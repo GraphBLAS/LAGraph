@@ -68,6 +68,23 @@
 #endif
 
 //------------------------------------------------------------------------------
+// LAGRAPH_OK: call LAGraph or GraphBLAS and check the result
+//------------------------------------------------------------------------------
+
+// The including file must define LAGRAPH_FREE_ALL as a macro that frees all
+// workspace if an error occurs.
+
+#define LAGRAPH_OK(method)                                                  \
+{                                                                           \
+    GrB_Info info = method ;                                                \
+    if (! (info == GrB_SUCCESS || info == GrB_NO_VALUE))                    \
+    {                                                                       \
+        LAGRAPH_FREE_ALL ;                                                  \
+        return (info) ;                                                     \
+    }                                                                       \
+}
+
+//------------------------------------------------------------------------------
 // Matrix Market format
 //------------------------------------------------------------------------------
 
@@ -97,4 +114,18 @@ typedef enum
     MM_hermitian
 }
 MM_storage_enum ;
+
+// maximum length of each line in the Matrix Market file format
+
+// The MatrixMarket format specificies a maximum line length of 1024.
+// This is currently sufficient for GraphBLAS but will need to be relaxed
+// if this function is extended to handle arbitrary user-defined types.
+#define MMLEN 1024
+#define MAXLINE MMLEN+6
+
+//------------------------------------------------------------------------------
+
+GrB_Info LAGraph_alloc_global ( ) ;
+
+GrB_Info LAGraph_free_global ( ) ;
 

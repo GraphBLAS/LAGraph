@@ -9,20 +9,17 @@
 
 #include "LAGraph_internal.h"
 
-// a global value for returning the complex type in a Matrix Market file:
-GrB_Type LAGraph_Complex = NULL ;
+#define LAGRAPH_FREE_ALL                    \
+{                                           \
+    LAGraph_free_global ( ) ;               \
+}
 
 GrB_Info LAGraph_init ( )
 {
-
     // initialize GraphBLAS
-    GrB_Info info = GrB_init ( ) ;
-    if (info != GrB_SUCCESS)
-    {
-        return (info) ;
-    }
+    LAGRAPH_OK (GrB_init ( )) ;
 
-    // create the complex type for LAGraph
-    return (GrB_Type_new (&LAGraph_Complex, sizeof (double complex))) ;
+    // allocate all global objects
+    LAGRAPH_OK (LAGraph_alloc_global ( )) ;
 }
 

@@ -131,16 +131,11 @@
 //          All entries on the diagonal are real.  Each off-diagonal entry in
 //          the file creates two entries in the GrB_Matrix that is returned.
 
-// According to the Matrix Marker format, entries are always listed in
+// According to the Matrix Market format, entries are always listed in
 // column-major order.  This rule is follwed by LAGraph_mmwrite.  However,
 // LAGraph_mmread can read the entries in any order.
 
 #include "LAGraph_internal.h"
-
-// The MatrixMarket format specificies a maximum line length of 1024.
-// This is currently sufficient for GraphBLAS but will need to be relaxed
-// if this function is extended to handle arbitrary user-defined types.
-#define MAXLINE 1030
 
 //------------------------------------------------------------------------------
 // get_line
@@ -268,95 +263,96 @@ static inline bool read_entry   // true if successful, false if failure
 (
     char *p,        // string containing the value
     GrB_type type,  // type of value to read
+    bool pattern,   // if true, then the value is 1
     char *x         // value read in
 )
 {
     
-    int64_t ival ;
-    uint64_t uval ;
-    double rval, zval ;
+    int64_t ival = 1 ;
+    uint64_t uval = 1 ;
+    double rval = 1, zval = 0 ;
 
     while (*p && isspace (*p)) p++ ;   // skip any spaces
 
     if (type == GrB_BOOL)
     {
-        if (sscanf (p, "%" SCNd64, ival) != 1) return (false) ;
+        if (!pattern && sscanf (p, "%" SCNd64, ival) != 1) return (false) ;
         if (ival < 0 || ival > 1) return (false) ;
         bool *result = (bool *) x ;
         result [0] = (bool) ival ;
     }
     else if (type == GrB_INT8)
     {
-        if (sscanf (p, "%" SCNd64, ival) != 1) return (false) ;
+        if (!pattern && sscanf (p, "%" SCNd64, ival) != 1) return (false) ;
         if (ival < INT8_MIN || ival > INT8_MAX) return (false) ;
         int8_t *result = (int8_t *) x ;
         result [0] = (int8_t) ival ;
     }
     else if (type == GrB_INT16)
     {
-        if (sscanf (p, "%" SCNd64, ival) != 1) return (false) ;
+        if (!pattern && sscanf (p, "%" SCNd64, ival) != 1) return (false) ;
         if (ival < INT16_MIN || ival > INT16_MAX) return (false) ;
         int16_t *result = (int16_t *) x ;
         result [0] = (int16_t) ival ;
     }
     else if (type == GrB_INT32)
     {
-        if (sscanf (p, "%" SCNd64, ival) != 1) return (false) ;
+        if (!pattern && sscanf (p, "%" SCNd64, ival) != 1) return (false) ;
         if (ival < INT32_MIN || ival > INT32_MAX) return (false) ;
         int32_t *result = (int32_t *) x ;
         result [0] = (int32_t) ival ;
     }
     else if (type == GrB_INT64)
     {
-        if (sscanf (p, "%" SCNd64, ival) != 1) return (false) ;
+        if (!pattern && sscanf (p, "%" SCNd64, ival) != 1) return (false) ;
         int64_t *result = (int64_t *) x ;
         result [0] = (int64_t) ival ;
     }
     else if (type == GrB_UINT8)
     {
-        if (sscanf (p, "%" SCNd64, ival) != 1) return (false) ;
+        if (!pattern && sscanf (p, "%" SCNd64, ival) != 1) return (false) ;
         if (ival < 0 || ival > UINT8_MAX) return (false) ;
         uint8_t *result = (uint8_t *) x ;
         result [0] = (uint8_t) ival ;
     }
     else if (type == GrB_UINT16)
     {
-        if (sscanf (p, "%" SCNd64, ival) != 1) return (false) ;
+        if (!pattern && sscanf (p, "%" SCNd64, ival) != 1) return (false) ;
         if (ival < 0 || ival > UINT16_MAX) return (false) ;
         uint16_t *result = (uint16_t *) x ;
         result [0] = (uint16_t) ival ;
     }
     else if (type == GrB_UINT32)
     {
-        if (sscanf (p, "%" SCNd64, ival) != 1) return (false) ;
+        if (!pattern && sscanf (p, "%" SCNd64, ival) != 1) return (false) ;
         if (ival < 0 || ival > UINT32_MAX) return (false) ;
         uint32_t *result = (uint32_t *) x ;
         result [0] = (uint32_t) ival ;
     }
     else if (type == GrB_UINT64)
     {
-        if (sscanf (p, "%" SCNu64, uval) != 1) return (false) ;
+        if (!pattern && sscanf (p, "%" SCNu64, uval) != 1) return (false) ;
         uint64_t *result = (uint64_t *) x ;
         result [0] = (uint64_t) ival ;
     }
     else if (type == GrB_FP32)
     {
-        if (!read_double (p, &rval)) return (false) ;
+        if (!pattern && !read_double (p, &rval)) return (false) ;
         float *result = (float *) x ;
         result [0] = (float) rval ;
     }
     else if (type == GrB_FP64)
     {
-        if (!read_double (p, &rval)) return (false) ;
+        if (!pattern && !read_double (p, &rval)) return (false) ;
         *((* double) x) = rval ;
         double *result = (double *) x ;
         result [0] = rval ;
     }
     else if (type == LAGraph_Complex)
     {
-        if (!read_double (p, &rval)) return (false) ;
+        if (!pattern && !read_double (p, &rval)) return (false) ;
         while (*p && !isspace (*p)) p++ ;   // skip real part
-        if (!read_double (p, &zval)) return (false) ;
+        if (!pattern && !read_double (p, &zval)) return (false) ;
         bool *result = (bool *) x ;
         result [0] = rval ;     // real part
         result [1] = zval ;     // imaginary part
@@ -761,12 +757,6 @@ GrB_Info LAGraph_mmread
                 return (GrB_INVALID_VALUE) ;
             }
 
-            // MatrixMarket type is complex iff the type is LAGraph_Complex
-            if ((MM_type == MM_complex) != ((*type) == LAGraph_Complex))
-            {
-                return (GrB_INVALID_VALUE) ;
-            }
-
         }
         else if (is_blank_line (buf))
         {
@@ -928,7 +918,7 @@ GrB_Info LAGraph_mmread
 
             while (*p && isspace (*p)) p++ ;        // skip any spaces
 
-            if (!read_entry (p, type, x))
+            if (!read_entry (p, type, MM_type == MM_pattern, x))
             {
                 GrB_free (A) ;
                 return (GrB_INVALID_VALUE) ;

@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_finalize:  start LAGraph
+// LAGraph_free:  wrapper for free
 //------------------------------------------------------------------------------
 
 // LAGraph, (TODO list all authors here) (c) 2019, All Rights Reserved.
@@ -9,12 +9,19 @@
 
 #include "LAGraph_internal.h"
 
-GrB_Info LAGraph_finalize ( )
+void LAGraph_free
+(
+    void **p                // *p is freed and set to NULL
+)
 {
-    // free the complex type and operators for LAGraph
-    LAGraph_free_global ( ) ;
 
-    // finalize GraphBLAS
-    return (GrB_finalize ( )) :
+    if (p != NULL)
+    {
+        if (*p != NULL)
+        {
+            free (p) ;
+            (*p) = NULL ;
+        }
+    }
 }
 
