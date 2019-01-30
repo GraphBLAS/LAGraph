@@ -1,4 +1,4 @@
-# LAgraph/Test
+# LAGraph/Test
 This folder contains a collection of independent test programs.
 Currently there is only one:
 
@@ -15,5 +15,5 @@ this folder and creating an new test.
 LAGraph and GraphBLAS must first be compiled (and installed if
 need be) before compiling and running these tests.
 
-Authors: TODO (list them here)
+Authors: (... list them here)
 

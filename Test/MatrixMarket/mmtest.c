@@ -2,7 +2,7 @@
 // mmtest: create a matrix and test Matrix Market I/O
 //------------------------------------------------------------------------------
 
-// LAGraph, (TODO list all authors here) (c) 2019, All Rights Reserved.
+// LAGraph, (... list all authors here) (c) 2019, All Rights Reserved.
 // http://graphblas.org  See LAGraph/Doc/License.txt for license.
 
 //------------------------------------------------------------------------------
@@ -102,10 +102,10 @@ GrB_Info mmtest
     }
 
     // print the first line to stderr
+    /*
     char buf [1030] ;
     fgets (buf, 1030, f) ;
     fprintf (stderr, "%s", buf) ; 
-
     fclose (f) ;
     f = fopen (filename, "r") ;
     if (f == NULL)
@@ -114,6 +114,7 @@ GrB_Info mmtest
         FREE_ALL ;
         return (GrB_INVALID_VALUE) ;
     }
+    */
 
     //--------------------------------------------------------------------------
     // read B from the same file

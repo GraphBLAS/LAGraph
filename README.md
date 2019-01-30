@@ -37,5 +37,5 @@ compiled GraphBLAS library is assumed to appear in ../GraphBLAS/build.  If you
 use a GraphBLAS library that uses a different structure, then edit the
 CMakeLists.txt file to point to right location.
 
-Authors: TODO (list them here)
+Authors: (... list them here)
 

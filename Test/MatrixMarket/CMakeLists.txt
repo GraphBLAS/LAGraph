@@ -2,7 +2,7 @@
 # LAGraph/Test/MatrixMarket/CMakeLists.txt:  cmake script for LAGraph test
 #-------------------------------------------------------------------------------
 
-# LAGraph, (TODO list all authors here) (c) 2019, All Rights Reserved.
+# LAGraph, (... list all authors here) (c) 2019, All Rights Reserved.
 # http://lagraph.org  See LAGraph/LICENSE for license.
 
 # CMakeLists.txt: instructions for cmake to build LAGraph.

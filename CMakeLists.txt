@@ -2,24 +2,17 @@
 # LAGraph/CMakeLists.txt:  cmake script for LAGraph
 #-------------------------------------------------------------------------------
 
-# LAGraph, (TODO list all authors here) (c) 2019, All Rights Reserved.
+# LAGraph, (... list all authors here) (c) 2019, All Rights Reserved.
 # http://lagraph.org  See LAGraph/LICENSE for license.
 
-# CMakeLists.txt: instructions for cmake to build LAGraph.
-# An ANSI C11 compiler is required.
-#
-# First, install any GraphBLAS library.
-# Alternatively, use ../GraphBLAS (see comments below).
+# CMakeLists.txt: instructions for cmake to build LAGraph.  An ANSI C11
+# compiler is required.  First, install any GraphBLAS library.  Alternatively,
+# use ../GraphBLAS (see comments below).
 #
 # To compile and install the LAGraph library:
 #
 #   make
 #   sudo make install
-#
-# Then to compile and run the Demos:
-# 
-#   cd Demos
-#   make
 #
 # If that fails for any reason, make sure your compiler supports ANSI C11.  You
 # could try changing your compiler, for example:
@@ -33,6 +26,10 @@
 #
 #   CC=xlc cmake ..
 #   CC=gcc cmake ..
+#
+# Then to compile and run the Tests ("make install" not required):
+# 
+#   make tests
 #
 # To remove all compiled files and libraries (except installed ones):
 #
@@ -70,6 +67,7 @@ endif ( )
 include ( GNUInstallDirs )
 
 # For development only, not for end-users:
+# TODO comment this out to compile for performance:
 set ( CMAKE_BUILD_TYPE Debug )
 
 if ( NOT CMAKE_BUILD_TYPE )
