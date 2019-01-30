@@ -8,6 +8,9 @@
 # CMakeLists.txt: instructions for cmake to build LAGraph.
 # An ANSI C11 compiler is required.
 #
+# First, install any GraphBLAS library.
+# Alternatively, use ../SuiteSparse/GraphBLAS (see comments below).
+#
 # To compile and install the LAGraph library:
 #
 #   make
@@ -65,7 +68,6 @@ endif ( )
 #-------------------------------------------------------------------------------
 
 include ( GNUInstallDirs )
-link_directories ( /usr/local/lib )
 
 # For development only, not for end-users:
 set ( CMAKE_BUILD_TYPE Debug )
@@ -73,6 +75,15 @@ set ( CMAKE_BUILD_TYPE Debug )
 if ( NOT CMAKE_BUILD_TYPE )
     set ( CMAKE_BUILD_TYPE Release )
 endif ( )
+
+#-------------------------------------------------------------------------------
+# edit these lines to select your GraphBLAS library
+#-------------------------------------------------------------------------------
+
+# link_directories ( /usr/local/lib )
+link_directories ( ../SuiteSparse/GraphBLAS/build )
+# include_directories ( /usr/local/include )
+include_directories ( ../SuiteSparse/GraphBLAS/Include )
 
 #-------------------------------------------------------------------------------
 # Configure Include/LAGraph.h and documentation with version number
@@ -128,7 +139,7 @@ message ( STATUS "CMAKE have OpenMP:         " ${OPENMP_FOUND} )
 
 set ( CMAKE_INCLUDE_CURRENT_DIR ON )
 
-include_directories ( Source Include /usr/local/include )
+include_directories ( Source Include )
 
 #-------------------------------------------------------------------------------
 # compiler options
