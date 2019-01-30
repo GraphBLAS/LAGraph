@@ -69,7 +69,7 @@ static bool print_double
 {
 
     char s [MAXLINE], *p ;
-    Int i, dest = 0, src = 0 ;
+    int64_t i, dest = 0, src = 0 ;
     int width, ok ;
 
     //--------------------------------------------------------------------------
@@ -196,7 +196,7 @@ static bool print_double
 // LAGraph_mmwrite
 //------------------------------------------------------------------------------
 
-GrB_info LAGraph_mmwrite
+GrB_Info LAGraph_mmwrite
 (
     GrB_Matrix A,           // matrix to write to the file
     FILE *f                 // file to write it to
@@ -225,9 +225,9 @@ GrB_info LAGraph_mmwrite
 
     #define LAGRAPH_FREE_ALL        \
     {                               \
-        LAGraph_free (&I) ;         \
-        LAGraph_free (&J) ;         \
-        LAGraph_free (&X) ;         \
+        LAGRAPH_FREE (I) ;          \
+        LAGRAPH_FREE (J) ;          \
+        LAGRAPH_FREE (X) ;          \
         GrB_free (&AT) ;            \
         GrB_free (&M) ;             \
     }
@@ -241,7 +241,7 @@ GrB_info LAGraph_mmwrite
 
     LAGRAPH_OK (GxB_Matrix_type  (&type,  A)) ;
     LAGRAPH_OK (GrB_Matrix_nrows (&nrows, A)) ;
-    LAGRAPH_OK (GrB_Matrix_ncols (&colss, A)) ;
+    LAGRAPH_OK (GrB_Matrix_ncols (&ncols, A)) ;
     LAGRAPH_OK (GrB_Matrix_nvals (&nvals, A)) ;
     GrB_Index n = nrows ;
 
@@ -395,18 +395,18 @@ GrB_info LAGraph_mmwrite
     }
 
     FPRINTF (f, "%%%%GraphBLAS ") ;
-    if      (type == GrB_BOOL  ) FPRINTF (f, "GrB_BOOL\n") ;
-    else if (type == GrB_INT8  ) FPRINTF (f, "GrB_INT8\n") ;
-    else if (type == GrB_INT16 ) FPRINTF (f, "GrB_INT16\n") ;
-    else if (type == GrB_INT32 ) FPRINTF (f, "GrB_INT32\n") ;
-    else if (type == GrB_INT64 ) FPRINTF (f, "GrB_INT64\n") ;
-    else if (type == GrB_UINT8 ) FPRINTF (f, "GrB_UINT8\n") ;
-    else if (type == GrB_UINT16) FPRINTF (f, "GrB_UINT16\n") ;
-    else if (type == GrB_UINT32) FPRINTF (f, "GrB_UINT32\n") ;
-    else if (type == GrB_UINT64) FPRINTF (f, "GrB_UINT64\n") ;
-    else if (type == GrB_FP32  ) FPRINTF (f, "GrB_FP32\n") ;
-    else if (type == GrB_FP64  ) FPRINTF (f, "GrB_FP64\n") ;
-    else                         FPRINTF (f, "LAGraph_Complex\n") ;
+    if      (type == GrB_BOOL  ) FPRINTF (f, "GrB_BOOL\n")
+    else if (type == GrB_INT8  ) FPRINTF (f, "GrB_INT8\n")
+    else if (type == GrB_INT16 ) FPRINTF (f, "GrB_INT16\n")
+    else if (type == GrB_INT32 ) FPRINTF (f, "GrB_INT32\n")
+    else if (type == GrB_INT64 ) FPRINTF (f, "GrB_INT64\n")
+    else if (type == GrB_UINT8 ) FPRINTF (f, "GrB_UINT8\n")
+    else if (type == GrB_UINT16) FPRINTF (f, "GrB_UINT16\n")
+    else if (type == GrB_UINT32) FPRINTF (f, "GrB_UINT32\n")
+    else if (type == GrB_UINT64) FPRINTF (f, "GrB_UINT64\n")
+    else if (type == GrB_FP32  ) FPRINTF (f, "GrB_FP32\n")
+    else if (type == GrB_FP64  ) FPRINTF (f, "GrB_FP64\n")
+    else                         FPRINTF (f, "LAGraph_Complex\n")
 
     //--------------------------------------------------------------------------
     // include any additional comments
@@ -431,7 +431,7 @@ GrB_info LAGraph_mmwrite
             LAGRAPH_OK (GrB_Matrix_setElement_BOOL (M, true, k, k)) ;
         }
         // M<M> = A
-        LAGRAPH_OK (GrB_assign (&M, M, NULL, A, GrB_ALL, n, GrB_ALL, n, NULL)) ;
+        LAGRAPH_OK (GrB_assign (M, M, NULL, A, GrB_ALL, n, GrB_ALL, n, NULL)) ;
         GrB_Index ndiag = 0 ;
         LAGRAPH_OK (GrB_Matrix_nvals (&ndiag, M)) ;
         GrB_free (&M) ;
@@ -453,8 +453,14 @@ GrB_info LAGraph_mmwrite
     // extract the and print tuples
     //--------------------------------------------------------------------------
 
-    LAGRAPH_OK (LAGraph_malloc (&I, nvals, sizeof (GrB_Index))) ;
-    LAGRAPH_OK (LAGraph_malloc (&J, nvals, sizeof (GrB_Index))) ;
+    I = LAGraph_malloc (nvals, sizeof (GrB_Index)) ;
+    J = LAGraph_malloc (nvals, sizeof (GrB_Index)) ;
+    if (I == NULL || J == NULL)
+    {
+        // out of memory
+        LAGRAPH_FREE_ALL ;
+        return (GrB_OUT_OF_MEMORY) ;
+    }
 
     // TODO need to sort them as well, into column-major order.  This can be
     // done with a few lines in SuiteSparse:GraphBLAS, but requires an explicit
@@ -466,8 +472,14 @@ GrB_info LAGraph_mmwrite
     #define WRITE_TUPLES(ctype,is_unsigned,is_signed,is_real,is_complex)    \
     {                                                                       \
         ctype *X = NULL ;                                                   \
-        LAGRAPH_OK (LAGraph_malloc (&X, nvals, sizeof (ctype))) ;           \
-        LAGRAPH_OK (GrB_extractTuples (&I, &J, &X, &nvals, A)) ;            \
+        X = LAGraph_malloc (nvals, sizeof (ctype)) ;                        \
+        if (X == NULL)                                                      \
+        {                                                                   \
+            /* out of memory */                                             \
+            LAGRAPH_FREE_ALL ;                                              \
+            return (GrB_OUT_OF_MEMORY) ;                                    \
+        }                                                                   \
+        LAGRAPH_OK (GrB_Matrix_extractTuples (I, J, ARG(X), &nvals, A)) ;   \
         for (int64_t k = 0 ; k < nvals ; k++)                               \
         {                                                                   \
             /* convert the row and column index to 1-based */               \
@@ -477,7 +489,7 @@ GrB_info LAGraph_mmwrite
             if (is_general || i >= j)                                       \
             {                                                               \
                 /* print the row and column index of the tuple */           \
-                FPRINTF (f, "%" PRIu64 " %" PRu64, i, j) ;                  \
+                FPRINTF (f, "%" PRIu64 " %" PRIu64, i, j) ;                 \
                 /* print the value of the tuple */                          \
                 if (is_pattern)                                             \
                 {                                                           \
@@ -509,18 +521,25 @@ GrB_info LAGraph_mmwrite
         }                                                                   \
     }
 
-    if      (type == GrB_BOOL   ) WRITE_TUPLES (bool            , 1, 0, 0, 0) ;
-    else if (type == GrB_INT8   ) WRITE_TUPLES (int8_t          , 0, 1, 0, 0) ;
-    else if (type == GrB_INT16  ) WRITE_TUPLES (int16_t         , 0, 1, 0, 0) ;
-    else if (type == GrB_INT32  ) WRITE_TUPLES (int32_t         , 0, 1, 0, 0) ;
-    else if (type == GrB_INT64  ) WRITE_TUPLES (int64_t         , 0, 1, 0, 0) ;
-    else if (type == GrB_UINT8  ) WRITE_TUPLES (uint8_t         , 1, 0, 0, 0) ;
-    else if (type == GrB_UINT16 ) WRITE_TUPLES (uint16_t        , 1, 0, 0, 0) ;
-    else if (type == GrB_UINT32 ) WRITE_TUPLES (uint32_t        , 1, 0, 0, 0) ;
-    else if (type == GrB_UINT64 ) WRITE_TUPLES (uint64_t        , 1, 0, 0, 0) ;
-    else if (type == GrB_FP32   ) WRITE_TUPLES (float           , 0, 0, 1, 0) ;
-    else if (type == GrB_FP64   ) WRITE_TUPLES (double          , 0, 0, 1, 0) ;
-    else                          WRITE_TUPLES (double complex  , 0, 0, 1, 0) ;
+    #define ARG(X) X
+
+    if      (type == GrB_BOOL   ) WRITE_TUPLES (bool    , 1, 0, 0, 0)
+    else if (type == GrB_INT8   ) WRITE_TUPLES (int8_t  , 0, 1, 0, 0)
+    else if (type == GrB_INT16  ) WRITE_TUPLES (int16_t , 0, 1, 0, 0)
+    else if (type == GrB_INT32  ) WRITE_TUPLES (int32_t , 0, 1, 0, 0)
+    else if (type == GrB_INT64  ) WRITE_TUPLES (int64_t , 0, 1, 0, 0)
+    else if (type == GrB_UINT8  ) WRITE_TUPLES (uint8_t , 1, 0, 0, 0)
+    else if (type == GrB_UINT16 ) WRITE_TUPLES (uint16_t, 1, 0, 0, 0)
+    else if (type == GrB_UINT32 ) WRITE_TUPLES (uint32_t, 1, 0, 0, 0)
+    else if (type == GrB_UINT64 ) WRITE_TUPLES (uint64_t, 1, 0, 0, 0)
+    else if (type == GrB_FP32   ) WRITE_TUPLES (float   , 0, 0, 1, 0)
+    else if (type == GrB_FP64   ) WRITE_TUPLES (double  , 0, 0, 1, 0)
+    else
+    {
+        #undef ARG
+        #define ARG(X) ((void *) X)
+        WRITE_TUPLES (double complex, 0, 0, 1, 0)
+    }
 
     ASSERT (nvals_to_print == nvals_printed) ;
 

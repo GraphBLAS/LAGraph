@@ -268,7 +268,7 @@ static inline bool read_double      // true if successful, false if failure
 static inline bool read_entry   // true if successful, false if failure
 (
     char *p,        // string containing the value
-    GrB_type type,  // type of value to read
+    GrB_Type type,  // type of value to read
     bool pattern,   // if true, then the value is 1
     char *x         // value read in, a pointer to space of size of the type
 )
@@ -281,55 +281,55 @@ static inline bool read_entry   // true if successful, false if failure
 
     if (type == GrB_BOOL)
     {
-        if (!pattern && sscanf (p, "%" SCNd64, ival) != 1) return (false) ;
+        if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
         if (ival < 0 || ival > 1) return (false) ;
         bool *result = (bool *) x ;
         result [0] = (bool) ival ;
     }
     else if (type == GrB_INT8)
     {
-        if (!pattern && sscanf (p, "%" SCNd64, ival) != 1) return (false) ;
+        if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
         if (ival < INT8_MIN || ival > INT8_MAX) return (false) ;
         int8_t *result = (int8_t *) x ;
         result [0] = (int8_t) ival ;
     }
     else if (type == GrB_INT16)
     {
-        if (!pattern && sscanf (p, "%" SCNd64, ival) != 1) return (false) ;
+        if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
         if (ival < INT16_MIN || ival > INT16_MAX) return (false) ;
         int16_t *result = (int16_t *) x ;
         result [0] = (int16_t) ival ;
     }
     else if (type == GrB_INT32)
     {
-        if (!pattern && sscanf (p, "%" SCNd64, ival) != 1) return (false) ;
+        if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
         if (ival < INT32_MIN || ival > INT32_MAX) return (false) ;
         int32_t *result = (int32_t *) x ;
         result [0] = (int32_t) ival ;
     }
     else if (type == GrB_INT64)
     {
-        if (!pattern && sscanf (p, "%" SCNd64, ival) != 1) return (false) ;
+        if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
         int64_t *result = (int64_t *) x ;
         result [0] = (int64_t) ival ;
     }
     else if (type == GrB_UINT8)
     {
-        if (!pattern && sscanf (p, "%" SCNd64, ival) != 1) return (false) ;
+        if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
         if (ival < 0 || ival > UINT8_MAX) return (false) ;
         uint8_t *result = (uint8_t *) x ;
         result [0] = (uint8_t) ival ;
     }
     else if (type == GrB_UINT16)
     {
-        if (!pattern && sscanf (p, "%" SCNd64, ival) != 1) return (false) ;
+        if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
         if (ival < 0 || ival > UINT16_MAX) return (false) ;
         uint16_t *result = (uint16_t *) x ;
         result [0] = (uint16_t) ival ;
     }
     else if (type == GrB_UINT32)
     {
-        if (!pattern && sscanf (p, "%" SCNd64, ival) != 1) return (false) ;
+        if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
         if (ival < 0 || ival > UINT32_MAX) return (false) ;
         uint32_t *result = (uint32_t *) x ;
         result [0] = (uint32_t) ival ;
@@ -337,7 +337,7 @@ static inline bool read_entry   // true if successful, false if failure
     else if (type == GrB_UINT64)
     {
         uint64_t uval = 1 ;
-        if (!pattern && sscanf (p, "%" SCNu64, uval) != 1) return (false) ;
+        if (!pattern && sscanf (p, "%" SCNu64, &uval) != 1) return (false) ;
         uint64_t *result = (uint64_t *) x ;
         result [0] = (uint64_t) uval ;
     }
@@ -440,61 +440,61 @@ static inline GrB_Info set_value
     if (type == GrB_BOOL)
     {
         bool *value = (bool *) x ;
-        return (GrB_Matrix_setElement_BOOL (*A, *value, i, j)) ;
+        return (GrB_Matrix_setElement_BOOL (A, *value, i, j)) ;
     }
     else if (type == GrB_INT8)
     {
         int8_t *value = (int8_t *) x ;
-        return (GrB_Matrix_setElement_INT8 (*A, *value, i, j)) ;
+        return (GrB_Matrix_setElement_INT8 (A, *value, i, j)) ;
     }
     else if (type == GrB_INT16)
     {
         int16_t *value = (int16_t *) x ;
-        return (GrB_Matrix_setElement_INT16 (*A, *value, i, j)) ;
+        return (GrB_Matrix_setElement_INT16 (A, *value, i, j)) ;
     }
     else if (type == GrB_INT32)
     {
         int32_t *value = (int32_t *) x ;
-        return (GrB_Matrix_setElement_INT32 (*A, *value, i, j)) ;
+        return (GrB_Matrix_setElement_INT32 (A, *value, i, j)) ;
     }
     else if (type == GrB_INT64)
     {
         int64_t *value = (int64_t *) x ;
-        return (GrB_Matrix_setElement_INT64 (*A, *value, i, j)) ;
+        return (GrB_Matrix_setElement_INT64 (A, *value, i, j)) ;
     }
     else if (type == GrB_UINT8)
     {
         uint8_t *value = (uint8_t *) x ;
-        return (GrB_Matrix_setElement_UINT8 (*A, *value, i, j)) ;
+        return (GrB_Matrix_setElement_UINT8 (A, *value, i, j)) ;
     }
     else if (type == GrB_UINT16)
     {
         uint16_t *value = (uint16_t *) x ;
-        return (GrB_Matrix_setElement_UINT16 (*A, *value, i, j)) ;
+        return (GrB_Matrix_setElement_UINT16 (A, *value, i, j)) ;
     }
     else if (type == GrB_UINT32)
     {
         uint32_t *value = (uint32_t *) x ;
-        return (GrB_Matrix_setElement_UINT32 (*A, *value, i, j)) ;
+        return (GrB_Matrix_setElement_UINT32 (A, *value, i, j)) ;
     }
     else if (type == GrB_UINT64)
     {
         uint64_t *value = (uint64_t *) x ;
-        return (GrB_Matrix_setElement_UINT64 (*A, *value, i, j)) ;
+        return (GrB_Matrix_setElement_UINT64 (A, *value, i, j)) ;
     }
     else if (type == GrB_FP32)
     {
         float *value = (float *) x ;
-        return (GrB_Matrix_setElement_FP32 (*A, *value, i, j)) ;
+        return (GrB_Matrix_setElement_FP32 (A, *value, i, j)) ;
     }
     else if (type == GrB_FP64)
     {
         double *value = (double *) x ;
-        return (GrB_Matrix_setElement_FP64 (*A, *value, i, j)) ;
+        return (GrB_Matrix_setElement_FP64 (A, *value, i, j)) ;
     }
     else if (type == LAGraph_Complex)
     {
-        return (GrB_Matrix_setElement_UDT (*A, x, i, j)) ;
+        return (GrB_Matrix_setElement_UDT (A, x, i, j)) ;
     }
     else
     {
@@ -634,25 +634,25 @@ GrB_Info LAGraph_mmread
             if (strncmp (p, "real", 4) == 0)
             {
                 MM_type = MM_real ;
-                (*type) = GrB_FP64 ;
+                type = GrB_FP64 ;
                 p += 4 ;
             }
             else if (strncmp (p, "integer", 7) == 0)
             {
                 MM_type = MM_integer ;
-                (*type) = GrB_INT64 ;
+                type = GrB_INT64 ;
                 p += 7 ;
             }
             else if (strncmp (p, "complex", 7) == 0)
             {
                 MM_type = MM_complex ;
-                (*type) = LAGraph_Complex ;
+                type = LAGraph_Complex ;
                 p += 7 ;
             }
             else if (strncmp (p, "pattern", 7) == 0)
             {
                 MM_type = MM_pattern ;
-                (*type) = GrB_BOOL ;
+                type = GrB_BOOL ;
                 p += 7 ;
             }
             else
@@ -669,19 +669,19 @@ GrB_Info LAGraph_mmread
 
             if (strncmp (p, "general", 7) == 0)
             {
-                (*MM_storage) = MM_general ;
+                MM_storage = MM_general ;
             }
             else if (strncmp (p, "symmetric", 9) == 0)
             {
-                (*MM_storage) = MM_symmetric ;
+                MM_storage = MM_symmetric ;
             }
             else if (strncmp (p, "skew-symmetric", 14) == 0)
             {
-                (*MM_storage) = MM_skew_symmetric ;
+                MM_storage = MM_skew_symmetric ;
             }
             else if (strncmp (p, "hermitian", 9) == 0)
             {
-                (*MM_storage) = MM_hermitian ;
+                MM_storage = MM_hermitian ;
             }
             else
             {
@@ -697,15 +697,15 @@ GrB_Info LAGraph_mmread
             {
                 // (coodinate) x (pattern) x (general or symmetric)
                 if (! (MM_fmt == MM_coordinate &&
-                        ((*MM_storage) == MM_general ||
-                         (*MM_storage) == MM_symmetric)))
+                        (MM_storage == MM_general ||
+                         MM_storage == MM_symmetric)))
                 {
                     // invalid combination
                     return (GrB_INVALID_VALUE) ;
                 }
             }
 
-            if ((*MM_storage) == MM_hermitian)
+            if (MM_storage == MM_hermitian)
             {
                 // (coordinate or array) x (complex) x (Hermitian)
                 if (! (MM_type == MM_complex))
@@ -729,7 +729,7 @@ GrB_Info LAGraph_mmread
             // the %%GraphBLAS line is treated as a pure comment and the
             // <entrytype> is ignored).
 
-            p = buf + 11 ;
+            char *p = buf + 11 ;
 
             while (*p && isspace (*p)) p++ ;        // skip any leading spaces
 
@@ -739,51 +739,51 @@ GrB_Info LAGraph_mmread
 
             if (strncmp (p, "GrB_BOOL", 8) == 0)
             {
-                (*type) = GrB_BOOL ;
+                type = GrB_BOOL ;
             }
             else if (strncmp (p, "GrB_INT8", 8) == 0)
             {
-                (*type) = GrB_INT8 ;
+                type = GrB_INT8 ;
             }
             else if (strncmp (p, "GrB_INT16", 9) == 0)
             {
-                (*type) = GrB_INT16 ;
+                type = GrB_INT16 ;
             }
             else if (strncmp (p, "GrB_INT32", 9) == 0)
             {
-                (*type) = GrB_INT32 ;
+                type = GrB_INT32 ;
             }
             else if (strncmp (p, "GrB_INT64", 9) == 0)
             {
-                (*type) = GrB_INT64 ;
+                type = GrB_INT64 ;
             }
             else if (strncmp (p, "GrB_UINT8", 9) == 0)
             {
-                (*type) = GrB_UINT8 ;
+                type = GrB_UINT8 ;
             }
             else if (strncmp (p, "GrB_UINT16", 10) == 0)
             {
-                (*type) = GrB_UINT16 ;
+                type = GrB_UINT16 ;
             }
             else if (strncmp (p, "GrB_UINT32", 10) == 0)
             {
-                (*type) = GrB_UINT32 ;
+                type = GrB_UINT32 ;
             }
             else if (strncmp (p, "GrB_UINT64", 10) == 0)
             {
-                (*type) = GrB_UINT64 ;
+                type = GrB_UINT64 ;
             }
             else if (strncmp (p, "GrB_FP32", 8) == 0)
             {
-                (*type) = GrB_FP32 ;
+                type = GrB_FP32 ;
             }
             else if (strncmp (p, "GrB_FP64", 8) == 0)
             {
-                (*type) = GrB_FP64 ;
+                type = GrB_FP64 ;
             }
             else if (strncmp (p, "LAGraph_Complex", 15) == 0)
             {
-                (*type) = LAGraph_Complex ;
+                type = LAGraph_Complex ;
             }
             else
             {
@@ -812,7 +812,7 @@ GrB_Info LAGraph_mmread
             // format: [nrows ncols nvals] or just [nrows ncols]
 
             int nitems = sscanf (buf, "%" SCNu64 " %" SCNu64 " %" SCNu64,
-                nrows, ncols, nvals) ;
+                &nrows, &ncols, &nvals) ;
 
             if (nitems == 2)
             {
@@ -824,9 +824,9 @@ GrB_Info LAGraph_mmread
                     MM_fmt = MM_array ;
                     MM_type = MM_real ;
                     MM_storage = MM_general ;
-                    (*type) = GrB_FP64 ;
+                    type = GrB_FP64 ;
                 }
-                (*nvals) = (*nrows) * (*ncols) ;
+                nvals = nrows * ncols ;
             }
             else if (nitems == 3)
             {
@@ -838,7 +838,7 @@ GrB_Info LAGraph_mmread
                     MM_fmt = MM_coordinate ;
                     MM_type = MM_real ;
                     MM_storage = MM_general ;
-                    (*type) = GrB_FP64 ;
+                    type = GrB_FP64 ;
                 }
             }
             else
@@ -847,7 +847,7 @@ GrB_Info LAGraph_mmread
                 return (GrB_INVALID_VALUE) ;
             }
 
-            if ((*nrows) != (*ncols))
+            if (nrows != ncols)
             {
                 if (! (MM_storage == MM_general))
                 {
@@ -868,7 +868,7 @@ GrB_Info LAGraph_mmread
     // create the matrix
     //--------------------------------------------------------------------------
 
-    info = GrB_Matrix_new (A, type, nrows, ncols) ;
+    GrB_Info info = GrB_Matrix_new (A, type, nrows, ncols) ;
     if (info != GrB_SUCCESS)
     {
         // failed to construct matrix
@@ -933,8 +933,7 @@ GrB_Info LAGraph_mmread
             else
             {
                 // coordinate format; read the row and column index
-	        nitems = sscanf (buf, "%" SCNu64 " %" SCNu64, &i, &j) ;
-                if (nitems != 2)
+                if (sscanf (buf, "%" SCNu64 " %" SCNu64, &i, &j) != 2)
                 {
                     // EOF or other I/O error
                     GrB_free (A) ;

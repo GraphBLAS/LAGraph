@@ -7,7 +7,7 @@
 
 //------------------------------------------------------------------------------
 
-// Frees the space and sets the pointer to NULL, to guard against double-free.
+// Wrapper for free.
 
 // TODO: should be able to modify the malloc/free routines used; also in
 // GraphBLAS.
@@ -16,17 +16,13 @@
 
 void LAGraph_free
 (
-    void **p                // *p is freed and set to NULL
+    void *p
 )
 {
 
     if (p != NULL)
     {
-        if (*p != NULL)
-        {
-            free (p) ;
-            (*p) = NULL ;
-        }
+        free (p) ;
     }
 }
 

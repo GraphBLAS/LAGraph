@@ -122,7 +122,7 @@ GrB_Info LAGraph_random         // create a random matrix
     // construct the matrix
     //--------------------------------------------------------------------------
 
-    LAGRAPH_OK (GrB_Matrix_new (&A, type, nrows, ncols)) ;
+    LAGRAPH_OK (GrB_Matrix_new (A, type, nrows, ncols)) ;
 
     #define RX(ctype,gt,is_bool,is_int,is_signed,is_real,is_complex)           \
     {                                                                          \
@@ -130,8 +130,8 @@ GrB_Info LAGraph_random         // create a random matrix
         for (int64_t k = 0 ; k < nvals ; k++)                                  \
         {                                                                      \
             /* get random row and column indices */                            \
-            GrB_Index i = LAGraph_rand64 ( ) % nrows ;                         \
-            GrB_Index j = LAGraph_rand64 ( ) % ncols ;                         \
+            GrB_Index i = LAGraph_rand64 (seed) % nrows ;                      \
+            GrB_Index j = LAGraph_rand64 (seed) % ncols ;                      \
             if (no_diagonal && (i == j)) continue ;                            \
             /* get a random value of the given type */                         \
             if (make_pattern)                                                  \
@@ -144,8 +144,8 @@ GrB_Info LAGraph_random         // create a random matrix
             }                                                                  \
             else if (is_int)                                                   \
             {                                                                  \
-                uint64_t t [0] = LAGraph_rand64 (seed) ;                       \
-                mempcy (&x, &t, sizeof (ctype)) ;                              \
+                uint64_t t = LAGraph_rand64 (seed) ;                           \
+                memcpy (&x, &t, sizeof (ctype)) ;                              \
             }                                                                  \
             else if (is_real)                                                  \
             {                                                                  \
@@ -174,7 +174,7 @@ GrB_Info LAGraph_random         // create a random matrix
             {                                                                  \
                 /* A (j,i) = conj (x) */                                       \
                 x = CONJ (x) ;                                                 \
-                LAGRAPH_OK (GrB_Matrix_setElement_ ## gt (*A, ARG(xconj),j,i));\
+                LAGRAPH_OK (GrB_Matrix_setElement_ ## gt (*A, ARG(x), j, i)) ; \
             }                                                                  \
         }                                                                      \
     }
@@ -183,17 +183,17 @@ GrB_Info LAGraph_random         // create a random matrix
     #define CONJ(x) x
     uint64_t t [2] = {0,0} ;
 
-    if      (type == GrB_BOOL        ) RX (bool    , BOOL  , 1, 0, 0, 0, 0) ;
-    else if (type == GrB_INT8        ) RX (int8_t  , INT8  , 0, 1, 1, 0, 0) ;
-    else if (type == GrB_INT16       ) RX (int16_t , INT16 , 0, 1, 1, 0, 0) ;
-    else if (type == GrB_INT32       ) RX (int32_t , INT32 , 0, 1, 1, 0, 0) ;
-    else if (type == GrB_INT64       ) RX (int64_t , INT64 , 0, 1, 1, 0, 0) ;
-    else if (type == GrB_UINT8       ) RX (uint16_t, UINT8 , 0, 1, 0, 0, 0) ;
-    else if (type == GrB_UINT16      ) RX (uint32_t, UINT16, 0, 1, 0, 0, 0) ;
-    else if (type == GrB_UINT32      ) RX (uint64_t, UINT32, 0, 1, 0, 0, 0) ;
-    else if (type == GrB_UINT64      ) RX (uint64_t, UINT64, 0, 1, 0, 0, 0) ;
-    else if (type == GrB_FP32        ) RX (float   , FP32  , 0, 0, 1, 1, 0) ;
-    else if (type == GrB_FP64        ) RX (double  , FP64  , 0, 0, 1, 1, 0) ;
+    if      (type == GrB_BOOL        ) RX (bool    , BOOL  , 1, 0, 0, 0, 0)
+    else if (type == GrB_INT8        ) RX (int8_t  , INT8  , 0, 1, 1, 0, 0)
+    else if (type == GrB_INT16       ) RX (int16_t , INT16 , 0, 1, 1, 0, 0)
+    else if (type == GrB_INT32       ) RX (int32_t , INT32 , 0, 1, 1, 0, 0)
+    else if (type == GrB_INT64       ) RX (int64_t , INT64 , 0, 1, 1, 0, 0)
+    else if (type == GrB_UINT8       ) RX (uint16_t, UINT8 , 0, 1, 0, 0, 0)
+    else if (type == GrB_UINT16      ) RX (uint32_t, UINT16, 0, 1, 0, 0, 0)
+    else if (type == GrB_UINT32      ) RX (uint64_t, UINT32, 0, 1, 0, 0, 0)
+    else if (type == GrB_UINT64      ) RX (uint64_t, UINT64, 0, 1, 0, 0, 0)
+    else if (type == GrB_FP32        ) RX (float   , FP32  , 0, 0, 1, 1, 0)
+    else if (type == GrB_FP64        ) RX (double  , FP64  , 0, 0, 1, 1, 0)
     else if (type == LAGraph_Complex )
     {
         #undef ARG

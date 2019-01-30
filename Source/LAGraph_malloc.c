@@ -11,19 +11,12 @@
 
 #include "LAGraph_internal.h"
 
-GrB_Info LAGraph_malloc
+void *LAGraph_malloc
 (
-    void **p,               // pointer to allocated block of memory
     size_t nitems,          // number of items
     size_t size_of_item     // size of each item
 )
 {
-
-    // check inputs
-    if (p == NULL)
-    {
-        return (GrB_NULL_POINTER) ;
-    }
 
     // make sure at least one item is allocated
     nitems = LAGRAPH_MAX (1, nitems) ;
@@ -34,14 +27,10 @@ GrB_Info LAGraph_malloc
     // check for integer overflow
     if ((double) nitems * (double) size_of_item > (double) INT64_MAX)
     {
-        (*p) = NULL ;
-        return (GrB_INVALID_VALUE) ;
+        return (NULL) ;
     }
 
     // malloc the space
-    (*p) = malloc (nitems * size_of_item) ;
-
-    // return result
-    return (((*p) == NULL) ? GrB_OUT_OF_MEMORY : GrB_SUCCESS) ;
+    return (malloc (nitems * size_of_item)) ;
 }
 

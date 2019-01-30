@@ -18,6 +18,21 @@
 
 #define LAGRAPH_RAND_MAX 32767
 
+// suitable for integers, and non-NaN floating point:
+#define LAGRAPH_MAX(x,y) (((x) > (y)) ? (x) : (y))
+#define LAGRAPH_MIN(x,y) (((x) < (y)) ? (x) : (y))
+
+// for floating-point, same as min(x,y,'includenan') and max(...) in MATLAB
+#define LAGRAPH_FMIN(x,y) ((isnan (x) || isnan (y)) ? NAN : LAGRAPH_MIN (x,y))
+#define LAGRAPH_FMAX(x,y) ((isnan (x) || isnan (y)) ? NAN : LAGRAPH_MAX (x,y))
+
+// free a block of memory and set the pointer to NULL
+#define LAGRAPH_FREE(p)     \
+{                           \
+    LAGraph_free (p) ;      \
+    p = NULL ;              \
+}
+
 //------------------------------------------------------------------------------
 // global objects
 //------------------------------------------------------------------------------
@@ -68,7 +83,7 @@ GrB_Info LAGraph_mmread
     FILE *f             // file to read from, already open
 ) ;
 
-GrB_info LAGraph_mmwrite
+GrB_Info LAGraph_mmwrite
 (
     GrB_Matrix A,           // matrix to write to the file
     FILE *f                 // file to write it to
@@ -126,15 +141,14 @@ GrB_Info LAGraph_alloc_global ( ) ;
 
 GrB_Info LAGraph_free_global ( ) ;
 
-GrB_Info LAGraph_malloc
+void *LAGraph_malloc        // wrapper for malloc
 (
-    void **p,               // pointer to allocated block of memory
     size_t nitems,          // number of items
     size_t size_of_item     // size of each item
 ) ;
 
-void LAGraph_free
+void LAGraph_free           // wrapper for free
 (
-    void **p                // *p is freed and set to NULL
+    void *p
 ) ;
 

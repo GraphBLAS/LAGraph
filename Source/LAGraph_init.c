@@ -19,9 +19,11 @@
 GrB_Info LAGraph_init ( )
 {
     // initialize GraphBLAS
-    LAGRAPH_OK (GrB_init ( )) ;
+    LAGRAPH_OK (GrB_init (GrB_NONBLOCKING)) ;
 
     // allocate all global objects
     LAGRAPH_OK (LAGraph_alloc_global ( )) ;
+
+    return (GrB_SUCCESS) ;
 }
 

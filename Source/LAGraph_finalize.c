@@ -17,6 +17,6 @@ GrB_Info LAGraph_finalize ( )
     LAGraph_free_global ( ) ;
 
     // finalize GraphBLAS
-    return (GrB_finalize ( )) :
+    return (GrB_finalize ( )) ;
 }
 
