@@ -7,11 +7,23 @@
 
 //------------------------------------------------------------------------------
 
-// This file should not be included in user applications.  See LAGraph.h
-// instead.
+// Include file for LAGraph functions.  This file should not be included in
+// user applications.  See LAGraph.h instead.
 
 #include "LAGraph.h"
 #include <ctype.h>
+
+#ifndef CMPLX
+#define CMPLX(real,imag) \
+    ( \
+    (double complex)((double)(real)) + \
+    (double complex)((double)(imag) * _Complex_I) \
+    )
+#endif
+
+// "I" is used in LAGraph and GraphBLAS to denote a list of row indices; remove
+// it here
+#undef I
 
 #ifdef MATLAB_MEX_FILE
 // compiling LAGraph for a MATLAB mexFunction.  Use mxMalloc, mxFree, etc.
@@ -72,15 +84,16 @@
 //------------------------------------------------------------------------------
 
 // The including file must define LAGRAPH_FREE_ALL as a macro that frees all
-// workspace if an error occurs.
+// workspace if an error occurs.  method can be a GrB_Info scalar as well,
+// so that LAGRAPH_OK(info) works.
 
 #define LAGRAPH_OK(method)                                                  \
 {                                                                           \
-    GrB_Info info = method ;                                                \
-    if (! (info == GrB_SUCCESS || info == GrB_NO_VALUE))                    \
+    GrB_Info this_info = method ;                                           \
+    if (! (this_info == GrB_SUCCESS || this_info == GrB_NO_VALUE))          \
     {                                                                       \
         LAGRAPH_FREE_ALL ;                                                  \
-        return (info) ;                                                     \
+        return (this_info) ;                                                \
     }                                                                       \
 }
 
@@ -123,6 +136,8 @@ MM_storage_enum ;
 #define MMLEN 1024
 #define MAXLINE MMLEN+6
 
+//------------------------------------------------------------------------------
+// internal LAGraph functions, not user-callable
 //------------------------------------------------------------------------------
 
 GrB_Info LAGraph_alloc_global ( ) ;

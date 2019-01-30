@@ -12,10 +12,7 @@
 #include "LAGraph_internal.h"
 
 #define LAGRAPH_FREE_ALL    \
-{                           \
-    GrB_free (&C) ;         \
-    GrB_free (&monoid) ;    \
-}
+    GrB_free (&C) ;
 
 GrB_Info LAGraph_ispattern  // return GrB_SUCCESS if successful
 (
@@ -25,7 +22,7 @@ GrB_Info LAGraph_ispattern  // return GrB_SUCCESS if successful
 )
 {
 
-    GrB_Monoid monoid = NULL ;
+    GrB_Matrix C = NULL ;
     GrB_Type type ;
     GrB_Index nrows, ncols ;
 
@@ -42,18 +39,10 @@ GrB_Info LAGraph_ispattern  // return GrB_SUCCESS if successful
     LAGRAPH_OK (GrB_Matrix_nrows (&nrows, A)) ;
     LAGRAPH_OK (GrB_Matrix_ncols (&ncols, A)) ;
 
-    #ifdef GxB_SUITESPARSE_GRAPHBLAS
-    // SuiteSparse has a predefined boolean AND monoid, but this is optional
-    monoid = GxB_LAND_BOOL_MONOID ;
-    #else
-    // this works just fine without SuiteSparse
-    LAGRAPH_OK (GrB_Monoid_new_BOOL (&monoid, GrB_LAND, true)) ;
-    #endif
-
     if (type == GrB_BOOL)
     {
         // result = and (A)
-        LAGRAPH_OK (GrB_reduce (result, NULL, monoid, A, NULL)) ;
+        LAGRAPH_OK (GrB_reduce (result, NULL, LAGraph_LAND_MONOID, A, NULL)) ;
     }
     else
     {
@@ -77,12 +66,11 @@ GrB_Info LAGraph_ispattern  // return GrB_SUCCESS if successful
         LAGRAPH_OK (GrB_apply (C, NULL, NULL, op, A, NULL)) ;
 
         // result = and (C)
-        LAGRAPH_OK (GrB_reduce (result, NULL, monoid, C, NULL)) ;
+        LAGRAPH_OK (GrB_reduce (result, NULL, LAGraph_LAND_MONOID, C, NULL)) ;
     }
 
     // free workspace and return result
     GrB_free (&C) ;
-    GrB_free (&monoid) ;
     return (GrB_SUCCESS) ;
 }
 

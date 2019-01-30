@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_init:  start LAGraph
+// LAGraph_randx: return a random double
 //------------------------------------------------------------------------------
 
 // LAGraph, (TODO list all authors here) (c) 2019, All Rights Reserved.
@@ -7,21 +7,12 @@
 
 //------------------------------------------------------------------------------
 
-// Initialize GraphBLAS, and then LAGraph.
+// LAGraph_randx: return a random double between 0 and 1, inclusive.
 
 #include "LAGraph_internal.h"
 
-#define LAGRAPH_FREE_ALL                    \
-{                                           \
-    LAGraph_free_global ( ) ;               \
-}
-
-GrB_Info LAGraph_init ( )
+double LAGraph_randx (uint64_t *seed)
 {
-    // initialize GraphBLAS
-    LAGRAPH_OK (GrB_init ( )) ;
-
-    // allocate all global objects
-    LAGRAPH_OK (LAGraph_alloc_global ( )) ;
+    return (((double) LAGraph_rand (seed)) / ((double) UINT64_MAX)) ;
 }
 

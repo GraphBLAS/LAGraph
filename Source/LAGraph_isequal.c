@@ -8,14 +8,17 @@
 //------------------------------------------------------------------------------
 
 // LAGraph_isequal: check if two matrices are identically equal (same size,
-// type, pattern, size, and values).  Checking for the same type requires a
-// function that is an extension in SuiteSparse:GraphBLAS.  For the standard
-// API, there is no way to determine the type of a matrix.
+// type, pattern, size, and values).  Checking for the same type requires the
+// GxB_Matrix_type function, which is an extension in SuiteSparse:GraphBLAS.
+// For the standard API, there is no way to determine the type of a matrix.
 
-// For both methods, if the two matrices are FP32 or FP64, and have NaNs, then
-// these functions will return false, since NaN == NaN is false.  To check for
-// NaN equality (like isequalwithequalnans in MATLAB), use LAGraph_isall with a
-// user-defined operator f(x,y) that returns true if x and y are both NaN.
+// TODO: add GrB_Matrix_Type to the GraphBLAS spec.
+
+// For both methods, if the two matrices are GrB_FP32, GrB_FP64, or
+// LAGraph_Complex, and have NaNs, then these functions will return false,
+// since NaN == NaN is false.  To check for NaN equality (like
+// isequalwithequalnans in MATLAB), use LAGraph_isall with a user-defined
+// operator f(x,y) that returns true if x and y are both NaN.
 
 #include "LAGraph_internal.h"
 

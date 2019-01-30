@@ -14,10 +14,7 @@
 #include "LAGraph_internal.h"
 
 #define LAGRAPH_FREE_ALL    \
-{                           \
     GrB_free (&C) ;         \
-    GrB_free (&monoid) ;    \
-}
 
 GrB_Info LAGraph_isall      // return GrB_SUCCESS if successful
 (
@@ -81,20 +78,11 @@ GrB_Info LAGraph_isall      // return GrB_SUCCESS if successful
         return (GrB_SUCCESS) ;
     }
 
-    #ifdef GxB_SUITESPARSE_GRAPHBLAS
-    // SuiteSparse has a predefined boolean AND monoid, but this is optional
-    monoid = GxB_LAND_BOOL_MONOID ;
-    #else
-    // this works just fine without SuiteSparse
-    LAGRAPH_OK (GrB_Monoid_new_BOOL (&monoid, GrB_LAND, true)) ;
-    #endif
-
     // result = and (C)
-    LAGRAPH_OK (GrB_reduce (result, NULL, monoid, C, NULL)) ;
+    LAGRAPH_OK (GrB_reduce (result, NULL, LAGraph_LAND_MONOID, C, NULL)) ;
 
     // free workspace and return result
     GrB_free (&C) ;
-    GrB_free (&monoid) ;
     return (GrB_SUCCESS) ;
 }
 

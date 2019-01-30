@@ -7,6 +7,11 @@
 
 //------------------------------------------------------------------------------
 
+// Frees the space and sets the pointer to NULL, to guard against double-free.
+
+// TODO: should be able to modify the malloc/free routines used; also in
+// GraphBLAS.
+
 #include "LAGraph_internal.h"
 
 void LAGraph_free

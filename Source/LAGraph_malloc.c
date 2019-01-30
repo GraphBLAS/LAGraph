@@ -7,6 +7,8 @@
 
 //------------------------------------------------------------------------------
 
+// Wrapper for malloc.
+
 #include "LAGraph_internal.h"
 
 GrB_Info LAGraph_malloc
@@ -16,6 +18,8 @@ GrB_Info LAGraph_malloc
     size_t size_of_item     // size of each item
 )
 {
+
+    // check inputs
     if (p == NULL)
     {
         return (GrB_NULL_POINTER) ;
@@ -27,9 +31,17 @@ GrB_Info LAGraph_malloc
     // make sure at least one byte is allocated
     size_of_item = LAGRAPH_MAX (1, size_of_item) ;
 
-    // TODO check for integer overflow
+    // check for integer overflow
+    if ((double) nitems * (double) size_of_item > (double) INT64_MAX)
+    {
+        (*p) = NULL ;
+        return (GrB_INVALID_VALUE) ;
+    }
+
+    // malloc the space
     (*p) = malloc (nitems * size_of_item) ;
 
+    // return result
     return (((*p) == NULL) ? GrB_OUT_OF_MEMORY : GrB_SUCCESS) ;
 }
 

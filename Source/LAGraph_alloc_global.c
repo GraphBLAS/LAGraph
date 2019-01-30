@@ -7,6 +7,8 @@
 
 //------------------------------------------------------------------------------
 
+// Define and allocate global types and operators for LAGraph.
+
 #include "LAGraph_internal.h"
 
 #define LAGRAPH_FREE_ALL                    \
@@ -230,6 +232,9 @@ void LAGraph_isone_complex
     (*z) = ((*x) == 1) ;
 }
 
+// boolean monoid
+GrB_Monoid LAGraph_LAND_MONOID = NULL ;
+
 //------------------------------------------------------------------------------
 // LAGraph_alloc_global
 //------------------------------------------------------------------------------
@@ -304,6 +309,8 @@ GrB_Info LAGraph_alloc_global ( )
 
     LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_UINT64, LAGraph_isone_complex,
         GrB_BOOL, LAGraph_Complex)) ;
+
+    LAGRAPH_OK (GrB_Monoid_new_BOOL (&LAGraph_LAND_MONOID, GrB_LAND, true)) ;
 
     return (GrB_SUCCESS) ;
 }

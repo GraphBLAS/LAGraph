@@ -5,6 +5,9 @@
 // LAGraph, (TODO list all authors here) (c) 2019, All Rights Reserved.
 // http://graphblas.org  See LAGraph/Doc/License.txt for license.
 
+// TODO: need to add an error reporting mechanism, like GrB_error.
+// TODO: need to add a GrB_Descriptor to all LAGraph functions.
+
 //------------------------------------------------------------------------------
 
 // LAGraph_mmread reads a GrB_Matrix from a Matrix Market file.  The file
@@ -135,6 +138,9 @@
 // column-major order.  This rule is follwed by LAGraph_mmwrite.  However,
 // LAGraph_mmread can read the entries in any order.
 
+// Parts of this code are from SuiteSparse/CHOLMOD/Check/cholmod_read.c, and
+// are used here by permission of the author of CHOLMOD/Check (T. A. Davis).
+
 #include "LAGraph_internal.h"
 
 //------------------------------------------------------------------------------
@@ -160,7 +166,7 @@ static inline bool get_line
     buf [1] = '\0' ;
     if (fgets (buf, MAXLINE, f) == NULL)
     {
-        // EOF or other error
+        // EOF or other I/O error
         return (false) ;
     }
     buf [MAXLINE] = '\0' ;
@@ -206,7 +212,7 @@ static inline bool is_blank_line
         }
         if (!isspace (c))
         {
-            // non-space character
+            // non-space character; this is not an error
             return (false) ;
         }
     }
@@ -220,22 +226,19 @@ static inline bool is_blank_line
 //------------------------------------------------------------------------------
 
 // Read a single double value from a string.  The string may be any string
-// recognized by sscanf, or inf, -inf, +inf, or nan.  infinity is also OK
-// instead of inf.
+// recognized by sscanf, or inf, -inf, +inf, or nan.  The token infinity is
+// also OK instead of inf (only the first 3 letters of inf* or nan* are
+// significant, and the rest are ignored).
 
-static inline bool read_double     // true if successful, false if failure
+static inline bool read_double      // true if successful, false if failure
 (
-    char *p,                // string containing the value
-    double *rval            // value to read in    
+    char *p,        // string containing the value
+    double *rval    // value to read in    
 )
 {
     while (*p && isspace (*p)) p++ ;   // skip any spaces
 
-    if (strncmp (p, "inf", 3) == 0)
-    {
-        (*rval) = INFINITY ;
-    }
-    else if (strncmp (p, "+inf", 4) == 0)
+    if ((strncmp (p, "inf", 3) == 0) || (strncmp (p, "+inf", 4) == 0))
     {
         (*rval) = INFINITY ;
     }
@@ -249,9 +252,12 @@ static inline bool read_double     // true if successful, false if failure
     }
     else
     {
-        if (sscanf (p, "%lg", rval) != 1) return (false) ;
+        if (sscanf (p, "%lg", rval) != 1)
+        {
+            // bad file format, EOF, or other I/O error
+            return (false) ;
+        }
     }
-
     return (true) ;
 }
 
@@ -264,12 +270,11 @@ static inline bool read_entry   // true if successful, false if failure
     char *p,        // string containing the value
     GrB_type type,  // type of value to read
     bool pattern,   // if true, then the value is 1
-    char *x         // value read in
+    char *x         // value read in, a pointer to space of size of the type
 )
 {
-    
+
     int64_t ival = 1 ;
-    uint64_t uval = 1 ;
     double rval = 1, zval = 0 ;
 
     while (*p && isspace (*p)) p++ ;   // skip any spaces
@@ -331,9 +336,10 @@ static inline bool read_entry   // true if successful, false if failure
     }
     else if (type == GrB_UINT64)
     {
+        uint64_t uval = 1 ;
         if (!pattern && sscanf (p, "%" SCNu64, uval) != 1) return (false) ;
         uint64_t *result = (uint64_t *) x ;
-        result [0] = (uint64_t) ival ;
+        result [0] = (uint64_t) uval ;
     }
     else if (type == GrB_FP32)
     {
@@ -344,7 +350,6 @@ static inline bool read_entry   // true if successful, false if failure
     else if (type == GrB_FP64)
     {
         if (!pattern && !read_double (p, &rval)) return (false) ;
-        *((* double) x) = rval ;
         double *result = (double *) x ;
         result [0] = rval ;
     }
@@ -353,16 +358,67 @@ static inline bool read_entry   // true if successful, false if failure
         if (!pattern && !read_double (p, &rval)) return (false) ;
         while (*p && !isspace (*p)) p++ ;   // skip real part
         if (!pattern && !read_double (p, &zval)) return (false) ;
-        bool *result = (bool *) x ;
+        double *result = (double *) x ;
         result [0] = rval ;     // real part
         result [1] = zval ;     // imaginary part
     }
     else
     {
+        // type not supported
         return (false) ;
     }
 
     return (true) ;     
+}
+
+//------------------------------------------------------------------------------
+// negate_scalar: negate a scalar value
+//------------------------------------------------------------------------------
+
+// negate the scalar x.  Do nothing for bool or uint*.
+
+static inline void negate_scalar
+(
+    GrB_Type type,
+    void *x
+)
+{
+
+    if (type == GrB_INT8)
+    {
+        int8_t *value = (int8_t *) x ;
+        (*value) = - (*value) ;
+    }
+    else if (type == GrB_INT16)
+    {
+        int16_t *value = (int16_t *) x ;
+        (*value) = - (*value) ;
+    }
+    else if (type == GrB_INT32)
+    {
+        int32_t *value = (int32_t *) x ;
+        (*value) = - (*value) ;
+    }
+    else if (type == GrB_INT64)
+    {
+        int64_t *value = (int64_t *) x ;
+        (*value) = - (*value) ;
+    }
+    else if (type == GrB_FP32)
+    {
+        float *value = (float *) x ;
+        (*value) = - (*value) ;
+    }
+    else if (type == GrB_FP64)
+    {
+        double *value = (double *) x ;
+        (*value) = - (*value) ;
+    }
+    else if (type == LAGraph_Complex)
+    {
+        double complex *value = (double complex *) x ;
+        (*value) = - (*value) ;
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -442,57 +498,8 @@ static inline GrB_Info set_value
     }
     else
     {
+        // type not supported
         return (GrB_PANIC) ;
-    }
-}
-
-//------------------------------------------------------------------------------
-// negate_value
-//------------------------------------------------------------------------------
-
-// negate the value x.  Do nothing for bool or uint*.
-
-static inline void negate_value
-(
-    GrB_Type type,
-    char *x
-)
-{
-
-    if (type == GrB_INT8)
-    {
-        int8_t *value = (int8_t *) x ;
-        (*value) = - (*value) ;
-    }
-    else if (type == GrB_INT16)
-    {
-        int16_t *value = (int16_t *) x ;
-        (*value) = - (*value) ;
-    }
-    else if (type == GrB_INT32)
-    {
-        int32_t *value = (int32_t *) x ;
-        (*value) = - (*value) ;
-    }
-    else if (type == GrB_INT64)
-    {
-        int64_t *value = (int64_t *) x ;
-        (*value) = - (*value) ;
-    }
-    else if (type == GrB_FP32)
-    {
-        float *value = (float *) x ;
-        (*value) = - (*value) ;
-    }
-    else if (type == GrB_FP64)
-    {
-        double *value = (double *) x ;
-        (*value) = - (*value) ;
-    }
-    else if (type == LAGraph_Complex)
-    {
-        double complex *value = (double complex *) x ;
-        (*value) = - (*value) ;
     }
 }
 
@@ -513,11 +520,12 @@ GrB_Info LAGraph_mmread
 
     if (A == NULL || f == NULL)
     {
+        // input arguments invalid
         return (GrB_NULL_POINTER) ;
     }
 
     //--------------------------------------------------------------------------
-    // set the default format
+    // set the default properties
     //--------------------------------------------------------------------------
 
     MM_fmt_enum     MM_fmt     = MM_coordinate ;
@@ -534,13 +542,29 @@ GrB_Info LAGraph_mmread
 
     // Read the header.  This consists of zero or more comment lines (blank, or
     // starting with a "%" in the first column), followed by a single data line
-    // containing up to four numerical values.  The first line is normally:
+    // containing two or three numerical values.  The first line is normally:
     //
     //          %%MatrixMarket matrix <fmt> <type> <storage>
     //
-    // but this is optional.  The 2nd line is also optional:
+    // but this is optional.  The 2nd line is also optional (the %%MatrixMarket
+    // line is required for this 2nd line to be recognized):
     //
     //          %%GraphBLAS <graphblastype>
+    //
+    // If the %%MatrixMarket line is not present, then the <fmt> <type> and
+    // <storage> are implicit.  If the first data line contains 3 items,
+    // then the implicit header is:
+    //
+    //          %%MatrixMarket matrix coordinate real general
+    //          %%GraphBLAS GrB_FP64
+    //
+    // If the first data line contains 2 items (nrows ncols), then the implicit
+    // header is:
+    //
+    //          %%MatrixMarket matrix array real general
+    //          %%GraphBLAS GrB_FP64
+    //
+    // The implicit header is an extension of the Matrix Market format.
 
     char buf [MAXLINE+1] ;
 
@@ -561,6 +585,7 @@ GrB_Info LAGraph_mmread
             //------------------------------------------------------------------
 
             //  %%MatrixMarket matrix <fmt> <type> <storage>
+            //  if present, it must be the first line in the file.
 
             got_mm_header = true ;
             char *p = buf + 14 ;
@@ -573,6 +598,7 @@ GrB_Info LAGraph_mmread
 
             if (strncmp (p, "matrix", 6) == 0)
             {
+                // invalid Matrix Market object
                 return (GrB_INVALID_VALUE) ;
             }
             p += 6 ;                                // skip past token "matrix"
@@ -595,11 +621,12 @@ GrB_Info LAGraph_mmread
             }
             else
             {
+                // invalid Matrix Market format
                 return (GrB_INVALID_VALUE) ;
             }
 
             //------------------------------------------------------------------
-            // get type token
+            // get the Matrix Market type token
             //------------------------------------------------------------------
 
             while (*p && isspace (*p)) p++ ;        // skip any leading spaces
@@ -630,11 +657,12 @@ GrB_Info LAGraph_mmread
             }
             else
             {
+                // invalid Matrix Market type
                 return (GrB_INVALID_VALUE) ;
             }
 
             //------------------------------------------------------------------
-            // get storage token
+            // get the storage token
             //------------------------------------------------------------------
 
             while (*p && isspace (*p)) p++ ;        // skip any leading spaces
@@ -657,6 +685,7 @@ GrB_Info LAGraph_mmread
             }
             else
             {
+                // invalid Matrix Market storage
                 return (GrB_INVALID_VALUE) ;
             }
 
@@ -671,6 +700,7 @@ GrB_Info LAGraph_mmread
                         ((*MM_storage) == MM_general ||
                          (*MM_storage) == MM_symmetric)))
                 {
+                    // invalid combination
                     return (GrB_INVALID_VALUE) ;
                 }
             }
@@ -680,6 +710,7 @@ GrB_Info LAGraph_mmread
                 // (coordinate or array) x (complex) x (Hermitian)
                 if (! (MM_type == MM_complex))
                 {
+                    // invalid combination
                     return (GrB_INVALID_VALUE) ;
                 }
             }
@@ -694,7 +725,9 @@ GrB_Info LAGraph_mmread
             // -----------------------------------------------------------------
 
             // This must appear as the 2nd line in the file, after the
-            // %%MatrixMarket header (which is required in this case).
+            // %%MatrixMarket header (which is required in this case; otherwise
+            // the %%GraphBLAS line is treated as a pure comment and the
+            // <entrytype> is ignored).
 
             p = buf + 11 ;
 
@@ -738,7 +771,7 @@ GrB_Info LAGraph_mmread
             }
             else if (strncmp (p, "GrB_UINT64", 10) == 0)
             {
-                (*type) = GrB_INT64 ;
+                (*type) = GrB_UINT64 ;
             }
             else if (strncmp (p, "GrB_FP32", 8) == 0)
             {
@@ -754,6 +787,7 @@ GrB_Info LAGraph_mmread
             }
             else
             {
+                // type not supported
                 return (GrB_INVALID_VALUE) ;
             }
 
@@ -809,14 +843,15 @@ GrB_Info LAGraph_mmread
             }
             else
             {
+                // wrong number of items in first data line
                 return (GrB_INVALID_VALUE) ;
             }
 
             if ((*nrows) != (*ncols))
             {
-                // a rectangular matrix must be in the general storage
                 if (! (MM_storage == MM_general))
                 {
+                    // a rectangular matrix must be in the general storage
                     return (GrB_INVALID_VALUE) ;
                 }
             }
@@ -836,6 +871,7 @@ GrB_Info LAGraph_mmread
     info = GrB_Matrix_new (A, type, nrows, ncols) ;
     if (info != GrB_SUCCESS)
     {
+        // failed to construct matrix
         return (info) ;
     }
 
@@ -845,6 +881,7 @@ GrB_Info LAGraph_mmread
 
     if (nrows == 0 || nrows == 0 || nvals == 0)
     {
+        // success: return an empty matrix.  This is not an error.
         return (GrB_SUCCESS) ;
     }
 
@@ -899,10 +936,13 @@ GrB_Info LAGraph_mmread
 	        nitems = sscanf (buf, "%" SCNu64 " %" SCNu64, &i, &j) ;
                 if (nitems != 2)
                 {
+                    // EOF or other I/O error
                     GrB_free (A) ;
                     return (GrB_INVALID_VALUE) ;
                 }
-                // convert from 1-based to 0-based
+                // convert from 1-based to 0-based.  If zero, the value
+                // underflows to UINT64_MAX, and will be reported as such
+                // by GrB_error ( ).  TODO: use a better error report.
                 i-- ;
                 j-- ;
                 // advance p to the 3rd token to get the value of the entry
@@ -920,6 +960,7 @@ GrB_Info LAGraph_mmread
 
             if (!read_entry (p, type, MM_type == MM_pattern, x))
             {
+                // EOF or other I/O error, or value of entry out of range
                 GrB_free (A) ;
                 return (GrB_INVALID_VALUE) ;
             }
@@ -931,6 +972,7 @@ GrB_Info LAGraph_mmread
             info = set_value (*A, type, i, j, x) ;
             if (info != GrB_SUCCESS)
             {
+                // unable to set element: invalid indices, or out of memory
                 GrB_free (A) ;
                 return (info) ;
             }
@@ -947,7 +989,7 @@ GrB_Info LAGraph_mmread
                 }
                 else if (MM_storage == MM_skew_symmetric)
                 {
-                    negate_value (type, x) ;
+                    negate_scalar (type, x) ;
                     info = set_value (*A, type, j, i, x) ;
                 }
                 else if (MM_storage == MM_hermitian)
@@ -958,6 +1000,7 @@ GrB_Info LAGraph_mmread
                 }
                 if (info != GrB_SUCCESS)
                 {
+                    // unable to set element: invalid indices, or out of memory
                     GrB_free (A) ;
                     return (info) ;
                 }
