@@ -2,7 +2,7 @@
 // LAGraph_alloc_global:  allocate all global objects for LAGraph
 //------------------------------------------------------------------------------
 
-// LAGraph, (TODO list all authors here) (c) 2019, All Rights Reserved.
+// LAGraph, (... list all authors here) (c) 2019, All Rights Reserved.
 // http://graphblas.org  See LAGraph/Doc/License.txt for license.
 
 //------------------------------------------------------------------------------
@@ -37,7 +37,10 @@ void LAGraph_eq_complex
     const double complex *y
 )
 {
+    // printf ("eq complex:\nx (%.18e,%.18e)\ny (%.18e,%.18e)\n",
+    //     creal (*x), cimag (*x), creal (*y), cimag (*y)) ;
     (*z) = (*x) == (*y) ;
+    // printf ("result %d\n", (*z)) ;
 }
 
 void LAGraph_skew_int8
@@ -321,19 +324,41 @@ GrB_Info LAGraph_alloc_global ( )
         F_UNARY (LAGraph_isone_uint64),
         GrB_BOOL, GrB_UINT64)) ;
 
-    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_UINT64, 
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_FP32, 
         F_UNARY (LAGraph_isone_float),
         GrB_BOOL, GrB_FP32)) ;
 
-    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_UINT64, 
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_FP64, 
         F_UNARY (LAGraph_isone_double),
         GrB_BOOL, GrB_FP64)) ;
 
-    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_UINT64, 
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_Complex, 
         F_UNARY (LAGraph_isone_complex),
         GrB_BOOL, LAGraph_Complex)) ;
 
     LAGRAPH_OK (GrB_Monoid_new_BOOL (&LAGraph_LAND_MONOID, GrB_LAND, true)) ;
+
+//  GxB_fprint (LAGraph_EQ_Complex, GxB_COMPLETE, stderr) ;
+//  GxB_fprint (LAGraph_SKEW_INT8, GxB_COMPLETE, stderr) ;
+//  GxB_fprint (LAGraph_SKEW_INT16, GxB_COMPLETE, stderr) ;
+//  GxB_fprint (LAGraph_SKEW_INT32, GxB_COMPLETE, stderr) ;
+//  GxB_fprint (LAGraph_SKEW_INT64, GxB_COMPLETE, stderr) ;
+//  GxB_fprint (LAGraph_SKEW_FP32, GxB_COMPLETE, stderr) ;
+//  GxB_fprint (LAGraph_SKEW_FP64, GxB_COMPLETE, stderr) ;
+//  GxB_fprint (LAGraph_SKEW_Complex, GxB_COMPLETE, stderr) ;
+//  GxB_fprint (LAGraph_Hermitian, GxB_COMPLETE, stderr) ;
+//  GxB_fprint (LAGraph_ISONE_INT8, GxB_COMPLETE, stderr) ;
+//  GxB_fprint (LAGraph_ISONE_INT16, GxB_COMPLETE, stderr) ;
+//  GxB_fprint (LAGraph_ISONE_INT32, GxB_COMPLETE, stderr) ;
+//  GxB_fprint (LAGraph_ISONE_INT64, GxB_COMPLETE, stderr) ;
+//  GxB_fprint (LAGraph_ISONE_UINT8, GxB_COMPLETE, stderr) ;
+//  GxB_fprint (LAGraph_ISONE_UINT16, GxB_COMPLETE, stderr) ;
+//  GxB_fprint (LAGraph_ISONE_UINT32, GxB_COMPLETE, stderr) ;
+//  GxB_fprint (LAGraph_ISONE_UINT64, GxB_COMPLETE, stderr) ;
+//  GxB_fprint (LAGraph_ISONE_UINT64, GxB_COMPLETE, stderr) ;
+//  GxB_fprint (LAGraph_ISONE_UINT64, GxB_COMPLETE, stderr) ;
+//  GxB_fprint (LAGraph_ISONE_UINT64, GxB_COMPLETE, stderr) ;
+//  GxB_fprint (LAGraph_LAND_MONOID, GxB_COMPLETE, stderr) ;
 
     return (GrB_SUCCESS) ;
 }

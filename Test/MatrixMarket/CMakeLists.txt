@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# LAGraph/CMakeLists.txt:  cmake script for LAGraph
+# LAGraph/Test/MatrixMarket/CMakeLists.txt:  cmake script for LAGraph test
 #-------------------------------------------------------------------------------
 
 # LAGraph, (TODO list all authors here) (c) 2019, All Rights Reserved.
@@ -50,18 +50,7 @@ if ( CMAKE_VERSION VERSION_GREATER "3.0" )
     cmake_policy ( SET CMP0048 NEW )
 endif ( )
 
-# version of LAGraph
-set ( LAGraph_DATE "Jan 29, 2019" )
-set ( LAGraph_VERSION_MAJOR 0 )
-set ( LAGraph_VERSION_MINOR 1 )
-set ( LAGraph_VERSION_SUB   0 )
-
-if ( CMAKE_MAJOR_VERSION GREATER 2 )
-    project ( lagraph
-        VERSION "${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}" )
-else ( )
-    project ( lagraph )
-endif ( )
+project ( mmtest )
 
 #-------------------------------------------------------------------------------
 # determine build type
@@ -81,32 +70,12 @@ endif ( )
 #-------------------------------------------------------------------------------
 
 # link_directories ( /usr/local/lib )
-link_directories ( ../GraphBLAS/build )
+link_directories ( ../../../GraphBLAS/build )
+link_directories ( ../../build )
+
 # include_directories ( /usr/local/include )
-include_directories ( ../GraphBLAS/Include )
-
-#-------------------------------------------------------------------------------
-# Configure Include/LAGraph.h and documentation with version number
-#-------------------------------------------------------------------------------
-
-# TODO
-
-#   configure_file (
-#       "Config/LAGraph.h.tmp" 
-#       "${PROJECT_SOURCE_DIR}/Include/LAGraph.h" 
-#   )
-#   configure_file (
-#       "Config/LAGraph_version.tex.in"
-#       "${PROJECT_SOURCE_DIR}/Doc/LAGraph_version.tex"
-#   )
-#   configure_file (
-#       "Config/LAGraph_API_version.tex.in"
-#       "${PROJECT_SOURCE_DIR}/Doc/LAGraph_API_version.tex"
-#   )
-#   configure_file (
-#       "Config/README.md.in"
-#       "${PROJECT_SOURCE_DIR}/README.md"
-#   )
+include_directories ( ../../../GraphBLAS/Include )
+include_directories ( ../../Include )
 
 #-------------------------------------------------------------------------------
 # determine what user threading model to use
@@ -134,12 +103,10 @@ message ( STATUS "CMAKE have Win32 pthreads: " ${CMAKE_USE_WIN32_THREADS_INIT} )
 message ( STATUS "CMAKE have OpenMP:         " ${OPENMP_FOUND} )
 
 #-------------------------------------------------------------------------------
-# include directories for lagraph library
+# include directories
 #-------------------------------------------------------------------------------
 
 set ( CMAKE_INCLUDE_CURRENT_DIR ON )
-
-include_directories ( Source Include )
 
 #-------------------------------------------------------------------------------
 # compiler options
@@ -180,34 +147,6 @@ else ( )
 endif ( )
 
 #-------------------------------------------------------------------------------
-# dynamic lagraph library properties
-#-------------------------------------------------------------------------------
-
-file ( GLOB LAGRAPH_SOURCES "Source/*.c" )
-
-add_library ( lagraph SHARED ${LAGRAPH_SOURCES} )
-SET_TARGET_PROPERTIES ( lagraph PROPERTIES
-    VERSION ${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}
-    SOVERSION ${LAGraph_VERSION_MAJOR}
-    C_STANDARD_REQUIRED 11
-    PUBLIC_HEADER "Include/LAGraph.h" )
-set_property ( TARGET lagraph PROPERTY C_STANDARD 11 )
-
-#-------------------------------------------------------------------------------
-# static lagraph library properties
-#-------------------------------------------------------------------------------
-
-add_library ( lagraph_static STATIC ${LAGRAPH_SOURCES} )
-SET_TARGET_PROPERTIES ( lagraph_static PROPERTIES
-    VERSION ${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}
-    OUTPUT_NAME lagraph
-    POSITION_INDEPENDENT_CODE OFF
-    SOVERSION ${LAGraph_VERSION_MAJOR}
-    C_STANDARD_REQUIRED 11
-    PUBLIC_HEADER "Include/LAGraph.h" )
-set_property ( TARGET lagraph_static PROPERTY C_STANDARD 11 )
-
-#-------------------------------------------------------------------------------
 # select the threading library 
 #-------------------------------------------------------------------------------
 
@@ -236,20 +175,14 @@ endif ( )
 if ( USE_OPENMP )
     # use OpenMP
     message ( STATUS "Using OpenMP to synchronize user threads" )
-    target_link_libraries ( lagraph        m ${OpenMP_C_LIBRARIES} )
-    target_link_libraries ( lagraph_static m ${OpenMP_C_LIBRARIES} )
     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS} -DUSER_OPENMP_THREADS " )
 elseif ( USE_POSIX )
     # use POSIX
     message ( STATUS "Using POSIX pthreads to synchronize user threads" )
-    target_link_libraries ( lagraph        m )
-    target_link_libraries ( lagraph_static m )
     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -pthread -DUSER_POSIX_THREADS " )
 else ( )
     # use no threading at all
     message ( WARNING "No support for user threads; LAGraph will not be thread-safe" )
-    target_link_libraries ( lagraph        m )
-    target_link_libraries ( lagraph_static m )
     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DUSER_NO_THREADS " )
 endif ( )
 
@@ -257,9 +190,6 @@ if ( CMAKE_THREAD_LIBS_INIT )
     target_link_libraries ( lagraph        ${CMAKE_THREAD_LIBS_INIT} )
     target_link_libraries ( lagraph_static ${CMAKE_THREAD_LIBS_INIT} )
 endif ( )
-
-target_link_libraries ( lagraph        graphblas )
-target_link_libraries ( lagraph_static graphblas )
 
 if ( CMAKE_USE_PTHREADS_INIT )
     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DHAVE_PTHREADS " )
@@ -276,11 +206,11 @@ endif ( )
 message ( STATUS "CMAKE C flags: " ${CMAKE_C_FLAGS} )
 
 #-------------------------------------------------------------------------------
-# lagraph installation location
+# Demo programs
 #-------------------------------------------------------------------------------
 
-install ( TARGETS lagraph lagraph_static
-    LIBRARY       DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-    ARCHIVE       DESTINATION ${CMAKE_INSTALL_LIBDIR} )
+add_executable ( mmtest "mmtest.c" )
+
+# Libraries required for Demo programs
+target_link_libraries ( mmtest graphblas lagraph m )
 

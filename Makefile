@@ -14,13 +14,13 @@
 
 JOBS ?= 1
 
-# build the LAGraph library (static and dynamic) and run a quick test
-default:
-	( cd build ; cmake $(CMAKE_OPTIONS) .. ; $(MAKE) --jobs=$(JOBS) )
-
-# just build the static and dynamic libraries; do not run the demo
+# build the LAGraph library (static and dynamic)
 library:
 	( cd build ; cmake $(CMAKE_OPTIONS) .. ; $(MAKE) --jobs=$(JOBS) )
+
+# run all tests (do "make ; make tests")
+tests:
+	( cd Test ; $(MAKE) --jobs=$(JOBS) )
 
 # just run cmake; do not compile
 cmake:
@@ -55,4 +55,5 @@ distclean:
 	rm -rf build/*
 	rm -rf Doc/html/*
 	( cd Doc  ; $(MAKE) distclean )
+	( cd Test ; $(MAKE) distclean )
 

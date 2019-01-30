@@ -2,7 +2,7 @@
 // LAGraph_ispattern: check if a matrix is all 1
 //------------------------------------------------------------------------------
 
-// LAGraph, (TODO list all authors here) (c) 2019, All Rights Reserved.
+// LAGraph, (... list all authors here) (c) 2019, All Rights Reserved.
 // http://graphblas.org  See LAGraph/Doc/License.txt for license.
 
 //------------------------------------------------------------------------------
@@ -18,7 +18,9 @@ GrB_Info LAGraph_ispattern  // return GrB_SUCCESS if successful
 (
     bool *result,           // true if A is all one, false otherwise
     GrB_Matrix A,
-    GrB_UnaryOp userop      // for A with user-defined type
+    GrB_UnaryOp userop      // for A with arbitrary user-defined type.
+                            // Ignored if A and B are of built-in types or
+                            // LAGraph_Complex.
 )
 {
 
@@ -34,6 +36,8 @@ GrB_Info LAGraph_ispattern  // return GrB_SUCCESS if successful
     }
     (*result) = false ;
 
+    // GxB_fprint (A, GxB_COMPLETE, stdout) ;
+
     // get the type and size of A
     LAGRAPH_OK (GxB_Matrix_type  (&type,  A)) ;
     LAGRAPH_OK (GrB_Matrix_nrows (&nrows, A)) ;
@@ -48,7 +52,7 @@ GrB_Info LAGraph_ispattern  // return GrB_SUCCESS if successful
     {
 
         // select the unary operator
-        GrB_UnaryOp op ;
+        GrB_UnaryOp op = NULL ;
         if      (type == GrB_INT8  ) op = LAGraph_ISONE_INT8 ;
         else if (type == GrB_INT16 ) op = LAGraph_ISONE_INT16 ;
         else if (type == GrB_INT32 ) op = LAGraph_ISONE_INT32 ;
@@ -59,11 +63,20 @@ GrB_Info LAGraph_ispattern  // return GrB_SUCCESS if successful
         else if (type == GrB_UINT64) op = LAGraph_ISONE_UINT64 ;
         else if (type == GrB_FP32  ) op = LAGraph_ISONE_FP32   ;
         else if (type == GrB_FP64  ) op = LAGraph_ISONE_FP64   ;
-        else                         op = userop ;
+        else if (type == LAGraph_Complex) op = LAGraph_ISONE_Complex   ;
+        else op = userop ;
+
+        if (op == NULL)
+        {
+            printf ("LAGraph_ispattern: userop is NULL\n") ;
+            return (GrB_NULL_POINTER) ;
+        }
 
         // C = isone (A)
         LAGRAPH_OK (GrB_Matrix_new (&C, GrB_BOOL, nrows, ncols)) ;
+
         LAGRAPH_OK (GrB_apply (C, NULL, NULL, op, A, NULL)) ;
+        // GxB_fprint (C, GxB_COMPLETE, stdout) ;
 
         // result = and (C)
         LAGRAPH_OK (GrB_reduce (result, NULL, LAGraph_LAND_MONOID, C, NULL)) ;

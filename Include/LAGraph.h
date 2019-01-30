@@ -94,7 +94,9 @@ GrB_Info LAGraph_ispattern  // return GrB_SUCCESS if successful
 (
     bool *result,           // true if A is all one, false otherwise
     GrB_Matrix A,
-    GrB_UnaryOp userop      // for A with user-defined type
+    GrB_UnaryOp userop      // for A with arbitrary user-defined type.
+                            // Ignored if A and B are of built-in types or
+                            // LAGraph_Complex.
 ) ;
 
 GrB_Info LAGraph_isequal    // return GrB_SUCCESS if successful
@@ -102,8 +104,9 @@ GrB_Info LAGraph_isequal    // return GrB_SUCCESS if successful
     bool *result,           // true if A == B, false if A != B or error
     GrB_Matrix A,
     GrB_Matrix B,
-    GrB_BinaryOp userop     // for A and B with user-defined types.  ignored
-                            // if A and B are of built-in types
+    GrB_BinaryOp userop     // for A and B with arbitrary user-defined types.
+                            // Ignored if A and B are of built-in types or
+                            // LAGraph_Complex.
 ) ;
 
 GrB_Info LAGraph_isall      // return GrB_SUCCESS if successful

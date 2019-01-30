@@ -2,7 +2,7 @@
 // LAGraph_random: create a random matrix
 //------------------------------------------------------------------------------
 
-// LAGraph, (TODO list all authors here) (c) 2019, All Rights Reserved.
+// LAGraph, (... list all authors here) (c) 2019, All Rights Reserved.
 // http://graphblas.org  See LAGraph/Doc/License.txt for license.
 
 //------------------------------------------------------------------------------

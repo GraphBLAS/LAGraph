@@ -2,7 +2,7 @@
 // LAGraph_mmread:  read a matrix from a Matrix Market file
 //------------------------------------------------------------------------------
 
-// LAGraph, (TODO list all authors here) (c) 2019, All Rights Reserved.
+// LAGraph, (... list all authors here) (c) 2019, All Rights Reserved.
 // http://graphblas.org  See LAGraph/Doc/License.txt for license.
 
 // TODO: need to add an error reporting mechanism, like GrB_error.
@@ -279,9 +279,12 @@ static inline bool read_entry   // true if successful, false if failure
 
     while (*p && isspace (*p)) p++ ;   // skip any spaces
 
+    // printf ("read entry [%s]: ", p) ;
+
     if (type == GrB_BOOL)
     {
         if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
+        // printf ("%" PRId64 "\n", ival) ;
         if (ival < 0 || ival > 1) return (false) ;
         bool *result = (bool *) x ;
         result [0] = (bool) ival ;
@@ -289,6 +292,7 @@ static inline bool read_entry   // true if successful, false if failure
     else if (type == GrB_INT8)
     {
         if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
+        // printf ("%" PRId64 "\n", ival) ;
         if (ival < INT8_MIN || ival > INT8_MAX) return (false) ;
         int8_t *result = (int8_t *) x ;
         result [0] = (int8_t) ival ;
@@ -296,6 +300,7 @@ static inline bool read_entry   // true if successful, false if failure
     else if (type == GrB_INT16)
     {
         if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
+        // printf ("%" PRId64 "\n", ival) ;
         if (ival < INT16_MIN || ival > INT16_MAX) return (false) ;
         int16_t *result = (int16_t *) x ;
         result [0] = (int16_t) ival ;
@@ -303,6 +308,7 @@ static inline bool read_entry   // true if successful, false if failure
     else if (type == GrB_INT32)
     {
         if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
+        // printf ("%" PRId64 "\n", ival) ;
         if (ival < INT32_MIN || ival > INT32_MAX) return (false) ;
         int32_t *result = (int32_t *) x ;
         result [0] = (int32_t) ival ;
@@ -310,12 +316,14 @@ static inline bool read_entry   // true if successful, false if failure
     else if (type == GrB_INT64)
     {
         if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
+        // printf ("%" PRId64 "\n", ival) ;
         int64_t *result = (int64_t *) x ;
         result [0] = (int64_t) ival ;
     }
     else if (type == GrB_UINT8)
     {
         if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
+        // printf ("%" PRId64 "\n", ival) ;
         if (ival < 0 || ival > UINT8_MAX) return (false) ;
         uint8_t *result = (uint8_t *) x ;
         result [0] = (uint8_t) ival ;
@@ -323,6 +331,7 @@ static inline bool read_entry   // true if successful, false if failure
     else if (type == GrB_UINT16)
     {
         if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
+        // printf ("%" PRId64 "\n", ival) ;
         if (ival < 0 || ival > UINT16_MAX) return (false) ;
         uint16_t *result = (uint16_t *) x ;
         result [0] = (uint16_t) ival ;
@@ -330,6 +339,7 @@ static inline bool read_entry   // true if successful, false if failure
     else if (type == GrB_UINT32)
     {
         if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
+        // printf ("%" PRId64 "\n", ival) ;
         if (ival < 0 || ival > UINT32_MAX) return (false) ;
         uint32_t *result = (uint32_t *) x ;
         result [0] = (uint32_t) ival ;
@@ -338,6 +348,7 @@ static inline bool read_entry   // true if successful, false if failure
     {
         uint64_t uval = 1 ;
         if (!pattern && sscanf (p, "%" SCNu64, &uval) != 1) return (false) ;
+        // printf ("%" PRIu64 "\n", uval) ;
         uint64_t *result = (uint64_t *) x ;
         result [0] = (uint64_t) uval ;
     }
@@ -350,14 +361,17 @@ static inline bool read_entry   // true if successful, false if failure
     else if (type == GrB_FP64)
     {
         if (!pattern && !read_double (p, &rval)) return (false) ;
+        // printf ("%g\n", rval) ;
         double *result = (double *) x ;
         result [0] = rval ;
     }
     else if (type == LAGraph_Complex)
     {
         if (!pattern && !read_double (p, &rval)) return (false) ;
+        // printf ("(%g, ", rval) ;
         while (*p && !isspace (*p)) p++ ;   // skip real part
         if (!pattern && !read_double (p, &zval)) return (false) ;
+        // printf ("%g)\n", zval) ;
         double *result = (double *) x ;
         result [0] = rval ;     // real part
         result [1] = zval ;     // imaginary part
@@ -365,6 +379,7 @@ static inline bool read_entry   // true if successful, false if failure
     else
     {
         // type not supported
+        printf ("LAGraph_mmread: read_entry: type not supported\n") ;
         return (false) ;
     }
 
@@ -521,6 +536,7 @@ GrB_Info LAGraph_mmread
     if (A == NULL || f == NULL)
     {
         // input arguments invalid
+        printf ("LAGraph_mmread: bad args\n") ;
         return (GrB_NULL_POINTER) ;
     }
 
@@ -596,9 +612,13 @@ GrB_Info LAGraph_mmread
 
             while (*p && isspace (*p)) p++ ;        // skip any leading spaces
 
-            if (strncmp (p, "matrix", 6) == 0)
+            // printf ("header now [%s]\n", p) ;
+            // printf ("compare %d\n", (strncmp (p, "matrix", 6))) ;
+
+            if (strncmp (p, "matrix", 6) != 0)
             {
                 // invalid Matrix Market object
+                printf ("LAGraph_mmread: bad object\n") ;
                 return (GrB_INVALID_VALUE) ;
             }
             p += 6 ;                                // skip past token "matrix"
@@ -622,6 +642,7 @@ GrB_Info LAGraph_mmread
             else
             {
                 // invalid Matrix Market format
+                printf ("LAGraph_mmread: bad format\n") ;
                 return (GrB_INVALID_VALUE) ;
             }
 
@@ -658,6 +679,7 @@ GrB_Info LAGraph_mmread
             else
             {
                 // invalid Matrix Market type
+                printf ("LAGraph_mmread: bad type\n") ;
                 return (GrB_INVALID_VALUE) ;
             }
 
@@ -686,6 +708,7 @@ GrB_Info LAGraph_mmread
             else
             {
                 // invalid Matrix Market storage
+                printf ("LAGraph_mmread: bad type\n") ;
                 return (GrB_INVALID_VALUE) ;
             }
 
@@ -701,6 +724,7 @@ GrB_Info LAGraph_mmread
                          MM_storage == MM_symmetric)))
                 {
                     // invalid combination
+                    printf ("LAGraph_mmread: bad pattern combo\n") ;
                     return (GrB_INVALID_VALUE) ;
                 }
             }
@@ -711,6 +735,7 @@ GrB_Info LAGraph_mmread
                 if (! (MM_type == MM_complex))
                 {
                     // invalid combination
+                    printf ("LAGraph_mmread: bad complex combo\n") ;
                     return (GrB_INVALID_VALUE) ;
                 }
             }
@@ -737,57 +762,60 @@ GrB_Info LAGraph_mmread
             // GrB_INT16, GrB_INT32, GrB_INT64, GrB_UINT8, GrB_UINT16,
             // GrB_UINT32, GrB_UINT64, GrB_FP32, GrB_FP64) or LAGraph_Complex.
 
-            if (strncmp (p, "GrB_BOOL", 8) == 0)
+            // printf ("for type: compare [%s]\n", p) ;
+
+            if (strncmp (p, "grb_bool", 8) == 0)
             {
                 type = GrB_BOOL ;
             }
-            else if (strncmp (p, "GrB_INT8", 8) == 0)
+            else if (strncmp (p, "grb_int8", 8) == 0)
             {
                 type = GrB_INT8 ;
             }
-            else if (strncmp (p, "GrB_INT16", 9) == 0)
+            else if (strncmp (p, "grb_int16", 9) == 0)
             {
                 type = GrB_INT16 ;
             }
-            else if (strncmp (p, "GrB_INT32", 9) == 0)
+            else if (strncmp (p, "grb_int32", 9) == 0)
             {
                 type = GrB_INT32 ;
             }
-            else if (strncmp (p, "GrB_INT64", 9) == 0)
+            else if (strncmp (p, "grb_int64", 9) == 0)
             {
                 type = GrB_INT64 ;
             }
-            else if (strncmp (p, "GrB_UINT8", 9) == 0)
+            else if (strncmp (p, "grb_uint8", 9) == 0)
             {
                 type = GrB_UINT8 ;
             }
-            else if (strncmp (p, "GrB_UINT16", 10) == 0)
+            else if (strncmp (p, "grb_uint16", 10) == 0)
             {
                 type = GrB_UINT16 ;
             }
-            else if (strncmp (p, "GrB_UINT32", 10) == 0)
+            else if (strncmp (p, "grb_uint32", 10) == 0)
             {
                 type = GrB_UINT32 ;
             }
-            else if (strncmp (p, "GrB_UINT64", 10) == 0)
+            else if (strncmp (p, "grb_uint64", 10) == 0)
             {
                 type = GrB_UINT64 ;
             }
-            else if (strncmp (p, "GrB_FP32", 8) == 0)
+            else if (strncmp (p, "grb_fp32", 8) == 0)
             {
                 type = GrB_FP32 ;
             }
-            else if (strncmp (p, "GrB_FP64", 8) == 0)
+            else if (strncmp (p, "grb_fp64", 8) == 0)
             {
                 type = GrB_FP64 ;
             }
-            else if (strncmp (p, "LAGraph_Complex", 15) == 0)
+            else if (strncmp (p, "lagraph_complex", 15) == 0)
             {
                 type = LAGraph_Complex ;
             }
             else
             {
                 // type not supported
+                printf ("LAGraph_mmread: type not supported\n") ;
                 return (GrB_INVALID_VALUE) ;
             }
 
@@ -844,6 +872,7 @@ GrB_Info LAGraph_mmread
             else
             {
                 // wrong number of items in first data line
+                printf ("LAGraph_mmread: bad 1st line\n") ;
                 return (GrB_INVALID_VALUE) ;
             }
 
@@ -852,6 +881,7 @@ GrB_Info LAGraph_mmread
                 if (! (MM_storage == MM_general))
                 {
                     // a rectangular matrix must be in the general storage
+                    printf ("LAGraph_mmread: bad rectangular\n") ;
                     return (GrB_INVALID_VALUE) ;
                 }
             }
@@ -872,6 +902,7 @@ GrB_Info LAGraph_mmread
     if (info != GrB_SUCCESS)
     {
         // failed to construct matrix
+        // printf ("mmread: failed to construct A\n") ;
         return (info) ;
     }
 
@@ -910,6 +941,7 @@ GrB_Info LAGraph_mmread
 	    {
 		// premature end of file - not enough triplets read in
                 GrB_free (A) ;
+                printf ("LAGraph:mmread: premature EOF\n") ;
 		return (GrB_INVALID_VALUE) ;
 	    }
 	    if (is_blank_line (buf))
@@ -923,20 +955,23 @@ GrB_Info LAGraph_mmread
             //------------------------------------------------------------------
 
             char *p ;
-            if (MM_storage == MM_array)
+            if (MM_fmt == MM_array)
             {
                 // array format, column major order
                 i = k % nrows ;
                 j = k / nrows ;
                 p = buf ;
+                // printf ("array now [%s]\n", p) ;
             }
             else
             {
                 // coordinate format; read the row and column index
-                if (sscanf (buf, "%" SCNu64 " %" SCNu64, &i, &j) != 2)
+                p = buf ;
+                if (sscanf (p, "%" SCNu64 " %" SCNu64, &i, &j) != 2)
                 {
                     // EOF or other I/O error
                     GrB_free (A) ;
+                    printf ("LAGraph_mmread: I/O error on indices\n") ;
                     return (GrB_INVALID_VALUE) ;
                 }
                 // convert from 1-based to 0-based.  If zero, the value
@@ -944,11 +979,13 @@ GrB_Info LAGraph_mmread
                 // by GrB_error ( ).  TODO: use a better error report.
                 i-- ;
                 j-- ;
+                // printf ("got (%g,%g)\n", (double) i, (double) j) ;
                 // advance p to the 3rd token to get the value of the entry
                 while (*p &&  isspace (*p)) p++ ;   // skip any leading spaces
                 while (*p && !isspace (*p)) p++ ;   // skip nrows
                 while (*p &&  isspace (*p)) p++ ;   // skip any spaces
                 while (*p && !isspace (*p)) p++ ;   // skip nrows
+                // printf ("now [%s]\n", p) ;
             }
 
             //------------------------------------------------------------------
@@ -961,6 +998,7 @@ GrB_Info LAGraph_mmread
             {
                 // EOF or other I/O error, or value of entry out of range
                 GrB_free (A) ;
+                printf ("LAGraph_mmread: I/O error on value\n") ;
                 return (GrB_INVALID_VALUE) ;
             }
 
@@ -972,9 +1010,12 @@ GrB_Info LAGraph_mmread
             if (info != GrB_SUCCESS)
             {
                 // unable to set element: invalid indices, or out of memory
+                printf ("mmread: unable to set element\n") ;
                 GrB_free (A) ;
                 return (info) ;
             }
+
+            // GxB_fprint (*A, GxB_COMPLETE, stdout) ;
 
             //------------------------------------------------------------------
             // also set the A(j,i) entry, if symmetric
@@ -1001,6 +1042,7 @@ GrB_Info LAGraph_mmread
                 {
                     // unable to set element: invalid indices, or out of memory
                     GrB_free (A) ;
+                    // printf ("mmread: unable to set symmetric element\n") ;
                     return (info) ;
                 }
             }

@@ -2,7 +2,7 @@
 // LAGraph_internal.h: include file for internal use in LAGraph
 //------------------------------------------------------------------------------
 
-// LAGraph, (TODO list all authors here) (c) 2019, All Rights Reserved.
+// LAGraph, (... list all authors here) (c) 2019, All Rights Reserved.
 // http://graphblas.org  See LAGraph/Doc/License.txt for license.
 
 //------------------------------------------------------------------------------
@@ -92,6 +92,8 @@
     GrB_Info this_info = method ;                                           \
     if (! (this_info == GrB_SUCCESS || this_info == GrB_NO_VALUE))          \
     {                                                                       \
+        fprintf (stderr, "LAGraph error: [%d]\n%s\n",                       \
+            this_info, GrB_error ( )) ;                                     \
         LAGRAPH_FREE_ALL ;                                                  \
         return (this_info) ;                                                \
     }                                                                       \
@@ -135,12 +137,4 @@ MM_storage_enum ;
 // if this function is extended to handle arbitrary user-defined types.
 #define MMLEN 1024
 #define MAXLINE MMLEN+6
-
-//------------------------------------------------------------------------------
-// internal LAGraph functions, not user-callable
-//------------------------------------------------------------------------------
-
-GrB_Info LAGraph_alloc_global ( ) ;
-
-GrB_Info LAGraph_free_global ( ) ;
 

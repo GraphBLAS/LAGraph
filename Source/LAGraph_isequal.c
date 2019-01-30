@@ -2,7 +2,7 @@
 // LAGraph_isequal: check two matrices for exact equality
 //------------------------------------------------------------------------------
 
-// LAGraph, (TODO list all authors here) (c) 2019, All Rights Reserved.
+// LAGraph, (... list all authors here) (c) 2019, All Rights Reserved.
 // http://graphblas.org  See LAGraph/Doc/License.txt for license.
 
 //------------------------------------------------------------------------------
@@ -29,8 +29,9 @@ GrB_Info LAGraph_isequal    // return GrB_SUCCESS if successful
     bool *result,           // true if A == B, false if A != B or error
     GrB_Matrix A,
     GrB_Matrix B,
-    GrB_BinaryOp userop     // for A and B with user-defined types.  ignored
-                            // if A and B are of built-in types
+    GrB_BinaryOp userop     // for A and B with arbitrary user-defined types.
+                            // Ignored if A and B are of built-in types or
+                            // LAGraph_Complex.
 )
 {
 
@@ -41,6 +42,7 @@ GrB_Info LAGraph_isequal    // return GrB_SUCCESS if successful
     if (result == NULL)
     {
         // error: required parameter, result, is NULL
+        printf ("LAGraph_isequal: bad args\n") ;
         return (GrB_NULL_POINTER) ;
     }
     (*result) = false ;
@@ -51,6 +53,7 @@ GrB_Info LAGraph_isequal    // return GrB_SUCCESS if successful
     if (atype != btype)
     {
         // types differ
+        // printf ("LAGraph_isequal: types differ\n") ;
         return (GrB_SUCCESS) ;
     }
 
@@ -66,10 +69,13 @@ GrB_Info LAGraph_isequal    // return GrB_SUCCESS if successful
     else if (atype == GrB_UINT64) op = GrB_EQ_UINT64 ;
     else if (atype == GrB_FP32  ) op = GrB_EQ_FP32   ;
     else if (atype == GrB_FP64  ) op = GrB_EQ_FP64   ;
-    else                          op = userop ; // A and B are user-defined
+    else if (atype == LAGraph_Complex) op = LAGraph_EQ_Complex   ;
+    else op = userop ;
 
     // check the size, pattern, and values of A and B
     LAGRAPH_OK (LAGraph_isall (result, A, B, op)) ;
+
+    // printf ("result: %d\n", *result) ;
 
     // return result
     return (GrB_SUCCESS) ;
