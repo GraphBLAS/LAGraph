@@ -16,8 +16,7 @@ GraphBLAS.  It contains the following files and folders:
 
     README.md: this file
 
-    Source: source code for the LAGraph library.  To compile LAGraph,
-        first compile GraphBLAS, and then do "make" in this directory.
+    Source: source code for the LAGraph library
 
     Test: main programs that test LAGraph.  To run the tests, first compile
         GraphBLAS and LAGraph, and then do "make tests" in this directory.
