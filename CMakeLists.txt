@@ -137,7 +137,7 @@ message ( STATUS "CMAKE have OpenMP:         " ${OPENMP_FOUND} )
 
 set ( CMAKE_INCLUDE_CURRENT_DIR ON )
 
-include_directories ( Source Include )
+include_directories ( Source/Utility Source/Algorithm Include )
 
 #-------------------------------------------------------------------------------
 # compiler options
@@ -181,7 +181,7 @@ endif ( )
 # dynamic lagraph library properties
 #-------------------------------------------------------------------------------
 
-file ( GLOB LAGRAPH_SOURCES "Source/*.c" )
+file ( GLOB LAGRAPH_SOURCES "Source/Utility/*.c" "Source/Algorithm/*.c" )
 
 add_library ( lagraph SHARED ${LAGRAPH_SOURCES} )
 SET_TARGET_PROPERTIES ( lagraph PROPERTIES
