@@ -27,6 +27,7 @@
 }
 
 GrB_Matrix A = NULL ;
+GrB_Matrix Abool = NULL ;
 GrB_Vector v = NULL ;
 
 //------------------------------------------------------------------------------
@@ -85,11 +86,21 @@ int main (int argc, char **argv)
     OK (LAGraph_mmread (&A, stdin)) ;
 
     // get the size of the problem.
-    GrB_Index n ;
-    OK (GrB_Matrix_nrows (&n, A)) ;
+    GrB_Index nrows, ncols ;
+    OK (GrB_Matrix_nrows (&nrows, A)) ;
+    OK (GrB_Matrix_ncols (&ncols, A)) ;
+    GrB_Index n = nrows ;
 
-    // typecast to boolean
-    OK (GrB_apply (A, NULL, NULL, LAGraph_TRUE_BOOL, A, NULL)) ;
+    // typecast to boolean and change all values to true.
+    // TODO: create a Utility function LAGraph_to_pattern that converts
+    // a matrix (of any selected type)?
+    OK (GrB_Matrix_new (&Abool, GrB_BOOL, nrows, ncols)) ;
+    OK (GrB_apply (Abool, NULL, NULL, LAGraph_TRUE_BOOL, A, NULL)) ;
+    GrB_free (&A) ;
+    A = Abool ;
+    Abool = NULL ;
+
+    // GxB_fprint (A, GxB_COMPLETE, stderr) ;
 
     // get the source node
     GrB_Index s = 0 ;
@@ -112,5 +123,6 @@ int main (int argc, char **argv)
 
     FREE_ALL ;
     LAGraph_finalize ( ) ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
+

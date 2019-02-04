@@ -226,5 +226,6 @@ int main (int argc, char **argv)
 
     printf ("\nmmtest: all tests passed\n") ;
     LAGraph_finalize ( ) ;
+    return (GrB_SUCCESS) ;
 }
 
