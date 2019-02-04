@@ -1,0 +1,12 @@
+
+TODO, SPEC: all enum values in the spec should be defined.  They are not, so as
+a result, a user code cannot be linked against an arbitrary GraphBLAS library
+after it is compiled.  It must be linked with the same GraphBLAS library it is
+compiled with.  SuiteSparse:GraphBLAS defines all user-visible enum values
+explicitly.  See the SuiteSparse/Include/GraphBLAS.h.   Note that I have
+added a GxB_DEFAULT = 0 to the descriptor enum, GrB_Desc_Value (otherwise,
+there is no way to set a descriptor value to its default value).  Otherwise,
+I have numbered them in the order they appear in the tables in the spec,
+starting with zero.
+
+
