@@ -9,4 +9,8 @@ there is no way to set a descriptor value to its default value).  Otherwise,
 I have numbered them in the order they appear in the tables in the spec,
 starting with zero.
 
+TODO: the following methods require GxB_Matrix_type:
+./Source/Utility/LAGraph_ispattern.c
+./Source/Utility/LAGraph_mmwrite.c
+./Source/Utility/LAGraph_isequal.c
 
