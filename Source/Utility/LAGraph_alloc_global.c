@@ -235,8 +235,22 @@ void LAGraph_isone_complex
     (*z) = ((*x) == 1) ;
 }
 
-// boolean monoid
+// convert to pattern (ignoring the values)
+GrB_UnaryOp LAGraph_TRUE_BOOL = NULL ;
+
+void LAGraph_true_bool
+(
+    bool *z,
+    const bool *x       // ignored
+)
+{
+    (*z) = true ;
+}
+
+// boolean monoids and semirings
 GrB_Monoid LAGraph_LAND_MONOID = NULL ;
+GrB_Monoid LAGraph_LOR_MONOID = NULL ;
+GrB_Semiring LAGraph_LOR_LAND_BOOL = NULL ;
 
 //------------------------------------------------------------------------------
 // LAGraph_alloc_global
@@ -336,7 +350,13 @@ GrB_Info LAGraph_alloc_global ( )
         F_UNARY (LAGraph_isone_complex),
         GrB_BOOL, LAGraph_Complex)) ;
 
-    LAGRAPH_OK (GrB_Monoid_new_BOOL (&LAGraph_LAND_MONOID, GrB_LAND, true)) ;
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_TRUE_BOOL, 
+        F_UNARY (LAGraph_true_bool), GrB_BOOL, GrB_BOOL)) ;
+
+    LAGRAPH_OK (GrB_Monoid_new_BOOL (&LAGraph_LAND_MONOID, GrB_LAND, true )) ;
+    LAGRAPH_OK (GrB_Monoid_new_BOOL (&LAGraph_LOR_MONOID , GrB_LOR , false)) ;
+    LAGRAPH_OK (GrB_Semiring_new (&LAGraph_LOR_LAND_BOOL,
+        LAGraph_LOR_MONOID, GrB_LAND)) ;
 
 //  GxB_fprint (LAGraph_EQ_Complex, GxB_COMPLETE, stderr) ;
 //  GxB_fprint (LAGraph_SKEW_INT8, GxB_COMPLETE, stderr) ;

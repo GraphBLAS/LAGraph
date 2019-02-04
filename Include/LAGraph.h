@@ -66,11 +66,16 @@ extern GrB_UnaryOp LAGraph_ISONE_FP32 ;
 extern GrB_UnaryOp LAGraph_ISONE_FP64 ;
 extern GrB_UnaryOp LAGraph_ISONE_Complex ;
 
-// boolean monoid
+// returns true
+extern GrB_UnaryOp LAGraph_TRUE_BOOL ;
+
+// monoids and semirings
 extern GrB_Monoid LAGraph_LAND_MONOID ;
+extern GrB_Monoid LAGraph_LOR_MONOID ;
+extern GrB_Semiring LAGraph_LOR_LAND_BOOL ;
 
 //------------------------------------------------------------------------------
-// user-callable functions
+// user-callable utility functions
 //------------------------------------------------------------------------------
 
 GrB_Info LAGraph_init ( ) ;         // start LAGraph
@@ -153,5 +158,18 @@ void *LAGraph_malloc        // wrapper for malloc
 void LAGraph_free           // wrapper for free
 (
     void *p
+) ;
+
+//------------------------------------------------------------------------------
+// user-callable algorithms
+//------------------------------------------------------------------------------
+
+GrB_Info LAGraph_bfs_simple
+(
+    GrB_Vector *v_output,   // v [i] is the BFS level of node i in the graph
+    const GrB_Matrix A,     // input graph, treated as if boolean in semiring
+    GrB_Index s,            // starting node of the BFS
+    int64_t max_level       // max # of levels to search (<0: nothing,
+                            // 1: just the source, 2: source and neighbors, etc)
 ) ;
 
