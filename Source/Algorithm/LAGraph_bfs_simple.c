@@ -112,6 +112,9 @@ GrB_Info LAGraph_bfs_simple
         // successors from current q, using !v as the mask
         LAGRAPH_OK (GrB_vxm (q, v, NULL, LAGraph_LOR_LAND_BOOL, q, A, desc)) ;
 
+        // dump q to see how it was computed:
+        GxB_fprint (q, GxB_COMPLETE, stderr) ;
+
         // note that if A has no explicit zeros, then this works faster:
         // GrB_Vector_nvals (&nvals, q) ; successor = (nvals > 0) ; 
 

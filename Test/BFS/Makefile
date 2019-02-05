@@ -18,7 +18,7 @@ JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/bfs_test 1 < cover.mtx > v
+	./build/bfs_test 3 < cover.mtx > v
 
 # build test
 compile:
