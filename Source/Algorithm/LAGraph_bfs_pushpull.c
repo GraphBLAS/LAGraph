@@ -7,14 +7,12 @@
 
 //------------------------------------------------------------------------------
 
-// By default in SuiteSparse:GraphBLAS, the matrix A is stored by row (CSR
-// format).  The method below computes q*A via GrB_vxm, which results in a
-// "push" BFS algorithm.  If instead A is stored by column (using an extension
-// to SuiteSparse:GraphBLAS), the algorithm becomes a "pull" algorithm.
-
-// A faster algorithm would use the push-pull strategy, which requires both
+// This algorithm uses the push-pull strategy, which requires both
 // A and AT = A' to be passed in.  If A is in CSR format, then vxm(q,A)
 // does the "push" and mxv(AT,q) does the "pull".
+
+// TODO: it uses a crude method to switch from push to pull.  needs a 
+// better one.
 
 // Reference: Carl Yang, Aydin Buluc, and John D. Owens. 2018. Implementing
 // Push-Pull Efficiently in GraphBLAS. In Proceedings of the 47th International
