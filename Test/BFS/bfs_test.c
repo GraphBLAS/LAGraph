@@ -14,7 +14,7 @@
     GrB_Info info = method ;                                                \
     if (! (info == GrB_SUCCESS || info == GrB_NO_VALUE))                    \
     {                                                                       \
-        printf ("bfs_test failure: [%d] %s\n", info, GrB_error ( )) ;       \
+        fprintf (stderr, "bfs_test failure: [%d] %s\n", info, GrB_error ( )) ;\
         FREE_ALL ;                                                          \
         return (info) ;                                                     \
     }                                                                       \
@@ -22,10 +22,12 @@
 
 #define FREE_ALL                    \
 {                                   \
+    GrB_free (&AT) ;                \
     GrB_free (&A) ;                 \
     GrB_free (&v) ;                 \
 }
 
+GrB_Matrix AT = NULL ;
 GrB_Matrix A = NULL ;
 GrB_Matrix Abool = NULL ;
 GrB_Vector v = NULL ;
@@ -112,6 +114,28 @@ int main (int argc, char **argv)
     // run the BFS on node s
     GrB_Vector v ;
     OK (LAGraph_bfs_simple (&v, A, s, n)) ;
+
+    // now the BFS on node s using push-pull instead
+    GrB_Vector v2 ;
+    OK (GrB_Matrix_new (&AT, GrB_BOOL, ncols, nrows)) ;
+    OK (GrB_transpose (AT, NULL, NULL, A, NULL)) ;
+    OK (LAGraph_bfs_pushpull (&v2, A, AT, s, n)) ;
+
+    // TODO: you can't typecast from vectors to matrices ...
+    // (except in SuiteSparse:GraphBLAS).  Need a function
+    // LAGraph_Vector_isequal.
+    bool isequal = false ;
+    OK (LAGraph_isequal (&isequal, (GrB_Matrix) v, (GrB_Matrix) v2, NULL)) ;
+
+    if (isequal)
+    {
+        fprintf (stderr, "results of simple and push-pull are OK\n") ;
+    }
+    else
+    {
+        fprintf (stderr, "ERROR! simple and push-pull differ\n") ;
+        abort ( ) ;
+    }
 
     // write the result to stdout (check them outside of this main program)
     for (int64_t i = 0 ; i < n ; i++)
