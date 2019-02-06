@@ -181,6 +181,9 @@ int main (int argc, char **argv)
         "uint8", "uint16", "uint32", "uint64",
         "float", "double",  "complex" } ;
 
+    double tic [2], t ;
+    LAGraph_tic (tic) ;
+
     for (int k = 0 ; k < NTYPES ; k++)
     {
         printf ("%-7s: ", typenames [k]) ;
@@ -223,6 +226,9 @@ int main (int argc, char **argv)
         }
         printf ("\n") ;
     }
+
+    t = LAGraph_toc (tic) ;
+    printf ("time taken: %g sec\n", t) ;
 
     printf ("\nmmtest: all tests passed\n") ;
     LAGraph_finalize ( ) ;

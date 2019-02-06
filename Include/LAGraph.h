@@ -16,6 +16,22 @@
 #include "GraphBLAS.h"
 #include <complex.h>
 
+#define _POSIX_C_SOURCE 200809L
+#include <time.h>
+
+#if defined ( __linux__ )
+#include <sys/time.h>
+#endif
+
+#if defined ( _OPENMP )
+#include <omp.h>
+#endif
+
+#if defined ( __MACH__ )
+#include <mach/clock.h>
+#include <mach/mach.h>
+#endif
+
 #define LAGRAPH_RAND_MAX 32767
 
 // suitable for integers, and non-NaN floating point:
@@ -158,6 +174,16 @@ void *LAGraph_malloc        // wrapper for malloc
 void LAGraph_free           // wrapper for free
 (
     void *p
+) ;
+
+void LAGraph_tic            // returns current time in seconds and nanoseconds
+(
+    double tic [2]          // tic [0]: seconds, tic [1]: nanoseconds
+) ;
+
+double LAGraph_toc          // returns time since last LAGraph_tic
+(
+    const double tic [2]    // tic from last call to LAGraph_tic
 ) ;
 
 //------------------------------------------------------------------------------
