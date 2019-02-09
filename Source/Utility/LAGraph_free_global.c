@@ -39,9 +39,30 @@ GrB_Info LAGraph_free_global ( )
     GrB_free (&LAGraph_TRUE_BOOL) ;
     GrB_free (&LAGraph_TRUE_BOOL_Complex) ;
 
+    GrB_free (&LAGraph_MAX_INT32_MONOID) ;
     GrB_free (&LAGraph_LAND_MONOID) ;
     GrB_free (&LAGraph_LOR_MONOID) ;
     GrB_free (&LAGraph_LOR_LAND_BOOL) ;
+
+//  GrB_free (&LAGraph_desc_oooo) ;     // NULL, no need to free it
+    GrB_free (&LAGraph_desc_ooor) ;
+    GrB_free (&LAGraph_desc_ooco) ;
+    GrB_free (&LAGraph_desc_oocr) ;
+
+    GrB_free (&LAGraph_desc_otoo) ;
+    GrB_free (&LAGraph_desc_otor) ;
+    GrB_free (&LAGraph_desc_otco) ;
+    GrB_free (&LAGraph_desc_otcr) ;
+
+    GrB_free (&LAGraph_desc_tooo) ;
+    GrB_free (&LAGraph_desc_toor) ;
+    GrB_free (&LAGraph_desc_toco) ;
+    GrB_free (&LAGraph_desc_tocr) ;
+
+    GrB_free (&LAGraph_desc_ttoo) ;
+    GrB_free (&LAGraph_desc_ttor) ;
+    GrB_free (&LAGraph_desc_ttco) ;
+    GrB_free (&LAGraph_desc_ttcr) ;
 
     return (GrB_SUCCESS) ;
 }

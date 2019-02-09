@@ -59,15 +59,20 @@
 // method can be a GrB_Info scalar as well, so that LAGRAPH_OK(info) works.
 // The function that uses this macro must return GrB_Info, or int.
 
+#define LAGRAPH_ERROR(message,info)                                         \
+{                                                                           \
+    fprintf (stderr, "LAGraph error: %s\n[%d]\n%s\nFile: %s Line: %d\n",    \
+        message, info, GrB_error ( ), __FILE__, __LINE__) ;                 \
+    LAGRAPH_FREE_ALL ;                                                      \
+    return (info) ;                                                         \
+}
+
 #define LAGRAPH_OK(method)                                                  \
 {                                                                           \
     info = method ;                                                         \
     if (! (info == GrB_SUCCESS || info == GrB_NO_VALUE))                    \
     {                                                                       \
-        fprintf (stderr, "LAGraph error: [%d]\n%sFile: %s Line: %d\n",      \
-            info, GrB_error ( ), __FILE__, __LINE__) ;                      \
-        LAGRAPH_FREE_ALL ;                                                  \
-        return (info) ;                                                     \
+        LAGRAPH_ERROR ("", info) ;                                          \
     }                                                                       \
 }
 
@@ -80,38 +85,72 @@
 // can be read into GraphBLAS.
 extern GrB_Type LAGraph_Complex ;
 
-// binary operators to test for symmetry, skew-symmetry and Hermitian property
-extern GrB_BinaryOp LAGraph_EQ_Complex ;
-extern GrB_BinaryOp LAGraph_SKEW_INT8 ;
-extern GrB_BinaryOp LAGraph_SKEW_INT16 ;
-extern GrB_BinaryOp LAGraph_SKEW_INT32 ;
-extern GrB_BinaryOp LAGraph_SKEW_INT64 ;
-extern GrB_BinaryOp LAGraph_SKEW_FP32 ;
-extern GrB_BinaryOp LAGraph_SKEW_FP64 ;
-extern GrB_BinaryOp LAGraph_SKEW_Complex ;
-extern GrB_BinaryOp LAGraph_Hermitian ;
+extern GrB_BinaryOp
 
-// unary operators to check if the entry is equal to 1
-extern GrB_UnaryOp LAGraph_ISONE_INT8 ;
-extern GrB_UnaryOp LAGraph_ISONE_INT16 ;
-extern GrB_UnaryOp LAGraph_ISONE_INT32 ;
-extern GrB_UnaryOp LAGraph_ISONE_INT64 ;
-extern GrB_UnaryOp LAGraph_ISONE_UINT8 ;
-extern GrB_UnaryOp LAGraph_ISONE_UINT16 ;
-extern GrB_UnaryOp LAGraph_ISONE_UINT32 ;
-extern GrB_UnaryOp LAGraph_ISONE_UINT64 ;
-extern GrB_UnaryOp LAGraph_ISONE_FP32 ;
-extern GrB_UnaryOp LAGraph_ISONE_FP64 ;
-extern GrB_UnaryOp LAGraph_ISONE_Complex ;
+    // binary operators to test for symmetry, skew-symmetry
+    // and Hermitian property
+    LAGraph_EQ_Complex          ,
+    LAGraph_SKEW_INT8           ,
+    LAGraph_SKEW_INT16          ,
+    LAGraph_SKEW_INT32          ,
+    LAGraph_SKEW_INT64          ,
+    LAGraph_SKEW_FP32           ,
+    LAGraph_SKEW_FP64           ,
+    LAGraph_SKEW_Complex        ,
+    LAGraph_Hermitian           ;
 
-// unary operators that return 1
-extern GrB_UnaryOp LAGraph_TRUE_BOOL ;
-extern GrB_UnaryOp LAGraph_TRUE_BOOL_Complex ;
+extern GrB_UnaryOp
+
+    // unary operators to check if the entry is equal to 1
+    LAGraph_ISONE_INT8          ,
+    LAGraph_ISONE_INT16         ,
+    LAGraph_ISONE_INT32         ,
+    LAGraph_ISONE_INT64         ,
+    LAGraph_ISONE_UINT8         ,
+    LAGraph_ISONE_UINT16        ,
+    LAGraph_ISONE_UINT32        ,
+    LAGraph_ISONE_UINT64        ,
+    LAGraph_ISONE_FP32          ,
+    LAGraph_ISONE_FP64          ,
+    LAGraph_ISONE_Complex       ,
+
+    // unary operators that return 1
+    LAGraph_TRUE_BOOL           ,
+    LAGraph_TRUE_BOOL_Complex   ;
 
 // monoids and semirings
+extern GrB_Monoid LAGraph_MAX_INT32_MONOID ;
 extern GrB_Monoid LAGraph_LAND_MONOID ;
 extern GrB_Monoid LAGraph_LOR_MONOID ;
 extern GrB_Semiring LAGraph_LOR_LAND_BOOL ;
+
+// all 16 descriptors
+// syntax: 4 characters define the following.  'o' is the default:
+// 1: o or t: A transpose
+// 2: o or t: B transpose
+// 3: o or c: complemented mask
+// 4: o or r: replace
+extern GrB_Descriptor
+
+    LAGraph_desc_oooo ,   // default (NULL)
+    LAGraph_desc_ooor ,   // replace
+    LAGraph_desc_ooco ,   // compl mask
+    LAGraph_desc_oocr ,   // compl mask, replace
+
+    LAGraph_desc_otoo ,   // A'
+    LAGraph_desc_otor ,   // A', replace
+    LAGraph_desc_otco ,   // A', compl mask
+    LAGraph_desc_otcr ,   // A', compl mask, replace
+
+    LAGraph_desc_tooo ,   // B'
+    LAGraph_desc_toor ,   // B', replace
+    LAGraph_desc_toco ,   // B', compl mask
+    LAGraph_desc_tocr ,   // B', compl mask, replace
+
+    LAGraph_desc_ttoo ,   // A', B'
+    LAGraph_desc_ttor ,   // A', B', replace
+    LAGraph_desc_ttco ,   // A', B', compl mask
+    LAGraph_desc_ttcr ;   // A', B', compl mask, replace
 
 //------------------------------------------------------------------------------
 // user-callable utility functions
@@ -225,7 +264,7 @@ GrB_Info LAGraph_bfs_pushpull
     const GrB_Matrix A,     // input graph, treated as if boolean in semiring
     const GrB_Matrix AT,    // transpose of A
     GrB_Index s,            // starting node of the BFS
-    int64_t max_level       // max # of levels to search (<0: nothing,
+    int32_t max_level       // max # of levels to search (<0: nothing,
                             // 1: just the source, 2: source and neighbors, etc)
 ) ;
 
@@ -234,7 +273,16 @@ GrB_Info LAGraph_bfs_simple
     GrB_Vector *v,          // v [i] is the BFS level of node i in the graph
     const GrB_Matrix A,     // input graph, treated as if boolean in semiring
     GrB_Index s,            // starting node of the BFS
-    int64_t max_level       // max # of levels to search (<0: nothing,
+    int32_t max_level       // max # of levels to search (<0: nothing,
+                            // 1: just the source, 2: source and neighbors, etc)
+) ;
+
+GrB_Info LAGraph_bfs2
+(
+    GrB_Vector *v_output,   // v [i] is the BFS level of node i in the graph
+    const GrB_Matrix A,     // input graph, treated as if boolean in semiring
+    GrB_Index s,            // starting node of the BFS
+    int32_t max_level       // max # of levels to search (<0: nothing,
                             // 1: just the source, 2: source and neighbors, etc)
 ) ;
 

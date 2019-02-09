@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# place a copy of ssget from sparse.tamu.edu (or in the SuiteSparse 
+# distribution) in your home directory.  Or put a link in your home
+# directory to ssget.  Then use ssgui.jar or ssget in MATLAB to
+# download matrices.
+
+tar zvfxO ~/ssget/MM/HB/west0067.tar.gz west0067/west0067.mtx | \
+    ./build/bfs_test 0 > o
+
+tar zvfxO ~/ssget/MM/ND/nd3k.tar.gz nd3k/nd3k.mtx | \
+    ./build/bfs_test 0 > o
+
+tar zvfxO ~/ssget/MM/ND/nd12k.tar.gz nd12k/nd12k.mtx | \
+    ./build/bfs_test 0 > o
+
+tar zvfxO /Users/davis/ssget/MM/McRae/ecology1.tar.gz \
+    ecology1/ecology1.mtx | \
+    ./build/bfs_test 0 > o

@@ -46,7 +46,7 @@ GrB_Info LAGraph_bfs_pushpull
     const GrB_Matrix A,     // input graph, treated as if boolean in semiring
     const GrB_Matrix AT,    // transpose of A
     GrB_Index s,            // starting node of the BFS
-    int64_t max_level       // max # of levels to search (<0: nothing,
+    int32_t max_level       // max # of levels to search (<0: nothing,
                             // 1: just the source, 2: source and neighbors, etc)
 )
 {
@@ -71,7 +71,7 @@ GrB_Info LAGraph_bfs_pushpull
 
     (*v_output) = NULL ;
 
-    GrB_Index nrows, ncols ;
+    GrB_Index nrows, ncols, nvals ;
     LAGRAPH_OK (GrB_Matrix_nrows (&nrows, A)) ;
     LAGRAPH_OK (GrB_Matrix_ncols (&ncols, A)) ;
     if (nrows != ncols)
@@ -90,21 +90,29 @@ GrB_Info LAGraph_bfs_pushpull
     // create an empty vector v.  Assume int32 is sufficient
     LAGRAPH_OK (GrB_Vector_new (&v, GrB_INT32, n)) ;
 
+    // make it dense
+    // if (max_level > 2)
+    {
+        for (GrB_Index i = 0 ; i < n ; i++)
+        {
+            LAGRAPH_OK (GrB_Vector_setElement (v, (int32_t) 0, i)) ;
+        }
+    }
+
     // create a boolean vector q, and set q[s] to true
     LAGRAPH_OK (GrB_Vector_new (&q, GrB_BOOL, n)) ;
     LAGRAPH_OK (GrB_Vector_setElement (q, true, s)) ;
 
-    // descriptor: invert the mask for vxm, and clear output before assignment
-    LAGRAPH_OK (GrB_Descriptor_new (&desc)) ;
-    LAGRAPH_OK (GrB_Descriptor_set (desc, GrB_MASK, GrB_SCMP)) ;
-    LAGRAPH_OK (GrB_Descriptor_set (desc, GrB_OUTP, GrB_REPLACE)) ;
+            // hack
+//          GrB_Descriptor_set (LAGraph_desc_oocr, GxB_AxB_METHOD ,
+//              GxB_AxB_GUSTAVSON) ;
 
     //--------------------------------------------------------------------------
     // BFS traversal and label the nodes
     //--------------------------------------------------------------------------
 
     bool successor = true ; // true when some successor found
-    for (int64_t level = 1 ; successor && level <= max_level ; level++)
+    for (int32_t level = 1 ; successor && level <= max_level ; level++)
     {
 
         // TODO if v is sparse and there are many levels, GrB_assign will be
@@ -115,12 +123,17 @@ GrB_Info LAGraph_bfs_pushpull
         // v<q> = level, using vector assign with q as the mask
         LAGRAPH_OK (GrB_assign (v, q, NULL, level, GrB_ALL, n, NULL)) ;
 
-        GrB_Index nvals ;
-        LAGRAPH_OK (GrB_Vector_nvals (&nvals, q)) ;
+        // GxB_fprint (AT, 3, stderr) ;
+        // fprintf (stderr, "v is now:\n") ;
+        // GxB_fprint (v, 3, stderr) ;
+        // GxB_fprint (LAGraph_desc_oocr, 3, stderr) ;
+        // GxB_fprint (LAGraph_LOR_LAND_BOOL, 3, stderr) ;
+
+        // LAGRAPH_OK (GrB_Vector_nvals (&nvals, q)) ;
 
         // q<!v> = q ||.&& A ; finds all the unvisited
         // successors from current q, using !v as the mask
-        if (level <= 2)     // a dumb rule ... need to check nvals of Q
+        if (0) // (level <= 2)     // a dumb rule ... need to check nvals of Q
         {
             // push, using saxpy operations
             // TODO in Version 2.2.3 of SuiteSparse:GraphBLAS, a dense mask
@@ -130,7 +143,7 @@ GrB_Info LAGraph_bfs_pushpull
             // fprintf (stderr, "level %g: --- push (heap or Gus.):\n", 
                 // (double) level) ;
             LAGRAPH_OK (GrB_vxm (q, v, NULL, LAGraph_LOR_LAND_BOOL, q, A,
-                desc)) ;
+                LAGraph_desc_oocr)) ;
         }
         else
         {
@@ -139,9 +152,27 @@ GrB_Info LAGraph_bfs_pushpull
             // but will be in the next release)
             // fprintf (stderr, "level %g: --- pull (dot):\n",
             //    (double) level) ;
+
+            // q<!v> = AT*q
             LAGRAPH_OK (GrB_mxv (q, v, NULL, LAGraph_LOR_LAND_BOOL, AT, q,
-                desc)) ;
+                LAGraph_desc_oocr)) ;
+
+            #if 0
+            // q<!v> = AT*v ; gives the same result.  If v(j) != 0, then
+            // node i has been seen.  AT(i,j)*v(j) is true if the edge (j,i)
+            // is present and v(j) is nonzero.  This sets y(i) to true
+            // where y = AT*v.  However, the value y(i) is assigned to q(i)
+            // only if v(i) was initially zero.
+            LAGRAPH_OK (GrB_mxv (q, v, NULL, LAGraph_LOR_LAND_BOOL, AT, v,
+                LAGraph_desc_oocr)) ;
+
+            // make q sparse
+            LAGRAPH_OK (GrB_assign (q, q, NULL, q, GrB_ALL, n,
+                LAGraph_desc_ooor)) ;
+            #endif
         }
+
+        // GxB_fprint (q, 3, stderr) ;
 
         // dump q to see how it was computed:
         // GxB_fprint (q, GxB_COMPLETE, stderr) ;
@@ -152,6 +183,21 @@ GrB_Info LAGraph_bfs_pushpull
         // successor = ||(q)
         LAGRAPH_OK (GrB_reduce (&successor, NULL, LAGraph_LOR_MONOID, q, NULL));
     }
+
+    //--------------------------------------------------------------------------
+    // make v sparse
+    //--------------------------------------------------------------------------
+
+    LAGRAPH_OK (GrB_Vector_nvals (&nvals, v)) ;
+
+    if (nvals < n)
+    {
+        // v<v> = v ; clearing v before assigning it back
+        LAGRAPH_OK (GrB_assign (v, v, NULL, v, GrB_ALL, n, LAGraph_desc_ooor)) ;
+    }
+
+    // finish the work
+    LAGRAPH_OK (GrB_Vector_nvals (&nvals, v)) ;
 
     //--------------------------------------------------------------------------
     // free workspace and return result

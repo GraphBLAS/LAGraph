@@ -258,9 +258,38 @@ void LAGraph_true_bool_complex
 }
 
 // boolean monoids and semirings
+GrB_Monoid LAGraph_MAX_INT32_MONOID = NULL ;
 GrB_Monoid LAGraph_LAND_MONOID = NULL ;
 GrB_Monoid LAGraph_LOR_MONOID = NULL ;
 GrB_Semiring LAGraph_LOR_LAND_BOOL = NULL ;
+
+// all 16 descriptors
+// syntax: 4 characters define the following.  'o' is the default:
+// 1: o or t: A transpose
+// 2: o or t: B transpose
+// 3: o or c: complemented mask
+// 4: o or r: replace
+GrB_Descriptor
+
+    LAGraph_desc_oooo = NULL ,   // default (NULL)
+    LAGraph_desc_ooor = NULL ,   // replace
+    LAGraph_desc_ooco = NULL ,   // compl mask
+    LAGraph_desc_oocr = NULL ,   // compl mask, replace
+
+    LAGraph_desc_otoo = NULL ,   // A'
+    LAGraph_desc_otor = NULL ,   // A', replace
+    LAGraph_desc_otco = NULL ,   // A', compl mask
+    LAGraph_desc_otcr = NULL ,   // A', compl mask, replace
+
+    LAGraph_desc_tooo = NULL ,   // B'
+    LAGraph_desc_toor = NULL ,   // B', replace
+    LAGraph_desc_toco = NULL ,   // B', compl mask
+    LAGraph_desc_tocr = NULL ,   // B', compl mask, replace
+
+    LAGraph_desc_ttoo = NULL ,   // A', B'
+    LAGraph_desc_ttor = NULL ,   // A', B', replace
+    LAGraph_desc_ttco = NULL ,   // A', B', compl mask
+    LAGraph_desc_ttcr = NULL ;   // A', B', compl mask, replace
 
 //------------------------------------------------------------------------------
 // LAGraph_alloc_global
@@ -373,10 +402,74 @@ GrB_Info LAGraph_alloc_global ( )
 
     // allocate the monoids and semirings
 
+    LAGRAPH_OK (GrB_Monoid_new_INT32 (&LAGraph_MAX_INT32_MONOID,
+        GrB_MAX_INT32, INT32_MIN)) ;
+
     LAGRAPH_OK (GrB_Monoid_new_BOOL (&LAGraph_LAND_MONOID, GrB_LAND, true )) ;
     LAGRAPH_OK (GrB_Monoid_new_BOOL (&LAGraph_LOR_MONOID , GrB_LOR , false)) ;
     LAGRAPH_OK (GrB_Semiring_new (&LAGraph_LOR_LAND_BOOL,
         LAGraph_LOR_MONOID, GrB_LAND)) ;
+
+
+    // allocate 16 descriptors
+
+    LAGraph_desc_oooo = NULL ;   // default (NULL)
+    LAGRAPH_OK (GrB_Descriptor_new (&LAGraph_desc_ooor)) ;
+    LAGRAPH_OK (GrB_Descriptor_new (&LAGraph_desc_ooco)) ;
+    LAGRAPH_OK (GrB_Descriptor_new (&LAGraph_desc_oocr)) ;
+
+    LAGRAPH_OK (GrB_Descriptor_new (&LAGraph_desc_otoo)) ;
+    LAGRAPH_OK (GrB_Descriptor_new (&LAGraph_desc_otor)) ;
+    LAGRAPH_OK (GrB_Descriptor_new (&LAGraph_desc_otco)) ;
+    LAGRAPH_OK (GrB_Descriptor_new (&LAGraph_desc_otcr)) ;
+
+    LAGRAPH_OK (GrB_Descriptor_new (&LAGraph_desc_tooo)) ;
+    LAGRAPH_OK (GrB_Descriptor_new (&LAGraph_desc_toor)) ;
+    LAGRAPH_OK (GrB_Descriptor_new (&LAGraph_desc_toco)) ;
+    LAGRAPH_OK (GrB_Descriptor_new (&LAGraph_desc_tocr)) ;
+
+    LAGRAPH_OK (GrB_Descriptor_new (&LAGraph_desc_ttoo)) ;
+    LAGRAPH_OK (GrB_Descriptor_new (&LAGraph_desc_ttor)) ;
+    LAGRAPH_OK (GrB_Descriptor_new (&LAGraph_desc_ttco)) ;
+    LAGRAPH_OK (GrB_Descriptor_new (&LAGraph_desc_ttcr)) ;
+
+    // set the 16 descriptors
+
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_ooor, GrB_OUTP, GrB_REPLACE)) ;
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_oocr, GrB_OUTP, GrB_REPLACE)) ;
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_otor, GrB_OUTP, GrB_REPLACE)) ;
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_otcr, GrB_OUTP, GrB_REPLACE)) ;
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_toor, GrB_OUTP, GrB_REPLACE)) ;
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_tocr, GrB_OUTP, GrB_REPLACE)) ;
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_ttor, GrB_OUTP, GrB_REPLACE)) ;
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_ttcr, GrB_OUTP, GrB_REPLACE)) ;
+
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_ooco, GrB_MASK, GrB_SCMP)) ;
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_oocr, GrB_MASK, GrB_SCMP)) ;
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_otco, GrB_MASK, GrB_SCMP)) ;
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_otcr, GrB_MASK, GrB_SCMP)) ;
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_toco, GrB_MASK, GrB_SCMP)) ;
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_tocr, GrB_MASK, GrB_SCMP)) ;
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_ttco, GrB_MASK, GrB_SCMP)) ;
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_ttcr, GrB_MASK, GrB_SCMP)) ;
+
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_otoo, GrB_INP1, GrB_TRAN)) ;
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_otor, GrB_INP1, GrB_TRAN)) ;
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_otco, GrB_INP1, GrB_TRAN)) ;
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_otcr, GrB_INP1, GrB_TRAN)) ;
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_ttoo, GrB_INP1, GrB_TRAN)) ;
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_ttor, GrB_INP1, GrB_TRAN)) ;
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_ttco, GrB_INP1, GrB_TRAN)) ;
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_ttcr, GrB_INP1, GrB_TRAN)) ;
+
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_tooo, GrB_INP0, GrB_TRAN)) ;
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_toor, GrB_INP0, GrB_TRAN)) ;
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_toco, GrB_INP0, GrB_TRAN)) ;
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_tocr, GrB_INP0, GrB_TRAN)) ;
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_ttoo, GrB_INP0, GrB_TRAN)) ;
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_ttor, GrB_INP0, GrB_TRAN)) ;
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_ttco, GrB_INP0, GrB_TRAN)) ;
+    LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_ttcr, GrB_INP0, GrB_TRAN)) ;
 
     return (GrB_SUCCESS) ;
 }

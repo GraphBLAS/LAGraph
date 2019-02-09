@@ -47,7 +47,7 @@ GrB_Info LAGraph_bfs_simple
     GrB_Vector *v_output,   // v [i] is the BFS level of node i in the graph
     const GrB_Matrix A,     // input graph, treated as if boolean in semiring
     GrB_Index s,            // starting node of the BFS
-    int64_t max_level       // max # of levels to search (<0: nothing,
+    int32_t max_level       // max # of levels to search (<0: nothing,
                             // 1: just the source, 2: source and neighbors, etc)
 )
 {
@@ -103,7 +103,7 @@ GrB_Info LAGraph_bfs_simple
     //--------------------------------------------------------------------------
 
     bool successor = true ; // true when some successor found
-    for (int64_t level = 1 ; successor && level <= max_level ; level++)
+    for (int32_t level = 1 ; successor && level <= max_level ; level++)
     {
         // v<q> = level, using vector assign with q as the mask
         LAGRAPH_OK (GrB_assign (v, q, NULL, level, GrB_ALL, n, NULL)) ;

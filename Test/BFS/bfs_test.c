@@ -20,6 +20,8 @@
     GrB_free (&Abool) ;             \
     GrB_free (&v) ;                 \
     GrB_free (&v2) ;                \
+    GrB_free (&v3) ;                \
+    GrB_free (&diff) ;              \
 }
 
 int main (int argc, char **argv)
@@ -33,6 +35,8 @@ int main (int argc, char **argv)
     GrB_Matrix Abool = NULL ;
     GrB_Vector v = NULL ;
     GrB_Vector v2 = NULL ;
+    GrB_Vector v3 = NULL ;
+    GrB_Vector diff = NULL ;
 
     LAGRAPH_OK (LAGraph_init ( )) ;
 
@@ -77,6 +81,9 @@ int main (int argc, char **argv)
         sscanf (argv [1], "%" PRIu64, &s) ; 
     }
 
+    fprintf (stderr, "input graph: nodes: %g edges: %g source node: %g\n",
+        (double) n, (double)  nvals, (double) s) ;
+
     //--------------------------------------------------------------------------
     // run the BFS on node s
     //--------------------------------------------------------------------------
@@ -85,12 +92,27 @@ int main (int argc, char **argv)
     double tic [2] ;
     LAGraph_tic (tic) ;
 
-    LAGRAPH_OK (LAGraph_bfs_simple (&v, A, s, n)) ;
+    LAGRAPH_OK (LAGraph_bfs_simple (&v, A, s, INT32_MAX)) ;
 
     // stop the timer
     double t1 = LAGraph_toc (tic) ;
     fprintf (stderr, "simple    time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
         t1, 1e-6*((double) nvals) / t1) ;
+
+    //--------------------------------------------------------------------------
+    // run the BFS on node s with LAGraph_bfs2
+    //--------------------------------------------------------------------------
+
+    // start the timer
+    LAGraph_tic (tic) ;
+
+    LAGRAPH_OK (LAGraph_bfs2 (&v2, A, s, INT32_MAX)) ;
+
+    // stop the timer
+    double t2 = LAGraph_toc (tic) ;
+    fprintf (stderr, "method2   time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
+        t2, 1e-6*((double) nvals) / t2) ;
+    fprintf (stderr, "speedup of method2:   %g\n", t1/t2) ;
 
     //--------------------------------------------------------------------------
     // now the BFS on node s using push-pull instead
@@ -102,21 +124,34 @@ int main (int argc, char **argv)
 
     LAGraph_tic (tic) ;
 
-    LAGRAPH_OK (LAGraph_bfs_pushpull (&v2, A, AT, s, n)) ;
+    LAGRAPH_OK (LAGraph_bfs_pushpull (&v3, A, AT, s, INT32_MAX)) ;
 
-    double t2 = LAGraph_toc (tic) ;
+    double t3 = LAGraph_toc (tic) ;
     fprintf (stderr, "push/pull time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
-        t2, 1e-6*((double) nvals) / t2) ;
-    fprintf (stderr, "speedup of push/pull: %g\n", t1/t2) ;
+        t3, 1e-6*((double) nvals) / t3) ;
+    fprintf (stderr, "speedup of push/pull: %g\n", t1/t3) ;
 
     //--------------------------------------------------------------------------
     // check results
     //--------------------------------------------------------------------------
 
+    // find the max level
+    int32_t maxlevel = 0 ;
+    LAGRAPH_OK (GrB_reduce (&maxlevel, NULL, LAGraph_MAX_INT32_MONOID, v,
+        NULL));
+    fprintf (stderr, "number of levels: %d\n", maxlevel) ;
+
+    // find the number of nodes visited
+    GrB_Index nv = 0 ;
+    LAGRAPH_OK (GrB_Vector_nvals (&nv, v)) ;
+    fprintf (stderr, "number of nodes visited: %g out of %g"
+        " (%g %% of the graph)\n", (double) nv, (double) n,
+        100. * (double) nv / (double) n) ;
+
     // TODO: you can't typecast from vectors to matrices ...  (except in
     // SuiteSparse:GraphBLAS).  Need a function LAGraph_Vector_isequal.
     bool isequal = false ;
-    LAGRAPH_OK (LAGraph_isequal (&isequal, (GrB_Matrix) v, (GrB_Matrix) v2,
+    LAGRAPH_OK (LAGraph_isequal (&isequal, (GrB_Matrix) v, (GrB_Matrix) v3,
         NULL)) ;
 
     if (isequal)
@@ -128,6 +163,40 @@ int main (int argc, char **argv)
         fprintf (stderr, "ERROR! simple and push-pull differ\n") ;
         abort ( ) ;
     }
+
+    LAGRAPH_OK (LAGraph_isequal (&isequal, (GrB_Matrix) v, (GrB_Matrix) v2,
+        NULL)) ;
+
+    if (isequal)
+    {
+        fprintf (stderr, "results of simple and method2   are the same\n") ;
+    }
+    else
+    {
+        fprintf (stderr, "ERROR! simple and method2   differ\n") ;
+        abort ( ) ;
+    }
+
+    #if 0
+    // diff = v2 - v
+    LAGRAPH_OK (GrB_Vector_new (&diff, GrB_INT32, n)) ;
+    LAGRAPH_OK (GrB_eWiseAdd (diff, NULL, NULL, GrB_MINUS_INT32, v2, v, NULL)) ;
+    // err = or (diff)
+    bool err ;
+    LAGRAPH_OK (GrB_reduce (&err, NULL, LAGraph_LOR_MONOID, diff, NULL)) ;
+    if (err)
+    {
+        GxB_fprint (diff, 3, stderr) ;
+        GxB_fprint (v2, 3, stderr) ;
+        GxB_fprint (v,  3, stderr) ;
+        fprintf (stderr, "ERROR! simple and method2 differ\n") ;
+        abort ( ) ;
+    }
+    else
+    {
+        fprintf (stderr, "results of simple and method2 are the same\n") ;
+    }
+    #endif
 
     //--------------------------------------------------------------------------
     // write the result to stdout (check them outside of this main program)
