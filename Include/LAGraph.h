@@ -38,15 +38,37 @@
 #define LAGRAPH_MAX(x,y) (((x) > (y)) ? (x) : (y))
 #define LAGRAPH_MIN(x,y) (((x) < (y)) ? (x) : (y))
 
-// for floating-point, same as min(x,y,'includenan') and max(...) in MATLAB
-#define LAGRAPH_FMIN(x,y) ((isnan (x) || isnan (y)) ? NAN : LAGRAPH_MIN (x,y))
-#define LAGRAPH_FMAX(x,y) ((isnan (x) || isnan (y)) ? NAN : LAGRAPH_MAX (x,y))
+// for floating-point, same as min(x,y,'omitnan') and max(...) in MATLAB
+#define LAGRAPH_OMITNAN(x,y,f) ((isnan (x)) ? (y) : ((isnan (y)) ? (x) : (f)))
+#define LAGRAPH_FMIN(x,y) LAGRAPH_OMITNAN (x, y, GB_IMIN (x,y))
+#define LAGRAPH_FMAX(x,y) LAGRAPH_OMITNAN (x, y, GB_IMAX (x,y))
 
 // free a block of memory and set the pointer to NULL
 #define LAGRAPH_FREE(p)     \
 {                           \
     LAGraph_free (p) ;      \
     p = NULL ;              \
+}
+
+//------------------------------------------------------------------------------
+// LAGRAPH_OK: call LAGraph or GraphBLAS and check the result
+//------------------------------------------------------------------------------
+
+// The including file must declare a scalar GrB_Info info, and must define
+// LAGRAPH_FREE_ALL as a macro that frees all workspace if an error occurs.
+// method can be a GrB_Info scalar as well, so that LAGRAPH_OK(info) works.
+// The function that uses this macro must return GrB_Info, or int.
+
+#define LAGRAPH_OK(method)                                                  \
+{                                                                           \
+    info = method ;                                                         \
+    if (! (info == GrB_SUCCESS || info == GrB_NO_VALUE))                    \
+    {                                                                       \
+        fprintf (stderr, "LAGraph error: [%d]\n%sFile: %s Line: %d\n",      \
+            info, GrB_error ( ), __FILE__, __LINE__) ;                      \
+        LAGRAPH_FREE_ALL ;                                                  \
+        return (info) ;                                                     \
+    }                                                                       \
 }
 
 //------------------------------------------------------------------------------
@@ -82,8 +104,9 @@ extern GrB_UnaryOp LAGraph_ISONE_FP32 ;
 extern GrB_UnaryOp LAGraph_ISONE_FP64 ;
 extern GrB_UnaryOp LAGraph_ISONE_Complex ;
 
-// returns true
+// unary operators that return 1
 extern GrB_UnaryOp LAGraph_TRUE_BOOL ;
+extern GrB_UnaryOp LAGraph_TRUE_BOOL_Complex ;
 
 // monoids and semirings
 extern GrB_Monoid LAGraph_LAND_MONOID ;
@@ -118,6 +141,12 @@ GrB_Info LAGraph_ispattern  // return GrB_SUCCESS if successful
     GrB_UnaryOp userop      // for A with arbitrary user-defined type.
                             // Ignored if A and B are of built-in types or
                             // LAGraph_Complex.
+) ;
+
+GrB_Info LAGraph_pattern    // return GrB_SUCCESS if successful
+(
+    GrB_Matrix *C,          // a boolean matrix with the pattern of A
+    GrB_Matrix A
 ) ;
 
 GrB_Info LAGraph_isequal    // return GrB_SUCCESS if successful
@@ -176,7 +205,7 @@ void LAGraph_free           // wrapper for free
     void *p
 ) ;
 
-void LAGraph_tic            // returns current time in seconds and nanoseconds
+void LAGraph_tic            // gets current time in seconds and nanoseconds
 (
     double tic [2]          // tic [0]: seconds, tic [1]: nanoseconds
 ) ;

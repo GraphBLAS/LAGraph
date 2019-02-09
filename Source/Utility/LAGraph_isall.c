@@ -27,6 +27,7 @@ GrB_Info LAGraph_isall      // return GrB_SUCCESS if successful
 )
 {
 
+    GrB_Info info ;
     GrB_Matrix C = NULL ;
     GrB_Monoid monoid = NULL ;
     GrB_Index nrows1, ncols1, nrows2, ncols2, nvals, nvals1, nvals2 ;

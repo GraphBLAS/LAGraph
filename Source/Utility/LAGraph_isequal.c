@@ -35,6 +35,7 @@ GrB_Info LAGraph_isequal    // return GrB_SUCCESS if successful
 )
 {
 
+    GrB_Info info ;
     GrB_Type atype, btype ;
     GrB_BinaryOp op ;
 

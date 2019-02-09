@@ -36,7 +36,7 @@
 // LAGrapph_tic: return the current wallclock time in high resolution
 //------------------------------------------------------------------------------
 
-void LAGraph_tic            // returns current time in seconds and nanoseconds
+void LAGraph_tic            // gets current time in seconds and nanoseconds
 (
     double tic [2]          // tic [0]: seconds, tic [1]: nanoseconds
 )

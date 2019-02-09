@@ -55,7 +55,7 @@ GrB_Info LAGraph_bfs_pushpull
     // check inputs
     //--------------------------------------------------------------------------
 
-    fprintf (stderr, "\npush-pull:\n") ;
+    // fprintf (stderr, "\npush-pull:\n") ;
 
     GrB_Info info ;
 
@@ -126,8 +126,9 @@ GrB_Info LAGraph_bfs_pushpull
             // TODO in Version 2.2.3 of SuiteSparse:GraphBLAS, a dense mask
             // vector will be slow (the entire vector gets scattered, but
             // not all is used...).  I can fix this however.
-            fprintf (stderr, "level %g: --- push (heap or Gus.):\n", 
-                (double) level) ;
+
+            // fprintf (stderr, "level %g: --- push (heap or Gus.):\n", 
+                // (double) level) ;
             LAGRAPH_OK (GrB_vxm (q, v, NULL, LAGraph_LOR_LAND_BOOL, q, A,
                 desc)) ;
         }
@@ -136,14 +137,14 @@ GrB_Info LAGraph_bfs_pushpull
             // pull, using dot products
             // TODO this needs early-exit (not on v2.2.3 of SuiteSparse
             // but will be in the next release)
-            fprintf (stderr, "level %g: --- pull (dot):\n",
-                (double) level) ;
+            // fprintf (stderr, "level %g: --- pull (dot):\n",
+            //    (double) level) ;
             LAGRAPH_OK (GrB_mxv (q, v, NULL, LAGraph_LOR_LAND_BOOL, AT, q,
                 desc)) ;
         }
 
         // dump q to see how it was computed:
-        GxB_fprint (q, GxB_COMPLETE, stderr) ;
+        // GxB_fprint (q, GxB_COMPLETE, stderr) ;
 
         // note that if A has no explicit zeros, then this works faster:
         // GrB_Vector_nvals (&nvals, q) ; successor = (nvals > 0) ; 

@@ -73,6 +73,7 @@ GrB_Info LAGraph_random         // create a random matrix
     // check inputs
     //--------------------------------------------------------------------------
 
+    GrB_Info info ;
     if (A == NULL)
     {
         return (GrB_NULL_POINTER) ;

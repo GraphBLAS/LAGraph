@@ -209,6 +209,7 @@ GrB_Info LAGraph_mmwrite
     // check inputs
     //--------------------------------------------------------------------------
 
+    GrB_Info info ;
     if (A == NULL || f == NULL)
     {
         // input arguments invalid

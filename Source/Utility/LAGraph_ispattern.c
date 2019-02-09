@@ -24,6 +24,7 @@ GrB_Info LAGraph_ispattern  // return GrB_SUCCESS if successful
 )
 {
 
+    GrB_Info info ;
     GrB_Matrix C = NULL ;
     GrB_Type type ;
     GrB_Index nrows, ncols ;

@@ -80,26 +80,6 @@
 #endif
 
 //------------------------------------------------------------------------------
-// LAGRAPH_OK: call LAGraph or GraphBLAS and check the result
-//------------------------------------------------------------------------------
-
-// The including file must define LAGRAPH_FREE_ALL as a macro that frees all
-// workspace if an error occurs.  method can be a GrB_Info scalar as well,
-// so that LAGRAPH_OK(info) works.
-
-#define LAGRAPH_OK(method)                                                  \
-{                                                                           \
-    GrB_Info this_info = method ;                                           \
-    if (! (this_info == GrB_SUCCESS || this_info == GrB_NO_VALUE))          \
-    {                                                                       \
-        fprintf (stderr, "LAGraph error: [%d]\n%s\n",                       \
-            this_info, GrB_error ( )) ;                                     \
-        LAGRAPH_FREE_ALL ;                                                  \
-        return (this_info) ;                                                \
-    }                                                                       \
-}
-
-//------------------------------------------------------------------------------
 // Matrix Market format
 //------------------------------------------------------------------------------
 

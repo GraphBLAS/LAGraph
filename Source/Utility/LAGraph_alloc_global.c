@@ -235,13 +235,23 @@ void LAGraph_isone_complex
     (*z) = ((*x) == 1) ;
 }
 
-// convert to pattern (ignoring the values)
+// unary operators that return boolean true
 GrB_UnaryOp LAGraph_TRUE_BOOL = NULL ;
+GrB_UnaryOp LAGraph_TRUE_BOOL_Complex  = NULL ;
 
 void LAGraph_true_bool
 (
     bool *z,
     const bool *x       // ignored
+)
+{
+    (*z) = true ;
+}
+
+void LAGraph_true_bool_complex
+(
+    bool *z,
+    const double complex *x     // ignored
 )
 {
     (*z) = true ;
@@ -261,6 +271,7 @@ GrB_Semiring LAGraph_LOR_LAND_BOOL = NULL ;
 
 GrB_Info LAGraph_alloc_global ( )
 {
+    GrB_Info info ;
 
     // create the complex type for LAGraph
 
@@ -284,101 +295,88 @@ GrB_Info LAGraph_alloc_global ( )
         F_BINARY (LAGraph_skew_int32),
         GrB_BOOL, GrB_INT32, GrB_INT32)) ;
 
-    LAGRAPH_OK (GrB_BinaryOp_new (&LAGraph_SKEW_INT64, 
+    LAGRAPH_OK (GrB_BinaryOp_new (&LAGraph_SKEW_INT64,
         F_BINARY (LAGraph_skew_int64),
         GrB_BOOL, GrB_INT64, GrB_INT64)) ;
 
-    LAGRAPH_OK (GrB_BinaryOp_new (&LAGraph_SKEW_FP32, 
+    LAGRAPH_OK (GrB_BinaryOp_new (&LAGraph_SKEW_FP32,
         F_BINARY (LAGraph_skew_float),
         GrB_BOOL, GrB_FP32, GrB_FP32)) ;
 
-    LAGRAPH_OK (GrB_BinaryOp_new (&LAGraph_SKEW_FP64, 
+    LAGRAPH_OK (GrB_BinaryOp_new (&LAGraph_SKEW_FP64,
         F_BINARY (LAGraph_skew_double),
         GrB_BOOL, GrB_FP64, GrB_FP64)) ;
 
-    LAGRAPH_OK (GrB_BinaryOp_new (&LAGraph_SKEW_Complex, 
+    LAGRAPH_OK (GrB_BinaryOp_new (&LAGraph_SKEW_Complex,
         F_BINARY (LAGraph_skew_complex),
         GrB_BOOL, LAGraph_Complex, LAGraph_Complex)) ;
 
-    LAGRAPH_OK (GrB_BinaryOp_new (&LAGraph_Hermitian, 
+    LAGRAPH_OK (GrB_BinaryOp_new (&LAGraph_Hermitian,
         F_BINARY (LAGraph_hermitian),
         GrB_BOOL, LAGraph_Complex, LAGraph_Complex)) ;
 
-    // create the unary operators
+    // create the unary operators that check if equal to 1
 
-    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_INT8, 
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_INT8,
         F_UNARY (LAGraph_isone_int8),
         GrB_BOOL, GrB_INT8)) ;
 
-    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_INT16, 
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_INT16,
         F_UNARY (LAGraph_isone_int16),
         GrB_BOOL, GrB_INT16)) ;
 
-    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_INT32, 
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_INT32,
         F_UNARY (LAGraph_isone_int32),
         GrB_BOOL, GrB_INT32)) ;
 
-    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_INT64, 
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_INT64,
         F_UNARY (LAGraph_isone_int64),
         GrB_BOOL, GrB_INT64)) ;
 
-    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_UINT8, 
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_UINT8,
         F_UNARY (LAGraph_isone_uint8),
         GrB_BOOL, GrB_UINT8)) ;
 
-    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_UINT16, 
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_UINT16,
         F_UNARY (LAGraph_isone_uint16),
         GrB_BOOL, GrB_UINT16)) ;
 
-    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_UINT32, 
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_UINT32,
         F_UNARY (LAGraph_isone_uint32),
         GrB_BOOL, GrB_UINT32)) ;
 
-    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_UINT64, 
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_UINT64,
         F_UNARY (LAGraph_isone_uint64),
         GrB_BOOL, GrB_UINT64)) ;
 
-    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_FP32, 
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_FP32,
         F_UNARY (LAGraph_isone_float),
         GrB_BOOL, GrB_FP32)) ;
 
-    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_FP64, 
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_FP64,
         F_UNARY (LAGraph_isone_double),
         GrB_BOOL, GrB_FP64)) ;
 
-    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_Complex, 
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_Complex,
         F_UNARY (LAGraph_isone_complex),
         GrB_BOOL, LAGraph_Complex)) ;
 
-    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_TRUE_BOOL, 
-        F_UNARY (LAGraph_true_bool), GrB_BOOL, GrB_BOOL)) ;
+    // create the unary operators that return true
+
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_TRUE_BOOL,
+        F_UNARY (LAGraph_true_bool),
+        GrB_BOOL, GrB_BOOL)) ;
+
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_TRUE_BOOL_Complex,
+        F_UNARY (LAGraph_true_bool_complex),
+        GrB_BOOL, LAGraph_Complex)) ;
+
+    // allocate the monoids and semirings
 
     LAGRAPH_OK (GrB_Monoid_new_BOOL (&LAGraph_LAND_MONOID, GrB_LAND, true )) ;
     LAGRAPH_OK (GrB_Monoid_new_BOOL (&LAGraph_LOR_MONOID , GrB_LOR , false)) ;
     LAGRAPH_OK (GrB_Semiring_new (&LAGraph_LOR_LAND_BOOL,
         LAGraph_LOR_MONOID, GrB_LAND)) ;
-
-//  GxB_fprint (LAGraph_EQ_Complex, GxB_COMPLETE, stderr) ;
-//  GxB_fprint (LAGraph_SKEW_INT8, GxB_COMPLETE, stderr) ;
-//  GxB_fprint (LAGraph_SKEW_INT16, GxB_COMPLETE, stderr) ;
-//  GxB_fprint (LAGraph_SKEW_INT32, GxB_COMPLETE, stderr) ;
-//  GxB_fprint (LAGraph_SKEW_INT64, GxB_COMPLETE, stderr) ;
-//  GxB_fprint (LAGraph_SKEW_FP32, GxB_COMPLETE, stderr) ;
-//  GxB_fprint (LAGraph_SKEW_FP64, GxB_COMPLETE, stderr) ;
-//  GxB_fprint (LAGraph_SKEW_Complex, GxB_COMPLETE, stderr) ;
-//  GxB_fprint (LAGraph_Hermitian, GxB_COMPLETE, stderr) ;
-//  GxB_fprint (LAGraph_ISONE_INT8, GxB_COMPLETE, stderr) ;
-//  GxB_fprint (LAGraph_ISONE_INT16, GxB_COMPLETE, stderr) ;
-//  GxB_fprint (LAGraph_ISONE_INT32, GxB_COMPLETE, stderr) ;
-//  GxB_fprint (LAGraph_ISONE_INT64, GxB_COMPLETE, stderr) ;
-//  GxB_fprint (LAGraph_ISONE_UINT8, GxB_COMPLETE, stderr) ;
-//  GxB_fprint (LAGraph_ISONE_UINT16, GxB_COMPLETE, stderr) ;
-//  GxB_fprint (LAGraph_ISONE_UINT32, GxB_COMPLETE, stderr) ;
-//  GxB_fprint (LAGraph_ISONE_UINT64, GxB_COMPLETE, stderr) ;
-//  GxB_fprint (LAGraph_ISONE_UINT64, GxB_COMPLETE, stderr) ;
-//  GxB_fprint (LAGraph_ISONE_UINT64, GxB_COMPLETE, stderr) ;
-//  GxB_fprint (LAGraph_ISONE_UINT64, GxB_COMPLETE, stderr) ;
-//  GxB_fprint (LAGraph_LAND_MONOID, GxB_COMPLETE, stderr) ;
 
     return (GrB_SUCCESS) ;
 }
