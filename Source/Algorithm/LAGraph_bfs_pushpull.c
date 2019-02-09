@@ -106,6 +106,12 @@ GrB_Info LAGraph_bfs_pushpull
     bool successor = true ; // true when some successor found
     for (int64_t level = 1 ; successor && level <= max_level ; level++)
     {
+
+        // TODO if v is sparse and there are many levels, GrB_assign will be
+        // slow.  Solution:  if nvals(v) > n/100, say, then convert it to
+        // dense.  Or, if the total work of the BFS is expected to be
+        // O(n), then make v dense to start with.
+
         // v<q> = level, using vector assign with q as the mask
         LAGRAPH_OK (GrB_assign (v, q, NULL, level, GrB_ALL, n, NULL)) ;
 
@@ -117,6 +123,9 @@ GrB_Info LAGraph_bfs_pushpull
         if (level <= 2)     // a dumb rule ... need to check nvals of Q
         {
             // push, using saxpy operations
+            // TODO in Version 2.2.3 of SuiteSparse:GraphBLAS, a dense mask
+            // vector will be slow (the entire vector gets scattered, but
+            // not all is used...).  I can fix this however.
             fprintf (stderr, "level %g: --- push (heap or Gus.):\n", 
                 (double) level) ;
             LAGRAPH_OK (GrB_vxm (q, v, NULL, LAGraph_LOR_LAND_BOOL, q, A,
@@ -125,6 +134,8 @@ GrB_Info LAGraph_bfs_pushpull
         else
         {
             // pull, using dot products
+            // TODO this needs early-exit (not on v2.2.3 of SuiteSparse
+            // but will be in the next release)
             fprintf (stderr, "level %g: --- pull (dot):\n",
                 (double) level) ;
             LAGRAPH_OK (GrB_mxv (q, v, NULL, LAGraph_LOR_LAND_BOOL, AT, q,
