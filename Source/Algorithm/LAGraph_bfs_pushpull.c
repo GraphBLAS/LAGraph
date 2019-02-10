@@ -152,7 +152,7 @@ GrB_Info LAGraph_bfs_pushpull
             // push, using saxpy operations
             // TODO in Version 2.2.3 of SuiteSparse:GraphBLAS, a dense mask
             // vector will be slow (the entire vector gets scattered, but
-            // not all is used...).  I can fix this however.
+            // not all is used...).  This is fixed in 2.3.0 (not released)
 
             // fprintf (stderr, "level %g: --- push (heap or Gus.):\n", 
                 // (double) level) ;
