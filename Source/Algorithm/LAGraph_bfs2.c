@@ -118,18 +118,35 @@ GrB_Info LAGraph_bfs2
     // BFS traversal and label the nodes
     //--------------------------------------------------------------------------
 
+    char filename [1000] ;
+    sprintf (filename, "bfs2_n%d.m", (int) n) ;
+    FILE *f = fopen (filename, "w") ;
+    double tic [2], t ;
+    fprintf (f, "\nfunction [a m s q] = bfs2_n%d\n", (int) n) ;
+
+    int64_t nvisited = 0 ;
+
     bool successor = true ; // true when some successor found
     for (int32_t level = 1 ; successor && level <= max_level ; level++)
     {
+        LAGRAPH_OK (GrB_Vector_nvals (&nvals, q)) ;
+        fprintf (f, "q(%5g) = %10g ;", (double) level, (double) nvals) ;
+
         // v<q> = level, using vector assign with q as the mask
+        LAGraph_tic (tic) ;
         LAGRAPH_OK (GrB_assign (v, q, NULL, level, GrB_ALL, n, NULL)) ;
+        t = LAGraph_toc (tic) ;
+        fprintf (f, "a(%5g) = %12.6e ; ", (double) level, t) ;
 
         // fprintf (stderr, "level %g\n", (double) level) ;
         // GxB_fprint (v, 3, stderr) ;
 
         // q<!v> = q ||.&& A ; finds all the unvisited
         // successors from current q, using !v as the mask
+        LAGraph_tic (tic) ;
         LAGRAPH_OK (GrB_vxm (q, v, NULL, LAGraph_LOR_LAND_BOOL, q, A, desc)) ;
+        t = LAGraph_toc (tic) ;
+        fprintf (f, "m(%5g) = %12.6e ; ", (double) level, t) ;
 
         // dump q to see how it was computed:
         // GxB_fprint (q, GxB_COMPLETE, stderr) ;
@@ -138,8 +155,14 @@ GrB_Info LAGraph_bfs2
         // GrB_Vector_nvals (&nvals, q) ; successor = (nvals > 0) ; 
 
         // successor = ||(q)
+        LAGraph_tic (tic) ;
         LAGRAPH_OK (GrB_reduce (&successor, NULL, LAGraph_LOR_MONOID, q, NULL));
+        t = LAGraph_toc (tic) ;
+        fprintf (f, "s(%5g) = %12.6e ;\n", (double) level, t) ;
+
     }
+
+    fclose (f) ;
 
     //--------------------------------------------------------------------------
     // make v sparse

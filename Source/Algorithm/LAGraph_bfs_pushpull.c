@@ -111,17 +111,31 @@ GrB_Info LAGraph_bfs_pushpull
     // BFS traversal and label the nodes
     //--------------------------------------------------------------------------
 
+    char filename [1000] ;
+    sprintf (filename, "bfs_pushpull_n%d.m", (int) n) ;
+    FILE *f = fopen (filename, "w") ;
+    double tic [2], t ;
+    fprintf (f, "\nfunction [a m s q] = bfs_pushpull_n%d\n", (int) n) ;
+
     bool successor = true ; // true when some successor found
     for (int32_t level = 1 ; successor && level <= max_level ; level++)
     {
 
-        // TODO if v is sparse and there are many levels, GrB_assign will be
-        // slow.  Solution:  if nvals(v) > n/100, say, then convert it to
-        // dense.  Or, if the total work of the BFS is expected to be
-        // O(n), then make v dense to start with.
+        // TODO  let v start sparse.  when it reaches
+        // nvals(v) > alpha*sqrt(n), convert to dense.
+        // find a good default alpha.  Provide alpha on input:
+        //  alpha=0:  use a dense v to start with
+        //  alhpa<0:  automatic selection
+        //  alpha>0:  use this particular value for alpha.
+
+        LAGRAPH_OK (GrB_Vector_nvals (&nvals, q)) ;
+        fprintf (f, "q(%5g) = %10g ;", (double) level, (double) nvals) ;
 
         // v<q> = level, using vector assign with q as the mask
+        LAGraph_tic (tic) ;
         LAGRAPH_OK (GrB_assign (v, q, NULL, level, GrB_ALL, n, NULL)) ;
+        t = LAGraph_toc (tic) ;
+        fprintf (f, "a(%5g) = %12.6e ; ", (double) level, t) ;
 
         // GxB_fprint (AT, 3, stderr) ;
         // fprintf (stderr, "v is now:\n") ;
@@ -154,8 +168,11 @@ GrB_Info LAGraph_bfs_pushpull
             //    (double) level) ;
 
             // q<!v> = AT*q
+            LAGraph_tic (tic) ;
             LAGRAPH_OK (GrB_mxv (q, v, NULL, LAGraph_LOR_LAND_BOOL, AT, q,
                 LAGraph_desc_oocr)) ;
+            t = LAGraph_toc (tic) ;
+            fprintf (f, "m(%5g) = %12.6e ; ", (double) level, t) ;
 
             #if 0
             // q<!v> = AT*v ; gives the same result.  If v(j) != 0, then
@@ -181,8 +198,13 @@ GrB_Info LAGraph_bfs_pushpull
         // GrB_Vector_nvals (&nvals, q) ; successor = (nvals > 0) ; 
 
         // successor = ||(q)
+        LAGraph_tic (tic) ;
         LAGRAPH_OK (GrB_reduce (&successor, NULL, LAGraph_LOR_MONOID, q, NULL));
+        t = LAGraph_toc (tic) ;
+        fprintf (f, "s(%5g) = %12.6e ;\n", (double) level, t) ;
     }
+
+    fclose (f) ;
 
     //--------------------------------------------------------------------------
     // make v sparse
