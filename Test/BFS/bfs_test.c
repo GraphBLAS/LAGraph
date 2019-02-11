@@ -97,7 +97,7 @@ int main (int argc, char **argv)
     // run the BFS on node s
     //--------------------------------------------------------------------------
 
-    int ntrials = 1000 ;
+    int ntrials = 1 ;
 
     // start the timer
     double tic [2] ;
