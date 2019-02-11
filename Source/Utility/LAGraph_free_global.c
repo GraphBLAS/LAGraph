@@ -39,9 +39,11 @@ GrB_Info LAGraph_free_global ( )
     GrB_free (&LAGraph_TRUE_BOOL) ;
     GrB_free (&LAGraph_TRUE_BOOL_Complex) ;
 
+    GrB_free (&LAGraph_PLUS_INT64_MONOID) ;
     GrB_free (&LAGraph_MAX_INT32_MONOID) ;
     GrB_free (&LAGraph_LAND_MONOID) ;
     GrB_free (&LAGraph_LOR_MONOID) ;
+
     GrB_free (&LAGraph_LOR_LAND_BOOL) ;
 
 //  GrB_free (&LAGraph_desc_oooo) ;     // NULL, no need to free it

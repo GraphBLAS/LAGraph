@@ -40,8 +40,8 @@
 
 // for floating-point, same as min(x,y,'omitnan') and max(...) in MATLAB
 #define LAGRAPH_OMITNAN(x,y,f) ((isnan (x)) ? (y) : ((isnan (y)) ? (x) : (f)))
-#define LAGRAPH_FMIN(x,y) LAGRAPH_OMITNAN (x, y, GB_IMIN (x,y))
-#define LAGRAPH_FMAX(x,y) LAGRAPH_OMITNAN (x, y, GB_IMAX (x,y))
+#define LAGRAPH_FMIN(x,y) LAGRAPH_OMITNAN (x, y, LAGRAPH_MIN (x,y))
+#define LAGRAPH_FMAX(x,y) LAGRAPH_OMITNAN (x, y, LAGRAPH_MAX (x,y))
 
 // free a block of memory and set the pointer to NULL
 #define LAGRAPH_FREE(p)     \
@@ -54,10 +54,11 @@
 // LAGRAPH_OK: call LAGraph or GraphBLAS and check the result
 //------------------------------------------------------------------------------
 
-// The including file must declare a scalar GrB_Info info, and must define
-// LAGRAPH_FREE_ALL as a macro that frees all workspace if an error occurs.
-// method can be a GrB_Info scalar as well, so that LAGRAPH_OK(info) works.
-// The function that uses this macro must return GrB_Info, or int.
+// To use LAGRAPH_OK, the #include'ing file must declare a scalar GrB_Info
+// info, and must define LAGRAPH_FREE_ALL as a macro that frees all workspace
+// if an error occurs.  The method can be a GrB_Info scalar as well, so that
+// LAGRAPH_OK(info) works.  The function that uses this macro must return
+// GrB_Info, or int.
 
 #define LAGRAPH_ERROR(message,info)                                         \
 {                                                                           \
@@ -119,9 +120,13 @@ extern GrB_UnaryOp
     LAGraph_TRUE_BOOL_Complex   ;
 
 // monoids and semirings
-extern GrB_Monoid LAGraph_MAX_INT32_MONOID ;
-extern GrB_Monoid LAGraph_LAND_MONOID ;
-extern GrB_Monoid LAGraph_LOR_MONOID ;
+extern GrB_Monoid
+
+    LAGraph_PLUS_INT64_MONOID,
+    LAGraph_MAX_INT32_MONOID,
+    LAGraph_LAND_MONOID,
+    LAGraph_LOR_MONOID ;
+
 extern GrB_Semiring LAGraph_LOR_LAND_BOOL ;
 
 // all 16 descriptors
@@ -258,31 +263,20 @@ double LAGraph_toc          // returns time since last LAGraph_tic
 // user-callable algorithms
 //------------------------------------------------------------------------------
 
-GrB_Info LAGraph_bfs_pushpull
+GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
 (
-    GrB_Vector *v,          // v [i] is the BFS level of node i in the graph
+    GrB_Vector *v_output,   // v(i) is the BFS level of node i in the graph
     const GrB_Matrix A,     // input graph, treated as if boolean in semiring
-    const GrB_Matrix AT,    // transpose of A
-    GrB_Index s,            // starting node of the BFS
-    int32_t max_level       // max # of levels to search (<0: nothing,
-                            // 1: just the source, 2: source and neighbors, etc)
+    const GrB_Matrix AT,    // transpose of A (optional; push-only if NULL)
+    GrB_Index s,            // starting node of the BFS (s < 0: whole graph)
+    int64_t max_level,      // see description above
+    bool vsparse            // if true, v is expected to be very sparse
 ) ;
 
-GrB_Info LAGraph_bfs_simple
+GrB_Info LAGraph_bfs_simple     // push-only BFS
 (
-    GrB_Vector *v,          // v [i] is the BFS level of node i in the graph
+    GrB_Vector *v_output,   // v(i) is the BFS level of node i in the graph
     const GrB_Matrix A,     // input graph, treated as if boolean in semiring
-    GrB_Index s,            // starting node of the BFS
-    int32_t max_level       // max # of levels to search (<0: nothing,
-                            // 1: just the source, 2: source and neighbors, etc)
-) ;
-
-GrB_Info LAGraph_bfs2
-(
-    GrB_Vector *v_output,   // v [i] is the BFS level of node i in the graph
-    const GrB_Matrix A,     // input graph, treated as if boolean in semiring
-    GrB_Index s,            // starting node of the BFS
-    int32_t max_level       // max # of levels to search (<0: nothing,
-                            // 1: just the source, 2: source and neighbors, etc)
+    GrB_Index s             // starting node of the BFS
 ) ;
 

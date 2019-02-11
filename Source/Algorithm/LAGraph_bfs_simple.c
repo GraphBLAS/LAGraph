@@ -7,19 +7,32 @@
 
 //------------------------------------------------------------------------------
 
-// By default in SuiteSparse:GraphBLAS, the matrix A is stored by row (CSR
-// format).  The method below computes q*A via GrB_vxm, which results in a
-// "push" BFS algorithm.  If instead A is stored by column (using an extension
-// to SuiteSparse:GraphBLAS), the algorithm becomes a "pull" algorithm.
+// Perform a single-source BFS, starting at a source node s.  Returns a sparse
+// vector v such that v(i) > 0 if node is reachable from s.  v(s)=1 and v(i)=k
+// if the path with the fewest edges from s to i has k-1 edges.  If i is not
+// reachable from s, then v(i) is implicitly zero and does not appear in the
+// pattern of v.  That is, GrB_Vectors_nvals (&nreach,v) will return the
+// size of the reach of s (including s itself).
 
-// A faster algorithm would use the push-pull strategy, which requires both
-// A and AT = A' to be passed in.  If A is in CSR format, then vxm(q,A)
-// does the "push" and mxv(AT,q) does the "pull".
+// This method is a simple one for illustration only.  It can work well in
+// practice, but its performance can be *very* poor in three important cases:
 
-// Reference: Carl Yang, Aydin Buluc, and John D. Owens. 2018. Implementing
-// Push-Pull Efficiently in GraphBLAS. In Proceedings of the 47th International
-// Conference on Parallel Processing (ICPP 2018). ACM, New York, NY, USA,
-// Article 89, 11 pages. DOI: https://doi.org/10.1145/3225058.3225122
+// (1) It takes Omega(n) time.  If nvals(v) << n is expected, use
+// LAGraph_bfs_pushpull instead, which is much faster if v is expected to be
+// very sparse.
+
+// (2) It assumes the matrix A has no edges of explicit zero value.  The
+// correct result will still be returned in this case, but it will be very
+// slow.  See LAGraph_bfs_pushpull for a method that handles this case
+// efficiently.
+
+// (3) It assumes that vxm(q,A) is fast, and implemented in a 'push' fashion,
+// using saxpy operations instead of dot products.  This requires that the rows
+// A(i,:) are efficient to access, which is the case if A is in CSR format
+// internally in GraphBLAS (or perhaps in both CSR and CSC formats).  This
+// method will be *exceedlingly* slow if A is a MATLAB matrix in CSC format.
+
+// See LAGraph_bfs_pushpull, which handles the above three cases.
 
 #include "LAGraph_internal.h"
 
@@ -27,28 +40,13 @@
 {                           \
     GrB_free (&v) ;         \
     GrB_free (&q) ;         \
-    GrB_free (&desc) ;      \
 }
 
-// Given an n-by-n adjacency matrix A and a source node s, performs a BFS
-// traversal of the graph and sets v[i] to the level in which node i is
-// visited (v[s] == 1).  If i is not reacheable from s, then v[i] = 0. (Vector
-// v should be empty on input.)  The graph A need not be Boolean on input;
-// if it isn't Boolean, the semiring will properly typecast it to Boolean.
-// However, best performance is obtained if A has type GrB_BOOL.
-
-// The matrix A can have explicit entries equal to zero.  These are safely
-// ignored.
-
-// TODO: allow for a set of source nodes (pass in q, not s)
-
-GrB_Info LAGraph_bfs_simple
+GrB_Info LAGraph_bfs_simple     // push-only BFS
 (
-    GrB_Vector *v_output,   // v [i] is the BFS level of node i in the graph
+    GrB_Vector *v_output,   // v(i) is the BFS level of node i in the graph
     const GrB_Matrix A,     // input graph, treated as if boolean in semiring
-    GrB_Index s,            // starting node of the BFS
-    int32_t max_level       // max # of levels to search (<0: nothing,
-                            // 1: just the source, 2: source and neighbors, etc)
+    GrB_Index s             // starting node of the BFS
 )
 {
 
@@ -57,70 +55,46 @@ GrB_Info LAGraph_bfs_simple
     //--------------------------------------------------------------------------
 
     GrB_Info info ;
-
     GrB_Vector q = NULL ;           // nodes visited at each level
     GrB_Vector v = NULL ;           // result vector
-    GrB_Descriptor desc = NULL ;    // descriptor for vxm
-
-    if (v_output == NULL)
-    {
-        // required output argument is missing
-        return (GrB_NULL_POINTER) ;
-    }
-
-    (*v_output) = NULL ;
-
-    GrB_Index nrows, ncols ;
-    LAGRAPH_OK (GrB_Matrix_nrows (&nrows, A)) ;
-    LAGRAPH_OK (GrB_Matrix_ncols (&ncols, A)) ;
-    if (nrows != ncols)
-    {
-        // A must be square
-        return (GrB_INVALID_VALUE) ;
-    }
+    if (v_output == NULL) LAGRAPH_ERROR ("argument missing", GrB_NULL_POINTER) ;
+    GrB_Index n ;
+    LAGRAPH_OK (GrB_Matrix_nrows (&n, A)) ;
 
     //--------------------------------------------------------------------------
     // initializations
     //--------------------------------------------------------------------------
 
-    GrB_Index n = nrows ;
-    max_level = LAGRAPH_MIN (n, max_level) ;
+    // create an empty vector v, and make it dense
+    LAGRAPH_OK (GrB_Vector_new (&v, (n > INT32_MAX) ? GrB_INT64:GrB_INT32, n)) ;
+    LAGRAPH_OK (GrB_assign (v, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
+    LAGRAPH_OK (GrB_Vector_nvals (&n, v)) ;     // finish pending work on v
 
-    // create an empty vector v.  Assume int32 is sufficient
-    LAGRAPH_OK (GrB_Vector_new (&v, GrB_INT32, n)) ;
-
-    // create a boolean vector q, and set q[s] to true
+    // create a boolean vector q, and set q(s) to true
     LAGRAPH_OK (GrB_Vector_new (&q, GrB_BOOL, n)) ;
     LAGRAPH_OK (GrB_Vector_setElement (q, true, s)) ;
-
-    // descriptor: invert the mask for vxm, and clear output before assignment
-    LAGRAPH_OK (GrB_Descriptor_new (&desc)) ;
-    LAGRAPH_OK (GrB_Descriptor_set (desc, GrB_MASK, GrB_SCMP)) ;
-    LAGRAPH_OK (GrB_Descriptor_set (desc, GrB_OUTP, GrB_REPLACE)) ;
 
     //--------------------------------------------------------------------------
     // BFS traversal and label the nodes
     //--------------------------------------------------------------------------
 
-    bool successor = true ; // true when some successor found
-    for (int32_t level = 1 ; successor && level <= max_level ; level++)
+    bool anyq = true ;
+    for (int64_t level = 1 ; level <= n ; level++)
     {
-        // v<q> = level, using vector assign with q as the mask
+        // v<q> = level
         LAGRAPH_OK (GrB_assign (v, q, NULL, level, GrB_ALL, n, NULL)) ;
 
-        // q<!v> = q ||.&& A ; finds all the unvisited
-        // successors from current q, using !v as the mask
-        LAGRAPH_OK (GrB_vxm (q, v, NULL, LAGraph_LOR_LAND_BOOL, q, A, desc)) ;
-
-        // dump q to see how it was computed:
-        // GxB_fprint (q, GxB_COMPLETE, stderr) ;
-
-        // note that if A has no explicit zeros, then this works faster:
-        // GrB_Vector_nvals (&nvals, q) ; successor = (nvals > 0) ; 
-
         // successor = ||(q)
-        LAGRAPH_OK (GrB_reduce (&successor, NULL, LAGraph_LOR_MONOID, q, NULL));
+        LAGRAPH_OK (GrB_reduce (&anyq, NULL, LAGraph_LOR_MONOID, q, NULL)) ;
+        if (!anyq) break ;
+
+        // q'<!v> = q'*A
+        LAGRAPH_OK (GrB_vxm (q, v, NULL, LAGraph_LOR_LAND_BOOL, q, A, 
+            LAGraph_desc_oocr)) ;
     }
+
+    // make v sparse
+    LAGRAPH_OK (GrB_assign (v, v, NULL, v, GrB_ALL, n, LAGraph_desc_ooor)) ;
 
     //--------------------------------------------------------------------------
     // free workspace and return result

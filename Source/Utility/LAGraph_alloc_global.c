@@ -258,6 +258,7 @@ void LAGraph_true_bool_complex
 }
 
 // boolean monoids and semirings
+GrB_Monoid LAGraph_PLUS_INT64_MONOID = NULL ;
 GrB_Monoid LAGraph_MAX_INT32_MONOID = NULL ;
 GrB_Monoid LAGraph_LAND_MONOID = NULL ;
 GrB_Monoid LAGraph_LOR_MONOID = NULL ;
@@ -401,6 +402,9 @@ GrB_Info LAGraph_alloc_global ( )
         GrB_BOOL, LAGraph_Complex)) ;
 
     // allocate the monoids and semirings
+
+    LAGRAPH_OK (GrB_Monoid_new_INT64 (&LAGraph_PLUS_INT64_MONOID,
+        GrB_PLUS_INT64, 0)) ;
 
     LAGRAPH_OK (GrB_Monoid_new_INT32 (&LAGraph_MAX_INT32_MONOID,
         GrB_MAX_INT32, INT32_MIN)) ;

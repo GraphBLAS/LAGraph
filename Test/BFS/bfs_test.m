@@ -7,8 +7,10 @@ if (nargin < 2)
     s = 1 ;
 end
 
+AT = A' ;
+
 % test the MATLAB version
-v = bfs_matlab (A, s) ;
+v = bfs_matlab (AT, s) ;
 n = size (A,1) ;
 
 fprintf ('# of nodes in graph: %d\n', n) ;
