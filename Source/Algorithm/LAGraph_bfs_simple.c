@@ -79,7 +79,8 @@ GrB_Info LAGraph_bfs_simple     // push-only BFS
     //--------------------------------------------------------------------------
 
     bool anyq = true ;
-    for (int64_t level = 1 ; level <= n ; level++)
+    int64_t level ;
+    for (level = 1 ; level <= n ; level++)
     {
         // v<q> = level
         LAGRAPH_OK (GrB_assign (v, q, NULL, level, GrB_ALL, n, NULL)) ;
@@ -94,7 +95,16 @@ GrB_Info LAGraph_bfs_simple     // push-only BFS
     }
 
     // make v sparse
+    fprintf (stderr, "simple: levels %lld\n", level) ;
+
+    GrB_Index nvals ;
+    GrB_Vector_nvals (&nvals, v) ;
+    fprintf (stderr, "simple nvals before %llu\n", nvals) ;
+
     LAGRAPH_OK (GrB_assign (v, v, NULL, v, GrB_ALL, n, LAGraph_desc_ooor)) ;
+
+    GrB_Vector_nvals (&nvals, v) ;
+    fprintf (stderr, "simple nvals after %llu\n", nvals) ;
 
     //--------------------------------------------------------------------------
     // free workspace and return result

@@ -209,11 +209,9 @@ message ( STATUS "CMAKE C flags: " ${CMAKE_C_FLAGS} )
 # Demo programs
 #-------------------------------------------------------------------------------
 
-add_executable ( bfs_test "bfs_test.c" )
+file ( GLOB SOURCES "*.c" )
 
-file ( GLOB SOURCE "*.c" )
-
-target_sources ( bfs_test PUBLIC ${SOURCE} )
+add_executable ( bfs_test ${SOURCES} )
 
 # Libraries required for Demo programs
 target_link_libraries ( bfs_test graphblas lagraph m )

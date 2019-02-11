@@ -34,7 +34,7 @@
 //          Results are undefined if AT is not NULL but not identical to the
 //          transpose of A.
 
-//      GrB_Index s: if s >= 0, the source node for single-source BFS.
+//      int64_t s: if s >= 0, the source node for single-source BFS.
 //          If s < 0, then the whole-graph BFS is computed.
 
 //      int64_t max_level:  An optional limit on the levels searched for the
@@ -348,7 +348,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
     GrB_Vector *v_output,   // v(i) is the BFS level of node i in the graph
     const GrB_Matrix A,     // input graph, treated as if boolean in semiring
     const GrB_Matrix AT,    // transpose of A (optional; push-only if NULL)
-    GrB_Index s,            // starting node of the BFS (s < 0: whole graph)
+    int64_t s,              // starting node of the BFS (s < 0: whole graph)
     int64_t max_level,      // see description above
     bool vsparse            // if true, v is expected to be very sparse
 )
@@ -544,6 +544,8 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
     // BFS traversal and label the nodes
     //--------------------------------------------------------------------------
 
+    int64_t level ;
+
     for (int64_t phase = 0 ; (nvisited < n) && (phase < max_phases) ; phase++)
     {
 
@@ -551,7 +553,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
         // single-source BFS for source node s
         //----------------------------------------------------------------------
 
-        for (int64_t level = 1 ; ; level++)
+        for (level = 1 ; ; level++)
         {
 
             //------------------------------------------------------------------
@@ -667,6 +669,8 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
         }
     }
 
+    fprintf (stderr, "pushpull: levels %lld\n", level) ;
+
     //--------------------------------------------------------------------------
     // make v sparse
     //--------------------------------------------------------------------------
@@ -674,8 +678,9 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
     // TODO put this in an LAGraph_* utility function:
 
     LAGRAPH_OK (GrB_Vector_nvals (&nvals, v)) ;
+    fprintf (stderr, "nvals before %llu\n", nvals) ;
 
-    if (nvals < n)
+    if (!whole_graph)
     {
         // v<v> = v ; clearing v before assigning it back
         LAGRAPH_OK (GrB_assign (v, v, NULL, v, GrB_ALL, n, LAGraph_desc_ooor)) ;
@@ -683,6 +688,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
 
     // finish the work
     LAGRAPH_OK (GrB_Vector_nvals (&nvals, v)) ;
+    fprintf (stderr, "nvals after %llu\n", nvals) ;
 
     //--------------------------------------------------------------------------
     // free workspace and return result

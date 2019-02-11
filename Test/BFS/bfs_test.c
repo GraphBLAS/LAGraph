@@ -133,6 +133,8 @@ int main (int argc, char **argv)
         t2, 1e-6*((double) nvals) / t2) ;
     fprintf (stderr, "speedup of method2:   %g\n", t1/t2) ;
 
+    LAGRAPH_OK (GrB_assign (v2, v2, NULL, v2, GrB_ALL, n, LAGraph_desc_ooor)) ;
+
     //--------------------------------------------------------------------------
     // AT = A'
     //--------------------------------------------------------------------------
@@ -160,6 +162,8 @@ int main (int argc, char **argv)
         t3, 1e-6*((double) nvals) / t3) ;
     fprintf (stderr, "speedup of push/pull OLD: %g\n", t1/t3) ;
 
+    LAGRAPH_OK (GrB_assign (v3, v3, NULL, v3, GrB_ALL, n, LAGraph_desc_ooor)) ;
+
     //--------------------------------------------------------------------------
     // now the BFS on node s using push-pull (BEST) instead
     //--------------------------------------------------------------------------
@@ -177,6 +181,8 @@ int main (int argc, char **argv)
         t5, 1e-6*((double) nvals) / t5) ;
     fprintf (stderr, "speedup of push/pull (best): %g\n", t1/t5) ;
 
+    LAGRAPH_OK (GrB_assign (v5, v5, NULL, v5, GrB_ALL, n, LAGraph_desc_ooor)) ;
+
     //--------------------------------------------------------------------------
     // now the BFS on node s using PULL (only) instead
     //--------------------------------------------------------------------------
@@ -188,6 +194,8 @@ int main (int argc, char **argv)
     fprintf (stderr, "pull      time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
         t4, 1e-6*((double) nvals) / t4) ;
     fprintf (stderr, "speedup of push/pull: %g (normally slow!)\n", t1/t4) ;
+
+    LAGRAPH_OK (GrB_assign (v4, v4, NULL, v4, GrB_ALL, n, LAGraph_desc_ooor)) ;
 
     //--------------------------------------------------------------------------
     // check results
@@ -208,22 +216,14 @@ int main (int argc, char **argv)
 
     // TODO: you can't typecast from vectors to matrices ...  (except in
     // SuiteSparse:GraphBLAS).  Need a function LAGraph_Vector_isequal.
-    bool isequal = false ;
-    LAGRAPH_OK (LAGraph_isequal (&isequal, (GrB_Matrix) v, (GrB_Matrix) v3,
-        NULL)) ;
-
-    if (!isequal)
-    {
-        fprintf (stderr, "ERROR! simple and push-pull differ\n") ;
-        abort ( ) ;
-    }
+    bool isequal = false, ok = true ;
 
     LAGRAPH_OK (LAGraph_isequal (&isequal, (GrB_Matrix) v, (GrB_Matrix) v2,
         NULL)) ;
     if (!isequal)
     {
         fprintf (stderr, "ERROR! simple and method2   differ\n") ;
-        abort ( ) ;
+        ok = false ;
     }
 
     LAGRAPH_OK (LAGraph_isequal (&isequal, (GrB_Matrix) v, (GrB_Matrix) v4,
@@ -231,7 +231,6 @@ int main (int argc, char **argv)
     if (!isequal)
     {
         fprintf (stderr, "ERROR! simple and PULL   differ\n") ;
-        abort ( ) ;
     }
 
     LAGRAPH_OK (LAGraph_isequal (&isequal, (GrB_Matrix) v, (GrB_Matrix) v5,
@@ -239,27 +238,37 @@ int main (int argc, char **argv)
     if (!isequal)
     {
         fprintf (stderr, "ERROR! simple and best   differ\n") ;
-        abort ( ) ;
+        ok = false ;
     }
 
-    #if 0
-    // diff = v2 - v
+    LAGRAPH_OK (LAGraph_isequal (&isequal, (GrB_Matrix) v, (GrB_Matrix) v3,
+        NULL)) ;
+    if (!isequal)
+    {
+        GxB_fprint (v,  2, stderr) ;
+        GxB_fprint (v3, 2, stderr) ;
+        fprintf (stderr, "ERROR! simple and push-pull differ\n") ;
+        ok = false ;
+    }
+
+    #if 1
+    // diff = v5 - v
     LAGRAPH_OK (GrB_Vector_new (&diff, GrB_INT32, n)) ;
-    LAGRAPH_OK (GrB_eWiseAdd (diff, NULL, NULL, GrB_MINUS_INT32, v2, v, NULL)) ;
+    LAGRAPH_OK (GrB_eWiseAdd (diff, NULL, NULL, GrB_MINUS_INT32, v5, v, NULL)) ;
     // err = or (diff)
     bool err ;
     LAGRAPH_OK (GrB_reduce (&err, NULL, LAGraph_LOR_MONOID, diff, NULL)) ;
     if (err)
     {
-        GxB_fprint (diff, 3, stderr) ;
-        GxB_fprint (v2, 3, stderr) ;
-        GxB_fprint (v,  3, stderr) ;
-        fprintf (stderr, "ERROR! simple and method2 differ\n") ;
-        abort ( ) ;
+        fprintf (stderr, "diff (v5-v):\n") ;
+        GxB_fprint (diff, 2, stderr) ;
+        GxB_fprint (v5, 2, stderr) ;
+        GxB_fprint (v,  2, stderr) ;
+        fprintf (stderr, "ERROR! simple and best differ\n") ;
     }
     else
     {
-        fprintf (stderr, "results of simple and method2 are the same\n") ;
+        fprintf (stderr, "diff is the same\n") ;
     }
     #endif
 
@@ -281,7 +290,17 @@ int main (int argc, char **argv)
 
     LAGRAPH_FREE_ALL ;
     LAGRAPH_OK (LAGraph_finalize ( )) ;
-    fprintf (stderr, "bfs_test: all tests passed\n") ;
+    fprintf (stderr, "bfs_test: ") ;
+    if (ok)
+    {
+        fprintf (stderr, "all tests passed\n") ;
+    }
+    else
+    {
+        fprintf (stderr, "TEST FAILURE\n") ;
+    }
+    fprintf (stderr,
+    "------------------------------------------------------------\n\n") ;
     return (GrB_SUCCESS) ;
 }
 
