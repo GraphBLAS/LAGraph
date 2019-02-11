@@ -21,7 +21,7 @@ GraphBLAS.  It contains the following files and folders:
         * Algorithms: graph algorithms such as BFS, connected components,
             centrality, etc, will go here
 
-        * Utilities: read/write a graph from a file, etc, will go here
+        * Utilities: read/write a graph from a file, etc, will go here...
         
 
     Test: main programs that test LAGraph.  To run the tests, first compile
