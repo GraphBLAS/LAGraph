@@ -36,7 +36,7 @@ GrB_Info LAGraph_Vector_to_dense
     }
     (*vdense) = NULL ;
 
-    GxB_fprint (v, 2, stderr) ;
+    // GxB_fprint (v, 2, stderr) ;
 
     //--------------------------------------------------------------------------
     // get the type and size of v
@@ -111,7 +111,7 @@ GrB_Info LAGraph_Vector_to_dense
         }
     }
 
-    GxB_fprint (u, 2, stderr) ;
+    // GxB_fprint (u, 2, stderr) ;
 
     // finish the assignment
     LAGRAPH_OK (GrB_Vector_nvals (&ignore, u)) ;
