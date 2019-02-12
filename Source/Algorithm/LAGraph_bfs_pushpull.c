@@ -327,12 +327,16 @@
 // If only A or AT are provided, and the result is a pull-only algorithm,
 // an error is returned.
 
-// References: Carl Yang, Aydin Buluc, and John D. Owens. 2018. Implementing
-// Push-Pull Efficiently in GraphBLAS. In Proceedings of the 47th International
+// References:
+
+// Carl Yang, Aydin Buluc, and John D. Owens. 2018. Implementing Push-Pull
+// Efficiently in GraphBLAS. In Proceedings of the 47th International
 // Conference on Parallel Processing (ICPP 2018). ACM, New York, NY, USA,
 // Article 89, 11 pages. DOI: https://doi.org/10.1145/3225058.3225122
-//
-// TODO: add Beamer
+
+// Scott Beamer, Krste Asanovic and David A. Patterson,
+// The GAP Benchmark Suite, http://arxiv.org/abs/1508.03619, 2015.
+// http://gap.cs.berkeley.edu/
 
 #include "LAGraph_internal.h"
 
@@ -603,6 +607,18 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
                 double binarysearch = (3 * (1 + log2 ((double) nq))) ;
                 double pullwork = (n-nvisited) * per_dot * binarysearch ;
                 use_vxm_with_A = (pushwork < pullwork) ;
+
+                /*
+                fprintf (stderr, "\nlevel %ld\npushwork %g : d %g nq %g "
+                    "pullwork %g  : n %g nvisited %g nvstart %g\n"
+                    "(n-nvisited) %g per_dot %g binsearch %g\n",
+                    level, pushwork, d, (double) nq,
+                    pullwork, (double) n, (double) nvisited, (double) nvstart,
+                    (double) (n-nvisited), per_dot, binarysearch) ;
+                if (use_vxm_with_A) fprintf (stderr, "do push\n") ;
+                else fprintf (stderr, "do pull\n") ;
+                */
+
                 if (!csr)
                 {
                     // Neither A(i,:) nor AT(i,:) is efficient.  Instead, both
@@ -627,7 +643,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
             {
                 // q<!v> = AT*q
                 // this is a pull step if AT is in CSR format; push if CSC
-                fprintf (stderr, "........................ pull %ld\n", level) ;
+//              fprintf (stderr, "........................ pull %ld\n", level) ;
                 LAGRAPH_OK (GrB_mxv (q, v, NULL, LAGraph_LOR_LAND_BOOL, AT, q,
                     LAGraph_desc_oocr)) ;
             }
@@ -670,8 +686,6 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
         }
     }
 
-    fprintf (stderr, "pushpull: levels %ld\n", level) ;
-
     //--------------------------------------------------------------------------
     // make v sparse
     //--------------------------------------------------------------------------
@@ -679,17 +693,12 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
     // TODO put this in an LAGraph_* utility function:
 
     LAGRAPH_OK (GrB_Vector_nvals (&nvals, v)) ;
-    fprintf (stderr, "nvals before %lu\n", nvals) ;
-
     if (!whole_graph)
     {
         // v<v> = v ; clearing v before assigning it back
         LAGRAPH_OK (GrB_assign (v, v, NULL, v, GrB_ALL, n, LAGraph_desc_ooor)) ;
     }
-
-    // finish the work
-    LAGRAPH_OK (GrB_Vector_nvals (&nvals, v)) ;
-    fprintf (stderr, "nvals after %lu\n", nvals) ;
+    LAGRAPH_OK (GrB_Vector_nvals (&nvals, v)) ;     // finish the work
 
     //--------------------------------------------------------------------------
     // free workspace and return result

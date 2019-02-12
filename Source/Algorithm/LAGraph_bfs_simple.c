@@ -58,7 +58,7 @@ GrB_Info LAGraph_bfs_simple     // push-only BFS
     GrB_Vector q = NULL ;           // nodes visited at each level
     GrB_Vector v = NULL ;           // result vector
     if (v_output == NULL) LAGRAPH_ERROR ("argument missing", GrB_NULL_POINTER) ;
-    GrB_Index n ;
+    GrB_Index n, nvals ;
     LAGRAPH_OK (GrB_Matrix_nrows (&n, A)) ;
 
     //--------------------------------------------------------------------------
@@ -78,14 +78,13 @@ GrB_Info LAGraph_bfs_simple     // push-only BFS
     // BFS traversal and label the nodes
     //--------------------------------------------------------------------------
 
-    bool anyq = true ;
-    int64_t level ;
-    for (level = 1 ; level <= n ; level++)
+    for (int64_t level = 1 ; level <= n ; level++)
     {
         // v<q> = level
         LAGRAPH_OK (GrB_assign (v, q, NULL, level, GrB_ALL, n, NULL)) ;
 
         // successor = ||(q)
+        bool anyq ;
         LAGRAPH_OK (GrB_reduce (&anyq, NULL, LAGraph_LOR_MONOID, q, NULL)) ;
         if (!anyq) break ;
 
@@ -94,17 +93,12 @@ GrB_Info LAGraph_bfs_simple     // push-only BFS
             LAGraph_desc_oocr)) ;
     }
 
+    //--------------------------------------------------------------------------
     // make v sparse
-    fprintf (stderr, "simple: levels %lld\n", level) ;
-
-    GrB_Index nvals ;
-    GrB_Vector_nvals (&nvals, v) ;
-    fprintf (stderr, "simple nvals before %llu\n", nvals) ;
+    //--------------------------------------------------------------------------
 
     LAGRAPH_OK (GrB_assign (v, v, NULL, v, GrB_ALL, n, LAGraph_desc_ooor)) ;
-
-    GrB_Vector_nvals (&nvals, v) ;
-    fprintf (stderr, "simple nvals after %llu\n", nvals) ;
+    GrB_Vector_nvals (&nvals, v) ;  // finish the work
 
     //--------------------------------------------------------------------------
     // free workspace and return result

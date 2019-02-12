@@ -25,6 +25,8 @@
     GrB_free (&v3) ;                \
     GrB_free (&v4) ;                \
     GrB_free (&v5) ;                \
+    GrB_free (&v6) ;                \
+    GrB_free (&v_whole) ;           \
     GrB_free (&diff) ;              \
 }
 
@@ -42,6 +44,8 @@ int main (int argc, char **argv)
     GrB_Vector v3 = NULL ;
     GrB_Vector v4 = NULL ;
     GrB_Vector v5 = NULL ;
+    GrB_Vector v6 = NULL ;
+    GrB_Vector v_whole = NULL ;
     GrB_Vector diff = NULL ;
 
     LAGRAPH_OK (LAGraph_init ( )) ;
@@ -90,33 +94,29 @@ int main (int argc, char **argv)
     }
 
     fprintf (stderr, "\n=========="
-        "input graph: nodes: %g edges: %g source node: %g\n",
-        (double) n, (double)  nvals, (double) s) ;
+        "input graph: nodes: %lu edges: %lu source node: %lu\n", n, nvals, s) ;
 
     //--------------------------------------------------------------------------
     // run the BFS on node s
     //--------------------------------------------------------------------------
 
-    int ntrials = 1 ;
+    int ntrials = 1 ;       // increase this to 10, 100, whatever, for more
+                            // accurate timing
 
     // start the timer
     double tic [2] ;
     LAGraph_tic (tic) ;
 
-/*
     for (int trial = 0 ; trial < ntrials ; trial++)
     {
         GrB_free (&v) ;
         LAGRAPH_OK (LAGraph_bfs_simple (&v, A, s)) ;
     }
-*/
 
     // stop the timer
     double t1 = LAGraph_toc (tic) / ntrials ;
-/*
     fprintf (stderr, "simple    time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
         t1, 1e-6*((double) nvals) / t1) ;
-*/
 
     //--------------------------------------------------------------------------
     // run the BFS on node s with LAGraph_bfs2 (PUSH)
@@ -125,23 +125,19 @@ int main (int argc, char **argv)
     // start the timer
     LAGraph_tic (tic) ;
 
-/*
     for (int trial = 0 ; trial < ntrials ; trial++)
     {
         GrB_free (&v2) ;
         LAGRAPH_OK (LAGraph_bfs2 (&v2, A, s, INT32_MAX)) ;
     }
-*/
 
     // stop the timer
     double t2 = LAGraph_toc (tic) / ntrials ;
-/*
     fprintf (stderr, "method2   time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
         t2, 1e-6*((double) nvals) / t2) ;
     fprintf (stderr, "speedup of method2:   %g\n", t1/t2) ;
-*/
 
-//  LAGRAPH_OK (GrB_assign (v2, v2, NULL, v2, GrB_ALL, n, LAGraph_desc_ooor)) ;
+    LAGRAPH_OK (GrB_assign (v2, v2, NULL, v2, GrB_ALL, n, LAGraph_desc_ooor)) ;
 
     //--------------------------------------------------------------------------
     // AT = A'
@@ -159,81 +155,104 @@ int main (int argc, char **argv)
 
     LAGraph_tic (tic) ;
 
-/*
     for (int trial = 0 ; trial < ntrials ; trial++)
     {
         GrB_free (&v3) ;
         LAGRAPH_OK (LAGraph_bfs_pushpull_old (&v3, A, AT, s, INT32_MAX)) ;
     }
-*/
 
     double t3 = LAGraph_toc (tic) / ntrials ;
-/*
     fprintf (stderr, "push/pull old:  %12.6e (sec), rate: %g (1e6 edges/sec)\n",
         t3, 1e-6*((double) nvals) / t3) ;
     fprintf (stderr, "speedup of push/pull OLD: %g\n", t1/t3) ;
-*/
 
-//  LAGRAPH_OK (GrB_assign (v3, v3, NULL, v3, GrB_ALL, n, LAGraph_desc_ooor)) ;
+    LAGRAPH_OK (GrB_assign (v3, v3, NULL, v3, GrB_ALL, n, LAGraph_desc_ooor)) ;
 
     //--------------------------------------------------------------------------
     // now the BFS on node s using push-pull (BEST) instead
     //--------------------------------------------------------------------------
 
     LAGraph_tic (tic) ;
-
     for (int trial = 0 ; trial < ntrials ; trial++)
     {
         GrB_free (&v5) ;
         LAGRAPH_OK (LAGraph_bfs_pushpull (&v5, A, AT, s, 0, false)) ;
     }
-
     double t5 = LAGraph_toc (tic) / ntrials ;
     fprintf (stderr, "push/pull best: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
         t5, 1e-6*((double) nvals) / t5) ;
     fprintf (stderr, "speedup of push/pull (best): %g\n", t1/t5) ;
-
     LAGRAPH_OK (GrB_assign (v5, v5, NULL, v5, GrB_ALL, n, LAGraph_desc_ooor)) ;
+
+    //--------------------------------------------------------------------------
+    // now the BFS on node s using push-pull (BEST) instead
+    //--------------------------------------------------------------------------
+
+    LAGraph_tic (tic) ;
+    for (int trial = 0 ; trial < ntrials ; trial++)
+    {
+        GrB_free (&v6) ;
+        LAGRAPH_OK (LAGraph_bfs_pushpull (&v6, A, AT, s, 0, true)) ;
+    }
+    double t6 = LAGraph_toc (tic) / ntrials ;
+    fprintf (stderr, "pushpull sparse %12.6e (sec), rate: %g (1e6 edges/sec)\n",
+        t6, 1e-6*((double) nvals) / t6) ;
+
+    //--------------------------------------------------------------------------
+    // BFS on the whole graph
+    //--------------------------------------------------------------------------
+
+    LAGraph_tic (tic) ;
+    for (int trial = 0 ; trial < ntrials ; trial++)
+    {
+        GrB_free (&v_whole) ;
+        LAGRAPH_OK (LAGraph_bfs_pushpull (&v_whole, A, AT, -1, 0, false)) ;
+    }
+    double tw = LAGraph_toc (tic) / ntrials ;
+    fprintf (stderr, "whole graph %12.6e (sec), rate: %g (1e6 edges/sec)\n"
+        "NOTE: the other BFS's are single-source; this is the whole graph)\n",
+        tw, 1e-6*((double) nvals) / tw) ;
+
+    // find the max level
+    int32_t maxlevel = 0 ;
+    LAGRAPH_OK (GrB_reduce (&maxlevel, NULL, LAGraph_MAX_INT32_MONOID, v_whole,
+        NULL));
+    fprintf (stderr, "number of levels: %d (for whole graph)\n", maxlevel) ;
 
     //--------------------------------------------------------------------------
     // now the BFS on node s using PULL (only) instead
     //--------------------------------------------------------------------------
 
     // slow!!!
+/*
+    fprintf (stderr, "starting pull-only BFS ... please wait, this is slow!\n");
     LAGraph_tic (tic) ;
-/*
     LAGRAPH_OK (LAGraph_bfs_pull (&v4, A, AT, s, INT32_MAX)) ;
-*/
     double t4 = LAGraph_toc (tic) ;
-/*
     fprintf (stderr, "pull      time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
         t4, 1e-6*((double) nvals) / t4) ;
     fprintf (stderr, "speedup of push/pull: %g (normally slow!)\n", t1/t4) ;
-*/
 
-//  LAGRAPH_OK (GrB_assign (v4, v4, NULL, v4, GrB_ALL, n, LAGraph_desc_ooor)) ;
+    LAGRAPH_OK (GrB_assign (v4, v4, NULL, v4, GrB_ALL, n, LAGraph_desc_ooor)) ;
+*/
 
     //--------------------------------------------------------------------------
     // check results
     //--------------------------------------------------------------------------
 
-    v = v5 ;
-    v5 = NULL ;
     bool isequal = false, ok = true ;
 
-/*
-
     // find the max level
-    int32_t maxlevel = 0 ;
     LAGRAPH_OK (GrB_reduce (&maxlevel, NULL, LAGraph_MAX_INT32_MONOID, v,
         NULL));
-    fprintf (stderr, "number of levels: %d\n", maxlevel) ;
+    fprintf (stderr, "number of levels: %d (for s = %lu, single-source)\n",
+        maxlevel, s) ;
 
     // find the number of nodes visited
     GrB_Index nv = 0 ;
     LAGRAPH_OK (GrB_Vector_nvals (&nv, v)) ;
-    fprintf (stderr, "number of nodes visited: %g out of %g"
-        " (%g %% of the graph)\n", (double) nv, (double) n,
+    fprintf (stderr, "# nodes visited (for single-source): %lu out of %lu"
+        " (%g %% of the graph)\n", nv, n,
         100. * (double) nv / (double) n) ;
 
     // TODO: you can't typecast from vectors to matrices ...  (except in
@@ -247,12 +266,14 @@ int main (int argc, char **argv)
         ok = false ;
     }
 
+/*
     LAGRAPH_OK (LAGraph_isequal (&isequal, (GrB_Matrix) v, (GrB_Matrix) v4,
         NULL)) ;
     if (!isequal)
     {
         fprintf (stderr, "ERROR! simple and PULL   differ\n") ;
     }
+*/
 
     LAGRAPH_OK (LAGraph_isequal (&isequal, (GrB_Matrix) v, (GrB_Matrix) v5,
         NULL)) ;
@@ -271,7 +292,16 @@ int main (int argc, char **argv)
         fprintf (stderr, "ERROR! simple and push-pull differ\n") ;
         ok = false ;
     }
-*/
+
+    LAGRAPH_OK (LAGraph_isequal (&isequal, (GrB_Matrix) v, (GrB_Matrix) v6,
+        NULL)) ;
+    if (!isequal)
+    {
+        GxB_fprint (v,  2, stderr) ;
+        GxB_fprint (v6, 2, stderr) ;
+        fprintf (stderr, "ERROR! simple and push-pull (sparse) differ\n") ;
+        ok = false ;
+    }
 
     #if 0
     // diff = v5 - v

@@ -14,6 +14,10 @@ tar zvfxO ~/ssget/MM/ND/nd3k.tar.gz nd3k/nd3k.mtx | \
 tar zvfxO ~/ssget/MM/ND/nd12k.tar.gz nd12k/nd12k.mtx | \
     ./build/bfs_test 0 > o
 
+tar zvfxO ~/ssget/MM/DIMACS10/road_usa.tar.gz \
+    road_usa/road_usa.mtx | \
+    ./build/bfs_test 0 > o
+
 tar zvfxO ~/ssget/MM/SNAP/soc-LiveJournal1.tar.gz \
     soc-LiveJournal1/soc-LiveJournal1.mtx | \
     ./build/bfs_test 0 > o
