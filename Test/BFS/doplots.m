@@ -1,7 +1,9 @@
-function doplots (a2,m2,s2,q2, ap,mp,sp,q, nnzA)
+function doplots (a2,m2,s2,q2, ap,mp,sp,q, nnzA, what)
 k = length (m2) ;
 n = sum(q)
 d = nnzA / n ;
+
+fprintf ('\n---------------------- %s\n', what) ;
 
 % Aydin's rule:
 nsteps = length (q) ;
@@ -26,13 +28,12 @@ for step = 1:nsteps
     % early_exit_prob = (visited+1)/n ;
     % ntrials_before_exit = 1/early_exit_prob ;
     expected_trials = n / (visited+1) ;
-    work = min (d, expected_trials) ;
+    per_dot = min (d, expected_trials) ;
 
     % pullwork (step) = (n-visited) * d ; % * log2 (thisq) ;
-    pullwork (step) = (n-visited) * work * (3 * (1 + log2 (thisq))) ;
-    pullwork (step) = pullwork (step) ; 
+    pullwork (step) = (n-visited) * per_dot * (3 * (1 + log2 (thisq))) ;
 
-    fprintf ('%g %g : do ', pushwork(step), pullwork(step)) ;
+    fprintf ('%12g %12g : step %4d do ', pushwork(step), pullwork(step), step) ;
 
     tbest = min (mp (step), m2 (step)) ;
 
@@ -55,6 +56,7 @@ subplot (2,3,6) ; semilogy (1:k, pushwork, 'ko-', 1:k, pullwork, 'ro-') ;
 % red is pull
 subplot (2,3,1) ; semilogy (1:k, a2, 'ko-', 1:k, ap, 'ro-') ;
 subplot (2,3,2) ; semilogy (1:k, m2, 'ko-', 1:k, mp, 'ro-', 1:k, my, 'co-') ;
+title (what) ;
 subplot (2,3,3) ; semilogy (1:k, s2, 'ko-', 1:k, sp, 'ro-') ;
 
 assert (isequal (q,q2)) ; 
