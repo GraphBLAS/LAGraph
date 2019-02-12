@@ -627,6 +627,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
             {
                 // q<!v> = AT*q
                 // this is a pull step if AT is in CSR format; push if CSC
+                fprintf (stderr, "........................ pull %ld\n", level) ;
                 LAGRAPH_OK (GrB_mxv (q, v, NULL, LAGraph_LOR_LAND_BOOL, AT, q,
                     LAGraph_desc_oocr)) ;
             }
@@ -669,7 +670,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
         }
     }
 
-    fprintf (stderr, "pushpull: levels %lld\n", level) ;
+    fprintf (stderr, "pushpull: levels %ld\n", level) ;
 
     //--------------------------------------------------------------------------
     // make v sparse
@@ -678,7 +679,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
     // TODO put this in an LAGraph_* utility function:
 
     LAGRAPH_OK (GrB_Vector_nvals (&nvals, v)) ;
-    fprintf (stderr, "nvals before %llu\n", nvals) ;
+    fprintf (stderr, "nvals before %lu\n", nvals) ;
 
     if (!whole_graph)
     {
@@ -688,7 +689,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
 
     // finish the work
     LAGRAPH_OK (GrB_Vector_nvals (&nvals, v)) ;
-    fprintf (stderr, "nvals after %llu\n", nvals) ;
+    fprintf (stderr, "nvals after %lu\n", nvals) ;
 
     //--------------------------------------------------------------------------
     // free workspace and return result

@@ -103,16 +103,20 @@ int main (int argc, char **argv)
     double tic [2] ;
     LAGraph_tic (tic) ;
 
+/*
     for (int trial = 0 ; trial < ntrials ; trial++)
     {
         GrB_free (&v) ;
         LAGRAPH_OK (LAGraph_bfs_simple (&v, A, s)) ;
     }
+*/
 
     // stop the timer
     double t1 = LAGraph_toc (tic) / ntrials ;
+/*
     fprintf (stderr, "simple    time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
         t1, 1e-6*((double) nvals) / t1) ;
+*/
 
     //--------------------------------------------------------------------------
     // run the BFS on node s with LAGraph_bfs2 (PUSH)
@@ -121,19 +125,23 @@ int main (int argc, char **argv)
     // start the timer
     LAGraph_tic (tic) ;
 
+/*
     for (int trial = 0 ; trial < ntrials ; trial++)
     {
         GrB_free (&v2) ;
         LAGRAPH_OK (LAGraph_bfs2 (&v2, A, s, INT32_MAX)) ;
     }
+*/
 
     // stop the timer
     double t2 = LAGraph_toc (tic) / ntrials ;
+/*
     fprintf (stderr, "method2   time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
         t2, 1e-6*((double) nvals) / t2) ;
     fprintf (stderr, "speedup of method2:   %g\n", t1/t2) ;
+*/
 
-    LAGRAPH_OK (GrB_assign (v2, v2, NULL, v2, GrB_ALL, n, LAGraph_desc_ooor)) ;
+//  LAGRAPH_OK (GrB_assign (v2, v2, NULL, v2, GrB_ALL, n, LAGraph_desc_ooor)) ;
 
     //--------------------------------------------------------------------------
     // AT = A'
@@ -151,18 +159,22 @@ int main (int argc, char **argv)
 
     LAGraph_tic (tic) ;
 
+/*
     for (int trial = 0 ; trial < ntrials ; trial++)
     {
         GrB_free (&v3) ;
         LAGRAPH_OK (LAGraph_bfs_pushpull_old (&v3, A, AT, s, INT32_MAX)) ;
     }
+*/
 
     double t3 = LAGraph_toc (tic) / ntrials ;
+/*
     fprintf (stderr, "push/pull old:  %12.6e (sec), rate: %g (1e6 edges/sec)\n",
         t3, 1e-6*((double) nvals) / t3) ;
     fprintf (stderr, "speedup of push/pull OLD: %g\n", t1/t3) ;
+*/
 
-    LAGRAPH_OK (GrB_assign (v3, v3, NULL, v3, GrB_ALL, n, LAGraph_desc_ooor)) ;
+//  LAGRAPH_OK (GrB_assign (v3, v3, NULL, v3, GrB_ALL, n, LAGraph_desc_ooor)) ;
 
     //--------------------------------------------------------------------------
     // now the BFS on node s using push-pull (BEST) instead
@@ -189,17 +201,27 @@ int main (int argc, char **argv)
 
     // slow!!!
     LAGraph_tic (tic) ;
+/*
     LAGRAPH_OK (LAGraph_bfs_pull (&v4, A, AT, s, INT32_MAX)) ;
+*/
     double t4 = LAGraph_toc (tic) ;
+/*
     fprintf (stderr, "pull      time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
         t4, 1e-6*((double) nvals) / t4) ;
     fprintf (stderr, "speedup of push/pull: %g (normally slow!)\n", t1/t4) ;
+*/
 
-    LAGRAPH_OK (GrB_assign (v4, v4, NULL, v4, GrB_ALL, n, LAGraph_desc_ooor)) ;
+//  LAGRAPH_OK (GrB_assign (v4, v4, NULL, v4, GrB_ALL, n, LAGraph_desc_ooor)) ;
 
     //--------------------------------------------------------------------------
     // check results
     //--------------------------------------------------------------------------
+
+    v = v5 ;
+    v5 = NULL ;
+    bool isequal = false, ok = true ;
+
+/*
 
     // find the max level
     int32_t maxlevel = 0 ;
@@ -216,7 +238,6 @@ int main (int argc, char **argv)
 
     // TODO: you can't typecast from vectors to matrices ...  (except in
     // SuiteSparse:GraphBLAS).  Need a function LAGraph_Vector_isequal.
-    bool isequal = false, ok = true ;
 
     LAGRAPH_OK (LAGraph_isequal (&isequal, (GrB_Matrix) v, (GrB_Matrix) v2,
         NULL)) ;
@@ -250,8 +271,9 @@ int main (int argc, char **argv)
         fprintf (stderr, "ERROR! simple and push-pull differ\n") ;
         ok = false ;
     }
+*/
 
-    #if 1
+    #if 0
     // diff = v5 - v
     LAGRAPH_OK (GrB_Vector_new (&diff, GrB_INT32, n)) ;
     LAGRAPH_OK (GrB_eWiseAdd (diff, NULL, NULL, GrB_MINUS_INT32, v5, v, NULL)) ;
