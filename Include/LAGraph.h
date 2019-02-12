@@ -203,11 +203,31 @@ GrB_Info LAGraph_isequal    // return GrB_SUCCESS if successful
                             // LAGraph_Complex.
 ) ;
 
+GrB_Info LAGraph_Vector_isequal    // return GrB_SUCCESS if successful
+(
+    bool *result,           // true if A == B, false if A != B or error
+    GrB_Vector A,
+    GrB_Vector B,
+    GrB_BinaryOp userop     // for A and B with arbitrary user-defined types.
+                            // Ignored if A and B are of built-in types or
+                            // LAGraph_Complex.
+) ;
+
 GrB_Info LAGraph_isall      // return GrB_SUCCESS if successful
 (
     bool *result,           // true if A == B, false if A != B or error
     GrB_Matrix A,
     GrB_Matrix B,
+    GrB_BinaryOp op         // GrB_EQ_<type>, for the type of A and B,
+                            // to check for equality.  Or use any desired
+                            // operator.  The operator should return GrB_BOOL.
+) ;
+
+GrB_Info LAGraph_Vector_isall      // return GrB_SUCCESS if successful
+(
+    bool *result,           // true if A == B, false if A != B or error
+    GrB_Vector A,
+    GrB_Vector B,
     GrB_BinaryOp op         // GrB_EQ_<type>, for the type of A and B,
                             // to check for equality.  Or use any desired
                             // operator.  The operator should return GrB_BOOL.

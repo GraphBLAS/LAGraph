@@ -14,3 +14,9 @@ TODO: the following methods require GxB_Matrix_type:
 ./Source/Utility/LAGraph_mmwrite.c
 ./Source/Utility/LAGraph_isequal.c
 
+
+TODO: write an LAGraph_eWiseAdd (C,M,accum,A,B,op,amissing,bmissing,desc)
+that does eWiseAdd on the intersection only;
+for entries in A but not B, uses cij = op(aij,bmissing)
+for entries in B but not A, uses cij = op(amissing,bij)
+
