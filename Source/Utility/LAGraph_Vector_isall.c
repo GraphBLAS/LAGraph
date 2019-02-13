@@ -64,7 +64,7 @@ GrB_Info LAGraph_Vector_isall      // return GrB_SUCCESS if successful
     }
 
     // C = A .* B, where the pattern of C is the intersection of A and B
-    LAGRAPH_OK (GrB_Vector_new (&C, GrB_BOOL, nrows1, ncols1)) ;
+    LAGRAPH_OK (GrB_Vector_new (&C, GrB_BOOL, nrows1)) ;
     LAGRAPH_OK (GrB_eWiseMult (C, NULL, NULL, op, A, B, NULL)) ;
 
     // ensure C has the same number of entries as A and B

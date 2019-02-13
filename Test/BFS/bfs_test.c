@@ -258,8 +258,7 @@ int main (int argc, char **argv)
     // TODO: you can't typecast from vectors to matrices ...  (except in
     // SuiteSparse:GraphBLAS).  Need a function LAGraph_Vector_isequal.
 
-    LAGRAPH_OK (LAGraph_isequal (&isequal, (GrB_Matrix) v, (GrB_Matrix) v2,
-        NULL)) ;
+    LAGRAPH_OK (LAGraph_Vector_isequal (&isequal, v, v2, NULL)) ;
     if (!isequal)
     {
         fprintf (stderr, "ERROR! simple and method2   differ\n") ;
@@ -267,24 +266,21 @@ int main (int argc, char **argv)
     }
 
 /*
-    LAGRAPH_OK (LAGraph_isequal (&isequal, (GrB_Matrix) v, (GrB_Matrix) v4,
-        NULL)) ;
+    LAGRAPH_OK (LAGraph_Vector_isequal (&isequal, v, v4, NULL)) ;
     if (!isequal)
     {
         fprintf (stderr, "ERROR! simple and PULL   differ\n") ;
     }
 */
 
-    LAGRAPH_OK (LAGraph_isequal (&isequal, (GrB_Matrix) v, (GrB_Matrix) v5,
-        NULL)) ;
+    LAGRAPH_OK (LAGraph_Vector_isequal (&isequal, v, v5, NULL)) ;
     if (!isequal)
     {
         fprintf (stderr, "ERROR! simple and best   differ\n") ;
         ok = false ;
     }
 
-    LAGRAPH_OK (LAGraph_isequal (&isequal, (GrB_Matrix) v, (GrB_Matrix) v3,
-        NULL)) ;
+    LAGRAPH_OK (LAGraph_Vector_isequal (&isequal, v, v3, NULL)) ;
     if (!isequal)
     {
         GxB_fprint (v,  2, stderr) ;
@@ -293,8 +289,7 @@ int main (int argc, char **argv)
         ok = false ;
     }
 
-    LAGRAPH_OK (LAGraph_isequal (&isequal, (GrB_Matrix) v, (GrB_Matrix) v6,
-        NULL)) ;
+    LAGRAPH_OK (LAGraph_Vector_isequal (&isequal, v, v6, NULL)) ;
     if (!isequal)
     {
         GxB_fprint (v,  2, stderr) ;
