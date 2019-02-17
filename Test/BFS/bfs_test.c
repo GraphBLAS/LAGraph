@@ -255,9 +255,6 @@ int main (int argc, char **argv)
         " (%g %% of the graph)\n", nv, n,
         100. * (double) nv / (double) n) ;
 
-    // TODO: you can't typecast from vectors to matrices ...  (except in
-    // SuiteSparse:GraphBLAS).  Need a function LAGraph_Vector_isequal.
-
     LAGRAPH_OK (LAGraph_Vector_isequal (&isequal, v, v2, NULL)) ;
     if (!isequal)
     {
@@ -283,8 +280,8 @@ int main (int argc, char **argv)
     LAGRAPH_OK (LAGraph_Vector_isequal (&isequal, v, v3, NULL)) ;
     if (!isequal)
     {
-        GxB_fprint (v,  2, stderr) ;
-        GxB_fprint (v3, 2, stderr) ;
+        // GxB_fprint (v,  2, stderr) ;
+        // GxB_fprint (v3, 2, stderr) ;
         fprintf (stderr, "ERROR! simple and push-pull differ\n") ;
         ok = false ;
     }
@@ -292,8 +289,8 @@ int main (int argc, char **argv)
     LAGRAPH_OK (LAGraph_Vector_isequal (&isequal, v, v6, NULL)) ;
     if (!isequal)
     {
-        GxB_fprint (v,  2, stderr) ;
-        GxB_fprint (v6, 2, stderr) ;
+        // GxB_fprint (v,  2, stderr) ;
+        // GxB_fprint (v6, 2, stderr) ;
         fprintf (stderr, "ERROR! simple and push-pull (sparse) differ\n") ;
         ok = false ;
     }
@@ -308,9 +305,9 @@ int main (int argc, char **argv)
     if (err)
     {
         fprintf (stderr, "diff (v5-v):\n") ;
-        GxB_fprint (diff, 2, stderr) ;
-        GxB_fprint (v5, 2, stderr) ;
-        GxB_fprint (v,  2, stderr) ;
+        // GxB_fprint (diff, 2, stderr) ;
+        // GxB_fprint (v5, 2, stderr) ;
+        // GxB_fprint (v,  2, stderr) ;
         fprintf (stderr, "ERROR! simple and best differ\n") ;
     }
     else

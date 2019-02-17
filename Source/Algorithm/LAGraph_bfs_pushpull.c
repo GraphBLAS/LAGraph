@@ -439,13 +439,18 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
             // This format would indicate that A can be easily accessed in row
             // and column order.  That is, x=A(i,:) would take O(nnz(A(i,:)))
             // time, and also x=A(:,j) would take O(nnz(A(:,j))) time.
+            #ifdef GxB_BY_EITHER
             A_csr = A_csr || (A_format == GxB_BY_EITHER) ;
+            #endif
         }
         if (AT != NULL)
         {
             // AT_csr is true if accessing AT(i,:) is fast
             LAGRAPH_OK (GxB_get (AT, GxB_FORMAT, &AT_format)) ;
-            AT_csr = (AT_format == GxB_BY_ROW) || (AT_format == GxB_BY_EITHER) ;
+            AT_csr = (AT_format == GxB_BY_ROW) ;
+            #ifdef GxB_BY_EITHER
+            AT_csr = AT_csr || (AT_format == GxB_BY_EITHER) ;
+            #endif
         }
         // Assume CSR if A(i,:) and AT(i,:) are both fast.  If csr is false,
         // then the algorithm below will reverse the use of vxm and mxv.
