@@ -20,3 +20,20 @@ that does eWiseAdd on the intersection only;
 for entries in A but not B, uses cij = op(aij,bmissing)
 for entries in B but not A, uses cij = op(amissing,bij)
 
+
+TODO: add interfaces to external packages.
+
+    GTgraph: (Madduri and Bader) for generating synthetic graphs
+    CSparse or CXSparse (for depth-first search, scc, dmperm, amd,
+        in the sequential case)
+    others?
+
+TODO: interfaces to:
+    MATLAB interface
+    Python interface, etc.
+
+TODO: need more algorithms and utilities
+
+TODO: simplify the CMake scripts in the Test/* folders (use a common
+    included file)
+
