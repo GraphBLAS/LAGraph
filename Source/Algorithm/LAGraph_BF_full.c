@@ -22,7 +22,7 @@
     GrB_free(&Atmp);                   \
     GrB_free(&BF_Tuple3);              \
     GrB_free(&BF_lMIN_Tuple3);         \
-    GrB_free(&BF_PLUSrhs_Tuple3;)      \
+    GrB_free(&BF_PLUSrhs_Tuple3);      \
     GrB_free(&BF_EQ_Tuple3);           \
     GrB_free(&BF_lMIN_Tuple3_Monoid);  \
     GrB_free(&BF_lMIN_PLUSrhs_Tuple3); \
@@ -131,12 +131,12 @@ GrB_Info LAGraph_BF_full
     GrB_Vector *ppi,            //the pointer to the vector of parent
     GrB_Vector *ph,             //the pointer to the vector of hops
     const GrB_Matrix A,         //matrix for the graph
-    const GrB_Index s,          //given index of the source
+    const GrB_Index s           //given index of the source
 )
 {
     GrB_Info info;
     // tmp vector to store distance vector after n (i.e., V) loops
-    GrB_Vector d = NULL; dtmp = NULL;
+    GrB_Vector d = NULL, dtmp = NULL;
     GrB_Matrix Atmp = NULL;
     GrB_Type BF_Tuple3;
     
@@ -196,11 +196,11 @@ GrB_Info LAGraph_BF_full
     {
         if (w == 0)             //diagonal entries
         {   
-            W[k] = (Tuple3) { .w = 0, .h = 0, .pi = 0 };
+            W[k] = (BF_Tuple3_struct) { .w = 0, .h = 0, .pi = 0 };
         }
         else
         {   
-            W[k] = (Tuple3) { .w = w, .h = 1, .pi = I[k] + 1 };
+            W[k] = (BF_Tuple3_struct) { .w = w[k], .h = 1, .pi = I[k] + 1 };
         }
     }
     LAGRAPH_OK (GrB_Matrix_new(&Atmp, BF_Tuple3, n, n));
@@ -221,7 +221,7 @@ GrB_Info LAGraph_BF_full
     while (!same && count < n - 1)
     {
         // execute semiring on d and A, and save the result to dtmp
-        LAGRAPH_OK (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, GxB_lMIN_PLUSrhs_Tuple3, 
+        LAGRAPH_OK (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, BF_lMIN_PLUSrhs_Tuple3, 
             Atmp, d, GrB_NULL));
 	LAGRAPH_OK (LAGraph_Vector_isequal(&same, dtmp, d, BF_EQ_Tuple3));
         if (!same)
@@ -238,7 +238,7 @@ GrB_Info LAGraph_BF_full
     if (!same)
     {
         // execute semiring again to check for negative-weight cycle
-        LAGRAPH_OK (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, GxB_lMIN_PLUSrhs_Tuple3, 
+        LAGRAPH_OK (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, BF_lMIN_PLUSrhs_Tuple3, 
             Atmp, d, GrB_NULL));
 	LAGRAPH_OK (LAGraph_Vector_isequal(&same, dtmp, d, BF_EQ_Tuple3));
         

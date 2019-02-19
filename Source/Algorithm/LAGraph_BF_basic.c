@@ -35,7 +35,7 @@ GrB_Info LAGraph_BF_basic
 (
     GrB_Vector *pd,             //the pointer to the vector of distance
     const GrB_Matrix A,         //matrix for the graph
-    const GrB_Index s,          //given index of the source
+    const GrB_Index s           //given index of the source
 )
 {
     GrB_Info info;
