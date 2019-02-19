@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_BF_noparent.c: Bellman-Ford method for single source shortest paths
+// LAGraph_BF_basic.c: Bellman-Ford method for single source shortest paths
 // without returning the parents in the paths
 //------------------------------------------------------------------------------
 
@@ -14,10 +14,6 @@
 
 //------------------------------------------------------------------------------
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <stdbool.h>
 #include "LAGraph_internal.h"
 
 #define LAGRAPH_FREE_ALL   \
@@ -35,7 +31,7 @@
 * A has zeros on diagonal and weights on corresponding entries of edges
 * s is given index for source vertex
 */
-GrB_Info LAGraph_BF_noparent
+GrB_Info LAGraph_BF_basic
 (
     GrB_Vector *pd,             //the pointer to the vector of distance
     const GrB_Matrix A,         //matrix for the graph
@@ -99,7 +95,7 @@ GrB_Info LAGraph_BF_noparent
         if (!same)
         {
             printf("A negative-weight cycle found. \n");
-	    (*pd) = NULL;
+	    GrB_free (pd);
             LAGRAPH_FREE_ALL;
             return (GrB_SUCCESS) ;
         }
