@@ -186,11 +186,6 @@ else ( )
     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DUSER_NO_THREADS " )
 endif ( )
 
-if ( CMAKE_THREAD_LIBS_INIT )
-    target_link_libraries ( lagraph        ${CMAKE_THREAD_LIBS_INIT} )
-    target_link_libraries ( lagraph_static ${CMAKE_THREAD_LIBS_INIT} )
-endif ( )
-
 if ( CMAKE_USE_PTHREADS_INIT )
     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DHAVE_PTHREADS " )
 endif ( )
