@@ -34,6 +34,16 @@ TODO: interfaces to:
 
 TODO: need more algorithms and utilities
 
+    from SuiteSparse/GraphBLAS/Demo and convert to LAGraph_*:
+        dpagerank
+        ipagerank
+        mis
+        tricount (see also Extras/tri)
+    
+    from SuiteSparse/GraphBLAS/Extras and convert to LAGraph_*:
+        ktruss
+        allktruss
+
 TODO: simplify the CMake scripts in the Test/* folders (use a common
     included file)
 
