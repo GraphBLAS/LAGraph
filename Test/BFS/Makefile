@@ -34,5 +34,5 @@ purge: distclean
 
 # remove all files not in the distribution
 distclean:
-	rm -rf build/* bfs_test
+	rm -rf build/* bfs_test results/* o v
 
