@@ -119,7 +119,7 @@ GrB_Info LAGraph_bfs2
     //--------------------------------------------------------------------------
 
     char filename [1000] ;
-    sprintf (filename, "bfs2_n%d.m", (int) n) ;
+    sprintf (filename, "results/bfs2_n%d.m", (int) n) ;
     FILE *f = fopen (filename, "w") ;
     double tic [2], t ;
     fprintf (f, "\nfunction [a m s q] = bfs2_n%d\n", (int) n) ;

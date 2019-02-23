@@ -112,7 +112,7 @@ GrB_Info LAGraph_bfs_pull
     //--------------------------------------------------------------------------
 
     char filename [1000] ;
-    sprintf (filename, "bfs_pull_n%d.m", (int) n) ;
+    sprintf (filename, "results/bfs_pull_n%d.m", (int) n) ;
     FILE *f = fopen (filename, "w") ;
     double tic [2], t ;
     fprintf (f, "\nfunction [a m s q] = bfs_pull_n%d\n", (int) n) ;
