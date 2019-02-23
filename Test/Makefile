@@ -18,6 +18,7 @@ JOBS ?= 1
 default:
 	( cd MatrixMarket ; $(MAKE) --jobs=$(JOBS) )
 	( cd BFS          ; $(MAKE) --jobs=$(JOBS) )
+	( cd BuildMatrix  ; $(MAKE) --jobs=$(JOBS) )
 
 clean: distclean
 
@@ -27,4 +28,5 @@ purge: distclean
 distclean:
 	( cd MatrixMarket ; $(MAKE) distclean )
 	( cd BFS          ; $(MAKE) distclean )
+	( cd BuildMatrix  ; $(MAKE) distclean )
 

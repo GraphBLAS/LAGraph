@@ -38,11 +38,6 @@
 #define LAGRAPH_MAX(x,y) (((x) > (y)) ? (x) : (y))
 #define LAGRAPH_MIN(x,y) (((x) < (y)) ? (x) : (y))
 
-// for floating-point, same as min(x,y,'omitnan') and max(...) in MATLAB
-#define LAGRAPH_OMITNAN(x,y,f) ((isnan (x)) ? (y) : ((isnan (y)) ? (x) : (f)))
-#define LAGRAPH_FMIN(x,y) LAGRAPH_OMITNAN (x, y, LAGRAPH_MIN (x,y))
-#define LAGRAPH_FMAX(x,y) LAGRAPH_OMITNAN (x, y, LAGRAPH_MAX (x,y))
-
 // free a block of memory and set the pointer to NULL
 #define LAGRAPH_FREE(p)     \
 {                           \
@@ -76,6 +71,22 @@
         LAGRAPH_ERROR ("", info) ;                                          \
     }                                                                       \
 }
+
+//------------------------------------------------------------------------------
+// LAGraph_Context: 
+//------------------------------------------------------------------------------
+
+// All LAGraph functions will use a Context for global parameters, error
+// status, and the like.  So far, the parameter is only for LAGraph_random.
+
+typedef struct
+{
+    int nthreads ;          // # of threads to use.  If <= 0, use defaults
+                            // (from omp_get_max_threads)
+
+    // TODO more can go here, like info, the GrB_error() results, etc.
+}
+LAGraph_Context ;
 
 //------------------------------------------------------------------------------
 // global objects
