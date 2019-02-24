@@ -108,7 +108,7 @@ int main (int argc, char **argv)
     uint64_t seed = 1 ;
     GrB_Index nrows = 100000 ;
     GrB_Index ncols = 100000 ;
-    GrB_Index nvals = 10000000 ;
+    GrB_Index nvals = 100000000 ;
 
     // create A with one thread
     OK (bmake (&A, GrB_FP64, nrows, ncols, nvals,

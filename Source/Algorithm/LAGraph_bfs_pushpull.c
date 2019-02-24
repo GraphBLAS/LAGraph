@@ -435,10 +435,10 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
             LAGRAPH_OK (GxB_get (A , GxB_FORMAT, &A_format)) ;
             A_csr = (A_format == GxB_BY_ROW) ;
             // GxB_BY_EITHER this is not implemented yet, but it could be in
-            // the future.  A placeholder definition appear in Version 2.3.0.
-            // This format would indicate that A can be easily accessed in row
-            // and column order.  That is, x=A(i,:) would take O(nnz(A(i,:)))
-            // time, and also x=A(:,j) would take O(nnz(A(:,j))) time.
+            // the future.  This format would indicate that A can be easily
+            // accessed in row and column order.  That is, x=A(i,:) would take
+            // O(nnz(A(i,:))) time, and also x=A(:,j) would take O(nnz(A(:,j)))
+            // time.
             #ifdef GxB_BY_EITHER
             A_csr = A_csr || (A_format == GxB_BY_EITHER) ;
             #endif
