@@ -18,7 +18,7 @@ JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/mmtest 2>stderr.txt
+	./build/btest
 
 # build test
 compile:
