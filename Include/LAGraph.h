@@ -172,6 +172,8 @@ extern GrB_Descriptor
 // user-callable utility functions
 //------------------------------------------------------------------------------
 
+typedef void (*LAGraph_binary_function) (void *, const void *, const void *) ;
+
 GrB_Info LAGraph_init ( ) ;         // start LAGraph
 
 GrB_Info LAGraph_finalize ( ) ;     // end LAGraph

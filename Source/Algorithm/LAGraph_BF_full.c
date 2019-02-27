@@ -170,12 +170,13 @@ GrB_Info LAGraph_BF_full
     //--------------------------------------------------------------------------
     LAGRAPH_OK (GrB_Type_new(&BF_Tuple3, sizeof(BF_Tuple3_struct)));
     
-    LAGRAPH_OK (GrB_BinaryOp_new(&BF_EQ_Tuple3, &BF_EQ, BF_Tuple3,
-        BF_Tuple3, BF_Tuple3));
-    LAGRAPH_OK (GrB_BinaryOp_new(&BF_lMIN_Tuple3, &BF_lMIN, BF_Tuple3,
-        BF_Tuple3, BF_Tuple3));
-    LAGRAPH_OK (GrB_BinaryOp_new(&BF_PLUSrhs_Tuple3, &BF_PLUSrhs, BF_Tuple3,
-        BF_Tuple3, BF_Tuple3)); 
+    LAGRAPH_OK (GrB_BinaryOp_new(&BF_EQ_Tuple3, 
+        (LAGraph_binary_function) (&BF_EQ), BF_Tuple3, BF_Tuple3, BF_Tuple3));
+    LAGRAPH_OK (GrB_BinaryOp_new(&BF_lMIN_Tuple3,
+        (LAGraph_binary_function) (&BF_lMIN), BF_Tuple3, BF_Tuple3, BF_Tuple3));
+    LAGRAPH_OK (GrB_BinaryOp_new(&BF_PLUSrhs_Tuple3, 
+        (LAGraph_binary_function)(&BF_PLUSrhs),
+        BF_Tuple3, BF_Tuple3, BF_Tuple3)); 
 
     BF_Tuple3_struct BF_identity = (BF_Tuple3_struct) { .w = INFINITY,
         .h = UINT64_MAX, .pi = UINT64_MAX };
@@ -253,7 +254,7 @@ GrB_Info LAGraph_BF_full
             return (GrB_SUCCESS) ;
         }
     }
-    LAGRAPH_OK (GrB_Vector_extractTuples_FP64(I, W, &nz, d));
+    LAGRAPH_OK (GrB_Vector_extractTuples_UDT (I, (void *) W, &nz, d));
     h = LAGraph_malloc(nz, sizeof(GrB_Index));
     pi = LAGraph_malloc(nz, sizeof(GrB_Index));
 
