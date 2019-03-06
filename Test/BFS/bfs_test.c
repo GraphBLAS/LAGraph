@@ -162,9 +162,9 @@ int main (int argc, char **argv)
     }
 
     double t3 = LAGraph_toc (tic) / ntrials ;
-    fprintf (stderr, "push/pull old:  %12.6e (sec), rate: %g (1e6 edges/sec)\n",
+    fprintf (stderr, "push/pull old:  %12.6e (sec), "
+        " rate: %g (1e6 edges/sec)\n",
         t3, 1e-6*((double) nvals) / t3) ;
-    fprintf (stderr, "speedup of push/pull OLD: %g\n", t1/t3) ;
 
     LAGRAPH_OK (GrB_assign (v3, v3, NULL, v3, GrB_ALL, n, LAGraph_desc_ooor)) ;
 
@@ -172,22 +172,50 @@ int main (int argc, char **argv)
     // now the BFS on node s using push-pull (BEST) instead
     //--------------------------------------------------------------------------
 
-    LAGraph_tic (tic) ;
-    for (int trial = 0 ; trial < ntrials ; trial++)
+    int nthreads_max = 1 ;
+    #if defined ( _OPENMP ) && defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    nthreads_max = omp_get_max_threads ( ) ;
+    fprintf (stderr, "\n====== parallel:\n") ;
+    #endif
+
+    double t5 [nthreads_max+1] ;
+
+    fprintf (stderr, "\n") ;
+
+    for (int nthreads = 1 ; nthreads <= nthreads_max ; nthreads++)
     {
-        GrB_free (&v5) ;
-        LAGRAPH_OK (LAGraph_bfs_pushpull (&v5, A, AT, s, 0, false)) ;
+        #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+        GxB_set (GxB_NTHREADS, nthreads) ;
+        #endif
+
+        LAGraph_tic (tic) ;
+        for (int trial = 0 ; trial < ntrials ; trial++)
+        {
+            GrB_free (&v5) ;
+            LAGRAPH_OK (LAGraph_bfs_pushpull (&v5, A, AT, s, 0, false)) ;
+        }
+        t5 [nthreads] = LAGraph_toc (tic) / ntrials ;
+        fprintf (stderr, "nthreads %d push/pull best: %12.6e (sec), "
+            " rate: %g (1e6 edges/sec)\n",
+            nthreads, t5 [nthreads], 1e-6*((double) nvals) / t5 [nthreads]) ;
+        if (nthreads > 1) fprintf (stderr, "speedup %g\n",
+            t5 [1] / t5 [nthreads]) ;
     }
-    double t5 = LAGraph_toc (tic) / ntrials ;
-    fprintf (stderr, "push/pull best: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
-        t5, 1e-6*((double) nvals) / t5) ;
-    fprintf (stderr, "speedup of push/pull (best): %g\n", t1/t5) ;
+
+    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    // restore default
+    GxB_set (GxB_NTHREADS, nthreads_max) ;
+    #endif
+
+    fprintf (stderr, "\n") ;
+
     LAGRAPH_OK (GrB_assign (v5, v5, NULL, v5, GrB_ALL, n, LAGraph_desc_ooor)) ;
 
     //--------------------------------------------------------------------------
     // now the BFS on node s using push-pull (BEST) instead
     //--------------------------------------------------------------------------
 
+    fprintf (stderr, "v starts sparse: (nthread %d)\n", nthreads_max) ;
     LAGraph_tic (tic) ;
     for (int trial = 0 ; trial < ntrials ; trial++)
     {

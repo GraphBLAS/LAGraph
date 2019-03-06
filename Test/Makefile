@@ -16,10 +16,10 @@ JOBS ?= 1
 
 # build all the tests
 default:
-	( cd BFS          ; $(MAKE) --jobs=$(JOBS) )
-	( cd CC		  ; $(MAKE) --jobs=$(JOBS) )
-	( cd BuildMatrix  ; $(MAKE) --jobs=$(JOBS) )
-	( cd MatrixMarket ; $(MAKE) --jobs=$(JOBS) )
+	( cd BFS          ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
+	( cd CC		  ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
+	( cd BuildMatrix  ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
+	( cd MatrixMarket ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 
 clean: distclean
 
