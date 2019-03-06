@@ -45,7 +45,7 @@
 GrB_Info LAGraph_bfs_simple     // push-only BFS
 (
     GrB_Vector *v_output,   // v(i) is the BFS level of node i in the graph
-    const GrB_Matrix A,     // input graph, treated as if boolean in semiring
+    GrB_Matrix A,           // input graph, treated as if boolean in semiring
     GrB_Index s             // starting node of the BFS
 )
 {

@@ -313,3 +313,4 @@ GrB_Info LAGraph_bfs_simple     // push-only BFS
     GrB_Index s             // starting node of the BFS
 ) ;
 
+GrB_Info LAGraph_lacc (GrB_Matrix A) ;

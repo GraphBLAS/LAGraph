@@ -220,7 +220,8 @@ void CountCC(GrB_Vector parents)
     printf("Number of clusters: %ld\n", ncc);
 }
 
-void LACC(GrB_Matrix A)
+// TODO: in progress (nothing returned yet...)
+GrB_Info LAGraph_lacc(GrB_Matrix A)
 {
     double tic [2], t ;
     GrB_Info info;    
@@ -268,6 +269,8 @@ void LACC(GrB_Matrix A)
     }
     
     CountCC(parents);
+
+    return (GrB_SUCCESS) ;
 }
 
 

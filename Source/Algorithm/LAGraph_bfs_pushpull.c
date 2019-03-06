@@ -350,8 +350,8 @@
 GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
 (
     GrB_Vector *v_output,   // v(i) is the BFS level of node i in the graph
-    const GrB_Matrix A,     // input graph, treated as if boolean in semiring
-    const GrB_Matrix AT,    // transpose of A (optional; push-only if NULL)
+    GrB_Matrix A,           // input graph, treated as if boolean in semiring
+    GrB_Matrix AT,          // transpose of A (optional; push-only if NULL)
     int64_t s,              // starting node of the BFS (s < 0: whole graph)
     int64_t max_level,      // see description above
     bool vsparse            // if true, v is expected to be very sparse
