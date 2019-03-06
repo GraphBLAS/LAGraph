@@ -16,10 +16,10 @@ JOBS ?= 1
 
 # build all the tests
 default:
-	( cd MatrixMarket ; $(MAKE) --jobs=$(JOBS) )
 	( cd BFS          ; $(MAKE) --jobs=$(JOBS) )
 	( cd CC		  ; $(MAKE) --jobs=$(JOBS) )
 	( cd BuildMatrix  ; $(MAKE) --jobs=$(JOBS) )
+	( cd MatrixMarket ; $(MAKE) --jobs=$(JOBS) )
 
 clean: distclean
 
@@ -27,8 +27,8 @@ purge: distclean
 
 # remove all files not in the distribution
 distclean:
-	( cd MatrixMarket ; $(MAKE) distclean )
 	( cd BFS          ; $(MAKE) distclean )
 	( cd CC           ; $(MAKE) distclean )
 	( cd BuildMatrix  ; $(MAKE) distclean )
+	( cd MatrixMarket ; $(MAKE) distclean )
 
