@@ -276,6 +276,10 @@ int main (int argc, char **argv)
     fprintf (stderr, "pushpull sparse %12.6e (sec), rate: %g (1e6 edges/sec)\n",
         t6, 1e-6*((double) nvals) / t6) ;
 
+    int32_t maxlevel = 0 ;
+
+#if 0
+
     //--------------------------------------------------------------------------
     // BFS on the whole graph
     //--------------------------------------------------------------------------
@@ -293,7 +297,6 @@ int main (int argc, char **argv)
         tw, 1e-6*((double) nvals) / tw) ;
 
     // find the max level
-    int32_t maxlevel = 0 ;
     LAGRAPH_OK (GrB_reduce (&maxlevel, NULL, LAGraph_MAX_INT32_MONOID, v_whole,
         NULL));
     fprintf (stderr, "number of levels: %d (for whole graph)\n", maxlevel) ;
@@ -315,6 +318,7 @@ int main (int argc, char **argv)
     fprintf (stderr, "whole graph %12.6e (sec), rate: %g (1e6 edges/sec)"
         "with tree\n",
         tpi, 1e-6*((double) nvals) / tpi) ;
+#endif
 
     //--------------------------------------------------------------------------
     // now the BFS on node s using PULL (only) instead

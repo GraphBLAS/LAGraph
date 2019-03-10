@@ -598,6 +598,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
     // BFS traversal and label the nodes
     //--------------------------------------------------------------------------
 
+    // TODO when structure-only mask can be used, start with level = 0
     int64_t level ;
 
     for (int64_t phase = 0 ; (nvisited < n) && (phase < max_phases) ; phase++)
@@ -808,17 +809,32 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
 
         if (whole_graph && nvisited + nq < n)
         {
+
+            // clear q, just in case max_level < n
+            LAGRAPH_OK (GrB_Vector_clear (q)) ;
+            nq = 0  ;
+
             // find starting node for next phase
-            bool visited = false ;
-            for ( ; s < n && !visited ; s++)
+            if (n > INT32_MAX)
             {
-                // visited = (v (s) != 0)
-                LAGRAPH_OK (GrB_Vector_extractElement (&visited, v, s)) ;
+                int64_t x = 0 ;
+                for ( ; s < n && (x == 0) ; s++)
+                {
+                    LAGRAPH_OK (GrB_Vector_extractElement (&x, v, s)) ;
+                }
+            }
+            else
+            {
+                int32_t x = 0 ;
+                for ( ; s < n && (x == 0) ; s++)
+                {
+                    LAGRAPH_OK (GrB_Vector_extractElement (&x, v, s)) ;
+                }
             }
 
             nvstart = nvisited ;
 
-            if (!visited)
+            if (info != GrB_NO_VALUE)
             {
                 fprintf (stderr, "huh?\n") ;
                 GxB_fprint (A, 2, stderr) ;
@@ -834,7 +850,14 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
                 // GxB_fprint (pi, GxB_COMPLETE, stdout) ;
             }
 
-            LAGRAPH_OK (GrB_Vector_clear (q)) ;
+            // TODO:
+            /*
+            if node s has out-degree of zero:
+                v(s)=1
+                nvisited++
+                get next unvisited node s, in the above for loop
+            */
+
             if (compute_tree)
             {
                 // clear q, and set q(s) to s+1
