@@ -351,7 +351,7 @@
 GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
 (
     GrB_Vector *v_output,   // v(i) is the BFS level of node i in the graph
-    GrB_Vector *pi_output,  // pi(i) is the parent of node i in the graph.
+    GrB_Vector *pi_output,  // pi(i) = p+1: p is the parent of node i
                             // if NULL, the parent is not computed
     GrB_Matrix A,           // input graph, treated as if boolean in semiring
     GrB_Matrix AT,          // transpose of A (optional; push-only if NULL)
@@ -803,7 +803,10 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
         // find the next source node s
         //----------------------------------------------------------------------
 
-        if (whole_graph && nvisited < n)
+//      fprintf (stderr, "phase %" PRId64 " nvisited %" PRId64 " nq %"
+//          PRId64 " n %" PRId64 "\n", phase, nvisited, nq, n) ; 
+
+        if (whole_graph && nvisited + nq < n)
         {
             // find starting node for next phase
             bool visited = false ;
@@ -813,11 +816,37 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
                 LAGRAPH_OK (GrB_Vector_extractElement (&visited, v, s)) ;
             }
 
-            // pi (s) = 0 denotes a root of the BFS tree
-            LAGRAPH_OK (GrB_assign (pi, NULL, min_int, 0, &s, 1, NULL)) ;
+            nvstart = nvisited ;
 
-            // printf ("start new source %g:\n", (double) s) ;
-            // GxB_fprint (pi, GxB_COMPLETE, stdout) ;
+            if (!visited)
+            {
+                fprintf (stderr, "huh?\n") ;
+                GxB_fprint (A, 2, stderr) ;
+                GxB_fprint (v, 2, stderr) ;
+                abort ( ) ;
+            }
+
+            // pi (s) = 0 denotes a root of the BFS tree
+            if (compute_tree)
+            {
+                LAGRAPH_OK (GrB_assign (pi, NULL, min_int, 0, &s, 1, NULL)) ;
+                // printf ("start new source %g:\n", (double) s) ;
+                // GxB_fprint (pi, GxB_COMPLETE, stdout) ;
+            }
+
+            LAGRAPH_OK (GrB_Vector_clear (q)) ;
+            if (compute_tree)
+            {
+                // clear q, and set q(s) to s+1
+                LAGRAPH_OK (GrB_Vector_setElement (q, s+1, s)) ;
+            }
+            else
+            {
+                // clear q, and set q(s) to true
+                LAGRAPH_OK (GrB_Vector_setElement (q, true, s)) ;
+            }
+            nq = 1 ;
+
         }
     }
 

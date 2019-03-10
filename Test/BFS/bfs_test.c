@@ -25,7 +25,9 @@
     GrB_free (&v3) ;                \
     GrB_free (&v4) ;                \
     GrB_free (&v5) ;                \
+    GrB_free (&v5_tree) ;           \
     GrB_free (&v6) ;                \
+    GrB_free (&pi) ;                \
     GrB_free (&v_whole) ;           \
     GrB_free (&pi_whole) ;          \
     GrB_free (&diff) ;              \
@@ -45,8 +47,10 @@ int main (int argc, char **argv)
     GrB_Vector v3 = NULL ;
     GrB_Vector v4 = NULL ;
     GrB_Vector v5 = NULL ;
+    GrB_Vector v5_tree = NULL ;
     GrB_Vector v6 = NULL ;
     GrB_Vector v_whole = NULL ;
+    GrB_Vector pi = NULL ;
     GrB_Vector pi_whole = NULL ;
     GrB_Vector diff = NULL ;
 
@@ -217,6 +221,50 @@ int main (int argc, char **argv)
     // now the BFS on node s using push-pull (BEST) instead
     //--------------------------------------------------------------------------
 
+    double t5_tree [nthreads_max+1] ;
+
+    fprintf (stderr, "parallel (with tree):\n") ;
+
+    for (int nthreads = 1 ; nthreads <= nthreads_max ; nthreads++)
+    {
+        #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+        GxB_set (GxB_NTHREADS, nthreads) ;
+        #endif
+
+        LAGraph_tic (tic) ;
+        for (int trial = 0 ; trial < ntrials ; trial++)
+        {
+            GrB_free (&v5_tree) ;
+            GrB_free (&pi) ;
+            LAGRAPH_OK (LAGraph_bfs_pushpull (&v5_tree, &pi, A, AT, s, 0,
+                false)) ;
+        }
+        t5_tree [nthreads] = LAGraph_toc (tic) / ntrials ;
+        fprintf (stderr, "nthreads %d push/pull TREE: %12.6e (sec), "
+            " rate: %g (1e6 edges/sec)\n",
+            nthreads, t5_tree [nthreads],
+            1e-6*((double) nvals) / t5_tree [nthreads]) ;
+        if (nthreads > 1) fprintf (stderr, "speedup %g\n",
+            t5_tree [1] / t5_tree [nthreads]) ;
+    }
+
+    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    // restore default
+    GxB_set (GxB_NTHREADS, nthreads_max) ;
+    #endif
+
+    fprintf (stderr, "\n") ;
+
+    LAGRAPH_OK (GrB_assign (v5_tree, v5_tree, NULL, v5_tree, GrB_ALL,
+        n, LAGraph_desc_ooor)) ;
+
+    // TODO: check the tree
+    GrB_free (&pi) ;
+
+    //--------------------------------------------------------------------------
+    // now the BFS on node s using push-pull (BEST) instead
+    //--------------------------------------------------------------------------
+
     fprintf (stderr, "v starts sparse: (nthread %d)\n", nthreads_max) ;
     LAGraph_tic (tic) ;
     for (int trial = 0 ; trial < ntrials ; trial++)
@@ -232,6 +280,7 @@ int main (int argc, char **argv)
     // BFS on the whole graph
     //--------------------------------------------------------------------------
 
+    fprintf (stderr, "\nwhole graph, no tree:\n") ;
     LAGraph_tic (tic) ;
     for (int trial = 0 ; trial < ntrials ; trial++)
     {
@@ -253,6 +302,7 @@ int main (int argc, char **argv)
     // BFS on the whole graph, also compute the tree
     //--------------------------------------------------------------------------
 
+    fprintf (stderr, "\nwhole graph, with tree:\n") ;
     LAGraph_tic (tic) ;
     for (int trial = 0 ; trial < ntrials ; trial++)
     {
@@ -316,6 +366,13 @@ int main (int argc, char **argv)
         fprintf (stderr, "ERROR! simple and PULL   differ\n") ;
     }
 */
+
+    LAGRAPH_OK (LAGraph_Vector_isequal (&isequal, v, v5_tree, NULL)) ;
+    if (!isequal)
+    {
+        fprintf (stderr, "ERROR! simple and TREE   differ\n") ;
+        ok = false ;
+    }
 
     LAGRAPH_OK (LAGraph_Vector_isequal (&isequal, v, v5, NULL)) ;
     if (!isequal)
