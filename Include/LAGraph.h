@@ -32,6 +32,12 @@
 #include <mach/mach.h>
 #endif
 
+#if defined __INTEL_COMPILER
+// disable icc warnings
+//  161:  unrecognized pragma
+#pragma warning (disable: 161)
+#endif
+
 #define LAGRAPH_RAND_MAX 32767
 
 // suitable for integers, and non-NaN floating point:
@@ -125,6 +131,10 @@ extern GrB_UnaryOp
     LAGraph_ISONE_FP32          ,
     LAGraph_ISONE_FP64          ,
     LAGraph_ISONE_Complex       ,
+
+    // unary operators that decrement by 1
+    LAGraph_DECR_INT32          ,
+    LAGraph_DECR_INT64          ,
 
     // unary operators that return 1
     LAGraph_TRUE_BOOL           ,
@@ -299,10 +309,12 @@ double LAGraph_toc          // returns time since last LAGraph_tic
 GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
 (
     GrB_Vector *v_output,   // v(i) is the BFS level of node i in the graph
-    const GrB_Matrix A,     // input graph, treated as if boolean in semiring
-    const GrB_Matrix AT,    // transpose of A (optional; push-only if NULL)
+    GrB_Vector *pi_output,  // pi(i) is the parent of node i in the graph.
+                            // if NULL, the parent is not computed
+    GrB_Matrix A,           // input graph, treated as if boolean in semiring
+    GrB_Matrix AT,          // transpose of A (optional; push-only if NULL)
     int64_t s,              // starting node of the BFS (s < 0: whole graph)
-    int64_t max_level,      // see description above
+    int64_t max_level,      // optional limit of # levels to search
     bool vsparse            // if true, v is expected to be very sparse
 ) ;
 

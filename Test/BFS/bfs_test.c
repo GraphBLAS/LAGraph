@@ -27,6 +27,7 @@
     GrB_free (&v5) ;                \
     GrB_free (&v6) ;                \
     GrB_free (&v_whole) ;           \
+    GrB_free (&pi_whole) ;          \
     GrB_free (&diff) ;              \
 }
 
@@ -46,6 +47,7 @@ int main (int argc, char **argv)
     GrB_Vector v5 = NULL ;
     GrB_Vector v6 = NULL ;
     GrB_Vector v_whole = NULL ;
+    GrB_Vector pi_whole = NULL ;
     GrB_Vector diff = NULL ;
 
     LAGRAPH_OK (LAGraph_init ( )) ;
@@ -192,7 +194,7 @@ int main (int argc, char **argv)
         for (int trial = 0 ; trial < ntrials ; trial++)
         {
             GrB_free (&v5) ;
-            LAGRAPH_OK (LAGraph_bfs_pushpull (&v5, A, AT, s, 0, false)) ;
+            LAGRAPH_OK (LAGraph_bfs_pushpull (&v5, NULL, A, AT, s, 0, false)) ;
         }
         t5 [nthreads] = LAGraph_toc (tic) / ntrials ;
         fprintf (stderr, "nthreads %d push/pull best: %12.6e (sec), "
@@ -220,7 +222,7 @@ int main (int argc, char **argv)
     for (int trial = 0 ; trial < ntrials ; trial++)
     {
         GrB_free (&v6) ;
-        LAGRAPH_OK (LAGraph_bfs_pushpull (&v6, A, AT, s, 0, true)) ;
+        LAGRAPH_OK (LAGraph_bfs_pushpull (&v6, NULL, A, AT, s, 0, true)) ;
     }
     double t6 = LAGraph_toc (tic) / ntrials ;
     fprintf (stderr, "pushpull sparse %12.6e (sec), rate: %g (1e6 edges/sec)\n",
@@ -234,7 +236,7 @@ int main (int argc, char **argv)
     for (int trial = 0 ; trial < ntrials ; trial++)
     {
         GrB_free (&v_whole) ;
-        LAGRAPH_OK (LAGraph_bfs_pushpull (&v_whole, A, AT, -1, 0, false)) ;
+        LAGRAPH_OK (LAGraph_bfs_pushpull (&v_whole, NULL, A, AT, -1, 0, false));
     }
     double tw = LAGraph_toc (tic) / ntrials ;
     fprintf (stderr, "whole graph %12.6e (sec), rate: %g (1e6 edges/sec)\n"
@@ -246,6 +248,23 @@ int main (int argc, char **argv)
     LAGRAPH_OK (GrB_reduce (&maxlevel, NULL, LAGraph_MAX_INT32_MONOID, v_whole,
         NULL));
     fprintf (stderr, "number of levels: %d (for whole graph)\n", maxlevel) ;
+
+    //--------------------------------------------------------------------------
+    // BFS on the whole graph, also compute the tree
+    //--------------------------------------------------------------------------
+
+    LAGraph_tic (tic) ;
+    for (int trial = 0 ; trial < ntrials ; trial++)
+    {
+        GrB_free (&v_whole) ;
+        GrB_free (&pi_whole) ;
+        LAGRAPH_OK (LAGraph_bfs_pushpull (&v_whole, &pi_whole,
+            A, AT, -1, 0, false)) ;
+    }
+    double tpi = LAGraph_toc (tic) / ntrials ;
+    fprintf (stderr, "whole graph %12.6e (sec), rate: %g (1e6 edges/sec)"
+        "with tree\n",
+        tpi, 1e-6*((double) nvals) / tpi) ;
 
     //--------------------------------------------------------------------------
     // now the BFS on node s using PULL (only) instead

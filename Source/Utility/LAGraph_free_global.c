@@ -36,6 +36,9 @@ GrB_Info LAGraph_free_global ( )
     GrB_free (&LAGraph_ISONE_FP64) ;
     GrB_free (&LAGraph_ISONE_Complex) ;
 
+    GrB_free (&LAGraph_DECR_INT32) ;
+    GrB_free (&LAGraph_DECR_INT64) ;
+
     GrB_free (&LAGraph_TRUE_BOOL) ;
     GrB_free (&LAGraph_TRUE_BOOL_Complex) ;
 

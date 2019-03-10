@@ -257,6 +257,28 @@ void LAGraph_true_bool_complex
     (*z) = true ;
 }
 
+// integer decrement
+GrB_UnaryOp LAGraph_DECR_INT32 = NULL ;
+GrB_UnaryOp LAGraph_DECR_INT64 = NULL ;
+
+void LAGraph_decr_int32
+(
+    int32_t *z,
+    const int32_t *x
+)
+{
+    (*z) = ((*x) - 1) ;
+}
+
+void LAGraph_decr_int64
+(
+    int64_t *z,
+    const int64_t *x
+)
+{
+    (*z) = ((*x) - 1) ;
+}
+
 // boolean monoids and semirings
 GrB_Monoid LAGraph_PLUS_INT64_MONOID = NULL ;
 GrB_Monoid LAGraph_MAX_INT32_MONOID = NULL ;
@@ -390,6 +412,16 @@ GrB_Info LAGraph_alloc_global ( )
     LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_Complex,
         F_UNARY (LAGraph_isone_complex),
         GrB_BOOL, LAGraph_Complex)) ;
+
+    // create the unary decrement operators
+
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_DECR_INT32,
+        F_UNARY (LAGraph_decr_int32),
+        GrB_INT32, GrB_INT32)) ;
+
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_DECR_INT64,
+        F_UNARY (LAGraph_decr_int64),
+        GrB_INT64, GrB_INT64)) ;
 
     // create the unary operators that return true
 

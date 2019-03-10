@@ -345,15 +345,18 @@
     GrB_free (&v) ;         \
     GrB_free (&t) ;         \
     GrB_free (&q) ;         \
+    GrB_free (&pi) ;        \
 }
 
 GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
 (
     GrB_Vector *v_output,   // v(i) is the BFS level of node i in the graph
+    GrB_Vector *pi_output,  // pi(i) is the parent of node i in the graph.
+                            // if NULL, the parent is not computed
     GrB_Matrix A,           // input graph, treated as if boolean in semiring
     GrB_Matrix AT,          // transpose of A (optional; push-only if NULL)
     int64_t s,              // starting node of the BFS (s < 0: whole graph)
-    int64_t max_level,      // see description above
+    int64_t max_level,      // optional limit of # levels to search
     bool vsparse            // if true, v is expected to be very sparse
 )
 {
@@ -366,6 +369,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
     GrB_Vector q = NULL ;           // nodes visited at each level
     GrB_Vector v = NULL ;           // result vector
     GrB_Vector t = NULL ;           // temporary vector
+    GrB_Vector pi = NULL ;          // parent vector
 
     if (v_output == NULL || (A == NULL && AT == NULL))
     {
@@ -373,7 +377,10 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
         LAGRAPH_ERROR ("required arguments are NULL", GrB_NULL_POINTER) ;
     }
 
+    // GxB_fprint (A, 3, stdout) ;
+
     (*v_output) = NULL ;
+    bool compute_tree = (pi_output != NULL) ;
 
     bool use_vxm_with_A ;
     GrB_Index nrows, ncols, nvalA, ignore, nvals ;
@@ -523,14 +530,14 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
     }
 
     // create an empty vector v
-    GrB_Type vtype = (n > INT32_MAX) ? GrB_INT64 : GrB_INT32 ;
-    LAGRAPH_OK (GrB_Vector_new (&v, vtype, n)) ;
+    GrB_Type int_type = (n > INT32_MAX) ? GrB_INT64 : GrB_INT32 ;
+    LAGRAPH_OK (GrB_Vector_new (&v, int_type, n)) ;
 
     // make v dense if the whole graph is being traversed
     int64_t vlimit = LAGRAPH_MAX (256, sqrt ((double) n)) ;
     if (!vsparse)
     {
-        // v is expceted to have many entries, so convert v to dense, then
+        // v is expected to have many entries, so convert v to dense, then
         // finish pending work.  If the guess is wrong, v can be made dense
         // later on.
         vsparse = false ;
@@ -538,9 +545,47 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
         LAGRAPH_OK (GrB_Vector_nvals (&ignore, v)) ;
     }
 
-    // create a boolean vector q, and set q(s) to true
-    LAGRAPH_OK (GrB_Vector_new (&q, GrB_BOOL, n)) ;
-    LAGRAPH_OK (GrB_Vector_setElement (q, true, s)) ;
+    GrB_Semiring first_semiring, second_semiring ;
+    GrB_BinaryOp min_int = NULL ;
+    if (compute_tree)
+    {
+        // create an integer vector q, and set q(s) to s+1
+        LAGRAPH_OK (GrB_Vector_new (&q, int_type, n)) ;
+        LAGRAPH_OK (GrB_Vector_setElement (q, s+1, s)) ;
+
+        // printf ("initial pi:\n") ;
+        // GxB_fprint (pi, GxB_COMPLETE, stdout) ;
+
+        // TODO add LAGraph_MIN_FIRST_INT64, etc, semirings
+        if (n > INT32_MAX)
+        {
+            first_semiring  = GxB_MIN_FIRST_INT64 ;
+            second_semiring = GxB_MIN_SECOND_INT64 ;
+            min_int = GrB_MIN_INT64 ;
+        }
+        else
+        {
+            first_semiring  = GxB_MIN_FIRST_INT32 ;
+            second_semiring = GxB_MIN_SECOND_INT32 ;
+            min_int = GrB_MIN_INT32 ;
+        }
+
+        // create the empty parent vector
+        LAGRAPH_OK (GrB_Vector_new (&pi, int_type, n)) ;
+        // pi (s) = 0 denotes a root of the BFS tree
+        // LAGRAPH_OK (GrB_Vector_setElement (pi, 0, s)) ;
+        LAGRAPH_OK (GrB_assign (pi, NULL, min_int, 0, &s, 1, NULL)) ;
+    }
+    else
+    {
+        // create a boolean vector q, and set q(s) to true
+        LAGRAPH_OK (GrB_Vector_new (&q, GrB_BOOL, n)) ;
+        LAGRAPH_OK (GrB_Vector_setElement (q, true, s)) ;
+
+        // TODO: use LOR_FIRST and LOR_SECOND instead:
+        first_semiring  = LAGraph_LOR_LAND_BOOL ;
+        second_semiring = LAGraph_LOR_LAND_BOOL ;
+    }
 
     // average node degree
     double d = (n == 0) ? 0 : (((double) nvalA) / (double) n) ;
@@ -564,10 +609,13 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
 
         for (level = 1 ; ; level++)
         {
+            // printf ("\n======================== level %g\n", (double) level);
 
             //------------------------------------------------------------------
             // set v to the current level, for all nodes in q
             //------------------------------------------------------------------
+
+            // TODO: the mask q should be 'structure only' (see draft spec)
 
             // v<q> = level: set v(i) = level for all nodes i in q
             LAGRAPH_OK (GrB_assign (v, q, NULL, level, GrB_ALL, n, NULL)) ;
@@ -590,7 +638,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
                 // Convert v to dense to speed up the rest of the work.  If
                 // this case is triggered, it would have been a bit faster to
                 // pass in vsparse = false on input.
-                LAGRAPH_OK (GrB_Vector_new (&t, vtype, n)) ;
+                LAGRAPH_OK (GrB_Vector_new (&t, int_type, n)) ;
                 LAGRAPH_OK (GrB_assign (t, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
                 LAGRAPH_OK (GrB_Vector_nvals (&ignore, t)) ;
                 LAGRAPH_OK (GrB_assign (t, v, NULL, v, GrB_ALL, n, NULL)) ;
@@ -637,41 +685,117 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
             // q = next level of the BFS
             //------------------------------------------------------------------
 
+            // TODO: v is a complemented 'structure-only' mask
+
+                // printf ("this q:\n") ;
+                // GxB_fprint (q, GxB_COMPLETE, stdout) ;
+
             if (use_vxm_with_A)
             {
                 // q'<!v> = q'*A
                 // this is a push step if A is in CSR format; pull if CSC
-                LAGRAPH_OK (GrB_vxm (q, v, NULL, LAGraph_LOR_LAND_BOOL, q, A,
+                LAGRAPH_OK (GrB_vxm (q, v, NULL, first_semiring, q, A,
                     LAGraph_desc_oocr)) ;
             }
             else
             {
                 // q<!v> = AT*q
                 // this is a pull step if AT is in CSR format; push if CSC
-//              fprintf (stderr, "........................ pull %ld\n", level) ;
-                LAGRAPH_OK (GrB_mxv (q, v, NULL, LAGraph_LOR_LAND_BOOL, AT, q,
+                LAGRAPH_OK (GrB_mxv (q, v, NULL, second_semiring, AT, q,
                     LAGraph_desc_oocr)) ;
             }
 
+                // printf ("next q:\n") ;
+                // GxB_fprint (q, GxB_COMPLETE, stdout) ;
+
             //------------------------------------------------------------------
-            // count the nodes in the current level
+            // move to next level
             //------------------------------------------------------------------
 
-            // nq = sum (q)
-            LAGRAPH_OK (GrB_reduce (&nq, NULL, LAGraph_PLUS_INT64_MONOID,
-                q, NULL)) ;
-
-            // check for zero-weight edges in the graph
-            LAGRAPH_OK (GrB_Vector_nvals (&nvals, q)) ;
-            if (nvals > nq)
+            if (compute_tree)
             {
-                // remove explicit zeros from q.  This will occur if A has any
-                // explicit entries with value zero.  Those entries are treated
-                // as non-edges in this algorithm, even without this step.  But
-                // extra useless entries in q can slow down the algorithm, so
-                // they are pruned here.
-                LAGRAPH_OK (GrB_assign (q, q, NULL, true, GrB_ALL, n,
-                    LAGraph_desc_ooor)) ;
+
+                //--------------------------------------------------------------
+                // assign parents
+                //--------------------------------------------------------------
+
+                // TODO: q is a 'structure-only' mask
+
+                // q(i) currently contains the parent of node i in tree
+                // (off by one so it won't have any zero values, for valued
+                // mask)
+                LAGRAPH_OK (GrB_assign (pi, q, min_int, q, GrB_ALL, n, NULL)) ;
+
+                // printf ("new pi at level %g:\n", (double) level) ;
+                // GxB_fprint (pi, GxB_COMPLETE, stdout) ;
+
+                //--------------------------------------------------------------
+                // replace q with current node numbers
+                //--------------------------------------------------------------
+
+                // q(i) = i+1 for all entries in q.  This could also be done
+                // with GrB_assign (q, q, NULL, x, GrB_ALL, n, NULL), with x =
+                // 1:n as a dense vector x, constructed just once at the
+                // beginning.  However, the time taken to construct x would be
+                // O(n).  This would dominate the run time if the output v is
+                // very sparse.
+
+                // TODO: use q(i)=i when q can be used as a structure-only mask
+
+                GrB_Index *qi ;
+                if (n > INT32_MAX)
+                {
+                    int64_t *qx ;
+                    LAGRAPH_OK (GxB_Vector_export (&q, &int_type, &n,
+                        &nq, &qi, (void **) (&qx), NULL)) ;
+                    for (int64_t k = 0 ; k < nq ; k++)
+                    {
+                        qx [k] = qi [k] + 1 ;
+                    }
+                    LAGRAPH_OK (GxB_Vector_import (&q, int_type, n,
+                        nq, &qi, (void **) (&qx), NULL)) ;
+                }
+                else
+                {
+                    int32_t *qx ;
+                    LAGRAPH_OK (GxB_Vector_export (&q, &int_type, &n,
+                        &nq, &qi, (void **) (&qx), NULL)) ;
+                    for (int32_t k = 0 ; k < nq ; k++)
+                    {
+                        qx [k] = qi [k] + 1 ;
+                    }
+                    LAGRAPH_OK (GxB_Vector_import (&q, int_type, n,
+                        nq, &qi, (void **) (&qx), NULL)) ;
+                }
+
+            }
+            else
+            {
+
+                //--------------------------------------------------------------
+                // count the nodes in the current level
+                //--------------------------------------------------------------
+
+                // TODO: if q can be used as a structure-only mask, then the
+                // following can be used instead:
+                // LAGRAPH_OK (GrB_Vector_nvals (&nq, q)) ;
+
+                // nq = sum (q)
+                LAGRAPH_OK (GrB_reduce (&nq, NULL, LAGraph_PLUS_INT64_MONOID,
+                    q, NULL)) ;
+
+                // check for zero-weight edges in the graph
+                LAGRAPH_OK (GrB_Vector_nvals (&nvals, q)) ;
+                if (nvals > nq)
+                {
+                    // remove explicit zeros from q.  This will occur if A has
+                    // any explicit entries with value zero.  Those entries are
+                    // treated as non-edges in this algorithm, even without
+                    // this step.  But extra useless entries in q can slow down
+                    // the algorithm, so they are pruned here.
+                    LAGRAPH_OK (GrB_assign (q, q, NULL, true, GrB_ALL, n,
+                        LAGraph_desc_ooor)) ;
+                }
             }
         }
 
@@ -688,6 +812,12 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
                 // visited = (v (s) != 0)
                 LAGRAPH_OK (GrB_Vector_extractElement (&visited, v, s)) ;
             }
+
+            // pi (s) = 0 denotes a root of the BFS tree
+            LAGRAPH_OK (GrB_assign (pi, NULL, min_int, 0, &s, 1, NULL)) ;
+
+            // printf ("start new source %g:\n", (double) s) ;
+            // GxB_fprint (pi, GxB_COMPLETE, stdout) ;
         }
     }
 
@@ -704,6 +834,30 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
         LAGRAPH_OK (GrB_assign (v, v, NULL, v, GrB_ALL, n, LAGraph_desc_ooor)) ;
     }
     LAGRAPH_OK (GrB_Vector_nvals (&nvals, v)) ;     // finish the work
+
+    //--------------------------------------------------------------------------
+    // shift the parent vector
+    //--------------------------------------------------------------------------
+
+    if (compute_tree)
+    {
+        // pi = pi - 1, for each entry in pi
+        // printf ("done, parent:\n") ;
+        // GxB_fprint (pi, 2, stderr) ;
+        // GrB_Index ignore ;
+        // GrB_Vector_nvals (&ignore, pi) ;
+        // GxB_fprint (pi, GxB_COMPLETE, stdout) ;
+
+        LAGRAPH_OK (GrB_apply (pi, NULL, NULL, 
+            (n > INT32_MAX) ? LAGraph_DECR_INT64 : LAGraph_DECR_INT32,
+            pi, NULL)) ;
+        // printf ("final parent:\n") ;
+        // GxB_fprint (pi, GxB_COMPLETE, stdout) ;
+        (*pi_output) = pi ;
+    }
+
+        // printf ("final level:\n") ;
+        // GxB_fprint (v, GxB_COMPLETE, stdout) ;
 
     //--------------------------------------------------------------------------
     // free workspace and return result

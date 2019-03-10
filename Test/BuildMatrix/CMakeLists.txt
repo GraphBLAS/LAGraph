@@ -59,7 +59,7 @@ project ( btest )
 include ( GNUInstallDirs )
 
 # For development only, not for end-users:
-set ( CMAKE_BUILD_TYPE Debug )
+# set ( CMAKE_BUILD_TYPE Debug )
 
 if ( NOT CMAKE_BUILD_TYPE )
     set ( CMAKE_BUILD_TYPE Release )
