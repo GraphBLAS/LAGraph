@@ -18,6 +18,13 @@
     GrB_free (&desc) ;      \
 }
 
+#ifdef MY_BOOL
+// just to test compile-time user-defined objects in SuiteSparse/GraphBLAS:
+#define Boolean My_LOR_LAND
+#else
+#define Boolean LAGraph_LOR_LAND_BOOL
+#endif
+
 GrB_Info LAGraph_bfs_pushpull_old
 (
     GrB_Vector *v_output,   // v [i] is the BFS level of node i in the graph
@@ -33,7 +40,9 @@ GrB_Info LAGraph_bfs_pushpull_old
     // check inputs
     //--------------------------------------------------------------------------
 
-    // fprintf (stderr, "\npush-pull:\n") ;
+    #ifdef MY_BOOL
+    fprintf (stderr, "\npush-pull (user-defined):\n") ;
+    #endif
 
     GrB_Info info ;
 
