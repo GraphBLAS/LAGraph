@@ -1,0 +1,1455 @@
+
+==========input graph: nodes: 685230 edges: 7600595
+init time 0.104498
+just one thread: 0.181243 method 1001
+
+GraphBLAS matrix: C 
+nrows: 685230 ncols: 685230 max # entries: 8285825
+format: hypersparse CSR vlen: 685230 nvec_nonempty: 685230 nvec: 685230 plen: 685230 vdim: 685230
+hyper_ratio 1
+GraphBLAS type:  float size: 4
+number of entries: 8285825 
+C time 0.44269
+built in dot 0.0195661 sec
+just one thread: 0.019608 method 1003
+built in dot 0.0183749 sec
+just one thread: 0.01842 method 1003
+built in dot 0.0184469 sec
+just one thread: 0.018486 method 1003
+built in dot 0.0182409 sec
+just one thread: 0.0182791 method 1003
+built in dot 0.01898 sec
+just one thread: 0.019022 method 1003
+built in dot 0.0183291 sec
+just one thread: 0.0183699 method 1003
+built in dot 0.01828 sec
+just one thread: 0.018321 method 1003
+built in dot 0.0182471 sec
+just one thread: 0.0182848 method 1003
+built in dot 0.0187371 sec
+just one thread: 0.0187821 method 1003
+built in dot 0.0189781 sec
+just one thread: 0.0190239 method 1003
+built in dot 0.019047 sec
+just one thread: 0.019093 method 1003
+built in dot 0.0181751 sec
+just one thread: 0.018219 method 1003
+built in dot 0.0182879 sec
+just one thread: 0.0183311 method 1003
+built in dot 0.0182931 sec
+just one thread: 0.018332 method 1003
+built in dot 0.0186799 sec
+just one thread: 0.018724 method 1003
+built in dot 0.018364 sec
+just one thread: 0.018405 method 1003
+built in dot 0.0189891 sec
+just one thread: 0.019033 method 1003
+built in dot 0.0184319 sec
+just one thread: 0.0184731 method 1003
+built in dot 0.018703 sec
+just one thread: 0.018748 method 1003
+built in dot 0.018302 sec
+just one thread: 0.018343 method 1003
+built in dot 0.0195179 sec
+just one thread: 0.0195591 method 1003
+built in dot 0.018369 sec
+just one thread: 0.0184112 method 1003
+built in dot 0.0183659 sec
+just one thread: 0.0184062 method 1003
+built in dot 0.018194 sec
+just one thread: 0.0182278 method 1003
+built in dot 0.022156 sec
+just one thread: 0.0222011 method 1003
+built in dot 0.018307 sec
+just one thread: 0.018347 method 1003
+built in dot 0.021086 sec
+just one thread: 0.0211599 method 1003
+built in dot 0.0181079 sec
+just one thread: 0.0181532 method 1003
+built in dot 0.018429 sec
+just one thread: 0.018471 method 1003
+built in dot 0.018111 sec
+just one thread: 0.0181541 method 1003
+built in dot 0.0190198 sec
+just one thread: 0.0190649 method 1003
+built in dot 0.0181332 sec
+just one thread: 0.018168 method 1003
+built in dot 0.0185518 sec
+just one thread: 0.0185971 method 1003
+built in dot 0.0180771 sec
+just one thread: 0.0181119 method 1003
+built in dot 0.0182531 sec
+just one thread: 0.0182879 method 1003
+built in dot 0.018714 sec
+just one thread: 0.0187581 method 1003
+built in dot 0.0228651 sec
+just one thread: 0.0229101 method 1003
+built in dot 0.0208349 sec
+just one thread: 0.020879 method 1003
+built in dot 0.0183229 sec
+just one thread: 0.0183609 method 1003
+built in dot 0.0192809 sec
+just one thread: 0.0193191 method 1003
+built in dot 0.0188198 sec
+just one thread: 0.0188589 method 1003
+built in dot 0.020304 sec
+just one thread: 0.020355 method 1003
+built in dot 0.021457 sec
+just one thread: 0.021503 method 1003
+built in dot 0.019635 sec
+just one thread: 0.0196791 method 1003
+built in dot 0.019449 sec
+just one thread: 0.01949 method 1003
+built in dot 0.018539 sec
+just one thread: 0.0185809 method 1003
+built in dot 0.018867 sec
+just one thread: 0.0189121 method 1003
+built in dot 0.0181742 sec
+just one thread: 0.0182118 method 1003
+built in dot 0.0181999 sec
+just one thread: 0.0182331 method 1003
+built in dot 0.0198672 sec
+just one thread: 0.0199089 method 1003
+built in dot 0.0185161 sec
+just one thread: 0.0185578 method 1003
+built in dot 0.0181351 sec
+just one thread: 0.0181708 method 1003
+built in dot 0.018378 sec
+just one thread: 0.0184259 method 1003
+built in dot 0.0182159 sec
+just one thread: 0.0182562 method 1003
+built in dot 0.018168 sec
+just one thread: 0.0182009 method 1003
+built in dot 0.0180449 sec
+just one thread: 0.018075 method 1003
+built in dot 0.018301 sec
+just one thread: 0.018342 method 1003
+built in dot 0.018259 sec
+just one thread: 0.0183311 method 1003
+built in dot 0.0182309 sec
+just one thread: 0.0182619 method 1003
+built in dot 0.018188 sec
+just one thread: 0.0182259 method 1003
+built in dot 0.01828 sec
+just one thread: 0.018317 method 1003
+built in dot 0.018275 sec
+just one thread: 0.0183201 method 1003
+built in dot 0.0201859 sec
+just one thread: 0.020231 method 1003
+built in dot 0.021101 sec
+just one thread: 0.0211461 method 1003
+built in dot 0.0190549 sec
+just one thread: 0.0191009 method 1003
+built in dot 0.0193939 sec
+just one thread: 0.019439 method 1003
+built in dot 0.0184309 sec
+just one thread: 0.0184789 method 1003
+built in dot 0.021018 sec
+just one thread: 0.02106 method 1003
+built in dot 0.018255 sec
+just one thread: 0.0182929 method 1003
+built in dot 0.0192139 sec
+just one thread: 0.0192599 method 1003
+built in dot 0.0184979 sec
+just one thread: 0.018533 method 1003
+built in dot 0.018296 sec
+just one thread: 0.0183392 method 1003
+built in dot 0.0183101 sec
+just one thread: 0.0183542 method 1003
+built in dot 0.0226769 sec
+just one thread: 0.0227242 method 1003
+built in dot 0.019032 sec
+just one thread: 0.0190761 method 1003
+built in dot 0.021759 sec
+just one thread: 0.0218029 method 1003
+built in dot 0.0227358 sec
+just one thread: 0.022784 method 1003
+built in dot 0.0182281 sec
+just one thread: 0.0182769 method 1003
+built in dot 0.019037 sec
+just one thread: 0.0190809 method 1003
+built in dot 0.018213 sec
+just one thread: 0.0182571 method 1003
+built in dot 0.018728 sec
+just one thread: 0.0187721 method 1003
+built in dot 0.018167 sec
+just one thread: 0.018203 method 1003
+built in dot 0.0203509 sec
+just one thread: 0.0203969 method 1003
+built in dot 0.018544 sec
+just one thread: 0.0185819 method 1003
+built in dot 0.0182531 sec
+just one thread: 0.018296 method 1003
+built in dot 0.018472 sec
+just one thread: 0.0185192 method 1003
+built in dot 0.021641 sec
+just one thread: 0.0216839 method 1003
+built in dot 0.022764 sec
+just one thread: 0.022805 method 1003
+built in dot 0.0184848 sec
+just one thread: 0.018528 method 1003
+built in dot 0.0181839 sec
+just one thread: 0.0182209 method 1003
+built in dot 0.018579 sec
+just one thread: 0.0186241 method 1003
+built in dot 0.018137 sec
+just one thread: 0.0181711 method 1003
+built in dot 0.019289 sec
+just one thread: 0.0193341 method 1003
+built in dot 0.0181379 sec
+just one thread: 0.018173 method 1003
+built in dot 0.0183251 sec
+just one thread: 0.018362 method 1003
+built in dot 0.018507 sec
+just one thread: 0.018553 method 1003
+built in dot 0.0184441 sec
+just one thread: 0.0184782 method 1003
+built in dot 0.018136 sec
+just one thread: 0.018172 method 1003
+built in dot 0.020463 sec
+just one thread: 0.0205069 method 1003
+built in dot 0.01809 sec
+just one thread: 0.018126 method 1003
+mxv 1.96689
+rank time 2.89347
+fini time 0.08251
+pagerank  time: 3.523348e+00 (sec), rate: 2.15721 (1e6 edges/sec) iters: 100
+init time 0.0959752
+
+GraphBLAS matrix: C 
+nrows: 685230 ncols: 685230 max # entries: 8285825
+format: hypersparse CSR vlen: 685230 nvec_nonempty: 685230 nvec: 685230 plen: 685230 vdim: 685230
+hyper_ratio 1
+GraphBLAS type:  float size: 4
+number of entries: 8285825 
+C time 0.41212
+built in dot 0.00930595 sec
+built in dot 0.00955296 sec
+just the slice Ck=A'*Bk: 0.0189328 sec
+built in dot 0.0132329 sec
+built in dot 0.0131769 sec
+just the slice Ck=A'*Bk: 0.0265062 sec
+built in dot 0.012749 sec
+built in dot 0.0129061 sec
+just the slice Ck=A'*Bk: 0.0257452 sec
+built in dot 0.012907 sec
+built in dot 0.0128751 sec
+just the slice Ck=A'*Bk: 0.025877 sec
+built in dot 0.0126948 sec
+built in dot 0.012892 sec
+just the slice Ck=A'*Bk: 0.0256851 sec
+built in dot 0.0126979 sec
+built in dot 0.013823 sec
+just the slice Ck=A'*Bk: 0.0266171 sec
+built in dot 0.0132139 sec
+built in dot 0.013108 sec
+just the slice Ck=A'*Bk: 0.026428 sec
+built in dot 0.0127442 sec
+built in dot 0.012845 sec
+just the slice Ck=A'*Bk: 0.025687 sec
+built in dot 0.0127211 sec
+built in dot 0.012974 sec
+just the slice Ck=A'*Bk: 0.02578 sec
+built in dot 0.01264 sec
+built in dot 0.012835 sec
+just the slice Ck=A'*Bk: 0.0255611 sec
+built in dot 0.0128591 sec
+built in dot 0.0128632 sec
+just the slice Ck=A'*Bk: 0.0258238 sec
+built in dot 0.0126529 sec
+built in dot 0.0128131 sec
+just the slice Ck=A'*Bk: 0.025558 sec
+built in dot 0.012907 sec
+built in dot 0.012995 sec
+just the slice Ck=A'*Bk: 0.026 sec
+built in dot 0.012717 sec
+built in dot 0.0128469 sec
+just the slice Ck=A'*Bk: 0.025655 sec
+built in dot 0.0126669 sec
+built in dot 0.01281 sec
+just the slice Ck=A'*Bk: 0.025564 sec
+built in dot 0.0129819 sec
+built in dot 0.013119 sec
+just the slice Ck=A'*Bk: 0.0261981 sec
+built in dot 0.012687 sec
+built in dot 0.0128281 sec
+just the slice Ck=A'*Bk: 0.0256078 sec
+built in dot 0.0132451 sec
+built in dot 0.0128679 sec
+just the slice Ck=A'*Bk: 0.026202 sec
+built in dot 0.01265 sec
+built in dot 0.012821 sec
+just the slice Ck=A'*Bk: 0.025573 sec
+built in dot 0.013304 sec
+built in dot 0.0129862 sec
+just the slice Ck=A'*Bk: 0.026392 sec
+built in dot 0.0129268 sec
+built in dot 0.0131612 sec
+just the slice Ck=A'*Bk: 0.0261869 sec
+built in dot 0.0131361 sec
+built in dot 0.013103 sec
+just the slice Ck=A'*Bk: 0.0263491 sec
+built in dot 0.0128162 sec
+built in dot 0.012789 sec
+just the slice Ck=A'*Bk: 0.0257001 sec
+built in dot 0.0126729 sec
+built in dot 0.0128779 sec
+just the slice Ck=A'*Bk: 0.0256522 sec
+built in dot 0.0126691 sec
+built in dot 0.0131099 sec
+just the slice Ck=A'*Bk: 0.0258839 sec
+built in dot 0.013032 sec
+built in dot 0.012804 sec
+just the slice Ck=A'*Bk: 0.0259311 sec
+built in dot 0.0127192 sec
+built in dot 0.0128021 sec
+just the slice Ck=A'*Bk: 0.0256078 sec
+built in dot 0.012954 sec
+built in dot 0.0128279 sec
+just the slice Ck=A'*Bk: 0.025876 sec
+built in dot 0.0126939 sec
+built in dot 0.0132871 sec
+just the slice Ck=A'*Bk: 0.026087 sec
+built in dot 0.012692 sec
+built in dot 0.012835 sec
+just the slice Ck=A'*Bk: 0.0256281 sec
+built in dot 0.0129502 sec
+built in dot 0.0128989 sec
+just the slice Ck=A'*Bk: 0.0259449 sec
+built in dot 0.012872 sec
+built in dot 0.0130889 sec
+just the slice Ck=A'*Bk: 0.0260651 sec
+built in dot 0.012728 sec
+built in dot 0.0129192 sec
+just the slice Ck=A'*Bk: 0.025732 sec
+built in dot 0.0130439 sec
+built in dot 0.013165 sec
+just the slice Ck=A'*Bk: 0.026315 sec
+built in dot 0.012671 sec
+built in dot 0.012886 sec
+just the slice Ck=A'*Bk: 0.0256479 sec
+built in dot 0.0128748 sec
+built in dot 0.0128918 sec
+just the slice Ck=A'*Bk: 0.0258701 sec
+built in dot 0.01267 sec
+built in dot 0.0129499 sec
+just the slice Ck=A'*Bk: 0.0257151 sec
+built in dot 0.012738 sec
+built in dot 0.0131302 sec
+just the slice Ck=A'*Bk: 0.0259681 sec
+built in dot 0.013272 sec
+built in dot 0.01301 sec
+just the slice Ck=A'*Bk: 0.0263951 sec
+built in dot 0.0128019 sec
+built in dot 0.012814 sec
+just the slice Ck=A'*Bk: 0.0257101 sec
+built in dot 0.0132072 sec
+built in dot 0.013145 sec
+just the slice Ck=A'*Bk: 0.0264568 sec
+built in dot 0.0129888 sec
+built in dot 0.0131161 sec
+just the slice Ck=A'*Bk: 0.026207 sec
+built in dot 0.0126779 sec
+built in dot 0.0130031 sec
+just the slice Ck=A'*Bk: 0.0257821 sec
+built in dot 0.0129008 sec
+built in dot 0.0129681 sec
+just the slice Ck=A'*Bk: 0.0259731 sec
+built in dot 0.0128131 sec
+built in dot 0.013397 sec
+just the slice Ck=A'*Bk: 0.0263159 sec
+built in dot 0.0129628 sec
+built in dot 0.0129321 sec
+just the slice Ck=A'*Bk: 0.025995 sec
+built in dot 0.0128059 sec
+built in dot 0.012903 sec
+just the slice Ck=A'*Bk: 0.0258062 sec
+built in dot 0.0126822 sec
+built in dot 0.012954 sec
+just the slice Ck=A'*Bk: 0.025737 sec
+built in dot 0.0129569 sec
+built in dot 0.0128481 sec
+just the slice Ck=A'*Bk: 0.025907 sec
+built in dot 0.0132551 sec
+built in dot 0.0131621 sec
+just the slice Ck=A'*Bk: 0.0265131 sec
+built in dot 0.013036 sec
+built in dot 0.0130379 sec
+just the slice Ck=A'*Bk: 0.026166 sec
+built in dot 0.0131402 sec
+built in dot 0.0131099 sec
+just the slice Ck=A'*Bk: 0.0263469 sec
+built in dot 0.0127981 sec
+built in dot 0.012845 sec
+just the slice Ck=A'*Bk: 0.025738 sec
+built in dot 0.012702 sec
+built in dot 0.012953 sec
+just the slice Ck=A'*Bk: 0.0257561 sec
+built in dot 0.0127571 sec
+built in dot 0.0128448 sec
+just the slice Ck=A'*Bk: 0.0257041 sec
+built in dot 0.0127261 sec
+built in dot 0.0131319 sec
+just the slice Ck=A'*Bk: 0.0259628 sec
+built in dot 0.0130942 sec
+built in dot 0.0128949 sec
+just the slice Ck=A'*Bk: 0.026087 sec
+built in dot 0.0127211 sec
+built in dot 0.0130439 sec
+just the slice Ck=A'*Bk: 0.0258639 sec
+built in dot 0.0127819 sec
+built in dot 0.0129869 sec
+just the slice Ck=A'*Bk: 0.0258701 sec
+built in dot 0.012727 sec
+built in dot 0.01297 sec
+just the slice Ck=A'*Bk: 0.0257959 sec
+built in dot 0.0133119 sec
+built in dot 0.013231 sec
+just the slice Ck=A'*Bk: 0.0266399 sec
+built in dot 0.0127828 sec
+built in dot 0.012877 sec
+just the slice Ck=A'*Bk: 0.0257602 sec
+built in dot 0.012955 sec
+built in dot 0.0134411 sec
+just the slice Ck=A'*Bk: 0.0265031 sec
+built in dot 0.0130301 sec
+built in dot 0.0131299 sec
+just the slice Ck=A'*Bk: 0.0262699 sec
+built in dot 0.014848 sec
+built in dot 0.0131369 sec
+just the slice Ck=A'*Bk: 0.0280941 sec
+built in dot 0.0127919 sec
+built in dot 0.0129449 sec
+just the slice Ck=A'*Bk: 0.025841 sec
+built in dot 0.0127659 sec
+built in dot 0.0128551 sec
+just the slice Ck=A'*Bk: 0.0257151 sec
+built in dot 0.012795 sec
+built in dot 0.0128698 sec
+just the slice Ck=A'*Bk: 0.025758 sec
+built in dot 0.013514 sec
+built in dot 0.0138679 sec
+just the slice Ck=A'*Bk: 0.0275431 sec
+built in dot 0.0142961 sec
+built in dot 0.0140231 sec
+just the slice Ck=A'*Bk: 0.028419 sec
+built in dot 0.01334 sec
+built in dot 0.013685 sec
+just the slice Ck=A'*Bk: 0.0271292 sec
+built in dot 0.0133109 sec
+built in dot 0.0138519 sec
+just the slice Ck=A'*Bk: 0.027266 sec
+built in dot 0.01367 sec
+built in dot 0.0131309 sec
+just the slice Ck=A'*Bk: 0.0278599 sec
+built in dot 0.012917 sec
+built in dot 0.015507 sec
+just the slice Ck=A'*Bk: 0.0285151 sec
+built in dot 0.01437 sec
+built in dot 0.0138049 sec
+just the slice Ck=A'*Bk: 0.028275 sec
+built in dot 0.012985 sec
+built in dot 0.013268 sec
+just the slice Ck=A'*Bk: 0.026355 sec
+built in dot 0.0130501 sec
+built in dot 0.012955 sec
+just the slice Ck=A'*Bk: 0.026113 sec
+built in dot 0.012784 sec
+built in dot 0.0131741 sec
+just the slice Ck=A'*Bk: 0.026053 sec
+built in dot 0.0158498 sec
+built in dot 0.01349 sec
+just the slice Ck=A'*Bk: 0.029449 sec
+built in dot 0.0126441 sec
+built in dot 0.0134251 sec
+just the slice Ck=A'*Bk: 0.0261719 sec
+built in dot 0.0132651 sec
+built in dot 0.0132759 sec
+just the slice Ck=A'*Bk: 0.0266399 sec
+built in dot 0.0132332 sec
+built in dot 0.0139289 sec
+just the slice Ck=A'*Bk: 0.027262 sec
+built in dot 0.0131309 sec
+built in dot 0.0130539 sec
+just the slice Ck=A'*Bk: 0.0262899 sec
+built in dot 0.013257 sec
+built in dot 0.0139441 sec
+just the slice Ck=A'*Bk: 0.027313 sec
+built in dot 0.014101 sec
+built in dot 0.0132601 sec
+just the slice Ck=A'*Bk: 0.027463 sec
+built in dot 0.0128729 sec
+built in dot 0.0130589 sec
+just the slice Ck=A'*Bk: 0.0260391 sec
+built in dot 0.013164 sec
+built in dot 0.012898 sec
+just the slice Ck=A'*Bk: 0.0261672 sec
+built in dot 0.012645 sec
+built in dot 0.0128369 sec
+just the slice Ck=A'*Bk: 0.0255721 sec
+built in dot 0.0127139 sec
+built in dot 0.0130122 sec
+just the slice Ck=A'*Bk: 0.0258219 sec
+built in dot 0.0127151 sec
+built in dot 0.0128629 sec
+just the slice Ck=A'*Bk: 0.0256748 sec
+built in dot 0.012701 sec
+built in dot 0.0128551 sec
+just the slice Ck=A'*Bk: 0.0256519 sec
+built in dot 0.0127249 sec
+built in dot 0.0130811 sec
+just the slice Ck=A'*Bk: 0.025912 sec
+built in dot 0.0134649 sec
+built in dot 0.0140181 sec
+just the slice Ck=A'*Bk: 0.02758 sec
+built in dot 0.013309 sec
+built in dot 0.0135272 sec
+just the slice Ck=A'*Bk: 0.026937 sec
+built in dot 0.013093 sec
+built in dot 0.0132818 sec
+just the slice Ck=A'*Bk: 0.0264781 sec
+built in dot 0.0130289 sec
+built in dot 0.0136881 sec
+just the slice Ck=A'*Bk: 0.0268271 sec
+built in dot 0.013304 sec
+built in dot 0.0133779 sec
+just the slice Ck=A'*Bk: 0.026865 sec
+built in dot 0.0133619 sec
+built in dot 0.013782 sec
+just the slice Ck=A'*Bk: 0.027241 sec
+built in dot 0.0132208 sec
+built in dot 0.013495 sec
+just the slice Ck=A'*Bk: 0.0268221 sec
+built in dot 0.0139701 sec
+built in dot 0.013072 sec
+just the slice Ck=A'*Bk: 0.0271778 sec
+mxv 2.83187
+rank time 4.13559
+fini time 0.11214
+pagerank  time: 4.757002e+00 (sec), rate: 1.59777 (1e6 edges/sec) iters: 100
+init time 0.0991709
+
+GraphBLAS matrix: C 
+nrows: 685230 ncols: 685230 max # entries: 8285825
+format: hypersparse CSR vlen: 685230 nvec_nonempty: 685230 nvec: 685230 plen: 685230 vdim: 685230
+hyper_ratio 1
+GraphBLAS type:  float size: 4
+number of entries: 8285825 
+C time 0.46691
+built in dot 0.00555205 sec
+built in dot 0.00663614 sec
+built in dot 0.0076499 sec
+just the slice Ck=A'*Bk: 0.0199711 sec
+built in dot 0.00818491 sec
+built in dot 0.00960588 sec
+built in dot 0.00837302 sec
+just the slice Ck=A'*Bk: 0.0263209 sec
+built in dot 0.00784993 sec
+built in dot 0.00931811 sec
+built in dot 0.00831795 sec
+just the slice Ck=A'*Bk: 0.0256178 sec
+built in dot 0.0079031 sec
+built in dot 0.00975609 sec
+built in dot 0.00825405 sec
+just the slice Ck=A'*Bk: 0.026068 sec
+built in dot 0.00815797 sec
+built in dot 0.00962496 sec
+built in dot 0.00832415 sec
+just the slice Ck=A'*Bk: 0.026257 sec
+built in dot 0.00792909 sec
+built in dot 0.00925922 sec
+built in dot 0.00823712 sec
+just the slice Ck=A'*Bk: 0.025573 sec
+built in dot 0.00788999 sec
+built in dot 0.00935602 sec
+built in dot 0.00822401 sec
+just the slice Ck=A'*Bk: 0.025619 sec
+built in dot 0.00783706 sec
+built in dot 0.00964785 sec
+built in dot 0.00835109 sec
+just the slice Ck=A'*Bk: 0.0259941 sec
+built in dot 0.00825191 sec
+built in dot 0.00961709 sec
+built in dot 0.00855088 sec
+just the slice Ck=A'*Bk: 0.0265701 sec
+built in dot 0.00785899 sec
+built in dot 0.00928783 sec
+built in dot 0.00826502 sec
+just the slice Ck=A'*Bk: 0.025547 sec
+built in dot 0.00803304 sec
+built in dot 0.00964403 sec
+built in dot 0.00845218 sec
+just the slice Ck=A'*Bk: 0.026284 sec
+built in dot 0.00789285 sec
+built in dot 0.00930309 sec
+built in dot 0.00829697 sec
+just the slice Ck=A'*Bk: 0.025629 sec
+built in dot 0.0079 sec
+built in dot 0.00937486 sec
+built in dot 0.00828385 sec
+just the slice Ck=A'*Bk: 0.0257039 sec
+built in dot 0.00790119 sec
+built in dot 0.00971699 sec
+built in dot 0.00830722 sec
+just the slice Ck=A'*Bk: 0.026073 sec
+built in dot 0.00781608 sec
+built in dot 0.00923204 sec
+built in dot 0.00826693 sec
+just the slice Ck=A'*Bk: 0.025445 sec
+built in dot 0.00794697 sec
+built in dot 0.00927806 sec
+built in dot 0.00829315 sec
+just the slice Ck=A'*Bk: 0.0256591 sec
+built in dot 0.00792885 sec
+built in dot 0.00917196 sec
+built in dot 0.00846791 sec
+just the slice Ck=A'*Bk: 0.025708 sec
+built in dot 0.00810218 sec
+built in dot 0.00943804 sec
+built in dot 0.00828505 sec
+just the slice Ck=A'*Bk: 0.0259519 sec
+built in dot 0.00821996 sec
+built in dot 0.00963306 sec
+built in dot 0.00836802 sec
+just the slice Ck=A'*Bk: 0.02637 sec
+built in dot 0.00790191 sec
+built in dot 0.00957799 sec
+built in dot 0.00849199 sec
+just the slice Ck=A'*Bk: 0.0261252 sec
+built in dot 0.00794101 sec
+built in dot 0.00924206 sec
+built in dot 0.00828004 sec
+just the slice Ck=A'*Bk: 0.0256031 sec
+built in dot 0.00817895 sec
+built in dot 0.00953197 sec
+built in dot 0.00832295 sec
+just the slice Ck=A'*Bk: 0.026176 sec
+built in dot 0.00783896 sec
+built in dot 0.00927091 sec
+built in dot 0.00829196 sec
+just the slice Ck=A'*Bk: 0.025542 sec
+built in dot 0.00818896 sec
+built in dot 0.00925899 sec
+built in dot 0.00828385 sec
+just the slice Ck=A'*Bk: 0.0258651 sec
+built in dot 0.00822401 sec
+built in dot 0.00950289 sec
+built in dot 0.00835013 sec
+just the slice Ck=A'*Bk: 0.026237 sec
+built in dot 0.00808501 sec
+built in dot 0.00956511 sec
+built in dot 0.00838208 sec
+just the slice Ck=A'*Bk: 0.0261869 sec
+built in dot 0.00788021 sec
+built in dot 0.00962687 sec
+built in dot 0.00820804 sec
+just the slice Ck=A'*Bk: 0.0258589 sec
+built in dot 0.00821519 sec
+built in dot 0.00955796 sec
+built in dot 0.00828505 sec
+just the slice Ck=A'*Bk: 0.0261939 sec
+built in dot 0.00791597 sec
+built in dot 0.00929618 sec
+built in dot 0.0082469 sec
+just the slice Ck=A'*Bk: 0.025588 sec
+built in dot 0.00788403 sec
+built in dot 0.00968599 sec
+built in dot 0.00838399 sec
+just the slice Ck=A'*Bk: 0.0261412 sec
+built in dot 0.008008 sec
+built in dot 0.00953507 sec
+built in dot 0.00831389 sec
+just the slice Ck=A'*Bk: 0.0260019 sec
+built in dot 0.00780296 sec
+built in dot 0.00932002 sec
+built in dot 0.011168 sec
+just the slice Ck=A'*Bk: 0.028434 sec
+built in dot 0.00787091 sec
+built in dot 0.00945997 sec
+built in dot 0.00834107 sec
+just the slice Ck=A'*Bk: 0.0258319 sec
+built in dot 0.00789785 sec
+built in dot 0.00930715 sec
+built in dot 0.00837898 sec
+just the slice Ck=A'*Bk: 0.0257211 sec
+built in dot 0.00815201 sec
+built in dot 0.00945282 sec
+built in dot 0.00833488 sec
+just the slice Ck=A'*Bk: 0.0260921 sec
+built in dot 0.00816202 sec
+built in dot 0.00925708 sec
+built in dot 0.008394 sec
+just the slice Ck=A'*Bk: 0.0259519 sec
+built in dot 0.007936 sec
+built in dot 0.00940895 sec
+built in dot 0.00823498 sec
+just the slice Ck=A'*Bk: 0.0257339 sec
+built in dot 0.00805998 sec
+built in dot 0.00921702 sec
+built in dot 0.00829005 sec
+just the slice Ck=A'*Bk: 0.0257049 sec
+built in dot 0.00785089 sec
+built in dot 0.0093348 sec
+built in dot 0.00837398 sec
+just the slice Ck=A'*Bk: 0.0257032 sec
+built in dot 0.00785995 sec
+built in dot 0.00933003 sec
+built in dot 0.00853014 sec
+just the slice Ck=A'*Bk: 0.0258501 sec
+built in dot 0.00791216 sec
+built in dot 0.00931692 sec
+built in dot 0.00859594 sec
+just the slice Ck=A'*Bk: 0.025969 sec
+built in dot 0.00821304 sec
+built in dot 0.00955701 sec
+built in dot 0.00838208 sec
+just the slice Ck=A'*Bk: 0.0262918 sec
+built in dot 0.00797987 sec
+built in dot 0.00935507 sec
+built in dot 0.00869107 sec
+just the slice Ck=A'*Bk: 0.0261872 sec
+built in dot 0.00799584 sec
+built in dot 0.00976205 sec
+built in dot 0.008358 sec
+just the slice Ck=A'*Bk: 0.026274 sec
+built in dot 0.00792813 sec
+built in dot 0.00933409 sec
+built in dot 0.00828695 sec
+just the slice Ck=A'*Bk: 0.0256851 sec
+built in dot 0.008919 sec
+built in dot 0.0112669 sec
+built in dot 0.0082581 sec
+just the slice Ck=A'*Bk: 0.0285561 sec
+built in dot 0.00780797 sec
+built in dot 0.00942993 sec
+built in dot 0.00825191 sec
+just the slice Ck=A'*Bk: 0.0256739 sec
+built in dot 0.00823307 sec
+built in dot 0.00959706 sec
+built in dot 0.00830007 sec
+just the slice Ck=A'*Bk: 0.026283 sec
+built in dot 0.00785899 sec
+built in dot 0.00928497 sec
+built in dot 0.00827193 sec
+just the slice Ck=A'*Bk: 0.0255511 sec
+built in dot 0.007864 sec
+built in dot 0.00926399 sec
+built in dot 0.00827503 sec
+just the slice Ck=A'*Bk: 0.025532 sec
+built in dot 0.00782895 sec
+built in dot 0.00930095 sec
+built in dot 0.00830793 sec
+just the slice Ck=A'*Bk: 0.025574 sec
+built in dot 0.00791287 sec
+built in dot 0.00937486 sec
+built in dot 0.00830197 sec
+just the slice Ck=A'*Bk: 0.025728 sec
+built in dot 0.00791287 sec
+built in dot 0.00924993 sec
+built in dot 0.008389 sec
+just the slice Ck=A'*Bk: 0.0256901 sec
+built in dot 0.0081861 sec
+built in dot 0.00954318 sec
+built in dot 0.00831103 sec
+just the slice Ck=A'*Bk: 0.0261898 sec
+built in dot 0.00790906 sec
+built in dot 0.00928402 sec
+built in dot 0.00827003 sec
+just the slice Ck=A'*Bk: 0.0255959 sec
+built in dot 0.00801396 sec
+built in dot 0.00926113 sec
+built in dot 0.00822496 sec
+just the slice Ck=A'*Bk: 0.0256341 sec
+built in dot 0.00791287 sec
+built in dot 0.00931907 sec
+built in dot 0.00828695 sec
+just the slice Ck=A'*Bk: 0.025651 sec
+built in dot 0.00787997 sec
+built in dot 0.00939393 sec
+built in dot 0.0084269 sec
+just the slice Ck=A'*Bk: 0.025846 sec
+built in dot 0.00796294 sec
+built in dot 0.00927997 sec
+built in dot 0.00858998 sec
+just the slice Ck=A'*Bk: 0.0259712 sec
+built in dot 0.00830102 sec
+built in dot 0.00959206 sec
+built in dot 0.00839114 sec
+just the slice Ck=A'*Bk: 0.0264339 sec
+built in dot 0.00792909 sec
+built in dot 0.00936508 sec
+built in dot 0.00824714 sec
+just the slice Ck=A'*Bk: 0.025677 sec
+built in dot 0.00793099 sec
+built in dot 0.00961995 sec
+built in dot 0.00836897 sec
+just the slice Ck=A'*Bk: 0.0260668 sec
+built in dot 0.00798798 sec
+built in dot 0.0093689 sec
+built in dot 0.00831485 sec
+just the slice Ck=A'*Bk: 0.0258238 sec
+built in dot 0.00788307 sec
+built in dot 0.00926995 sec
+built in dot 0.00826907 sec
+just the slice Ck=A'*Bk: 0.0255799 sec
+built in dot 0.00791812 sec
+built in dot 0.0117509 sec
+built in dot 0.00822306 sec
+just the slice Ck=A'*Bk: 0.0280318 sec
+built in dot 0.00791788 sec
+built in dot 0.0114131 sec
+built in dot 0.00837708 sec
+just the slice Ck=A'*Bk: 0.0278649 sec
+built in dot 0.00802708 sec
+built in dot 0.00937796 sec
+built in dot 0.00825596 sec
+just the slice Ck=A'*Bk: 0.0258031 sec
+built in dot 0.008044 sec
+built in dot 0.00963283 sec
+built in dot 0.00826502 sec
+just the slice Ck=A'*Bk: 0.0260859 sec
+built in dot 0.00794601 sec
+built in dot 0.00929403 sec
+built in dot 0.00828695 sec
+just the slice Ck=A'*Bk: 0.0256531 sec
+built in dot 0.00786781 sec
+built in dot 0.00922108 sec
+built in dot 0.00819206 sec
+just the slice Ck=A'*Bk: 0.0254171 sec
+built in dot 0.00803804 sec
+built in dot 0.00942302 sec
+built in dot 0.00873494 sec
+just the slice Ck=A'*Bk: 0.0263479 sec
+built in dot 0.00841403 sec
+built in dot 0.0095911 sec
+built in dot 0.00833511 sec
+just the slice Ck=A'*Bk: 0.02649 sec
+built in dot 0.00778008 sec
+built in dot 0.0103011 sec
+built in dot 0.00837493 sec
+just the slice Ck=A'*Bk: 0.0266111 sec
+built in dot 0.007833 sec
+built in dot 0.00922704 sec
+built in dot 0.00852299 sec
+just the slice Ck=A'*Bk: 0.0257132 sec
+built in dot 0.00802994 sec
+built in dot 0.00959516 sec
+built in dot 0.00846601 sec
+just the slice Ck=A'*Bk: 0.0262382 sec
+built in dot 0.00794792 sec
+built in dot 0.00939608 sec
+built in dot 0.00834584 sec
+just the slice Ck=A'*Bk: 0.0258281 sec
+built in dot 0.00793815 sec
+built in dot 0.00953794 sec
+built in dot 0.00841594 sec
+just the slice Ck=A'*Bk: 0.0260479 sec
+built in dot 0.00820017 sec
+built in dot 0.00927186 sec
+built in dot 0.00820494 sec
+just the slice Ck=A'*Bk: 0.025821 sec
+built in dot 0.00781608 sec
+built in dot 0.00946784 sec
+built in dot 0.00835586 sec
+just the slice Ck=A'*Bk: 0.0257921 sec
+built in dot 0.00792909 sec
+built in dot 0.00969911 sec
+built in dot 0.00828409 sec
+just the slice Ck=A'*Bk: 0.0260601 sec
+built in dot 0.00783205 sec
+built in dot 0.00933981 sec
+built in dot 0.00827599 sec
+just the slice Ck=A'*Bk: 0.0255759 sec
+built in dot 0.00793695 sec
+built in dot 0.00924802 sec
+built in dot 0.0083549 sec
+just the slice Ck=A'*Bk: 0.025691 sec
+built in dot 0.00781608 sec
+built in dot 0.00923181 sec
+built in dot 0.00827408 sec
+just the slice Ck=A'*Bk: 0.0254619 sec
+built in dot 0.007864 sec
+built in dot 0.00927901 sec
+built in dot 0.00822806 sec
+just the slice Ck=A'*Bk: 0.0255089 sec
+built in dot 0.007797 sec
+built in dot 0.00945997 sec
+built in dot 0.010844 sec
+just the slice Ck=A'*Bk: 0.0282469 sec
+built in dot 0.00806594 sec
+built in dot 0.00937295 sec
+built in dot 0.00827384 sec
+just the slice Ck=A'*Bk: 0.0258541 sec
+built in dot 0.00825715 sec
+built in dot 0.00923586 sec
+built in dot 0.00835085 sec
+just the slice Ck=A'*Bk: 0.0259919 sec
+built in dot 0.00838304 sec
+built in dot 0.00952315 sec
+built in dot 0.00830483 sec
+just the slice Ck=A'*Bk: 0.0263519 sec
+built in dot 0.00785589 sec
+built in dot 0.00962281 sec
+built in dot 0.00942802 sec
+just the slice Ck=A'*Bk: 0.0270631 sec
+built in dot 0.00791121 sec
+built in dot 0.00924993 sec
+built in dot 0.00829983 sec
+just the slice Ck=A'*Bk: 0.025588 sec
+built in dot 0.0078721 sec
+built in dot 0.009197 sec
+built in dot 0.00824809 sec
+just the slice Ck=A'*Bk: 0.0254512 sec
+built in dot 0.00787902 sec
+built in dot 0.00942516 sec
+built in dot 0.00827098 sec
+just the slice Ck=A'*Bk: 0.0257161 sec
+built in dot 0.0076561 sec
+built in dot 0.00927496 sec
+built in dot 0.00826621 sec
+just the slice Ck=A'*Bk: 0.0253279 sec
+built in dot 0.00834179 sec
+built in dot 0.00931597 sec
+built in dot 0.00844002 sec
+just the slice Ck=A'*Bk: 0.026233 sec
+built in dot 0.00794888 sec
+built in dot 0.00930905 sec
+built in dot 0.00830197 sec
+just the slice Ck=A'*Bk: 0.0256982 sec
+built in dot 0.00790501 sec
+built in dot 0.00998998 sec
+built in dot 0.008358 sec
+just the slice Ck=A'*Bk: 0.026403 sec
+built in dot 0.00797796 sec
+built in dot 0.00932097 sec
+built in dot 0.00865698 sec
+just the slice Ck=A'*Bk: 0.0260971 sec
+built in dot 0.0081811 sec
+built in dot 0.00948191 sec
+built in dot 0.00831795 sec
+just the slice Ck=A'*Bk: 0.0261159 sec
+built in dot 0.0078609 sec
+built in dot 0.00931787 sec
+built in dot 0.00827098 sec
+just the slice Ck=A'*Bk: 0.0255849 sec
+built in dot 0.00797415 sec
+built in dot 0.00934196 sec
+built in dot 0.00831699 sec
+just the slice Ck=A'*Bk: 0.025764 sec
+mxv 2.89126
+rank time 4.18783
+fini time 0.109507
+pagerank  time: 4.865159e+00 (sec), rate: 1.56225 (1e6 edges/sec) iters: 100
+init time 0.0982101
+
+GraphBLAS matrix: C 
+nrows: 685230 ncols: 685230 max # entries: 8285825
+format: hypersparse CSR vlen: 685230 nvec_nonempty: 685230 nvec: 685230 plen: 685230 vdim: 685230
+hyper_ratio 1
+GraphBLAS type:  float size: 4
+number of entries: 8285825 
+C time 0.447579
+built in dot 0.00494981 sec
+built in dot 0.00543308 sec
+built in dot 0.00574994 sec
+built in dot 0.00602007 sec
+just the slice Ck=A'*Bk: 0.0223019 sec
+built in dot 0.00582695 sec
+built in dot 0.00685906 sec
+built in dot 0.00646615 sec
+built in dot 0.00672388 sec
+just the slice Ck=A'*Bk: 0.0260642 sec
+built in dot 0.00578499 sec
+built in dot 0.00782418 sec
+built in dot 0.00642681 sec
+built in dot 0.00655603 sec
+just the slice Ck=A'*Bk: 0.026794 sec
+built in dot 0.00605917 sec
+built in dot 0.00679994 sec
+built in dot 0.00653386 sec
+built in dot 0.00662494 sec
+just the slice Ck=A'*Bk: 0.026264 sec
+built in dot 0.00606799 sec
+built in dot 0.00680184 sec
+built in dot 0.006567 sec
+built in dot 0.00657701 sec
+just the slice Ck=A'*Bk: 0.0261939 sec
+built in dot 0.00582099 sec
+built in dot 0.00678682 sec
+built in dot 0.00634718 sec
+built in dot 0.00663495 sec
+just the slice Ck=A'*Bk: 0.0257711 sec
+built in dot 0.00608587 sec
+built in dot 0.00677681 sec
+built in dot 0.00664306 sec
+built in dot 0.0066371 sec
+just the slice Ck=A'*Bk: 0.0263369 sec
+built in dot 0.00587893 sec
+built in dot 0.00679207 sec
+built in dot 0.00631285 sec
+built in dot 0.00658298 sec
+just the slice Ck=A'*Bk: 0.025758 sec
+built in dot 0.00601006 sec
+built in dot 0.00669694 sec
+built in dot 0.00640202 sec
+built in dot 0.00671101 sec
+just the slice Ck=A'*Bk: 0.0260351 sec
+built in dot 0.00620484 sec
+built in dot 0.00666213 sec
+built in dot 0.00630617 sec
+built in dot 0.00665092 sec
+just the slice Ck=A'*Bk: 0.026006 sec
+built in dot 0.00585198 sec
+built in dot 0.00678802 sec
+built in dot 0.00628901 sec
+built in dot 0.00662994 sec
+just the slice Ck=A'*Bk: 0.025739 sec
+built in dot 0.00583196 sec
+built in dot 0.00675917 sec
+built in dot 0.00630903 sec
+built in dot 0.00668192 sec
+just the slice Ck=A'*Bk: 0.0257621 sec
+built in dot 0.00583005 sec
+built in dot 0.00671983 sec
+built in dot 0.00625587 sec
+built in dot 0.00664997 sec
+just the slice Ck=A'*Bk: 0.0256391 sec
+built in dot 0.00583005 sec
+built in dot 0.00672889 sec
+built in dot 0.00669384 sec
+built in dot 0.00672102 sec
+just the slice Ck=A'*Bk: 0.026175 sec
+built in dot 0.00610995 sec
+built in dot 0.00667095 sec
+built in dot 0.00651503 sec
+built in dot 0.00671196 sec
+just the slice Ck=A'*Bk: 0.026212 sec
+built in dot 0.00584793 sec
+built in dot 0.0066762 sec
+built in dot 0.00630283 sec
+built in dot 0.00666499 sec
+just the slice Ck=A'*Bk: 0.0256801 sec
+built in dot 0.00585485 sec
+built in dot 0.00671005 sec
+built in dot 0.00631595 sec
+built in dot 0.006598 sec
+just the slice Ck=A'*Bk: 0.0256641 sec
+built in dot 0.00585604 sec
+built in dot 0.00687003 sec
+built in dot 0.00630403 sec
+built in dot 0.00662589 sec
+just the slice Ck=A'*Bk: 0.0258369 sec
+built in dot 0.00596499 sec
+built in dot 0.00668406 sec
+built in dot 0.00649309 sec
+built in dot 0.00661707 sec
+just the slice Ck=A'*Bk: 0.0259421 sec
+built in dot 0.00587201 sec
+built in dot 0.00670409 sec
+built in dot 0.00632119 sec
+built in dot 0.00657105 sec
+just the slice Ck=A'*Bk: 0.0256369 sec
+built in dot 0.00580788 sec
+built in dot 0.00673914 sec
+built in dot 0.00637388 sec
+built in dot 0.00657797 sec
+just the slice Ck=A'*Bk: 0.0256639 sec
+built in dot 0.00584984 sec
+built in dot 0.00674486 sec
+built in dot 0.00634193 sec
+built in dot 0.00664997 sec
+just the slice Ck=A'*Bk: 0.025773 sec
+built in dot 0.00611496 sec
+built in dot 0.00671816 sec
+built in dot 0.00636005 sec
+built in dot 0.00659299 sec
+just the slice Ck=A'*Bk: 0.0259809 sec
+built in dot 0.00583196 sec
+built in dot 0.00666308 sec
+built in dot 0.00670385 sec
+built in dot 0.00667286 sec
+just the slice Ck=A'*Bk: 0.0260649 sec
+built in dot 0.00582314 sec
+built in dot 0.00672007 sec
+built in dot 0.00629306 sec
+built in dot 0.00658202 sec
+just the slice Ck=A'*Bk: 0.025589 sec
+built in dot 0.00587606 sec
+built in dot 0.00733614 sec
+built in dot 0.00644708 sec
+built in dot 0.006706 sec
+just the slice Ck=A'*Bk: 0.026562 sec
+built in dot 0.00582004 sec
+built in dot 0.00677299 sec
+built in dot 0.006356 sec
+built in dot 0.00659609 sec
+just the slice Ck=A'*Bk: 0.0257261 sec
+built in dot 0.00669813 sec
+built in dot 0.00668883 sec
+built in dot 0.00634289 sec
+built in dot 0.00661993 sec
+just the slice Ck=A'*Bk: 0.0266559 sec
+built in dot 0.00578189 sec
+built in dot 0.00691915 sec
+built in dot 0.00634384 sec
+built in dot 0.00659084 sec
+just the slice Ck=A'*Bk: 0.0258341 sec
+built in dot 0.00581908 sec
+built in dot 0.00678086 sec
+built in dot 0.00637484 sec
+built in dot 0.00658393 sec
+just the slice Ck=A'*Bk: 0.025744 sec
+built in dot 0.00580597 sec
+built in dot 0.00682902 sec
+built in dot 0.00630212 sec
+built in dot 0.0067749 sec
+just the slice Ck=A'*Bk: 0.025903 sec
+built in dot 0.00588202 sec
+built in dot 0.00682211 sec
+built in dot 0.00679708 sec
+built in dot 0.00684881 sec
+just the slice Ck=A'*Bk: 0.0267029 sec
+built in dot 0.00585914 sec
+built in dot 0.00674105 sec
+built in dot 0.00632811 sec
+built in dot 0.00664902 sec
+just the slice Ck=A'*Bk: 0.0257599 sec
+built in dot 0.00585604 sec
+built in dot 0.006742 sec
+built in dot 0.00865293 sec
+built in dot 0.00660586 sec
+just the slice Ck=A'*Bk: 0.0280402 sec
+built in dot 0.00583506 sec
+built in dot 0.00685382 sec
+built in dot 0.0062499 sec
+built in dot 0.00742388 sec
+just the slice Ck=A'*Bk: 0.026552 sec
+built in dot 0.00595212 sec
+built in dot 0.00674391 sec
+built in dot 0.00640488 sec
+built in dot 0.00682306 sec
+just the slice Ck=A'*Bk: 0.0261219 sec
+built in dot 0.00608015 sec
+built in dot 0.00688291 sec
+built in dot 0.00657105 sec
+built in dot 0.00656509 sec
+just the slice Ck=A'*Bk: 0.0262959 sec
+built in dot 0.005862 sec
+built in dot 0.006778 sec
+built in dot 0.00676394 sec
+built in dot 0.00657296 sec
+just the slice Ck=A'*Bk: 0.02616 sec
+built in dot 0.00578499 sec
+built in dot 0.00670004 sec
+built in dot 0.006387 sec
+built in dot 0.00662303 sec
+just the slice Ck=A'*Bk: 0.0256901 sec
+built in dot 0.00591588 sec
+built in dot 0.00680709 sec
+built in dot 0.00628996 sec
+built in dot 0.00657296 sec
+just the slice Ck=A'*Bk: 0.0257621 sec
+built in dot 0.00577807 sec
+built in dot 0.00669622 sec
+built in dot 0.00662088 sec
+built in dot 0.00678587 sec
+just the slice Ck=A'*Bk: 0.0260749 sec
+built in dot 0.00585914 sec
+built in dot 0.00673079 sec
+built in dot 0.00637603 sec
+built in dot 0.00664592 sec
+just the slice Ck=A'*Bk: 0.025794 sec
+built in dot 0.00581598 sec
+built in dot 0.00669003 sec
+built in dot 0.00657797 sec
+built in dot 0.00732422 sec
+just the slice Ck=A'*Bk: 0.0266049 sec
+built in dot 0.00585604 sec
+built in dot 0.00673604 sec
+built in dot 0.00492597 sec
+built in dot 0.00687385 sec
+just the slice Ck=A'*Bk: 0.02457 sec
+built in dot 0.005826 sec
+built in dot 0.00672221 sec
+built in dot 0.00633907 sec
+built in dot 0.00656509 sec
+just the slice Ck=A'*Bk: 0.0256379 sec
+built in dot 0.00579906 sec
+built in dot 0.00693989 sec
+built in dot 0.0062921 sec
+built in dot 0.00657296 sec
+just the slice Ck=A'*Bk: 0.0257852 sec
+built in dot 0.00593805 sec
+built in dot 0.00681782 sec
+built in dot 0.00631809 sec
+built in dot 0.00725198 sec
+just the slice Ck=A'*Bk: 0.0265129 sec
+built in dot 0.00579596 sec
+built in dot 0.00674009 sec
+built in dot 0.00628209 sec
+built in dot 0.006603 sec
+just the slice Ck=A'*Bk: 0.0256081 sec
+built in dot 0.00581408 sec
+built in dot 0.00671601 sec
+built in dot 0.00628209 sec
+built in dot 0.00657201 sec
+just the slice Ck=A'*Bk: 0.025564 sec
+built in dot 0.0060699 sec
+built in dot 0.0067482 sec
+built in dot 0.00632691 sec
+built in dot 0.00664496 sec
+just the slice Ck=A'*Bk: 0.0260041 sec
+built in dot 0.00664306 sec
+built in dot 0.00682282 sec
+built in dot 0.0063448 sec
+built in dot 0.00662494 sec
+just the slice Ck=A'*Bk: 0.0266099 sec
+built in dot 0.00696421 sec
+built in dot 0.00672913 sec
+built in dot 0.00636101 sec
+built in dot 0.00787902 sec
+just the slice Ck=A'*Bk: 0.0281329 sec
+built in dot 0.00743198 sec
+built in dot 0.00741196 sec
+built in dot 0.00632191 sec
+built in dot 0.00689197 sec
+just the slice Ck=A'*Bk: 0.0282772 sec
+built in dot 0.00580406 sec
+built in dot 0.00674701 sec
+built in dot 0.00629115 sec
+built in dot 0.00662208 sec
+just the slice Ck=A'*Bk: 0.025651 sec
+built in dot 0.00581694 sec
+built in dot 0.00673199 sec
+built in dot 0.00710082 sec
+built in dot 0.00663614 sec
+just the slice Ck=A'*Bk: 0.026484 sec
+built in dot 0.00580406 sec
+built in dot 0.00669789 sec
+built in dot 0.00630307 sec
+built in dot 0.00656509 sec
+just the slice Ck=A'*Bk: 0.0255461 sec
+built in dot 0.00584912 sec
+built in dot 0.00695992 sec
+built in dot 0.0065639 sec
+built in dot 0.00658512 sec
+just the slice Ck=A'*Bk: 0.026149 sec
+built in dot 0.00579095 sec
+built in dot 0.00673103 sec
+built in dot 0.00635099 sec
+built in dot 0.00659394 sec
+just the slice Ck=A'*Bk: 0.025665 sec
+built in dot 0.00578403 sec
+built in dot 0.00673795 sec
+built in dot 0.00631595 sec
+built in dot 0.00654912 sec
+just the slice Ck=A'*Bk: 0.025568 sec
+built in dot 0.0058291 sec
+built in dot 0.00672603 sec
+built in dot 0.00639796 sec
+built in dot 0.00670314 sec
+just the slice Ck=A'*Bk: 0.025867 sec
+built in dot 0.00858998 sec
+built in dot 0.006809 sec
+built in dot 0.00628614 sec
+built in dot 0.00662208 sec
+just the slice Ck=A'*Bk: 0.0284889 sec
+built in dot 0.00587106 sec
+built in dot 0.00667906 sec
+built in dot 0.00636387 sec
+built in dot 0.00663495 sec
+just the slice Ck=A'*Bk: 0.0257201 sec
+built in dot 0.00595689 sec
+built in dot 0.0068779 sec
+built in dot 0.00634313 sec
+built in dot 0.00666809 sec
+just the slice Ck=A'*Bk: 0.0260301 sec
+built in dot 0.0061121 sec
+built in dot 0.00687599 sec
+built in dot 0.00631404 sec
+built in dot 0.00662708 sec
+just the slice Ck=A'*Bk: 0.0261061 sec
+built in dot 0.00579596 sec
+built in dot 0.00673413 sec
+built in dot 0.00622702 sec
+built in dot 0.00655103 sec
+just the slice Ck=A'*Bk: 0.025491 sec
+built in dot 0.00593615 sec
+built in dot 0.00682211 sec
+built in dot 0.00653601 sec
+built in dot 0.00659609 sec
+just the slice Ck=A'*Bk: 0.0260758 sec
+built in dot 0.0058279 sec
+built in dot 0.006706 sec
+built in dot 0.00643182 sec
+built in dot 0.00659394 sec
+just the slice Ck=A'*Bk: 0.0257471 sec
+built in dot 0.00584793 sec
+built in dot 0.0067699 sec
+built in dot 0.00627708 sec
+built in dot 0.00657916 sec
+just the slice Ck=A'*Bk: 0.025656 sec
+built in dot 0.0058639 sec
+built in dot 0.00681281 sec
+built in dot 0.00633812 sec
+built in dot 0.00661588 sec
+just the slice Ck=A'*Bk: 0.0258121 sec
+built in dot 0.00592804 sec
+built in dot 0.00670481 sec
+built in dot 0.00629187 sec
+built in dot 0.00662208 sec
+just the slice Ck=A'*Bk: 0.0257301 sec
+built in dot 0.0059979 sec
+built in dot 0.00739694 sec
+built in dot 0.00651002 sec
+built in dot 0.00664091 sec
+just the slice Ck=A'*Bk: 0.0267351 sec
+built in dot 0.00617409 sec
+built in dot 0.00753593 sec
+built in dot 0.00632405 sec
+built in dot 0.00657511 sec
+just the slice Ck=A'*Bk: 0.0268178 sec
+built in dot 0.00610113 sec
+built in dot 0.00682211 sec
+built in dot 0.00636697 sec
+built in dot 0.00662208 sec
+just the slice Ck=A'*Bk: 0.026098 sec
+built in dot 0.00587893 sec
+built in dot 0.00671196 sec
+built in dot 0.00629592 sec
+built in dot 0.00662804 sec
+just the slice Ck=A'*Bk: 0.025682 sec
+built in dot 0.00634789 sec
+built in dot 0.00677681 sec
+built in dot 0.00655389 sec
+built in dot 0.00674319 sec
+just the slice Ck=A'*Bk: 0.0266051 sec
+built in dot 0.00583506 sec
+built in dot 0.00675106 sec
+built in dot 0.00657797 sec
+built in dot 0.00656414 sec
+just the slice Ck=A'*Bk: 0.025913 sec
+built in dot 0.0058229 sec
+built in dot 0.00675011 sec
+built in dot 0.00630283 sec
+built in dot 0.006742 sec
+just the slice Ck=A'*Bk: 0.0258479 sec
+built in dot 0.00595498 sec
+built in dot 0.00690103 sec
+built in dot 0.00627804 sec
+built in dot 0.00666595 sec
+just the slice Ck=A'*Bk: 0.0259891 sec
+built in dot 0.00593114 sec
+built in dot 0.00671887 sec
+built in dot 0.00631118 sec
+built in dot 0.00661421 sec
+just the slice Ck=A'*Bk: 0.0257499 sec
+built in dot 0.00587487 sec
+built in dot 0.0067029 sec
+built in dot 0.00698209 sec
+built in dot 0.00697207 sec
+just the slice Ck=A'*Bk: 0.0267091 sec
+built in dot 0.00586104 sec
+built in dot 0.00719285 sec
+built in dot 0.00640297 sec
+built in dot 0.00662684 sec
+just the slice Ck=A'*Bk: 0.026263 sec
+built in dot 0.00582099 sec
+built in dot 0.00679398 sec
+built in dot 0.00633597 sec
+built in dot 0.0065732 sec
+just the slice Ck=A'*Bk: 0.025696 sec
+built in dot 0.00592995 sec
+built in dot 0.00695992 sec
+built in dot 0.00651312 sec
+built in dot 0.00666499 sec
+just the slice Ck=A'*Bk: 0.0262821 sec
+built in dot 0.00585794 sec
+built in dot 0.00692081 sec
+built in dot 0.00633621 sec
+built in dot 0.00659204 sec
+just the slice Ck=A'*Bk: 0.0258889 sec
+built in dot 0.00626087 sec
+built in dot 0.00683308 sec
+built in dot 0.00654697 sec
+built in dot 0.00661016 sec
+just the slice Ck=A'*Bk: 0.0264461 sec
+built in dot 0.0058291 sec
+built in dot 0.00675011 sec
+built in dot 0.00628495 sec
+built in dot 0.00656796 sec
+just the slice Ck=A'*Bk: 0.025609 sec
+built in dot 0.0058279 sec
+built in dot 0.0067451 sec
+built in dot 0.00626898 sec
+built in dot 0.00675821 sec
+just the slice Ck=A'*Bk: 0.025784 sec
+built in dot 0.0058341 sec
+built in dot 0.00674295 sec
+built in dot 0.0062809 sec
+built in dot 0.00707316 sec
+just the slice Ck=A'*Bk: 0.026124 sec
+built in dot 0.00580406 sec
+built in dot 0.00676918 sec
+built in dot 0.00626397 sec
+built in dot 0.00658512 sec
+just the slice Ck=A'*Bk: 0.0256019 sec
+built in dot 0.00579596 sec
+built in dot 0.00694203 sec
+built in dot 0.00630093 sec
+built in dot 0.00672603 sec
+just the slice Ck=A'*Bk: 0.0259621 sec
+built in dot 0.005795 sec
+built in dot 0.00691295 sec
+built in dot 0.00655389 sec
+built in dot 0.00653815 sec
+just the slice Ck=A'*Bk: 0.0259929 sec
+built in dot 0.00579715 sec
+built in dot 0.0069139 sec
+built in dot 0.0062902 sec
+built in dot 0.00658798 sec
+just the slice Ck=A'*Bk: 0.0257668 sec
+built in dot 0.00580001 sec
+built in dot 0.00674295 sec
+built in dot 0.006428 sec
+built in dot 0.00669289 sec
+just the slice Ck=A'*Bk: 0.025862 sec
+built in dot 0.00626898 sec
+built in dot 0.00689197 sec
+built in dot 0.006639 sec
+built in dot 0.00663495 sec
+just the slice Ck=A'*Bk: 0.0266328 sec
+built in dot 0.00585389 sec
+built in dot 0.00667691 sec
+built in dot 0.00629997 sec
+built in dot 0.006598 sec
+just the slice Ck=A'*Bk: 0.0256081 sec
+built in dot 0.00613403 sec
+built in dot 0.00686789 sec
+built in dot 0.00645423 sec
+built in dot 0.00661802 sec
+just the slice Ck=A'*Bk: 0.026262 sec
+built in dot 0.00603318 sec
+built in dot 0.00670505 sec
+built in dot 0.0063169 sec
+built in dot 0.00692701 sec
+just the slice Ck=A'*Bk: 0.0261619 sec
+built in dot 0.0058701 sec
+built in dot 0.00683594 sec
+built in dot 0.00640297 sec
+built in dot 0.00658107 sec
+just the slice Ck=A'*Bk: 0.0258799 sec
+built in dot 0.0058229 sec
+built in dot 0.00665998 sec
+built in dot 0.00628185 sec
+built in dot 0.00658393 sec
+just the slice Ck=A'*Bk: 0.025517 sec
+built in dot 0.00584507 sec
+built in dot 0.00676012 sec
+built in dot 0.006253 sec
+built in dot 0.00659895 sec
+just the slice Ck=A'*Bk: 0.0256431 sec
+mxv 2.85176
+rank time 4.13381
+fini time 0.111694
+pagerank  time: 4.793180e+00 (sec), rate: 1.58571 (1e6 edges/sec) iters: 100

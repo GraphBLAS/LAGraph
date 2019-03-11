@@ -40,7 +40,7 @@ C = C' ;
 % iterate to compute the pagerank of each node
 for iters = 1:itermax
     rsum = sum (r) ;
-    fprintf ('sum(r) %g\n', rsum) ;
+    % fprintf ('sum(r) %g\n', rsum) ;
     rnew = C*r + a * rsum ;
     if (norm (r-rnew) <= tol)
         break ;

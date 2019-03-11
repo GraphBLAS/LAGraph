@@ -46,18 +46,18 @@
 
 #define DAMPING 0.85
 
-double rsum ;
+float rsum ;
 #pragma omp threadprivate(rsum)
 
 void fdiv  (void *z, const void *x)
 {
-    (*((double *) z)) = (* ((double *) x)) / rsum ;
+    (*((float *) z)) = (* ((float *) x)) / rsum ;
 }
 
 void fdiff (void *z, const void *x, const void *y)
 {
-    double delta = (* ((double *) x)) - (* ((double *) y)) ;
-    (*((double *) z)) = delta * delta ;
+    float delta = (* ((float *) x)) - (* ((float *) y)) ;
+    (*((float *) z)) = delta * delta ;
 }
 
 //------------------------------------------------------------------------------
@@ -106,7 +106,7 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     LAGraph_tic (tic) ;
 
     GrB_Info info ;
-    double *X = NULL ;
+    float *X = NULL ;
     GrB_Index n, nvals, *I = NULL ;
     LAGraph_PageRank *P = NULL ;
     GrB_Vector r = NULL, t = NULL, d = NULL ;
@@ -122,19 +122,19 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     if (n == 0) return (GrB_SUCCESS) ;
 
     // teleport = (1 - 0.85) / n
-    double one = 1.0 ;
-    double teleport = (one - DAMPING) / ((double) n) ;
+    float one = 1.0 ;
+    float teleport = (one - DAMPING) / ((float) n) ;
 
     // r (i) = 1/n for all nodes i
-    double x = 1.0 / ((double) n) ;
-    LAGRAPH_OK (GrB_Vector_new (&r, GrB_FP64, n)) ;
+    float x = 1.0 / ((float) n) ;
+    LAGRAPH_OK (GrB_Vector_new (&r, GrB_FP32, n)) ;
     LAGRAPH_OK (GrB_assign (r, NULL, NULL, x, GrB_ALL, n, NULL)) ;
 
     // d (i) = out deg of node i
-    LAGRAPH_OK (GrB_Vector_new (&d, GrB_FP64, n)) ;
-    LAGRAPH_OK (GrB_reduce (d, NULL, NULL, GrB_PLUS_FP64, A, NULL)) ;
+    LAGRAPH_OK (GrB_Vector_new (&d, GrB_FP32, n)) ;
+    LAGRAPH_OK (GrB_reduce (d, NULL, NULL, GrB_PLUS_FP32, A, NULL)) ;
 
-    // D = diag (d) * DAMPING
+    // D = (1/diag (d)) * DAMPING
     #ifdef GxB_SUITESPARSE_GRAPHBLAS
     GrB_Type type ;
     LAGRAPH_OK (GxB_Vector_export (&d, &type, &n, &nvals, &I, (void **) (&X),
@@ -142,7 +142,7 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     #else
     nvals = n ;
     I = malloc ((nvals + 1) * sizeof (GrB_Index)) ;
-    X = malloc ((nvals + 1) * sizeof (double)) ;
+    X = malloc ((nvals + 1) * sizeof (float)) ;
     if (I == NULL || X == NULL)
     {
         LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
@@ -151,9 +151,9 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     LAGRAPH_OK (GrB_free (&d)) ;
     #endif
 
-    for (int64_t k = 0 ; k < nvals ; k++) X [k] /= DAMPING ;
-    LAGRAPH_OK (GrB_Matrix_new (&D, GrB_FP64, n, n)) ;
-    LAGRAPH_OK (GrB_Matrix_build (D, I, I, X, nvals, GrB_PLUS_FP64)) ;
+    for (int64_t k = 0 ; k < nvals ; k++) X [k] = DAMPING / X [k] ;
+    LAGRAPH_OK (GrB_Matrix_new (&D, GrB_FP32, n, n)) ;
+    LAGRAPH_OK (GrB_Matrix_build (D, I, I, X, nvals, GrB_PLUS_FP32)) ;
     free (I) ;
     free (X) ;
 
@@ -161,14 +161,15 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
 
     // C = diagonal matrix with all zeros on the diagonal.  This ensures that
     // the vectors r and t remain dense, which is faster.
-    LAGRAPH_OK (GrB_Matrix_new (&C, GrB_FP64, n, n)) ;
+    LAGRAPH_OK (GrB_Matrix_new (&C, GrB_FP32, n, n)) ;
+    // GxB_set (C, GxB_HYPER, GxB_ALWAYS_HYPER) ;
+
     for (int64_t k = 0 ; k < n ; k++)
     {
         // C(k,k) = 0
-        LAGRAPH_OK (GrB_Matrix_setElement (C, (double) 0, k, k)) ;
+        LAGRAPH_OK (GrB_Matrix_setElement (C, (float) 0, k, k)) ;
     }
 
-    // GxB_print (C, 3) ;
 
     // GxB_print (A, 3) ;
 
@@ -179,22 +180,29 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     LAGraph_tic (tic) ;
 
     // C = C+(D*A)' = C+A'*D' using A(i,j)/D(i,i) as the multiplicative operator
-    LAGRAPH_OK (GrB_mxm (C, NULL, GrB_PLUS_FP64, GxB_PLUS_DIV_FP64, A, D,
+    LAGRAPH_OK (GrB_mxm (C, NULL, GrB_PLUS_FP32, GxB_PLUS_TIMES_FP32, A, D,
         LAGraph_desc_ttoo)) ;
+
+/*
+    // C = C+(D*A)
+    LAGRAPH_OK (GrB_mxm (C, NULL, GrB_PLUS_FP32, GxB_PLUS_TIMES_FP32, D, A,
+        NULL)) ;
+*/
 
     LAGRAPH_OK (GrB_free (&D)) ;
 
     // create operators
-    LAGRAPH_OK (GrB_UnaryOp_new  (&op_div,  fdiv, GrB_FP64, GrB_FP64)) ;
-    LAGRAPH_OK (GrB_BinaryOp_new (&op_diff, fdiff, GrB_FP64, GrB_FP64,
-        GrB_FP64)) ;
+    LAGRAPH_OK (GrB_UnaryOp_new  (&op_div,  fdiv, GrB_FP32, GrB_FP32)) ;
+    LAGRAPH_OK (GrB_BinaryOp_new (&op_diff, fdiff, GrB_FP32, GrB_FP32,
+        GrB_FP32)) ;
 
-    tol = tol*tol ;         // use tol^2 so sqrt(rdiff) not needed
-    double rdiff = 1 ;      // so first iteration is always done
+    float ftol = tol*tol ;  // use tol^2 so sqrt(rdiff) not needed
+    float rdiff = 1 ;       // so first iteration is always done
 
-    LAGRAPH_OK (GrB_Vector_new (&t, GrB_FP64, n)) ;
+    LAGRAPH_OK (GrB_Vector_new (&t, GrB_FP32, n)) ;
 
-    // GxB_print (C, 3) ;
+    // GxB_print (C, 2) ;
+    GxB_fprint (C, 2, stderr) ;
 
     tt = LAGraph_toc (tic) ;
     fprintf (stderr, "C time %g\n", tt) ;
@@ -204,26 +212,45 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     // iterate to compute the pagerank of each node
     //--------------------------------------------------------------------------
 
-    for ((*iters) = 0 ; (*iters) < itermax && rdiff > tol ; (*iters)++)
+    double t2 = 0 ;
+
+    for ((*iters) = 0 ; (*iters) < itermax && rdiff > ftol ; (*iters)++)
     {
 
         //----------------------------------------------------------------------
-        // t = C * r + (teleport * sum (r)) ;
+        // t = r*C + (teleport * sum (r)) ;
         //----------------------------------------------------------------------
 
-        double s ;
-        LAGRAPH_OK (GrB_reduce (&s, NULL, GxB_PLUS_FP64_MONOID, r, NULL)) ;
+        // GxB_print (r, 2) ;
+
+        float s = 1 ;
+        LAGRAPH_OK (GrB_reduce (&s, NULL, GxB_PLUS_FP32_MONOID, r, NULL)) ;
         // printf ("s %g\n", s) ;
-        LAGRAPH_OK (GrB_mxv (t, NULL, NULL, GxB_PLUS_TIMES_FP64, C, r, NULL)) ;
+
+        double tic2 [2] ;
+        LAGraph_tic (tic2) ;
+
+//      LAGRAPH_OK (GrB_vxm (t, NULL, NULL, GxB_PLUS_TIMES_FP32, r, C, NULL)) ;
+        LAGRAPH_OK (GrB_mxv (t, NULL, NULL, GxB_PLUS_TIMES_FP32, C, r, NULL)) ;
+
+        double t3 = LAGraph_toc (tic2) ;
+        t2 += t3 ;
+        fprintf (stderr, "one mxv %g\n", t3) ;
+
+        LAGraph_tic (tic2) ;
+        LAGRAPH_OK (GrB_mxv (t, NULL, NULL, GxB_PLUS_TIMES_FP32, C, r, NULL)) ;
+        t3 = LAGraph_toc (tic2) ;
+        fprintf (stderr, "another mxv %g\n", t3) ;
+
         s *= teleport ;
-        LAGRAPH_OK (GrB_assign (t, NULL, GrB_PLUS_FP64, s, GrB_ALL, n, NULL)) ;
+        LAGRAPH_OK (GrB_assign (t, NULL, GrB_PLUS_FP32, s, GrB_ALL, n, NULL)) ;
 
         //----------------------------------------------------------------------
         // rdiff = sum ((r-t).^2)
         //----------------------------------------------------------------------
 
         LAGRAPH_OK (GrB_eWiseAdd (r, NULL, NULL, op_diff, r, t, NULL)) ;
-        LAGRAPH_OK (GrB_reduce (&rdiff, NULL, GxB_PLUS_FP64_MONOID, r, NULL)) ;
+        LAGRAPH_OK (GrB_reduce (&rdiff, NULL, GxB_PLUS_FP32_MONOID, r, NULL)) ;
 
         //----------------------------------------------------------------------
         // swap r and t
@@ -232,9 +259,12 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
         GrB_Vector temp = r ;
         r = t ;
         t = temp ;
+        LAGRAPH_OK (GrB_Vector_clear (t)) ;
 
         // GxB_print (r, 3) ;
     }
+
+        fprintf (stderr, "mxv %g\n", t2) ;
 
     LAGRAPH_OK (GrB_free (&C)) ;
     LAGRAPH_OK (GrB_free (&t)) ;
@@ -248,7 +278,7 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     //--------------------------------------------------------------------------
 
     // rsum = sum (r)
-    LAGRAPH_OK (GrB_reduce (&rsum, NULL, GxB_PLUS_FP64_MONOID, r, NULL)) ;
+    LAGRAPH_OK (GrB_reduce (&rsum, NULL, GxB_PLUS_FP32_MONOID, r, NULL)) ;
 
     // r = r / rsum
     LAGRAPH_OK (GrB_apply (r, NULL, NULL, op_div, r, NULL)) ;
@@ -266,7 +296,7 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     #else
     nvals = n ;
     I = malloc (n * sizeof (GrB_Index)) ;
-    X = malloc (n * sizeof (double)) ;
+    X = malloc (n * sizeof (float)) ;
     if (I == NULL || X == NULL)
     {
         LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
@@ -275,7 +305,7 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     LAGRAPH_OK (GrB_free (&r)) ;
     #endif
 
-    // this will always be true since r is dense, but double-check anyway:
+    // this will always be true since r is dense, but check anyway:
     if (nvals != n) return (GrB_PANIC) ;
 
     // P = struct (X,I)
