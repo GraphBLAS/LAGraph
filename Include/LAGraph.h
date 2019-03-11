@@ -15,6 +15,7 @@
 
 #include "GraphBLAS.h"
 #include <complex.h>
+#undef I
 
 #define _POSIX_C_SOURCE 200809L
 #include <time.h>
@@ -326,3 +327,21 @@ GrB_Info LAGraph_bfs_simple     // push-only BFS
 ) ;
 
 GrB_Info LAGraph_lacc (GrB_Matrix A) ;
+
+// LAGraph_pagrank computes an array of structs for its result
+typedef struct
+{
+    double pagerank ;   // the pagerank of a node
+    GrB_Index page ;    // the node number itself
+}
+LAGraph_PageRank ;
+
+GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
+(
+    LAGraph_PageRank **Phandle, // output: array of LAGraph_PageRank structs
+    GrB_Matrix A,               // binary input graph, not modified
+    int itermax,                // max number of iterations
+    double tol,                 // stop when norm (r-rnew,2) < tol
+    int *iters                  // number of iterations taken
+) ;
+
