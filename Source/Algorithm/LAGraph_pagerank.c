@@ -202,7 +202,7 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     LAGRAPH_OK (GrB_Vector_new (&t, GrB_FP32, n)) ;
 
     // GxB_print (C, 2) ;
-    GxB_fprint (C, 2, stderr) ;
+    // GxB_fprint (C, 2, stderr) ;
 
     tt = LAGraph_toc (tic) ;
     fprintf (stderr, "C time %g\n", tt) ;
@@ -235,12 +235,12 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
 
         double t3 = LAGraph_toc (tic2) ;
         t2 += t3 ;
-        fprintf (stderr, "one mxv %g\n", t3) ;
+//      fprintf (stderr, "one mxv %g\n", t3) ;
 
-        LAGraph_tic (tic2) ;
-        LAGRAPH_OK (GrB_mxv (t, NULL, NULL, GxB_PLUS_TIMES_FP32, C, r, NULL)) ;
-        t3 = LAGraph_toc (tic2) ;
-        fprintf (stderr, "another mxv %g\n", t3) ;
+//      LAGraph_tic (tic2) ;
+//      LAGRAPH_OK (GrB_mxv (t, NULL, NULL, GxB_PLUS_TIMES_FP32, C, r, NULL)) ;
+//      t3 = LAGraph_toc (tic2) ;
+//      fprintf (stderr, "another mxv %g\n", t3) ;
 
         s *= teleport ;
         LAGRAPH_OK (GrB_assign (t, NULL, GrB_PLUS_FP32, s, GrB_ALL, n, NULL)) ;
@@ -259,7 +259,7 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
         GrB_Vector temp = r ;
         r = t ;
         t = temp ;
-        LAGRAPH_OK (GrB_Vector_clear (t)) ;
+//      LAGRAPH_OK (GrB_Vector_clear (t)) ;
 
         // GxB_print (r, 3) ;
     }

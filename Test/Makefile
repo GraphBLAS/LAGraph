@@ -16,6 +16,7 @@ JOBS ?= 1
 
 # build all the tests
 default:
+	( cd PageRank     ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd BFS          ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd CC		  ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd BuildMatrix  ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
@@ -27,6 +28,7 @@ purge: distclean
 
 # remove all files not in the distribution
 distclean:
+	( cd PageRank     ; $(MAKE) distclean )
 	( cd BFS          ; $(MAKE) distclean )
 	( cd CC           ; $(MAKE) distclean )
 	( cd BuildMatrix  ; $(MAKE) distclean )

@@ -67,7 +67,8 @@ endif ( )
 include ( GNUInstallDirs )
 
 # For development only, not for end-users:
-# set ( CMAKE_BUILD_TYPE Debug )
+# TODO Debug is on
+set ( CMAKE_BUILD_TYPE Debug )
 
 if ( NOT CMAKE_BUILD_TYPE )
     set ( CMAKE_BUILD_TYPE Release )
@@ -77,16 +78,14 @@ endif ( )
 # edit these lines to select your GraphBLAS library
 #-------------------------------------------------------------------------------
 
-link_directories ( /usr/local/lib )
-# link_directories ( ../GraphBLAS/build )
-include_directories ( /usr/local/include )
-# include_directories ( ../GraphBLAS/Include )
+# link_directories ( /usr/local/lib )
+link_directories ( ../GraphBLAS/build )
+# include_directories ( /usr/local/include )
+include_directories ( ../GraphBLAS/Include )
 
 #-------------------------------------------------------------------------------
 # Configure Include/LAGraph.h and documentation with version number
 #-------------------------------------------------------------------------------
-
-# TODO
 
 #   configure_file (
 #       "Config/LAGraph.h.tmp" 

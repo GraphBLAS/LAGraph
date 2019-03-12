@@ -43,6 +43,7 @@ int main (int argc, char **argv)
     // LAGraph_mmwrite (Abool, stderr) ;
     GrB_free (&A) ;
     A = Abool ;
+    Abool = NULL ;
     // GxB_fprint (A, GxB_COMPLETE, stderr) ;
 
     // finish any pending computations
@@ -73,7 +74,7 @@ int main (int argc, char **argv)
     #if defined ( _OPENMP ) && defined ( GxB_SUITESPARSE_GRAPHBLAS )
     nthreads_max = omp_get_max_threads ( ) ;
     #endif
-    // nthreads_max = 1 ;
+    // nthreads_max = 19 ;
 
     int ntrials = 1 ;       // increase this to 10, 100, whatever, for more
                             // accurate timing
@@ -100,8 +101,8 @@ int main (int argc, char **argv)
         // stop the timer
         double t1 = LAGraph_toc (tic) / ntrials ;
         fprintf (stderr, "pagerank  time: %12.6e (sec), "
-            "rate: %g (1e6 edges/sec) iters: %d\n",
-            t1, 1e-6*((double) nvals) / t1, iters) ;
+            "rate: %g (1e6 edges/sec) iters: %d threads: %d\n",
+            t1, 1e-6*((double) nvals) / t1, iters, nthreads) ;
     }
 
     //--------------------------------------------------------------------------

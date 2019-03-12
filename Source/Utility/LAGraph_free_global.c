@@ -14,6 +14,8 @@
 GrB_Info LAGraph_free_global ( )
 {
 
+    GrB_free (&LAGraph_Complex) ;
+
     GrB_free (&LAGraph_EQ_Complex) ;
     GrB_free (&LAGraph_SKEW_INT8) ;
     GrB_free (&LAGraph_SKEW_INT16) ;
