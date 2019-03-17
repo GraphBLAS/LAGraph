@@ -72,14 +72,9 @@ GrB_Info LAGraph_Vector_isall      // return GrB_SUCCESS if successful
     if (nvals != nvals1)
     {
         // pattern of A and B are different
-        // printf ("LAGraph_isall: pattern differs\n") ;
         GrB_free (&C) ;
         return (GrB_SUCCESS) ;
     }
-
-    // GxB_fprint (A, GxB_COMPLETE, stdout) ;
-    // GxB_fprint (B, GxB_COMPLETE, stdout) ;
-    // GxB_fprint (C, GxB_COMPLETE, stdout) ;
 
     // result = and (C)
     LAGRAPH_OK (GrB_reduce (result, NULL, LAGraph_LAND_MONOID, C, NULL)) ;

@@ -556,17 +556,16 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
         // printf ("initial pi:\n") ;
         // GxB_fprint (pi, GxB_COMPLETE, stdout) ;
 
-        // TODO add LAGraph_MIN_FIRST_INT64, etc, semirings
         if (n > INT32_MAX)
         {
-            first_semiring  = GxB_MIN_FIRST_INT64 ;
-            second_semiring = GxB_MIN_SECOND_INT64 ;
+            first_semiring  = LAGraph_MIN_FIRST_INT64 ;
+            second_semiring = LAGraph_MIN_SECOND_INT64 ;
             min_int = GrB_MIN_INT64 ;
         }
         else
         {
-            first_semiring  = GxB_MIN_FIRST_INT32 ;
-            second_semiring = GxB_MIN_SECOND_INT32 ;
+            first_semiring  = LAGraph_MIN_FIRST_INT32 ;
+            second_semiring = LAGraph_MIN_SECOND_INT32 ;
             min_int = GrB_MIN_INT32 ;
         }
 
@@ -582,9 +581,8 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
         LAGRAPH_OK (GrB_Vector_new (&q, GrB_BOOL, n)) ;
         LAGRAPH_OK (GrB_Vector_setElement (q, true, s)) ;
 
-        // TODO: use LOR_FIRST and LOR_SECOND instead:
-        first_semiring  = LAGraph_LOR_LAND_BOOL ;
-        second_semiring = LAGraph_LOR_LAND_BOOL ;
+        first_semiring  = LAGraph_LOR_FIRST_BOOL ;
+        second_semiring = LAGraph_LOR_SECOND_BOOL ;
     }
 
     // average node degree
@@ -743,6 +741,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
 
                 // TODO: use q(i)=i when q can be used as a structure-only mask
 
+                #ifdef GxB_SUITESPARSE_GRAPHBLAS
                 GrB_Index *qi ;
                 if (n > INT32_MAX)
                 {
@@ -768,6 +767,13 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
                     LAGRAPH_OK (GxB_Vector_import (&q, int_type, n,
                         nq, &qi, (void **) (&qx), NULL)) ;
                 }
+                #else
+
+                // TODO: use extractTuples and build instead
+                fprintf (stderr, "TODO: use extractTuples here\n") ;
+                abort ( ) ;
+
+                #endif
 
             }
             else
@@ -834,13 +840,13 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
 
             nvstart = nvisited ;
 
-            if (info != GrB_NO_VALUE)
-            {
-                fprintf (stderr, "huh?\n") ;
-                GxB_fprint (A, 2, stderr) ;
-                GxB_fprint (v, 2, stderr) ;
-                abort ( ) ;
-            }
+//          if (info != GrB_NO_VALUE)
+//          {
+//              fprintf (stderr, "huh?\n") ;
+//              GxB_fprint (A, 2, stderr) ;
+//              GxB_fprint (v, 2, stderr) ;
+//              abort ( ) ;
+//          }
 
             // pi (s) = 0 denotes a root of the BFS tree
             if (compute_tree)

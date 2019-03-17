@@ -147,9 +147,19 @@ extern GrB_Monoid
     LAGraph_PLUS_INT64_MONOID,
     LAGraph_MAX_INT32_MONOID,
     LAGraph_LAND_MONOID,
-    LAGraph_LOR_MONOID ;
+    LAGraph_LOR_MONOID,
+    LAGraph_MIN_INT32_MONOID,
+    LAGraph_MIN_INT64_MONOID ;
 
-extern GrB_Semiring LAGraph_LOR_LAND_BOOL ;
+extern GrB_Semiring
+
+    LAGraph_LOR_LAND_BOOL,
+    LAGraph_LOR_SECOND_BOOL,
+    LAGraph_LOR_FIRST_BOOL,
+    LAGraph_MIN_SECOND_INT32,
+    LAGraph_MIN_FIRST_INT32,
+    LAGraph_MIN_SECOND_INT64,
+    LAGraph_MIN_FIRST_INT64 ;
 
 // all 16 descriptors
 // syntax: 4 characters define the following.  'o' is the default:
