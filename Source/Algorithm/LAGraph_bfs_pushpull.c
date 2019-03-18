@@ -573,7 +573,8 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
         LAGRAPH_OK (GrB_Vector_new (&pi, int_type, n)) ;
         // pi (s) = 0 denotes a root of the BFS tree
         // LAGRAPH_OK (GrB_Vector_setElement (pi, 0, s)) ;
-        LAGRAPH_OK (GrB_assign (pi, NULL, min_int, 0, &s, 1, NULL)) ;
+        GrB_Index root = (GrB_Index) s ;
+        LAGRAPH_OK (GrB_assign (pi, NULL, min_int, 0, &root, 1, NULL)) ;
     }
     else
     {
@@ -851,7 +852,8 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
             // pi (s) = 0 denotes a root of the BFS tree
             if (compute_tree)
             {
-                LAGRAPH_OK (GrB_assign (pi, NULL, min_int, 0, &s, 1, NULL)) ;
+                GrB_Index root = (GrB_Index) s ;
+                LAGRAPH_OK (GrB_assign (pi, NULL, min_int, 0, &root, 1, NULL)) ;
                 // printf ("start new source %g:\n", (double) s) ;
                 // GxB_fprint (pi, GxB_COMPLETE, stdout) ;
             }
