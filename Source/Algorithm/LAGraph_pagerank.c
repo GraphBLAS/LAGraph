@@ -175,19 +175,32 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
 
     // GxB_print (C, 3) ;
 
+    int nthreads_save ;
+    GxB_get (GxB_NTHREADS, &nthreads_save) ;
+    GxB_set (GxB_NTHREADS, 1);
+
     double tt = LAGraph_toc (tic) ;
     fprintf (stderr, "init time %g\n", tt) ;
     LAGraph_tic (tic) ;
 
-    // C = C+(D*A)' = C+A'*D' using A(i,j)/D(i,i) as the multiplicative operator
-    LAGRAPH_OK (GrB_mxm (C, NULL, GrB_PLUS_FP32, GxB_PLUS_TIMES_FP32, A, D,
-        LAGraph_desc_ttoo)) ;
+    // C = C+(D*A)' = C+A'*D'  : using the transpose of C, and C*r below
+//  LAGRAPH_OK (GrB_mxm (C, NULL, GrB_PLUS_FP32, GxB_PLUS_TIMES_FP32, A, D,
+//      LAGraph_desc_ttoo)) ;
 
-/*
     // C = C+(D*A)
     LAGRAPH_OK (GrB_mxm (C, NULL, GrB_PLUS_FP32, GxB_PLUS_TIMES_FP32, D, A,
         NULL)) ;
-*/
+
+    tt = LAGraph_toc (tic) ;
+    fprintf (stderr, "D*A mxm time %g\n", tt) ;
+    LAGraph_tic (tic) ;
+
+    // C = C'
+    LAGRAPH_OK (GrB_transpose (C, NULL, NULL, C, NULL)) ;
+
+    // C = C+(D*A), to use saxpy vxm
+//  LAGRAPH_OK (GrB_mxm (C, NULL, GrB_PLUS_FP32, GxB_PLUS_TIMES_FP32, D, A,
+//      NULL)) ;
 
     LAGRAPH_OK (GrB_free (&D)) ;
 
@@ -205,8 +218,9 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     // GxB_fprint (C, 2, stderr) ;
 
     tt = LAGraph_toc (tic) ;
-    fprintf (stderr, "C time %g\n", tt) ;
+    fprintf (stderr, "C transpose time %g\n", tt) ;
     LAGraph_tic (tic) ;
+    GxB_set (GxB_NTHREADS, nthreads_save) ;
 
     //--------------------------------------------------------------------------
     // iterate to compute the pagerank of each node
@@ -230,8 +244,11 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
         double tic2 [2] ;
         LAGraph_tic (tic2) ;
 
-//      LAGRAPH_OK (GrB_vxm (t, NULL, NULL, GxB_PLUS_TIMES_FP32, r, C, NULL)) ;
+        // using the transpose of A, scaled (dot product)
         LAGRAPH_OK (GrB_mxv (t, NULL, NULL, GxB_PLUS_TIMES_FP32, C, r, NULL)) ;
+
+        // using the original A, scaled (saxpy)
+//      LAGRAPH_OK (GrB_vxm (t, NULL, NULL, GxB_PLUS_TIMES_FP32, r, C, NULL)) ;
 
         double t3 = LAGraph_toc (tic2) ;
         t2 += t3 ;

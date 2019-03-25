@@ -19,7 +19,7 @@
     GrB_free (&Abool) ;                         \
 }
 
-int main (int argc, char **argv)
+int main ( )
 {
 
     GrB_Info info ;
@@ -64,7 +64,7 @@ int main (int argc, char **argv)
     // LAGRAPH_OK (GrB_Matrix_setElement (A, 0, 0, n-1)) ;     // hack
 
     fprintf (stderr, "\n=========="
-        "input graph: nodes: %lu edges: %lu\n", n, nvals) ;
+        "input graph: nodes: %"PRIu64" edges: %"PRIu64"\n", n, nvals) ;
 
     //--------------------------------------------------------------------------
     // compute the pagerank
@@ -74,7 +74,7 @@ int main (int argc, char **argv)
     #if defined ( _OPENMP ) && defined ( GxB_SUITESPARSE_GRAPHBLAS )
     nthreads_max = omp_get_max_threads ( ) ;
     #endif
-    // nthreads_max = 19 ;
+    // nthreads_max = 4 ;
 
     int ntrials = 1 ;       // increase this to 10, 100, whatever, for more
                             // accurate timing
@@ -87,6 +87,8 @@ int main (int argc, char **argv)
         #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
         GxB_set (GxB_NTHREADS, nthreads) ;
         #endif
+        printf ("\nptest nthreads %d ======================================\n",
+            nthreads) ;
 
         // start the timer
         double tic [2] ;
