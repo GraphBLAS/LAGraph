@@ -154,8 +154,8 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     for (int64_t k = 0 ; k < nvals ; k++) X [k] = DAMPING / X [k] ;
     LAGRAPH_OK (GrB_Matrix_new (&D, GrB_FP32, n, n)) ;
     LAGRAPH_OK (GrB_Matrix_build (D, I, I, X, nvals, GrB_PLUS_FP32)) ;
-    free (I) ;
-    free (X) ;
+    free (I) ; I = NULL ;
+    free (X) ; X = NULL ;
 
     // GxB_print (D, 3) ;
 
@@ -170,6 +170,8 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
         LAGRAPH_OK (GrB_Matrix_setElement (C, (float) 0, k, k)) ;
     }
 
+    // make sure D is diagonal
+    LAGRAPH_OK (GrB_eWiseAdd (D, NULL, NULL, GrB_PLUS_FP32, D, C, NULL)) ;
 
     // GxB_print (A, 3) ;
 
@@ -183,6 +185,8 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     fprintf (stderr, "init time %g\n", tt) ;
     LAGraph_tic (tic) ;
 
+#if 1
+    // use GrB_mxv for t=C*r below
     // C = C+(D*A)' = C+A'*D'  : using the transpose of C, and C*r below
 //  LAGRAPH_OK (GrB_mxm (C, NULL, GrB_PLUS_FP32, GxB_PLUS_TIMES_FP32, A, D,
 //      LAGraph_desc_ttoo)) ;
@@ -198,9 +202,12 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     // C = C'
     LAGRAPH_OK (GrB_transpose (C, NULL, NULL, C, NULL)) ;
 
+#else
+    // use GrB_vxm for t=r*C below
     // C = C+(D*A), to use saxpy vxm
-//  LAGRAPH_OK (GrB_mxm (C, NULL, GrB_PLUS_FP32, GxB_PLUS_TIMES_FP32, D, A,
-//      NULL)) ;
+    LAGRAPH_OK (GrB_mxm (C, NULL, GrB_PLUS_FP32, GxB_PLUS_TIMES_FP32, D, A,
+        NULL)) ;
+#endif
 
     LAGRAPH_OK (GrB_free (&D)) ;
 
@@ -232,7 +239,7 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     {
 
         //----------------------------------------------------------------------
-        // t = r*C + (teleport * sum (r)) ;
+        // t = (r*C or C*r) + (teleport * sum (r)) ;
         //----------------------------------------------------------------------
 
         // GxB_print (r, 2) ;
@@ -244,11 +251,15 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
         double tic2 [2] ;
         LAGraph_tic (tic2) ;
 
+#if 1
+        // t = C*r
         // using the transpose of A, scaled (dot product)
         LAGRAPH_OK (GrB_mxv (t, NULL, NULL, GxB_PLUS_TIMES_FP32, C, r, NULL)) ;
-
+#else
+        // t = r*C
         // using the original A, scaled (saxpy)
-//      LAGRAPH_OK (GrB_vxm (t, NULL, NULL, GxB_PLUS_TIMES_FP32, r, C, NULL)) ;
+        LAGRAPH_OK (GrB_vxm (t, NULL, NULL, GxB_PLUS_TIMES_FP32, r, C, NULL)) ;
+#endif
 
         double t3 = LAGraph_toc (tic2) ;
         t2 += t3 ;
@@ -297,6 +308,7 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     // rsum = sum (r)
     LAGRAPH_OK (GrB_reduce (&rsum, NULL, GxB_PLUS_FP32_MONOID, r, NULL)) ;
 
+    // TODO use vxm with rsum as a 1-by-1 matrix
     // r = r / rsum
     LAGRAPH_OK (GrB_apply (r, NULL, NULL, op_div, r, NULL)) ;
 
