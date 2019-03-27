@@ -20,6 +20,7 @@
 // free all workspace
 #define FREEWORK                                \
 {                                               \
+    GrB_free (&T) ;                             \
     GrB_free (&D) ;                             \
     GrB_free (&C) ;                             \
     GrB_free (&r) ;                             \
@@ -112,7 +113,7 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     GrB_Vector r = NULL, t = NULL, d = NULL ;
     GrB_UnaryOp op_div = NULL ;
     GrB_BinaryOp op_diff = NULL ;
-    GrB_Matrix C = NULL, D = NULL ;
+    GrB_Matrix C = NULL, D = NULL, T = NULL ;
 
     if (Phandle == NULL) LAGRAPH_ERROR ("null pointer", GrB_NULL_POINTER) ;
     (*Phandle) = NULL ;
@@ -177,9 +178,9 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
 
     // GxB_print (C, 3) ;
 
-    int nthreads_save ;
-    GxB_get (GxB_NTHREADS, &nthreads_save) ;
-    GxB_set (GxB_NTHREADS, 1);
+//  int nthreads_save ;
+//  GxB_get (GxB_NTHREADS, &nthreads_save) ;
+//  GxB_set (GxB_NTHREADS, 1);
 
     double tt = LAGraph_toc (tic) ;
     fprintf (stderr, "init time %g\n", tt) ;
@@ -191,16 +192,18 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
 //  LAGRAPH_OK (GrB_mxm (C, NULL, GrB_PLUS_FP32, GxB_PLUS_TIMES_FP32, A, D,
 //      LAGraph_desc_ttoo)) ;
 
-    // C = C+(D*A)
-    LAGRAPH_OK (GrB_mxm (C, NULL, GrB_PLUS_FP32, GxB_PLUS_TIMES_FP32, D, A,
-        NULL)) ;
+    // T = D*A
+    LAGRAPH_OK (GrB_Matrix_new (&T, GrB_FP32, n, n)) ;
+    LAGRAPH_OK (GrB_mxm (T, NULL, NULL, GxB_PLUS_TIMES_FP32, D, A, NULL)) ;
 
     tt = LAGraph_toc (tic) ;
-    fprintf (stderr, "D*A mxm time %g\n", tt) ;
+    fprintf (stderr, "D*A mxm time %g\n\n", tt) ;
     LAGraph_tic (tic) ;
 
-    // C = C'
-    LAGRAPH_OK (GrB_transpose (C, NULL, NULL, C, NULL)) ;
+    // C = C+T'
+    LAGRAPH_OK (GrB_transpose (C, NULL, GrB_PLUS_FP32, T, NULL)) ;
+
+    LAGRAPH_OK (GrB_free (&T)) ;
 
 #else
     // use GrB_vxm for t=r*C below
@@ -227,7 +230,7 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     tt = LAGraph_toc (tic) ;
     fprintf (stderr, "C transpose time %g\n", tt) ;
     LAGraph_tic (tic) ;
-    GxB_set (GxB_NTHREADS, nthreads_save) ;
+//  GxB_set (GxB_NTHREADS, nthreads_save) ;
 
     //--------------------------------------------------------------------------
     // iterate to compute the pagerank of each node
