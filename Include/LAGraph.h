@@ -116,7 +116,8 @@ extern GrB_BinaryOp
     LAGraph_SKEW_FP32           ,
     LAGraph_SKEW_FP64           ,
     LAGraph_SKEW_Complex        ,
-    LAGraph_Hermitian           ;
+    LAGraph_Hermitian           ,
+    LAGraph_LOR_UINT32          ;
 
 extern GrB_UnaryOp
 
@@ -133,11 +134,15 @@ extern GrB_UnaryOp
     LAGraph_ISONE_FP64          ,
     LAGraph_ISONE_Complex       ,
 
+    // unary operators to check if the entry is equal to 2
+    LAGraph_ISTWO_UINT32        ,
+
     // unary operators that decrement by 1
     LAGraph_DECR_INT32          ,
     LAGraph_DECR_INT64          ,
 
     // unary operators that return 1
+    LAGraph_ONE_UINT32          ,
     LAGraph_TRUE_BOOL           ,
     LAGraph_TRUE_BOOL_Complex   ;
 
@@ -149,7 +154,8 @@ extern GrB_Monoid
     LAGraph_LAND_MONOID,
     LAGraph_LOR_MONOID,
     LAGraph_MIN_INT32_MONOID,
-    LAGraph_MIN_INT64_MONOID ;
+    LAGraph_MIN_INT64_MONOID,
+    LAGraph_PLUS_UINT32_MONOID ;
 
 extern GrB_Semiring
 
@@ -159,7 +165,8 @@ extern GrB_Semiring
     LAGraph_MIN_SECOND_INT32,
     LAGraph_MIN_FIRST_INT32,
     LAGraph_MIN_SECOND_INT64,
-    LAGraph_MIN_FIRST_INT64 ;
+    LAGraph_MIN_FIRST_INT64,
+    LAGraph_PLUS_TIMES_UINT32 ;
 
 // all 16 descriptors
 // syntax: 4 characters define the following.  'o' is the default:
@@ -353,5 +360,16 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     int itermax,                // max number of iterations
     double tol,                 // stop when norm (r-rnew,2) < tol
     int *iters                  // number of iterations taken
+) ;
+
+GrB_Info LAGraph_tricount   // count # of triangles
+(
+    int64_t *p_ntri,        // # of trianagles
+    const int method,       // 0 to 5, see above
+    const GrB_Matrix A,     // adjacency matrix for methods 0, 1, and 2
+    const GrB_Matrix E,     // edge incidence matrix for method 0
+    const GrB_Matrix L,     // L=tril(A) for methods 2, 4, and 4
+    const GrB_Matrix U,     // U=triu(A) for methods 2, 3, and 5
+    double t [2]            // t [0]: multiply time, t [1]: reduce time
 ) ;
 

@@ -29,6 +29,7 @@ GrB_BinaryOp LAGraph_SKEW_FP32    = NULL ;
 GrB_BinaryOp LAGraph_SKEW_FP64    = NULL ;
 GrB_BinaryOp LAGraph_SKEW_Complex = NULL ;
 GrB_BinaryOp LAGraph_Hermitian    = NULL ;
+GrB_BinaryOp LAGraph_LOR_UINT32   = NULL ;
 
 void LAGraph_eq_complex
 (
@@ -121,6 +122,16 @@ void LAGraph_hermitian
 )
 {
     (*z) = (*x) == conj (*y) ;
+}
+
+void LAGraph_lor_uint32
+(
+    uint32_t *z,
+    const uint32_t *x,
+    const uint32_t *y
+)
+{
+    (*z) = (((*x) != 0) || ((*y) != 0)) ;
 }
 
 // unary operators to check if the entry is equal to 1
@@ -235,6 +246,18 @@ void LAGraph_isone_complex
     (*z) = ((*x) == 1) ;
 }
 
+// unary operator to check if the entry is equal to 2
+GrB_UnaryOp LAGraph_ISTWO_UINT32 = NULL ;
+
+void LAGraph_istwo_uint32
+(
+    bool *z,
+    const uint32_t *x
+)
+{
+    (*z) = ((*x) == 2) ;
+}
+
 // unary operators that return boolean true
 GrB_UnaryOp LAGraph_TRUE_BOOL = NULL ;
 GrB_UnaryOp LAGraph_TRUE_BOOL_Complex  = NULL ;
@@ -255,6 +278,18 @@ void LAGraph_true_bool_complex
 )
 {
     (*z) = true ;
+}
+
+// unary operators that return 1
+GrB_UnaryOp LAGraph_ONE_UINT32 = NULL ;
+
+void LAGraph_one_uint32
+(
+    uint32_t *z,
+    const uint32_t *x       // ignored
+)
+{
+    (*z) = 1 ;
 }
 
 // integer decrement
@@ -279,25 +314,24 @@ void LAGraph_decr_int64
     (*z) = ((*x) - 1) ;
 }
 
-// boolean monoids and semirings
+// monoids
 GrB_Monoid LAGraph_PLUS_INT64_MONOID = NULL ;
 GrB_Monoid LAGraph_MAX_INT32_MONOID = NULL ;
 GrB_Monoid LAGraph_LAND_MONOID = NULL ;
 GrB_Monoid LAGraph_LOR_MONOID = NULL ;
-
 GrB_Monoid LAGraph_MIN_INT32_MONOID = NULL ;
 GrB_Monoid LAGraph_MIN_INT64_MONOID = NULL ;
+GrB_Monoid LAGraph_PLUS_UINT32_MONOID = NULL ;
 
+// semirings
 GrB_Semiring LAGraph_LOR_LAND_BOOL = NULL ;
-
 GrB_Semiring LAGraph_LOR_SECOND_BOOL = NULL ;
 GrB_Semiring LAGraph_LOR_FIRST_BOOL = NULL ;
-
 GrB_Semiring LAGraph_MIN_SECOND_INT32 = NULL ;
 GrB_Semiring LAGraph_MIN_FIRST_INT32 = NULL ;
-
 GrB_Semiring LAGraph_MIN_SECOND_INT64 = NULL ;
 GrB_Semiring LAGraph_MIN_FIRST_INT64 = NULL ;
+GrB_Semiring LAGraph_PLUS_TIMES_UINT32 = NULL ;
 
 // all 16 descriptors
 // syntax: 4 characters define the following.  'o' is the default:
@@ -384,6 +418,16 @@ GrB_Info LAGraph_alloc_global ( )
         F_BINARY (LAGraph_hermitian),
         GrB_BOOL, LAGraph_Complex, LAGraph_Complex)) ;
 
+    #ifdef GxB_SUITESPARSE_GRAPHBLAS
+    // use the built-in binary operator
+    LAGraph_LOR_UINT32 = GxB_LOR_UINT32 ;
+    #else
+    // create a new built-in binary operator using LAGraph_lor_uint32
+    LAGRAPH_OK (GrB_BinaryOp_new (&LAGraph_LOR_UINT32,
+        F_BINARY (LAGraph_lor_uint32),
+        GrB_UINT32, GrB_UINT32, GrB_UINT32)) ;
+    #endif
+
     //--------------------------------------------------------------------------
     // create the unary operators that check if equal to 1
     //--------------------------------------------------------------------------
@@ -432,6 +476,18 @@ GrB_Info LAGraph_alloc_global ( )
         F_UNARY (LAGraph_isone_complex),
         GrB_BOOL, LAGraph_Complex)) ;
 
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_INT8,
+        F_UNARY (LAGraph_isone_int8),
+        GrB_BOOL, GrB_INT8)) ;
+
+    //--------------------------------------------------------------------------
+    // create the unary operator that checks if equal to 2
+    //--------------------------------------------------------------------------
+
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISTWO_UINT32,
+        F_UNARY (LAGraph_istwo_uint32),
+        GrB_BOOL, GrB_UINT32)) ;
+
     //--------------------------------------------------------------------------
     // create the unary decrement operators
     //--------------------------------------------------------------------------
@@ -456,6 +512,16 @@ GrB_Info LAGraph_alloc_global ( )
         F_UNARY (LAGraph_true_bool_complex),
         GrB_BOOL, LAGraph_Complex)) ;
 
+    #ifdef GxB_SUITESPARSE_GRAPHBLAS
+    // use the built-in unary operator
+    LAGraph_ONE_UINT32 = GxB_ONE_UINT32 ;
+    #else
+    // create a new built-in unary operator using LAGraph_one_uint32
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ONE_UINT32,
+        F_UNARY (LAGraph_one_uint32),
+        GrB_UINT32, GrB_UINT32)) ;
+    #endif
+
     //--------------------------------------------------------------------------
     // create the monoids
     //--------------------------------------------------------------------------
@@ -473,7 +539,11 @@ GrB_Info LAGraph_alloc_global ( )
         GrB_MIN_INT64, INT64_MAX)) ;
 
     LAGRAPH_OK (GrB_Monoid_new_BOOL (&LAGraph_LAND_MONOID, GrB_LAND, true )) ;
+
     LAGRAPH_OK (GrB_Monoid_new_BOOL (&LAGraph_LOR_MONOID , GrB_LOR , false)) ;
+
+    LAGRAPH_OK (GrB_Monoid_new_UINT32 (&LAGraph_PLUS_UINT32_MONOID,
+        GrB_PLUS_UINT32, 0)) ;
 
     //--------------------------------------------------------------------------
     // create the semirings
@@ -499,6 +569,9 @@ GrB_Info LAGraph_alloc_global ( )
 
     LAGRAPH_OK (GrB_Semiring_new (&LAGraph_MIN_FIRST_INT64,
         LAGraph_MIN_INT64_MONOID, GrB_FIRST_INT64)) ;
+
+    LAGRAPH_OK (GrB_Semiring_new (&LAGraph_PLUS_TIMES_UINT32,
+        LAGraph_PLUS_UINT32_MONOID, GrB_TIMES_UINT32)) ;
 
     //--------------------------------------------------------------------------
     // create 15 descriptors (one does not need to be allocated)
