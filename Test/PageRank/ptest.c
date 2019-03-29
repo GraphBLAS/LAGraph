@@ -71,10 +71,9 @@ int main ( )
     //--------------------------------------------------------------------------
 
     int nthreads_max = 1 ;
-    #if defined ( _OPENMP ) && defined ( GxB_SUITESPARSE_GRAPHBLAS )
-    nthreads_max = omp_get_max_threads ( ) ;
+    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    GxB_get (GxB_NTHREADS, &nthreads_max) ;
     #endif
-    // nthreads_max = 4 ;
 
     int ntrials = 1 ;       // increase this to 10, 100, whatever, for more
                             // accurate timing

@@ -362,11 +362,26 @@ GrB_Descriptor
     LAGraph_desc_ttcr = NULL ;   // A', B', compl mask, replace
 
 //------------------------------------------------------------------------------
+// LAGraph_support_function:  select function for GxB_SelectOp and GxB_select
+//------------------------------------------------------------------------------
+
+GxB_SelectOp LAGraph_support = NULL ;
+
+bool LAGraph_support_function (const GrB_Index i, const GrB_Index j,
+    const GrB_Index nrows, const GrB_Index ncols,
+    const uint32_t *x, const uint32_t *support)
+{
+    return ((*x) >= (*support)) ;
+}
+
+//------------------------------------------------------------------------------
 // LAGraph_alloc_global
 //------------------------------------------------------------------------------
 
 #define F_BINARY(f) ((void (*)(void *, const void *, const void *)) f)
 #define F_UNARY(f)  ((void (*)(void *, const void *)) f)
+#define F_SELECT(f) ((bool (*)(const GrB_Index, const GrB_Index,        \
+    const GrB_Index, const GrB_Index, const void *, const void *)) f)
 
 GrB_Info LAGraph_alloc_global ( )
 {
@@ -636,6 +651,13 @@ GrB_Info LAGraph_alloc_global ( )
     LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_ttor, GrB_INP0, GrB_TRAN)) ;
     LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_ttco, GrB_INP0, GrB_TRAN)) ;
     LAGRAPH_OK (GrB_Descriptor_set (LAGraph_desc_ttcr, GrB_INP0, GrB_TRAN)) ;
+
+    //--------------------------------------------------------------------------
+    // allocate the select function for ktruss and allktruss
+    //--------------------------------------------------------------------------
+
+    LAGRAPH_OK (GxB_SelectOp_new (&LAGraph_support, 
+        F_SELECT (LAGraph_support_function), GrB_UINT32)) ;
 
     return (GrB_SUCCESS) ;
 }

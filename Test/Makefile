@@ -16,11 +16,13 @@ JOBS ?= 1
 
 # build all the tests
 default:
-	( cd PageRank     ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
-	( cd BFS          ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
-	( cd CC		  ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
-	( cd BuildMatrix  ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
-	( cd MatrixMarket ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
+	( cd KTruss        ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
+	( cd TriangleCount ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
+	( cd PageRank      ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
+	( cd BFS           ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
+	( cd CC		   ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
+	( cd BuildMatrix   ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
+	( cd MatrixMarket  ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 
 clean: distclean
 
@@ -28,9 +30,11 @@ purge: distclean
 
 # remove all files not in the distribution
 distclean:
-	( cd PageRank     ; $(MAKE) distclean )
-	( cd BFS          ; $(MAKE) distclean )
-	( cd CC           ; $(MAKE) distclean )
-	( cd BuildMatrix  ; $(MAKE) distclean )
-	( cd MatrixMarket ; $(MAKE) distclean )
+	( cd KTruss        ; $(MAKE) distclean )
+	( cd TriangleCount ; $(MAKE) distclean )
+	( cd PageRank      ; $(MAKE) distclean )
+	( cd BFS           ; $(MAKE) distclean )
+	( cd CC            ; $(MAKE) distclean )
+	( cd BuildMatrix   ; $(MAKE) distclean )
+	( cd MatrixMarket  ; $(MAKE) distclean )
 

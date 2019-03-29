@@ -47,8 +47,9 @@
 
 #define DAMPING 0.85
 
+// TODO replace with binary operator and expanded scalar, or GrB_mxm:
 float rsum ;
-#pragma omp threadprivate(rsum)
+// #pragma omp threadprivate(rsum)
 
 void fdiv  (void *z, const void *x)
 {

@@ -163,9 +163,12 @@ int main (int argc, char **argv)
 {
 
     printf ("MatrixMarket/mmtest: "
-        "testing LAGraph_mmread, _mmwrite, and _random\n") ;
+        "testing LAGraph_mmread, _mmwrite, and _random: ") ;
 
     LAGraph_init ( ) ;
+
+    bool long_test = (argc > 2) ;
+    printf ("%s test\n", long_test ? "long" : "short") ;
 
     uint64_t seed = 1 ;
 
@@ -181,6 +184,22 @@ int main (int argc, char **argv)
         "uint8", "uint16", "uint32", "uint64",
         "float", "double",  "complex" } ;
 
+    GrB_Index n1, n2, nvals1, nvals2 ;
+    if (long_test)
+    {
+        n1 = 0 ;
+        n2 = 8 ;
+        nvals1 = 0 ;
+        nvals2 = 30 ;
+    }
+    else
+    {
+        n1 = 6 ;
+        n2 = 8 ;
+        nvals1 = 29 ;
+        nvals2 = 30 ;
+    }
+
     double tic [2], t ;
     LAGraph_tic (tic) ;
 
@@ -188,13 +207,13 @@ int main (int argc, char **argv)
     {
         printf ("%-7s: ", typenames [k]) ;
         GrB_Type type = types [k] ;
-        for (GrB_Index nrows = 0 ; nrows < 8 ; nrows++)
+        for (GrB_Index nrows = n1 ; nrows < n2 ; nrows++)
         {
-            for (GrB_Index ncols = 0 ; ncols < 8 ; ncols++)
+            for (GrB_Index ncols = n1 ; ncols < n2 ; ncols++)
             {
                 printf (".") ;
                 fflush (stdout) ;
-                for (GrB_Index nvals = 0 ; nvals < 30 ; nvals++)
+                for (GrB_Index nvals = nvals1 ; nvals < nvals2 ; nvals++)
                 {
                     for (int pat = 0 ; pat <= 1 ; pat++)
                     {

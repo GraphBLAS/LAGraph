@@ -179,8 +179,8 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     int nthreads_max = 1 ;
-    #if defined ( _OPENMP ) && defined ( GxB_SUITESPARSE_GRAPHBLAS )
-    nthreads_max = omp_get_max_threads ( ) ;
+    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    GxB_get (GxB_NTHREADS, &nthreads_max) ;
     fprintf (stderr, "\n====== parallel:\n") ;
     #endif
 

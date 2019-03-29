@@ -85,6 +85,9 @@ GrB_Info LAGraph_free_global ( )
     GrB_free (&LAGraph_desc_ttco) ;
     GrB_free (&LAGraph_desc_ttcr) ;
 
+    // free the select operator for ktruss and allktruss
+    GrB_free (&LAGraph_support) ;
+
     return (GrB_SUCCESS) ;
 }
 

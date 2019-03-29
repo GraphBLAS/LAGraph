@@ -196,6 +196,8 @@ extern GrB_Descriptor
     LAGraph_desc_ttco ,   // A', B', compl mask
     LAGraph_desc_ttcr ;   // A', B', compl mask, replace
 
+extern GxB_SelectOp LAGraph_support ;
+
 //------------------------------------------------------------------------------
 // user-callable utility functions
 //------------------------------------------------------------------------------
@@ -371,5 +373,13 @@ GrB_Info LAGraph_tricount   // count # of triangles
     const GrB_Matrix L,     // L=tril(A) for methods 2, 4, and 4
     const GrB_Matrix U,     // U=triu(A) for methods 2, 3, and 5
     double t [2]            // t [0]: multiply time, t [1]: reduce time
+) ;
+
+GrB_Info LAGraph_ktruss         // compute the k-truss of a graph
+(
+    GrB_Matrix *Chandle,        // output k-truss subgraph, C
+    const GrB_Matrix A,         // input adjacency matrix, A, not modified
+    const uint32_t k,           // find the k-truss, where k >= 3
+    int32_t *p_nsteps           // # of steps taken (ignored if NULL)
 ) ;
 

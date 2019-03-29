@@ -96,14 +96,12 @@ int main (int argc, char **argv)
 
     LAGraph_init ( ) ;
 
-    // TODO: put this in the LAGraph_Context, created by LAGraph_init
-    #ifdef _OPENMP
-    int maxthreads = omp_get_max_threads ( ) ;
-    #else
-    int maxthreads = 1 ;
+    int nthreads_max = 1 ;
+    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    GxB_get (GxB_NTHREADS, &nthreads_max) ;
     #endif
 
-    printf ("max threads %d\n", maxthreads) ;
+    printf ("max threads %d\n", nthreads_max) ;
 
     uint64_t seed = 1 ;
     GrB_Index nrows = 100000 ;
@@ -117,7 +115,7 @@ int main (int argc, char **argv)
     // OK (GxB_print (A, 2)) ;
 
     // now create B with 1 to max # of threads
-    for (int nthreads = 1 ; nthreads <= maxthreads ; nthreads++)
+    for (int nthreads = 1 ; nthreads <= nthreads_max ; nthreads++)
     {
 
         // reset the seed

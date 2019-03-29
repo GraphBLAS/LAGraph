@@ -3,8 +3,11 @@
 //------------------------------------------------------------------------------
 
 // Given a symmetric binary graph A with no-self edges, LAGraph_tricount counts
-// the exact number of triangles in the graph.  The L and U matrices are the
-// strictly lower and strictly upper triangular parts of A, respectively.
+// the exact number of triangles in the graph.  A triangle is a clique of size
+// three, that is, 3 nodes that are all pairwise connected.
+
+// On input, the L and U matrices are the strictly lower and strictly upper
+// triangular parts of the symmetrix matrix A, respectively.
 
 // One of 6 methods are used.  Each computes the same result, ntri:
 
@@ -17,7 +20,7 @@
 //  6:  SandiaDot2: ntri = sum (sum ((U * L') .* U))
 
 // All matrices are assumed to be in CSR format (GxB_BY_ROW in
-// SuiteSparse:GraphBLAS).  The method works fine if the matrices are in CSC
+// SuiteSparse:GraphBLAS).  The 6 methods work fine if the matrices are in CSC
 // format; just the underlying algorithms employed inside SuiteSparse:GraphBLAS
 // will differ (dot product vs saxpy, for SuiteSparse, for example).
 
@@ -49,12 +52,6 @@
 // here for the semiring.  GraphBLAS will do typecasting internally, but that
 // takes extra time.   Results are undefined if the input matrices are not
 // binary, or if self-edges exist.
-
-// This method has been updated as of Version 2.2 of SuiteSparse:GraphBLAS.  It
-// now assumes the matrix is held by row (GxB_BY_ROW), not by column
-// (GxB_BY_COL).  Both methods work fine, but with matrices stored by column,
-// C<M>=A'*B uses the dot product method by default, whereas C<M>=A*B' uses the
-// dot product method if the matrices are stored by row.
 
 // This code is modified from SuiteSparse/GraphBLAS/Demo/Source/tricount.c.
 // It contains no GxB_* extensions and thus it should work in any GraphBLAS

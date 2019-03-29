@@ -2,7 +2,7 @@
 // LAGraph/Test/TriangeCount/ttest.c: test program for LAGraph_tricount
 //------------------------------------------------------------------------------
 
-// Usage:  ttmest < matrixmarketfile.mtx
+// Usage:  ttest < matrixmarketfile.mtx
 
 // Three methods are tested: Sandia, Sandia2, and SandiaDot, with nthreads of
 // 1, 2, 4, ..., max # of threads.  The prep time (to compute L and/or U) is
@@ -179,10 +179,9 @@ int main (int argc, char **argv)
     // triangle counting
     //--------------------------------------------------------------------------
 
-    #if defined ( _OPENMP )
-    int nthreads_max = omp_get_max_threads ( ) ;
-    #else
     int nthreads_max = 1 ;
+    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    GxB_get (GxB_NTHREADS, &nthreads_max) ;
     #endif
 
     // warmup for more accurate timing
