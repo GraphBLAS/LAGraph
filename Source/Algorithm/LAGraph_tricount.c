@@ -6,14 +6,15 @@
 // the exact number of triangles in the graph.  The L and U matrices are the
 // strictly lower and strictly upper triangular parts of A, respectively.
 
-// One of 5 methods are used.  Each computes the same result, ntri:
+// One of 6 methods are used.  Each computes the same result, ntri:
 
 //  0:  minitri:    ntri = nnz (A*E == 2) / 3
 //  1:  Burkhardt:  ntri = sum (sum ((A^2) .* A)) / 6
 //  2:  Cohen:      ntri = sum (sum ((L * U) .* A)) / 2
-//  3:  Sandia:     ntri = sum (sum ((U * U) .* U))
-//  4:  Sandia2:    ntri = sum (sum ((L * L) .* L))
+//  3:  Sandia:     ntri = sum (sum ((L * L) .* L))
+//  4:  Sandia2:    ntri = sum (sum ((U * U) .* U))
 //  5:  SandiaDot:  ntri = sum (sum ((L * U') .* L)).  Note that L=U'.
+//  6:  SandiaDot2: ntri = sum (sum ((U * L') .* U))
 
 // All matrices are assumed to be in CSR format (GxB_BY_ROW in
 // SuiteSparse:GraphBLAS).  The method works fine if the matrices are in CSC
@@ -25,17 +26,18 @@
 
 // Methods 1 and 2 are much more memory efficient as compare to Method 0,
 // taking memory space the same size as A.  But they are slower than methods 3
-// to 5.
+// to 6.
 
-// Methods 3 to 5 take a little less memory than methods 1 and 2, are by far
+// Methods 3 to 6 take a little less memory than methods 1 and 2, are by far
 // the fastest methods in general.  The methods 3 and 5 compute the same
 // intermediate matrix (L*L), and differ only in the way the matrix
 // multiplication is done.  Method 3 uses an outer-product method (Gustavson's
-// method).  Method 5 uses dot products and does not explicitly transpose U.
-// They are called the "Sandia" method since matrices in the  KokkosKernels are
-// stored in compressed-sparse row form, so (L*L).*L in the KokkosKernel method
-// is equivalent to (L*L).*L in SuiteSparse:GraphBLAS when the matrices in
-// SuiteSparse:GraphBLAS are in their default format (also by row).
+// method).  Method 5 uses dot products (assuming both matrices are in CSR
+// format) and does not explicitly transpose U.  They are called the "Sandia"
+// method since matrices in the KokkosKernels are stored in compressed-sparse
+// row form, so (L*L).*L in the KokkosKernel method is equivalent to (L*L).*L
+// in SuiteSparse:GraphBLAS when the matrices in SuiteSparse:GraphBLAS are in
+// their default format (also by row).
 
 // A is a binary square symmetric matrix.  E is the edge incidence matrix of A.
 // L=tril(A), and U=triu(A).  See SuiteSparse/GraphBLAS/Demo/tricount.m for a
@@ -74,8 +76,8 @@ GrB_Info LAGraph_tricount   // count # of triangles
     const int method,       // 0 to 5, see above
     const GrB_Matrix A,     // adjacency matrix for methods 0, 1, and 2
     const GrB_Matrix E,     // edge incidence matrix for method 0
-    const GrB_Matrix L,     // L=tril(A) for methods 2, 4, and 4
-    const GrB_Matrix U,     // U=triu(A) for methods 2, 3, and 5
+    const GrB_Matrix L,     // L=tril(A) for methods 2, 3, 5, and 6
+    const GrB_Matrix U,     // U=triu(A) for methods 2, 4, 5, and 6
     double t [2]            // t [0]: multiply time, t [1]: reduce time
 )
 {
@@ -105,7 +107,6 @@ GrB_Info LAGraph_tricount   // count # of triangles
             LAGRAPH_OK (GrB_mxm (C, NULL, NULL, LAGraph_PLUS_TIMES_UINT32,
                 A, E, NULL)) ;
             t [0] = LAGraph_toc (tic) ;
-
             LAGraph_tic (tic) ;
             LAGRAPH_OK (GrB_Matrix_new (&S, GrB_BOOL, n, ne)) ;
             LAGRAPH_OK (GrB_apply (S, NULL, NULL, LAGraph_ISTWO_UINT32,
@@ -122,7 +123,6 @@ GrB_Info LAGraph_tricount   // count # of triangles
             LAGRAPH_OK (GrB_mxm (C, A, NULL, LAGraph_PLUS_TIMES_UINT32,
                 A, A, NULL)) ;
             t [0] = LAGraph_toc (tic) ;
-
             LAGraph_tic (tic) ;
             LAGRAPH_OK (GrB_reduce (&ntri, NULL, LAGraph_PLUS_INT64_MONOID,
                 C, NULL)) ;
@@ -136,7 +136,6 @@ GrB_Info LAGraph_tricount   // count # of triangles
             LAGRAPH_OK (GrB_mxm (C, A, NULL, LAGraph_PLUS_TIMES_UINT32,
                 L, U, NULL)) ;
             t [0] = LAGraph_toc (tic) ;
-
             LAGraph_tic (tic) ;
             LAGRAPH_OK (GrB_reduce (&ntri, NULL, LAGraph_PLUS_INT64_MONOID,
                 C, NULL)) ;
@@ -150,7 +149,6 @@ GrB_Info LAGraph_tricount   // count # of triangles
             LAGRAPH_OK (GrB_mxm (C, L, NULL, LAGraph_PLUS_TIMES_UINT32,
                 L, L, NULL)) ;
             t [0] = LAGraph_toc (tic) ;
-
             LAGraph_tic (tic) ;
             LAGRAPH_OK (GrB_reduce (&ntri, NULL, LAGraph_PLUS_INT64_MONOID,
                 C, NULL)) ;
@@ -163,7 +161,6 @@ GrB_Info LAGraph_tricount   // count # of triangles
             LAGRAPH_OK (GrB_mxm (C, U, NULL, LAGraph_PLUS_TIMES_UINT32,
                 U, U, NULL)) ;
             t [0] = LAGraph_toc (tic) ;
-
             LAGraph_tic (tic) ;
             LAGRAPH_OK (GrB_reduce (&ntri, NULL, LAGraph_PLUS_INT64_MONOID,
                 C, NULL)) ;
@@ -176,7 +173,18 @@ GrB_Info LAGraph_tricount   // count # of triangles
             LAGRAPH_OK (GrB_mxm (C, L, NULL, LAGraph_PLUS_TIMES_UINT32,
                 L, U, LAGraph_desc_otoo)) ;
             t [0] = LAGraph_toc (tic) ;
+            LAGraph_tic (tic) ;
+            LAGRAPH_OK (GrB_reduce (&ntri, NULL, LAGraph_PLUS_INT64_MONOID,
+                C, NULL)) ;
+            break ;
 
+        case 6:  // SandiaDot2: ntri = sum (sum ((U * L') .* U))
+
+            LAGRAPH_OK (GrB_Matrix_nrows (&n, U)) ;
+            LAGRAPH_OK (GrB_Matrix_new (&C, GrB_UINT32, n, n)) ;
+            LAGRAPH_OK (GrB_mxm (C, U, NULL, LAGraph_PLUS_TIMES_UINT32,
+                U, L, LAGraph_desc_otoo)) ;
+            t [0] = LAGraph_toc (tic) ;
             LAGraph_tic (tic) ;
             LAGRAPH_OK (GrB_reduce (&ntri, NULL, LAGraph_PLUS_INT64_MONOID,
                 C, NULL)) ;

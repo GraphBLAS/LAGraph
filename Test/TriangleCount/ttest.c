@@ -27,12 +27,13 @@ void print_method (int method)
 {
     switch (method)
     {
-        case 0:  printf ("minitri:   nnz (A*E == 2) / 3\n"  ) ; break ;
-        case 1:  printf ("Burkhardt: sum ((A^2) .* A) / 6\n") ; break ;
-        case 2:  printf ("Cohen:     sum ((L*U) .* A) / 2\n") ; break ;
-        case 3:  printf ("Sandia:    sum ((U*U) .* U)\n"    ) ; break ;
-        case 4:  printf ("Sandia2:   sum ((L*L) .* L)\n"    ) ; break ;
-        case 5:  printf ("SandiaDot: sum ((L*U') .* L)\n"   ) ; break ;
+        case 0:  printf ("minitri:    nnz (A*E == 2) / 3\n"  ) ; break ;
+        case 1:  printf ("Burkhardt:  sum ((A^2) .* A) / 6\n") ; break ;
+        case 2:  printf ("Cohen:      sum ((L*U) .* A) / 2\n") ; break ;
+        case 3:  printf ("Sandia:     sum ((L*L) .* L)\n"    ) ; break ;
+        case 4:  printf ("Sandia2:    sum ((U*U) .* U)\n"    ) ; break ;
+        case 5:  printf ("SandiaDot:  sum ((L*U') .* L)\n"   ) ; break ;
+        case 6:  printf ("SandiaDot2: sum ((U*L') .* U)\n"   ) ; break ;
         default: printf ("invalid method\n") ; abort ( ) ;
     }
 }
@@ -194,8 +195,8 @@ int main (int argc, char **argv)
     int method_best = -1 ;
     int nthreads_best = -1 ;
 
-    // try methods 3, 4, and 5
-    for (int method = 3 ; method <= 5 ; method++)
+    // try methods 3 to 6
+    for (int method = 3 ; method <= 6 ; method++)
     {
 
         printf ("\nMethod: ") ;
