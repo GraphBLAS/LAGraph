@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/Test/KTruss/ttest.c: test program for LAGraph_ktruss
+// LAGraph/Test/KTruss/ktest.c: test program for LAGraph_ktruss
 //------------------------------------------------------------------------------
 
 // Usage:  ktest < matrixmarketfile.mtx

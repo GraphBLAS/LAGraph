@@ -69,7 +69,7 @@
 
 GrB_Info LAGraph_tricount   // count # of triangles
 (
-    int64_t *p_ntri,        // # of trianagles
+    int64_t *p_ntri,        // # of triangles
     const int method,       // 0 to 5, see above
     const GrB_Matrix A,     // adjacency matrix for methods 0, 1, and 2
     const GrB_Matrix E,     // edge incidence matrix for method 0

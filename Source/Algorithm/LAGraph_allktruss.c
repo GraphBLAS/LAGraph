@@ -1,12 +1,12 @@
 //------------------------------------------------------------------------------
-// allktruss_graphblas.c: find all k-trusses of a graph via GraphBLAS
+// LAGraph_allktruss.c: find all k-trusses of a graph via GraphBLAS
 //------------------------------------------------------------------------------
 
-// Given a symmetric graph A with no-self edges, ktruss_graphblas finds all
+// Given a symmetric graph A with no-self edges, LAGraph_allktruss finds all
 // k-trusses of A.
 
 // The edge weights of A are treated as binary.  Explicit zero entries in A are
-// treated as non-edges.  Any type will work, but int64 is recommended for
+// treated as non-edges.  Any type will work, but uint32 is recommended for
 // fastest results since that is the type used here for the semiring.
 // GraphBLAS will do typecasting internally, but that takes extra time. 
 
@@ -16,15 +16,29 @@
 // subgraph of A.  The edge weights of C are the support of each edge.  That
 // is, C(i,j)=nt if the edge (i,j) is part of nt triangles in C.  All edges in
 // C have support of at least k-2.  The total number of triangles in C is
-// reduce(C,'plus')/6.  The number of edges in C is nnz(C)/2.  C is returned as
-// symmetric with a zero-free diagonal.  The k-trusses are not returned if Cset
-// is NULL.  Cset [kmax] is NULL since the kmax-truss is empty.
+// sum(C)/6.  The number of edges in C is nnz(C)/2.  C = Cset [k] is returned
+// as symmetric with a zero-free diagonal, if Cset is not NULL on input.  The
+// k-trusses are not returned if Cset is NULL.  Cset [kmax] is NULL since the
+// kmax-truss is empty.
+
+// The arrays ntris, nedges, and nstepss hold the output statistics.
+// ntris   [k] = # of triangles in the k-truss
+// nedges  [k] = # of edges in the k-truss
+// nstepss [k] = # of steps required to compute the k-truss
 
 // Usage: constructs k-trusses of A, for k = 3:kmax
-//      GrB_Info info = allktruss_graphblas (&Cset, A, &kmax,
-//          ntries, nedges, nstepss) ;
 
-// Compare this function with the MATLAB equivalent, allktruss.m.
+//      GrB_Matrix_nrows (&n, A) ;
+//      GrB_Matrix *Cset = LAGraph_malloc (n, sizeof (GrB_Matrix)) ;
+//      int64_t *ntris   = LAGraph_malloc (n, sizeof (int64_t)) ;
+//      int64_t *nedges  = LAGraph_malloc (n, sizeof (int64_t)) ;
+//      int64_t *nstepss = LAGraph_malloc (n, sizeof (int64_t)) ;
+//      GrB_Info info = LAGraph_allktruss (&Cset, A, &kmax,
+//          ntris, nedges, nstepss) ;
+
+// Compare this function with the MATLAB equivalent, allktruss.m, in
+// LAGraph/Test/AllKTruss.  This function is derived from SuiteSparse/
+// GraphBLAS/Extras/ktruss/allktruss_graphblas.c
 
 #define LAGRAPH_FREE_ALL                        \
     if (keep_all_ktrusses)                      \
@@ -34,21 +48,9 @@
             GrB_free (&(Cset [kk])) ;           \
         }                                       \
     }                                           \
-    GrB_free (&supportop) ;                     \
     GrB_free (&C) ;
 
 #include "LAGraph_internal.h"
-
-//------------------------------------------------------------------------------
-// support_function:  select function for GxB_SelectOp and GxB_select
-//------------------------------------------------------------------------------
-
-bool support_function (const GrB_Index i, const GrB_Index j,
-    const GrB_Index nrows, const GrB_Index ncols,
-    const int64_t *x, const int64_t *support)
-{
-    return ((*x) >= (*support)) ;
-}
 
 //------------------------------------------------------------------------------
 // C = LAGraph_allktruss (A,k): find all k-trusses a graph
@@ -56,9 +58,8 @@ bool support_function (const GrB_Index i, const GrB_Index j,
 
 GrB_Info LAGraph_allktruss      // compute all k-trusses of a graph
 (
-    GrB_Matrix *Cset,           // output k-truss subgraphs (optional)
+    GrB_Matrix *Cset,           // size n, output k-truss subgraphs (optional)
     GrB_Matrix A,               // input adjacency matrix, A, not modified
-
     // output statistics
     int64_t *kmax,              // smallest k where k-truss is empty
     int64_t *ntris,             // size n, ntris [k] is #triangles in k-truss
@@ -101,9 +102,6 @@ GrB_Info LAGraph_allktruss      // compute all k-trusses of a graph
     // the current k-truss
     GrB_Matrix C = NULL ;
 
-    // select operator
-    GxB_SelectOp supportop = NULL ;
-
     // get the size of A
     GrB_Index n ;
     LAGRAPH_OK (GrB_Matrix_nrows (&n, A)) ;
@@ -112,19 +110,11 @@ GrB_Info LAGraph_allktruss      // compute all k-trusses of a graph
     // C<A> = A*A
     //--------------------------------------------------------------------------
 
-    double tmult = 0 ;
-    double tsel  = 0 ;
-    double t1 = omp_get_wtime ( ) ;
-
     GrB_Index last_cnz ;
     LAGRAPH_OK (GrB_Matrix_nvals (&last_cnz, A)) ;       // last_cnz = nnz (A)
-    LAGRAPH_OK (GrB_Matrix_new (&C, GrB_INT64, n, n)) ;
-    LAGRAPH_OK (GrB_mxm (C, A, NULL, GxB_PLUS_LAND_INT64, A, A, NULL)) ;
+    LAGRAPH_OK (GrB_Matrix_new (&C, GrB_UINT32, n, n)) ;
+    LAGRAPH_OK (GrB_mxm (C, A, NULL, GxB_PLUS_LAND_UINT32, A, A, NULL)) ;
     int64_t nsteps = 1 ;
-
-    double t2 = omp_get_wtime ( ) ;
-    printf ("cmult time: %g\n", t2-t1) ;
-    tmult += (t2-t1) ;
 
     //--------------------------------------------------------------------------
     // find all k-trusses
@@ -146,13 +136,8 @@ GrB_Info LAGraph_allktruss      // compute all k-trusses of a graph
             // C = C .* (C >= support)
             //------------------------------------------------------------------
 
-            double t1 = omp_get_wtime ( ) ;
-
-            LAGRAPH_OK (GxB_select (C, NULL, NULL, supportop, C, &support, NULL)) ;
-
-            t2 = omp_get_wtime ( ) ;
-            printf ("select time: %g\n", t2-t1) ;
-            tsel += (t2-t1) ;
+            LAGRAPH_OK (GxB_select (C, NULL, NULL, LAGraph_support, C,
+                &support, NULL)) ;
 
             //------------------------------------------------------------------
             // check if k-truss has been found
@@ -164,7 +149,8 @@ GrB_Info LAGraph_allktruss      // compute all k-trusses of a graph
             {
                 // k-truss has been found
                 int64_t nt = 0 ;
-                LAGRAPH_OK (GrB_reduce (&nt, NULL, GxB_PLUS_INT64_MONOID, C, NULL)) ;
+                LAGRAPH_OK (GrB_reduce (&nt, NULL, GxB_PLUS_INT64_MONOID,
+                    C, NULL)) ;
                 ntris   [k] = nt / 6 ;
                 nedges  [k] = cnz / 2 ;
                 nstepss [k] = nsteps ;
@@ -172,19 +158,21 @@ GrB_Info LAGraph_allktruss      // compute all k-trusses of a graph
                 if (cnz == 0)
                 {
                     // this is the last k-truss
-                    LAGRAPH_OK (GrB_free (&supportop)) ;    // free the select operator
-                    LAGRAPH_OK (GrB_free (&C)) ;            // free last empty k-truss
+                    LAGRAPH_OK (GrB_free (&C)) ;    // free last empty k-truss
                     (*kmax) = k ;
                     if (keep_all_ktrusses)
                     {
                         Cset [k] = NULL ;
                     }
-                    printf ("allktruss graphblas done: tmult %g tsel %g\n", tmult, tsel) ;
                     return (GrB_SUCCESS) ;
                 }
                 else if (keep_all_ktrusses)
                 {
                     // save the k-truss in the list of output k-trusses
+                    // TODO: if Cset [k] == Cset [k-1], then do not save it.
+                    // Set it to NULLL to denote that the k-truss is the
+                    // same as the (k-1)-truss.  Also, advance quickly to
+                    // the next k, setting k = min (C).
                     LAGRAPH_OK (GrB_Matrix_dup (&(Cset [k]), C)) ;
                 }
                 // start finding the next k-truss
@@ -199,13 +187,7 @@ GrB_Info LAGraph_allktruss      // compute all k-trusses of a graph
             // C<C> = C*C
             //------------------------------------------------------------------
 
-            t1 = omp_get_wtime ( ) ;
-
-            LAGRAPH_OK (GrB_mxm (C, C, NULL, GxB_PLUS_LAND_INT64, C, C, NULL)) ;
-
-            t2 = omp_get_wtime ( ) ;
-            printf ("mult time: %g\n", t2-t1) ;
-            tmult += (t2-t1) ;
+            LAGRAPH_OK (GrB_mxm (C, C, NULL, GxB_PLUS_LAND_UINT32, C, C, NULL));
         }
     }
 }

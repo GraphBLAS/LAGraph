@@ -1,5 +1,6 @@
 % Test ktruss.m.  Requires ssget.
 
+clear
 index = ssget ;
 f = find (index.pattern_symmetry == 1) ;
 [~,i] = sort (index.nnz (f)) ;
@@ -32,18 +33,26 @@ for kk = 1:nmat
 
     n = size (A,1) ;
 
+    ttot = 0 ;
+
     % find all the k-trusses
     for k = 3:100
 
-        C = ktruss (A,k) ;
+        tic
+        [C, nsteps] = ktruss (A,k) ;
         ne = nnz (C) / 2 ;
         nt = full (sum (sum (C))) / 6 ;
+        t = toc ;
+        ttot = ttot + t ;
 
-        fprintf ('k %4d sec ne %10d nt %10d\n', k, ne, nt) ;
+        fprintf ('k %4d sec ne %10d nt %10d nsteps %6d time: %g\n', ...
+            k, ne, nt, nsteps, t) ;
 
         if (ne == 0)
             break ;
         end
     end
+
+    fprintf ('total time: %g\n', ttot) ;
 end
 

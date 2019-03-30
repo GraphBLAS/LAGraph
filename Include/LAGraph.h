@@ -366,7 +366,7 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
 
 GrB_Info LAGraph_tricount   // count # of triangles
 (
-    int64_t *p_ntri,        // # of trianagles
+    int64_t *ntri,          // # of triangles
     const int method,       // 0 to 5, see above
     const GrB_Matrix A,     // adjacency matrix for methods 0, 1, and 2
     const GrB_Matrix E,     // edge incidence matrix for method 0
@@ -380,6 +380,17 @@ GrB_Info LAGraph_ktruss         // compute the k-truss of a graph
     GrB_Matrix *Chandle,        // output k-truss subgraph, C
     const GrB_Matrix A,         // input adjacency matrix, A, not modified
     const uint32_t k,           // find the k-truss, where k >= 3
-    int32_t *p_nsteps           // # of steps taken (ignored if NULL)
+    int32_t *nsteps             // # of steps taken (ignored if NULL)
+) ;
+
+GrB_Info LAGraph_allktruss      // compute all k-trusses of a graph
+(
+    GrB_Matrix *Cset,           // size n, output k-truss subgraphs (optional)
+    GrB_Matrix A,               // input adjacency matrix, A, not modified
+    // output statistics
+    int64_t *kmax,              // smallest k where k-truss is empty
+    int64_t *ntris,             // size n, ntris [k] is #triangles in k-truss
+    int64_t *nedges,            // size n, nedges [k] is #edges in k-truss
+    int64_t *nstepss            // size n, nstepss [k] is #steps for k-truss
 ) ;
 
