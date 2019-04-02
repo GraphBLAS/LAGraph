@@ -86,8 +86,6 @@ int main ( )
         #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
         GxB_set (GxB_NTHREADS, nthreads) ;
         #endif
-        printf ("\nptest nthreads %d ======================================\n",
-            nthreads) ;
 
         // start the timer
         double tic [2] ;
