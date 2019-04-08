@@ -10,7 +10,7 @@ GraphBLAS.  It contains the following files and folders:
 
     Include: contains the LAGraph.h file
 
-    LICENSE: Apache 2 license
+    LICENSE: BSD 2-clause license
 
     Makefile: a simple Makefile that relies on CMake to build LAGraph.
 
