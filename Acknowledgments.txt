@@ -8,6 +8,7 @@ THIS WORK IS FUNDED IN PART BY:
     [DM19-0270]
 2.  NVIDIA, Intel, and MIT Lincoln Laboratory
 3.  The National Science Foundation (1514406).
+4.  The United States Department of Energy, Office of Science, ASCR Contract No. DE-AC02-05CH11231.
 
 
 THIS WORK BUILDS UPON THE FOLLOWING PRIOR WORKS:
@@ -28,3 +29,8 @@ THIS WORK BUILDS UPON THE FOLLOWING PRIOR WORKS:
     itself under the Apache 2 license, any contributions derived from 
     SuiteSparse:GraphBLAS and incorporated by the Author into LAGraph are
     contributed under the LAGraph license.
+3.  Combinatorial BLAS, 
+    (https://people.eecs.berkeley.edu/~aydin/CombBLAS/) 
+    Copyright (c) 2011-2018, The Regents of the University of California, through Lawrence 
+    Berkeley National Laboratory (subject to receipt of any required approvals from the 
+    U.S. Dept. of Energy) and University of California, Santa Barbara. 
