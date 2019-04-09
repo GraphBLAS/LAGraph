@@ -48,7 +48,7 @@ if ( CMAKE_VERSION VERSION_GREATER "3.0" )
 endif ( )
 
 # version of LAGraph
-set ( LAGraph_DATE "Jan 29, 2019" )
+set ( LAGraph_DATE "Apr 9, 2019" )
 set ( LAGraph_VERSION_MAJOR 0 )
 set ( LAGraph_VERSION_MINOR 1 )
 set ( LAGraph_VERSION_SUB   0 )
