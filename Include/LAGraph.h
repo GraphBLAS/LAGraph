@@ -13,6 +13,9 @@
 // include files and global #defines
 //------------------------------------------------------------------------------
 
+#ifndef LAGRAPH_INCLUDE
+#define LAGRAPH_INCLUDE
+
 #include "GraphBLAS.h"
 #include <complex.h>
 #undef I
@@ -394,3 +397,4 @@ GrB_Info LAGraph_allktruss      // compute all k-trusses of a graph
     int64_t *nstepss            // size n, nstepss [k] is #steps for k-truss
 ) ;
 
+#endif
