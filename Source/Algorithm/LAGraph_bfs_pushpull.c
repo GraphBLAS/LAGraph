@@ -632,19 +632,17 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
             //------------------------------------------------------------------
 
             // TODO add conversion from sparse to dense as a LAGraph utility
+            // TODO: use a structural mask, when added to the spec
 
             if (vsparse && nvisited > vlimit)
             {
                 // Convert v to dense to speed up the rest of the work.  If
                 // this case is triggered, it would have been a bit faster to
                 // pass in vsparse = false on input.
-                LAGRAPH_OK (GrB_Vector_new (&t, int_type, n)) ;
-                LAGRAPH_OK (GrB_assign (t, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
-                LAGRAPH_OK (GrB_Vector_nvals (&ignore, t)) ;
-                LAGRAPH_OK (GrB_assign (t, v, NULL, v, GrB_ALL, n, NULL)) ;
-                GrB_free (&v) ;
-                v = t ;
-                t = NULL ;
+                // v <!v> = 0
+                LAGRAPH_OK (GrB_assign (v, v, NULL, 0, GrB_ALL, n, 
+                    LAGraph_desc_ooco)) ;
+                LAGRAPH_OK (GrB_Vector_nvals (&ignore, v)) ;
                 vsparse = false ;
             }
 
