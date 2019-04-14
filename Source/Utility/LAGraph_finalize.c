@@ -7,7 +7,7 @@
 
 //------------------------------------------------------------------------------
 
-// Finalize LAGraph and then finilize GraphBLAS.
+// Finalize LAGraph and then finalize GraphBLAS.
 
 #include "LAGraph_internal.h"
 
