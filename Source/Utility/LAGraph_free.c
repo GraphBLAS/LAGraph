@@ -9,9 +9,6 @@
 
 // Wrapper for free.
 
-// TODO: should be able to modify the malloc/free routines used; also in
-// GraphBLAS.
-
 #include "LAGraph_internal.h"
 
 void LAGraph_free
@@ -22,7 +19,7 @@ void LAGraph_free
 
     if (p != NULL)
     {
-        free (p) ;
+        LAGraph_free_function (p) ;
     }
 }
 

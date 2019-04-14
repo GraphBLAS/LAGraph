@@ -22,6 +22,12 @@ GrB_Info LAGraph_init ( )
     GrB_Info info ;
     LAGRAPH_OK (GrB_init (GrB_NONBLOCKING)) ;
 
+    LAGraph_malloc_function  = malloc ;
+    LAGraph_calloc_function  = calloc ;
+    LAGraph_realloc_function = realloc ;
+    LAGraph_free_function    = free ;
+    LAGraph_malloc_is_thread_safe = true ;
+
     // allocate all global objects
     LAGRAPH_OK (LAGraph_alloc_global ( )) ;
 

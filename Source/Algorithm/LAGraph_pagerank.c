@@ -26,8 +26,8 @@
     GrB_free (&r) ;                             \
     GrB_free (&t) ;                             \
     GrB_free (&d) ;                             \
-    if (I != NULL) { free (I) ; I = NULL ; }    \
-    if (X != NULL) { free (X) ; X = NULL ; }    \
+    LAGRAPH_FREE (I) ;                          \
+    LAGRAPH_FREE (X) ;                          \
     GrB_free (&op_div) ;                        \
     GrB_free (&op_diff) ;                       \
 }
@@ -35,7 +35,7 @@
 // error handler: free output P and all workspace
 #define LAGRAPH_FREE_ALL                        \
 {                                               \
-    if (P != NULL) { free (P) ; P = NULL ; }    \
+    LAGRAPH_FREE (P) ;                          \
     FREEWORK ;                                  \
 }
 
@@ -143,8 +143,8 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
         NULL)) ;
     #else
     nvals = n ;
-    I = malloc ((nvals + 1) * sizeof (GrB_Index)) ;
-    X = malloc ((nvals + 1) * sizeof (float)) ;
+    I = LAGraph_malloc ((nvals + 1), sizeof (GrB_Index)) ;
+    X = LAGraph_malloc ((nvals + 1), sizeof (float)) ;
     if (I == NULL || X == NULL)
     {
         LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
@@ -156,8 +156,8 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     for (int64_t k = 0 ; k < nvals ; k++) X [k] = DAMPING / X [k] ;
     LAGRAPH_OK (GrB_Matrix_new (&D, GrB_FP32, n, n)) ;
     LAGRAPH_OK (GrB_Matrix_build (D, I, I, X, nvals, GrB_PLUS_FP32)) ;
-    free (I) ; I = NULL ;
-    free (X) ; X = NULL ;
+    LAGRAPH_FREE (I) ;
+    LAGRAPH_FREE (X) ;
 
     // GxB_print (D, 3) ;
 
@@ -328,8 +328,8 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
         NULL)) ;
     #else
     nvals = n ;
-    I = malloc (n * sizeof (GrB_Index)) ;
-    X = malloc (n * sizeof (float)) ;
+    I = LAGraph_malloc (n, sizeof (GrB_Index)) ;
+    X = LAGraph_malloc (n, sizeof (float)) ;
     if (I == NULL || X == NULL)
     {
         LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
@@ -342,7 +342,7 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     if (nvals != n) return (GrB_PANIC) ;
 
     // P = struct (X,I)
-    P = malloc (n * sizeof (LAGraph_PageRank)) ;
+    P = LAGraph_malloc (n, sizeof (LAGraph_PageRank)) ;
     if (P == NULL)
     {
         LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;

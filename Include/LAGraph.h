@@ -202,12 +202,35 @@ extern GrB_Descriptor
 extern GxB_SelectOp LAGraph_support ;
 
 //------------------------------------------------------------------------------
+// memory management functions
+//------------------------------------------------------------------------------
+
+// use the ANSI C functions by default (or mx* functions if the #ifdef
+// above redefines them).  See Source/Utility/LAGraph_malloc.c.
+
+extern void * (* LAGraph_malloc_function  ) (size_t)         ;
+extern void * (* LAGraph_calloc_function  ) (size_t, size_t) ;
+extern void * (* LAGraph_realloc_function ) (void *, size_t) ;
+extern void   (* LAGraph_free_function    ) (void *)         ;
+extern bool LAGraph_malloc_is_thread_safe ;
+
+//------------------------------------------------------------------------------
 // user-callable utility functions
 //------------------------------------------------------------------------------
 
 typedef void (*LAGraph_binary_function) (void *, const void *, const void *) ;
 
 GrB_Info LAGraph_init ( ) ;         // start LAGraph
+
+GrB_Info LAGraph_xinit              // start LAGraph (alternative method)
+(
+    // pointers to memory management functions
+    void * (* user_malloc_function  ) (size_t),
+    void * (* user_calloc_function  ) (size_t, size_t),
+    void * (* user_realloc_function ) (void *, size_t),
+    void   (* user_free_function    ) (void *),
+    bool user_malloc_is_thread_safe
+) ;
 
 GrB_Info LAGraph_finalize ( ) ;     // end LAGraph
 

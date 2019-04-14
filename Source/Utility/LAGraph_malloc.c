@@ -13,6 +13,27 @@
 
 #include "LAGraph_internal.h"
 
+//------------------------------------------------------------------------------
+// global space
+//------------------------------------------------------------------------------
+
+void * (* LAGraph_malloc_function  ) (size_t)         = malloc ;
+void * (* LAGraph_calloc_function  ) (size_t, size_t) = calloc ;
+void * (* LAGraph_realloc_function ) (void *, size_t) = realloc ;
+void   (* LAGraph_free_function    ) (void *)         = free ;
+
+bool LAGraph_malloc_is_thread_safe =
+    #ifdef MATLAB_MEX_FILE
+        false       // mxMalloc is not thread-safe
+    #else
+        true        // ANCI C malloc, TBB scalable_malloc, etc are thread safe
+    #endif
+        ;
+
+//------------------------------------------------------------------------------
+// LAGraph_malloc
+//------------------------------------------------------------------------------
+
 void *LAGraph_malloc
 (
     size_t nitems,          // number of items
@@ -33,6 +54,6 @@ void *LAGraph_malloc
     }
 
     // malloc the space
-    return (malloc (nitems * size_of_item)) ;
+    return (LAGraph_malloc_function (nitems * size_of_item)) ;
 }
 

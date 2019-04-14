@@ -163,9 +163,15 @@ int main (int argc, char **argv)
 {
 
     printf ("MatrixMarket/mmtest: "
-        "testing LAGraph_mmread, _mmwrite, and _random: ") ;
+        "testing LAGraph_mmread, _mmwrite, and _random:\n") ;
 
+    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    printf ("testing LAGraph_xinit (requires SuiteSparse:GraphBLAS)\n") ;
+    LAGraph_xinit (malloc, calloc, realloc, free, true) ;
+    #else
+    printf ("LAGraph_init\n") ;
     LAGraph_init ( ) ;
+    #endif
 
     bool long_test = (argc > 2) ;
     printf ("%s test\n", long_test ? "long" : "short") ;

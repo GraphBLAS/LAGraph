@@ -26,12 +26,12 @@
     GrB_free(&BF_EQ_Tuple3);           \
     GrB_free(&BF_lMIN_Tuple3_Monoid);  \
     GrB_free(&BF_lMIN_PLUSrhs_Tuple3); \
-    free(I);                           \
-    free(J);                           \
-    free(w);                           \
-    free(W);                           \
-    free(h);                           \
-    free(pi);                          \
+    LAGRAPH_FREE (I);                  \
+    LAGRAPH_FREE (J);                  \
+    LAGRAPH_FREE (w);                  \
+    LAGRAPH_FREE (W);                  \
+    LAGRAPH_FREE (h);                  \
+    LAGRAPH_FREE (pi);                 \
 }
 
 //------------------------------------------------------------------------------
@@ -186,12 +186,13 @@ GrB_Info LAGraph_BF_full
         BF_lMIN_Tuple3_Monoid, BF_PLUSrhs_Tuple3));
 
     //--------------------------------------------------------------------------
-    // malloc for arrays used for tuplets
+    // allocate arrays used for tuplets
     //--------------------------------------------------------------------------
-    I = LAGraph_malloc(nz, sizeof(GrB_Index));
-    J = LAGraph_malloc(nz, sizeof(GrB_Index));
-    w = LAGraph_malloc(nz, sizeof(double));
-    W = LAGraph_malloc(nz, sizeof(BF_Tuple3_struct));
+
+    I = LAGraph_malloc (nz, sizeof(GrB_Index)) ;
+    J = LAGraph_malloc (nz, sizeof(GrB_Index)) ;
+    w = LAGraph_malloc (nz, sizeof(double)) ;
+    W = LAGraph_malloc (nz, sizeof(BF_Tuple3_struct)) ;
     LAGRAPH_OK (GrB_Matrix_extractTuples_FP64(I, J, w, &nz, A));
     for (GrB_Index k = 0; k < nz; k++)
     {

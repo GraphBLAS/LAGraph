@@ -1,4 +1,4 @@
-#include "GraphBLAS.h"
+#include "LAGraph.h"
 
 /**
  * Code is based on the algorithm described in the following paper
@@ -36,8 +36,8 @@ void CondHook(GrB_Matrix A, GrB_Vector parents, GrB_Vector stars)
     // extract values in hookP
     GrB_Index nhooks;
     GrB_Vector_nvals(&nhooks, hook);
-    GrB_Index *nzid = malloc(nhooks * sizeof (GrB_Index));
-    GrB_Index *p = malloc(nhooks * sizeof (GrB_Index));
+    GrB_Index *nzid = LAGraph_malloc (nhooks, sizeof (GrB_Index));
+    GrB_Index *p = LAGraph_malloc (nhooks, sizeof (GrB_Index));
     GrB_Vector_extractTuples(nzid, p, &nhooks, hookP);
     
     //a dense vector of hooks for assignments
@@ -91,8 +91,8 @@ void UnCondHook(GrB_Matrix A, GrB_Vector parents, GrB_Vector stars)
     // exatrct values in hookP
     GrB_Index nhooks;
     GrB_Vector_nvals(&nhooks, hook);
-    GrB_Index *nzid = malloc(nhooks * sizeof (GrB_Index));
-    GrB_Index *p = malloc(nhooks * sizeof (GrB_Index));
+    GrB_Index *nzid = LAGraph_malloc (nhooks, sizeof (GrB_Index));
+    GrB_Index *p = LAGraph_malloc (nhooks, sizeof (GrB_Index));
     GrB_Vector_extractTuples(nzid, p, &nhooks, hookP);
     
     //a dense vector of hooks for assignments
@@ -113,15 +113,15 @@ void GrandParents(GrB_Vector parents, GrB_Vector grandParents)
     GrB_Vector_size(&n, parents);
     
     // extract parents for indexing
-    GrB_Index *index = malloc(n * sizeof (GrB_Index));
-    GrB_Index *p = malloc(n * sizeof (GrB_Index));
+    GrB_Index *index = LAGraph_malloc (n, sizeof (GrB_Index));
+    GrB_Index *p = LAGraph_malloc (n, sizeof (GrB_Index));
     GrB_Vector_extractTuples(index, p, &n, parents);
     
     GrB_extract (grandParents, NULL, NULL, parents,  p, n, NULL) ;
     //GxB_Vector_fprint(grandParents, "---- grandParents ------", GxB_SHORT, stderr);
     
-    if(index) free(index);
-    if(p) free(p);
+    LAGRAPH_FREE (index);
+    LAGRAPH_FREE (p);
 }
 void Shortcut(GrB_Vector parents)
 {
@@ -167,8 +167,8 @@ void StarCheck(GrB_Vector parents, GrB_Vector stars)
     // extract indices and values for assign
     GrB_Index nNonstars;
     GrB_Vector_nvals(&nNonstars, nsGrandParents);
-    GrB_Index *vertex = malloc(nNonstars * sizeof (GrB_Index));
-    GrB_Index *gp = malloc(nNonstars * sizeof (GrB_Index));
+    GrB_Index *vertex = LAGraph_malloc (nNonstars, sizeof (GrB_Index));
+    GrB_Index *gp = LAGraph_malloc (nNonstars, sizeof (GrB_Index));
     GrB_Vector_extractTuples(vertex, gp, &nNonstars, nsGrandParents);
     
     GrB_assign (stars, NULL, NULL, false,  vertex,  nNonstars, NULL) ;
@@ -176,8 +176,8 @@ void StarCheck(GrB_Vector parents, GrB_Vector stars)
       
     
     // extract indices and values for assign
-    GrB_Index *v = malloc(n * sizeof (GrB_Index));
-    GrB_Index *p = malloc(n * sizeof (GrB_Index));
+    GrB_Index *v = LAGraph_malloc (n, sizeof (GrB_Index));
+    GrB_Index *p = LAGraph_malloc (n, sizeof (GrB_Index));
     GrB_Vector_extractTuples(v, p, &n, parents);
     
     
@@ -186,10 +186,10 @@ void StarCheck(GrB_Vector parents, GrB_Vector stars)
     GrB_extract (starsf, NULL, NULL, stars,  p, n, NULL) ;
     GrB_assign (stars, NULL, NULL, starsf, GrB_ALL,  0, NULL) ;
     
-    free(vertex);
-    free(gp);
-    free(v);
-    free(p);
+    LAGRAPH_FREE (vertex);
+    LAGRAPH_FREE (gp);
+    LAGRAPH_FREE (v);
+    LAGRAPH_FREE (p);
 }
 
 
@@ -199,8 +199,8 @@ void CountCC(GrB_Vector parents)
     GrB_Index n;
     GrB_Vector_size(&n, parents);
     // exatrct parents for indexing
-    GrB_Index *v = malloc(n * sizeof (GrB_Index));
-    GrB_Index *p = malloc(n * sizeof (GrB_Index));
+    GrB_Index *v = LAGraph_malloc (n, sizeof (GrB_Index));
+    GrB_Index *p = LAGraph_malloc (n, sizeof (GrB_Index));
     GrB_Vector_extractTuples(v, p, &n, parents);
     GrB_Vector cc = NULL;
     GrB_Vector_new (&cc, GrB_UINT64, n);
@@ -214,8 +214,8 @@ void CountCC(GrB_Vector parents)
     GrB_Index ncc= (uint64_t)0;
     GrB_reduce (&ncc, NULL, sum, cc, NULL) ;
     
-    if(v) free(v);
-    if(p) free(p);
+    LAGRAPH_FREE (v);
+    LAGRAPH_FREE (p);
     
     printf("Number of clusters: %ld\n", ncc);
 }
