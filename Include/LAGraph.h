@@ -420,4 +420,20 @@ GrB_Info LAGraph_allktruss      // compute all k-trusses of a graph
     int64_t *nstepss            // size n, nstepss [k] is #steps for k-truss
 ) ;
 
+GrB_Info LAGraph_BF_full
+(
+    GrB_Vector *pd,             //the pointer to the vector of distance
+    GrB_Vector *ppi,            //the pointer to the vector of parent
+    GrB_Vector *ph,             //the pointer to the vector of hops
+    const GrB_Matrix A,         //matrix for the graph
+    const GrB_Index s           //given index of the source
+) ;
+
+GrB_Info LAGraph_BF_basic
+(
+    GrB_Vector *pd,             //the pointer to the vector of distance
+    const GrB_Matrix A,         //matrix for the graph
+    const GrB_Index s           //given index of the source
+) ;
+
 #endif
