@@ -436,4 +436,11 @@ GrB_Info LAGraph_BF_basic
     const GrB_Index s           //given index of the source
 ) ;
 
+GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
+(
+    GrB_Vector *LCC_handle,     // output vector
+    const GrB_Matrix A,         // input matrix
+    bool sanitize               // if true, ensure A is binary
+) ;
+
 #endif
