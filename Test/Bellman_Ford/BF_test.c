@@ -88,7 +88,7 @@ int main (int argc, char **argv)
 
     // stop the timer
     double t1 = LAGraph_toc (tic) / ntrials ;
-    fprintf (stderr, "FB_full   time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
+    fprintf (stderr, "BF_full   time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
         t1, 1e-6*((double) nvals) / t1) ;
 
     //--------------------------------------------------------------------------
@@ -106,7 +106,7 @@ int main (int argc, char **argv)
 
     // stop the timer
     double t2 = LAGraph_toc (tic) / ntrials ;
-    fprintf (stderr, "FB_basic  time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
+    fprintf (stderr, "BF_basic  time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
         t2, 1e-6*((double) nvals) / t2) ;
     fprintf (stderr, "speedup of FB_basic:   %g\n", t1/t2) ;
 
@@ -141,7 +141,7 @@ int main (int argc, char **argv)
 
     LAGRAPH_FREE_ALL ;
     LAGRAPH_OK (LAGraph_finalize ( )) ;
-    fprintf (stderr, "bfs_test: ") ;
+    fprintf (stderr, "BF_test: ") ;
     if (ok)
     {
         fprintf (stderr, "all tests passed\n") ;
