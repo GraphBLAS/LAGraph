@@ -282,11 +282,21 @@ void LAGraph_true_bool_complex
 
 // unary operators that return 1
 GrB_UnaryOp LAGraph_ONE_UINT32 = NULL ;
+GrB_UnaryOp LAGraph_ONE_FP64 = NULL ;
 
 void LAGraph_one_uint32
 (
     uint32_t *z,
     const uint32_t *x       // ignored
+)
+{
+    (*z) = 1 ;
+}
+
+void LAGraph_one_fp64
+(
+    double *z,
+    const double *x       // ignored
 )
 {
     (*z) = 1 ;
@@ -314,6 +324,21 @@ void LAGraph_decr_int64
     (*z) = ((*x) - 1) ;
 }
 
+// z = x * (x - 1), used by LAGraph_lcc.
+// This operator calculates the comb(d(v), 2) value.
+void LAGraph_comb_fp64
+(
+    void *z,
+    const void *x
+)
+{
+    double xd = *(double *) x ;
+    double *zd = (double *) z ;
+    (*zd) = ((xd) * (xd - 1)) ;
+}
+
+GrB_UnaryOp LAGraph_COMB_FP64 = NULL ;
+
 // monoids
 GrB_Monoid LAGraph_PLUS_INT64_MONOID = NULL ;
 GrB_Monoid LAGraph_MAX_INT32_MONOID = NULL ;
@@ -322,6 +347,8 @@ GrB_Monoid LAGraph_LOR_MONOID = NULL ;
 GrB_Monoid LAGraph_MIN_INT32_MONOID = NULL ;
 GrB_Monoid LAGraph_MIN_INT64_MONOID = NULL ;
 GrB_Monoid LAGraph_PLUS_UINT32_MONOID = NULL ;
+GrB_Monoid LAGraph_PLUS_FP64_MONOID = NULL ;
+GrB_Monoid LAGraph_DIV_FP64_MONOID = NULL ;
 
 // semirings
 GrB_Semiring LAGraph_LOR_LAND_BOOL = NULL ;
@@ -332,6 +359,7 @@ GrB_Semiring LAGraph_MIN_FIRST_INT32 = NULL ;
 GrB_Semiring LAGraph_MIN_SECOND_INT64 = NULL ;
 GrB_Semiring LAGraph_MIN_FIRST_INT64 = NULL ;
 GrB_Semiring LAGraph_PLUS_TIMES_UINT32 = NULL ;
+GrB_Semiring LAGraph_PLUS_TIMES_FP64 = NULL ;
 
 // all 16 descriptors
 // syntax: 4 characters define the following.  'o' is the default:
@@ -346,15 +374,15 @@ GrB_Descriptor
     LAGraph_desc_ooco = NULL ,   // compl mask
     LAGraph_desc_oocr = NULL ,   // compl mask, replace
 
-    LAGraph_desc_otoo = NULL ,   // A'
-    LAGraph_desc_otor = NULL ,   // A', replace
-    LAGraph_desc_otco = NULL ,   // A', compl mask
-    LAGraph_desc_otcr = NULL ,   // A', compl mask, replace
+    LAGraph_desc_tooo = NULL ,   // A'
+    LAGraph_desc_toor = NULL ,   // A', replace
+    LAGraph_desc_toco = NULL ,   // A', compl mask
+    LAGraph_desc_tocr = NULL ,   // A', compl mask, replace
 
-    LAGraph_desc_tooo = NULL ,   // B'
-    LAGraph_desc_toor = NULL ,   // B', replace
-    LAGraph_desc_toco = NULL ,   // B', compl mask
-    LAGraph_desc_tocr = NULL ,   // B', compl mask, replace
+    LAGraph_desc_otoo = NULL ,   // B'
+    LAGraph_desc_otor = NULL ,   // B', replace
+    LAGraph_desc_otco = NULL ,   // B', compl mask
+    LAGraph_desc_otcr = NULL ,   // B', compl mask, replace
 
     LAGraph_desc_ttoo = NULL ,   // A', B'
     LAGraph_desc_ttor = NULL ,   // A', B', replace
@@ -530,12 +558,28 @@ GrB_Info LAGraph_alloc_global ( )
     #ifdef GxB_SUITESPARSE_GRAPHBLAS
     // use the built-in unary operator
     LAGraph_ONE_UINT32 = GxB_ONE_UINT32 ;
+    LAGraph_ONE_FP64   = GxB_ONE_FP64 ;
     #else
+
     // create a new built-in unary operator using LAGraph_one_uint32
     LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ONE_UINT32,
         F_UNARY (LAGraph_one_uint32),
         GrB_UINT32, GrB_UINT32)) ;
+
+    // create a new built-in unary operator using LAGraph_one_fp64
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ONE_FP64,
+        F_UNARY (LAGraph_one_fp64),
+        GrB_FP64, GrB_FP64)) ;
+
     #endif
+
+    //--------------------------------------------------------------------------
+    // create the comb operator for LAGraph_lcc
+    //--------------------------------------------------------------------------
+
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_COMB_FP64,
+        F_UNARY (LAGraph_comb_fp64),
+        GrB_FP64, GrB_FP64)) ;
 
     //--------------------------------------------------------------------------
     // create the monoids
@@ -559,6 +603,12 @@ GrB_Info LAGraph_alloc_global ( )
 
     LAGRAPH_OK (GrB_Monoid_new_UINT32 (&LAGraph_PLUS_UINT32_MONOID,
         GrB_PLUS_UINT32, 0)) ;
+
+    LAGRAPH_OK (GrB_Monoid_new_FP64 (&LAGraph_PLUS_FP64_MONOID,
+        GrB_PLUS_FP64, 0)) ;
+
+    LAGRAPH_OK (GrB_Monoid_new_FP64 (&LAGraph_DIV_FP64_MONOID,
+        GrB_DIV_FP64, (double) 1.0)) ;
 
     //--------------------------------------------------------------------------
     // create the semirings
@@ -587,6 +637,9 @@ GrB_Info LAGraph_alloc_global ( )
 
     LAGRAPH_OK (GrB_Semiring_new (&LAGraph_PLUS_TIMES_UINT32,
         LAGraph_PLUS_UINT32_MONOID, GrB_TIMES_UINT32)) ;
+
+    LAGRAPH_OK (GrB_Semiring_new (&LAGraph_PLUS_TIMES_FP64,
+        LAGraph_PLUS_FP64_MONOID, GrB_TIMES_FP64)) ;
 
     //--------------------------------------------------------------------------
     // create 15 descriptors (one does not need to be allocated)

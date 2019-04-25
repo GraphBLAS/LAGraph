@@ -144,8 +144,12 @@ extern GrB_UnaryOp
     LAGraph_DECR_INT32          ,
     LAGraph_DECR_INT64          ,
 
+    // comb operator for lcc
+    LAGraph_COMB_FP64           ,
+
     // unary operators that return 1
     LAGraph_ONE_UINT32          ,
+    LAGraph_ONE_FP64            ,
     LAGraph_TRUE_BOOL           ,
     LAGraph_TRUE_BOOL_Complex   ;
 
@@ -158,7 +162,8 @@ extern GrB_Monoid
     LAGraph_LOR_MONOID,
     LAGraph_MIN_INT32_MONOID,
     LAGraph_MIN_INT64_MONOID,
-    LAGraph_PLUS_UINT32_MONOID ;
+    LAGraph_PLUS_UINT32_MONOID,
+    LAGraph_PLUS_FP64_MONOID ;
 
 extern GrB_Semiring
 
@@ -169,7 +174,8 @@ extern GrB_Semiring
     LAGraph_MIN_FIRST_INT32,
     LAGraph_MIN_SECOND_INT64,
     LAGraph_MIN_FIRST_INT64,
-    LAGraph_PLUS_TIMES_UINT32 ;
+    LAGraph_PLUS_TIMES_UINT32,
+    LAGraph_PLUS_TIMES_FP64 ;
 
 // all 16 descriptors
 // syntax: 4 characters define the following.  'o' is the default:
@@ -418,6 +424,13 @@ GrB_Info LAGraph_allktruss      // compute all k-trusses of a graph
     int64_t *ntris,             // size n, ntris [k] is #triangles in k-truss
     int64_t *nedges,            // size n, nedges [k] is #edges in k-truss
     int64_t *nstepss            // size n, nstepss [k] is #steps for k-truss
+) ;
+
+GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
+(
+    GrB_Vector *LCC_handle,     // output vector
+    const GrB_Matrix A,         // input matrix
+    bool sanitize               // if true, ensure A is binary
 ) ;
 
 #endif

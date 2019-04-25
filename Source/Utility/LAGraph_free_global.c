@@ -34,7 +34,9 @@ GrB_Info LAGraph_free_global ( )
     GrB_free (&LAGraph_DECR_INT64) ;
     GrB_free (&LAGraph_TRUE_BOOL) ;
     GrB_free (&LAGraph_TRUE_BOOL_Complex) ;
+    GrB_free (&LAGraph_ONE_FP64) ;
     GrB_free (&LAGraph_ONE_UINT32) ;
+    GrB_free (&LAGraph_COMB_FP64) ;
 
     // free the binary ops
     GrB_free (&LAGraph_EQ_Complex) ;
@@ -56,6 +58,7 @@ GrB_Info LAGraph_free_global ( )
     GrB_free (&LAGraph_MIN_INT32_MONOID) ;
     GrB_free (&LAGraph_MIN_INT64_MONOID) ;
     GrB_free (&LAGraph_PLUS_UINT32_MONOID) ;
+    GrB_free (&LAGraph_PLUS_FP64_MONOID) ;
 
     // free the semirings
     GrB_free (&LAGraph_LOR_LAND_BOOL) ;
@@ -66,6 +69,7 @@ GrB_Info LAGraph_free_global ( )
     GrB_free (&LAGraph_MIN_SECOND_INT64) ;
     GrB_free (&LAGraph_MIN_FIRST_INT64) ;
     GrB_free (&LAGraph_PLUS_TIMES_UINT32) ;
+    GrB_free (&LAGraph_PLUS_TIMES_FP64) ;
 
     // free the descriptors
 //  GrB_free (&LAGraph_desc_oooo) ;     // NULL, no need to free it
