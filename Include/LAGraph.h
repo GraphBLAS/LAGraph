@@ -2,8 +2,35 @@
 // LAGraph.h:  include file for user applications that use LAGraph
 //------------------------------------------------------------------------------
 
-// LAGraph, (TODO list all authors here) (c) 2019, All Rights Reserved.
-// http://graphblas.org  See LAGraph/Doc/License.txt for license.
+/*
+    LAGraph:  graph algorithms based on GraphBLAS
+
+    Copyright 2019 LAGraph Contributors. 
+
+    (see Contributors.txt for a full list of Contributors; see
+    ContributionInstructions.txt for information on how you can Contribute to
+    this project). 
+
+    All Rights Reserved.
+
+    NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
+    CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
+    AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
+    PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
+    THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
+    RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
+
+    Released under a BSD license, please see the LICENSE file distributed with
+    this Software or contact permission@sei.cmu.edu for full terms.
+
+    Created, in part, with funding and support from the United States
+    Government.  (see Acknowledgments.txt file).
+
+    This program includes and/or can make use of certain third party source
+    code, object code, documentation and other files ("Third Party Software").
+    See LICENSE file for more details.
+
+*/
 
 //------------------------------------------------------------------------------
 
@@ -18,6 +45,10 @@
 
 #include "GraphBLAS.h"
 #include <complex.h>
+#include <ctype.h>
+
+// "I" is defined by <complex.h>, but is used in LAGraph and GraphBLAS to
+// denote a list of row indices; remove it here.
 #undef I
 
 #define _POSIX_C_SOURCE 200809L
@@ -144,32 +175,38 @@ extern GrB_UnaryOp
     LAGraph_DECR_INT32          ,
     LAGraph_DECR_INT64          ,
 
+    // unary operator for lcc
+    LAGraph_COMB_FP64           ,
+
     // unary operators that return 1
     LAGraph_ONE_UINT32          ,
+    LAGraph_ONE_FP64            ,
     LAGraph_TRUE_BOOL           ,
     LAGraph_TRUE_BOOL_Complex   ;
 
 // monoids and semirings
 extern GrB_Monoid
 
-    LAGraph_PLUS_INT64_MONOID,
-    LAGraph_MAX_INT32_MONOID,
-    LAGraph_LAND_MONOID,
-    LAGraph_LOR_MONOID,
-    LAGraph_MIN_INT32_MONOID,
-    LAGraph_MIN_INT64_MONOID,
-    LAGraph_PLUS_UINT32_MONOID ;
+    LAGraph_PLUS_INT64_MONOID   ,
+    LAGraph_MAX_INT32_MONOID    ,
+    LAGraph_LAND_MONOID         ,
+    LAGraph_LOR_MONOID          ,
+    LAGraph_MIN_INT32_MONOID    ,
+    LAGraph_MIN_INT64_MONOID    ,
+    LAGraph_PLUS_FP64_MONOID    ,
+    LAGraph_PLUS_UINT32_MONOID  ;
 
 extern GrB_Semiring
 
-    LAGraph_LOR_LAND_BOOL,
-    LAGraph_LOR_SECOND_BOOL,
-    LAGraph_LOR_FIRST_BOOL,
-    LAGraph_MIN_SECOND_INT32,
-    LAGraph_MIN_FIRST_INT32,
-    LAGraph_MIN_SECOND_INT64,
-    LAGraph_MIN_FIRST_INT64,
-    LAGraph_PLUS_TIMES_UINT32 ;
+    LAGraph_LOR_LAND_BOOL       ,
+    LAGraph_LOR_SECOND_BOOL     ,
+    LAGraph_LOR_FIRST_BOOL      ,
+    LAGraph_MIN_SECOND_INT32    ,
+    LAGraph_MIN_FIRST_INT32     ,
+    LAGraph_MIN_SECOND_INT64    ,
+    LAGraph_MIN_FIRST_INT64     ,
+    LAGraph_PLUS_TIMES_FP64     ,
+    LAGraph_PLUS_TIMES_UINT32   ;
 
 // all 16 descriptors
 // syntax: 4 characters define the following.  'o' is the default:
@@ -348,6 +385,11 @@ double LAGraph_toc          // returns time since last LAGraph_tic
     const double tic [2]    // tic from last call to LAGraph_tic
 ) ;
 
+GrB_Info LAGraph_prune_diag // remove all entries from the diagonal
+(
+    GrB_Matrix A
+) ;
+
 //------------------------------------------------------------------------------
 // user-callable algorithms
 //------------------------------------------------------------------------------
@@ -442,5 +484,6 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     const GrB_Matrix A,         // input matrix
     bool sanitize               // if true, ensure A is binary
 ) ;
+
 
 #endif

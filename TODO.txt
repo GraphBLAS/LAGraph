@@ -41,3 +41,4 @@ TODO: need more algorithms and utilities
 TODO: simplify the CMake scripts in the Test/* folders (use a common
     included file)
 
+TODO: move LICENSE, etc to Doc/

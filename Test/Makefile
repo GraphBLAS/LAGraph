@@ -16,6 +16,7 @@ JOBS ?= 1
 
 # build all the tests
 default:
+	( cd LCC           ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd AllKTruss     ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd KTruss        ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd TriangleCount ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
@@ -31,6 +32,7 @@ purge: distclean
 
 # remove all files not in the distribution
 distclean:
+	( cd LCC           ; $(MAKE) distclean )
 	( cd AllKTruss     ; $(MAKE) distclean )
 	( cd KTruss        ; $(MAKE) distclean )
 	( cd TriangleCount ; $(MAKE) distclean )

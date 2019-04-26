@@ -18,7 +18,7 @@ JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/lcctest < ../BFS/west0067.mtx
+	./build/lcctest < ../BFS/west0067.mtx > lcc_results
 
 # build test
 compile:

@@ -2,13 +2,46 @@
 // LAGraph_mmwrite:  write a matrix to a Matrix Market file
 //------------------------------------------------------------------------------
 
-// LAGraph, (... list all authors here) (c) 2019, All Rights Reserved.
-// http://graphblas.org  See LAGraph/Doc/License.txt for license.
+/*
+    LAGraph:  graph algorithms based on GraphBLAS
+
+    Copyright 2019 LAGraph Contributors. 
+
+    (see Contributors.txt for a full list of Contributors; see
+    ContributionInstructions.txt for information on how you can Contribute to
+    this project). 
+
+    All Rights Reserved.
+
+    NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
+    CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
+    AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
+    PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
+    THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
+    RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
+
+    Released under a BSD license, please see the LICENSE file distributed with
+    this Software or contact permission@sei.cmu.edu for full terms.
+
+    Created, in part, with funding and support from the United States
+    Government.  (see Acknowledgments.txt file).
+
+    This program includes and/or can make use of certain third party source
+    code, object code, documentation and other files ("Third Party Software").
+    See LICENSE file for more details.
+
+*/
 
 //------------------------------------------------------------------------------
 
+// LAGraph_mmwrite:  write a matrix to a Matrix Market file.
+// Contributed by Tim Davis, Texas A&M.
+
 // Writes a matrix to a file in the Matrix Market format.  See LAGraph_mmread
 // for a description of the format.
+
+// TODO output is yet not sorted, as required by the Matrix Market format.
+// The LAGraph_mmread can read in an unsorted file, however.
 
 // Parts of this code are from SuiteSparse/CHOLMOD/Check/cholmod_write.c, and
 // are used here by permission of the author of CHOLMOD/Check (T. A. Davis).
@@ -483,9 +516,10 @@ GrB_Info LAGraph_mmwrite
     }
 
     // TODO need to sort them as well, into column-major order.  This can be
-    // done with a few lines in SuiteSparse:GraphBLAS, but requires an explicit
-    // sort otherwise.  The ANSI C11 sort could be used, but it would required
-    // the [I J X] arrays to be concatenated.
+    // done with a few lines in SuiteSparse:GraphBLAS, by converting the matrix
+    // to CSC format.  This requires an explicit sort otherwise.  The ANSI C11
+    // sort could be used, but it would required the [I J X] arrays to be
+    // concatenated.
 
     GrB_Index nvals_printed = 0 ;
     bool coord = (MM_fmt == MM_coordinate) ;

@@ -1,6 +1,41 @@
 //------------------------------------------------------------------------------
-// SuiteSparse/GraphBLAS/Demo/Source/dpagerank: pagerank using a real semiring
+// LAGraph_pagerank: pagerank using a real semiring
 //------------------------------------------------------------------------------
+
+/*
+    LAGraph:  graph algorithms based on GraphBLAS
+
+    Copyright 2019 LAGraph Contributors. 
+
+    (see Contributors.txt for a full list of Contributors; see
+    ContributionInstructions.txt for information on how you can Contribute to
+    this project). 
+
+    All Rights Reserved.
+
+    NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
+    CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
+    AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
+    PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
+    THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
+    RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
+
+    Released under a BSD license, please see the LICENSE file distributed with
+    this Software or contact permission@sei.cmu.edu for full terms.
+
+    Created, in part, with funding and support from the United States
+    Government.  (see Acknowledgments.txt file).
+
+    This program includes and/or can make use of certain third party source
+    code, object code, documentation and other files ("Third Party Software").
+    See LICENSE file for more details.
+
+*/
+
+//------------------------------------------------------------------------------
+
+// LAGraph_pagerank: pagerank using a real semiring, contributed by Tim Davis,
+// Texas A&M.
 
 // A is a square unsymmetric binary matrix of size n-by-n, where A(i,j) is the
 // edge (i,j).  Self-edges are LAGRAPH_OK.  A can be of any built-in type.
@@ -10,8 +45,8 @@
 // node number P[0].page in the graph.  P[1] is the next page, and so on, to
 // the lowest-ranked page P[n-1].page with rank P[n-1].pagerank.
 
-// See dpagerank.m for the equivalent computation in MATLAB (except the random
-// number generator differs).
+// See LAGraph/Test/PageRank/dpagerank.m for the equivalent computation in
+// MATLAB (except the random number generator differs).
 
 //------------------------------------------------------------------------------
 // helper macros

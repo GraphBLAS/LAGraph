@@ -2,6 +2,40 @@
 // LAGraph/Test/LCC/lcctest.c: test program for LAGraph_lcc
 //------------------------------------------------------------------------------
 
+/*
+    LAGraph:  graph algorithms based on GraphBLAS
+
+    Copyright 2019 LAGraph Contributors. 
+
+    (see Contributors.txt for a full list of Contributors; see
+    ContributionInstructions.txt for information on how you can Contribute to
+    this project). 
+
+    All Rights Reserved.
+
+    NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
+    CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
+    AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
+    PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
+    THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
+    RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
+
+    Released under a BSD license, please see the LICENSE file distributed with
+    this Software or contact permission@sei.cmu.edu for full terms.
+
+    Created, in part, with funding and support from the United States
+    Government.  (see Acknowledgments.txt file).
+
+    This program includes and/or can make use of certain third party source
+    code, object code, documentation and other files ("Third Party Software").
+    See LICENSE file for more details.
+
+*/
+
+//------------------------------------------------------------------------------
+
+// Contributed by Tim Davis, Texas A&M
+
 // Usage:  lcctest < matrixmarketfile.mtx
 
 #include "LAGraph.h"
@@ -59,6 +93,7 @@ int main (int argc, char **argv)
     GrB_Index n, ne ;
     LAGRAPH_OK (GrB_Matrix_nrows (&n, C)) ;
 
+#if 0
     // A = spones (C), and typecast to FP64
     LAGRAPH_OK (GrB_Matrix_new (&A, GrB_FP64, n, n)) ;
     LAGRAPH_OK (GrB_apply (A, NULL, NULL, LAGraph_ONE_FP64, C, NULL)) ;
@@ -78,6 +113,10 @@ int main (int argc, char **argv)
     GrB_free (&M) ;
 
     LAGRAPH_OK (GrB_Matrix_nvals (&ne, A)) ;
+#else
+    A = C ;
+    C = NULL ;
+#endif
 
     double t_process = LAGraph_toc (tic) ;
     fprintf (stderr, "process A time:  %14.6f sec\n", t_process) ;
@@ -87,7 +126,6 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     double t1 ;
-    nthreads_max = 1 ;
     for (int nthreads = 1 ; nthreads <= nthreads_max ; )
     {
         #ifdef GxB_SUITESPARSE_GRAPHBLAS
@@ -96,7 +134,7 @@ int main (int argc, char **argv)
 
         double tic [2] ;
         LAGraph_tic (tic) ;
-        LAGRAPH_OK (LAGraph_lcc (&LCC, A, false)) ;
+        LAGRAPH_OK (LAGraph_lcc (&LCC, A, true)) ;
         double t = LAGraph_toc (tic) ;
 
         if (nthreads == 1)
@@ -109,8 +147,9 @@ int main (int argc, char **argv)
             for (GrB_Index i = 0 ; i < n ; i++)
             {
                 double x = 0 ;
-                info = GrB_Vector_extractElement (&x, LCC, i) ;
-                printf ("%32.16g\n", x) ;
+                LAGRAPH_OK (GrB_Vector_extractElement (&x, LCC1, i)) ;
+                if (info == GrB_NO_VALUE) printf (" 0.\n") ;
+                else printf ("%32.16g\n", x) ;
             }
         }
         else

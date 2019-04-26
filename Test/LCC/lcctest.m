@@ -27,11 +27,16 @@ f = f (i) ;
 matrices = f ;
 nmat = length (matrices)
 
-for kk = 1:nmat
+for kk = 1:nmat % 1022:nmat
 
     % get a matrix
-    matrix = matrices {kk} ;
+    matrix = matrices (kk) ;
+    try
     Prob = ssget (matrix, index) ;
+    catch
+        continue
+    end
+
     id = Prob.id ;
     A = Prob.A ;
     if (isfield (Prob, 'Zeros')) 
@@ -39,18 +44,20 @@ for kk = 1:nmat
     end
     fprintf ('\n%4d %4d %-40s\n', kk, id, Prob.name) ;
     clear Prob 
+    if (~isreal (A))
+        A = spones (A) ;
+    end
 
     % compute the result in MATLAB
     c1 = lcc (A) ;
 
     % compute the result in GraphBLAS
-    mwrite (A, 'A.mtx') ;
-    system ('./lcc < A.mtx > lcc_results') ;
-    c2 = load ('lcc_results') ;
+    c2 = lcc_graphblas (A) ;
 
-    err = norm (c1-c2,1)
-    if (err > 0)
-        pause
+    err = norm (c1-c2,1) ;
+    if (err > 1e-12)
+        err
+        error ('!')
     end
 end
 

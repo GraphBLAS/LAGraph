@@ -1,6 +1,41 @@
 //------------------------------------------------------------------------------
-// LAGraph_tricount.c: count the number of triangles in a graph
+// LAGraph_tricount: count the number of triangles in a graph
 //------------------------------------------------------------------------------
+
+/*
+    LAGraph:  graph algorithms based on GraphBLAS
+
+    Copyright 2019 LAGraph Contributors. 
+
+    (see Contributors.txt for a full list of Contributors; see
+    ContributionInstructions.txt for information on how you can Contribute to
+    this project). 
+
+    All Rights Reserved.
+
+    NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
+    CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
+    AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
+    PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
+    THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
+    RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
+
+    Released under a BSD license, please see the LICENSE file distributed with
+    this Software or contact permission@sei.cmu.edu for full terms.
+
+    Created, in part, with funding and support from the United States
+    Government.  (see Acknowledgments.txt file).
+
+    This program includes and/or can make use of certain third party source
+    code, object code, documentation and other files ("Third Party Software").
+    See LICENSE file for more details.
+
+*/
+
+//------------------------------------------------------------------------------
+
+// LAGraph_tricount: count the number of triangles in a graph,
+// Contributed by Tim Davis, Texas A&M.
 
 // Given a symmetric binary graph A with no-self edges, LAGraph_tricount counts
 // the exact number of triangles in the graph.  A triangle is a clique of size
@@ -19,10 +54,14 @@
 //  5:  SandiaDot:  ntri = sum (sum ((L * U') .* L)).  Note that L=U'.
 //  6:  SandiaDot2: ntri = sum (sum ((U * L') .* U))
 
+// TODO use an enum for the above methods.
+
 // All matrices are assumed to be in CSR format (GxB_BY_ROW in
 // SuiteSparse:GraphBLAS).  The 6 methods work fine if the matrices are in CSC
 // format; just the underlying algorithms employed inside SuiteSparse:GraphBLAS
 // will differ (dot product vs saxpy, for SuiteSparse, for example).
+// For example, the Sandia and Sandia2 methods will effectively be
+// swapped.
 
 // Method 0 can take a huge amount of memory, for all of A*E.  As a result,
 // it often fails for large problems.

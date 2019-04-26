@@ -2,19 +2,48 @@
 // LAGraph_mmread:  read a matrix from a Matrix Market file
 //------------------------------------------------------------------------------
 
-// LAGraph, (... list all authors here) (c) 2019, All Rights Reserved.
-// http://graphblas.org  See LAGraph/Doc/License.txt for license.
+/*
+    LAGraph:  graph algorithms based on GraphBLAS
+
+    Copyright 2019 LAGraph Contributors. 
+
+    (see Contributors.txt for a full list of Contributors; see
+    ContributionInstructions.txt for information on how you can Contribute to
+    this project). 
+
+    All Rights Reserved.
+
+    NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
+    CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
+    AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
+    PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
+    THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
+    RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
+
+    Released under a BSD license, please see the LICENSE file distributed with
+    this Software or contact permission@sei.cmu.edu for full terms.
+
+    Created, in part, with funding and support from the United States
+    Government.  (see Acknowledgments.txt file).
+
+    This program includes and/or can make use of certain third party source
+    code, object code, documentation and other files ("Third Party Software").
+    See LICENSE file for more details.
+
+*/
 
 // TODO: need to add an error reporting mechanism, like GrB_error.
 // TODO: need to add a GrB_Descriptor to all LAGraph functions.
 
 //------------------------------------------------------------------------------
 
-// LAGraph_mmread reads a GrB_Matrix from a Matrix Market file.  The file
-// format is compatible with all variations of the Matrix Market "coordinate"
-// and "array" format (http://www.nist.gov/MatrixMarket).  The format is fully
-// described in LAGraph/Doc/MatrixMarket.pdf, and summarized here (with
-// extensions for LAGraph).
+// LAGraph_mmread:  read a matrix from a Matrix Market file.
+// Contributed by Tim Davis, Texas A&M
+
+// The file format used here is compatible with all variations of the Matrix
+// Market "coordinate" and "array" format (http://www.nist.gov/MatrixMarket).
+// The format is fully described in LAGraph/Doc/MatrixMarket.pdf, and
+// summarized here (with extensions for LAGraph).
 
 // The first line of the file starts with %%MatrixMarket, with the following
 // format:
