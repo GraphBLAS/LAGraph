@@ -65,3 +65,12 @@
              0.05555555555555555
               0.1964285714285714
               0.1555555555555556
+dot2: nthreads 4 naslice 1 nbslice 32
+dot2: phase1 time: 5.6982e-05
+dot2 phase2: 2.71797e-05
+dot2: nthreads 16 naslice 16 nbslice 67
+dot2: phase1 time: 8.60691e-05
+dot2 phase2: 5.60284e-05
+dot2: nthreads 40 naslice 40 nbslice 67
+dot2: phase1 time: 0.0239658
+dot2 phase2: 0.00797701

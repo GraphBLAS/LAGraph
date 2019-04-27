@@ -58,6 +58,12 @@ int main ( )
 
     LAGRAPH_OK (LAGraph_init ( )) ;
 
+    int nthreads_max = 1 ;
+    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    GxB_get (GxB_NTHREADS, &nthreads_max) ;
+    GxB_set (GxB_NTHREADS, 1) ;
+    #endif
+
     //--------------------------------------------------------------------------
     // read in a matrix from a file and convert to boolean
     //--------------------------------------------------------------------------
@@ -99,18 +105,13 @@ int main ( )
     // compute the pagerank
     //--------------------------------------------------------------------------
 
-    int nthreads_max = 1 ;
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
-    GxB_get (GxB_NTHREADS, &nthreads_max) ;
-    #endif
-
     int ntrials = 1 ;       // increase this to 10, 100, whatever, for more
                             // accurate timing
     
     double tol = 1e-5 ;
     int iters, itermax = 100 ;
 
-    for (int nthreads = 1 ; nthreads <= nthreads_max ; nthreads++)
+    for (int nthreads = 1 ; nthreads <= nthreads_max ; nthreads *= 2)
     {
         #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
         GxB_set (GxB_NTHREADS, nthreads) ;

@@ -273,6 +273,10 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     //--------------------------------------------------------------------------
 
     double t2 = 0 ;
+    double t5 = 0 ;
+    double t6 = 0 ;
+    double t7 = 0 ;
+    double t8 = 0 ;
 
     for ((*iters) = 0 ; (*iters) < itermax && rdiff > ftol ; (*iters)++)
     {
@@ -280,16 +284,17 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
         //----------------------------------------------------------------------
         // t = (r*C or C*r) + (teleport * sum (r)) ;
         //----------------------------------------------------------------------
+        double tic2 [2] ;
 
         // GxB_print (r, 2) ;
 
+        LAGraph_tic (tic2) ;
         float s = 1 ;
         LAGRAPH_OK (GrB_reduce (&s, NULL, GxB_PLUS_FP32_MONOID, r, NULL)) ;
         // printf ("s %g\n", s) ;
+        t5 += LAGraph_toc (tic2) ;
 
-        double tic2 [2] ;
         LAGraph_tic (tic2) ;
-
 #if 1
         // t = C*r
         // using the transpose of A, scaled (dot product)
@@ -300,8 +305,7 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
         LAGRAPH_OK (GrB_vxm (t, NULL, NULL, GxB_PLUS_TIMES_FP32, r, C, NULL)) ;
 #endif
 
-        double t3 = LAGraph_toc (tic2) ;
-        t2 += t3 ;
+        t2 += LAGraph_toc (tic2) ;
 //      fprintf (stderr, "one mxv %g\n", t3) ;
 
 //      LAGraph_tic (tic2) ;
@@ -309,15 +313,22 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
 //      t3 = LAGraph_toc (tic2) ;
 //      fprintf (stderr, "another mxv %g\n", t3) ;
 
+        LAGraph_tic (tic2) ;
         s *= teleport ;
         LAGRAPH_OK (GrB_assign (t, NULL, GrB_PLUS_FP32, s, GrB_ALL, n, NULL)) ;
+        t6 += LAGraph_toc (tic2) ;
 
         //----------------------------------------------------------------------
         // rdiff = sum ((r-t).^2)
         //----------------------------------------------------------------------
 
+        LAGraph_tic (tic2) ;
         LAGRAPH_OK (GrB_eWiseAdd (r, NULL, NULL, op_diff, r, t, NULL)) ;
+        t7 += LAGraph_toc (tic2) ;
+
+        LAGraph_tic (tic2) ;
         LAGRAPH_OK (GrB_reduce (&rdiff, NULL, GxB_PLUS_FP32_MONOID, r, NULL)) ;
+        t8 += LAGraph_toc (tic2) ;
 
         //----------------------------------------------------------------------
         // swap r and t
@@ -331,7 +342,11 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
         // GxB_print (r, 3) ;
     }
 
+        fprintf (stderr, "reduce1 %g\n", t5) ;
         fprintf (stderr, "mxv %g\n", t2) ;
+        fprintf (stderr, "assign %g\n", t6) ;
+        fprintf (stderr, "add %g\n", t7) ;
+        fprintf (stderr, "reduce2 %g\n", t8) ;
 
     LAGRAPH_OK (GrB_free (&C)) ;
     LAGRAPH_OK (GrB_free (&t)) ;
