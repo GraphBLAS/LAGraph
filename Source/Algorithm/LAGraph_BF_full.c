@@ -133,22 +133,18 @@ void BF_PLUSrhs
 
 void BF_EQ
 (
-    BF_Tuple3_struct *z,
+    bool z,
     const BF_Tuple3_struct *y,
     const BF_Tuple3_struct *x
 )
 {
     if (x->w == y->w && x->h == y->h && x->pi == y->pi)
     {
-        z->w  = 1;
-        z->h  = 1;
-        z->pi = 1;
+        z = true;
     }
     else
     {
-        z->w  = 0;
-        z->h  = 0;
-        z->pi = 0;
+        z = false;
     }
 }
 
@@ -224,7 +220,7 @@ GrB_Info LAGraph_BF_full
 
     // GrB_BinaryOp
     LAGRAPH_OK (GrB_BinaryOp_new(&BF_EQ_Tuple3, 
-        (LAGraph_binary_function) (&BF_EQ), BF_Tuple3, BF_Tuple3, BF_Tuple3));
+        (LAGraph_binary_function) (&BF_EQ), GrB_BOOL, BF_Tuple3, BF_Tuple3));
     LAGRAPH_OK (GrB_BinaryOp_new(&BF_lMIN_Tuple3,
         (LAGraph_binary_function) (&BF_lMIN), BF_Tuple3, BF_Tuple3, BF_Tuple3));
     LAGRAPH_OK (GrB_BinaryOp_new(&BF_PLUSrhs_Tuple3, 
