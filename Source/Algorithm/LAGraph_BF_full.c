@@ -248,7 +248,7 @@ GrB_Info LAGraph_BF_full
     J = LAGraph_malloc (nz, sizeof(GrB_Index)) ;
     w = LAGraph_malloc (nz, sizeof(double)) ;
     W = LAGraph_malloc (nz, sizeof(BF_Tuple3_struct)) ;
-    if (I == NULL || J == NULL || w == NULL || W == NULL);
+    if (I == NULL || J == NULL || w == NULL || W == NULL)
     {
         LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
     }
@@ -327,7 +327,7 @@ GrB_Info LAGraph_BF_full
     LAGRAPH_OK (GrB_Vector_extractTuples_UDT (I, (void *) W, &nz, d));
     h  = LAGraph_malloc(nz, sizeof(GrB_Index));
     pi = LAGraph_malloc(nz, sizeof(GrB_Index));
-    if (h == NULL || pi == NULL);
+    if (h == NULL || pi == NULL)
     {
         LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
     }
