@@ -227,7 +227,7 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
 //  GxB_set (GxB_NTHREADS, 1);
 
     double tt = LAGraph_toc (tic) ;
-    fprintf (stderr, "init time %g\n", tt) ;
+    fprintf (stderr, "\ninit time %g\n", tt) ;
     LAGraph_tic (tic) ;
 
     // use GrB_mxv for t=C*r below
@@ -240,7 +240,7 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     LAGRAPH_OK (GrB_mxm (T, NULL, NULL, GxB_PLUS_TIMES_FP32, D, A, NULL)) ;
 
     tt = LAGraph_toc (tic) ;
-    fprintf (stderr, "D*A mxm time %g\n\n", tt) ;
+    fprintf (stderr, "D*A mxm time %g\n", tt) ;
     LAGraph_tic (tic) ;
 
     // C = C+T'
@@ -362,6 +362,10 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     // r = r / rsum
     LAGRAPH_OK (GrB_apply (r, NULL, NULL, op_div, r, NULL)) ;
 
+    tt = LAGraph_toc (tic) ;
+    fprintf (stderr, "scale time %g\n", tt) ;
+    LAGraph_tic (tic) ;
+
     //--------------------------------------------------------------------------
     // sort the nodes by pagerank
     //--------------------------------------------------------------------------
@@ -419,7 +423,7 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     //--------------------------------------------------------------------------
 
     tt = LAGraph_toc (tic) ;
-    fprintf (stderr, "fini time %g\n", tt) ;
+    fprintf (stderr, "sort time %g\n", tt) ;
 
     (*Phandle) = P ;
     return (GrB_SUCCESS) ;
