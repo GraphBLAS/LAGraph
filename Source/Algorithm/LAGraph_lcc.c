@@ -146,8 +146,6 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     LAGRAPH_OK (GrB_Matrix_new (&C, GrB_FP64, n, n)) ;
     LAGRAPH_OK (GrB_eWiseAdd (C, NULL, NULL, GrB_LOR, S, AT, NULL)) ;
     if (sanitize) GrB_free (&S) ;
-    // GxB_print (A, 3) ;
-    // GxB_print (C, 3) ;
 
     //--------------------------------------------------------------------------
     // Find wedges of each node
@@ -160,7 +158,6 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     // Create vector W for containing number of wedges per vertex
     // W(i) = W(i) * (W(i)-1)
     LAGRAPH_OK (GrB_apply (W, NULL, NULL, LAGraph_COMB_FP64, W, NULL)) ;
-    // GxB_print (W, 3) ;
 
     //--------------------------------------------------------------------------
     // Calculate triangles
@@ -187,7 +184,6 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
 
     // LCC = LCC ./ W
     LAGRAPH_OK (GrB_eWiseMult (LCC, NULL, NULL, GrB_DIV_FP64, LCC, W, NULL)) ;
-    // GxB_print (LCC, 3) ;
 
     //--------------------------------------------------------------------------
     // free workspace and return result

@@ -7,5 +7,5 @@
 
 tar zvfxO ~/ssget/MM/DIMACS10/road_usa.tar.gz \
     road_usa/road_usa.mtx | \
-    ./build/lcctest
+    ./build/lcctest > lcc_results
 
