@@ -64,6 +64,7 @@
     LAGRAPH_FREE (I) ;                          \
     LAGRAPH_FREE (X) ;                          \
     GrB_free (&op_div) ;                        \
+    GrB_free (&op_teleport) ;                   \
     GrB_free (&op_diff) ;                       \
 }
 
@@ -84,11 +85,16 @@
 
 // TODO replace with binary operator and expanded scalar, or GrB_mxm:
 float rsum ;
-// #pragma omp threadprivate(rsum)
+float teleport_scalar ;
 
 void fdiv  (void *z, const void *x)
 {
     (*((float *) z)) = (* ((float *) x)) / rsum ;
+}
+
+void fteleport  (void *z, const void *x)
+{
+    (*((float *) z)) = (* ((float *) x)) + teleport_scalar ;
 }
 
 void fdiff (void *z, const void *x, const void *y)
@@ -148,6 +154,7 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     LAGraph_PageRank *P = NULL ;
     GrB_Vector r = NULL, t = NULL, d = NULL ;
     GrB_UnaryOp op_div = NULL ;
+    GrB_UnaryOp op_teleport = NULL ;
     GrB_BinaryOp op_diff = NULL ;
     GrB_Matrix C = NULL, D = NULL, T = NULL ;
 
@@ -197,7 +204,8 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     // GxB_print (D, 3) ;
 
     // C = diagonal matrix with all zeros on the diagonal.  This ensures that
-    // the vectors r and t remain dense, which is faster.
+    // the vectors r and t remain dense, which is faster, and is required
+    // for the t += teleport_scalar step.
     LAGRAPH_OK (GrB_Matrix_new (&C, GrB_FP32, n, n)) ;
     // GxB_set (C, GxB_HYPER, GxB_ALWAYS_HYPER) ;
 
@@ -222,7 +230,6 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     fprintf (stderr, "init time %g\n", tt) ;
     LAGraph_tic (tic) ;
 
-#if 1
     // use GrB_mxv for t=C*r below
     // C = C+(D*A)' = C+A'*D'  : using the transpose of C, and C*r below
 //  LAGRAPH_OK (GrB_mxm (C, NULL, GrB_PLUS_FP32, GxB_PLUS_TIMES_FP32, A, D,
@@ -241,19 +248,13 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
 
     LAGRAPH_OK (GrB_free (&T)) ;
 
-#else
-    // use GrB_vxm for t=r*C below
-    // C = C+(D*A), to use saxpy vxm
-    LAGRAPH_OK (GrB_mxm (C, NULL, GrB_PLUS_FP32, GxB_PLUS_TIMES_FP32, D, A,
-        NULL)) ;
-#endif
-
     LAGRAPH_OK (GrB_free (&D)) ;
 
     // create operators
-    LAGRAPH_OK (GrB_UnaryOp_new  (&op_div,  fdiv, GrB_FP32, GrB_FP32)) ;
-    LAGRAPH_OK (GrB_BinaryOp_new (&op_diff, fdiff, GrB_FP32, GrB_FP32,
-        GrB_FP32)) ;
+    LAGRAPH_OK (GrB_UnaryOp_new (&op_div,  fdiv, GrB_FP32, GrB_FP32)) ;
+    LAGRAPH_OK (GrB_UnaryOp_new (&op_teleport, fteleport, GrB_FP32, GrB_FP32)) ;
+    LAGRAPH_OK (GrB_BinaryOp_new (&op_diff, fdiff,
+        GrB_FP32, GrB_FP32, GrB_FP32)) ;
 
     float ftol = tol*tol ;  // use tol^2 so sqrt(rdiff) not needed
     float rdiff = 1 ;       // so first iteration is always done
@@ -289,21 +290,13 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
         // GxB_print (r, 2) ;
 
         LAGraph_tic (tic2) ;
-        float s = 1 ;
-        LAGRAPH_OK (GrB_reduce (&s, NULL, GxB_PLUS_FP32_MONOID, r, NULL)) ;
-        // printf ("s %g\n", s) ;
+        LAGRAPH_OK (GrB_reduce (&rsum, NULL, GxB_PLUS_FP32_MONOID, r, NULL)) ;
         t5 += LAGraph_toc (tic2) ;
 
         LAGraph_tic (tic2) ;
-#if 1
         // t = C*r
         // using the transpose of A, scaled (dot product)
         LAGRAPH_OK (GrB_mxv (t, NULL, NULL, GxB_PLUS_TIMES_FP32, C, r, NULL)) ;
-#else
-        // t = r*C
-        // using the original A, scaled (saxpy)
-        LAGRAPH_OK (GrB_vxm (t, NULL, NULL, GxB_PLUS_TIMES_FP32, r, C, NULL)) ;
-#endif
 
         t2 += LAGraph_toc (tic2) ;
 //      fprintf (stderr, "one mxv %g\n", t3) ;
@@ -313,9 +306,12 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
 //      t3 = LAGraph_toc (tic2) ;
 //      fprintf (stderr, "another mxv %g\n", t3) ;
 
+        // t += teleport_scalar ;
         LAGraph_tic (tic2) ;
-        s *= teleport ;
-        LAGRAPH_OK (GrB_assign (t, NULL, GrB_PLUS_FP32, s, GrB_ALL, n, NULL)) ;
+        teleport_scalar = teleport * rsum ;
+//      LAGRAPH_OK (GrB_assign (t, NULL, GrB_PLUS_FP32, teleport_scalar,
+//          GrB_ALL, n, NULL)) ;
+        LAGRAPH_OK (GrB_apply (t, NULL, NULL, op_teleport, t, NULL)) ;
         t6 += LAGraph_toc (tic2) ;
 
         //----------------------------------------------------------------------
@@ -342,11 +338,11 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
         // GxB_print (r, 3) ;
     }
 
-        fprintf (stderr, "reduce1 %g\n", t5) ;
-        fprintf (stderr, "mxv %g\n", t2) ;
-        fprintf (stderr, "assign %g\n", t6) ;
-        fprintf (stderr, "add %g\n", t7) ;
-        fprintf (stderr, "reduce2 %g\n", t8) ;
+        fprintf (stderr, "reduce1  %g\n", t5) ;
+        fprintf (stderr, "mxv      %g\n", t2) ;
+        fprintf (stderr, "teleport %g\n", t6) ;
+        fprintf (stderr, "add      %g\n", t7) ;
+        fprintf (stderr, "reduce2  %g\n", t8) ;
 
     LAGRAPH_OK (GrB_free (&C)) ;
     LAGRAPH_OK (GrB_free (&t)) ;
