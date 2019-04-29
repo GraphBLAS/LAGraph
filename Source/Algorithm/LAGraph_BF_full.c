@@ -133,22 +133,18 @@ void BF_PLUSrhs
 
 void BF_EQ
 (
-    BF_Tuple3_struct *z,
+    bool *z,
     const BF_Tuple3_struct *y,
     const BF_Tuple3_struct *x
 )
 {
     if (x->w == y->w && x->h == y->h && x->pi == y->pi)
     {
-        z->w  = 1;
-        z->h  = 1;
-        z->pi = 1;
+        *z = true;
     }
     else
     {
-        z->w  = 0;
-        z->h  = 0;
-        z->pi = 0;
+        *z = false;
     }
 }
 
@@ -224,7 +220,7 @@ GrB_Info LAGraph_BF_full
 
     // GrB_BinaryOp
     LAGRAPH_OK (GrB_BinaryOp_new(&BF_EQ_Tuple3, 
-        (LAGraph_binary_function) (&BF_EQ), BF_Tuple3, BF_Tuple3, BF_Tuple3));
+        (LAGraph_binary_function) (&BF_EQ), GrB_BOOL, BF_Tuple3, BF_Tuple3));
     LAGRAPH_OK (GrB_BinaryOp_new(&BF_lMIN_Tuple3,
         (LAGraph_binary_function) (&BF_lMIN), BF_Tuple3, BF_Tuple3, BF_Tuple3));
     LAGRAPH_OK (GrB_BinaryOp_new(&BF_PLUSrhs_Tuple3, 
@@ -248,7 +244,7 @@ GrB_Info LAGraph_BF_full
     J = LAGraph_malloc (nz, sizeof(GrB_Index)) ;
     w = LAGraph_malloc (nz, sizeof(double)) ;
     W = LAGraph_malloc (nz, sizeof(BF_Tuple3_struct)) ;
-    if (I == NULL || J == NULL || w == NULL || W == NULL);
+    if (I == NULL || J == NULL || w == NULL || W == NULL)
     {
         LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
     }
@@ -327,7 +323,7 @@ GrB_Info LAGraph_BF_full
     LAGRAPH_OK (GrB_Vector_extractTuples_UDT (I, (void *) W, &nz, d));
     h  = LAGraph_malloc(nz, sizeof(GrB_Index));
     pi = LAGraph_malloc(nz, sizeof(GrB_Index));
-    if (h == NULL || pi == NULL);
+    if (h == NULL || pi == NULL)
     {
         LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
     }
