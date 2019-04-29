@@ -35,7 +35,7 @@
 //------------------------------------------------------------------------------
 
 // LAGraph_BF_basic: Bellman-Ford single source shortest paths, returning just
-// the shortest path lengths.  Contributed by JinHau Chen and Tim Davis, Texas
+// the shortest path lengths.  Contributed by Jinhao Chen and Tim Davis, Texas
 // A&M.
 
 // LAGraph_BF_full performs a Bellman-Ford to find out shortest path, parent
@@ -116,8 +116,8 @@ GrB_Info LAGraph_BF_basic
     while (!same && iter < n - 1)
     {
         // excute semiring on d and A, and save the result to d
-        LAGRAPH_OK (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, GxB_MIN_PLUS_FP64, A, 
-            d, GrB_NULL));    
+        LAGRAPH_OK (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, GxB_MIN_PLUS_FP64, d, A, 
+            GrB_NULL));
         LAGRAPH_OK (LAGraph_Vector_isequal(&same, dtmp, d, GrB_NULL));
         if (!same)
         {
@@ -133,8 +133,8 @@ GrB_Info LAGraph_BF_basic
     if (!same)
     {
         // excute semiring again to check for negative-weight cycle
-        LAGRAPH_OK (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, GxB_MIN_PLUS_FP64, A, 
-            d, GrB_NULL));
+        LAGRAPH_OK (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, GxB_MIN_PLUS_FP64, d, A, 
+            GrB_NULL));
         LAGRAPH_OK (LAGraph_Vector_isequal(&same, dtmp, d, GrB_NULL));
 
 	// if d != dtmp, then there is a negative-weight cycle in the graph

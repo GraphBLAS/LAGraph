@@ -35,7 +35,7 @@
 //------------------------------------------------------------------------------
 
 // LAGraph_BF_full: Bellman-Ford single source shortest paths, returning both
-// the path lenths and the shortest-path tree.  contributed by JinHau Chen and
+// the path lenths and the shortest-path tree.  contributed by Jinhao Chen and
 // Tim Davis, Texas A&M.
 
 // LAGraph_BF_full performs a Bellman-Ford to find out shortest path, parent
@@ -96,8 +96,8 @@ BF_Tuple3_struct;
 void BF_lMIN
 (
     BF_Tuple3_struct *z,
-    const BF_Tuple3_struct *y,
-    const BF_Tuple3_struct *x
+    const BF_Tuple3_struct *x,
+    const BF_Tuple3_struct *y
 )
 {
     if (x->w < y->w
@@ -115,8 +115,8 @@ void BF_lMIN
 void BF_PLUSrhs
 (
     BF_Tuple3_struct *z,
-    const BF_Tuple3_struct *y,
-    const BF_Tuple3_struct *x
+    const BF_Tuple3_struct *x,
+    const BF_Tuple3_struct *y
 )
 {
     z->w = x->w + y->w;
@@ -134,8 +134,8 @@ void BF_PLUSrhs
 void BF_EQ
 (
     bool *z,
-    const BF_Tuple3_struct *y,
-    const BF_Tuple3_struct *x
+    const BF_Tuple3_struct *x,
+    const BF_Tuple3_struct *y
 )
 {
     if (x->w == y->w && x->h == y->h && x->pi == y->pi)
@@ -287,8 +287,8 @@ GrB_Info LAGraph_BF_full
     while (!same && iter < n - 1)
     {
         // execute semiring on d and A, and save the result to dtmp
-        LAGRAPH_OK (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, BF_lMIN_PLUSrhs_Tuple3, 
-            Atmp, d, GrB_NULL));
+        LAGRAPH_OK (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, BF_lMIN_PLUSrhs_Tuple3, 
+            d, Atmp, GrB_NULL));
         LAGRAPH_OK (LAGraph_Vector_isequal(&same, dtmp, d, BF_EQ_Tuple3));
         if (!same)
         {
@@ -304,8 +304,8 @@ GrB_Info LAGraph_BF_full
     if (!same)
     {
         // execute semiring again to check for negative-weight cycle
-        LAGRAPH_OK (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, BF_lMIN_PLUSrhs_Tuple3, 
-            Atmp, d, GrB_NULL));
+        LAGRAPH_OK (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, BF_lMIN_PLUSrhs_Tuple3, 
+            d, Atmp, GrB_NULL));
         LAGRAPH_OK (LAGraph_Vector_isequal(&same, dtmp, d, BF_EQ_Tuple3));
         
         // if d != dtmp, then there is a negative-weight cycle in the graph
