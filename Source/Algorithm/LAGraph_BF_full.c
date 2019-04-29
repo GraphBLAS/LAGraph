@@ -133,18 +133,18 @@ void BF_PLUSrhs
 
 void BF_EQ
 (
-    bool z,
+    bool *z,
     const BF_Tuple3_struct *y,
     const BF_Tuple3_struct *x
 )
 {
     if (x->w == y->w && x->h == y->h && x->pi == y->pi)
     {
-        z = true;
+        *z = true;
     }
     else
     {
-        z = false;
+        *z = false;
     }
 }
 
