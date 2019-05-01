@@ -34,7 +34,7 @@ use.  LAGraph will use -lgraphblas and will include the GraphBLAS.h file
 from its installed location.  Alternatively, the CMakeLists.txt script can use
 a relative directory:
 
-    ../GraphBlAS: any GraphBLAS implementation.
+    ../GraphBLAS: any GraphBLAS implementation.
 
 So that LAGraph and GraphBLAS reside in the same parent folder.  The include
 file for GraphBLAS will be assumed to appear in ../GraphBLAS/Include, and the
