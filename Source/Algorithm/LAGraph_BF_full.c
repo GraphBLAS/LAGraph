@@ -40,11 +40,12 @@
 
 // LAGraph_BF_full performs a Bellman-Ford to find out shortest path, parent
 // nodes along the path and the hops (number of edges) in the path from given
-// source vertex s on graph given as matrix A. The sparse matrix A has entry 
-// A(i, j) if there is edge from vertex i to vertex j with weight w, then
-// A(i, j) = w. Furthermore, LAGraph_BF_full requires A(i, i) = 0 for all
-// 0 <= i < n.
+// source vertex s in the range of [0, n) on graph given as matrix A with size
+// n*n. The sparse matrix A has entry A(i, j) if there is an edge from vertex i
+// to vertex j with weight w, then A(i, j) = w. Furthermore, LAGraph_BF_full
+// requires A(i, i) = 0 for all 0 <= i < n.
 
+// TODO: think about the retrun values
 // LAGraph_BF_full returns GrB_SUCCESS regardless of existence of negative-
 // weight cycle. However, the GrB_Vector d(k), pi(k) and h(k)  (i.e.,
 // *pd_output, *ppi_output and *ph_output respectively) will be NULL when
@@ -280,8 +281,8 @@ GrB_Info LAGraph_BF_full
     //--------------------------------------------------------------------------
     // copy d to dtmp in order to create a same size of vector
     LAGRAPH_OK (GrB_Vector_dup(&dtmp, d));
-    bool same= false;          // variable indicating if d=dtmp
-    int32_t iter = 0;          // number of iterations
+    bool same= false;          // variable indicating if d == dtmp
+    int64_t iter = 0;          // number of iterations
 
     // terminate when no new path is found or more than V-1 loops
     while (!same && iter < n - 1)
@@ -289,6 +290,7 @@ GrB_Info LAGraph_BF_full
         // execute semiring on d and A, and save the result to dtmp
         LAGRAPH_OK (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, BF_lMIN_PLUSrhs_Tuple3, 
             d, Atmp, GrB_NULL));
+
         LAGRAPH_OK (LAGraph_Vector_isequal(&same, dtmp, d, BF_EQ_Tuple3));
         if (!same)
         {
@@ -306,12 +308,12 @@ GrB_Info LAGraph_BF_full
         // execute semiring again to check for negative-weight cycle
         LAGRAPH_OK (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, BF_lMIN_PLUSrhs_Tuple3, 
             d, Atmp, GrB_NULL));
-        LAGRAPH_OK (LAGraph_Vector_isequal(&same, dtmp, d, BF_EQ_Tuple3));
-        
+
         // if d != dtmp, then there is a negative-weight cycle in the graph
+        LAGRAPH_OK (LAGraph_Vector_isequal(&same, dtmp, d, BF_EQ_Tuple3));
         if (!same)
         {
-            //printf("A negative-weight cycle found. \n");
+            // printf("A negative-weight cycle found. \n");
             LAGRAPH_FREE_ALL;
             return (GrB_SUCCESS) ;
         }
@@ -320,15 +322,15 @@ GrB_Info LAGraph_BF_full
     //--------------------------------------------------------------------------
     // extract tuple from "distance" vector d and create GrB_Vectors for output
     //--------------------------------------------------------------------------
-    LAGRAPH_OK (GrB_Vector_extractTuples_UDT (I, (void *) W, &nz, d));
-    h  = LAGraph_malloc(nz, sizeof(GrB_Index));
-    pi = LAGraph_malloc(nz, sizeof(GrB_Index));
-    if (h == NULL || pi == NULL)
+    LAGRAPH_OK (GrB_Vector_extractTuples_UDT (I, (void *) W, &n, d));
+    h  = LAGraph_malloc (n, sizeof(GrB_Index)) ;
+    pi = LAGraph_malloc (n, sizeof(GrB_Index)) ;
+    if (w == NULL || h == NULL || pi == NULL)
     {
         LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
     }
 
-    for (GrB_Index k = 0; k < nz; k++)
+    for (GrB_Index k = 0; k < n; k++)
     {
         w [k] = W[k].w ;
         h [k] = W[k].h ;
@@ -337,9 +339,9 @@ GrB_Info LAGraph_BF_full
     LAGRAPH_OK (GrB_Vector_new(pd_output,  GrB_FP64,   n));
     LAGRAPH_OK (GrB_Vector_new(ppi_output, GrB_UINT64, n));
     LAGRAPH_OK (GrB_Vector_new(ph_output,  GrB_UINT64, n));
-    LAGRAPH_OK (GrB_Vector_build_FP64  (*pd_output , I, w , nz,GrB_MIN_FP64  ));
-    LAGRAPH_OK (GrB_Vector_build_UINT64(*ppi_output, I, pi, nz,GrB_MIN_UINT64));
-    LAGRAPH_OK (GrB_Vector_build_UINT64(*ph_output , I, h , nz,GrB_MIN_UINT64));
+    LAGRAPH_OK (GrB_Vector_build_FP64  (*pd_output , I, w , n, GrB_MIN_FP64  ));
+    LAGRAPH_OK (GrB_Vector_build_UINT64(*ppi_output, I, pi, n, GrB_MIN_UINT64));
+    LAGRAPH_OK (GrB_Vector_build_UINT64(*ph_output , I, h , n, GrB_MIN_UINT64));
     LAGRAPH_FREE_ALL;
     return (GrB_SUCCESS) ;
 }
