@@ -111,8 +111,13 @@ int main ( )
     double tol = 1e-5 ;
     int iters, itermax = 100 ;
 
-    for (int nthreads = 1 ; nthreads <= nthreads_max ; nthreads *= 2)
+    int nthread_list [7] = {1, 2, 4, 8, 16, 20, 40} ;
+
+    // for (int nthreads = 1 ; nthreads <= nthreads_max ; nthreads *= 2)
+    for (int kk = 0 ; kk < 7 ; kk++)
     {
+        int nthreads = nthread_list [kk] ;
+
         #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
         GxB_set (GxB_NTHREADS, nthreads) ;
         #endif
