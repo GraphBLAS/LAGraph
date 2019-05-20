@@ -1,0 +1,10 @@
+# Ignore these files:
+o
+dnn
+dnn_data
+*.o
+.DS_Store
+
+# Do not ignore this file
+!.gitignore
+
