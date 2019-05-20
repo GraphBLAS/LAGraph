@@ -38,13 +38,13 @@
 // the shortest path lengths.  Contributed by Jinhao Chen and Tim Davis, Texas
 // A&M.
 
-// LAGraph_BF_full performs a Bellman-Ford to find out shortest path, parent
-// nodes along the path and the hops (number of edges) in the path from given 
-// source vertex s on graph given as matrix A. The sparse matrix A has entry  
-// A(i, j) if there is edge from vertex i to vertex j with weight w, then 
-// A(i, j) = w. Furthermore, LAGraph_BF_full requires A(i, i) = 0 for all 
-// 0 <= i < n.
+// LAGraph_BF_basic performs a Bellman-Ford to find out shortest path length
+// from given source vertex s in the range of [0, n) on graph given as matrix A
+// with size n by n. The sparse matrix A has entry A(i, j) if there is edge from
+// vertex i to vertex j with weight w, then A(i, j) = w. Furthermore,
+// LAGraph_BF_basic requires A(i, i) = 0 for all 0 <= i < n.
 
+// TODO: think about the retrun values
 // LAGraph_BF_basic returns GrB_SUCCESS regardless of existence of
 // negative-weight cycle. However, the GrB_Vector d(k) (i.e., *pd_output) will
 // be NULL when negative-weight cycle detected. Otherwise, the vector d has
@@ -109,7 +109,7 @@ GrB_Info LAGraph_BF_basic
     // copy d to dtmp in order to create a same size of vector
     LAGRAPH_OK (GrB_Vector_dup(&dtmp, d));
  
-    int32_t iter = 0;      //number of iterations
+    int64_t iter = 0;      //number of iterations
     bool same = false;     //variable indicating if d=dtmp
 
     // terminate when no new path is found or more than n-1 loops
@@ -140,7 +140,7 @@ GrB_Info LAGraph_BF_basic
 	// if d != dtmp, then there is a negative-weight cycle in the graph
         if (!same)
         {
-            //printf("A negative-weight cycle found. \n");
+            // printf("A negative-weight cycle found. \n");
             LAGRAPH_FREE_ALL;
             return (GrB_SUCCESS) ;
         }

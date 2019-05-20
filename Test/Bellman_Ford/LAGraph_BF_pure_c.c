@@ -1,16 +1,16 @@
 //------------------------------------------------------------------------------
 // BF_pure_c.c: implementation of Bellman-Ford method for shortest paths in
-// given graph using conventional method with c 
+// given graph using conventional method with c
 //------------------------------------------------------------------------------
 
 /*
     LAGraph:  graph algorithms based on GraphBLAS
 
-    Copyright 2019 LAGraph Contributors. 
+    Copyright 2019 LAGraph Contributors.
 
     (see Contributors.txt for a full list of Contributors; see
     ContributionInstructions.txt for information on how you can Contribute to
-    this project). 
+    this project).
 
     All Rights Reserved.
 
@@ -32,6 +32,29 @@
     See LICENSE file for more details.
 
 */
+
+//------------------------------------------------------------------------------
+
+// LAGraph_BF_full_mxv: Bellman-Ford single source shortest paths, returning
+// both the path lenths and the shortest-path tree.  contributed by Jinhao Chen
+// and Tim Davis, Texas A&M.
+
+// LAGraph_BF_pure_c performs a Bellman-Ford to find out shortest path
+// length, parent nodes along the path from given source vertex s in the range
+// of [0, n) on graph with n nodes. It is implemented purely using conventional
+// method. It is used here for checking the correctness of the result and
+// comparison with the Bellman Ford implemented based on LAGraph. Therefore, it
+// require the graph represented as triplet format (I, J, W), which is an edge
+// from vertex I(k) to vertex J(k) with weight W(k), and also the number of
+// vertices and number of edges.
+
+// TODO: think about the retrun values
+// LAGraph_BF_pure_c returns GrB_SUCCESS regardless of existence of negative-
+// weight cycle. However, the vector d(k) and pi(k) (i.e., *pd, and *ppi
+// respectively) will be NULL when negative-weight cycle detected. Otherwise,
+// the vector d has d(k) as the shortest distance from s to k. pi(k) = p, where
+// p is the parent node of k-th node in the shortest path. In particular,
+// pi(s) = -1.
 
 //------------------------------------------------------------------------------
 
@@ -59,10 +82,10 @@ GrB_Info LAGraph_BF_pure_c
     const int64_t nz,// number of edges
     const int64_t *I,// row index vector
     const int64_t *J,// column index vector
-    const double *W  // weight vector, W(i) = weight of edge (I(i),J(i))
+    const double  *W // weight vector, W(i) = weight of edge (I(i),J(i))
 )
 {
-    int64_t i, j;
+    int64_t i, j, k;
     double *d = NULL;
     int64_t *pi = NULL;
     if (I == NULL || J == NULL || W == NULL || pd == NULL || ppi == NULL)
@@ -101,21 +124,16 @@ GrB_Info LAGraph_BF_pure_c
     bool new_path = true;     //variable indicating if new path is found
     int64_t count = 0;        //number of loops
     // terminate when no new path is found or more than n-1 loops
-    while(new_path && count < n-1)    
+    while(new_path && count < n-1)
     {
         new_path = false;
-        for (int64_t k = 0; k < n; k++)
-        {
-            printf("%4.2f   ", d[k]);
-        }
-        printf("\n");
-        for (int64_t k = 0; k < nz; k++)
+        for (k = 0; k < nz; k++)
         {
             i = I[k];
             j = J[k];
             if (d[j] > d[i] + W[k])
             {
-                d[j] = d[i] + W[j];
+                d[j] = d[i] + W[k];
                 pi[j] = i;
                 new_path = true;
             }
@@ -130,13 +148,13 @@ GrB_Info LAGraph_BF_pure_c
         // Do another loop of RELAX to check for negative loop,
         // return true if there is negative-weight cycle;
         // otherwise, print the distance vector and return false.
-        for (int64_t k = 0; k < nz; k++)
+        for (k = 0; k < nz; k++)
         {
             i = I[k];
             j = J[k];
             if (d[j] > d[i] + W[k])
             {
-                //printf("A negative-weight cycle exists. \n");
+                // printf("A negative-weight cycle exists. \n");
                 LAGRAPH_FREE_ALL;
                 return (GrB_SUCCESS) ;
             }

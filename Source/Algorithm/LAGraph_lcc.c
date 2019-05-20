@@ -34,7 +34,8 @@
 
 //------------------------------------------------------------------------------
 
-// LAGraph_lcc: Contributed by Gabor Szarnyas and Balint Hegyi, TU Budapest
+// LAGraph_lcc: Contributed by Gabor Szarnyas and Balint Hegyi,
+// Budapest University of Technology and Economics
 // (with accented characters: G\'{a}bor Sz\'{a}rnyas and B\'{a}lint Hegyi,
 // using LaTeX syntax). https://inf.mit.bme.hu/en/members/szarnyasg .
 // Modified by Tim Davis.
@@ -67,7 +68,7 @@
 
 // The input matrix A must be square.  If A is known to be binary (with all
 // explicit edge weights equal to 1), then sanitize can be false.  This is the
-// case for the LDBC benchmark
+// case for the LDBC benchmark.
 
 // Otherwise, if sanitize is true, edge weights of A are ignored and only the
 // pattern of A is used.  This step takes extra time and memory to sanitize the

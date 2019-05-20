@@ -34,18 +34,20 @@
 
 //------------------------------------------------------------------------------
 
-// LAGraph_BF_basic: Bellman-Ford single source shortest paths, returning just
-// the shortest path lengths.  Contributed by Jinhao Chen and Tim Davis, Texas
-// A&M.
+// LAGraph_BF_basic_mxv: Bellman-Ford single source shortest paths, returning
+// just the shortest path lengths.  Contributed by Jinhao Chen and Tim Davis,
+// Texas A&M.
 
-// LAGraph_BF_full performs a Bellman-Ford to find out shortest path, parent
-// nodes along the path and the hops (number of edges) in the path from given 
-// source vertex s on graph given as matrix A. The sparse matrix A has entry  
-// A(i, j) if there is edge from vertex i to vertex j with weight w, then 
-// A(i, j) = w. Furthermore, LAGraph_BF_full requires A(i, i) = 0 for all 
-// 0 <= i < n.
+// LAGraph_BF_basic_mxv performs a Bellman-Ford to find out shortest path length
+// from given source vertex s in the range of [0, n) on graph with n nodes.
+// It works almost the same as LAGraph_BF_basic except that it performs update
+// using GrB_mxv instead of GrB_vxm, therefore, it require the input matrix as 
+// the transpose of adjacency matrix A with size n by n. That is, the input
+// sparse matrix has entry AT(i, j) if there is edge from vertex j to vertex i
+// with weight w, then AT(i, j) = w. While same as LAGraph_BF_basic, it requires
+// AT(i, i) = 0 for all 0 <= i < n.
 
-// LAGraph_BF_basic returns GrB_SUCCESS regardless of existence of
+// LAGraph_BF_basic_mxv returns GrB_SUCCESS regardless of existence of
 // negative-weight cycle. However, the GrB_Vector d(k) (i.e., *pd_output) will
 // be NULL when negative-weight cycle detected. Otherwise, the vector d has
 // d(k) as the shortest distance from s to k.
@@ -61,18 +63,18 @@
 }
 
 
-// Given a n-by-n adjacency matrix A and a source vertex s.
+// Given the transposed of a n-by-n adjacency matrix A and a source vertex s.
 // If there is no negative-weight cycle reachable from s, return the distances
 // of shortest paths from s as vector d. Otherwise, return d=NULL if there is
 // negative-weight cycle.
 // pd_output = &d, where d is a GrB_Vector with d(k) as the shortest distance
 // from s to k when no negative-weight cycle detected, otherwise, d = NULL.
-// A has zeros on diagonal and weights on corresponding entries of edges
+// AT has zeros on diagonal and weights on corresponding entries of edges
 // s is given index for source vertex
 GrB_Info LAGraph_BF_basic_mxv
 (
     GrB_Vector *pd_output,      //the pointer to the vector of distance
-    const GrB_Matrix A,         //matrix for the graph
+    const GrB_Matrix AT,        //transposed adjacency matrix for the graph
     const GrB_Index s           //given index of the source
 )
 {
@@ -81,20 +83,19 @@ GrB_Info LAGraph_BF_basic_mxv
     // tmp vector to store distance vector after n loops
     GrB_Vector d = NULL, dtmp = NULL;
   
-    if (A == NULL || pd_output == NULL)
+    if (AT == NULL || pd_output == NULL)
     {
         // required argument is missing
         LAGRAPH_ERROR ("required arguments are NULL", GrB_NULL_POINTER) ;
     }
 
-    printf ("\n") ;
     *pd_output = NULL;
-    LAGRAPH_OK (GrB_Matrix_nrows (&nrows, A)) ;
-    LAGRAPH_OK (GrB_Matrix_ncols (&ncols, A)) ;
+    LAGRAPH_OK (GrB_Matrix_nrows (&nrows, AT)) ;
+    LAGRAPH_OK (GrB_Matrix_ncols (&ncols, AT)) ;
     if (nrows != ncols)
     {
-        // A must be square
-        LAGRAPH_ERROR ("A must be square", GrB_INVALID_VALUE) ;
+        // AT must be square
+        LAGRAPH_ERROR ("AT must be square", GrB_INVALID_VALUE) ;
     }
     GrB_Index n = nrows;           // n = # of vertices in graph
     
@@ -110,15 +111,16 @@ GrB_Info LAGraph_BF_basic_mxv
     // copy d to dtmp in order to create a same size of vector
     LAGRAPH_OK (GrB_Vector_dup(&dtmp, d));
  
-    int32_t iter = 0;      //number of iterations
-    bool same = false;     //variable indicating if d==dtmp
+    int64_t iter = 0;      //number of iterations
+    bool same = false;     //variable indicating if d == dtmp
 
     // terminate when no new path is found or more than n-1 loops
     while (!same && iter < n - 1)
     {
-        // excute semiring on d and A, and save the result to d
-        LAGRAPH_OK (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, GxB_MIN_PLUS_FP64, A, 
+        // excute semiring on d and AT, and save the result to d
+        LAGRAPH_OK (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, GxB_MIN_PLUS_FP64, AT, 
             d, GrB_NULL));
+
         LAGRAPH_OK (LAGraph_Vector_isequal(&same, dtmp, d, GrB_NULL));
         if (!same)
         {
@@ -134,14 +136,14 @@ GrB_Info LAGraph_BF_basic_mxv
     if (!same)
     {
         // excute semiring again to check for negative-weight cycle
-        LAGRAPH_OK (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, GxB_MIN_PLUS_FP64, A, 
+        LAGRAPH_OK (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, GxB_MIN_PLUS_FP64, AT, 
             d, GrB_NULL));
-        LAGRAPH_OK (LAGraph_Vector_isequal(&same, dtmp, d, GrB_NULL));
 
 	// if d != dtmp, then there is a negative-weight cycle in the graph
+        LAGRAPH_OK (LAGraph_Vector_isequal(&same, dtmp, d, GrB_NULL));
         if (!same)
         {
-            //printf("A negative-weight cycle found. \n");
+            // printf("AT negative-weight cycle found. \n");
             LAGRAPH_FREE_ALL;
             return (GrB_SUCCESS) ;
         }

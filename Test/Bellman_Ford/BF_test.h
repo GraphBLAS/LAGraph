@@ -47,10 +47,10 @@ GrB_Info LAGraph_BF_pure_c
     const double *W  // weight vector, W(i) = weight of edge (I(i),J(i))
 );
 
-GrB_Info LAGraph_BF_basic_mxv //
+GrB_Info LAGraph_BF_basic_mxv
 (
     GrB_Vector *pd_output,      //the pointer to the vector of distance
-    const GrB_Matrix A,         //matrix for the graph
+    const GrB_Matrix AT,        //transposed adjacency matrix for the graph
     const GrB_Index s           //given index of the source
 );
 
@@ -58,8 +58,8 @@ GrB_Info LAGraph_BF_full_mxv
 ( 
     GrB_Vector *pd_output,      //the pointer to the vector of distance 
     GrB_Vector *ppi_output,     //the pointer to the vector of parent 
-    GrB_Vector *ph_output,       //the pointer to the vector of hops 
-    const GrB_Matrix A,         //matrix for the graph 
+    GrB_Vector *ph_output,      //the pointer to the vector of hops 
+    const GrB_Matrix AT,        //transposed adjacency matrix for the graph 
     const GrB_Index s           //given index of the source 
 );
 
