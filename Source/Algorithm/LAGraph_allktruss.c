@@ -83,6 +83,7 @@
             GrB_free (&(Cset [kk])) ;           \
         }                                       \
     }                                           \
+    GrB_free (&Support) ;                       \
     GrB_free (&C) ;
 
 #include "LAGraph_internal.h"
@@ -136,6 +137,10 @@ GrB_Info LAGraph_allktruss      // compute all k-trusses of a graph
 
     // the current k-truss
     GrB_Matrix C = NULL ;
+    GrB_Vector Support = NULL ;
+
+    // Support scalar for GxB_select
+    LAGRAPH_OK (GrB_Vector_new (&Support, GrB_UINT32, 1)) ;
 
     // get the size of A
     GrB_Index n ;
@@ -162,7 +167,8 @@ GrB_Info LAGraph_allktruss      // compute all k-trusses of a graph
         // find the k-truss
         //----------------------------------------------------------------------
 
-        int64_t support = (k-2) ;
+        uint32_t support = (k-2) ;
+        LAGRAPH_OK (GrB_Vector_setElement (Support, support, 0)) ;
 
         while (1)
         {
@@ -172,7 +178,12 @@ GrB_Info LAGraph_allktruss      // compute all k-trusses of a graph
             //------------------------------------------------------------------
 
             LAGRAPH_OK (GxB_select (C, NULL, NULL, LAGraph_support, C,
-                &support, NULL)) ;
+                #if GxB_IMPLEMENTATION >= GxB_VERSION (3,0,0)
+                Support,    // V3.0.0 and later uses a GrB_Vector
+                #else
+                &support,   // V2.x and earlier uses a (const void *) pointer
+                #endif
+                NULL)) ;
 
             //------------------------------------------------------------------
             // check if k-truss has been found
@@ -194,6 +205,7 @@ GrB_Info LAGraph_allktruss      // compute all k-trusses of a graph
                 {
                     // this is the last k-truss
                     LAGRAPH_OK (GrB_free (&C)) ;    // free last empty k-truss
+                    LAGRAPH_OK (GrB_free (&Support)) ;
                     (*kmax) = k ;
                     if (keep_all_ktrusses)
                     {

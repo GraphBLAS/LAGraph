@@ -46,6 +46,7 @@
 
 #define LAGRAPH_FREE_ALL    \
 {                           \
+    GrB_free (&Support) ;   \
     GrB_free (&C) ;         \
     GrB_free (&M) ;         \
     GrB_free (&A) ;         \
@@ -81,6 +82,7 @@ int main (int argc, char **argv)
 
     GrB_Info info ;
     GrB_Matrix A = NULL, E = NULL, L = NULL, U = NULL, C = NULL, M = NULL ;
+    GrB_Vector Support = NULL ;
     GrB_Index *I = NULL, *J = NULL ;
     uint32_t *X = NULL ;
     LAGraph_init ( ) ;
@@ -145,9 +147,18 @@ int main (int argc, char **argv)
 
         // U = triu (A,1), for methods 2, 3, and 5
         LAGraph_tic (tic) ;
-        GrB_Index k = 1 ;
+        int64_t k = 1 ;
         LAGRAPH_OK (GrB_Matrix_new (&U, GrB_UINT32, n, n)) ;
-        LAGRAPH_OK (GxB_select (U, NULL, NULL, GxB_TRIU, A, &k, NULL)) ;
+        LAGRAPH_OK (GrB_Vector_new (&Support, GrB_INT64, 1)) ;
+        LAGRAPH_OK (GrB_Vector_setElement (Support, k, 0)) ;
+        LAGRAPH_OK (GxB_select (U, NULL, NULL, GxB_TRIU, A,
+                #if GxB_IMPLEMENTATION >= GxB_VERSION (3,0,0)
+                Support,    // V3.0.0 and later uses a GrB_Vector
+                #else
+                &k,         // V2.x and earlier uses a (const void *) pointer
+                #endif
+                NULL)) ;
+
         LAGRAPH_OK (GrB_Matrix_nvals (&nedges, U)) ;
         printf ("n %.16g # edges %.16g\n", (double) n, (double) nedges) ;
         double t_U = LAGraph_toc (tic) ;
@@ -157,7 +168,15 @@ int main (int argc, char **argv)
         LAGraph_tic (tic) ;
         LAGRAPH_OK (GrB_Matrix_new (&L, GrB_UINT32, n, n)) ;
         k = -1 ;
-        LAGRAPH_OK (GxB_select (L, NULL, NULL, GxB_TRIL, A, &k, NULL)) ;
+        LAGRAPH_OK (GrB_Vector_setElement (Support, k, 0)) ;
+        LAGRAPH_OK (GxB_select (L, NULL, NULL, GxB_TRIL, A,
+                #if GxB_IMPLEMENTATION >= GxB_VERSION (3,0,0)
+                Support,    // V3.0.0 and later uses a GrB_Vector
+                #else
+                &k,         // V2.x and earlier uses a (const void *) pointer
+                #endif
+                NULL)) ;
+
         double t_L = LAGraph_toc (tic) ;
         printf ("L=tril(A) time:  %14.6f sec\n", t_L) ;
 

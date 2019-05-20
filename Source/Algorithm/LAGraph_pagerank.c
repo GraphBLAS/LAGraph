@@ -83,7 +83,11 @@
 
 #define DAMPING 0.85
 
-// TODO replace with binary operator and expanded scalar, or GrB_mxm:
+// TODO uses global values.  Avoid them!  LAGraph_pagerank can use internal
+// parallelism (all threads will see the same global values), but multiple
+// instances of LAGraph_pagerank called be done in parallel in a user
+// application.  Replace globals via binary operator on expanded scalars, or
+// GrB_mxm.
 float rsum ;
 float teleport_scalar ;
 

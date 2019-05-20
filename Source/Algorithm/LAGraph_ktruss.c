@@ -69,6 +69,7 @@
 // TODO add cite
 
 #define LAGRAPH_FREE_ALL                \
+    GrB_free (&Support) ;               \
     GrB_free (&C) ;
 
 #include "LAGraph_internal.h"
@@ -103,11 +104,16 @@ GrB_Info LAGraph_ktruss         // compute the k-truss of a graph
 
     GrB_Index n ;
     GrB_Matrix C = NULL ;
+    GrB_Vector Support = NULL ;
     LAGRAPH_OK (GrB_Matrix_nrows (&n, A)) ;
     LAGRAPH_OK (GrB_Matrix_new (&C, GrB_UINT32, n, n)) ;
 
     // for the select operator
     uint32_t support = (k-2) ;
+    LAGRAPH_OK (GrB_Vector_new (&Support, GrB_UINT32, 1)) ;
+    LAGRAPH_OK (GrB_Vector_setElement (Support, support, 0)) ;
+    GrB_Index ignore ;
+    LAGRAPH_OK (GrB_Vector_nvals (&ignore, Support)) ;
 
     // last_cnz = nnz (A)
     GrB_Index cnz, last_cnz ;
@@ -131,7 +137,12 @@ GrB_Info LAGraph_ktruss         // compute the k-truss of a graph
         // C = C .* (C >= support)
         //----------------------------------------------------------------------
 
-        LAGRAPH_OK (GxB_select (C, NULL, NULL, LAGraph_support, C, &support,
+        LAGRAPH_OK (GxB_select (C, NULL, NULL, LAGraph_support, C,
+            #if GxB_IMPLEMENTATION >= GxB_VERSION (3,0,0)
+            Support,    // V3.0.0 and later uses a GrB_Vector
+            #else
+            &support,   // V2.x and earlier uses a (const void *) pointer
+            #endif
             NULL)) ;
 
         //----------------------------------------------------------------------
@@ -146,6 +157,7 @@ GrB_Info LAGraph_ktruss         // compute the k-truss of a graph
             {
                 (*p_nsteps) = nsteps ;              // return # of steps
             }
+            GrB_free (&Support) ;
             return (GrB_SUCCESS) ;
         }
         last_cnz = cnz ;

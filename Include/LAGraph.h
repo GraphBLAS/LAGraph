@@ -5,11 +5,11 @@
 /*
     LAGraph:  graph algorithms based on GraphBLAS
 
-    Copyright 2019 LAGraph Contributors. 
+    Copyright 2019 LAGraph Contributors.
 
     (see Contributors.txt for a full list of Contributors; see
     ContributionInstructions.txt for information on how you can Contribute to
-    this project). 
+    this project).
 
     All Rights Reserved.
 
@@ -114,7 +114,7 @@
 }
 
 //------------------------------------------------------------------------------
-// LAGraph_Context: 
+// LAGraph_Context:
 //------------------------------------------------------------------------------
 
 // All LAGraph functions will use a Context for global parameters, error
@@ -193,8 +193,9 @@ extern GrB_Monoid
     LAGraph_LOR_MONOID          ,
     LAGraph_MIN_INT32_MONOID    ,
     LAGraph_MIN_INT64_MONOID    ,
-    LAGraph_PLUS_FP64_MONOID    ,
-    LAGraph_PLUS_UINT32_MONOID  ;
+    LAGraph_PLUS_UINT32_MONOID  ,
+    LAGraph_PLUS_FP32_MONOID    ,
+    LAGraph_PLUS_FP64_MONOID    ;
 
 extern GrB_Semiring
 
@@ -205,8 +206,11 @@ extern GrB_Semiring
     LAGraph_MIN_FIRST_INT32     ,
     LAGraph_MIN_SECOND_INT64    ,
     LAGraph_MIN_FIRST_INT64     ,
+    LAGraph_PLUS_TIMES_UINT32   ,
     LAGraph_PLUS_TIMES_FP64     ,
-    LAGraph_PLUS_TIMES_UINT32   ;
+    LAGraph_PLUS_PLUS_FP64      ,
+    LAGraph_PLUS_TIMES_FP32     ,
+    LAGraph_PLUS_PLUS_FP32      ;
 
 // all 16 descriptors
 // syntax: 4 characters define the following.  'o' is the default:
@@ -282,6 +286,15 @@ GrB_Info LAGraph_mmwrite
     GrB_Matrix A,           // matrix to write to the file
     FILE *f                 // file to write it to
     // TODO , FILE *fcomments         // optional file with extra comments
+) ;
+
+GrB_Info LAGraph_tsvread        // returns GrB_SUCCESS if successful
+(
+    GrB_Matrix *Chandle,        // C, created on output
+    FILE *f,                    // file to read from (already open)
+    GrB_Type type,              // the type of C to create
+    GrB_Index nrows,            // C is nrows-by-ncols
+    GrB_Index ncols
 ) ;
 
 GrB_Info LAGraph_ispattern  // return GrB_SUCCESS if successful
@@ -485,5 +498,15 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     bool sanitize               // if true, ensure A is binary
 ) ;
 
+GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
+(
+    // output
+    GrB_Matrix *Yhandle,    // Y, created on output
+    // input: not modified
+    GrB_Matrix *W,      // W [0..nlayers-1], each nneurons-by-nneurons
+    GrB_Matrix *Bias,   // Bias [0..nlayers-1], diagonal nneurons-by-nneurons
+    int nlayers,        // # of layers
+    GrB_Matrix Y0       // input features: nfeatures-by-nneurons
+) ;
 
 #endif

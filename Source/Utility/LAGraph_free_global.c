@@ -90,6 +90,7 @@ GrB_Info LAGraph_free_global ( )
     GrB_free (&LAGraph_MIN_INT64_MONOID) ;
     GrB_free (&LAGraph_PLUS_UINT32_MONOID) ;
     GrB_free (&LAGraph_PLUS_FP64_MONOID) ;
+    GrB_free (&LAGraph_PLUS_FP32_MONOID) ;
 
     // free the semirings
     GrB_free (&LAGraph_LOR_LAND_BOOL) ;
@@ -101,6 +102,9 @@ GrB_Info LAGraph_free_global ( )
     GrB_free (&LAGraph_MIN_FIRST_INT64) ;
     GrB_free (&LAGraph_PLUS_TIMES_UINT32) ;
     GrB_free (&LAGraph_PLUS_TIMES_FP64) ;
+    GrB_free (&LAGraph_PLUS_PLUS_FP64) ;
+    GrB_free (&LAGraph_PLUS_TIMES_FP32) ;
+    GrB_free (&LAGraph_PLUS_PLUS_FP32) ;
 
     // free the descriptors
 //  GrB_free (&LAGraph_desc_oooo) ;     // NULL, no need to free it

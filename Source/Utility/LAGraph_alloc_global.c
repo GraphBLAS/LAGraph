@@ -379,6 +379,7 @@ GrB_Monoid LAGraph_MIN_INT32_MONOID = NULL ;
 GrB_Monoid LAGraph_MIN_INT64_MONOID = NULL ;
 GrB_Monoid LAGraph_PLUS_UINT32_MONOID = NULL ;
 GrB_Monoid LAGraph_PLUS_FP64_MONOID = NULL ;
+GrB_Monoid LAGraph_PLUS_FP32_MONOID = NULL ;
 GrB_Monoid LAGraph_DIV_FP64_MONOID = NULL ;
 
 // semirings
@@ -391,6 +392,9 @@ GrB_Semiring LAGraph_MIN_SECOND_INT64 = NULL ;
 GrB_Semiring LAGraph_MIN_FIRST_INT64 = NULL ;
 GrB_Semiring LAGraph_PLUS_TIMES_UINT32 = NULL ;
 GrB_Semiring LAGraph_PLUS_TIMES_FP64 = NULL ;
+GrB_Semiring LAGraph_PLUS_PLUS_FP64 = NULL ;
+GrB_Semiring LAGraph_PLUS_TIMES_FP32 = NULL ;
+GrB_Semiring LAGraph_PLUS_PLUS_FP32 = NULL ;
 
 // all 16 descriptors
 // syntax: 4 characters define the following.  'o' is the default:
@@ -636,7 +640,10 @@ GrB_Info LAGraph_alloc_global ( )
         GrB_PLUS_UINT32, 0)) ;
 
     LAGRAPH_OK (GrB_Monoid_new_FP64 (&LAGraph_PLUS_FP64_MONOID,
-        GrB_PLUS_FP64, 0)) ;
+        GrB_PLUS_FP64, (double) 0)) ;
+
+    LAGRAPH_OK (GrB_Monoid_new_FP32 (&LAGraph_PLUS_FP32_MONOID,
+        GrB_PLUS_FP32, (float) 0)) ;
 
     LAGRAPH_OK (GrB_Monoid_new_FP64 (&LAGraph_DIV_FP64_MONOID,
         GrB_DIV_FP64, (double) 1.0)) ;
@@ -669,8 +676,17 @@ GrB_Info LAGraph_alloc_global ( )
     LAGRAPH_OK (GrB_Semiring_new (&LAGraph_PLUS_TIMES_UINT32,
         LAGraph_PLUS_UINT32_MONOID, GrB_TIMES_UINT32)) ;
 
+    LAGRAPH_OK (GrB_Semiring_new (&LAGraph_PLUS_TIMES_FP32,
+        LAGraph_PLUS_FP32_MONOID, GrB_TIMES_FP32)) ;
+
+    LAGRAPH_OK (GrB_Semiring_new (&LAGraph_PLUS_PLUS_FP32,
+        LAGraph_PLUS_FP32_MONOID, GrB_PLUS_FP32)) ;
+
     LAGRAPH_OK (GrB_Semiring_new (&LAGraph_PLUS_TIMES_FP64,
         LAGraph_PLUS_FP64_MONOID, GrB_TIMES_FP64)) ;
+
+    LAGRAPH_OK (GrB_Semiring_new (&LAGraph_PLUS_PLUS_FP64,
+        LAGraph_PLUS_FP64_MONOID, GrB_PLUS_FP64)) ;
 
     //--------------------------------------------------------------------------
     // create 15 descriptors (one does not need to be allocated)
