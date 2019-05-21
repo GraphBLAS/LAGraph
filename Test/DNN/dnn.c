@@ -201,6 +201,9 @@ int main (int argc, char **argv)
         fclose (f) ;
         double t = LAGraph_toc (tic) ;
         printf ("# features: %" PRIu64 " read time: %g sec\n", nfeatures, t) ;
+        GrB_Index nvals ;
+        LAGRAPH_OK (GrB_Matrix_nvals (&nvals, Y0)) ;
+        printf ("# entries in Y0: %g million\n", (double) nvals / 1e6) ;
         fflush (stdout) ;
 
         //----------------------------------------------------------------------
@@ -291,7 +294,8 @@ int main (int argc, char **argv)
                 LAGRAPH_OK (GrB_Matrix_nvals (&nvals, W [layer])) ;
                 nedges += nvals ;
             }
-            printf ("total # edges %g million\n", nedges / 1e6) ;
+            printf ("# edges in all layers: %g million\n\n",
+                (double) nedges / 1e6) ;
             fflush (stdout) ;
 
             // read TrueCategories as a boolean nfeatures-by-1 vector
@@ -315,6 +319,7 @@ int main (int argc, char **argv)
             //------------------------------------------------------------------
 
             double t1 = 0, tcheck = 0 ;
+            GrB_Index final_ynvals ;
 
             for (int kth = 0 ; kth < NNTHREADS ; kth++)
             {
@@ -354,6 +359,8 @@ int main (int argc, char **argv)
                 // this is so fast, it's hardly worth timing ...
                 LAGraph_tic (tic) ;
 
+                LAGRAPH_OK (GrB_Matrix_nvals (&final_ynvals, Y)) ;
+
                 // C = sum (Y)
                 LAGRAPH_OK (GrB_Vector_new (&C, type, nfeatures)) ;
                 LAGRAPH_OK (GrB_reduce (C, NULL, NULL, GrB_PLUS_FP64, Y,
@@ -383,6 +390,8 @@ int main (int argc, char **argv)
                 printf (" test passed\n") ;
             }
 
+            printf ("\n# entries in final Y: %g million\n", 
+                (double) final_ynvals / 1e6) ;
             printf ("check time: %g sec\n", tcheck) ;
             LAGRAPH_OK (GxB_set (GxB_NTHREADS, nthreads_max)) ;
         }
