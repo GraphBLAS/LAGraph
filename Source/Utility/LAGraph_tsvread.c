@@ -29,7 +29,6 @@
     This program includes and/or can make use of certain third party source
     code, object code, documentation and other files ("Third Party Software").
     See LICENSE file for more details.
-
 */
 
 //------------------------------------------------------------------------------

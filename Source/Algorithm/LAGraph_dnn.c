@@ -32,6 +32,8 @@
 
 */
 
+//------------------------------------------------------------------------------
+
 // LAGraph_dnn: sparse deep neural network.  Contributed by Tim Davis,
 // Texas A&M University.  Based on inferenceReLUvec.m by Jeremy Kepner, MIT.
 
@@ -126,7 +128,6 @@ GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
 
     for (int layer = 0 ; layer < nlayers ; layer++)
     {
-
         // Y = Y * W [layer], using the conventional PLUS_TIMES semiring
         LAGRAPH_OK (GrB_mxm (Y, NULL, NULL, plus_times,
             ((layer == 0) ? Y0 : Y), W [layer], NULL)) ;
@@ -136,8 +137,8 @@ GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
         // introduce any new entries in Y.
         LAGRAPH_OK (GrB_mxm (Y, NULL, NULL, plus_plus, Y, Bias [layer], NULL)) ;
 
-        // delete negative entries from Y
-        LAGRAPH_OK (GxB_select (Y, NULL, NULL, GxB_GE_ZERO, Y, NULL, NULL)) ;
+        // delete entries from Y: keep only those entries greater than zero
+        LAGRAPH_OK (GxB_select (Y, NULL, NULL, GxB_GT_ZERO, Y, NULL, NULL)) ;
     }
 
     //--------------------------------------------------------------------------

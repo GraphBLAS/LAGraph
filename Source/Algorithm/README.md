@@ -10,5 +10,6 @@
     * LAGraph_lcc: local clustering coefficient
     * LAGraph_pagerank: pagerank
     * LAGraph_tricount: count triangles in a graph
+    * LAGraph_dnn: sparse deep neural network
     * more to appear here...
 

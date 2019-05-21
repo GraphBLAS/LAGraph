@@ -1,6 +1,7 @@
 //------------------------------------------------------------------------------
 // LAGraph/Test/DNN/dnn: run all neural networks from http://graphchallenge.org
 //------------------------------------------------------------------------------
+
 /*
     LAGraph:  graph algorithms based on GraphBLAS
 
@@ -28,7 +29,6 @@
     This program includes and/or can make use of certain third party source
     code, object code, documentation and other files ("Third Party Software").
     See LICENSE file for more details.
-
 */
 
 //------------------------------------------------------------------------------
@@ -38,15 +38,14 @@
 
 // Usage: ./build/dnn nproblems
 
-// nproblems is the # of test problems to solve.  It defaults to 12 (run all 12
-// DNN's).  The problems are solved in order from small to big.  The Makefile
-// just runs the first and smallest problem.
+// nproblems is the # of test problems to solve.  If not present, it defaults
+// to 12 (run all 12 DNN's).  The problems are solved in order from small to
+// big.  The Makefile just runs the first and smallest problem.
 
 // NOTE: this test currently uses many GxB_* extensions in
-// SuiteSparse:GraphBLAS.
+// SuiteSparse:GraphBLAS.  It optionally uses OpenMP.
 
 #include <LAGraph.h>
-#include <omp.h>
 
 #define LAGRAPH_FREE_ALL ;
 
@@ -145,7 +144,7 @@ int main (int argc, char **argv)
         }                                               \
     }
 
-    // select the type
+    // select the type.  GrB_FP32 is faster and passes all the tests.
 //  GrB_Type type = GrB_FP64 ;
     GrB_Type type = GrB_FP32 ;
 
@@ -251,7 +250,7 @@ int main (int argc, char **argv)
                 fclose (my_file) ;
                 my_ok = my_ok && (my_info == GrB_SUCCESS) ;
 
-                // construct the bias matrix: Bias [layer].  note that all Bias
+                // construct the bias matrix: Bias [layer].  Note that all Bias
                 // matrices are the same for all layers, and all diagonal
                 // entries are also the same, but this test must not exploit
                 // that fact.
@@ -269,14 +268,14 @@ int main (int argc, char **argv)
                 ok = ok && my_ok ;
             }
 
-            t = LAGraph_toc (tic) ;
-            printf ("read net time %g sec\n", t) ;
-
             if (!ok)
             {
                 printf ("neural read failure\n") ;
                 abort ( ) ;
             }
+
+            t = LAGraph_toc (tic) ;
+            printf ("read net time %g sec\n", t) ;
 
             double nedges = 0 ;
             for (int layer = 0 ; layer < nlayers ; layer++)
