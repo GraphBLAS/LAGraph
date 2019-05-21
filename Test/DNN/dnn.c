@@ -153,6 +153,10 @@ int main (int argc, char **argv)
     LAGRAPH_OK (GxB_get (GxB_NTHREADS, &nthreads_max)) ;
     printf ("max # of nthreads: %d\n", nthreads_max) ;
 
+    #define NNTHREADS 12
+    int nthreads_list [NNTHREADS] =
+        { 1, 2, 4, 8, 16, 20, 32, 40, 64, 128, 160, 256 } ;
+
     // determine the # of problems to solve
     int nproblems = NMAXNEURONS * NMAXLAYERS ;
     if (argc > 1)
@@ -197,6 +201,7 @@ int main (int argc, char **argv)
         fclose (f) ;
         double t = LAGraph_toc (tic) ;
         printf ("# features: %" PRIu64 " read time: %g sec\n", nfeatures, t) ;
+        fflush (stdout) ;
 
         //----------------------------------------------------------------------
         // run each problem size (for all #'s of layers)
@@ -228,7 +233,9 @@ int main (int argc, char **argv)
             int first_layer = (kl == 0) ? 0 : maxLayers [kl-1] ;
             bool ok = true ;
 
-            #pragma omp parallel for schedule(dynamic,1) reduction(&&:ok)
+            // assume the I/O system can handle 2-way parallelism
+            #pragma omp parallel for schedule(dynamic,1) reduction(&&:ok) \
+                num_threads (2)
             for (int layer = first_layer ; layer < nlayers ; layer++)
             {
                 // read the neuron layer: W [layer]
@@ -285,6 +292,7 @@ int main (int argc, char **argv)
                 nedges += nvals ;
             }
             printf ("total # edges %g million\n", nedges / 1e6) ;
+            fflush (stdout) ;
 
             // read TrueCategories as a boolean nfeatures-by-1 vector
             LAGRAPH_OK (GrB_Vector_new (&TrueCategories, GrB_BOOL,
@@ -306,16 +314,17 @@ int main (int argc, char **argv)
             // solve the problem with 1, 2, 4, ..., nthreads_max threads
             //------------------------------------------------------------------
 
-            double t1 = 0 ;
-            int nthreads = 1 ;
+            double t1 = 0, tcheck = 0 ;
 
-            while (1)
+            for (int kth = 0 ; kth < NNTHREADS ; kth++)
             {
 
                 //--------------------------------------------------------------
                 // set the # of threads to use
                 //--------------------------------------------------------------
 
+                int nthreads = nthreads_list [kth] ;
+                if (nthreads > nthreads_max) break ;
                 LAGRAPH_OK (GxB_set (GxB_NTHREADS, nthreads)) ;
                 printf ("nthreads %2d: ", nthreads) ;
                 fflush (stdout) ;
@@ -370,31 +379,11 @@ int main (int argc, char **argv)
                 GrB_free (&Categories) ;
                 GrB_free (&C) ;
                 GrB_free (&Y) ;
-                t = LAGraph_toc (tic) ;
+                tcheck = LAGraph_toc (tic) ;
                 printf (" test passed\n") ;
-                if (nthreads == nthreads_max)
-                {
-                    printf ("check time: %g sec\n", t) ;
-                }
-
-                //--------------------------------------------------------------
-                // advance to the next # of threads
-                //--------------------------------------------------------------
-
-                if (nthreads == nthreads_max)
-                {
-                    break ;
-                }
-                else if (2 * nthreads <= nthreads_max)
-                {
-                    nthreads *= 2 ;
-                }
-                else
-                {
-                    nthreads = nthreads_max ;
-                }
             }
 
+            printf ("check time: %g sec\n", tcheck) ;
             LAGRAPH_OK (GxB_set (GxB_NTHREADS, nthreads_max)) ;
         }
 
