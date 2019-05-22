@@ -114,10 +114,14 @@ int main (int argc, char **argv)
     #define NMAXLAYERS 3
     int maxLayers [NMAXLAYERS] = { 120, 480, 1920 } ;
 
+//  #define NMAXNEURONS 1
+//  int Nneurons [NMAXNEURONS] = { 65536 } ;
+//  double neuralNetBias [NMAXNEURONS] = { -0.45 } ;
+
     #define NMAXNEURONS 4
     int Nneurons [NMAXNEURONS] = { 1024, 4096, 16384, 65536 } ;
-
     double neuralNetBias [NMAXNEURONS] = { -0.3, -0.35, -0.4, -0.45 } ;
+
     int nfeatures = 60000 ;
 
     GrB_Matrix Y0 = NULL, Y = NULL, W [65536], Bias [65536] ;
@@ -178,6 +182,7 @@ int main (int argc, char **argv)
         //----------------------------------------------------------------------
 
         if (problem > nproblems) continue ;
+
 
         //----------------------------------------------------------------------
         // get the number of nneurons and neural bias
@@ -304,15 +309,22 @@ int main (int argc, char **argv)
             sprintf (filename, "%s/DNN/neuron%d-l%d-categories.tsv", DNN_DATA,
                 nneurons, nlayers) ;
             f = fopen (filename, "r") ;
-            if (!f) { printf ("cannot open %s\n", filename) ; abort ( ) ; }
-            while (1)
+            bool check_result = (f != NULL) ;
+            if (check_result)
             {
-                int category ;
-                if (fscanf (f, "%d\n", &category) == EOF) break ;
-                LAGRAPH_OK (GrB_Vector_setElement (TrueCategories,
-                    (bool) true, category-1)) ;
+                while (1)
+                {
+                    int category ;
+                    if (fscanf (f, "%d\n", &category) == EOF) break ;
+                    LAGRAPH_OK (GrB_Vector_setElement (TrueCategories,
+                        (bool) true, category-1)) ;
+                }
+                fclose (f) ;
             }
-            fclose (f) ;
+            else
+            {
+                printf ("cannot open %s\n", filename) ;
+            }
 
             //------------------------------------------------------------------
             // solve the problem with 1, 2, 4, ..., nthreads_max threads
@@ -358,36 +370,41 @@ int main (int argc, char **argv)
 
                 // this is so fast, it's hardly worth timing ...
                 LAGraph_tic (tic) ;
-
                 LAGRAPH_OK (GrB_Matrix_nvals (&final_ynvals, Y)) ;
 
-                // C = sum (Y)
-                LAGRAPH_OK (GrB_Vector_new (&C, type, nfeatures)) ;
-                LAGRAPH_OK (GrB_reduce (C, NULL, NULL, GrB_PLUS_FP64, Y,
-                    NULL)) ;
-                // Categories = pattern of C
-                LAGRAPH_OK (GrB_Vector_new (&Categories, GrB_BOOL, nfeatures)) ;
-                LAGRAPH_OK (GrB_apply (Categories, NULL, NULL, GxB_ONE_BOOL, C,
-                    NULL)) ;
-
-                // check if Categories and TrueCategories are the same
-                bool isequal ;
-                LAGRAPH_OK (LAGraph_Vector_isequal (&isequal,
-                    TrueCategories, Categories, NULL)) ;
-                if (!isequal)
+                if (check_result)
                 {
-                    GxB_print (TrueCategories, 3) ;
-                    GxB_print (Categories, 3) ;
-                    printf ("test failure!\n") ;
-                    LAGRAPH_FREE_ALL ;
-                    abort ( ) ;
+
+                    // C = sum (Y)
+                    LAGRAPH_OK (GrB_Vector_new (&C, type, nfeatures)) ;
+                    LAGRAPH_OK (GrB_reduce (C, NULL, NULL, GrB_PLUS_FP64, Y,
+                        NULL)) ;
+                    // Categories = pattern of C
+                    LAGRAPH_OK (GrB_Vector_new (&Categories, GrB_BOOL,
+                        nfeatures)) ;
+                    LAGRAPH_OK (GrB_apply (Categories, NULL, NULL, GxB_ONE_BOOL,
+                        C, NULL)) ;
+
+                    // check if Categories and TrueCategories are the same
+                    bool isequal ;
+                    LAGRAPH_OK (LAGraph_Vector_isequal (&isequal,
+                        TrueCategories, Categories, NULL)) ;
+                    if (!isequal)
+                    {
+                        GxB_print (TrueCategories, 3) ;
+                        GxB_print (Categories, 3) ;
+                        printf ("test failure!\n") ;
+                        LAGRAPH_FREE_ALL ;
+                        abort ( ) ;
+                    }
+                    printf (" test passed") ;
                 }
+                printf ("\n") ;
 
                 GrB_free (&Categories) ;
                 GrB_free (&C) ;
                 GrB_free (&Y) ;
                 tcheck = LAGraph_toc (tic) ;
-                printf (" test passed\n") ;
             }
 
             printf ("\n# entries in final Y: %g million\n", 
