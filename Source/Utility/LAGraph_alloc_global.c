@@ -333,6 +333,29 @@ void LAGraph_one_fp64
     (*z) = 1 ;
 }
 
+// unary ops to check if greater than zero
+GrB_UnaryOp LAGraph_GT0_FP32 = NULL ;
+GrB_UnaryOp LAGraph_GT0_FP64 = NULL ;
+
+void LAGraph_gt0_fp32
+(
+    bool *z,
+    const float *x
+)
+{
+    (*z) = ((*x) > 0) ;
+}
+
+void LAGraph_gt0_fp64
+(
+    bool *z,
+    const double *x
+)
+{
+    (*z) = ((*x) > 0) ;
+}
+
+
 // integer decrement
 GrB_UnaryOp LAGraph_DECR_INT32 = NULL ;
 GrB_UnaryOp LAGraph_DECR_INT64 = NULL ;
@@ -577,6 +600,18 @@ GrB_Info LAGraph_alloc_global ( )
     LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_DECR_INT64,
         F_UNARY (LAGraph_decr_int64),
         GrB_INT64, GrB_INT64)) ;
+
+    //--------------------------------------------------------------------------
+    // create the unary greater-than-zero operators
+    //--------------------------------------------------------------------------
+
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_GT0_FP32,
+        F_UNARY (LAGraph_gt0_fp32),
+        GrB_BOOL, GrB_FP32)) ;
+
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_GT0_FP64,
+        F_UNARY (LAGraph_gt0_fp64),
+        GrB_BOOL, GrB_FP64)) ;
 
     //--------------------------------------------------------------------------
     // create the unary operators that return true

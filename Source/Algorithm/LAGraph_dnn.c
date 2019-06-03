@@ -57,7 +57,11 @@
 
 #include "LAGraph.h"
 
-#define LAGRAPH_FREE_ALL GrB_free (Yhandle) ;
+#define LAGRAPH_FREE_ALL    \
+{                           \
+    GrB_free (&M) ;         \
+    GrB_free (Yhandle) ;    \
+}
 
 GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
 (
@@ -81,20 +85,29 @@ GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
         return (GrB_NULL_POINTER) ;
     }
 
+    GrB_Matrix Y = NULL ;
+    GrB_Matrix M = NULL ;
+    (*Yhandle) = NULL ;
+
     GrB_Type type ;
     LAGRAPH_OK (GxB_Matrix_type (&type, Y0)) ;
 
     GrB_Semiring plus_times, plus_plus ;
+    GrB_UnaryOp gt0, id ;
 
     if (type == GrB_FP32)
     {
         plus_times = LAGraph_PLUS_TIMES_FP32 ;
         plus_plus  = LAGraph_PLUS_PLUS_FP32 ;
+        gt0        = LAGraph_GT0_FP32 ;
+        id         = GrB_IDENTITY_FP32 ;
     }
     else if (type == GrB_FP64)
     {
         plus_times = LAGraph_PLUS_TIMES_FP64 ;
         plus_plus  = LAGraph_PLUS_PLUS_FP64 ;
+        gt0        = LAGraph_GT0_FP64 ;
+        id         = GrB_IDENTITY_FP32 ;
     }
     else
     {
@@ -114,13 +127,11 @@ GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
     // create the output matrix Y
     //--------------------------------------------------------------------------
 
-    GrB_Matrix Y = NULL ;
-    (*Yhandle) = NULL ;
-
     GrB_Index nfeatures, nneurons ;
     LAGRAPH_OK (GrB_Matrix_nrows (&nfeatures, Y0)) ;
     LAGRAPH_OK (GrB_Matrix_ncols (&nneurons,  Y0)) ;
     LAGRAPH_OK (GrB_Matrix_new (&Y, type, nfeatures, nneurons)) ;
+    LAGRAPH_OK (GrB_Matrix_new (&M, GrB_BOOL, nfeatures, nneurons)) ;
 
     //--------------------------------------------------------------------------
     // propagate the features through the neuron layers
@@ -138,13 +149,22 @@ GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
         LAGRAPH_OK (GrB_mxm (Y, NULL, NULL, plus_plus, Y, Bias [layer], NULL)) ;
 
         // delete entries from Y: keep only those entries greater than zero
+        #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
+            && GxB_IMPLEMENTATION >= GxB_VERSION (3,0,0)
+        // using SuiteSparse:GraphBLAS 3.0.0 or later.
         LAGRAPH_OK (GxB_select (Y, NULL, NULL, GxB_GT_ZERO, Y, NULL, NULL)) ;
+        #else
+        // using SuiteSparse v2.x or earlier, or any other GraphBLAS library.
+        LAGRAPH_OK (GrB_apply (M, NULL, NULL, gt0, Y, NULL)) ;
+        LAGRAPH_OK (GrB_apply (Y, M, NULL, id, Y, LAGraph_desc_ooor)) ;
+        #endif
     }
 
     //--------------------------------------------------------------------------
-    // return result
+    // free workspace and return result
     //--------------------------------------------------------------------------
 
+    GrB_free (&M) ;
     (*Yhandle) = Y ;
     return (GrB_SUCCESS) ;
 }

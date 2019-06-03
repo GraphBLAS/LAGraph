@@ -178,6 +178,10 @@ extern GrB_UnaryOp
     // unary operator for lcc
     LAGraph_COMB_FP64           ,
 
+    // unary ops to check if greater than zero
+    LAGraph_GT0_FP32            ,
+    LAGraph_GT0_FP64            ,
+
     // unary operators that return 1
     LAGraph_ONE_UINT32          ,
     LAGraph_ONE_FP64            ,
