@@ -107,7 +107,7 @@ GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
         plus_times = LAGraph_PLUS_TIMES_FP64 ;
         plus_plus  = LAGraph_PLUS_PLUS_FP64 ;
         gt0        = LAGraph_GT0_FP64 ;
-        id         = GrB_IDENTITY_FP32 ;
+        id         = GrB_IDENTITY_FP64 ;
     }
     else
     {
@@ -137,28 +137,41 @@ GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
     // propagate the features through the neuron layers
     //--------------------------------------------------------------------------
 
+//  double t1 = 0, t2 = 0, t3 = 0, t ;
+
     for (int layer = 0 ; layer < nlayers ; layer++)
     {
         // Y = Y * W [layer], using the conventional PLUS_TIMES semiring
+//      t = omp_get_wtime ( ) ;
         LAGRAPH_OK (GrB_mxm (Y, NULL, NULL, plus_times,
             ((layer == 0) ? Y0 : Y), W [layer], NULL)) ;
+//      t1 += (omp_get_wtime ( ) - t) ;
 
         // Y = Y * Bias [layer], using the PLUS_PLUS semiring.  This computes
         // Y(i,j) += Bias [layer] (j,j) for each entry Y(i,j).  It does not
         // introduce any new entries in Y.
+//      t = omp_get_wtime ( ) ;
         LAGRAPH_OK (GrB_mxm (Y, NULL, NULL, plus_plus, Y, Bias [layer], NULL)) ;
+//      t2 += (omp_get_wtime ( ) - t) ;
 
         // delete entries from Y: keep only those entries greater than zero
         #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
             && GxB_IMPLEMENTATION >= GxB_VERSION (3,0,0)
         // using SuiteSparse:GraphBLAS 3.0.0 or later.
+//      t = omp_get_wtime ( ) ;
         LAGRAPH_OK (GxB_select (Y, NULL, NULL, GxB_GT_ZERO, Y, NULL, NULL)) ;
+//      t3 += (omp_get_wtime ( ) - t) ;
+
         #else
         // using SuiteSparse v2.x or earlier, or any other GraphBLAS library.
         LAGRAPH_OK (GrB_apply (M, NULL, NULL, gt0, Y, NULL)) ;
         LAGRAPH_OK (GrB_apply (Y, M, NULL, id, Y, LAGraph_desc_ooor)) ;
         #endif
     }
+
+//  printf ("\nY*W: %g sec\n", t1) ;
+//  printf ("Y+B: %g sec\n", t2) ;
+//  printf ("RelU %g sec\n", t3) ;
 
     //--------------------------------------------------------------------------
     // free workspace and return result
