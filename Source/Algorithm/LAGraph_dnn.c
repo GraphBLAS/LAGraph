@@ -93,13 +93,14 @@ GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
     LAGRAPH_OK (GxB_Matrix_type (&type, Y0)) ;
 
     GrB_Semiring plus_times, plus_plus ;
-    GrB_UnaryOp gt0, id ;
+    GrB_UnaryOp gt0, id, ymax ;
 
     if (type == GrB_FP32)
     {
         plus_times = LAGraph_PLUS_TIMES_FP32 ;
         plus_plus  = LAGraph_PLUS_PLUS_FP32 ;
         gt0        = LAGraph_GT0_FP32 ;
+        ymax       = LAGraph_YMAX_FP32 ;
         id         = GrB_IDENTITY_FP32 ;
     }
     else if (type == GrB_FP64)
@@ -107,6 +108,7 @@ GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
         plus_times = LAGraph_PLUS_TIMES_FP64 ;
         plus_plus  = LAGraph_PLUS_PLUS_FP64 ;
         gt0        = LAGraph_GT0_FP64 ;
+        ymax       = LAGraph_YMAX_FP64 ;
         id         = GrB_IDENTITY_FP64 ;
     }
     else
@@ -167,6 +169,9 @@ GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
         LAGRAPH_OK (GrB_apply (M, NULL, NULL, gt0, Y, NULL)) ;
         LAGRAPH_OK (GrB_apply (Y, M, NULL, id, Y, LAGraph_desc_ooor)) ;
         #endif
+
+        // threshold maximum values: Y (Y > 32) = 32
+        LAGRAPH_OK (GrB_apply (Y, NULL, NULL, ymax, Y, NULL)) ;
     }
 
 //  printf ("\nY*W: %g sec\n", t1) ;

@@ -182,6 +182,10 @@ extern GrB_UnaryOp
     LAGraph_GT0_FP32            ,
     LAGraph_GT0_FP64            ,
 
+    // unary YMAX ops for DNN
+    LAGraph_YMAX_FP32           ,
+    LAGraph_YMAX_FP64           ,
+
     // unary operators that return 1
     LAGraph_ONE_UINT32          ,
     LAGraph_ONE_FP64            ,

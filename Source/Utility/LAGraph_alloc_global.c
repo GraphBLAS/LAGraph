@@ -355,6 +355,28 @@ void LAGraph_gt0_fp64
     (*z) = ((*x) > 0) ;
 }
 
+// unary operators to threshold a max value for DNN
+GrB_UnaryOp LAGraph_YMAX_FP32 = NULL ;
+GrB_UnaryOp LAGraph_YMAX_FP64 = NULL ;
+
+void LAGraph_ymax_fp32
+(
+    float *z,
+    const float *x
+)
+{
+    (*z) = fminf ((*x), (float) 32.0) ;
+}
+
+void LAGraph_ymax_fp64
+(
+    float *z,
+    const float *x
+)
+{
+    (*z) = fmin ((*x), (double) 32.0) ;
+}
+
 
 // integer decrement
 GrB_UnaryOp LAGraph_DECR_INT32 = NULL ;
@@ -612,6 +634,18 @@ GrB_Info LAGraph_alloc_global ( )
     LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_GT0_FP64,
         F_UNARY (LAGraph_gt0_fp64),
         GrB_BOOL, GrB_FP64)) ;
+
+    //--------------------------------------------------------------------------
+    // create the unary YMAX operators
+    //--------------------------------------------------------------------------
+
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_YMAX_FP32,
+        F_UNARY (LAGraph_ymax_fp32),
+        GrB_FP32, GrB_FP32)) ;
+
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_YMAX_FP64,
+        F_UNARY (LAGraph_ymax_fp64),
+        GrB_FP64, GrB_FP64)) ;
 
     //--------------------------------------------------------------------------
     // create the unary operators that return true
