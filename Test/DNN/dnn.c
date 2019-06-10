@@ -152,6 +152,9 @@ int main (int argc, char **argv)
 //  GrB_Type type = GrB_FP64 ;
     GrB_Type type = GrB_FP32 ;
 
+    printf ("type: ") ;
+    if (type == GrB_FP64) printf ("double\n") ; else printf ("float\n") ;
+
     // get the max # of threads that can be used
     int nthreads_max ;
     LAGRAPH_OK (GxB_get (GxB_NTHREADS, &nthreads_max)) ;
@@ -160,6 +163,9 @@ int main (int argc, char **argv)
     #define NNTHREADS 12
     int nthreads_list [NNTHREADS] =
         { 1, 2, 4, 8, 16, 20, 32, 40, 64, 128, 160, 256 } ;
+
+//  #define NNTHREADS 1
+//  int nthreads_list [NNTHREADS] = { 40 } ;
 
     // determine the # of problems to solve
     int nproblems = NMAXNEURONS * NMAXLAYERS ;
@@ -372,32 +378,44 @@ int main (int argc, char **argv)
                 LAGraph_tic (tic) ;
                 LAGRAPH_OK (GrB_Matrix_nvals (&final_ynvals, Y)) ;
 
+                // C = sum (Y)
+                LAGRAPH_OK (GrB_Vector_new (&C, type, nfeatures)) ;
+                LAGRAPH_OK (GrB_reduce (C, NULL, NULL, GrB_PLUS_FP64, Y, NULL));
+                // Categories = pattern of C
+                LAGRAPH_OK (GrB_Vector_new (&Categories, GrB_BOOL, nfeatures)) ;
+                LAGRAPH_OK (GrB_apply (Categories, NULL, NULL, GxB_ONE_BOOL,
+                    C, NULL)) ;
+
+                // write out Categories, as a 1-based file
+                sprintf (filename, "my_neuron%d-l%d-categories_threads%d.tsv",
+                    nneurons, nlayers, nthreads) ;
+                FILE *ff = fopen (filename, "w") ;
+                for (int i = 0 ; i < nfeatures ; i++)
+                {
+                    bool c = false ;
+                    LAGRAPH_OK (GrB_Vector_extractElement (&c, Categories, i)) ;
+                    if (c) fprintf (ff, "%d\n", i + 1) ;
+                }
+                fclose (ff) ;
+
                 if (check_result)
                 {
-
-                    // C = sum (Y)
-                    LAGRAPH_OK (GrB_Vector_new (&C, type, nfeatures)) ;
-                    LAGRAPH_OK (GrB_reduce (C, NULL, NULL, GrB_PLUS_FP64, Y,
-                        NULL)) ;
-                    // Categories = pattern of C
-                    LAGRAPH_OK (GrB_Vector_new (&Categories, GrB_BOOL,
-                        nfeatures)) ;
-                    LAGRAPH_OK (GrB_apply (Categories, NULL, NULL, GxB_ONE_BOOL,
-                        C, NULL)) ;
-
                     // check if Categories and TrueCategories are the same
                     bool isequal ;
                     LAGRAPH_OK (LAGraph_Vector_isequal (&isequal,
                         TrueCategories, Categories, NULL)) ;
                     if (!isequal)
                     {
-                        GxB_print (TrueCategories, 3) ;
-                        GxB_print (Categories, 3) ;
+                        // GxB_print (TrueCategories, 3) ;
+                        // GxB_print (Categories, 3) ;
                         printf ("test failure!\n") ;
-                        LAGRAPH_FREE_ALL ;
-                        abort ( ) ;
+                        // LAGRAPH_FREE_ALL ;
+                        // abort ( ) ;
                     }
-                    printf (" test passed") ;
+                    else
+                    {
+                        printf (" test passed") ;
+                    }
                 }
                 printf ("\n") ;
 

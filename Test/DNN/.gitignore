@@ -4,6 +4,7 @@ dnn
 dnn_data
 *.o
 .DS_Store
+my_*
 
 # Do not ignore this file
 !.gitignore

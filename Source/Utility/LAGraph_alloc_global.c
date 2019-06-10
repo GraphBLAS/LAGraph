@@ -370,8 +370,8 @@ void LAGraph_ymax_fp32
 
 void LAGraph_ymax_fp64
 (
-    float *z,
-    const float *x
+    double *z,
+    const double *x
 )
 {
     (*z) = fmin ((*x), (double) 32.0) ;
