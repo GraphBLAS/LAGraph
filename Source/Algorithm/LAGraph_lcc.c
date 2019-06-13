@@ -170,10 +170,6 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
         LAGraph_desc_otoo)) ;
     GrB_free (&AT) ;
 
-    // CA = CA.*C via element-wise multiplication
-    LAGRAPH_OK (GrB_eWiseMult (CA, NULL, NULL, GrB_TIMES_FP64, CA, C, NULL)) ;
-    GrB_free (&C) ;
-
     //--------------------------------------------------------------------------
     // Calculate LCC
     //--------------------------------------------------------------------------
