@@ -359,16 +359,21 @@ int main (int argc, char **argv)
                 LAGraph_tic (tic) ;
                 LAGRAPH_OK (LAGraph_dnn (&Y, W, Bias, nlayers, Y0)) ;
                 t = LAGraph_toc (tic) ;
-                printf ("solution time %12.2f sec", t) ;
+
+                printf ("soln time %12.2f sec", t) ;
 
                 if (nthreads == 1)
                 {
                     t1 = t ;
+                    printf ("                 ") ;
                 }
                 else
                 {
                     printf (" speedup %8.2f", t1/t) ;
                 }
+
+                double rate = ((double) nfeatures) * ((double) nedges) / t ;
+                printf (" rate %10.4f (1e9 edges/sec) ", rate / 1e9) ;
 
                 //--------------------------------------------------------------
                 // check the result
@@ -387,6 +392,7 @@ int main (int argc, char **argv)
                     C, NULL)) ;
 
                 // write out Categories, as a 1-based file
+                /*
                 sprintf (filename, "my_neuron%d-l%d-categories_threads%d.tsv",
                     nneurons, nlayers, nthreads) ;
                 FILE *ff = fopen (filename, "w") ;
@@ -397,6 +403,7 @@ int main (int argc, char **argv)
                     if (c) fprintf (ff, "%d\n", i + 1) ;
                 }
                 fclose (ff) ;
+                */
 
                 if (check_result)
                 {
@@ -411,10 +418,6 @@ int main (int argc, char **argv)
                         printf ("test failure!\n") ;
                         // LAGRAPH_FREE_ALL ;
                         // abort ( ) ;
-                    }
-                    else
-                    {
-                        printf (" test passed") ;
                     }
                 }
                 printf ("\n") ;

@@ -1,0 +1,70 @@
+hypersparse.cs.tamu.edu
+type: float
+max # of nthreads: 40
+# of problems to solve: 12
+
+# neurons: 1024 bias: -0.3
+# features: 60000 read time: 3.08589 sec
+# entries in Y0: 6.37451 million
+
+--------------------------------------neurons per layer: 1024 layers: 120
+read net time 1.291 sec
+# edges in all layers: 3.93216 million
+
+nthreads  1: 
+Y*W: 16.3922 sec
+Y+B: 1.1404 sec
+RelU 1.11356 sec
+Ymax 2.30508 sec
+soln time        20.95 sec                  rate    11.2608 (1e9 edges/sec) 
+nthreads  2: 
+Y*W: 9.58302 sec
+Y+B: 0.684154 sec
+RelU 0.662929 sec
+Ymax 1.18613 sec
+soln time        12.12 sec speedup     1.73 rate    19.4720 (1e9 edges/sec) 
+nthreads  4: 
+Y*W: 4.87062 sec
+Y+B: 0.391555 sec
+RelU 0.381454 sec
+Ymax 0.618453 sec
+soln time         6.26 sec speedup     3.35 rate    37.6754 (1e9 edges/sec) 
+nthreads  8: 
+Y*W: 2.50045 sec
+Y+B: 0.262519 sec
+RelU 0.243477 sec
+Ymax 0.327314 sec
+soln time         3.33 sec speedup     6.28 rate    70.7683 (1e9 edges/sec) 
+nthreads 16: 
+Y*W: 1.33545 sec
+Y+B: 0.211964 sec
+RelU 0.171555 sec
+Ymax 0.186254 sec
+soln time         1.91 sec speedup    11.00 rate   123.8272 (1e9 edges/sec) 
+nthreads 20: 
+Y*W: 1.0923 sec
+Y+B: 0.211739 sec
+RelU 0.155449 sec
+Ymax 0.161612 sec
+soln time         1.62 sec speedup    12.92 rate   145.5287 (1e9 edges/sec) 
+nthreads 32: 
+Y*W: 1.12338 sec
+Y+B: 0.251783 sec
+RelU 0.199336 sec
+Ymax 0.172214 sec
+soln time         1.75 sec speedup    11.99 rate   135.0636 (1e9 edges/sec) 
+nthreads 40: 
+Y*W: 0.939821 sec
+Y+B: 0.25001 sec
+RelU 0.198243 sec
+Ymax 0.151131 sec
+soln time         1.54 sec speedup    13.61 rate   153.2685 (1e9 edges/sec) 
+
+# entries in final Y: 1.85549 million
+check time: 0.00686598 sec
+
+--------------------------------------neurons per layer: 1024 layers: 480
+read net time 3.49816 sec
+# edges in all layers: 15.7286 million
+
+nthreads  1: 
