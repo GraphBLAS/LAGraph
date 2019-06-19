@@ -5,6 +5,8 @@ Intel Xeon E5-2698 v4, with 2.2 GHz, 20 hardware cores (40 threads).
 The icc compiler was used (19.0.3.199 20190206).
 The GPUs were not used.
 
+These results were for the earlier specification of the problem, without ymax.
+
 max # of nthreads: 40
 # of problems to solve: 12
 
