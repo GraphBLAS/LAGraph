@@ -1,0 +1,40 @@
+Results on hypersparse.cse.tamu.edu, June 17
+MATLAB R2018a
+model name	: Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+The last 16K run was terminated.  64K wasn't run.
+
+runSparseDNNchallenge
+DNN neurons/layer: 1024, layers: 120, edges: 3932160
+Read time (sec): 1.4305, read rate (edges/sec): 2748785.746
+Run time (sec): 179.1841, run rate (edges/sec): 1316688563.89
+Challenge PASSED
+DNN neurons/layer: 1024, layers: 480, edges: 15728640
+Read time (sec): 5.5286, read rate (edges/sec): 2844977.4661
+Run time (sec): 677.5103, run rate (edges/sec): 1392921061.9675
+Challenge PASSED
+DNN neurons/layer: 1024, layers: 1920, edges: 62914560
+Read time (sec): 22.2019, read rate (edges/sec): 2833749.8522
+Run time (sec): 2680.9812, run rate (edges/sec): 1408019444.2008
+Challenge PASSED
+DNN neurons/layer: 4096, layers: 120, edges: 15728640
+Read time (sec): 5.2847, read rate (edges/sec): 2976286.8019
+Run time (sec): 818.493, run rate (edges/sec): 1152995066.2694
+Challenge PASSED
+DNN neurons/layer: 4096, layers: 480, edges: 62914560
+Read time (sec): 21.4024, read rate (edges/sec): 2939600.0135
+Run time (sec): 3240.1668, run rate (edges/sec): 1165024456.1126
+Challenge PASSED
+DNN neurons/layer: 4096, layers: 1920, edges: 251658240
+Read time (sec): 86.0035, read rate (edges/sec): 2926141.0146
+Run time (sec): 12738.2649, run rate (edges/sec): 1185365083.307
+Challenge PASSED
+DNN neurons/layer: 16384, layers: 120, edges: 62914560
+Read time (sec): 21.4243, read rate (edges/sec): 2936599.8067
+Run time (sec): 3451.8057, run rate (edges/sec): 1093593867.8165
+Challenge PASSED
+DNN neurons/layer: 16384, layers: 480, edges: 251658240
+Read time (sec): 85.6859, read rate (edges/sec): 2936985.1232
+Run time (sec): 13986.9404, run rate (edges/sec): 1079542344.0018
+Challenge PASSED
+DNN neurons/layer: 16384, layers: 1920, edges: 1006632960
+Read time (sec): 349.1694, read rate (edges/sec): 2882936.0293
