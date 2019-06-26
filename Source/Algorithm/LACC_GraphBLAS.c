@@ -301,9 +301,9 @@ GrB_Vector LAGraph_lacc(GrB_Matrix A)
         
         GrB_eWiseMult(pchange,NULL, NULL, GrB_NE_UINT64, parents1,parents, NULL);
         GrB_reduce (&change, NULL, Lor, pchange, NULL) ;
-        GxB_Vector_fprint(parents1, "---- parents1 ------", GxB_SHORT, stderr);
-        GxB_Vector_fprint(parents, "---- parents ------", GxB_SHORT, stderr);
-        GxB_Vector_fprint(pchange, "---- change ------", GxB_SHORT, stderr);
+//        GxB_Vector_fprint(parents1, "---- parents1 ------", GxB_SHORT, stderr);
+//        GxB_Vector_fprint(parents, "---- parents ------", GxB_SHORT, stderr);
+//        GxB_Vector_fprint(pchange, "---- change ------", GxB_SHORT, stderr);
     }
     
     CountCC(parents);

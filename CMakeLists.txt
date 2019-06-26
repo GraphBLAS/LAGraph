@@ -77,10 +77,10 @@ endif ( )
 # edit these lines to select your GraphBLAS library
 #-------------------------------------------------------------------------------
 
-# link_directories ( /usr/local/lib )
-link_directories ( ../GraphBLAS/build )
-# include_directories ( /usr/local/include )
-include_directories ( ../GraphBLAS/Include )
+link_directories ( /usr/local/lib64 )
+#link_directories ( ../GraphBLAS/build )
+include_directories ( /usr/local/include )
+#include_directories ( ../GraphBLAS/Include )
 
 #-------------------------------------------------------------------------------
 # Configure Include/LAGraph.h and documentation with version number
@@ -135,6 +135,7 @@ message ( STATUS "CMAKE have OpenMP:         " ${OPENMP_FOUND} )
 set ( CMAKE_INCLUDE_CURRENT_DIR ON )
 
 include_directories ( Source/Utility Source/Algorithm Include )
+link_directories(/usr/local/lib64)
 
 #-------------------------------------------------------------------------------
 # compiler options
