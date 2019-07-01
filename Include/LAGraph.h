@@ -411,6 +411,13 @@ GrB_Info LAGraph_prune_diag // remove all entries from the diagonal
     GrB_Matrix A
 ) ;
 
+GrB_Info LAGraph_Vector_to_dense
+(
+    GrB_Vector *vdense,     // output vector
+    GrB_Vector v,           // input vector
+    void *id                // pointer to value to fill vdense with
+) ;
+
 //------------------------------------------------------------------------------
 // user-callable algorithms
 //------------------------------------------------------------------------------
