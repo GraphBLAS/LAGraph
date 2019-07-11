@@ -418,6 +418,14 @@ GrB_Info LAGraph_Vector_to_dense
     void *id                // pointer to value to fill vdense with
 ) ;
 
+GrB_Info LAGraph_grread     // read a matrix from a binary file
+(
+    GrB_Matrix *G,          // handle of matrix to create
+    uint64_t *G_version,    // the version in the file
+    const char *filename,   // name of file to open
+    GrB_Type gtype          // type of matrix to read
+) ;
+
 //------------------------------------------------------------------------------
 // user-callable algorithms
 //------------------------------------------------------------------------------
