@@ -207,7 +207,7 @@ int main (int argc, char **argv)
     // now the BFS on node s using push-pull (BEST) instead
     //--------------------------------------------------------------------------
 
-    int nthreads_max = 1 ;
+    int nthreads_max = 4 ;
     #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
     GxB_get (GxB_NTHREADS, &nthreads_max) ;
     fprintf (stderr, "\n====== parallel:\n") ;

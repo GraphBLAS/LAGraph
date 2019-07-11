@@ -55,7 +55,7 @@
 
 // This header is followed by a matrix in CSR format:
 
-//      Gp : an array of size ((n+1) * sizeof (uint64_t)) bytes, but Cp [0] = 0
+//      Gp : an array of size ((n+1) * sizeof (uint64_t)) bytes, but Gp [0] = 0
 //          does not appear in the file.  This section of the file is thus
 //          (n * sizeof (uint64_t)) bytes in length.
 
@@ -99,6 +99,7 @@ gr_header ;
 
 static GrB_Info LAGraph_binary_read
 (
+    char *name,             // name of array being read in
     int fd,                 // file descriptor to read from
     void *buffer,           // buffer of size nbytes to read into
     size_t nbytes           // # of bytes to read
@@ -109,9 +110,11 @@ static GrB_Info LAGraph_binary_read
         fprintf (stderr, "LAGraph_grread: file I/O error\n") ;
         return (GrB_INVALID_VALUE) ;
     }
-    if (read (fd, buffer, nbytes) != nbytes)
+    ssize_t nbytes_read = read (fd, buffer, nbytes) ;
+    if (nbytes_read != nbytes)
     {
-        fprintf (stderr, "LAGraph_grread: file I/O error\n") ;
+        fprintf (stderr, "LAGraph_grread: file I/O error; expected %g bytes"
+            ", got %g\n", (double) nbytes_read, (double) nbytes) ;
         return (GrB_INVALID_VALUE) ;
     }
     return (GrB_SUCCESS) ;
@@ -183,7 +186,8 @@ GrB_Info LAGraph_grread     // read a matrix from a binary file
     //--------------------------------------------------------------------------
 
     gr_header header ;
-    LAGRAPH_OK (LAGraph_binary_read (fd, &header, sizeof (gr_header))) ;
+    LAGRAPH_OK (LAGraph_binary_read ("header",
+        fd, &header, sizeof (gr_header))) ;
 
     (*G_version) = header.version ;     // version, TODO: what is this?
     uint64_t esize = header.esize ;     // sizeof (edge type)
@@ -218,7 +222,8 @@ GrB_Info LAGraph_grread     // read a matrix from a binary file
     }
 
     Gp [0] = 0 ;
-    LAGRAPH_OK (LAGraph_binary_read (fd, Gp+1, n * sizeof (GrB_Index))) ;
+    LAGRAPH_OK (LAGraph_binary_read ("pointers",
+        fd, Gp+1, n * sizeof (GrB_Index))) ;
 
     //--------------------------------------------------------------------------
     // allocate and read in the indices
@@ -232,7 +237,8 @@ GrB_Info LAGraph_grread     // read a matrix from a binary file
     }
 
     // indices are in 32-bit format in the file
-    LAGRAPH_OK (LAGraph_binary_read (fd, Gj_32, e * sizeof (int32_t))) ;
+    LAGRAPH_OK (LAGraph_binary_read ("indices",
+        fd, Gj_32, e * sizeof (int32_t))) ;
 
     // convert to 64-bit
     #pragma omp parallel for schedule(static)
@@ -271,7 +277,7 @@ GrB_Info LAGraph_grread     // read a matrix from a binary file
     else
     {
         // read in the edge weights
-        LAGRAPH_OK (LAGraph_binary_read (fd, Gx, e * esize)) ;
+        LAGRAPH_OK (LAGraph_binary_read ("edgeweights", fd, Gx, e * esize)) ;
     }
 
     //--------------------------------------------------------------------------
