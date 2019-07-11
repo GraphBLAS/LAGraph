@@ -1,6 +1,5 @@
 //------------------------------------------------------------------------------
-// BF_pure_c.c: implementation of Bellman-Ford method for shortest paths in
-// given graph using conventional method with c
+// BF_pure_c.c: Bellman-Ford method, not using GraphBLAS
 //------------------------------------------------------------------------------
 
 /*

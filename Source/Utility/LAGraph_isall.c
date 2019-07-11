@@ -5,11 +5,11 @@
 /*
     LAGraph:  graph algorithms based on GraphBLAS
 
-    Copyright 2019 LAGraph Contributors. 
+    Copyright 2019 LAGraph Contributors.
 
     (see Contributors.txt for a full list of Contributors; see
     ContributionInstructions.txt for information on how you can Contribute to
-    this project). 
+    this project).
 
     All Rights Reserved.
 
@@ -36,7 +36,7 @@
 
 // LAGraph_isall: check two matrices.  Contributed by Tim Davis, Texas A&M
 
-// Applies a binary operator to two matrices A and B, and returns result = true 
+// Applies a binary operator to two matrices A and B, and returns result = true
 // if the pattern of A and B are identical, and if the result of C = A op B is
 // true for all entries in C.
 
@@ -76,7 +76,7 @@ GrB_Info LAGraph_isall      // return GrB_SUCCESS if successful
     if (nrows1 != nrows2)
     {
         // # of rows differ
-        return (GrB_SUCCESS) ;    
+        return (GrB_SUCCESS) ;
     }
 
     LAGRAPH_OK (GrB_Matrix_ncols (&ncols1, A)) ;

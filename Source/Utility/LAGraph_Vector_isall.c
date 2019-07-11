@@ -5,11 +5,11 @@
 /*
     LAGraph:  graph algorithms based on GraphBLAS
 
-    Copyright 2019 LAGraph Contributors. 
+    Copyright 2019 LAGraph Contributors.
 
     (see Contributors.txt for a full list of Contributors; see
     ContributionInstructions.txt for information on how you can Contribute to
-    this project). 
+    this project).
 
     All Rights Reserved.
 
@@ -36,7 +36,7 @@
 
 // LAGraph_Vector_isall: check two vectors, contributed by Tim Davis, Texas A&M
 
-// Applies a binary operator to two vectors A and B, and returns result = true 
+// Applies a binary operator to two vectors A and B, and returns result = true
 // if the pattern of A and B are identical, and if the result of C = A op B is
 // true for all entries in C.
 
@@ -78,7 +78,7 @@ GrB_Info LAGraph_Vector_isall      // return GrB_SUCCESS if successful
     {
         // # of rows differ
         // printf ("LAGraph_isall: rows differ\n") ;
-        return (GrB_SUCCESS) ;    
+        return (GrB_SUCCESS) ;
     }
 
     // check the # entries in A and B

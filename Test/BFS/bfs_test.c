@@ -5,11 +5,11 @@
 /*
     LAGraph:  graph algorithms based on GraphBLAS
 
-    Copyright 2019 LAGraph Contributors. 
+    Copyright 2019 LAGraph Contributors.
 
     (see Contributors.txt for a full list of Contributors; see
     ContributionInstructions.txt for information on how you can Contribute to
-    this project). 
+    this project).
 
     All Rights Reserved.
 
@@ -125,7 +125,7 @@ int main (int argc, char **argv)
     GrB_Index s = 0 ;
     if (argc > 1)
     {
-        sscanf (argv [1], "%" PRIu64, &s) ; 
+        sscanf (argv [1], "%" PRIu64, &s) ;
     }
 
     fprintf (stderr, "\n=========="

@@ -2,6 +2,37 @@
 // LAGraph_FW: Floyd-Warshall method: all pairs shortest paths
 //------------------------------------------------------------------------------
 
+/*
+    LAGraph:  graph algorithms based on GraphBLAS
+
+    Copyright 2019 LAGraph Contributors.
+
+    (see Contributors.txt for a full list of Contributors; see
+    ContributionInstructions.txt for information on how you can Contribute to
+    this project).
+
+    All Rights Reserved.
+
+    NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
+    CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
+    AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
+    PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
+    THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
+    RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
+
+    Released under a BSD license, please see the LICENSE file distributed with
+    this Software or contact permission@sei.cmu.edu for full terms.
+
+    Created, in part, with funding and support from the United States
+    Government.  (see Acknowledgments.txt file).
+
+    This program includes and/or can make use of certain third party source
+    code, object code, documentation and other files ("Third Party Software").
+    See LICENSE file for more details.
+*/
+
+//------------------------------------------------------------------------------
+
 // The input is a square unsymmetric matrix G, for a directed graph.  G can be
 // of any type.  If it is real (float or double) or a 64-bit integer, then the
 // output is of type GrB_FP64.  Otherwise, the output is of type GrB_INT32.
@@ -48,13 +79,13 @@ GrB_Info LAGraph_FW
         gtype == GrB_INT64 || gtype == GrB_UINT64)
     {
         otype = GrB_FP64 ;
-        semiring = GxB_MIN_PLUS_FP64 ; 
+        semiring = GxB_MIN_PLUS_FP64 ;
         op = GrB_MIN_FP64 ;
     }
     else
     {
         otype = GrB_INT32 ;
-        semiring = GxB_MIN_PLUS_INT32 ; 
+        semiring = GxB_MIN_PLUS_INT32 ;
         op = GrB_MIN_INT32 ;
     }
 

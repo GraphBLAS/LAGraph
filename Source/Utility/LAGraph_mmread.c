@@ -5,11 +5,11 @@
 /*
     LAGraph:  graph algorithms based on GraphBLAS
 
-    Copyright 2019 LAGraph Contributors. 
+    Copyright 2019 LAGraph Contributors.
 
     (see Contributors.txt for a full list of Contributors; see
     ContributionInstructions.txt for information on how you can Contribute to
-    this project). 
+    this project).
 
     All Rights Reserved.
 
@@ -262,7 +262,7 @@ static inline bool is_blank_line
 static inline bool read_double      // true if successful, false if failure
 (
     char *p,        // string containing the value
-    double *rval    // value to read in    
+    double *rval    // value to read in
 )
 {
     while (*p && isspace (*p)) p++ ;   // skip any spaces
@@ -412,7 +412,7 @@ static inline bool read_entry   // true if successful, false if failure
         return (false) ;
     }
 
-    return (true) ;     
+    return (true) ;
 }
 
 //------------------------------------------------------------------------------
@@ -959,25 +959,25 @@ GrB_Info LAGraph_mmread
         GrB_Index i, j ;
         char x [MAXLINE] ;
 
-	for ( ; ; )
-	{
+        for ( ; ; )
+        {
 
             //------------------------------------------------------------------
             // read the file until finding the next triplet
             //------------------------------------------------------------------
 
-	    if (!get_line (f, buf))
-	    {
-		// premature end of file - not enough triplets read in
+            if (!get_line (f, buf))
+            {
+                // premature end of file - not enough triplets read in
                 GrB_free (A) ;
                 printf ("LAGraph:mmread: premature EOF\n") ;
-		return (GrB_INVALID_VALUE) ;
-	    }
-	    if (is_blank_line (buf))
-	    {
-		// blank line or comment
-		continue ;
-	    }
+                return (GrB_INVALID_VALUE) ;
+            }
+            if (is_blank_line (buf))
+            {
+                // blank line or comment
+                continue ;
+            }
 
             //------------------------------------------------------------------
             // get the row and column index
@@ -1077,8 +1077,8 @@ GrB_Info LAGraph_mmread
             }
 
             // one more entry has been read in
-	    break ;
-	}
+            break ;
+        }
     }
 
     return (GrB_SUCCESS) ;

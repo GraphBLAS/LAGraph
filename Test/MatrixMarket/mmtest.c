@@ -5,11 +5,11 @@
 /*
     LAGraph:  graph algorithms based on GraphBLAS
 
-    Copyright 2019 LAGraph Contributors. 
+    Copyright 2019 LAGraph Contributors.
 
     (see Contributors.txt for a full list of Contributors; see
     ContributionInstructions.txt for information on how you can Contribute to
-    this project). 
+    this project).
 
     All Rights Reserved.
 
@@ -134,7 +134,7 @@ GrB_Info mmtest
     /*
     char buf [1030] ;
     fgets (buf, 1030, f) ;
-    fprintf (stderr, "%s", buf) ; 
+    fprintf (stderr, "%s", buf) ;
     fclose (f) ;
     f = fopen (filename, "r") ;
     if (f == NULL)

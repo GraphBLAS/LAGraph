@@ -5,11 +5,11 @@
 /*
     LAGraph:  graph algorithms based on GraphBLAS
 
-    Copyright 2019 LAGraph Contributors. 
+    Copyright 2019 LAGraph Contributors.
 
     (see Contributors.txt for a full list of Contributors; see
     ContributionInstructions.txt for information on how you can Contribute to
-    this project). 
+    this project).
 
     All Rights Reserved.
 
@@ -80,7 +80,7 @@ GrB_Info LAGraph_BF_basic
     GrB_Index nrows, ncols;
     // tmp vector to store distance vector after n (i.e., V) loops
     GrB_Vector d = NULL, dtmp = NULL;
-  
+
     if (A == NULL || pd_output == NULL)
     {
         // required argument is missing
@@ -96,7 +96,7 @@ GrB_Info LAGraph_BF_basic
         LAGRAPH_ERROR ("A must be square", GrB_INVALID_VALUE) ;
     }
     GrB_Index n = nrows;           // n = # of vertices in graph
-    
+
     if (s >= n || s < 0)
     {
         LAGRAPH_ERROR ("invalid value for source vertex s", GrB_INVALID_VALUE) ;
@@ -108,7 +108,7 @@ GrB_Info LAGraph_BF_basic
 
     // copy d to dtmp in order to create a same size of vector
     LAGRAPH_OK (GrB_Vector_dup(&dtmp, d));
- 
+
     int64_t iter = 0;      //number of iterations
     bool same = false;     //variable indicating if d=dtmp
 
@@ -116,7 +116,7 @@ GrB_Info LAGraph_BF_basic
     while (!same && iter < n - 1)
     {
         // excute semiring on d and A, and save the result to d
-        LAGRAPH_OK (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, GxB_MIN_PLUS_FP64, d, A, 
+        LAGRAPH_OK (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, GxB_MIN_PLUS_FP64, d, A,
             GrB_NULL));
         LAGRAPH_OK (LAGraph_Vector_isequal(&same, dtmp, d, GrB_NULL));
         if (!same)
@@ -128,16 +128,16 @@ GrB_Info LAGraph_BF_basic
         iter++;
     }
 
-    // check for negative-weight cycle only when there was a new path in the 
+    // check for negative-weight cycle only when there was a new path in the
     // last loop, otherwise, there can't be a negative-weight cycle.
     if (!same)
     {
         // excute semiring again to check for negative-weight cycle
-        LAGRAPH_OK (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, GxB_MIN_PLUS_FP64, d, A, 
+        LAGRAPH_OK (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, GxB_MIN_PLUS_FP64, d, A,
             GrB_NULL));
         LAGRAPH_OK (LAGraph_Vector_isequal(&same, dtmp, d, GrB_NULL));
 
-	// if d != dtmp, then there is a negative-weight cycle in the graph
+        // if d != dtmp, then there is a negative-weight cycle in the graph
         if (!same)
         {
             // printf("A negative-weight cycle found. \n");

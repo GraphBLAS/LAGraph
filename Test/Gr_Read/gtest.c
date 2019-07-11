@@ -5,11 +5,11 @@
 /*
     LAGraph:  graph algorithms based on GraphBLAS
 
-    Copyright 2019 LAGraph Contributors. 
+    Copyright 2019 LAGraph Contributors.
 
     (see Contributors.txt for a full list of Contributors; see
     ContributionInstructions.txt for information on how you can Contribute to
-    this project). 
+    this project).
 
     All Rights Reserved.
 
@@ -23,7 +23,7 @@
     Released under a BSD license, please see the LICENSE file distributed with
     this Software or contact permission@sei.cmu.edu for full terms.
 
-    
+    Created, in part, with funding and support from the United States
     Government.  (see Acknowledgments.txt file).
 
     This program includes and/or can make use of certain third party source
