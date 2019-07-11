@@ -51,7 +51,6 @@
 // denote a list of row indices; remove it here.
 #undef I
 
-#define _POSIX_C_SOURCE 200809L
 #include <time.h>
 
 #if defined ( __linux__ )

@@ -70,10 +70,6 @@
 // occurs or the edge size is not what was expected.
 
 #include "LAGraph_internal.h"
-#include <fcntl.h>
-#include <sys/types.h>
-#include <sys/uio.h>
-#include <unistd.h>
 
 //------------------------------------------------------------------------------
 // gr_header
@@ -100,21 +96,23 @@ gr_header ;
 static GrB_Info LAGraph_binary_read
 (
     char *name,             // name of array being read in
-    int fd,                 // file descriptor to read from
+    FILE *fp,               // file to read from
     void *buffer,           // buffer of size nbytes to read into
-    size_t nbytes           // # of bytes to read
+    size_t n,               // # of elements to read
+    size_t size             // size of each element
 )
 {
-    if (fd < 0)
+    if (fp == NULL)
     {
         fprintf (stderr, "LAGraph_grread: file I/O error\n") ;
         return (GrB_INVALID_VALUE) ;
     }
-    ssize_t nbytes_read = read (fd, buffer, nbytes) ;
-    if (nbytes_read != nbytes)
+    size_t n_read = fread (buffer, size, n, fp) ;
+    if (n_read != n)
     {
-        fprintf (stderr, "LAGraph_grread: file I/O error; expected %g bytes"
-            ", got %g\n", (double) nbytes_read, (double) nbytes) ;
+        fprintf (stderr, "LAGraph_grread: file I/O error; expected %g items"
+            ", got %g, object %s, size %g\n", (double) n_read, (double) n,
+            name, (double) size) ;
         return (GrB_INVALID_VALUE) ;
     }
     return (GrB_SUCCESS) ;
@@ -133,7 +131,8 @@ static GrB_Info LAGraph_binary_read
     LAGRAPH_FREE (Gj) ;         \
     LAGRAPH_FREE (Gj_32) ;      \
     LAGRAPH_FREE (Gx) ;         \
-    if (fd >= 0) close (fd) ;   \
+    if (fp != NULL) fclose (fp) ; \
+    fp = NULL ;                 \
 }
 
 //------------------------------------------------------------------------------
@@ -160,7 +159,7 @@ GrB_Info LAGraph_grread     // read a matrix from a binary file
     int32_t *Gj_32 = NULL ;
     GrB_Index *Gj = NULL ;
     void *Gx = NULL ;
-    int fd = -1 ;
+    FILE *fp = NULL ;
 
     if (G == NULL || G_version == NULL  || filename == NULL)
     {
@@ -174,8 +173,8 @@ GrB_Info LAGraph_grread     // read a matrix from a binary file
     // open the file
     //--------------------------------------------------------------------------
 
-    fd = open (filename, O_RDONLY) ;
-    if (fd < 0)
+    fp = fopen (filename, "r") ;
+    if (fp == NULL)
     {
         fprintf (stderr, "LAGraph_grread: file not found: %s\n", filename) ;
         LAGRAPH_ERROR ("input file not found", GrB_INVALID_VALUE) ;
@@ -187,7 +186,7 @@ GrB_Info LAGraph_grread     // read a matrix from a binary file
 
     gr_header header ;
     LAGRAPH_OK (LAGraph_binary_read ("header",
-        fd, &header, sizeof (gr_header))) ;
+        fp, &header, 1, sizeof (gr_header))) ;
 
     (*G_version) = header.version ;     // version, TODO: what is this?
     uint64_t esize = header.esize ;     // sizeof (edge type)
@@ -223,7 +222,7 @@ GrB_Info LAGraph_grread     // read a matrix from a binary file
 
     Gp [0] = 0 ;
     LAGRAPH_OK (LAGraph_binary_read ("pointers",
-        fd, Gp+1, n * sizeof (GrB_Index))) ;
+        fp, Gp+1, n, sizeof (GrB_Index))) ;
 
     //--------------------------------------------------------------------------
     // allocate and read in the indices
@@ -238,7 +237,7 @@ GrB_Info LAGraph_grread     // read a matrix from a binary file
 
     // indices are in 32-bit format in the file
     LAGRAPH_OK (LAGraph_binary_read ("indices",
-        fd, Gj_32, e * sizeof (int32_t))) ;
+        fp, Gj_32, e, sizeof (int32_t))) ;
 
     // convert to 64-bit
     #pragma omp parallel for schedule(static)
@@ -277,7 +276,7 @@ GrB_Info LAGraph_grread     // read a matrix from a binary file
     else
     {
         // read in the edge weights
-        LAGRAPH_OK (LAGraph_binary_read ("edgeweights", fd, Gx, e * esize)) ;
+        LAGRAPH_OK (LAGraph_binary_read ("edgeweights", fp, Gx, e, esize)) ;
     }
 
     //--------------------------------------------------------------------------
@@ -291,7 +290,7 @@ GrB_Info LAGraph_grread     // read a matrix from a binary file
     // close the file and return result
     //--------------------------------------------------------------------------
 
-    close (fd) ;
+    fclose (fp) ;
     return (GrB_SUCCESS) ;
 }
 
