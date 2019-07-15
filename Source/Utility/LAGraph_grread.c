@@ -40,8 +40,9 @@
 
 // The file format consists of a header, with the following content:
 
-//      uint64_t version :  TODO what is this?
-//          This value is returned to the caller, but is otherwise unused.
+//      uint64_t version : either 1 or 2.  1: nodes are 2^32, 2: nodes are
+//          64 bit.  This value is returned to the caller, but is otherwise
+//          unused.
 
 //      uint64_t esize : the size of the edge weight, as sizeof (edgetype).
 //          For example, if the file contains edge weights of type int32_t,
@@ -79,7 +80,9 @@
 
 typedef struct
 {
-    uint64_t version ;      // TODO what is this?
+    uint64_t version ;      // either 1 or 2.
+                            // 1: node id's are in the range 0 to 2^32
+                            // 2: node id's are in the range 0 to 2^64
     uint64_t esize ;        // sizeof (edgetype)
     uint64_t n ;            // # of nodes in the graph
     uint64_t e ;            // # of edges in the graph
@@ -188,10 +191,11 @@ GrB_Info LAGraph_grread     // read a matrix from a binary file
     LAGRAPH_OK (LAGraph_binary_read ("header",
         fp, &header, 1, sizeof (gr_header))) ;
 
-    (*G_version) = header.version ;     // version, TODO: what is this?
+    uint64_t version = header.version ; // version, 1 or 2
     uint64_t esize = header.esize ;     // sizeof (edge type)
     uint64_t n = header.n ;             // # of nodes
     uint64_t e = header.e ;             // # of edges
+    (*G_version) = version ;
 
     size_t esize_expected = 0 ;
     if (gtype != NULL)
@@ -205,7 +209,12 @@ GrB_Info LAGraph_grread     // read a matrix from a binary file
         LAGRAPH_ERROR ("unexpected edge size", GrB_INVALID_VALUE) ;
     }
 
-    if (n > UINT32_MAX)
+    if (! (version == 1 || version == 2))
+    {
+        LAGRAPH_ERROR ("invalid version, must be 1 or 2", GrB_INVALID_VALUE) ;
+    }
+
+    if (version == 1 && n > UINT32_MAX)
     {
         LAGRAPH_ERROR ("problem too large", GrB_INVALID_VALUE) ;
     }
@@ -228,25 +237,55 @@ GrB_Info LAGraph_grread     // read a matrix from a binary file
     // allocate and read in the indices
     //--------------------------------------------------------------------------
 
-    Gj    = LAGraph_malloc (e, sizeof (GrB_Index)) ;
-    Gj_32 = LAGraph_malloc (e, sizeof (int32_t)) ;
-    if (Gj_32 == NULL || Gj == NULL)
+    Gj = LAGraph_malloc (e, sizeof (GrB_Index)) ;
+    if (Gj == NULL)
     {
         LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
     }
 
-    // indices are in 32-bit format in the file
-    LAGRAPH_OK (LAGraph_binary_read ("indices",
-        fp, Gj_32, e, sizeof (int32_t))) ;
-
-    // convert to 64-bit
-    #pragma omp parallel for schedule(static)
-    for (GrB_Index p = 0 ; p < e ; p++)
+    if (version == 1)
     {
-        Gj [p] = (GrB_Index) Gj_32 [p] ;
-    }
 
-    LAGRAPH_FREE (Gj_32) ;
+        //----------------------------------------------------------------------
+        // indices are in 32-bit format in the file
+        //----------------------------------------------------------------------
+
+        // allocate workspace for a single chunk
+        #define CHUNK (10 * 1024 * 1024)
+        int64_t chunk = LAGRAPH_MIN (CHUNK, e) ;
+        Gj_32 = LAGraph_malloc (chunk, sizeof (int32_t)) ;
+        if (Gj_32 == NULL)
+        {
+            LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
+        }
+
+        // read in the indices one chunk at a time
+        for (int64_t k = 0 ; k < e ; k += CHUNK)
+        {
+            // read in the next chunk
+            int64_t chunk = LAGRAPH_MIN (CHUNK, e-k) ;
+            LAGRAPH_OK (LAGraph_binary_read ("indices",
+                fp, Gj_32, chunk, sizeof (int32_t))) ;
+            // convert the chunk to 64-bit
+            #pragma omp parallel for schedule(static)
+            for (GrB_Index p = 0 ; p < chunk ; p++)
+            {
+                Gj [k + p] = (GrB_Index) Gj_32 [p] ;
+            }
+        }
+        LAGRAPH_FREE (Gj_32) ;
+
+    }
+    else
+    {
+
+        //----------------------------------------------------------------------
+        // indices are in 64-bit format in the file
+        //----------------------------------------------------------------------
+
+        LAGRAPH_OK (LAGraph_binary_read ("indices",
+            fp, Gj, e, sizeof (GrB_Index))) ;
+    }
 
     //--------------------------------------------------------------------------
     // read in the values
