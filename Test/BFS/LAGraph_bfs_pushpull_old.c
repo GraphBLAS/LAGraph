@@ -5,11 +5,11 @@
 /*
     LAGraph:  graph algorithms based on GraphBLAS
 
-    Copyright 2019 LAGraph Contributors. 
+    Copyright 2019 LAGraph Contributors.
 
     (see Contributors.txt for a full list of Contributors; see
     ContributionInstructions.txt for information on how you can Contribute to
-    this project). 
+    this project).
 
     All Rights Reserved.
 
@@ -253,7 +253,7 @@ GrB_Info LAGraph_bfs_pushpull_old
         // GxB_fprint (q, GxB_COMPLETE, stderr) ;
 
         // note that if A has no explicit zeros, then this works faster:
-        // GrB_Vector_nvals (&nvals, q) ; successor = (nvals > 0) ; 
+        // GrB_Vector_nvals (&nvals, q) ; successor = (nvals > 0) ;
 
         // successor = ||(q)
         LAGraph_tic (tic) ;

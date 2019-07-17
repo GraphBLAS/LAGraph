@@ -5,11 +5,11 @@
 /*
     LAGraph:  graph algorithms based on GraphBLAS
 
-    Copyright 2019 LAGraph Contributors. 
+    Copyright 2019 LAGraph Contributors.
 
     (see Contributors.txt for a full list of Contributors; see
     ContributionInstructions.txt for information on how you can Contribute to
-    this project). 
+    this project).
 
     All Rights Reserved.
 
@@ -78,7 +78,7 @@
 
 //------------------------------------------------------------------------------
 // data type for each entry of the adjacent matrix A and "distance" vector d;
-// <INFINITY,INFINITY,INFINITY> corresponds to nonexistence of a path, and 
+// <INFINITY,INFINITY,INFINITY> corresponds to nonexistence of a path, and
 // the value  <0, 0, NULL> corresponds to a path from a vertex to itself
 //------------------------------------------------------------------------------
 typedef struct
@@ -109,7 +109,7 @@ void BF_lMIN
     }
     else
     {
-        *z = *y; 
+        *z = *y;
     }
 }
 
@@ -157,7 +157,7 @@ void BF_EQ
 //   sum of edges length in the shortest path
 // ppi_output is pointer to a GrB_Vector, where the i-th entry is pi(i), the
 //   parent of i-th vertex in the shortest path
-// ph_output is pointer to a GrB_Vector, where the i-th entry is h(s,i), the 
+// ph_output is pointer to a GrB_Vector, where the i-th entry is h(s,i), the
 //   number of edges from s to i in the shortest path
 // A has zeros on diagonal and weights on corresponding entries of edges
 // s is given index for source vertex
@@ -175,14 +175,14 @@ GrB_Info LAGraph_BF_full
     GrB_Vector d = NULL, dtmp = NULL;
     GrB_Matrix Atmp = NULL;
     GrB_Type BF_Tuple3;
-    
+
     GrB_BinaryOp BF_lMIN_Tuple3;
     GrB_BinaryOp BF_PLUSrhs_Tuple3;
     GrB_BinaryOp BF_EQ_Tuple3;
 
     GrB_Monoid BF_lMIN_Tuple3_Monoid;
     GrB_Semiring BF_lMIN_PLUSrhs_Tuple3;
- 
+
     GrB_Index nrows, ncols, n, nz;  // n = # of row/col, nz = # of nnz in graph
     GrB_Index *I = NULL, *J = NULL; // for col/row indices of entries from A
     GrB_Index *h = NULL, *pi = NULL;
@@ -195,18 +195,18 @@ GrB_Info LAGraph_BF_full
         // required argument is missing
         LAGRAPH_ERROR ("required arguments are NULL", GrB_NULL_POINTER) ;
     }
-    
+
     *pd_output  = NULL;
     *ppi_output = NULL;
     *ph_output  = NULL;
-    LAGRAPH_OK (GrB_Matrix_nrows (&nrows, A)) ; 
-    LAGRAPH_OK (GrB_Matrix_ncols (&ncols, A)) ; 
+    LAGRAPH_OK (GrB_Matrix_nrows (&nrows, A)) ;
+    LAGRAPH_OK (GrB_Matrix_ncols (&ncols, A)) ;
     LAGRAPH_OK (GrB_Matrix_nvals (&nz, A));
-    if (nrows != ncols) 
-    { 
-        // A must be square 
-        LAGRAPH_ERROR ("A must be square", GrB_INVALID_VALUE) ; 
-    } 
+    if (nrows != ncols)
+    {
+        // A must be square
+        LAGRAPH_ERROR ("A must be square", GrB_INVALID_VALUE) ;
+    }
     n = nrows;
 
     if (s >= n || s < 0)
@@ -220,13 +220,13 @@ GrB_Info LAGraph_BF_full
     LAGRAPH_OK (GrB_Type_new(&BF_Tuple3, sizeof(BF_Tuple3_struct)));
 
     // GrB_BinaryOp
-    LAGRAPH_OK (GrB_BinaryOp_new(&BF_EQ_Tuple3, 
+    LAGRAPH_OK (GrB_BinaryOp_new(&BF_EQ_Tuple3,
         (LAGraph_binary_function) (&BF_EQ), GrB_BOOL, BF_Tuple3, BF_Tuple3));
     LAGRAPH_OK (GrB_BinaryOp_new(&BF_lMIN_Tuple3,
         (LAGraph_binary_function) (&BF_lMIN), BF_Tuple3, BF_Tuple3, BF_Tuple3));
-    LAGRAPH_OK (GrB_BinaryOp_new(&BF_PLUSrhs_Tuple3, 
+    LAGRAPH_OK (GrB_BinaryOp_new(&BF_PLUSrhs_Tuple3,
         (LAGraph_binary_function)(&BF_PLUSrhs),
-        BF_Tuple3, BF_Tuple3, BF_Tuple3)); 
+        BF_Tuple3, BF_Tuple3, BF_Tuple3));
 
     // GrB_Monoid
     BF_Tuple3_struct BF_identity = (BF_Tuple3_struct) { .w = INFINITY,
@@ -257,11 +257,11 @@ GrB_Info LAGraph_BF_full
     for (GrB_Index k = 0; k < nz; k++)
     {
         if (w[k] == 0)             //diagonal entries
-        {   
+        {
             W[k] = (BF_Tuple3_struct) { .w = 0, .h = 0, .pi = 0 };
         }
         else
-        {   
+        {
             W[k] = (BF_Tuple3_struct) { .w = w[k], .h = 1, .pi = I[k] + 1 };
         }
     }
@@ -288,7 +288,7 @@ GrB_Info LAGraph_BF_full
     while (!same && iter < n - 1)
     {
         // execute semiring on d and A, and save the result to dtmp
-        LAGRAPH_OK (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, BF_lMIN_PLUSrhs_Tuple3, 
+        LAGRAPH_OK (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, BF_lMIN_PLUSrhs_Tuple3,
             d, Atmp, GrB_NULL));
 
         LAGRAPH_OK (LAGraph_Vector_isequal(&same, dtmp, d, BF_EQ_Tuple3));
@@ -301,12 +301,12 @@ GrB_Info LAGraph_BF_full
         iter ++;
     }
 
-    // check for negative-weight cycle only when there was a new path in the  
+    // check for negative-weight cycle only when there was a new path in the
     // last loop, otherwise, there can't be a negative-weight cycle.
     if (!same)
     {
         // execute semiring again to check for negative-weight cycle
-        LAGRAPH_OK (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, BF_lMIN_PLUSrhs_Tuple3, 
+        LAGRAPH_OK (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, BF_lMIN_PLUSrhs_Tuple3,
             d, Atmp, GrB_NULL));
 
         // if d != dtmp, then there is a negative-weight cycle in the graph

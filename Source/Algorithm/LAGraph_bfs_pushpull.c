@@ -5,11 +5,11 @@
 /*
     LAGraph:  graph algorithms based on GraphBLAS
 
-    Copyright 2019 LAGraph Contributors. 
+    Copyright 2019 LAGraph Contributors.
 
     (see Contributors.txt for a full list of Contributors; see
     ContributionInstructions.txt for information on how you can Contribute to
-    this project). 
+    this project).
 
     All Rights Reserved.
 
@@ -670,7 +670,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
                 // this case is triggered, it would have been a bit faster to
                 // pass in vsparse = false on input.
                 // v <!v> = 0
-                LAGRAPH_OK (GrB_assign (v, v, NULL, 0, GrB_ALL, n, 
+                LAGRAPH_OK (GrB_assign (v, v, NULL, 0, GrB_ALL, n,
                     LAGraph_desc_ooco)) ;
                 LAGRAPH_OK (GrB_Vector_nvals (&ignore, v)) ;
                 vsparse = false ;
@@ -840,7 +840,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
         //----------------------------------------------------------------------
 
 //      fprintf (stderr, "phase %" PRId64 " nvisited %" PRId64 " nq %"
-//          PRId64 " n %" PRId64 "\n", phase, nvisited, nq, n) ; 
+//          PRId64 " n %" PRId64 "\n", phase, nvisited, nq, n) ;
 
         if (whole_graph && nvisited + nq < n)
         {
@@ -936,7 +936,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
         // GrB_Vector_nvals (&ignore, pi) ;
         // GxB_fprint (pi, GxB_COMPLETE, stdout) ;
 
-        LAGRAPH_OK (GrB_apply (pi, NULL, NULL, 
+        LAGRAPH_OK (GrB_apply (pi, NULL, NULL,
             (n > INT32_MAX) ? LAGraph_DECR_INT64 : LAGraph_DECR_INT32,
             pi, NULL)) ;
         // printf ("final parent:\n") ;

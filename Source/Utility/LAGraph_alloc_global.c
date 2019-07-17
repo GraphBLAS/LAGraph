@@ -5,11 +5,11 @@
 /*
     LAGraph:  graph algorithms based on GraphBLAS
 
-    Copyright 2019 LAGraph Contributors. 
+    Copyright 2019 LAGraph Contributors.
 
     (see Contributors.txt for a full list of Contributors; see
     ContributionInstructions.txt for information on how you can Contribute to
-    this project). 
+    this project).
 
     All Rights Reserved.
 
@@ -825,7 +825,7 @@ GrB_Info LAGraph_alloc_global ( )
     // allocate the select function for ktruss and allktruss
     //--------------------------------------------------------------------------
 
-    LAGRAPH_OK (GxB_SelectOp_new (&LAGraph_support, 
+    LAGRAPH_OK (GxB_SelectOp_new (&LAGraph_support,
         F_SELECT (LAGraph_support_function), GrB_UINT32)) ;
 
     return (GrB_SUCCESS) ;

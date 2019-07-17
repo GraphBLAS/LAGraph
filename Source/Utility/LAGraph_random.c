@@ -5,11 +5,11 @@
 /*
     LAGraph:  graph algorithms based on GraphBLAS
 
-    Copyright 2019 LAGraph Contributors. 
+    Copyright 2019 LAGraph Contributors.
 
     (see Contributors.txt for a full list of Contributors; see
     ContributionInstructions.txt for information on how you can Contribute to
-    this project). 
+    this project).
 
     All Rights Reserved.
 
@@ -45,7 +45,7 @@
 // no_diagonal is true, entries on the diagonal are dropped, thus reducing the
 // entries in A from the given nvals.
 
-// The parameters are considered in the following order: 
+// The parameters are considered in the following order:
 
 // type: A is always returned with this type.  If the type is not
 //                  LAGraph_Complex, then make_hermitian is ignored and treated
@@ -232,7 +232,7 @@ GrB_Info LAGraph_random         // create a random matrix
         #define CONJ(x) conj(x)
         RX (double complex, UDT, 0, 0, 1, 0, 1) ;
     }
-    else                         
+    else
     {
         // type not supported
         LAGRAPH_FREE_ALL ;

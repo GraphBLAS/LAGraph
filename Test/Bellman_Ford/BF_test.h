@@ -2,11 +2,11 @@
 /*
     LAGraph:  graph algorithms based on GraphBLAS
 
-    Copyright 2019 LAGraph Contributors. 
+    Copyright 2019 LAGraph Contributors.
 
     (see Contributors.txt for a full list of Contributors; see
     ContributionInstructions.txt for information on how you can Contribute to
-    this project). 
+    this project).
 
     All Rights Reserved.
 
@@ -55,11 +55,11 @@ GrB_Info LAGraph_BF_basic_mxv
 );
 
 GrB_Info LAGraph_BF_full_mxv
-( 
-    GrB_Vector *pd_output,      //the pointer to the vector of distance 
-    GrB_Vector *ppi_output,     //the pointer to the vector of parent 
-    GrB_Vector *ph_output,      //the pointer to the vector of hops 
-    const GrB_Matrix AT,        //transposed adjacency matrix for the graph 
-    const GrB_Index s           //given index of the source 
+(
+    GrB_Vector *pd_output,      //the pointer to the vector of distance
+    GrB_Vector *ppi_output,     //the pointer to the vector of parent
+    GrB_Vector *ph_output,      //the pointer to the vector of hops
+    const GrB_Matrix AT,        //transposed adjacency matrix for the graph
+    const GrB_Index s           //given index of the source
 );
 

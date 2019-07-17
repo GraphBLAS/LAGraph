@@ -5,11 +5,11 @@
 /*
     LAGraph:  graph algorithms based on GraphBLAS
 
-    Copyright 2019 LAGraph Contributors. 
+    Copyright 2019 LAGraph Contributors.
 
     (see Contributors.txt for a full list of Contributors; see
     ContributionInstructions.txt for information on how you can Contribute to
-    this project). 
+    this project).
 
     All Rights Reserved.
 
@@ -43,7 +43,7 @@
 // The edge weights of A are treated as binary.  Explicit zero entries in A are
 // treated as non-edges.  Any type will work, but uint32 is recommended for
 // fastest results since that is the type used here for the semiring.
-// GraphBLAS will do typecasting internally, but that takes extra time. 
+// GraphBLAS will do typecasting internally, but that takes extra time.
 
 // The optional output matrices Cset [3..kmax-1] are the k-trusses of A.  Their
 // edges are a subset of A.  Each edge in C = Cset [k] is part of at least k-2

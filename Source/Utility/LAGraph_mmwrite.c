@@ -5,11 +5,11 @@
 /*
     LAGraph:  graph algorithms based on GraphBLAS
 
-    Copyright 2019 LAGraph Contributors. 
+    Copyright 2019 LAGraph Contributors.
 
     (see Contributors.txt for a full list of Contributors; see
     ContributionInstructions.txt for information on how you can Contribute to
-    this project). 
+    this project).
 
     All Rights Reserved.
 
@@ -487,7 +487,7 @@ GrB_Info LAGraph_mmwrite
         LAGRAPH_OK (GrB_Matrix_nvals (&ndiag, C)) ;
         GrB_free (&M) ;
         GrB_free (&C) ;
-        // nvals_to_print = # of entries in tril(A), including diagonal 
+        // nvals_to_print = # of entries in tril(A), including diagonal
         nvals_to_print = ndiag + (nvals - ndiag) / 2 ;
     }
 

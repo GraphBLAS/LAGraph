@@ -42,7 +42,7 @@
 // length, parent nodes along the path and the hops (number of edges) in the
 // path from given source vertex s in the range of [0, n) on graph with n nodes.
 // It works almost the same as LAGraph_BF_full except that it performs update
-// using GrB_mxv instead of GrB_vxm, therefore, it require the input matrix as 
+// using GrB_mxv instead of GrB_vxm, therefore, it require the input matrix as
 // the transpose of adjacency matrix A with size n by n. That is, the input
 // sparse matrix has entry AT(i, j) if there is edge from vertex j to vertex i
 // with weight w, then AT(i, j) = w. While same as LAGraph_BF_full, it requires

@@ -427,7 +427,7 @@ int main (int argc, char **argv)
                 tcheck = LAGraph_toc (tic) ;
             }
 
-            printf ("\n# entries in final Y: %g million\n", 
+            printf ("\n# entries in final Y: %g million\n",
                 (double) final_ynvals / 1e6) ;
             printf ("check time: %g sec\n", tcheck) ;
             LAGraph_set_nthreads (nthreads_max) ;

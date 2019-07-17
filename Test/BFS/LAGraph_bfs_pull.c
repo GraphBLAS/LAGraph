@@ -5,11 +5,11 @@
 /*
     LAGraph:  graph algorithms based on GraphBLAS
 
-    Copyright 2019 LAGraph Contributors. 
+    Copyright 2019 LAGraph Contributors.
 
     (see Contributors.txt for a full list of Contributors; see
     ContributionInstructions.txt for information on how you can Contribute to
-    this project). 
+    this project).
 
     All Rights Reserved.
 
@@ -40,7 +40,7 @@
 // A and AT = A' to be passed in.  If A is in CSR format, then vxm(q,A)
 // does the "push" and mxv(AT,q) does the "pull".
 
-// TODO: it uses a crude method to switch from push to pull.  needs a 
+// TODO: it uses a crude method to switch from push to pull.  needs a
 // better one.
 
 // Reference: Carl Yang, Aydin Buluc, and John D. Owens. 2018. Implementing
@@ -183,7 +183,7 @@ GrB_Info LAGraph_bfs_pull
             // vector will be slow (the entire vector gets scattered, but
             // not all is used...).  This is fixed in 2.3.0 (not released)
 
-            // fprintf (stderr, "level %g: --- push (heap or Gus.):\n", 
+            // fprintf (stderr, "level %g: --- push (heap or Gus.):\n",
                 // (double) level) ;
             LAGRAPH_OK (GrB_vxm (q, v, NULL, LAGraph_LOR_LAND_BOOL, q, A,
                 LAGraph_desc_oocr)) ;
@@ -227,7 +227,7 @@ GrB_Info LAGraph_bfs_pull
         // GxB_fprint (q, GxB_COMPLETE, stderr) ;
 
         // note that if A has no explicit zeros, then this works faster:
-        // GrB_Vector_nvals (&nvals, q) ; successor = (nvals > 0) ; 
+        // GrB_Vector_nvals (&nvals, q) ; successor = (nvals > 0) ;
 
         // successor = ||(q)
         LAGraph_tic (tic) ;

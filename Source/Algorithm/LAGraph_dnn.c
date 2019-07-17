@@ -139,30 +139,30 @@ GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
     // propagate the features through the neuron layers
     //--------------------------------------------------------------------------
 
-    double t1 = 0, t2 = 0, t3 = 0, t4 = 0, t ;
+    // double t1 = 0, t2 = 0, t3 = 0, t4 = 0, t ;
 
     for (int layer = 0 ; layer < nlayers ; layer++)
     {
         // Y = Y * W [layer], using the conventional PLUS_TIMES semiring
-        t = omp_get_wtime ( ) ;
+        // t = omp_get_wtime ( ) ;
         LAGRAPH_OK (GrB_mxm (Y, NULL, NULL, plus_times,
             ((layer == 0) ? Y0 : Y), W [layer], NULL)) ;
-        t1 += (omp_get_wtime ( ) - t) ;
+        // t1 += (omp_get_wtime ( ) - t) ;
 
         // Y = Y * Bias [layer], using the PLUS_PLUS semiring.  This computes
         // Y(i,j) += Bias [layer] (j,j) for each entry Y(i,j).  It does not
         // introduce any new entries in Y.
-        t = omp_get_wtime ( ) ;
+        // t = omp_get_wtime ( ) ;
         LAGRAPH_OK (GrB_mxm (Y, NULL, NULL, plus_plus, Y, Bias [layer], NULL)) ;
-        t2 += (omp_get_wtime ( ) - t) ;
+        // t2 += (omp_get_wtime ( ) - t) ;
 
         // delete entries from Y: keep only those entries greater than zero
         #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
             && GxB_IMPLEMENTATION >= GxB_VERSION (3,0,0)
         // using SuiteSparse:GraphBLAS 3.0.0 or later.
-        t = omp_get_wtime ( ) ;
+        // t = omp_get_wtime ( ) ;
         LAGRAPH_OK (GxB_select (Y, NULL, NULL, GxB_GT_ZERO, Y, NULL, NULL)) ;
-        t3 += (omp_get_wtime ( ) - t) ;
+        // t3 += (omp_get_wtime ( ) - t) ;
 
         #else
         // using SuiteSparse v2.x or earlier, or any other GraphBLAS library.
@@ -171,15 +171,15 @@ GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
         #endif
 
         // threshold maximum values: Y (Y > 32) = 32
-        t = omp_get_wtime ( ) ;
+        // t = omp_get_wtime ( ) ;
         LAGRAPH_OK (GrB_apply (Y, NULL, NULL, ymax, Y, NULL)) ;
-        t4 += (omp_get_wtime ( ) - t) ;
+        // t4 += (omp_get_wtime ( ) - t) ;
     }
 
-    printf ("\nY*W: %g sec\n", t1) ;
-    printf ("Y+B: %g sec\n", t2) ;
-    printf ("RelU %g sec\n", t3) ;
-    printf ("Ymax %g sec\n", t4) ;
+    // printf ("\nY*W: %g sec\n", t1) ;
+    // printf ("Y+B: %g sec\n", t2) ;
+    // printf ("RelU %g sec\n", t3) ;
+    // printf ("Ymax %g sec\n", t4) ;
 
     //--------------------------------------------------------------------------
     // free workspace and return result
