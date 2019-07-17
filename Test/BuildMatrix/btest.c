@@ -84,7 +84,7 @@ GrB_Info bmake
     // create a random matrix
     //--------------------------------------------------------------------------
 
-    OK (GxB_set (GxB_NTHREADS, nthreads)) ;
+    LAGraph_set_nthreads (nthreads) ;
 
     // this is with one thread, so far:
     OK (LAGraph_random (&A, type, nrows, ncols, nvals,
@@ -126,11 +126,7 @@ int main (int argc, char **argv)
 
     LAGraph_init ( ) ;
 
-    int nthreads_max = 1 ;
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
-    GxB_get (GxB_NTHREADS, &nthreads_max) ;
-    #endif
-
+    int nthreads_max = LAGraph_get_nthreads ( ) ;
     printf ("max threads %d\n", nthreads_max) ;
 
     uint64_t seed = 1 ;

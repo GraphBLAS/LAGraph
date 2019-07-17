@@ -58,11 +58,8 @@ int main ( )
 
     LAGRAPH_OK (LAGraph_init ( )) ;
 
-    int nthreads_max = 1 ;
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
-    GxB_get (GxB_NTHREADS, &nthreads_max) ;
-    GxB_set (GxB_NTHREADS, 1) ;
-    #endif
+    int nthreads_max = LAGraph_get_nthreads ( ) ;
+    LAGraph_set_nthreads (1) ;
 
     //--------------------------------------------------------------------------
     // read in a matrix from a file and convert to boolean
@@ -117,10 +114,7 @@ int main ( )
     for (int kk = 0 ; kk < 7 ; kk++)
     {
         int nthreads = nthread_list [kk] ;
-
-        #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
-        GxB_set (GxB_NTHREADS, nthreads) ;
-        #endif
+        LAGraph_set_nthreads (nthreads) ;
 
         // start the timer
         double tic [2] ;

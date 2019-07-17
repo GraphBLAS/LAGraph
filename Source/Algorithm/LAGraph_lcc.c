@@ -98,7 +98,9 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
 (
     GrB_Vector *LCC_handle,     // output vector
     const GrB_Matrix A,         // input matrix
-    bool sanitize               // if true, ensure A is binary
+    bool sanitize,              // if true, ensure A is binary
+    double t [2]                // t [0] = sanitize time, t [1] = lcc time,
+                                // in seconds
 )
 {
 
@@ -123,13 +125,20 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     // ensure input is binary and has no self-edges
     //--------------------------------------------------------------------------
 
+    double tic [2] ;
+    t [0] = 0 ;         // sanitize time
+    t [1] = 0 ;         // LCC time
+
     if (sanitize)
     {
+        LAGraph_tic (tic) ;
+
         // S = binary pattern of A
         LAGRAPH_OK (LAGraph_pattern (&S, A)) ;
 
         // remove all self edges
         LAGRAPH_OK (LAGraph_prune_diag (S)) ;
+        t [0] = LAGraph_toc (tic) ;
     }
     else
     {
@@ -141,6 +150,8 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     //--------------------------------------------------------------------------
     // C = A+A' to create an undirected graph C
     //--------------------------------------------------------------------------
+
+    LAGraph_tic (tic) ;
 
     LAGRAPH_OK (GrB_Matrix_new (&AT, GrB_FP64, n, n)) ;
     LAGRAPH_OK (GrB_transpose (AT, NULL, NULL, S, NULL)) ;
@@ -189,6 +200,7 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     (*LCC_handle) = LCC ;
     LCC = NULL ;            // set to NULL so LAGRAPH_FREE_ALL doesn't free it
     LAGRAPH_FREE_ALL ;
+    t [1] = LAGraph_toc (tic) ;
     return (GrB_SUCCESS) ;
 }
 

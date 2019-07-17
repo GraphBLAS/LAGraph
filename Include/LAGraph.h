@@ -418,6 +418,16 @@ GrB_Info LAGraph_Vector_to_dense
     void *id                // pointer to value to fill vdense with
 ) ;
 
+int LAGraph_set_nthreads        // returns # threads set, 0 if nothing done
+(
+    int nthreads
+) ;
+
+int LAGraph_get_nthreads        // returns # threads to use, 0 if unknown
+(
+    void
+) ;
+
 //------------------------------------------------------------------------------
 // user-callable algorithms
 //------------------------------------------------------------------------------
@@ -510,7 +520,9 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
 (
     GrB_Vector *LCC_handle,     // output vector
     const GrB_Matrix A,         // input matrix
-    bool sanitize               // if true, ensure A is binary
+    bool sanitize,              // if true, ensure A is binary
+    double t [2]                // t [0] = sanitize time, t [1] = lcc time,
+                                // in seconds
 ) ;
 
 GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful

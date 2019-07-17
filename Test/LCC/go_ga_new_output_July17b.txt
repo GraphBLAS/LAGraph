@@ -1,0 +1,54 @@
+west0067:
+
+read A time:           0.000733 sec
+Matrix n: 67, ne: 294
+nthreads:   1 sanitize         0.00 sec, LCC time:       0.00 sec, rate:   0.72
+nthreads:   8 sanitize         0.00 sec, LCC time:       0.00 sec, rate:   1.05 speedup:   1.46 vs 1 thread
+nthreads:  16 sanitize         0.00 sec, LCC time:       0.00 sec, rate:   0.79 speedup:   1.11 vs 1 thread
+nthreads:  20 sanitize         0.00 sec, LCC time:       0.00 sec, rate:   0.77 speedup:   1.07 vs 1 thread
+nthreads:  40 sanitize         0.00 sec, LCC time:       0.00 sec, rate:   0.56 speedup:   0.78 vs 1 thread
+
+Graphalytics/datagen-7_5-fb.mtx.zip
+
+read A time:          27.718719 sec
+Matrix n: 633432, ne: 34185747
+nthreads:   1 sanitize         1.24 sec, LCC time:     108.39 sec, rate:   0.32
+nthreads:   8 sanitize         0.29 sec, LCC time:      14.29 sec, rate:   2.39 speedup:   7.59 vs 1 thread
+nthreads:  16 sanitize         0.20 sec, LCC time:       7.50 sec, rate:   4.56 speedup:  14.45 vs 1 thread
+nthreads:  20 sanitize         0.17 sec, LCC time:       6.17 sec, rate:   5.54 speedup:  17.57 vs 1 thread
+nthreads:  40 sanitize         0.21 sec, LCC time:       4.25 sec, rate:   8.04 speedup:  25.49 vs 1 thread
+
+Graphalytics/datagen-7_6-fb.mtx.zip
+
+read A time:          34.379885 sec
+Matrix n: 754147, ne: 42162988
+nthreads:   1 sanitize         1.50 sec, LCC time:     138.14 sec, rate:   0.31
+nthreads:   8 sanitize         0.30 sec, LCC time:      18.25 sec, rate:   2.31 speedup:   7.57 vs 1 thread
+nthreads:  16 sanitize         0.22 sec, LCC time:       9.52 sec, rate:   4.43 speedup:  14.51 vs 1 thread
+nthreads:  20 sanitize         0.21 sec, LCC time:       7.91 sec, rate:   5.33 speedup:  17.47 vs 1 thread
+nthreads:  40 sanitize         0.25 sec, LCC time:       5.39 sec, rate:   7.83 speedup:  25.64 vs 1 thread
+
+Graphalytics/datagen-7_7-zf.mtx.zip
+
+read A time:          26.722885 sec
+Matrix n: 13180508, ne: 32791267
+nthreads:   1 sanitize         2.79 sec, LCC time:      21.35 sec, rate:   1.54
+nthreads:   8 sanitize         1.13 sec, LCC time:       4.19 sec, rate:   7.82 speedup:   5.09 vs 1 thread
+nthreads:  16 sanitize         0.97 sec, LCC time:       2.99 sec, rate:  10.96 speedup:   7.14 vs 1 thread
+nthreads:  20 sanitize         0.96 sec, LCC time:       2.76 sec, rate:  11.90 speedup:   7.75 vs 1 thread
+nthreads:  40 sanitize         1.06 sec, LCC time:       2.60 sec, rate:  12.61 speedup:   8.21 vs 1 thread
+
+Graphalytics/datagen-7_8-zf.mtx.zip
+
+read A time:          33.525948 sec
+Matrix n: 16521886, ne: 41025255
+nthreads:   1 sanitize         3.46 sec, LCC time:      26.80 sec, rate:   1.53
+nthreads:   8 sanitize         1.41 sec, LCC time:       5.30 sec, rate:   7.74 speedup:   5.05 vs 1 thread
+nthreads:  16 sanitize         1.22 sec, LCC time:       3.79 sec, rate:  10.82 speedup:   7.07 vs 1 thread
+nthreads:  20 sanitize         1.21 sec, LCC time:       3.49 sec, rate:  11.75 speedup:   7.68 vs 1 thread
+nthreads:  40 sanitize         1.32 sec, LCC time:       3.27 sec, rate:  12.55 speedup:   8.20 vs 1 thread
+
+Graphalytics/datagen-7_9-fb.mtx.zip
+
+read A time:          70.272873 sec
+Matrix n: 1387587, ne: 85670523

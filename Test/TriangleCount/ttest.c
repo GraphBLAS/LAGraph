@@ -232,10 +232,7 @@ int main (int argc, char **argv)
     // triangle counting
     //--------------------------------------------------------------------------
 
-    int nthreads_max = 1 ;
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
-    GxB_get (GxB_NTHREADS, &nthreads_max) ;
-    #endif
+    int nthreads_max = LAGraph_get_nthreads ( ) ;
 
     // warmup for more accurate timing
     int64_t ntriangles ;
@@ -257,9 +254,7 @@ int main (int argc, char **argv)
         double t_sequential ;
         for (int nthreads = 1 ; nthreads <= nthreads_max ; )
         {
-            #ifdef GxB_SUITESPARSE_GRAPHBLAS
-            GxB_set (GxB_NTHREADS, nthreads) ;
-            #endif
+            LAGraph_set_nthreads (nthreads) ;
             int64_t nt ;
             LAGRAPH_OK (LAGraph_tricount (&nt, method, A, E, L, U, t)) ;
             double ttot = t [0] + t [1] ;

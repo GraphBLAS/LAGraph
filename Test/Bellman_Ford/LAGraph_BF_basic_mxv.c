@@ -114,6 +114,8 @@ GrB_Info LAGraph_BF_basic_mxv
     int64_t iter = 0;      //number of iterations
     bool same = false;     //variable indicating if d == dtmp
 
+    // TODO add MIN_PLUS_FP64 to the LAGraph preallocated objects
+
     // terminate when no new path is found or more than n-1 loops
     while (!same && iter < n - 1)
     {

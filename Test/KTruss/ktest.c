@@ -57,10 +57,7 @@ int main (int argc, char **argv)
     GrB_Info info ;
     GrB_Matrix A = NULL, C = NULL, M = NULL ;
     LAGraph_init ( ) ;
-    int nthreads_max = 1 ;
-    #ifdef GxB_SUITESPARSE_GRAPHBLAS
-    GxB_get (GxB_NTHREADS, &nthreads_max) ;
-    #endif
+    int nthreads_max = LAGraph_get_nthreads ( ) ;
 
     //--------------------------------------------------------------------------
     // get the input matrix
@@ -130,9 +127,7 @@ int main (int argc, char **argv)
         double t_sequential ;
         for (int nthreads = 1 ; nthreads <= nthreads_max ; )
         {
-            #ifdef GxB_SUITESPARSE_GRAPHBLAS
-            GxB_set (GxB_NTHREADS, nthreads) ;
-            #endif
+            LAGraph_set_nthreads (nthreads) ;
 
             double tic [2] ;
             LAGraph_tic (tic) ;

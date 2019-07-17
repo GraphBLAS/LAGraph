@@ -156,8 +156,7 @@ int main (int argc, char **argv)
     if (type == GrB_FP64) printf ("double\n") ; else printf ("float\n") ;
 
     // get the max # of threads that can be used
-    int nthreads_max ;
-    LAGRAPH_OK (GxB_get (GxB_NTHREADS, &nthreads_max)) ;
+    int nthreads_max = LAGraph_get_nthreads ( ) ;
     printf ("max # of nthreads: %d\n", nthreads_max) ;
 
     #define NNTHREADS 12
@@ -348,7 +347,7 @@ int main (int argc, char **argv)
 
                 int nthreads = nthreads_list [kth] ;
                 if (nthreads > nthreads_max) break ;
-                LAGRAPH_OK (GxB_set (GxB_NTHREADS, nthreads)) ;
+                LAGraph_set_nthreads (nthreads) ;
                 printf ("nthreads %2d: ", nthreads) ;
                 fflush (stdout) ;
 
@@ -431,7 +430,7 @@ int main (int argc, char **argv)
             printf ("\n# entries in final Y: %g million\n", 
                 (double) final_ynvals / 1e6) ;
             printf ("check time: %g sec\n", tcheck) ;
-            LAGRAPH_OK (GxB_set (GxB_NTHREADS, nthreads_max)) ;
+            LAGraph_set_nthreads (nthreads_max) ;
         }
 
         //----------------------------------------------------------------------
