@@ -109,3 +109,6 @@ nthreads:  20 sanitize         1.21 sec, LCC time:      58.91 sec, rate:   4.57 
 nthreads:  40 sanitize         1.33 sec, LCC time:      39.85 sec, rate:   6.76 speedup:  25.45 vs 1 thread
 
 Graphalytics/datagen-8_5-fb.mtx.zip
+
+read A time:         275.447062 sec
+Matrix n: 4599739, ne: 332026902
