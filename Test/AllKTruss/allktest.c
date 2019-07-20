@@ -5,11 +5,11 @@
 /*
     LAGraph:  graph algorithms based on GraphBLAS
 
-    Copyright 2019 LAGraph Contributors. 
+    Copyright 2019 LAGraph Contributors.
 
     (see Contributors.txt for a full list of Contributors; see
     ContributionInstructions.txt for information on how you can Contribute to
-    this project). 
+    this project).
 
     All Rights Reserved.
 
@@ -65,14 +65,11 @@ int main (int argc, char **argv)
     GrB_Info info ;
     GrB_Matrix A = NULL, C = NULL, M = NULL ;
     GrB_Matrix *Cset = NULL ;
-    int64_t kmax = 0 ; 
+    int64_t kmax = 0 ;
     int64_t *ntris = NULL, *nedges  = NULL, *nstepss = NULL ;
 
     LAGraph_init ( ) ;
-    int nthreads_max = 1 ;
-    #ifdef GxB_SUITESPARSE_GRAPHBLAS
-    GxB_get (GxB_NTHREADS, &nthreads_max) ;
-    #endif
+    int nthreads_max = LAGraph_get_nthreads ( ) ;
 
     //--------------------------------------------------------------------------
     // get the input matrix
@@ -144,9 +141,7 @@ int main (int argc, char **argv)
     double t1 ;
     for (int nthreads = 1 ; nthreads <= nthreads_max ; )
     {
-        #ifdef GxB_SUITESPARSE_GRAPHBLAS
-        GxB_set (GxB_NTHREADS, nthreads) ;
-        #endif
+        LAGraph_set_nthreads (nthreads) ;
 
         double tic [2] ;
         LAGraph_tic (tic) ;

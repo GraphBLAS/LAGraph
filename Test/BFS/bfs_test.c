@@ -5,11 +5,11 @@
 /*
     LAGraph:  graph algorithms based on GraphBLAS
 
-    Copyright 2019 LAGraph Contributors. 
+    Copyright 2019 LAGraph Contributors.
 
     (see Contributors.txt for a full list of Contributors; see
     ContributionInstructions.txt for information on how you can Contribute to
-    this project). 
+    this project).
 
     All Rights Reserved.
 
@@ -125,7 +125,7 @@ int main (int argc, char **argv)
     GrB_Index s = 0 ;
     if (argc > 1)
     {
-        sscanf (argv [1], "%" PRIu64, &s) ; 
+        sscanf (argv [1], "%" PRIu64, &s) ;
     }
 
     fprintf (stderr, "\n=========="
@@ -207,11 +207,8 @@ int main (int argc, char **argv)
     // now the BFS on node s using push-pull (BEST) instead
     //--------------------------------------------------------------------------
 
-    int nthreads_max = 1 ;
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
-    GxB_get (GxB_NTHREADS, &nthreads_max) ;
-    fprintf (stderr, "\n====== parallel:\n") ;
-    #endif
+
+    int nthreads_max = LAGraph_get_nthreads ( ) ;
 
     double t5 [nthreads_max+1] ;
 
@@ -219,9 +216,7 @@ int main (int argc, char **argv)
 
     for (int nthreads = 1 ; nthreads <= nthreads_max ; nthreads++)
     {
-        #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
-        GxB_set (GxB_NTHREADS, nthreads) ;
-        #endif
+        LAGraph_set_nthreads (nthreads) ;
 
         LAGraph_tic (tic) ;
         for (int trial = 0 ; trial < ntrials ; trial++)
@@ -237,10 +232,8 @@ int main (int argc, char **argv)
             t5 [1] / t5 [nthreads]) ;
     }
 
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
     // restore default
-    GxB_set (GxB_NTHREADS, nthreads_max) ;
-    #endif
+    LAGraph_set_nthreads (nthreads_max) ;
 
     fprintf (stderr, "\n") ;
 
@@ -256,9 +249,7 @@ int main (int argc, char **argv)
 
     for (int nthreads = 1 ; nthreads <= nthreads_max ; nthreads++)
     {
-        #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
-        GxB_set (GxB_NTHREADS, nthreads) ;
-        #endif
+        LAGraph_set_nthreads (nthreads) ;
 
         LAGraph_tic (tic) ;
         for (int trial = 0 ; trial < ntrials ; trial++)
@@ -277,10 +268,8 @@ int main (int argc, char **argv)
             t5_tree [1] / t5_tree [nthreads]) ;
     }
 
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
     // restore default
-    GxB_set (GxB_NTHREADS, nthreads_max) ;
-    #endif
+    LAGraph_set_nthreads (nthreads_max) ;
 
     fprintf (stderr, "\n") ;
 

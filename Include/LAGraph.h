@@ -51,7 +51,6 @@
 // denote a list of row indices; remove it here.
 #undef I
 
-#define _POSIX_C_SOURCE 200809L
 #include <time.h>
 
 #if defined ( __linux__ )
@@ -411,6 +410,31 @@ GrB_Info LAGraph_prune_diag // remove all entries from the diagonal
     GrB_Matrix A
 ) ;
 
+GrB_Info LAGraph_Vector_to_dense
+(
+    GrB_Vector *vdense,     // output vector
+    GrB_Vector v,           // input vector
+    void *id                // pointer to value to fill vdense with
+) ;
+
+int LAGraph_set_nthreads        // returns # threads set, 0 if nothing done
+(
+    int nthreads
+) ;
+
+int LAGraph_get_nthreads        // returns # threads to use, 0 if unknown
+(
+    void
+) ;
+
+GrB_Info LAGraph_grread     // read a matrix from a binary file
+(
+    GrB_Matrix *G,          // handle of matrix to create
+    uint64_t *G_version,    // the version in the file
+    const char *filename,   // name of file to open
+    GrB_Type gtype          // type of matrix to read
+) ;
+
 //------------------------------------------------------------------------------
 // user-callable algorithms
 //------------------------------------------------------------------------------
@@ -503,7 +527,9 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
 (
     GrB_Vector *LCC_handle,     // output vector
     const GrB_Matrix A,         // input matrix
-    bool sanitize               // if true, ensure A is binary
+    bool sanitize,              // if true, ensure A is binary
+    double t [2]                // t [0] = sanitize time, t [1] = lcc time,
+                                // in seconds
 ) ;
 
 GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful

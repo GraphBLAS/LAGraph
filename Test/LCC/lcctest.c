@@ -5,11 +5,11 @@
 /*
     LAGraph:  graph algorithms based on GraphBLAS
 
-    Copyright 2019 LAGraph Contributors. 
+    Copyright 2019 LAGraph Contributors.
 
     (see Contributors.txt for a full list of Contributors; see
     ContributionInstructions.txt for information on how you can Contribute to
-    this project). 
+    this project).
 
     All Rights Reserved.
 
@@ -59,10 +59,8 @@ int main (int argc, char **argv)
     GrB_Vector LCC = NULL, LCC1 = NULL ;
 
     LAGraph_init ( ) ;
-    int nthreads_max = 1 ;
-    #ifdef GxB_SUITESPARSE_GRAPHBLAS
-    GxB_get (GxB_NTHREADS, &nthreads_max) ;
-    #endif
+    int nthreads_max = LAGraph_get_nthreads ( ) ;
+    if (nthreads_max == 0) nthreads_max = 1 ;
 
     //--------------------------------------------------------------------------
     // get the input matrix
@@ -70,6 +68,8 @@ int main (int argc, char **argv)
 
     double tic [2] ;
     LAGraph_tic (tic) ;
+
+    FILE *out = stdout ;
 
     FILE *f ;
     if (argc == 1)
@@ -86,12 +86,13 @@ int main (int argc, char **argv)
         }
     }
     LAGRAPH_OK (LAGraph_mmread (&C, f)) ;
-    double t_read = LAGraph_toc (tic) ;
-    fprintf (stderr, "\nread A time:     %14.6f sec\n", t_read) ;
-
-    LAGraph_tic (tic) ;
     GrB_Index n, ne ;
     LAGRAPH_OK (GrB_Matrix_nrows (&n, C)) ;
+    LAGRAPH_OK (GrB_Matrix_nvals (&ne, C)) ;
+    double t_read = LAGraph_toc (tic) ;
+    fprintf (out, "\nread A time:     %14.6f sec\n", t_read) ;
+
+    LAGraph_tic (tic) ;
 
 #if 0
     // A = spones (C), and typecast to FP64
@@ -113,72 +114,85 @@ int main (int argc, char **argv)
     GrB_free (&M) ;
 
     LAGRAPH_OK (GrB_Matrix_nvals (&ne, A)) ;
+
+    // double t_process = LAGraph_toc (tic) ;
+    fprintf (out, "process A time:  %14.6f sec\n", t_process) ;
+
 #else
     A = C ;
     C = NULL ;
 #endif
 
-    double t_process = LAGraph_toc (tic) ;
-    fprintf (stderr, "process A time:  %14.6f sec\n", t_process) ;
+    LAGRAPH_OK (GrB_Matrix_nvals (&ne, A)) ;
+    #ifdef GxB_SUITESPARSE_GRAPHBLAS
+    // GxB_fprint (A, GxB_SUMMARY, out) ;
+    #endif
+    fprintf (out, "Matrix n: %0.16g, ne: %0.16g\n", (double) n, (double) ne) ;
+    fflush (out) ;
 
     //--------------------------------------------------------------------------
     // compute LCC
     //--------------------------------------------------------------------------
 
-    double t1 ;
-    for (int nthreads = 1 ; nthreads <= nthreads_max ; )
+    #define NTRIALS 5
+    int nthread_list [NTRIALS] = { 1, 8, 16, 20, 40 } ;
+
+    double t1 = -1 ;
+    int nthreads_t1 = 0 ;
+    // for (int nthreads = 1 ; nthreads <= nthreads_max ; )
+    for (int trial = 0 ; trial < NTRIALS ; trial++)
     {
-        #ifdef GxB_SUITESPARSE_GRAPHBLAS
-        GxB_set (GxB_NTHREADS, nthreads) ;
-        #endif
 
-        double tic [2] ;
-        LAGraph_tic (tic) ;
-        LAGRAPH_OK (LAGraph_lcc (&LCC, A, true)) ;
-        double t = LAGraph_toc (tic) ;
+        int nthreads = nthread_list [trial] ;
+        if (nthreads > nthreads_max) break ;
+        LAGraph_set_nthreads (nthreads) ;
 
-        if (nthreads == 1)
+        // ignore the sanitize time;  assume the user could have provided an
+        // input graph that is already undirected with no self-edges
+        double timing [2] ;
+        LAGRAPH_OK (LAGraph_lcc (&LCC, A, true, timing)) ;
+        double t = timing [1] ;
+
+        if (LCC1 == NULL)
         {
             LCC1 = LCC ;
             LCC = NULL ;
             t1 = t ;
-            // GxB_print (LCC, 3) ;
-            // dump the result to stdout
-            for (GrB_Index i = 0 ; i < n ; i++)
-            {
-                double x = 0 ;
-                LAGRAPH_OK (GrB_Vector_extractElement (&x, LCC1, i)) ;
-                if (info == GrB_NO_VALUE) printf (" 0.\n") ;
-                else printf ("%32.16g\n", x) ;
-            }
+            nthreads_t1 = nthreads ;
+            // dump the result to lcc_results (required for comparing the
+            // results with MATLAB)
+            #if 0
+                FILE *results = fopen ("lcc_results", "w") ;
+                for (GrB_Index i = 0 ; i < n ; i++)
+                {
+                    double x = 0 ;
+                    LAGRAPH_OK (GrB_Vector_extractElement (&x, LCC1, i)) ;
+                    if (info == GrB_NO_VALUE) fprintf (results, " 0.\n") ;
+                    else fprintf (results, "%32.16g\n", x) ;
+                }
+                fclose (results) ;
+            #endif
         }
-        else
+        else if (LCC1 != NULL)
         {
             bool ok ;
             LAGRAPH_OK (LAGraph_Vector_isequal (&ok, LCC, LCC1, GrB_EQ_FP64)) ;
-            if (!ok) { fprintf (stderr, "error!\n") ; abort ( ) ; }
+            if (!ok) { fprintf (out, "error!\n") ; abort ( ) ; }
             GrB_free (&LCC) ;
         }
 
-        fprintf (stderr, "nthreads: %3d time: %12.6f rate: %6.2f", nthreads, t,
-            1e-6 * ne / t) ;
-        if (nthreads > 1)
+        fprintf (out, "nthreads: %3d sanitize %12.2f sec, LCC time: %10.2f"
+            " sec, rate: %6.2f", nthreads, timing [0], t, 1e-6 * ne / t) ;
+        if (nthreads != nthreads_t1 && t1 > 0)
         {
-            fprintf (stderr, " speedup: %6.2f", t1 / t) ;
+            fprintf (out, " speedup: %6.2f vs %d thread", t1 / t, nthreads_t1);
+            if (nthreads_t1 != 1) fprintf (out, "s") ;
         }
-        fprintf (stderr, "\n") ;
-
-        if (nthreads != nthreads_max && 4 * nthreads > nthreads_max)
-        {
-            nthreads = nthreads_max ;
-        }
-        else
-        {
-            nthreads *= 4 ;
-        }
+        fprintf (out, "\n") ;
+        fflush (out) ;
     }
 
-    fprintf (stderr, "\n") ;
+    fprintf (out, "\n") ;
     LAGRAPH_FREE_ALL ;
     LAGraph_finalize ( ) ;
 }

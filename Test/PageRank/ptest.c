@@ -5,11 +5,11 @@
 /*
     LAGraph:  graph algorithms based on GraphBLAS
 
-    Copyright 2019 LAGraph Contributors. 
+    Copyright 2019 LAGraph Contributors.
 
     (see Contributors.txt for a full list of Contributors; see
     ContributionInstructions.txt for information on how you can Contribute to
-    this project). 
+    this project).
 
     All Rights Reserved.
 
@@ -58,11 +58,8 @@ int main ( )
 
     LAGRAPH_OK (LAGraph_init ( )) ;
 
-    int nthreads_max = 1 ;
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
-    GxB_get (GxB_NTHREADS, &nthreads_max) ;
-    GxB_set (GxB_NTHREADS, 1) ;
-    #endif
+    int nthreads_max = LAGraph_get_nthreads ( ) ;
+    LAGraph_set_nthreads (1) ;
 
     //--------------------------------------------------------------------------
     // read in a matrix from a file and convert to boolean
@@ -107,7 +104,7 @@ int main ( )
 
     int ntrials = 1 ;       // increase this to 10, 100, whatever, for more
                             // accurate timing
-    
+
     double tol = 1e-5 ;
     int iters, itermax = 100 ;
 
@@ -117,10 +114,7 @@ int main ( )
     for (int kk = 0 ; kk < 7 ; kk++)
     {
         int nthreads = nthread_list [kk] ;
-
-        #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
-        GxB_set (GxB_NTHREADS, nthreads) ;
-        #endif
+        LAGraph_set_nthreads (nthreads) ;
 
         // start the timer
         double tic [2] ;

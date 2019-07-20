@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# Graphalytics is a symbolic link to files in Matrix Market format
+# provided by Gabor Szarnyas, https://inf.mit.bme.hu/en/members/szarnyasg
+
+echo "west0067:"
+./build/lcctest < ../BFS/west0067.mtx
+
+echo "Graphalytics/datagen-7_5-fb.mtx.zip"
+unzip -p Graphalytics/datagen-7_5-fb.mtx.zip | ./build/lcctest
+
+echo "Graphalytics/datagen-7_6-fb.mtx.zip"
+unzip -p Graphalytics/datagen-7_6-fb.mtx.zip | ./build/lcctest
+
+echo "Graphalytics/datagen-7_7-zf.mtx.zip"
+unzip -p Graphalytics/datagen-7_7-zf.mtx.zip | ./build/lcctest
+
+echo "Graphalytics/datagen-7_8-zf.mtx.zip"
+unzip -p Graphalytics/datagen-7_8-zf.mtx.zip | ./build/lcctest
+
+echo "Graphalytics/datagen-7_9-fb.mtx.zip"
+unzip -p Graphalytics/datagen-7_9-fb.mtx.zip | ./build/lcctest
+
+echo "Graphalytics/datagen-8_0-fb.mtx.zip"
+unzip -p Graphalytics/datagen-8_0-fb.mtx.zip | ./build/lcctest
+
+echo "Graphalytics/datagen-8_1-fb.mtx.zip"
+unzip -p Graphalytics/datagen-8_1-fb.mtx.zip | ./build/lcctest
+
+echo "Graphalytics/datagen-8_2-zf.mtx.zip"
+unzip -p Graphalytics/datagen-8_2-zf.mtx.zip | ./build/lcctest
+
+echo "Graphalytics/datagen-8_3-zf.mtx.zip"
+unzip -p Graphalytics/datagen-8_3-zf.mtx.zip | ./build/lcctest
+
+echo "Graphalytics/datagen-8_4-fb.mtx.zip"
+unzip -p Graphalytics/datagen-8_4-fb.mtx.zip | ./build/lcctest
+
+echo "Graphalytics/datagen-8_5-fb.mtx.zip"
+unzip -p Graphalytics/datagen-8_5-fb.mtx.zip | ./build/lcctest
+
+echo "Graphalytics/datagen-8_6-fb.mtx.zip"
+unzip -p Graphalytics/datagen-8_6-fb.mtx.zip | ./build/lcctest
+
+echo "Graphalytics/datagen-8_7-zf.mtx.zip"
+unzip -p Graphalytics/datagen-8_7-zf.mtx.zip | ./build/lcctest
+
+echo "Graphalytics/datagen-8_8-zf.mtx.zip"
+unzip -p Graphalytics/datagen-8_8-zf.mtx.zip | ./build/lcctest
+
+echo "Graphalytics/datagen-8_9-fb.mtx.zip"
+unzip -p Graphalytics/datagen-8_9-fb.mtx.zip | ./build/lcctest
+
+echo "Graphalytics/datagen-9_2-zf.mtx.zip"
+unzip -p Graphalytics/datagen-9_2-zf.mtx.zip | ./build/lcctest
+
+echo "Graphalytics/dota-league.mtx.zip"
+unzip -p Graphalytics/dota-league.mtx.zip    | ./build/lcctest

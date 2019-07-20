@@ -5,11 +5,11 @@
 /*
     LAGraph:  graph algorithms based on GraphBLAS
 
-    Copyright 2019 LAGraph Contributors. 
+    Copyright 2019 LAGraph Contributors.
 
     (see Contributors.txt for a full list of Contributors; see
     ContributionInstructions.txt for information on how you can Contribute to
-    this project). 
+    this project).
 
     All Rights Reserved.
 
@@ -102,9 +102,9 @@ int main (int argc, char **argv)
     LAGRAPH_OK (GrB_Matrix_nrows (&nrows, A)) ;
     LAGRAPH_OK (GrB_Matrix_ncols (&ncols, A)) ;
     GrB_Index n = nrows ;
-    
-    I = LAGraph_malloc (nvals, sizeof(GrB_Index)) ; 
-    J = LAGraph_malloc (nvals, sizeof(GrB_Index)) ; 
+
+    I = LAGraph_malloc (nvals, sizeof(GrB_Index)) ;
+    J = LAGraph_malloc (nvals, sizeof(GrB_Index)) ;
     W = LAGraph_malloc (nvals, sizeof(double)) ;
 
     LAGRAPH_OK (GrB_Matrix_extractTuples_FP64(I, J, W, &nvals, A));
@@ -133,7 +133,7 @@ int main (int argc, char **argv)
     GrB_Index s = 0 ;
     if (argc > 1)
     {
-        sscanf (argv [1], "%" PRIu64, &s) ; 
+        sscanf (argv [1], "%" PRIu64, &s) ;
     }
 
     fprintf (stderr, "\n=========="
@@ -243,8 +243,9 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
     // check results
     //--------------------------------------------------------------------------
-    bool isequal = false, ok = true ; 
-    
+
+    bool isequal = false, ok = true ;
+
     if (d != NULL && d1 != NULL)
     {
         for (int64_t i = 0 ; i < n ; i++)

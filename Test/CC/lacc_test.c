@@ -1,12 +1,15 @@
+//------------------------------------------------------------------------------
+// lacc_test: test LAGraph_lacc
+//------------------------------------------------------------------------------
 
 /*
     LAGraph:  graph algorithms based on GraphBLAS
 
-    Copyright 2019 LAGraph Contributors. 
+    Copyright 2019 LAGraph Contributors.
 
     (see Contributors.txt for a full list of Contributors; see
     ContributionInstructions.txt for information on how you can Contribute to
-    this project). 
+    this project).
 
     All Rights Reserved.
 
@@ -49,7 +52,7 @@ int main (int argc, char **argv)
     FILE *f ;
     if (argc == 1)
     {
-        f = stdin ; 
+        f = stdin ;
     }
     else
     {
