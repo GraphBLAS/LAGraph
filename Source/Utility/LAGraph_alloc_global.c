@@ -473,7 +473,9 @@ GrB_Descriptor
 // LAGraph_support_function:  select function for GxB_SelectOp and GxB_select
 //------------------------------------------------------------------------------
 
+#if defined ( GxB_SUITESPARSE_GRAPHBLAS )
 GxB_SelectOp LAGraph_support = NULL ;
+#endif
 
 bool LAGraph_support_function (const GrB_Index i, const GrB_Index j,
     const GrB_Index nrows, const GrB_Index ncols,
@@ -825,8 +827,16 @@ GrB_Info LAGraph_alloc_global ( )
     // allocate the select function for ktruss and allktruss
     //--------------------------------------------------------------------------
 
+    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    #if ( GxB_IMPLEMENTATION >= GxB_VERSION (3,0,1) )
+    // Note the added parameter (SuiteSparse:GraphBLAS, July 19, V3.0.1 draft)
+    LAGRAPH_OK (GxB_SelectOp_new (&LAGraph_support,
+        F_SELECT (LAGraph_support_function), GrB_UINT32, GrB_UINT32)) ;
+    #else
     LAGRAPH_OK (GxB_SelectOp_new (&LAGraph_support,
         F_SELECT (LAGraph_support_function), GrB_UINT32)) ;
+    #endif
+    #endif
 
     return (GrB_SUCCESS) ;
 }
