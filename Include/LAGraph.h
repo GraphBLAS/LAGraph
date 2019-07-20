@@ -434,7 +434,7 @@ GrB_Info LAGraph_bfs_simple     // push-only BFS
     GrB_Index s             // starting node of the BFS
 ) ;
 
-GrB_Vector LAGraph_lacc (GrB_Matrix A) ;
+GrB_Info LAGraph_lacc (GrB_Matrix A, GrB_Vector *result) ;
 
 // LAGraph_pagrank computes an array of structs for its result
 typedef struct
