@@ -258,7 +258,7 @@ void CountCC(GrB_Vector parents)
 }
 
 // TODO: in progress (nothing returned yet...)
-GrB_Info LAGraph_lacc(GrB_Matrix A)
+GrB_Info LAGraph_lacc(GrB_Matrix A, GrB_Vector *result)
 {
     double tic [2], t ;
     GrB_Info info;
@@ -306,7 +306,8 @@ GrB_Info LAGraph_lacc(GrB_Matrix A)
 
     CountCC(parents);
 
-    return (GrB_SUCCESS) ;
+    *result = parents;
+    return GrB_SUCCESS;
 }
 
 
