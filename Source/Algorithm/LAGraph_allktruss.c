@@ -133,14 +133,17 @@ GrB_Info LAGraph_allktruss      // compute all k-trusses of a graph
     (*kmax) = 0 ;
     k = 0 ;
 
+#if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
+    && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,0,1) )
+
     GrB_Info info ;
 
     // the current k-truss
     GrB_Matrix C = NULL ;
-    GrB_Vector Support = NULL ;
+    GxB_Scalar Support = NULL ;
 
     // Support scalar for GxB_select
-    LAGRAPH_OK (GrB_Vector_new (&Support, GrB_UINT32, 1)) ;
+    LAGRAPH_OK (GxB_Scalar_new (&Support, GrB_UINT32)) ;
 
     // get the size of A
     GrB_Index n ;
@@ -168,7 +171,7 @@ GrB_Info LAGraph_allktruss      // compute all k-trusses of a graph
         //----------------------------------------------------------------------
 
         uint32_t support = (k-2) ;
-        LAGRAPH_OK (GrB_Vector_setElement (Support, support, 0)) ;
+        LAGRAPH_OK (GxB_Scalar_setElement (Support, support)) ;
 
         while (1)
         {
@@ -177,12 +180,7 @@ GrB_Info LAGraph_allktruss      // compute all k-trusses of a graph
             // C = C .* (C >= support)
             //------------------------------------------------------------------
 
-            LAGRAPH_OK (GxB_select (C, NULL, NULL, LAGraph_support, C,
-                #if GxB_IMPLEMENTATION >= GxB_VERSION (3,0,0)
-                Support,    // V3.0.0 and later uses a GrB_Vector
-                #else
-                &support,   // V2.x and earlier uses a (const void *) pointer
-                #endif
+            LAGRAPH_OK (GxB_select (C, NULL, NULL, LAGraph_support, C, Support,
                 NULL)) ;
 
             //------------------------------------------------------------------
@@ -237,5 +235,10 @@ GrB_Info LAGraph_allktruss      // compute all k-trusses of a graph
             LAGRAPH_OK (GrB_mxm (C, C, NULL, GxB_PLUS_LAND_UINT32, C, C, NULL));
         }
     }
+
+#else
+    // requires SuiteSparse:GraphBLAS v3.0.1
+    return (GrB_NO_VALUE) ;
+#endif
 }
 

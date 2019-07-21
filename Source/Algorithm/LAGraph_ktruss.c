@@ -41,8 +41,8 @@
 
 // TODO add sanitize step to remove diagonal
 
-// TODO:  currently relies on a GxB* function in SuiteSparse/GraphBLAS.
-// use #ifdef for non-SuiteSparse GraphBLAS libraries.
+// TODO:  currently relies on a GxB* function in SuiteSparse/GraphBLAS v3.0.1,
+// including the new GxB_Scalar.  Write a version using pure GraphBLAS.
 
 // The edge weights of A are treated as binary.  Explicit zero entries in A are
 // treated as non-edges.  Any type will work, but uint32 is recommended for
@@ -95,6 +95,10 @@ GrB_Info LAGraph_ktruss         // compute the k-truss of a graph
     if (k < 3) return (GrB_INVALID_VALUE) ;
 
     if (Chandle == NULL) return (GrB_NULL_POINTER) ;
+    (*Chandle) = NULL ;
+
+#if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
+    && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,0,1) )
 
     //--------------------------------------------------------------------------
     // initializations
@@ -104,16 +108,16 @@ GrB_Info LAGraph_ktruss         // compute the k-truss of a graph
 
     GrB_Index n ;
     GrB_Matrix C = NULL ;
-    GrB_Vector Support = NULL ;
+    GxB_Scalar Support = NULL ;
     LAGRAPH_OK (GrB_Matrix_nrows (&n, A)) ;
     LAGRAPH_OK (GrB_Matrix_new (&C, GrB_UINT32, n, n)) ;
 
     // for the select operator
     uint32_t support = (k-2) ;
-    LAGRAPH_OK (GrB_Vector_new (&Support, GrB_UINT32, 1)) ;
-    LAGRAPH_OK (GrB_Vector_setElement (Support, support, 0)) ;
+    LAGRAPH_OK (GxB_Scalar_new (&Support, GrB_UINT32)) ;
+    LAGRAPH_OK (GxB_Scalar_setElement (Support, support)) ;
     GrB_Index ignore ;
-    LAGRAPH_OK (GrB_Vector_nvals (&ignore, Support)) ;
+    LAGRAPH_OK (GxB_Scalar_nvals (&ignore, Support)) ;
 
     // last_cnz = nnz (A)
     GrB_Index cnz, last_cnz ;
@@ -137,12 +141,7 @@ GrB_Info LAGraph_ktruss         // compute the k-truss of a graph
         // C = C .* (C >= support)
         //----------------------------------------------------------------------
 
-        LAGRAPH_OK (GxB_select (C, NULL, NULL, LAGraph_support, C,
-            #if GxB_IMPLEMENTATION >= GxB_VERSION (3,0,0)
-            Support,    // V3.0.0 and later uses a GrB_Vector
-            #else
-            &support,   // V2.x and earlier uses a (const void *) pointer
-            #endif
+        LAGRAPH_OK (GxB_select (C, NULL, NULL, LAGraph_support, C, Support,
             NULL)) ;
 
         //----------------------------------------------------------------------
@@ -162,5 +161,10 @@ GrB_Info LAGraph_ktruss         // compute the k-truss of a graph
         }
         last_cnz = cnz ;
     }
+
+#else
+    // requires SuiteSparse:GraphBLAS v3.0.1
+    return (GrB_NO_VALUE) ;
+#endif
 }
 

@@ -158,7 +158,7 @@ GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
 
         // delete entries from Y: keep only those entries greater than zero
         #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
-            && GxB_IMPLEMENTATION >= GxB_VERSION (3,0,0)
+            && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,0,0) )
         // using SuiteSparse:GraphBLAS 3.0.0 or later.
         // t = omp_get_wtime ( ) ;
         LAGRAPH_OK (GxB_select (Y, NULL, NULL, GxB_GT_ZERO, Y, NULL, NULL)) ;

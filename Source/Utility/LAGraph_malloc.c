@@ -57,7 +57,7 @@ bool LAGraph_malloc_is_thread_safe =
     #ifdef MATLAB_MEX_FILE
         false       // mxMalloc is not thread-safe
     #else
-        true        // ANCI C malloc, TBB scalable_malloc, etc are thread safe
+        true        // ANSI C malloc, TBB scalable_malloc, etc are thread safe
     #endif
         ;
 
