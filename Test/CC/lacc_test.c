@@ -38,6 +38,7 @@
 
 #define LAGRAPH_FREE_ALL    \
 {                           \
+    GrB_free (&result) ;    \
     GrB_free (&A) ;         \
 }
 
@@ -46,6 +47,7 @@ int main (int argc, char **argv)
 {
     GrB_Info info ;
     GrB_Matrix A = NULL ;
+    GrB_Vector result = NULL ;
     GrB_init (GrB_NONBLOCKING) ;
     // self edges are OK
 
@@ -66,7 +68,9 @@ int main (int argc, char **argv)
 
     LAGRAPH_OK (LAGraph_mmread (&A, f)) ;
 
-    LAGRAPH_OK (LAGraph_lacc (A)) ;
+    LAGRAPH_OK (LAGraph_lacc (A, &result)) ;
+
+    // TODO: check result
 
     LAGRAPH_FREE_ALL ;
     LAGRAPH_OK (GrB_finalize ( )) ;

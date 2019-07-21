@@ -130,9 +130,9 @@ int main (int argc, char **argv)
     printf ("max threads %d\n", nthreads_max) ;
 
     uint64_t seed = 1 ;
-    GrB_Index nrows = 100000 ;
-    GrB_Index ncols = 100000 ;
-    GrB_Index nvals = 100000000 ;
+    GrB_Index nrows = 10000 ;
+    GrB_Index ncols = 10000 ;
+    GrB_Index nvals = 1000000 ;
 
     // create A with one thread
     OK (bmake (&A, GrB_FP64, nrows, ncols, nvals,
@@ -140,6 +140,7 @@ int main (int argc, char **argv)
 
     // OK (GxB_print (A, 2)) ;
 
+    #if 0
     // now create B with 1 to max # of threads
     for (int nthreads = 1 ; nthreads <= nthreads_max ; nthreads++)
     {
@@ -171,6 +172,7 @@ int main (int argc, char **argv)
 
         OK (GrB_free (&B)) ;
     }
+    #endif
 
     printf ("\nbtest: all tests passed\n") ;
     FREE_ALL ;
