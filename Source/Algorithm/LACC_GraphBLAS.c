@@ -254,7 +254,7 @@ void CountCC(GrB_Vector parents)
     LAGRAPH_FREE (v);
     LAGRAPH_FREE (p);
 
-    printf("Number of clusters: %ld\n", ncc);
+    printf("number of components: %ld\n", ncc);
 }
 
 GrB_Info LAGraph_lacc(GrB_Matrix A, GrB_Vector *result)

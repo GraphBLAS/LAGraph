@@ -22,7 +22,7 @@ default:
 	( cd TriangleCount ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd PageRank      ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd BFS           ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
-	( cd CC		   ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
+	( cd CC            ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd MatrixMarket  ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd BuildMatrix   ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 
