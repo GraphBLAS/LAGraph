@@ -34,6 +34,8 @@
 
 // Contributed by Tim Davis, Texas A&M
 
+// Usage:  lacctest < matrixmarketfile.mtx
+
 #include "LAGraph.h"
 
 #define LAGRAPH_FREE_ALL    \
