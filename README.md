@@ -2,7 +2,11 @@
 This is a library plus a test harness for collecting algorithms that use the
 GraphBLAS.  It contains the following files and folders:
 
-    CMakeLists.txt: a CMake script for compiling
+    CMakeLists.txt: a CMake script for compiling.  Do not run cmake in this
+        top-level directory.  Do "make" here, which does the build in the
+        ./build directory:
+
+	( cd build ; cmake .. ; make )
 
     Doc: documentation, including the results of doxygen
 
