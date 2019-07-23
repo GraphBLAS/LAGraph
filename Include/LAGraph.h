@@ -462,9 +462,12 @@ GrB_Info LAGraph_bfs_simple     // push-only BFS
     GrB_Index s             // starting node of the BFS
 ) ;
 
-GrB_Info LAGraph_lacc (GrB_Matrix A, GrB_Vector *result) ;
+GrB_Info LAGraph_lacc (
+    GrB_Matrix A,
+    GrB_Vector *result
+) ;
 
-// LAGraph_pagrank computes an array of structs for its result
+// LAGraph_pagerank computes an array of structs for its result
 typedef struct
 {
     double pagerank ;   // the pagerank of a node
