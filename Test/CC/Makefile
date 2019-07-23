@@ -20,6 +20,7 @@ JOBS ?= 1
 default: compile
 	./build/lacc_test < ../BFS/west0067.mtx 2>stderr.txt
 	./build/lacc_test < ldbc-wcc-example.mtx 2>stderr.txt
+	./build/lacc_test < tree-example.mtx 2>stderr.txt
 
 # build test
 compile:

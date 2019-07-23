@@ -73,10 +73,10 @@ int main (int argc, char **argv)
     }
     else
     {
-        f = fopen (argv[0], "r") ;
+        f = fopen (argv[1], "r") ;
         if (f == NULL)
         {
-            printf ("unable to open file [%s]\n", argv[0]) ;
+            printf ("unable to open file [%s]\n", argv[1]) ;
             return (GrB_INVALID_VALUE) ;
         }
     }
