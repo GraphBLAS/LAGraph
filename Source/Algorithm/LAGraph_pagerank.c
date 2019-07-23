@@ -38,7 +38,7 @@
 // Texas A&M.
 
 // A is a square unsymmetric binary matrix of size n-by-n, where A(i,j) is the
-// edge (i,j).  Self-edges are LAGRAPH_OK.  A can be of any built-in type.
+// edge (i,j).  Self-edges are OK.  A can be of any built-in type.
 
 // On output, P is pointer to an array of LAGraph_PageRank structs.  P[0] is the
 // highest ranked page, with pagerank P[0].pagerank and the page corresponds to

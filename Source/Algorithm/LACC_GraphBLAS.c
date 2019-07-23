@@ -126,7 +126,7 @@ void UnCondHook(GrB_Matrix A, GrB_Vector parents, GrB_Vector stars)
     //GxB_Vector_fprint(hookP, "---- hookP ------", GxB_SHORT, stderr);
 
 
-    // exatrct values in hookP
+    // extract values in hookP
     GrB_Index nhooks;
     GrB_Vector_nvals(&nhooks, hook);
     GrB_Index *nzid = LAGraph_malloc (nhooks, sizeof (GrB_Index));
