@@ -484,6 +484,14 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     int *iters                  // number of iterations taken
 ) ;
 
+GrB_Info LAGraph_pagerank2
+(
+    GrB_Matrix A,
+    double dampening_factor,
+    unsigned long iteration_num,
+    GrB_Vector *result
+) ;
+
 GrB_Info LAGraph_tricount   // count # of triangles
 (
     int64_t *ntri,          // # of triangles
