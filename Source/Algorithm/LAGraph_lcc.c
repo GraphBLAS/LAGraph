@@ -88,7 +88,7 @@
     if (sanitize) GrB_free (&S) ;   \
     GrB_free (&C) ;                 \
     GrB_free (&M) ;                 \
-    GrB_free (&CA) ;                \
+    GrB_free (&CL) ;                \
     GrB_free (&W) ;                 \
 }
 
@@ -113,7 +113,7 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
         return (GrB_NULL_POINTER) ;
     }
 
-    GrB_Matrix AT = NULL, C = NULL, CA = NULL, S = NULL, M = NULL ;
+    GrB_Matrix AT = NULL, C = NULL, D = NULL, CL = NULL, S = NULL, M = NULL ;
     GrB_Vector W = NULL, LCC = NULL ;
     GrB_Info info ;
 
@@ -147,17 +147,36 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
         S = A ;
     }
 
-    //--------------------------------------------------------------------------
-    // C = A+A' to create an undirected graph C
-    //--------------------------------------------------------------------------
-
     LAGraph_tic (tic) ;
 
     LAGRAPH_OK (GrB_Matrix_new (&AT, GrB_FP64, n, n)) ;
     LAGRAPH_OK (GrB_transpose (AT, NULL, NULL, S, NULL)) ;
+
+    //--------------------------------------------------------------------------
+    // C = A \/ A' to create an undirected graph C
+    //--------------------------------------------------------------------------
+
     LAGRAPH_OK (GrB_Matrix_new (&C, GrB_FP64, n, n)) ;
     LAGRAPH_OK (GrB_eWiseAdd (C, NULL, NULL, GrB_LOR, S, AT, NULL)) ;
+
+    //--------------------------------------------------------------------------
+    // D = A + A' to create an undirected multigraph D
+    //--------------------------------------------------------------------------
+
+    LAGRAPH_OK (GrB_Matrix_new (&D, GrB_FP64, n, n)) ;
+    LAGRAPH_OK (GrB_eWiseAdd (D, NULL, NULL, GrB_PLUS_FP64, S, AT, NULL)) ;
+
+    GrB_free (&AT) ;
     if (sanitize) GrB_free (&S) ;
+
+    //--------------------------------------------------------------------------
+    // L = tril(D)
+    //--------------------------------------------------------------------------
+
+    GrB_Matrix L = NULL ;
+    LAGRAPH_OK (GrB_Matrix_new (&L, GrB_UINT32, n, n)) ;
+    LAGRAPH_OK (GxB_select (L, NULL, NULL, GxB_TRIL, D, NULL, NULL)) ;
+    GrB_free (&D) ;
 
     //--------------------------------------------------------------------------
     // Find wedges of each node
@@ -175,20 +194,18 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     // Calculate triangles
     //--------------------------------------------------------------------------
 
-    // CA<C> = C*A = C*AT' using a masked dot product
-    LAGRAPH_OK (GrB_Matrix_new (&CA, GrB_FP64, n, n)) ;
-    LAGRAPH_OK (GrB_mxm (CA, C, NULL, LAGraph_PLUS_TIMES_FP64, C, AT,
-        LAGraph_desc_otoo)) ;
-    GrB_free (&AT) ;
+    // CL<C> = C*L using a masked dot product
+    LAGRAPH_OK (GrB_Matrix_new (&CL, GrB_FP64, n, n)) ;
+    LAGRAPH_OK (GrB_mxm (CL, C, NULL, LAGraph_PLUS_TIMES_FP64, C, L, NULL)) ;
 
     //--------------------------------------------------------------------------
     // Calculate LCC
     //--------------------------------------------------------------------------
 
-    // LCC(i) = sum (CA (i,:)) = # of triangles at each node
+    // LCC(i) = sum (CL (i,:)) = # of triangles at each node
     LAGRAPH_OK (GrB_Vector_new (&LCC, GrB_FP64, n)) ;
-    LAGRAPH_OK (GrB_reduce (LCC, NULL, NULL, GrB_PLUS_FP64, CA, NULL)) ;
-    GrB_free (&CA) ;
+    LAGRAPH_OK (GrB_reduce (LCC, NULL, NULL, GrB_PLUS_FP64, CL, NULL)) ;
+    GrB_free (&CL) ;
 
     // LCC = LCC ./ W
     LAGRAPH_OK (GrB_eWiseMult (LCC, NULL, NULL, GrB_DIV_FP64, LCC, W, NULL)) ;
