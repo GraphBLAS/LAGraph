@@ -62,13 +62,13 @@ void CondHook(GrB_Matrix A, GrB_Vector parents, GrB_Vector stars)
     //GxB_Vector_fprint(hook, "--Hook --", GxB_SHORT, stderr);
 
     // only keep vertices whose minNeighborparent is smaller than its own parent
-    GrB_eWiseMult(hook,NULL, NULL, GrB_MIN_UINT64, hook,parents, NULL);
+    GrB_eWiseMult(hook,NULL, NULL, GrB_MIN_UINT64, hook, parents, NULL);
     //GxB_Vector_fprint(hook, "---- Hook ------", GxB_SHORT, stderr);
 
     //parents of hooks
     GrB_Vector hookP = NULL;
     GrB_Vector_new (&hookP, GrB_UINT64, n);
-    GrB_eWiseMult(hookP,NULL, NULL, GrB_SECOND_UINT64, hook,parents, NULL);
+    GrB_eWiseMult(hookP,NULL, NULL, GrB_SECOND_UINT64, hookP, parents, NULL);
     //GxB_Vector_fprint(hookP, "---- hookP ------", GxB_SHORT, stderr);
 
     // extract values in hookP
