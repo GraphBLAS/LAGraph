@@ -35,7 +35,7 @@
 //------------------------------------------------------------------------------
 
 // LAGraph_BF_full: Bellman-Ford single source shortest paths, returning both
-// the path lenths and the shortest-path tree.  contributed by Jinhao Chen and
+// the path lengths and the shortest-path tree.  contributed by Jinhao Chen and
 // Tim Davis, Texas A&M.
 
 // LAGraph_BF_full performs a Bellman-Ford to find out shortest path, parent
