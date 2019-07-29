@@ -32,6 +32,17 @@
 
 */
 
+// LAGraph_pagerank2: Alternative PageRank implementation using a real
+// semiring. Not to be confused with the dpagerank2.c algorithm, included
+// in the SuiteSparse:GrapBLAS demos.
+//
+// This algorithm follows the specification given in the LDBC Graphalytics
+// benchmark, see https://github.com/ldbc/ldbc_graphalytics_docs/
+//
+// Contributed by Gabor Szarnyas and Balint Hegyi, Budapest University of
+// Technology and Economics (with accented characters: G\'{a}bor Sz\'{a}rnyas
+// and B\'{a}lint Hegyi, using LaTeX syntax).
+
 #include "LAGraph.h"
 
 #define LAGRAPH_FREE_ALL { \
@@ -46,10 +57,10 @@
 };
 
 GrB_Info LAGraph_pagerank2(
+    GrB_Vector *result,
     GrB_Matrix A,
     double damping_factor,
-    unsigned long iteration_num,
-    GrB_Vector *result
+    unsigned long iteration_num
 ) {
     GrB_Info info;
     GrB_Index n;
