@@ -53,7 +53,7 @@
     GrB_Vector_free(&nondangling_mask); \
     GrB_Vector_free(&importance_vec); \
     GrB_Vector_free(&dangling_vec); \
-    GrB_Vector_free(pr_next); \
+    GrB_Vector_free(&pr_curr); \
 };
 
 GrB_Info LAGraph_pagerank2(
@@ -73,19 +73,19 @@ GrB_Info LAGraph_pagerank2(
     GrB_Vector importance_vec;
     GrB_Vector dangling_vec;
 
-    GrB_Vector *pr_prev = NULL;
-    GrB_Vector *pr_next = NULL;
+    GrB_Vector pr_prev = NULL;
+    GrB_Vector pr_curr = NULL;
 
     LAGRAPH_OK(GrB_Matrix_nrows(&n, A))
     GrB_Index nvals;
     LAGRAPH_OK(GrB_Matrix_nvals(&nvals, A))
 
-    // Make a complement descriptor
+    // Create complement descriptor
 
     LAGRAPH_OK(GrB_Descriptor_new(&invmask_desc))
     LAGRAPH_OK(GrB_Descriptor_set(invmask_desc, GrB_MASK, GrB_SCMP))
 
-    // Make a transpose descriptor
+    // Create transpose descriptor
 
     LAGRAPH_OK(GrB_Descriptor_new(&transpose_desc))
     LAGRAPH_OK(GrB_Descriptor_set(transpose_desc, GrB_INP0, GrB_TRAN))
@@ -128,12 +128,11 @@ GrB_Info LAGraph_pagerank2(
 
     // Result vectors
 
-    LAGRAPH_OK(GrB_Vector_new(pr_prev, GrB_FP64, n))
-    LAGRAPH_OK(GrB_Vector_new(pr_next, GrB_FP64, n))
+    LAGRAPH_OK(GrB_Vector_new(&pr_curr, GrB_FP64, n))
 
     // Fill result vector with initial value (1 / |V|)
     LAGRAPH_OK(GrB_Vector_assign_FP64(
-        *pr_prev,
+        pr_curr,
         GrB_NULL,
         GrB_NULL,
         (1.0 / n),
@@ -148,19 +147,10 @@ GrB_Info LAGraph_pagerank2(
     // Teleport value
     const double teleport = (1 - damping_factor) / n;
 
-    pr_prev = (GrB_Vector *) malloc(sizeof(GrB_Vector));
-    if (pr_prev == NULL) {
-        LAGRAPH_ERROR("pr_prev allocation error, pointer is NULL", GrB_NULL_POINTER)
-    }
-    pr_prev = (GrB_Vector *) malloc(sizeof(GrB_Vector));
-    if (pr_prev == NULL) {
-        LAGRAPH_ERROR("pr_next allocation error, pointer is NULL", GrB_NULL_POINTER)
-    }
-
-    pr_prev = (GrB_Vector *) malloc(sizeof(GrB_Vector));
-    pr_next = (GrB_Vector *) malloc(sizeof(GrB_Vector));
-
     for (int i = 0; i < iteration_num; i++) {
+        pr_prev = pr_curr;
+	LAGRAPH_OK(GrB_Vector_new(&pr_curr, GrB_FP64, n))
+
         //
         // Importance calculation
         //
@@ -171,7 +161,7 @@ GrB_Info LAGraph_pagerank2(
             nondangling_mask,
             GrB_NULL,
             GrB_DIV_FP64,
-            *pr_prev,
+            pr_prev,
             A_out,
             GrB_NULL
         ))
@@ -207,7 +197,7 @@ GrB_Info LAGraph_pagerank2(
             dangling_vec,
             nondangling_mask,
             GrB_NULL,
-            *pr_prev,
+            pr_prev,
             GrB_ALL,
             n,
             invmask_desc
@@ -229,7 +219,7 @@ GrB_Info LAGraph_pagerank2(
         // Add teleport, importance_vec, and dangling_vec components together
         //
         LAGRAPH_OK(GrB_Vector_assign_FP64(
-            *pr_next,
+            pr_curr,
             GrB_NULL,
             GrB_NULL,
             (teleport + dangling_sum),
@@ -238,21 +228,16 @@ GrB_Info LAGraph_pagerank2(
             GrB_NULL
         ))
         LAGRAPH_OK(GrB_eWiseAdd_Vector_Monoid(
-            *pr_next,
+            pr_curr,
             GrB_NULL,
             GrB_NULL,
             GxB_PLUS_FP64_MONOID,
-            *pr_next,
+            pr_curr,
             importance_vec,
             GrB_NULL
         ))
-
-        // Swap the new and old vectors
-        GrB_Vector *temp = pr_next;
-        pr_next = pr_prev;
-        pr_prev = temp;
     }
 
-    // Because of the swap, the previous result will be the actual output
-    result = pr_prev;
+    (*result) = pr_curr;
+    return (GrB_SUCCESS);
 }
