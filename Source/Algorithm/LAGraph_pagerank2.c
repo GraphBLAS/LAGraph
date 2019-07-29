@@ -79,6 +79,7 @@ GrB_Info LAGraph_pagerank2(
     LAGRAPH_OK(GrB_Matrix_nrows(&n, A))
     GrB_Index nvals;
     LAGRAPH_OK(GrB_Matrix_nvals(&nvals, A))
+
     // Make a complement descriptor
 
     LAGRAPH_OK(GrB_Descriptor_new(&invmask_desc))
@@ -166,7 +167,7 @@ GrB_Info LAGraph_pagerank2(
 
         // Divide previous PageRank with number of outbound edges
         LAGRAPH_OK(GrB_eWiseMult_Vector_BinaryOp(
-           importance_vec,
+            importance_vec,
             nondangling_mask,
             GrB_NULL,
             GrB_DIV_FP64,
