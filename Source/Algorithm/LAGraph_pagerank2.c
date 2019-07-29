@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_pagerank: pagerank using a real semiring
+// LAGraph_pagerank2: pagerank using a real semiring
 //------------------------------------------------------------------------------
 
 /*
@@ -47,7 +47,7 @@
 
 GrB_Info LAGraph_pagerank2(
     GrB_Matrix A,
-    double dampening_factor,
+    double damping_factor,
     unsigned long iteration_num,
     GrB_Vector *result
 ) {
@@ -133,8 +133,8 @@ GrB_Info LAGraph_pagerank2(
     LAGRAPH_OK(GrB_Vector_new(&importance_vec, GrB_FP64, n))
     LAGRAPH_OK(GrB_Vector_new(&dangling_vec, GrB_FP64, n))
 
-    // Teleporting factor
-    const double teleport_factor = (1 - dampening_factor) / n;
+    // Teleport value
+    const double teleport = (1 - damping_factor) / n;
 
     pr_prev = (GrB_Vector *) malloc(sizeof(GrB_Vector));
     if (pr_prev == NULL) {
@@ -155,7 +155,7 @@ GrB_Info LAGraph_pagerank2(
 
         // Divide previous PageRank with number of outbound edges
         LAGRAPH_OK(GrB_eWiseMult_Vector_BinaryOp(
-            importance_vec,
+           importance_vec,
             nondangling_mask,
             GrB_NULL,
             GrB_DIV_FP64,
@@ -164,18 +164,18 @@ GrB_Info LAGraph_pagerank2(
             GrB_NULL
         ))
 
-        // Multiply importance with dampening factor
+        // Multiply importance with damping factor
         LAGRAPH_OK(GrB_Vector_assign_FP64(
             importance_vec,
             nondangling_mask,
             GrB_TIMES_FP64,
-            dampening_factor,
+            damping_factor,
             GrB_ALL,
             n,
             GrB_NULL
         ))
 
-        // Calculate summed PR for all inbound vertices
+        // Calculate total PR of all inbound vertices
         LAGRAPH_OK(GrB_mxv(
             importance_vec,
             nondangling_mask,
@@ -202,25 +202,25 @@ GrB_Info LAGraph_pagerank2(
         ))
 
         // Sum the previous PR values together
-        double dangling_factor;
+        double dangling_sum;
         LAGRAPH_OK(GrB_Vector_reduce_FP64(
-            &dangling_factor,
+            &dangling_sum,
             GrB_NULL,
             GxB_PLUS_FP64_MONOID,
             dangling_vec,
             GrB_NULL
         ))
-        dangling_factor *= (dampening_factor / n);
+        dangling_sum *= (damping_factor / n);
 
         //
         // PageRank summarization
-        // Add teleportation, importance_vec, and dangling_vec components together
+        // Add teleport, importance_vec, and dangling_vec components together
         //
         LAGRAPH_OK(GrB_Vector_assign_FP64(
             *pr_next,
             GrB_NULL,
             GrB_NULL,
-            (teleport_factor + dangling_factor),
+            (teleport + dangling_sum),
             GrB_ALL,
             n,
             GrB_NULL
