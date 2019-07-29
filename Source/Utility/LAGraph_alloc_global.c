@@ -401,7 +401,7 @@ void LAGraph_decr_int64
 }
 
 // z = x * (x - 1), used by LAGraph_lcc.
-// This operator calculates the comb(d(v), 2) value.
+// This operator calculates the comb(d(v), 2) / 2 value.
 void LAGraph_comb_fp64
 (
     void *z,
