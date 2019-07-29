@@ -55,7 +55,7 @@ int main ( )
     GrB_Matrix A = NULL ;
     GrB_Matrix Abool = NULL ;
     LAGraph_PageRank *P = NULL ;
-    GrB_Vector *PR = NULL;
+    GrB_Vector PR = NULL;
 
     LAGRAPH_OK (LAGraph_init ( )) ;
 
@@ -138,13 +138,13 @@ int main ( )
     // print results
     //--------------------------------------------------------------------------
 
-    GxB_Vector_fprint(PR, "---- PR ------", GxB_SHORT, stderr);
     /*
     for (int64_t k = 0 ; k < n ; k++)
     {
         printf ("%" PRIu64 " %g\n", P [k].page, P [k].pagerank) ;
     }
     */
+    GxB_Vector_fprint(PR, "---- PR ------", GxB_SHORT, stderr);
 
     //--------------------------------------------------------------------------
     // free all workspace and finish

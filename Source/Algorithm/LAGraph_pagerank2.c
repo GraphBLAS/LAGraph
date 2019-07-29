@@ -49,11 +49,11 @@
     GrB_Descriptor_free(&transpose_desc); \
     GrB_Descriptor_free(&invmask_desc); \
     GrB_Matrix_free(&A); \
-    GrB_Vector_free(&A_out); \
+    GrB_Vector_free(&d_out); \
     GrB_Vector_free(&nondangling_mask); \
     GrB_Vector_free(&importance_vec); \
     GrB_Vector_free(&dangling_vec); \
-    GrB_Vector_free(&pr_curr); \
+    GrB_Vector_free(&pr); \
 };
 
 GrB_Info LAGraph_pagerank2(
@@ -67,14 +67,13 @@ GrB_Info LAGraph_pagerank2(
 
     GrB_Descriptor invmask_desc;
     GrB_Descriptor transpose_desc;
-    GrB_Vector A_out;
+    GrB_Vector d_out;
     GrB_Vector nondangling_mask;
 
     GrB_Vector importance_vec;
     GrB_Vector dangling_vec;
 
-    GrB_Vector pr_prev = NULL;
-    GrB_Vector pr_curr = NULL;
+    GrB_Vector pr = NULL;
 
     LAGRAPH_OK(GrB_Matrix_nrows(&n, A))
     GrB_Index nvals;
@@ -96,9 +95,9 @@ GrB_Info LAGraph_pagerank2(
     //
     // Stores the outbound degrees of all vertices
     //
-    LAGRAPH_OK(GrB_Vector_new(&A_out, GrB_UINT64, n))
+    LAGRAPH_OK(GrB_Vector_new(&d_out, GrB_UINT64, n))
     LAGRAPH_OK(GrB_Matrix_reduce_Monoid(
-        A_out,
+        d_out,
         GrB_NULL,
         GrB_NULL,
         GxB_PLUS_UINT64_MONOID,
@@ -107,10 +106,10 @@ GrB_Info LAGraph_pagerank2(
     ))
 
     //
-    // Non-dangling_vec vector determination
+    // Determine vector of non-dangling vertices
     //
-    // These vertices the ones which have outgoing edges. In further operations,
-    // this mask can be negated to select dangling_vec vertices.
+    // These vertices are the ones which have outgoing edges. In subsequent
+    // operations, this mask can be negated to select dangling vertices.
     //
     LAGRAPH_OK(GrB_Vector_new(&nondangling_mask, GrB_BOOL, n))
     LAGRAPH_OK(GrB_Matrix_reduce_Monoid(
@@ -126,13 +125,12 @@ GrB_Info LAGraph_pagerank2(
     // Iteration
     //
 
-    // Result vectors
-
-    LAGRAPH_OK(GrB_Vector_new(&pr_curr, GrB_FP64, n))
+    // Initialize PR vector
+    LAGRAPH_OK(GrB_Vector_new(&pr, GrB_FP64, n))
 
     // Fill result vector with initial value (1 / |V|)
     LAGRAPH_OK(GrB_Vector_assign_FP64(
-        pr_curr,
+        pr,
         GrB_NULL,
         GrB_NULL,
         (1.0 / n),
@@ -148,9 +146,6 @@ GrB_Info LAGraph_pagerank2(
     const double teleport = (1 - damping_factor) / n;
 
     for (int i = 0; i < iteration_num; i++) {
-        pr_prev = pr_curr;
-	LAGRAPH_OK(GrB_Vector_new(&pr_curr, GrB_FP64, n))
-
         //
         // Importance calculation
         //
@@ -158,18 +153,18 @@ GrB_Info LAGraph_pagerank2(
         // Divide previous PageRank with number of outbound edges
         LAGRAPH_OK(GrB_eWiseMult_Vector_BinaryOp(
             importance_vec,
-            nondangling_mask,
+            GrB_NULL,
             GrB_NULL,
             GrB_DIV_FP64,
-            pr_prev,
-            A_out,
+            pr,
+            d_out,
             GrB_NULL
         ))
 
-        // Multiply importance with damping factor
+        // Multiply importance by damping factor
         LAGRAPH_OK(GrB_Vector_assign_FP64(
             importance_vec,
-            nondangling_mask,
+            GrB_NULL,
             GrB_TIMES_FP64,
             damping_factor,
             GrB_ALL,
@@ -180,7 +175,7 @@ GrB_Info LAGraph_pagerank2(
         // Calculate total PR of all inbound vertices
         LAGRAPH_OK(GrB_mxv(
             importance_vec,
-            nondangling_mask,
+            GrB_NULL,
             GrB_NULL,
             GxB_PLUS_TIMES_FP64,
             A,
@@ -197,13 +192,13 @@ GrB_Info LAGraph_pagerank2(
             dangling_vec,
             nondangling_mask,
             GrB_NULL,
-            pr_prev,
+            pr,
             GrB_ALL,
             n,
             invmask_desc
         ))
 
-        // Sum the previous PR values together
+        // Sum the previous PR values of dangling vertices together
         double dangling_sum;
         LAGRAPH_OK(GrB_Vector_reduce_FP64(
             &dangling_sum,
@@ -212,6 +207,8 @@ GrB_Info LAGraph_pagerank2(
             dangling_vec,
             GrB_NULL
         ))
+
+        // Multiply by damping factor and 1 / |V|
         dangling_sum *= (damping_factor / n);
 
         //
@@ -219,7 +216,7 @@ GrB_Info LAGraph_pagerank2(
         // Add teleport, importance_vec, and dangling_vec components together
         //
         LAGRAPH_OK(GrB_Vector_assign_FP64(
-            pr_curr,
+            pr,
             GrB_NULL,
             GrB_NULL,
             (teleport + dangling_sum),
@@ -228,16 +225,16 @@ GrB_Info LAGraph_pagerank2(
             GrB_NULL
         ))
         LAGRAPH_OK(GrB_eWiseAdd_Vector_Monoid(
-            pr_curr,
+            pr,
             GrB_NULL,
             GrB_NULL,
             GxB_PLUS_FP64_MONOID,
-            pr_curr,
+            pr,
             importance_vec,
             GrB_NULL
         ))
     }
 
-    (*result) = pr_curr;
+    (*result) = pr;
     return (GrB_SUCCESS);
 }
