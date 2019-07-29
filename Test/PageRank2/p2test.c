@@ -55,6 +55,7 @@ int main ( )
     GrB_Matrix A = NULL ;
     GrB_Matrix Abool = NULL ;
     LAGraph_PageRank *P = NULL ;
+    GrB_Vector *PR = NULL;
 
     LAGRAPH_OK (LAGraph_init ( )) ;
 
@@ -122,8 +123,8 @@ int main ( )
 
         for (int trial = 0 ; trial < ntrials ; trial++)
         {
-            if (P != NULL) { free (P) ; P = NULL ; }
-            LAGRAPH_OK (LAGraph_pagerank2 (&P, A, 0.85, itermax)) ;
+            if (PR != NULL) { free (PR) ; PR = NULL ; }
+            LAGRAPH_OK (LAGraph_pagerank2 (&PR, A, 0.85, itermax)) ;
         }
 
         // stop the timer
@@ -137,10 +138,13 @@ int main ( )
     // print results
     //--------------------------------------------------------------------------
 
+    GxB_Vector_fprint(PR, "---- PR ------", GxB_SHORT, stderr);
+    /*
     for (int64_t k = 0 ; k < n ; k++)
     {
         printf ("%" PRIu64 " %g\n", P [k].page, P [k].pagerank) ;
     }
+    */
 
     //--------------------------------------------------------------------------
     // free all workspace and finish
