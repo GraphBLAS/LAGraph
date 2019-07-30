@@ -414,3 +414,4 @@ step  23 time 36.153719 sec, nvals 46897108
  edges 23448554 ntriangles 274009101
 nthreads:   1 time:   882.348225 rate:   0.10 steps 23
 step   1 time 54.019762 sec, nvals 52565048
+step   2 time 27.693449 sec, nvals 48372156
