@@ -232,15 +232,15 @@ extern GrB_Descriptor
     LAGraph_desc_ooco ,   // compl mask
     LAGraph_desc_oocr ,   // compl mask, replace
 
-    LAGraph_desc_otoo ,   // A'
-    LAGraph_desc_otor ,   // A', replace
-    LAGraph_desc_otco ,   // A', compl mask
-    LAGraph_desc_otcr ,   // A', compl mask, replace
+    LAGraph_desc_tooo ,   // A'
+    LAGraph_desc_toor ,   // A', replace
+    LAGraph_desc_toco ,   // A', compl mask
+    LAGraph_desc_tocr ,   // A', compl mask, replace
 
-    LAGraph_desc_tooo ,   // B'
-    LAGraph_desc_toor ,   // B', replace
-    LAGraph_desc_toco ,   // B', compl mask
-    LAGraph_desc_tocr ,   // B', compl mask, replace
+    LAGraph_desc_otoo ,   // B'
+    LAGraph_desc_otor ,   // B', replace
+    LAGraph_desc_otco ,   // B', compl mask
+    LAGraph_desc_otcr ,   // B', compl mask, replace
 
     LAGraph_desc_ttoo ,   // A', B'
     LAGraph_desc_ttor ,   // A', B', replace
