@@ -102,7 +102,18 @@
     printf ("oh, %g sec is much faster if I use all the threads (%d)\n",
         now_nthreads) ;
     assert (now_nthreads == nthreads_max) ;
+
 */
+
+// NOTE:  the GraphBLAS API does not have a GxB_set or GxB_get to control the #
+// of threads that GraphBLAS should use.  Those are SuiteSparse:GraphBLAS
+// extensions.  The above code will work in any GraphBLAS library; it will just
+// likely run with all the CPU threads and/or GPU cores and/or MPI nodes it can
+// use (assuming // it's a multi-threaded library or GPU code, or whatever).
+
+// To allow this function to compile when SuiteSparse:GraphBLAS is not being
+// used, the use of the SuiteSparse:GraphBLAS-specific function GxB_get is
+// protected by an #ifdef.
 
 // contributed by Tim Davis, Texas A&M
 
