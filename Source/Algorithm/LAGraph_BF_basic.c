@@ -115,6 +115,10 @@ GrB_Info LAGraph_BF_basic
     // terminate when no new path is found or more than n-1 loops
     while (!same && iter < n - 1)
     {
+
+        double tic [2] ;
+        LAGraph_tic (tic) ;
+
         // excute semiring on d and A, and save the result to d
         LAGRAPH_OK (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, GxB_MIN_PLUS_FP64, d, A,
             GrB_NULL));
@@ -126,6 +130,12 @@ GrB_Info LAGraph_BF_basic
             d = ttmp;
         }
         iter++;
+
+        double t = LAGraph_toc (tic) ;
+        GrB_Index dnz ;
+        LAGRAPH_OK (GrB_Vector_nvals (&dnz, d)) ;
+        printf ("step %3d time %16,4f sec, nvals %.16g\n", iter, t, (double) dnz) ;
+        fflush (stdout) ;
     }
 
     // check for negative-weight cycle only when there was a new path in the
