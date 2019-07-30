@@ -426,7 +426,7 @@ int LAGraph_set_nthreads        // returns # threads set, 0 if nothing done
     int nthreads
 ) ;
 
-int LAGraph_get_nthreads        // returns # threads to use, 0 if unknown
+int LAGraph_get_nthreads        // returns # threads to use, 1 if unknown
 (
     void
 ) ;

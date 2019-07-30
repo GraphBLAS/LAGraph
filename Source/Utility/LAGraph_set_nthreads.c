@@ -37,7 +37,7 @@
 // LAGraph_set_nthreads: set # of threads to use
 // contributed by Tim Davis, Texas A&M
 
-// See also LAGraph_get_nthreads
+// See LAGraph_get_nthreads for details on what this function does.
 
 #include "LAGraph_internal.h"
 

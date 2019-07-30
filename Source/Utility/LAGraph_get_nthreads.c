@@ -34,14 +34,83 @@
 
 //------------------------------------------------------------------------------
 
-// LAGraph_get_nthreads: get # of threads to use
+// LAGraph_get_nthreads: get # of threads that will be used by GraphBLAS.
+
+// SuiteSparse:GraphBLAS has a mechanism that controls the number of threads
+// that will be used in each operation.  This value is set by GxB_set and
+// retreived by GxB_get.  It may be less than the value returned
+// omp_get_max_threads.
+
+// GrB_init (and GxB_init) keeps track of this as a global setting, and
+// initializes this value to omp_get_max_threads.  If you want to test the
+// performance of a LAGraph or GraphBLAS function (when using SuiteSparse:
+// GraphBLAS), you can modify this value with LAGraph_set_nthreads, and you
+// can retrieve it with LAGraph_get_threads.  Here is an example:
+
+/*
+    LAGraph_init ( ) ;  // start GraphBLAS and LAGraph
+
+    // get the current # of threads to use. 
+    int nthreads_max = LAGraph_get_nthreads ( ) ;
+    int nthreads_max2 = omp_get_max_nthreads ( ) ;
+
+    printf ("omp max: %d, to use in LAGraph: %d\n", nthreads_max,
+        nthreads_max2) ;
+    assert (nthreads_max == nthreads_max2) ;
+
+    // do some computation using nthreads_max
+    double tic [2], t ;
+    LAGraph_tic (tic) ;
+    LAGraph_lcc ( ... ) ;
+    double t = LAGraph_toc (tic) ;
+    printf ("time to solve the problem using %d threads: %g (seconds)\n',
+        nthreads_max, t) ;
+
+    // OK, now let's try it again with different #'s of threads:
+    for (int k = nthreads_max ; k > 0 ; k--)
+    {
+        LAGraph_set_nthreads (k) ;
+
+        LAGraph_tic (tic) ;
+        LAGraph_lcc ( ... ) ;
+        t = LAGraph_toc (tic) ;
+
+        printf ("time to solve the problem using %d threads: %g (seconds)\n',
+            nthreads_max, t) ;
+    }
+
+    int now_nthreads = LAGraph_get_nthreads ( ) ;
+    printf ("Now the nthread setting is %d\n", now_nthreads) ;
+    assert (now_nthreads == 1) ;
+
+    // do something with one thread
+    LAGraph_tic (tic) ;
+    LAGraph_lcc ( ... ) ;
+    t = LAGraph_toc (tic) ;
+
+    printf ("hey, %g sec is slow! (because I told LAGraph to use %d thread)\n",
+        now_nthreads) ;
+
+    // So reset it back to the max
+    LAGraph_set_nthreads (nthreads_max) ;
+
+    LAGraph_tic (tic) ;
+    LAGraph_lcc ( ... ) ;
+    t = LAGraph_toc (tic) ;
+
+    now_nthreads = LAGraph_get_nthreads ( ) ;
+    printf ("oh, %g sec is much faster if I use all the threads (%d)\n",
+        now_nthreads) ;
+    assert (now_nthreads == nthreads_max) ;
+*/
+
 // contributed by Tim Davis, Texas A&M
 
-// See also LAGraph_get_nthreads
+// See also LAGraph_set_nthreads
 
 #include "LAGraph_internal.h"
 
-int LAGraph_get_nthreads        // returns # threads to use, 1 if unknown
+int LAGraph_get_nthreads    // returns # threads to use, 1 if unknown
 (
     void
 )
