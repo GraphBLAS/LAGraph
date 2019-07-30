@@ -50,7 +50,7 @@ int LAGraph_get_nthreads        // returns # threads to use, 1 if unknown
     int nthreads = 1 ;
 
     #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
-    info = GxB_get (GxB_NTHREADS, &nthreads) ;
+    GrB_Info info = GxB_get (GxB_NTHREADS, &nthreads) ;
     if (info != GrB_SUCCESS)
     {
         fprintf (stderr, "LAGraph error:\n[%d]\n%s\nFile: %s Line: %d\n",
