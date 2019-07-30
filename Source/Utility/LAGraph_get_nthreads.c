@@ -50,7 +50,13 @@ int LAGraph_get_nthreads        // returns # threads to use, 1 if unknown
     int nthreads = 1 ;
 
     #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
-    GxB_get (GxB_NTHREADS, &nthreads) ;
+    info = GxB_get (GxB_NTHREADS, &nthreads) ;
+    if (info != GrB_SUCCESS)
+    {
+        fprintf (stderr, "LAGraph error:\n[%d]\n%s\nFile: %s Line: %d\n",
+            info, GrB_error ( ), __FILE__, __LINE__) ;
+        return (-9999) ;
+    }
     #elif defined ( _OPENMP )
     nthreads = omp_get_max_threads ( ) ;
     #else
