@@ -130,6 +130,9 @@ GrB_Info LAGraph_ktruss         // compute the k-truss of a graph
     for (int32_t nsteps = 1 ; ; nsteps++)
     {
 
+        double tic [2] ;
+        LAGraph_tic (tic) ;
+
         //----------------------------------------------------------------------
         // C<C> = C*C
         //----------------------------------------------------------------------
@@ -149,6 +152,8 @@ GrB_Info LAGraph_ktruss         // compute the k-truss of a graph
         //----------------------------------------------------------------------
 
         LAGRAPH_OK (GrB_Matrix_nvals (&cnz, C)) ;
+        double t = LAGraph_toc (tic) ;
+        printf ("step %3d time %16,4f sec, nvals %.16g\n", nsteps, t, (double) cnz) ;
         if (cnz == last_cnz)
         {
             (*Chandle) = C ;                        // return the result C

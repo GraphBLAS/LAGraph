@@ -110,6 +110,7 @@ int main (int argc, char **argv)
 
     double t_process = LAGraph_toc (tic) ;
     printf ("process A time:  %14.6f sec\n", t_process) ;
+    printf ("input graph: %g nodes, %g edges\n", (double) n, (double) nedges) ;
 
     //--------------------------------------------------------------------------
     // construct all ktrusses
@@ -121,7 +122,7 @@ int main (int argc, char **argv)
     for (uint32_t k = 3 ; k < 10 && nedges_in_ktruss > 0 ; k++)
     {
 
-        printf ("\nKTruss: k = %3d:", (int) k) ;
+        printf ("\nKTruss: k = %3d:\n", (int) k) ;
         double t1 ;
 
         double t_sequential ;
@@ -155,6 +156,7 @@ int main (int argc, char **argv)
             {
                 printf (" speedup: %6.2f", t1 / t) ;
             }
+            printf (" steps %d", nsteps) ;
             printf ("\n") ;
 
             if (nthreads != nthreads_max && 2 * nthreads > nthreads_max)
