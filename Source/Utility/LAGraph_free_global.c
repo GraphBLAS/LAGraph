@@ -67,7 +67,8 @@ GrB_Info LAGraph_free_global ( )
     GrB_free (&LAGraph_TRUE_BOOL_Complex) ;
     GrB_free (&LAGraph_ONE_FP64) ;
     GrB_free (&LAGraph_ONE_UINT32) ;
-    GrB_free (&LAGraph_COMB_FP64) ;
+    GrB_free (&LAGraph_COMB_DIR_FP64) ;
+    GrB_free (&LAGraph_COMB_UNDIR_FP64) ;
     GrB_free (&LAGraph_GT0_FP32) ;
     GrB_free (&LAGraph_GT0_FP64) ;
     GrB_free (&LAGraph_YMAX_FP32) ;

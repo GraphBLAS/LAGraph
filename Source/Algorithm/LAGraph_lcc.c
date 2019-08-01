@@ -84,7 +84,6 @@
 #define LAGRAPH_FREE_ALL            \
 {                                   \
     GrB_free (&LCC) ;               \
-    GrB_free (&AT) ;                \
     if (sanitize) GrB_free (&S) ;   \
     GrB_free (&C) ;                 \
     GrB_free (&M) ;                 \
@@ -98,6 +97,7 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
 (
     GrB_Vector *LCC_handle,     // output vector
     const GrB_Matrix A,         // input matrix
+    bool symmetric,             // if true, the matrix is symmetric
     bool sanitize,              // if true, ensure A is binary
     double t [2]                // t [0] = sanitize time, t [1] = lcc time,
                                 // in seconds
@@ -113,7 +113,7 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
         return (GrB_NULL_POINTER) ;
     }
 
-    GrB_Matrix AT = NULL, C = NULL, D = NULL, CL = NULL, S = NULL, M = NULL ;
+    GrB_Matrix C = NULL, CL = NULL, S = NULL, M = NULL, L = NULL ;
     GrB_Vector W = NULL, LCC = NULL ;
     GrB_Info info ;
 
@@ -149,34 +149,50 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
 
     LAGraph_tic (tic) ;
 
-    LAGRAPH_OK (GrB_Matrix_new (&AT, GrB_FP64, n, n)) ;
-    LAGRAPH_OK (GrB_transpose (AT, NULL, NULL, S, NULL)) ;
-
-    //--------------------------------------------------------------------------
-    // C = A \/ A' to create an undirected graph C
-    //--------------------------------------------------------------------------
-
     LAGRAPH_OK (GrB_Matrix_new (&C, GrB_FP64, n, n)) ;
-    LAGRAPH_OK (GrB_eWiseAdd (C, NULL, NULL, GrB_LOR, S, AT, NULL)) ;
-
-    //--------------------------------------------------------------------------
-    // D = A + A' to create an undirected multigraph D
-    //--------------------------------------------------------------------------
-
-    LAGRAPH_OK (GrB_Matrix_new (&D, GrB_FP64, n, n)) ;
-    LAGRAPH_OK (GrB_eWiseAdd (D, NULL, NULL, GrB_PLUS_FP64, S, AT, NULL)) ;
-
-    GrB_free (&AT) ;
-    if (sanitize) GrB_free (&S) ;
-
-    //--------------------------------------------------------------------------
-    // L = tril(D)
-    //--------------------------------------------------------------------------
-
-    GrB_Matrix L = NULL ;
     LAGRAPH_OK (GrB_Matrix_new (&L, GrB_UINT32, n, n)) ;
-    LAGRAPH_OK (GxB_select (L, NULL, NULL, GxB_TRIL, D, NULL, NULL)) ;
-    GrB_free (&D) ;
+
+    if (symmetric)
+    {
+        C = S ;
+        S = NULL ;
+
+        //--------------------------------------------------------------------------
+        // L = tril(A)
+        //--------------------------------------------------------------------------
+        LAGRAPH_OK (GxB_select (L, NULL, NULL, GxB_TRIL, C, NULL, NULL)) ;
+    }
+    else
+    {
+        GrB_Matrix AT = NULL, D = NULL ;
+
+        LAGRAPH_OK (GrB_Matrix_new (&AT, GrB_FP64, n, n)) ;
+        LAGRAPH_OK (GrB_transpose (AT, NULL, NULL, S, NULL)) ;
+
+        //--------------------------------------------------------------------------
+        // C = A \/ A' to create an undirected graph C
+        //--------------------------------------------------------------------------
+
+        LAGRAPH_OK (GrB_Matrix_new (&C, GrB_FP64, n, n)) ;
+        LAGRAPH_OK (GrB_eWiseAdd (C, NULL, NULL, GrB_LOR, S, AT, NULL)) ;
+
+        //--------------------------------------------------------------------------
+        // D = A + A' to create an undirected multigraph D
+        //--------------------------------------------------------------------------
+
+        LAGRAPH_OK (GrB_Matrix_new (&D, GrB_FP64, n, n)) ;
+        LAGRAPH_OK (GrB_eWiseAdd (D, NULL, NULL, GrB_PLUS_FP64, S, AT, NULL)) ;
+
+        GrB_free (&AT) ;
+        if (sanitize) GrB_free (&S) ;
+
+        //--------------------------------------------------------------------------
+        // L = tril(D)
+        //--------------------------------------------------------------------------
+
+        LAGRAPH_OK (GxB_select (L, NULL, NULL, GxB_TRIL, D, NULL, NULL)) ;
+        GrB_free (&D) ;
+    }
 
     //--------------------------------------------------------------------------
     // Find wedges of each node
@@ -186,9 +202,17 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     LAGRAPH_OK (GrB_Vector_new (&W, GrB_FP64, n)) ;
     LAGRAPH_OK (GrB_reduce (W, NULL, NULL, GrB_PLUS_FP64, C, NULL)) ;
 
-    // Create vector W for containing number of wedges per vertex
-    // W(i) = W(i) * (W(i)-1)
-    LAGRAPH_OK (GrB_apply (W, NULL, NULL, LAGraph_COMB_FP64, W, NULL)) ;
+    // Compute vector W defining the number of wedges per vertex
+    if (symmetric)
+    {
+        // the graph is undirected
+        LAGRAPH_OK (GrB_apply(W, NULL, NULL, LAGraph_COMB_UNDIR_FP64, W, NULL)) ;
+    }
+    else
+    {
+        // the graph is directed
+        LAGRAPH_OK (GrB_apply(W, NULL, NULL, LAGraph_COMB_DIR_FP64, W, NULL)) ;
+    }
 
     //--------------------------------------------------------------------------
     // Calculate triangles

@@ -174,8 +174,9 @@ extern GrB_UnaryOp
     LAGraph_DECR_INT32          ,
     LAGraph_DECR_INT64          ,
 
-    // unary operator for lcc
-    LAGraph_COMB_FP64           ,
+    // unary operators for lcc
+    LAGraph_COMB_DIR_FP64       ,
+    LAGraph_COMB_UNDIR_FP64     ,
 
     // unary ops to check if greater than zero
     LAGraph_GT0_FP32            ,
@@ -542,6 +543,7 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
 (
     GrB_Vector *LCC_handle,     // output vector
     const GrB_Matrix A,         // input matrix
+    bool symmetric,             // if true, the matrix is symmetric
     bool sanitize,              // if true, ensure A is binary
     double t [2]                // t [0] = sanitize time, t [1] = lcc time,
                                 // in seconds
