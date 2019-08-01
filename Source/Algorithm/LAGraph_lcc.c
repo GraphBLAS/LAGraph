@@ -59,12 +59,16 @@
 // Then the metric lcc(v) is defined as:
 
 // lcc(v) = (sum for all u in N(v) of |intersection (N(v), N_out(u))) /
-//          ( |N(v)| * (|N(v)|-1))
+//          ( |N(v)| * (|N(v)|-1) )
 
 // That is, for directed graphs, the set of neighbors N(v) is found without
 // taking directions into account, but a node u that has both an edge (u,v) and
-// (v,u) is counted just once.  However, edges directions are enforced when
-// considering two nodes u1 and u2 that are both in N(v).
+// (v,u) is counted just once.  However, edge directions are enforced when
+// considering two nodes u1 and u2 that are both in N(v), i.e. when counting
+// the number of edges between neighbors, (u,v) and (v,u) are counted as two.
+// To account for this, the maximum possible number of edges for vertex v is
+// determined as the 2-combination of |N(v)| for undirected graphs and as the
+// 2-permutation of |N(v)| for directed graphs.
 
 // The input matrix A must be square.  If A is known to be binary (with all
 // explicit edge weights equal to 1), then sanitize can be false.  This is the
@@ -157,7 +161,7 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
         S = NULL ;
 
         //--------------------------------------------------------------------------
-        // L = tril(A)
+        // L = tril(C)
         //--------------------------------------------------------------------------
         LAGRAPH_OK (GxB_select (L, NULL, NULL, GxB_TRIL, C, NULL, NULL)) ;
     }
