@@ -488,7 +488,7 @@ GrB_Info LAGraph_pagerank2
 (
     GrB_Vector *result,
     GrB_Matrix A,
-    double dampening_factor,
+    double damping_factor,
     unsigned long iteration_num
 ) ;
 
