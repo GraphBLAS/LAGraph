@@ -86,7 +86,6 @@
     GrB_free (&LCC) ;               \
     if (sanitize) GrB_free (&S) ;   \
     GrB_free (&C) ;                 \
-    GrB_free (&M) ;                 \
     GrB_free (&CL) ;                \
     GrB_free (&W) ;                 \
 }
@@ -113,7 +112,7 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
         return (GrB_NULL_POINTER) ;
     }
 
-    GrB_Matrix C = NULL, CL = NULL, S = NULL, M = NULL, L = NULL ;
+    GrB_Matrix C = NULL, CL = NULL, S = NULL, L = NULL ;
     GrB_Vector W = NULL, LCC = NULL ;
     GrB_Info info ;
 
