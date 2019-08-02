@@ -401,8 +401,8 @@ void LAGraph_decr_int64
 }
 
 // z = x * (x - 1), used by LAGraph_lcc.
-// This operator calculates the comb(d(v), 2) / 2 value.
-void LAGraph_comb_fp64
+// This operator calculates the 2-permutation of d(v).
+void LAGraph_comb_dir_fp64
 (
     void *z,
     const void *x
@@ -413,7 +413,22 @@ void LAGraph_comb_fp64
     (*zd) = ((xd) * (xd - 1)) ;
 }
 
-GrB_UnaryOp LAGraph_COMB_FP64 = NULL ;
+// z = x * (x - 1) / 2, used by LAGraph_lcc.
+// This operator calculates the 2-combination of d(v).
+void LAGraph_comb_undir_fp64
+(
+    void *z,
+    const void *x
+)
+{
+    double xd = *(double *) x ;
+    double *zd = (double *) z ;
+    (*zd) = ((xd) * (xd - 1)) / 2;
+}
+
+
+GrB_UnaryOp LAGraph_COMB_DIR_FP64 = NULL ;
+GrB_UnaryOp LAGraph_COMB_UNDIR_FP64 = NULL ;
 
 // monoids
 GrB_Monoid LAGraph_PLUS_INT64_MONOID = NULL ;
@@ -682,11 +697,15 @@ GrB_Info LAGraph_alloc_global ( )
     #endif
 
     //--------------------------------------------------------------------------
-    // create the comb operator for LAGraph_lcc
+    // create the operators for LAGraph_lcc
     //--------------------------------------------------------------------------
 
-    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_COMB_FP64,
-        F_UNARY (LAGraph_comb_fp64),
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_COMB_DIR_FP64,
+        F_UNARY (LAGraph_comb_dir_fp64),
+        GrB_FP64, GrB_FP64)) ;
+
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_COMB_UNDIR_FP64,
+        F_UNARY (LAGraph_comb_undir_fp64),
         GrB_FP64, GrB_FP64)) ;
 
     //--------------------------------------------------------------------------

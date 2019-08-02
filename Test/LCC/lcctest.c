@@ -72,9 +72,11 @@ int main (int argc, char **argv)
     FILE *out = stdout ;
 
     FILE *f ;
-    if (argc == 1)
+    bool symmetric ;
+    if (argc < 3)
     {
         f = stdin ;
+        symmetric = false ;
     }
     else
     {
@@ -84,7 +86,9 @@ int main (int argc, char **argv)
             printf ("unable to open file [%s]\n", argv[1]) ;
             return (GrB_INVALID_VALUE) ;
         }
+        symmetric = argv[2] == 0 ;
     }
+
     LAGRAPH_OK (LAGraph_mmread (&C, f)) ;
     GrB_Index n, ne ;
     LAGRAPH_OK (GrB_Matrix_nrows (&n, C)) ;
@@ -148,9 +152,9 @@ int main (int argc, char **argv)
         LAGraph_set_nthreads (nthreads) ;
 
         // ignore the sanitize time;  assume the user could have provided an
-        // input graph that is already undirected with no self-edges
+        // input graph that is already binary with no self-edges
         double timing [2] ;
-        LAGRAPH_OK (LAGraph_lcc (&LCC, A, true, timing)) ;
+        LAGRAPH_OK (LAGraph_lcc (&LCC, A, symmetric, true, timing)) ;
         double t = timing [1] ;
 
         if (LCC1 == NULL)
