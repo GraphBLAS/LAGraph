@@ -87,11 +87,12 @@
 
 #define LAGRAPH_FREE_ALL            \
 {                                   \
-    GrB_free (&LCC) ;               \
-    if (sanitize) GrB_free (&S) ;   \
     GrB_free (&C) ;                 \
     GrB_free (&CL) ;                \
+    if (sanitize) GrB_free (&S) ;   \
+    GrB_free (&L) ;                 \
     GrB_free (&W) ;                 \
+    GrB_free (&LCC) ;               \
 }
 
 //------------------------------------------------------------------------------
@@ -224,6 +225,7 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     // CL<C> = C*L using a masked dot product
     LAGRAPH_OK (GrB_Matrix_new (&CL, GrB_FP64, n, n)) ;
     LAGRAPH_OK (GrB_mxm (CL, C, NULL, LAGraph_PLUS_TIMES_FP64, C, L, NULL)) ;
+    GrB_free (&L) ;
 
     //--------------------------------------------------------------------------
     // Calculate LCC
