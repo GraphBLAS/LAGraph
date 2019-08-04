@@ -43,8 +43,8 @@
 // This function was originally written for the LDBC Graphalytics benchmark,
 // at https://graphalytics.org/ .
 
-// The local clustering coefficient is a measure for each node of a directed
-// graph.  It is fully described in the following document:
+// The local clustering coefficient is a measure for each node of a graph.
+// Its definition is fully described in the following document:
 // https://ldbc.github.io/ldbc_graphalytics_docs/graphalytics_spec.pdf
 
 // For each node v, the lcc(v) is the ratio between the number of edges between
