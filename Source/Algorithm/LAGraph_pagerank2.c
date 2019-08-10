@@ -46,22 +46,24 @@
 #include "LAGraph.h"
 
 #define LAGRAPH_FREE_ALL { \
-    GrB_Descriptor_free(&transpose_desc); \
-    GrB_Descriptor_free(&invmask_desc); \
-    GrB_Matrix_free(&A); \
-    GrB_Vector_free(&d_out); \
-    GrB_Vector_free(&nondangling_mask); \
-    GrB_Vector_free(&importance_vec); \
-    GrB_Vector_free(&dangling_vec); \
-    GrB_Vector_free(&pr); \
+    GrB_free(&transpose_desc); \
+    GrB_free(&invmask_desc); \
+    GrB_free(&A); \
+    GrB_free(&d_out); \
+    GrB_free(&nondangling_mask); \
+    GrB_free(&importance_vec); \
+    GrB_free(&dangling_vec); \
+    GrB_free(&pr); \
 };
 
-GrB_Info LAGraph_pagerank2(
+GrB_Info LAGraph_pagerank2
+(
     GrB_Vector *result,
     GrB_Matrix A,
     double damping_factor,
     unsigned long iteration_num
-) {
+)
+{
     GrB_Info info;
     GrB_Index n;
 
@@ -145,7 +147,8 @@ GrB_Info LAGraph_pagerank2(
     // Teleport value
     const double teleport = (1 - damping_factor) / n;
 
-    for (int i = 0; i < iteration_num; i++) {
+    for (int i = 0; i < iteration_num; i++)
+    {
         //
         // Importance calculation
         //
