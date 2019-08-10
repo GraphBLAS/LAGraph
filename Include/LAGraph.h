@@ -490,7 +490,7 @@ GrB_Info LAGraph_pagerank2      // alternative PageRank definition
     GrB_Vector *result,         // output: array of LAGraph_PageRank structs
     GrB_Matrix A,               // binary input graph, not modified
     double damping_factor,      // damping factor
-    unsigned long iteration_num // number of iterations
+    unsigned long itermax       // number of iterations
 ) ;
 
 GrB_Info LAGraph_tricount   // count # of triangles
