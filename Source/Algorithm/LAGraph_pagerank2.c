@@ -131,11 +131,11 @@ GrB_Info LAGraph_pagerank2
     LAGRAPH_OK(GrB_Vector_new(&pr, GrB_FP64, n))
 
     // Fill result vector with initial value (1 / |V|)
-    LAGRAPH_OK(GrB_Vector_assign_FP64(
+    LAGRAPH_OK(GrB_assign(
         pr,
         GrB_NULL,
         GrB_NULL,
-        (1.0 / n),
+       (double) 1.0 / n,
         GrB_ALL,
         n,
         GrB_NULL
