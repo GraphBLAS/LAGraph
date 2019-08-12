@@ -149,7 +149,7 @@ GrB_Info UnCondHook(GrB_Matrix A, GrB_Vector parents, GrB_Vector stars)
     //GxB_Vector_fprint(hookP, "---- hookP ------", GxB_SHORT, stderr);
 
 
-    // exatrct values in hookP
+    // extract values in hookP
     GrB_Index nhooks;
     LAGRAPH_OK (GrB_Vector_nvals(&nhooks, hook));
     GrB_Index *nzid = LAGraph_malloc (nhooks, sizeof (GrB_Index));
@@ -302,7 +302,7 @@ GrB_Info CountCC(GrB_Vector parents, GrB_Index* countcc)
     GrB_Index n;
     LAGRAPH_OK (GrB_Vector_size(&n, parents));
 
-    // exatrct parents for indexing
+    // extract parents for indexing
     GrB_Index *v = LAGraph_malloc (n, sizeof (GrB_Index));
     GrB_Index *p = LAGraph_malloc (n, sizeof (GrB_Index));
     GrB_Index *temp = LAGraph_malloc (n, sizeof (GrB_Index));
@@ -349,7 +349,7 @@ GrB_Info CountCC(GrB_Vector parents, GrB_Index* countcc)
     return (GrB_SUCCESS) ;
 }
 
-GrB_Info LAGraph_lacc(GrB_Matrix A, GrB_Vector *result)
+GrB_Info LAGraph_cc(GrB_Matrix A, GrB_Vector *result)
 {
     GrB_Info info;
     GrB_Index n ;

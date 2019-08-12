@@ -7,7 +7,7 @@
 
 #-------------------------------------------------------------------------------
 
-# simple Makefile for LAGraph/Test/CC/lacc_test,
+# simple Makefile for LAGraph/Test/CC/cctest,
 
 # relies on cmake to do the actual build.  Use the CMAKE_OPTIONS argument to
 # this Makefile to pass options to cmake.
@@ -18,9 +18,9 @@ JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/lacc_test < ../BFS/west0067.mtx 2>stderr.txt
-	./build/lacc_test < ldbc-wcc-example.mtx 2>stderr.txt
-	./build/lacc_test < tree-example.mtx 2>stderr.txt
+	./build/cctest < ../BFS/west0067.mtx 2>stderr.txt
+	./build/cctest < ldbc-wcc-example.mtx 2>stderr.txt
+	./build/cctest < tree-example.mtx 2>stderr.txt
 
 # build test
 compile:
@@ -36,5 +36,5 @@ purge: distclean
 
 # remove all files not in the distribution
 distclean:
-	rm -rf build/* A.mtx lacc_test
+	rm -rf build/* A.mtx cctest
 

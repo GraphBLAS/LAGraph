@@ -50,7 +50,7 @@ if ( CMAKE_VERSION VERSION_GREATER "3.0" )
     cmake_policy ( SET CMP0048 NEW )
 endif ( )
 
-project ( lacc_test )
+project ( cctest )
 
 #-------------------------------------------------------------------------------
 # determine build type
@@ -206,8 +206,8 @@ message ( STATUS "CMAKE C flags: " ${CMAKE_C_FLAGS} )
 
 file ( GLOB SOURCES "*.c" )
 
-add_executable ( lacc_test ${SOURCES} )
+add_executable ( cctest ${SOURCES} )
 
 # Libraries required for Demo programs
-target_link_libraries ( lacc_test graphblas lagraph m )
+target_link_libraries ( cctest graphblas lagraph m )
 
