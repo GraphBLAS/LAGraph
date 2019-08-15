@@ -45,23 +45,25 @@
 
 #include "LAGraph.h"
 
-#define LAGRAPH_FREE_ALL { \
-    GrB_Descriptor_free(&transpose_desc); \
-    GrB_Descriptor_free(&invmask_desc); \
-    GrB_Matrix_free(&A); \
-    GrB_Vector_free(&d_out); \
-    GrB_Vector_free(&nondangling_mask); \
-    GrB_Vector_free(&importance_vec); \
-    GrB_Vector_free(&dangling_vec); \
-    GrB_Vector_free(&pr); \
+#define LAGRAPH_FREE_ALL {       \
+    GrB_free(&transpose_desc);   \
+    GrB_free(&invmask_desc);     \
+    GrB_free(&A);                \
+    GrB_free(&d_out);            \
+    GrB_free(&nondangling_mask); \
+    GrB_free(&importance_vec);   \
+    GrB_free(&dangling_vec);     \
+    GrB_free(&pr);               \
 };
 
-GrB_Info LAGraph_pagerank2(
-    GrB_Vector *result,
-    GrB_Matrix A,
-    double damping_factor,
-    unsigned long iteration_num
-) {
+GrB_Info LAGraph_pagerank2 // alternative PageRank definition
+(
+    GrB_Vector *result,    // output: array of LAGraph_PageRank structs
+    GrB_Matrix A,          // binary input graph, not modified
+    double damping_factor, // damping factor
+    unsigned long itermax  // number of iterations
+)
+{
     GrB_Info info;
     GrB_Index n;
 
@@ -96,7 +98,7 @@ GrB_Info LAGraph_pagerank2(
     // Stores the outbound degrees of all vertices
     //
     LAGRAPH_OK(GrB_Vector_new(&d_out, GrB_UINT64, n))
-    LAGRAPH_OK(GrB_Matrix_reduce_Monoid(
+    LAGRAPH_OK(GrB_reduce(
         d_out,
         GrB_NULL,
         GrB_NULL,
@@ -112,7 +114,7 @@ GrB_Info LAGraph_pagerank2(
     // operations, this mask can be negated to select dangling vertices.
     //
     LAGRAPH_OK(GrB_Vector_new(&nondangling_mask, GrB_BOOL, n))
-    LAGRAPH_OK(GrB_Matrix_reduce_Monoid(
+    LAGRAPH_OK(GrB_reduce(
         nondangling_mask,
         GrB_NULL,
         GrB_NULL,
@@ -129,11 +131,11 @@ GrB_Info LAGraph_pagerank2(
     LAGRAPH_OK(GrB_Vector_new(&pr, GrB_FP64, n))
 
     // Fill result vector with initial value (1 / |V|)
-    LAGRAPH_OK(GrB_Vector_assign_FP64(
+    LAGRAPH_OK(GrB_assign(
         pr,
         GrB_NULL,
         GrB_NULL,
-        (1.0 / n),
+        1.0 / n,
         GrB_ALL,
         n,
         GrB_NULL
@@ -145,13 +147,14 @@ GrB_Info LAGraph_pagerank2(
     // Teleport value
     const double teleport = (1 - damping_factor) / n;
 
-    for (int i = 0; i < iteration_num; i++) {
+    for (int i = 0; i < itermax; i++)
+    {
         //
         // Importance calculation
         //
 
         // Divide previous PageRank with number of outbound edges
-        LAGRAPH_OK(GrB_eWiseMult_Vector_BinaryOp(
+        LAGRAPH_OK(GrB_eWiseMult(
             importance_vec,
             GrB_NULL,
             GrB_NULL,
@@ -162,7 +165,7 @@ GrB_Info LAGraph_pagerank2(
         ))
 
         // Multiply importance by damping factor
-        LAGRAPH_OK(GrB_Vector_assign_FP64(
+        LAGRAPH_OK(GrB_assign(
             importance_vec,
             GrB_NULL,
             GrB_TIMES_FP64,
@@ -188,7 +191,7 @@ GrB_Info LAGraph_pagerank2(
         //
 
         // Extract all the dangling PR entries from the previous result
-        LAGRAPH_OK(GrB_Vector_extract(
+        LAGRAPH_OK(GrB_extract(
             dangling_vec,
             nondangling_mask,
             GrB_NULL,
@@ -200,7 +203,7 @@ GrB_Info LAGraph_pagerank2(
 
         // Sum the previous PR values of dangling vertices together
         double dangling_sum;
-        LAGRAPH_OK(GrB_Vector_reduce_FP64(
+        LAGRAPH_OK(GrB_reduce(
             &dangling_sum,
             GrB_NULL,
             GxB_PLUS_FP64_MONOID,
@@ -215,7 +218,7 @@ GrB_Info LAGraph_pagerank2(
         // PageRank summarization
         // Add teleport, importance_vec, and dangling_vec components together
         //
-        LAGRAPH_OK(GrB_Vector_assign_FP64(
+        LAGRAPH_OK(GrB_assign(
             pr,
             GrB_NULL,
             GrB_NULL,
@@ -224,7 +227,7 @@ GrB_Info LAGraph_pagerank2(
             n,
             GrB_NULL
         ))
-        LAGRAPH_OK(GrB_eWiseAdd_Vector_Monoid(
+        LAGRAPH_OK(GrB_eWiseAdd(
             pr,
             GrB_NULL,
             GrB_NULL,

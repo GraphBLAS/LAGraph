@@ -485,12 +485,12 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     int *iters                  // number of iterations taken
 ) ;
 
-GrB_Info LAGraph_pagerank2
+GrB_Info LAGraph_pagerank2      // alternative PageRank definition
 (
-    GrB_Vector *result,
-    GrB_Matrix A,
-    double damping_factor,
-    unsigned long iteration_num
+    GrB_Vector *result,         // output: array of LAGraph_PageRank structs
+    GrB_Matrix A,               // binary input graph, not modified
+    double damping_factor,      // damping factor
+    unsigned long itermax       // number of iterations
 ) ;
 
 GrB_Info LAGraph_tricount   // count # of triangles
