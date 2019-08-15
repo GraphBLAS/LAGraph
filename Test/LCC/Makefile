@@ -7,7 +7,7 @@
 
 #-------------------------------------------------------------------------------
 
-# simple Makefile for LAGraph/Test/LCC/ktest
+# simple Makefile for LAGraph/Test/LCC/lcctest
 
 # relies on cmake to do the actual build.  Use the CMAKE_OPTIONS argument to
 # this Makefile to pass options to cmake.
@@ -18,7 +18,7 @@ JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/lcctest ../BFS/west0067.mtx 0
+	./build/lcctest < ../BFS/west0067.mtx
 	./build/lcctest ldbc-directed-example.mtx 0
 	./build/lcctest ldbc-undirected-example.mtx 1
 

@@ -36,7 +36,14 @@
 
 // Contributed by Tim Davis, Texas A&M
 
-// Usage:  lcctest < matrixmarketfile.mtx
+// Usage: lcctest can be used with both stdin or a file as its input.
+// We assume by default that the matrix is symmetric. To override this,
+// use the file-based input and pass 1 as the last argument.
+//
+// lcctest < matrixmarketfile.mtx
+// lcctest matrixmarketfile.mtx
+// lcctest unsymmetric-matrixmarketfile.mtx 0
+// lcctest symmetric-matrixmarketfile.mtx 1
 
 #include "LAGraph.h"
 
@@ -73,7 +80,7 @@ int main (int argc, char **argv)
 
     FILE *f ;
     bool symmetric ;
-    if (argc < 3)
+    if (argc == 1)
     {
         f = stdin ;
         symmetric = false ;
@@ -86,7 +93,14 @@ int main (int argc, char **argv)
             printf ("unable to open file [%s]\n", argv[1]) ;
             return (GrB_INVALID_VALUE) ;
         }
-        symmetric = argv[2] == 0 ;
+        if (argc == 2)
+        {
+            symmetric = false ;
+        }
+        else
+        {
+            symmetric = argv[2] == 0 ;
+        }
     }
 
     LAGRAPH_OK (LAGraph_mmread (&C, f)) ;

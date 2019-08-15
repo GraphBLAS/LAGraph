@@ -43,8 +43,8 @@
 // This function was originally written for the LDBC Graphalytics benchmark,
 // at https://graphalytics.org/ .
 
-// The local clustering coefficient is a measure for each node of a directed
-// graph.  It is fully described in the following document:
+// The local clustering coefficient is a measure for each node of a graph.
+// Its definition is fully described in the following document:
 // https://ldbc.github.io/ldbc_graphalytics_docs/graphalytics_spec.pdf
 
 // For each node v, the lcc(v) is the ratio between the number of edges between
@@ -87,11 +87,12 @@
 
 #define LAGRAPH_FREE_ALL            \
 {                                   \
-    GrB_free (&LCC) ;               \
-    if (sanitize) GrB_free (&S) ;   \
     GrB_free (&C) ;                 \
     GrB_free (&CL) ;                \
+    if (sanitize) GrB_free (&S) ;   \
+    GrB_free (&L) ;                 \
     GrB_free (&W) ;                 \
+    GrB_free (&LCC) ;               \
 }
 
 //------------------------------------------------------------------------------
@@ -224,6 +225,7 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     // CL<C> = C*L using a masked dot product
     LAGRAPH_OK (GrB_Matrix_new (&CL, GrB_FP64, n, n)) ;
     LAGRAPH_OK (GrB_mxm (CL, C, NULL, LAGraph_PLUS_TIMES_FP64, C, L, NULL)) ;
+    GrB_free (&L) ;
 
     //--------------------------------------------------------------------------
     // Calculate LCC
