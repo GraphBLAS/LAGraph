@@ -1,5 +1,6 @@
 //------------------------------------------------------------------------------
-// LAGraph_BF_basic: Bellman-Ford method for single source shortest paths
+// LAGraph_BF_basic_pushpull: Bellman-Ford method for single source shortest
+// paths
 //------------------------------------------------------------------------------
 
 /*
@@ -34,14 +35,14 @@
 
 //------------------------------------------------------------------------------
 
-// LAGraph_BF_basic: Bellman-Ford single source shortest paths, returning just
-// the shortest path lengths.  Contributed by Jinhao Chen and Tim Davis, Texas
-// A&M.
+// LAGraph_BF_basic_pushpull: Bellman-Ford single source shortest paths,
+// returning just the shortest path lengths.  Contributed by Jinhao Chen and
+// Tim Davis, Texas A&M.
 
-// LAGraph_BF_basic performs a Bellman-Ford to find out shortest path length
-// from given source vertex s in the range of [0, n) on graph given as matrix A
-// with size n by n. The sparse matrix A has entry A(i, j) if there is edge from
-// vertex i to vertex j with weight w, then A(i, j) = w. Furthermore,
+// LAGraph_BF_basic_pushpull performs a Bellman-Ford to find out shortest path
+// length from given source vertex s in the range of [0, n) on graph given as
+// matrix A with size n by n. The sparse matrix A has entry A(i, j) if there is
+// edge from vertex i to vertex j with weight w, then A(i, j) = w. Furthermore,
 // LAGraph_BF_basic requires A(i, i) = 0 for all 0 <= i < n.
 
 // TODO: think about the retrun values
@@ -52,7 +53,7 @@
 
 //------------------------------------------------------------------------------
 
-#include "BF_test.h"
+#include "LAGraph_internal.h"
 
 #define LAGRAPH_FREE_ALL   \
 {                          \
