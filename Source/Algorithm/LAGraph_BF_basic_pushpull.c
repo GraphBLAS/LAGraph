@@ -79,7 +79,7 @@ GrB_Info LAGraph_BF_basic_pushpull
 )
 {
     GrB_Info info;
-    GrB_Index nrows, ncols;
+    GrB_Index nrows, ncols, nvalA;
     // tmp vector to store distance vector after n (i.e., V) loops
     GrB_Vector d = NULL, dtmp = NULL;
 
@@ -93,14 +93,16 @@ GrB_Info LAGraph_BF_basic_pushpull
     bool use_vxm_with_A;
     if (A == NULL)
     {
-        LAGRAPH_OK (GrB_Matrix_nrows (&nrows, A)) ;
-        LAGRAPH_OK (GrB_Matrix_ncols (&ncols, A)) ;
+        LAGRAPH_OK (GrB_Matrix_nrows (&nrows, AT)) ;
+        LAGRAPH_OK (GrB_Matrix_ncols (&ncols, AT)) ;
+        LAGRAPH_OK (GrB_Matrix_nvals (&nvalA, AT)) ;
         use_vxm_with_A = false;
     }
     else
     {
         LAGRAPH_OK (GrB_Matrix_nrows (&nrows, A)) ;
         LAGRAPH_OK (GrB_Matrix_ncols (&ncols, A)) ;
+        LAGRAPH_OK (GrB_Matrix_nvals (&nvalA, A)) ;
         use_vxm_with_A = true;
     }
 
@@ -113,14 +115,30 @@ GrB_Info LAGraph_BF_basic_pushpull
         LAGRAPH_ERROR ("A must be square", GrB_INVALID_VALUE) ;
     }
     GrB_Index n = nrows;           // n = # of vertices in graph
+    // average node degree
+    double dA = (n == 0) ? 0 : (((double) nvalA) / (double) n) ;
 
     if (s >= n || s < 0)
     {
         LAGRAPH_ERROR ("invalid value for source vertex s", GrB_INVALID_VALUE) ;
     }
 
-    // threshold to determine if d should be made dense
-    int64_t dthreshold =  n/2 ;
+    // values used to determine if d should be converted to dense
+    // dthreshold is used when only A or AT is available
+    int64_t dthreshold ;
+    if (A == NULL)
+    {
+        dthreshold =  LAGRAPH_MAX (256, sqrt ((double) n)) ;
+    }
+    else
+    {
+        dthreshold = n/2;
+    }
+    // refer to GraphBLAS/Source/GB_AxB_select.c
+    // convert d to dense when GB_AxB_select intend to use Gustavson
+    size_t csize = sizeof(double) + sizeof(int64_t) ;
+    double gs_memory = ((double) n * (double) csize)/1e9 ;
+
     bool dsparse = true;
 
     // Initialize distance vector, change the d[s] to 0
@@ -166,23 +184,43 @@ GrB_Info LAGraph_BF_basic_pushpull
         double t2 = LAGraph_toc (tic) ;
         GrB_Index dnz ;
         LAGRAPH_OK (GrB_Vector_nvals (&dnz, d)) ;
-        if (dsparse && dnz > dthreshold)
-        {
-            dsparse = false;
-            LAGRAPH_OK (GrB_Vector_setElement_FP64(d, 1e-16, s));
-            LAGRAPH_OK (GrB_assign (d, d, NULL, INFINITY, GrB_ALL, n,
-                LAGraph_desc_ooco)) ;
-            LAGRAPH_OK (GrB_Vector_setElement_FP64(d, 0, s));
-//            GxB_Vector_fprint(d, "---- d ------", GxB_SHORT, stderr);
-            if (push_pull)
-            {
-                use_vxm_with_A=false;
-            }
-        }
+
 //        printf ("step %3d time1 %16.4f sec time2 %16.4f sec, nvals %.16g\n", iter, t1, t2-t1, (double) dnz) ;
         printf ("step %3d time %16.4f sec, nvals %.16g\n", iter, t2, (double) dnz) ;
         fflush (stdout) ;
+        
+        if (dsparse)
+        {
+            if (!push_pull)
+            {
+                if (dnz > dthreshold)
+                {
+                    dsparse = false;
+                }
+            }
+            else
+            {
+                double heap_memory = (((double) dnz+1) *
+                                     5 * (double) (sizeof(int64_t))) / 1e9;
+                int log2dnz = 0 ;
+                while (dnz > 0)
+                {
+                    dnz = dnz / 2 ;
+                    log2dnz++ ;
+                }
+                dsparse = (4 * log2dnz * heap_memory < gs_memory);
+                use_vxm_with_A = dsparse;
+            }
 
+            if (!dsparse)
+            {
+                LAGRAPH_OK (GrB_Vector_setElement_FP64(d, 1e-16, s));
+                LAGRAPH_OK (GrB_assign (d, d, NULL, INFINITY, GrB_ALL, n,
+                    LAGraph_desc_ooco)) ;
+                LAGRAPH_OK (GrB_Vector_setElement_FP64(d, 0, s));
+//                GxB_Vector_fprint(d, "---- d ------", GxB_SHORT, stderr);
+            }
+        }
     }
 
     // check for negative-weight cycle only when there was a new path in the
@@ -213,7 +251,7 @@ GrB_Info LAGraph_BF_basic_pushpull
     }
 
     //--------------------------------------------------------------------------
-    // make d sparse (TODO: how?)
+    // TODO: make d sparse
     //--------------------------------------------------------------------------
     /*if (!dsparse)
     {
