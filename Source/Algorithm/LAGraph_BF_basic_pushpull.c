@@ -185,8 +185,8 @@ GrB_Info LAGraph_BF_basic_pushpull
         GrB_Index dnz ;
         LAGRAPH_OK (GrB_Vector_nvals (&dnz, d)) ;
 
-//        printf ("step %3d time1 %16.4f sec time2 %16.4f sec, nvals %.16g\n", iter, t1, t2-t1, (double) dnz) ;
-        printf ("step %3d time %16.4f sec, nvals %.16g\n", iter, t2, (double) dnz) ;
+//      printf ("step %3d time1 %16.4f sec time2 %16.4f sec, nvals %.16g\n", iter, t1, t2-t1, (double) dnz) ;
+//      printf ("step %3d time %16.4f sec, nvals %.16g\n", iter, t2, (double) dnz) ;
         fflush (stdout) ;
         
         if (dsparse)
