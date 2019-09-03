@@ -439,6 +439,12 @@ GrB_Info LAGraph_grread     // read a matrix from a binary file
     GrB_Type gtype          // type of matrix to read
 ) ;
 
+GrB_Info LAGraph_1_to_n     // create an integer vector v = 1:n
+(
+    GrB_Vector *v_handle,   // vector to create
+    GrB_Index n             // size of vector to create
+) ;
+
 //------------------------------------------------------------------------------
 // user-callable algorithms
 //------------------------------------------------------------------------------
