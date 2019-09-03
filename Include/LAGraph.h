@@ -174,8 +174,9 @@ extern GrB_UnaryOp
     LAGraph_DECR_INT32          ,
     LAGraph_DECR_INT64          ,
 
-    // unary operator for lcc
-    LAGraph_COMB_FP64           ,
+    // unary operators for lcc
+    LAGraph_COMB_DIR_FP64       ,
+    LAGraph_COMB_UNDIR_FP64     ,
 
     // unary ops to check if greater than zero
     LAGraph_GT0_FP32            ,
@@ -232,15 +233,15 @@ extern GrB_Descriptor
     LAGraph_desc_ooco ,   // compl mask
     LAGraph_desc_oocr ,   // compl mask, replace
 
-    LAGraph_desc_otoo ,   // A'
-    LAGraph_desc_otor ,   // A', replace
-    LAGraph_desc_otco ,   // A', compl mask
-    LAGraph_desc_otcr ,   // A', compl mask, replace
+    LAGraph_desc_tooo ,   // A'
+    LAGraph_desc_toor ,   // A', replace
+    LAGraph_desc_toco ,   // A', compl mask
+    LAGraph_desc_tocr ,   // A', compl mask, replace
 
-    LAGraph_desc_tooo ,   // B'
-    LAGraph_desc_toor ,   // B', replace
-    LAGraph_desc_toco ,   // B', compl mask
-    LAGraph_desc_tocr ,   // B', compl mask, replace
+    LAGraph_desc_otoo ,   // B'
+    LAGraph_desc_otor ,   // B', replace
+    LAGraph_desc_otco ,   // B', compl mask
+    LAGraph_desc_otcr ,   // B', compl mask, replace
 
     LAGraph_desc_ttoo ,   // A', B'
     LAGraph_desc_ttor ,   // A', B', replace
@@ -426,7 +427,7 @@ int LAGraph_set_nthreads        // returns # threads set, 0 if nothing done
     int nthreads
 ) ;
 
-int LAGraph_get_nthreads        // returns # threads to use, 0 if unknown
+int LAGraph_get_nthreads        // returns # threads to use, 1 if unknown
 (
     void
 ) ;
@@ -468,7 +469,7 @@ GrB_Info LAGraph_bfs_simple     // push-only BFS
     GrB_Index s             // starting node of the BFS
 ) ;
 
-GrB_Info LAGraph_lacc (
+GrB_Info LAGraph_cc (
     GrB_Matrix A,
     GrB_Vector *result
 ) ;
@@ -490,12 +491,12 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     int *iters                  // number of iterations taken
 ) ;
 
-GrB_Info LAGraph_pagerank2
+GrB_Info LAGraph_pagerank2      // alternative PageRank definition
 (
-    GrB_Matrix A,
-    double dampening_factor,
-    unsigned long iteration_num,
-    GrB_Vector *result
+    GrB_Vector *result,         // output: array of LAGraph_PageRank structs
+    GrB_Matrix A,               // binary input graph, not modified
+    double damping_factor,      // damping factor
+    unsigned long itermax       // number of iterations
 ) ;
 
 GrB_Info LAGraph_tricount   // count # of triangles
@@ -548,6 +549,7 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
 (
     GrB_Vector *LCC_handle,     // output vector
     const GrB_Matrix A,         // input matrix
+    bool symmetric,             // if true, the matrix is symmetric
     bool sanitize,              // if true, ensure A is binary
     double t [2]                // t [0] = sanitize time, t [1] = lcc time,
                                 // in seconds

@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// lacc_test: test LAGraph_lacc
+// cctest: test LAGraph_cc
 //------------------------------------------------------------------------------
 
 /*
@@ -34,7 +34,7 @@
 
 // Contributed by Tim Davis, Texas A&M
 
-// Usage:  lacctest < matrixmarketfile.mtx
+// Usage:  cctest < matrixmarketfile.mtx
 
 #include "LAGraph.h"
 
@@ -70,7 +70,7 @@ int main (int argc, char **argv)
 
     LAGRAPH_OK (LAGraph_mmread (&A, f)) ;
 
-    LAGRAPH_OK (LAGraph_lacc (A, &result)) ;
+    LAGRAPH_OK (LAGraph_cc (A, &result)) ;
 
     // TODO: check result
 

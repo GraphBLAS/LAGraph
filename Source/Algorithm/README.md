@@ -1,6 +1,6 @@
 # Algorithms: 
 
-    * LACC_GraphBLAS: connected components
+    * LAGraph_cc: connected components
     * LAGraph_BF_basic: Bellman-Ford single source shortest paths
     * LAGraph_BF_full: Bellman-Ford single source shortest paths, with tree
     * LAGraph_allktruss: all k-trusses of a graph

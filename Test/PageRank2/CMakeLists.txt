@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# LAGraph/Test/CC/CMakeLists.txt:  cmake script for LAGraph test
+# LAGraph/Test/PageRank2/CMakeLists.txt:  cmake script for LAGraph test
 #-------------------------------------------------------------------------------
 
 # LAGraph, (... list all authors here) (c) 2019, All Rights Reserved.
@@ -50,7 +50,7 @@ if ( CMAKE_VERSION VERSION_GREATER "3.0" )
     cmake_policy ( SET CMP0048 NEW )
 endif ( )
 
-project ( cctest )
+project ( p2test )
 
 #-------------------------------------------------------------------------------
 # determine build type
@@ -125,7 +125,7 @@ if ( "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
     endif ( )
 elseif ( "${CMAKE_C_COMPILER_ID}" STREQUAL "Intel" )
     # options for icc: also needs -std=c11
-    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -std=c11 " )
+    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -g -std=c11 " )
     # check all warnings:
 #   set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -w3 " )
     if ( CMAKE_C_COMPILER_VERSION VERSION_LESS 18.0 )
@@ -206,8 +206,8 @@ message ( STATUS "CMAKE C flags: " ${CMAKE_C_FLAGS} )
 
 file ( GLOB SOURCES "*.c" )
 
-add_executable ( cctest ${SOURCES} )
+add_executable ( p2test ${SOURCES} )
 
 # Libraries required for Demo programs
-target_link_libraries ( cctest graphblas lagraph m )
+target_link_libraries ( p2test graphblas lagraph m )
 

@@ -197,7 +197,7 @@ int main (int argc, char **argv)
     // stop the timer
     double t3 = LAGraph_toc (tic) / ntrials ;
     fprintf (stderr, "BF_pure_c     time: %12.6e (sec), rate:"
-        " %g (1e6 edges/sec)\n", t2, 1e-6*((double) nvals) / t3) ;
+        " %g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
     fprintf (stderr, "speedup of BF_pure_c:      %g\n", t1/t3) ;
 
 
@@ -218,7 +218,7 @@ int main (int argc, char **argv)
     // stop the timer
     double t4 = LAGraph_toc (tic) / ntrials ;
     fprintf (stderr, "BF_full_mxv   time: %12.6e (sec), rate:"
-        " %g (1e6 edges/sec)\n", t1, 1e-6*((double) nvals) / t1) ;
+        " %g (1e6 edges/sec)\n", t4, 1e-6*((double) nvals) / t4) ;
     fprintf (stderr, "speedup of BF_full_mxv:    %g\n", t1/t4) ;
 
     //--------------------------------------------------------------------------
@@ -237,7 +237,7 @@ int main (int argc, char **argv)
     // stop the timer
     double t5 = LAGraph_toc (tic) / ntrials ;
     fprintf (stderr, "BF_basic_mxv  time: %12.6e (sec), rate:"
-        " %g (1e6 edges/sec)\n", t2, 1e-6*((double) nvals) / t5) ;
+        " %g (1e6 edges/sec)\n", t5, 1e-6*((double) nvals) / t5) ;
     fprintf (stderr, "speedup of BF_basic_mxv:   %g\n", t1/t5) ;
 
     //--------------------------------------------------------------------------

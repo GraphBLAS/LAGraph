@@ -1,0 +1,417 @@
+
+read A time:           0.000226 sec
+process A time:        0.000241 sec
+input graph: 67 nodes, 574 edges
+
+KTruss: k =   3:
+step   1 time 0.000070 sec, nvals 412
+step   2 time 0.000048 sec, nvals 412
+ edges 206 ntriangles 120
+nthreads:   1 time:     0.000226 rate:   2.54 steps 2
+step   1 time 0.000033 sec, nvals 412
+step   2 time 0.000043 sec, nvals 412
+nthreads:   2 time:     0.000105 rate:   5.47 speedup:   2.15 steps 2
+step   1 time 0.000031 sec, nvals 412
+step   2 time 0.000054 sec, nvals 412
+nthreads:   4 time:     0.000110 rate:   5.22 speedup:   2.05 steps 2
+
+KTruss: k =   4:
+step   1 time 0.000031 sec, nvals 206
+step   2 time 0.000035 sec, nvals 90
+step   3 time 0.000021 sec, nvals 64
+step   4 time 0.000017 sec, nvals 60
+step   5 time 0.000016 sec, nvals 58
+step   6 time 0.000015 sec, nvals 58
+ edges 29 ntriangles 20
+nthreads:   1 time:     0.000192 rate:   2.99 steps 6
+step   1 time 0.000032 sec, nvals 206
+step   2 time 0.000030 sec, nvals 90
+step   3 time 0.000019 sec, nvals 64
+step   4 time 0.000016 sec, nvals 60
+step   5 time 0.000015 sec, nvals 58
+step   6 time 0.000015 sec, nvals 58
+nthreads:   2 time:     0.000185 rate:   3.10 speedup:   1.04 steps 6
+step   1 time 0.000033 sec, nvals 206
+step   2 time 0.000029 sec, nvals 90
+step   3 time 0.000019 sec, nvals 64
+step   4 time 0.000016 sec, nvals 60
+step   5 time 0.000015 sec, nvals 58
+step   6 time 0.000014 sec, nvals 58
+nthreads:   4 time:     0.000186 rate:   3.09 speedup:   1.03 steps 6
+
+KTruss: k =   5:
+step   1 time 0.000031 sec, nvals 64
+step   2 time 0.000022 sec, nvals 4
+step   3 time 0.000031 sec, nvals 0
+step   4 time 0.000012 sec, nvals 0
+ edges 0 ntriangles 0
+nthreads:   1 time:     0.000137 rate:   4.19 steps 4
+step   1 time 0.000031 sec, nvals 64
+step   2 time 0.000018 sec, nvals 4
+step   3 time 0.000017 sec, nvals 0
+step   4 time 0.000012 sec, nvals 0
+nthreads:   2 time:     0.000118 rate:   4.86 speedup:   1.16 steps 4
+step   1 time 0.000030 sec, nvals 64
+step   2 time 0.000019 sec, nvals 4
+step   3 time 0.000016 sec, nvals 0
+step   4 time 0.000012 sec, nvals 0
+nthreads:   4 time:     0.000118 rate:   4.86 speedup:   1.16 steps 4
+
+
+read A time:          13.473020 sec
+process A time:       11.316797 sec
+input graph: 2.39473e+07 nodes, 5.77086e+07 edges
+
+KTruss: k =   3:
+step   1 time 4.271415 sec, nvals 2589630
+step   2 time 0.741349 sec, nvals 2589630
+ edges 1294815 ntriangles 438804
+nthreads:   1 time:     5.012933 rate:  11.51 steps 2
+step   1 time 2.554398 sec, nvals 2589630
+step   2 time 0.449221 sec, nvals 2589630
+nthreads:   2 time:     3.003727 rate:  19.21 speedup:   1.67 steps 2
+step   1 time 1.995612 sec, nvals 2589630
+step   2 time 0.403592 sec, nvals 2589630
+nthreads:   4 time:     2.399327 rate:  24.05 speedup:   2.09 steps 2
+
+KTruss: k =   4:
+step   1 time 4.240404 sec, nvals 43190
+step   2 time 0.022527 sec, nvals 1082
+step   3 time 0.000221 sec, nvals 1080
+step   4 time 0.000160 sec, nvals 1080
+ edges 540 ntriangles 360
+nthreads:   1 time:     4.263468 rate:  13.54 steps 4
+step   1 time 2.531805 sec, nvals 43190
+step   2 time 0.015727 sec, nvals 1082
+step   3 time 0.000293 sec, nvals 1080
+step   4 time 0.000194 sec, nvals 1080
+nthreads:   2 time:     2.548163 rate:  22.65 speedup:   1.67 steps 4
+step   1 time 1.959699 sec, nvals 43190
+step   2 time 0.013360 sec, nvals 1082
+step   3 time 0.000448 sec, nvals 1080
+step   4 time 0.000226 sec, nvals 1080
+nthreads:   4 time:     1.973897 rate:  29.24 speedup:   2.16 steps 4
+
+KTruss: k =   5:
+step   1 time 4.184755 sec, nvals 4
+step   2 time 0.000653 sec, nvals 0
+step   3 time 0.000017 sec, nvals 0
+ edges 0 ntriangles 0
+nthreads:   1 time:     4.185512 rate:  13.79 steps 3
+step   1 time 2.536520 sec, nvals 4
+step   2 time 0.001517 sec, nvals 0
+step   3 time 0.000022 sec, nvals 0
+nthreads:   2 time:     2.538171 rate:  22.74 speedup:   1.65 steps 3
+step   1 time 1.959237 sec, nvals 4
+step   2 time 0.001284 sec, nvals 0
+step   3 time 0.000019 sec, nvals 0
+nthreads:   4 time:     1.960679 rate:  29.43 speedup:   2.13 steps 3
+
+
+read A time:           1.167154 sec
+process A time:        0.759853 sec
+input graph: 1.97128e+06 nodes, 5.53321e+06 edges
+
+KTruss: k =   3:
+step   1 time 0.441351 sec, nvals 698322
+step   2 time 0.166656 sec, nvals 698322
+ edges 349161 ntriangles 120676
+nthreads:   1 time:     0.608192 rate:   9.10 steps 2
+step   1 time 0.256423 sec, nvals 698322
+step   2 time 0.123863 sec, nvals 698322
+nthreads:   2 time:     0.380384 rate:  14.55 speedup:   1.60 steps 2
+step   1 time 0.216940 sec, nvals 698322
+step   2 time 0.113461 sec, nvals 698322
+nthreads:   4 time:     0.330485 rate:  16.74 speedup:   1.84 steps 2
+
+KTruss: k =   4:
+step   1 time 0.426728 sec, nvals 25730
+step   2 time 0.010235 sec, nvals 512
+step   3 time 0.000143 sec, nvals 504
+step   4 time 0.000131 sec, nvals 504
+ edges 252 ntriangles 168
+nthreads:   1 time:     0.437390 rate:  12.65 steps 4
+step   1 time 0.272652 sec, nvals 25730
+step   2 time 0.006736 sec, nvals 512
+step   3 time 0.000133 sec, nvals 504
+step   4 time 0.000130 sec, nvals 504
+nthreads:   2 time:     0.279783 rate:  19.78 speedup:   1.56 steps 4
+step   1 time 0.232798 sec, nvals 25730
+step   2 time 0.007970 sec, nvals 512
+step   3 time 0.000133 sec, nvals 504
+step   4 time 0.000096 sec, nvals 504
+nthreads:   4 time:     0.241123 rate:  22.95 speedup:   1.81 steps 4
+
+KTruss: k =   5:
+step   1 time 0.436651 sec, nvals 4
+step   2 time 0.000065 sec, nvals 0
+step   3 time 0.000024 sec, nvals 0
+ edges 0 ntriangles 0
+nthreads:   1 time:     0.436850 rate:  12.67 steps 3
+step   1 time 0.278312 sec, nvals 4
+step   2 time 0.000060 sec, nvals 0
+step   3 time 0.000024 sec, nvals 0
+nthreads:   2 time:     0.278497 rate:  19.87 speedup:   1.57 steps 3
+step   1 time 0.228321 sec, nvals 4
+step   2 time 0.000067 sec, nvals 0
+step   3 time 0.000044 sec, nvals 0
+nthreads:   4 time:     0.228542 rate:  24.21 speedup:   1.91 steps 3
+
+
+read A time:           1.789365 sec
+process A time:        0.666999 sec
+input graph: 1e+06 nodes, 3.996e+06 edges
+
+KTruss: k =   3:
+step   1 time 0.064142 sec, nvals 0
+step   2 time 0.000100 sec, nvals 0
+ edges 0 ntriangles 0
+nthreads:   1 time:     0.064361 rate:  62.09 steps 2
+step   1 time 0.085116 sec, nvals 0
+step   2 time 0.000021 sec, nvals 0
+nthreads:   2 time:     0.085230 rate:  46.88 speedup:   0.76 steps 2
+step   1 time 0.102785 sec, nvals 0
+step   2 time 0.000026 sec, nvals 0
+nthreads:   4 time:     0.102876 rate:  38.84 speedup:   0.63 steps 2
+
+
+read A time:           1.868694 sec
+process A time:        0.313803 sec
+input graph: 9000 nodes, 3.27069e+06 edges
+
+KTruss: k =   3:
+step   1 time 2.686264 sec, nvals 3270690
+ edges 1635345 ntriangles 104073280
+nthreads:   1 time:     2.686379 rate:   1.22 steps 1
+step   1 time 1.589635 sec, nvals 3270690
+nthreads:   2 time:     1.589702 rate:   2.06 speedup:   1.69 steps 1
+step   1 time 1.455934 sec, nvals 3270690
+nthreads:   4 time:     1.455997 rate:   2.25 speedup:   1.85 steps 1
+
+KTruss: k =   4:
+step   1 time 2.724700 sec, nvals 3270690
+ edges 1635345 ntriangles 104073280
+nthreads:   1 time:     2.724762 rate:   1.20 steps 1
+step   1 time 1.570016 sec, nvals 3270690
+nthreads:   2 time:     1.570112 rate:   2.08 speedup:   1.74 steps 1
+step   1 time 1.401765 sec, nvals 3270690
+nthreads:   4 time:     1.401825 rate:   2.33 speedup:   1.94 steps 1
+
+KTruss: k =   5:
+step   1 time 2.683638 sec, nvals 3270690
+ edges 1635345 ntriangles 104073280
+nthreads:   1 time:     2.683709 rate:   1.22 steps 1
+step   1 time 1.508260 sec, nvals 3270690
+nthreads:   2 time:     1.508331 rate:   2.17 speedup:   1.78 steps 1
+step   1 time 1.344180 sec, nvals 3270690
+nthreads:   4 time:     1.344256 rate:   2.43 speedup:   2.00 steps 1
+
+KTruss: k =   6:
+step   1 time 2.582504 sec, nvals 3270690
+ edges 1635345 ntriangles 104073280
+nthreads:   1 time:     2.582584 rate:   1.27 steps 1
+step   1 time 1.509775 sec, nvals 3270690
+nthreads:   2 time:     1.509846 rate:   2.17 speedup:   1.71 steps 1
+step   1 time 1.339284 sec, nvals 3270690
+nthreads:   4 time:     1.339363 rate:   2.44 speedup:   1.93 steps 1
+
+KTruss: k =   7:
+step   1 time 2.575094 sec, nvals 3270690
+ edges 1635345 ntriangles 104073280
+nthreads:   1 time:     2.575177 rate:   1.27 steps 1
+step   1 time 1.537579 sec, nvals 3270690
+nthreads:   2 time:     1.537660 rate:   2.13 speedup:   1.67 steps 1
+step   1 time 1.345077 sec, nvals 3270690
+nthreads:   4 time:     1.345134 rate:   2.43 speedup:   1.91 steps 1
+
+KTruss: k =   8:
+step   1 time 2.597974 sec, nvals 3270690
+ edges 1635345 ntriangles 104073280
+nthreads:   1 time:     2.598034 rate:   1.26 steps 1
+step   1 time 1.523752 sec, nvals 3270690
+nthreads:   2 time:     1.523830 rate:   2.15 speedup:   1.70 steps 1
+step   1 time 1.324038 sec, nvals 3270690
+nthreads:   4 time:     1.324098 rate:   2.47 speedup:   1.96 steps 1
+
+KTruss: k =   9:
+step   1 time 2.593170 sec, nvals 3270690
+ edges 1635345 ntriangles 104073280
+nthreads:   1 time:     2.593230 rate:   1.26 steps 1
+step   1 time 1.499756 sec, nvals 3270690
+nthreads:   2 time:     1.499815 rate:   2.18 speedup:   1.73 steps 1
+step   1 time 1.349851 sec, nvals 3270690
+nthreads:   4 time:     1.349905 rate:   2.42 speedup:   1.92 steps 1
+
+
+read A time:           7.631127 sec
+process A time:        1.394596 sec
+input graph: 36000 nodes, 1.41849e+07 edges
+
+KTruss: k =   3:
+step   1 time 11.933573 sec, nvals 14184946
+ edges 7092473 ntriangles 460159481
+nthreads:   1 time:    11.933732 rate:   1.19 steps 1
+step   1 time 7.243312 sec, nvals 14184946
+nthreads:   2 time:     7.243422 rate:   1.96 speedup:   1.65 steps 1
+step   1 time 6.697858 sec, nvals 14184946
+nthreads:   4 time:     6.697933 rate:   2.12 speedup:   1.78 steps 1
+
+KTruss: k =   4:
+step   1 time 12.455963 sec, nvals 14184946
+ edges 7092473 ntriangles 460159481
+nthreads:   1 time:    12.456036 rate:   1.14 steps 1
+step   1 time 7.201596 sec, nvals 14184946
+nthreads:   2 time:     7.201702 rate:   1.97 speedup:   1.73 steps 1
+step   1 time 6.431878 sec, nvals 14184946
+nthreads:   4 time:     6.431950 rate:   2.21 speedup:   1.94 steps 1
+
+KTruss: k =   5:
+step   1 time 12.045614 sec, nvals 14184946
+ edges 7092473 ntriangles 460159481
+nthreads:   1 time:    12.045685 rate:   1.18 steps 1
+step   1 time 7.208489 sec, nvals 14184946
+nthreads:   2 time:     7.208562 rate:   1.97 speedup:   1.67 steps 1
+step   1 time 6.497198 sec, nvals 14184946
+nthreads:   4 time:     6.497269 rate:   2.18 speedup:   1.85 steps 1
+
+KTruss: k =   6:
+step   1 time 12.300960 sec, nvals 14184946
+ edges 7092473 ntriangles 460159481
+nthreads:   1 time:    12.301043 rate:   1.15 steps 1
+step   1 time 7.093418 sec, nvals 14184946
+nthreads:   2 time:     7.093535 rate:   2.00 speedup:   1.73 steps 1
+step   1 time 6.438190 sec, nvals 14184946
+nthreads:   4 time:     6.438258 rate:   2.20 speedup:   1.91 steps 1
+
+KTruss: k =   7:
+step   1 time 12.348995 sec, nvals 14184946
+ edges 7092473 ntriangles 460159481
+nthreads:   1 time:    12.349065 rate:   1.15 steps 1
+step   1 time 7.523435 sec, nvals 14184946
+nthreads:   2 time:     7.523504 rate:   1.89 speedup:   1.64 steps 1
+step   1 time 6.861550 sec, nvals 14184946
+nthreads:   4 time:     6.861621 rate:   2.07 speedup:   1.80 steps 1
+
+KTruss: k =   8:
+step   1 time 12.155740 sec, nvals 14184946
+ edges 7092473 ntriangles 460159481
+nthreads:   1 time:    12.156559 rate:   1.17 steps 1
+step   1 time 6.972138 sec, nvals 14184946
+nthreads:   2 time:     6.972226 rate:   2.03 speedup:   1.74 steps 1
+step   1 time 6.215616 sec, nvals 14184946
+nthreads:   4 time:     6.215686 rate:   2.28 speedup:   1.96 steps 1
+
+KTruss: k =   9:
+step   1 time 12.125754 sec, nvals 14184946
+ edges 7092473 ntriangles 460159481
+nthreads:   1 time:    12.125832 rate:   1.17 steps 1
+step   1 time 7.143808 sec, nvals 14184946
+nthreads:   2 time:     7.143895 rate:   1.99 speedup:   1.70 steps 1
+step   1 time 6.354769 sec, nvals 14184946
+nthreads:   4 time:     6.354839 rate:   2.23 speedup:   1.91 steps 1
+
+
+read A time:          26.228455 sec
+process A time:       11.198077 sec
+input graph: 4.84757e+06 nodes, 8.57025e+07 edges
+
+KTruss: k =   3:
+step   1 time 82.819674 sec, nvals 71062058
+step   2 time 65.436525 sec, nvals 71062058
+ edges 35531029 ntriangles 285730264
+nthreads:   1 time:   148.256400 rate:   0.58 steps 2
+step   1 time 52.732785 sec, nvals 71062058
+step   2 time 42.074412 sec, nvals 71062058
+nthreads:   2 time:    94.807346 rate:   0.90 speedup:   1.56 steps 2
+step   1 time 52.772590 sec, nvals 71062058
+step   2 time 77.990425 sec, nvals 71062058
+nthreads:   4 time:   130.763168 rate:   0.66 speedup:   1.13 steps 2
+
+KTruss: k =   4:
+step   1 time 85.401207 sec, nvals 60439940
+step   2 time 51.597299 sec, nvals 58080128
+step   3 time 47.738578 sec, nvals 57705206
+step   4 time 47.100655 sec, nvals 57607562
+step   5 time 46.656285 sec, nvals 57575798
+step   6 time 47.105192 sec, nvals 57564266
+step   7 time 46.868536 sec, nvals 57559840
+step   8 time 46.863338 sec, nvals 57557992
+step   9 time 46.937156 sec, nvals 57557256
+step  10 time 46.926152 sec, nvals 57556944
+step  11 time 47.009160 sec, nvals 57556768
+step  12 time 46.831600 sec, nvals 57556690
+step  13 time 47.018557 sec, nvals 57556660
+step  14 time 46.942644 sec, nvals 57556650
+step  15 time 46.909636 sec, nvals 57556646
+step  16 time 47.038739 sec, nvals 57556642
+step  17 time 46.963977 sec, nvals 57556640
+step  18 time 46.792267 sec, nvals 57556640
+ edges 28778320 ntriangles 281156892
+nthreads:   1 time:   888.701919 rate:   0.10 steps 18
+step   1 time 52.580138 sec, nvals 60439940
+step   2 time 32.408761 sec, nvals 58080128
+step   3 time 29.990945 sec, nvals 57705206
+step   4 time 29.368185 sec, nvals 57607562
+step   5 time 29.299544 sec, nvals 57575798
+step   6 time 29.179568 sec, nvals 57564266
+step   7 time 29.162788 sec, nvals 57559840
+step   8 time 29.119943 sec, nvals 57557992
+step   9 time 29.051739 sec, nvals 57557256
+step  10 time 29.162073 sec, nvals 57556944
+step  11 time 29.124919 sec, nvals 57556768
+step  12 time 29.113586 sec, nvals 57556690
+step  13 time 29.813608 sec, nvals 57556660
+step  14 time 30.285495 sec, nvals 57556650
+step  15 time 33.025400 sec, nvals 57556646
+step  16 time 34.033984 sec, nvals 57556642
+step  17 time 37.176290 sec, nvals 57556640
+step  18 time 37.696060 sec, nvals 57556640
+nthreads:   2 time:   579.593980 rate:   0.15 speedup:   1.53 steps 18
+step   1 time 71.374562 sec, nvals 60439940
+step   2 time 74.594276 sec, nvals 58080128
+step   3 time 66.866796 sec, nvals 57705206
+step   4 time 62.823209 sec, nvals 57607562
+step   5 time 65.318364 sec, nvals 57575798
+step   6 time 65.000921 sec, nvals 57564266
+step   7 time 69.270672 sec, nvals 57559840
+step   8 time 69.700389 sec, nvals 57557992
+step   9 time 66.358376 sec, nvals 57557256
+step  10 time 69.410208 sec, nvals 57556944
+step  11 time 79.952603 sec, nvals 57556768
+step  12 time 67.874425 sec, nvals 57556690
+step  13 time 69.214528 sec, nvals 57556660
+step  14 time 65.867688 sec, nvals 57556650
+step  15 time 61.899869 sec, nvals 57556646
+step  16 time 62.039045 sec, nvals 57556642
+step  17 time 60.684611 sec, nvals 57556640
+step  18 time 60.861820 sec, nvals 57556640
+nthreads:   4 time:  1209.113714 rate:   0.07 speedup:   0.74 steps 18
+
+KTruss: k =   5:
+step   1 time 83.949603 sec, nvals 52565048
+step   2 time 43.564267 sec, nvals 48372156
+step   3 time 37.579878 sec, nvals 47429386
+step   4 time 36.369817 sec, nvals 47125742
+step   5 time 36.383356 sec, nvals 47004858
+step   6 time 35.944904 sec, nvals 46950424
+step   7 time 35.732952 sec, nvals 46924310
+step   8 time 35.315359 sec, nvals 46911296
+step   9 time 36.109076 sec, nvals 46904874
+step  10 time 36.679272 sec, nvals 46901496
+step  11 time 35.452424 sec, nvals 46899606
+step  12 time 35.138383 sec, nvals 46898480
+step  13 time 35.217131 sec, nvals 46897894
+step  14 time 36.010025 sec, nvals 46897554
+step  15 time 36.844964 sec, nvals 46897378
+step  16 time 37.701037 sec, nvals 46897252
+step  17 time 35.919446 sec, nvals 46897188
+step  18 time 35.573060 sec, nvals 46897152
+step  19 time 35.246102 sec, nvals 46897130
+step  20 time 35.118670 sec, nvals 46897116
+step  21 time 35.093218 sec, nvals 46897112
+step  22 time 35.250007 sec, nvals 46897108
+step  23 time 36.153719 sec, nvals 46897108
+ edges 23448554 ntriangles 274009101
+nthreads:   1 time:   882.348225 rate:   0.10 steps 23
+step   1 time 54.019762 sec, nvals 52565048
+step   2 time 27.693449 sec, nvals 48372156

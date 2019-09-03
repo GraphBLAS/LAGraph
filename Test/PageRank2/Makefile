@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Test/CC/Makefile
+# Test/PageRank/Makefile
 #-------------------------------------------------------------------------------
 
 # LAGraph, (... list all authors here) (c) 2019, All Rights Reserved.
@@ -7,7 +7,7 @@
 
 #-------------------------------------------------------------------------------
 
-# simple Makefile for LAGraph/Test/CC/cctest,
+# simple Makefile for LAGraph/Test/PageRank/p2test,
 
 # relies on cmake to do the actual build.  Use the CMAKE_OPTIONS argument to
 # this Makefile to pass options to cmake.
@@ -18,9 +18,9 @@ JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/cctest < ../BFS/west0067.mtx 2>stderr.txt
-	./build/cctest < ldbc-wcc-example.mtx 2>stderr.txt
-	./build/cctest < tree-example.mtx 2>stderr.txt
+	./build/p2test < ldbc-directed-example-unweighted.mtx
+#	./build/p2test < ../BFS/cover.mtx
+#	./build/p2test < ../BFS/west0067.mtx
 
 # build test
 compile:
@@ -36,5 +36,5 @@ purge: distclean
 
 # remove all files not in the distribution
 distclean:
-	rm -rf build/* A.mtx cctest
+	rm -rf build/* A.mtx p2test
 
