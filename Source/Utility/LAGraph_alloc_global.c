@@ -324,11 +324,21 @@ void LAGraph_true_bool_complex
 // unary operators that return 1
 GrB_UnaryOp LAGraph_ONE_UINT32 = NULL ;
 GrB_UnaryOp LAGraph_ONE_FP64 = NULL ;
+GrB_UnaryOp LAGraph_ONE_INT64 = NULL ;
 
 void LAGraph_one_uint32
 (
     uint32_t *z,
     const uint32_t *x       // ignored
+)
+{
+    (*z) = 1 ;
+}
+
+void LAGraph_one_int64
+(
+    int64_t *z,
+    const int64_t *x       // ignored
 )
 {
     (*z) = 1 ;
@@ -695,6 +705,7 @@ GrB_Info LAGraph_alloc_global ( )
 
     #ifdef GxB_SUITESPARSE_GRAPHBLAS
     // use the built-in unary operator
+    LAGraph_ONE_INT64  = GxB_ONE_INT64 ;
     LAGraph_ONE_UINT32 = GxB_ONE_UINT32 ;
     LAGraph_ONE_FP64   = GxB_ONE_FP64 ;
     #else
@@ -703,6 +714,11 @@ GrB_Info LAGraph_alloc_global ( )
     LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ONE_UINT32,
         F_UNARY (LAGraph_one_uint32),
         GrB_UINT32, GrB_UINT32)) ;
+
+    // create a new built-in unary operator using LAGraph_one_int64
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ONE_INT64,
+        F_UNARY (LAGraph_one_int64),
+        GrB_INT64, GrB_INT64)) ;
 
     // create a new built-in unary operator using LAGraph_one_fp64
     LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ONE_FP64,
