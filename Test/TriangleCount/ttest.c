@@ -233,9 +233,13 @@ int main (int argc, char **argv)
     // warmup for more accurate timing
     int64_t ntriangles ;
     double t [2] ;
-    LAGRAPH_OK (LAGraph_tricount (&ntriangles, 3, A, E, L, U, t)) ;
+    LAGRAPH_OK (LAGraph_tricount (&ntriangles, 5, A, E, L, U, t)) ;
     printf ("# of triangles: %" PRId64 "\n", ntriangles) ;
+    double ttot = t [0] + t [1] ;
+    printf ("nthreads: %3d time: %12.6f rate: %6.2f", nthreads_max, ttot,
+        1e-6 * nedges / ttot) ;
 
+#if 0
     double t_best = INFINITY ;
     int method_best = -1 ;
     int nthreads_best = -1 ;
@@ -289,6 +293,7 @@ int main (int argc, char **argv)
     printf ("nthreads: %3d time: %12.6f rate: %6.2f ", nthreads_best, t_best,
         1e-6 * nedges / t_best) ;
     print_method (method_best) ;
+#endif
     LAGRAPH_FREE_ALL ;
     LAGraph_finalize ( ) ;
 
