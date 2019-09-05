@@ -87,6 +87,7 @@ GrB_Info LAGraph_free_global ( )
     GrB_free (&LAGraph_SKEW_Complex) ;
     GrB_free (&LAGraph_Hermitian) ;
     GrB_free (&LAGraph_LOR_UINT32) ;
+    GrB_free (&LAGraph_LOR_INT64) ;
 
     // free the monoids
     GrB_free (&LAGraph_PLUS_INT64_MONOID) ;

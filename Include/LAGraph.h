@@ -150,7 +150,8 @@ extern GrB_BinaryOp
     LAGraph_SKEW_FP64           ,
     LAGraph_SKEW_Complex        ,
     LAGraph_Hermitian           ,
-    LAGraph_LOR_UINT32          ;
+    LAGraph_LOR_UINT32          ,
+    LAGraph_LOR_INT64           ;
 
 extern GrB_UnaryOp
 
@@ -189,6 +190,7 @@ extern GrB_UnaryOp
 
     // unary operators that return 1
     LAGraph_ONE_UINT32          ,
+    LAGraph_ONE_INT64           ,
     LAGraph_ONE_FP64            ,
     LAGraph_TRUE_BOOL           ,
     LAGraph_TRUE_BOOL_Complex   ;

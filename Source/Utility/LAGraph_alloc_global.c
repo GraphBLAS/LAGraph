@@ -61,6 +61,7 @@ GrB_BinaryOp LAGraph_SKEW_FP64    = NULL ;
 GrB_BinaryOp LAGraph_SKEW_Complex = NULL ;
 GrB_BinaryOp LAGraph_Hermitian    = NULL ;
 GrB_BinaryOp LAGraph_LOR_UINT32   = NULL ;
+GrB_BinaryOp LAGraph_LOR_INT64    = NULL ;
 
 void LAGraph_eq_complex
 (
@@ -160,6 +161,16 @@ void LAGraph_lor_uint32
     uint32_t *z,
     const uint32_t *x,
     const uint32_t *y
+)
+{
+    (*z) = (((*x) != 0) || ((*y) != 0)) ;
+}
+
+void LAGraph_lor_int64
+(
+    int64_t *z,
+    const int64_t *x,
+    const int64_t *y
 )
 {
     (*z) = (((*x) != 0) || ((*y) != 0)) ;
@@ -584,11 +595,19 @@ GrB_Info LAGraph_alloc_global ( )
     #ifdef GxB_SUITESPARSE_GRAPHBLAS
     // use the built-in binary operator
     LAGraph_LOR_UINT32 = GxB_LOR_UINT32 ;
+    LAGraph_LOR_INT64  = GxB_LOR_INT64  ;
     #else
+
     // create a new built-in binary operator using LAGraph_lor_uint32
     LAGRAPH_OK (GrB_BinaryOp_new (&LAGraph_LOR_UINT32,
         F_BINARY (LAGraph_lor_uint32),
         GrB_UINT32, GrB_UINT32, GrB_UINT32)) ;
+
+    // create a new built-in binary operator using LAGraph_lor_int64
+    LAGRAPH_OK (GrB_BinaryOp_new (&LAGraph_LOR_INT64,
+        F_BINARY (LAGraph_lor_int64),
+        GrB_INT64, GrB_INT64, GrB_INT64)) ;
+
     #endif
 
     //--------------------------------------------------------------------------
