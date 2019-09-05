@@ -91,7 +91,7 @@ int main (int argc, char **argv)
     #endif
 
     GrB_Index *I = NULL, *J = NULL ;
-    uint32_t *X = NULL ;
+    int64_t *X = NULL ;
     LAGraph_init ( ) ;
 
     //--------------------------------------------------------------------------
@@ -123,9 +123,9 @@ int main (int argc, char **argv)
     GrB_Index n, nedges ;
     LAGRAPH_OK (GrB_Matrix_nrows (&n, C)) ;
 
-    // A = spones (C), and typecast to uint32
-    LAGRAPH_OK (GrB_Matrix_new (&A, GrB_UINT32, n, n)) ;
-    LAGRAPH_OK (GrB_apply (A, NULL, NULL, LAGraph_ONE_UINT32, C, NULL)) ;
+    // A = spones (C), and typecast to int64
+    LAGRAPH_OK (GrB_Matrix_new (&A, GrB_INT64, n, n)) ;
+    LAGRAPH_OK (GrB_apply (A, NULL, NULL, LAGraph_ONE_INT64, C, NULL)) ;
     GrB_free (&C) ;
 
     // M = diagonal mask matrix
@@ -137,7 +137,7 @@ int main (int argc, char **argv)
     }
 
     // make A symmetric (A = spones (A+A')) and remove self edges (via M)
-    LAGRAPH_OK (GrB_eWiseAdd (A, M, NULL, LAGraph_LOR_UINT32, A, A,
+    LAGRAPH_OK (GrB_eWiseAdd (A, M, NULL, LAGraph_LOR_INT64, A, A,
         LAGraph_desc_otcr)) ;
     GrB_free (&M) ;
 
@@ -156,7 +156,7 @@ int main (int argc, char **argv)
         // U = triu (A,1), for methods 2, 3, and 5
         LAGraph_tic (tic) ;
         int64_t k = 1 ;
-        LAGRAPH_OK (GrB_Matrix_new (&U, GrB_UINT32, n, n)) ;
+        LAGRAPH_OK (GrB_Matrix_new (&U, GrB_INT64, n, n)) ;
         LAGRAPH_OK (GxB_Scalar_new (&Support, GrB_INT64)) ;
         LAGRAPH_OK (GxB_Scalar_setElement (Support, k)) ;
         LAGRAPH_OK (GxB_select (U, NULL, NULL, GxB_TRIU, A, Support, NULL)) ;
@@ -168,7 +168,7 @@ int main (int argc, char **argv)
 
         // L = tril (A,-1), for methods 2 and 4
         LAGraph_tic (tic) ;
-        LAGRAPH_OK (GrB_Matrix_new (&L, GrB_UINT32, n, n)) ;
+        LAGRAPH_OK (GrB_Matrix_new (&L, GrB_INT64, n, n)) ;
         k = -1 ;
         LAGRAPH_OK (GxB_Scalar_setElement (Support, k)) ;
         LAGRAPH_OK (GxB_select (L, NULL, NULL, GxB_TRIL, A, Support, NULL)) ;
@@ -184,7 +184,7 @@ int main (int argc, char **argv)
         LAGRAPH_OK (GrB_Matrix_nvals (&nvals, A)) ;
         I = LAGraph_malloc (nvals, sizeof (GrB_Index)) ;
         J = LAGraph_malloc (nvals, sizeof (GrB_Index)) ;
-        X = LAGraph_malloc (nvals, sizeof (uint32_t)) ;
+        X = LAGraph_malloc (nvals, sizeof (int64_t)) ;
         if (I == NULL || J == NULL || X == NULL)
         {
             LAGRAPH_FREE_ALL ;
@@ -207,11 +207,11 @@ int main (int argc, char **argv)
             }
         }
 
-        LAGRAPH_OK (GrB_Matrix_new (&L, GrB_UINT32, n, n)) ;
-        LAGRAPH_OK (GrB_Matrix_new (&U, GrB_UINT32, n, n)) ;
+        LAGRAPH_OK (GrB_Matrix_new (&L, GrB_INT64, n, n)) ;
+        LAGRAPH_OK (GrB_Matrix_new (&U, GrB_INT64, n, n)) ;
 
-        LAGRAPH_OK (GrB_Matrix_build (L, I, J, X, nedges, GrB_PLUS_UINT32)) ;
-        LAGRAPH_OK (GrB_Matrix_build (U, J, I, X, nedges, GrB_PLUS_UINT32)) ;
+        LAGRAPH_OK (GrB_Matrix_build (L, I, J, X, nedges, GrB_PLUS_INT64)) ;
+        LAGRAPH_OK (GrB_Matrix_build (U, J, I, X, nedges, GrB_PLUS_INT64)) ;
 
         LAGRAPH_FREE (I) ;
         LAGRAPH_FREE (J) ;

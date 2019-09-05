@@ -279,11 +279,21 @@ void LAGraph_isone_complex
 
 // unary operator to check if the entry is equal to 2
 GrB_UnaryOp LAGraph_ISTWO_UINT32 = NULL ;
+GrB_UnaryOp LAGraph_ISTWO_INT64 = NULL ;
 
 void LAGraph_istwo_uint32
 (
     bool *z,
     const uint32_t *x
+)
+{
+    (*z) = ((*x) == 2) ;
+}
+
+void LAGraph_istwo_int64
+(
+    bool *z,
+    const int64_t *x
 )
 {
     (*z) = ((*x) == 2) ;
@@ -451,6 +461,7 @@ GrB_Semiring LAGraph_MIN_FIRST_INT32 = NULL ;
 GrB_Semiring LAGraph_MIN_SECOND_INT64 = NULL ;
 GrB_Semiring LAGraph_MIN_FIRST_INT64 = NULL ;
 GrB_Semiring LAGraph_PLUS_TIMES_UINT32 = NULL ;
+GrB_Semiring LAGraph_PLUS_TIMES_INT64 = NULL ;
 GrB_Semiring LAGraph_PLUS_TIMES_FP64 = NULL ;
 GrB_Semiring LAGraph_PLUS_PLUS_FP64 = NULL ;
 GrB_Semiring LAGraph_PLUS_TIMES_FP32 = NULL ;
@@ -630,6 +641,10 @@ GrB_Info LAGraph_alloc_global ( )
         F_UNARY (LAGraph_istwo_uint32),
         GrB_BOOL, GrB_UINT32)) ;
 
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISTWO_INT64,
+        F_UNARY (LAGraph_istwo_int64),
+        GrB_BOOL, GrB_INT64)) ;
+
     //--------------------------------------------------------------------------
     // create the unary decrement operators
     //--------------------------------------------------------------------------
@@ -767,6 +782,9 @@ GrB_Info LAGraph_alloc_global ( )
 
     LAGRAPH_OK (GrB_Semiring_new (&LAGraph_PLUS_TIMES_UINT32,
         LAGraph_PLUS_UINT32_MONOID, GrB_TIMES_UINT32)) ;
+
+    LAGRAPH_OK (GrB_Semiring_new (&LAGraph_PLUS_TIMES_INT64,
+        LAGraph_PLUS_INT64_MONOID, GrB_TIMES_INT64)) ;
 
     LAGRAPH_OK (GrB_Semiring_new (&LAGraph_PLUS_TIMES_FP32,
         LAGraph_PLUS_FP32_MONOID, GrB_TIMES_FP32)) ;

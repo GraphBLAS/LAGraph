@@ -415,3 +415,860 @@ step  23 time 36.153719 sec, nvals 46897108
 nthreads:   1 time:   882.348225 rate:   0.10 steps 23
 step   1 time 54.019762 sec, nvals 52565048
 step   2 time 27.693449 sec, nvals 48372156
+step   3 time 23.735301 sec, nvals 47429386
+step   4 time 24.544246 sec, nvals 47125742
+step   5 time 23.303944 sec, nvals 47004858
+step   6 time 23.638308 sec, nvals 46950424
+step   7 time 22.688782 sec, nvals 46924310
+step   8 time 21.917296 sec, nvals 46911296
+step   9 time 21.912967 sec, nvals 46904874
+step  10 time 21.773853 sec, nvals 46901496
+step  11 time 21.906678 sec, nvals 46899606
+step  12 time 21.738342 sec, nvals 46898480
+step  13 time 21.775268 sec, nvals 46897894
+step  14 time 21.797227 sec, nvals 46897554
+step  15 time 22.207163 sec, nvals 46897378
+step  16 time 22.407495 sec, nvals 46897252
+step  17 time 21.858337 sec, nvals 46897188
+step  18 time 21.966664 sec, nvals 46897152
+step  19 time 21.826803 sec, nvals 46897130
+step  20 time 21.907814 sec, nvals 46897116
+step  21 time 22.279798 sec, nvals 46897112
+step  22 time 21.706139 sec, nvals 46897108
+step  23 time 21.689981 sec, nvals 46897108
+nthreads:   2 time:   550.296888 rate:   0.16 speedup:   1.60 steps 23
+step   1 time 53.016586 sec, nvals 52565048
+step   2 time 55.618626 sec, nvals 48372156
+step   3 time 51.205190 sec, nvals 47429386
+step   4 time 48.929797 sec, nvals 47125742
+step   5 time 47.636534 sec, nvals 47004858
+step   6 time 49.752280 sec, nvals 46950424
+step   7 time 49.987573 sec, nvals 46924310
+step   8 time 47.787303 sec, nvals 46911296
+step   9 time 49.557544 sec, nvals 46904874
+step  10 time 50.960688 sec, nvals 46901496
+step  11 time 47.694764 sec, nvals 46899606
+step  12 time 47.605220 sec, nvals 46898480
+step  13 time 47.741463 sec, nvals 46897894
+step  14 time 48.790164 sec, nvals 46897554
+step  15 time 48.082117 sec, nvals 46897378
+step  16 time 47.740114 sec, nvals 46897252
+step  17 time 48.320544 sec, nvals 46897188
+step  18 time 48.206030 sec, nvals 46897152
+step  19 time 47.796993 sec, nvals 46897130
+step  20 time 47.916254 sec, nvals 46897116
+step  21 time 47.815883 sec, nvals 46897112
+step  22 time 47.646701 sec, nvals 46897108
+step  23 time 48.231899 sec, nvals 46897108
+nthreads:   4 time:  1128.041699 rate:   0.08 speedup:   0.78 steps 23
+
+KTruss: k =   6:
+step   1 time 84.513499 sec, nvals 46430246
+step   2 time 36.422951 sec, nvals 41023666
+step   3 time 30.353990 sec, nvals 39569640
+step   4 time 28.641481 sec, nvals 39039646
+step   5 time 28.294056 sec, nvals 38807768
+step   6 time 28.386497 sec, nvals 38693986
+step   7 time 27.732384 sec, nvals 38634678
+step   8 time 27.477735 sec, nvals 38602144
+step   9 time 27.483889 sec, nvals 38583506
+step  10 time 27.476708 sec, nvals 38572402
+step  11 time 27.497099 sec, nvals 38565454
+step  12 time 27.544381 sec, nvals 38561266
+step  13 time 27.515426 sec, nvals 38558722
+step  14 time 27.378173 sec, nvals 38557008
+step  15 time 27.635561 sec, nvals 38555880
+step  16 time 27.484072 sec, nvals 38555052
+step  17 time 27.488334 sec, nvals 38554544
+step  18 time 27.471241 sec, nvals 38554184
+step  19 time 27.658663 sec, nvals 38553966
+step  20 time 27.656580 sec, nvals 38553800
+step  21 time 27.438629 sec, nvals 38553688
+step  22 time 27.437904 sec, nvals 38553616
+step  23 time 27.361536 sec, nvals 38553574
+step  24 time 27.668564 sec, nvals 38553556
+step  25 time 27.404998 sec, nvals 38553538
+step  26 time 27.620151 sec, nvals 38553532
+step  27 time 27.634826 sec, nvals 38553532
+ edges 19276766 ntriangles 265706140
+nthreads:   1 time:   814.680724 rate:   0.11 steps 27
+step   1 time 52.541782 sec, nvals 46430246
+step   2 time 22.583925 sec, nvals 41023666
+step   3 time 19.469504 sec, nvals 39569640
+step   4 time 17.352219 sec, nvals 39039646
+step   5 time 16.989770 sec, nvals 38807768
+step   6 time 16.731094 sec, nvals 38693986
+step   7 time 16.735819 sec, nvals 38634678
+step   8 time 16.570597 sec, nvals 38602144
+step   9 time 16.606299 sec, nvals 38583506
+step  10 time 16.804064 sec, nvals 38572402
+step  11 time 16.895787 sec, nvals 38565454
+step  12 time 16.523258 sec, nvals 38561266
+step  13 time 16.593252 sec, nvals 38558722
+step  14 time 16.656626 sec, nvals 38557008
+step  15 time 16.541671 sec, nvals 38555880
+step  16 time 16.578941 sec, nvals 38555052
+step  17 time 16.730157 sec, nvals 38554544
+step  18 time 16.617255 sec, nvals 38554184
+step  19 time 16.512746 sec, nvals 38553966
+step  20 time 16.554209 sec, nvals 38553800
+step  21 time 16.490606 sec, nvals 38553688
+step  22 time 16.559513 sec, nvals 38553616
+step  23 time 16.524064 sec, nvals 38553574
+step  24 time 16.559357 sec, nvals 38553556
+step  25 time 16.459608 sec, nvals 38553538
+step  26 time 16.508686 sec, nvals 38553532
+step  27 time 16.522855 sec, nvals 38553532
+nthreads:   2 time:   494.215061 rate:   0.17 speedup:   1.65 steps 27
+step   1 time 52.427734 sec, nvals 46430246
+step   2 time 48.772282 sec, nvals 41023666
+step   3 time 42.432133 sec, nvals 39569640
+step   4 time 44.525218 sec, nvals 39039646
+step   5 time 43.151323 sec, nvals 38807768
+step   6 time 42.886591 sec, nvals 38693986
+step   7 time 42.629799 sec, nvals 38634678
+step   8 time 42.698197 sec, nvals 38602144
+step   9 time 42.947777 sec, nvals 38583506
+step  10 time 42.952781 sec, nvals 38572402
+step  11 time 42.774896 sec, nvals 38565454
+step  12 time 42.505992 sec, nvals 38561266
+step  13 time 43.154471 sec, nvals 38558722
+step  14 time 42.687447 sec, nvals 38557008
+step  15 time 42.821915 sec, nvals 38555880
+step  16 time 42.623454 sec, nvals 38555052
+step  17 time 43.002254 sec, nvals 38554544
+step  18 time 42.747404 sec, nvals 38554184
+step  19 time 43.220899 sec, nvals 38553966
+step  20 time 42.396579 sec, nvals 38553800
+step  21 time 43.759053 sec, nvals 38553688
+step  22 time 43.231290 sec, nvals 38553616
+step  23 time 51.973521 sec, nvals 38553574
+step  24 time 45.828753 sec, nvals 38553556
+step  25 time 42.601723 sec, nvals 38553538
+step  26 time 42.657503 sec, nvals 38553532
+step  27 time 42.875885 sec, nvals 38553532
+nthreads:   4 time:  1186.288543 rate:   0.07 speedup:   0.69 steps 27
+
+KTruss: k =   7:
+step   1 time 82.631939 sec, nvals 41462504
+step   2 time 31.585561 sec, nvals 35283048
+step   3 time 25.357259 sec, nvals 33462148
+step   4 time 23.451806 sec, nvals 32743186
+step   5 time 23.642876 sec, nvals 32407868
+step   6 time 23.014772 sec, nvals 32233726
+step   7 time 22.480489 sec, nvals 32136368
+step   8 time 22.465600 sec, nvals 32079758
+step   9 time 22.537926 sec, nvals 32045546
+step  10 time 22.296579 sec, nvals 32023784
+step  11 time 22.509808 sec, nvals 32010162
+step  12 time 22.126881 sec, nvals 32001174
+step  13 time 22.362046 sec, nvals 31995320
+step  14 time 22.494955 sec, nvals 31991628
+step  15 time 22.165408 sec, nvals 31989110
+step  16 time 22.468758 sec, nvals 31987306
+step  17 time 22.593640 sec, nvals 31986116
+step  18 time 22.799828 sec, nvals 31985224
+step  19 time 24.329696 sec, nvals 31984590
+step  20 time 22.332921 sec, nvals 31984106
+step  21 time 22.115399 sec, nvals 31983730
+step  22 time 22.543513 sec, nvals 31983404
+step  23 time 22.175865 sec, nvals 31983160
+step  24 time 22.050594 sec, nvals 31982984
+step  25 time 22.344440 sec, nvals 31982838
+step  26 time 22.481395 sec, nvals 31982696
+step  27 time 22.040955 sec, nvals 31982566
+step  28 time 22.402385 sec, nvals 31982468
+step  29 time 22.190797 sec, nvals 31982380
+step  30 time 22.075516 sec, nvals 31982316
+step  31 time 22.402911 sec, nvals 31982278
+step  32 time 22.382009 sec, nvals 31982242
+step  33 time 22.113853 sec, nvals 31982218
+step  34 time 22.562315 sec, nvals 31982202
+step  35 time 22.482174 sec, nvals 31982198
+step  36 time 22.235973 sec, nvals 31982194
+step  37 time 22.408609 sec, nvals 31982190
+step  38 time 22.308676 sec, nvals 31982188
+step  39 time 22.209326 sec, nvals 31982186
+step  40 time 22.269059 sec, nvals 31982180
+step  41 time 22.529010 sec, nvals 31982166
+step  42 time 22.323148 sec, nvals 31982158
+step  43 time 22.197270 sec, nvals 31982158
+ edges 15991079 ntriangles 257088749
+nthreads:   1 time:  1038.496197 rate:   0.08 steps 43
+step   1 time 53.146429 sec, nvals 41462504
+step   2 time 19.584694 sec, nvals 35283048
+step   3 time 51.648617 sec, nvals 33462148
+step   4 time 48.526828 sec, nvals 32743186
+step   5 time 47.765190 sec, nvals 32407868
+step   6 time 46.968327 sec, nvals 32233726
+step   7 time 46.918919 sec, nvals 32136368
+step   8 time 46.510687 sec, nvals 32079758
+step   9 time 46.602717 sec, nvals 32045546
+step  10 time 46.358931 sec, nvals 32023784
+step  11 time 46.080177 sec, nvals 32010162
+step  12 time 46.347567 sec, nvals 32001174
+step  13 time 46.216072 sec, nvals 31995320
+step  14 time 46.078916 sec, nvals 31991628
+step  15 time 46.043583 sec, nvals 31989110
+step  16 time 47.231251 sec, nvals 31987306
+step  17 time 46.835464 sec, nvals 31986116
+step  18 time 46.507908 sec, nvals 31985224
+step  19 time 46.025023 sec, nvals 31984590
+step  20 time 46.338727 sec, nvals 31984106
+step  21 time 46.001846 sec, nvals 31983730
+step  22 time 45.853892 sec, nvals 31983404
+step  23 time 46.142089 sec, nvals 31983160
+step  24 time 50.111139 sec, nvals 31982984
+step  25 time 54.180131 sec, nvals 31982838
+step  26 time 47.336067 sec, nvals 31982696
+step  27 time 46.078109 sec, nvals 31982566
+step  28 time 46.617373 sec, nvals 31982468
+step  29 time 46.263453 sec, nvals 31982380
+step  30 time 46.149695 sec, nvals 31982316
+step  31 time 46.452993 sec, nvals 31982278
+step  32 time 46.141619 sec, nvals 31982242
+step  33 time 46.439589 sec, nvals 31982218
+step  34 time 46.517149 sec, nvals 31982202
+step  35 time 45.923042 sec, nvals 31982198
+step  36 time 46.304441 sec, nvals 31982194
+step  37 time 47.368570 sec, nvals 31982190
+step  38 time 46.950996 sec, nvals 31982188
+step  39 time 46.942585 sec, nvals 31982186
+step  40 time 46.043973 sec, nvals 31982180
+step  41 time 47.777560 sec, nvals 31982166
+step  42 time 47.455506 sec, nvals 31982158
+step  43 time 47.052539 sec, nvals 31982158
+nthreads:   2 time:  1999.842615 rate:   0.04 speedup:   0.52 steps 43
+step   1 time 53.727921 sec, nvals 41462504
+step   2 time 46.412205 sec, nvals 35283048
+step   3 time 40.971013 sec, nvals 33462148
+step   4 time 37.815667 sec, nvals 32743186
+step   5 time 37.782516 sec, nvals 32407868
+step   6 time 36.952460 sec, nvals 32233726
+step   7 time 36.977475 sec, nvals 32136368
+step   8 time 36.935766 sec, nvals 32079758
+step   9 time 36.643560 sec, nvals 32045546
+step  10 time 36.150132 sec, nvals 32023784
+step  11 time 36.396762 sec, nvals 32010162
+step  12 time 36.042045 sec, nvals 32001174
+step  13 time 36.533932 sec, nvals 31995320
+step  14 time 35.753719 sec, nvals 31991628
+step  15 time 36.602567 sec, nvals 31989110
+step  16 time 35.731426 sec, nvals 31987306
+step  17 time 36.896918 sec, nvals 31986116
+step  18 time 35.922981 sec, nvals 31985224
+step  19 time 36.047663 sec, nvals 31984590
+step  20 time 36.147160 sec, nvals 31984106
+step  21 time 35.947672 sec, nvals 31983730
+step  22 time 36.536734 sec, nvals 31983404
+step  23 time 36.360810 sec, nvals 31983160
+step  24 time 36.226850 sec, nvals 31982984
+step  25 time 36.520043 sec, nvals 31982838
+step  26 time 36.685979 sec, nvals 31982696
+step  27 time 35.775688 sec, nvals 31982566
+step  28 time 36.270859 sec, nvals 31982468
+step  29 time 35.868921 sec, nvals 31982380
+step  30 time 36.759919 sec, nvals 31982316
+step  31 time 35.987326 sec, nvals 31982278
+step  32 time 36.432356 sec, nvals 31982242
+step  33 time 36.272716 sec, nvals 31982218
+step  34 time 37.229216 sec, nvals 31982202
+step  35 time 36.818855 sec, nvals 31982198
+step  36 time 36.098644 sec, nvals 31982194
+step  37 time 36.402787 sec, nvals 31982190
+step  38 time 36.089641 sec, nvals 31982188
+step  39 time 36.322037 sec, nvals 31982186
+step  40 time 36.377132 sec, nvals 31982180
+step  41 time 36.166968 sec, nvals 31982166
+step  42 time 36.728893 sec, nvals 31982158
+step  43 time 36.112547 sec, nvals 31982158
+nthreads:   4 time:  1598.438804 rate:   0.05 speedup:   0.65 steps 43
+
+KTruss: k =   8:
+step   1 time 87.463775 sec, nvals 37354526
+step   2 time 27.757000 sec, nvals 30720892
+step   3 time 22.021579 sec, nvals 28678456
+step   4 time 19.985503 sec, nvals 27824080
+step   5 time 19.223191 sec, nvals 27409516
+step   6 time 19.977950 sec, nvals 27186984
+step   7 time 18.733044 sec, nvals 27058680
+step   8 time 18.455434 sec, nvals 26979672
+step   9 time 18.532496 sec, nvals 26929564
+step  10 time 18.371646 sec, nvals 26898000
+step  11 time 18.384882 sec, nvals 26877980
+step  12 time 18.950637 sec, nvals 26864512
+step  13 time 18.336154 sec, nvals 26855740
+step  14 time 18.336449 sec, nvals 26849958
+step  15 time 18.367385 sec, nvals 26845910
+step  16 time 18.275344 sec, nvals 26843038
+step  17 time 18.275526 sec, nvals 26840968
+step  18 time 18.291803 sec, nvals 26839404
+step  19 time 18.254277 sec, nvals 26838346
+step  20 time 18.367511 sec, nvals 26837510
+step  21 time 18.283399 sec, nvals 26836900
+step  22 time 18.355399 sec, nvals 26836480
+step  23 time 18.237707 sec, nvals 26836140
+step  24 time 18.257482 sec, nvals 26835940
+step  25 time 18.284205 sec, nvals 26835744
+step  26 time 18.451902 sec, nvals 26835530
+step  27 time 18.432726 sec, nvals 26835356
+step  28 time 18.370240 sec, nvals 26835190
+step  29 time 18.308183 sec, nvals 26835072
+step  30 time 18.254589 sec, nvals 26834966
+step  31 time 18.318655 sec, nvals 26834888
+step  32 time 18.295594 sec, nvals 26834826
+step  33 time 18.257361 sec, nvals 26834794
+step  34 time 18.260303 sec, nvals 26834766
+step  35 time 18.279671 sec, nvals 26834730
+step  36 time 18.249326 sec, nvals 26834694
+step  37 time 18.229278 sec, nvals 26834680
+step  38 time 18.395948 sec, nvals 26834678
+step  39 time 18.167837 sec, nvals 26834678
+ edges 13417339 ntriangles 248733107
+nthreads:   1 time:   802.053526 rate:   0.11 steps 39
+step   1 time 52.512761 sec, nvals 37354526
+step   2 time 17.321514 sec, nvals 30720892
+step   3 time 45.739382 sec, nvals 28678456
+step   4 time 41.817046 sec, nvals 27824080
+step   5 time 41.070558 sec, nvals 27409516
+step   6 time 40.274702 sec, nvals 27186984
+step   7 time 39.423165 sec, nvals 27058680
+step   8 time 39.304532 sec, nvals 26979672
+step   9 time 39.651816 sec, nvals 26929564
+step  10 time 39.266215 sec, nvals 26898000
+step  11 time 39.214960 sec, nvals 26877980
+step  12 time 39.226865 sec, nvals 26864512
+step  13 time 38.835762 sec, nvals 26855740
+step  14 time 39.533843 sec, nvals 26849958
+step  15 time 39.041688 sec, nvals 26845910
+step  16 time 38.813145 sec, nvals 26843038
+step  17 time 39.267012 sec, nvals 26840968
+step  18 time 39.162444 sec, nvals 26839404
+step  19 time 38.837635 sec, nvals 26838346
+step  20 time 38.954322 sec, nvals 26837510
+step  21 time 38.825217 sec, nvals 26836900
+step  22 time 38.649824 sec, nvals 26836480
+step  23 time 39.038745 sec, nvals 26836140
+step  24 time 38.809437 sec, nvals 26835940
+step  25 time 39.025392 sec, nvals 26835744
+step  26 time 38.991176 sec, nvals 26835530
+step  27 time 39.002945 sec, nvals 26835356
+step  28 time 39.034241 sec, nvals 26835190
+step  29 time 38.734990 sec, nvals 26835072
+step  30 time 38.789551 sec, nvals 26834966
+step  31 time 38.836202 sec, nvals 26834888
+step  32 time 39.051379 sec, nvals 26834826
+step  33 time 39.156670 sec, nvals 26834794
+step  34 time 39.314978 sec, nvals 26834766
+step  35 time 38.831379 sec, nvals 26834730
+step  36 time 39.091355 sec, nvals 26834694
+step  37 time 39.000693 sec, nvals 26834680
+step  38 time 39.009634 sec, nvals 26834678
+step  39 time 38.873222 sec, nvals 26834678
+nthreads:   2 time:  1527.338472 rate:   0.06 speedup:   0.53 steps 39
+step   1 time 52.790451 sec, nvals 37354526
+step   2 time 43.884946 sec, nvals 30720892
+step   3 time 36.525055 sec, nvals 28678456
+step   4 time 33.942697 sec, nvals 27824080
+step   5 time 33.377405 sec, nvals 27409516
+step   6 time 33.196465 sec, nvals 27186984
+step   7 time 31.616761 sec, nvals 27058680
+step   8 time 31.665870 sec, nvals 26979672
+step   9 time 31.393783 sec, nvals 26929564
+step  10 time 31.499168 sec, nvals 26898000
+step  11 time 31.214994 sec, nvals 26877980
+step  12 time 31.282297 sec, nvals 26864512
+step  13 time 31.314728 sec, nvals 26855740
+step  14 time 30.903500 sec, nvals 26849958
+step  15 time 31.261296 sec, nvals 26845910
+step  16 time 31.170944 sec, nvals 26843038
+step  17 time 30.963744 sec, nvals 26840968
+step  18 time 31.225494 sec, nvals 26839404
+step  19 time 31.263263 sec, nvals 26838346
+step  20 time 30.919643 sec, nvals 26837510
+step  21 time 31.028932 sec, nvals 26836900
+step  22 time 30.907320 sec, nvals 26836480
+step  23 time 30.731707 sec, nvals 26836140
+step  24 time 30.986889 sec, nvals 26835940
+step  25 time 31.300865 sec, nvals 26835744
+step  26 time 30.887502 sec, nvals 26835530
+step  27 time 30.967322 sec, nvals 26835356
+step  28 time 31.213459 sec, nvals 26835190
+step  29 time 31.105181 sec, nvals 26835072
+step  30 time 31.183253 sec, nvals 26834966
+step  31 time 30.805195 sec, nvals 26834888
+step  32 time 30.978702 sec, nvals 26834826
+step  33 time 31.368990 sec, nvals 26834794
+step  34 time 32.772242 sec, nvals 26834766
+step  35 time 31.261598 sec, nvals 26834730
+step  36 time 31.049066 sec, nvals 26834694
+step  37 time 31.735363 sec, nvals 26834680
+step  38 time 31.181016 sec, nvals 26834678
+step  39 time 31.517190 sec, nvals 26834678
+nthreads:   4 time:  1264.397118 rate:   0.07 speedup:   0.63 steps 39
+
+KTruss: k =   9:
+step   1 time 84.590464 sec, nvals 33900526
+step   2 time 24.891546 sec, nvals 27030164
+step   3 time 19.053109 sec, nvals 24873502
+step   4 time 17.219699 sec, nvals 23942002
+step   5 time 16.339859 sec, nvals 23476528
+step   6 time 15.981345 sec, nvals 23221110
+step   7 time 15.670959 sec, nvals 23070792
+step   8 time 15.568621 sec, nvals 22979242
+step   9 time 15.446240 sec, nvals 22920920
+step  10 time 15.594931 sec, nvals 22882334
+step  11 time 15.342594 sec, nvals 22855848
+step  12 time 15.466901 sec, nvals 22837158
+step  13 time 15.454126 sec, nvals 22824338
+step  14 time 15.296975 sec, nvals 22815482
+step  15 time 15.440134 sec, nvals 22808732
+step  16 time 15.311123 sec, nvals 22804026
+step  17 time 15.303379 sec, nvals 22800418
+step  18 time 15.267256 sec, nvals 22797986
+step  19 time 15.415074 sec, nvals 22796066
+step  20 time 15.301803 sec, nvals 22794596
+step  21 time 15.294216 sec, nvals 22793486
+step  22 time 15.295232 sec, nvals 22792600
+step  23 time 15.266074 sec, nvals 22791944
+step  24 time 15.279451 sec, nvals 22791426
+step  25 time 15.352703 sec, nvals 22791044
+step  26 time 15.271297 sec, nvals 22790818
+step  27 time 15.291984 sec, nvals 22790670
+step  28 time 15.271055 sec, nvals 22790546
+step  29 time 15.311399 sec, nvals 22790434
+step  30 time 15.329445 sec, nvals 22790344
+step  31 time 15.291702 sec, nvals 22790258
+step  32 time 15.333577 sec, nvals 22790216
+step  33 time 15.393718 sec, nvals 22790174
+step  34 time 15.343881 sec, nvals 22790150
+step  35 time 15.369331 sec, nvals 22790100
+step  36 time 15.366845 sec, nvals 22790056
+step  37 time 15.303451 sec, nvals 22790030
+step  38 time 15.257758 sec, nvals 22790012
+step  39 time 15.305681 sec, nvals 22789986
+step  40 time 15.306541 sec, nvals 22789964
+step  41 time 15.265843 sec, nvals 22789944
+step  42 time 15.281842 sec, nvals 22789924
+step  43 time 15.266967 sec, nvals 22789916
+step  44 time 15.276011 sec, nvals 22789904
+step  45 time 15.346651 sec, nvals 22789892
+step  46 time 15.312140 sec, nvals 22789874
+step  47 time 15.322389 sec, nvals 22789872
+step  48 time 15.290992 sec, nvals 22789872
+ edges 11394936 ntriangles 240916697
+nthreads:   1 time:   822.556885 rate:   0.10 steps 48
+step   1 time 52.781507 sec, nvals 33900526
+step   2 time 49.157769 sec, nvals 27030164
+step   3 time 39.724528 sec, nvals 24873502
+step   4 time 37.465915 sec, nvals 23942002
+step   5 time 37.313100 sec, nvals 23476528
+step   6 time 35.527056 sec, nvals 23221110
+step   7 time 35.288072 sec, nvals 23070792
+step   8 time 35.347540 sec, nvals 22979242
+step   9 time 35.323500 sec, nvals 22920920
+step  10 time 34.950457 sec, nvals 22882334
+step  11 time 34.521980 sec, nvals 22855848
+step  12 time 34.445553 sec, nvals 22837158
+step  13 time 34.729256 sec, nvals 22824338
+step  14 time 34.655191 sec, nvals 22815482
+step  15 time 34.802213 sec, nvals 22808732
+step  16 time 34.593221 sec, nvals 22804026
+step  17 time 34.619619 sec, nvals 22800418
+step  18 time 34.793765 sec, nvals 22797986
+step  19 time 34.614545 sec, nvals 22796066
+step  20 time 34.476333 sec, nvals 22794596
+step  21 time 34.611756 sec, nvals 22793486
+step  22 time 34.498219 sec, nvals 22792600
+step  23 time 34.478040 sec, nvals 22791944
+step  24 time 34.559675 sec, nvals 22791426
+step  25 time 34.367977 sec, nvals 22791044
+step  26 time 34.378101 sec, nvals 22790818
+step  27 time 34.694061 sec, nvals 22790670
+step  28 time 34.750291 sec, nvals 22790546
+step  29 time 34.624998 sec, nvals 22790434
+step  30 time 34.636320 sec, nvals 22790344
+step  31 time 34.576792 sec, nvals 22790258
+step  32 time 34.853968 sec, nvals 22790216
+step  33 time 34.915887 sec, nvals 22790174
+step  34 time 34.999657 sec, nvals 22790150
+step  35 time 34.516423 sec, nvals 22790100
+step  36 time 34.711338 sec, nvals 22790056
+step  37 time 34.635239 sec, nvals 22790030
+step  38 time 34.727471 sec, nvals 22790012
+step  39 time 34.752032 sec, nvals 22789986
+step  40 time 34.649926 sec, nvals 22789964
+step  41 time 34.919806 sec, nvals 22789944
+step  42 time 34.592283 sec, nvals 22789924
+step  43 time 34.862309 sec, nvals 22789916
+step  44 time 34.879084 sec, nvals 22789904
+step  45 time 34.438111 sec, nvals 22789892
+step  46 time 34.439439 sec, nvals 22789874
+step  47 time 34.226456 sec, nvals 22789872
+step  48 time 34.328886 sec, nvals 22789872
+nthreads:   2 time:  1708.758261 rate:   0.05 speedup:   0.48 steps 48
+step   1 time 52.495051 sec, nvals 33900526
+step   2 time 38.344467 sec, nvals 27030164
+step   3 time 31.599980 sec, nvals 24873502
+step   4 time 29.791412 sec, nvals 23942002
+step   5 time 28.846671 sec, nvals 23476528
+step   6 time 28.363923 sec, nvals 23221110
+step   7 time 34.212101 sec, nvals 23070792
+step   8 time 30.634416 sec, nvals 22979242
+step   9 time 31.876484 sec, nvals 22920920
+step  10 time 27.601001 sec, nvals 22882334
+step  11 time 28.393208 sec, nvals 22855848
+step  12 time 29.791081 sec, nvals 22837158
+step  13 time 30.334040 sec, nvals 22824338
+step  14 time 30.945746 sec, nvals 22815482
+step  15 time 30.385667 sec, nvals 22808732
+step  16 time 30.577421 sec, nvals 22804026
+step  17 time 29.962070 sec, nvals 22800418
+step  18 time 28.981501 sec, nvals 22797986
+step  19 time 27.984594 sec, nvals 22796066
+step  20 time 27.746144 sec, nvals 22794596
+step  21 time 27.708392 sec, nvals 22793486
+step  22 time 28.415313 sec, nvals 22792600
+step  23 time 27.982325 sec, nvals 22791944
+step  24 time 28.218337 sec, nvals 22791426
+step  25 time 28.152345 sec, nvals 22791044
+step  26 time 28.412609 sec, nvals 22790818
+step  27 time 28.451897 sec, nvals 22790670
+step  28 time 28.430356 sec, nvals 22790546
+step  29 time 28.202576 sec, nvals 22790434
+step  30 time 28.121011 sec, nvals 22790344
+step  31 time 28.310370 sec, nvals 22790258
+step  32 time 31.503101 sec, nvals 22790216
+step  33 time 30.298772 sec, nvals 22790174
+step  34 time 29.773800 sec, nvals 22790150
+step  35 time 31.010154 sec, nvals 22790100
+step  36 time 31.569482 sec, nvals 22790056
+step  37 time 30.099750 sec, nvals 22790030
+step  38 time 30.676299 sec, nvals 22790012
+step  39 time 30.707250 sec, nvals 22789986
+step  40 time 28.912321 sec, nvals 22789964
+step  41 time 31.987549 sec, nvals 22789944
+step  42 time 33.431259 sec, nvals 22789924
+step  43 time 28.212856 sec, nvals 22789916
+step  44 time 31.979232 sec, nvals 22789904
+step  45 time 42.250635 sec, nvals 22789892
+step  46 time 30.863460 sec, nvals 22789874
+step  47 time 29.454497 sec, nvals 22789872
+step  48 time 30.027189 sec, nvals 22789872
+nthreads:   4 time:  1472.033750 rate:   0.06 speedup:   0.56 steps 48
+
+
+read A time:          27.712622 sec
+process A time:       24.576646 sec
+input graph: 1.13990e+06 nodes, 1.12751e+08 edges
+
+KTruss: k =   3:
+step   1 time 354.361471 sec, nvals 112697040
+step   2 time 336.759629 sec, nvals 112697040
+ edges 56348520 ntriangles 4916374555
+nthreads:   1 time:   691.121291 rate:   0.16 steps 2
+step   1 time 193.154716 sec, nvals 112697040
+step   2 time 198.329093 sec, nvals 112697040
+nthreads:   2 time:   391.484025 rate:   0.29 speedup:   1.77 steps 2
+step   1 time 177.195754 sec, nvals 112697040
+step   2 time 179.718671 sec, nvals 112697040
+nthreads:   4 time:   356.914573 rate:   0.32 speedup:   1.94 steps 2
+
+KTruss: k =   4:
+step   1 time 337.570702 sec, nvals 112578546
+step   2 time 349.121230 sec, nvals 112571730
+step   3 time 322.049717 sec, nvals 112571610
+step   4 time 374.229034 sec, nvals 112571592
+step   5 time 340.820625 sec, nvals 112571588
+step   6 time 349.483833 sec, nvals 112571588
+ edges 56285794 ntriangles 4916344375
+nthreads:   1 time:  2073.275502 rate:   0.05 steps 6
+step   1 time 188.610301 sec, nvals 112578546
+step   2 time 219.204792 sec, nvals 112571730
+step   3 time 216.396266 sec, nvals 112571610
+step   4 time 189.248081 sec, nvals 112571592
+step   5 time 178.736625 sec, nvals 112571588
+step   6 time 178.156511 sec, nvals 112571588
+nthreads:   2 time:  1170.352983 rate:   0.10 speedup:   1.77 steps 6
+step   1 time 158.401746 sec, nvals 112578546
+step   2 time 185.102118 sec, nvals 112571730
+step   3 time 178.734412 sec, nvals 112571610
+step   4 time 176.787103 sec, nvals 112571592
+step   5 time 157.521527 sec, nvals 112571588
+step   6 time 156.478262 sec, nvals 112571588
+nthreads:   4 time:  1013.027823 rate:   0.11 speedup:   2.05 steps 6
+
+KTruss: k =   5:
+step   1 time 288.392395 sec, nvals 112390608
+step   2 time 290.982246 sec, nvals 112368070
+step   3 time 289.030586 sec, nvals 112365856
+step   4 time 289.617581 sec, nvals 112365664
+step   5 time 289.223715 sec, nvals 112365602
+step   6 time 288.846882 sec, nvals 112365586
+step   7 time 288.091713 sec, nvals 112365584
+step   8 time 289.295001 sec, nvals 112365584
+ edges 56182792 ntriangles 4916242079
+nthreads:   1 time:  2313.480565 rate:   0.05 steps 8
+step   1 time 168.569032 sec, nvals 112390608
+step   2 time 170.410255 sec, nvals 112368070
+step   3 time 170.840313 sec, nvals 112365856
+step   4 time 170.282889 sec, nvals 112365664
+step   5 time 170.729740 sec, nvals 112365602
+step   6 time 170.268749 sec, nvals 112365586
+step   7 time 170.408787 sec, nvals 112365584
+step   8 time 169.453411 sec, nvals 112365584
+nthreads:   2 time:  1360.963610 rate:   0.08 speedup:   1.70 steps 8
+step   1 time 155.653658 sec, nvals 112390608
+step   2 time 160.633182 sec, nvals 112368070
+step   3 time 157.361019 sec, nvals 112365856
+step   4 time 156.210604 sec, nvals 112365664
+step   5 time 156.742230 sec, nvals 112365602
+step   6 time 157.422400 sec, nvals 112365586
+step   7 time 157.054163 sec, nvals 112365584
+step   8 time 156.898605 sec, nvals 112365584
+nthreads:   4 time:  1257.976365 rate:   0.09 speedup:   1.84 steps 8
+
+KTruss: k =   6:
+step   1 time 287.766496 sec, nvals 112112368
+step   2 time 290.916290 sec, nvals 112061760
+step   3 time 288.829757 sec, nvals 112053982
+step   4 time 288.711577 sec, nvals 112052668
+step   5 time 287.995344 sec, nvals 112052374
+step   6 time 289.226988 sec, nvals 112052272
+step   7 time 289.018733 sec, nvals 112052232
+step   8 time 288.658478 sec, nvals 112052226
+step   9 time 289.653094 sec, nvals 112052224
+step  10 time 288.001057 sec, nvals 112052224
+ edges 56026112 ntriangles 4916004364
+nthreads:   1 time:  2888.778390 rate:   0.04 steps 10
+step   1 time 168.618526 sec, nvals 112112368
+step   2 time 170.064308 sec, nvals 112061760
+step   3 time 170.925414 sec, nvals 112053982
+step   4 time 169.476178 sec, nvals 112052668
+step   5 time 172.104786 sec, nvals 112052374
+step   6 time 169.937157 sec, nvals 112052272
+step   7 time 169.400323 sec, nvals 112052232
+step   8 time 169.627955 sec, nvals 112052226
+step   9 time 170.012719 sec, nvals 112052224
+step  10 time 170.088540 sec, nvals 112052224
+nthreads:   2 time:  1700.256492 rate:   0.07 speedup:   1.70 steps 10
+step   1 time 156.358607 sec, nvals 112112368
+step   2 time 157.991640 sec, nvals 112061760
+step   3 time 157.580101 sec, nvals 112053982
+step   4 time 157.797662 sec, nvals 112052668
+step   5 time 158.739954 sec, nvals 112052374
+step   6 time 158.354668 sec, nvals 112052272
+step   7 time 156.884954 sec, nvals 112052232
+step   8 time 157.567261 sec, nvals 112052226
+step   9 time 162.027476 sec, nvals 112052224
+step  10 time 157.509874 sec, nvals 112052224
+nthreads:   4 time:  1580.812752 rate:   0.07 speedup:   1.83 steps 10
+
+KTruss: k =   7:
+step   1 time 287.359924 sec, nvals 111781002
+step   2 time 289.976426 sec, nvals 111692958
+step   3 time 289.731791 sec, nvals 111677178
+step   4 time 288.216255 sec, nvals 111673578
+step   5 time 288.381400 sec, nvals 111672556
+step   6 time 287.852477 sec, nvals 111672260
+step   7 time 287.471653 sec, nvals 111672148
+step   8 time 286.813427 sec, nvals 111672114
+step   9 time 287.688176 sec, nvals 111672104
+step  10 time 287.477404 sec, nvals 111672096
+step  11 time 287.546323 sec, nvals 111672092
+step  12 time 287.141673 sec, nvals 111672092
+ edges 55836046 ntriangles 4915605050
+nthreads:   1 time:  3455.657628 rate:   0.03 steps 12
+step   1 time 168.937207 sec, nvals 111781002
+step   2 time 170.273479 sec, nvals 111692958
+step   3 time 169.511539 sec, nvals 111677178
+step   4 time 169.732781 sec, nvals 111673578
+step   5 time 169.873133 sec, nvals 111672556
+step   6 time 171.116054 sec, nvals 111672260
+step   7 time 170.211567 sec, nvals 111672148
+step   8 time 169.596181 sec, nvals 111672114
+step   9 time 169.795118 sec, nvals 111672104
+step  10 time 172.524634 sec, nvals 111672096
+step  11 time 169.010491 sec, nvals 111672092
+step  12 time 169.090541 sec, nvals 111672092
+nthreads:   2 time:  2039.673340 rate:   0.06 speedup:   1.69 steps 12
+step   1 time 159.566054 sec, nvals 111781002
+step   2 time 157.082560 sec, nvals 111692958
+step   3 time 156.739237 sec, nvals 111677178
+step   4 time 156.694299 sec, nvals 111673578
+step   5 time 157.242475 sec, nvals 111672556
+step   6 time 156.609354 sec, nvals 111672260
+step   7 time 156.674984 sec, nvals 111672148
+step   8 time 157.337718 sec, nvals 111672114
+step   9 time 157.533368 sec, nvals 111672104
+step  10 time 157.113097 sec, nvals 111672096
+step  11 time 156.796328 sec, nvals 111672092
+step  12 time 157.626234 sec, nvals 111672092
+nthreads:   4 time:  1887.016443 rate:   0.06 speedup:   1.83 steps 12
+
+KTruss: k =   8:
+step   1 time 288.630196 sec, nvals 111379506
+step   2 time 289.365736 sec, nvals 111239304
+step   3 time 287.758233 sec, nvals 111210586
+step   4 time 287.337013 sec, nvals 111203128
+step   5 time 286.387365 sec, nvals 111200920
+step   6 time 285.948776 sec, nvals 111200130
+step   7 time 287.827507 sec, nvals 111199856
+step   8 time 286.453651 sec, nvals 111199742
+step   9 time 287.093377 sec, nvals 111199682
+step  10 time 287.012899 sec, nvals 111199666
+step  11 time 287.146605 sec, nvals 111199658
+step  12 time 287.429143 sec, nvals 111199652
+step  13 time 286.981881 sec, nvals 111199652
+ edges 55599826 ntriangles 4914972229
+nthreads:   1 time:  3735.373082 rate:   0.03 steps 13
+step   1 time 169.020795 sec, nvals 111379506
+step   2 time 169.637270 sec, nvals 111239304
+step   3 time 169.889507 sec, nvals 111210586
+step   4 time 169.372075 sec, nvals 111203128
+step   5 time 169.685508 sec, nvals 111200920
+step   6 time 169.604255 sec, nvals 111200130
+step   7 time 169.394967 sec, nvals 111199856
+step   8 time 169.117178 sec, nvals 111199742
+step   9 time 168.657712 sec, nvals 111199682
+step  10 time 170.038126 sec, nvals 111199666
+step  11 time 169.190946 sec, nvals 111199658
+step  12 time 169.615427 sec, nvals 111199652
+step  13 time 169.309742 sec, nvals 111199652
+nthreads:   2 time:  2202.534199 rate:   0.05 speedup:   1.70 steps 13
+step   1 time 156.000496 sec, nvals 111379506
+step   2 time 155.659212 sec, nvals 111239304
+step   3 time 156.613006 sec, nvals 111210586
+step   4 time 155.901018 sec, nvals 111203128
+step   5 time 155.592429 sec, nvals 111200920
+step   6 time 156.144661 sec, nvals 111200130
+step   7 time 164.106560 sec, nvals 111199856
+step   8 time 162.191214 sec, nvals 111199742
+step   9 time 156.328046 sec, nvals 111199682
+step  10 time 156.097349 sec, nvals 111199666
+step  11 time 155.705601 sec, nvals 111199658
+step  12 time 156.269916 sec, nvals 111199652
+step  13 time 156.098117 sec, nvals 111199652
+nthreads:   4 time:  2042.708425 rate:   0.06 speedup:   1.83 steps 13
+
+KTruss: k =   9:
+step   1 time 287.924230 sec, nvals 110892016
+step   2 time 289.289843 sec, nvals 110683740
+step   3 time 285.254242 sec, nvals 110636474
+step   4 time 285.595555 sec, nvals 110622708
+step   5 time 284.434592 sec, nvals 110618098
+step   6 time 284.909258 sec, nvals 110616492
+step   7 time 285.764454 sec, nvals 110615798
+step   8 time 285.205244 sec, nvals 110615450
+step   9 time 286.386379 sec, nvals 110615258
+step  10 time 285.345511 sec, nvals 110615140
+step  11 time 284.694422 sec, nvals 110615084
+step  12 time 285.246976 sec, nvals 110615020
+step  13 time 285.281289 sec, nvals 110614996
+step  14 time 285.375465 sec, nvals 110614986
+step  15 time 286.724849 sec, nvals 110614984
+step  16 time 285.455710 sec, nvals 110614982
+step  17 time 285.870334 sec, nvals 110614978
+step  18 time 284.054142 sec, nvals 110614974
+step  19 time 285.022478 sec, nvals 110614970
+step  20 time 284.682304 sec, nvals 110614964
+step  21 time 285.444850 sec, nvals 110614958
+step  22 time 287.040297 sec, nvals 110614956
+step  23 time 284.587892 sec, nvals 110614954
+step  24 time 284.046381 sec, nvals 110614954
+ edges 55307477 ntriangles 4914018397
+nthreads:   1 time:  6853.639119 rate:   0.02 steps 24
+step   1 time 168.932449 sec, nvals 110892016
+step   2 time 169.424114 sec, nvals 110683740
+step   3 time 168.247895 sec, nvals 110636474
+step   4 time 167.564541 sec, nvals 110622708
+step   5 time 168.931300 sec, nvals 110618098
+step   6 time 168.019238 sec, nvals 110616492
+step   7 time 168.017577 sec, nvals 110615798
+step   8 time 168.221209 sec, nvals 110615450
+step   9 time 167.696895 sec, nvals 110615258
+step  10 time 167.896953 sec, nvals 110615140
+step  11 time 167.946607 sec, nvals 110615084
+step  12 time 168.238768 sec, nvals 110615020
+step  13 time 167.590949 sec, nvals 110614996
+step  14 time 168.298440 sec, nvals 110614986
+step  15 time 167.636502 sec, nvals 110614984
+step  16 time 167.653083 sec, nvals 110614982
+step  17 time 170.562286 sec, nvals 110614978
+step  18 time 167.392038 sec, nvals 110614974
+step  19 time 168.039071 sec, nvals 110614970
+step  20 time 167.966751 sec, nvals 110614964
+step  21 time 167.893733 sec, nvals 110614958
+step  22 time 167.628447 sec, nvals 110614956
+step  23 time 167.856967 sec, nvals 110614954
+step  24 time 167.914963 sec, nvals 110614954
+nthreads:   2 time:  4035.572047 rate:   0.03 speedup:   1.70 steps 24
+step   1 time 156.140509 sec, nvals 110892016
+step   2 time 156.689566 sec, nvals 110683740
+step   3 time 157.366540 sec, nvals 110636474
+step   4 time 155.469268 sec, nvals 110622708
+step   5 time 155.085226 sec, nvals 110618098
+step   6 time 155.940763 sec, nvals 110616492
+step   7 time 155.282368 sec, nvals 110615798
+step   8 time 155.012780 sec, nvals 110615450
+step   9 time 155.296525 sec, nvals 110615258
+step  10 time 155.986496 sec, nvals 110615140
+step  11 time 154.520195 sec, nvals 110615084
+step  12 time 155.717884 sec, nvals 110615020
+step  13 time 154.961388 sec, nvals 110614996
+step  14 time 155.788350 sec, nvals 110614986
+step  15 time 155.484901 sec, nvals 110614984
+step  16 time 160.092945 sec, nvals 110614982
+step  17 time 155.459469 sec, nvals 110614978
+step  18 time 155.989198 sec, nvals 110614974
+step  19 time 155.009350 sec, nvals 110614970
+step  20 time 155.020460 sec, nvals 110614964
+step  21 time 155.032637 sec, nvals 110614958
+step  22 time 155.679818 sec, nvals 110614956
+step  23 time 155.375386 sec, nvals 110614954
+step  24 time 155.586171 sec, nvals 110614954
+nthreads:   4 time:  3737.989448 rate:   0.03 speedup:   1.83 steps 24
+
+
+read A time:          77.530341 sec
+process A time:       31.866641 sec
+input graph: 7.41487e+06 nodes, 3.0197e+08 edges
+
+KTruss: k =   3:
+step   1 time 1231.263366 sec, nvals 295191370
+step   2 time 1247.979759 sec, nvals 295191370
+ edges 147595685 ntriangles 60115561372
+nthreads:   1 time:  2479.245021 rate:   0.12 steps 2
+step   1 time 763.961704 sec, nvals 295191370
+step   2 time 756.554682 sec, nvals 295191370
+nthreads:   2 time:  1520.520934 rate:   0.20 speedup:   1.63 steps 2
+step   1 time 810.368172 sec, nvals 295191370
+step   2 time 799.572667 sec, nvals 295191370
+nthreads:   4 time:  1609.947170 rate:   0.19 speedup:   1.54 steps 2
+
+KTruss: k =   4:
+step   1 time 1236.256198 sec, nvals 291173532
+step   2 time 1252.046060 sec, nvals 290292712
+step   3 time 1283.449196 sec, nvals 290261822
+step   4 time 1265.965384 sec, nvals 290249160
+step   5 time 1245.440250 sec, nvals 290239910
+step   6 time 1240.995096 sec, nvals 290232352
+step   7 time 1240.133764 sec, nvals 290227246
+step   8 time 1247.230793 sec, nvals 290223104
+step   9 time 1237.850887 sec, nvals 290219700
+step  10 time 1240.090961 sec, nvals 290216640
+step  11 time 1258.227288 sec, nvals 290214320
+step  12 time 1250.702552 sec, nvals 290212390
+step  13 time 1246.802471 sec, nvals 290210800
+step  14 time 1337.497218 sec, nvals 290209422
+step  15 time 1309.265729 sec, nvals 290208186
+step  16 time 1183.611377 sec, nvals 290207184
+step  17 time 12508.470067 sec, nvals 290206312
+step  18 time 1149.506915 sec, nvals 290205538
+step  19 time 1149.142229 sec, nvals 290204846
+step  20 time 1147.553239 sec, nvals 290204184
+step  21 time 1142.856650 sec, nvals 290203564
+step  22 time 1137.174840 sec, nvals 290202992
+step  23 time 1138.832186 sec, nvals 290202460
+step  24 time 1139.159039 sec, nvals 290201950
+step  25 time 1136.444728 sec, nvals 290201472

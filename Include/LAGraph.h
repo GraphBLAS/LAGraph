@@ -169,6 +169,7 @@ extern GrB_UnaryOp
 
     // unary operators to check if the entry is equal to 2
     LAGraph_ISTWO_UINT32        ,
+    LAGraph_ISTWO_INT64         ,
 
     // unary operators that decrement by 1
     LAGraph_DECR_INT32          ,
@@ -215,6 +216,7 @@ extern GrB_Semiring
     LAGraph_MIN_SECOND_INT64    ,
     LAGraph_MIN_FIRST_INT64     ,
     LAGraph_PLUS_TIMES_UINT32   ,
+    LAGraph_PLUS_TIMES_INT64    ,
     LAGraph_PLUS_TIMES_FP64     ,
     LAGraph_PLUS_PLUS_FP64      ,
     LAGraph_PLUS_TIMES_FP32     ,
