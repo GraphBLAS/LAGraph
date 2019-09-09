@@ -1,4 +1,4 @@
-﻿//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // LAGraph_BF_full.c: Bellman-Ford single-source shortest paths, returns tree
 //------------------------------------------------------------------------------
 
@@ -45,7 +45,8 @@
 // to vertex j with weight w, then A(i, j) = w. Furthermore, LAGraph_BF_full
 // requires A(i, i) = 0 for all 0 <= i < n.
 
-// TODO: think about the retrun values
+// TODO: think about the return values
+
 // LAGraph_BF_full returns GrB_SUCCESS regardless of existence of negative-
 // weight cycle. However, the GrB_Vector d(k), pi(k) and h(k)  (i.e.,
 // *pd_output, *ppi_output and *ph_output respectively) will be NULL when
