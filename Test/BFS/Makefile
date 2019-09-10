@@ -18,7 +18,7 @@ JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/bfs_test < cover.mtx 2>stderr.txt
+	./build/bfs_test < cover.mtx
 
 # build test
 compile:

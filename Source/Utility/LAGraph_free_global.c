@@ -61,12 +61,14 @@ GrB_Info LAGraph_free_global ( )
     GrB_free (&LAGraph_ISONE_FP64) ;
     GrB_free (&LAGraph_ISONE_Complex) ;
     GrB_free (&LAGraph_ISTWO_UINT32) ;
+    GrB_free (&LAGraph_ISTWO_INT64) ;
     GrB_free (&LAGraph_DECR_INT32) ;
     GrB_free (&LAGraph_DECR_INT64) ;
     GrB_free (&LAGraph_TRUE_BOOL) ;
     GrB_free (&LAGraph_TRUE_BOOL_Complex) ;
     GrB_free (&LAGraph_ONE_FP64) ;
     GrB_free (&LAGraph_ONE_UINT32) ;
+    GrB_free (&LAGraph_ONE_INT64) ;
     GrB_free (&LAGraph_COMB_DIR_FP64) ;
     GrB_free (&LAGraph_COMB_UNDIR_FP64) ;
     GrB_free (&LAGraph_GT0_FP32) ;
@@ -85,6 +87,7 @@ GrB_Info LAGraph_free_global ( )
     GrB_free (&LAGraph_SKEW_Complex) ;
     GrB_free (&LAGraph_Hermitian) ;
     GrB_free (&LAGraph_LOR_UINT32) ;
+    GrB_free (&LAGraph_LOR_INT64) ;
 
     // free the monoids
     GrB_free (&LAGraph_PLUS_INT64_MONOID) ;
@@ -106,6 +109,7 @@ GrB_Info LAGraph_free_global ( )
     GrB_free (&LAGraph_MIN_SECOND_INT64) ;
     GrB_free (&LAGraph_MIN_FIRST_INT64) ;
     GrB_free (&LAGraph_PLUS_TIMES_UINT32) ;
+    GrB_free (&LAGraph_PLUS_TIMES_INT64) ;
     GrB_free (&LAGraph_PLUS_TIMES_FP64) ;
     GrB_free (&LAGraph_PLUS_PLUS_FP64) ;
     GrB_free (&LAGraph_PLUS_TIMES_FP32) ;

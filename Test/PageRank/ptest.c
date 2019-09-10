@@ -105,13 +105,15 @@ int main ( )
     int ntrials = 1 ;       // increase this to 10, 100, whatever, for more
                             // accurate timing
 
-    double tol = 1e-5 ;
+    double tol = 1e-4 ;
     int iters, itermax = 100 ;
 
-    int nthread_list [7] = {1, 2, 4, 8, 16, 20, 40} ;
+    #define NTRIALS 2
+    // int nthread_list [NTRIALS] = {1, 2, 4, 8, 16, 20, 40} ;
+    int nthread_list [NTRIALS] = {1, 40} ;
 
     // for (int nthreads = 1 ; nthreads <= nthreads_max ; nthreads *= 2)
-    for (int kk = 0 ; kk < 7 ; kk++)
+    for (int kk = 0 ; kk < NTRIALS ; kk++)
     {
         int nthreads = nthread_list [kk] ;
         LAGraph_set_nthreads (nthreads) ;

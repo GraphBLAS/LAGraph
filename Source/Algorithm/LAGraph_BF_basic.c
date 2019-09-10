@@ -134,7 +134,7 @@ GrB_Info LAGraph_BF_basic
         double t = LAGraph_toc (tic) ;
         GrB_Index dnz ;
         LAGRAPH_OK (GrB_Vector_nvals (&dnz, d)) ;
-        printf ("step %3d time %16.4f sec, nvals %.16g\n", iter, t, (double) dnz) ;
+//      printf ("step %3d time %16.4f sec, nvals %.16g\n", iter, t, (double) dnz) ;
         fflush (stdout) ;
     }
 

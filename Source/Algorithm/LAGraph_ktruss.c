@@ -153,7 +153,7 @@ GrB_Info LAGraph_ktruss         // compute the k-truss of a graph
 
         LAGRAPH_OK (GrB_Matrix_nvals (&cnz, C)) ;
         double t = LAGraph_toc (tic) ;
-        printf ("step %3d time %16,4f sec, nvals %.16g\n", nsteps, t, (double) cnz) ;
+//      printf ("step %3d time %16.4f sec, nvals %.16g\n", nsteps, t, (double) cnz) ;
         fflush (stdout) ;
         if (cnz == last_cnz)
         {

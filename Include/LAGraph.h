@@ -150,7 +150,8 @@ extern GrB_BinaryOp
     LAGraph_SKEW_FP64           ,
     LAGraph_SKEW_Complex        ,
     LAGraph_Hermitian           ,
-    LAGraph_LOR_UINT32          ;
+    LAGraph_LOR_UINT32          ,
+    LAGraph_LOR_INT64           ;
 
 extern GrB_UnaryOp
 
@@ -169,6 +170,7 @@ extern GrB_UnaryOp
 
     // unary operators to check if the entry is equal to 2
     LAGraph_ISTWO_UINT32        ,
+    LAGraph_ISTWO_INT64         ,
 
     // unary operators that decrement by 1
     LAGraph_DECR_INT32          ,
@@ -188,6 +190,7 @@ extern GrB_UnaryOp
 
     // unary operators that return 1
     LAGraph_ONE_UINT32          ,
+    LAGraph_ONE_INT64           ,
     LAGraph_ONE_FP64            ,
     LAGraph_TRUE_BOOL           ,
     LAGraph_TRUE_BOOL_Complex   ;
@@ -215,6 +218,7 @@ extern GrB_Semiring
     LAGraph_MIN_SECOND_INT64    ,
     LAGraph_MIN_FIRST_INT64     ,
     LAGraph_PLUS_TIMES_UINT32   ,
+    LAGraph_PLUS_TIMES_INT64    ,
     LAGraph_PLUS_TIMES_FP64     ,
     LAGraph_PLUS_PLUS_FP64      ,
     LAGraph_PLUS_TIMES_FP32     ,
@@ -438,6 +442,12 @@ GrB_Info LAGraph_grread     // read a matrix from a binary file
     uint64_t *G_version,    // the version in the file
     const char *filename,   // name of file to open
     GrB_Type gtype          // type of matrix to read
+) ;
+
+GrB_Info LAGraph_1_to_n     // create an integer vector v = 1:n
+(
+    GrB_Vector *v_handle,   // vector to create
+    GrB_Index n             // size of vector to create
 ) ;
 
 //------------------------------------------------------------------------------

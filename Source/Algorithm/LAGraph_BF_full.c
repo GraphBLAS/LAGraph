@@ -1,4 +1,4 @@
-﻿//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // LAGraph_BF_full.c: Bellman-Ford single-source shortest paths, returns tree
 //------------------------------------------------------------------------------
 
@@ -45,7 +45,8 @@
 // to vertex j with weight w, then A(i, j) = w. Furthermore, LAGraph_BF_full
 // requires A(i, i) = 0 for all 0 <= i < n.
 
-// TODO: think about the retrun values
+// TODO: think about the return values
+
 // LAGraph_BF_full returns GrB_SUCCESS regardless of existence of negative-
 // weight cycle. However, the GrB_Vector d(k), pi(k) and h(k)  (i.e.,
 // *pd_output, *ppi_output and *ph_output respectively) will be NULL when
@@ -254,6 +255,9 @@ GrB_Info LAGraph_BF_full
     // create matrix Atmp based on A, while its entries become BF_Tuple3 type
     //--------------------------------------------------------------------------
     LAGRAPH_OK (GrB_Matrix_extractTuples_FP64(I, J, w, &nz, A));
+    int nthreads = LAGraph_get_nthreads ( ) ;
+    printf ("nthreads %d\n", nthreads) ;
+    #pragma omp parallel for num_threads(nthreads) schedule(static)
     for (GrB_Index k = 0; k < nz; k++)
     {
         if (w[k] == 0)             //diagonal entries

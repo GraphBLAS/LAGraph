@@ -61,6 +61,7 @@ GrB_BinaryOp LAGraph_SKEW_FP64    = NULL ;
 GrB_BinaryOp LAGraph_SKEW_Complex = NULL ;
 GrB_BinaryOp LAGraph_Hermitian    = NULL ;
 GrB_BinaryOp LAGraph_LOR_UINT32   = NULL ;
+GrB_BinaryOp LAGraph_LOR_INT64    = NULL ;
 
 void LAGraph_eq_complex
 (
@@ -160,6 +161,16 @@ void LAGraph_lor_uint32
     uint32_t *z,
     const uint32_t *x,
     const uint32_t *y
+)
+{
+    (*z) = (((*x) != 0) || ((*y) != 0)) ;
+}
+
+void LAGraph_lor_int64
+(
+    int64_t *z,
+    const int64_t *x,
+    const int64_t *y
 )
 {
     (*z) = (((*x) != 0) || ((*y) != 0)) ;
@@ -279,11 +290,21 @@ void LAGraph_isone_complex
 
 // unary operator to check if the entry is equal to 2
 GrB_UnaryOp LAGraph_ISTWO_UINT32 = NULL ;
+GrB_UnaryOp LAGraph_ISTWO_INT64 = NULL ;
 
 void LAGraph_istwo_uint32
 (
     bool *z,
     const uint32_t *x
+)
+{
+    (*z) = ((*x) == 2) ;
+}
+
+void LAGraph_istwo_int64
+(
+    bool *z,
+    const int64_t *x
 )
 {
     (*z) = ((*x) == 2) ;
@@ -314,11 +335,21 @@ void LAGraph_true_bool_complex
 // unary operators that return 1
 GrB_UnaryOp LAGraph_ONE_UINT32 = NULL ;
 GrB_UnaryOp LAGraph_ONE_FP64 = NULL ;
+GrB_UnaryOp LAGraph_ONE_INT64 = NULL ;
 
 void LAGraph_one_uint32
 (
     uint32_t *z,
     const uint32_t *x       // ignored
+)
+{
+    (*z) = 1 ;
+}
+
+void LAGraph_one_int64
+(
+    int64_t *z,
+    const int64_t *x       // ignored
 )
 {
     (*z) = 1 ;
@@ -451,6 +482,7 @@ GrB_Semiring LAGraph_MIN_FIRST_INT32 = NULL ;
 GrB_Semiring LAGraph_MIN_SECOND_INT64 = NULL ;
 GrB_Semiring LAGraph_MIN_FIRST_INT64 = NULL ;
 GrB_Semiring LAGraph_PLUS_TIMES_UINT32 = NULL ;
+GrB_Semiring LAGraph_PLUS_TIMES_INT64 = NULL ;
 GrB_Semiring LAGraph_PLUS_TIMES_FP64 = NULL ;
 GrB_Semiring LAGraph_PLUS_PLUS_FP64 = NULL ;
 GrB_Semiring LAGraph_PLUS_TIMES_FP32 = NULL ;
@@ -563,11 +595,19 @@ GrB_Info LAGraph_alloc_global ( )
     #ifdef GxB_SUITESPARSE_GRAPHBLAS
     // use the built-in binary operator
     LAGraph_LOR_UINT32 = GxB_LOR_UINT32 ;
+    LAGraph_LOR_INT64  = GxB_LOR_INT64  ;
     #else
+
     // create a new built-in binary operator using LAGraph_lor_uint32
     LAGRAPH_OK (GrB_BinaryOp_new (&LAGraph_LOR_UINT32,
         F_BINARY (LAGraph_lor_uint32),
         GrB_UINT32, GrB_UINT32, GrB_UINT32)) ;
+
+    // create a new built-in binary operator using LAGraph_lor_int64
+    LAGRAPH_OK (GrB_BinaryOp_new (&LAGraph_LOR_INT64,
+        F_BINARY (LAGraph_lor_int64),
+        GrB_INT64, GrB_INT64, GrB_INT64)) ;
+
     #endif
 
     //--------------------------------------------------------------------------
@@ -630,6 +670,10 @@ GrB_Info LAGraph_alloc_global ( )
         F_UNARY (LAGraph_istwo_uint32),
         GrB_BOOL, GrB_UINT32)) ;
 
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISTWO_INT64,
+        F_UNARY (LAGraph_istwo_int64),
+        GrB_BOOL, GrB_INT64)) ;
+
     //--------------------------------------------------------------------------
     // create the unary decrement operators
     //--------------------------------------------------------------------------
@@ -680,6 +724,7 @@ GrB_Info LAGraph_alloc_global ( )
 
     #ifdef GxB_SUITESPARSE_GRAPHBLAS
     // use the built-in unary operator
+    LAGraph_ONE_INT64  = GxB_ONE_INT64 ;
     LAGraph_ONE_UINT32 = GxB_ONE_UINT32 ;
     LAGraph_ONE_FP64   = GxB_ONE_FP64 ;
     #else
@@ -688,6 +733,11 @@ GrB_Info LAGraph_alloc_global ( )
     LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ONE_UINT32,
         F_UNARY (LAGraph_one_uint32),
         GrB_UINT32, GrB_UINT32)) ;
+
+    // create a new built-in unary operator using LAGraph_one_int64
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ONE_INT64,
+        F_UNARY (LAGraph_one_int64),
+        GrB_INT64, GrB_INT64)) ;
 
     // create a new built-in unary operator using LAGraph_one_fp64
     LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ONE_FP64,
@@ -767,6 +817,9 @@ GrB_Info LAGraph_alloc_global ( )
 
     LAGRAPH_OK (GrB_Semiring_new (&LAGraph_PLUS_TIMES_UINT32,
         LAGraph_PLUS_UINT32_MONOID, GrB_TIMES_UINT32)) ;
+
+    LAGRAPH_OK (GrB_Semiring_new (&LAGraph_PLUS_TIMES_INT64,
+        LAGraph_PLUS_INT64_MONOID, GrB_TIMES_INT64)) ;
 
     LAGRAPH_OK (GrB_Semiring_new (&LAGraph_PLUS_TIMES_FP32,
         LAGraph_PLUS_FP32_MONOID, GrB_TIMES_FP32)) ;

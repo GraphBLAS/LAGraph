@@ -37,27 +37,20 @@
 // LAGraph_bfs_pushpull: direction-optimized push/pull breadth first search,
 // contributed by Tim Davis, Texas A&M.
 
-// LAGraph_bfs_pushpull computes the BFS of a graph from a single given
-// starting node s.  The result is a vector v where v(i)=k if node i was placed
-// at level k in the BFS.
+// LAGraph_bfs_pushpull computes the BFS of a graph, either from a single given
+// starting node s, or for the whole graph.  The result is a vector v where
+// v(i)=k if node i was placed at level k in the BFS.
 
 // Usage:
 
-// info = LAGraph_bfs_pushpull (&v, &pi, A, AT, s, max_level, vsparse) ;
+// info = LAGraph_bfs_pushpull (&v, A, AT, s, max_level, vsparse) ;
 
 //      GrB_Vector *v:  a vector containing the result, created on output.
 //          v(i) = k is the BFS level of node i in the graph, where
 //          a source node s has v(s)=1.  v(i) is implicitly zero if it is
 //          unreachable from s.  That is, GrB_Vector_nvals (&nreach,v)
 //          is the size of the reachable set of s, for a single-source
-//          BFS.
-
-//      GrB_Vector *pi:  a vector containing the BFS tree.
-//          pi(s) = s if s is the source node.  pi(i) = p if p is the parent of
-//          i.  If vsparse is true on input, and only a small part of the graph
-//          is traversed, then pi is sparse, and pi has the same pattern as v.
-//          Entries not in pi have not been reached.  Otherwise, pi is returned
-//          as a full vector with pi(i)=-1 if is is not reached.
+//          BFS.  For a whole-graph BFS, v(i)>=1 for all i.
 
 //      GrB_Matrix A: a square matrix, either GrB_BOOL, or a matrix with a
 //          built-in type (the method is fastest if it is GrB_BOOL).
@@ -71,13 +64,15 @@
 //          Results are undefined if AT is not NULL but not identical to the
 //          transpose of A.
 
-//      int64_t s: the source node for single-source BFS.
+//      int64_t s: if s >= 0, the source node for single-source BFS.
+//          If s < 0, then the whole-graph BFS is computed.
 
 //      int64_t max_level:  An optional limit on the levels searched for the
 //          single-source BFS.  If zero, then no limit is enforced.  If > 0,
 //          then only nodes with v(i) <= max_level will be visited.  That is:
 //          1: just the source node s, 2: the source and its neighbors, 3: the
-//          source s, its neighbors, and their neighbors, etc.
+//          source s, its neighbors, and their neighbors, etc.  Ignored for
+//          the whole-graph BFS.
 
 //      bool vsparse:  if the result v may remain very sparse, then set this
 //          parameter to true.  If v might have many entries, set it false.  If
@@ -85,13 +80,23 @@
 //          the handling of v.  If you guess wrong, there is a slight
 //          performance penalty.  The results are not affected by this
 //          parameter, just the performance.  This parameter is used only for
-//          the single-source BFS.
+//          the single-source BFS.  It is ignored for whole-graph BFS and
+//          treated as if true (v(i)>0 will be hold for all i on output in
+//          this case).
 
 // single-source BFS:
 //      Given a graph A, a source node s, find all nodes reachable from node s.
 //      v(s)=1, v(i)=2 if edge (s,i) appears in the graph, and so on.  If node
 //      i is not reachable from s, then implicitly v(i)=0.  v is returned as a
 //      sparse vector, and v(i) is not an entry in this vector.
+
+// whole-graph BFS:
+//      The source node is not specified (the parameter s < 0 denotes a request
+//      to traverse the whole graph).  In this case, a single-source BFS is
+//      started at node 0.  The single-source BFS is then repeated with a source
+//      node as the smallest numbered unvisited node t (it is given v(t)=1),
+//      until the entire graph is searched.  v is returned as a dense vector,
+//      with n entries, and v(i)>0 for all i.
 
 // This algorithm can use the push-pull strategy, which requires both A and
 // AT=A' to be passed in.  If the graph is known to be symmetric, then the same
@@ -311,11 +316,13 @@
 // node being marked is nvisited/n.  The expected number of trials until
 // success, for a sequence of events with probabilty p, is 1/p.  Thus, the
 // expected number of iterations in a dot product before an early termination
-// is 1/p = (n/nvisited+1), where +1 is added to avoid a divide by zero.
-// However, it cannot exceed d.  Thus, the total work for the dot product
-// (pull) method can be estimated as:
+// is 1/p = (n/nvisited).  For subsequent phases when traversing a whole graph,
+// nodes visited in prior phases will not be see, so 1/p=1/(nvisited-nvstart+1)
+// where nvstart is the # of nodes visited at the start of the phase (+1 to
+// avoid divide-by-zero).  However, it cannot exceed d.  Thus, the total work
+// for the dot product (pull) method can be estimated as:
 
-//      per_dot = min (d, n / (nvisited+1))
+//      per_dot = min (d, n / (nvisited-nvstart+1))
 //      pullwork = (n-nvisited) * per_dot * (3 * (1 + log2 ((double) nq)))
 
 // The above expressions are valid for SuiteSparse:GraphBLAS v2.3.0 and later,
@@ -374,11 +381,11 @@
 GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
 (
     GrB_Vector *v_output,   // v(i) is the BFS level of node i in the graph
-    GrB_Vector *pi_output,  // pi(i) = p if p is the parent of node i.
-                            // if NULL, the parent is not computed.
+    GrB_Vector *pi_output,  // pi(i) = p+1: p is the parent of node i
+                            // if NULL, the parent is not computed
     GrB_Matrix A,           // input graph, treated as if boolean in semiring
     GrB_Matrix AT,          // transpose of A (optional; push-only if NULL)
-    int64_t s,              // starting node of the BFS
+    int64_t s,              // starting node of the BFS (s < 0: whole graph)
     int64_t max_level,      // optional limit of # levels to search
     bool vsparse            // if true, v is expected to be very sparse
 )
@@ -399,6 +406,8 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
         // required output argument is missing
         LAGRAPH_ERROR ("required arguments are NULL", GrB_NULL_POINTER) ;
     }
+
+    // GxB_fprint (A, 2, stdout) ;
 
     (*v_output) = NULL ;
     bool compute_tree = (pi_output != NULL) ;
@@ -447,6 +456,9 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
     // following is disabled (even SuiteSparse:GraphBLAS).  The push/pull
     // behaviour will be unpredicatble, however, unless the library's default
     // format is CSR.
+
+    // TODO: SPEC: this is one reason a GraphBLAS library should identify
+    // itself with a #define.
 
     #ifdef GxB_SUITESPARSE_GRAPHBLAS
 
@@ -511,30 +523,41 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
     //--------------------------------------------------------------------------
 
     GrB_Index n = nrows ;
-
-    int nthreads = LAGraph_get_nthreads ( ) ;
-    nthreads = LAGRAPH_MIN (n / 4096, nthreads) ;
-    nthreads = LAGRAPH_MAX (nthreads, 1) ;
-
-    // just traverse from the source node s
-    max_level = (max_level <= 0) ? n : LAGRAPH_MIN (n, max_level) ;
+    int64_t max_phases ;
+    bool whole_graph = (s < 0) ;
+    if (whole_graph)
+    {
+        // traverse the entire graph
+        s = 0 ;
+        max_level = n ;
+        max_phases = n ;
+        vsparse = false ;
+    }
+    else
+    {
+        // just traverse from the source node s
+        max_level = (max_level <= 0) ? n : LAGRAPH_MIN (n, max_level) ;
+        max_phases = 1 ;
+    }
 
     // create an empty vector v
     GrB_Type int_type = (n > INT32_MAX) ? GrB_INT64 : GrB_INT32 ;
     LAGRAPH_OK (GrB_Vector_new (&v, int_type, n)) ;
 
-    // make v dense if requested
+    // make v dense if the whole graph is being traversed
     int64_t vlimit = LAGRAPH_MAX (256, sqrt ((double) n)) ;
     if (!vsparse)
     {
         // v is expected to have many entries, so convert v to dense, then
         // finish pending work.  If the guess is wrong, v can be made dense
         // later on.
+        vsparse = false ;
         LAGRAPH_OK (GrB_assign (v, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
         LAGRAPH_OK (GrB_Vector_nvals (&ignore, v)) ;
     }
 
     GrB_Semiring first_semiring, second_semiring ;
+    GrB_BinaryOp max_int = NULL ;
     if (compute_tree)
     {
         // create an integer vector q, and set q(s) to s+1
@@ -545,24 +568,28 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
         {
             first_semiring  = LAGraph_MIN_FIRST_INT64 ;
             second_semiring = LAGraph_MIN_SECOND_INT64 ;
+            max_int = GrB_MAX_INT64 ;
         }
         else
         {
             first_semiring  = LAGraph_MIN_FIRST_INT32 ;
             second_semiring = LAGraph_MIN_SECOND_INT32 ;
+            max_int = GrB_MAX_INT32 ;
         }
 
         // create the empty parent vector
         LAGRAPH_OK (GrB_Vector_new (&pi, int_type, n)) ;
         if (!vsparse)
         {
-            // make pi a dense vector of all 0's
-            LAGRAPH_OK (GrB_assign (pi, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
+            // make pi a dense vector of all -1's
+            LAGRAPH_OK (GrB_assign (pi, NULL, NULL, -1, GrB_ALL, n, NULL)) ;
             LAGRAPH_OK (GrB_Vector_nvals (&ignore, pi)) ;
         }
-        // pi (s) = s+1 denotes a root of the BFS tree
+        // pi (s) = 0 denotes a root of the BFS tree
         GrB_Index root = (GrB_Index) s ;
-        LAGRAPH_OK (GrB_assign (pi, NULL, NULL, s+1, &root, 1, NULL)) ;
+        LAGRAPH_OK (GrB_assign (pi, NULL, NULL, 0, &root, 1, NULL)) ;
+        LAGRAPH_OK (GrB_Vector_nvals (&ignore, pi)) ;
+
     }
     else
     {
@@ -578,192 +605,317 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
     double d = (n == 0) ? 0 : (((double) nvalA) / (double) n) ;
 
     int64_t nvisited = 0 ;      // # nodes visited so far
+    int64_t nvstart = 0 ;       // # nodes visited by prior phases
     GrB_Index nq = 1 ;          // number of nodes in the current level
 
     //--------------------------------------------------------------------------
     // BFS traversal and label the nodes
     //--------------------------------------------------------------------------
 
-    for (int64_t level = 1 ; ; level++)
+    // TODO when structure-only mask can be used, start with level = 0
+    int64_t level ;
+    int64_t phase = 0 ;
+    double tlevels = 0, tnext = 0 ;
+
+    for (phase = 0 ; (nvisited < n) && (phase < max_phases) ; phase++)
     {
 
         //----------------------------------------------------------------------
-        // set v to the current level, for all nodes in q
+        // single-source BFS for source node s
         //----------------------------------------------------------------------
 
-        // v<q> = level: set v(i) = level for all nodes i in q
-        LAGRAPH_OK (GrB_assign (v, q, NULL, level, GrB_ALL, n, NULL)) ;
-
-        //----------------------------------------------------------------------
-        // check if done
-        //----------------------------------------------------------------------
-
-        nvisited += nq ;
-        if (nq == 0 || nvisited == n || level >= max_level) break ;
-
-        //----------------------------------------------------------------------
-        // check if v should be converted to dense
-        //----------------------------------------------------------------------
-
-        if (vsparse && nvisited > vlimit)
+        double t1 = omp_get_wtime ( ) ;
+        for (level = 1 ; ; level++)
         {
-            // Convert v to dense to speed up the rest of the work.  If this
-            // case is triggered, it would have been a bit faster to pass in
-            // vsparse = false on input.
-            // v <!v> = 0
-            LAGRAPH_OK (GrB_assign (v, v, NULL, 0, GrB_ALL, n,
-                LAGraph_desc_ooco)) ;
-            LAGRAPH_OK (GrB_Vector_nvals (&ignore, v)) ;
+            // printf ("\n======================== level %g\n", (double) level);
 
-            if (compute_tree)
+            //------------------------------------------------------------------
+            // set v to the current level, for all nodes in q
+            //------------------------------------------------------------------
+
+            // TODO: the mask q should be 'structure only' (see draft spec)
+
+            // v<q> = level: set v(i) = level for all nodes i in q
+            LAGRAPH_OK (GrB_assign (v, q, NULL, level, GrB_ALL, n, NULL)) ;
+
+            //------------------------------------------------------------------
+            // check if done
+            //------------------------------------------------------------------
+
+            nvisited += nq ;
+            if (nq == 0 || nvisited == n || level >= max_level) break ;
+
+            //------------------------------------------------------------------
+            // check if v should be converted to dense
+            //------------------------------------------------------------------
+
+            // TODO add conversion from sparse to dense as a LAGraph utility
+            // TODO: use a structural mask, when added to the spec
+
+            if (vsparse && nvisited > vlimit)
             {
-                // pi<!pi> = 0
-                LAGRAPH_OK (GrB_assign (pi, pi, NULL, 0, GrB_ALL, n,
+                // Convert v to dense to speed up the rest of the work.  If
+                // this case is triggered, it would have been a bit faster to
+                // pass in vsparse = false on input.
+                // v <!v> = 0
+                LAGRAPH_OK (GrB_assign (v, v, NULL, 0, GrB_ALL, n,
                     LAGraph_desc_ooco)) ;
-                LAGRAPH_OK (GrB_Vector_nvals (&ignore, pi)) ;
+                LAGRAPH_OK (GrB_Vector_nvals (&ignore, v)) ;
+                vsparse = false ;
             }
 
-            vsparse = false ;
-        }
+            //------------------------------------------------------------------
+            // select push vs pull
+            //------------------------------------------------------------------
 
-        //----------------------------------------------------------------------
-        // select push vs pull
-        //----------------------------------------------------------------------
-
-        if (push_pull)
-        {
-            double pushwork = d * nq ;
-            double expected = (double) n / (double) (nvisited+1) ;
-            double per_dot = LAGRAPH_MIN (d, expected) ;
-            double binarysearch = (3 * (1 + log2 ((double) nq))) ;
-            double pullwork = (n-nvisited) * per_dot * binarysearch ;
-            use_vxm_with_A = (pushwork < pullwork) ;
-
-            if (!csr)
+            if (push_pull)
             {
-                // Neither A(i,:) nor AT(i,:) is efficient.  Instead, both
-                // A(:,j) and AT(:,j) is fast (that is, the two matrices
-                // are in CSC format).  Swap the
-                use_vxm_with_A = !use_vxm_with_A ;
-            }
-        }
+                double pushwork = d * nq ;
+                double expected = (double) n / (double) (nvisited-nvstart+1) ;
+                double per_dot = LAGRAPH_MIN (d, expected) ;
+                double binarysearch = (3 * (1 + log2 ((double) nq))) ;
+                double pullwork = (n-nvisited) * per_dot * binarysearch ;
+                use_vxm_with_A = (pushwork < pullwork) ;
 
-        //----------------------------------------------------------------------
-        // q = next level of the BFS
-        //----------------------------------------------------------------------
+                /*
+                fprintf (stderr, "\nlevel %ld\npushwork %g : d %g nq %g "
+                    "pullwork %g  : n %g nvisited %g nvstart %g\n"
+                    "(n-nvisited) %g per_dot %g binsearch %g\n",
+                    level, pushwork, d, (double) nq,
+                    pullwork, (double) n, (double) nvisited, (double) nvstart,
+                    (double) (n-nvisited), per_dot, binarysearch) ;
+                if (use_vxm_with_A) fprintf (stderr, "do push\n") ;
+                else fprintf (stderr, "do pull\n") ;
+                */
 
-        if (use_vxm_with_A)
-        {
-            // q'<!v> = q'*A
-            // this is a push step if A is in CSR format; pull if CSC
-            LAGRAPH_OK (GrB_vxm (q, v, NULL, first_semiring, q, A,
-                LAGraph_desc_oocr)) ;
-        }
-        else
-        {
-            // q<!v> = AT*q
-            // this is a pull step if AT is in CSR format; push if CSC
-            LAGRAPH_OK (GrB_mxv (q, v, NULL, second_semiring, AT, q,
-                LAGraph_desc_oocr)) ;
-        }
-
-        //----------------------------------------------------------------------
-        // move to next level
-        //----------------------------------------------------------------------
-
-        if (compute_tree)
-        {
-
-            //------------------------------------------------------------------
-            // assign parents
-            //------------------------------------------------------------------
-
-            // q(i) currently contains the parent of node i in tree (off by one
-            // so it won't have any zero values, for valued mask).
-            // pi<q> = q
-            LAGRAPH_OK (GrB_assign (pi, q, NULL, q, GrB_ALL, n, NULL)) ;
-
-            //------------------------------------------------------------------
-            // replace q with current node numbers
-            //------------------------------------------------------------------
-
-            // q(i) = i+1 for all entries in q.
-
-            #ifdef GxB_SUITESPARSE_GRAPHBLAS
-            GrB_Index *qi ;
-            if (n > INT32_MAX)
-            {
-                int64_t *qx ;
-                LAGRAPH_OK (GxB_Vector_export (&q, &int_type, &n, &nq, &qi,
-                    (void **) (&qx), NULL)) ;
-                int nth = LAGRAPH_MIN (nq / 8192, nthreads) ;
-                nth = LAGRAPH_MAX (nth, 1) ;
-                #pragma omp parallel for num_threads(nth) schedule(static)
-                for (int64_t k = 0 ; k < nq ; k++)
+                if (!csr)
                 {
-                    qx [k] = qi [k] + 1 ;
+                    // Neither A(i,:) nor AT(i,:) is efficient.  Instead, both
+                    // A(:,j) and AT(:,j) is fast (that is, the two matrices
+                    // are in CSC format).  Swap the
+                    use_vxm_with_A = !use_vxm_with_A ;
                 }
-                LAGRAPH_OK (GxB_Vector_import (&q, int_type, n, nq, &qi,
-                    (void **) (&qx), NULL)) ;
+            }
+
+            //------------------------------------------------------------------
+            // q = next level of the BFS
+            //------------------------------------------------------------------
+
+            // TODO: v is a complemented 'structure-only' mask
+
+                // printf ("this q:\n") ;
+                // GxB_fprint (q, GxB_COMPLETE, stdout) ;
+
+            if (use_vxm_with_A)
+            {
+                // q'<!v> = q'*A
+                // this is a push step if A is in CSR format; pull if CSC
+                LAGRAPH_OK (GrB_vxm (q, v, NULL, first_semiring, q, A,
+                    LAGraph_desc_oocr)) ;
             }
             else
             {
-                int32_t *qx ;
-                LAGRAPH_OK (GxB_Vector_export (&q, &int_type, &n, &nq, &qi,
-                    (void **) (&qx), NULL)) ;
-                int nth = LAGRAPH_MIN (nq / 8192, nthreads) ;
-                nth = LAGRAPH_MAX (nth, 1) ;
-                #pragma omp parallel for num_threads(nth) schedule(static)
-                for (int32_t k = 0 ; k < nq ; k++)
-                {
-                    qx [k] = qi [k] + 1 ;
-                }
-                LAGRAPH_OK (GxB_Vector_import (&q, int_type, n, nq, &qi,
-                    (void **) (&qx), NULL)) ;
+                // q<!v> = AT*q
+                // this is a pull step if AT is in CSR format; push if CSC
+                LAGRAPH_OK (GrB_mxv (q, v, NULL, second_semiring, AT, q,
+                    LAGraph_desc_oocr)) ;
             }
 
-            #else
+                // printf ("next q:\n") ;
+                // GxB_fprint (q, GxB_COMPLETE, stdout) ;
 
-            // TODO: use extractTuples and build instead
-            fprintf (stderr, "TODO: use extractTuples here\n") ;
-            abort ( ) ;
+            //------------------------------------------------------------------
+            // move to next level
+            //------------------------------------------------------------------
 
-            #endif
+            if (compute_tree)
+            {
 
+                //--------------------------------------------------------------
+                // assign parents
+                //--------------------------------------------------------------
+
+                // q(i) currently contains the parent of node i in tree
+                // (off by one so it won't have any zero values, for valued
+                // mask)
+                LAGRAPH_OK (GrB_assign (pi, q, max_int, q, GrB_ALL, n, NULL)) ;
+
+                // printf ("new pi at level %g:\n", (double) level) ;
+                // GxB_fprint (pi, GxB_COMPLETE, stdout) ;
+
+                //--------------------------------------------------------------
+                // replace q with current node numbers
+                //--------------------------------------------------------------
+
+                // q(i) = i+1 for all entries in q.  This could also be done
+                // with GrB_assign (q, q, NULL, x, GrB_ALL, n, NULL), with x =
+                // 1:n as a dense vector x, constructed just once at the
+                // beginning.  However, the time taken to construct x would be
+                // O(n).  This would dominate the run time if the output v is
+                // very sparse.
+
+                // TODO: use q(i)=i when q can be used as a structure-only mask
+
+                #ifdef GxB_SUITESPARSE_GRAPHBLAS
+                GrB_Index *qi ;
+                if (n > INT32_MAX)
+                {
+                    int64_t *qx ;
+                    LAGRAPH_OK (GxB_Vector_export (&q, &int_type, &n,
+                        &nq, &qi, (void **) (&qx), NULL)) ;
+                    for (int64_t k = 0 ; k < nq ; k++)
+                    {
+                        qx [k] = qi [k] + 1 ;
+                    }
+                    LAGRAPH_OK (GxB_Vector_import (&q, int_type, n,
+                        nq, &qi, (void **) (&qx), NULL)) ;
+                }
+                else
+                {
+                    int32_t *qx ;
+                    LAGRAPH_OK (GxB_Vector_export (&q, &int_type, &n,
+                        &nq, &qi, (void **) (&qx), NULL)) ;
+                    for (int32_t k = 0 ; k < nq ; k++)
+                    {
+                        qx [k] = qi [k] + 1 ;
+                    }
+                    LAGRAPH_OK (GxB_Vector_import (&q, int_type, n,
+                        nq, &qi, (void **) (&qx), NULL)) ;
+                }
+                #else
+
+                // TODO: use extractTuples and build instead
+                fprintf (stderr, "TODO: use extractTuples here\n") ;
+                abort ( ) ;
+
+                #endif
+
+            }
+            else
+            {
+
+                //--------------------------------------------------------------
+                // count the nodes in the current level
+                //--------------------------------------------------------------
+
+                // TODO: if q can be used as a structure-only mask, then the
+                // following can be used instead:
+                // LAGRAPH_OK (GrB_Vector_nvals (&nq, q)) ;
+
+                // nq = sum (q)
+                LAGRAPH_OK (GrB_reduce (&nq, NULL, LAGraph_PLUS_INT64_MONOID,
+                    q, NULL)) ;
+
+                // check for zero-weight edges in the graph
+                LAGRAPH_OK (GrB_Vector_nvals (&nvals, q)) ;
+                if (nvals > nq)
+                {
+                    // remove explicit zeros from q.  This will occur if A has
+                    // any explicit entries with value zero.  Those entries are
+                    // treated as non-edges in this algorithm, even without
+                    // this step.  But extra useless entries in q can slow down
+                    // the algorithm, so they are pruned here.
+                    LAGRAPH_OK (GrB_assign (q, q, NULL, true, GrB_ALL, n,
+                        LAGraph_desc_ooor)) ;
+                }
+            }
         }
-        else
+        t1 = omp_get_wtime ( ) - t1 ;
+        tlevels += t1 ;
+
+        //----------------------------------------------------------------------
+        // find the next source node s
+        //----------------------------------------------------------------------
+
+//      fprintf (stderr, "phase %" PRId64 " nvisited %" PRId64 " nq %"
+//          PRId64 " n %" PRId64 "\n", phase, nvisited, nq, n) ;
+
+        double t2 = omp_get_wtime ( ) ;
+        if (whole_graph && nvisited + nq < n)
         {
 
-            //------------------------------------------------------------------
-            // count the nodes in the current level
-            //------------------------------------------------------------------
+            // clear q, just in case max_level < n
+            LAGRAPH_OK (GrB_Vector_clear (q)) ;
+            nq = 0  ;
 
-            // nq = sum (q)
-            LAGRAPH_OK (GrB_reduce (&nq, NULL, LAGraph_PLUS_INT64_MONOID,
-                q, NULL)) ;
-
-            // check for zero-weight edges in the graph
-            LAGRAPH_OK (GrB_Vector_nvals (&nvals, q)) ;
-            if (nvals > nq)
+            // find starting node for next phase
+            if (n > INT32_MAX)
             {
-                // remove explicit zeros from q.  This will occur if A has
-                // any explicit entries with value zero.  Those entries are
-                // treated as non-edges in this algorithm, even without
-                // this step.  But extra useless entries in q can slow down
-                // the algorithm, so they are pruned here.
-                LAGRAPH_OK (GrB_assign (q, q, NULL, true, GrB_ALL, n,
-                    LAGraph_desc_ooor)) ;
+                int64_t x = 0 ;
+                for ( ; s < n && (x == 0) ; s++)
+                {
+                    LAGRAPH_OK (GrB_Vector_extractElement (&x, v, s)) ;
+                }
             }
+            else
+            {
+                int32_t x = 0 ;
+                for ( ; s < n && (x == 0) ; s++)
+                {
+                    LAGRAPH_OK (GrB_Vector_extractElement (&x, v, s)) ;
+                }
+            }
+
+            nvstart = nvisited ;
+
+//          if (info != GrB_NO_VALUE)
+//          {
+//              fprintf (stderr, "huh?\n") ;
+//              GxB_fprint (A, 2, stderr) ;
+//              GxB_fprint (v, 2, stderr) ;
+//              abort ( ) ;
+//          }
+
+            // pi (s) = 0 denotes a root of the BFS tree
+            if (compute_tree)
+            {
+                GrB_Index root = (GrB_Index) s ;
+                LAGRAPH_OK (GrB_assign (pi, NULL, max_int, 0, &root, 1, NULL)) ;
+                // printf ("start new source %g:\n", (double) s) ;
+                // GxB_fprint (pi, GxB_COMPLETE, stdout) ;
+            }
+
+            // TODO:
+            /*
+            if node s has out-degree of zero:
+                v(s)=1
+                nvisited++
+                get next unvisited node s, in the above for loop
+            */
+
+            if (compute_tree)
+            {
+                // clear q, and set q(s) to s+1
+                LAGRAPH_OK (GrB_Vector_setElement (q, s+1, s)) ;
+            }
+            else
+            {
+                // clear q, and set q(s) to true
+                LAGRAPH_OK (GrB_Vector_setElement (q, true, s)) ;
+            }
+            nq = 1 ;
+
         }
+        t2 = omp_get_wtime ( ) - t2 ;
+        tnext += t2 ;
+
     }
+    printf ("# phases %g\n", (double) phase) ;
+    printf ("tlevels  %g\n", tlevels) ;
+    printf ("tnext    %g\n", tnext) ;
 
     //--------------------------------------------------------------------------
     // make v sparse
     //--------------------------------------------------------------------------
 
+    // TODO put this in an LAGraph_* utility function:
+
     LAGRAPH_OK (GrB_Vector_nvals (&nvals, v)) ;
-    // v<v> = v ; clearing v before assigning it back
-    LAGRAPH_OK (GrB_assign (v, v, NULL, v, GrB_ALL, n, LAGraph_desc_ooor)) ;
+    if (!whole_graph)
+    {
+        // v<v> = v ; clearing v before assigning it back
+        LAGRAPH_OK (GrB_assign (v, v, NULL, v, GrB_ALL, n, LAGraph_desc_ooor)) ;
+    }
     LAGRAPH_OK (GrB_Vector_nvals (&nvals, v)) ;     // finish the work
 
     //--------------------------------------------------------------------------
@@ -773,12 +925,25 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
     if (compute_tree)
     {
         // pi = pi - 1, for each entry in pi
+        // printf ("done, parent:\n") ;
+        // GxB_fprint (pi, 2, stderr) ;
+        // GrB_Index ignore ;
+        // GrB_Vector_nvals (&ignore, pi) ;
+        // GxB_fprint (pi, GxB_COMPLETE, stdout) ;
+        // printf ("done parent:\n") ;
+        // GxB_fprint (pi, 2, stdout) ;
+
         LAGRAPH_OK (GrB_apply (pi, NULL, NULL,
             (n > INT32_MAX) ? LAGraph_DECR_INT64 : LAGraph_DECR_INT32,
             pi, NULL)) ;
+        // printf ("final parent:\n") ;
+        // GxB_fprint (pi, 2, stdout) ;
         (*pi_output) = pi ;
         pi = NULL ;
     }
+
+        // printf ("final level:\n") ;
+        // GxB_fprint (v, GxB_COMPLETE, stdout) ;
 
     //--------------------------------------------------------------------------
     // free workspace and return result

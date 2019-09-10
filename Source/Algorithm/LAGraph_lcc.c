@@ -161,9 +161,9 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
         C = S ;
         S = NULL ;
 
-        //--------------------------------------------------------------------------
+        //----------------------------------------------------------------------
         // L = tril(C)
-        //--------------------------------------------------------------------------
+        //----------------------------------------------------------------------
         LAGRAPH_OK (GxB_select (L, NULL, NULL, GxB_TRIL, C, NULL, NULL)) ;
     }
     else
@@ -173,16 +173,16 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
         LAGRAPH_OK (GrB_Matrix_new (&AT, GrB_FP64, n, n)) ;
         LAGRAPH_OK (GrB_transpose (AT, NULL, NULL, S, NULL)) ;
 
-        //--------------------------------------------------------------------------
+        //----------------------------------------------------------------------
         // C = A \/ A' to create an undirected graph C
-        //--------------------------------------------------------------------------
+        //----------------------------------------------------------------------
 
         LAGRAPH_OK (GrB_Matrix_new (&C, GrB_FP64, n, n)) ;
         LAGRAPH_OK (GrB_eWiseAdd (C, NULL, NULL, GrB_LOR, S, AT, NULL)) ;
 
-        //--------------------------------------------------------------------------
+        //----------------------------------------------------------------------
         // D = A + A' to create an undirected multigraph D
-        //--------------------------------------------------------------------------
+        //----------------------------------------------------------------------
 
         LAGRAPH_OK (GrB_Matrix_new (&D, GrB_FP64, n, n)) ;
         LAGRAPH_OK (GrB_eWiseAdd (D, NULL, NULL, GrB_PLUS_FP64, S, AT, NULL)) ;
@@ -190,9 +190,9 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
         GrB_free (&AT) ;
         if (sanitize) GrB_free (&S) ;
 
-        //--------------------------------------------------------------------------
+        //----------------------------------------------------------------------
         // L = tril(D)
-        //--------------------------------------------------------------------------
+        //----------------------------------------------------------------------
 
         LAGRAPH_OK (GxB_select (L, NULL, NULL, GxB_TRIL, D, NULL, NULL)) ;
         GrB_free (&D) ;
@@ -210,7 +210,7 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     if (symmetric)
     {
         // the graph is undirected
-        LAGRAPH_OK (GrB_apply(W, NULL, NULL, LAGraph_COMB_UNDIR_FP64, W, NULL)) ;
+        LAGRAPH_OK (GrB_apply(W, NULL, NULL, LAGraph_COMB_UNDIR_FP64, W, NULL));
     }
     else
     {

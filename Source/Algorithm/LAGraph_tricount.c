@@ -139,13 +139,13 @@ GrB_Info LAGraph_tricount   // count # of triangles
 
             LAGRAPH_OK (GrB_Matrix_nrows (&n, A)) ;
             LAGRAPH_OK (GrB_Matrix_ncols (&ne, E)) ;
-            LAGRAPH_OK (GrB_Matrix_new (&C, GrB_UINT32, n, ne)) ;
-            LAGRAPH_OK (GrB_mxm (C, NULL, NULL, LAGraph_PLUS_TIMES_UINT32,
+            LAGRAPH_OK (GrB_Matrix_new (&C, GrB_INT64, n, ne)) ;
+            LAGRAPH_OK (GrB_mxm (C, NULL, NULL, LAGraph_PLUS_TIMES_INT64,
                 A, E, NULL)) ;
             t [0] = LAGraph_toc (tic) ;
             LAGraph_tic (tic) ;
             LAGRAPH_OK (GrB_Matrix_new (&S, GrB_BOOL, n, ne)) ;
-            LAGRAPH_OK (GrB_apply (S, NULL, NULL, LAGraph_ISTWO_UINT32,
+            LAGRAPH_OK (GrB_apply (S, NULL, NULL, LAGraph_ISTWO_INT64,
                 C, NULL)) ;
             LAGRAPH_OK (GrB_reduce (&ntri, NULL, LAGraph_PLUS_INT64_MONOID,
                 S, NULL)) ;
@@ -155,8 +155,8 @@ GrB_Info LAGraph_tricount   // count # of triangles
         case 1:  // Burkhardt:  ntri = sum (sum ((A^2) .* A)) / 6
 
             LAGRAPH_OK (GrB_Matrix_nrows (&n, A)) ;
-            LAGRAPH_OK (GrB_Matrix_new (&C, GrB_UINT32, n, n)) ;
-            LAGRAPH_OK (GrB_mxm (C, A, NULL, LAGraph_PLUS_TIMES_UINT32,
+            LAGRAPH_OK (GrB_Matrix_new (&C, GrB_INT64, n, n)) ;
+            LAGRAPH_OK (GrB_mxm (C, A, NULL, LAGraph_PLUS_TIMES_INT64,
                 A, A, NULL)) ;
             t [0] = LAGraph_toc (tic) ;
             LAGraph_tic (tic) ;
@@ -168,8 +168,8 @@ GrB_Info LAGraph_tricount   // count # of triangles
         case 2:  // Cohen:      ntri = sum (sum ((L * U) .* A)) / 2
 
             LAGRAPH_OK (GrB_Matrix_nrows (&n, A)) ;
-            LAGRAPH_OK (GrB_Matrix_new (&C, GrB_UINT32, n, n)) ;
-            LAGRAPH_OK (GrB_mxm (C, A, NULL, LAGraph_PLUS_TIMES_UINT32,
+            LAGRAPH_OK (GrB_Matrix_new (&C, GrB_INT64, n, n)) ;
+            LAGRAPH_OK (GrB_mxm (C, A, NULL, LAGraph_PLUS_TIMES_INT64,
                 L, U, NULL)) ;
             t [0] = LAGraph_toc (tic) ;
             LAGraph_tic (tic) ;
@@ -181,8 +181,8 @@ GrB_Info LAGraph_tricount   // count # of triangles
         case 3:  // Sandia:    ntri = sum (sum ((L * L) .* L))
 
             LAGRAPH_OK (GrB_Matrix_nrows (&n, L)) ;
-            LAGRAPH_OK (GrB_Matrix_new (&C, GrB_UINT32, n, n)) ;
-            LAGRAPH_OK (GrB_mxm (C, L, NULL, LAGraph_PLUS_TIMES_UINT32,
+            LAGRAPH_OK (GrB_Matrix_new (&C, GrB_INT64, n, n)) ;
+            LAGRAPH_OK (GrB_mxm (C, L, NULL, LAGraph_PLUS_TIMES_INT64,
                 L, L, NULL)) ;
             t [0] = LAGraph_toc (tic) ;
             LAGraph_tic (tic) ;
@@ -193,8 +193,8 @@ GrB_Info LAGraph_tricount   // count # of triangles
         case 4:  // Sandia2:    ntri = sum (sum ((U * U) .* U))
 
             LAGRAPH_OK (GrB_Matrix_nrows (&n, U)) ;
-            LAGRAPH_OK (GrB_Matrix_new (&C, GrB_UINT32, n, n)) ;
-            LAGRAPH_OK (GrB_mxm (C, U, NULL, LAGraph_PLUS_TIMES_UINT32,
+            LAGRAPH_OK (GrB_Matrix_new (&C, GrB_INT64, n, n)) ;
+            LAGRAPH_OK (GrB_mxm (C, U, NULL, LAGraph_PLUS_TIMES_INT64,
                 U, U, NULL)) ;
             t [0] = LAGraph_toc (tic) ;
             LAGraph_tic (tic) ;
@@ -205,8 +205,8 @@ GrB_Info LAGraph_tricount   // count # of triangles
         case 5:  // SandiaDot:  ntri = sum (sum ((L * U') .* L))
 
             LAGRAPH_OK (GrB_Matrix_nrows (&n, U)) ;
-            LAGRAPH_OK (GrB_Matrix_new (&C, GrB_UINT32, n, n)) ;
-            LAGRAPH_OK (GrB_mxm (C, L, NULL, LAGraph_PLUS_TIMES_UINT32,
+            LAGRAPH_OK (GrB_Matrix_new (&C, GrB_INT64, n, n)) ;
+            LAGRAPH_OK (GrB_mxm (C, L, NULL, LAGraph_PLUS_TIMES_INT64,
                 L, U, LAGraph_desc_otoo)) ;
             t [0] = LAGraph_toc (tic) ;
             LAGraph_tic (tic) ;
@@ -217,8 +217,8 @@ GrB_Info LAGraph_tricount   // count # of triangles
         case 6:  // SandiaDot2: ntri = sum (sum ((U * L') .* U))
 
             LAGRAPH_OK (GrB_Matrix_nrows (&n, U)) ;
-            LAGRAPH_OK (GrB_Matrix_new (&C, GrB_UINT32, n, n)) ;
-            LAGRAPH_OK (GrB_mxm (C, U, NULL, LAGraph_PLUS_TIMES_UINT32,
+            LAGRAPH_OK (GrB_Matrix_new (&C, GrB_INT64, n, n)) ;
+            LAGRAPH_OK (GrB_mxm (C, U, NULL, LAGraph_PLUS_TIMES_INT64,
                 U, L, LAGraph_desc_otoo)) ;
             t [0] = LAGraph_toc (tic) ;
             LAGraph_tic (tic) ;
