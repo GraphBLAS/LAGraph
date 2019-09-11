@@ -191,8 +191,16 @@ int main (int argc, char **argv)
         LAGRAPH_OK (GrB_Vector_extractElement (&x2, v_batch, i));
         printf ("| %7.2f |\n", x2);
 
-        tests_pass &= (fabs(x1 - x2) < 1E-6); // Check that both methods give
-                                              // the same results
+        // Check that both methods give the same results
+        bool test_result = (fabs(x1 - x2) / (1E-10 + fmax(x1, x2)) < 1E-5);
+        tests_pass &= test_result;
+        if (!test_result)
+        {
+            fprintf(stderr, "Failure at index %d\n", i);
+            fprintf(stderr, "x1 = %f\n", x1);
+            fprintf(stderr, "x2 = %f\n", x2);
+            fprintf(stderr, "Error = %f\n", fabs(x1-x2) / (1E-6 + fmax(x1,x2)));
+        }
     }
 
     printf("   +-------------------------+\n");
@@ -201,19 +209,21 @@ int main (int argc, char **argv)
     // free all workspace and finish
     //--------------------------------------------------------------------------
 
-    LAGRAPH_FREE_ALL ;
+    LAGRAPH_FREE_ALL;
     LAGRAPH_OK (LAGraph_finalize());
     fprintf (stderr, "bc_test: ");
     if (tests_pass)
     {
-        fprintf (stderr, "all tests passed\n") ;
+        fprintf (stderr, "all tests passed\n");
+        printf("all tests passed\n");
     }
     else
     {
-        fprintf (stderr, "TEST FAILURE\n") ;
+        fprintf (stderr, "TEST FAILURE\n");
+        printf("TEST FAILURE\n");
     }
     fprintf (stderr,
-    "------------------------------------------------------------\n\n") ;
-    return (GrB_SUCCESS) ;
+    "------------------------------------------------------------\n\n");
+    return (GrB_SUCCESS);
 }
 

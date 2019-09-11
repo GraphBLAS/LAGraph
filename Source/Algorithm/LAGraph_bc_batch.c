@@ -244,6 +244,9 @@ GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
     // zero length paths
     LAGRAPH_OK (GrB_assign(*centrality, GrB_NULL, GrB_NULL, -(float)num_sources, GrB_ALL, n, GrB_NULL));
 
+    // TODO: This is to force resolution of pending tuples in GraphBLAS.
+    LAGRAPH_OK (GrB_wait());
+
     // centrality += update
     LAGRAPH_OK (GrB_reduce(*centrality, GrB_NULL, GrB_PLUS_FP64, GrB_PLUS_FP64, bc_update, GrB_NULL));
 
