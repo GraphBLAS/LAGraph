@@ -41,10 +41,6 @@ install:
 docs:
 	( cd Doc ; $(MAKE) )
 
-# create the doxygen documentation in Doc/html
-dox:
-	doxygen
-
 # remove any installed libraries and #include files
 uninstall:
 	- xargs rm < build/install_manifest.txt

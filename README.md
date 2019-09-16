@@ -8,9 +8,7 @@ GraphBLAS.  It contains the following files and folders:
 
 	( cd build ; cmake .. ; make )
 
-    Doc: documentation, including the results of doxygen
-
-    Doxyfile: to build the doxygen documentation, do "make dox" in this folder.
+    Doc: documentation
 
     Include: contains the LAGraph.h file
 
