@@ -63,8 +63,6 @@
     GrB_free (&d) ;                             \
     LAGRAPH_FREE (I) ;                          \
     LAGRAPH_FREE (X) ;                          \
-    GrB_free (&op_div) ;                        \
-    GrB_free (&op_teleport) ;                   \
     GrB_free (&op_diff) ;                       \
 }
 
@@ -82,24 +80,6 @@
 //------------------------------------------------------------------------------
 
 #define DAMPING 0.85
-
-// TODO uses global values.  Avoid them!  LAGraph_pagerank can use internal
-// parallelism (all threads will see the same global values), but multiple
-// instances of LAGraph_pagerank called be done in parallel in a user
-// application.  Replace globals via binary operator on expanded scalars, or
-// GrB_mxm.
-float rsum ;
-float teleport_scalar ;
-
-void fdiv  (void *z, const void *x)
-{
-    (*((float *) z)) = (* ((float *) x)) / rsum ;
-}
-
-void fteleport  (void *z, const void *x)
-{
-    (*((float *) z)) = (* ((float *) x)) + teleport_scalar ;
-}
 
 void fdiff (void *z, const void *x, const void *y)
 {
@@ -153,12 +133,11 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
     LAGraph_tic (tic) ;
 
     GrB_Info info ;
+    float rsum ;
     float *X = NULL ;
     GrB_Index n, nvals, *I = NULL ;
     LAGraph_PageRank *P = NULL ;
     GrB_Vector r = NULL, t = NULL, d = NULL ;
-    GrB_UnaryOp op_div = NULL ;
-    GrB_UnaryOp op_teleport = NULL ;
     GrB_BinaryOp op_diff = NULL ;
     GrB_Matrix C = NULL, D = NULL, T = NULL ;
 
@@ -254,9 +233,7 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
 
     LAGRAPH_OK (GrB_free (&D)) ;
 
-    // create operators
-    LAGRAPH_OK (GrB_UnaryOp_new (&op_div,  fdiv, GrB_FP32, GrB_FP32)) ;
-    LAGRAPH_OK (GrB_UnaryOp_new (&op_teleport, fteleport, GrB_FP32, GrB_FP32)) ;
+    // create operator
     LAGRAPH_OK (GrB_BinaryOp_new (&op_diff, fdiff,
         GrB_FP32, GrB_FP32, GrB_FP32)) ;
 
@@ -312,10 +289,9 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
 
         // t += teleport_scalar ;
         LAGraph_tic (tic2) ;
-        teleport_scalar = teleport * rsum ;
-//      LAGRAPH_OK (GrB_assign (t, NULL, GrB_PLUS_FP32, teleport_scalar,
-//          GrB_ALL, n, NULL)) ;
-        LAGRAPH_OK (GrB_apply (t, NULL, NULL, op_teleport, t, NULL)) ;
+        float teleport_scalar = teleport * rsum ;
+        LAGRAPH_OK (GrB_assign(t, NULL, GrB_PLUS_FP32, teleport_scalar, GrB_ALL, n, NULL)) ;
+
         t6 += LAGraph_toc (tic2) ;
 
         //----------------------------------------------------------------------
@@ -342,11 +318,11 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
         // GxB_print (r, 3) ;
     }
 
-        fprintf (stderr, "reduce1  %g\n", t5) ;
-        fprintf (stderr, "mxv      %g\n", t2) ;
-        fprintf (stderr, "teleport %g\n", t6) ;
-        fprintf (stderr, "add      %g\n", t7) ;
-        fprintf (stderr, "reduce2  %g\n", t8) ;
+    fprintf (stderr, "reduce1  %g\n", t5) ;
+    fprintf (stderr, "mxv      %g\n", t2) ;
+    fprintf (stderr, "teleport %g\n", t6) ;
+    fprintf (stderr, "add      %g\n", t7) ;
+    fprintf (stderr, "reduce2  %g\n", t8) ;
 
     LAGRAPH_OK (GrB_free (&C)) ;
     LAGRAPH_OK (GrB_free (&t)) ;
@@ -364,7 +340,7 @@ GrB_Info LAGraph_pagerank       // GrB_SUCCESS or error condition
 
     // TODO use vxm with rsum as a 1-by-1 matrix
     // r = r / rsum
-    LAGRAPH_OK (GrB_apply (r, NULL, NULL, op_div, r, NULL)) ;
+    LAGRAPH_OK (GrB_assign (r, NULL, GrB_TIMES_FP32, 1 / rsum, GrB_ALL, n, NULL)) ;
 
     tt = LAGraph_toc (tic) ;
     fprintf (stderr, "scale time %g\n", tt) ;
