@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_bc: Brandes' algorithm for computing betweeness centrality
+// LAGraph_bc_batch: Brandes' algorithm for computing betweeness centrality
 //------------------------------------------------------------------------------
 
 /*
@@ -63,24 +63,36 @@
 // node is tallied by reversing the traversal. From this, the (approximate)
 // betweenness centrality is computed.
 
+// A_matrix represents the graph.  It must be square, and can be unsymmetric.
+// Self-edges are OK.
+
 //------------------------------------------------------------------------------
 
 #include "LAGraph_internal.h"
 
-#define LAGRAPH_FREE_ALL            \
+#define LAGRAPH_FREE_WORK           \
 {                                   \
     GrB_free (&frontier);           \
     GrB_free (&paths);              \
-    GrB_free (&inv_paths);             \
+    GrB_free (&inv_paths);          \
     GrB_free (&bc_update);          \
     GrB_free (&desc_tsr);           \
     GrB_free (&replace);            \
     GrB_free (&temp);               \
-    for (int i = 0; i < depth; i++) \
-    {                               \
-        GrB_free(&(S_array[i]));    \
-    }                               \
-    free (S_array);                 \
+    if (S_array != NULL)                \
+    {                                   \
+        for (int i = 0; i < depth; i++) \
+        {                               \
+            GrB_free(&(S_array[i]));    \
+        }                               \
+        free (S_array);                 \
+    }                                   \
+}
+
+#define LAGRAPH_FREE_ALL            \
+{                                   \
+    LAGRAPH_FREE_WORK ;             \
+    GrB_free (centrality) ;         \
 }
 
 GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
@@ -88,39 +100,40 @@ GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
     GrB_Vector *centrality,    // centrality(i) is the betweeness centrality of node i
     const GrB_Matrix A_matrix, // input graph, treated as if boolean in semiring
     const GrB_Index *sources,  // source vertices from which to compute shortest paths
-    const int32_t num_sources  // number of source vertices (length of s)
+    int32_t num_sources        // number of source vertices (length of s)
 )
 {
     GrB_Info info;
 
+    (*centrality) = NULL ;
     GrB_Index n; // Number of nodes in the graph
 
     // Array of BFS search matrices
     // S_array[i] is a matrix that stores the depth at which each vertex is 
     // first seen thus far in each BFS at the current depth i. Each column
     // corresponds to a BFS traversal starting from a source node.
-    GrB_Matrix *S_array;
+    GrB_Matrix *S_array = NULL ;
 
     // Frontier matrix
     // Stores # of shortest paths to vertices at current BFS depth
-    GrB_Matrix frontier;
+    GrB_Matrix frontier = NULL ;
     
     // Paths matrix holds the number of shortest paths for each node and 
     // starting node discovered so far.
-    GrB_Matrix paths;
+    GrB_Matrix paths = NULL ;
 
     // Inverse of the number of shortest paths for each node and source node
-    GrB_Matrix inv_paths;
+    GrB_Matrix inv_paths = NULL ;
 
     // Update matrix for betweenness centrality, values for each node for
     // each starting node
-    GrB_Matrix bc_update;
+    GrB_Matrix bc_update = NULL ;
 
     // Temporary workspace matrix
-    GrB_Matrix temp;
+    GrB_Matrix temp = NULL ;
 
-    GrB_Descriptor desc_tsr;
-    GrB_Descriptor replace;
+    GrB_Descriptor desc_tsr = NULL ;
+    GrB_Descriptor replace = NULL ;
 
     int64_t depth = 0; // Initial BFS depth
 
@@ -128,7 +141,7 @@ GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
 
     // Create the result vector, one entry for each node
     LAGRAPH_OK (GrB_Vector_new(centrality, GrB_FP64, n));
-    
+
     // Create a new descriptor that represents the following traits:
     //  - Tranpose the first input matrix
     //  - Replace the output 
@@ -138,8 +151,39 @@ GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
     LAGRAPH_OK (GrB_Descriptor_set(desc_tsr, GrB_OUTP, GrB_REPLACE));
     LAGRAPH_OK (GrB_Descriptor_set(desc_tsr, GrB_MASK, GrB_SCMP));
 
+    // This is also: LAGraph_desc_tocr :  A', compl mask, replace
+
     // Initialize paths to source vertices with ones
-    // paths[s[i],i]=1 for i=[0, ..., nsver)
+    // paths[s[i],i]=1 for i=[0, ..., num_sources)
+
+    #if 1
+
+    if (sources == GrB_ALL)
+    {
+        num_sources = n ;
+    }
+
+    LAGRAPH_OK (GrB_Matrix_new(&paths, GrB_INT64, n, num_sources));
+    // optional: to set the matrix to CSC format
+    // LAGRAPH_OK (GxB_set (paths, GxB_FORMAT, GxB_BY_COL)) ;
+    if (sources == GrB_ALL)
+    {
+        for (int i = 0; i < num_sources; ++i)
+        {
+            // paths [i,i] = 1
+            LAGRAPH_OK (GrB_Matrix_setElement_INT64 (paths, 1, i, i)) ;
+        }
+    }
+    else
+    {
+        for (int i = 0; i < num_sources; ++i)
+        {
+            // paths [s[i],i] = 1
+            LAGRAPH_OK (GrB_Matrix_setElement_INT64 (paths, 1, sources [i], i)) ;
+        }
+    }
+
+    #else
     GrB_Index *i_nsver = (GrB_Index*) malloc(sizeof(GrB_Index)*num_sources);
     int64_t *ones = (int64_t*) malloc(sizeof(int64_t)*num_sources);
     for (int i = 0; i < num_sources; ++i)
@@ -172,14 +216,23 @@ GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
 
     free(i_nsver);
     free(ones);
+    #endif
 
     // Create frontier matrix and initialize to outgoing nodes from 
     // all source nodes
     LAGRAPH_OK (GrB_Matrix_new(&frontier, GrB_INT64, n, num_sources));
+    // AT = A'
+    // frontier <!paths> = AT (:,sources)
     LAGRAPH_OK (GrB_extract(frontier, paths, GrB_NULL, A_matrix, GrB_ALL, n, sources, num_sources, desc_tsr));
 
     // Allocate memory for the array of S matrices
-    S_array = (GrB_Matrix*) malloc(sizeof(GrB_Matrix)*n);
+    S_array = (GrB_Matrix*) calloc(n, sizeof(GrB_Matrix));
+    if (S_array == NULL)
+    {
+        // out of memory
+        LAGRAPH_FREE_ALL ;
+        return (GrB_OUT_OF_MEMORY) ;
+    }
 
     // === Breadth-first search stage ==========================================
     GrB_Index sum = 0;    // Sum of shortest paths to vertices at current depth
@@ -187,6 +240,7 @@ GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
                           //  are no shorter than any existing paths.
     do
     {
+
         // Create the current search matrix - one column for each source/BFS
         LAGRAPH_OK (GrB_Matrix_new(&(S_array[depth]), GrB_BOOL, n, num_sources));
         
@@ -221,6 +275,7 @@ GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
     // Note that this is only useful when using a mask
     LAGRAPH_OK (GrB_Descriptor_new(&replace));
     LAGRAPH_OK (GrB_Descriptor_set(replace, GrB_OUTP, GrB_REPLACE));
+    // This is LAGraph_desc_ooor: replace
 
     // Create temporary workspace matrix
     LAGRAPH_OK (GrB_Matrix_new(&temp, GrB_FP64, n, num_sources));
@@ -247,6 +302,6 @@ GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
     // centrality += update
     LAGRAPH_OK (GrB_reduce(*centrality, GrB_NULL, GrB_PLUS_FP64, GrB_PLUS_FP64, bc_update, GrB_NULL));
 
-    LAGRAPH_FREE_ALL;
+    LAGRAPH_FREE_WORK ;
     return GrB_SUCCESS;
 }
