@@ -18,9 +18,7 @@ JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/p2test < ldbc-directed-example-unweighted.mtx
-#	./build/p2test < ../BFS/cover.mtx
-#	./build/p2test < ../BFS/west0067.mtx
+	./build/p2test < ../../Data/ldbc-directed-example-unweighted.mtx
 
 # build test
 compile:
