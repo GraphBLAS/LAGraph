@@ -574,6 +574,17 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
                                 // in seconds
 ) ;
 
+GrB_Info LAGraph_cdlp           // compute cdlp for all nodes in A
+(
+    GrB_Vector *CDLP_handle,    // output vector
+    const GrB_Matrix A,         // input matrix
+    bool symmetric,             // denote whether the matrix is symmetric
+    bool sanitize,              // if true, ensure A is binary
+    int itermax,                // max number of iterations,
+    double *t                   // t [0] = sanitize time, t [1] = cdlp time,
+                                // in seconds
+) ;
+
 GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
 (
     // output
@@ -584,5 +595,7 @@ GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
     int nlayers,        // # of layers
     GrB_Matrix Y0       // input features: nfeatures-by-nneurons
 ) ;
+
+
 
 #endif

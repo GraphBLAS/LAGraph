@@ -24,6 +24,7 @@ default:
 	( cd BFS                   ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd BetweennessCentrality ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd CC                    ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
+	( cd CDLP                  ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd MatrixMarket          ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd BuildMatrix           ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 
@@ -41,6 +42,7 @@ distclean:
 	( cd BFS                   ; $(MAKE) distclean )
 	( cd BetweennessCentrality ; $(MAKE) distclean )
 	( cd CC                    ; $(MAKE) distclean )
+	( cd CDLP                  ; $(MAKE) distclean )
 	( cd MatrixMarket          ; $(MAKE) distclean )
 	( cd BuildMatrix           ; $(MAKE) distclean )
 

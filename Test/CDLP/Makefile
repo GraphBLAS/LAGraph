@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Test/PageRank/Makefile
+# Test/CDLP/Makefile
 #-------------------------------------------------------------------------------
 
 # LAGraph, (... list all authors here) (c) 2019, All Rights Reserved.
@@ -7,7 +7,7 @@
 
 #-------------------------------------------------------------------------------
 
-# simple Makefile for LAGraph/Test/PageRank/p2test,
+# simple Makefile for LAGraph/Test/CDLP/cdlptest
 
 # relies on cmake to do the actual build.  Use the CMAKE_OPTIONS argument to
 # this Makefile to pass options to cmake.
@@ -18,7 +18,10 @@ JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/p2test < ../../Data/ldbc-directed-example-unweighted.mtx
+	./build/cdlptest ../../Data/ldbc-cdlp-directed-example.mtx 0 5
+	./build/cdlptest ../../Data/ldbc-cdlp-undirected-example.mtx 1 5
+	./build/cdlptest ../../Data/ldbc-directed-example-unweighted.mtx 0 2
+	./build/cdlptest ../../Data/ldbc-undirected-example-unweighted.mtx 1 2
 
 # build test
 compile:
@@ -34,5 +37,5 @@ purge: distclean
 
 # remove all files not in the distribution
 distclean:
-	rm -rf build/* A.mtx p2test
+	rm -rf build/* A.mtx cdlptest stderr.txt
 

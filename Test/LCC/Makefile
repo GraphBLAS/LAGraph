@@ -19,8 +19,8 @@ JOBS ?= 1
 # build and run test
 default: compile
 	./build/lcctest < ../BFS/west0067.mtx
-	./build/lcctest ldbc-directed-example.mtx 0
-	./build/lcctest ldbc-undirected-example.mtx 1
+	./build/lcctest ../../Data/ldbc-directed-example-unweighted.mtx 0
+	./build/lcctest ../../Data/ldbc-undirected-example-unweighted.mtx 1
 
 # build test
 compile:
