@@ -36,6 +36,11 @@ my_*.out
 .nfs*
 .pyc
 *.tmp
+*.idea
+*.dylib
+cmake-build-debug*
+CMakeFiles*
+
 
 # Do not ignore this file
 !.gitignore
