@@ -86,6 +86,267 @@
 }
 
 //------------------------------------------------------------------------------
+// memory management functions
+//------------------------------------------------------------------------------
+
+// use the ANSI C functions by default (or mx* functions if the #ifdef
+// above redefines them).  See Source/Utility/LAGraph_malloc.c.
+
+extern void * (* LAGraph_malloc_function  ) (size_t)         ;
+extern void * (* LAGraph_calloc_function  ) (size_t, size_t) ;
+extern void * (* LAGraph_realloc_function ) (void *, size_t) ;
+extern void   (* LAGraph_free_function    ) (void *)         ;
+extern bool LAGraph_malloc_is_thread_safe ;
+
+//------------------------------------------------------------------------------
+// LAGr wrappers: call GraphBLAS in a defined LAGraph context
+//------------------------------------------------------------------------------
+
+// Algebra Methods /////////////////////////////////////////////////////////////
+
+#define LAGr_Type_new(...)                                                  \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_Type_new(__VA_ARGS__));                           \
+}                                                                           \
+
+#define LAGr_UnaryOp_new(...)                                               \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_UnaryOp_new(__VA_ARGS__));                        \
+}                                                                           \
+
+#define LAGr_BinaryOp_new(...)                                              \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_BinaryOp_new(__VA_ARGS__));                       \
+}                                                                           \
+
+#define LAGr_Monoid_new(...)                                                \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_Monoid_new(__VA_ARGS__));                         \
+}                                                                           \
+
+#define LAGr_Semiring_new(...)                                              \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_Semiring_new(__VA_ARGS__));                       \
+}                                                                           \
+
+// Vector Methods //////////////////////////////////////////////////////////////
+
+#define LAGr_Vector_new(...)                                                \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_Vector_new(__VA_ARGS__));                         \
+}                                                                           \
+
+#define LAGr_Vector_dup(...)                                                \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_Vector_dup(__VA_ARGS__));                         \
+}                                                                           \
+
+#define LAGr_Vector_resize(...)                                             \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_Vector_resize(__VA_ARGS__));                      \
+}                                                                           \
+
+#define LAGr_Vector_clear(...)                                              \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_Vector_clear(__VA_ARGS__));                       \
+}                                                                           \
+
+#define LAGr_Vector_size(...)                                               \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_Vector_size(__VA_ARGS__));                        \
+}                                                                           \
+
+#define LAGr_Vector_nvals(...)                                              \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_Vector_nvals(__VA_ARGS__));                       \
+}                                                                           \
+
+#define LAGr_Vector_build(...)                                              \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_Vector_build(__VA_ARGS__));                       \
+}                                                                           \
+
+#define LAGr_Vector_setElement(...)                                         \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_Vector_setElement(__VA_ARGS__));                  \
+}                                                                           \
+
+#define LAGr_Vector_removeElement(...)                                      \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_Vector_removeElement(__VA_ARGS__));               \
+}                                                                           \
+
+#define LAGr_Vector_extractElement(...)                                     \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_Vector_extractElement(__VA_ARGS__));              \
+}                                                                           \
+
+#define LAGr_Vector_extractTuples(...)                                      \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_Vector_extractTuples(__VA_ARGS__));               \
+}                                                                           \
+
+// Matrix Methods //////////////////////////////////////////////////////////////
+
+#define LAGr_Matrix_new(...)                                                \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_Matrix_new(__VA_ARGS__));                         \
+}                                                                           \
+
+#define LAGr_Matrix_dup(...)                                                \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_Matrix_dup(__VA_ARGS__));                         \
+}                                                                           \
+
+#define LAGr_Matrix_resize(...)                                             \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_Matrix_resize(__VA_ARGS__));                      \
+}                                                                           \
+
+#define LAGr_Matrix_clear(...)                                              \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_Matrix_clear(__VA_ARGS__));                       \
+}                                                                           \
+
+#define LAGr_Matrix_nrows(...)                                              \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_Matrix_nrows(__VA_ARGS__));                       \
+}                                                                           \
+
+#define LAGr_Matrix_ncols(...)                                              \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_Matrix_ncols(__VA_ARGS__));                       \
+}                                                                           \
+
+#define LAGr_Matrix_nvals(...)                                              \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_Matrix_nvals(__VA_ARGS__));                       \
+}                                                                           \
+
+#define LAGr_Matrix_build(...)                                              \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_Matrix_build(__VA_ARGS__));                       \
+}                                                                           \
+
+#define LAGr_Matrix_setElement(...)                                         \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_Matrix_setElement(__VA_ARGS__));                  \
+}                                                                           \
+
+#define LAGr_Matrix_removeElement(...)                                      \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_Matrix_removeElement(__VA_ARGS__));               \
+}                                                                           \
+
+#define LAGr_Matrix_extractElement(...)                                     \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_Matrix_extractElement(__VA_ARGS__));              \
+}                                                                           \
+
+#define LAGr_Matrix_extractTuples(...)                                      \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_Matrix_extractTuples(__VA_ARGS__));               \
+}                                                                           \
+
+// Descriptor Methods //////////////////////////////////////////////////////////
+
+#define LAGr_Descriptor_new(...)                                            \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_Descriptor_new(__VA_ARGS__));                     \
+}                                                                           \
+
+#define LAGr_Descriptor_set(...)                                            \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_Descriptor_set(__VA_ARGS__));                     \
+}                                                                           \
+
+// Free Method /////////////////////////////////////////////////////////////////
+
+// TODO: For now, LAGr_free is simply a wrapper for GrB_free with no error
+//       handling. In the future, there may be more happening here.
+#define LAGr_free(...)                                                      \
+{                                                                           \
+    GrB_free(__VA_ARGS__);                                                  \
+}                                                                           \
+
+// GraphBLAS Operations ////////////////////////////////////////////////////////
+
+#define LAGr_mxm(...)                                                       \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_mxm(__VA_ARGS__));                                \
+}                                                                           \
+
+#define LAGr_vxm(...)                                                       \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_vxm(__VA_ARGS__));                                \
+}                                                                           \
+
+#define LAGr_mxv(...)                                                       \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_mxv(__VA_ARGS__));                                \
+}                                                                           \
+
+#define LAGr_eWiseMult(...)                                                 \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_eWiseMult(__VA_ARGS__));                          \
+}                                                                           \
+
+#define LAGr_eWiseAdd(...)                                                  \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_eWiseAdd(__VA_ARGS__));                           \
+}                                                                           \
+
+#define LAGr_extract(...)                                                   \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_extract(__VA_ARGS__));                            \
+}                                                                           \
+
+#define LAGr_assign(...)                                                    \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_assign(__VA_ARGS__));                             \
+}                                                                           \
+
+#define LAGr_apply(...)                                                     \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_apply(__VA_ARGS__));                              \
+}                                                                           \
+
+#define LAGr_reduce(...)                                                    \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_reduce(__VA_ARGS__));                             \
+}                                                                           \
+
+#define LAGr_transpose(...)                                                 \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_transpose(__VA_ARGS__));                          \
+}                                                                           \
+
+#define LAGr_kronecker(...)                                                 \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_kronecker(__VA_ARGS__));                          \
+}                                                                           \
+
+// Sequence Termination ////////////////////////////////////////////////////////
+
+#define LAGr_wait(...)                                                      \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_wait(__VA_ARGS__));                               \
+}                                                                           \
+
+#define LAGr_UnaryOp_free(...)                                              \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GrB_UnaryOp_free(__VA_ARGS__));                       \
+}                                                                           \
+
+#define LAGRAPH_TRY_CATCH(info)                                             \
+{                                                                           \
+    if (!(info == GrB_SUCCESS || info == GrB_NO_VALUE))                     \
+    {                                                                       \
+        LAGRAPH_ERROR ("", info);                                           \
+    }                                                                       \
+}                                                                           \
+
+//------------------------------------------------------------------------------
 // LAGRAPH_OK: call LAGraph or GraphBLAS and check the result
 //------------------------------------------------------------------------------
 
@@ -257,19 +518,6 @@ extern GrB_Descriptor
 // requires SuiteSparse:GraphBLAS v3.0.1 or later
 extern GxB_SelectOp LAGraph_support ;
 #endif
-
-//------------------------------------------------------------------------------
-// memory management functions
-//------------------------------------------------------------------------------
-
-// use the ANSI C functions by default (or mx* functions if the #ifdef
-// above redefines them).  See Source/Utility/LAGraph_malloc.c.
-
-extern void * (* LAGraph_malloc_function  ) (size_t)         ;
-extern void * (* LAGraph_calloc_function  ) (size_t, size_t) ;
-extern void * (* LAGraph_realloc_function ) (void *, size_t) ;
-extern void   (* LAGraph_free_function    ) (void *)         ;
-extern bool LAGraph_malloc_is_thread_safe ;
 
 //------------------------------------------------------------------------------
 // user-callable utility functions
