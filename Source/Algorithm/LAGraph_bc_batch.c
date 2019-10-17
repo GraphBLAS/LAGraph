@@ -70,23 +70,23 @@
 
 #include "LAGraph_internal.h"
 
-#define LAGRAPH_FREE_WORK           \
-{                                   \
-    GrB_free (&frontier);           \
-    GrB_free (&paths);              \
-    GrB_free (&inv_paths);          \
-    GrB_free (&bc_update);          \
-    GrB_free (&desc_tsr);           \
-    GrB_free (&replace);            \
-    GrB_free (&temp);               \
-    if (S_array != NULL)                \
-    {                                   \
-        for (int i = 0; i < depth; i++) \
-        {                               \
-            GrB_free(&(S_array[i]));    \
-        }                               \
-        free (S_array);                 \
-    }                                   \
+#define LAGRAPH_FREE_WORK                   \
+{                                           \
+    GrB_free (&frontier);                   \
+    GrB_free (&paths);                      \
+    GrB_free (&inv_paths);                  \
+    GrB_free (&bc_update);                  \
+    GrB_free (&desc_tsr);                   \
+    GrB_free (&replace);                    \
+    GrB_free (&temp);                       \
+    if (S_array != NULL)                    \
+    {                                       \
+        for (int64_t d = 0; d < depth; d++) \
+        {                                   \
+            GrB_free(&(S_array[d]));        \
+        }                                   \
+        free (S_array);                     \
+    }                                       \
 }
 
 #define LAGRAPH_FREE_ALL            \
@@ -103,8 +103,6 @@ GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
     int32_t num_sources        // number of source vertices (length of s)
 )
 {
-    GrB_Info info;
-
     (*centrality) = NULL ;
     GrB_Index n; // Number of nodes in the graph
 
@@ -137,93 +135,56 @@ GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
 
     int64_t depth = 0; // Initial BFS depth
 
-    LAGRAPH_OK (GrB_Matrix_nrows(&n, A_matrix)); // Get dimensions
+    LAGr_Matrix_nrows(&n, A_matrix); // Get dimensions
 
     // Create the result vector, one entry for each node
-    LAGRAPH_OK (GrB_Vector_new(centrality, GrB_FP64, n));
+    LAGr_Vector_new(centrality, GrB_FP64, n);
 
     // Create a new descriptor that represents the following traits:
     //  - Tranpose the first input matrix
     //  - Replace the output 
     //  - Use the structural complement of the mask
-    LAGRAPH_OK (GrB_Descriptor_new(&desc_tsr));
-    LAGRAPH_OK (GrB_Descriptor_set(desc_tsr, GrB_INP0, GrB_TRAN));
-    LAGRAPH_OK (GrB_Descriptor_set(desc_tsr, GrB_OUTP, GrB_REPLACE));
-    LAGRAPH_OK (GrB_Descriptor_set(desc_tsr, GrB_MASK, GrB_SCMP));
+    LAGr_Descriptor_new(&desc_tsr);
+    LAGr_Descriptor_set(desc_tsr, GrB_INP0, GrB_TRAN);
+    LAGr_Descriptor_set(desc_tsr, GrB_OUTP, GrB_REPLACE);
+    LAGr_Descriptor_set(desc_tsr, GrB_MASK, GrB_SCMP);
 
     // This is also: LAGraph_desc_tocr :  A', compl mask, replace
 
     // Initialize paths to source vertices with ones
     // paths[s[i],i]=1 for i=[0, ..., num_sources)
 
-    #if 1
-
     if (sources == GrB_ALL)
     {
         num_sources = n ;
     }
 
-    LAGRAPH_OK (GrB_Matrix_new(&paths, GrB_INT64, n, num_sources));
+    LAGr_Matrix_new(&paths, GrB_INT64, n, num_sources);
     // optional: to set the matrix to CSC format
     // LAGRAPH_OK (GxB_set (paths, GxB_FORMAT, GxB_BY_COL)) ;
     if (sources == GrB_ALL)
     {
-        for (int i = 0; i < num_sources; ++i)
+        for (GrB_Index i = 0; i < num_sources; ++i)
         {
             // paths [i,i] = 1
-            LAGRAPH_OK (GrB_Matrix_setElement_INT64 (paths, 1, i, i)) ;
+            LAGr_Matrix_setElement(paths, (int64_t) 1, i, i);
         }
     }
     else
     {
-        for (int i = 0; i < num_sources; ++i)
+        for (GrB_Index i = 0; i < num_sources; ++i)
         {
             // paths [s[i],i] = 1
-            LAGRAPH_OK (GrB_Matrix_setElement_INT64 (paths, 1, sources [i], i)) ;
+            LAGr_Matrix_setElement(paths, (int64_t) 1, sources[i], i);
         }
     }
-
-    #else
-    GrB_Index *i_nsver = (GrB_Index*) malloc(sizeof(GrB_Index)*num_sources);
-    int64_t *ones = (int64_t*) malloc(sizeof(int64_t)*num_sources);
-    for (int i = 0; i < num_sources; ++i)
-    {
-        i_nsver[i] = i;
-        ones[i] = 1;
-    }
-
-    LAGRAPH_OK (GrB_Matrix_new(&paths, GrB_INT64, n, num_sources));
-
-    // If sources is GrB_ALL, then we compute all-pairs shortest paths
-    if (sources == GrB_ALL)
-    {
-        GrB_Index *s_all = malloc(sizeof(GrB_Index) * n);
-        
-        for (int i = 0; i < n; i++)
-        {
-            s_all[i] = i;
-        }
-
-        LAGRAPH_OK (GrB_Matrix_build(paths, s_all, i_nsver, ones, num_sources, GrB_PLUS_INT64));
-
-        free(s_all);
-    }
-    else
-    {
-        // If sources is not GrB_ALL, use the provided list of source nodes
-        LAGRAPH_OK (GrB_Matrix_build(paths, sources, i_nsver, ones, num_sources, GrB_PLUS_INT64));
-    }
-
-    free(i_nsver);
-    free(ones);
-    #endif
 
     // Create frontier matrix and initialize to outgoing nodes from 
     // all source nodes
-    LAGRAPH_OK (GrB_Matrix_new(&frontier, GrB_INT64, n, num_sources));
+    LAGr_Matrix_new(&frontier, GrB_INT64, n, num_sources);
     // AT = A'
     // frontier <!paths> = AT (:,sources)
-    LAGRAPH_OK (GrB_extract(frontier, paths, GrB_NULL, A_matrix, GrB_ALL, n, sources, num_sources, desc_tsr));
+    LAGr_extract(frontier, paths, GrB_NULL, A_matrix, GrB_ALL, n, sources, num_sources, desc_tsr);
 
     // Allocate memory for the array of S matrices
     S_array = (GrB_Matrix*) calloc(n, sizeof(GrB_Matrix));
@@ -240,21 +201,23 @@ GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
                           //  are no shorter than any existing paths.
     do
     {
-
+        
         // Create the current search matrix - one column for each source/BFS
-        LAGRAPH_OK (GrB_Matrix_new(&(S_array[depth]), GrB_BOOL, n, num_sources));
+        LAGr_Matrix_new(&(S_array[depth]), GrB_BOOL, n, num_sources);
         
         // Copy the current frontier to S
-        LAGRAPH_OK (GrB_apply(S_array[depth], GrB_NULL, GrB_NULL, GrB_IDENTITY_BOOL, frontier, GrB_NULL));
+        LAGr_apply(S_array[depth], GrB_NULL, GrB_NULL, GrB_IDENTITY_BOOL, frontier, GrB_NULL);
 
         // Accumulate path counts: paths += frontier
-        LAGRAPH_OK (GrB_eWiseAdd(paths, GrB_NULL, GrB_NULL, GxB_PLUS_TIMES_INT64, paths, frontier, GrB_NULL));
+        // Should be GrB_assign with GrB_PLUS_INT64 for accum
+        LAGr_assign(paths, GrB_NULL, GrB_PLUS_INT64, frontier, GrB_ALL, n, GrB_ALL, num_sources, GrB_NULL);
+        //LAGr_eWiseAdd(paths, GrB_NULL, GrB_NULL, GxB_PLUS_TIMES_INT64, paths, frontier, GrB_NULL);
 
         // Update frontier: frontier<!paths>=A’ +.∗ frontier
-        LAGRAPH_OK (GrB_mxm(frontier, paths, GrB_NULL, GxB_PLUS_TIMES_INT64, A_matrix, frontier, desc_tsr));
+        LAGr_mxm(frontier, paths, GrB_NULL, GxB_PLUS_TIMES_INT64, A_matrix, frontier, desc_tsr);
 
         // Sum up the number of BFS paths still being explored
-        LAGRAPH_OK (GrB_Matrix_nvals(&sum, frontier));
+        LAGr_Matrix_nvals(&sum, frontier);
 
         depth = depth + 1;
 
@@ -263,44 +226,38 @@ GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
     // === Betweenness centrality computation phase ============================
 
     // Create inverse paths matrix: inv_paths = 1 ./ paths
-    LAGRAPH_OK (GrB_Matrix_new(&inv_paths, GrB_FP64, n, num_sources));
-    LAGRAPH_OK (GrB_apply(inv_paths, GrB_NULL, GrB_NULL, GrB_MINV_FP64, paths, GrB_NULL));
+    LAGr_Matrix_new(&inv_paths, GrB_FP64, n, num_sources);
+    LAGr_apply(inv_paths, GrB_NULL, GrB_NULL, GrB_MINV_FP64, paths, GrB_NULL);
 
     // Create the update matrix and initialize it to 1
     // TODO: "To avoid sparsity issues"?
-    LAGRAPH_OK (GrB_Matrix_new(&bc_update, GrB_FP64, n, num_sources));
-    LAGRAPH_OK (GrB_assign(bc_update, GrB_NULL, GrB_NULL, 1.0f, GrB_ALL, n, GrB_ALL, num_sources, GrB_NULL));
-
-    // Create a descriptor to denote total replacement of the output
-    // Note that this is only useful when using a mask
-    LAGRAPH_OK (GrB_Descriptor_new(&replace));
-    LAGRAPH_OK (GrB_Descriptor_set(replace, GrB_OUTP, GrB_REPLACE));
-    // This is LAGraph_desc_ooor: replace
+    LAGr_Matrix_new(&bc_update, GrB_FP64, n, num_sources);
+    LAGr_assign(bc_update, GrB_NULL, GrB_NULL, 1.0f, GrB_ALL, n, GrB_ALL, num_sources, GrB_NULL);
 
     // Create temporary workspace matrix
-    LAGRAPH_OK (GrB_Matrix_new(&temp, GrB_FP64, n, num_sources));
+    LAGr_Matrix_new(&temp, GrB_FP64, n, num_sources);
     
     // Backtrack through the BFS and compute centrality updates for each vertex
-    for (int i = depth - 1; i > 0; i--)
+    for (int64_t i = depth - 1; i > 0; i--)
     {
         // Add contributions by successors and mask with that BFS level’s frontier
         
         // temp<S_array[i]>=(1 ./ nsp) .∗ bc_update
-        LAGRAPH_OK (GrB_eWiseMult(temp, S_array[i], GrB_NULL, GxB_PLUS_TIMES_FP64, bc_update, inv_paths, replace));
+        LAGr_eWiseMult(temp, S_array[i], GrB_NULL, GxB_PLUS_TIMES_FP64, bc_update, inv_paths, LAGraph_desc_ooor);
 
         // temp<S_array[i−1]> = (A ∗ temp)
-        LAGRAPH_OK (GrB_mxm(temp, S_array[i-1], GrB_NULL, GxB_PLUS_TIMES_FP64, A_matrix, temp, replace));
+        LAGr_mxm(temp, S_array[i-1], GrB_NULL, GxB_PLUS_TIMES_FP64, A_matrix, temp, LAGraph_desc_ooor);
 
         // bc_update += temp .∗ paths
-        LAGRAPH_OK (GrB_eWiseMult(bc_update, GrB_NULL, GrB_PLUS_FP64, GxB_TIMES_FP64_MONOID, temp, paths, GrB_NULL));
+        LAGr_eWiseMult(bc_update, GrB_NULL, GrB_PLUS_FP64, GxB_TIMES_FP64_MONOID, temp, paths, GrB_NULL);
     }
 
     // Initialize the centrality array with -(num_sources) to avoid counting
     // zero length paths
-    LAGRAPH_OK (GrB_assign(*centrality, GrB_NULL, GrB_NULL, -(float)num_sources, GrB_ALL, n, GrB_NULL));
+    LAGr_assign(*centrality, GrB_NULL, GrB_NULL, -(float)num_sources, GrB_ALL, n, GrB_NULL);
 
     // centrality += update
-    LAGRAPH_OK (GrB_reduce(*centrality, GrB_NULL, GrB_PLUS_FP64, GrB_PLUS_FP64, bc_update, GrB_NULL));
+    LAGr_reduce(*centrality, GrB_NULL, GrB_PLUS_FP64, GrB_PLUS_FP64, bc_update, GrB_NULL);
 
     LAGRAPH_FREE_WORK ;
     return GrB_SUCCESS;

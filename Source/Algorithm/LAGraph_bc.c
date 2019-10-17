@@ -85,8 +85,6 @@ GrB_Info LAGraph_bc     // betweeness centrality
     GrB_Index source        // source vertex from which to compute shortest paths
 )
 {
-    GrB_Info info;
-
     GrB_Index n; // Number of nodes in the graph
     
     // BFS search matrix
@@ -107,32 +105,32 @@ GrB_Info LAGraph_bc     // betweeness centrality
     // Temp vectors used in computing the centrality update
     GrB_Vector temp1, temp2;
 
-    LAGRAPH_OK (GrB_Matrix_nrows(&n, A_matrix)); // Get dimensions
+    LAGr_Matrix_nrows(&n, A_matrix); // Get dimensions
 
     // Create the result vector for storing the final centrality metric
-    LAGRAPH_OK (GrB_Vector_new(centrality, GrB_FP64, n));
+    LAGr_Vector_new(centrality, GrB_FP64, n);
     
     // Create the search matrix. Dimensions are n x n:
     //  n vertices and (worst case) n levels in the BFS
-    LAGRAPH_OK (GrB_Matrix_new(&S_matrix, GrB_INT64, n, n));
+    LAGr_Matrix_new(&S_matrix, GrB_INT64, n, n);
     
     // Create the frontier vector - one entry for each vertex
-    LAGRAPH_OK (GrB_Vector_new(&frontier, GrB_INT64, n));
+    LAGr_Vector_new(&frontier, GrB_INT64, n);
 
     // Initialize the frontier vector with the source vertex
-    LAGRAPH_OK (GrB_Vector_setElement(frontier, 1, source));
+    LAGr_Vector_setElement(frontier, 1, source);
     
     // Initialze the number of paths with a copy of the frontier vector
-    LAGRAPH_OK (GrB_Vector_dup(&paths, frontier));
+    LAGr_Vector_dup(&paths, frontier);
     
     // Create a descriptor to return the structural complement of the output
-    LAGRAPH_OK (GrB_Descriptor_new(&structural_complement_output));
-    LAGRAPH_OK (GrB_Descriptor_set(structural_complement_output, GrB_MASK, GrB_SCMP));
-    LAGRAPH_OK (GrB_Descriptor_set(structural_complement_output, GrB_OUTP, GrB_REPLACE));
+    LAGr_Descriptor_new(&structural_complement_output);
+    LAGr_Descriptor_set(structural_complement_output, GrB_MASK, GrB_SCMP);
+    LAGr_Descriptor_set(structural_complement_output, GrB_OUTP, GrB_REPLACE);
     
     // Create a descriptor to use the transpose of the first input argument
-    LAGRAPH_OK (GrB_Descriptor_new(&transpose_first_arg));
-    LAGRAPH_OK (GrB_Descriptor_set(transpose_first_arg, GrB_INP0, GrB_TRAN));
+    LAGr_Descriptor_new(&transpose_first_arg);
+    LAGr_Descriptor_set(transpose_first_arg, GrB_INP0, GrB_TRAN);
 
     // === Breadth-first search stage ==========================================
     int64_t depth = 0;  // Start at depth 0
@@ -143,18 +141,18 @@ GrB_Info LAGraph_bc     // betweeness centrality
     {
         // Set this column of the S_matrix matrix equal to the frontier vector
         // S_matrix(:,depth) = frontier
-        LAGRAPH_OK (GrB_assign(S_matrix, GrB_NULL, GrB_NULL, frontier, depth, GrB_ALL, n, GrB_NULL));
+        LAGr_assign(S_matrix, GrB_NULL, GrB_NULL, frontier, depth, GrB_ALL, n, GrB_NULL);
 
         // Traverse to the next level of the BFS.
         // frontier = frontier*S_matrix masked by paths
         // The structural complement descriptor is used to denote !paths
-        LAGRAPH_OK (GrB_vxm(frontier, paths, GrB_NULL, GxB_PLUS_TIMES_INT64, frontier, A_matrix, structural_complement_output));
+        LAGr_vxm(frontier, paths, GrB_NULL, GxB_PLUS_TIMES_INT64, frontier, A_matrix, structural_complement_output);
 
         // Accumulate shortest paths: paths = paths + frontier
-        LAGRAPH_OK (GrB_eWiseAdd(paths, GrB_NULL, GrB_NULL, GxB_PLUS_TIMES_INT64, paths, frontier, GrB_NULL));
+        LAGr_eWiseAdd(paths, GrB_NULL, GrB_NULL, GxB_PLUS_TIMES_INT64, paths, frontier, GrB_NULL);
 
         // Sum path counts: sum(frontier)
-        LAGRAPH_OK (GrB_reduce(&sum, GrB_NULL, GxB_PLUS_INT64_MONOID, frontier, GrB_NULL));
+        LAGr_reduce(&sum, GrB_NULL, GxB_PLUS_INT64_MONOID, frontier, GrB_NULL);
 
         // Increase BFS depth by one
         depth = depth + 1;
@@ -162,8 +160,8 @@ GrB_Info LAGraph_bc     // betweeness centrality
     } while (sum); // Repeat until sum(frontier) = 0
 
     // === Betweenness centrality computation phase ============================
-    LAGRAPH_OK (GrB_Vector_new(&temp1, GrB_FP64, n));
-    LAGRAPH_OK (GrB_Vector_new(&temp2, GrB_FP64, n));
+    LAGr_Vector_new(&temp1, GrB_FP64, n);
+    LAGr_Vector_new(&temp2, GrB_FP64, n);
 
     // Backtrack through the BFS and compute centrality updates for each vertex
     for (int i = depth; i > 1; i--)
@@ -175,30 +173,30 @@ GrB_Info LAGraph_bc     // betweeness centrality
         // We need to build this complex operation piecewise.
 
         // temp1 = ones(1,n)
-        LAGRAPH_OK (GrB_assign(temp1, GrB_NULL, GrB_NULL, 1.0f, GrB_ALL, n, GrB_NULL));
+        LAGr_assign(temp1, GrB_NULL, GrB_NULL, 1.0f, GrB_ALL, n, GrB_NULL);
         
         // temp1 = 1 + centrality
-        LAGRAPH_OK (GrB_eWiseAdd(temp1, GrB_NULL, GrB_NULL, GxB_PLUS_TIMES_FP64, temp1, *centrality, GrB_NULL));
+        LAGr_eWiseAdd(temp1, GrB_NULL, GrB_NULL, GxB_PLUS_TIMES_FP64, temp1, *centrality, GrB_NULL);
         
         // temp2 = S_matrix(i,:)'
-        LAGRAPH_OK (GrB_extract(temp2, GrB_NULL, GrB_NULL, S_matrix, GrB_ALL, n, i, transpose_first_arg));
+        LAGr_extract(temp2, GrB_NULL, GrB_NULL, S_matrix, GrB_ALL, n, i, transpose_first_arg);
         
         // temp2 = (1 + centrality) ./ S_matrix(i,:)'
-        LAGRAPH_OK (GrB_eWiseMult(temp2, GrB_NULL, GrB_NULL, GrB_DIV_FP64, temp1, temp2, GrB_NULL)); 
+        LAGr_eWiseMult(temp2, GrB_NULL, GrB_NULL, GrB_DIV_FP64, temp1, temp2, GrB_NULL);
         
         // temp2 = A_matrix * (1 + centrality) ./ S_matrix(i,:)'
-        LAGRAPH_OK (GrB_mxv(temp2, GrB_NULL, GrB_NULL, GxB_PLUS_TIMES_FP64, A_matrix, temp2, GrB_NULL)); 
+        LAGr_mxv(temp2, GrB_NULL, GrB_NULL, GxB_PLUS_TIMES_FP64, A_matrix, temp2, GrB_NULL);
         
         // temp1 = S_matrix(i-1,:)'
-        LAGRAPH_OK (GrB_extract(temp1, GrB_NULL, GrB_NULL, S_matrix, GrB_ALL, n, i-1, transpose_first_arg));
+        LAGr_extract(temp1, GrB_NULL, GrB_NULL, S_matrix, GrB_ALL, n, i-1, transpose_first_arg);
         
         // Compute the entire update for the centrality scores
         // temp1 = S_matrix(i-1,:)' .* A_matrix * (1 + centrality) ./ S_matrix(i,:)'
-        LAGRAPH_OK (GrB_eWiseMult(temp1, GrB_NULL, GrB_NULL, GxB_PLUS_TIMES_FP64, temp1, temp2, GrB_NULL));
+        LAGr_eWiseMult(temp1, GrB_NULL, GrB_NULL, GxB_PLUS_TIMES_FP64, temp1, temp2, GrB_NULL);
 
         // Update centrality scores
         // centrality += temp1
-        LAGRAPH_OK (GrB_eWiseAdd(*centrality, GrB_NULL, GrB_NULL, GxB_PLUS_TIMES_FP64, *centrality, temp1, GrB_NULL)); 
+        LAGr_eWiseAdd(*centrality, GrB_NULL, GrB_NULL, GxB_PLUS_TIMES_FP64, *centrality, temp1, GrB_NULL);
     }
 
     // === Clean up and return =================================================
