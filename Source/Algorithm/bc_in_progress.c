@@ -95,7 +95,7 @@
     GrB_free (centrality) ;         \
 }
 
-GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
+GrB_Info LAGraph_bc_batch_wip // betweeness centrality, batch algorithm
 (
     GrB_Vector *centrality,    // centrality(i) is the betweeness centrality of node i
     const GrB_Matrix A_matrix, // input graph, treated as if boolean in semiring
@@ -166,7 +166,7 @@ GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
     // make paths a dense matrix
     LAGRAPH_OK (GrB_assign (paths, GrB_NULL, GrB_NULL, 0, GrB_ALL, n, GrB_ALL, num_sources, GrB_NULL)) ;
     GrB_Index ignore ;
-    LAGRAPH_OK (GrB_Matrix_all (&ignore, paths)) ;
+    LAGRAPH_OK (GrB_Matrix_nvals (&ignore, paths)) ;
 
     // optional: to set the matrix to CSC format
     // LAGRAPH_OK (GxB_set (paths, GxB_FORMAT, GxB_BY_COL)) ;
