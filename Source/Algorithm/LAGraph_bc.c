@@ -120,7 +120,7 @@ GrB_Info LAGraph_bc     // betweeness centrality
     // Initialize the frontier vector with the source vertex
     LAGr_Vector_setElement(frontier, 1, source);
     
-    // Initialze the number of paths with a copy of the frontier vector
+    // Initialize the number of paths with a copy of the frontier vector
     LAGr_Vector_dup(&paths, frontier);
     
     // Create a descriptor to return the structural complement of the output
@@ -164,7 +164,7 @@ GrB_Info LAGraph_bc     // betweeness centrality
     LAGr_Vector_new(&temp2, GrB_FP64, n);
 
     // Backtrack through the BFS and compute centrality updates for each vertex
-    for (int i = depth; i > 1; i--)
+    for (int64_t i = depth; i > 1; i--)
     {
         // TODO: Optimize this - probably possible with only one temp vector
         
@@ -196,7 +196,7 @@ GrB_Info LAGraph_bc     // betweeness centrality
 
         // Update centrality scores
         // centrality += temp1
-        LAGr_eWiseAdd(*centrality, GrB_NULL, GrB_NULL, GxB_PLUS_TIMES_FP64, *centrality, temp1, GrB_NULL);
+        LAGr_assign(*centrality, GrB_NULL, GrB_PLUS_FP64, temp1, GrB_ALL, n, GrB_NULL);
     }
 
     // === Clean up and return =================================================
