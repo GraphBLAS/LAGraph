@@ -813,6 +813,14 @@ GrB_Info LAGraph_BF_basic
     const GrB_Index s           //given index of the source
 ) ;
 
+GrB_Info LAGraph_BF_basic_pushpull
+(
+    GrB_Vector *pd,             //the pointer to the vector of distance
+    const GrB_Matrix A,         //matrix for the graph
+    const GrB_Matrix AT,        //transpose of A (optional)
+    const GrB_Index s           //given index of the source
+) ;
+
 GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
 (
     GrB_Vector *LCC_handle,     // output vector
