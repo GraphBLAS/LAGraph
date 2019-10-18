@@ -68,7 +68,7 @@ int main (int argc, char **argv)
     LAGRAPH_OK (LAGraph_mmread(&A, stdin));
 
     // convert to boolean, pattern-only
-    LAGRAPH_OK (LAGraph_pattern(&Abool, A));
+    LAGRAPH_OK (LAGraph_pattern(&Abool, A, GrB_INT64));
 
     GrB_free (&A);
     A = Abool;
@@ -82,8 +82,8 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     GrB_Index nrows, ncols;
-    LAGRAPH_OK (GrB_Matrix_nrows(&nrows, A));
-    LAGRAPH_OK (GrB_Matrix_ncols(&ncols, A));
+    LAGr_Matrix_nrows(&nrows, A);
+    LAGr_Matrix_ncols(&ncols, A);
     GrB_Index n = nrows;
 
     //--------------------------------------------------------------------------
@@ -124,7 +124,7 @@ int main (int argc, char **argv)
     {
         // if the entry v(i) is not present, x is unmodified, so '0' is printed
         float x = 0;
-        LAGRAPH_OK (GrB_Vector_extractElement (&x, v_batch, i));
+        LAGr_Vector_extractElement (&x, v_batch, i);
         printf("%f\n", x);
     }
 

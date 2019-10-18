@@ -74,7 +74,7 @@ int main (int argc, char **argv)
     LAGRAPH_OK (LAGraph_mmread(&A, stdin));
 
     // convert to boolean, pattern-only
-    LAGRAPH_OK (LAGraph_pattern(&Abool, A));
+    LAGRAPH_OK (LAGraph_pattern(&Abool, A, GrB_INT64));
 
     GrB_free (&A);
     A = Abool;
@@ -180,7 +180,7 @@ int main (int argc, char **argv)
 
     for (int64_t i = 0; i < n; i++)
     {
-        printf("   | %3d ", i);
+        printf("   | %3lld ", i);
 
         // if the entry v(i) is not present, x is unmodified, so '0' is printed
         float x1 = 0;
@@ -196,7 +196,7 @@ int main (int argc, char **argv)
         tests_pass &= test_result;
         if (!test_result)
         {
-            fprintf(stderr, "Failure at index %d\n", i);
+            fprintf(stderr, "Failure at index %lld\n", i);
             fprintf(stderr, "x1 = %f\n", x1);
             fprintf(stderr, "x2 = %f\n", x2);
             fprintf(stderr, "Error = %f\n", fabs(x1-x2) / (1E-6 + fmax(x1,x2)));

@@ -236,7 +236,7 @@ GrB_Info LAGraph_cdlp
         LAGraph_tic (tic) ;
 
         // S = binary pattern of A
-        LAGRAPH_OK (LAGraph_pattern(&S, A))
+        LAGRAPH_OK (LAGraph_pattern(&S, A, GrB_UINT64))
         // Remove all self edges
         LAGRAPH_OK (LAGraph_prune_diag(S))
 

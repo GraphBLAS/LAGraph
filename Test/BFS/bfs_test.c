@@ -86,7 +86,7 @@ int main (int argc, char **argv)
     // LAGraph_mmwrite (A, stderr) ;
 
     // convert to boolean, pattern-only
-    LAGRAPH_OK (LAGraph_pattern (&Abool, A)) ;
+    LAGRAPH_OK (LAGraph_pattern (&Abool, A, GrB_BOOL)) ;
     // LAGraph_mmwrite (Abool, stderr) ;
     GrB_free (&A) ;
     A = Abool ;

@@ -138,7 +138,7 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
         LAGraph_tic (tic) ;
 
         // S = binary pattern of A
-        LAGRAPH_OK (LAGraph_pattern (&S, A)) ;
+        LAGRAPH_OK (LAGraph_pattern (&S, A, GrB_FP64)) ;
 
         // remove all self edges
         LAGRAPH_OK (LAGraph_prune_diag (S)) ;

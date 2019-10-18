@@ -573,7 +573,8 @@ GrB_Info LAGraph_ispattern  // return GrB_SUCCESS if successful
 GrB_Info LAGraph_pattern    // return GrB_SUCCESS if successful
 (
     GrB_Matrix *C,          // a boolean matrix with the pattern of A
-    GrB_Matrix A
+    GrB_Matrix A,
+    GrB_Type T              // return type for C
 ) ;
 
 GrB_Info LAGraph_isequal    // return GrB_SUCCESS if successful

@@ -71,7 +71,7 @@ int main (int argc, char **argv)
     LAGRAPH_OK (LAGraph_mmread(&A, stdin));
 
     // convert to boolean, pattern-only
-    LAGRAPH_OK (LAGraph_pattern(&Abool, A));
+    LAGRAPH_OK (LAGraph_pattern(&Abool, A, GrB_INT64));
 
     GrB_free (&A);
     A = Abool;
