@@ -308,8 +308,8 @@ GrB_Info LAGraph_cdlp
         {
             // check if we have a reason to recompute the mode value
             if (k == nnz        // we surpassed the last element
-             || I[k-1] != I[k]  // the run value has changed
-             || X[k-1] != X[k]) // the row index has changed
+             || I[k-1] != I[k]  // the row index has changed
+             || X[k-1] != X[k]) // the run value has changed
             {
                 if (run_length > mode_length)
                 {
@@ -321,7 +321,7 @@ GrB_Info LAGraph_cdlp
             run_length++;
 
             // check if we passed a row
-            if (k == nnz        // we reached the last element
+            if (k == nnz        // we surpassed the last element
              || I[k-1] != I[k]) // the row index has changed
             {
                 GrB_Matrix_setElement(L, mode_value, I[k-1], I[k-1]);
