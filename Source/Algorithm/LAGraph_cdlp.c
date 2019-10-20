@@ -150,39 +150,6 @@
     GrB_free (&desc_out) ;                                                     \
 }
 
-GrB_Index Get_Min_Mode(
-    const GrB_Index *labels,
-    const GrB_Index num_vals
-)
-{
-    GrB_Index mode_label = labels[num_vals - 1];
-    GrB_Index mode_occurrence = 1;
-    GrB_Index current_occurrence = 1;
-
-    for (int64_t i = num_vals - 2; i >= 0; i--)
-    {
-        if (labels[i] != labels[i + 1])
-        {
-            if (current_occurrence >= mode_occurrence)
-            {
-                mode_label = labels[i + 1];
-                mode_occurrence = current_occurrence;
-            }
-            current_occurrence = 1;
-        }
-        else
-        {
-            current_occurrence++;
-        }
-    }
-
-    if (current_occurrence >= mode_occurrence)
-    {
-        mode_label = labels[0];
-    }
-    return mode_label;
-}
-
 GrB_Info LAGraph_cdlp
 (
     GrB_Vector *CDLP_handle, // output vector
@@ -310,7 +277,6 @@ GrB_Info LAGraph_cdlp
     uint64_t* workspace2 = LAGraph_malloc(nnz, sizeof(GrB_Index));
 
     const int nthreads = LAGraph_get_nthreads();
-
     for (int iteration = 0; iteration < itermax; iteration++)
     {
         // AL_in = A * L
@@ -326,23 +292,40 @@ GrB_Info LAGraph_cdlp
 
         GB_msort_2(I, X, workspace1, workspace2, nnz, nthreads);
 
-        int curr_row_index = 0;
-        int curr_row_start = 0;
-
         // save current labels for comparison by swapping L and L_prev
         GrB_Matrix L_swap = L;
         L = L_prev;
         L_prev = L_swap;
 
-        for (GrB_Index k = 0; k <= nnz; k++)
+        GrB_Index mode_value = -1;
+        GrB_Index mode_length = 0;
+        GrB_Index run_length = 1;
+
+        // I[k] is the current row index
+        // X[k] is the current value
+        // we iterate in range 1..nnz and use the last index (nnz) to process the last row of the matrix
+        for (GrB_Index k = 1; k <= nnz; k++)
         {
-            // check if there is a change in row index or if we hit the end of the array
-            if (k == nnz || I[k] != curr_row_index)
+            // check if we have a reason to recompute the mode value
+            if (k == nnz        // we surpassed the last element
+             || I[k-1] != I[k]  // the run value has changed
+             || X[k-1] != X[k]) // the row index has changed
             {
-                GrB_Index min_mode = Get_Min_Mode(X + curr_row_start, k - curr_row_start);
-                GrB_Matrix_setElement(L, min_mode, curr_row_index, curr_row_index);
-                curr_row_index++;
-                curr_row_start = k;
+                if (run_length > mode_length)
+                {
+                    mode_value = X[k-1];
+                    mode_length = run_length;
+                }
+                run_length = 0;
+            }
+            run_length++;
+
+            // check if we passed a row
+            if (k == nnz        // we reached the last element
+             || I[k-1] != I[k]) // the row index has changed
+            {
+                GrB_Matrix_setElement(L, mode_value, I[k-1], I[k-1]);
+                mode_length = 0;
             }
         }
 
