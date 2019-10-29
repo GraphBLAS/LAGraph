@@ -144,10 +144,10 @@
     GrB_free (&L) ;                                                            \
     if (sanitize) GrB_free (&S) ;                                              \
     GrB_free (&S) ;                                                            \
+    GrB_free (&AT) ;                                                           \
     GrB_free (&AL_in) ;                                                        \
     GrB_free (&AL_out) ;                                                       \
-    GrB_free (&desc_in) ;                                                      \
-    GrB_free (&desc_out) ;                                                     \
+    GrB_free (&desc) ;                                                         \
 }
 
 GrB_Info LAGraph_cdlp
@@ -168,14 +168,15 @@ GrB_Info LAGraph_cdlp
     GrB_Matrix L_prev = NULL;
     // Source adjacency matrix
     GrB_Matrix S = NULL;
+    // Transposed matrix for the unsymmetric case
+    GrB_Matrix AT = NULL;
     // S*L matrix
     GrB_Matrix AL_in = NULL;
     GrB_Matrix AL_out = NULL;
     // Result CDLP vector
     GrB_Vector CDLP = NULL;
 
-    GrB_Descriptor desc_in = NULL;
-    GrB_Descriptor desc_out = NULL;
+    GrB_Descriptor desc = NULL;
 
     // Arrays holding extracted tuples
     GrB_Index *I = NULL;
@@ -228,13 +229,8 @@ GrB_Info LAGraph_cdlp
         )
     }
 
-    LAGRAPH_OK(GrB_Descriptor_new(&desc_in))
-    LAGRAPH_OK(GrB_Descriptor_set(desc_in, GrB_OUTP, GrB_REPLACE))
-
-    LAGRAPH_OK(GrB_Descriptor_new(&desc_out))
-    LAGRAPH_OK(GrB_Descriptor_set(desc_out, GrB_INP0, GrB_TRAN))
-    LAGRAPH_OK(GrB_Descriptor_set(desc_out, GrB_OUTP, GrB_REPLACE))
-
+    LAGRAPH_OK(GrB_Descriptor_new(&desc))
+    LAGRAPH_OK(GrB_Descriptor_set(desc, GrB_OUTP, GrB_REPLACE))
 
     // n = size of A (# of nodes in the graph)
     GrB_Index n;
@@ -275,6 +271,11 @@ GrB_Info LAGraph_cdlp
     if (!symmetric)
     {
         LAGRAPH_OK(GrB_Matrix_new(&AL_out, GrB_UINT64, n, n))
+
+        // compute AT for the unsymmetric case as it will be used
+        // to compute AL_out = A'*L in each iteration
+        LAGRAPH_OK (GrB_Matrix_new (&AT, GrB_UINT64, n, n)) ;
+        LAGRAPH_OK (GrB_transpose (AT, NULL, NULL, A, NULL)) ;
     }
 
     // Initialize data structures for extraction from 'AL_in' and (for directed graphs) 'AL_out'
@@ -288,13 +289,13 @@ GrB_Info LAGraph_cdlp
     for (int iteration = 0; iteration < itermax; iteration++)
     {
         // AL_in = A * L
-        LAGRAPH_OK(GrB_mxm(AL_in, GrB_NULL, GrB_NULL, GxB_PLUS_TIMES_UINT64, S, L, desc_in))
+        LAGRAPH_OK(GrB_mxm(AL_in, GrB_NULL, GrB_NULL, GxB_PLUS_TIMES_UINT64, S, L, desc))
         LAGRAPH_OK(GrB_Matrix_extractTuples_UINT64(I, GrB_NULL, X, &nz, AL_in))
 
         if (!symmetric)
         {
-            // AL_out = A' * L
-            LAGRAPH_OK(GrB_mxm(AL_out, GrB_NULL, GrB_NULL, GxB_PLUS_TIMES_UINT64, S, L, desc_out))
+            // AL_out = A' * L = AT * L
+            LAGRAPH_OK(GrB_mxm(AL_out, GrB_NULL, GrB_NULL, GxB_PLUS_TIMES_UINT64, AT, L, desc))
             LAGRAPH_OK(GrB_Matrix_extractTuples_UINT64(&I[nz], GrB_NULL, &X[nz], &nz, AL_out))
         }
 
