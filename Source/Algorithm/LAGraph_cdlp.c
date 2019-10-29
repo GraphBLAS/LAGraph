@@ -255,11 +255,19 @@ GrB_Info LAGraph_cdlp
     }
 
     // Initialize L with diagonal elements 1..n
-    LAGRAPH_OK(GrB_Matrix_new(&L, GrB_UINT64, n, n))
-    for (GrB_Index i = 0; i < n; i++)
+    I = LAGraph_malloc (n, sizeof (GrB_Index)) ;
+    X = LAGraph_malloc (n, sizeof (uint64_t)) ;
+    if (I == NULL || X == NULL)
     {
-        LAGRAPH_OK(GrB_Matrix_setElement(L, i + 1, i, i))
+        LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
     }
+    for (GrB_Index i = 0; i < n; i++) {
+        I[i] = i;
+        X[i] = i+1;
+    }
+    LAGRAPH_OK (GrB_Matrix_new (&L, GrB_UINT64, n, n)) ;
+    LAGRAPH_OK (GrB_Matrix_build (L, I, I, X, n, GrB_PLUS_UINT64)) ;
+
     // Initialize matrix for storing previous labels
     LAGRAPH_OK(GrB_Matrix_new(&L_prev, GrB_UINT64, n, n))
 
