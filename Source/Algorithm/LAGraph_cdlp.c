@@ -268,11 +268,8 @@ GrB_Info LAGraph_cdlp
     // Initialize matrix for storing previous labels
     LAGRAPH_OK(GrB_Matrix_new(&L_prev, GrB_UINT64, n, n))
 
-    LAGRAPH_OK(GrB_Matrix_new(&AL_in, GrB_UINT64, n, n))
     if (!symmetric)
     {
-        LAGRAPH_OK(GrB_Matrix_new(&AL_out, GrB_UINT64, n, n))
-
         // compute AT for the unsymmetric case as it will be used
         // to compute AL_out = A'*L in each iteration
         LAGRAPH_OK (GrB_Matrix_new (&AT, GrB_UINT64, n, n)) ;
@@ -290,14 +287,18 @@ GrB_Info LAGraph_cdlp
     for (int iteration = 0; iteration < itermax; iteration++)
     {
         // AL_in = A * L
+        LAGRAPH_OK(GrB_Matrix_new(&AL_in, GrB_UINT64, n, n))
         LAGRAPH_OK(GrB_mxm(AL_in, GrB_NULL, GrB_NULL, GxB_PLUS_TIMES_UINT64, S, L, desc))
         LAGRAPH_OK(GrB_Matrix_extractTuples_UINT64(I, GrB_NULL, X, &nz, AL_in))
+        LAGRAPH_OK(GrB_free(&AL_in))
 
         if (!symmetric)
         {
             // AL_out = A' * L = AT * L
+            LAGRAPH_OK(GrB_Matrix_new(&AL_out, GrB_UINT64, n, n))
             LAGRAPH_OK(GrB_mxm(AL_out, GrB_NULL, GrB_NULL, GxB_PLUS_TIMES_UINT64, AT, L, desc))
             LAGRAPH_OK(GrB_Matrix_extractTuples_UINT64(&I[nz], GrB_NULL, &X[nz], &nz, AL_out))
+            LAGRAPH_OK(GrB_free(&AL_out))
         }
 
         GB_msort_2(I, X, workspace1, workspace2, nnz, nthreads);
