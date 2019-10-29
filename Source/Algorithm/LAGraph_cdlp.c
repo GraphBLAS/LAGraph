@@ -231,6 +231,7 @@ GrB_Info LAGraph_cdlp
 
     LAGRAPH_OK(GrB_Descriptor_new(&desc))
     LAGRAPH_OK(GrB_Descriptor_set(desc, GrB_OUTP, GrB_REPLACE))
+    LAGRAPH_OK(GrB_Descriptor_set(desc, GxB_AxB_METHOD, GxB_AxB_HEAP))
 
     // n = size of A (# of nodes in the graph)
     GrB_Index n;
