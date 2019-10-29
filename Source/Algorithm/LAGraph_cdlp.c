@@ -142,8 +142,8 @@
 #define LAGRAPH_FREE_ALL                                                       \
 {                                                                              \
     GrB_free (&L) ;                                                            \
+    GrB_free (&L_prev) ;                                                       \
     if (sanitize) GrB_free (&S) ;                                              \
-    GrB_free (&S) ;                                                            \
     GrB_free (&AT) ;                                                           \
     GrB_free (&AL_in) ;                                                        \
     GrB_free (&AL_out) ;                                                       \
@@ -280,8 +280,8 @@ GrB_Info LAGraph_cdlp
     I = LAGraph_malloc(nnz, sizeof(GrB_Index));
     X = LAGraph_malloc(nnz, sizeof(GrB_Index));
 
-    uint64_t* workspace1 = LAGraph_malloc(nnz, sizeof(GrB_Index));
-    uint64_t* workspace2 = LAGraph_malloc(nnz, sizeof(GrB_Index));
+    uint64_t *workspace1 = LAGraph_malloc(nnz, sizeof(GrB_Index));
+    uint64_t *workspace2 = LAGraph_malloc(nnz, sizeof(GrB_Index));
 
     const int nthreads = LAGraph_get_nthreads();
     for (int iteration = 0; iteration < itermax; iteration++)
@@ -359,6 +359,11 @@ GrB_Info LAGraph_cdlp
             }
         }
     }
+
+    LAGRAPH_FREE (I) ;
+    LAGRAPH_FREE (X) ;
+    LAGRAPH_FREE (workspace1) ;
+    LAGRAPH_FREE (workspace2) ;
 
     //--------------------------------------------------------------------------
     // extract final labels to the result vector
