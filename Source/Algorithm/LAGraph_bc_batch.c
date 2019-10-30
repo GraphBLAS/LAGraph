@@ -72,13 +72,13 @@
 
 #define LAGRAPH_FREE_WORK                   \
 {                                           \
-    GrB_free (&frontier);                   \
-    GrB_free (&paths);                      \
-    GrB_free (&inv_paths);                  \
-    GrB_free (&bc_update);                  \
-    GrB_free (&desc_tsr);                   \
-    GrB_free (&replace);                    \
-    GrB_free (&temp);                       \
+    GrB_free(&frontier);                    \
+    GrB_free(&paths);                       \
+    GrB_free(&inv_paths);                   \
+    GrB_free(&bc_update);                    \
+    GrB_free(&desc_tsr);                    \
+    GrB_free(&replace);                     \
+    GrB_free(&temp);                        \
     if (S_array != NULL)                    \
     {                                       \
         for (int64_t d = 0; d < depth; d++) \
@@ -134,7 +134,7 @@ GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
     GrB_Descriptor replace = NULL ;
 
     int64_t depth = 0; // Initial BFS depth
-
+    GxB_set (GxB_FORMAT, GxB_BY_COL) ;
     LAGr_Matrix_nrows(&n, A_matrix); // Get dimensions
 
     // Create the result vector, one entry for each node
@@ -179,7 +179,7 @@ GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
         }
     }
 
-    // Create frontier matrix and initialize to outgoing nodes from 
+    // Create frontier matrix and initialize to outgoing nodes from
     // all source nodes
     LAGr_Matrix_new(&frontier, GrB_INT64, n, num_sources);
     // AT = A'
@@ -201,15 +201,14 @@ GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
                           //  are no shorter than any existing paths.
     do
     {
-        
+
         // Create the current search matrix - one column for each source/BFS
         LAGr_Matrix_new(&(S_array[depth]), GrB_BOOL, n, num_sources);
-        
+
         // Copy the current frontier to S
         LAGr_apply(S_array[depth], GrB_NULL, GrB_NULL, GrB_IDENTITY_BOOL, frontier, GrB_NULL);
 
         // Accumulate path counts: paths += frontier
-        // Should be GrB_assign with GrB_PLUS_INT64 for accum
         LAGr_assign(paths, GrB_NULL, GrB_PLUS_INT64, frontier, GrB_ALL, n, GrB_ALL, num_sources, GrB_NULL);
         //LAGr_eWiseAdd(paths, GrB_NULL, GrB_NULL, GxB_PLUS_TIMES_INT64, paths, frontier, GrB_NULL);
 
@@ -226,24 +225,24 @@ GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
     // === Betweenness centrality computation phase ============================
 
     // Create inverse paths matrix: inv_paths = 1 ./ paths
-    LAGr_Matrix_new(&inv_paths, GrB_FP64, n, num_sources);
-    LAGr_apply(inv_paths, GrB_NULL, GrB_NULL, GrB_MINV_FP64, paths, GrB_NULL);
+    //LAGr_Matrix_new(&inv_paths, GrB_FP64, n, num_sources);
+    //LAGr_apply(inv_paths, GrB_NULL, GrB_NULL, GrB_MINV_FP64, paths, GrB_NULL);
 
     // Create the update matrix and initialize it to 1
     // TODO: "To avoid sparsity issues"?
     LAGr_Matrix_new(&bc_update, GrB_FP64, n, num_sources);
     LAGr_assign(bc_update, GrB_NULL, GrB_NULL, 1.0f, GrB_ALL, n, GrB_ALL, num_sources, GrB_NULL);
 
-    // Create temporary workspace matrix
     LAGr_Matrix_new(&temp, GrB_FP64, n, num_sources);
-    
+
+    GxB_print(paths, GxB_COMPLETE);
     // Backtrack through the BFS and compute centrality updates for each vertex
     for (int64_t i = depth - 1; i > 0; i--)
     {
         // Add contributions by successors and mask with that BFS level’s frontier
-        
-        // temp<S_array[i]>=(1 ./ nsp) .∗ bc_update
-        LAGr_eWiseMult(temp, S_array[i], GrB_NULL, GxB_PLUS_TIMES_FP64, bc_update, inv_paths, LAGraph_desc_ooor);
+
+        // temp<S_array[i]> = (1 ./ nsp) .∗ bc_update
+        LAGr_eWiseMult(temp, S_array[i], GrB_NULL, GrB_DIV_FP64, bc_update, paths, LAGraph_desc_ooor);
 
         // temp<S_array[i−1]> = (A ∗ temp)
         LAGr_mxm(temp, S_array[i-1], GrB_NULL, GxB_PLUS_TIMES_FP64, A_matrix, temp, LAGraph_desc_ooor);
@@ -251,7 +250,6 @@ GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
         // bc_update += temp .∗ paths
         LAGr_eWiseMult(bc_update, GrB_NULL, GrB_PLUS_FP64, GxB_TIMES_FP64_MONOID, temp, paths, GrB_NULL);
     }
-
     // Initialize the centrality array with -(num_sources) to avoid counting
     // zero length paths
     LAGr_assign(*centrality, GrB_NULL, GrB_NULL, -(float)num_sources, GrB_ALL, n, GrB_NULL);
