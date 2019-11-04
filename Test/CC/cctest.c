@@ -70,7 +70,7 @@ int main (int argc, char **argv)
 
     LAGRAPH_OK (LAGraph_mmread (&A, f)) ;
 
-    LAGRAPH_OK (LAGraph_cc (A, &result, false)) ;
+    LAGRAPH_OK (LAGraph_cc (&result, A, false)) ;
 
     // TODO: check result
 

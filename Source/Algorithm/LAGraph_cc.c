@@ -349,7 +349,13 @@ GrB_Info CountCC(GrB_Vector parents, GrB_Index* countcc)
     return (GrB_SUCCESS) ;
 }
 
-GrB_Info LAGraph_cc(GrB_Matrix A, GrB_Vector *result, bool sanitize)
+
+GrB_Info LAGraph_cc
+(
+    GrB_Vector *result,     // output: array of component identifiers
+    GrB_Matrix A,           // input matrix
+    bool sanitize           // if true, ensure A is symmetric
+)
 {
     GrB_Info info;
     GrB_Index n ;

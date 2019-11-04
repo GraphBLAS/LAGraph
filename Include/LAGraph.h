@@ -738,9 +738,9 @@ GrB_Info LAGraph_bfs_simple     // push-only BFS
 ) ;
 
 GrB_Info LAGraph_cc (
-    GrB_Matrix A,
-    GrB_Vector *result,
-    bool sanitize
+    GrB_Vector *result,     // output: array of component identifiers
+    GrB_Matrix A,           // input matrix
+    bool sanitize           // if true, ensure A is symmetric
 ) ;
 
 // LAGraph_pagerank computes an array of structs for its result
