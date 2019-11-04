@@ -739,7 +739,8 @@ GrB_Info LAGraph_bfs_simple     // push-only BFS
 
 GrB_Info LAGraph_cc (
     GrB_Matrix A,
-    GrB_Vector *result
+    GrB_Vector *result,
+    bool sanitize
 ) ;
 
 // LAGraph_pagerank computes an array of structs for its result
