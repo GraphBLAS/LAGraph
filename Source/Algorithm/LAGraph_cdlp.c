@@ -144,10 +144,10 @@
     GrB_free (&L) ;                                                            \
     GrB_free (&L_prev) ;                                                       \
     if (sanitize) GrB_free (&S) ;                                              \
+    GrB_free (&AT) ;                                                           \
     GrB_free (&AL_in) ;                                                        \
     GrB_free (&AL_out) ;                                                       \
-    GrB_free (&desc_in) ;                                                      \
-    GrB_free (&desc_out) ;                                                     \
+    GrB_free (&desc) ;                                                         \
 }
 
 GrB_Info LAGraph_cdlp
@@ -168,14 +168,15 @@ GrB_Info LAGraph_cdlp
     GrB_Matrix L_prev = NULL;
     // Source adjacency matrix
     GrB_Matrix S = NULL;
+    // Transposed matrix for the unsymmetric case
+    GrB_Matrix AT = NULL;
     // S*L matrix
     GrB_Matrix AL_in = NULL;
     GrB_Matrix AL_out = NULL;
     // Result CDLP vector
     GrB_Vector CDLP = NULL;
 
-    GrB_Descriptor desc_in = NULL;
-    GrB_Descriptor desc_out = NULL;
+    GrB_Descriptor desc = NULL;
 
     // Arrays holding extracted tuples
     GrB_Index *I = NULL;
@@ -228,12 +229,9 @@ GrB_Info LAGraph_cdlp
         )
     }
 
-    LAGRAPH_OK(GrB_Descriptor_new(&desc_in))
-    LAGRAPH_OK(GrB_Descriptor_set(desc_in, GrB_OUTP, GrB_REPLACE))
-
-    LAGRAPH_OK(GrB_Descriptor_new(&desc_out))
-    LAGRAPH_OK(GrB_Descriptor_set(desc_out, GrB_INP0, GrB_TRAN))
-    LAGRAPH_OK(GrB_Descriptor_set(desc_out, GrB_OUTP, GrB_REPLACE))
+    LAGRAPH_OK(GrB_Descriptor_new(&desc))
+    LAGRAPH_OK(GrB_Descriptor_set(desc, GrB_OUTP, GrB_REPLACE))
+    LAGRAPH_OK(GrB_Descriptor_set(desc, GxB_AxB_METHOD, GxB_AxB_HEAP))
 
     // n = size of A (# of nodes in the graph)
     GrB_Index n;
@@ -254,42 +252,59 @@ GrB_Info LAGraph_cdlp
     }
 
     // Initialize L with diagonal elements 1..n
-    LAGRAPH_OK(GrB_Matrix_new(&L, GrB_UINT64, n, n))
-    for (GrB_Index i = 0; i < n; i++)
+    I = LAGraph_malloc (n, sizeof (GrB_Index)) ;
+    X = LAGraph_malloc (n, sizeof (GrB_Index)) ;
+    if (I == NULL || X == NULL)
     {
-        LAGRAPH_OK(GrB_Matrix_setElement(L, i + 1, i, i))
+        LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
     }
+    for (GrB_Index i = 0; i < n; i++) {
+        I[i] = i;
+        X[i] = i+1;
+    }
+    LAGRAPH_OK (GrB_Matrix_new (&L, GrB_UINT64, n, n)) ;
+    LAGRAPH_OK (GrB_Matrix_build (L, I, I, X, n, GrB_PLUS_UINT64)) ;
+    LAGRAPH_FREE (I) ;
+    LAGRAPH_FREE (X) ;
+
     // Initialize matrix for storing previous labels
     LAGRAPH_OK(GrB_Matrix_new(&L_prev, GrB_UINT64, n, n))
 
-    LAGRAPH_OK(GrB_Matrix_new(&AL_in, GrB_UINT64, n, n))
     if (!symmetric)
     {
-        LAGRAPH_OK(GrB_Matrix_new(&AL_out, GrB_UINT64, n, n))
+        // compute AT for the unsymmetric case as it will be used
+        // to compute AL_out = A'*L in each iteration
+        LAGRAPH_OK (GrB_Matrix_new (&AT, GrB_UINT64, n, n)) ;
+        LAGRAPH_OK (GrB_transpose (AT, NULL, NULL, A, NULL)) ;
     }
-
-    // Initialize data structures for extraction from 'AL_in' and (for directed graphs) 'AL_out'
-    I = LAGraph_malloc(nnz, sizeof(GrB_Index));
-    X = LAGraph_malloc(nnz, sizeof(GrB_Index));
-
-    uint64_t *workspace1 = LAGraph_malloc(nnz, sizeof(GrB_Index));
-    uint64_t *workspace2 = LAGraph_malloc(nnz, sizeof(GrB_Index));
 
     const int nthreads = LAGraph_get_nthreads();
     for (int iteration = 0; iteration < itermax; iteration++)
     {
+        // Initialize data structures for extraction from 'AL_in' and (for directed graphs) 'AL_out'
+        I = LAGraph_malloc(nnz, sizeof(GrB_Index));
+        X = LAGraph_malloc(nnz, sizeof(GrB_Index));
+
         // AL_in = A * L
-        LAGRAPH_OK(GrB_mxm(AL_in, GrB_NULL, GrB_NULL, GxB_PLUS_TIMES_UINT64, S, L, desc_in))
+        LAGRAPH_OK(GrB_Matrix_new(&AL_in, GrB_UINT64, n, n))
+        LAGRAPH_OK(GrB_mxm(AL_in, GrB_NULL, GrB_NULL, GxB_PLUS_TIMES_UINT64, S, L, desc))
         LAGRAPH_OK(GrB_Matrix_extractTuples_UINT64(I, GrB_NULL, X, &nz, AL_in))
+        LAGRAPH_OK(GrB_free(&AL_in))
 
         if (!symmetric)
         {
-            // AL_out = A' * L
-            LAGRAPH_OK(GrB_mxm(AL_out, GrB_NULL, GrB_NULL, GxB_PLUS_TIMES_UINT64, S, L, desc_out))
+            // AL_out = A' * L = AT * L
+            LAGRAPH_OK(GrB_Matrix_new(&AL_out, GrB_UINT64, n, n))
+            LAGRAPH_OK(GrB_mxm(AL_out, GrB_NULL, GrB_NULL, GxB_PLUS_TIMES_UINT64, AT, L, desc))
             LAGRAPH_OK(GrB_Matrix_extractTuples_UINT64(&I[nz], GrB_NULL, &X[nz], &nz, AL_out))
+            LAGRAPH_OK(GrB_free(&AL_out))
         }
 
+        uint64_t *workspace1 = LAGraph_malloc(nnz, sizeof(GrB_Index));
+        uint64_t *workspace2 = LAGraph_malloc(nnz, sizeof(GrB_Index));
         GB_msort_2(I, X, workspace1, workspace2, nnz, nthreads);
+        LAGRAPH_FREE (workspace1) ;
+        LAGRAPH_FREE (workspace2) ;
 
         // save current labels for comparison by swapping L and L_prev
         GrB_Matrix L_swap = L;
@@ -327,6 +342,8 @@ GrB_Info LAGraph_cdlp
                 mode_length = 0;
             }
         }
+        LAGRAPH_FREE (I) ;
+        LAGRAPH_FREE (X) ;
 
         if (L_prev == L)
         {
@@ -347,11 +364,6 @@ GrB_Info LAGraph_cdlp
             }
         }
     }
-
-    LAGRAPH_FREE (I) ;
-    LAGRAPH_FREE (X) ;
-    LAGRAPH_FREE (workspace1) ;
-    LAGRAPH_FREE (workspace2) ;
 
     //--------------------------------------------------------------------------
     // extract final labels to the result vector
