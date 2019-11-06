@@ -280,9 +280,6 @@ GrB_Info LAGraph_cdlp
     I = LAGraph_malloc(nnz, sizeof(GrB_Index));
     X = LAGraph_malloc(nnz, sizeof(GrB_Index));
 
-    uint64_t *workspace1 = LAGraph_malloc(nnz, sizeof(GrB_Index));
-    uint64_t *workspace2 = LAGraph_malloc(nnz, sizeof(GrB_Index));
-
     const int nthreads = LAGraph_get_nthreads();
     for (int iteration = 0; iteration < itermax; iteration++)
     {
@@ -301,7 +298,11 @@ GrB_Info LAGraph_cdlp
             LAGRAPH_OK(GrB_free(&AL_out))
         }
 
+        uint64_t *workspace1 = LAGraph_malloc(nnz, sizeof(GrB_Index));
+        uint64_t *workspace2 = LAGraph_malloc(nnz, sizeof(GrB_Index));
         GB_msort_2(I, X, workspace1, workspace2, nnz, nthreads);
+        LAGRAPH_FREE (workspace1) ;
+        LAGRAPH_FREE (workspace2) ;
 
         // save current labels for comparison by swapping L and L_prev
         GrB_Matrix L_swap = L;
@@ -362,8 +363,6 @@ GrB_Info LAGraph_cdlp
 
     LAGRAPH_FREE (I) ;
     LAGRAPH_FREE (X) ;
-    LAGRAPH_FREE (workspace1) ;
-    LAGRAPH_FREE (workspace2) ;
 
     //--------------------------------------------------------------------------
     // extract final labels to the result vector
