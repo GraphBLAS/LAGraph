@@ -253,7 +253,7 @@ GrB_Info LAGraph_cdlp
 
     // Initialize L with diagonal elements 1..n
     I = LAGraph_malloc (n, sizeof (GrB_Index)) ;
-    X = LAGraph_malloc (n, sizeof (uint64_t)) ;
+    X = LAGraph_malloc (n, sizeof (GrB_Index)) ;
     if (I == NULL || X == NULL)
     {
         LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
@@ -264,6 +264,8 @@ GrB_Info LAGraph_cdlp
     }
     LAGRAPH_OK (GrB_Matrix_new (&L, GrB_UINT64, n, n)) ;
     LAGRAPH_OK (GrB_Matrix_build (L, I, I, X, n, GrB_PLUS_UINT64)) ;
+    LAGRAPH_FREE (I) ;
+    LAGRAPH_FREE (X) ;
 
     // Initialize matrix for storing previous labels
     LAGRAPH_OK(GrB_Matrix_new(&L_prev, GrB_UINT64, n, n))
@@ -276,13 +278,13 @@ GrB_Info LAGraph_cdlp
         LAGRAPH_OK (GrB_transpose (AT, NULL, NULL, A, NULL)) ;
     }
 
-    // Initialize data structures for extraction from 'AL_in' and (for directed graphs) 'AL_out'
-    I = LAGraph_malloc(nnz, sizeof(GrB_Index));
-    X = LAGraph_malloc(nnz, sizeof(GrB_Index));
-
     const int nthreads = LAGraph_get_nthreads();
     for (int iteration = 0; iteration < itermax; iteration++)
     {
+        // Initialize data structures for extraction from 'AL_in' and (for directed graphs) 'AL_out'
+        I = LAGraph_malloc(nnz, sizeof(GrB_Index));
+        X = LAGraph_malloc(nnz, sizeof(GrB_Index));
+
         // AL_in = A * L
         LAGRAPH_OK(GrB_Matrix_new(&AL_in, GrB_UINT64, n, n))
         LAGRAPH_OK(GrB_mxm(AL_in, GrB_NULL, GrB_NULL, GxB_PLUS_TIMES_UINT64, S, L, desc))
@@ -340,6 +342,8 @@ GrB_Info LAGraph_cdlp
                 mode_length = 0;
             }
         }
+        LAGRAPH_FREE (I) ;
+        LAGRAPH_FREE (X) ;
 
         if (L_prev == L)
         {
@@ -360,9 +364,6 @@ GrB_Info LAGraph_cdlp
             }
         }
     }
-
-    LAGRAPH_FREE (I) ;
-    LAGRAPH_FREE (X) ;
 
     //--------------------------------------------------------------------------
     // extract final labels to the result vector
