@@ -349,7 +349,13 @@ GrB_Info CountCC(GrB_Vector parents, GrB_Index* countcc)
     return (GrB_SUCCESS) ;
 }
 
-GrB_Info LAGraph_cc(GrB_Matrix A, GrB_Vector *result)
+
+GrB_Info LAGraph_cc
+(
+    GrB_Vector *result,     // output: array of component identifiers
+    GrB_Matrix A,           // input matrix
+    bool sanitize           // if true, ensure A is symmetric
+)
 {
     GrB_Info info;
     GrB_Index n ;
@@ -358,7 +364,24 @@ GrB_Info LAGraph_cc(GrB_Matrix A, GrB_Vector *result)
     //LAGRAPH_OK (GrB_Matrix_nvals (&nnz, A)) ;
     //printf ("number of nodes: %g\n", (double) n) ;
     //printf ("number of edges: %g\n", (double) nnz) ;
-    
+
+    GrB_Matrix S = NULL;
+    if (sanitize)
+    {
+        GrB_Descriptor desc = NULL ;
+        LAGRAPH_OK(GrB_Descriptor_new(&desc)) ;
+        LAGRAPH_OK(GrB_Descriptor_set(desc, GrB_INP1, GrB_TRAN)) ;
+
+        LAGRAPH_OK (GrB_Matrix_new (&S, GrB_BOOL, n, n)) ;
+        LAGRAPH_OK (GrB_eWiseAdd (S, NULL, NULL, GrB_LOR, A, A, desc)) ;
+        LAGRAPH_FREE(desc) ;
+    }
+    else
+    {
+        // Use the input as-is, and assume it is binary and symmetric
+        S = A ;
+    }
+
     GrB_Vector stars = NULL ;
     GrB_Vector parents = NULL ;
     LAGRAPH_OK (GrB_Vector_new (&stars, GrB_BOOL, n));
@@ -381,9 +404,9 @@ GrB_Info LAGraph_cc(GrB_Matrix A, GrB_Vector *result)
     while(change)
     {
         LAGRAPH_OK (GrB_Vector_dup(&parents1, parents));
-        CondHook(A, parents, stars);
+        CondHook(S, parents, stars);
         StarCheck(parents, stars);
-        UnCondHook(A, parents, stars);
+        UnCondHook(S, parents, stars);
         Shortcut(parents);
         StarCheck(parents, stars);
         LAGRAPH_OK (GrB_eWiseMult(pchange,NULL, NULL, GrB_NE_UINT64, parents1,parents, NULL));
