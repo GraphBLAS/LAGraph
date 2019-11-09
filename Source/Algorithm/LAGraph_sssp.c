@@ -77,29 +77,29 @@ double LAGRAPH_SSSP_UB = 0;
 void geq_threshold(void *out, const void *in)
 {
     const double in_dbl = *((const double*) in);
-    double out_bool = (in_dbl >= LAGRAPH_SSSP_THRESHOLD_VALUE);
-    *((double*) out) = out_bool;
+    bool out_bool = (in_dbl >= LAGRAPH_SSSP_THRESHOLD_VALUE);
+    *((bool*) out) = out_bool;
 }
 
 void gt_threshold(void *out, const void *in)
 {
     const double in_dbl = *((const double*) in);
-    double out_bool = (in_dbl > LAGRAPH_SSSP_THRESHOLD_VALUE);
-    *((double*) out) = out_bool;
+    bool out_bool = (in_dbl > LAGRAPH_SSSP_THRESHOLD_VALUE);
+    *((bool*) out) = out_bool;
 }
 
 void leq_threshold(void *out, const void *in)
 {
     const double in_dbl = *((const double*) in);
-    double out_bool = (in_dbl <= LAGRAPH_SSSP_THRESHOLD_VALUE);
-    *((double*) out) = out_bool;
+    bool out_bool = (in_dbl <= LAGRAPH_SSSP_THRESHOLD_VALUE);
+    *((bool*) out) = out_bool;
 }
 
 void in_range(void *out, const void *in)
 {
     const double in_dbl = *((const double*) in);
-    double out_bool = (in_dbl <= LAGRAPH_SSSP_UB) && (in_dbl >= LAGRAPH_SSSP_LB);
-    *((double*) out) = out_bool;
+    bool out_bool = (in_dbl <= LAGRAPH_SSSP_UB) && (in_dbl >= LAGRAPH_SSSP_LB);
+    *((bool*) out) = out_bool;
 }
 
 GrB_Info LAGraph_sssp // single source shortest paths
@@ -136,18 +136,16 @@ GrB_Info LAGraph_sssp // single source shortest paths
 
     GrB_Semiring MIN_PLUS_FP64 = NULL;
 
-    LAGr_UnaryOp_new(&leq_delta, &leq_threshold, GrB_FP64, GrB_FP64);
-    LAGr_UnaryOp_new(&gt_delta, &gt_threshold, GrB_FP64, GrB_FP64);
-    LAGr_UnaryOp_new(&geq_idelta, &geq_threshold, GrB_FP64, GrB_FP64);
-    LAGr_UnaryOp_new(&select_in_range, &in_range, GrB_FP64, GrB_FP64);
+    LAGr_UnaryOp_new(&leq_delta, &leq_threshold, GrB_BOOL, GrB_FP64);
+    LAGr_UnaryOp_new(&gt_delta, &gt_threshold, GrB_BOOL, GrB_FP64);
+    LAGr_UnaryOp_new(&geq_idelta, &geq_threshold, GrB_BOOL, GrB_FP64);
+    LAGr_UnaryOp_new(&select_in_range, &in_range, GrB_BOOL, GrB_FP64);
 
     GrB_Semiring_new(&MIN_PLUS_FP64, GxB_MIN_FP64_MONOID, GrB_PLUS_FP64);
-
-    //GxB_set (GxB_FORMAT, GxB_BY_COL) ;
+    
     LAGr_Matrix_nrows(&n, graph); // Get dimensions
 
-    // Create the result vector, one entry for each node
-    LAGr_Vector_new(path_length, GrB_FP64, n);
+    // Create the workspace vectors
     LAGr_Vector_new(&t, GrB_FP64, n);
     LAGr_Vector_new(&tmasked, GrB_FP64, n);
     LAGr_Vector_new(&tReq, GrB_FP64, n);
@@ -203,7 +201,7 @@ GrB_Info LAGraph_sssp // single source shortest paths
         LAGr_Vector_clear(s);
 
         // tBi = t .* (i*delta <= t < (i+1)*delta)
-        LAGRAPH_SSSP_LB = ( i ) * delta;
+        LAGRAPH_SSSP_LB = (i) * delta;
         LAGRAPH_SSSP_UB = (i+1.0) * delta;
 
         LAGr_apply(tBi, GrB_NULL, GrB_NULL, select_in_range, t, GrB_NULL);
@@ -261,7 +259,7 @@ GrB_Info LAGraph_sssp // single source shortest paths
     }
 
     // result = t
-    LAGr_apply(*path_length, GrB_NULL, GrB_NULL, GrB_IDENTITY_FP64, t, GrB_NULL);
+    LAGr_Vector_dup(path_length, t);
 
     LAGRAPH_FREE_WORK;
     return GrB_SUCCESS;
