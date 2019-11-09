@@ -99,12 +99,17 @@
 //           | 0 0 0 0 4 |
 //
 // If we multiply adjacency matrix with diag(L), we get a matrix
-// containing the labels of the neighbor nodes.
+// containing the labels of the neighbor nodes. We use the 'sel2nd' operator
+// for multiplication to avoid having to lookup the value on the left.
+// The conventional plus.times semiring would also work: 1 * y = sel2nd(1, y).
+// Note that we multiply with a diagonal matrix so the addition operator
+// is not used. In the implementation, we use "min" so the semiring is
+// "min.sel2nd" on uint64 values.
 //
-// In the example, this gives:
+// In the example, this gives the following:
 //
-// AL = A*diag(L) = | 0 5 4 5 4 |
-//                  | . . .     |
+// AL = A min.sel2nd diag(L) = | 0 5 4 5 4 |
+//                             | . . .     |
 //
 // ## Selecting the minimum mode value
 //
@@ -273,7 +278,7 @@ GrB_Info LAGraph_cdlp
     if (!symmetric)
     {
         // compute AT for the unsymmetric case as it will be used
-        // to compute AL_out = A'*L in each iteration
+        // to compute AL_out = A' min.2nd L in each iteration
         LAGRAPH_OK (GrB_Matrix_new (&AT, GrB_UINT64, n, n)) ;
         LAGRAPH_OK (GrB_transpose (AT, NULL, NULL, A, NULL)) ;
     }
@@ -285,17 +290,17 @@ GrB_Info LAGraph_cdlp
         I = LAGraph_malloc(nnz, sizeof(GrB_Index));
         X = LAGraph_malloc(nnz, sizeof(GrB_Index));
 
-        // AL_in = A * L
+        // AL_in = A min.2nd L
         LAGRAPH_OK(GrB_Matrix_new(&AL_in, GrB_UINT64, n, n))
-        LAGRAPH_OK(GrB_mxm(AL_in, GrB_NULL, GrB_NULL, GxB_PLUS_TIMES_UINT64, S, L, desc))
+        LAGRAPH_OK(GrB_mxm(AL_in, GrB_NULL, GrB_NULL, GxB_MIN_SECOND_UINT64, S, L, desc))
         LAGRAPH_OK(GrB_Matrix_extractTuples_UINT64(I, GrB_NULL, X, &nz, AL_in))
         LAGRAPH_OK(GrB_free(&AL_in))
 
         if (!symmetric)
         {
-            // AL_out = A' * L = AT * L
+            // AL_out = A' min.2nd L
             LAGRAPH_OK(GrB_Matrix_new(&AL_out, GrB_UINT64, n, n))
-            LAGRAPH_OK(GrB_mxm(AL_out, GrB_NULL, GrB_NULL, GxB_PLUS_TIMES_UINT64, AT, L, desc))
+            LAGRAPH_OK(GrB_mxm(AL_out, GrB_NULL, GrB_NULL, GxB_MIN_SECOND_UINT64, AT, L, desc))
             LAGRAPH_OK(GrB_Matrix_extractTuples_UINT64(&I[nz], GrB_NULL, &X[nz], &nz, AL_out))
             LAGRAPH_OK(GrB_free(&AL_out))
         }
