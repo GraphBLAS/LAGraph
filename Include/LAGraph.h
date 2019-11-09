@@ -751,6 +751,12 @@ GrB_Info LAGraph_cc (
     bool sanitize           // if true, ensure A is symmetric
 ) ;
 
+GrB_Info LAGraph_fast_sv (
+    GrB_Vector *result,     // output: array of component identifiers
+    GrB_Matrix A,           // input matrix
+    bool sanitize           // if true, ensure A is symmetric
+) ;
+
 // LAGraph_pagerank computes an array of structs for its result
 typedef struct
 {
