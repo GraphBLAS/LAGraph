@@ -93,6 +93,7 @@
     GrB_free (&L) ;                 \
     GrB_free (&W) ;                 \
     GrB_free (&LCC) ;               \
+    GrB_free (&desc) ;              \
 }
 
 //------------------------------------------------------------------------------
@@ -120,6 +121,7 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     GrB_Matrix C = NULL, CL = NULL, S = NULL, L = NULL ;
     GrB_Vector W = NULL, LCC = NULL ;
     GrB_Info info ;
+    GrB_Descriptor desc = NULL ;
 
     // n = size of A (# of nodes in the graph)
     GrB_Index n ;
@@ -223,8 +225,12 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     //--------------------------------------------------------------------------
 
     // CL<C> = C*L using a masked dot product
+    LAGRAPH_OK(GrB_Descriptor_new(&desc))
+    LAGRAPH_OK(GrB_Descriptor_set(desc, GrB_OUTP, GrB_REPLACE))
+    LAGRAPH_OK(GrB_Descriptor_set(desc, GxB_AxB_METHOD, GxB_AxB_DOT))
+
     LAGRAPH_OK (GrB_Matrix_new (&CL, GrB_FP64, n, n)) ;
-    LAGRAPH_OK (GrB_mxm (CL, C, NULL, LAGraph_PLUS_TIMES_FP64, C, L, NULL)) ;
+    LAGRAPH_OK (GrB_mxm (CL, C, NULL, LAGraph_PLUS_TIMES_FP64, C, L, desc)) ;
     GrB_free (&L) ;
 
     //--------------------------------------------------------------------------
