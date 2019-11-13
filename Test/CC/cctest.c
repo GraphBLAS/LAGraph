@@ -34,9 +34,17 @@
 
 // Contributed by Tim Davis, Texas A&M
 
-// Usage:  cctest < matrixmarketfile.mtx
+// Usage: cctest can be used with both stdin or a file as its input.
+// We assume by default that the matrix is symmetric. To override this,
+// use the file-based input and pass 1 as the last argument.
+//
+// lcctest < matrixmarketfile.mtx
+// lcctest matrixmarketfile.mtx
+// lcctest unsymmetric-matrixmarketfile.mtx 0
+// lcctest symmetric-matrixmarketfile.mtx 1
 
 #include "LAGraph.h"
+#include <sys/time.h>
 
 #define LAGRAPH_FREE_ALL    \
 {                           \
@@ -44,6 +52,26 @@
     GrB_free (&A) ;         \
 }
 
+double to_sec(struct timeval t1, struct timeval t2)
+{
+    return
+        (t2.tv_sec  - t1.tv_sec ) + 
+        (t2.tv_usec - t1.tv_usec) * 1e-6;
+}
+
+GrB_Index countCC (GrB_Vector f, GrB_Index n)
+{
+    GrB_Index nCC = 0;
+    GrB_Index *w_ind = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
+    GrB_Index *w_val = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
+    GrB_Vector_extractTuples(w_ind, w_val, &n, f);
+    for (GrB_Index i = 0; i < n; i++)
+        if (w_val[i] == i)
+            nCC += 1;
+    free(w_ind);
+    free(w_val);
+    return nCC;
+}
 
 int main (int argc, char **argv)
 {
@@ -54,6 +82,7 @@ int main (int argc, char **argv)
     // self edges are OK
 
     FILE *f ;
+    int symm = 0;
     if (argc == 1)
     {
         f = stdin ;
@@ -66,13 +95,37 @@ int main (int argc, char **argv)
             printf ("unable to open file [%s]\n", argv[1]) ;
             return (GrB_INVALID_VALUE) ;
         }
+        if (argc > 2)
+            symm = atoi(argv[2]);
     }
 
+    GrB_Index n;
     LAGRAPH_OK (LAGraph_mmread (&A, f)) ;
+    LAGRAPH_OK (GrB_Matrix_nrows (&n, A)) ;
 
-    LAGRAPH_OK (LAGraph_cc (&result, A, false)) ;
+    #define NTRIALS 5
+    int nthreads_max;
+    int nthread_list [NTRIALS] = { 1, 4, 16, 20, 40 } ;
+    struct timeval t1, t2;
 
-    // TODO: check result
+    LAGRAPH_OK (GxB_get (GxB_NTHREADS, &nthreads_max)) ;
+
+    for (int trial = 0 ; trial < NTRIALS ; trial++)
+    {
+        int nthreads = nthread_list [trial] ;
+        if (nthreads > nthreads_max) break ;
+        LAGraph_set_nthreads (nthreads) ;
+
+        gettimeofday (&t1, 0) ;
+        LAGRAPH_OK (LAGraph_fast_sv (&result, A, false)) ;
+        gettimeofday (&t2, 0) ;
+
+        GrB_Index nCC = countCC (result, n) ;
+        printf("number of threads: %d\n", nthreads) ;
+        printf("number of CCs: %lu\n", nCC) ;
+        printf("elasped time: %f\n", to_sec (t1, t2)) ;
+        printf("\n");
+    }
 
     LAGRAPH_FREE_ALL ;
     LAGRAPH_OK (GrB_finalize ( )) ;
