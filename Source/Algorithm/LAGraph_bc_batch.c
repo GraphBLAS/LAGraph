@@ -74,7 +74,6 @@
 {                                           \
     GrB_free(&frontier);                    \
     GrB_free(&paths);                       \
-    GrB_free(&inv_paths);                   \
     GrB_free(&bc_update);                    \
     GrB_free(&desc_tsr);                    \
     GrB_free(&replace);                     \
@@ -120,9 +119,6 @@ GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
     // starting node discovered so far.
     GrB_Matrix paths = NULL ;
 
-    // Inverse of the number of shortest paths for each node and source node
-    GrB_Matrix inv_paths = NULL ;
-
     // Update matrix for betweenness centrality, values for each node for
     // each starting node
     GrB_Matrix bc_update = NULL ;
@@ -134,7 +130,6 @@ GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
     GrB_Descriptor replace = NULL ;
 
     int64_t depth = 0; // Initial BFS depth
-    GxB_set (GxB_FORMAT, GxB_BY_COL) ;
     LAGr_Matrix_nrows(&n, A_matrix); // Get dimensions
 
     // Create the result vector, one entry for each node
@@ -160,6 +155,7 @@ GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
     }
 
     LAGr_Matrix_new(&paths, GrB_INT64, n, num_sources);
+    GxB_set (paths, GxB_FORMAT, GxB_BY_COL) ;
     // optional: to set the matrix to CSC format
     // LAGRAPH_OK (GxB_set (paths, GxB_FORMAT, GxB_BY_COL)) ;
     if (sources == GrB_ALL)
@@ -182,6 +178,7 @@ GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
     // Create frontier matrix and initialize to outgoing nodes from
     // all source nodes
     LAGr_Matrix_new(&frontier, GrB_INT64, n, num_sources);
+    GxB_set (frontier, GxB_FORMAT, GxB_BY_COL) ;
     // AT = A'
     // frontier <!paths> = AT (:,sources)
     LAGr_extract(frontier, paths, GrB_NULL, A_matrix, GrB_ALL, n, sources, num_sources, desc_tsr);
@@ -204,6 +201,7 @@ GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
 
         // Create the current search matrix - one column for each source/BFS
         LAGr_Matrix_new(&(S_array[depth]), GrB_BOOL, n, num_sources);
+        GxB_set (S_array [depth], GxB_FORMAT, GxB_BY_COL) ;
 
         // Copy the current frontier to S
         LAGr_apply(S_array[depth], GrB_NULL, GrB_NULL, GrB_IDENTITY_BOOL, frontier, GrB_NULL);
@@ -224,18 +222,16 @@ GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
 
     // === Betweenness centrality computation phase ============================
 
-    // Create inverse paths matrix: inv_paths = 1 ./ paths
-    //LAGr_Matrix_new(&inv_paths, GrB_FP64, n, num_sources);
-    //LAGr_apply(inv_paths, GrB_NULL, GrB_NULL, GrB_MINV_FP64, paths, GrB_NULL);
-
     // Create the update matrix and initialize it to 1
     // TODO: "To avoid sparsity issues"?
     LAGr_Matrix_new(&bc_update, GrB_FP64, n, num_sources);
+    GxB_set (bc_update, GxB_FORMAT, GxB_BY_COL) ;
     LAGr_assign(bc_update, GrB_NULL, GrB_NULL, 1.0f, GrB_ALL, n, GrB_ALL, num_sources, GrB_NULL);
 
     LAGr_Matrix_new(&temp, GrB_FP64, n, num_sources);
+    GxB_set (temp, GxB_FORMAT, GxB_BY_COL) ;
 
-    GxB_print(paths, GxB_COMPLETE);
+    // GxB_print(paths, GxB_COMPLETE);
     // Backtrack through the BFS and compute centrality updates for each vertex
     for (int64_t i = depth - 1; i > 0; i--)
     {
