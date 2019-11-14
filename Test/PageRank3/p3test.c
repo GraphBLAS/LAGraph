@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// p2test: read in (or create) a matrix and test PageRank2
+// p3test: read in (or create) a matrix and test PageRank3
 //------------------------------------------------------------------------------
 
 /*
@@ -37,7 +37,7 @@
 // Contributed by Tim Davis, Texas A&M and Gabor Szarnyas, BME
 
 // usage:
-// p2test < in > out
+// p3test < in > out
 
 #include "LAGraph.h"
 
