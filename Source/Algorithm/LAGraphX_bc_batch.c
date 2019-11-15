@@ -245,31 +245,33 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
     // Create a dense version of the GraphBLAS paths matrix
     paths_dense = calloc(nnz_dense, sizeof(double));
 
-    GrB_Index nnz_paths = nnz_dense;
-    LAGr_Matrix_nvals(&nnz_paths, paths);
-    GrB_Index* paths_row = LAGraph_malloc(nnz_paths, sizeof(GrB_Index));
-    GrB_Index* paths_col = LAGraph_malloc(nnz_paths, sizeof(GrB_Index));
-    double* paths_x = LAGraph_malloc(nnz_paths, sizeof(double));
+    GrB_Index num_rows;
+    GrB_Index num_cols;
+    GrB_Index nnz;
+    int64_t num_nonempty;
+    GrB_Type type;
 
-    // NOTE: We can't use GxB_Matrix_export because paths may not be fully dense.
-    LAGr_Matrix_extractTuples(paths_row, paths_col, paths_x, &nnz_paths, paths);
-    for(int64_t i = 0; i < nnz_paths; i++)
+    GxB_Matrix_export_CSC(&paths, &type, &num_rows, &num_cols, &nnz, &num_nonempty, &Sp, &Si, &Sx, GrB_NULL);
+#pragma omp parallel for
+    for (int64_t col = 0; col < num_sources; col++)
     {
-        // Scatter the sparse matrix values into the dense version
-        GrB_Index row = paths_row[i];
-        GrB_Index col = paths_col[i];
-        paths_dense[col * n + row] = paths_x[i];
+#pragma omp parallel for
+        for (GrB_Index p = Sp[col]; p < Sp[col+1]; p++)
+        {
+            // Scatter the sparse matrix values into the dense version
+            int64_t row = Si[p];
+            paths_dense[col * n + row] = ((int64_t*)Sx)[p];
+        }
     }
 
-    // Clean up our arrays
-    LAGraph_free(paths_x);
-    LAGraph_free(paths_row);
-    LAGraph_free(paths_col);
+    // Throw away the "sparse" version of paths
+    LAGraph_free(Sp);
+    LAGraph_free(Si);
+    LAGraph_free(Sx);
 
     // Create temporary workspace matrix
     LAGr_Matrix_new(&t2, GrB_FP64, n, num_sources);
 
-    GrB_Index nnz;
     // Backtrack through the BFS and compute centrality updates for each vertex
     for (int64_t i = depth - 1; i > 0; i--)
     {
@@ -278,10 +280,6 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
         // temp<S_array[i]> = bc_update ./ paths
 
         // Export the pattern of S_array[i]
-        GrB_Index num_rows;
-        GrB_Index num_cols;
-        int64_t num_nonempty;
-        GrB_Type type;
         GxB_Matrix_export_CSC(&(S_array[i]), &type, &num_rows, &num_cols, &nnz, &num_nonempty, &Sp, &Si, &Sx, GrB_NULL);
 
         // Compute Tx = bc_update ./ paths_dense for all elements of S_array
@@ -290,9 +288,11 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
         Ti = LAGraph_malloc(nnz, sizeof(GrB_Index));
         Tx = LAGraph_malloc(nnz, sizeof(double));
 
+#pragma omp parallel for
         for (int64_t col = 0; col < num_sources; col++)
         {
             Tp[col] = Sp[col];
+#pragma omp parallel for
             for (GrB_Index p = Sp[col]; p < Sp[col+1]; p++)
             {
                 // Compute Tx by eWiseMult of dense matrices
@@ -314,9 +314,10 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
 
         // bc_update += t2 .* paths
         GxB_Matrix_export_CSC(&t2, &type, &num_rows, &num_cols, &nnz, &num_nonempty, &Tp, &Ti, &Tx, GrB_NULL);
-
+#pragma omp parallel for
         for (int64_t col = 0; col < num_sources; col++)
         {
+#pragma omp parallel for
             for (GrB_Index p = Tp[col]; p < Tp[col+1]; p++)
             {
                 GrB_Index row = Ti[p];
@@ -331,6 +332,7 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
     // Initialize the centrality array with -(num_sources) to avoid counting
     // zero length paths
     double* centrality_dense = LAGraph_malloc(n, sizeof(double));
+#pragma omp parallel for
     for (GrB_Index i = 0; i < n; i++)
     {
         centrality_dense[i] = -num_sources;
@@ -341,6 +343,7 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
     // We could also speed this up in parallel.
     for (int64_t i = 0; i < num_sources; i++)
     {
+#pragma omp parallel for
         for (GrB_Index j = 0; j < n; j++)
         {
             centrality_dense[j] += bc_update_dense[n * i + j];
@@ -349,6 +352,7 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
 
     // Build the index vector.
     GrB_Index* I = LAGraph_malloc(n, sizeof(GrB_Index));
+#pragma omp parallel for
     for (GrB_Index j = 0; j < n; j++)
     {
         I[j] = j;
