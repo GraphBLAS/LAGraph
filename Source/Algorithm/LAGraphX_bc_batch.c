@@ -80,7 +80,6 @@
     GrB_free(&t2);                          \
     GrB_free(&desc_tsr);                    \
     GrB_free(&replace);                     \
-    GrB_free(&temp);                        \
     if (S_array != NULL)                    \
     {                                       \
         for (int64_t d = 0; d < depth; d++) \
@@ -105,46 +104,44 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
     int32_t num_sources        // number of source vertices (length of s)
 )
 {
-    (*centrality) = NULL ;
+    (*centrality) = NULL;
     GrB_Index n; // Number of nodes in the graph
 
     // Array of BFS search matrices
     // S_array[i] is a matrix that stores the depth at which each vertex is 
     // first seen thus far in each BFS at the current depth i. Each column
     // corresponds to a BFS traversal starting from a source node.
-    GrB_Matrix *S_array = NULL ;
+    GrB_Matrix *S_array = NULL;
 
     // Frontier matrix
     // Stores # of shortest paths to vertices at current BFS depth
-    GrB_Matrix frontier = NULL ;
+    GrB_Matrix frontier = NULL;
     
     // Paths matrix holds the number of shortest paths for each node and 
     // starting node discovered so far. Starts out sparse and becomes denser.
-    GrB_Matrix paths = NULL ;
+    GrB_Matrix paths = NULL;
     double* paths_dense = NULL;
 
     // Update matrix for betweenness centrality, values for each node for
     // each starting node. Treated as dense for efficiency.
     double* bc_update_dense = NULL;
 
-    // Temporary workspace matrix
-    GrB_Matrix temp = NULL ;
+    GrB_Descriptor desc_tsr = NULL;
+    GrB_Descriptor replace = NULL;
 
-    GrB_Descriptor desc_tsr = NULL ;
-    GrB_Descriptor replace = NULL ;
+    GrB_Index* Sp = NULL;
+    GrB_Index* Si = NULL;
+    void* Sx = NULL;
 
-    GrB_Index* r = NULL;
-    GrB_Index* c = NULL;
     GrB_Index* Tp = NULL;
     GrB_Index* Ti = NULL;
-    double* Tx = NULL;
+    void* Tx = NULL;
 
     GrB_Matrix t1 = NULL;
     GrB_Matrix t2 = NULL;
-    double* t2_dense = NULL;
 
     int64_t depth = 0; // Initial BFS depth
-    GxB_set (GxB_FORMAT, GxB_BY_COL) ;
+
     LAGr_Matrix_nrows(&n, A_matrix); // Get dimensions
 
     // Create a new descriptor that represents the following traits:
@@ -167,6 +164,7 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
     }
 
     LAGr_Matrix_new(&paths, GrB_INT64, n, num_sources);
+    GxB_set(paths, GxB_FORMAT, GxB_BY_COL);
     // optional: to set the matrix to CSC format
     // LAGRAPH_OK (GxB_set (paths, GxB_FORMAT, GxB_BY_COL)) ;
     if (sources == GrB_ALL)
@@ -189,6 +187,7 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
     // Create frontier matrix and initialize to outgoing nodes from
     // all source nodes
     LAGr_Matrix_new(&frontier, GrB_INT64, n, num_sources);
+    GxB_set(frontier, GxB_FORMAT, GxB_BY_COL);
 
     // AT = A'
     // frontier <!paths> = AT (:,sources)
@@ -212,6 +211,7 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
 
         // Create the current search matrix - one column for each source/BFS
         LAGr_Matrix_new(&(S_array[depth]), GrB_BOOL, n, num_sources);
+        GxB_set(S_array[depth], GxB_FORMAT, GxB_BY_COL);
 
         // Copy the current frontier to S
         LAGr_apply(S_array[depth], GrB_NULL, GrB_NULL, GrB_IDENTITY_BOOL, frontier, GrB_NULL);
@@ -276,74 +276,62 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
         // Add contributions by successors and mask with that BFS level’s frontier
 
         // temp<S_array[i]> = bc_update ./ paths
-        r = LAGraph_malloc(nnz_dense, sizeof(GrB_Index));
-        c = LAGraph_malloc(nnz_dense, sizeof(GrB_Index));
-        Tp = LAGraph_malloc(nnz_dense, sizeof(GrB_Index));
-        Ti = LAGraph_malloc(nnz_dense, sizeof(GrB_Index));
-        Tx = LAGraph_malloc(nnz_dense, sizeof(double));
 
-        LAGr_Matrix_nvals(&nnz, S_array[i]);
-
-        // Get the pattern of S_array[i]
-        LAGr_Matrix_extractTuples(r, c, Tx, &nnz, S_array[i]);
+        // Export the pattern of S_array[i]
+        GrB_Index num_rows;
+        GrB_Index num_cols;
+        int64_t num_nonempty;
+        GrB_Type type;
+        GxB_Matrix_export_CSC(&(S_array[i]), &type, &num_rows, &num_cols, &nnz, &num_nonempty, &Sp, &Si, &Sx, GrB_NULL);
 
         // Compute Tx = bc_update ./ paths_dense for all elements of S_array
         // Build the Tp and Ti vectors, too.
-        GrB_Index nz = 0;
-        GrB_Index k = 0;
-        int64_t nonempty_count = 0;
+        Tp = LAGraph_malloc(num_sources+1, sizeof(GrB_Index));
+        Ti = LAGraph_malloc(nnz, sizeof(GrB_Index));
+        Tx = LAGraph_malloc(nnz, sizeof(double));
+
         for (int64_t col = 0; col < num_sources; col++)
         {
-            Tp[k++] = nz;
-            bool is_nonempty_col = false;
-            while (nz < nnz && col == c[nz])
+            Tp[col] = Sp[col];
+            for (GrB_Index p = Sp[col]; p < Sp[col+1]; p++)
             {
-                // Count nonempty columns
-                if (is_nonempty_col == false)
-                {
-                    nonempty_count += 1;
-                }
-                is_nonempty_col = true;
-
                 // Compute Tx by eWiseMult of dense matrices
-                GrB_Index row = Ti[nz] = r[nz];
-                Tx[nz] = bc_update_dense[col * n + row] / paths_dense[col * n + row];
-
-                nz += 1;
+                GrB_Index row = Ti[p] = Si[p];
+                ((double*)Tx)[p] = bc_update_dense[col * n + row] / paths_dense[col * n + row];
             }
         }
-        Tp[k] = nz;
+        Tp[num_sources] = Sp[num_sources];
+
+        // Restore S_array[i] by importing it
+        GxB_Matrix_import_CSC(&(S_array[i]), GrB_BOOL, num_rows, num_cols, nnz, num_nonempty, &Sp, &Si, &Sx, GrB_NULL);
 
         // Create a GraphBLAS matrix t1 from Tp, Ti, Tx
         // The row/column indices are the pattern r/c from S_array[i]
-        GxB_Matrix_import_CSC(&t1, GrB_FP64, n, num_sources, nz, nonempty_count, &Tp, &Ti, (void**) &Tx, GrB_NULL);
+        GxB_Matrix_import_CSC(&t1, GrB_FP64, n, num_sources, nnz, num_nonempty, &Tp, &Ti, (void**) &Tx, GrB_NULL);
 
         // temp<S_array[i−1]> = (A * temp)
         LAGr_mxm(t2, S_array[i-1], GrB_NULL, GxB_PLUS_TIMES_FP64, A_matrix, t1, LAGraph_desc_ooor);
 
         // bc_update += t2 .* paths
-        // Create a dense version of t2. Again, we can't use GxB_Matrix_export
-        // because t2 may not be fully dense.
-        GrB_Index nnz_t2 = nnz_dense;
-        t2_dense = LAGraph_malloc(nnz_t2, sizeof(double));
-        LAGr_Matrix_extractTuples(r, c, t2_dense, &nnz_t2, t2);
+        GxB_Matrix_export_CSC(&t2, &type, &num_rows, &num_cols, &nnz, &num_nonempty, &Tp, &Ti, &Tx, GrB_NULL);
 
-        for (nz = 0; nz < nnz_t2; nz++)
+        for (int64_t col = 0; col < num_sources; col++)
         {
-            GrB_Index row = r[nz];
-            GrB_Index col = c[nz];
-            bc_update_dense[col * n + row] += t2_dense[nz] * paths_dense[col * n + row];
+            for (GrB_Index p = Tp[col]; p < Tp[col+1]; p++)
+            {
+                GrB_Index row = Ti[p];
+                bc_update_dense[col * n + row] += ((double*)Tx)[p] * paths_dense[col * n + row];
+            }
         }
 
-        LAGraph_free(r);
-        LAGraph_free(c);
-        LAGraph_free(t2_dense);
+        // Re-import t2
+        GxB_Matrix_import_CSC(&t2, GrB_FP64, num_rows, num_cols, nnz, num_nonempty, &Tp, &Ti, &Tx, GrB_NULL);
     }
 
     // Initialize the centrality array with -(num_sources) to avoid counting
     // zero length paths
     double* centrality_dense = LAGraph_malloc(n, sizeof(double));
-    for (int64_t i = 0; i < n; i++)
+    for (GrB_Index i = 0; i < n; i++)
     {
         centrality_dense[i] = -num_sources;
     }
@@ -353,7 +341,7 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
     // We could also speed this up in parallel.
     for (int64_t i = 0; i < num_sources; i++)
     {
-        for (int64_t j = 0; j < n; j++)
+        for (GrB_Index j = 0; j < n; j++)
         {
             centrality_dense[j] += bc_update_dense[n * i + j];
         }
@@ -361,7 +349,7 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
 
     // Build the index vector.
     GrB_Index* I = LAGraph_malloc(n, sizeof(GrB_Index));
-    for (int64_t j = 0; j < n; j++)
+    for (GrB_Index j = 0; j < n; j++)
     {
         I[j] = j;
     }
@@ -369,6 +357,6 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
     // Import the dense vector into GraphBLAS and return it.
     GxB_Vector_import(centrality, GrB_FP64, n, n, &I, (void**) &centrality_dense, GrB_NULL);
 
-    LAGRAPH_FREE_WORK ;
+    LAGRAPH_FREE_WORK;
     return GrB_SUCCESS;
 }
