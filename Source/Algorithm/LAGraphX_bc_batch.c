@@ -92,8 +92,8 @@
 
 #define LAGRAPH_FREE_ALL            \
 {                                   \
-    LAGRAPH_FREE_WORK ;             \
-    GrB_free (centrality) ;         \
+    LAGRAPH_FREE_WORK;              \
+    GrB_free (centrality);          \
 }
 
 GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
@@ -160,13 +160,12 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
 
     if (sources == GrB_ALL)
     {
-        num_sources = n ;
+        num_sources = n;
     }
 
     LAGr_Matrix_new(&paths, GrB_INT64, n, num_sources);
     GxB_set(paths, GxB_FORMAT, GxB_BY_COL);
-    // optional: to set the matrix to CSC format
-    // LAGRAPH_OK (GxB_set (paths, GxB_FORMAT, GxB_BY_COL)) ;
+
     if (sources == GrB_ALL)
     {
         for (GrB_Index i = 0; i < num_sources; ++i)
@@ -198,8 +197,8 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
     if (S_array == NULL)
     {
         // out of memory
-        LAGRAPH_FREE_ALL ;
-        return (GrB_OUT_OF_MEMORY) ;
+        LAGRAPH_FREE_ALL;
+        return (GrB_OUT_OF_MEMORY);
     }
 
     // === Breadth-first search stage ==========================================
@@ -208,7 +207,6 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
                           //  are no shorter than any existing paths.
     do
     {
-
         // Create the current search matrix - one column for each source/BFS
         LAGr_Matrix_new(&(S_array[depth]), GrB_BOOL, n, num_sources);
         GxB_set(S_array[depth], GxB_FORMAT, GxB_BY_COL);
@@ -218,7 +216,6 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
 
         // Accumulate path counts: paths += frontier
         LAGr_assign(paths, GrB_NULL, GrB_PLUS_INT64, frontier, GrB_ALL, n, GrB_ALL, num_sources, GrB_NULL);
-        //LAGr_eWiseAdd(paths, GrB_NULL, GrB_NULL, GxB_PLUS_TIMES_INT64, paths, frontier, GrB_NULL);
 
         // Update frontier: frontier<!paths>=A’ +.∗ frontier
         LAGr_mxm(frontier, paths, GrB_NULL, GxB_PLUS_TIMES_INT64, A_matrix, frontier, desc_tsr);
@@ -341,7 +338,6 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
 
     // centrality[i] += bc_update[i,:]
     // Both are dense. We can also take care of the reduction.
-    // We could also speed this up in parallel.
     for (int64_t i = 0; i < num_sources; i++)
     {
 #pragma omp parallel for
