@@ -253,7 +253,6 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
 #pragma omp parallel for
     for (int64_t col = 0; col < num_sources; col++)
     {
-#pragma omp parallel for
         for (GrB_Index p = Sp[col]; p < Sp[col+1]; p++)
         {
             // Scatter the sparse matrix values into the dense version
@@ -290,7 +289,6 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
         for (int64_t col = 0; col < num_sources; col++)
         {
             Tp[col] = Sp[col];
-#pragma omp parallel for
             for (GrB_Index p = Sp[col]; p < Sp[col+1]; p++)
             {
                 // Compute Tx by eWiseMult of dense matrices
@@ -315,7 +313,6 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
 #pragma omp parallel for
         for (int64_t col = 0; col < num_sources; col++)
         {
-#pragma omp parallel for
             for (GrB_Index p = Tp[col]; p < Tp[col+1]; p++)
             {
                 GrB_Index row = Ti[p];
