@@ -236,6 +236,7 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
     // We will store it column-wise (col * p + row)
     const GrB_Index nnz_dense = n * num_sources;
     bc_update_dense = LAGraph_malloc(nnz_dense, sizeof(double));
+#pragma omp parallel for
     for (GrB_Index nz = 0; nz < nnz_dense; nz++)
     {
         bc_update_dense[nz] = 1.0;
