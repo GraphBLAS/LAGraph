@@ -123,7 +123,7 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
     // Paths matrix holds the number of shortest paths for each node and 
     // starting node discovered so far. Starts out sparse and becomes denser.
     GrB_Matrix paths = NULL;
-    double* paths_dense = NULL;
+    int64_t* paths_dense = NULL;
 
     // Update matrix for betweenness centrality, values for each node for
     // each starting node. Treated as dense for efficiency.
@@ -170,9 +170,11 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
     GxB_set(paths, GxB_FORMAT, GxB_BY_COL);
 
     // make paths dense
-    LAGr_assign (paths, NULL, NULL, 0, GrB_ALL, n, GrB_ALL, num_sources, NULL) ;
-    GrB_Index ignore ;
-    GrB_Matrix_nvals (&ignore, paths) ;
+    LAGr_assign(paths, NULL, NULL, 0, GrB_ALL, n, GrB_ALL, num_sources, NULL);
+
+    // Force resolution of pending tuples
+    GrB_Index ignore;
+    GrB_Matrix_nvals(&ignore, paths);
 
     if (sources == GrB_ALL)
     {
@@ -224,7 +226,6 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
 
         // Accumulate path counts: paths += frontier
         LAGr_assign(paths, GrB_NULL, GrB_PLUS_INT64, frontier, GrB_ALL, n, GrB_ALL, num_sources, GrB_NULL);
-        // GrB_Matrix_nvals (&ignore, paths) ;
 
         // Update frontier: frontier<!paths>=A’ +.∗ frontier
         LAGr_mxm(frontier, paths, GrB_NULL, GxB_PLUS_TIMES_INT64, A_matrix, frontier, desc_tsr);
@@ -250,7 +251,6 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
 
     // By this point, paths is (mostly) dense.
     // Create a dense version of the GraphBLAS paths matrix
-    paths_dense = calloc(nnz_dense, sizeof(double));
 
     GrB_Index num_rows;
     GrB_Index num_cols;
@@ -259,21 +259,11 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
     GrB_Type type;
 
     GxB_Matrix_export_CSC(&paths, &type, &num_rows, &num_cols, &nnz, &num_nonempty, &Sp, &Si, &Sx, GrB_NULL);
-#pragma omp parallel for num_threads(nthreads)
-    for (int64_t col = 0; col < num_sources; col++)
-    {
-        for (GrB_Index p = Sp[col]; p < Sp[col+1]; p++)
-        {
-            // Scatter the sparse matrix values into the dense version
-            int64_t row = Si[p];
-            paths_dense[col * n + row] = ((int64_t*)Sx)[p];
-        }
-    }
+    paths_dense = (int64_t*) Sx;
 
     // Throw away the "sparse" version of paths
     LAGraph_free(Sp);
     LAGraph_free(Si);
-    LAGraph_free(Sx);
 
     // Create temporary workspace matrix
     LAGr_Matrix_new(&t2, GrB_FP64, n, num_sources);
@@ -302,7 +292,7 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
             {
                 // Compute Tx by eWiseMult of dense matrices
                 GrB_Index row = Ti[p] = Si[p];
-                ((double*)Tx)[p] = bc_update_dense[col * n + row] / paths_dense[col * n + row];
+                ((double*)Tx)[p] = bc_update_dense[col * n + row] / ((double) paths_dense[col * n + row]);
             }
         }
         Tp[num_sources] = Sp[num_sources];
@@ -325,7 +315,7 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
             for (GrB_Index p = Tp[col]; p < Tp[col+1]; p++)
             {
                 GrB_Index row = Ti[p];
-                bc_update_dense[col * n + row] += ((double*)Tx)[p] * paths_dense[col * n + row];
+                bc_update_dense[col * n + row] += ((double*)Tx)[p] * ((double) paths_dense[col * n + row]);
             }
         }
 
