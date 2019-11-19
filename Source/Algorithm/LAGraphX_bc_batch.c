@@ -107,6 +107,9 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
     (*centrality) = NULL;
     GrB_Index n; // Number of nodes in the graph
 
+    int nthreads ;
+    GxB_get (GxB_NTHREADS, &nthreads) ;
+
     // Array of BFS search matrices
     // S_array[i] is a matrix that stores the depth at which each vertex is 
     // first seen thus far in each BFS at the current depth i. Each column
@@ -166,6 +169,11 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
     LAGr_Matrix_new(&paths, GrB_INT64, n, num_sources);
     GxB_set(paths, GxB_FORMAT, GxB_BY_COL);
 
+    // make paths dense
+    LAGr_assign (paths, NULL, NULL, 0, GrB_ALL, n, GrB_ALL, num_sources, NULL) ;
+    GrB_Index ignore ;
+    GrB_Matrix_nvals (&ignore, paths) ;
+
     if (sources == GrB_ALL)
     {
         for (GrB_Index i = 0; i < num_sources; ++i)
@@ -216,6 +224,7 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
 
         // Accumulate path counts: paths += frontier
         LAGr_assign(paths, GrB_NULL, GrB_PLUS_INT64, frontier, GrB_ALL, n, GrB_ALL, num_sources, GrB_NULL);
+        // GrB_Matrix_nvals (&ignore, paths) ;
 
         // Update frontier: frontier<!paths>=A’ +.∗ frontier
         LAGr_mxm(frontier, paths, GrB_NULL, GxB_PLUS_TIMES_INT64, A_matrix, frontier, desc_tsr);
@@ -233,7 +242,7 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
     // We will store it column-wise (col * p + row)
     const GrB_Index nnz_dense = n * num_sources;
     bc_update_dense = LAGraph_malloc(nnz_dense, sizeof(double));
-#pragma omp parallel for
+#pragma omp parallel for num_threads(nthreads)
     for (GrB_Index nz = 0; nz < nnz_dense; nz++)
     {
         bc_update_dense[nz] = 1.0;
@@ -250,7 +259,7 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
     GrB_Type type;
 
     GxB_Matrix_export_CSC(&paths, &type, &num_rows, &num_cols, &nnz, &num_nonempty, &Sp, &Si, &Sx, GrB_NULL);
-#pragma omp parallel for
+#pragma omp parallel for num_threads(nthreads)
     for (int64_t col = 0; col < num_sources; col++)
     {
         for (GrB_Index p = Sp[col]; p < Sp[col+1]; p++)
@@ -285,7 +294,7 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
         Ti = LAGraph_malloc(nnz, sizeof(GrB_Index));
         Tx = LAGraph_malloc(nnz, sizeof(double));
 
-#pragma omp parallel for
+#pragma omp parallel for num_threads(nthreads)
         for (int64_t col = 0; col < num_sources; col++)
         {
             Tp[col] = Sp[col];
@@ -310,7 +319,7 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
 
         // bc_update += t2 .* paths
         GxB_Matrix_export_CSC(&t2, &type, &num_rows, &num_cols, &nnz, &num_nonempty, &Tp, &Ti, &Tx, GrB_NULL);
-#pragma omp parallel for
+#pragma omp parallel for num_threads(nthreads)
         for (int64_t col = 0; col < num_sources; col++)
         {
             for (GrB_Index p = Tp[col]; p < Tp[col+1]; p++)
@@ -327,7 +336,7 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
     // Initialize the centrality array with -(num_sources) to avoid counting
     // zero length paths
     double* centrality_dense = LAGraph_malloc(n, sizeof(double));
-#pragma omp parallel for
+#pragma omp parallel for num_threads(nthreads)
     for (GrB_Index i = 0; i < n; i++)
     {
         centrality_dense[i] = -num_sources;
@@ -335,10 +344,10 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
 
     // centrality[i] += bc_update[i,:]
     // Both are dense. We can also take care of the reduction.
-    for (int64_t i = 0; i < num_sources; i++)
+#pragma omp parallel for schedule(static) num_threads(nthreads)
+    for (GrB_Index j = 0; j < n; j++)
     {
-#pragma omp parallel for
-        for (GrB_Index j = 0; j < n; j++)
+        for (int64_t i = 0; i < num_sources; i++)
         {
             centrality_dense[j] += bc_update_dense[n * i + j];
         }
@@ -346,7 +355,7 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
 
     // Build the index vector.
     GrB_Index* I = LAGraph_malloc(n, sizeof(GrB_Index));
-#pragma omp parallel for
+#pragma omp parallel for num_threads(nthreads)
     for (GrB_Index j = 0; j < n; j++)
     {
         I[j] = j;
