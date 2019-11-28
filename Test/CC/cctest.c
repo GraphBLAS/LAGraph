@@ -130,7 +130,7 @@ int main (int argc, char **argv)
         GrB_Matrix_dup (&A, S);
 
         gettimeofday (&t1, 0) ;
-        LAGRAPH_OK (LAGraph_fast_sv (&result, A, false)) ;
+        LAGRAPH_OK (LAGraph_cc_fastsv (&result, A, false)) ;
         gettimeofday (&t2, 0) ;
 
         nCC = countCC (result, n) ;
@@ -138,13 +138,13 @@ int main (int argc, char **argv)
         printf("FastSV: %f\n", to_sec (t1, t2)) ;
 
         gettimeofday (&t1, 0) ;
-        LAGRAPH_OK (LAGraph_Boruvka (&result, A, false)) ;
+        LAGRAPH_OK (LAGraph_cc_boruvka (&result, A, false)) ;
         gettimeofday (&t2, 0) ;
         GrB_free (&A);
 
         nCC = countCC (result, n) ;
         printf("number of CCs: %lu\n", nCC) ;
-        printf("Boru: %f\n", to_sec (t1, t2)) ;
+        printf("Boruvka: %f\n", to_sec (t1, t2)) ;
         printf("\n");
     }
 

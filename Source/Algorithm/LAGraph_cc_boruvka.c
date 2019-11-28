@@ -118,7 +118,7 @@ static GrB_Info Reduce_assign (GrB_Vector w, GrB_Vector mask, GrB_Vector src, Gr
     return GrB_SUCCESS;
 }
 
-GrB_Info LAGraph_Boruvka
+GrB_Info LAGraph_cc_boruvka
 (
     GrB_Vector *result,     // output: array of component identifiers
     GrB_Matrix A,           // input matrix

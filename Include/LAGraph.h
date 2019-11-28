@@ -745,19 +745,19 @@ GrB_Info LAGraph_bfs_simple     // push-only BFS
     GrB_Index s             // starting node of the BFS
 ) ;
 
-GrB_Info LAGraph_cc (
+GrB_Info LAGraph_cc_lacc (
     GrB_Vector *result,     // output: array of component identifiers
     GrB_Matrix A,           // input matrix
     bool sanitize           // if true, ensure A is symmetric
 ) ;
 
-GrB_Info LAGraph_fast_sv (
+GrB_Info LAGraph_cc_fastsv (
     GrB_Vector *result,     // output: array of component identifiers
     GrB_Matrix A,           // input matrix
     bool sanitize           // if true, ensure A is symmetric
 ) ;
 
-GrB_Info LAGraph_Boruvka (
+GrB_Info LAGraph_cc_boruvka (
     GrB_Vector *result,     // output: array of component identifiers
     GrB_Matrix A,           // input matrix
     bool sanitize           // if true, ensure A is symmetric
