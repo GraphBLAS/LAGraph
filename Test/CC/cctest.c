@@ -76,10 +76,10 @@ GrB_Index countCC (GrB_Vector f, GrB_Index n)
 int main (int argc, char **argv)
 {
     GrB_Info info ;
-    GrB_Matrix A = NULL ;
-    GrB_Vector result = NULL ;
+    GrB_Matrix A, S ;
+    GrB_Vector result ;
     GrB_init (GrB_NONBLOCKING) ;
-    // self edges are OK
+    LAGRAPH_OK (GxB_set (GxB_FORMAT, GxB_BY_ROW)) ;
 
     FILE *f ;
     int symm = 0;
@@ -103,6 +103,14 @@ int main (int argc, char **argv)
     LAGRAPH_OK (LAGraph_mmread (&A, f)) ;
     LAGRAPH_OK (GrB_Matrix_nrows (&n, A)) ;
 
+    GrB_Descriptor desc = 0 ;
+    LAGRAPH_OK (GrB_Descriptor_new(&desc)) ;
+    LAGRAPH_OK (GrB_Descriptor_set(desc, GrB_INP1, GrB_TRAN)) ;
+
+    LAGRAPH_OK (GrB_Matrix_new (&S, GrB_BOOL, n, n)) ;
+    LAGRAPH_OK (GrB_eWiseAdd (S, 0, 0, GrB_LOR, A, A, desc)) ;
+    LAGRAPH_FREE (desc) ;
+
     #define NTRIALS 5
     int nthreads_max;
     int nthread_list [NTRIALS] = { 1, 4, 16, 20, 40 } ;
@@ -110,20 +118,33 @@ int main (int argc, char **argv)
 
     LAGRAPH_OK (GxB_get (GxB_NTHREADS, &nthreads_max)) ;
 
+    GrB_Index nCC;
     for (int trial = 0 ; trial < NTRIALS ; trial++)
     {
         int nthreads = nthread_list [trial] ;
         if (nthreads > nthreads_max) break ;
         LAGraph_set_nthreads (nthreads) ;
+        printf("number of threads: %d\n", nthreads) ;
+
+        // LAGraph_rm() may change the matrix A
+        GrB_Matrix_dup (&A, S);
 
         gettimeofday (&t1, 0) ;
         LAGRAPH_OK (LAGraph_fast_sv (&result, A, false)) ;
         gettimeofday (&t2, 0) ;
 
-        GrB_Index nCC = countCC (result, n) ;
-        printf("number of threads: %d\n", nthreads) ;
+        nCC = countCC (result, n) ;
         printf("number of CCs: %lu\n", nCC) ;
-        printf("elasped time: %f\n", to_sec (t1, t2)) ;
+        printf("FastSV: %f\n", to_sec (t1, t2)) ;
+
+        gettimeofday (&t1, 0) ;
+        LAGRAPH_OK (LAGraph_Boruvka (&result, A, false)) ;
+        gettimeofday (&t2, 0) ;
+        GrB_free (&A);
+
+        nCC = countCC (result, n) ;
+        printf("number of CCs: %lu\n", nCC) ;
+        printf("Boru: %f\n", to_sec (t1, t2)) ;
         printf("\n");
     }
 
