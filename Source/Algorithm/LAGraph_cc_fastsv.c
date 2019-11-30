@@ -56,7 +56,7 @@ static GrB_Info Reduce_assign (GrB_Vector w, GrB_Vector src, GrB_Index *index, G
     return GrB_SUCCESS;
 }
 
-GrB_Info LAGraph_fast_sv
+GrB_Info LAGraph_cc_fastsv
 (
     GrB_Vector *result,     // output: array of component identifiers
     GrB_Matrix A,           // input matrix
