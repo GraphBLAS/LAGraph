@@ -1,0 +1,1051 @@
+Script started on Fri 06 Dec 2019 04:34:34 PM CST
+Intel Suite:
+Copyright (C) 2009-2019 Intel Corporation. All rights reserved.
+Intel(R) VTune(TM) Amplifier 2019 (build 591499)
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m cat do_gap 
+#!/bin/sh
+build/bc_gap_test ~/GAP/GAP-road/GAP-road.mtx ~/GAP/GAP-road/GAP-road_sources.mtx
+build/bc_gap_test ~/GAP/GAP-web/GAP-web.mtx ~/GAP/GAP-web/GAP-web_sources.mtx
+
+build/bc_gap_test ~/GAP/GAP-kron/GAP-kron.mtx ~/GAP/GAP-kron/GAP-kron_sources.mtx
+build/bc_gap_test ~/GAP/GAP-twitter/GAP-twitter.mtx ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
+build/bc_gap_test ~/GAP/GAP-urand/GAP-urand.mtx ~/GAP/GAP-urand/GAP-urand_sources.mtx
+
+[0;36mhypersparse $[0m build/bc_gap_test ~/GAP/GAP-road/GAP-road.mtx ~/GAP/GAP-road/GAP-r oad_sources.mtx
+matrix: /home/faculty/davis/GAP/GAP-road/GAP-road.mtx
+read time: 18.9329 sec
+
+  64x1 GraphBLAS double matrix, sparse by row:
+  SourceNodes, 64 entries
+
+    (0,0)    4795721
+    (1,0)    21003854
+    (2,0)    417969
+    (3,0)    6496512
+    (4,0)    6648700
+    (5,0)    9811074
+    (6,0)    22247479
+    (7,0)    5720253
+    (8,0)    12366460
+    (9,0)    20413730
+    (10,0)    4217375
+    (11,0)    2674750
+    (12,0)    22085558
+    (13,0)    19445041
+    (14,0)    2360789
+    (15,0)    19115969
+    (16,0)    7758768
+    (17,0)    13468235
+    (18,0)    30368
+    (19,0)    18599548
+    (20,0)    7526109
+    (21,0)    16836281
+    (22,0)    12742068
+    (23,0)    7697996
+    (24,0)    5876444
+    (25,0)    9616341
+    (26,0)    2497674
+    (27,0)    10052291
+    (28,0)    12493058
+    (29,0)    1670856
+    (30,0)    2760680
+    (31,0)    2460942
+    (32,0)    8489651
+    (33,0)    5005226
+    (34,0)    8744646
+    (35,0)    8512024
+    (36,0)    21912166
+    (37,0)    1105391
+    (38,0)    15432164
+    (39,0)    1600178
+    (40,0)    19079470
+    (41,0)    16516638
+    (42,0)    20202567
+    (43,0)    21372804
+    (44,0)    2898010
+    (45,0)    8491278
+    (46,0)    18798318
+    (47,0)    23757561
+    (48,0)    17161820
+    (49,0)    23180740
+    (50,0)    10997086
+    (51,0)    3730631
+    (52,0)    1079069
+    (53,0)    15426823
+    (54,0)    12190926
+    (55,0)    1155219
+    (56,0)    10693489
+    (57,0)    14434836
+    (58,0)    19963340
+    (59,0)    3486186
+    (60,0)    18383270
+    (61,0)    20269909
+    (62,0)    12370765
+    (63,0)    7843141
+
+setup time: 1.32446 sec
+
+========== input graph: nodes: 23947347 edges: 57708624
+Starting Betweenness Centrality Tests
+ - nthreads: 40
+
+Trial 0 : sources: [ 4795720 21003853 417968 6496511 ]
+Xbc setup 0.282481 sec
+                0    accum:    0.00019192696      mxm:      0.00020194054
+                1    accum:    5.2928925e-05      mxm:      0.00015997887
+                2    accum:     5.197525e-05      mxm:       0.0001718998
+                3    accum:    4.5061111e-05      mxm:      0.00017213821
+                4    accum:    4.5061111e-05      mxm:       0.0001950264
+                5    accum:     5.197525e-05      mxm:      0.00021409988
+                6    accum:    4.5061111e-05      mxm:      0.00025606155
+                7    accum:    7.2002411e-05      mxm:      0.00024604797
+                8    accum:    7.2002411e-05      mxm:      0.00027918816
+                9    accum:     5.197525e-05      mxm:      0.00029301643
+               10    accum:    0.00011491776      mxm:      0.00030899048
+               11    accum:    7.2956085e-05      mxm:      0.00032687187
+               12    accum:    4.5061111e-05      mxm:      0.00034308434
+               13    accum:    5.2928925e-05      mxm:      0.00035691261
+               14    accum:    0.00011897087      mxm:      0.00034999847
+               15    accum:    5.3167343e-05      mxm:       0.0003900528
+               16    accum:     7.390976e-05      mxm:      0.00042009354
+               17    accum:    4.7922134e-05      mxm:      0.00040578842
+               18    accum:    4.4822693e-05      mxm:      0.00042486191
+               19    accum:    6.7949295e-05      mxm:       0.0004529953
+               20    accum:    6.6995621e-05      mxm:      0.00049304962
+               21    accum:    6.9141388e-05      mxm:      0.00052404404
+               22    accum:    0.00053715706      mxm:      0.00056695938
+               23    accum:    5.6028366e-05      mxm:       0.0005941391
+               24    accum:     0.0015830994      mxm:      0.00064110756
+               25    accum:    6.6995621e-05      mxm:      0.00064611435
+               26    accum:    6.4134598e-05      mxm:      0.00065207481
+               27    accum:     0.0010149479      mxm:      0.00066709518
+               28    accum:    6.9141388e-05      mxm:      0.00068902969
+               29    accum:    4.6014786e-05      mxm:      0.00069499016
+               30    accum:     4.696846e-05      mxm:      0.00074005127
+               31    accum:    4.5776367e-05      mxm:      0.00077390671
+               32    accum:    8.6069107e-05      mxm:      0.00078606606
+               33    accum:    7.5101852e-05      mxm:      0.00082111359
+               34    accum:    7.6055527e-05      mxm:      0.00086808205
+               35    accum:     0.0062820911      mxm:      0.00096082687
+               36    accum:    6.6041946e-05      mxm:      0.00095105171
+               37    accum:    0.00046396255      mxm:       0.0010690689
+               38    accum:    6.6041946e-05      mxm:       0.0010139942
+               39    accum:    0.00012087822      mxm:       0.0010740757
+               40    accum:     0.0001270771      mxm:       0.0010609627
+               41    accum:    4.7922134e-05      mxm:       0.0010619164
+               42    accum:    5.7935715e-05      mxm:       0.0010638237
+               43    accum:    4.7922134e-05      mxm:       0.0010550022
+               44    accum:     5.197525e-05      mxm:       0.0010738373
+               45    accum:    6.1988831e-05      mxm:         0.00106287
+               46    accum:    0.00010585785      mxm:       0.0010631084
+               47    accum:    0.00011897087      mxm:       0.0010340214
+               48    accum:    4.8875809e-05      mxm:       0.0010609627
+               49    accum:    0.00010704994      mxm:       0.0010931492
+               50    accum:    9.9897385e-05      mxm:       0.0011630058
+               51    accum:    7.5101852e-05      mxm:       0.0012509823
+               52    accum:     0.0011100769      mxm:       0.0012140274
+               53    accum:     0.0011870861      mxm:       0.0012660027
+               54    accum:    5.8174133e-05      mxm:       0.0012648106
+               55    accum:    6.6041946e-05      mxm:       0.0013399124
+               56    accum:    6.6995621e-05      mxm:       0.0034379959
+               57    accum:    0.00011396408      mxm:       0.0014710426
+               58    accum:    0.00069308281      mxm:       0.0014350414
+               59    accum:    3.3855438e-05      mxm:        0.001429081
+               60    accum:    0.00011301041      mxm:       0.0015349388
+               61    accum:    7.7962875e-05      mxm:       0.0015058517
+               62    accum:     3.194809e-05      mxm:       0.0015070438
+               63    accum:    3.2901764e-05      mxm:       0.0014688969
+               64    accum:     3.194809e-05      mxm:       0.0014688969
+               65    accum:    8.7022781e-05      mxm:       0.0015048981
+               66    accum:    3.4093857e-05      mxm:       0.0015509129
+               67    accum:    9.1075897e-05      mxm:        0.001568079
+               68    accum:    0.00010490417      mxm:       0.0016059875
+               69    accum:    3.0040741e-05      mxm:       0.0015819073
+               70    accum:     3.194809e-05      mxm:        0.001636982
+               71    accum:    3.2901764e-05      mxm:       0.0016019344
+               72    accum:    0.00081300735      mxm:       0.0015881062
+               73    accum:    3.2901764e-05      mxm:       0.0016279221
+               74    accum:      0.010328054      mxm:       0.0018179417
+               75    accum:    0.00041508675      mxm:        0.001750946
+               76    accum:    3.3140182e-05      mxm:       0.0017220974
+               77    accum:    0.00012612343      mxm:       0.0017290115
+               78    accum:    7.7009201e-05      mxm:       0.0017740726
+               79    accum:    7.2002411e-05      mxm:       0.0018460751
+               80    accum:    6.7949295e-05      mxm:       0.0018808842
+               81    accum:    3.3140182e-05      mxm:       0.0019350052
+               82    accum:    3.3855438e-05      mxm:       0.0019748211
+               83    accum:    9.2983246e-05      mxm:       0.0020000935
+               84    accum:    9.2029572e-05      mxm:       0.0020070076
+               85    accum:    7.8201294e-05      mxm:        0.002035141
+               86    accum:    9.4175339e-05      mxm:       0.0021061897
+               87    accum:    0.00010585785      mxm:       0.0021109581
+               88    accum:    7.6055527e-05      mxm:        0.012970924
+               89    accum:     0.0010170937      mxm:       0.0023140907
+               90    accum:     4.696846e-05      mxm:        0.002286911
+               91    accum:    6.1035156e-05      mxm:       0.0023491383
+               92    accum:    3.4093857e-05      mxm:       0.0023100376
+               93    accum:    3.3855438e-05      mxm:        0.002286911
+               94    accum:    6.9141388e-05      mxm:       0.0022671223
+               95    accum:    7.0095062e-05      mxm:       0.0023028851
+               96    accum:    3.4093857e-05      mxm:       0.0023479462
+               97    accum:    3.2901764e-05      mxm:       0.0023908615
+               98    accum:    7.7009201e-05      mxm:       0.0024430752
+               99    accum:    5.8174133e-05      mxm:       0.0024940968
+              100    accum:    3.2901764e-05      mxm:       0.0081977844
+              101    accum:    6.6995621e-05      mxm:       0.0024571419
+              102    accum:    6.9141388e-05      mxm:       0.0024261475
+              103    accum:    0.00010299683      mxm:       0.0024809837
+              104    accum:    8.7022781e-05      mxm:       0.0024650097
+              105    accum:    0.00011086464      mxm:        0.002423048
+              106    accum:    8.4877014e-05      mxm:       0.0024909973
+              107    accum:    8.7976456e-05      mxm:       0.0024671555
+              108    accum:    8.4877014e-05      mxm:       0.0025119781
+              109    accum:     8.392334e-05      mxm:       0.0025429726
+              110    accum:    8.5830688e-05      mxm:       0.0025570393
+              111    accum:    7.7962875e-05      mxm:       0.0026099682
+              112    accum:    0.00012612343      mxm:        0.002655983
+              113    accum:    7.6770782e-05      mxm:        0.015295029
+              114    accum:    7.9870224e-05      mxm:       0.0027320385
+              115    accum:    8.2015991e-05      mxm:       0.0027189255
+              116    accum:    7.5817108e-05      mxm:        0.002767086
+              117    accum:    3.4093857e-05      mxm:       0.0027110577
+              118    accum:    7.0095062e-05      mxm:       0.0027141571
+              119    accum:    6.6995621e-05      mxm:       0.0027148724
+              120    accum:     0.0012750626      mxm:       0.0027449131
+              121    accum:     3.695488e-05      mxm:       0.0027890205
+              122    accum:    7.1048737e-05      mxm:       0.0028920174
+              123    accum:      0.010684013      mxm:       0.0052042007
+              124    accum:    3.7908554e-05      mxm:        0.002920866
+              125    accum:    3.3855438e-05      mxm:       0.0028560162
+              126    accum:    3.6001205e-05      mxm:       0.0028669834
+              127    accum:    3.6001205e-05      mxm:       0.0028948784
+              128    accum:    0.00026392937      mxm:       0.0028820038
+              129    accum:    7.7009201e-05      mxm:       0.0028951168
+              130    accum:    3.4093857e-05      mxm:       0.0029540062
+              131    accum:    3.5047531e-05      mxm:       0.0029258728
+              132    accum:    7.7009201e-05      mxm:        0.013813972
+              133    accum:    6.2942505e-05      mxm:       0.0030679703
+              134    accum:    8.6069107e-05      mxm:       0.0031609535
+              135    accum:    7.2956085e-05      mxm:        0.003205061
+              136    accum:     7.390976e-05      mxm:       0.0032498837
+              137    accum:     0.0001950264      mxm:       0.0033209324
+              138    accum:    7.0810318e-05      mxm:       0.0034511089
+              139    accum:    5.2928925e-05      mxm:       0.0035090446
+              140    accum:    5.4121017e-05      mxm:       0.0034971237
+              141    accum:    0.00088214874      mxm:        0.014137983
+              142    accum:    0.00011610985      mxm:        0.003467083
+              143    accum:    5.9127808e-05      mxm:        0.005395174
+              144    accum:    6.1035156e-05      mxm:       0.0035381317
+              145    accum:    0.00067996979      mxm:       0.0036110878
+              146    accum:    5.1021576e-05      mxm:       0.0036840439
+              147    accum:    5.0067902e-05      mxm:        0.003786087
+              148    accum:     0.0077331066      mxm:       0.0051708221
+              149    accum:     5.197525e-05      mxm:       0.0038299561
+              150    accum:    5.7935715e-05      mxm:       0.0038189888
+              151    accum:    5.7935715e-05      mxm:       0.0038650036
+              152    accum:    5.6028366e-05      mxm:        0.003898859
+              153    accum:    0.00011181831      mxm:         0.00395298
+              154    accum:    0.00012016296      mxm:       0.0039110184
+              155    accum:    9.0122223e-05      mxm:        0.016203165
+              156    accum:    5.8889389e-05      mxm:        0.005038023
+^C
+[0;36mhypersparse $[0m make
+( cd build ; cmake  .. ; make --jobs=1 )
+-- CMAKE build type:          Release
+-- CMAKE C Flags release:     -O3 -DNDEBUG
+-- CMAKE compiler ID:         GNU
+-- CMAKE thread library:      -lpthread
+-- CMAKE have pthreads:       1
+-- CMAKE have Win32 pthreads: 
+-- CMAKE have OpenMP:         TRUE
+-- Automatic selection of synchronization method
+-- Using OpenMP to synchronize user threads
+-- CMAKE C flags:  -std=c11 -O -lm -Wno-pragmas  -O3 -DNDEBUG -fopenmp -DUSER_OPENMP_THREADS  -DHAVE_PTHREADS 
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build
+make[1]: Entering directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+make[2]: Entering directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+make[3]: Entering directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+make[3]: Leaving directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+[ 25%] Built target bc_test
+make[3]: Entering directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+make[3]: Leaving directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+[ 50%] Built target bc_batch_exe
+make[3]: Entering directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+make[3]: Leaving directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+[ 75%] Built target bc_exe
+make[3]: Entering directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+make[3]: Leaving directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+[100%] Built target bc_gap_test
+make[2]: Leaving directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+make[1]: Leaving directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+./build/bc_test < sample.mtx 2>stderr.txt
+Starting Betweenness Centrality Tests
+ - nthreads: 40
+ - ntrials: 1
+ - Start Test: Betweenness Centrality (Brandes Algorithm)
+ - End Test: Betweenness Centrality (Brandes Algorithm)
+ - Start Test: Betweenness Centrality (Batch Algorithm)
+ - End Test: Betweenness Centrality (Batch Algorithm)
+ - Betweenness Centrality Numerical Results
+
+   +-------------------------+
+   | v_i | Brandes |  Batch  |
+   +-------------------------+
+   |   0 |    0.00 |    0.00 |
+   |   1 |    1.33 |    1.33 |
+   |   2 |    1.33 |    1.33 |
+   |   3 |    1.33 |    1.33 |
+   |   4 |   12.00 |   12.00 |
+   |   5 |    2.50 |    2.50 |
+   |   6 |    2.50 |    2.50 |
+   |   7 |    0.00 |    0.00 |
+   +-------------------------+
+all tests passed
+./build/bc_test < sample2.mtx 2>>stderr.txt
+Starting Betweenness Centrality Tests
+ - nthreads: 40
+ - ntrials: 1
+ - Start Test: Betweenness Centrality (Brandes Algorithm)
+ - End Test: Betweenness Centrality (Brandes Algorithm)
+ - Start Test: Betweenness Centrality (Batch Algorithm)
+ - End Test: Betweenness Centrality (Batch Algorithm)
+ - Betweenness Centrality Numerical Results
+
+   +-------------------------+
+   | v_i | Brandes |  Batch  |
+   +-------------------------+
+   |   0 |    0.00 |    0.00 |
+   |   1 |    4.67 |    4.67 |
+   |   2 |    8.00 |    8.00 |
+   |   3 |    0.67 |    0.67 |
+   |   4 |    8.67 |    8.67 |
+   |   5 |   10.00 |   10.00 |
+   |   6 |    0.00 |    0.00 |
+   |   7 |    0.00 |    0.00 |
+   +-------------------------+
+all tests passed
+./build/bc_test < west0067.mtx 2>>stderr.txt
+Starting Betweenness Centrality Tests
+ - nthreads: 40
+ - ntrials: 1
+ - Start Test: Betweenness Centrality (Brandes Algorithm)
+ - End Test: Betweenness Centrality (Brandes Algorithm)
+ - Start Test: Betweenness Centrality (Batch Algorithm)
+ - End Test: Betweenness Centrality (Batch Algorithm)
+ - Betweenness Centrality Numerical Results
+
+   +-------------------------+
+   | v_i | Brandes |  Batch  |
+   +-------------------------+
+   |   0 |  142.77 |  142.77 |
+   |   1 |  104.97 |  104.97 |
+   |   2 |  103.09 |  103.09 |
+   |   3 |   96.69 |   96.69 |
+   |   4 |   88.41 |   88.41 |
+   |   5 |   59.56 |   59.56 |
+   |   6 |   44.60 |   44.60 |
+   |   7 |   72.53 |   72.53 |
+   |   8 |   81.61 |   81.61 |
+   |   9 |   83.20 |   83.20 |
+   |  10 |   51.93 |   51.93 |
+   |  11 |   38.45 |   38.45 |
+   |  12 |   90.04 |   90.04 |
+   |  13 |   91.82 |   91.82 |
+   |  14 |  160.02 |  160.02 |
+   |  15 |  212.33 |  212.33 |
+   |  16 |  159.03 |  159.03 |
+   |  17 |  258.28 |  258.28 |
+   |  18 |  148.95 |  148.95 |
+   |  19 |  229.71 |  229.71 |
+   |  20 |   83.48 |   83.48 |
+   |  21 |   76.94 |   76.94 |
+   |  22 |   99.05 |   99.05 |
+   |  23 |  110.63 |  110.63 |
+   |  24 |  140.78 |  140.78 |
+   |  25 |  175.51 |  175.51 |
+   |  26 |  151.64 |  151.64 |
+   |  27 |  175.81 |  175.81 |
+   |  28 |  182.43 |  182.43 |
+   |  29 |  131.21 |  131.21 |
+   |  30 |  328.95 |  328.95 |
+   |  31 |  120.51 |  120.51 |
+   |  32 |  116.11 |  116.11 |
+   |  33 |  117.67 |  117.67 |
+   |  34 |  109.75 |  109.75 |
+   |  35 |   93.84 |   93.84 |
+   |  36 |  190.50 |  190.50 |
+   |  37 |  130.87 |  130.87 |
+   |  38 |  111.93 |  111.93 |
+   |  39 |  121.19 |  121.19 |
+   |  40 |  156.61 |  156.61 |
+   |  41 |  111.87 |  111.87 |
+   |  42 |  229.94 |  229.94 |
+   |  43 |  148.63 |  148.63 |
+   |  44 |  162.48 |  162.48 |
+   |  45 |   40.36 |   40.36 |
+   |  46 |   63.30 |   63.30 |
+   |  47 |   36.23 |   36.23 |
+   |  48 |  175.00 |  175.00 |
+   |  49 |   72.64 |   72.64 |
+   |  50 |   59.49 |   59.49 |
+   |  51 |   61.70 |   61.70 |
+   |  52 |   54.72 |   54.72 |
+   |  53 |   48.52 |   48.52 |
+   |  54 |  343.45 |  343.45 |
+   |  55 |   66.78 |   66.78 |
+   |  56 |  248.12 |  248.12 |
+   |  57 |  211.65 |  211.65 |
+   |  58 |  224.34 |  224.34 |
+   |  59 |  156.34 |  156.34 |
+   |  60 |  184.99 |  184.99 |
+   |  61 |  127.06 |  127.06 |
+   |  62 |   95.40 |   95.40 |
+   |  63 |  182.68 |  182.68 |
+   |  64 |  232.45 |  232.45 |
+   |  65 |   81.61 |   81.61 |
+   |  66 |  114.87 |  114.87 |
+   +-------------------------+
+all tests passed
+./build/bc_gap_test < west0067.mtx
+matrix: from stdin
+read time: 0.000540018 sec
+
+  4x1 GraphBLAS int64_t matrix, sparse by row:
+  SourceNodes, 4 entries
+
+    (0,0)   1
+    (1,0)   2
+    (2,0)   3
+    (3,0)   4
+
+setup time: 0.000250101 sec
+
+========== input graph: nodes: 67 edges: 294
+Starting Betweenness Centrality Tests
+ - nthreads: 40
+
+Trial 0 : sources: [ 0 1 2 3 ]
+Xbc setup 0.00049901 sec
+                0    accum:      0.011428833      mxm:      9.6082687e-05
+                1    accum:    5.4121017e-05      mxm:      8.2969666e-05
+                2    accum:    5.4836273e-05      mxm:      0.00010490417
+                3    accum:     4.696846e-05      mxm:      9.6082687e-05
+                4    accum:    0.00010704994      mxm:      5.8889389e-05
+Xbc bfs phase: 0.0121307
+Xbc: setup for backtrack    7.5101852e-05
+                5    contr:    4.7922134e-05      mxm:      0.00012207031
+                5    contr:    4.4822693e-05      mxm:      6.7949295e-05
+                5    contr:    4.4107437e-05      mxm:      8.9168549e-05
+                5    contr:    4.3153763e-05      mxm:      9.6082687e-05
+Xbx 2nd phase: 0.000555277
+Xbc wrapup:    0.000190973
+Xbc total:     0.0134511
+Batch    time: 1.362109e-02 (sec), rate: 0.0215842 (1e6 edges/sec)
+./build/bc_gap_test: all tests passed
+[0;36mhypersparse $[0m make
+( cd build ; cmake  .. ; make --jobs=1 )
+-- CMAKE build type:          Release
+-- CMAKE C Flags release:     -O3 -DNDEBUG
+-- CMAKE compiler ID:         GNU
+-- CMAKE thread library:      -lpthread
+-- CMAKE have pthreads:       1
+-- CMAKE have Win32 pthreads: 
+-- CMAKE have OpenMP:         TRUE
+-- Automatic selection of synchronization method
+-- Using OpenMP to synchronize user threads
+-- CMAKE C flags:  -std=c11 -O -lm -Wno-pragmas  -O3 -DNDEBUG -fopenmp -DUSER_OPENMP_THREADS  -DHAVE_PTHREADS 
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build
+make[1]: Entering directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+make[2]: Entering directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+make[3]: Entering directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+make[3]: Leaving directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+[ 25%] Built target bc_test
+make[3]: Entering directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+make[3]: Leaving directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+[ 50%] Built target bc_batch_exe
+make[3]: Entering directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+make[3]: Leaving directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+[ 75%] Built target bc_exe
+make[3]: Entering directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+make[3]: Leaving directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+[100%] Built target bc_gap_test
+make[2]: Leaving directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+make[1]: Leaving directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+./build/bc_test < sample.mtx 2>stderr.txt
+Starting Betweenness Centrality Tests
+ - nthreads: 40
+ - ntrials: 1
+ - Start Test: Betweenness Centrality (Brandes Algorithm)
+ - End Test: Betweenness Centrality (Brandes Algorithm)
+ - Start Test: Betweenness Centrality (Batch Algorithm)
+ - End Test: Betweenness Centrality (Batch Algorithm)
+ - Betweenness Centrality Numerical Results
+
+   +-------------------------+
+   | v_i | Brandes |  Batch  |
+   +-------------------------+
+   |   0 |    0.00 |    0.00 |
+   |   1 |    1.33 |    1.33 |
+   |   2 |    1.33 |    1.33 |
+   |   3 |    1.33 |    1.33 |
+   |   4 |   12.00 |   12.00 |
+   |   5 |    2.50 |    2.50 |
+   |   6 |    2.50 |    2.50 |
+   |   7 |    0.00 |    0.00 |
+   +-------------------------+
+all tests passed
+./build/bc_test < sample2.mtx 2>>stderr.txt
+Starting Betweenness Centrality Tests
+ - nthreads: 40
+ - ntrials: 1
+ - Start Test: Betweenness Centrality (Brandes Algorithm)
+ - End Test: Betweenness Centrality (Brandes Algorithm)
+ - Start Test: Betweenness Centrality (Batch Algorithm)
+ - End Test: Betweenness Centrality (Batch Algorithm)
+ - Betweenness Centrality Numerical Results
+
+   +-------------------------+
+   | v_i | Brandes |  Batch  |
+   +-------------------------+
+   |   0 |    0.00 |    0.00 |
+   |   1 |    4.67 |    4.67 |
+   |   2 |    8.00 |    8.00 |
+   |   3 |    0.67 |    0.67 |
+   |   4 |    8.67 |    8.67 |
+   |   5 |   10.00 |   10.00 |
+   |   6 |    0.00 |    0.00 |
+   |   7 |    0.00 |    0.00 |
+   +-------------------------+
+all tests passed
+./build/bc_test < west0067.mtx 2>>stderr.txt
+Starting Betweenness Centrality Tests
+ - nthreads: 40
+ - ntrials: 1
+ - Start Test: Betweenness Centrality (Brandes Algorithm)
+ - End Test: Betweenness Centrality (Brandes Algorithm)
+ - Start Test: Betweenness Centrality (Batch Algorithm)
+ - End Test: Betweenness Centrality (Batch Algorithm)
+ - Betweenness Centrality Numerical Results
+
+   +-------------------------+
+   | v_i | Brandes |  Batch  |
+   +-------------------------+
+   |   0 |  142.77 |  142.77 |
+   |   1 |  104.97 |  104.97 |
+   |   2 |  103.09 |  103.09 |
+   |   3 |   96.69 |   96.69 |
+   |   4 |   88.41 |   88.41 |
+   |   5 |   59.56 |   59.56 |
+   |   6 |   44.60 |   44.60 |
+   |   7 |   72.53 |   72.53 |
+   |   8 |   81.61 |   81.61 |
+   |   9 |   83.20 |   83.20 |
+   |  10 |   51.93 |   51.93 |
+   |  11 |   38.45 |   38.45 |
+   |  12 |   90.04 |   90.04 |
+   |  13 |   91.82 |   91.82 |
+   |  14 |  160.02 |  160.02 |
+   |  15 |  212.33 |  212.33 |
+   |  16 |  159.03 |  159.03 |
+   |  17 |  258.28 |  258.28 |
+   |  18 |  148.95 |  148.95 |
+   |  19 |  229.71 |  229.71 |
+   |  20 |   83.48 |   83.48 |
+   |  21 |   76.94 |   76.94 |
+   |  22 |   99.05 |   99.05 |
+   |  23 |  110.63 |  110.63 |
+   |  24 |  140.78 |  140.78 |
+   |  25 |  175.51 |  175.51 |
+   |  26 |  151.64 |  151.64 |
+   |  27 |  175.81 |  175.81 |
+   |  28 |  182.43 |  182.43 |
+   |  29 |  131.21 |  131.21 |
+   |  30 |  328.95 |  328.95 |
+   |  31 |  120.51 |  120.51 |
+   |  32 |  116.11 |  116.11 |
+   |  33 |  117.67 |  117.67 |
+   |  34 |  109.75 |  109.75 |
+   |  35 |   93.84 |   93.84 |
+   |  36 |  190.50 |  190.50 |
+   |  37 |  130.87 |  130.87 |
+   |  38 |  111.93 |  111.93 |
+   |  39 |  121.19 |  121.19 |
+   |  40 |  156.61 |  156.61 |
+   |  41 |  111.87 |  111.87 |
+   |  42 |  229.94 |  229.94 |
+   |  43 |  148.63 |  148.63 |
+   |  44 |  162.48 |  162.48 |
+   |  45 |   40.36 |   40.36 |
+   |  46 |   63.30 |   63.30 |
+   |  47 |   36.23 |   36.23 |
+   |  48 |  175.00 |  175.00 |
+   |  49 |   72.64 |   72.64 |
+   |  50 |   59.49 |   59.49 |
+   |  51 |   61.70 |   61.70 |
+   |  52 |   54.72 |   54.72 |
+   |  53 |   48.52 |   48.52 |
+   |  54 |  343.45 |  343.45 |
+   |  55 |   66.78 |   66.78 |
+   |  56 |  248.12 |  248.12 |
+   |  57 |  211.65 |  211.65 |
+   |  58 |  224.34 |  224.34 |
+   |  59 |  156.34 |  156.34 |
+   |  60 |  184.99 |  184.99 |
+   |  61 |  127.06 |  127.06 |
+   |  62 |   95.40 |   95.40 |
+   |  63 |  182.68 |  182.68 |
+   |  64 |  232.45 |  232.45 |
+   |  65 |   81.61 |   81.61 |
+   |  66 |  114.87 |  114.87 |
+   +-------------------------+
+all tests passed
+./build/bc_gap_test < west0067.mtx
+matrix: from stdin
+read time: 0.000406027 sec
+
+  4x1 GraphBLAS int64_t matrix, sparse by row:
+  SourceNodes, 4 entries
+
+    (0,0)   1
+    (1,0)   2
+    (2,0)   3
+    (3,0)   4
+
+setup time: 0.000209093 sec
+
+========== input graph: nodes: 67 edges: 294
+Starting Betweenness Centrality Tests
+ - nthreads: 40
+
+Trial 0 : sources: [ 0 1 2 3 ]
+Xbc setup 0.000430107 sec
+                0    accum:      0.022294044      mxm:       0.0001077652
+                1    accum:     7.891655e-05      mxm:      7.5817108e-05
+                2    accum:    7.3194504e-05      mxm:      9.7036362e-05
+                3    accum:     7.390976e-05      mxm:      8.9883804e-05
+                4    accum:    6.9141388e-05      mxm:      6.3896179e-05
+Xbc bfs phase: 0.0230236
+Xbc: setup for backtrack    6.6995621e-05
+                5    contr:    6.2942505e-05      mxm:      0.00017404556
+                5    contr:    4.2915344e-05      mxm:      8.2015991e-05
+                5    contr:    6.1035156e-05      mxm:      6.8187714e-05
+                5    contr:     4.196167e-05      mxm:      7.0810318e-05
+Xbx 2nd phase: 0.000603914
+Xbc wrapup:    0.00018692
+Xbc total:     0.0243115
+Batch    time: 2.448010e-02 (sec), rate: 0.0120098 (1e6 edges/sec)
+./build/bc_gap_test: all tests passed
+[0;36mhypersparse $[0m make
+( cd build ; cmake  .. ; make --jobs=1 )
+-- CMAKE build type:          Release
+-- CMAKE C Flags release:     -O3 -DNDEBUG
+-- CMAKE compiler ID:         GNU
+-- CMAKE thread library:      -lpthread
+-- CMAKE have pthreads:       1
+-- CMAKE have Win32 pthreads: 
+-- CMAKE have OpenMP:         TRUE
+-- Automatic selection of synchronization method
+-- Using OpenMP to synchronize user threads
+-- CMAKE C flags:  -std=c11 -O -lm -Wno-pragmas  -O3 -DNDEBUG -fopenmp -DUSER_OPENMP_THREADS  -DHAVE_PTHREADS 
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build
+make[1]: Entering directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+make[2]: Entering directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+make[3]: Entering directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+make[3]: Leaving directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+[ 25%] Built target bc_test
+make[3]: Entering directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+make[3]: Leaving directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+[ 50%] Built target bc_batch_exe
+make[3]: Entering directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+make[3]: Leaving directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+[ 75%] Built target bc_exe
+make[3]: Entering directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+make[3]: Leaving directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+[100%] Built target bc_gap_test
+make[2]: Leaving directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+make[1]: Leaving directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+./build/bc_test < sample.mtx 2>stderr.txt
+Starting Betweenness Centrality Tests
+ - nthreads: 40
+ - ntrials: 1
+ - Start Test: Betweenness Centrality (Brandes Algorithm)
+ - End Test: Betweenness Centrality (Brandes Algorithm)
+ - Start Test: Betweenness Centrality (Batch Algorithm)
+ - End Test: Betweenness Centrality (Batch Algorithm)
+ - Betweenness Centrality Numerical Results
+
+   +-------------------------+
+   | v_i | Brandes |  Batch  |
+   +-------------------------+
+   |   0 |    0.00 |    0.00 |
+   |   1 |    1.33 |    1.33 |
+   |   2 |    1.33 |    1.33 |
+   |   3 |    1.33 |    1.33 |
+   |   4 |   12.00 |   12.00 |
+   |   5 |    2.50 |    2.50 |
+   |   6 |    2.50 |    2.50 |
+   |   7 |    0.00 |    0.00 |
+   +-------------------------+
+all tests passed
+./build/bc_test < sample2.mtx 2>>stderr.txt
+Starting Betweenness Centrality Tests
+ - nthreads: 40
+ - ntrials: 1
+ - Start Test: Betweenness Centrality (Brandes Algorithm)
+ - End Test: Betweenness Centrality (Brandes Algorithm)
+ - Start Test: Betweenness Centrality (Batch Algorithm)
+ - End Test: Betweenness Centrality (Batch Algorithm)
+ - Betweenness Centrality Numerical Results
+
+   +-------------------------+
+   | v_i | Brandes |  Batch  |
+   +-------------------------+
+   |   0 |    0.00 |    0.00 |
+   |   1 |    4.67 |    4.67 |
+   |   2 |    8.00 |    8.00 |
+   |   3 |    0.67 |    0.67 |
+   |   4 |    8.67 |    8.67 |
+   |   5 |   10.00 |   10.00 |
+   |   6 |    0.00 |    0.00 |
+   |   7 |    0.00 |    0.00 |
+   +-------------------------+
+all tests passed
+./build/bc_test < west0067.mtx 2>>stderr.txt
+Starting Betweenness Centrality Tests
+ - nthreads: 40
+ - ntrials: 1
+ - Start Test: Betweenness Centrality (Brandes Algorithm)
+ - End Test: Betweenness Centrality (Brandes Algorithm)
+ - Start Test: Betweenness Centrality (Batch Algorithm)
+ - End Test: Betweenness Centrality (Batch Algorithm)
+ - Betweenness Centrality Numerical Results
+
+   +-------------------------+
+   | v_i | Brandes |  Batch  |
+   +-------------------------+
+   |   0 |  142.77 |  142.77 |
+   |   1 |  104.97 |  104.97 |
+   |   2 |  103.09 |  103.09 |
+   |   3 |   96.69 |   96.69 |
+   |   4 |   88.41 |   88.41 |
+   |   5 |   59.56 |   59.56 |
+   |   6 |   44.60 |   44.60 |
+   |   7 |   72.53 |   72.53 |
+   |   8 |   81.61 |   81.61 |
+   |   9 |   83.20 |   83.20 |
+   |  10 |   51.93 |   51.93 |
+   |  11 |   38.45 |   38.45 |
+   |  12 |   90.04 |   90.04 |
+   |  13 |   91.82 |   91.82 |
+   |  14 |  160.02 |  160.02 |
+   |  15 |  212.33 |  212.33 |
+   |  16 |  159.03 |  159.03 |
+   |  17 |  258.28 |  258.28 |
+   |  18 |  148.95 |  148.95 |
+   |  19 |  229.71 |  229.71 |
+   |  20 |   83.48 |   83.48 |
+   |  21 |   76.94 |   76.94 |
+   |  22 |   99.05 |   99.05 |
+   |  23 |  110.63 |  110.63 |
+   |  24 |  140.78 |  140.78 |
+   |  25 |  175.51 |  175.51 |
+   |  26 |  151.64 |  151.64 |
+   |  27 |  175.81 |  175.81 |
+   |  28 |  182.43 |  182.43 |
+   |  29 |  131.21 |  131.21 |
+   |  30 |  328.95 |  328.95 |
+   |  31 |  120.51 |  120.51 |
+   |  32 |  116.11 |  116.11 |
+   |  33 |  117.67 |  117.67 |
+   |  34 |  109.75 |  109.75 |
+   |  35 |   93.84 |   93.84 |
+   |  36 |  190.50 |  190.50 |
+   |  37 |  130.87 |  130.87 |
+   |  38 |  111.93 |  111.93 |
+   |  39 |  121.19 |  121.19 |
+   |  40 |  156.61 |  156.61 |
+   |  41 |  111.87 |  111.87 |
+   |  42 |  229.94 |  229.94 |
+   |  43 |  148.63 |  148.63 |
+   |  44 |  162.48 |  162.48 |
+   |  45 |   40.36 |   40.36 |
+   |  46 |   63.30 |   63.30 |
+   |  47 |   36.23 |   36.23 |
+   |  48 |  175.00 |  175.00 |
+   |  49 |   72.64 |   72.64 |
+   |  50 |   59.49 |   59.49 |
+   |  51 |   61.70 |   61.70 |
+   |  52 |   54.72 |   54.72 |
+   |  53 |   48.52 |   48.52 |
+   |  54 |  343.45 |  343.45 |
+   |  55 |   66.78 |   66.78 |
+   |  56 |  248.12 |  248.12 |
+   |  57 |  211.65 |  211.65 |
+   |  58 |  224.34 |  224.34 |
+   |  59 |  156.34 |  156.34 |
+   |  60 |  184.99 |  184.99 |
+   |  61 |  127.06 |  127.06 |
+   |  62 |   95.40 |   95.40 |
+   |  63 |  182.68 |  182.68 |
+   |  64 |  232.45 |  232.45 |
+   |  65 |   81.61 |   81.61 |
+   |  66 |  114.87 |  114.87 |
+   +-------------------------+
+all tests passed
+./build/bc_gap_test < west0067.mtx
+matrix: from stdin
+read time: 0.000311852 sec
+
+  4x1 GraphBLAS int64_t matrix, sparse by row:
+  SourceNodes, 4 entries
+
+    (0,0)   1
+    (1,0)   2
+    (2,0)   3
+    (3,0)   4
+
+setup time: 0.000174046 sec
+
+========== input graph: nodes: 67 edges: 294
+Starting Betweenness Centrality Tests
+ - nthreads: 40
+
+Trial 0 : sources: [ 0 1 2 3 ]
+Xbc setup 0.000337839 sec
+                0    accum:      0.011223078      mxm:       0.0001809597
+                1    accum:     0.0022170544      mxm:      7.9870224e-05
+                2    accum:    5.1021576e-05      mxm:       9.894371e-05
+                3    accum:     5.197525e-05      mxm:      9.2983246e-05
+                4    accum:    0.00012493134      mxm:      6.6041946e-05
+Xbc bfs phase: 0.0141869
+Xbc: setup for backtrack    4.6014786e-05
+                4    contr:    6.5088272e-05      mxm:      0.00014400482
+                3    contr:    4.1007996e-05      mxm:      0.00014305115
+                2    contr:    7.5101852e-05      mxm:      7.2002411e-05
+                1    contr:    7.0095062e-05      mxm:      6.4134598e-05
+Xbx 2nd phase: 0.000674486
+Xbc wrapup:    0.000145912
+Xbc total:     0.0153911
+Batch    time: 1.592684e-02 (sec), rate: 0.0184594 (1e6 edges/sec)
+./build/bc_gap_test: all tests passed
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m make
+( cd build ; cmake  .. ; make --jobs=1 )
+-- CMAKE build type:          Release
+-- CMAKE C Flags release:     -O3 -DNDEBUG
+-- CMAKE compiler ID:         GNU
+-- CMAKE thread library:      -lpthread
+-- CMAKE have pthreads:       1
+-- CMAKE have Win32 pthreads: 
+-- CMAKE have OpenMP:         TRUE
+-- Automatic selection of synchronization method
+-- Using OpenMP to synchronize user threads
+-- CMAKE C flags:  -std=c11 -O -lm -Wno-pragmas  -O3 -DNDEBUG -fopenmp -DUSER_OPENMP_THREADS  -DHAVE_PTHREADS 
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build
+make[1]: Entering directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+make[2]: Entering directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+make[3]: Entering directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+make[3]: Leaving directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+[ 25%] Built target bc_test
+make[3]: Entering directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+make[3]: Leaving directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+[ 50%] Built target bc_batch_exe
+make[3]: Entering directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+make[3]: Leaving directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+[ 75%] Built target bc_exe
+make[3]: Entering directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+make[3]: Leaving directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+[100%] Built target bc_gap_test
+make[2]: Leaving directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+make[1]: Leaving directory '/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality/build'
+./build/bc_test < sample.mtx 2>stderr.txt
+Starting Betweenness Centrality Tests
+ - nthreads: 40
+ - ntrials: 1
+ - Start Test: Betweenness Centrality (Brandes Algorithm)
+ - End Test: Betweenness Centrality (Brandes Algorithm)
+ - Start Test: Betweenness Centrality (Batch Algorithm)
+ - End Test: Betweenness Centrality (Batch Algorithm)
+ - Betweenness Centrality Numerical Results
+
+   +-------------------------+
+   | v_i | Brandes |  Batch  |
+   +-------------------------+
+   |   0 |    0.00 |    0.00 |
+   |   1 |    1.33 |    1.33 |
+   |   2 |    1.33 |    1.33 |
+   |   3 |    1.33 |    1.33 |
+   |   4 |   12.00 |   12.00 |
+   |   5 |    2.50 |    2.50 |
+   |   6 |    2.50 |    2.50 |
+   |   7 |    0.00 |    0.00 |
+   +-------------------------+
+all tests passed
+./build/bc_test < sample2.mtx 2>>stderr.txt
+Starting Betweenness Centrality Tests
+ - nthreads: 40
+ - ntrials: 1
+ - Start Test: Betweenness Centrality (Brandes Algorithm)
+ - End Test: Betweenness Centrality (Brandes Algorithm)
+ - Start Test: Betweenness Centrality (Batch Algorithm)
+ - End Test: Betweenness Centrality (Batch Algorithm)
+ - Betweenness Centrality Numerical Results
+
+   +-------------------------+
+   | v_i | Brandes |  Batch  |
+   +-------------------------+
+   |   0 |    0.00 |    0.00 |
+   |   1 |    4.67 |    4.67 |
+   |   2 |    8.00 |    8.00 |
+   |   3 |    0.67 |    0.67 |
+   |   4 |    8.67 |    8.67 |
+   |   5 |   10.00 |   10.00 |
+   |   6 |    0.00 |    0.00 |
+   |   7 |    0.00 |    0.00 |
+   +-------------------------+
+all tests passed
+./build/bc_test < west0067.mtx 2>>stderr.txt
+Starting Betweenness Centrality Tests
+ - nthreads: 40
+ - ntrials: 1
+ - Start Test: Betweenness Centrality (Brandes Algorithm)
+ - End Test: Betweenness Centrality (Brandes Algorithm)
+ - Start Test: Betweenness Centrality (Batch Algorithm)
+ - End Test: Betweenness Centrality (Batch Algorithm)
+ - Betweenness Centrality Numerical Results
+
+   +-------------------------+
+   | v_i | Brandes |  Batch  |
+   +-------------------------+
+   |   0 |  142.77 |  142.77 |
+   |   1 |  104.97 |  104.97 |
+   |   2 |  103.09 |  103.09 |
+   |   3 |   96.69 |   96.69 |
+   |   4 |   88.41 |   88.41 |
+   |   5 |   59.56 |   59.56 |
+   |   6 |   44.60 |   44.60 |
+   |   7 |   72.53 |   72.53 |
+   |   8 |   81.61 |   81.61 |
+   |   9 |   83.20 |   83.20 |
+   |  10 |   51.93 |   51.93 |
+   |  11 |   38.45 |   38.45 |
+   |  12 |   90.04 |   90.04 |
+   |  13 |   91.82 |   91.82 |
+   |  14 |  160.02 |  160.02 |
+   |  15 |  212.33 |  212.33 |
+   |  16 |  159.03 |  159.03 |
+   |  17 |  258.28 |  258.28 |
+   |  18 |  148.95 |  148.95 |
+   |  19 |  229.71 |  229.71 |
+   |  20 |   83.48 |   83.48 |
+   |  21 |   76.94 |   76.94 |
+   |  22 |   99.05 |   99.05 |
+   |  23 |  110.63 |  110.63 |
+   |  24 |  140.78 |  140.78 |
+   |  25 |  175.51 |  175.51 |
+   |  26 |  151.64 |  151.64 |
+   |  27 |  175.81 |  175.81 |
+   |  28 |  182.43 |  182.43 |
+   |  29 |  131.21 |  131.21 |
+   |  30 |  328.95 |  328.95 |
+   |  31 |  120.51 |  120.51 |
+   |  32 |  116.11 |  116.11 |
+   |  33 |  117.67 |  117.67 |
+   |  34 |  109.75 |  109.75 |
+   |  35 |   93.84 |   93.84 |
+   |  36 |  190.50 |  190.50 |
+   |  37 |  130.87 |  130.87 |
+   |  38 |  111.93 |  111.93 |
+   |  39 |  121.19 |  121.19 |
+   |  40 |  156.61 |  156.61 |
+   |  41 |  111.87 |  111.87 |
+   |  42 |  229.94 |  229.94 |
+   |  43 |  148.63 |  148.63 |
+   |  44 |  162.48 |  162.48 |
+   |  45 |   40.36 |   40.36 |
+   |  46 |   63.30 |   63.30 |
+   |  47 |   36.23 |   36.23 |
+   |  48 |  175.00 |  175.00 |
+   |  49 |   72.64 |   72.64 |
+   |  50 |   59.49 |   59.49 |
+   |  51 |   61.70 |   61.70 |
+   |  52 |   54.72 |   54.72 |
+   |  53 |   48.52 |   48.52 |
+   |  54 |  343.45 |  343.45 |
+   |  55 |   66.78 |   66.78 |
+   |  56 |  248.12 |  248.12 |
+   |  57 |  211.65 |  211.65 |
+   |  58 |  224.34 |  224.34 |
+   |  59 |  156.34 |  156.34 |
+   |  60 |  184.99 |  184.99 |
+   |  61 |  127.06 |  127.06 |
+   |  62 |   95.40 |   95.40 |
+   |  63 |  182.68 |  182.68 |
+   |  64 |  232.45 |  232.45 |
+   |  65 |   81.61 |   81.61 |
+   |  66 |  114.87 |  114.87 |
+   +-------------------------+
+all tests passed
+./build/bc_gap_test < west0067.mtx
+matrix: from stdin
+read time: 0.000432014 sec
+
+  4x1 GraphBLAS int64_t matrix, sparse by row:
+  SourceNodes, 4 entries
+
+    (0,0)   1
+    (1,0)   2
+    (2,0)   3
+    (3,0)   4
+
+setup time: 0.000222206 sec
+
+========== input graph: nodes: 67 edges: 294
+Starting Betweenness Centrality Tests
+ - nthreads: 40
+
+Trial 0 : sources: [ 0 1 2 3 ]
+Xbc setup 0.000452995 sec
+                0    accum:      0.011676073      mxm:      0.00014400482
+                1    accum:     0.0016579628      mxm:      0.00010418892
+                2    accum:     0.0017271042      mxm:      0.00012588501
+                3    accum:    7.4863434e-05      mxm:       0.0001270771
+                4    accum:    7.2956085e-05      mxm:       8.392334e-05
+Xbc bfs phase: 0.015794
+Xbc: setup for backtrack    7.0095062e-05
+                4    contr:      0.000177145      mxm:      0.00021600723
+                3    contr:    6.6041946e-05      mxm:      0.00011587143
+                2    contr:    6.6041946e-05      mxm:       0.0001001358
+                1    contr:    6.2942505e-05      mxm:      7.5817108e-05
+Xbx 2nd phase: 0.000880003
+Xbc wrapup:    0.000192881
+Xbc total:     0.01739
+Batch    time: 1.760387e-02 (sec), rate: 0.0167009 (1e6 edges/sec)
+./build/bc_gap_test: all tests passed
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m cat do_gap 
+#!/bin/sh
+build/bc_gap_test ~/GAP/GAP-road/GAP-road.mtx ~/GAP/GAP-road/GAP-road_sources.mtx
+build/bc_gap_test ~/GAP/GAP-web/GAP-web.mtx ~/GAP/GAP-web/GAP-web_sources.mtx
+
+build/bc_gap_test ~/GAP/GAP-kron/GAP-kron.mtx ~/GAP/GAP-kron/GAP-kron_sources.mtx
+build/bc_gap_test ~/GAP/GAP-twitter/GAP-twitter.mtx ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
+build/bc_gap_test ~/GAP/GAP-urand/GAP-urand.mtx ~/GAP/GAP-urand/GAP-urand_sources.mtx
+
+[0;36mhypersparse $[0m exit
+exit
+
+Script done on Fri 06 Dec 2019 04:40:05 PM CST

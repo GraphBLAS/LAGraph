@@ -104,6 +104,9 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
     int32_t num_sources        // number of source vertices (length of s)
 )
 {
+    double tic [2];
+    LAGraph_tic (tic);
+
     (*centrality) = NULL;
     GrB_Index n; // Number of nodes in the graph
 
@@ -223,8 +226,15 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
     GrB_Index sum = 0;    // Sum of shortest paths to vertices at current depth
                           // Equal to sum(frontier). Continue BFS until new paths
                           //  are no shorter than any existing paths.
+
+    double time_1 = LAGraph_toc (tic) ;
+    printf ("Xbc setup %g sec\n", time_1) ;
+    double time_2 = 0 ;
+
     do
     {
+        LAGraph_tic (tic);
+
         // Create the current search matrix - one column for each source/BFS
         LAGr_Matrix_new(&(S_array[depth]), GrB_BOOL, n, num_sources);
         GxB_set(S_array[depth], GxB_FORMAT, GxB_BY_COL);
@@ -257,6 +267,11 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
         // Import paths
         GxB_Matrix_import_CSC(&paths, GrB_INT64, n, num_sources, nnz_dense, n, &Sp, &Si, (void**) &Sx, GrB_NULL);
 
+        double time_2a = LAGraph_toc (tic) ;
+        time_2 += time_2a ;
+        printf (" %16"PRId64"    accum: %16.8g  ", depth, time_2a) ;
+        LAGraph_tic (tic);
+
         //=== Update frontier: frontier<!paths>=A’ +.∗ frontier ================
         LAGr_mxm(frontier, paths, GrB_NULL, GxB_PLUS_TIMES_INT64, A_matrix, frontier, desc_tsr);
 
@@ -265,7 +280,14 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
 
         depth = depth + 1;
 
+        double time_2b = LAGraph_toc (tic) ;
+        printf ("    mxm:   %16.8g\n", time_2b) ;
+        time_2 += time_2b ;
+
     } while (sum); // Repeat until no more shortest paths being discovered
+
+    printf ("Xbc bfs phase: %g\n", time_2) ;
+    LAGraph_tic (tic);
 
     //=== Betweenness centrality computation phase =============================
 
@@ -290,10 +312,15 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
     // Create temporary workspace matrix
     LAGr_Matrix_new(&t2, GrB_FP64, n, num_sources);
 
+    double time_3 = LAGraph_toc (tic) ;
+    printf ("Xbc: setup for backtrack %16.8g\n", time_3) ;
+    double time_4 = 0 ;
+
     // Backtrack through the BFS and compute centrality updates for each vertex
     for (int64_t i = depth - 1; i > 0; i--)
     {
         // Add contributions by successors and mask with that BFS level’s frontier
+        LAGraph_tic (tic);
 
         //=== temp<S_array[i]> = bc_update ./ paths ============================
 
@@ -326,8 +353,14 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
         // The row/column indices are the pattern r/c from S_array[i]
         GxB_Matrix_import_CSC(&t1, GrB_FP64, n, num_sources, nnz, num_nonempty, &Tp, &Ti, (void**) &Tx, GrB_NULL);
 
+        double time_4a = LAGraph_toc (tic) ;
+        time_4 += time_4a ;
+        printf (" %16"PRId64"    contr: %16.8g  ", i, time_4a) ;
+        LAGraph_tic (tic);
+
         //=== t2<S_array[i−1]> = (A * t1) ======================================
         LAGr_mxm(t2, S_array[i-1], GrB_NULL, GxB_PLUS_TIMES_FP64, A_matrix, t1, LAGraph_desc_ooor);
+        GrB_free(&t1);
 
         //=== bc_update += t2 .* paths =========================================
         GxB_Matrix_export_CSC(&t2, &type, &num_rows, &num_cols, &nnz, &num_nonempty, &Tp, &Ti, &Tx, GrB_NULL);
@@ -343,7 +376,15 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
 
         // Re-import t2
         GxB_Matrix_import_CSC(&t2, GrB_FP64, num_rows, num_cols, nnz, num_nonempty, &Tp, &Ti, &Tx, GrB_NULL);
+
+        double time_4b = LAGraph_toc (tic) ;
+        time_4 += time_4b ;
+        printf ("    mxm:   %16.8g\n", time_4b) ;
+
     }
+
+    printf ("Xbx 2nd phase: %g\n", time_4) ;
+    LAGraph_tic (tic);
 
     //=== Initialize the centrality array with -(num_sources) to avoid counting
     //    zero length paths ====================================================
@@ -377,5 +418,9 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
     GxB_Vector_import(centrality, GrB_FP64, n, n, &I, (void**) &centrality_dense, GrB_NULL);
 
     LAGRAPH_FREE_WORK;
+    double time_5 = LAGraph_toc (tic) ;
+    printf ("Xbc wrapup:    %g\n", time_5) ;
+    printf ("Xbc total:     %g\n", time_1 + time_2 + time_3 + time_4 + time_5) ;
+
     return GrB_SUCCESS;
 }

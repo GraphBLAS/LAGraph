@@ -33,17 +33,3 @@
 
 #include "LAGraph.h"
 
-GrB_Info LAGraph_bc     // betweeness centrality
-(
-    GrB_Vector *delta, // delta(i) is the betweeness centrality of node i
-    GrB_Matrix A,      // input graph, treated as if boolean in semiring
-    GrB_Index s        // source vertex from which to compute shortest paths
-);
-
-GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
-(
-    GrB_Vector *delta,  // delta(i) is the betweeness centrality of node i
-    const GrB_Matrix A, // input graph, treated as if boolean in semiring
-    const GrB_Index *s, // source vertices from which to compute shortest paths
-    const int32_t nsver // number of source vertices (length of s)
-);

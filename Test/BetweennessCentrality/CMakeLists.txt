@@ -217,11 +217,16 @@ set (BC_EXE_SRC
 set (BC_BATCH_EXE_SRC
      bc_batch_exe.c)
 
+set (BC_GAP_TEST_SRC
+     bc_gap_test.c)
+
 add_executable ( bc_test ${BC_TEST_SRC} )
 add_executable ( bc_exe ${BC_EXE_SRC} )
 add_executable ( bc_batch_exe ${BC_BATCH_EXE_SRC} )
+add_executable ( bc_gap_test ${BC_GAP_TEST_SRC} )
 
 # Libraries required for Demo programs
+target_link_libraries ( bc_gap_test graphblas lagraph m )
 target_link_libraries ( bc_test graphblas lagraph m )
 target_link_libraries ( bc_exe graphblas lagraph m )
 target_link_libraries ( bc_batch_exe graphblas lagraph m )

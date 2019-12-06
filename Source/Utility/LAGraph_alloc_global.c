@@ -658,10 +658,6 @@ GrB_Info LAGraph_alloc_global ( )
         F_UNARY (LAGraph_isone_complex),
         GrB_BOOL, LAGraph_Complex)) ;
 
-    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ISONE_INT8,
-        F_UNARY (LAGraph_isone_int8),
-        GrB_BOOL, GrB_INT8)) ;
-
     //--------------------------------------------------------------------------
     // create the unary operator that checks if equal to 2
     //--------------------------------------------------------------------------

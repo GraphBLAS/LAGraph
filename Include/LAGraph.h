@@ -719,12 +719,12 @@ GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
 );
 
 GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
-    (
-        GrB_Vector *delta,  // delta(i) is the betweeness centrality of node i
-        const GrB_Matrix A, // input graph, treated as if boolean in semiring
-        const GrB_Index *s, // source vertices from which to compute shortest paths
-        const int32_t nsver // number of source vertices (length of s)
-    );
+(
+    GrB_Vector *delta,  // delta(i) is the betweeness centrality of node i
+    const GrB_Matrix A, // input graph, treated as if boolean in semiring
+    const GrB_Index *s, // source vertices from which to compute shortest paths
+    const int32_t nsver // number of source vertices (length of s)
+);
 
 GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
 (
@@ -889,5 +889,6 @@ GrB_Info LAGraph_sssp // single source shortest paths
     const GrB_Index source,    // source vertex from which to compute shortest paths
     double delta               // delta value for delta stepping
 ) ;
+
 
 #endif

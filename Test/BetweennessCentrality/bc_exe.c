@@ -94,7 +94,7 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     fprintf (stderr, "\n=========="
-        "input graph: nodes: %llu edges: %llu\n", n, nvals) ;
+        "input graph: nodes: %"PRIu64" edges: %"PRIu64"\n", n, nvals) ;
 
     int nthreads = LAGraph_get_nthreads();
     fprintf(stderr, "Starting bc_exe\n");
