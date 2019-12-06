@@ -132,7 +132,7 @@ int main (int argc, char **argv)
     uint64_t seed = 1 ;
     GrB_Index nrows = 10000 ;
     GrB_Index ncols = 10000 ;
-    GrB_Index nvals = 1000000 ;
+    GrB_Index nvals = 10000000 ;
 
     // create A with one thread
     OK (bmake (&A, GrB_FP64, nrows, ncols, nvals,
@@ -140,7 +140,7 @@ int main (int argc, char **argv)
 
     // OK (GxB_print (A, 2)) ;
 
-    #if 0
+    #if 1
     // now create B with 1 to max # of threads
     for (int nthreads = 1 ; nthreads <= nthreads_max ; nthreads++)
     {
