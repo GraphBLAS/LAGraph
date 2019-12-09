@@ -1,0 +1,19 @@
+#!/bin/bash
+
+
+# /raid/hyper/gapbs/GAP
+echo "Test kron:"
+./build/p3test <  ~/GAP/GAP-kron/GAP-kron.mtx
+
+echo "Test road:"
+./build/p3test  <   ~/GAP/GAP-road/GAP-road.mtx
+ 
+echo "Test twitter:"
+./build/p3test  <   ~/GAP/GAP-twitter/GAP-twitter.mtx
+
+echo "Test urand:"
+./build/p3test  <   ~/GAP/GAP-urand/GAP-urand.mtx
+
+echo "Test web:"
+./build/p3test  <  ~/GAP/GAP-web/GAP-web.mtx
+
