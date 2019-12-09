@@ -112,11 +112,11 @@ int main ( )
     //    #define NTHRLIST 7
     //    int nthread_list [NTHRLIST] = {1, 2, 4, 8, 16, 20, 40} ;
 
-//#define NTHRLIST 2
-//    int nthread_list [NTHRLIST] = {1, 40} ;    
+#define NTHRLIST 2
+    int nthread_list [NTHRLIST] = {1, 40} ;    
 
-#define NTHRLIST 1
-    int nthread_list [NTHRLIST] = {40} ;    
+    //#define NTHRLIST 1
+    //    int nthread_list [NTHRLIST] = {40} ;    
 
 
     for (int kk = 0 ; kk < NTHRLIST; kk++)
