@@ -467,7 +467,8 @@ extern GrB_Monoid
     LAGraph_MIN_INT64_MONOID    ,
     LAGraph_PLUS_UINT32_MONOID  ,
     LAGraph_PLUS_FP32_MONOID    ,
-    LAGraph_PLUS_FP64_MONOID    ;
+    LAGraph_PLUS_FP64_MONOID    ,
+    LAGraph_DIV_FP64_MONOID     ;
 
 extern GrB_Semiring
 

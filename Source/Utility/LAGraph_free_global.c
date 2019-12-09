@@ -99,6 +99,7 @@ GrB_Info LAGraph_free_global ( )
     GrB_free (&LAGraph_PLUS_UINT32_MONOID) ;
     GrB_free (&LAGraph_PLUS_FP64_MONOID) ;
     GrB_free (&LAGraph_PLUS_FP32_MONOID) ;
+    GrB_free (&LAGraph_DIV_FP64_MONOID) ;
 
     // free the semirings
     GrB_free (&LAGraph_LOR_LAND_BOOL) ;
