@@ -7,7 +7,7 @@
 
 #-------------------------------------------------------------------------------
 
-# simple Makefile for LAGraph/Test/PageRank/p2test,
+# simple Makefile for LAGraph/Test/PageRank/p3test,
 
 # relies on cmake to do the actual build.  Use the CMAKE_OPTIONS argument to
 # this Makefile to pass options to cmake.
@@ -18,7 +18,7 @@ JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/p2test < ../../Data/ldbc-directed-example-unweighted.mtx
+	./build/p3test < ../../Data/ldbc-directed-example-unweighted.mtx
 
 # build test
 compile:
@@ -34,5 +34,5 @@ purge: distclean
 
 # remove all files not in the distribution
 distclean:
-	rm -rf build/* A.mtx p2test
+	rm -rf build/* A.mtx p3test
 

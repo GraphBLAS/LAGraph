@@ -3,32 +3,32 @@
 //------------------------------------------------------------------------------
 
 /*
-    LAGraph:  graph algorithms based on GraphBLAS
+LAGraph:  graph algorithms based on GraphBLAS
 
-    Copyright 2019 LAGraph Contributors.
+Copyright 2019 LAGraph Contributors.
 
-    (see Contributors.txt for a full list of Contributors; see
-    ContributionInstructions.txt for information on how you can Contribute to
-    this project).
+(see Contributors.txt for a full list of Contributors; see
+ContributionInstructions.txt for information on how you can Contribute to
+this project).
 
-    All Rights Reserved.
+All Rights Reserved.
 
-    NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
-    CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
-    AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
-    PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
-    THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
-    RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
+NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
+CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
+AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
+PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
+THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
+RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
 
-    Released under a BSD license, please see the LICENSE file distributed with
-    this Software or contact permission@sei.cmu.edu for full terms.
+Released under a BSD license, please see the LICENSE file distributed with
+this Software or contact permission@sei.cmu.edu for full terms.
 
-    Created, in part, with funding and support from the United States
-    Government.  (see Acknowledgments.txt file).
+Created, in part, with funding and support from the United States
+Government.  (see Acknowledgments.txt file).
 
-    This program includes and/or can make use of certain third party source
-    code, object code, documentation and other files ("Third Party Software").
-    See LICENSE file for more details.
+This program includes and/or can make use of certain third party source
+code, object code, documentation and other files ("Third Party Software").
+See LICENSE file for more details.
 
 */
 
@@ -97,22 +97,29 @@ int main ( )
     // LAGRAPH_OK (GrB_Matrix_setElement (A, 0, 0, n-1)) ;     // hack
 
     fprintf (stderr, "\n=========="
-        "input graph: nodes: %"PRIu64" edges: %"PRIu64"\n", n, nvals) ;
+            "input graph: nodes: %"PRIu64" edges: %"PRIu64"\n", n, nvals) ;
 
     //--------------------------------------------------------------------------
     // compute the pagerank
     //--------------------------------------------------------------------------
 
     int ntrials = 1 ;       // increase this to 10, 100, whatever, for more
-                            // accurate timing
+    // accurate timing
 
-    double tol = 1e-5 ;
+    float tol = 1e-4 ;
     int iters, itermax = 100 ;
 
-    int nthread_list [7] = {1, 2, 4, 8, 16, 20, 40} ;
+    //    #define NTHRLIST 7
+    //    int nthread_list [NTHRLIST] = {1, 2, 4, 8, 16, 20, 40} ;
 
-    // for (int nthreads = 1 ; nthreads <= nthreads_max ; nthreads *= 2)
-    for (int kk = 0 ; kk < 7 ; kk++)
+#define NTHRLIST 2
+    int nthread_list [NTHRLIST] = {1, 40} ;    
+
+    //#define NTHRLIST 1
+    //    int nthread_list [NTHRLIST] = {40} ;    
+
+
+    for (int kk = 0 ; kk < NTHRLIST; kk++)
     {
         int nthreads = nthread_list [kk] ;
         LAGraph_set_nthreads (nthreads) ;
@@ -124,14 +131,16 @@ int main ( )
         for (int trial = 0 ; trial < ntrials ; trial++)
         {
             if (PR != NULL) { free (PR) ; PR = NULL ; }
-            LAGRAPH_OK (LAGraph_pagerank2 (&PR, A, 0.85, itermax)) ;
+            //uncomment the one that you want to run
+            //LAGRAPH_OK (LAGraph_pagerank3a (&PR, A, 0.85, itermax, &iters)) ;
+            LAGRAPH_OK (LAGraph_pagerank3b (&PR, A, 0.85, itermax, &iters)) ;
         }
 
         // stop the timer
         double t1 = LAGraph_toc (tic) / ntrials ;
         fprintf (stderr, "pagerank  time: %12.6e (sec), "
-            "rate: %g (1e6 edges/sec) iters: %d threads: %d\n",
-            t1, 1e-6*((double) nvals) / t1, iters, nthreads) ;
+                "rate: %g (1e6 edges/sec) iters: %d threads: %d\n",
+                t1, 1e-6*((double) nvals) / t1, iters, nthreads) ;
     }
 
     //--------------------------------------------------------------------------
@@ -139,11 +148,11 @@ int main ( )
     //--------------------------------------------------------------------------
 
     /*
-    for (int64_t k = 0 ; k < n ; k++)
-    {
-        printf ("%" PRIu64 " %g\n", P [k].page, P [k].pagerank) ;
-    }
-    */
+       for (int64_t k = 0 ; k < n ; k++)
+       {
+       printf ("%" PRIu64 " %g\n", P [k].page, P [k].pagerank) ;
+       }
+       */
     GxB_Vector_fprint(PR, "---- PR ------", GxB_SHORT, stderr);
 
     //--------------------------------------------------------------------------
@@ -154,4 +163,3 @@ int main ( )
     LAGRAPH_OK (LAGraph_finalize ( )) ;
     return (GrB_SUCCESS) ;
 }
-

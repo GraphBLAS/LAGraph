@@ -788,13 +788,24 @@ GrB_Info LAGraph_pagerank2      // second PageRank definition
     unsigned long itermax       // number of iterations
 ) ;
 
-GrB_Info LAGraph_pagerank3      // third PageRank definition
+GrB_Info LAGraph_pagerank3a      // third PageRank definition
 (
     GrB_Vector *result,         // output: array of LAGraph_PageRank structs
     GrB_Matrix A,               // binary input graph, not modified
-    double damping_factor,      // damping factor
-    unsigned long itermax       // number of iterations
+    float damping_factor,      // damping factor
+    unsigned long itermax,      // maximum number of iterations
+    int *iters                  // number of iterations taken
 ) ;
+
+GrB_Info LAGraph_pagerank3b      // third PageRank definition
+(
+    GrB_Vector *result,         // output: array of LAGraph_PageRank structs
+    GrB_Matrix A,               // binary input graph, not modified
+    float damping_factor,      // damping factor
+    unsigned long itermax,      // maximum number of iterations
+    int *iters                  // number of iterations taken
+) ;
+
 
 GrB_Info LAGraph_tricount   // count # of triangles
 (
