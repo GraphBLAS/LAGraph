@@ -45,7 +45,7 @@ See LICENSE file for more details.
 {                                               \
     if (P != NULL) { free (P) ; P = NULL ; }    \
     GrB_free (&A) ;                             \
-    GrB_free (&Abool) ;                         \
+    GrB_free (&A_fp32) ;                         \
 }
 
 int main ( )
@@ -53,7 +53,7 @@ int main ( )
 
     GrB_Info info ;
     GrB_Matrix A = NULL ;
-    GrB_Matrix Abool = NULL ;
+    GrB_Matrix A_fp32 = NULL ;
     LAGraph_PageRank *P = NULL ;
     GrB_Vector PR = NULL;
 
@@ -68,15 +68,16 @@ int main ( )
 
     // read in the file in Matrix Market format
     LAGRAPH_OK (LAGraph_mmread (&A, stdin)) ;
-    // GxB_fprint (A, GxB_COMPLETE, stderr) ;
+    // GxB_fprint (A, GxB_SHORT, stderr) ;
     // LAGraph_mmwrite (A, stderr) ;
 
-    // convert to boolean, pattern-only
-    LAGRAPH_OK (LAGraph_pattern (&Abool, A, GrB_BOOL)) ;
-    // LAGraph_mmwrite (Abool, stderr) ;
+    // convert to FP32
+    LAGRAPH_OK (LAGraph_pattern (&A_fp32, A, GrB_FP32)) ;
+    // LAGraph_mmwrite (A_fp32, stderr) ;
     GrB_free (&A) ;
-    A = Abool ;
-    Abool = NULL ;
+    A = A_fp32 ;
+    A_fp32 = NULL ;
+    LAGRAPH_OK(GxB_set (A, GxB_FORMAT, GxB_BY_COL));
     // GxB_fprint (A, GxB_COMPLETE, stderr) ;
 
     // finish any pending computations
@@ -92,7 +93,7 @@ int main ( )
     LAGRAPH_OK (GrB_Matrix_ncols (&ncols, A)) ;
     GrB_Index n = nrows ;
 
-    // GxB_fprint (A, GxB_COMPLETE, stderr) ;
+    GxB_fprint (A, GxB_SHORT, stderr) ;
 
     // LAGRAPH_OK (GrB_Matrix_setElement (A, 0, 0, n-1)) ;     // hack
 
@@ -132,7 +133,7 @@ int main ( )
         {
             if (PR != NULL) { free (PR) ; PR = NULL ; }
             //uncomment the one that you want to run
-            //LAGRAPH_OK (LAGraph_pagerank3a (&PR, A, 0.85, itermax, &iters)) ;
+//          LAGRAPH_OK (LAGraph_pagerank3a (&PR, A, 0.85, itermax, &iters)) ;
             LAGRAPH_OK (LAGraph_pagerank3b (&PR, A, 0.85, itermax, &iters)) ;
         }
 

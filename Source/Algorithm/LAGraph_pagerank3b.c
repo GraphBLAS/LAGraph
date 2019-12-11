@@ -38,6 +38,9 @@ See LICENSE file for more details.
 // This algorithm follows the specification given in the GAP Benchmark Suite:
 // https://arxiv.org/abs/1508.03619
 
+// For fastest results, the input matrix should be GrB_FP32, stored in
+// GxB_BY_COL format.
+
 #include "LAGraph.h"
 
 #define LAGRAPH_FREE_ALL {       \
@@ -59,7 +62,7 @@ See LICENSE file for more details.
     GrB_Info LAGraph_pagerank3b // PageRank definition
 (
  GrB_Vector *result,    // output: array of LAGraph_PageRank structs
- GrB_Matrix A,          // binary input graph, not modified
+ GrB_Matrix A_input,    // binary input graph, not modified
  float damping_factor, // damping factor
  unsigned long itermax, // maximum number of iterations
  int* iters             // output: number of iterations taken
@@ -68,9 +71,10 @@ See LICENSE file for more details.
     GrB_Info info;
     GrB_Index n;
 
-    GrB_Descriptor invmask_desc;
-    GrB_Descriptor transpose_desc;
-    GrB_Vector grb_d_out;
+    GrB_Descriptor invmask_desc = NULL ;
+    GrB_Descriptor transpose_desc = NULL ;
+    GrB_Vector grb_d_out = NULL ;
+    GrB_Matrix A = NULL ;
 
 #ifdef PRINT_TIMING_INFO
     // start the timer
@@ -82,21 +86,26 @@ See LICENSE file for more details.
     GrB_Vector importance_vec = NULL ;
     GrB_Vector grb_pr = NULL;
 
-    GrB_Matrix G; // a dense row of zeros zeroes(1,nc)
-    GrB_Index nc; //number of columnns
+    GrB_Matrix G = NULL ; // a dense row of zeros zeroes(1,n)
+    GrB_Index ncols ; //number of columnns
 
-    LAGRAPH_OK(GrB_Matrix_ncols(&nc, A));
-
-    LAGRAPH_OK(GrB_Matrix_nrows(&n, A));
+    LAGRAPH_OK(GrB_Matrix_ncols(&ncols , A_input));
+    LAGRAPH_OK(GrB_Matrix_nrows(&n, A_input));
     GrB_Index nvals;
-    LAGRAPH_OK(GrB_Matrix_nvals(&nvals, A));
+    LAGRAPH_OK(GrB_Matrix_nvals(&nvals, A_input));
 
+    if (ncols  != n)
+    {
+        return (GrB_DIMENSION_MISMATCH) ;
+    }
 
-    LAGRAPH_OK(GrB_Matrix_new (&G, GrB_FP32, n, nc));
+    LAGRAPH_OK(GrB_Matrix_new (&G, GrB_FP32, n, n));
+    LAGRAPH_OK(GrB_Matrix_new (&A, GrB_FP32, n, n));
+    LAGRAPH_OK(GxB_set (A, GxB_FORMAT, GxB_BY_COL));
 
     // G is zeros in last row
-    for (GrB_Index c = 0; c < nc; c++){
-        LAGRAPH_OK(GrB_Matrix_setElement (G, 0.0, nc-1, c));
+    for (GrB_Index c = 0; c < n; c++){
+        LAGRAPH_OK(GrB_Matrix_setElement (G, 0.0, n-1, c));
     }
 #ifndef NDEBUG
     int print_size = 5;   //number of entries get printed
@@ -104,11 +113,9 @@ See LICENSE file for more details.
     //  GxB_print (G, 3) ;
 #endif
 
-    // A += G;
-    LAGRAPH_OK(GrB_eWiseAdd (A, NULL, NULL, GrB_PLUS_FP32, A, G, NULL));
-
-
-    LAGRAPH_OK(GxB_set (A, GxB_FORMAT, GxB_BY_COL));
+    // A = A_input + G;
+    LAGRAPH_OK(GrB_eWiseAdd (A, NULL, NULL, GrB_PLUS_FP32, A_input, G, NULL));
+    GrB_free (&G) ;
 
 #ifndef NDEBUG
     // GxB_print (A, 3) ;
@@ -126,8 +133,8 @@ See LICENSE file for more details.
 
     // Matrix A row sum
     // Stores the outbound degrees of all vertices
-    LAGRAPH_OK(GrB_Vector_new(&grb_d_out, GrB_UINT64, n));
-    LAGRAPH_OK(GrB_reduce( grb_d_out, NULL, NULL, GxB_PLUS_UINT64_MONOID,
+    LAGRAPH_OK(GrB_Vector_new(&grb_d_out, GrB_FP32, n));
+    LAGRAPH_OK(GrB_reduce( grb_d_out, NULL, NULL, GxB_PLUS_FP32_MONOID,
                 A, NULL ));
 
 #ifndef NDEBUG
@@ -149,7 +156,7 @@ See LICENSE file for more details.
 
     GrB_Type type = GrB_FP32 ;
     GrB_Index *dI = NULL ;
-    unsigned long int *d_sp= NULL ;
+    float  *d_sp= NULL ;
     GrB_Index d_nvals;
     GrB_Index d_n;
 
@@ -158,14 +165,14 @@ See LICENSE file for more details.
                 (void **) (&d_sp),   NULL)) ;
 
     // dens d_out
-    long int *d_out = (long int*) calloc(n, sizeof(long int));
+    float *d_out = (float *) calloc(n, sizeof(float));
 
     int nthreads = LAGraph_get_nthreads ( ) ;
     nthreads = LAGRAPH_MIN (n , nthreads) ;
     nthreads = LAGRAPH_MAX (nthreads, 1) ;
 
     #pragma omp parallel for num_threads(nthreads) schedule(static)
-    for (int i = 0 ; i < d_nvals; i++){
+    for (int64_t i = 0 ; i < d_nvals; i++){
         GrB_Index ind = (GrB_Index) dI[i];
         d_out [ind] = d_sp [i];
     }
@@ -246,7 +253,7 @@ See LICENSE file for more details.
 #endif
 
         // Calculate total PR of all inbound vertices
-        // importance_vec *= importance_vec * A'?
+        // importance_vec = A' * importance_vec
         LAGRAPH_OK(GrB_mxv( importance_vec, NULL, NULL, GxB_PLUS_TIMES_FP32,
                     A, importance_vec, transpose_desc ));
 #ifndef NDEBUG

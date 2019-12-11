@@ -38,6 +38,9 @@ See LICENSE file for more details.
 // This algorithm follows the specification given in the GAP Benchmark Suite:
 // https://arxiv.org/abs/1508.03619
 
+// For fastest results, the input matrix should be GrB_FP32, stored in
+// GxB_BY_COL format.
+
 #include "LAGraph.h"
 
 #define LAGRAPH_FREE_ALL {       \
@@ -70,11 +73,11 @@ GrB_Info LAGraph_pagerank3a // PageRank definition
     GrB_Info info;
     GrB_Index n;
 
-    GrB_Descriptor invmask_desc;
-    GrB_Descriptor transpose_desc;
-    GrB_Vector d_out;
+    GrB_Descriptor invmask_desc = NULL ;
+    GrB_Descriptor transpose_desc = NULL ;
+    GrB_Vector d_out = NULL ;
 
-    GrB_Vector importance_vec;
+    GrB_Vector importance_vec = NULL ;
 
     GrB_Vector pr = NULL;
 
@@ -97,8 +100,8 @@ GrB_Info LAGraph_pagerank3a // PageRank definition
 
     // Matrix A row sum
     // Stores the outbound degrees of all vertices
-    LAGRAPH_OK(GrB_Vector_new(&d_out, GrB_UINT64, n));
-    LAGRAPH_OK(GrB_reduce( d_out, NULL, NULL, GxB_PLUS_UINT64_MONOID,
+    LAGRAPH_OK(GrB_Vector_new(&d_out, GrB_FP32, n));
+    LAGRAPH_OK(GrB_reduce( d_out, NULL, NULL, GxB_PLUS_FP32_MONOID,
                 A, NULL ));
     //GxB_print (d_out, 3) ;
 
@@ -146,7 +149,7 @@ GrB_Info LAGraph_pagerank3a // PageRank definition
         //GxB_print(importance_vec, 3);
         
         // Calculate total PR of all inbound vertices
-        // importance_vec *= importance_vec * A'?
+        // importance_vec = A' * importance_vec
         LAGRAPH_OK(GrB_mxv( importance_vec, NULL, NULL, GxB_PLUS_TIMES_FP32,
                     A, importance_vec, transpose_desc ));
 
