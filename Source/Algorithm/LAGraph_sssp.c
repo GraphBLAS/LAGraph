@@ -33,14 +33,20 @@
 */
 
 //------------------------------------------------------------------------------
-
 // LAGraph_sssp: Single source shortest path with delta stepping.
 // Contributed by Scott Kolodziej and Tim Davis, Texas A&M University.
-// Adapted from GraphBLAS Template Library (GBTL) by Scott McMillian.
-
+// Adapted from GraphBLAS Template Library (GBTL) by Scott McMillian and Tze
+// Meng Low.
+//------------------------------------------------------------------------------
+// U. Sridhar, M. Blanco, R. Mayuranath, D. G. Spampinato, T. M. Low, and
+// S. McMillan, “Delta-Stepping SSSP: From Vertices and Edges to GraphBLAS
+// Implementations,” in 2019 IEEE International Parallel and Distributed
+// Processing Symposium Workshops (IPDPSW), 2019, pp. 241–250.
+// https://ieeexplore.ieee.org/document/8778222/references
+// https://arxiv.org/abs/1911.06895
+//------------------------------------------------------------------------------
 // LAGraph_sssp computes the shortest path lengths from the specified source
 // vertex to all other vertices in the graph.
-
 //------------------------------------------------------------------------------
 
 #include "LAGraph_internal.h"
