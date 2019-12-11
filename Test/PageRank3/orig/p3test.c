@@ -45,7 +45,7 @@ See LICENSE file for more details.
 {                                               \
     if (P != NULL) { free (P) ; P = NULL ; }    \
     GrB_free (&A) ;                             \
-    GrB_free (&A_fp32) ;                         \
+    GrB_free (&Abool) ;                         \
 }
 
 int main ( )
@@ -53,7 +53,7 @@ int main ( )
 
     GrB_Info info ;
     GrB_Matrix A = NULL ;
-    GrB_Matrix A_fp32 = NULL ;
+    GrB_Matrix Abool = NULL ;
     LAGraph_PageRank *P = NULL ;
     GrB_Vector PR = NULL;
 
@@ -66,22 +66,18 @@ int main ( )
     // read in a matrix from a file and convert to boolean
     //--------------------------------------------------------------------------
 
-    double tic [2] ;
-    LAGraph_tic (tic) ;
-
     // read in the file in Matrix Market format
     LAGRAPH_OK (LAGraph_mmread (&A, stdin)) ;
-    // GxB_fprint (A, GxB_SHORT, stdout) ;
-    // LAGraph_mmwrite (A, stdout) ;
+    // GxB_fprint (A, GxB_COMPLETE, stderr) ;
+    // LAGraph_mmwrite (A, stderr) ;
 
-    // convert to FP32
-    LAGRAPH_OK (LAGraph_pattern (&A_fp32, A, GrB_FP32)) ;
-    // LAGraph_mmwrite (A_fp32, stdout) ;
+    // convert to boolean, pattern-only
+    LAGRAPH_OK (LAGraph_pattern (&Abool, A, GrB_BOOL)) ;
+    // LAGraph_mmwrite (Abool, stderr) ;
     GrB_free (&A) ;
-    A = A_fp32 ;
-    A_fp32 = NULL ;
-    LAGRAPH_OK(GxB_set (A, GxB_FORMAT, GxB_BY_COL));
-    // GxB_fprint (A, GxB_COMPLETE, stdout) ;
+    A = Abool ;
+    Abool = NULL ;
+    // GxB_fprint (A, GxB_COMPLETE, stderr) ;
 
     // finish any pending computations
     GrB_Index nvals ;
@@ -96,15 +92,12 @@ int main ( )
     LAGRAPH_OK (GrB_Matrix_ncols (&ncols, A)) ;
     GrB_Index n = nrows ;
 
+    // GxB_fprint (A, GxB_COMPLETE, stderr) ;
+
     // LAGRAPH_OK (GrB_Matrix_setElement (A, 0, 0, n-1)) ;     // hack
 
-    printf ("\n=========="
+    fprintf (stderr, "\n=========="
             "input graph: nodes: %"PRIu64" edges: %"PRIu64"\n", n, nvals) ;
-
-    double tread = LAGraph_toc (tic) ;
-    printf ("read time: %g sec\n", tread) ;
-
-    GxB_fprint (A, GxB_SHORT, stdout) ;
 
     //--------------------------------------------------------------------------
     // compute the pagerank
@@ -132,19 +125,20 @@ int main ( )
         LAGraph_set_nthreads (nthreads) ;
 
         // start the timer
+        double tic [2] ;
         LAGraph_tic (tic) ;
 
         for (int trial = 0 ; trial < ntrials ; trial++)
         {
             if (PR != NULL) { free (PR) ; PR = NULL ; }
             //uncomment the one that you want to run
-//          LAGRAPH_OK (LAGraph_pagerank3a (&PR, A, 0.85, itermax, &iters)) ;
+            //LAGRAPH_OK (LAGraph_pagerank3a (&PR, A, 0.85, itermax, &iters)) ;
             LAGRAPH_OK (LAGraph_pagerank3b (&PR, A, 0.85, itermax, &iters)) ;
         }
 
         // stop the timer
         double t1 = LAGraph_toc (tic) / ntrials ;
-        printf ("pagerank  time: %12.6e (sec), "
+        fprintf (stderr, "pagerank  time: %12.6e (sec), "
                 "rate: %g (1e6 edges/sec) iters: %d threads: %d\n",
                 t1, 1e-6*((double) nvals) / t1, iters, nthreads) ;
     }
@@ -159,7 +153,7 @@ int main ( )
        printf ("%" PRIu64 " %g\n", P [k].page, P [k].pagerank) ;
        }
        */
-    GxB_Vector_fprint(PR, "---- PR ------", GxB_SHORT, stdout);
+    GxB_Vector_fprint(PR, "---- PR ------", GxB_SHORT, stderr);
 
     //--------------------------------------------------------------------------
     // free all workspace and finish
