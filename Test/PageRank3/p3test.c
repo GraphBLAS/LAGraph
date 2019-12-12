@@ -45,7 +45,8 @@ See LICENSE file for more details.
 {                                               \
     if (P != NULL) { free (P) ; P = NULL ; }    \
     GrB_free (&A) ;                             \
-    GrB_free (&A_fp32) ;                         \
+    GrB_free (&PR) ;                            \
+    GrB_free (&A_fp32) ;                        \
 }
 
 int main ( )
@@ -125,6 +126,9 @@ int main ( )
     //#define NTHRLIST 1
     //    int nthread_list [NTHRLIST] = {40} ;    
 
+    //uncomment the one that you want to run
+    printf ("Testing pagerank3a (slower than 3b)\n") ;
+//  printf ("Testing pagerank3b (fast version)\n") ;
 
     for (int kk = 0 ; kk < NTHRLIST; kk++)
     {
@@ -136,10 +140,10 @@ int main ( )
 
         for (int trial = 0 ; trial < ntrials ; trial++)
         {
-            if (PR != NULL) { free (PR) ; PR = NULL ; }
+            GrB_free (&PR) ;
             //uncomment the one that you want to run
-//          LAGRAPH_OK (LAGraph_pagerank3a (&PR, A, 0.85, itermax, &iters)) ;
-            LAGRAPH_OK (LAGraph_pagerank3b (&PR, A, 0.85, itermax, &iters)) ;
+            LAGRAPH_OK (LAGraph_pagerank3a (&PR, A, 0.85, itermax, &iters)) ;
+//          LAGRAPH_OK (LAGraph_pagerank3b (&PR, A, 0.85, itermax, &iters)) ;
         }
 
         // stop the timer
