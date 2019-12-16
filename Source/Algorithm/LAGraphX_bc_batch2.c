@@ -96,11 +96,11 @@
     GrB_free (centrality);          \
 }
 
-GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
+GrB_Info LAGraphX_bc_batch2 // betweeness centrality, batch algorithm
 (
-    GrB_Vector *centrality,    // centrality(i) is the betweeness centrality of node i
-    const GrB_Matrix A_matrix, // input graph, treated as if boolean in semiring
-    const GrB_Index *sources,  // source vertices from which to compute shortest paths
+    GrB_Vector *centrality,    // centrality(i): betweeness centrality of node i
+    const GrB_Matrix A_matrix, // input graph
+    const GrB_Index *sources,  // source vertices for shortest paths
     int32_t num_sources        // number of source vertices (length of s)
 )
 {
@@ -126,22 +126,22 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
     // Paths matrix holds the number of shortest paths for each node and 
     // starting node discovered so far. Starts out sparse and becomes denser.
     GrB_Matrix paths = NULL;
-    int64_t* paths_dense = NULL;
+    double *paths_dense = NULL;
 
     // Update matrix for betweenness centrality, values for each node for
     // each starting node. Treated as dense for efficiency.
-    double* bc_update_dense = NULL;
+    double *bc_update_dense = NULL;
 
     GrB_Descriptor desc_tsr = NULL;
     GrB_Descriptor replace = NULL;
 
     GrB_Index* Sp = NULL;
     GrB_Index* Si = NULL;
-    void* Sx = NULL;
+    double *Sx = NULL;
 
     GrB_Index* Tp = NULL;
     GrB_Index* Ti = NULL;
-    void* Tx = NULL;
+    double *Tx = NULL;
 
     GrB_Index num_rows;
     GrB_Index num_cols;
@@ -177,7 +177,7 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
         num_sources = n;
     }
 
-    LAGr_Matrix_new(&paths, GrB_INT64, n, num_sources);
+    LAGr_Matrix_new(&paths, GrB_FP64, n, num_sources);
     GxB_set(paths, GxB_FORMAT, GxB_BY_COL);
 
     // make paths dense
@@ -192,7 +192,7 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
         for (GrB_Index i = 0; i < num_sources; ++i)
         {
             // paths [i,i] = 1
-            LAGr_Matrix_setElement(paths, (int64_t) 1, i, i);
+            LAGr_Matrix_setElement(paths, (double) 1, i, i);
         }
     }
     else
@@ -200,13 +200,13 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
         for (GrB_Index i = 0; i < num_sources; ++i)
         {
             // paths [s[i],i] = 1
-            LAGr_Matrix_setElement(paths, (int64_t) 1, sources[i], i);
+            LAGr_Matrix_setElement(paths, (double) 1, sources[i], i);
         }
     }
 
     // Create frontier matrix and initialize to outgoing nodes from
     // all source nodes
-    LAGr_Matrix_new(&frontier, GrB_INT64, n, num_sources);
+    LAGr_Matrix_new(&frontier, GrB_FP64, n, num_sources);
     GxB_set(frontier, GxB_FORMAT, GxB_BY_COL);
 
     // AT = A'
@@ -245,10 +245,10 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
         //=== Accumulate path counts: paths += frontier ========================
 
         // Export paths
-        GxB_Matrix_export_CSC(&paths, &type, &num_rows, &num_cols, &nnz, &num_nonempty, &Sp, &Si, &Sx, GrB_NULL);
+        GxB_Matrix_export_CSC(&paths, &type, &num_rows, &num_cols, &nnz, &num_nonempty, &Sp, &Si, (void **) &Sx, GrB_NULL);
 
         // Export frontier
-        GxB_Matrix_export_CSC(&frontier, &type, &num_rows, &num_cols, &nnz, &num_nonempty, &Tp, &Ti, &Tx, GrB_NULL);
+        GxB_Matrix_export_CSC(&frontier, &type, &num_rows, &num_cols, &nnz, &num_nonempty, &Tp, &Ti, (void **) &Tx, GrB_NULL);
 
         // Use frontier pattern to update dense paths
 #pragma omp parallel for num_threads(nthreads)
@@ -257,23 +257,24 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
             for (GrB_Index p = Tp[col]; p < Tp[col+1]; p++)
             {
                 GrB_Index row = Ti[p];
-                ((int64_t*)Sx)[col * n + row] += ((int64_t*)Tx)[p];
+                Sx [col * n + row] += Tx [p];
             }
         }
 
         // Import frontier
-        GxB_Matrix_import_CSC(&frontier, GrB_INT64, n, num_sources, nnz, num_nonempty, &Tp, &Ti, (void**) &Tx, GrB_NULL);
+        GxB_Matrix_import_CSC(&frontier, GrB_FP64, n, num_sources, nnz, num_nonempty, &Tp, &Ti, (void **) &Tx, GrB_NULL);
 
         // Import paths
-        GxB_Matrix_import_CSC(&paths, GrB_INT64, n, num_sources, nnz_dense, n, &Sp, &Si, (void**) &Sx, GrB_NULL);
+        GxB_Matrix_import_CSC(&paths, GrB_FP64, n, num_sources, nnz_dense, n, &Sp, &Si, (void **) &Sx, GrB_NULL);
 
         double time_2a = LAGraph_toc (tic) ;
         time_2 += time_2a ;
-        // printf (" %16"PRId64"    accum: %16.8g  ", depth, time_2a) ;
+        // printf (" %16"PRId64"    accum: %12.6g  ", depth, time_2a) ;
+
         LAGraph_tic (tic);
 
         //=== Update frontier: frontier<!paths>=A’ +.∗ frontier ================
-        LAGr_mxm(frontier, paths, GrB_NULL, GxB_PLUS_TIMES_INT64, A_matrix, frontier, desc_tsr);
+        LAGr_mxm(frontier, paths, GrB_NULL, GxB_PLUS_TIMES_FP64, A_matrix, frontier, desc_tsr);
 
         //=== Sum up the number of BFS paths still being explored ==============
         LAGr_Matrix_nvals(&sum, frontier);
@@ -281,13 +282,15 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
         depth = depth + 1;
 
         double time_2b = LAGraph_toc (tic) ;
-        // printf ("    mxm:   %16.8g\n", time_2b) ;
+        // printf ("    mxm:   %12.6g\n", time_2b) ;
         time_2 += time_2b ;
 
     } while (sum); // Repeat until no more shortest paths being discovered
 
     printf ("Xbc bfs phase: %g\n", time_2) ;
     LAGraph_tic (tic);
+
+    // GxB_fprint (paths, 3, stdout) ;
 
     //=== Betweenness centrality computation phase =============================
 
@@ -302,8 +305,7 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
 
     // By this point, paths is (mostly) dense.
     // Create a dense version of the GraphBLAS paths matrix
-    GxB_Matrix_export_CSC(&paths, &type, &num_rows, &num_cols, &nnz, &num_nonempty, &Sp, &Si, &Sx, GrB_NULL);
-    paths_dense = (int64_t*) Sx;
+    GxB_Matrix_export_CSC(&paths, &type, &num_rows, &num_cols, &nnz, &num_nonempty, &Sp, &Si, (void **) &paths_dense, GrB_NULL);
 
     // Throw away the "sparse" version of paths
     LAGraph_free(Sp);
@@ -313,7 +315,7 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
     LAGr_Matrix_new(&t2, GrB_FP64, n, num_sources);
 
     double time_3 = LAGraph_toc (tic) ;
-    printf ("Xbc: setup for backtrack %16.8g\n", time_3) ;
+    printf ("Xbc: setup for backtrack %12.6g\n", time_3) ;
     double time_4 = 0 ;
 
     // Backtrack through the BFS and compute centrality updates for each vertex
@@ -325,7 +327,8 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
         //=== temp<S_array[i]> = bc_update ./ paths ============================
 
         // Export the pattern of S_array[i]
-        GxB_Matrix_export_CSC(&(S_array[i]), &type, &num_rows, &num_cols, &nnz, &num_nonempty, &Sp, &Si, &Sx, GrB_NULL);
+        void *Bx ;
+        GxB_Matrix_export_CSC(&(S_array[i]), &type, &num_rows, &num_cols, &nnz, &num_nonempty, &Sp, &Si, &Bx, GrB_NULL);
 
         // Compute Tx = bc_update ./ paths_dense for all elements of S_array
         // Build the Tp and Ti vectors, too.
@@ -341,21 +344,21 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
             {
                 // Compute Tx by eWiseMult of dense matrices
                 GrB_Index row = Ti[p] = Si[p];
-                ((double*)Tx)[p] = bc_update_dense[col * n + row] / ((double) paths_dense[col * n + row]);
+                Tx [p] = bc_update_dense [col * n + row] / paths_dense[col * n + row] ;
             }
         }
         Tp[num_sources] = Sp[num_sources];
 
         // Restore S_array[i] by importing it
-        GxB_Matrix_import_CSC(&(S_array[i]), GrB_BOOL, num_rows, num_cols, nnz, num_nonempty, &Sp, &Si, &Sx, GrB_NULL);
+        GxB_Matrix_import_CSC(&(S_array[i]), GrB_BOOL, num_rows, num_cols, nnz, num_nonempty, &Sp, &Si, &Bx, GrB_NULL);
 
         // Create a GraphBLAS matrix t1 from Tp, Ti, Tx
         // The row/column indices are the pattern r/c from S_array[i]
-        GxB_Matrix_import_CSC(&t1, GrB_FP64, n, num_sources, nnz, num_nonempty, &Tp, &Ti, (void**) &Tx, GrB_NULL);
+        GxB_Matrix_import_CSC(&t1, GrB_FP64, n, num_sources, nnz, num_nonempty, &Tp, &Ti, (void **) &Tx, GrB_NULL);
 
         double time_4a = LAGraph_toc (tic) ;
         time_4 += time_4a ;
-        // printf (" %16"PRId64"    contr: %16.8g  ", i, time_4a) ;
+        // printf (" %16"PRId64"    contr: %12.6g  ", i, time_4a) ;
         LAGraph_tic (tic);
 
         //=== t2<S_array[i−1]> = (A * t1) ======================================
@@ -363,23 +366,23 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
         GrB_free(&t1);
 
         //=== bc_update += t2 .* paths =========================================
-        GxB_Matrix_export_CSC(&t2, &type, &num_rows, &num_cols, &nnz, &num_nonempty, &Tp, &Ti, &Tx, GrB_NULL);
+        GxB_Matrix_export_CSC(&t2, &type, &num_rows, &num_cols, &nnz, &num_nonempty, &Tp, &Ti, (void **) &Tx, GrB_NULL);
 #pragma omp parallel for num_threads(nthreads)
         for (int64_t col = 0; col < num_sources; col++)
         {
             for (GrB_Index p = Tp[col]; p < Tp[col+1]; p++)
             {
                 GrB_Index row = Ti[p];
-                bc_update_dense[col * n + row] += ((double*)Tx)[p] * ((double) paths_dense[col * n + row]);
+                bc_update_dense[col * n + row] += Tx [p] * paths_dense [col * n + row] ;
             }
         }
 
         // Re-import t2
-        GxB_Matrix_import_CSC(&t2, GrB_FP64, num_rows, num_cols, nnz, num_nonempty, &Tp, &Ti, &Tx, GrB_NULL);
+        GxB_Matrix_import_CSC(&t2, GrB_FP64, num_rows, num_cols, nnz, num_nonempty, &Tp, &Ti, (void **) &Tx, GrB_NULL);
 
         double time_4b = LAGraph_toc (tic) ;
         time_4 += time_4b ;
-        // printf ("    mxm:   %16.8g\n", time_4b) ;
+        // printf ("    mxm:   %12.6g\n", time_4b) ;
 
     }
 
@@ -388,7 +391,7 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
 
     //=== Initialize the centrality array with -(num_sources) to avoid counting
     //    zero length paths ====================================================
-    double* centrality_dense = LAGraph_malloc(n, sizeof(double));
+    double *centrality_dense = LAGraph_malloc(n, sizeof(double));
 #pragma omp parallel for num_threads(nthreads)
     for (GrB_Index i = 0; i < n; i++)
     {
@@ -415,7 +418,7 @@ GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
     }
 
     // Import the dense vector into GraphBLAS and return it.
-    GxB_Vector_import(centrality, GrB_FP64, n, n, &I, (void**) &centrality_dense, GrB_NULL);
+    GxB_Vector_import(centrality, GrB_FP64, n, n, &I, (void **) &centrality_dense, GrB_NULL);
 
     LAGRAPH_FREE_WORK;
     double time_5 = LAGraph_toc (tic) ;

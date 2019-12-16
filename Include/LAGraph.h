@@ -553,6 +553,25 @@ GrB_Info LAGraph_mmwrite
     // TODO , FILE *fcomments         // optional file with extra comments
 ) ;
 
+// ascii header prepended to all *.grb files
+#define LAGRAPH_BIN_HEADER 512
+
+GrB_Info LAGraph_binwrite
+(
+    GrB_Matrix *A,          // matrix to write to the file
+    char *filename,         // file to write it to
+    const char *comments    // comments to add to the file, up to 220 characters
+                            // in length, not including the terminating null
+                            // byte. Ignored if NULL.  Characters past
+                            // the 220 limit are silently ignored.
+) ;
+
+GrB_Info LAGraph_binread
+(
+    GrB_Matrix *A,          // matrix to read from the file
+    char *filename          // file to read it from
+) ;
+
 GrB_Info LAGraph_tsvread        // returns GrB_SUCCESS if successful
 (
     GrB_Matrix *Chandle,        // C, created on output
@@ -711,6 +730,13 @@ GrB_Info LAGraph_bc     // betweeness centrality
     GrB_Index s        // source vertex from which to compute shortest paths
 );
 
+GrB_Info LAGraph_bc2     // betweeness centrality
+(
+    GrB_Vector *centrality, // centrality(i): betweeness centrality of node i
+    GrB_Matrix A_matrix,    // input graph
+    GrB_Index source        // source vertex
+) ;
+
 GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
 (
     GrB_Vector *delta,  // delta(i) is the betweeness centrality of node i
@@ -720,6 +746,14 @@ GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
 );
 
 GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
+(
+    GrB_Vector *delta,  // delta(i) is the betweeness centrality of node i
+    const GrB_Matrix A, // input graph, treated as if boolean in semiring
+    const GrB_Index *s, // source vertices from which to compute shortest paths
+    const int32_t nsver // number of source vertices (length of s)
+);
+
+GrB_Info LAGraphX_bc_batch2 // betweeness centrality, batch algorithm
 (
     GrB_Vector *delta,  // delta(i) is the betweeness centrality of node i
     const GrB_Matrix A, // input graph, treated as if boolean in semiring
