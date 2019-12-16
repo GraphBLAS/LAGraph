@@ -217,7 +217,7 @@ int main (int argc, char **argv)
         //----------------------------------------------------------------------
 
         ntrials++ ;
-        printf ("\nTrial %"PRId64 " : sources: [", ntrials) ;
+        printf ("\nTrial %d : sources: [", ntrials) ;
         GrB_Index vertex_list [batch_size] ;
         for (int64_t k = 0 ; k < batch_size ; k++)
         {

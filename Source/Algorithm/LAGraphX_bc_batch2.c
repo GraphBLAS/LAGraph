@@ -230,6 +230,8 @@ GrB_Info LAGraphX_bc_batch2 // betweeness centrality, batch algorithm
     double time_1 = LAGraph_toc (tic) ;
     printf ("Xbc setup %g sec\n", time_1) ;
     double time_2 = 0 ;
+    double time_2a_all = 0 ;
+    double time_2b_all = 0 ;
 
     do
     {
@@ -269,6 +271,7 @@ GrB_Info LAGraphX_bc_batch2 // betweeness centrality, batch algorithm
 
         double time_2a = LAGraph_toc (tic) ;
         time_2 += time_2a ;
+        time_2a_all += time_2a ;
         // printf (" %16"PRId64"    accum: %12.6g  ", depth, time_2a) ;
 
         LAGraph_tic (tic);
@@ -284,10 +287,13 @@ GrB_Info LAGraphX_bc_batch2 // betweeness centrality, batch algorithm
         double time_2b = LAGraph_toc (tic) ;
         // printf ("    mxm:   %12.6g\n", time_2b) ;
         time_2 += time_2b ;
+        time_2b_all += time_2b ;
 
     } while (sum); // Repeat until no more shortest paths being discovered
 
     printf ("Xbc bfs phase: %g\n", time_2) ;
+    printf ("    bfs mxm:   %g\n", time_2b_all) ;
+    printf ("    bfs other  %g\n", time_2a_all) ;
     LAGraph_tic (tic);
 
     // GxB_fprint (paths, 3, stdout) ;
@@ -317,6 +323,8 @@ GrB_Info LAGraphX_bc_batch2 // betweeness centrality, batch algorithm
     double time_3 = LAGraph_toc (tic) ;
     printf ("Xbc: setup for backtrack %12.6g\n", time_3) ;
     double time_4 = 0 ;
+    double time_4a_all = 0 ;
+    double time_4b_all = 0 ;
 
     // Backtrack through the BFS and compute centrality updates for each vertex
     for (int64_t i = depth - 1; i > 0; i--)
@@ -358,6 +366,7 @@ GrB_Info LAGraphX_bc_batch2 // betweeness centrality, batch algorithm
 
         double time_4a = LAGraph_toc (tic) ;
         time_4 += time_4a ;
+        time_4a_all += time_4a ;
         // printf (" %16"PRId64"    contr: %12.6g  ", i, time_4a) ;
         LAGraph_tic (tic);
 
@@ -382,11 +391,14 @@ GrB_Info LAGraphX_bc_batch2 // betweeness centrality, batch algorithm
 
         double time_4b = LAGraph_toc (tic) ;
         time_4 += time_4b ;
+        time_4b_all += time_4b ;
         // printf ("    mxm:   %12.6g\n", time_4b) ;
 
     }
 
     printf ("Xbx 2nd phase: %g\n", time_4) ;
+    printf ("    2nd mxm  : %g\n", time_4b_all) ;
+    printf ("    2nd other: %g\n", time_4a_all) ;
     LAGraph_tic (tic);
 
     //=== Initialize the centrality array with -(num_sources) to avoid counting

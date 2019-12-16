@@ -29,6 +29,7 @@ default:
 	( cd CDLP                  ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd MatrixMarket          ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd BuildMatrix           ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
+	( cd BinRead               ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 
 clean: distclean
 
@@ -49,4 +50,5 @@ distclean:
 	( cd CDLP                  ; $(MAKE) distclean )
 	( cd MatrixMarket          ; $(MAKE) distclean )
 	( cd BuildMatrix           ; $(MAKE) distclean )
+	( cd BinRead               ; $(MAKE) distclean )
 

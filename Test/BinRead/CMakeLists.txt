@@ -208,12 +208,17 @@ message ( STATUS "CMAKE C flags: " ${CMAKE_C_FLAGS} )
 # Demo programs
 #-------------------------------------------------------------------------------
 
-set (BINREAD_SRC
+set (MTX2BIN_SRC
      mtx2bin.c)
 
-add_executable ( mtx2bin ${BINREAD_SRC} )
+set (BINREAD_SRC
+     binread.c)
+
+add_executable ( mtx2bin ${MTX2BIN_SRC} )
+add_executable ( binread ${BINREAD_SRC} )
 
 # Libraries required for Demo programs
 target_link_libraries ( mtx2bin graphblas lagraph m )
+target_link_libraries ( binread graphblas lagraph m )
 
 

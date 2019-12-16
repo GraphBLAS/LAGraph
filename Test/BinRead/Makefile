@@ -19,6 +19,7 @@ JOBS ?= 1
 # build and run test
 default: compile
 	./build/mtx2bin west0067.mtx west0067.grb
+	./build/binread west0067.grb
 
 # build test
 compile:
