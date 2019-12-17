@@ -189,6 +189,7 @@ GrB_Info LAGraphX_bc_batch2 // betweeness centrality, batch algorithm
 
     if (sources == GrB_ALL)
     {
+        // TODO: remove this option
         for (GrB_Index i = 0; i < num_sources; ++i)
         {
             // paths [i,i] = 1
@@ -211,6 +212,7 @@ GrB_Info LAGraphX_bc_batch2 // betweeness centrality, batch algorithm
 
     // AT = A'
     // frontier <!paths> = AT (:,sources)
+    // TODO: use mxm, so A_matrix values are ignored.
     LAGr_extract(frontier, paths, GrB_NULL, A_matrix, GrB_ALL, n, sources, num_sources, desc_tsr);
 
     // Allocate memory for the array of S matrices
@@ -277,7 +279,7 @@ GrB_Info LAGraphX_bc_batch2 // betweeness centrality, batch algorithm
         LAGraph_tic (tic);
 
         //=== Update frontier: frontier<!paths>=A’ +.∗ frontier ================
-        LAGr_mxm(frontier, paths, GrB_NULL, GxB_PLUS_TIMES_FP64, A_matrix, frontier, desc_tsr);
+        LAGr_mxm(frontier, paths, GrB_NULL, GxB_PLUS_SECOND_FP64, A_matrix, frontier, desc_tsr);
 
         //=== Sum up the number of BFS paths still being explored ==============
         LAGr_Matrix_nvals(&sum, frontier);
@@ -371,7 +373,7 @@ GrB_Info LAGraphX_bc_batch2 // betweeness centrality, batch algorithm
         LAGraph_tic (tic);
 
         //=== t2<S_array[i−1]> = (A * t1) ======================================
-        LAGr_mxm(t2, S_array[i-1], GrB_NULL, GxB_PLUS_TIMES_FP64, A_matrix, t1, LAGraph_desc_ooor);
+        LAGr_mxm(t2, S_array[i-1], GrB_NULL, GxB_PLUS_SECOND_FP64, A_matrix, t1, LAGraph_desc_ooor);
         GrB_free(&t1);
 
         //=== bc_update += t2 .* paths =========================================
