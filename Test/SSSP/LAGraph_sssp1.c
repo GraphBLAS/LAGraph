@@ -163,7 +163,7 @@ GrB_Info LAGraph_sssp1         // single source shortest paths
     {
         LAGr_Vector_clear(s);
 
-        // tmasked =  (tmasked < (i+1)*delta)
+        // tmasked = select (tmasked < (i+1)*delta)
         LAGRAPH_OK (GxB_Scalar_setElement_FP64(uBound, (i+1.0) * delta));
         LAGRAPH_OK (GxB_select(tmasked, GrB_NULL, GrB_NULL, GxB_LT_THUNK,
             tmasked, uBound, GrB_NULL));
@@ -188,7 +188,7 @@ GrB_Info LAGraph_sssp1         // single source shortest paths
             LAGr_eWiseAdd(tless, tReq, GrB_NULL, GrB_LT_FP64, tReq,
                 t, LAGraph_desc_ooor);
 
-            // tmasked<tless> = i*delta <= tReq < (i+1)*delta
+            // tmasked<tless> = select (i*delta <= tReq < (i+1)*delta)
             // TODO try swapping the order; pick the fastest one
             LAGRAPH_OK (GxB_select(tmasked, tless, GrB_NULL, GxB_GE_THUNK,
                 tReq,    lBound, GrB_NULL));
@@ -220,7 +220,7 @@ GrB_Info LAGraph_sssp1         // single source shortest paths
 
         ++i;
 
-        // t >= i*delta
+        // tmasked = select (t >= i*delta)
         LAGRAPH_OK (GxB_Scalar_setElement_FP64(lBound, i * delta));
         LAGRAPH_OK (GxB_select(tmasked, GrB_NULL, GrB_NULL, GxB_GE_THUNK, t,
             lBound, GrB_NULL));
