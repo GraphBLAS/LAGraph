@@ -158,7 +158,7 @@ int main (int argc, char **argv)
     LAGraph_tic (tic);
 
     // convert to pattern-only
-    LAGRAPH_OK (LAGraph_pattern(&Abool, A, GrB_FP64));
+    LAGRAPH_OK (LAGraph_pattern(&Abool, A, GrB_BOOL));
 
     GrB_free (&A);
     A = Abool;
