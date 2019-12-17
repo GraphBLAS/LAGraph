@@ -47,6 +47,7 @@
     GrB_free (&A_in);               \
     GrB_free (&A);                  \
     GrB_free (&path_lengths);       \
+    GrB_free (&path_lengths1);      \
 }
 
 int main (int argc, char **argv)
@@ -56,6 +57,7 @@ int main (int argc, char **argv)
     GrB_Matrix A_in = NULL;
     GrB_Matrix A = NULL;
     GrB_Vector path_lengths = NULL;
+    GrB_Vector path_lengths1 = NULL;
 
     LAGRAPH_OK (LAGraph_init());
 
@@ -87,7 +89,7 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     fprintf (stderr, "\n=========="
-        "input graph: nodes: %llu edges: %llu\n", n, nvals) ;
+        "input graph: nodes: %lu edges: %lu\n", n, nvals) ;
 
     int nthreads = LAGraph_get_nthreads();
     fprintf(stderr, "Starting Single Source Shortest Paths Tests\n");
@@ -109,10 +111,9 @@ int main (int argc, char **argv)
     double tic [2];
     LAGraph_tic (tic);
 
-    LAGr_Vector_new(&path_lengths, GrB_FP64, n);
-
     for (int trial = 0; trial < ntrials; trial++)
     {
+        GrB_free (&path_lengths);
         LAGRAPH_OK (LAGraph_sssp (&path_lengths, A, 0, 3)) ;
     }
 
@@ -133,6 +134,52 @@ int main (int argc, char **argv)
         double x = 0;
         LAGr_Vector_extractElement(&x, path_lengths, i);
         printf("%f\n", x);
+    }
+
+
+    //--------------------------------------------------------------------------
+    // Compute betweenness centrality from all nodes (Brandes)
+    //--------------------------------------------------------------------------
+
+    fprintf(stderr, " - Start Test: Single Source Shortest Paths\n");
+
+    // Start the timer
+    LAGraph_tic (tic);
+
+
+    for (int trial = 0; trial < ntrials; trial++)
+    {
+        GrB_free (&path_lengths1);
+        LAGRAPH_OK (LAGraph_sssp1 (&path_lengths1, A, 0, 3)) ;
+    }
+
+    // Stop the timer
+    t1 = LAGraph_toc (tic) / ntrials ;
+    fprintf (stderr, "SSSP+Delta Stepping  time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
+        t1, 1e-6*((double) nvals) / t1) ;
+
+    fprintf(stderr, " - End Test: Single Source Shortest Paths\n");
+
+    //--------------------------------------------------------------------------
+    // write the result to stdout
+    //--------------------------------------------------------------------------
+
+    bool test_pass = true;
+    for (int64_t i = 0; i < n; i++)
+    {
+        // if the entry v(i) is not present, x is unmodified, so '0' is printed
+        double x = 0, x1 = 0;
+        LAGr_Vector_extractElement(&x1, path_lengths1, i);
+        LAGr_Vector_extractElement(&x, path_lengths, i);
+	test_pass &= (x == x1);
+    }
+    if(!test_pass)
+    {
+	printf ("ERROR! TEST FAILURE\n") ;
+    }
+    else
+    {
+	printf ("all tests passed\n");
     }
 
     //--------------------------------------------------------------------------

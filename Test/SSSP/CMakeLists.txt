@@ -50,7 +50,7 @@ if ( CMAKE_VERSION VERSION_GREATER "3.0" )
     cmake_policy ( SET CMP0048 NEW )
 endif ( )
 
-project ( bc_test )
+project ( sssp_test )
 
 #-------------------------------------------------------------------------------
 # determine build type
@@ -206,19 +206,14 @@ message ( STATUS "CMAKE C flags: " ${CMAKE_C_FLAGS} )
 #-------------------------------------------------------------------------------
 
 set (SSSP_TEST_SRC
-     sssp_test.c)
-
-set (SSSP_EXE_SRC
-     sssp_exe.c)
+     sssp_test.c LAGraph_sssp1.c)
 
 set (SSSP_CHECK_SRC
         sssp_check.c)
 
 add_executable ( sssp_test ${SSSP_TEST_SRC} )
-add_executable ( sssp_exe ${SSSP_EXE_SRC} )
 add_executable ( sssp_check ${SSSP_CHECK_SRC} )
 
 # Libraries required for Demo programs
 target_link_libraries ( sssp_test graphblas lagraph m )
-target_link_libraries ( sssp_exe graphblas lagraph m )
 target_link_libraries ( sssp_check graphblas lagraph m )

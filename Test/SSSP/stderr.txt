@@ -1,0 +1,9 @@
+
+==========input graph: nodes: 1138 edges: 7450
+Starting Single Source Shortest Paths Tests
+ - nthreads: 6
+ - ntrials: 1
+ - Start Test: Single Source Shortest Paths
+SSSP+Delta Stepping  time: 3.214740e-03 (sec), rate: 2.31745 (1e6 edges/sec)
+ - End Test: Single Source Shortest Paths
+ - Start Test: Single Source Shortest Paths

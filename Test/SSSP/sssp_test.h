@@ -41,3 +41,12 @@ GrB_Info LAGraph_sssp // single source shortest paths
     const GrB_Index source,    // source vertex from which to compute shortest paths
     double delta               // delta value for delta stepping
 );
+
+GrB_Info LAGraph_sssp1 // single source shortest paths
+(
+    GrB_Vector *path_length,   // path_length(i) is the length of the shortest
+                               // path from the source vertex to vertex i
+    GrB_Matrix graph,          // input graph, treated as if boolean in semiring
+    GrB_Index source,          // source vertex from which to compute shortest paths
+    double delta               // delta value for delta stepping
+);
