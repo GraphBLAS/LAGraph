@@ -65,15 +65,14 @@ int main (int argc, char **argv)
     // read in a matrix from a file and convert to boolean
     //--------------------------------------------------------------------------
 
+    // TODO copy from bc_gap_test (binary vs mtx market)
+
     // read in the file in Matrix Market format
     LAGRAPH_OK (LAGraph_mmread(&A_in, stdin));
 
-    // convert to boolean, pattern-only
-    LAGRAPH_OK (LAGraph_pattern(&A, A_in, GrB_FP64));
-
     // finish any pending computations
     GrB_Index nvals;
-    GrB_Matrix_nvals (&nvals, A);
+    GrB_Matrix_nvals (&nvals, A_in);
 
     //--------------------------------------------------------------------------
     // get the size of the problem.
@@ -83,6 +82,13 @@ int main (int argc, char **argv)
     LAGr_Matrix_nrows(&nrows, A);
     LAGr_Matrix_ncols(&ncols, A);
     GrB_Index n = nrows;
+
+    // convert input matrix to INT32
+    GrB_Matrix_new (A, GrB_INT32, n, n) ;
+    GrB_apply (A, NULL, NULL, GrB_IDENTITY_INT32, A_in, NULL) ;
+    GxB_print (A, 2) ;
+
+    GrB_free (&A_in) ;
 
     //--------------------------------------------------------------------------
     // Begin tests
@@ -110,6 +116,8 @@ int main (int argc, char **argv)
     // Start the timer
     double tic [2];
     LAGraph_tic (tic);
+
+    // TODO use 64 trials (or whatever SourceNodes is)
 
     for (int trial = 0; trial < ntrials; trial++)
     {

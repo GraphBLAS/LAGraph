@@ -65,13 +65,17 @@
     GrB_free(&s);                           \
 }
 
-GrB_Info LAGraph_sssp1// single source shortest paths
+// TODO assert the input matrix has type GrB_INT32
+// TODO use INT32 instead of FP64
+// TODO try different delta (for the GAP matrices)
+
+GrB_Info LAGraph_sssp1         // single source shortest paths
 (
     GrB_Vector *path_length,   // path_length(i) is the length of the shortest
                                // path from the source vertex to vertex i
-    GrB_Matrix graph,          // input graph, treated as if boolean in semiring
+    GrB_Matrix graph,          // input graph, treated as if boolean in semiring (INT32)
     GrB_Index source,          // source vertex from which to compute shortest paths
-    double delta               // delta value for delta stepping
+    double delta               // delta value for delta stepping // TODO make int64 or int32
 )
 {
     GrB_Info info;
@@ -145,7 +149,7 @@ GrB_Info LAGraph_sssp1// single source shortest paths
     LAGRAPH_OK (GxB_select(AH, GrB_NULL, GrB_NULL, GxB_GT_THUNK, graph, lBound,
         GrB_NULL));
 
-    GrB_Index i = 0;
+    GrB_Index i = 0;    // TODO use same INT32 or INT64
 
     // tmasked >= i*delta to find out how many left to be optimized
     LAGRAPH_OK (GxB_Scalar_setElement_FP64(lBound, i * delta));
@@ -164,8 +168,8 @@ GrB_Info LAGraph_sssp1// single source shortest paths
         LAGRAPH_OK (GxB_select(tmasked, GrB_NULL, GrB_NULL, GxB_LT_THUNK,
             tmasked, uBound, GrB_NULL));
 
-        // tBi = t<tmaksed>
-        LAGr_apply(tBi, GrB_NULL, GrB_NULL, GxB_ONE_FP64, tmasked,
+        // tBi = pattern of tmasked
+        LAGr_apply(tBi, GrB_NULL, GrB_NULL, GxB_ONE_BOOL, tmasked,
             LAGraph_desc_ooor);
 
         LAGr_Vector_nvals(&tmasked_nvals, tmasked);
@@ -176,7 +180,7 @@ GrB_Info LAGraph_sssp1// single source shortest paths
             LAGr_vxm(tReq, GrB_NULL, GrB_NULL, GxB_MIN_PLUS_FP64,
                 tmasked, AL, GrB_NULL);
 
-            // s = s + tBi
+            // s = (s | tBi)
             LAGr_eWiseAdd(s, GrB_NULL, GrB_NULL, GrB_LOR, s, tBi,
                 GrB_NULL);
 
@@ -185,6 +189,7 @@ GrB_Info LAGraph_sssp1// single source shortest paths
                 t, LAGraph_desc_ooor);
 
             // tmasked<tless> = i*delta <= tReq < (i+1)*delta
+            // TODO try swapping the order; pick the fastest one
             LAGRAPH_OK (GxB_select(tmasked, tless, GrB_NULL, GxB_GE_THUNK,
                 tReq,    lBound, GrB_NULL));
             LAGRAPH_OK (GxB_select(tmasked, tless, GrB_NULL, GxB_LT_THUNK,
@@ -194,14 +199,14 @@ GrB_Info LAGraph_sssp1// single source shortest paths
             LAGr_eWiseAdd(t, tless, GrB_NULL, GrB_MIN_FP64, t,
                 tReq, GrB_NULL);
 
-            // tBi = t<tmaksed>
-            LAGr_apply(tBi, GrB_NULL, GrB_NULL, GxB_ONE_FP64,
+            // tBi = pattern of tmasked
+            LAGr_apply(tBi, GrB_NULL, GrB_NULL, GxB_ONE_BOOL,
                 tmasked, LAGraph_desc_ooor);
 
             LAGr_Vector_nvals(&tmasked_nvals, tmasked);
         }
 
-        // (t .* s)
+        // tmasked = (t .* s)
         LAGr_apply(tmasked, s, GrB_NULL, GrB_IDENTITY_FP64, t,
             LAGraph_desc_ooor);
 
