@@ -46,6 +46,8 @@ See LICENSE file for more details.
     if (P != NULL) { free (P) ; P = NULL ; }    \
     GrB_free (&A) ;                             \
     GrB_free (&PR) ;                            \
+    GrB_free (&d_in) ;                          \
+    GrB_free (&d_out) ;                         \
     GrB_free (&A_temp) ;                        \
 }
 
@@ -57,6 +59,7 @@ int main (int argc, char **argv)
     GrB_Matrix A_temp = NULL ;
     LAGraph_PageRank *P = NULL ;
     GrB_Vector PR = NULL;
+    GrB_Vector d_out = NULL, d_in = NULL ;
 
     LAGRAPH_OK (LAGraph_init ( )) ;
 
@@ -144,43 +147,58 @@ int main (int argc, char **argv)
     LAGRAPH_OK (GrB_Matrix_ncols (&ncols, A)) ;
     GrB_Index n = nrows ;
 
+    // finish any pending computations
+    GrB_Index nvals ;
+    GrB_Matrix_nvals (&nvals, A) ;
+    printf ("original # of edges: %"PRId64"\n", nvals) ;
+
     //--------------------------------------------------------------------------
-    // ensure the matrix has no empty rows
+    // ensure the matrix has no empty rows or columns
     //--------------------------------------------------------------------------
 
-    GrB_Vector d = NULL ;
-    LAGRAPH_OK(GrB_Vector_new(&d, GrB_FP32, n));
-    LAGRAPH_OK(GrB_reduce( d, NULL, NULL, GxB_PLUS_FP32_MONOID, A, NULL ));
-    GrB_Index non_dangling ;
-    LAGRAPH_OK (GrB_Vector_nvals (&non_dangling, d)) ;
+    LAGRAPH_OK (GrB_Vector_new (&d_out, GrB_FP32, n)) ;
+    LAGRAPH_OK (GrB_Vector_new (&d_in , GrB_FP32, n)) ;
+    LAGRAPH_OK (GrB_reduce (d_out, NULL, NULL, GxB_PLUS_FP32_MONOID, A, NULL )) ;
+    LAGRAPH_OK (GrB_reduce (d_in,  NULL, NULL, GxB_PLUS_FP32_MONOID, A, LAGraph_desc_tooo)) ;
+    GrB_Index n_d_out, n_d_in ;
+    LAGRAPH_OK (GrB_Vector_nvals (&n_d_out, d_out)) ;
+    LAGRAPH_OK (GrB_Vector_nvals (&n_d_in , d_in )) ;
 
-    if (non_dangling < n)
+    int64_t edges_added = 0 ;
+    if (n_d_out < n || n_d_in < n)
     {
         // A = A+I if A has any dangling nodes
-        printf ("Matrix has %"PRId64" empty rows\n", n - non_dangling) ;
+        printf ("Matrix has %"PRId64" empty rows\n", n - n_d_out) ;
+        printf ("Matrix has %"PRId64" empty cols\n", n - n_d_in) ;
         for (GrB_Index i = 0; i < n; i++)
         {
-            float di = 0 ;
-            LAGRAPH_OK (GrB_Vector_extractElement (&di, d, i)) ;
-            if (di == 0)
+            float din = 0, dout = 0 ;
+            LAGRAPH_OK (GrB_Vector_extractElement (&din , d_in , i)) ;
+            LAGRAPH_OK (GrB_Vector_extractElement (&dout, d_out, i)) ;
+            if (din == 0 || dout == 0)
             {
-                non_dangling++ ;
+                edges_added++ ;
                 LAGRAPH_OK (GrB_Matrix_setElement (A, 1, i, i));
             }
         }
     }
 
-    if (non_dangling < n) { printf ("ERROR!\n") ; abort ( ) ; }
-    GrB_free (&d) ;
+    GrB_free (&d_in) ;
+    GrB_free (&d_out) ;
 
-    // finish any pending computations
-    GrB_Index nvals ;
-    GrB_Matrix_nvals (&nvals, A) ;
+    float *dout = NULL ;
+    GrB_Index *dI = NULL ;
+    GrB_Type type ;
+    LAGRAPH_OK (GrB_Vector_new (&d_out, GrB_FP32, n)) ;
+    LAGRAPH_OK (GrB_reduce (d_out, NULL, NULL, GxB_PLUS_FP32_MONOID, A, NULL )) ;
+    LAGRAPH_OK (GxB_Vector_export (&d_out, &type, &n, &n_d_out, &dI, (void **) (&dout), NULL)) ;
+    LAGRAPH_FREE (dI) ;
 
     // LAGRAPH_OK (GrB_Matrix_setElement (A, 0, 0, n-1)) ;     // hack
 
     printf ("\n=========="
             "input graph: nodes: %"PRIu64" edges: %"PRIu64"\n", n, nvals) ;
+    printf ("diag entries added: %"PRId64"\n", edges_added) ;
 
     double tread = LAGraph_toc (tic) ;
     printf ("read time: %g sec\n", tread) ;
@@ -191,8 +209,8 @@ int main (int argc, char **argv)
     // compute the pagerank (both methods)
     //--------------------------------------------------------------------------
 
-    int ntrials = 16 ;       // increase this to 10, 100, whatever, for more
-    // accurate timing
+    // the GAP benchmark requires 16 trials
+    int ntrials = 16 ;
 
     float tol = 1e-4 ;
     int iters, itermax = 100 ;
@@ -212,6 +230,7 @@ int main (int argc, char **argv)
     // method 3a
     //--------------------------------------------------------------------------
 
+#if 1
     for (int kk = 0 ; kk < NTHRLIST; kk++)
     {
         int nthreads = nthread_list [kk] ;
@@ -238,6 +257,7 @@ int main (int argc, char **argv)
 
     GxB_Vector_fprint(PR, "---- PR ------", GxB_SHORT, stdout);
     GrB_free (&PR) ;
+#endif
 
     //--------------------------------------------------------------------------
     // method 3c
@@ -254,7 +274,7 @@ int main (int argc, char **argv)
         {
             GrB_free (&PR) ;
             LAGraph_tic (tic) ;
-            LAGRAPH_OK (LAGraph_pagerank3c (&PR, A, 0.85, itermax, &iters)) ;
+            LAGRAPH_OK (LAGraph_pagerank3c (&PR, A, dout, 0.85, itermax, &iters)) ;
             double t1 = LAGraph_toc (tic) ;
             total_time += t1 ;
             printf ("trial %2d, time %16.6g\n", trial, t1) ;
@@ -276,3 +296,4 @@ int main (int argc, char **argv)
     LAGRAPH_OK (LAGraph_finalize ( )) ;
     return (GrB_SUCCESS) ;
 }
+

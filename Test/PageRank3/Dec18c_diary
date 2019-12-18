@@ -1,8 +1,7 @@
-Script started on Wed 18 Dec 2019 04:40:34 PM CST
+Script started on Wed 18 Dec 2019 05:12:44 PM CST
 Intel Suite:
 Copyright (C) 2009-2019 Intel Corporation. All rights reserved.
 Intel(R) VTune(TM) Amplifier 2019 (build 591499)
-[0;36mhypersparse $[0m 
 [0;36mhypersparse $[0m ./gap_test
 Test kron:
 matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
@@ -14,7 +13,7 @@ Matrix has 71143742 empty cols
 
 ==========input graph: nodes: 134217726 edges: 4223264644
 diag entries added: 71143742
-read time: 182.912 sec
+read time: 190.329 sec
 
   134217726x134217726 GraphBLAS bool matrix, sparse by col:
   A, 4294408386 entries
@@ -30,8 +29,23 @@ read time: 182.912 sec
     (8,8)   1
     (26920261,9)   1
     ...
-trial  0, time          51.9386
-Average pagerank3a  time:          51.9386 (sec), rate:      81.31 (1e6 edges/sec) iters: 7 threads: 40
+trial  0, time          51.6244
+trial  1, time          52.2459
+trial  2, time           52.236
+trial  3, time          53.0136
+trial  4, time          53.1338
+trial  5, time          52.0281
+trial  6, time          52.1099
+trial  7, time          52.0439
+trial  8, time          51.4041
+trial  9, time          52.3302
+trial 10, time           51.918
+trial 11, time          52.0786
+trial 12, time          51.9218
+trial 13, time          52.2838
+trial 14, time          52.3494
+trial 15, time          51.9267
+Average pagerank3a  time:          52.1655 (sec), rate:      80.96 (1e6 edges/sec) iters: 7 threads: 40
 
   134217726x1 GraphBLAS float vector, sparse by col:
   ---- PR ------, 134217726 entries
@@ -67,8 +81,23 @@ Average pagerank3a  time:          51.9386 (sec), rate:      81.31 (1e6 edges/se
     (28,0)    2.13301e-09
     (29,0)    1.52126e-09
     ...
-trial  0, time          23.7392
-Average pagerank3c  time:          23.7392 (sec), rate:      177.9 (1e6 edges/sec) iters: 7 threads: 40
+trial  0, time          22.6948
+trial  1, time          22.6955
+trial  2, time          22.6848
+trial  3, time          22.6906
+trial  4, time          22.7088
+trial  5, time          22.6912
+trial  6, time          22.6989
+trial  7, time          22.6892
+trial  8, time          22.6841
+trial  9, time          22.6987
+trial 10, time          22.6889
+trial 11, time           22.693
+trial 12, time          22.6972
+trial 13, time          22.6706
+trial 14, time          22.6854
+trial 15, time          22.6948
+Average pagerank3c  time:          22.6917 (sec), rate:      186.1 (1e6 edges/sec) iters: 7 threads: 40
 
   134217726x1 GraphBLAS float vector, sparse by col:
   ---- PR ------, 134217726 entries
@@ -112,7 +141,7 @@ original # of edges: 57708624
 
 ==========input graph: nodes: 23947347 edges: 57708624
 diag entries added: 0
-read time: 2.36018 sec
+read time: 2.33215 sec
 
   23947347x23947347 GraphBLAS bool matrix, sparse by col:
   A, 57708624 entries
@@ -140,8 +169,23 @@ read time: 2.36018 sec
     (1048581,8)   1
     (2,9)   1
     ...
-trial  0, time          11.5053
-Average pagerank3a  time:          11.5053 (sec), rate:      5.016 (1e6 edges/sec) iters: 39 threads: 40
+trial  0, time          11.3944
+trial  1, time          11.4368
+trial  2, time          11.5013
+trial  3, time          11.3999
+trial  4, time          11.9307
+trial  5, time          11.4473
+trial  6, time          11.4198
+trial  7, time          11.4807
+trial  8, time          11.4397
+trial  9, time          11.4164
+trial 10, time          11.4957
+trial 11, time          11.5261
+trial 12, time          11.5173
+trial 13, time          11.4336
+trial 14, time          11.4509
+trial 15, time          11.3866
+Average pagerank3a  time:          11.4798 (sec), rate:      5.027 (1e6 edges/sec) iters: 39 threads: 40
 
   23947347x1 GraphBLAS float vector, sparse by col:
   ---- PR ------, 23947347 entries
@@ -177,8 +221,23 @@ Average pagerank3a  time:          11.5053 (sec), rate:      5.016 (1e6 edges/se
     (28,0)    7.3439e-08
     (29,0)    5.27261e-08
     ...
-trial  0, time          3.19835
-Average pagerank3c  time:          3.19835 (sec), rate:      18.04 (1e6 edges/sec) iters: 39 threads: 40
+trial  0, time          2.12732
+trial  1, time          2.15118
+trial  2, time          2.13763
+trial  3, time          2.11252
+trial  4, time          2.11254
+trial  5, time          2.10748
+trial  6, time          2.09711
+trial  7, time          2.12095
+trial  8, time          2.11275
+trial  9, time          2.11875
+trial 10, time          2.12719
+trial 11, time          2.12116
+trial 12, time          2.11764
+trial 13, time          2.12807
+trial 14, time           2.0848
+trial 15, time           2.0808
+Average pagerank3c  time:          2.11612 (sec), rate:      27.27 (1e6 edges/sec) iters: 39 threads: 40
 
   23947347x1 GraphBLAS float vector, sparse by col:
   ---- PR ------, 23947347 entries
@@ -224,107 +283,7 @@ Matrix has 25889280 empty cols
 
 ==========input graph: nodes: 61578415 edges: 1468364884
 diag entries added: 27438232
-read time: 65.6571 sec
+read time: 60.5332 sec
 
   61578415x61578415 GraphBLAS bool matrix, sparse by col:
-  A, 1495803116 entries
-
-    (0,0)   1
-    (1,1)   1
-    (2,2)   1
-    (3,3)   1
-    (4,4)   1
-    (5,5)   1
-    (6,6)   1
-    (7,7)   1
-    (8,8)   1
-    (9,9)   1
-    ...
-trial  0, time          39.4627
-Average pagerank3a  time:          39.4627 (sec), rate:      37.21 (1e6 edges/sec) iters: 26 threads: 40
-
-  61578415x1 GraphBLAS float vector, sparse by col:
-  ---- PR ------, 61578415 entries
-
-    (0,0)    1.62395e-08
-    (1,0)    1.62395e-08
-    (2,0)    1.62395e-08
-    (3,0)    1.62395e-08
-    (4,0)    1.62395e-08
-    (5,0)    1.62395e-08
-    (6,0)    1.62395e-08
-    (7,0)    1.62395e-08
-    (8,0)    1.62395e-08
-    (9,0)    1.62395e-08
-    (10,0)    1.62395e-08
-    (11,0)    1.62395e-08
-    (12,0)    4.35641e-08
-    (13,0)    1.38676e-08
-    (14,0)    9.20566e-09
-    (15,0)    2.09159e-08
-    (16,0)    3.02227e-08
-    (17,0)    1.5594e-08
-    (18,0)    6.64866e-09
-    (19,0)    1.62395e-08
-    (20,0)    3.64832e-08
-    (21,0)    4.56939e-08
-    (22,0)    2.67726e-08
-    (23,0)    9.85883e-09
-    (24,0)    9.30129e-09
-    (25,0)    1.62395e-08
-    (26,0)    1.62395e-08
-    (27,0)    1.62395e-08
-    (28,0)    1.62395e-08
-    (29,0)    1.62395e-08
-    ...
-trial  0, time          22.9057
-Average pagerank3c  time:          22.9057 (sec), rate:       64.1 (1e6 edges/sec) iters: 26 threads: 40
-
-  61578415x1 GraphBLAS float vector, sparse by col:
-  ---- PR ------, 61578415 entries
-
-    (0,0)    1.62395e-08
-    (1,0)    1.62395e-08
-    (2,0)    1.62395e-08
-    (3,0)    1.62395e-08
-    (4,0)    1.62395e-08
-    (5,0)    1.62395e-08
-    (6,0)    1.62395e-08
-    (7,0)    1.62395e-08
-    (8,0)    1.62395e-08
-    (9,0)    1.62395e-08
-    (10,0)    1.62395e-08
-    (11,0)    1.62395e-08
-    (12,0)    4.35641e-08
-    (13,0)    1.38676e-08
-    (14,0)    9.20566e-09
-    (15,0)    2.09159e-08
-    (16,0)    3.02227e-08
-    (17,0)    1.5594e-08
-    (18,0)    6.64866e-09
-    (19,0)    1.62395e-08
-    (20,0)    3.64832e-08
-    (21,0)    4.56939e-08
-    (22,0)    2.67726e-08
-    (23,0)    9.85883e-09
-    (24,0)    9.30129e-09
-    (25,0)    1.62395e-08
-    (26,0)    1.62395e-08
-    (27,0)    1.62395e-08
-    (28,0)    1.62395e-08
-    (29,0)    1.62395e-08
-    ...
-Test urand:
-matrix: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
-[.grb]
-Reading binary file: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
-original # of edges: 4294966740
-^C^C^Z
-[1]+  Stopped                 ./gap_test
-[0;36mhypersparse $[0m k[Kexit
-exit
-There are stopped jobs.
-[0;36mhypersparse $[0m exit
-exit
-
-Script done on Wed 18 Dec 2019 04:50:10 PM CST
+  A, 149

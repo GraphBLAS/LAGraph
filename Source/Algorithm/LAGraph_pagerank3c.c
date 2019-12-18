@@ -46,209 +46,133 @@ See LICENSE file for more details.
 
 #include "LAGraph.h"
 
-#define LAGRAPH_FREE_ALL        \
-{                               \
-    LAGRAPH_FREE (I);           \
-    LAGRAPH_FREE (d_out) ;      \
-    GrB_free(&grb_d_out);       \
-    GrB_free(&importance_vec);  \
-    GrB_free(&grb_pr);          \
+#define LAGRAPH_FREE_ALL            \
+{                                   \
+    LAGRAPH_FREE (I) ;              \
+    LAGRAPH_FREE (pr) ;             \
+    LAGRAPH_FREE (oldpr) ;          \
+    GrB_free (&importance_vec) ;    \
+    GrB_free (&grb_pr) ;            \
 };
-
-#undef NDEBUG
-// comment this out to see the intermediate resluts; lots of prints!!
-#define NDEBUG
-
-// uncomment this to see the  timing info
-#define PRINT_TIMING_INFO
 
 GrB_Info LAGraph_pagerank3c // PageRank definition
 (
- GrB_Vector *result,    // output: array of LAGraph_PageRank structs
- GrB_Matrix A,          // binary input graph, not modified
- float damping_factor,  // damping factor
- unsigned long itermax, // maximum number of iterations
- int* iters             // output: number of iterations taken
- )
+    GrB_Vector *result,    // output: array of LAGraph_PageRank structs
+    GrB_Matrix A,          // binary input graph, not modified
+    const float *restrict d_out, // out degree of each node (GrB_FP32, size n)
+    float damping_factor,  // damping factor
+    unsigned long itermax, // maximum number of iterations
+    int* iters             // output: number of iterations taken
+)
 {
 
     //--------------------------------------------------------------------------
     // initializations
     //--------------------------------------------------------------------------
 
-    GrB_Info info;
-    GrB_Index n;
-
-    GrB_Vector grb_d_out = NULL ;
+    GrB_Info info ;
+    GrB_Index n, ncols ;
     GrB_Vector importance_vec = NULL ;
     GrB_Vector grb_pr = NULL;
     GrB_Index *I = NULL ;
-    float *d_out = NULL ;
+    float *restrict pr = NULL ;
+    float *oldpr = NULL ;
 
-#ifdef PRINT_TIMING_INFO
-    // start the timer
-    double tic [2] ;
-    LAGraph_tic (tic) ;
-#endif
+    LAGRAPH_OK (GrB_Matrix_ncols (&ncols, A)) ;
+    LAGRAPH_OK (GrB_Matrix_nrows (&n, A)) ;
+    GrB_Index nvals ;
+    LAGRAPH_OK (GrB_Matrix_nvals (&nvals, A)) ;
 
-    GrB_Index ncols ; //number of columnns
-
-    LAGRAPH_OK(GrB_Matrix_ncols(&ncols , A));
-    LAGRAPH_OK(GrB_Matrix_nrows(&n, A));
-    GrB_Index nvals;
-    LAGRAPH_OK(GrB_Matrix_nvals(&nvals, A));
-
-    if (ncols  != n)
+    if (ncols != n)
     {
-        return (GrB_DIMENSION_MISMATCH) ;
+        LAGRAPH_ERROR ("matrix must be square", GrB_DIMENSION_MISMATCH) ;
     }
-
-    // Matrix A row sum
-    // Stores the outbound degrees of all vertices
-    LAGRAPH_OK(GrB_Vector_new(&grb_d_out, GrB_FP32, n));
-    LAGRAPH_OK(GrB_reduce( grb_d_out, NULL, NULL, GxB_PLUS_FP32_MONOID,
-                A, NULL ));
-
-#ifndef NDEBUG
-    GxB_print (grb_d_out, 1) ;
-    // GxB_print (A, 3) ;
-#endif
 
     // Teleport value
     const float teleport = (1 - damping_factor) / n;
-
-    float  tol = 1e-4;
-    float  rdiff = 1 ;       // first iteration is always done
+    float tol = 1e-4 ;
+    float rdiff = 1 ;       // first iteration is always done
 
     GrB_Type type = GrB_FP32 ;
     GrB_Index d_nvals;
     GrB_Index d_n;
 
-    // d_out <-----   grb_d_out || export
-    LAGRAPH_OK (GxB_Vector_export (&grb_d_out, &type, &d_n, &d_nvals, &I,
-                (void **) (&d_out),   NULL)) ;
-
-    if (d_nvals < n)
-    {
-        LAGRAPH_ERROR ("Matrix has dangling nodes!", GrB_INVALID_VALUE) ;
-    }
-
     int nthreads = LAGraph_get_nthreads ( ) ;
-    nthreads = LAGRAPH_MIN (n , nthreads) ;
+    nthreads = LAGRAPH_MIN (n, nthreads) ;
     nthreads = LAGRAPH_MAX (nthreads, 1) ;
-
-#ifndef NDEBUG
-    for (int i = 0 ; i < n; i++){
-        printf("d_out [%d]=%ld\n", i, d_out [i]);
-    }
-#endif
 
     //--------------------------------------------------------------------------
     // compute the pagerank
     //--------------------------------------------------------------------------
 
-#ifdef PRINT_TIMING_INFO
-    // stop the timer
-    double t1 = LAGraph_toc (tic); 
-    printf ("\ninitialization time: %12.6e (sec)\n",t1);
-    LAGraph_tic (tic);
-#endif
+    // initializing pr and I
+    pr = LAGraph_malloc (n, sizeof (float)) ;
+    I =  LAGraph_malloc (n, sizeof (GrB_Index)) ;
+    oldpr = LAGraph_malloc (n, sizeof (float)) ;
 
-    // initializing pr
-    float *pr = (float *) malloc (n*sizeof(float));     
-    #pragma omp parallel for num_threads(nthreads) schedule(static)
-    for (int i = 0; i < n ; i++){
-        pr [i] = 1.0/n;
-   }
-#ifndef NDEBUG
-    for (int i = 0 ; i < n ; i++){
-        printf("pr[%d]=%f\n", i, pr [i]);
+    if (pr == NULL || I == NULL || oldpr == NULL)
+    {
+        LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
     }
-#endif
- 
-    float *oldpr = (float *) malloc (n*sizeof(float));     
+
+    #pragma omp parallel for num_threads(nthreads) schedule(static)
+    for (int64_t k = 0 ; k < n ; k++)
+    {
+        I [k] = k ;
+        pr [k] = 1.0/n ;
+    }
 
     for ((*iters) = 0 ; (*iters) < itermax && rdiff > tol ; (*iters)++)
     {
 
         // Importance calculation
         #pragma omp parallel for num_threads(nthreads) schedule(static)
-        for (int i = 0 ; i < n; i++){
-            oldpr [i] = pr [i];
-            // assumes d_out [i] > 0
-            pr [i] = damping_factor * pr [i] / d_out [i];
+        for (int64_t i = 0 ; i < n; i++)
+        {
+            oldpr [i] = pr [i] ;
+            pr [i] = damping_factor * pr [i] / d_out [i] ;
         }
 
-#ifndef NDEBUG
-        for (int i = 0 ; i < n; i++){
-            printf (" pr [%d] = %f\n",  i,  pr [i]);
-        }
-#endif
-        // importance_vec <-----  pr
-        LAGRAPH_OK (GxB_Vector_import (&importance_vec, GrB_FP32, n, n, &I, 
-                    (void **) (&pr),   NULL)) ;
-
-#ifndef NDEBUG
-        printf ("after importance_vec import\n");
-        GxB_print (importance_vec, 2) ;
-#endif
+        // import pr and I into importance_vec
+        LAGRAPH_OK (GxB_Vector_import (&importance_vec, GrB_FP32, n, n, &I,
+            (void **) (&pr), NULL)) ;
 
         // Calculate total PR of all inbound vertices
         // importance_vec = A' * importance_vec
-        LAGRAPH_OK(GrB_mxv( importance_vec, NULL, NULL,
-            GxB_PLUS_SECOND_FP32, A, importance_vec, LAGraph_desc_toor ));
+        LAGRAPH_OK (GrB_mxv (importance_vec, NULL, NULL, GxB_PLUS_SECOND_FP32,
+            A, importance_vec, LAGraph_desc_tooo)) ;
 
-#ifndef NDEBUG
-        printf ("==============2\n");
-        printf ("after mxv\n");
-        GxB_print (importance_vec, 1) ;
-#endif
-
-        GrB_Index nvals_exp;
-        // pr <-----  importance_vec 
-        GrB_Type ivtype;
-        LAGRAPH_OK (GxB_Vector_export (&importance_vec, &ivtype, &n, &nvals_exp,
-                    &I,  (void **) (&pr),   NULL)) ;
-        // assert (nvals_exp == n );
-
-
-        // PageRank summarization
-        // Add teleport, importance_vec, and dangling_vec components together
-        // pr = (1-df)/n + pr
-        // rdiff = sum (abs(oldpr-pr))
-
-        rdiff = 0;
-        // norm (oldpr pr, 1)
-        #pragma omp parallel for num_threads(nthreads) schedule(static) \
-            reduction(+:rdiff)
-        for (int i = 0 ; i < n; i++)
+        GrB_Vector_nvals (&nvals, importance_vec) ;
+        if (nvals != n)
         {
-            pr [i] += teleport; 
-            float d = (oldpr [i] - pr [i]); 
-            d = (d > 0 ? d : -d); //abs(d)
-            rdiff += d;
+            LAGRAPH_ERROR ("Matrix must not have empty rows or columns!",
+                GrB_PANIC) ;
         }
 
-#ifndef NDEBUG
-        printf("---------------------------iters %d  rdiff=%f\n",*iters, rdiff);
-#endif
+        // export importance_vec to pr and I
+        GrB_Index nvals_exp ;
+        LAGRAPH_OK (GxB_Vector_export (&importance_vec, &type, &n, &nvals_exp,
+            &I, (void **) (&pr), NULL)) ;
+
+        // add teleport and check for convergence
+        rdiff = 0 ;
+        #pragma omp parallel for num_threads(nthreads) schedule(static) \
+            reduction(+:rdiff)
+        for (int64_t i = 0 ; i < n; i++)
+        {
+            pr [i] += teleport ;
+            rdiff += fabsf (oldpr [i] - pr [i]) ;
+        }
     }
 
-#ifdef PRINT_TIMING_INFO
-    // stop the timer
-    double t2 = LAGraph_toc (tic); 
-    printf ("computation time: %12.6e (sec) ratio (comp/init): %f\n\n",
-            t2, t2/t1);
-#endif
-
-    // grb_pr<-----  pr || import back
-    LAGRAPH_OK (GxB_Vector_import (&grb_pr, GrB_FP32, n, n, &I, 
-                (void **) (&pr),   NULL)) ;
-    (*result) = grb_pr;
+    // import result (pr and I) into grb_pr
+    LAGRAPH_OK (GxB_Vector_import (&grb_pr, GrB_FP32, n, n, &I,
+        (void **) (&pr), NULL)) ;
+    (*result) = grb_pr ;
     grb_pr = NULL ;
 
-    LAGRAPH_FREE (oldpr);
+    LAGRAPH_FREE (oldpr) ;
     LAGRAPH_FREE_ALL ;
-    return (GrB_SUCCESS);
+    return (GrB_SUCCESS) ;
 }
 
