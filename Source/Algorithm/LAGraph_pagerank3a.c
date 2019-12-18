@@ -38,15 +38,12 @@ See LICENSE file for more details.
 // This algorithm follows the specification given in the GAP Benchmark Suite:
 // https://arxiv.org/abs/1508.03619
 
-// For fastest results, the input matrix should be GrB_FP32, stored in
-// GxB_BY_COL format.
+// For fastest results, the input matrix A should be stored in
+// GxB_BY_COL format.  All entries in A must be equal to 1.
 
 #include "LAGraph.h"
 
 #define LAGRAPH_FREE_ALL {       \
-    GrB_free(&transpose_desc);   \
-    GrB_free(&invmask_desc);     \
-    GrB_free(&A);                \
     GrB_free(&d_out);            \
     GrB_free(&importance_vec);   \
     GrB_free(&pr);               \
@@ -72,16 +69,9 @@ GrB_Info LAGraph_pagerank3a // PageRank definition
 {
     GrB_Info info;
     GrB_Index n;
-
-    GrB_Descriptor invmask_desc = NULL ;
-    GrB_Descriptor transpose_desc = NULL ;
     GrB_Vector d_out = NULL ;
-
     GrB_Vector importance_vec = NULL ;
-
     GrB_Vector pr = NULL;
-
-
     GrB_BinaryOp op_diff = NULL ;
     GrB_Vector oldpr = NULL;
 
@@ -89,25 +79,20 @@ GrB_Info LAGraph_pagerank3a // PageRank definition
     GrB_Index nvals;
     LAGRAPH_OK(GrB_Matrix_nvals(&nvals, A));
 
-    // Create complement descriptor
-    LAGRAPH_OK(GrB_Descriptor_new(&invmask_desc));
-    LAGRAPH_OK(GrB_Descriptor_set(invmask_desc, GrB_MASK, GrB_SCMP));
-
-    // Create transpose descriptor
-    LAGRAPH_OK(GrB_Descriptor_new(&transpose_desc));
-    LAGRAPH_OK(GrB_Descriptor_set(transpose_desc, GrB_INP0, GrB_TRAN));
-    LAGRAPH_OK(GrB_Descriptor_set(transpose_desc, GrB_OUTP, GrB_REPLACE));
-
     // Matrix A row sum
     // Stores the outbound degrees of all vertices
     LAGRAPH_OK(GrB_Vector_new(&d_out, GrB_FP32, n));
-    LAGRAPH_OK(GrB_reduce( d_out, NULL, NULL, GxB_PLUS_FP32_MONOID,
-                A, NULL ));
-    //GxB_print (d_out, 3) ;
+    LAGRAPH_OK(GrB_reduce( d_out, NULL, NULL, GxB_PLUS_FP32_MONOID, A, NULL ));
+
+    GrB_Index non_dangling ;
+    LAGRAPH_OK (GrB_Vector_nvals (&non_dangling, d_out)) ;
+    if (non_dangling < n)
+    {
+        LAGRAPH_ERROR ("Matrix has dangling nodes!", GrB_INVALID_VALUE) ;
+    }
 
     // Iteration
     // Initialize PR vector
-    //
     LAGRAPH_OK(GrB_Vector_new(&pr, GrB_FP32, n));
     // Fill result vector with initial value (1 / |V|)
     LAGRAPH_OK(GrB_assign( pr, NULL, NULL, 1.0 / n, GrB_ALL, n, NULL ));
@@ -124,9 +109,8 @@ GrB_Info LAGraph_pagerank3a // PageRank definition
     float  tol = 1e-4;
     float  rdiff = 1 ;       // so first iteration is always done
 
-
-
-    for ((*iters) = 0 ; (*iters) < itermax && rdiff > tol ; (*iters)++) {
+    for ((*iters) = 0 ; (*iters) < itermax && rdiff > tol ; (*iters)++)
+    {
         // oldpr = pr; deep copy
         GrB_Vector_dup(&oldpr, pr);
  
@@ -150,8 +134,8 @@ GrB_Info LAGraph_pagerank3a // PageRank definition
         
         // Calculate total PR of all inbound vertices
         // importance_vec = A' * importance_vec
-        LAGRAPH_OK(GrB_mxv( importance_vec, NULL, NULL, GxB_PLUS_TIMES_FP32,
-                    A, importance_vec, transpose_desc ));
+        LAGRAPH_OK(GrB_mxv( importance_vec, NULL, NULL, GxB_PLUS_SECOND_FP32,
+                    A, importance_vec, LAGraph_desc_tooo)) ;
 
         //GxB_print(importance_vec, 3);
 
@@ -174,8 +158,11 @@ GrB_Info LAGraph_pagerank3a // PageRank definition
         LAGRAPH_OK (GrB_reduce (&rdiff, NULL, 
                     GxB_PLUS_FP32_MONOID, oldpr, NULL)) ;
         //printf("iters %d  rdiff=%f\n",*iters, rdiff);
+        GrB_free (&oldpr) ;
    }
 
     (*result) = pr;
+    pr = NULL ;
+    LAGRAPH_FREE_ALL ;
     return (GrB_SUCCESS);
 }
