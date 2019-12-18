@@ -34,7 +34,8 @@
 
 //------------------------------------------------------------------------------
 
-// Contributed by Scott Kolodziej, Texas A&M University
+// Contributed by Jinhao Chen, Scott Kolodziej and Tim Davis, Texas A&M
+// University
 
 // usage:
 // bc_test < in > out
@@ -46,6 +47,11 @@
 {                                   \
     GrB_free (&A_in);               \
     GrB_free (&A);                  \
+    free (I);                       \
+    free (J);                       \
+    free (W);                       \
+    free (d);                       \
+    free (pi);                      \
     GrB_free (&path_lengths);       \
     GrB_free (&path_lengths1);      \
 }
@@ -53,9 +59,17 @@
 int main (int argc, char **argv)
 {
     GrB_Info info;
+    double tic[2];
+
+    GrB_Index s = 0;
+    int32_t delta = 3;
 
     GrB_Matrix A_in = NULL;
     GrB_Matrix A = NULL;
+    GrB_Index *I = NULL, *J = NULL; // for col/row indices of entries from A
+    int32_t *W = NULL;
+    int32_t *d = NULL;              // for BF result
+    int64_t *pi = NULL;
     GrB_Vector path_lengths = NULL;
     GrB_Vector path_lengths1 = NULL;
 
@@ -79,16 +93,23 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     GrB_Index nrows, ncols;
-    LAGr_Matrix_nrows(&nrows, A);
-    LAGr_Matrix_ncols(&ncols, A);
+    LAGr_Matrix_nrows(&nrows, A_in);
+    LAGr_Matrix_ncols(&ncols, A_in);
     GrB_Index n = nrows;
 
     // convert input matrix to INT32
-    GrB_Matrix_new (A, GrB_INT32, n, n) ;
+    GrB_Matrix_new (&A, GrB_INT32, n, n) ;
     GrB_apply (A, NULL, NULL, GrB_IDENTITY_INT32, A_in, NULL) ;
     GxB_print (A, 2) ;
 
     GrB_free (&A_in) ;
+
+    I = LAGraph_malloc (nvals, sizeof(GrB_Index)) ;
+    J = LAGraph_malloc (nvals, sizeof(GrB_Index)) ;
+    W = LAGraph_malloc (nvals, sizeof(int32_t)) ;
+
+    LAGRAPH_OK (GrB_Matrix_extractTuples_INT32(I, J, W, &nvals, A));
+
 
     //--------------------------------------------------------------------------
     // Begin tests
@@ -108,29 +129,23 @@ int main (int argc, char **argv)
     fprintf(stderr, " - ntrials: %d\n", ntrials);
 
     //--------------------------------------------------------------------------
-    // Compute betweenness centrality from all nodes (Brandes)
+    // find shortest path using BF on node s with LAGraph_pure_c
     //--------------------------------------------------------------------------
 
-    fprintf(stderr, " - Start Test: Single Source Shortest Paths\n");
+    // start the timer
+    LAGraph_tic (tic) ;
 
-    // Start the timer
-    double tic [2];
-    LAGraph_tic (tic);
-
-    // TODO use 64 trials (or whatever SourceNodes is)
-
-    for (int trial = 0; trial < ntrials; trial++)
+    for (int trial = 0 ; trial < ntrials ; trial++)
     {
-        GrB_free (&path_lengths);
-        LAGRAPH_OK (LAGraph_sssp (&path_lengths, A, 0, 3)) ;
+        free (d) ;
+        free (pi) ;
+        LAGRAPH_OK (LAGraph_BF_pure_c (&d, &pi, s, n, nvals, I, J, W)) ;
     }
 
-    // Stop the timer
-    double t1 = LAGraph_toc (tic) / ntrials ;
-    fprintf (stderr, "SSSP+Delta Stepping  time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
-        t1, 1e-6*((double) nvals) / t1) ;
-
-    fprintf(stderr, " - End Test: Single Source Shortest Paths\n");
+    // stop the timer
+    double t3 = LAGraph_toc (tic) / ntrials ;
+    fprintf (stderr, "BF_pure_c     time: %12.6e (sec), rate:"
+        " %g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
 
     //--------------------------------------------------------------------------
     // write the result to stdout
@@ -139,17 +154,60 @@ int main (int argc, char **argv)
     for (int64_t i = 0; i < n; i++)
     {
         // if the entry v(i) is not present, x is unmodified, so '0' is printed
-        double x = 0;
-        LAGr_Vector_extractElement(&x, path_lengths, i);
-        printf("%f\n", x);
+        printf("%d\n", d[i]);
     }
 
-
     //--------------------------------------------------------------------------
-    // Compute betweenness centrality from all nodes (Brandes)
+    // Compute shortest path using delta stepping with given node and delta
     //--------------------------------------------------------------------------
 
     fprintf(stderr, " - Start Test: Single Source Shortest Paths\n");
+
+    // Start the timer
+    LAGraph_tic (tic);
+
+    // TODO use 64 trials (or whatever SourceNodes is)
+
+    for (int trial = 0; trial < ntrials; trial++)
+    {
+        GrB_free (&path_lengths);
+        LAGRAPH_OK (LAGraph_sssp (&path_lengths, A, s, delta)) ;
+    }
+
+    // Stop the timer
+    double t1 = LAGraph_toc (tic) / ntrials ;
+    fprintf (stderr, "SSSP+Delta Stepping  time: %12.6e (sec), rate:"
+        " %g (1e6 edges/sec)\n", t1, 1e-6*((double) nvals) / t1) ;
+
+    fprintf(stderr, " - End Test: Single Source Shortest Paths\n");
+
+    //--------------------------------------------------------------------------
+    // check the result for correctnestt
+    //--------------------------------------------------------------------------
+
+    bool test_pass = true;
+    for (int64_t i = 0; i < n; i++)
+    {
+        // if the entry v(i) is not present, x is unmodified, so '0' is printed
+        double x1 = 0;
+        LAGr_Vector_extractElement(&x1, path_lengths, i);
+	test_pass &= (d[i] == x1);
+        fprintf(stderr, "[i, BF, sssp] = [%ld, %d, %f]\n", i, d[i], x1); 
+    }
+    if(!test_pass)
+    {
+	fprintf(stderr, "ERROR! TEST FAILURE\n") ;
+    }
+    else
+    {
+	fprintf(stderr, "all tests passed\n");
+    }
+    fprintf(stderr, "============================================================================================================================\n");
+
+    //--------------------------------------------------------------------------
+    // Compute shortest path using delta stepping with given node and delta
+    //--------------------------------------------------------------------------
+    fprintf(stderr, " - Start Test: Single Source Shortest Paths1\n");
 
     // Start the timer
     LAGraph_tic (tic);
@@ -158,36 +216,36 @@ int main (int argc, char **argv)
     for (int trial = 0; trial < ntrials; trial++)
     {
         GrB_free (&path_lengths1);
-        LAGRAPH_OK (LAGraph_sssp1 (&path_lengths1, A, 0, 3)) ;
+        fprintf(stderr, "trial %d\n",trial);
+        LAGRAPH_OK (LAGraph_sssp1 (&path_lengths1, A, s, delta)) ;
     }
 
     // Stop the timer
     t1 = LAGraph_toc (tic) / ntrials ;
-    fprintf (stderr, "SSSP+Delta Stepping  time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
-        t1, 1e-6*((double) nvals) / t1) ;
+    fprintf (stderr, "SSSP+Delta Stepping  time: %12.6e (sec), rate:"
+        " %g (1e6 edges/sec)\n", t1, 1e-6*((double) nvals) / t1) ;
 
     fprintf(stderr, " - End Test: Single Source Shortest Paths\n");
 
     //--------------------------------------------------------------------------
-    // write the result to stdout
+    // check the result for correctnestt
     //--------------------------------------------------------------------------
 
-    bool test_pass = true;
+    test_pass = true;
     for (int64_t i = 0; i < n; i++)
     {
         // if the entry v(i) is not present, x is unmodified, so '0' is printed
-        double x = 0, x1 = 0;
+        int32_t x1 = 0;
         LAGr_Vector_extractElement(&x1, path_lengths1, i);
-        LAGr_Vector_extractElement(&x, path_lengths, i);
-	test_pass &= (x == x1);
+	test_pass &= (d[i] == x1);
     }
     if(!test_pass)
     {
-	printf ("ERROR! TEST FAILURE\n") ;
+	fprintf(stderr, "ERROR! TEST FAILURE\n") ;
     }
     else
     {
-	printf ("all tests passed\n");
+	fprintf(stderr, "all tests passed\n");
     }
 
     //--------------------------------------------------------------------------
