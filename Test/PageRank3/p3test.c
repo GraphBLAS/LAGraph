@@ -153,18 +153,25 @@ int main (int argc, char **argv)
     LAGRAPH_OK(GrB_reduce( d, NULL, NULL, GxB_PLUS_FP32_MONOID, A, NULL ));
     GrB_Index non_dangling ;
     LAGRAPH_OK (GrB_Vector_nvals (&non_dangling, d)) ;
-    GrB_free (&d) ;
 
     if (non_dangling < n)
     {
         // A = A+I if A has any dangling nodes
-        printf ("Matrix has empty rows\n") ;
-
+        printf ("Matrix has %"PRId64" empty rows\n", n - non_dangling) ;
         for (GrB_Index i = 0; i < n; i++)
         {
-            LAGRAPH_OK(GrB_Matrix_setElement (A, 1, i, i));
+            float di = 0 ;
+            LAGRAPH_OK (GrB_Vector_extractElement (&di, d, i)) ;
+            if (di == 0)
+            {
+                non_dangling++ ;
+                LAGRAPH_OK (GrB_Matrix_setElement (A, 1, i, i));
+            }
         }
     }
+
+    if (non_dangling < n) { printf ("ERROR!\n") ; abort ( ) ; }
+    GrB_free (&d) ;
 
     // finish any pending computations
     GrB_Index nvals ;
