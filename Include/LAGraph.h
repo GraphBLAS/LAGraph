@@ -763,6 +763,13 @@ GrB_Info LAGraph_cc_boruvka (
     GrB_Matrix A,           // input matrix
     bool sanitize           // if true, ensure A is symmetric
 ) ;
+
+GrB_Info LAGraph_msf (
+    GrB_Matrix *result,     // output: an unsymmetrical matrix, the spanning forest
+    GrB_Matrix A,           // input matrix
+    bool sanitize           // if true, ensure A is symmetric
+) ;
+
 // LAGraph_pagerank computes an array of structs for its result
 typedef struct
 {
