@@ -1,0 +1,3 @@
+#!/bin/sh
+
+./build/sssp_test < cover.mtx 3

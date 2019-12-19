@@ -124,6 +124,7 @@ if ( "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
         message ( FATAL_ERROR "gcc version must be at least 4.9" )
     endif ( )
 elseif ( "${CMAKE_C_COMPILER_ID}" STREQUAL "Intel" )
+    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -g " )
     # options for icc: also needs -std=c11
     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -std=c11 " )
     # check all warnings:

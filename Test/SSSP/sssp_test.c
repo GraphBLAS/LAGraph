@@ -81,6 +81,7 @@ int main (int argc, char **argv)
     double tic[2];
 
     LAGRAPH_OK (LAGraph_init());
+    // LAGraph_set_nthreads (1) ;
 
     //--------------------------------------------------------------------------
     // read in a matrix from a file and convert to INT32
@@ -201,6 +202,9 @@ int main (int argc, char **argv)
     GrB_Index ignore;
     LAGr_Matrix_nvals (&ignore, SourceNodes);
 
+    // try converting to column format (this is slower than the default)
+    // GxB_set (A, GxB_FORMAT, GxB_BY_COL) ;
+
     GxB_fprint (A, 2, stdout) ;
     GxB_fprint (SourceNodes, GxB_COMPLETE, stdout) ;
 
@@ -215,7 +219,7 @@ int main (int argc, char **argv)
     printf("Starting Single Source Shortest Paths Tests\n");
     printf(" - nthreads: %d\n", nthreads);
 
-    int ntrials = (int) nsource;
+    int ntrials = 1 ; // (int) nsource;
     double total_time1 = 0 ;
     double total_time2 = 0 ;
     double total_time3 = 0 ;
@@ -276,6 +280,7 @@ int main (int argc, char **argv)
         // find shortest path using BF on node s with LAGraph_pure_c
         //----------------------------------------------------------------------
 
+#if 0
         // get the triplet form for the Bellman-Ford function
         I = LAGraph_malloc (nvals, sizeof(GrB_Index)) ;
         J = LAGraph_malloc (nvals, sizeof(GrB_Index)) ;
@@ -304,6 +309,7 @@ int main (int argc, char **argv)
         LAGRAPH_FREE (I) ;
         LAGRAPH_FREE (J) ;
         LAGRAPH_FREE (W) ;
+#endif
 
         //----------------------------------------------------------------------
         // write the result to result file if there is none
@@ -324,6 +330,7 @@ int main (int argc, char **argv)
         // check the result for correctness
         //----------------------------------------------------------------------
 
+#if 0
         for (int64_t i = 0; i < n; i++)
         {
             bool test_result ;
@@ -354,6 +361,7 @@ int main (int argc, char **argv)
                 printf ("\n") ;
             }
         }
+#endif
 
         LAGRAPH_FREE (d) ;
     }
@@ -363,13 +371,15 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     printf ("ntrials: %d\n", ntrials) ;
+    #if 0
     printf ("Average time per trial (Bellman-Ford pure C): %12.6g sec\n",
         total_time1 / ntrials);
+    #endif
     #if 0
     printf ("Average time per trial (apply operator): %g sec\n",
         total_time2 / ntrials);
     #endif
-    printf ("Average time per trial (SSSP1, with select): %12.6g sec\n",
+    printf ("Average time per trial (SSSP1, with select):  %12.6g sec\n",
         total_time3 / ntrials);
 
     LAGRAPH_FREE_ALL;
