@@ -139,11 +139,11 @@ void check_solution (GrB_Matrix S, GrB_Matrix R)
     }
     if (answer != my_sol) {
         printf("wrong answer!\n");
-        printf("expected : %lld\n", answer);
-        printf("actual   : %lld\n", my_sol);
+        printf("expected : %lu\n", answer);
+        printf("actual   : %lu\n", my_sol);
         exit(0);
     } else {
-        printf("correct (sum = %lld).\n", sum);
+        printf("correct (sum = %lu)\n", sum);
     }
     free(I); free(J); free(X); free(ind); free(f);
     GrB_free (&Add);
@@ -202,7 +202,6 @@ int main (int argc, char **argv)
         gettimeofday (&t1, 0);
         LAGRAPH_OK (LAGraph_msf (&result, S, true));
         gettimeofday (&t2, 0);
-
         check_solution (S, result);
 
         printf("Boruvka MSF: %f\n", to_sec (t1, t2));

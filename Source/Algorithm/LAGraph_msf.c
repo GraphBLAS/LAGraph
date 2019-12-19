@@ -163,11 +163,12 @@ GrB_Info LAGraph_msf
         LAGRAPH_OK (GrB_assign (edge, 0, 0, inf, GrB_ALL, 0, 0));
         LAGRAPH_OK (GrB_mxv (edge, 0, GrB_MIN_UINT64, combMin, S, f, 0));
         // cedge[u] = children's minimum edge  | if u is a root
-        //          = inf                      | otherwise
-        LAGRAPH_OK (GrB_assign (cedge, 0, 0, inf, GrB_ALL, 0, 0));
+        //          = (INT_MAX, u)             | otherwise
+        LAGRAPH_OK (GrB_assign (t, 0, 0, (uint64_t) INT_MAX, GrB_ALL, 0, 0));
+        LAGRAPH_OK (GrB_eWiseMult (cedge, 0, 0, comb, t, i, 0));
         LAGRAPH_OK (Reduce_assign (cedge, edge, parent, n));
         // if (f[u] == u) f[u] := snd(cedge[u])  -- the index part of the edge
-        LAGRAPH_OK (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, f, i, 0)); 
+        LAGRAPH_OK (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, f, i, 0));
         LAGRAPH_OK (GrB_apply (f, mask, GrB_SECOND_UINT64, snd, cedge, 0));
         // identify all the vertex pairs (u, v) where f[u] == v and f[v] == u
         // and then select the minimum of u, v as the new root;
