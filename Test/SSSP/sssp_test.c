@@ -258,7 +258,7 @@ int main (int argc, char **argv)
 
         // stop the timer
         double t2 = LAGraph_toc (tic) ;
-        fprintf (stderr, "SSSP+Delta Stepping  time: %12.6e (sec), rate:"
+        printf ("SSSP+Delta Stepping  time: %12.6e (sec), rate:"
             " %g (1e6 edges/sec)\n", t2, 1e-6*((double) nvals) / t2) ;
 
         total_time2 += t2;
@@ -277,7 +277,7 @@ int main (int argc, char **argv)
 
         // Stop the timer
         double t3 = LAGraph_toc (tic);
-        fprintf (stderr, "SSSP+Delta Stepping  time: %12.6e (sec), rate:"
+        printf ("SSSP+Delta Stepping  time: %12.6e (sec), rate:"
             " %g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
 
         total_time3 += t3;
@@ -343,11 +343,11 @@ int main (int argc, char **argv)
 
     if(!test_pass)
     {
-        fprintf(stderr, "ERROR! TEST FAILURE\n") ;
+        printf("ERROR! TEST FAILURE\n") ;
     }
     else
     {
-        fprintf(stderr, "all tests passed\n");
+        printf("all tests passed\n");
     }
 
     return (GrB_SUCCESS);
