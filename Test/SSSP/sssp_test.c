@@ -234,40 +234,6 @@ int main (int argc, char **argv)
         printf ("\nTrial %d : source node: %"PRIu64"\n", trial, s) ;
 
         //----------------------------------------------------------------------
-        // find shortest path using BF on node s with LAGraph_pure_c
-        //----------------------------------------------------------------------
-
-        // get the triplet form for the Bellman-Ford function
-        I = LAGraph_malloc (nvals, sizeof(GrB_Index)) ;
-        J = LAGraph_malloc (nvals, sizeof(GrB_Index)) ;
-        W = LAGraph_malloc (nvals, sizeof(int32_t)) ;
-        if (I == NULL || J == NULL || W == NULL)
-        {
-            LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
-        }
-        LAGRAPH_OK (GrB_Matrix_extractTuples_INT32(I, J, W, &nvals, A));
-
-        printf(" - Start Test: Bellman-Ford Single Source Shortest Paths\n");
-        // start the timer
-        LAGraph_tic (tic) ;
-
-        LAGRAPH_FREE (d) ;
-        LAGRAPH_FREE (pi) ;
-        LAGRAPH_OK (LAGraph_BF_pure_c (&d, &pi, s, n, nvals, I, J, W)) ;
-
-        // stop the timer
-        double t1 = LAGraph_toc (tic) ;
-        printf ("BF_pure_c     time: %12.6e (sec), rate:"
-            " %g (1e6 edges/sec)\n", t1, 1e-6*((double) nvals) / t1) ;
-
-        total_time1 += t1;
-
-        LAGRAPH_FREE (pi) ;
-        LAGRAPH_FREE (I) ;
-        LAGRAPH_FREE (J) ;
-        LAGRAPH_FREE (W) ;
-
-        //----------------------------------------------------------------------
         // Compute shortest path using delta stepping with given node and delta
         //----------------------------------------------------------------------
 
@@ -283,8 +249,8 @@ int main (int argc, char **argv)
 
         // stop the timer
         double t2 = LAGraph_toc (tic) ;
-        printf ("SSSP+Delta Stepping  time: %12.6e (sec), rate:"
-            " %g (1e6 edges/sec)\n", t2, 1e-6*((double) nvals) / t2) ;
+        printf ("SSSP (apply)    time: %12.6g (sec), rate:"
+            " %12.6g (1e6 edges/sec)\n", t2, 1e-6*((double) nvals) / t2) ;
 
         total_time2 += t2;
         #endif
@@ -292,9 +258,6 @@ int main (int argc, char **argv)
         //----------------------------------------------------------------------
         // Compute shortest path using delta stepping with given node and delta
         //----------------------------------------------------------------------
-
-        printf(" - Start Test: delta-stepping Single Source Shortest Paths"
-            " (select operator)\n");
 
         // Start the timer
         LAGraph_tic (tic);
@@ -304,10 +267,43 @@ int main (int argc, char **argv)
 
         // Stop the timer
         double t3 = LAGraph_toc (tic);
-        printf ("SSSP+Delta Stepping  time: %12.6e (sec), rate:"
-            " %g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
+        printf ("SSSP1 (select)  time: %12.6g (sec), rate:"
+            " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
 
         total_time3 += t3;
+
+        //----------------------------------------------------------------------
+        // find shortest path using BF on node s with LAGraph_pure_c
+        //----------------------------------------------------------------------
+
+        // get the triplet form for the Bellman-Ford function
+        I = LAGraph_malloc (nvals, sizeof(GrB_Index)) ;
+        J = LAGraph_malloc (nvals, sizeof(GrB_Index)) ;
+        W = LAGraph_malloc (nvals, sizeof(int32_t)) ;
+        if (I == NULL || J == NULL || W == NULL)
+        {
+            LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
+        }
+        LAGRAPH_OK (GrB_Matrix_extractTuples_INT32(I, J, W, &nvals, A));
+
+        // start the timer
+        LAGraph_tic (tic) ;
+
+        LAGRAPH_FREE (d) ;
+        LAGRAPH_FREE (pi) ;
+        LAGRAPH_OK (LAGraph_BF_pure_c (&d, &pi, s, n, nvals, I, J, W)) ;
+
+        // stop the timer
+        double t1 = LAGraph_toc (tic) ;
+        printf ("BF_pure_c       time: %12.6g (sec), rate:"
+            " %g (1e6 edges/sec)\n", t1, 1e-6*((double) nvals) / t1) ;
+
+        total_time1 += t1;
+
+        LAGRAPH_FREE (pi) ;
+        LAGRAPH_FREE (I) ;
+        LAGRAPH_FREE (J) ;
+        LAGRAPH_FREE (W) ;
 
         //----------------------------------------------------------------------
         // write the result to result file if there is none
@@ -316,7 +312,7 @@ int main (int argc, char **argv)
 #if 0
         //if( access( fname, F_OK ) == -1 )// check if the result file exists
         {
-            FILE *file = fopen(fname)..
+            FILE *file = fopen(fname)
             for (int64_t i = 0; i < n; i++)
             {
                 fprintf(file, "%d\n", d[i]);
@@ -358,19 +354,22 @@ int main (int argc, char **argv)
                 printf ("\n") ;
             }
         }
+
+        LAGRAPH_FREE (d) ;
     }
 
     //--------------------------------------------------------------------------
     // free all workspace and finish
     //--------------------------------------------------------------------------
+
     printf ("ntrials: %d\n", ntrials) ;
-    printf ("Average time per trial (Bellman-Ford pure C): %g sec\n",
+    printf ("Average time per trial (Bellman-Ford pure C): %12.6g sec\n",
         total_time1 / ntrials);
     #if 0
     printf ("Average time per trial (apply operator): %g sec\n",
         total_time2 / ntrials);
     #endif
-    printf ("Average time per trial (select operator):   %g sec\n",
+    printf ("Average time per trial (SSSP1, with select): %12.6g sec\n",
         total_time3 / ntrials);
 
     LAGRAPH_FREE_ALL;

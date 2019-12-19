@@ -145,13 +145,13 @@ GrB_Info LAGraph_sssp1         // single source shortest paths
     LAGr_Matrix_new(&AL, GrB_INT32, n, n);
     LAGRAPH_OK (GxB_select(AL, GrB_NULL, GrB_NULL, GxB_LE_THUNK, A, lBound,
         GrB_NULL));
-    GxB_print(AL, print_lvl);
+    // GxB_print(AL, print_lvl);
 
     // AH = A .* (A > delta) with lBound = delta
     LAGr_Matrix_new(&AH, GrB_INT32, n, n);
     LAGRAPH_OK (GxB_select(AH, GrB_NULL, GrB_NULL, GxB_GT_THUNK, A, lBound,
         GrB_NULL));
-    GxB_print(AH, print_lvl);
+    // GxB_print(AH, print_lvl);
 
     int32_t i = 0;
 
@@ -159,9 +159,10 @@ GrB_Info LAGraph_sssp1         // single source shortest paths
     LAGRAPH_OK (GxB_Scalar_setElement_INT32(lBound, i * delta));
     LAGRAPH_OK (GxB_select(tmasked, GrB_NULL, GrB_NULL, GxB_GE_THUNK, t, lBound,
         GrB_NULL));
-    GxB_print(tmasked, print_lvl);
+    // GxB_print(tmasked, print_lvl);
 
     LAGr_Vector_nvals(&tmasked_nvals, tmasked);
+
     if (print_lvl > 0)
     {
         fprintf (stderr, "outter tmasked has %ld nnz\n",tmasked_nvals);
@@ -183,10 +184,11 @@ GrB_Info LAGraph_sssp1         // single source shortest paths
         // tBi = pattern of tmasked
         LAGr_apply(tBi, GrB_NULL, GrB_NULL, GxB_ONE_BOOL, tmasked,
             LAGraph_desc_ooor);
-        GxB_print(tBi, print_lvl);
-        GxB_print(tmasked, print_lvl);
+        // GxB_print(tBi, print_lvl);
+        // GxB_print(tmasked, print_lvl);
 
         LAGr_Vector_nvals(&tmasked_nvals, tmasked);
+
         if (print_lvl > 0)
         {
             fprintf (stderr, "inner tmasked has %ld nnz\n",tmasked_nvals);
@@ -201,7 +203,7 @@ GrB_Info LAGraph_sssp1         // single source shortest paths
             // tReq = AL' (min.+) (t .* tBi)
             LAGr_vxm(tReq, GrB_NULL, GrB_NULL, GxB_MIN_PLUS_INT32,
                 tmasked, AL, GrB_NULL);
-            GxB_print(tReq, print_lvl);
+            // GxB_print(tReq, print_lvl);
 
             // s = (s | tBi)
             LAGr_eWiseAdd(s, GrB_NULL, GrB_NULL, GrB_LOR, s, tBi,
@@ -210,16 +212,16 @@ GrB_Info LAGraph_sssp1         // single source shortest paths
             // tless<tReq> = tReq .< t
             LAGr_eWiseAdd(tless, tReq, GrB_NULL, GrB_LT_INT32, tReq,
                 t, LAGraph_desc_ooor);
-            GxB_print(tless, print_lvl);
+            // GxB_print(tless, print_lvl);
 
             // tmasked<tless> = select (i*delta <= tReq < (i+1)*delta)
             // TODO try swapping the order; pick the fastest one
             LAGRAPH_OK (GxB_select(tmasked, tless, GrB_NULL, GxB_GE_THUNK,
                 tReq,    lBound, LAGraph_desc_ooor));
-            GxB_print(tmasked, print_lvl);
+            // GxB_print(tmasked, print_lvl);
             LAGRAPH_OK (GxB_select(tmasked, tless, GrB_NULL, GxB_LT_THUNK,
                 tmasked, uBound, GrB_NULL));
-            GxB_print(tmasked, print_lvl);
+            // GxB_print(tmasked, print_lvl);
 
             // t<tless> = min(t, tReq)
             // alternatively use the following
@@ -229,9 +231,10 @@ GrB_Info LAGraph_sssp1         // single source shortest paths
             // tBi = pattern of tmasked
             LAGr_apply(tBi, GrB_NULL, GrB_NULL, GxB_ONE_BOOL,
                 tmasked, LAGraph_desc_ooor);
-            GxB_print(tBi, print_lvl);
+            // GxB_print(tBi, print_lvl);
 
             LAGr_Vector_nvals(&tmasked_nvals, tmasked);
+
             if (print_lvl > 0)
             {
                 fprintf (stderr, "inner tmasked has %ld nnz\n",tmasked_nvals);
@@ -260,9 +263,10 @@ GrB_Info LAGraph_sssp1         // single source shortest paths
         LAGRAPH_OK (GxB_Scalar_setElement_INT32(lBound, i * delta));
         LAGRAPH_OK (GxB_select(tmasked, GrB_NULL, GrB_NULL, GxB_GE_THUNK, t,
             lBound, GrB_NULL));
-        GxB_print(tmasked, print_lvl);
+        // GxB_print(tmasked, print_lvl);
 
         LAGr_Vector_nvals(&tmasked_nvals, tmasked);
+
         if (print_lvl > 0)
         {
             fprintf (stderr, "outter tmasked has %ld nnz\n",tmasked_nvals);
