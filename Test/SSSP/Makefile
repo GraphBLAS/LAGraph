@@ -21,6 +21,11 @@ default: compile
 	#./build/sssp_test < jagmesh7.mtx 3 > jagmesh7.out #2>stderr.txt
 	#./build/sssp_check jagmesh7.out jagmesh7.check
 	./build/sssp_test < cover.mtx 3 #> cover.out #2>stderr.txt
+	./build/sssp_test /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron.grb /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron_sources.mtx 2 > kron.out
+	./build/sssp_test /raid/hyper/gapbs/GAP/GAP-road/GAP-road.grb /raid/hyper/gapbs/GAP/GAP-road/GAP-road_sources.mtx 50000 > road.out
+	./build/sssp_test /raid/hyper/gapbs/GAP/GAP-twitter/GAP-twitter.grb /raid/hyper/gapbs/GAP/GAP-twitter/GAP-twitter_sources.mtx 3 > twitter.out
+	./build/sssp_test /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand.grb /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand_sources.mtx 3 > urand.out
+	./build/sssp_test /raid/hyper/gapbs/GAP/GAP-web/GAP-web.grb /raid/hyper/gapbs/GAP/GAP-web/GAP-web_sources.mtx 3 > web.out
 
 # build test
 compile:
