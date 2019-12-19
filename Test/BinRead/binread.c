@@ -44,17 +44,18 @@
 #define LAGRAPH_FREE_ALL            \
 {                                   \
     GrB_free (&A) ;                 \
+    GrB_free (&A_cast) ;            \
 }
 
 int main (int argc, char **argv)
 {
     GrB_Info info ;
     GrB_Matrix A = NULL ;
+    GrB_Matrix A_cast = NULL ;
 
     if (argc < 2)
     {
-        LAGRAPH_ERROR ("Usage: binread infile.grb",
-            GrB_INVALID_VALUE) ;
+        LAGRAPH_ERROR ("Usage: binread infile.grb", GrB_INVALID_VALUE) ;
     }
 
     printf ("infile:  %s\n", argv [1]) ;
@@ -77,6 +78,43 @@ int main (int argc, char **argv)
     LAGRAPH_OK (GxB_fprint (A, 2, stdout)) ;
 
     //--------------------------------------------------------------------------
+    // convert type, if requested
+    //--------------------------------------------------------------------------
+
+    if (argc > 2)
+    {
+        printf ("outfile:  %s\n", argv [2]) ;
+        printf ("type:     %s\n", argv [3]) ;
+
+        GrB_Index nrows, ncols ;
+        LAGRAPH_OK (GrB_Matrix_nrows (&nrows, A)) ;
+        LAGRAPH_OK (GrB_Matrix_ncols (&ncols, A)) ;
+
+        if (strcmp (argv [3], "uint8") == 0)
+        {
+            LAGRAPH_OK (GrB_Matrix_new (&A_cast, GrB_UINT8, nrows, ncols)) ;
+            LAGRAPH_OK (GrB_apply (A_cast, NULL, NULL, GrB_IDENTITY_UINT8, A, NULL)) ;
+        }
+        else if (strcmp (argv [3], "int32") == 0)
+        {
+            LAGRAPH_OK (GrB_Matrix_new (&A_cast, GrB_INT32, nrows, ncols)) ;
+            LAGRAPH_OK (GrB_apply (A_cast, NULL, NULL, GrB_IDENTITY_INT32, A, NULL)) ;
+        }
+        else
+        {
+            LAGRAPH_ERROR ("type not yet implemented", GrB_INVALID_VALUE) ;
+        }
+
+        LAGRAPH_OK (GxB_fprint (A_cast, 2, stdout)) ;
+
+        GrB_free (&A) ;
+        A = A_cast ;
+        A_cast = NULL ;
+
+        LAGRAPH_OK (LAGraph_binwrite (&A, argv [2], NULL)) ;
+    }
+
+    //--------------------------------------------------------------------------
     // free everthing
     //--------------------------------------------------------------------------
 
@@ -84,3 +122,4 @@ int main (int argc, char **argv)
     GrB_finalize ( ) ;
     return (GrB_SUCCESS) ;
 }
+

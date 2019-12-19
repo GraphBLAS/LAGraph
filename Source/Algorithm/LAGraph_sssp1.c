@@ -50,7 +50,7 @@
 // vertex to all other vertices in the graph.
 //------------------------------------------------------------------------------
 
-#include "sssp_test.h"
+#include "LAGraph_internal.h"
 
 #define LAGRAPH_FREE_ALL                    \
 {                                           \
@@ -170,6 +170,7 @@ GrB_Info LAGraph_sssp1         // single source shortest paths
     //--------------------------------------------------------------------------
     // while (t >= i*delta) not empty
     //--------------------------------------------------------------------------
+
     while (tmasked_nvals > 0)
     {
         LAGr_Vector_clear(s);
@@ -194,6 +195,7 @@ GrB_Info LAGraph_sssp1         // single source shortest paths
         //----------------------------------------------------------------------
         // continue while the current bucket B[i] is not empty
         //----------------------------------------------------------------------
+
         while (tmasked_nvals > 0)
         {
             // tReq = AL' (min.+) (t .* tBi)
@@ -247,9 +249,11 @@ GrB_Info LAGraph_sssp1         // single source shortest paths
         // t = min(t, tReq)
         LAGr_eWiseAdd(t, GrB_NULL, GrB_NULL, GrB_MIN_INT32, t, tReq,
             GrB_NULL);
+
         //----------------------------------------------------------------------
         // prepare for the next loop, and find out how many left to be computed
         //----------------------------------------------------------------------
+
         ++i;
 
         // tmasked = select (t >= i*delta)

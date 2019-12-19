@@ -35,19 +35,20 @@
 //------------------------------------------------------------------------------
 
 // LAGraph_BF_full_mxv: Bellman-Ford single source shortest paths, returning
-// both the path lengths and the shortest-path tree.  contributed by Jinhao Chen
-// and Tim Davis, Texas A&M.
+// both the path lengths and the shortest-path tree.  Contributed by Jinhao
+// Chen and Tim Davis, Texas A&M.
 
-// LAGraph_BF_pure_c performs a Bellman-Ford to find out shortest path
-// length, parent nodes along the path from given source vertex s in the range
-// of [0, n) on graph with n nodes. It is implemented purely using conventional
-// method. It is used here for checking the correctness of the result and
-// comparison with the Bellman Ford implemented based on LAGraph. Therefore, it
-// require the graph represented as triplet format (I, J, W), which is an edge
-// from vertex I(k) to vertex J(k) with weight W(k), and also the number of
-// vertices and number of edges.
+// LAGraph_BF_pure_c performs the Bellman-Ford algorithm to find out shortest
+// path length, parent nodes along the path from given source vertex s in the
+// range of [0, n) on graph with n nodes. It is implemented purely using
+// conventional method, and is single-threaded. It is used here for checking
+// the correctness of the result and comparison with the Bellman Ford
+// implemented based on LAGraph.  Therefore, it require the graph represented
+// as triplet format (I, J, W), which is an edge from vertex I(k) to vertex
+// J(k) with weight W(k), and also the number of vertices and number of edges.
 
-// TODO: think about the retrun values
+// TODO: think about the return values
+
 // LAGraph_BF_pure_c returns GrB_SUCCESS regardless of existence of negative-
 // weight cycle. However, the vector d(k) and pi(k) (i.e., *pd, and *ppi
 // respectively) will be NULL when negative-weight cycle detected. Otherwise,
@@ -57,12 +58,12 @@
 
 //------------------------------------------------------------------------------
 
-#include "sssp_test.h"
+#include "LAGraph_internal.h"
 
 #define LAGRAPH_FREE_ALL      \
 {                             \
-    free(d);                  \
-    free(pi);                 \
+    LAGRAPH_FREE (d);         \
+    LAGRAPH_FREE (pi);        \
 }
 
 // Given the edges and corresponding weights of a graph in tuple
@@ -70,6 +71,7 @@
 // cycle reachable from s, returns GrB_SUCCESS and the shortest distance
 // d and the shortest path tree pi. Otherwise return NULL pointer for d
 // and pi.
+
 GrB_Info LAGraph_BF_pure_c
 (
     int32_t **pd,     // pointer to distance vector d, d(k) = shorstest distance
@@ -93,9 +95,9 @@ GrB_Info LAGraph_BF_pure_c
         LAGRAPH_ERROR ("required arguments are NULL", GrB_NULL_POINTER) ;
     }
 
-    if (*pd != NULL) {free(*pd);}
-    if (*ppi != NULL) {free(*ppi);}
-    *pd = NULL; *ppi = NULL;
+
+    LAGRAPH_FREE (*pd) ;
+    LAGRAPH_FREE (*ppi) ;
 
     if (s >= n || s < 0)
     {
@@ -119,6 +121,7 @@ GrB_Info LAGraph_BF_pure_c
         pi[i] = -1;
     }
     d[s] = 0;
+
     // start the RELAX process and print results after each loop
     bool new_path = true;     //variable indicating if new path is found
     int64_t count = 0;        //number of loops
@@ -163,4 +166,5 @@ GrB_Info LAGraph_BF_pure_c
     *pd = d;
     *ppi = pi;
     return (GrB_SUCCESS) ;
- }
+}
+

@@ -49,7 +49,7 @@
 // vertex to all other vertices in the graph.
 //------------------------------------------------------------------------------
 
-#include "sssp_test.h"
+#include "LAGraph_internal.h"
 
 #define LAGRAPH_FREE_WORK                   \
 {                                           \

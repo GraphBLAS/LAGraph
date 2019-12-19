@@ -20,6 +20,8 @@ JOBS ?= 1
 default: compile
 	./build/mtx2bin west0067.mtx west0067.grb
 	./build/binread west0067.grb
+	./build/binread west0067.grb west0067_int32.grb int32
+	./build/binread west0067_int32.grb
 
 # build test
 compile:

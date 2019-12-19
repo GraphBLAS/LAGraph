@@ -38,8 +38,11 @@
 // University
 
 // usage:
-// sssp_test < in > out
-// in is the Matrix Market file, out is the level set.
+// sssp_test < in.mtx > out
+// in.mtx is the Matrix Market file, out is the level set.
+
+// sssp_test in.mtx source.mtx > out
+// sssp_test in.grb source.mtx > out
 
 #include "sssp_test.h"
 
@@ -48,11 +51,11 @@
     GrB_free (&A_in);               \
     GrB_free (&A);                  \
     GrB_free (&SourceNodes) ;       \
-    free (I);                       \
-    free (J);                       \
-    free (W);                       \
-    free (d);                       \
-    free (pi);                      \
+    LAGRAPH_FREE (I);               \
+    LAGRAPH_FREE (J);               \
+    LAGRAPH_FREE (W);               \
+    LAGRAPH_FREE (d);               \
+    LAGRAPH_FREE (pi);              \
     GrB_free (&path_lengths);       \
     GrB_free (&path_lengths1);      \
 }
@@ -178,24 +181,28 @@ int main (int argc, char **argv)
     GrB_Index n = nrows;
 
     // convert input matrix to INT32
-    GrB_Matrix_new (&A, GrB_INT32, n, n) ;
-    GrB_apply (A, NULL, NULL, GrB_IDENTITY_INT32, A_in, NULL) ;
-
-    GrB_free (&A_in) ;
+    GrB_Type type ;
+    GxB_Matrix_type (&type, A) ;
+    if (type == GrB_INT32)
+    {
+        A = A_in ;
+        A_in = NULL ;
+    }
+    else
+    {
+        GrB_Matrix_new (&A, GrB_INT32, n, n) ;
+        GrB_apply (A, NULL, NULL, GrB_IDENTITY_INT32, A_in, NULL) ;
+        GrB_free (&A_in) ;
+    }
 
     // get the number of source nodes
     GrB_Index nsource;
     LAGRAPH_OK (GrB_Matrix_nrows (&nsource, SourceNodes));
+    GrB_Index ignore;
+    LAGr_Matrix_nvals (&ignore, SourceNodes);
 
     GxB_fprint (A, 2, stdout) ;
     GxB_fprint (SourceNodes, GxB_COMPLETE, stdout) ;
-
-    // get the triplet form for the Bellman-Ford function
-    I = LAGraph_malloc (nvals, sizeof(GrB_Index)) ;
-    J = LAGraph_malloc (nvals, sizeof(GrB_Index)) ;
-    W = LAGraph_malloc (nvals, sizeof(int32_t)) ;
-
-    LAGRAPH_OK (GrB_Matrix_extractTuples_INT32(I, J, W, &nvals, A));
 
     //--------------------------------------------------------------------------
     // Begin tests
@@ -213,27 +220,39 @@ int main (int argc, char **argv)
     double total_time2 = 0 ;
     double total_time3 = 0 ;
 
-
     for (int trial = 0 ; trial < ntrials ; trial++)
     {
-        // get the kth source node
+
+        //----------------------------------------------------------------------
+        // get the source node for this trial
+        //----------------------------------------------------------------------
+
         s = -1 ;
         LAGRAPH_OK (GrB_Matrix_extractElement (&s, SourceNodes, trial, 0));
-
-        printf ("\nTrial %d : sources: %"PRIu64"\n", trial, s) ;
+        // convert from 1-based to 0-based
+        s-- ;
+        printf ("\nTrial %d : source node: %"PRIu64"\n", trial, s) ;
 
         //----------------------------------------------------------------------
         // find shortest path using BF on node s with LAGraph_pure_c
         //----------------------------------------------------------------------
 
+        // get the triplet form for the Bellman-Ford function
+        I = LAGraph_malloc (nvals, sizeof(GrB_Index)) ;
+        J = LAGraph_malloc (nvals, sizeof(GrB_Index)) ;
+        W = LAGraph_malloc (nvals, sizeof(int32_t)) ;
+        if (I == NULL || J == NULL || W == NULL)
+        {
+            LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
+        }
+        LAGRAPH_OK (GrB_Matrix_extractTuples_INT32(I, J, W, &nvals, A));
+
         printf(" - Start Test: Bellman-Ford Single Source Shortest Paths\n");
         // start the timer
         LAGraph_tic (tic) ;
 
-        free (d) ;
-        d = NULL;
-        free (pi) ;
-        pi = NULL;
+        LAGRAPH_FREE (d) ;
+        LAGRAPH_FREE (pi) ;
         LAGRAPH_OK (LAGraph_BF_pure_c (&d, &pi, s, n, nvals, I, J, W)) ;
 
         // stop the timer
@@ -243,10 +262,16 @@ int main (int argc, char **argv)
 
         total_time1 += t1;
 
+        LAGRAPH_FREE (pi) ;
+        LAGRAPH_FREE (I) ;
+        LAGRAPH_FREE (J) ;
+        LAGRAPH_FREE (W) ;
+
         //----------------------------------------------------------------------
         // Compute shortest path using delta stepping with given node and delta
         //----------------------------------------------------------------------
 
+        #if 0
         printf(" - Start Test: delta-stepping Single Source Shortest Paths"
             " (apply operator)\n");
 
@@ -262,10 +287,12 @@ int main (int argc, char **argv)
             " %g (1e6 edges/sec)\n", t2, 1e-6*((double) nvals) / t2) ;
 
         total_time2 += t2;
+        #endif
 
         //----------------------------------------------------------------------
         // Compute shortest path using delta stepping with given node and delta
         //----------------------------------------------------------------------
+
         printf(" - Start Test: delta-stepping Single Source Shortest Paths"
             " (select operator)\n");
 
@@ -285,6 +312,7 @@ int main (int argc, char **argv)
         //----------------------------------------------------------------------
         // write the result to result file if there is none
         //----------------------------------------------------------------------
+
 #if 0
         //if( access( fname, F_OK ) == -1 )// check if the result file exists
         {
@@ -295,15 +323,19 @@ int main (int argc, char **argv)
             }
         }
 #endif
+
         //----------------------------------------------------------------------
-        // check the result for correctnestt
+        // check the result for correctness
         //----------------------------------------------------------------------
 
         for (int64_t i = 0; i < n; i++)
         {
+            bool test_result ;
+
+            #if 0
             double x = INT32_MAX;
             LAGr_Vector_extractElement(&x, path_lengths, i);
-            bool test_result = ((double)d[i] == x);
+            test_result = ((double)d[i] == x);
             test_pass &= test_result;
             if (!test_result)
             {
@@ -312,6 +344,7 @@ int main (int argc, char **argv)
                 printf ("  d = %d\n", d[i]);
                 printf ("\n") ;
             }
+            #endif
 
             int32_t x1 = INT32_MAX;
             LAGr_Vector_extractElement(&x1, path_lengths1, i);
@@ -333,8 +366,10 @@ int main (int argc, char **argv)
     printf ("ntrials: %d\n", ntrials) ;
     printf ("Average time per trial (Bellman-Ford pure C): %g sec\n",
         total_time1 / ntrials);
+    #if 0
     printf ("Average time per trial (apply operator): %g sec\n",
         total_time2 / ntrials);
+    #endif
     printf ("Average time per trial (select operator):   %g sec\n",
         total_time3 / ntrials);
 
