@@ -205,19 +205,16 @@ int main (int argc, char **argv)
     // try converting to column format (this is slower than the default)
     // GxB_set (A, GxB_FORMAT, GxB_BY_COL) ;
 
-    GxB_fprint (A, 2, stdout) ;
-    GxB_fprint (SourceNodes, GxB_COMPLETE, stdout) ;
+    // GxB_fprint (A, 2, stdout) ;
+    // GxB_fprint (SourceNodes, GxB_COMPLETE, stdout) ;
 
     //--------------------------------------------------------------------------
     // Begin tests
     //--------------------------------------------------------------------------
 
-    printf ("\n========== input graph: nodes: %"PRIu64" edges: %"PRIu64"\n",
-        n, nvals) ;
-
     int nthreads = LAGraph_get_nthreads();
-    printf("Starting Single Source Shortest Paths Tests\n");
-    printf(" - nthreads: %d\n", nthreads);
+    printf ("input graph: nodes: %"PRIu64" edges: %"PRIu64" nthreads %d\n",
+        n, nvals, nthreads) ;
 
     int ntrials = 1 ; // (int) nsource;
     double total_time1 = 0 ;
@@ -379,8 +376,8 @@ int main (int argc, char **argv)
     printf ("Average time per trial (apply operator): %g sec\n",
         total_time2 / ntrials);
     #endif
-    printf ("Average time per trial (SSSP1, with select):  %12.6g sec\n",
-        total_time3 / ntrials);
+    printf ("Average time per trial (SSSP1, with select):  %12.6g sec "
+        "(delta %d)\n", total_time3 / ntrials, delta);
 
     LAGRAPH_FREE_ALL;
     LAGRAPH_OK (LAGraph_finalize());
