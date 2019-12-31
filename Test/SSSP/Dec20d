@@ -287,3 +287,57 @@ read time: 0.745306 sec
 input graph: nodes: 23947347 edges: 57708624 nthreads 40
 
 Trial 0 : source node: 4795720
+SSSP1 (select)  time:      1309.69 (sec), rate:    0.0440628 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       1309.69 sec (delta 90000)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-road/GAP-road.grb
+sources: /raid/hyper/gapbs/GAP/GAP-road/GAP-road_sources.mtx
+read time: 0.58722 sec
+input graph: nodes: 23947347 edges: 57708624 nthreads 40
+
+Trial 0 : source node: 4795720
+SSSP1 (select)  time:      1286.68 (sec), rate:    0.0448507 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       1286.68 sec (delta 100000)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-road/GAP-road.grb
+sources: /raid/hyper/gapbs/GAP/GAP-road/GAP-road_sources.mtx
+read time: 0.557121 sec
+input graph: nodes: 23947347 edges: 57708624 nthreads 40
+
+Trial 0 : source node: 4795720
+SSSP1 (select)  time:      1232.73 (sec), rate:    0.0468136 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       1232.73 sec (delta 110000)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-road/GAP-road.grb
+sources: /raid/hyper/gapbs/GAP/GAP-road/GAP-road_sources.mtx
+read time: 0.553364 sec
+input graph: nodes: 23947347 edges: 57708624 nthreads 40
+
+Trial 0 : source node: 4795720
+SSSP1 (select)  time:      1206.26 (sec), rate:    0.0478408 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       1206.26 sec (delta 120000)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-road/GAP-road.grb
+sources: /raid/hyper/gapbs/GAP/GAP-road/GAP-road_sources.mtx
+read time: 0.554852 sec
+input graph: nodes: 23947347 edges: 57708624 nthreads 40
+
+Trial 0 : source node: 4795720
+SSSP1 (select)  time:      1081.35 (sec), rate:    0.0533672 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       1081.35 sec (delta 200000)
+all tests passed
+./dogaps: 43: ./dogaps: 00000: not found
+[0;36mhypersparse $[0m 

@@ -4,5 +4,5 @@
 ./build/sssp_test /raid/hyper/gapbs/GAP/GAP-twitter/GAP-twitter.grb /raid/hyper/gapbs/GAP/GAP-twitter/GAP-twitter_sources.mtx 51 
 ./build/sssp_test /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand.grb /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand_sources.mtx 35 
 ./build/sssp_test /raid/hyper/gapbs/GAP/GAP-web/GAP-web.grb /raid/hyper/gapbs/GAP/GAP-web/GAP-web_sources.mtx 150
-./build/sssp_test /raid/hyper/gapbs/GAP/GAP-road/GAP-road.grb /raid/hyper/gapbs/GAP/GAP-road/GAP-road_sources.mtx 100000
+./build/sssp_test /raid/hyper/gapbs/GAP/GAP-road/GAP-road.grb /raid/hyper/gapbs/GAP/GAP-road/GAP-road_sources.mtx 200000
 
