@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# LAGraph/Test/CC/CMakeLists.txt:  cmake script for LAGraph test
+# LAGraph/Test/SCC/CMakeLists.txt:  cmake script for LAGraph test
 #-------------------------------------------------------------------------------
 
 # LAGraph, (... list all authors here) (c) 2019, All Rights Reserved.

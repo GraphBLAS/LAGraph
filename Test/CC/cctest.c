@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// cctest: test LAGraph_cc
+// cctest: test LAGraph_cc_*.c
 //------------------------------------------------------------------------------
 
 /*
@@ -38,10 +38,10 @@
 // We assume by default that the matrix is symmetric. To override this,
 // use the file-based input and pass 1 as the last argument.
 //
-// lcctest < matrixmarketfile.mtx
-// lcctest matrixmarketfile.mtx
-// lcctest unsymmetric-matrixmarketfile.mtx 0
-// lcctest symmetric-matrixmarketfile.mtx 1
+// cctest < matrixmarketfile.mtx
+// cctest matrixmarketfile.mtx
+// cctest unsymmetric-matrixmarketfile.mtx 0
+// cctest symmetric-matrixmarketfile.mtx 1
 
 #include "LAGraph.h"
 #include <sys/time.h>
@@ -126,11 +126,8 @@ int main (int argc, char **argv)
         LAGraph_set_nthreads (nthreads) ;
         printf("number of threads: %d\n", nthreads) ;
 
-        // LAGraph_rm() may change the matrix A
-        GrB_Matrix_dup (&A, S);
-
         gettimeofday (&t1, 0) ;
-        LAGRAPH_OK (LAGraph_cc_fastsv (&result, A, false)) ;
+        LAGRAPH_OK (LAGraph_cc_fastsv (&result, A, true)) ;
         gettimeofday (&t2, 0) ;
 
         nCC = countCC (result, n) ;
@@ -138,9 +135,8 @@ int main (int argc, char **argv)
         printf("FastSV: %f\n", to_sec (t1, t2)) ;
 
         gettimeofday (&t1, 0) ;
-        LAGRAPH_OK (LAGraph_cc_boruvka (&result, A, false)) ;
+        LAGRAPH_OK (LAGraph_cc_boruvka (&result, A, true)) ;
         gettimeofday (&t2, 0) ;
-        GrB_free (&A);
 
         nCC = countCC (result, n) ;
         printf("number of CCs: %lu\n", nCC) ;

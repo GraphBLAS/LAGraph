@@ -30,7 +30,7 @@
 
 /**
  * Code is based on Borilvka's minimum spanning forest algorithm
- * Author: Yongzhe Zhang
+ * Contributed by Yongzhe Zhang (zyz915@gmail.com)
  **/
 
 #define LAGRAPH_FREE_ALL
@@ -106,17 +106,17 @@ GrB_Info LAGraph_cc_boruvka
     // semiring & monoid
     GrB_Monoid Min, Add;
     GrB_Semiring sel2ndMin;
-    LAGRAPH_OK (GrB_Monoid_new (&Min, GrB_MIN_UINT64, n));
+    LAGRAPH_OK (GrB_Monoid_new (&Min, GrB_MIN_UINT64, (uint64_t) n));
     LAGRAPH_OK (GrB_Semiring_new (&sel2ndMin, Min, GrB_SECOND_UINT64));
-    LAGRAPH_OK (GrB_Monoid_new (&Add, GrB_PLUS_UINT64, (GrB_Index) 0));
+    LAGRAPH_OK (GrB_Monoid_new (&Add, GrB_PLUS_UINT64, (uint64_t) 0));
     GrB_Index nvals, diff;
-    LAGRAPH_OK (GrB_Matrix_nvals (&nvals, A));
+    LAGRAPH_OK (GrB_Matrix_nvals (&nvals, S));
     // GxB_SelectOp
     GxB_SelectOp sel_op;
     LAGRAPH_OK (GxB_SelectOp_new (&sel_op, func, 0, 0));
     for (int iters = 1; nvals > 0; iters++)
     {
-        // every vertex points t oa root vertex at the begining
+        // every vertex points to a root vertex at the begining
         // mnp[u] = u's minimum neighbor's parent
         LAGRAPH_OK (GrB_assign (mnp, 0, 0, n, GrB_ALL, 0, 0));
         LAGRAPH_OK (GrB_mxv (mnp, 0, GrB_MIN_UINT64, sel2ndMin, S, f, 0));
@@ -142,7 +142,7 @@ GrB_Info LAGraph_cc_boruvka
             LAGRAPH_OK (GrB_assign (f, 0, 0, gp, GrB_ALL, 0, 0));
             LAGRAPH_OK (GrB_reduce (&diff, 0, Add, mask, 0));
         } while (diff != 0);
-        // remove edges connecting the same connected component
+        // remove the edges inside each connected component
         LAGRAPH_OK (GxB_select (S, 0, 0, sel_op, S, 0, 0));
         LAGRAPH_OK (GrB_Matrix_nvals (&nvals, S));
     }
@@ -150,14 +150,14 @@ GrB_Info LAGraph_cc_boruvka
 
     free(I);
     free(V);
-    GrB_free (&gp);
-    GrB_free (&mnp);
-    GrB_free (&ccmn);
-    GrB_free (&i);
-    GrB_free (&inf);
-    GrB_free (&mask);
-    GrB_free (&Add);
-    GrB_free (&Min);
-    GrB_free (&sel2ndMin);
+    LAGRAPH_FREE (gp);
+    LAGRAPH_FREE (mnp);
+    LAGRAPH_FREE (ccmn);
+    LAGRAPH_FREE (i);
+    LAGRAPH_FREE (inf);
+    LAGRAPH_FREE (mask);
+    LAGRAPH_FREE (Add);
+    LAGRAPH_FREE (Min);
+    LAGRAPH_FREE (sel2ndMin);
     return GrB_SUCCESS;
 }

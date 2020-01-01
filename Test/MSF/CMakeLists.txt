@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# LAGraph/Test/CC/CMakeLists.txt:  cmake script for LAGraph test
+# LAGraph/Test/MSF/CMakeLists.txt:  cmake script for LAGraph test
 #-------------------------------------------------------------------------------
 
 # LAGraph, (... list all authors here) (c) 2019, All Rights Reserved.
@@ -206,7 +206,7 @@ message ( STATUS "CMAKE C flags: " ${CMAKE_C_FLAGS} )
 
 file ( GLOB SOURCES "*.c" )
 
-add_executable ( msftest msftest.c )
+add_executable ( msftest ${SOURCES} )
 
 # Libraries required for Demo programs
 target_link_libraries ( msftest graphblas lagraph m )

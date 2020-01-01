@@ -28,10 +28,14 @@
 
 */
 
+/**
+ * Code is based on Boruvka's minimum spanning forest algorithm
+ * Contributed by Yongzhe Zhang (zyz915@gmail.com)
+ */
+
 #define LAGRAPH_FREE_ALL
 
 #include "LAGraph.h"
-#include <sys/time.h>
 
 // encode each edge into a single uint64_t
 static void combine (void *z, const void *x, const void *y)
@@ -211,6 +215,7 @@ GrB_Info LAGraph_msf
         LAGRAPH_OK (GrB_Vector_extractTuples (SI + ntuples, SX + ntuples, &num, t));
         LAGRAPH_OK (GrB_Vector_clear (t));
         ntuples += num;
+        // path halving until every vertex points on a root
         do {
             LAGRAPH_OK (GrB_Vector_extractTuples (I, V, &n, f));
             LAGRAPH_OK (GrB_extract (t, 0, 0, f, V, n, 0));
@@ -218,6 +223,7 @@ GrB_Info LAGraph_msf
             LAGRAPH_OK (GrB_assign (f, 0, 0, t, GrB_ALL, 0, 0));
             LAGRAPH_OK (GrB_reduce (&diff, 0, Add, mask, 0));
         } while (diff != 0);
+        // remove the edges in the same connected component
         LAGRAPH_OK (GrB_Vector_extractTuples (I, parent, &n, f));
         LAGRAPH_OK (GxB_select (S, 0, 0, s2, S, GrB_NULL, 0));
         GrB_Matrix_nvals (&nvals, S);
