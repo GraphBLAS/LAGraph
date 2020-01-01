@@ -45,6 +45,7 @@
 #define LAGRAPH_FREE_ALL            \
 {                                   \
     GrB_free (&A);                  \
+    GrB_free (&AT);                 \
     GrB_free (&Abool);              \
     GrB_free (&v);                  \
     GrB_free (&v_brandes);          \
@@ -58,6 +59,7 @@ int main (int argc, char **argv)
     uint64_t seed = 1;
 
     GrB_Matrix A = NULL;
+    GrB_Matrix AT = NULL;
     GrB_Matrix Abool = NULL;
     GrB_Vector v = NULL;
     GrB_Vector v_brandes = NULL;
@@ -194,6 +196,26 @@ int main (int argc, char **argv)
     double t_setup = LAGraph_toc (tic) ;
     printf ("setup time: %g sec\n", t_setup) ;
 
+    // AT = A'
+    LAGraph_tic (tic);
+    bool A_is_symmetric ;
+    LAGRAPH_OK (GrB_Matrix_new (&AT, GrB_BOOL, n, n)) ;
+    LAGRAPH_OK (GrB_transpose (AT, NULL, NULL, A, NULL)) ;
+    LAGRAPH_OK (LAGraph_isequal (&A_is_symmetric, A, AT, NULL)) ;
+    if (A_is_symmetric)
+    {
+        printf ("A is symmetric\n") ;
+        GrB_free (&AT) ;
+        AT = A ;
+    }
+    else
+    {
+        printf ("A is unsymmetric\n") ;
+        GxB_fprint (AT, 2, stdout) ;
+    }
+    double t_transpose = LAGraph_toc (tic) ;
+    printf ("transpose time: %g\n", t_transpose) ;
+
     //--------------------------------------------------------------------------
     // Begin tests
     //--------------------------------------------------------------------------
@@ -267,7 +289,8 @@ int main (int argc, char **argv)
 
 //      LAGRAPH_OK (LAGraph_bc_batch  (&v_batch, A, vertex_list, batch_size)) ;
 //      LAGRAPH_OK (LAGraphX_bc_batch (&v_batch, A, vertex_list, batch_size)) ;
-        LAGRAPH_OK (LAGraphX_bc_batch2 (&v_batch, A, vertex_list, batch_size)) ;
+//      LAGRAPH_OK (LAGraphX_bc_batch2 (&v_batch, A, vertex_list, batch_size)) ;
+        LAGRAPH_OK (LAGraphX_bc_batch3 (&v_batch, A, AT, vertex_list, batch_size)) ;
 
 #if 0
         LAGRAPH_OK (GrB_Vector_new(&v_batch, GrB_FP64, n));

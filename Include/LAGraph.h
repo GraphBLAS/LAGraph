@@ -761,6 +761,15 @@ GrB_Info LAGraphX_bc_batch2 // betweeness centrality, batch algorithm
     const int32_t nsver // number of source vertices (length of s)
 );
 
+GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
+(
+    GrB_Vector *delta,  // delta(i) is the betweeness centrality of node i
+    const GrB_Matrix A, // input graph, treated as if boolean in semiring
+    const GrB_Matrix AT, // A'
+    const GrB_Index *s, // source vertices from which to compute shortest paths
+    const int32_t nsver // number of source vertices (length of s)
+);
+
 GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
 (
     GrB_Vector *v_output,   // v(i) is the BFS level of node i in the graph

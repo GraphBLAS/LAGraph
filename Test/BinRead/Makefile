@@ -37,5 +37,5 @@ purge: distclean
 
 # remove all files not in the distribution
 distclean:
-	rm -rf build/*
+	rm -rf build/* west0067.grb west0067_int32.grb
 
