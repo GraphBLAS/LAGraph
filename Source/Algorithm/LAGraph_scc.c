@@ -32,6 +32,8 @@
  * Code is based on the Min-Label algorithm described in the following paper:
  * D. Yan, J. Cheng, K. Xin, Y. Lu, W. Ng, Y. Bu, "Pregel Algorithms for Graph
  * Connectivity Problems with Performance Guarantees"
+ * Proc. VLDB Endow. 7, 14 (October 2014), 1821–1832.
+ * DOI: https://doi.org/10.14778/2733085.2733089
  *
  * Contributed by Yongzhe Zhang (zyz915@gmail.com)
  **/
