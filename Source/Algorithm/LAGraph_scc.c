@@ -102,9 +102,9 @@ static GrB_Info propagate (GrB_Vector label, GrB_Vector mask,
     while (true)
     {
         if (is_csr) {
-            LAGRAPH_OK (GrB_mxv (t, 0, GrB_MIN_UINT64, sel2ndMin, AT, s, 0));
-        } else {
             LAGRAPH_OK (GrB_vxm (t, 0, GrB_MIN_UINT64, sel1stMin, s, A, 0));
+        } else {
+            LAGRAPH_OK (GrB_mxv (t, 0, GrB_MIN_UINT64, sel2ndMin, AT, s, 0));
         }
         LAGRAPH_OK (GrB_eWiseMult (mask, 0, 0, GxB_ISNE_UINT64, t, label, 0));
         LAGRAPH_OK (GrB_assign (label, mask, 0, t, GrB_ALL, 0, 0));

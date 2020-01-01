@@ -59,17 +59,17 @@ double to_sec(struct timeval t1, struct timeval t2)
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 
-GrB_Index verify_scc (GrB_Matrix A, GrB_Vector result)
+GrB_Index verify_scc (GrB_Matrix *A, GrB_Vector result)
 {
     GrB_Index n;
-    GrB_Matrix_nrows (&n, A);
+    GrB_Matrix_nrows (&n, *A);
 
     GrB_Type ty;
     GrB_Index nrows, ncols, nvals;
     uint64_t *pos, *csr;
     int64_t nonempty;
     void *val;
-    GxB_Matrix_export_CSR (&A, &ty, &nrows, &ncols, &nvals, &nonempty,
+    GxB_Matrix_export_CSR (A, &ty, &nrows, &ncols, &nvals, &nonempty,
             &pos, &csr, &val, 0);
 
     int64_t *indexes = malloc (sizeof(int64_t) * n);
@@ -165,6 +165,9 @@ GrB_Index verify_scc (GrB_Matrix A, GrB_Vector result)
         exit(0);
     }
 
+    GxB_Matrix_import_CSR (A, ty, nrows, ncols, nvals, nonempty,
+            &pos, &csr, &val, 0);
+
     free (indexes); free (lowlink); free (onstack);
     free (stack); free (scc);
     free (s_curr); free (s_next); free (s_step);
@@ -188,6 +191,7 @@ int main (int argc, char **argv)
     }
     else
     {
+        printf("filename: %s\n", argv[1]);
         f = fopen (argv[1], "r") ;
         if (f == NULL)
         {
@@ -220,7 +224,7 @@ int main (int argc, char **argv)
         LAGRAPH_OK (LAGraph_scc (&result, A)) ;
         gettimeofday (&t2, 0) ;
 
-        GrB_Index nSCC = verify_scc (A, result);
+        GrB_Index nSCC = verify_scc (&A, result);
         printf("number of SCCs: %lu\n", (long) nSCC);
         printf("elapsed time: %f\n", to_sec(t1, t2));
     }
