@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Test/BetweennessCentrality/Makefile
+# Test/BinRead/Makefile
 #-------------------------------------------------------------------------------
 
 # LAGraph, (... list all authors here) (c) 2019, All Rights Reserved.
@@ -7,7 +7,7 @@
 
 #-------------------------------------------------------------------------------
 
-# simple Makefile for LAGraph/Test/BetweennessCentrality/bc_test,
+# simple Makefile for LAGraph/Test/BinRead/bc_test,
 
 # relies on cmake to do the actual build.  Use the CMAKE_OPTIONS argument to
 # this Makefile to pass options to cmake.
@@ -18,13 +18,10 @@ JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/bc_test < sample.mtx 2>stderr.txt
-	./build/bc_test < sample2.mtx 2>>stderr.txt
-	./build/bc_test < west0067.mtx 2>>stderr.txt
-	./build/bc_gap_test < LFAT5.mtx
-	./build/bc_gap_test < west0067.mtx
-#	./build/bc_gap_test ~/indochina-2004.grb ~/indochina-sources.mtx
-#	./build/bc_test < jagmesh7.mtx 2>>stderr.txt
+	./build/mtx2bin west0067.mtx west0067.grb
+	./build/binread west0067.grb
+	./build/binread west0067.grb west0067_int32.grb int32
+	./build/binread west0067_int32.grb
 
 # build test
 compile:
@@ -40,5 +37,5 @@ purge: distclean
 
 # remove all files not in the distribution
 distclean:
-	rm -rf build/* A.mtx v_batch v_brandes stderr.txt bc_test
+	rm -rf build/*
 

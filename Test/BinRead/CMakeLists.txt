@@ -1,5 +1,6 @@
 #------------------------------------------------------------------------------
-# LAGraph/Test/SSSP/CMakeLists.txt: cmake script for SSSP test
+# LAGraph/Test/BetweennessCentrality/CMakeLists.txt: cmake script for 
+#                                                    BetweennessCentrality test
 #------------------------------------------------------------------------------
 
 # LAGraph, (... list all authors here) (c) 2019, All Rights Reserved.
@@ -50,7 +51,7 @@ if ( CMAKE_VERSION VERSION_GREATER "3.0" )
     cmake_policy ( SET CMP0048 NEW )
 endif ( )
 
-project ( sssp_test )
+project ( binread_test )
 
 #-------------------------------------------------------------------------------
 # determine build type
@@ -124,9 +125,10 @@ if ( "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
         message ( FATAL_ERROR "gcc version must be at least 4.9" )
     endif ( )
 elseif ( "${CMAKE_C_COMPILER_ID}" STREQUAL "Intel" )
-    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -g " )
     # options for icc: also needs -std=c11
     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -std=c11 " )
+    # TODO remove -g
+    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -g " )
     # check all warnings:
 #   set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -w3 " )
     if ( CMAKE_C_COMPILER_VERSION VERSION_LESS 18.0 )
@@ -134,7 +136,7 @@ elseif ( "${CMAKE_C_COMPILER_ID}" STREQUAL "Intel" )
     endif ( )
 elseif ( "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang" )
     # options for clang
-    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -std=c11 -g " )
+    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -std=c11 -O3 " )
     if ( CMAKE_C_COMPILER_VERSION VERSION_LESS 3.3 )
         message ( FATAL_ERROR "clang version must be at least 3.3" )
     endif ( )
@@ -206,15 +208,17 @@ message ( STATUS "CMAKE C flags: " ${CMAKE_C_FLAGS} )
 # Demo programs
 #-------------------------------------------------------------------------------
 
-set (SSSP_TEST_SRC
-     sssp_test.c )
+set (MTX2BIN_SRC
+     mtx2bin.c)
 
-set (SSSP_CHECK_SRC
-        sssp_check.c)
+set (BINREAD_SRC
+     binread.c)
 
-add_executable ( sssp_test ${SSSP_TEST_SRC} )
-add_executable ( sssp_check ${SSSP_CHECK_SRC} )
+add_executable ( mtx2bin ${MTX2BIN_SRC} )
+add_executable ( binread ${BINREAD_SRC} )
 
 # Libraries required for Demo programs
-target_link_libraries ( sssp_test graphblas lagraph m )
-target_link_libraries ( sssp_check graphblas lagraph m )
+target_link_libraries ( mtx2bin graphblas lagraph m )
+target_link_libraries ( binread graphblas lagraph m )
+
+

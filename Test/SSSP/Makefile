@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Test/BetweennessCentrality/Makefile
+# Test/SSSP/Makefile
 #-------------------------------------------------------------------------------
 
 # LAGraph, (... list all authors here) (c) 2019, All Rights Reserved.
@@ -7,7 +7,7 @@
 
 #-------------------------------------------------------------------------------
 
-# simple Makefile for LAGraph/Test/BetweennessCentrality/bc_test,
+# simple Makefile for LAGraph/Test/SSSP/sssp_test,
 
 # relies on cmake to do the actual build.  Use the CMAKE_OPTIONS argument to
 # this Makefile to pass options to cmake.
@@ -18,8 +18,9 @@ JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/sssp_test < jagmesh7.mtx > jagmesh7.out 2>stderr.txt
-	./build/sssp_check jagmesh7.out jagmesh7.check
+	#./build/sssp_test < jagmesh7.mtx 3 > jagmesh7.out #2>stderr.txt
+	#./build/sssp_check jagmesh7.out jagmesh7.check
+	./build/sssp_test < cover.mtx 3 #> cover.out #2>stderr.txt
 
 # build test
 compile:
@@ -35,5 +36,5 @@ purge: distclean
 
 # remove all files not in the distribution
 distclean:
-	rm -rf build/* stderr.txt sssp_test sssp_exe
+	rm -rf build/* stderr.txt sssp_test sssp_exe *.out
 

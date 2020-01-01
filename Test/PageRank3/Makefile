@@ -18,7 +18,9 @@ JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/p3test < ../../Data/ldbc-directed-example-unweighted.mtx
+	./build/p3test ../BinRead/west0067.grb
+	./build/p3test ~/indochina-2004.grb
+#	./build/p3test < ../../Data/ldbc-directed-example-unweighted.mtx
 
 # build test
 compile:

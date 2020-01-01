@@ -1,0 +1,3 @@
+#!/bin/sh
+rm -f S_matrix* S_array*
+./build/bc_gap_test ~/indochina-2004.mtx ~/indochina-sources.mtx

@@ -104,7 +104,7 @@ void leq_threshold(void *out, const void *in)
 void in_range(void *out, const void *in)
 {
     const double in_dbl = *((const double*) in);
-    bool out_bool = (in_dbl <= LAGRAPH_SSSP_UB) && (in_dbl >= LAGRAPH_SSSP_LB);
+    bool out_bool = (in_dbl < LAGRAPH_SSSP_UB) && (in_dbl >= LAGRAPH_SSSP_LB);
     *((bool*) out) = out_bool;
 }
 

@@ -553,6 +553,25 @@ GrB_Info LAGraph_mmwrite
     // TODO , FILE *fcomments         // optional file with extra comments
 ) ;
 
+// ascii header prepended to all *.grb files
+#define LAGRAPH_BIN_HEADER 512
+
+GrB_Info LAGraph_binwrite
+(
+    GrB_Matrix *A,          // matrix to write to the file
+    char *filename,         // file to write it to
+    const char *comments    // comments to add to the file, up to 220 characters
+                            // in length, not including the terminating null
+                            // byte. Ignored if NULL.  Characters past
+                            // the 220 limit are silently ignored.
+) ;
+
+GrB_Info LAGraph_binread
+(
+    GrB_Matrix *A,          // matrix to read from the file
+    char *filename          // file to read it from
+) ;
+
 GrB_Info LAGraph_tsvread        // returns GrB_SUCCESS if successful
 (
     GrB_Matrix *Chandle,        // C, created on output
@@ -711,6 +730,13 @@ GrB_Info LAGraph_bc     // betweeness centrality
     GrB_Index s        // source vertex from which to compute shortest paths
 );
 
+GrB_Info LAGraph_bc2     // betweeness centrality
+(
+    GrB_Vector *centrality, // centrality(i): betweeness centrality of node i
+    GrB_Matrix A_matrix,    // input graph
+    GrB_Index source        // source vertex
+) ;
+
 GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
 (
     GrB_Vector *delta,  // delta(i) is the betweeness centrality of node i
@@ -720,6 +746,14 @@ GrB_Info LAGraph_bc_batch // betweeness centrality, batch algorithm
 );
 
 GrB_Info LAGraphX_bc_batch // betweeness centrality, batch algorithm
+(
+    GrB_Vector *delta,  // delta(i) is the betweeness centrality of node i
+    const GrB_Matrix A, // input graph, treated as if boolean in semiring
+    const GrB_Index *s, // source vertices from which to compute shortest paths
+    const int32_t nsver // number of source vertices (length of s)
+);
+
+GrB_Info LAGraphX_bc_batch2 // betweeness centrality, batch algorithm
 (
     GrB_Vector *delta,  // delta(i) is the betweeness centrality of node i
     const GrB_Matrix A, // input graph, treated as if boolean in semiring
@@ -818,6 +852,15 @@ GrB_Info LAGraph_pagerank3b      // third PageRank definition
     int *iters                  // number of iterations taken
 ) ;
 
+GrB_Info LAGraph_pagerank3c // PageRank definition
+(
+    GrB_Vector *result,    // output: array of LAGraph_PageRank structs
+    GrB_Matrix A,          // binary input graph, not modified
+    const float *restrict d_out, // out degree of each node (GrB_FP32, size n)
+    float damping_factor,  // damping factor
+    unsigned long itermax, // maximum number of iterations
+    int* iters             // output: number of iterations taken
+) ;
 
 GrB_Info LAGraph_tricount   // count # of triangles
 (
@@ -913,6 +956,31 @@ GrB_Info LAGraph_sssp // single source shortest paths
     const GrB_Index source,    // source vertex from which to compute shortest paths
     double delta               // delta value for delta stepping
 ) ;
+
+GrB_Info LAGraph_sssp1 // single source shortest paths
+(
+    GrB_Vector *path_length,   // path_length(i) is the length of the shortest
+                               // path from the source vertex to vertex i
+    GrB_Matrix graph,          // input graph, treated as if boolean in semiring
+    GrB_Index source,          // source vertex from which to compute shortest paths
+    int32_t delta               // delta value for delta stepping
+);
+
+
+GrB_Info LAGraph_BF_pure_c
+(
+    int32_t **pd,    // pointer to distance vector d, d(k) = shorstest distance
+                     // between s and k if k is reachable from s
+    int64_t **ppi,   // pointer to parent index vector pi, pi(k) = parent of
+                     // node k in the shortest path tree
+    const int64_t s, // given source node index
+    const int64_t n, // number of nodes
+    const int64_t nz,// number of edges
+    const int64_t *I,// row index vector
+    const int64_t *J,// column index vector
+    const int32_t *W // weight vector, W(i) = weight of edge (I(i),J(i))
+);
+
 
 
 #endif

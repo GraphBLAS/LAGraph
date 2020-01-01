@@ -1,0 +1,343 @@
+Script started on Fri 20 Dec 2019 12:04:53 PM CST
+Intel Suite:
+Copyright (C) 2009-2019 Intel Corporation. All rights reserved.
+Intel(R) VTune(TM) Amplifier 2019 (build 591499)
+[0;36mhypersparse $[0m ./dogaps
+matrix: /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron.grb
+sources: /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 45.6141 sec
+input graph: nodes: 134217726 edges: 4223264644 nthreads 40
+
+Trial 0 : source node: 2338012
+SSSP1 (select)  time:      95.2724 (sec), rate:      44.3283 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       95.2724 sec (delta 25)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron.grb
+sources: /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 45.172 sec
+input graph: nodes: 134217726 edges: 4223264644 nthreads 40
+
+Trial 0 : source node: 2338012
+SSSP1 (select)  time:      96.4047 (sec), rate:      43.8077 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       96.4047 sec (delta 26)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron.grb
+sources: /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 31.2707 sec
+input graph: nodes: 134217726 edges: 4223264644 nthreads 40
+
+Trial 0 : source node: 2338012
+SSSP1 (select)  time:      93.5039 (sec), rate:      45.1667 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       93.5039 sec (delta 27)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-twitter/GAP-twitter.grb
+sources: /raid/hyper/gapbs/GAP/GAP-twitter/GAP-twitter_sources.mtx
+read time: 15.9897 sec
+input graph: nodes: 61578415 edges: 1468364884 nthreads 40
+
+Trial 0 : source node: 12441072
+SSSP1 (select)  time:      61.7178 (sec), rate:      23.7916 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       61.7178 sec (delta 48)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-twitter/GAP-twitter.grb
+sources: /raid/hyper/gapbs/GAP/GAP-twitter/GAP-twitter_sources.mtx
+read time: 11.4951 sec
+input graph: nodes: 61578415 edges: 1468364884 nthreads 40
+
+Trial 0 : source node: 12441072
+SSSP1 (select)  time:       57.084 (sec), rate:      25.7229 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):        57.084 sec (delta 49)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-twitter/GAP-twitter.grb
+sources: /raid/hyper/gapbs/GAP/GAP-twitter/GAP-twitter_sources.mtx
+read time: 10.8483 sec
+input graph: nodes: 61578415 edges: 1468364884 nthreads 40
+
+Trial 0 : source node: 12441072
+SSSP1 (select)  time:      53.3165 (sec), rate:      27.5405 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       53.3165 sec (delta 50)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-twitter/GAP-twitter.grb
+sources: /raid/hyper/gapbs/GAP/GAP-twitter/GAP-twitter_sources.mtx
+read time: 10.8636 sec
+input graph: nodes: 61578415 edges: 1468364884 nthreads 40
+
+Trial 0 : source node: 12441072
+SSSP1 (select)  time:       52.409 (sec), rate:      28.0174 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):        52.409 sec (delta 51)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-twitter/GAP-twitter.grb
+sources: /raid/hyper/gapbs/GAP/GAP-twitter/GAP-twitter_sources.mtx
+read time: 10.8137 sec
+input graph: nodes: 61578415 edges: 1468364884 nthreads 40
+
+Trial 0 : source node: 12441072
+SSSP1 (select)  time:      52.8351 (sec), rate:      27.7914 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       52.8351 sec (delta 52)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand.grb
+sources: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 46.4234 sec
+input graph: nodes: 134217728 edges: 4294966740 nthreads 40
+
+Trial 0 : source node: 27691419
+SSSP1 (select)  time:      179.442 (sec), rate:      23.9351 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       179.442 sec (delta 30)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand.grb
+sources: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 36.1599 sec
+input graph: nodes: 134217728 edges: 4294966740 nthreads 40
+
+Trial 0 : source node: 27691419
+SSSP1 (select)  time:      181.098 (sec), rate:      23.7163 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       181.098 sec (delta 31)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand.grb
+sources: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 35.001 sec
+input graph: nodes: 134217728 edges: 4294966740 nthreads 40
+
+Trial 0 : source node: 27691419
+SSSP1 (select)  time:      176.818 (sec), rate:      24.2903 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       176.818 sec (delta 32)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand.grb
+sources: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 33.6814 sec
+input graph: nodes: 134217728 edges: 4294966740 nthreads 40
+
+Trial 0 : source node: 27691419
+SSSP1 (select)  time:       187.87 (sec), rate:      22.8614 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):        187.87 sec (delta 33)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand.grb
+sources: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 34.2161 sec
+input graph: nodes: 134217728 edges: 4294966740 nthreads 40
+
+Trial 0 : source node: 27691419
+SSSP1 (select)  time:      173.708 (sec), rate:      24.7252 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       173.708 sec (delta 34)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand.grb
+sources: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 34.5586 sec
+input graph: nodes: 134217728 edges: 4294966740 nthreads 40
+
+Trial 0 : source node: 27691419
+SSSP1 (select)  time:      168.635 (sec), rate:       25.469 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       168.635 sec (delta 35)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand.grb
+sources: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 33.9179 sec
+input graph: nodes: 134217728 edges: 4294966740 nthreads 40
+
+Trial 0 : source node: 27691419
+SSSP1 (select)  time:      176.178 (sec), rate:      24.3786 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       176.178 sec (delta 36)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand.grb
+sources: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 33.3195 sec
+input graph: nodes: 134217728 edges: 4294966740 nthreads 40
+
+Trial 0 : source node: 27691419
+SSSP1 (select)  time:      182.937 (sec), rate:      23.4779 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       182.937 sec (delta 37)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand.grb
+sources: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 33.1267 sec
+input graph: nodes: 134217728 edges: 4294966740 nthreads 40
+
+Trial 0 : source node: 27691419
+SSSP1 (select)  time:      179.036 (sec), rate:      23.9894 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       179.036 sec (delta 38)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand.grb
+sources: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 33.8674 sec
+input graph: nodes: 134217728 edges: 4294966740 nthreads 40
+
+Trial 0 : source node: 27691419
+SSSP1 (select)  time:      182.765 (sec), rate:      23.4999 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       182.765 sec (delta 39)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand.grb
+sources: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 34.6217 sec
+input graph: nodes: 134217728 edges: 4294966740 nthreads 40
+
+Trial 0 : source node: 27691419
+SSSP1 (select)  time:      189.468 (sec), rate:      22.6686 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       189.468 sec (delta 40)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-web/GAP-web.grb
+sources: /raid/hyper/gapbs/GAP/GAP-web/GAP-web_sources.mtx
+read time: 20.799 sec
+input graph: nodes: 50636151 edges: 1930292948 nthreads 40
+
+Trial 0 : source node: 10219452
+SSSP1 (select)  time:      66.0459 (sec), rate:      29.2265 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       66.0459 sec (delta 150)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-web/GAP-web.grb
+sources: /raid/hyper/gapbs/GAP/GAP-web/GAP-web_sources.mtx
+read time: 15.128 sec
+input graph: nodes: 50636151 edges: 1930292948 nthreads 40
+
+Trial 0 : source node: 10219452
+SSSP1 (select)  time:      66.0614 (sec), rate:      29.2197 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       66.0614 sec (delta 200)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-web/GAP-web.grb
+sources: /raid/hyper/gapbs/GAP/GAP-web/GAP-web_sources.mtx
+read time: 14.2618 sec
+input graph: nodes: 50636151 edges: 1930292948 nthreads 40
+
+Trial 0 : source node: 10219452
+SSSP1 (select)  time:      74.0581 (sec), rate:      26.0646 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       74.0581 sec (delta 250)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-web/GAP-web.grb
+sources: /raid/hyper/gapbs/GAP/GAP-web/GAP-web_sources.mtx
+read time: 14.23 sec
+input graph: nodes: 50636151 edges: 1930292948 nthreads 40
+
+Trial 0 : source node: 10219452
+SSSP1 (select)  time:      68.3632 (sec), rate:      28.2358 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       68.3632 sec (delta 300)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-road/GAP-road.grb
+sources: /raid/hyper/gapbs/GAP/GAP-road/GAP-road_sources.mtx
+read time: 0.745306 sec
+input graph: nodes: 23947347 edges: 57708624 nthreads 40
+
+Trial 0 : source node: 4795720
+SSSP1 (select)  time:      1309.69 (sec), rate:    0.0440628 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       1309.69 sec (delta 90000)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-road/GAP-road.grb
+sources: /raid/hyper/gapbs/GAP/GAP-road/GAP-road_sources.mtx
+read time: 0.58722 sec
+input graph: nodes: 23947347 edges: 57708624 nthreads 40
+
+Trial 0 : source node: 4795720
+SSSP1 (select)  time:      1286.68 (sec), rate:    0.0448507 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       1286.68 sec (delta 100000)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-road/GAP-road.grb
+sources: /raid/hyper/gapbs/GAP/GAP-road/GAP-road_sources.mtx
+read time: 0.557121 sec
+input graph: nodes: 23947347 edges: 57708624 nthreads 40
+
+Trial 0 : source node: 4795720
+SSSP1 (select)  time:      1232.73 (sec), rate:    0.0468136 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       1232.73 sec (delta 110000)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-road/GAP-road.grb
+sources: /raid/hyper/gapbs/GAP/GAP-road/GAP-road_sources.mtx
+read time: 0.553364 sec
+input graph: nodes: 23947347 edges: 57708624 nthreads 40
+
+Trial 0 : source node: 4795720
+SSSP1 (select)  time:      1206.26 (sec), rate:    0.0478408 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       1206.26 sec (delta 120000)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-road/GAP-road.grb
+sources: /raid/hyper/gapbs/GAP/GAP-road/GAP-road_sources.mtx
+read time: 0.554852 sec
+input graph: nodes: 23947347 edges: 57708624 nthreads 40
+
+Trial 0 : source node: 4795720
+SSSP1 (select)  time:      1081.35 (sec), rate:    0.0533672 (1e6 edges/sec)
+ntrials: 1
+Average time per trial (SSSP1, with select):       1081.35 sec (delta 200000)
+all tests passed
+./dogaps: 43: ./dogaps: 00000: not found
+[0;36mhypersparse $[0m 

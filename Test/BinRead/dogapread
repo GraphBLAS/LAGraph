@@ -1,0 +1,7 @@
+#!/bin/sh
+
+./build/binread ~/GAP/GAP-kron/GAP-kron.grb
+./build/binread ~/GAP/GAP-road/GAP-road.grb
+./build/binread ~/GAP/GAP-twitter/GAP-twitter.grb
+./build/binread ~/GAP/GAP-urand/GAP-urand.grb
+./build/binread ~/GAP/GAP-web/GAP-web.grb

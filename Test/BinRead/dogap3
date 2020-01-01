@@ -1,0 +1,7 @@
+#!/bin/sh
+
+./build/binread ~/GAP/GAP-kron/GAP-kron.grb ~/GAP/GAP-kron/GAP-kron_int32.grb int32
+
+./build/binread ~/GAP/GAP-twitter/GAP-twitter.grb ~/GAP/GAP-twitter/GAP-twitter_int32.grb int32
+./build/binread ~/GAP/GAP-urand/GAP-urand.grb ~/GAP/GAP-urand/GAP-urand_int32.grb int32
+./build/binread ~/GAP/GAP-web/GAP-web.grb ~/GAP/GAP-web/GAP-web_int32.grb int32
