@@ -804,6 +804,11 @@ GrB_Info LAGraph_msf (
     bool sanitize           // if true, ensure A is symmetric
 ) ;
 
+GrB_Info LAGraph_scc (
+    GrB_Vector *result,     // output: array of component identifiers
+    GrB_Matrix A            // input matrix
+) ;
+
 // LAGraph_pagerank computes an array of structs for its result
 typedef struct
 {
