@@ -82,25 +82,64 @@ int main (int argc, char **argv)
     LAGRAPH_OK (GxB_set (GxB_FORMAT, GxB_BY_ROW)) ;
 
     FILE *f ;
-    int symm = 0;
-    if (argc == 1)
+    int symm = 0; // where is it used for??
+
+    GrB_Index n;
+
+    // LAGRAPH_OK (LAGraph_mmread (&A, f)) ;
+    if (argc > 1)
     {
-        f = stdin ;
+        // Usage:
+        //      ./cctest matrixfile.mtx
+        //      ./cctest matrixfile.grb
+
+        // read in the file in Matrix Market format from the input file
+        char *filename = argv [1] ;
+        printf ("matrix: %s\n", filename) ;
+
+        // find the filename extension
+        size_t len = strlen (filename) ;
+        char *ext = NULL ;
+        for (int k = len-1 ; k >= 0 ; k--)
+        {
+            if (filename [k] == '.')
+            {
+                ext = filename + k ;
+                printf ("[%s]\n", ext) ;
+                break ;
+            }
+        }
+        bool is_binary = (ext != NULL && strncmp (ext, ".grb", 4) == 0) ;
+
+        if (is_binary)
+        {
+            printf ("Reading binary file: %s\n", filename) ;
+            LAGRAPH_OK (LAGraph_binread (&A, filename)) ;
+        }
+        else
+        {
+            printf ("Reading Matrix Market file: %s\n", filename) ;
+            FILE *f = fopen (filename, "r") ;
+            if (f == NULL)
+            {
+                printf ("Matrix file not found: [%s]\n", filename) ;
+                exit (1) ;
+            }
+            LAGRAPH_OK (LAGraph_mmread(&A, f));
+            fclose (f) ;
+        }
+
     }
     else
     {
-        f = fopen (argv[1], "r") ;
-        if (f == NULL)
-        {
-            printf ("unable to open file [%s]\n", argv[1]) ;
-            return (GrB_INVALID_VALUE) ;
-        }
-        if (argc > 2)
-            symm = atoi(argv[2]);
-    }
 
-    GrB_Index n;
-    LAGRAPH_OK (LAGraph_mmread (&A, f)) ;
+        // Usage:  ./cctest < matrixfile.mtx
+        printf ("matrix: from stdin\n") ;
+
+        // read in the file in Matrix Market format from stdin
+        LAGRAPH_OK (LAGraph_mmread(&A, stdin));
+    }
+    ///////////
     LAGRAPH_OK (GrB_Matrix_nrows (&n, A)) ;
 
     GrB_Descriptor desc = 0 ;
