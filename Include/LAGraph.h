@@ -767,7 +767,8 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
     const GrB_Matrix A, // input graph, treated as if boolean in semiring
     const GrB_Matrix AT, // A'
     const GrB_Index *s, // source vertices from which to compute shortest paths
-    const int32_t nsver // number of source vertices (length of s)
+    const int32_t nsver, // number of source vertices (length of s)
+    double timing [3]
 );
 
 GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL

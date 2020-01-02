@@ -177,11 +177,13 @@ int main (int argc, char **argv)
     // Start the timer
     LAGraph_tic (tic) ;
 
+    double timing [3] ;
+
     for (int trial = 0 ; trial < ntrials ; trial++)
     {
         GrB_free (&v_batch) ;
 //      LAGRAPH_OK (LAGraph_bc_batch (&v_batch, A, vertex_list, n_batch)) ;
-        LAGRAPH_OK (LAGraphX_bc_batch3 (&v_batch, A, AT, vertex_list, n_batch));
+        LAGRAPH_OK (LAGraphX_bc_batch3 (&v_batch, A, AT, vertex_list, n_batch, timing));
     }
 
     // Stop the timer
@@ -201,21 +203,46 @@ int main (int argc, char **argv)
     printf("   | v_i | Brandes |  Batch  |\n");
     printf("   +-------------------------+\n");
 
+    double tol = 1e-10 ;
+    GrB_Type type ;
+    GxB_Vector_type (&type, v_brandes) ;
+    if (type == GrB_FP32)
+    {
+        printf("   |     | (FP32)  ");
+        tol = 1e-5 ;
+    }
+    else
+    {
+        printf("   |     | (FP64)  ");
+    }
+    GxB_Vector_type (&type, v_batch) ;
+    if (type == GrB_FP32)
+    {
+        printf("|  (FP32) |\n");
+        tol = 1e-5 ;
+    }
+    else
+    {
+        printf("|  (FP64) |\n");
+    }
+
+    printf("   +-------------------------+\n");
+
     for (int64_t i = 0; i < n; i++)
     {
         printf("   | %3"PRId64" ", i);
 
         // if the entry v(i) is not present, x is unmodified, so '0' is printed
-        float x1 = 0;
+        double x1 = 0;
         LAGRAPH_OK (GrB_Vector_extractElement (&x1, v_brandes, i));
         printf("| %7.2f ", x1);
 
-        float x2 = 0;
+        double x2 = 0;
         LAGRAPH_OK (GrB_Vector_extractElement (&x2, v_batch, i));
         printf ("| %7.2f |\n", x2);
 
         // Check that both methods give the same results
-        bool test_result = (fabs(x1 - x2) / (1E-10 + fmax(x1, x2)) < 1E-5);
+        bool test_result = (fabs(x1 - x2) / (tol + fmax(x1, x2)) < 1E-5);
         tests_pass &= test_result;
         if (!test_result)
         {

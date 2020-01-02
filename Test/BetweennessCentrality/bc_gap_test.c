@@ -230,6 +230,7 @@ int main (int argc, char **argv)
     int ntrials = 0 ;
     double total_time_1 = 0 ;
     double total_time_2 = 0 ;
+    double total_timing [3] ;
 
     for (int64_t kstart = 0 ; kstart <  nsource ; kstart += batch_size)
     {
@@ -285,12 +286,13 @@ int main (int argc, char **argv)
         //----------------------------------------------------------------------
 
         // Start the timer
-        LAGraph_tic (tic) ;
+        //LAGraph_tic (tic) ;
+        double timing [3] ;
 
 //      LAGRAPH_OK (LAGraph_bc_batch  (&v_batch, A, vertex_list, batch_size)) ;
 //      LAGRAPH_OK (LAGraphX_bc_batch (&v_batch, A, vertex_list, batch_size)) ;
 //      LAGRAPH_OK (LAGraphX_bc_batch2 (&v_batch, A, vertex_list, batch_size)) ;
-        LAGRAPH_OK (LAGraphX_bc_batch3 (&v_batch, A, AT, vertex_list, batch_size)) ;
+        LAGRAPH_OK (LAGraphX_bc_batch3 (&v_batch, A, AT, vertex_list, batch_size, timing)) ;
 
 #if 0
         LAGRAPH_OK (GrB_Vector_new(&v_batch, GrB_FP64, n));
@@ -306,11 +308,14 @@ int main (int argc, char **argv)
 #endif
 
         // Stop the timer
-        double t2 = LAGraph_toc (tic) ;
-        printf ("Batch    time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
-            t2, 1e-6*((double) nvals) / t2) ;
+        // double t2 = LAGraph_toc (tic) ;
+        // printf ("Batch    time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
+            // t2, 1e-6*((double) nvals) / t2) ;
+        // total_time_2 += t2 ;
 
-        total_time_2 += t2 ;
+        total_timing [0] += timing [0] ;        // pushpull
+        total_timing [1] += timing [1] ;        // allpush
+        total_timing [2] += timing [2] ;        // allpull
 
         //----------------------------------------------------------------------
         // check result
@@ -328,6 +333,7 @@ int main (int argc, char **argv)
             double x2 = 0;
             LAGRAPH_OK (GrB_Vector_extractElement (&x2, v_batch, i));
 
+            // TODO use a lower tolerance if v_* are GrB_FP32
             double err = (fabs(x1 - x2) / (1E-10 + fmax(x1, x2))) ;
 
             // Check that both methods give the same results
@@ -351,6 +357,9 @@ int main (int argc, char **argv)
 
         GrB_free (&v_brandes) ;
         GrB_free (&v_batch) ;
+
+        // HACK: just do the first batch
+        break ;
     }
 
     //--------------------------------------------------------------------------
@@ -363,8 +372,9 @@ int main (int argc, char **argv)
         printf ("Average time per trial (Brandes): %g sec\n",
             total_time_1 / ntrials);
     }
-    printf ("Average time per trial (batch):   %g sec\n",
-        total_time_2 / ntrials);
+    printf ("Average time per trial: batch, pushpull:   %g sec\n", total_timing [0] / ntrials);
+    printf ("Average time per trial: batch, allpush :   %g sec\n", total_timing [1] / ntrials);
+    printf ("Average time per trial: batch, allpull :   %g sec\n", total_timing [2] / ntrials);
 
     LAGRAPH_FREE_ALL;
     LAGRAPH_OK (LAGraph_finalize());
