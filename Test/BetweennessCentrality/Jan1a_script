@@ -1,0 +1,1922 @@
+Script started on Wed 01 Jan 2020 02:50:21 PM CST
+Intel Suite:
+Copyright (C) 2009-2019 Intel Corporation. All rights reserved.
+Intel(R) VTune(TM) Amplifier 2019 (build 591499)
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m ./do_gap
+matrix: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+sources: /home/faculty/davis/GAP/GAP-web/GAP-web_sources.mtx
+read time: 20.8317 sec
+
+  50636151x50636151 GraphBLAS bool matrix, sparse by row:
+  A, 1930292948 entries
+
+    (10,49817219)   1
+    (10,49824797)   1
+    (10,49824842)   1
+    (10,49824843)   1
+    (10,49824846)   1
+    (10,49826026)   1
+    (10,49826027)   1
+    (10,49826709)   1
+    (10,49826710)   1
+    (10,49826711)   1
+    (10,49826712)   1
+    (10,49826713)   1
+    (10,49826714)   1
+    (10,49826715)   1
+    (10,49826716)   1
+    (10,49826717)   1
+    (10,49826719)   1
+    (10,49827761)   1
+    (10,49853332)   1
+    (10,49853570)   1
+    (10,49853571)   1
+    (10,49853572)   1
+    (10,49853573)   1
+    (10,49853574)   1
+    (10,49853575)   1
+    (10,49855627)   1
+    (10,50184826)   1
+    (10,50284715)   1
+    (10,50284718)   1
+    (10,50284719)   1
+    ...
+
+  64x1 GraphBLAS double matrix, sparse by row:
+  SourceNodes, 64 entries
+
+    (0,0)    10219453
+    (1,0)    44758212
+    (2,0)    890672
+    (3,0)    13843757
+    (4,0)    14168063
+    (5,0)    20906931
+    (6,0)    12189585
+    (7,0)    26352336
+    (8,0)    43500687
+    (9,0)    8987025
+    (10,0)    5699763
+    (11,0)    41436456
+    (12,0)    5030728
+    (13,0)    40735219
+    (14,0)    16533564
+    (15,0)    28700167
+    (16,0)    64712
+    (17,0)    39634751
+    (18,0)    16037780
+    (19,0)    27152740
+    (20,0)    16404062
+    (21,0)    20491964
+    (22,0)    5322424
+    (23,0)    21420954
+    (24,0)    26622110
+    (25,0)    5882876
+    (26,0)    18091041
+    (27,0)    10665897
+    (28,0)    18634423
+    (29,0)    18138716
+    (30,0)    2355536
+    (31,0)    32885206
+    (32,0)    40657441
+    (33,0)    35196168
+    (34,0)    45544427
+    (35,0)    6175520
+    (36,0)    40058319
+    (37,0)    50626231
+    (38,0)    36571020
+    (39,0)    49397053
+    (40,0)    23434266
+    (41,0)    2299445
+    (42,0)    32873824
+    (43,0)    25978283
+    (44,0)    2461716
+    (45,0)    22787315
+    (46,0)    30759948
+    (47,0)    7428895
+    (48,0)    39173871
+    (49,0)    43194210
+    (50,0)    26361510
+    (51,0)    39747212
+    (52,0)    30670030
+    (53,0)    41483034
+    (54,0)    9358667
+    (55,0)    9945009
+    (56,0)    3355245
+    (57,0)    33831270
+    (58,0)    45124745
+    (59,0)    16137878
+    (60,0)    11235449
+    (61,0)    37509145
+    (62,0)    27402415
+    (63,0)    39546084
+
+setup time: 10.313 sec
+
+========== input graph: nodes: 50636151 edges: 1930292948
+Starting Betweenness Centrality Tests
+ - nthreads: 40
+
+Trial 1 : sources: [ 10219452 44758211 890671 13843756 ]
+Xbc setup 0.461375 sec
+Xbc bfs phase: 10.4172
+    bfs mxm:   9.87604
+    bfs other  0.541168
+Xbc: setup for backtrack     0.163369
+Xbx 2nd phase: 4.93751
+    2nd mxm  : 3.87056
+    2nd other: 1.06695
+Xbc wrapup:    0.31261
+Xbc total:     16.2921
+Batch    time: 1.629285e+01 (sec), rate: 118.475 (1e6 edges/sec)
+
+Trial 2 : sources: [ 14168062 20906930 12189584 26352335 ]
+Xbc setup 0.442826 sec
+Xbc bfs phase: 9.84565
+    bfs mxm:   9.34112
+    bfs other  0.504529
+Xbc: setup for backtrack     0.162775
+Xbx 2nd phase: 4.71935
+    2nd mxm  : 3.80441
+    2nd other: 0.914938
+Xbc wrapup:    0.315162
+Xbc total:     15.4858
+Batch    time: 1.548598e+01 (sec), rate: 124.648 (1e6 edges/sec)
+
+Trial 3 : sources: [ 43500686 8987024 5699762 41436455 ]
+Xbc setup 0.441648 sec
+Xbc bfs phase: 9.3111
+    bfs mxm:   8.83243
+    bfs other  0.478672
+Xbc: setup for backtrack     0.161544
+Xbx 2nd phase: 4.60836
+    2nd mxm  : 3.7686
+    2nd other: 0.839765
+Xbc wrapup:    0.308989
+Xbc total:     14.8316
+Batch    time: 1.483211e+01 (sec), rate: 130.143 (1e6 edges/sec)
+
+Trial 4 : sources: [ 5030727 40735218 16533563 28700166 ]
+Xbc setup 0.44228 sec
+Xbc bfs phase: 16.7752
+    bfs mxm:   16.126
+    bfs other  0.649251
+Xbc: setup for backtrack       0.1625
+Xbx 2nd phase: 6.43367
+    2nd mxm  : 5.27178
+    2nd other: 1.16189
+Xbc wrapup:    0.328207
+Xbc total:     24.1419
+Batch    time: 2.414312e+01 (sec), rate: 79.9521 (1e6 edges/sec)
+
+Trial 5 : sources: [ 64711 39634750 16037779 27152739 ]
+Xbc setup 0.443486 sec
+Xbc bfs phase: 11.534
+    bfs mxm:   11.0039
+    bfs other  0.530052
+Xbc: setup for backtrack     0.164804
+Xbx 2nd phase: 5.88419
+    2nd mxm  : 4.97069
+    2nd other: 0.913495
+Xbc wrapup:    0.327778
+Xbc total:     18.3542
+Batch    time: 1.835550e+01 (sec), rate: 105.162 (1e6 edges/sec)
+
+Trial 6 : sources: [ 16404061 20491963 5322423 21420953 ]
+Xbc setup 0.443569 sec
+Xbc bfs phase: 12.5565
+    bfs mxm:   11.9469
+    bfs other  0.609526
+Xbc: setup for backtrack     0.163904
+Xbx 2nd phase: 6.23538
+    2nd mxm  : 5.06132
+    2nd other: 1.17406
+Xbc wrapup:    0.33354
+Xbc total:     19.7329
+Batch    time: 1.973359e+01 (sec), rate: 97.8176 (1e6 edges/sec)
+
+Trial 7 : sources: [ 26622109 5882875 18091040 10665896 ]
+Xbc setup 0.44014 sec
+Xbc bfs phase: 9.54852
+    bfs mxm:   9.03526
+    bfs other  0.513256
+Xbc: setup for backtrack     0.163134
+Xbx 2nd phase: 4.76125
+    2nd mxm  : 3.82417
+    2nd other: 0.937084
+Xbc wrapup:    0.30624
+Xbc total:     15.2193
+Batch    time: 1.522051e+01 (sec), rate: 126.822 (1e6 edges/sec)
+
+Trial 8 : sources: [ 18634422 18138715 2355535 32885205 ]
+Xbc setup 0.440352 sec
+Xbc bfs phase: 8.78299
+    bfs mxm:   8.34775
+    bfs other  0.435242
+Xbc: setup for backtrack      0.16128
+Xbx 2nd phase: 4.5126
+    2nd mxm  : 3.76545
+    2nd other: 0.747155
+Xbc wrapup:    0.299814
+Xbc total:     14.197
+Batch    time: 1.419772e+01 (sec), rate: 135.958 (1e6 edges/sec)
+
+Trial 9 : sources: [ 40657440 35196167 45544426 6175519 ]
+Xbc setup 0.438202 sec
+Xbc bfs phase: 8.82214
+    bfs mxm:   8.38587
+    bfs other  0.436274
+Xbc: setup for backtrack     0.164033
+Xbx 2nd phase: 4.44981
+    2nd mxm  : 3.74117
+    2nd other: 0.708645
+Xbc wrapup:    0.300354
+Xbc total:     14.1745
+Batch    time: 1.417525e+01 (sec), rate: 136.173 (1e6 edges/sec)
+
+Trial 10 : sources: [ 40058318 50626230 36571019 49397052 ]
+Xbc setup 0.439117 sec
+Xbc bfs phase: 11.2225
+    bfs mxm:   10.6923
+    bfs other  0.530147
+Xbc: setup for backtrack     0.165641
+Xbx 2nd phase: 5.89851
+    2nd mxm  : 4.98954
+    2nd other: 0.908972
+Xbc wrapup:    0.321807
+Xbc total:     18.0476
+Batch    time: 1.804777e+01 (sec), rate: 106.955 (1e6 edges/sec)
+
+Trial 11 : sources: [ 23434265 2299444 32873823 25978282 ]
+Xbc setup 0.443739 sec
+Xbc bfs phase: 8.76577
+    bfs mxm:   8.34758
+    bfs other  0.418187
+Xbc: setup for backtrack     0.162687
+Xbx 2nd phase: 4.47472
+    2nd mxm  : 3.76405
+    2nd other: 0.710661
+Xbc wrapup:    0.308096
+Xbc total:     14.155
+Batch    time: 1.415535e+01 (sec), rate: 136.365 (1e6 edges/sec)
+
+Trial 12 : sources: [ 2461715 22787314 30759947 7428894 ]
+Xbc setup 0.441176 sec
+Xbc bfs phase: 18.6519
+    bfs mxm:   18.201
+    bfs other  0.450898
+Xbc: setup for backtrack      0.18717
+Xbx 2nd phase: 3.76688
+    2nd mxm  : 3.09846
+    2nd other: 0.668418
+Xbc wrapup:    0.284026
+Xbc total:     23.3311
+Batch    time: 2.333197e+01 (sec), rate: 82.7317 (1e6 edges/sec)
+
+Trial 13 : sources: [ 39173870 43194209 26361509 39747211 ]
+Xbc setup 0.436563 sec
+Xbc bfs phase: 0.0389691
+    bfs mxm:   0.0233705
+    bfs other  0.0155986
+Xbc: setup for backtrack     0.163533
+Xbx 2nd phase: 0.0229099
+    2nd mxm  : 0.0222951
+    2nd other: 0.000614839
+Xbc wrapup:    0.249754
+Xbc total:     0.911729
+Batch    time: 9.118419e-01 (sec), rate: 2116.92 (1e6 edges/sec)
+
+Trial 14 : sources: [ 30670029 41483033 9358666 9945008 ]
+Xbc setup 0.437495 sec
+Xbc bfs phase: 11.5424
+    bfs mxm:   10.9954
+    bfs other  0.546954
+Xbc: setup for backtrack     0.162233
+Xbx 2nd phase: 5.87036
+    2nd mxm  : 4.96493
+    2nd other: 0.905432
+Xbc wrapup:    0.327148
+Xbc total:     18.3396
+Batch    time: 1.834036e+01 (sec), rate: 105.248 (1e6 edges/sec)
+
+Trial 15 : sources: [ 3355244 33831269 45124744 16137877 ]
+Xbc setup 0.43733 sec
+Xbc bfs phase: 9.16456
+    bfs mxm:   8.67803
+    bfs other  0.486536
+Xbc: setup for backtrack     0.161816
+Xbx 2nd phase: 4.63618
+    2nd mxm  : 3.78475
+    2nd other: 0.851433
+Xbc wrapup:    0.299115
+Xbc total:     14.699
+Batch    time: 1.469933e+01 (sec), rate: 131.318 (1e6 edges/sec)
+
+Trial 16 : sources: [ 11235448 37509144 27402414 39546083 ]
+Xbc setup 0.437064 sec
+Xbc bfs phase: 11.08
+    bfs mxm:   10.5424
+    bfs other  0.53753
+Xbc: setup for backtrack     0.161441
+Xbx 2nd phase: 5.85838
+    2nd mxm  : 4.965
+    2nd other: 0.893372
+Xbc wrapup:    0.323566
+Xbc total:     17.8604
+Batch    time: 1.786115e+01 (sec), rate: 108.072 (1e6 edges/sec)
+ntrials: 16
+Average time per trial (batch):   16.2365 sec
+build/bc_gap_test: all tests passed
+matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+sources: /home/faculty/davis/GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 45.5819 sec
+
+  134217726x134217726 GraphBLAS bool matrix, sparse by row:
+  A, 4223264644 entries
+
+    (1,83111928)   1
+    (2,113772338)   1
+    (9,26920261)   1
+    (9,33335674)   1
+    (9,90905511)   1
+    (9,92964069)   1
+    (9,126874301)   1
+    (11,3075467)   1
+    (11,11283179)   1
+    (11,14136330)   1
+    (11,18241662)   1
+    (11,21256905)   1
+    (11,26197037)   1
+    (11,34992956)   1
+    (11,49762924)   1
+    (11,54231301)   1
+    (11,55275316)   1
+    (11,55896288)   1
+    (11,56613538)   1
+    (11,69378808)   1
+    (11,76391974)   1
+    (11,77970070)   1
+    (11,80121717)   1
+    (11,113872174)   1
+    (11,115829864)   1
+    (11,125066355)   1
+    (11,129708509)   1
+    (11,131285585)   1
+    (11,132549336)   1
+    (14,11049596)   1
+    ...
+
+  64x1 GraphBLAS double matrix, sparse by row:
+  SourceNodes, 64 entries
+
+    (0,0)    2338013
+    (1,0)    31997660
+    (2,0)    23590941
+    (3,0)    43400605
+    (4,0)    75337938
+    (5,0)    169868
+    (6,0)    104041221
+    (7,0)    94177943
+    (8,0)    32871358
+    (9,0)    56230003
+    (10,0)    69883038
+    (11,0)    9346346
+    (12,0)    48915359
+    (13,0)    122571174
+    (14,0)    6183280
+    (15,0)    86323664
+    (16,0)    106725781
+    (17,0)    92389939
+    (18,0)    16210739
+    (19,0)    59816701
+    (20,0)    111669930
+    (21,0)    102831412
+    (22,0)    113384801
+    (23,0)    43872565
+    (24,0)    80508828
+    (25,0)    26105649
+    (26,0)    8807517
+    (27,0)    118452456
+    (28,0)    121818860
+    (29,0)    42361929
+    (30,0)    29493054
+    (31,0)    98461504
+    (32,0)    71931338
+    (33,0)    103808469
+    (34,0)    4092346
+    (35,0)    115276242
+    (36,0)    4649344
+    (37,0)    76656190
+    (38,0)    31312002
+    (39,0)    111334128
+    (40,0)    100962919
+    (41,0)    41823216
+    (42,0)    22631241
+    (43,0)    42848462
+    (44,0)    79485149
+    (45,0)    106818743
+    (46,0)    73347975
+    (47,0)    78848446
+    (48,0)    109920511
+    (49,0)    121492134
+    (50,0)    101037297
+    (51,0)    15438601
+    (52,0)    4584785
+    (53,0)    124503846
+    (54,0)    87241744
+    (55,0)    108297009
+    (56,0)    33955083
+    (57,0)    79934824
+    (58,0)    8608482
+    (59,0)    82435064
+    (60,0)    46579272
+    (61,0)    515422
+    (62,0)    121530468
+    (63,0)    127978737
+
+setup time: 22.4925 sec
+
+========== input graph: nodes: 134217726 edges: 4223264644
+Starting Betweenness Centrality Tests
+ - nthreads: 40
+
+Trial 1 : sources: [ 2338012 31997659 23590940 43400604 ]
+Xbc setup 1.12252 sec
+Xbc bfs phase: 50.7117
+    bfs mxm:   50.0612
+    bfs other  0.650496
+Xbc: setup for backtrack     0.406431
+Xbx 2nd phase: 566.338
+    2nd mxm  : 565.088
+    2nd other: 1.24946
+Xbc wrapup:    0.761643
+Xbc total:     619.34
+Batch    time: 6.193405e+02 (sec), rate: 6.81897 (1e6 edges/sec)
+
+Trial 2 : sources: [ 75337937 169867 104041220 94177942 ]
+Xbc setup 1.11277 sec
+Xbc bfs phase: 51.4632
+    bfs mxm:   50.8826
+    bfs other  0.580639
+Xbc: setup for backtrack     0.409427
+Xbx 2nd phase: 590.835
+    2nd mxm  : 589.584
+    2nd other: 1.25066
+Xbc wrapup:    0.762796
+Xbc total:     644.583
+Batch    time: 6.445835e+02 (sec), rate: 6.55193 (1e6 edges/sec)
+
+Trial 3 : sources: [ 32871357 56230002 69883037 9346345 ]
+Xbc setup 1.10963 sec
+Xbc bfs phase: 55.7694
+    bfs mxm:   55.1453
+    bfs other  0.624111
+Xbc: setup for backtrack     0.414732
+Xbx 2nd phase: 570.389
+    2nd mxm  : 568.938
+    2nd other: 1.45107
+Xbc wrapup:    0.761951
+Xbc total:     628.445
+Batch    time: 6.284452e+02 (sec), rate: 6.72018 (1e6 edges/sec)
+
+Trial 4 : sources: [ 48915358 122571173 6183279 86323663 ]
+Xbc setup 1.11652 sec
+Xbc bfs phase: 55.7585
+    bfs mxm:   55.1349
+    bfs other  0.623588
+Xbc: setup for backtrack     0.412772
+Xbx 2nd phase: 573.529
+    2nd mxm  : 572.226
+    2nd other: 1.3032
+Xbc wrapup:    0.75437
+Xbc total:     631.571
+Batch    time: 6.315716e+02 (sec), rate: 6.68691 (1e6 edges/sec)
+
+Trial 5 : sources: [ 106725780 92389938 16210738 59816700 ]
+Xbc setup 1.1051 sec
+Xbc bfs phase: 48.3755
+    bfs mxm:   47.8187
+    bfs other  0.556799
+Xbc: setup for backtrack      0.40967
+Xbx 2nd phase: 529.689
+    2nd mxm  : 528.594
+    2nd other: 1.09436
+Xbc wrapup:    0.756056
+Xbc total:     580.335
+Batch    time: 5.803354e+02 (sec), rate: 7.27728 (1e6 edges/sec)
+
+Trial 6 : sources: [ 111669929 102831411 113384800 43872564 ]
+Xbc setup 1.11273 sec
+Xbc bfs phase: 56.7324
+    bfs mxm:   56.1272
+    bfs other  0.605199
+Xbc: setup for backtrack     0.407344
+Xbx 2nd phase: 590.369
+    2nd mxm  : 589.051
+    2nd other: 1.31878
+Xbc wrapup:    0.771026
+Xbc total:     649.393
+Batch    time: 6.493939e+02 (sec), rate: 6.50339 (1e6 edges/sec)
+
+Trial 7 : sources: [ 80508827 26105648 8807516 118452455 ]
+Xbc setup 1.1167 sec
+Xbc bfs phase: 56.0949
+    bfs mxm:   55.4934
+    bfs other  0.601412
+Xbc: setup for backtrack     0.406393
+Xbx 2nd phase: 557.356
+    2nd mxm  : 556.082
+    2nd other: 1.27472
+Xbc wrapup:    0.760622
+Xbc total:     615.735
+Batch    time: 6.157351e+02 (sec), rate: 6.8589 (1e6 edges/sec)
+
+Trial 8 : sources: [ 121818859 42361928 29493053 98461503 ]
+Xbc setup 1.11076 sec
+Xbc bfs phase: 48.1799
+    bfs mxm:   47.6419
+    bfs other  0.538015
+Xbc: setup for backtrack     0.410767
+Xbx 2nd phase: 633.188
+    2nd mxm  : 632.198
+    2nd other: 0.989741
+Xbc wrapup:    0.74932
+Xbc total:     683.638
+Batch    time: 6.836395e+02 (sec), rate: 6.17762 (1e6 edges/sec)
+
+Trial 9 : sources: [ 71931337 103808468 4092345 115276241 ]
+Xbc setup 1.10391 sec
+Xbc bfs phase: 50.1623
+    bfs mxm:   49.5502
+    bfs other  0.612132
+Xbc: setup for backtrack      0.40659
+Xbx 2nd phase: 595.098
+    2nd mxm  : 593.88
+    2nd other: 1.21794
+Xbc wrapup:    0.757693
+Xbc total:     647.528
+Batch    time: 6.475295e+02 (sec), rate: 6.52212 (1e6 edges/sec)
+
+Trial 10 : sources: [ 4649343 76656189 31312001 111334127 ]
+Xbc setup 1.11228 sec
+Xbc bfs phase: 55.7703
+    bfs mxm:   55.1736
+    bfs other  0.59665
+Xbc: setup for backtrack     0.407274
+Xbx 2nd phase: 544.422
+    2nd mxm  : 543.15
+    2nd other: 1.272
+Xbc wrapup:    0.753925
+Xbc total:     602.465
+Batch    time: 6.024656e+02 (sec), rate: 7.00997 (1e6 edges/sec)
+
+Trial 11 : sources: [ 100962918 41823215 22631240 42848461 ]
+Xbc setup 1.10853 sec
+Xbc bfs phase: 64.4996
+    bfs mxm:   63.7878
+    bfs other  0.711851
+Xbc: setup for backtrack     0.408325
+Xbx 2nd phase: 606.605
+    2nd mxm  : 604.991
+    2nd other: 1.61464
+Xbc wrapup:    0.766129
+Xbc total:     673.388
+Batch    time: 6.733881e+02 (sec), rate: 6.27167 (1e6 edges/sec)
+
+Trial 12 : sources: [ 79485148 106818742 73347974 78848445 ]
+Xbc setup 1.11719 sec
+Xbc bfs phase: 48.0264
+    bfs mxm:   47.4584
+    bfs other  0.567922
+Xbc: setup for backtrack     0.408458
+Xbx 2nd phase: 621.808
+    2nd mxm  : 620.735
+    2nd other: 1.07338
+Xbc wrapup:    0.76042
+Xbc total:     672.12
+Batch    time: 6.721205e+02 (sec), rate: 6.28349 (1e6 edges/sec)
+
+Trial 13 : sources: [ 109920510 121492133 101037296 15438600 ]
+Xbc setup 1.11373 sec
+Xbc bfs phase: 54.8792
+    bfs mxm:   54.2409
+    bfs other  0.638287
+Xbc: setup for backtrack     0.412731
+Xbx 2nd phase: 613.766
+    2nd mxm  : 612.372
+    2nd other: 1.39335
+Xbc wrapup:    0.752418
+Xbc total:     670.924
+Batch    time: 6.709239e+02 (sec), rate: 6.2947 (1e6 edges/sec)
+
+Trial 14 : sources: [ 4584784 124503845 87241743 108297008 ]
+Xbc setup 1.10361 sec
+Xbc bfs phase: 55.9432
+    bfs mxm:   55.2207
+    bfs other  0.722482
+Xbc: setup for backtrack     0.407913
+Xbx 2nd phase: 559.548
+    2nd mxm  : 557.868
+    2nd other: 1.67953
+Xbc wrapup:    0.754147
+Xbc total:     617.756
+Batch    time: 6.177572e+02 (sec), rate: 6.83645 (1e6 edges/sec)
+
+Trial 15 : sources: [ 33955082 79934823 8608481 82435063 ]
+Xbc setup 1.10508 sec
+Xbc bfs phase: 54.2915
+    bfs mxm:   53.6695
+    bfs other  0.622004
+Xbc: setup for backtrack     0.408392
+Xbx 2nd phase: 563.814
+    2nd mxm  : 562.435
+    2nd other: 1.37869
+Xbc wrapup:    0.76596
+Xbc total:     620.385
+Batch    time: 6.203860e+02 (sec), rate: 6.80748 (1e6 edges/sec)
+
+Trial 16 : sources: [ 46579271 515421 121530467 127978736 ]
+Xbc setup 1.10767 sec
+Xbc bfs phase: 50.7788
+    bfs mxm:   50.192
+    bfs other  0.586773
+Xbc: setup for backtrack     0.414505
+Xbx 2nd phase: 557.931
+    2nd mxm  : 556.684
+    2nd other: 1.24673
+Xbc wrapup:    0.759619
+Xbc total:     610.991
+Batch    time: 6.109915e+02 (sec), rate: 6.91215 (1e6 edges/sec)
+ntrials: 16
+Average time per trial (batch):   635.538 sec
+build/bc_gap_test: all tests passed
+matrix: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+sources: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter_sources.mtx
+read time: 15.9426 sec
+
+  61578415x61578415 GraphBLAS bool matrix, sparse by row:
+  A, 1468364884 entries
+
+    (12,13)   1
+    (12,14)   1
+    (12,15)   1
+    (12,16)   1
+    (12,17)   1
+    (12,18)   1
+    (12,20)   1
+    (12,21)   1
+    (12,22)   1
+    (12,23)   1
+    (12,24)   1
+    (12,31)   1
+    (12,38)   1
+    (12,41)   1
+    (12,47)   1
+    (12,52)   1
+    (12,53)   1
+    (12,56)   1
+    (12,57)   1
+    (12,58)   1
+    (12,59)   1
+    (12,60)   1
+    (12,61)   1
+    (12,62)   1
+    (12,64)   1
+    (12,67)   1
+    (12,69)   1
+    (12,70)   1
+    (12,76)   1
+    (12,87)   1
+    ...
+
+  64x1 GraphBLAS double matrix, sparse by row:
+  SourceNodes, 64 entries
+
+    (0,0)    12441073
+    (1,0)    54488258
+    (2,0)    25451916
+    (3,0)    57714474
+    (4,0)    14839495
+    (5,0)    32081105
+    (6,0)    52957358
+    (7,0)    50444381
+    (8,0)    49590702
+    (9,0)    20127817
+    (10,0)    34939334
+    (11,0)    48251002
+    (12,0)    19524254
+    (13,0)    43676727
+    (14,0)    33055509
+    (15,0)    15244688
+    (16,0)    24946739
+    (17,0)    6479473
+    (18,0)    26077683
+    (19,0)    22023876
+    (20,0)    22081916
+    (21,0)    40034163
+    (22,0)    49496015
+    (23,0)    42847508
+    (24,0)    52409558
+    (25,0)    55445389
+    (26,0)    22028098
+    (27,0)    48766649
+    (28,0)    44521242
+    (29,0)    60135543
+    (30,0)    28528672
+    (31,0)    9678013
+    (32,0)    40020307
+    (33,0)    31625736
+    (34,0)    37446893
+    (35,0)    51788953
+    (36,0)    52584256
+    (37,0)    20346697
+    (38,0)    48387910
+    (39,0)    37337428
+    (40,0)    50501085
+    (41,0)    30130062
+    (42,0)    41185894
+    (43,0)    56495704
+    (44,0)    45663306
+    (45,0)    33359461
+    (46,0)    48143059
+    (47,0)    33291514
+    (48,0)    53461446
+    (49,0)    29340611
+    (50,0)    34148499
+    (51,0)    49171807
+    (52,0)    35550697
+    (53,0)    14521508
+    (54,0)    51633219
+    (55,0)    46823383
+    (56,0)    19396274
+    (57,0)    19871751
+    (58,0)    36862678
+    (59,0)    49539127
+    (60,0)    34016453
+    (61,0)    36567396
+    (62,0)    55487794
+    (63,0)    14391371
+
+setup time: 8.12231 sec
+
+========== input graph: nodes: 61578415 edges: 1468364884
+Starting Betweenness Centrality Tests
+ - nthreads: 40
+
+Trial 1 : sources: [ 12441072 54488257 25451915 57714473 ]
+Xbc setup 0.532505 sec
+Xbc bfs phase: 18.9105
+    bfs mxm:   18.5455
+    bfs other  0.36501
+Xbc: setup for backtrack     0.187014
+Xbx 2nd phase: 100.427
+    2nd mxm  : 99.6901
+    2nd other: 0.73674
+Xbc wrapup:    0.351086
+Xbc total:     120.408
+Batch    time: 1.204085e+02 (sec), rate: 12.1949 (1e6 edges/sec)
+
+Trial 2 : sources: [ 14839494 32081104 52957357 50444380 ]
+Xbc setup 0.510357 sec
+Xbc bfs phase: 18.3865
+    bfs mxm:   17.9587
+    bfs other  0.427826
+Xbc: setup for backtrack     0.187438
+Xbx 2nd phase: 92.9319
+    2nd mxm  : 92.1108
+    2nd other: 0.821056
+Xbc wrapup:    0.351936
+Xbc total:     112.368
+Batch    time: 1.123688e+02 (sec), rate: 13.0674 (1e6 edges/sec)
+
+Trial 3 : sources: [ 49590701 20127816 34939333 48251001 ]
+Xbc setup 0.509046 sec
+Xbc bfs phase: 19.8898
+    bfs mxm:   19.4935
+    bfs other  0.396282
+Xbc: setup for backtrack     0.187596
+Xbx 2nd phase: 95.5643
+    2nd mxm  : 94.7156
+    2nd other: 0.848702
+Xbc wrapup:    0.367282
+Xbc total:     116.518
+Batch    time: 1.165184e+02 (sec), rate: 12.602 (1e6 edges/sec)
+
+Trial 4 : sources: [ 19524253 43676726 33055508 15244687 ]
+Xbc setup 0.516533 sec
+Xbc bfs phase: 15.9614
+    bfs mxm:   15.6023
+    bfs other  0.359093
+Xbc: setup for backtrack     0.187888
+Xbx 2nd phase: 97.7484
+    2nd mxm  : 97.0826
+    2nd other: 0.665806
+Xbc wrapup:    0.355234
+Xbc total:     114.769
+Batch    time: 1.147698e+02 (sec), rate: 12.794 (1e6 edges/sec)
+
+Trial 5 : sources: [ 24946738 6479472 26077682 22023875 ]
+Xbc setup 0.511354 sec
+Xbc bfs phase: 20.7037
+    bfs mxm:   20.246
+    bfs other  0.457684
+Xbc: setup for backtrack     0.191522
+Xbx 2nd phase: 94.0538
+    2nd mxm  : 93.0753
+    2nd other: 0.978421
+Xbc wrapup:    0.35528
+Xbc total:     115.816
+Batch    time: 1.158164e+02 (sec), rate: 12.6784 (1e6 edges/sec)
+
+Trial 6 : sources: [ 22081915 40034162 49496014 42847507 ]
+Xbc setup 0.51229 sec
+Xbc bfs phase: 16.4006
+    bfs mxm:   16.0575
+    bfs other  0.343071
+Xbc: setup for backtrack     0.187507
+Xbx 2nd phase: 97.4766
+    2nd mxm  : 96.7853
+    2nd other: 0.691295
+Xbc wrapup:    0.360556
+Xbc total:     114.938
+Batch    time: 1.149379e+02 (sec), rate: 12.7753 (1e6 edges/sec)
+
+Trial 7 : sources: [ 52409557 55445388 22028097 48766648 ]
+Xbc setup 0.514922 sec
+Xbc bfs phase: 16.8173
+    bfs mxm:   16.4418
+    bfs other  0.375518
+Xbc: setup for backtrack     0.184114
+Xbx 2nd phase: 94.7977
+    2nd mxm  : 94.0515
+    2nd other: 0.746264
+Xbc wrapup:    0.358276
+Xbc total:     112.672
+Batch    time: 1.126730e+02 (sec), rate: 13.0321 (1e6 edges/sec)
+
+Trial 8 : sources: [ 44521241 60135542 28528671 9678012 ]
+Xbc setup 0.514139 sec
+Xbc bfs phase: 20.462
+    bfs mxm:   20.0484
+    bfs other  0.413601
+Xbc: setup for backtrack     0.186777
+Xbx 2nd phase: 95.6436
+    2nd mxm  : 94.7725
+    2nd other: 0.871171
+Xbc wrapup:    0.365008
+Xbc total:     117.172
+Batch    time: 1.171718e+02 (sec), rate: 12.5317 (1e6 edges/sec)
+
+Trial 9 : sources: [ 40020306 31625735 37446892 51788952 ]
+Xbc setup 0.516403 sec
+Xbc bfs phase: 15.819
+    bfs mxm:   15.5036
+    bfs other  0.315467
+Xbc: setup for backtrack     0.186141
+Xbx 2nd phase: 97.2629
+    2nd mxm  : 96.6336
+    2nd other: 0.629287
+Xbc wrapup:    0.354744
+Xbc total:     114.139
+Batch    time: 1.141400e+02 (sec), rate: 12.8646 (1e6 edges/sec)
+
+Trial 10 : sources: [ 52584255 20346696 48387909 37337427 ]
+Xbc setup 0.508113 sec
+Xbc bfs phase: 17.8198
+    bfs mxm:   17.451
+    bfs other  0.36879
+Xbc: setup for backtrack     0.185229
+Xbx 2nd phase: 97.5148
+    2nd mxm  : 96.6864
+    2nd other: 0.828397
+Xbc wrapup:    0.364176
+Xbc total:     116.392
+Batch    time: 1.163924e+02 (sec), rate: 12.6156 (1e6 edges/sec)
+
+Trial 11 : sources: [ 50501084 30130061 41185893 56495703 ]
+Xbc setup 0.549564 sec
+Xbc bfs phase: 19.083
+    bfs mxm:   18.6374
+    bfs other  0.445655
+Xbc: setup for backtrack     0.184276
+Xbx 2nd phase: 98.3677
+    2nd mxm  : 97.5011
+    2nd other: 0.866586
+Xbc wrapup:    0.355045
+Xbc total:     118.54
+Batch    time: 1.185400e+02 (sec), rate: 12.3871 (1e6 edges/sec)
+
+Trial 12 : sources: [ 45663305 33359460 48143058 33291513 ]
+Xbc setup 0.51024 sec
+^C
+[0;36mhypersparse $[0m cat do_gap 
+#!/bin/sh
+
+build/bc_gap_test ~/GAP/GAP-web/GAP-web.grb ~/GAP/GAP-web/GAP-web_sources.mtx
+build/bc_gap_test ~/GAP/GAP-kron/GAP-kron.grb ~/GAP/GAP-kron/GAP-kron_sources.mtx
+build/bc_gap_test ~/GAP/GAP-twitter/GAP-twitter.grb ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
+build/bc_gap_test ~/GAP/GAP-urand/GAP-urand.grb ~/GAP/GAP-urand/GAP-urand_sources.mtx
+build/bc_gap_test ~/GAP/GAP-road/GAP-road.grb ~/GAP/GAP-road/GAP-road_sources.mtx
+
+[0;36mhypersparse $[0m build/bc_gap_test ~/GAP/GAP-twitter/GAP-twitter.grb ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
+matrix: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+sources: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter_sources.mtx
+read time: 11.1038 sec
+
+  61578415x61578415 GraphBLAS bool matrix, sparse by row:
+  A, 1468364884 entries
+
+    (12,13)   1
+    (12,14)   1
+    (12,15)   1
+    (12,16)   1
+    (12,17)   1
+    (12,18)   1
+    (12,20)   1
+    (12,21)   1
+    (12,22)   1
+    (12,23)   1
+    (12,24)   1
+    (12,31)   1
+    (12,38)   1
+    (12,41)   1
+    (12,47)   1
+    (12,52)   1
+    (12,53)   1
+    (12,56)   1
+    (12,57)   1
+    (12,58)   1
+    (12,59)   1
+    (12,60)   1
+    (12,61)   1
+    (12,62)   1
+    (12,64)   1
+    (12,67)   1
+    (12,69)   1
+    (12,70)   1
+    (12,76)   1
+    (12,87)   1
+    ...
+
+  64x1 GraphBLAS double matrix, sparse by row:
+  SourceNodes, 64 entries
+
+    (0,0)    12441073
+    (1,0)    54488258
+    (2,0)    25451916
+    (3,0)    57714474
+    (4,0)    14839495
+    (5,0)    32081105
+    (6,0)    52957358
+    (7,0)    50444381
+    (8,0)    49590702
+    (9,0)    20127817
+    (10,0)    34939334
+    (11,0)    48251002
+    (12,0)    19524254
+    (13,0)    43676727
+    (14,0)    33055509
+    (15,0)    15244688
+    (16,0)    24946739
+    (17,0)    6479473
+    (18,0)    26077683
+    (19,0)    22023876
+    (20,0)    22081916
+    (21,0)    40034163
+    (22,0)    49496015
+    (23,0)    42847508
+    (24,0)    52409558
+    (25,0)    55445389
+    (26,0)    22028098
+    (27,0)    48766649
+    (28,0)    44521242
+    (29,0)    60135543
+    (30,0)    28528672
+    (31,0)    9678013
+    (32,0)    40020307
+    (33,0)    31625736
+    (34,0)    37446893
+    (35,0)    51788953
+    (36,0)    52584256
+    (37,0)    20346697
+    (38,0)    48387910
+    (39,0)    37337428
+    (40,0)    50501085
+    (41,0)    30130062
+    (42,0)    41185894
+    (43,0)    56495704
+    (44,0)    45663306
+    (45,0)    33359461
+    (46,0)    48143059
+    (47,0)    33291514
+    (48,0)    53461446
+    (49,0)    29340611
+    (50,0)    34148499
+    (51,0)    49171807
+    (52,0)    35550697
+    (53,0)    14521508
+    (54,0)    51633219
+    (55,0)    46823383
+    (56,0)    19396274
+    (57,0)    19871751
+    (58,0)    36862678
+    (59,0)    49539127
+    (60,0)    34016453
+    (61,0)    36567396
+    (62,0)    55487794
+    (63,0)    14391371
+
+setup time: 8.07771 sec
+
+========== input graph: nodes: 61578415 edges: 1468364884
+Starting Betweenness Centrality Tests
+ - nthreads: 40
+
+Trial 1 : sources: [ 12441072 54488257 25451915 57714473 ]
+Xbc setup 0.536597 sec
+Xbc bfs phase: 19.0089
+    bfs mxm:   18.6372
+    bfs other  0.37171
+Xbc: setup for backtrack     0.188993
+Xbx 2nd phase: 99.3738
+    2nd mxm  : 98.6433
+    2nd other: 0.730521
+Xbc wrapup:    0.355929
+Xbc total:     119.464
+Batch    time: 1.194646e+02 (sec), rate: 12.2912 (1e6 edges/sec)
+
+Trial 2 : sources: [ 14839494 32081104 52957357 50444380 ]
+Xbc setup 0.51908 sec
+Xbc bfs phase: 18.2925
+    bfs mxm:   17.8948
+    bfs other  0.397732
+Xbc: setup for backtrack     0.190153
+Xbx 2nd phase: 93.1691
+    2nd mxm  : 92.3483
+    2nd other: 0.820756
+Xbc wrapup:    0.359243
+Xbc total:     112.53
+Batch    time: 1.125307e+02 (sec), rate: 13.0486 (1e6 edges/sec)
+
+Trial 3 : sources: [ 49590701 20127816 34939333 48251001 ]
+Xbc setup 0.521739 sec
+Xbc bfs phase: 19.9562
+    bfs mxm:   19.5588
+    bfs other  0.397394
+Xbc: setup for backtrack     0.190385
+Xbx 2nd phase: 95.5801
+    2nd mxm  : 94.6741
+    2nd other: 0.905995
+Xbc wrapup:    0.360631
+Xbc total:     116.609
+Batch    time: 1.166093e+02 (sec), rate: 12.5922 (1e6 edges/sec)
+
+Trial 4 : sources: [ 19524253 43676726 33055508 15244687 ]
+Xbc setup 0.530799 sec
+Xbc bfs phase: 15.903
+    bfs mxm:   15.5627
+    bfs other  0.340292
+Xbc: setup for backtrack      0.19114
+Xbx 2nd phase: 97.9026
+    2nd mxm  : 97.2601
+    2nd other: 0.64258
+Xbc wrapup:    0.350976
+Xbc total:     114.879
+Batch    time: 1.148791e+02 (sec), rate: 12.7818 (1e6 edges/sec)
+
+Trial 5 : sources: [ 24946738 6479472 26077682 22023875 ]
+Xbc setup 0.517678 sec
+Xbc bfs phase: 20.7174
+    bfs mxm:   20.248
+    bfs other  0.469376
+Xbc: setup for backtrack     0.204144
+Xbx 2nd phase: 94.876
+    2nd mxm  : 93.906
+    2nd other: 0.96993
+Xbc wrapup:    0.354028
+Xbc total:     116.669
+Batch    time: 1.166700e+02 (sec), rate: 12.5856 (1e6 edges/sec)
+
+Trial 6 : sources: [ 22081915 40034162 49496014 42847507 ]
+Xbc setup 0.516524 sec
+Xbc bfs phase: 16.3342
+    bfs mxm:   15.9786
+    bfs other  0.355562
+Xbc: setup for backtrack     0.193238
+Xbx 2nd phase: 97.3486
+    2nd mxm  : 96.6615
+    2nd other: 0.687074
+Xbc wrapup:    0.361069
+Xbc total:     114.754
+Batch    time: 1.147544e+02 (sec), rate: 12.7957 (1e6 edges/sec)
+
+Trial 7 : sources: [ 52409557 55445388 22028097 48766648 ]
+Xbc setup 0.519324 sec
+Xbc bfs phase: 16.9086
+    bfs mxm:   16.5423
+    bfs other  0.366322
+Xbc: setup for backtrack     0.192031
+Xbx 2nd phase: 95.0391
+    2nd mxm  : 94.214
+    2nd other: 0.825014
+Xbc wrapup:    0.357613
+Xbc total:     113.017
+Batch    time: 1.130174e+02 (sec), rate: 12.9924 (1e6 edges/sec)
+
+Trial 8 : sources: [ 44521241 60135542 28528671 9678012 ]
+Xbc setup 0.516852 sec
+Xbc bfs phase: 20.4255
+    bfs mxm:   20.0207
+    bfs other  0.404792
+Xbc: setup for backtrack     0.192566
+Xbx 2nd phase: 95.8242
+    2nd mxm  : 94.9652
+    2nd other: 0.859047
+Xbc wrapup:    0.363957
+Xbc total:     117.323
+Batch    time: 1.173234e+02 (sec), rate: 12.5155 (1e6 edges/sec)
+
+Trial 9 : sources: [ 40020306 31625735 37446892 51788952 ]
+Xbc setup 0.522095 sec
+Xbc bfs phase: 15.9061
+    bfs mxm:   15.5877
+    bfs other  0.318406
+Xbc: setup for backtrack     0.188925
+Xbx 2nd phase: 97.1985
+    2nd mxm  : 96.6033
+    2nd other: 0.595131
+Xbc wrapup:    0.354376
+Xbc total:     114.17
+Batch    time: 1.141702e+02 (sec), rate: 12.8612 (1e6 edges/sec)
+
+Trial 10 : sources: [ 52584255 20346696 48387909 37337427 ]
+Xbc setup 0.515773 sec
+Xbc bfs phase: 17.8934
+    bfs mxm:   17.5241
+    bfs other  0.36928
+Xbc: setup for backtrack     0.190562
+Xbx 2nd phase: 97.5472
+    2nd mxm  : 96.7848
+    2nd other: 0.762353
+Xbc wrapup:    0.356449
+Xbc total:     116.503
+Batch    time: 1.165035e+02 (sec), rate: 12.6036 (1e6 edges/sec)
+
+Trial 11 : sources: [ 50501084 30130061 41185893 56495703 ]
+Xbc setup 0.515741 sec
+Xbc bfs phase: 18.5514
+    bfs mxm:   18.1745
+    bfs other  0.376989
+Xbc: setup for backtrack     0.190164
+Xbx 2nd phase: 97.7757
+    2nd mxm  : 96.9627
+    2nd other: 0.812962
+Xbc wrapup:    0.352523
+Xbc total:     117.386
+Batch    time: 1.173864e+02 (sec), rate: 12.5088 (1e6 edges/sec)
+
+Trial 12 : sources: [ 45663305 33359460 48143058 33291513 ]
+Xbc setup 0.51819 sec
+Xbc bfs phase: 19.2681
+    bfs mxm:   18.8801
+    bfs other  0.387937
+Xbc: setup for backtrack     0.191763
+Xbx 2nd phase: 99.2956
+    2nd mxm  : 98.5162
+    2nd other: 0.779488
+Xbc wrapup:    0.363474
+Xbc total:     119.637
+Batch    time: 1.196375e+02 (sec), rate: 12.2734 (1e6 edges/sec)
+
+Trial 13 : sources: [ 53461445 29340610 34148498 49171806 ]
+Xbc setup 0.523555 sec
+Xbc bfs phase: 16.2448
+    bfs mxm:   15.8876
+    bfs other  0.357172
+Xbc: setup for backtrack     0.188933
+Xbx 2nd phase: 97.5881
+    2nd mxm  : 96.8967
+    2nd other: 0.691454
+Xbc wrapup:    0.362753
+Xbc total:     114.908
+Batch    time: 1.149084e+02 (sec), rate: 12.7786 (1e6 edges/sec)
+
+Trial 14 : sources: [ 35550696 14521507 51633218 46823382 ]
+Xbc setup 0.516831 sec
+Xbc bfs phase: 19.4306
+    bfs mxm:   19.0507
+    bfs other  0.379872
+Xbc: setup for backtrack     0.187957
+Xbx 2nd phase: 99.0082
+    2nd mxm  : 98.1713
+    2nd other: 0.836943
+Xbc wrapup:    0.35882
+Xbc total:     119.502
+Batch    time: 1.195033e+02 (sec), rate: 12.2872 (1e6 edges/sec)
+
+Trial 15 : sources: [ 19396273 19871750 36862677 49539126 ]
+Xbc setup 0.521679 sec
+Xbc bfs phase: 19.5098
+    bfs mxm:   19.0719
+    bfs other  0.437876
+Xbc: setup for backtrack     0.190287
+Xbx 2nd phase: 98.2481
+    2nd mxm  : 97.3147
+    2nd other: 0.933321
+Xbc wrapup:    0.358586
+Xbc total:     118.828
+Batch    time: 1.188288e+02 (sec), rate: 12.357 (1e6 edges/sec)
+
+Trial 16 : sources: [ 34016452 36567395 55487793 14391370 ]
+Xbc setup 0.520528 sec
+Xbc bfs phase: 16.2616
+    bfs mxm:   15.9556
+    bfs other  0.306059
+Xbc: setup for backtrack     0.191339
+Xbx 2nd phase: 94.145
+    2nd mxm  : 93.568
+    2nd other: 0.577059
+Xbc wrapup:    0.355842
+Xbc total:     111.474
+Batch    time: 1.114747e+02 (sec), rate: 13.1722 (1e6 edges/sec)
+ntrials: 16
+Average time per trial (batch):   116.104 sec
+build/bc_gap_test: all tests passed
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m cat do_gap 
+#!/bin/sh
+
+build/bc_gap_test ~/GAP/GAP-web/GAP-web.grb ~/GAP/GAP-web/GAP-web_sources.mtx
+build/bc_gap_test ~/GAP/GAP-kron/GAP-kron.grb ~/GAP/GAP-kron/GAP-kron_sources.mtx
+build/bc_gap_test ~/GAP/GAP-twitter/GAP-twitter.grb ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
+build/bc_gap_test ~/GAP/GAP-urand/GAP-urand.grb ~/GAP/GAP-urand/GAP-urand_sources.mtx
+build/bc_gap_test ~/GAP/GAP-road/GAP-road.grb ~/GAP/GAP-road/GAP-road_sources.mtx
+
+[0;36mhypersparse $[0m build/bc_gap_test ~/GAP/GAP-road/GAP-road.grb ~/GAP/GAP-road/GAP-road_sources.mtx
+matrix: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+sources: /home/faculty/davis/GAP/GAP-road/GAP-road_sources.mtx
+read time: 0.751986 sec
+
+  23947347x23947347 GraphBLAS bool matrix, sparse by row:
+  A, 57708624 entries
+
+    (0,1)   1
+    (0,709)   1
+    (0,1049673)   1
+    (1,0)   1
+    (1,2097154)   1
+    (2,9)   1
+    (2,2097152)   1
+    (2,2097156)   1
+    (3,1903)   1
+    (3,1048578)   1
+    (4,5)   1
+    (4,2097153)   1
+    (5,4)   1
+    (5,11)   1
+    (5,1048579)   1
+    (6,7)   1
+    (6,1048580)   1
+    (6,1048582)   1
+    (7,6)   1
+    (8,33976)   1
+    (8,1048581)   1
+    (9,2)   1
+    ...
+
+  64x1 GraphBLAS double matrix, sparse by row:
+  SourceNodes, 64 entries
+
+    (0,0)    4795721
+    (1,0)    21003854
+    (2,0)    417969
+    (3,0)    6496512
+    (4,0)    6648700
+    (5,0)    9811074
+    (6,0)    22247479
+    (7,0)    5720253
+    (8,0)    12366460
+    (9,0)    20413730
+    (10,0)    4217375
+    (11,0)    2674750
+    (12,0)    22085558
+    (13,0)    19445041
+    (14,0)    2360789
+    (15,0)    19115969
+    (16,0)    7758768
+    (17,0)    13468235
+    (18,0)    30368
+    (19,0)    18599548
+    (20,0)    7526109
+    (21,0)    16836281
+    (22,0)    12742068
+    (23,0)    7697996
+    (24,0)    5876444
+    (25,0)    9616341
+    (26,0)    2497674
+    (27,0)    10052291
+    (28,0)    12493058
+    (29,0)    1670856
+    (30,0)    2760680
+    (31,0)    2460942
+    (32,0)    8489651
+    (33,0)    5005226
+    (34,0)    8744646
+    (35,0)    8512024
+    (36,0)    21912166
+    (37,0)    1105391
+    (38,0)    15432164
+    (39,0)    1600178
+    (40,0)    19079470
+    (41,0)    16516638
+    (42,0)    20202567
+    (43,0)    21372804
+    (44,0)    2898010
+    (45,0)    8491278
+    (46,0)    18798318
+    (47,0)    23757561
+    (48,0)    17161820
+    (49,0)    23180740
+    (50,0)    10997086
+    (51,0)    3730631
+    (52,0)    1079069
+    (53,0)    15426823
+    (54,0)    12190926
+    (55,0)    1155219
+    (56,0)    10693489
+    (57,0)    14434836
+    (58,0)    19963340
+    (59,0)    3486186
+    (60,0)    18383270
+    (61,0)    20269909
+    (62,0)    12370765
+    (63,0)    7843141
+
+setup time: 0.630972 sec
+
+========== input graph: nodes: 23947347 edges: 57708624
+Starting Betweenness Centrality Tests
+ - nthreads: 40
+
+Trial 1 : sources: [ 4795720 21003853 417968 6496511 ]
+Xbc setup 0.221489 sec
+Xbc bfs phase: 71.8846
+    bfs mxm:   47.4753
+    bfs other  24.4093
+Xbc: setup for backtrack    0.0739169
+Xbx 2nd phase: 28.1699
+    2nd mxm  : 26.5244
+    2nd other: 1.64554
+Xbc wrapup:    0.112321
+Xbc total:     100.462
+Batch    time: 1.004677e+02 (sec), rate: 0.5744 (1e6 edges/sec)
+
+Trial 2 : sources: [ 6648699 9811073 22247478 5720252 ]
+Xbc setup 0.231758 sec
+Xbc bfs phase: 68.0022
+    bfs mxm:   44.7676
+    bfs other  23.2345
+Xbc: setup for backtrack    0.0736968
+Xbx 2nd phase: 29.4681
+    2nd mxm  : 28.0002
+    2nd other: 1.46798
+Xbc wrapup:    0.114172
+Xbc total:     97.89
+Batch    time: 9.789519e+01 (sec), rate: 0.589494 (1e6 edges/sec)
+
+Trial 3 : sources: [ 12366459 20413729 4217374 2674749 ]
+Xbc setup 0.195637 sec
+Xbc bfs phase: 67.5668
+    bfs mxm:   44.1758
+    bfs other  23.391
+Xbc: setup for backtrack    0.0738491
+Xbx 2nd phase: 29.6263
+    2nd mxm  : 28.2344
+    2nd other: 1.39183
+Xbc wrapup:    0.113784
+Xbc total:     97.5763
+Batch    time: 9.758197e+01 (sec), rate: 0.591386 (1e6 edges/sec)
+
+Trial 4 : sources: [ 22085557 19445040 2360788 19115968 ]
+Xbc setup 0.219801 sec
+Xbc bfs phase: 67.1618
+    bfs mxm:   43.6899
+    bfs other  23.4719
+Xbc: setup for backtrack    0.0792475
+Xbx 2nd phase: 28.6509
+    2nd mxm  : 27.2027
+    2nd other: 1.44819
+Xbc wrapup:    0.113952
+Xbc total:     96.2258
+Batch    time: 9.623141e+01 (sec), rate: 0.599686 (1e6 edges/sec)
+
+Trial 5 : sources: [ 7758767 13468234 30367 18599547 ]
+Xbc setup 0.231975 sec
+Xbc bfs phase: 65.7688
+    bfs mxm:   43.0974
+    bfs other  22.6714
+Xbc: setup for backtrack    0.0745192
+Xbx 2nd phase: 27.7527
+    2nd mxm  : 26.3921
+    2nd other: 1.36055
+Xbc wrapup:    0.113823
+Xbc total:     93.9418
+Batch    time: 9.394726e+01 (sec), rate: 0.614266 (1e6 edges/sec)
+
+Trial 6 : sources: [ 7526108 16836280 12742067 7697995 ]
+Xbc setup 0.233705 sec
+Xbc bfs phase: 69.1744
+    bfs mxm:   44.5411
+    bfs other  24.6334
+Xbc: setup for backtrack    0.0902824
+Xbx 2nd phase: 29.9971
+    2nd mxm  : 28.4928
+    2nd other: 1.50436
+Xbc wrapup:    0.116297
+Xbc total:     99.6118
+Batch    time: 9.961790e+01 (sec), rate: 0.5793 (1e6 edges/sec)
+
+Trial 7 : sources: [ 5876443 9616340 2497673 10052290 ]
+Xbc setup 0.237624 sec
+Xbc bfs phase: 67.073
+    bfs mxm:   43.7559
+    bfs other  23.3172
+Xbc: setup for backtrack     0.074073
+Xbx 2nd phase: 28.2512
+    2nd mxm  : 26.758
+    2nd other: 1.49314
+Xbc wrapup:    0.11646
+Xbc total:     95.7524
+Batch    time: 9.575800e+01 (sec), rate: 0.602651 (1e6 edges/sec)
+
+Trial 8 : sources: [ 12493057 1670855 2760679 2460941 ]
+Xbc setup 0.19804 sec
+Xbc bfs phase: 68.7463
+    bfs mxm:   43.8348
+    bfs other  24.9115
+Xbc: setup for backtrack    0.0800315
+Xbx 2nd phase: 29.7158
+    2nd mxm  : 28.3219
+    2nd other: 1.39393
+Xbc wrapup:    0.113186
+Xbc total:     98.8534
+Batch    time: 9.885936e+01 (sec), rate: 0.583745 (1e6 edges/sec)
+
+Trial 9 : sources: [ 8489650 5005225 8744645 8512023 ]
+Xbc setup 0.25627 sec
+Xbc bfs phase: 61.5044
+    bfs mxm:   42.2888
+    bfs other  19.2156
+Xbc: setup for backtrack    0.0739533
+Xbx 2nd phase: 26.6977
+    2nd mxm  : 25.2649
+    2nd other: 1.43283
+Xbc wrapup:    0.113296
+Xbc total:     88.6457
+Batch    time: 8.865113e+01 (sec), rate: 0.650963 (1e6 edges/sec)
+
+Trial 10 : sources: [ 21912165 1105390 15432163 1600177 ]
+Xbc setup 0.233465 sec
+Xbc bfs phase: 73.0071
+    bfs mxm:   47.5014
+    bfs other  25.5057
+Xbc: setup for backtrack    0.0739749
+Xbx 2nd phase: 32.0406
+    2nd mxm  : 30.3956
+    2nd other: 1.64503
+Xbc wrapup:    0.116723
+Xbc total:     105.472
+Batch    time: 1.054780e+02 (sec), rate: 0.547115 (1e6 edges/sec)
+
+Trial 11 : sources: [ 19079469 16516637 20202566 21372803 ]
+Xbc setup 0.239817 sec
+Xbc bfs phase: 70.8971
+    bfs mxm:   45.2497
+    bfs other  25.6474
+Xbc: setup for backtrack    0.0879025
+Xbx 2nd phase: 30.7568
+    2nd mxm  : 29.3338
+    2nd other: 1.42304
+Xbc wrapup:    0.115493
+Xbc total:     102.097
+Batch    time: 1.021031e+02 (sec), rate: 0.565199 (1e6 edges/sec)
+
+Trial 12 : sources: [ 2898009 8491277 18798317 23757560 ]
+Xbc setup 0.230856 sec
+Xbc bfs phase: 64.8675
+    bfs mxm:   42.2563
+    bfs other  22.6111
+Xbc: setup for backtrack    0.0739718
+Xbx 2nd phase: 28.4098
+    2nd mxm  : 26.8716
+    2nd other: 1.53817
+Xbc wrapup:    0.11774
+Xbc total:     93.6998
+Batch    time: 9.370544e+01 (sec), rate: 0.615851 (1e6 edges/sec)
+
+Trial 13 : sources: [ 17161819 23180739 10997085 3730630 ]
+Xbc setup 0.233972 sec
+Xbc bfs phase: 70.8605
+    bfs mxm:   44.9551
+    bfs other  25.9054
+Xbc: setup for backtrack    0.0757913
+Xbx 2nd phase: 30.8752
+    2nd mxm  : 29.2268
+    2nd other: 1.64844
+Xbc wrapup:    0.116611
+Xbc total:     102.162
+Batch    time: 1.021681e+02 (sec), rate: 0.56484 (1e6 edges/sec)
+
+Trial 14 : sources: [ 1079068 15426822 12190925 1155218 ]
+Xbc setup 0.250556 sec
+Xbc bfs phase: 61.6545
+    bfs mxm:   41.6257
+    bfs other  20.0288
+Xbc: setup for backtrack    0.0751732
+Xbx 2nd phase: 25.6459
+    2nd mxm  : 24.1979
+    2nd other: 1.44802
+Xbc wrapup:    0.113104
+Xbc total:     87.7392
+Batch    time: 8.774424e+01 (sec), rate: 0.657691 (1e6 edges/sec)
+
+Trial 15 : sources: [ 10693488 14434835 19963339 3486185 ]
+Xbc setup 0.255174 sec
+Xbc bfs phase: 64.8719
+    bfs mxm:   42.7947
+    bfs other  22.0772
+Xbc: setup for backtrack    0.0862007
+Xbx 2nd phase: 27.3035
+    2nd mxm  : 25.9014
+    2nd other: 1.40211
+Xbc wrapup:    0.112817
+Xbc total:     92.6296
+Batch    time: 9.263512e+01 (sec), rate: 0.622967 (1e6 edges/sec)
+
+Trial 16 : sources: [ 18383269 20269908 12370764 7843140 ]
+Xbc setup 0.233372 sec
+Xbc bfs phase: 63.834
+    bfs mxm:   42.3916
+    bfs other  21.4425
+Xbc: setup for backtrack    0.0744805
+Xbx 2nd phase: 27.7357
+    2nd mxm  : 26.2527
+    2nd other: 1.48301
+Xbc wrapup:    0.118327
+Xbc total:     91.996
+Batch    time: 9.200129e+01 (sec), rate: 0.627259 (1e6 edges/sec)
+ntrials: 16
+Average time per trial (batch):   96.5528 sec
+build/bc_gap_test: all tests passed
+[0;36mhypersparse $[0m cat do_gap 
+#!/bin/sh
+
+build/bc_gap_test ~/GAP/GAP-web/GAP-web.grb ~/GAP/GAP-web/GAP-web_sources.mtx
+build/bc_gap_test ~/GAP/GAP-kron/GAP-kron.grb ~/GAP/GAP-kron/GAP-kron_sources.mtx
+build/bc_gap_test ~/GAP/GAP-twitter/GAP-twitter.grb ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
+build/bc_gap_test ~/GAP/GAP-urand/GAP-urand.grb ~/GAP/GAP-urand/GAP-urand_sources.mtx
+build/bc_gap_test ~/GAP/GAP-road/GAP-road.grb ~/GAP/GAP-road/GAP-road_sources.mtx
+
+[0;36mhypersparse $[0m build/bc_gap_test ~/GAP/GAP-urand/GAP-urand.grb ~/GAP/GAP-urand/GAP-urand_sources.mtx
+matrix: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+sources: /home/faculty/davis/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 46.3551 sec
+
+  134217728x134217728 GraphBLAS bool matrix, sparse by row:
+  A, 4294966740 entries
+
+    (0,8291853)   1
+    (0,9845139)   1
+    (0,14571172)   1
+    (0,16459757)   1
+    (0,27302127)   1
+    (0,27726180)   1
+    (0,30303523)   1
+    (0,32640525)   1
+    (0,33360373)   1
+    (0,40782998)   1
+    (0,41057943)   1
+    (0,43348321)   1
+    (0,50206206)   1
+    (0,52510658)   1
+    (0,53390371)   1
+    (0,53579654)   1
+    (0,54622695)   1
+    (0,57696071)   1
+    (0,59385788)   1
+    (0,60365539)   1
+    (0,64764501)   1
+    (0,64889445)   1
+    (0,72706136)   1
+    (0,77394182)   1
+    (0,82101150)   1
+    (0,86364056)   1
+    (0,86790574)   1
+    (0,90287459)   1
+    (0,104674459)   1
+    (0,109716228)   1
+    ...
+
+  64x1 GraphBLAS double matrix, sparse by row:
+  SourceNodes, 64 entries
+
+    (0,0)    27691420
+    (1,0)    121280315
+    (2,0)    2413432
+    (3,0)    37512114
+    (4,0)    38390878
+    (5,0)    56651038
+    (6,0)    128461249
+    (7,0)    33029843
+    (8,0)    71406329
+    (9,0)    117872828
+    (10,0)    24351939
+    (11,0)    15444520
+    (12,0)    127526282
+    (13,0)    112279429
+    (14,0)    13631650
+    (15,0)    110379303
+    (16,0)    44800624
+    (17,0)    77768194
+    (18,0)    175348
+    (19,0)    107397390
+    (20,0)    43457210
+    (21,0)    97215941
+    (22,0)    73575166
+    (23,0)    44449716
+    (24,0)    33931725
+    (25,0)    55526611
+    (26,0)    14422052
+    (27,0)    58043874
+    (28,0)    72137330
+    (29,0)    9647841
+    (30,0)    15940696
+    (31,0)    14209953
+    (32,0)    49020884
+    (33,0)    28901139
+    (34,0)    50493274
+    (35,0)    49150070
+    (36,0)    126525083
+    (37,0)    6382741
+    (38,0)    89108298
+    (39,0)    9239736
+    (40,0)    110168549
+    (41,0)    95370260
+    (42,0)    116653531
+    (43,0)    123410704
+    (44,0)    16733666
+    (45,0)    49030283
+    (46,0)    108545122
+    (47,0)    99095666
+    (48,0)    133850078
+    (49,0)    63499302
+    (50,0)    21541383
+    (51,0)    6230752
+    (52,0)    89077457
+    (53,0)    70392766
+    (54,0)    6670456
+    (55,0)    61746272
+    (56,0)    83349536
+    (57,0)    115272185
+    (58,0)    20129909
+    (59,0)    106148554
+    (60,0)    117042376
+    (61,0)    71431188
+    (62,0)    45287809
+    (63,0)    107702121
+
+setup time: 28.0884 sec
+
+========== input graph: nodes: 134217728 edges: 4294966740
+Starting Betweenness Centrality Tests
+ - nthreads: 40
+
+Trial 1 : sources: [ 27691419 121280314 2413431 37512113 ]
+Xbc setup 1.14224 sec
+Xbc bfs phase: 68.862
+    bfs mxm:   68.0326
+    bfs other  0.829393
+Xbc: setup for backtrack     0.415571
+Xbx 2nd phase: 336.961
+    2nd mxm  : 335.314
+    2nd other: 1.64741
+Xbc wrapup:    0.865581
+Xbc total:     408.247
+Batch    time: 4.082468e+02 (sec), rate: 10.5205 (1e6 edges/sec)
+
+Trial 2 : sources: [ 38390877 56651037 128461248 33029842 ]
+Xbc setup 1.1372 sec
+Xbc bfs phase: 68.5387
+    bfs mxm:   67.7312
+    bfs other  0.807455
+Xbc: setup for backtrack     0.411379
+Xbx 2nd phase: 344.174
+    2nd mxm  : 342.601
+    2nd other: 1.5728
+Xbc wrapup:    0.866583
+Xbc total:     415.128
+Batch    time: 4.151283e+02 (sec), rate: 10.3461 (1e6 edges/sec)
+
+Trial 3 : sources: [ 71406328 117872827 24351938 15444519 ]
+Xbc setup 1.13296 sec
+Xbc bfs phase: 68.8608
+    bfs mxm:   68.0265
+    bfs other  0.834325
+Xbc: setup for backtrack     0.421793
+Xbx 2nd phase: 330.341
+    2nd mxm  : 328.69
+    2nd other: 1.65106
+Xbc wrapup:    0.860652
+Xbc total:     401.617
+Batch    time: 4.016172e+02 (sec), rate: 10.6942 (1e6 edges/sec)
+
+Trial 4 : sources: [ 127526281 112279428 13631649 110379302 ]
+Xbc setup 1.12496 sec
+Xbc bfs phase: 68.745
+    bfs mxm:   67.9596
+    bfs other  0.785397
+Xbc: setup for backtrack     0.417312
+Xbx 2nd phase: 322.619
+    2nd mxm  : 320.989
+    2nd other: 1.63009
+Xbc wrapup:    0.854317
+Xbc total:     393.761
+Batch    time: 3.937609e+02 (sec), rate: 10.9075 (1e6 edges/sec)
+
+Trial 5 : sources: [ 44800623 77768193 175347 107397389 ]
+Xbc setup 1.12035 sec
+Xbc bfs phase: 68.7342
+    bfs mxm:   67.9553
+    bfs other  0.77889
+Xbc: setup for backtrack     0.419179
+Xbx 2nd phase: 322.29
+    2nd mxm  : 320.683
+    2nd other: 1.60679
+Xbc wrapup:    0.865783
+Xbc total:     393.43
+Batch    time: 3.934300e+02 (sec), rate: 10.9167 (1e6 edges/sec)
+
+Trial 6 : sources: [ 43457209 97215940 73575165 44449715 ]
+Xbc setup 1.13 sec
+Xbc bfs phase: 68.3494
+    bfs mxm:   67.5508
+    bfs other  0.798598
+Xbc: setup for backtrack     0.410023
+Xbx 2nd phase: 337.57
+    2nd mxm  : 335.995
+    2nd other: 1.57511
+Xbc wrapup:    0.86528
+Xbc total:     408.324
+Batch    time: 4.083247e+02 (sec), rate: 10.5185 (1e6 edges/sec)
+
+Trial 7 : sources: [ 33931724 55526610 14422051 58043873 ]
+Xbc setup 1.13193 sec
+Xbc bfs phase: 68.7165
+    bfs mxm:   67.9168
+    bfs other  0.799745
+Xbc: setup for backtrack     0.414372
+Xbx 2nd phase: 320.587
+    2nd mxm  : 318.968
+    2nd other: 1.61937
+Xbc wrapup:    0.86426
+Xbc total:     391.714
+Batch    time: 3.917143e+02 (sec), rate: 10.9645 (1e6 edges/sec)
+
+Trial 8 : sources: [ 72137329 9647840 15940695 14209952 ]
+Xbc setup 1.12928 sec
+Xbc bfs phase: 68.7945
+    bfs mxm:   68.0128
+    bfs other  0.781637
+Xbc: setup for backtrack     0.411955
+Xbx 2nd phase: 348.215
+    2nd mxm  : 346.546
+    2nd other: 1.66914
+Xbc wrapup:    0.858296
+Xbc total:     419.409
+Batch    time: 4.194090e+02 (sec), rate: 10.2405 (1e6 edges/sec)
+
+Trial 9 : sources: [ 49020883 28901138 50493273 49150069 ]
+Xbc setup 1.12274 sec
+Xbc bfs phase: 68.4209
+    bfs mxm:   67.6506
+    bfs other  0.770365
+Xbc: setup for backtrack     0.415376
+Xbx 2nd phase: 329.729
+    2nd mxm  : 328.155
+    2nd other: 1.57461
+Xbc wrapup:    0.857174
+Xbc total:     400.546
+Batch    time: 4.005457e+02 (sec), rate: 10.7228 (1e6 edges/sec)
+
+Trial 10 : sources: [ 126525082 6382740 89108297 9239735 ]
+Xbc setup 1.12417 sec
+Xbc bfs phase: 68.5298
+    bfs mxm:   67.7479
+    bfs other  0.78193
+Xbc: setup for backtrack     0.414916
+Xbx 2nd phase: 338.264
+    2nd mxm  : 336.63
+    2nd other: 1.63378
+Xbc wrapup:    0.863785
+Xbc total:     409.196
+Batch    time: 4.091966e+02 (sec), rate: 10.4961 (1e6 edges/sec)
+
+Trial 11 : sources: [ 110168548 95370259 116653530 123410703 ]
+Xbc setup 1.13052 sec
+Xbc bfs phase: 68.8284
+    bfs mxm:   68.0436
+    bfs other  0.784837
+Xbc: setup for backtrack     0.413708
+Xbx 2nd phase: 328.433
+    2nd mxm  : 326.811
+    2nd other: 1.62132
+Xbc wrapup:    0.853581
+Xbc total:     399.659
+Batch    time: 3.996591e+02 (sec), rate: 10.7466 (1e6 edges/sec)
+
+Trial 12 : sources: [ 16733665 49030282 108545121 99095665 ]
+Xbc setup 1.12172 sec
+Xbc bfs phase: 68.608
+    bfs mxm:   67.8131
+    bfs other  0.794902
+Xbc: setup for backtrack     0.411371
+Xbx 2nd phase: 336.253
+    2nd mxm  : 334.675
+    2nd other: 1.57746
+Xbc wrapup:    0.855757
+Xbc total:     407.25
+Batch    time: 4.072498e+02 (sec), rate: 10.5463 (1e6 edges/sec)
+
+Trial 13 : sources: [ 133850077 63499301 21541382 6230751 ]
+Xbc setup 1.1213 sec
+Xbc bfs phase: 68.4706
+    bfs mxm:   67.6982
+    bfs other  0.772476
+Xbc: setup for backtrack     0.416558
+Xbx 2nd phase: 346.628
+    2nd mxm  : 345.033
+    2nd other: 1.59497
+Xbc wrapup:    0.866336
+Xbc total:     417.503
+Batch    time: 4.175040e+02 (sec), rate: 10.2872 (1e6 edges/sec)
+
+Trial 14 : sources: [ 89077456 70392765 6670455 61746271 ]
+Xbc setup 1.12806 sec
+Xbc bfs phase: 68.7457
+    bfs mxm:   67.9418
+    bfs other  0.80395
+Xbc: setup for backtrack     0.413149
+Xbx 2nd phase: 328.645
+    2nd mxm  : 327.069
+    2nd other: 1.57602
+Xbc wrapup:    0.852562
+Xbc total:     399.784
+Batch    time: 3.997844e+02 (sec), rate: 10.7432 (1e6 edges/sec)
+
+Trial 15 : sources: [ 83349535 115272184 20129908 106148553 ]
+Xbc setup 1.12412 sec
+Xbc bfs phase: 68.763
+    bfs mxm:   67.908
+    bfs other  0.854963
+Xbc: setup for backtrack     0.416989
+Xbx 2nd phase: 321.854
+    2nd mxm  : 320.259
+    2nd other: 1.59582
+Xbc wrapup:    0.866539
+Xbc total:     393.025
+Batch    time: 3.930252e+02 (sec), rate: 10.928 (1e6 edges/sec)
+
+Trial 16 : sources: [ 117042375 71431187 45287808 107702120 ]
+Xbc setup 1.12631 sec
+Xbc bfs phase: 68.643
+    bfs mxm:   67.8406
+    bfs other  0.802347
+Xbc: setup for backtrack     0.413667
+Xbx 2nd phase: 321.128
+    2nd mxm  : 319.548
+    2nd other: 1.58008
+Xbc wrapup:    0.863209
+Xbc total:     392.174
+Batch    time: 3.921745e+02 (sec), rate: 10.9517 (1e6 edges/sec)
+ntrials: 16
+Average time per trial (batch):   403.173 sec
+build/bc_gap_test: all tests passed
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m exit
+exit
+
+Script done on Wed 01 Jan 2020 09:57:35 PM CST
