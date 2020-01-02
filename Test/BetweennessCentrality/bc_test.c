@@ -45,6 +45,7 @@
 #define LAGRAPH_FREE_ALL            \
 {                                   \
     GrB_free (&A);                  \
+    GrB_free (&AT);                 \
     GrB_free (&Abool);              \
     GrB_free (&v);                  \
     GrB_free (&v_brandes);          \
@@ -57,6 +58,7 @@ int main (int argc, char **argv)
     uint64_t seed = 1;
 
     GrB_Matrix A = NULL;
+    GrB_Matrix AT = NULL;
     GrB_Matrix Abool = NULL;
     GrB_Vector v = NULL;
     GrB_Vector v_brandes = NULL;
@@ -74,10 +76,11 @@ int main (int argc, char **argv)
     LAGRAPH_OK (LAGraph_mmread(&A, stdin));
 
     // convert to boolean, pattern-only
-    LAGRAPH_OK (LAGraph_pattern(&Abool, A, GrB_INT64));
+    LAGRAPH_OK (LAGraph_pattern(&Abool, A, GrB_BOOL));
 
     GrB_free (&A);
     A = Abool;
+    Abool = NULL ;
 
     // finish any pending computations
     GrB_Index nvals;
@@ -91,6 +94,25 @@ int main (int argc, char **argv)
     LAGRAPH_OK (GrB_Matrix_nrows(&nrows, A));
     LAGRAPH_OK (GrB_Matrix_ncols(&ncols, A));
     GrB_Index n = nrows;
+
+    // AT = A'
+    bool A_is_symmetric ;
+    LAGRAPH_OK (GrB_Matrix_new (&AT, GrB_BOOL, n, n)) ;
+    LAGRAPH_OK (GrB_transpose (AT, NULL, NULL, A, NULL)) ;
+    LAGRAPH_OK (LAGraph_isequal (&A_is_symmetric, A, AT, NULL)) ;
+    if (A_is_symmetric)
+    {
+        printf ("A is symmetric\n") ;
+        GrB_free (&AT) ;
+        AT = A ;
+    }
+    else
+    {
+        printf ("A is unsymmetric\n") ;
+        GxB_fprint (AT, 2, stdout) ;
+    }
+
+    GrB_Matrix_nvals (&nvals, AT);
 
     //--------------------------------------------------------------------------
     // Begin tests
@@ -158,7 +180,8 @@ int main (int argc, char **argv)
     for (int trial = 0 ; trial < ntrials ; trial++)
     {
         GrB_free (&v_batch) ;
-        LAGRAPH_OK (LAGraph_bc_batch (&v_batch, A, vertex_list, n_batch)) ;
+//      LAGRAPH_OK (LAGraph_bc_batch (&v_batch, A, vertex_list, n_batch)) ;
+        LAGRAPH_OK (LAGraphX_bc_batch3 (&v_batch, A, AT, vertex_list, n_batch));
     }
 
     // Stop the timer
