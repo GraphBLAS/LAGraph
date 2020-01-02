@@ -224,8 +224,8 @@ int main (int argc, char **argv)
         n, nvals) ;
 
     int nthreads = LAGraph_get_nthreads();
-    printf("Starting Betweenness Centrality Tests\n");
-    printf(" - nthreads: %d\n", nthreads);
+    printf("TESTING LAGraphX_bc_batch3 (saxpy in both phases, nthreads %d\n",
+        nthreads) ;
 
     int ntrials = 0 ;
     double total_time_1 = 0 ;
