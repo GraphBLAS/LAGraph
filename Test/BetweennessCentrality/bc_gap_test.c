@@ -317,6 +317,17 @@ int main (int argc, char **argv)
         total_timing [1] += timing [1] ;        // allpush
         total_timing [2] += timing [2] ;        // allpull
 
+        GrB_Type type ;
+        GxB_Vector_type (&type, v_batch) ;
+        if (type == GrB_FP32)
+        {
+            printf("LAGraph is FP32\n");
+        }
+        else
+        {
+            printf("LAGraph is FP64\n");
+        }
+
         //----------------------------------------------------------------------
         // check result
         //----------------------------------------------------------------------

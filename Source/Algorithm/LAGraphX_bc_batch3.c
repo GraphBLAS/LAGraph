@@ -97,12 +97,12 @@
 
 // TODO add LAGraph_PLUS_SECOND_FP* to LAGraph.h.
 #if 0
-// select FP32
+// select FP64
 #define REAL_t                  double
 #define LAGr_REAL_TYPE          GrB_FP64
 #define LAGr_PLUS_SECOND_REAL   GxB_PLUS_SECOND_FP64
 #else
-// select FP64
+// select FP32
 #define REAL_t                  float
 #define LAGr_REAL_TYPE          GrB_FP32
 #define LAGr_PLUS_SECOND_REAL   GxB_PLUS_SECOND_FP32
