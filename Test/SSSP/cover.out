@@ -1,0 +1,71 @@
+matrix: from stdin
+read time: 6.10352e-05 sec
+
+  7x7 GraphBLAS int32_t matrix, sparse by row:
+  A, 12 entries
+
+    (0,1)   2
+    (0,3)   7
+    (1,4)   5
+    (1,6)   8
+    (2,5)   1
+    (3,0)   4
+    (3,2)   1
+    (4,5)   7
+    (5,2)   5
+    (6,2)   9
+    (6,3)   1
+    (6,4)   1
+
+  4x1 GraphBLAS int64_t matrix, hypersparse by row:
+  SourceNodes, no entries
+  pending tuples: 4 max pending: 256 zombies: 0
+  pending tuples:
+    GraphBLAS type:  int64_t size: 8
+    row: 0 col: 0   1
+    row: 1 col: 0   2
+    row: 2 col: 0   3
+    row: 3 col: 0   4
+  pending operator: implicit 2nd
+
+
+========== input graph: nodes: 7 edges: 12
+Starting Single Source Shortest Paths Tests
+ - nthreads: 40
+
+Trial 0 : sources: 1
+ - Start Test: Bellman-Ford Single Source Shortest Paths
+BF_pure_c     time: 1.907349e-06 (sec), rate: 6.29146 (1e6 edges/sec)
+ - Start Test: delta-stepping Single Source Shortest Paths (apply operator)
+SSSP+Delta Stepping  time: 2.860069e-03 (sec), rate: 0.0041957 (1e6 edges/sec)
+ - Start Test: delta-stepping Single Source Shortest Paths (select operator)
+SSSP+Delta Stepping  time: 2.040863e-03 (sec), rate: 0.00587987 (1e6 edges/sec)
+
+Trial 1 : sources: 2
+ - Start Test: Bellman-Ford Single Source Shortest Paths
+BF_pure_c     time: 1.192093e-06 (sec), rate: 10.0663 (1e6 edges/sec)
+ - Start Test: delta-stepping Single Source Shortest Paths (apply operator)
+SSSP+Delta Stepping  time: 1.116037e-03 (sec), rate: 0.0107523 (1e6 edges/sec)
+ - Start Test: delta-stepping Single Source Shortest Paths (select operator)
+SSSP+Delta Stepping  time: 6.449223e-04 (sec), rate: 0.0186069 (1e6 edges/sec)
+
+Trial 2 : sources: 3
+ - Start Test: Bellman-Ford Single Source Shortest Paths
+BF_pure_c     time: 9.536743e-07 (sec), rate: 12.5829 (1e6 edges/sec)
+ - Start Test: delta-stepping Single Source Shortest Paths (apply operator)
+SSSP+Delta Stepping  time: 3.412962e-03 (sec), rate: 0.00351601 (1e6 edges/sec)
+ - Start Test: delta-stepping Single Source Shortest Paths (select operator)
+SSSP+Delta Stepping  time: 2.629995e-03 (sec), rate: 0.00456275 (1e6 edges/sec)
+
+Trial 3 : sources: 4
+ - Start Test: Bellman-Ford Single Source Shortest Paths
+BF_pure_c     time: 9.536743e-07 (sec), rate: 12.5829 (1e6 edges/sec)
+ - Start Test: delta-stepping Single Source Shortest Paths (apply operator)
+SSSP+Delta Stepping  time: 2.178907e-03 (sec), rate: 0.00550735 (1e6 edges/sec)
+ - Start Test: delta-stepping Single Source Shortest Paths (select operator)
+SSSP+Delta Stepping  time: 1.291037e-03 (sec), rate: 0.00929486 (1e6 edges/sec)
+ntrials: 4
+Average time per trial (Bellman-Ford pure C): 1.2517e-06 sec
+Average time per trial (apply operator): 0.00239199 sec
+Average time per trial (select operator):   0.0016517 sec
+all tests passed

@@ -259,7 +259,7 @@ int main (int argc, char **argv)
         //----------------------------------------------------------------------
         // Compute shortest path using delta stepping with given node and delta
         //----------------------------------------------------------------------
-
+#if 0
         // Start the timer
         LAGraph_tic (tic);
 
@@ -272,6 +272,33 @@ int main (int argc, char **argv)
             " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
 
         total_time3 += t3;
+#endif
+
+        // Start the timer
+        LAGraph_tic (tic);
+
+        GrB_free (&path_lengths1);
+        LAGRAPH_OK (LAGraph_sssp11 (&path_lengths1, A, s, delta)) ;
+
+        // Stop the timer
+        double t3 = LAGraph_toc (tic);
+        printf ("SSSP11 (select)  time: %12.6g (sec), rate:"
+            " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
+
+        total_time3 += t3;
+
+
+        // Start the timer
+        LAGraph_tic (tic);
+
+        GrB_free (&path_lengths1);
+        LAGRAPH_OK (LAGraph_sssp2 (&path_lengths1, A, s, delta)) ;
+
+        // Stop the timer
+        t3 = LAGraph_toc (tic);
+        printf ("SSSP2 (select)  time: %12.6g (sec), rate:"
+            " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
+
 
         //----------------------------------------------------------------------
         // find shortest path using BF on node s with LAGraph_pure_c

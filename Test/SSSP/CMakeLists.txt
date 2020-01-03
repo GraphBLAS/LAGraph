@@ -207,7 +207,7 @@ message ( STATUS "CMAKE C flags: " ${CMAKE_C_FLAGS} )
 #-------------------------------------------------------------------------------
 
 set (SSSP_TEST_SRC
-     sssp_test.c )
+     sssp_test.c LAGraph_sssp11.c LAGraph_sssp2.c)
 
 set (SSSP_CHECK_SRC
         sssp_check.c)

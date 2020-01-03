@@ -32,3 +32,21 @@
 // Contributed by Scott Kolodziej, Texas A&M University
 
 #include "LAGraph.h"
+GrB_Info LAGraph_sssp11         // single source shortest paths
+(
+    GrB_Vector *path_length,   // path_length(i) is the length of the shortest
+                               // path from the source vertex to vertex i
+    GrB_Matrix A,              // input graph, treated as if boolean in semiring (INT32)
+    GrB_Index source,          // source vertex from which to compute shortest paths
+    int32_t delta               // delta value for delta stepping
+);
+
+GrB_Info LAGraph_sssp2         // single source shortest paths
+(
+    GrB_Vector *path_length,   // path_length(i) is the length of the shortest
+                               // path from the source vertex to vertex i
+    GrB_Matrix A,              // input graph, treated as if boolean in semiring (INT32)
+    GrB_Index source,          // source vertex from which to compute shortest paths
+    int32_t delta               // delta value for delta stepping
+);
+
