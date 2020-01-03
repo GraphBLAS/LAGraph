@@ -1,0 +1,110 @@
+matrix: /home/grads/a/aznaveh/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/grads/a/aznaveh/GAP/GAP-web/GAP-web.grb
+number of threads: 1
+number of CCs: 123
+FastSV: 121.133794
+number of CCs: 123
+Boruvka: 189.677783
+
+number of threads: 4
+number of CCs: 123
+FastSV: 38.509867
+number of CCs: 123
+Boruvka: 58.612597
+
+number of threads: 16
+number of CCs: 123
+FastSV: 17.746928
+number of CCs: 123
+Boruvka: 27.047322
+
+number of threads: 20
+number of CCs: 123
+FastSV: 16.923298
+matrix: /home/grads/a/aznaveh/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/grads/a/aznaveh/GAP/GAP-kron/GAP-kron.grb
+number of threads: 1
+number of CCs: 71164263
+FastSV: 1463.503211
+number of CCs: 71164263
+Boruvka: 1917.060959
+
+number of threads: 4
+matrix: /home/grads/a/aznaveh/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/grads/a/aznaveh/GAP/GAP-twitter/GAP-twitter.grb
+number of threads: 1
+number of CCs: 19926186
+FastSV: 463.277754
+number of CCs: 19926186
+Boruvka: 455.673883
+
+number of threads: 4
+number of CCs: 19926186
+FastSV: 137.122000
+number of CCs: 19926186
+Boruvka: 138.265211
+
+number of threads: 16
+number of CCs: 19926186
+FastSV: 46.818400
+number of CCs: 19926186
+Boruvka: 47.943353
+
+number of threads: 20
+number of CCs: 19926186
+FastSV: 41.818149
+number of CCs: 19926186
+Boruvka: 43.001151
+
+number of threads: 40
+number of CCs: 19926186
+FastSV: 39.392845
+number of CCs: 19926186
+Boruvka: 41.448427
+
+matrix: /home/grads/a/aznaveh/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/grads/a/aznaveh/GAP/GAP-urand/GAP-urand.grb
+number of threads: 1
+number of CCs: 1
+FastSV: 1495.081864
+number of CCs: 1
+Boruvka: 2322.043411
+
+number of threads: 4
+matrix: /home/grads/a/aznaveh/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/grads/a/aznaveh/GAP/GAP-road/GAP-road.grb
+number of threads: 1
+number of CCs: 1
+FastSV: 49.694693
+number of CCs: 1
+Boruvka: 63.439479
+
+number of threads: 4
+number of CCs: 1
+FastSV: 16.627095
+number of CCs: 1
+Boruvka: 21.447160
+
+number of threads: 16
+number of CCs: 1
+FastSV: 8.922520
+number of CCs: 1
+Boruvka: 11.286769
+
+number of threads: 20
+number of CCs: 1
+FastSV: 8.609656
+number of CCs: 1
+Boruvka: 10.902780
+
+number of threads: 40
+number of CCs: 1
+FastSV: 8.337306
+number of CCs: 1
+Boruvka: 10.925793
+
