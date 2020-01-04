@@ -81,7 +81,65 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     // read in the file in Matrix Market format
-    LAGRAPH_OK (LAGraph_mmread (&A, stdin)) ;
+    //LAGRAPH_OK (LAGraph_mmread (&A, stdin)) ;
+
+    if (argc > 1)
+    {
+        // Usage:
+        //      ./bfs_test matrixfile.mtx
+        //      ./bfs_test matrixfile.grb
+
+        // read in the file in Matrix Market format from the input file
+        char *filename = argv [1] ;
+        printf ("matrix: %s\n", filename) ;
+
+        // find the filename extension
+        size_t len = strlen (filename) ;
+        char *ext = NULL ;
+        for (int k = len-1 ; k >= 0 ; k--)
+        {
+            if (filename [k] == '.')
+            {
+                ext = filename + k ;
+                printf ("[%s]\n", ext) ;
+                break ;
+            }
+        }
+        bool is_binary = (ext != NULL && strncmp (ext, ".grb", 4) == 0) ;
+
+        if (is_binary)
+        {
+            printf ("Reading binary file: %s\n", filename) ;
+            LAGRAPH_OK (LAGraph_binread (&A, filename)) ;
+        }
+        else
+        {
+            printf ("Reading Matrix Market file: %s\n", filename) ;
+            FILE *f = fopen (filename, "r") ;
+            if (f == NULL)
+            {
+                printf ("Matrix file not found: [%s]\n", filename) ;
+                exit (1) ;
+            }
+            LAGRAPH_OK (LAGraph_mmread(&A, f));
+            fclose (f) ;
+        }
+
+    }
+    else
+    {
+
+        // Usage:  ./bfs_test < matrixfile.mtx
+        printf ("matrix: from stdin\n") ;
+
+        // read in the file in Matrix Market format from stdin
+        LAGRAPH_OK (LAGraph_mmread(&A, stdin));
+    }
+
+////////////////////////
+
+
+
     // GxB_fprint (A, GxB_COMPLETE, stderr) ;
     // LAGraph_mmwrite (A, stderr) ;
 
