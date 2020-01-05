@@ -1,5 +1,6 @@
 //------------------------------------------------------------------------------
-// LAGraph_sssp: Single source shortest path with delta stepping
+// LAGraph_sssp11: Single source shortest path with delta stepping, same as
+// LAGraph_sssp1 but with timing
 //------------------------------------------------------------------------------
 
 /*
