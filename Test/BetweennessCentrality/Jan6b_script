@@ -246,3 +246,2548 @@ build/bc_gap_test: all tests passed
 matrix: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
 [.grb]
 Reading binary file: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+sources: /home/faculty/davis/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 33.0799 sec
+setup time: 6.00131 sec
+A is symmetric
+transpose time: 81.7228
+
+========== input graph: nodes: 134217728 edges: 4294966740
+TESTING LAGraphX_bc_batch3 (saxpy in both phases, nthreads 40
+
+Trial 1 : sources: [ 27691419 121280314 2413431 37512113 ]
+Batch    time: 6.617222e+01 (sec), rate: 64.9059 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 2 : sources: [ 38390877 56651037 128461248 33029842 ]
+Batch    time: 6.624520e+01 (sec), rate: 64.8344 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 3 : sources: [ 71406328 117872827 24351938 15444519 ]
+Batch    time: 6.504211e+01 (sec), rate: 66.0336 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 4 : sources: [ 127526281 112279428 13631649 110379302 ]
+Batch    time: 6.405601e+01 (sec), rate: 67.0502 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 5 : sources: [ 44800623 77768193 175347 107397389 ]
+Batch    time: 6.371052e+01 (sec), rate: 67.4138 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 6 : sources: [ 43457209 97215940 73575165 44449715 ]
+Batch    time: 6.572795e+01 (sec), rate: 65.3446 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 7 : sources: [ 33931724 55526610 14422051 58043873 ]
+Batch    time: 6.372622e+01 (sec), rate: 67.3972 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 8 : sources: [ 72137329 9647840 15940695 14209952 ]
+Batch    time: 6.810469e+01 (sec), rate: 63.0642 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 9 : sources: [ 49020883 28901138 50493273 49150069 ]
+Batch    time: 6.476543e+01 (sec), rate: 66.3157 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 10 : sources: [ 126525082 6382740 89108297 9239735 ]
+Batch    time: 6.598988e+01 (sec), rate: 65.0852 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 11 : sources: [ 110168548 95370259 116653530 123410703 ]
+Batch    time: 6.473030e+01 (sec), rate: 66.3517 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 12 : sources: [ 16733665 49030282 108545121 99095665 ]
+Batch    time: 6.590310e+01 (sec), rate: 65.1709 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 13 : sources: [ 133850077 63499301 21541382 6230751 ]
+Batch    time: 6.725786e+01 (sec), rate: 63.8582 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 14 : sources: [ 89077456 70392765 6670455 61746271 ]
+Batch    time: 6.500395e+01 (sec), rate: 66.0724 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 15 : sources: [ 83349535 115272184 20129908 106148553 ]
+Batch    time: 6.467401e+01 (sec), rate: 66.4095 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 16 : sources: [ 117042375 71431187 45287808 107702120 ]
+Batch    time: 6.389690e+01 (sec), rate: 67.2171 (1e6 edges/sec)
+LAGraph batch is FP32
+ntrials: 16
+Average time per trial: batch, pushpull:   65.3129 sec
+Average time per trial: batch, allpush :   65.3129 sec
+Average time per trial: batch, allpull :   inf sec
+build/bc_gap_test: all tests passed
+matrix: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+sources: /home/faculty/davis/GAP/GAP-road/GAP-road_sources.mtx
+read time: 0.74596 sec
+setup time: 0.113635 sec
+A is symmetric
+transpose time: 0.920152
+
+========== input graph: nodes: 23947347 edges: 57708624
+TESTING LAGraphX_bc_batch3 (saxpy in both phases, nthreads 40
+
+Trial 1 : sources: [ 4795720 21003853 417968 6496511 ]
+Batch    time: 8.164153e+01 (sec), rate: 0.706854 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 2 : sources: [ 6648699 9811073 22247478 5720252 ]
+Batch    time: 8.131656e+01 (sec), rate: 0.709679 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 3 : sources: [ 12366459 20413729 4217374 2674749 ]
+Batch    time: 7.491649e+01 (sec), rate: 0.770306 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 4 : sources: [ 22085557 19445040 2360788 19115968 ]
+Batch    time: 7.811339e+01 (sec), rate: 0.73878 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 5 : sources: [ 7758767 13468234 30367 18599547 ]
+Batch    time: 7.667272e+01 (sec), rate: 0.752662 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 6 : sources: [ 7526108 16836280 12742067 7697995 ]
+Batch    time: 9.379697e+01 (sec), rate: 0.61525 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 7 : sources: [ 5876443 9616340 2497673 10052290 ]
+Batch    time: 9.635139e+01 (sec), rate: 0.598939 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 8 : sources: [ 12493057 1670855 2760679 2460941 ]
+Batch    time: 8.362052e+01 (sec), rate: 0.690125 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 9 : sources: [ 8489650 5005225 8744645 8512023 ]
+Batch    time: 8.653643e+01 (sec), rate: 0.666871 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 10 : sources: [ 21912165 1105390 15432163 1600177 ]
+Batch    time: 1.021651e+02 (sec), rate: 0.564857 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 11 : sources: [ 19079469 16516637 20202566 21372803 ]
+Batch    time: 9.739631e+01 (sec), rate: 0.592513 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 12 : sources: [ 2898009 8491277 18798317 23757560 ]
+Batch    time: 8.780615e+01 (sec), rate: 0.657228 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 13 : sources: [ 17161819 23180739 10997085 3730630 ]
+Batch    time: 9.988709e+01 (sec), rate: 0.577739 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 14 : sources: [ 1079068 15426822 12190925 1155218 ]
+Batch    time: 7.195388e+01 (sec), rate: 0.802022 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 15 : sources: [ 10693488 14434835 19963339 3486185 ]
+Batch    time: 7.388123e+01 (sec), rate: 0.7811 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 16 : sources: [ 18383269 20269908 12370764 7843140 ]
+Batch    time: 7.807472e+01 (sec), rate: 0.739146 (1e6 edges/sec)
+LAGraph batch is FP32
+ntrials: 16
+Average time per trial: batch, pushpull:   85.2528 sec
+Average time per trial: batch, allpush :   85.2528 sec
+Average time per trial: batch, allpull :   inf sec
+build/bc_gap_test: all tests passed
+[0;36mhypersparse $[0m pwd
+/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality
+[0;36mhypersparse $[0m dir
+total 13128
+   4 batch_result.mtx     4 bcheck.m              12 CMakeLists.txt    16 Jan6b_script     4 sample2.mtx  3784 t_nomask
+   8 bc_batch_exe.c      12 bc_test.c              4 [0m[01;31mdo_gap[0m*            4 LFAT5.mtx        4 sample.mtx    344 t_nomask.m
+   8 bc_exe.c             4 bc_test.h              4 [01;31mgo[0m*                4 Makefile         4 stderr.txt      4 west0067.mtx
+  16 bc_gap_test.c        4 bc_test.m              4 [01;31mgo2[0m*               4 m.awk         3960 t_allmask
+   4 bcheck1.m            4 brandes_result.mtx    36 jagmesh7.mtx       4 [01;32moutput[0m/        472 t_allmask.m
+   4 bcheck2.m            4 [01;32mbuild[0m/              4376 Jan6a_scriopt      4 [01;32mresults[0m/         4 t_compare.m
+[0;36mhypersparse $[0m dkr [K[Kdir -t
+total 13128
+  16 Jan6b_script    472 t_allmask.m            4 m.awk         4 [0m[01;32mresults[0m/     12 CMakeLists.txt     4 sample.mtx
+  16 bc_gap_test.c   344 t_nomask.m             4 [01;32moutput[0m/       4 Makefile      4 bc_test.h          4 west0067.mtx
+   4 stderr.txt     3960 t_allmask              4 bcheck2.m     4 [01;31mdo_gap[0m*       8 bc_exe.c           4 bc_test.m
+   4 [01;32mbuild[0m/         3784 t_nomask               4 bcheck1.m     4 [01;31mgo[0m*           8 bc_batch_exe.c
+4376 Jan6a_scriopt     4 batch_result.mtx       4 bcheck.m      4 [01;31mgo2[0m*         36 jagmesh7.mtx
+   4 t_compare.m       4 brandes_result.mtx    12 bc_test.c     4 LFAT5.mtx     4 sample2.mtx
+[0;36mhypersparse $[0m l J[Kt_*
+[?1049h[?1h=Script started on Mon 06 Jan 2020 11:19:59 AM CST
+Intel Suite:
+Copyright (C) 2009-2019 Intel Corporation. All rights reserved.
+Intel(R) VTune(TM) Amplifier 2019 (build 591499)
+[7mESC[27m[0;36mhypersparse $[7mESC[27m[0m ./do_gap
+matrix: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+sources: /home/faculty/davis/GAP/GAP-web/GAP-web_sources.mtx
+read time: 14.154 sec
+[ GrB_apply  ]
+
+  50636151x50636151 GraphBLAS bool matrix, sparse by row:
+  max # entries: 1930292948
+  vlen: 50636151 nvec_nonempty: 43399533 nvec: 50636151 plen: 50636151 vdim: 50636151 hyper_ratio 0.0625
+  A 0x153b730 number of memory blocks: 4
+    GraphBLAS type:  bool size: 1
+  ->h: (nil) shallow: 0
+  ->p: 0x7fb0e66ff010 shallow: 0
+  ->i: 0x7fad4e007010 shallow: 0
+  ->x: 0x7fb112179010 shallow: 0
+  A, 1930292948 entries
+
+  row: 10 : 33 entries [0:32]
+    column 49817219:   1
+    column 49824797:   1
+    column 49824842:   1
+    column 49824843:   1
+    column 49824846:   1
+    column 49826026:   1
+    column 49826027:   1
+    column 49826709:   1
+    column 49826710:   1
+    column 49826711:   1
+    column 49826712:   1
+    column 49826713:   1
+    column 49826714:   1
+    column 49826715:   1
+    column 49826716:   1
+    column 49826717:   1
+    column 49826719:   1
+    column 49827761:   1
+    column 49853332:   1
+    column 49853570:   1
+    column 49853571:   1
+    column 49853572:   1
+    column 49853573:   1
+    column 49853574:   1
+    column 49853575:   1
+    column 49855627:   1
+    column 50184826:   1
+    column 50284715:   1
+    column 50284718:   1
+    column 50284719:   1
+        ...
+  row: 11 : 1 entries [33:33]
+        ...
+  row: 80 : 65 entries [34:98]
+        ...
+  row: 81 : 65 entries [99:163]
+        ...
+  row: 82 : 65 entries [164:228]
+        ...
+  row: 83 : 65 entries [229:293]
+        ...
+  row: 84 : 65 entries [294:358]
+        ...
+  row: 85 : 65 entries [359:423]
+        ...
+  row: 86 : 65 entries [424:488]
+        ...
+  row: 87 : 65 entries [489:553]
+        ...
+    ...
+  Pending (nil)
+  queue head  (nil)
+  queue prev  (nil)
+  queue next  (nil)
+  is in queue 0
+[7mt_allmask (file 1 of 5)[27m[K[K/[K  [K[K__[Kmm[Kxx[Kmm[K[1;1HScript started on Mon 06 Jan 2020 11:19:59 AM CST
+[2;1HIntel Suite:
+[3;1HCopyright (C) 2009-2019 Intel Corporation. All rights reserved.
+[4;1HIntel(R) VTune(TM) Amplifier 2019 (build 591499)
+[5;1H[7mESC[27m[0;36mhypersparse $[7mESC[27m[0m ./do_gap
+[6;1Hmatrix: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[7;1H[.grb]
+[8;1HReading binary file: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[9;1Hsources: /home/faculty/davis/GAP/GAP-web/GAP-web_sources.mtx
+[10;1Hread time: 14.154 sec
+[11;1H[ GrB_apply  ]
+[12;1H
+[13;1H  50636151x50636151 GraphBLAS bool matrix, sparse by row:
+[14;1H  max # entries: 1930292948
+[15;1H  vlen: 50636151 nvec_nonempty: 43399533 nvec: 50636151 plen: 50636151 vdim: 50636151 hyper_ratio 0.0625
+[16;1H  A 0x153b730 number of memory blocks: 4
+[17;1H    GraphBLAS type:  bool size: 1
+[18;1H  ->h: (nil) shallow: 0
+[19;1H  ->p: 0x7fb0e66ff010 shallow: 0
+[20;1H  ->i: 0x7fad4e007010 shallow: 0
+[21;1H  ->x: 0x7fb112179010 shallow: 0
+[22;1H  A, 1930292948 entries
+[23;1H
+[24;1H  row: 10 : 33 entries [0:32]
+[25;1H    column 49817219:   1
+[26;1H    column 49824797:   1
+[27;1H    column 49824842:   1
+[28;1H    column 49824843:   1
+[29;1H    column 49824846:   1
+[30;1H    column 49826026:   1
+[31;1H    column 49826027:   1
+[32;1H    column 49826709:   1
+[33;1H    column 49826710:   1
+[34;1H    column 49826711:   1
+[35;1H    column 49826712:   1
+[36;1H    column 49826713:   1
+[37;1H    column 49826714:   1
+[38;1H    column 49826715:   1
+[39;1H    column 49826716:   1
+[40;1H    column 49826717:   1
+[41;1H    column 49826719:   1
+[42;1H    column 49827761:   1
+[43;1H    column 49853332:   1
+[44;1H    column 49853570:   1
+[45;1H    column 49853571:   1
+[46;1H    column 49853572:   1
+[47;1H    column 49853573:   1
+[48;1H    column 49853574:   1
+[49;1H    column 49853575:   1
+[50;1H    column 49855627:   1
+[51;1H    column 50184826:   1
+[52;1H    column 50284715:   1
+[53;1H    column 50284718:   1
+[54;1H    column 50284719:   1
+[55;1H        ...
+[56;1H  row: 11 : 1 entries [33:33]
+[57;1H        ...
+[58;1H  row: 80 : 65 entries [34:98]
+[59;1H        ...
+[60;1H  row: 81 : 65 entries [99:163]
+[61;1H        ...
+[62;1H  row: 82 : 65 entries [164:228]
+[63;1H        ...
+[64;1H  row: 83 : 65 entries [229:293]
+[65;1H        ...
+[66;1H  row: 84 : 65 entries [294:358]
+[67;1H        ...
+[68;1H  row: 85 : 65 entries [359:423]
+[69;1H        ...
+[70;1H  row: 86 : 65 entries [424:488]
+[71;1H        ...
+[72;1H  row: 87 : 65 entries [489:553]
+[73;1H        ...
+[74;1H    ...
+[75;1H  Pending (nil)
+[76;1H  queue head  (nil)
+[77;1H  queue prev  (nil)
+[78;1H  queue next  (nil)
+[79;1H  is in queue 0
+[80;1H[1;1HScript started on Mon 06 Jan 2020 11:19:59 AM CST
+[2;1HIntel Suite:
+[3;1HCopyright (C) 2009-2019 Intel Corporation. All rights reserved.
+[4;1HIntel(R) VTune(TM) Amplifier 2019 (build 591499)
+[5;1H[7mESC[27m[0;36mhypersparse $[7mESC[27m[0m ./do_gap
+[6;1Hmatrix: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[7;1H[.grb]
+[8;1HReading binary file: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[9;1Hsources: /home/faculty/davis/GAP/GAP-web/GAP-web_sources.mtx
+[10;1Hread time: 14.154 sec
+[11;1H[ GrB_apply  ]
+[12;1H
+[13;1H  50636151x50636151 GraphBLAS bool matrix, sparse by row:
+[14;1H  max # entries: 1930292948
+[15;1H  vlen: 50636151 nvec_nonempty: 43399533 nvec: 50636151 plen: 50636151 vdim: 50636151 hyper_ratio 0.0625
+[16;1H  A 0x153b730 number of memory blocks: 4
+[17;1H    GraphBLAS type:  bool size: 1
+[18;1H  ->h: (nil) shallow: 0
+[19;1H  ->p: 0x7fb0e66ff010 shallow: 0
+[20;1H  ->i: 0x7fad4e007010 shallow: 0
+[21;1H  ->x: 0x7fb112179010 shallow: 0
+[22;1H  A, 1930292948 entries
+[23;1H
+[24;1H  row: 10 : 33 entries [0:32]
+[25;1H    column 49817219:   1
+[26;1H    column 49824797:   1
+[27;1H    column 49824842:   1
+[28;1H    column 49824843:   1
+[29;1H    column 49824846:   1
+[30;1H    column 49826026:   1
+[31;1H    column 49826027:   1
+[32;1H    column 49826709:   1
+[33;1H    column 49826710:   1
+[34;1H    column 49826711:   1
+[35;1H    column 49826712:   1
+[36;1H    column 49826713:   1
+[37;1H    column 49826714:   1
+[38;1H    column 49826715:   1
+[39;1H    column 49826716:   1
+[40;1H    column 49826717:   1
+[41;1H    column 49826719:   1
+[42;1H    column 49827761:   1
+[43;1H    column 49853332:   1
+[44;1H    column 49853570:   1
+[45;1H    column 49853571:   1
+[46;1H    column 49853572:   1
+[47;1H    column 49853573:   1
+[48;1H    column 49853574:   1
+[49;1H    column 49853575:   1
+[50;1H    column 49855627:   1
+[51;1H    column 50184826:   1
+[52;1H    column 50284715:   1
+[53;1H    column 50284718:   1
+[54;1H    column 50284719:   1
+[55;1H        ...
+[56;1H  row: 11 : 1 entries [33:33]
+[57;1H        ...
+[58;1H  row: 80 : 65 entries [34:98]
+[59;1H        ...
+[60;1H  row: 81 : 65 entries [99:163]
+[61;1H        ...
+[62;1H  row: 82 : 65 entries [164:228]
+[63;1H        ...
+[64;1H  row: 83 : 65 entries [229:293]
+[65;1H        ...
+[66;1H  row: 84 : 65 entries [294:358]
+[67;1H        ...
+[68;1H  row: 85 : 65 entries [359:423]
+[69;1H        ...
+[70;1H  row: 86 : 65 entries [424:488]
+[71;1H        ...
+[72;1H  row: 87 : 65 entries [489:553]
+[73;1H        ...
+[74;1H    ...
+[75;1H  Pending (nil)
+[76;1H  queue head  (nil)
+[77;1H  queue prev  (nil)
+[78;1H  queue next  (nil)
+[79;1H  is in queue 0
+[80;1H...skipping...
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.02562e+08 mwork 2.02545e+08 A*B flops: 16941 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.052727 sec,  pull/push inf nvals 0
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.03044e+08 mwork 2.02545e+08 A*B flops: 499680 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0519035 sec,  pull/push inf nvals 5982
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.08636e+08 mwork 2.02545e+08 A*B flops: 6.09139e+06 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0558105 sec,  pull/push inf nvals 99734
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.12529e+08 mwork 2.02545e+08 A*B flops: 9.98421e+06 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 163 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0635585 sec,  pull/push inf nvals 177692
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.14266e+08 mwork 2.02545e+08 A*B flops: 1.17218e+07 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0670202 sec,  pull/push inf nvals 246041
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.4341e+08 mwork 2.02545e+08 A*B flops: 4.08657e+07 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0829668 sec,  pull/push inf nvals 888199
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.87555e+08 mwork 2.02545e+08 A*B flops: 8.50102e+07 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.107599 sec,  pull/push inf nvals 1.87346e+06
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 4.1579e+08 mwork 2.02545e+08 A*B flops: 2.13245e+08 Use M: 1
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.138657 sec,  pull/push inf nvals 5.02305e+06
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 5.45436e+08 mwork 1.51908e+08 A*B flops: 3.93527e+08 Use M: 1
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.183256 sec,  pull/push inf nvals 8.10044e+06
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 5.82817e+08 mwork 1.51908e+08 A*B flops: 4.30909e+08 Use M: 1
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.200061 sec,  pull/push inf nvals 1.04564e+07
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 6.1918e+08 mwork 1.51908e+08 A*B flops: 4.67272e+08 Use M: 1
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.213892 sec,  pull/push inf nvals 1.15035e+07
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 5.651e+08 mwork 1.51908e+08 A*B flops: 4.13191e+08 Use M: 1
+:[K[H[2J[H[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.02562e+08 mwork 2.02545e+08 A*B flops: 16941 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.052727 sec,  pull/push inf nvals 0
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.03044e+08 mwork 2.02545e+08 A*B flops: 499680 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0519035 sec,  pull/push inf nvals 5982
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.08636e+08 mwork 2.02545e+08 A*B flops: 6.09139e+06 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0558105 sec,  pull/push inf nvals 99734
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.12529e+08 mwork 2.02545e+08 A*B flops: 9.98421e+06 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 163 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0635585 sec,  pull/push inf nvals 177692
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.14266e+08 mwork 2.02545e+08 A*B flops: 1.17218e+07 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0670202 sec,  pull/push inf nvals 246041
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.4341e+08 mwork 2.02545e+08 A*B flops: 4.08657e+07 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0829668 sec,  pull/push inf nvals 888199
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.87555e+08 mwork 2.02545e+08 A*B flops: 8.50102e+07 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.107599 sec,  pull/push inf nvals 1.87346e+06
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 4.1579e+08 mwork 2.02545e+08 A*B flops: 2.13245e+08 Use M: 1
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.138657 sec,  pull/push inf nvals 5.02305e+06
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 5.45436e+08 mwork 1.51908e+08 A*B flops: 3.93527e+08 Use M: 1
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.183256 sec,  pull/push inf nvals 8.10044e+06
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[H[2J[H[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.02562e+08 mwork 2.02545e+08 A*B flops: 16941 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.052727 sec,  pull/push inf nvals 0
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.03044e+08 mwork 2.02545e+08 A*B flops: 499680 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0519035 sec,  pull/push inf nvals 5982
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.08636e+08 mwork 2.02545e+08 A*B flops: 6.09139e+06 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0558105 sec,  pull/push inf nvals 99734
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.12529e+08 mwork 2.02545e+08 A*B flops: 9.98421e+06 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 163 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0635585 sec,  pull/push inf nvals 177692
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.14266e+08 mwork 2.02545e+08 A*B flops: 1.17218e+07 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0670202 sec,  pull/push inf nvals 246041
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.4341e+08 mwork 2.02545e+08 A*B flops: 4.08657e+07 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0829668 sec,  pull/push inf nvals 888199
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.87555e+08 mwork 2.02545e+08 A*B flops: 8.50102e+07 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.107599 sec,  pull/push inf nvals 1.87346e+06
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 4.1579e+08 mwork 2.02545e+08 A*B flops: 2.13245e+08 Use M: 1
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+:[K[H[2J[H[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.02562e+08 mwork 2.02545e+08 A*B flops: 16941 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.052727 sec,  pull/push inf nvals 0
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.03044e+08 mwork 2.02545e+08 A*B flops: 499680 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0519035 sec,  pull/push inf nvals 5982
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.08636e+08 mwork 2.02545e+08 A*B flops: 6.09139e+06 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0558105 sec,  pull/push inf nvals 99734
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.12529e+08 mwork 2.02545e+08 A*B flops: 9.98421e+06 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 163 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0635585 sec,  pull/push inf nvals 177692
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.14266e+08 mwork 2.02545e+08 A*B flops: 1.17218e+07 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0670202 sec,  pull/push inf nvals 246041
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.4341e+08 mwork 2.02545e+08 A*B flops: 4.08657e+07 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0829668 sec,  pull/push inf nvals 888199
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.87555e+08 mwork 2.02545e+08 A*B flops: 8.50102e+07 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+saxpy3 done
+:[K[H[2J[H[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.02562e+08 mwork 2.02545e+08 A*B flops: 16941 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.052727 sec,  pull/push inf nvals 0
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.03044e+08 mwork 2.02545e+08 A*B flops: 499680 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0519035 sec,  pull/push inf nvals 5982
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.08636e+08 mwork 2.02545e+08 A*B flops: 6.09139e+06 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0558105 sec,  pull/push inf nvals 99734
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.12529e+08 mwork 2.02545e+08 A*B flops: 9.98421e+06 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 163 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0635585 sec,  pull/push inf nvals 177692
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.14266e+08 mwork 2.02545e+08 A*B flops: 1.17218e+07 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0670202 sec,  pull/push inf nvals 246041
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.4341e+08 mwork 2.02545e+08 A*B flops: 4.08657e+07 Use M: 0###### HEY! MASK COSTLY !!
+:[K[H[2J[H[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.02562e+08 mwork 2.02545e+08 A*B flops: 16941 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.052727 sec,  pull/push inf nvals 0
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.03044e+08 mwork 2.02545e+08 A*B flops: 499680 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0519035 sec,  pull/push inf nvals 5982
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.08636e+08 mwork 2.02545e+08 A*B flops: 6.09139e+06 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0558105 sec,  pull/push inf nvals 99734
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.12529e+08 mwork 2.02545e+08 A*B flops: 9.98421e+06 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 163 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0635585 sec,  pull/push inf nvals 177692
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.14266e+08 mwork 2.02545e+08 A*B flops: 1.17218e+07 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+:[K[H[2J[H[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.02562e+08 mwork 2.02545e+08 A*B flops: 16941 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.052727 sec,  pull/push inf nvals 0
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.03044e+08 mwork 2.02545e+08 A*B flops: 499680 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0519035 sec,  pull/push inf nvals 5982
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.08636e+08 mwork 2.02545e+08 A*B flops: 6.09139e+06 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0558105 sec,  pull/push inf nvals 99734
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.12529e+08 mwork 2.02545e+08 A*B flops: 9.98421e+06 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 163 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0635585 sec,  pull/push inf nvals 177692
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 2.14266e+08 mwork 2.02545e+08 A*B flops: 1.17218e+07 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+saxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.0670202 sec,  pull/push inf nvals 246041
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 4.05089e+08  totfl 2.4341e+08 mwork 2.02545e+08 A*B flops: 4.08657e+07 Use M: 0###### HEY! MASK COSTLY !!
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.0829668 sec,  pull/push inf nvals 888199
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 4.05089e+08  totfl 2.87555e+08 mwork 2.02545e+08 A*B flops: 8.50102e+07 Use M: 0###### HEY! MASK COSTLY !!
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.107599 sec,  pull/push inf nvals 1.87346e+06
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 4.05089e+08  totfl 4.1579e+08 mwork 2.02545e+08 A*B flops: 2.13245e+08 Use M: 1
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.138657 sec,  pull/push inf nvals 5.02305e+06
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 4.05089e+08  totfl 5.45436e+08 mwork 1.51908e+08 A*B flops: 3.93527e+08 Use M: 1
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.183256 sec,  pull/push inf nvals 8.10044e+06
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KAA[K[HMsaxpy3 done
+[33;1H[K:[K[K [KESCESC[KOO[KAA[K[HM    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+[33;1H[K:[K[K [KESCESC[KOO[KAA[K[HM    nnz(M) 4.05089e+08  totfl 2.14266e+08 mwork 2.02545e+08 A*B flops: 1.17218e+07 Use M: 0###### HEY! MASK COSTLY !!
+[33;1H[K:[K[K [KESCESC[KOO[KAA[K[HM[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+[33;1H[K:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.183256 sec,  pull/push inf nvals 8.10044e+06
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 4.05089e+08  totfl 5.82817e+08 mwork 1.51908e+08 A*B flops: 4.30909e+08 Use M: 1
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.200061 sec,  pull/push inf nvals 1.04564e+07
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 4.05089e+08  totfl 6.1918e+08 mwork 1.51908e+08 A*B flops: 4.67272e+08 Use M: 1
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.213892 sec,  pull/push inf nvals 1.15035e+07
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 4.05089e+08  totfl 5.651e+08 mwork 1.51908e+08 A*B flops: 4.13191e+08 Use M: 1
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.19773 sec,  pull/push inf nvals 1.04373e+07
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 4.05089e+08  totfl 5.8103e+08 mwork 1.51908e+08 A*B flops: 4.29122e+08 Use M: 1
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.207197 sec,  pull/push inf nvals 1.09631e+07
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 4.05089e+08  totfl 7.43232e+08 mwork 1.51908e+08 A*B flops: 5.91324e+08 Use M: 1
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.225837 sec,  pull/push inf nvals 1.33868e+07
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 4.05089e+08  totfl 5.84243e+08 mwork 1.51908e+08 A*B flops: 4.32334e+08 Use M: 1
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.203661 sec,  pull/push inf nvals 1.12289e+07
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 4.05089e+08  totfl 5.7944e+08 mwork 1.51908e+08 A*B flops: 4.27532e+08 Use M: 1
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.191608 sec,  pull/push inf nvals 1.14241e+07
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 4.05089e+08  totfl 4.95585e+08 mwork 1.51908e+08 A*B flops: 3.43677e+08 Use M: 1
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.180283 sec,  pull/push inf nvals 9.40644e+06
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 4.05089e+08  totfl 4.38952e+08 mwork 1.51908e+08 A*B flops: 2.87044e+08 Use M: 1
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.160942 sec,  pull/push inf nvals 8.90756e+06
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 4.05089e+08  totfl 3.89648e+08 mwork 1.51908e+08 A*B flops: 2.37739e+08 Use M: 1
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.150436 sec,  pull/push inf nvals 7.04358e+06
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 4.05089e+08  totfl 4.60175e+08 mwork 1.51908e+08 A*B flops: 3.08267e+08 Use M: 1
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.155808 sec,  pull/push inf nvals 7.50952e+06
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 4.05089e+08  totfl 3.17333e+08 mwork 1.51908e+08 A*B flops: 1.65425e+08 Use M: 1
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.116479 sec,  pull/push inf nvals 4.87967e+06
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 4.05089e+08  totfl 2.65942e+08 mwork 1.51908e+08 A*B flops: 1.14034e+08 Use M: 0###### HEY! MASK COSTLY !!
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.101207 sec,  pull/push inf nvals 3.66488e+06
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 4.05089e+08  totfl 2.31658e+08 mwork 1.51908e+08 A*B flops: 7.97495e+07 Use M: 0###### HEY! MASK COSTLY !!
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.0936308 sec,  pull/push inf nvals 2.85096e+06
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 4.05089e+08  totfl 2.07863e+08 mwork 1.51908e+08 A*B flops: 5.59549e+07 Use M: 0###### HEY! MASK COSTLY !!
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.0846307 sec,  pull/push inf nvals 2.17431e+06
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 4.05089e+08  totfl 1.94639e+08 mwork 1.51908e+08 A*B flops: 4.27308e+07 Use M: 0###### HEY! MASK COSTLY !!
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.0772263 sec,  pull/push inf nvals 1.73019e+06
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 4.05089e+08  totfl 1.88426e+08 mwork 1.51908e+08 A*B flops: 3.65178e+07 Use M: 0###### HEY! MASK COSTLY !!
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.0719972 sec,  pull/push inf nvals 1.26294e+06
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 4.05089e+08  totfl 1.78477e+08 mwork 1.51908e+08 A*B flops: 2.65688e+07 Use M: 0###### HEY! MASK COSTLY !!
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.0691125 sec,  pull/push inf nvals 969910
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 4.05089e+08  totfl 1.8008e+08 mwork 1.51908e+08 A*B flops: 2.81717e+07 Use M: 0###### HEY! MASK COSTLY !!
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.0668372 sec,  pull/push inf nvals 943445
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 4.05089e+08  totfl 1.6933e+08 mwork 1.51908e+08 A*B flops: 1.7422e+07 Use M: 0###### HEY! MASK COSTLY !!
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.0669429 sec,  pull/push inf nvals 721349
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 4.05089e+08  totfl 1.66311e+08 mwork 1.51908e+08 A*B flops: 1.44024e+07 Use M: 0###### HEY! MASK COSTLY !!
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.0652262 sec,  pull/push inf nvals 615743
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 4.05089e+08  totfl 1.64759e+08 mwork 1.51908e+08 A*B flops: 1.28503e+07 Use M: 0###### HEY! MASK COSTLY !!
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.0655821 sec,  pull/push inf nvals 523583
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 4.05089e+08  totfl 1.65191e+08 mwork 1.51908e+08 A*B flops: 1.32827e+07 Use M: 0###### HEY! MASK COSTLY !!
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.0644613 sec,  pull/push inf nvals 442743
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 4.05089e+08  totfl 1.62735e+08 mwork 1.51908e+08 A*B flops: 1.08266e+07 Use M: 0###### HEY! MASK COSTLY !!
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.0625165 sec,  pull/push inf nvals 394203
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K    nnz(M) 4.05089e+08  totfl 1.5819e+08 mwork 1.51908e+08 A*B flops: 6.28142e+06 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.071573 sec,  pull/push inf nvals 327684
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 1.56327e+08 mwork 1.51908e+08 A*B flops: 4.41893e+06 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0719383 sec,  pull/push inf nvals 297570
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 1.55851e+08 mwork 1.51908e+08 A*B flops: 3.94265e+06 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.063162 sec,  pull/push inf nvals 237023
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 1.55337e+08 mwork 1.51908e+08 A*B flops: 3.42903e+06 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0610649 sec,  pull/push inf nvals 180397
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 1.55423e+08 mwork 1.51908e+08 A*B flops: 3.51422e+06 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+:[K[K1: push_time: 0.0680627 sec,  pull/push inf nvals 170994
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 1.57333e+08 mwork 1.51908e+08 A*B flops: 5.42498e+06 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0600751 sec,  pull/push inf nvals 168346
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 1.53985e+08 mwork 1.51908e+08 A*B flops: 2.07615e+06 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0586411 sec,  pull/push inf nvals 139360
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 1.5289e+08 mwork 1.51908e+08 A*B flops: 981219 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0555094 sec,  pull/push inf nvals 69495
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 1.52783e+08 mwork 1.51908e+08 A*B flops: 874295 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.056426 sec,  pull/push inf nvals 38056
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 1.52892e+08 mwork 1.51908e+08 A*B flops: 984035 Use M: 0###### HEY! MASK COSTLY !!
+:[K[K    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.05549 sec,  pull/push inf nvals 51983
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 1.52684e+08 mwork 1.51908e+08 A*B flops: 775578 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.054624 sec,  pull/push inf nvals 48870
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 1.52333e+08 mwork 1.51908e+08 A*B flops: 424616 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0550027 sec,  pull/push inf nvals 50660
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 1.52162e+08 mwork 1.51908e+08 A*B flops: 253116 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0554903 sec,  pull/push inf nvals 26684
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 1.52135e+08 mwork 1.51908e+08 A*B flops: 226568 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.053536 sec,  pull/push inf nvals 9937
+:[K[K[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 1.52082e+08 mwork 1.51908e+08 A*B flops: 173657 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.056152 sec,  pull/push inf nvals 2397
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 1.52188e+08 mwork 1.51908e+08 A*B flops: 279256 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0542358 sec,  pull/push inf nvals 3339
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 1.5221e+08 mwork 1.51908e+08 A*B flops: 301079 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0549879 sec,  pull/push inf nvals 4484
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 1.5196e+08 mwork 1.51908e+08 A*B flops: 51235 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0542007 sec,  pull/push inf nvals 2001
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 1.51925e+08 mwork 1.51908e+08 A*B flops: 16442 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+:[K[Ksaxpy3 done
+] ]
+1: push_time: 0.0542826 sec,  pull/push inf nvals 403
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 1.51918e+08 mwork 1.51908e+08 A*B flops: 9897 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0540186 sec,  pull/push inf nvals 180
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 1.51914e+08 mwork 1.51908e+08 A*B flops: 5673 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 110 coarse: (gus: 1 1hash: 0 hash: 1) fine: (gus: 108 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.411491 sec,  pull/push inf nvals 119
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 1.01275e+08 mwork 1.01272e+08 A*B flops: 2878 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 84 coarse: (gus: 1 1hash: 0 hash: 2) fine: (gus: 81 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.403947 sec,  pull/push inf nvals 66
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 5.064e+07 mwork 5.06362e+07 A*B flops: 3850 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 2) fine: (gus: 160 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0237397 sec,  pull/push inf nvals 65
+[ GrB_apply  ]
+:[K[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 5.064e+07 mwork 5.06362e+07 A*B flops: 3862 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 2) fine: (gus: 160 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0217275 sec,  pull/push inf nvals 63
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 5.06387e+07 mwork 5.06362e+07 A*B flops: 2569 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 2) fine: (gus: 160 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0200519 sec,  pull/push inf nvals 43
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 5.06384e+07 mwork 5.06362e+07 A*B flops: 2207 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 2) fine: (gus: 160 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0213686 sec,  pull/push inf nvals 38
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 5.06362e+07 mwork 5.06362e+07 A*B flops: 79 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 2) fine: (gus: 160 hash: 0)
+saxpy3 done
+] ]
+1: push_time: 0.0290078 sec,  pull/push inf nvals 3
+[ GrB_apply  ]
+[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+    nnz(M) 4.05089e+08  totfl 5.06362e+07 mwork 5.06362e+07 A*B flops: 2 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 40 ntasks 2 coarse: (gus: 1 1hash: 0 hash: 1) fine: (gus: 0 hash: 0)
+saxpy3 done
+:[K[K] ]
+1: push_time: 0.380846 sec,  pull/push inf nvals 1
+Xbx 1st phase:
+    1st mxm allpush:  6.37746
+    1st other:        0.35384
+Xbc: setup for backtrack     0.136986
+starting 2nd phase
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 6  totfl 4 mwork 3 A*B flops: 1 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 1 ntasks 1 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 0 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 8.34027e-05 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 76  totfl 42 mwork 38 A*B flops: 4 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 1 ntasks 1 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 0 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.000233169 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 86  totfl 206 mwork 43 A*B flops: 163 Use M: 1
+    nthreads 1 ntasks 1 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 0 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.000160097 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 126  totfl 265 mwork 63 A*B flops: 202 Use M: 1
+    nthreads 1 ntasks 1 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 0 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.000111953 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+:[K[K    nnz(M) 130  totfl 287 mwork 65 A*B flops: 222 Use M: 1
+    nthreads 1 ntasks 1 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 0 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.000188679 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 132  totfl 289 mwork 65 A*B flops: 224 Use M: 1
+    nthreads 1 ntasks 1 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 0 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.00017253 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 238  totfl 363 mwork 118 A*B flops: 245 Use M: 1
+    nthreads 1 ntasks 1 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 0 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.000152922 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 360  totfl 459 mwork 180 A*B flops: 279 Use M: 1
+    nthreads 1 ntasks 1 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 0 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.000171407 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 806  totfl 1024 mwork 403 A*B flops: 621 Use M: 1
+    nthreads 1 ntasks 1 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 0 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.000106904 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 4002  totfl 3171 mwork 2001 A*B flops: 1170 Use M: 0###### HEY! MASK COSTLY !!
+    nthreads 1 ntasks 1 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 0 hash: 0)
+:[K[Ksaxpy3 done
+] ]
+2: push_time: 0.000191678 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 8968  totfl 10979 mwork 4484 A*B flops: 6495 Use M: 1
+    nthreads 2 ntasks 5 coarse: (gus: 0 1hash: 0 hash: 2) fine: (gus: 0 hash: 3)
+saxpy3 done
+] ]
+2: push_time: 0.000508813 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 6678  totfl 60127 mwork 3339 A*B flops: 56788 Use M: 1
+    nthreads 14 ntasks 17 coarse: (gus: 0 1hash: 0 hash: 2) fine: (gus: 0 hash: 15)
+saxpy3 done
+] ]
+2: push_time: 0.00100345 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 4794  totfl 453263 mwork 2397 A*B flops: 450866 Use M: 1
+    nthreads 40 ntasks 113 coarse: (gus: 0 1hash: 0 hash: 2) fine: (gus: 0 hash: 111)
+saxpy3 done
+] ]
+2: push_time: 0.00191432 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 19874  totfl 55489 mwork 9937 A*B flops: 45552 Use M: 1
+    nthreads 13 ntasks 16 coarse: (gus: 0 1hash: 0 hash: 2) fine: (gus: 0 hash: 14)
+saxpy3 done
+] ]
+2: push_time: 0.00253647 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 53368  totfl 284538 mwork 26684 A*B flops: 257854 Use M: 1
+    nthreads 40 ntasks 72 coarse: (gus: 0 1hash: 0 hash: 2) fine: (gus: 0 hash: 70)
+saxpy3 done
+] ]
+:[K[K2: push_time: 0.00783526 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 101320  totfl 133290 mwork 50660 A*B flops: 82630 Use M: 1
+    nthreads 32 ntasks 35 coarse: (gus: 0 1hash: 0 hash: 3) fine: (gus: 0 hash: 32)
+saxpy3 done
+] ]
+2: push_time: 0.00531207 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 97740  totfl 236780 mwork 48870 A*B flops: 187910 Use M: 1
+    nthreads 40 ntasks 60 coarse: (gus: 0 1hash: 0 hash: 2) fine: (gus: 0 hash: 58)
+saxpy3 done
+] ]
+2: push_time: 0.00418641 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 103966  totfl 255407 mwork 51983 A*B flops: 203424 Use M: 1
+    nthreads 40 ntasks 65 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 0 hash: 64)
+saxpy3 done
+] ]
+2: push_time: 0.00852745 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 76112  totfl 682188 mwork 38056 A*B flops: 644132 Use M: 1
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 0 hash: 161)
+saxpy3 done
+] ]
+2: push_time: 0.00740766 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 138990  totfl 726477 mwork 69495 A*B flops: 656982 Use M: 1
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 0 hash: 162)
+saxpy3 done
+] ]
+2: push_time: 0.00627146 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+:[K[K    nnz(M) 278720  totfl 666330 mwork 139360 A*B flops: 526970 Use M: 1
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 0 hash: 162)
+saxpy3 done
+] ]
+2: push_time: 0.0122152 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 336692  totfl 1.18823e+06 mwork 168346 A*B flops: 1.01988e+06 Use M: 1
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 0 hash: 162)
+saxpy3 done
+] ]
+2: push_time: 0.0101375 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 341988  totfl 1.25607e+06 mwork 170994 A*B flops: 1.08508e+06 Use M: 1
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 0 hash: 161)
+saxpy3 done
+] ]
+2: push_time: 0.0157814 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 360794  totfl 1.39304e+06 mwork 180397 A*B flops: 1.21264e+06 Use M: 1
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 0 hash: 162)
+saxpy3 done
+] ]
+2: push_time: 0.0095219 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 474046  totfl 4.7393e+06 mwork 237023 A*B flops: 4.50228e+06 Use M: 1
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 148 hash: 14)
+saxpy3 done
+] ]
+2: push_time: 0.0172407 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 595140  totfl 1.90409e+06 mwork 297570 A*B flops: 1.60652e+06 Use M: 1
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 123 hash: 39)
+:[K[Ksaxpy3 done
+] ]
+2: push_time: 0.0160024 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 655368  totfl 1.75693e+06 mwork 327684 A*B flops: 1.42925e+06 Use M: 1
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 105 hash: 57)
+saxpy3 done
+] ]
+2: push_time: 0.0184597 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 788406  totfl 2.45226e+06 mwork 394203 A*B flops: 2.05806e+06 Use M: 1
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 87 hash: 74)
+saxpy3 done
+] ]
+2: push_time: 0.0199309 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 885486  totfl 3.32037e+06 mwork 442743 A*B flops: 2.87763e+06 Use M: 1
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 77 hash: 85)
+saxpy3 done
+] ]
+2: push_time: 0.0258732 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 1.04717e+06  totfl 4.24424e+06 mwork 523583 A*B flops: 3.72066e+06 Use M: 1
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 124 hash: 38)
+saxpy3 done
+] ]
+2: push_time: 0.0307601 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 1.23149e+06  totfl 8.69893e+06 mwork 615743 A*B flops: 8.08319e+06 Use M: 1
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+:[K[K2: push_time: 0.0286705 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 1.4427e+06  totfl 8.67635e+06 mwork 721349 A*B flops: 7.955e+06 Use M: 1
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.0312016 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 1.88689e+06  totfl 7.63521e+06 mwork 943445 A*B flops: 6.69177e+06 Use M: 1
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.0282896 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 1.93982e+06  totfl 9.63193e+06 mwork 969910 A*B flops: 8.66202e+06 Use M: 1
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 144 hash: 18)
+saxpy3 done
+] ]
+2: push_time: 0.0323564 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 2.52589e+06  totfl 1.02388e+07 mwork 1.26294e+06 A*B flops: 8.97588e+06 Use M: 1
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.0369841 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 3.46038e+06  totfl 2.02729e+07 mwork 1.73019e+06 A*B flops: 1.85427e+07 Use M: 1
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.036587 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+:[K[K    nnz(M) 4.34863e+06  totfl 2.15002e+07 mwork 2.17431e+06 A*B flops: 1.93259e+07 Use M: 1
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.0417561 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 5.70192e+06  totfl 2.25817e+07 mwork 2.85096e+06 A*B flops: 1.97307e+07 Use M: 1
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.0448262 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 7.32976e+06  totfl 3.4965e+07 mwork 3.66488e+06 A*B flops: 3.13001e+07 Use M: 1
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.0612784 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 9.75935e+06  totfl 4.46041e+07 mwork 4.87967e+06 A*B flops: 3.97244e+07 Use M: 1
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.0635653 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 1.5019e+07  totfl 6.93375e+07 mwork 7.50952e+06 A*B flops: 6.1828e+07 Use M: 1
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.0710786 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 1.40872e+07  totfl 1.51609e+08 mwork 7.04358e+06 A*B flops: 1.44565e+08 Use M: 1
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+:[K[Ksaxpy3 done
+] ]
+2: push_time: 0.103971 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 1.78151e+07  totfl 1.47007e+08 mwork 8.90756e+06 A*B flops: 1.38099e+08 Use M: 1
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.100782 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 1.88129e+07  totfl 2.27648e+08 mwork 9.40644e+06 A*B flops: 2.18241e+08 Use M: 1
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.130971 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 2.28482e+07  totfl 2.23403e+08 mwork 1.14241e+07 A*B flops: 2.11979e+08 Use M: 1
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.133631 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 2.24578e+07  totfl 2.25844e+08 mwork 1.12289e+07 A*B flops: 2.14615e+08 Use M: 1
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.144174 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 2.67736e+07  totfl 3.57716e+08 mwork 1.33868e+07 A*B flops: 3.44329e+08 Use M: 1
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+:[K[K2: push_time: 0.159094 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 2.19263e+07  totfl 4.26989e+08 mwork 1.09631e+07 A*B flops: 4.16026e+08 Use M: 1
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.178623 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 2.08746e+07  totfl 5.00948e+08 mwork 1.04373e+07 A*B flops: 4.9051e+08 Use M: 1
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.167779 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 2.3007e+07  totfl 5.94234e+08 mwork 1.15035e+07 A*B flops: 5.8273e+08 Use M: 1
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.170434 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 2.09127e+07  totfl 4.2051e+08 mwork 1.04564e+07 A*B flops: 4.10054e+08 Use M: 1
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.16397 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 1.62009e+07  totfl 3.71839e+08 mwork 8.10044e+06 A*B flops: 3.63738e+08 Use M: 1
+    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 162 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.153199 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+:[K[K    nnz(M) 1.00461e+07  totfl 4.1623e+08 mwork 5.02114e+06 A*B flops: 4.11209e+08 Use M: 1
+    nthreads 40 ntasks 160 coarse: (gus: 1 1hash: 0 hash: 1) fine: (gus: 158 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.14931 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 3.74692e+06  totfl 5.07841e+08 mwork 1.87346e+06 A*B flops: 5.05967e+08 Use M: 1
+    nthreads 40 ntasks 160 coarse: (gus: 1 1hash: 0 hash: 1) fine: (gus: 158 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.159408 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 1.7764e+06  totfl 4.22865e+08 mwork 888199 A*B flops: 4.21977e+08 Use M: 1
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.0977076 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 492082  totfl 2.73794e+08 mwork 246041 A*B flops: 2.73548e+08 Use M: 1
+    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.0738171 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 355384  totfl 2.25715e+08 mwork 177692 A*B flops: 2.25537e+08 Use M: 1
+    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 160 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.057987 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 199468  totfl 1.05199e+08 mwork 99734 A*B flops: 1.05099e+08 Use M: 1
+    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 160 hash: 0)
+:[K[Ksaxpy3 done
+] ]
+2: push_time: 0.0453534 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 11964  totfl 2.38604e+07 mwork 5982 A*B flops: 2.38545e+07 Use M: 1
+    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 2) fine: (gus: 159 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.0314662 sec,  pull/push inf
+[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+    nnz(M) 380  totfl 1.81081e+07 mwork 190 A*B flops: 1.81079e+07 Use M: 1
+    nthreads 40 ntasks 160 coarse: (gus: 0 1hash: 0 hash: 3) fine: (gus: 157 hash: 0)
+saxpy3 done
+] ]
+2: push_time: 0.0226835 sec,  pull/push inf
+Xbx 2nd phase:
+    2nd mxm allpush:  2.94395
+    2nd other:        1.25082
+Xbc wrapup:    0.206784
+Xbc total (allpush):     11.7074
+Batch    time: 1.170923e+01 (sec), rate: 164.852 (1e6 edges/sec)
+
+  50636151x1 GraphBLAS float vector, sparse by col:
+  max # entries: 50636151
+  vlen: 50636151 nvec_nonempty: 1 nvec: 1 plen: 1 vdim: 1 hyper_ratio 0.0625
+  A 0x153c220 number of memory blocks: 4
+    GraphBLAS type:  float size: 4
+  ->h: (nil) shallow: 0
+  ->p: 0x9d8f410 shallow: 0
+  ->i: 0x7fb4734ce010 shallow: 0
+  ->x: 0x7fb48c723010 shallow: 0
+  v_batch, 50636151 entries
+:[K[K
+  column: 0 : 50636151 entries [0:50636150]
+    row 0:    0
+    row 1:    0
+    row 2:    0
+    row 3:    0
+    row 4:    0
+    row 5:    0
+    row 6:    0
+    row 7:    0
+    row 8:    0
+    row 9:    0
+    row 10:    0
+    row 11:    3
+    row 12:    0
+    row 13:    0
+    row 14:    0
+    row 15:    0
+    row 16:    0
+    row 17:    0
+    row 18:    0
+    row 19:    0
+    row 20:    0
+    row 21:    0
+    row 22:    0
+    row 23:    0
+    row 24:    0
+    row 25:    0
+    row 26:    0
+    row 27:    0
+    row 28:    0
+    row 29:    0
+:[K[K        ...
+  Pending (nil)
+  queue head  (nil)
+  queue prev  (nil)
+  queue next  (nil)
+  is in queue 0
+LAGraph batch is FP32
+ntrials: 1
+Average time per trial: batch, pushpull:   11.7074 sec
+Average time per trial: batch, allpush :   11.7074 sec
+Average time per trial: batch, allpull :   inf sec
+build/bc_gap_test: all tests passed
+matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+sources: /home/faculty/davis/GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 39.7443 sec
+[ GrB_apply  ]
+
+  134217726x134217726 GraphBLAS bool matrix, sparse by row:
+  max # entries: 4223264644
+  vlen: 134217726 nvec_nonempty: 63073984 nvec: 134217726 plen: 134217726 vdim: 134217726 hyper_ratio 0.0625
+  A 0x1207730 number of memory blocks: 4
+    GraphBLAS type:  bool size: 1
+  ->h: (nil) shallow: 0
+  ->p: 0x7fb2410f9010 shallow: 0
+  ->i: 0x7faa63405010 shallow: 0
+  ->x: 0x7fb294921010 shallow: 0
+  A, 4223264644 entries
+
+  row: 1 : 1 entries [0:0]
+    column 83111928:   1
+:[K[K  row: 2 : 1 entries [1:1]
+    column 113772338:   1
+  row: 9 : 5 entries [2:6]
+    column 26920261:   1
+    column 33335674:   1
+    column 90905511:   1
+    column 92964069:   1
+    column 126874301:   1
+  row: 11 : 22 entries [7:28]
+    column 3075467:   1
+    column 11283179:   1
+    column 14136330:   1
+    column 18241662:   1
+    column 21256905:   1
+    column 26197037:   1
+    column 34992956:   1
+    column 49762924:   1
+    column 54231301:   1
+    column 55275316:   1
+    column 55896288:   1
+    column 56613538:   1
+    column 69378808:   1
+    column 76391974:   1
+    column 77970070:   1
+    column 80121717:   1
+    column 113872174:   1
+    column 115829864:   1
+    column 125066355:   1
+    column 129708509:   1
+    column 131285585:   1
+    column 132549336:   1
+  row: 14 : 7 entries [29:35]
+:[K[K    column 11049596:   1
+        ...
+  row: 15 : 6 entries [36:41]
+        ...
+  row: 19 : 6 entries [42:47]
+        ...
+  row: 24 : 1 entries [48:48]
+        ...
+  row: 25 : 4 entries [49:52]
+        ...
+  row: 26 : 90 entries [53:142]
+        ...
+    ...
+  Pending (nil)
+  queue head  (nil)
+  queue prev  (nil)
+  queue next  (nil)
+  is in queue 0
+
+  64x1 GraphBLAS double matrix, sparse by row:
+  max # entries: 64
+  vlen: 1 nvec_nonempty: 64 nvec: 64 plen: 64 vdim: 64 hyper_ratio 0.0625
+  A 0x1208970 number of memory blocks: 4
+    GraphBLAS type:  double size: 8
+  ->h: (nil) shallow: 0
+  ->p: 0x1208cc0 shallow: 0
+  ->i: 0x1208ab0 shallow: 0
+  ->x: 0x1209ad0 shallow: 0
+  SourceNodes, 64 entries
+
+  row: 0 : 1 entries [0:0]
+    column 0:    2338013
+:[K[K  row: 1 : 1 entries [1:1]
+    column 0:    31997660
+  row: 2 : 1 entries [2:2]
+    column 0:    23590941
+  row: 3 : 1 entries [3:3]
+    column 0:    43400605
+  row: 4 : 1 entries [4:4]
+    column 0:    75337938
+  row: 5 : 1 entries [5:5]
+    column 0:    169868
+  row: 6 : 1 entries [6:6]
+    column 0:    104041221
+  row: 7 : 1 entries [7:7]
+    column 0:    94177943
+  row: 8 : 1 entries [8:8]
+    column 0:    32871358
+  row: 9 : 1 entries [9:9]
+    column 0:    56230003
+  row: 10 : 1 entries [10:10]
+    column 0:    69883038
+  row: 11 : 1 entries [11:11]
+    column 0:    9346346
+  row: 12 : 1 entries [12:12]
+    column 0:    48915359
+  row: 13 : 1 entries [13:13]
+    column 0:    122571174
+  row: 14 : 1 entries [14:14]
+    column 0:    6183280
+  row: 15 : 1 entries [15:15]
+    column 0:    86323664
+  row: 16 : 1 entries [16:16]
+    column 0:    106725781
+:[K[K  row: 17 : 1 entries [17:17]
+    column 0:    92389939
+  row: 18 : 1 entries [18:18]
+    column 0:    16210739
+  row: 19 : 1 entries [19:19]
+    column 0:    59816701
+  row: 20 : 1 entries [20:20]
+    column 0:    111669930
+  row: 21 : 1 entries [21:21]
+    column 0:    102831412
+  row: 22 : 1 entries [22:22]
+    column 0:    113384801
+  row: 23 : 1 entries [23:23]
+    column 0:    43872565
+  row: 24 : 1 entries [24:24]
+    column 0:    80508828
+  row: 25 : 1 entries [25:25]
+    column 0:    26105649
+  row: 26 : 1 entries [26:26]
+    column 0:    8807517
+  row: 27 : 1 entries [27:27]
+    column 0:    118452456
+  row: 28 : 1 entries [28:28]
+    column 0:    121818860
+  row: 29 : 1 entries [29:29]
+    column 0:    42361929
+  row: 30 : 1 entries [30:30]
+    column 0:    29493054
+  row: 31 : 1 entries [31:31]
+    column 0:    98461504
+  row: 32 : 1 entries [32:32]
+    column 0:    71931338
+:[K[K[HM    column 0:    106725781
+[HM  row: 16 : 1 entries [16:16]
+[HM    column 0:    86323664
+[HM  row: 15 : 1 entries [15:15]
+[HM    column 0:    6183280
+[HM  row: 14 : 1 entries [14:14]
+[HM    column 0:    122571174
+[HM  row: 13 : 1 entries [13:13]
+[HM    column 0:    48915359
+[HM  row: 12 : 1 entries [12:12]
+[HM    column 0:    9346346
+[HM  row: 11 : 1 entries [11:11]
+[HM    column 0:    69883038
+[HM  row: 10 : 1 entries [10:10]
+[HM    column 0:    56230003
+[HM  row: 9 : 1 entries [9:9]
+[HM    column 0:    32871358
+[HM  row: 8 : 1 entries [8:8]
+[HM    column 0:    94177943
+[HM  row: 7 : 1 entries [7:7]
+[HM    column 0:    104041221
+[HM  row: 6 : 1 entries [6:6]
+[HM    column 0:    169868
+[HM  row: 5 : 1 entries [5:5]
+[HM    column 0:    75337938
+[HM  row: 4 : 1 entries [4:4]
+[HM    column 0:    43400605
+[HM  row: 3 : 1 entries [3:3]
+[HM    column 0:    23590941
+[HM  row: 2 : 1 entries [2:2]
+[HM    column 0:    31997660
+[HM  row: 1 : 1 entries [1:1]
+[33;1H[K:[K[K[HM    column 0:    2338013
+[HM  row: 0 : 1 entries [0:0]
+[HM
+[HM  SourceNodes, 64 entries
+[HM  ->x: 0x1209ad0 shallow: 0
+[HM  ->i: 0x1208ab0 shallow: 0
+[HM  ->p: 0x1208cc0 shallow: 0
+[HM  ->h: (nil) shallow: 0
+[HM    GraphBLAS type:  double size: 8
+[HM  A 0x1208970 number of memory blocks: 4
+[HM  vlen: 1 nvec_nonempty: 64 nvec: 64 plen: 64 vdim: 64 hyper_ratio 0.0625
+[HM  max # entries: 64
+[HM  64x1 GraphBLAS double matrix, sparse by row:
+[HM
+[HM  is in queue 0
+[HM  queue next  (nil)
+[HM  queue prev  (nil)
+[HM  queue head  (nil)
+[HM  Pending (nil)
+[HM    ...
+[HM        ...
+[HM  row: 26 : 90 entries [53:142]
+[HM        ...
+[HM  row: 25 : 4 entries [49:52]
+[HM        ...
+[HM  row: 24 : 1 entries [48:48]
+[HM        ...
+[HM  row: 19 : 6 entries [42:47]
+[HM        ...
+[HM  row: 15 : 6 entries [36:41]
+[HM        ...
+[HM    column 11049596:   1
+[33;1H[K:[K[K[HM  row: 14 : 7 entries [29:35]
+[HM    column 132549336:   1
+[HM    column 131285585:   1
+[HM    column 129708509:   1
+[HM    column 125066355:   1
+[HM    column 115829864:   1
+[HM    column 113872174:   1
+[HM    column 80121717:   1
+[HM    column 77970070:   1
+[HM    column 76391974:   1
+[HM    column 69378808:   1
+[HM    column 56613538:   1
+[HM    column 55896288:   1
+[HM    column 55275316:   1
+[HM    column 54231301:   1
+[HM    column 49762924:   1
+[HM    column 34992956:   1
+[HM    column 26197037:   1
+[HM    column 21256905:   1
+[HM    column 18241662:   1
+[HM    column 14136330:   1
+[HM    column 11283179:   1
+[HM    column 3075467:   1
+[HM  row: 11 : 22 entries [7:28]
+[HM    column 126874301:   1
+[HM    column 92964069:   1
+[HM    column 90905511:   1
+[HM    column 33335674:   1
+[HM    column 26920261:   1
+[HM  row: 9 : 5 entries [2:6]
+[HM    column 113772338:   1
+[HM  row: 2 : 1 entries [1:1]
+[33;1H[K:[K[K[HM    column 83111928:   1
+[HM  row: 1 : 1 entries [0:0]
+[HM
+[HM  A, 4223264644 entries
+[HM  ->x: 0x7fb294921010 shallow: 0
+[HM  ->i: 0x7faa63405010 shallow: 0
+[HM  ->p: 0x7fb2410f9010 shallow: 0
+[HM  ->h: (nil) shallow: 0
+[HM    GraphBLAS type:  bool size: 1
+[HM  A 0x1207730 number of memory blocks: 4
+[HM  vlen: 134217726 nvec_nonempty: 63073984 nvec: 134217726 plen: 134217726 vdim: 134217726 hyper_ratio 0.0625
+[HM  max # entries: 4223264644
+[HM  134217726x134217726 GraphBLAS bool matrix, sparse by row:
+[HM
+[HM[ GrB_apply  ]
+[HMread time: 39.7443 sec
+[HMsources: /home/faculty/davis/GAP/GAP-kron/GAP-kron_sources.mtx
+[HMReading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[HM[.grb]
+[HMmatrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[HMbuild/bc_gap_test: all tests passed
+[HMAverage time per trial: batch, allpull :   inf sec
+[HMAverage time per trial: batch, allpush :   11.7074 sec
+[HMAverage time per trial: batch, pushpull:   11.7074 sec
+[HMntrials: 1
+[HMLAGraph batch is FP32
+[HM  is in queue 0
+[HM  queue next  (nil)
+[HM  queue prev  (nil)
+[HM  queue head  (nil)
+[HM  Pending (nil)
+[HM        ...
+[33;1H[K:[K[K[HM    row 29:    0
+[HM    row 28:    0
+[HM    row 27:    0
+[HM    row 26:    0
+[HM    row 25:    0
+[HM    row 24:    0
+[HM    row 23:    0
+[HM    row 22:    0
+[HM    row 21:    0
+[HM    row 20:    0
+[HM    row 19:    0
+[HM    row 18:    0
+[HM    row 17:    0
+[HM    row 16:    0
+[HM    row 15:    0
+[HM    row 14:    0
+[HM    row 13:    0
+[HM    row 12:    0
+[HM    row 11:    3
+[HM    row 10:    0
+[HM    row 9:    0
+[HM    row 8:    0
+[HM    row 7:    0
+[HM    row 6:    0
+[HM    row 5:    0
+[HM    row 4:    0
+[HM    row 3:    0
+[HM    row 2:    0
+[HM    row 1:    0
+[HM    row 0:    0
+[HM  column: 0 : 50636151 entries [0:50636150]
+[HM
+[33;1H[K:[K[K[HM  v_batch, 50636151 entries
+[HM  ->x: 0x7fb48c723010 shallow: 0
+[HM  ->i: 0x7fb4734ce010 shallow: 0
+[HM  ->p: 0x9d8f410 shallow: 0
+[HM  ->h: (nil) shallow: 0
+[HM    GraphBLAS type:  float size: 4
+[HM  A 0x153c220 number of memory blocks: 4
+[HM  vlen: 50636151 nvec_nonempty: 1 nvec: 1 plen: 1 vdim: 1 hyper_ratio 0.0625
+[HM  max # entries: 50636151
+[HM  50636151x1 GraphBLAS float vector, sparse by col:
+[HM
+[HMBatch    time: 1.170923e+01 (sec), rate: 164.852 (1e6 edges/sec)
+[HMXbc total (allpush):     11.7074
+[HMXbc wrapup:    0.206784
+[HM    2nd other:        1.25082
+[HM    2nd mxm allpush:  2.94395
+[HMXbx 2nd phase:
+[HM2: push_time: 0.0226835 sec,  pull/push inf
+[HM] ]
+[HMsaxpy3 done
+[HM    nthreads 40 ntasks 160 coarse: (gus: 0 1hash: 0 hash: 3) fine: (gus: 157 hash: 0)
+[HM    nnz(M) 380  totfl 1.81081e+07 mwork 190 A*B flops: 1.81079e+07 Use M: 1
+[HM[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+[HM2: push_time: 0.0314662 sec,  pull/push inf
+[HM] ]
+[HMsaxpy3 done
+[HM    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 2) fine: (gus: 159 hash: 0)
+[HM    nnz(M) 11964  totfl 2.38604e+07 mwork 5982 A*B flops: 2.38545e+07 Use M: 1
+[HM[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+[HM2: push_time: 0.0453534 sec,  pull/push inf
+[HM] ]
+[HMsaxpy3 done
+[33;1H[K:[K[K[HM    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 160 hash: 0)
+[HM    nnz(M) 199468  totfl 1.05199e+08 mwork 99734 A*B flops: 1.05099e+08 Use M: 1
+[HM[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+[HM2: push_time: 0.057987 sec,  pull/push inf
+[HM] ]
+[HMsaxpy3 done
+[HM    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 160 hash: 0)
+[HM    nnz(M) 355384  totfl 2.25715e+08 mwork 177692 A*B flops: 2.25537e+08 Use M: 1
+[HM[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+[HM2: push_time: 0.0738171 sec,  pull/push inf
+[HM] ]
+[HMsaxpy3 done
+[HM    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+[HM    nnz(M) 492082  totfl 2.73794e+08 mwork 246041 A*B flops: 2.73548e+08 Use M: 1
+[HM[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+[HM2: push_time: 0.0977076 sec,  pull/push inf
+[HM] ]
+[HMsaxpy3 done
+[HM    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 161 hash: 0)
+[HM    nnz(M) 1.7764e+06  totfl 4.22865e+08 mwork 888199 A*B flops: 4.21977e+08 Use M: 1
+[HM[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+[HM2: push_time: 0.159408 sec,  pull/push inf
+[HM] ]
+[HMsaxpy3 done
+[HM    nthreads 40 ntasks 160 coarse: (gus: 1 1hash: 0 hash: 1) fine: (gus: 158 hash: 0)
+[HM    nnz(M) 3.74692e+06  totfl 5.07841e+08 mwork 1.87346e+06 A*B flops: 5.05967e+08 Use M: 1
+[HM[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+[HM2: push_time: 0.14931 sec,  pull/push inf
+[HM] ]
+[HMsaxpy3 done
+[HM    nthreads 40 ntasks 160 coarse: (gus: 1 1hash: 0 hash: 1) fine: (gus: 158 hash: 0)
+[HM    nnz(M) 1.00461e+07  totfl 4.1623e+08 mwork 5.02114e+06 A*B flops: 4.11209e+08 Use M: 1
+[33;1H[K:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K2: push_time: 0.0453534 sec,  pull/push inf
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 11964  totfl 2.38604e+07 mwork 5982 A*B flops: 2.38545e+07 Use M: 1
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 2) fine: (gus: 159 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K2: push_time: 0.0314662 sec,  pull/push inf
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 380  totfl 1.81081e+07 mwork 190 A*B flops: 1.81079e+07 Use M: 1
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 160 coarse: (gus: 0 1hash: 0 hash: 3) fine: (gus: 157 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K2: push_time: 0.0226835 sec,  pull/push inf
+:[K[K [KESCESC[KOO[KBB[KXbx 2nd phase:
+:[K[K [KESCESC[KOO[KBB[K    2nd mxm allpush:  2.94395
+:[K[K [KESCESC[KOO[KBB[K    2nd other:        1.25082
+:[K[K [KESCESC[KOO[KBB[KXbc wrapup:    0.206784
+:[K[K [KESCESC[KOO[KBB[KXbc total (allpush):     11.7074
+:[K[K [KESCESC[KOO[KBB[KBatch    time: 1.170923e+01 (sec), rate: 164.852 (1e6 edges/sec)
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K  50636151x1 GraphBLAS float vector, sparse by col:
+:[K[K [KESCESC[KOO[KBB[K  max # entries: 50636151
+:[K[K [KESCESC[KOO[KBB[K  vlen: 50636151 nvec_nonempty: 1 nvec: 1 plen: 1 vdim: 1 hyper_ratio 0.0625
+:[K[K [KESCESC[KOO[KBB[K  A 0x153c220 number of memory blocks: 4
+:[K[K [KESCESC[KOO[KBB[K    GraphBLAS type:  float size: 4
+:[K[K [KESCESC[KOO[KBB[K  ->h: (nil) shallow: 0
+:[K[K [KESCESC[KOO[KBB[K  ->p: 0x9d8f410 shallow: 0
+:[K[K [KESCESC[KOO[KBB[K  ->i: 0x7fb4734ce010 shallow: 0
+:[K[K [KESCESC[KOO[KBB[K  ->x: 0x7fb48c723010 shallow: 0
+:[K[K [KESCESC[KOO[KBB[K  v_batch, 50636151 entries
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K  column: 0 : 50636151 entries [0:50636150]
+:[K[K [KESCESC[KOO[KBB[K    row 0:    0
+:[K[K [KESCESC[KOO[KBB[K    row 1:    0
+:[K[K [KESCESC[KOO[KBB[K    row 2:    0
+:[K[K [KESCESC[KOO[KBB[K    row 3:    0
+:[K[K [KESCESC[KOO[KBB[K    row 4:    0
+:[K[K [KESCESC[KOO[KBB[K    row 5:    0
+:[K[K [KESCESC[KOO[KBB[K    row 6:    0
+:[K[K [KESCESC[KOO[KBB[K    row 7:    0
+:[K[K [KESCESC[KOO[KBB[K    row 8:    0
+:[K[K [KESCESC[KOO[KBB[K    row 9:    0
+:[K[K [KESCESC[KOO[KBB[K    row 10:    0
+:[K[K [KESCESC[KOO[KBB[K    row 11:    3
+:[K[K [KESCESC[KOO[KBB[K    row 12:    0
+:[K[K [KESCESC[KOO[KBB[K    row 13:    0
+:[K[K [KESCESC[KOO[KBB[K    row 14:    0
+:[K[K [KESCESC[KOO[KBB[K    row 15:    0
+:[K[K [KESCESC[KOO[KBB[K    row 16:    0
+:[K[K [KESCESC[KOO[KBB[K    row 17:    0
+:[K[K [KESCESC[KOO[KBB[K    row 18:    0
+:[K[K [KESCESC[KOO[KBB[K    row 19:    0
+:[K[K [KESCESC[KOO[KBB[K    row 20:    0
+:[K[K [KESCESC[KOO[KBB[K    row 21:    0
+:[K[K [KESCESC[KOO[KBB[K    row 22:    0
+:[K[K [KESCESC[KOO[KBB[K    row 23:    0
+:[K[K [KESCESC[KOO[KBB[K    row 24:    0
+:[K[K [KESCESC[KOO[KBB[K    row 25:    0
+:[K[K [KESCESC[KOO[KBB[K    row 26:    0
+:[K[K [KESCESC[KOO[KBB[K    row 27:    0
+:[K[K [KESCESC[KOO[KBB[K    row 28:    0
+:[K[K [KESCESC[KOO[KBB[K    row 29:    0
+:[K[K [KESCESC[KOO[KBB[K        ...
+:[K[K [KESCESC[KOO[KBB[K  Pending (nil)
+:[K[K [KESCESC[KOO[KBB[K  queue head  (nil)
+:[K[K [KESCESC[KOO[KBB[K  queue prev  (nil)
+:[K[K [KESCESC[KOO[KBB[K  queue next  (nil)
+:[K[K [KESCESC[KOO[KBB[K  is in queue 0
+:[K[K [KESCESC[KOO[KBB[KLAGraph batch is FP32
+:[K[K [KESCESC[KOO[KBB[Kntrials: 1
+:[K[K [KESCESC[KOO[KBB[KAverage time per trial: batch, pushpull:   11.7074 sec
+:[K[K [KESCESC[KOO[KBB[KAverage time per trial: batch, allpush :   11.7074 sec
+:[K[K [KESCESC[KOO[KBB[KAverage time per trial: batch, allpull :   inf sec
+:[K[K [KESCESC[KOO[KBB[Kbuild/bc_gap_test: all tests passed
+:[K[K [KESCESC[KOO[KBB[Kmatrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+:[K[K [KESCESC[KOO[KBB[K[.grb]
+:[K[K [KESCESC[KOO[KBB[KReading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+:[K[K [KESCESC[KOO[KBB[Ksources: /home/faculty/davis/GAP/GAP-kron/GAP-kron_sources.mtx
+:[K[K [KESCESC[KOO[KBB[Kread time: 39.7443 sec
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K  134217726x134217726 GraphBLAS bool matrix, sparse by row:
+:[K[K [KESCESC[KOO[KBB[K  max # entries: 4223264644
+:[K[K [KESCESC[KOO[KBB[K  vlen: 134217726 nvec_nonempty: 63073984 nvec: 134217726 plen: 134217726 vdim: 134217726 hyper_ratio 0.0625
+:[K[K [KESCESC[KOO[KBB[K  A 0x1207730 number of memory blocks: 4
+:[K[K [KESCESC[KOO[KBB[K    GraphBLAS type:  bool size: 1
+:[K[K [KESCESC[KOO[KBB[K  ->h: (nil) shallow: 0
+:[K[K [KESCESC[KOO[KBB[K  ->p: 0x7fb2410f9010 shallow: 0
+:[K[K [KESCESC[KOO[KBB[K  ->i: 0x7faa63405010 shallow: 0
+:[K[K [KESCESC[KOO[KBB[K  ->x: 0x7fb294921010 shallow: 0
+:[K[K [KESCESC[KOO[KBB[K  A, 4223264644 entries
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K  row: 1 : 1 entries [0:0]
+:[K[K [KESCESC[KOO[KBB[K    column 83111928:   1
+:[K[K [KESCESC[KOO[KBB[K  row: 2 : 1 entries [1:1]
+:[K[K [KESCESC[KOO[KBB[K    column 113772338:   1
+:[K[K [KESCESC[KOO[KBB[K  row: 9 : 5 entries [2:6]
+:[K[K [KESCESC[KOO[KBB[K    column 26920261:   1
+:[K[K [KESCESC[KOO[KBB[K    column 33335674:   1
+:[K[K [KESCESC[KOO[KBB[K    column 90905511:   1
+:[K[K [KESCESC[KOO[KBB[K    column 92964069:   1
+:[K[K [KESCESC[KOO[KBB[K    column 126874301:   1
+:[K[K [KESCESC[KOO[KBB[K  row: 11 : 22 entries [7:28]
+:[K[K [KESCESC[KOO[KBB[K    column 3075467:   1
+:[K[K [KESCESC[KOO[KBB[K    column 11283179:   1
+:[K[K [KESCESC[KOO[KBB[K    column 14136330:   1
+:[K[K [KESCESC[KOO[KBB[K    column 18241662:   1
+:[K[K [KESCESC[KOO[KBB[K    column 21256905:   1
+:[K[K [KESCESC[KOO[KBB[K    column 26197037:   1
+:[K[K [KESCESC[KOO[KBB[K    column 34992956:   1
+:[K[K [KESCESC[KOO[KBB[K    column 49762924:   1
+:[K[K [KESCESC[KOO[KBB[K    column 54231301:   1
+:[K[K [KESCESC[KOO[KBB[K    column 55275316:   1
+:[K[K [KESCESC[KOO[KBB[K    column 55896288:   1
+:[K[K [KESCESC[KOO[KBB[K    column 56613538:   1
+:[K[K [KESCESC[KOO[KBB[K    column 69378808:   1
+:[K[K [KESCESC[KOO[KBB[K    column 76391974:   1
+:[K[K [KESCESC[KOO[KBB[K    column 77970070:   1
+:[K[K [KESCESC[KOO[KBB[K    column 80121717:   1
+:[K[K [KESCESC[KOO[KBB[K    column 113872174:   1
+:[K[K [KESCESC[KOO[KBB[K    column 115829864:   1
+:[K[K [KESCESC[KOO[KBB[K    column 125066355:   1
+:[K[K [KESCESC[KOO[KBB[K    column 129708509:   1
+:[K[K [KESCESC[KOO[KBB[K    column 131285585:   1
+:[K[K [KESCESC[KOO[KBB[K    column 132549336:   1
+:[K[K [KESCESC[KOO[KBB[K  row: 14 : 7 entries [29:35]
+:[K[K [KESCESC[KOO[KBB[K    column 11049596:   1
+:[K[K [KESCESC[KOO[KBB[K        ...
+:[K[K [KESCESC[KOO[KBB[K  row: 15 : 6 entries [36:41]
+:[K[K [KESCESC[KOO[KBB[K        ...
+:[K[K [KESCESC[KOO[KBB[K  row: 19 : 6 entries [42:47]
+:[K[K [KESCESC[KOO[KBB[K        ...
+:[K[K [KESCESC[KOO[KBB[K  row: 24 : 1 entries [48:48]
+:[K[K [KESCESC[KOO[KBB[K        ...
+:[K[K [KESCESC[KOO[KBB[K  row: 25 : 4 entries [49:52]
+:[K[K [KESCESC[KOO[KBB[K        ...
+:[K[K [KESCESC[KOO[KBB[K  row: 26 : 90 entries [53:142]
+:[K[K [KESCESC[KOO[KBB[K        ...
+:[K[K [KESCESC[KOO[KBB[K    ...
+:[K[K [KESCESC[KOO[KBB[K  Pending (nil)
+:[K[K [KESCESC[KOO[KBB[K  queue head  (nil)
+:[K[K [KESCESC[KOO[KBB[K  queue prev  (nil)
+:[K[K [KESCESC[KOO[KBB[K  queue next  (nil)
+:[K[K [KESCESC[KOO[KBB[K  is in queue 0
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K  64x1 GraphBLAS double matrix, sparse by row:
+:[K[K [KESCESC[KOO[KBB[K  max # entries: 64
+:[K[K [KESCESC[KOO[KBB[K  vlen: 1 nvec_nonempty: 64 nvec: 64 plen: 64 vdim: 64 hyper_ratio 0.0625
+:[K[K [KESCESC[KOO[KBB[K  A 0x1208970 number of memory blocks: 4
+:[K[K [KESCESC[KOO[KBB[K    GraphBLAS type:  double size: 8
+:[K[K [KESCESC[KOO[KBB[K  ->h: (nil) shallow: 0
+:[K[K [KESCESC[KOO[KBB[K  ->p: 0x1208cc0 shallow: 0
+:[K[K [KESCESC[KOO[KBB[K  ->i: 0x1208ab0 shallow: 0
+:[K[K [KESCESC[KOO[KBB[K  ->x: 0x1209ad0 shallow: 0
+:[K[K [KESCESC[KOO[KBB[K  SourceNodes, 64 entries
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K  row: 0 : 1 entries [0:0]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    2338013
+:[K[K [KESCESC[KOO[KBB[K  row: 1 : 1 entries [1:1]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    31997660
+:[K[K [KESCESC[KOO[KBB[K  row: 2 : 1 entries [2:2]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    23590941
+:[K[K [KESCESC[KOO[KBB[K  row: 3 : 1 entries [3:3]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    43400605
+:[K[K [KESCESC[KOO[KBB[K  row: 4 : 1 entries [4:4]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    75337938
+:[K[K [KESCESC[KOO[KBB[K  row: 5 : 1 entries [5:5]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    169868
+:[K[K [KESCESC[KOO[KBB[K  row: 6 : 1 entries [6:6]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    104041221
+:[K[K [KESCESC[KOO[KBB[K  row: 7 : 1 entries [7:7]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    94177943
+:[K[K [KESCESC[KOO[KBB[K  row: 8 : 1 entries [8:8]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    32871358
+:[K[K [KESCESC[KOO[KBB[K  row: 9 : 1 entries [9:9]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    56230003
+:[K[K [KESCESC[KOO[KBB[K  row: 10 : 1 entries [10:10]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    69883038
+:[K[K [KESCESC[KOO[KBB[K  row: 11 : 1 entries [11:11]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    9346346
+:[K[K [KESCESC[KOO[KBB[K  row: 12 : 1 entries [12:12]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    48915359
+:[K[K [KESCESC[KOO[KBB[K  row: 13 : 1 entries [13:13]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    122571174
+:[K[K [KESCESC[KOO[KBB[K  row: 14 : 1 entries [14:14]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    6183280
+:[K[K [KESCESC[KOO[KBB[K  row: 15 : 1 entries [15:15]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    86323664
+:[K[K [KESCESC[KOO[KBB[K  row: 16 : 1 entries [16:16]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    106725781
+:[K[K [KESCESC[KOO[KBB[K  row: 17 : 1 entries [17:17]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    92389939
+:[K[K [KESCESC[KOO[KBB[K  row: 18 : 1 entries [18:18]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    16210739
+:[K[K [KESCESC[KOO[KBB[K  row: 19 : 1 entries [19:19]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    59816701
+:[K[K [KESCESC[KOO[KBB[K  row: 20 : 1 entries [20:20]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    111669930
+:[K[K [KESCESC[KOO[KBB[K  row: 21 : 1 entries [21:21]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    102831412
+:[K[K [KESCESC[KOO[KBB[K  row: 22 : 1 entries [22:22]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    113384801
+:[K[K [KESCESC[KOO[KBB[K  row: 23 : 1 entries [23:23]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    43872565
+:[K[K [KESCESC[KOO[KBB[K  row: 24 : 1 entries [24:24]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    80508828
+:[K[K [KESCESC[KOO[KBB[K  row: 25 : 1 entries [25:25]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    26105649
+:[K[K [KESCESC[KOO[KBB[K  row: 26 : 1 entries [26:26]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    8807517
+:[K[K [KESCESC[KOO[KBB[K  row: 27 : 1 entries [27:27]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    118452456
+:[K[K [KESCESC[KOO[KBB[K  row: 28 : 1 entries [28:28]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    121818860
+:[K[K [KESCESC[KOO[KBB[K  row: 29 : 1 entries [29:29]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    42361929
+:[K[K [KESCESC[KOO[KBB[K  row: 30 : 1 entries [30:30]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    29493054
+:[K[K [KESCESC[KOO[KBB[K  row: 31 : 1 entries [31:31]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    98461504
+:[K[K [KESCESC[KOO[KBB[K  row: 32 : 1 entries [32:32]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    71931338
+:[K[K [KESCESC[KOO[KBB[K  row: 33 : 1 entries [33:33]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    103808469
+:[K[K [KESCESC[KOO[KBB[K  row: 34 : 1 entries [34:34]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    4092346
+:[K[K [KESCESC[KOO[KBB[K  row: 35 : 1 entries [35:35]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    115276242
+:[K[K [KESCESC[KOO[KBB[K  row: 36 : 1 entries [36:36]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    4649344
+:[K[K [KESCESC[KOO[KBB[K  row: 37 : 1 entries [37:37]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    76656190
+:[K[K [KESCESC[KOO[KBB[K  row: 38 : 1 entries [38:38]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    31312002
+:[K[K [KESCESC[KOO[KBB[K  row: 39 : 1 entries [39:39]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    111334128
+:[K[K [KESCESC[KOO[KBB[K  row: 40 : 1 entries [40:40]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    100962919
+:[K[K [KESCESC[KOO[KBB[K  row: 41 : 1 entries [41:41]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    41823216
+:[K[K [KESCESC[KOO[KBB[K  row: 42 : 1 entries [42:42]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    22631241
+:[K[K [KESCESC[KOO[KBB[K  row: 43 : 1 entries [43:43]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    42848462
+:[K[K [KESCESC[KOO[KBB[K  row: 44 : 1 entries [44:44]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    79485149
+:[K[K [KESCESC[KOO[KBB[K  row: 45 : 1 entries [45:45]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    106818743
+:[K[K [KESCESC[KOO[KBB[K  row: 46 : 1 entries [46:46]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    73347975
+:[K[K [KESCESC[KOO[KBB[K  row: 47 : 1 entries [47:47]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    78848446
+:[K[K [KESCESC[KOO[KBB[K  row: 48 : 1 entries [48:48]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    109920511
+:[K[K [KESCESC[KOO[KBB[K  row: 49 : 1 entries [49:49]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    121492134
+:[K[K [KESCESC[KOO[KBB[K  row: 50 : 1 entries [50:50]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    101037297
+:[K[K [KESCESC[KOO[KBB[K  row: 51 : 1 entries [51:51]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    15438601
+:[K[K [KESCESC[KOO[KBB[K  row: 52 : 1 entries [52:52]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    4584785
+:[K[K [KESCESC[KOO[KBB[K  row: 53 : 1 entries [53:53]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    124503846
+:[K[K [KESCESC[KOO[KBB[K  row: 54 : 1 entries [54:54]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    87241744
+:[K[K [KESCESC[KOO[KBB[K  row: 55 : 1 entries [55:55]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    108297009
+:[K[K [KESCESC[KOO[KBB[K  row: 56 : 1 entries [56:56]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    33955083
+:[K[K [KESCESC[KOO[KBB[K  row: 57 : 1 entries [57:57]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    79934824
+:[K[K [KESCESC[KOO[KBB[K  row: 58 : 1 entries [58:58]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    8608482
+:[K[K [KESCESC[KOO[KBB[K  row: 59 : 1 entries [59:59]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    82435064
+:[K[K [KESCESC[KOO[KBB[K  row: 60 : 1 entries [60:60]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    46579272
+:[K[K [KESCESC[KOO[KBB[K  row: 61 : 1 entries [61:61]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    515422
+:[K[K [KESCESC[KOO[KBB[K  row: 62 : 1 entries [62:62]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    121530468
+:[K[K [KESCESC[KOO[KBB[K  row: 63 : 1 entries [63:63]
+:[K[K [KESCESC[KOO[KBB[K    column 0:    127978737
+:[K[K [KESCESC[KOO[KBB[K  Pending (nil)
+:[K[K [KESCESC[KOO[KBB[K  queue head  (nil)
+:[K[K [KESCESC[KOO[KBB[K  queue prev  (nil)
+:[K[K [KESCESC[KOO[KBB[K  queue next  (nil)
+:[K[K [KESCESC[KOO[KBB[K  is in queue 0
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[Ksetup time: 28.0599 sec
+:[K[K [KESCESC[KOO[KBB[K[ GrB_transpose  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB_eWiseMult  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB_reduce  ]
+:[K[K [KESCESC[KOO[KBB[KA is symmetric
+:[K[K [KESCESC[KOO[KBB[Ktranspose time: 75.102
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K========== input graph: nodes: 134217726 edges: 4223264644
+:[K[K [KESCESC[KOO[KBB[KTESTING LAGraphX_bc_batch3 (saxpy in both phases, nthreads 40
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[KTrial 1 : sources: [ 2338012 31997659 23590940 43400604 ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB_assign  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB_extract  ]
+:[K[K [KESCESC[KOO[KBB[Kstarting 1st phase
+:[K[K [KESCESC[KOO[KBB[KXbc setup 1.06811 sec
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 1.07374e+09  totfl 5.74093e+08 mwork 5.36871e+08 A*B flops: 3.72225e+07 Use M: 0###### HEY! MASK COSTLY !!
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.662098 sec,  pull/push inf nvals 0
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 1.07374e+09  totfl 6.94754e+09 mwork 5.36871e+08 A*B flops: 6.41067e+09 Use M: 1
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 11.7656 sec,  pull/push inf nvals 1.04727e+07
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 1.07374e+09  totfl 1.08399e+10 mwork 5.36871e+08 A*B flops: 1.03031e+10 Use M: 1
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 161 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 161 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 9.38604 sec,  pull/push inf nvals 1.74511e+08
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 1.07374e+09  totfl 6.7842e+08 mwork 5.36871e+08 A*B flops: 1.41549e+08 Use M: 0###### HEY! MASK COSTLY !!
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.831089 sec,  pull/push inf nvals 6.67667e+07
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 1.07374e+09  totfl 5.37251e+08 mwork 5.36871e+08 A*B flops: 380572 Use M: 0###### HEY! MASK COSTLY !!
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.288296 sec,  pull/push inf nvals 377880
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 1.07374e+09  totfl 5.36872e+08 mwork 5.36871e+08 A*B flops: 1029 Use M: 0###### HEY! MASK COSTLY !!
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 0.276272 sec,  pull/push inf nvals 1022
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<!M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 1.07374e+09  totfl 4.02653e+08 mwork 4.02653e+08 A*B flops: 7 Use M: 0###### HEY! MASK COSTLY !!
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 110 coarse: (gus: 1 1hash: 0 hash: 1) fine: (gus: 108 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K1: push_time: 2.03733 sec,  pull/push inf nvals 7
+:[K[K [KESCESC[KOO[KBB[KXbx 1st phase:
+:[K[K [KESCESC[KOO[KBB[K    1st mxm allpush:  25.2467
+:[K[K [KESCESC[KOO[KBB[K    1st other:        0.421181
+:[K[K [KESCESC[KOO[KBB[KXbc: setup for backtrack     0.368668
+:[K[K [KESCESC[KOO[KBB[Kstarting 2nd phase
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 2044  totfl 1014 mwork 1007 A*B flops: 7 Use M: 0###### HEY! MASK COSTLY !!
+:[K[K [KESCESC[KOO[KBB[K    nthreads 1 ntasks 1 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 0 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K2: push_time: 0.000125934 sec,  pull/push inf
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 755760  totfl 378909 mwork 377880 A*B flops: 1029 Use M: 0###### HEY! MASK COSTLY !!
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 94 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 0 hash: 93)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K2: push_time: 0.00489319 sec,  pull/push inf
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 1.33533e+08  totfl 6.71472e+07 mwork 6.67667e+07 A*B flops: 380572 Use M: 0###### HEY! MASK COSTLY !!
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 158 coarse: (gus: 0 1hash: 0 hash: 1) fine: (gus: 157 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K2: push_time: 0.353545 sec,  pull/push inf
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 3.49021e+08  totfl 3.16059e+08 mwork 1.74511e+08 A*B flops: 1.41549e+08 Use M: 0###### HEY! MASK COSTLY !!
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K2: push_time: 1.20884 sec,  pull/push inf
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 2.09454e+07  totfl 1.03135e+10 mwork 1.04727e+07 A*B flops: 1.03031e+10 Use M: 1
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 163 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 163 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K2: push_time: 12.2832 sec,  pull/push inf
+:[K[K [KESCESC[KOO[KBB[K[ GrB[7m_mxm[27m [ C<M>=A*B, saxpy 
+:[K[K [KESCESC[KOO[KBB[K    nnz(M) 5174  totfl 6.41068e+09 mwork 2587 A*B flops: 6.41067e+09 Use M: 1
+:[K[K [KESCESC[KOO[KBB[K    nthreads 40 ntasks 162 coarse: (gus: 0 1hash: 0 hash: 0) fine: (gus: 162 hash: 0)
+:[K[K [KESCESC[KOO[KBB[Ksaxpy3 done
+:[K[K [KESCESC[KOO[KBB[K] ]
+:[K[K [KESCESC[KOO[KBB[K2: push_time: 2.0594 sec,  pull/push inf
+:[K[K [KESCESC[KOO[KBB[KXbx 2nd phase:
+:[K[K [KESCESC[KOO[KBB[K    2nd mxm allpush:  15.9101
+:[K[K [KESCESC[KOO[KBB[K    2nd other:        1.30546
+:[K[K [KESCESC[KOO[KBB[KXbc wrapup:    0.51887
+:[K[K [KESCESC[KOO[KBB[KXbc total (allpush):     44.839
+:[K[K [KESCESC[KOO[KBB[KBatch    time: 4.483935e+01 (sec), rate: 94.1866 (1e6 edges/sec)
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K  134217726x1 GraphBLAS float vector, sparse by col:
+:[K[K [KESCESC[KOO[KBB[K  max # entries: 134217726
+:[K[K [KESCESC[KOO[KBB[K  vlen: 134217726 nvec_nonempty: 1 nvec: 1 plen: 1 vdim: 1 hyper_ratio 0.0625
+:[K[K [KESCESC[KOO[KBB[K  A 0x121a510 number of memory blocks: 4
+:[K[K [KESCESC[KOO[KBB[K    GraphBLAS type:  float size: 4
+:[K[K [KESCESC[KOO[KBB[K  ->h: (nil) shallow: 0
+:[K[K [KESCESC[KOO[KBB[K  ->p: 0x1208850 shallow: 0
+:[K[K [KESCESC[KOO[KBB[K  ->i: 0x7fc2f6cdb010 shallow: 0
+:[K[K [KESCESC[KOO[KBB[K  ->x: 0x7fc336cdc010 shallow: 0
+:[K[K [KESCESC[KOO[KBB[K  v_batch, 134217726 entries
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K  column: 0 : 134217726 entries [0:134217725]
+:[K[K [KESCESC[KOO[KBB[K    row 0:    0
+:[K[K [KESCESC[KOO[KBB[K    row 1:    0
+:[K[K [KESCESC[KOO[KBB[K    row 2:    0
+:[K[K [KESCESC[KOO[KBB[K    row 3:    0
+:[K[K [KESCESC[KOO[KBB[K    row 4:    0
+:[K[K [KESCESC[KOO[KBB[K    row 5:    0
+:[K[K [KESCESC[KOO[KBB[K    row 6:    0
+:[K[K [KESCESC[KOO[KBB[K    row 7:    0
+:[K[K [KESCESC[KOO[KBB[K    row 8:    0
+:[K[K [KESCESC[KOO[KBB[K    row 9:    0
+:[K[K [KESCESC[KOO[KBB[K    row 10:    0
+:[K[K [KESCESC[KOO[KBB[K    row 11:    0
+:[K[K [KESCESC[KOO[KBB[K    row 12:    0
+:[K[K [KESCESC[KOO[KBB[K    row 13:    0
+:[K[K [KESCESC[KOO[KBB[K    row 14:    0
+:[K[K [KESCESC[KOO[KBB[K    row 15:    0
+:[K[K [KESCESC[KOO[KBB[K    row 16:    0
+:[K[K [KESCESC[KOO[KBB[K    row 17:    0
+:[K[K [KESCESC[KOO[KBB[K    row 18:    0
+:[K[K [KESCESC[KOO[KBB[K    row 19:    0
+:[K[K [KESCESC[KOO[KBB[K    row 20:    0
+:[K[K [KESCESC[KOO[KBB[K    row 21:    0
+:[K[K [KESCESC[KOO[KBB[K    row 22:    0
+:[K[K [KESCESC[KOO[KBB[K    row 23:    0
+:[K[K [KESCESC[KOO[KBB[K    row 24:    0
+:[K[K [KESCESC[KOO[KBB[K    row 25:    0
+:[K[K [KESCESC[KOO[KBB[K    row 26:    0.107879
+:[K[K [KESCESC[KOO[KBB[K    row 27:    0
+:[K[K [KESCESC[KOO[KBB[K    row 28:    0
+:[K[K [KESCESC[KOO[KBB[K    row 29:    0
+:[K[K [KESCESC[KOO[KBB[K        ...
+:[K[K [KESCESC[KOO[KBB[K  Pending (nil)
+:[K[K [KESCESC[KOO[KBB[K  queue head  (nil)
+:[K[K [KESCESC[KOO[KBB[K  queue prev  (nil)
+:[K[K [KESCESC[KOO[KBB[K  queue next  (nil)
+:[K[K [KESCESC[KOO[KBB[K  is in queue 0
+:[K[K [KESCESC[KOO[KBB[KLAGraph batch is FP32
+:[K[K [KESCESC[KOO[KBB[Kntrials: 1
+:[K[K [KESCESC[KOO[KBB[KAverage time per trial: batch, pushpull:   44.839 sec
+:[K[K [KESCESC[KOO[KBB[KAverage time per trial: batch, allpush :   44.839 sec
+:[K[K [KESCESC[KOO[KBB[KAverage time per trial: batch, allpull :   inf sec
+:[K[K [KESCESC[KOO[KBB[Kbuild/bc_gap_test: all tests passed
+:[K[K [KESCESC[KOO[KBB[Kmatrix: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+:[K[K [KESCESC[KOO[KBB[K[.grb]
+:[K[K [KESCESC[KOO[KBB[KReading binary file: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+:[K[K [KESCESC[KOO[KBB[Ksources: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter_sources.mtx
+:[K[K [KESCESC[KOO[KBB[Kread time: 10.9324 sec
+:[K[K [KESCESC[KOO[KBB[K[ GrB_apply  ]
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K  61578415x61578415 GraphBLAS bool matrix, sparse by row:
+:[K[K [KESCESC[KOO[KBB[K  max # entries: 1468364884
+:[K[K [KESCESC[KOO[KBB[K  vlen: 61578415 nvec_nonempty: 40103278 nvec: 61578415 plen: 61578415 vdim: 61578415 hyper_ratio 0.0625
+:[K[K [KESCESC[KOO[KBB[K  A 0x2219730 number of memory blocks: 4
+:[K[K [KESCESC[KOO[KBB[K    GraphBLAS type:  bool size: 1
+:[K[K [KESCESC[KOO[KBB[K  ->h: (nil) shallow: 0
+:[K[K [KESCESC[KOO[KBB[K  ->p: 0x7fd90f7fb010 shallow: 0
+:[K[K [KESCESC[KOO[KBB[K  ->i: 0x7fd65353e010 shallow: 0
+:[K[K [KESCESC[KOO[KBB[K  ->x: 0x7fd9405f1010 shallow: 0
+:[K[K [KESCESC[KOO[KBB[K  A, 1468364884 entries
+:[K[K [KESCESC[KOO[KBB[K
+:[K[K [KESCESC[KOO[KBB[K  row: 12 : 1001061 entries [0:1001060]
+:[K[K [KESCESC[KOO[KBB[K    column 13:   1
+:[K[K [KESCESC[KOO[KBB[K    column 14:   1
+:[K[K [KESCESC[KOO[KBB[K    column 15:   1
+:[K[K[?1l>[?1049l[0;36mhypersparse $[0m git status
+On branch master
+Your branch is up-to-date with 'origin/master'.
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	[31mmodified:   Jan6b_script[m
+
+no changes added to commit (use "git add" and/or "git commit -a")
+[0;36mhypersparse $[0m git diff .
+[?1h=[1mdiff --git a/Test/BetweennessCentrality/Jan6b_script b/Test/BetweennessCentrality/Jan6b_script[m[m
+[1mindex 6ba0760..1874638 100644[m[m
+[1m--- a/Test/BetweennessCentrality/Jan6b_script[m[m
+[1m+++ b/Test/BetweennessCentrality/Jan6b_script[m[m
+[36m@@ -246,3 +246,2451 @@[m [mbuild/bc_gap_test: all tests passed[m[m
+ matrix: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb[m[m
+ [.grb][m[m
+ Reading binary file: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb[m[m
+[32m+[m[32msources: /home/faculty/davis/GAP/GAP-urand/GAP-urand_sources.mtx[m[41m[7m^M[27m[m[m
+[32m+[m[32mread time: 33.0799 sec[m[41m[7m^M[27m[m[m
+[32m+[m[32msetup time: 6.00131 sec[m[41m[7m^M[27m[m[m
+[32m+[m[32mA is symmetric[m[41m[7m^M[27m[m[m
+[32m+[m[32mtranspose time: 81.7228[m[41m[7m^M[27m[m[m
+[32m+[m[41m[7m^M[27m[m[m
+[32m+[m[32m========== input graph: nodes: 134217728 edges: 4294966740[m[41m[7m^M[27m[m[m
+[32m+[m[32mTESTING LAGraphX_bc_batch3 (saxpy in both phases, nthreads 40[m[41m[7m^M[27m[m[m
+[32m+[m[41m[7m^M[27m[m[m
+[32m+[m[32mTrial 1 : sources: [ 27691419 121280314 2413431 37512113 ][m[41m[7m^M[27m[m[m
+[32m+[m[32mBatch    time: 6.617222e+01 (sec), rate: 64.9059 (1e6 edges/sec)[m[41m[7m^M[27m[m[m
+[32m+[m[32mLAGraph batch is FP32[m[41m[7m^M[27m[m[m
+[32m+[m[41m[7m^M[27m[m[m
+[32m+[m[32mTrial 2 : sources: [ 38390877 56651037 128461248 33029842 ][m[41m[7m^M[27m[m[m
+[32m+[m[32mBatch    time: 6.624520e+01 (sec), rate: 64.8344 (1e6 edges/sec)[m[41m[7m^M[27m[m[m
+[32m+[m[32mLAGraph batch is FP32[m[41m[7m^M[27m[m[m
+[32m+[m[41m[7m^M[27m[m[m
+[32m+[m[32mTrial 3 : sources: [ 71406328 117872827 24351938 15444519 ][m[41m[7m^M[27m[m[m
+[32m+[m[32mBatch    time: 6.504211e+01 (sec), rate: 66.0336 (1e6 edges/sec)[m[41m[7m^M[27m[m[m
+[32m+[m[32mLAGraph batch is FP32[m[41m[7m^M[27m[m[m
+[32m+[m[41m[7m^M[27m[m[m
+[32m+[m[32mTrial 4 : sources: [ 127526281 112279428 13631649 110379302 ][m[41m[7m^M[27m[m[m
+[32m+[m[32mBatch    time: 6.405601e+01 (sec), rate: 67.0502 (1e6 edges/sec)[m[41m[7m^M[27m[m[m
+[32m+[m[32mLAGraph batch is FP32[m[41m[7m^M[27m[m[m
+:[K[K...skipping...
+[32m+[m[32m:[7m^M[27m [1mE[0mSC[1mOB[0m[7m^M[27m[.grb][m[41m[7m^M[27m[m[m
+[32m+[m[32m:[7m^M[27m [1mE[0mSC[1mOB[0m[7m^M[27mReading binary file: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb[m[41m[7m^M[27m[m[m
+[32m+[m[32m:[7m^M[27m [1mE[0mSC[1mOB[0m[7m^M[27msources: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter_sources.mtx[m[41m[7m^M[27m[m[m
+[32m+[m[32m:[7m^M[27m [1mE[0mSC[1mOB[0m[7m^M[27mread time: 10.9324 sec[m[41m[7m^M[27m[m[m
+[32m+[m[32m:[7m^M[27m [1mE[0mSC[1mOB[0m[7m^M[27m[ GrB_apply  ][m[41m[7m^M[27m[m[m
+[32m+[m[32m:[7m^M[27m [1mE[0mSC[1mOB[0m[7m^M[27m[m[41m[7m^M[27m[m[m
+[32m+[m[32m:[7m^M[27m [1mE[0mSC[1mOB[0m[7m^M[27m  61578415x61578415 GraphBLAS bool matrix, sparse by row:[m[41m[7m^M[27m[m[m
+[32m+[m[32m:[7m^M[27m [1mE[0mSC[1mOB[0m[7m^M[27m  max # entries: 1468364884[m[41m[7m^M[27m[m[m
+[32m+[m[32m:[7m^M[27m [1mE[0mSC[1mOB[0m[7m^M[27m  vlen: 61578415 nvec_nonempty: 40103278 nvec: 61578415 plen: 61578415 vdim: 61578415 hyper_ratio 0.0625[m[41m[7m^M[27m[m[m
+[32m+[m[32m:[7m^M[27m [1mE[0mSC[1mOB[0m[7m^M[27m  A 0x2219730 number of memory blocks: 4[m[41m[7m^M[27m[m[m
+[32m+[m[32m:[7m^M[27m [1mE[0mSC[1mOB[0m[7m^M[27m    GraphBLAS type:  bool size: 1[m[41m[7m^M[27m[m[m
+[32m+[m[32m:[7m^M[27m [1mE[0mSC[1mOB[0m[7m^M[27m  ->h: (nil) shallow: 0[m[41m[7m^M[27m[m[m
+[32m+[m[32m:[7m^M[27m [1mE[0mSC[1mOB[0m[7m^M[27m  ->p: 0x7fd90f7fb010 shallow: 0[m[41m[7m^M[27m[m[m
+[32m+[m[32m:[7m^M[27m [1mE[0mSC[1mOB[0m[7m^M[27m  ->i: 0x7fd65353e010 shallow: 0[m[41m[7m^M[27m[m[m
+[32m+[m[32m:[7m^M[27m [1mE[0mSC[1mOB[0m[7m^M[27m  ->x: 0x7fd9405f1010 shallow: 0[m[41m[7m^M[27m[m[m
+[32m+[m[32m:[7m^M[27m [1mE[0mSC[1mOB[0m[7m^M[27m  A, 1468364884 entries[m[41m[7m^M[27m[m[m
+[32m+[m[32m:[7m^M[27m [1mE[0mSC[1mOB[0m[7m^M[27m[m[41m[7m^M[27m[m[m
+[32m+[m[32m:[7m^M[27m [1mE[0mSC[1mOB[0m[7m^M[27m  row: 12 : 1001061 entries [0:1001060][m[41m[7m^M[27m[m[m
+[32m+[m[32m:[7m^M[27m [1mE[0mSC[1mOB[0m[7m^M[27m    column 13:   1[m[41m[7m^M[27m[m[m
+[32m+[m[32m:[7m^M[27m [1mE[0mSC[1mOB[0m[7m^M[27m    column 14:   1[m[41m[7m^M[27m[m[m
+[32m+[m[32m:[7m^M[27m [1mE[0mSC[1mOB[0m[7m^M[27m    column 15:   1[m[41m[7m^M[27m[m[m
+[32m+[m[32m:[7m^M[27m[0;36mhypersparse $[0m git status[m[41m[7m^M[27m[m[m
+[32m+[m[32mOn branch master[m[41m[7m^M[27m[m[m
+[32m+[m[32mYour branch is up-to-date with 'origin/master'.[m[41m[7m^M[27m[m[m
+[32m+[m[32mChanges not staged for commit:[m[41m[7m^M[27m[m[m
+[32m+[m[32m  (use "git add <file>..." to update what will be committed)[m[41m[7m^M[27m[m[m
+[32m+[m[32m  (use "git checkout -- <file>..." to discard changes in working directory)[m[41m[7m^M[27m[m[m
+[32m+[m[41m[7m^M[27m[m[m
+[32m+[m       [32m[31mmodified:   Jan6b_script[m[m[41m[7m^M[27m[m[m
+[32m+[m[41m[7m^M[27m[m[m
+[32m+[m[32mno changes added to commit (use "git add" and/or "git commit -a")[m[41m[7m^M[27m[m[m
+[32m+[m[32m[0;36mhypersparse $[0m git diff .[m[41m[7m^M[27m[m[m
+[7m(END)[27m[K[K[?1l>[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m dir
+total 13252
+   4 batch_result.mtx    12 bc_test.c              4 [0m[01;31mgo[0m*               4 m.awk         472 t_allmask.m
+   8 bc_batch_exe.c       4 bc_test.h              4 [01;31mgo2[0m*              4 [01;32moutput[0m/         4 t_compare.m
+   8 bc_exe.c             4 bc_test.m             36 jagmesh7.mtx      4 [01;32mresults[0m/     3784 t_nomask
+  16 bc_gap_test.c        4 brandes_result.mtx  4376 Jan6a_scriopt     4 sample2.mtx   344 t_nomask.m
+   4 bcheck1.m            4 [01;32mbuild[0m/               140 Jan6b_script      4 sample.mtx      4 west0067.mtx
+   4 bcheck2.m           12 CMakeLists.txt         4 LFAT5.mtx         4 stderr.txt
+   4 bcheck.m             4 [01;31mdo_gap[0m*                4 Makefile       3960 t_allmask
+[0;36mhypersparse $[0m git add[K
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m xit
+No command 'xit' found, did you mean:
+ Command 'xwit' from package 'xwit' (universe)
+ Command 'git' from package 'git' (main)
+ Command 'vit' from package 'vit' (universe)
+ Command 'xia' from package 'xia' (universe)
+ Command 'nit' from package 'python-nevow' (universe)
+ Command 'xvt' from package 'xvt' (universe)
+ Command 'wit' from package 'wit' (universe)
+xit: command not found
+[0;36mhypersparse $[0m exit
+exit
+
+Script done on Mon 06 Jan 2020 05:05:43 PM CST
