@@ -171,9 +171,8 @@ int main (int argc, char **argv)
     GrB_Matrix_nvals (&nvals, SourceNodes);
     GrB_Matrix_nvals (&nvals, A);
 
-    GxB_fprint (A, 2, stdout) ;
-
-    GxB_fprint (SourceNodes, GxB_COMPLETE, stdout) ;
+    // GxB_fprint (A, 2, stdout) ;
+    // GxB_fprint (SourceNodes, GxB_COMPLETE, stdout) ;
 
     //--------------------------------------------------------------------------
     // get the size of the problem.
@@ -211,7 +210,7 @@ int main (int argc, char **argv)
     else
     {
         printf ("A is unsymmetric\n") ;
-        GxB_fprint (AT, 2, stdout) ;
+        // GxB_fprint (AT, 2, stdout) ;
     }
     double t_transpose = LAGraph_toc (tic) ;
     printf ("transpose time: %g\n", t_transpose) ;
@@ -222,6 +221,8 @@ int main (int argc, char **argv)
 
     printf ("\n========== input graph: nodes: %"PRIu64" edges: %"PRIu64"\n",
         n, nvals) ;
+
+    // LAGraph_set_nthreads (1) ;
 
     int nthreads = LAGraph_get_nthreads();
     printf("TESTING LAGraphX_bc_batch3 (saxpy in both phases, nthreads %d\n",
@@ -255,44 +256,18 @@ int main (int argc, char **argv)
         printf (" ]\n") ;
 
         //----------------------------------------------------------------------
-        // Compute betweenness centrality from four source nodes (Brandes)
-        //----------------------------------------------------------------------
-
-        #if 0
-        // Start the timer
-        LAGraph_tic (tic);
-
-        LAGRAPH_OK (GrB_Vector_new(&v_brandes, GrB_FP64, n));
-        for (int64_t k = 0 ; k < batch_size ; k++)
-        {
-            // get the kth source node
-            GrB_Index source = vertex_list [k] ;
-            LAGRAPH_OK (LAGraph_bc (&v, A, source)) ;
-//          LAGRAPH_OK (LAGraph_bc2 (&v, A, source)) ;
-            LAGRAPH_OK (GrB_eWiseAdd(v_brandes, GrB_NULL, GrB_NULL, GrB_PLUS_FP64, v_brandes, v, GrB_NULL));
-            GrB_free (&v) ;
-        }
-
-        // Stop the timer
-        double t1 = LAGraph_toc (tic) ;
-        printf ("Brandes  time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
-            t1, 1e-6*((double) nvals) / t1) ;
-
-        total_time_1 += t1 ;
-        #endif
-
-        //----------------------------------------------------------------------
         // Compute betweenness centrality using batch algorithm
         //----------------------------------------------------------------------
 
         // Start the timer
-        //LAGraph_tic (tic) ;
+        LAGraph_tic (tic) ;
         double timing [3] ;
 
 //      LAGRAPH_OK (LAGraph_bc_batch  (&v_batch, A, vertex_list, batch_size)) ;
 //      LAGRAPH_OK (LAGraphX_bc_batch (&v_batch, A, vertex_list, batch_size)) ;
 //      LAGRAPH_OK (LAGraphX_bc_batch2 (&v_batch, A, vertex_list, batch_size)) ;
-        LAGRAPH_OK (LAGraphX_bc_batch3 (&v_batch, A, AT, vertex_list, batch_size, timing)) ;
+        LAGRAPH_OK (LAGraphX_bc_batch3 (&v_batch, A, AT, vertex_list,
+            batch_size, timing)) ;
 
 #if 0
         LAGRAPH_OK (GrB_Vector_new(&v_batch, GrB_FP64, n));
@@ -308,10 +283,12 @@ int main (int argc, char **argv)
 #endif
 
         // Stop the timer
-        // double t2 = LAGraph_toc (tic) ;
-        // printf ("Batch    time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
-            // t2, 1e-6*((double) nvals) / t2) ;
+         double t2 = LAGraph_toc (tic) ;
+         printf ("Batch    time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
+            t2, 1e-6*((double) nvals) / t2) ;
         // total_time_2 += t2 ;
+
+        // GxB_print (v_batch, 2) ;
 
         total_timing [0] += timing [0] ;        // pushpull
         total_timing [1] += timing [1] ;        // allpush
@@ -319,58 +296,109 @@ int main (int argc, char **argv)
 
         GrB_Type type ;
         GxB_Vector_type (&type, v_batch) ;
+        double tol ;
         if (type == GrB_FP32)
         {
-            printf("LAGraph is FP32\n");
+            // printf("LAGraph batch is FP32\n");
+            tol = 0.005 ;
         }
         else
         {
-            printf("LAGraph is FP64\n");
+            // printf("LAGraph batch is FP64\n");
+            tol = 1e-10 ;
         }
+
+        //----------------------------------------------------------------------
+        // Compute betweenness centrality from four source nodes (Brandes)
+        //----------------------------------------------------------------------
+
+// comment this out to skip the test of Brandes' method
+#if 0
+        // Start the timer
+        LAGraph_tic (tic);
+
+        LAGRAPH_OK (GrB_Vector_new(&v_brandes, GrB_FP64, n));
+        for (int64_t k = 0 ; k < batch_size ; k++)
+        {
+            // get the kth source node
+            GrB_Index source = vertex_list [k] ;
+            LAGRAPH_OK (LAGraph_bc (&v, A, source)) ;
+//          LAGRAPH_OK (LAGraph_bc2 (&v, A, source)) ;
+            LAGRAPH_OK (GrB_eWiseAdd(v_brandes, GrB_NULL, GrB_NULL,
+                GrB_PLUS_FP64, v_brandes, v, GrB_NULL));
+            GrB_free (&v) ;
+        }
+
+        // Stop the timer
+        double t1 = LAGraph_toc (tic) ;
+        printf ("Brandes  time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
+            t1, 1e-6*((double) nvals) / t1) ;
+
+        GxB_print (v_brandes, 2) ;
+        total_time_1 += t1 ;
+#endif
 
         //----------------------------------------------------------------------
         // check result
         //----------------------------------------------------------------------
 
-        #if 0
-        for (int64_t i = 0; i < n; i++)
+        if (v_brandes != NULL)
         {
-
-            // if the ith entry is not present, x is unmodified, so '0'
-            // is printed
-            double x1 = 0;
-            LAGRAPH_OK (GrB_Vector_extractElement (&x1, v_brandes, i));
-
-            double x2 = 0;
-            LAGRAPH_OK (GrB_Vector_extractElement (&x2, v_batch, i));
-
-            // TODO use a lower tolerance if v_* are GrB_FP32
-            double err = (fabs(x1 - x2) / (1E-10 + fmax(x1, x2))) ;
-
-            // Check that both methods give the same results
-            bool test_result =  err < 1E-5;
-            tests_pass &= test_result;
-            if (!test_result)
+            printf ("checking result ... (TODO error check is too slow)\n") ;
+            double maxerr = 0 ;
+            double xmax = 0 ;
+            for (int64_t i = 0; i < n; i++)
             {
-                printf ("%"PRId64 " %g %g %g ", i, x1, x2, err) ;
-                printf ("FAIL") ;
+                // TODO this test is slow.  Use GrB_eWiseAdd and GrB_reduce.
+
+                // if the ith entry is not present, x is unmodified, so '0'
+                // is printed
+                double x1 = 0;
+                LAGRAPH_OK (GrB_Vector_extractElement (&x1, v_brandes, i));
+                xmax = fmax (xmax, fabs (x1)) ;
+
+                double x2 = 0;
+                LAGRAPH_OK (GrB_Vector_extractElement (&x2, v_batch, i));
+
+                double err = fabs(x1 - x2) ;
+                maxerr = fmax (maxerr, err) ;
+
+                // Check that both methods give the same results
                 /*
-                printf ("   Failure at index %"PRId64"\n", i);
-                printf ("   x1 = %g\n", x1);
-                printf ("   x2 = %g\n", x2);
-                printf ("   Error = %f\n", fabs(x1-x2) / (1E-6 + fmax(x1,x2)));
+                bool test_result = err < tol ;
+                tests_pass &= test_result;
+                if (!test_result)
+                {
+                    printf ("%"PRId64 " %g %g %g ", i, x1, x2, err) ;
+                    printf ("FAIL") ;
+                    printf ("   Failure at index %"PRId64"\n", i);
+                    printf ("   x1 = %g\n", x1);
+                    printf ("   x2 = %g\n", x2);
+                    printf ("   Error = %f\n", err) ;
+                    printf ("\n") ;
+                    break ;
+                }
                 */
-                // break ;
-                printf ("\n") ;
             }
+            double relerr = maxerr / xmax ;
+            printf ("max relative error: %g\n", maxerr / xmax) ;
+
+            #if 1
+            printf ("writing results to mtx files:\n") ;
+            FILE *f = fopen ("brandes_result.mtx", "w") ;
+            LAGraph_mmwrite ((GrB_Matrix) v_brandes, f) ;
+            fclose (f) ;
+            f = fopen ("batch_result.mtx", "w") ;
+            LAGraph_mmwrite ((GrB_Matrix) v_batch, f) ;
+            fclose (f) ;
+            #endif
         }
-        #endif
 
         GrB_free (&v_brandes) ;
         GrB_free (&v_batch) ;
 
         // HACK: just do the first batch
-        break ;
+        // break ;
     }
 
     //--------------------------------------------------------------------------
@@ -383,9 +411,12 @@ int main (int argc, char **argv)
         printf ("Average time per trial (Brandes): %g sec\n",
             total_time_1 / ntrials);
     }
-    printf ("Average time per trial: batch, pushpull:   %g sec\n", total_timing [0] / ntrials);
-    printf ("Average time per trial: batch, allpush :   %g sec\n", total_timing [1] / ntrials);
-    printf ("Average time per trial: batch, allpull :   %g sec\n", total_timing [2] / ntrials);
+    printf ("Average time per trial: batch, pushpull:   %g sec\n",
+        total_timing [0] / ntrials);
+    printf ("Average time per trial: batch, allpush :   %g sec\n",
+        total_timing [1] / ntrials);
+    printf ("Average time per trial: batch, allpull :   %g sec\n",
+        total_timing [2] / ntrials);
 
     LAGRAPH_FREE_ALL;
     LAGRAPH_OK (LAGraph_finalize());

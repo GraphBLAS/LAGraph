@@ -204,6 +204,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
 
         case 5:  // SandiaDot:  ntri = sum (sum ((L * U') .* L))
 
+            // using the masked dot product (very efficient)
             LAGRAPH_OK (GrB_Matrix_nrows (&n, U)) ;
             LAGRAPH_OK (GrB_Matrix_new (&C, GrB_INT64, n, n)) ;
             LAGRAPH_OK (GrB_mxm (C, L, NULL, LAGraph_PLUS_TIMES_INT64,
@@ -216,6 +217,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
 
         case 6:  // SandiaDot2: ntri = sum (sum ((U * L') .* U))
 
+            // using the masked dot product (very efficient)
             LAGRAPH_OK (GrB_Matrix_nrows (&n, U)) ;
             LAGRAPH_OK (GrB_Matrix_new (&C, GrB_INT64, n, n)) ;
             LAGRAPH_OK (GrB_mxm (C, U, NULL, LAGraph_PLUS_TIMES_INT64,

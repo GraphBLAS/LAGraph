@@ -1,2 +1,4 @@
 stderr.txt
+batch_result.mtx
+brandes_result.mtx
 !.gitignore

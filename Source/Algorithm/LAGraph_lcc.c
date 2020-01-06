@@ -90,10 +90,9 @@
     GrB_free (&C) ;                 \
     GrB_free (&CL) ;                \
     if (sanitize) GrB_free (&S) ;   \
-    GrB_free (&L) ;                 \
+    GrB_free (&U) ;                 \
     GrB_free (&W) ;                 \
     GrB_free (&LCC) ;               \
-    GrB_free (&desc) ;              \
 }
 
 //------------------------------------------------------------------------------
@@ -118,14 +117,19 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
         return (GrB_NULL_POINTER) ;
     }
 
-    GrB_Matrix C = NULL, CL = NULL, S = NULL, L = NULL ;
+    GrB_Matrix C = NULL, CL = NULL, S = NULL, U = NULL ;
     GrB_Vector W = NULL, LCC = NULL ;
     GrB_Info info ;
-    GrB_Descriptor desc = NULL ;
 
     // n = size of A (# of nodes in the graph)
     GrB_Index n ;
     LAGRAPH_OK (GrB_Matrix_nrows (&n, A)) ;
+    GxB_Format_Value fmt ;
+    LAGRAPH_OK (GxB_get (A, GxB_FORMAT, &fmt)) ;
+    if (fmt != GxB_BY_ROW)
+    {
+        LAGRAPH_ERROR ("A must be stored by row", GrB_INVALID_VALUE) ;
+    }
 
     //--------------------------------------------------------------------------
     // ensure input is binary and has no self-edges
@@ -156,7 +160,7 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     LAGraph_tic (tic) ;
 
     LAGRAPH_OK (GrB_Matrix_new (&C, GrB_FP64, n, n)) ;
-    LAGRAPH_OK (GrB_Matrix_new (&L, GrB_UINT32, n, n)) ;
+    LAGRAPH_OK (GrB_Matrix_new (&U, GrB_UINT32, n, n)) ;
 
     if (symmetric)
     {
@@ -164,9 +168,11 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
         S = NULL ;
 
         //----------------------------------------------------------------------
-        // L = tril(C)
+        // U = triu(C)
         //----------------------------------------------------------------------
-        LAGRAPH_OK (GxB_select (L, NULL, NULL, GxB_TRIL, C, NULL, NULL)) ;
+
+        LAGRAPH_OK (GxB_select (U, NULL, NULL, GxB_TRIU, C, NULL, NULL)) ;
+
     }
     else
     {
@@ -193,10 +199,11 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
         if (sanitize) GrB_free (&S) ;
 
         //----------------------------------------------------------------------
-        // L = tril(D)
+        // U = triu(D)
         //----------------------------------------------------------------------
 
-        LAGRAPH_OK (GxB_select (L, NULL, NULL, GxB_TRIL, D, NULL, NULL)) ;
+        // note that L=U' since D is symmetric
+        LAGRAPH_OK (GxB_select (U, NULL, NULL, GxB_TRIU, D, NULL, NULL)) ;
         GrB_free (&D) ;
     }
 
@@ -224,14 +231,14 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     // Calculate triangles
     //--------------------------------------------------------------------------
 
-    // CL<C> = C*L using a masked dot product
-    LAGRAPH_OK(GrB_Descriptor_new(&desc))
-    LAGRAPH_OK(GrB_Descriptor_set(desc, GrB_OUTP, GrB_REPLACE))
-    LAGRAPH_OK(GrB_Descriptor_set(desc, GxB_AxB_METHOD, GxB_AxB_DOT))
-
+    // CL<C> = C*L = C*U' using a masked dot product.  No explicit transpose
+    // is now required.  The old method did a transpose of L internally in
+    // SuiteSparse:GraphBLAS, both v3.1 and v3.2, followed by the masked dot
+    // product.  Using U' instead of L avoids the tranpose of L.
     LAGRAPH_OK (GrB_Matrix_new (&CL, GrB_FP64, n, n)) ;
-    LAGRAPH_OK (GrB_mxm (CL, C, NULL, LAGraph_PLUS_TIMES_FP64, C, L, desc)) ;
-    GrB_free (&L) ;
+    LAGRAPH_OK (GrB_mxm (CL, C, NULL, LAGraph_PLUS_TIMES_FP64, C, U, 
+        LAGraph_desc_otoo)) ;
+    GrB_free (&U) ;
 
     //--------------------------------------------------------------------------
     // Calculate LCC

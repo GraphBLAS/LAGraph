@@ -66,6 +66,13 @@
 // A_matrix represents the graph.  It must be square, and can be unsymmetric.
 // Self-edges are OK.
 
+// If DO_PULL is #defined, the algorithm does each GrB_mxm twice: once with the
+// "pull" (dot product method internally in GraphBLAS) and ones with the "push"
+// (the saxpy method in GraphBLAS).  Then it pretends to have a perfect
+// heuristic by taking the min of both times to compute the "pushpull" time.
+// This is of course unrealistic, but it's a lower bound on any heuristc that
+// tries to select the correct method at each step.
+
 //------------------------------------------------------------------------------
 
 #include "LAGraph_internal.h"
@@ -81,8 +88,9 @@
     GrB_free (&desc) ;                      \
     if (S_array != NULL)                    \
     {                                       \
-        for (int64_t d = 0; d < depth; d++) \
+        for (int64_t d = 0; d < n ; d++)    \
         {                                   \
+            if (S_array [d] == NULL) break ; \
             GrB_free(&(S_array[d]));        \
         }                                   \
         free (S_array);                     \
@@ -118,26 +126,18 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
     double timing [3]
 )
 {
-    double tic [2];
-    LAGraph_tic (tic);
-
+    GrB_Info info ;
     GrB_Descriptor desc = NULL ;
 
-    (*centrality) = NULL;
-    GrB_Index n; // Number of nodes in the graph
-
-    int nthreads ;
-    GxB_get (GxB_NTHREADS, &nthreads) ;
+    // Frontier matrix
+    // Stores # of shortest paths to vertices at current BFS depth
+    GrB_Matrix frontier = NULL;
 
     // Array of BFS search matrices
     // S_array[i] is a matrix that stores the depth at which each vertex is
     // first seen thus far in each BFS at the current depth i. Each column
     // corresponds to a BFS traversal starting from a source node.
     GrB_Matrix *S_array = NULL;
-
-    // Frontier matrix
-    // Stores # of shortest paths to vertices at current BFS depth
-    GrB_Matrix frontier = NULL;
 
     // Paths matrix holds the number of shortest paths for each node and
     // starting node discovered so far. Starts out sparse and becomes denser.
@@ -147,6 +147,29 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
     // Update matrix for betweenness centrality, values for each node for
     // each starting node. Treated as dense for efficiency.
     REAL_t *bc_update_dense = NULL;
+
+    GrB_Matrix t1 = NULL;
+    GrB_Matrix t2 = NULL;
+
+    GrB_Index n; // Number of nodes in the graph
+
+    (*centrality) = NULL;
+
+    //--------------------------------------------------------------------------
+
+    double tic [2];
+    LAGraph_tic (tic);
+
+    GxB_Format_Value a_fmt, at_fmt ;
+    LAGRAPH_OK (GxB_get (A_matrix,  GxB_FORMAT, &a_fmt )) ;
+    LAGRAPH_OK (GxB_get (AT_matrix, GxB_FORMAT, &at_fmt)) ;
+    if (a_fmt != GxB_BY_ROW || at_fmt != GxB_BY_ROW)
+    {
+        LAGRAPH_ERROR ("A and AT must be stored by row", GrB_INVALID_VALUE) ;
+    }
+
+    int nthreads ;
+    GxB_get (GxB_NTHREADS, &nthreads) ;
 
     GrB_Index* Sp = NULL;
     GrB_Index* Si = NULL;
@@ -159,13 +182,7 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
     GrB_Index num_rows;
     GrB_Index num_cols;
     GrB_Index nnz;
-    int64_t num_nonempty;
     GrB_Type type;
-
-    GrB_Matrix t1 = NULL;
-    GrB_Matrix t2 = NULL;
-
-    int64_t depth = 0; // Initial BFS depth
 
     LAGr_Matrix_nrows(&n, A_matrix); // Get dimensions
 
@@ -231,7 +248,8 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
     // AT = A'
     // frontier <!paths> = AT (:,sources)
     // TODO: use mxm, so A_matrix values are ignored.
-    LAGr_extract(frontier, paths, GrB_NULL, A_matrix, GrB_ALL, n, sources, num_sources, LAGraph_desc_tocr);
+    LAGr_extract(frontier, paths, GrB_NULL, A_matrix, GrB_ALL, n, sources,
+        num_sources, LAGraph_desc_tocr);
 
     // Allocate memory for the array of S matrices
     S_array = (GrB_Matrix*) calloc(n, sizeof(GrB_Matrix));
@@ -242,22 +260,26 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
         return (GrB_OUT_OF_MEMORY);
     }
 
-    printf ("starting 1st phase\n") ;
+    // printf ("starting 1st phase\n") ;
     // GxB_fprint (A_matrix, 2, stdout) ;
     // GxB_fprint (frontier, 2, stdout) ;
 
     //=== Breadth-first search stage ===========================================
-    GrB_Index sum = 0;    // Sum of shortest paths to vertices at current depth
-                          // Equal to sum(frontier). Continue BFS until new paths
-                          //  are no shorter than any existing paths.
+    GrB_Index sum = 0;   // Sum of shortest paths to vertices at current depth
+                         // Equal to sum(frontier). Continue BFS until new paths
+                         //  are no shorter than any existing paths.
 
     double time_1 = LAGraph_toc (tic) ;
-    printf ("Xbc setup %g sec\n", time_1) ;
+    // printf ("Xbc setup %g sec\n", time_1) ;
 
     double phase1_other_time = 0 ;
     double phase1_allpush_time = 0 ;
     double phase1_allpull_time = 0 ;
     double phase1_pushpull_time = 0 ;
+
+    int nth = LAGRAPH_MIN (nthreads, num_sources) ;
+
+    int64_t depth = 0; // Initial BFS depth
 
     do
     {
@@ -268,18 +290,23 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
         GxB_set(S_array[depth], GxB_FORMAT, GxB_BY_COL);
 
         // Copy the current frontier to S
-        LAGr_apply(S_array[depth], GrB_NULL, GrB_NULL, GrB_IDENTITY_BOOL, frontier, GrB_NULL);
+        LAGr_apply(S_array[depth], GrB_NULL, GrB_NULL, GrB_IDENTITY_BOOL,
+            frontier, GrB_NULL);
 
         //=== Accumulate path counts: paths += frontier ========================
 
         // Export paths
-        GxB_Matrix_export_CSC(&paths, &type, &num_rows, &num_cols, &nnz, &num_nonempty, &Sp, &Si, (void **) &Sx, GrB_NULL);
+        int64_t paths_nonempty ;
+        GxB_Matrix_export_CSC(&paths, &type, &num_rows, &num_cols, &nnz,
+            &paths_nonempty, &Sp, &Si, (void **) &Sx, GrB_NULL);
 
         // Export frontier
-        GxB_Matrix_export_CSC(&frontier, &type, &num_rows, &num_cols, &nnz, &num_nonempty, &Tp, &Ti, (void **) &Tx, GrB_NULL);
+        int64_t frontier_nonempty ;
+        GxB_Matrix_export_CSC(&frontier, &type, &num_rows, &num_cols, &nnz,
+            &frontier_nonempty, &Tp, &Ti, (void **) &Tx, GrB_NULL);
 
         // Use frontier pattern to update dense paths
-#pragma omp parallel for num_threads(nthreads)
+        #pragma omp parallel for num_threads(nth)
         for (int64_t col = 0; col < num_sources; col++)
         {
             for (GrB_Index p = Tp[col]; p < Tp[col+1]; p++)
@@ -290,38 +317,47 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
         }
 
         // Import frontier
-        GxB_Matrix_import_CSC(&frontier, LAGr_REAL_TYPE, n, num_sources, nnz, num_nonempty, &Tp, &Ti, (void **) &Tx, GrB_NULL);
+        GxB_Matrix_import_CSC(&frontier, LAGr_REAL_TYPE, n, num_sources, nnz,
+            frontier_nonempty, &Tp, &Ti, (void **) &Tx, GrB_NULL);
 
         // Import paths
-        GxB_Matrix_import_CSC(&paths, LAGr_REAL_TYPE, n, num_sources, nnz_dense, n, &Sp, &Si, (void **) &Sx, GrB_NULL);
+        GxB_Matrix_import_CSC(&paths, LAGr_REAL_TYPE, n, num_sources,
+            nnz_dense, paths_nonempty, &Sp, &Si, (void **) &Sx, GrB_NULL);
 
         phase1_other_time += LAGraph_toc (tic) ;
 
         //=== Update frontier: frontier<!paths>=A’ +.∗ frontier ================
 
-            GrB_Matrix frontier2 ;
+            double pull_time = INFINITY ;
+#if DO_PULL
+            GrB_Matrix frontier2  = NULL ;
             GrB_Matrix_dup (&frontier2, frontier) ;
-
-            // uses the "pull" method (dot)
+            // uses the "pull" method (dot), because AT_matrix is stored by
+            // row, and frontier is stored by column.
             LAGraph_tic (tic);
-            LAGr_mxm(frontier, paths, GrB_NULL, LAGr_PLUS_SECOND_REAL, AT_matrix, frontier, desc /* LAGraph_desc_oocr */);
-            double pull_time = LAGraph_toc (tic) ;
-            printf ("1: pull_time: %g sec\n", pull_time) ;
+            LAGr_mxm(frontier2, paths, GrB_NULL, LAGr_PLUS_SECOND_REAL,
+                AT_matrix, frontier2, desc /* LAGraph_desc_oocr */);
+            pull_time = LAGraph_toc (tic) ;
+            // printf ("1: pull_time: %g sec\n", pull_time) ;
+            GrB_free (&frontier2) ;
+#endif
             phase1_allpull_time += pull_time ;
 
             // uses the "push" method (saxpy)
             LAGraph_tic (tic);
-            LAGr_mxm(frontier2, paths, GrB_NULL, LAGr_PLUS_SECOND_REAL, A_matrix, frontier2, LAGraph_desc_tocr);
+            LAGr_mxm(frontier, paths, GrB_NULL, LAGr_PLUS_SECOND_REAL,
+                A_matrix, frontier, LAGraph_desc_tocr);
+
             double push_time = LAGraph_toc (tic) ;
-            printf ("1: push_time: %g sec,  pull/push %g\n", push_time, pull_time/push_time) ;
+//            printf ("1: push_time: %g sec,  pull/push %g nvals %g\n",
+//                push_time, pull_time/push_time, (double) sum) ;
             phase1_allpush_time += push_time ;
 
             // assume a perfect pushpull heuristic
             double pushpull_time = fmin (pull_time, push_time) ;
             phase1_pushpull_time += pushpull_time ;
 
-            GrB_free (&frontier2) ;
-
+ 
         //=== Sum up the number of BFS paths still being explored ==============
         LAGraph_tic (tic);
         LAGr_Matrix_nvals(&sum, frontier);
@@ -330,11 +366,13 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
 
     } while (sum); // Repeat until no more shortest paths being discovered
 
-    printf ("Xbx 1st phase:\n") ;
-    printf ("    1st mxm allpush:  %g\n", phase1_allpush_time) ;
-    printf ("    1st mxm allpull:  %g\n", phase1_allpull_time) ;
-    printf ("    1st mxm pushpull: %g\n", phase1_pushpull_time) ;
-    printf ("    1st other:        %g\n", phase1_other_time) ;
+    // printf ("Xbx 1st phase:\n") ;
+    // printf ("    1st mxm allpush:  %g\n", phase1_allpush_time) ;
+#if DO_PULL
+    // printf ("    1st mxm allpull:  %g\n", phase1_allpull_time) ;
+    // printf ("    1st mxm pushpull: %g\n", phase1_pushpull_time) ;
+#endif
+    // printf ("    1st other:        %g\n", phase1_other_time) ;
 
     LAGraph_tic (tic);
 
@@ -345,7 +383,8 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
     // Create the dense update matrix and initialize it to 1
     // We will store it column-wise (col * p + row)
     bc_update_dense = LAGraph_malloc(nnz_dense, sizeof(REAL_t));
-#pragma omp parallel for num_threads(nthreads)
+
+    #pragma omp parallel for num_threads(nthreads)
     for (GrB_Index nz = 0; nz < nnz_dense; nz++)
     {
         bc_update_dense[nz] = 1.0;
@@ -353,7 +392,9 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
 
     // By this point, paths is (mostly) dense.
     // Create a dense version of the GraphBLAS paths matrix
-    GxB_Matrix_export_CSC(&paths, &type, &num_rows, &num_cols, &nnz, &num_nonempty, &Sp, &Si, (void **) &paths_dense, GrB_NULL);
+    int64_t paths_nonempty ;
+    GxB_Matrix_export_CSC(&paths, &type, &num_rows, &num_cols, &nnz,
+        &paths_nonempty, &Sp, &Si, (void **) &paths_dense, GrB_NULL);
 
     // Throw away the "sparse" version of paths
     LAGraph_free(Sp);
@@ -364,27 +405,30 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
     GxB_set(t2, GxB_FORMAT, GxB_BY_COL);
 
     double time_3 = LAGraph_toc (tic) ;
-    printf ("Xbc: setup for backtrack %12.6g\n", time_3) ;
+    // printf ("Xbc: setup for backtrack %12.6g\n", time_3) ;
 
     double phase2_other_time = 0 ;
     double phase2_allpush_time = 0 ;
     double phase2_allpull_time = 0 ;
     double phase2_pushpull_time = 0 ;
 
-    printf ("starting 2nd phase\n") ;
+    // printf ("starting 2nd phase\n") ;
     // GxB_fprint (AT_matrix, 2, stdout) ;
 
     // Backtrack through the BFS and compute centrality updates for each vertex
     for (int64_t i = depth - 1; i > 0; i--)
     {
-        // Add contributions by successors and mask with that BFS level’s frontier
+        // Add contributions by successors and mask with that BFS level’s
+        // frontier
         LAGraph_tic (tic);
 
         //=== temp<S_array[i]> = bc_update ./ paths ============================
 
         // Export the pattern of S_array[i]
         void *Bx ;
-        GxB_Matrix_export_CSC(&(S_array[i]), &type, &num_rows, &num_cols, &nnz, &num_nonempty, &Sp, &Si, &Bx, GrB_NULL);
+        int64_t S_nonempty ;
+        GxB_Matrix_export_CSC(&(S_array[i]), &type, &num_rows, &num_cols, &nnz,
+            &S_nonempty, &Sp, &Si, &Bx, GrB_NULL);
 
         // Compute Tx = bc_update ./ paths_dense for all elements of S_array
         // Build the Tp and Ti vectors, too.
@@ -392,7 +436,9 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
         Ti = LAGraph_malloc(nnz, sizeof(GrB_Index));
         Tx = LAGraph_malloc(nnz, sizeof(REAL_t));
 
-#pragma omp parallel for num_threads(nthreads)
+        // int ndiv0 = 0 ;
+
+        #pragma omp parallel for num_threads(nthreads)
         for (int64_t col = 0; col < num_sources; col++)
         {
             Tp[col] = Sp[col];
@@ -400,17 +446,23 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
             {
                 // Compute Tx by eWiseMult of dense matrices
                 GrB_Index row = Ti[p] = Si[p];
-                Tx [p] = bc_update_dense [col * n + row] / paths_dense[col * n + row] ;
+                // if (paths_dense [col * n + row] == 0) ndiv0++ ;
+                Tx [p] = bc_update_dense [col * n + row]
+                           / paths_dense [col * n + row] ;
             }
         }
         Tp[num_sources] = Sp[num_sources];
 
+//      if (ndiv0 > 0) printf ("\n HERE ndiv0 %d !! \n\n", ndiv0) ;
+
         // Restore S_array[i] by importing it
-        GxB_Matrix_import_CSC(&(S_array[i]), GrB_BOOL, num_rows, num_cols, nnz, num_nonempty, &Sp, &Si, &Bx, GrB_NULL);
+        GxB_Matrix_import_CSC(&(S_array[i]), GrB_BOOL, num_rows, num_cols,
+            nnz, S_nonempty, &Sp, &Si, &Bx, GrB_NULL);
 
         // Create a GraphBLAS matrix t1 from Tp, Ti, Tx
         // The row/column indices are the pattern r/c from S_array[i]
-        GxB_Matrix_import_CSC(&t1, LAGr_REAL_TYPE, n, num_sources, nnz, num_nonempty, &Tp, &Ti, (void **) &Tx, GrB_NULL);
+        GxB_Matrix_import_CSC(&t1, LAGr_REAL_TYPE, n, num_sources, nnz,
+            S_nonempty, &Tp, &Ti, (void **) &Tx, GrB_NULL);
 
         phase2_other_time += LAGraph_toc (tic) ;
 
@@ -418,14 +470,18 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
 
         //=== t2<S_array[i−1]> = (A * t1) ======================================
 
+            double pull_time = INFINITY ;
+#if DO_PULL
             // uses the "pull" method (dot)
             LAGraph_tic (tic);
             GrB_free (&t2) ;
             LAGr_Matrix_new(&t2, LAGr_REAL_TYPE, n, num_sources);
             GxB_set(t2, GxB_FORMAT, GxB_BY_COL);
-            LAGr_mxm(t2, S_array[i-1], GrB_NULL, LAGr_PLUS_SECOND_REAL, A_matrix, t1, LAGraph_desc_ooor);
-            double pull_time = LAGraph_toc (tic) ;
-            printf ("2: pull_time: %g sec\n", pull_time) ;
+            LAGr_mxm(t2, S_array[i-1], GrB_NULL, LAGr_PLUS_SECOND_REAL,
+                A_matrix, t1, LAGraph_desc_ooor);
+            pull_time = LAGraph_toc (tic) ;
+            // printf ("2: pull_time: %g sec\n", pull_time) ;
+#endif
             phase2_allpull_time += pull_time ;
 
             // uses the "push" method (saxpy)
@@ -433,9 +489,12 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
             GrB_free (&t2) ;
             LAGr_Matrix_new(&t2, LAGr_REAL_TYPE, n, num_sources);
             GxB_set(t2, GxB_FORMAT, GxB_BY_COL);
-            LAGr_mxm(t2, S_array[i-1], GrB_NULL, LAGr_PLUS_SECOND_REAL, AT_matrix, t1, LAGraph_desc_toor);
+            LAGr_mxm(t2, S_array[i-1], GrB_NULL, LAGr_PLUS_SECOND_REAL,
+                AT_matrix, t1, LAGraph_desc_toor);
+
             double push_time = LAGraph_toc (tic) ;
-            printf ("2: push_time: %g sec,  pull/push %g\n", push_time, pull_time/push_time) ;
+//             printf ("2: push_time: %g sec,  pull/push %g\n", push_time,
+//                 pull_time/push_time) ;
             phase2_allpush_time += push_time ;
 
             // assume a perfect pushpull heuristic
@@ -446,35 +505,45 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
         GrB_free(&t1);
 
         //=== bc_update += t2 .* paths =========================================
-        GxB_Matrix_export_CSC(&t2, &type, &num_rows, &num_cols, &nnz, &num_nonempty, &Tp, &Ti, (void **) &Tx, GrB_NULL);
-#pragma omp parallel for num_threads(nthreads)
+        int64_t t2_nonempty ;
+        GxB_Matrix_export_CSC(&t2, &type, &num_rows, &num_cols, &nnz,
+            &t2_nonempty, &Tp, &Ti, (void **) &Tx, GrB_NULL);
+
+        #pragma omp parallel for num_threads(nth)
         for (int64_t col = 0; col < num_sources; col++)
         {
             for (GrB_Index p = Tp[col]; p < Tp[col+1]; p++)
             {
                 GrB_Index row = Ti[p];
-                bc_update_dense[col * n + row] += Tx [p] * paths_dense [col * n + row] ;
+                bc_update_dense [col * n + row] += 
+                    Tx [p] * paths_dense [col * n + row] ;
             }
         }
 
         // Re-import t2
-        GxB_Matrix_import_CSC(&t2, LAGr_REAL_TYPE, num_rows, num_cols, nnz, num_nonempty, &Tp, &Ti, (void **) &Tx, GrB_NULL);
+        GxB_Matrix_import_CSC(&t2, LAGr_REAL_TYPE, num_rows, num_cols, nnz,
+            t2_nonempty, &Tp, &Ti, (void **) &Tx, GrB_NULL);
 
         phase2_other_time += LAGraph_toc (tic) ;
     }
 
+    #if 0
     printf ("Xbx 2nd phase:\n") ;
     printf ("    2nd mxm allpush:  %g\n", phase2_allpush_time) ;
+#if DO_PULL
     printf ("    2nd mxm allpull:  %g\n", phase2_allpull_time) ;
     printf ("    2nd mxm pushpull: %g\n", phase2_pushpull_time) ;
+#endif
     printf ("    2nd other:        %g\n", phase2_other_time) ;
+    #endif
 
     LAGraph_tic (tic);
 
     //=== Initialize the centrality array with -(num_sources) to avoid counting
     //    zero length paths ====================================================
     REAL_t *centrality_dense = LAGraph_malloc(n, sizeof(REAL_t));
-#pragma omp parallel for num_threads(nthreads)
+
+    #pragma omp parallel for num_threads(nthreads)
     for (GrB_Index i = 0; i < n; i++)
     {
         centrality_dense[i] = -num_sources;
@@ -482,7 +551,8 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
 
     //=== centrality[i] += bc_update[i,:] ======================================
     // Both are dense. We can also take care of the reduction.
-#pragma omp parallel for schedule(static) num_threads(nthreads)
+
+    #pragma omp parallel for schedule(static) num_threads(nthreads)
     for (GrB_Index j = 0; j < n; j++)
     {
         for (int64_t i = 0; i < num_sources; i++)
@@ -493,26 +563,42 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
 
     // Build the index vector.
     GrB_Index* I = LAGraph_malloc(n, sizeof(GrB_Index));
-#pragma omp parallel for num_threads(nthreads)
+    
+    #pragma omp parallel for num_threads(nthreads)
     for (GrB_Index j = 0; j < n; j++)
     {
         I[j] = j;
     }
 
     // Import the dense vector into GraphBLAS and return it.
-    GxB_Vector_import(centrality, LAGr_REAL_TYPE, n, n, &I, (void **) &centrality_dense, GrB_NULL);
+    GxB_Vector_import(centrality, LAGr_REAL_TYPE, n, n, &I,
+        (void **) &centrality_dense, GrB_NULL);
 
     LAGRAPH_FREE_WORK;
     double time_5 = LAGraph_toc (tic) ;
-    printf ("Xbc wrapup:    %g\n", time_5) ;
+    // printf ("Xbc wrapup:    %g\n", time_5) ;
 
-    timing [0] = time_1 + (phase1_pushpull_time + phase1_other_time) + time_3 + (phase2_pushpull_time + phase2_other_time) + time_5 ;
-    timing [1] = time_1 + (phase1_allpush_time  + phase1_other_time) + time_3 + (phase2_allpush_time  + phase2_other_time) + time_5 ;
-    timing [2] = time_1 + (phase1_allpull_time  + phase1_other_time) + time_3 + (phase2_allpull_time  + phase2_other_time) + time_5 ;
+    timing [0] = time_1
+              + (phase1_pushpull_time + phase1_other_time)
+              + time_3 + (phase2_pushpull_time + phase2_other_time) + time_5 ;
 
+    timing [1] = time_1
+                + (phase1_allpush_time  + phase1_other_time)
+                + time_3 + (phase2_allpush_time  + phase2_other_time) + time_5 ;
+
+    timing [2] = time_1
+                + (phase1_allpull_time  + phase1_other_time)
+                + time_3 + (phase2_allpull_time  + phase2_other_time) + time_5 ;
+
+#if 0
+#if DO_PULL
     printf ("Xbc total (pushpull):    %g\n", timing [0]) ;
+#endif
     printf ("Xbc total (allpush):     %g\n", timing [1]) ;
+#if DO_PULL
     printf ("Xbc total (allpull):     %g\n", timing [2]) ;
+#endif
+#endif
 
     return GrB_SUCCESS;
 }

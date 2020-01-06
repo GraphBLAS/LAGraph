@@ -224,9 +224,10 @@ GrB_Info LAGraph_cdlp
 
     LAGraph_tic (tic) ;
 
-    GxB_Format_Value A_format = -1;
+    GxB_Format_Value A_format = -1, global_format = -1 ;
     LAGRAPH_OK (GxB_get(A, GxB_FORMAT, &A_format))
-    if (A_format != GxB_BY_ROW)
+    LAGRAPH_OK (GxB_get(GxB_FORMAT, &global_format))
+    if (A_format != GxB_BY_ROW || global_format != GxB_BY_ROW)
     {
         LAGRAPH_ERROR(
             "CDLP algorithm only works on matrices stored by row (CSR)",
@@ -234,6 +235,8 @@ GrB_Info LAGraph_cdlp
         )
     }
 
+    // TODO: heap is no longer in SuiteSparse, as of 3.2.0draftx.
+    // the new saxpy method is used instead (Gustavson + Hash)
     LAGRAPH_OK(GrB_Descriptor_new(&desc))
     LAGRAPH_OK(GrB_Descriptor_set(desc, GrB_OUTP, GrB_REPLACE))
     LAGRAPH_OK(GrB_Descriptor_set(desc, GxB_AxB_METHOD, GxB_AxB_HEAP))
@@ -291,6 +294,7 @@ GrB_Info LAGraph_cdlp
         X = LAGraph_malloc(nnz, sizeof(GrB_Index));
 
         // AL_in = A min.2nd L
+        // (using the "push" (saxpy) method)
         LAGRAPH_OK(GrB_Matrix_new(&AL_in, GrB_UINT64, n, n))
         LAGRAPH_OK(GrB_mxm(AL_in, GrB_NULL, GrB_NULL, GxB_MIN_SECOND_UINT64, S, L, desc))
         LAGRAPH_OK(GrB_Matrix_extractTuples_UINT64(I, GrB_NULL, X, &nz, AL_in))
@@ -299,6 +303,7 @@ GrB_Info LAGraph_cdlp
         if (!symmetric)
         {
             // AL_out = A' min.2nd L
+            // (using the "push" (saxpy) method)
             LAGRAPH_OK(GrB_Matrix_new(&AL_out, GrB_UINT64, n, n))
             LAGRAPH_OK(GrB_mxm(AL_out, GrB_NULL, GrB_NULL, GxB_MIN_SECOND_UINT64, AT, L, desc))
             LAGRAPH_OK(GrB_Matrix_extractTuples_UINT64(&I[nz], GrB_NULL, &X[nz], &nz, AL_out))
@@ -350,8 +355,13 @@ GrB_Info LAGraph_cdlp
         LAGRAPH_FREE (I) ;
         LAGRAPH_FREE (X) ;
 
+        // TODO comment from Tim.  I don't understand this test.
+        // if L_prev == L then they are the same matrix, and their
+        // contents will always be the same and thus the for loop
+        // with always report same == true.
         if (L_prev == L)
         {
+            // TODO: this might be slow.  See LAGraph_isequal instead
             bool same = true;
             for (GrB_Index i = 0; i < n; i++)
             {

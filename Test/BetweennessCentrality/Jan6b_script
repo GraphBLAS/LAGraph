@@ -1,0 +1,248 @@
+Script started on Mon 06 Jan 2020 01:11:42 PM CST
+Intel Suite:
+Copyright (C) 2009-2019 Intel Corporation. All rights reserved.
+Intel(R) VTune(TM) Amplifier 2019 (build 591499)
+[0;36mhypersparse $[0m ./do_gap
+matrix: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+sources: /home/faculty/davis/GAP/GAP-web/GAP-web_sources.mtx
+read time: 14.1562 sec
+setup time: 2.27242 sec
+A is unsymmetric
+transpose time: 6.56564
+
+========== input graph: nodes: 50636151 edges: 1930292948
+TESTING LAGraphX_bc_batch3 (saxpy in both phases, nthreads 40
+
+Trial 1 : sources: [ 10219452 44758211 890671 13843756 ]
+Batch    time: 9.607136e+00 (sec), rate: 200.923 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 2 : sources: [ 14168062 20906930 12189584 26352335 ]
+Batch    time: 8.999600e+00 (sec), rate: 214.487 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 3 : sources: [ 43500686 8987024 5699762 41436455 ]
+Batch    time: 9.024916e+00 (sec), rate: 213.885 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 4 : sources: [ 5030727 40735218 16533563 28700166 ]
+Batch    time: 1.230761e+01 (sec), rate: 156.837 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 5 : sources: [ 64711 39634750 16037779 27152739 ]
+Batch    time: 1.113723e+01 (sec), rate: 173.319 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 6 : sources: [ 16404061 20491963 5322423 21420953 ]
+Batch    time: 1.174360e+01 (sec), rate: 164.37 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 7 : sources: [ 26622109 5882875 18091040 10665896 ]
+Batch    time: 9.286809e+00 (sec), rate: 207.853 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 8 : sources: [ 18634422 18138715 2355535 32885205 ]
+Batch    time: 8.877061e+00 (sec), rate: 217.447 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 9 : sources: [ 40657440 35196167 45544426 6175519 ]
+Batch    time: 8.697228e+00 (sec), rate: 221.943 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 10 : sources: [ 40058318 50626230 36571019 49397052 ]
+Batch    time: 1.095668e+01 (sec), rate: 176.175 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 11 : sources: [ 23434265 2299444 32873823 25978282 ]
+Batch    time: 8.622087e+00 (sec), rate: 223.878 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 12 : sources: [ 2461715 22787314 30759947 7428894 ]
+Batch    time: 6.582461e+00 (sec), rate: 293.248 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 13 : sources: [ 39173870 43194209 26361509 39747211 ]
+Batch    time: 7.906420e-01 (sec), rate: 2441.42 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 14 : sources: [ 30670029 41483033 9358666 9945008 ]
+Batch    time: 1.106477e+01 (sec), rate: 174.454 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 15 : sources: [ 3355244 33831269 45124744 16137877 ]
+Batch    time: 9.091270e+00 (sec), rate: 212.324 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 16 : sources: [ 11235448 37509144 27402414 39546083 ]
+Batch    time: 1.075680e+01 (sec), rate: 179.449 (1e6 edges/sec)
+LAGraph batch is FP32
+ntrials: 16
+Average time per trial: batch, pushpull:   9.22153 sec
+Average time per trial: batch, allpush :   9.22153 sec
+Average time per trial: batch, allpull :   inf sec
+build/bc_gap_test: all tests passed
+matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+sources: /home/faculty/davis/GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 41.2006 sec
+setup time: 8.83355 sec
+A is symmetric
+transpose time: 75.0883
+
+========== input graph: nodes: 134217726 edges: 4223264644
+TESTING LAGraphX_bc_batch3 (saxpy in both phases, nthreads 40
+
+Trial 1 : sources: [ 2338012 31997659 23590940 43400604 ]
+Batch    time: 4.194258e+01 (sec), rate: 100.692 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 2 : sources: [ 75337937 169867 104041220 94177942 ]
+Batch    time: 3.986342e+01 (sec), rate: 105.943 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 3 : sources: [ 32871357 56230002 69883037 9346345 ]
+Batch    time: 4.211797e+01 (sec), rate: 100.272 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 4 : sources: [ 48915358 122571173 6183279 86323663 ]
+Batch    time: 4.113466e+01 (sec), rate: 102.669 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 5 : sources: [ 106725780 92389938 16210738 59816700 ]
+Batch    time: 4.323054e+01 (sec), rate: 97.6917 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 6 : sources: [ 111669929 102831411 113384800 43872564 ]
+Batch    time: 4.087599e+01 (sec), rate: 103.319 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 7 : sources: [ 80508827 26105648 8807516 118452455 ]
+Batch    time: 4.266593e+01 (sec), rate: 98.9845 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 8 : sources: [ 121818859 42361928 29493053 98461503 ]
+Batch    time: 3.601368e+01 (sec), rate: 117.268 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 9 : sources: [ 71931337 103808468 4092345 115276241 ]
+Batch    time: 3.903519e+01 (sec), rate: 108.191 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 10 : sources: [ 4649343 76656189 31312001 111334127 ]
+Batch    time: 4.419707e+01 (sec), rate: 95.5553 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 11 : sources: [ 100962918 41823215 22631240 42848461 ]
+Batch    time: 4.610112e+01 (sec), rate: 91.6087 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 12 : sources: [ 79485148 106818742 73347974 78848445 ]
+Batch    time: 3.591754e+01 (sec), rate: 117.582 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 13 : sources: [ 109920510 121492133 101037296 15438600 ]
+Batch    time: 3.991718e+01 (sec), rate: 105.801 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 14 : sources: [ 4584784 124503845 87241743 108297008 ]
+Batch    time: 4.905956e+01 (sec), rate: 86.0844 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 15 : sources: [ 33955082 79934823 8608481 82435063 ]
+Batch    time: 4.263454e+01 (sec), rate: 99.0573 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 16 : sources: [ 46579271 515421 121530467 127978736 ]
+Batch    time: 4.185093e+01 (sec), rate: 100.912 (1e6 edges/sec)
+LAGraph batch is FP32
+ntrials: 16
+Average time per trial: batch, pushpull:   41.6599 sec
+Average time per trial: batch, allpush :   41.6599 sec
+Average time per trial: batch, allpull :   inf sec
+build/bc_gap_test: all tests passed
+matrix: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+sources: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter_sources.mtx
+read time: 12.9061 sec
+setup time: 1.75573 sec
+A is unsymmetric
+transpose time: 21.3955
+
+========== input graph: nodes: 61578415 edges: 1468364884
+TESTING LAGraphX_bc_batch3 (saxpy in both phases, nthreads 40
+
+Trial 1 : sources: [ 12441072 54488257 25451915 57714473 ]
+Batch    time: 1.457281e+01 (sec), rate: 100.761 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 2 : sources: [ 14839494 32081104 52957357 50444380 ]
+Batch    time: 1.765308e+01 (sec), rate: 83.1789 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 3 : sources: [ 49590701 20127816 34939333 48251001 ]
+Batch    time: 1.543950e+01 (sec), rate: 95.1044 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 4 : sources: [ 19524253 43676726 33055508 15244687 ]
+Batch    time: 1.370586e+01 (sec), rate: 107.134 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 5 : sources: [ 24946738 6479472 26077682 22023875 ]
+Batch    time: 1.696287e+01 (sec), rate: 86.5635 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 6 : sources: [ 22081915 40034162 49496014 42847507 ]
+Batch    time: 1.429573e+01 (sec), rate: 102.713 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 7 : sources: [ 52409557 55445388 22028097 48766648 ]
+Batch    time: 1.440668e+01 (sec), rate: 101.922 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 8 : sources: [ 44521241 60135542 28528671 9678012 ]
+Batch    time: 1.716087e+01 (sec), rate: 85.5647 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 9 : sources: [ 40020306 31625735 37446892 51788952 ]
+Batch    time: 1.351664e+01 (sec), rate: 108.634 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 10 : sources: [ 52584255 20346696 48387909 37337427 ]
+Batch    time: 1.388497e+01 (sec), rate: 105.752 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 11 : sources: [ 50501084 30130061 41185893 56495703 ]
+Batch    time: 1.437376e+01 (sec), rate: 102.156 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 12 : sources: [ 45663305 33359460 48143058 33291513 ]
+Batch    time: 1.641255e+01 (sec), rate: 89.466 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 13 : sources: [ 53461445 29340610 34148498 49171806 ]
+Batch    time: 1.460312e+01 (sec), rate: 100.551 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 14 : sources: [ 35550696 14521507 51633218 46823382 ]
+Batch    time: 1.502633e+01 (sec), rate: 97.7195 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 15 : sources: [ 19396273 19871750 36862677 49539126 ]
+Batch    time: 1.757429e+01 (sec), rate: 83.5519 (1e6 edges/sec)
+LAGraph batch is FP32
+
+Trial 16 : sources: [ 34016452 36567395 55487793 14391370 ]
+Batch    time: 1.422823e+01 (sec), rate: 103.201 (1e6 edges/sec)
+LAGraph batch is FP32
+ntrials: 16
+Average time per trial: batch, pushpull:   15.2386 sec
+Average time per trial: batch, allpush :   15.2386 sec
+Average time per trial: batch, allpull :   inf sec
+build/bc_gap_test: all tests passed
+matrix: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb

@@ -149,7 +149,8 @@ int main (int argc, char **argv)
         {
             GrB_free (&v) ;
             LAGRAPH_OK (LAGraph_bc (&v, A, vertex)) ;
-            LAGRAPH_OK (GrB_eWiseAdd(v_brandes, GrB_NULL, GrB_NULL, GrB_PLUS_FP32, v_brandes, v, GrB_NULL));
+            LAGRAPH_OK (GrB_eWiseAdd(v_brandes, GrB_NULL, GrB_NULL,
+                GrB_PLUS_FP32, v_brandes, v, GrB_NULL));
         }
     }
 
@@ -228,6 +229,9 @@ int main (int argc, char **argv)
 
     printf("   +-------------------------+\n");
 
+    // TODO this uses an absolute error, which is bad since for very big
+    // problems, an individual score can be up to 1e5 or 1e6.  Need to
+    // compute a relative error instead.
     for (int64_t i = 0; i < n; i++)
     {
         printf("   | %3"PRId64" ", i);
