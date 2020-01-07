@@ -383,7 +383,7 @@ int main (int argc, char **argv)
             double relerr = maxerr / xmax ;
             printf ("max relative error: %g\n", maxerr / xmax) ;
 
-            #if 1
+            #if 0
             printf ("writing results to mtx files:\n") ;
             FILE *f = fopen ("brandes_result.mtx", "w") ;
             LAGraph_mmwrite ((GrB_Matrix) v_brandes, f) ;
