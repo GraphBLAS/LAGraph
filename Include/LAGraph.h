@@ -771,6 +771,24 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
     double timing [3]
 );
 
+GrB_Info LAGraph_bc_batch3 // betweeness centrality, batch algorithm
+(
+    GrB_Vector *centrality,    // centrality(i) is the betweeness centrality of node i
+    const GrB_Matrix A,        // input graph, treated as if boolean in semiring
+    const GrB_Matrix AT,       // A'
+    const GrB_Index *sources,  // source vertices from which to compute shortest paths
+    int32_t num_sources        // number of source vertices (length of s)
+) ;
+
+GrB_Info LAGraph_bc_batch4      // betweeness centrality, batch algorithm
+(
+    GrB_Vector *centrality,    // centrality(i) is the betweeness centrality of node i
+    const GrB_Matrix A_matrix, // input graph, treated as if boolean in semiring
+    const GrB_Matrix AT_matrix, // A'
+    const GrB_Index *sources,  // source vertices from which to compute shortest paths
+    int32_t num_sources        // number of source vertices (length of s)
+) ;
+
 GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
 (
     GrB_Vector *v_output,   // v(i) is the BFS level of node i in the graph

@@ -109,7 +109,6 @@ int main (int argc, char **argv)
     else
     {
         printf ("A is unsymmetric\n") ;
-        GxB_fprint (AT, 2, stdout) ;
     }
 
     GrB_Matrix_nvals (&nvals, AT);
@@ -131,6 +130,15 @@ int main (int argc, char **argv)
 
     printf(" - ntrials: %d\n", ntrials);
 
+    // Create batch of vertices to use in traversal
+    int n_batch = 4 ;
+    GrB_Index *vertex_list = calloc (n, sizeof (GrB_Index)) ;
+    srand (1) ;
+    for (int i = 0 ; i < n_batch ; i++)
+    {
+        vertex_list [i] = rand ( ) % n ;
+    }
+
     //--------------------------------------------------------------------------
     // Compute betweenness centrality from all nodes (Brandes)
     //--------------------------------------------------------------------------
@@ -145,10 +153,10 @@ int main (int argc, char **argv)
 
     for (int trial = 0; trial < ntrials; trial++)
     {
-        for (int vertex = 0; vertex < n; vertex++)
+        for (int i = 0; i < n_batch ; i++)
         {
             GrB_free (&v) ;
-            LAGRAPH_OK (LAGraph_bc (&v, A, vertex)) ;
+            LAGRAPH_OK (LAGraph_bc (&v, A, vertex_list [i])) ;
             LAGRAPH_OK (GrB_eWiseAdd(v_brandes, GrB_NULL, GrB_NULL,
                 GrB_PLUS_FP32, v_brandes, v, GrB_NULL));
         }
@@ -167,14 +175,6 @@ int main (int argc, char **argv)
 
     printf(" - Start Test: Betweenness Centrality (Batch Algorithm)\n");
 
-    // Create batch of vertices to use in traversal
-    // int n_batch = /* size_of_batch */;
-    // GrB_Index *vertex_list = malloc(sizeof(GrB_Index) * n);
-
-    // ... or use GrB_ALL for all vertices
-    int n_batch = n;
-    const GrB_Index *vertex_list = GrB_ALL;
-
     // Start the timer
     LAGraph_tic (tic) ;
 
@@ -184,7 +184,9 @@ int main (int argc, char **argv)
     {
         GrB_free (&v_batch) ;
 //      LAGRAPH_OK (LAGraph_bc_batch (&v_batch, A, vertex_list, n_batch)) ;
-        LAGRAPH_OK (LAGraphX_bc_batch3 (&v_batch, A, AT, vertex_list, n_batch, timing));
+//      LAGRAPH_OK (LAGraph_bc_batch3 (&v_batch, A, AT, vertex_list, n_batch)) ;
+        LAGRAPH_OK (LAGraph_bc_batch4 (&v_batch, A, AT, vertex_list, n_batch)) ;
+//      LAGRAPH_OK (LAGraphX_bc_batch3 (&v_batch, A, AT, vertex_list, n_batch, timing));
     }
 
     // Stop the timer
