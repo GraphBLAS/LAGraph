@@ -1,0 +1,3 @@
+#!/bin/sh
+./build/bc_gap_test ~/indochina-2004.grb ~/indochina-sources.mtx
+

@@ -1,0 +1,390 @@
+Script started on Wed 08 Jan 2020 09:49:08 AM CST
+Intel Suite:
+Copyright (C) 2009-2019 Intel Corporation. All rights reserved.
+Intel(R) VTune(TM) Amplifier 2019 (build 591499)
+[0;36mhypersparse $[0m ./do_gap
+matrix: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+sources: /home/faculty/davis/GAP/GAP-web/GAP-web_sources.mtx
+A is unsymmetric
+
+========== input graph: nodes: 50636151 edges: 1930292948
+nthreads 40
+
+Trial 1 : sources: [ 10219452 44758211 890671 13843756 ]
+Batch X3 time:      11.1654 (sec), rate: 172.881 (1e6 edges/sec)
+Batch v4 time:      16.8771 (sec), rate: 114.374 (1e6 edges/sec)
+
+Trial 2 : sources: [ 14168062 20906930 12189584 26352335 ]
+Batch X3 time:       9.4360 (sec), rate: 204.567 (1e6 edges/sec)
+Batch v4 time:      13.2224 (sec), rate: 145.987 (1e6 edges/sec)
+
+Trial 3 : sources: [ 43500686 8987024 5699762 41436455 ]
+Batch X3 time:       8.7595 (sec), rate: 220.365 (1e6 edges/sec)
+Batch v4 time:      13.2133 (sec), rate: 146.087 (1e6 edges/sec)
+
+Trial 4 : sources: [ 5030727 40735218 16533563 28700166 ]
+Batch X3 time:      11.3360 (sec), rate: 170.28 (1e6 edges/sec)
+Batch v4 time:      16.2472 (sec), rate: 118.808 (1e6 edges/sec)
+
+Trial 5 : sources: [ 64711 39634750 16037779 27152739 ]
+Batch X3 time:      10.7120 (sec), rate: 180.199 (1e6 edges/sec)
+Batch v4 time:      15.7142 (sec), rate: 122.838 (1e6 edges/sec)
+
+Trial 6 : sources: [ 16404061 20491963 5322423 21420953 ]
+Batch X3 time:      11.2678 (sec), rate: 171.31 (1e6 edges/sec)
+Batch v4 time:      16.0349 (sec), rate: 120.381 (1e6 edges/sec)
+
+Trial 7 : sources: [ 26622109 5882875 18091040 10665896 ]
+Batch X3 time:       9.0288 (sec), rate: 213.792 (1e6 edges/sec)
+Batch v4 time:      13.4315 (sec), rate: 143.714 (1e6 edges/sec)
+
+Trial 8 : sources: [ 18634422 18138715 2355535 32885205 ]
+Batch X3 time:       8.5190 (sec), rate: 226.587 (1e6 edges/sec)
+Batch v4 time:      13.1453 (sec), rate: 146.843 (1e6 edges/sec)
+
+Trial 9 : sources: [ 40657440 35196167 45544426 6175519 ]
+Batch X3 time:       8.4104 (sec), rate: 229.513 (1e6 edges/sec)
+Batch v4 time:      13.0643 (sec), rate: 147.754 (1e6 edges/sec)
+
+Trial 10 : sources: [ 40058318 50626230 36571019 49397052 ]
+Batch X3 time:      10.5083 (sec), rate: 183.692 (1e6 edges/sec)
+Batch v4 time:      15.5741 (sec), rate: 123.942 (1e6 edges/sec)
+
+Trial 11 : sources: [ 23434265 2299444 32873823 25978282 ]
+Batch X3 time:       8.4718 (sec), rate: 227.849 (1e6 edges/sec)
+Batch v4 time:      13.0294 (sec), rate: 148.149 (1e6 edges/sec)
+
+Trial 12 : sources: [ 2461715 22787314 30759947 7428894 ]
+Batch X3 time:       6.3942 (sec), rate: 301.884 (1e6 edges/sec)
+Batch v4 time:      10.5427 (sec), rate: 183.093 (1e6 edges/sec)
+
+Trial 13 : sources: [ 39173870 43194209 26361509 39747211 ]
+Batch X3 time:       0.7837 (sec), rate: 2463.02 (1e6 edges/sec)
+Batch v4 time:       4.6230 (sec), rate: 417.545 (1e6 edges/sec)
+
+Trial 14 : sources: [ 30670029 41483033 9358666 9945008 ]
+Batch X3 time:      10.7661 (sec), rate: 179.293 (1e6 edges/sec)
+Batch v4 time:      15.7866 (sec), rate: 122.274 (1e6 edges/sec)
+
+Trial 15 : sources: [ 3355244 33831269 45124744 16137877 ]
+Batch X3 time:       8.8538 (sec), rate: 218.02 (1e6 edges/sec)
+Batch v4 time:      13.2478 (sec), rate: 145.707 (1e6 edges/sec)
+
+Trial 16 : sources: [ 11235448 37509144 27402414 39546083 ]
+Batch X3 time:      10.4492 (sec), rate: 184.731 (1e6 edges/sec)
+Batch v4 time:      15.6028 (sec), rate: 123.714 (1e6 edges/sec)
+ntrials: 16
+Average time per trial (BatchX3): 9.05388 sec
+Average time per trial (Batch4 ): 13.7098 sec
+build/bc_gap_test: all tests passed
+matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+sources: /home/faculty/davis/GAP/GAP-kron/GAP-kron_sources.mtx
+A is symmetric
+
+========== input graph: nodes: 134217726 edges: 4223264644
+nthreads 40
+
+Trial 1 : sources: [ 2338012 31997659 23590940 43400604 ]
+Batch X3 time:      40.9060 (sec), rate: 103.243 (1e6 edges/sec)
+Batch v4 time:      53.1148 (sec), rate: 79.512 (1e6 edges/sec)
+
+Trial 2 : sources: [ 75337937 169867 104041220 94177942 ]
+Batch X3 time:      37.8008 (sec), rate: 111.724 (1e6 edges/sec)
+Batch v4 time:      50.9603 (sec), rate: 82.8736 (1e6 edges/sec)
+
+Trial 3 : sources: [ 32871357 56230002 69883037 9346345 ]
+Batch X3 time:      40.7814 (sec), rate: 103.559 (1e6 edges/sec)
+Batch v4 time:      53.6880 (sec), rate: 78.663 (1e6 edges/sec)
+
+Trial 4 : sources: [ 48915358 122571173 6183279 86323663 ]
+Batch X3 time:      39.9900 (sec), rate: 105.608 (1e6 edges/sec)
+Batch v4 time:      52.2491 (sec), rate: 80.8294 (1e6 edges/sec)
+
+Trial 5 : sources: [ 106725780 92389938 16210738 59816700 ]
+Batch X3 time:      42.0490 (sec), rate: 100.437 (1e6 edges/sec)
+Batch v4 time:      55.0326 (sec), rate: 76.7412 (1e6 edges/sec)
+
+Trial 6 : sources: [ 111669929 102831411 113384800 43872564 ]
+Batch X3 time:      39.1981 (sec), rate: 107.742 (1e6 edges/sec)
+Batch v4 time:      52.0332 (sec), rate: 81.1648 (1e6 edges/sec)
+
+Trial 7 : sources: [ 80508827 26105648 8807516 118452455 ]
+Batch X3 time:      41.0681 (sec), rate: 102.836 (1e6 edges/sec)
+Batch v4 time:      54.0058 (sec), rate: 78.2002 (1e6 edges/sec)
+
+Trial 8 : sources: [ 121818859 42361928 29493053 98461503 ]
+Batch X3 time:      35.8512 (sec), rate: 117.8 (1e6 edges/sec)
+Batch v4 time:      47.6184 (sec), rate: 88.6898 (1e6 edges/sec)
+
+Trial 9 : sources: [ 71931337 103808468 4092345 115276241 ]
+Batch X3 time:      37.9776 (sec), rate: 111.204 (1e6 edges/sec)
+Batch v4 time:      50.0907 (sec), rate: 84.3123 (1e6 edges/sec)
+
+Trial 10 : sources: [ 4649343 76656189 31312001 111334127 ]
+Batch X3 time:      42.0690 (sec), rate: 100.389 (1e6 edges/sec)
+Batch v4 time:      55.2064 (sec), rate: 76.4996 (1e6 edges/sec)
+
+Trial 11 : sources: [ 100962918 41823215 22631240 42848461 ]
+Batch X3 time:      42.5892 (sec), rate: 99.1628 (1e6 edges/sec)
+Batch v4 time:      54.7050 (sec), rate: 77.2006 (1e6 edges/sec)
+
+Trial 12 : sources: [ 79485148 106818742 73347974 78848445 ]
+Batch X3 time:      35.4335 (sec), rate: 119.188 (1e6 edges/sec)
+Batch v4 time:      47.9901 (sec), rate: 88.0029 (1e6 edges/sec)
+
+Trial 13 : sources: [ 109920510 121492133 101037296 15438600 ]
+Batch X3 time:      38.5635 (sec), rate: 109.514 (1e6 edges/sec)
+Batch v4 time:      51.2799 (sec), rate: 82.3571 (1e6 edges/sec)
+
+Trial 14 : sources: [ 4584784 124503845 87241743 108297008 ]
+Batch X3 time:      47.0399 (sec), rate: 89.7806 (1e6 edges/sec)
+Batch v4 time:      58.6655 (sec), rate: 71.9889 (1e6 edges/sec)
+
+Trial 15 : sources: [ 33955082 79934823 8608481 82435063 ]
+Batch X3 time:      41.3066 (sec), rate: 102.242 (1e6 edges/sec)
+Batch v4 time:      54.4730 (sec), rate: 77.5294 (1e6 edges/sec)
+
+Trial 16 : sources: [ 46579271 515421 121530467 127978736 ]
+Batch X3 time:      40.0902 (sec), rate: 105.344 (1e6 edges/sec)
+Batch v4 time:      52.4196 (sec), rate: 80.5666 (1e6 edges/sec)
+ntrials: 16
+Average time per trial (BatchX3): 40.1696 sec
+Average time per trial (Batch4 ): 52.7208 sec
+build/bc_gap_test: all tests passed
+matrix: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+sources: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter_sources.mtx
+A is unsymmetric
+
+========== input graph: nodes: 61578415 edges: 1468364884
+nthreads 40
+
+Trial 1 : sources: [ 12441072 54488257 25451915 57714473 ]
+Batch X3 time:      14.1231 (sec), rate: 103.969 (1e6 edges/sec)
+Batch v4 time:      19.4169 (sec), rate: 75.623 (1e6 edges/sec)
+
+Trial 2 : sources: [ 14839494 32081104 52957357 50444380 ]
+Batch X3 time:      17.7600 (sec), rate: 82.6784 (1e6 edges/sec)
+Batch v4 time:      23.7995 (sec), rate: 61.6973 (1e6 edges/sec)
+
+Trial 3 : sources: [ 49590701 20127816 34939333 48251001 ]
+Batch X3 time:      15.1996 (sec), rate: 96.6053 (1e6 edges/sec)
+Batch v4 time:      20.3448 (sec), rate: 72.174 (1e6 edges/sec)
+
+Trial 4 : sources: [ 19524253 43676726 33055508 15244687 ]
+Batch X3 time:      13.5092 (sec), rate: 108.694 (1e6 edges/sec)
+Batch v4 time:      18.9448 (sec), rate: 77.5074 (1e6 edges/sec)
+
+Trial 5 : sources: [ 24946738 6479472 26077682 22023875 ]
+Batch X3 time:      16.4650 (sec), rate: 89.1809 (1e6 edges/sec)
+Batch v4 time:      21.6117 (sec), rate: 67.9429 (1e6 edges/sec)
+
+Trial 6 : sources: [ 22081915 40034162 49496014 42847507 ]
+Batch X3 time:      14.0250 (sec), rate: 104.696 (1e6 edges/sec)
+Batch v4 time:      19.4448 (sec), rate: 75.5143 (1e6 edges/sec)
+
+Trial 7 : sources: [ 52409557 55445388 22028097 48766648 ]
+Batch X3 time:      14.2100 (sec), rate: 103.333 (1e6 edges/sec)
+Batch v4 time:      19.5860 (sec), rate: 74.9702 (1e6 edges/sec)
+
+Trial 8 : sources: [ 44521241 60135542 28528671 9678012 ]
+Batch X3 time:      16.7414 (sec), rate: 87.7087 (1e6 edges/sec)
+Batch v4 time:      21.9632 (sec), rate: 66.8556 (1e6 edges/sec)
+
+Trial 9 : sources: [ 40020306 31625735 37446892 51788952 ]
+Batch X3 time:      13.3918 (sec), rate: 109.646 (1e6 edges/sec)
+Batch v4 time:      18.8121 (sec), rate: 78.0542 (1e6 edges/sec)
+
+Trial 10 : sources: [ 52584255 20346696 48387909 37337427 ]
+Batch X3 time:      13.7423 (sec), rate: 106.85 (1e6 edges/sec)
+Batch v4 time:      18.9475 (sec), rate: 77.4965 (1e6 edges/sec)
+
+Trial 11 : sources: [ 50501084 30130061 41185893 56495703 ]
+Batch X3 time:      14.0419 (sec), rate: 104.57 (1e6 edges/sec)
+Batch v4 time:      19.4359 (sec), rate: 75.5492 (1e6 edges/sec)
+
+Trial 12 : sources: [ 45663305 33359460 48143058 33291513 ]
+Batch X3 time:      16.1041 (sec), rate: 91.1796 (1e6 edges/sec)
+Batch v4 time:      21.5279 (sec), rate: 68.2077 (1e6 edges/sec)
+
+Trial 13 : sources: [ 53461445 29340610 34148498 49171806 ]
+Batch X3 time:      14.4400 (sec), rate: 101.687 (1e6 edges/sec)
+Batch v4 time:      19.6909 (sec), rate: 74.5708 (1e6 edges/sec)
+
+Trial 14 : sources: [ 35550696 14521507 51633218 46823382 ]
+Batch X3 time:      14.3478 (sec), rate: 102.341 (1e6 edges/sec)
+Batch v4 time:      19.6511 (sec), rate: 74.7216 (1e6 edges/sec)
+
+Trial 15 : sources: [ 19396273 19871750 36862677 49539126 ]
+Batch X3 time:      17.3838 (sec), rate: 84.4675 (1e6 edges/sec)
+Batch v4 time:      22.4411 (sec), rate: 65.4319 (1e6 edges/sec)
+
+Trial 16 : sources: [ 34016452 36567395 55487793 14391370 ]
+Batch X3 time:      14.0177 (sec), rate: 104.751 (1e6 edges/sec)
+Batch v4 time:      19.4065 (sec), rate: 75.6636 (1e6 edges/sec)
+ntrials: 16
+Average time per trial (BatchX3): 14.9689 sec
+Average time per trial (Batch4 ): 20.3141 sec
+build/bc_gap_test: all tests passed
+matrix: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+sources: /home/faculty/davis/GAP/GAP-urand/GAP-urand_sources.mtx
+A is symmetric
+
+========== input graph: nodes: 134217728 edges: 4294966740
+nthreads 40
+
+Trial 1 : sources: [ 27691419 121280314 2413431 37512113 ]
+Batch X3 time:      65.4407 (sec), rate: 65.6314 (1e6 edges/sec)
+Batch v4 time:      78.0645 (sec), rate: 55.0182 (1e6 edges/sec)
+
+Trial 2 : sources: [ 38390877 56651037 128461248 33029842 ]
+Batch X3 time:      65.7294 (sec), rate: 65.3432 (1e6 edges/sec)
+Batch v4 time:      78.2021 (sec), rate: 54.9213 (1e6 edges/sec)
+
+Trial 3 : sources: [ 71406328 117872827 24351938 15444519 ]
+Batch X3 time:      64.4496 (sec), rate: 66.6407 (1e6 edges/sec)
+Batch v4 time:      76.8833 (sec), rate: 55.8634 (1e6 edges/sec)
+
+Trial 4 : sources: [ 127526281 112279428 13631649 110379302 ]
+Batch X3 time:      63.5210 (sec), rate: 67.6149 (1e6 edges/sec)
+Batch v4 time:      75.8365 (sec), rate: 56.6346 (1e6 edges/sec)
+
+Trial 5 : sources: [ 44800623 77768193 175347 107397389 ]
+Batch X3 time:      63.4213 (sec), rate: 67.7212 (1e6 edges/sec)
+Batch v4 time:      75.7100 (sec), rate: 56.7292 (1e6 edges/sec)
+
+Trial 6 : sources: [ 43457209 97215940 73575165 44449715 ]
+Batch X3 time:      65.3209 (sec), rate: 65.7518 (1e6 edges/sec)
+Batch v4 time:      77.7987 (sec), rate: 55.2062 (1e6 edges/sec)
+
+Trial 7 : sources: [ 33931724 55526610 14422051 58043873 ]
+Batch X3 time:      63.3334 (sec), rate: 67.8152 (1e6 edges/sec)
+Batch v4 time:      75.6927 (sec), rate: 56.7422 (1e6 edges/sec)
+
+Trial 8 : sources: [ 72137329 9647840 15940695 14209952 ]
+Batch X3 time:      67.0580 (sec), rate: 64.0486 (1e6 edges/sec)
+Batch v4 time:      79.1638 (sec), rate: 54.2541 (1e6 edges/sec)
+
+Trial 9 : sources: [ 49020883 28901138 50493273 49150069 ]
+Batch X3 time:      64.3840 (sec), rate: 66.7086 (1e6 edges/sec)
+Batch v4 time:      76.7740 (sec), rate: 55.943 (1e6 edges/sec)
+
+Trial 10 : sources: [ 126525082 6382740 89108297 9239735 ]
+Batch X3 time:      66.3204 (sec), rate: 64.7608 (1e6 edges/sec)
+Batch v4 time:      78.0019 (sec), rate: 55.0624 (1e6 edges/sec)
+
+Trial 11 : sources: [ 110168548 95370259 116653530 123410703 ]
+Batch X3 time:      64.3987 (sec), rate: 66.6934 (1e6 edges/sec)
+Batch v4 time:      76.7421 (sec), rate: 55.9663 (1e6 edges/sec)
+
+Trial 12 : sources: [ 16733665 49030282 108545121 99095665 ]
+Batch X3 time:      65.3753 (sec), rate: 65.6971 (1e6 edges/sec)
+Batch v4 time:      77.8939 (sec), rate: 55.1387 (1e6 edges/sec)
+
+Trial 13 : sources: [ 133850077 63499301 21541382 6230751 ]
+Batch X3 time:      65.7003 (sec), rate: 65.3721 (1e6 edges/sec)
+Batch v4 time:      77.7113 (sec), rate: 55.2682 (1e6 edges/sec)
+
+Trial 14 : sources: [ 89077456 70392765 6670455 61746271 ]
+Batch X3 time:      64.4817 (sec), rate: 66.6076 (1e6 edges/sec)
+Batch v4 time:      76.7886 (sec), rate: 55.9324 (1e6 edges/sec)
+
+Trial 15 : sources: [ 83349535 115272184 20129908 106148553 ]
+Batch X3 time:      63.3774 (sec), rate: 67.7681 (1e6 edges/sec)
+Batch v4 time:      75.7485 (sec), rate: 56.7004 (1e6 edges/sec)
+
+Trial 16 : sources: [ 117042375 71431187 45287808 107702120 ]
+Batch X3 time:      63.2688 (sec), rate: 67.8844 (1e6 edges/sec)
+Batch v4 time:      75.5094 (sec), rate: 56.8799 (1e6 edges/sec)
+ntrials: 16
+Average time per trial (BatchX3): 64.7238 sec
+Average time per trial (Batch4 ): 77.0326 sec
+build/bc_gap_test: all tests passed
+matrix: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+sources: /home/faculty/davis/GAP/GAP-road/GAP-road_sources.mtx
+A is symmetric
+
+========== input graph: nodes: 23947347 edges: 57708624
+nthreads 40
+
+Trial 1 : sources: [ 4795720 21003853 417968 6496511 ]
+Batch X3 time:     117.1846 (sec), rate: 0.492459 (1e6 edges/sec)
+Batch v4 time:      93.6593 (sec), rate: 0.616154 (1e6 edges/sec)
+
+Trial 2 : sources: [ 6648699 9811073 22247478 5720252 ]
+Batch X3 time:      90.2571 (sec), rate: 0.639381 (1e6 edges/sec)
+Batch v4 time:      95.4067 (sec), rate: 0.60487 (1e6 edges/sec)
+
+Trial 3 : sources: [ 12366459 20413729 4217374 2674749 ]
+Batch X3 time:      73.4055 (sec), rate: 0.786162 (1e6 edges/sec)
+Batch v4 time:      90.7823 (sec), rate: 0.635682 (1e6 edges/sec)
+
+Trial 4 : sources: [ 22085557 19445040 2360788 19115968 ]
+Batch X3 time:     104.7274 (sec), rate: 0.551037 (1e6 edges/sec)
+Batch v4 time:      95.5466 (sec), rate: 0.603984 (1e6 edges/sec)
+
+Trial 5 : sources: [ 7758767 13468234 30367 18599547 ]
+Batch X3 time:      81.6497 (sec), rate: 0.706783 (1e6 edges/sec)
+Batch v4 time:      90.6610 (sec), rate: 0.636532 (1e6 edges/sec)
+
+Trial 6 : sources: [ 7526108 16836280 12742067 7697995 ]
+Batch X3 time:     140.8687 (sec), rate: 0.409663 (1e6 edges/sec)
+Batch v4 time:     107.1208 (sec), rate: 0.538725 (1e6 edges/sec)
+
+Trial 7 : sources: [ 5876443 9616340 2497673 10052290 ]
+Batch X3 time:     149.1159 (sec), rate: 0.387005 (1e6 edges/sec)
+Batch v4 time:     103.0880 (sec), rate: 0.559799 (1e6 edges/sec)
+
+Trial 8 : sources: [ 12493057 1670855 2760679 2460941 ]
+Batch X3 time:      80.9293 (sec), rate: 0.713075 (1e6 edges/sec)
+Batch v4 time:      99.2827 (sec), rate: 0.581256 (1e6 edges/sec)
+
+Trial 9 : sources: [ 8489650 5005225 8744645 8512023 ]
+Batch X3 time:      83.9402 (sec), rate: 0.687497 (1e6 edges/sec)
+Batch v4 time:      99.9852 (sec), rate: 0.577172 (1e6 edges/sec)
+
+Trial 10 : sources: [ 21912165 1105390 15432163 1600177 ]
+Batch X3 time:      99.3858 (sec), rate: 0.580653 (1e6 edges/sec)
+Batch v4 time:     114.5562 (sec), rate: 0.503758 (1e6 edges/sec)
+
+Trial 11 : sources: [ 19079469 16516637 20202566 21372803 ]
+Batch X3 time:      92.8881 (sec), rate: 0.62127 (1e6 edges/sec)
+Batch v4 time:     109.4162 (sec), rate: 0.527423 (1e6 edges/sec)
+
+Trial 12 : sources: [ 2898009 8491277 18798317 23757560 ]
+Batch X3 time:      85.2977 (sec), rate: 0.676555 (1e6 edges/sec)
+Batch v4 time:      96.6309 (sec), rate: 0.597207 (1e6 edges/sec)
+
+Trial 13 : sources: [ 17161819 23180739 10997085 3730630 ]
+Batch X3 time:      96.7671 (sec), rate: 0.596366 (1e6 edges/sec)
+Batch v4 time:     112.0173 (sec), rate: 0.515176 (1e6 edges/sec)
+
+Trial 14 : sources: [ 1079068 15426822 12190925 1155218 ]
+Batch X3 time:      73.9563 (sec), rate: 0.780307 (1e6 edges/sec)
+Batch v4 time:      83.9541 (sec), rate: 0.687383 (1e6 edges/sec)
+
+Trial 15 : sources: [ 10693488 14434835 19963339 3486185 ]
+Batch X3 time:      72.6786 (sec), rate: 0.794025 (1e6 edges/sec)
+Batch v4 time:      88.4951 (sec), rate: 0.652111 (1e6 edges/sec)
+
+Trial 16 : sources: [ 18383269 20269908 12370764 7843140 ]
+Batch X3 time:      76.5259 (sec), rate: 0.754105 (1e6 edges/sec)
+Batch v4 time:      88.9632 (sec), rate: 0.64868 (1e6 edges/sec)
+ntrials: 16
+Average time per trial (BatchX3): 94.9736 sec
+Average time per trial (Batch4 ): 98.0978 sec
+build/bc_gap_test: all tests passed
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m exit
+exit
+
+Script done on Wed 08 Jan 2020 12:35:22 PM CST

@@ -50,6 +50,7 @@
     GrB_free (&v);                  \
     GrB_free (&v_brandes);          \
     GrB_free (&v_batch);            \
+    GrB_free (&v_batch4);           \
     GrB_free (&SourceNodes) ;       \
 }
 
@@ -64,6 +65,7 @@ int main (int argc, char **argv)
     GrB_Vector v = NULL;
     GrB_Vector v_brandes = NULL;
     GrB_Vector v_batch = NULL;
+    GrB_Vector v_batch4 = NULL;
     GrB_Matrix SourceNodes = NULL ;
 
     bool tests_pass = true;
@@ -155,7 +157,7 @@ int main (int argc, char **argv)
     }
 
     double t_read = LAGraph_toc (tic) ;
-    printf ("read time: %g sec\n", t_read) ;
+    // printf ("read time: %g sec\n", t_read) ;
 
     LAGraph_tic (tic);
 
@@ -190,7 +192,7 @@ int main (int argc, char **argv)
     }
 
     double t_setup = LAGraph_toc (tic) ;
-    printf ("setup time: %g sec\n", t_setup) ;
+    // printf ("setup time: %g sec\n", t_setup) ;
 
     // AT = A'
     LAGraph_tic (tic);
@@ -209,7 +211,41 @@ int main (int argc, char **argv)
         printf ("A is unsymmetric\n") ;
     }
     double t_transpose = LAGraph_toc (tic) ;
-    printf ("transpose time: %g\n", t_transpose) ;
+    // printf ("transpose time: %g\n", t_transpose) ;
+
+    #define K 1024
+    #define M (K*K)
+
+    int nchunks ;
+
+    /*
+    double Chunks [16+1] = { 0,
+          1*K,   2*K,  4*K,   8*K,
+         16*K,  32*K, 64*K, 128*K,
+        256*K, 512*K,    M,   2*M,
+          4*M,   8*M, 16*M,  32*M } ;
+    nchunks = 8 ;
+    */
+
+    /*
+    double Chunks [3+1] = { 0,
+          2*K,  4*K,   16*K  } ;
+    nchunks = 3 ;
+    */
+
+    double Chunks [1+1] = { 0,
+          4*K   } ;
+    nchunks = 1 ;
+
+    /*
+    int nt = 7 ;
+    int Nthreads [7+1] = { 0,
+        1, 2, 4, 8, 12, 20, 40 } ;
+    */
+
+    int nt = 5 ;
+    int Nthreads [6+1] = { 0,
+        1, 5, 10, 20, 40 } ;
 
     //--------------------------------------------------------------------------
     // Begin tests
@@ -218,17 +254,27 @@ int main (int argc, char **argv)
     printf ("\n========== input graph: nodes: %"PRIu64" edges: %"PRIu64"\n",
         n, nvals) ;
 
-    int nthreads = LAGraph_get_nthreads();
-    printf ("nthreads %d\n", nthreads) ;
+    int nthreads_max = LAGraph_get_nthreads();
+    printf ("nthreads max %d\n", nthreads_max) ;
 //  printf("TESTING LAGraphX_bc_batch3 (saxpy in both phases, nthreads %d\n",
 //      nthreads) ;
 
     int ntrials = 0 ;
     double total_time_1 = 0 ;
-    double total_time_2 = 0 ;
+    double total_time_x3 [16+1][8+1] ;
+    double total_time_4  [16+1][8+1] ;
     double total_timing [3] = { 0, 0, 0 } ;
 
-    for (int64_t kstart = 0 ; kstart <  nsource ; kstart += batch_size)
+    for (int c = 0 ; c < 17 ; c++)
+    {
+        for (int t = 0 ; t < 9 ; t++)
+        {
+            total_time_x3 [c][t] = 0 ;
+            total_time_4  [c][t] = 0 ;
+        }
+    }
+
+    for (int64_t kstart = 0 ; kstart < nsource ; kstart += batch_size)
     {
 
         //----------------------------------------------------------------------
@@ -255,17 +301,64 @@ int main (int argc, char **argv)
         // Compute betweenness centrality using batch algorithm
         //----------------------------------------------------------------------
 
-        // Start the timer
-        LAGraph_tic (tic) ;
-        double timing [3] = { 0, 0, 0 } ;
-
 //      LAGRAPH_OK (LAGraph_bc_batch  (&v_batch, A, vertex_list, batch_size)) ;
 //      LAGRAPH_OK (LAGraphX_bc_batch (&v_batch, A, vertex_list, batch_size)) ;
 //      LAGRAPH_OK (LAGraphX_bc_batch2 (&v_batch, A, vertex_list, batch_size)) ;
-//      LAGRAPH_OK (LAGraphX_bc_batch3 (&v_batch, A, AT, vertex_list,
-//          batch_size, timing)) ;
-        LAGRAPH_OK (LAGraph_bc_batch4 (&v_batch, A, AT, vertex_list,
-            batch_size)) ;
+
+        printf ("---\n") ;
+
+        // version X3
+        for (int c = 1 ; c <= nchunks ; c++)
+        {
+            printf ("\n") ;
+            GxB_set (GxB_CHUNK, Chunks [c]) ;
+            for (int t = 1 ; t <= nt ; t++)
+            {
+                if (Nthreads [t] > nthreads_max) continue ;
+                GxB_set (GxB_NTHREADS, Nthreads [t]) ;
+                double timing [3] = { 0, 0, 0 } ;
+                GrB_free (&v_batch) ;
+                LAGraph_tic (tic) ;
+                LAGRAPH_OK (LAGraphX_bc_batch3 (&v_batch, A, AT, vertex_list,
+                    batch_size, timing)) ;
+                double t2 = LAGraph_toc (tic) ;
+        //      total_timing [0] += timing [0] ;        // pushpull
+        //      total_timing [1] += timing [1] ;        // allpush
+        //      total_timing [2] += timing [2] ;        // allpull
+                total_time_x3 [c][t] += t2 ;
+                printf ("Batch X3 time %2d:%2d: %12.4f (sec), rate: %10.3f\n",
+                    c, Nthreads [t], t2, 1e-6*((double) nvals) / t2) ;
+            }
+        }
+
+        // GxB_print (v_batch, 2) ;
+        printf ("---\n") ;
+
+        // version 4
+        for (int c = 1 ; c <= nchunks ; c++)
+        {
+            printf ("\n") ;
+            GxB_set (GxB_CHUNK, Chunks [c]) ;
+            for (int t = 1 ; t <= nt ; t++)
+            {
+                if (Nthreads [t] > nthreads_max) continue ;
+                GxB_set (GxB_NTHREADS, Nthreads [t]) ;
+                GrB_free (&v_batch4) ;
+                LAGraph_tic (tic) ;
+                LAGRAPH_OK (LAGraph_bc_batch4 (&v_batch4, A, AT, vertex_list,
+                    batch_size)) ;
+                double t2 = LAGraph_toc (tic) ;
+                printf ("Batch v4 time %2d:%2d: %12.4f (sec), rate: %10.3f\n",
+                    c, Nthreads [t], t2, 1e-6*((double) nvals) / t2) ;
+                total_time_4 [c][t] += t2 ;
+            }
+        }
+
+        // back to default
+        GxB_set (GxB_CHUNK, 4096) ;
+        GxB_set (GxB_NTHREADS, nthreads_max) ;
+
+        // GxB_print (v_batch4, 2) ;
 
 #if 0
         LAGRAPH_OK (GrB_Vector_new(&v_batch, GrB_FP64, n));
@@ -279,16 +372,6 @@ int main (int argc, char **argv)
             GrB_free (&v) ;
         }
 #endif
-
-        // Stop the timer
-         double t2 = LAGraph_toc (tic) ;
-         printf ("Batch    time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
-            t2, 1e-6*((double) nvals) / t2) ;
-        // total_time_2 += t2 ;
-
-        total_timing [0] += timing [0] ;        // pushpull
-        total_timing [1] += timing [1] ;        // allpush
-        total_timing [2] += timing [2] ;        // allpull
 
         GrB_Type type ;
         GxB_Vector_type (&type, v_batch) ;
@@ -325,9 +408,11 @@ int main (int argc, char **argv)
             GrB_free (&v) ;
         }
 
+        // GxB_print (v_brandes, 2) ;
+
         // Stop the timer
         double t1 = LAGraph_toc (tic) ;
-        printf ("Brandes  time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
+        printf ("Brandes  time: %12.4f (sec), rate: %g (1e6 edges/sec)\n",
             t1, 1e-6*((double) nvals) / t1) ;
 
         total_time_1 += t1 ;
@@ -337,26 +422,37 @@ int main (int argc, char **argv)
         // check result
         //----------------------------------------------------------------------
 
-        if (v_brandes != NULL)
+        if (kstart == 0 && v_brandes != NULL)
         {
-            printf ("checking result ... (TODO error check is too slow)\n") ;
-            double maxerr = 0 ;
+            printf ("max relative error: ") ;
+            fflush (stdout) ;
+            // printf ("checking result ... \n") ;
+            double maxerr_x3 = 0 ;
+            double maxerr_4 = 0 ;
             double xmax = 0 ;
             for (int64_t i = 0; i < n; i++)
             {
                 // TODO this test is slow.  Use GrB_eWiseAdd and GrB_reduce.
 
-                // if the ith entry is not present, x is unmodified, so '0'
-                // is printed
                 double x1 = 0;
                 LAGRAPH_OK (GrB_Vector_extractElement (&x1, v_brandes, i));
                 xmax = fmax (xmax, fabs (x1)) ;
 
                 double x2 = 0;
-                LAGRAPH_OK (GrB_Vector_extractElement (&x2, v_batch, i));
+                if (v_batch != NULL)
+                {
+                    LAGRAPH_OK (GrB_Vector_extractElement (&x2, v_batch, i));
+                }
+                double err = fabs (x1 - x2) ;
+                maxerr_x3 = fmax (maxerr_x3, err) ;
 
-                double err = fabs(x1 - x2) ;
-                maxerr = fmax (maxerr, err) ;
+                double x4 = 0;
+                if (v_batch4 != NULL)
+                {
+                    LAGRAPH_OK (GrB_Vector_extractElement (&x4, v_batch4, i));
+                }
+                err = fabs (x1 - x4) ;
+                maxerr_4 = fmax (maxerr_4, err) ;
 
                 // Check that both methods give the same results
                 /*
@@ -375,8 +471,7 @@ int main (int argc, char **argv)
                 }
                 */
             }
-            double relerr = maxerr / xmax ;
-            printf ("max relative error: %g\n", maxerr / xmax) ;
+            printf ("%g %g\n", maxerr_x3 / xmax, maxerr_4 / xmax) ;
 
             #if 0
             printf ("writing results to mtx files:\n") ;
@@ -391,27 +486,63 @@ int main (int argc, char **argv)
 
         GrB_free (&v_brandes) ;
         GrB_free (&v_batch) ;
+        GrB_free (&v_batch4) ;
 
         // HACK: just do the first batch
-        break ;
+        // break ;
     }
 
     //--------------------------------------------------------------------------
     // free all workspace and finish
     //--------------------------------------------------------------------------
 
-    printf ("ntrials: %d\n", ntrials) ;
+    printf ("\nntrials: %d\n", ntrials) ;
     if (total_time_1 > 0)
     {
         printf ("Average time per trial (Brandes): %g sec\n",
             total_time_1 / ntrials);
     }
+
+    if (total_time_x3 [1] > 0)
+    {
+        for (int c = 1 ; c <= nchunks ; c++)
+        {
+            printf ("\n") ;
+            for (int t = 1 ; t <= nt ; t++)
+            {
+                double t2 = total_time_x3 [c][t] ;
+                printf ("Ave (BatchX3) %2d:%2d: %10.3f sec, rate %10.3f\n",
+                    c, Nthreads [t], t2 / ntrials,
+                    1e-6*((double) nvals) / t2) ;
+            }
+        }
+    }
+
+    printf ("\n") ;
+
+    if (total_time_x3 [1] > 0)
+    {
+        for (int c = 1 ; c <= nchunks ; c++)
+        {
+            printf ("\n") ;
+            for (int t = 1 ; t <= nt ; t++)
+            {
+                double t2 = total_time_4 [c][t] ;
+                printf ("Ave (Batch4)  %2d:%2d: %10.3f sec, rate %10.3f\n",
+                    c, Nthreads [t], t2 / ntrials,
+                    1e-6*((double) nvals) / t2) ;
+            }
+        }
+    }
+
+    /*
     printf ("Average time per trial: batch, pushpull:   %g sec\n",
         total_timing [0] / ntrials);
     printf ("Average time per trial: batch, allpush :   %g sec\n",
         total_timing [1] / ntrials);
     printf ("Average time per trial: batch, allpull :   %g sec\n",
         total_timing [2] / ntrials);
+    */
 
     LAGRAPH_FREE_ALL;
     LAGRAPH_OK (LAGraph_finalize());

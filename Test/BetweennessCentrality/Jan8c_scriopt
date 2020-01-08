@@ -1,0 +1,169 @@
+Script started on Wed 08 Jan 2020 02:05:23 PM CST
+Intel Suite:
+Copyright (C) 2009-2019 Intel Corporation. All rights reserved.
+Intel(R) VTune(TM) Amplifier 2019 (build 591499)
+[0;36mhypersparse $[0m ./do_gap
+matrix: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+sources: /home/faculty/davis/GAP/GAP-web/GAP-web_sources.mtx
+A is unsymmetric
+
+========== input graph: nodes: 50636151 edges: 1930292948
+nthreads max 40
+
+Trial 1 : sources: [ 10219452 44758211 890671 13843756 ]
+---
+
+Batch X3 time  1:10:      15.4783 (sec), rate:    124.709
+Batch X3 time  1:20:       9.7785 (sec), rate:    197.401
+Batch X3 time  1:40:       9.6548 (sec), rate:    199.931
+---
+
+Batch v4 time  1:10:      22.1038 (sec), rate:     87.329
+Batch v4 time  1:20:      14.2662 (sec), rate:    135.305
+Batch v4 time  1:40:      13.7322 (sec), rate:    140.567
+
+ntrials: 1
+
+Ave (BatchX3)  1:10:     15.478 sec, rate    124.709
+Ave (BatchX3)  1:20:      9.779 sec, rate    197.401
+Ave (BatchX3)  1:40:      9.655 sec, rate    199.931
+
+
+Ave (Batch4)   1:10:     22.104 sec, rate     87.329
+Ave (Batch4)   1:20:     14.266 sec, rate    135.305
+Ave (Batch4)   1:40:     13.732 sec, rate    140.567
+build/bc_gap_test: all tests passed
+matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+sources: /home/faculty/davis/GAP/GAP-kron/GAP-kron_sources.mtx
+A is symmetric
+
+========== input graph: nodes: 134217726 edges: 4223264644
+nthreads max 40
+
+Trial 1 : sources: [ 2338012 31997659 23590940 43400604 ]
+---
+
+Batch X3 time  1:10:     129.2767 (sec), rate:     32.668
+Batch X3 time  1:20:      71.0895 (sec), rate:     59.408
+Batch X3 time  1:40:      40.9780 (sec), rate:    103.062
+---
+
+Batch v4 time  1:10:     143.5730 (sec), rate:     29.415
+Batch v4 time  1:20:      83.6416 (sec), rate:     50.492
+Batch v4 time  1:40:      53.2413 (sec), rate:     79.323
+
+ntrials: 1
+
+Ave (BatchX3)  1:10:    129.277 sec, rate     32.668
+Ave (BatchX3)  1:20:     71.090 sec, rate     59.408
+Ave (BatchX3)  1:40:     40.978 sec, rate    103.062
+
+
+Ave (Batch4)   1:10:    143.573 sec, rate     29.415
+Ave (Batch4)   1:20:     83.642 sec, rate     50.492
+Ave (Batch4)   1:40:     53.241 sec, rate     79.323
+build/bc_gap_test: all tests passed
+matrix: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+sources: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter_sources.mtx
+A is unsymmetric
+
+========== input graph: nodes: 61578415 edges: 1468364884
+nthreads max 40
+
+Trial 1 : sources: [ 12441072 54488257 25451915 57714473 ]
+---
+
+Batch X3 time  1:10:      36.1500 (sec), rate:     40.619
+Batch X3 time  1:20:      19.3058 (sec), rate:     76.058
+Batch X3 time  1:40:      14.1928 (sec), rate:    103.458
+---
+
+Batch v4 time  1:10:      42.9390 (sec), rate:     34.197
+Batch v4 time  1:20:      24.6738 (sec), rate:     59.511
+Batch v4 time  1:40:      19.3412 (sec), rate:     75.919
+
+ntrials: 1
+
+Ave (BatchX3)  1:10:     36.150 sec, rate     40.619
+Ave (BatchX3)  1:20:     19.306 sec, rate     76.058
+Ave (BatchX3)  1:40:     14.193 sec, rate    103.458
+
+
+Ave (Batch4)   1:10:     42.939 sec, rate     34.197
+Ave (Batch4)   1:20:     24.674 sec, rate     59.511
+Ave (Batch4)   1:40:     19.341 sec, rate     75.919
+build/bc_gap_test: all tests passed
+matrix: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+sources: /home/faculty/davis/GAP/GAP-urand/GAP-urand_sources.mtx
+A is symmetric
+
+========== input graph: nodes: 134217728 edges: 4294966740
+nthreads max 40
+
+Trial 1 : sources: [ 27691419 121280314 2413431 37512113 ]
+---
+
+Batch X3 time  1:10:     109.6782 (sec), rate:     39.160
+Batch X3 time  1:20:      73.4955 (sec), rate:     58.438
+Batch X3 time  1:40:      65.5849 (sec), rate:     65.487
+---
+
+Batch v4 time  1:10:     125.8418 (sec), rate:     34.130
+Batch v4 time  1:20:      85.8881 (sec), rate:     50.007
+Batch v4 time  1:40:      77.9859 (sec), rate:     55.074
+
+ntrials: 1
+
+Ave (BatchX3)  1:10:    109.678 sec, rate     39.160
+Ave (BatchX3)  1:20:     73.496 sec, rate     58.438
+Ave (BatchX3)  1:40:     65.585 sec, rate     65.487
+
+
+Ave (Batch4)   1:10:    125.842 sec, rate     34.130
+Ave (Batch4)   1:20:     85.888 sec, rate     50.007
+Ave (Batch4)   1:40:     77.986 sec, rate     55.074
+build/bc_gap_test: all tests passed
+matrix: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+sources: /home/faculty/davis/GAP/GAP-road/GAP-road_sources.mtx
+A is symmetric
+
+========== input graph: nodes: 23947347 edges: 57708624
+nthreads max 40
+
+Trial 1 : sources: [ 4795720 21003853 417968 6496511 ]
+---
+
+Batch X3 time  1:10:      50.9516 (sec), rate:      1.133
+Batch X3 time  1:20:      52.4797 (sec), rate:      1.100
+Batch X3 time  1:40:      78.0611 (sec), rate:      0.739
+---
+
+Batch v4 time  1:10:      61.3519 (sec), rate:      0.941
+Batch v4 time  1:20:      62.3001 (sec), rate:      0.926
+Batch v4 time  1:40:      91.4347 (sec), rate:      0.631
+
+ntrials: 1
+
+Ave (BatchX3)  1:10:     50.952 sec, rate      1.133
+Ave (BatchX3)  1:20:     52.480 sec, rate      1.100
+Ave (BatchX3)  1:40:     78.061 sec, rate      0.739
+
+
+Ave (Batch4)   1:10:     61.352 sec, rate      0.941
+Ave (Batch4)   1:20:     62.300 sec, rate      0.926
+Ave (Batch4)   1:40:     91.435 sec, rate      0.631
+build/bc_gap_test: all tests passed
+[0;36mhypersparse $[0m exit
+exit
+
+Script done on Wed 08 Jan 2020 03:02:00 PM CST
