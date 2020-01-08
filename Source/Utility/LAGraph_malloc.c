@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_malloc:  wrapper for malloc
+// LAGraph_malloc:  wrapper for malloc and calloc
 //------------------------------------------------------------------------------
 
 /*
@@ -36,9 +36,9 @@
 
 // LAGraph_malloc:  wrapper for malloc, contributed by Tim Davis, Texas A&M
 
-// Wrapper for malloc.
+// Wrapper for malloc and calloc.
 
-// TODO also need a wrapper for calloc and realloc.
+// TODO also need a wrapper for realloc.
 
 #include "LAGraph_internal.h"
 
@@ -86,5 +86,32 @@ void *LAGraph_malloc
 
     // malloc the space
     return (LAGraph_malloc_function (nitems * size_of_item)) ;
+}
+
+//------------------------------------------------------------------------------
+// LAGraph_calloc
+//------------------------------------------------------------------------------
+
+void *LAGraph_calloc
+(
+    size_t nitems,          // number of items
+    size_t size_of_item     // size of each item
+)
+{
+
+    // make sure at least one item is allocated
+    nitems = LAGRAPH_MAX (1, nitems) ;
+
+    // make sure at least one byte is allocated
+    size_of_item = LAGRAPH_MAX (1, size_of_item) ;
+
+    // check for integer overflow
+    if ((double) nitems * (double) size_of_item > (double) INT64_MAX)
+    {
+        return (NULL) ;
+    }
+
+    // calloc the space
+    return (LAGraph_calloc_function (nitems, size_of_item)) ;
 }
 

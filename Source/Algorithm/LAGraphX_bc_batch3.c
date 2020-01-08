@@ -245,7 +245,7 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
         num_sources, LAGraph_desc_tocr);
 
     // Allocate memory for the array of S matrices
-    S_array = (GrB_Matrix*) calloc(n, sizeof(GrB_Matrix));
+    S_array = (GrB_Matrix*) LAGraph_calloc (n, sizeof(GrB_Matrix));
     if (S_array == NULL)
     {
         // out of memory
@@ -262,7 +262,7 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
     GrB_Index seen = 0 ;            // total # of nodes seen * (# sources)
 
     double time_1 = LAGraph_toc (tic) ;
-    printf ("   init:      %g\n", time_1) ;
+    // printf ("   init:      %g\n", time_1) ;
     double phase1_other_time = 0 ;
     double phase1_allpush_time = 0 ;
     double phase1_allpull_time = 0 ;
@@ -275,7 +275,7 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
     do
     {
         LAGraph_tic (tic);
-        printf ("depth: %g\n", (double) depth) ;
+        // printf ("depth: %g\n", (double) depth) ;
 
         // Create the current search matrix - one column for each source/BFS
         LAGr_Matrix_new (&(S_array[depth]), GrB_BOOL, n, num_sources) ;
@@ -343,7 +343,7 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
             LAGr_mxm(frontier2, paths, GrB_NULL, LAGr_PLUS_SECOND_REAL,
                 AT_matrix, frontier2, pull_descriptor) ;
             pull_time = LAGraph_toc (tic) ;
-            printf ("1: pull_time: %g sec\n", pull_time) ;
+            // printf ("1: pull_time: %g sec\n", pull_time) ;
             GrB_free (&frontier2) ;
 #endif
             phase1_allpull_time += pull_time ;
@@ -354,8 +354,8 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
                 A_matrix, frontier, LAGraph_desc_tocr);
 
             double push_time = LAGraph_toc (tic) ;
-            printf ("1: push_time: %g sec,  pull/push %g\n",
-                push_time, pull_time/push_time) ;
+            // printf ("1: push_time: %g sec,  pull/push %g\n",
+            //     push_time, pull_time/push_time) ;
             phase1_allpush_time += push_time ;
 
             // assume a perfect pushpull heuristic
@@ -370,12 +370,12 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
 
     } while (frontier_size > 0) ; // Repeat until the frontier is empty
 
-    printf ("    1st mxm allpush:  %g\n", phase1_allpush_time) ;
+    // printf ("    1st mxm allpush:  %g\n", phase1_allpush_time) ;
 #if DO_PULL
     printf ("    1st mxm allpull:  %g\n", phase1_allpull_time) ;
     printf ("    1st mxm pushpull: %g\n", phase1_pushpull_time) ;
 #endif
-    printf ("    1st other:        %g\n", phase1_other_time) ;
+    // printf ("    1st other:        %g\n", phase1_other_time) ;
 
     LAGraph_tic (tic);
 
@@ -419,7 +419,7 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
         // Add contributions by successors and mask with that BFS level's
         // frontier
         LAGraph_tic (tic);
-        printf ("back: %g\n", (double) i) ;
+        // printf ("back: %g\n", (double) i) ;
 
         /*
         GrB_Index prior_size ;
@@ -499,8 +499,8 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
                 AT_matrix, t1, LAGraph_desc_toor);
 
             double push_time = LAGraph_toc (tic) ;
-            printf ("2: push_time: %g sec,  pull/push %g\n", push_time,
-                pull_time/push_time) ;
+            // printf ("2: push_time: %g sec,  pull/push %g\n", push_time,
+                // pull_time/push_time) ;
             phase2_allpush_time += push_time ;
 
             // assume a perfect pushpull heuristic
@@ -533,12 +533,12 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
         phase2_other_time += LAGraph_toc (tic) ;
     }
 
-    printf ("    2nd mxm allpush:  %g\n", phase2_allpush_time) ;
+    // printf ("    2nd mxm allpush:  %g\n", phase2_allpush_time) ;
 #if DO_PULL
     printf ("    2nd mxm allpull:  %g\n", phase2_allpull_time) ;
     printf ("    2nd mxm pushpull: %g\n", phase2_pushpull_time) ;
 #endif
-    printf ("    2nd other:        %g\n", phase2_other_time + time_3) ;
+    // printf ("    2nd other:        %g\n", phase2_other_time + time_3) ;
 
     LAGraph_tic (tic);
 
@@ -583,7 +583,7 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
 
     LAGRAPH_FREE_WORK;
     double time_5 = LAGraph_toc (tic) ;
-    printf ("   wrapup:    %g\n", time_5) ;
+    // printf ("   wrapup:    %g\n", time_5) ;
 
     timing [0] = time_1
               + (phase1_pushpull_time + phase1_other_time)
@@ -600,7 +600,7 @@ GrB_Info LAGraphX_bc_batch3 // betweeness centrality, batch algorithm
 #if DO_PULL
     printf ("Xbc total (pushpull):    %g\n", timing [0]) ;
 #endif
-    printf ("Xbc total (allpush):     %g\n", timing [1]) ;
+    // printf ("Xbc total (allpush):     %g\n", timing [1]) ;
 #if DO_PULL
     printf ("Xbc total (allpull):     %g\n", timing [2]) ;
 #endif

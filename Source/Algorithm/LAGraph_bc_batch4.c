@@ -78,7 +78,7 @@
     GrB_free (&frontier) ;                      \
     GrB_free (&paths) ;                         \
     GrB_free (&bc_update) ;                     \
-    GrB_free (&W) ;                          \
+    GrB_free (&W) ;                             \
     if (S != NULL)                              \
     {                                           \
         for (int64_t i = 0 ; i < n ; i++)       \
@@ -143,8 +143,6 @@ GrB_Info LAGraph_bc_batch4      // betweeness centrality, batch algorithm
     // Initialize paths to source vertices with ones, and the other
     // entries equal to zero.
     LAGr_assign (paths, NULL, NULL, 0, GrB_ALL, ns, GrB_ALL, n, NULL) ;
-    GrB_Index ignore ;
-    LAGr_Matrix_nvals (&ignore, paths) ;    // finish the work
     for (GrB_Index i = 0 ; i < ns ; i++)
     {
         // paths (i,s(i)) = 1
@@ -153,10 +151,11 @@ GrB_Info LAGraph_bc_batch4      // betweeness centrality, batch algorithm
     }
 
     // Initial frontier: frontier<!paths>= frontier*A
-    LAGr_mxm (frontier, paths, NULL, GxB_PLUS_FIRST_FP32, frontier, A, LAGraph_desc_oocr) ;
+    LAGr_mxm (frontier, paths, NULL, GxB_PLUS_FIRST_FP32, frontier, A,
+        LAGraph_desc_oocr) ;
 
     // Allocate memory for the array of S matrices
-    S = (GrB_Matrix *) calloc (n, sizeof (GrB_Matrix)) ;
+    S = (GrB_Matrix *) LAGraph_calloc  (n, sizeof (GrB_Matrix)) ;
     if (S == NULL)
     {
         // out of memory
@@ -171,17 +170,17 @@ GrB_Info LAGraph_bc_batch4      // betweeness centrality, batch algorithm
     int64_t depth ;
     for (depth = 0 ; frontier_size > 0 && depth < n ; depth++)
     {
-        printf ("depth: %g\n", (double) depth) ;
         // S [depth] = (bool) frontier
         LAGr_Matrix_new (&(S [depth]), GrB_BOOL, ns, n) ;
         LAGr_apply (S [depth], NULL, NULL, GrB_IDENTITY_BOOL, frontier, NULL) ;
 
         // Accumulate path counts: paths += frontier
-        LAGr_assign (paths, NULL, GrB_PLUS_FP32, frontier, GrB_ALL, n, GrB_ALL, ns, NULL) ;
-        LAGr_Matrix_nvals (&ignore, paths) ;    // finish the work
+        LAGr_assign (paths, NULL, GrB_PLUS_FP32, frontier, GrB_ALL, n, GrB_ALL,
+            ns, NULL) ;
 
         // Update frontier: frontier<!paths> = frontier*A
-        LAGr_mxm (frontier, paths, NULL, GxB_PLUS_FIRST_FP32, frontier, A, LAGraph_desc_oocr) ;
+        LAGr_mxm (frontier, paths, NULL, GxB_PLUS_FIRST_FP32, frontier, A,
+            LAGraph_desc_oocr) ;
 
         // Get the size of the current frontier
         LAGr_Matrix_nvals (&frontier_size, frontier) ;
@@ -198,25 +197,28 @@ GrB_Info LAGraph_bc_batch4      // betweeness centrality, batch algorithm
     // Backtrack through the BFS and compute centrality updates for each vertex
     for (int64_t i = depth-1 ; i > 0 ; i--)
     {
-        // Add contributions by successors and mask with that BFS level's frontier
-        printf ("back: %g\n", (double) i) ;
+        // Add contributions by successors and mask with that level's frontier
 
         // W<S[i]> = bc_update ./ path
-        LAGr_eWiseMult (W, S [i], NULL, GrB_DIV_FP32, bc_update, paths, LAGraph_desc_ooor) ;
+        LAGr_eWiseMult (W, S [i], NULL, GrB_DIV_FP32, bc_update, paths,
+            LAGraph_desc_ooor) ;
 
         // W<S[i−1]> = W * A'
-        LAGr_mxm (W, S [i-1], NULL, GxB_PLUS_FIRST_FP32, W, AT, LAGraph_desc_ooor) ;
+        LAGr_mxm (W, S [i-1], NULL, GxB_PLUS_FIRST_FP32, W, AT,
+            LAGraph_desc_ooor) ;
 
         // bc_update += W .* paths
-        LAGr_eWiseMult (bc_update, NULL, GrB_PLUS_FP32, GrB_TIMES_FP32, W, paths, NULL) ;
+        LAGr_eWiseMult (bc_update, NULL, GrB_PLUS_FP32, GrB_TIMES_FP32, W,
+            paths, NULL) ;
     }
 
-    // Initialize the centrality array with -(ns) to avoid counting
+    // Initialize the centrality array with -ns to avoid counting
     // zero length paths
-    LAGr_assign (*centrality, NULL, NULL, -(float)ns, GrB_ALL, n, NULL) ;
+    LAGr_assign (*centrality, NULL, NULL, -ns, GrB_ALL, n, NULL) ;
 
-    // centrality += update
-    LAGr_reduce (*centrality, NULL, GrB_PLUS_FP32, GrB_PLUS_FP32, bc_update, LAGraph_desc_tooo) ;
+    // centrality (i) = sum (bc_update (:,i)) for all nodes i
+    LAGr_reduce (*centrality, NULL, GrB_PLUS_FP32, GrB_PLUS_FP32, bc_update,
+        LAGraph_desc_tooo) ;
 
     LAGRAPH_FREE_WORK ;
     return (GrB_SUCCESS) ;

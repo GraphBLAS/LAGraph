@@ -165,7 +165,7 @@ See LICENSE file for more details.
                 (void **) (&d_sp),   NULL)) ;
 
     // dens d_out
-    float *d_out = (float *) calloc(n, sizeof(float));
+    float *d_out = (float *) LAGraph_calloc (n, sizeof(float));
 
     int nthreads = LAGraph_get_nthreads ( ) ;
     nthreads = LAGRAPH_MIN (n , nthreads) ;

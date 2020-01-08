@@ -216,7 +216,7 @@ GrB_Info LAGraphX_bc_batch2 // betweeness centrality, batch algorithm
     LAGr_extract(frontier, paths, GrB_NULL, A_matrix, GrB_ALL, n, sources, num_sources, desc_tsr);
 
     // Allocate memory for the array of S matrices
-    S_array = (GrB_Matrix*) calloc(n, sizeof(GrB_Matrix));
+    S_array = (GrB_Matrix*) LAGraph_calloc (n, sizeof(GrB_Matrix));
     if (S_array == NULL)
     {
         // out of memory

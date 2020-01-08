@@ -158,7 +158,7 @@ See LICENSE file for more details.
                 (void **) (&d_sp),   NULL)) ;
 
     // dens d_out
-    long int *d_out = (long int*) calloc(n, sizeof(long int));
+    long int *d_out = (long int*) LAGraph_calloc (n, sizeof(long int));
 
     int nthreads = LAGraph_get_nthreads ( ) ;
     nthreads = LAGRAPH_MIN (n , nthreads) ;
