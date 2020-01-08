@@ -668,6 +668,12 @@ void *LAGraph_malloc        // wrapper for malloc
     size_t size_of_item     // size of each item
 ) ;
 
+void *LAGraph_calloc        // wrapper for calloc
+(
+    size_t nitems,          // number of items
+    size_t size_of_item     // size of each item
+) ;
+
 void LAGraph_free           // wrapper for free
 (
     void *p

@@ -219,8 +219,9 @@ int main (int argc, char **argv)
         n, nvals) ;
 
     int nthreads = LAGraph_get_nthreads();
-    printf("TESTING LAGraphX_bc_batch3 (saxpy in both phases, nthreads %d\n",
-        nthreads) ;
+    printf ("nthreads %d\n", nthreads) ;
+//  printf("TESTING LAGraphX_bc_batch3 (saxpy in both phases, nthreads %d\n",
+//      nthreads) ;
 
     int ntrials = 0 ;
     double total_time_1 = 0 ;
@@ -263,7 +264,8 @@ int main (int argc, char **argv)
 //      LAGRAPH_OK (LAGraphX_bc_batch2 (&v_batch, A, vertex_list, batch_size)) ;
 //      LAGRAPH_OK (LAGraphX_bc_batch3 (&v_batch, A, AT, vertex_list,
 //          batch_size, timing)) ;
-        LAGRAPH_OK (LAGraph_bc_batch4 (&v_batch, A, AT, vertex_list, batch_size)) ;
+        LAGRAPH_OK (LAGraph_bc_batch4 (&v_batch, A, AT, vertex_list,
+            batch_size)) ;
 
 #if 0
         LAGRAPH_OK (GrB_Vector_new(&v_batch, GrB_FP64, n));
