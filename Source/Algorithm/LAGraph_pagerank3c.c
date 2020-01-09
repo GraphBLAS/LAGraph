@@ -142,6 +142,7 @@ GrB_Info LAGraph_pagerank3c // PageRank definition
         // Calculate total PR of all inbound vertices: v = A' * v
         LAGr_mxv (v, NULL, NULL, GxB_PLUS_SECOND_FP32, A, v, LAGraph_desc_tooo);
 
+        GrB_Index nvals ;
         LAGr_Vector_nvals (&nvals, v) ;
         if (nvals != n)
         {
@@ -150,9 +151,7 @@ GrB_Info LAGraph_pagerank3c // PageRank definition
         }
 
         // export v to pr and I
-        GrB_Index nvals_exp ;
-        LAGr_Vector_export (&v, &type, &n, &nvals_exp, &I, (void **) (&pr),
-            NULL) ;
+        LAGr_Vector_export (&v, &type, &n, &nvals, &I, (void **) (&pr), NULL) ;
 
         // add teleport and check for convergence
         rdiff = 0 ;
@@ -166,7 +165,7 @@ GrB_Info LAGraph_pagerank3c // PageRank definition
     }
 
     // import result (pr and I) into final result
-    LAGr_Vector_import (*result, GrB_FP32, n, n, &I, (void **) (&pr), NULL) ;
+    LAGr_Vector_import (result, GrB_FP32, n, n, &I, (void **) (&pr), NULL) ;
     LAGRAPH_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }

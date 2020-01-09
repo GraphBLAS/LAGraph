@@ -58,6 +58,7 @@
 #define LAGRAPH_FREE_ALL            \
 {                                   \
     LAGr_free (&r) ;                \
+    LAGr_free (&d) ;                \
     LAGr_free (&t) ;                \
 }
 
@@ -79,6 +80,7 @@ GrB_Info LAGraph_pagerank3d // PageRank definition
     GrB_Info info ;
     GrB_Index n ;
     GrB_Vector r = NULL ;
+    GrB_Vector d = NULL ;
     GrB_Vector t = NULL ;
 
     LAGr_Matrix_nrows (&n, A) ;
@@ -97,28 +99,42 @@ GrB_Info LAGraph_pagerank3d // PageRank definition
     const float tol = 1e-4 ;
     float rdiff = 1 ;       // so first iteration is always done
 
-    LAGr_Vector_new (&t, GrB_FP32, n) ;
-
     //--------------------------------------------------------------------------
     // pagerank iterations
     //--------------------------------------------------------------------------
 
     for ((*iters) = 0 ; (*iters) < itermax && rdiff > tol ; (*iters)++)
     {
-        // t = -r
-        LAGr_apply (t, NULL, NULL, GrB_AINV_FP32, r, NULL) ;
+//printf ("\n -------------------------------------------ITER: %d\n",(*iters)) ;
+//GxB_print (r, 2) ;
+
+        // t = r
+        LAGr_Vector_dup (&t, r) ;
+//printf ("\nt = r\n") ;
+//GxB_print (t, 2) ;
 
         // r = r ./ d
         LAGr_eWiseMult (r, NULL, NULL, GrB_DIV_FP32, r, d, NULL) ;
+//printf ("\nr = r./d\n") ;
+//GxB_print (r, 2) ;
 
         // r = A'*r
         LAGr_mxv (r, NULL, NULL, GxB_PLUS_SECOND_FP32, A, r, LAGraph_desc_tooo);
+//printf ("\nr = A'*r\n") ;
+//GxB_print (r, 2) ;
 
         // r += teleport
         LAGr_assign (r, NULL, GrB_PLUS_FP32, teleport, GrB_ALL, n, NULL) ;
+//printf ("\nr += teleport\n") ;
+//GxB_print (r, 2) ;
 
-        // t += r
-        LAGr_assign (t, NULL, GrB_PLUS_FP32, r, GrB_ALL, n, NULL) ;
+        // t -= r
+        LAGr_assign (t, NULL, GrB_MINUS_FP32, r, GrB_ALL, n, NULL) ;
+//printf ("\nt -= r\n") ;
+//GxB_print (t, 2) ;
+
+        // t = abs (t)
+        LAGr_apply (t, NULL, NULL, GxB_ABS_FP32, t, NULL) ;
 
         // rdiff = sum (t)
         LAGr_reduce (&rdiff, NULL, GxB_PLUS_FP32_MONOID, t, NULL) ;

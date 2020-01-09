@@ -55,10 +55,10 @@
 
 #define LAGRAPH_FREE_ALL            \
 {                                   \
-    GrB_free (&v) ;                 \
-    GrB_free (&pr) ;                \
-    GrB_free (&prior) ;             \
-    GrB_free (&op_diff) ;           \
+    LAGr_free (&v) ;                \
+    LAGr_free (&pr) ;               \
+    LAGr_free (&prior) ;            \
+    LAGr_free (&op_diff) ;          \
 };
 
 void ddiff (void *z, const void *x, const void *y)
@@ -134,7 +134,7 @@ GrB_Info LAGraph_pagerank3a // PageRank definition
         // rdiff = sum (|pr-prior|)
         LAGr_eWiseAdd (prior, NULL, NULL, op_diff, prior, pr, NULL) ;
         LAGr_reduce (&rdiff, NULL, GxB_PLUS_FP32_MONOID, prior, NULL) ;
-        GrB_free (&prior) ;
+        LAGr_free (&prior) ;
    }
 
     (*result) = pr ;

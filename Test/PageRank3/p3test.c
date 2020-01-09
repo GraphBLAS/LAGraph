@@ -218,7 +218,7 @@ int main (int argc, char **argv)
     double tread = LAGraph_toc (tic) ;
     printf ("read time: %g sec\n", tread) ;
 
-    GxB_fprint (A, GxB_SHORT, stdout) ;
+    // GxB_fprint (A, GxB_SHORT, stdout) ;
 
     //--------------------------------------------------------------------------
     // compute the pagerank (both methods)
@@ -236,8 +236,8 @@ int main (int argc, char **argv)
     // #define NTHRLIST 2
     // int nthread_list [NTHRLIST] = {1, 40} ;    
 
-    #define NTHRLIST 3
-    int nthread_list [NTHRLIST] = {10, 20, 40} ;    
+    #define NTHRLIST 4
+    int nthread_list [NTHRLIST] = {1, 2, 4, 8} ;    
 
     nthread_list [NTHRLIST-1] = nthreads_max ;
 
@@ -266,7 +266,7 @@ int main (int argc, char **argv)
                 &iters)) ;
             double t1 = LAGraph_toc (tic) ;
             total_time += t1 ;
-            printf ("trial %2d, time %16.6g\n", trial, t1) ;
+            printf ("trial %2d, time %10.3f\n", trial, t1) ;
         }
 
         double t = total_time / ntrials ;
@@ -275,7 +275,7 @@ int main (int argc, char **argv)
                 t, 1e-6*((double) nvals) / t, iters, nthreads) ;
     }
 
-    GxB_Vector_fprint(PR, "---- PR ------", GxB_SHORT, stdout);
+//  GxB_Vector_fprint(PR, "---- PR ------", GxB_SHORT, stdout);
     GrB_free (&PR) ;
 #endif
 
@@ -300,7 +300,7 @@ int main (int argc, char **argv)
                 &iters)) ;
             double t1 = LAGraph_toc (tic) ;
             total_time += t1 ;
-            printf ("trial %2d, time %16.6g\n", trial, t1) ;
+            printf ("trial %2d, time %10.3f\n", trial, t1) ;
         }
 
         double t = total_time / ntrials ;
@@ -309,7 +309,7 @@ int main (int argc, char **argv)
                 t, 1e-6*((double) nvals) / t, iters, nthreads) ;
     }
 
-    GxB_Vector_fprint(PR, "---- PR ------", GxB_SHORT, stdout);
+//  GxB_Vector_fprint(PR, "---- PR ------", GxB_SHORT, stdout);
     GrB_free (&PR) ;
 #endif
 
@@ -333,7 +333,7 @@ int main (int argc, char **argv)
                 &iters)) ;
             double t1 = LAGraph_toc (tic) ;
             total_time += t1 ;
-            printf ("trial %2d, time %16.6g\n", trial, t1) ;
+            printf ("trial %2d, time %10.3f\n", trial, t1) ;
         }
 
         double t = total_time / ntrials ;
@@ -342,7 +342,7 @@ int main (int argc, char **argv)
                 t, 1e-6*((double) nvals) / t, iters, nthreads) ;
     }
 
-    GxB_Vector_fprint(PR, "---- PR ------", GxB_SHORT, stdout);
+    // GxB_Vector_fprint(PR, "---- PR ------", GxB_SHORT, stdout);
 
     //--------------------------------------------------------------------------
     // free all workspace and finish
