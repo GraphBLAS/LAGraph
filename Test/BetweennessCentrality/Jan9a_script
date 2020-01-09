@@ -1015,3 +1015,75 @@ Batch v4 time  1:40:      75.8371 (sec), rate:      0.761
 Trial 12 : sources: [ 2898009 8491277 18798317 23757560 ]
 ---
 
+Batch X3 time  1:10:      58.1426 (sec), rate:      0.993
+Batch X3 time  1:20:      63.0313 (sec), rate:      0.916
+Batch X3 time  1:40:      93.6677 (sec), rate:      0.616
+---
+
+Batch v4 time  1:10:      65.2098 (sec), rate:      0.885
+Batch v4 time  1:20:      65.9561 (sec), rate:      0.875
+Batch v4 time  1:40:      85.5690 (sec), rate:      0.674
+
+Trial 13 : sources: [ 17161819 23180739 10997085 3730630 ]
+---
+
+Batch X3 time  1:10:      64.1781 (sec), rate:      0.899
+Batch X3 time  1:20:      69.6609 (sec), rate:      0.828
+Batch X3 time  1:40:     100.3457 (sec), rate:      0.575
+---
+
+Batch v4 time  1:10:      69.0938 (sec), rate:      0.835
+Batch v4 time  1:20:      68.9679 (sec), rate:      0.837
+Batch v4 time  1:40:      77.7908 (sec), rate:      0.742
+
+Trial 14 : sources: [ 1079068 15426822 12190925 1155218 ]
+---
+
+Batch X3 time  1:10:      52.8779 (sec), rate:      1.091
+Batch X3 time  1:20:      56.3105 (sec), rate:      1.025
+Batch X3 time  1:40:      81.6402 (sec), rate:      0.707
+---
+
+Batch v4 time  1:10:      61.7800 (sec), rate:      0.934
+Batch v4 time  1:20:      61.3241 (sec), rate:      0.941
+Batch v4 time  1:40:      67.1265 (sec), rate:      0.860
+
+Trial 15 : sources: [ 10693488 14434835 19963339 3486185 ]
+---
+
+Batch X3 time  1:10:      52.9980 (sec), rate:      1.089
+Batch X3 time  1:20:      55.8627 (sec), rate:      1.033
+Batch X3 time  1:40:      81.5336 (sec), rate:      0.708
+---
+
+Batch v4 time  1:10:      61.5567 (sec), rate:      0.937
+Batch v4 time  1:20:      60.8272 (sec), rate:      0.949
+Batch v4 time  1:40:      65.8689 (sec), rate:      0.876
+
+Trial 16 : sources: [ 18383269 20269908 12370764 7843140 ]
+---
+
+Batch X3 time  1:10:      52.3992 (sec), rate:      1.101
+Batch X3 time  1:20:      55.9370 (sec), rate:      1.032
+Batch X3 time  1:40:      84.4300 (sec), rate:      0.684
+---
+
+Batch v4 time  1:10:      62.6479 (sec), rate:      0.921
+Batch v4 time  1:20:      61.6808 (sec), rate:      0.936
+Batch v4 time  1:40:      67.7639 (sec), rate:      0.852
+
+ntrials: 16
+
+Ave (BatchX3)  1:10:     57.107 sec, rate      1.011
+Ave (BatchX3)  1:20:     61.504 sec, rate      0.938
+Ave (BatchX3)  1:40:     89.768 sec, rate      0.643
+
+
+Ave (Batch4)   1:10:     64.224 sec, rate      0.899
+Ave (Batch4)   1:20:     63.965 sec, rate      0.902
+Ave (Batch4)   1:40:     71.954 sec, rate      0.802
+build/bc_gap_test: all tests passed
+[0;36mhypersparse $[0m exit
+exit
+
+Script done on Thu 09 Jan 2020 12:21:54 PM CST
