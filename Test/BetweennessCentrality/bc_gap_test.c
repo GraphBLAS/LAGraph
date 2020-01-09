@@ -536,6 +536,7 @@ int main (int argc, char **argv)
     }
 
     /*
+
     printf ("Average time per trial: batch, pushpull:   %g sec\n",
         total_timing [0] / ntrials);
     printf ("Average time per trial: batch, allpush :   %g sec\n",
