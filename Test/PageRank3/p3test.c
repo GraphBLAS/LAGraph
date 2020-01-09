@@ -225,7 +225,8 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     // the GAP benchmark requires 16 trials
-    int ntrials = 16 ;
+    int ntrials = 1 ; // 16 ;
+    printf ("# of trials: %d\n", ntrials) ;
 
     float tol = 1e-4 ;
     int iters, itermax = 100 ;
@@ -250,11 +251,12 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
 #if 1
+    printf ("\nMethod 3a:\n") ;
     for (int kk = 0 ; kk < NTHRLIST; kk++)
     {
         int nthreads = nthread_list [kk] ;
         LAGraph_set_nthreads (nthreads) ;
-        printf ("\npagerank3a: %d threads\n", nthreads) ;
+        // printf ("3a:%2d: ", nthreads) ;
         
         double total_time = 0 ;
 
@@ -265,9 +267,10 @@ int main (int argc, char **argv)
             LAGRAPH_OK (LAGraph_pagerank3a (&PR, A, d_out, 0.85, itermax,
                 &iters)) ;
             double t1 = LAGraph_toc (tic) ;
+            // printf ("%10.3f ", t1) ;
             total_time += t1 ;
-            printf ("trial %2d, time %10.3f\n", trial, t1) ;
         }
+        // printf ("\n") ;
 
         double t = total_time / ntrials ;
         printf ("Avg pagerank3a  time: %10.3f (sec), "
@@ -284,11 +287,12 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
 #if 1
+    printf ("\nMethod 3d:\n") ;
     for (int kk = 0 ; kk < NTHRLIST; kk++)
     {
         int nthreads = nthread_list [kk] ;
         LAGraph_set_nthreads (nthreads) ;
-        printf ("\npagerank3d: %d threads\n", nthreads) ;
+        // printf ("3d:%2d: ", nthreads) ;
         
         double total_time = 0 ;
 
@@ -299,9 +303,10 @@ int main (int argc, char **argv)
             LAGRAPH_OK (LAGraph_pagerank3d (&PR, A, d_out, 0.85, itermax,
                 &iters)) ;
             double t1 = LAGraph_toc (tic) ;
+            // printf ("%10.3f ", t1) ; fflush (stdout) ;
             total_time += t1 ;
-            printf ("trial %2d, time %10.3f\n", trial, t1) ;
         }
+        // printf ("\n") ;
 
         double t = total_time / ntrials ;
         printf ("Avg pagerank3d  time: %10.3f (sec), "
@@ -317,11 +322,12 @@ int main (int argc, char **argv)
     // method 3c
     //--------------------------------------------------------------------------
 
+    printf ("\nMethod 3c:\n") ;
     for (int kk = 0 ; kk < NTHRLIST; kk++)
     {
         int nthreads = nthread_list [kk] ;
         LAGraph_set_nthreads (nthreads) ;
-        printf ("\npagerank3c: %d threads\n", nthreads) ;
+        // printf ("3c:%2d: ", nthreads) ;
 
         double total_time = 0 ;
 
@@ -332,9 +338,10 @@ int main (int argc, char **argv)
             LAGRAPH_OK (LAGraph_pagerank3c (&PR, A, dout, 0.85, itermax,
                 &iters)) ;
             double t1 = LAGraph_toc (tic) ;
+            // printf ("%10.3f ", t1) ; fflush (stdout) ;
             total_time += t1 ;
-            printf ("trial %2d, time %10.3f\n", trial, t1) ;
         }
+        // printf ("\n") ;
 
         double t = total_time / ntrials ;
         printf ("Avg pagerank3c  time: %10.3f (sec), "
