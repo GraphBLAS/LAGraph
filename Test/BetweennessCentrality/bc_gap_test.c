@@ -510,10 +510,10 @@ int main (int argc, char **argv)
             printf ("\n") ;
             for (int t = 1 ; t <= nt ; t++)
             {
-                double t2 = total_time_x3 [c][t] ;
+                if (Nthreads [t] > nthreads_max) continue ;
+                double t2 = total_time_x3 [c][t] / ntrials ;
                 printf ("Ave (BatchX3) %2d:%2d: %10.3f sec, rate %10.3f\n",
-                    c, Nthreads [t], t2 / ntrials,
-                    1e-6*((double) nvals) / t2) ;
+                    c, Nthreads [t], t2, 1e-6*((double) nvals) / t2) ;
             }
         }
     }
@@ -527,10 +527,10 @@ int main (int argc, char **argv)
             printf ("\n") ;
             for (int t = 1 ; t <= nt ; t++)
             {
-                double t2 = total_time_4 [c][t] ;
+                if (Nthreads [t] > nthreads_max) continue ;
+                double t2 = total_time_4 [c][t] / ntrials ;
                 printf ("Ave (Batch4)  %2d:%2d: %10.3f sec, rate %10.3f\n",
-                    c, Nthreads [t], t2 / ntrials,
-                    1e-6*((double) nvals) / t2) ;
+                    c, Nthreads [t], t2, 1e-6*((double) nvals) / t2) ;
             }
         }
     }
