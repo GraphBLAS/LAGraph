@@ -61,7 +61,7 @@ int main (int argc, char **argv)
     GrB_Vector PR = NULL;
     GrB_Vector d_out = NULL, d_in = NULL ;
 
-    LAGRAPH_OK (LAGraph_init ( )) ;
+    LAGraph_init ( ) ;
 
     int nthreads_max = LAGraph_get_nthreads ( ) ;
 
@@ -158,8 +158,9 @@ int main (int argc, char **argv)
 
     LAGRAPH_OK (GrB_Vector_new (&d_out, GrB_FP32, n)) ;
     LAGRAPH_OK (GrB_Vector_new (&d_in , GrB_FP32, n)) ;
-    LAGRAPH_OK (GrB_reduce (d_out, NULL, NULL, GxB_PLUS_FP32_MONOID, A, NULL )) ;
-    LAGRAPH_OK (GrB_reduce (d_in,  NULL, NULL, GxB_PLUS_FP32_MONOID, A, LAGraph_desc_tooo)) ;
+    LAGRAPH_OK (GrB_reduce (d_out, NULL, NULL, GxB_PLUS_FP32_MONOID, A, NULL ));
+    LAGRAPH_OK (GrB_reduce (d_in,  NULL, NULL, GxB_PLUS_FP32_MONOID, A,
+        LAGraph_desc_tooo)) ;
     GrB_Index n_d_out, n_d_in ;
     LAGRAPH_OK (GrB_Vector_nvals (&n_d_out, d_out)) ;
     LAGRAPH_OK (GrB_Vector_nvals (&n_d_in , d_in )) ;
@@ -186,19 +187,33 @@ int main (int argc, char **argv)
     GrB_free (&d_in) ;
     GrB_free (&d_out) ;
 
+    // Matrix A row sum
+    // Stores the outbound degrees of all vertices, for pagerank3a and 3d
+    LAGr_Vector_new (&d_out, GrB_FP32, n) ;
+    LAGr_reduce (d_out, NULL, NULL, GxB_PLUS_FP32_MONOID, A, NULL) ;
+    GrB_Index non_dangling ;
+    LAGr_Vector_nvals (&non_dangling, d_out) ;
+    if (non_dangling < n)
+    {
+        LAGRAPH_ERROR ("Matrix has dangling nodes!", GrB_INVALID_VALUE) ;
+    }
+
+    // copy into a double vector for pagerank3c
     float *dout = NULL ;
     GrB_Index *dI = NULL ;
-    GrB_Type type ;
-    LAGRAPH_OK (GrB_Vector_new (&d_out, GrB_FP32, n)) ;
-    LAGRAPH_OK (GrB_reduce (d_out, NULL, NULL, GxB_PLUS_FP32_MONOID, A, NULL )) ;
-    LAGRAPH_OK (GxB_Vector_export (&d_out, &type, &n, &n_d_out, &dI, (void **) (&dout), NULL)) ;
+    GrB_Type dtype ;
+    GrB_Vector d_out2 = NULL ;
+    GrB_Vector_dup (&d_out2, d_out) ;
+    LAGr_Vector_export (&d_out2, &dtype, &n, &n_d_out, &dI,
+        (void **) (&dout), NULL) ;
     LAGRAPH_FREE (dI) ;
-
-    // LAGRAPH_OK (GrB_Matrix_setElement (A, 0, 0, n-1)) ;     // hack
 
     printf ("\n=========="
             "input graph: nodes: %"PRIu64" edges: %"PRIu64"\n", n, nvals) ;
     printf ("diag entries added: %"PRId64"\n", edges_added) ;
+
+    GrB_Index nvals2 ;
+    GrB_Matrix_nvals (&nvals2, A) ;
 
     double tread = LAGraph_toc (tic) ;
     printf ("read time: %g sec\n", tread) ;
@@ -221,10 +236,14 @@ int main (int argc, char **argv)
     // #define NTHRLIST 2
     // int nthread_list [NTHRLIST] = {1, 40} ;    
 
-    #define NTHRLIST 1
-    int nthread_list [NTHRLIST] = {40} ;    
+    #define NTHRLIST 3
+    int nthread_list [NTHRLIST] = {10, 20, 40} ;    
 
     nthread_list [NTHRLIST-1] = nthreads_max ;
+
+    double chunk ;
+    GxB_get (GxB_CHUNK, &chunk) ;
+    printf ("chunk: %g\n", chunk) ;
 
     //--------------------------------------------------------------------------
     // method 3a
@@ -235,6 +254,7 @@ int main (int argc, char **argv)
     {
         int nthreads = nthread_list [kk] ;
         LAGraph_set_nthreads (nthreads) ;
+        printf ("\npagerank3a: %d threads\n", nthreads) ;
         
         double total_time = 0 ;
 
@@ -242,17 +262,51 @@ int main (int argc, char **argv)
         {
             GrB_free (&PR) ;
             LAGraph_tic (tic) ;
-            LAGRAPH_OK (LAGraph_pagerank3a (&PR, A, 0.85, itermax, &iters)) ;
+            LAGRAPH_OK (LAGraph_pagerank3a (&PR, A, d_out, 0.85, itermax,
+                &iters)) ;
             double t1 = LAGraph_toc (tic) ;
             total_time += t1 ;
             printf ("trial %2d, time %16.6g\n", trial, t1) ;
         }
 
         double t = total_time / ntrials ;
-        printf ("Average pagerank3a  time: %16.6g (sec), "
-                "rate: %10.4g (1e6 edges/sec) iters: %d threads: %d\n",
+        printf ("Avg pagerank3a  time: %10.3f (sec), "
+                "rate: %10.3f iters: %d threads: %d\n",
                 t, 1e-6*((double) nvals) / t, iters, nthreads) ;
+    }
 
+    GxB_Vector_fprint(PR, "---- PR ------", GxB_SHORT, stdout);
+    GrB_free (&PR) ;
+#endif
+
+    //--------------------------------------------------------------------------
+    // method 3d
+    //--------------------------------------------------------------------------
+
+#if 1
+    for (int kk = 0 ; kk < NTHRLIST; kk++)
+    {
+        int nthreads = nthread_list [kk] ;
+        LAGraph_set_nthreads (nthreads) ;
+        printf ("\npagerank3d: %d threads\n", nthreads) ;
+        
+        double total_time = 0 ;
+
+        for (int trial = 0 ; trial < ntrials ; trial++)
+        {
+            GrB_free (&PR) ;
+            LAGraph_tic (tic) ;
+            LAGRAPH_OK (LAGraph_pagerank3d (&PR, A, d_out, 0.85, itermax,
+                &iters)) ;
+            double t1 = LAGraph_toc (tic) ;
+            total_time += t1 ;
+            printf ("trial %2d, time %16.6g\n", trial, t1) ;
+        }
+
+        double t = total_time / ntrials ;
+        printf ("Avg pagerank3d  time: %10.3f (sec), "
+                "rate: %10.3f iters: %d threads: %d\n",
+                t, 1e-6*((double) nvals) / t, iters, nthreads) ;
     }
 
     GxB_Vector_fprint(PR, "---- PR ------", GxB_SHORT, stdout);
@@ -267,6 +321,7 @@ int main (int argc, char **argv)
     {
         int nthreads = nthread_list [kk] ;
         LAGraph_set_nthreads (nthreads) ;
+        printf ("\npagerank3c: %d threads\n", nthreads) ;
 
         double total_time = 0 ;
 
@@ -274,15 +329,16 @@ int main (int argc, char **argv)
         {
             GrB_free (&PR) ;
             LAGraph_tic (tic) ;
-            LAGRAPH_OK (LAGraph_pagerank3c (&PR, A, dout, 0.85, itermax, &iters)) ;
+            LAGRAPH_OK (LAGraph_pagerank3c (&PR, A, dout, 0.85, itermax,
+                &iters)) ;
             double t1 = LAGraph_toc (tic) ;
             total_time += t1 ;
             printf ("trial %2d, time %16.6g\n", trial, t1) ;
         }
 
         double t = total_time / ntrials ;
-        printf ("Average pagerank3c  time: %16.6g (sec), "
-                "rate: %10.4g (1e6 edges/sec) iters: %d threads: %d\n",
+        printf ("Avg pagerank3c  time: %10.3f (sec), "
+                "rate: %10.3f iters: %d threads: %d\n",
                 t, 1e-6*((double) nvals) / t, iters, nthreads) ;
     }
 

@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_pagerank3a: pagerank using a real semiring
+// LAGraph_pagerank3d: pagerank using a real semiring
 //------------------------------------------------------------------------------
 
 /*
@@ -33,7 +33,7 @@
 */
 
 //------------------------------------------------------------------------------
-// LAGraph_pagerank3a: GAP-style PageRank, all work done in GraphBLAS
+// LAGraph_pagerank3d: GAP-style PageRank, all work done in GraphBLAS
 
 // See also LAGraph_pagerank3c, for the same computation but with import/export.
 
@@ -51,28 +51,21 @@
 // out-going edge (that is, the matrix A cannot have any empty rows).  For
 // fastest results, the matrix A should not have any empty columns.
 
+// Contributed by Tim Davis and Mohsen Aznaveh.
+
 #include "LAGraph.h"
 
 #define LAGRAPH_FREE_ALL            \
 {                                   \
-    GrB_free (&v) ;                 \
-    GrB_free (&pr) ;                \
-    GrB_free (&prior) ;             \
-    GrB_free (&op_diff) ;           \
-};
-
-void ddiff (void *z, const void *x, const void *y)
-{
-    // z = fabs (x-y)
-    float delta = (* ((float *) x)) - (* ((float *) y)) ;
-    (*((float *) z)) = fabs (delta) ;
+    LAGr_free (&r) ;                \
+    LAGr_free (&t) ;                \
 }
 
-GrB_Info LAGraph_pagerank3a // PageRank definition
+GrB_Info LAGraph_pagerank3d // PageRank definition
 (
     GrB_Vector *result,     // output: array of LAGraph_PageRank structs
     GrB_Matrix A,           // binary input graph, not modified
-    GrB_Vector d_out,       // outbound degree of all nodes
+    GrB_Vector d_out,       // outbound degree of all nodes (not modified)
     float damping,          // damping factor (typically 0.85)
     int itermax,            // maximum number of iterations
     int *iters              // output: number of iterations taken
@@ -85,27 +78,26 @@ GrB_Info LAGraph_pagerank3a // PageRank definition
 
     GrB_Info info ;
     GrB_Index n ;
-    GrB_Vector v = NULL ;
-    GrB_Vector pr = NULL ;
-    GrB_BinaryOp op_diff = NULL ;
-    GrB_Vector prior = NULL ;
+    GrB_Vector r = NULL ;
+    GrB_Vector t = NULL ;
 
     LAGr_Matrix_nrows (&n, A) ;
 
-    // pr = 1 / n
-    LAGr_Vector_new (&pr, GrB_FP32, n) ;
-    LAGr_assign (pr, NULL, NULL, 1.0 / n, GrB_ALL, n, NULL) ;
+    // r = 1 / n
+    LAGr_Vector_new (&r, GrB_FP32, n) ;
+    LAGr_assign (r, NULL, NULL, 1.0 / n, GrB_ALL, n, NULL) ;
 
-    LAGr_Vector_new (&v, GrB_FP32, n) ;
-
-    // Teleport value
     const float teleport = (1 - damping) / n ;
 
-    // create binary operator to compute z = fabs (x-y)
-    LAGr_BinaryOp_new (&op_diff, ddiff, GrB_FP32, GrB_FP32, GrB_FP32) ;
+    // prescale with damping factor, so it isn't done each iteration
+    // d = d_out / damping ;
+    LAGr_Vector_dup (&d, d_out) ;
+    LAGr_assign (d, NULL, GrB_DIV_FP32, damping, GrB_ALL, n, NULL) ;
 
     const float tol = 1e-4 ;
     float rdiff = 1 ;       // so first iteration is always done
+
+    LAGr_Vector_new (&t, GrB_FP32, n) ;
 
     //--------------------------------------------------------------------------
     // pagerank iterations
@@ -113,32 +105,27 @@ GrB_Info LAGraph_pagerank3a // PageRank definition
 
     for ((*iters) = 0 ; (*iters) < itermax && rdiff > tol ; (*iters)++)
     {
-        // prior = pr ; deep copy
-        GrB_Vector_dup (&prior, pr) ;
+        // t = -r
+        LAGr_apply (t, NULL, NULL, GrB_AINV_FP32, r, NULL) ;
 
-        // Divide prior PageRank with # of outbound edges: v = pr ./ d_out
-        LAGr_eWiseMult (v, NULL, NULL, GrB_DIV_FP32, pr, d_out, NULL) ;
+        // r = r ./ d
+        LAGr_eWiseMult (r, NULL, NULL, GrB_DIV_FP32, r, d, NULL) ;
 
-        // Multiply importance by damping factor: v *= damping
-        LAGr_assign (v, NULL, GrB_TIMES_FP32, damping, GrB_ALL, n, NULL) ;
+        // r = A'*r
+        LAGr_mxv (r, NULL, NULL, GxB_PLUS_SECOND_FP32, A, r, LAGraph_desc_tooo);
 
-        // Calculate total PR of all inbound vertices: v = A' * v
-        LAGr_mxv (v, NULL, NULL, GxB_PLUS_SECOND_FP32, A, v, LAGraph_desc_tooo);
+        // r += teleport
+        LAGr_assign (r, NULL, GrB_PLUS_FP32, teleport, GrB_ALL, n, NULL) ;
 
-        // PageRank summarization: pr = (1-df)/n
-        LAGr_assign (pr, NULL, NULL, teleport, GrB_ALL, n, NULL) ;
+        // t += r
+        LAGr_assign (t, NULL, GrB_PLUS_FP32, r, GrB_ALL, n, NULL) ;
 
-        // pr += v
-        LAGr_eWiseAdd (pr, NULL, NULL, GrB_PLUS_FP32, pr, v, NULL) ;
-
-        // rdiff = sum (|pr-prior|)
-        LAGr_eWiseAdd (prior, NULL, NULL, op_diff, prior, pr, NULL) ;
-        LAGr_reduce (&rdiff, NULL, GxB_PLUS_FP32_MONOID, prior, NULL) ;
-        GrB_free (&prior) ;
+        // rdiff = sum (t)
+        LAGr_reduce (&rdiff, NULL, GxB_PLUS_FP32_MONOID, t, NULL) ;
    }
 
-    (*result) = pr ;
-    pr = NULL ;
+    (*result) = r ;
+    r = NULL ;
     LAGRAPH_FREE_ALL ;
     return (GrB_SUCCESS) ;
 }

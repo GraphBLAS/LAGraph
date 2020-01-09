@@ -107,158 +107,168 @@ extern bool LAGraph_malloc_is_thread_safe ;
 #define LAGr_Type_new(...)                                                  \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Type_new(__VA_ARGS__));                           \
-}                                                                           \
+}
 
 #define LAGr_UnaryOp_new(...)                                               \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_UnaryOp_new(__VA_ARGS__));                        \
-}                                                                           \
+}
 
 #define LAGr_BinaryOp_new(...)                                              \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_BinaryOp_new(__VA_ARGS__));                       \
-}                                                                           \
+}
 
 #define LAGr_Monoid_new(...)                                                \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Monoid_new(__VA_ARGS__));                         \
-}                                                                           \
+}
 
 #define LAGr_Semiring_new(...)                                              \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Semiring_new(__VA_ARGS__));                       \
-}                                                                           \
+}
 
 // Vector Methods //////////////////////////////////////////////////////////////
 
 #define LAGr_Vector_new(...)                                                \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Vector_new(__VA_ARGS__));                         \
-}                                                                           \
+}
 
 #define LAGr_Vector_dup(...)                                                \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Vector_dup(__VA_ARGS__));                         \
-}                                                                           \
+}
 
 #define LAGr_Vector_resize(...)                                             \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Vector_resize(__VA_ARGS__));                      \
-}                                                                           \
+}
 
 #define LAGr_Vector_clear(...)                                              \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Vector_clear(__VA_ARGS__));                       \
-}                                                                           \
+}
 
 #define LAGr_Vector_size(...)                                               \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Vector_size(__VA_ARGS__));                        \
-}                                                                           \
+}
 
 #define LAGr_Vector_nvals(...)                                              \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Vector_nvals(__VA_ARGS__));                       \
-}                                                                           \
+}
 
 #define LAGr_Vector_build(...)                                              \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Vector_build(__VA_ARGS__));                       \
-}                                                                           \
+}
 
 #define LAGr_Vector_setElement(...)                                         \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Vector_setElement(__VA_ARGS__));                  \
-}                                                                           \
+}
 
 #define LAGr_Vector_removeElement(...)                                      \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Vector_removeElement(__VA_ARGS__));               \
-}                                                                           \
+}
 
 #define LAGr_Vector_extractElement(...)                                     \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Vector_extractElement(__VA_ARGS__));              \
-}                                                                           \
+}
 
 #define LAGr_Vector_extractTuples(...)                                      \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Vector_extractTuples(__VA_ARGS__));               \
-}                                                                           \
+}
+
+#define LAGr_Vector_import(...)                                             \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GxB_Vector_import (__VA_ARGS__)) ;                    \
+}
+
+#define LAGr_Vector_export(...)                                             \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GxB_Vector_export (__VA_ARGS__)) ;                    \
+}
 
 // Matrix Methods //////////////////////////////////////////////////////////////
 
 #define LAGr_Matrix_new(...)                                                \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Matrix_new(__VA_ARGS__));                         \
-}                                                                           \
+}
 
 #define LAGr_Matrix_dup(...)                                                \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Matrix_dup(__VA_ARGS__));                         \
-}                                                                           \
+}
 
 #define LAGr_Matrix_resize(...)                                             \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Matrix_resize(__VA_ARGS__));                      \
-}                                                                           \
+}
 
 #define LAGr_Matrix_clear(...)                                              \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Matrix_clear(__VA_ARGS__));                       \
-}                                                                           \
+}
 
 #define LAGr_Matrix_nrows(...)                                              \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Matrix_nrows(__VA_ARGS__));                       \
-}                                                                           \
+}
 
 #define LAGr_Matrix_ncols(...)                                              \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Matrix_ncols(__VA_ARGS__));                       \
-}                                                                           \
+}
 
 #define LAGr_Matrix_nvals(...)                                              \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Matrix_nvals(__VA_ARGS__));                       \
-}                                                                           \
+}
 
 #define LAGr_Matrix_build(...)                                              \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Matrix_build(__VA_ARGS__));                       \
-}                                                                           \
+}
 
 #define LAGr_Matrix_setElement(...)                                         \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Matrix_setElement(__VA_ARGS__));                  \
-}                                                                           \
+}
 
 #define LAGr_Matrix_removeElement(...)                                      \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Matrix_removeElement(__VA_ARGS__));               \
-}                                                                           \
+}
 
 #define LAGr_Matrix_extractElement(...)                                     \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Matrix_extractElement(__VA_ARGS__));              \
-}                                                                           \
+}
 
 #define LAGr_Matrix_extractTuples(...)                                      \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Matrix_extractTuples(__VA_ARGS__));               \
-}                                                                           \
+}
 
 // Descriptor Methods //////////////////////////////////////////////////////////
 
 #define LAGr_Descriptor_new(...)                                            \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Descriptor_new(__VA_ARGS__));                     \
-}                                                                           \
+}
 
 #define LAGr_Descriptor_set(...)                                            \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Descriptor_set(__VA_ARGS__));                     \
-}                                                                           \
+}
 
 // Free Method /////////////////////////////////////////////////////////////////
 
@@ -267,84 +277,89 @@ extern bool LAGraph_malloc_is_thread_safe ;
 #define LAGr_free(...)                                                      \
 {                                                                           \
     GrB_free(__VA_ARGS__);                                                  \
-}                                                                           \
+}
 
 // GraphBLAS Operations ////////////////////////////////////////////////////////
 
 #define LAGr_mxm(...)                                                       \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_mxm(__VA_ARGS__));                                \
-}                                                                           \
+}
 
 #define LAGr_vxm(...)                                                       \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_vxm(__VA_ARGS__));                                \
-}                                                                           \
+}
 
 #define LAGr_mxv(...)                                                       \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_mxv(__VA_ARGS__));                                \
-}                                                                           \
+}
 
 #define LAGr_eWiseMult(...)                                                 \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_eWiseMult(__VA_ARGS__));                          \
-}                                                                           \
+}
 
 #define LAGr_eWiseAdd(...)                                                  \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_eWiseAdd(__VA_ARGS__));                           \
-}                                                                           \
+}
 
 #define LAGr_extract(...)                                                   \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_extract(__VA_ARGS__));                            \
-}                                                                           \
+}
 
 #define LAGr_assign(...)                                                    \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_assign(__VA_ARGS__));                             \
-}                                                                           \
+}
 
 #define LAGr_apply(...)                                                     \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_apply(__VA_ARGS__));                              \
-}                                                                           \
+}
 
 #define LAGr_reduce(...)                                                    \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_reduce(__VA_ARGS__));                             \
-}                                                                           \
+}
 
 #define LAGr_transpose(...)                                                 \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_transpose(__VA_ARGS__));                          \
-}                                                                           \
+}
 
 #define LAGr_kronecker(...)                                                 \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_kronecker(__VA_ARGS__));                          \
-}                                                                           \
+}
 
 // Sequence Termination ////////////////////////////////////////////////////////
 
 #define LAGr_wait(...)                                                      \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_wait(__VA_ARGS__));                               \
-}                                                                           \
+}
 
 #define LAGr_UnaryOp_free(...)                                              \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_UnaryOp_free(__VA_ARGS__));                       \
-}                                                                           \
+}
 
-#define LAGRAPH_TRY_CATCH(info)                                             \
+#define LAGRAPH_TRY_CATCH(method)                                           \
 {                                                                           \
+    GrB_Info info = (method) ;                                              \
     if (!(info == GrB_SUCCESS || info == GrB_NO_VALUE))                     \
     {                                                                       \
-        LAGRAPH_ERROR ("", info);                                           \
+        LAGRAPH_ERROR ("", info) ;                                          \
     }                                                                       \
-}                                                                           \
+}
+
+//------------------------------------------------------------------------------
+// LAGraph methods
+//------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
 // LAGRAPH_OK: call LAGraph or GraphBLAS and check the result
@@ -868,32 +883,43 @@ GrB_Info LAGraph_pagerank2      // second PageRank definition
     unsigned long itermax       // number of iterations
 ) ;
 
-GrB_Info LAGraph_pagerank3a      // third PageRank definition
+GrB_Info LAGraph_pagerank3a // PageRank definition
 (
-    GrB_Vector *result,         // output: array of LAGraph_PageRank structs
-    GrB_Matrix A,               // binary input graph, not modified
-    float damping_factor,      // damping factor
-    unsigned long itermax,      // maximum number of iterations
-    int *iters                  // number of iterations taken
+    GrB_Vector *result,     // output: array of LAGraph_PageRank structs
+    GrB_Matrix A,           // binary input graph, not modified
+    GrB_Vector d_out,       // outbound degree of all nodes
+    float damping,          // damping factor (typically 0.85)
+    int itermax,            // maximum number of iterations
+    int *iters              // output: number of iterations taken
 ) ;
 
-GrB_Info LAGraph_pagerank3b      // third PageRank definition
+GrB_Info LAGraph_pagerank3b     // PageRank definition
 (
     GrB_Vector *result,         // output: array of LAGraph_PageRank structs
     GrB_Matrix A,               // binary input graph, not modified
-    float damping_factor,      // damping factor
+    float damping_factor,       // damping factor
     unsigned long itermax,      // maximum number of iterations
     int *iters                  // number of iterations taken
 ) ;
 
 GrB_Info LAGraph_pagerank3c // PageRank definition
 (
-    GrB_Vector *result,    // output: array of LAGraph_PageRank structs
-    GrB_Matrix A,          // binary input graph, not modified
+    GrB_Vector *result,     // output: array of LAGraph_PageRank structs
+    GrB_Matrix A,           // binary input graph, not modified
     const float *restrict d_out, // out degree of each node (GrB_FP32, size n)
-    float damping_factor,  // damping factor
-    unsigned long itermax, // maximum number of iterations
-    int* iters             // output: number of iterations taken
+    float damping,          // damping factor (typically 0.85)
+    int itermax,            // maximum number of iterations
+    int* iters              // output: number of iterations taken
+) ;
+
+GrB_Info LAGraph_pagerank3d // PageRank definition
+(
+    GrB_Vector *result,     // output: array of LAGraph_PageRank structs
+    GrB_Matrix A,           // binary input graph, not modified
+    GrB_Vector d_out,       // outbound degree of all nodes (not modified)
+    float damping,          // damping factor (typically 0.85)
+    int itermax,            // maximum number of iterations
+    int *iters              // output: number of iterations taken
 ) ;
 
 GrB_Info LAGraph_tricount   // count # of triangles
