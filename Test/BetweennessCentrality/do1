@@ -1,0 +1,4 @@
+#!/bin/sh
+
+build/bc_gap_test ~/roadNet-CA.mtx ~/roadNet-CA_sources.mtx
+

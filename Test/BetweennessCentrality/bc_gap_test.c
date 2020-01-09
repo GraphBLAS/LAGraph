@@ -233,9 +233,14 @@ int main (int argc, char **argv)
     nchunks = 3 ;
     */
 
-    double Chunks [1+1] = { 0,
-          4*K   } ;
-    nchunks = 1 ;
+    double Chunks [10+1] = { 0,
+          4*K, 16*K, 64*K   } ;
+    nchunks = 3 ;
+
+    for (int c = 1 ; c <= nchunks ; c++)
+    {
+        printf (" chunk test %d: size %g\n", c, Chunks [c]) ;
+    }
 
     /*
     int nt = 7 ;
@@ -243,9 +248,20 @@ int main (int argc, char **argv)
         1, 2, 4, 8, 12, 20, 40 } ;
     */
 
+    /*
     int nt = 5 ;
     int Nthreads [6+1] = { 0,
-        1, 5, 10, 20, 40 } ;
+        1, 5, 10, 20, 40 } ;        // hypersparse
+    */
+
+    int nt = 4 ;
+    int Nthreads [6+1] = { 0,
+        1, 2, 4, 8 } ;              // slash
+
+    for (int t = 1 ; t <= nt ; t++)
+    {
+        printf (" thread test %d: %d\n", t, Nthreads [t]) ;
+    }
 
     //--------------------------------------------------------------------------
     // Begin tests
@@ -256,8 +272,6 @@ int main (int argc, char **argv)
 
     int nthreads_max = LAGraph_get_nthreads();
     printf ("nthreads max %d\n", nthreads_max) ;
-//  printf("TESTING LAGraphX_bc_batch3 (saxpy in both phases, nthreads %d\n",
-//      nthreads) ;
 
     int ntrials = 0 ;
     double total_time_1 = 0 ;
@@ -497,13 +511,13 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     printf ("\nntrials: %d\n", ntrials) ;
-    if (total_time_1 > 0)
+    if (total_time_1 > 0 && ntrials > 1)
     {
         printf ("Average time per trial (Brandes): %g sec\n",
             total_time_1 / ntrials);
     }
 
-    if (total_time_x3 [1] > 0)
+    if (total_time_x3 [1] > 0 && ntrials > 1)
     {
         for (int c = 1 ; c <= nchunks ; c++)
         {
@@ -520,7 +534,7 @@ int main (int argc, char **argv)
 
     printf ("\n") ;
 
-    if (total_time_x3 [1] > 0)
+    if (total_time_x3 [1] > 0 && ntrials > 1)
     {
         for (int c = 1 ; c <= nchunks ; c++)
         {
