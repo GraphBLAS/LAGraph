@@ -233,9 +233,15 @@ int main (int argc, char **argv)
     nchunks = 3 ;
     */
 
+    /*
     double Chunks [10+1] = { 0,
           4*K, 16*K, 64*K   } ;
     nchunks = 3 ;
+    */
+
+    double Chunks [10+1] = { 0,
+          64*K   } ;
+    nchunks = 1 ;
 
     for (int c = 1 ; c <= nchunks ; c++)
     {
@@ -248,15 +254,15 @@ int main (int argc, char **argv)
         1, 2, 4, 8, 12, 20, 40 } ;
     */
 
-    /*
-    int nt = 5 ;
+    int nt = 3 ;
     int Nthreads [6+1] = { 0,
-        1, 5, 10, 20, 40 } ;        // hypersparse
-    */
+        10, 20, 40 } ;        // hypersparse
 
+    /*
     int nt = 4 ;
     int Nthreads [6+1] = { 0,
         1, 2, 4, 8 } ;              // slash
+    */
 
     for (int t = 1 ; t <= nt ; t++)
     {
