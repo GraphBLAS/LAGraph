@@ -922,6 +922,16 @@ GrB_Info LAGraph_pagerank3d // PageRank definition
     int *iters              // output: number of iterations taken
 ) ;
 
+GrB_Info LAGraph_pagerank3e // PageRank definition
+(
+    GrB_Vector *result,     // output: array of LAGraph_PageRank structs
+    GrB_Matrix A,           // binary input graph, not modified
+    GrB_Vector d_out,       // outbound degree of all nodes (not modified)
+    float damping,          // damping factor (typically 0.85)
+    int itermax,            // maximum number of iterations
+    int *iters              // output: number of iterations taken
+) ;
+
 GrB_Info LAGraph_tricount   // count # of triangles
 (
     int64_t *ntri,          // # of triangles

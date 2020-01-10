@@ -188,7 +188,7 @@ int main (int argc, char **argv)
     GrB_free (&d_out) ;
 
     // Matrix A row sum
-    // Stores the outbound degrees of all vertices, for pagerank3a and 3d
+    // Stores the outbound degrees of all vertices, for pagerank3e and 3d
     LAGr_Vector_new (&d_out, GrB_FP32, n) ;
     LAGr_reduce (d_out, NULL, NULL, GxB_PLUS_FP32_MONOID, A, NULL) ;
     GrB_Index non_dangling ;
@@ -217,6 +217,8 @@ int main (int argc, char **argv)
 
     double tread = LAGraph_toc (tic) ;
     printf ("read time: %g sec\n", tread) ;
+
+    FILE *f = NULL ;
 
     // GxB_fprint (A, GxB_SHORT, stdout) ;
 
@@ -261,16 +263,16 @@ int main (int argc, char **argv)
     printf ("\n") ;
 
     //--------------------------------------------------------------------------
-    // method 3a
+    // method 3e
     //--------------------------------------------------------------------------
 
-#if 0
-    printf ("\nMethod 3a:\n") ;
+#if 1
+    printf ("\nMethod 3e:\n") ;
     for (int kk = 0 ; kk < NTHRLIST; kk++)
     {
         int nthreads = nthread_list [kk] ;
         LAGraph_set_nthreads (nthreads) ;
-        // printf ("3a:%2d: ", nthreads) ;
+        // printf ("3e:%2d: ", nthreads) ;
         
         double total_time = 0 ;
 
@@ -278,7 +280,7 @@ int main (int argc, char **argv)
         {
             GrB_free (&PR) ;
             LAGraph_tic (tic) ;
-            LAGRAPH_OK (LAGraph_pagerank3a (&PR, A, d_out, 0.85, itermax,
+            LAGRAPH_OK (LAGraph_pagerank3e (&PR, A, d_out, 0.85, itermax,
                 &iters)) ;
             double t1 = LAGraph_toc (tic) ;
             // printf ("%10.3f ", t1) ;
@@ -288,13 +290,18 @@ int main (int argc, char **argv)
 
         double t = total_time / ntrials ;
 
-        printf ("3a:%3d: avg time: %10.3f (sec), "
+        printf ("3e:%3d: avg time: %10.3f (sec), "
                 "rate: %10.3f iters: %d\n", nthreads,
                 t, 1e-6*((double) nvals) * iters / t, iters) ;
 
     }
 
     // GxB_print (PR, GxB_SHORT) ;
+
+    // f = fopen ("rank3e.mtx", "w") ;
+    // LAGraph_mmwrite (PR, f) ;
+    // fclose (f) ;
+
     GrB_free (&PR) ;
 #endif
 
@@ -331,6 +338,11 @@ int main (int argc, char **argv)
     }
 
     // GxB_print (PR, GxB_SHORT) ;
+
+    // f = fopen ("rank3d.mtx", "w") ;
+    // LAGraph_mmwrite (PR, f) ;
+    // fclose (f) ;
+
     GrB_free (&PR) ;
 #endif
 
@@ -364,6 +376,10 @@ int main (int argc, char **argv)
                 "rate: %10.3f iters: %d\n", nthreads,
                 t, 1e-6*((double) nvals) * iters / t, iters) ;
     }
+
+    // f = fopen ("rank3c.mtx", "w") ;
+    // LAGraph_mmwrite (PR, f) ;
+    // fclose (f) ;
 
     // GxB_print (PR, GxB_SHORT) ;
 
