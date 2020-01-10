@@ -46,10 +46,11 @@
 // matrix, it assumes there are no rows in A that have no entries.
 
 // For fastest results, the input matrix A should be stored in GxB_BY_COL
-// format (TODO: check this on input).  All entries in A must be equal to 1
-// (TODO: relax this condition).  All nodes of A must have at least one
-// out-going edge (that is, the matrix A cannot have any empty rows).  For
-// fastest results, the matrix A should not have any empty columns.
+// format (TODO: check this on input).  The values of A are ignored; just its
+// pattern is used.  All nodes of A must have at least one out-going edge
+// (that is, the matrix A cannot have any empty rows); otherwise, a
+// divide-by-zero occurs and the results are undefined.  For fastest results,
+// the matrix A should not have any empty columns.
 
 // Contributed by Tim Davis and Mohsen Aznaveh.
 
