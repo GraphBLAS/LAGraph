@@ -1,0 +1,102 @@
+Script started on Thu 09 Jan 2020 06:53:22 PM CST
+Intel Suite:
+Copyright (C) 2009-2019 Intel Corporation. All rights reserved.
+Intel(R) VTune(TM) Amplifier 2019 (build 591499)
+[0;36mhypersparse $[0m ./do[K[Kgap_test 
+Test kron:
+matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+original # of edges: 4223264644
+Matrix has 71143742 empty rows
+Matrix has 71143742 empty cols
+
+==========input graph: nodes: 134217726 edges: 4223264644
+diag entries added: 71143742
+read time: 192.188 sec
+# of trials: 16
+chunk: 65536
+threads: 40 
+
+Method 3d:
+3d: 40: avg time:     23.956 (sec), rate:   1234.063 iters: 7
+
+Method 3c:
+3c: 40: avg time:     22.503 (sec), rate:   1313.746 iters: 7
+Test road:
+matrix: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+original # of edges: 57708624
+
+==========input graph: nodes: 23947347 edges: 57708624
+diag entries added: 0
+read time: 2.32107 sec
+# of trials: 16
+chunk: 65536
+threads: 40 
+
+Method 3d:
+3d: 40: avg time:      3.680 (sec), rate:    611.603 iters: 39
+
+Method 3c:
+3c: 40: avg time:      2.125 (sec), rate:   1059.312 iters: 39
+Test twitter:
+matrix: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+original # of edges: 1468364884
+Matrix has 21475137 empty rows
+Matrix has 25889280 empty cols
+
+==========input graph: nodes: 61578415 edges: 1468364884
+diag entries added: 27438232
+read time: 66.1418 sec
+# of trials: 16
+chunk: 65536
+threads: 40 
+
+Method 3d:
+3d: 40: avg time:     23.639 (sec), rate:   1614.989 iters: 26
+
+Method 3c:
+3c: 40: avg time:     21.286 (sec), rate:   1793.533 iters: 26
+Test urand:
+matrix: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+original # of edges: 4294966740
+
+==========input graph: nodes: 134217728 edges: 4294966740
+diag entries added: 0
+read time: 174.626 sec
+# of trials: 16
+chunk: 65536
+threads: 40 
+
+Method 3d:
+3d: 40: avg time:     29.513 (sec), rate:    873.156 iters: 6
+
+Method 3c:
+3c: 40: avg time:     28.168 (sec), rate:    914.856 iters: 6
+Test web:
+matrix: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+original # of edges: 1930292948
+Matrix has 7236618 empty rows
+Matrix has 438 empty cols
+
+==========input graph: nodes: 50636151 edges: 1930292948
+diag entries added: 7236964
+read time: 38.7942 sec
+# of trials: 16
+chunk: 65536
+threads: 40 
+
+Method 3d:
+3d: 40: avg time:     12.548 (sec), rate:   4922.773 iters: 32
+
+Method 3c:
+3c: 40: avg time:     10.372 (sec), rate:   5955.251 iters: 32
+[0;36mhypersparse $[0m 

@@ -1,8 +1,8 @@
 #!/bin/sh
 
-build/bc_gap_test ~/GAP/GAP-web/GAP-web.grb ~/GAP/GAP-web/GAP-web_sources.mtx
 build/bc_gap_test ~/GAP/GAP-kron/GAP-kron.grb ~/GAP/GAP-kron/GAP-kron_sources.mtx
+build/bc_gap_test ~/GAP/GAP-road/GAP-road.grb ~/GAP/GAP-road/GAP-road_sources.mtx
 build/bc_gap_test ~/GAP/GAP-twitter/GAP-twitter.grb ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
 build/bc_gap_test ~/GAP/GAP-urand/GAP-urand.grb ~/GAP/GAP-urand/GAP-urand_sources.mtx
-build/bc_gap_test ~/GAP/GAP-road/GAP-road.grb ~/GAP/GAP-road/GAP-road_sources.mtx
+build/bc_gap_test ~/GAP/GAP-web/GAP-web.grb ~/GAP/GAP-web/GAP-web_sources.mtx
 
