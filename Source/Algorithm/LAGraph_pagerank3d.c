@@ -86,6 +86,7 @@ GrB_Info LAGraph_pagerank3d // PageRank definition
     LAGr_Matrix_nrows (&n, A) ;
 
     // r = 1 / n
+    LAGr_Vector_new (&t, GrB_FP32, n) ;
     LAGr_Vector_new (&r, GrB_FP32, n) ;
     LAGr_assign (r, NULL, NULL, 1.0 / n, GrB_ALL, n, NULL) ;
 
@@ -105,33 +106,20 @@ GrB_Info LAGraph_pagerank3d // PageRank definition
 
     for ((*iters) = 0 ; (*iters) < itermax && rdiff > tol ; (*iters)++)
     {
-//printf ("\n -------------------------------------------ITER: %d\n",(*iters)) ;
-//GxB_print (r, 2) ;
-
         // t = r
-        LAGr_Vector_dup (&t, r) ;
-//printf ("\nt = r\n") ;
-//GxB_print (t, 2) ;
+        LAGr_assign (t, NULL, NULL, r, GrB_ALL, n, NULL) ;
 
         // r = r ./ d
         LAGr_eWiseMult (r, NULL, NULL, GrB_DIV_FP32, r, d, NULL) ;
-//printf ("\nr = r./d\n") ;
-//GxB_print (r, 2) ;
 
         // r = A'*r
         LAGr_mxv (r, NULL, NULL, GxB_PLUS_SECOND_FP32, A, r, LAGraph_desc_tooo);
-//printf ("\nr = A'*r\n") ;
-//GxB_print (r, 2) ;
 
         // r += teleport
         LAGr_assign (r, NULL, GrB_PLUS_FP32, teleport, GrB_ALL, n, NULL) ;
-//printf ("\nr += teleport\n") ;
-//GxB_print (r, 2) ;
 
         // t -= r
         LAGr_assign (t, NULL, GrB_MINUS_FP32, r, GrB_ALL, n, NULL) ;
-//printf ("\nt -= r\n") ;
-//GxB_print (t, 2) ;
 
         // t = abs (t)
         LAGr_apply (t, NULL, NULL, GxB_ABS_FP32, t, NULL) ;

@@ -113,6 +113,7 @@ GrB_Info LAGraph_pagerank3a // PageRank definition
 
     for ((*iters) = 0 ; (*iters) < itermax && rdiff > tol ; (*iters)++)
     {
+// printf ("\n============================ pagerank 3A iter: %d\n", (*iters)) ;
         // prior = pr ; deep copy
         GrB_Vector_dup (&prior, pr) ;
 

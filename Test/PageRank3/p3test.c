@@ -225,7 +225,7 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     // the GAP benchmark requires 16 trials
-    int ntrials = 1 ; // 16 ;
+    int ntrials = 16 ;
     printf ("# of trials: %d\n", ntrials) ;
 
     float tol = 1e-4 ;
@@ -240,14 +240,16 @@ int main (int argc, char **argv)
     // #define NTHRLIST 4
     // int nthread_list [NTHRLIST] = {1, 2, 4, 8} ;    
 
-    #define NTHRLIST 3
-    int nthread_list [NTHRLIST] = {10, 20, 40} ;    
+    // #define NTHRLIST 3
+    // int nthread_list [NTHRLIST] = {10, 20, 40} ;    
+
+    #define NTHRLIST 1
+    int nthread_list [NTHRLIST] = {40} ;    
 
     nthread_list [NTHRLIST-1] = nthreads_max ;
 
     double chunk = 64 * 1024 ;
     GxB_set (GxB_CHUNK, &chunk) ;
-    // GxB_get (GxB_CHUNK, &chunk) ;
     printf ("chunk: %g\n", chunk) ;
 
     printf ("threads: ") ;
@@ -262,7 +264,7 @@ int main (int argc, char **argv)
     // method 3a
     //--------------------------------------------------------------------------
 
-#if 1
+#if 0
     printf ("\nMethod 3a:\n") ;
     for (int kk = 0 ; kk < NTHRLIST; kk++)
     {
@@ -288,11 +290,11 @@ int main (int argc, char **argv)
 
         printf ("3a:%3d: avg time: %10.3f (sec), "
                 "rate: %10.3f iters: %d\n", nthreads,
-                t, 1e-6*((double) nvals) / t, iters) ;
+                t, 1e-6*((double) nvals) * iters / t, iters) ;
 
     }
 
-//  GxB_Vector_fprint(PR, "---- PR ------", GxB_SHORT, stdout);
+    // GxB_print (PR, GxB_SHORT) ;
     GrB_free (&PR) ;
 #endif
 
@@ -325,10 +327,10 @@ int main (int argc, char **argv)
         double t = total_time / ntrials ;
         printf ("3d:%3d: avg time: %10.3f (sec), "
                 "rate: %10.3f iters: %d\n", nthreads,
-                t, 1e-6*((double) nvals) / t, iters) ;
+                t, 1e-6*((double) nvals) * iters / t, iters) ;
     }
 
-//  GxB_Vector_fprint(PR, "---- PR ------", GxB_SHORT, stdout);
+    // GxB_print (PR, GxB_SHORT) ;
     GrB_free (&PR) ;
 #endif
 
@@ -360,10 +362,10 @@ int main (int argc, char **argv)
         double t = total_time / ntrials ;
         printf ("3c:%3d: avg time: %10.3f (sec), "
                 "rate: %10.3f iters: %d\n", nthreads,
-                t, 1e-6*((double) nvals) / t, iters) ;
+                t, 1e-6*((double) nvals) * iters / t, iters) ;
     }
 
-    // GxB_Vector_fprint(PR, "---- PR ------", GxB_SHORT, stdout);
+    // GxB_print (PR, GxB_SHORT) ;
 
     //--------------------------------------------------------------------------
     // free all workspace and finish

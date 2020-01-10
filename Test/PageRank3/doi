@@ -1,0 +1,2 @@
+#!/bin/bash
+./build/p3test ~/indochina-2004.grb

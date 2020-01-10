@@ -128,6 +128,7 @@ GrB_Info LAGraph_pagerank3c // PageRank definition
 
     for ((*iters) = 0 ; (*iters) < itermax && rdiff > tol ; (*iters)++)
     {
+// printf ("\n============================ pagerank 3C iter: %d\n", (*iters)) ;
         // Importance calculation
         #pragma omp parallel for num_threads(nthreads) schedule(static)
         for (int64_t i = 0 ; i < n; i++)
