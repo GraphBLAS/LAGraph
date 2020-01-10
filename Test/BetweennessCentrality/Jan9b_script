@@ -61,7 +61,7 @@ Batch X3 time  1:20:      52.1453 (sec), rate:     80.990
 Batch X3 time  1:40:      39.8475 (sec), rate:    105.986
 ---
 
-^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[A^[[A^[[A^[[A^[[A^[[A^[[A                                                                                                                                                                                                    Batch v4 time  1:10:      95.5556 (sec), rate:     44.197
+Batch v4 time  1:10:      95.5556 (sec), rate:     44.197
 Batch v4 time  1:20:      54.0545 (sec), rate:     78.130
 Batch v4 time  1:40:      41.5433 (sec), rate:    101.659
 
@@ -1084,24 +1084,4 @@ Ave (Batch4)   1:10:     16.490 sec, rate    117.057
 Ave (Batch4)   1:20:     10.500 sec, rate    183.844
 Ave (Batch4)   1:40:      9.732 sec, rate    198.335
 build/bc_gap_test: all tests passed
-[0;36mhypersparse $[0m pwd
-/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality
-[0;36mhypersparse $[0m ex[K[Kgt[Kit status
-On branch master
-Your branch is up-to-date with 'origin/master'.
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git checkout -- <file>..." to discard changes in working directory)
 
-	[31mmodified:   do_gap[m
-
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-
-	[31mJan9b_script[m
-	[31m../PageRank3/Jan9c_diary[m
-
-no changes added to commit (use "git add" and/or "git commit -a")
-[0;36mhypersparse $[0m pwd
-/home/faculty/davis/sparse/LAGraph/Test/BetweennessCentrality
-[0;36mhypersparse $[0m 
