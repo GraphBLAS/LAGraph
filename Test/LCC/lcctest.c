@@ -34,7 +34,7 @@
 
 //------------------------------------------------------------------------------
 
-// Contributed by Tim Davis, Texas A&M
+// Contributed by Tim Davis, Texas A&M and Gabor Szarnyas, BME
 
 // Usage: lcctest can be used with both stdin or a file as its input.
 // We assume by default that the matrix is symmetric. To override this,
@@ -99,7 +99,7 @@ int main (int argc, char **argv)
         }
         else
         {
-            symmetric = argv[2] == 0 ;
+            symmetric = atoi(argv[2]) == 0;
         }
     }
 
