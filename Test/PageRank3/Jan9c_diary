@@ -99,4 +99,7 @@ Method 3d:
 
 Method 3c:
 3c: 40: avg time:     10.372 (sec), rate:   5955.251 iters: 32
-[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m exit
+exit
+
+Script done on Fri 10 Jan 2020 09:39:50 AM CST

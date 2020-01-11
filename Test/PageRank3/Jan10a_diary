@@ -1,0 +1,123 @@
+Script started on Fri 10 Jan 2020 06:29:50 AM CST
+Intel Suite:
+Copyright (C) 2009-2019 Intel Corporation. All rights reserved.
+Intel(R) VTune(TM) Amplifier 2019 (build 591499)
+[0;36mhypersparse $[0m ./gap_test 
+Test kron:
+matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+original # of edges: 4223264644
+Matrix has 71143742 empty rows
+Matrix has 71143742 empty cols
+
+==========input graph: nodes: 134217726 edges: 4223264644
+diag entries added: 71143742
+read time: 187.285 sec
+# of trials: 16
+chunk: 65536
+threads: 40 
+
+Method 3e:
+3e: 40: avg time:     23.885 (sec), rate:   1237.693 iters: 7
+
+Method 3d:
+3d: 40: avg time:     24.107 (sec), rate:   1226.306 iters: 7
+
+Method 3c:
+3c: 40: avg time:     22.626 (sec), rate:   1306.566 iters: 7
+Test road:
+matrix: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+original # of edges: 57708624
+
+==========input graph: nodes: 23947347 edges: 57708624
+diag entries added: 0
+read time: 2.33723 sec
+# of trials: 16
+chunk: 65536
+threads: 40 
+
+Method 3e:
+3e: 40: avg time:      3.486 (sec), rate:    645.612 iters: 39
+
+Method 3d:
+3d: 40: avg time:      3.582 (sec), rate:    628.307 iters: 39
+
+Method 3c:
+3c: 40: avg time:      2.136 (sec), rate:   1053.530 iters: 39
+Test twitter:
+matrix: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+original # of edges: 1468364884
+Matrix has 21475137 empty rows
+Matrix has 25889280 empty cols
+
+==========input graph: nodes: 61578415 edges: 1468364884
+diag entries added: 27438232
+read time: 60.8308 sec
+# of trials: 16
+chunk: 65536
+threads: 40 
+
+Method 3e:
+3e: 40: avg time:     23.387 (sec), rate:   1632.394 iters: 26
+
+Method 3d:
+3d: 40: avg time:     23.529 (sec), rate:   1622.594 iters: 26
+
+Method 3c:
+3c: 40: avg time:     21.340 (sec), rate:   1789.027 iters: 26
+Test urand:
+matrix: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+original # of edges: 4294966740
+
+==========input graph: nodes: 134217728 edges: 4294966740
+diag entries added: 0
+read time: 172.135 sec
+# of trials: 16
+chunk: 65536
+threads: 40 
+
+Method 3e:
+3e: 40: avg time:     29.367 (sec), rate:    877.505 iters: 6
+
+Method 3d:
+3d: 40: avg time:     29.519 (sec), rate:    872.977 iters: 6
+
+Method 3c:
+3c: 40: avg time:     28.230 (sec), rate:    912.860 iters: 6
+Test web:
+matrix: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+original # of edges: 1930292948
+Matrix has 7236618 empty rows
+Matrix has 438 empty cols
+
+==========input graph: nodes: 50636151 edges: 1930292948
+diag entries added: 7236964
+read time: 38.7158 sec
+# of trials: 16
+chunk: 65536
+threads: 40 
+
+Method 3e:
+3e: 40: avg time:     12.309 (sec), rate:   5018.407 iters: 32
+
+Method 3d:
+3d: 40: avg time:     12.484 (sec), rate:   4948.036 iters: 32
+
+Method 3c:
+3c: 40: avg time:     10.241 (sec), rate:   6031.336 iters: 32
+[0;36mhypersparse $[0m ./gap_test [7Pexitscreen -rvi do_gap [1@cat[C[C[C[C[C[C[C[C[6Pgmakell -t[2Pdircd ../BetweennessCentrality/[C[C[C[C[C[C[C[C[C[C[C[C[C[Cpwd[Kjobstail -n 10000 -f Jan9c_diary [C[C[C[C[C[C[C[C[C[C[C[C[C[Cman tail[Ktail -f Jan9c_diary [C[C[C[C[C[C[C[C[C[C[C[C[C[Cll -t[Kcd sparse/LAGraph/Test/PageRank3/[C[C[C[C[C[C[C[C[C[C[C[C[C[Cexit[Kgit pullstatuscd sparse/GraphBLAS[Kpwdgit pullshcommit -m 'bc results Jan9b'[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cadd .[Kstatusawk -f ~/g Jan9b_script [C[C[C[C[C[C[C[C[C[C[C[C[C[Cpwd[Kvi Jan9b_script [C[C[C[C[C[C[C[C[C[C[C[C[C[Cscript -f Jan9b_script[C[C[C[C[C[C[C[C[C[C[C[C[C[Cpwd[Kexitgit statuspwd[Kgit statuspwd[K./do_gap [5Pexitgit status[K
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m exit
+exit
+
+Script done on Fri 10 Jan 2020 08:05:46 AM CST
