@@ -361,7 +361,7 @@
 // The GAP Benchmark Suite, http://arxiv.org/abs/1508.03619, 2015.
 // http://gap.cs.berkeley.edu/
 
-#include "LAGraph_internal.h"
+#include "bfs_test.h"
 
 #define LAGRAPH_FREE_ALL    \
 {                           \
@@ -371,7 +371,7 @@
     GrB_free (&pi) ;        \
 }
 
-GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
+GrB_Info bfs_log   // push, pull, or push-pull, and log timings
 (
     GrB_Vector *v_output,   // v(i) is the BFS level of node i in the graph
     GrB_Vector *pi_output,  // pi(i) = p if p is the parent of node i.
@@ -380,7 +380,8 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
     GrB_Matrix AT,          // transpose of A (optional; push-only if NULL)
     int64_t s,              // starting node of the BFS
     int64_t max_level,      // optional limit of # levels to search
-    bool vsparse            // if true, v is expected to be very sparse
+    bool vsparse,           // if true, v is expected to be very sparse
+    FILE *file
 )
 {
 
@@ -487,20 +488,22 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
             if (A != NULL && A_format == GxB_BY_COL)
             {
                 // this would result in a pull-only BFS ... exceedingly slow
-                LAGRAPH_ERROR (
-                    "SuiteSparse: AT not provided, so A must be GxB_BY_ROW\n"
-                    "(or provide both A and AT, both in the same format,\n"
-                    "either both GxB_BY_COL or both GxB_BY_ROW)",
-                    GrB_INVALID_VALUE) ;
+fprintf (file, "%% pull only!!\n") ;
+//              LAGRAPH_ERROR (
+//                  "SuiteSparse: AT not provided, so A must be GxB_BY_ROW\n"
+//                  "(or provide both A and AT, both in the same format,\n"
+//                  "either both GxB_BY_COL or both GxB_BY_ROW)",
+//                  GrB_INVALID_VALUE) ;
             }
             if (AT != NULL && AT_format == GxB_BY_ROW)
             {
                 // this would result in a pull-only BFS ... exceedingly slow
-                LAGRAPH_ERROR (
-                    "SuiteSparse: A not provided, so AT must be GxB_BY_COL\n"
-                    "(or provide both A and AT, both in the same format,\n"
-                    "either both GxB_BY_COL or both GxB_BY_ROW)",
-                    GrB_INVALID_VALUE) ;
+fprintf (file, "%% pull only!!\n") ;
+//              LAGRAPH_ERROR (
+//                  "SuiteSparse: A not provided, so AT must be GxB_BY_COL\n"
+//                  "(or provide both A and AT, both in the same format,\n"
+//                  "either both GxB_BY_COL or both GxB_BY_ROW)",
+//                  GrB_INVALID_VALUE) ;
             }
         }
 
@@ -577,6 +580,9 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
     // average node degree
     double d = (n == 0) ? 0 : (((double) nvalA) / (double) n) ;
 
+fprintf (file, "\nk = k+1 ; s{k} = %lu ;\n", s) ;
+fprintf (file, "results{k} = [\n") ;
+
     int64_t nvisited = 0 ;      // # nodes visited so far
     GrB_Index nq = 1 ;          // number of nodes in the current level
 
@@ -648,9 +654,14 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
             }
         }
 
+        bool do_push = use_vxm_with_A ;
+        if (!csr) do_push = !do_push ;
+
         //----------------------------------------------------------------------
         // q = next level of the BFS
         //----------------------------------------------------------------------
+
+double tic [2] ; LAGraph_tic (tic) ;
 
         if (use_vxm_with_A)
         {
@@ -666,6 +677,9 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
             LAGRAPH_OK (GrB_mxv (q, v, NULL, second_semiring, AT, q,
                 LAGraph_desc_oocr)) ;
         }
+
+double time = LAGraph_toc (tic) ;
+fprintf (file, "%d  %16lu %16lu     %g\n", do_push, nq, nvisited, time) ;
 
         //----------------------------------------------------------------------
         // move to next level
@@ -696,7 +710,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
                 int64_t *qx ;
                 LAGRAPH_OK (GxB_Vector_export (&q, &int_type, &n, &nq, &qi,
                     (void **) (&qx), NULL)) ;
-                int nth = LAGRAPH_MIN (nq / (64*1024), nthreads) ;
+                int nth = LAGRAPH_MIN (nq / 8192, nthreads) ;
                 nth = LAGRAPH_MAX (nth, 1) ;
                 #pragma omp parallel for num_threads(nth) schedule(static)
                 for (int64_t k = 0 ; k < nq ; k++)
@@ -711,7 +725,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
                 int32_t *qx ;
                 LAGRAPH_OK (GxB_Vector_export (&q, &int_type, &n, &nq, &qi,
                     (void **) (&qx), NULL)) ;
-                int nth = LAGRAPH_MIN (nq / (64*1024), nthreads) ;
+                int nth = LAGRAPH_MIN (nq / 8192, nthreads) ;
                 nth = LAGRAPH_MAX (nth, 1) ;
                 #pragma omp parallel for num_threads(nth) schedule(static)
                 for (int32_t k = 0 ; k < nq ; k++)
@@ -738,13 +752,6 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
             // count the nodes in the current level
             //------------------------------------------------------------------
 
-            LAGr_Vector_nvals (&nq, q) ;
-
-            #if 0
-            // This is no longer needed, since the first operator for the vxm
-            // (or 2nd operator for mxv) causes the values of A and AT to be
-            // ignored.
-
             // nq = sum (q)
             LAGRAPH_OK (GrB_reduce (&nq, NULL, LAGraph_PLUS_INT64_MONOID,
                 q, NULL)) ;
@@ -761,10 +768,10 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
                 LAGRAPH_OK (GrB_assign (q, q, NULL, true, GrB_ALL, n,
                     LAGraph_desc_ooor)) ;
             }
-            #endif
-
         }
     }
+
+fprintf (file, "] ;\n") ;
 
     //--------------------------------------------------------------------------
     // make v sparse

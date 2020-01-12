@@ -81,16 +81,18 @@
 // in SuiteSparse:GraphBLAS when the matrices in SuiteSparse:GraphBLAS are in
 // their default format (also by row).
 
-// A is a binary square symmetric matrix.  E is the edge incidence matrix of A.
+// A is a square symmetric matrix, of any type.  Its values are ignored.  E is
+// the edge incidence matrix of A (the values of E are also ignored).
 // L=tril(A), and U=triu(A).  See SuiteSparse/GraphBLAS/Demo/tricount.m for a
 // complete definition of each method and the matrices A, E, L, and U, and
 // citations of relevant references.
 
-// All input matrices should have binary values (0 and 1).  Any type will work,
-// but uint32 is recommended for fastest results since that is the type used
-// here for the semiring.  GraphBLAS will do typecasting internally, but that
-// takes extra time.   Results are undefined if the input matrices are not
-// binary, or if self-edges exist.
+// The new GxB_PAIR_INT64 binary operator in SuiteSparse:GraphBLAS v3.2.0 is
+// used in the semiring.  This is the function f(x,y)=1, so the values of A, L,
+// U, and E are not accessed.  They can have any values and any type.  Only the
+// structure of the matrices is used.
+
+// Results are undefined if self-edges exist.
 
 // This code is modified from SuiteSparse/GraphBLAS/Demo/Source/tricount.c.
 // It contains no GxB_* extensions and thus it should work in any GraphBLAS
@@ -108,13 +110,12 @@
 
 GrB_Info LAGraph_tricount   // count # of triangles
 (
-    int64_t *p_ntri,        // # of triangles
-    const int method,       // 0 to 5, see above
+    int64_t *ntri,          // # of triangles
+    const int method,       // 0 to 6, see above
     const GrB_Matrix A,     // adjacency matrix for methods 0, 1, and 2
     const GrB_Matrix E,     // edge incidence matrix for method 0
     const GrB_Matrix L,     // L=tril(A) for methods 2, 3, 5, and 6
-    const GrB_Matrix U,     // U=triu(A) for methods 2, 4, 5, and 6
-    double t [2]            // t [0]: multiply time, t [1]: reduce time
+    const GrB_Matrix U      // U=triu(A) for methods 2, 4, 5, and 6
 )
 {
 
@@ -122,12 +123,20 @@ GrB_Info LAGraph_tricount   // count # of triangles
     // check inputs and initialize
     //--------------------------------------------------------------------------
 
-    double tic [2] ;
-    LAGraph_tic (tic) ;
     GrB_Info info ;
-    int64_t ntri ;
     GrB_Index n, ne ;
     GrB_Matrix S = NULL, C = NULL ;
+
+#if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
+    && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,2,0) )
+    // the PAIR function is f(x,y)=1
+    GrB_Semiring s = GxB_PLUS_PAIR_INT64 ;
+#else
+    GrB_Semiring s = LAGraph_PLUS_TIMES_INT64 ;
+#endif
+    GrB_Monoid sum = LAGraph_PLUS_INT64_MONOID ;
+    GrB_Type type = GrB_INT64 ;
+    GrB_UnaryOp istwo = LAGraph_ISTWO_INT64 ;
 
     //--------------------------------------------------------------------------
     // count triangles
@@ -137,95 +146,68 @@ GrB_Info LAGraph_tricount   // count # of triangles
     {
         case 0:  // minitri:    ntri = nnz (A*E == 2) / 3
 
-            LAGRAPH_OK (GrB_Matrix_nrows (&n, A)) ;
-            LAGRAPH_OK (GrB_Matrix_ncols (&ne, E)) ;
-            LAGRAPH_OK (GrB_Matrix_new (&C, GrB_INT64, n, ne)) ;
-            LAGRAPH_OK (GrB_mxm (C, NULL, NULL, LAGraph_PLUS_TIMES_INT64,
-                A, E, NULL)) ;
-            t [0] = LAGraph_toc (tic) ;
-            LAGraph_tic (tic) ;
-            LAGRAPH_OK (GrB_Matrix_new (&S, GrB_BOOL, n, ne)) ;
-            LAGRAPH_OK (GrB_apply (S, NULL, NULL, LAGraph_ISTWO_INT64,
-                C, NULL)) ;
-            LAGRAPH_OK (GrB_reduce (&ntri, NULL, LAGraph_PLUS_INT64_MONOID,
-                S, NULL)) ;
-            ntri /= 3 ;
+            LAGr_Matrix_nrows (&n, A) ;
+            LAGr_Matrix_ncols (&ne, E) ;
+            LAGr_Matrix_new (&C, type, n, ne) ;
+            LAGr_mxm (C, NULL, NULL, s, A, E, NULL) ;
+            LAGr_Matrix_new (&S, GrB_BOOL, n, ne) ;
+            LAGr_apply (S, NULL, NULL, istwo, C, NULL) ;
+            LAGr_reduce (ntri, NULL, sum, S, NULL) ;
+            (*ntri) /= 3 ;
             break ;
 
         case 1:  // Burkhardt:  ntri = sum (sum ((A^2) .* A)) / 6
 
-            LAGRAPH_OK (GrB_Matrix_nrows (&n, A)) ;
-            LAGRAPH_OK (GrB_Matrix_new (&C, GrB_INT64, n, n)) ;
-            LAGRAPH_OK (GrB_mxm (C, A, NULL, LAGraph_PLUS_TIMES_INT64,
-                A, A, NULL)) ;
-            t [0] = LAGraph_toc (tic) ;
-            LAGraph_tic (tic) ;
-            LAGRAPH_OK (GrB_reduce (&ntri, NULL, LAGraph_PLUS_INT64_MONOID,
-                C, NULL)) ;
-            ntri /= 6 ;
+            LAGr_Matrix_nrows (&n, A) ;
+            LAGr_Matrix_new (&C, type, n, n) ;
+            LAGr_mxm (C, A, NULL, s, A, A, NULL) ;
+            LAGr_reduce (ntri, NULL, sum, C, NULL) ;
+            (*ntri) /= 6 ;
             break ;
 
         case 2:  // Cohen:      ntri = sum (sum ((L * U) .* A)) / 2
 
-            LAGRAPH_OK (GrB_Matrix_nrows (&n, A)) ;
-            LAGRAPH_OK (GrB_Matrix_new (&C, GrB_INT64, n, n)) ;
-            LAGRAPH_OK (GrB_mxm (C, A, NULL, LAGraph_PLUS_TIMES_INT64,
-                L, U, NULL)) ;
-            t [0] = LAGraph_toc (tic) ;
-            LAGraph_tic (tic) ;
-            LAGRAPH_OK (GrB_reduce (&ntri, NULL, LAGraph_PLUS_INT64_MONOID,
-                C, NULL)) ;
-            ntri /= 2 ;
+            LAGr_Matrix_nrows (&n, A) ;
+            LAGr_Matrix_new (&C, type, n, n) ;
+            LAGr_mxm (C, A, NULL, s, L, U, NULL) ;
+            LAGr_reduce (ntri, NULL, sum, C, NULL) ;
+            (*ntri) /= 2 ;
             break ;
 
-        case 3:  // Sandia:    ntri = sum (sum ((L * L) .* L))
+        case 3:  // Sandia:     ntri = sum (sum ((L * L) .* L))
 
-            LAGRAPH_OK (GrB_Matrix_nrows (&n, L)) ;
-            LAGRAPH_OK (GrB_Matrix_new (&C, GrB_INT64, n, n)) ;
-            LAGRAPH_OK (GrB_mxm (C, L, NULL, LAGraph_PLUS_TIMES_INT64,
-                L, L, NULL)) ;
-            t [0] = LAGraph_toc (tic) ;
-            LAGraph_tic (tic) ;
-            LAGRAPH_OK (GrB_reduce (&ntri, NULL, LAGraph_PLUS_INT64_MONOID,
-                C, NULL)) ;
+            // using the masked saxpy3 method
+            LAGr_Matrix_nrows (&n, L) ;
+            LAGr_Matrix_new (&C, type, n, n) ;
+            LAGr_mxm (C, L, NULL, s, L, L, NULL) ;
+            LAGr_reduce (ntri, NULL, sum, C, NULL) ;
             break ;
 
         case 4:  // Sandia2:    ntri = sum (sum ((U * U) .* U))
 
-            LAGRAPH_OK (GrB_Matrix_nrows (&n, U)) ;
-            LAGRAPH_OK (GrB_Matrix_new (&C, GrB_INT64, n, n)) ;
-            LAGRAPH_OK (GrB_mxm (C, U, NULL, LAGraph_PLUS_TIMES_INT64,
-                U, U, NULL)) ;
-            t [0] = LAGraph_toc (tic) ;
-            LAGraph_tic (tic) ;
-            LAGRAPH_OK (GrB_reduce (&ntri, NULL, LAGraph_PLUS_INT64_MONOID,
-                C, NULL)) ;
+            // using the masked saxpy3 method
+            LAGr_Matrix_nrows (&n, U) ;
+            LAGr_Matrix_new (&C, type, n, n) ;
+            LAGr_mxm (C, U, NULL, s, U, U, NULL) ;
+            LAGr_reduce (ntri, NULL, sum, C, NULL) ;
             break ;
 
         case 5:  // SandiaDot:  ntri = sum (sum ((L * U') .* L))
 
             // using the masked dot product (very efficient)
-            LAGRAPH_OK (GrB_Matrix_nrows (&n, U)) ;
-            LAGRAPH_OK (GrB_Matrix_new (&C, GrB_INT64, n, n)) ;
-            LAGRAPH_OK (GrB_mxm (C, L, NULL, LAGraph_PLUS_TIMES_INT64,
-                L, U, LAGraph_desc_otoo)) ;
-            t [0] = LAGraph_toc (tic) ;
-            LAGraph_tic (tic) ;
-            LAGRAPH_OK (GrB_reduce (&ntri, NULL, LAGraph_PLUS_INT64_MONOID,
-                C, NULL)) ;
+            LAGr_Matrix_nrows (&n, U) ;
+            LAGr_Matrix_new (&C, type, n, n) ;
+            LAGr_mxm (C, L, NULL, s, L, U, LAGraph_desc_otoo) ;
+            LAGr_reduce (ntri, NULL, sum, C, NULL) ;
             break ;
 
         case 6:  // SandiaDot2: ntri = sum (sum ((U * L') .* U))
 
             // using the masked dot product (very efficient)
-            LAGRAPH_OK (GrB_Matrix_nrows (&n, U)) ;
-            LAGRAPH_OK (GrB_Matrix_new (&C, GrB_INT64, n, n)) ;
-            LAGRAPH_OK (GrB_mxm (C, U, NULL, LAGraph_PLUS_TIMES_INT64,
-                U, L, LAGraph_desc_otoo)) ;
-            t [0] = LAGraph_toc (tic) ;
-            LAGraph_tic (tic) ;
-            LAGRAPH_OK (GrB_reduce (&ntri, NULL, LAGraph_PLUS_INT64_MONOID,
-                C, NULL)) ;
+            LAGr_Matrix_nrows (&n, U) ;
+            LAGr_Matrix_new (&C, type, n, n) ;
+            LAGr_mxm (C, U, NULL, s, U, L, LAGraph_desc_otoo) ;
+            LAGr_reduce (ntri, NULL, sum, C, NULL) ;
             break ;
 
         default:    // invalid method
@@ -239,8 +221,6 @@ GrB_Info LAGraph_tricount   // count # of triangles
     //--------------------------------------------------------------------------
 
     LAGRAPH_FREE_ALL ;
-    t [1] = LAGraph_toc (tic) ;
-    (*p_ntri) = ntri ;
     return (GrB_SUCCESS) ;
 }
 

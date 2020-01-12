@@ -46,7 +46,7 @@
 
 #define LAGRAPH_FREE_ALL    \
 {                           \
-    GrB_free (&Support) ;   \
+    GrB_free (&thunk) ;     \
     GrB_free (&C) ;         \
     GrB_free (&M) ;         \
     GrB_free (&A) ;         \
@@ -85,9 +85,9 @@ int main (int argc, char **argv)
 
     #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
         && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,0,1) )
-    GxB_Scalar Support = NULL ;
+    GxB_Scalar thunk = NULL ;
     #else
-    GrB_Vector Support = NULL ;     // unused, for LAGRAPH_FREE_ALL
+    GrB_Vector thunk = NULL ;     // unused, for LAGRAPH_FREE_ALL
     #endif
 
     GrB_Index *I = NULL, *J = NULL ;
@@ -189,6 +189,8 @@ int main (int argc, char **argv)
     // construct L and U
     //--------------------------------------------------------------------------
 
+    int nthreads_max = LAGraph_get_nthreads ( ) ;
+
     #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
         && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,0,1) )
 
@@ -196,24 +198,28 @@ int main (int argc, char **argv)
         LAGraph_tic (tic) ;
         int64_t k = 1 ;
         LAGRAPH_OK (GrB_Matrix_new (&U, GrB_INT64, n, n)) ;
-        LAGRAPH_OK (GxB_Scalar_new (&Support, GrB_INT64)) ;
-        LAGRAPH_OK (GxB_Scalar_setElement (Support, k)) ;
-        LAGRAPH_OK (GxB_select (U, NULL, NULL, GxB_TRIU, A, Support, NULL)) ;
+        LAGRAPH_OK (GxB_Scalar_new (&thunk, GrB_INT64)) ;
+        LAGRAPH_OK (GxB_Scalar_setElement (thunk, k)) ;
+        LAGRAPH_OK (GxB_select (U, NULL, NULL, GxB_TRIU, A, thunk, NULL)) ;
 
         LAGRAPH_OK (GrB_Matrix_nvals (&nedges, U)) ;
         printf ("n %.16g # edges %.16g\n", (double) n, (double) nedges) ;
         double t_U = LAGraph_toc (tic) ;
-        printf ("U=triu(A) time:  %14.6f sec\n", t_U) ;
+        printf ("U=triu(A) time:  %14.6f sec (%d threads)\n", t_U, 
+            nthreads_max) ;
 
         // L = tril (A,-1), for methods 2 and 4
         LAGraph_tic (tic) ;
         LAGRAPH_OK (GrB_Matrix_new (&L, GrB_INT64, n, n)) ;
         k = -1 ;
-        LAGRAPH_OK (GxB_Scalar_setElement (Support, k)) ;
-        LAGRAPH_OK (GxB_select (L, NULL, NULL, GxB_TRIL, A, Support, NULL)) ;
+        LAGRAPH_OK (GxB_Scalar_setElement (thunk, k)) ;
+        LAGRAPH_OK (GxB_select (L, NULL, NULL, GxB_TRIL, A, thunk, NULL)) ;
 
         double t_L = LAGraph_toc (tic) ;
-        printf ("L=tril(A) time:  %14.6f sec\n", t_L) ;
+        printf ("L=tril(A) time:  %14.6f sec (%d threads)\n", t_L, 
+            nthreads_max) ;
+
+        double t_LU = t_L + t_U ;
 
     #else
 
@@ -259,6 +265,9 @@ int main (int argc, char **argv)
         double t_LU = LAGraph_toc (tic) ;
         printf ("L and U   time:  %14.6f sec\n", t_LU) ;
 
+        double t_L = t_LU ;
+        double t_U = t_LU ;
+
     #endif
 
     // E is not constructed (required for method 0, which is very slow)
@@ -267,23 +276,21 @@ int main (int argc, char **argv)
     // triangle counting
     //--------------------------------------------------------------------------
 
-    int nthreads_max = LAGraph_get_nthreads ( ) ;
-
     // warmup for more accurate timing
     int64_t ntriangles ;
-    double t [2] ;
-    LAGRAPH_OK (LAGraph_tricount (&ntriangles, 5, A, E, L, U, t)) ;
+    LAGraph_tic (tic) ;
+    LAGRAPH_OK (LAGraph_tricount (&ntriangles, 5, A, E, L, U)) ;
     printf ("# of triangles: %" PRId64 "\n", ntriangles) ;
-    double ttot = t [0] + t [1] ;
-    printf ("nthreads: %3d time: %12.6f rate: %6.2f", nthreads_max, ttot,
-        1e-6 * nedges / ttot) ;
+    double ttot = LAGraph_toc (tic) + t_LU ;
+    printf ("nthreads: %3d time: %12.6f rate: %6.2f (SandiaDot)",
+        nthreads_max, ttot, 1e-6 * nedges / ttot) ;
 
-#if 0
+#if 1
     double t_best = INFINITY ;
     int method_best = -1 ;
     int nthreads_best = -1 ;
 
-    // try methods 3 to 6
+    // try all methods 3 to 6
     for (int method = 3 ; method <= 6 ; method++)
     {
 
@@ -295,8 +302,23 @@ int main (int argc, char **argv)
         {
             LAGraph_set_nthreads (nthreads) ;
             int64_t nt ;
-            LAGRAPH_OK (LAGraph_tricount (&nt, method, A, E, L, U, t)) ;
-            double ttot = t [0] + t [1] ;
+            LAGraph_tic (tic) ;
+            LAGRAPH_OK (LAGraph_tricount (&nt, method, A, E, L, U)) ;
+            double ttot = LAGraph_toc (tic) ;
+
+            switch (method)
+            {
+                case 0: break ;                 // TODO add time to construct E
+                case 1: break ;                 // Burkhardt: no prep
+                case 2: ttot += t_LU ; break ;  // Cohen: need L and U
+                case 3: ttot += t_L ;  break ;  // Sandia: need just L
+                case 4: ttot += t_U ;  break ;  // Sandia2: need just U
+                case 5: ttot += t_LU ; break ;  // SandiaDot: need L and U
+                case 6: ttot += t_LU ; break ;  // SandiaDot2: need L and U
+                default:
+                        printf ("unknown method!\n") ;
+            }
+
             printf ("nthreads: %3d time: %12.6f rate: %6.2f", nthreads, ttot,
                 1e-6 * nedges / ttot) ;
             if (nthreads == 1)

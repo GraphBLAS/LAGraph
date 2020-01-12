@@ -939,8 +939,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
     const GrB_Matrix A,     // adjacency matrix for methods 0, 1, and 2
     const GrB_Matrix E,     // edge incidence matrix for method 0
     const GrB_Matrix L,     // L=tril(A) for methods 2, 4, and 4
-    const GrB_Matrix U,     // U=triu(A) for methods 2, 3, and 5
-    double t [2]            // t [0]: multiply time, t [1]: reduce time
+    const GrB_Matrix U      // U=triu(A) for methods 2, 3, and 5
 ) ;
 
 GrB_Info LAGraph_ktruss         // compute the k-truss of a graph
