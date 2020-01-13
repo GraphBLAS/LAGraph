@@ -63,7 +63,7 @@
 // format; just the underlying algorithms employed inside SuiteSparse:GraphBLAS
 // will differ (dot product vs saxpy, for example).  If L and U are in CSC
 // format, then the "Dot" methods would use an outer product approach, which is
-// slow in SuiteSparse:GraphBLAS.
+// slow in SuiteSparse:GraphBLAS (requiring an explicit transpose).
 
 // Methods 1 and 2 are slower than methods 3 to 6 and take more memory.
 // Methods 3 to 6 take a little less memory than methods 1 and 2, are by far
@@ -78,9 +78,10 @@
 // their default format (also by row).
 
 // The new GxB_PAIR_INT64 binary operator in SuiteSparse:GraphBLAS v3.2.0 is
-// used in the semiring.  This is the function f(x,y)=1, so the values of A, L,
-// and U are not accessed.  They can have any values and any type.  Only the
-// structure of the matrices is used.
+// used in the semiring, if available.  This is the function f(x,y)=1, so the
+// values of A, L, and U are not accessed.  They can have any values and any
+// type.  Only the structure of the matrices is used.  Otherwise, without this
+// operator, the input matrix A must be binary.
 
 // Reference: Wolf, Deveci, Berry, Hammond, Rajamanickam, 'Fast linear algebra-
 // based triangle counting with KokkosKernels', IEEE HPEC'17,
@@ -239,10 +240,12 @@ GrB_Info LAGraph_tricount   // count # of triangles
         #if 0
         // case 0:  // minitri:    ntri = nnz (A*E == 2) / 3
 
-            // TODO need to build E
+            // This method requires the incidence matrix E.  It is very slow
+            // compared to the other methods.  The construction of E was done
+            // in the Test/Tricount/*.c driver, and it hasn't been added here.
             LAGr_Matrix_ncols (&ne, E) ;
             LAGr_free (&C) ;
-            LAGr_Matrix_new (&C, type, n, ne) ;
+            LAGr_Matrix_new (&C, GrB_INT64, n, ne) ;
             LAGr_mxm (C, NULL, NULL, s, A, E, NULL) ;
             LAGr_Matrix_new (&S, GrB_BOOL, n, ne) ;
             LAGr_apply (S, NULL, NULL, LAGraph_ISTWO_INT64, C, NULL) ;
@@ -284,7 +287,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
 
         case 5:  // SandiaDot:  ntri = sum (sum ((L * U') .* L))
 
-            // using the masked dot product (very efficient)
+            // using the masked dot product
             LAGRAPH_OK (tricount_prep (&L, &U, A)) ;
             LAGr_mxm (C, L, NULL, s, L, U, LAGraph_desc_otoo) ;
             LAGr_reduce (ntri, NULL, sum, C, NULL) ;
@@ -292,7 +295,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
 
         case 6:  // SandiaDot2: ntri = sum (sum ((U * L') .* U))
 
-            // using the masked dot product (very efficient)
+            // using the masked dot product
             LAGRAPH_OK (tricount_prep (&L, &U, A)) ;
             LAGr_mxm (C, U, NULL, s, U, L, LAGraph_desc_otoo) ;
             LAGr_reduce (ntri, NULL, sum, C, NULL) ;

@@ -44,7 +44,7 @@
 // cctest symmetric-matrixmarketfile.mtx 1
 
 #include "LAGraph.h"
-#include <sys/time.h>
+// #include <sys/time.h>
 
 #define LAGRAPH_FREE_ALL    \
 {                           \
@@ -52,12 +52,14 @@
     GrB_free (&A) ;         \
 }
 
+/*
 double to_sec(struct timeval t1, struct timeval t2)
 {
     return
         (t2.tv_sec  - t1.tv_sec ) + 
         (t2.tv_usec - t1.tv_usec) * 1e-6;
 }
+*/
 
 GrB_Index countCC (GrB_Vector f, GrB_Index n)
 {
@@ -151,11 +153,11 @@ int main (int argc, char **argv)
     LAGRAPH_FREE (desc) ;
 
     #define NTRIALS 5
-    int nthreads_max;
-    int nthread_list [NTRIALS] = { 1, 4, 16, 20, 40 } ;
-    struct timeval t1, t2;
+    int nthreads_max = LAGraph_get_nthreads ( ) ;
+    int nthread_list [20] = { 1, 4, 8, 10, 16, 20, 40 } ;
+    double tic [2], t1, t2 ;
 
-    LAGRAPH_OK (GxB_get (GxB_NTHREADS, &nthreads_max)) ;
+    bool sanitize = false ;
 
     GrB_Index nCC;
     for (int trial = 0 ; trial < NTRIALS ; trial++)
@@ -163,24 +165,25 @@ int main (int argc, char **argv)
         int nthreads = nthread_list [trial] ;
         if (nthreads > nthreads_max) break ;
         LAGraph_set_nthreads (nthreads) ;
-        printf("number of threads: %d\n", nthreads) ;
 
-        gettimeofday (&t1, 0) ;
-        LAGRAPH_OK (LAGraph_cc_fastsv (&result, A, true)) ;
-        gettimeofday (&t2, 0) ;
+        LAGraph_tic (tic) ;
+        LAGRAPH_OK (LAGraph_cc_fastsv (&result, A, sanitize)) ;
+        t1 = LAGraph_toc (tic) ;
+
+        nCC = countCC (result, n) ;
+        printf("FastSV: threads: %2d time: %10.4f  # of CC: %lu\n",
+            nthreads, t1, nCC) ;
+
+        /*
+        LAGraph_tic (tic) ;
+        LAGRAPH_OK (LAGraph_cc_boruvka (&result, A, sanitize)) ;
+        t2 = LAGraph_toc (tic) ;
 
         nCC = countCC (result, n) ;
         printf("number of CCs: %lu\n", nCC) ;
-        printf("FastSV: %f\n", to_sec (t1, t2)) ;
-
-        gettimeofday (&t1, 0) ;
-        LAGRAPH_OK (LAGraph_cc_boruvka (&result, A, true)) ;
-        gettimeofday (&t2, 0) ;
-
-        nCC = countCC (result, n) ;
-        printf("number of CCs: %lu\n", nCC) ;
-        printf("Boruvka: %f\n", to_sec (t1, t2)) ;
+        printf("Boruvka: %f\n", t2) ;
         printf("\n");
+        */
     }
 
     LAGRAPH_FREE_ALL ;

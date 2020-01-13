@@ -1,0 +1,5 @@
+#!/bin/sh
+./build/cctest ~/roadNet-CA.mtx
+./build/cctest ~/soc-Pokec.grb
+
+

@@ -147,7 +147,7 @@ int main (int argc, char **argv)
     printf ("\nread A time:     %14.6f sec\n", t_read) ;
 
     LAGraph_tic (tic) ;
-    GrB_Index n, nedges ;
+    GrB_Index n, nvals ;
     LAGr_Matrix_nrows (&n, C) ;
 
     // A = spones (C), and typecast to int64
@@ -166,29 +166,42 @@ int main (int argc, char **argv)
     // make A symmetric (A = spones (A+A')) and remove self edges (via M)
     LAGr_eWiseAdd (A, M, NULL, LAGraph_LOR_INT64, A, A, LAGraph_desc_otcr) ;
     GrB_free (&M) ;
-    LAGr_Matrix_nvals (&nedges, A) ;
+    LAGr_Matrix_nvals (&nvals, A) ;
 
     double t_process = LAGraph_toc (tic) ;
     printf ("process A time:  %14.6f sec\n", t_process) ;
+    printf ("# of nodes: %lu   number of entries: %lu\n", n, nvals) ;
 
-//  GxB_print (A, 3) ;
+    //  GxB_print (A, 3) ;
 
     int nthreads_max = LAGraph_get_nthreads ( ) ;
+
+    int ntest = 4 ;
+    int Nthreads [6+1] = { 0,
+        1, 2, 4, 8 } ;              // slash
+
+    printf ("threads to test: ") ;
+    for (int t = 1 ; t <= ntest ; t++)
+    {
+        int nthreads = Nthreads [t] ;
+        if (nthreads > nthreads_max) break ;
+        printf (" %d", nthreads) ;
+    }
+    printf ("\n") ;
 
     //--------------------------------------------------------------------------
     // triangle counting
     //--------------------------------------------------------------------------
 
-    // warmup for more accurate timing
+    // warmup for more accurate timing, and also print # of triangles
     int64_t ntriangles ;
     LAGraph_tic (tic) ;
     LAGRAPH_OK (LAGraph_tricount (&ntriangles, 5, A)) ;
     printf ("# of triangles: %" PRId64 "\n", ntriangles) ;
     double ttot = LAGraph_toc (tic) ;
     printf ("nthreads: %3d time: %12.6f rate: %6.2f (SandiaDot)",
-        nthreads_max, ttot, 1e-6 * nedges / ttot) ;
+        nthreads_max, ttot, 1e-6 * nvals / ttot) ;
 
-#if 1
     double t_best = INFINITY ;
     int method_best = -1 ;
     int nthreads_best = -1 ;
@@ -201,16 +214,18 @@ int main (int argc, char **argv)
         print_method (method) ;
 
         double t_sequential ;
-        for (int nthreads = 1 ; nthreads <= nthreads_max ; )
+        for (int t = 1 ; t <= ntest ; t++)
         {
+            int nthreads = Nthreads [t] ;
+            if (nthreads > nthreads_max) break ;
             LAGraph_set_nthreads (nthreads) ;
-            int64_t nt ;
+            int64_t nt2 ;
             LAGraph_tic (tic) ;
-            LAGRAPH_OK (LAGraph_tricount (&nt, method, A)) ;
+            LAGRAPH_OK (LAGraph_tricount (&nt2, method, A)) ;
             double ttot = LAGraph_toc (tic) ;
 
             printf ("nthreads: %3d time: %12.6f rate: %6.2f", nthreads, ttot,
-                1e-6 * nedges / ttot) ;
+                1e-6 * nvals / ttot) ;
             if (nthreads == 1)
             {
                 t_sequential = ttot ;
@@ -220,7 +235,7 @@ int main (int argc, char **argv)
                 printf (" speedup: %6.2f", t_sequential / ttot) ;
             }
             printf ("\n") ;
-            if (nt != ntriangles) { printf ("Test failure!\n") ; abort ( ) ; }
+            if (nt2 != ntriangles) { printf ("Test failure!\n") ; abort ( ) ; }
 
             if (ttot < t_best)
             {
@@ -228,26 +243,14 @@ int main (int argc, char **argv)
                 method_best = method ;
                 nthreads_best = nthreads ;
             }
-
-            if (nthreads != nthreads_max && 2 * nthreads > nthreads_max)
-            {
-                nthreads = nthreads_max ;
-            }
-            else
-            {
-                nthreads *= 2 ;
-            }
         }
     }
 
     printf ("\nBest method:\n") ;
     printf ("nthreads: %3d time: %12.6f rate: %6.2f ", nthreads_best, t_best,
-        1e-6 * nedges / t_best) ;
+        1e-6 * nvals / t_best) ;
     print_method (method_best) ;
-#endif
     LAGRAPH_FREE_ALL ;
     LAGraph_finalize ( ) ;
-
-    printf ("\n") ;
 }
 
