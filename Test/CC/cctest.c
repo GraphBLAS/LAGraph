@@ -48,6 +48,7 @@
 
 #define LAGRAPH_FREE_ALL    \
 {                           \
+    GrB_free (&S) ;         \
     GrB_free (&result) ;    \
     GrB_free (&A) ;         \
 }
@@ -78,8 +79,8 @@ GrB_Index countCC (GrB_Vector f, GrB_Index n)
 int main (int argc, char **argv)
 {
     GrB_Info info ;
-    GrB_Matrix A, S ;
-    GrB_Vector result ;
+    GrB_Matrix A = NULL, S = NULL ;
+    GrB_Vector result = NULL ;
     GrB_init (GrB_NONBLOCKING) ;
     LAGRAPH_OK (GxB_set (GxB_FORMAT, GxB_BY_ROW)) ;
 
@@ -172,10 +173,18 @@ int main (int argc, char **argv)
         LAGraph_tic (tic) ;
         LAGRAPH_OK (LAGraph_cc_fastsv (&result, A, sanitize)) ;
         t1 = LAGraph_toc (tic) ;
-
         nCC = countCC (result, n) ;
-        printf("FastSV: threads: %2d time: %10.4f  # of CC: %lu\n",
+        printf("FastSV:  threads: %2d time: %10.4f  # of CC: %lu\n",
             nthreads, t1, nCC) ;
+        LAGr_free (&result) ;
+
+        LAGraph_tic (tic) ;
+        LAGRAPH_OK (LAGraph_cc_fastsv2 (&result, A, sanitize)) ;
+        t1 = LAGraph_toc (tic) ;
+        nCC = countCC (result, n) ;
+        printf("FastSV2: threads: %2d time: %10.4f  # of CC: %lu\n",
+            nthreads, t1, nCC) ;
+        LAGr_free (&result) ;
 
         /*
         LAGraph_tic (tic) ;
@@ -185,8 +194,8 @@ int main (int argc, char **argv)
         nCC = countCC (result, n) ;
         printf("number of CCs: %lu\n", nCC) ;
         printf("Boruvka: %f\n", t2) ;
-        printf("\n");
         */
+        printf("\n");
     }
 
     LAGRAPH_FREE_ALL ;

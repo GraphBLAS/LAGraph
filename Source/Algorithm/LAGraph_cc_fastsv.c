@@ -139,3 +139,4 @@ GrB_Info LAGraph_cc_fastsv
     LAGRAPH_OK (GrB_free (&sel2ndMin));
     return GrB_SUCCESS;
 }
+
