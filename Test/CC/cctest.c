@@ -143,6 +143,9 @@ int main (int argc, char **argv)
     }
     ///////////
     LAGRAPH_OK (GrB_Matrix_nrows (&n, A)) ;
+    GrB_Index nvals ;
+    LAGr_Matrix_nvals (&nvals, A) ;
+    printf ("# of nodes: %lu  # of edges: %lu\n", n, nvals) ;
 
     GrB_Descriptor desc = 0 ;
     LAGRAPH_OK (GrB_Descriptor_new(&desc)) ;
