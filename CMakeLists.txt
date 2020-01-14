@@ -148,8 +148,7 @@ if ( "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -std=c11 -lm -Wno-pragmas " )
     # check all warnings:
 #   set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -Wall -Wextra -Wpedantic -Werror " )
-    # TODO -g is on
-    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -g " )
+#   set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -g " )
     if ( CMAKE_C_COMPILER_VERSION VERSION_LESS 4.9 )
         message ( FATAL_ERROR "gcc version must be at least 4.9" )
     endif ( )
