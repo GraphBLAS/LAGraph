@@ -1,0 +1,1404 @@
+matrix: /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron.grb
+sources: /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 30.9191 sec
+input graph: nodes: 134217726 edges: 4223264644 nthreads 40
+
+Trial 0 : source node: 2338012
+SSSP1 (select)  time:      28.3923 (sec), rate:      148.747 (1e6 edges/sec)
+SSSP11 (select)  time:      27.8803 (sec), rate:      151.479 (1e6 edges/sec)
+SSSP2 (select)  time:      28.3689 (sec), rate:      148.869 (1e6 edges/sec)
+
+Trial 1 : source node: 31997659
+SSSP1 (select)  time:      27.7876 (sec), rate:      151.984 (1e6 edges/sec)
+SSSP11 (select)  time:      27.6466 (sec), rate:      152.759 (1e6 edges/sec)
+SSSP2 (select)  time:       27.795 (sec), rate:      151.943 (1e6 edges/sec)
+
+Trial 2 : source node: 23590940
+SSSP1 (select)  time:      26.9049 (sec), rate:       156.97 (1e6 edges/sec)
+SSSP11 (select)  time:      27.1225 (sec), rate:      155.711 (1e6 edges/sec)
+SSSP2 (select)  time:      28.2577 (sec), rate:      149.455 (1e6 edges/sec)
+
+Trial 3 : source node: 43400604
+SSSP1 (select)  time:      28.2396 (sec), rate:      149.551 (1e6 edges/sec)
+SSSP11 (select)  time:      28.2151 (sec), rate:      149.681 (1e6 edges/sec)
+SSSP2 (select)  time:      28.7653 (sec), rate:      146.818 (1e6 edges/sec)
+
+Trial 4 : source node: 75337937
+SSSP1 (select)  time:      26.9879 (sec), rate:      156.487 (1e6 edges/sec)
+SSSP11 (select)  time:       26.905 (sec), rate:      156.969 (1e6 edges/sec)
+SSSP2 (select)  time:      26.9831 (sec), rate:      156.515 (1e6 edges/sec)
+
+Trial 5 : source node: 169867
+SSSP1 (select)  time:      27.9773 (sec), rate:      150.953 (1e6 edges/sec)
+SSSP11 (select)  time:      27.7101 (sec), rate:      152.409 (1e6 edges/sec)
+SSSP2 (select)  time:      28.2092 (sec), rate:      149.712 (1e6 edges/sec)
+
+Trial 6 : source node: 104041220
+SSSP1 (select)  time:      27.9021 (sec), rate:       151.36 (1e6 edges/sec)
+SSSP11 (select)  time:      28.0142 (sec), rate:      150.754 (1e6 edges/sec)
+SSSP2 (select)  time:      28.0426 (sec), rate:      150.602 (1e6 edges/sec)
+
+Trial 7 : source node: 94177942
+SSSP1 (select)  time:      28.2383 (sec), rate:      149.558 (1e6 edges/sec)
+SSSP11 (select)  time:      28.3768 (sec), rate:      148.828 (1e6 edges/sec)
+SSSP2 (select)  time:      28.5577 (sec), rate:      147.885 (1e6 edges/sec)
+
+Trial 8 : source node: 32871357
+SSSP1 (select)  time:      27.6174 (sec), rate:       152.92 (1e6 edges/sec)
+SSSP11 (select)  time:      27.7504 (sec), rate:      152.187 (1e6 edges/sec)
+SSSP2 (select)  time:      28.1461 (sec), rate:      150.048 (1e6 edges/sec)
+
+Trial 9 : source node: 56230002
+SSSP1 (select)  time:      28.3586 (sec), rate:      148.924 (1e6 edges/sec)
+SSSP11 (select)  time:       28.362 (sec), rate:      148.906 (1e6 edges/sec)
+SSSP2 (select)  time:      28.6276 (sec), rate:      147.524 (1e6 edges/sec)
+
+Trial 10 : source node: 69883037
+SSSP1 (select)  time:       28.972 (sec), rate:      145.771 (1e6 edges/sec)
+SSSP11 (select)  time:      28.8537 (sec), rate:      146.368 (1e6 edges/sec)
+SSSP2 (select)  time:      29.0658 (sec), rate:        145.3 (1e6 edges/sec)
+
+Trial 11 : source node: 9346345
+SSSP1 (select)  time:      28.3608 (sec), rate:      148.912 (1e6 edges/sec)
+SSSP11 (select)  time:      28.0859 (sec), rate:      150.369 (1e6 edges/sec)
+SSSP2 (select)  time:      28.4265 (sec), rate:      148.568 (1e6 edges/sec)
+
+Trial 12 : source node: 48915358
+SSSP1 (select)  time:      28.1919 (sec), rate:      149.804 (1e6 edges/sec)
+SSSP11 (select)  time:      27.9793 (sec), rate:      150.942 (1e6 edges/sec)
+SSSP2 (select)  time:      28.1375 (sec), rate:      150.094 (1e6 edges/sec)
+
+Trial 13 : source node: 122571173
+SSSP1 (select)  time:      27.8241 (sec), rate:      151.785 (1e6 edges/sec)
+SSSP11 (select)  time:      27.6889 (sec), rate:      152.526 (1e6 edges/sec)
+SSSP2 (select)  time:      27.7437 (sec), rate:      152.224 (1e6 edges/sec)
+
+Trial 14 : source node: 6183279
+SSSP1 (select)  time:      27.7517 (sec), rate:       152.18 (1e6 edges/sec)
+SSSP11 (select)  time:       27.463 (sec), rate:       153.78 (1e6 edges/sec)
+SSSP2 (select)  time:      27.8577 (sec), rate:      151.601 (1e6 edges/sec)
+
+Trial 15 : source node: 86323663
+SSSP1 (select)  time:       27.122 (sec), rate:      155.713 (1e6 edges/sec)
+SSSP11 (select)  time:      27.1607 (sec), rate:      155.491 (1e6 edges/sec)
+SSSP2 (select)  time:      27.1467 (sec), rate:      155.572 (1e6 edges/sec)
+
+Trial 16 : source node: 106725780
+SSSP1 (select)  time:      27.2216 (sec), rate:      155.144 (1e6 edges/sec)
+SSSP11 (select)  time:      27.3447 (sec), rate:      154.446 (1e6 edges/sec)
+SSSP2 (select)  time:      27.4532 (sec), rate:      153.835 (1e6 edges/sec)
+
+Trial 17 : source node: 92389938
+SSSP1 (select)  time:      29.3844 (sec), rate:      143.725 (1e6 edges/sec)
+SSSP11 (select)  time:       29.027 (sec), rate:      145.494 (1e6 edges/sec)
+SSSP2 (select)  time:      29.3598 (sec), rate:      143.845 (1e6 edges/sec)
+
+Trial 18 : source node: 16210738
+SSSP1 (select)  time:      27.8075 (sec), rate:      151.875 (1e6 edges/sec)
+SSSP11 (select)  time:      27.6028 (sec), rate:      153.001 (1e6 edges/sec)
+SSSP2 (select)  time:      27.7434 (sec), rate:      152.226 (1e6 edges/sec)
+
+Trial 19 : source node: 59816700
+SSSP1 (select)  time:       27.674 (sec), rate:      152.607 (1e6 edges/sec)
+SSSP11 (select)  time:      27.6177 (sec), rate:      152.919 (1e6 edges/sec)
+SSSP2 (select)  time:      27.8396 (sec), rate:        151.7 (1e6 edges/sec)
+
+Trial 20 : source node: 111669929
+SSSP1 (select)  time:      28.4465 (sec), rate:      148.463 (1e6 edges/sec)
+SSSP11 (select)  time:      27.9649 (sec), rate:       151.02 (1e6 edges/sec)
+SSSP2 (select)  time:      28.3789 (sec), rate:      148.817 (1e6 edges/sec)
+
+Trial 21 : source node: 102831411
+SSSP1 (select)  time:      29.9694 (sec), rate:      140.919 (1e6 edges/sec)
+SSSP11 (select)  time:      31.2327 (sec), rate:      135.219 (1e6 edges/sec)
+SSSP2 (select)  time:      28.9263 (sec), rate:      146.001 (1e6 edges/sec)
+
+Trial 22 : source node: 113384800
+SSSP1 (select)  time:      27.2512 (sec), rate:      154.975 (1e6 edges/sec)
+SSSP11 (select)  time:      26.7432 (sec), rate:      157.919 (1e6 edges/sec)
+SSSP2 (select)  time:      27.1527 (sec), rate:      155.538 (1e6 edges/sec)
+
+Trial 23 : source node: 43872564
+SSSP1 (select)  time:      28.2235 (sec), rate:      149.636 (1e6 edges/sec)
+SSSP11 (select)  time:      27.9911 (sec), rate:      150.879 (1e6 edges/sec)
+SSSP2 (select)  time:      28.5994 (sec), rate:       147.67 (1e6 edges/sec)
+
+Trial 24 : source node: 80508827
+SSSP1 (select)  time:      27.4277 (sec), rate:      153.978 (1e6 edges/sec)
+SSSP11 (select)  time:      27.1923 (sec), rate:      155.311 (1e6 edges/sec)
+SSSP2 (select)  time:      27.4133 (sec), rate:      154.059 (1e6 edges/sec)
+
+Trial 25 : source node: 26105648
+SSSP1 (select)  time:      27.4891 (sec), rate:      153.634 (1e6 edges/sec)
+SSSP11 (select)  time:      27.2281 (sec), rate:      155.107 (1e6 edges/sec)
+SSSP2 (select)  time:      27.5422 (sec), rate:      153.338 (1e6 edges/sec)
+
+Trial 26 : source node: 8807516
+SSSP1 (select)  time:      27.1134 (sec), rate:      155.763 (1e6 edges/sec)
+SSSP11 (select)  time:       27.098 (sec), rate:      155.852 (1e6 edges/sec)
+SSSP2 (select)  time:      27.3506 (sec), rate:      154.412 (1e6 edges/sec)
+
+Trial 27 : source node: 118452455
+SSSP1 (select)  time:      28.3451 (sec), rate:      148.995 (1e6 edges/sec)
+SSSP11 (select)  time:      27.9404 (sec), rate:      151.153 (1e6 edges/sec)
+SSSP2 (select)  time:       28.526 (sec), rate:       148.05 (1e6 edges/sec)
+
+Trial 28 : source node: 121818859
+SSSP1 (select)  time:        27.73 (sec), rate:        152.3 (1e6 edges/sec)
+SSSP11 (select)  time:      27.7299 (sec), rate:        152.3 (1e6 edges/sec)
+SSSP2 (select)  time:      28.0451 (sec), rate:      150.588 (1e6 edges/sec)
+
+Trial 29 : source node: 42361928
+SSSP1 (select)  time:      27.5029 (sec), rate:      153.557 (1e6 edges/sec)
+SSSP11 (select)  time:      27.2181 (sec), rate:      155.164 (1e6 edges/sec)
+SSSP2 (select)  time:      27.6615 (sec), rate:      152.676 (1e6 edges/sec)
+
+Trial 30 : source node: 29493053
+SSSP1 (select)  time:      26.9275 (sec), rate:      156.838 (1e6 edges/sec)
+SSSP11 (select)  time:      27.0541 (sec), rate:      156.105 (1e6 edges/sec)
+SSSP2 (select)  time:      26.9484 (sec), rate:      156.717 (1e6 edges/sec)
+
+Trial 31 : source node: 98461503
+SSSP1 (select)  time:      28.0377 (sec), rate:      150.628 (1e6 edges/sec)
+SSSP11 (select)  time:      27.7216 (sec), rate:      152.345 (1e6 edges/sec)
+SSSP2 (select)  time:      27.9786 (sec), rate:      150.946 (1e6 edges/sec)
+
+Trial 32 : source node: 71931337
+SSSP1 (select)  time:      26.3986 (sec), rate:       159.98 (1e6 edges/sec)
+SSSP11 (select)  time:        26.69 (sec), rate:      158.234 (1e6 edges/sec)
+SSSP2 (select)  time:      26.4766 (sec), rate:      159.509 (1e6 edges/sec)
+
+Trial 33 : source node: 103808468
+SSSP1 (select)  time:      27.6198 (sec), rate:      152.907 (1e6 edges/sec)
+SSSP11 (select)  time:      27.9369 (sec), rate:      151.172 (1e6 edges/sec)
+SSSP2 (select)  time:      27.7533 (sec), rate:      152.172 (1e6 edges/sec)
+
+Trial 34 : source node: 4092345
+SSSP1 (select)  time:      26.9786 (sec), rate:      156.541 (1e6 edges/sec)
+SSSP11 (select)  time:      27.0553 (sec), rate:      156.097 (1e6 edges/sec)
+SSSP2 (select)  time:      27.2526 (sec), rate:      154.967 (1e6 edges/sec)
+
+Trial 35 : source node: 115276241
+SSSP1 (select)  time:      28.1766 (sec), rate:      149.885 (1e6 edges/sec)
+SSSP11 (select)  time:      27.9094 (sec), rate:       151.32 (1e6 edges/sec)
+SSSP2 (select)  time:      28.2259 (sec), rate:      149.624 (1e6 edges/sec)
+
+Trial 36 : source node: 4649343
+SSSP1 (select)  time:      27.7175 (sec), rate:      152.368 (1e6 edges/sec)
+SSSP11 (select)  time:      27.3148 (sec), rate:      154.614 (1e6 edges/sec)
+SSSP2 (select)  time:      27.7763 (sec), rate:      152.045 (1e6 edges/sec)
+
+Trial 37 : source node: 76656189
+SSSP1 (select)  time:      28.4432 (sec), rate:      148.481 (1e6 edges/sec)
+SSSP11 (select)  time:        28.01 (sec), rate:      150.777 (1e6 edges/sec)
+SSSP2 (select)  time:      28.4052 (sec), rate:      148.679 (1e6 edges/sec)
+
+Trial 38 : source node: 31312001
+SSSP1 (select)  time:      28.5375 (sec), rate:       147.99 (1e6 edges/sec)
+SSSP11 (select)  time:      28.3791 (sec), rate:      148.816 (1e6 edges/sec)
+SSSP2 (select)  time:      28.7459 (sec), rate:      146.917 (1e6 edges/sec)
+
+Trial 39 : source node: 111334127
+SSSP1 (select)  time:      27.9077 (sec), rate:       151.33 (1e6 edges/sec)
+SSSP11 (select)  time:       27.773 (sec), rate:      152.064 (1e6 edges/sec)
+SSSP2 (select)  time:      27.9064 (sec), rate:      151.337 (1e6 edges/sec)
+
+Trial 40 : source node: 100962918
+SSSP1 (select)  time:      29.1221 (sec), rate:      145.019 (1e6 edges/sec)
+SSSP11 (select)  time:      28.8276 (sec), rate:      146.501 (1e6 edges/sec)
+SSSP2 (select)  time:      29.3026 (sec), rate:      144.126 (1e6 edges/sec)
+
+Trial 41 : source node: 41823215
+SSSP1 (select)  time:      27.7398 (sec), rate:      152.245 (1e6 edges/sec)
+SSSP11 (select)  time:      27.4137 (sec), rate:      154.057 (1e6 edges/sec)
+SSSP2 (select)  time:      27.6838 (sec), rate:      152.553 (1e6 edges/sec)
+
+Trial 42 : source node: 22631240
+SSSP1 (select)  time:      26.3779 (sec), rate:      160.106 (1e6 edges/sec)
+SSSP11 (select)  time:      26.5845 (sec), rate:      158.862 (1e6 edges/sec)
+SSSP2 (select)  time:       26.768 (sec), rate:      157.773 (1e6 edges/sec)
+
+Trial 43 : source node: 42848461
+SSSP1 (select)  time:       26.444 (sec), rate:      159.706 (1e6 edges/sec)
+SSSP11 (select)  time:      26.5027 (sec), rate:      159.352 (1e6 edges/sec)
+SSSP2 (select)  time:      28.9663 (sec), rate:      145.799 (1e6 edges/sec)
+
+Trial 44 : source node: 79485148
+SSSP1 (select)  time:      28.2652 (sec), rate:      149.416 (1e6 edges/sec)
+SSSP11 (select)  time:      27.2679 (sec), rate:      154.881 (1e6 edges/sec)
+SSSP2 (select)  time:      27.5015 (sec), rate:      153.565 (1e6 edges/sec)
+
+Trial 45 : source node: 106818742
+SSSP1 (select)  time:      27.3796 (sec), rate:      154.248 (1e6 edges/sec)
+SSSP11 (select)  time:      27.4627 (sec), rate:      153.782 (1e6 edges/sec)
+SSSP2 (select)  time:      27.5798 (sec), rate:      153.129 (1e6 edges/sec)
+
+Trial 46 : source node: 73347974
+SSSP1 (select)  time:      28.1212 (sec), rate:      150.181 (1e6 edges/sec)
+SSSP11 (select)  time:      27.5477 (sec), rate:      153.308 (1e6 edges/sec)
+SSSP2 (select)  time:      28.1352 (sec), rate:      150.106 (1e6 edges/sec)
+
+Trial 47 : source node: 78848445
+SSSP1 (select)  time:       26.384 (sec), rate:      160.069 (1e6 edges/sec)
+SSSP11 (select)  time:      26.6908 (sec), rate:       158.23 (1e6 edges/sec)
+SSSP2 (select)  time:      26.5356 (sec), rate:      159.155 (1e6 edges/sec)
+
+Trial 48 : source node: 109920510
+SSSP1 (select)  time:      28.3378 (sec), rate:      149.033 (1e6 edges/sec)
+SSSP11 (select)  time:      28.0311 (sec), rate:      150.663 (1e6 edges/sec)
+SSSP2 (select)  time:      28.3408 (sec), rate:      149.017 (1e6 edges/sec)
+
+Trial 49 : source node: 121492133
+SSSP1 (select)  time:      28.1829 (sec), rate:      149.852 (1e6 edges/sec)
+SSSP11 (select)  time:      27.5405 (sec), rate:      153.347 (1e6 edges/sec)
+SSSP2 (select)  time:      27.8748 (sec), rate:      151.508 (1e6 edges/sec)
+
+Trial 50 : source node: 101037296
+SSSP1 (select)  time:      27.5085 (sec), rate:      153.526 (1e6 edges/sec)
+SSSP11 (select)  time:      27.4444 (sec), rate:      153.884 (1e6 edges/sec)
+SSSP2 (select)  time:      27.3307 (sec), rate:      154.525 (1e6 edges/sec)
+
+Trial 51 : source node: 15438600
+SSSP1 (select)  time:      27.3406 (sec), rate:      154.468 (1e6 edges/sec)
+SSSP11 (select)  time:      27.3887 (sec), rate:      154.197 (1e6 edges/sec)
+SSSP2 (select)  time:      27.5134 (sec), rate:      153.498 (1e6 edges/sec)
+
+Trial 52 : source node: 4584784
+SSSP1 (select)  time:      29.0216 (sec), rate:      145.521 (1e6 edges/sec)
+SSSP11 (select)  time:      28.8431 (sec), rate:      146.422 (1e6 edges/sec)
+SSSP2 (select)  time:      28.9649 (sec), rate:      145.806 (1e6 edges/sec)
+
+Trial 53 : source node: 124503845
+SSSP1 (select)  time:      27.3186 (sec), rate:      154.593 (1e6 edges/sec)
+SSSP11 (select)  time:      27.4133 (sec), rate:      154.059 (1e6 edges/sec)
+SSSP2 (select)  time:      27.5067 (sec), rate:      153.536 (1e6 edges/sec)
+
+Trial 54 : source node: 87241743
+SSSP1 (select)  time:      27.4609 (sec), rate:      153.792 (1e6 edges/sec)
+SSSP11 (select)  time:      27.1457 (sec), rate:      155.578 (1e6 edges/sec)
+SSSP2 (select)  time:      27.3655 (sec), rate:      154.328 (1e6 edges/sec)
+
+Trial 55 : source node: 108297008
+SSSP1 (select)  time:      27.7769 (sec), rate:      152.042 (1e6 edges/sec)
+SSSP11 (select)  time:      27.7581 (sec), rate:      152.145 (1e6 edges/sec)
+SSSP2 (select)  time:      28.1219 (sec), rate:      150.177 (1e6 edges/sec)
+
+Trial 56 : source node: 33955082
+SSSP1 (select)  time:      27.5808 (sec), rate:      153.123 (1e6 edges/sec)
+SSSP11 (select)  time:      27.3022 (sec), rate:      154.686 (1e6 edges/sec)
+SSSP2 (select)  time:      27.5146 (sec), rate:      153.492 (1e6 edges/sec)
+
+Trial 57 : source node: 79934823
+SSSP1 (select)  time:      27.5722 (sec), rate:      153.171 (1e6 edges/sec)
+SSSP11 (select)  time:      27.4532 (sec), rate:      153.835 (1e6 edges/sec)
+SSSP2 (select)  time:      27.4401 (sec), rate:      153.909 (1e6 edges/sec)
+
+Trial 58 : source node: 8608481
+SSSP1 (select)  time:      26.7471 (sec), rate:      157.896 (1e6 edges/sec)
+SSSP11 (select)  time:      26.5973 (sec), rate:      158.786 (1e6 edges/sec)
+SSSP2 (select)  time:      26.7266 (sec), rate:      158.017 (1e6 edges/sec)
+
+Trial 59 : source node: 82435063
+SSSP1 (select)  time:      26.3388 (sec), rate:      160.344 (1e6 edges/sec)
+SSSP11 (select)  time:      26.6913 (sec), rate:      158.226 (1e6 edges/sec)
+SSSP2 (select)  time:      26.3542 (sec), rate:       160.25 (1e6 edges/sec)
+
+Trial 60 : source node: 46579271
+SSSP1 (select)  time:      27.2547 (sec), rate:      154.955 (1e6 edges/sec)
+SSSP11 (select)  time:      27.1152 (sec), rate:      155.753 (1e6 edges/sec)
+SSSP2 (select)  time:      27.2921 (sec), rate:      154.743 (1e6 edges/sec)
+
+Trial 61 : source node: 515421
+SSSP1 (select)  time:      29.9217 (sec), rate:      141.144 (1e6 edges/sec)
+SSSP11 (select)  time:      29.4018 (sec), rate:       143.64 (1e6 edges/sec)
+SSSP2 (select)  time:      29.9937 (sec), rate:      140.805 (1e6 edges/sec)
+
+Trial 62 : source node: 121530467
+SSSP1 (select)  time:      27.3157 (sec), rate:      154.609 (1e6 edges/sec)
+SSSP11 (select)  time:      27.2182 (sec), rate:      155.163 (1e6 edges/sec)
+SSSP2 (select)  time:      27.3164 (sec), rate:      154.606 (1e6 edges/sec)
+
+Trial 63 : source node: 127978736
+SSSP1 (select)  time:      27.3728 (sec), rate:      154.287 (1e6 edges/sec)
+SSSP11 (select)  time:      27.4521 (sec), rate:      153.841 (1e6 edges/sec)
+SSSP2 (select)  time:      27.4412 (sec), rate:      153.902 (1e6 edges/sec)
+ntrials: 64
+Average time per trial (SSSP1, with select):       27.7788 sec (delta 27)
+Average time per trial (SSSP11, with select):       27.6576 sec (delta 27)
+Average time per trial (SSSP2, with select):       27.8932 sec (delta 27)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-twitter/GAP-twitter.grb
+sources: /raid/hyper/gapbs/GAP/GAP-twitter/GAP-twitter_sources.mtx
+read time: 14.2236 sec
+input graph: nodes: 61578415 edges: 1468364884 nthreads 40
+
+Trial 0 : source node: 12441072
+SSSP1 (select)  time:      14.6645 (sec), rate:       100.13 (1e6 edges/sec)
+SSSP11 (select)  time:      14.8648 (sec), rate:      98.7811 (1e6 edges/sec)
+SSSP2 (select)  time:      14.5134 (sec), rate:      101.173 (1e6 edges/sec)
+
+Trial 1 : source node: 54488257
+SSSP1 (select)  time:      16.4294 (sec), rate:      89.3744 (1e6 edges/sec)
+SSSP11 (select)  time:      16.4165 (sec), rate:      89.4446 (1e6 edges/sec)
+SSSP2 (select)  time:      16.1443 (sec), rate:      90.9523 (1e6 edges/sec)
+
+Trial 2 : source node: 25451915
+SSSP1 (select)  time:      17.4261 (sec), rate:      84.2625 (1e6 edges/sec)
+SSSP11 (select)  time:      17.0918 (sec), rate:      85.9103 (1e6 edges/sec)
+SSSP2 (select)  time:      17.0456 (sec), rate:      86.1431 (1e6 edges/sec)
+
+Trial 3 : source node: 57714473
+SSSP1 (select)  time:      16.7222 (sec), rate:      87.8094 (1e6 edges/sec)
+SSSP11 (select)  time:      16.5526 (sec), rate:      88.7091 (1e6 edges/sec)
+SSSP2 (select)  time:      16.3276 (sec), rate:      89.9312 (1e6 edges/sec)
+
+Trial 4 : source node: 14839494
+SSSP1 (select)  time:      16.3689 (sec), rate:      89.7044 (1e6 edges/sec)
+SSSP11 (select)  time:      16.4414 (sec), rate:      89.3092 (1e6 edges/sec)
+SSSP2 (select)  time:      16.1691 (sec), rate:      90.8129 (1e6 edges/sec)
+
+Trial 5 : source node: 32081104
+SSSP1 (select)  time:      16.2468 (sec), rate:      90.3789 (1e6 edges/sec)
+SSSP11 (select)  time:       18.481 (sec), rate:      79.4529 (1e6 edges/sec)
+SSSP2 (select)  time:      15.5879 (sec), rate:      94.1988 (1e6 edges/sec)
+
+Trial 6 : source node: 52957357
+SSSP1 (select)  time:       15.817 (sec), rate:      92.8345 (1e6 edges/sec)
+SSSP11 (select)  time:      15.9876 (sec), rate:      91.8439 (1e6 edges/sec)
+SSSP2 (select)  time:       15.581 (sec), rate:      94.2408 (1e6 edges/sec)
+
+Trial 7 : source node: 50444380
+SSSP1 (select)  time:      16.5769 (sec), rate:      88.5791 (1e6 edges/sec)
+SSSP11 (select)  time:      16.5751 (sec), rate:      88.5885 (1e6 edges/sec)
+SSSP2 (select)  time:      16.3255 (sec), rate:      89.9429 (1e6 edges/sec)
+
+Trial 8 : source node: 49590701
+SSSP1 (select)  time:      16.0239 (sec), rate:      91.6358 (1e6 edges/sec)
+SSSP11 (select)  time:      15.8732 (sec), rate:       92.506 (1e6 edges/sec)
+SSSP2 (select)  time:      15.4332 (sec), rate:      95.1434 (1e6 edges/sec)
+
+Trial 9 : source node: 20127816
+SSSP1 (select)  time:      14.9579 (sec), rate:      98.1668 (1e6 edges/sec)
+SSSP11 (select)  time:      14.9776 (sec), rate:      98.0373 (1e6 edges/sec)
+SSSP2 (select)  time:      14.6032 (sec), rate:      100.551 (1e6 edges/sec)
+
+Trial 10 : source node: 34939333
+SSSP1 (select)  time:      17.0462 (sec), rate:      86.1405 (1e6 edges/sec)
+SSSP11 (select)  time:      17.0198 (sec), rate:      86.2739 (1e6 edges/sec)
+SSSP2 (select)  time:       16.693 (sec), rate:      87.9627 (1e6 edges/sec)
+
+Trial 11 : source node: 48251001
+SSSP1 (select)  time:      17.2039 (sec), rate:      85.3509 (1e6 edges/sec)
+SSSP11 (select)  time:      16.9907 (sec), rate:      86.4215 (1e6 edges/sec)
+SSSP2 (select)  time:      16.8828 (sec), rate:      86.9739 (1e6 edges/sec)
+
+Trial 12 : source node: 19524253
+SSSP1 (select)  time:      15.0729 (sec), rate:      97.4179 (1e6 edges/sec)
+SSSP11 (select)  time:       15.245 (sec), rate:      96.3178 (1e6 edges/sec)
+SSSP2 (select)  time:      14.7072 (sec), rate:      99.8398 (1e6 edges/sec)
+
+Trial 13 : source node: 43676726
+SSSP1 (select)  time:       16.685 (sec), rate:      88.0052 (1e6 edges/sec)
+SSSP11 (select)  time:       16.628 (sec), rate:       88.307 (1e6 edges/sec)
+SSSP2 (select)  time:      16.5058 (sec), rate:      88.9607 (1e6 edges/sec)
+
+Trial 14 : source node: 33055508
+SSSP1 (select)  time:      16.1425 (sec), rate:      90.9629 (1e6 edges/sec)
+SSSP11 (select)  time:       16.111 (sec), rate:      91.1408 (1e6 edges/sec)
+SSSP2 (select)  time:      15.7945 (sec), rate:      92.9669 (1e6 edges/sec)
+
+Trial 15 : source node: 15244687
+SSSP1 (select)  time:       15.549 (sec), rate:      94.4347 (1e6 edges/sec)
+SSSP11 (select)  time:      15.4818 (sec), rate:      94.8447 (1e6 edges/sec)
+SSSP2 (select)  time:      15.0929 (sec), rate:      97.2887 (1e6 edges/sec)
+
+Trial 16 : source node: 24946738
+SSSP1 (select)  time:      18.0749 (sec), rate:      81.2377 (1e6 edges/sec)
+SSSP11 (select)  time:      18.0949 (sec), rate:      81.1478 (1e6 edges/sec)
+SSSP2 (select)  time:      17.5903 (sec), rate:       83.476 (1e6 edges/sec)
+
+Trial 17 : source node: 6479472
+SSSP1 (select)  time:      16.2479 (sec), rate:      90.3725 (1e6 edges/sec)
+SSSP11 (select)  time:      16.3362 (sec), rate:      89.8841 (1e6 edges/sec)
+SSSP2 (select)  time:      16.1526 (sec), rate:      90.9056 (1e6 edges/sec)
+
+Trial 18 : source node: 26077682
+SSSP1 (select)  time:      16.7928 (sec), rate:        87.44 (1e6 edges/sec)
+SSSP11 (select)  time:      16.7402 (sec), rate:      87.7149 (1e6 edges/sec)
+SSSP2 (select)  time:      16.3722 (sec), rate:      89.6863 (1e6 edges/sec)
+
+Trial 19 : source node: 22023875
+SSSP1 (select)  time:       16.839 (sec), rate:      87.2002 (1e6 edges/sec)
+SSSP11 (select)  time:      16.9194 (sec), rate:       86.786 (1e6 edges/sec)
+SSSP2 (select)  time:      16.3824 (sec), rate:      89.6306 (1e6 edges/sec)
+
+Trial 20 : source node: 22081915
+SSSP1 (select)  time:      16.7626 (sec), rate:      87.5975 (1e6 edges/sec)
+SSSP11 (select)  time:      16.5127 (sec), rate:      88.9233 (1e6 edges/sec)
+SSSP2 (select)  time:      16.2411 (sec), rate:      90.4106 (1e6 edges/sec)
+
+Trial 21 : source node: 40034162
+SSSP1 (select)  time:      14.8143 (sec), rate:      99.1183 (1e6 edges/sec)
+SSSP11 (select)  time:      14.9579 (sec), rate:      98.1668 (1e6 edges/sec)
+SSSP2 (select)  time:      14.6691 (sec), rate:      100.099 (1e6 edges/sec)
+
+Trial 22 : source node: 49496014
+SSSP1 (select)  time:      16.9581 (sec), rate:      86.5877 (1e6 edges/sec)
+SSSP11 (select)  time:      16.9008 (sec), rate:      86.8814 (1e6 edges/sec)
+SSSP2 (select)  time:      16.7392 (sec), rate:      87.7201 (1e6 edges/sec)
+
+Trial 23 : source node: 42847507
+SSSP1 (select)  time:      18.9854 (sec), rate:      77.3419 (1e6 edges/sec)
+SSSP11 (select)  time:      18.7144 (sec), rate:      78.4616 (1e6 edges/sec)
+SSSP2 (select)  time:      18.8457 (sec), rate:       77.915 (1e6 edges/sec)
+
+Trial 24 : source node: 52409557
+SSSP1 (select)  time:      16.2445 (sec), rate:      90.3915 (1e6 edges/sec)
+SSSP11 (select)  time:      16.1743 (sec), rate:      90.7836 (1e6 edges/sec)
+SSSP2 (select)  time:      15.9209 (sec), rate:      92.2286 (1e6 edges/sec)
+
+Trial 25 : source node: 55445388
+SSSP1 (select)  time:      14.6222 (sec), rate:       100.42 (1e6 edges/sec)
+SSSP11 (select)  time:      14.8407 (sec), rate:      98.9416 (1e6 edges/sec)
+SSSP2 (select)  time:      14.5831 (sec), rate:      100.689 (1e6 edges/sec)
+
+Trial 26 : source node: 22028097
+SSSP1 (select)  time:      16.1959 (sec), rate:      90.6625 (1e6 edges/sec)
+SSSP11 (select)  time:      16.1399 (sec), rate:      90.9774 (1e6 edges/sec)
+SSSP2 (select)  time:      15.7641 (sec), rate:      93.1464 (1e6 edges/sec)
+
+Trial 27 : source node: 48766648
+SSSP1 (select)  time:      16.5348 (sec), rate:      88.8044 (1e6 edges/sec)
+SSSP11 (select)  time:      16.4795 (sec), rate:      89.1024 (1e6 edges/sec)
+SSSP2 (select)  time:      16.3552 (sec), rate:      89.7799 (1e6 edges/sec)
+
+Trial 28 : source node: 44521241
+SSSP1 (select)  time:      16.1049 (sec), rate:      91.1753 (1e6 edges/sec)
+SSSP11 (select)  time:      16.0898 (sec), rate:      91.2605 (1e6 edges/sec)
+SSSP2 (select)  time:      15.8194 (sec), rate:      92.8203 (1e6 edges/sec)
+
+Trial 29 : source node: 60135542
+SSSP1 (select)  time:      15.0274 (sec), rate:      97.7124 (1e6 edges/sec)
+SSSP11 (select)  time:      14.9748 (sec), rate:       98.056 (1e6 edges/sec)
+SSSP2 (select)  time:      14.5702 (sec), rate:      100.778 (1e6 edges/sec)
+
+Trial 30 : source node: 28528671
+SSSP1 (select)  time:      14.7456 (sec), rate:      99.5798 (1e6 edges/sec)
+SSSP11 (select)  time:      14.8652 (sec), rate:      98.7787 (1e6 edges/sec)
+SSSP2 (select)  time:      14.4731 (sec), rate:      101.454 (1e6 edges/sec)
+
+Trial 31 : source node: 9678012
+SSSP1 (select)  time:       16.506 (sec), rate:      88.9594 (1e6 edges/sec)
+SSSP11 (select)  time:      16.3407 (sec), rate:      89.8596 (1e6 edges/sec)
+SSSP2 (select)  time:      16.3383 (sec), rate:      89.8726 (1e6 edges/sec)
+
+Trial 32 : source node: 40020306
+SSSP1 (select)  time:      17.0333 (sec), rate:      86.2056 (1e6 edges/sec)
+SSSP11 (select)  time:      16.8598 (sec), rate:      87.0927 (1e6 edges/sec)
+SSSP2 (select)  time:       16.659 (sec), rate:      88.1426 (1e6 edges/sec)
+
+Trial 33 : source node: 31625735
+SSSP1 (select)  time:      16.4923 (sec), rate:      89.0336 (1e6 edges/sec)
+SSSP11 (select)  time:      16.4336 (sec), rate:      89.3512 (1e6 edges/sec)
+SSSP2 (select)  time:      16.3302 (sec), rate:      89.9174 (1e6 edges/sec)
+
+Trial 34 : source node: 37446892
+SSSP1 (select)  time:      16.6179 (sec), rate:      88.3606 (1e6 edges/sec)
+SSSP11 (select)  time:      16.5532 (sec), rate:      88.7056 (1e6 edges/sec)
+SSSP2 (select)  time:      16.4246 (sec), rate:      89.4004 (1e6 edges/sec)
+
+Trial 35 : source node: 51788952
+SSSP1 (select)  time:       16.305 (sec), rate:       90.056 (1e6 edges/sec)
+SSSP11 (select)  time:      16.1503 (sec), rate:      90.9189 (1e6 edges/sec)
+SSSP2 (select)  time:      16.0011 (sec), rate:      91.7666 (1e6 edges/sec)
+
+Trial 36 : source node: 52584255
+SSSP1 (select)  time:      16.0192 (sec), rate:      91.6631 (1e6 edges/sec)
+SSSP11 (select)  time:      16.0896 (sec), rate:      91.2618 (1e6 edges/sec)
+SSSP2 (select)  time:      15.6881 (sec), rate:      93.5973 (1e6 edges/sec)
+
+Trial 37 : source node: 20346696
+SSSP1 (select)  time:      16.2691 (sec), rate:      90.2549 (1e6 edges/sec)
+SSSP11 (select)  time:      16.2901 (sec), rate:      90.1384 (1e6 edges/sec)
+SSSP2 (select)  time:      15.9618 (sec), rate:      91.9926 (1e6 edges/sec)
+
+Trial 38 : source node: 48387909
+SSSP1 (select)  time:       15.855 (sec), rate:      92.6122 (1e6 edges/sec)
+SSSP11 (select)  time:      15.8447 (sec), rate:      92.6726 (1e6 edges/sec)
+SSSP2 (select)  time:      15.4088 (sec), rate:      95.2941 (1e6 edges/sec)
+
+Trial 39 : source node: 37337427
+SSSP1 (select)  time:      14.7153 (sec), rate:      99.7849 (1e6 edges/sec)
+SSSP11 (select)  time:      14.9742 (sec), rate:      98.0595 (1e6 edges/sec)
+SSSP2 (select)  time:      14.5793 (sec), rate:      100.716 (1e6 edges/sec)
+
+Trial 40 : source node: 50501084
+SSSP1 (select)  time:      15.8668 (sec), rate:      92.5434 (1e6 edges/sec)
+SSSP11 (select)  time:      16.0534 (sec), rate:      91.4673 (1e6 edges/sec)
+SSSP2 (select)  time:      15.4993 (sec), rate:      94.7373 (1e6 edges/sec)
+
+Trial 41 : source node: 30130061
+SSSP1 (select)  time:      16.4238 (sec), rate:      89.4048 (1e6 edges/sec)
+SSSP11 (select)  time:      16.2643 (sec), rate:      90.2814 (1e6 edges/sec)
+SSSP2 (select)  time:      16.0446 (sec), rate:      91.5177 (1e6 edges/sec)
+
+Trial 42 : source node: 41185893
+SSSP1 (select)  time:      16.8293 (sec), rate:      87.2507 (1e6 edges/sec)
+SSSP11 (select)  time:      16.9731 (sec), rate:      86.5115 (1e6 edges/sec)
+SSSP2 (select)  time:      16.5987 (sec), rate:      88.4627 (1e6 edges/sec)
+
+Trial 43 : source node: 56495703
+SSSP1 (select)  time:      15.7038 (sec), rate:      93.5036 (1e6 edges/sec)
+SSSP11 (select)  time:      15.7608 (sec), rate:      93.1654 (1e6 edges/sec)
+SSSP2 (select)  time:      15.3026 (sec), rate:      95.9554 (1e6 edges/sec)
+
+Trial 44 : source node: 45663305
+SSSP1 (select)  time:      15.8289 (sec), rate:      92.7649 (1e6 edges/sec)
+SSSP11 (select)  time:      15.9276 (sec), rate:      92.1902 (1e6 edges/sec)
+SSSP2 (select)  time:      15.4471 (sec), rate:      95.0578 (1e6 edges/sec)
+
+Trial 45 : source node: 33359460
+SSSP1 (select)  time:       15.743 (sec), rate:      93.2711 (1e6 edges/sec)
+SSSP11 (select)  time:      15.8226 (sec), rate:      92.8016 (1e6 edges/sec)
+SSSP2 (select)  time:      15.2786 (sec), rate:      96.1058 (1e6 edges/sec)
+
+Trial 46 : source node: 48143058
+SSSP1 (select)  time:      15.4245 (sec), rate:      95.1968 (1e6 edges/sec)
+SSSP11 (select)  time:      15.5899 (sec), rate:      94.1869 (1e6 edges/sec)
+SSSP2 (select)  time:      15.0557 (sec), rate:      97.5286 (1e6 edges/sec)
+
+Trial 47 : source node: 33291513
+SSSP1 (select)  time:      14.9939 (sec), rate:      97.9308 (1e6 edges/sec)
+SSSP11 (select)  time:      15.1462 (sec), rate:      96.9458 (1e6 edges/sec)
+SSSP2 (select)  time:      14.5034 (sec), rate:      101.243 (1e6 edges/sec)
+
+Trial 48 : source node: 53461445
+SSSP1 (select)  time:      16.3701 (sec), rate:      89.6982 (1e6 edges/sec)
+SSSP11 (select)  time:      16.0475 (sec), rate:      91.5011 (1e6 edges/sec)
+SSSP2 (select)  time:      16.5569 (sec), rate:      88.6861 (1e6 edges/sec)
+
+Trial 49 : source node: 29340610
+SSSP1 (select)  time:      18.2063 (sec), rate:      80.6514 (1e6 edges/sec)
+SSSP11 (select)  time:      17.0654 (sec), rate:      86.0435 (1e6 edges/sec)
+SSSP2 (select)  time:      15.1382 (sec), rate:      96.9975 (1e6 edges/sec)
+
+Trial 50 : source node: 34148498
+SSSP1 (select)  time:      15.9203 (sec), rate:      92.2321 (1e6 edges/sec)
+SSSP11 (select)  time:      16.1463 (sec), rate:       90.941 (1e6 edges/sec)
+SSSP2 (select)  time:       15.722 (sec), rate:      93.3957 (1e6 edges/sec)
+
+Trial 51 : source node: 49171806
+SSSP1 (select)  time:      16.2065 (sec), rate:      90.6033 (1e6 edges/sec)
+SSSP11 (select)  time:      16.2736 (sec), rate:      90.2299 (1e6 edges/sec)
+SSSP2 (select)  time:      15.7924 (sec), rate:      92.9792 (1e6 edges/sec)
+
+Trial 52 : source node: 35550696
+SSSP1 (select)  time:      16.2851 (sec), rate:      90.1663 (1e6 edges/sec)
+SSSP11 (select)  time:      16.3347 (sec), rate:      89.8925 (1e6 edges/sec)
+SSSP2 (select)  time:      15.9736 (sec), rate:      91.9242 (1e6 edges/sec)
+
+Trial 53 : source node: 14521507
+SSSP1 (select)  time:      16.3934 (sec), rate:      89.5706 (1e6 edges/sec)
+SSSP11 (select)  time:      16.4435 (sec), rate:      89.2977 (1e6 edges/sec)
+SSSP2 (select)  time:      16.3021 (sec), rate:      90.0723 (1e6 edges/sec)
+
+Trial 54 : source node: 51633218
+SSSP1 (select)  time:      16.7765 (sec), rate:       87.525 (1e6 edges/sec)
+SSSP11 (select)  time:      16.8379 (sec), rate:       87.206 (1e6 edges/sec)
+SSSP2 (select)  time:      16.6644 (sec), rate:      88.1141 (1e6 edges/sec)
+
+Trial 55 : source node: 46823382
+SSSP1 (select)  time:      16.1052 (sec), rate:      91.1732 (1e6 edges/sec)
+SSSP11 (select)  time:      16.0422 (sec), rate:      91.5314 (1e6 edges/sec)
+SSSP2 (select)  time:      15.5046 (sec), rate:      94.7053 (1e6 edges/sec)
+
+Trial 56 : source node: 19396273
+SSSP1 (select)  time:      17.1999 (sec), rate:      85.3708 (1e6 edges/sec)
+SSSP11 (select)  time:      17.0491 (sec), rate:      86.1257 (1e6 edges/sec)
+SSSP2 (select)  time:      17.1475 (sec), rate:      85.6313 (1e6 edges/sec)
+
+Trial 57 : source node: 19871750
+SSSP1 (select)  time:      16.7096 (sec), rate:      87.8755 (1e6 edges/sec)
+SSSP11 (select)  time:       16.573 (sec), rate:      88.5999 (1e6 edges/sec)
+SSSP2 (select)  time:      16.5492 (sec), rate:      88.7271 (1e6 edges/sec)
+
+Trial 58 : source node: 36862677
+SSSP1 (select)  time:      17.4998 (sec), rate:      83.9075 (1e6 edges/sec)
+SSSP11 (select)  time:      17.3599 (sec), rate:      84.5837 (1e6 edges/sec)
+SSSP2 (select)  time:      17.4647 (sec), rate:      84.0763 (1e6 edges/sec)
+
+Trial 59 : source node: 49539126
+SSSP1 (select)  time:      17.1565 (sec), rate:      85.5864 (1e6 edges/sec)
+SSSP11 (select)  time:      17.0893 (sec), rate:      85.9232 (1e6 edges/sec)
+SSSP2 (select)  time:      16.5018 (sec), rate:      88.9821 (1e6 edges/sec)
+
+Trial 60 : source node: 34016452
+SSSP1 (select)  time:      15.0046 (sec), rate:      97.8613 (1e6 edges/sec)
+SSSP11 (select)  time:      15.1776 (sec), rate:      96.7454 (1e6 edges/sec)
+SSSP2 (select)  time:      14.6453 (sec), rate:      100.262 (1e6 edges/sec)
+
+Trial 61 : source node: 36567395
+SSSP1 (select)  time:      16.1194 (sec), rate:      91.0931 (1e6 edges/sec)
+SSSP11 (select)  time:      15.8015 (sec), rate:      92.9255 (1e6 edges/sec)
+SSSP2 (select)  time:      15.5059 (sec), rate:       94.697 (1e6 edges/sec)
+
+Trial 62 : source node: 55487793
+SSSP1 (select)  time:      15.7807 (sec), rate:      93.0484 (1e6 edges/sec)
+SSSP11 (select)  time:      15.7859 (sec), rate:      93.0174 (1e6 edges/sec)
+SSSP2 (select)  time:      15.4429 (sec), rate:      95.0837 (1e6 edges/sec)
+
+Trial 63 : source node: 14391370
+SSSP1 (select)  time:      17.7598 (sec), rate:      82.6792 (1e6 edges/sec)
+SSSP11 (select)  time:      17.7049 (sec), rate:      82.9355 (1e6 edges/sec)
+SSSP2 (select)  time:      17.4616 (sec), rate:      84.0909 (1e6 edges/sec)
+ntrials: 64
+Average time per trial (SSSP1, with select):       16.2813 sec (delta 51)
+Average time per trial (SSSP11, with select):       16.2857 sec (delta 51)
+Average time per trial (SSSP2, with select):       15.9278 sec (delta 51)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand.grb
+sources: /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 42.1063 sec
+input graph: nodes: 134217728 edges: 4294966740 nthreads 40
+
+Trial 0 : source node: 27691419
+SSSP1 (select)  time:       36.259 (sec), rate:      118.452 (1e6 edges/sec)
+SSSP11 (select)  time:      36.8765 (sec), rate:      116.469 (1e6 edges/sec)
+SSSP2 (select)  time:      35.6591 (sec), rate:      120.445 (1e6 edges/sec)
+
+Trial 1 : source node: 121280314
+SSSP1 (select)  time:      36.7717 (sec), rate:      116.801 (1e6 edges/sec)
+SSSP11 (select)  time:      37.7946 (sec), rate:       113.64 (1e6 edges/sec)
+SSSP2 (select)  time:      36.0242 (sec), rate:      119.224 (1e6 edges/sec)
+
+Trial 2 : source node: 2413431
+SSSP1 (select)  time:      37.0218 (sec), rate:      116.012 (1e6 edges/sec)
+SSSP11 (select)  time:      37.9602 (sec), rate:      113.144 (1e6 edges/sec)
+SSSP2 (select)  time:      36.0235 (sec), rate:      119.227 (1e6 edges/sec)
+
+Trial 3 : source node: 37512113
+SSSP1 (select)  time:      36.6561 (sec), rate:      117.169 (1e6 edges/sec)
+SSSP11 (select)  time:      36.8203 (sec), rate:      116.647 (1e6 edges/sec)
+SSSP2 (select)  time:      35.7859 (sec), rate:      120.018 (1e6 edges/sec)
+
+Trial 4 : source node: 38390877
+SSSP1 (select)  time:      36.6514 (sec), rate:      117.184 (1e6 edges/sec)
+SSSP11 (select)  time:      37.2146 (sec), rate:      115.411 (1e6 edges/sec)
+SSSP2 (select)  time:      35.8851 (sec), rate:      119.687 (1e6 edges/sec)
+
+Trial 5 : source node: 56651037
+SSSP1 (select)  time:      36.4714 (sec), rate:      117.763 (1e6 edges/sec)
+SSSP11 (select)  time:      37.0789 (sec), rate:      115.833 (1e6 edges/sec)
+SSSP2 (select)  time:      35.6821 (sec), rate:      120.368 (1e6 edges/sec)
+
+Trial 6 : source node: 128461248
+SSSP1 (select)  time:       36.881 (sec), rate:      116.455 (1e6 edges/sec)
+SSSP11 (select)  time:      37.7668 (sec), rate:      113.723 (1e6 edges/sec)
+SSSP2 (select)  time:      35.8571 (sec), rate:       119.78 (1e6 edges/sec)
+
+Trial 7 : source node: 33029842
+SSSP1 (select)  time:       36.973 (sec), rate:      116.165 (1e6 edges/sec)
+SSSP11 (select)  time:      37.7479 (sec), rate:       113.78 (1e6 edges/sec)
+SSSP2 (select)  time:      36.1458 (sec), rate:      118.823 (1e6 edges/sec)
+
+Trial 8 : source node: 71406328
+SSSP1 (select)  time:      36.5687 (sec), rate:      117.449 (1e6 edges/sec)
+SSSP11 (select)  time:      36.8868 (sec), rate:      116.437 (1e6 edges/sec)
+SSSP2 (select)  time:      35.7715 (sec), rate:      120.067 (1e6 edges/sec)
+
+Trial 9 : source node: 117872827
+SSSP1 (select)  time:       36.693 (sec), rate:      117.051 (1e6 edges/sec)
+SSSP11 (select)  time:      37.2482 (sec), rate:      115.307 (1e6 edges/sec)
+SSSP2 (select)  time:      35.9133 (sec), rate:      119.593 (1e6 edges/sec)
+
+Trial 10 : source node: 24351938
+SSSP1 (select)  time:      37.9651 (sec), rate:      113.129 (1e6 edges/sec)
+SSSP11 (select)  time:      38.9665 (sec), rate:      110.222 (1e6 edges/sec)
+SSSP2 (select)  time:       35.742 (sec), rate:      120.166 (1e6 edges/sec)
+
+Trial 11 : source node: 15444519
+SSSP1 (select)  time:      36.6497 (sec), rate:       117.19 (1e6 edges/sec)
+SSSP11 (select)  time:      36.8768 (sec), rate:      116.468 (1e6 edges/sec)
+SSSP2 (select)  time:      35.7237 (sec), rate:      120.227 (1e6 edges/sec)
+
+Trial 12 : source node: 127526281
+SSSP1 (select)  time:      37.1744 (sec), rate:      115.536 (1e6 edges/sec)
+SSSP11 (select)  time:      37.8592 (sec), rate:      113.446 (1e6 edges/sec)
+SSSP2 (select)  time:      36.2629 (sec), rate:       118.44 (1e6 edges/sec)
+
+Trial 13 : source node: 112279428
+SSSP1 (select)  time:      36.4548 (sec), rate:      117.816 (1e6 edges/sec)
+SSSP11 (select)  time:       36.664 (sec), rate:      117.144 (1e6 edges/sec)
+SSSP2 (select)  time:      35.5976 (sec), rate:      120.653 (1e6 edges/sec)
+
+Trial 14 : source node: 13631649
+SSSP1 (select)  time:      36.8648 (sec), rate:      116.506 (1e6 edges/sec)
+SSSP11 (select)  time:      37.7765 (sec), rate:      113.694 (1e6 edges/sec)
+SSSP2 (select)  time:      36.1747 (sec), rate:      118.728 (1e6 edges/sec)
+
+Trial 15 : source node: 110379302
+SSSP1 (select)  time:      36.5639 (sec), rate:      117.465 (1e6 edges/sec)
+SSSP11 (select)  time:      36.8862 (sec), rate:      116.438 (1e6 edges/sec)
+SSSP2 (select)  time:      35.6636 (sec), rate:       120.43 (1e6 edges/sec)
+
+Trial 16 : source node: 44800623
+SSSP1 (select)  time:      36.6538 (sec), rate:      117.177 (1e6 edges/sec)
+SSSP11 (select)  time:      37.2526 (sec), rate:      115.293 (1e6 edges/sec)
+SSSP2 (select)  time:      35.8627 (sec), rate:      119.761 (1e6 edges/sec)
+
+Trial 17 : source node: 77768193
+SSSP1 (select)  time:      36.9598 (sec), rate:      116.206 (1e6 edges/sec)
+SSSP11 (select)  time:       38.136 (sec), rate:      112.622 (1e6 edges/sec)
+SSSP2 (select)  time:      35.8609 (sec), rate:      119.767 (1e6 edges/sec)
+
+Trial 18 : source node: 175347
+SSSP1 (select)  time:      36.9261 (sec), rate:      116.313 (1e6 edges/sec)
+SSSP11 (select)  time:      37.7626 (sec), rate:      113.736 (1e6 edges/sec)
+SSSP2 (select)  time:      35.9282 (sec), rate:      119.543 (1e6 edges/sec)
+
+Trial 19 : source node: 107397389
+SSSP1 (select)  time:       36.276 (sec), rate:      118.397 (1e6 edges/sec)
+SSSP11 (select)  time:      37.0171 (sec), rate:      116.027 (1e6 edges/sec)
+SSSP2 (select)  time:      35.7016 (sec), rate:      120.302 (1e6 edges/sec)
+
+Trial 20 : source node: 43457209
+SSSP1 (select)  time:      37.3069 (sec), rate:      115.125 (1e6 edges/sec)
+SSSP11 (select)  time:      37.8373 (sec), rate:      113.511 (1e6 edges/sec)
+SSSP2 (select)  time:      36.4093 (sec), rate:      117.963 (1e6 edges/sec)
+
+Trial 21 : source node: 97215940
+SSSP1 (select)  time:      37.0773 (sec), rate:      115.838 (1e6 edges/sec)
+SSSP11 (select)  time:      37.9274 (sec), rate:      113.242 (1e6 edges/sec)
+SSSP2 (select)  time:      36.1684 (sec), rate:      118.749 (1e6 edges/sec)
+
+Trial 22 : source node: 73575165
+SSSP1 (select)  time:      37.1449 (sec), rate:      115.627 (1e6 edges/sec)
+SSSP11 (select)  time:       37.264 (sec), rate:      115.258 (1e6 edges/sec)
+SSSP2 (select)  time:       36.229 (sec), rate:       118.55 (1e6 edges/sec)
+
+Trial 23 : source node: 44449715
+SSSP1 (select)  time:      36.6364 (sec), rate:      117.232 (1e6 edges/sec)
+SSSP11 (select)  time:      37.1214 (sec), rate:      115.701 (1e6 edges/sec)
+SSSP2 (select)  time:      35.7275 (sec), rate:      120.214 (1e6 edges/sec)
+
+Trial 24 : source node: 33931724
+SSSP1 (select)  time:      36.9309 (sec), rate:      116.298 (1e6 edges/sec)
+SSSP11 (select)  time:      37.7374 (sec), rate:      113.812 (1e6 edges/sec)
+SSSP2 (select)  time:      36.1353 (sec), rate:      118.858 (1e6 edges/sec)
+
+Trial 25 : source node: 55526610
+SSSP1 (select)  time:       36.849 (sec), rate:      116.556 (1e6 edges/sec)
+SSSP11 (select)  time:      37.6961 (sec), rate:      113.937 (1e6 edges/sec)
+SSSP2 (select)  time:      36.0352 (sec), rate:      119.188 (1e6 edges/sec)
+
+Trial 26 : source node: 14422051
+SSSP1 (select)  time:      36.8586 (sec), rate:      116.526 (1e6 edges/sec)
+SSSP11 (select)  time:      36.8969 (sec), rate:      116.405 (1e6 edges/sec)
+SSSP2 (select)  time:      35.8941 (sec), rate:      119.657 (1e6 edges/sec)
+
+Trial 27 : source node: 58043873
+SSSP1 (select)  time:      37.2833 (sec), rate:      115.198 (1e6 edges/sec)
+SSSP11 (select)  time:      37.9747 (sec), rate:      113.101 (1e6 edges/sec)
+SSSP2 (select)  time:      36.2699 (sec), rate:      118.417 (1e6 edges/sec)
+
+Trial 28 : source node: 72137329
+SSSP1 (select)  time:      36.9095 (sec), rate:      116.365 (1e6 edges/sec)
+SSSP11 (select)  time:      38.8056 (sec), rate:      110.679 (1e6 edges/sec)
+SSSP2 (select)  time:      37.3193 (sec), rate:      115.087 (1e6 edges/sec)
+
+Trial 29 : source node: 9647840
+SSSP1 (select)  time:      37.0996 (sec), rate:      115.769 (1e6 edges/sec)
+SSSP11 (select)  time:      37.9729 (sec), rate:      113.106 (1e6 edges/sec)
+SSSP2 (select)  time:      36.3023 (sec), rate:      118.311 (1e6 edges/sec)
+
+Trial 30 : source node: 15940695
+SSSP1 (select)  time:      36.9254 (sec), rate:      116.315 (1e6 edges/sec)
+SSSP11 (select)  time:       37.537 (sec), rate:      114.419 (1e6 edges/sec)
+SSSP2 (select)  time:      36.1275 (sec), rate:      118.884 (1e6 edges/sec)
+
+Trial 31 : source node: 14209952
+SSSP1 (select)  time:      37.0023 (sec), rate:      116.073 (1e6 edges/sec)
+SSSP11 (select)  time:      37.9309 (sec), rate:      113.231 (1e6 edges/sec)
+SSSP2 (select)  time:      36.1634 (sec), rate:      118.766 (1e6 edges/sec)
+
+Trial 32 : source node: 49020883
+SSSP1 (select)  time:       36.959 (sec), rate:      116.209 (1e6 edges/sec)
+SSSP11 (select)  time:      37.3622 (sec), rate:      114.955 (1e6 edges/sec)
+SSSP2 (select)  time:      36.0017 (sec), rate:      119.299 (1e6 edges/sec)
+
+Trial 33 : source node: 28901138
+SSSP1 (select)  time:      36.8803 (sec), rate:      116.457 (1e6 edges/sec)
+SSSP11 (select)  time:      37.2267 (sec), rate:      115.373 (1e6 edges/sec)
+SSSP2 (select)  time:      35.8923 (sec), rate:      119.662 (1e6 edges/sec)
+
+Trial 34 : source node: 50493273
+SSSP1 (select)  time:       36.932 (sec), rate:      116.294 (1e6 edges/sec)
+SSSP11 (select)  time:       37.806 (sec), rate:      113.605 (1e6 edges/sec)
+SSSP2 (select)  time:      36.1476 (sec), rate:      118.818 (1e6 edges/sec)
+
+Trial 35 : source node: 49150069
+SSSP1 (select)  time:      37.0774 (sec), rate:      115.838 (1e6 edges/sec)
+SSSP11 (select)  time:      37.7981 (sec), rate:      113.629 (1e6 edges/sec)
+SSSP2 (select)  time:       35.936 (sec), rate:      119.517 (1e6 edges/sec)
+
+Trial 36 : source node: 126525082
+SSSP1 (select)  time:      36.8669 (sec), rate:      116.499 (1e6 edges/sec)
+SSSP11 (select)  time:      37.4761 (sec), rate:      114.606 (1e6 edges/sec)
+SSSP2 (select)  time:      35.9694 (sec), rate:      119.406 (1e6 edges/sec)
+
+Trial 37 : source node: 6382740
+SSSP1 (select)  time:       36.772 (sec), rate:        116.8 (1e6 edges/sec)
+SSSP11 (select)  time:      37.2279 (sec), rate:      115.369 (1e6 edges/sec)
+SSSP2 (select)  time:      35.9774 (sec), rate:      119.379 (1e6 edges/sec)
+
+Trial 38 : source node: 89108297
+SSSP1 (select)  time:      36.6491 (sec), rate:      117.192 (1e6 edges/sec)
+SSSP11 (select)  time:      37.2129 (sec), rate:      115.416 (1e6 edges/sec)
+SSSP2 (select)  time:      35.8811 (sec), rate:        119.7 (1e6 edges/sec)
+
+Trial 39 : source node: 9239735
+SSSP1 (select)  time:      36.8796 (sec), rate:      116.459 (1e6 edges/sec)
+SSSP11 (select)  time:      37.1787 (sec), rate:      115.522 (1e6 edges/sec)
+SSSP2 (select)  time:      36.0083 (sec), rate:      119.277 (1e6 edges/sec)
+
+Trial 40 : source node: 110168548
+SSSP1 (select)  time:      36.5081 (sec), rate:      117.644 (1e6 edges/sec)
+SSSP11 (select)  time:      36.9041 (sec), rate:      116.382 (1e6 edges/sec)
+SSSP2 (select)  time:      35.5187 (sec), rate:      120.921 (1e6 edges/sec)
+
+Trial 41 : source node: 95370259
+SSSP1 (select)  time:      36.9545 (sec), rate:      116.223 (1e6 edges/sec)
+SSSP11 (select)  time:      37.7882 (sec), rate:      113.659 (1e6 edges/sec)
+SSSP2 (select)  time:      36.1218 (sec), rate:      118.902 (1e6 edges/sec)
+
+Trial 42 : source node: 116653530
+SSSP1 (select)  time:      36.8522 (sec), rate:      116.546 (1e6 edges/sec)
+SSSP11 (select)  time:      36.8215 (sec), rate:      116.643 (1e6 edges/sec)
+SSSP2 (select)  time:       35.972 (sec), rate:      119.397 (1e6 edges/sec)
+
+Trial 43 : source node: 123410703
+SSSP1 (select)  time:      36.6171 (sec), rate:      117.294 (1e6 edges/sec)
+SSSP11 (select)  time:      37.1736 (sec), rate:      115.538 (1e6 edges/sec)
+SSSP2 (select)  time:       35.902 (sec), rate:       119.63 (1e6 edges/sec)
+
+Trial 44 : source node: 16733665
+SSSP1 (select)  time:        36.77 (sec), rate:      116.806 (1e6 edges/sec)
+SSSP11 (select)  time:      37.9212 (sec), rate:       113.26 (1e6 edges/sec)
+SSSP2 (select)  time:      35.9219 (sec), rate:      119.564 (1e6 edges/sec)
+
+Trial 45 : source node: 49030282
+SSSP1 (select)  time:      36.9787 (sec), rate:      116.147 (1e6 edges/sec)
+SSSP11 (select)  time:      37.4933 (sec), rate:      114.553 (1e6 edges/sec)
+SSSP2 (select)  time:      36.1551 (sec), rate:      118.793 (1e6 edges/sec)
+
+Trial 46 : source node: 108545121
+SSSP1 (select)  time:      36.6134 (sec), rate:      117.306 (1e6 edges/sec)
+SSSP11 (select)  time:      37.3457 (sec), rate:      115.006 (1e6 edges/sec)
+SSSP2 (select)  time:      35.9585 (sec), rate:      119.442 (1e6 edges/sec)
+
+Trial 47 : source node: 99095665
+SSSP1 (select)  time:      36.8031 (sec), rate:      116.701 (1e6 edges/sec)
+SSSP11 (select)  time:      37.6788 (sec), rate:      113.989 (1e6 edges/sec)
+SSSP2 (select)  time:      38.1832 (sec), rate:      112.483 (1e6 edges/sec)
+
+Trial 48 : source node: 133850077
+SSSP1 (select)  time:      37.1393 (sec), rate:      115.645 (1e6 edges/sec)
+SSSP11 (select)  time:      37.3987 (sec), rate:      114.843 (1e6 edges/sec)
+SSSP2 (select)  time:      36.1163 (sec), rate:      118.921 (1e6 edges/sec)
+
+Trial 49 : source node: 63499301
+SSSP1 (select)  time:      36.8301 (sec), rate:      116.616 (1e6 edges/sec)
+SSSP11 (select)  time:      37.9609 (sec), rate:      113.142 (1e6 edges/sec)
+SSSP2 (select)  time:      35.8905 (sec), rate:      119.669 (1e6 edges/sec)
+
+Trial 50 : source node: 21541382
+SSSP1 (select)  time:      37.0621 (sec), rate:      115.886 (1e6 edges/sec)
+SSSP11 (select)  time:      38.0568 (sec), rate:      112.857 (1e6 edges/sec)
+SSSP2 (select)  time:       36.296 (sec), rate:      118.332 (1e6 edges/sec)
+
+Trial 51 : source node: 6230751
+SSSP1 (select)  time:      36.5796 (sec), rate:      117.414 (1e6 edges/sec)
+SSSP11 (select)  time:      37.2468 (sec), rate:      115.311 (1e6 edges/sec)
+SSSP2 (select)  time:      35.8718 (sec), rate:      119.731 (1e6 edges/sec)
+
+Trial 52 : source node: 89077456
+SSSP1 (select)  time:      37.2324 (sec), rate:      115.356 (1e6 edges/sec)
+SSSP11 (select)  time:      37.4495 (sec), rate:      114.687 (1e6 edges/sec)
+SSSP2 (select)  time:      36.1463 (sec), rate:      118.822 (1e6 edges/sec)
+
+Trial 53 : source node: 70392765
+SSSP1 (select)  time:      37.0191 (sec), rate:       116.02 (1e6 edges/sec)
+SSSP11 (select)  time:      38.0974 (sec), rate:      112.737 (1e6 edges/sec)
+SSSP2 (select)  time:       36.089 (sec), rate:      119.011 (1e6 edges/sec)
+
+Trial 54 : source node: 6670455
+SSSP1 (select)  time:      37.4393 (sec), rate:      114.718 (1e6 edges/sec)
+SSSP11 (select)  time:      37.4196 (sec), rate:      114.779 (1e6 edges/sec)
+SSSP2 (select)  time:       36.503 (sec), rate:      117.661 (1e6 edges/sec)
+
+Trial 55 : source node: 61746271
+SSSP1 (select)  time:      36.5083 (sec), rate:      117.644 (1e6 edges/sec)
+SSSP11 (select)  time:      36.6823 (sec), rate:      117.086 (1e6 edges/sec)
+SSSP2 (select)  time:      35.3788 (sec), rate:        121.4 (1e6 edges/sec)
+
+Trial 56 : source node: 83349535
+SSSP1 (select)  time:      37.2358 (sec), rate:      115.345 (1e6 edges/sec)
+SSSP11 (select)  time:      38.0587 (sec), rate:      112.851 (1e6 edges/sec)
+SSSP2 (select)  time:      36.2864 (sec), rate:      118.363 (1e6 edges/sec)
+
+Trial 57 : source node: 115272184
+SSSP1 (select)  time:      37.1051 (sec), rate:      115.752 (1e6 edges/sec)
+SSSP11 (select)  time:      37.7336 (sec), rate:      113.823 (1e6 edges/sec)
+SSSP2 (select)  time:      36.1488 (sec), rate:      118.813 (1e6 edges/sec)
+
+Trial 58 : source node: 20129908
+SSSP1 (select)  time:      37.3083 (sec), rate:      115.121 (1e6 edges/sec)
+SSSP11 (select)  time:      37.6082 (sec), rate:      114.203 (1e6 edges/sec)
+SSSP2 (select)  time:      36.3582 (sec), rate:      118.129 (1e6 edges/sec)
+
+Trial 59 : source node: 106148553
+SSSP1 (select)  time:      36.7379 (sec), rate:      116.908 (1e6 edges/sec)
+SSSP11 (select)  time:      36.9126 (sec), rate:      116.355 (1e6 edges/sec)
+SSSP2 (select)  time:      35.7723 (sec), rate:      120.064 (1e6 edges/sec)
+
+Trial 60 : source node: 117042375
+SSSP1 (select)  time:      37.1141 (sec), rate:      115.723 (1e6 edges/sec)
+SSSP11 (select)  time:      37.6617 (sec), rate:      114.041 (1e6 edges/sec)
+SSSP2 (select)  time:      36.4399 (sec), rate:      117.864 (1e6 edges/sec)
+
+Trial 61 : source node: 71431187
+SSSP1 (select)  time:      36.8908 (sec), rate:      116.424 (1e6 edges/sec)
+SSSP11 (select)  time:      37.5563 (sec), rate:      114.361 (1e6 edges/sec)
+SSSP2 (select)  time:      35.8078 (sec), rate:      119.945 (1e6 edges/sec)
+
+Trial 62 : source node: 45287808
+SSSP1 (select)  time:      36.7944 (sec), rate:      116.729 (1e6 edges/sec)
+SSSP11 (select)  time:      37.8785 (sec), rate:      113.388 (1e6 edges/sec)
+SSSP2 (select)  time:      35.9654 (sec), rate:       119.42 (1e6 edges/sec)
+
+Trial 63 : source node: 107702120
+SSSP1 (select)  time:      37.0917 (sec), rate:      115.793 (1e6 edges/sec)
+SSSP11 (select)  time:      37.7509 (sec), rate:      113.771 (1e6 edges/sec)
+SSSP2 (select)  time:      36.1433 (sec), rate:      118.832 (1e6 edges/sec)
+ntrials: 64
+Average time per trial (SSSP1, with select):       36.8853 sec (delta 35)
+Average time per trial (SSSP11, with select):       37.5185 sec (delta 35)
+Average time per trial (SSSP2, with select):       36.0439 sec (delta 35)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-web/GAP-web.grb
+sources: /raid/hyper/gapbs/GAP/GAP-web/GAP-web_sources.mtx
+read time: 20.8109 sec
+input graph: nodes: 50636151 edges: 1930292948 nthreads 40
+
+Trial 0 : source node: 10219452
+SSSP1 (select)  time:      39.5636 (sec), rate:      48.7896 (1e6 edges/sec)
+SSSP11 (select)  time:      40.4063 (sec), rate:       47.772 (1e6 edges/sec)
+SSSP2 (select)  time:      38.8166 (sec), rate:      49.7285 (1e6 edges/sec)
+
+Trial 1 : source node: 44758211
+SSSP1 (select)  time:      40.6469 (sec), rate:      47.4893 (1e6 edges/sec)
+SSSP11 (select)  time:       43.016 (sec), rate:      44.8738 (1e6 edges/sec)
+SSSP2 (select)  time:      40.3831 (sec), rate:      47.7995 (1e6 edges/sec)
+
+Trial 2 : source node: 890671
+SSSP1 (select)  time:      41.6991 (sec), rate:       46.291 (1e6 edges/sec)
+SSSP11 (select)  time:      49.6274 (sec), rate:      38.8957 (1e6 edges/sec)
+SSSP2 (select)  time:       39.898 (sec), rate:      48.3807 (1e6 edges/sec)
+
+Trial 3 : source node: 13843756
+SSSP1 (select)  time:       2.8515 (sec), rate:       676.94 (1e6 edges/sec)
+SSSP11 (select)  time:      2.80078 (sec), rate:      689.199 (1e6 edges/sec)
+SSSP2 (select)  time:      2.81003 (sec), rate:       686.93 (1e6 edges/sec)
+
+Trial 4 : source node: 14168062
+SSSP1 (select)  time:      40.1463 (sec), rate:      48.0814 (1e6 edges/sec)
+SSSP11 (select)  time:      41.4997 (sec), rate:      46.5135 (1e6 edges/sec)
+SSSP2 (select)  time:      38.0485 (sec), rate:      50.7324 (1e6 edges/sec)
+
+Trial 5 : source node: 20906930
+SSSP1 (select)  time:      41.0724 (sec), rate:      46.9973 (1e6 edges/sec)
+SSSP11 (select)  time:      44.0466 (sec), rate:      43.8239 (1e6 edges/sec)
+SSSP2 (select)  time:      39.6036 (sec), rate:      48.7403 (1e6 edges/sec)
+
+Trial 6 : source node: 12189584
+SSSP1 (select)  time:       41.088 (sec), rate:      46.9794 (1e6 edges/sec)
+SSSP11 (select)  time:      43.3612 (sec), rate:      44.5166 (1e6 edges/sec)
+SSSP2 (select)  time:      39.8226 (sec), rate:      48.4723 (1e6 edges/sec)
+
+Trial 7 : source node: 26352335
+SSSP1 (select)  time:      2.79832 (sec), rate:      689.805 (1e6 edges/sec)
+SSSP11 (select)  time:      2.77726 (sec), rate:      695.034 (1e6 edges/sec)
+SSSP2 (select)  time:      2.77877 (sec), rate:      694.656 (1e6 edges/sec)
+
+Trial 8 : source node: 43500686
+SSSP1 (select)  time:      40.2283 (sec), rate:      47.9834 (1e6 edges/sec)
+SSSP11 (select)  time:      40.1729 (sec), rate:      48.0497 (1e6 edges/sec)
+SSSP2 (select)  time:      39.5223 (sec), rate:      48.8406 (1e6 edges/sec)
+
+Trial 9 : source node: 8987024
+SSSP1 (select)  time:       39.984 (sec), rate:      48.2767 (1e6 edges/sec)
+SSSP11 (select)  time:       42.746 (sec), rate:      45.1573 (1e6 edges/sec)
+SSSP2 (select)  time:      38.9121 (sec), rate:      49.6065 (1e6 edges/sec)
+
+Trial 10 : source node: 5699762
+SSSP1 (select)  time:      2.85103 (sec), rate:      677.051 (1e6 edges/sec)
+SSSP11 (select)  time:      2.81625 (sec), rate:      685.414 (1e6 edges/sec)
+SSSP2 (select)  time:      2.80478 (sec), rate:      688.216 (1e6 edges/sec)
+
+Trial 11 : source node: 41436455
+SSSP1 (select)  time:      41.5852 (sec), rate:      46.4178 (1e6 edges/sec)
+SSSP11 (select)  time:      44.1055 (sec), rate:      43.7654 (1e6 edges/sec)
+SSSP2 (select)  time:      40.9674 (sec), rate:      47.1177 (1e6 edges/sec)
+
+Trial 12 : source node: 5030727
+SSSP1 (select)  time:      40.1282 (sec), rate:      48.1032 (1e6 edges/sec)
+SSSP11 (select)  time:      42.0475 (sec), rate:      45.9075 (1e6 edges/sec)
+SSSP2 (select)  time:      38.5288 (sec), rate:         50.1 (1e6 edges/sec)
+
+Trial 13 : source node: 40735218
+SSSP1 (select)  time:      41.7945 (sec), rate:      46.1854 (1e6 edges/sec)
+SSSP11 (select)  time:      43.7199 (sec), rate:      44.1514 (1e6 edges/sec)
+SSSP2 (select)  time:      40.4663 (sec), rate:      47.7012 (1e6 edges/sec)
+
+Trial 14 : source node: 16533563
+SSSP1 (select)  time:      40.9038 (sec), rate:      47.1911 (1e6 edges/sec)
+SSSP11 (select)  time:      42.5815 (sec), rate:      45.3318 (1e6 edges/sec)
+SSSP2 (select)  time:      38.8277 (sec), rate:      49.7144 (1e6 edges/sec)
+
+Trial 15 : source node: 28700166
+SSSP1 (select)  time:      39.8199 (sec), rate:      48.4756 (1e6 edges/sec)
+SSSP11 (select)  time:      41.5553 (sec), rate:      46.4512 (1e6 edges/sec)
+SSSP2 (select)  time:      37.9906 (sec), rate:      50.8097 (1e6 edges/sec)
+
+Trial 16 : source node: 64711
+SSSP1 (select)  time:      39.9638 (sec), rate:      48.3011 (1e6 edges/sec)
+SSSP11 (select)  time:      41.8831 (sec), rate:      46.0876 (1e6 edges/sec)
+SSSP2 (select)  time:      39.7131 (sec), rate:       48.606 (1e6 edges/sec)
+
+Trial 17 : source node: 39634750
+SSSP1 (select)  time:      41.1506 (sec), rate:       46.908 (1e6 edges/sec)
+SSSP11 (select)  time:        43.59 (sec), rate:      44.2829 (1e6 edges/sec)
+SSSP2 (select)  time:      39.4143 (sec), rate:      48.9744 (1e6 edges/sec)
+
+Trial 18 : source node: 16037779
+SSSP1 (select)  time:      40.2359 (sec), rate:      47.9744 (1e6 edges/sec)
+SSSP11 (select)  time:      43.1237 (sec), rate:      44.7618 (1e6 edges/sec)
+SSSP2 (select)  time:      38.8238 (sec), rate:      49.7193 (1e6 edges/sec)
+
+Trial 19 : source node: 27152739
+SSSP1 (select)  time:      40.1507 (sec), rate:      48.0762 (1e6 edges/sec)
+SSSP11 (select)  time:      42.2125 (sec), rate:       45.728 (1e6 edges/sec)
+SSSP2 (select)  time:       39.254 (sec), rate:      49.1744 (1e6 edges/sec)
+
+Trial 20 : source node: 16404061
+SSSP1 (select)  time:      41.6525 (sec), rate:      46.3428 (1e6 edges/sec)
+SSSP11 (select)  time:      43.8539 (sec), rate:      44.0164 (1e6 edges/sec)
+SSSP2 (select)  time:       40.947 (sec), rate:      47.1413 (1e6 edges/sec)
+
+Trial 21 : source node: 20491963
+SSSP1 (select)  time:      40.6407 (sec), rate:      47.4966 (1e6 edges/sec)
+SSSP11 (select)  time:      40.6838 (sec), rate:      47.4462 (1e6 edges/sec)
+SSSP2 (select)  time:      39.2233 (sec), rate:       49.213 (1e6 edges/sec)
+
+Trial 22 : source node: 5322423
+SSSP1 (select)  time:      40.4456 (sec), rate:      47.7257 (1e6 edges/sec)
+SSSP11 (select)  time:      47.8522 (sec), rate:      40.3386 (1e6 edges/sec)
+SSSP2 (select)  time:      39.1363 (sec), rate:      49.3223 (1e6 edges/sec)
+
+Trial 23 : source node: 21420953
+SSSP1 (select)  time:      40.5151 (sec), rate:      47.6437 (1e6 edges/sec)
+SSSP11 (select)  time:      42.7895 (sec), rate:      45.1114 (1e6 edges/sec)
+SSSP2 (select)  time:      38.4167 (sec), rate:      50.2463 (1e6 edges/sec)
+
+Trial 24 : source node: 26622109
+SSSP1 (select)  time:      41.5546 (sec), rate:       46.452 (1e6 edges/sec)
+SSSP11 (select)  time:      43.1304 (sec), rate:      44.7548 (1e6 edges/sec)
+SSSP2 (select)  time:      39.6376 (sec), rate:      48.6986 (1e6 edges/sec)
+
+Trial 25 : source node: 5882875
+SSSP1 (select)  time:      40.6744 (sec), rate:      47.4572 (1e6 edges/sec)
+SSSP11 (select)  time:      43.1894 (sec), rate:      44.6937 (1e6 edges/sec)
+SSSP2 (select)  time:      38.9817 (sec), rate:      49.5179 (1e6 edges/sec)
+
+Trial 26 : source node: 18091040
+SSSP1 (select)  time:       39.935 (sec), rate:      48.3358 (1e6 edges/sec)
+SSSP11 (select)  time:      42.0917 (sec), rate:      45.8592 (1e6 edges/sec)
+SSSP2 (select)  time:      38.6357 (sec), rate:      49.9614 (1e6 edges/sec)
+
+Trial 27 : source node: 10665896
+SSSP1 (select)  time:      2.95486 (sec), rate:       653.26 (1e6 edges/sec)
+SSSP11 (select)  time:      2.93745 (sec), rate:      657.133 (1e6 edges/sec)
+SSSP2 (select)  time:      2.93522 (sec), rate:      657.632 (1e6 edges/sec)
+
+Trial 28 : source node: 18634422
+SSSP1 (select)  time:      40.1649 (sec), rate:      48.0592 (1e6 edges/sec)
+SSSP11 (select)  time:      41.8443 (sec), rate:      46.1303 (1e6 edges/sec)
+SSSP2 (select)  time:      38.4021 (sec), rate:      50.2653 (1e6 edges/sec)
+
+Trial 29 : source node: 18138715
+SSSP1 (select)  time:      41.2659 (sec), rate:       46.777 (1e6 edges/sec)
+SSSP11 (select)  time:      43.9391 (sec), rate:      43.9311 (1e6 edges/sec)
+SSSP2 (select)  time:      40.3306 (sec), rate:      47.8617 (1e6 edges/sec)
+
+Trial 30 : source node: 2355535
+SSSP1 (select)  time:      40.2177 (sec), rate:      47.9961 (1e6 edges/sec)
+SSSP11 (select)  time:      42.2069 (sec), rate:       45.734 (1e6 edges/sec)
+SSSP2 (select)  time:      38.1893 (sec), rate:      50.5454 (1e6 edges/sec)
+
+Trial 31 : source node: 32885205
+SSSP1 (select)  time:      2.85094 (sec), rate:      677.073 (1e6 edges/sec)
+SSSP11 (select)  time:      2.81604 (sec), rate:      685.465 (1e6 edges/sec)
+SSSP2 (select)  time:      2.81696 (sec), rate:      685.241 (1e6 edges/sec)
+
+Trial 32 : source node: 40657440
+SSSP1 (select)  time:      41.0706 (sec), rate:      46.9994 (1e6 edges/sec)
+SSSP11 (select)  time:      43.3855 (sec), rate:      44.4917 (1e6 edges/sec)
+SSSP2 (select)  time:      39.3421 (sec), rate:      49.0644 (1e6 edges/sec)
+
+Trial 33 : source node: 35196167
+SSSP1 (select)  time:      41.0983 (sec), rate:      46.9677 (1e6 edges/sec)
+SSSP11 (select)  time:      42.7363 (sec), rate:      45.1675 (1e6 edges/sec)
+SSSP2 (select)  time:      40.1183 (sec), rate:      48.1151 (1e6 edges/sec)
+
+Trial 34 : source node: 45544426
+SSSP1 (select)  time:      39.1546 (sec), rate:      49.2993 (1e6 edges/sec)
+SSSP11 (select)  time:      39.5621 (sec), rate:      48.7914 (1e6 edges/sec)
+SSSP2 (select)  time:      37.7888 (sec), rate:       51.081 (1e6 edges/sec)
+
+Trial 35 : source node: 6175519
+SSSP1 (select)  time:      2.74349 (sec), rate:      703.589 (1e6 edges/sec)
+SSSP11 (select)  time:      2.71599 (sec), rate:      710.715 (1e6 edges/sec)
+SSSP2 (select)  time:      2.71875 (sec), rate:      709.992 (1e6 edges/sec)
+
+Trial 36 : source node: 40058318
+SSSP1 (select)  time:      40.6315 (sec), rate:      47.5073 (1e6 edges/sec)
+SSSP11 (select)  time:      42.2195 (sec), rate:      45.7204 (1e6 edges/sec)
+SSSP2 (select)  time:       38.921 (sec), rate:      49.5952 (1e6 edges/sec)
+
+Trial 37 : source node: 50626230
+SSSP1 (select)  time:      40.6099 (sec), rate:      47.5326 (1e6 edges/sec)
+SSSP11 (select)  time:      41.9552 (sec), rate:      46.0085 (1e6 edges/sec)
+SSSP2 (select)  time:      39.3789 (sec), rate:      49.0185 (1e6 edges/sec)
+
+Trial 38 : source node: 36571019
+SSSP1 (select)  time:       41.278 (sec), rate:      46.7632 (1e6 edges/sec)
+SSSP11 (select)  time:      43.4816 (sec), rate:      44.3933 (1e6 edges/sec)
+SSSP2 (select)  time:      40.0794 (sec), rate:      48.1617 (1e6 edges/sec)
+
+Trial 39 : source node: 49397052
+SSSP1 (select)  time:      40.2731 (sec), rate:      47.9301 (1e6 edges/sec)
+SSSP11 (select)  time:      42.7811 (sec), rate:      45.1202 (1e6 edges/sec)
+SSSP2 (select)  time:      39.0689 (sec), rate:      49.4075 (1e6 edges/sec)
+
+Trial 40 : source node: 23434265
+SSSP1 (select)  time:      40.6667 (sec), rate:      47.4661 (1e6 edges/sec)
+SSSP11 (select)  time:      42.4516 (sec), rate:      45.4704 (1e6 edges/sec)
+SSSP2 (select)  time:      39.6099 (sec), rate:      48.7326 (1e6 edges/sec)
+
+Trial 41 : source node: 2299444
+SSSP1 (select)  time:      41.7488 (sec), rate:      46.2359 (1e6 edges/sec)
+SSSP11 (select)  time:      44.5557 (sec), rate:      43.3232 (1e6 edges/sec)
+SSSP2 (select)  time:       40.323 (sec), rate:      47.8708 (1e6 edges/sec)
+
+Trial 42 : source node: 32873823
+SSSP1 (select)  time:       2.8303 (sec), rate:      682.011 (1e6 edges/sec)
+SSSP11 (select)  time:      2.80876 (sec), rate:       687.24 (1e6 edges/sec)
+SSSP2 (select)  time:      2.83989 (sec), rate:      679.707 (1e6 edges/sec)
+
+Trial 43 : source node: 25978282
+SSSP1 (select)  time:      48.5011 (sec), rate:       39.799 (1e6 edges/sec)
+SSSP11 (select)  time:       43.237 (sec), rate:      44.6445 (1e6 edges/sec)
+SSSP2 (select)  time:      40.1273 (sec), rate:      48.1043 (1e6 edges/sec)
+
+Trial 44 : source node: 2461715
+SSSP1 (select)  time:      2.94066 (sec), rate:      656.415 (1e6 edges/sec)
+SSSP11 (select)  time:       2.9208 (sec), rate:      660.878 (1e6 edges/sec)
+SSSP2 (select)  time:       2.9352 (sec), rate:      657.636 (1e6 edges/sec)
+
+Trial 45 : source node: 22787314
+SSSP1 (select)  time:      41.0989 (sec), rate:       46.967 (1e6 edges/sec)
+SSSP11 (select)  time:      43.2375 (sec), rate:       44.644 (1e6 edges/sec)
+SSSP2 (select)  time:      40.4307 (sec), rate:      47.7432 (1e6 edges/sec)
+
+Trial 46 : source node: 30759947
+SSSP1 (select)  time:      40.2189 (sec), rate:      47.9947 (1e6 edges/sec)
+SSSP11 (select)  time:      40.3775 (sec), rate:      47.8061 (1e6 edges/sec)
+SSSP2 (select)  time:       38.518 (sec), rate:       50.114 (1e6 edges/sec)
+
+Trial 47 : source node: 7428894
+SSSP1 (select)  time:      2.74027 (sec), rate:      704.418 (1e6 edges/sec)
+SSSP11 (select)  time:      2.70023 (sec), rate:      714.862 (1e6 edges/sec)
+SSSP2 (select)  time:      2.69783 (sec), rate:      715.498 (1e6 edges/sec)
+
+Trial 48 : source node: 39173870
+SSSP1 (select)  time:      2.70702 (sec), rate:      713.069 (1e6 edges/sec)
+SSSP11 (select)  time:      2.70987 (sec), rate:      712.318 (1e6 edges/sec)
+SSSP2 (select)  time:      2.70106 (sec), rate:      714.642 (1e6 edges/sec)
+
+Trial 49 : source node: 43194209
+SSSP1 (select)  time:      2.72409 (sec), rate:      708.602 (1e6 edges/sec)
+SSSP11 (select)  time:      2.71976 (sec), rate:      709.728 (1e6 edges/sec)
+SSSP2 (select)  time:      2.75526 (sec), rate:      700.584 (1e6 edges/sec)
+
+Trial 50 : source node: 26361509
+SSSP1 (select)  time:      2.78051 (sec), rate:      694.223 (1e6 edges/sec)
+SSSP11 (select)  time:      2.75899 (sec), rate:      699.636 (1e6 edges/sec)
+SSSP2 (select)  time:      2.75877 (sec), rate:      699.694 (1e6 edges/sec)
+
+Trial 51 : source node: 39747211
+SSSP1 (select)  time:      2.71913 (sec), rate:      709.895 (1e6 edges/sec)
+SSSP11 (select)  time:      2.72243 (sec), rate:      709.034 (1e6 edges/sec)
+SSSP2 (select)  time:       2.7211 (sec), rate:      709.379 (1e6 edges/sec)
+
+Trial 52 : source node: 30670029
+SSSP1 (select)  time:      39.5372 (sec), rate:      48.8222 (1e6 edges/sec)
+SSSP11 (select)  time:      39.5131 (sec), rate:       48.852 (1e6 edges/sec)
+SSSP2 (select)  time:      38.7051 (sec), rate:      49.8718 (1e6 edges/sec)
+
+Trial 53 : source node: 41483033
+SSSP1 (select)  time:      41.2575 (sec), rate:      46.7865 (1e6 edges/sec)
+SSSP11 (select)  time:      42.1281 (sec), rate:      45.8196 (1e6 edges/sec)
+SSSP2 (select)  time:      40.0027 (sec), rate:      48.2541 (1e6 edges/sec)
+
+Trial 54 : source node: 9358666
+SSSP1 (select)  time:      41.3513 (sec), rate:      46.6803 (1e6 edges/sec)
+SSSP11 (select)  time:      41.5764 (sec), rate:      46.4276 (1e6 edges/sec)
+SSSP2 (select)  time:      39.7383 (sec), rate:      48.5751 (1e6 edges/sec)
+
+Trial 55 : source node: 9945008
+SSSP1 (select)  time:      41.6709 (sec), rate:      46.3223 (1e6 edges/sec)
+SSSP11 (select)  time:      43.9141 (sec), rate:      43.9561 (1e6 edges/sec)
+SSSP2 (select)  time:      40.1198 (sec), rate:      48.1132 (1e6 edges/sec)
+
+Trial 56 : source node: 3355244
+SSSP1 (select)  time:      41.4025 (sec), rate:      46.6227 (1e6 edges/sec)
+SSSP11 (select)  time:      42.7287 (sec), rate:      45.1756 (1e6 edges/sec)
+SSSP2 (select)  time:      40.3079 (sec), rate:      47.8887 (1e6 edges/sec)
+
+Trial 57 : source node: 33831269
+SSSP1 (select)  time:      40.5237 (sec), rate:      47.6336 (1e6 edges/sec)
+SSSP11 (select)  time:      42.6078 (sec), rate:      45.3037 (1e6 edges/sec)
+SSSP2 (select)  time:      39.3432 (sec), rate:      49.0629 (1e6 edges/sec)
+
+Trial 58 : source node: 45124744
+SSSP1 (select)  time:      40.1334 (sec), rate:      48.0969 (1e6 edges/sec)
+SSSP11 (select)  time:      42.1716 (sec), rate:      45.7724 (1e6 edges/sec)
+SSSP2 (select)  time:      38.3569 (sec), rate:      50.3245 (1e6 edges/sec)
+
+Trial 59 : source node: 16137877
+SSSP1 (select)  time:      2.87608 (sec), rate:      671.154 (1e6 edges/sec)
+SSSP11 (select)  time:       2.8641 (sec), rate:      673.961 (1e6 edges/sec)
+SSSP2 (select)  time:       2.8609 (sec), rate:      674.715 (1e6 edges/sec)
+
+Trial 60 : source node: 11235448
+SSSP1 (select)  time:      40.8421 (sec), rate:      47.2623 (1e6 edges/sec)
+SSSP11 (select)  time:      40.9249 (sec), rate:      47.1667 (1e6 edges/sec)
+SSSP2 (select)  time:      40.0737 (sec), rate:      48.1686 (1e6 edges/sec)
+
+Trial 61 : source node: 37509144
+SSSP1 (select)  time:      40.6444 (sec), rate:      47.4922 (1e6 edges/sec)
+SSSP11 (select)  time:       41.284 (sec), rate:      46.7565 (1e6 edges/sec)
+SSSP2 (select)  time:      39.4893 (sec), rate:      48.8814 (1e6 edges/sec)
+
+Trial 62 : source node: 27402414
+SSSP1 (select)  time:      41.7353 (sec), rate:      46.2509 (1e6 edges/sec)
+SSSP11 (select)  time:       43.881 (sec), rate:      43.9893 (1e6 edges/sec)
+SSSP2 (select)  time:      41.4636 (sec), rate:      46.5539 (1e6 edges/sec)
+
+Trial 63 : source node: 39546083
+SSSP1 (select)  time:      40.5322 (sec), rate:      47.6237 (1e6 edges/sec)
+SSSP11 (select)  time:      40.2518 (sec), rate:      47.9554 (1e6 edges/sec)
+SSSP2 (select)  time:      38.4799 (sec), rate:      50.1637 (1e6 edges/sec)
+ntrials: 64
+Average time per trial (SSSP1, with select):       32.5403 sec (delta 150)
+Average time per trial (SSSP11, with select):       33.9267 sec (delta 150)
+Average time per trial (SSSP2, with select):       31.4033 sec (delta 150)
+all tests passed
+matrix: /raid/hyper/gapbs/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-road/GAP-road.grb
+sources: /raid/hyper/gapbs/GAP/GAP-road/GAP-road_sources.mtx
+read time: 0.746003 sec
+input graph: nodes: 23947347 edges: 57708624 nthreads 40
+
+Trial 0 : source node: 4795720
+SSSP1 (select)  time:      1038.13 (sec), rate:    0.0555892 (1e6 edges/sec)
+SSSP11 (select)  time:      1017.78 (sec), rate:    0.0567004 (1e6 edges/sec)
+SSSP2 (select)  time:      974.655 (sec), rate:    0.0592093 (1e6 edges/sec)
+
+Trial 1 : source node: 21003853
+SSSP1 (select)  time:      800.654 (sec), rate:    0.0720769 (1e6 edges/sec)
+SSSP11 (select)  time:      794.288 (sec), rate:    0.0726545 (1e6 edges/sec)
+SSSP2 (select)  time:      778.585 (sec), rate:    0.0741198 (1e6 edges/sec)
+
+Trial 2 : source node: 417968
+SSSP1 (select)  time:      813.546 (sec), rate:    0.0709347 (1e6 edges/sec)
+SSSP11 (select)  time:      818.659 (sec), rate:    0.0704916 (1e6 edges/sec)
+SSSP2 (select)  time:      800.024 (sec), rate:    0.0721336 (1e6 edges/sec)
+
+Trial 3 : source node: 6496511
+SSSP1 (select)  time:      988.692 (sec), rate:    0.0583686 (1e6 edges/sec)
+SSSP11 (select)  time:       978.08 (sec), rate:    0.0590019 (1e6 edges/sec)
+SSSP2 (select)  time:       927.21 (sec), rate:     0.062239 (1e6 edges/sec)
+
+Trial 4 : source node: 6648699
+SSSP1 (select)  time:      662.084 (sec), rate:    0.0871621 (1e6 edges/sec)
+SSSP11 (select)  time:      662.914 (sec), rate:     0.087053 (1e6 edges/sec)
+SSSP2 (select)  time:      668.139 (sec), rate:    0.0863722 (1e6 edges/sec)
+
+Trial 5 : source node: 9811073
+SSSP1 (select)  time:      953.484 (sec), rate:     0.060524 (1e6 edges/sec)
+SSSP11 (select)  time:      972.256 (sec), rate:    0.0593554 (1e6 edges/sec)
+SSSP2 (select)  time:      934.781 (sec), rate:    0.0617349 (1e6 edges/sec)
+
+Trial 6 : source node: 22247478
+SSSP1 (select)  time:      796.305 (sec), rate:    0.0724705 (1e6 edges/sec)
+SSSP11 (select)  time:      772.348 (sec), rate:    0.0747184 (1e6 edges/sec)
+SSSP2 (select)  time:      773.576 (sec), rate:    0.0745999 (1e6 edges/sec)
+
+Trial 7 : source node: 5720252
+SSSP1 (select)  time:      830.696 (sec), rate:    0.0694702 (1e6 edges/sec)
+SSSP11 (select)  time:      810.573 (sec), rate:    0.0711949 (1e6 edges/sec)
+SSSP2 (select)  time:      800.035 (sec), rate:    0.0721327 (1e6 edges/sec)
+
+Trial 8 : source node: 12366459
+SSSP1 (select)  time:      748.967 (sec), rate:     0.077051 (1e6 edges/sec)
+SSSP11 (select)  time:      717.584 (sec), rate:    0.0804208 (1e6 edges/sec)
+SSSP2 (select)  time:      737.545 (sec), rate:    0.0782442 (1e6 edges/sec)
+
+Trial 9 : source node: 20413729
+SSSP1 (select)  time:      788.303 (sec), rate:    0.0732061 (1e6 edges/sec)
+SSSP11 (select)  time:      773.993 (sec), rate:    0.0745596 (1e6 edges/sec)
+SSSP2 (select)  time:      769.839 (sec), rate:    0.0749619 (1e6 edges/sec)
+
+Trial 10 : source node: 4217374
+SSSP1 (select)  time:      959.135 (sec), rate:    0.0601674 (1e6 edges/sec)
+SSSP11 (select)  time:      942.342 (sec), rate:    0.0612396 (1e6 edges/sec)
+SSSP2 (select)  time:      909.959 (sec), rate:     0.063419 (1e6 edges/sec)
+
+Trial 11 : source node: 2674749
+SSSP1 (select)  time:      973.914 (sec), rate:    0.0592543 (1e6 edges/sec)
+SSSP11 (select)  time:      947.991 (sec), rate:    0.0608746 (1e6 edges/sec)
+SSSP2 (select)  time:      924.056 (sec), rate:    0.0624515 (1e6 edges/sec)
+
+Trial 12 : source node: 22085557
+SSSP1 (select)  time:       772.92 (sec), rate:    0.0746631 (1e6 edges/sec)
+SSSP11 (select)  time:      773.251 (sec), rate:    0.0746312 (1e6 edges/sec)
+SSSP2 (select)  time:      758.353 (sec), rate:    0.0760973 (1e6 edges/sec)
+
+Trial 13 : source node: 19445040
+SSSP1 (select)  time:      937.564 (sec), rate:    0.0615516 (1e6 edges/sec)
+SSSP11 (select)  time:      939.677 (sec), rate:    0.0614132 (1e6 edges/sec)
+SSSP2 (select)  time:      890.273 (sec), rate:    0.0648212 (1e6 edges/sec)
+
+Trial 14 : source node: 2360788
+SSSP1 (select)  time:      904.285 (sec), rate:    0.0638169 (1e6 edges/sec)
+SSSP11 (select)

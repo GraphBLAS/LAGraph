@@ -1,3 +1,16 @@
 #!/bin/sh
 
+#./build/sssp_test /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron.grb /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron_sources.mtx 1 
+#./build/sssp_test /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron.grb /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron_sources.mtx 2 
+#./build/sssp_test /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron.grb /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron_sources.mtx 3 
+#./build/sssp_test /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron.grb /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron_sources.mtx 4 
+#./build/sssp_test /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron.grb /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron_sources.mtx 5 
+#./build/sssp_test /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron.grb /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron_sources.mtx 6 
+#./build/sssp_test /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron.grb /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron_sources.mtx 7 
+#./build/sssp_test /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron.grb /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron_sources.mtx 8 
+#./build/sssp_test /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron.grb /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron_sources.mtx 9 
+#./build/sssp_test /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron.grb /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron_sources.mtx 10 
+#./build/sssp_test /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron.grb /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron_sources.mtx 15 
 ./build/sssp_test /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron.grb /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron_sources.mtx 27 
+#./build/sssp_test /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron.grb /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron_sources.mtx 50 
+#./build/sssp_test /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron.grb /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron_sources.mtx 100 

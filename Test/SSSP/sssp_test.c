@@ -216,10 +216,13 @@ int main (int argc, char **argv)
     printf ("input graph: nodes: %"PRIu64" edges: %"PRIu64" nthreads %d\n",
         n, nvals, nthreads) ;
 
-    int ntrials = 1 ; // (int) nsource;
+    int ntrials =  1;//(int) nsource;
     double total_time1 = 0 ;
     double total_time2 = 0 ;
     double total_time3 = 0 ;
+    double total_time31 = 0 ;
+    double total_time32 = 0 ;
+    double t1, t2, t3;
 
     for (int trial = 0 ; trial < ntrials ; trial++)
     {
@@ -249,7 +252,7 @@ int main (int argc, char **argv)
         LAGRAPH_OK (LAGraph_sssp (&path_lengths, A, s, delta)) ;
 
         // stop the timer
-        double t2 = LAGraph_toc (tic) ;
+        t2 = LAGraph_toc (tic) ;
         printf ("SSSP (apply)    time: %12.6g (sec), rate:"
             " %12.6g (1e6 edges/sec)\n", t2, 1e-6*((double) nvals) / t2) ;
 
@@ -259,7 +262,7 @@ int main (int argc, char **argv)
         //----------------------------------------------------------------------
         // Compute shortest path using delta stepping with given node and delta
         //----------------------------------------------------------------------
-#if 0
+
         // Start the timer
         LAGraph_tic (tic);
 
@@ -267,12 +270,12 @@ int main (int argc, char **argv)
         LAGRAPH_OK (LAGraph_sssp1 (&path_lengths1, A, s, delta)) ;
 
         // Stop the timer
-        double t3 = LAGraph_toc (tic);
+        t3 = LAGraph_toc (tic);
         printf ("SSSP1 (select)  time: %12.6g (sec), rate:"
             " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
 
         total_time3 += t3;
-#endif
+
 
         // Start the timer
         LAGraph_tic (tic);
@@ -281,11 +284,11 @@ int main (int argc, char **argv)
         LAGRAPH_OK (LAGraph_sssp11 (&path_lengths1, A, s, delta)) ;
 
         // Stop the timer
-        double t3 = LAGraph_toc (tic);
+        t3 = LAGraph_toc (tic);
         printf ("SSSP11 (select)  time: %12.6g (sec), rate:"
             " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
 
-        total_time3 += t3;
+        total_time31 += t3;
 
 
         // Start the timer
@@ -298,6 +301,7 @@ int main (int argc, char **argv)
         t3 = LAGraph_toc (tic);
         printf ("SSSP2 (select)  time: %12.6g (sec), rate:"
             " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
+        total_time32 += t3;
 
 
         //----------------------------------------------------------------------
@@ -323,7 +327,7 @@ int main (int argc, char **argv)
         LAGRAPH_OK (LAGraph_BF_pure_c (&d, &pi, s, n, nvals, I, J, W)) ;
 
         // stop the timer
-        double t1 = LAGraph_toc (tic) ;
+        t1 = LAGraph_toc (tic) ;
         printf ("BF_pure_c       time: %12.6g (sec), rate:"
             " %g (1e6 edges/sec)\n", t1, 1e-6*((double) nvals) / t1) ;
 
@@ -405,6 +409,10 @@ int main (int argc, char **argv)
     #endif
     printf ("Average time per trial (SSSP1, with select):  %12.6g sec "
         "(delta %d)\n", total_time3 / ntrials, delta);
+    printf ("Average time per trial (SSSP11, with select):  %12.6g sec "
+        "(delta %d)\n", total_time31 / ntrials, delta);
+    printf ("Average time per trial (SSSP2, with select):  %12.6g sec "
+        "(delta %d)\n", total_time32 / ntrials, delta);
 
     LAGRAPH_FREE_ALL;
     LAGRAPH_OK (LAGraph_finalize());

@@ -109,8 +109,11 @@ GrB_Info LAGraph_sssp11         // single source shortest paths
     double total_time5 = 0;
     double total_time6 = 0;
     double total_time7 = 0;
+    double total_time8 = 0;
+    double total_time9 = 0;
     double tic1[2], tic[2];
     LAGraph_tic(tic1);
+    LAGraph_tic(tic);
 
     if (A == NULL || path_length == NULL)
     {
@@ -144,7 +147,7 @@ GrB_Info LAGraph_sssp11         // single source shortest paths
     LAGr_Vector_new(&tmasked, GrB_INT32, n);
     LAGr_Vector_new(&tReq, GrB_INT32, n);
 
-    LAGr_Vector_new(&tBi, GrB_BOOL, n);
+    //LAGr_Vector_new(&tBi, GrB_BOOL, n);
     LAGr_Vector_new(&tnew, GrB_BOOL, n);
     LAGr_Vector_new(&tless, GrB_BOOL, n);
     LAGr_Vector_new(&s, GrB_BOOL, n);
@@ -171,8 +174,9 @@ GrB_Info LAGraph_sssp11         // single source shortest paths
     // TODO: tmasked starts out as the sparse vector t (one entry)
     // tmasked >= i*delta to find out how many left to be optimized
     LAGRAPH_OK (GxB_Scalar_setElement_INT32(lBound, i * delta));
-    LAGRAPH_OK (GxB_select(tmasked, GrB_NULL, GrB_NULL, GxB_GE_THUNK, t, lBound,
-        GrB_NULL));
+    //LAGRAPH_OK (GxB_select(tmasked, GrB_NULL, GrB_NULL, GxB_GE_THUNK, t, lBound,
+    //    GrB_NULL));
+    LAGr_Vector_setElement(tmasked, 0, source);
     // GxB_print(tmasked, print_lvl);
 
     LAGr_Vector_nvals(&tmasked_nvals, tmasked);
@@ -181,6 +185,8 @@ GrB_Info LAGraph_sssp11         // single source shortest paths
     {
         fprintf (stderr, "outter tmasked has %ld nnz\n",tmasked_nvals);
     }
+    double t1 = LAGraph_toc(tic);
+    //printf("pre-handling time %12.6g sec\n", t1);
 
     //--------------------------------------------------------------------------
     // while (t >= i*delta) not empty
@@ -195,12 +201,15 @@ GrB_Info LAGraph_sssp11         // single source shortest paths
         LAGRAPH_OK (GxB_Scalar_setElement_INT32(uBound, (i+1) * delta));
         LAGRAPH_OK (GxB_select(tmasked, GrB_NULL, GrB_NULL, GxB_LT_THUNK,
             tmasked, uBound, GrB_NULL));
-        double t1 = LAGraph_toc(tic);
+        t1 = LAGraph_toc(tic);
         total_time1 += t1;
 
         // tBi = pattern of tmasked
+        /*LAGraph_tic (tic);
         LAGr_apply(tBi, GrB_NULL, GrB_NULL, GxB_ONE_BOOL, tmasked,
             LAGraph_desc_ooor);
+        t1 = LAGraph_toc(tic);
+        total_time8 += t1;*/
         // GxB_print(tBi, print_lvl);
         // GxB_print(tmasked, print_lvl);
 
@@ -225,11 +234,17 @@ GrB_Info LAGraph_sssp11         // single source shortest paths
             total_time2 += t1;
             // GxB_print(tReq, print_lvl);
 
-            // TODO try using GrB_assign with an accum of GrB_LOR
             // s = (s | tBi)
+            // GrB_assign is faster here
             LAGraph_tic (tic);
-            LAGr_eWiseAdd(s, GrB_NULL, GrB_NULL, GrB_LOR, s, tBi,
-                GrB_NULL);
+            //LAGr_eWiseAdd(s, GrB_NULL, GrB_NULL, GrB_LOR, s, tBi,
+            //    GrB_NULL);
+            //LAGRAPH_OK (GrB_assign(s, GrB_NULL, GrB_LOR, tBi, GrB_ALL,
+            //    n, GrB_NULL));
+
+            LAGr_apply(s, GrB_NULL, GrB_LOR, GxB_ONE_BOOL, tmasked, GrB_NULL);
+            //GxB_print(s, 2);
+
             t1 = LAGraph_toc(tic);
             total_time3 += t1;
 
@@ -242,29 +257,35 @@ GrB_Info LAGraph_sssp11         // single source shortest paths
             // GxB_print(tless, print_lvl);
 
             // tmasked<tless> = select (i*delta <= tReq < (i+1)*delta)
-            // TODO try swapping the order; pick the fastest one
+            // since all entries of the 5 GAP graphs are known to be positive,
+            // and the entries of tmasked are at least i*delta,
+            // tReq = tmasked min.+ AL must be >= i*delta.
+            // Therefore, there is no need to perform GxB_select with
+            // GxB_GE_THUNK to find tmasked >= i*delta from tReq 
             LAGraph_tic (tic);
-            LAGRAPH_OK (GxB_select(tmasked, tless, GrB_NULL, GxB_GE_THUNK,
-                tReq,    lBound, LAGraph_desc_ooor));
-            // GxB_print(tmasked, print_lvl);
             LAGRAPH_OK (GxB_select(tmasked, tless, GrB_NULL, GxB_LT_THUNK,
-                tmasked, uBound, GrB_NULL));
+                tReq,    uBound, LAGraph_desc_ooor));
+            // For general graph, it is better to uncomment the following
+            //LAGRAPH_OK (GxB_select(tmasked, tless, GrB_NULL, GxB_GE_THUNK, 
+            //                tmasked, lBound, GrB_NULL));
             t1 = LAGraph_toc(tic);
             total_time5 += t1;
-            printf ("select tmasked takes %12.6g sec when tmasked_nvals=%"PRIu64"\n", t1, tmasked_nvals);
+            //printf ("select tmasked takes %12.6g sec when tmasked_nvals=%"PRIu64"\n", t1, tmasked_nvals);
             // GxB_print(tmasked, print_lvl);
 
             // t<tless> = min(t, tReq)
-            // alternatively use the following
+            // GrB_apply is faster than GrB_eWiseAdd here
             LAGraph_tic (tic);
             LAGr_apply(t, tless, GrB_NULL, GrB_IDENTITY_INT32, tReq, GrB_NULL);
             t1 = LAGraph_toc(tic);
             total_time6 += t1;
-            //LAGr_eWiseAdd(t, tless, GrB_NULL, GrB_MIN_INT32, t, tReq, GrB_NULL);
 
             // tBi = pattern of tmasked
+            /*LAGraph_tic (tic);
             LAGr_apply(tBi, GrB_NULL, GrB_NULL, GxB_ONE_BOOL,
                 tmasked, LAGraph_desc_ooor);
+            t1 = LAGraph_toc(tic);
+            total_time8 += t1;*/
             // GxB_print(tBi, print_lvl);
 
             LAGr_Vector_nvals(&tmasked_nvals, tmasked);
@@ -287,8 +308,15 @@ GrB_Info LAGraph_sssp11         // single source shortest paths
         total_time2 += t1;
 
         // t = min(t, tReq)
-        LAGr_eWiseAdd(t, GrB_NULL, GrB_NULL, GrB_MIN_INT32, t, tReq,
-            GrB_NULL);
+        LAGraph_tic (tic);
+        LAGr_eWiseAdd(tless, tReq, GrB_NULL, GrB_LT_INT32, tReq,
+            t, LAGraph_desc_ooor);
+        LAGr_apply(t, tless, GrB_NULL, GrB_IDENTITY_INT32, tReq, GrB_NULL);
+        
+        /*LAGr_eWiseAdd(t, tReq, GrB_NULL, GrB_MIN_INT32, t, tReq,
+            GrB_NULL);*/
+        t1 = LAGraph_toc(tic);
+        total_time9 += t1;
 
         //----------------------------------------------------------------------
         // prepare for the next loop, and find out how many left to be computed
@@ -299,8 +327,10 @@ GrB_Info LAGraph_sssp11         // single source shortest paths
         // tmasked = select (t >= i*delta)
         LAGraph_tic (tic);
         LAGRAPH_OK (GxB_Scalar_setElement_INT32(lBound, i * delta));
+        //LAGRAPH_OK (GxB_select(tmasked, GrB_NULL, GrB_NULL, GxB_GE_THUNK, t,
+        //    lBound, GrB_NULL));//TODO: LAGraph_desc_ooor?
         LAGRAPH_OK (GxB_select(tmasked, GrB_NULL, GrB_NULL, GxB_GE_THUNK, t,
-            lBound, GrB_NULL));
+            lBound, LAGraph_desc_ooor));
         t1 = LAGraph_toc(tic);
         total_time7 += t1;
         // GxB_print(tmasked, print_lvl);
@@ -329,11 +359,32 @@ GrB_Info LAGraph_sssp11         // single source shortest paths
         total_time6/total_time);
     printf("select GE time %12.6g sec, ratio %12.6g\n", total_time7,
         total_time7/total_time);
+    printf("find tBi time %12.6g sec, ratio %12.6g\n", total_time8,
+        total_time8/total_time);
+    printf("update t time2 %12.6g sec, ratio %12.6g\n", total_time9,
+        total_time9/total_time);
 
     // result = t
     *path_length = t;
     t = NULL;
 
     LAGRAPH_FREE_ALL;
-    return GrB_SUCCESS;
+/*    GrB_free(&AL);
+    t1 = LAGraph_toc(tic);
+    printf("time %12.6g sec\n", t1);
+    LAGraph_tic (tic);
+    GrB_free(&AH);
+    t1 = LAGraph_toc(tic);
+    printf("time %12.6g sec\n", t1);
+    LAGraph_tic (tic);
+    GrB_free(&t);
+    GrB_free(&tmasked);
+    GrB_free(&tReq);
+    GrB_free(&tBi);
+    GrB_free(&tnew);
+    GrB_free(&tless);
+    GrB_free(&s);
+    t1 = LAGraph_toc(tic);
+    printf("time %12.6g sec\n", t1);
+*/    return GrB_SUCCESS;
 }
