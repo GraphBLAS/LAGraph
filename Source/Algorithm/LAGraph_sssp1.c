@@ -231,6 +231,7 @@ GrB_Info LAGraph_sssp1         // single source shortest paths
             // alternatively use the following
             LAGr_apply(t, tless, GrB_NULL, GrB_IDENTITY_INT32, tReq, GrB_NULL);
             //LAGr_eWiseAdd(t, tless, GrB_NULL, GrB_MIN_INT32, t, tReq, GrB_NULL);
+            // try: LAGr_assign (t, tless, NULL, tReq, GrB_ALL, n, NULL) ;
 
             // tBi = pattern of tmasked
             LAGr_apply(tBi, GrB_NULL, GrB_NULL, GxB_ONE_BOOL,
@@ -248,6 +249,7 @@ GrB_Info LAGraph_sssp1         // single source shortest paths
         // tmasked = (t .* s)
         LAGr_apply(tmasked, s, GrB_NULL, GrB_IDENTITY_INT32, t,
             LAGraph_desc_ooor);
+        // try: LAGr_assign (tmasked, s, NULL, t, GrB_ALL, n, LAGraph_desc_ooor) ;
 
         // tReq = AH'(t .* s)
         LAGr_vxm(tReq, GrB_NULL, GrB_NULL, GxB_MIN_PLUS_INT32,
