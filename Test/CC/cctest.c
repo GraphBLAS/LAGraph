@@ -208,6 +208,14 @@ int main (int argc, char **argv)
             nthreads, t1, nCC) ;
         LAGr_free (&result) ;
 
+        LAGraph_tic (tic) ;
+        LAGRAPH_OK (LAGraph_cc_fastsv5 (&result, A, sanitize)) ;
+        t1 = LAGraph_toc (tic) ;
+        nCC = countCC (result, n) ;
+        printf("FastSV4: threads: %2d time: %10.4f  # of CC: %lu\n",
+            nthreads, t1, nCC) ;
+        LAGr_free (&result) ;
+
         /*
         LAGraph_tic (tic) ;
         LAGRAPH_OK (LAGraph_cc_boruvka (&result, A, sanitize)) ;
