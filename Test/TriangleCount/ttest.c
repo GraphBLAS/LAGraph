@@ -176,15 +176,23 @@ int main (int argc, char **argv)
 
     int nthreads_max = LAGraph_get_nthreads ( ) ;
 
-    int ntest = 4 ;
-    int Nthreads [6+1] = { 0,
-        1, 2, 4, 8 } ;              // slash
+//  int ntest = 4 ;
+//  int Nthreads [6+1] = { 0,
+//      1, 2, 4, 8 } ;              // slash
+
+//  int ntest = 9 ;
+//  int Nthreads [20] = { 0,
+//      64, 32, 24, 16, 12, 8, 4, 2, 1 } ;        // devcloud
+
+    int ntest = 9 ;
+    int Nthreads [20] = { 0,
+        1, 2, 4, 8, 12, 16, 24, 32, 64 } ;        // devcloud
 
     printf ("threads to test: ") ;
     for (int t = 1 ; t <= ntest ; t++)
     {
         int nthreads = Nthreads [t] ;
-        if (nthreads > nthreads_max) break ;
+        if (nthreads > nthreads_max) continue ;
         printf (" %d", nthreads) ;
     }
     printf ("\n") ;
@@ -217,7 +225,7 @@ int main (int argc, char **argv)
         for (int t = 1 ; t <= ntest ; t++)
         {
             int nthreads = Nthreads [t] ;
-            if (nthreads > nthreads_max) break ;
+            if (nthreads > nthreads_max) continue ;
             LAGraph_set_nthreads (nthreads) ;
             int64_t nt2 ;
             LAGraph_tic (tic) ;

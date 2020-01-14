@@ -1,0 +1,4 @@
+#!/bin/sh
+
+./build/mtx2bin ~/GAP/GAP-kron/GAP-kron.mtx ~/GAP/GAP-kron/GAP-kron.grb
+./build/mtx2bin ~/GAP/GAP-urand/GAP-urand.mtx ~/GAP/GAP-urand/GAP-urand.grb

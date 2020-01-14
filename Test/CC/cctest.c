@@ -156,9 +156,15 @@ int main (int argc, char **argv)
     LAGRAPH_OK (GrB_eWiseAdd (S, 0, 0, GrB_LOR, A, A, desc)) ;
     LAGRAPH_FREE (desc) ;
 
-    #define NTRIALS 5
     int nthreads_max = LAGraph_get_nthreads ( ) ;
-    int nthread_list [20] = { 1, 4, 8, 10, 16, 20, 40 } ;
+
+//  #define NTRIALS 5
+//  int nthread_list [20] = { 1, 4, 8, 10, 16, 20, 40 } ;
+
+    // devcloud
+    #define NTRIALS 9
+    int nthread_list [20] = { 64, 32, 24, 16, 12, 8, 4, 2, 1 } ;
+
     double tic [2], t1, t2 ;
 
     bool sanitize = false ;
@@ -167,7 +173,7 @@ int main (int argc, char **argv)
     for (int trial = 0 ; trial < NTRIALS ; trial++)
     {
         int nthreads = nthread_list [trial] ;
-        if (nthreads > nthreads_max) break ;
+        if (nthreads > nthreads_max) continue ;
         LAGraph_set_nthreads (nthreads) ;
 
         LAGraph_tic (tic) ;
