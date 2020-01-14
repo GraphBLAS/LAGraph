@@ -27,5 +27,3 @@ TODO: simplify the CMake scripts in the Test/* folders (use a common
 
 TODO: move LICENSE, etc to Doc/
 
-TODO: binary file I/O
-

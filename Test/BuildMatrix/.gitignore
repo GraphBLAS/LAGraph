@@ -1,3 +1,6 @@
 # Ignore these files
 A.mtx
 stderr.txt
+
+# Do not ignore this file
+!.gitignore

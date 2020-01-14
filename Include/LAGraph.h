@@ -129,6 +129,18 @@ extern bool LAGraph_malloc_is_thread_safe ;
     LAGRAPH_TRY_CATCH(GrB_Semiring_new(__VA_ARGS__));                       \
 }
 
+// Scalar Methods //////////////////////////////////////////////////////////////
+
+#define LAGr_Scalar_new(...)                                                \
+{                                                                           \
+    LAGRAPH_TRY_CATCH (GxB_Scalar_new(__VA_ARGS__)) ;                       \
+}
+
+#define LAGr_Scalar_setElement(...)                                         \
+{                                                                           \
+    LAGRAPH_TRY_CATCH (GxB_Scalar_setElement(__VA_ARGS__)) ;                \
+}
+
 // Vector Methods //////////////////////////////////////////////////////////////
 
 #define LAGr_Vector_new(...)                                                \
@@ -334,6 +346,11 @@ extern bool LAGraph_malloc_is_thread_safe ;
 #define LAGr_kronecker(...)                                                 \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_kronecker(__VA_ARGS__));                          \
+}
+
+#define LAGr_select(...)                                                    \
+{                                                                           \
+    LAGRAPH_TRY_CATCH (GxB_select (__VA_ARGS__)) ;                          \
 }
 
 // Sequence Termination ////////////////////////////////////////////////////////
@@ -841,6 +858,30 @@ GrB_Info LAGraph_cc_fastsv (
     bool sanitize           // if true, ensure A is symmetric
 ) ;
 
+GrB_Info LAGraph_cc_fastsv2 (
+    GrB_Vector *result,     // output: array of component identifiers
+    GrB_Matrix A,           // input matrix
+    bool sanitize           // if true, ensure A is symmetric
+) ;
+
+GrB_Info LAGraph_cc_fastsv3 (
+    GrB_Vector *result,     // output: array of component identifiers
+    GrB_Matrix A,           // input matrix
+    bool sanitize           // if true, ensure A is symmetric
+) ;
+
+GrB_Info LAGraph_cc_fastsv4 (
+    GrB_Vector *result,     // output: array of component identifiers
+    GrB_Matrix A,           // input matrix
+    bool sanitize           // if true, ensure A is symmetric
+) ;
+
+GrB_Info LAGraph_cc_fastsv5 (
+    GrB_Vector *result,     // output: array of component identifiers
+    GrB_Matrix A,           // input matrix
+    bool sanitize           // if true, ensure A is symmetric
+) ;
+
 GrB_Info LAGraph_cc_boruvka (
     GrB_Vector *result,     // output: array of component identifiers
     GrB_Matrix A,           // input matrix
@@ -935,11 +976,8 @@ GrB_Info LAGraph_pagerank3e // PageRank definition
 GrB_Info LAGraph_tricount   // count # of triangles
 (
     int64_t *ntri,          // # of triangles
-    const int method,       // 0 to 5, see above
-    const GrB_Matrix A,     // adjacency matrix for methods 0, 1, and 2
-    const GrB_Matrix E,     // edge incidence matrix for method 0
-    const GrB_Matrix L,     // L=tril(A) for methods 2, 4, and 4
-    const GrB_Matrix U      // U=triu(A) for methods 2, 3, and 5
+    const int method,       // 1 to 6, see above
+    const GrB_Matrix A      // input matrix, must be symmetric, no diag entries
 ) ;
 
 GrB_Info LAGraph_ktruss         // compute the k-truss of a graph

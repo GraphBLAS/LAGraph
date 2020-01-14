@@ -245,19 +245,19 @@ int main (int argc, char **argv)
     // #define NTHRLIST 3
     // int nthread_list [NTHRLIST] = {10, 20, 40} ;    
 
-    #define NTHRLIST 1
-    int nthread_list [NTHRLIST] = {40} ;    
+    // devcloud
+    #define NTHRLIST 9
+    int nthread_list [NTHRLIST] = { 64, 32, 24, 16, 12, 8, 4, 2, 1 } ;
 
-    nthread_list [NTHRLIST-1] = nthreads_max ;
-
-    double chunk = 64 * 1024 ;
-    GxB_set (GxB_CHUNK, &chunk) ;
+    double chunk ; // = 64 * 1024 ;
+    GxB_get (GxB_CHUNK, &chunk) ;
     printf ("chunk: %g\n", chunk) ;
 
     printf ("threads: ") ;
     for (int kk = 0 ; kk < NTHRLIST; kk++)
     {
         int nthreads = nthread_list [kk] ;
+        if (nthreads > nthreads_max) continue ;
         printf ("%d ", nthreads) ;
     }
     printf ("\n") ;
@@ -271,6 +271,7 @@ int main (int argc, char **argv)
     for (int kk = 0 ; kk < NTHRLIST; kk++)
     {
         int nthreads = nthread_list [kk] ;
+        if (nthreads > nthreads_max) continue ;
         LAGraph_set_nthreads (nthreads) ;
         // printf ("3e:%2d: ", nthreads) ;
         
@@ -314,6 +315,7 @@ int main (int argc, char **argv)
     for (int kk = 0 ; kk < NTHRLIST; kk++)
     {
         int nthreads = nthread_list [kk] ;
+        if (nthreads > nthreads_max) continue ;
         LAGraph_set_nthreads (nthreads) ;
         // printf ("3d:%2d: ", nthreads) ;
         
@@ -354,6 +356,7 @@ int main (int argc, char **argv)
     for (int kk = 0 ; kk < NTHRLIST; kk++)
     {
         int nthreads = nthread_list [kk] ;
+        if (nthreads > nthreads_max) continue ;
         LAGraph_set_nthreads (nthreads) ;
         // printf ("3c:%2d: ", nthreads) ;
 

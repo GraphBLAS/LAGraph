@@ -5,3 +5,6 @@ w
 o
 v
 rg
+
+# Do not ignore this file
+!.gitignore

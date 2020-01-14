@@ -5,3 +5,6 @@ stderr.txt
 w
 o
 v
+
+# Do not ignore this file
+!.gitignore

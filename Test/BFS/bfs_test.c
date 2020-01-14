@@ -77,17 +77,22 @@ int main (int argc, char **argv)
     double tic [2] ;
     LAGraph_tic (tic) ;
 
-    double chunk = 64 * 1024 ;
-    GxB_set (GxB_CHUNK, chunk) ;
+    double chunk ; // = 64 * 1024 ;
+    GxB_get (GxB_CHUNK, chunk) ;
     printf ("chunk: %g\n", chunk) ;
-    int nt = 7 ;
-    int Nthreads [60] = { 0,
-        1, 2, 3, 4, 7, 8, 10 } ;              // slash
+
+//  int nt = 7 ;
+//  int Nthreads [60] = { 0,
+//      1, 2, 3, 4, 7, 8, 10 } ;              // slash
+
+    int nt = 9 ;
+    int Nthreads [20] = { 0,
+        64, 32, 24, 16, 12, 8, 4, 2, 1 } ;        // devcloud
 
     printf ("threads: ") ;
     for (int t = 1 ; t <= nt ; t++)
     {
-        if (Nthreads [t] > nthreads_max) break ;
+        if (Nthreads [t] > nthreads_max) continue ;
         printf (" %d", Nthreads [t]) ;
     }
     printf ("\n") ;

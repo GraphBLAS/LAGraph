@@ -59,6 +59,10 @@ int main (int argc, char **argv)
     GrB_Info info;
     uint64_t seed = 1;
 
+    #ifdef GxB_SUITESPARSE_GRAPHBLAS
+    printf ("%s %s\n", GxB_IMPLEMENTATION_NAME, GxB_IMPLEMENTATION_DATE) ;
+    #endif
+
     GrB_Matrix A = NULL;
     GrB_Matrix AT = NULL;
     GrB_Matrix Abool = NULL;
@@ -157,7 +161,7 @@ int main (int argc, char **argv)
     }
 
     double t_read = LAGraph_toc (tic) ;
-    // printf ("read time: %g sec\n", t_read) ;
+    printf ("read time: %g sec\n", t_read) ;
 
     LAGraph_tic (tic);
 
@@ -211,7 +215,7 @@ int main (int argc, char **argv)
         printf ("A is unsymmetric\n") ;
     }
     double t_transpose = LAGraph_toc (tic) ;
-    // printf ("transpose time: %g\n", t_transpose) ;
+    printf ("transpose time: %g\n", t_transpose) ;
 
     #define K 1024
     #define M (K*K)
@@ -254,9 +258,15 @@ int main (int argc, char **argv)
         1, 2, 4, 8, 12, 20, 40 } ;
     */
 
+    /*
     int nt = 3 ;
     int Nthreads [6+1] = { 0,
         10, 20, 40 } ;        // hypersparse
+    */
+
+    int nt = 9 ;
+    int Nthreads [20] = { 0,
+        64, 32, 24, 16, 12, 8, 4, 2, 1 } ;        // devcloud
 
     /*
     int nt = 4 ;
@@ -264,9 +274,12 @@ int main (int argc, char **argv)
         1, 2, 4, 8 } ;              // slash
     */
 
+    int nthreads_max = LAGraph_get_nthreads();
     for (int t = 1 ; t <= nt ; t++)
     {
-        printf (" thread test %d: %d\n", t, Nthreads [t]) ;
+        int nthreads = Nthreads [t] ;
+        if (nthreads > nthreads_max) continue ;
+        printf (" thread test %d: %d\n", t, nthreads) ;
     }
 
     //--------------------------------------------------------------------------
@@ -276,7 +289,6 @@ int main (int argc, char **argv)
     printf ("\n========== input graph: nodes: %"PRIu64" edges: %"PRIu64"\n",
         n, nvals) ;
 
-    int nthreads_max = LAGraph_get_nthreads();
     printf ("nthreads max %d\n", nthreads_max) ;
 
     int ntrials = 0 ;

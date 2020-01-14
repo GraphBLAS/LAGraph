@@ -44,20 +44,23 @@
 // cctest symmetric-matrixmarketfile.mtx 1
 
 #include "LAGraph.h"
-#include <sys/time.h>
+// #include <sys/time.h>
 
 #define LAGRAPH_FREE_ALL    \
 {                           \
+    GrB_free (&S) ;         \
     GrB_free (&result) ;    \
     GrB_free (&A) ;         \
 }
 
+/*
 double to_sec(struct timeval t1, struct timeval t2)
 {
     return
         (t2.tv_sec  - t1.tv_sec ) + 
         (t2.tv_usec - t1.tv_usec) * 1e-6;
 }
+*/
 
 GrB_Index countCC (GrB_Vector f, GrB_Index n)
 {
@@ -76,8 +79,8 @@ GrB_Index countCC (GrB_Vector f, GrB_Index n)
 int main (int argc, char **argv)
 {
     GrB_Info info ;
-    GrB_Matrix A, S ;
-    GrB_Vector result ;
+    GrB_Matrix A = NULL, S = NULL ;
+    GrB_Vector result = NULL ;
     GrB_init (GrB_NONBLOCKING) ;
     LAGRAPH_OK (GxB_set (GxB_FORMAT, GxB_BY_ROW)) ;
 
@@ -141,6 +144,9 @@ int main (int argc, char **argv)
     }
     ///////////
     LAGRAPH_OK (GrB_Matrix_nrows (&n, A)) ;
+    GrB_Index nvals ;
+    LAGr_Matrix_nvals (&nvals, A) ;
+    printf ("# of nodes: %lu  # of edges: %lu\n", n, nvals) ;
 
     GrB_Descriptor desc = 0 ;
     LAGRAPH_OK (GrB_Descriptor_new(&desc)) ;
@@ -150,36 +156,75 @@ int main (int argc, char **argv)
     LAGRAPH_OK (GrB_eWiseAdd (S, 0, 0, GrB_LOR, A, A, desc)) ;
     LAGRAPH_FREE (desc) ;
 
-    #define NTRIALS 5
-    int nthreads_max;
-    int nthread_list [NTRIALS] = { 1, 4, 16, 20, 40 } ;
-    struct timeval t1, t2;
+    int nthreads_max = LAGraph_get_nthreads ( ) ;
 
-    LAGRAPH_OK (GxB_get (GxB_NTHREADS, &nthreads_max)) ;
+//  #define NTRIALS 5
+//  int nthread_list [20] = { 1, 4, 8, 10, 16, 20, 40 } ;
+
+    // devcloud
+    #define NTRIALS 9
+    int nthread_list [20] = { 64, 32, 24, 16, 12, 8, 4, 2, 1 } ;
+
+    double tic [2], t1, t2 ;
+
+    bool sanitize = false ;
 
     GrB_Index nCC;
     for (int trial = 0 ; trial < NTRIALS ; trial++)
     {
         int nthreads = nthread_list [trial] ;
-        if (nthreads > nthreads_max) break ;
+        if (nthreads > nthreads_max) continue ;
         LAGraph_set_nthreads (nthreads) ;
-        printf("number of threads: %d\n", nthreads) ;
 
-        gettimeofday (&t1, 0) ;
-        LAGRAPH_OK (LAGraph_cc_fastsv (&result, A, true)) ;
-        gettimeofday (&t2, 0) ;
+        LAGraph_tic (tic) ;
+        LAGRAPH_OK (LAGraph_cc_fastsv (&result, A, sanitize)) ;
+        t1 = LAGraph_toc (tic) ;
+        nCC = countCC (result, n) ;
+        printf("FastSV:  threads: %2d time: %10.4f  # of CC: %lu\n",
+            nthreads, t1, nCC) ;
+        LAGr_free (&result) ;
+
+        LAGraph_tic (tic) ;
+        LAGRAPH_OK (LAGraph_cc_fastsv2 (&result, A, sanitize)) ;
+        t1 = LAGraph_toc (tic) ;
+        nCC = countCC (result, n) ;
+        printf("FastSV2: threads: %2d time: %10.4f  # of CC: %lu\n",
+            nthreads, t1, nCC) ;
+        LAGr_free (&result) ;
+
+        LAGraph_tic (tic) ;
+        LAGRAPH_OK (LAGraph_cc_fastsv3 (&result, A, sanitize)) ;
+        t1 = LAGraph_toc (tic) ;
+        nCC = countCC (result, n) ;
+        printf("FastSV3: threads: %2d time: %10.4f  # of CC: %lu\n",
+            nthreads, t1, nCC) ;
+        LAGr_free (&result) ;
+
+        LAGraph_tic (tic) ;
+        LAGRAPH_OK (LAGraph_cc_fastsv4 (&result, A, sanitize)) ;
+        t1 = LAGraph_toc (tic) ;
+        nCC = countCC (result, n) ;
+        printf("FastSV4: threads: %2d time: %10.4f  # of CC: %lu\n",
+            nthreads, t1, nCC) ;
+        LAGr_free (&result) ;
+
+        LAGraph_tic (tic) ;
+        LAGRAPH_OK (LAGraph_cc_fastsv5 (&result, A, sanitize)) ;
+        t1 = LAGraph_toc (tic) ;
+        nCC = countCC (result, n) ;
+        printf("FastSV4: threads: %2d time: %10.4f  # of CC: %lu\n",
+            nthreads, t1, nCC) ;
+        LAGr_free (&result) ;
+
+        /*
+        LAGraph_tic (tic) ;
+        LAGRAPH_OK (LAGraph_cc_boruvka (&result, A, sanitize)) ;
+        t2 = LAGraph_toc (tic) ;
 
         nCC = countCC (result, n) ;
         printf("number of CCs: %lu\n", nCC) ;
-        printf("FastSV: %f\n", to_sec (t1, t2)) ;
-
-        gettimeofday (&t1, 0) ;
-        LAGRAPH_OK (LAGraph_cc_boruvka (&result, A, true)) ;
-        gettimeofday (&t2, 0) ;
-
-        nCC = countCC (result, n) ;
-        printf("number of CCs: %lu\n", nCC) ;
-        printf("Boruvka: %f\n", to_sec (t1, t2)) ;
+        printf("Boruvka: %f\n", t2) ;
+        */
         printf("\n");
     }
 
