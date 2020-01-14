@@ -1,0 +1,48 @@
+matrix: /home/davis/roadNet-CA.mtx
+[.mtx]
+Reading Matrix Market file: /home/davis/roadNet-CA.mtx
+# of nodes: 1971281  # of edges: 5533214
+FastSV:  threads:  8 time:     0.6489  # of CC: 8713
+FastSV2: threads:  8 time:     0.5261  # of CC: 8713
+FastSV3: threads:  8 time:     0.4458  # of CC: 8713
+FastSV4: threads:  8 time:     0.3358  # of CC: 8713
+
+FastSV:  threads:  4 time:     0.6385  # of CC: 8713
+FastSV2: threads:  4 time:     0.5036  # of CC: 8713
+FastSV3: threads:  4 time:     0.4149  # of CC: 8713
+FastSV4: threads:  4 time:     0.3255  # of CC: 8713
+
+FastSV:  threads:  2 time:     0.7537  # of CC: 8713
+FastSV2: threads:  2 time:     0.5832  # of CC: 8713
+FastSV3: threads:  2 time:     0.4810  # of CC: 8713
+FastSV4: threads:  2 time:     0.3868  # of CC: 8713
+
+FastSV:  threads:  1 time:     0.9461  # of CC: 8713
+FastSV2: threads:  1 time:     0.7360  # of CC: 8713
+FastSV3: threads:  1 time:     0.6264  # of CC: 8713
+FastSV4: threads:  1 time:     0.5051  # of CC: 8713
+
+matrix: /home/davis/soc-Pokec.grb
+[.grb]
+Reading binary file: /home/davis/soc-Pokec.grb
+# of nodes: 1632803  # of edges: 30622564
+FastSV:  threads:  8 time:     0.3985  # of CC: 196024
+FastSV2: threads:  8 time:     0.3652  # of CC: 196024
+FastSV3: threads:  8 time:     0.3259  # of CC: 196024
+FastSV4: threads:  8 time:     0.2273  # of CC: 196024
+
+FastSV:  threads:  4 time:     0.4164  # of CC: 196024
+FastSV2: threads:  4 time:     0.3725  # of CC: 196024
+FastSV3: threads:  4 time:     0.3317  # of CC: 196024
+FastSV4: threads:  4 time:     0.2194  # of CC: 196024
+
+FastSV:  threads:  2 time:     0.5966  # of CC: 196024
+FastSV2: threads:  2 time:     0.5224  # of CC: 196024
+FastSV3: threads:  2 time:     0.4979  # of CC: 196024
+FastSV4: threads:  2 time:     0.3016  # of CC: 196024
+
+FastSV:  threads:  1 time:     0.9112  # of CC: 196024
+FastSV2: threads:  1 time:     0.8154  # of CC: 196024
+FastSV3: threads:  1 time:     0.8542  # of CC: 196024
+FastSV4: threads:  1 time:     0.4548  # of CC: 196024
+
