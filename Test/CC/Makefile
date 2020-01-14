@@ -18,9 +18,9 @@ JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/cctest < ../BFS/west0067.mtx 2>stderr.txt
-	./build/cctest < ldbc-wcc-example.mtx 2>stderr.txt
-	./build/cctest < tree-example.mtx 2>stderr.txt
+	./build/cctest < ../BFS/west0067.mtx
+	./build/cctest < ldbc-wcc-example.mtx
+	./build/cctest < tree-example.mtx
 
 # build test
 compile:
