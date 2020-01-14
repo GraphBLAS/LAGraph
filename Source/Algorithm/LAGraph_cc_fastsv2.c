@@ -116,6 +116,7 @@ static GrB_Info Reduce_assign
     LAGRAPH_FREE (I);               \
     LAGRAPH_FREE (V);               \
     LAGRAPH_FREE (mem);             \
+    LAGr_free (&f) ;                \
     LAGr_free (&gp);                \
     LAGr_free (&mngp);              \
     LAGr_free (&gp_new);            \
