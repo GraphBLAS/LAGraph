@@ -242,7 +242,14 @@ GrB_Info LAGraph_sssp11         // single source shortest paths
             //LAGRAPH_OK (GrB_assign(s, GrB_NULL, GrB_LOR, tBi, GrB_ALL,
             //    n, GrB_NULL));
 
-            LAGr_apply(s, GrB_NULL, GrB_LOR, GxB_ONE_BOOL, tmasked, GrB_NULL);
+// was:
+LAGr_apply(s, GrB_NULL, GrB_LOR, GxB_ONE_BOOL, tmasked, GrB_NULL);
+// try this:
+// LAGr_eWiseAdd (s, NULL, NULL, GxB_PAIR_BOOL, s, tmasked, NULL) ;
+// or
+// LAGr_assign (s, NULL, GxB_PAIR_BOOL, tmasked, GrB_ALL, n, NULL) ;
+// but fix source
+
             //GxB_print(s, 2);
 
             t1 = LAGraph_toc(tic);
