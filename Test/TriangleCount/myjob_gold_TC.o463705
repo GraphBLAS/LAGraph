@@ -1,0 +1,110 @@
+
+########################################################################
+#      Date:           Tue Jan 14 19:28:08 PST 2020
+#    Job ID:           463705.v-qsvr-1.aidevcloud
+#      User:           u32248
+# Resources:           neednodes=1:ppn=2:gold6128,nodes=1:ppn=2:gold6128,walltime=24:00:00
+########################################################################
+
+matrix: /home/u32248/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-web/GAP-web.grb
+
+read A time:         266.261407 sec
+process A time:       30.028492 sec
+# of nodes: 50636151   number of entries: 3620126660
+threads to test:  12 16 24
+# of triangles: 84907041475
+nthreads:  24 time:    83.156385 rate:  43.53 (SandiaDot)
+Method: Sandia:     sum ((L*L) .* L)
+nthreads:  12 time:   391.849857 rate:   9.24 speedup:   0.00
+nthreads:  16 time:   358.897549 rate:  10.09 speedup:   0.00
+nthreads:  24 time:   269.206796 rate:  13.45 speedup:   0.00
+
+Method: Sandia2:    sum ((U*U) .* U)
+nthreads:  12 time:   291.473836 rate:  12.42 speedup:   0.00
+nthreads:  16 time:   265.193037 rate:  13.65 speedup:   0.00
+nthreads:  24 time:   272.420063 rate:  13.29 speedup:   0.00
+
+Method: SandiaDot:  sum ((L*U') .* L)
+nthreads:  12 time:   104.764570 rate:  34.55 speedup:   0.00
+nthreads:  16 time:    92.716027 rate:  39.05 speedup:   0.00
+nthreads:  24 time:    79.277219 rate:  45.66 speedup:   0.00
+
+Method: SandiaDot2: sum ((U*L') .* U)
+nthreads:  12 time:   117.499266 rate:  30.81 speedup:   0.00
+nthreads:  16 time:   105.357879 rate:  34.36 speedup:   0.00
+nthreads:  24 time:    88.789349 rate:  40.77 speedup:   0.00
+
+Best method:
+nthreads:  24 time:    79.277219 rate:  45.66 SandiaDot:  sum ((L*U') .* L)
+matrix: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+
+read A time:         204.382446 sec
+process A time:       51.727822 sec
+# of nodes: 61578415   number of entries: 2405026092
+threads to test:  12 16 24
+# of triangles: 34824916864
+nthreads:  24 time:  1456.491444 rate:   1.65 (SandiaDot)
+Method: Sandia:     sum ((L*L) .* L)
+nthreads:  12 time:  2551.099298 rate:   0.94 speedup:   0.00
+nthreads:  16 time:  2801.925307 rate:   0.86 speedup:   0.00
+nthreads:  24 time:  2732.945874 rate:   0.88 speedup:   0.00
+
+Method: Sandia2:    sum ((U*U) .* U)
+nthreads:  12 time:  2609.726797 rate:   0.92 speedup:   0.00
+nthreads:  16 time:  2506.860319 rate:   0.96 speedup:   0.00
+nthreads:  24 time:  2496.833826 rate:   0.96 speedup:   0.00
+
+Method: SandiaDot:  sum ((L*U') .* L)
+nthreads:  12 time:  2606.950755 rate:   0.92 speedup:   0.00
+nthreads:  16 time:  2049.112716 rate:   1.17 speedup:   0.00
+nthreads:  24 time:  1444.504277 rate:   1.66 speedup:   0.00
+
+Method: SandiaDot2: sum ((U*L') .* U)
+nthreads:  12 time:   857.256710 rate:   2.81 speedup:   0.00
+nthreads:  16 time:   745.312064 rate:   3.23 speedup:   0.00
+nthreads:  24 time:   591.850120 rate:   4.06 speedup:   0.00
+
+Best method:
+nthreads:  24 time:   591.850120 rate:   4.06 SandiaDot2: sum ((U*L') .* U)
+matrix: /home/u32248/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-road/GAP-road.grb
+
+read A time:           9.534117 sec
+process A time:        3.244993 sec
+# of nodes: 23947347   number of entries: 57708624
+threads to test:  12 16 24
+# of triangles: 438804
+nthreads:  24 time:     0.752244 rate:  76.72 (SandiaDot)
+Method: Sandia:     sum ((L*L) .* L)
+nthreads:  12 time:     0.407980 rate: 141.45 speedup:   0.00
+nthreads:  16 time:     0.386022 rate: 149.50 speedup:   0.00
+nthreads:  24 time:     0.352490 rate: 163.72 speedup:   0.00
+
+Method: Sandia2:    sum ((U*U) .* U)
+nthreads:  12 time:     0.427960 rate: 134.85 speedup:   0.00
+nthreads:  16 time:     0.392808 rate: 146.91 speedup:   0.00
+nthreads:  24 time:     0.360814 rate: 159.94 speedup:   0.00
+
+Method: SandiaDot:  sum ((L*U') .* L)
+nthreads:  12 time:     0.614833 rate:  93.86 speedup:   0.00
+nthreads:  16 time:     0.538350 rate: 107.20 speedup:   0.00
+nthreads:  24 time:     0.514504 rate: 112.16 speedup:   0.00
+
+Method: SandiaDot2: sum ((U*L') .* U)
+nthreads:  12 time:     0.612787 rate:  94.17 speedup:   0.00
+nthreads:  16 time:     0.594855 rate:  97.01 speedup:   0.00
+nthreads:  24 time:     0.536593 rate: 107.55 speedup:   0.00
+
+Best method:
+nthreads:  24 time:     0.352490 rate: 163.72 Sandia:     sum ((L*L) .* L)
+
+########################################################################
+# End of output for job 463705.v-qsvr-1.aidevcloud
+# Date: Wed Jan 15 03:49:02 PST 2020
+########################################################################
+
