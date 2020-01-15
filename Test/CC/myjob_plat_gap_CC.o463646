@@ -1,0 +1,72 @@
+
+########################################################################
+#      Date:           Tue Jan 14 17:04:56 PST 2020
+#    Job ID:           463646.v-qsvr-1.aidevcloud
+#      User:           u32248
+# Resources:           neednodes=1:ppn=2:plat8153,nodes=1:ppn=2:plat8153,walltime=24:00:00
+########################################################################
+
+matrix: /home/u32248/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-web/GAP-web.grb
+# of nodes: 50636151  # of edges: 1930292948
+FastSV:  threads: 64 time:    32.2222  # of CC: 7186488
+FastSV2: threads: 64 time:    25.9813  # of CC: 7186488
+FastSV3: threads: 64 time:    22.2215  # of CC: 7186488
+FastSV4: threads: 64 time:    16.4969  # of CC: 7186488
+FastSV5: threads: 64 time:    16.4049  # of CC: 7186488
+
+FastSV:  threads: 32 time:    32.6765  # of CC: 7186488
+FastSV2: threads: 32 time:    25.3660  # of CC: 7186488
+FastSV3: threads: 32 time:    21.6067  # of CC: 7186488
+FastSV4: threads: 32 time:    16.1253  # of CC: 7186488
+FastSV5: threads: 32 time:    15.8153  # of CC: 7186488
+
+FastSV:  threads: 24 time:    31.7620  # of CC: 7186488
+FastSV2: threads: 24 time:    24.8440  # of CC: 7186488
+FastSV3: threads: 24 time:    21.0463  # of CC: 7186488
+FastSV4: threads: 24 time:    16.0769  # of CC: 7186488
+FastSV5: threads: 24 time:    16.0194  # of CC: 7186488
+
+FastSV:  threads: 16 time:    33.4676  # of CC: 7186488
+FastSV2: threads: 16 time:    26.3720  # of CC: 7186488
+FastSV3: threads: 16 time:    22.2762  # of CC: 7186488
+FastSV4: threads: 16 time:    17.2873  # of CC: 7186488
+FastSV5: threads: 16 time:    17.2688  # of CC: 7186488
+
+FastSV:  threads: 12 time:    36.3502  # of CC: 7186488
+FastSV2: threads: 12 time:    28.6982  # of CC: 7186488
+FastSV3: threads: 12 time:    24.0593  # of CC: 7186488
+FastSV4: threads: 12 time:    18.8454  # of CC: 7186488
+FastSV5: threads: 12 time:    18.9363  # of CC: 7186488
+
+FastSV:  threads:  8 time:    43.0970  # of CC: 7186488
+FastSV2: threads:  8 time:    33.8834  # of CC: 7186488
+FastSV3: threads:  8 time:    28.6083  # of CC: 7186488
+FastSV4: threads:  8 time:    22.3250  # of CC: 7186488
+FastSV5: threads:  8 time:    22.2889  # of CC: 7186488
+
+FastSV:  threads:  4 time:    64.8104  # of CC: 7186488
+FastSV2: threads:  4 time:    50.6254  # of CC: 7186488
+FastSV3: threads:  4 time:    41.7238  # of CC: 7186488
+FastSV4: threads:  4 time:    33.4565  # of CC: 7186488
+FastSV5: threads:  4 time:    33.3976  # of CC: 7186488
+
+FastSV:  threads:  2 time:   108.6274  # of CC: 7186488
+FastSV2: threads:  2 time:    84.9646  # of CC: 7186488
+FastSV3: threads:  2 time:    68.4762  # of CC: 7186488
+FastSV4: threads:  2 time:    55.9107  # of CC: 7186488
+FastSV5: threads:  2 time:    55.2182  # of CC: 7186488
+
+FastSV:  threads:  1 time:   177.6868  # of CC: 7186488
+FastSV2: threads:  1 time:   139.0393  # of CC: 7186488
+FastSV3: threads:  1 time:   110.8710  # of CC: 7186488
+FastSV4: threads:  1 time:    91.1094  # of CC: 7186488
+FastSV5: threads:  1 time:    91.0231  # of CC: 7186488
+
+
+########################################################################
+# End of output for job 463646.v-qsvr-1.aidevcloud
+# Date: Tue Jan 14 18:53:43 PST 2020
+########################################################################
+

@@ -1,0 +1,65 @@
+
+########################################################################
+#      Date:           Tue Jan 14 04:22:28 PST 2020
+#    Job ID:           463198.v-qsvr-1.aidevcloud
+#      User:           u32248
+# Resources:           neednodes=1:ppn=2:plat8153,nodes=1:ppn=2:plat8153,walltime=24:00:00
+########################################################################
+
+Test kron:
+matrix: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+original # of edges: 4223264644
+Matrix has 71143742 empty rows
+Matrix has 71143742 empty cols
+
+==========input graph: nodes: 134217726 edges: 4223264644
+diag entries added: 71143742
+read time: 1714.16 sec
+# of trials: 16
+chunk: 65536
+threads: 64 32 24 16 12 8 4 2 1 
+
+Method 3e:
+3e: 64: avg time:     18.699 (sec), rate:   1580.951 iters: 7
+3e: 32: avg time:     19.835 (sec), rate:   1490.474 iters: 7
+3e: 24: avg time:     23.662 (sec), rate:   1249.373 iters: 7
+3e: 16: avg time:     32.626 (sec), rate:    906.107 iters: 7
+3e: 12: avg time:     41.771 (sec), rate:    707.737 iters: 7
+3e:  8: avg time:     60.639 (sec), rate:    487.521 iters: 7
+3e:  4: avg time:    115.614 (sec), rate:    255.703 iters: 7
+3e:  2: avg time:    225.109 (sec), rate:    131.327 iters: 7
+3e:  1: avg time:    403.632 (sec), rate:     73.242 iters: 7
+
+Method 3d:
+3d: 64: avg time:     19.368 (sec), rate:   1526.345 iters: 7
+3d: 32: avg time:     20.493 (sec), rate:   1442.618 iters: 7
+3d: 24: avg time:     24.058 (sec), rate:   1228.796 iters: 7
+3d: 16: avg time:     32.747 (sec), rate:    902.754 iters: 7
+3d: 12: avg time:     42.202 (sec), rate:    700.505 iters: 7
+3d:  8: avg time:     60.955 (sec), rate:    484.997 iters: 7
+3d:  4: avg time:    116.201 (sec), rate:    254.412 iters: 7
+3d:  2: avg time:    225.270 (sec), rate:    131.233 iters: 7
+3d:  1: avg time:    411.067 (sec), rate:     71.917 iters: 7
+
+Method 3c:
+3c: 64: avg time:     16.772 (sec), rate:   1762.615 iters: 7
+3c: 32: avg time:     18.019 (sec), rate:   1640.612 iters: 7
+3c: 24: avg time:     21.898 (sec), rate:   1350.053 iters: 7
+3c: 16: avg time:     30.565 (sec), rate:    967.213 iters: 7
+3c: 12: avg time:     39.910 (sec), rate:    740.735 iters: 7
+3c:  8: avg time:     58.368 (sec), rate:    506.493 iters: 7
+3c:  4: avg time:    112.202 (sec), rate:    263.478 iters: 7
+3c:  2: avg time:    219.675 (sec), rate:    134.576 iters: 7
+3c:  1: avg time:    400.754 (sec), rate:     73.768 iters: 7
+Test road:
+Test twitter:
+Test urand:
+Test web:
+
+########################################################################
+# End of output for job 463198.v-qsvr-1.aidevcloud
+# Date: Tue Jan 14 17:22:04 PST 2020
+########################################################################
+
