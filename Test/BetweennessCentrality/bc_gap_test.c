@@ -264,9 +264,9 @@ int main (int argc, char **argv)
         10, 20, 40 } ;        // hypersparse
     */
 
-    int nt = 9 ;
+    int nt = 5 ;
     int Nthreads [20] = { 0,
-        64, 32, 24, 16, 12, 8, 4, 2, 1 } ;        // devcloud
+        64, 32, 24, 12, 8 } ;        // devcloud
 
     /*
     int nt = 4 ;

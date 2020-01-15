@@ -184,9 +184,9 @@ int main (int argc, char **argv)
 //  int Nthreads [20] = { 0,
 //      64, 32, 24, 16, 12, 8, 4, 2, 1 } ;        // devcloud
 
-    int ntest = 9 ;
+    int ntest = 5 ;
     int Nthreads [20] = { 0,
-        1, 2, 4, 8, 12, 16, 24, 32, 64 } ;        // devcloud
+        12, 16, 24, 32, 64 } ;        // devcloud
 
     printf ("threads to test: ") ;
     for (int t = 1 ; t <= ntest ; t++)

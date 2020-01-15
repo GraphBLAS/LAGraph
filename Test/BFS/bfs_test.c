@@ -85,9 +85,9 @@ int main (int argc, char **argv)
 //  int Nthreads [60] = { 0,
 //      1, 2, 3, 4, 7, 8, 10 } ;              // slash
 
-    int nt = 9 ;
+    int nt = 5 ;
     int Nthreads [20] = { 0,
-        64, 32, 24, 16, 12, 8, 4, 2, 1 } ;        // devcloud
+        64, 32, 24, 12, 8 } ;        // devcloud
 
     printf ("threads: ") ;
     for (int t = 1 ; t <= nt ; t++)

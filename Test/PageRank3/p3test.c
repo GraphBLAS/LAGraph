@@ -249,8 +249,8 @@ int main (int argc, char **argv)
     // int nthread_list [NTHRLIST] = {10, 20, 40} ;    
 
     // devcloud
-    #define NTHRLIST 9
-    int nthread_list [NTHRLIST] = { 64, 32, 24, 16, 12, 8, 4, 2, 1 } ;
+    #define NTHRLIST 5
+    int nthread_list [NTHRLIST] = { 64, 32, 24, 16, 8 } ;
 
     double chunk ; // = 64 * 1024 ;
     GxB_get (GxB_CHUNK, &chunk) ;
@@ -269,7 +269,7 @@ int main (int argc, char **argv)
     // method 3e
     //--------------------------------------------------------------------------
 
-#if 1
+#if 0
     printf ("\nMethod 3e:\n") ;
     for (int kk = 0 ; kk < NTHRLIST; kk++)
     {
@@ -313,7 +313,7 @@ int main (int argc, char **argv)
     // method 3d
     //--------------------------------------------------------------------------
 
-#if 1
+#if 0
     printf ("\nMethod 3d:\n") ;
     for (int kk = 0 ; kk < NTHRLIST; kk++)
     {

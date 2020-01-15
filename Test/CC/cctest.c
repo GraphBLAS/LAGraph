@@ -162,52 +162,74 @@ int main (int argc, char **argv)
 //  int nthread_list [20] = { 1, 4, 8, 10, 16, 20, 40 } ;
 
     // devcloud
-    #define NTRIALS 9
-    int nthread_list [20] = { 64, 32, 24, 16, 12, 8, 4, 2, 1 } ;
+    #define NTH 5
+    int nthread_list [20] = { 64, 32, 24, 16, 8 } ;
 
     double tic [2], t1, t2 ;
+
+    #define NTRIALS 64
+    printf ("# of trials: %d\n", NTRIALS) ;
 
     bool sanitize = false ;
 
     GrB_Index nCC;
-    for (int trial = 0 ; trial < NTRIALS ; trial++)
+    for (int trial = 0 ; trial < NTH ; trial++)
     {
         int nthreads = nthread_list [trial] ;
         if (nthreads > nthreads_max) continue ;
         LAGraph_set_nthreads (nthreads) ;
 
-        LAGraph_tic (tic) ;
-        LAGRAPH_OK (LAGraph_cc_fastsv (&result, A, sanitize)) ;
-        t1 = LAGraph_toc (tic) ;
-        nCC = countCC (result, n) ;
+        double t1 = 0 ;
+        for (int k = 0 ; k < NTRIALS ; k++)
+        {
+            LAGraph_tic (tic) ;
+            LAGRAPH_OK (LAGraph_cc_fastsv (&result, A, sanitize)) ;
+            t1 += LAGraph_toc (tic) ;
+            nCC = countCC (result, n) ;
+            LAGr_free (&result) ;
+        }
         printf("FastSV:  threads: %2d time: %10.4f  # of CC: %lu\n",
-            nthreads, t1, nCC) ;
-        LAGr_free (&result) ;
+            nthreads, t1/ NTRIALS, nCC) ;
 
-        LAGraph_tic (tic) ;
-        LAGRAPH_OK (LAGraph_cc_fastsv2 (&result, A, sanitize)) ;
-        t1 = LAGraph_toc (tic) ;
-        nCC = countCC (result, n) ;
+#if 0
+        t1 = 0 ;
+        for (int k = 0 ; k < NTRIALS ; k++)
+        {
+            LAGraph_tic (tic) ;
+            LAGRAPH_OK (LAGraph_cc_fastsv2 (&result, A, sanitize)) ;
+            t1 += LAGraph_toc (tic) ;
+            nCC = countCC (result, n) ;
+            LAGr_free (&result) ;
+        }
         printf("FastSV2: threads: %2d time: %10.4f  # of CC: %lu\n",
-            nthreads, t1, nCC) ;
-        LAGr_free (&result) ;
+            nthreads, t1 / NTRIALS, nCC) ;
 
-        LAGraph_tic (tic) ;
-        LAGRAPH_OK (LAGraph_cc_fastsv3 (&result, A, sanitize)) ;
-        t1 = LAGraph_toc (tic) ;
-        nCC = countCC (result, n) ;
+        t1 = 0 ;
+        for (int k = 0 ; k < NTRIALS ; k++)
+        {
+            LAGraph_tic (tic) ;
+            LAGRAPH_OK (LAGraph_cc_fastsv3 (&result, A, sanitize)) ;
+            t1 += LAGraph_toc (tic) ;
+            nCC = countCC (result, n) ;
+            LAGr_free (&result) ;
+        }
         printf("FastSV3: threads: %2d time: %10.4f  # of CC: %lu\n",
-            nthreads, t1, nCC) ;
-        LAGr_free (&result) ;
+            nthreads, t1 / NTRIALS, nCC) ;
+#endif
 
-        LAGraph_tic (tic) ;
-        LAGRAPH_OK (LAGraph_cc_fastsv4 (&result, A, sanitize)) ;
-        t1 = LAGraph_toc (tic) ;
-        nCC = countCC (result, n) ;
+        t1 = 0 ;
+        for (int k = 0 ; k < NTRIALS ; k++)
+        {
+            LAGraph_tic (tic) ;
+            LAGRAPH_OK (LAGraph_cc_fastsv4 (&result, A, sanitize)) ;
+            t1 += LAGraph_toc (tic) ;
+            nCC = countCC (result, n) ;
+            LAGr_free (&result) ;
+        }
         printf("FastSV4: threads: %2d time: %10.4f  # of CC: %lu\n",
-            nthreads, t1, nCC) ;
-        LAGr_free (&result) ;
+            nthreads, t1 / NTRIALS, nCC) ;
 
+        /*
         LAGraph_tic (tic) ;
         LAGRAPH_OK (LAGraph_cc_fastsv5 (&result, A, sanitize)) ;
         t1 = LAGraph_toc (tic) ;
@@ -215,6 +237,7 @@ int main (int argc, char **argv)
         printf("FastSV5: threads: %2d time: %10.4f  # of CC: %lu\n",
             nthreads, t1, nCC) ;
         LAGr_free (&result) ;
+        */
 
         /*
         LAGraph_tic (tic) ;
