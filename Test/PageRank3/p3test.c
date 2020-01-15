@@ -45,6 +45,7 @@ See LICENSE file for more details.
 {                                               \
     if (P != NULL) { free (P) ; P = NULL ; }    \
     GrB_free (&A) ;                             \
+    GrB_free (&A2) ;                            \
     GrB_free (&PR) ;                            \
     GrB_free (&d_in) ;                          \
     GrB_free (&d_out) ;                         \
@@ -57,6 +58,7 @@ int main (int argc, char **argv)
     GrB_Info info ;
     GrB_Matrix A = NULL ;
     GrB_Matrix A_temp = NULL ;
+    GrB_Matrix A2 = NULL ;
     LAGraph_PageRank *P = NULL ;
     GrB_Vector PR = NULL;
     GrB_Vector d_out = NULL, d_in = NULL ;
@@ -129,7 +131,7 @@ int main (int argc, char **argv)
     // GxB_fprint (A, GxB_SHORT, stdout) ;
     // LAGraph_mmwrite (A, stdout) ;
 
-    // convert to FP32
+    // convert to bool
     LAGRAPH_OK (LAGraph_pattern (&A_temp, A, GrB_BOOL)) ;
     // LAGraph_mmwrite (A_temp, stdout) ;
     GrB_free (&A) ;
@@ -150,6 +152,7 @@ int main (int argc, char **argv)
     // finish any pending computations
     GrB_Index nvals ;
     GrB_Matrix_nvals (&nvals, A) ;
+    GrB_Matrix_dup (&A2, A) ;
     printf ("original # of edges: %"PRId64"\n", nvals) ;
 
     //--------------------------------------------------------------------------
@@ -227,7 +230,7 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     // the GAP benchmark requires 16 trials
-    int ntrials = 16 ;
+    int ntrials = 1 ; // 16 ;
     printf ("# of trials: %d\n", ntrials) ;
 
     float tol = 1e-4 ;
@@ -381,6 +384,44 @@ int main (int argc, char **argv)
     }
 
     // f = fopen ("rank3c.mtx", "w") ;
+    // LAGraph_mmwrite (PR, f) ;
+    // fclose (f) ;
+
+    // GxB_print (PR, GxB_SHORT) ;
+
+    //--------------------------------------------------------------------------
+    // method 3f
+    //--------------------------------------------------------------------------
+
+    printf ("\nMethod 3f:\n") ;
+    for (int kk = 0 ; kk < NTHRLIST; kk++)
+    {
+        int nthreads = nthread_list [kk] ;
+        if (nthreads > nthreads_max) continue ;
+        LAGraph_set_nthreads (nthreads) ;
+        // printf ("3c:%2d: ", nthreads) ;
+
+        double total_time = 0 ;
+
+        for (int trial = 0 ; trial < ntrials ; trial++)
+        {
+            GrB_free (&PR) ;
+            LAGraph_tic (tic) ;
+            LAGRAPH_OK (LAGraph_pagerank3f (&PR, A2, d_out, 0.85, itermax,
+                &iters)) ;
+            double t1 = LAGraph_toc (tic) ;
+            // printf ("%10.3f ", t1) ; fflush (stdout) ;
+            total_time += t1 ;
+        }
+        // printf ("\n") ;
+
+        double t = total_time / ntrials ;
+        printf ("3f:%3d: avg time: %10.3f (sec), "
+                "rate: %10.3f iters: %d\n", nthreads,
+                t, 1e-6*((double) nvals) * iters / t, iters) ;
+    }
+
+    // f = fopen ("rank3f.mtx", "w") ;
     // LAGraph_mmwrite (PR, f) ;
     // fclose (f) ;
 
