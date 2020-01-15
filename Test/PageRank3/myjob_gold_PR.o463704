@@ -1,0 +1,130 @@
+
+########################################################################
+#      Date:           Tue Jan 14 19:23:16 PST 2020
+#    Job ID:           463704.v-qsvr-1.aidevcloud
+#      User:           u32248
+# Resources:           neednodes=1:ppn=2:gold6128,nodes=1:ppn=2:gold6128,walltime=24:00:00
+########################################################################
+
+Test kron:
+matrix: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+original # of edges: 4223264644
+Matrix has 71143742 empty rows
+Matrix has 71143742 empty cols
+
+==========input graph: nodes: 134217726 edges: 4223264644
+diag entries added: 71143742
+read time: 775.265 sec
+# of trials: 1
+chunk: 65536
+threads: 24 16 8 
+
+Method 3c:
+3c: 24: avg time:     34.877 (sec), rate:    847.621 iters: 7
+3c: 16: avg time:     37.529 (sec), rate:    787.738 iters: 7
+3c:  8: avg time:     53.781 (sec), rate:    549.686 iters: 7
+
+Method 3f:
+3f: 24: avg time:     35.075 (sec), rate:    842.858 iters: 7
+3f: 16: avg time:     36.013 (sec), rate:    820.892 iters: 7
+3f:  8: avg time:     52.464 (sec), rate:    563.492 iters: 7
+Test road:
+matrix: /home/u32248/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-road/GAP-road.grb
+original # of edges: 57708624
+
+==========input graph: nodes: 23947347 edges: 57708624
+diag entries added: 0
+read time: 11.8225 sec
+# of trials: 1
+chunk: 65536
+threads: 24 16 8 
+
+Method 3c:
+3c: 24: avg time:      3.165 (sec), rate:    711.103 iters: 39
+3c: 16: avg time:      2.826 (sec), rate:    796.352 iters: 39
+3c:  8: avg time:      3.740 (sec), rate:    601.789 iters: 39
+
+Method 3f:
+3f: 24: avg time:      3.283 (sec), rate:    685.492 iters: 39
+3f: 16: avg time:      3.033 (sec), rate:    742.053 iters: 39
+3f:  8: avg time:      3.799 (sec), rate:    592.413 iters: 39
+Test twitter:
+matrix: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+original # of edges: 1468364884
+Matrix has 21475137 empty rows
+Matrix has 25889280 empty cols
+
+==========input graph: nodes: 61578415 edges: 1468364884
+diag entries added: 27438232
+read time: 265.999 sec
+# of trials: 1
+chunk: 65536
+threads: 24 16 8 
+
+Method 3c:
+3c: 24: avg time:     32.543 (sec), rate:   1173.134 iters: 26
+3c: 16: avg time:     34.568 (sec), rate:   1104.405 iters: 26
+3c:  8: avg time:     51.505 (sec), rate:    741.236 iters: 26
+
+Method 3f:
+3f: 24: avg time:     30.078 (sec), rate:   1073.999 iters: 22
+3f: 16: avg time:     31.013 (sec), rate:   1041.616 iters: 22
+3f:  8: avg time:     41.501 (sec), rate:    778.385 iters: 22
+Test urand:
+matrix: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+original # of edges: 4294966740
+
+==========input graph: nodes: 134217728 edges: 4294966740
+diag entries added: 0
+read time: 758.611 sec
+# of trials: 1
+chunk: 65536
+threads: 24 16 8 
+
+Method 3c:
+3c: 24: avg time:     40.728 (sec), rate:    632.726 iters: 6
+3c: 16: avg time:     40.679 (sec), rate:    633.491 iters: 6
+3c:  8: avg time:     56.236 (sec), rate:    458.247 iters: 6
+
+Method 3f:
+3f: 24: avg time:     42.360 (sec), rate:    608.355 iters: 6
+3f: 16: avg time:     43.111 (sec), rate:    597.753 iters: 6
+3f:  8: avg time:     57.479 (sec), rate:    448.335 iters: 6
+Test web:
+matrix: /home/u32248/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-web/GAP-web.grb
+original # of edges: 1930292948
+Matrix has 7236618 empty rows
+Matrix has 438 empty cols
+
+==========input graph: nodes: 50636151 edges: 1930292948
+diag entries added: 7236964
+read time: 297.265 sec
+# of trials: 1
+chunk: 65536
+threads: 24 16 8 
+
+Method 3c:
+3c: 24: avg time:     15.967 (sec), rate:   3868.527 iters: 32
+3c: 16: avg time:     14.842 (sec), rate:   4161.752 iters: 32
+3c:  8: avg time:     19.003 (sec), rate:   3250.482 iters: 32
+
+Method 3f:
+3f: 24: avg time:     15.169 (sec), rate:   3690.411 iters: 29
+3f: 16: avg time:     14.699 (sec), rate:   3808.250 iters: 29
+3f:  8: avg time:     16.229 (sec), rate:   3449.268 iters: 29
+
+########################################################################
+# End of output for job 463704.v-qsvr-1.aidevcloud
+# Date: Tue Jan 14 20:13:07 PST 2020
+########################################################################
+

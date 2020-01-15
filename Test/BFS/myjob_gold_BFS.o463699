@@ -1,0 +1,94 @@
+
+########################################################################
+#      Date:           Tue Jan 14 19:13:02 PST 2020
+#    Job ID:           463699.v-qsvr-1.aidevcloud
+#      User:           u32248
+# Resources:           neednodes=1:ppn=2:gold6128,nodes=1:ppn=2:gold6128,walltime=24:00:00
+########################################################################
+
+chunk: 0
+threads:  24 12 8
+matrix: /home/u32248/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-web/GAP-web.grb
+sources: /home/u32248/GAP/GAP-web/GAP-web_sources.mtx
+read time: 269.428
+A is unsymmetric
+transpose time: 9.29602
+
+==========input graph: nodes: 50636151 edges: 1930292948 ntrials: 64
+allpush (with tree):
+:24:allpush   (w/ tree):        5.133 (sec), rate: 376.07 speedup  0.0
+:12:allpush   (w/ tree):        4.884 (sec), rate: 395.24 speedup  0.0
+: 8:allpush   (w/ tree):        5.737 (sec), rate: 336.47 speedup  0.0
+
+chunk: 0
+threads:  24 12 8
+matrix: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+sources: /home/u32248/GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 592.085
+A is symmetric
+transpose time: 109.807
+
+==========input graph: nodes: 134217726 edges: 4223264644 ntrials: 64
+allpush (with tree):
+:24:allpush   (w/ tree):       12.191 (sec), rate: 346.44 speedup  0.0
+:12:allpush   (w/ tree):       15.201 (sec), rate: 277.82 speedup  0.0
+: 8:allpush   (w/ tree):       21.529 (sec), rate: 196.16 speedup  0.0
+
+chunk: 0
+threads:  24 12 8
+matrix: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+sources: /home/u32248/GAP/GAP-twitter/GAP-twitter_sources.mtx
+read time: 205.734
+A is unsymmetric
+transpose time: 30.0961
+
+==========input graph: nodes: 61578415 edges: 1468364884 ntrials: 64
+allpush (with tree):
+:24:allpush   (w/ tree):        5.863 (sec), rate: 250.46 speedup  0.0
+:12:allpush   (w/ tree):        7.027 (sec), rate: 208.97 speedup  0.0
+: 8:allpush   (w/ tree):        9.816 (sec), rate: 149.60 speedup  0.0
+
+chunk: 0
+threads:  24 12 8
+matrix: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+sources: /home/u32248/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 600.205
+A is symmetric
+transpose time: 125.404
+
+==========input graph: nodes: 134217728 edges: 4294966740 ntrials: 64
+allpush (with tree):
+:24:allpush   (w/ tree):       24.011 (sec), rate: 178.87 speedup  0.0
+:12:allpush   (w/ tree):       28.357 (sec), rate: 151.46 speedup  0.0
+: 8:allpush   (w/ tree):       40.267 (sec), rate: 106.66 speedup  0.0
+
+chunk: 0
+threads:  24 12 8
+matrix: /home/u32248/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-road/GAP-road.grb
+sources: /home/u32248/GAP/GAP-road/GAP-road_sources.mtx
+read time: 9.77285
+A is symmetric
+transpose time: 1.18853
+
+==========input graph: nodes: 23947347 edges: 57708624 ntrials: 64
+allpush (with tree):
+:24:allpush   (w/ tree):        8.165 (sec), rate:   7.07 speedup  0.0
+:12:allpush   (w/ tree):        8.045 (sec), rate:   7.17 speedup  0.0
+: 8:allpush   (w/ tree):        8.308 (sec), rate:   6.95 speedup  0.0
+
+
+########################################################################
+# End of output for job 463699.v-qsvr-1.aidevcloud
+# Date: Tue Jan 14 23:23:56 PST 2020
+########################################################################
+
