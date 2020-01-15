@@ -87,6 +87,7 @@ static GrB_Info Reduce_assign
     GrB_Index *sval = mem, *wval = sval + nw;
     LAGr_Vector_extractTuples(NULL, wval, &nw, w);
     LAGr_Vector_extractTuples(NULL, sval, &ns, src);
+#if 0
     if (nthreads >= 4)
     {
         #pragma omp parallel for num_threads(nthreads) schedule(static)
@@ -98,6 +99,7 @@ static GrB_Info Reduce_assign
         }
     }
     else
+#endif
     {
         for (GrB_Index i = 0; i < n; i++)
         {

@@ -131,6 +131,7 @@ static GrB_Info Reduce_assign
     LAGr_Vector_export (s_handle, &s_type, &s_n, &s_nvals, &s_i,
         (void **) &s_x, NULL) ;
 
+#if 0
     if (nthreads >= 4)
     {
         #pragma omp parallel for num_threads(nthreads) schedule(static)
@@ -140,6 +141,7 @@ static GrB_Info Reduce_assign
         }
     }
     else
+#endif
     {
         for (GrB_Index k = 0 ; k < n ; k++)
         {

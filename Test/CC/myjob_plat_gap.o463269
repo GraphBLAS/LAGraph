@@ -1,0 +1,304 @@
+
+########################################################################
+#      Date:           Tue Jan 14 07:53:11 PST 2020
+#    Job ID:           463269.v-qsvr-1.aidevcloud
+#      User:           u32248
+# Resources:           neednodes=1:ppn=2:plat8153,nodes=1:ppn=2:plat8153,walltime=24:00:00
+########################################################################
+
+matrix: /home/u32248/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-web/GAP-web.grb
+# of nodes: 50636151  # of edges: 1930292948
+FastSV:  threads: 64 time:    40.0219  # of CC: 7186488
+FastSV2: threads: 64 time:   100.6627  # of CC: 7186488
+FastSV3: threads: 64 time:    76.2777  # of CC: 7186488
+FastSV4: threads: 64 time:    73.9958  # of CC: 7186488
+FastSV4: threads: 64 time:    22.2099  # of CC: 7186488
+
+FastSV:  threads: 32 time:    38.2842  # of CC: 7186488
+FastSV2: threads: 32 time:    92.5033  # of CC: 7186488
+FastSV3: threads: 32 time:    77.9983  # of CC: 7186488
+FastSV4: threads: 32 time:    76.3014  # of CC: 7186488
+FastSV4: threads: 32 time:    22.0132  # of CC: 7186488
+
+FastSV:  threads: 24 time:    38.7189  # of CC: 7186488
+FastSV2: threads: 24 time:    89.4283  # of CC: 7186488
+FastSV3: threads: 24 time:    75.8003  # of CC: 7186488
+FastSV4: threads: 24 time:    73.1659  # of CC: 7186488
+FastSV4: threads: 24 time:    22.6593  # of CC: 7186488
+
+FastSV:  threads: 16 time:    41.8820  # of CC: 7186488
+FastSV2: threads: 16 time:    92.8575  # of CC: 7186488
+FastSV3: threads: 16 time:    77.1760  # of CC: 7186488
+FastSV4: threads: 16 time:    74.0080  # of CC: 7186488
+FastSV4: threads: 16 time:    25.2933  # of CC: 7186488
+
+FastSV:  threads: 12 time:    46.3429  # of CC: 7186488
+FastSV2: threads: 12 time:    96.1804  # of CC: 7186488
+FastSV3: threads: 12 time:    80.9194  # of CC: 7186488
+FastSV4: threads: 12 time:    76.8538  # of CC: 7186488
+FastSV4: threads: 12 time:    27.7985  # of CC: 7186488
+
+FastSV:  threads:  8 time:    55.3189  # of CC: 7186488
+FastSV2: threads:  8 time:   104.0382  # of CC: 7186488
+FastSV3: threads:  8 time:    89.6057  # of CC: 7186488
+FastSV4: threads:  8 time:    83.6478  # of CC: 7186488
+FastSV4: threads:  8 time:    33.5753  # of CC: 7186488
+
+FastSV:  threads:  4 time:    84.2724  # of CC: 7186488
+FastSV2: threads:  4 time:   136.6745  # of CC: 7186488
+FastSV3: threads:  4 time:   108.0484  # of CC: 7186488
+FastSV4: threads:  4 time:   100.9694  # of CC: 7186488
+FastSV4: threads:  4 time:    51.0320  # of CC: 7186488
+
+FastSV:  threads:  2 time:   143.6414  # of CC: 7186488
+FastSV2: threads:  2 time:   117.5942  # of CC: 7186488
+FastSV3: threads:  2 time:    99.7143  # of CC: 7186488
+FastSV4: threads:  2 time:    85.4739  # of CC: 7186488
+FastSV4: threads:  2 time:    85.2999  # of CC: 7186488
+
+FastSV:  threads:  1 time:   234.3063  # of CC: 7186488
+FastSV2: threads:  1 time:   194.3948  # of CC: 7186488
+FastSV3: threads:  1 time:   165.4332  # of CC: 7186488
+FastSV4: threads:  1 time:   140.5286  # of CC: 7186488
+FastSV4: threads:  1 time:   139.6181  # of CC: 7186488
+
+matrix: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+# of nodes: 134217726  # of edges: 4223264644
+FastSV:  threads: 64 time:    33.4775  # of CC: 71164263
+FastSV2: threads: 64 time:    38.6006  # of CC: 71164263
+FastSV3: threads: 64 time:    32.3376  # of CC: 71164263
+FastSV4: threads: 64 time:    29.9599  # of CC: 71164263
+FastSV4: threads: 64 time:    22.8720  # of CC: 71164263
+
+FastSV:  threads: 32 time:    34.0915  # of CC: 71164263
+FastSV2: threads: 32 time:    36.1089  # of CC: 71164263
+FastSV3: threads: 32 time:    35.4635  # of CC: 71164263
+FastSV4: threads: 32 time:    32.6786  # of CC: 71164263
+FastSV4: threads: 32 time:    24.2367  # of CC: 71164263
+
+FastSV:  threads: 24 time:    37.4603  # of CC: 71164263
+FastSV2: threads: 24 time:    39.7478  # of CC: 71164263
+FastSV3: threads: 24 time:    38.7187  # of CC: 71164263
+FastSV4: threads: 24 time:    36.1751  # of CC: 71164263
+FastSV4: threads: 24 time:    27.3995  # of CC: 71164263
+
+FastSV:  threads: 16 time:    46.9839  # of CC: 71164263
+FastSV2: threads: 16 time:    49.7399  # of CC: 71164263
+FastSV3: threads: 16 time:    48.3202  # of CC: 71164263
+FastSV4: threads: 16 time:    45.1863  # of CC: 71164263
+FastSV4: threads: 16 time:    36.3008  # of CC: 71164263
+
+FastSV:  threads: 12 time:    57.4528  # of CC: 71164263
+FastSV2: threads: 12 time:    60.2746  # of CC: 71164263
+FastSV3: threads: 12 time:    58.7267  # of CC: 71164263
+FastSV4: threads: 12 time:    54.6386  # of CC: 71164263
+FastSV4: threads: 12 time:    45.5982  # of CC: 71164263
+
+FastSV:  threads:  8 time:    78.0956  # of CC: 71164263
+FastSV2: threads:  8 time:    81.2375  # of CC: 71164263
+FastSV3: threads:  8 time:    77.7162  # of CC: 71164263
+FastSV4: threads:  8 time:    72.0195  # of CC: 71164263
+FastSV4: threads:  8 time:    63.6561  # of CC: 71164263
+
+FastSV:  threads:  4 time:   139.5755  # of CC: 71164263
+FastSV2: threads:  4 time:   143.3626  # of CC: 71164263
+FastSV3: threads:  4 time:   137.3354  # of CC: 71164263
+FastSV4: threads:  4 time:   126.5478  # of CC: 71164263
+FastSV4: threads:  4 time:   117.1614  # of CC: 71164263
+
+FastSV:  threads:  2 time:   262.4138  # of CC: 71164263
+FastSV2: threads:  2 time:   251.1591  # of CC: 71164263
+FastSV3: threads:  2 time:   244.9841  # of CC: 71164263
+FastSV4: threads:  2 time:   224.1596  # of CC: 71164263
+FastSV4: threads:  2 time:   223.5402  # of CC: 71164263
+
+FastSV:  threads:  1 time:   482.3743  # of CC: 71164263
+FastSV2: threads:  1 time:   458.9134  # of CC: 71164263
+FastSV3: threads:  1 time:   444.2622  # of CC: 71164263
+FastSV4: threads:  1 time:   406.1530  # of CC: 71164263
+FastSV4: threads:  1 time:   397.7729  # of CC: 71164263
+
+matrix: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+# of nodes: 61578415  # of edges: 1468364884
+FastSV:  threads: 64 time:    21.1490  # of CC: 21489814
+FastSV2: threads: 64 time:    32.5380  # of CC: 21489814
+FastSV3: threads: 64 time:    25.6737  # of CC: 21489814
+FastSV4: threads: 64 time:    23.4823  # of CC: 21489814
+FastSV4: threads: 64 time:    13.2283  # of CC: 21489814
+
+FastSV:  threads: 32 time:    20.3611  # of CC: 21489814
+FastSV2: threads: 32 time:    28.9806  # of CC: 21489814
+FastSV3: threads: 32 time:    26.1283  # of CC: 21489814
+FastSV4: threads: 32 time:    23.8839  # of CC: 21489814
+FastSV4: threads: 32 time:    13.2646  # of CC: 21489814
+
+FastSV:  threads: 24 time:    21.8638  # of CC: 21489814
+FastSV2: threads: 24 time:    30.3586  # of CC: 21489814
+FastSV3: threads: 24 time:    26.7883  # of CC: 21489814
+FastSV4: threads: 24 time:    24.6517  # of CC: 21489814
+FastSV4: threads: 24 time:    14.8664  # of CC: 21489814
+
+FastSV:  threads: 16 time:    26.2128  # of CC: 21489814
+FastSV2: threads: 16 time:    34.8098  # of CC: 21489814
+FastSV3: threads: 16 time:    31.4953  # of CC: 21489814
+FastSV4: threads: 16 time:    28.7133  # of CC: 21489814
+FastSV4: threads: 16 time:    18.8975  # of CC: 21489814
+
+FastSV:  threads: 12 time:    31.2013  # of CC: 21489814
+FastSV2: threads: 12 time:    40.6522  # of CC: 21489814
+FastSV3: threads: 12 time:    36.5580  # of CC: 21489814
+FastSV4: threads: 12 time:    33.3599  # of CC: 21489814
+FastSV4: threads: 12 time:    23.2113  # of CC: 21489814
+
+FastSV:  threads:  8 time:    41.8034  # of CC: 21489814
+FastSV2: threads:  8 time:    49.8579  # of CC: 21489814
+FastSV3: threads:  8 time:    46.1437  # of CC: 21489814
+FastSV4: threads:  8 time:    42.1403  # of CC: 21489814
+FastSV4: threads:  8 time:    31.7735  # of CC: 21489814
+
+FastSV:  threads:  4 time:    73.1349  # of CC: 21489814
+FastSV2: threads:  4 time:    80.2482  # of CC: 21489814
+FastSV3: threads:  4 time:    75.1066  # of CC: 21489814
+FastSV4: threads:  4 time:    67.7899  # of CC: 21489814
+FastSV4: threads:  4 time:    57.5276  # of CC: 21489814
+
+FastSV:  threads:  2 time:   135.6380  # of CC: 21489814
+FastSV2: threads:  2 time:   129.4393  # of CC: 21489814
+FastSV3: threads:  2 time:   123.0915  # of CC: 21489814
+FastSV4: threads:  2 time:   106.7006  # of CC: 21489814
+FastSV4: threads:  2 time:   107.2472  # of CC: 21489814
+
+FastSV:  threads:  1 time:   233.4861  # of CC: 21489814
+FastSV2: threads:  1 time:   221.3396  # of CC: 21489814
+FastSV3: threads:  1 time:   209.0376  # of CC: 21489814
+FastSV4: threads:  1 time:   185.5437  # of CC: 21489814
+FastSV4: threads:  1 time:   186.2382  # of CC: 21489814
+
+matrix: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+# of nodes: 134217728  # of edges: 4294966740
+FastSV:  threads: 64 time:    29.9912  # of CC: 1
+FastSV2: threads: 64 time:    25.6746  # of CC: 1
+FastSV3: threads: 64 time:    23.4917  # of CC: 1
+FastSV4: threads: 64 time:    20.2519  # of CC: 1
+FastSV4: threads: 64 time:    18.7798  # of CC: 1
+
+FastSV:  threads: 32 time:    28.8988  # of CC: 1
+FastSV2: threads: 32 time:    24.4286  # of CC: 1
+FastSV3: threads: 32 time:    26.9315  # of CC: 1
+FastSV4: threads: 32 time:    24.3730  # of CC: 1
+FastSV4: threads: 32 time:    19.0718  # of CC: 1
+
+FastSV:  threads: 24 time:    31.7103  # of CC: 1
+FastSV2: threads: 24 time:    27.6164  # of CC: 1
+FastSV3: threads: 24 time:    30.0542  # of CC: 1
+FastSV4: threads: 24 time:    27.1916  # of CC: 1
+FastSV4: threads: 24 time:    21.8270  # of CC: 1
+
+FastSV:  threads: 16 time:    38.7461  # of CC: 1
+FastSV2: threads: 16 time:    35.4024  # of CC: 1
+FastSV3: threads: 16 time:    37.5977  # of CC: 1
+FastSV4: threads: 16 time:    34.9113  # of CC: 1
+FastSV4: threads: 16 time:    28.5285  # of CC: 1
+
+FastSV:  threads: 12 time:    46.4785  # of CC: 1
+FastSV2: threads: 12 time:    43.9688  # of CC: 1
+FastSV3: threads: 12 time:    45.9723  # of CC: 1
+FastSV4: threads: 12 time:    42.5325  # of CC: 1
+FastSV4: threads: 12 time:    35.2593  # of CC: 1
+
+FastSV:  threads:  8 time:    61.9541  # of CC: 1
+FastSV2: threads:  8 time:    61.1698  # of CC: 1
+FastSV3: threads:  8 time:    62.2049  # of CC: 1
+FastSV4: threads:  8 time:    57.3292  # of CC: 1
+FastSV4: threads:  8 time:    48.7450  # of CC: 1
+
+FastSV:  threads:  4 time:   109.0534  # of CC: 1
+FastSV2: threads:  4 time:   111.3524  # of CC: 1
+FastSV3: threads:  4 time:   107.0615  # of CC: 1
+FastSV4: threads:  4 time:   100.2341  # of CC: 1
+FastSV4: threads:  4 time:    90.3288  # of CC: 1
+
+FastSV:  threads:  2 time:   203.4049  # of CC: 1
+FastSV2: threads:  2 time:   193.5032  # of CC: 1
+FastSV3: threads:  2 time:   186.8385  # of CC: 1
+FastSV4: threads:  2 time:   170.3747  # of CC: 1
+FastSV4: threads:  2 time:   170.8285  # of CC: 1
+
+FastSV:  threads:  1 time:   361.3737  # of CC: 1
+FastSV2: threads:  1 time:   319.2276  # of CC: 1
+FastSV3: threads:  1 time:   308.6564  # of CC: 1
+FastSV4: threads:  1 time:   282.9650  # of CC: 1
+FastSV4: threads:  1 time:   278.8032  # of CC: 1
+
+matrix: /home/u32248/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-road/GAP-road.grb
+# of nodes: 23947347  # of edges: 57708624
+FastSV:  threads: 64 time:    10.1714  # of CC: 1
+FastSV2: threads: 64 time:    10.3967  # of CC: 1
+FastSV3: threads: 64 time:     7.4888  # of CC: 1
+FastSV4: threads: 64 time:     6.1634  # of CC: 1
+FastSV4: threads: 64 time:     4.4150  # of CC: 1
+
+FastSV:  threads: 32 time:     8.3449  # of CC: 1
+FastSV2: threads: 32 time:     8.5171  # of CC: 1
+FastSV3: threads: 32 time:     6.7950  # of CC: 1
+FastSV4: threads: 32 time:     5.7009  # of CC: 1
+FastSV4: threads: 32 time:     4.0843  # of CC: 1
+
+FastSV:  threads: 24 time:     8.2827  # of CC: 1
+FastSV2: threads: 24 time:     8.6691  # of CC: 1
+FastSV3: threads: 24 time:     6.9241  # of CC: 1
+FastSV4: threads: 24 time:     5.7379  # of CC: 1
+FastSV4: threads: 24 time:     4.1816  # of CC: 1
+
+FastSV:  threads: 16 time:     8.7552  # of CC: 1
+FastSV2: threads: 16 time:     9.0359  # of CC: 1
+FastSV3: threads: 16 time:     7.3496  # of CC: 1
+FastSV4: threads: 16 time:     6.0253  # of CC: 1
+FastSV4: threads: 16 time:     4.4581  # of CC: 1
+
+FastSV:  threads: 12 time:     9.4474  # of CC: 1
+FastSV2: threads: 12 time:     9.7626  # of CC: 1
+FastSV3: threads: 12 time:     7.9152  # of CC: 1
+FastSV4: threads: 12 time:     6.5945  # of CC: 1
+FastSV4: threads: 12 time:     4.9222  # of CC: 1
+
+FastSV:  threads:  8 time:    11.4390  # of CC: 1
+FastSV2: threads:  8 time:    11.6247  # of CC: 1
+FastSV3: threads:  8 time:     9.4954  # of CC: 1
+FastSV4: threads:  8 time:     7.6823  # of CC: 1
+FastSV4: threads:  8 time:     5.9136  # of CC: 1
+
+FastSV:  threads:  4 time:    17.4435  # of CC: 1
+FastSV2: threads:  4 time:    16.7440  # of CC: 1
+FastSV3: threads:  4 time:    13.7059  # of CC: 1
+FastSV4: threads:  4 time:    11.2491  # of CC: 1
+FastSV4: threads:  4 time:     9.0437  # of CC: 1
+
+FastSV:  threads:  2 time:    29.7915  # of CC: 1
+FastSV2: threads:  2 time:    23.4540  # of CC: 1
+FastSV3: threads:  2 time:    19.7506  # of CC: 1
+FastSV4: threads:  2 time:    15.3623  # of CC: 1
+FastSV4: threads:  2 time:    15.6033  # of CC: 1
+
+FastSV:  threads:  1 time:    47.0115  # of CC: 1
+FastSV2: threads:  1 time:    37.8053  # of CC: 1
+FastSV3: threads:  1 time:    31.8868  # of CC: 1
+FastSV4: threads:  1 time:    25.3841  # of CC: 1
+FastSV4: threads:  1 time:    25.1435  # of CC: 1
+
+
+########################################################################
+# End of output for job 463269.v-qsvr-1.aidevcloud
+# Date: Tue Jan 14 13:10:49 PST 2020
+########################################################################
+
