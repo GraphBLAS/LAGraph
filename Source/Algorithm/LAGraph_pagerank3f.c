@@ -85,7 +85,7 @@ GrB_Info LAGraph_pagerank3f // PageRank definition
     GrB_Info info ;
     GrB_Index n ;
     GrB_Vector r = NULL, d = NULL, t = NULL, w = NULL ;
-    GrB_descriptor desc = LAGraph_desc_tooo ;
+    GrB_Descriptor desc = LAGraph_desc_tooo ;
     LAGr_Matrix_nrows (&n, A) ;
 
     // r = 1 / n
