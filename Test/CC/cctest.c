@@ -65,13 +65,11 @@ double to_sec(struct timeval t1, struct timeval t2)
 GrB_Index countCC (GrB_Vector f, GrB_Index n)
 {
     GrB_Index nCC = 0;
-    GrB_Index *w_ind = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
     GrB_Index *w_val = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
-    GrB_Vector_extractTuples(w_ind, w_val, &n, f);
+    GrB_Vector_extractTuples(NULL, w_val, &n, f);
     for (GrB_Index i = 0; i < n; i++)
         if (w_val[i] == i)
             nCC += 1;
-    free(w_ind);
     free(w_val);
     return nCC;
 }
@@ -183,12 +181,12 @@ int main (int argc, char **argv)
         for (int k = 0 ; k < NTRIALS ; k++)
         {
             LAGraph_tic (tic) ;
-            LAGRAPH_OK (LAGraph_cc_fastsv (&result, A, sanitize)) ;
+            LAGRAPH_OK (LAGraph_cc_fastsv (&result, S, sanitize)) ;
             t1 += LAGraph_toc (tic) ;
             nCC = countCC (result, n) ;
             LAGr_free (&result) ;
         }
-        printf("FastSV:  threads: %2d time: %10.4f  # of CC: %lu\n",
+        printf("FastSV:   threads: %2d time: %10.4f  # of CC: %lu\n",
             nthreads, t1/ NTRIALS, nCC) ;
 
 #if 0
@@ -221,12 +219,24 @@ int main (int argc, char **argv)
         for (int k = 0 ; k < NTRIALS ; k++)
         {
             LAGraph_tic (tic) ;
-            LAGRAPH_OK (LAGraph_cc_fastsv4 (&result, A, sanitize)) ;
+            LAGRAPH_OK (LAGraph_cc_fastsv5 (&result, S, sanitize)) ;
             t1 += LAGraph_toc (tic) ;
             nCC = countCC (result, n) ;
             LAGr_free (&result) ;
         }
-        printf("FastSV4: threads: %2d time: %10.4f  # of CC: %lu\n",
+        printf("FastSV5:  threads: %2d time: %10.4f  # of CC: %lu\n",
+            nthreads, t1 / NTRIALS, nCC) ;
+
+        t1 = 0 ;
+        for (int k = 0 ; k < NTRIALS ; k++)
+        {
+            LAGraph_tic (tic) ;
+            LAGRAPH_OK (LAGraph_cc_fastsv5a (&result, S, sanitize)) ;
+            t1 += LAGraph_toc (tic) ;
+            nCC = countCC (result, n) ;
+            LAGr_free (&result) ;
+        }
+        printf("FastSV5a: threads: %2d time: %10.4f  # of CC: %lu\n",
             nthreads, t1 / NTRIALS, nCC) ;
 
         /*

@@ -882,6 +882,12 @@ GrB_Info LAGraph_cc_fastsv5 (
     bool sanitize           // if true, ensure A is symmetric
 ) ;
 
+GrB_Info LAGraph_cc_fastsv5a (
+    GrB_Vector *result,     // output: array of component identifiers
+    GrB_Matrix A,           // input matrix
+    bool sanitize           // if true, ensure A is symmetric
+) ;
+
 GrB_Info LAGraph_cc_boruvka (
     GrB_Vector *result,     // output: array of component identifiers
     GrB_Matrix A,           // input matrix
