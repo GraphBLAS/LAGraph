@@ -342,6 +342,7 @@ int main (int argc, char **argv)
     // method 3c
     //--------------------------------------------------------------------------
 
+#if 0
     printf ("\nMethod 3c:\n") ;
     for (int kk = 1 ; kk <= nt ; kk++)
     {
@@ -373,8 +374,8 @@ int main (int argc, char **argv)
     // f = fopen ("rank3c.mtx", "w") ;
     // LAGraph_mmwrite (PR, f) ;
     // fclose (f) ;
-
     // GxB_print (PR, GxB_SHORT) ;
+#endif
 
     //--------------------------------------------------------------------------
     // method 3f
@@ -411,7 +412,43 @@ int main (int argc, char **argv)
     // f = fopen ("rank3f.mtx", "w") ;
     // LAGraph_mmwrite (PR, f) ;
     // fclose (f) ;
+    // GxB_print (PR, GxB_SHORT) ;
 
+    //--------------------------------------------------------------------------
+    // method x4
+    //--------------------------------------------------------------------------
+
+    printf ("\nMethod x4:\n") ;
+    for (int kk = 1 ; kk <= nt ; kk++)
+    {
+        int nthreads = Nthreads [kk] ;
+        if (nthreads > nthreads_max) continue ;
+        LAGraph_set_nthreads (nthreads) ;
+        // printf ("3c:%2d: ", nthreads) ;
+
+        double total_time = 0 ;
+
+        for (int trial = 0 ; trial < ntrials ; trial++)
+        {
+            GrB_free (&PR) ;
+            LAGraph_tic (tic) ;
+            LAGRAPH_OK (LAGraph_pagerankx4 (&PR, A_orig, dout, 0.85, itermax,
+                &iters)) ;
+            double t1 = LAGraph_toc (tic) ;
+            // printf ("%10.3f ", t1) ; fflush (stdout) ;
+            total_time += t1 ;
+        }
+        // printf ("\n") ;
+
+        double t = total_time / ntrials ;
+        printf ("x4:%3d: avg time: %10.3f (sec), "
+                "rate: %10.3f iters: %d\n", nthreads,
+                t, 1e-6*((double) nvals) * iters / t, iters) ;
+    }
+
+    // f = fopen ("rankx4.mtx", "w") ;
+    // LAGraph_mmwrite (PR, f) ;
+    // fclose (f) ;
     // GxB_print (PR, GxB_SHORT) ;
 
     //--------------------------------------------------------------------------

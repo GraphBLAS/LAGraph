@@ -111,37 +111,37 @@ GrB_Info LAGraph_bc_batch4      // betweeness centrality, batch algorithm
     (*centrality) = NULL ;
     GrB_Index n = 0 ;           // # nodes in the graph
 
-    // Array of BFS search matrices
-    // S [i] is a matrix that stores the depth at which each vertex is
+    // Array of BFS search matrices.
+    // S [i] is a sparse matrix that stores the depth at which each vertex is
     // first seen thus far in each BFS at the current depth i. Each column
     // corresponds to a BFS traversal starting from a source node.
     GrB_Matrix *S = NULL ;
 
-    // Frontier matrix
+    // Frontier matrix, a sparse matrix.
     // Stores # of shortest paths to vertices at current BFS depth
     GrB_Matrix frontier = NULL ;
 
     // Paths matrix holds the number of shortest paths for each node and
-    // starting node discovered so far.
+    // starting node discovered so far.  A dense matrix that is updated with
+    // sparse updates, and also used as a mask.
     GrB_Matrix paths = NULL ;
 
     // Update matrix for betweenness centrality, values for each node for
-    // each starting node
+    // each starting node.  A dense matrix.
     GrB_Matrix bc_update = NULL ;
 
-    // Temporary workspace matrix
+    // Temporary workspace matrix (sparse).
     GrB_Matrix W = NULL ;
 
     LAGr_Matrix_nrows (&n, A) ;      // # of nodes
 
     // Create the result vector, one entry for each node
     LAGr_Vector_new (centrality, GrB_FP32, n) ;
-
-    LAGr_Matrix_new (&paths, GrB_FP32, ns, n) ;
-    LAGr_Matrix_new (&frontier, GrB_FP32, ns, n) ;
+    LAGr_Matrix_new (&paths,     GrB_FP32, ns, n) ;
+    LAGr_Matrix_new (&frontier,  GrB_FP32, ns, n) ;
 
     // Initialize paths to source vertices with ones, and the other
-    // entries equal to zero.
+    // entries equal to zero.  The paths matrix is dense, and stays that way.
     LAGr_assign (paths, NULL, NULL, 0, GrB_ALL, ns, GrB_ALL, n, NULL) ;
     for (GrB_Index i = 0 ; i < ns ; i++)
     {
@@ -164,15 +164,17 @@ GrB_Info LAGraph_bc_batch4      // betweeness centrality, batch algorithm
     }
 
     // === Breadth-first search stage ==========================================
+
     GrB_Index frontier_size ;
     LAGr_Matrix_nvals (&frontier_size, frontier) ;
 
     int64_t depth ;
     for (depth = 0 ; frontier_size > 0 && depth < n ; depth++)
     {
-        // S [depth] = (bool) frontier
+        // S [depth] = pattern of frontier
         LAGr_Matrix_new (&(S [depth]), GrB_BOOL, ns, n) ;
         LAGr_apply (S [depth], NULL, NULL, GrB_IDENTITY_BOOL, frontier, NULL) ;
+//      LAGr_apply (S [depth], NULL, NULL, GxB_ONE_BOOL, frontier, NULL) ;
 
         // Accumulate path counts: paths += frontier
         LAGr_assign (paths, NULL, GrB_PLUS_FP32, frontier, GrB_ALL, n, GrB_ALL,
@@ -188,7 +190,7 @@ GrB_Info LAGraph_bc_batch4      // betweeness centrality, batch algorithm
 
     // === Betweenness centrality computation phase ============================
 
-    // bc_update = ones (ns, n)
+    // bc_update = ones (ns, n) ; a dense matrix (and stays dense)
     LAGr_Matrix_new (&bc_update, GrB_FP32, ns, n) ;
     LAGr_assign (bc_update, NULL, NULL, 1, GrB_ALL, ns, GrB_ALL, n, NULL) ;
     // W: empty ns-by-n array, as workspace
@@ -208,6 +210,7 @@ GrB_Info LAGraph_bc_batch4      // betweeness centrality, batch algorithm
             LAGraph_desc_ooor) ;
 
         // bc_update += W .* paths
+        // bc_update and paths are both dense, but W is sparse
         LAGr_eWiseMult (bc_update, NULL, GrB_PLUS_FP32, GrB_TIMES_FP32, W,
             paths, NULL) ;
     }

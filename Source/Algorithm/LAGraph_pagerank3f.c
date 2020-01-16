@@ -85,8 +85,13 @@ GrB_Info LAGraph_pagerank3f // PageRank definition
     GrB_Info info ;
     GrB_Index n ;
     GrB_Vector r = NULL, d = NULL, t = NULL, w = NULL ;
+    (*result) = NULL ;
     GrB_Descriptor desc = LAGraph_desc_tooo ;
     LAGr_Matrix_nrows (&n, A) ;
+
+    const float teleport = (1 - damping) / n ;
+    const float tol = 1e-4 ;
+    float rdiff = 1 ;       // first iteration is always done
 
     // r = 1 / n
     LAGr_Vector_new (&t, GrB_FP32, n) ;
@@ -94,15 +99,10 @@ GrB_Info LAGraph_pagerank3f // PageRank definition
     LAGr_Vector_new (&w, GrB_FP32, n) ;
     LAGr_assign (r, NULL, NULL, 1.0 / n, GrB_ALL, n, NULL) ;
 
-    const float teleport = (1 - damping) / n ;
-
     // prescale with damping factor, so it isn't done each iteration
     // d = d_out / damping ;
     LAGr_Vector_dup (&d, d_out) ;
     LAGr_assign (d, NULL, GrB_DIV_FP32, damping, GrB_ALL, n, NULL) ;
-
-    const float tol = 1e-4 ;
-    float rdiff = 1 ;       // so first iteration is always done
 
     //--------------------------------------------------------------------------
     // pagerank iterations
@@ -130,7 +130,11 @@ GrB_Info LAGraph_pagerank3f // PageRank definition
 
         // rdiff = sum (t)
         LAGr_reduce (&rdiff, NULL, GxB_PLUS_FP32_MONOID, t, NULL) ;
-   }
+    }
+
+    //--------------------------------------------------------------------------
+    // free workspace and return result
+    //--------------------------------------------------------------------------
 
     (*result) = r ;
     r = NULL ;
