@@ -48,7 +48,7 @@ See LICENSE file for more details.
 {                                               \
     if (P != NULL) { free (P) ; P = NULL ; }    \
     GrB_free (&A) ;                             \
-    GrB_free (&A2) ;                            \
+    GrB_free (&A_orig) ;                        \
     GrB_free (&PR) ;                            \
     GrB_free (&d_in) ;                          \
     GrB_free (&d_out) ;                         \
@@ -61,7 +61,7 @@ int main (int argc, char **argv)
     GrB_Info info ;
     GrB_Matrix A = NULL ;
     GrB_Matrix A_temp = NULL ;
-    GrB_Matrix A2 = NULL ;
+    GrB_Matrix A_orig = NULL ;
     LAGraph_PageRank *P = NULL ;
     GrB_Vector PR = NULL;
     GrB_Vector d_out = NULL, d_in = NULL ;
@@ -164,7 +164,7 @@ int main (int argc, char **argv)
     // finish any pending computations
     GrB_Index nvals ;
     GrB_Matrix_nvals (&nvals, A) ;
-    GrB_Matrix_dup (&A2, A) ;
+    GrB_Matrix_dup (&A_orig, A) ;
     printf ("original # of edges: %"PRId64"\n", nvals) ;
 
     //--------------------------------------------------------------------------
@@ -394,7 +394,7 @@ int main (int argc, char **argv)
         {
             GrB_free (&PR) ;
             LAGraph_tic (tic) ;
-            LAGRAPH_OK (LAGraph_pagerank3f (&PR, A2, d_out, 0.85, itermax,
+            LAGRAPH_OK (LAGraph_pagerank3f (&PR, A_orig, d_out, 0.85, itermax,
                 &iters)) ;
             double t1 = LAGraph_toc (tic) ;
             // printf ("%10.3f ", t1) ; fflush (stdout) ;

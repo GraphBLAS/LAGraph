@@ -1,2 +1,4 @@
 #!/bin/bash
-./build/p3test ~/indochina-2004.grb
+./build/gap_pr_test ~/roadNet-CA.mtx
+./build/gap_pr_test ~/soc-Pokec.grb
+./build/gap_pr_test ~/com-Orkut.grb

@@ -354,7 +354,7 @@ int main (int argc, char **argv)
     // BFS: all-push, with tree (log all timings)
     //--------------------------------------------------------------------------
 
-#if 1
+#if 0
 
     sprintf (filename, "allpush_%lu.m", n) ;
     f = fopen (filename, "w") ;
@@ -406,7 +406,7 @@ int main (int argc, char **argv)
     // BFS: all-pull, with tree (log all timings)
     //--------------------------------------------------------------------------
 
-#if 1
+#if 0
 
     nthreads = nthreads_max ;
     sprintf (filename, "allpull_%lu.m", n) ;

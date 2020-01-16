@@ -51,6 +51,10 @@
 // (that is, the matrix A cannot have any empty rows); otherwise, a
 // divide-by-zero occurs and the results are undefined.
 
+// TODO use either AT passed in instead, stored by row, or A passed in and
+// stored by col.  Both allow fast access to the out-adjacencies, using the
+// dot-product method internally in SuiteSparse:GraphBLAS.
+
 // Contributed by Tim Davis and Mohsen Aznaveh.
 
 #include "LAGraph.h"
@@ -81,7 +85,7 @@ GrB_Info LAGraph_pagerank3f // PageRank definition
     GrB_Info info ;
     GrB_Index n ;
     GrB_Vector r = NULL, d = NULL, t = NULL, w = NULL ;
-
+    GrB_descriptor desc = LAGraph_desc_tooo ;
     LAGr_Matrix_nrows (&n, A) ;
 
     // r = 1 / n
@@ -116,8 +120,7 @@ GrB_Info LAGraph_pagerank3f // PageRank definition
         LAGr_assign (r, NULL, NULL, teleport, GrB_ALL, n, NULL) ;
 
         // r += A'*w
-        LAGr_mxv (r, NULL, GrB_PLUS_FP32, GxB_PLUS_SECOND_FP32, A, w,
-            LAGraph_desc_tooo);
+        LAGr_mxv (r, NULL, GrB_PLUS_FP32, GxB_PLUS_SECOND_FP32, A, w, desc) ;
 
         // t -= r
         LAGr_assign (t, NULL, GrB_MINUS_FP32, r, GrB_ALL, n, NULL) ;
