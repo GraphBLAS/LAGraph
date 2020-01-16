@@ -155,17 +155,21 @@ int main (int argc, char **argv)
     }
     ///////////
     LAGRAPH_OK (GrB_Matrix_nrows (&n, A)) ;
-    GrB_Index nvals ;
+    GrB_Index nvals, svals ;
     LAGr_Matrix_nvals (&nvals, A) ;
     printf ("# of nodes: %lu  # of edges: %lu\n", n, nvals) ;
 
+    // S = A | A'
     GrB_Descriptor desc = 0 ;
     LAGRAPH_OK (GrB_Descriptor_new(&desc)) ;
     LAGRAPH_OK (GrB_Descriptor_set(desc, GrB_INP1, GrB_TRAN)) ;
-
     LAGRAPH_OK (GrB_Matrix_new (&S, GrB_BOOL, n, n)) ;
     LAGRAPH_OK (GrB_eWiseAdd (S, 0, 0, GrB_LOR, A, A, desc)) ;
     LAGRAPH_FREE (desc) ;
+    LAGr_free (&A) ;
+    LAGr_Matrix_nvals (&svals, S) ;
+    printf ("# of edges in S = A|A':  %lu ", svals) ;
+    printf ((svals == nvals) ? "(A symmetric)\n" : "(A unsymmetric)\n") ;
 
     double tic [2], t1, t2 ;
 
@@ -192,32 +196,6 @@ int main (int argc, char **argv)
         }
         printf("FastSV:   threads: %2d time: %10.4f  # of CC: %lu\n",
             nthreads, t1/ NTRIALS, nCC) ;
-
-#if 0
-        t1 = 0 ;
-        for (int k = 0 ; k < NTRIALS ; k++)
-        {
-            LAGraph_tic (tic) ;
-            LAGRAPH_OK (LAGraph_cc_fastsv2 (&result, A, sanitize)) ;
-            t1 += LAGraph_toc (tic) ;
-            nCC = countCC (result, n) ;
-            LAGr_free (&result) ;
-        }
-        printf("FastSV2: threads: %2d time: %10.4f  # of CC: %lu\n",
-            nthreads, t1 / NTRIALS, nCC) ;
-
-        t1 = 0 ;
-        for (int k = 0 ; k < NTRIALS ; k++)
-        {
-            LAGraph_tic (tic) ;
-            LAGRAPH_OK (LAGraph_cc_fastsv3 (&result, A, sanitize)) ;
-            t1 += LAGraph_toc (tic) ;
-            nCC = countCC (result, n) ;
-            LAGr_free (&result) ;
-        }
-        printf("FastSV3: threads: %2d time: %10.4f  # of CC: %lu\n",
-            nthreads, t1 / NTRIALS, nCC) ;
-#endif
 
         t1 = 0 ;
         for (int k = 0 ; k < NTRIALS ; k++)

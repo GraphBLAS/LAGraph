@@ -232,8 +232,7 @@ GrB_Info LAGraph_cc_fastsv5
         LAGr_mxv (mngp, NULL, GrB_MIN_UINT32, GxB_MIN_SECOND_UINT32, S, gp,
             NULL) ;
         LAGRAPH_OK (Reduce_assign32 (&f, &mngp, V32, n, nthreads)) ;
-        LAGr_eWiseMult (f, NULL, NULL, GrB_MIN_UINT32, f, mngp, NULL) ;
-        LAGr_eWiseMult (f, NULL, NULL, GrB_MIN_UINT32, f, gp, NULL) ;
+        LAGr_eWiseAdd (f, NULL, GrB_MIN_UINT32, GrB_MIN_UINT32, mngp, gp, NULL);
         // calculate grandparent
         LAGr_Vector_extractTuples (NULL, V32, &n, f) ;
         #pragma omp parallel for num_threads(nthreads2) schedule(static)
