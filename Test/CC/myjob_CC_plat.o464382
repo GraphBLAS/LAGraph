@@ -1,0 +1,144 @@
+
+########################################################################
+#      Date:           Wed Jan 15 18:47:49 PST 2020
+#    Job ID:           464382.v-qsvr-1.aidevcloud
+#      User:           u32248
+# Resources:           neednodes=1:ppn=2:plat8153,nodes=1:ppn=2:plat8153,walltime=24:00:00
+########################################################################
+
+ thread test 1: 64
+ thread test 2: 32
+ thread test 3: 24
+ thread test 4: 12
+ thread test 5: 8
+ thread test 6: 4
+matrix: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+# of nodes: 134217726  # of edges: 4223264644
+# of trials: 16
+FastSV:  threads: 64 time:    30.0397  # of CC: 71164263
+FastSV4: threads: 64 time:    20.2697  # of CC: 71164263
+
+FastSV:  threads: 32 time:    32.6920  # of CC: 71164263
+FastSV4: threads: 32 time:    22.3595  # of CC: 71164263
+
+FastSV:  threads: 24 time:    36.2982  # of CC: 71164263
+FastSV4: threads: 24 time:    26.0149  # of CC: 71164263
+
+FastSV:  threads: 12 time:    55.4009  # of CC: 71164263
+FastSV4: threads: 12 time:    43.7186  # of CC: 71164263
+
+FastSV:  threads:  8 time:    76.2252  # of CC: 71164263
+FastSV4: threads:  8 time:    61.9950  # of CC: 71164263
+
+ thread test 1: 64
+ thread test 2: 32
+ thread test 3: 24
+ thread test 4: 12
+ thread test 5: 8
+ thread test 6: 4
+matrix: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+# of nodes: 134217728  # of edges: 4294966740
+# of trials: 16
+FastSV:  threads: 64 time:    27.6392  # of CC: 1
+FastSV4: threads: 64 time:    17.6383  # of CC: 1
+
+FastSV:  threads: 32 time:    28.1248  # of CC: 1
+FastSV4: threads: 32 time:    18.3338  # of CC: 1
+
+FastSV:  threads: 24 time:    30.5591  # of CC: 1
+FastSV4: threads: 24 time:    20.8916  # of CC: 1
+
+FastSV:  threads: 12 time:    44.6084  # of CC: 1
+FastSV4: threads: 12 time:    34.0365  # of CC: 1
+
+FastSV:  threads:  8 time:    60.2145  # of CC: 1
+FastSV4: threads:  8 time:    47.5621  # of CC: 1
+
+ thread test 1: 64
+ thread test 2: 32
+ thread test 3: 24
+ thread test 4: 12
+ thread test 5: 8
+ thread test 6: 4
+matrix: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+# of nodes: 61578415  # of edges: 1468364884
+# of trials: 16
+FastSV:  threads: 64 time:    18.8454  # of CC: 21489814
+FastSV4: threads: 64 time:    11.6824  # of CC: 21489814
+
+FastSV:  threads: 32 time:    18.6701  # of CC: 21489814
+FastSV4: threads: 32 time:    12.0028  # of CC: 21489814
+
+FastSV:  threads: 24 time:    20.2444  # of CC: 21489814
+FastSV4: threads: 24 time:    13.5437  # of CC: 21489814
+
+FastSV:  threads: 12 time:    29.5683  # of CC: 21489814
+FastSV4: threads: 12 time:    21.7270  # of CC: 21489814
+
+FastSV:  threads:  8 time:    39.9456  # of CC: 21489814
+FastSV4: threads:  8 time:    30.1693  # of CC: 21489814
+
+ thread test 1: 64
+ thread test 2: 32
+ thread test 3: 24
+ thread test 4: 12
+ thread test 5: 8
+ thread test 6: 4
+matrix: /home/u32248/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-web/GAP-web.grb
+# of nodes: 50636151  # of edges: 1930292948
+# of trials: 16
+FastSV:  threads: 64 time:    36.9159  # of CC: 7186488
+FastSV4: threads: 64 time:    17.5516  # of CC: 7186488
+
+FastSV:  threads: 32 time:    32.5428  # of CC: 7186488
+FastSV4: threads: 32 time:    16.0670  # of CC: 7186488
+
+FastSV:  threads: 24 time:    32.3649  # of CC: 7186488
+FastSV4: threads: 24 time:    16.0088  # of CC: 7186488
+
+FastSV:  threads: 12 time:    36.7581  # of CC: 7186488
+FastSV4: threads: 12 time:    18.6499  # of CC: 7186488
+
+FastSV:  threads:  8 time:    43.2744  # of CC: 7186488
+FastSV4: threads:  8 time:    22.1266  # of CC: 7186488
+
+ thread test 1: 64
+ thread test 2: 32
+ thread test 3: 24
+ thread test 4: 12
+ thread test 5: 8
+ thread test 6: 4
+matrix: /home/u32248/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-road/GAP-road.grb
+# of nodes: 23947347  # of edges: 57708624
+# of trials: 16
+FastSV:  threads: 64 time:     8.5877  # of CC: 1
+FastSV4: threads: 64 time:     3.8638  # of CC: 1
+
+FastSV:  threads: 32 time:     7.6354  # of CC: 1
+FastSV4: threads: 32 time:     3.5842  # of CC: 1
+
+FastSV:  threads: 24 time:     7.5874  # of CC: 1
+FastSV4: threads: 24 time:     3.6148  # of CC: 1
+
+FastSV:  threads: 12 time:     8.6705  # of CC: 1
+FastSV4: threads: 12 time:     4.2802  # of CC: 1
+
+FastSV:  threads:  8 time:    10.2946  # of CC: 1
+FastSV4: threads:  8 time:     5.0868  # of CC: 1
+
+
+########################################################################
+# End of output for job 464382.v-qsvr-1.aidevcloud
+# Date: Thu Jan 16 01:39:36 PST 2020
+########################################################################
+
