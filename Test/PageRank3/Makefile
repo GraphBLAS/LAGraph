@@ -7,7 +7,7 @@
 
 #-------------------------------------------------------------------------------
 
-# simple Makefile for LAGraph/Test/PageRank/p3test,
+# simple Makefile for LAGraph/Test/PageRank/gap_pr_test,
 
 # relies on cmake to do the actual build.  Use the CMAKE_OPTIONS argument to
 # this Makefile to pass options to cmake.
@@ -18,9 +18,9 @@ JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/p3test ../BinRead/west0067.grb
-#	./build/p3test ~/indochina-2004.grb
-#	./build/p3test < ../../Data/ldbc-directed-example-unweighted.mtx
+	./build/gap_pr_test ../BinRead/west0067.grb
+#	./build/gap_pr_test ~/indochina-2004.grb
+#	./build/gap_pr_test < ../../Data/ldbc-directed-example-unweighted.mtx
 
 # build test
 compile:
@@ -36,5 +36,5 @@ purge: distclean
 
 # remove all files not in the distribution
 distclean:
-	rm -rf build/* A.mtx p3test
+	rm -rf build/* A.mtx gap_pr_test
 

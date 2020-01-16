@@ -839,6 +839,19 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
     bool vsparse            // if true, v is expected to be very sparse
 ) ;
 
+GrB_Info bfs_log                // push-pull BFS, or push-only if AT = NULL
+(
+    GrB_Vector *v_output,   // v(i) is the BFS level of node i in the graph
+    GrB_Vector *pi_output,  // pi(i) = p if p is the parent of node i.
+                            // if NULL, the parent is not computed.
+    GrB_Matrix A,           // input graph, treated as if boolean in semiring
+    GrB_Matrix AT,          // transpose of A (optional; push-only if NULL)
+    int64_t s,              // starting node of the BFS
+    int64_t max_level,      // optional limit of # levels to search
+    bool vsparse            // if true, v is expected to be very sparse
+    , FILE *file
+)  ;
+
 GrB_Info LAGraph_bfs_simple     // push-only BFS
 (
     GrB_Vector *v_output,   // v(i) is the BFS level of node i in the graph

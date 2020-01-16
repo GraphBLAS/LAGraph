@@ -369,7 +369,7 @@
     GrB_free (&pi) ;        \
 }
 
-GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
+GrB_Info bfs_log                // push-pull BFS, or push-only if AT = NULL
 (
     GrB_Vector *v_output,   // v(i) is the BFS level of node i in the graph
     GrB_Vector *pi_output,  // pi(i) = p if p is the parent of node i.
@@ -379,6 +379,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
     int64_t s,              // starting node of the BFS
     int64_t max_level,      // optional limit of # levels to search
     bool vsparse            // if true, v is expected to be very sparse
+    , FILE *file
 )
 {
 
@@ -428,6 +429,8 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
         // A must be square
         LAGRAPH_ERROR ("A must be square", GrB_NULL_POINTER) ;
     }
+
+fprintf (file, "%%%%%%%%%% n %lu nvals %lu s %lu\n", nrows, nvalA, s) ;
 
     //--------------------------------------------------------------------------
     // check the format of A and AT
@@ -485,20 +488,22 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
             if (A != NULL && A_format == GxB_BY_COL)
             {
                 // this would result in a pull-only BFS ... exceedingly slow
-                LAGRAPH_ERROR (
-                    "SuiteSparse: AT not provided, so A must be GxB_BY_ROW\n"
-                    "(or provide both A and AT, both in the same format,\n"
-                    "either both GxB_BY_COL or both GxB_BY_ROW)",
-                    GrB_INVALID_VALUE) ;
+fprintf (file, "%% pull only!\n") ;
+//              LAGRAPH_ERROR (
+//                  "SuiteSparse: AT not provided, so A must be GxB_BY_ROW\n"
+//                  "(or provide both A and AT, both in the same format,\n"
+//                  "either both GxB_BY_COL or both GxB_BY_ROW)",
+//                  GrB_INVALID_VALUE) ;
             }
             if (AT != NULL && AT_format == GxB_BY_ROW)
             {
                 // this would result in a pull-only BFS ... exceedingly slow
-                LAGRAPH_ERROR (
-                    "SuiteSparse: A not provided, so AT must be GxB_BY_COL\n"
-                    "(or provide both A and AT, both in the same format,\n"
-                    "either both GxB_BY_COL or both GxB_BY_ROW)",
-                    GrB_INVALID_VALUE) ;
+fprintf (file, "%% pull only!\n") ;
+//              LAGRAPH_ERROR (
+//                  "SuiteSparse: A not provided, so AT must be GxB_BY_COL\n"
+//                  "(or provide both A and AT, both in the same format,\n"
+//                  "either both GxB_BY_COL or both GxB_BY_ROW)",
+//                  GrB_INVALID_VALUE) ;
             }
         }
 
@@ -511,8 +516,8 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
     GrB_Index n = nrows ;
 
     int nthreads = LAGraph_get_nthreads ( ) ;
-    nthreads = LAGRAPH_MIN (n / 4096, nthreads) ;
-    nthreads = LAGRAPH_MAX (nthreads, 1) ;
+    // nthreads = LAGRAPH_MIN (n / 4096, nthreads) ;
+    // nthreads = LAGRAPH_MAX (nthreads, 1) ;
 
     // just traverse from the source node s
     max_level = (max_level <= 0) ? n : LAGRAPH_MIN (n, max_level) ;
@@ -655,6 +660,10 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
         // q = next level of the BFS
         //----------------------------------------------------------------------
 
+bool do_push = use_vxm_with_A ;
+if (!csr) do_push = !do_push ;
+double tic [2] ; LAGraph_tic (tic) ;
+
         if (use_vxm_with_A)
         {
             // q'<!v> = q'*A
@@ -669,6 +678,10 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
             LAGRAPH_OK (GrB_mxv (q, v, NULL, second_semiring, AT, q,
                 LAGraph_desc_oocr)) ;
         }
+
+double time = LAGraph_toc (tic) ;
+fprintf (file, "%ld %lu %g  %2d %d %ld %lu %ld  %g\n", 
+                 s,  n, d, nthreads, do_push, level, nq, nvisited, time) ;
 
         //----------------------------------------------------------------------
         // move to next level

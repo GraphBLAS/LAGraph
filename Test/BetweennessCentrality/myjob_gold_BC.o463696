@@ -1,0 +1,1109 @@
+
+########################################################################
+#      Date:           Tue Jan 14 19:11:21 PST 2020
+#    Job ID:           463696.v-qsvr-1.aidevcloud
+#      User:           u32248
+# Resources:           neednodes=1:ppn=2:gold6128,nodes=1:ppn=2:gold6128,walltime=24:00:00
+########################################################################
+
+SuiteSparse:GraphBLAS Jan 14, 2020 (DRAFT12)
+matrix: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+sources: /home/u32248/GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 585.113 sec
+A is symmetric
+transpose time: 107.821
+ chunk test 1: size 65536
+ thread test 3: 24
+ thread test 4: 12
+ thread test 5: 8
+
+========== input graph: nodes: 134217726 edges: 4223264644
+nthreads max 24
+
+Trial 1 : sources: [ 2338012 31997659 23590940 43400604 ]
+---
+
+Batch X3 time  1:24:     143.9962 (sec), rate:     29.329
+Batch X3 time  1:12:     197.7334 (sec), rate:     21.358
+Batch X3 time  1: 8:     282.9269 (sec), rate:     14.927
+---
+
+Batch v4 time  1:24:     144.0204 (sec), rate:     29.324
+Batch v4 time  1:12:     203.1740 (sec), rate:     20.786
+Batch v4 time  1: 8:     291.1889 (sec), rate:     14.504
+
+Trial 2 : sources: [ 75337937 169867 104041220 94177942 ]
+---
+
+Batch X3 time  1:24:     140.0515 (sec), rate:     30.155
+Batch X3 time  1:12:     186.4534 (sec), rate:     22.651
+Batch X3 time  1: 8:     258.3290 (sec), rate:     16.348
+---
+
+Batch v4 time  1:24:     144.3543 (sec), rate:     29.256
+Batch v4 time  1:12:     188.9685 (sec), rate:     22.349
+Batch v4 time  1: 8:     269.0732 (sec), rate:     15.696
+
+Trial 3 : sources: [ 32871357 56230002 69883037 9346345 ]
+---
+
+Batch X3 time  1:24:     139.2323 (sec), rate:     30.333
+Batch X3 time  1:12:     189.1155 (sec), rate:     22.332
+Batch X3 time  1: 8:     268.7835 (sec), rate:     15.713
+---
+
+Batch v4 time  1:24:     146.1525 (sec), rate:     28.896
+Batch v4 time  1:12:     195.9120 (sec), rate:     21.557
+Batch v4 time  1: 8:     279.3668 (sec), rate:     15.117
+
+Trial 4 : sources: [ 48915358 122571173 6183279 86323663 ]
+---
+
+Batch X3 time  1:24:     142.9834 (sec), rate:     29.537
+Batch X3 time  1:12:     181.7481 (sec), rate:     23.237
+Batch X3 time  1: 8:     265.0569 (sec), rate:     15.933
+---
+
+Batch v4 time  1:24:     145.4894 (sec), rate:     29.028
+Batch v4 time  1:12:     189.7470 (sec), rate:     22.257
+Batch v4 time  1: 8:     272.1278 (sec), rate:     15.519
+
+Trial 5 : sources: [ 106725780 92389938 16210738 59816700 ]
+---
+
+Batch X3 time  1:24:     141.9281 (sec), rate:     29.756
+Batch X3 time  1:12:     182.3081 (sec), rate:     23.166
+Batch X3 time  1: 8:     261.4226 (sec), rate:     16.155
+---
+
+Batch v4 time  1:24:     146.6993 (sec), rate:     28.789
+Batch v4 time  1:12:     190.4402 (sec), rate:     22.176
+Batch v4 time  1: 8:     264.2989 (sec), rate:     15.979
+
+Trial 6 : sources: [ 111669929 102831411 113384800 43872564 ]
+---
+
+Batch X3 time  1:24:     146.7506 (sec), rate:     28.779
+Batch X3 time  1:12:     187.0735 (sec), rate:     22.575
+Batch X3 time  1: 8:     259.1775 (sec), rate:     16.295
+---
+
+Batch v4 time  1:24:     147.5073 (sec), rate:     28.631
+Batch v4 time  1:12:     188.2849 (sec), rate:     22.430
+Batch v4 time  1: 8:     273.7558 (sec), rate:     15.427
+
+Trial 7 : sources: [ 80508827 26105648 8807516 118452455 ]
+---
+
+Batch X3 time  1:24:     139.9123 (sec), rate:     30.185
+Batch X3 time  1:12:     188.4094 (sec), rate:     22.415
+Batch X3 time  1: 8:     266.7289 (sec), rate:     15.834
+---
+
+Batch v4 time  1:24:     147.8573 (sec), rate:     28.563
+Batch v4 time  1:12:     196.2170 (sec), rate:     21.523
+Batch v4 time  1: 8:     280.7865 (sec), rate:     15.041
+
+Trial 8 : sources: [ 121818859 42361928 29493053 98461503 ]
+---
+
+Batch X3 time  1:24:     137.4277 (sec), rate:     30.731
+Batch X3 time  1:12:     174.2556 (sec), rate:     24.236
+Batch X3 time  1: 8:     244.4417 (sec), rate:     17.277
+---
+
+Batch v4 time  1:24:     141.9555 (sec), rate:     29.751
+Batch v4 time  1:12:     180.1757 (sec), rate:     23.440
+Batch v4 time  1: 8:     255.2143 (sec), rate:     16.548
+
+Trial 9 : sources: [ 71931337 103808468 4092345 115276241 ]
+---
+
+Batch X3 time  1:24:     132.0950 (sec), rate:     31.971
+Batch X3 time  1:12:     184.9284 (sec), rate:     22.837
+Batch X3 time  1: 8:     260.8205 (sec), rate:     16.192
+---
+
+Batch v4 time  1:24:     137.2426 (sec), rate:     30.772
+Batch v4 time  1:12:     188.3676 (sec), rate:     22.420
+Batch v4 time  1: 8:     266.6933 (sec), rate:     15.836
+
+Trial 10 : sources: [ 4649343 76656189 31312001 111334127 ]
+---
+
+Batch X3 time  1:24:     139.9228 (sec), rate:     30.183
+Batch X3 time  1:12:     187.3163 (sec), rate:     22.546
+Batch X3 time  1: 8:     270.9147 (sec), rate:     15.589
+---
+
+Batch v4 time  1:24:     146.1826 (sec), rate:     28.890
+Batch v4 time  1:12:     182.6287 (sec), rate:     23.125
+Batch v4 time  1: 8:     276.4114 (sec), rate:     15.279
+
+Trial 11 : sources: [ 100962918 41823215 22631240 42848461 ]
+---
+
+Batch X3 time  1:24:     152.3556 (sec), rate:     27.720
+Batch X3 time  1:12:     187.5715 (sec), rate:     22.515
+Batch X3 time  1: 8:     270.4874 (sec), rate:     15.614
+---
+
+Batch v4 time  1:24:     156.6148 (sec), rate:     26.966
+Batch v4 time  1:12:     195.6184 (sec), rate:     21.589
+Batch v4 time  1: 8:     275.4807 (sec), rate:     15.331
+
+Trial 12 : sources: [ 79485148 106818742 73347974 78848445 ]
+---
+
+Batch X3 time  1:24:     135.4889 (sec), rate:     31.171
+Batch X3 time  1:12:     169.3216 (sec), rate:     24.942
+Batch X3 time  1: 8:     245.6696 (sec), rate:     17.191
+---
+
+Batch v4 time  1:24:     140.6669 (sec), rate:     30.023
+Batch v4 time  1:12:     175.5468 (sec), rate:     24.058
+Batch v4 time  1: 8:     251.5353 (sec), rate:     16.790
+
+Trial 13 : sources: [ 109920510 121492133 101037296 15438600 ]
+---
+
+Batch X3 time  1:24:     133.8722 (sec), rate:     31.547
+Batch X3 time  1:12:     214.6015 (sec), rate:     19.680
+Batch X3 time  1: 8:     271.4488 (sec), rate:     15.558
+---
+
+Batch v4 time  1:24:     140.9462 (sec), rate:     29.964
+Batch v4 time  1:12:     221.6723 (sec), rate:     19.052
+Batch v4 time  1: 8:     284.6937 (sec), rate:     14.834
+
+Trial 14 : sources: [ 4584784 124503845 87241743 108297008 ]
+---
+
+Batch X3 time  1:24:     141.8702 (sec), rate:     29.769
+Batch X3 time  1:12:     205.8901 (sec), rate:     20.512
+Batch X3 time  1: 8:     280.3830 (sec), rate:     15.062
+---
+
+Batch v4 time  1:24:     147.2739 (sec), rate:     28.676
+Batch v4 time  1:12:     218.6094 (sec), rate:     19.319
+Batch v4 time  1: 8:     287.3757 (sec), rate:     14.696
+
+Trial 15 : sources: [ 33955082 79934823 8608481 82435063 ]
+---
+
+Batch X3 time  1:24:     138.0111 (sec), rate:     30.601
+Batch X3 time  1:12:     190.0055 (sec), rate:     22.227
+Batch X3 time  1: 8:     269.1158 (sec), rate:     15.693
+---
+
+Batch v4 time  1:24:     144.6832 (sec), rate:     29.190
+Batch v4 time  1:12:     193.3780 (sec), rate:     21.839
+Batch v4 time  1: 8:     282.7388 (sec), rate:     14.937
+
+Trial 16 : sources: [ 46579271 515421 121530467 127978736 ]
+---
+
+Batch X3 time  1:24:     137.8868 (sec), rate:     30.629
+Batch X3 time  1:12:     188.2990 (sec), rate:     22.429
+Batch X3 time  1: 8:     263.5179 (sec), rate:     16.026
+---
+
+Batch v4 time  1:24:     144.7998 (sec), rate:     29.166
+Batch v4 time  1:12:     193.1979 (sec), rate:     21.860
+Batch v4 time  1: 8:     273.5356 (sec), rate:     15.440
+
+ntrials: 16
+
+Ave (BatchX3)  1:24:    140.237 sec, rate     30.115
+Ave (BatchX3)  1:12:    188.439 sec, rate     22.412
+Ave (BatchX3)  1: 8:    264.952 sec, rate     15.940
+
+
+Ave (Batch4)   1:24:    145.153 sec, rate     29.095
+Ave (Batch4)   1:12:    193.871 sec, rate     21.784
+Ave (Batch4)   1: 8:    274.017 sec, rate     15.412
+build/bc_gap_test: all tests passed
+SuiteSparse:GraphBLAS Jan 14, 2020 (DRAFT12)
+matrix: /home/u32248/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-road/GAP-road.grb
+sources: /home/u32248/GAP/GAP-road/GAP-road_sources.mtx
+read time: 9.48128 sec
+A is symmetric
+transpose time: 1.04831
+ chunk test 1: size 65536
+ thread test 3: 24
+ thread test 4: 12
+ thread test 5: 8
+
+========== input graph: nodes: 23947347 edges: 57708624
+nthreads max 24
+
+Trial 1 : sources: [ 4795720 21003853 417968 6496511 ]
+---
+
+Batch X3 time  1:24:      54.0578 (sec), rate:      1.068
+Batch X3 time  1:12:      45.8013 (sec), rate:      1.260
+Batch X3 time  1: 8:      45.7600 (sec), rate:      1.261
+---
+
+Batch v4 time  1:24:      68.6257 (sec), rate:      0.841
+Batch v4 time  1:12:      70.8129 (sec), rate:      0.815
+Batch v4 time  1: 8:      83.3434 (sec), rate:      0.692
+
+Trial 2 : sources: [ 6648699 9811073 22247478 5720252 ]
+---
+
+Batch X3 time  1:24:      47.3901 (sec), rate:      1.218
+Batch X3 time  1:12:      43.3377 (sec), rate:      1.332
+Batch X3 time  1: 8:      43.5691 (sec), rate:      1.325
+---
+
+Batch v4 time  1:24:      65.6960 (sec), rate:      0.878
+Batch v4 time  1:12:      68.0255 (sec), rate:      0.848
+Batch v4 time  1: 8:      80.3341 (sec), rate:      0.718
+
+Trial 3 : sources: [ 12366459 20413729 4217374 2674749 ]
+---
+
+Batch X3 time  1:24:      47.3575 (sec), rate:      1.219
+Batch X3 time  1:12:      43.6877 (sec), rate:      1.321
+Batch X3 time  1: 8:      43.9227 (sec), rate:      1.314
+---
+
+Batch v4 time  1:24:      65.0457 (sec), rate:      0.887
+Batch v4 time  1:12:      67.7765 (sec), rate:      0.851
+Batch v4 time  1: 8:      79.9617 (sec), rate:      0.722
+
+Trial 4 : sources: [ 22085557 19445040 2360788 19115968 ]
+---
+
+Batch X3 time  1:24:      48.5639 (sec), rate:      1.188
+Batch X3 time  1:12:      44.9051 (sec), rate:      1.285
+Batch X3 time  1: 8:      44.0536 (sec), rate:      1.310
+---
+
+Batch v4 time  1:24:      66.0620 (sec), rate:      0.874
+Batch v4 time  1:12:      69.0078 (sec), rate:      0.836
+Batch v4 time  1: 8:      80.5870 (sec), rate:      0.716
+
+Trial 5 : sources: [ 7758767 13468234 30367 18599547 ]
+---
+
+Batch X3 time  1:24:      47.1531 (sec), rate:      1.224
+Batch X3 time  1:12:      44.9032 (sec), rate:      1.285
+Batch X3 time  1: 8:      44.8107 (sec), rate:      1.288
+---
+
+Batch v4 time  1:24:      65.4148 (sec), rate:      0.882
+Batch v4 time  1:12:      69.6802 (sec), rate:      0.828
+Batch v4 time  1: 8:      82.4091 (sec), rate:      0.700
+
+Trial 6 : sources: [ 7526108 16836280 12742067 7697995 ]
+---
+
+Batch X3 time  1:24:      47.3845 (sec), rate:      1.218
+Batch X3 time  1:12:      43.5318 (sec), rate:      1.326
+Batch X3 time  1: 8:      44.3483 (sec), rate:      1.301
+---
+
+Batch v4 time  1:24:      66.1314 (sec), rate:      0.873
+Batch v4 time  1:12:      69.0926 (sec), rate:      0.835
+Batch v4 time  1: 8:      81.3411 (sec), rate:      0.709
+
+Trial 7 : sources: [ 5876443 9616340 2497673 10052290 ]
+---
+
+Batch X3 time  1:24:      47.9225 (sec), rate:      1.204
+Batch X3 time  1:12:      45.8601 (sec), rate:      1.258
+Batch X3 time  1: 8:      45.2405 (sec), rate:      1.276
+---
+
+Batch v4 time  1:24:      66.9966 (sec), rate:      0.861
+Batch v4 time  1:12:      70.7831 (sec), rate:      0.815
+Batch v4 time  1: 8:      81.4961 (sec), rate:      0.708
+
+Trial 8 : sources: [ 12493057 1670855 2760679 2460941 ]
+---
+
+Batch X3 time  1:24:      46.7536 (sec), rate:      1.234
+Batch X3 time  1:12:      42.2819 (sec), rate:      1.365
+Batch X3 time  1: 8:      42.9978 (sec), rate:      1.342
+---
+
+Batch v4 time  1:24:      64.0628 (sec), rate:      0.901
+Batch v4 time  1:12:      67.3571 (sec), rate:      0.857
+Batch v4 time  1: 8:      80.2647 (sec), rate:      0.719
+
+Trial 9 : sources: [ 8489650 5005225 8744645 8512023 ]
+---
+
+Batch X3 time  1:24:      49.1723 (sec), rate:      1.174
+Batch X3 time  1:12:      44.6786 (sec), rate:      1.292
+Batch X3 time  1: 8:      44.2355 (sec), rate:      1.305
+---
+
+Batch v4 time  1:24:      67.6296 (sec), rate:      0.853
+Batch v4 time  1:12:      71.3085 (sec), rate:      0.809
+Batch v4 time  1: 8:      84.3442 (sec), rate:      0.684
+
+Trial 10 : sources: [ 21912165 1105390 15432163 1600177 ]
+---
+
+Batch X3 time  1:24:      48.2108 (sec), rate:      1.197
+Batch X3 time  1:12:      44.9826 (sec), rate:      1.283
+Batch X3 time  1: 8:      44.5754 (sec), rate:      1.295
+---
+
+Batch v4 time  1:24:      64.5693 (sec), rate:      0.894
+Batch v4 time  1:12:      67.8428 (sec), rate:      0.851
+Batch v4 time  1: 8:      77.8159 (sec), rate:      0.742
+
+Trial 11 : sources: [ 19079469 16516637 20202566 21372803 ]
+---
+
+Batch X3 time  1:24:      46.3854 (sec), rate:      1.244
+Batch X3 time  1:12:      43.8169 (sec), rate:      1.317
+Batch X3 time  1: 8:      44.3912 (sec), rate:      1.300
+---
+
+Batch v4 time  1:24:      65.3365 (sec), rate:      0.883
+Batch v4 time  1:12:      67.9631 (sec), rate:      0.849
+Batch v4 time  1: 8:      79.2090 (sec), rate:      0.729
+
+Trial 12 : sources: [ 2898009 8491277 18798317 23757560 ]
+---
+
+Batch X3 time  1:24:      47.3810 (sec), rate:      1.218
+Batch X3 time  1:12:      44.6334 (sec), rate:      1.293
+Batch X3 time  1: 8:      44.4730 (sec), rate:      1.298
+---
+
+Batch v4 time  1:24:      65.7594 (sec), rate:      0.878
+Batch v4 time  1:12:      69.4613 (sec), rate:      0.831
+Batch v4 time  1: 8:      82.2040 (sec), rate:      0.702
+
+Trial 13 : sources: [ 17161819 23180739 10997085 3730630 ]
+---
+
+Batch X3 time  1:24:      48.1576 (sec), rate:      1.198
+Batch X3 time  1:12:      44.3744 (sec), rate:      1.300
+Batch X3 time  1: 8:      44.6715 (sec), rate:      1.292
+---
+
+Batch v4 time  1:24:      65.4498 (sec), rate:      0.882
+Batch v4 time  1:12:      68.8830 (sec), rate:      0.838
+Batch v4 time  1: 8:      80.0331 (sec), rate:      0.721
+
+Trial 14 : sources: [ 1079068 15426822 12190925 1155218 ]
+---
+
+Batch X3 time  1:24:      47.9476 (sec), rate:      1.204
+Batch X3 time  1:12:      45.5066 (sec), rate:      1.268
+Batch X3 time  1: 8:      45.2650 (sec), rate:      1.275
+---
+
+Batch v4 time  1:24:      66.5471 (sec), rate:      0.867
+Batch v4 time  1:12:      72.2657 (sec), rate:      0.799
+Batch v4 time  1: 8:      84.6246 (sec), rate:      0.682
+
+Trial 15 : sources: [ 10693488 14434835 19963339 3486185 ]
+---
+
+Batch X3 time  1:24:      47.9727 (sec), rate:      1.203
+Batch X3 time  1:12:      45.1743 (sec), rate:      1.277
+Batch X3 time  1: 8:      44.7078 (sec), rate:      1.291
+---
+
+Batch v4 time  1:24:      66.0126 (sec), rate:      0.874
+Batch v4 time  1:12:      69.0951 (sec), rate:      0.835
+Batch v4 time  1: 8:      81.8408 (sec), rate:      0.705
+
+Trial 16 : sources: [ 18383269 20269908 12370764 7843140 ]
+---
+
+Batch X3 time  1:24:      48.3148 (sec), rate:      1.194
+Batch X3 time  1:12:      44.4046 (sec), rate:      1.300
+Batch X3 time  1: 8:      43.6711 (sec), rate:      1.321
+---
+
+Batch v4 time  1:24:      64.8436 (sec), rate:      0.890
+Batch v4 time  1:12:      69.3004 (sec), rate:      0.833
+Batch v4 time  1: 8:      81.4533 (sec), rate:      0.708
+
+ntrials: 16
+
+Ave (BatchX3)  1:24:     48.133 sec, rate      1.199
+Ave (BatchX3)  1:12:     44.493 sec, rate      1.297
+Ave (BatchX3)  1: 8:     44.418 sec, rate      1.299
+
+
+Ave (Batch4)   1:24:     65.886 sec, rate      0.876
+Ave (Batch4)   1:12:     69.291 sec, rate      0.833
+Ave (Batch4)   1: 8:     81.329 sec, rate      0.710
+build/bc_gap_test: all tests passed
+SuiteSparse:GraphBLAS Jan 14, 2020 (DRAFT12)
+matrix: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+sources: /home/u32248/GAP/GAP-twitter/GAP-twitter_sources.mtx
+read time: 204.558 sec
+A is unsymmetric
+transpose time: 30.8201
+ chunk test 1: size 65536
+ thread test 3: 24
+ thread test 4: 12
+ thread test 5: 8
+
+========== input graph: nodes: 61578415 edges: 1468364884
+nthreads max 24
+
+Trial 1 : sources: [ 12441072 54488257 25451915 57714473 ]
+---
+
+Batch X3 time  1:24:      52.4027 (sec), rate:     28.021
+Batch X3 time  1:12:      64.5272 (sec), rate:     22.756
+Batch X3 time  1: 8:      96.7135 (sec), rate:     15.183
+---
+
+Batch v4 time  1:24:      52.8708 (sec), rate:     27.773
+Batch v4 time  1:12:      67.6554 (sec), rate:     21.704
+Batch v4 time  1: 8:     101.2760 (sec), rate:     14.499
+
+Trial 2 : sources: [ 14839494 32081104 52957357 50444380 ]
+---
+
+Batch X3 time  1:24:      53.4036 (sec), rate:     27.496
+Batch X3 time  1:12:      66.1170 (sec), rate:     22.209
+Batch X3 time  1: 8:      91.9116 (sec), rate:     15.976
+---
+
+Batch v4 time  1:24:      57.1425 (sec), rate:     25.697
+Batch v4 time  1:12:      69.1992 (sec), rate:     21.219
+Batch v4 time  1: 8:      97.5662 (sec), rate:     15.050
+
+Trial 3 : sources: [ 49590701 20127816 34939333 48251001 ]
+---
+
+Batch X3 time  1:24:      49.6049 (sec), rate:     29.601
+Batch X3 time  1:12:      70.6006 (sec), rate:     20.798
+Batch X3 time  1: 8:      97.5293 (sec), rate:     15.056
+---
+
+Batch v4 time  1:24:      52.6772 (sec), rate:     27.875
+Batch v4 time  1:12:      75.0673 (sec), rate:     19.561
+Batch v4 time  1: 8:     105.1025 (sec), rate:     13.971
+
+Trial 4 : sources: [ 19524253 43676726 33055508 15244687 ]
+---
+
+Batch X3 time  1:24:      46.4675 (sec), rate:     31.600
+Batch X3 time  1:12:      61.6548 (sec), rate:     23.816
+Batch X3 time  1: 8:      92.1122 (sec), rate:     15.941
+---
+
+Batch v4 time  1:24:      48.3520 (sec), rate:     30.368
+Batch v4 time  1:12:      65.6325 (sec), rate:     22.373
+Batch v4 time  1: 8:      97.5286 (sec), rate:     15.056
+
+Trial 5 : sources: [ 24946738 6479472 26077682 22023875 ]
+---
+
+Batch X3 time  1:24:      51.0720 (sec), rate:     28.751
+Batch X3 time  1:12:      70.6724 (sec), rate:     20.777
+Batch X3 time  1: 8:      98.8567 (sec), rate:     14.853
+---
+
+Batch v4 time  1:24:      54.5426 (sec), rate:     26.921
+Batch v4 time  1:12:      75.2189 (sec), rate:     19.521
+Batch v4 time  1: 8:     103.3417 (sec), rate:     14.209
+
+Trial 6 : sources: [ 22081915 40034162 49496014 42847507 ]
+---
+
+Batch X3 time  1:24:      47.7864 (sec), rate:     30.728
+Batch X3 time  1:12:      64.3514 (sec), rate:     22.818
+Batch X3 time  1: 8:      87.9545 (sec), rate:     16.695
+---
+
+Batch v4 time  1:24:      48.8726 (sec), rate:     30.045
+Batch v4 time  1:12:      67.4360 (sec), rate:     21.774
+Batch v4 time  1: 8:      95.3175 (sec), rate:     15.405
+
+Trial 7 : sources: [ 52409557 55445388 22028097 48766648 ]
+---
+
+Batch X3 time  1:24:      49.9792 (sec), rate:     29.380
+Batch X3 time  1:12:      68.1323 (sec), rate:     21.552
+Batch X3 time  1: 8:      92.7143 (sec), rate:     15.838
+---
+
+Batch v4 time  1:24:      52.6574 (sec), rate:     27.885
+Batch v4 time  1:12:      70.9507 (sec), rate:     20.696
+Batch v4 time  1: 8:      99.1130 (sec), rate:     14.815
+
+Trial 8 : sources: [ 44521241 60135542 28528671 9678012 ]
+---
+
+Batch X3 time  1:24:      50.9619 (sec), rate:     28.813
+Batch X3 time  1:12:      63.6797 (sec), rate:     23.059
+Batch X3 time  1: 8:      87.6687 (sec), rate:     16.749
+---
+
+Batch v4 time  1:24:      53.7886 (sec), rate:     27.299
+Batch v4 time  1:12:      67.5624 (sec), rate:     21.733
+Batch v4 time  1: 8:      93.9929 (sec), rate:     15.622
+
+Trial 9 : sources: [ 40020306 31625735 37446892 51788952 ]
+---
+
+Batch X3 time  1:24:      45.9633 (sec), rate:     31.946
+Batch X3 time  1:12:      56.7080 (sec), rate:     25.893
+Batch X3 time  1: 8:      83.9323 (sec), rate:     17.495
+---
+
+Batch v4 time  1:24:      48.6049 (sec), rate:     30.210
+Batch v4 time  1:12:      60.7674 (sec), rate:     24.164
+Batch v4 time  1: 8:      90.7260 (sec), rate:     16.185
+
+Trial 10 : sources: [ 52584255 20346696 48387909 37337427 ]
+---
+
+Batch X3 time  1:24:      48.2747 (sec), rate:     30.417
+Batch X3 time  1:12:      73.6129 (sec), rate:     19.947
+Batch X3 time  1: 8:      93.3691 (sec), rate:     15.726
+---
+
+Batch v4 time  1:24:      50.4951 (sec), rate:     29.079
+Batch v4 time  1:12:      75.2317 (sec), rate:     19.518
+Batch v4 time  1: 8:      99.7525 (sec), rate:     14.720
+
+Trial 11 : sources: [ 50501084 30130061 41185893 56495703 ]
+---
+
+Batch X3 time  1:24:      49.2439 (sec), rate:     29.818
+Batch X3 time  1:12:      68.2983 (sec), rate:     21.499
+Batch X3 time  1: 8:      97.7032 (sec), rate:     15.029
+---
+
+Batch v4 time  1:24:      52.3914 (sec), rate:     28.027
+Batch v4 time  1:12:      72.4081 (sec), rate:     20.279
+Batch v4 time  1: 8:     103.6764 (sec), rate:     14.163
+
+Trial 12 : sources: [ 45663305 33359460 48143058 33291513 ]
+---
+
+Batch X3 time  1:24:      50.2205 (sec), rate:     29.238
+Batch X3 time  1:12:      71.4129 (sec), rate:     20.562
+Batch X3 time  1: 8:      94.3387 (sec), rate:     15.565
+---
+
+Batch v4 time  1:24:      52.9376 (sec), rate:     27.738
+Batch v4 time  1:12:      76.0807 (sec), rate:     19.300
+Batch v4 time  1: 8:      99.9282 (sec), rate:     14.694
+
+Trial 13 : sources: [ 53461445 29340610 34148498 49171806 ]
+---
+
+Batch X3 time  1:24:      47.7640 (sec), rate:     30.742
+Batch X3 time  1:12:      64.2354 (sec), rate:     22.859
+Batch X3 time  1: 8:      92.1484 (sec), rate:     15.935
+---
+
+Batch v4 time  1:24:      50.8381 (sec), rate:     28.883
+Batch v4 time  1:12:      67.7104 (sec), rate:     21.686
+Batch v4 time  1: 8:      95.9985 (sec), rate:     15.296
+
+Trial 14 : sources: [ 35550696 14521507 51633218 46823382 ]
+---
+
+Batch X3 time  1:24:      51.1220 (sec), rate:     28.723
+Batch X3 time  1:12:      63.5180 (sec), rate:     23.117
+Batch X3 time  1: 8:      90.7906 (sec), rate:     16.173
+---
+
+Batch v4 time  1:24:      52.8370 (sec), rate:     27.790
+Batch v4 time  1:12:      68.1981 (sec), rate:     21.531
+Batch v4 time  1: 8:      95.7301 (sec), rate:     15.339
+
+Trial 15 : sources: [ 19396273 19871750 36862677 49539126 ]
+---
+
+Batch X3 time  1:24:      52.8272 (sec), rate:     27.796
+Batch X3 time  1:12:      70.6922 (sec), rate:     20.771
+Batch X3 time  1: 8:     103.9345 (sec), rate:     14.128
+---
+
+Batch v4 time  1:24:      55.5751 (sec), rate:     26.421
+Batch v4 time  1:12:      75.0191 (sec), rate:     19.573
+Batch v4 time  1: 8:     111.2921 (sec), rate:     13.194
+
+Trial 16 : sources: [ 34016452 36567395 55487793 14391370 ]
+---
+
+Batch X3 time  1:24:      47.2428 (sec), rate:     31.081
+Batch X3 time  1:12:      59.8306 (sec), rate:     24.542
+Batch X3 time  1: 8:      89.7616 (sec), rate:     16.358
+---
+
+Batch v4 time  1:24:      49.8362 (sec), rate:     29.464
+Batch v4 time  1:12:      63.7280 (sec), rate:     23.041
+Batch v4 time  1: 8:      94.9243 (sec), rate:     15.469
+
+ntrials: 16
+
+Ave (BatchX3)  1:24:     49.646 sec, rate     29.577
+Ave (BatchX3)  1:12:     66.128 sec, rate     22.205
+Ave (BatchX3)  1: 8:     93.215 sec, rate     15.752
+
+
+Ave (Batch4)   1:24:     52.151 sec, rate     28.156
+Ave (Batch4)   1:12:     69.867 sec, rate     21.017
+Ave (Batch4)   1: 8:     99.079 sec, rate     14.820
+build/bc_gap_test: all tests passed
+SuiteSparse:GraphBLAS Jan 14, 2020 (DRAFT12)
+matrix: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+sources: /home/u32248/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 594.577 sec
+A is symmetric
+transpose time: 119.546
+ chunk test 1: size 65536
+ thread test 3: 24
+ thread test 4: 12
+ thread test 5: 8
+
+========== input graph: nodes: 134217728 edges: 4294966740
+nthreads max 24
+
+Trial 1 : sources: [ 27691419 121280314 2413431 37512113 ]
+---
+
+Batch X3 time  1:24:     200.5811 (sec), rate:     21.413
+Batch X3 time  1:12:     238.4934 (sec), rate:     18.009
+Batch X3 time  1: 8:     319.1063 (sec), rate:     13.459
+---
+
+Batch v4 time  1:24:     190.8520 (sec), rate:     22.504
+Batch v4 time  1:12:     236.4285 (sec), rate:     18.166
+Batch v4 time  1: 8:     323.8855 (sec), rate:     13.261
+
+Trial 2 : sources: [ 38390877 56651037 128461248 33029842 ]
+---
+
+Batch X3 time  1:24:     186.5445 (sec), rate:     23.024
+Batch X3 time  1:12:     232.5180 (sec), rate:     18.472
+Batch X3 time  1: 8:     319.8107 (sec), rate:     13.430
+---
+
+Batch v4 time  1:24:     186.8114 (sec), rate:     22.991
+Batch v4 time  1:12:     240.6088 (sec), rate:     17.850
+Batch v4 time  1: 8:     331.1595 (sec), rate:     12.969
+
+Trial 3 : sources: [ 71406328 117872827 24351938 15444519 ]
+---
+
+Batch X3 time  1:24:     179.6404 (sec), rate:     23.909
+Batch X3 time  1:12:     220.8214 (sec), rate:     19.450
+Batch X3 time  1: 8:     307.7472 (sec), rate:     13.956
+---
+
+Batch v4 time  1:24:     185.2318 (sec), rate:     23.187
+Batch v4 time  1:12:     225.5245 (sec), rate:     19.044
+Batch v4 time  1: 8:     315.1046 (sec), rate:     13.630
+
+Trial 4 : sources: [ 127526281 112279428 13631649 110379302 ]
+---
+
+Batch X3 time  1:24:     177.7918 (sec), rate:     24.157
+Batch X3 time  1:12:     222.3198 (sec), rate:     19.319
+Batch X3 time  1: 8:     304.9362 (sec), rate:     14.085
+---
+
+Batch v4 time  1:24:     180.1013 (sec), rate:     23.848
+Batch v4 time  1:12:     228.6413 (sec), rate:     18.785
+Batch v4 time  1: 8:     314.4372 (sec), rate:     13.659
+
+Trial 5 : sources: [ 44800623 77768193 175347 107397389 ]
+---
+
+Batch X3 time  1:24:     179.5050 (sec), rate:     23.927
+Batch X3 time  1:12:     223.9019 (sec), rate:     19.182
+Batch X3 time  1: 8:     308.4857 (sec), rate:     13.923
+---
+
+Batch v4 time  1:24:     184.9050 (sec), rate:     23.228
+Batch v4 time  1:12:     229.0590 (sec), rate:     18.750
+Batch v4 time  1: 8:     317.2438 (sec), rate:     13.538
+
+Trial 6 : sources: [ 43457209 97215940 73575165 44449715 ]
+---
+
+Batch X3 time  1:24:     182.1991 (sec), rate:     23.573
+Batch X3 time  1:12:     231.0374 (sec), rate:     18.590
+Batch X3 time  1: 8:     317.6342 (sec), rate:     13.522
+---
+
+Batch v4 time  1:24:     190.4989 (sec), rate:     22.546
+Batch v4 time  1:12:     239.1881 (sec), rate:     17.956
+Batch v4 time  1: 8:     323.0834 (sec), rate:     13.294
+
+Trial 7 : sources: [ 33931724 55526610 14422051 58043873 ]
+---
+
+Batch X3 time  1:24:     188.1913 (sec), rate:     22.822
+Batch X3 time  1:12:     227.0492 (sec), rate:     18.916
+Batch X3 time  1: 8:     309.6664 (sec), rate:     13.870
+---
+
+Batch v4 time  1:24:     181.6712 (sec), rate:     23.641
+Batch v4 time  1:12:     229.0487 (sec), rate:     18.751
+Batch v4 time  1: 8:     317.0551 (sec), rate:     13.546
+
+Trial 8 : sources: [ 72137329 9647840 15940695 14209952 ]
+---
+
+Batch X3 time  1:24:     181.0488 (sec), rate:     23.723
+Batch X3 time  1:12:     229.6458 (sec), rate:     18.703
+Batch X3 time  1: 8:     318.5905 (sec), rate:     13.481
+---
+
+Batch v4 time  1:24:     187.7847 (sec), rate:     22.872
+Batch v4 time  1:12:     238.5139 (sec), rate:     18.007
+Batch v4 time  1: 8:     327.8385 (sec), rate:     13.101
+
+Trial 9 : sources: [ 49020883 28901138 50493273 49150069 ]
+---
+
+Batch X3 time  1:24:     180.7850 (sec), rate:     23.757
+Batch X3 time  1:12:     224.4073 (sec), rate:     19.139
+Batch X3 time  1: 8:     311.2868 (sec), rate:     13.797
+---
+
+Batch v4 time  1:24:     185.0343 (sec), rate:     23.212
+Batch v4 time  1:12:     231.3555 (sec), rate:     18.564
+Batch v4 time  1: 8:     319.2820 (sec), rate:     13.452
+
+Trial 10 : sources: [ 126525082 6382740 89108297 9239735 ]
+---
+
+Batch X3 time  1:24:     177.5087 (sec), rate:     24.196
+Batch X3 time  1:12:     231.0604 (sec), rate:     18.588
+Batch X3 time  1: 8:     315.5040 (sec), rate:     13.613
+---
+
+Batch v4 time  1:24:     183.8822 (sec), rate:     23.357
+Batch v4 time  1:12:     230.5789 (sec), rate:     18.627
+Batch v4 time  1: 8:     321.6482 (sec), rate:     13.353
+
+Trial 11 : sources: [ 110168548 95370259 116653530 123410703 ]
+---
+
+Batch X3 time  1:24:     180.2530 (sec), rate:     23.827
+Batch X3 time  1:12:     223.7205 (sec), rate:     19.198
+Batch X3 time  1: 8:     316.0500 (sec), rate:     13.590
+---
+
+Batch v4 time  1:24:     181.2259 (sec), rate:     23.700
+Batch v4 time  1:12:     233.6135 (sec), rate:     18.385
+Batch v4 time  1: 8:     322.0961 (sec), rate:     13.334
+
+Trial 12 : sources: [ 16733665 49030282 108545121 99095665 ]
+---
+
+Batch X3 time  1:24:     180.6828 (sec), rate:     23.771
+Batch X3 time  1:12:     228.2051 (sec), rate:     18.821
+Batch X3 time  1: 8:     318.3445 (sec), rate:     13.492
+---
+
+Batch v4 time  1:24:     186.1577 (sec), rate:     23.072
+Batch v4 time  1:12:     233.8820 (sec), rate:     18.364
+Batch v4 time  1: 8:     331.3670 (sec), rate:     12.961
+
+Trial 13 : sources: [ 133850077 63499301 21541382 6230751 ]
+---
+
+Batch X3 time  1:24:     183.4285 (sec), rate:     23.415
+Batch X3 time  1:12:     232.3636 (sec), rate:     18.484
+Batch X3 time  1: 8:     321.4456 (sec), rate:     13.361
+---
+
+Batch v4 time  1:24:     186.7008 (sec), rate:     23.005
+Batch v4 time  1:12:     235.4299 (sec), rate:     18.243
+Batch v4 time  1: 8:     325.8512 (sec), rate:     13.181
+
+Trial 14 : sources: [ 89077456 70392765 6670455 61746271 ]
+---
+
+Batch X3 time  1:24:     182.6564 (sec), rate:     23.514
+Batch X3 time  1:12:     227.6235 (sec), rate:     18.869
+Batch X3 time  1: 8:     317.0859 (sec), rate:     13.545
+---
+
+Batch v4 time  1:24:     187.0446 (sec), rate:     22.962
+Batch v4 time  1:12:     232.8130 (sec), rate:     18.448
+Batch v4 time  1: 8:     322.3477 (sec), rate:     13.324
+
+Trial 15 : sources: [ 83349535 115272184 20129908 106148553 ]
+---
+
+Batch X3 time  1:24:     180.0555 (sec), rate:     23.854
+Batch X3 time  1:12:     224.6708 (sec), rate:     19.117
+Batch X3 time  1: 8:     310.7344 (sec), rate:     13.822
+---
+
+Batch v4 time  1:24:     184.7111 (sec), rate:     23.252
+Batch v4 time  1:12:     229.7132 (sec), rate:     18.697
+Batch v4 time  1: 8:     319.9869 (sec), rate:     13.422
+
+Trial 16 : sources: [ 117042375 71431187 45287808 107702120 ]
+---
+
+Batch X3 time  1:24:     177.8090 (sec), rate:     24.155
+Batch X3 time  1:12:     225.8089 (sec), rate:     19.020
+Batch X3 time  1: 8:     310.1789 (sec), rate:     13.847
+---
+
+Batch v4 time  1:24:     183.3786 (sec), rate:     23.421
+Batch v4 time  1:12:     228.1109 (sec), rate:     18.828
+Batch v4 time  1: 8:     317.4576 (sec), rate:     13.529
+
+ntrials: 16
+
+Ave (BatchX3)  1:24:    182.418 sec, rate     23.545
+Ave (BatchX3)  1:12:    227.728 sec, rate     18.860
+Ave (BatchX3)  1: 8:    314.163 sec, rate     13.671
+
+
+Ave (Batch4)   1:24:    185.374 sec, rate     23.169
+Ave (Batch4)   1:12:    232.657 sec, rate     18.461
+Ave (Batch4)   1: 8:    321.865 sec, rate     13.344
+build/bc_gap_test: all tests passed
+SuiteSparse:GraphBLAS Jan 14, 2020 (DRAFT12)
+matrix: /home/u32248/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-web/GAP-web.grb
+sources: /home/u32248/GAP/GAP-web/GAP-web_sources.mtx
+read time: 266.35 sec
+A is unsymmetric
+transpose time: 9.50516
+ chunk test 1: size 65536
+ thread test 3: 24
+ thread test 4: 12
+ thread test 5: 8
+
+========== input graph: nodes: 50636151 edges: 1930292948
+nthreads max 24
+
+Trial 1 : sources: [ 10219452 44758211 890671 13843756 ]
+---
+
+Batch X3 time  1:24:      22.6434 (sec), rate:     85.247
+Batch X3 time  1:12:      24.7590 (sec), rate:     77.963
+Batch X3 time  1: 8:      30.8985 (sec), rate:     62.472
+---
+
+Batch v4 time  1:24:      24.5169 (sec), rate:     78.733
+Batch v4 time  1:12:      27.9820 (sec), rate:     68.983
+Batch v4 time  1: 8:      38.4517 (sec), rate:     50.201
+
+Trial 2 : sources: [ 14168062 20906930 12189584 26352335 ]
+---
+
+Batch X3 time  1:24:      19.7788 (sec), rate:     97.594
+Batch X3 time  1:12:      21.0794 (sec), rate:     91.572
+Batch X3 time  1: 8:      27.8305 (sec), rate:     69.359
+---
+
+Batch v4 time  1:24:      23.0053 (sec), rate:     83.906
+Batch v4 time  1:12:      25.2996 (sec), rate:     76.297
+Batch v4 time  1: 8:      35.3118 (sec), rate:     54.664
+
+Trial 3 : sources: [ 43500686 8987024 5699762 41436455 ]
+---
+
+Batch X3 time  1:24:      19.7613 (sec), rate:     97.680
+Batch X3 time  1:12:      21.3940 (sec), rate:     90.226
+Batch X3 time  1: 8:      28.3589 (sec), rate:     68.067
+---
+
+Batch v4 time  1:24:      23.2178 (sec), rate:     83.139
+Batch v4 time  1:12:      25.6124 (sec), rate:     75.366
+Batch v4 time  1: 8:      35.5533 (sec), rate:     54.293
+
+Trial 4 : sources: [ 5030727 40735218 16533563 28700166 ]
+---
+
+Batch X3 time  1:24:      25.7023 (sec), rate:     75.102
+Batch X3 time  1:12:      29.5961 (sec), rate:     65.221
+Batch X3 time  1: 8:      40.1001 (sec), rate:     48.137
+---
+
+Batch v4 time  1:24:      29.8793 (sec), rate:     64.603
+Batch v4 time  1:12:      35.1557 (sec), rate:     54.907
+Batch v4 time  1: 8:      50.1436 (sec), rate:     38.495
+
+Trial 5 : sources: [ 64711 39634750 16037779 27152739 ]
+---
+
+Batch X3 time  1:24:      24.8142 (sec), rate:     77.790
+Batch X3 time  1:12:      26.3967 (sec), rate:     73.126
+Batch X3 time  1: 8:      39.1380 (sec), rate:     49.320
+---
+
+Batch v4 time  1:24:      28.9864 (sec), rate:     66.593
+Batch v4 time  1:12:      32.6271 (sec), rate:     59.162
+Batch v4 time  1: 8:      49.2343 (sec), rate:     39.206
+
+Trial 6 : sources: [ 16404061 20491963 5322423 21420953 ]
+---
+
+Batch X3 time  1:24:      25.6681 (sec), rate:     75.202
+Batch X3 time  1:12:      30.7955 (sec), rate:     62.681
+Batch X3 time  1: 8:      42.1016 (sec), rate:     45.848
+---
+
+Batch v4 time  1:24:      30.2577 (sec), rate:     63.795
+Batch v4 time  1:12:      36.4582 (sec), rate:     52.945
+Batch v4 time  1: 8:      51.8655 (sec), rate:     37.217
+
+Trial 7 : sources: [ 26622109 5882875 18091040 10665896 ]
+---
+
+Batch X3 time  1:24:      20.1996 (sec), rate:     95.561
+Batch X3 time  1:12:      21.4220 (sec), rate:     90.108
+Batch X3 time  1: 8:      28.7037 (sec), rate:     67.249
+---
+
+Batch v4 time  1:24:      23.4843 (sec), rate:     82.195
+Batch v4 time  1:12:      25.7653 (sec), rate:     74.918
+Batch v4 time  1: 8:      36.1003 (sec), rate:     53.470
+
+Trial 8 : sources: [ 18634422 18138715 2355535 32885205 ]
+---
+
+Batch X3 time  1:24:      18.9376 (sec), rate:    101.929
+Batch X3 time  1:12:      20.6832 (sec), rate:     93.327
+Batch X3 time  1: 8:      26.0198 (sec), rate:     74.186
+---
+
+Batch v4 time  1:24:      22.5148 (sec), rate:     85.734
+Batch v4 time  1:12:      25.2261 (sec), rate:     76.520
+Batch v4 time  1: 8:      33.9074 (sec), rate:     56.928
+
+Trial 9 : sources: [ 40657440 35196167 45544426 6175519 ]
+---
+
+Batch X3 time  1:24:      18.8004 (sec), rate:    102.673
+Batch X3 time  1:12:      20.2200 (sec), rate:     95.465
+Batch X3 time  1: 8:      26.1208 (sec), rate:     73.899
+---
+
+Batch v4 time  1:24:      22.5552 (sec), rate:     85.581
+Batch v4 time  1:12:      25.0799 (sec), rate:     76.966
+Batch v4 time  1: 8:      33.7702 (sec), rate:     57.160
+
+Trial 10 : sources: [ 40058318 50626230 36571019 49397052 ]
+---
+
+Batch X3 time  1:24:      23.7303 (sec), rate:     81.343
+Batch X3 time  1:12:      26.6389 (sec), rate:     72.461
+Batch X3 time  1: 8:      37.3036 (sec), rate:     51.745
+---
+
+Batch v4 time  1:24:      28.6041 (sec), rate:     67.483
+Batch v4 time  1:12:      33.3437 (sec), rate:     57.891
+Batch v4 time  1: 8:      47.2817 (sec), rate:     40.825
+
+Trial 11 : sources: [ 23434265 2299444 32873823 25978282 ]
+---
+
+Batch X3 time  1:24:      18.6750 (sec), rate:    103.362
+Batch X3 time  1:12:      20.1716 (sec), rate:     95.694
+Batch X3 time  1: 8:      25.9563 (sec), rate:     74.367
+---
+
+Batch v4 time  1:24:      22.5926 (sec), rate:     85.439
+Batch v4 time  1:12:      25.2403 (sec), rate:     76.477
+Batch v4 time  1: 8:      33.6320 (sec), rate:     57.395
+
+Trial 12 : sources: [ 2461715 22787314 30759947 7428894 ]
+---
+
+Batch X3 time  1:24:      14.4970 (sec), rate:    133.151
+Batch X3 time  1:12:      15.0026 (sec), rate:    128.664
+Batch X3 time  1: 8:      18.8322 (sec), rate:    102.499
+---
+
+Batch v4 time  1:24:      16.8437 (sec), rate:    114.601
+Batch v4 time  1:12:      18.3571 (sec), rate:    105.152
+Batch v4 time  1: 8:      24.1448 (sec), rate:     79.947
+
+Trial 13 : sources: [ 39173870 43194209 26361509 39747211 ]
+---
+
+Batch X3 time  1:24:       0.5136 (sec), rate:   3758.307
+Batch X3 time  1:12:       0.5404 (sec), rate:   3571.890
+Batch X3 time  1: 8:       0.5866 (sec), rate:   3290.623
+---
+
+Batch v4 time  1:24:       1.0313 (sec), rate:   1871.640
+Batch v4 time  1:12:       1.1933 (sec), rate:   1617.560
+Batch v4 time  1: 8:       1.3655 (sec), rate:   1413.647
+
+Trial 14 : sources: [ 30670029 41483033 9358666 9945008 ]
+---
+
+Batch X3 time  1:24:      25.0669 (sec), rate:     77.006
+Batch X3 time  1:12:      27.2074 (sec), rate:     70.947
+Batch X3 time  1: 8:      36.9168 (sec), rate:     52.288
+---
+
+Batch v4 time  1:24:      29.5728 (sec), rate:     65.273
+Batch v4 time  1:12:      33.5524 (sec), rate:     57.531
+Batch v4 time  1: 8:      46.7158 (sec), rate:     41.320
+
+Trial 15 : sources: [ 3355244 33831269 45124744 16137877 ]
+---
+
+Batch X3 time  1:24:      19.4011 (sec), rate:     99.494
+Batch X3 time  1:12:      20.7378 (sec), rate:     93.081
+Batch X3 time  1: 8:      28.6620 (sec), rate:     67.347
+---
+
+Batch v4 time  1:24:      23.0534 (sec), rate:     83.731
+Batch v4 time  1:12:      25.6002 (sec), rate:     75.402
+Batch v4 time  1: 8:      35.5292 (sec), rate:     54.330
+
+Trial 16 : sources: [ 11235448 37509144 27402414 39546083 ]
+---
+
+Batch X3 time  1:24:      23.4047 (sec), rate:     82.475
+Batch X3 time  1:12:      25.2454 (sec), rate:     76.461
+Batch X3 time  1: 8:      35.7145 (sec), rate:     54.048
+---
+
+Batch v4 time  1:24:      28.6783 (sec), rate:     67.308
+Batch v4 time  1:12:      31.9830 (sec), rate:     60.354
+Batch v4 time  1: 8:      45.7673 (sec), rate:     42.176
+
+ntrials: 16
+
+Ave (BatchX3)  1:24:     20.100 sec, rate     96.036
+Ave (BatchX3)  1:12:     21.993 sec, rate     87.768
+Ave (BatchX3)  1: 8:     29.578 sec, rate     65.262
+
+
+Ave (Batch4)   1:24:     23.675 sec, rate     81.534
+Ave (Batch4)   1:12:     26.780 sec, rate     72.080
+Ave (Batch4)   1: 8:     37.423 sec, rate     51.580
+build/bc_gap_test: all tests passed
+
+########################################################################
+# End of output for job 463696.v-qsvr-1.aidevcloud
+# Date: Wed Jan 15 11:48:05 PST 2020
+########################################################################
+

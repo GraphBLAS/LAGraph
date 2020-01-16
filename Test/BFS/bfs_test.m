@@ -1,4 +1,4 @@
-function v = bfs_test (A, s, filename) ;
+function vout = bfs_test (A, s, filename)
 
 if (nargin < 3)
     filename = 'A.mtx' ;
@@ -28,8 +28,15 @@ for level = 1:n
     fprintf ('\n') ;
 end
 
+bfs_check (A, s, v) ;
+
+if (nargout > 1)
+    vout = v ;
+end
+
 % now try LAGraph_bfs_simple:
 
+%{
 fprintf ('\ntesting LAGraph_bfs_simple:\n') ;
 
 % TODO: for now, this requires mread and mwrite from SuiteSparse/CHOLMOD (see
@@ -43,6 +50,7 @@ system (sprintf ('./build/bfs_test %d < %s > %s', s-1, filename, outfile)) ;
 v2 = load (outfile) ;
 
 assert (isequal (v, v2)) ;
+%}
 
 fprintf ('bfs_test: all tests passed\n') ;
 

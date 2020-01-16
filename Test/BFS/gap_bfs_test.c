@@ -45,6 +45,9 @@
 #include "../../Source/Utility/LAGraph_internal.h"
 #include "bfs_test.h"
 
+#define NTHREAD_LIST 6
+#define THREAD_LIST 64, 32, 24, 12, 8, 4
+
 #define LAGRAPH_FREE_ALL            \
 {                                   \
     GrB_free (&AT) ;                \
@@ -70,7 +73,19 @@ int main (int argc, char **argv)
     GrB_Matrix SourceNodes = NULL ;
 
     LAGRAPH_OK (LAGraph_init ( )) ;
-    int nthreads, nthreads_max = LAGraph_get_nthreads ( ) ;
+    int nthreads ;
+
+    int nt = NTHREAD_LIST ;
+    int Nthreads [20] = { 0, THREAD_LIST } ;
+    int nthreads_max = LAGraph_get_nthreads();
+    Nthreads [nt] = LAGRAPH_MIN (Nthreads [nt], nthreads_max) ;
+    for (int t = 1 ; t <= nt ; t++)
+    {
+        int nthreads = Nthreads [t] ;
+        if (nthreads > nthreads_max) continue ;
+        printf (" thread test %d: %d\n", t, nthreads) ;
+    }
+
     double t [nthreads_max+1] ;
     char filename [1000] ;
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
@@ -80,22 +95,6 @@ int main (int argc, char **argv)
     double chunk ; // = 64 * 1024 ;
     GxB_get (GxB_CHUNK, chunk) ;
     printf ("chunk: %g\n", chunk) ;
-
-//  int nt = 7 ;
-//  int Nthreads [60] = { 0,
-//      1, 2, 3, 4, 7, 8, 10 } ;              // slash
-
-    int nt = 5 ;
-    int Nthreads [20] = { 0,
-        64, 32, 24, 12, 8 } ;        // devcloud
-
-    printf ("threads: ") ;
-    for (int t = 1 ; t <= nt ; t++)
-    {
-        if (Nthreads [t] > nthreads_max) continue ;
-        printf (" %d", Nthreads [t]) ;
-    }
-    printf ("\n") ;
 
     //--------------------------------------------------------------------------
     // read in a matrix from a file and convert to boolean
@@ -133,7 +132,7 @@ int main (int argc, char **argv)
         else
         {
             printf ("Reading Matrix Market file: %s\n", filename) ;
-            FILE *f = fopen (filename, "r") ;
+            f = fopen (filename, "r") ;
             if (f == NULL)
             {
                 printf ("Matrix file not found: [%s]\n", filename) ;
@@ -148,7 +147,7 @@ int main (int argc, char **argv)
         {
             filename = argv [2] ;
             printf ("sources: %s\n", filename) ;
-            FILE *f = fopen (filename, "r") ;
+            f = fopen (filename, "r") ;
             if (f == NULL)
             {
                 printf ("Source node file not found: [%s]\n", filename) ;
@@ -303,6 +302,7 @@ int main (int argc, char **argv)
         int nthreads = Nthreads [tt] ;
         if (nthreads > nthreads_max) continue ;
         LAGraph_set_nthreads (nthreads) ;
+
         LAGraph_tic (tic) ;
         for (int trial = 0 ; trial < ntrials ; trial++)
         {
@@ -322,31 +322,56 @@ int main (int argc, char **argv)
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;
     printf ( "\n") ;
-    // TODO: check results
+
+    LAGraph_tic (tic) ;
+    printf ("saving results ...\n")  ;
+
+    // dump the last result so it can be checked
+    sprintf (filename, "s_%d.mtx", (int) n) ;
+    f = fopen (filename, "w") ;
+    LAGraph_mmwrite ((GrB_Matrix) SourceNodes, f) ;
+    fclose (f) ;
+
+    sprintf (filename, "v_%d.mtx", (int) n) ;
+    f = fopen (filename, "w") ;
+    LAGraph_mmwrite ((GrB_Matrix) v, f) ;
+    fclose (f) ;
+
+    sprintf (filename, "p_%d.mtx", (int) n) ;
+    f = fopen (filename, "w") ;
+    LAGraph_mmwrite ((GrB_Matrix) pi, f) ;
+    fclose (f) ;
+
     // LAGRAPH_OK (GxB_print (v, 2)) ;
     // LAGRAPH_OK (GxB_print (pi, 2)) ;
     GrB_free (&v) ;
     GrB_free (&pi) ;
 
+    double t_save = LAGraph_toc (tic) ;
+    printf ("save time: %g sec\n\n", t_save) ;
+
     //--------------------------------------------------------------------------
     // BFS: all-push, with tree (log all timings)
     //--------------------------------------------------------------------------
 
-#if 0
+#if 1
 
-    nthreads = nthreads_max ;
-    sprintf (filename, "push_%lu.m", n) ;
+    sprintf (filename, "allpush_%lu.m", n) ;
     f = fopen (filename, "w") ;
-    fprintf (f, "function [results, n, nvals, nthreads, name] = push_%lu\n", n);
+    fprintf (f, "function [results, name] = allpush_%lu\n", n);
     fprintf (f, "%% bfs_log: all-push\n") ;
     fprintf (f, "name = '%s' ;\n", matrix_name) ;
     fprintf (f, "n = %lu ;\n", n) ;
     fprintf (f, "nvals = %lu ;\n", nvals) ;
     fprintf (f, "d = %g ;\n", ((double) nvals) / (double) n) ;
-    fprintf (f, "nthreads = %d ; k = 0 ;\n", nthreads) ;
+    fprintf (f, "%%%% columns in results:\n") ;
+    fprintf (f, "%%%% s, n, d, nthreads, do_push, level, nq, nvisited, time\n");
+    fprintf (f, "results = [\n") ;
     printf ( "allpush (log, with tree):\n") ;
-    // for (int nthreads = 1 ; nthreads <= nthreads_max ; nthreads *= 2)
+    for (int tt = 1 ; tt <= nt ; tt++)
     {
+        int nthreads = Nthreads [tt] ;
+        if (nthreads > nthreads_max) continue ;
         LAGraph_set_nthreads (nthreads) ;
         LAGraph_tic (tic) ;
         for (int trial = 0 ; trial < ntrials ; trial++)
@@ -372,6 +397,7 @@ int main (int argc, char **argv)
     // LAGRAPH_OK (GxB_print (pi, 2)) ;
     GrB_free (&v) ;
     GrB_free (&pi) ;
+    fprintf (f, "] ;\n") ;
     fclose (f) ;
 
 #endif
@@ -380,21 +406,25 @@ int main (int argc, char **argv)
     // BFS: all-pull, with tree (log all timings)
     //--------------------------------------------------------------------------
 
-#if 0
+#if 1
 
     nthreads = nthreads_max ;
-    sprintf (filename, "pull_%lu.m", n) ;
+    sprintf (filename, "allpull_%lu.m", n) ;
     f = fopen (filename, "w") ;
-    fprintf (f, "function [results, n, nvals, nthreads, name] = pull_%lu\n", n);
+    fprintf (f, "function [results, name] = allpush_%lu\n", n);
     fprintf (f, "%% bfs_log: all-pull\n") ;
     fprintf (f, "name = '%s' ;\n", matrix_name) ;
     fprintf (f, "n = %lu ;\n", n) ;
     fprintf (f, "nvals = %lu ;\n", nvals) ;
     fprintf (f, "d = %g ;\n", ((double) nvals) / (double) n) ;
-    fprintf (f, "nthreads = %d ; k = 0 ;\n", nthreads) ;
+    fprintf (f, "%%%% columns in results:\n") ;
+    fprintf (f, "%%%% s, n, d, nthreads, do_push, level, nq, nvisited, time\n");
+    fprintf (f, "results = [\n") ;
     printf ( "allpull (log, with tree):\n") ;
-    // for (int nthreads = 1 ; nthreads <= nthreads_max ; nthreads *= 2)
+    for (int tt = 1 ; tt <= nt ; tt++)
     {
+        int nthreads = Nthreads [tt] ;
+        if (nthreads > nthreads_max) continue ;
         LAGraph_set_nthreads (nthreads) ;
         LAGraph_tic (tic) ;
         for (int trial = 0 ; trial < ntrials ; trial++)
@@ -420,6 +450,7 @@ int main (int argc, char **argv)
     // LAGRAPH_OK (GxB_print (pi, 2)) ;
     GrB_free (&v) ;
     GrB_free (&pi) ;
+    fprintf (f, "] ;\n") ;
     fclose (f) ;
 
 #endif

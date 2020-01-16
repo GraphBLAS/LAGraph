@@ -53,6 +53,9 @@
     GrB_free (&A) ;         \
 }
 
+#define NTHREAD_LIST 6
+#define THREAD_LIST 64, 32, 24, 12, 8, 4
+
 /*
 double to_sec(struct timeval t1, struct timeval t2)
 {
@@ -79,8 +82,18 @@ int main (int argc, char **argv)
     GrB_Info info ;
     GrB_Matrix A = NULL, S = NULL ;
     GrB_Vector result = NULL ;
-    GrB_init (GrB_NONBLOCKING) ;
-    LAGRAPH_OK (GxB_set (GxB_FORMAT, GxB_BY_ROW)) ;
+
+    LAGRAPH_OK (LAGraph_init ( )) ;
+    int nt = NTHREAD_LIST ;
+    int Nthreads [20] = { 0, THREAD_LIST } ;
+    int nthreads_max = LAGraph_get_nthreads();
+    Nthreads [nt] = LAGRAPH_MIN (Nthreads [nt], nthreads_max) ;
+    for (int t = 1 ; t <= nt ; t++)
+    {
+        int nthreads = Nthreads [t] ;
+        if (nthreads > nthreads_max) continue ;
+        printf (" thread test %d: %d\n", t, nthreads) ;
+    }
 
     FILE *f ;
     int symm = 0; // where is it used for??
@@ -154,26 +167,17 @@ int main (int argc, char **argv)
     LAGRAPH_OK (GrB_eWiseAdd (S, 0, 0, GrB_LOR, A, A, desc)) ;
     LAGRAPH_FREE (desc) ;
 
-    int nthreads_max = LAGraph_get_nthreads ( ) ;
-
-//  #define NTRIALS 5
-//  int nthread_list [20] = { 1, 4, 8, 10, 16, 20, 40 } ;
-
-    // devcloud
-    #define NTH 5
-    int nthread_list [20] = { 64, 32, 24, 16, 8 } ;
-
     double tic [2], t1, t2 ;
 
-    #define NTRIALS 64
+    #define NTRIALS 16
     printf ("# of trials: %d\n", NTRIALS) ;
 
     bool sanitize = false ;
 
     GrB_Index nCC;
-    for (int trial = 0 ; trial < NTH ; trial++)
+    for (int trial = 1 ; trial < nt ; trial++)
     {
-        int nthreads = nthread_list [trial] ;
+        int nthreads = Nthreads [trial] ;
         if (nthreads > nthreads_max) continue ;
         LAGraph_set_nthreads (nthreads) ;
 

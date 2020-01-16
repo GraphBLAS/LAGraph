@@ -18,7 +18,7 @@ JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/bfs_test < cover.mtx
+	./build/gap_bfs_test < cover.mtx
 
 # build test
 compile:
@@ -34,5 +34,5 @@ purge: distclean
 
 # remove all files not in the distribution
 distclean:
-	rm -rf build/* A.mtx bfs_test
+	rm -rf build/* A.mtx bfs_test gap_bfs_test
 
