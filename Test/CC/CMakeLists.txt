@@ -50,7 +50,7 @@ if ( CMAKE_VERSION VERSION_GREATER "3.0" )
     cmake_policy ( SET CMP0048 NEW )
 endif ( )
 
-project ( cctest )
+project ( gap_cc_test )
 
 #-------------------------------------------------------------------------------
 # determine build type
@@ -208,8 +208,8 @@ message ( STATUS "CMAKE C flags: " ${CMAKE_C_FLAGS} )
 
 file ( GLOB SOURCES "*.c" )
 
-add_executable ( cctest ${SOURCES} )
+add_executable ( gap_cc_test ${SOURCES} )
 
 # Libraries required for Demo programs
-target_link_libraries ( cctest graphblas lagraph m )
+target_link_libraries ( gap_cc_test graphblas lagraph m )
 

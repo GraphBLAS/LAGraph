@@ -1,5 +1,5 @@
 #!/bin/sh
-./build/bfs_test ~/indochina-2004.grb ~/indochina-sources.mtx
-./build/bfs_test ~/roadNet-CA.mtx ~/roadNet-CA_sources.mtx
-
+./build/gap_bfs_test ~/indochina-2004.grb ~/indochina-sources.mtx
+./build/gap_bfs_test ~/roadNet-CA.mtx ~/roadNet-CA_sources.mtx
+./build/gap_bfs_test ~/com-Orkut.grb
 

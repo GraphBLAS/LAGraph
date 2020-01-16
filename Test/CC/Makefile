@@ -18,9 +18,9 @@ JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/cctest < ../BFS/west0067.mtx
-	./build/cctest < ldbc-wcc-example.mtx
-	./build/cctest < tree-example.mtx
+	./build/gap_cc_test < ../BFS/west0067.mtx
+	./build/gap_cc_test < ldbc-wcc-example.mtx
+	./build/gap_cc_test < tree-example.mtx
 
 # build test
 compile:
@@ -36,5 +36,5 @@ purge: distclean
 
 # remove all files not in the distribution
 distclean:
-	rm -rf build/* A.mtx cctest
+	rm -rf build/* A.mtx gap_cc_test
 

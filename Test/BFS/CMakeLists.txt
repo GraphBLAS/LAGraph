@@ -50,7 +50,7 @@ if ( CMAKE_VERSION VERSION_GREATER "3.0" )
     cmake_policy ( SET CMP0048 NEW )
 endif ( )
 
-project ( bfs_test )
+project ( gap_bfs_test )
 
 #-------------------------------------------------------------------------------
 # determine build type
@@ -206,8 +206,8 @@ message ( STATUS "CMAKE C flags: " ${CMAKE_C_FLAGS} )
 
 file ( GLOB SOURCES "*.c" )
 
-add_executable ( bfs_test ${SOURCES} )
+add_executable ( gap_bfs_test ${SOURCES} )
 
 # Libraries required for Demo programs
-target_link_libraries ( bfs_test graphblas lagraph m )
+target_link_libraries ( gap_bfs_test graphblas lagraph m )
 

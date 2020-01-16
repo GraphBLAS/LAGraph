@@ -21,10 +21,10 @@ default: compile
 	./build/bc_test < sample.mtx 2>stderr.txt
 	./build/bc_test < sample2.mtx 2>>stderr.txt
 	./build/bc_test < west0067.mtx 2>>stderr.txt
-	./build/bc_gap_test < LFAT5.mtx
-	./build/bc_gap_test < west0067.mtx
+	./build/gap_bc_test < LFAT5.mtx
+	./build/gap_bc_test < west0067.mtx
 #	./build/bc_test < jagmesh7.mtx 2>>stderr.txt
-#	./build/bc_gap_test ~/indochina-2004.grb ~/indochina-sources.mtx
+#	./build/gap_bc_test ~/indochina-2004.grb ~/indochina-sources.mtx
 
 # build test
 compile:

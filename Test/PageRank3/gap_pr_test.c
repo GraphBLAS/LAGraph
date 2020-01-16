@@ -39,6 +39,9 @@ See LICENSE file for more details.
 // usage:
 // p3test < in > out
 
+#define NTHREAD_LIST 6
+#define THREAD_LIST 64, 32, 24, 12, 8, 4
+
 #include "LAGraph.h"
 
 #define LAGRAPH_FREE_ALL                        \
@@ -65,7 +68,16 @@ int main (int argc, char **argv)
 
     LAGraph_init ( ) ;
 
-    int nthreads_max = LAGraph_get_nthreads ( ) ;
+    int nt = NTHREAD_LIST ;
+    int Nthreads [20] = { 0, THREAD_LIST } ;
+    int nthreads_max = LAGraph_get_nthreads();
+    Nthreads [nt] = LAGRAPH_MIN (Nthreads [nt], nthreads_max) ;
+    for (int t = 1 ; t <= nt ; t++)
+    {
+        int nthreads = Nthreads [t] ;
+        if (nthreads > nthreads_max) continue ;
+        printf (" thread test %d: %d\n", t, nthreads) ;
+    }
 
     //--------------------------------------------------------------------------
     // read in a matrix from a file and convert to boolean
@@ -230,40 +242,15 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     // the GAP benchmark requires 16 trials
-    int ntrials = 1 ; // 16 ;
+    int ntrials = 16 ;
     printf ("# of trials: %d\n", ntrials) ;
 
     float tol = 1e-4 ;
     int iters, itermax = 100 ;
 
-    // #define NTHRLIST 7
-    // int nthread_list [NTHRLIST] = {1, 2, 4, 8, 16, 20, 40} ;
-
-    // #define NTHRLIST 2
-    // int nthread_list [NTHRLIST] = {1, 40} ;    
-
-    // #define NTHRLIST 4
-    // int nthread_list [NTHRLIST] = {1, 2, 4, 8} ;    
-
-    // #define NTHRLIST 3
-    // int nthread_list [NTHRLIST] = {10, 20, 40} ;    
-
-    // devcloud
-    #define NTHRLIST 5
-    int nthread_list [NTHRLIST] = { 64, 32, 24, 16, 8 } ;
-
     double chunk ; // = 64 * 1024 ;
     GxB_get (GxB_CHUNK, &chunk) ;
     printf ("chunk: %g\n", chunk) ;
-
-    printf ("threads: ") ;
-    for (int kk = 0 ; kk < NTHRLIST; kk++)
-    {
-        int nthreads = nthread_list [kk] ;
-        if (nthreads > nthreads_max) continue ;
-        printf ("%d ", nthreads) ;
-    }
-    printf ("\n") ;
 
     //--------------------------------------------------------------------------
     // method 3e
@@ -271,9 +258,9 @@ int main (int argc, char **argv)
 
 #if 0
     printf ("\nMethod 3e:\n") ;
-    for (int kk = 0 ; kk < NTHRLIST; kk++)
+    for (int kk = 1 ; kk <= nt ; kk++)
     {
-        int nthreads = nthread_list [kk] ;
+        int nthreads = Nthreads [kk] ;
         if (nthreads > nthreads_max) continue ;
         LAGraph_set_nthreads (nthreads) ;
         // printf ("3e:%2d: ", nthreads) ;
@@ -315,9 +302,9 @@ int main (int argc, char **argv)
 
 #if 0
     printf ("\nMethod 3d:\n") ;
-    for (int kk = 0 ; kk < NTHRLIST; kk++)
+    for (int kk = 1 ; kk <= nt ; kk++)
     {
-        int nthreads = nthread_list [kk] ;
+        int nthreads = Nthreads [kk] ;
         if (nthreads > nthreads_max) continue ;
         LAGraph_set_nthreads (nthreads) ;
         // printf ("3d:%2d: ", nthreads) ;
@@ -356,9 +343,9 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     printf ("\nMethod 3c:\n") ;
-    for (int kk = 0 ; kk < NTHRLIST; kk++)
+    for (int kk = 1 ; kk <= nt ; kk++)
     {
-        int nthreads = nthread_list [kk] ;
+        int nthreads = Nthreads [kk] ;
         if (nthreads > nthreads_max) continue ;
         LAGraph_set_nthreads (nthreads) ;
         // printf ("3c:%2d: ", nthreads) ;
@@ -394,9 +381,9 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     printf ("\nMethod 3f:\n") ;
-    for (int kk = 0 ; kk < NTHRLIST; kk++)
+    for (int kk = 1 ; kk <= nt ; kk++)
     {
-        int nthreads = nthread_list [kk] ;
+        int nthreads = Nthreads [kk] ;
         if (nthreads > nthreads_max) continue ;
         LAGraph_set_nthreads (nthreads) ;
         // printf ("3c:%2d: ", nthreads) ;

@@ -1,19 +1,8 @@
 #!/bin/bash
 
-
-# /raid/hyper/gapbs/GAP
-echo "Test kron:"
-./build/p3test ~/GAP/GAP-kron/GAP-kron.grb
-
-echo "Test road:"
-./build/p3test ~/GAP/GAP-road/GAP-road.grb
- 
-echo "Test twitter:"
-./build/p3test ~/GAP/GAP-twitter/GAP-twitter.grb
-
-echo "Test urand:"
-./build/p3test ~/GAP/GAP-urand/GAP-urand.grb
-
-echo "Test web:"
-./build/p3test ~/GAP/GAP-web/GAP-web.grb
+./build/gap_pr_test ~/GAP/GAP-kron/GAP-kron.grb
+./build/gap_pr_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_pr_test ~/GAP/GAP-twitter/GAP-twitter.grb
+./build/gap_pr_test ~/GAP/GAP-web/GAP-web.grb
+./build/gap_pr_test ~/GAP/GAP-road/GAP-road.grb
 

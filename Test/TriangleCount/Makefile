@@ -7,7 +7,7 @@
 
 #-------------------------------------------------------------------------------
 
-# simple Makefile for LAGraph/Test/TriangleCount/ttest,
+# simple Makefile for LAGraph/Test/TriangleCount/gap_tc_test,
 
 # relies on cmake to do the actual build.  Use the CMAKE_OPTIONS argument to
 # this Makefile to pass options to cmake.
@@ -18,7 +18,7 @@ JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/ttest < ../BFS/west0067.mtx
+	./build/gap_tc_test < ../BFS/west0067.mtx
 
 # build test
 compile:
@@ -34,5 +34,5 @@ purge: distclean
 
 # remove all files not in the distribution
 distclean:
-	rm -rf build/* A.mtx ttest stderr.txt
+	rm -rf build/* A.mtx gap_tc_test stderr.txt
 

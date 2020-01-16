@@ -7,3 +7,10 @@ v
 bfs2_n*.m
 bfs_pull_n*.m
 bfs_pushpull_n*.m
+good/*
+p_*
+v_*
+s_*
+allpush_*.m
+allpull_*.m
+pushpull_*.m
