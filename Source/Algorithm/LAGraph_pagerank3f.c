@@ -86,8 +86,14 @@ GrB_Info LAGraph_pagerank3f // PageRank definition
     GrB_Index n ;
     GrB_Vector r = NULL, d = NULL, t = NULL, w = NULL ;
     (*result) = NULL ;
-    GrB_Descriptor desc = LAGraph_desc_tooo ;
     LAGr_Matrix_nrows (&n, A) ;
+
+    #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
+        && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,2,0) )
+    GrB_Descriptor desc_t0 = GrB_DESC_T0 ;
+    #else
+    GrB_Descriptor desc_t0 = LAGraph_desc_tooo ;
+    #endif
 
     const float teleport = (1 - damping) / n ;
     const float tol = 1e-4 ;
@@ -120,7 +126,7 @@ GrB_Info LAGraph_pagerank3f // PageRank definition
         LAGr_assign (r, NULL, NULL, teleport, GrB_ALL, n, NULL) ;
 
         // r += A'*w
-        LAGr_mxv (r, NULL, GrB_PLUS_FP32, GxB_PLUS_SECOND_FP32, A, w, desc) ;
+        LAGr_mxv (r, NULL, GrB_PLUS_FP32, GxB_PLUS_SECOND_FP32, A, w, desc_t0) ;
 
         // t -= r
         LAGr_assign (t, NULL, GrB_MINUS_FP32, r, GrB_ALL, n, NULL) ;

@@ -600,6 +600,7 @@ fprintf (file, "%% pull only!\n") ;
 
         // v<q> = level: set v(i) = level for all nodes i in q
         LAGRAPH_OK (GrB_assign (v, q, NULL, level, GrB_ALL, n, NULL)) ;
+        // TODO use GrB_DESC_S since q is sparse
 
         //----------------------------------------------------------------------
         // check if done
@@ -619,7 +620,7 @@ fprintf (file, "%% pull only!\n") ;
             // vsparse = false on input.
             // v <!v> = 0
             LAGRAPH_OK (GrB_assign (v, v, NULL, 0, GrB_ALL, n,
-                LAGraph_desc_ooco)) ;
+                LAGraph_desc_ooco)) ; // TODO use GrB_DESC_SC since v is sparse
             LAGRAPH_OK (GrB_Vector_nvals (&ignore, v)) ;
 
             if (compute_tree)
@@ -627,7 +628,8 @@ fprintf (file, "%% pull only!\n") ;
                 // Convert pi from sparse to dense, to speed up the work.
                 // pi<!pi> = 0
                 LAGRAPH_OK (GrB_assign (pi, pi, NULL, 0, GrB_ALL, n,
-                    LAGraph_desc_ooco)) ;
+                    LAGraph_desc_ooco)) ; 
+                    // TODO use GrB_DESC_SC since pi is sparse
                 LAGRAPH_OK (GrB_Vector_nvals (&ignore, pi)) ;
             }
 
@@ -664,19 +666,20 @@ bool do_push = use_vxm_with_A ;
 if (!csr) do_push = !do_push ;
 double tic [2] ; LAGraph_tic (tic) ;
 
+
         if (use_vxm_with_A)
         {
             // q'<!v> = q'*A
             // this is a push step if A is in CSR format; pull if CSC
             LAGRAPH_OK (GrB_vxm (q, v, NULL, first_semiring, q, A,
-                LAGraph_desc_oocr)) ;
+                LAGraph_desc_oocr)) ; // TODO use GrB_DESC_RC, v is dense
         }
         else
         {
             // q<!v> = AT*q
             // this is a pull step if AT is in CSR format; push if CSC
             LAGRAPH_OK (GrB_mxv (q, v, NULL, second_semiring, AT, q,
-                LAGraph_desc_oocr)) ;
+                LAGraph_desc_oocr)) ;   // TODO use GrB_DESC_RC, v is dense
         }
 
 double time = LAGraph_toc (tic) ;
@@ -697,6 +700,7 @@ fprintf (file, "%ld %lu %g  %2d %d %ld %lu %ld  %g\n",
             // q(i) currently contains the parent of node i in tree (off by one
             // so it won't have any zero values, for valued mask).
             // pi<q> = q
+            // TODO use GrB_DESC_S
             LAGRAPH_OK (GrB_assign (pi, q, NULL, q, GrB_ALL, n, NULL)) ;
 
             //------------------------------------------------------------------
@@ -755,30 +759,6 @@ fprintf (file, "%ld %lu %g  %2d %d %ld %lu %ld  %g\n",
             //------------------------------------------------------------------
 
             LAGr_Vector_nvals (&nq, q) ;
-
-            #if 0
-            // This is no longer needed, since the first operator for the vxm
-            // (or 2nd operator for mxv) causes the values of A and AT to be
-            // ignored.
-
-            // nq = sum (q)
-            LAGRAPH_OK (GrB_reduce (&nq, NULL, LAGraph_PLUS_INT64_MONOID,
-                q, NULL)) ;
-
-            // check for zero-weight edges in the graph
-            LAGRAPH_OK (GrB_Vector_nvals (&nvals, q)) ;
-            if (nvals > nq)
-            {
-                // remove explicit zeros from q.  This will occur if A has
-                // any explicit entries with value zero.  Those entries are
-                // treated as non-edges in this algorithm, even without
-                // this step.  But extra useless entries in q can slow down
-                // the algorithm, so they are pruned here.
-                LAGRAPH_OK (GrB_assign (q, q, NULL, true, GrB_ALL, n,
-                    LAGraph_desc_ooor)) ;
-            }
-            #endif
-
         }
     }
 
@@ -787,7 +767,7 @@ fprintf (file, "%ld %lu %g  %2d %d %ld %lu %ld  %g\n",
     //--------------------------------------------------------------------------
 
 #if 0
-    // skip this ...
+    // skip this ...  TODO: use GrB_DESC_R
 
     LAGRAPH_OK (GrB_Vector_nvals (&nvals, v)) ;
     // v<v> = v ; clearing v before assigning it back

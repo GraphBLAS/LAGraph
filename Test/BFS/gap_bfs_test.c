@@ -45,8 +45,11 @@
 #include "../../Source/Utility/LAGraph_internal.h"
 #include "bfs_test.h"
 
-#define NTHREAD_LIST 6
-#define THREAD_LIST 64, 32, 24, 12, 8, 4
+#define NTHREAD_LIST 2
+#define THREAD_LIST 0
+
+// #define NTHREAD_LIST 6
+// #define THREAD_LIST 64, 32, 24, 12, 8, 4
 
 #define LAGRAPH_FREE_ALL            \
 {                                   \
@@ -77,14 +80,25 @@ int main (int argc, char **argv)
 
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;
-    int nthreads_max = LAGraph_get_nthreads();
-    Nthreads [nt] = LAGRAPH_MIN (Nthreads [nt], nthreads_max) ;
+    int nthreads_max = LAGraph_get_nthreads ( ) ;
+    if (Nthreads [1] == 0)
+    {
+        // create thread list automatically
+        Nthreads [1] = nthreads_max ;
+        for (int t = 2 ; t <= nt ; t++)
+        {
+            Nthreads [t] = Nthreads [t-1] / 2 ;
+            if (Nthreads [t] == 0) nt = t-1 ;
+        }
+    }
+    printf ("threads to test: ") ;
     for (int t = 1 ; t <= nt ; t++)
     {
         int nthreads = Nthreads [t] ;
         if (nthreads > nthreads_max) continue ;
-        printf (" thread test %d: %d\n", t, nthreads) ;
+        printf (" %d", nthreads) ;
     }
+    printf ("\n") ;
 
     double t [nthreads_max+1] ;
     char filename [1000] ;
@@ -238,26 +252,33 @@ int main (int argc, char **argv)
     // run the BFS on all source nodes
     //--------------------------------------------------------------------------
 
-#if 0
-    int nth2 = LAGraph_get_nthreads ( ) ;
-    printf ("nthreads for simple BFS: %d\n", nth2) ;
+#if 1
 
-    LAGraph_tic (tic) ;
-
-    for (int trial = 0 ; trial < ntrials ; trial++)
+    printf ( "simple all-push (no tree):\n") ;
+    for (int tt = 1 ; tt <= nt ; tt++)
     {
-        int64_t s ; 
-        // s = SourceNodes [i]
-        LAGRAPH_OK (GrB_Matrix_extractElement (&s, SourceNodes, trial, 0)) ;
-        GrB_free (&v) ;
-        LAGRAPH_OK (LAGraph_bfs_simple (&v, A, s)) ;
-    }
+        int nthreads = Nthreads [tt] ;
+        if (nthreads > nthreads_max) continue ;
+        LAGraph_set_nthreads (nthreads) ;
 
-    // stop the timer
-    double t1 = LAGraph_toc (tic) / ntrials ;
-    printf ( "nthreads_max: %d\n", nthreads_max) ;
-    printf ( "simple    time: %12.3f (sec), rate: %6.2f\n",
-        t1, 1e-6*((double) nvals) / t1) ;
+        LAGraph_tic (tic) ;
+        for (int trial = 0 ; trial < ntrials ; trial++)
+        {
+            int64_t s ; 
+            // s = SourceNodes [i]
+            LAGRAPH_OK (GrB_Matrix_extractElement (&s, SourceNodes, trial, 0)) ;
+            GrB_free (&v) ;
+            GrB_free (&pi) ;
+            LAGRAPH_OK (LAGraph_bfs_simple (&v, A, s)) ;
+        }
+        t [nthreads] = LAGraph_toc (tic) / ntrials ;
+        printf ( ":%2d:simple    (no tree): %12.3f (sec), rate: %6.2f\n",
+            nthreads, t [nthreads], 1e-6*((double) nvals) / t [nthreads]) ;
+    }
+    // restore default
+    LAGraph_set_nthreads (nthreads_max) ;
+    printf ( "\n") ;
+
 #endif
 
     //--------------------------------------------------------------------------
@@ -280,10 +301,8 @@ int main (int argc, char **argv)
         }
         t [nthreads] = LAGraph_toc (tic) / ntrials ;
         printf ( ":%2d:push/pull: (no tree) %12.3f (sec), "
-            " rate: %6.2f",
+            " rate: %6.2f\n",
             nthreads, t [nthreads], 1e-6*((double) nvals) / t [nthreads]) ;
-        if (nthreads > 1) printf ( " speedup %4.1f", t [1] / t [nthreads]) ;
-        printf ("\n") ;
     }
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;
@@ -314,15 +333,14 @@ int main (int argc, char **argv)
             LAGRAPH_OK (LAGraph_bfs_pushpull (&v, &pi, A, NULL, s, 0, false)) ;
         }
         t [nthreads] = LAGraph_toc (tic) / ntrials ;
-        printf ( ":%2d:allpush   (w/ tree): %12.3f (sec), rate: %6.2f",
+        printf ( ":%2d:allpush   (w/ tree): %12.3f (sec), rate: %6.2f\n",
             nthreads, t [nthreads], 1e-6*((double) nvals) / t [nthreads]) ;
-        if (nthreads > 1) printf ( " speedup %4.1f", t [1] / t [nthreads]) ;
-        printf ("\n") ;
     }
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;
     printf ( "\n") ;
 
+    #if 0
     LAGraph_tic (tic) ;
     printf ("saving results ...\n")  ;
 
@@ -349,6 +367,7 @@ int main (int argc, char **argv)
 
     double t_save = LAGraph_toc (tic) ;
     printf ("save time: %g sec\n\n", t_save) ;
+    #endif
 
     //--------------------------------------------------------------------------
     // BFS: all-push, with tree (log all timings)
@@ -384,10 +403,8 @@ int main (int argc, char **argv)
             LAGRAPH_OK (bfs_log (&v, &pi, A, NULL, s, 0, false, f)) ;
         }
         t [nthreads] = LAGraph_toc (tic) / ntrials ;
-        printf ( ":%2d:allpush   (w/ tree): %12.3f (sec), rate: %6.2f",
+        printf ( ":%2d:allpush   (w/ tree): %12.3f (sec), rate: %6.2f\n",
             nthreads, t [nthreads], 1e-6*((double) nvals) / t [nthreads]) ;
-        if (nthreads > 1) printf ( " speedup %4.1f", t [1] / t [nthreads]) ;
-        printf ("\n") ;
     }
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;
@@ -437,10 +454,8 @@ int main (int argc, char **argv)
             LAGRAPH_OK (bfs_log (&v, &pi, NULL, AT, s, 0, false, f)) ;
         }
         t [nthreads] = LAGraph_toc (tic) / ntrials ;
-        printf ( ":%2d:allpull   (w/ tree): %12.3f (sec), rate: %6.2f",
+        printf ( ":%2d:allpull   (w/ tree): %12.3f (sec), rate: %6.2f\n",
             nthreads, t [nthreads], 1e-6*((double) nvals) / t [nthreads]) ;
-        if (nthreads > 1) printf ( " speedup %4.1f", t [1] / t [nthreads]) ;
-        printf ("\n") ;
     }
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;
@@ -478,10 +493,8 @@ int main (int argc, char **argv)
             LAGRAPH_OK (LAGraph_bfs_pushpull (&v, &pi, A, AT, s, 0, false)) ;
         }
         t [nthreads] = LAGraph_toc (tic) / ntrials ;
-        printf ( ":%2d:push/pull (w/ tree): %12.3f (sec), rate: %6.2f",
+        printf ( ":%2d:push/pull (w/ tree): %12.3f (sec), rate: %6.2f\n",
             nthreads, t [nthreads], 1e-6*((double) nvals) / t [nthreads]) ;
-        if (nthreads > 1) printf ( " speedup %4.1f", t [1] / t [nthreads]) ;
-        printf ("\n") ;
     }
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;

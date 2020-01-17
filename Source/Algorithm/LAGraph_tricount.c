@@ -5,7 +5,7 @@
 /*
     LAGraph:  graph algorithms based on GraphBLAS
 
-    Copyright 2019 LAGraph Contributors.
+    Copyright 2020 LAGraph Contributors.
 
     (see Contributors.txt for a full list of Contributors; see
     ContributionInstructions.txt for information on how you can Contribute to
@@ -52,8 +52,9 @@
 //  5:  SandiaDot:  ntri = sum (sum ((L * U') .* L)).  Note that L=U'.
 //  6:  SandiaDot2: ntri = sum (sum ((U * L') .* U)).  Note that U=L'.
 
-// A is a square symmetric matrix, of any type.  Its values are ignored.
-// Results are undefined for methods 1 and 2 if self-edges exist in A.
+// A is a square symmetric matrix, of any type.  Its values are ignored,
+// (assuming v3.2.0 of SuiteSparse:GraphBLAS is used); otherwise, A must be
+// binary.  Results are undefined for methods 1 and 2 if self-edges exist in A.
 // Results are undefined for all methods if A is unsymmetric.
 
 // TODO use an enum for the above methods.
@@ -65,7 +66,7 @@
 // format, then the "Dot" methods would use an outer product approach, which is
 // slow in SuiteSparse:GraphBLAS (requiring an explicit transpose).
 
-// Methods 1 and 2 are slower than methods 3 to 6 and take more memory.
+// Methods 1 and 2 are much slower than methods 3 to 6 and take more memory.
 // Methods 3 to 6 take a little less memory than methods 1 and 2, are by far
 // the fastest methods in general.  The methods 3 and 5 compute the same
 // intermediate matrix (L*L), and differ only in the way the matrix
@@ -79,9 +80,9 @@
 
 // The new GxB_PAIR_INT64 binary operator in SuiteSparse:GraphBLAS v3.2.0 is
 // used in the semiring, if available.  This is the function f(x,y)=1, so the
-// values of A, L, and U are not accessed.  They can have any values and any
-// type.  Only the structure of the matrices is used.  Otherwise, without this
-// operator, the input matrix A must be binary.
+// values of A are not accessed.  They can have any values and any type.  Only
+// the structure of A.  Otherwise, without this operator, the input matrix A
+// must be binary.
 
 // Reference: Wolf, Deveci, Berry, Hammond, Rajamanickam, 'Fast linear algebra-
 // based triangle counting with KokkosKernels', IEEE HPEC'17,
@@ -222,13 +223,19 @@ GrB_Info LAGraph_tricount   // count # of triangles
 
 #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
     && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,2,0) )
-    // the PAIR function is f(x,y)=1
+    // the PAIR function is f(x,y)=1, ignoring input values and type
     GrB_Semiring s = GxB_PLUS_PAIR_INT64 ;
+    GrB_Descriptor desc_s   = GrB_DESC_S ;
+    GrB_Descriptor desc_st1 = GrB_DESC_ST1 ;
 #else
+    // f(x,y)=x*y, so x and y must be 1 to compute the correct count, and thus
+    // the input matrix A must be binary.
     GrB_Semiring s = LAGraph_PLUS_TIMES_INT64 ;
+    GrB_Descriptor desc_s   = NULL ;
+    GrB_Descriptor desc_st1 = LAGraph_desc_otoo ;
 #endif
-    GrB_Monoid sum = LAGraph_PLUS_INT64_MONOID ;
 
+    GrB_Monoid sum = LAGraph_PLUS_INT64_MONOID ;
     LAGr_Matrix_new (&C, GrB_INT64, n, n) ;
 
     //--------------------------------------------------------------------------
@@ -256,7 +263,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
 
         case 1:  // Burkhardt:  ntri = sum (sum ((A^2) .* A)) / 6
 
-            LAGr_mxm (C, A, NULL, s, A, A, NULL) ;
+            LAGr_mxm (C, A, NULL, s, A, A, desc_s) ;
             LAGr_reduce (ntri, NULL, sum, C, NULL) ;
             (*ntri) /= 6 ;
             break ;
@@ -264,7 +271,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
         case 2:  // Cohen:      ntri = sum (sum ((L * U) .* A)) / 2
 
             LAGRAPH_OK (tricount_prep (&L, &U, A)) ;
-            LAGr_mxm (C, A, NULL, s, L, U, NULL) ;
+            LAGr_mxm (C, A, NULL, s, L, U, desc_s) ;
             LAGr_reduce (ntri, NULL, sum, C, NULL) ;
             (*ntri) /= 2 ;
             break ;
@@ -273,7 +280,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
 
             // using the masked saxpy3 method
             LAGRAPH_OK (tricount_prep (&L, NULL, A)) ;
-            LAGr_mxm (C, L, NULL, s, L, L, NULL) ;
+            LAGr_mxm (C, L, NULL, s, L, L, desc_s) ;
             LAGr_reduce (ntri, NULL, sum, C, NULL) ;
             break ;
 
@@ -281,7 +288,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
 
             // using the masked saxpy3 method
             LAGRAPH_OK (tricount_prep (NULL, &U, A)) ;
-            LAGr_mxm (C, U, NULL, s, U, U, NULL) ;
+            LAGr_mxm (C, U, NULL, s, U, U, desc_s) ;
             LAGr_reduce (ntri, NULL, sum, C, NULL) ;
             break ;
 
@@ -289,7 +296,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
 
             // using the masked dot product
             LAGRAPH_OK (tricount_prep (&L, &U, A)) ;
-            LAGr_mxm (C, L, NULL, s, L, U, LAGraph_desc_otoo) ;
+            LAGr_mxm (C, L, NULL, s, L, U, desc_st1) ;
             LAGr_reduce (ntri, NULL, sum, C, NULL) ;
             break ;
 
@@ -297,7 +304,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
 
             // using the masked dot product
             LAGRAPH_OK (tricount_prep (&L, &U, A)) ;
-            LAGr_mxm (C, U, NULL, s, U, L, LAGraph_desc_otoo) ;
+            LAGr_mxm (C, U, NULL, s, U, L, desc_st1) ;
             LAGr_reduce (ntri, NULL, sum, C, NULL) ;
             break ;
 

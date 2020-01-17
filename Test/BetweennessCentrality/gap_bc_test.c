@@ -34,8 +34,11 @@
 
 //------------------------------------------------------------------------------
 
-#define NTHREAD_LIST 6
-#define THREAD_LIST 64, 32, 24, 12, 8, 4
+#define NTHREAD_LIST 2
+#define THREAD_LIST 0
+
+// #define NTHREAD_LIST 6
+// #define THREAD_LIST 64, 32, 24, 12, 8, 4
 
 // Contributed by Scott Kolodziej and Tim Davis, Texas A&M University
 
@@ -81,14 +84,25 @@ int main (int argc, char **argv)
 
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;
-    int nthreads_max = LAGraph_get_nthreads();
-    Nthreads [nt] = LAGRAPH_MIN (Nthreads [nt], nthreads_max) ;
+    int nthreads_max = LAGraph_get_nthreads ( ) ;
+    if (Nthreads [1] == 0)
+    {
+        // create thread list automatically
+        Nthreads [1] = nthreads_max ;
+        for (int t = 2 ; t <= nt ; t++)
+        {
+            Nthreads [t] = Nthreads [t-1] / 2 ;
+            if (Nthreads [t] == 0) nt = t-1 ;
+        }
+    }
+    printf ("threads to test: ") ;
     for (int t = 1 ; t <= nt ; t++)
     {
         int nthreads = Nthreads [t] ;
         if (nthreads > nthreads_max) continue ;
-        printf (" thread test %d: %d\n", t, nthreads) ;
+        printf (" %d", nthreads) ;
     }
+    printf ("\n") ;
 
     // GxB_set (GxB_NTHREADS, 1) ;
     // GxB_set (GxB_CHUNK, 1) ;
@@ -291,8 +305,6 @@ int main (int argc, char **argv)
 
     printf ("\n========== input graph: nodes: %"PRIu64" edges: %"PRIu64"\n",
         n, nvals) ;
-
-    printf ("nthreads max %d\n", nthreads_max) ;
 
     int ntrials = 0 ;
     double total_time_1 = 0 ;

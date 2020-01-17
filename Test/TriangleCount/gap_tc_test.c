@@ -42,8 +42,11 @@
 
 #include "LAGraph.h"
 
-#define NTHREAD_LIST 6
-#define THREAD_LIST 64, 32, 24, 12, 8, 4
+#define NTHREAD_LIST 2
+#define THREAD_LIST 0
+
+// #define NTHREAD_LIST 6
+// #define THREAD_LIST 64, 32, 24, 12, 8, 4
 
 #define LAGRAPH_FREE_ALL    \
     GrB_free (&thunk) ;     \
@@ -90,14 +93,25 @@ int main (int argc, char **argv)
 
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;
-    int nthreads_max = LAGraph_get_nthreads();
-    Nthreads [nt] = LAGRAPH_MIN (Nthreads [nt], nthreads_max) ;
+    int nthreads_max = LAGraph_get_nthreads ( ) ;
+    if (Nthreads [1] == 0)
+    {
+        // create thread list automatically
+        Nthreads [1] = nthreads_max ;
+        for (int t = 2 ; t <= nt ; t++)
+        {
+            Nthreads [t] = Nthreads [t-1] / 2 ;
+            if (Nthreads [t] == 0) nt = t-1 ;
+        }
+    }
+    printf ("threads to test: ") ;
     for (int t = 1 ; t <= nt ; t++)
     {
         int nthreads = Nthreads [t] ;
         if (nthreads > nthreads_max) continue ;
-        printf (" thread test %d: %d\n", t, nthreads) ;
+        printf (" %d", nthreads) ;
     }
+    printf ("\n") ;
 
     //--------------------------------------------------------------------------
     // get the input matrix
@@ -159,7 +173,6 @@ int main (int argc, char **argv)
         LAGRAPH_OK (LAGraph_mmread(&C, stdin));
     }
 
-
     double t_read = LAGraph_toc (tic) ;
     printf ("\nread A time:     %14.6f sec\n", t_read) ;
 
@@ -167,9 +180,9 @@ int main (int argc, char **argv)
     GrB_Index n, nvals ;
     LAGr_Matrix_nrows (&n, C) ;
 
-    // A = spones (C), and typecast to int64
-    LAGr_Matrix_new (&A, GrB_INT64, n, n) ;
-    LAGr_apply (A, NULL, NULL, LAGraph_ONE_INT64, C, NULL) ;
+    // A = spones (C), and typecast to bool
+    LAGr_Matrix_new (&A, GrB_BOOL, n, n) ;
+    LAGr_apply (A, NULL, NULL, GxB_ONE_BOOL, C, NULL) ;
     GrB_free (&C) ;
 
     // M = diagonal mask matrix
@@ -180,8 +193,8 @@ int main (int argc, char **argv)
         LAGr_Matrix_setElement (M, (bool) true, i, i) ;
     }
 
-    // make A symmetric (A = spones (A+A')) and remove self edges (via M)
-    LAGr_eWiseAdd (A, M, NULL, LAGraph_LOR_INT64, A, A, LAGraph_desc_otcr) ;
+    // make A symmetric (A = spones (A|A')) and remove self edges (via M)
+    LAGr_eWiseAdd (A, M, NULL, GrB_LOR, A, A, LAGraph_desc_otcr) ;
     GrB_free (&M) ;
     LAGr_Matrix_nvals (&nvals, A) ;
 
@@ -199,8 +212,8 @@ int main (int argc, char **argv)
     LAGRAPH_OK (LAGraph_tricount (&ntriangles, 5, A)) ;
     printf ("# of triangles: %" PRId64 "\n", ntriangles) ;
     double ttot = LAGraph_toc (tic) ;
-    // printf ("nthreads: %3d time: %12.6f rate: %6.2f (SandiaDot)",
-    //     nthreads_max, ttot, 1e-6 * nvals / ttot) ;
+    printf ("nthreads: %3d time: %12.6f rate: %6.2f (SandiaDot, one trial)\n",
+            nthreads_max, ttot, 1e-6 * nvals / ttot) ;
 
     double t_best = INFINITY ;
     int method_best = -1 ;
@@ -230,17 +243,8 @@ int main (int argc, char **argv)
             }
             double ttot = LAGraph_toc (tic) / ntrials ;
 
-            printf ("nthreads: %3d time: %12.6f rate: %6.2f", nthreads, ttot,
+            printf ("nthreads: %3d time: %12.6f rate: %6.2f\n", nthreads, ttot,
                 1e-6 * nvals / ttot) ;
-            if (nthreads == 1)
-            {
-                t_sequential = ttot ;
-            }
-            else
-            {
-                printf (" speedup: %6.2f", t_sequential / ttot) ;
-            }
-            printf ("\n") ;
             if (nt2 != ntriangles) { printf ("Test failure!\n") ; abort ( ) ; }
 
             if (ttot < t_best)

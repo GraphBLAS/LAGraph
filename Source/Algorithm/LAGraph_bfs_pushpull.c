@@ -401,6 +401,19 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
     (*v_output) = NULL ;
     bool compute_tree = (pi_output != NULL) ;
 
+    #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
+        && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,2,0) )
+    GrB_Descriptor desc_s  = GrB_DESC_S ;
+    GrB_Descriptor desc_sc = GrB_DESC_SC ;
+    GrB_Descriptor desc_rc = GrB_DESC_RC ;
+    GrB_Descriptor desc_r  = GrB_DESC_R ;
+    #else
+    GrB_Descriptor desc_s  = NULL ;
+    GrB_Descriptor desc_sc = LAGraph_desc_ooco ;
+    GrB_Descriptor desc_rc = LAGraph_desc_oocr ;
+    GrB_Descriptor desc_r  = LAGraph_desc_ooor ;
+    #endif
+
     bool use_vxm_with_A ;
     GrB_Index nrows, ncols, nvalA, ignore, nvals ;
     if (A == NULL)
@@ -594,7 +607,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
         //----------------------------------------------------------------------
 
         // v<q> = level: set v(i) = level for all nodes i in q
-        LAGRAPH_OK (GrB_assign (v, q, NULL, level, GrB_ALL, n, NULL)) ;
+        LAGRAPH_OK (GrB_assign (v, q, NULL, level, GrB_ALL, n, desc_s)) ;
 
         //----------------------------------------------------------------------
         // check if done
@@ -613,16 +626,14 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
             // If this case is triggered, it would have been faster to pass in
             // vsparse = false on input.
             // v <!v> = 0
-            LAGRAPH_OK (GrB_assign (v, v, NULL, 0, GrB_ALL, n,
-                LAGraph_desc_ooco)) ;
+            LAGRAPH_OK (GrB_assign (v, v, NULL, 0, GrB_ALL, n, desc_sc)) ;
             LAGRAPH_OK (GrB_Vector_nvals (&ignore, v)) ;
 
             if (compute_tree)
             {
                 // Convert pi from sparse to dense, to speed up the work.
                 // pi<!pi> = 0
-                LAGRAPH_OK (GrB_assign (pi, pi, NULL, 0, GrB_ALL, n,
-                    LAGraph_desc_ooco)) ;
+                LAGRAPH_OK (GrB_assign (pi, pi, NULL, 0, GrB_ALL, n, desc_sc)) ;
                 LAGRAPH_OK (GrB_Vector_nvals (&ignore, pi)) ;
             }
 
@@ -659,15 +670,13 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
         {
             // q'<!v> = q'*A
             // this is a push step if A is in CSR format; pull if CSC
-            LAGRAPH_OK (GrB_vxm (q, v, NULL, first_semiring, q, A,
-                LAGraph_desc_oocr)) ;
+            LAGRAPH_OK (GrB_vxm (q, v, NULL, first_semiring, q, A, desc_rc)) ;
         }
         else
         {
             // q<!v> = AT*q
             // this is a pull step if AT is in CSR format; push if CSC
-            LAGRAPH_OK (GrB_mxv (q, v, NULL, second_semiring, AT, q,
-                LAGraph_desc_oocr)) ;
+            LAGRAPH_OK (GrB_mxv (q, v, NULL, second_semiring, AT, q, desc_rc)) ;
         }
 
         //----------------------------------------------------------------------
@@ -684,7 +693,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
             // q(i) currently contains the parent of node i in tree (off by one
             // so it won't have any zero values, for valued mask).
             // pi<q> = q
-            LAGRAPH_OK (GrB_assign (pi, q, NULL, q, GrB_ALL, n, NULL)) ;
+            LAGRAPH_OK (GrB_assign (pi, q, NULL, q, GrB_ALL, n, desc_s)) ;
 
             //------------------------------------------------------------------
             // replace q with current node numbers
@@ -742,45 +751,8 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
             //------------------------------------------------------------------
 
             LAGr_Vector_nvals (&nq, q) ;
-
-            #if 0
-            // This is no longer needed, since the first operator for the vxm
-            // (or 2nd operator for mxv) causes the values of A and AT to be
-            // ignored.
-
-            // nq = sum (q)
-            LAGRAPH_OK (GrB_reduce (&nq, NULL, LAGraph_PLUS_INT64_MONOID,
-                q, NULL)) ;
-
-            // check for zero-weight edges in the graph
-            LAGRAPH_OK (GrB_Vector_nvals (&nvals, q)) ;
-            if (nvals > nq)
-            {
-                // remove explicit zeros from q.  This will occur if A has
-                // any explicit entries with value zero.  Those entries are
-                // treated as non-edges in this algorithm, even without
-                // this step.  But extra useless entries in q can slow down
-                // the algorithm, so they are pruned here.
-                LAGRAPH_OK (GrB_assign (q, q, NULL, true, GrB_ALL, n,
-                    LAGraph_desc_ooor)) ;
-            }
-            #endif
-
         }
     }
-
-    //--------------------------------------------------------------------------
-    // make v sparse
-    //--------------------------------------------------------------------------
-
-#if 0
-    // skip this ...
-
-    LAGRAPH_OK (GrB_Vector_nvals (&nvals, v)) ;
-    // v<v> = v ; clearing v before assigning it back
-    LAGRAPH_OK (GrB_assign (v, v, NULL, v, GrB_ALL, n, LAGraph_desc_ooor)) ;
-    LAGRAPH_OK (GrB_Vector_nvals (&nvals, v)) ;     // finish the work
-#endif
 
     //--------------------------------------------------------------------------
     // return the parent vector, if computed

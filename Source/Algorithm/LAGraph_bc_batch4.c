@@ -150,9 +150,20 @@ GrB_Info LAGraph_bc_batch4      // betweeness centrality, batch algorithm
         LAGr_Matrix_setElement (frontier, 1, i, sources [i]) ;
     }
 
+    #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
+        && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,2,0) )
+    GrB_Descriptor desc_rc = GrB_DESC_RC ;
+    GrB_Descriptor desc_rs = GrB_DESC_RS ;
+    GrB_Descriptor desc_t0 = GrB_DESC_T0 ;
+    #else
+    GrB_Descriptor desc_rc = LAGraph_desc_oocr ;
+    GrB_Descriptor desc_rs = LAGraph_desc_ooor ;
+    GrB_Descriptor desc_t0 = LAGraph_desc_tooo  ;
+    #endif
+
     // Initial frontier: frontier<!paths>= frontier*A
     LAGr_mxm (frontier, paths, NULL, GxB_PLUS_FIRST_FP32, frontier, A,
-        LAGraph_desc_oocr) ;
+        desc_rc) ;
 
     // Allocate memory for the array of S matrices
     S = (GrB_Matrix *) LAGraph_calloc  (n, sizeof (GrB_Matrix)) ;
@@ -173,8 +184,7 @@ GrB_Info LAGraph_bc_batch4      // betweeness centrality, batch algorithm
     {
         // S [depth] = pattern of frontier
         LAGr_Matrix_new (&(S [depth]), GrB_BOOL, ns, n) ;
-        LAGr_apply (S [depth], NULL, NULL, GrB_IDENTITY_BOOL, frontier, NULL) ;
-//      LAGr_apply (S [depth], NULL, NULL, GxB_ONE_BOOL, frontier, NULL) ;
+        LAGr_apply (S [depth], NULL, NULL, GxB_ONE_BOOL, frontier, NULL) ;
 
         // Accumulate path counts: paths += frontier
         LAGr_assign (paths, NULL, GrB_PLUS_FP32, frontier, GrB_ALL, n, GrB_ALL,
@@ -182,7 +192,7 @@ GrB_Info LAGraph_bc_batch4      // betweeness centrality, batch algorithm
 
         // Update frontier: frontier<!paths> = frontier*A
         LAGr_mxm (frontier, paths, NULL, GxB_PLUS_FIRST_FP32, frontier, A,
-            LAGraph_desc_oocr) ;
+            desc_rc) ;
 
         // Get the size of the current frontier
         LAGr_Matrix_nvals (&frontier_size, frontier) ;
@@ -203,11 +213,10 @@ GrB_Info LAGraph_bc_batch4      // betweeness centrality, batch algorithm
 
         // W<S[i]> = bc_update ./ path
         LAGr_eWiseMult (W, S [i], NULL, GrB_DIV_FP32, bc_update, paths,
-            LAGraph_desc_ooor) ;
+            desc_rs) ;
 
         // W<S[i−1]> = W * A'
-        LAGr_mxm (W, S [i-1], NULL, GxB_PLUS_FIRST_FP32, W, AT,
-            LAGraph_desc_ooor) ;
+        LAGr_mxm (W, S [i-1], NULL, GxB_PLUS_FIRST_FP32, W, AT, desc_rs) ;
 
         // bc_update += W .* paths
         // bc_update and paths are both dense, but W is sparse
@@ -221,7 +230,7 @@ GrB_Info LAGraph_bc_batch4      // betweeness centrality, batch algorithm
 
     // centrality (i) = sum (bc_update (:,i)) for all nodes i
     LAGr_reduce (*centrality, NULL, GrB_PLUS_FP32, GrB_PLUS_FP32, bc_update,
-        LAGraph_desc_tooo) ;
+        desc_t0) ;
 
     LAGRAPH_FREE_WORK ;
     return (GrB_SUCCESS) ;

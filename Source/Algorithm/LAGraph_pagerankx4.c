@@ -96,8 +96,14 @@ GrB_Info LAGraph_pagerankx4 // PageRank definition
     float *restrict prior = NULL ;
     GrB_Type type = GrB_FP32 ;
     (*result) = NULL ;
-    GrB_Descriptor desc = LAGraph_desc_tooo ;
     LAGr_Matrix_nrows (&n, A) ;
+
+    #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
+        && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,2,0) )
+    GrB_Descriptor desc_t0 = GrB_DESC_T0 ;
+    #else
+    GrB_Descriptor desc_t0 = LAGraph_desc_tooo ;
+    #endif
 
     const float teleport = (1 - damping) / n ;
     const float tol = 1e-4 ;
@@ -151,7 +157,7 @@ GrB_Info LAGraph_pagerankx4 // PageRank definition
         LAGr_Vector_import (&v, type, n, n, &vi, (void **) (&vx), NULL) ;
 
         // w += A'*v
-        LAGr_mxv (w, NULL, GrB_PLUS_FP32, GxB_PLUS_SECOND_FP32, A, v, desc) ;
+        LAGr_mxv (w, NULL, GrB_PLUS_FP32, GxB_PLUS_SECOND_FP32, A, v, desc_t0) ;
 
         // export w to vx and vi (the new score; note the swap)
         LAGr_Vector_export (&w, &type, &n, &n, &vi, (void **) (&vx), NULL) ;
