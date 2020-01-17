@@ -144,8 +144,7 @@ static GrB_Info Reduce_assign32
     LAGr_free (&mngp) ;             \
     LAGr_free (&gp_new) ;           \
     LAGr_free (&mod) ;              \
-    LAGr_free (&S) ;                \
-    LAGr_free (&T) ;                \
+    if (sanitize) LAGr_free (&S) ;  \
 }
 
 //------------------------------------------------------------------------------
@@ -163,14 +162,14 @@ GrB_Info LAGraph_cc_fastsv5a
     uint32_t *V32 = NULL ;
     GrB_Index n, nnz, *I = NULL ;
     GrB_Vector f = NULL, gp_new = NULL, mngp = NULL, mod = NULL, gp = NULL ;
-    GrB_Matrix S = NULL, T ;
+    GrB_Matrix S = NULL, T = NULL ;
 
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------
 
     LAGr_Matrix_nrows (&n, A) ;
-    LAGr_Matrix_nrows (&nnz, A) ;
+    LAGr_Matrix_nvals (&nnz, A) ;
 
     if (n > UINT32_MAX)
     {
@@ -184,11 +183,6 @@ GrB_Info LAGraph_cc_fastsv5a
     LAGRAPH_OK (GxB_get (A , GxB_FORMAT, &format)) ;
     bool sampling = (format == GxB_BY_ROW) && (n * FASTSV_SAMPLES * 2 < nnz);
     
-    if (format != GxB_BY_ROW)
-    {
-        LAGRAPH_ERROR("not in CSR format.", GrB_INVALID_VALUE) ;
-    }
-
     if (sanitize)
     {
         // S = A | A'
@@ -198,7 +192,8 @@ GrB_Info LAGraph_cc_fastsv5a
     else
     {
         // Use the input as-is, and assume it is symmetric
-        LAGr_Matrix_dup (&S, A) ;
+        // LAGr_Matrix_dup (&S, A) ;
+        S = A;
     }
 
     //--------------------------------------------------------------------------
@@ -238,7 +233,6 @@ GrB_Info LAGraph_cc_fastsv5a
     // main computation
     //--------------------------------------------------------------------------
 
-    // Sampling
     if (sampling)
     {
         GrB_Type type;
@@ -250,17 +244,42 @@ GrB_Info LAGraph_cc_fastsv5a
         GxB_Matrix_export_CSR (&S, &type, &nrows, &ncols, &nvals,
                 &nonempty, &Sp, &Sj, &Sx, NULL);
 
-        LAGr_Matrix_new (&T, GrB_BOOL, n, n);
         GrB_Index *Tp = LAGraph_malloc (nrows+1, sizeof (GrB_Index)) ;
         GrB_Index *Tj = LAGraph_malloc (nvals, sizeof (GrB_Index)) ;
-        void *Tx = LAGraph_malloc (nrows, 1);
-        memset(Tx, 1, nrows);
+        void *Tx = LAGraph_malloc (nvals, 1) ;
 
-        for (GrB_Index i = 0 ; i < nrows ; i++)
+        int *range = LAGraph_malloc (nthreads + 1, sizeof (int)) ;
+        GrB_Index *count = LAGraph_malloc (nthreads + 1, sizeof (GrB_Index)) ;
+        memset (count,  0, sizeof (GrB_Index) * (nthreads + 1)) ;
+
+        range [0] = 0;
+        for (int i = 0; i < nthreads; i++)
+            range [i + 1] = range [i] + (n + i) / nthreads;
+
+        #pragma omp parallel for num_threads(nthreads) schedule(static)
+        for (int t = 0; t < nthreads; t++)
         {
-            Tp [i + 1] = Tp[i];
-            for (int j = 0; j < FASTSV_SAMPLES && Sp [i] + j < Sp [i + 1]; j++)
-                Tj [Tp [i + 1]++] = Sj [Sp [i] + j];
+            for (int i = range[t]; i < range[t + 1]; i++)
+            {
+                int deg = Sp [i + 1] - Sp [i];
+                count [t + 1] += LAGRAPH_MIN (FASTSV_SAMPLES, deg) ;
+            }
+        }
+
+        for (int i = 0; i < nthreads; i++)
+            count [i + 1] += count [i];
+
+        #pragma omp parallel for num_threads(nthreads) schedule(static)
+        for (int t = 0; t < nthreads; t++)
+        {
+            GrB_Index p = count [t];
+            Tp [range [t]] = p;
+            for (int i = range[t]; i < range[t + 1]; i++)
+            {
+                for (int j = 0; j < FASTSV_SAMPLES && Sp [i] + j < Sp [i + 1]; j++)
+                    Tj [p++] = Sj [Sp [i] + j];
+                Tp [i + 1] = p;
+            }
         }
 
         GrB_Index t_nvals = Tp[nrows];
@@ -324,12 +343,6 @@ GrB_Info LAGraph_cc_fastsv5a
         int64_t t_nonempty;
         GxB_Matrix_export_CSR (&T, &type, &nrows, &ncols, &t_nvals,
                 &t_nonempty, &Tp, &Tj, &Tx, NULL);
-
-        int *range = LAGraph_malloc (nthreads + 1, sizeof(int));
-        int *count = LAGraph_malloc (nthreads + 1, sizeof(int));
-        range [0] = 0;
-        for (int i = 0; i < nthreads; i++)
-            range [i + 1] = range [i] + (n + i) / nthreads;
 
         #pragma omp parallel for num_threads(nthreads) schedule(static)
         for (int t = 0; t < nthreads; t++)
@@ -418,6 +431,8 @@ GrB_Info LAGraph_cc_fastsv5a
 
     *result = f ;
     f = NULL ;
+    if (sampling)
+        LAGr_free (&T) ;
     LAGRAPH_FREE_ALL ;
     return (GrB_SUCCESS) ;
 }
