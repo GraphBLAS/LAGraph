@@ -144,7 +144,6 @@ static GrB_Info Reduce_assign32
     LAGr_free (&mngp) ;             \
     LAGr_free (&gp_new) ;           \
     LAGr_free (&mod) ;              \
-    if (sanitize) LAGr_free (&S) ;  \
 }
 
 //------------------------------------------------------------------------------
@@ -154,7 +153,7 @@ static GrB_Info Reduce_assign32
 GrB_Info LAGraph_cc_fastsv5a
 (
     GrB_Vector *result,     // output: array of component identifiers
-    GrB_Matrix A,           // input matrix
+    GrB_Matrix *A,          // input matrix
     bool sanitize           // if true, ensure A is symmetric
 )
 {
@@ -168,8 +167,8 @@ GrB_Info LAGraph_cc_fastsv5a
     // check inputs
     //--------------------------------------------------------------------------
 
-    LAGr_Matrix_nrows (&n, A) ;
-    LAGr_Matrix_nvals (&nnz, A) ;
+    LAGr_Matrix_nrows (&n, *A) ;
+    LAGr_Matrix_nvals (&nnz, *A) ;
 
     if (n > UINT32_MAX)
     {
@@ -180,20 +179,20 @@ GrB_Info LAGraph_cc_fastsv5a
 #define FASTSV_SAMPLES 4
 
     GxB_Format_Value format;
-    LAGRAPH_OK (GxB_get (A , GxB_FORMAT, &format)) ;
+    LAGRAPH_OK (GxB_get (*A , GxB_FORMAT, &format)) ;
     bool sampling = (format == GxB_BY_ROW) && (n * FASTSV_SAMPLES * 2 < nnz);
     
     if (sanitize)
     {
         // S = A | A'
         LAGr_Matrix_new (&S, GrB_BOOL, n, n) ;
-        LAGr_eWiseAdd (S, NULL, NULL, GrB_LOR, A, A, LAGraph_desc_otoo) ;
+        LAGr_eWiseAdd (S, NULL, NULL, GrB_LOR, *A, *A, LAGraph_desc_otoo) ;
     }
     else
     {
         // Use the input as-is, and assume it is symmetric
         // LAGr_Matrix_dup (&S, A) ;
-        S = A;
+        S = *A;
     }
 
     //--------------------------------------------------------------------------
@@ -431,6 +430,10 @@ GrB_Info LAGraph_cc_fastsv5a
 
     *result = f ;
     f = NULL ;
+    if (!sanitize)
+        *A = S;
+    else
+        LAGr_free (&S) ;
     if (sampling)
         LAGr_free (&T) ;
     LAGRAPH_FREE_ALL ;
