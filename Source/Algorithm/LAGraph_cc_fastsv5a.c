@@ -169,7 +169,7 @@ GrB_Info LAGraph_cc_fastsv5a
     //--------------------------------------------------------------------------
 
     LAGr_Matrix_nrows (&n, A) ;
-    LAGr_Matrix_nrows (&nnz, A) ;
+    LAGr_Matrix_nvals (&nnz, A) ;
 
     if (n > UINT32_MAX)
     {
