@@ -144,8 +144,7 @@ static GrB_Info Reduce_assign32
     LAGr_free (&mngp) ;             \
     LAGr_free (&gp_new) ;           \
     LAGr_free (&mod) ;              \
-    LAGr_free (&S) ;                \
-    LAGr_free (&T) ;                \
+    if (sanitize) LAGr_free (&S) ;  \
 }
 
 //------------------------------------------------------------------------------
@@ -163,7 +162,7 @@ GrB_Info LAGraph_cc_fastsv5a
     uint32_t *V32 = NULL ;
     GrB_Index n, nnz, *I = NULL ;
     GrB_Vector f = NULL, gp_new = NULL, mngp = NULL, mod = NULL, gp = NULL ;
-    GrB_Matrix S = NULL, T ;
+    GrB_Matrix S = NULL, T = NULL ;
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -184,11 +183,6 @@ GrB_Info LAGraph_cc_fastsv5a
     LAGRAPH_OK (GxB_get (A , GxB_FORMAT, &format)) ;
     bool sampling = (format == GxB_BY_ROW) && (n * FASTSV_SAMPLES * 2 < nnz);
     
-    if (format != GxB_BY_ROW)
-    {
-        LAGRAPH_ERROR("not in CSR format.", GrB_INVALID_VALUE) ;
-    }
-
     if (sanitize)
     {
         // S = A | A'
@@ -198,7 +192,8 @@ GrB_Info LAGraph_cc_fastsv5a
     else
     {
         // Use the input as-is, and assume it is symmetric
-        LAGr_Matrix_dup (&S, A) ;
+        // LAGr_Matrix_dup (&S, A) ;
+        S = A;
     }
 
     //--------------------------------------------------------------------------
@@ -250,7 +245,6 @@ GrB_Info LAGraph_cc_fastsv5a
         GxB_Matrix_export_CSR (&S, &type, &nrows, &ncols, &nvals,
                 &nonempty, &Sp, &Sj, &Sx, NULL);
 
-        LAGr_Matrix_new (&T, GrB_BOOL, n, n);
         GrB_Index *Tp = LAGraph_malloc (nrows+1, sizeof (GrB_Index)) ;
         GrB_Index *Tj = LAGraph_malloc (nvals, sizeof (GrB_Index)) ;
         void *Tx = LAGraph_malloc (nrows, 1);
@@ -418,6 +412,8 @@ GrB_Info LAGraph_cc_fastsv5a
 
     *result = f ;
     f = NULL ;
+    if (sampling)
+        LAGr_free (&T) ;
     LAGRAPH_FREE_ALL ;
     return (GrB_SUCCESS) ;
 }
