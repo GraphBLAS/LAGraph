@@ -179,7 +179,7 @@ int main (int argc, char **argv)
     bool sanitize = false ;
 
     GrB_Index nCC;
-    for (int trial = 1 ; trial < nt ; trial++)
+    for (int trial = 1 ; trial <= nt ; trial++)
     {
         int nthreads = Nthreads [trial] ;
         if (nthreads > nthreads_max) continue ;
@@ -213,7 +213,7 @@ int main (int argc, char **argv)
         for (int k = 0 ; k < NTRIALS ; k++)
         {
             LAGraph_tic (tic) ;
-            LAGRAPH_OK (LAGraph_cc_fastsv5a (&result, S, sanitize)) ;
+            LAGRAPH_OK (LAGraph_cc_fastsv5a (&result, &S, sanitize)) ;
             t1 += LAGraph_toc (tic) ;
             nCC = countCC (result, n) ;
             LAGr_free (&result) ;
