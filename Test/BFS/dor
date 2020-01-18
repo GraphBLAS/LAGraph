@@ -1,0 +1,3 @@
+#!/bin/sh
+# ./build/gap_bfs_test ~/roadNet-CA.mtx ~/roadNet-CA_sources.mtx
+./build/gap_bfs_test ~/roadNet-CA.mtx

@@ -228,11 +228,13 @@ int main (int argc, char **argv)
     // get the source nodes
     //--------------------------------------------------------------------------
 
+    #define NSOURCES 1024
+
     if (SourceNodes == NULL)
     {
-        LAGRAPH_OK (GrB_Matrix_new (&SourceNodes, GrB_INT64, 64, 1)) ;
+        LAGRAPH_OK (GrB_Matrix_new (&SourceNodes, GrB_INT64, NSOURCES, 1)) ;
         srand (1) ;
-        for (int k = 0 ; k < 64 ; k++)
+        for (int k = 0 ; k < NSOURCES ; k++)
         {
             int64_t i = rand ( ) % n ;
             // SourceNodes [k] = i 
@@ -278,6 +280,16 @@ int main (int argc, char **argv)
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;
     printf ( "\n") ;
+
+    #if 0
+    // dump the results so it can be checked
+    sprintf (filename, "v_%d_simple.mtx", (int) n) ;
+    f = fopen (filename, "w") ;
+    LAGraph_mmwrite ((GrB_Matrix) v, f) ;
+    fclose (f) ;
+    #endif
+
+    GrB_free (&v) ;
 
 #endif
 

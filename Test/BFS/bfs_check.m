@@ -62,10 +62,11 @@ for k = 1:n
     end
 end
 
+
 if (nargin > 3 && n < 10000)
     pi = full (double (pi)) ;
     pi (s) = 0 ;
-    treeplot (pi) ;
+    treeplot (pi') ;
 end
 
 fprintf ('BFS ok\n') ;

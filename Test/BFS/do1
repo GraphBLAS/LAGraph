@@ -1,0 +1,3 @@
+#!/bin/sh
+./build/gap_bfs_test ~/com-Orkut.grb
+

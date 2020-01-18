@@ -87,13 +87,13 @@ GrB_Info LAGraph_bfs_simple     // push-only BFS
 
     #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
         && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,2,0) )
-    GrB_Descriptor desc_s  = GrB_DESC_S ;
-    GrB_Descriptor desc_rc = GrB_DESC_RC ;
-    GrB_Semiring semiring  = GxB_ANY_PAIR_BOOL ;
+        GrB_Descriptor desc_s  = GrB_DESC_S ;
+        GrB_Descriptor desc_rc = GrB_DESC_RC ;
+        GrB_Semiring semiring  = GxB_ANY_PAIR_BOOL ;
     #else
-    GrB_Descriptor desc_s  = NULL ;
-    GrB_Descriptor desc_rc = LAGraph_desc_oocr ;
-    GrB_Semiring semiring  = LAGraph_LOR_FIRST_BOOL ;
+        GrB_Descriptor desc_s  = NULL ;
+        GrB_Descriptor desc_rc = LAGraph_desc_oocr ;
+        GrB_Semiring semiring  = LAGraph_LOR_FIRST_BOOL ;
     #endif
 
     //--------------------------------------------------------------------------

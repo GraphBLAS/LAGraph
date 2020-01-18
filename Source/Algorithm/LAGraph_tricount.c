@@ -221,19 +221,19 @@ GrB_Info LAGraph_tricount   // count # of triangles
     GrB_Matrix C = NULL, L = NULL, U = NULL ;
     LAGr_Matrix_nrows (&n, A) ;
 
-#if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
-    && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,2,0) )
-    // the PAIR function is f(x,y)=1, ignoring input values and type
-    GrB_Semiring s = GxB_PLUS_PAIR_INT64 ;
-    GrB_Descriptor desc_s   = GrB_DESC_S ;
-    GrB_Descriptor desc_st1 = GrB_DESC_ST1 ;
-#else
-    // f(x,y)=x*y, so x and y must be 1 to compute the correct count, and thus
-    // the input matrix A must be binary.
-    GrB_Semiring s = LAGraph_PLUS_TIMES_INT64 ;
-    GrB_Descriptor desc_s   = NULL ;
-    GrB_Descriptor desc_st1 = LAGraph_desc_otoo ;
-#endif
+    #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
+        && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,2,0) )
+        // the PAIR function is f(x,y)=1, ignoring input values and type
+        GrB_Descriptor desc_s   = GrB_DESC_S ;
+        GrB_Descriptor desc_st1 = GrB_DESC_ST1 ;
+        GrB_Semiring   semiring = GxB_PLUS_PAIR_INT64 ;
+    #else
+        // f(x,y)=x*y, so x and y must be 1 to compute the correct count, and
+        // thus the input matrix A must be binary.
+        GrB_Descriptor desc_s   = NULL ;
+        GrB_Descriptor desc_st1 = LAGraph_desc_otoo ;
+        GrB_Semiring   semiring = LAGraph_PLUS_TIMES_INT64 ;
+    #endif
 
     GrB_Monoid sum = LAGraph_PLUS_INT64_MONOID ;
     LAGr_Matrix_new (&C, GrB_INT64, n, n) ;
@@ -253,7 +253,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
             LAGr_Matrix_ncols (&ne, E) ;
             LAGr_free (&C) ;
             LAGr_Matrix_new (&C, GrB_INT64, n, ne) ;
-            LAGr_mxm (C, NULL, NULL, s, A, E, NULL) ;
+            LAGr_mxm (C, NULL, NULL, semiring, A, E, NULL) ;
             LAGr_Matrix_new (&S, GrB_BOOL, n, ne) ;
             LAGr_apply (S, NULL, NULL, LAGraph_ISTWO_INT64, C, NULL) ;
             LAGr_reduce (ntri, NULL, sum, S, NULL) ;
@@ -263,7 +263,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
 
         case 1:  // Burkhardt:  ntri = sum (sum ((A^2) .* A)) / 6
 
-            LAGr_mxm (C, A, NULL, s, A, A, desc_s) ;
+            LAGr_mxm (C, A, NULL, semiring, A, A, desc_s) ;
             LAGr_reduce (ntri, NULL, sum, C, NULL) ;
             (*ntri) /= 6 ;
             break ;
@@ -271,7 +271,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
         case 2:  // Cohen:      ntri = sum (sum ((L * U) .* A)) / 2
 
             LAGRAPH_OK (tricount_prep (&L, &U, A)) ;
-            LAGr_mxm (C, A, NULL, s, L, U, desc_s) ;
+            LAGr_mxm (C, A, NULL, semiring, L, U, desc_s) ;
             LAGr_reduce (ntri, NULL, sum, C, NULL) ;
             (*ntri) /= 2 ;
             break ;
@@ -280,7 +280,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
 
             // using the masked saxpy3 method
             LAGRAPH_OK (tricount_prep (&L, NULL, A)) ;
-            LAGr_mxm (C, L, NULL, s, L, L, desc_s) ;
+            LAGr_mxm (C, L, NULL, semiring, L, L, desc_s) ;
             LAGr_reduce (ntri, NULL, sum, C, NULL) ;
             break ;
 
@@ -288,7 +288,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
 
             // using the masked saxpy3 method
             LAGRAPH_OK (tricount_prep (NULL, &U, A)) ;
-            LAGr_mxm (C, U, NULL, s, U, U, desc_s) ;
+            LAGr_mxm (C, U, NULL, semiring, U, U, desc_s) ;
             LAGr_reduce (ntri, NULL, sum, C, NULL) ;
             break ;
 
@@ -296,7 +296,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
 
             // using the masked dot product
             LAGRAPH_OK (tricount_prep (&L, &U, A)) ;
-            LAGr_mxm (C, L, NULL, s, L, U, desc_st1) ;
+            LAGr_mxm (C, L, NULL, semiring, L, U, desc_st1) ;
             LAGr_reduce (ntri, NULL, sum, C, NULL) ;
             break ;
 
@@ -304,7 +304,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
 
             // using the masked dot product
             LAGRAPH_OK (tricount_prep (&L, &U, A)) ;
-            LAGr_mxm (C, U, NULL, s, U, L, desc_st1) ;
+            LAGr_mxm (C, U, NULL, semiring, U, L, desc_st1) ;
             LAGr_reduce (ntri, NULL, sum, C, NULL) ;
             break ;
 

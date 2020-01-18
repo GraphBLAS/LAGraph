@@ -193,7 +193,7 @@ int main (int argc, char **argv)
     bool sanitize = false ;
 
     GrB_Index nCC;
-    for (int trial = 1 ; trial < nt ; trial++)
+    for (int trial = 1 ; trial <= nt ; trial++)
     {
         int nthreads = Nthreads [trial] ;
         if (nthreads > nthreads_max) continue ;

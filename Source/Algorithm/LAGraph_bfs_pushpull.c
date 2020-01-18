@@ -372,7 +372,7 @@
 GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
 (
     GrB_Vector *v_output,   // v(i) is the BFS level of node i in the graph
-    GrB_Vector *pi_output,  // pi(i) = p if p is the parent of node i.
+    GrB_Vector *pi_output,  // pi(i) = p+1 if p is the parent of node i.
                             // if NULL, the parent is not computed.
     GrB_Matrix A,           // input graph, treated as if boolean in semiring
     GrB_Matrix AT,          // transpose of A (optional; push-only if NULL)
@@ -419,17 +419,17 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
     if (A == NULL)
     {
         // only AT is provided
-        LAGRAPH_OK (GrB_Matrix_ncols (&nrows, AT)) ;
-        LAGRAPH_OK (GrB_Matrix_nrows (&ncols, AT)) ;
-        LAGRAPH_OK (GrB_Matrix_nvals (&nvalA, AT)) ;
+        LAGr_Matrix_ncols (&nrows, AT) ;
+        LAGr_Matrix_nrows (&ncols, AT) ;
+        LAGr_Matrix_nvals (&nvalA, AT) ;
         use_vxm_with_A = false ;
     }
     else
     {
         // A is provided.  AT may or may not be provided
-        LAGRAPH_OK (GrB_Matrix_nrows (&nrows, A)) ;
-        LAGRAPH_OK (GrB_Matrix_ncols (&ncols, A)) ;
-        LAGRAPH_OK (GrB_Matrix_nvals (&nvalA, A)) ;
+        LAGr_Matrix_nrows (&nrows, A) ;
+        LAGr_Matrix_ncols (&ncols, A) ;
+        LAGr_Matrix_nvals (&nvalA, A) ;
         use_vxm_with_A = true ;
     }
 
@@ -468,13 +468,13 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
         if (A != NULL)
         {
             // A_csr is true if accessing A(i,:) is fast
-            LAGRAPH_OK (GxB_get (A , GxB_FORMAT, &A_format)) ;
+            LAGr_get (A , GxB_FORMAT, &A_format) ;
             A_csr = (A_format == GxB_BY_ROW) ;
         }
         if (AT != NULL)
         {
             // AT_csr is true if accessing AT(i,:) is fast
-            LAGRAPH_OK (GxB_get (AT, GxB_FORMAT, &AT_format)) ;
+            LAGr_get (AT, GxB_FORMAT, &AT_format) ;
             AT_csr = (AT_format == GxB_BY_ROW) ;
         }
         // Assume CSR if A(i,:) and AT(i,:) are both fast.  If csr is false,
@@ -532,7 +532,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
 
     // create an empty vector v
     GrB_Type int_type = (n > INT32_MAX) ? GrB_INT64 : GrB_INT32 ;
-    LAGRAPH_OK (GrB_Vector_new (&v, int_type, n)) ;
+    LAGr_Vector_new (&v, int_type, n) ;
 
     // make v dense if requested
     int64_t vlimit = LAGRAPH_MAX (256, sqrt ((double) n)) ;
@@ -541,52 +541,72 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
         // v is expected to have many entries, so convert v to dense, then
         // finish pending work.  If the guess is wrong, v can be made dense
         // later on.
-        LAGRAPH_OK (GrB_assign (v, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
-        LAGRAPH_OK (GrB_Vector_nvals (&ignore, v)) ;
+        LAGr_assign (v, NULL, NULL, 0, GrB_ALL, n, NULL) ;
+        LAGr_Vector_nvals (&ignore, v) ;
     }
 
     GrB_Semiring first_semiring, second_semiring ;
     if (compute_tree)
     {
         // create an integer vector q, and set q(s) to s+1
-        LAGRAPH_OK (GrB_Vector_new (&q, int_type, n)) ;
-        LAGRAPH_OK (GrB_Vector_setElement (q, s+1, s)) ;
+        LAGr_Vector_new (&q, int_type, n) ;
+        LAGr_Vector_setElement (q, s+1, s) ;
 
         if (n > INT32_MAX)
         {
-            // first_semiring  = LAGraph_MIN_FIRST_INT64 ;
-            // second_semiring = LAGraph_MIN_SECOND_INT64 ;
-            first_semiring  = GxB_ANY_FIRST_INT64 ;
-            second_semiring = GxB_ANY_SECOND_INT64 ;
+            #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
+                && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,2,0) )
+                // terminates as soon as it finds any parent; nondeterministic
+                first_semiring  = GxB_ANY_FIRST_INT64 ;
+                second_semiring = GxB_ANY_SECOND_INT64 ;
+            #else
+                // deterministic, but cannot terminate early
+                first_semiring  = LAGraph_MIN_FIRST_INT64 ;
+                second_semiring = LAGraph_MIN_SECOND_INT64 ;
+            #endif
         }
         else
         {
-            // first_semiring  = LAGraph_MIN_FIRST_INT32 ;
-            // second_semiring = LAGraph_MIN_SECOND_INT32 ;
-            first_semiring  = GxB_ANY_FIRST_INT32 ;
-            second_semiring = GxB_ANY_SECOND_INT32 ;
+            #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
+                && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,2,0) )
+                // terminates as soon as it finds any parent; nondeterministic
+                first_semiring  = GxB_ANY_FIRST_INT32 ;
+                second_semiring = GxB_ANY_SECOND_INT32 ;
+            #else
+                // deterministic, but cannot terminate early
+                first_semiring  = LAGraph_MIN_FIRST_INT32 ;
+                second_semiring = LAGraph_MIN_SECOND_INT32 ;
+            #endif
         }
 
         // create the empty parent vector
-        LAGRAPH_OK (GrB_Vector_new (&pi, int_type, n)) ;
+        LAGr_Vector_new (&pi, int_type, n) ;
         if (!vsparse)
         {
             // make pi a dense vector of all 0's
-            LAGRAPH_OK (GrB_assign (pi, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
-            LAGRAPH_OK (GrB_Vector_nvals (&ignore, pi)) ;
+            LAGr_assign (pi, NULL, NULL, 0, GrB_ALL, n, NULL) ;
+            LAGr_Vector_nvals (&ignore, pi) ;
         }
         // pi (s) = s+1 denotes a root of the BFS tree
         GrB_Index root = (GrB_Index) s ;
-        LAGRAPH_OK (GrB_assign (pi, NULL, NULL, s+1, &root, 1, NULL)) ;
+        LAGr_assign (pi, NULL, NULL, s+1, &root, 1, NULL) ;
     }
     else
     {
         // create a boolean vector q, and set q(s) to true
-        LAGRAPH_OK (GrB_Vector_new (&q, GrB_BOOL, n)) ;
-        LAGRAPH_OK (GrB_Vector_setElement (q, true, s)) ;
+        LAGr_Vector_new (&q, GrB_BOOL, n) ;
+        LAGr_Vector_setElement (q, true, s) ;
 
-        first_semiring  = LAGraph_LOR_FIRST_BOOL ;
-        second_semiring = LAGraph_LOR_SECOND_BOOL ;
+        #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
+            && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,2,0) )
+            // terminates as soon as it finds any pair
+            first_semiring  = GxB_ANY_PAIR_BOOL ;
+            second_semiring = GxB_ANY_PAIR_BOOL ;
+        #else
+            // can terminate early, but requires more data movement internally
+            first_semiring  = LAGraph_LOR_FIRST_BOOL ;
+            second_semiring = LAGraph_LOR_SECOND_BOOL ;
+        #endif
     }
 
     // average node degree
@@ -607,7 +627,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
         //----------------------------------------------------------------------
 
         // v<q> = level: set v(i) = level for all nodes i in q
-        LAGRAPH_OK (GrB_assign (v, q, NULL, level, GrB_ALL, n, desc_s)) ;
+        LAGr_assign (v, q, NULL, level, GrB_ALL, n, desc_s) ;
 
         //----------------------------------------------------------------------
         // check if done
@@ -626,15 +646,15 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
             // If this case is triggered, it would have been faster to pass in
             // vsparse = false on input.
             // v <!v> = 0
-            LAGRAPH_OK (GrB_assign (v, v, NULL, 0, GrB_ALL, n, desc_sc)) ;
-            LAGRAPH_OK (GrB_Vector_nvals (&ignore, v)) ;
+            LAGr_assign (v, v, NULL, 0, GrB_ALL, n, desc_sc) ;
+            LAGr_Vector_nvals (&ignore, v) ;
 
             if (compute_tree)
             {
                 // Convert pi from sparse to dense, to speed up the work.
                 // pi<!pi> = 0
-                LAGRAPH_OK (GrB_assign (pi, pi, NULL, 0, GrB_ALL, n, desc_sc)) ;
-                LAGRAPH_OK (GrB_Vector_nvals (&ignore, pi)) ;
+                LAGr_assign (pi, pi, NULL, 0, GrB_ALL, n, desc_sc) ;
+                LAGr_Vector_nvals (&ignore, pi) ;
             }
 
             vsparse = false ;
@@ -670,13 +690,13 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
         {
             // q'<!v> = q'*A
             // this is a push step if A is in CSR format; pull if CSC
-            LAGRAPH_OK (GrB_vxm (q, v, NULL, first_semiring, q, A, desc_rc)) ;
+            LAGr_vxm (q, v, NULL, first_semiring, q, A, desc_rc) ;
         }
         else
         {
             // q<!v> = AT*q
             // this is a pull step if AT is in CSR format; push if CSC
-            LAGRAPH_OK (GrB_mxv (q, v, NULL, second_semiring, AT, q, desc_rc)) ;
+            LAGr_mxv (q, v, NULL, second_semiring, AT, q, desc_rc) ;
         }
 
         //----------------------------------------------------------------------
@@ -693,12 +713,14 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
             // q(i) currently contains the parent of node i in tree (off by one
             // so it won't have any zero values, for valued mask).
             // pi<q> = q
-            LAGRAPH_OK (GrB_assign (pi, q, NULL, q, GrB_ALL, n, desc_s)) ;
+// TODO special case for assign:  C(:,:)<A>=A, mask is structural
+            LAGr_assign (pi, q, NULL, q, GrB_ALL, n, desc_s) ;
 
             //------------------------------------------------------------------
             // replace q with current node numbers
             //------------------------------------------------------------------
 
+            // TODO this could be a unaryop
             // q(i) = i+1 for all entries in q.
 
             #ifdef GxB_SUITESPARSE_GRAPHBLAS
@@ -706,8 +728,8 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
             if (n > INT32_MAX)
             {
                 int64_t *qx ;
-                LAGRAPH_OK (GxB_Vector_export (&q, &int_type, &n, &nq, &qi,
-                    (void **) (&qx), NULL)) ;
+                LAGr_Vector_export (&q, &int_type, &n, &nq, &qi,
+                    (void **) (&qx), NULL) ;
                 int nth = LAGRAPH_MIN (nq / (64*1024), nthreads) ;
                 nth = LAGRAPH_MAX (nth, 1) ;
                 #pragma omp parallel for num_threads(nth) schedule(static)
@@ -715,14 +737,14 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
                 {
                     qx [k] = qi [k] + 1 ;
                 }
-                LAGRAPH_OK (GxB_Vector_import (&q, int_type, n, nq, &qi,
-                    (void **) (&qx), NULL)) ;
+                LAGr_Vector_import (&q, int_type, n, nq, &qi,
+                    (void **) (&qx), NULL) ;
             }
             else
             {
                 int32_t *qx ;
-                LAGRAPH_OK (GxB_Vector_export (&q, &int_type, &n, &nq, &qi,
-                    (void **) (&qx), NULL)) ;
+                LAGr_Vector_export (&q, &int_type, &n, &nq, &qi,
+                    (void **) (&qx), NULL) ;
                 int nth = LAGRAPH_MIN (nq / (64*1024), nthreads) ;
                 nth = LAGRAPH_MAX (nth, 1) ;
                 #pragma omp parallel for num_threads(nth) schedule(static)
@@ -730,8 +752,8 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
                 {
                     qx [k] = qi [k] + 1 ;
                 }
-                LAGRAPH_OK (GxB_Vector_import (&q, int_type, n, nq, &qi,
-                    (void **) (&qx), NULL)) ;
+                LAGr_Vector_import (&q, int_type, n, nq, &qi,
+                    (void **) (&qx), NULL) ;
             }
 
             #else

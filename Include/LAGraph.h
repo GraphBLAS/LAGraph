@@ -282,6 +282,16 @@ extern bool LAGraph_malloc_is_thread_safe ;
     LAGRAPH_TRY_CATCH(GrB_Descriptor_set(__VA_ARGS__));                     \
 }
 
+#define LAGr_get(...)                                                       \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GxB_get(__VA_ARGS__));                                \
+}
+
+#define LAGr_set(...)                                                       \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GxB_set(__VA_ARGS__));                                \
+}
+
 // Free Method /////////////////////////////////////////////////////////////////
 
 // TODO: For now, LAGr_free is simply a wrapper for GrB_free with no error

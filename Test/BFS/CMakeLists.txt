@@ -117,6 +117,7 @@ set ( CMAKE_INCLUDE_CURRENT_DIR ON )
 if ( "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
     # cmake 2.8 workaround: gcc needs to be told to do ANSI C11.
     # cmake 3.0 doesn't have this problem.
+    # set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -g " )
     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -std=c11 -lm -Wno-pragmas " )
     # check all warnings:
 #   set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -Wall -Wextra -Wpedantic -Werror " )
@@ -125,6 +126,7 @@ if ( "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
     endif ( )
 elseif ( "${CMAKE_C_COMPILER_ID}" STREQUAL "Intel" )
     # options for icc: also needs -std=c11
+    # set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -g " )
     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -std=c11 " )
     # check all warnings:
 #   set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -w3 " )
