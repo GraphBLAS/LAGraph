@@ -235,6 +235,18 @@ int main (int argc, char **argv)
         printf("FastSV5a: threads: %2d time: %10.4f  # of CC: %lu\n",
             nthreads, t1 / NTRIALS, nCC) ;
 
+        t1 = 0 ;
+        for (int k = 0 ; k < NTRIALS ; k++)
+        {
+            LAGraph_tic (tic) ;
+            LAGRAPH_OK (LAGraph_cc_fastsv5b (&result, &S, sanitize)) ;
+            t1 += LAGraph_toc (tic) ;
+            nCC = countCC (result, n) ;
+            LAGr_free (&result) ;
+        }
+        printf("FastSV5b: threads: %2d time: %10.4f  # of CC: %lu\n",
+            nthreads, t1 / NTRIALS, nCC) ;
+
         /*
         LAGraph_tic (tic) ;
         LAGRAPH_OK (LAGraph_cc_fastsv5 (&result, A, sanitize)) ;
