@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_cc_fastsv5a: connected components
+// LAGraph_cc_fastsv5b: connected components
 //------------------------------------------------------------------------------
 
 /*
@@ -51,28 +51,6 @@
 #include "LAGraph.h"
 
 //------------------------------------------------------------------------------
-// atomic_min_uint32: compute (*p) = min (*p, value), via atomic update
-//------------------------------------------------------------------------------
-
-static inline void atomic_min_uint32
-(
-    uint32_t *p,        // input/output
-    uint32_t value      // input
-)
-{
-    uint32_t old, new ;
-    do
-    {
-        // get the old value at (*p)
-        // #pragma omp atomic read
-        old = (*p) ;
-        // compute the new minimum
-        new = LAGRAPH_MIN (old, value) ;
-    }
-    while (!__sync_bool_compare_and_swap (p, old, new)) ;
-}
-
-//------------------------------------------------------------------------------
 // Reduce_assign32:  w (index) += src, using MIN as the "+=" accum operator
 //------------------------------------------------------------------------------
 
@@ -86,6 +64,56 @@ static inline void atomic_min_uint32
 
 #define LAGRAPH_FREE_ALL
 
+// hash table
+const int P = 1024;
+int *ht_key;
+int *ht_val;
+
+#define HASH(x) (((x << 4) + x) & 1023)
+#define NEXT(x) ((x + 23) & 1023)
+
+static void ht_malloc ()
+{
+    ht_key = LAGraph_malloc (P, sizeof (int));
+    ht_val = LAGraph_malloc (P, sizeof (int));
+}
+
+static void ht_init ()
+{
+    memset(ht_key, -1, sizeof(int) * P);
+    memset(ht_val,  0, sizeof(int) * P);
+}
+
+static void ht_free ()
+{
+    LAGRAPH_FREE (ht_key) ;
+    LAGRAPH_FREE (ht_val) ;
+}
+
+static void ht_sample (uint32_t *V32, int n, int samples)
+{
+    for (int i = 0; i < samples; i++) {
+        int x = V32 [rand() % n];
+        int h = HASH (x);
+        while (ht_key [h] != -1 && ht_key [h] != x)
+            h = NEXT (h);
+        ht_key [h] = x;
+        ht_val [h] += 1;
+    }
+}
+
+static int ht_most_frequent ()
+{
+    int key = -1, val = 0;
+    for (int i = 0; i < P; i++)
+        if (ht_val [i] > val)
+        {
+            key = ht_key [i];
+            val = ht_val [i];
+        }
+    return key;
+}
+
 static GrB_Info Reduce_assign32
 (
     GrB_Vector *w_handle,   // vector of size n, all entries present
@@ -95,7 +123,6 @@ static GrB_Info Reduce_assign32
     int nthreads
 )
 {
-
     GrB_Type w_type, s_type ;
     GrB_Index w_n, s_n, w_nvals, s_nvals, *w_i, *s_i ;
     uint32_t *w_x, *s_x ;
@@ -105,18 +132,49 @@ static GrB_Info Reduce_assign32
     LAGr_Vector_export (s_handle, &s_type, &s_n, &s_nvals, &s_i,
         (void **) &s_x, NULL) ;
 
-#if 0
     if (nthreads >= 4)
     {
+        uint32_t *mem = LAGraph_malloc (nthreads * P, sizeof (uint32_t));
+
+        ht_init () ;
+        ht_sample (index, n, 864) ;
+
         #pragma omp parallel for num_threads(nthreads) schedule(static)
-        for (GrB_Index k = 0 ; k < n ; k++)
+        for (int t = 0; t < nthreads; t++)
         {
-            uint32_t i = index [k] ;
-            atomic_min_uint32 (&(w_x [i]), s_x [k]) ;
+            uint32_t *buf = mem + t * P;
+            for (int h = 0; h < P; h++)
+                if (ht_key [h] != -1)
+                    buf [h] = w_x [ht_key [h]];
+
+            int st = (n * t + nthreads - 1) / nthreads;
+            int ed = (n * t + n + nthreads - 1) / nthreads;
+
+            for (int k = st ; k < ed ; k++)
+            {
+                uint32_t i = index [k] ;
+                int h = HASH(i);
+                while (ht_key [h] != -1 && ht_key [h] != i)
+                    h = NEXT (h);
+
+                if (ht_key [h] == -1)
+                    w_x [i] = LAGRAPH_MIN (w_x [i], s_x [k]);
+                else
+                    buf [h] = LAGRAPH_MIN (buf [h], s_x [k]);
+            }
         }
+
+        for (int h = 0; h < P; h++)
+        {
+            int i = ht_key [h];
+            if (i != -1)
+                for (int j = 0; j < nthreads; j++)
+                    w_x [i] = LAGRAPH_MIN (w_x [i], mem [j * P + h]);
+        }
+
+        LAGRAPH_FREE (mem);
     }
     else
-#endif
     {
         // sequential version, to avoid atomics
         for (GrB_Index k = 0 ; k < n ; k++)
@@ -150,7 +208,7 @@ static GrB_Info Reduce_assign32
 // LAGraph_cc_fastsv5
 //------------------------------------------------------------------------------
 
-GrB_Info LAGraph_cc_fastsv5a
+GrB_Info LAGraph_cc_fastsv5b
 (
     GrB_Vector *result,     // output: array of component identifiers
     GrB_Matrix *A,          // input matrix
@@ -200,14 +258,11 @@ GrB_Info LAGraph_cc_fastsv5a
     //--------------------------------------------------------------------------
 
     // determine # of threads to use for Reduce_assign
-    int nthreads_max = LAGraph_get_nthreads ( ) ;
-    int nthreads = n / (1024*1024) ;
-    nthreads = LAGRAPH_MIN (nthreads, nthreads_max) ;
-    nthreads = LAGRAPH_MAX (nthreads, 1) ;
+    int nthreads = LAGraph_get_nthreads ( ) ;
 
     // # of threads to use for typecast
     int nthreads2 = n / (64*1024) ;
-    nthreads2 = LAGRAPH_MIN (nthreads2, nthreads_max) ;
+    nthreads2 = LAGRAPH_MIN (nthreads2, nthreads) ;
     nthreads2 = LAGRAPH_MAX (nthreads2, 1) ;
 
     // vectors
@@ -227,6 +282,8 @@ GrB_Info LAGraph_cc_fastsv5a
     LAGr_Vector_build (f, I, V32, n, GrB_PLUS_UINT32) ;
     LAGr_Vector_dup (&gp,   f) ;
     LAGr_Vector_dup (&mngp, f) ;
+
+    ht_malloc ();
 
     //--------------------------------------------------------------------------
     // main computation
@@ -251,9 +308,8 @@ GrB_Info LAGraph_cc_fastsv5a
         GrB_Index *count = LAGraph_malloc (nthreads + 1, sizeof (GrB_Index)) ;
         memset (count,  0, sizeof (GrB_Index) * (nthreads + 1)) ;
 
-        range [0] = 0;
-        for (int i = 0; i < nthreads; i++)
-            range [i + 1] = range [i] + (n + i) / nthreads;
+        for (int i = 0; i <= nthreads; i++)
+            range [i] = (n * i + nthreads - 1) / nthreads;
 
         #pragma omp parallel for num_threads(nthreads) schedule(static)
         for (int t = 0; t < nthreads; t++)
@@ -286,13 +342,14 @@ GrB_Info LAGraph_cc_fastsv5a
         GxB_Matrix_import_CSR (&T, type, nrows, ncols, t_nvals,
                 -1, &Tp, &Tj, &Tx, NULL);
 
-        bool change = true;
+        bool change = true, is_first = true;
         while (change)
         {
             // hooking & shortcutting
             LAGr_mxv (mngp, NULL, GrB_MIN_UINT32, GxB_MIN_SECOND_UINT32, T, gp,
                 NULL) ;
-            LAGRAPH_OK (Reduce_assign32 (&f, &mngp, V32, n, nthreads)) ;
+            if (!is_first)
+                LAGRAPH_OK (Reduce_assign32 (&f, &mngp, V32, n, nthreads)) ;
             // old:
             // LAGr_eWiseMult (f, NULL, NULL, GrB_MIN_UINT32, f, mngp, NULL) ;
             // LAGr_eWiseMult (f, NULL, NULL, GrB_MIN_UINT32, f, gp, NULL) ;
@@ -311,33 +368,13 @@ GrB_Info LAGraph_cc_fastsv5a
             LAGr_eWiseMult (mod, NULL, NULL, GrB_NE_UINT32, gp_new, gp, NULL) ;
             LAGr_reduce (&change, NULL, GxB_LOR_BOOL_MONOID, mod, NULL) ;
             // swap gp and gp_new
-            GrB_Vector t = gp ; gp = gp_new ; gp_new = t ; 
+            GrB_Vector t = gp ; gp = gp_new ; gp_new = t ;
+            is_first = false;
         }
 
-        // find the most frequent component label in vector f through sampling
-        const int P = 1024;
-        int ht_key [P];
-        int ht_val [P];
-
-        memset(ht_key, -1, sizeof(int) * P);
-        memset(ht_val,  0, sizeof(int) * P);
-
-        for (int i = 0; i < 864; i++) {
-            int x = V32[rand() % n];
-            int h = ((x << 4) + x) & 1023;
-            while (ht_key [h] != -1 && ht_key [h] != x)
-                h = (h + 23) & 1023;
-            ht_key [h] = x;
-            ht_val [h] += 1;
-        }
-
-        int key = -1, val = 0;
-        for (int i = 0; i < P; i++)
-            if (ht_val [i] > val)
-            {
-                key = ht_key [i];
-                val = ht_val [i];
-            }
+        ht_init() ;
+        ht_sample (V32, n, 864) ;
+        int key = ht_most_frequent() ;
 
         int64_t t_nonempty;
         GxB_Matrix_export_CSR (&T, &type, &nrows, &ncols, &t_nvals,
@@ -427,6 +464,8 @@ GrB_Info LAGraph_cc_fastsv5a
     //--------------------------------------------------------------------------
     // free workspace and return result
     //--------------------------------------------------------------------------
+
+    ht_free () ;
 
     *result = f ;
     f = NULL ;
