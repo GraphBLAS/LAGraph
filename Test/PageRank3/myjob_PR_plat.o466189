@@ -1,0 +1,115 @@
+
+########################################################################
+#      Date:           Sat Jan 18 15:22:31 PST 2020
+#    Job ID:           466189.v-qsvr-1.aidevcloud
+#      User:           u32248
+# Resources:           neednodes=1:ppn=2:plat8153,nodes=1:ppn=2:plat8153,walltime=24:00:00
+########################################################################
+
+threads to test:  64 32
+matrix: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+original # of edges: 4223264644
+Matrix has 71143742 empty rows
+Matrix has 71143742 empty cols
+
+==========input graph: nodes: 134217726 edges: 4223264644
+diag entries added: 71143742
+read time: 3236.89 sec
+# of trials: 16
+chunk: 65536
+
+Method 3f:
+3f: 64: avg time:     16.503 (sec), rate:   1791.312 iters: 7
+3f: 32: avg time:     17.218 (sec), rate:   1716.951 iters: 7
+
+Method x4:
+x4: 64: avg time:     15.857 (sec), rate:   1864.350 iters: 7
+x4: 32: avg time:     16.659 (sec), rate:   1774.578 iters: 7
+threads to test:  64 32
+matrix: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+original # of edges: 4294966740
+
+==========input graph: nodes: 134217728 edges: 4294966740
+diag entries added: 0
+read time: 735.565 sec
+# of trials: 16
+chunk: 65536
+
+Method 3f:
+3f: 64: avg time:     19.478 (sec), rate:   1323.028 iters: 6
+3f: 32: avg time:     19.152 (sec), rate:   1345.513 iters: 6
+
+Method x4:
+x4: 64: avg time:     18.613 (sec), rate:   1384.532 iters: 6
+x4: 32: avg time:     18.952 (sec), rate:   1359.729 iters: 6
+threads to test:  64 32
+matrix: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+original # of edges: 1468364884
+Matrix has 21475137 empty rows
+Matrix has 25889280 empty cols
+
+==========input graph: nodes: 61578415 edges: 1468364884
+diag entries added: 27438232
+read time: 638.589 sec
+# of trials: 16
+chunk: 65536
+
+Method 3f:
+3f: 64: avg time:     12.396 (sec), rate:   2605.918 iters: 22
+3f: 32: avg time:     13.489 (sec), rate:   2394.821 iters: 22
+
+Method x4:
+x4: 64: avg time:     11.735 (sec), rate:   2752.910 iters: 22
+x4: 32: avg time:     12.648 (sec), rate:   2554.012 iters: 22
+threads to test:  64 32
+matrix: /home/u32248/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-web/GAP-web.grb
+original # of edges: 1930292948
+Matrix has 7236618 empty rows
+Matrix has 438 empty cols
+
+==========input graph: nodes: 50636151 edges: 1930292948
+diag entries added: 7236964
+read time: 299.081 sec
+# of trials: 16
+chunk: 65536
+
+Method 3f:
+3f: 64: avg time:      7.009 (sec), rate:   8261.812 iters: 30
+3f: 32: avg time:      6.885 (sec), rate:   8410.926 iters: 30
+
+Method x4:
+x4: 64: avg time:      6.090 (sec), rate:   9509.393 iters: 30
+x4: 32: avg time:      6.234 (sec), rate:   9288.853 iters: 30
+threads to test:  64 32
+matrix: /home/u32248/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-road/GAP-road.grb
+original # of edges: 57708624
+
+==========input graph: nodes: 23947347 edges: 57708624
+diag entries added: 0
+read time: 11.7087 sec
+# of trials: 16
+chunk: 65536
+
+Method 3f:
+3f: 64: avg time:      1.422 (sec), rate:   1582.747 iters: 39
+3f: 32: avg time:      1.132 (sec), rate:   1988.491 iters: 39
+
+Method x4:
+x4: 64: avg time:      0.908 (sec), rate:   2479.224 iters: 39
+x4: 32: avg time:      0.846 (sec), rate:   2659.547 iters: 39
+
+########################################################################
+# End of output for job 466189.v-qsvr-1.aidevcloud
+# Date: Sat Jan 18 17:44:56 PST 2020
+########################################################################
+

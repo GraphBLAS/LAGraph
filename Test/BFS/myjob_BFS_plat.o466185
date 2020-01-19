@@ -1,0 +1,109 @@
+
+########################################################################
+#      Date:           Sat Jan 18 15:22:23 PST 2020
+#    Job ID:           466185.v-qsvr-1.aidevcloud
+#      User:           u32248
+# Resources:           neednodes=1:ppn=2:plat8153,nodes=1:ppn=2:plat8153,walltime=24:00:00
+########################################################################
+
+threads to test:  64 32
+chunk: 0
+matrix: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+sources: /home/u32248/GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 3091.94
+A is symmetric
+transpose time: 94.2389
+
+==========input graph: nodes: 134217726 edges: 4223264644 ntrials: 64
+simple all-push (no tree):
+:64:simple    (no tree):        1.649 (sec), rate: 2560.67
+:32:simple    (no tree):        1.893 (sec), rate: 2231.02
+
+allpush (with tree):
+:64:allpush   (w/ tree):        2.169 (sec), rate: 1947.34
+:32:allpush   (w/ tree):        2.382 (sec), rate: 1773.07
+
+threads to test:  64 32
+chunk: 0
+matrix: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+sources: /home/u32248/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 602.983
+A is symmetric
+transpose time: 102.905
+
+==========input graph: nodes: 134217728 edges: 4294966740 ntrials: 64
+simple all-push (no tree):
+:64:simple    (no tree):        4.218 (sec), rate: 1018.26
+:32:simple    (no tree):        4.596 (sec), rate: 934.47
+
+allpush (with tree):
+:64:allpush   (w/ tree):        5.393 (sec), rate: 796.34
+:32:allpush   (w/ tree):        5.789 (sec), rate: 741.96
+
+threads to test:  64 32
+chunk: 0
+matrix: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+sources: /home/u32248/GAP/GAP-twitter/GAP-twitter_sources.mtx
+read time: 636.49
+A is unsymmetric
+transpose time: 28.4405
+
+==========input graph: nodes: 61578415 edges: 1468364884 ntrials: 64
+simple all-push (no tree):
+:64:simple    (no tree):        1.083 (sec), rate: 1356.39
+:32:simple    (no tree):        1.096 (sec), rate: 1340.21
+
+allpush (with tree):
+:64:allpush   (w/ tree):        1.522 (sec), rate: 964.73
+:32:allpush   (w/ tree):        1.547 (sec), rate: 949.01
+
+threads to test:  64 32
+chunk: 0
+matrix: /home/u32248/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-web/GAP-web.grb
+sources: /home/u32248/GAP/GAP-web/GAP-web_sources.mtx
+read time: 529.104
+A is unsymmetric
+transpose time: 10.674
+
+==========input graph: nodes: 50636151 edges: 1930292948 ntrials: 64
+simple all-push (no tree):
+:64:simple    (no tree):        2.140 (sec), rate: 901.93
+:32:simple    (no tree):        1.158 (sec), rate: 1666.88
+
+allpush (with tree):
+:64:allpush   (w/ tree):        2.359 (sec), rate: 818.21
+:32:allpush   (w/ tree):        1.634 (sec), rate: 1181.23
+
+threads to test:  64 32
+chunk: 0
+matrix: /home/u32248/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-road/GAP-road.grb
+sources: /home/u32248/GAP/GAP-road/GAP-road_sources.mtx
+read time: 9.80834
+A is symmetric
+transpose time: 1.22774
+
+==========input graph: nodes: 23947347 edges: 57708624 ntrials: 64
+simple all-push (no tree):
+:64:simple    (no tree):        7.490 (sec), rate:   7.70
+:32:simple    (no tree):        7.450 (sec), rate:   7.75
+
+allpush (with tree):
+:64:allpush   (w/ tree):        9.276 (sec), rate:   6.22
+:32:allpush   (w/ tree):        9.230 (sec), rate:   6.25
+
+
+########################################################################
+# End of output for job 466185.v-qsvr-1.aidevcloud
+# Date: Sat Jan 18 18:07:02 PST 2020
+########################################################################
+

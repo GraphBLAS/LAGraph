@@ -1,0 +1,99 @@
+
+########################################################################
+#      Date:           Sat Jan 18 15:22:31 PST 2020
+#    Job ID:           466188.v-qsvr-1.aidevcloud
+#      User:           u32248
+# Resources:           neednodes=1:ppn=2:gold6128,nodes=1:ppn=2:gold6128,walltime=24:00:00
+########################################################################
+
+threads to test:  24 12
+matrix: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+# of nodes: 134217726  # of edges: 4223264644
+# of edges in S = A|A':  4223264644 (A symmetric)
+# of trials: 16
+FastSV:   threads: 24 time:    41.2366  # of CC: 71164263
+FastSV5:  threads: 24 time:    30.5122  # of CC: 71164263
+FastSV5a: threads: 24 time:     9.1112  # of CC: 71164263
+FastSV5b: threads: 24 time:     6.9995  # of CC: 71164263
+
+FastSV:   threads: 12 time:    47.0833  # of CC: 71164263
+FastSV5:  threads: 12 time:    35.1356  # of CC: 71164263
+FastSV5a: threads: 12 time:    10.2607  # of CC: 71164263
+FastSV5b: threads: 12 time:     8.7160  # of CC: 71164263
+
+threads to test:  24 12
+matrix: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+# of nodes: 134217728  # of edges: 4294966740
+# of edges in S = A|A':  4294966740 (A symmetric)
+# of trials: 16
+FastSV:   threads: 24 time:    33.5134  # of CC: 1
+FastSV5:  threads: 24 time:    24.5234  # of CC: 1
+FastSV5a: threads: 24 time:    10.5240  # of CC: 1
+FastSV5b: threads: 24 time:     8.5049  # of CC: 1
+
+FastSV:   threads: 12 time:    37.6887  # of CC: 1
+FastSV5:  threads: 12 time:    27.6907  # of CC: 1
+FastSV5a: threads: 12 time:    11.8235  # of CC: 1
+FastSV5b: threads: 12 time:    10.9719  # of CC: 1
+
+threads to test:  24 12
+matrix: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+# of nodes: 61578415  # of edges: 1468364884
+# of edges in S = A|A':  2405026092 (A unsymmetric)
+# of trials: 16
+FastSV:   threads: 24 time:    18.6477  # of CC: 19926186
+FastSV5:  threads: 24 time:    13.1983  # of CC: 19926186
+FastSV5a: threads: 24 time:     4.2694  # of CC: 19926186
+FastSV5b: threads: 24 time:     3.1192  # of CC: 19926186
+
+FastSV:   threads: 12 time:    21.2659  # of CC: 19926186
+FastSV5:  threads: 12 time:    15.4812  # of CC: 19926186
+FastSV5a: threads: 12 time:     4.7447  # of CC: 19926186
+FastSV5b: threads: 12 time:     3.7921  # of CC: 19926186
+
+threads to test:  24 12
+matrix: /home/u32248/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-web/GAP-web.grb
+# of nodes: 50636151  # of edges: 1930292948
+# of edges in S = A|A':  3620126660 (A unsymmetric)
+# of trials: 16
+FastSV:   threads: 24 time:     7.1339  # of CC: 123
+FastSV5:  threads: 24 time:     3.1071  # of CC: 123
+FastSV5a: threads: 24 time:     5.4383  # of CC: 123
+FastSV5b: threads: 24 time:     4.1019  # of CC: 123
+
+FastSV:   threads: 12 time:     7.9471  # of CC: 123
+FastSV5:  threads: 12 time:     3.5964  # of CC: 123
+FastSV5a: threads: 12 time:     5.8406  # of CC: 123
+FastSV5b: threads: 12 time:     4.5202  # of CC: 123
+
+threads to test:  24 12
+matrix: /home/u32248/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-road/GAP-road.grb
+# of nodes: 23947347  # of edges: 57708624
+# of edges in S = A|A':  57708624 (A symmetric)
+# of trials: 16
+FastSV:   threads: 24 time:     7.0912  # of CC: 1
+FastSV5:  threads: 24 time:     2.3285  # of CC: 1
+FastSV5a: threads: 24 time:     2.3222  # of CC: 1
+FastSV5b: threads: 24 time:     1.8358  # of CC: 1
+
+FastSV:   threads: 12 time:     7.6056  # of CC: 1
+FastSV5:  threads: 12 time:     2.5605  # of CC: 1
+FastSV5a: threads: 12 time:     2.5310  # of CC: 1
+FastSV5b: threads: 12 time:     2.1347  # of CC: 1
+
+
+########################################################################
+# End of output for job 466188.v-qsvr-1.aidevcloud
+# Date: Sat Jan 18 18:14:26 PST 2020
+########################################################################
+
