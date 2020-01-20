@@ -19,6 +19,7 @@ JOBS ?= 1
 # build and run test
 default: compile
 	./build/gap_bfs_test < cover.mtx
+	./build/gap_bfs_test_allthreads < cover.mtx
 
 # build test
 compile:

@@ -208,8 +208,10 @@ message ( STATUS "CMAKE C flags: " ${CMAKE_C_FLAGS} )
 
 file ( GLOB SOURCES "*.c" )
 
-add_executable ( gap_bfs_test ${SOURCES} )
+add_executable ( gap_bfs_test gap_bfs_test.c )
+add_executable ( gap_bfs_test_allthreads gap_bfs_test_allthreads.c )
 
 # Libraries required for Demo programs
 target_link_libraries ( gap_bfs_test graphblas lagraph m )
+target_link_libraries ( gap_bfs_test_allthreads graphblas lagraph m )
 

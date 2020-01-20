@@ -223,8 +223,10 @@ add_executable ( bc_test ${BC_TEST_SRC} )
 add_executable ( bc_exe ${BC_EXE_SRC} )
 add_executable ( bc_batch_exe ${BC_BATCH_EXE_SRC} )
 add_executable ( gap_bc_test ${BC_GAP_TEST_SRC} )
+add_executable ( gap_bc_test_allthreads gap_bc_test_allthreads.c )
 
 # Libraries required for Demo programs
+target_link_libraries ( gap_bc_test_allthreads graphblas lagraph m )
 target_link_libraries ( gap_bc_test graphblas lagraph m )
 target_link_libraries ( bc_test graphblas lagraph m )
 target_link_libraries ( bc_exe graphblas lagraph m )
