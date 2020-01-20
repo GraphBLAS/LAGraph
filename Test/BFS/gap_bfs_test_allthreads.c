@@ -186,6 +186,7 @@ int main (int argc, char **argv)
     // LAGraph_mmwrite (Abool, stderr) ;
     GrB_free (&A) ;
     A = Abool ;
+    Abool = NULL ;
 
     //--------------------------------------------------------------------------
     // get the size of the problem.
@@ -206,6 +207,10 @@ int main (int argc, char **argv)
     // AT = A'
     //--------------------------------------------------------------------------
 
+    // HACK: AT not needed for push-only BFS
+    AT = NULL ;
+
+#if 0
     LAGraph_tic (tic);
     bool A_is_symmetric ;
     LAGRAPH_OK (GrB_Matrix_new (&AT, GrB_BOOL, n, n)) ;
@@ -223,12 +228,13 @@ int main (int argc, char **argv)
     }
     double t_transpose = LAGraph_toc (tic) ;
     printf ("transpose time: %g\n", t_transpose) ;
+#endif
 
     //--------------------------------------------------------------------------
     // get the source nodes
     //--------------------------------------------------------------------------
 
-    #define NSOURCES 1024
+    #define NSOURCES 64
 
     if (SourceNodes == NULL)
     {

@@ -45,7 +45,7 @@
 #include "../../Source/Utility/LAGraph_internal.h"
 #include "bfs_test.h"
 
-#define NTHREAD_LIST 1
+#define NTHREAD_LIST 8
 #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 6
@@ -207,7 +207,7 @@ int main (int argc, char **argv)
     // AT = A'
     //--------------------------------------------------------------------------
 
-    // HACK
+    // HACK: AT not needed for push-only BFS
     AT = NULL ;
 
 #if 0
@@ -287,7 +287,7 @@ int main (int argc, char **argv)
     LAGraph_set_nthreads (nthreads_max) ;
     printf ( "\n") ;
 
-    #if 0
+    #if 1
     // dump the results so it can be checked
     sprintf (filename, "v_%d_simple.mtx", (int) n) ;
     f = fopen (filename, "w") ;
@@ -358,7 +358,7 @@ int main (int argc, char **argv)
     LAGraph_set_nthreads (nthreads_max) ;
     printf ( "\n") ;
 
-    #if 0
+    #if 1
     LAGraph_tic (tic) ;
     printf ("saving results ...\n")  ;
 
@@ -601,19 +601,7 @@ int main (int argc, char **argv)
     // free all workspace and finish
     //--------------------------------------------------------------------------
 
-//    LAGRAPH_FREE_ALL ;
-
-//#define LAGRAPH_FREE_ALL            \
-
-{
-    GrB_free (&AT) ;
-    GrB_free (&A) ; 
-    GrB_free (&Abool) ; 
-    GrB_free (&v) ;
-    GrB_free (&pi) ;
-    GrB_free (&SourceNodes) ;
-}
-
+    LAGRAPH_FREE_ALL ;
     LAGRAPH_OK (LAGraph_finalize ( )) ;
 
 #if 0
