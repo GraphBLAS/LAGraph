@@ -75,16 +75,16 @@
 
 #define LAGRAPH_FREE_WORK                       \
 {                                               \
-    GrB_free (&frontier) ;                      \
-    GrB_free (&paths) ;                         \
-    GrB_free (&bc_update) ;                     \
-    GrB_free (&W) ;                             \
+    LAGr_free (&frontier) ;                     \
+    LAGr_free (&paths) ;                        \
+    LAGr_free (&bc_update) ;                    \
+    LAGr_free (&W) ;                            \
     if (S != NULL)                              \
     {                                           \
         for (int64_t i = 0 ; i < n ; i++)       \
         {                                       \
             if (S [i] == NULL) break ;          \
-            GrB_free (&(S [i])) ;               \
+            LAGr_free (&(S [i])) ;              \
         }                                       \
         free (S) ;                              \
     }                                           \
@@ -93,7 +93,7 @@
 #define LAGRAPH_FREE_ALL            \
 {                                   \
     LAGRAPH_FREE_WORK ;             \
-    GrB_free (centrality) ;         \
+    LAGr_free (centrality) ;        \
 }
 
 //------------------------------------------------------------------------------
@@ -197,6 +197,8 @@ GrB_Info LAGraph_bc_batch4      // betweeness centrality, batch algorithm
         // Get the size of the current frontier
         LAGr_Matrix_nvals (&frontier_size, frontier) ;
     }
+
+    LAGr_free (&frontier) ;
 
     // === Betweenness centrality computation phase ============================
 
