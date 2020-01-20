@@ -281,7 +281,7 @@ int main (int argc, char **argv)
     LAGraph_set_nthreads (nthreads_max) ;
     printf ( "\n") ;
 
-    #if 0
+    #if 1
     // dump the results so it can be checked
     sprintf (filename, "v_%d_simple.mtx", (int) n) ;
     f = fopen (filename, "w") ;
@@ -352,7 +352,7 @@ int main (int argc, char **argv)
     LAGraph_set_nthreads (nthreads_max) ;
     printf ( "\n") ;
 
-    #if 0
+    #if 1
     LAGraph_tic (tic) ;
     printf ("saving results ...\n")  ;
 

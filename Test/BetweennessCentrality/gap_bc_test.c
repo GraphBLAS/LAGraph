@@ -160,17 +160,19 @@ int main (int argc, char **argv)
         }
 
         // read in source nodes in Matrix Market format from the input file
-        filename = argv [2] ;
-        printf ("sources: %s\n", filename) ;
-        FILE *f = fopen (filename, "r") ;
-        if (f == NULL)
+        if (argc > 2)
         {
-            printf ("Source node file not found: [%s]\n", filename) ;
-            exit (1) ;
+            filename = argv [2] ;
+            printf ("sources: %s\n", filename) ;
+            FILE *f = fopen (filename, "r") ;
+            if (f == NULL)
+            {
+                printf ("Source node file not found: [%s]\n", filename) ;
+                exit (1) ;
+            }
+            LAGRAPH_OK (LAGraph_mmread (&SourceNodes, f)) ;
+            fclose (f) ;
         }
-        LAGRAPH_OK (LAGraph_mmread (&SourceNodes, f)) ;
-        fclose (f) ;
-
     }
     else
     {
@@ -203,7 +205,6 @@ int main (int argc, char **argv)
 
     // finish any pending computations
     GrB_Index nvals;
-    GrB_Matrix_nvals (&nvals, SourceNodes);
     GrB_Matrix_nvals (&nvals, A);
 
     //--------------------------------------------------------------------------
@@ -214,6 +215,25 @@ int main (int argc, char **argv)
     LAGRAPH_OK (GrB_Matrix_nrows(&nrows, A));
     LAGRAPH_OK (GrB_Matrix_ncols(&ncols, A));
     GrB_Index n = nrows;
+
+    //--------------------------------------------------------------------------
+    // get the source nodes
+    //--------------------------------------------------------------------------
+
+    #define NSOURCES 32
+
+    if (SourceNodes == NULL)
+    {
+        LAGRAPH_OK (GrB_Matrix_new (&SourceNodes, GrB_INT64, NSOURCES, 1)) ;
+        srand (1) ;
+        for (int k = 0 ; k < NSOURCES ; k++)
+        {
+            int64_t i = rand ( ) % n ;
+            // SourceNodes [k] = i 
+            LAGRAPH_OK (GrB_Matrix_setElement (SourceNodes, i, k, 0)) ;
+        }
+    }
+    GrB_Matrix_nvals (&nvals, SourceNodes);
 
     GrB_Index nsource ;
     LAGRAPH_OK (GrB_Matrix_nrows(&nsource, SourceNodes));

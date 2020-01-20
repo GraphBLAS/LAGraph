@@ -223,7 +223,7 @@ int main (int argc, char **argv)
     // for (int method = 3 ; method <= 6 ; method++)
 
     // just try all methods 5 and 6
-    for (int method = 5 ; method <= 6 ; method++)
+    for (int method = 3 ; method <= 6 ; method++)
     {
 
         printf ("\nMethod: ") ;

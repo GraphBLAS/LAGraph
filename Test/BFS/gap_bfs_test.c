@@ -45,7 +45,7 @@
 #include "../../Source/Utility/LAGraph_internal.h"
 #include "bfs_test.h"
 
-#define NTHREAD_LIST 2
+#define NTHREAD_LIST 1
 #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 6
@@ -186,6 +186,7 @@ int main (int argc, char **argv)
     // LAGraph_mmwrite (Abool, stderr) ;
     GrB_free (&A) ;
     A = Abool ;
+    Abool = NULL ;
 
     //--------------------------------------------------------------------------
     // get the size of the problem.
@@ -206,6 +207,10 @@ int main (int argc, char **argv)
     // AT = A'
     //--------------------------------------------------------------------------
 
+    // HACK
+    AT = NULL ;
+
+#if 0
     LAGraph_tic (tic);
     bool A_is_symmetric ;
     LAGRAPH_OK (GrB_Matrix_new (&AT, GrB_BOOL, n, n)) ;
@@ -223,12 +228,13 @@ int main (int argc, char **argv)
     }
     double t_transpose = LAGraph_toc (tic) ;
     printf ("transpose time: %g\n", t_transpose) ;
+#endif
 
     //--------------------------------------------------------------------------
     // get the source nodes
     //--------------------------------------------------------------------------
 
-    #define NSOURCES 1024
+    #define NSOURCES 1
 
     if (SourceNodes == NULL)
     {
@@ -595,7 +601,19 @@ int main (int argc, char **argv)
     // free all workspace and finish
     //--------------------------------------------------------------------------
 
-    LAGRAPH_FREE_ALL ;
+//    LAGRAPH_FREE_ALL ;
+
+//#define LAGRAPH_FREE_ALL            \
+
+{
+    GrB_free (&AT) ;
+    GrB_free (&A) ; 
+    GrB_free (&Abool) ; 
+    GrB_free (&v) ;
+    GrB_free (&pi) ;
+    GrB_free (&SourceNodes) ;
+}
+
     LAGRAPH_OK (LAGraph_finalize ( )) ;
 
 #if 0

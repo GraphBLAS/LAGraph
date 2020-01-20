@@ -1,3 +1,5 @@
 #!/bin/sh
-./build/gap_bfs_test ~/com-Orkut.grb
+./build/gap_bfs_test ~/com-Orkut.grb > o
+# grep rate o
+# diff v_3*
 
