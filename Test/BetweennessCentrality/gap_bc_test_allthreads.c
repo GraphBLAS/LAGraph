@@ -65,10 +65,6 @@ int main (int argc, char **argv)
     GrB_Info info;
     uint64_t seed = 1;
 
-    #ifdef GxB_SUITESPARSE_GRAPHBLAS
-    printf ("%s %s\n", GxB_IMPLEMENTATION_NAME, GxB_IMPLEMENTATION_DATE) ;
-    #endif
-
     GrB_Matrix A = NULL;
     GrB_Matrix AT = NULL;
     GrB_Matrix Abool = NULL;

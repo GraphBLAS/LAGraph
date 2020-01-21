@@ -43,12 +43,21 @@
 
 GrB_Info LAGraph_init ( )
 {
+    GrB_Info info ;
+
     #ifdef MATLAB_MEX_FILE
     // use MATLAB memory allocation functions
-    return (LAGraph_xinit (mxMalloc, mxCalloc, mxRealloc, mxFree, false)) ;
+    info = LAGraph_xinit (mxMalloc, mxCalloc, mxRealloc, mxFree, false) ;
     #else
     // use ANSI C memory allocation functions
-    return (LAGraph_xinit (malloc, calloc, realloc, free, true)) ;
+    info = LAGraph_xinit (malloc, calloc, realloc, free, true) ;
     #endif
-}
 
+    #ifdef GxB_SUITESPARSE_GRAPHBLAS
+    char *library_date ;
+    GxB_get (GxB_LIBRARY_DATE, &library_date) ;
+    printf ("SuiteSparse:GraphBLAS %s\n", library_date) ;
+    #endif
+
+    return (info) ;
+}
