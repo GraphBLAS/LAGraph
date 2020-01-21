@@ -13,6 +13,7 @@
 // keys.
 
 #include "GraphBLAS.h"
+#include "LAGraph.h"
 
 // from GB.h
 typedef unsigned char GB_void ;
