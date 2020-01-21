@@ -38,24 +38,24 @@
 // contributed by Tim Davis, Texas A&M.
 
 // LAGraph_bfs_pushpull computes the BFS of a graph from a single given
-// starting node s.  The result is a vector v where v(i)=k if node i was placed
+// source node.  The result is a vector v where v(i)=k if node i was placed
 // at level k in the BFS.
 
 // Usage:
 
-// info = LAGraph_bfs_pushpull (&v, &pi, A, AT, s, max_level, vsparse) ;
+// info = LAGraph_bfs_pushpull (&v, &pi, A, AT, source, max_level, vsparse) ;
 
 //      GrB_Vector *v:  a vector containing the result, created on output.
-//          v(i) = k is the BFS level of node i in the graph, where
-//          a source node s has v(s)=1.  v(i) is implicitly zero if it is
-//          unreachable from s.  That is, GrB_Vector_nvals (&nreach,v)
-//          is the size of the reachable set of s, for a single-source
+//          v(i) = k is the BFS level of node i in the graph, where a source
+//          node has v(source)=1.  v(i) is implicitly zero if it is unreachable
+//          from the source node.  That is, GrB_Vector_nvals (&nreach,v) is the
+//          size of the reachable set of the source node, for a single-source
 //          BFS.  v may be returned as sparse, or full.  If full, v(i)=0
-//          indicates that node i was not reached.  If sparse, the pattern of
-//          v indicates the set of nodes reached.
+//          indicates that node i was not reached.  If sparse, the pattern of v
+//          indicates the set of nodes reached.
 
 //      GrB_Vector *pi:  a vector containing the BFS tree, in 1-based indexing.
-//          pi(s) = s+1 if s is the source node.  pi(i) = p+1 if p is the
+//          pi(source) = source+1 for source node.  pi(i) = p+1 if p is the
 //          parent of i.  If pi is sparse, and pi(i) is not present, then node
 //          i has not been reached.  Otherwise, if pi is full, then pi(i)=0
 //          indicates that node i was not reached.
@@ -71,13 +71,13 @@
 //          below).  Results are undefined if AT is not NULL but not identical
 //          to the transpose of A.
 
-//      int64_t s: the source node for the BFS.
+//      int64_t source: the source node for the BFS.
 
 //      int64_t max_level:  An optional limit on the levels searched for the
 //          single-source BFS.  If zero, then no limit is enforced.  If > 0,
 //          then only nodes with v(i) <= max_level will be visited.  That is:
-//          1: just the source node s, 2: the source and its neighbors, 3: the
-//          source s, its neighbors, and their neighbors, etc.
+//          1: just the source node, 2: the source and its neighbors, 3: the
+//          source node, its neighbors, and their neighbors, etc.
 
 //      bool vsparse:  if the result v may remain very sparse, then set this
 //          parameter to true.  If v might have many entries, set it false.  If
@@ -88,10 +88,11 @@
 //          the single-source BFS.
 
 // single-source BFS:
-//      Given a graph A, a source node s, find all nodes reachable from node s.
-//      v(s)=1, v(i)=2 if edge (s,i) appears in the graph, and so on.  If node
-//      i is not reachable from s, then implicitly v(i)=0.  v is returned as a
-//      sparse vector, and v(i) is not an entry in this vector.
+//      Given a graph A, a source node, find all nodes reachable from the
+//      source node.  v(source)=1, v(i)=2 if edge (source,i) appears in the
+//      graph, and so on.  If node i is not reachable from source, then
+//      implicitly v(i)=0.  v is returned as a sparse vector, and v(i) is not
+//      an entry in this vector.
 
 // This algorithm can use the push-pull strategy, which requires both A and
 // AT=A' to be passed in.  If the graph is known to be symmetric, then the same
@@ -101,7 +102,7 @@
 // If only A or AT is passed in, then only single strategy will be used: push
 // or pull, but not both.  In general, push-only performs well.  A pull-only
 // strategy is possible but it is exceedingly slow.  Assuming A and AT are both
-// in CSR format, then:
+// in CSR format, then (let s = source node):
 
 //      LAGraph_bfs_pushpull (..., A, AT,    s, ...) ;  // push-pull (fastest)
 //      LAGraph_bfs_pushpull (..., A, NULL,  s, ...) ;  // push-only (good)
@@ -376,7 +377,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
                             // if NULL, the parent is not computed.
     GrB_Matrix A,           // input graph, treated as if boolean in semiring
     GrB_Matrix AT,          // transpose of A (optional; push-only if NULL)
-    int64_t s,              // starting node of the BFS
+    int64_t source,         // starting node of the BFS
     int64_t max_level,      // optional limit of # levels to search
     bool vsparse            // if true, v is expected to be very sparse
 )
@@ -456,7 +457,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
 
     // LAGraph_bfs_pushpull will work just fine if nothing is changed or if the
     // following is disabled (even SuiteSparse:GraphBLAS).  The push/pull
-    // behaviour will be unpredicatble, however, unless the library's default
+    // behaviour will be unpredicatble, however, unless the library default
     // format is CSR.
 
     #ifdef GxB_SUITESPARSE_GRAPHBLAS
@@ -527,7 +528,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
     nthreads = LAGRAPH_MIN (n / 4096, nthreads) ;
     nthreads = LAGRAPH_MAX (nthreads, 1) ;
 
-    // just traverse from the source node s
+    // just traverse from the source node
     max_level = (max_level <= 0) ? n : LAGRAPH_MIN (n, max_level) ;
 
     // create an empty vector v
@@ -538,19 +539,17 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
     int64_t vlimit = LAGRAPH_MAX (256, sqrt ((double) n)) ;
     if (!vsparse)
     {
-        // v is expected to have many entries, so convert v to dense, then
-        // finish pending work.  If the guess is wrong, v can be made dense
-        // later on.
+        // v is expected to have many entries, so convert v to dense.
+        // If the guess is wrong, v can be made dense later on.
         LAGr_assign (v, NULL, NULL, 0, GrB_ALL, n, NULL) ;
-        LAGr_Vector_nvals (&ignore, v) ;
     }
 
     GrB_Semiring first_semiring, second_semiring ;
     if (compute_tree)
     {
-        // create an integer vector q, and set q(s) to s+1
+        // create an integer vector q, and set q(source) to source+1
         LAGr_Vector_new (&q, int_type, n) ;
-        LAGr_Vector_setElement (q, s+1, s) ;
+        LAGr_Vector_setElement (q, source+1, source) ;
 
         if (n > INT32_MAX)
         {
@@ -583,19 +582,17 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
         LAGr_Vector_new (&pi, int_type, n) ;
         if (!vsparse)
         {
-            // make pi a dense vector of all 0's
+            // make pi a dense vector of all zeros
             LAGr_assign (pi, NULL, NULL, 0, GrB_ALL, n, NULL) ;
-            LAGr_Vector_nvals (&ignore, pi) ;
         }
-        // pi (s) = s+1 denotes a root of the BFS tree
-        GrB_Index root = (GrB_Index) s ;
-        LAGr_assign (pi, NULL, NULL, s+1, &root, 1, NULL) ;
+        // pi (source) = source+1 denotes a root of the BFS tree
+        LAGr_Vector_setElement (pi, source+1, source) ;
     }
     else
     {
-        // create a boolean vector q, and set q(s) to true
+        // create a boolean vector q, and set q(source) to true
         LAGr_Vector_new (&q, GrB_BOOL, n) ;
-        LAGr_Vector_setElement (q, true, s) ;
+        LAGr_Vector_setElement (q, true, source) ;
 
         #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
             && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,2,0) )
@@ -713,7 +710,6 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
             // q(i) currently contains the parent of node i in tree (off by one
             // so it won't have any zero values, for valued mask).
             // pi<q> = q
-// TODO special case for assign:  C(:,:)<A>=A, mask is structural
             LAGr_assign (pi, q, NULL, q, GrB_ALL, n, desc_s) ;
 
             //------------------------------------------------------------------
@@ -759,6 +755,11 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
             #else
 
             // TODO: use extractTuples and build instead
+
+            // Or use something like:
+            // extract tuples into I
+            // let e = 1:n be created once, in initialization phase
+            // q<q> = e (I)
             fprintf (stderr, "TODO: use extractTuples here\n") ;
             abort ( ) ;
 
