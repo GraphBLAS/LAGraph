@@ -239,7 +239,7 @@ GrB_Info LAGraph_sssp2         // single source shortest paths
                 tmasked, AL, GrB_NULL);
             t1 = LAGraph_toc(tic);
             total_time2 += t1;
-            // GxB_print(tReq, print_lvl);
+            // GxB_print(tReq, 2);
 
             // s = (s | tBi)
             LAGraph_tic (tic);
@@ -341,7 +341,7 @@ GrB_Info LAGraph_sssp2         // single source shortest paths
     }
 
     double total_time = LAGraph_toc(tic1);
-/*    printf("total time %12.6g sec\n", total_time);
+    printf("total time %12.6g sec\n", total_time);
     printf("select LT time %12.6g sec, ratio %12.6g\n", total_time1,
         total_time1/total_time);
     printf("vxm time %12.6g sec, ratio %12.6g\n", total_time2,
@@ -361,7 +361,7 @@ GrB_Info LAGraph_sssp2         // single source shortest paths
     printf("update t time2 %12.6g sec, ratio %12.6g\n", total_time9,
         total_time9/total_time);
     printf("get tmasked = t .* s time2 %12.6g sec, ratio %12.6g\n",
-        total_time10, total_time10/total_time);*/
+        total_time10, total_time10/total_time);
 
 
     // result = t

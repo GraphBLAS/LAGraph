@@ -138,8 +138,6 @@ GrB_Info LAGraph_sssp1         // single source shortest paths
     LAGr_Vector_new(&tless, GrB_BOOL, n);
     LAGr_Vector_new(&s, GrB_BOOL, n);
 
-    // TODO: try making t a dense vector
-
     // t = infinity, t[src] = 0
     LAGr_Vector_setElement(t, 0, source);
 
@@ -157,7 +155,6 @@ GrB_Info LAGraph_sssp1         // single source shortest paths
 
     int32_t i = 0;
 
-    // TODO: tmasked starts out as the sparse vector t (one entry)
     // tmasked >= i*delta to find out how many left to be optimized
     LAGRAPH_OK (GxB_Scalar_setElement_INT32(lBound, i * delta));
     LAGRAPH_OK (GxB_select(tmasked, GrB_NULL, GrB_NULL, GxB_GE_THUNK, t, lBound,
@@ -208,7 +205,9 @@ GrB_Info LAGraph_sssp1         // single source shortest paths
                 tmasked, AL, GrB_NULL);
             // GxB_print(tReq, print_lvl);
 
-            // TODO try using GrB_assign with an accum of GrB_LOR
+            // Even though GrB_assign is faster than eWiseAdd here, the total
+            // time of getting s with assign and tmasked = (s.*t) later is
+            // longer than using eWiseAdd here
             // s = (s | tBi)
             LAGr_eWiseAdd(s, GrB_NULL, GrB_NULL, GrB_LOR, s, tBi,
                 GrB_NULL);

@@ -263,7 +263,7 @@ int main (int argc, char **argv)
         //----------------------------------------------------------------------
         // Compute shortest path using delta stepping with given node and delta
         //----------------------------------------------------------------------
-
+#if 0
         // Start the timer
         LAGraph_tic (tic);
 
@@ -272,15 +272,14 @@ int main (int argc, char **argv)
 
         // Stop the timer
         t3 = LAGraph_toc (tic);
-        //printf ("SSSP1 (select)  time: %12.6g (sec), rate:"
-        //    " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
+        printf ("SSSP1 (select)  time: %12.6g (sec), rate:"
+            " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
 
         total_time3 += t3;
-
+#endif
 #if 0
         // Start the timer
         LAGraph_tic (tic);
-
         GrB_free (&path_lengths1);
         LAGRAPH_OK (LAGraph_sssp11a(&path_lengths1, A, s, delta, true)) ;
 
@@ -299,20 +298,20 @@ int main (int argc, char **argv)
         t3 = LAGraph_toc (tic);
         printf ("SSSP11b (select)  time: %12.6g (sec), rate:"
             " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
+
 #endif
         // Start the timer
         LAGraph_tic (tic);
-
         GrB_free (&path_lengths1);
         LAGRAPH_OK (LAGraph_sssp11 (&path_lengths1, A, s, delta, true)) ;
 
         // Stop the timer
         t3 = LAGraph_toc (tic);
-        //printf ("SSSP11 (select)  time: %12.6g (sec), rate:"
-        //    " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
+        printf ("SSSP11 (select)  time: %12.6g (sec), rate:"
+            " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
 
         total_time31 += t3;
-
+#if 0
         // Start the timer
         LAGraph_tic (tic);
 
@@ -324,7 +323,7 @@ int main (int argc, char **argv)
         //printf ("SSSP2 (select)  time: %12.6g (sec), rate:"
         //    " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
         total_time32 += t3;
-
+#endif
 
         //----------------------------------------------------------------------
         // find shortest path using BF on node s with LAGraph_pure_c

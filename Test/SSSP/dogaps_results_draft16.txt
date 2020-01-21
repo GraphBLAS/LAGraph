@@ -1891,3 +1891,27 @@ AH has nvals = 0
 Average time per trial (SSSP1, with select):       994.489 sec (delta 1800000)
 Average time per trial (SSSP11, with select):       943.397 sec (delta 1800000)
 Average time per trial (SSSP2, with select):        914.34 sec (delta 1800000)
+matrix: /raid/hyper/gapbs/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-road/GAP-road.grb
+sources: /raid/hyper/gapbs/GAP/GAP-road/GAP-road_sources.mtx
+read time: 0.625115 sec
+input graph: nodes: 23947347 edges: 57708624 nthreads 40
+A has nvals = 57708624
+AL has nvals = 57708624
+AH has nvals = 0
+Average time per trial (SSSP1, with select):       1006.53 sec (delta 1900000)
+Average time per trial (SSSP11, with select):       952.063 sec (delta 1900000)
+Average time per trial (SSSP2, with select):       927.143 sec (delta 1900000)
+matrix: /raid/hyper/gapbs/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /raid/hyper/gapbs/GAP/GAP-road/GAP-road.grb
+sources: /raid/hyper/gapbs/GAP/GAP-road/GAP-road_sources.mtx
+read time: 0.563078 sec
+input graph: nodes: 23947347 edges: 57708624 nthreads 40
+A has nvals = 57708624
+AL has nvals = 57708624
+AH has nvals = 0
+Average time per trial (SSSP1, with select):       1022.77 sec (delta 2000000)
+Average time per trial (SSSP11, with select):       962.221 sec (delta 2000000)
+Average time per trial (SSSP2, with select):       951.649 sec (delta 2000000)

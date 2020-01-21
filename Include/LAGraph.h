@@ -1143,6 +1143,18 @@ GrB_Info LAGraph_BF_pure_c
     const int32_t *W // weight vector, W(i) = weight of edge (I(i),J(i))
 );
 
+GrB_Info LAGraph_sssp11         // single source shortest paths
+(
+    GrB_Vector *path_length,   // path_length(i) is the length of the shortest
+                               // path from the source vertex to vertex i
+    GrB_Matrix A,              // input graph, treated as if boolean in
+                               // semiring (INT32)
+    GrB_Index source,          // source vertex from which to compute
+                               // shortest paths
+    int32_t delta,             // delta value for delta stepping
+    bool AIsAllPositive        // A boolean indicating whether the entries of
+                               // matrix A are all positive
+);
 
 
 #endif
