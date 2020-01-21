@@ -81,6 +81,7 @@ int main (int argc, char **argv)
     double tic[2];
 
     LAGRAPH_OK (LAGraph_init());
+    //GxB_set(GxB_CHUNK, 4096) ;
     // LAGraph_set_nthreads (1) ;
 
     //--------------------------------------------------------------------------
@@ -235,7 +236,7 @@ int main (int argc, char **argv)
         LAGRAPH_OK (GrB_Matrix_extractElement (&s, SourceNodes, trial, 0));
         // convert from 1-based to 0-based
         s-- ;
-        printf ("\nTrial %d : source node: %"PRIu64"\n", trial, s) ;
+        //printf ("\nTrial %d : source node: %"PRIu64"\n", trial, s) ;
 
         //----------------------------------------------------------------------
         // Compute shortest path using delta stepping with given node and delta
@@ -271,25 +272,46 @@ int main (int argc, char **argv)
 
         // Stop the timer
         t3 = LAGraph_toc (tic);
-        printf ("SSSP1 (select)  time: %12.6g (sec), rate:"
-            " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
+        //printf ("SSSP1 (select)  time: %12.6g (sec), rate:"
+        //    " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
 
         total_time3 += t3;
 
+#if 0
+        // Start the timer
+        LAGraph_tic (tic);
+
+        GrB_free (&path_lengths1);
+        LAGRAPH_OK (LAGraph_sssp11a(&path_lengths1, A, s, delta, true)) ;
+
+        // Stop the timer
+        t3 = LAGraph_toc (tic);
+        printf ("SSSP11a(select)  time: %12.6g (sec), rate:"
+            " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
 
         // Start the timer
         LAGraph_tic (tic);
 
         GrB_free (&path_lengths1);
-        LAGRAPH_OK (LAGraph_sssp11 (&path_lengths1, A, s, delta)) ;
+        LAGRAPH_OK (LAGraph_sssp11b (&path_lengths1, A, s, delta, true)) ;
 
         // Stop the timer
         t3 = LAGraph_toc (tic);
-        printf ("SSSP11 (select)  time: %12.6g (sec), rate:"
+        printf ("SSSP11b (select)  time: %12.6g (sec), rate:"
             " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
+#endif
+        // Start the timer
+        LAGraph_tic (tic);
+
+        GrB_free (&path_lengths1);
+        LAGRAPH_OK (LAGraph_sssp11 (&path_lengths1, A, s, delta, true)) ;
+
+        // Stop the timer
+        t3 = LAGraph_toc (tic);
+        //printf ("SSSP11 (select)  time: %12.6g (sec), rate:"
+        //    " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
 
         total_time31 += t3;
-
 
         // Start the timer
         LAGraph_tic (tic);
@@ -299,8 +321,8 @@ int main (int argc, char **argv)
 
         // Stop the timer
         t3 = LAGraph_toc (tic);
-        printf ("SSSP2 (select)  time: %12.6g (sec), rate:"
-            " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
+        //printf ("SSSP2 (select)  time: %12.6g (sec), rate:"
+        //    " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
         total_time32 += t3;
 
 
@@ -398,7 +420,7 @@ int main (int argc, char **argv)
     // free all workspace and finish
     //--------------------------------------------------------------------------
 
-    printf ("ntrials: %d\n", ntrials) ;
+    //printf ("ntrials: %d\n", ntrials) ;
     #if 0
     printf ("Average time per trial (Bellman-Ford pure C): %12.6g sec\n",
         total_time1 / ntrials);
@@ -416,7 +438,7 @@ int main (int argc, char **argv)
 
     LAGRAPH_FREE_ALL;
     LAGRAPH_OK (LAGraph_finalize());
-
+#if 0
     if(!test_pass)
     {
         printf("ERROR! TEST FAILURE\n") ;
@@ -425,7 +447,7 @@ int main (int argc, char **argv)
     {
         printf("all tests passed\n");
     }
-
+#endif
     return (GrB_SUCCESS);
 }
 
