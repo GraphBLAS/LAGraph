@@ -72,14 +72,6 @@
 #pragma warning (disable: 161)
 #endif
 
-#if !defined(__cplusplus)
-  #define LA_RESTRICT restrict
-#elif defined(_MSC_BUILD) || defined(__clang__) || defined(__GNUC__) || defined(__INTEL_COMPILER)
-  #define LA_RESTRICT __restrict
-#else
-  #define LA_RESTRICT
-#endif
-
 #define LAGRAPH_RAND_MAX 32767
 
 // suitable for integers, and non-NaN floating point:
@@ -986,14 +978,14 @@ GrB_Info LAGraph_pagerank3b     // PageRank definition
     int *iters                  // number of iterations taken
 ) ;
 
-GrB_Info LAGraph_pagerank3c         // PageRank definition
+GrB_Info LAGraph_pagerank3c // PageRank definition
 (
-    GrB_Vector *result,             // output: array of LAGraph_PageRank structs
-    GrB_Matrix A,                   // binary input graph, not modified
-    const float *LA_RESTRICT d_out, // out degree of each node (GrB_FP32, size n)
-    float damping,                  // damping factor (typically 0.85)
-    int itermax,                    // maximum number of iterations
-    int* iters                      // output: number of iterations taken
+    GrB_Vector *result,     // output: array of LAGraph_PageRank structs
+    GrB_Matrix A,           // binary input graph, not modified
+    const float *restrict d_out, // out degree of each node (GrB_FP32, size n)
+    float damping,          // damping factor (typically 0.85)
+    int itermax,            // maximum number of iterations
+    int* iters              // output: number of iterations taken
 ) ;
 
 GrB_Info LAGraph_pagerank3d // PageRank definition
@@ -1030,7 +1022,7 @@ GrB_Info LAGraph_pagerankx4 // PageRank definition
 (
     GrB_Vector *result,     // output: array of LAGraph_PageRank structs
     GrB_Matrix A,           // binary input graph, not modified
-    const float *LA_RESTRICT d_out, // out degree of each node (GrB_FP32, size n)
+    const float *restrict d_out, // out degree of each node (GrB_FP32, size n)
     float damping,          // damping factor (typically 0.85)
     int itermax,            // maximum number of iterations
     int *iters              // output: number of iterations taken
