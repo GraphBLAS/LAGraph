@@ -107,7 +107,7 @@ int main (int argc, char **argv)
     LAGraph_tic (tic) ;
 
     double chunk ; // = 64 * 1024 ;
-    GxB_get (GxB_CHUNK, chunk) ;
+    GxB_get (GxB_CHUNK, &chunk) ;
     printf ("chunk: %g\n", chunk) ;
 
     //--------------------------------------------------------------------------
