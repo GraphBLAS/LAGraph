@@ -232,7 +232,7 @@ int main (int argc, char **argv)
 
         printf ("\nMethod: ") ;
         print_method (method) ;
-        if (n == 134217726)
+        if (n == 134217726 && method < 5)
         {
             printf ("kron fails on method %d; skipped\n", method) ;
             continue ;
