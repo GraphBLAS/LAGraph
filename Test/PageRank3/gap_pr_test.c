@@ -267,6 +267,19 @@ int main (int argc, char **argv)
     printf ("chunk: %g\n", chunk) ;
 
     //--------------------------------------------------------------------------
+    // warmup for more accurate timing
+    //--------------------------------------------------------------------------
+
+    LAGraph_set_nthreads (nthreads_max) ;
+    LAGraph_tic (tic) ;
+    LAGRAPH_OK (LAGraph_pagerank3f (&PR, A_orig, d_out, 0.85, itermax,
+                &iters)) ;
+    double t_warmup = LAGraph_toc (tic) ;
+    printf ("warmup (3f): %10.3f (threads: %d)\n", t_warmup, nthreads_max) ;
+    fflush (stdout) ;
+    GrB_free (&PR) ;
+
+    //--------------------------------------------------------------------------
     // method 3e
     //--------------------------------------------------------------------------
 

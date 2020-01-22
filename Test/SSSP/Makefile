@@ -18,9 +18,9 @@ JOBS ?= 1
 
 # build and run test
 default: compile
-	#./build/sssp_test < jagmesh7.mtx 3 > jagmesh7.out #2>stderr.txt
+	#./build/sssp_test jagmesh7.mtx 3 > jagmesh7.out #2>stderr.txt
 	#./build/sssp_check jagmesh7.out jagmesh7.check
-	./build/sssp_test < cover.mtx 3 #> cover.out #2>stderr.txt
+	./build/sssp_test cover.mtx 3
 
 # build test
 compile:

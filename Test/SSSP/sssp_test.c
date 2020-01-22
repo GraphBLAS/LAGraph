@@ -41,8 +41,8 @@
 // sssp_test < in.mtx > out
 // in.mtx is the Matrix Market file, out is the level set.
 
-// sssp_test in.mtx source.mtx > out
-// sssp_test in.grb source.mtx > out
+// sssp_test in.mtx source.mtx delta > out
+// sssp_test in.grb source.mtx delta > out
 
 #include "sssp_test.h"
 
@@ -84,19 +84,20 @@ int main (int argc, char **argv)
     //GxB_set(GxB_CHUNK, 4096) ;
     // LAGraph_set_nthreads (1) ;
 
-    //--------------------------------------------------------------------------
-    // read in a matrix from a file and convert to INT32
-    //--------------------------------------------------------------------------
-
     LAGraph_tic (tic);
 
     int batch_size = 4 ;
 
-    if (argc > 2)
+    //--------------------------------------------------------------------------
+    // get the matrix
+    //--------------------------------------------------------------------------
+
+    if (argc > 1)
     {
-        // Usage:
-        //      ./sssp_test matrixfile.mtx sourcenodes.mtx delta
-        //      ./sssp_test matrixfile.grb sourcenodes.mtx delta
+
+        //----------------------------------------------------------------------
+        // Usage: ./sssp_test matrixfile.mtx ...
+        //----------------------------------------------------------------------
 
         // read in the file in Matrix Market format from the input file
         char *filename = argv [1] ;
@@ -134,9 +135,58 @@ int main (int argc, char **argv)
             LAGRAPH_OK (LAGraph_mmread(&A_in, f));
             fclose (f) ;
         }
+    }
+    else
+    {
+
+        //----------------------------------------------------------------------
+        // Usage:  ./sssp_test < matrixfile.mtx
+        //----------------------------------------------------------------------
+
+        printf ("matrix: from stdin\n") ;
+
+        // read in the file in Matrix Market format from stdin
+        LAGRAPH_OK (LAGraph_mmread(&A_in, stdin));
+    }
+
+    // get the size of the problem.
+    GrB_Index nvals;
+    GrB_Matrix_nvals (&nvals, A_in);
+    GrB_Index nrows, ncols;
+    LAGr_Matrix_nrows(&nrows, A_in);
+    LAGr_Matrix_ncols(&ncols, A_in);
+    GrB_Index n = nrows;
+
+    //--------------------------------------------------------------------------
+    // get delta
+    //--------------------------------------------------------------------------
+
+    if (argc > 2)
+    {
+        // usage:  ./sssp_test matrix delta ...
+        delta = atoi (argv [2]) ;
+    }
+    else
+    {
+        // usage:  ./sssp_test matrix
+        // or:     ./sssp_test < matrix
+        delta = 2 ;
+    }
+    printf ("delta: %d\n", delta) ;
+
+    //--------------------------------------------------------------------------
+    // get the source nodes
+    //--------------------------------------------------------------------------
+
+    if (argc > 3)
+    {
+
+        //----------------------------------------------------------------------
+        // usage:  ./sssp_test matrix delta sourcenodes
+        //----------------------------------------------------------------------
 
         // read in source nodes in Matrix Market format from the input file
-        filename = argv [2] ;
+        char *filename = argv [3] ;
         printf ("sources: %s\n", filename) ;
         FILE *f = fopen (filename, "r") ;
         if (f == NULL)
@@ -147,40 +197,31 @@ int main (int argc, char **argv)
         LAGRAPH_OK (LAGraph_mmread (&SourceNodes, f)) ;
         fclose (f) ;
 
-        delta = atoi(argv [3]) ;
-    }
-    else if (argc == 2)
-    {
-        // Usage:  ./sssp_test < matrixfile.mtx delta
-        printf ("matrix: from stdin\n") ;
-
-        // read in the file in Matrix Market format from stdin
-        LAGRAPH_OK (LAGraph_mmread(&A_in, stdin));
-
-        // use nodes [1 2 3 4...] as the source nodes (in 1-based notation)
-        LAGRAPH_OK (GrB_Matrix_new (&SourceNodes, GrB_INT64, batch_size, 1)) ;
-        for (int64_t i = 0 ; i < batch_size ; i++)
-        {
-            LAGRAPH_OK (GrB_Matrix_setElement (SourceNodes, i+1, i, 0)) ;
-        }
-        delta = atoi(argv [1]) ;
     }
     else
     {
-        printf ("Incorrect function call\n") ;
-        exit (1) ;
+
+        //----------------------------------------------------------------------
+        // create random source nodes
+        //----------------------------------------------------------------------
+
+        #define NSOURCES 1
+
+        LAGRAPH_OK (GrB_Matrix_new (&SourceNodes, GrB_INT64, NSOURCES, 1)) ;
+        srand (1) ;
+        for (int k = 0 ; k < NSOURCES ; k++)
+        {
+            int64_t i = rand ( ) % n ;
+            // SourceNodes [k] = i 
+            LAGRAPH_OK (GrB_Matrix_setElement (SourceNodes, i, k, 0)) ;
+        }
+        GrB_Matrix_nvals (&nvals, SourceNodes);
     }
 
     double t_read = LAGraph_toc (tic) ;
     printf ("read time: %g sec\n", t_read) ;
 
-    // get the size of the problem.
-    GrB_Index nvals;
-    GrB_Matrix_nvals (&nvals, A_in);
-    GrB_Index nrows, ncols;
-    LAGr_Matrix_nrows(&nrows, A_in);
-    LAGr_Matrix_ncols(&ncols, A_in);
-    GrB_Index n = nrows;
+    //--------------------------------------------------------------------------
 
     // convert input matrix to INT32
     GrB_Type type ;
@@ -217,7 +258,7 @@ int main (int argc, char **argv)
     printf ("input graph: nodes: %"PRIu64" edges: %"PRIu64" nthreads %d\n",
         n, nvals, nthreads) ;
 
-    int ntrials =  1;//(int) nsource;
+    int ntrials =  1;//(int) nsource;   // TODO for GAP use nsource
     double total_time1 = 0 ;
     double total_time2 = 0 ;
     double total_time3 = 0 ;
