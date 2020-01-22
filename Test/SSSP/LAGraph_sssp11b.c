@@ -1,6 +1,7 @@
 //------------------------------------------------------------------------------
-// LAGraph_sssp11: Single source shortest path with delta stepping, same as
-// LAGraph_sssp1 but with timing
+// LAGraph_sssp11b: Single source shortest path with delta stepping, t is set
+// to be initially sparse. The only difference between 11a and 11b is that
+// tless is reduced to scalar instead of taking explicit 0 away
 //------------------------------------------------------------------------------
 
 /*
@@ -158,14 +159,12 @@ GrB_Info LAGraph_sssp11b        // single source shortest paths
 
     // AL = A .* (A <= delta) with lBound = delta
     LAGr_Matrix_new(&AL, GrB_INT32, n, n);
-    LAGr_select(AL, NULL, NULL, GxB_LE_THUNK, A, lBound,
-        NULL) ;
+    LAGr_select(AL, NULL, NULL, GxB_LE_THUNK, A, lBound, NULL) ;
     // GxB_print(AL, print_lvl);
 
     // AH = A .* (A > delta) with lBound = delta
     LAGr_Matrix_new(&AH, GrB_INT32, n, n);
-    LAGr_select(AH, NULL, NULL, GxB_GT_THUNK, A, lBound,
-        NULL) ;
+    LAGr_select(AH, NULL, NULL, GxB_GT_THUNK, A, lBound, NULL) ;
 
     GrB_Index nvals = 0;
     LAGr_Matrix_nvals(&nvals, A);
@@ -248,7 +247,7 @@ GrB_Info LAGraph_sssp11b        // single source shortest paths
             //LAGr_apply(s, NULL, GrB_LOR, GxB_ONE_BOOL, tmasked, NULL);
             // worse:0.14+2.27=2.41sec
             //LAGr_assign (s, NULL, GxB_PAIR_BOOL, tmasked, GrB_ALL, n, NULL) ;
-            // LAGr_Vector_nvals (&ignore, s) ; // finish the work for assign
+            //LAGr_Vector_nvals (&ignore, s) ; // finish the work for assign
             //GxB_print(s, 2);
 
             t1 = LAGraph_toc(tic);
@@ -265,18 +264,18 @@ GrB_Info LAGraph_sssp11b        // single source shortest paths
             //GxB_print(t, 2);
             LAGraph_tic (tic);
             // TODO: try clearing explicitly ...
-            //LAGr_Vector_clear (tless) ;
+            LAGr_Vector_clear (tless) ;
             LAGr_eWiseAdd (tless, tReq, NULL, GrB_LT_INT32, tReq,
-                t,  GrB_DESC_R ) ;
-            t1 = LAGraph_toc(tic);
-            total_time4 += t1;
-            //GxB_print(tless, 2);
+                t, GrB_DESC_S) ;
 
             // if tless is all zero, no need to continue the rest of this loop
             // Note that it can have explicit
-            //bool any_tless = true ;
-           // LAGr_reduce (&any_less, NULL, GrB_LOR, tless, NULL) ;
-            //if (!any_tless) { break; }
+            bool any_tless = false;
+            LAGr_reduce (&any_tless, NULL, GxB_LOR_BOOL_MONOID, tless, NULL) ;
+            t1 = LAGraph_toc(tic);
+            total_time4 += t1;
+            //GxB_print(tless, 2);
+            if (!any_tless) { break; }
 
             // tmasked<tless> = select (i*delta <= tReq < (i+1)*delta)
             // since all entries of the 5 GAP graphs are known to be positive,
@@ -305,9 +304,9 @@ GrB_Info LAGraph_sssp11b        // single source shortest paths
             // t<tless> = tReq
             // GrB_apply is faster than GrB_eWiseAdd or GrB_assign here
             LAGraph_tic (tic);
-            //LAGr_apply (t, tless, NULL, GrB_IDENTITY_INT32, tReq, NULL) ;
-            LAGr_assign (t, tless, NULL, tReq, GrB_ALL, n, NULL) ;
-            LAGr_Vector_nvals (&ignore, s) ; // finish the work for assign
+            LAGr_apply (t, tless, NULL, GrB_IDENTITY_INT32, tReq, NULL) ;
+            // LAGr_assign (t, tless, NULL, tReq, GrB_ALL, n, NULL) ;
+            //LAGr_Vector_nvals(&ignore, t);
             t1 = LAGraph_toc(tic);
             total_time6 += t1;
 
@@ -320,12 +319,10 @@ GrB_Info LAGraph_sssp11b        // single source shortest paths
         }
 
         // tmasked<s> = t
-        // GrB_apply is faster than GrB_assign with GRB_DESC_R or GrB_DESC_RS
-        // while with Vector_clear ahead, GrB_assign is faster than GrB_apply
+        // GrB_apply is faster than GrB_assign here
         LAGraph_tic (tic);
         LAGr_Vector_clear (tmasked) ;
-        //LAGr_apply (tmasked, s, NULL, GrB_IDENTITY_INT32, t,
-        //    GrB_DESC_S /* or GrB_DESC_RS */) ;
+        //LAGr_apply (tmasked, s, NULL, GrB_IDENTITY_INT32, t, GrB_DESC_S ) ;
         LAGr_assign (tmasked, s, NULL, t, GrB_ALL, n, GrB_DESC_S) ;
         t1 = LAGraph_toc(tic);
         total_time10 += t1;

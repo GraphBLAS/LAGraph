@@ -1,6 +1,8 @@
 //------------------------------------------------------------------------------
-// LAGraph_sssp11: Single source shortest path with delta stepping, same as
-// LAGraph_sssp1 but with timing
+// LAGraph_sssp11a: Single source shortest path with delta stepping, t is set
+// to be initially sparse. The only difference between 11a and 11b is that
+// the explicit 0 in tless (inner loop) is prunned and so that it can be used
+// as structural mask
 //------------------------------------------------------------------------------
 
 /*
@@ -158,14 +160,12 @@ GrB_Info LAGraph_sssp11a        // single source shortest paths
 
     // AL = A .* (A <= delta) with lBound = delta
     LAGr_Matrix_new(&AL, GrB_INT32, n, n);
-    LAGr_select(AL, NULL, NULL, GxB_LE_THUNK, A, lBound,
-        NULL) ;
+    LAGr_select(AL, NULL, NULL, GxB_LE_THUNK, A, lBound, NULL) ;
     // GxB_print(AL, print_lvl);
 
     // AH = A .* (A > delta) with lBound = delta
     LAGr_Matrix_new(&AH, GrB_INT32, n, n);
-    LAGr_select(AH, NULL, NULL, GxB_GT_THUNK, A, lBound,
-        NULL) ;
+    LAGr_select(AH, NULL, NULL, GxB_GT_THUNK, A, lBound, NULL) ;
 
     GrB_Index nvals = 0;
     LAGr_Matrix_nvals(&nvals, A);
@@ -243,12 +243,12 @@ GrB_Info LAGraph_sssp11a        // single source shortest paths
             //GxB_print(s, 2);
             //GxB_print(tmasked, 2);
             // best:0.35+1.17=1.52sec
-            //LAGr_eWiseAdd (s, NULL, NULL, GxB_PAIR_BOOL, s, tmasked, NULL) ;
+            LAGr_eWiseAdd (s, NULL, NULL, GxB_PAIR_BOOL, s, tmasked, NULL) ;
             // 2nd best:0.50+1.22=1.72sec
             //LAGr_apply(s, NULL, GrB_LOR, GxB_ONE_BOOL, tmasked, NULL);
             // worse:0.14+2.27=2.41sec
-            LAGr_assign (s, NULL, GxB_PAIR_BOOL, tmasked, GrB_ALL, n, NULL) ;
-            LAGr_Vector_nvals (&ignore, s) ; // finish the work for assign
+            //LAGr_assign (s, NULL, GxB_PAIR_BOOL, tmasked, GrB_ALL, n, NULL) ;
+            //LAGr_Vector_nvals (&ignore, s) ; // finish the work for assign
             //GxB_print(s, 2);
 
             t1 = LAGraph_toc(tic);
@@ -268,15 +268,16 @@ GrB_Info LAGraph_sssp11a        // single source shortest paths
             LAGr_Vector_clear (tless) ;
             LAGr_eWiseAdd (tless, tReq, NULL, GrB_LT_INT32, tReq,
                 t, GrB_DESC_S) ;
+
+            // remove explicit zeros from tless so it can be used as a
+            // structural mask
+            GrB_Index tless_nvals ;
+            LAGr_select (tless, NULL, NULL, GxB_NONZERO, tless, NULL, NULL) ;
+            LAGr_Vector_nvals (&tless_nvals, tless) ;
             t1 = LAGraph_toc(tic);
             total_time4 += t1;
             //GxB_print(tless, 2);
-
-            // if tless is all zero, no need to continue the rest of this loop
-            // Note that it can have explicit
-            bool any_tless = false;
-            LAGr_reduce (&any_tless, NULL, GxB_LOR_BOOL_MONOID, tless, NULL) ;
-            if (!any_tless) { break; }
+            if (tless_nvals == 0) { break ; }
 
             // tmasked<tless> = select (i*delta <= tReq < (i+1)*delta)
             // since all entries of the 5 GAP graphs are known to be positive,
@@ -289,7 +290,7 @@ GrB_Info LAGraph_sssp11a        // single source shortest paths
             LAGr_Vector_clear (tmasked) ;
             // tless cannot be a structural mask; it has explicit zeros
             LAGr_select (tmasked, tless, NULL, GxB_LT_THUNK,
-                tReq, uBound, NULL /* GrB_DESC_R */) ;
+                tReq, uBound,  GrB_DESC_S) ;
             // For general graph with negative weight, the following needs
             // to be done
             if (!AIsAllPositive)
@@ -305,8 +306,9 @@ GrB_Info LAGraph_sssp11a        // single source shortest paths
             // t<tless> = tReq
             // GrB_apply is faster than GrB_eWiseAdd or GrB_assign here
             LAGraph_tic (tic);
-            LAGr_apply (t, tless, NULL, GrB_IDENTITY_INT32, tReq, NULL) ;
+            LAGr_apply (t, tless, NULL, GrB_IDENTITY_INT32, tReq, GrB_DESC_S) ;
             // LAGr_assign (t, tless, NULL, tReq, GrB_ALL, n, NULL) ;
+            //LAGr_Vector_nvals(&ignore, t);
             t1 = LAGraph_toc(tic);
             total_time6 += t1;
 
@@ -321,9 +323,9 @@ GrB_Info LAGraph_sssp11a        // single source shortest paths
         // tmasked<s> = t
         // GrB_apply is faster than GrB_assign here
         LAGraph_tic (tic);
-        LAGr_apply (tmasked, s, NULL, GrB_IDENTITY_INT32, t,
-             GrB_DESC_RS ) ;
-        //LAGr_assign (tmasked, s, NULL, t, GrB_ALL, n, GrB_DESC_R) ;
+        LAGr_Vector_clear (tmasked) ;
+        //LAGr_apply (tmasked, s, NULL, GrB_IDENTITY_INT32, t, GrB_DESC_S ) ;
+        LAGr_assign (tmasked, s, NULL, t, GrB_ALL, n, GrB_DESC_S) ;
         t1 = LAGraph_toc(tic);
         total_time10 += t1;
 
@@ -373,12 +375,12 @@ GrB_Info LAGraph_sssp11a        // single source shortest paths
     }
 
     double total_time = LAGraph_toc(tic1);
-    printf("total time, select LT time, vxm time, update s, find tless,"
+    /*printf("total time, select LT time, vxm time, update s, find tless,"
     "update tmasked, update t, select GE, update t time2, get t.*s time:\n"
     "%12.6g\n %12.6g\n %12.6g\n %12.6g\n %12.6g\n %12.6g\n"
     "%12.6g\n %12.6g\n %12.6g\n %12.6g \n",
     total_time, total_time1, total_time2, total_time3, total_time4,
-    total_time5, total_time6, total_time7, total_time9, total_time10);
+    total_time5, total_time6, total_time7, total_time9, total_time10);*/
     /*printf("total time %12.6g sec\n", total_time);
     printf("select LT time %12.6g sec, ratio %12.6g\n", total_time1,
         total_time1/total_time);
