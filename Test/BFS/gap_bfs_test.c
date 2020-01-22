@@ -101,7 +101,6 @@ int main (int argc, char **argv)
     printf ("\n") ;
 
     double t [nthreads_max+1] ;
-    char filename [1000] ;
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
     double tic [2] ;
     LAGraph_tic (tic) ;
@@ -242,13 +241,11 @@ int main (int argc, char **argv)
         srand (1) ;
         for (int k = 0 ; k < NSOURCES ; k++)
         {
-            int64_t i = rand ( ) % n ;
+            int64_t i = 1 + (rand ( ) % n) ;    // in range 1 to n
             // SourceNodes [k] = i 
             LAGRAPH_OK (GrB_Matrix_setElement (SourceNodes, i, k, 0)) ;
         }
     }
-
-    // GxB_print (SourceNodes, 3) ;
 
     int64_t ntrials ;
     GrB_Matrix_nrows (&ntrials, SourceNodes) ;
@@ -275,6 +272,7 @@ int main (int argc, char **argv)
             int64_t s ; 
             // s = SourceNodes [i]
             LAGRAPH_OK (GrB_Matrix_extractElement (&s, SourceNodes, trial, 0)) ;
+            s-- ; // convert from 1-based to 0-based
             GrB_free (&v) ;
             GrB_free (&pi) ;
             LAGRAPH_OK (LAGraph_bfs_simple (&v, A, s)) ;
@@ -282,6 +280,7 @@ int main (int argc, char **argv)
         t [nthreads] = LAGraph_toc (tic) / ntrials ;
         printf ( ":%2d:simple    (no tree): %12.3f (sec), rate: %6.2f\n",
             nthreads, t [nthreads], 1e-6*((double) nvals) / t [nthreads]) ;
+        LAGr_log (matrix_name, "simple:allpush", nthreads, t [nthreads]) ;
     }
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;
@@ -314,6 +313,7 @@ int main (int argc, char **argv)
             int64_t s ; 
             // s = SourceNodes [i]
             LAGRAPH_OK (GrB_Matrix_extractElement (&s, SourceNodes, trial, 0)) ;
+            s-- ; // convert from 1-based to 0-based
             GrB_free (&v5) ;
             LAGRAPH_OK (LAGraph_bfs_pushpull (&v5, NULL, A, AT, s, 0, false)) ;
         }
@@ -346,6 +346,7 @@ int main (int argc, char **argv)
             int64_t s ; 
             // s = SourceNodes [i]
             LAGRAPH_OK (GrB_Matrix_extractElement (&s, SourceNodes, trial, 0)) ;
+            s-- ; // convert from 1-based to 0-based
             GrB_free (&v) ;
             GrB_free (&pi) ;
             LAGRAPH_OK (LAGraph_bfs_pushpull (&v, &pi, A, NULL, s, 0, false)) ;
@@ -353,6 +354,7 @@ int main (int argc, char **argv)
         t [nthreads] = LAGraph_toc (tic) / ntrials ;
         printf ( ":%2d:allpush   (w/ tree): %12.3f (sec), rate: %6.2f\n",
             nthreads, t [nthreads], 1e-6*((double) nvals) / t [nthreads]) ;
+        LAGr_log (matrix_name, "w/tree:allpush", nthreads, t [nthreads]) ;
     }
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;
@@ -416,6 +418,7 @@ int main (int argc, char **argv)
             int64_t s ; 
             // s = SourceNodes [i]
             LAGRAPH_OK (GrB_Matrix_extractElement (&s, SourceNodes, trial, 0)) ;
+            s-- ; // convert from 1-based to 0-based
             GrB_free (&v) ;
             GrB_free (&pi) ;
             LAGRAPH_OK (bfs_log (&v, &pi, A, NULL, s, 0, false, f)) ;
@@ -467,6 +470,7 @@ int main (int argc, char **argv)
             int64_t s ; 
             // s = SourceNodes [i]
             LAGRAPH_OK (GrB_Matrix_extractElement (&s, SourceNodes, trial, 0)) ;
+            s-- ; // convert from 1-based to 0-based
             GrB_free (&v) ;
             GrB_free (&pi) ;
             LAGRAPH_OK (bfs_log (&v, &pi, NULL, AT, s, 0, false, f)) ;
@@ -506,6 +510,7 @@ int main (int argc, char **argv)
             int64_t s ; 
             // s = SourceNodes [i]
             LAGRAPH_OK (GrB_Matrix_extractElement (&s, SourceNodes, trial, 0)) ;
+            s-- ; // convert from 1-based to 0-based
             GrB_free (&v) ;
             GrB_free (&pi) ;
             LAGRAPH_OK (LAGraph_bfs_pushpull (&v, &pi, A, AT, s, 0, false)) ;
@@ -538,6 +543,7 @@ int main (int argc, char **argv)
         int64_t s ; 
         // s = SourceNodes [i]
         LAGRAPH_OK (GrB_Matrix_extractElement (&s, SourceNodes, trial, 0)) ;
+        s-- ; // convert from 1-based to 0-based
         GrB_free (&v6) ;
         LAGRAPH_OK (LAGraph_bfs_pushpull (&v6, NULL, A, AT, s, 0, true)) ;
     }
@@ -559,6 +565,7 @@ int main (int argc, char **argv)
     bool isequal = false, ok = true ;
     int64_t s ; 
     LAGRAPH_OK (GrB_Matrix_extractElement (&s, SourceNodes, ntrials-1, 0)) ;
+    s-- ; // convert from 1-based to 0-based
 
     // find the max level
     LAGRAPH_OK (GrB_reduce (&maxlevel, NULL, LAGraph_MAX_INT32_MONOID, v,

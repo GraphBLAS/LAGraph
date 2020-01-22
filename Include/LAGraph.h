@@ -415,6 +415,21 @@ extern bool LAGraph_malloc_is_thread_safe ;
     }                                                                       \
 }
 
+GrB_Info LAGraph_log 
+(
+    char *caller,           // calling function
+    char *message1,         // message to include (may be NULL)
+    char *message2,         // message to include (may be NULL)
+    int nthreads,           // # of threads used
+    double t                // time taken by the test
+) ;
+
+// LAGr_log (message1, message2, nthreads, time)
+#define LAGr_log(...)                                                       \
+{                                                                           \
+    LAGRAPH_TRY_CATCH (LAGraph_log (__FILE__, __VA_ARGS__)) ;               \
+}
+
 //------------------------------------------------------------------------------
 // LAGraph_Context:
 //------------------------------------------------------------------------------
