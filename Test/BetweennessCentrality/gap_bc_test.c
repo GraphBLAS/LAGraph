@@ -112,6 +112,7 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     int batch_size = 4 ;
+    char *matrix_name = (argc > 1) ? argv [1] : "stdin" ; 
 
     if (argc > 1)
     {
@@ -158,12 +159,12 @@ int main (int argc, char **argv)
         // read in source nodes in Matrix Market format from the input file
         if (argc > 2)
         {
-            filename = argv [2] ;
-            printf ("sources: %s\n", filename) ;
-            FILE *f = fopen (filename, "r") ;
+            char *sourcefile = argv [2] ;
+            printf ("sources: %s\n", sourcefile) ;
+            FILE *f = fopen (sourcefile, "r") ;
             if (f == NULL)
             {
-                printf ("Source node file not found: [%s]\n", filename) ;
+                printf ("Source node file not found: [%s]\n", sourcefile) ;
                 exit (1) ;
             }
             LAGRAPH_OK (LAGraph_mmread (&SourceNodes, f)) ;
@@ -178,13 +179,6 @@ int main (int argc, char **argv)
 
         // read in the file in Matrix Market format from stdin
         LAGRAPH_OK (LAGraph_mmread(&A, stdin));
-
-        // use nodes [1 2 3 4...] as the source nodes (in 1-based notation)
-        LAGRAPH_OK (GrB_Matrix_new (&SourceNodes, GrB_INT64, batch_size, 1)) ;
-        for (int64_t i = 0 ; i < batch_size ; i++)
-        {
-            LAGRAPH_OK (GrB_Matrix_setElement (SourceNodes, i+1, i, 0)) ;
-        }
     }
 
     double t_read = LAGraph_toc (tic) ;
@@ -224,7 +218,7 @@ int main (int argc, char **argv)
         srand (1) ;
         for (int k = 0 ; k < NSOURCES ; k++)
         {
-            int64_t i = rand ( ) % n ;
+            int64_t i = 1 + (rand ( ) % n) ;    // in range 1 to n
             // SourceNodes [k] = i 
             LAGRAPH_OK (GrB_Matrix_setElement (SourceNodes, i, k, 0)) ;
         }
@@ -253,7 +247,6 @@ int main (int argc, char **argv)
     {
         printf ("A is symmetric\n") ;
         GrB_free (&AT) ;
-        AT = A ;
     }
     else
     {
@@ -350,7 +343,7 @@ int main (int argc, char **argv)
         for (int64_t k = 0 ; k < batch_size ; k++)
         {
             // get the kth source node
-            GrB_Index source = -1 ;
+            int64_t source = -1 ;
             LAGRAPH_OK (GrB_Matrix_extractElement (&source, SourceNodes,
                 k + kstart, 0)) ;
             // subtract one to convert from 1-based to 0-based
@@ -382,8 +375,9 @@ int main (int argc, char **argv)
                 double timing [3] = { 0, 0, 0 } ;
                 GrB_free (&v_batch) ;
                 LAGraph_tic (tic) ;
-                LAGRAPH_OK (LAGraphX_bc_batch3 (&v_batch, A, AT, vertex_list,
-                    batch_size, timing)) ;
+                LAGRAPH_OK (LAGraphX_bc_batch3 (&v_batch, A,
+                    ((AT == NULL) ? A : AT),
+                    vertex_list, batch_size, timing)) ;
                 double t2 = LAGraph_toc (tic) ;
         //      total_timing [0] += timing [0] ;        // pushpull
         //      total_timing [1] += timing [1] ;        // allpush
@@ -408,8 +402,9 @@ int main (int argc, char **argv)
                 GxB_set (GxB_NTHREADS, Nthreads [t]) ;
                 GrB_free (&v_batch4) ;
                 LAGraph_tic (tic) ;
-                LAGRAPH_OK (LAGraph_bc_batch4 (&v_batch4, A, AT, vertex_list,
-                    batch_size)) ;
+                LAGRAPH_OK (LAGraph_bc_batch4 (&v_batch4, A,
+                    ((AT == NULL) ? A : AT),
+                    vertex_list, batch_size)) ;
                 double t2 = LAGraph_toc (tic) ;
                 printf ("Batch v4 time %2d:%2d: %12.4f (sec), rate: %10.3f\n",
                     c, Nthreads [t], t2, 1e-6*((double) nvals) / t2) ;
@@ -418,7 +413,6 @@ int main (int argc, char **argv)
         }
 
         // back to default
-        GxB_set (GxB_CHUNK, 4096) ;
         GxB_set (GxB_NTHREADS, nthreads_max) ;
 
         // GxB_print (v_batch4, 2) ;
@@ -566,7 +560,7 @@ int main (int argc, char **argv)
             total_time_1 / ntrials);
     }
 
-    if (total_time_x3 [1] > 0 && ntrials > 1)
+    if (total_time_x3 [1] > 0) // && ntrials > 1)
     {
         for (int c = 1 ; c <= nchunks ; c++)
         {
@@ -577,13 +571,14 @@ int main (int argc, char **argv)
                 double t2 = total_time_x3 [c][t] / ntrials ;
                 printf ("Ave (BatchX3) %2d:%2d: %10.3f sec, rate %10.3f\n",
                     c, Nthreads [t], t2, 1e-6*((double) nvals) / t2) ;
+                LAGr_log (matrix_name, "BatchX3", Nthreads [t], t2) ;
             }
         }
     }
 
     printf ("\n") ;
 
-    if (total_time_x3 [1] > 0 && ntrials > 1)
+    if (total_time_x3 [1] > 0) // && ntrials > 1)
     {
         for (int c = 1 ; c <= nchunks ; c++)
         {
@@ -594,6 +589,7 @@ int main (int argc, char **argv)
                 double t2 = total_time_4 [c][t] / ntrials ;
                 printf ("Ave (Batch4)  %2d:%2d: %10.3f sec, rate %10.3f\n",
                     c, Nthreads [t], t2, 1e-6*((double) nvals) / t2) ;
+                LAGr_log (matrix_name, "Batch4", Nthreads [t], t2) ;
             }
         }
     }

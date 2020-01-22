@@ -182,7 +182,7 @@ See LICENSE file for more details.
 
 #ifndef NDEBUG
     for (int i = 0 ; i < print_size; i++){
-        printf("d_out [%d]=%ld\n", i, d_out [i]);
+        printf("d_out [%d]=%g\n", i, d_out [i]);
     }
 #endif
 

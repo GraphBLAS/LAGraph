@@ -54,19 +54,24 @@
     GrB_free (&M) ;         \
     GrB_free (&A) ;
 
-void print_method (int method)
+char *method_name (int method)
 {
     switch (method)
     {
-        case 0:  printf ("minitri:    nnz (A*E == 2) / 3\n"  ) ; break ;
-        case 1:  printf ("Burkhardt:  sum ((A^2) .* A) / 6\n") ; break ;
-        case 2:  printf ("Cohen:      sum ((L*U) .* A) / 2\n") ; break ;
-        case 3:  printf ("Sandia:     sum ((L*L) .* L)\n"    ) ; break ;
-        case 4:  printf ("Sandia2:    sum ((U*U) .* U)\n"    ) ; break ;
-        case 5:  printf ("SandiaDot:  sum ((L*U') .* L)\n"   ) ; break ;
-        case 6:  printf ("SandiaDot2: sum ((U*L') .* U)\n"   ) ; break ;
-        default: printf ("invalid method\n") ; abort ( ) ;
+        case 0:  return ("minitri:    nnz (A*E == 2) / 3"  ) ;
+        case 1:  return ("Burkhardt:  sum ((A^2) .* A) / 6") ;
+        case 2:  return ("Cohen:      sum ((L*U) .* A) / 2") ;
+        case 3:  return ("Sandia:     sum ((L*L) .* L)"    ) ;
+        case 4:  return ("Sandia2:    sum ((U*U) .* U)"    ) ;
+        case 5:  return ("SandiaDot:  sum ((L*U') .* L)"   ) ;
+        case 6:  return ("SandiaDot2: sum ((U*L') .* U)"   ) ;
+        default: return ("invalid method\n") ; abort ( ) ;
     }
+}
+
+void print_method (int method)
+{
+    printf ("%s\n", method_name (method)) ;
 }
 
 int main (int argc, char **argv)
@@ -119,6 +124,7 @@ int main (int argc, char **argv)
 
     double tic [2] ;
     LAGraph_tic (tic) ;
+    char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
     
     if (argc > 1)
     {
@@ -254,6 +260,8 @@ int main (int argc, char **argv)
             printf ("nthreads: %3d time: %12.6f rate: %6.2f\n", nthreads, ttot,
                 1e-6 * nvals / ttot) ;
             if (nt2 != ntriangles) { printf ("Test failure!\n") ; abort ( ) ; }
+
+            LAGr_log (matrix_name, method_name (method), nthreads, ttot) ;
 
             if (ttot < t_best)
             {

@@ -18,9 +18,9 @@ JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/gap_cc_test < ../BFS/west0067.mtx
-	./build/gap_cc_test < ldbc-wcc-example.mtx
-	./build/gap_cc_test < tree-example.mtx
+	./build/gap_cc_test ../BFS/west0067.mtx
+	./build/gap_cc_test ldbc-wcc-example.mtx
+	./build/gap_cc_test tree-example.mtx
 
 # build test
 compile:

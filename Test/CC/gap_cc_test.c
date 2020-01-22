@@ -114,6 +114,8 @@ int main (int argc, char **argv)
 
     GrB_Index n;
 
+    char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
+
     // LAGRAPH_OK (LAGraph_mmread (&A, f)) ;
     if (argc > 1)
     {
@@ -210,6 +212,7 @@ int main (int argc, char **argv)
         }
         printf("FastSV:   threads: %2d time: %10.4f  # of CC: %lu\n",
             nthreads, t1/ NTRIALS, nCC) ;
+        LAGr_log (matrix_name, "FastSV", nthreads, t1/NTRIALS) ;
 
         t1 = 0 ;
         for (int k = 0 ; k < NTRIALS ; k++)
@@ -222,6 +225,7 @@ int main (int argc, char **argv)
         }
         printf("FastSV5:  threads: %2d time: %10.4f  # of CC: %lu\n",
             nthreads, t1 / NTRIALS, nCC) ;
+        LAGr_log (matrix_name, "FastSV5", nthreads, t1/NTRIALS) ;
 
         t1 = 0 ;
         for (int k = 0 ; k < NTRIALS ; k++)
@@ -234,6 +238,7 @@ int main (int argc, char **argv)
         }
         printf("FastSV5a: threads: %2d time: %10.4f  # of CC: %lu\n",
             nthreads, t1 / NTRIALS, nCC) ;
+        LAGr_log (matrix_name, "FastSV5a", nthreads, t1/NTRIALS) ;
 
         t1 = 0 ;
         for (int k = 0 ; k < NTRIALS ; k++)
@@ -246,6 +251,7 @@ int main (int argc, char **argv)
         }
         printf("FastSV5b: threads: %2d time: %10.4f  # of CC: %lu\n",
             nthreads, t1 / NTRIALS, nCC) ;
+        LAGr_log (matrix_name, "FastSV5b", nthreads, t1/NTRIALS) ;
 
         /*
         LAGraph_tic (tic) ;
