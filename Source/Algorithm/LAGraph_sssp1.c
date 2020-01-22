@@ -56,11 +56,12 @@
 {                                           \
     GrB_free(&AL);                          \
     GrB_free(&AH);                          \
+    GrB_free(&lBound);                      \
+    GrB_free(&uBound);                      \
     GrB_free(&t);                           \
     GrB_free(&tmasked);                     \
     GrB_free(&tReq);                        \
     GrB_free(&tBi);                         \
-    GrB_free(&tnew);                        \
     GrB_free(&tless);                       \
     GrB_free(&s);                           \
 }
@@ -97,7 +98,6 @@ GrB_Info LAGraph_sssp1         // single source shortest paths
 
     // GrB_BOOL vectors
     GrB_Vector tBi = NULL;
-    GrB_Vector tnew = NULL;
     GrB_Vector tless = NULL;
     GrB_Vector s = NULL;
 
@@ -134,7 +134,6 @@ GrB_Info LAGraph_sssp1         // single source shortest paths
     LAGr_Vector_new(&tReq, GrB_INT32, n);
 
     LAGr_Vector_new(&tBi, GrB_BOOL, n);
-    LAGr_Vector_new(&tnew, GrB_BOOL, n);
     LAGr_Vector_new(&tless, GrB_BOOL, n);
     LAGr_Vector_new(&s, GrB_BOOL, n);
 

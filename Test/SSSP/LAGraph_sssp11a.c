@@ -59,6 +59,8 @@
 {                                           \
     GrB_free(&AL);                          \
     GrB_free(&AH);                          \
+    GrB_free(&lBound);                      \
+    GrB_free(&uBound);                      \
     GrB_free(&t);                           \
     GrB_free(&tmasked);                     \
     GrB_free(&tReq);                        \
