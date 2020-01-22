@@ -219,6 +219,10 @@ int main (int argc, char **argv)
     int method_best = -1 ;
     int nthreads_best = -1 ;
 
+
+    // kron: input graph: nodes: 134217726 edges: 4223264644
+    // fails on methods 3 and 4.
+
     // try all methods 3 to 6
     // for (int method = 3 ; method <= 6 ; method++)
 
@@ -228,8 +232,12 @@ int main (int argc, char **argv)
 
         printf ("\nMethod: ") ;
         print_method (method) ;
+        if (n == 134217726)
+        {
+            printf ("kron fails on method %d; skipped\n", method) ;
+            continue ;
+        }
 
-        double t_sequential ;
         for (int t = 1 ; t <= nt ; t++)
         {
             int nthreads = Nthreads [t] ;

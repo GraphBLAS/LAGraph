@@ -45,7 +45,7 @@
 #include "../../Source/Utility/LAGraph_internal.h"
 #include "bfs_test.h"
 
-#define NTHREAD_LIST 8
+#define NTHREAD_LIST 2
 #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 6
@@ -234,7 +234,7 @@ int main (int argc, char **argv)
     // get the source nodes
     //--------------------------------------------------------------------------
 
-    #define NSOURCES 1
+    #define NSOURCES 64
 
     if (SourceNodes == NULL)
     {
@@ -287,7 +287,7 @@ int main (int argc, char **argv)
     LAGraph_set_nthreads (nthreads_max) ;
     printf ( "\n") ;
 
-    #if 1
+    #if 0
     // dump the results so it can be checked
     sprintf (filename, "v_%d_simple.mtx", (int) n) ;
     f = fopen (filename, "w") ;
@@ -358,7 +358,7 @@ int main (int argc, char **argv)
     LAGraph_set_nthreads (nthreads_max) ;
     printf ( "\n") ;
 
-    #if 1
+    #if 0
     LAGraph_tic (tic) ;
     printf ("saving results ...\n")  ;
 
