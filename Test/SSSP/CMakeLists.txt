@@ -50,10 +50,10 @@ if ( CMAKE_VERSION VERSION_GREATER "3.0" )
     cmake_policy ( SET CMP0048 NEW )
 endif ( )
 
-project ( sssp_test )
+project ( gap_sssp_test )
 
 #-------------------------------------------------------------------------------
-# determine build type
+# deteurmine build type
 #-------------------------------------------------------------------------------
 
 include ( GNUInstallDirs )
@@ -124,7 +124,7 @@ if ( "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
         message ( FATAL_ERROR "gcc version must be at least 4.9" )
     endif ( )
 elseif ( "${CMAKE_C_COMPILER_ID}" STREQUAL "Intel" )
-    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -g " )
+    # set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -g " )
     # options for icc: also needs -std=c11
     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -std=c11 " )
     # check all warnings:
@@ -134,7 +134,7 @@ elseif ( "${CMAKE_C_COMPILER_ID}" STREQUAL "Intel" )
     endif ( )
 elseif ( "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang" )
     # options for clang
-    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -std=c11 -g " )
+    # set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -std=c11 -g " )
     if ( CMAKE_C_COMPILER_VERSION VERSION_LESS 3.3 )
         message ( FATAL_ERROR "clang version must be at least 3.3" )
     endif ( )
@@ -207,14 +207,14 @@ message ( STATUS "CMAKE C flags: " ${CMAKE_C_FLAGS} )
 #-------------------------------------------------------------------------------
 
 set (SSSP_TEST_SRC
-     sssp_test.c LAGraph_sssp11a.c LAGraph_sssp11b.c LAGraph_sssp2.c)
+     gap_sssp_test.c LAGraph_sssp11a.c LAGraph_sssp11b.c LAGraph_sssp2.c)
 
 set (SSSP_CHECK_SRC
         sssp_check.c)
 
-add_executable ( sssp_test ${SSSP_TEST_SRC} )
+add_executable ( gap_sssp_test ${SSSP_TEST_SRC} )
 add_executable ( sssp_check ${SSSP_CHECK_SRC} )
 
 # Libraries required for Demo programs
-target_link_libraries ( sssp_test graphblas lagraph m )
+target_link_libraries ( gap_sssp_test graphblas lagraph m )
 target_link_libraries ( sssp_check graphblas lagraph m )

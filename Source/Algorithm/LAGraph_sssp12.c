@@ -1,6 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_sssp11: Single source shortest path with delta stepping, same as
-// LAGraph_sssp1 but with timing
+// LAGraph_sssp12: single-source shortest path
 //------------------------------------------------------------------------------
 
 /*
@@ -34,7 +33,7 @@
 */
 
 //------------------------------------------------------------------------------
-// LAGraph_sssp: Single source shortest path with delta stepping.
+// LAGraph_sssp12: Single source shortest path with delta stepping.
 // Contributed by Jinhao Chen, Scott Kolodziej and Tim Davis, Texas A&M
 // University.
 // Adapted from GraphBLAS Template Library (GBTL) by Scott McMillian and Tze
@@ -70,7 +69,7 @@
 // TODO assert the input matrix has type GrB_INT32
 // TODO try different delta (for the GAP matrices)
 
-GrB_Info LAGraph_sssp11         // single source shortest paths
+GrB_Info LAGraph_sssp12         // single source shortest paths
 (
     GrB_Vector *path_length,   // path_length(i) is the length of the shortest
                                // path from the source vertex to vertex i
@@ -218,6 +217,7 @@ GrB_Info LAGraph_sssp11         // single source shortest paths
 
     while (tmasked_nvals > 0)
     {
+        printf ("\n============================= outer: %d\n", i) ;
         // tmasked = select (tmasked < (i+1)*delta)
         LAGraph_tic (tic);
         LAGr_Scalar_setElement (uBound, (i+1) * delta);
@@ -239,6 +239,7 @@ GrB_Info LAGraph_sssp11         // single source shortest paths
 
         while (tmasked_nvals > 0)
         {
+            printf ("\n=============== inner:\n") ;
             // tReq = AL' (min.+) tmasked
             LAGraph_tic (tic);
             LAGr_vxm (tReq, NULL, NULL, GxB_MIN_PLUS_INT32, tmasked, AL, NULL) ;
@@ -341,6 +342,8 @@ GrB_Info LAGraph_sssp11         // single source shortest paths
                 fprintf (stderr, "inner tmasked has %ld nnz\n",tmasked_nvals);
             }
         }
+
+        printf ("\n=============== next outer:\n") ;
 
         // tmasked<s> = t
         // GrB_apply is faster than GrB_assign with GrB_DESC_R or GrB_DESC_RS

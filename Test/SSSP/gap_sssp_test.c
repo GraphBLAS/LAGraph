@@ -46,6 +46,9 @@
 
 #include "sssp_test.h"
 
+#define NTHREAD_LIST 2
+#define THREAD_LIST 0
+
 #define LAGRAPH_FREE_ALL            \
 {                                   \
     GrB_free (&A_in);               \
@@ -64,7 +67,7 @@ int main (int argc, char **argv)
 {
     GrB_Info info;
 
-    GrB_Index s = 0;
+    GrB_Index ignore, s = 0 ;
     int32_t delta = 3;
 
     GrB_Matrix A_in = NULL;
@@ -84,6 +87,28 @@ int main (int argc, char **argv)
     //GxB_set(GxB_CHUNK, 4096) ;
     // LAGraph_set_nthreads (1) ;
 
+    int nt = NTHREAD_LIST ;
+    int Nthreads [20] = { 0, THREAD_LIST } ;
+    int nthreads_max = LAGraph_get_nthreads ( ) ;
+    if (Nthreads [1] == 0)
+    {
+        // create thread list automatically
+        Nthreads [1] = nthreads_max ;
+        for (int t = 2 ; t <= nt ; t++)
+        {
+            Nthreads [t] = Nthreads [t-1] / 2 ;
+            if (Nthreads [t] == 0) nt = t-1 ;
+        }
+    }
+    printf ("threads to test: ") ;
+    for (int t = 1 ; t <= nt ; t++)
+    {
+        int nthreads = Nthreads [t] ;
+        if (nthreads > nthreads_max) continue ;
+        printf (" %d", nthreads) ;
+    }
+    printf ("\n") ;
+
     LAGraph_tic (tic);
 
     int batch_size = 4 ;
@@ -91,6 +116,8 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
     // get the matrix
     //--------------------------------------------------------------------------
+
+    char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
 
     if (argc > 1)
     {
@@ -150,8 +177,8 @@ int main (int argc, char **argv)
     }
 
     // get the size of the problem.
-    GrB_Index nvals;
-    GrB_Matrix_nvals (&nvals, A_in);
+    GrB_Index anz ;
+    GrB_Matrix_nvals (&anz, A_in);
     GrB_Index nrows, ncols;
     LAGr_Matrix_nrows(&nrows, A_in);
     LAGr_Matrix_ncols(&ncols, A_in);
@@ -215,7 +242,7 @@ int main (int argc, char **argv)
             // SourceNodes [k] = i 
             LAGRAPH_OK (GrB_Matrix_setElement (SourceNodes, i, k, 0)) ;
         }
-        GrB_Matrix_nvals (&nvals, SourceNodes);
+        GrB_Matrix_nvals (&ignore, SourceNodes);
     }
 
     double t_read = LAGraph_toc (tic) ;
@@ -241,7 +268,6 @@ int main (int argc, char **argv)
     // get the number of source nodes
     GrB_Index nsource;
     LAGRAPH_OK (GrB_Matrix_nrows (&nsource, SourceNodes));
-    GrB_Index ignore;
     LAGr_Matrix_nvals (&ignore, SourceNodes);
 
     // try converting to column format (this is slower than the default)
@@ -255,15 +281,23 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     int nthreads = LAGraph_get_nthreads();
-    printf ("input graph: nodes: %"PRIu64" edges: %"PRIu64" nthreads %d\n",
-        n, nvals, nthreads) ;
+    printf ("input graph: nodes: %"PRIu64" edges: %"PRIu64" max nthreads %d\n",
+        n, anz, nthreads) ;
 
-    int ntrials =  1;//(int) nsource;   // TODO for GAP use nsource
+    int ntrials =  1 ; // (int) nsource ;   // TODO for GAP use nsource
+
+for (int tt = 1 ; tt <= nt ; tt++)
+{
+    int nthreads = Nthreads [tt] ;
+    if (nthreads > nthreads_max) continue ;
+    LAGraph_set_nthreads (nthreads) ;
+
     double total_time1 = 0 ;
     double total_time2 = 0 ;
     double total_time3 = 0 ;
     double total_time31 = 0 ;
     double total_time32 = 0 ;
+    double total_time_sssp12 = 0 ;
     double t1, t2, t3;
 
     for (int trial = 0 ; trial < ntrials ; trial++)
@@ -280,10 +314,11 @@ int main (int argc, char **argv)
         //printf ("\nTrial %d : source node: %"PRIu64"\n", trial, s) ;
 
         //----------------------------------------------------------------------
-        // Compute shortest path using delta stepping with given node and delta
+        // sssp
         //----------------------------------------------------------------------
 
-        #if 0
+#if 0
+
         printf(" - Start Test: delta-stepping Single Source Shortest Paths"
             " (apply operator)\n");
 
@@ -296,14 +331,16 @@ int main (int argc, char **argv)
         // stop the timer
         t2 = LAGraph_toc (tic) ;
         printf ("SSSP (apply)    time: %12.6g (sec), rate:"
-            " %12.6g (1e6 edges/sec)\n", t2, 1e-6*((double) nvals) / t2) ;
+            " %12.6g (1e6 edges/sec)\n", t2, 1e-6*((double) anz) / t2) ;
 
         total_time2 += t2;
-        #endif
+
+#endif
 
         //----------------------------------------------------------------------
-        // Compute shortest path using delta stepping with given node and delta
+        // sssp1
         //----------------------------------------------------------------------
+
 #if 0
         // Start the timer
         LAGraph_tic (tic);
@@ -314,10 +351,14 @@ int main (int argc, char **argv)
         // Stop the timer
         t3 = LAGraph_toc (tic);
         printf ("SSSP1 (select)  time: %12.6g (sec), rate:"
-            " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
+            " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) anz) / t3) ;
 
         total_time3 += t3;
 #endif
+
+        //----------------------------------------------------------------------
+        // sssp11a
+        //----------------------------------------------------------------------
 
 #if 0
         // Start the timer
@@ -328,8 +369,14 @@ int main (int argc, char **argv)
         // Stop the timer
         t3 = LAGraph_toc (tic);
         printf ("SSSP11a(select)  time: %12.6g (sec), rate:"
-            " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
+            " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) anz) / t3) ;
+#endif
 
+        //----------------------------------------------------------------------
+        // sssp11b
+        //----------------------------------------------------------------------
+
+#if 0
         // Start the timer
         LAGraph_tic (tic);
 
@@ -339,9 +386,14 @@ int main (int argc, char **argv)
         // Stop the timer
         t3 = LAGraph_toc (tic);
         printf ("SSSP11b (select)  time: %12.6g (sec), rate:"
-            " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
+            " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) anz) / t3) ;
 #endif
 
+        //----------------------------------------------------------------------
+        // sssp11: with dense vector t
+        //----------------------------------------------------------------------
+
+        printf ("\n---------------------- sssp11: nthreads %d\n", nthreads) ;
 
         // Start the timer
         LAGraph_tic (tic);
@@ -351,9 +403,55 @@ int main (int argc, char **argv)
         // Stop the timer
         t3 = LAGraph_toc (tic);
         //printf ("SSSP11 (select)  time: %12.6g (sec), rate:"
-        //    " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
-
+        //    " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) anz) / t3) ;
         total_time31 += t3;
+
+        printf ("\n sssp11: done\n\n") ;
+
+        #if 1
+        // save the results
+        if (tt == 1)
+        {
+            char savefilename [2000] ;
+            sprintf (savefilename, "pathlen_%lu_sssp11.mtx", n) ;
+            FILE *savefile = fopen (savefilename, "w") ;
+            LAGraph_mmwrite ((GrB_Matrix) path_lengths1, savefile) ;
+            fclose (savefile) ;
+        }
+        #endif
+
+        //----------------------------------------------------------------------
+        // sssp12: with dense vector t
+        //----------------------------------------------------------------------
+
+        printf ("\n---------------------- sssp12: nthreads %d\n", nthreads) ;
+
+        // Start the timer
+        LAGraph_tic (tic) ;
+        GrB_free (&path_lengths1) ;
+        LAGRAPH_OK (LAGraph_sssp12 (&path_lengths1, A, s, delta, true)) ;
+
+        // Stop the timer
+        t3 = LAGraph_toc (tic) ;
+        total_time_sssp12 += t3 ;
+
+        printf ("\n sssp12: done\n") ;
+
+        #if 1
+        // save the results
+        if (tt == 1)
+        {
+            char savefilename [2000] ;
+            sprintf (savefilename, "pathlen_%lu_sssp12.mtx", n) ;
+            FILE *savefile = fopen (savefilename, "w") ;
+            LAGraph_mmwrite ((GrB_Matrix) path_lengths1, savefile) ;
+            fclose (savefile) ;
+        }
+        #endif
+
+        //----------------------------------------------------------------------
+        // sssp2
+        //----------------------------------------------------------------------
 
 #if 0
         // Start the timer
@@ -365,7 +463,7 @@ int main (int argc, char **argv)
         // Stop the timer
         t3 = LAGraph_toc (tic);
         //printf ("SSSP2 (select)  time: %12.6g (sec), rate:"
-        //    " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
+        //    " %12.6g (1e6 edges/sec)\n", t3, 1e-6*((double) anz) / t3) ;
         total_time32 += t3;
 #endif
 
@@ -373,28 +471,31 @@ int main (int argc, char **argv)
         // find shortest path using BF on node s with LAGraph_pure_c
         //----------------------------------------------------------------------
 
-#if 0
+#if 1
         // get the triplet form for the Bellman-Ford function
-        I = LAGraph_malloc (nvals, sizeof(GrB_Index)) ;
-        J = LAGraph_malloc (nvals, sizeof(GrB_Index)) ;
-        W = LAGraph_malloc (nvals, sizeof(int32_t)) ;
+        LAGr_Matrix_nvals (&anz, A) ;
+        I = LAGraph_malloc (anz, sizeof(GrB_Index)) ;
+        J = LAGraph_malloc (anz, sizeof(GrB_Index)) ;
+        W = LAGraph_malloc (anz, sizeof(int32_t)) ;
         if (I == NULL || J == NULL || W == NULL)
         {
             LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
         }
-        LAGRAPH_OK (GrB_Matrix_extractTuples_INT32(I, J, W, &nvals, A));
+        LAGRAPH_OK (GrB_Matrix_extractTuples_INT32(I, J, W, &anz, A));
+
+        printf ("BF source: %lu (zero-based)\n", s) ;
 
         // start the timer
         LAGraph_tic (tic) ;
 
         LAGRAPH_FREE (d) ;
         LAGRAPH_FREE (pi) ;
-        LAGRAPH_OK (LAGraph_BF_pure_c (&d, &pi, s, n, nvals, I, J, W)) ;
+        LAGRAPH_OK (LAGraph_BF_pure_c (&d, &pi, s, n, anz, I, J, W)) ;
 
         // stop the timer
         t1 = LAGraph_toc (tic) ;
-        printf ("BF_pure_c       time: %12.6g (sec), rate:"
-            " %g (1e6 edges/sec)\n", t1, 1e-6*((double) nvals) / t1) ;
+        // printf ("BF_pure_c       time: %12.6g (sec), rate:"
+        //     " %g (1e6 edges/sec)\n", t1, 1e-6*((double) anz) / t1) ;
 
         total_time1 += t1;
 
@@ -404,11 +505,65 @@ int main (int argc, char **argv)
         LAGRAPH_FREE (W) ;
 #endif
 
-        //----------------------------------------------------------------------
-        // write the result to result file if there is none
-        //----------------------------------------------------------------------
+// sample input:
+
+//      %%MatrixMarket matrix coordinate real general
+//      %%GraphBLAS GrB_INT32
+//      % Matrix from the cover of "Graph Algorithms in the Language of Linear
+//      % Algebra", Kepner and Gilbert.  Note that cover shows A'.  This is A.
+//      7 7 12
+//      4 1 4
+//      1 2 2
+//      4 3 1
+//      6 3 5
+//      7 3 9
+//      1 4 7
+//      7 4 1
+//      2 5 5
+//      7 5 1
+//      3 6 1
+//      5 6 7
+//      2 7 8
+
+// sample output:
+
+//      %%MatrixMarket matrix coordinate integer general
+//      %%GraphBLAS GrB_INT32
+//      %% BF path len for cover.mtx
+//      %% source node: 1 (in 1-based notation)
+//      7 1 7
+//      1 1 0
+//      2 1 2
+//      3 1 8
+//      4 1 7
+//      5 1 7
+//      6 1 9
+//      7 1 10
+
+        #if 1
+        // save the results
+        if (tt == 1)
+        {
+            char savefilename [2000] ;
+            sprintf (savefilename, "pathlen_%lu_bf.mtx", n) ;
+            FILE *savefile = fopen (savefilename, "w") ;
+            // LAGraph_mmwrite ((GrB_Matrix) path_lengths1, savefile) ;
+            fprintf (savefile, "%%%%MatrixMarket matrix coordinate integer"
+                " general\n%%%%GraphBLAS GrB_INT32\n") ;
+            fprintf (savefile, "%%%% BF path len for %s\n", matrix_name) ;
+            fprintf (savefile, "%%%% source node: %lu (in 1-based notation)\n",
+                s+1) ;
+            fprintf (savefile, "%lu 1 %lu\n", n, n) ;
+            for (int i = 0 ; i < n ; i++)
+            {
+                fprintf (savefile, "%d 1 %d\n", i+1, d [i]) ;
+            }
+            fclose (savefile) ;
+        }
+        #endif
 
 #if 0
+        // write the result to result file if there is none
         //if( access( fname, F_OK ) == -1 )// check if the result file exists
         {
             FILE *file = fopen(fname)
@@ -439,6 +594,7 @@ int main (int argc, char **argv)
                 printf ("  x = %g\n", x);
                 printf ("  d = %d\n", d[i]);
                 printf ("\n") ;
+                abort ( ) ;
             }
             #endif
 
@@ -452,35 +608,76 @@ int main (int argc, char **argv)
                 printf ("  x = %d\n", x1);
                 printf ("  d = %d\n", d[i]);
                 printf ("\n") ;
+                abort ( ) ;
             }
         }
 #endif
 
-        LAGRAPH_FREE (d) ;
+        // free the result from LAGraph_BF_pure_c
+        // LAGRAPH_FREE (d) ;
+
     }
+
+    //--------------------------------------------------------------------------
+    // report results
+    //--------------------------------------------------------------------------
+
+    //printf ("ntrials: %d\n", ntrials) ;
+    double e = (double) anz ;
+
+    if (total_time1 > 0)
+    {
+        total_time1 = total_time1 / ntrials ;
+        printf ("%2d: BF      time: %14.6f sec  rate: %8.2f\n",
+            nthreads, total_time1, 1e-6 * e / total_time1) ;
+        LAGr_log (matrix_name, "BF", nthreads, total_time1) ;
+    }
+
+    #if 0
+    printf ("Average time per trial (apply operator): %g sec\n",
+        total_time2 / ntrials);
+    #endif
+
+    if (total_time3 > 0)
+    {
+        total_time3 = total_time3 / ntrials ;
+        printf ("%2d: SSSP1   time: %14.6f sec  rate: %8.2f (delta %d)\n",
+            nthreads, total_time3, 1e-6 * e / total_time3, delta) ;
+        LAGr_log (matrix_name, "SSSP1", nthreads, total_time3) ;
+    }
+
+    if (total_time31 > 0)
+    {
+        total_time31 = total_time31 / ntrials ;
+        printf ("%2d: SSSP11  time: %14.6f sec  rate: %8.2f (delta %d)\n",
+            nthreads, total_time31, 1e-6 * e / total_time31, delta) ;
+        LAGr_log (matrix_name, "SSSP11", nthreads, total_time31) ;
+    }
+
+    if (total_time32 > 0)
+    {
+        total_time32 = total_time32 / ntrials ;
+        printf ("%2d: SSSP2   time: %14.6f sec  rate: %8.2f (delta %d)\n",
+            nthreads, total_time32, 1e-6 * e / total_time32, delta) ;
+        LAGr_log (matrix_name, "SSSP2", nthreads, total_time32) ;
+    }
+
+    if (total_time_sssp12 > 0)
+    {
+        total_time_sssp12 = total_time_sssp12 / ntrials ;
+        printf ("%2d: SSSP12  time: %14.6f sec  rate: %8.2f (delta %d)\n",
+            nthreads, total_time_sssp12, 1e-6 * e / total_time_sssp12, delta) ;
+        LAGr_log (matrix_name, "SSSP12", nthreads, total_time_sssp12) ;
+    }
+}
 
     //--------------------------------------------------------------------------
     // free all workspace and finish
     //--------------------------------------------------------------------------
 
-    //printf ("ntrials: %d\n", ntrials) ;
-    #if 0
-    printf ("Average time per trial (Bellman-Ford pure C): %12.6g sec\n",
-        total_time1 / ntrials);
-    #endif
-    #if 0
-    printf ("Average time per trial (apply operator): %g sec\n",
-        total_time2 / ntrials);
-    #endif
-    printf ("Average time per trial (SSSP1, with select):  %12.6g sec "
-        "(delta %d)\n", total_time3 / ntrials, delta);
-    printf ("Average time per trial (SSSP11, with select):  %12.6g sec "
-        "(delta %d)\n", total_time31 / ntrials, delta);
-    printf ("Average time per trial (SSSP2, with select):  %12.6g sec "
-        "(delta %d)\n", total_time32 / ntrials, delta);
-
     LAGRAPH_FREE_ALL;
     LAGRAPH_OK (LAGraph_finalize());
+
 #if 0
     if(!test_pass)
     {
@@ -491,6 +688,7 @@ int main (int argc, char **argv)
         printf("all tests passed\n");
     }
 #endif
+
     return (GrB_SUCCESS);
 }
 
