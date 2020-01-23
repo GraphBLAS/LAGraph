@@ -1,8 +1,8 @@
 #!/bin/sh
 
-./build/gap_sssp_test /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron.grb       27 /raid/hyper/gapbs/GAP/GAP-kron/GAP-kron_sources.mtx
-./build/gap_sssp_test /raid/hyper/gapbs/GAP/GAP-twitter/GAP-twitter.grb 51 /raid/hyper/gapbs/GAP/GAP-twitter/GAP-twitter_sources.mtx
-./build/gap_sssp_test /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand.grb     35 /raid/hyper/gapbs/GAP/GAP-urand/GAP-urand_sources.mtx
-./build/gap_sssp_test /raid/hyper/gapbs/GAP/GAP-web/GAP-web.grb         150 /raid/hyper/gapbs/GAP/GAP-web/GAP-web_sources.mtx
-./build/gap_sssp_test /raid/hyper/gapbs/GAP/GAP-road/GAP-road.grb       200000 /raid/hyper/gapbs/GAP/GAP-road/GAP-road_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-kron/GAP-kron.grb       27      ~/GAP/GAP-kron/GAP-kron_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-twitter/GAP-twitter.grb 51      ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-urand/GAP-urand.grb     35      ~/GAP/GAP-urand/GAP-urand_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb         150     ~/GAP/GAP-web/GAP-web_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-road/GAP-road.grb       200000  ~/GAP/GAP-road/GAP-road_sources.mtx
 
