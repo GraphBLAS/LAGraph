@@ -427,7 +427,8 @@ for (int tt = 1 ; tt <= nt ; tt++)
         // sssp12: with dense vector t
         //----------------------------------------------------------------------
 
-        printf ("\n----sssp12: nthreads %d trial: %d\n", nthreads, trial) ;
+        printf ("\n----sssp12: nthreads %d trial: %d source: %lu (0-based)\n",
+            nthreads, trial, s) ;
 
         // Start the timer
         LAGraph_tic (tic) ;
