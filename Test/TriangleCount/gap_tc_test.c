@@ -82,16 +82,15 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     GrB_Info info ;
-    GrB_Matrix A = NULL, C = NULL, M = NULL ;
 
+    GrB_Matrix A = NULL, C = NULL, M = NULL ;
     #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
         && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,0,1) )
     GxB_Scalar thunk = NULL ;
     #else
     GrB_Vector thunk = NULL ;     // unused, for LAGRAPH_FREE_ALL
     #endif
-
-    LAGraph_init ( ) ;
+    LAGRAPH_OK (LAGraph_init ( )) ;
 
     int ntrials = 3 ;
     printf ("# of trials: %d\n", ntrials) ;

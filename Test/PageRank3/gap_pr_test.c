@@ -52,24 +52,20 @@ See LICENSE file for more details.
     if (P != NULL) { free (P) ; P = NULL ; }    \
     GrB_free (&A) ;                             \
     GrB_free (&A_orig) ;                        \
+    GrB_free (&A_temp) ;                        \
     GrB_free (&PR) ;                            \
     GrB_free (&d_in) ;                          \
     GrB_free (&d_out) ;                         \
-    GrB_free (&A_temp) ;                        \
 }
 
 int main (int argc, char **argv)
 {
-
     GrB_Info info ;
-    GrB_Matrix A = NULL ;
-    GrB_Matrix A_temp = NULL ;
-    GrB_Matrix A_orig = NULL ;
-    LAGraph_PageRank *P = NULL ;
-    GrB_Vector PR = NULL;
-    GrB_Vector d_out = NULL, d_in = NULL ;
 
-    LAGraph_init ( ) ;
+    LAGraph_PageRank *P = NULL ;
+    GrB_Matrix A = NULL, A_orig = NULL, A_temp = NULL ;
+    GrB_Vector PR = NULL, d_out = NULL, d_in = NULL ;
+    LAGRAPH_OK (LAGraph_init ( )) ;
 
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;

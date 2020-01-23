@@ -573,6 +573,7 @@ GrB_Info LAGraph_mmwrite
             }                                                               \
             nvals_printed++ ;                                               \
         }                                                                   \
+        LAGRAPH_FREE (X) ;                                                  \
     }
 
     #define ARG(X) X

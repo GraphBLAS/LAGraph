@@ -83,9 +83,9 @@ GrB_Index countCC (GrB_Vector f, GrB_Index n)
 int main (int argc, char **argv)
 {
     GrB_Info info ;
+
     GrB_Matrix A = NULL, S = NULL ;
     GrB_Vector result = NULL ;
-
     LAGRAPH_OK (LAGraph_init ( )) ;
 
     int nt = NTHREAD_LIST ;

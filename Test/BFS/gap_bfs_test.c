@@ -63,10 +63,7 @@
 
 int main (int argc, char **argv)
 {
-
     GrB_Info info ;
-    uint64_t seed = 1 ;
-    FILE *f ;
 
     GrB_Matrix AT = NULL ;
     GrB_Matrix A = NULL ;
@@ -74,8 +71,10 @@ int main (int argc, char **argv)
     GrB_Vector v = NULL ;
     GrB_Vector pi = NULL ;
     GrB_Matrix SourceNodes = NULL ;
-
     LAGRAPH_OK (LAGraph_init ( )) ;
+
+    uint64_t seed = 1 ;
+    FILE *f ;
     int nthreads ;
 
     int nt = NTHREAD_LIST ;

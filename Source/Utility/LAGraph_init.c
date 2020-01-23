@@ -40,6 +40,8 @@
 // See also LAGraph_xinit.
 
 #include "LAGraph_internal.h"
+#include <malloc.h>
+// #include <gnu/libc-version.h>
 
 GrB_Info LAGraph_init ( )
 {
@@ -50,6 +52,15 @@ GrB_Info LAGraph_init ( )
     info = LAGraph_xinit (mxMalloc, mxCalloc, mxRealloc, mxFree, false) ;
     #else
     // use ANSI C memory allocation functions
+    #ifdef __linux__
+    // Use mallopt to speedup malloc and free on Linux.  Otherwise, it can take
+    // several seconds to free a large block of memory.  For this to be
+    // effective, LAGraph_init must be called before the user program does any
+    // mallocs or frees itself.
+    mallopt (M_MMAP_MAX, 0) ;           // disable mmap; it's too slow
+    mallopt (M_TRIM_THRESHOLD, -1) ;    // disable sbrk trimming
+    mallopt (M_TOP_PAD, 16*1024*1024) ; // increase padding to speedup malloc
+    #endif
     info = LAGraph_xinit (malloc, calloc, realloc, free, true) ;
     #endif
 
@@ -57,7 +68,9 @@ GrB_Info LAGraph_init ( )
     char *library_date ;
     GxB_get (GxB_LIBRARY_DATE, &library_date) ;
     printf ("SuiteSparse:GraphBLAS %s\n", library_date) ;
+    // printf ("glibc %s\n", gnu_get_libc_version ( )) ;
     #endif
 
     return (info) ;
 }
+

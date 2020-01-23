@@ -41,8 +41,8 @@
 // sssp_test < in.mtx > out
 // in.mtx is the Matrix Market file, out is the level set.
 
-// sssp_test in.mtx source.mtx delta > out
-// sssp_test in.grb source.mtx delta > out
+// sssp_test in.mtx delta source.mtx > out
+// sssp_test in.grb delta source.mtx > out
 
 #include "sssp_test.h"
 
@@ -65,27 +65,27 @@
 
 int main (int argc, char **argv)
 {
-    GrB_Info info;
+    GrB_Info info ;
+
+    GrB_Matrix A_in = NULL ;
+    GrB_Matrix A = NULL ;
+    GrB_Matrix SourceNodes = NULL ;
+    GrB_Index *I = NULL, *J = NULL ;    // for col/row indices of entries from A
+    int32_t *W = NULL ;
+    int32_t *d = NULL ;                 // for BF result
+    int64_t *pi = NULL ;
+    GrB_Vector path_lengths = NULL ;
+    GrB_Vector path_lengths1 = NULL ;
+    LAGRAPH_OK (LAGraph_init ( )) ;
 
     GrB_Index ignore, s = 0 ;
     int32_t delta = 3;
 
-    GrB_Matrix A_in = NULL;
-    GrB_Matrix A = NULL;
-    GrB_Matrix SourceNodes = NULL;
-    GrB_Index *I = NULL, *J = NULL; // for col/row indices of entries from A
-    int32_t *W = NULL;
-    int32_t *d = NULL;              // for BF result
-    int64_t *pi = NULL;
-    GrB_Vector path_lengths = NULL;
-    GrB_Vector path_lengths1 = NULL;
+    //GxB_set(GxB_CHUNK, 4096) ;
+    // LAGraph_set_nthreads (1) ;
 
     bool test_pass = true;
     double tic[2];
-
-    LAGRAPH_OK (LAGraph_init());
-    //GxB_set(GxB_CHUNK, 4096) ;
-    // LAGraph_set_nthreads (1) ;
 
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;
@@ -232,13 +232,13 @@ int main (int argc, char **argv)
         // create random source nodes
         //----------------------------------------------------------------------
 
-        #define NSOURCES 1
+        #define NSOURCES 64
 
         LAGRAPH_OK (GrB_Matrix_new (&SourceNodes, GrB_INT64, NSOURCES, 1)) ;
         srand (1) ;
         for (int k = 0 ; k < NSOURCES ; k++)
         {
-            int64_t i = rand ( ) % n ;
+            int64_t i = 1 + rand ( ) % n ;      // 1-based source node
             // SourceNodes [k] = i 
             LAGRAPH_OK (GrB_Matrix_setElement (SourceNodes, i, k, 0)) ;
         }
@@ -283,8 +283,9 @@ int main (int argc, char **argv)
     int nthreads = LAGraph_get_nthreads();
     printf ("input graph: nodes: %"PRIu64" edges: %"PRIu64" max nthreads %d\n",
         n, anz, nthreads) ;
+    printf ("# of source nodes: %lu\n", nsource) ;
 
-    int ntrials =  1 ; // (int) nsource ;   // TODO for GAP use nsource
+    int ntrials = (int) nsource ;
 
 for (int tt = 1 ; tt <= nt ; tt++)
 {
@@ -393,6 +394,7 @@ for (int tt = 1 ; tt <= nt ; tt++)
         // sssp11: with dense vector t
         //----------------------------------------------------------------------
 
+#if 0
         printf ("\n---------------------- sssp11: nthreads %d\n", nthreads) ;
 
         // Start the timer
@@ -408,7 +410,7 @@ for (int tt = 1 ; tt <= nt ; tt++)
 
         printf ("\n sssp11: done\n\n") ;
 
-        #if 1
+        #if 0
         // save the results
         if (tt == 1)
         {
@@ -419,12 +421,13 @@ for (int tt = 1 ; tt <= nt ; tt++)
             fclose (savefile) ;
         }
         #endif
+#endif
 
         //----------------------------------------------------------------------
         // sssp12: with dense vector t
         //----------------------------------------------------------------------
 
-        printf ("\n---------------------- sssp12: nthreads %d\n", nthreads) ;
+        printf ("\n----sssp12: nthreads %d trial: %d\n", nthreads, trial) ;
 
         // Start the timer
         LAGraph_tic (tic) ;
@@ -435,9 +438,9 @@ for (int tt = 1 ; tt <= nt ; tt++)
         t3 = LAGraph_toc (tic) ;
         total_time_sssp12 += t3 ;
 
-        printf ("\n sssp12: done\n") ;
+        // printf ("\n sssp12: done\n") ;
 
-        #if 1
+        #if 0
         // save the results
         if (tt == 1)
         {
@@ -471,41 +474,42 @@ for (int tt = 1 ; tt <= nt ; tt++)
         // find shortest path using BF on node s with LAGraph_pure_c
         //----------------------------------------------------------------------
 
-#if 1
         // get the triplet form for the Bellman-Ford function
-        LAGr_Matrix_nvals (&anz, A) ;
-        I = LAGraph_malloc (anz, sizeof(GrB_Index)) ;
-        J = LAGraph_malloc (anz, sizeof(GrB_Index)) ;
-        W = LAGraph_malloc (anz, sizeof(int32_t)) ;
-        if (I == NULL || J == NULL || W == NULL)
+        if (tt == 1)
         {
-            LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
-        }
-        LAGRAPH_OK (GrB_Matrix_extractTuples_INT32(I, J, W, &anz, A));
+#if 0
+            LAGr_Matrix_nvals (&anz, A) ;
+            I = LAGraph_malloc (anz, sizeof(GrB_Index)) ;
+            J = LAGraph_malloc (anz, sizeof(GrB_Index)) ;
+            W = LAGraph_malloc (anz, sizeof(int32_t)) ;
+            if (I == NULL || J == NULL || W == NULL)
+            {
+                LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
+            }
+            LAGRAPH_OK (GrB_Matrix_extractTuples_INT32(I, J, W, &anz, A));
 
-        printf ("BF source: %lu (zero-based)\n", s) ;
+            printf ("BF source: %lu (zero-based)\n", s) ;
 
-        // start the timer
-        LAGraph_tic (tic) ;
+            // start the timer
+            LAGraph_tic (tic) ;
 
-        LAGRAPH_FREE (d) ;
-        LAGRAPH_FREE (pi) ;
-        LAGRAPH_OK (LAGraph_BF_pure_c (&d, &pi, s, n, anz, I, J, W)) ;
+            LAGRAPH_FREE (d) ;
+            LAGRAPH_FREE (pi) ;
+            LAGRAPH_OK (LAGraph_BF_pure_c (&d, &pi, s, n, anz, I, J, W)) ;
 
-        // stop the timer
-        t1 = LAGraph_toc (tic) ;
-        // printf ("BF_pure_c       time: %12.6g (sec), rate:"
-        //     " %g (1e6 edges/sec)\n", t1, 1e-6*((double) anz) / t1) ;
+            // stop the timer
+            t1 = LAGraph_toc (tic) ;
+            // printf ("BF_pure_c       time: %12.6g (sec), rate:"
+            //     " %g (1e6 edges/sec)\n", t1, 1e-6*((double) anz) / t1) ;
 
-        total_time1 += t1;
+            total_time1 += t1;
 
-        LAGRAPH_FREE (pi) ;
-        LAGRAPH_FREE (I) ;
-        LAGRAPH_FREE (J) ;
-        LAGRAPH_FREE (W) ;
-#endif
+            LAGRAPH_FREE (pi) ;
+            LAGRAPH_FREE (I) ;
+            LAGRAPH_FREE (J) ;
+            LAGRAPH_FREE (W) ;
 
-// sample input:
+    // sample input:
 
 //      %%MatrixMarket matrix coordinate real general
 //      %%GraphBLAS GrB_INT32
@@ -525,97 +529,98 @@ for (int tt = 1 ; tt <= nt ; tt++)
 //      5 6 7
 //      2 7 8
 
-// sample output:
+    // sample output:
 
-//      %%MatrixMarket matrix coordinate integer general
-//      %%GraphBLAS GrB_INT32
-//      %% BF path len for cover.mtx
-//      %% source node: 1 (in 1-based notation)
-//      7 1 7
-//      1 1 0
-//      2 1 2
-//      3 1 8
-//      4 1 7
-//      5 1 7
-//      6 1 9
-//      7 1 10
-
-        #if 1
-        // save the results
-        if (tt == 1)
-        {
-            char savefilename [2000] ;
-            sprintf (savefilename, "pathlen_%lu_bf.mtx", n) ;
-            FILE *savefile = fopen (savefilename, "w") ;
-            // LAGraph_mmwrite ((GrB_Matrix) path_lengths1, savefile) ;
-            fprintf (savefile, "%%%%MatrixMarket matrix coordinate integer"
-                " general\n%%%%GraphBLAS GrB_INT32\n") ;
-            fprintf (savefile, "%%%% BF path len for %s\n", matrix_name) ;
-            fprintf (savefile, "%%%% source node: %lu (in 1-based notation)\n",
-                s+1) ;
-            fprintf (savefile, "%lu 1 %lu\n", n, n) ;
-            for (int i = 0 ; i < n ; i++)
-            {
-                fprintf (savefile, "%d 1 %d\n", i+1, d [i]) ;
-            }
-            fclose (savefile) ;
-        }
-        #endif
-
-#if 0
-        // write the result to result file if there is none
-        //if( access( fname, F_OK ) == -1 )// check if the result file exists
-        {
-            FILE *file = fopen(fname)
-            for (int64_t i = 0; i < n; i++)
-            {
-                fprintf(file, "%d\n", d[i]);
-            }
-        }
-#endif
-
-        //----------------------------------------------------------------------
-        // check the result for correctness
-        //----------------------------------------------------------------------
-
-#if 0
-        for (int64_t i = 0; i < n; i++)
-        {
-            bool test_result ;
+    //      %%MatrixMarket matrix coordinate integer general
+    //      %%GraphBLAS GrB_INT32
+    //      %% BF path len for cover.mtx
+    //      %% source node: 1 (in 1-based notation)
+    //      7 1 7
+    //      1 1 0
+    //      2 1 2
+    //      3 1 8
+    //      4 1 7
+    //      5 1 7
+    //      6 1 9
+    //      7 1 10
 
             #if 0
-            double x = INT32_MAX;
-            LAGr_Vector_extractElement(&x, path_lengths, i);
-            test_result = ((double)d[i] == x);
-            test_pass &= test_result;
-            if (!test_result)
+            // save the results
+            if (tt == 1)
             {
-                printf ("  Failure at index %"PRId64" calculated by sssp\n", i);
-                printf ("  x = %g\n", x);
-                printf ("  d = %d\n", d[i]);
-                printf ("\n") ;
-                abort ( ) ;
+                char savefilename [2000] ;
+                sprintf (savefilename, "pathlen_%lu_bf.mtx", n) ;
+                FILE *savefile = fopen (savefilename, "w") ;
+                // LAGraph_mmwrite ((GrB_Matrix) path_lengths1, savefile) ;
+                fprintf (savefile, "%%%%MatrixMarket matrix coordinate integer"
+                    " general\n%%%%GraphBLAS GrB_INT32\n") ;
+                fprintf (savefile, "%%%% BF path len for %s\n", matrix_name) ;
+                fprintf (savefile, "%%%% source node: %lu (in 1-based)\n",
+                    s+1) ;
+                fprintf (savefile, "%lu 1 %lu\n", n, n) ;
+                for (int i = 0 ; i < n ; i++)
+                {
+                    fprintf (savefile, "%d 1 %d\n", i+1, d [i]) ;
+                }
+                fclose (savefile) ;
             }
             #endif
 
-            int32_t x1 = INT32_MAX;
-            LAGr_Vector_extractElement(&x1, path_lengths1, i);
-            test_result = (d[i] == x1);
-            test_pass &= test_result;
-            if (!test_result)
+    #if 0
+            // write the result to result file if there is none
+            // if( access( fname, F_OK ) == -1 )
             {
-                printf ("  Failure at index %"PRId64" caculated by sssp1\n", i);
-                printf ("  x = %d\n", x1);
-                printf ("  d = %d\n", d[i]);
-                printf ("\n") ;
-                abort ( ) ;
+                FILE *file = fopen(fname)
+                for (int64_t i = 0; i < n; i++)
+                {
+                    fprintf(file, "%d\n", d[i]);
+                }
             }
-        }
+    #endif
+
+            //------------------------------------------------------------------
+            // check the result for correctness
+            //------------------------------------------------------------------
+
+    #if 0
+            for (int64_t i = 0; i < n; i++)
+            {
+                bool test_result ;
+
+                #if 0
+                double x = INT32_MAX;
+                LAGr_Vector_extractElement(&x, path_lengths, i);
+                test_result = ((double)d[i] == x);
+                test_pass &= test_result;
+                if (!test_result)
+                {
+                    printf ("  Failure at %"PRId64" calculated by sssp\n", i);
+                    printf ("  x = %g\n", x);
+                    printf ("  d = %d\n", d[i]);
+                    printf ("\n") ;
+                    abort ( ) ;
+                }
+                #endif
+
+                int32_t x1 = INT32_MAX;
+                LAGr_Vector_extractElement(&x1, path_lengths1, i);
+                test_result = (d[i] == x1);
+                test_pass &= test_result;
+                if (!test_result)
+                {
+                    printf ("  Failure at %"PRId64" caculated by sssp1\n", i);
+                    printf ("  x = %d\n", x1);
+                    printf ("  d = %d\n", d[i]);
+                    printf ("\n") ;
+                    abort ( ) ;
+                }
+            }
+    #endif
 #endif
 
-        // free the result from LAGraph_BF_pure_c
-        // LAGRAPH_FREE (d) ;
-
+            // free the result from LAGraph_BF_pure_c
+            // LAGRAPH_FREE (d) ;
+        }
     }
 
     //--------------------------------------------------------------------------

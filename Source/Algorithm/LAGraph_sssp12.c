@@ -52,6 +52,8 @@
 
 #include "LAGraph.h"
 
+#define TIMING 0
+
 #define LAGRAPH_FREE_ALL                    \
 {                                           \
     GrB_free(&AL);                          \
@@ -208,8 +210,9 @@ GrB_Info LAGraph_sssp12         // single source shortest paths
     {
         fprintf (stderr, "outter tmasked has %ld nnz\n",tmasked_nvals);
     }
-    double t1 = LAGraph_toc(tic);
+    double t_pre = LAGraph_toc(tic);
     //printf("pre-handling time %12.6g sec\n", t1);
+    double t1 ;
 
     //--------------------------------------------------------------------------
     // while (t >= i*delta) not empty
@@ -217,7 +220,7 @@ GrB_Info LAGraph_sssp12         // single source shortest paths
 
     while (tmasked_nvals > 0)
     {
-        printf ("\n============================= outer: %d\n", i) ;
+        // printf ("\n============================= outer: %d\n", i) ;
         // tmasked = select (tmasked < (i+1)*delta)
         LAGraph_tic (tic);
         LAGr_Scalar_setElement (uBound, (i+1) * delta);
@@ -239,7 +242,7 @@ GrB_Info LAGraph_sssp12         // single source shortest paths
 
         while (tmasked_nvals > 0)
         {
-            printf ("\n=============== inner:\n") ;
+            // printf ("\n=============== inner:\n") ;
             // tReq = AL' (min.+) tmasked
             LAGraph_tic (tic);
             LAGr_vxm (tReq, NULL, NULL, GxB_MIN_PLUS_INT32, tmasked, AL, NULL) ;
@@ -343,17 +346,11 @@ GrB_Info LAGraph_sssp12         // single source shortest paths
             }
         }
 
-        printf ("\n=============== next outer:\n") ;
+        // printf ("\n=============== next outer:\n") ;
 
         // tmasked<s> = t
-        // GrB_apply is faster than GrB_assign with GrB_DESC_R or GrB_DESC_RS
-        // while with Vector_clear ahead, GrB_assign is faster than GrB_apply
         LAGraph_tic (tic);
-        LAGr_Vector_clear (tmasked) ;
-        //LAGr_apply (tmasked, s, NULL, GrB_IDENTITY_INT32, t,
-        //    GrB_DESC_S /* or GrB_DESC_RS */) ;
-        LAGr_assign (tmasked, s, NULL, t, GrB_ALL, n, GrB_DESC_S
-            /* GrB_DESC_RS, if the vector_clear above is removed */) ;
+        LAGr_assign (tmasked, s, NULL, t, GrB_ALL, n, GrB_DESC_RS) ;
         t1 = LAGraph_toc(tic);
         total_time10 += t1;
 
@@ -400,12 +397,11 @@ GrB_Info LAGraph_sssp12         // single source shortest paths
         // try to make tmasked as sparse as possible in the first select
         if (do_LT_first)
         {
-            LAGr_select (tmasked, NULL, NULL, GxB_LT_THUNK, t      ,
-                  Inf , NULL) ;
+            LAGr_select (tmasked, NULL, NULL, GxB_LT_THUNK, t, Inf , NULL) ;
             // get the number of reachable nodes
             LAGr_Vector_nvals (&tmasked_nvals_tmp, tmasked) ;
-            LAGr_select (tmasked, NULL, NULL, GxB_GE_THUNK, tmasked,
-                lBound, NULL) ;
+            LAGr_select (tmasked, NULL, NULL, GxB_GE_THUNK, tmasked, lBound,
+                NULL) ;
             LAGr_Vector_nvals (&tmasked_nvals, tmasked) ;
             // do GE first if GE can get rid of more entries for tmasked
             if (n-tmasked_nvals_tmp <  tmasked_nvals_tmp-tmasked_nvals)
@@ -415,8 +411,7 @@ GrB_Info LAGraph_sssp12         // single source shortest paths
         }
         else
         {
-            LAGr_select (tmasked, NULL, NULL, GxB_GE_THUNK,    t   ,
-                lBound, NULL) ;
+            LAGr_select (tmasked, NULL, NULL, GxB_GE_THUNK, t, lBound, NULL) ;
             LAGr_select (tmasked, NULL, NULL, GxB_LT_THUNK, tmasked,
                   Inf , NULL) ;
             LAGr_Vector_nvals (&tmasked_nvals, tmasked) ;
@@ -433,39 +428,44 @@ GrB_Info LAGraph_sssp12         // single source shortest paths
         }
     }
 
-    double total_time = LAGraph_toc(tic1);
-    /*printf("total time, select LT time, vxm time, update s, find tless,"
+    /*
+    printf("total time, select LT time, vxm time, update s, find tless,"
     "update tmasked, update t, select GE, update t time2, get t.*s time:\n"
     "%12.6g\n %12.6g\n %12.6g\n %12.6g\n %12.6g\n %12.6g\n"
     "%12.6g\n %12.6g\n %12.6g\n %12.6g \n",
     total_time, total_time1, total_time2, total_time3, total_time4,
-    total_time5, total_time6, total_time7, total_time9, total_time10);*/
-   /* printf("total time %12.6g sec\n", total_time);
-    printf("select LT time %12.6g sec, ratio %12.6g\n", total_time1,
-        total_time1/total_time);
-    printf("vxm time %12.6g sec, ratio %12.6g\n", total_time2,
-        total_time2/total_time);
-    printf("update s time %12.6g sec, ratio %12.6g\n", total_time3,
-        total_time3/total_time);
-    printf("find tless time %12.6g sec, ratio %12.6g\n", total_time4,
-        total_time4/total_time);
-    printf("update tmasked time %12.6g sec, ratio %12.6g\n", total_time5,
-        total_time5/total_time);
-    printf("update t time %12.6g sec, ratio %12.6g\n", total_time6,
-        total_time6/total_time);
-    printf("select GE time %12.6g sec, ratio %12.6g\n", total_time7,
-        total_time7/total_time);
-    printf("update t time2 %12.6g sec, ratio %12.6g\n", total_time9,
-        total_time9/total_time);
-    printf("get tmasked = t .* s time2 %12.6g sec, ratio %12.6g\n",
-        total_time10, total_time10/total_time);*/
-
-    // TODO: should t be always dense?
+    total_time5, total_time6, total_time7, total_time9, total_time10);
+    */
 
     // result = t
     *path_length = t;
     t = NULL;
 
-    LAGRAPH_FREE_ALL;
+    LAGraph_tic (tic) ;
+    GrB_free (&lBound) ;
+    GrB_free (&uBound) ;
+    GrB_free (&Inf) ;
+    GrB_free (&tmasked) ;
+    GrB_free (&tReq) ;
+    GrB_free (&tless) ;
+    GrB_free (&s) ;
+    GrB_free (&AL) ;
+    GrB_free (&AH) ;
+    double t_free = LAGraph_toc (tic) ;
+
+    double total_time = LAGraph_toc(tic1);
+    printf("total time      %12.3f sec\n", total_time);
+    printf("init time       %12.3f sec, ratio %8.3f\n", t_pre, t_pre/total_time);
+    printf("select LT time  %12.3f sec, ratio %8.3f\n", total_time1, total_time1/total_time);
+    printf("vxm time        %12.3f sec, ratio %8.3f\n", total_time2, total_time2/total_time);
+    printf("update s time   %12.3f sec, ratio %8.3f\n", total_time3, total_time3/total_time);
+    printf("find tless time %12.3f sec, ratio %8.3f\n", total_time4, total_time4/total_time);
+    printf("update tmasked  %12.3f sec, ratio %8.3f\n", total_time5, total_time5/total_time);
+    printf("update t time   %12.3f sec, ratio %8.3f\n", total_time6, total_time6/total_time);
+    printf("select GE time  %12.3f sec, ratio %8.3f\n", total_time7, total_time7/total_time);
+    printf("update t time2  %12.3f sec, ratio %8.3f\n", total_time9, total_time9/total_time);
+    printf("tmasked<s>=t    %12.3f sec, ratio %8.3f\n", total_time10, total_time10/total_time);
+
+    printf("free workspace  %12.3f sec, ratio %8.3f\n", t_free, t_free / total_time) ;
     return GrB_SUCCESS;
 }

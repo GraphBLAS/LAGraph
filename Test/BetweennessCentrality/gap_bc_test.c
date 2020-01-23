@@ -63,20 +63,19 @@
 int main (int argc, char **argv)
 {
     GrB_Info info;
-    uint64_t seed = 1;
 
-    GrB_Matrix A = NULL;
-    GrB_Matrix AT = NULL;
-    GrB_Matrix Abool = NULL;
-    GrB_Vector v = NULL;
-    GrB_Vector v_brandes = NULL;
-    GrB_Vector v_batch = NULL;
-    GrB_Vector v_batch4 = NULL;
+    GrB_Matrix A = NULL ;
+    GrB_Matrix AT = NULL ;
+    GrB_Matrix Abool = NULL ;
+    GrB_Vector v = NULL ;
+    GrB_Vector v_brandes = NULL ;
+    GrB_Vector v_batch = NULL ;
+    GrB_Vector v_batch4 = NULL ;
     GrB_Matrix SourceNodes = NULL ;
+    LAGRAPH_OK (LAGraph_init ( )) ;
 
+    uint64_t seed = 1;
     bool tests_pass = true;
-
-    LAGRAPH_OK (LAGraph_init ());
 
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;
