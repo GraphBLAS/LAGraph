@@ -1,0 +1,118 @@
+Script started on Sat 01 Feb 2020 01:53:11 PM CST
+Intel Suite:
+Copyright (C) 2009-2019 Intel Corporation. All rights reserved.
+Intel(R) VTune(TM) Amplifier 2019 (build 591499)
+
+hypersparse $ ./do_gap
+SuiteSparse:GraphBLAS Feb 1, 2020 (DRAFT23)
+threads to test:  40 20
+matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+original # of edges: 4223264644
+Matrix has 71143742 empty rows
+Matrix has 71143742 empty cols
+
+==========input graph: nodes: 134217726 edges: 4223264644
+diag entries added: 71143742
+read time: 193.243 sec
+# of trials: 16
+chunk: 65536
+warmup (3f):     21.826 (threads: 40)
+
+Method 3f:
+3f: 40: avg time:     21.780 (sec), rate:   1357.351 iters: 7
+3f: 20: avg time:     22.690 (sec), rate:   1302.886 iters: 7
+
+Method x4:
+x4: 40: avg time:     21.562 (sec), rate:   1371.067 iters: 7
+x4: 20: avg time:     22.378 (sec), rate:   1321.070 iters: 7
+SuiteSparse:GraphBLAS Jan 31, 2020 (DRAFT22)
+threads to test:  40 20
+matrix: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+original # of edges: 4294966740
+
+==========input graph: nodes: 134217728 edges: 4294966740
+diag entries added: 0
+read time: 181.871 sec
+# of trials: 16
+chunk: 65536
+warmup (3f):     27.635 (threads: 40)
+
+Method 3f:
+3f: 40: avg time:     27.633 (sec), rate:    932.584 iters: 6
+3f: 20: avg time:     28.587 (sec), rate:    901.439 iters: 6
+
+Method x4:
+x4: 40: avg time:     27.333 (sec), rate:    942.817 iters: 6
+x4: 20: avg time:     28.280 (sec), rate:    911.234 iters: 6
+SuiteSparse:GraphBLAS Jan 31, 2020 (DRAFT22)
+threads to test:  40 20
+matrix: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+original # of edges: 1468364884
+Matrix has 21475137 empty rows
+Matrix has 25889280 empty cols
+
+==========input graph: nodes: 61578415 edges: 1468364884
+diag entries added: 27438232
+read time: 62.5196 sec
+# of trials: 16
+chunk: 65536
+warmup (3f):     17.049 (threads: 40)
+
+Method 3f:
+3f: 40: avg time:     17.043 (sec), rate:   1895.460 iters: 22
+3f: 20: avg time:     17.808 (sec), rate:   1814.055 iters: 22
+
+Method x4:
+x4: 40: avg time:     16.679 (sec), rate:   1936.815 iters: 22
+x4: 20: avg time:     17.470 (sec), rate:   1849.102 iters: 22
+SuiteSparse:GraphBLAS Jan 31, 2020 (DRAFT22)
+threads to test:  40 20
+matrix: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+original # of edges: 1930292948
+Matrix has 7236618 empty rows
+Matrix has 438 empty cols
+
+==========input graph: nodes: 50636151 edges: 1930292948
+diag entries added: 7236964
+read time: 42.2223 sec
+# of trials: 16
+chunk: 65536
+warmup (3f):      8.860 (threads: 40)
+
+Method 3f:
+3f: 40: avg time:      8.869 (sec), rate:   6529.435 iters: 30
+3f: 20: avg time:      9.041 (sec), rate:   6405.226 iters: 30
+
+Method x4:
+x4: 40: avg time:      8.488 (sec), rate:   6822.409 iters: 30
+x4: 20: avg time:      8.693 (sec), rate:   6661.590 iters: 30
+SuiteSparse:GraphBLAS Jan 31, 2020 (DRAFT22)
+threads to test:  40 20
+matrix: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+original # of edges: 57708624
+
+==========input graph: nodes: 23947347 edges: 57708624
+diag entries added: 0
+read time: 2.10887 sec
+# of trials: 16
+chunk: 65536
+warmup (3f):      1.388 (threads: 40)
+
+Method 3f:
+3f: 40: avg time:      1.368 (sec), rate:   1644.979 iters: 39
+3f: 20: avg time:      1.402 (sec), rate:   1605.172 iters: 39
+
+Method x4:
+x4: 40: avg time:      1.163 (sec), rate:   1934.401 iters: 39
+x4: 20: avg time:      1.186 (sec), rate:   1897.068 iters: 39
+

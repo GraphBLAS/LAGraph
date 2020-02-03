@@ -1,0 +1,20 @@
+#!/bin/bash
+
+cd BetweennessCentrality
+./do_gap
+
+cd ../BFS
+./do_gap
+
+cd ../CC
+./do_gap
+
+cd ../PageRank3
+./do_gap
+
+cd ../SSSP
+./do_gap
+
+cd ../TriangleCount
+./do_gap
+
