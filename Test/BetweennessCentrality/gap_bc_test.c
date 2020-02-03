@@ -360,6 +360,8 @@ int main (int argc, char **argv)
 //      LAGRAPH_OK (LAGraphX_bc_batch (&v_batch, A, vertex_list, batch_size)) ;
 //      LAGRAPH_OK (LAGraphX_bc_batch2 (&v_batch, A, vertex_list, batch_size)) ;
 
+GxB_set (GxB_BURBLE, 1) ;
+
         printf ("---\n") ;
 
         // version X3
@@ -413,6 +415,8 @@ int main (int argc, char **argv)
 
         // back to default
         GxB_set (GxB_NTHREADS, nthreads_max) ;
+
+GxB_set (GxB_BURBLE, 0) ;
 
         // GxB_print (v_batch4, 2) ;
 

@@ -405,6 +405,7 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
     // method 3f
     //--------------------------------------------------------------------------
+GxB_set (GxB_BURBLE, 1) ;
 
     printf ("\nMethod 3f:\n") ;
     for (int kk = 1 ; kk <= nt ; kk++)
@@ -477,6 +478,7 @@ int main (int argc, char **argv)
     // LAGraph_mmwrite (PR, f) ;
     // fclose (f) ;
     // GxB_print (PR, GxB_SHORT) ;
+GxB_set (GxB_BURBLE, 0) ;
 
     //--------------------------------------------------------------------------
     // free all workspace and finish

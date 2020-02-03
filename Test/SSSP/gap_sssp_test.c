@@ -285,6 +285,8 @@ int main (int argc, char **argv)
         n, anz, nthreads) ;
     printf ("# of source nodes: %lu\n", nsource) ;
 
+GxB_set (GxB_BURBLE, 1) ;
+
     int ntrials = (int) nsource ;
 
 for (int tt = 1 ; tt <= nt ; tt++)
@@ -676,6 +678,8 @@ for (int tt = 1 ; tt <= nt ; tt++)
         LAGr_log (matrix_name, "SSSP12", nthreads, total_time_sssp12) ;
     }
 }
+
+GxB_set (GxB_BURBLE, 0) ;
 
     //--------------------------------------------------------------------------
     // free all workspace and finish

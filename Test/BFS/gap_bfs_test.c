@@ -335,6 +335,8 @@ int main (int argc, char **argv)
     // BFS: all-push, with tree
     //--------------------------------------------------------------------------
 
+GxB_set (GxB_BURBLE, 1) ;
+
     printf ( "allpush (with tree):\n") ;
     for (int tt = 1 ; tt <= nt ; tt++)
     {
@@ -361,6 +363,8 @@ int main (int argc, char **argv)
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;
     printf ( "\n") ;
+
+GxB_set (GxB_BURBLE, 0) ;
 
     #if 0
     LAGraph_tic (tic) ;

@@ -194,6 +194,8 @@ int main (int argc, char **argv)
 
     bool sanitize = false ;
 
+GxB_set (GxB_BURBLE, 1) ;
+
     GrB_Index nCC;
     for (int trial = 1 ; trial <= nt ; trial++)
     {
@@ -274,6 +276,8 @@ int main (int argc, char **argv)
         */
         printf("\n");
     }
+
+GxB_set (GxB_BURBLE, 0) ;
 
     LAGRAPH_FREE_ALL ;
     LAGRAPH_OK (GrB_finalize ( )) ;

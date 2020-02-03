@@ -231,8 +231,9 @@ int main (int argc, char **argv)
     // try all methods 3 to 6
     // for (int method = 3 ; method <= 6 ; method++)
 
-    // just try all methods 5 and 6
-    for (int method = 3 ; method <= 6 ; method++)
+GxB_set (GxB_BURBLE, 1) ;
+    // just try methods 5 and 6
+    for (int method = 5 ; method <= 6 ; method++)
     {
 
         printf ("\nMethod: ") ;
@@ -270,6 +271,7 @@ int main (int argc, char **argv)
             }
         }
     }
+GxB_set (GxB_BURBLE, 0) ;
 
     printf ("\nBest method:\n") ;
     printf ("nthreads: %3d time: %12.6f rate: %6.2f ", nthreads_best, t_best,
