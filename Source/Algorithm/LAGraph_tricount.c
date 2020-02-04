@@ -231,9 +231,6 @@ GrB_Info LAGraph_tricount   // count # of triangles
     GrB_Index n ;
     GrB_Matrix C = NULL, L = NULL, U = NULL, T = NULL, A = NULL ;
     int64_t *P = NULL, *D = NULL, *W0 = NULL, *W1 = NULL ;
-
-// printf (" in tricount: ") ; GxB_print (A_in, 2) ;
-
     LAGr_Matrix_nrows (&n, A_in) ;
 
     #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
@@ -307,15 +304,12 @@ GrB_Info LAGraph_tricount   // count # of triangles
         LAGRAPH_FREE (W1) ; 
         LAGRAPH_FREE (D) ; 
 
-        // printf ("before assign: ") ;GxB_print (A, 2) ;
-
         // T = A_in (P,P) and typecast to boolean
         LAGr_Matrix_new (&T, GrB_BOOL, n, n) ;
         LAGr_assign (T, NULL, NULL, A_in, P, n, P, n, NULL) ;
         LAGRAPH_FREE (P) ; 
 
         A = T ;
-        // printf ("after assign: ") ; GxB_print (A, 2) ;
     }
     else
     {
