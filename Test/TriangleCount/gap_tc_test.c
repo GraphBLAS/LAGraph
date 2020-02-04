@@ -42,7 +42,7 @@
 
 #include "LAGraph.h"
 
-#define NTHREAD_LIST 2
+#define NTHREAD_LIST 1
 #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 6
@@ -108,7 +108,7 @@ int main (int argc, char **argv)
     #endif
     LAGRAPH_OK (LAGraph_init ( )) ;
 
-    int ntrials = 1 ;
+    int ntrials = 3 ;
     printf ("# of trials: %d\n", ntrials) ;
 
     int nt = NTHREAD_LIST ;
