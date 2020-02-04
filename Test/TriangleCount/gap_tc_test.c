@@ -52,26 +52,39 @@
     GrB_free (&thunk) ;     \
     GrB_free (&C) ;         \
     GrB_free (&M) ;         \
-    GrB_free (&A) ;
+    GrB_free (&X) ;         \
+    GrB_free (&D) ;         \
+    GrB_free (&A) ;         \
+    LAGRAPH_FREE (degree) ; \
+    LAGRAPH_FREE (Di) ;
 
-char *method_name (int method)
+char t [256] ;
+
+char *method_name (int method, int sorting)
 {
+    char *s ;
     switch (method)
     {
-        case 0:  return ("minitri:    nnz (A*E == 2) / 3"  ) ;
-        case 1:  return ("Burkhardt:  sum ((A^2) .* A) / 6") ;
-        case 2:  return ("Cohen:      sum ((L*U) .* A) / 2") ;
-        case 3:  return ("Sandia:     sum ((L*L) .* L)"    ) ;
-        case 4:  return ("Sandia2:    sum ((U*U) .* U)"    ) ;
-        case 5:  return ("SandiaDot:  sum ((L*U') .* L)"   ) ;
-        case 6:  return ("SandiaDot2: sum ((U*L') .* U)"   ) ;
-        default: return ("invalid method\n") ; abort ( ) ;
+        case 0:  s = "minitri:    nnz (A*E == 2) / 3  " ; break ;
+        case 1:  s = "Burkhardt:  sum ((A^2) .* A) / 6" ; break ;
+        case 2:  s = "Cohen:      sum ((L*U) .* A) / 2" ; break ;
+        case 3:  s = "Sandia:     sum ((L*L) .* L)    " ; break ;
+        case 4:  s = "Sandia2:    sum ((U*U) .* U)    " ; break ;
+        case 5:  s = "SandiaDot:  sum ((L*U') .* L)   " ; break ;
+        case 6:  s = "SandiaDot2: sum ((U*L') .* U)   " ; break ;
+        default: abort ( ) ;
     }
+
+    if (sorting < 0) sprintf (t, "%s sort: descending degree", s) ;
+    else if (sorting > 0) sprintf (t, "%s ascending degree", s) ;
+    else sprintf (t, "%s sort: none", s) ;
+    return (t) ;
 }
 
-void print_method (int method)
+
+void print_method (int method, int sorting)
 {
-    printf ("%s\n", method_name (method)) ;
+    printf ("%s\n", method_name (method, sorting)) ;
 }
 
 int main (int argc, char **argv)
@@ -84,6 +97,9 @@ int main (int argc, char **argv)
     GrB_Info info ;
 
     GrB_Matrix A = NULL, C = NULL, M = NULL ;
+    GrB_Vector X = NULL, D = NULL ;
+    int64_t *degree = NULL ;
+    GrB_Index *Di = NULL ;
     #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
         && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,0,1) )
     GxB_Scalar thunk = NULL ;
@@ -207,6 +223,29 @@ int main (int argc, char **argv)
     printf ("process A time:  %14.6f sec\n", t_process) ;
     printf ("# of nodes: %lu   number of entries: %lu\n", n, nvals) ;
 
+    // compute the degree of each node (TODO: make this an LAGraph utility)
+    LAGraph_tic (tic) ;
+    LAGr_Vector_new (&X, GrB_BOOL, n) ;
+    LAGr_Vector_new (&D, GrB_INT64, n) ;
+    LAGr_assign (X, NULL, NULL, 0, GrB_ALL, n, NULL) ;
+    LAGr_assign (D, NULL, NULL, 0, GrB_ALL, n, NULL) ;
+    LAGr_vxm (D, NULL, GrB_PLUS_INT64, GxB_PLUS_PAIR_INT64, X, A, NULL) ;
+    // GxB_print (A, 2) ;
+    // GxB_print (D, 2) ;
+    GrB_free (&X) ;
+    GrB_Type type ;
+    GrB_Index n2, nvals2 ;
+    LAGr_Vector_export (&D, &type, &n2, &nvals2, &Di, (void **) &degree, NULL) ;
+    if (n != n2 || n != nvals2) { printf ("??\n") ; abort ( ) ; }
+    LAGRAPH_FREE (Di) ;
+    double t_degree = LAGraph_toc (tic) ;
+    printf ("compute degree: %g sec\n", t_degree) ;
+
+//  for (int i = 0 ; i < 10 ; i++)
+//  {
+//      printf ("node: %d degree %ld\n", i, degree [i]) ;
+//  }
+
     //--------------------------------------------------------------------------
     // triangle counting
     //--------------------------------------------------------------------------
@@ -214,16 +253,18 @@ int main (int argc, char **argv)
     // warmup for more accurate timing, and also print # of triangles
     int64_t ntriangles ;
     LAGraph_tic (tic) ;
-    LAGRAPH_OK (LAGraph_tricount (&ntriangles, 5, A)) ;
+    LAGRAPH_OK (LAGraph_tricount (&ntriangles, 5, 0, NULL, A)) ;
     printf ("# of triangles: %" PRId64 "\n", ntriangles) ;
     double ttot = LAGraph_toc (tic) ;
     printf ("nthreads: %3d time: %12.6f rate: %6.2f (SandiaDot, one trial)\n",
             nthreads_max, ttot, 1e-6 * nvals / ttot) ;
 
+// printf ("here: \n") ; GxB_print (A, 2) ;
+
     double t_best = INFINITY ;
     int method_best = -1 ;
     int nthreads_best = -1 ;
-
+    int sorting_best = 0 ;
 
     // kron: input graph: nodes: 134217726 edges: 4223264644
     // fails on methods 3 and 4.
@@ -231,52 +272,60 @@ int main (int argc, char **argv)
     // try all methods 3 to 6
     // for (int method = 3 ; method <= 6 ; method++)
 
-GxB_set (GxB_BURBLE, 1) ;
     // just try methods 5 and 6
     for (int method = 5 ; method <= 6 ; method++)
     {
-
-        printf ("\nMethod: ") ;
-        print_method (method) ;
-        if (n == 134217726 && method < 5)
+        for (int sorting = -1 ; sorting <= 1 ; sorting++)
         {
-            printf ("kron fails on method %d; skipped\n", method) ;
-            continue ;
-        }
-
-        for (int t = 1 ; t <= nt ; t++)
-        {
-            int nthreads = Nthreads [t] ;
-            if (nthreads > nthreads_max) continue ;
-            LAGraph_set_nthreads (nthreads) ;
-            int64_t nt2 ;
-            LAGraph_tic (tic) ;
-            for (int trial = 0 ; trial < ntrials ; trial++)
+            printf ("\nMethod: ") ;
+            print_method (method, sorting) ;
+            if (n == 134217726 && method < 5)
             {
-                LAGRAPH_OK (LAGraph_tricount (&nt2, method, A)) ;
+                printf ("kron fails on method %d; skipped\n", method) ;
+                continue ;
             }
-            double ttot = LAGraph_toc (tic) / ntrials ;
 
-            printf ("nthreads: %3d time: %12.6f rate: %6.2f\n", nthreads, ttot,
-                1e-6 * nvals / ttot) ;
-            if (nt2 != ntriangles) { printf ("Test failure!\n") ; abort ( ) ; }
-
-            LAGr_log (matrix_name, method_name (method), nthreads, ttot) ;
-
-            if (ttot < t_best)
+            for (int t = 1 ; t <= nt ; t++)
             {
-                t_best = ttot ;
-                method_best = method ;
-                nthreads_best = nthreads ;
+                int nthreads = Nthreads [t] ;
+                if (nthreads > nthreads_max) continue ;
+                LAGraph_set_nthreads (nthreads) ;
+                int64_t nt2 ;
+                LAGraph_tic (tic) ;
+                for (int trial = 0 ; trial < ntrials ; trial++)
+                {
+// printf ("now: %d \n", trial) ; GxB_print (A, 2) ;
+                    LAGRAPH_OK (LAGraph_tricount (&nt2, method, sorting,
+                        degree, A)) ;
+                }
+                double ttot = LAGraph_toc (tic) / ntrials ;
+
+                printf ("nthreads: %3d time: %12.6f rate: %6.2f\n", nthreads,
+                    ttot, 1e-6 * nvals / ttot) ;
+                if (nt2 != ntriangles)
+                {
+                    printf ("Test failure!\n") ;
+                    abort ( ) ;
+                }
+
+                LAGr_log (matrix_name, method_name (method, sorting),
+                    nthreads, ttot) ;
+
+                if (ttot < t_best)
+                {
+                    t_best = ttot ;
+                    method_best = method ;
+                    nthreads_best = nthreads ;
+                    sorting_best = sorting ;
+                }
             }
         }
     }
-GxB_set (GxB_BURBLE, 0) ;
 
-    printf ("\nBest method:\n") ;
-    printf ("nthreads: %3d time: %12.6f rate: %6.2f ", nthreads_best, t_best,
-        1e-6 * nvals / t_best) ;
-    print_method (method_best) ;
+    printf ("\nBest method: ") ;
+    print_method (method_best, sorting_best) ;
+    printf ("nthreads: %3d time: %12.6f rate: %6.2f\n",
+        nthreads_best, t_best, 1e-6 * nvals / t_best) ;
     LAGRAPH_FREE_ALL ;
     LAGraph_finalize ( ) ;
 }

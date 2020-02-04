@@ -89,6 +89,7 @@
 // https://dx.doi.org/10.1109/HPEC.2017.8091043,
 
 #include "LAGraph_internal.h"
+#include "GB_msort_2.h"
 
 //------------------------------------------------------------------------------
 // tricount_prep: construct L and U
@@ -202,13 +203,23 @@ static GrB_Info tricount_prep
 #define LAGRAPH_FREE_ALL        \
     GrB_free (&C) ;             \
     GrB_free (&L) ;             \
-    GrB_free (&U) ;
+    GrB_free (&T) ;             \
+    GrB_free (&U) ;             \
+    LAGRAPH_FREE (W0) ;         \
+    LAGRAPH_FREE (W1) ;         \
+    LAGRAPH_FREE (P) ;          \
+    LAGRAPH_FREE (D) ; 
 
 GrB_Info LAGraph_tricount   // count # of triangles
 (
     int64_t *ntri,          // # of triangles
     const int method,       // 1 to 6, see above
-    const GrB_Matrix A      // input matrix, must be symmetric, no diag entries
+    const int sorting,      //  0: no sort
+                            //  1: sort by degree, ascending order
+                            // -1: sort by degree, descending order
+    const int64_t *degree,  // degree of each node, may be NULL if sorting==0.
+                            // of size n, unmodified. 
+    const GrB_Matrix A_in   // input matrix, must be symmetric, no diag entries
 )
 {
 
@@ -218,8 +229,12 @@ GrB_Info LAGraph_tricount   // count # of triangles
 
     GrB_Info info ;
     GrB_Index n ;
-    GrB_Matrix C = NULL, L = NULL, U = NULL ;
-    LAGr_Matrix_nrows (&n, A) ;
+    GrB_Matrix C = NULL, L = NULL, U = NULL, T = NULL, A = NULL ;
+    int64_t *P = NULL, *D = NULL, *W0 = NULL, *W1 = NULL ;
+
+// printf (" in tricount: ") ; GxB_print (A_in, 2) ;
+
+    LAGr_Matrix_nrows (&n, A_in) ;
 
     #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
         && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,2,0) )
@@ -237,6 +252,76 @@ GrB_Info LAGraph_tricount   // count # of triangles
 
     GrB_Monoid sum = LAGraph_PLUS_INT64_MONOID ;
     LAGr_Matrix_new (&C, GrB_INT64, n, n) ;
+
+    //--------------------------------------------------------------------------
+    // sort the input matrix, if requested
+    //--------------------------------------------------------------------------
+
+    if (sorting != 0)
+    {
+
+        // decide how many threads to use
+        #define CHUNK (64*1024)
+        int nthreads = LAGraph_get_nthreads ( ) ;
+        nthreads = LAGRAPH_MIN (nthreads, n/CHUNK) ;
+        nthreads = LAGRAPH_MAX (nthreads, 1) ;
+
+        // allocate workspace
+        P  = LAGraph_malloc (n, sizeof (int64_t)) ;
+        D  = LAGraph_malloc (n, sizeof (int64_t)) ;
+        W0 = LAGraph_malloc (n, sizeof (int64_t)) ;
+        W1 = LAGraph_malloc (n, sizeof (int64_t)) ;
+        if (P == NULL || D == NULL || W0 == NULL || W1 == NULL)
+        {
+            // out of memory
+            LAGRAPH_FREE_ALL ;
+            return (GrB_OUT_OF_MEMORY) ;
+        }
+
+        // construct the pair [D,P] to sort
+        #pragma omp parallel for num_threads(nthreads) schedule(static)
+        for (int64_t k = 0 ; k < n ; k++)
+        {
+            D [k] = degree [k] ;
+            P [k] = k ;
+        }
+
+        // sort [D,P] in ascending order of degree, tie-breaking on P
+        GB_msort_2 (D, P, W0, W1, n, nthreads) ;
+
+        if (sorting < 0)
+        {
+            // reverse the order of P
+            #pragma omp parallel for num_threads(nthreads) schedule(static)
+            for (int64_t k = 0 ; k < n ; k++)
+            {
+                W0 [k] = P [n-k-1] ;
+            }
+            LAGRAPH_FREE (P) ; 
+            P = W0 ;
+            W0 = NULL ;
+        }
+
+        // free workspace
+        LAGRAPH_FREE (W0) ; 
+        LAGRAPH_FREE (W1) ; 
+        LAGRAPH_FREE (D) ; 
+
+        // printf ("before assign: ") ;GxB_print (A, 2) ;
+
+        // T = A_in (P,P) and typecast to boolean
+        LAGr_Matrix_new (&T, GrB_BOOL, n, n) ;
+        LAGr_assign (T, NULL, NULL, A_in, P, n, P, n, NULL) ;
+        LAGRAPH_FREE (P) ; 
+
+        A = T ;
+        // printf ("after assign: ") ; GxB_print (A, 2) ;
+    }
+    else
+    {
+        // use the input matrix as-is
+        A = A_in ;
+    }
 
     //--------------------------------------------------------------------------
     // count triangles
@@ -310,6 +395,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
 
         default:    // invalid method
 
+            LAGRAPH_FREE_ALL ;
             return (GrB_INVALID_VALUE) ;
             break ;
     }

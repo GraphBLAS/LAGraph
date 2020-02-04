@@ -1047,7 +1047,12 @@ GrB_Info LAGraph_tricount   // count # of triangles
 (
     int64_t *ntri,          // # of triangles
     const int method,       // 1 to 6, see above
-    const GrB_Matrix A      // input matrix, must be symmetric, no diag entries
+    const int sorting,      //  0: no sort
+                            //  1: sort by degree, ascending order
+                            // -1: sort by degree, descending order
+    const int64_t *degree,  // degree of each node, may be NULL if sorting==0.
+                            // of size n, unmodified. 
+    const GrB_Matrix A_in   // input matrix, must be symmetric, no diag entries
 ) ;
 
 GrB_Info LAGraph_ktruss         // compute the k-truss of a graph
