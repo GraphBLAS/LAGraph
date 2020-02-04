@@ -108,7 +108,7 @@ int main (int argc, char **argv)
     #endif
     LAGRAPH_OK (LAGraph_init ( )) ;
 
-    int ntrials = 3 ;
+    int ntrials = 1 ;
     printf ("# of trials: %d\n", ntrials) ;
 
     int nt = NTHREAD_LIST ;
