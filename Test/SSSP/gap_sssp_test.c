@@ -285,7 +285,7 @@ int main (int argc, char **argv)
         n, anz, nthreads) ;
     printf ("# of source nodes: %lu\n", nsource) ;
 
-GxB_set (GxB_BURBLE, 1) ;
+GxB_set (GxB_BURBLE, 0) ;
 
     int ntrials = (int) nsource ;
 
@@ -429,13 +429,13 @@ for (int tt = 1 ; tt <= nt ; tt++)
         // sssp12: with dense vector t
         //----------------------------------------------------------------------
 
-        printf ("\n----sssp12: nthreads %d trial: %d source: %lu (0-based)\n",
+        printf ("\n----sssp12c: nthreads %d trial: %d source: %lu (0-based)\n",
             nthreads, trial, s) ;
 
         // Start the timer
         LAGraph_tic (tic) ;
         GrB_free (&path_lengths1) ;
-        LAGRAPH_OK (LAGraph_sssp12 (&path_lengths1, A, s, delta, true)) ;
+        LAGRAPH_OK (LAGraph_sssp12c (&path_lengths1, A, s, delta, true)) ;
 
         // Stop the timer
         t3 = LAGraph_toc (tic) ;
@@ -673,9 +673,9 @@ for (int tt = 1 ; tt <= nt ; tt++)
     if (total_time_sssp12 > 0)
     {
         total_time_sssp12 = total_time_sssp12 / ntrials ;
-        printf ("%2d: SSSP12  time: %14.6f sec  rate: %8.2f (delta %d)\n",
+        printf ("%2d: SSSP12c time: %14.6f sec  rate: %8.2f (delta %d)\n",
             nthreads, total_time_sssp12, 1e-6 * e / total_time_sssp12, delta) ;
-        LAGr_log (matrix_name, "SSSP12", nthreads, total_time_sssp12) ;
+        LAGr_log (matrix_name, "SSSP12c", nthreads, total_time_sssp12) ;
     }
 }
 
