@@ -276,39 +276,43 @@ GrB_Info LAGraph_tricount   // count # of triangles
         }
 
         // construct the pair [D,P] to sort
-        #pragma omp parallel for num_threads(nthreads) schedule(static)
-        for (int64_t k = 0 ; k < n ; k++)
+        if (sorting > 0)
         {
-            D [k] = degree [k] ;
-            P [k] = k ;
-        }
-
-        // sort [D,P] in ascending order of degree, tie-breaking on P
-        GB_msort_2 (D, P, W0, W1, n, nthreads) ;
-
-        if (sorting < 0)
-        {
-            // reverse the order of P
+            // sort [D,P] in ascending order of degree, tie-breaking on P
             #pragma omp parallel for num_threads(nthreads) schedule(static)
             for (int64_t k = 0 ; k < n ; k++)
             {
-                W0 [k] = P [n-k-1] ;
+                D [k] = degree [k] ;
+                P [k] = k ;
             }
-            LAGRAPH_FREE (P) ; 
-            P = W0 ;
-            W0 = NULL ;
+        }
+        else
+        {
+            // sort [D,P] in descending order of degree, tie-breaking on P
+            #pragma omp parallel for num_threads(nthreads) schedule(static)
+            for (int64_t k = 0 ; k < n ; k++)
+            {
+                D [k] = -degree [k] ;
+                P [k] = k ;
+            }
         }
 
-        // free workspace
-        LAGRAPH_FREE (W0) ; 
-        LAGRAPH_FREE (W1) ; 
-        LAGRAPH_FREE (D) ; 
+//          for (int64_t k = 0 ; k < n ; k++)
+//          {
+//              printf ("before [%3ld %3ld]\n", D [k], P [k]) ;
+//          }
+
+        GB_msort_2 (D, P, W0, W1, n, nthreads) ;
+
+//          printf ("\n") ;
+//          for (int64_t k = 0 ; k < n ; k++)
+//          {
+//              printf ("after  [%3ld %3ld]\n", D [k], P [k]) ;
+//          }
 
         // T = A_in (P,P) and typecast to boolean
         LAGr_Matrix_new (&T, GrB_BOOL, n, n) ;
-        LAGr_assign (T, NULL, NULL, A_in, P, n, P, n, NULL) ;
-        LAGRAPH_FREE (P) ; 
-
+        LAGr_extract (T, NULL, NULL, A_in, P, n, P, n, NULL) ;
         A = T ;
     }
     else
@@ -316,6 +320,40 @@ GrB_Info LAGraph_tricount   // count # of triangles
         // use the input matrix as-is
         A = A_in ;
     }
+
+#if 0
+    printf ("permuted:\n") ;
+    GrB_Index ignore ;
+    GrB_Matrix_nvals (&ignore, A) ;
+    GxB_print (A, 3) ;
+
+    // compute the degree of each node (TODO: make this an LAGraph utility)
+    GrB_Vector X, D2 ;
+    LAGr_Vector_new (&X, GrB_BOOL, n) ;
+    LAGr_Vector_new (&D2, GrB_INT64, n) ;
+    LAGr_assign (X, NULL, NULL, 0, GrB_ALL, n, NULL) ;
+    LAGr_assign (D2, NULL, NULL, 0, GrB_ALL, n, NULL) ;
+    LAGr_vxm (D2, NULL, GrB_PLUS_INT64, GxB_PLUS_PAIR_INT64, X, A, NULL) ;
+    GxB_print (D2, 3) ;
+    GrB_free (&X) ;
+    GrB_Type type ;
+    GrB_Index n2, nvals2, *Di ;
+    int64_t *deg ;
+    LAGr_Vector_export (&D2, &type, &n2, &nvals2, &Di, (void **) &deg, NULL) ;
+    if (n != n2 || n != nvals2) { printf ("??\n") ; abort ( ) ; }
+
+    printf ("\nNew: sorting %d\n", sorting) ;
+    for (int i = 0 ; i < 67 ; i++)
+    {
+        printf ("node: %d degree %ld\n", i, deg [i]) ;
+    }
+#endif
+
+    // free workspace
+    LAGRAPH_FREE (W0) ; 
+    LAGRAPH_FREE (W1) ; 
+    LAGRAPH_FREE (D) ; 
+    LAGRAPH_FREE (P) ; 
 
     //--------------------------------------------------------------------------
     // count triangles

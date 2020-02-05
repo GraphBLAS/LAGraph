@@ -1,0 +1,142 @@
+Script started on Wed 05 Feb 2020 06:26:25 AM CST
+Intel Suite:
+Copyright (C) 2009-2019 Intel Corporation. All rights reserved.
+Intel(R) VTune(TM) Amplifier 2019 (build 591499)
+[0;36mhypersparse $[0m cat do_kron 
+#!/bin/sh
+
+./build/gap_tc_test ~/DIMACS10/kron_g500-logn16/kron_g500-logn16.mtx
+./build/gap_tc_test ~/DIMACS10/kron_g500-logn17/kron_g500-logn17.mtx
+./build/gap_tc_test ~/DIMACS10/kron_g500-logn18/kron_g500-logn18.mtx
+./build/gap_tc_test ~/DIMACS10/kron_g500-logn19/kron_g500-logn19.mtx
+./build/gap_tc_test ~/DIMACS10/kron_g500-logn20/kron_g500-logn20.mtx
+./build/gap_tc_test ~/DIMACS10/kron_g500-logn21/kron_g500-logn21.mtx
+./build/gap_tc_test ~/GAP/GAP-kron/GAP-kron.grb
+
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m ./do_kron
+SuiteSparse:GraphBLAS Feb 3, 2020 (DRAFT26)
+# of trials: 3
+threads to test:  40
+matrix: /home/faculty/davis/DIMACS10/kron_g500-logn16/kron_g500-logn16.mtx
+[.mtx]
+Reading Matrix Market file: /home/faculty/davis/DIMACS10/kron_g500-logn16/kron_g500-logn16.mtx
+
+read A time:           1.390052 sec
+process A time:        0.117144 sec
+# of nodes: 65536   number of entries: 4912142
+compute degree: 0.0124452 sec
+# of triangles: 118811321
+nthreads:  40 time:     0.283413 rate:  17.33 (SandiaDot, one trial)
+
+Method: SandiaDot:  sum ((L*U') .* L)    sort: descending degree
+nthreads:  40 time:     0.317431 rate:  15.47
+
+Method: SandiaDot:  sum ((L*U') .* L)    sort: none
+nthreads:  40 time:     0.262491 rate:  18.71
+
+Method: SandiaDot:  sum ((L*U') .* L)    ascending degree
+nthreads:  40 time:     0.309255 rate:  15.88
+
+Method: SandiaDot2: sum ((U*L') .* U)    sort: descending degree
+nthreads:  40 time:     0.310512 rate:  15.82
+
+Method: SandiaDot2: sum ((U*L') .* U)    sort: none
+nthreads:  40 time:     0.261092 rate:  18.81
+
+Method: SandiaDot2: sum ((U*L') .* U)    ascending degree
+nthreads:  40 time:     0.305881 rate:  16.06
+
+Best method: SandiaDot2: sum ((U*L') .* U)    sort: none
+nthreads:  40 time:     0.261092 rate:  18.81
+SuiteSparse:GraphBLAS Feb 3, 2020 (DRAFT26)
+# of trials: 3
+threads to test:  40
+matrix: /home/faculty/davis/DIMACS10/kron_g500-logn17/kron_g500-logn17.mtx
+[.mtx]
+Reading Matrix Market file: /home/faculty/davis/DIMACS10/kron_g500-logn17/kron_g500-logn17.mtx
+
+read A time:           2.874526 sec
+process A time:        0.244844 sec
+# of nodes: 131072   number of entries: 10227970
+compute degree: 0.0209274 sec
+# of triangles: 287593439
+nthreads:  40 time:     0.742641 rate:  13.77 (SandiaDot, one trial)
+
+Method: SandiaDot:  sum ((L*U') .* L)    sort: descending degree
+nthreads:  40 time:     0.792916 rate:  12.90
+
+Method: SandiaDot:  sum ((L*U') .* L)    sort: none
+nthreads:  40 time:     0.731757 rate:  13.98
+
+Method: SandiaDot:  sum ((L*U') .* L)    ascending degree
+nthreads:  40 time:     0.817320 rate:  12.51
+
+Method: SandiaDot2: sum ((U*L') .* U)    sort: descending degree
+nthreads:  40 time:     0.780365 rate:  13.11
+
+Method: SandiaDot2: sum ((U*L') .* U)    sort: none
+nthreads:  40 time:     0.700667 rate:  14.60
+
+Method: SandiaDot2: sum ((U*L') .* U)    ascending degree
+nthreads:  40 time:     0.782614 rate:  13.07
+
+Best method: SandiaDot2: sum ((U*L') .* U)    sort: none
+nthreads:  40 time:     0.700667 rate:  14.60
+SuiteSparse:GraphBLAS Feb 3, 2020 (DRAFT26)
+# of trials: 3
+threads to test:  40
+matrix: /home/faculty/davis/DIMACS10/kron_g500-logn18/kron_g500-logn18.mtx
+[.mtx]
+Reading Matrix Market file: /home/faculty/davis/DIMACS10/kron_g500-logn18/kron_g500-logn18.mtx
+
+read A time:           6.028402 sec
+process A time:        0.501205 sec
+# of nodes: 262144   number of entries: 21165372
+compute degree: 0.0331766 sec
+# of triangles: 687677667
+nthreads:  40 time:     1.892077 rate:  11.19 (SandiaDot, one trial)
+
+Method: SandiaDot:  sum ((L*U') .* L)    sort: descending degree
+nthreads:  40 time:     2.063679 rate:  10.26
+
+Method: SandiaDot:  sum ((L*U') .* L)    sort: none
+nthreads:  40 time:     1.895023 rate:  11.17
+
+Method: SandiaDot:  sum ((L*U') .* L)    ascending degree
+nthreads:  40 time:     2.055700 rate:  10.30
+
+Method: SandiaDot2: sum ((U*L') .* U)    sort: descending degree
+nthreads:  40 time:     2.009199 rate:  10.53
+
+Method: SandiaDot2: sum ((U*L') .* U)    sort: none
+nthreads:  40 time:     1.871345 rate:  11.31
+
+Method: SandiaDot2: sum ((U*L') .* U)    ascending degree
+nthreads:  40 time:     2.034026 rate:  10.41
+
+Best method: SandiaDot2: sum ((U*L') .* U)    sort: none
+nthreads:  40 time:     1.871345 rate:  11.31
+SuiteSparse:GraphBLAS Feb 3, 2020 (DRAFT26)
+# of trials: 3
+threads to test:  40
+matrix: /home/faculty/davis/DIMACS10/kron_g500-logn19/kron_g500-logn19.mtx
+[.mtx]
+Reading Matrix Market file: /home/faculty/davis/DIMACS10/kron_g500-logn19/kron_g500-logn19.mtx
+
+read A time:          12.480926 sec
+process A time:        1.047762 sec
+# of nodes: 524288   number of entries: 43561574
+compute degree: 0.0578171 sec
+# of triangles: 1625559121
+nthreads:  40 time:     5.109270 rate:   8.53 (SandiaDot, one trial)
+
+Method: SandiaDot:  sum ((L*U') .* L)    sort: descending degree
+nthreads:  40 time:     5.429256 rate:   8.02
+
+Method: SandiaDot:  sum ((L*U') .* L)    sort: none
+^C
+[0;36mhypersparse $[0m exit
+exit
+
+Script done on Wed 05 Feb 2020 06:28:28 AM CST

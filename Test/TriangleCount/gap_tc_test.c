@@ -108,7 +108,7 @@ int main (int argc, char **argv)
     #endif
     LAGRAPH_OK (LAGraph_init ( )) ;
 
-    int ntrials = 3 ;
+    int ntrials = 1 ;
     printf ("# of trials: %d\n", ntrials) ;
 
     int nt = NTHREAD_LIST ;
@@ -241,10 +241,12 @@ int main (int argc, char **argv)
     double t_degree = LAGraph_toc (tic) ;
     printf ("compute degree: %g sec\n", t_degree) ;
 
-//  for (int i = 0 ; i < 10 ; i++)
-//  {
-//      printf ("node: %d degree %ld\n", i, degree [i]) ;
-//  }
+#if 0
+    for (int i = 0 ; i < 67 ; i++)
+    {
+        printf ("node: %d degree %ld\n", i, degree [i]) ;
+    }
+#endif
 
     //--------------------------------------------------------------------------
     // triangle counting
