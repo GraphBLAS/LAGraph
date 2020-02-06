@@ -288,6 +288,7 @@ int main (int argc, char **argv)
     LAGraph_set_nthreads (nthreads_max) ;
     printf ( "\n") ;
 
+    char filename [1024] ;
     #if 0
     // dump the results so it can be checked
     sprintf (filename, "v_%d_simple.mtx", (int) n) ;
@@ -332,10 +333,10 @@ int main (int argc, char **argv)
 #endif
 
     //--------------------------------------------------------------------------
-    // BFS: all-push, with tree
+    // BFS: pushpull, with tree
     //--------------------------------------------------------------------------
 
-    printf ( "allpush (with tree):\n") ;
+    printf ( "pushpull (with tree):\n") ;
     for (int tt = 1 ; tt <= nt ; tt++)
     {
         int nthreads = Nthreads [tt] ;
@@ -351,18 +352,18 @@ int main (int argc, char **argv)
             s-- ; // convert from 1-based to 0-based
             GrB_free (&v) ;
             GrB_free (&pi) ;
-            LAGRAPH_OK (LAGraph_bfs_pushpull (&v, &pi, A, NULL, s, 0, false)) ;
+            LAGRAPH_OK (LAGraph_bfs_pushpull (&v, &pi, A, AT, s, 0, false)) ;
         }
         t [nthreads] = LAGraph_toc (tic) / ntrials ;
-        printf ( ":%2d:allpush   (w/ tree): %12.3f (sec), rate: %6.2f\n",
+        printf ( ":%2d:pushpull  (w/ tree): %12.3f (sec), rate: %6.2f\n",
             nthreads, t [nthreads], 1e-6*((double) nvals) / t [nthreads]) ;
-        LAGr_log (matrix_name, "w/tree:allpush", nthreads, t [nthreads]) ;
+        LAGr_log (matrix_name, "w/tree:pushpull", nthreads, t [nthreads]) ;
     }
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;
     printf ( "\n") ;
 
-    #if 0
+    #if 1
     LAGraph_tic (tic) ;
     printf ("saving results ...\n")  ;
 
@@ -392,9 +393,10 @@ int main (int argc, char **argv)
     #endif
 
     //--------------------------------------------------------------------------
-    // BFS: all-push, with tree (log all timings)
+    // BFS: both push and pull, with tree (log all timings)
     //--------------------------------------------------------------------------
 
+#if 0
     printf ( "both (with tree, log all timings):\n") ;
     for (int tt = 1 ; tt <= nt ; tt++)
     {
@@ -425,6 +427,7 @@ int main (int argc, char **argv)
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;
     printf ( "\n") ;
+#endif
 
 #if 0
 

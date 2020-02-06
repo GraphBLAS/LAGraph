@@ -1,0 +1,121 @@
+Script started on Thu 06 Feb 2020 03:58:08 AM CST
+Intel Suite:
+Copyright (C) 2009-2019 Intel Corporation. All rights reserved.
+Intel(R) VTune(TM) Amplifier 2019 (build 591499)
+[0;36mhypersparse $[0m ./do_gap
+SuiteSparse:GraphBLAS Feb 3, 2020 (DRAFT26)
+threads to test:  40 20
+chunk: 65536
+matrix: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+sources: /home/faculty/davis/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 38.1187
+A is symmetric
+transpose time: 81.1516
+
+==========input graph: nodes: 134217728 edges: 4294966740 ntrials: 64
+simple all-push (no tree):
+:40:simple    (no tree):        4.541 (sec), rate: 945.92
+:20:simple    (no tree):        5.179 (sec), rate: 829.30
+
+pushpull (with tree):
+:40:pushpull  (w/ tree):        2.767 (sec), rate: 1551.98
+:20:pushpull  (w/ tree):        2.967 (sec), rate: 1447.67
+
+saving results ...
+save time: 78.0243 sec
+
+SuiteSparse:GraphBLAS Feb 3, 2020 (DRAFT26)
+threads to test:  40 20
+chunk: 65536
+matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+sources: /home/faculty/davis/GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 46.0923
+A is symmetric
+transpose time: 76.0373
+
+==========input graph: nodes: 134217726 edges: 4223264644 ntrials: 64
+simple all-push (no tree):
+:40:simple    (no tree):        3.335 (sec), rate: 1266.28
+:20:simple    (no tree):        3.687 (sec), rate: 1145.40
+
+pushpull (with tree):
+:40:pushpull  (w/ tree):        3.645 (sec), rate: 1158.74
+:20:pushpull  (w/ tree):        4.211 (sec), rate: 1002.88
+
+saving results ...
+save time: 78.9015 sec
+
+SuiteSparse:GraphBLAS Feb 3, 2020 (DRAFT26)
+threads to test:  40 20
+chunk: 65536
+matrix: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+sources: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter_sources.mtx
+read time: 15.163
+A is unsymmetric
+transpose time: 21.1289
+
+==========input graph: nodes: 61578415 edges: 1468364884 ntrials: 64
+simple all-push (no tree):
+:40:simple    (no tree):        0.908 (sec), rate: 1618.03
+:20:simple    (no tree):        1.076 (sec), rate: 1364.69
+
+pushpull (with tree):
+:40:pushpull  (w/ tree):        1.133 (sec), rate: 1296.44
+:20:pushpull  (w/ tree):        1.361 (sec), rate: 1078.68
+
+saving results ...
+save time: 34.2691 sec
+
+SuiteSparse:GraphBLAS Feb 3, 2020 (DRAFT26)
+threads to test:  40 20
+chunk: 65536
+matrix: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+sources: /home/faculty/davis/GAP/GAP-web/GAP-web_sources.mtx
+read time: 20.9995
+A is unsymmetric
+transpose time: 5.3213
+
+==========input graph: nodes: 50636151 edges: 1930292948 ntrials: 64
+simple all-push (no tree):
+:40:simple    (no tree):        0.968 (sec), rate: 1993.15
+:20:simple    (no tree):        0.999 (sec), rate: 1933.04
+
+pushpull (with tree):
+:40:pushpull  (w/ tree):        1.091 (sec), rate: 1768.72
+:20:pushpull  (w/ tree):        1.112 (sec), rate: 1735.96
+
+saving results ...
+save time: 28.1796 sec
+
+SuiteSparse:GraphBLAS Feb 3, 2020 (DRAFT26)
+threads to test:  40 20
+chunk: 65536
+matrix: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+sources: /home/faculty/davis/GAP/GAP-road/GAP-road_sources.mtx
+read time: 0.795784
+A is symmetric
+transpose time: 0.674586
+
+==========input graph: nodes: 23947347 edges: 57708624 ntrials: 64
+simple all-push (no tree):
+:40:simple    (no tree):        6.894 (sec), rate:   8.37
+:20:simple    (no tree):        6.721 (sec), rate:   8.59
+
+pushpull (with tree):
+:40:pushpull  (w/ tree):        7.444 (sec), rate:   7.75
+:20:pushpull  (w/ tree):        7.381 (sec), rate:   7.82
+
+saving results ...
+save time: 13.4415 sec
+
+[0;36mhypersparse $[0m 
