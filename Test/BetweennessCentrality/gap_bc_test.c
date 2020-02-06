@@ -360,8 +360,6 @@ int main (int argc, char **argv)
 //      LAGRAPH_OK (LAGraphX_bc_batch (&v_batch, A, vertex_list, batch_size)) ;
 //      LAGRAPH_OK (LAGraphX_bc_batch2 (&v_batch, A, vertex_list, batch_size)) ;
 
-GxB_set (GxB_BURBLE, 1) ;
-
         printf ("---\n") ;
 
         // version X3
@@ -415,8 +413,6 @@ GxB_set (GxB_BURBLE, 1) ;
 
         // back to default
         GxB_set (GxB_NTHREADS, nthreads_max) ;
-
-GxB_set (GxB_BURBLE, 0) ;
 
         // GxB_print (v_batch4, 2) ;
 
@@ -574,7 +570,10 @@ GxB_set (GxB_BURBLE, 0) ;
                 double t2 = total_time_x3 [c][t] / ntrials ;
                 printf ("Ave (BatchX3) %2d:%2d: %10.3f sec, rate %10.3f\n",
                     c, Nthreads [t], t2, 1e-6*((double) nvals) / t2) ;
-                LAGr_log (matrix_name, "BatchX3", Nthreads [t], t2) ;
+                if (n > 1000)
+                {
+                    LAGr_log (matrix_name, "BatchX3", Nthreads [t], t2) ;
+                }
             }
         }
     }
@@ -592,20 +591,13 @@ GxB_set (GxB_BURBLE, 0) ;
                 double t2 = total_time_4 [c][t] / ntrials ;
                 printf ("Ave (Batch4)  %2d:%2d: %10.3f sec, rate %10.3f\n",
                     c, Nthreads [t], t2, 1e-6*((double) nvals) / t2) ;
-                LAGr_log (matrix_name, "Batch4", Nthreads [t], t2) ;
+                if (n > 1000)
+                {
+                    LAGr_log (matrix_name, "Batch4", Nthreads [t], t2) ;
+                }
             }
         }
     }
-
-    /*
-
-    printf ("Average time per trial: batch, pushpull:   %g sec\n",
-        total_timing [0] / ntrials);
-    printf ("Average time per trial: batch, allpush :   %g sec\n",
-        total_timing [1] / ntrials);
-    printf ("Average time per trial: batch, allpull :   %g sec\n",
-        total_timing [2] / ntrials);
-    */
 
     LAGRAPH_FREE_ALL;
     LAGRAPH_OK (LAGraph_finalize());

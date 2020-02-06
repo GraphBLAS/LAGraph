@@ -108,7 +108,7 @@ int main (int argc, char **argv)
     #endif
     LAGRAPH_OK (LAGraph_init ( )) ;
 
-    int ntrials = 1 ;
+    int ntrials = 3 ;
     printf ("# of trials: %d\n", ntrials) ;
 
     int nt = NTHREAD_LIST ;
@@ -261,8 +261,6 @@ int main (int argc, char **argv)
     printf ("nthreads: %3d time: %12.6f rate: %6.2f (SandiaDot, one trial)\n",
             nthreads_max, ttot, 1e-6 * nvals / ttot) ;
 
-// printf ("here: \n") ; GxB_print (A, 2) ;
-
     double t_best = INFINITY ;
     int method_best = -1 ;
     int nthreads_best = -1 ;
@@ -296,7 +294,6 @@ int main (int argc, char **argv)
                 LAGraph_tic (tic) ;
                 for (int trial = 0 ; trial < ntrials ; trial++)
                 {
-// printf ("now: %d \n", trial) ; GxB_print (A, 2) ;
                     LAGRAPH_OK (LAGraph_tricount (&nt2, method, sorting,
                         degree, A)) ;
                 }
@@ -310,8 +307,11 @@ int main (int argc, char **argv)
                     abort ( ) ;
                 }
 
-                LAGr_log (matrix_name, method_name (method, sorting),
-                    nthreads, ttot) ;
+                if (n > 1000)
+                {
+                    LAGr_log (matrix_name, method_name (method, sorting),
+                        nthreads, ttot) ;
+                }
 
                 if (ttot < t_best)
                 {

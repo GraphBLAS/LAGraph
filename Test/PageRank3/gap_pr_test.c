@@ -405,7 +405,6 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
     // method 3f
     //--------------------------------------------------------------------------
-GxB_set (GxB_BURBLE, 1) ;
 
     printf ("\nMethod 3f:\n") ;
     for (int kk = 1 ; kk <= nt ; kk++)
@@ -433,7 +432,10 @@ GxB_set (GxB_BURBLE, 1) ;
         printf ("3f:%3d: avg time: %10.3f (sec), "
                 "rate: %10.3f iters: %d\n", nthreads,
                 t, 1e-6*((double) nvals) * iters / t, iters) ;
-        LAGr_log (matrix_name, "pagerank:3f", nthreads, t) ;
+        if (n > 1000)
+        {
+            LAGr_log (matrix_name, "pagerank:3f", nthreads, t) ;
+        }
     }
 
     // f = fopen ("rank3f.mtx", "w") ;
@@ -471,14 +473,16 @@ GxB_set (GxB_BURBLE, 1) ;
         printf ("x4:%3d: avg time: %10.3f (sec), "
                 "rate: %10.3f iters: %d\n", nthreads,
                 t, 1e-6*((double) nvals) * iters / t, iters) ;
-        LAGr_log (matrix_name, "pagerank:x4", nthreads, t) ;
+        if (n > 1000)
+        {
+            LAGr_log (matrix_name, "pagerank:x4", nthreads, t) ;
+        }
     }
 
     // f = fopen ("rankx4.mtx", "w") ;
     // LAGraph_mmwrite (PR, f) ;
     // fclose (f) ;
     // GxB_print (PR, GxB_SHORT) ;
-GxB_set (GxB_BURBLE, 0) ;
 
     //--------------------------------------------------------------------------
     // free all workspace and finish

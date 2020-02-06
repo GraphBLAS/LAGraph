@@ -285,8 +285,6 @@ int main (int argc, char **argv)
         n, anz, nthreads) ;
     printf ("# of source nodes: %lu\n", nsource) ;
 
-GxB_set (GxB_BURBLE, 0) ;
-
     int ntrials = (int) nsource ;
 
 for (int tt = 1 ; tt <= nt ; tt++)
@@ -301,6 +299,7 @@ for (int tt = 1 ; tt <= nt ; tt++)
     double total_time31 = 0 ;
     double total_time32 = 0 ;
     double total_time_sssp12 = 0 ;
+    double total_time_sssp12c = 0 ;
     double t1, t2, t3;
 
     for (int trial = 0 ; trial < ntrials ; trial++)
@@ -441,7 +440,21 @@ for (int tt = 1 ; tt <= nt ; tt++)
         t3 = LAGraph_toc (tic) ;
         total_time_sssp12 += t3 ;
 
-        // printf ("\n sssp12: done\n") ;
+        //----------------------------------------------------------------------
+        // sssp12c: with dense vector t
+        //----------------------------------------------------------------------
+
+        printf ("\n----sssp12c: nthreads %d trial: %d source: %lu (0-based)\n",
+            nthreads, trial, s) ;
+
+        // Start the timer
+        LAGraph_tic (tic) ;
+        GrB_free (&path_lengths1) ;
+        LAGRAPH_OK (LAGraph_sssp12c (&path_lengths1, A, s, delta, true)) ;
+
+        // Stop the timer
+        t3 = LAGraph_toc (tic) ;
+        total_time_sssp12c += t3 ;
 
         #if 0
         // save the results
@@ -638,7 +651,7 @@ for (int tt = 1 ; tt <= nt ; tt++)
         total_time1 = total_time1 / ntrials ;
         printf ("%2d: BF      time: %14.6f sec  rate: %8.2f\n",
             nthreads, total_time1, 1e-6 * e / total_time1) ;
-        LAGr_log (matrix_name, "BF", nthreads, total_time1) ;
+        if (n > 1000) LAGr_log (matrix_name, "BF", nthreads, total_time1) ;
     }
 
     #if 0
@@ -651,7 +664,7 @@ for (int tt = 1 ; tt <= nt ; tt++)
         total_time3 = total_time3 / ntrials ;
         printf ("%2d: SSSP1   time: %14.6f sec  rate: %8.2f (delta %d)\n",
             nthreads, total_time3, 1e-6 * e / total_time3, delta) ;
-        LAGr_log (matrix_name, "SSSP1", nthreads, total_time3) ;
+        if (n > 1000) LAGr_log (matrix_name, "SSSP1", nthreads, total_time3) ;
     }
 
     if (total_time31 > 0)
@@ -659,7 +672,7 @@ for (int tt = 1 ; tt <= nt ; tt++)
         total_time31 = total_time31 / ntrials ;
         printf ("%2d: SSSP11  time: %14.6f sec  rate: %8.2f (delta %d)\n",
             nthreads, total_time31, 1e-6 * e / total_time31, delta) ;
-        LAGr_log (matrix_name, "SSSP11", nthreads, total_time31) ;
+        if (n > 1000) LAGr_log (matrix_name, "SSSP11", nthreads, total_time31) ;
     }
 
     if (total_time32 > 0)
@@ -667,19 +680,32 @@ for (int tt = 1 ; tt <= nt ; tt++)
         total_time32 = total_time32 / ntrials ;
         printf ("%2d: SSSP2   time: %14.6f sec  rate: %8.2f (delta %d)\n",
             nthreads, total_time32, 1e-6 * e / total_time32, delta) ;
-        LAGr_log (matrix_name, "SSSP2", nthreads, total_time32) ;
+        if (n > 1000) LAGr_log (matrix_name, "SSSP2", nthreads, total_time32) ;
     }
 
     if (total_time_sssp12 > 0)
     {
         total_time_sssp12 = total_time_sssp12 / ntrials ;
-        printf ("%2d: SSSP12c time: %14.6f sec  rate: %8.2f (delta %d)\n",
+        printf ("%2d: SSSP12  time: %14.6f sec  rate: %8.2f (delta %d)\n",
             nthreads, total_time_sssp12, 1e-6 * e / total_time_sssp12, delta) ;
-        LAGr_log (matrix_name, "SSSP12c", nthreads, total_time_sssp12) ;
+        if (n > 1000)
+        {
+            LAGr_log (matrix_name, "SSSP12c", nthreads, total_time_sssp12) ;
+        }
     }
-}
 
-GxB_set (GxB_BURBLE, 0) ;
+    if (total_time_sssp12c > 0)
+    {
+        total_time_sssp12c = total_time_sssp12c / ntrials ;
+        printf ("%2d: SSSP12c time: %14.6f sec  rate: %8.2f (delta %d)\n",
+            nthreads, total_time_sssp12c, 1e-6 * e / total_time_sssp12c, delta);
+        if (n > 1000)
+        {
+            LAGr_log (matrix_name, "SSSP12c", nthreads, total_time_sssp12c) ;
+        }
+    }
+
+}
 
     //--------------------------------------------------------------------------
     // free all workspace and finish

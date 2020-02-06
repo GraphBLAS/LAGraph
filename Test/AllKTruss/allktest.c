@@ -153,7 +153,7 @@ int main (int argc, char **argv)
             t1 = t ;
             for (int64_t kk = 3 ; kk <= kmax ; kk++)
             {
-                printf (" k %4d", kk) ;
+                printf (" k %4d", (int) kk) ;
                 printf (" edges %12" PRIu64, nedges [kk]) ;
                 printf (" ntriangles %12" PRId64, ntris [kk]) ;
                 printf (" nsteps %6" PRId64 "\n", nstepss [kk]) ;

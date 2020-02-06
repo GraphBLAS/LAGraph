@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# run all GAP benchmarks
+
 cd BetweennessCentrality
 ./do_gap
 

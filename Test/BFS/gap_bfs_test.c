@@ -282,7 +282,10 @@ int main (int argc, char **argv)
         t [nthreads] = LAGraph_toc (tic) / ntrials ;
         printf ( ":%2d:simple    (no tree): %12.3f (sec), rate: %6.2f\n",
             nthreads, t [nthreads], 1e-6*((double) nvals) / t [nthreads]) ;
-        LAGr_log (matrix_name, "simple:allpush", nthreads, t [nthreads]) ;
+        if (n > 1000)
+        {
+            LAGr_log (matrix_name, "simple:allpush", nthreads, t [nthreads]) ;
+        }
     }
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;
@@ -357,13 +360,16 @@ int main (int argc, char **argv)
         t [nthreads] = LAGraph_toc (tic) / ntrials ;
         printf ( ":%2d:pushpull  (w/ tree): %12.3f (sec), rate: %6.2f\n",
             nthreads, t [nthreads], 1e-6*((double) nvals) / t [nthreads]) ;
-        LAGr_log (matrix_name, "w/tree:pushpull", nthreads, t [nthreads]) ;
+        if (n > 1000)
+        {
+            LAGr_log (matrix_name, "w/tree:pushpull", nthreads, t [nthreads]) ;
+        }
     }
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;
     printf ( "\n") ;
 
-    #if 1
+    #if 0
     LAGraph_tic (tic) ;
     printf ("saving results ...\n")  ;
 

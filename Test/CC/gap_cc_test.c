@@ -194,8 +194,6 @@ int main (int argc, char **argv)
 
     bool sanitize = false ;
 
-GxB_set (GxB_BURBLE, 1) ;
-
     GrB_Index nCC;
     for (int trial = 1 ; trial <= nt ; trial++)
     {
@@ -203,6 +201,7 @@ GxB_set (GxB_BURBLE, 1) ;
         if (nthreads > nthreads_max) continue ;
         LAGraph_set_nthreads (nthreads) ;
 
+        #if 0
         double t1 = 0 ;
         for (int k = 0 ; k < NTRIALS ; k++)
         {
@@ -214,7 +213,11 @@ GxB_set (GxB_BURBLE, 1) ;
         }
         printf("FastSV:   threads: %2d time: %10.4f  # of CC: %lu\n",
             nthreads, t1/ NTRIALS, nCC) ;
-        LAGr_log (matrix_name, "FastSV", nthreads, t1/NTRIALS) ;
+        if (n > 1000)
+        {
+            LAGr_log (matrix_name, "FastSV", nthreads, t1/NTRIALS) ;
+        }
+        #endif
 
         t1 = 0 ;
         for (int k = 0 ; k < NTRIALS ; k++)
@@ -227,7 +230,10 @@ GxB_set (GxB_BURBLE, 1) ;
         }
         printf("FastSV5:  threads: %2d time: %10.4f  # of CC: %lu\n",
             nthreads, t1 / NTRIALS, nCC) ;
-        LAGr_log (matrix_name, "FastSV5", nthreads, t1/NTRIALS) ;
+        if (n > 1000)
+        {
+            LAGr_log (matrix_name, "FastSV5", nthreads, t1/NTRIALS) ;
+        }
 
         t1 = 0 ;
         for (int k = 0 ; k < NTRIALS ; k++)
@@ -240,7 +246,10 @@ GxB_set (GxB_BURBLE, 1) ;
         }
         printf("FastSV5a: threads: %2d time: %10.4f  # of CC: %lu\n",
             nthreads, t1 / NTRIALS, nCC) ;
-        LAGr_log (matrix_name, "FastSV5a", nthreads, t1/NTRIALS) ;
+        if (n > 1000)
+        {
+            LAGr_log (matrix_name, "FastSV5a", nthreads, t1/NTRIALS) ;
+        }
 
         t1 = 0 ;
         for (int k = 0 ; k < NTRIALS ; k++)
@@ -253,7 +262,10 @@ GxB_set (GxB_BURBLE, 1) ;
         }
         printf("FastSV5b: threads: %2d time: %10.4f  # of CC: %lu\n",
             nthreads, t1 / NTRIALS, nCC) ;
-        LAGr_log (matrix_name, "FastSV5b", nthreads, t1/NTRIALS) ;
+        if (n > 1000)
+        {
+            LAGr_log (matrix_name, "FastSV5b", nthreads, t1/NTRIALS) ;
+        }
 
         /*
         LAGraph_tic (tic) ;
@@ -276,8 +288,6 @@ GxB_set (GxB_BURBLE, 1) ;
         */
         printf("\n");
     }
-
-GxB_set (GxB_BURBLE, 0) ;
 
     LAGRAPH_FREE_ALL ;
     LAGRAPH_OK (GrB_finalize ( )) ;
