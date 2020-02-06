@@ -14,3 +14,4 @@ s_*
 allpush_*.m
 allpull_*.m
 pushpull_*.m
+logtime_*txt

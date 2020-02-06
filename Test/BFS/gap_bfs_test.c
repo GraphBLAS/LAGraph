@@ -211,7 +211,7 @@ int main (int argc, char **argv)
     // HACK: AT not needed for push-only BFS
     AT = NULL ;
 
-#if 0
+#if 1
     LAGraph_tic (tic);
     bool A_is_symmetric ;
     LAGRAPH_OK (GrB_Matrix_new (&AT, GrB_BOOL, n, n)) ;
@@ -335,8 +335,6 @@ int main (int argc, char **argv)
     // BFS: all-push, with tree
     //--------------------------------------------------------------------------
 
-GxB_set (GxB_BURBLE, 1) ;
-
     printf ( "allpush (with tree):\n") ;
     for (int tt = 1 ; tt <= nt ; tt++)
     {
@@ -363,8 +361,6 @@ GxB_set (GxB_BURBLE, 1) ;
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;
     printf ( "\n") ;
-
-GxB_set (GxB_BURBLE, 0) ;
 
     #if 0
     LAGraph_tic (tic) ;
@@ -398,6 +394,37 @@ GxB_set (GxB_BURBLE, 0) ;
     //--------------------------------------------------------------------------
     // BFS: all-push, with tree (log all timings)
     //--------------------------------------------------------------------------
+
+    printf ( "both (with tree, log all timings):\n") ;
+    for (int tt = 1 ; tt <= nt ; tt++)
+    {
+
+        int nthreads = Nthreads [tt] ;
+        if (nthreads > nthreads_max) continue ;
+        LAGraph_set_nthreads (nthreads) ;
+
+        char logfilename [1024] ;
+        sprintf (logfilename, "logtime_%ld_%d.txt", n, nthreads) ;
+        printf ("logfile: [%s]\n", logfilename) ;
+        FILE *logfile = fopen (logfilename, "w") ;
+
+        for (int trial = 0 ; trial < ntrials ; trial++)
+        {
+            int64_t s ; 
+            // s = SourceNodes [i]
+            LAGRAPH_OK (GrB_Matrix_extractElement (&s, SourceNodes, trial, 0)) ;
+            s-- ; // convert from 1-based to 0-based
+            GrB_free (&v) ;
+            GrB_free (&pi) ;
+            LAGRAPH_OK (LAGraph_bfs_both (&v, &pi, A, AT, s, 0, false,
+                logfile)) ;
+        }
+
+        fclose (logfile) ;
+    }
+    // restore default
+    LAGraph_set_nthreads (nthreads_max) ;
+    printf ( "\n") ;
 
 #if 0
 
