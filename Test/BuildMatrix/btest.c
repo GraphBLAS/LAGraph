@@ -130,9 +130,9 @@ int main (int argc, char **argv)
     printf ("max threads %d\n", nthreads_max) ;
 
     uint64_t seed = 1 ;
-    GrB_Index nrows = 10000 ;
-    GrB_Index ncols = 10000 ;
-    GrB_Index nvals = 10000000 ;
+    GrB_Index nrows = 1000 ;
+    GrB_Index ncols = 1000 ;
+    GrB_Index nvals = 100000 ;
 
     // create A with one thread
     OK (bmake (&A, GrB_FP64, nrows, ncols, nvals,
