@@ -15,3 +15,8 @@ for node = 1:234
     fclose (f) ;
 end
 
+f = fopen ('runallnodes', 'w') ;
+for node = 1:234
+    filename = sprintf ('myjob_TC_urand_n%03d', node) ;
+    fprintf (f, 'qsub %s\n', filename) ;
+end
