@@ -106,117 +106,7 @@ warmup (3f):     16.959 (threads: 40)
 
 Method 3f:
 ^C
-[0;36mhypersparse $[0m vi gap_pr_test.c 
-[?1000h[?1049h[?1h=[2;1H▽[6n[2;1H  [1;1H[1;79r[?12;25h[?12l[?25h[27m[23m[m[97m[40m[H[2J[?25l[79;1H"gap_pr_test.c" 495L, 15785C[>c[1;1H[96m//------------------------------------------------------------------------------[2;1H// p3test: read in (or create) a matrix and test PageRank3
-//------------------------------------------------------------------------------[5;1H/*
-LAGraph:  graph algorithms based on GraphBLAS
 
-Copyright 2019 LAGraph Contributors.
-
-(see Contributors.txt for a full list of Contributors; see
-ContributionInstructions.txt for information on how you can Contribute to
-this project).
-
-All Rights Reserved.
-
-NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
-CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
-AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
-PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
-THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
-RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
-
-Released under a BSD license, please see the LICENSE file distributed with
-this Software or contact permission@sei.cmu.edu for full terms.
-
-Created, in part, with funding and support from the United States
-Government.  (see Acknowledgments.txt file).
-
-This program includes and/or can make use of certain third party source
-code, object code, documentation and other files ("Third Party Software").
-See LICENSE file for more details.
-
-*/
-
-//------------------------------------------------------------------------------[37;1H// Contributed by Tim Davis, Texas A&M and Gabor Szarnyas, BME
-
-// usage:
-// p3test < in > out[m[97m[40m
-
-[95m#define NTHREAD_LIST [m[97m[40m[92m2[m[97m[40m
-[95m#define THREAD_LIST [m[97m[40m[92m0[m[97m[40m
-
-[96m// #define NTHREAD_LIST 6
-// #define THREAD_LIST 64, 32, 24, 12, 8, 4[m[97m[40m
-
-[95m#include [m[97m[40m[91m"LAGraph.h"[m[97m[40m
-
-[95m#define LAGRAPH_FREE_ALL                        \
-{                                               \
-    [m[97m[40m[92mif[m[97m[40m[95m (P != [m[97m[40m[92mNULL[m[97m[40m[95m) { free (P) ; P = [m[97m[40m[92mNULL[m[97m[40m[95m ; }    \
-    GrB_free (&A) ;                             \
-    GrB_free (&A_orig) ;                        \
-    GrB_free (&A_temp) ;                        \
-    GrB_free (&PR) ;                            \
-    GrB_free (&d_in) ;                          \
-    GrB_free (&d_out) ;                         \
-}[m[97m[40m
-
-[92mint[m[97m[40m main ([92mint[m[97m[40m argc, [92mchar[m[97m[40m **argv)
-{
-    GrB_Info info ;[65;5HLAGraph_PageRank *P = [92mNULL[m[97m[40m ;
-    GrB_Matrix A = [92mNULL[m[97m[40m, A_orig = [92mNULL[m[97m[40m, A_temp = [92mNULL[m[97m[40m ;
-    GrB_Vector PR = [92mNULL[m[97m[40m, d_out = [92mNULL[m[97m[40m, d_in = [92mNULL[m[97m[40m ;
-    LAGRAPH_OK (LAGraph_init ( )) ;
-GxB_set (GxB_BURBLE, [92m1[m[97m[40m) ;
-    [92mint[m[97m[40m nt = NTHREAD_LIST ;
-    [92mint[m[97m[40m Nthreads [[92m20[m[97m[40m] = { [92m0[m[97m[40m, THREAD_LIST } ;
-    [92mint[m[97m[40m nthreads_max = LAGraph_get_nthreads ( ) ;
-    [92mif[m[97m[40m (Nthreads [[92m1[m[97m[40m] == [92m0[m[97m[40m)
-    {[75;9H[96m// create thread list automatically[m[97m[40m[76;9HNthreads [[92m1[m[97m[40m] = nthreads_max ;[77;9H[92mfor[m[97m[40m ([92mint[m[97m[40m t = [92m2[m[97m[40m ; t <= nt ; t++)[78;9H{[79;63H1,1[11CTop[1;1H[?12l[?25h[?1000l[?1006h[?1002h[?1006l[?1002l[?1006h[?1002hP+q436f\P+q6b75\P+q6b64\P+q6b72\P+q6b6c\P+q2332\P+q2334\P+q2569\P+q2a37\P+q6b31\[?25l[79;1H[K[79;1H/[?12l[?25hn[?25l[?12l[?25ht[?25l[?12l[?25hr[?25l[?12l[?25hi[?25l[?12l[?25ha[?25l[?12l[?25hl[?25l[?12l[?25hs[?25l[?12l[?25h[?25l[27m[23m[m[97m[40m[H[2J[1;5HLAGr_Vector_new (&d_out, GrB_FP32, n) ;
-    LAGr_reduce (d_out, [92mNULL[m[97m[40m, [92mNULL[m[97m[40m, GxB_PLUS_FP32_MONOID, A, [92mNULL[m[97m[40m) ;
-    GrB_Index non_dangling ;
-    LAGr_Vector_nvals (&non_dangling, d_out) ;
-    [92mif[m[97m[40m (non_dangling < n)
-    {[7;9HLAGRAPH_ERROR ([91m"Matrix has dangling nodes!"[m[97m[40m, GrB_INVALID_VALUE) ;
-    }[10;5H[96m// copy into a double vector for pagerank3c[m[97m[40m
-    [92mfloat[m[97m[40m *dout = [92mNULL[m[97m[40m ;
-    GrB_Index *dI = [92mNULL[m[97m[40m ;
-    GrB_Type dtype ;
-    GrB_Vector d_out2 = [92mNULL[m[97m[40m ;
-    GrB_Vector_dup (&d_out2, d_out) ;
-    LAGr_Vector_export (&d_out2, &dtype, &n, &n_d_out, &dI,[17;9H([92mvoid[m[97m[40m **) (&dout), [92mNULL[m[97m[40m) ;
-    LAGRAPH_FREE (dI) ;[20;5Hprintf ([91m"[m[97m[40m[91m[40m\n[m[97m[40m[91m=========="[21;13H"input graph: nodes: %"[m[97m[40mPRIu64[91m" edges: %"[m[97m[40mPRIu64[91m"[m[97m[40m[91m[40m\n[m[97m[40m[91m"[m[97m[40m, n, nvals) ;
-    printf ([91m"diag entries added: %"[m[97m[40mPRId64[91m"[m[97m[40m[91m[40m\n[m[97m[40m[91m"[m[97m[40m, edges_added) ;[24;5HGrB_Index nvals2 ;
-    GrB_Matrix_nvals (&nvals2, A) ;[27;5H[92mdouble[m[97m[40m tread = LAGraph_toc (tic) ;
-    printf ([91m"read time: [m[97m[40m[91m[40m%g[m[97m[40m[91m sec[m[97m[40m[91m[40m\n[m[97m[40m[91m"[m[97m[40m, tread) ;[30;5H[92mFILE[m[97m[40m *f = [92mNULL[m[97m[40m ;[32;5H[96m// GxB_fprint (A, GxB_SHORT, stdout) ;[34;5H//--------------------------------------------------------------------------[35;5H// compute the pagerank (both methods)
-[m[97m[40m    [96m//--------------------------------------------------------------------------[38;5H// the GAP benchmark requires 16 trials[m[97m[40m
-    [92mint[m[97m[40m [4m[30m[103mntrials[m[97m[40m = [92m16[m[97m[40m ;
-    printf ([91m"# of trials: [m[97m[40m[91m[40m%d\n[m[97m[40m[91m"[m[97m[40m, [4m[30m[103mntrials[m[97m[40m) ;[42;5H[92mfloat[m[97m[40m tol = [92m1e-4[m[97m[40m ;
-    [92mint[m[97m[40m iters, itermax = [92m100[m[97m[40m ;[45;5H[92mdouble[m[97m[40m chunk ; [96m// = 64 * 1024 ;[m[97m[40m
-    GxB_get (GxB_CHUNK, &chunk) ;
-    printf ([91m"chunk: [m[97m[40m[91m[40m%g\n[m[97m[40m[91m"[m[97m[40m, chunk) ;[49;5H[96m//--------------------------------------------------------------------------[50;5H// warmup for more accurate timing
-[m[97m[40m    [96m//--------------------------------------------------------------------------[m[97m[40m[53;5HLAGraph_set_nthreads (nthreads_max) ;
-    LAGraph_tic (tic) ;
-    LAGRAPH_OK (LAGraph_pagerank3f (&PR, A_orig, d_out, [92m0.85[m[97m[40m, itermax,[56;17H&iters)) ;
-    [92mdouble[m[97m[40m t_warmup = LAGraph_toc (tic) ;
-    printf ([91m"warmup (3f): [m[97m[40m[91m[40m%10.3f[m[97m[40m[91m (threads: [m[97m[40m[91m[40m%d[m[97m[40m[91m)[m[97m[40m[91m[40m\n[m[97m[40m[91m"[m[97m[40m, t_warmup, nthreads_max) ;
-    fflush ([92mstdout[m[97m[40m) ;
-    GrB_free (&PR) ;[62;5H[96m//--------------------------------------------------------------------------[63;5H// method 3e
-[m[97m[40m    [96m//--------------------------------------------------------------------------[m[97m[40m[66;1H[95m#if 0[m[97m[40m
-[96m    printf ("\nMethod 3e:\n") ;
-    for (int kk = 1 ; kk <= nt ; kk++)
-    {
-        int nthreads = Nthreads [kk] ;
-        if (nthreads > nthreads_max) continue ;
-        LAGraph_set_nthreads (nthreads) ;
-        // printf ("3e:%2d: ", nthreads) ;
-        
-        double total_time = 0 ;
-
-        for (int trial = 0 ; trial < [m[97m[40m[4m[30m[103mntrials[m[97m[40m[96m ; trial++)
-        {[m[97m[40m[79;63H257,9[9C52%[39;9H[?12l[?25h[?25l[79;67H17[39;17H[?12l[?25h[?25l[79;68H9[39;19H[?12l[?25h[?25l[79;1H[1m-- INSERT --[m[97m[40m[79;63H[K[79;63H257,19[8C52%[39;19H[?12l[?25h[?25l[1C[92m16[m[97m[40m ;[79;67H20[39;20H[?12l[?25h[?25l [92m16[m[97m[40m ;[79;68H1[39;21H[?12l[?25h[?25l;[92m16[m[97m[40m ;[79;68H2[39;22H[?12l[?25h[?25l [92m16[m[97m[40m ;[79;68H3[39;23H[?12l[?25h[?25l/[92m16[m[97m[40m ;[79;68H4[39;24H[?12l[?25h[?25l[96m//16 ;[m[97m[40m[79;68H5[39;25H[?12l[?25h[?25l[96m 16 ;[m[97m[40m[79;68H6[39;26H[?12l[?25h[79;1H[K[39;25H[?25l[79;63H257,25[8C52%[39;25H[?12l[?25h[?1006l[?1002l[?25l[79;1H"gap_pr_test.c"[79;63H[K[79;17H495L, 15792C written
-[39;49m[?1l>[?12l[?25h[?1049l[0;36mhypersparse $[0m gmake
 ( cd build ; cmake  .. ; make --jobs=40 )
 -- CMAKE build type:          Release
 -- CMAKE C Flags release:     -O3 -DNDEBUG
@@ -3087,4 +2977,760 @@ x4: 20: avg time:      1.191 (sec), rate:   1890.059 iters: 39
 [0;36mhypersparse $[0m 
 [0;36mhypersparse $[0m 
 [0;36mhypersparse $[0m 
-[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m gmake
+( cd build ; cmake  .. ; make --jobs=40 )
+-- CMAKE build type:          Release
+-- CMAKE C Flags release:     -O3 -DNDEBUG
+-- CMAKE compiler ID:         GNU
+-- CMAKE thread library:      -lpthread
+-- CMAKE have pthreads:       1
+-- CMAKE have Win32 pthreads: 
+-- CMAKE have OpenMP:         TRUE
+-- Automatic selection of synchronization method
+-- Using OpenMP to synchronize user threads
+-- CMAKE C flags:  -std=c11 -lm -Wno-pragmas  -O3 -DNDEBUG -fopenmp -DUSER_OPENMP_THREADS  -DHAVE_PTHREADS 
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/faculty/davis/sparse/LAGraph/Test/PageRank3/build
+make[1]: Entering directory '/home/faculty/davis/sparse/LAGraph/Test/PageRank3/build'
+make[2]: Entering directory '/home/faculty/davis/sparse/LAGraph/Test/PageRank3/build'
+make[3]: Entering directory '/home/faculty/davis/sparse/LAGraph/Test/PageRank3/build'
+make[3]: Leaving directory '/home/faculty/davis/sparse/LAGraph/Test/PageRank3/build'
+[100%] Built target gap_pr_test
+make[2]: Leaving directory '/home/faculty/davis/sparse/LAGraph/Test/PageRank3/build'
+make[1]: Leaving directory '/home/faculty/davis/sparse/LAGraph/Test/PageRank3/build'
+./build/gap_pr_test ../BinRead/west0067.grb
+SuiteSparse:GraphBLAS Feb 7, 2020 (DRAFT28)
+threads to test:  40 20
+matrix: ../BinRead/west0067.grb
+[.grb]
+Reading binary file: ../BinRead/west0067.grb
+original # of edges: 294
+
+==========input graph: nodes: 67 edges: 294
+diag entries added: 0
+read time: 0.000242762 sec
+# of trials: 1
+chunk: 65536
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 0.00216687
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 4.35505e-05
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 5.74999e-06
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 7.05197e-06
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 5.30854e-06
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 5.62891e-06
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 5.55441e-06
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 5.36814e-06
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 5.26384e-06
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 5.14276e-06
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 3.96743e-06
+warmup (3f):      0.003 (threads: 40)
+
+Method 3f:
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 6.37956e-06
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 5.2359e-06
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 5.05894e-06
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 4.97326e-06
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 5.22472e-06
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 5.4203e-06
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 4.9267e-06
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 5.03287e-06
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 3.80725e-06
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 5.27129e-06
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 4.93228e-06
+3f: 40: avg time:      0.000 (sec), rate:     15.384 iters: 11
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 5.8338e-06
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 5.31785e-06
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 4.90248e-06
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 5.20609e-06
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 3.88548e-06
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 4.85219e-06
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 5.1856e-06
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 5.51902e-06
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 5.40912e-06
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 5.19492e-06
+cblas saxpy n: 67 nthreads: 1
+C-=A via axpy time: 5.24335e-06
+3f: 20: avg time:      0.000 (sec), rate:     15.356 iters: 11
+
+Method x4:
+x4: 40: avg time:      0.015 (sec), rate:      0.213 iters: 11
+x4: 20: avg time:      0.001 (sec), rate:      3.813 iters: 11
+[0;36mhypersparse $[0m g[Kg[Kcat go[K[Kdo_gap p[K
+#!/bin/bash
+
+./build/gap_pr_test ~/GAP/GAP-kron/GAP-kron.grb
+./build/gap_pr_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_pr_test ~/GAP/GAP-twitter/GAP-twitter.grb
+./build/gap_pr_test ~/GAP/GAP-web/GAP-web.grb
+./build/gap_pr_test ~/GAP/GAP-road/GAP-road.grb
+
+[0;36mhypersparse $[0m ./build/gap_pr_test ~/GAP/GAP-road/GAP-road.grb
+SuiteSparse:GraphBLAS Feb 7, 2020 (DRAFT28)
+threads to test:  40 20
+matrix: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+original # of edges: 57708624
+
+==========input graph: nodes: 23947347 edges: 57708624
+diag entries added: 0
+read time: 1.92539 sec
+# of trials: 1
+chunk: 65536
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0418164
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0436882
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0362884
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0425893
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0360977
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0349076
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0415013
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0378872
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0375415
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0363619
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0399375
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0421405
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0410362
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0419584
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0463641
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.044708
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0383138
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0425681
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0416671
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.036557
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0380413
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0412363
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0359149
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0371328
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0458365
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0330435
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0378016
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0378969
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0465736
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0427847
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0365014
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0319565
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0332074
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0459502
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0433903
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0603067
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0558279
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0401843
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0419853
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0342153
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0449968
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.046759
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.039973
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.042555
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0374404
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0432538
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0360099
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0468497
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0484533
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0406926
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0332802
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0415743
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0436644
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0428609
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0423444
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0381297
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0396068
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0408795
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0504285
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0385503
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0389247
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0365016
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0350704
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0339611
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0305538
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0414628
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.038295
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0452777
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0463812
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0472074
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0375503
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0461417
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0460724
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0461673
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0370433
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0400842
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0345124
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0424736
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.041804
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0422892
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0431917
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0427791
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0259629
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0412505
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0427679
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0396885
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0421673
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.035341
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0407591
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0291332
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0479388
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0395233
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0382178
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0416158
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0385589
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0500711
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0379531
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0450926
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0478699
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0472262
+warmup (3f):     17.875 (threads: 40)
+
+Method 3f:
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0435577
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0403299
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0380436
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0395605
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0443297
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0335192
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0394889
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0402862
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0388
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0324191
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0527346
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.037074
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0467431
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0380384
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0558223
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0424838
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0443724
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0315098
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0454282
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0445658
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0397769
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.032317
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0451296
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.043974
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0427395
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0309946
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0374349
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0441757
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0489921
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0414512
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0478144
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0400024
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0375619
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0376971
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.041381
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0451182
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0390254
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0393499
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0436716
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0444377
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0453868
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0335104
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0455804
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.035749
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0442227
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0499852
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0426976
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0425037
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0347948
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0329544
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0431853
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0385082
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0377008
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0325146
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0500403
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0465062
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0528825
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0400394
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0393203
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0542968
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0330419
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0399614
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0367954
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.040648
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0482203
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0471752
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0368129
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0406044
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0415961
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0469167
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0367991
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.039456
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0469097
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0366608
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0490247
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0469422
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0424095
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0381931
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0494259
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0350719
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0330549
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0388033
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0333666
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0454366
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0452214
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0267114
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0312579
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0376876
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0473035
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.040969
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0408239
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0330981
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0398224
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0419703
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0504583
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0417502
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0465342
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0411735
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0401816
+cblas saxpy n: 23947347 nthreads: 40
+C-=A via axpy time: 0.0397069
+3f: 40: avg time:     18.147 (sec), rate:    317.999 iters: 100
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0234899
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0194435
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0186462
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.019537
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0190694
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0190771
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0199778
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0200295
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0199588
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0199804
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0198683
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0190151
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0197882
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0195338
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0204173
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0193082
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0202823
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0209259
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0199909
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0204403
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0200997
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.019098
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0202393
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0197416
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0202279
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0189943
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0202185
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0194436
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0211395
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0202631
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0208005
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0202233
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0195993
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0195286
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0219915
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0201252
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0202449
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0198382
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0201652
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.020039
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0201189
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0195063
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0196685
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0197419
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0195718
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0194693
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0198783
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0192299
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0201388
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0199924
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0192645
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0200357
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0197245
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0205048
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0196967
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0194692
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0202794
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0193302
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0196153
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0197681
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0190654
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.019609
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0201975
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0198056
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0199055
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0187008
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0204466
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0209736
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0195721
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0194522
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.020005
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0188329
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0203034
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0201698
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0202046
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0195164
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0204378
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0190565
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0199839
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0202616
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0194572
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0204832
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0198304
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0194446
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0205235
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0200889
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0195083
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0201832
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0206158
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0198726
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0191997
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0204558
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0201519
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0202359
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0198281
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0199191
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0197383
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0204339
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.0206208
+cblas saxpy n: 23947347 nthreads: 20
+C-=A via axpy time: 0.019122
+3f: 20: avg time:      5.679 (sec), rate:   1016.201 iters: 100
+
+Method x4:
+x4: 40: avg time:      1.203 (sec), rate:   1870.863 iters: 39
+x4: 20: avg time:      1.192 (sec), rate:   1887.698 iters: 39
+[0;36mhypersparse $[0m pwd
+/home/faculty/davis/sparse/LAGraph/Test/PageRank3
+[0;36mhypersparse $[0m git status
+On branch master
+Your branch is up-to-date with 'origin/master'.
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	[31mmodified:   Feb7.txt[m
+
+no changes added to commit (use "git add" and/or "git commit -a")
+[0;36mhypersparse $[0m git[K[K[Kexit
+exit
+
+Script done on Fri 07 Feb 2020 08:32:15 PM CST
