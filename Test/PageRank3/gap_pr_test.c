@@ -66,7 +66,7 @@ int main (int argc, char **argv)
     GrB_Matrix A = NULL, A_orig = NULL, A_temp = NULL ;
     GrB_Vector PR = NULL, d_out = NULL, d_in = NULL ;
     LAGRAPH_OK (LAGraph_init ( )) ;
-
+GxB_set (GxB_BURBLE, 1) ;
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;
     int nthreads_max = LAGraph_get_nthreads ( ) ;
@@ -254,7 +254,7 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     // the GAP benchmark requires 16 trials
-    int ntrials = 16 ;
+    int ntrials = 1 ; // 16 ;
     printf ("# of trials: %d\n", ntrials) ;
 
     float tol = 1e-4 ;

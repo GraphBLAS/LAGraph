@@ -1,0 +1,697 @@
+hypersparse.cs.tamu.edu
+June 18-20, 2019, using V3.0.0 Draft of GraphBLAS (June 18 version) 
+The GPUs were not used.
+icc (ICC) 19.0.3.199 20190206
+
+type: float
+max # of nthreads: 40
+# of problems to solve: 12
+
+# neurons: 1024 bias: -0.3
+# features: 60000 read time: 3.08589 sec
+# entries in Y0: 6.37451 million
+
+--------------------------------------neurons per layer: 1024 layers: 120
+read net time 1.291 sec
+# edges in all layers: 3.93216 million
+
+nthreads  1: 
+Y*W: 16.3922 sec
+Y+B: 1.1404 sec
+RelU 1.11356 sec
+Ymax 2.30508 sec
+soln time        20.95 sec                  rate    11.2608 (1e9 edges/sec) 
+nthreads  2: 
+Y*W: 9.58302 sec
+Y+B: 0.684154 sec
+RelU 0.662929 sec
+Ymax 1.18613 sec
+soln time        12.12 sec speedup     1.73 rate    19.4720 (1e9 edges/sec) 
+nthreads  4: 
+Y*W: 4.87062 sec
+Y+B: 0.391555 sec
+RelU 0.381454 sec
+Ymax 0.618453 sec
+soln time         6.26 sec speedup     3.35 rate    37.6754 (1e9 edges/sec) 
+nthreads  8: 
+Y*W: 2.50045 sec
+Y+B: 0.262519 sec
+RelU 0.243477 sec
+Ymax 0.327314 sec
+soln time         3.33 sec speedup     6.28 rate    70.7683 (1e9 edges/sec) 
+nthreads 16: 
+Y*W: 1.33545 sec
+Y+B: 0.211964 sec
+RelU 0.171555 sec
+Ymax 0.186254 sec
+soln time         1.91 sec speedup    11.00 rate   123.8272 (1e9 edges/sec) 
+nthreads 20: 
+Y*W: 1.0923 sec
+Y+B: 0.211739 sec
+RelU 0.155449 sec
+Ymax 0.161612 sec
+soln time         1.62 sec speedup    12.92 rate   145.5287 (1e9 edges/sec) 
+nthreads 32: 
+Y*W: 1.12338 sec
+Y+B: 0.251783 sec
+RelU 0.199336 sec
+Ymax 0.172214 sec
+soln time         1.75 sec speedup    11.99 rate   135.0636 (1e9 edges/sec) 
+nthreads 40: 
+Y*W: 0.939821 sec
+Y+B: 0.25001 sec
+RelU 0.198243 sec
+Ymax 0.151131 sec
+soln time         1.54 sec speedup    13.61 rate   153.2685 (1e9 edges/sec) 
+
+# entries in final Y: 1.85549 million
+check time: 0.00686598 sec
+
+--------------------------------------neurons per layer: 1024 layers: 480
+read net time 3.49816 sec
+# edges in all layers: 15.7286 million
+
+nthreads  1: 
+Y*W: 44.6335 sec
+Y+B: 2.08798 sec
+RelU 3.02656 sec
+Ymax 7.64756 sec
+soln time        57.40 sec                  rate    16.4423 (1e9 edges/sec) 
+nthreads  2: 
+Y*W: 24.8277 sec
+Y+B: 1.41272 sec
+RelU 1.78338 sec
+Ymax 3.97708 sec
+soln time        32.00 sec speedup     1.79 rate    29.4901 (1e9 edges/sec) 
+nthreads  4: 
+Y*W: 12.5817 sec
+Y+B: 0.800805 sec
+RelU 0.980584 sec
+Ymax 2.04737 sec
+soln time        16.41 sec speedup     3.50 rate    57.5063 (1e9 edges/sec) 
+nthreads  8: 
+Y*W: 6.35816 sec
+Y+B: 0.51081 sec
+RelU 0.559598 sec
+Ymax 1.041 sec
+soln time         8.47 sec speedup     6.78 rate   111.4214 (1e9 edges/sec) 
+nthreads 16: 
+Y*W: 3.37677 sec
+Y+B: 0.440845 sec
+RelU 0.351783 sec
+Ymax 0.557876 sec
+soln time         4.73 sec speedup    12.14 rate   199.6218 (1e9 edges/sec) 
+nthreads 20: 
+Y*W: 2.84099 sec
+Y+B: 0.451516 sec
+RelU 0.317504 sec
+Ymax 0.479286 sec
+soln time         4.09 sec speedup    14.03 rate   230.7596 (1e9 edges/sec) 
+nthreads 32: 
+Y*W: 2.9912 sec
+Y+B: 0.498734 sec
+RelU 0.364034 sec
+Ymax 0.456194 sec
+soln time         4.31 sec speedup    13.32 rate   218.9318 (1e9 edges/sec) 
+nthreads 40: 
+Y*W: 2.59789 sec
+Y+B: 0.530367 sec
+RelU 0.390407 sec
+Ymax 0.420706 sec
+soln time         3.94 sec speedup    14.57 rate   239.5347 (1e9 edges/sec) 
+
+# entries in final Y: 1.85549 million
+check time: 0.00685596 sec
+
+--------------------------------------neurons per layer: 1024 layers: 1920
+read net time 13.7101 sec
+# edges in all layers: 62.9146 million
+
+nthreads  1: 
+Y*W: 157.704 sec
+Y+B: 5.88535 sec
+RelU 10.6479 sec
+Ymax 29.1651 sec
+soln time       203.40 sec                  rate    18.5586 (1e9 edges/sec) 
+nthreads  2: 
+Y*W: 85.7498 sec
+Y+B: 4.3515 sec
+RelU 6.13149 sec
+Ymax 15.1662 sec
+soln time       111.40 sec speedup     1.83 rate    33.8856 (1e9 edges/sec) 
+nthreads  4: 
+Y*W: 43.2338 sec
+Y+B: 2.46376 sec
+RelU 3.2932 sec
+Ymax 7.7074 sec
+soln time        56.70 sec speedup     3.59 rate    66.5773 (1e9 edges/sec) 
+nthreads  8: 
+Y*W: 22.0817 sec
+Y+B: 1.49733 sec
+RelU 1.80979 sec
+Ymax 3.92913 sec
+soln time        29.32 sec speedup     6.94 rate   128.7528 (1e9 edges/sec) 
+nthreads 16: 
+Y*W: 11.7052 sec
+Y+B: 1.37473 sec
+RelU 1.08326 sec
+Ymax 2.07974 sec
+soln time        16.24 sec speedup    12.52 rate   232.3837 (1e9 edges/sec) 
+nthreads 20: 
+Y*W: 9.77635 sec
+Y+B: 1.38052 sec
+RelU 0.974428 sec
+Ymax 1.76145 sec
+soln time        13.89 sec speedup    14.64 rate   271.6943 (1e9 edges/sec) 
+nthreads 32: 
+Y*W: 10.4854 sec
+Y+B: 1.47949 sec
+RelU 1.10005 sec
+Ymax 1.61988 sec
+soln time        14.69 sec speedup    13.85 rate   257.0315 (1e9 edges/sec) 
+nthreads 40: 
+Y*W: 9.48692 sec
+Y+B: 1.60012 sec
+RelU 1.15879 sec
+Ymax 1.4589 sec
+soln time        13.71 sec speedup    14.84 rate   275.4118 (1e9 edges/sec) 
+
+# entries in final Y: 1.85549 million
+check time: 0.00691509 sec
+
+# neurons: 4096 bias: -0.35
+# features: 60000 read time: 12.3878 sec
+# entries in Y0: 25.0191 million
+
+--------------------------------------neurons per layer: 4096 layers: 120
+read net time 6.22167 sec
+# edges in all layers: 15.7286 million
+
+nthreads  1: 
+Y*W: 72.6969 sec
+Y+B: 8.13573 sec
+RelU 6.78566 sec
+Ymax 12.1334 sec
+soln time        99.75 sec                  rate     9.4607 (1e9 edges/sec) 
+nthreads  2: 
+Y*W: 44.1931 sec
+Y+B: 3.78266 sec
+RelU 3.99201 sec
+Ymax 5.07621 sec
+soln time        57.04 sec speedup     1.75 rate    16.5437 (1e9 edges/sec) 
+nthreads  4: 
+Y*W: 21.3608 sec
+Y+B: 2.64116 sec
+RelU 2.26963 sec
+Ymax 3.44513 sec
+soln time        29.72 sec speedup     3.36 rate    31.7570 (1e9 edges/sec) 
+nthreads  8: 
+Y*W: 11.2196 sec
+Y+B: 1.79043 sec
+RelU 1.51653 sec
+Ymax 2.01054 sec
+soln time        16.54 sec speedup     6.03 rate    57.0663 (1e9 edges/sec) 
+nthreads 16: 
+Y*W: 6.09343 sec
+Y+B: 1.4424 sec
+RelU 1.22245 sec
+Ymax 1.31779 sec
+soln time        10.08 sec speedup     9.90 rate    93.6584 (1e9 edges/sec) 
+nthreads 20: 
+Y*W: 5.16364 sec
+Y+B: 1.38286 sec
+RelU 1.1944 sec
+Ymax 1.19048 sec
+soln time         8.93 sec speedup    11.17 rate   105.6621 (1e9 edges/sec) 
+nthreads 32: 
+Y*W: 5.5749 sec
+Y+B: 1.63712 sec
+RelU 1.46364 sec
+Ymax 1.36026 sec
+soln time        10.04 sec speedup     9.94 rate    94.0327 (1e9 edges/sec) 
+nthreads 40: 
+Y*W: 4.92253 sec
+Y+B: 1.6581 sec
+RelU 1.46725 sec
+Ymax 1.34963 sec
+soln time         9.40 sec speedup    10.61 rate   100.4205 (1e9 edges/sec) 
+
+# entries in final Y: 7.3769 million
+check time: 0.00662112 sec
+
+--------------------------------------neurons per layer: 4096 layers: 480
+read net time 26.4382 sec
+# edges in all layers: 62.9146 million
+
+nthreads  1: 
+Y*W: 211.399 sec
+Y+B: 24.6532 sec
+RelU 22.6125 sec
+Ymax 44.055 sec
+soln time       302.72 sec                  rate    12.4699 (1e9 edges/sec) 
+nthreads  2: 
+Y*W: 122.338 sec
+Y+B: 10.0204 sec
+RelU 13.4815 sec
+Ymax 17.6768 sec
+soln time       163.52 sec speedup     1.85 rate    23.0855 (1e9 edges/sec) 
+nthreads  4: 
+Y*W: 59.4933 sec
+Y+B: 7.9222 sec
+RelU 7.30142 sec
+Ymax 12.2951 sec
+soln time        87.01 sec speedup     3.48 rate    43.3831 (1e9 edges/sec) 
+nthreads  8: 
+Y*W: 31.113 sec
+Y+B: 5.51241 sec
+RelU 4.78964 sec
+Ymax 7.19302 sec
+soln time        48.61 sec speedup     6.23 rate    77.6587 (1e9 edges/sec) 
+nthreads 16: 
+Y*W: 17.2608 sec
+Y+B: 4.57019 sec
+RelU 3.78678 sec
+Ymax 4.79068 sec
+soln time        30.41 sec speedup     9.95 rate   124.1371 (1e9 edges/sec) 
+nthreads 20: 
+Y*W: 14.7986 sec
+Y+B: 4.39485 sec
+RelU 3.70889 sec
+Ymax 4.32889 sec
+soln time        27.23 sec speedup    11.12 rate   138.6203 (1e9 edges/sec) 
+nthreads 32: 
+Y*W: 16.9457 sec
+Y+B: 5.15676 sec
+RelU 4.45594 sec
+Ymax 4.90675 sec
+soln time        31.47 sec speedup     9.62 rate   119.9675 (1e9 edges/sec) 
+nthreads 40: 
+Y*W: 14.9455 sec
+Y+B: 5.3399 sec
+RelU 4.55983 sec
+Ymax 4.89896 sec
+soln time        29.74 sec speedup    10.18 rate   126.9090 (1e9 edges/sec) 
+
+# entries in final Y: 7.3769 million
+check time: 0.0114911 sec
+
+--------------------------------------neurons per layer: 4096 layers: 1920
+read net time 105.376 sec
+# edges in all layers: 251.658 million
+
+nthreads  1: 
+Y*W: 763.118 sec
+Y+B: 89.6167 sec
+RelU 85.0463 sec
+Ymax 169.936 sec
+soln time      1107.72 sec                  rate    13.6312 (1e9 edges/sec) 
+nthreads  2: 
+Y*W: 436.31 sec
+Y+B: 33.4354 sec
+RelU 50.8433 sec
+Ymax 67.5156 sec
+soln time       588.11 sec speedup     1.88 rate    25.6748 (1e9 edges/sec) 
+nthreads  4: 
+Y*W: 212.617 sec
+Y+B: 29.4348 sec
+RelU 27.5126 sec
+Ymax 47.7982 sec
+soln time       317.36 sec speedup     3.49 rate    47.5779 (1e9 edges/sec) 
+nthreads  8: 
+Y*W: 110.95 sec
+Y+B: 20.2367 sec
+RelU 17.4809 sec
+Ymax 27.4363 sec
+soln time       176.11 sec speedup     6.29 rate    85.7409 (1e9 edges/sec) 
+nthreads 16: 
+Y*W: 61.47 sec
+Y+B: 16.628 sec
+RelU 13.627 sec
+Ymax 17.9161 sec
+soln time       109.64 sec speedup    10.10 rate   137.7152 (1e9 edges/sec) 
+nthreads 20: 
+Y*W: 51.8431 sec
+Y+B: 15.7313 sec
+RelU 13.2542 sec
+Ymax 15.7794 sec
+soln time        96.61 sec speedup    11.47 rate   156.2939 (1e9 edges/sec) 
+nthreads 32: 
+Y*W: 58.9189 sec
+Y+B: 15.5648 sec
+RelU 13.1414 sec
+Ymax 15.1648 sec
+soln time       102.79 sec speedup    10.78 rate   146.8943 (1e9 edges/sec) 
+nthreads 40: 
+Y*W: 53.6463 sec
+Y+B: 18.4959 sec
+RelU 15.7991 sec
+Ymax 17.545 sec
+soln time       105.49 sec speedup    10.50 rate   143.1386 (1e9 edges/sec) 
+
+# entries in final Y: 7.3769 million
+check time: 0.00611997 sec
+
+# neurons: 16384 bias: -0.4
+# features: 60000 read time: 49.6322 sec
+# entries in Y0: 98.8589 million
+
+--------------------------------------neurons per layer: 16384 layers: 120
+read net time 31.6298 sec
+# edges in all layers: 62.9146 million
+
+nthreads  1: 
+Y*W: 643.735 sec
+Y+B: 37.6509 sec
+RelU 32.2031 sec
+Ymax 55.1222 sec
+soln time       768.71 sec                  rate     4.9107 (1e9 edges/sec) 
+nthreads  2: 
+Y*W: 353.665 sec
+Y+B: 19.907 sec
+RelU 18.0849 sec
+Ymax 28.7681 sec
+soln time       420.43 sec speedup     1.83 rate     8.9787 (1e9 edges/sec) 
+nthreads  4: 
+Y*W: 178.488 sec
+Y+B: 11.4942 sec
+RelU 10.7972 sec
+Ymax 15.771 sec
+soln time       216.55 sec speedup     3.55 rate    17.4319 (1e9 edges/sec) 
+nthreads  8: 
+Y*W: 91.5843 sec
+Y+B: 7.28775 sec
+RelU 7.14404 sec
+Ymax 9.21873 sec
+soln time       115.23 sec speedup     6.67 rate    32.7581 (1e9 edges/sec) 
+nthreads 16: 
+Y*W: 47.241 sec
+Y+B: 5.81808 sec
+RelU 5.66715 sec
+Ymax 6.11553 sec
+soln time        64.84 sec speedup    11.86 rate    58.2166 (1e9 edges/sec) 
+nthreads 20: 
+Y*W: 38.9724 sec
+Y+B: 5.64628 sec
+RelU 5.558 sec
+Ymax 5.58015 sec
+soln time        55.76 sec speedup    13.79 rate    67.7023 (1e9 edges/sec) 
+nthreads 32: 
+Y*W: 35.5229 sec
+Y+B: 6.80315 sec
+RelU 6.85562 sec
+Ymax 6.49474 sec
+soln time        55.68 sec speedup    13.81 rate    67.8001 (1e9 edges/sec) 
+nthreads 40: 
+Y*W: 30.2446 sec
+Y+B: 6.85389 sec
+RelU 6.87385 sec
+Ymax 6.27315 sec
+soln time        50.25 sec speedup    15.30 rate    75.1283 (1e9 edges/sec) 
+
+# entries in final Y: 31.4245 million
+check time: 0.04018 sec
+
+--------------------------------------neurons per layer: 16384 layers: 480
+read net time 92.871 sec
+# edges in all layers: 251.658 million
+
+nthreads  1: 
+Y*W: 2191.36 sec
+Y+B: 120.949 sec
+RelU 110.781 sec
+Ymax 207.09 sec
+soln time      2630.18 sec                  rate     5.7409 (1e9 edges/sec) 
+nthreads  2: 
+Y*W: 1183.17 sec
+Y+B: 63.7658 sec
+RelU 60.5369 sec
+Ymax 106.46 sec
+soln time      1413.93 sec speedup     1.86 rate    10.6791 (1e9 edges/sec) 
+nthreads  4: 
+Y*W: 600.74 sec
+Y+B: 41.0752 sec
+RelU 39.2698 sec
+Ymax 61.1684 sec
+soln time       742.25 sec speedup     3.54 rate    20.3428 (1e9 edges/sec) 
+nthreads  8: 
+Y*W: 309.271 sec
+Y+B: 27.8721 sec
+RelU 26.6639 sec
+Ymax 36.6791 sec
+soln time       400.49 sec speedup     6.57 rate    37.7029 (1e9 edges/sec) 
+nthreads 16: 
+Y*W: 158.334 sec
+Y+B: 21.7045 sec
+RelU 20.7506 sec
+Ymax 24.4309 sec
+soln time       225.22 sec speedup    11.68 rate    67.0431 (1e9 edges/sec) 
+nthreads 20: 
+Y*W: 131.218 sec
+Y+B: 21.0888 sec
+RelU 20.3667 sec
+Ymax 22.4461 sec
+soln time       195.12 sec speedup    13.48 rate    77.3855 (1e9 edges/sec) 
+nthreads 32: 
+Y*W: 116.86 sec
+Y+B: 20.9396 sec
+RelU 20.1774 sec
+Ymax 21.5303 sec
+soln time       179.51 sec speedup    14.65 rate    84.1162 (1e9 edges/sec) 
+nthreads 40: 
+Y*W: 104.735 sec
+Y+B: 26.3274 sec
+RelU 25.7772 sec
+Ymax 25.7534 sec
+soln time       182.59 sec speedup    14.40 rate    82.6947 (1e9 edges/sec) 
+
+# entries in final Y: 31.4245 million
+check time: 0.0407901 sec
+
+--------------------------------------neurons per layer: 16384 layers: 1920
+read net time 376.961 sec
+# edges in all layers: 1006.63 million
+
+nthreads  1: 
+Y*W: 8408.15 sec
+Y+B: 480.941 sec
+RelU 454.133 sec
+Ymax 838.381 sec
+soln time     10181.61 sec                  rate     5.9321 (1e9 edges/sec) 
+nthreads  2: 
+Y*W: 4546.92 sec
+Y+B: 259.704 sec
+RelU 253.178 sec
+Ymax 436.529 sec
+soln time      5496.34 sec speedup     1.85 rate    10.9888 (1e9 edges/sec) 
+nthreads  4: 
+Y*W: 2288.25 sec
+Y+B: 153.228 sec
+RelU 148.692 sec
+Ymax 240.413 sec
+soln time      2830.59 sec speedup     3.60 rate    21.3376 (1e9 edges/sec) 
+nthreads  8: 
+Y*W: 1171.29 sec
+Y+B: 99.7394 sec
+RelU 96.2615 sec
+Ymax 141.78 sec
+soln time      1509.08 sec speedup     6.75 rate    40.0232 (1e9 edges/sec) 
+nthreads 16: 
+Y*W: 597.124 sec
+Y+B: 80.6845 sec
+RelU 77.8938 sec
+Ymax 95.9791 sec
+soln time       851.68 sec speedup    11.95 rate    70.9160 (1e9 edges/sec) 
+nthreads 20: 
+Y*W: 494.804 sec
+Y+B: 78.7358 sec
+RelU 76.529 sec
+Ymax 87.7802 sec
+soln time       737.85 sec speedup    13.80 rate    81.8567 (1e9 edges/sec) 
+nthreads 32: 
+Y*W: 464.681 sec
+Y+B: 97.2131 sec
+RelU 95.2082 sec
+Ymax 103.165 sec
+soln time       760.27 sec speedup    13.39 rate    79.4429 (1e9 edges/sec) 
+nthreads 40: 
+Y*W: 394.398 sec
+Y+B: 98.1395 sec
+RelU 96.4914 sec
+Ymax 99.6597 sec
+soln time       688.69 sec speedup    14.78 rate    87.6997 (1e9 edges/sec) 
+
+# entries in final Y: 31.4245 million
+check time: 0.042207 sec
+
+# neurons: 65536 bias: -0.45
+# features: 60000 read time: 203.014 sec
+# entries in Y0: 392.192 million
+
+--------------------------------------neurons per layer: 65536 layers: 120
+read net time 99.9137 sec
+# edges in all layers: 251.658 million
+
+nthreads  1: 
+Y*W: 3195.92 sec
+Y+B: 150.316 sec
+RelU 128.245 sec
+Ymax 222.221 sec
+soln time      3696.70 sec                  rate     4.0846 (1e9 edges/sec) 
+nthreads  2: 
+Y*W: 1719.04 sec
+Y+B: 80.7054 sec
+RelU 72.1052 sec
+Ymax 115.891 sec
+soln time      1987.74 sec speedup     1.86 rate     7.5963 (1e9 edges/sec) 
+nthreads  4: 
+Y*W: 875.826 sec
+Y+B: 47.2557 sec
+RelU 43.453 sec
+Ymax 63.913 sec
+soln time      1030.45 sec speedup     3.59 rate    14.6533 (1e9 edges/sec) 
+nthreads  8: 
+Y*W: 451.898 sec
+Y+B: 30.1201 sec
+RelU 28.8342 sec
+Ymax 37.6608 sec
+soln time       548.51 sec speedup     6.74 rate    27.5280 (1e9 edges/sec) 
+nthreads 16: 
+Y*W: 240.136 sec
+Y+B: 22.9003 sec
+RelU 22.7489 sec
+Ymax 24.8372 sec
+soln time       310.62 sec speedup    11.90 rate    48.6104 (1e9 edges/sec) 
+nthreads 20: 
+Y*W: 199.58 sec
+Y+B: 22.1594 sec
+RelU 22.368 sec
+Ymax 22.723 sec
+soln time       266.83 sec speedup    13.85 rate    56.5884 (1e9 edges/sec) 
+nthreads 32: 
+Y*W: 186.877 sec
+Y+B: 24.7729 sec
+RelU 25.4887 sec
+Ymax 25.0107 sec
+soln time       262.15 sec speedup    14.10 rate    57.5988 (1e9 edges/sec) 
+nthreads 40: 
+Y*W: 172.889 sec
+Y+B: 25.9011 sec
+RelU 26.7206 sec
+Ymax 25.7533 sec
+soln time       251.26 sec speedup    14.71 rate    60.0942 (1e9 edges/sec) 
+
+# entries in final Y: 130.679 million
+check time: 0.15788 sec
+
+--------------------------------------neurons per layer: 65536 layers: 480
+read net time 295.729 sec
+# edges in all layers: 1006.63 million
+
+nthreads  1: 
+Y*W: 11306.9 sec
+Y+B: 493.192 sec
+RelU 450.153 sec
+Ymax 852.246 sec
+soln time     13102.52 sec                  rate     4.6096 (1e9 edges/sec) 
+nthreads  2: 
+Y*W: 6073.63 sec
+Y+B: 255.803 sec
+RelU 249.934 sec
+Ymax 438.617 sec
+soln time      7017.98 sec speedup     1.87 rate     8.6062 (1e9 edges/sec) 
+nthreads  4: 
+Y*W: 3083.81 sec
+Y+B: 146.117 sec
+RelU 145.535 sec
+Ymax 238.541 sec
+soln time      3614.00 sec speedup     3.63 rate    16.7122 (1e9 edges/sec) 
+nthreads  8: 
+Y*W: 1581 sec
+Y+B: 90.7499 sec
+RelU 92.6841 sec
+Ymax 137.217 sec
+soln time      1901.65 sec speedup     6.89 rate    31.7608 (1e9 edges/sec) 
+nthreads 16: 
+Y*W: 829.941 sec
+Y+B: 67.6879 sec
+RelU 70.5341 sec
+Ymax 87.6744 sec
+soln time      1055.84 sec speedup    12.41 rate    57.2038 (1e9 edges/sec) 
+nthreads 20: 
+Y*W: 692.095 sec
+Y+B: 65.4576 sec
+RelU 69.612 sec
+Ymax 79.6621 sec
+soln time       906.83 sec speedup    14.45 rate    66.6036 (1e9 edges/sec) 
+nthreads 32: 
+Y*W: 663.456 sec
+Y+B: 75.7697 sec
+RelU 77.3314 sec
+Ymax 86.0866 sec
+soln time       902.64 sec speedup    14.52 rate    66.9123 (1e9 edges/sec) 
+nthreads 40: 
+Y*W: 638.063 sec
+Y+B: 79.3297 sec
+RelU 81.417 sec
+Ymax 86.0751 sec
+soln time       884.89 sec speedup    14.81 rate    68.2551 (1e9 edges/sec) 
+
+# entries in final Y: 130.679 million
+check time: 0.127587 sec
+
+--------------------------------------neurons per layer: 65536 layers: 1920
+read net time 1177.34 sec
+# edges in all layers: 4026.53 million
+
+nthreads  1: 
+Y*W: 44002 sec
+Y+B: 2002.59 sec
+RelU 1895.77 sec
+Ymax 3487.01 sec
+soln time     51387.41 sec                  rate     4.7014 (1e9 edges/sec) 
+nthreads  2: 
+Y*W: 23703 sec
+Y+B: 1073.62 sec
+RelU 1061.47 sec
+Ymax 1827.49 sec
+soln time     27665.55 sec speedup     1.86 rate     8.7326 (1e9 edges/sec) 
+nthreads  4: 
+Y*W: 12069.3 sec
+Y+B: 621.041 sec
+RelU 629.945 sec
+Ymax 1009.26 sec
+soln time     14329.56 sec speedup     3.59 rate    16.8597 (1e9 edges/sec) 
+nthreads  8: 
+Y*W: 6256.72 sec
+Y+B: 396.907 sec
+RelU 415.966 sec
+Ymax 595.819 sec
+soln time      7665.42 sec speedup     6.70 rate    31.5171 (1e9 edges/sec) 
+nthreads 16: 
+Y*W: 3297 sec
+Y+B: 303.286 sec
+RelU 324.267 sec
+Ymax 390.566 sec
+soln time      4315.12 sec speedup    11.91 rate    55.9873 (1e9 edges/sec) 
+nthreads 20: 
+Y*W: 2736.37 sec
+Y+B: 293.924 sec
+RelU 320.683 sec
+Ymax 358.007 sec
+soln time      3708.99 sec speedup    13.85 rate    65.1369 (1e9 edges/sec) 
+nthreads 32: 
+Y*W: 2646.59 sec
+Y+B: 345.672 sec
+RelU 371.216 sec
+Ymax 396.6 sec
+soln time      3760.08 sec speedup    13.67 rate    64.2519 (1e9 edges/sec) 
+nthreads 40: 
+Y*W: 2564.21 sec
+Y+B: 364.182 sec
+RelU 393.713 sec
+Ymax 398.932 sec
+soln time      3721.04 sec speedup    13.81 rate    64.9259 (1e9 edges/sec) 
+
+# entries in final Y: 130.679 million
+check time: 0.162303 sec
+all tests passed

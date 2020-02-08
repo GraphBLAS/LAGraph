@@ -39,7 +39,7 @@
 # get the version
 #-------------------------------------------------------------------------------
 
-# cmake 3.0 is preferred.
+# cmake 3.13 is preferred.
 cmake_minimum_required ( VERSION 2.8.12 )
 
 if ( CMAKE_VERSION VERSION_GREATER "3.0" )
@@ -48,7 +48,7 @@ if ( CMAKE_VERSION VERSION_GREATER "3.0" )
 endif ( )
 
 # version of LAGraph
-set ( LAGraph_DATE "Jan 22, 2020 (5AM)" )
+set ( LAGraph_DATE "Feb 7, 2020" )
 set ( LAGraph_VERSION_MAJOR 0 )
 set ( LAGraph_VERSION_MINOR 1 )
 set ( LAGraph_VERSION_SUB   0 )
@@ -127,6 +127,42 @@ message ( STATUS "CMAKE thread library:      " ${CMAKE_THREAD_LIBS_INIT} )
 message ( STATUS "CMAKE have pthreads:       " ${CMAKE_USE_PTHREADS_INIT}  )
 message ( STATUS "CMAKE have Win32 pthreads: " ${CMAKE_USE_WIN32_THREADS_INIT} )
 message ( STATUS "CMAKE have OpenMP:         " ${OPENMP_FOUND} )
+
+#-------------------------------------------------------------------------------
+# find the BLAS
+#-------------------------------------------------------------------------------
+
+if ( CMAKE_VERSION VERSION_GREATER "3.13" )
+
+    # Look for the parallel 64-bit MKL BLAS by default
+    set ( BLA_VENDOR Intel10_64ilp )
+    include ( FindBLAS )
+
+    if ( ${BLAS_FOUND} )
+        set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DMKL_ILP64 " )
+
+    else ( )
+        message ( STATUS "CBLAS : Intel MKL not found" )
+
+        # FUTURE: enable other BLAS flavors here
+        # set ( BLA_VENDOR ... )
+        # include ( FindBLAS )
+
+    endif ( )
+
+endif ( )
+
+if ( ${BLAS_FOUND} )
+    # BLAS_LINKER_FLAGS: uncached list of required linker flags
+    # (excluding -l and -L).
+    message ( STATUS "CBLAS:                     found" )
+    message ( STATUS "CBLAS linker flags:        " ${BLAS_LINKER_FLAGS} )
+    # BLAS_LIBRARIES: list of libraries to link against (may be empty)
+    message ( STATUS "CBLAS libraries:    " ${BLAS_LIBRARIES} )
+else ( )
+    message ( STATUS "CBLAS:                     not found" )
+endif ( )
+
 
 #-------------------------------------------------------------------------------
 # include directories for lagraph library
@@ -272,6 +308,15 @@ endif ( )
 
 if ( CMAKE_USE_WIN32_THREADS_INIT )
     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DHAVE_WINDOWS_THREADS " )
+endif ( )
+
+if ( BLAS_FOUND )
+    # use the dense CBLAS
+    message ( STATUS "Using dense CBLAS for faster dense matrix/vector operations" )
+    target_link_libraries ( lagraph ${BLAS_LIBRARIES} )
+else ( )
+    message ( STATUS "NOT using dense CBLAS (dense matrix/vector operations could be faster if you had it)." )
+    message ( STATUS "(requires cmake 3.13 or later)" )
 endif ( )
 
 #-------------------------------------------------------------------------------
