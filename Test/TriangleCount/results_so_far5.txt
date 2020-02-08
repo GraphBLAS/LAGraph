@@ -1,4 +1,10 @@
 
+hostname = log_s001-n002.txt
+
+   331.156   %  SandiaDot: -
+   182.290   %  SandiaDot: none
+   327.721   %  SandiaDot: +
+
 hostname = log_s001-n003.txt
 
    109.802   %  SandiaDot: -
@@ -74,6 +80,12 @@ hostname = log_s001-n003.txt
    110.159   %  SandiaDot: -
     61.082   %  SandiaDot: none
    109.885   %  SandiaDot: +
+   110.862   %  SandiaDot2: -
+    63.310   %  SandiaDot2: none
+   113.056   %  SandiaDot2: +
+
+   329.752   %  SandiaDot: -
+   184.515   %  SandiaDot: none
 
 hostname = log_s001-n004.txt
 
@@ -84,6 +96,9 @@ hostname = log_s001-n004.txt
     63.930   %  SandiaDot2: none
    113.504   %  SandiaDot2: +
 
+   333.705   %  SandiaDot: -
+   185.302   %  SandiaDot: none
+   327.764   %  SandiaDot: +
 
 hostname = log_s001-n005.txt
 
@@ -129,6 +144,9 @@ hostname = log_s001-n005.txt
     72.519   %  SandiaDot2: none
    126.451   %  SandiaDot2: +
 
+   369.036   %  SandiaDot: -
+   204.663   %  SandiaDot: none
+   361.115   %  SandiaDot: +
 
 hostname = log_s001-n006.txt
 
@@ -167,6 +185,9 @@ hostname = log_s001-n006.txt
     72.999   %  SandiaDot2: none
    125.915   %  SandiaDot2: +
 
+   367.787   %  SandiaDot: -
+   202.738   %  SandiaDot: none
+   361.534   %  SandiaDot: +
 
 hostname = log_s001-n007.txt
 
@@ -198,6 +219,33 @@ hostname = log_s001-n007.txt
     71.725   %  SandiaDot2: none
    127.342   %  SandiaDot2: +
 
+   377.142   %  SandiaDot: -
+   207.649   %  SandiaDot: none
+   366.682   %  SandiaDot: +
+
+hostname = log_s001-n008.txt
+
+   392.698   %  SandiaDot: -
+   203.839   %  SandiaDot: none
+   381.322   %  SandiaDot: +
+
+hostname = log_s001-n009.txt
+
+   375.059   %  SandiaDot: -
+   206.078   %  SandiaDot: none
+   368.948   %  SandiaDot: +
+
+hostname = log_s001-n012.txt
+
+   399.086   %  SandiaDot: -
+   228.610   %  SandiaDot: none
+   390.758   %  SandiaDot: +
+
+hostname = log_s001-n013.txt
+
+   347.050   %  SandiaDot: -
+   192.228   %  SandiaDot: none
+   345.918   %  SandiaDot: +
 
 hostname = log_s001-n045.txt
 

@@ -301,6 +301,7 @@ int main (int argc, char **argv)
                     ttot += ttrial [trial] ;
                     printf ("trial %2d: %g sec\n", trial, ttrial [trial]) ;
                 }
+                ttot = ttot / ntrials ;
                 printf ("nthreads: %3d time: %12.6f rate: %6.2f\n", nthreads,
                     ttot, 1e-6 * nvals / ttot) ;
                 if (nt2 != ntriangles)
