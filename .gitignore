@@ -40,7 +40,6 @@ my_*.out
 *.dylib
 cmake-build-debug*
 CMakeFiles*
-log_*.txt
 
 
 # Do not ignore this file

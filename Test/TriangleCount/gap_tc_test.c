@@ -291,14 +291,16 @@ int main (int argc, char **argv)
                 if (nthreads > nthreads_max) continue ;
                 LAGraph_set_nthreads (nthreads) ;
                 int64_t nt2 ;
-                LAGraph_tic (tic) ;
+                double ttot = 0, ttrial [100] ;
                 for (int trial = 0 ; trial < ntrials ; trial++)
                 {
+                    LAGraph_tic (tic) ;
                     LAGRAPH_OK (LAGraph_tricount (&nt2, method, sorting,
                         degree, A)) ;
+                    ttrial [trial] = LAGraph_toc (tic) ;
+                    ttot += ttrial [trial] ;
+                    printf ("trial %2d: %g sec\n", trial, ttrial [trial]) ;
                 }
-                double ttot = LAGraph_toc (tic) / ntrials ;
-
                 printf ("nthreads: %3d time: %12.6f rate: %6.2f\n", nthreads,
                     ttot, 1e-6 * nvals / ttot) ;
                 if (nt2 != ntriangles)

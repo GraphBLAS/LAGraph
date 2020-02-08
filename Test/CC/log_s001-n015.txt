@@ -1,0 +1,240 @@
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 17:22:46 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : FastSV5
+# threads used: 24 time: 30.1018
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 17:24:54 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : FastSV5a
+# threads used: 24 time: 7.41697
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 17:26:30 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : FastSV5b
+# threads used: 24 time: 5.44954
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 17:35:25 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 12
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : FastSV5
+# threads used: 12 time: 32.8275
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 17:37:39 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 12
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : FastSV5a
+# threads used: 12 time: 7.82477
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 17:39:28 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 12
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : FastSV5b
+# threads used: 12 time: 6.27322
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 17:59:04 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : FastSV5
+# threads used: 24 time: 26.5954
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 18:01:36 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : FastSV5a
+# threads used: 24 time: 9.36524
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 18:03:38 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : FastSV5b
+# threads used: 24 time: 7.43498
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 18:11:00 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 12
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : FastSV5
+# threads used: 12 time: 27.4603
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 18:13:33 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 12
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : FastSV5a
+# threads used: 12 time: 9.38394
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 18:15:50 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 12
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : FastSV5b
+# threads used: 12 time: 8.45143
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 18:24:05 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb : FastSV5
+# threads used: 24 time: 14.9885
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 18:25:08 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb : FastSV5a
+# threads used: 24 time: 3.83632
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 18:25:55 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb : FastSV5b
+# threads used: 24 time: 2.77663
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 18:30:20 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 12
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb : FastSV5
+# threads used: 12 time: 16.4204
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 18:31:24 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 12
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb : FastSV5a
+# threads used: 12 time: 3.90123
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 18:32:13 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 12
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb : FastSV5b
+# threads used: 12 time: 2.88992
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 18:37:48 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-web/GAP-web.grb : FastSV5
+# threads used: 24 time: 3.22707
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 18:38:58 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-web/GAP-web.grb : FastSV5a
+# threads used: 24 time: 4.35383
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 18:39:50 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-web/GAP-web.grb : FastSV5b
+# threads used: 24 time: 3.1584
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 18:40:41 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 12
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-web/GAP-web.grb : FastSV5
+# threads used: 12 time: 3.14291
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 18:41:51 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 12
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-web/GAP-web.grb : FastSV5a
+# threads used: 12 time: 4.29346
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 18:42:40 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 12
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-web/GAP-web.grb : FastSV5b
+# threads used: 12 time: 2.99322
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 18:43:25 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-road/GAP-road.grb : FastSV5
+# threads used: 24 time: 1.89741
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 18:43:56 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-road/GAP-road.grb : FastSV5a
+# threads used: 24 time: 1.86563
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 18:44:20 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-road/GAP-road.grb : FastSV5b
+# threads used: 24 time: 1.49887
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 18:44:51 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 12
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-road/GAP-road.grb : FastSV5
+# threads used: 12 time: 1.91114
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 18:45:23 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 12
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-road/GAP-road.grb : FastSV5a
+# threads used: 12 time: 1.91757
+
+From: /home/u32248/LAGraph/Test/CC/gap_cc_test.c
+Date: Thu Feb  6 18:45:50 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 12
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-road/GAP-road.grb : FastSV5b
+# threads used: 12 time: 1.67156

@@ -1,0 +1,160 @@
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Thu Feb  6 18:44:30 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : BatchX3
+# threads used: 24 time: 69.6984
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Thu Feb  6 18:44:30 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : BatchX3
+# threads used: 12 time: 99.7898
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Thu Feb  6 18:44:30 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : Batch4
+# threads used: 24 time: 70.2634
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Thu Feb  6 18:44:30 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : Batch4
+# threads used: 12 time: 97.605
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Thu Feb  6 20:50:27 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : BatchX3
+# threads used: 24 time: 93.2778
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Thu Feb  6 20:50:27 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : BatchX3
+# threads used: 12 time: 107.204
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Thu Feb  6 20:50:27 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : Batch4
+# threads used: 24 time: 105.952
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Thu Feb  6 20:50:27 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : Batch4
+# threads used: 12 time: 119.688
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Thu Feb  6 21:25:55 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb : BatchX3
+# threads used: 24 time: 23.6032
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Thu Feb  6 21:25:55 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb : BatchX3
+# threads used: 12 time: 35.1736
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Thu Feb  6 21:25:55 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb : Batch4
+# threads used: 24 time: 23.8114
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Thu Feb  6 21:25:55 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb : Batch4
+# threads used: 12 time: 34.9642
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Thu Feb  6 21:43:21 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-web/GAP-web.grb : BatchX3
+# threads used: 24 time: 12.0372
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Thu Feb  6 21:43:21 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-web/GAP-web.grb : BatchX3
+# threads used: 12 time: 12.3679
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Thu Feb  6 21:43:21 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-web/GAP-web.grb : Batch4
+# threads used: 24 time: 11.3117
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Thu Feb  6 21:43:21 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-web/GAP-web.grb : Batch4
+# threads used: 12 time: 12.3911
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Thu Feb  6 23:09:34 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-road/GAP-road.grb : BatchX3
+# threads used: 24 time: 180.555
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Thu Feb  6 23:09:34 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-road/GAP-road.grb : BatchX3
+# threads used: 12 time: 51.2433
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Thu Feb  6 23:09:34 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-road/GAP-road.grb : Batch4
+# threads used: 24 time: 47.0842
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Thu Feb  6 23:09:34 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-road/GAP-road.grb : Batch4
+# threads used: 12 time: 43.655

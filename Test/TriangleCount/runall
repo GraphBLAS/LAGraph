@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for f in {1..234}
+do
+    echo $f
+done

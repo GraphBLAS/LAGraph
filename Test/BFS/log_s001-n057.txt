@@ -1,0 +1,160 @@
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb  6 17:23:34 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : simple:allpush
+# threads used: 24 time: 8.28445
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb  6 17:32:26 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 12
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : simple:allpush
+# threads used: 12 time: 8.30522
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb  6 17:36:59 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : w/tree:pushpull
+# threads used: 24 time: 4.27005
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb  6 17:42:01 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 12
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : w/tree:pushpull
+# threads used: 12 time: 4.72205
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb  6 18:03:25 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : simple:allpush
+# threads used: 24 time: 8.98812
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb  6 18:11:51 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 12
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : simple:allpush
+# threads used: 12 time: 7.90227
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb  6 18:18:54 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : w/tree:pushpull
+# threads used: 24 time: 6.60907
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb  6 18:26:11 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 12
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : w/tree:pushpull
+# threads used: 12 time: 6.82387
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb  6 18:32:18 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb : simple:allpush
+# threads used: 24 time: 1.93033
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb  6 18:34:42 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 12
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb : simple:allpush
+# threads used: 12 time: 2.25983
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb  6 18:37:07 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb : w/tree:pushpull
+# threads used: 24 time: 2.25988
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb  6 18:39:51 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 12
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb : w/tree:pushpull
+# threads used: 12 time: 2.56515
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb  6 18:46:03 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-web/GAP-web.grb : simple:allpush
+# threads used: 24 time: 1.47002
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb  6 18:47:36 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 12
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-web/GAP-web.grb : simple:allpush
+# threads used: 12 time: 1.45663
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb  6 18:49:25 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-web/GAP-web.grb : w/tree:pushpull
+# threads used: 24 time: 1.70789
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb  6 18:51:18 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 12
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-web/GAP-web.grb : w/tree:pushpull
+# threads used: 12 time: 1.76863
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb  6 18:57:08 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-road/GAP-road.grb : simple:allpush
+# threads used: 24 time: 5.27866
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb  6 19:02:43 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 12
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-road/GAP-road.grb : simple:allpush
+# threads used: 12 time: 5.23817
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb  6 19:08:44 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-road/GAP-road.grb : w/tree:pushpull
+# threads used: 24 time: 5.63786
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb  6 19:14:50 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 12
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-road/GAP-road.grb : w/tree:pushpull
+# threads used: 12 time: 5.72059
