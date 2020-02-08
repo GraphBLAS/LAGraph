@@ -1,0 +1,10 @@
+#!/bin/bash
+
+
+for f in log_*
+do
+    echo
+    echo hostname = ${f}
+    echo
+    awk -f m.awk < ${f} | grep -v kron | grep -v twitter | grep -v web | grep -v road
+done

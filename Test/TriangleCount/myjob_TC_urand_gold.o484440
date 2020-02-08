@@ -1,0 +1,48 @@
+
+########################################################################
+#      Date:           Fri Feb  7 09:00:28 PST 2020
+#    Job ID:           484440.v-qsvr-1.aidevcloud
+#      User:           u32248
+# Resources:           neednodes=1:ppn=2:gold6128,nodes=1:ppn=2:gold6128,walltime=24:00:00
+########################################################################
+
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+# of trials: 3
+threads to test:  24
+matrix: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+
+read A time:         595.470896 sec
+process A time:      138.496115 sec
+# of nodes: 134217728   number of entries: 4294966740
+compute degree: 23.6277 sec
+# of triangles: 5378
+nthreads:  24 time:    72.145466 rate:  59.53 (SandiaDot, one trial)
+
+Method: SandiaDot:  sum ((L*U') .* L)    sort: descending degree
+nthreads:  24 time:   125.228138 rate:  34.30
+
+Method: SandiaDot:  sum ((L*U') .* L)    sort: none
+nthreads:  24 time:    71.122924 rate:  60.39
+
+Method: SandiaDot:  sum ((L*U') .* L)    ascending degree
+nthreads:  24 time:   123.709034 rate:  34.72
+
+Method: SandiaDot2: sum ((U*L') .* U)    sort: descending degree
+nthreads:  24 time:   126.856737 rate:  33.86
+
+Method: SandiaDot2: sum ((U*L') .* U)    sort: none
+nthreads:  24 time:    73.364463 rate:  58.54
+
+Method: SandiaDot2: sum ((U*L') .* U)    ascending degree
+nthreads:  24 time:   128.027380 rate:  33.55
+
+Best method: SandiaDot:  sum ((L*U') .* L)    sort: none
+nthreads:  24 time:    71.122924 rate:  60.39
+
+########################################################################
+# End of output for job 484440.v-qsvr-1.aidevcloud
+# Date: Fri Feb  7 09:46:55 PST 2020
+########################################################################
+

@@ -1,0 +1,46 @@
+#PBS -l nodes=s001-n003
+#PBS -l walltime=24:00:00
+
+# to submit, use
+#    qsub myjob
+
+# to check results
+#    qstat
+
+cd $PBS_O_WORKDIR
+
+# ./do_gap
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
+./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb

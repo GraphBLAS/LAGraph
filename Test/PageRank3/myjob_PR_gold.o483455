@@ -1,0 +1,125 @@
+
+########################################################################
+#      Date:           Thu Feb  6 17:02:49 PST 2020
+#    Job ID:           483455.v-qsvr-1.aidevcloud
+#      User:           u32248
+# Resources:           neednodes=1:ppn=2:gold6128,nodes=1:ppn=2:gold6128,walltime=24:00:00
+########################################################################
+
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+threads to test:  24 12
+matrix: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+original # of edges: 4223264644
+Matrix has 71143742 empty rows
+Matrix has 71143742 empty cols
+
+==========input graph: nodes: 134217726 edges: 4223264644
+diag entries added: 71143742
+read time: 787.444 sec
+# of trials: 16
+chunk: 65536
+warmup (3f):     44.978 (threads: 24)
+
+Method 3f:
+3f: 24: avg time:     44.312 (sec), rate:    667.157 iters: 7
+3f: 12: avg time:     44.781 (sec), rate:    660.162 iters: 7
+
+Method x4:
+x4: 24: avg time:     38.796 (sec), rate:    762.011 iters: 7
+x4: 12: avg time:     40.110 (sec), rate:    737.052 iters: 7
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+threads to test:  24 12
+matrix: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+original # of edges: 4294966740
+
+==========input graph: nodes: 134217728 edges: 4294966740
+diag entries added: 0
+read time: 774.892 sec
+# of trials: 16
+chunk: 65536
+warmup (3f):     58.945 (threads: 24)
+
+Method 3f:
+3f: 24: avg time:     57.643 (sec), rate:    447.058 iters: 6
+3f: 12: avg time:     55.954 (sec), rate:    460.550 iters: 6
+
+Method x4:
+x4: 24: avg time:     53.468 (sec), rate:    481.963 iters: 6
+x4: 12: avg time:     53.086 (sec), rate:    485.435 iters: 6
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+threads to test:  24 12
+matrix: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+original # of edges: 1468364884
+Matrix has 21475137 empty rows
+Matrix has 25889280 empty cols
+
+==========input graph: nodes: 61578415 edges: 1468364884
+diag entries added: 27438232
+read time: 266.067 sec
+# of trials: 16
+chunk: 65536
+warmup (3f):     27.725 (threads: 24)
+
+Method 3f:
+3f: 24: avg time:     27.070 (sec), rate:   1193.337 iters: 22
+3f: 12: avg time:     28.666 (sec), rate:   1126.926 iters: 22
+
+Method x4:
+x4: 24: avg time:     27.495 (sec), rate:   1174.895 iters: 22
+x4: 12: avg time:     29.718 (sec), rate:   1087.001 iters: 22
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+threads to test:  24 12
+matrix: /home/u32248/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-web/GAP-web.grb
+original # of edges: 1930292948
+Matrix has 7236618 empty rows
+Matrix has 438 empty cols
+
+==========input graph: nodes: 50636151 edges: 1930292948
+diag entries added: 7236964
+read time: 291.785 sec
+# of trials: 16
+chunk: 65536
+warmup (3f):     19.933 (threads: 24)
+
+Method 3f:
+3f: 24: avg time:     19.182 (sec), rate:   3018.929 iters: 30
+3f: 12: avg time:     19.436 (sec), rate:   2979.412 iters: 30
+
+Method x4:
+x4: 24: avg time:     18.899 (sec), rate:   3064.071 iters: 30
+x4: 12: avg time:     19.102 (sec), rate:   3031.478 iters: 30
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+threads to test:  24 12
+matrix: /home/u32248/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-road/GAP-road.grb
+original # of edges: 57708624
+
+==========input graph: nodes: 23947347 edges: 57708624
+diag entries added: 0
+read time: 11.1902 sec
+# of trials: 16
+chunk: 65536
+warmup (3f):      1.770 (threads: 24)
+
+Method 3f:
+3f: 24: avg time:      1.591 (sec), rate:   1414.388 iters: 39
+3f: 12: avg time:      1.830 (sec), rate:   1230.138 iters: 39
+
+Method x4:
+x4: 24: avg time:      1.569 (sec), rate:   1434.054 iters: 39
+x4: 12: avg time:      1.682 (sec), rate:   1338.346 iters: 39
+
+########################################################################
+# End of output for job 483455.v-qsvr-1.aidevcloud
+# Date: Thu Feb  6 20:16:59 PST 2020
+########################################################################
+

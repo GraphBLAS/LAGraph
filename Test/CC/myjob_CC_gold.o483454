@@ -1,0 +1,94 @@
+
+########################################################################
+#      Date:           Thu Feb  6 17:02:49 PST 2020
+#    Job ID:           483454.v-qsvr-1.aidevcloud
+#      User:           u32248
+# Resources:           neednodes=1:ppn=2:gold6128,nodes=1:ppn=2:gold6128,walltime=24:00:00
+########################################################################
+
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+threads to test:  24 12
+matrix: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+# of nodes: 134217726  # of edges: 4223264644
+# of edges in S = A|A':  4223264644 (A symmetric)
+# of trials: 16
+FastSV5:  threads: 24 time:    30.1018  # of CC: 71164263
+FastSV5a: threads: 24 time:     7.4170  # of CC: 71164263
+FastSV5b: threads: 24 time:     5.4495  # of CC: 71164263
+
+FastSV5:  threads: 12 time:    32.8275  # of CC: 71164263
+FastSV5a: threads: 12 time:     7.8248  # of CC: 71164263
+FastSV5b: threads: 12 time:     6.2732  # of CC: 71164263
+
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+threads to test:  24 12
+matrix: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+# of nodes: 134217728  # of edges: 4294966740
+# of edges in S = A|A':  4294966740 (A symmetric)
+# of trials: 16
+FastSV5:  threads: 24 time:    26.5954  # of CC: 1
+FastSV5a: threads: 24 time:     9.3652  # of CC: 1
+FastSV5b: threads: 24 time:     7.4350  # of CC: 1
+
+FastSV5:  threads: 12 time:    27.4603  # of CC: 1
+FastSV5a: threads: 12 time:     9.3839  # of CC: 1
+FastSV5b: threads: 12 time:     8.4514  # of CC: 1
+
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+threads to test:  24 12
+matrix: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+# of nodes: 61578415  # of edges: 1468364884
+# of edges in S = A|A':  2405026092 (A unsymmetric)
+# of trials: 16
+FastSV5:  threads: 24 time:    14.9885  # of CC: 19926186
+FastSV5a: threads: 24 time:     3.8363  # of CC: 19926186
+FastSV5b: threads: 24 time:     2.7766  # of CC: 19926186
+
+FastSV5:  threads: 12 time:    16.4204  # of CC: 19926186
+FastSV5a: threads: 12 time:     3.9012  # of CC: 19926186
+FastSV5b: threads: 12 time:     2.8899  # of CC: 19926186
+
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+threads to test:  24 12
+matrix: /home/u32248/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-web/GAP-web.grb
+# of nodes: 50636151  # of edges: 1930292948
+# of edges in S = A|A':  3620126660 (A unsymmetric)
+# of trials: 16
+FastSV5:  threads: 24 time:     3.2271  # of CC: 123
+FastSV5a: threads: 24 time:     4.3538  # of CC: 123
+FastSV5b: threads: 24 time:     3.1584  # of CC: 123
+
+FastSV5:  threads: 12 time:     3.1429  # of CC: 123
+FastSV5a: threads: 12 time:     4.2935  # of CC: 123
+FastSV5b: threads: 12 time:     2.9932  # of CC: 123
+
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+threads to test:  24 12
+matrix: /home/u32248/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-road/GAP-road.grb
+# of nodes: 23947347  # of edges: 57708624
+# of edges in S = A|A':  57708624 (A symmetric)
+# of trials: 16
+FastSV5:  threads: 24 time:     1.8974  # of CC: 1
+FastSV5a: threads: 24 time:     1.8656  # of CC: 1
+FastSV5b: threads: 24 time:     1.4989  # of CC: 1
+
+FastSV5:  threads: 12 time:     1.9111  # of CC: 1
+FastSV5a: threads: 12 time:     1.9176  # of CC: 1
+FastSV5b: threads: 12 time:     1.6716  # of CC: 1
+
+
+########################################################################
+# End of output for job 483454.v-qsvr-1.aidevcloud
+# Date: Thu Feb  6 18:45:50 PST 2020
+########################################################################
+
