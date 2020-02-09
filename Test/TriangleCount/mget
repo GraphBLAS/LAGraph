@@ -1,0 +1,11 @@
+#!/bin/bash
+
+for f in log_*
+do
+    echo
+    echo %----------------------------------------
+    echo hostname = \'${f}\' \;
+    echo %----------------------------------------
+    echo
+    awk -f mg.awk < ${f}
+done

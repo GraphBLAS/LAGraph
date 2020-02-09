@@ -1,384 +1,384 @@
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 11:22:54 2020
+Date: Sat Feb  8 22:09:56 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    sort: descending degree
-# threads used: 24 time: 109.975
+# threads used: 24 time: 115.793
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 11:25:58 2020
+Date: Sat Feb  8 22:13:09 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    sort: none
-# threads used: 24 time: 61.3582
+# threads used: 24 time: 64.5806
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 11:31:24 2020
+Date: Sat Feb  8 22:18:50 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    ascending degree
-# threads used: 24 time: 108.646
+# threads used: 24 time: 113.423
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 11:36:51 2020
+Date: Sat Feb  8 22:24:38 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    sort: descending degree
-# threads used: 24 time: 109.076
+# threads used: 24 time: 116.233
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 11:40:02 2020
+Date: Sat Feb  8 22:28:07 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    sort: none
-# threads used: 24 time: 63.5747
+# threads used: 24 time: 69.4131
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 11:45:37 2020
+Date: Sat Feb  8 22:34:02 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    ascending degree
-# threads used: 24 time: 111.723
+# threads used: 24 time: 118.181
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 11:59:18 2020
+Date: Sat Feb  8 22:48:17 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    sort: descending degree
-# threads used: 24 time: 110.786
+# threads used: 24 time: 118.25
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 12:02:24 2020
+Date: Sat Feb  8 22:51:31 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    sort: none
-# threads used: 24 time: 61.9377
+# threads used: 24 time: 64.8297
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 12:07:51 2020
+Date: Sat Feb  8 22:57:20 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    ascending degree
-# threads used: 24 time: 109
+# threads used: 24 time: 116.204
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 12:13:22 2020
+Date: Sat Feb  8 23:03:14 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    sort: descending degree
-# threads used: 24 time: 110.5
+# threads used: 24 time: 118.229
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 12:16:35 2020
+Date: Sat Feb  8 23:06:44 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    sort: none
-# threads used: 24 time: 64.1526
+# threads used: 24 time: 69.7282
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 12:22:15 2020
+Date: Sat Feb  8 23:12:45 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    ascending degree
-# threads used: 24 time: 113.332
+# threads used: 24 time: 120.453
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 12:35:55 2020
+Date: Sat Feb  8 23:26:52 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    sort: descending degree
-# threads used: 24 time: 110.555
+# threads used: 24 time: 116.322
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 12:38:58 2020
+Date: Sat Feb  8 23:30:06 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    sort: none
-# threads used: 24 time: 60.9399
+# threads used: 24 time: 64.5262
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 12:44:23 2020
+Date: Sat Feb  8 23:35:51 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    ascending degree
-# threads used: 24 time: 108.36
+# threads used: 24 time: 115.148
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 12:49:51 2020
+Date: Sat Feb  8 23:41:39 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    sort: descending degree
-# threads used: 24 time: 109.418
+# threads used: 24 time: 116.069
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 12:53:01 2020
+Date: Sat Feb  8 23:45:08 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    sort: none
-# threads used: 24 time: 63.3996
+# threads used: 24 time: 69.6292
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 12:58:38 2020
+Date: Sat Feb  8 23:51:04 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    ascending degree
-# threads used: 24 time: 112.206
+# threads used: 24 time: 118.72
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 13:12:19 2020
+Date: Sun Feb  9 00:05:22 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    sort: descending degree
-# threads used: 24 time: 110.088
+# threads used: 24 time: 116.525
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 13:15:22 2020
+Date: Sun Feb  9 00:08:45 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    sort: none
-# threads used: 24 time: 60.8881
+# threads used: 24 time: 67.691
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 13:20:48 2020
+Date: Sun Feb  9 00:14:35 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    ascending degree
-# threads used: 24 time: 108.497
+# threads used: 24 time: 116.607
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 13:26:18 2020
+Date: Sun Feb  9 00:20:29 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    sort: descending degree
-# threads used: 24 time: 110.138
+# threads used: 24 time: 117.943
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 13:29:29 2020
+Date: Sun Feb  9 00:23:58 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    sort: none
-# threads used: 24 time: 63.5981
+# threads used: 24 time: 69.6142
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 13:35:08 2020
+Date: Sun Feb  9 00:30:02 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    ascending degree
-# threads used: 24 time: 112.913
+# threads used: 24 time: 121.217
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 13:48:55 2020
+Date: Sun Feb  9 00:44:13 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    sort: descending degree
-# threads used: 24 time: 110.661
+# threads used: 24 time: 117.24
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 13:51:59 2020
+Date: Sun Feb  9 00:47:27 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    sort: none
-# threads used: 24 time: 61.2549
+# threads used: 24 time: 64.8691
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 13:57:26 2020
+Date: Sun Feb  9 00:53:14 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    ascending degree
-# threads used: 24 time: 109.187
+# threads used: 24 time: 115.772
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 14:02:56 2020
+Date: Sun Feb  9 00:59:09 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    sort: descending degree
-# threads used: 24 time: 109.924
+# threads used: 24 time: 118.253
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 14:06:06 2020
+Date: Sun Feb  9 01:02:34 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    sort: none
-# threads used: 24 time: 63.4203
+# threads used: 24 time: 68.1359
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 14:11:44 2020
+Date: Sun Feb  9 01:08:36 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    ascending degree
-# threads used: 24 time: 112.509
+# threads used: 24 time: 120.725
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 14:25:30 2020
+Date: Sun Feb  9 01:22:52 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    sort: descending degree
-# threads used: 24 time: 109.577
+# threads used: 24 time: 116.791
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 14:28:34 2020
+Date: Sun Feb  9 01:26:09 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    sort: none
-# threads used: 24 time: 61.4222
+# threads used: 24 time: 65.5537
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 14:34:00 2020
+Date: Sun Feb  9 01:31:56 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    ascending degree
-# threads used: 24 time: 108.646
+# threads used: 24 time: 115.508
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 14:39:31 2020
+Date: Sun Feb  9 01:37:44 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    sort: descending degree
-# threads used: 24 time: 110.329
+# threads used: 24 time: 116.235
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 14:42:42 2020
+Date: Sun Feb  9 01:41:14 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    sort: none
-# threads used: 24 time: 63.6699
+# threads used: 24 time: 69.7655
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 14:48:20 2020
+Date: Sun Feb  9 01:47:12 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    ascending degree
-# threads used: 24 time: 112.738
+# threads used: 24 time: 119.499
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 15:02:16 2020
+Date: Sun Feb  9 02:01:24 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    sort: descending degree
-# threads used: 24 time: 110.168
+# threads used: 24 time: 117.596
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 15:05:18 2020
+Date: Sun Feb  9 02:04:38 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    sort: none
-# threads used: 24 time: 60.7843
+# threads used: 24 time: 64.5413
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 15:10:42 2020
+Date: Sun Feb  9 02:10:25 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    ascending degree
-# threads used: 24 time: 108.014
+# threads used: 24 time: 115.547
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 15:16:09 2020
+Date: Sun Feb  9 02:16:19 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    sort: descending degree
-# threads used: 24 time: 108.867
+# threads used: 24 time: 118.017
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 15:19:17 2020
+Date: Sun Feb  9 02:19:48 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    sort: none
-# threads used: 24 time: 62.8935
+# threads used: 24 time: 69.6011
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 15:24:51 2020
+Date: Sun Feb  9 02:25:42 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    ascending degree
-# threads used: 24 time: 111.169
+# threads used: 24 time: 118.124
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 15:38:37 2020
+Date: Sun Feb  9 02:39:57 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    sort: descending degree
-# threads used: 24 time: 110.689
+# threads used: 24 time: 117.25
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 15:41:40 2020
+Date: Sun Feb  9 02:43:14 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    sort: none
-# threads used: 24 time: 61.0676
+# threads used: 24 time: 65.6097
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 15:47:08 2020
+Date: Sun Feb  9 02:49:02 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    ascending degree
-# threads used: 24 time: 109.33
+# threads used: 24 time: 115.911
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 15:52:37 2020
+Date: Sun Feb  9 02:54:54 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    sort: descending degree
-# threads used: 24 time: 109.593
+# threads used: 24 time: 117.267
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 15:55:50 2020
+Date: Sun Feb  9 02:58:22 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    sort: none
-# threads used: 24 time: 64.2721
+# threads used: 24 time: 69.4114
 
 From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
-Date: Sat Feb  8 16:01:28 2020
+Date: Sun Feb  9 03:04:23 2020
 CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 max # of threads: 24
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    ascending degree
-# threads used: 24 time: 112.764
+# threads used: 24 time: 120.324
