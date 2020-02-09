@@ -29,7 +29,7 @@ i = 0 ;
                 i = 1 ;
             }
         }
-        printf "    t(%d) = %10.3f   %%  %s %s\n", i, t, method, sort
+        printf "    t(%d) = %10.3f ; %%  %s %s\n", i, t, method, sort
         i = i + 1 ;
 
         if (match (method, "Dot2")) {
