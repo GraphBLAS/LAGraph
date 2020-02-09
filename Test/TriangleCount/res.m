@@ -1,3 +1,5 @@
+% Intel DevCloud test results
+host = 0
 
 %----------------------------------------
 hostname = 'log_s001-n002.txt' ;
@@ -516,6 +518,7 @@ Results {host}{k} = t ;
 
     t(1) =    110.479   %  SandiaDot: -
     t(2) =     60.916   %  SandiaDot: none
+    t(3) =    108.676   %  SandiaDot: +
 
 %----------------------------------------
 hostname = 'log_s001-n004.txt' ;
@@ -1793,6 +1796,7 @@ Results {host}{k} = t ;
     t(1) =    115.958   %  SandiaDot: -
     t(2) =     64.563   %  SandiaDot: none
     t(3) =    114.460   %  SandiaDot: +
+    t(4) =    116.105   %  SandiaDot2: -
 
 %----------------------------------------
 hostname = 'log_s001-n019.txt' ;
@@ -1854,6 +1858,8 @@ Results {host}{k} = t ;
     t(1) =    116.326   %  SandiaDot: -
     t(2) =     64.426   %  SandiaDot: none
     t(3) =    115.115   %  SandiaDot: +
+    t(4) =    115.342   %  SandiaDot2: -
+    t(5) =     66.649   %  SandiaDot2: none
 
 %----------------------------------------
 hostname = 'log_s001-n020.txt' ;
@@ -1914,6 +1920,7 @@ Results {host}{k} = t ;
 
     t(1) =    117.357   %  SandiaDot: -
     t(2) =     66.441   %  SandiaDot: none
+    t(3) =    116.804   %  SandiaDot: +
 
 %----------------------------------------
 hostname = 'log_s001-n021.txt' ;
@@ -1983,6 +1990,7 @@ k = k + 1 ;
 Results {host}{k} = t ;
 
     t(1) =    114.568   %  SandiaDot: -
+    t(2) =     65.620   %  SandiaDot: none
 
 %----------------------------------------
 hostname = 'log_s001-n023.txt' ;
@@ -2041,6 +2049,7 @@ Results {host}{k} = t ;
 k = k + 1 ;
 Results {host}{k} = t ;
 
+    t(1) =    117.082   %  SandiaDot: -
 
 %----------------------------------------
 hostname = 'log_s001-n024.txt' ;
@@ -2093,6 +2102,7 @@ Results {host}{k} = t ;
     t(2) =     65.564   %  SandiaDot: none
     t(3) =    127.856   %  SandiaDot: +
     t(4) =    128.043   %  SandiaDot2: -
+    t(5) =     65.258   %  SandiaDot2: none
 
 %----------------------------------------
 hostname = 'log_s001-n026.txt' ;
@@ -2146,6 +2156,11 @@ Results {host}{k} = t ;
     t(3) =    114.124   %  SandiaDot: +
     t(4) =    116.545   %  SandiaDot2: -
     t(5) =     66.709   %  SandiaDot2: none
+    t(6) =    118.838   %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
 
 %----------------------------------------
 hostname = 'log_s001-n027.txt' ;
@@ -2198,6 +2213,7 @@ Results {host}{k} = t ;
     t(2) =     65.228   %  SandiaDot: none
     t(3) =    114.999   %  SandiaDot: +
     t(4) =    114.482   %  SandiaDot2: -
+    t(5) =     69.670   %  SandiaDot2: none
 
 %----------------------------------------
 hostname = 'log_s001-n028.txt' ;
