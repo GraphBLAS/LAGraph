@@ -1,0 +1,15 @@
+From: /home/faculty/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Fri Feb  7 15:14:50 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : SandiaDot:  sum ((L*U') .* L)    sort: descending degree
+# threads used: 40 time: 2301.35
+
+From: /home/faculty/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Fri Feb  7 16:32:55 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : SandiaDot:  sum ((L*U') .* L)    sort: none
+# threads used: 40 time: 1561.64
