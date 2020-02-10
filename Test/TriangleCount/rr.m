@@ -3,7 +3,7 @@
 clear
 system ('./mget > res.m') ;
 res
-whos
+% whos
 nhosts = length (Results) ;
 
 method = {
@@ -20,7 +20,7 @@ for host = 1:nhosts
     hostname = Host {host} ;
     R = Results {host} ;
     nresults = length (R) ;
-    fprintf ('%s: %d\n', hostname, nresults) ;
+    % fprintf ('%s: %d\n', hostname, nresults) ;
     for k = 1:nresults
         t = Results {host}{k} ;
         tbest = min (tbest, t) ;
@@ -31,6 +31,7 @@ fprintf ('\nbest run times:\n') ;
 for m = 1:6
     fprintf ('%s : %g\n', method {m}, tbest (m)) ;
 end
+fprintf ('\n\n') ;
 
 % convert results to relative times
 quality = inf (nhosts,1) ;
@@ -70,8 +71,8 @@ for host = 1:nhosts
 %       end
 %       fprintf ('\n') ;
         quality (host) = sum (ttot) / 6;
-        minq (host) = min (ttot) ;
-        maxq (host) = max (ttot) ;
+        minq (host) = min (tmin) ;
+        maxq (host) = max (tmax) ;
     end
 %   fprintf ('\n') ;
 end
@@ -110,7 +111,7 @@ for host = hosts' % 1:nhosts
         for m = 1:6
             fprintf (' %6.1f', tmin (m)) ;
         end
-        fprintf (' :   overall: %6.1f\n', min (ttot)) ;
+        fprintf (' :   overall: %6.1f\n', min (tmin)) ;
 
         fprintf ('  avg:') ;
         for m = 1:6
@@ -122,7 +123,7 @@ for host = hosts' % 1:nhosts
         for m = 1:6
             fprintf (' %6.1f', tmax (m)) ;
         end
-        fprintf (' :   overall: %6.1f\n', max (ttot)) ;
+        fprintf (' :   overall: %6.1f\n', max (tmax)) ;
 
     end
     fprintf ('\n') ;

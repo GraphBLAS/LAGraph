@@ -1,0 +1,2299 @@
+s001-n001
+     state = down,offline
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n045
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971015,macaddr=a4:bf:01:27:23:55,cpuclock=Fixed,varattr=,jobs=,state=free,netload=125361959864,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=199066108kb,totmem=199770740kb,idletime=2897095,nusers=2,nsessions=2,sessions=2640 23438,uname=Linux s001-n045 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n002
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971003,macaddr=a4:bf:01:38:e4:82,cpuclock=Fixed,varattr=,jobs=,state=free,netload=261922134393,gres=,loadave=0.00,ncpus=24,physmem=196739700kb,availmem=198056828kb,totmem=198738544kb,idletime=5025141,nusers=2,nsessions=2,sessions=2884 5025,uname=Linux s001-n002 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n046
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970988,macaddr=a4:bf:01:27:17:20,cpuclock=Fixed,varattr=,jobs=,state=free,netload=44610777590,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198991044kb,totmem=199770740kb,idletime=2846468,nusers=2,nsessions=2,sessions=9222 9288,uname=Linux s001-n046 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n003
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971013,macaddr=a4:bf:01:38:e0:a7,cpuclock=Fixed,varattr=,jobs=,state=free,netload=592796991362,gres=,loadave=0.00,ncpus=24,physmem=196739704kb,availmem=197983548kb,totmem=198738548kb,idletime=3977188,nusers=2,nsessions=2,sessions=5267 18821,uname=Linux s001-n003 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n047
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971010,macaddr=a4:bf:01:2c:c7:85,cpuclock=Fixed,varattr=,jobs=,state=free,netload=147771764475,gres=,loadave=0.01,ncpus=24,physmem=197771892kb,availmem=198993996kb,totmem=199770736kb,idletime=3073640,nusers=2,nsessions=2,sessions=2616 26276,uname=Linux s001-n047 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n004
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971016,macaddr=a4:bf:01:38:df:ab,cpuclock=Fixed,varattr=,jobs=,state=free,netload=156517811468,gres=,loadave=0.00,ncpus=24,physmem=196739704kb,availmem=197990036kb,totmem=198738548kb,idletime=2913032,nusers=2,nsessions=2,sessions=5259 5353,uname=Linux s001-n004 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n048
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971003,macaddr=a4:bf:01:2c:b9:f7,cpuclock=Fixed,varattr=,jobs=,state=free,netload=54046033490,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198990548kb,totmem=199770740kb,idletime=3458915,nusers=2,nsessions=2,sessions=5666 5962,uname=Linux s001-n048 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n005
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971007,macaddr=a4:bf:01:2f:28:57,cpuclock=Fixed,varattr=,jobs=,state=free,netload=231311015772,gres=,loadave=0.00,ncpus=24,physmem=197767928kb,availmem=198977656kb,totmem=199766772kb,idletime=3303451,nusers=2,nsessions=2,sessions=6023 15704,uname=Linux s001-n005 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n049
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971000,macaddr=a4:bf:01:27:27:0d,cpuclock=Fixed,varattr=,jobs=,state=free,netload=124289973182,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198995992kb,totmem=199770740kb,idletime=4090599,nusers=2,nsessions=2,sessions=2513 29762,uname=Linux s001-n049 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n006
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970994,macaddr=a4:bf:01:2f:1f:29,cpuclock=Fixed,varattr=,jobs=,state=free,netload=149550956334,gres=,loadave=0.00,ncpus=24,physmem=197767924kb,availmem=198984548kb,totmem=199766768kb,idletime=5025100,nusers=3,nsessions=3,sessions=1131 5049 5933,uname=Linux s001-n006 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n050
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971008,macaddr=a4:bf:01:2c:ef:23,cpuclock=Fixed,varattr=,jobs=,state=free,netload=90372045974,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198994024kb,totmem=199770740kb,idletime=2896816,nusers=2,nsessions=2,sessions=2567 7467,uname=Linux s001-n050 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n007
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971026,macaddr=a4:bf:01:2f:27:8f,cpuclock=Fixed,varattr=,jobs=,state=free,netload=323369970760,gres=,loadave=0.00,ncpus=24,physmem=197767920kb,availmem=198978536kb,totmem=199766764kb,idletime=5030586,nusers=2,nsessions=2,sessions=3582 5957,uname=Linux s001-n007 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n051
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971004,macaddr=a4:bf:01:27:19:82,cpuclock=Fixed,varattr=,jobs=,state=free,netload=57376464174,gres=,loadave=0.00,ncpus=24,physmem=197771892kb,availmem=198989424kb,totmem=199770736kb,idletime=4518435,nusers=2,nsessions=2,sessions=2617 4593,uname=Linux s001-n051 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n008
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970985,macaddr=a4:bf:01:2f:31:c1,cpuclock=Fixed,varattr=,jobs=,state=free,netload=126234708917,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198975620kb,totmem=199770740kb,idletime=2896553,nusers=2,nsessions=2,sessions=3122 6354,uname=Linux s001-n008 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n052
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971026,macaddr=a4:bf:01:27:45:08,cpuclock=Fixed,varattr=,jobs=,state=free,netload=114742019689,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198983304kb,totmem=199770740kb,idletime=3705287,nusers=2,nsessions=2,sessions=2573 10465,uname=Linux s001-n052 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n009
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971021,macaddr=a4:bf:01:2c:f2:a2,cpuclock=Fixed,varattr=,jobs=,state=free,netload=88293745749,gres=,loadave=0.00,ncpus=24,physmem=197767916kb,availmem=198979180kb,totmem=199766760kb,idletime=2838543,nusers=2,nsessions=2,sessions=5958 17100,uname=Linux s001-n009 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n053
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970990,macaddr=a4:bf:01:27:44:f9,cpuclock=Fixed,varattr=,jobs=,state=free,netload=64814511697,gres=,loadave=0.00,ncpus=24,physmem=197771892kb,availmem=198981976kb,totmem=199770736kb,idletime=3545512,nusers=2,nsessions=2,sessions=2543 17607,uname=Linux s001-n053 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n011
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971017,macaddr=a4:bf:01:2c:ca:87,cpuclock=Fixed,varattr=,jobs=,state=free,netload=105694101707,gres=,loadave=0.03,ncpus=24,physmem=197767920kb,availmem=198981380kb,totmem=199766764kb,idletime=3461972,nusers=2,nsessions=2,sessions=5080 5990,uname=Linux s001-n011 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n054
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970994,macaddr=a4:bf:01:2c:ee:d3,cpuclock=Fixed,varattr=,jobs=,state=free,netload=111107217580,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198990248kb,totmem=199770740kb,idletime=3530259,nusers=2,nsessions=2,sessions=2692 6265,uname=Linux s001-n054 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n012
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971023,macaddr=a4:bf:01:2c:c9:74,cpuclock=Fixed,varattr=,jobs=,state=free,netload=51832539417,gres=,loadave=0.00,ncpus=24,physmem=164737792kb,availmem=165970308kb,totmem=166736636kb,idletime=2846701,nusers=2,nsessions=2,sessions=6213 12175,uname=Linux s001-n012 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n055
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971005,macaddr=a4:bf:01:27:23:50,cpuclock=Fixed,varattr=,jobs=,state=free,netload=57087279071,gres=,loadave=0.00,ncpus=24,physmem=197771892kb,availmem=198996220kb,totmem=199770736kb,idletime=3477729,nusers=2,nsessions=2,sessions=2621 14187,uname=Linux s001-n055 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n013
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971000,macaddr=a4:bf:01:2c:ec:e9,cpuclock=Fixed,varattr=,jobs=,state=free,netload=100617745576,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=199001608kb,totmem=199770740kb,idletime=3736254,nusers=2,nsessions=2,sessions=6211 6570,uname=Linux s001-n013 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n056
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971001,macaddr=a4:bf:01:27:22:d3,cpuclock=Fixed,varattr=,jobs=,state=free,netload=48791565485,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=199002484kb,totmem=199770740kb,idletime=4518407,nusers=2,nsessions=2,sessions=2586 10678,uname=Linux s001-n056 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n014
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971018,macaddr=a4:bf:01:27:22:38,cpuclock=Fixed,varattr=,jobs=,state=free,netload=74639920149,gres=,loadave=0.00,ncpus=24,physmem=197771892kb,availmem=198966324kb,totmem=199770736kb,idletime=3675177,nusers=2,nsessions=2,sessions=5920 19667,uname=Linux s001-n014 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n057
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971000,macaddr=a4:bf:01:27:4a:3f,cpuclock=Fixed,varattr=,jobs=,state=free,netload=24408018429,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198998108kb,totmem=199770740kb,idletime=3458434,nusers=2,nsessions=2,sessions=9510 13867,uname=Linux s001-n057 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n015
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970988,macaddr=a4:bf:01:27:16:b7,cpuclock=Fixed,varattr=,jobs=,state=free,netload=79879731097,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198975180kb,totmem=199770740kb,idletime=3547364,nusers=2,nsessions=2,sessions=6261 21783,uname=Linux s001-n015 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n058
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971009,macaddr=a4:bf:01:27:2c:b2,cpuclock=Fixed,varattr=,jobs=,state=free,netload=54746225759,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198980000kb,totmem=199770740kb,idletime=2994284,nusers=2,nsessions=2,sessions=2615 23788,uname=Linux s001-n058 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n016
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970999,macaddr=a4:bf:01:27:22:15,cpuclock=Fixed,varattr=,jobs=,state=free,netload=51623846606,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198971480kb,totmem=199770740kb,idletime=5100392,nusers=2,nsessions=2,sessions=6453 13104,uname=Linux s001-n016 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n059
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970983,macaddr=a4:bf:01:27:19:e1,cpuclock=Fixed,varattr=,jobs=,state=free,netload=47150110672,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198996308kb,totmem=199770740kb,idletime=4517981,nusers=2,nsessions=2,sessions=2619 31787,uname=Linux s001-n059 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n017
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971027,macaddr=a4:bf:01:27:27:f8,cpuclock=Fixed,varattr=,jobs=,state=free,netload=72463663361,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198982492kb,totmem=199770740kb,idletime=5100798,nusers=2,nsessions=2,sessions=4286 5935,uname=Linux s001-n017 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n060
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970992,macaddr=a4:bf:01:27:4a:bc,cpuclock=Fixed,varattr=,jobs=,state=free,netload=61643140381,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198983404kb,totmem=199770740kb,idletime=3620143,nusers=2,nsessions=2,sessions=2588 26316,uname=Linux s001-n060 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n018
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970999,macaddr=a4:bf:01:27:44:e5,cpuclock=Fixed,varattr=,jobs=,state=free,netload=67040229131,gres=,loadave=0.01,ncpus=24,physmem=197771892kb,availmem=198990380kb,totmem=199770736kb,idletime=4684139,nusers=2,nsessions=2,sessions=6268 13962,uname=Linux s001-n018 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n061
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970984,macaddr=a4:bf:01:27:52:78,cpuclock=Fixed,varattr=,jobs=,state=free,netload=71676655878,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198977144kb,totmem=199770740kb,idletime=4517972,nusers=2,nsessions=2,sessions=2578 17950,uname=Linux s001-n061 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n019
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971022,macaddr=a4:bf:01:27:22:47,cpuclock=Fixed,varattr=,jobs=,state=free,netload=67760814179,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198978864kb,totmem=199770740kb,idletime=5022569,nusers=2,nsessions=2,sessions=1888 6502,uname=Linux s001-n019 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n062
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970984,macaddr=a4:bf:01:27:b1:b9,cpuclock=Fixed,varattr=,jobs=,state=free,netload=55269626794,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198994504kb,totmem=199770740kb,idletime=4517976,nusers=2,nsessions=2,sessions=2584 22295,uname=Linux s001-n062 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n020
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970993,macaddr=a4:bf:01:2c:eb:e5,cpuclock=Fixed,varattr=,jobs=,state=free,netload=63376986361,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198990620kb,totmem=199770740kb,idletime=4147469,nusers=2,nsessions=2,sessions=3280 9223,uname=Linux s001-n020 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n063
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971021,macaddr=a4:bf:01:27:49:22,cpuclock=Fixed,varattr=,jobs=,state=free,netload=51198765265,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198984608kb,totmem=199770740kb,idletime=4518008,nusers=2,nsessions=2,sessions=2560 28949,uname=Linux s001-n063 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n021
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971011,macaddr=a4:bf:01:2c:ed:de,cpuclock=Fixed,varattr=,jobs=,state=free,netload=77952503281,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198989700kb,totmem=199770740kb,idletime=5100608,nusers=2,nsessions=2,sessions=5901 22134,uname=Linux s001-n021 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n064
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971025,macaddr=a4:bf:01:27:47:29,cpuclock=Fixed,varattr=,jobs=,state=free,netload=29846718358,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198999752kb,totmem=199770740kb,idletime=4140121,nusers=2,nsessions=2,sessions=2609 25377,uname=Linux s001-n064 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n022
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971012,macaddr=a4:bf:01:27:4a:6c,cpuclock=Fixed,varattr=,jobs=,state=free,netload=32837910147,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198994116kb,totmem=199770740kb,idletime=3959084,nusers=2,nsessions=2,sessions=6232 7720,uname=Linux s001-n022 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n065
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970988,macaddr=a4:bf:01:2c:c9:4c,cpuclock=Fixed,varattr=,jobs=,state=free,netload=37183769915,gres=,loadave=0.00,ncpus=24,physmem=197771892kb,availmem=198987988kb,totmem=199770736kb,idletime=3361090,nusers=2,nsessions=2,sessions=2562 16827,uname=Linux s001-n065 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n023
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971014,macaddr=a4:bf:01:27:46:6b,cpuclock=Fixed,varattr=,jobs=,state=free,netload=30294273844,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=199000808kb,totmem=199770740kb,idletime=5100589,nusers=2,nsessions=2,sessions=3545 6140,uname=Linux s001-n023 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n066
+     state = down,offline
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n024
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971001,macaddr=a4:bf:01:27:41:98,cpuclock=Fixed,varattr=,jobs=,state=free,netload=30911415336,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198977968kb,totmem=199770740kb,idletime=5100036,nusers=2,nsessions=2,sessions=6217 8890,uname=Linux s001-n024 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n067
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970991,macaddr=a4:bf:01:27:d8:4c,cpuclock=Fixed,varattr=,jobs=,state=free,netload=33083678564,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198990720kb,totmem=199770740kb,idletime=4518399,nusers=2,nsessions=2,sessions=2639 9154,uname=Linux s001-n067 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n025
+     state = down,offline
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n068
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971008,macaddr=a4:bf:01:2c:ca:0f,cpuclock=Fixed,varattr=,jobs=,state=free,netload=52963524120,gres=,loadave=0.00,ncpus=24,physmem=197771892kb,availmem=198989088kb,totmem=199770736kb,idletime=3444188,nusers=2,nsessions=2,sessions=2577 20765,uname=Linux s001-n068 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n026
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971005,macaddr=a4:bf:01:27:41:bb,cpuclock=Fixed,varattr=,jobs=,state=free,netload=43971762447,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198990448kb,totmem=199770740kb,idletime=5099552,nusers=2,nsessions=2,sessions=5921 13059,uname=Linux s001-n026 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n069
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971019,macaddr=a4:bf:01:27:48:19,cpuclock=Fixed,varattr=,jobs=,state=free,netload=28721189444,gres=,loadave=0.00,ncpus=24,physmem=197771892kb,availmem=198992556kb,totmem=199770736kb,idletime=4518069,nusers=2,nsessions=2,sessions=2642 30334,uname=Linux s001-n069 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n027
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970993,macaddr=a4:bf:01:2c:ca:2d,cpuclock=Fixed,varattr=,jobs=,state=free,netload=40746010778,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198999324kb,totmem=199770740kb,idletime=5099556,nusers=2,nsessions=2,sessions=5935 12103,uname=Linux s001-n027 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n070
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970999,macaddr=a4:bf:01:27:2c:df,cpuclock=Fixed,varattr=,jobs=,state=free,netload=34620490517,gres=,loadave=0.00,ncpus=24,physmem=197771892kb,availmem=199001808kb,totmem=199770736kb,idletime=4518061,nusers=2,nsessions=2,sessions=2591 28736,uname=Linux s001-n070 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n028
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971013,macaddr=a4:bf:01:27:20:53,cpuclock=Fixed,varattr=,jobs=,state=free,netload=34433606628,gres=,loadave=0.00,ncpus=24,physmem=197771892kb,availmem=199000600kb,totmem=199770736kb,idletime=3457880,nusers=2,nsessions=2,sessions=5892 13467,uname=Linux s001-n028 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n072
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971015,macaddr=a4:bf:01:27:49:bd,cpuclock=Fixed,varattr=,jobs=,state=free,netload=44122722928,gres=,loadave=0.00,ncpus=24,physmem=197771892kb,availmem=199007476kb,totmem=199770736kb,idletime=4498090,nusers=2,nsessions=2,sessions=2609 25689,uname=Linux s001-n072 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n029
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971011,macaddr=a4:bf:01:27:23:7d,cpuclock=Fixed,varattr=,jobs=,state=free,netload=41920002805,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=199008416kb,totmem=199770740kb,idletime=5099964,nusers=2,nsessions=2,sessions=5968 16668,uname=Linux s001-n029 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n073
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970999,macaddr=a4:bf:01:27:4a:ad,cpuclock=Fixed,varattr=,jobs=,state=free,netload=28827395301,gres=,loadave=0.00,ncpus=24,physmem=197771892kb,availmem=199004736kb,totmem=199770736kb,idletime=3441775,nusers=2,nsessions=2,sessions=2636 21747,uname=Linux s001-n073 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n030
+     state = down,offline
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n074
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970989,macaddr=a4:bf:01:27:22:ab,cpuclock=Fixed,varattr=,jobs=,state=free,netload=106977013616,gres=,loadave=0.00,ncpus=24,physmem=197771892kb,availmem=199006008kb,totmem=199770736kb,idletime=4518110,nusers=2,nsessions=2,sessions=2606 12280,uname=Linux s001-n074 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n031
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971009,macaddr=a4:bf:01:27:23:0f,cpuclock=Fixed,varattr=,jobs=,state=free,netload=29101477421,gres=,loadave=0.07,ncpus=24,physmem=197771896kb,availmem=199002968kb,totmem=199770740kb,idletime=3475709,nusers=2,nsessions=2,sessions=934 6191,uname=Linux s001-n031 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n075
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971011,macaddr=a4:bf:01:27:46:70,cpuclock=Fixed,varattr=,jobs=,state=free,netload=33277186890,gres=,loadave=0.00,ncpus=24,physmem=197771892kb,availmem=199007996kb,totmem=199770736kb,idletime=4518129,nusers=2,nsessions=2,sessions=2584 16964,uname=Linux s001-n075 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n032
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971021,macaddr=a4:bf:01:2c:bd:d0,cpuclock=Fixed,varattr=,jobs=,state=free,netload=28235277024,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198986460kb,totmem=199770740kb,idletime=3472386,nusers=2,nsessions=2,sessions=1763 9132,uname=Linux s001-n032 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n076
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971010,macaddr=a4:bf:01:27:70:b2,cpuclock=Fixed,varattr=,jobs=,state=free,netload=58494033551,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198998992kb,totmem=199770740kb,idletime=4518133,nusers=2,nsessions=2,sessions=2603 5591,uname=Linux s001-n076 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n033
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970989,macaddr=a4:bf:01:27:53:04,cpuclock=Fixed,varattr=,jobs=,state=free,netload=39600922677,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=199007016kb,totmem=199770740kb,idletime=5099380,nusers=2,nsessions=2,sessions=6228 23664,uname=Linux s001-n033 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n077
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971003,macaddr=a4:bf:01:2f:22:b7,cpuclock=Fixed,varattr=,jobs=,state=free,netload=45960651611,gres=,loadave=0.00,ncpus=24,physmem=197771892kb,availmem=199008976kb,totmem=199770736kb,idletime=4518411,nusers=2,nsessions=2,sessions=2597 3412,uname=Linux s001-n077 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n034
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971002,macaddr=a4:bf:01:27:48:eb,cpuclock=Fixed,varattr=,jobs=,state=free,netload=31302780617,gres=,loadave=0.00,ncpus=24,physmem=197771892kb,availmem=199007556kb,totmem=199770736kb,idletime=5099015,nusers=2,nsessions=2,sessions=6195 14160,uname=Linux s001-n034 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n078
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971003,macaddr=a4:bf:01:2f:31:f8,cpuclock=Fixed,varattr=,jobs=,state=free,netload=45258386329,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=199013696kb,totmem=199770740kb,idletime=4518409,nusers=2,nsessions=2,sessions=2559 5955,uname=Linux s001-n078 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n035
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970999,macaddr=a4:bf:01:27:4a:03,cpuclock=Fixed,varattr=,jobs=,state=free,netload=26597182645,gres=,loadave=0.00,ncpus=24,physmem=197771892kb,availmem=199011444kb,totmem=199770736kb,idletime=5099371,nusers=2,nsessions=2,sessions=5894 12268,uname=Linux s001-n035 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n079
+     state = down,offline
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n036
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971019,macaddr=a4:bf:01:27:1f:63,cpuclock=Fixed,varattr=,jobs=,state=free,netload=43797018810,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198997836kb,totmem=199770740kb,idletime=5097855,nusers=2,nsessions=2,sessions=6301 14008,uname=Linux s001-n036 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n080
+     state = down,offline
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n037
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971026,macaddr=a4:bf:01:2c:c0:eb,cpuclock=Fixed,varattr=,jobs=,state=free,netload=26317955018,gres=,loadave=0.01,ncpus=24,physmem=197771892kb,availmem=199001492kb,totmem=199770736kb,idletime=5022917,nusers=2,nsessions=2,sessions=6239 25648,uname=Linux s001-n037 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n038
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970990,macaddr=a4:bf:01:27:23:a5,cpuclock=Fixed,varattr=,jobs=,state=free,netload=26649036562,gres=,loadave=0.00,ncpus=24,physmem=197771892kb,availmem=198995088kb,totmem=199770736kb,idletime=5098772,nusers=2,nsessions=2,sessions=6293 14244,uname=Linux s001-n038 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n039
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971019,macaddr=a4:bf:01:27:4a:c1,cpuclock=Fixed,varattr=,jobs=,state=free,netload=26159709842,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=199008716kb,totmem=199770740kb,idletime=5098468,nusers=2,nsessions=2,sessions=6627 13166,uname=Linux s001-n039 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n040
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971022,macaddr=a4:bf:01:27:48:23,cpuclock=Fixed,varattr=,jobs=,state=free,netload=198210860236,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198996164kb,totmem=199770740kb,idletime=4833510,nusers=2,nsessions=2,sessions=6389 15688,uname=Linux s001-n040 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n041
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971017,macaddr=a4:bf:01:27:42:5b,cpuclock=Fixed,varattr=,jobs=,state=free,netload=28164950924,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=199001880kb,totmem=199770740kb,idletime=5098829,nusers=2,nsessions=2,sessions=5929 18844,uname=Linux s001-n041 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n042
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971023,macaddr=a4:bf:01:27:45:03,cpuclock=Fixed,varattr=,jobs=,state=free,netload=26470201627,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=199007496kb,totmem=199770740kb,idletime=5098404,nusers=2,nsessions=2,sessions=6242 12809,uname=Linux s001-n042 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n043
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971008,macaddr=a4:bf:01:27:2b:8b,cpuclock=Fixed,varattr=,jobs=,state=free,netload=38681746516,gres=,loadave=0.00,ncpus=24,physmem=197771892kb,availmem=199003600kb,totmem=199770736kb,idletime=5023317,nusers=2,nsessions=2,sessions=6238 24738,uname=Linux s001-n043 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n044
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971019,macaddr=a4:bf:01:2c:ef:c8,cpuclock=Fixed,varattr=,jobs=,state=free,netload=38019952347,gres=,loadave=0.00,ncpus=24,physmem=197771892kb,availmem=199001328kb,totmem=199770736kb,idletime=5097814,nusers=2,nsessions=2,sessions=5963 13198,uname=Linux s001-n044 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n093
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 1/462795.v-qsvr-1.aidevcloud,0/462859.v-qsvr-1.aidevcloud
+     status = rectime=1578971011,macaddr=a4:bf:01:3f:60:14,cpuclock=Fixed,varattr=,jobs=462795.v-qsvr-1.aidevcloud(cput=7,energy_used=0,mem=125472kb,vmem=404688kb,walltime=10700,session_id=14535) 462859.v-qsvr-1.aidevcloud(cput=18,energy_used=0,mem=321124kb,vmem=2259012kb,walltime=1951,session_id=7869),state=free,netload=2263076461645,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198696048kb,totmem=199770740kb,idletime=80215,nusers=5,nsessions=8,sessions=5922 7869 9635 13112 14535 17175 18891 29964,uname=Linux s001-n093 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n094
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 1/462731.v-qsvr-1.aidevcloud,0/462799.v-qsvr-1.aidevcloud
+     status = rectime=1578971023,macaddr=a4:bf:01:3f:4d:ea,cpuclock=Fixed,varattr=,jobs=462731.v-qsvr-1.aidevcloud(cput=38,energy_used=0,mem=101864kb,vmem=418372kb,walltime=13070,session_id=3187) 462799.v-qsvr-1.aidevcloud(cput=244,energy_used=0,mem=109352kb,vmem=488416kb,walltime=10329,session_id=19244),state=free,netload=2568823855587,gres=,loadave=0.11,ncpus=24,physmem=197771892kb,availmem=198904652kb,totmem=199770736kb,idletime=67838,nusers=4,nsessions=6,sessions=3187 5924 8005 9028 19244 22839,uname=Linux s001-n094 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n095
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 0-1/462855.v-qsvr-1.aidevcloud
+     status = rectime=1578971009,macaddr=a4:bf:01:3f:5c:81,cpuclock=Fixed,varattr=,jobs=462855.v-qsvr-1.aidevcloud(cput=3034,energy_used=0,mem=39436kb,vmem=115852kb,walltime=2592,session_id=11024),state=free,netload=2553403121103,gres=,loadave=1.25,ncpus=24,physmem=197771896kb,availmem=198998400kb,totmem=199770740kb,idletime=940152,nusers=3,nsessions=3,sessions=3078 5937 11024,uname=Linux s001-n095 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n096
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 0-1/462866.v-qsvr-1.aidevcloud
+     status = rectime=1578970996,macaddr=a4:bf:01:3f:53:df,cpuclock=Fixed,varattr=,jobs=462866.v-qsvr-1.aidevcloud(cput=1648,energy_used=0,mem=403444kb,vmem=1228736kb,walltime=100,session_id=7611),state=free,netload=3207613603437,gres=,loadave=19.90,ncpus=24,physmem=197771892kb,availmem=198967268kb,totmem=199770736kb,idletime=51961,nusers=3,nsessions=3,sessions=5991 7611 17600,uname=Linux s001-n096 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n097
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 0/462767.v-qsvr-1.aidevcloud,1/462797.v-qsvr-1.aidevcloud
+     status = rectime=1578971000,macaddr=a4:bf:01:3f:52:59,cpuclock=Fixed,varattr=,jobs=462767.v-qsvr-1.aidevcloud(cput=1806,energy_used=0,mem=11780316kb,vmem=15865620kb,walltime=12372,session_id=25796) 462797.v-qsvr-1.aidevcloud(cput=115815,energy_used=0,mem=35386600kb,vmem=40475676kb,walltime=10669,session_id=32426),state=free,netload=3375882791888,gres=,loadave=12.83,ncpus=24,physmem=197771896kb,availmem=159646908kb,totmem=199770740kb,idletime=101111,nusers=4,nsessions=7,sessions=32426 2964 5930 6658 25796 31494 31918,uname=Linux s001-n097 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n098
+     state = down,job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 0-1/460023.v-qsvr-1.aidevcloud
+     status = rectime=1578606341,macaddr=a4:bf:01:3f:4a:ca,cpuclock=Fixed,varattr=,jobs=460023.v-qsvr-1.aidevcloud(cput=100,energy_used=0,mem=20066284kb,vmem=261512472kb,walltime=17,session_id=24349),state=free,netload=2235744273927,gres=,loadave=70.30,ncpus=24,physmem=197771892kb,availmem=194770472kb,totmem=199770736kb,idletime=151505,nusers=4,nsessions=4,sessions=4286 6281 24349 27461,uname=Linux s001-n098 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n099
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 0-1/462768.v-qsvr-1.aidevcloud
+     status = rectime=1578971023,macaddr=a4:bf:01:3f:6a:c3,cpuclock=Fixed,varattr=,jobs=462768.v-qsvr-1.aidevcloud(cput=12205,energy_used=0,mem=17046196kb,vmem=17076652kb,walltime=12331,session_id=16873),state=free,netload=2539795341702,gres=,loadave=1.00,ncpus=24,physmem=197771892kb,availmem=181948236kb,totmem=199770736kb,idletime=40743,nusers=4,nsessions=4,sessions=5968 16873 19356 21332,uname=Linux s001-n099 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n100
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 0-1/462858.v-qsvr-1.aidevcloud
+     status = rectime=1578971007,macaddr=a4:bf:01:3f:00:cb,cpuclock=Fixed,varattr=,jobs=462858.v-qsvr-1.aidevcloud(cput=49347,energy_used=0,mem=652896kb,vmem=1478608kb,walltime=2107,session_id=32542),state=free,netload=2054549201751,gres=,loadave=24.26,ncpus=24,physmem=197771892kb,availmem=198711436kb,totmem=199770736kb,idletime=89885,nusers=3,nsessions=3,sessions=32542 6030 13559,uname=Linux s001-n100 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n101
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 0-1/462339.v-qsvr-1.aidevcloud
+     status = rectime=1578971022,macaddr=a4:bf:01:3f:86:48,cpuclock=Fixed,varattr=,jobs=462339.v-qsvr-1.aidevcloud(cput=1262080,energy_used=0,mem=11018508kb,vmem=15625236kb,walltime=66834,session_id=2630),state=free,netload=2006588310423,gres=,loadave=16.96,ncpus=24,physmem=197771892kb,availmem=188142348kb,totmem=199770736kb,idletime=168438,nusers=3,nsessions=3,sessions=2125 2630 8958,uname=Linux s001-n101 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n102
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 1/462814.v-qsvr-1.aidevcloud,0/462862.v-qsvr-1.aidevcloud
+     status = rectime=1578971019,macaddr=a4:bf:01:3e:ef:e1,cpuclock=Fixed,varattr=,jobs=462814.v-qsvr-1.aidevcloud(cput=400,energy_used=0,mem=3308964kb,vmem=9570264kb,walltime=7858,session_id=18997) 462862.v-qsvr-1.aidevcloud(cput=4,energy_used=0,mem=87136kb,vmem=359592kb,walltime=707,session_id=5320),state=free,netload=1850658374127,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198916364kb,totmem=199770740kb,idletime=269070,nusers=5,nsessions=5,sessions=5320 9633 18997 28489 29385,uname=Linux s001-n102 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n103
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 0-1/462798.v-qsvr-1.aidevcloud
+     status = rectime=1578970995,macaddr=a4:bf:01:3f:51:32,cpuclock=Fixed,varattr=,jobs=462798.v-qsvr-1.aidevcloud(cput=10653,energy_used=0,mem=17956740kb,vmem=54316940kb,walltime=10656,session_id=26688),state=free,netload=2125277573005,gres=,loadave=1.00,ncpus=24,physmem=197771896kb,availmem=181076352kb,totmem=199770740kb,idletime=4941790,nusers=4,nsessions=4,sessions=5990 21938 26688 27382,uname=Linux s001-n103 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n104
+     state = down,job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 0-1/460708.v-qsvr-1.aidevcloud
+     status = rectime=1578651989,macaddr=a4:bf:01:3f:8a:26,cpuclock=Fixed,varattr=,jobs=460708.v-qsvr-1.aidevcloud(cput=192,energy_used=0,mem=20188144kb,vmem=274937272kb,walltime=23,session_id=12559),state=free,netload=1449323701484,gres=,loadave=84.80,ncpus=24,physmem=197771896kb,availmem=195457432kb,totmem=199770740kb,idletime=237901,nusers=4,nsessions=4,sessions=6283 12559 24612 30765,uname=Linux s001-n104 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n105
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 0-1/462860.v-qsvr-1.aidevcloud
+     status = rectime=1578971028,macaddr=a4:bf:01:3e:dd:55,cpuclock=Fixed,varattr=,jobs=462860.v-qsvr-1.aidevcloud(cput=44044,energy_used=0,mem=390488kb,vmem=1220280kb,walltime=1883,session_id=23043),state=free,netload=1603699179575,gres=,loadave=24.03,ncpus=24,physmem=197771896kb,availmem=198980884kb,totmem=199770740kb,idletime=1262529,nusers=4,nsessions=4,sessions=6334 12098 12957 23043,uname=Linux s001-n105 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n106
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 0/462863.v-qsvr-1.aidevcloud,1/462867.v-qsvr-1.aidevcloud
+     status = rectime=1578971023,macaddr=a4:bf:01:3f:4b:fb,cpuclock=Fixed,varattr=,jobs=462863.v-qsvr-1.aidevcloud(cput=4,energy_used=0,mem=88412kb,vmem=357552kb,walltime=687,session_id=15847) 462867.v-qsvr-1.aidevcloud(cput=3,energy_used=0,mem=87764kb,vmem=356388kb,walltime=37,session_id=17722),state=free,netload=2028186539067,gres=,loadave=0.04,ncpus=24,physmem=197771896kb,availmem=198932296kb,totmem=199770740kb,idletime=278030,nusers=5,nsessions=5,sessions=6002 15847 17722 19468 20281,uname=Linux s001-n106 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n107
+     state = down,offline
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n108
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 0-1/462313.v-qsvr-1.aidevcloud
+     status = rectime=1578971013,macaddr=a4:bf:01:3e:cb:fb,cpuclock=Fixed,varattr=,jobs=462313.v-qsvr-1.aidevcloud(cput=1338942,energy_used=0,mem=10816184kb,vmem=15484908kb,walltime=70905,session_id=29974),state=free,netload=1696554950490,gres=,loadave=23.10,ncpus=24,physmem=197771896kb,availmem=188371100kb,totmem=199770740kb,idletime=374291,nusers=4,nsessions=4,sessions=5961 9808 26873 29974,uname=Linux s001-n108 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n109
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 0-1/462313.v-qsvr-1.aidevcloud
+     status = rectime=1578970998,macaddr=a4:bf:01:3f:4c:32,cpuclock=Fixed,varattr=,jobs=462313.v-qsvr-1.aidevcloud,state=free,netload=1406255478927,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=199016028kb,totmem=199770740kb,idletime=231428,nusers=3,nsessions=3,sessions=3291 5906 17158,uname=Linux s001-n109 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n110
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 0-1/462313.v-qsvr-1.aidevcloud
+     status = rectime=1578971013,macaddr=a4:bf:01:3f:01:25,cpuclock=Fixed,varattr=,jobs=462313.v-qsvr-1.aidevcloud,state=free,netload=1693114804641,gres=,loadave=0.01,ncpus=24,physmem=197771896kb,availmem=199030368kb,totmem=199770740kb,idletime=467237,nusers=2,nsessions=2,sessions=6024 8775,uname=Linux s001-n110 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n111
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 0-1/462313.v-qsvr-1.aidevcloud
+     status = rectime=1578970988,macaddr=a4:bf:01:3f:af:38,cpuclock=Fixed,varattr=,jobs=462313.v-qsvr-1.aidevcloud,state=free,netload=2236956526203,gres=,loadave=0.00,ncpus=24,physmem=197771892kb,availmem=199023056kb,totmem=199770736kb,idletime=5115534,nusers=2,nsessions=2,sessions=8226 9744,uname=Linux s001-n111 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n112
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 0-1/462864.v-qsvr-1.aidevcloud
+     status = rectime=1578970997,macaddr=a4:bf:01:3f:3c:67,cpuclock=Fixed,varattr=,jobs=462864.v-qsvr-1.aidevcloud(cput=1,energy_used=0,mem=109420kb,vmem=563864kb,walltime=425,Error_Path=/dev/pts/0,Output_Path=/dev/pts/0,session_id=30284),state=free,netload=2401304532469,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=199038620kb,totmem=199770740kb,idletime=207,nusers=3,nsessions=3,sessions=5859 25111 30284,uname=Linux s001-n112 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n113
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 0-1/462773.v-qsvr-1.aidevcloud
+     status = rectime=1578971005,macaddr=a4:bf:01:3f:5e:43,cpuclock=Fixed,varattr=,jobs=462773.v-qsvr-1.aidevcloud(cput=12178,energy_used=0,mem=17046260kb,vmem=17076636kb,walltime=12307,session_id=487),state=free,netload=2256000118949,gres=,loadave=1.00,ncpus=24,physmem=197771896kb,availmem=181956796kb,totmem=199770740kb,idletime=1313346,nusers=3,nsessions=3,sessions=487 5941 31538,uname=Linux s001-n113 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n114
+     state = down,offline
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n115
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 0-1/462774.v-qsvr-1.aidevcloud
+     status = rectime=1578971020,macaddr=a4:bf:01:3f:37:71,cpuclock=Fixed,varattr=,jobs=462774.v-qsvr-1.aidevcloud(cput=24362,energy_used=0,mem=17046184kb,vmem=17088936kb,walltime=12322,session_id=10866),state=free,netload=1214412533937,gres=,loadave=2.00,ncpus=24,physmem=197771892kb,availmem=181964016kb,totmem=199770736kb,idletime=296148,nusers=3,nsessions=3,sessions=5915 10866 27358,uname=Linux s001-n115 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n116
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 0-1/462339.v-qsvr-1.aidevcloud
+     status = rectime=1578970987,macaddr=a4:bf:01:3f:57:8b,cpuclock=Fixed,varattr=,jobs=462339.v-qsvr-1.aidevcloud,state=free,netload=2279101188729,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198992760kb,totmem=199770740kb,idletime=2124475,nusers=3,nsessions=3,sessions=5370 6275 31644,uname=Linux s001-n116 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n117
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 0-1/462339.v-qsvr-1.aidevcloud
+     status = rectime=1578971010,macaddr=a4:bf:01:3e:f7:11,cpuclock=Fixed,varattr=,jobs=462339.v-qsvr-1.aidevcloud,state=free,netload=1917708543677,gres=,loadave=0.00,ncpus=24,physmem=197771892kb,availmem=199024356kb,totmem=199770736kb,idletime=884822,nusers=2,nsessions=2,sessions=5901 6795,uname=Linux s001-n117 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n118
+     state = down,offline
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n119
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 0-1/462865.v-qsvr-1.aidevcloud
+     status = rectime=1578971020,macaddr=a4:bf:01:3f:78:ab,cpuclock=Fixed,varattr=,jobs=462865.v-qsvr-1.aidevcloud(cput=210,energy_used=0,mem=22628432kb,vmem=25370160kb,walltime=216,session_id=22106),state=free,netload=1410897968276,gres=,loadave=1.05,ncpus=24,physmem=197771896kb,availmem=172636248kb,totmem=199770740kb,idletime=2822964,nusers=3,nsessions=3,sessions=5944 22106 32129,uname=Linux s001-n119 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n120
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 0/462830.v-qsvr-1.aidevcloud,1/462868.v-qsvr-1.aidevcloud
+     status = rectime=1578971023,macaddr=a4:bf:01:3e:fc:c0,cpuclock=Fixed,varattr=,jobs=462830.v-qsvr-1.aidevcloud(cput=19,energy_used=0,mem=131072kb,vmem=487044kb,walltime=4864,session_id=23111) 462868.v-qsvr-1.aidevcloud(,session_id=26533),state=free,netload=1254298137695,gres=,loadave=0.21,ncpus=24,physmem=197771892kb,availmem=198925244kb,totmem=199770736kb,idletime=2467413,nusers=3,nsessions=4,sessions=4289 5956 23111 27220,uname=Linux s001-n120 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n121
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 0-1/462339.v-qsvr-1.aidevcloud
+     status = rectime=1578971020,macaddr=a4:bf:01:3f:3a:af,cpuclock=Fixed,varattr=,jobs=462339.v-qsvr-1.aidevcloud,state=free,netload=1266922833763,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=199027768kb,totmem=199770740kb,idletime=229698,nusers=2,nsessions=2,sessions=5913 5973,uname=Linux s001-n121 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n122
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 0/462783.v-qsvr-1.aidevcloud,1/462818.v-qsvr-1.aidevcloud
+     status = rectime=1578971000,macaddr=a4:bf:01:3f:af:92,cpuclock=Fixed,varattr=,jobs=462783.v-qsvr-1.aidevcloud(cput=64,energy_used=0,mem=231620kb,vmem=2556088kb,walltime=12177,session_id=17635) 462818.v-qsvr-1.aidevcloud(cput=10,energy_used=0,mem=88104kb,vmem=355848kb,walltime=6865,session_id=1247),state=free,netload=903588653529,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198833016kb,totmem=199770740kb,idletime=447192,nusers=4,nsessions=7,sessions=1247 5934 10988 17635 17899 17914 28295,uname=Linux s001-n122 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n123
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 0-1/462834.v-qsvr-1.aidevcloud
+     status = rectime=1578971016,macaddr=a4:bf:01:3f:af:24,cpuclock=Fixed,varattr=,jobs=462834.v-qsvr-1.aidevcloud(cput=81729,energy_used=0,mem=50628600kb,vmem=51805192kb,walltime=4269,session_id=8322),state=free,netload=934255057129,gres=,loadave=19.19,ncpus=24,physmem=197771896kb,availmem=148126164kb,totmem=199770740kb,idletime=2906804,nusers=3,nsessions=3,sessions=5887 8322 17129,uname=Linux s001-n123 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n124
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971021,macaddr=a4:bf:01:3f:00:35,cpuclock=Fixed,varattr=,jobs=,state=free,netload=1018351133701,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=199089868kb,totmem=199770740kb,idletime=2896029,nusers=2,nsessions=2,sessions=5904 25211,uname=Linux s001-n124 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n125
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 0/462824.v-qsvr-1.aidevcloud,1/462825.v-qsvr-1.aidevcloud
+     status = rectime=1578971022,macaddr=a4:bf:01:3e:f1:d0,cpuclock=Fixed,varattr=,jobs=462824.v-qsvr-1.aidevcloud(cput=11,energy_used=0,mem=227544kb,vmem=2534328kb,walltime=6092,session_id=25059) 462825.v-qsvr-1.aidevcloud(cput=6,energy_used=0,mem=87056kb,vmem=355236kb,walltime=6074,session_id=25891),state=free,netload=1026790323984,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198840620kb,totmem=199770740kb,idletime=409558,nusers=5,nsessions=8,sessions=5917 12451 25059 25891 26749 27379 27384 28815,uname=Linux s001-n125 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n126
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970998,macaddr=a4:bf:01:3e:fa:a9,cpuclock=Fixed,varattr=,jobs=,state=free,netload=1147656876229,gres=,loadave=0.01,ncpus=24,physmem=197771896kb,availmem=199069960kb,totmem=199770740kb,idletime=4805,nusers=2,nsessions=2,sessions=5870 6749,uname=Linux s001-n126 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n127
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971018,macaddr=a4:bf:01:3e:f3:47,cpuclock=Fixed,varattr=,jobs=,state=free,netload=1274439127224,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=199091552kb,totmem=199770740kb,idletime=5113558,nusers=2,nsessions=2,sessions=6296 14415,uname=Linux s001-n127 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n128
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 0-1/462837.v-qsvr-1.aidevcloud
+     status = rectime=1578970990,macaddr=a4:bf:01:3f:19:b2,cpuclock=Fixed,varattr=,jobs=462837.v-qsvr-1.aidevcloud(cput=86,energy_used=0,mem=323956kb,vmem=1826420kb,walltime=3865,Error_Path=/dev/pts/0,Output_Path=/dev/pts/0,session_id=32741),state=free,netload=755255209521,gres=,loadave=0.00,ncpus=24,physmem=197771892kb,availmem=198999036kb,totmem=199770736kb,idletime=5110237,nusers=3,nsessions=3,sessions=3228 5965 32741,uname=Linux s001-n128 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n129
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971024,macaddr=a4:bf:01:3f:65:5f,cpuclock=Fixed,varattr=,jobs=,state=free,netload=770670549614,gres=,loadave=0.00,ncpus=24,physmem=197771892kb,availmem=199065492kb,totmem=199770736kb,idletime=2841048,nusers=2,nsessions=2,sessions=781 5935,uname=Linux s001-n129 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n130
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971019,macaddr=a4:bf:01:3f:7b:26,cpuclock=Fixed,varattr=,jobs=,state=free,netload=709125837005,gres=,loadave=0.09,ncpus=24,physmem=197771892kb,availmem=199049136kb,totmem=199770736kb,idletime=1473704,nusers=2,nsessions=2,sessions=4922 5921,uname=Linux s001-n130 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n131
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971016,macaddr=a4:bf:01:3f:4e:71,cpuclock=Fixed,varattr=,jobs=,state=free,netload=756685417673,gres=,loadave=0.06,ncpus=24,physmem=197771896kb,availmem=199014972kb,totmem=199770740kb,idletime=2906032,nusers=2,nsessions=2,sessions=5909 8833,uname=Linux s001-n131 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n132
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970998,macaddr=a4:bf:01:3f:1d:4a,cpuclock=Fixed,varattr=,jobs=,state=free,netload=513422486754,gres=,loadave=0.06,ncpus=24,physmem=197771896kb,availmem=199054116kb,totmem=199770740kb,idletime=1790838,nusers=3,nsessions=3,sessions=5903 12812 31951,uname=Linux s001-n132 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n133
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     jobs = 0/462734.v-qsvr-1.aidevcloud
+     status = rectime=1578971026,macaddr=a4:bf:01:3f:aa:8d,cpuclock=Fixed,varattr=,jobs=462734.v-qsvr-1.aidevcloud(cput=45,energy_used=0,mem=251984kb,vmem=6091632kb,walltime=12656,session_id=26135),state=free,netload=14518162792,gres=,loadave=0.07,ncpus=24,physmem=197771892kb,availmem=198778812kb,totmem=199770736kb,idletime=26553,nusers=3,nsessions=8,sessions=889 3038 26135 26976 26979 27019 27022 27023,uname=Linux s001-n133 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n134
+     state = offline
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971001,macaddr=a4:bf:01:3e:fe:cd,cpuclock=Fixed,varattr=,jobs=,state=free,netload=25199730069,gres=,loadave=0.08,ncpus=24,physmem=197771892kb,availmem=198091664kb,totmem=199770736kb,idletime=5003326,nusers=2,nsessions=2,sessions=5908 7063,uname=Linux s001-n134 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n135
+     state = free
+     power_state = Running
+     np = 2
+     properties = jupyter,batch,xeon,gold6128,skl,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970993,macaddr=a4:bf:01:3f:38:f2,cpuclock=Fixed,varattr=,jobs=,state=free,netload=318300066964,gres=,loadave=0.04,ncpus=24,physmem=197771892kb,availmem=199058964kb,totmem=199770736kb,idletime=1791102,nusers=2,nsessions=2,sessions=5975 27803,uname=Linux s001-n135 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n145
+     state = down,offline
+     power_state = Running
+     np = 2
+     properties = fpga_compile,xeon,plat8153,skl,ram384gb,net1gbe
+     ntype = cluster
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n146
+     state = offline
+     power_state = Running
+     np = 2
+     properties = fpga_compile,xeon,plat8153,skl,ram384gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970993,macaddr=a4:bf:01:2f:2a:73,cpuclock=Fixed,varattr=,jobs=,state=free,netload=56699426163,gres=,loadave=0.00,ncpus=64,physmem=394908624kb,availmem=394729904kb,totmem=396907468kb,idletime=4941745,nusers=2,nsessions=2,sessions=6416 57686,uname=Linux s001-n146 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n147
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = fpga_compile,xeon,plat8153,skl,ram384gb,net1gbe
+     ntype = cluster
+     jobs = 0-1/462861.v-qsvr-1.aidevcloud
+     status = rectime=1578971022,macaddr=a4:bf:01:2f:23:3e,cpuclock=Fixed,varattr=,jobs=462861.v-qsvr-1.aidevcloud(cput=1329,energy_used=0,mem=20709036kb,vmem=21306804kb,walltime=1474,session_id=16545),state=free,netload=2830172995872,gres=,loadave=1.01,ncpus=64,physmem=394908640kb,availmem=377059576kb,totmem=396907484kb,idletime=396054,nusers=3,nsessions=3,sessions=3038 16545 37576,uname=Linux s001-n147 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n148
+     state = free
+     power_state = Running
+     np = 2
+     properties = fpga_compile,xeon,plat8153,skl,ram384gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971006,macaddr=a4:bf:01:2f:20:af,cpuclock=Fixed,varattr=,jobs=,state=free,netload=1510008937279,gres=,loadave=0.00,ncpus=64,physmem=394908624kb,availmem=395465512kb,totmem=396907468kb,idletime=1857763,nusers=2,nsessions=2,sessions=2973 58633,uname=Linux s001-n148 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n149
+     state = offline
+     power_state = Running
+     np = 2
+     properties = fpga_compile,xeon,plat8153,skl,ram384gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970995,macaddr=a4:bf:01:3f:8c:d3,cpuclock=Fixed,varattr=,jobs=,state=free,netload=56694439704,gres=,loadave=0.00,ncpus=64,physmem=394908628kb,availmem=394732616kb,totmem=396907472kb,idletime=4941785,nusers=2,nsessions=2,sessions=9586 59555,uname=Linux s001-n149 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n150
+     state = free
+     power_state = Running
+     np = 2
+     properties = fpga_compile,xeon,plat8153,skl,ram384gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971015,macaddr=a4:bf:01:3f:90:f7,cpuclock=Fixed,varattr=,jobs=,state=free,netload=365483148318,gres=,loadave=0.00,ncpus=64,physmem=394908628kb,availmem=395738228kb,totmem=396907472kb,idletime=1857069,nusers=2,nsessions=2,sessions=3030 39567,uname=Linux s001-n150 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n151
+     state = free
+     power_state = Running
+     np = 2
+     properties = fpga_compile,xeon,plat8153,skl,ram384gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971004,macaddr=a4:bf:01:44:d4:e6,cpuclock=Fixed,varattr=,jobs=,state=free,netload=295882327009,gres=,loadave=0.00,ncpus=64,physmem=394908628kb,availmem=395706972kb,totmem=396907472kb,idletime=2908849,nusers=2,nsessions=2,sessions=3058 58055,uname=Linux s001-n151 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n152
+     state = free
+     power_state = Running
+     np = 2
+     properties = fpga_compile,xeon,plat8153,skl,ram384gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970984,macaddr=a4:bf:01:44:d4:6e,cpuclock=Fixed,varattr=,jobs=,state=free,netload=294154666341,gres=,loadave=0.00,ncpus=64,physmem=394908628kb,availmem=395664904kb,totmem=396907472kb,idletime=2909134,nusers=2,nsessions=2,sessions=3018 27592,uname=Linux s001-n152 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n153
+     state = free
+     power_state = Running
+     np = 2
+     properties = fpga_compile,xeon,plat8153,skl,ram384gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971016,macaddr=a4:bf:01:3f:40:db,cpuclock=Fixed,varattr=,jobs=,state=free,netload=180736998838,gres=,loadave=0.00,ncpus=64,physmem=394908628kb,availmem=395686704kb,totmem=396907472kb,idletime=2907752,nusers=2,nsessions=2,sessions=3056 59884,uname=Linux s001-n153 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n154
+     state = free
+     power_state = Running
+     np = 2
+     properties = fpga_compile,xeon,plat8153,skl,ram384gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970991,macaddr=a4:bf:01:40:0d:44,cpuclock=Fixed,varattr=,jobs=,state=free,netload=82481678862,gres=,loadave=0.00,ncpus=64,physmem=394908628kb,availmem=395658988kb,totmem=396907472kb,idletime=2908833,nusers=2,nsessions=2,sessions=3117 9479,uname=Linux s001-n154 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n155
+     state = free
+     power_state = Running
+     np = 2
+     properties = fpga_compile,xeon,plat8153,skl,ram384gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971017,macaddr=a4:bf:01:40:1b:12,cpuclock=Fixed,varattr=,jobs=,state=free,netload=39576698140,gres=,loadave=0.00,ncpus=64,physmem=394908628kb,availmem=395712908kb,totmem=396907472kb,idletime=2908729,nusers=2,nsessions=2,sessions=3030 11577,uname=Linux s001-n155 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n156
+     state = free
+     power_state = Running
+     np = 2
+     properties = fpga_compile,xeon,plat8153,skl,ram384gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970992,macaddr=a4:bf:01:3f:67:f3,cpuclock=Fixed,varattr=,jobs=,state=free,netload=83909174762,gres=,loadave=0.00,ncpus=64,physmem=394908628kb,availmem=395679092kb,totmem=396907472kb,idletime=2914608,nusers=2,nsessions=2,sessions=3084 60417,uname=Linux s001-n156 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n081
+     state = offline
+     power_state = Running
+     np = 2
+     properties = fpga_runtime,xeon,gold6128,skl,ram192gb,net1gbe,fpga,arria10
+     ntype = cluster
+     status = rectime=1578971005,macaddr=a4:bf:01:2f:28:52,cpuclock=Fixed,varattr=,jobs=,state=free,netload=54951468246,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=198041196kb,totmem=199770740kb,idletime=4518411,nusers=2,nsessions=2,sessions=2523 6142,uname=Linux s001-n081 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n082
+     state = offline
+     power_state = Running
+     np = 2
+     properties = fpga_runtime,xeon,gold6128,skl,ram192gb,net1gbe,fpga,arria10
+     ntype = cluster
+     status = rectime=1578971006,macaddr=a4:bf:01:2f:1e:d9,cpuclock=Fixed,varattr=,jobs=,state=free,netload=56178941666,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=197991128kb,totmem=199770740kb,idletime=4518414,nusers=2,nsessions=2,sessions=2725 13126,uname=Linux s001-n082 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n083
+     state = free
+     power_state = Running
+     np = 2
+     properties = fpga_runtime,xeon,gold6128,skl,ram192gb,net1gbe,fpga,arria10
+     ntype = cluster
+     status = rectime=1578971003,macaddr=a4:bf:01:2f:29:a1,cpuclock=Fixed,varattr=,jobs=,state=free,netload=289922951366,gres=,loadave=0.00,ncpus=24,physmem=197771892kb,availmem=199047572kb,totmem=199770736kb,idletime=114645,nusers=2,nsessions=2,sessions=2618 27051,uname=Linux s001-n083 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n084
+     state = free
+     power_state = Running
+     np = 2
+     properties = fpga_runtime,xeon,gold6128,skl,ram192gb,net1gbe,fpga,arria10
+     ntype = cluster
+     status = rectime=1578970992,macaddr=a4:bf:01:2f:2a:af,cpuclock=Fixed,varattr=,jobs=,state=free,netload=134769989782,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=199056332kb,totmem=199770740kb,idletime=388421,nusers=2,nsessions=2,sessions=2574 9859,uname=Linux s001-n084 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n085
+     state = down,offline
+     power_state = Running
+     np = 2
+     properties = fpga_runtime,xeon,gold6128,skl,ram192gb,net1gbe,fpga,arria10
+     ntype = cluster
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n086
+     state = free
+     power_state = Running
+     np = 2
+     properties = fpga_runtime,xeon,gold6128,skl,ram192gb,net1gbe,fpga,arria10
+     ntype = cluster
+     status = rectime=1578970987,macaddr=a4:bf:01:2f:2b:36,cpuclock=Fixed,varattr=,jobs=,state=free,netload=141094584599,gres=,loadave=0.00,ncpus=24,physmem=164741768kb,availmem=166030468kb,totmem=166740612kb,idletime=2321987,nusers=2,nsessions=2,sessions=2693 21179,uname=Linux s001-n086 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n087
+     state = offline
+     power_state = Running
+     np = 2
+     properties = fpga_runtime,xeon,gold6128,skl,ram192gb,net1gbe,fpga,arria10
+     ntype = cluster
+     status = rectime=1578970994,macaddr=a4:bf:01:2f:2d:34,cpuclock=Fixed,varattr=,jobs=,state=free,netload=56064965372,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=197989068kb,totmem=199770740kb,idletime=4518398,nusers=2,nsessions=2,sessions=2638 13146,uname=Linux s001-n087 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n088
+     state = free
+     power_state = Running
+     np = 2
+     properties = fpga_runtime,xeon,gold6128,skl,ram192gb,net1gbe,fpga,arria10
+     ntype = cluster
+     status = rectime=1578970993,macaddr=a4:bf:01:2f:2c:26,cpuclock=Fixed,varattr=,jobs=,state=free,netload=95529371298,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=199057372kb,totmem=199770740kb,idletime=4518401,nusers=2,nsessions=2,sessions=2706 13431,uname=Linux s001-n088 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n089
+     state = free
+     power_state = Running
+     np = 2
+     properties = fpga_runtime,xeon,gold6128,skl,ram192gb,net1gbe,fpga,arria10
+     ntype = cluster
+     status = rectime=1578971027,macaddr=a4:bf:01:2f:29:83,cpuclock=Fixed,varattr=,jobs=,state=free,netload=111637765733,gres=,loadave=0.00,ncpus=24,physmem=197771892kb,availmem=199055664kb,totmem=199770736kb,idletime=2781195,nusers=2,nsessions=2,sessions=2686 28072,uname=Linux s001-n089 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n090
+     state = free
+     power_state = Running
+     np = 2
+     properties = fpga_runtime,xeon,gold6128,skl,ram192gb,net1gbe,fpga,arria10
+     ntype = cluster
+     status = rectime=1578971016,macaddr=a4:bf:01:2f:1f:15,cpuclock=Fixed,varattr=,jobs=,state=free,netload=161831954303,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=199065416kb,totmem=199770740kb,idletime=4518424,nusers=2,nsessions=2,sessions=2720 13163,uname=Linux s001-n090 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n091
+     state = free
+     power_state = Running
+     np = 2
+     properties = fpga_runtime,xeon,gold6128,skl,ram192gb,net1gbe,fpga,arria10
+     ntype = cluster
+     status = rectime=1578970995,macaddr=a4:bf:01:2f:22:99,cpuclock=Fixed,varattr=,jobs=,state=free,netload=105326470657,gres=,loadave=0.00,ncpus=24,physmem=197771896kb,availmem=199059332kb,totmem=199770740kb,idletime=3398395,nusers=2,nsessions=2,sessions=2647 12688,uname=Linux s001-n091 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n092
+     state = free
+     power_state = Running
+     np = 2
+     properties = fpga_runtime,xeon,gold6128,skl,ram192gb,net1gbe,fpga,arria10
+     ntype = cluster
+     status = rectime=1578970999,macaddr=a4:bf:01:2f:29:92,cpuclock=Fixed,varattr=,jobs=,state=free,netload=22401716123,gres=,loadave=0.00,ncpus=24,physmem=197771892kb,availmem=199133436kb,totmem=199770736kb,idletime=957585,nusers=2,nsessions=2,sessions=893 2597,uname=Linux s001-n092 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n140
+     state = down,job-exclusive
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     jobs = 0-1/452960.v-qsvr-1.aidevcloud
+     status = rectime=1577456405,macaddr=ac:1f:6b:ad:88:60,cpuclock=Fixed,varattr=,jobs=452960.v-qsvr-1.aidevcloud(cput=129,energy_used=0,mem=21081880kb,vmem=54372084kb,walltime=11456,Error_Path=/dev/pts/0,Output_Path=/dev/pts/0,session_id=23410),state=free,netload=6072243274,gres=,loadave=0.05,ncpus=12,physmem=65774464kb,availmem=67350076kb,totmem=67773308kb,idletime=309097,nusers=3,nsessions=3,sessions=658 2264 23410,uname=Linux s001-n140 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n141
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     jobs = 0-1/460761.v-qsvr-1.aidevcloud
+     status = rectime=1578970986,macaddr=ac:1f:6b:ad:89:2c,cpuclock=Fixed,varattr=,jobs=460761.v-qsvr-1.aidevcloud(cput=53597,energy_used=0,mem=1043396kb,vmem=2249808kb,walltime=17798,session_id=2011),state=free,netload=53177308678,gres=,loadave=3.08,ncpus=12,physmem=65774452kb,availmem=66517052kb,totmem=67773296kb,idletime=1823677,nusers=3,nsessions=3,sessions=661 2011 2330,uname=Linux s001-n141 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n157
+     state = down,offline
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1577755608,macaddr=ac:1f:6b:ad:89:fc,cpuclock=Fixed,varattr=,jobs=,state=free,netload=11725794,gres=,loadave=0.08,ncpus=12,physmem=65774464kb,availmem=67414952kb,totmem=67773308kb,idletime=156,nusers=2,nsessions=2,sessions=2699 2732,uname=Linux s001-n157 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n158
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     jobs = 0-1/460772.v-qsvr-1.aidevcloud
+     status = rectime=1578971019,macaddr=ac:1f:6b:ad:88:b0,cpuclock=Fixed,varattr=,jobs=460772.v-qsvr-1.aidevcloud(cput=18259,energy_used=0,mem=982144kb,vmem=2170988kb,walltime=6292,session_id=2268),state=free,netload=38964931753,gres=,loadave=2.66,ncpus=12,physmem=65774464kb,availmem=67000024kb,totmem=67773308kb,idletime=544987,nusers=3,nsessions=3,sessions=565 2268 2693,uname=Linux s001-n158 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n159
+     state = down,offline
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578003284,macaddr=ac:1f:6b:ad:88:9a,cpuclock=Fixed,varattr=,jobs=,state=free,netload=1498234609,gres=,loadave=0.00,ncpus=12,physmem=65774464kb,availmem=67324064kb,totmem=67773308kb,idletime=246471,nusers=2,nsessions=2,sessions=678 2426,uname=Linux s001-n159 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n160
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971025,macaddr=ac:1f:6b:ad:88:a8,cpuclock=Fixed,varattr=,jobs=,state=free,netload=48615779543,gres=,loadave=0.00,ncpus=12,physmem=65774464kb,availmem=67223472kb,totmem=67773308kb,idletime=457511,nusers=2,nsessions=2,sessions=588 5611,uname=Linux s001-n160 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n161
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578970995,macaddr=ac:1f:6b:ad:86:a4,cpuclock=Fixed,varattr=,jobs=,state=free,netload=39479705197,gres=,loadave=0.00,ncpus=12,physmem=65774456kb,availmem=67365684kb,totmem=67773300kb,idletime=261659,nusers=2,nsessions=2,sessions=401 650,uname=Linux s001-n161 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n162
+     state = offline
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578970996,macaddr=ac:1f:6b:ad:88:18,cpuclock=Fixed,varattr=,jobs=,state=free,netload=31235445773,gres=,loadave=0.00,ncpus=12,physmem=65774464kb,availmem=67334188kb,totmem=67773308kb,idletime=885244,nusers=2,nsessions=2,sessions=607 2279,uname=Linux s001-n162 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n163
+     state = down
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971028,macaddr=ac:1f:6b:ad:87:e0,cpuclock=Fixed,varattr=,jobs=,state=free,netload=8299329313,gres=,message=ERROR: prolog/epilog failed,file: /var/spool/torque/mom_priv/epilogue.parallel,exit: 126,nonzero p/e exit status,loadave=0.00,ncpus=12,physmem=65774464kb,availmem=67338868kb,totmem=67773308kb,idletime=1211811,nusers=2,nsessions=2,sessions=632 2605,uname=Linux s001-n163 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     note = ERROR: prolog/epilog failed, file: /var/spool/torque/mom_priv/epilogue.parallel, exit: 126, nonzero p/e exit status
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n164
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578970993,macaddr=ac:1f:6b:ad:86:aa,cpuclock=Fixed,varattr=,jobs=,state=free,netload=23598866734,gres=,loadave=0.04,ncpus=12,physmem=65774464kb,availmem=67356576kb,totmem=67773308kb,idletime=1172297,nusers=2,nsessions=2,sessions=634 2293,uname=Linux s001-n164 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n165
+     state = down
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971014,macaddr=ac:1f:6b:ad:ab:c4,cpuclock=Fixed,varattr=,jobs=,state=free,netload=18758963391,gres=,message=ERROR: prolog/epilog failed,file: /var/spool/torque/mom_priv/epilogue.parallel,exit: 126,nonzero p/e exit status,loadave=0.08,ncpus=12,physmem=65774464kb,availmem=67346304kb,totmem=67773308kb,idletime=960327,nusers=2,nsessions=2,sessions=628 5544,uname=Linux s001-n165 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     note = ERROR: prolog/epilog failed, file: /var/spool/torque/mom_priv/epilogue.parallel, exit: 126, nonzero p/e exit status
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n166
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578970992,macaddr=ac:1f:6b:ad:ab:ca,cpuclock=Fixed,varattr=,jobs=,state=free,netload=16488517183,gres=,loadave=0.00,ncpus=12,physmem=65774464kb,availmem=67311952kb,totmem=67773308kb,idletime=1823678,nusers=2,nsessions=2,sessions=656 2252,uname=Linux s001-n166 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n167
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     jobs = 0-1/462296.v-qsvr-1.aidevcloud
+     status = rectime=1578970995,macaddr=ac:1f:6b:ad:aa:e6,cpuclock=Fixed,varattr=,jobs=462296.v-qsvr-1.aidevcloud(cput=795744,energy_used=0,mem=4913384kb,vmem=7517056kb,walltime=72814,session_id=21416),state=free,netload=22257321389,gres=,loadave=10.94,ncpus=12,physmem=65774464kb,availmem=62523896kb,totmem=67773308kb,idletime=1823680,nusers=3,nsessions=3,sessions=659 2267 21416,uname=Linux s001-n167 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n168
+     state = down,offline
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n169
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971013,macaddr=ac:1f:6b:ad:ab:ba,cpuclock=Fixed,varattr=,jobs=,state=free,netload=27238457559,gres=,loadave=0.07,ncpus=12,physmem=65774464kb,availmem=67362944kb,totmem=67773308kb,idletime=1823698,nusers=2,nsessions=2,sessions=641 2295,uname=Linux s001-n169 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n170
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     jobs = 0-1/462296.v-qsvr-1.aidevcloud
+     status = rectime=1578971015,macaddr=ac:1f:6b:ad:d1:5c,cpuclock=Fixed,varattr=,jobs=462296.v-qsvr-1.aidevcloud,state=free,netload=21207789959,gres=,loadave=0.00,ncpus=12,physmem=65774464kb,availmem=67309548kb,totmem=67773308kb,idletime=937176,nusers=2,nsessions=2,sessions=604 2595,uname=Linux s001-n170 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n171
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     jobs = 0-1/462296.v-qsvr-1.aidevcloud
+     status = rectime=1578970993,macaddr=ac:1f:6b:ad:ac:5a,cpuclock=Fixed,varattr=,jobs=462296.v-qsvr-1.aidevcloud,state=free,netload=14838580720,gres=,loadave=0.00,ncpus=12,physmem=65774464kb,availmem=67361236kb,totmem=67773308kb,idletime=1823677,nusers=2,nsessions=2,sessions=645 2240,uname=Linux s001-n171 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n172
+     state = down
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578970986,macaddr=ac:1f:6b:ad:d1:bc,cpuclock=Fixed,varattr=,jobs=,state=free,netload=6545901754,gres=,message=ERROR: prolog/epilog failed,file: /var/spool/torque/mom_priv/epilogue.parallel,exit: 126,nonzero p/e exit status,loadave=0.00,ncpus=12,physmem=65774464kb,availmem=67364512kb,totmem=67773308kb,idletime=960041,nusers=2,nsessions=2,sessions=663 2263,uname=Linux s001-n172 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     note = ERROR: prolog/epilog failed, file: /var/spool/torque/mom_priv/epilogue.parallel, exit: 126, nonzero p/e exit status
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n173
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     jobs = 0-1/462296.v-qsvr-1.aidevcloud
+     status = rectime=1578970992,macaddr=ac:1f:6b:ad:ab:cc,cpuclock=Fixed,varattr=,jobs=462296.v-qsvr-1.aidevcloud,state=free,netload=12021667996,gres=,loadave=0.00,ncpus=12,physmem=65774464kb,availmem=67365316kb,totmem=67773308kb,idletime=1823676,nusers=2,nsessions=2,sessions=652 2265,uname=Linux s001-n173 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n174
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578970984,macaddr=ac:1f:6b:ad:d0:92,cpuclock=Fixed,varattr=,jobs=,state=free,netload=12639315089,gres=,loadave=0.00,ncpus=12,physmem=65774464kb,availmem=67414840kb,totmem=67773308kb,idletime=1823668,nusers=2,nsessions=2,sessions=680 2320,uname=Linux s001-n174 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n175
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971017,macaddr=ac:1f:6b:ad:d1:5a,cpuclock=Fixed,varattr=,jobs=,state=free,netload=11464332760,gres=,loadave=0.00,ncpus=12,physmem=65774464kb,availmem=67342500kb,totmem=67773308kb,idletime=1211251,nusers=2,nsessions=2,sessions=661 2622,uname=Linux s001-n175 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n176
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971025,macaddr=ac:1f:6b:ad:d0:dc,cpuclock=Fixed,varattr=,jobs=,state=free,netload=6239632165,gres=,loadave=0.00,ncpus=12,physmem=65774464kb,availmem=67420240kb,totmem=67773308kb,idletime=960395,nusers=2,nsessions=2,sessions=604 5577,uname=Linux s001-n176 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n177
+     state = job-exclusive
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     jobs = 0-1/462650.v-qsvr-1.aidevcloud
+     status = rectime=1578970987,macaddr=ac:1f:6b:ad:d0:c8,cpuclock=Fixed,varattr=,jobs=462650.v-qsvr-1.aidevcloud(cput=354377,energy_used=0,mem=6431692kb,vmem=10240036kb,walltime=33644,session_id=16901),state=free,netload=19530731963,gres=,loadave=11.75,ncpus=12,physmem=65774464kb,availmem=61216768kb,totmem=67773308kb,idletime=43547,nusers=3,nsessions=3,sessions=655 2338 16901,uname=Linux s001-n177 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n178
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578970997,macaddr=ac:1f:6b:ad:ab:c6,cpuclock=Fixed,varattr=,jobs=,state=free,netload=11678628003,gres=,loadave=0.00,ncpus=12,physmem=65774464kb,availmem=67364576kb,totmem=67773308kb,idletime=1823677,nusers=2,nsessions=2,sessions=607 2296,uname=Linux s001-n178 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n179
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971000,macaddr=ac:1f:6b:ad:d1:6c,cpuclock=Fixed,varattr=,jobs=,state=free,netload=16684973495,gres=,loadave=0.00,ncpus=12,physmem=65774464kb,availmem=67358412kb,totmem=67773308kb,idletime=50818,nusers=2,nsessions=2,sessions=608 2288,uname=Linux s001-n179 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n180
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578970990,macaddr=ac:1f:6b:ad:d1:da,cpuclock=Fixed,varattr=,jobs=,state=free,netload=12247285144,gres=,loadave=0.00,ncpus=12,physmem=65774464kb,availmem=67361012kb,totmem=67773308kb,idletime=1823672,nusers=2,nsessions=2,sessions=631 2277,uname=Linux s001-n180 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n181
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971009,macaddr=ac:1f:6b:ad:d1:50,cpuclock=Fixed,varattr=,jobs=,state=free,netload=12165549765,gres=,loadave=0.00,ncpus=12,physmem=65774464kb,availmem=67362044kb,totmem=67773308kb,idletime=1823691,nusers=2,nsessions=2,sessions=657 2239,uname=Linux s001-n181 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n182
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971009,macaddr=ac:1f:6b:ad:d0:ce,cpuclock=Fixed,varattr=,jobs=,state=free,netload=12570753285,gres=,loadave=0.00,ncpus=12,physmem=65774464kb,availmem=67344508kb,totmem=67773308kb,idletime=1823691,nusers=2,nsessions=2,sessions=638 2241,uname=Linux s001-n182 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n183
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971026,macaddr=ac:1f:6b:ad:d0:9c,cpuclock=Fixed,varattr=,jobs=,state=free,netload=6195405116,gres=,loadave=0.00,ncpus=12,physmem=65774464kb,availmem=67344452kb,totmem=67773308kb,idletime=960368,nusers=2,nsessions=2,sessions=664 5620,uname=Linux s001-n183 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n184
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971008,macaddr=ac:1f:6b:ad:ac:10,cpuclock=Fixed,varattr=,jobs=,state=free,netload=12081812653,gres=,loadave=0.04,ncpus=12,physmem=65774464kb,availmem=67326896kb,totmem=67773308kb,idletime=1823690,nusers=2,nsessions=2,sessions=660 2253,uname=Linux s001-n184 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n185
+     state = offline
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578970986,cpuclock=Fixed,varattr=,jobs=,state=free,netload=24715421978,gres=,loadave=0.07,ncpus=12,physmem=65774464kb,availmem=67404956kb,totmem=67773308kb,idletime=5196480,nusers=1,nsessions=1,sessions=5624,uname=Linux s001-n185 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n186
+     state = down,offline
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n187
+     state = down,offline
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n188
+     state = down,offline
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578005684,cpuclock=Fixed,varattr=,jobs=,state=free,netload=19165762196,gres=,loadave=0.05,ncpus=12,physmem=65774444kb,availmem=67296024kb,totmem=67773288kb,idletime=4231262,nusers=1,nsessions=1,sessions=5800,uname=Linux s001-n188 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n190
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578970999,macaddr=ac:1f:6b:ad:d1:4a,cpuclock=Fixed,varattr=,jobs=,state=free,netload=13732718980,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67339372kb,totmem=67773288kb,idletime=422535,nusers=2,nsessions=2,sessions=656 2264,uname=Linux s001-n190 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n191
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971023,macaddr=ac:1f:6b:ad:d6:48,cpuclock=Fixed,varattr=,jobs=,state=free,netload=11889848540,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67344864kb,totmem=67773288kb,idletime=418271,nusers=2,nsessions=2,sessions=682 2308,uname=Linux s001-n191 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n192
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971014,macaddr=ac:1f:6b:ad:d5:fa,cpuclock=Fixed,varattr=,jobs=,state=free,netload=11624198305,gres=,loadave=0.00,ncpus=12,physmem=65774448kb,availmem=67342572kb,totmem=67773292kb,idletime=1823681,nusers=2,nsessions=2,sessions=404 657,uname=Linux s001-n192 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n193
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971007,macaddr=ac:1f:6b:ad:d7:76,cpuclock=Fixed,varattr=,jobs=,state=free,netload=10987553000,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67330740kb,totmem=67773288kb,idletime=1823673,nusers=2,nsessions=2,sessions=609 2288,uname=Linux s001-n193 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n194
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578970986,macaddr=ac:1f:6b:ad:d0:ec,cpuclock=Fixed,varattr=,jobs=,state=free,netload=11560193029,gres=,loadave=0.00,ncpus=12,physmem=65774436kb,availmem=67336444kb,totmem=67773280kb,idletime=1823650,nusers=2,nsessions=2,sessions=406 658,uname=Linux s001-n194 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n195
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971015,macaddr=ac:1f:6b:ad:d1:8a,cpuclock=Fixed,varattr=,jobs=,state=free,netload=11832120222,gres=,loadave=0.02,ncpus=12,physmem=65774444kb,availmem=67331800kb,totmem=67773288kb,idletime=1823681,nusers=2,nsessions=2,sessions=630 2322,uname=Linux s001-n195 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n196
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971022,macaddr=ac:1f:6b:ad:d0:f0,cpuclock=Fixed,varattr=,jobs=,state=free,netload=12095805287,gres=,loadave=0.00,ncpus=12,physmem=65774456kb,availmem=67331388kb,totmem=67773300kb,idletime=1823687,nusers=2,nsessions=2,sessions=597 2361,uname=Linux s001-n196 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n197
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971007,macaddr=ac:1f:6b:ad:a8:fc,cpuclock=Fixed,varattr=,jobs=,state=free,netload=12070517081,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67355896kb,totmem=67773288kb,idletime=1823672,nusers=2,nsessions=2,sessions=659 2281,uname=Linux s001-n197 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n198
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578970985,macaddr=ac:1f:6b:ad:d6:56,cpuclock=Fixed,varattr=,jobs=,state=free,netload=11693639764,gres=,loadave=0.00,ncpus=12,physmem=65774456kb,availmem=67330996kb,totmem=67773300kb,idletime=1823650,nusers=2,nsessions=2,sessions=663 2304,uname=Linux s001-n198 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n199
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971008,macaddr=ac:1f:6b:ad:d0:b2,cpuclock=Fixed,varattr=,jobs=,state=free,netload=6196322027,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67346056kb,totmem=67773288kb,idletime=960393,nusers=2,nsessions=2,sessions=662 5687,uname=Linux s001-n199 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n200
+     state = down,offline
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1577760891,cpuclock=Fixed,varattr=,jobs=,state=free,netload=18432294500,gres=,message=ERROR: torque spool filesystem full,loadave=1.84,ncpus=12,physmem=65774448kb,availmem=67310296kb,totmem=67773292kb,idletime=3998823,nusers=2,nsessions=2,sessions=2369 21034,uname=Linux s001-n200 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     note = ERROR: torque spool filesystem full
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n201
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971024,macaddr=ac:1f:6b:ad:d6:e6,cpuclock=Fixed,varattr=,jobs=,state=free,netload=11693830290,gres=,loadave=0.00,ncpus=12,physmem=65774448kb,availmem=67333124kb,totmem=67773292kb,idletime=1823689,nusers=2,nsessions=2,sessions=661 2268,uname=Linux s001-n201 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n202
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971012,macaddr=ac:1f:6b:ad:d1:10,cpuclock=Fixed,varattr=,jobs=,state=free,netload=28452464850,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67271792kb,totmem=67773288kb,idletime=5208963,nusers=2,nsessions=2,sessions=2364 25182,uname=Linux s001-n202 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n203
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971024,macaddr=ac:1f:6b:ad:d7:70,cpuclock=Fixed,varattr=,jobs=,state=free,netload=6230409832,gres=,loadave=0.08,ncpus=12,physmem=65774444kb,availmem=67351328kb,totmem=67773288kb,idletime=974665,nusers=2,nsessions=2,sessions=668 9311,uname=Linux s001-n203 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n204
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578970992,macaddr=ac:1f:6b:ad:d7:68,cpuclock=Fixed,varattr=,jobs=,state=free,netload=28440430919,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67277148kb,totmem=67773288kb,idletime=5208943,nusers=2,nsessions=2,sessions=2330 27081,uname=Linux s001-n204 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n205
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971011,macaddr=ac:1f:6b:ad:d0:f2,cpuclock=Fixed,varattr=,jobs=,state=free,netload=28487725526,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67270464kb,totmem=67773288kb,idletime=2808731,nusers=2,nsessions=2,sessions=1664 2286,uname=Linux s001-n205 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n206
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578970995,macaddr=ac:1f:6b:f6:10:a8,cpuclock=Fixed,varattr=,jobs=,state=free,netload=11652839068,gres=,loadave=0.00,ncpus=12,physmem=65774448kb,availmem=67340868kb,totmem=67773292kb,idletime=1829129,nusers=2,nsessions=2,sessions=406 660,uname=Linux s001-n206 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n207
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578970993,macaddr=ac:1f:6b:f6:10:be,cpuclock=Fixed,varattr=,jobs=,state=free,netload=6197465767,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67343856kb,totmem=67773288kb,idletime=960349,nusers=2,nsessions=2,sessions=662 5625,uname=Linux s001-n207 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n208
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971007,macaddr=ac:1f:6b:f6:10:bc,cpuclock=Fixed,varattr=,jobs=,state=free,netload=6195626609,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67345340kb,totmem=67773288kb,idletime=960312,nusers=2,nsessions=2,sessions=652 5722,uname=Linux s001-n208 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n209
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971015,macaddr=ac:1f:6b:f6:10:8c,cpuclock=Fixed,varattr=,jobs=,state=free,netload=35800621861,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67297756kb,totmem=67773288kb,idletime=1481378,nusers=2,nsessions=2,sessions=686 2376,uname=Linux s001-n209 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n210
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971011,macaddr=ac:1f:6b:f6:10:90,cpuclock=Fixed,varattr=,jobs=,state=free,netload=9138339871,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67325356kb,totmem=67773288kb,idletime=1476052,nusers=2,nsessions=2,sessions=663 5775,uname=Linux s001-n210 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n211
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971004,macaddr=ac:1f:6b:f6:10:9c,cpuclock=Fixed,varattr=,jobs=,state=free,netload=11752768839,gres=,loadave=0.00,ncpus=12,physmem=65774436kb,availmem=67330200kb,totmem=67773280kb,idletime=1829137,nusers=2,nsessions=2,sessions=682 2303,uname=Linux s001-n211 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n212
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971025,macaddr=ac:1f:6b:f6:10:b0,cpuclock=Fixed,varattr=,jobs=,state=free,netload=11696249905,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67331288kb,totmem=67773288kb,idletime=1829157,nusers=2,nsessions=2,sessions=684 2294,uname=Linux s001-n212 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n213
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971028,macaddr=ac:1f:6b:f6:12:9e,cpuclock=Fixed,varattr=,jobs=,state=free,netload=11778117299,gres=,loadave=0.00,ncpus=12,physmem=65774436kb,availmem=67329000kb,totmem=67773280kb,idletime=1829160,nusers=2,nsessions=2,sessions=645 2296,uname=Linux s001-n213 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n214
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971020,macaddr=ac:1f:6b:f6:10:c4,cpuclock=Fixed,varattr=,jobs=,state=free,netload=11747569125,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67333512kb,totmem=67773288kb,idletime=1829152,nusers=2,nsessions=2,sessions=624 2262,uname=Linux s001-n214 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n215
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971028,macaddr=ac:1f:6b:f6:10:c0,cpuclock=Fixed,varattr=,jobs=,state=free,netload=12146951228,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67346404kb,totmem=67773288kb,idletime=1829160,nusers=2,nsessions=2,sessions=657 2294,uname=Linux s001-n215 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n216
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971025,macaddr=ac:1f:6b:f6:10:ae,cpuclock=Fixed,varattr=,jobs=,state=free,netload=11195236555,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67332284kb,totmem=67773288kb,idletime=1829156,nusers=2,nsessions=2,sessions=661 2321,uname=Linux s001-n216 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n218
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971023,macaddr=ac:1f:6b:f6:10:94,cpuclock=Fixed,varattr=,jobs=,state=free,netload=11732986914,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67330284kb,totmem=67773288kb,idletime=1829154,nusers=2,nsessions=2,sessions=662 2343,uname=Linux s001-n218 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n219
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971013,macaddr=ac:1f:6b:f6:10:9a,cpuclock=Fixed,varattr=,jobs=,state=free,netload=6183357834,gres=,loadave=0.00,ncpus=12,physmem=65774448kb,availmem=67322416kb,totmem=67773292kb,idletime=960386,nusers=2,nsessions=2,sessions=660 5763,uname=Linux s001-n219 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n220
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971011,macaddr=ac:1f:6b:f6:10:92,cpuclock=Fixed,varattr=,jobs=,state=free,netload=6225674103,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67326376kb,totmem=67773288kb,idletime=975989,nusers=2,nsessions=2,sessions=659 5762,uname=Linux s001-n220 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n221
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971025,macaddr=ac:1f:6b:f6:10:96,cpuclock=Fixed,varattr=,jobs=,state=free,netload=6138981364,gres=,loadave=0.00,ncpus=12,physmem=65774448kb,availmem=67348424kb,totmem=67773292kb,idletime=958037,nusers=2,nsessions=2,sessions=650 2254,uname=Linux s001-n221 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n222
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971026,macaddr=ac:1f:6b:f6:10:c8,cpuclock=Fixed,varattr=,jobs=,state=free,netload=11506974016,gres=,loadave=0.00,ncpus=12,physmem=65774456kb,availmem=67329028kb,totmem=67773300kb,idletime=1829156,nusers=2,nsessions=2,sessions=635 2399,uname=Linux s001-n222 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n223
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971007,macaddr=ac:1f:6b:f6:10:98,cpuclock=Fixed,varattr=,jobs=,state=free,netload=11917547413,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67331996kb,totmem=67773288kb,idletime=1829137,nusers=2,nsessions=2,sessions=633 2241,uname=Linux s001-n223 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n224
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971000,macaddr=ac:1f:6b:ad:d1:d4,cpuclock=Fixed,varattr=,jobs=,state=free,netload=6139926203,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67349192kb,totmem=67773288kb,idletime=958010,nusers=2,nsessions=2,sessions=632 2283,uname=Linux s001-n224 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n225
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971014,macaddr=ac:1f:6b:f6:10:a4,cpuclock=Fixed,varattr=,jobs=,state=free,netload=6138924292,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67346968kb,totmem=67773288kb,idletime=958024,nusers=2,nsessions=2,sessions=664 2276,uname=Linux s001-n225 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n226
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971012,macaddr=ac:1f:6b:f6:24:d4,cpuclock=Fixed,varattr=,jobs=,state=free,netload=10945836044,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67325452kb,totmem=67773288kb,idletime=1829142,nusers=2,nsessions=2,sessions=684 2278,uname=Linux s001-n226 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n227
+     state = down,offline
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1577761444,macaddr=ac:1f:6b:f6:24:da,cpuclock=Fixed,varattr=,jobs=,state=free,netload=11872963639,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67294320kb,totmem=67773288kb,idletime=619578,nusers=2,nsessions=2,sessions=658 2268,uname=Linux s001-n227 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n228
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578970991,macaddr=ac:1f:6b:f6:25:80,cpuclock=Fixed,varattr=,jobs=,state=free,netload=10945505869,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67327396kb,totmem=67773288kb,idletime=1829125,nusers=2,nsessions=2,sessions=603 2262,uname=Linux s001-n228 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n229
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578970992,macaddr=ac:1f:6b:f6:25:84,cpuclock=Fixed,varattr=,jobs=,state=free,netload=10945586138,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67326796kb,totmem=67773288kb,idletime=1829125,nusers=2,nsessions=2,sessions=664 2249,uname=Linux s001-n229 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n230
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971001,macaddr=ac:1f:6b:f6:25:68,cpuclock=Fixed,varattr=,jobs=,state=free,netload=11224806644,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67347316kb,totmem=67773288kb,idletime=1829133,nusers=2,nsessions=2,sessions=659 2281,uname=Linux s001-n230 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n231
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578970984,macaddr=ac:1f:6b:f6:23:94,cpuclock=Fixed,varattr=,jobs=,state=free,netload=10945552215,gres=,loadave=0.02,ncpus=12,physmem=65774444kb,availmem=67330056kb,totmem=67773288kb,idletime=1829117,nusers=2,nsessions=2,sessions=632 2334,uname=Linux s001-n231 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n232
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971003,macaddr=ac:1f:6b:f6:25:74,cpuclock=Fixed,varattr=,jobs=,state=free,netload=10945750832,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67324420kb,totmem=67773288kb,idletime=1829135,nusers=2,nsessions=2,sessions=682 2365,uname=Linux s001-n232 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n233
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578970996,macaddr=ac:1f:6b:f6:25:de,cpuclock=Fixed,varattr=,jobs=,state=free,netload=10945502254,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67325744kb,totmem=67773288kb,idletime=1829126,nusers=2,nsessions=2,sessions=682 2353,uname=Linux s001-n233 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n234
+     state = free
+     power_state = Running
+     np = 2
+     properties = gen9,xeon,e-2176g,cfl,gpu,ram64gb,net1gbe,6cores,eus0024
+     ntype = cluster
+     status = rectime=1578971024,macaddr=ac:1f:6b:f6:24:e2,cpuclock=Fixed,varattr=,jobs=,state=free,netload=10945882140,gres=,loadave=0.00,ncpus=12,physmem=65774444kb,availmem=67324244kb,totmem=67773288kb,idletime=1829156,nusers=2,nsessions=2,sessions=680 2287,uname=Linux s001-n234 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n010
+     state = down,offline
+     power_state = Running
+     np = 2
+     properties = experimental,xeon,clx,ram192gb,net1gbe
+     ntype = cluster
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n142
+     state = free
+     power_state = Running
+     np = 2
+     properties = experimental,xeon,clx,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578970994,macaddr=a4:bf:01:68:cf:a1,cpuclock=Fixed,varattr=,jobs=,state=free,netload=20694550766,gres=,loadave=0.00,ncpus=16,physmem=1559230024kb,availmem=1560256352kb,totmem=1561228868kb,idletime=3037015,nusers=2,nsessions=2,sessions=3070 3107,uname=Linux s001-n142 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n143
+     state = offline
+     power_state = Running
+     np = 2
+     properties = experimental,xeon,clx,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971022,macaddr=a4:bf:01:68:c5:52,cpuclock=Fixed,varattr=,jobs=,state=free,netload=18259242934,gres=,loadave=0.00,ncpus=16,physmem=1559230024kb,availmem=1560244556kb,totmem=1561228868kb,idletime=3037042,nusers=2,nsessions=2,sessions=2965 2996,uname=Linux s001-n143 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
+s001-n144
+     state = offline
+     power_state = Running
+     np = 2
+     properties = experimental,xeon,clx,ram192gb,net1gbe
+     ntype = cluster
+     status = rectime=1578971025,macaddr=a4:bf:01:68:d4:55,cpuclock=Fixed,varattr=,jobs=,state=free,netload=17344702572,gres=,loadave=0.00,ncpus=16,physmem=195188880kb,availmem=196453272kb,totmem=197187724kb,idletime=2862280,nusers=2,nsessions=2,sessions=808 3093,uname=Linux s001-n144 4.15.18 #1 SMP Fri Oct 18 11:54:23 PDT 2019 x86_64,opsys=linux
+     mom_service_port = 15002
+     mom_manager_port = 15003
+
