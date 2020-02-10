@@ -1,0 +1,48 @@
+
+From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun Feb  9 19:41:59 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    sort: descending degree
+# threads used: 24 time: 120.661
+
+From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun Feb  9 19:45:17 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    sort: none
+# threads used: 24 time: 66.0677
+
+From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun Feb  9 19:51:15 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    ascending degree
+# threads used: 24 time: 119.498
+
+From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun Feb  9 19:57:21 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    sort: descending degree
+# threads used: 24 time: 121.936
+
+From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun Feb  9 20:00:47 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    sort: none
+# threads used: 24 time: 68.5383
+
+From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun Feb  9 20:07:00 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    ascending degree
+# threads used: 24 time: 124.392
