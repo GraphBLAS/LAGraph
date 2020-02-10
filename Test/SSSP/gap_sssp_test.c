@@ -690,7 +690,7 @@ for (int tt = 1 ; tt <= nt ; tt++)
             nthreads, total_time_sssp12, 1e-6 * e / total_time_sssp12, delta) ;
         if (n > 1000)
         {
-            LAGr_log (matrix_name, "SSSP12c", nthreads, total_time_sssp12) ;
+            LAGr_log (matrix_name, "SSSP12", nthreads, total_time_sssp12) ;
         }
     }
 

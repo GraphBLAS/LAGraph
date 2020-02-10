@@ -75,8 +75,9 @@ char *method_name (int method, int sorting)
         default: abort ( ) ;
     }
 
-    if (sorting < 0) sprintf (t, "%s sort: descending degree", s) ;
-    else if (sorting > 0) sprintf (t, "%s ascending degree", s) ;
+    if (sorting == -1) sprintf (t, "%s sort: descending degree", s) ;
+    else if (sorting == 1) sprintf (t, "%s ascending degree", s) ;
+    else if (sorting == 2) sprintf (t, "%s auto-sort", s) ;
     else sprintf (t, "%s sort: none", s) ;
     return (t) ;
 }
@@ -275,7 +276,7 @@ int main (int argc, char **argv)
     // just try methods 5 and 6
     for (int method = 5 ; method <= 6 ; method++)
     {
-        for (int sorting = -1 ; sorting <= 1 ; sorting++)
+        for (int sorting = -1 ; sorting <= 2 ; sorting++)
         {
             printf ("\nMethod: ") ;
             print_method (method, sorting) ;
