@@ -219,8 +219,8 @@ GrB_Info LAGraph_tricount   // count # of triangles
                             // -1: sort by degree, descending order
                             //  2: auto selection: no sort if rule is not
                             // triggered.  Otherise: sort in ascending order
-                            // for method == 5, descending ordering for
-                            // method == 6.
+                            // for methods 3 and 5, descending ordering for
+                            // methods 4 and 6.
     const int64_t *degree,  // degree of each node, may be NULL if sorting==0.
                             // of size n, unmodified. 
     const GrB_Matrix A_in   // input matrix, must be symmetric, no diag entries
@@ -263,9 +263,11 @@ GrB_Info LAGraph_tricount   // count # of triangles
     {
         // auto selection of sorting method.
 
-        // This rule is the same as Scott Beamer's rule in the GAP TC
+        // This rule is very similar to Scott Beamer's rule in the GAP TC
         // benchmark, except that it is extended to handle the ascending sort
-        // needed by methods 3 and 5.
+        // needed by methods 3 and 5.  It also uses a stricter rule, since
+        // the performance of triangle counting in GraphBLAS is less sensitive
+        // than in the GAP algorithm.
 
         GrB_Index nvals ;
         LAGr_Matrix_nvals (&nvals, A_in) ;
@@ -296,7 +298,8 @@ GrB_Info LAGraph_tricount   // count # of triangles
             printf ("average degree: %g\n", sample_average) ;
             printf ("median  degree: %g\n", sample_median) ;
 
-            if (sample_average / 1.3 > sample_median)
+            // sort if the average degree is very high compared to the median
+            if (sample_average > 4 * sample_median)
             {
                 switch (method)
                 {
@@ -306,6 +309,11 @@ GrB_Info LAGraph_tricount   // count # of triangles
                     case 6:  sorting = -1 ; break ;     // sort descending
                     default: sorting =  0 ; break ;     // no sort
                 }
+            }
+            else
+            {
+                // no sorting
+                sorting = 0 ;
             }
         }
         else

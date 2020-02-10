@@ -256,7 +256,7 @@ int main (int argc, char **argv)
     // warmup for more accurate timing, and also print # of triangles
     int64_t ntriangles ;
     LAGraph_tic (tic) ;
-    LAGRAPH_OK (LAGraph_tricount (&ntriangles, 5, 0, NULL, A)) ;
+    LAGRAPH_OK (LAGraph_tricount (&ntriangles, 6, 2, degree, A)) ;
     printf ("# of triangles: %" PRId64 "\n", ntriangles) ;
     double ttot = LAGraph_toc (tic) ;
     printf ("nthreads: %3d time: %12.6f rate: %6.2f (SandiaDot, one trial)\n",
@@ -276,7 +276,9 @@ int main (int argc, char **argv)
     // just try methods 5 and 6
     for (int method = 5 ; method <= 6 ; method++)
     {
-        for (int sorting = -1 ; sorting <= 2 ; sorting++)
+        // for (int sorting = -1 ; sorting <= 2 ; sorting++)
+
+        int sorting = 2 ;
         {
             printf ("\nMethod: ") ;
             print_method (method, sorting) ;
