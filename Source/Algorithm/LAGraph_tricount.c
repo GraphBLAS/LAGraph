@@ -214,9 +214,13 @@ GrB_Info LAGraph_tricount   // count # of triangles
 (
     int64_t *ntri,          // # of triangles
     const int method,       // 1 to 6, see above
-    const int sorting,      //  0: no sort
+    int sorting,            //  0: no sort
                             //  1: sort by degree, ascending order
                             // -1: sort by degree, descending order
+                            //  2: auto selection: no sort if rule is not
+                            // triggered.  Otherise: sort in ascending order
+                            // for method == 5, descending ordering for
+                            // method == 6.
     const int64_t *degree,  // degree of each node, may be NULL if sorting==0.
                             // of size n, unmodified. 
     const GrB_Matrix A_in   // input matrix, must be symmetric, no diag entries
@@ -251,6 +255,73 @@ GrB_Info LAGraph_tricount   // count # of triangles
     LAGr_Matrix_new (&C, GrB_INT64, n, n) ;
 
     //--------------------------------------------------------------------------
+    // heuristic sort rule
+    //--------------------------------------------------------------------------
+
+    #define NSAMPLES 1000
+    if (sorting == 2 && method >= 3 && method <= 6)
+    {
+        // auto selection of sorting method.
+
+        // This rule is the same as Scott Beamer's rule in the GAP TC
+        // benchmark, except that it is extended to handle the ascending sort
+        // needed by methods 3 and 5.
+
+        GrB_Index nvals ;
+        LAGr_Matrix_nvals (&nvals, A_in) ;
+        if (n > NSAMPLES && ((double) nvals / ((double) n)) >= 10)
+        {
+            // pick 1000 nodes at random and determine their degree
+            struct drand48_data buffer ;
+            srand48_r ((long int) n, &buffer) ;
+            int64_t samples [NSAMPLES] ;
+            int64_t dsum = 0 ;
+            for (int k = 0 ; k < NSAMPLES ; k++)
+            {
+                long int result ;
+                lrand48_r (&buffer, &result) ;
+                int64_t i = result % n ;
+                int64_t d = degree [i] ;
+                samples [k] = d ;
+                dsum += d ;
+            }
+
+            // find the average degree
+            double sample_average = ((double) dsum) / NSAMPLES ;
+
+            // find the median degree
+            GB_qsort_1a (samples, NSAMPLES) ;
+            double sample_median = (double) samples [NSAMPLES/2] ;
+
+            printf ("average degree: %g\n", sample_average) ;
+            printf ("median  degree: %g\n", sample_median) ;
+
+            if (sample_average / 1.3 > sample_median)
+            {
+                switch (method)
+                {
+                    case 3:  sorting =  1 ; break ;     // sort ascending
+                    case 4:  sorting = -1 ; break ;     // sort descending
+                    case 5:  sorting =  1 ; break ;     // sort ascending
+                    case 6:  sorting = -1 ; break ;     // sort descending
+                    default: sorting =  0 ; break ;     // no sort
+                }
+            }
+        }
+        else
+        {
+            // no sorting
+            sorting = 0 ;
+        }
+
+        printf ("auto sorting: %d: ", sorting) ;
+        if (sorting == 0) printf ("none") ;
+        else if (sorting == -1) printf ("descending") ;
+        else if (sorting ==  1) printf ("ascending") ;
+        printf ("\n") ;
+    }
+
+    //--------------------------------------------------------------------------
     // sort the input matrix, if requested
     //--------------------------------------------------------------------------
 
@@ -278,6 +349,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
         // construct the pair [D,P] to sort
         if (sorting > 0)
         {
+            printf ("sort ascending\n") ;
             // sort [D,P] in ascending order of degree, tie-breaking on P
             #pragma omp parallel for num_threads(nthreads) schedule(static)
             for (int64_t k = 0 ; k < n ; k++)
@@ -288,6 +360,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
         }
         else
         {
+            printf ("sort descending\n") ;
             // sort [D,P] in descending order of degree, tie-breaking on P
             #pragma omp parallel for num_threads(nthreads) schedule(static)
             for (int64_t k = 0 ; k < n ; k++)
