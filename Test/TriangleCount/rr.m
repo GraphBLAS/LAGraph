@@ -1,7 +1,7 @@
 
 % get the latest results
 clear
-system ('./mget > res.m') ;
+% system ('./mget > res.m') ;
 res
 % whos
 nhosts = length (Results) ;

@@ -2,14 +2,6 @@
 host = 0 ;
 
 %----------------------------------------
-hostname = 'log_hypersparse.cs.tamu.edu.txt' ;
-%----------------------------------------
-
-k = 0 ; host = host + 1 ;
-Host {host} = hostname ;
-
-
-%----------------------------------------
 hostname = 'log_s001-n002.txt' ;
 %----------------------------------------
 
@@ -4795,6 +4787,75 @@ k = k + 1 ;
 Results {host}{k} = t ;
 
     t(1) =    115.838 ; %  SandiaDot: -
+    t(2) =     64.216 ; %  SandiaDot: none
+    t(3) =    115.092 ; %  SandiaDot: +
+    t(4) =    115.378 ; %  SandiaDot2: -
+    t(5) =     67.915 ; %  SandiaDot2: none
+    t(6) =    118.502 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    114.613 ; %  SandiaDot: -
+    t(2) =     65.930 ; %  SandiaDot: none
+    t(3) =    113.521 ; %  SandiaDot: +
+    t(4) =    116.309 ; %  SandiaDot2: -
+    t(5) =     66.358 ; %  SandiaDot2: none
+    t(6) =    118.315 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    127.505 ; %  SandiaDot: -
+    t(2) =     66.195 ; %  SandiaDot: none
+    t(3) =    127.017 ; %  SandiaDot: +
+    t(4) =    128.519 ; %  SandiaDot2: -
+    t(5) =     67.092 ; %  SandiaDot2: none
+    t(6) =    130.916 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.637 ; %  SandiaDot: -
+    t(2) =     64.273 ; %  SandiaDot: none
+    t(3) =    114.545 ; %  SandiaDot: +
+    t(4) =    117.518 ; %  SandiaDot2: -
+    t(5) =     69.084 ; %  SandiaDot2: none
+    t(6) =    119.488 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.292 ; %  SandiaDot: -
+    t(2) =     64.553 ; %  SandiaDot: none
+    t(3) =    114.120 ; %  SandiaDot: +
+    t(4) =    115.429 ; %  SandiaDot2: -
+    t(5) =     67.160 ; %  SandiaDot2: none
+    t(6) =    118.327 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.557 ; %  SandiaDot: -
+    t(2) =     64.684 ; %  SandiaDot: none
+    t(3) =    113.922 ; %  SandiaDot: +
+    t(4) =    116.832 ; %  SandiaDot2: -
+    t(5) =     67.170 ; %  SandiaDot2: none
+    t(6) =    120.023 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    114.117 ; %  SandiaDot: -
+    t(2) =     64.143 ; %  SandiaDot: none
+    t(3) =    113.791 ; %  SandiaDot: +
+    t(4) =    114.227 ; %  SandiaDot2: -
+    t(5) =     66.560 ; %  SandiaDot2: none
+    t(6) =    117.472 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
 
 %----------------------------------------
 hostname = 'log_s001-n054.txt' ;
@@ -5515,6 +5576,94 @@ Results {host}{k} = t ;
     t(4) =    120.897 ; %  SandiaDot2: -
     t(5) =     69.214 ; %  SandiaDot2: none
     t(6) =    123.247 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+
+%----------------------------------------
+hostname = 'log_s001-n062.txt' ;
+%----------------------------------------
+
+k = 0 ; host = host + 1 ;
+Host {host} = hostname ;
+
+    t(1) =    123.329 ; %  SandiaDot: -
+    t(2) =     67.697 ; %  SandiaDot: none
+    t(3) =    121.677 ; %  SandiaDot: +
+    t(4) =    124.814 ; %  SandiaDot2: -
+    t(5) =     69.835 ; %  SandiaDot2: none
+    t(6) =    126.976 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.026 ; %  SandiaDot: -
+    t(2) =     66.235 ; %  SandiaDot: none
+    t(3) =    116.079 ; %  SandiaDot: +
+    t(4) =    117.709 ; %  SandiaDot2: -
+    t(5) =     68.719 ; %  SandiaDot2: none
+    t(6) =    119.724 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    122.233 ; %  SandiaDot: -
+    t(2) =     66.407 ; %  SandiaDot: none
+    t(3) =    121.545 ; %  SandiaDot: +
+    t(4) =    122.952 ; %  SandiaDot2: -
+    t(5) =     69.069 ; %  SandiaDot2: none
+    t(6) =    125.432 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.246 ; %  SandiaDot: -
+    t(2) =     67.161 ; %  SandiaDot: none
+    t(3) =    115.240 ; %  SandiaDot: +
+    t(4) =    116.587 ; %  SandiaDot2: -
+    t(5) =     69.536 ; %  SandiaDot2: none
+    t(6) =    120.353 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    123.755 ; %  SandiaDot: -
+    t(2) =     66.714 ; %  SandiaDot: none
+    t(3) =    121.216 ; %  SandiaDot: +
+    t(4) =    122.635 ; %  SandiaDot2: -
+    t(5) =     68.910 ; %  SandiaDot2: none
+    t(6) =    125.546 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.090 ; %  SandiaDot: -
+    t(2) =     65.839 ; %  SandiaDot: none
+    t(3) =    115.487 ; %  SandiaDot: +
+    t(4) =    116.455 ; %  SandiaDot2: -
+    t(5) =     69.350 ; %  SandiaDot2: none
+    t(6) =    119.059 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    118.172 ; %  SandiaDot: -
+    t(2) =     66.494 ; %  SandiaDot: none
+    t(3) =    117.012 ; %  SandiaDot: +
+    t(4) =    118.568 ; %  SandiaDot2: -
+    t(5) =     69.421 ; %  SandiaDot2: none
+    t(6) =    121.322 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    120.544 ; %  SandiaDot: -
+    t(2) =     65.889 ; %  SandiaDot: none
+    t(3) =    120.766 ; %  SandiaDot: +
+    t(4) =    122.449 ; %  SandiaDot2: -
+    t(5) =     68.640 ; %  SandiaDot2: none
+    t(6) =    124.921 ; %  SandiaDot2: +
 
 k = k + 1 ;
 Results {host}{k} = t ;
@@ -7505,6 +7654,86 @@ Results {host}{k} = t ;
 k = k + 1 ;
 Results {host}{k} = t ;
 
+    t(1) =    118.060 ; %  SandiaDot: -
+    t(2) =     65.155 ; %  SandiaDot: none
+    t(3) =    114.466 ; %  SandiaDot: +
+    t(4) =    117.119 ; %  SandiaDot2: -
+    t(5) =     67.795 ; %  SandiaDot2: none
+    t(6) =    117.551 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    129.296 ; %  SandiaDot: -
+    t(2) =     65.761 ; %  SandiaDot: none
+    t(3) =    126.994 ; %  SandiaDot: +
+    t(4) =    128.735 ; %  SandiaDot2: -
+    t(5) =     67.589 ; %  SandiaDot2: none
+    t(6) =    128.905 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.567 ; %  SandiaDot: -
+    t(2) =     64.491 ; %  SandiaDot: none
+    t(3) =    115.853 ; %  SandiaDot: +
+    t(4) =    118.475 ; %  SandiaDot2: -
+    t(5) =     66.881 ; %  SandiaDot2: none
+    t(6) =    120.689 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    118.215 ; %  SandiaDot: -
+    t(2) =     64.830 ; %  SandiaDot: none
+    t(3) =    117.088 ; %  SandiaDot: +
+    t(4) =    117.125 ; %  SandiaDot2: -
+    t(5) =     69.614 ; %  SandiaDot2: none
+    t(6) =    119.266 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.365 ; %  SandiaDot: -
+    t(2) =     65.058 ; %  SandiaDot: none
+    t(3) =    115.540 ; %  SandiaDot: +
+    t(4) =    118.269 ; %  SandiaDot2: -
+    t(5) =     67.503 ; %  SandiaDot2: none
+    t(6) =    120.199 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    114.260 ; %  SandiaDot: -
+    t(2) =     64.836 ; %  SandiaDot: none
+    t(3) =    113.161 ; %  SandiaDot: +
+    t(4) =    115.485 ; %  SandiaDot2: -
+    t(5) =     66.944 ; %  SandiaDot2: none
+    t(6) =    118.269 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.390 ; %  SandiaDot: -
+    t(2) =     65.330 ; %  SandiaDot: none
+    t(3) =    116.726 ; %  SandiaDot: +
+    t(4) =    116.119 ; %  SandiaDot2: -
+    t(5) =     67.837 ; %  SandiaDot2: none
+    t(6) =    119.093 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.262 ; %  SandiaDot: -
+    t(2) =     64.564 ; %  SandiaDot: none
+    t(3) =    113.551 ; %  SandiaDot: +
+    t(4) =    116.820 ; %  SandiaDot2: -
+    t(5) =     67.986 ; %  SandiaDot2: none
+    t(6) =    119.726 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
 
 %----------------------------------------
 hostname = 'log_s001-n094.txt' ;
@@ -7579,6 +7808,16 @@ Results {host}{k} = t ;
     t(4) =    116.081 ; %  SandiaDot2: -
     t(5) =     67.801 ; %  SandiaDot2: none
     t(6) =    118.578 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.999 ; %  SandiaDot: -
+    t(2) =     64.781 ; %  SandiaDot: none
+    t(3) =    115.786 ; %  SandiaDot: +
+    t(4) =    118.372 ; %  SandiaDot2: -
+    t(5) =     67.285 ; %  SandiaDot2: none
+    t(6) =    120.787 ; %  SandiaDot2: +
 
 k = k + 1 ;
 Results {host}{k} = t ;
@@ -7694,6 +7933,13 @@ Results {host}{k} = t ;
     t(1) =    126.962 ; %  SandiaDot: -
     t(2) =     64.674 ; %  SandiaDot: none
     t(3) =    125.987 ; %  SandiaDot: +
+    t(4) =    127.937 ; %  SandiaDot2: -
+    t(5) =     67.626 ; %  SandiaDot2: none
+    t(6) =    129.467 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
 
 %----------------------------------------
 hostname = 'log_s001-n096.txt' ;
@@ -7912,6 +8158,86 @@ Results {host}{k} = t ;
 k = k + 1 ;
 Results {host}{k} = t ;
 
+    t(1) =    115.531 ; %  SandiaDot: -
+    t(2) =     63.620 ; %  SandiaDot: none
+    t(3) =    114.337 ; %  SandiaDot: +
+    t(4) =    115.481 ; %  SandiaDot2: -
+    t(5) =     66.978 ; %  SandiaDot2: none
+    t(6) =    117.233 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    114.944 ; %  SandiaDot: -
+    t(2) =     67.264 ; %  SandiaDot: none
+    t(3) =    114.292 ; %  SandiaDot: +
+    t(4) =    115.756 ; %  SandiaDot2: -
+    t(5) =     68.064 ; %  SandiaDot2: none
+    t(6) =    117.708 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.551 ; %  SandiaDot: -
+    t(2) =     64.849 ; %  SandiaDot: none
+    t(3) =    115.516 ; %  SandiaDot: +
+    t(4) =    117.332 ; %  SandiaDot2: -
+    t(5) =     67.571 ; %  SandiaDot2: none
+    t(6) =    119.599 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.261 ; %  SandiaDot: -
+    t(2) =     64.486 ; %  SandiaDot: none
+    t(3) =    115.028 ; %  SandiaDot: +
+    t(4) =    115.386 ; %  SandiaDot2: -
+    t(5) =     67.035 ; %  SandiaDot2: none
+    t(6) =    117.354 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    114.868 ; %  SandiaDot: -
+    t(2) =     66.527 ; %  SandiaDot: none
+    t(3) =    114.696 ; %  SandiaDot: +
+    t(4) =    116.236 ; %  SandiaDot2: -
+    t(5) =     67.617 ; %  SandiaDot2: none
+    t(6) =    120.180 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    130.121 ; %  SandiaDot: -
+    t(2) =     69.501 ; %  SandiaDot: none
+    t(3) =    128.647 ; %  SandiaDot: +
+    t(4) =    131.085 ; %  SandiaDot2: -
+    t(5) =     70.703 ; %  SandiaDot2: none
+    t(6) =    133.217 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    129.452 ; %  SandiaDot: -
+    t(2) =     64.710 ; %  SandiaDot: none
+    t(3) =    125.489 ; %  SandiaDot: +
+    t(4) =    127.593 ; %  SandiaDot2: -
+    t(5) =     67.539 ; %  SandiaDot2: none
+    t(6) =    130.752 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.146 ; %  SandiaDot: -
+    t(2) =     64.023 ; %  SandiaDot: none
+    t(3) =    115.290 ; %  SandiaDot: +
+    t(4) =    116.485 ; %  SandiaDot2: -
+    t(5) =     69.787 ; %  SandiaDot2: none
+    t(6) =    118.903 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
 
 %----------------------------------------
 hostname = 'log_s001-n097.txt' ;
@@ -8002,6 +8328,182 @@ Results {host}{k} = t ;
 
 
 %----------------------------------------
+hostname = 'log_s001-n099.txt' ;
+%----------------------------------------
+
+k = 0 ; host = host + 1 ;
+Host {host} = hostname ;
+
+    t(1) =    130.954 ; %  SandiaDot: -
+    t(2) =     67.575 ; %  SandiaDot: none
+    t(3) =    129.118 ; %  SandiaDot: +
+    t(4) =    131.550 ; %  SandiaDot2: -
+    t(5) =     72.697 ; %  SandiaDot2: none
+    t(6) =    134.590 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.200 ; %  SandiaDot: -
+    t(2) =     64.353 ; %  SandiaDot: none
+    t(3) =    115.998 ; %  SandiaDot: +
+    t(4) =    118.080 ; %  SandiaDot2: -
+    t(5) =     67.048 ; %  SandiaDot2: none
+    t(6) =    121.149 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.319 ; %  SandiaDot: -
+    t(2) =     64.673 ; %  SandiaDot: none
+    t(3) =    115.138 ; %  SandiaDot: +
+    t(4) =    117.419 ; %  SandiaDot2: -
+    t(5) =     67.566 ; %  SandiaDot2: none
+    t(6) =    120.272 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.748 ; %  SandiaDot: -
+    t(2) =     65.704 ; %  SandiaDot: none
+    t(3) =    116.128 ; %  SandiaDot: +
+    t(4) =    118.210 ; %  SandiaDot2: -
+    t(5) =     68.162 ; %  SandiaDot2: none
+    t(6) =    120.503 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    114.975 ; %  SandiaDot: -
+    t(2) =     63.933 ; %  SandiaDot: none
+    t(3) =    113.790 ; %  SandiaDot: +
+    t(4) =    117.618 ; %  SandiaDot2: -
+    t(5) =     67.331 ; %  SandiaDot2: none
+    t(6) =    118.220 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.433 ; %  SandiaDot: -
+    t(2) =     64.532 ; %  SandiaDot: none
+    t(3) =    114.764 ; %  SandiaDot: +
+    t(4) =    117.124 ; %  SandiaDot2: -
+    t(5) =     67.529 ; %  SandiaDot2: none
+    t(6) =    120.469 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    118.080 ; %  SandiaDot: -
+    t(2) =     68.019 ; %  SandiaDot: none
+    t(3) =    117.351 ; %  SandiaDot: +
+    t(4) =    116.843 ; %  SandiaDot2: -
+    t(5) =     70.261 ; %  SandiaDot2: none
+    t(6) =    121.575 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.074 ; %  SandiaDot: -
+    t(2) =     66.406 ; %  SandiaDot: none
+    t(3) =    114.548 ; %  SandiaDot: +
+    t(4) =    117.365 ; %  SandiaDot2: -
+    t(5) =     67.370 ; %  SandiaDot2: none
+    t(6) =    119.197 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+
+%----------------------------------------
+hostname = 'log_s001-n100.txt' ;
+%----------------------------------------
+
+k = 0 ; host = host + 1 ;
+Host {host} = hostname ;
+
+    t(1) =    116.052 ; %  SandiaDot: -
+    t(2) =     64.936 ; %  SandiaDot: none
+    t(3) =    114.685 ; %  SandiaDot: +
+    t(4) =    116.337 ; %  SandiaDot2: -
+    t(5) =     67.937 ; %  SandiaDot2: none
+    t(6) =    120.265 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    126.805 ; %  SandiaDot: -
+    t(2) =     64.638 ; %  SandiaDot: none
+    t(3) =    124.009 ; %  SandiaDot: +
+    t(4) =    127.944 ; %  SandiaDot2: -
+    t(5) =     69.667 ; %  SandiaDot2: none
+    t(6) =    128.602 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    118.520 ; %  SandiaDot: -
+    t(2) =     64.749 ; %  SandiaDot: none
+    t(3) =    116.213 ; %  SandiaDot: +
+    t(4) =    118.372 ; %  SandiaDot2: -
+    t(5) =     69.301 ; %  SandiaDot2: none
+    t(6) =    120.365 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.739 ; %  SandiaDot: -
+    t(2) =     66.069 ; %  SandiaDot: none
+    t(3) =    114.803 ; %  SandiaDot: +
+    t(4) =    117.834 ; %  SandiaDot2: -
+    t(5) =     68.908 ; %  SandiaDot2: none
+    t(6) =    120.135 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.885 ; %  SandiaDot: -
+    t(2) =     69.609 ; %  SandiaDot: none
+    t(3) =    115.981 ; %  SandiaDot: +
+    t(4) =    118.776 ; %  SandiaDot2: -
+    t(5) =     70.734 ; %  SandiaDot2: none
+    t(6) =    120.987 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.358 ; %  SandiaDot: -
+    t(2) =     65.164 ; %  SandiaDot: none
+    t(3) =    115.676 ; %  SandiaDot: +
+    t(4) =    117.827 ; %  SandiaDot2: -
+    t(5) =     68.324 ; %  SandiaDot2: none
+    t(6) =    120.192 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.137 ; %  SandiaDot: -
+    t(2) =     65.835 ; %  SandiaDot: none
+    t(3) =    115.546 ; %  SandiaDot: +
+    t(4) =    116.852 ; %  SandiaDot2: -
+    t(5) =     69.503 ; %  SandiaDot2: none
+    t(6) =    119.721 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.302 ; %  SandiaDot: -
+    t(2) =     69.615 ; %  SandiaDot: none
+    t(3) =    116.188 ; %  SandiaDot: +
+    t(4) =    118.696 ; %  SandiaDot2: -
+    t(5) =     70.357 ; %  SandiaDot2: none
+    t(6) =    121.706 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+
+%----------------------------------------
 hostname = 'log_s001-n101.txt' ;
 %----------------------------------------
 
@@ -8054,6 +8556,86 @@ Results {host}{k} = t ;
     t(4) =    117.956 ; %  SandiaDot2: -
     t(5) =     70.418 ; %  SandiaDot2: none
     t(6) =    122.503 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.836 ; %  SandiaDot: -
+    t(2) =     64.360 ; %  SandiaDot: none
+    t(3) =    114.826 ; %  SandiaDot: +
+    t(4) =    116.968 ; %  SandiaDot2: -
+    t(5) =     66.681 ; %  SandiaDot2: none
+    t(6) =    119.604 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    127.621 ; %  SandiaDot: -
+    t(2) =     66.753 ; %  SandiaDot: none
+    t(3) =    126.244 ; %  SandiaDot: +
+    t(4) =    128.659 ; %  SandiaDot2: -
+    t(5) =     72.650 ; %  SandiaDot2: none
+    t(6) =    130.623 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.229 ; %  SandiaDot: -
+    t(2) =     65.700 ; %  SandiaDot: none
+    t(3) =    114.671 ; %  SandiaDot: +
+    t(4) =    115.937 ; %  SandiaDot2: -
+    t(5) =     66.011 ; %  SandiaDot2: none
+    t(6) =    118.843 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    118.180 ; %  SandiaDot: -
+    t(2) =     69.518 ; %  SandiaDot: none
+    t(3) =    116.155 ; %  SandiaDot: +
+    t(4) =    118.872 ; %  SandiaDot2: -
+    t(5) =     70.498 ; %  SandiaDot2: none
+    t(6) =    121.232 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.954 ; %  SandiaDot: -
+    t(2) =     64.741 ; %  SandiaDot: none
+    t(3) =    114.840 ; %  SandiaDot: +
+    t(4) =    117.064 ; %  SandiaDot2: -
+    t(5) =     67.634 ; %  SandiaDot2: none
+    t(6) =    119.219 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.272 ; %  SandiaDot: -
+    t(2) =     64.231 ; %  SandiaDot: none
+    t(3) =    113.610 ; %  SandiaDot: +
+    t(4) =    116.352 ; %  SandiaDot2: -
+    t(5) =     68.172 ; %  SandiaDot2: none
+    t(6) =    118.872 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.188 ; %  SandiaDot: -
+    t(2) =     64.767 ; %  SandiaDot: none
+    t(3) =    113.851 ; %  SandiaDot: +
+    t(4) =    116.192 ; %  SandiaDot2: -
+    t(5) =     67.872 ; %  SandiaDot2: none
+    t(6) =    118.822 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.026 ; %  SandiaDot: -
+    t(2) =     64.978 ; %  SandiaDot: none
+    t(3) =    114.608 ; %  SandiaDot: +
+    t(4) =    116.742 ; %  SandiaDot2: -
+    t(5) =     69.392 ; %  SandiaDot2: none
+    t(6) =    119.022 ; %  SandiaDot2: +
 
 k = k + 1 ;
 Results {host}{k} = t ;
@@ -8272,6 +8854,86 @@ Results {host}{k} = t ;
     t(4) =    126.825 ; %  SandiaDot2: -
     t(5) =     67.187 ; %  SandiaDot2: none
     t(6) =    127.929 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.817 ; %  SandiaDot: -
+    t(2) =     67.045 ; %  SandiaDot: none
+    t(3) =    115.485 ; %  SandiaDot: +
+    t(4) =    116.277 ; %  SandiaDot2: -
+    t(5) =     68.235 ; %  SandiaDot2: none
+    t(6) =    119.187 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    118.029 ; %  SandiaDot: -
+    t(2) =     65.689 ; %  SandiaDot: none
+    t(3) =    116.435 ; %  SandiaDot: +
+    t(4) =    118.313 ; %  SandiaDot2: -
+    t(5) =     71.145 ; %  SandiaDot2: none
+    t(6) =    120.935 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.406 ; %  SandiaDot: -
+    t(2) =     64.591 ; %  SandiaDot: none
+    t(3) =    115.605 ; %  SandiaDot: +
+    t(4) =    116.306 ; %  SandiaDot2: -
+    t(5) =     66.973 ; %  SandiaDot2: none
+    t(6) =    118.655 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    118.645 ; %  SandiaDot: -
+    t(2) =     64.911 ; %  SandiaDot: none
+    t(3) =    116.676 ; %  SandiaDot: +
+    t(4) =    117.244 ; %  SandiaDot2: -
+    t(5) =     69.956 ; %  SandiaDot2: none
+    t(6) =    120.338 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.458 ; %  SandiaDot: -
+    t(2) =     66.064 ; %  SandiaDot: none
+    t(3) =    116.201 ; %  SandiaDot: +
+    t(4) =    118.648 ; %  SandiaDot2: -
+    t(5) =     69.912 ; %  SandiaDot2: none
+    t(6) =    120.773 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.355 ; %  SandiaDot: -
+    t(2) =     64.891 ; %  SandiaDot: none
+    t(3) =    113.848 ; %  SandiaDot: +
+    t(4) =    117.599 ; %  SandiaDot2: -
+    t(5) =     69.985 ; %  SandiaDot2: none
+    t(6) =    119.489 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    118.666 ; %  SandiaDot: -
+    t(2) =     67.831 ; %  SandiaDot: none
+    t(3) =    117.266 ; %  SandiaDot: +
+    t(4) =    118.447 ; %  SandiaDot2: -
+    t(5) =     70.025 ; %  SandiaDot2: none
+    t(6) =    120.843 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.896 ; %  SandiaDot: -
+    t(2) =     64.559 ; %  SandiaDot: none
+    t(3) =    114.899 ; %  SandiaDot: +
+    t(4) =    116.693 ; %  SandiaDot2: -
+    t(5) =     67.263 ; %  SandiaDot2: none
+    t(6) =    118.494 ; %  SandiaDot2: +
 
 k = k + 1 ;
 Results {host}{k} = t ;
@@ -8504,6 +9166,76 @@ Results {host}{k} = t ;
 k = k + 1 ;
 Results {host}{k} = t ;
 
+    t(1) =    127.096 ; %  SandiaDot: -
+    t(2) =     64.495 ; %  SandiaDot: none
+    t(3) =    124.771 ; %  SandiaDot: +
+    t(4) =    127.727 ; %  SandiaDot2: -
+    t(5) =     69.679 ; %  SandiaDot2: none
+    t(6) =    130.164 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.983 ; %  SandiaDot: -
+    t(2) =     64.332 ; %  SandiaDot: none
+    t(3) =    115.277 ; %  SandiaDot: +
+    t(4) =    117.278 ; %  SandiaDot2: -
+    t(5) =     66.915 ; %  SandiaDot2: none
+    t(6) =    120.414 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.668 ; %  SandiaDot: -
+    t(2) =     65.489 ; %  SandiaDot: none
+    t(3) =    116.184 ; %  SandiaDot: +
+    t(4) =    117.968 ; %  SandiaDot2: -
+    t(5) =     68.455 ; %  SandiaDot2: none
+    t(6) =    120.698 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    128.908 ; %  SandiaDot: -
+    t(2) =     66.543 ; %  SandiaDot: none
+    t(3) =    127.086 ; %  SandiaDot: +
+    t(4) =    129.090 ; %  SandiaDot2: -
+    t(5) =     72.049 ; %  SandiaDot2: none
+    t(6) =    131.406 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.460 ; %  SandiaDot: -
+    t(2) =     65.094 ; %  SandiaDot: none
+    t(3) =    115.535 ; %  SandiaDot: +
+    t(4) =    117.657 ; %  SandiaDot2: -
+    t(5) =     69.180 ; %  SandiaDot2: none
+    t(6) =    121.376 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.647 ; %  SandiaDot: -
+    t(2) =     64.384 ; %  SandiaDot: none
+    t(3) =    114.300 ; %  SandiaDot: +
+    t(4) =    117.347 ; %  SandiaDot2: -
+    t(5) =     66.827 ; %  SandiaDot2: none
+    t(6) =    119.820 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    114.812 ; %  SandiaDot: -
+    t(2) =     65.564 ; %  SandiaDot: none
+    t(3) =    113.906 ; %  SandiaDot: +
+    t(4) =    115.657 ; %  SandiaDot2: -
+    t(5) =     66.757 ; %  SandiaDot2: none
+    t(6) =    117.435 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
 
 %----------------------------------------
 hostname = 'log_s001-n105.txt' ;
@@ -8523,6 +9255,173 @@ k = k + 1 ;
 Results {host}{k} = t ;
 
     t(1) =    117.285 ; %  SandiaDot: -
+    t(2) =     65.862 ; %  SandiaDot: none
+    t(3) =    116.094 ; %  SandiaDot: +
+    t(4) =    117.791 ; %  SandiaDot2: -
+    t(5) =     68.528 ; %  SandiaDot2: none
+    t(6) =    119.914 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.796 ; %  SandiaDot: -
+    t(2) =     64.492 ; %  SandiaDot: none
+    t(3) =    114.933 ; %  SandiaDot: +
+    t(4) =    118.065 ; %  SandiaDot2: -
+    t(5) =     67.440 ; %  SandiaDot2: none
+    t(6) =    121.030 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.805 ; %  SandiaDot: -
+    t(2) =     66.866 ; %  SandiaDot: none
+    t(3) =    117.311 ; %  SandiaDot: +
+    t(4) =    118.904 ; %  SandiaDot2: -
+    t(5) =     69.563 ; %  SandiaDot2: none
+    t(6) =    120.499 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.719 ; %  SandiaDot: -
+    t(2) =     65.535 ; %  SandiaDot: none
+    t(3) =    116.085 ; %  SandiaDot: +
+    t(4) =    117.466 ; %  SandiaDot2: -
+    t(5) =     68.138 ; %  SandiaDot2: none
+    t(6) =    119.869 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.641 ; %  SandiaDot: -
+    t(2) =     64.877 ; %  SandiaDot: none
+    t(3) =    115.946 ; %  SandiaDot: +
+    t(4) =    116.351 ; %  SandiaDot2: -
+    t(5) =     70.299 ; %  SandiaDot2: none
+    t(6) =    118.510 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.463 ; %  SandiaDot: -
+    t(2) =     66.021 ; %  SandiaDot: none
+    t(3) =    116.231 ; %  SandiaDot: +
+    t(4) =    118.161 ; %  SandiaDot2: -
+    t(5) =     69.112 ; %  SandiaDot2: none
+    t(6) =    120.286 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    118.038 ; %  SandiaDot: -
+    t(2) =     67.451 ; %  SandiaDot: none
+    t(3) =    116.094 ; %  SandiaDot: +
+    t(4) =    117.500 ; %  SandiaDot2: -
+    t(5) =     69.631 ; %  SandiaDot2: none
+    t(6) =    121.274 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.933 ; %  SandiaDot: -
+    t(2) =     65.601 ; %  SandiaDot: none
+    t(3) =    116.125 ; %  SandiaDot: +
+    t(4) =    117.328 ; %  SandiaDot2: -
+    t(5) =     67.633 ; %  SandiaDot2: none
+    t(6) =    120.019 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+
+%----------------------------------------
+hostname = 'log_s001-n106.txt' ;
+%----------------------------------------
+
+k = 0 ; host = host + 1 ;
+Host {host} = hostname ;
+
+    t(1) =    116.436 ; %  SandiaDot: -
+    t(2) =     64.323 ; %  SandiaDot: none
+    t(3) =    115.505 ; %  SandiaDot: +
+    t(4) =    117.184 ; %  SandiaDot2: -
+    t(5) =     66.923 ; %  SandiaDot2: none
+    t(6) =    120.142 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.430 ; %  SandiaDot: -
+    t(2) =     64.823 ; %  SandiaDot: none
+    t(3) =    115.669 ; %  SandiaDot: +
+    t(4) =    116.480 ; %  SandiaDot2: -
+    t(5) =     69.721 ; %  SandiaDot2: none
+    t(6) =    119.844 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.471 ; %  SandiaDot: -
+    t(2) =     64.500 ; %  SandiaDot: none
+    t(3) =    114.980 ; %  SandiaDot: +
+    t(4) =    117.130 ; %  SandiaDot2: -
+    t(5) =     67.492 ; %  SandiaDot2: none
+    t(6) =    120.086 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.285 ; %  SandiaDot: -
+    t(2) =     64.854 ; %  SandiaDot: none
+    t(3) =    115.064 ; %  SandiaDot: +
+    t(4) =    116.758 ; %  SandiaDot2: -
+    t(5) =     67.765 ; %  SandiaDot2: none
+    t(6) =    120.165 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.121 ; %  SandiaDot: -
+    t(2) =     65.070 ; %  SandiaDot: none
+    t(3) =    114.653 ; %  SandiaDot: +
+    t(4) =    117.209 ; %  SandiaDot2: -
+    t(5) =     69.925 ; %  SandiaDot2: none
+    t(6) =    119.794 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.283 ; %  SandiaDot: -
+    t(2) =     64.604 ; %  SandiaDot: none
+    t(3) =    114.813 ; %  SandiaDot: +
+    t(4) =    115.574 ; %  SandiaDot2: -
+    t(5) =     69.337 ; %  SandiaDot2: none
+    t(6) =    119.093 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.136 ; %  SandiaDot: -
+    t(2) =     64.661 ; %  SandiaDot: none
+    t(3) =    115.564 ; %  SandiaDot: +
+    t(4) =    117.096 ; %  SandiaDot2: -
+    t(5) =     69.603 ; %  SandiaDot2: none
+    t(6) =    120.001 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.329 ; %  SandiaDot: -
+    t(2) =     65.574 ; %  SandiaDot: none
+    t(3) =    115.660 ; %  SandiaDot: +
+    t(4) =    117.867 ; %  SandiaDot2: -
+    t(5) =     69.610 ; %  SandiaDot2: none
+    t(6) =    120.795 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
 
 %----------------------------------------
 hostname = 'log_s001-n108.txt' ;
@@ -8737,6 +9636,86 @@ Results {host}{k} = t ;
     t(4) =    115.935 ; %  SandiaDot2: -
     t(5) =     67.343 ; %  SandiaDot2: none
     t(6) =    118.774 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.724 ; %  SandiaDot: -
+    t(2) =     65.418 ; %  SandiaDot: none
+    t(3) =    116.881 ; %  SandiaDot: +
+    t(4) =    117.196 ; %  SandiaDot2: -
+    t(5) =     68.306 ; %  SandiaDot2: none
+    t(6) =    119.988 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.785 ; %  SandiaDot: -
+    t(2) =     64.603 ; %  SandiaDot: none
+    t(3) =    115.208 ; %  SandiaDot: +
+    t(4) =    116.609 ; %  SandiaDot2: -
+    t(5) =     67.621 ; %  SandiaDot2: none
+    t(6) =    119.502 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.770 ; %  SandiaDot: -
+    t(2) =     64.504 ; %  SandiaDot: none
+    t(3) =    114.998 ; %  SandiaDot: +
+    t(4) =    116.274 ; %  SandiaDot2: -
+    t(5) =     69.205 ; %  SandiaDot2: none
+    t(6) =    118.637 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.054 ; %  SandiaDot: -
+    t(2) =     66.391 ; %  SandiaDot: none
+    t(3) =    115.850 ; %  SandiaDot: +
+    t(4) =    118.157 ; %  SandiaDot2: -
+    t(5) =     68.210 ; %  SandiaDot2: none
+    t(6) =    120.925 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.202 ; %  SandiaDot: -
+    t(2) =     64.435 ; %  SandiaDot: none
+    t(3) =    115.070 ; %  SandiaDot: +
+    t(4) =    117.476 ; %  SandiaDot2: -
+    t(5) =     69.242 ; %  SandiaDot2: none
+    t(6) =    119.440 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    114.604 ; %  SandiaDot: -
+    t(2) =     66.130 ; %  SandiaDot: none
+    t(3) =    114.380 ; %  SandiaDot: +
+    t(4) =    115.788 ; %  SandiaDot2: -
+    t(5) =     66.707 ; %  SandiaDot2: none
+    t(6) =    117.846 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.255 ; %  SandiaDot: -
+    t(2) =     66.100 ; %  SandiaDot: none
+    t(3) =    116.486 ; %  SandiaDot: +
+    t(4) =    118.614 ; %  SandiaDot2: -
+    t(5) =     68.853 ; %  SandiaDot2: none
+    t(6) =    121.400 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.091 ; %  SandiaDot: -
+    t(2) =     66.836 ; %  SandiaDot: none
+    t(3) =    115.773 ; %  SandiaDot: +
+    t(4) =    117.209 ; %  SandiaDot2: -
+    t(5) =     68.636 ; %  SandiaDot2: none
+    t(6) =    118.510 ; %  SandiaDot2: +
 
 k = k + 1 ;
 Results {host}{k} = t ;
@@ -8993,6 +9972,12 @@ Results {host}{k} = t ;
     t(2) =     64.338 ; %  SandiaDot: none
     t(3) =    114.297 ; %  SandiaDot: +
     t(4) =    116.846 ; %  SandiaDot2: -
+    t(5) =     67.540 ; %  SandiaDot2: none
+    t(6) =    119.295 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
 
 %----------------------------------------
 hostname = 'log_s001-n110.txt' ;
@@ -9126,6 +10111,81 @@ Results {host}{k} = t ;
     t(3) =    113.830 ; %  SandiaDot: +
     t(4) =    116.483 ; %  SandiaDot2: -
     t(5) =     67.885 ; %  SandiaDot2: none
+    t(6) =    118.610 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.711 ; %  SandiaDot: -
+    t(2) =     65.758 ; %  SandiaDot: none
+    t(3) =    115.117 ; %  SandiaDot: +
+    t(4) =    117.269 ; %  SandiaDot2: -
+    t(5) =     67.754 ; %  SandiaDot2: none
+    t(6) =    120.274 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.936 ; %  SandiaDot: -
+    t(2) =     64.589 ; %  SandiaDot: none
+    t(3) =    116.002 ; %  SandiaDot: +
+    t(4) =    116.985 ; %  SandiaDot2: -
+    t(5) =     69.639 ; %  SandiaDot2: none
+    t(6) =    119.194 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.480 ; %  SandiaDot: -
+    t(2) =     64.680 ; %  SandiaDot: none
+    t(3) =    115.171 ; %  SandiaDot: +
+    t(4) =    117.358 ; %  SandiaDot2: -
+    t(5) =     67.261 ; %  SandiaDot2: none
+    t(6) =    120.242 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.603 ; %  SandiaDot: -
+    t(2) =     66.016 ; %  SandiaDot: none
+    t(3) =    115.831 ; %  SandiaDot: +
+    t(4) =    118.606 ; %  SandiaDot2: -
+    t(5) =     70.395 ; %  SandiaDot2: none
+    t(6) =    120.165 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.719 ; %  SandiaDot: -
+    t(2) =     64.601 ; %  SandiaDot: none
+    t(3) =    115.327 ; %  SandiaDot: +
+    t(4) =    116.727 ; %  SandiaDot2: -
+    t(5) =     67.381 ; %  SandiaDot2: none
+    t(6) =    120.081 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.002 ; %  SandiaDot: -
+    t(2) =     68.728 ; %  SandiaDot: none
+    t(3) =    116.259 ; %  SandiaDot: +
+    t(4) =    118.459 ; %  SandiaDot2: -
+    t(5) =     69.626 ; %  SandiaDot2: none
+    t(6) =    120.176 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.230 ; %  SandiaDot: -
+    t(2) =     64.604 ; %  SandiaDot: none
+    t(3) =    114.602 ; %  SandiaDot: +
+    t(4) =    116.387 ; %  SandiaDot2: -
+    t(5) =     66.889 ; %  SandiaDot2: none
+    t(6) =    119.004 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
 
 %----------------------------------------
 hostname = 'log_s001-n111.txt' ;
@@ -9420,6 +10480,182 @@ Results {host}{k} = t ;
     t(4) =    116.697 ; %  SandiaDot2: -
     t(5) =     66.156 ; %  SandiaDot2: none
     t(6) =    117.942 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+
+%----------------------------------------
+hostname = 'log_s001-n112.txt' ;
+%----------------------------------------
+
+k = 0 ; host = host + 1 ;
+Host {host} = hostname ;
+
+    t(1) =    117.104 ; %  SandiaDot: -
+    t(2) =     67.516 ; %  SandiaDot: none
+    t(3) =    116.144 ; %  SandiaDot: +
+    t(4) =    117.165 ; %  SandiaDot2: -
+    t(5) =     68.137 ; %  SandiaDot2: none
+    t(6) =    120.388 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.940 ; %  SandiaDot: -
+    t(2) =     65.058 ; %  SandiaDot: none
+    t(3) =    117.125 ; %  SandiaDot: +
+    t(4) =    117.688 ; %  SandiaDot2: -
+    t(5) =     69.167 ; %  SandiaDot2: none
+    t(6) =    119.693 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.673 ; %  SandiaDot: -
+    t(2) =     67.595 ; %  SandiaDot: none
+    t(3) =    116.109 ; %  SandiaDot: +
+    t(4) =    118.706 ; %  SandiaDot2: -
+    t(5) =     69.590 ; %  SandiaDot2: none
+    t(6) =    119.791 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.416 ; %  SandiaDot: -
+    t(2) =     64.754 ; %  SandiaDot: none
+    t(3) =    114.685 ; %  SandiaDot: +
+    t(4) =    116.613 ; %  SandiaDot2: -
+    t(5) =     66.990 ; %  SandiaDot2: none
+    t(6) =    118.808 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.536 ; %  SandiaDot: -
+    t(2) =     66.178 ; %  SandiaDot: none
+    t(3) =    116.650 ; %  SandiaDot: +
+    t(4) =    118.997 ; %  SandiaDot2: -
+    t(5) =     69.633 ; %  SandiaDot2: none
+    t(6) =    121.442 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    119.257 ; %  SandiaDot: -
+    t(2) =     67.478 ; %  SandiaDot: none
+    t(3) =    116.646 ; %  SandiaDot: +
+    t(4) =    119.104 ; %  SandiaDot2: -
+    t(5) =     69.949 ; %  SandiaDot2: none
+    t(6) =    121.395 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    118.106 ; %  SandiaDot: -
+    t(2) =     68.492 ; %  SandiaDot: none
+    t(3) =    116.733 ; %  SandiaDot: +
+    t(4) =    116.967 ; %  SandiaDot2: -
+    t(5) =     70.825 ; %  SandiaDot2: none
+    t(6) =    121.269 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.792 ; %  SandiaDot: -
+    t(2) =     67.957 ; %  SandiaDot: none
+    t(3) =    116.367 ; %  SandiaDot: +
+    t(4) =    118.936 ; %  SandiaDot2: -
+    t(5) =     69.823 ; %  SandiaDot2: none
+    t(6) =    120.339 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+
+%----------------------------------------
+hostname = 'log_s001-n113.txt' ;
+%----------------------------------------
+
+k = 0 ; host = host + 1 ;
+Host {host} = hostname ;
+
+    t(1) =    114.689 ; %  SandiaDot: -
+    t(2) =     64.564 ; %  SandiaDot: none
+    t(3) =    112.976 ; %  SandiaDot: +
+    t(4) =    116.018 ; %  SandiaDot2: -
+    t(5) =     68.701 ; %  SandiaDot2: none
+    t(6) =    117.781 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.138 ; %  SandiaDot: -
+    t(2) =     63.942 ; %  SandiaDot: none
+    t(3) =    113.066 ; %  SandiaDot: +
+    t(4) =    116.758 ; %  SandiaDot2: -
+    t(5) =     68.762 ; %  SandiaDot2: none
+    t(6) =    118.432 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.682 ; %  SandiaDot: -
+    t(2) =     65.431 ; %  SandiaDot: none
+    t(3) =    115.203 ; %  SandiaDot: +
+    t(4) =    116.169 ; %  SandiaDot2: -
+    t(5) =     66.817 ; %  SandiaDot2: none
+    t(6) =    119.373 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    121.034 ; %  SandiaDot: -
+    t(2) =     63.372 ; %  SandiaDot: none
+    t(3) =    120.662 ; %  SandiaDot: +
+    t(4) =    121.881 ; %  SandiaDot2: -
+    t(5) =     66.702 ; %  SandiaDot2: none
+    t(6) =    124.616 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    114.464 ; %  SandiaDot: -
+    t(2) =     65.757 ; %  SandiaDot: none
+    t(3) =    113.560 ; %  SandiaDot: +
+    t(4) =    115.759 ; %  SandiaDot2: -
+    t(5) =     66.634 ; %  SandiaDot2: none
+    t(6) =    117.726 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    118.185 ; %  SandiaDot: -
+    t(2) =     68.932 ; %  SandiaDot: none
+    t(3) =    115.351 ; %  SandiaDot: +
+    t(4) =    116.690 ; %  SandiaDot2: -
+    t(5) =     69.630 ; %  SandiaDot2: none
+    t(6) =    120.765 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    113.822 ; %  SandiaDot: -
+    t(2) =     64.308 ; %  SandiaDot: none
+    t(3) =    113.557 ; %  SandiaDot: +
+    t(4) =    114.592 ; %  SandiaDot2: -
+    t(5) =     67.093 ; %  SandiaDot2: none
+    t(6) =    117.634 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.705 ; %  SandiaDot: -
+    t(2) =     66.639 ; %  SandiaDot: none
+    t(3) =    114.728 ; %  SandiaDot: +
+    t(4) =    114.696 ; %  SandiaDot2: -
+    t(5) =     67.383 ; %  SandiaDot2: none
+    t(6) =    117.800 ; %  SandiaDot2: +
 
 k = k + 1 ;
 Results {host}{k} = t ;
@@ -9726,6 +10962,174 @@ Results {host}{k} = t ;
     t(4) =    115.584 ; %  SandiaDot2: -
     t(5) =     68.097 ; %  SandiaDot2: none
     t(6) =    118.309 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.725 ; %  SandiaDot: -
+    t(2) =     65.153 ; %  SandiaDot: none
+    t(3) =    115.714 ; %  SandiaDot: +
+    t(4) =    116.837 ; %  SandiaDot2: -
+    t(5) =     67.852 ; %  SandiaDot2: none
+    t(6) =    120.333 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.835 ; %  SandiaDot: -
+    t(2) =     64.989 ; %  SandiaDot: none
+    t(3) =    115.626 ; %  SandiaDot: +
+    t(4) =    117.768 ; %  SandiaDot2: -
+    t(5) =     67.869 ; %  SandiaDot2: none
+    t(6) =    120.596 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.377 ; %  SandiaDot: -
+    t(2) =     64.598 ; %  SandiaDot: none
+    t(3) =    114.557 ; %  SandiaDot: +
+    t(4) =    117.657 ; %  SandiaDot2: -
+    t(5) =     67.407 ; %  SandiaDot2: none
+    t(6) =    119.580 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.298 ; %  SandiaDot: -
+    t(2) =     65.276 ; %  SandiaDot: none
+    t(3) =    114.472 ; %  SandiaDot: +
+    t(4) =    116.291 ; %  SandiaDot2: -
+    t(5) =     69.866 ; %  SandiaDot2: none
+    t(6) =    118.389 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    114.121 ; %  SandiaDot: -
+    t(2) =     64.263 ; %  SandiaDot: none
+    t(3) =    113.250 ; %  SandiaDot: +
+    t(4) =    116.666 ; %  SandiaDot2: -
+    t(5) =     66.772 ; %  SandiaDot2: none
+    t(6) =    117.662 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.520 ; %  SandiaDot: -
+    t(2) =     65.572 ; %  SandiaDot: none
+    t(3) =    114.465 ; %  SandiaDot: +
+    t(4) =    116.343 ; %  SandiaDot2: -
+    t(5) =     69.701 ; %  SandiaDot2: none
+    t(6) =    120.156 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.865 ; %  SandiaDot: -
+    t(2) =     64.941 ; %  SandiaDot: none
+    t(3) =    115.194 ; %  SandiaDot: +
+    t(4) =    116.127 ; %  SandiaDot2: -
+    t(5) =     67.602 ; %  SandiaDot2: none
+    t(6) =    119.508 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.136 ; %  SandiaDot: -
+    t(2) =     66.054 ; %  SandiaDot: none
+    t(3) =    113.804 ; %  SandiaDot: +
+    t(4) =    115.321 ; %  SandiaDot2: -
+    t(5) =     67.297 ; %  SandiaDot2: none
+    t(6) =    118.668 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+
+%----------------------------------------
+hostname = 'log_s001-n117.txt' ;
+%----------------------------------------
+
+k = 0 ; host = host + 1 ;
+Host {host} = hostname ;
+
+    t(1) =    130.845 ; %  SandiaDot: -
+    t(2) =     67.178 ; %  SandiaDot: none
+    t(3) =    129.667 ; %  SandiaDot: +
+    t(4) =    131.195 ; %  SandiaDot2: -
+    t(5) =     67.863 ; %  SandiaDot2: none
+    t(6) =    132.183 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.907 ; %  SandiaDot: -
+    t(2) =     64.858 ; %  SandiaDot: none
+    t(3) =    115.216 ; %  SandiaDot: +
+    t(4) =    118.133 ; %  SandiaDot2: -
+    t(5) =     67.076 ; %  SandiaDot2: none
+    t(6) =    120.556 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.651 ; %  SandiaDot: -
+    t(2) =     64.813 ; %  SandiaDot: none
+    t(3) =    115.905 ; %  SandiaDot: +
+    t(4) =    117.166 ; %  SandiaDot2: -
+    t(5) =     67.469 ; %  SandiaDot2: none
+    t(6) =    119.586 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    119.010 ; %  SandiaDot: -
+    t(2) =     64.540 ; %  SandiaDot: none
+    t(3) =    116.421 ; %  SandiaDot: +
+    t(4) =    118.741 ; %  SandiaDot2: -
+    t(5) =     69.862 ; %  SandiaDot2: none
+    t(6) =    121.489 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.478 ; %  SandiaDot: -
+    t(2) =     66.828 ; %  SandiaDot: none
+    t(3) =    115.031 ; %  SandiaDot: +
+    t(4) =    117.631 ; %  SandiaDot2: -
+    t(5) =     68.519 ; %  SandiaDot2: none
+    t(6) =    120.425 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    118.758 ; %  SandiaDot: -
+    t(2) =     64.646 ; %  SandiaDot: none
+    t(3) =    117.695 ; %  SandiaDot: +
+    t(4) =    119.022 ; %  SandiaDot2: -
+    t(5) =     69.761 ; %  SandiaDot2: none
+    t(6) =    122.237 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.291 ; %  SandiaDot: -
+    t(2) =     64.380 ; %  SandiaDot: none
+    t(3) =    114.957 ; %  SandiaDot: +
+    t(4) =    116.342 ; %  SandiaDot2: -
+    t(5) =     66.787 ; %  SandiaDot2: none
+    t(6) =    118.532 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.373 ; %  SandiaDot: -
+    t(2) =     64.539 ; %  SandiaDot: none
+    t(3) =    115.292 ; %  SandiaDot: +
+    t(4) =    115.941 ; %  SandiaDot2: -
+    t(5) =     66.640 ; %  SandiaDot2: none
+    t(6) =    118.313 ; %  SandiaDot2: +
 
 k = k + 1 ;
 Results {host}{k} = t ;
@@ -10114,6 +11518,86 @@ Host {host} = hostname ;
 k = k + 1 ;
 Results {host}{k} = t ;
 
+    t(1) =    118.639 ; %  SandiaDot: -
+    t(2) =     65.633 ; %  SandiaDot: none
+    t(3) =    115.410 ; %  SandiaDot: +
+    t(4) =    117.377 ; %  SandiaDot2: -
+    t(5) =     69.688 ; %  SandiaDot2: none
+    t(6) =    120.339 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.678 ; %  SandiaDot: -
+    t(2) =     64.476 ; %  SandiaDot: none
+    t(3) =    116.092 ; %  SandiaDot: +
+    t(4) =    118.036 ; %  SandiaDot2: -
+    t(5) =     69.149 ; %  SandiaDot2: none
+    t(6) =    121.582 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    118.670 ; %  SandiaDot: -
+    t(2) =     64.636 ; %  SandiaDot: none
+    t(3) =    116.266 ; %  SandiaDot: +
+    t(4) =    118.448 ; %  SandiaDot2: -
+    t(5) =     69.018 ; %  SandiaDot2: none
+    t(6) =    120.497 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    125.935 ; %  SandiaDot: -
+    t(2) =     63.921 ; %  SandiaDot: none
+    t(3) =    125.224 ; %  SandiaDot: +
+    t(4) =    128.219 ; %  SandiaDot2: -
+    t(5) =     66.835 ; %  SandiaDot2: none
+    t(6) =    128.842 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    118.793 ; %  SandiaDot: -
+    t(2) =     67.493 ; %  SandiaDot: none
+    t(3) =    117.512 ; %  SandiaDot: +
+    t(4) =    118.094 ; %  SandiaDot2: -
+    t(5) =     69.864 ; %  SandiaDot2: none
+    t(6) =    121.559 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.340 ; %  SandiaDot: -
+    t(2) =     65.966 ; %  SandiaDot: none
+    t(3) =    116.081 ; %  SandiaDot: +
+    t(4) =    118.074 ; %  SandiaDot2: -
+    t(5) =     69.047 ; %  SandiaDot2: none
+    t(6) =    120.467 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.850 ; %  SandiaDot: -
+    t(2) =     64.664 ; %  SandiaDot: none
+    t(3) =    115.074 ; %  SandiaDot: +
+    t(4) =    117.356 ; %  SandiaDot2: -
+    t(5) =     66.729 ; %  SandiaDot2: none
+    t(6) =    120.108 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.154 ; %  SandiaDot: -
+    t(2) =     66.408 ; %  SandiaDot: none
+    t(3) =    116.296 ; %  SandiaDot: +
+    t(4) =    118.419 ; %  SandiaDot2: -
+    t(5) =     69.193 ; %  SandiaDot2: none
+    t(6) =    120.573 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
 
 %----------------------------------------
 hostname = 'log_s001-n122.txt' ;
@@ -10148,6 +11632,86 @@ Results {host}{k} = t ;
     t(4) =    116.202 ; %  SandiaDot2: -
     t(5) =     68.581 ; %  SandiaDot2: none
     t(6) =    119.193 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.762 ; %  SandiaDot: -
+    t(2) =     64.713 ; %  SandiaDot: none
+    t(3) =    113.632 ; %  SandiaDot: +
+    t(4) =    116.875 ; %  SandiaDot2: -
+    t(5) =     69.494 ; %  SandiaDot2: none
+    t(6) =    120.353 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.967 ; %  SandiaDot: -
+    t(2) =     65.436 ; %  SandiaDot: none
+    t(3) =    115.972 ; %  SandiaDot: +
+    t(4) =    117.566 ; %  SandiaDot2: -
+    t(5) =     68.779 ; %  SandiaDot2: none
+    t(6) =    120.631 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.381 ; %  SandiaDot: -
+    t(2) =     64.378 ; %  SandiaDot: none
+    t(3) =    113.652 ; %  SandiaDot: +
+    t(4) =    115.817 ; %  SandiaDot2: -
+    t(5) =     67.030 ; %  SandiaDot2: none
+    t(6) =    118.258 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.773 ; %  SandiaDot: -
+    t(2) =     65.067 ; %  SandiaDot: none
+    t(3) =    114.853 ; %  SandiaDot: +
+    t(4) =    116.500 ; %  SandiaDot2: -
+    t(5) =     67.196 ; %  SandiaDot2: none
+    t(6) =    119.364 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    114.565 ; %  SandiaDot: -
+    t(2) =     63.862 ; %  SandiaDot: none
+    t(3) =    113.791 ; %  SandiaDot: +
+    t(4) =    116.430 ; %  SandiaDot2: -
+    t(5) =     66.747 ; %  SandiaDot2: none
+    t(6) =    118.644 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    120.934 ; %  SandiaDot: -
+    t(2) =     69.944 ; %  SandiaDot: none
+    t(3) =    118.070 ; %  SandiaDot: +
+    t(4) =    120.117 ; %  SandiaDot2: -
+    t(5) =     71.804 ; %  SandiaDot2: none
+    t(6) =    121.573 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.165 ; %  SandiaDot: -
+    t(2) =     64.744 ; %  SandiaDot: none
+    t(3) =    115.133 ; %  SandiaDot: +
+    t(4) =    116.812 ; %  SandiaDot2: -
+    t(5) =     67.414 ; %  SandiaDot2: none
+    t(6) =    120.200 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    118.274 ; %  SandiaDot: -
+    t(2) =     64.823 ; %  SandiaDot: none
+    t(3) =    116.059 ; %  SandiaDot: +
+    t(4) =    117.152 ; %  SandiaDot2: -
+    t(5) =     69.293 ; %  SandiaDot2: none
+    t(6) =    120.464 ; %  SandiaDot2: +
 
 k = k + 1 ;
 Results {host}{k} = t ;
@@ -10190,6 +11754,438 @@ Results {host}{k} = t ;
 k = k + 1 ;
 Results {host}{k} = t ;
 
+    t(1) =    125.861 ; %  SandiaDot: -
+    t(2) =     64.554 ; %  SandiaDot: none
+    t(3) =    124.188 ; %  SandiaDot: +
+    t(4) =    126.857 ; %  SandiaDot2: -
+    t(5) =     66.937 ; %  SandiaDot2: none
+    t(6) =    128.383 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.614 ; %  SandiaDot: -
+    t(2) =     65.899 ; %  SandiaDot: none
+    t(3) =    113.636 ; %  SandiaDot: +
+    t(4) =    114.126 ; %  SandiaDot2: -
+    t(5) =     66.384 ; %  SandiaDot2: none
+    t(6) =    118.124 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    127.262 ; %  SandiaDot: -
+    t(2) =     66.206 ; %  SandiaDot: none
+    t(3) =    123.593 ; %  SandiaDot: +
+    t(4) =    124.286 ; %  SandiaDot2: -
+    t(5) =     66.843 ; %  SandiaDot2: none
+    t(6) =    125.895 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.700 ; %  SandiaDot: -
+    t(2) =     67.945 ; %  SandiaDot: none
+    t(3) =    114.960 ; %  SandiaDot: +
+    t(4) =    117.546 ; %  SandiaDot2: -
+    t(5) =     69.518 ; %  SandiaDot2: none
+    t(6) =    120.615 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.924 ; %  SandiaDot: -
+    t(2) =     64.056 ; %  SandiaDot: none
+    t(3) =    116.331 ; %  SandiaDot: +
+    t(4) =    116.295 ; %  SandiaDot2: -
+    t(5) =     66.910 ; %  SandiaDot2: none
+    t(6) =    117.811 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.174 ; %  SandiaDot: -
+    t(2) =     67.172 ; %  SandiaDot: none
+    t(3) =    115.051 ; %  SandiaDot: +
+    t(4) =    117.213 ; %  SandiaDot2: -
+    t(5) =     67.356 ; %  SandiaDot2: none
+    t(6) =    120.193 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    119.304 ; %  SandiaDot: -
+    t(2) =     64.482 ; %  SandiaDot: none
+    t(3) =    116.421 ; %  SandiaDot: +
+    t(4) =    118.777 ; %  SandiaDot2: -
+    t(5) =     69.589 ; %  SandiaDot2: none
+    t(6) =    121.816 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    113.506 ; %  SandiaDot: -
+    t(2) =     64.275 ; %  SandiaDot: none
+    t(3) =    113.160 ; %  SandiaDot: +
+    t(4) =    114.983 ; %  SandiaDot2: -
+    t(5) =     66.905 ; %  SandiaDot2: none
+    t(6) =    117.868 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+
+%----------------------------------------
+hostname = 'log_s001-n124.txt' ;
+%----------------------------------------
+
+k = 0 ; host = host + 1 ;
+Host {host} = hostname ;
+
+    t(1) =    129.131 ; %  SandiaDot: -
+    t(2) =     66.143 ; %  SandiaDot: none
+    t(3) =    127.139 ; %  SandiaDot: +
+    t(4) =    129.315 ; %  SandiaDot2: -
+    t(5) =     69.007 ; %  SandiaDot2: none
+    t(6) =    132.499 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.714 ; %  SandiaDot: -
+    t(2) =     65.193 ; %  SandiaDot: none
+    t(3) =    115.542 ; %  SandiaDot: +
+    t(4) =    117.812 ; %  SandiaDot2: -
+    t(5) =     68.199 ; %  SandiaDot2: none
+    t(6) =    120.276 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.567 ; %  SandiaDot: -
+    t(2) =     64.698 ; %  SandiaDot: none
+    t(3) =    116.119 ; %  SandiaDot: +
+    t(4) =    117.745 ; %  SandiaDot2: -
+    t(5) =     68.234 ; %  SandiaDot2: none
+    t(6) =    120.664 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.067 ; %  SandiaDot: -
+    t(2) =     65.687 ; %  SandiaDot: none
+    t(3) =    116.010 ; %  SandiaDot: +
+    t(4) =    117.857 ; %  SandiaDot2: -
+    t(5) =     68.175 ; %  SandiaDot2: none
+    t(6) =    120.494 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.379 ; %  SandiaDot: -
+    t(2) =     66.092 ; %  SandiaDot: none
+    t(3) =    114.390 ; %  SandiaDot: +
+    t(4) =    116.841 ; %  SandiaDot2: -
+    t(5) =     66.927 ; %  SandiaDot2: none
+    t(6) =    118.456 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.637 ; %  SandiaDot: -
+    t(2) =     65.509 ; %  SandiaDot: none
+    t(3) =    115.251 ; %  SandiaDot: +
+    t(4) =    116.189 ; %  SandiaDot2: -
+    t(5) =     67.622 ; %  SandiaDot2: none
+    t(6) =    119.421 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.816 ; %  SandiaDot: -
+    t(2) =     64.681 ; %  SandiaDot: none
+    t(3) =    115.301 ; %  SandiaDot: +
+    t(4) =    117.422 ; %  SandiaDot2: -
+    t(5) =     69.781 ; %  SandiaDot2: none
+    t(6) =    119.947 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.631 ; %  SandiaDot: -
+    t(2) =     64.481 ; %  SandiaDot: none
+    t(3) =    115.810 ; %  SandiaDot: +
+    t(4) =    117.308 ; %  SandiaDot2: -
+    t(5) =     66.817 ; %  SandiaDot2: none
+    t(6) =    119.807 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+
+%----------------------------------------
+hostname = 'log_s001-n125.txt' ;
+%----------------------------------------
+
+k = 0 ; host = host + 1 ;
+Host {host} = hostname ;
+
+    t(1) =    117.886 ; %  SandiaDot: -
+    t(2) =     64.768 ; %  SandiaDot: none
+    t(3) =    115.669 ; %  SandiaDot: +
+    t(4) =    117.823 ; %  SandiaDot2: -
+    t(5) =     69.803 ; %  SandiaDot2: none
+    t(6) =    120.487 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.307 ; %  SandiaDot: -
+    t(2) =     64.585 ; %  SandiaDot: none
+    t(3) =    115.618 ; %  SandiaDot: +
+    t(4) =    115.549 ; %  SandiaDot2: -
+    t(5) =     68.004 ; %  SandiaDot2: none
+    t(6) =    118.846 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.376 ; %  SandiaDot: -
+    t(2) =     67.416 ; %  SandiaDot: none
+    t(3) =    115.420 ; %  SandiaDot: +
+    t(4) =    117.036 ; %  SandiaDot2: -
+    t(5) =     67.114 ; %  SandiaDot2: none
+    t(6) =    119.929 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    114.883 ; %  SandiaDot: -
+    t(2) =     67.207 ; %  SandiaDot: none
+    t(3) =    114.142 ; %  SandiaDot: +
+    t(4) =    115.257 ; %  SandiaDot2: -
+    t(5) =     67.675 ; %  SandiaDot2: none
+    t(6) =    118.335 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.264 ; %  SandiaDot: -
+    t(2) =     66.017 ; %  SandiaDot: none
+    t(3) =    115.978 ; %  SandiaDot: +
+    t(4) =    117.778 ; %  SandiaDot2: -
+    t(5) =     70.098 ; %  SandiaDot2: none
+    t(6) =    119.443 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.670 ; %  SandiaDot: -
+    t(2) =     64.710 ; %  SandiaDot: none
+    t(3) =    116.047 ; %  SandiaDot: +
+    t(4) =    115.898 ; %  SandiaDot2: -
+    t(5) =     69.477 ; %  SandiaDot2: none
+    t(6) =    120.211 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.233 ; %  SandiaDot: -
+    t(2) =     67.634 ; %  SandiaDot: none
+    t(3) =    116.984 ; %  SandiaDot: +
+    t(4) =    118.795 ; %  SandiaDot2: -
+    t(5) =     69.444 ; %  SandiaDot2: none
+    t(6) =    120.436 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.427 ; %  SandiaDot: -
+    t(2) =     64.796 ; %  SandiaDot: none
+    t(3) =    114.712 ; %  SandiaDot: +
+    t(4) =    117.147 ; %  SandiaDot2: -
+    t(5) =     66.947 ; %  SandiaDot2: none
+    t(6) =    118.888 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+
+%----------------------------------------
+hostname = 'log_s001-n126.txt' ;
+%----------------------------------------
+
+k = 0 ; host = host + 1 ;
+Host {host} = hostname ;
+
+    t(1) =    114.617 ; %  SandiaDot: -
+    t(2) =     65.390 ; %  SandiaDot: none
+    t(3) =    113.733 ; %  SandiaDot: +
+    t(4) =    115.324 ; %  SandiaDot2: -
+    t(5) =     67.792 ; %  SandiaDot2: none
+    t(6) =    116.980 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    114.827 ; %  SandiaDot: -
+    t(2) =     64.593 ; %  SandiaDot: none
+    t(3) =    115.720 ; %  SandiaDot: +
+    t(4) =    115.211 ; %  SandiaDot2: -
+    t(5) =     66.663 ; %  SandiaDot2: none
+    t(6) =    118.147 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.417 ; %  SandiaDot: -
+    t(2) =     64.695 ; %  SandiaDot: none
+    t(3) =    114.912 ; %  SandiaDot: +
+    t(4) =    116.449 ; %  SandiaDot2: -
+    t(5) =     67.511 ; %  SandiaDot2: none
+    t(6) =    119.656 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.302 ; %  SandiaDot: -
+    t(2) =     67.550 ; %  SandiaDot: none
+    t(3) =    116.191 ; %  SandiaDot: +
+    t(4) =    117.386 ; %  SandiaDot2: -
+    t(5) =     67.323 ; %  SandiaDot2: none
+    t(6) =    120.344 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    118.072 ; %  SandiaDot: -
+    t(2) =     69.227 ; %  SandiaDot: none
+    t(3) =    116.541 ; %  SandiaDot: +
+    t(4) =    117.995 ; %  SandiaDot2: -
+    t(5) =     67.651 ; %  SandiaDot2: none
+    t(6) =    121.074 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.972 ; %  SandiaDot: -
+    t(2) =     64.680 ; %  SandiaDot: none
+    t(3) =    113.798 ; %  SandiaDot: +
+    t(4) =    117.694 ; %  SandiaDot2: -
+    t(5) =     69.573 ; %  SandiaDot2: none
+    t(6) =    119.223 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.373 ; %  SandiaDot: -
+    t(2) =     67.794 ; %  SandiaDot: none
+    t(3) =    115.780 ; %  SandiaDot: +
+    t(4) =    116.150 ; %  SandiaDot2: -
+    t(5) =     67.223 ; %  SandiaDot2: none
+    t(6) =    118.479 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.752 ; %  SandiaDot: -
+    t(2) =     64.570 ; %  SandiaDot: none
+    t(3) =    115.622 ; %  SandiaDot: +
+    t(4) =    117.454 ; %  SandiaDot2: -
+    t(5) =     67.191 ; %  SandiaDot2: none
+    t(6) =    119.761 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+
+%----------------------------------------
+hostname = 'log_s001-n127.txt' ;
+%----------------------------------------
+
+k = 0 ; host = host + 1 ;
+Host {host} = hostname ;
+
+    t(1) =    117.295 ; %  SandiaDot: -
+    t(2) =     67.036 ; %  SandiaDot: none
+    t(3) =    116.583 ; %  SandiaDot: +
+    t(4) =    115.802 ; %  SandiaDot2: -
+    t(5) =     67.636 ; %  SandiaDot2: none
+    t(6) =    118.746 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.846 ; %  SandiaDot: -
+    t(2) =     65.064 ; %  SandiaDot: none
+    t(3) =    114.793 ; %  SandiaDot: +
+    t(4) =    117.400 ; %  SandiaDot2: -
+    t(5) =     67.785 ; %  SandiaDot2: none
+    t(6) =    119.589 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.386 ; %  SandiaDot: -
+    t(2) =     65.480 ; %  SandiaDot: none
+    t(3) =    114.706 ; %  SandiaDot: +
+    t(4) =    116.623 ; %  SandiaDot2: -
+    t(5) =     68.257 ; %  SandiaDot2: none
+    t(6) =    119.164 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.344 ; %  SandiaDot: -
+    t(2) =     66.861 ; %  SandiaDot: none
+    t(3) =    115.456 ; %  SandiaDot: +
+    t(4) =    117.484 ; %  SandiaDot2: -
+    t(5) =     67.445 ; %  SandiaDot2: none
+    t(6) =    120.428 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.836 ; %  SandiaDot: -
+    t(2) =     66.533 ; %  SandiaDot: none
+    t(3) =    115.654 ; %  SandiaDot: +
+    t(4) =    116.575 ; %  SandiaDot2: -
+    t(5) =     67.944 ; %  SandiaDot2: none
+    t(6) =    119.408 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.340 ; %  SandiaDot: -
+    t(2) =     64.773 ; %  SandiaDot: none
+    t(3) =    114.173 ; %  SandiaDot: +
+    t(4) =    117.784 ; %  SandiaDot2: -
+    t(5) =     69.928 ; %  SandiaDot2: none
+    t(6) =    119.018 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.901 ; %  SandiaDot: -
+    t(2) =     64.578 ; %  SandiaDot: none
+    t(3) =    116.636 ; %  SandiaDot: +
+    t(4) =    117.362 ; %  SandiaDot2: -
+    t(5) =     70.752 ; %  SandiaDot2: none
+    t(6) =    119.530 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.052 ; %  SandiaDot: -
+    t(2) =     64.866 ; %  SandiaDot: none
+    t(3) =    114.887 ; %  SandiaDot: +
+    t(4) =    117.262 ; %  SandiaDot2: -
+    t(5) =     69.583 ; %  SandiaDot2: none
+    t(6) =    121.082 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
 
 %----------------------------------------
 hostname = 'log_s001-n128.txt' ;
@@ -10214,6 +12210,86 @@ Results {host}{k} = t ;
     t(4) =    115.653 ; %  SandiaDot2: -
     t(5) =     67.068 ; %  SandiaDot2: none
     t(6) =    118.364 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    118.898 ; %  SandiaDot: -
+    t(2) =     66.752 ; %  SandiaDot: none
+    t(3) =    116.613 ; %  SandiaDot: +
+    t(4) =    118.351 ; %  SandiaDot2: -
+    t(5) =     69.829 ; %  SandiaDot2: none
+    t(6) =    122.804 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.464 ; %  SandiaDot: -
+    t(2) =     64.435 ; %  SandiaDot: none
+    t(3) =    115.403 ; %  SandiaDot: +
+    t(4) =    117.566 ; %  SandiaDot2: -
+    t(5) =     67.154 ; %  SandiaDot2: none
+    t(6) =    120.289 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    115.984 ; %  SandiaDot: -
+    t(2) =     64.376 ; %  SandiaDot: none
+    t(3) =    114.494 ; %  SandiaDot: +
+    t(4) =    117.256 ; %  SandiaDot2: -
+    t(5) =     67.556 ; %  SandiaDot2: none
+    t(6) =    120.078 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.734 ; %  SandiaDot: -
+    t(2) =     66.571 ; %  SandiaDot: none
+    t(3) =    116.643 ; %  SandiaDot: +
+    t(4) =    117.377 ; %  SandiaDot2: -
+    t(5) =     69.109 ; %  SandiaDot2: none
+    t(6) =    121.042 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.822 ; %  SandiaDot: -
+    t(2) =     64.669 ; %  SandiaDot: none
+    t(3) =    116.298 ; %  SandiaDot: +
+    t(4) =    118.044 ; %  SandiaDot2: -
+    t(5) =     67.472 ; %  SandiaDot2: none
+    t(6) =    120.389 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.543 ; %  SandiaDot: -
+    t(2) =     65.784 ; %  SandiaDot: none
+    t(3) =    115.273 ; %  SandiaDot: +
+    t(4) =    117.991 ; %  SandiaDot2: -
+    t(5) =     69.608 ; %  SandiaDot2: none
+    t(6) =    121.274 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.374 ; %  SandiaDot: -
+    t(2) =     64.727 ; %  SandiaDot: none
+    t(3) =    114.896 ; %  SandiaDot: +
+    t(4) =    118.351 ; %  SandiaDot2: -
+    t(5) =     69.552 ; %  SandiaDot2: none
+    t(6) =    120.452 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.479 ; %  SandiaDot: -
+    t(2) =     64.749 ; %  SandiaDot: none
+    t(3) =    115.072 ; %  SandiaDot: +
+    t(4) =    116.405 ; %  SandiaDot2: -
+    t(5) =     70.201 ; %  SandiaDot2: none
+    t(6) =    119.969 ; %  SandiaDot2: +
 
 k = k + 1 ;
 Results {host}{k} = t ;
@@ -10565,11 +12641,96 @@ Results {host}{k} = t ;
     t(3) =    116.128 ; %  SandiaDot: +
     t(4) =    116.499 ; %  SandiaDot2: -
     t(5) =     68.538 ; %  SandiaDot2: none
+    t(6) =    119.060 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
 
 %----------------------------------------
-hostname = 'log_slash.txt' ;
+hostname = 'log_s001-n135.txt' ;
 %----------------------------------------
 
 k = 0 ; host = host + 1 ;
 Host {host} = hostname ;
+
+    t(1) =    115.315 ; %  SandiaDot: -
+    t(2) =     67.424 ; %  SandiaDot: none
+    t(3) =    113.539 ; %  SandiaDot: +
+    t(4) =    117.357 ; %  SandiaDot2: -
+    t(5) =     67.117 ; %  SandiaDot2: none
+    t(6) =    119.108 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.824 ; %  SandiaDot: -
+    t(2) =     65.453 ; %  SandiaDot: none
+    t(3) =    116.111 ; %  SandiaDot: +
+    t(4) =    115.731 ; %  SandiaDot2: -
+    t(5) =     69.479 ; %  SandiaDot2: none
+    t(6) =    118.938 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.073 ; %  SandiaDot: -
+    t(2) =     64.890 ; %  SandiaDot: none
+    t(3) =    114.934 ; %  SandiaDot: +
+    t(4) =    116.468 ; %  SandiaDot2: -
+    t(5) =     70.325 ; %  SandiaDot2: none
+    t(6) =    119.465 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.094 ; %  SandiaDot: -
+    t(2) =     65.694 ; %  SandiaDot: none
+    t(3) =    116.038 ; %  SandiaDot: +
+    t(4) =    118.091 ; %  SandiaDot2: -
+    t(5) =     68.110 ; %  SandiaDot2: none
+    t(6) =    120.219 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.158 ; %  SandiaDot: -
+    t(2) =     65.404 ; %  SandiaDot: none
+    t(3) =    115.176 ; %  SandiaDot: +
+    t(4) =    115.873 ; %  SandiaDot2: -
+    t(5) =     69.526 ; %  SandiaDot2: none
+    t(6) =    118.788 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.683 ; %  SandiaDot: -
+    t(2) =     65.498 ; %  SandiaDot: none
+    t(3) =    116.026 ; %  SandiaDot: +
+    t(4) =    117.457 ; %  SandiaDot2: -
+    t(5) =     67.796 ; %  SandiaDot2: none
+    t(6) =    121.263 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    117.363 ; %  SandiaDot: -
+    t(2) =     64.901 ; %  SandiaDot: none
+    t(3) =    115.529 ; %  SandiaDot: +
+    t(4) =    117.917 ; %  SandiaDot2: -
+    t(5) =     67.606 ; %  SandiaDot2: none
+    t(6) =    120.801 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
+
+    t(1) =    116.942 ; %  SandiaDot: -
+    t(2) =     65.455 ; %  SandiaDot: none
+    t(3) =    115.187 ; %  SandiaDot: +
+    t(4) =    118.053 ; %  SandiaDot2: -
+    t(5) =     68.535 ; %  SandiaDot2: none
+    t(6) =    119.808 ; %  SandiaDot2: +
+
+k = k + 1 ;
+Results {host}{k} = t ;
 
