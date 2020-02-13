@@ -64,7 +64,9 @@
 // format; just the underlying algorithms employed inside SuiteSparse:GraphBLAS
 // will differ (dot product vs saxpy, for example).  If L and U are in CSC
 // format, then the "Dot" methods would use an outer product approach, which is
-// slow in SuiteSparse:GraphBLAS (requiring an explicit transpose).
+// slow in SuiteSparse:GraphBLAS (requiring an explicit transpose).  The
+// auto-sort rule probably needs to be reversed, if A is in CSC format (this is
+// not yet tested).
 
 // Methods 1 and 2 are much slower than methods 3 to 6 and take more memory.
 // Methods 3 to 6 take a little less memory than methods 1 and 2, are by far
@@ -219,8 +221,8 @@ GrB_Info LAGraph_tricount   // count # of triangles
                             // -1: sort by degree, descending order
                             //  2: auto selection: no sort if rule is not
                             // triggered.  Otherise: sort in ascending order
-                            // for method == 5, descending ordering for
-                            // method == 6.
+                            // for methods 3 and 5, descending ordering for
+                            // methods 4 and 6.
     const int64_t *degree,  // degree of each node, may be NULL if sorting==0.
                             // of size n, unmodified. 
     const GrB_Matrix A_in   // input matrix, must be symmetric, no diag entries
@@ -258,60 +260,72 @@ GrB_Info LAGraph_tricount   // count # of triangles
     // heuristic sort rule
     //--------------------------------------------------------------------------
 
-    #define NSAMPLES 1000
-    if (sorting == 2 && method >= 3 && method <= 6)
+    if (sorting == 2)
     {
-        // auto selection of sorting method.
+        // auto selection of sorting method
+        sorting = 0 ;       // default is not to sort
 
-        // This rule is the same as Scott Beamer's rule in the GAP TC
-        // benchmark, except that it is extended to handle the ascending sort
-        // needed by methods 3 and 5.
-
-        GrB_Index nvals ;
-        LAGr_Matrix_nvals (&nvals, A_in) ;
-        if (n > NSAMPLES && ((double) nvals / ((double) n)) >= 10)
+        if (method >= 3 && method <= 6)
         {
-            // pick 1000 nodes at random and determine their degree
-            struct drand48_data buffer ;
-            srand48_r ((long int) n, &buffer) ;
-            int64_t samples [NSAMPLES] ;
-            int64_t dsum = 0 ;
-            for (int k = 0 ; k < NSAMPLES ; k++)
+            // This rule is very similar to Scott Beamer's rule in the GAP TC
+            // benchmark, except that it is extended to handle the ascending
+            // sort needed by methods 3 and 5.  It also uses a stricter rule,
+            // since the performance of triangle counting in GraphBLAS is less
+            // sensitive to the sorting as compared to the GAP algorithm.  This
+            // is because the dot products in GraphBLAS use binary search if
+            // one vector is very sparse compared to the other.  As a result,
+            // GraphBLAS needs the sort for fewer matrices, as compared to the
+            // GAP algorithm.
+
+            // With this rule, the GAP-kron and GAP-twitter matrices are
+            // sorted, and the others remain unsorted.  With the rule in the
+            // GAP tc.cc benchmark, GAP-web is also sorted, but it is not
+            // sorted here.
+
+            #define NSAMPLES 1000
+            GrB_Index nvals ;
+            LAGr_Matrix_nvals (&nvals, A_in) ;
+            if (n > NSAMPLES && ((double) nvals / ((double) n)) >= 10)
             {
-                long int result ;
-                lrand48_r (&buffer, &result) ;
-                int64_t i = result % n ;
-                int64_t d = degree [i] ;
-                samples [k] = d ;
-                dsum += d ;
-            }
-
-            // find the average degree
-            double sample_average = ((double) dsum) / NSAMPLES ;
-
-            // find the median degree
-            GB_qsort_1a (samples, NSAMPLES) ;
-            double sample_median = (double) samples [NSAMPLES/2] ;
-
-            printf ("average degree: %g\n", sample_average) ;
-            printf ("median  degree: %g\n", sample_median) ;
-
-            if (sample_average / 1.3 > sample_median)
-            {
-                switch (method)
+                // pick 1000 nodes at random and determine their degree
+                struct drand48_data buffer ;
+                srand48_r ((long int) n, &buffer) ;
+                int64_t samples [NSAMPLES] ;
+                int64_t dsum = 0 ;
+                for (int k = 0 ; k < NSAMPLES ; k++)
                 {
-                    case 3:  sorting =  1 ; break ;     // sort ascending
-                    case 4:  sorting = -1 ; break ;     // sort descending
-                    case 5:  sorting =  1 ; break ;     // sort ascending
-                    case 6:  sorting = -1 ; break ;     // sort descending
-                    default: sorting =  0 ; break ;     // no sort
+                    long int result ;
+                    lrand48_r (&buffer, &result) ;
+                    int64_t i = result % n ;
+                    int64_t d = degree [i] ;
+                    samples [k] = d ;
+                    dsum += d ;
+                }
+
+                // find the average degree
+                double sample_average = ((double) dsum) / NSAMPLES ;
+
+                // find the median degree
+                GB_qsort_1a (samples, NSAMPLES) ;
+                double sample_median = (double) samples [NSAMPLES/2] ;
+
+                printf ("average degree: %g\n", sample_average) ;
+                printf ("median  degree: %g\n", sample_median) ;
+
+                // sort if the average degree is very high compared to the
+                // median
+                if (sample_average > 4 * sample_median)
+                {
+                    switch (method)
+                    {
+                        case 3:  sorting =  1 ; break ;     // sort ascending
+                        case 4:  sorting = -1 ; break ;     // sort descending
+                        case 5:  sorting =  1 ; break ;     // sort ascending
+                        case 6:  sorting = -1 ; break ;     // sort descending
+                        default: sorting =  0 ; break ;     // no sort
+                    }
                 }
             }
-        }
-        else
-        {
-            // no sorting
-            sorting = 0 ;
         }
 
         printf ("auto sorting: %d: ", sorting) ;
@@ -483,6 +497,9 @@ GrB_Info LAGraph_tricount   // count # of triangles
             break ;
 
         case 5:  // SandiaDot:  ntri = sum (sum ((L * U') .* L))
+
+            // This tends to be the fastest method, for most matrices, but the
+            // Dot2 method is also very fast.
 
             // using the masked dot product
             LAGRAPH_OK (tricount_prep (&L, &U, A)) ;

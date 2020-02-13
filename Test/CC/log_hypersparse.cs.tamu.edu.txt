@@ -237,3 +237,243 @@ max # of threads: 20
 SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
 Message: /home/faculty/davis/GAP/GAP-road/GAP-road.grb : FastSV5b
 # threads used: 20 time: 1.19444
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 03:32:11 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : FastSV5
+# threads used: 40 time: 19.8895
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 03:33:54 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : FastSV5a
+# threads used: 40 time: 6.21625
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 03:35:01 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : FastSV5b
+# threads used: 40 time: 4.04559
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 03:40:43 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : FastSV5
+# threads used: 20 time: 21.1608
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 03:42:28 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : FastSV5a
+# threads used: 20 time: 6.40529
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 03:43:43 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : FastSV5b
+# threads used: 20 time: 4.52023
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 03:50:56 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb : FastSV5
+# threads used: 40 time: 17.7315
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 03:52:52 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb : FastSV5a
+# threads used: 40 time: 7.04523
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 03:54:13 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb : FastSV5b
+# threads used: 40 time: 4.89729
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 03:59:13 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb : FastSV5
+# threads used: 20 time: 18.5546
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 04:01:13 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb : FastSV5a
+# threads used: 20 time: 7.35589
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 04:02:43 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb : FastSV5b
+# threads used: 20 time: 5.41861
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 04:05:57 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb : FastSV5
+# threads used: 40 time: 8.95706
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 04:06:45 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb : FastSV5a
+# threads used: 40 time: 2.94114
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 04:07:15 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb : FastSV5b
+# threads used: 40 time: 1.78732
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 04:09:52 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb : FastSV5
+# threads used: 20 time: 9.7052
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 04:10:41 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb : FastSV5a
+# threads used: 20 time: 3.01637
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 04:11:14 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb : FastSV5b
+# threads used: 20 time: 1.94377
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 04:12:29 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-web/GAP-web.grb : FastSV5
+# threads used: 40 time: 2.66799
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 04:13:38 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-web/GAP-web.grb : FastSV5a
+# threads used: 40 time: 4.2289
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 04:14:16 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-web/GAP-web.grb : FastSV5b
+# threads used: 40 time: 2.31844
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 04:15:01 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-web/GAP-web.grb : FastSV5
+# threads used: 20 time: 2.71004
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 04:16:10 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-web/GAP-web.grb : FastSV5a
+# threads used: 20 time: 4.27726
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 04:16:50 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-web/GAP-web.grb : FastSV5b
+# threads used: 20 time: 2.41909
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 04:17:23 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-road/GAP-road.grb : FastSV5
+# threads used: 40 time: 1.65273
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 04:17:51 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-road/GAP-road.grb : FastSV5a
+# threads used: 40 time: 1.6888
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 04:18:08 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-road/GAP-road.grb : FastSV5b
+# threads used: 40 time: 1.06275
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 04:18:35 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-road/GAP-road.grb : FastSV5
+# threads used: 20 time: 1.66564
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 04:19:03 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-road/GAP-road.grb : FastSV5a
+# threads used: 20 time: 1.70806
+
+From: /home/faculty/davis/sparse/LAGraph/Test/CC/gap_cc_test.c
+Date: Mon Feb 10 04:19:23 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Feb 9, 2020 (DRAFT28)
+Message: /home/faculty/davis/GAP/GAP-road/GAP-road.grb : FastSV5b
+# threads used: 20 time: 1.17023
