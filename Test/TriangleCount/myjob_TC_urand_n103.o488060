@@ -1,0 +1,614 @@
+
+########################################################################
+#      Date:           Mon Feb 10 10:40:30 PST 2020
+#    Job ID:           488060.v-qsvr-1.aidevcloud
+#      User:           u32248
+# Resources:           neednodes=s001-n103:ppn=2,nodes=s001-n103:ppn=2,walltime=24:00:00
+########################################################################
+
+     24 
+     24 address sizes	: 46 bits physical, 48 bits virtual
+      1 apicid		: 0
+      1 apicid		: 1
+      1 apicid		: 12
+      1 apicid		: 13
+      1 apicid		: 18
+      1 apicid		: 19
+      1 apicid		: 20
+      1 apicid		: 21
+      1 apicid		: 22
+      1 apicid		: 23
+      1 apicid		: 26
+      1 apicid		: 27
+      1 apicid		: 32
+      1 apicid		: 33
+      1 apicid		: 44
+      1 apicid		: 45
+      1 apicid		: 50
+      1 apicid		: 51
+      1 apicid		: 52
+      1 apicid		: 53
+      1 apicid		: 54
+      1 apicid		: 55
+      1 apicid		: 58
+      1 apicid		: 59
+     12 bogomips	: 6800.00
+     12 bogomips	: 6801.99
+     24 bugs		: cpu_meltdown spectre_v1 spectre_v2 spec_store_bypass l1tf mds swapgs
+     24 cache_alignment	: 64
+     24 cache size	: 19712 KB
+     24 clflush size	: 64
+      4 core id		: 0
+      4 core id		: 10
+      4 core id		: 11
+      4 core id		: 13
+      4 core id		: 6
+      4 core id		: 9
+     24 cpu cores	: 6
+     24 cpu family	: 6
+     24 cpuid level	: 22
+      1 cpu MHz		: 1200.017
+      1 cpu MHz		: 1200.037
+      1 cpu MHz		: 1200.067
+      1 cpu MHz		: 1200.135
+      1 cpu MHz		: 1200.205
+      1 cpu MHz		: 1200.215
+      1 cpu MHz		: 1200.246
+      1 cpu MHz		: 1200.248
+      1 cpu MHz		: 1200.303
+      1 cpu MHz		: 1200.410
+      1 cpu MHz		: 1200.422
+      1 cpu MHz		: 1200.436
+      1 cpu MHz		: 1200.439
+      1 cpu MHz		: 1200.454
+      1 cpu MHz		: 1200.523
+      1 cpu MHz		: 1200.536
+      1 cpu MHz		: 1200.537
+      1 cpu MHz		: 1200.666
+      1 cpu MHz		: 1200.673
+      1 cpu MHz		: 1200.752
+      1 cpu MHz		: 1201.128
+      1 cpu MHz		: 1201.204
+      1 cpu MHz		: 1201.312
+      1 cpu MHz		: 1201.391
+     24 flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb cat_l3 cdp_l3 invpcid_single pti intel_ppin ssbd mba ibrs ibpb stibp tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm cqm mpx rdt_a avx512f avx512dq rdseed adx smap clflushopt clwb intel_pt avx512cd avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local dtherm ida arat pln pts hwp hwp_act_window hwp_epp hwp_pkg_req pku ospke md_clear flush_l1d
+     24 fpu_exception	: yes
+     24 fpu		: yes
+      1 initial apicid	: 0
+      1 initial apicid	: 1
+      1 initial apicid	: 12
+      1 initial apicid	: 13
+      1 initial apicid	: 18
+      1 initial apicid	: 19
+      1 initial apicid	: 20
+      1 initial apicid	: 21
+      1 initial apicid	: 22
+      1 initial apicid	: 23
+      1 initial apicid	: 26
+      1 initial apicid	: 27
+      1 initial apicid	: 32
+      1 initial apicid	: 33
+      1 initial apicid	: 44
+      1 initial apicid	: 45
+      1 initial apicid	: 50
+      1 initial apicid	: 51
+      1 initial apicid	: 52
+      1 initial apicid	: 53
+      1 initial apicid	: 54
+      1 initial apicid	: 55
+      1 initial apicid	: 58
+      1 initial apicid	: 59
+     24 microcode	: 0x2000065
+     24 model		: 85
+     24 model name	: Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+     12 physical id	: 0
+     12 physical id	: 1
+     24 power management:
+      1 processor	: 0
+      1 processor	: 1
+      1 processor	: 10
+      1 processor	: 11
+      1 processor	: 12
+      1 processor	: 13
+      1 processor	: 14
+      1 processor	: 15
+      1 processor	: 16
+      1 processor	: 17
+      1 processor	: 18
+      1 processor	: 19
+      1 processor	: 2
+      1 processor	: 20
+      1 processor	: 21
+      1 processor	: 22
+      1 processor	: 23
+      1 processor	: 3
+      1 processor	: 4
+      1 processor	: 5
+      1 processor	: 6
+      1 processor	: 7
+      1 processor	: 8
+      1 processor	: 9
+     24 siblings	: 12
+     24 stepping	: 4
+     24 vendor_id	: GenuineIntel
+     24 wp		: yes
+MemTotal:       197771896 kB
+MemFree:        196994160 kB
+MemAvailable:   196047684 kB
+Buffers:            9848 kB
+Cached:           109932 kB
+SwapCached:         1268 kB
+Active:            54968 kB
+Inactive:          74228 kB
+Active(anon):      21940 kB
+Inactive(anon):    25752 kB
+Active(file):      33028 kB
+Inactive(file):    48476 kB
+Unevictable:       75316 kB
+Mlocked:           75316 kB
+SwapTotal:       1998844 kB
+SwapFree:        1930368 kB
+Dirty:               400 kB
+Writeback:             0 kB
+AnonPages:         84292 kB
+Mapped:            93048 kB
+Shmem:               284 kB
+Slab:             133128 kB
+SReclaimable:      43804 kB
+SUnreclaim:        89324 kB
+KernelStack:        6544 kB
+PageTables:         4376 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:    100884792 kB
+Committed_AS:     348456 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:           0 kB
+VmallocChunk:          0 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:         0 kB
+ShmemHugePages:        0 kB
+ShmemPmdMapped:        0 kB
+CmaTotal:              0 kB
+CmaFree:               0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+DirectMap4k:     1463660 kB
+DirectMap2M:    158648320 kB
+DirectMap1G:    42991616 kB
+
+Per-node numastat info (in MBs):
+                          Node 0          Node 1           Total
+                 --------------- --------------- ---------------
+Numa_Hit            782160871.72    764534034.02   1546694905.74
+Numa_Miss             2342408.96      6128301.64      8470710.59
+Numa_Foreign          6128301.64      2342408.96      8470710.59
+Interleave_Hit            163.64          166.33          329.97
+Local_Node          782160496.79    764533383.82   1546693880.61
+Other_Node            2342783.89      6128951.83      8471735.72
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+# of trials: 3
+threads to test:  24
+matrix: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+
+read A time:         594.890613 sec
+process A time:      141.286067 sec
+# of nodes: 134217728   number of entries: 4294966740
+compute degree: 24.1905 sec
+# of triangles: 5378
+nthreads:  24 time:    64.765446 rate:  66.32 (SandiaDot, one trial)
+
+Method: SandiaDot:  sum ((L*U') .* L)    sort: descending degree
+trial  0: 117.327 sec
+trial  1: 117.476 sec
+trial  2: 116.576 sec
+nthreads:  24 time:   117.126421 rate:  36.67
+
+Method: SandiaDot:  sum ((L*U') .* L)    sort: none
+trial  0: 64.8804 sec
+trial  1: 64.3236 sec
+trial  2: 64.0415 sec
+nthreads:  24 time:    64.415147 rate:  66.68
+
+Method: SandiaDot:  sum ((L*U') .* L)    ascending degree
+trial  0: 115.617 sec
+trial  1: 116.39 sec
+trial  2: 116.347 sec
+nthreads:  24 time:   116.117901 rate:  36.99
+
+Method: SandiaDot2: sum ((U*L') .* U)    sort: descending degree
+trial  0: 116.686 sec
+trial  1: 115.551 sec
+trial  2: 116.639 sec
+nthreads:  24 time:   116.292063 rate:  36.93
+
+Method: SandiaDot2: sum ((U*L') .* U)    sort: none
+trial  0: 69.4472 sec
+trial  1: 69.0451 sec
+trial  2: 68.992 sec
+nthreads:  24 time:    69.161430 rate:  62.10
+
+Method: SandiaDot2: sum ((U*L') .* U)    ascending degree
+trial  0: 118.869 sec
+trial  1: 118.291 sec
+trial  2: 119.339 sec
+nthreads:  24 time:   118.833183 rate:  36.14
+
+Best method: SandiaDot:  sum ((L*U') .* L)    sort: none
+nthreads:  24 time:    64.415147 rate:  66.68
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+# of trials: 3
+threads to test:  24
+matrix: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+
+read A time:         273.853777 sec
+process A time:      135.606390 sec
+# of nodes: 134217728   number of entries: 4294966740
+compute degree: 34.6496 sec
+# of triangles: 5378
+nthreads:  24 time:    64.829789 rate:  66.25 (SandiaDot, one trial)
+
+Method: SandiaDot:  sum ((L*U') .* L)    sort: descending degree
+trial  0: 127.496 sec
+trial  1: 127.511 sec
+trial  2: 126.281 sec
+nthreads:  24 time:   127.095894 rate:  33.79
+
+Method: SandiaDot:  sum ((L*U') .* L)    sort: none
+trial  0: 64.844 sec
+trial  1: 64.4789 sec
+trial  2: 64.1608 sec
+nthreads:  24 time:    64.494556 rate:  66.59
+
+Method: SandiaDot:  sum ((L*U') .* L)    ascending degree
+trial  0: 126.322 sec
+trial  1: 123.27 sec
+trial  2: 124.721 sec
+nthreads:  24 time:   124.770907 rate:  34.42
+
+Method: SandiaDot2: sum ((U*L') .* U)    sort: descending degree
+trial  0: 127.896 sec
+trial  1: 127.816 sec
+trial  2: 127.468 sec
+nthreads:  24 time:   127.726808 rate:  33.63
+
+Method: SandiaDot2: sum ((U*L') .* U)    sort: none
+trial  0: 69.9152 sec
+trial  1: 69.6784 sec
+trial  2: 69.4432 sec
+nthreads:  24 time:    69.678942 rate:  61.64
+
+Method: SandiaDot2: sum ((U*L') .* U)    ascending degree
+trial  0: 130.757 sec
+trial  1: 129.278 sec
+trial  2: 130.457 sec
+nthreads:  24 time:   130.163927 rate:  33.00
+
+Best method: SandiaDot:  sum ((L*U') .* L)    sort: none
+nthreads:  24 time:    64.494556 rate:  66.59
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+# of trials: 3
+threads to test:  24
+matrix: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+
+read A time:         277.163346 sec
+process A time:      132.457924 sec
+# of nodes: 134217728   number of entries: 4294966740
+compute degree: 28.2464 sec
+# of triangles: 5378
+nthreads:  24 time:    64.575928 rate:  66.51 (SandiaDot, one trial)
+
+Method: SandiaDot:  sum ((L*U') .* L)    sort: descending degree
+trial  0: 117.268 sec
+trial  1: 117.569 sec
+trial  2: 116.113 sec
+nthreads:  24 time:   116.983201 rate:  36.71
+
+Method: SandiaDot:  sum ((L*U') .* L)    sort: none
+trial  0: 64.5659 sec
+trial  1: 64.1675 sec
+trial  2: 64.2621 sec
+nthreads:  24 time:    64.331847 rate:  66.76
+
+Method: SandiaDot:  sum ((L*U') .* L)    ascending degree
+trial  0: 115.203 sec
+trial  1: 115.854 sec
+trial  2: 114.775 sec
+nthreads:  24 time:   115.277260 rate:  37.26
+
+Method: SandiaDot2: sum ((U*L') .* U)    sort: descending degree
+trial  0: 117.121 sec
+trial  1: 117.508 sec
+trial  2: 117.205 sec
+nthreads:  24 time:   117.278161 rate:  36.62
+
+Method: SandiaDot2: sum ((U*L') .* U)    sort: none
+trial  0: 66.6648 sec
+trial  1: 66.9133 sec
+trial  2: 67.1677 sec
+nthreads:  24 time:    66.915285 rate:  64.19
+
+Method: SandiaDot2: sum ((U*L') .* U)    ascending degree
+trial  0: 120.493 sec
+trial  1: 119.85 sec
+trial  2: 120.9 sec
+nthreads:  24 time:   120.414135 rate:  35.67
+
+Best method: SandiaDot:  sum ((L*U') .* L)    sort: none
+nthreads:  24 time:    64.331847 rate:  66.76
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+# of trials: 3
+threads to test:  24
+matrix: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+
+read A time:         278.430088 sec
+process A time:      135.538087 sec
+# of nodes: 134217728   number of entries: 4294966740
+compute degree: 21.4408 sec
+# of triangles: 5378
+nthreads:  24 time:    65.578078 rate:  65.49 (SandiaDot, one trial)
+
+Method: SandiaDot:  sum ((L*U') .* L)    sort: descending degree
+trial  0: 116.27 sec
+trial  1: 117.611 sec
+trial  2: 116.124 sec
+nthreads:  24 time:   116.668372 rate:  36.81
+
+Method: SandiaDot:  sum ((L*U') .* L)    sort: none
+trial  0: 65.8802 sec
+trial  1: 65.5496 sec
+trial  2: 65.0363 sec
+nthreads:  24 time:    65.488714 rate:  65.58
+
+Method: SandiaDot:  sum ((L*U') .* L)    ascending degree
+trial  0: 115.747 sec
+trial  1: 115.574 sec
+trial  2: 117.232 sec
+nthreads:  24 time:   116.184184 rate:  36.97
+
+Method: SandiaDot2: sum ((U*L') .* U)    sort: descending degree
+trial  0: 117.593 sec
+trial  1: 117.474 sec
+trial  2: 118.835 sec
+nthreads:  24 time:   117.967585 rate:  36.41
+
+Method: SandiaDot2: sum ((U*L') .* U)    sort: none
+trial  0: 68.9464 sec
+trial  1: 68.08 sec
+trial  2: 68.3386 sec
+nthreads:  24 time:    68.455003 rate:  62.74
+
+Method: SandiaDot2: sum ((U*L') .* U)    ascending degree
+trial  0: 121.423 sec
+trial  1: 120.135 sec
+trial  2: 120.537 sec
+nthreads:  24 time:   120.698317 rate:  35.58
+
+Best method: SandiaDot:  sum ((L*U') .* L)    sort: none
+nthreads:  24 time:    65.488714 rate:  65.58
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+# of trials: 3
+threads to test:  24
+matrix: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+
+read A time:         273.353271 sec
+process A time:      139.923514 sec
+# of nodes: 134217728   number of entries: 4294966740
+compute degree: 21.8951 sec
+# of triangles: 5378
+nthreads:  24 time:    66.865380 rate:  64.23 (SandiaDot, one trial)
+
+Method: SandiaDot:  sum ((L*U') .* L)    sort: descending degree
+trial  0: 129.226 sec
+trial  1: 128.322 sec
+trial  2: 129.176 sec
+nthreads:  24 time:   128.907825 rate:  33.32
+
+Method: SandiaDot:  sum ((L*U') .* L)    sort: none
+trial  0: 67.2094 sec
+trial  1: 66.264 sec
+trial  2: 66.1559 sec
+nthreads:  24 time:    66.543119 rate:  64.54
+
+Method: SandiaDot:  sum ((L*U') .* L)    ascending degree
+trial  0: 127.847 sec
+trial  1: 126.534 sec
+trial  2: 126.876 sec
+nthreads:  24 time:   127.085804 rate:  33.80
+
+Method: SandiaDot2: sum ((U*L') .* U)    sort: descending degree
+trial  0: 130.135 sec
+trial  1: 128.641 sec
+trial  2: 128.495 sec
+nthreads:  24 time:   129.090200 rate:  33.27
+
+Method: SandiaDot2: sum ((U*L') .* U)    sort: none
+trial  0: 72.0916 sec
+trial  1: 72.1319 sec
+trial  2: 71.9228 sec
+nthreads:  24 time:    72.048769 rate:  59.61
+
+Method: SandiaDot2: sum ((U*L') .* U)    ascending degree
+trial  0: 131.728 sec
+trial  1: 131.184 sec
+trial  2: 131.305 sec
+nthreads:  24 time:   131.406005 rate:  32.68
+
+Best method: SandiaDot:  sum ((L*U') .* L)    sort: none
+nthreads:  24 time:    66.543119 rate:  64.54
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+# of trials: 3
+threads to test:  24
+matrix: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+
+read A time:         277.824361 sec
+process A time:      136.943840 sec
+# of nodes: 134217728   number of entries: 4294966740
+compute degree: 23.1295 sec
+# of triangles: 5378
+nthreads:  24 time:    65.169511 rate:  65.90 (SandiaDot, one trial)
+
+Method: SandiaDot:  sum ((L*U') .* L)    sort: descending degree
+trial  0: 115.256 sec
+trial  1: 115.92 sec
+trial  2: 115.203 sec
+nthreads:  24 time:   115.459834 rate:  37.20
+
+Method: SandiaDot:  sum ((L*U') .* L)    sort: none
+trial  0: 65.1553 sec
+trial  1: 65.4613 sec
+trial  2: 64.6661 sec
+nthreads:  24 time:    65.094235 rate:  65.98
+
+Method: SandiaDot:  sum ((L*U') .* L)    ascending degree
+trial  0: 115.524 sec
+trial  1: 115.183 sec
+trial  2: 115.897 sec
+nthreads:  24 time:   115.534908 rate:  37.17
+
+Method: SandiaDot2: sum ((U*L') .* U)    sort: descending degree
+trial  0: 117.246 sec
+trial  1: 118.075 sec
+trial  2: 117.649 sec
+nthreads:  24 time:   117.656748 rate:  36.50
+
+Method: SandiaDot2: sum ((U*L') .* U)    sort: none
+trial  0: 69.5074 sec
+trial  1: 68.8446 sec
+trial  2: 69.1874 sec
+nthreads:  24 time:    69.179792 rate:  62.08
+
+Method: SandiaDot2: sum ((U*L') .* U)    ascending degree
+trial  0: 120.635 sec
+trial  1: 121.895 sec
+trial  2: 121.597 sec
+nthreads:  24 time:   121.375817 rate:  35.39
+
+Best method: SandiaDot:  sum ((L*U') .* L)    sort: none
+nthreads:  24 time:    65.094235 rate:  65.98
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+# of trials: 3
+threads to test:  24
+matrix: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+
+read A time:         277.024711 sec
+process A time:      130.201489 sec
+# of nodes: 134217728   number of entries: 4294966740
+compute degree: 21.5358 sec
+# of triangles: 5378
+nthreads:  24 time:    64.538831 rate:  66.55 (SandiaDot, one trial)
+
+Method: SandiaDot:  sum ((L*U') .* L)    sort: descending degree
+trial  0: 116.62 sec
+trial  1: 115.686 sec
+trial  2: 114.636 sec
+nthreads:  24 time:   115.647195 rate:  37.14
+
+Method: SandiaDot:  sum ((L*U') .* L)    sort: none
+trial  0: 64.667 sec
+trial  1: 64.3041 sec
+trial  2: 64.1797 sec
+nthreads:  24 time:    64.383566 rate:  66.71
+
+Method: SandiaDot:  sum ((L*U') .* L)    ascending degree
+trial  0: 114.211 sec
+trial  1: 113.905 sec
+trial  2: 114.783 sec
+nthreads:  24 time:   114.299601 rate:  37.58
+
+Method: SandiaDot2: sum ((U*L') .* U)    sort: descending degree
+trial  0: 117.653 sec
+trial  1: 117.354 sec
+trial  2: 117.034 sec
+nthreads:  24 time:   117.346942 rate:  36.60
+
+Method: SandiaDot2: sum ((U*L') .* U)    sort: none
+trial  0: 67.1101 sec
+trial  1: 66.6326 sec
+trial  2: 66.7388 sec
+nthreads:  24 time:    66.827181 rate:  64.27
+
+Method: SandiaDot2: sum ((U*L') .* U)    ascending degree
+trial  0: 119.656 sec
+trial  1: 119.753 sec
+trial  2: 120.05 sec
+nthreads:  24 time:   119.819872 rate:  35.85
+
+Best method: SandiaDot:  sum ((L*U') .* L)    sort: none
+nthreads:  24 time:    64.383566 rate:  66.71
+SuiteSparse:GraphBLAS Feb 6, 2020 (DRAFT27)
+# of trials: 3
+threads to test:  24
+matrix: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+
+read A time:         273.069527 sec
+process A time:      133.685287 sec
+# of nodes: 134217728   number of entries: 4294966740
+compute degree: 21.6449 sec
+# of triangles: 5378
+nthreads:  24 time:    66.009723 rate:  65.07 (SandiaDot, one trial)
+
+Method: SandiaDot:  sum ((L*U') .* L)    sort: descending degree
+trial  0: 115.081 sec
+trial  1: 115.154 sec
+trial  2: 114.202 sec
+nthreads:  24 time:   114.812241 rate:  37.41
+
+Method: SandiaDot:  sum ((L*U') .* L)    sort: none
+trial  0: 65.8307 sec
+trial  1: 65.5961 sec
+trial  2: 65.2639 sec
+nthreads:  24 time:    65.563590 rate:  65.51
+
+Method: SandiaDot:  sum ((L*U') .* L)    ascending degree
+trial  0: 113.27 sec
+trial  1: 114.213 sec
+trial  2: 114.237 sec
+nthreads:  24 time:   113.906400 rate:  37.71
+
+Method: SandiaDot2: sum ((U*L') .* U)    sort: descending degree
+trial  0: 115.339 sec
+trial  1: 116.389 sec
+trial  2: 115.244 sec
+nthreads:  24 time:   115.657398 rate:  37.14
+
+Method: SandiaDot2: sum ((U*L') .* U)    sort: none
+trial  0: 66.8805 sec
+trial  1: 66.5607 sec
+trial  2: 66.8307 sec
+nthreads:  24 time:    66.757312 rate:  64.34
+
+Method: SandiaDot2: sum ((U*L') .* U)    ascending degree
+trial  0: 117.584 sec
+trial  1: 117.668 sec
+trial  2: 117.054 sec
+nthreads:  24 time:   117.435186 rate:  36.57
+
+Best method: SandiaDot:  sum ((L*U') .* L)    sort: none
+nthreads:  24 time:    65.563590 rate:  65.51
+
+########################################################################
+# End of output for job 488060.v-qsvr-1.aidevcloud
+# Date: Mon Feb 10 15:58:41 PST 2020
+########################################################################
+
