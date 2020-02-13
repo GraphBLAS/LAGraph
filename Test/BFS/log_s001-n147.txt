@@ -1,0 +1,160 @@
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb 13 05:47:25 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : simple:allpush
+# threads used: 64 time: 2.89191
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb 13 05:51:07 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 32
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : simple:allpush
+# threads used: 32 time: 3.45821
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb 13 05:54:30 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : w/tree:pushpull
+# threads used: 64 time: 3.18088
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb 13 05:58:16 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 32
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : w/tree:pushpull
+# threads used: 32 time: 3.52413
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb 13 06:21:54 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : simple:allpush
+# threads used: 64 time: 4.17924
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb 13 06:26:22 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 32
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : simple:allpush
+# threads used: 32 time: 4.18947
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb 13 06:28:48 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : w/tree:pushpull
+# threads used: 64 time: 2.27147
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb 13 06:31:32 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 32
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : w/tree:pushpull
+# threads used: 32 time: 2.5658
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb 13 06:45:12 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb : simple:allpush
+# threads used: 64 time: 1.03228
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb 13 06:46:25 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 32
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb : simple:allpush
+# threads used: 32 time: 1.13514
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb 13 06:47:43 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb : w/tree:pushpull
+# threads used: 64 time: 1.22183
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb 13 06:49:09 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 32
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb : w/tree:pushpull
+# threads used: 32 time: 1.34452
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb 13 07:02:33 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-web/GAP-web.grb : simple:allpush
+# threads used: 64 time: 1.56523
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb 13 07:03:36 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 32
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-web/GAP-web.grb : simple:allpush
+# threads used: 32 time: 0.985951
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb 13 07:05:27 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-web/GAP-web.grb : w/tree:pushpull
+# threads used: 64 time: 1.73885
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb 13 07:06:37 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 32
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-web/GAP-web.grb : w/tree:pushpull
+# threads used: 32 time: 1.09322
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb 13 07:14:47 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-road/GAP-road.grb : simple:allpush
+# threads used: 64 time: 6.93299
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb 13 07:22:04 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 32
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-road/GAP-road.grb : simple:allpush
+# threads used: 32 time: 6.83789
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb 13 07:30:01 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-road/GAP-road.grb : w/tree:pushpull
+# threads used: 64 time: 7.44481
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Thu Feb 13 07:37:49 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 32
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-road/GAP-road.grb : w/tree:pushpull
+# threads used: 32 time: 7.30319
