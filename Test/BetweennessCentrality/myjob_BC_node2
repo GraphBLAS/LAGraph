@@ -1,4 +1,4 @@
-#PBS -l nodes=1:ppn=2:plat8153
+#PBS -l nodes=s001-n002
 #PBS -l walltime=24:00:00
 
 cd $PBS_O_WORKDIR
