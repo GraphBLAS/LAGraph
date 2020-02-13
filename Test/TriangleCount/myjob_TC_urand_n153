@@ -1,10 +1,10 @@
-#PBS -l nodes=s001-n156
+#PBS -l nodes=s001-n153
 #PBS -l walltime=24:00:00
 cd $PBS_O_WORKDIR
 cat /proc/cpuinfo | sort | uniq -c
 cat /proc/meminfo
 numastat -v
-numactl -l
+numactl -s
 ./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
 ./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
 ./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb

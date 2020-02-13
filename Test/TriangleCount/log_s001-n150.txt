@@ -62,3 +62,11 @@ max # of threads: 64
 SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
 Message: /home/u32248/GAP/GAP-road/GAP-road.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
 # threads used: 64 time: 0.332828
+
+From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Thu Feb 13 07:52:01 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 64 time: 850.99
