@@ -450,16 +450,88 @@ LAGraph_Context ;
 // global objects
 //------------------------------------------------------------------------------
 
-// LAGraph_Complex is a GrB_Type containing the ANSI C11 double complex
-// type.  This is required so that any arbitrary Matrix Market format
-// can be read into GraphBLAS.
+// LAGraph_Complex operators
+//------------------------------------------------------------------------------
+// 10 binary functions, z=f(x,y), where CxC -> C
+//------------------------------------------------------------------------------
+
+extern
+GrB_BinaryOp LAGraph_FIRST_Complex , LAGraph_SECOND_Complex , LAGraph_MIN_Complex ,
+             LAGraph_MAX_Complex   , LAGraph_PLUS_Complex   , LAGraph_MINUS_Complex ,
+             LAGraph_TIMES_Complex , LAGraph_DIV_Complex    , LAGraph_RDIV_Complex  ,
+             LAGraph_RMINUS_Complex ;
+
+//------------------------------------------------------------------------------
+// 6 binary comparison functions, z=f(x,y), where CxC -> C
+//------------------------------------------------------------------------------
+
+extern
+GrB_BinaryOp LAGraph_ISEQ_Complex , LAGraph_ISNE_Complex ,
+             LAGraph_ISGT_Complex , LAGraph_ISLT_Complex ,
+             LAGraph_ISGE_Complex , LAGraph_ISLE_Complex ;
+
+//------------------------------------------------------------------------------
+// 3 binary boolean functions, z=f(x,y), where CxC -> C
+//------------------------------------------------------------------------------
+
+extern
+GrB_BinaryOp LAGraph_OR_Complex , LAGraph_AND , LAGraph_XOR_Complex ;
+
+//------------------------------------------------------------------------------
+// 6 binary comparison functions, z=f(x,y), where CxC -> bool
+//------------------------------------------------------------------------------
+
+extern
+GrB_BinaryOp LAGraph_EQ_Complex , LAGraph_NE_Complex ,
+             LAGraph_GT_Complex , LAGraph_LT_Complex ,
+             LAGraph_GE_Complex , LAGraph_LE_Complex ;
+
+//------------------------------------------------------------------------------
+// 1 binary function, z=f(x,y), where double x double -> C
+//------------------------------------------------------------------------------
+
+extern GrB_BinaryOp LAGraph_COMPLEX_Complex ;
+
+//------------------------------------------------------------------------------
+// 5 unary functions, z=f(x) where C -> C
+//------------------------------------------------------------------------------
+
+extern
+GrB_UnaryOp  LAGraph_IDENTITY_Complex , LAGraph_AINV_Complex , LAGraph_MINV_Complex ,
+             LAGraph_NOT_Complex ,      LAGraph_CONJ_Complex,
+             LAGraph_ONE_UINT32 ,      LAGraph_ABS_Complex  ;
+
+//------------------------------------------------------------------------------
+// 4 unary functions, z=f(x) where C -> double
+//------------------------------------------------------------------------------
+
+extern 
+GrB_UnaryOp LAGraph_REAL_Complex, LAGraph_IMAG_Complex,
+            LAGraph_CABS_Complex, LAGraph_ANGLE_Complex ;
+
+//------------------------------------------------------------------------------
+// 2 unary functions, z=f(x) where double -> C
+//------------------------------------------------------------------------------
+
+extern GrB_UnaryOp LAGraph_COMPLEX_REAL_Complex, LAGraph_COMPLEX_IMAG_Complex ;
+
+//------------------------------------------------------------------------------
+// Complex type, scalars, monoids, and semiring
+//------------------------------------------------------------------------------
+
 extern GrB_Type LAGraph_Complex ;
+
+extern GrB_Monoid   LAGraph_PLUS_Complex_MONOID, LAGraph_TIMES_Complex_MONOID ;
+extern GrB_Semiring LAGraph_PLUS_TIMES_Complex ;
+extern double complex LAGraph_Complex_1  ;
+extern double complex LAGraph_Complex_0 ;
+GrB_Info LAGraph_Complex_init ( ) ;
+GrB_Info LAGraph_Complex_finalize ( ) ;
 
 extern GrB_BinaryOp
 
     // binary operators to test for symmetry, skew-symmetry
     // and Hermitian property
-    LAGraph_EQ_Complex          ,
     LAGraph_SKEW_INT8           ,
     LAGraph_SKEW_INT16          ,
     LAGraph_SKEW_INT32          ,
