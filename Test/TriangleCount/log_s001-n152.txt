@@ -1,0 +1,128 @@
+
+From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Thu Feb 13 20:43:48 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 64 time: 30.4714
+
+From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Thu Feb 13 20:45:25 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 64 time: 32.49
+
+From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Thu Feb 13 20:50:26 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 64 time: 31.1332
+
+From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Thu Feb 13 20:52:02 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 64 time: 31.8525
+
+From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Thu Feb 13 20:57:04 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 64 time: 31.3329
+
+From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Thu Feb 13 20:58:39 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 64 time: 31.9317
+
+From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Thu Feb 13 21:03:40 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 64 time: 30.9895
+
+From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Thu Feb 13 21:05:15 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 64 time: 31.5804
+
+From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Thu Feb 13 21:10:16 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 64 time: 31.0198
+
+From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Thu Feb 13 21:11:51 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 64 time: 31.5789
+
+From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Thu Feb 13 21:16:50 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 64 time: 31.0177
+
+From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Thu Feb 13 21:18:25 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 64 time: 31.7087
+
+From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Thu Feb 13 21:23:25 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 64 time: 31.1307
+
+From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Thu Feb 13 21:25:01 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 64 time: 31.7495
+
+From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Thu Feb 13 21:30:03 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 64 time: 31.1976
+
+From: /home/u32248/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Thu Feb 13 21:31:38 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 64 time: 31.8031

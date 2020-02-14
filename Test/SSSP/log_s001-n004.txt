@@ -1,0 +1,48 @@
+
+From: /home/u32248/LAGraph/Test/SSSP/gap_sssp_test.c
+Date: Thu Feb 13 23:11:36 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : SSSP12
+# threads used: 24 time: 24.4247
+
+From: /home/u32248/LAGraph/Test/SSSP/gap_sssp_test.c
+Date: Thu Feb 13 23:11:36 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : SSSP12c
+# threads used: 24 time: 24.2967
+
+From: /home/u32248/LAGraph/Test/SSSP/gap_sssp_test.c
+Date: Fri Feb 14 00:15:22 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 12
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : SSSP12
+# threads used: 12 time: 30.0255
+
+From: /home/u32248/LAGraph/Test/SSSP/gap_sssp_test.c
+Date: Fri Feb 14 00:15:22 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 12
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : SSSP12c
+# threads used: 12 time: 29.7558
+
+From: /home/u32248/LAGraph/Test/SSSP/gap_sssp_test.c
+Date: Fri Feb 14 01:28:07 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SSSP12
+# threads used: 24 time: 28.8878
+
+From: /home/u32248/LAGraph/Test/SSSP/gap_sssp_test.c
+Date: Fri Feb 14 01:28:07 2020
+CPU:  Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+max # of threads: 24
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : SSSP12c
+# threads used: 24 time: 29.8155
