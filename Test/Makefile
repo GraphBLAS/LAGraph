@@ -16,6 +16,7 @@ JOBS ?= 1
 
 # build all the tests
 default:
+	( cd Complex               ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd LCC                   ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd AllKTruss             ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd KTruss                ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )

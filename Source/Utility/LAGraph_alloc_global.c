@@ -47,11 +47,7 @@
     LAGraph_free_global ( ) ;               \
 }
 
-// a global value for returning the complex type in a Matrix Market file:
-GrB_Type LAGraph_Complex = NULL ;
-
 // binary operators to test for symmetry, skew-symmetry and Hermitian property
-GrB_BinaryOp LAGraph_EQ_Complex   = NULL ;
 GrB_BinaryOp LAGraph_SKEW_INT8    = NULL ;
 GrB_BinaryOp LAGraph_SKEW_INT16   = NULL ;
 GrB_BinaryOp LAGraph_SKEW_INT32   = NULL ;
@@ -62,19 +58,6 @@ GrB_BinaryOp LAGraph_SKEW_Complex = NULL ;
 GrB_BinaryOp LAGraph_Hermitian    = NULL ;
 GrB_BinaryOp LAGraph_LOR_UINT32   = NULL ;
 GrB_BinaryOp LAGraph_LOR_INT64    = NULL ;
-
-void LAGraph_eq_complex
-(
-    bool *z,
-    const double complex *x,
-    const double complex *y
-)
-{
-    // printf ("eq complex:\nx (%.18e,%.18e)\ny (%.18e,%.18e)\n",
-    //     creal (*x), cimag (*x), creal (*y), cimag (*y)) ;
-    (*z) = (*x) == (*y) ;
-    // printf ("result %d\n", (*z)) ;
-}
 
 void LAGraph_skew_int8
 (
@@ -555,10 +538,6 @@ GrB_Info LAGraph_alloc_global ( )
     //--------------------------------------------------------------------------
     // create the binary operators
     //--------------------------------------------------------------------------
-
-    LAGRAPH_OK (GrB_BinaryOp_new (&LAGraph_EQ_Complex,
-        F_BINARY (LAGraph_eq_complex),
-        GrB_BOOL, LAGraph_Complex, LAGraph_Complex)) ;
 
     LAGRAPH_OK (GrB_BinaryOp_new (&LAGraph_SKEW_INT8,
         F_BINARY (LAGraph_skew_int8),

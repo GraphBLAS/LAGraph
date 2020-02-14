@@ -112,7 +112,7 @@ GrB_Info LAGraph_xinit
 
     // allocate all global objects
     LAGRAPH_OK (LAGraph_alloc_global ( )) ;
-
+    LAGRAPH_OK (LAGraph_Complex_init ( )) ;
     return (GrB_SUCCESS) ;
 
 }
