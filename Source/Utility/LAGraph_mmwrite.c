@@ -388,7 +388,7 @@ GrB_Info LAGraph_mmwrite
 
         if (MM_type == MM_complex && MM_storage == MM_general)
         {
-            LAGRAPH_OK (LAGraph_isall (&isequal, A, AT, LAGraph_Hermitian)) ;
+            LAGRAPH_OK (LAGraph_isall (&isequal, A, AT, LAGraph_HERMITIAN_Complex)) ;
             if (isequal)
             {
                 MM_storage = MM_hermitian ;

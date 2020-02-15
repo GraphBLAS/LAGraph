@@ -33,7 +33,7 @@ int main (int argc, char **argv)
         "testing LAGraph_Complex and its operators:\n") ;
 
     #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
-    printf ("testing LAGraph_xinit (requires SuiteSparse:GraphBLAS)\n") ;
+    printf ("LAGraph_xinit (requires SuiteSparse:GraphBLAS)\n") ;
     LAGraph_xinit (malloc, calloc, realloc, free, true) ;
     #else
     printf ("LAGraph_init\n") ;
