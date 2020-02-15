@@ -456,35 +456,55 @@ LAGraph_Context ;
 //------------------------------------------------------------------------------
 
 extern
-GrB_BinaryOp LAGraph_FIRST_Complex , LAGraph_SECOND_Complex , LAGraph_MIN_Complex ,
-             LAGraph_MAX_Complex   , LAGraph_PLUS_Complex   , LAGraph_MINUS_Complex ,
-             LAGraph_TIMES_Complex , LAGraph_DIV_Complex    , LAGraph_RDIV_Complex  ,
-             LAGraph_RMINUS_Complex ;
+GrB_BinaryOp
+    LAGraph_FIRST_Complex           ,
+    LAGraph_SECOND_Complex          ,
+    LAGraph_MIN_Complex             ,
+    LAGraph_MAX_Complex             ,
+    LAGraph_PLUS_Complex            ,
+    LAGraph_MINUS_Complex           ,
+    LAGraph_TIMES_Complex           ,
+    LAGraph_DIV_Complex             ,
+    LAGraph_RDIV_Complex            ,
+    LAGraph_RMINUS_Complex          ,
+    LAGraph_SKEW_Complex            ,
+    LAGraph_HERMITIAN_Complex       ;
 
 //------------------------------------------------------------------------------
-// 6 binary comparison functions, z=f(x,y), where CxC -> C
+// 6 binary comparison functions, z = f(x,y), where CxC -> C
 //------------------------------------------------------------------------------
 
 extern
-GrB_BinaryOp LAGraph_ISEQ_Complex , LAGraph_ISNE_Complex ,
-             LAGraph_ISGT_Complex , LAGraph_ISLT_Complex ,
-             LAGraph_ISGE_Complex , LAGraph_ISLE_Complex ;
+GrB_BinaryOp
+    LAGraph_ISEQ_Complex              ,
+    LAGraph_ISNE_Complex              ,
+    LAGraph_ISGT_Complex              ,
+    LAGraph_ISLT_Complex              ,
+    LAGraph_ISGE_Complex              ,
+    LAGraph_ISLE_Complex              ;
 
 //------------------------------------------------------------------------------
 // 3 binary boolean functions, z=f(x,y), where CxC -> C
 //------------------------------------------------------------------------------
 
 extern
-GrB_BinaryOp LAGraph_OR_Complex , LAGraph_AND , LAGraph_XOR_Complex ;
+GrB_BinaryOp
+    LAGraph_OR_Complex                ,
+    LAGraph_AND_Complex               ,
+    LAGraph_XOR_Complex               ;
 
 //------------------------------------------------------------------------------
 // 6 binary comparison functions, z=f(x,y), where CxC -> bool
 //------------------------------------------------------------------------------
 
 extern
-GrB_BinaryOp LAGraph_EQ_Complex , LAGraph_NE_Complex ,
-             LAGraph_GT_Complex , LAGraph_LT_Complex ,
-             LAGraph_GE_Complex , LAGraph_LE_Complex ;
+GrB_BinaryOp
+    LAGraph_EQ_Complex                ,
+    LAGraph_NE_Complex                ,
+    LAGraph_GT_Complex                ,
+    LAGraph_LT_Complex                ,
+    LAGraph_GE_Complex                ,
+    LAGraph_LE_Complex                ;
 
 //------------------------------------------------------------------------------
 // 1 binary function, z=f(x,y), where double x double -> C
@@ -497,23 +517,35 @@ extern GrB_BinaryOp LAGraph_COMPLEX_Complex ;
 //------------------------------------------------------------------------------
 
 extern
-GrB_UnaryOp  LAGraph_IDENTITY_Complex , LAGraph_AINV_Complex , LAGraph_MINV_Complex ,
-             LAGraph_NOT_Complex ,      LAGraph_CONJ_Complex,
-             LAGraph_ONE_UINT32 ,      LAGraph_ABS_Complex  ;
+GrB_UnaryOp
+    LAGraph_IDENTITY_Complex          ,
+    LAGraph_AINV_Complex              ,
+    LAGraph_MINV_Complex              ,
+    LAGraph_NOT_Complex               ,
+    LAGraph_CONJ_Complex              ,
+    LAGraph_ONE_UINT32                ,
+    LAGraph_ISONE_Complex             ,
+    LAGraph_ABS_Complex               ,
+    LAGraph_TRUE_BOOL_Complex         ;
 
 //------------------------------------------------------------------------------
 // 4 unary functions, z=f(x) where C -> double
 //------------------------------------------------------------------------------
 
 extern 
-GrB_UnaryOp LAGraph_REAL_Complex, LAGraph_IMAG_Complex,
-            LAGraph_CABS_Complex, LAGraph_ANGLE_Complex ;
+GrB_UnaryOp
+    LAGraph_REAL_Complex              ,
+    LAGraph_IMAG_Complex              ,
+    LAGraph_CABS_Complex              ,
+    LAGraph_ANGLE_Complex             ;
 
 //------------------------------------------------------------------------------
 // 2 unary functions, z=f(x) where double -> C
 //------------------------------------------------------------------------------
 
-extern GrB_UnaryOp LAGraph_COMPLEX_REAL_Complex, LAGraph_COMPLEX_IMAG_Complex ;
+extern GrB_UnaryOp
+    LAGraph_COMPLEX_REAL_Complex      ,
+    LAGraph_COMPLEX_IMAG_Complex      ;
 
 //------------------------------------------------------------------------------
 // Complex type, scalars, monoids, and semiring
@@ -521,10 +553,15 @@ extern GrB_UnaryOp LAGraph_COMPLEX_REAL_Complex, LAGraph_COMPLEX_IMAG_Complex ;
 
 extern GrB_Type LAGraph_Complex ;
 
-extern GrB_Monoid   LAGraph_PLUS_Complex_MONOID, LAGraph_TIMES_Complex_MONOID ;
+extern GrB_Monoid
+    LAGraph_PLUS_Complex_MONOID       ,
+    LAGraph_TIMES_Complex_MONOID      ;
+    
 extern GrB_Semiring LAGraph_PLUS_TIMES_Complex ;
+
 extern double complex LAGraph_Complex_1  ;
 extern double complex LAGraph_Complex_0 ;
+
 GrB_Info LAGraph_Complex_init ( ) ;
 GrB_Info LAGraph_Complex_finalize ( ) ;
 
@@ -538,8 +575,6 @@ extern GrB_BinaryOp
     LAGraph_SKEW_INT64          ,
     LAGraph_SKEW_FP32           ,
     LAGraph_SKEW_FP64           ,
-    LAGraph_SKEW_Complex        ,
-    LAGraph_Hermitian           ,
     LAGraph_LOR_UINT32          ,
     LAGraph_LOR_INT64           ;
 
@@ -556,7 +591,6 @@ extern GrB_UnaryOp
     LAGraph_ISONE_UINT64        ,
     LAGraph_ISONE_FP32          ,
     LAGraph_ISONE_FP64          ,
-    LAGraph_ISONE_Complex       ,
 
     // unary operators to check if the entry is equal to 2
     LAGraph_ISTWO_UINT32        ,
@@ -582,8 +616,7 @@ extern GrB_UnaryOp
     LAGraph_ONE_UINT32          ,
     LAGraph_ONE_INT64           ,
     LAGraph_ONE_FP64            ,
-    LAGraph_TRUE_BOOL           ,
-    LAGraph_TRUE_BOOL_Complex   ;
+    LAGraph_TRUE_BOOL           ;
 
 // monoids and semirings
 extern GrB_Monoid

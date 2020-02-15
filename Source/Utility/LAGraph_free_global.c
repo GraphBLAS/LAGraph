@@ -45,9 +45,6 @@
 GrB_Info LAGraph_free_global ( )
 {
 
-    // free the types
-    GrB_free (&LAGraph_Complex) ;
-
     // free the unary ops
     GrB_free (&LAGraph_ISONE_INT8) ;
     GrB_free (&LAGraph_ISONE_INT16) ;
@@ -84,8 +81,6 @@ GrB_Info LAGraph_free_global ( )
     GrB_free (&LAGraph_SKEW_INT64) ;
     GrB_free (&LAGraph_SKEW_FP32) ;
     GrB_free (&LAGraph_SKEW_FP64) ;
-    GrB_free (&LAGraph_SKEW_Complex) ;
-    GrB_free (&LAGraph_Hermitian) ;
     GrB_free (&LAGraph_LOR_UINT32) ;
     GrB_free (&LAGraph_LOR_INT64) ;
 
