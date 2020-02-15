@@ -89,10 +89,10 @@ int main (int argc, char **argv)
     OK (LAGraph_mmwrite (C, stdout)) ;
     
     /* // Multi matrices */
-    /* OK(GrB_eWiseMult */
-    /*    (C, NULL, NULL, LAGraph_TIMES_Complex, A, B, NULL)); */
+    OK(GrB_eWiseMult
+       (C, NULL, NULL, LAGraph_TIMES_Complex, A, B, NULL));
 
-    /* OK (LAGraph_mmwrite (C, stdout)) ; */
+    OK (LAGraph_mmwrite (C, stdout)) ;
     
     // Matrix Mult matrices
     OK(GrB_mxm
