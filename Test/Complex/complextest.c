@@ -41,7 +41,7 @@
 #include <complex.h>
 #include <assert.h>
 
-#define OK(method) do                                                   \
+#define OK(method)                                                      \
 {                                                                       \
     GrB_Info this_info = method ;                                       \
     if (! (this_info == GrB_SUCCESS || this_info == GrB_NO_VALUE))      \
@@ -50,17 +50,17 @@
         FREE_ALL ;                                                      \
         return (this_info) ;                                            \
     }                                                                   \
-} while(0);
+}                                                                       \
 
-#define FREE_ALL do                 \
+#define FREE_ALL                    \
 {                                   \
     GrB_free (&A) ;                 \
     GrB_free (&B) ;                 \
     GrB_free (&C) ;                 \
     GrB_free (&APPROX_Complex) ;    \
-} while(0);
+}                                   \
 
-#define FOPENR(filename) do                                     \
+#define FOPENR(filename)                                        \
 {                                                               \
     f = fopen (filename, "r") ;                                 \
     if (f == NULL)                                              \
@@ -69,15 +69,16 @@
         FREE_ALL ;                                              \
         return (GrB_INVALID_VALUE) ;                            \
     }                                                           \
-} while(0) ;
+}                                                               \
 
-#define CHECK(filename) do {                        \
+#define CHECK(filename)                                     \
+{                                                           \
     FOPENR(filename) ;                                      \
-    OK (LAGraph_mmread (&D, f)) ;                          \
+    OK (LAGraph_mmread (&D, f)) ;                           \
     fclose(f);                                              \
-    OK (LAGraph_isequal(&result, C, D, APPROX_Complex));  \
+    OK (LAGraph_isequal(&result, C, D, APPROX_Complex));    \
     assert(result);                                         \
-} while(0) ;
+}                                                           \
 
 
 void complex_approx
