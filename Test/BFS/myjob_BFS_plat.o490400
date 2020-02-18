@@ -1,0 +1,114 @@
+
+########################################################################
+#      Date:           Thu Feb 13 05:13:59 PST 2020
+#    Job ID:           490400.v-qsvr-1.aidevcloud
+#      User:           u32248
+# Resources:           neednodes=1:ppn=2:plat8153,nodes=1:ppn=2:plat8153,walltime=24:00:00
+########################################################################
+
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+threads to test:  64 32
+chunk: 65536
+matrix: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+sources: /home/u32248/GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 1715.04
+A is symmetric
+transpose time: 85.4807
+
+==========input graph: nodes: 134217726 edges: 4223264644 ntrials: 64
+simple all-push (no tree):
+:64:simple    (no tree):        2.892 (sec), rate: 1460.37
+:32:simple    (no tree):        3.458 (sec), rate: 1221.23
+
+pushpull (with tree):
+:64:pushpull  (w/ tree):        3.181 (sec), rate: 1327.70
+:32:pushpull  (w/ tree):        3.524 (sec), rate: 1198.39
+
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+threads to test:  64 32
+chunk: 65536
+matrix: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+sources: /home/u32248/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 1039.86
+A is symmetric
+transpose time: 104.335
+
+==========input graph: nodes: 134217728 edges: 4294966740 ntrials: 64
+simple all-push (no tree):
+:64:simple    (no tree):        4.179 (sec), rate: 1027.69
+:32:simple    (no tree):        4.189 (sec), rate: 1025.18
+
+pushpull (with tree):
+:64:pushpull  (w/ tree):        2.271 (sec), rate: 1890.83
+:32:pushpull  (w/ tree):        2.566 (sec), rate: 1673.93
+
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+threads to test:  64 32
+chunk: 65536
+matrix: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+sources: /home/u32248/GAP/GAP-twitter/GAP-twitter_sources.mtx
+read time: 715.491
+A is unsymmetric
+transpose time: 29.3494
+
+==========input graph: nodes: 61578415 edges: 1468364884 ntrials: 64
+simple all-push (no tree):
+:64:simple    (no tree):        1.032 (sec), rate: 1422.45
+:32:simple    (no tree):        1.135 (sec), rate: 1293.55
+
+pushpull (with tree):
+:64:pushpull  (w/ tree):        1.222 (sec), rate: 1201.78
+:32:pushpull  (w/ tree):        1.345 (sec), rate: 1092.11
+
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+threads to test:  64 32
+chunk: 65536
+matrix: /home/u32248/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-web/GAP-web.grb
+sources: /home/u32248/GAP/GAP-web/GAP-web_sources.mtx
+read time: 692.649
+A is unsymmetric
+transpose time: 7.20819
+
+==========input graph: nodes: 50636151 edges: 1930292948 ntrials: 64
+simple all-push (no tree):
+:64:simple    (no tree):        1.565 (sec), rate: 1233.23
+:32:simple    (no tree):        0.986 (sec), rate: 1957.80
+
+pushpull (with tree):
+:64:pushpull  (w/ tree):        1.739 (sec), rate: 1110.10
+:32:pushpull  (w/ tree):        1.093 (sec), rate: 1765.70
+
+SuiteSparse:GraphBLAS Feb 11, 2020 (DRAFT29)
+threads to test:  64 32
+chunk: 65536
+matrix: /home/u32248/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-road/GAP-road.grb
+sources: /home/u32248/GAP/GAP-road/GAP-road_sources.mtx
+read time: 40.6647
+A is symmetric
+transpose time: 0.865184
+
+==========input graph: nodes: 23947347 edges: 57708624 ntrials: 64
+simple all-push (no tree):
+:64:simple    (no tree):        6.933 (sec), rate:   8.32
+:32:simple    (no tree):        6.838 (sec), rate:   8.44
+
+pushpull (with tree):
+:64:pushpull  (w/ tree):        7.445 (sec), rate:   7.75
+:32:pushpull  (w/ tree):        7.303 (sec), rate:   7.90
+
+
+########################################################################
+# End of output for job 490400.v-qsvr-1.aidevcloud
+# Date: Thu Feb 13 07:37:49 PST 2020
+########################################################################
+

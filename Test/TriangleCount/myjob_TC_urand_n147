@@ -4,7 +4,7 @@ cd $PBS_O_WORKDIR
 cat /proc/cpuinfo | sort | uniq -c
 cat /proc/meminfo
 numastat -v
-numactl -l
+numactl -s
 ./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
 ./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb
 ./build/gap_tc_test ~/GAP/GAP-urand/GAP-urand.grb

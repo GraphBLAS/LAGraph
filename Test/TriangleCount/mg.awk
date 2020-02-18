@@ -1,15 +1,18 @@
 
 BEGIN {
-printf "k = 0 ; host = host + 1 ;\n" 
+printf "host = host + 1 ;\n" 
 printf "Host {host} = hostname ;\n\n"
-i = 0 ;
+i = 1 ;
 }
 
 /Message/ {
     is_urand = match ($0, "urand")
     m = $0
     method = $4
-    if (match ($0, "none")) {
+    if (match ($0, "auto")) {
+        sort = "auto"
+    }
+    else if (match ($0, "none")) {
         sort = "none"
     }
     else if (match ($0, "ascend")) {

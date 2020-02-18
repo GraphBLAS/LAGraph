@@ -53,7 +53,7 @@
     GrB_free (&A) ;         \
 }
 
-#define NTHREAD_LIST 2
+#define NTHREAD_LIST 4
 #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 6
@@ -190,7 +190,7 @@ int main (int argc, char **argv)
     double tic [2], t1, t2 ;
 
     #define NTRIALS 16
-    printf ("# of trials: %d\n", NTRIALS) ;
+    printf ("# of trials: %d\n\n", NTRIALS) ;
 
     bool sanitize = false ;
 
@@ -224,17 +224,20 @@ int main (int argc, char **argv)
         {
             LAGraph_tic (tic) ;
             LAGRAPH_OK (LAGraph_cc_fastsv5 (&result, S, sanitize)) ;
-            t1 += LAGraph_toc (tic) ;
+            double ttrial = LAGraph_toc (tic) ;
+            t1 += ttrial ;
+            printf ("SV5:  trial: %2d time: %10.4f sec\n", k, ttrial) ;
             nCC = countCC (result, n) ;
             LAGr_free (&result) ;
         }
-        printf("FastSV5:  threads: %2d time: %10.4f  # of CC: %lu\n",
+        printf("FastSV5:  threads: %2d time: %10.4f  # of CC: %lu\n\n",
             nthreads, t1 / NTRIALS, nCC) ;
         if (n > 1000)
         {
             LAGr_log (matrix_name, "FastSV5", nthreads, t1/NTRIALS) ;
         }
 
+        #if 0
         t1 = 0 ;
         for (int k = 0 ; k < NTRIALS ; k++)
         {
@@ -250,17 +253,20 @@ int main (int argc, char **argv)
         {
             LAGr_log (matrix_name, "FastSV5a", nthreads, t1/NTRIALS) ;
         }
+        #endif
 
         t1 = 0 ;
         for (int k = 0 ; k < NTRIALS ; k++)
         {
             LAGraph_tic (tic) ;
             LAGRAPH_OK (LAGraph_cc_fastsv5b (&result, &S, sanitize)) ;
-            t1 += LAGraph_toc (tic) ;
+            double ttrial = LAGraph_toc (tic) ;
+            t1 += ttrial ;
+            printf ("SV5b: trial: %2d time: %10.4f sec\n", k, ttrial) ;
             nCC = countCC (result, n) ;
             LAGr_free (&result) ;
         }
-        printf("FastSV5b: threads: %2d time: %10.4f  # of CC: %lu\n",
+        printf("FastSV5b: threads: %2d time: %10.4f  # of CC: %lu\n\n",
             nthreads, t1 / NTRIALS, nCC) ;
         if (n > 1000)
         {

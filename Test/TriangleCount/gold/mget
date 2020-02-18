@@ -1,0 +1,13 @@
+#!/bin/bash
+
+echo % Intel DevCloud test results
+echo host = 0 \;
+for f in log_*
+do
+    echo
+    echo %----------------------------------------
+    echo hostname = \'${f}\' \;
+    echo %----------------------------------------
+    echo
+    awk -f mg.awk < ${f}
+done

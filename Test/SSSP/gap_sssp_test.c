@@ -313,7 +313,8 @@ for (int tt = 1 ; tt <= nt ; tt++)
         LAGRAPH_OK (GrB_Matrix_extractElement (&s, SourceNodes, trial, 0));
         // convert from 1-based to 0-based
         s-- ;
-        //printf ("\nTrial %d : source node: %"PRIu64"\n", trial, s) ;
+        // printf ("\nTrial %d : source node: %"PRIu64"\n", trial, s) ;
+        printf ("\n") ;
 
         //----------------------------------------------------------------------
         // sssp
@@ -428,8 +429,8 @@ for (int tt = 1 ; tt <= nt ; tt++)
         // sssp12: with dense vector t
         //----------------------------------------------------------------------
 
-        printf ("\n----sssp12: nthreads %d trial: %d source: %lu (0-based)\n",
-            nthreads, trial, s) ;
+//      printf ("\n----sssp12: nthreads %d trial: %d source: %lu (0-based)\n",
+//          nthreads, trial, s) ;
 
         // Start the timer
         LAGraph_tic (tic) ;
@@ -438,14 +439,16 @@ for (int tt = 1 ; tt <= nt ; tt++)
 
         // Stop the timer
         t3 = LAGraph_toc (tic) ;
+        printf ("sssp12 : threads: %2d trial: %2d source %9lu "
+            "time: %10.4f sec\n", nthreads, trial, s, t3) ;
         total_time_sssp12 += t3 ;
 
         //----------------------------------------------------------------------
         // sssp12c: with dense vector t
         //----------------------------------------------------------------------
 
-        printf ("\n----sssp12c: nthreads %d trial: %d source: %lu (0-based)\n",
-            nthreads, trial, s) ;
+//      printf ("\n----sssp12c: nthreads %d trial: %d source: %lu (0-based)\n",
+//          nthreads, trial, s) ;
 
         // Start the timer
         LAGraph_tic (tic) ;
@@ -454,6 +457,8 @@ for (int tt = 1 ; tt <= nt ; tt++)
 
         // Stop the timer
         t3 = LAGraph_toc (tic) ;
+        printf ("sssp12c: threads: %2d trial: %2d source %9lu "
+            "time: %10.4f sec\n", nthreads, trial, s, t3) ;
         total_time_sssp12c += t3 ;
 
         #if 0
@@ -643,7 +648,8 @@ for (int tt = 1 ; tt <= nt ; tt++)
     // report results
     //--------------------------------------------------------------------------
 
-    //printf ("ntrials: %d\n", ntrials) ;
+    printf ("\n") ;
+
     double e = (double) anz ;
 
     if (total_time1 > 0)
