@@ -45,7 +45,7 @@
 #include "../../Source/Utility/LAGraph_internal.h"
 #include "bfs_test.h"
 
-#define NTHREAD_LIST 2
+#define NTHREAD_LIST 6
 #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 8
@@ -259,7 +259,7 @@ int main (int argc, char **argv)
     // run the BFS on all source nodes
     //--------------------------------------------------------------------------
 
-#if 1
+#if 0
 
     printf ( "simple all-push (no tree):\n") ;
     for (int tt = 1 ; tt <= nt ; tt++)
@@ -345,8 +345,10 @@ int main (int argc, char **argv)
         int nthreads = Nthreads [tt] ;
         if (nthreads > nthreads_max) continue ;
         LAGraph_set_nthreads (nthreads) ;
+        t [nthreads] = 0 ;
+        printf ("\n------------------------------------------- threads: %2d\n",
+            nthreads) ;
 
-        LAGraph_tic (tic) ;
         for (int trial = 0 ; trial < ntrials ; trial++)
         {
             int64_t s ; 
@@ -355,9 +357,14 @@ int main (int argc, char **argv)
             s-- ; // convert from 1-based to 0-based
             GrB_free (&v) ;
             GrB_free (&pi) ;
+            LAGraph_tic (tic) ;
             LAGRAPH_OK (LAGraph_bfs_pushpull (&v, &pi, A, AT, s, 0, false)) ;
+            double ttrial = LAGraph_toc (tic) ;
+            t [nthreads] += ttrial ;
+            printf ("trial: %2d threads: %2d source: %9ld time: %10.4f sec\n",
+                trial, nthreads, s, ttrial) ;
         }
-        t [nthreads] = LAGraph_toc (tic) / ntrials ;
+        t [nthreads] = t [nthreads] / ntrials ;
         printf ( ":%2d:pushpull  (w/ tree): %12.3f (sec), rate: %6.2f\n",
             nthreads, t [nthreads], 1e-6*((double) nvals) / t [nthreads]) ;
         if (n > 1000)

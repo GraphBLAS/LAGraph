@@ -254,7 +254,7 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     // the GAP benchmark requires 16 trials
-    int ntrials = 1 ; // 16 ;
+    int ntrials = 16 ;
     printf ("# of trials: %d\n", ntrials) ;
 
     float tol = 1e-4 ;
@@ -412,7 +412,7 @@ int main (int argc, char **argv)
         int nthreads = Nthreads [kk] ;
         if (nthreads > nthreads_max) continue ;
         LAGraph_set_nthreads (nthreads) ;
-        // printf ("3c:%2d: ", nthreads) ;
+        printf ("\n--------------------------- nthreads: %2d\n", nthreads) ;
 
         double total_time = 0 ;
 
@@ -423,7 +423,7 @@ int main (int argc, char **argv)
             LAGRAPH_OK (LAGraph_pagerank3f (&PR, A_orig, d_out, 0.85, itermax,
                 &iters)) ;
             double t1 = LAGraph_toc (tic) ;
-            // printf ("%10.3f ", t1) ; fflush (stdout) ;
+            printf ("trial: %2d time: %10.4f sec\n", trial, t1) ;
             total_time += t1 ;
         }
         // printf ("\n") ;
@@ -453,7 +453,7 @@ int main (int argc, char **argv)
         int nthreads = Nthreads [kk] ;
         if (nthreads > nthreads_max) continue ;
         LAGraph_set_nthreads (nthreads) ;
-        // printf ("3c:%2d: ", nthreads) ;
+        printf ("\n--------------------------- nthreads: %2d\n", nthreads) ;
 
         double total_time = 0 ;
 
@@ -464,7 +464,7 @@ int main (int argc, char **argv)
             LAGRAPH_OK (LAGraph_pagerankx4 (&PR, A_orig, dout, 0.85, itermax,
                 &iters)) ;
             double t1 = LAGraph_toc (tic) ;
-            // printf ("%10.3f ", t1) ; fflush (stdout) ;
+            printf ("trial: %2d time: %10.4f sec\n", trial, t1) ;
             total_time += t1 ;
         }
         // printf ("\n") ;

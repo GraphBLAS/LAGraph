@@ -34,7 +34,7 @@
 
 //------------------------------------------------------------------------------
 
-#define NTHREAD_LIST 2
+#define NTHREAD_LIST 3
 #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 6
@@ -257,38 +257,6 @@ int main (int argc, char **argv)
     #define K 1024
     #define M (K*K)
 
-    int nchunks ;
-
-    /*
-    double Chunks [16+1] = { 0,
-          1*K,   2*K,  4*K,   8*K,
-         16*K,  32*K, 64*K, 128*K,
-        256*K, 512*K,    M,   2*M,
-          4*M,   8*M, 16*M,  32*M } ;
-    nchunks = 8 ;
-    */
-
-    /*
-    double Chunks [3+1] = { 0,
-          2*K,  4*K,   16*K  } ;
-    nchunks = 3 ;
-    */
-
-    /*
-    double Chunks [10+1] = { 0,
-          4*K, 16*K, 64*K   } ;
-    nchunks = 3 ;
-    */
-
-    double Chunks [10+1] = { 0,
-          64*K   } ;
-    nchunks = 1 ;
-
-    for (int c = 1 ; c <= nchunks ; c++)
-    {
-        printf (" chunk test %d: size %g\n", c, Chunks [c]) ;
-    }
-
     /*
     int nt = 7 ;
     int Nthreads [7+1] = { 0,
@@ -316,17 +284,14 @@ int main (int argc, char **argv)
 
     int ntrials = 0 ;
     double total_time_1 = 0 ;
-    double total_time_x3 [16+1][8+1] ;
-    double total_time_4  [16+1][8+1] ;
-    double total_timing [3] = { 0, 0, 0 } ;
+    double total_time_x3 [8+1] ;
+    double total_time_4  [8+1] ;
+    double total_timing  [3] = { 0, 0, 0 } ;
 
-    for (int c = 0 ; c < 17 ; c++)
+    for (int t = 0 ; t < 9 ; t++)
     {
-        for (int t = 0 ; t < 9 ; t++)
-        {
-            total_time_x3 [c][t] = 0 ;
-            total_time_4  [c][t] = 0 ;
-        }
+        total_time_x3 [t] = 0 ;
+        total_time_4  [t] = 0 ;
     }
 
     for (int64_t kstart = 0 ; kstart < nsource ; kstart += batch_size)
@@ -360,13 +325,11 @@ int main (int argc, char **argv)
 //      LAGRAPH_OK (LAGraphX_bc_batch (&v_batch, A, vertex_list, batch_size)) ;
 //      LAGRAPH_OK (LAGraphX_bc_batch2 (&v_batch, A, vertex_list, batch_size)) ;
 
-        printf ("---\n") ;
 
+#if 0
+        printf ("---\n") ;
         // version X3
-        for (int c = 1 ; c <= nchunks ; c++)
         {
-            printf ("\n") ;
-            GxB_set (GxB_CHUNK, Chunks [c]) ;
             for (int t = 1 ; t <= nt ; t++)
             {
                 if (Nthreads [t] > nthreads_max) continue ;
@@ -381,20 +344,19 @@ int main (int argc, char **argv)
         //      total_timing [0] += timing [0] ;        // pushpull
         //      total_timing [1] += timing [1] ;        // allpush
         //      total_timing [2] += timing [2] ;        // allpull
-                total_time_x3 [c][t] += t2 ;
-                printf ("Batch X3 time %2d:%2d: %12.4f (sec), rate: %10.3f\n",
-                    c, Nthreads [t], t2, 1e-6*((double) nvals) / t2) ;
+                total_time_x3 [t] += t2 ;
+                printf ("Batch X3 time %2d: %12.4f (sec), rate: %10.3f\n",
+                    Nthreads [t], t2, 1e-6*((double) nvals) / t2) ;
             }
         }
-
         // GxB_print (v_batch, 2) ;
         printf ("---\n") ;
+#endif
+
 
         // version 4
-        for (int c = 1 ; c <= nchunks ; c++)
         {
             printf ("\n") ;
-            GxB_set (GxB_CHUNK, Chunks [c]) ;
             for (int t = 1 ; t <= nt ; t++)
             {
                 if (Nthreads [t] > nthreads_max) continue ;
@@ -405,9 +367,9 @@ int main (int argc, char **argv)
                     ((AT == NULL) ? A : AT),
                     vertex_list, batch_size)) ;
                 double t2 = LAGraph_toc (tic) ;
-                printf ("Batch v4 time %2d:%2d: %12.4f (sec), rate: %10.3f\n",
-                    c, Nthreads [t], t2, 1e-6*((double) nvals) / t2) ;
-                total_time_4 [c][t] += t2 ;
+                printf ("Batch v4 time %2d: %12.4f (sec)\n",
+                    Nthreads [t], t2) ;
+                total_time_4 [t] += t2 ;
             }
         }
 
@@ -430,7 +392,7 @@ int main (int argc, char **argv)
 #endif
 
         GrB_Type type ;
-        GxB_Vector_type (&type, v_batch) ;
+        GxB_Vector_type (&type, v_batch4) ;
         double tol ;
         if (type == GrB_FP32)
         {
@@ -561,40 +523,33 @@ int main (int argc, char **argv)
 
     if (total_time_x3 [1] > 0) // && ntrials > 1)
     {
-        for (int c = 1 ; c <= nchunks ; c++)
+        for (int t = 1 ; t <= nt ; t++)
         {
-            printf ("\n") ;
-            for (int t = 1 ; t <= nt ; t++)
+            if (Nthreads [t] > nthreads_max) continue ;
+            double t2 = total_time_x3 [t] / ntrials ;
+            printf ("Ave (BatchX3) %2d: %10.3f sec, rate %10.3f\n",
+                Nthreads [t], t2, 1e-6*((double) nvals) / t2) ;
+            if (n > 1000)
             {
-                if (Nthreads [t] > nthreads_max) continue ;
-                double t2 = total_time_x3 [c][t] / ntrials ;
-                printf ("Ave (BatchX3) %2d:%2d: %10.3f sec, rate %10.3f\n",
-                    c, Nthreads [t], t2, 1e-6*((double) nvals) / t2) ;
-                if (n > 1000)
-                {
-                    LAGr_log (matrix_name, "BatchX3", Nthreads [t], t2) ;
-                }
+                LAGr_log (matrix_name, "BatchX3", Nthreads [t], t2) ;
             }
         }
     }
 
     printf ("\n") ;
 
-    if (total_time_x3 [1] > 0) // && ntrials > 1)
+    if (total_time_4 [1] > 0) // && ntrials > 1)
     {
-        for (int c = 1 ; c <= nchunks ; c++)
+        printf ("\n") ;
+        for (int t = 1 ; t <= nt ; t++)
         {
-            printf ("\n") ;
-            for (int t = 1 ; t <= nt ; t++)
+            if (Nthreads [t] > nthreads_max) continue ;
+            double t2 = total_time_4 [t] / ntrials ;
+            printf ("Ave (Batch4)  %2d: %10.3f sec, rate %10.3f\n",
+                Nthreads [t], t2, 1e-6*((double) nvals) / t2) ;
+            if (n > 1000)
             {
-                if (Nthreads [t] > nthreads_max) continue ;
-                double t2 = total_time_4 [c][t] / ntrials ;
-                printf ("Ave (Batch4)  %2d:%2d: %10.3f sec, rate %10.3f\n",
-                    c, Nthreads [t], t2, 1e-6*((double) nvals) / t2) ;
-                if (n > 1000)
-                {
-                    LAGr_log (matrix_name, "Batch4", Nthreads [t], t2) ;
-                }
+                LAGr_log (matrix_name, "Batch4", Nthreads [t], t2) ;
             }
         }
     }
