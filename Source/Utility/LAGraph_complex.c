@@ -35,6 +35,7 @@
 //------------------------------------------------------------------------------
 
 // Contributed by Michel Pelletier.
+
 #include "LAGraph_internal.h"
 
 // a global value for returning the complex type in a Matrix Market file:
