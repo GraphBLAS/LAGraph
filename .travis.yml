@@ -1,0 +1,5 @@
+services:
+  - docker
+
+script:
+  - docker run -w /LAGraph -it graphblas/lagraph:latest make tests
