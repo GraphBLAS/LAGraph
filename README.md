@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/GraphBLAS/LAGraph.svg?branch=master)](https://travis-ci.org/GraphBLAS/LAGraph)
+<br />
 # LAGraph
 This is a library plus a test harness for collecting algorithms that use the
 GraphBLAS.  It contains the following files and folders:
