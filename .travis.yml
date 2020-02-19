@@ -2,4 +2,5 @@ services:
   - docker
 
 script:
-  - docker run -w /LAGraph -it graphblas/lagraph:latest make tests
+  - docker build -t graphblas/lagraph:${TRAVIS_COMMIT) .
+  - docker run -w /LAGraph -it graphblas/lagraph:${TRAVIS_COMMIT) make tests

@@ -17,5 +17,5 @@ COPY . /LAGraph
 WORKDIR /LAGraph
 RUN make clean
 RUN make library
-RUN make tests
+# RUN make tests
 RUN make install
