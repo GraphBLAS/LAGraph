@@ -34,7 +34,8 @@
 
 //------------------------------------------------------------------------------
 
-// Contributed by Michel Pelletier.
+// Contributed by Michel Pelletier. Adapted from 'usercomplex.c' code
+// in SuiteSparse Demo by Dr. Tim Davis.
 
 #include "LAGraph_internal.h"
 
