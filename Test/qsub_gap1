@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# run all GAP benchmarks (my1*)
+
+cd BetweennessCentrality
+qsub my1_BC_plat
+
+cd ../BFS
+qsub my1_BFS_plat
+
+cd ../CC
+qsub my1_CC_plat
+
+cd ../PageRank3
+qsub my1_PR_plat
+
+cd ../SSSP
+qsub my1_SSSP_plat
+
+cd ../TriangleCount
+qsub my1_TC_plat
+
