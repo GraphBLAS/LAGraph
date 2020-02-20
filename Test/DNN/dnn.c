@@ -348,7 +348,7 @@ int main (int argc, char **argv)
                 int nthreads = nthreads_list [kth] ;
                 if (nthreads > nthreads_max) break ;
                 LAGraph_set_nthreads (nthreads) ;
-                printf ("nthreads %2d: ", nthreads) ;
+                printf ("nthreads %3d: ", nthreads) ;
                 fflush (stdout) ;
 
                 //--------------------------------------------------------------

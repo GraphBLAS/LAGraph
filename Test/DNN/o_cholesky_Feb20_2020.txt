@@ -1,0 +1,47 @@
+Script started on Thu 20 Feb 2020 03:34:19 PM CST
+      _           _           _          
+  ___| |__   ___ | | ___  ___| | ___   _ 
+ / __| '_ \ / _ \| |/ _ \/ __| |/ / | | |
+| (__| | | | (_) | |  __/\__ \   <| |_| |
+ \___|_| |_|\___/|_|\___||___/_|\_\\__, |
+                                   |___/ 
+kdavis@cholesky:~/sparse/LAGraph/Test/DNN\[0;36mcholesky $[0m dir
+total 56
+ 0 [0m[01;34m2019_results[0m/   20 dnn.c       4 [01;32mgo1[0m*                        0 [01;34msave[0m/
+ 0 [01;34mbuild[0m/           0 [01;36mdnn_data[0m@   4 Makefile                   12 typescript
+ 8 CMakeLists.txt   4 [01;32mgo[0m*         4 o_cholesky_Feb20_2020.txt
+kdavis@cholesky:~/sparse/LAGraph/Test/DNN\[0;36mcholesky $[0m ./go[K[0;36mcholesky $[0m ./go[K[0;36mcholesky $[0m ./go[K[0;36mcholesky $[0m ./go[K[0;36mcholesky $[0m ./go[K[0;36mcholesky $[0m ./go
+cholesky.cs.tamu.edu
+SuiteSparse:GraphBLAS Feb 20, 2020
+type: float
+max # of nthreads: 160
+# of problems to solve: 12
+
+# neurons: 1024 bias: -0.3
+# features: 60000 read time: 3.05283 sec
+# entries in Y0: 6.37451 million
+
+--------------------------------------neurons per layer: 1024 layers: 120
+read net time 1.26749 sec
+# edges in all layers: 3.93216 million
+
+nthreads   1: soln time        37.02 sec                  rate     6.3738 (1e9 edges/sec) 
+nthreads   2: soln time        18.54 sec speedup     2.00 rate    12.7245 (1e9 edges/sec) 
+nthreads   4: soln time         9.72 sec speedup     3.81 rate    24.2695 (1e9 edges/sec) 
+nthreads   8: soln time         5.15 sec speedup     7.19 rate    45.8233 (1e9 edges/sec) 
+nthreads  16: soln time         3.28 sec speedup    11.30 rate    72.0012 (1e9 edges/sec) 
+nthreads  20: soln time         2.80 sec speedup    13.20 rate    84.1249 (1e9 edges/sec) 
+nthreads  32: soln time         2.63 sec speedup    14.09 rate    89.8337 (1e9 edges/sec) 
+nthreads  40: soln time         2.38 sec speedup    15.53 rate    98.9753 (1e9 edges/sec) 
+nthreads  64: soln time         2.52 sec speedup    14.71 rate    93.7602 (1e9 edges/sec) 
+nthreads 128: soln time         3.84 sec speedup     9.65 rate    61.4773 (1e9 edges/sec) 
+nthreads 160: soln time         3.99 sec speedup     9.28 rate    59.1711 (1e9 edges/sec) 
+
+# entries in final Y: 1.85549 million
+check time: 0.00105205 sec
+
+--------------------------------------neurons per layer: 1024 layers: 480
+read net time 3.81648 sec
+# edges in all layers: 15.7286 million
+
+nthreads   1: 
