@@ -303,14 +303,11 @@ if ( CMAKE_USE_WIN32_THREADS_INIT )
     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DHAVE_WINDOWS_THREADS " )
 endif ( )
 
-if ( BLAS_FOUND )
-    # use the dense CBLAS
-    message ( STATUS "Using dense CBLAS for faster dense matrix/vector operations" )
-    target_link_libraries ( lagraph ${BLAS_LIBRARIES} )
-else ( )
-    message ( STATUS "NOT using dense CBLAS (dense matrix/vector operations could be faster if you had it)." )
-    message ( STATUS "(requires cmake 3.13 or later)" )
-endif ( )
+# if ( BLAS_FOUND )
+#     # use the dense CBLAS
+#     message ( STATUS "Using dense CBLAS for faster dense matrix/vector operations" )
+#     target_link_libraries ( lagraph ${BLAS_LIBRARIES} )
+# endif ( )
 
 #-------------------------------------------------------------------------------
 # print final C flags
