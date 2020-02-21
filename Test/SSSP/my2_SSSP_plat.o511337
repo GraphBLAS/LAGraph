@@ -1,0 +1,128 @@
+
+########################################################################
+#      Date:           Thu Feb 20 21:24:57 PST 2020
+#    Job ID:           511337.v-qsvr-1.aidevcloud
+#      User:           u32248
+# Resources:           neednodes=1:ppn=2:plat8153,nodes=1:ppn=2:plat8153,walltime=24:00:00
+########################################################################
+
+SuiteSparse:GraphBLAS Feb 20, 2020
+threads to test:  64 32
+matrix: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+delta: 27
+sources: /home/u32248/GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 588.72 sec
+input graph: nodes: 134217726 edges: 4223264644 max nthreads 64
+# of source nodes: 64
+
+sssp12 : threads: 64 trial:  0 source   2338012 time:    16.7682 sec
+sssp12c: threads: 64 trial:  0 source   2338012 time:    18.1968 sec
+
+sssp12 : threads: 64 trial:  1 source  31997659 time:    18.2904 sec
+sssp12c: threads: 64 trial:  1 source  31997659 time:    18.2063 sec
+
+sssp12 : threads: 64 trial:  2 source  23590940 time:    17.7556 sec
+sssp12c: threads: 64 trial:  2 source  23590940 time:    26.0045 sec
+
+SuiteSparse:GraphBLAS Feb 20, 2020
+threads to test:  64 32
+matrix: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+delta: 35
+sources: /home/u32248/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 1020.55 sec
+input graph: nodes: 134217728 edges: 4294966740 max nthreads 64
+# of source nodes: 64
+
+sssp12 : threads: 64 trial:  0 source  27691419 time:    18.3526 sec
+sssp12c: threads: 64 trial:  0 source  27691419 time:    20.6745 sec
+
+sssp12 : threads: 64 trial:  1 source 121280314 time:    21.1850 sec
+sssp12c: threads: 64 trial:  1 source 121280314 time:    21.5976 sec
+
+sssp12 : threads: 64 trial:  2 source   2413431 time:    23.5600 sec
+sssp12c: threads: 64 trial:  2 source   2413431 time:    29.8916 sec
+
+SuiteSparse:GraphBLAS Feb 20, 2020
+threads to test:  64 32
+matrix: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+delta: 51
+sources: /home/u32248/GAP/GAP-twitter/GAP-twitter_sources.mtx
+read time: 204.432 sec
+input graph: nodes: 61578415 edges: 1468364884 max nthreads 64
+# of source nodes: 64
+
+sssp12 : threads: 64 trial:  0 source  12441072 time:     9.8791 sec
+sssp12c: threads: 64 trial:  0 source  12441072 time:    10.1050 sec
+
+sssp12 : threads: 64 trial:  1 source  54488257 time:    11.0910 sec
+sssp12c: threads: 64 trial:  1 source  54488257 time:    12.3695 sec
+
+sssp12 : threads: 64 trial:  2 source  25451915 time:    11.4108 sec
+sssp12c: threads: 64 trial:  2 source  25451915 time:    10.9731 sec
+
+sssp12 : threads: 64 trial:  3 source  57714473 time:    10.7436 sec
+sssp12c: threads: 64 trial:  3 source  57714473 time:    10.7407 sec
+
+sssp12 : threads: 64 trial:  4 source  14839494 time:    10.1943 sec
+sssp12c: threads: 64 trial:  4 source  14839494 time:    10.8708 sec
+
+sssp12 : threads: 64 trial:  5 source  32081104 time:     9.6710 sec
+sssp12c: threads: 64 trial:  5 source  32081104 time:    10.3914 sec
+
+sssp12 : threads: 64 trial:  6 source  52957357 time:    10.3537 sec
+sssp12c: threads: 64 trial:  6 source  52957357 time:    10.8214 sec
+
+sssp12 : threads: 64 trial:  7 source  50444380 time:    11.0040 sec
+sssp12c: threads: 64 trial:  7 source  50444380 time:    10.7863 sec
+
+sssp12 : threads: 64 trial:  8 source  49590701 time:    10.3960 sec
+sssp12c: threads: 64 trial:  8 source  49590701 time:    10.7072 sec
+
+sssp12 : threads: 64 trial:  9 source  20127816 time:    11.7815 sec
+sssp12c: threads: 64 trial:  9 source  20127816 time:    14.7782 sec
+
+SuiteSparse:GraphBLAS Feb 20, 2020
+threads to test:  64 32
+matrix: /home/u32248/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-web/GAP-web.grb
+delta: 150
+sources: /home/u32248/GAP/GAP-web/GAP-web_sources.mtx
+read time: 269.348 sec
+input graph: nodes: 50636151 edges: 1930292948 max nthreads 64
+# of source nodes: 64
+
+sssp12 : threads: 64 trial:  0 source  10219452 time:    34.8321 sec
+sssp12c: threads: 64 trial:  0 source  10219452 time:    37.0830 sec
+
+sssp12 : threads: 64 trial:  1 source  44758211 time:    39.0372 sec
+sssp12c: threads: 64 trial:  1 source  44758211 time:    38.8624 sec
+
+sssp12 : threads: 64 trial:  2 source    890671 time:    35.0712 sec
+sssp12c: threads: 64 trial:  2 source    890671 time:    36.3837 sec
+
+sssp12 : threads: 64 trial:  3 source  13843756 time:     2.1796 sec
+sssp12c: threads: 64 trial:  3 source  13843756 time:     2.1602 sec
+
+sssp12 : threads: 64 trial:  4 source  14168062 time:    34.4707 sec
+sssp12c: threads: 64 trial:  4 source  14168062 time:    33.9662 sec
+
+sssp12 : threads: 64 trial:  5 source  20906930 time:    36.1431 sec
+sssp12c: threads: 64 trial:  5 source  20906930 time:    35.8954 sec
+
+sssp12 : threads: 64 trial:  6 source  12189584 time:    35.2335 sec
+sssp12c: threads: 64 trial:  6 source  12189584 time:    34.4391 sec
+
+sssp12 : threads: 64 trial:  7 source  26352335 time:     5.1392 sec
+
+########################################################################
+# End of output for job 511337.v-qsvr-1.aidevcloud
+# Date: Fri Feb 21 07:42:57 PST 2020
+########################################################################
+
