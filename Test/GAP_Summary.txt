@@ -1,0 +1,149 @@
+--------------------------------------------------------------------------------
+Feb 20. Results on plat8153, using gcc 7.4 with v3.2.0: SET 1
+--------------------------------------------------------------------------------
+
+max 32 threads, first set of results ('black box'): my1_*_plat scripts:
+
+        #PBS -l nodes=1:ppn=2:plat8153
+        #PBS -l walltime=24:00:00
+        cd $PBS_O_WORKDIR
+        export OMP_NUM_THREADS=32
+        export KMP_AFFINITY="verbose,explicit,proclist=[0-31]"
+        export GOMP_CPU_AFFINITY="0-31"
+        numactl --interleave=all ./do_gap
+
+default method marked =, for 32 threads (same across the row)
+best result marked (*), as compared to SET 2 below.
+
+                kron        urand       twitter      web        road
+                -----       -----       -------     ----        ----
+
+n148:
+BC GrB(v4)#32   37.09 =      48.33 =    15.78 =     8.19 =      62.28 = 
+BC GrB(v4)#16   73.89        82.73      25.84      11.53        56.78
+BC GrB(v4)#8   139.24       147.89      53.99      19.96        54.18 *
+
+n150:
+BFS GrB (#32)    3.125 =     2.183 =     1.157 =    1.072 =     7.557 = 
+BFS GrB (#16)    5.193       3.477       1.740      1.410       7.515
+BFS GrB (# 8)    9.410       6.077       2.966      2.052       7.530
+BFS GrB (# 4)   18.228      11.535       5.528      3.364       7.577
+BFS GrB (# 2)   35.437      21.960      10.476      5.881       7.680
+BFS GrB (# 1)   69.960      43.963      19.815     10.638       7.897
+
+n149: do not report method sv5, just sv5b
+CC (sv5) #32    17.293      14.383      7.755       2.095       1.472
+CC (sv5) #16    29.988      23.693     13.656       2.906       1.729
+CC (sv5) #8     54.385      41.834     24.880       4.436       2.268
+CC (sv5) #4    105.110      78.758     47.752       7.741       3.533
+--
+CC (sv5b)#32     3.433 =     4.548 =    1.486 =     1.730 =     0.807 =
+CC (sv5b)#16     5.394       6.906      2.248       2.344       1.312
+CC (sv5b)#8      9.072      12.071      3.651       3.399       2.253
+CC (sv5b)#4     17.279      23.417      6.745       5.923       4.368
+
+n147: 3f is pure GraphBLAS, x4 uses import/export.  Report just 3f.
+      x4 is faster but uses openmp loops outside of GraphBLAS, so
+      save it for SET 2.
+PR 3f #32       16.541 =    18.860 =    12.891 =    6.345 =     0.919 =
+PR 3f #16       28.377      31.304      23.037     10.229       1.431
+--
+PR x4 #32       16.363      18.676      12.716      6.158       0.813  
+PR x4 #16       27.991      30.993      22.817      9.898       1.257
+
+n147:
+SSSP12  #32     16.686        .           .           .          .
+SSSP12  #16     25.049        .           .           .          .
+--
+SSSP12c #32     16.315        .           .           .          .
+SSSP12c #16     24.390        .           .           .          .
+
+n149: report dot2 only
+TC (dot) #32   1309.06      48.00       318.84      48.50       0.309
+TC (dot2)#32   1205.67 =    49.83 =     308.54 =    47.80 =     0.321 =
+
+--------------------------------------------------------------------------------
+Feb 20. Results on plat8153, using gcc 7.4 with v3.2.0: SET 2
+--------------------------------------------------------------------------------
+
+max 64 threads, 2nd 'best effort' results, from my2_*_plat scripts.
+with numactl --interleave=all, all other defaults (affinity, # threads):
+
+        #PBS -l nodes=1:ppn=2:plat8153
+        #PBS -l walltime=24:00:00
+        cd $PBS_O_WORKDIR
+        export OMP_NUM_THREADS=64
+        numactl --interleave=all ./do_gap
+
+Best result with *.
+
+                kron        urand       twitter      web        road
+                -----       -----       -------     ----        ----
+
+n148: (in progress; trying BC on road with fewer threads for SET 2)
+BC GrB(v4)#64   29.85 *     41.48 *     14.17 *     13.38       69.81
+BC GrB(v4)#32   37.18       45.50       16.15        8.42 *     61.86
+BC GrB(v4)#16   73.88       79.71       26.22       11.13       56.49 *
+
+n150: note that road is essentially the same, for all thread counts
+BFS GrB (#64)   2.817 *      2.068 *     1.103 *    1.586       7.638
+BFS GrB (#32)   3.185        2.215       1.184      1.102 *     7.479
+BFS GrB (#16)   5.220        3.425       1.761      1.372       7.455 *
+BFS GrB (# 8)   9.559        6.171       3.054      2.074       7.457
+BFS GrB (# 4)  18.144       11.463       5.560      3.408       7.501
+BFS GrB (# 2)  34.423       21.926      10.315      5.988       7.646
+
+n148: only report method sv5b
+CC (sv5) #64    15.583      13.453       7.052      2.013       1.455
+CC (sv5) #32    17.357      14.446       7.802      2.138       1.534
+CC (sv5) #16    29.384      23.530      13.148      2.730       1.727
+CC (sv5) #8     55.329      42.125      24.249      4.433       2.353
+--
+CC (sv5b)#64     3.002 *     3.931 *     1.335 *    1.718 *     0.716 *
+CC (sv5b)#32     3.476       4.602       1.474      1.759       0.817
+CC (sv5b)#16     5.237       7.213       2.151      2.169       1.245
+CC (sv5b)#8      9.437      13.073       3.731      3.376       2.282
+
+n148: 3f is pure GraphBLAS, x4 uses import/export.  Just report 3f?
+    3f is slower but more elegant, and nearly as fast.
+PR:3f #64       15.508      18.401      11.833      6.091       0.870
+PR:3f #32       16.406      18.764      12.858      6.292       0.916
+--
+PR:x4 #64       15.303 *    18.202 *    11.642 *    5.915 *     0.769 *
+PR:x4 #32       16.192      18.547      12.662      6.079       0.812
+
+n148:
+SSSP12  #64     16.578        .           .           .          .
+SSSP12  #32     16.904        .           .           .          .
+--
+SSSP12c #64     16.332        .           .           .          .
+SSSP12c #32     16.502        .           .           .          .
+
+n147: pick all dot or all dot?  a mix?
+TC (dot) #64    837.070     30.222 *    212.248 *   36.653 *    0.355
+TC (dot2)#64    829.292 *   31.356      219.430     38.040      0.345 *
+
+
+--------------------------------------------------------------------------------
+Feb 20. Results on plat8153, using gcc 7.4 with v3.2.0: SET 3
+--------------------------------------------------------------------------------
+
+all default settings (64 threads on 32 cores, default
+affinity, default numactl):
+
+        #PBS -l nodes=1:ppn=2:plat8153
+        #PBS -l walltime=24:00:00
+        cd $PBS_O_WORKDIR
+        ./do_gap
+
+Jobs submitted ... results in progress ...
+
+--------------------------------------------------------------------------------
+Feb 20. Results on plat8153, using icc .4 with v3.2.0: SET 1,2,3
+--------------------------------------------------------------------------------
+
+TODO: modify GraphBLAS to replace atomic read/writes with plain read/writes,
+and use icc.  Repeat sets 1,2,3 above.
+
+Also try clang?
+
