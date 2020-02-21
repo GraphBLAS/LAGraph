@@ -288,14 +288,15 @@ GrB_Info LAGraph_tricount   // count # of triangles
             if (n > NSAMPLES && ((double) nvals / ((double) n)) >= 10)
             {
                 // pick 1000 nodes at random and determine their degree
-                struct drand48_data buffer ;
-                srand48_r ((long int) n, &buffer) ;
+                // struct drand48_data buffer ;
+                // srand48_r ((long int) n, &buffer) ;
+                uint64_t seed = n ;
                 int64_t samples [NSAMPLES] ;
                 int64_t dsum = 0 ;
                 for (int k = 0 ; k < NSAMPLES ; k++)
                 {
-                    long int result ;
-                    lrand48_r (&buffer, &result) ;
+                    uint64_t result = LAGraph_rand64 (&seed) ;
+                    // lrand48_r (&buffer, &result) ;
                     int64_t i = result % n ;
                     int64_t d = degree [i] ;
                     samples [k] = d ;
