@@ -468,6 +468,8 @@ GrB_BinaryOp
     LAGraph_RDIV_Complex            ,
     LAGraph_RMINUS_Complex          ,
     LAGraph_SKEW_Complex            ,
+    LAGraph_PAIR_Complex            ,
+    LAGraph_ANY_Complex            ,
     LAGraph_HERMITIAN_Complex       ;
 
 //------------------------------------------------------------------------------

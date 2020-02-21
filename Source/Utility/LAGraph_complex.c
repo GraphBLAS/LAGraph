@@ -139,6 +139,25 @@ void complex_skew
     (*z) = (*x) == -(*y) ;
 }
 
+void complex_pair
+(
+    double complex *z,
+    const double complex *x,
+    const double complex *y
+)
+{
+    (*z) = ONE ;
+}
+
+void complex_any
+(
+    double complex *z,
+    const double complex *x,
+    const double complex *y
+)
+{
+    (*z) = (*y) ;
+}
 
 void complex_hermitian
 (
@@ -164,6 +183,8 @@ GrB_BinaryOp
     LAGraph_RMINUS_Complex = NULL         ,
     LAGraph_RDIV_Complex = NULL           ,
     LAGraph_SKEW_Complex = NULL           ,
+    LAGraph_PAIR_Complex = NULL           ,
+    LAGraph_ANY_Complex = NULL            ,
     LAGraph_HERMITIAN_Complex = NULL      ;
 
 //------------------------------------------------------------------------------
@@ -366,6 +387,8 @@ GrB_Info LAGraph_Complex_init ( )
     OK (GrB_BinaryOp_new (&LAGraph_TIMES_Complex       , complex_times       , C, C, C)) ;
     OK (GrB_BinaryOp_new (&LAGraph_DIV_Complex         , complex_div         , C, C, C)) ;
     OK (GrB_BinaryOp_new (&LAGraph_RDIV_Complex        , complex_rdiv        , C, C, C)) ;
+    OK (GrB_BinaryOp_new (&LAGraph_PAIR_Complex        , complex_pair        , C, C, C)) ;
+    OK (GrB_BinaryOp_new (&LAGraph_ANY_Complex         , complex_any         , C, C, C)) ;
     OK (GrB_BinaryOp_new (&LAGraph_SKEW_Complex        , complex_skew        , GrB_BOOL, C, C)) ;
     OK (GrB_BinaryOp_new (&LAGraph_HERMITIAN_Complex   , complex_hermitian   , GrB_BOOL, C, C)) ;
 
@@ -488,6 +511,8 @@ GrB_Info LAGraph_Complex_finalize ( )
     GrB_BinaryOp_free (&LAGraph_TIMES_Complex ) ;
     GrB_BinaryOp_free (&LAGraph_DIV_Complex   ) ;
     GrB_BinaryOp_free (&LAGraph_RDIV_Complex  ) ;
+    GrB_BinaryOp_free (&LAGraph_PAIR_Complex  ) ;
+    GrB_BinaryOp_free (&LAGraph_ANY_Complex  ) ;
     GrB_BinaryOp_free (&LAGraph_SKEW_Complex  ) ;
     GrB_BinaryOp_free (&LAGraph_HERMITIAN_Complex  ) ;
 
