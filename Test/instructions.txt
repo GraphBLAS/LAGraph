@@ -48,8 +48,21 @@ myjob_compile_plat_gcc contains the following:
     make CC=gcc CXX=gcc JOBS=24
     ----------------------------------------------------------------------
 
+Note that will break if you do not have the m4 command.
+
 DO NOT USE icc; IT WILL GIVE POOR PERFORMANCE, because of how it does atomics.
-I'm exploring workarounds.
+I'm exploring workarounds.  Probably can use this in
+GraphBLAS/Source/GB_atomics.h: 
+
+    #define GB_ATOMIC_READ
+    #define GB_ATOMIC_WRITE
+
+instead of the current:
+
+    #define GB_ATOMIC_READ    GB_PRAGMA (omp atomic read)
+    #define GB_ATOMIC_WRITE   GB_PRAGMA (omp atomic write)
+
+Then I think icc should be fast.
 
 You then need to convert the *mtx files to GraphBLAS binary *grb files for
 faster I/O times.  My scripts assume the matrices are in ~/GAP/GAP-xxx/*.*
@@ -71,26 +84,38 @@ just once:
     cd LAGraph/Test/BinRead
     qsub myjob_BinRead_gold
 
-When that finishes, run the tests.  All the qsub scripts are already
-in the LAGraph github.  You should be able to cut-and-paste these commands
-to run all the scripts.  For the output, see the Test/*/myjob*.o* files
-that the scripts generate.
+When that finishes, run the tests.  All the qsub scripts are already in the
+LAGraph github.  You should be able to cut-and-paste these commands to run all
+the scripts.  For the output, see the Test/*/myjob*.o* files that the scripts
+generate.
 
     cd LAGraph/Test
     cd BetweennessCentrality
-    qsub myjob_BC_gold
+    qsub my1_BC_plat
+    qsub my2_BC_plat
     cd ../BFS
-    qsub myjob_BFS_gold
+    qsub my1_BFS_plat
+    qsub my2_BFS_plat
     cd ../CC
-    qsub myjob_CC_gold
+    qsub my1_CC_plat
+    qsub my2_CC_plat
     cd ../PageRank3
-    qsub myjob_PR_gold
+    qsub my1_PR_plat
+    qsub my2_PR_plat
     cd ../SSSP
-    qsub myjob_SSSP_gold
+    qsub my1_SSSP_plat
+    qsub my2_SSSP_plat
     cd ../TriangleCount
-    qsub myjob_TC_gold
+    qsub my1_TC_plat
+    qsub my2_TC_plat
 
-In addition, each test result will be placed in a file in each
+Those run the 2 sets: "default" (set 1, the my1* jobs), and "best effort" (the
+my2* jobs).  You can also try the */my3_*_plat jobs, which use all default
+settings (including # of threads, with hyperthreading enabled by default).
+This will use whatever threads you have as the max, then it runs again with 1/2
+that number.
+
+Each test result will be placed in a file in each
 test folder, as it completes, with the name log_HOST.txt, where
 HOST is the hostname of the system that was used.
 
