@@ -39,3 +39,58 @@ Batch v4 time 40:      41.2819 (sec)
 Batch v4 time 20:      50.6125 (sec)
 Batch v4 time 10:      96.1498 (sec)
 Batch v4 time  5:     349.5834 (sec)
+Batch v4 time  2:     594.4223 (sec)
+Batch v4 time  1:    1115.8367 (sec)
+
+Trial 4 : sources: [ 48915358 122571173 6183279 86323663 ]
+
+Batch v4 time 40:      39.1528 (sec)
+Batch v4 time 20:      51.2218 (sec)
+Batch v4 time 10:     115.6960 (sec)
+Batch v4 time  5:     259.1971 (sec)
+Batch v4 time  2:     610.9660 (sec)
+Batch v4 time  1:    1120.1812 (sec)
+
+Trial 5 : sources: [ 106725780 92389938 16210738 59816700 ]
+
+Batch v4 time 40:      41.4985 (sec)
+Batch v4 time 20:      47.6002 (sec)
+Batch v4 time 10:      87.2959 (sec)
+Batch v4 time  5:     316.6584 (sec)
+Batch v4 time  2:     598.6016 (sec)
+Batch v4 time  1:    1102.7456 (sec)
+
+Trial 6 : sources: [ 111669929 102831411 113384800 43872564 ]
+
+Batch v4 time 40:      40.5765 (sec)
+Batch v4 time 20:      50.8922 (sec)
+Batch v4 time 10:      89.7214 (sec)
+Batch v4 time  5:     321.5356 (sec)
+Batch v4 time  2:     609.9392 (sec)
+Batch v4 time  1:    1145.3905 (sec)
+
+Trial 7 : sources: [ 80508827 26105648 8807516 118452455 ]
+
+Batch v4 time 40:      40.8907 (sec)
+Batch v4 time 20:      48.3665 (sec)
+Batch v4 time 10:      85.3230 (sec)
+Batch v4 time  5:     345.4105 (sec)
+Batch v4 time  2:     567.9106 (sec)
+Batch v4 time  1:    1098.2388 (sec)
+
+Trial 8 : sources: [ 121818859 42361928 29493053 98461503 ]
+
+Batch v4 time 40:      36.7882 (sec)
+Batch v4 time 20:      42.3352 (sec)
+Batch v4 time 10:      70.5405 (sec)
+Batch v4 time  5:     150.9481 (sec)
+Batch v4 time  2:     569.6686 (sec)
+Batch v4 time  1:    1075.8982 (sec)
+
+Trial 9 : sources: [ 71931337 103808468 4092345 115276241 ]
+
+Batch v4 time 40:      37.9692 (sec)
+Batch v4 time 20:      43.3725 (sec)
+Batch v4 time 10:      88.7262 (sec)
+Batch v4 time  5:     307.8199 (sec)
+Batch v4 time  2:     744.7440 (sec)
