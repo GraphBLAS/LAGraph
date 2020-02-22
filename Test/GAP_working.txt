@@ -153,7 +153,16 @@ affinity, default numactl):
         cd $PBS_O_WORKDIR
         ./do_gap
 
-Jobs submitted ... results in progress ...
+From the initial BC results, this is a lot slower.  The only difference is
+the 'numactl --interleave=all' in SET2, whereas SET3 uses the default numactl.
+Clearly, --interleave=all is faster.
+
+                kron        urand       twitter      web        road
+                -----       -----       -------     ----        ----
+n149:
+BC GrB(v4)#64   36.148      51.233      16.366      13.271      88.815
+BC GrB(v4)#32   44.334      56.770      18.153       9.006      60.846
+BC GrB(v4)#16   81.057      83.692      29.015      11.686      54.854
 
 --------------------------------------------------------------------------------
 Feb 20. Results on plat8153, using icc .4 with v3.2.0: SET 1,2,3
