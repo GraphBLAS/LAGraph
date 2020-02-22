@@ -8,3 +8,34 @@ threads to test:  40 20 10 5 2 1
 matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
 [.grb]
 Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+sources: /home/faculty/davis/GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 45.6183 sec
+A is symmetric
+transpose time: 76.6043
+
+========== input graph: nodes: 134217726 edges: 64
+
+Trial 1 : sources: [ 2338012 31997659 23590940 43400604 ]
+
+Batch v4 time 40:      42.1777 (sec)
+Batch v4 time 20:      74.9292 (sec)
+Batch v4 time 10:     137.4180 (sec)
+Batch v4 time  5:     214.4187 (sec)
+Batch v4 time  2:     623.0188 (sec)
+Batch v4 time  1:    1067.0837 (sec)
+
+Trial 2 : sources: [ 75337937 169867 104041220 94177942 ]
+
+Batch v4 time 40:      37.9323 (sec)
+Batch v4 time 20:      43.4654 (sec)
+Batch v4 time 10:      82.7273 (sec)
+Batch v4 time  5:     328.4507 (sec)
+Batch v4 time  2:     576.1303 (sec)
+Batch v4 time  1:    1071.1725 (sec)
+
+Trial 3 : sources: [ 32871357 56230002 69883037 9346345 ]
+
+Batch v4 time 40:      41.2819 (sec)
+Batch v4 time 20:      50.6125 (sec)
+Batch v4 time 10:      96.1498 (sec)
+Batch v4 time  5:     349.5834 (sec)
