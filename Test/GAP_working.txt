@@ -89,12 +89,12 @@ Best result with *.
                 -----       -----       -------     ----        ----
 
 n148: (in progress; trying BC on road with fewer threads for SET 2)
-BC GrB(v4)#64   29.85 *     41.48 *     14.17 *     13.38       69.81
+BC GrB(v4)#64   29.85       41.48 *     14.17 *     13.38       69.81
 BC GrB(v4)#32   37.18       45.50       16.15        8.42 *     61.86
 BC GrB(v4)#16   73.88       79.71       26.22       11.13       56.49 *
 
 n150:
-BC GrB(v4)#64   29.287        .           .           .           .
+BC GrB(v4)#64   29.287 *      .           .           .           .
 BC GrB(v4)#32   36.842        .           .           .           .
 BC GrB(v4)#16   73.464        .           .           .           .
 BC GrB(v4)#8   139.943        .           .           .           .
@@ -153,9 +153,8 @@ affinity, default numactl):
         cd $PBS_O_WORKDIR
         ./do_gap
 
-From the initial BC results, this is a lot slower.  The only difference is
-the 'numactl --interleave=all' in SET2, whereas SET3 uses the default numactl.
-Clearly, --interleave=all is faster.
+This is slower.  The only difference is the 'numactl --interleave=all' in SET2,
+whereas SET3 uses the default numactl.  Clearly, --interleave=all is faster.
 
                 kron        urand       twitter      web        road
                 -----       -----       -------     ----        ----
@@ -163,6 +162,25 @@ n149:
 BC GrB(v4)#64   36.148      51.233      16.366      13.271      88.815
 BC GrB(v4)#32   44.334      56.770      18.153       9.006      60.846
 BC GrB(v4)#16   81.057      83.692      29.015      11.686      54.854
+
+n149:
+BFS GrB (#64)   3.102        2.383       1.254      1.672       7.454
+BFS GrB (#32)   3.524        2.568       1.330      1.089       7.282
+BFS GrB (#16)   5.689        3.834       1.930      1.371       7.253
+BFS GrB (# 8)  10.673        6.653       3.297      2.125       7.266
+BFS GrB (# 4)  20.662       12.900       6.285      3.693       7.313
+BFS GrB (# 2)  48.449       29.402      15.046      9.311       7.422
+
+n149:
+CC (sv5) #64    17.689        .           .          .           .
+CC (sv5) #32    19.046        .           .          .           .
+CC (sv5) #16    30.015        .           .          .           .
+CC (sv5) #8       .           .           .          .           .
+--
+CC (sv5b)#64     3.350        .           .          .           .
+CC (sv5b)#32     3.887        .           .          .           .
+CC (sv5b)#16     5.471        .           .          .           .
+CC (sv5b)#8       .           .           .          .           .
 
 --------------------------------------------------------------------------------
 Feb 20. Results on plat8153, using icc .4 with v3.2.0: SET 1,2,3

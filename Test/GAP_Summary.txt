@@ -56,7 +56,7 @@ with numactl --interleave=all, all other defaults (affinity, # threads):
 
                 kron        urand       twitter      web        road
                 -----       -----       -------     ----        ----
-BC GrB          29.852      41.483      14.169      8.185      54.181
+BC GrB          29.287      41.483      14.169      8.185      54.181
 BFS GrB          2.817       2.068       1.103      1.072       7.455
 CC GrB           3.002       3.931       1.335      1.718       0.716
 PR GrB          15.303      18.202      11.642      5.915       0.769
