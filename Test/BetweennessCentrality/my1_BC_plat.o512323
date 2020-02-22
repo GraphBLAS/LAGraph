@@ -1,0 +1,180 @@
+
+########################################################################
+#      Date:           Fri Feb 21 07:53:45 PST 2020
+#    Job ID:           512323.v-qsvr-1.aidevcloud
+#      User:           u32248
+# Resources:           neednodes=1:ppn=2:plat8153,nodes=1:ppn=2:plat8153,walltime=24:00:00
+########################################################################
+
+SuiteSparse:GraphBLAS Feb 20, 2020
+threads to test:  32 16 8 4 2 1
+matrix: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+sources: /home/u32248/GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 1963.18 sec
+A is symmetric
+transpose time: 70.5378
+
+========== input graph: nodes: 134217726 edges: 64
+
+Trial 1 : sources: [ 2338012 31997659 23590940 43400604 ]
+
+Batch v4 time 32:      36.3715 (sec)
+Batch v4 time 16:     107.2964 (sec)
+Batch v4 time  8:     174.8771 (sec)
+Batch v4 time  4:     284.4589 (sec)
+Batch v4 time  2:     743.4516 (sec)
+Batch v4 time  1:    1252.5421 (sec)
+
+Trial 2 : sources: [ 75337937 169867 104041220 94177942 ]
+
+Batch v4 time 32:      33.1942 (sec)
+Batch v4 time 16:      59.1007 (sec)
+Batch v4 time  8:     120.9739 (sec)
+Batch v4 time  4:     401.1485 (sec)
+Batch v4 time  2:     688.8925 (sec)
+Batch v4 time  1:    1249.6638 (sec)
+
+Trial 3 : sources: [ 32871357 56230002 69883037 9346345 ]
+
+Batch v4 time 32:      39.7065 (sec)
+Batch v4 time 16:      66.7043 (sec)
+Batch v4 time  8:     134.7339 (sec)
+Batch v4 time  4:     430.3656 (sec)
+Batch v4 time  2:     710.9961 (sec)
+Batch v4 time  1:    1279.2167 (sec)
+
+Trial 4 : sources: [ 48915358 122571173 6183279 86323663 ]
+
+Batch v4 time 32:      33.1215 (sec)
+Batch v4 time 16:      70.0448 (sec)
+Batch v4 time  8:     157.9274 (sec)
+Batch v4 time  4:     424.1887 (sec)
+Batch v4 time  2:     692.2123 (sec)
+Batch v4 time  1:    1251.1550 (sec)
+
+Trial 5 : sources: [ 106725780 92389938 16210738 59816700 ]
+
+Batch v4 time 32:      36.3929 (sec)
+Batch v4 time 16:      60.3698 (sec)
+Batch v4 time  8:     122.2952 (sec)
+Batch v4 time  4:     416.8940 (sec)
+Batch v4 time  2:     712.5418 (sec)
+Batch v4 time  1:    1261.2275 (sec)
+
+Trial 6 : sources: [ 111669929 102831411 113384800 43872564 ]
+
+Batch v4 time 32:      34.2643 (sec)
+Batch v4 time 16:      66.4578 (sec)
+Batch v4 time  8:     125.6222 (sec)
+Batch v4 time  4:     408.1553 (sec)
+Batch v4 time  2:     702.8022 (sec)
+Batch v4 time  1:    1277.4906 (sec)
+
+Trial 7 : sources: [ 80508827 26105648 8807516 118452455 ]
+
+Batch v4 time 32:      35.5429 (sec)
+Batch v4 time 16:      66.8426 (sec)
+Batch v4 time  8:     122.0984 (sec)
+Batch v4 time  4:     411.2347 (sec)
+Batch v4 time  2:     664.4365 (sec)
+Batch v4 time  1:    1263.2560 (sec)
+
+Trial 8 : sources: [ 121818859 42361928 29493053 98461503 ]
+
+Batch v4 time 32:      31.6690 (sec)
+Batch v4 time 16:      54.8694 (sec)
+Batch v4 time  8:      99.3933 (sec)
+Batch v4 time  4:     376.9293 (sec)
+Batch v4 time  2:     677.1869 (sec)
+Batch v4 time  1:    1258.4488 (sec)
+
+Trial 9 : sources: [ 71931337 103808468 4092345 115276241 ]
+
+Batch v4 time 32:      32.5756 (sec)
+Batch v4 time 16:      64.7414 (sec)
+Batch v4 time  8:     125.3647 (sec)
+Batch v4 time  4:     404.9220 (sec)
+Batch v4 time  2:     862.5527 (sec)
+Batch v4 time  1:    1252.3447 (sec)
+
+Trial 10 : sources: [ 4649343 76656189 31312001 111334127 ]
+
+Batch v4 time 32:      37.5975 (sec)
+Batch v4 time 16:      61.5716 (sec)
+Batch v4 time  8:     139.0239 (sec)
+Batch v4 time  4:     391.9078 (sec)
+Batch v4 time  2:     691.8784 (sec)
+Batch v4 time  1:    1268.9410 (sec)
+
+Trial 11 : sources: [ 100962918 41823215 22631240 42848461 ]
+
+Batch v4 time 32:      54.8872 (sec)
+Batch v4 time 16:      87.3427 (sec)
+Batch v4 time  8:     145.6761 (sec)
+Batch v4 time  4:     354.6091 (sec)
+Batch v4 time  2:     726.2690 (sec)
+Batch v4 time  1:    1244.0240 (sec)
+
+Trial 12 : sources: [ 79485148 106818742 73347974 78848445 ]
+
+Batch v4 time 32:      31.0167 (sec)
+Batch v4 time 16:      52.5801 (sec)
+Batch v4 time  8:     106.6548 (sec)
+Batch v4 time  4:     376.5371 (sec)
+Batch v4 time  2:     661.3023 (sec)
+Batch v4 time  1:    1229.3968 (sec)
+
+Trial 13 : sources: [ 109920510 121492133 101037296 15438600 ]
+
+Batch v4 time 32:      32.8700 (sec)
+Batch v4 time 16:     109.1487 (sec)
+Batch v4 time  8:     188.5211 (sec)
+Batch v4 time  4:     371.4732 (sec)
+Batch v4 time  2:     711.5548 (sec)
+Batch v4 time  1:    1260.5593 (sec)
+
+Trial 14 : sources: [ 4584784 124503845 87241743 108297008 ]
+
+Batch v4 time 32:      42.9592 (sec)
+Batch v4 time 16:     110.7466 (sec)
+Batch v4 time  8:     160.8364 (sec)
+Batch v4 time  4:     491.1209 (sec)
+Batch v4 time  2:     716.9266 (sec)
+Batch v4 time  1:    1264.5524 (sec)
+
+Trial 15 : sources: [ 33955082 79934823 8608481 82435063 ]
+
+Batch v4 time 32:      35.1890 (sec)
+Batch v4 time 16:      64.1991 (sec)
+Batch v4 time  8:     133.9880 (sec)
+Batch v4 time  4:     421.9455 (sec)
+Batch v4 time  2:     693.9735 (sec)
+Batch v4 time  1:    1265.2313 (sec)
+
+Trial 16 : sources: [ 46579271 515421 121530467 127978736 ]
+
+Batch v4 time 32:      33.5771 (sec)
+Batch v4 time 16:      60.2876 (sec)
+Batch v4 time  8:     119.0160 (sec)
+Batch v4 time  4:     413.2707 (sec)
+Batch v4 time  2:     726.3411 (sec)
+Batch v4 time  1:    1259.8086 (sec)
+
+ntrials: 16
+
+
+Ave (Batch4)  32:     36.308 sec, rate      0.000
+Ave (Batch4)  16:     72.644 sec, rate      0.000
+Ave (Batch4)   8:    136.063 sec, rate      0.000
+Ave (Batch4)   4:    398.698 sec, rate      0.000
+Ave (Batch4)   2:    711.457 sec, rate      0.000
+Ave (Batch4)   1:   1258.616 sec, rate      0.000
+./build/gap_bc_test: all tests passed
+
+########################################################################
+# End of output for job 512323.v-qsvr-1.aidevcloud
+# Date: Sat Feb 22 05:06:43 PST 2020
+########################################################################
+
