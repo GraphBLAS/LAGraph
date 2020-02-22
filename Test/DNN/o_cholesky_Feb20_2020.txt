@@ -250,3 +250,6 @@ read net time 1103.34 sec
 
 nthreads   1: 
 
+soln time     57184.16 sec                  rate     4.2248 (1e9 edges/sec) 
+nthreads   2: soln time     30105.87 sec speedup     1.90 rate     8.0247 (1e9 edges/sec) 
+nthreads   4: 
