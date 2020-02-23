@@ -60,7 +60,7 @@ BC GrB          29.287      41.483      14.169      8.185      54.181
 BFS GrB          2.817       2.068       1.103      1.072       7.455
 CC GrB           3.002       3.931       1.335      1.718       0.716
 PR GrB          15.303      18.202      11.642      5.915       0.769
-SSSP GrB        16.315      18.954       7.634     11.981      62.739
+SSSP GrB        16.315      18.870       7.634     11.981      62.739
 TC GrB         829.292      30.222     212.248     36.653       0.321
 
 BC:  same as SET 1, but with 64 threads for kron, urand, web;
@@ -82,13 +82,15 @@ PR:  using method x4 (import/export) and 64 threads for all matrices
      maybe just report 3f since it's pure GraphBLAS and only slightly
      slower?
 
-SSSP: same as SET1, except using 16 threads for road.
+SSSP: same as SET1 (32 threads for each, except using 16 threads for
+    road, and 64 for urand).
     TODO: SSSP for road is probably faster with even fewer threads.
     Testing in progress.
 
 TC:  using 64 for all but road, and 'dot' method instead of the default
     'dot2' for urand, twitter, and web.  Road graph with 32 threads
-    (same as SET1).  The primary difference is to use 64 threads:
+    (same as SET1).  The primary difference is to use 64 threads
+    for all but road:
                 kron        urand       twitter      web        road
                 -----       -----       -------     ----        ----
 TC (dot) #64    837.070     30.222 *    212.248 *   36.653 *    0.355
