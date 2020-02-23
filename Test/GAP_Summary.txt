@@ -61,7 +61,7 @@ BFS GrB          2.767       2.068       1.043      1.010       7.455
 CC GrB           3.002       3.931       1.335      1.718       0.716
 PR GrB          15.303      18.202      11.642      5.915       0.769
 SSSP GrB        16.315      18.870       7.634     11.981      62.739
-TC GrB         829.292      30.222     212.248     36.653       0.300
+TC GrB         829.292      29.849     197.667     36.653       0.300
 
 BC:  same as SET 1, but with 64 threads for kron, urand, web;
      32 threads for web, 8 threads for road.
