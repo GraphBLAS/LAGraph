@@ -42,7 +42,7 @@ autotuning by default for all of its parallel regions, so these results are
 presented above.
 
 --------------------------------------------------------------------------------
-Feb 20. Results on plat8153, using gcc 7.4 with v3.2.0: SET 2
+Feb 20. Results on plat8153, using gcc 7.4 or icc 19.1, with v3.2.0: SET 2
 --------------------------------------------------------------------------------
 
 max 64 threads, 2nd 'best effort' results, from my2_*_plat scripts.
@@ -57,11 +57,11 @@ with numactl --interleave=all, all other defaults (affinity, # threads):
                 kron        urand       twitter      web        road
                 -----       -----       -------     ----        ----
 BC GrB          29.287      41.483      14.169      8.185      54.181
-BFS GrB          2.817       2.068       1.103      1.072       7.455
+BFS GrB          2.767       2.068       1.043      1.010       7.455
 CC GrB           3.002       3.931       1.335      1.718       0.716
 PR GrB          15.303      18.202      11.642      5.915       0.769
 SSSP GrB        16.315      18.870       7.634     11.981      62.739
-TC GrB         829.292      30.222     212.248     36.653       0.321
+TC GrB         829.292      30.222     212.248     36.653       0.300
 
 BC:  same as SET 1, but with 64 threads for kron, urand, web;
      32 threads for web, 8 threads for road.
