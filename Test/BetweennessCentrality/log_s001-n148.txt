@@ -238,3 +238,123 @@ max # of threads: 64
 SuiteSparse:GraphBLAS Feb 20, 2020
 Message: /home/u32248/GAP/GAP-road/GAP-road.grb : Batch4
 # threads used: 16 time: 56.4926
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Sun Feb 23 08:59:30 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : Batch4
+# threads used: 64 time: 32.2227
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Sun Feb 23 08:59:30 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : Batch4
+# threads used: 32 time: 42.6444
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Sun Feb 23 08:59:30 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : Batch4
+# threads used: 16 time: 84.0041
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Sun Feb 23 10:05:55 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : Batch4
+# threads used: 64 time: 44.8991
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Sun Feb 23 10:05:55 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : Batch4
+# threads used: 32 time: 53.8673
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Sun Feb 23 10:05:55 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : Batch4
+# threads used: 16 time: 90.7092
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Sun Feb 23 10:28:08 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb : Batch4
+# threads used: 64 time: 16.1419
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Sun Feb 23 10:28:08 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb : Batch4
+# threads used: 32 time: 17.3589
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Sun Feb 23 10:28:08 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb : Batch4
+# threads used: 16 time: 29.4401
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Sun Feb 23 10:40:09 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-web/GAP-web.grb : Batch4
+# threads used: 64 time: 7.99157
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Sun Feb 23 10:40:09 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-web/GAP-web.grb : Batch4
+# threads used: 32 time: 8.27834
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Sun Feb 23 10:40:09 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-web/GAP-web.grb : Batch4
+# threads used: 16 time: 11.3002
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Sun Feb 23 11:35:28 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-road/GAP-road.grb : Batch4
+# threads used: 64 time: 79.2781
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Sun Feb 23 11:35:28 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-road/GAP-road.grb : Batch4
+# threads used: 32 time: 66.2968
+
+From: /home/u32248/LAGraph/Test/BetweennessCentrality/gap_bc_test.c
+Date: Sun Feb 23 11:35:28 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 64
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-road/GAP-road.grb : Batch4
+# threads used: 16 time: 61.0476
