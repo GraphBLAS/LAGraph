@@ -252,4 +252,21 @@ nthreads   1:
 
 soln time     57184.16 sec                  rate     4.2248 (1e9 edges/sec) 
 nthreads   2: soln time     30105.87 sec speedup     1.90 rate     8.0247 (1e9 edges/sec) 
-nthreads   4: 
+nthreads   4: soln time     16432.37 sec speedup     3.48 rate    14.7022 (1e9 edges/sec) 
+nthreads   8: soln time      9157.63 sec speedup     6.24 rate    26.3815 (1e9 edges/sec) 
+nthreads  16: soln time      5492.03 sec speedup    10.41 rate    43.9896 (1e9 edges/sec) 
+nthreads  20: soln time      5039.76 sec speedup    11.35 rate    47.9372 (1e9 edges/sec) 
+nthreads  32: soln time      3754.85 sec speedup    15.23 rate    64.3413 (1e9 edges/sec) 
+nthreads  40: soln time      3980.91 sec speedup    14.36 rate    60.6877 (1e9 edges/sec) 
+nthreads  64: soln time      3452.00 sec speedup    16.57 rate    69.9860 (1e9 edges/sec) 
+nthreads 128: soln time      2902.40 sec speedup    19.70 rate    83.2385 (1e9 edges/sec) 
+nthreads 160: soln time      2843.68 sec speedup    20.11 rate    84.9576 (1e9 edges/sec) 
+
+# entries in final Y: 130.679 million
+check time: 0.0304331 sec
+all tests passed
+kdavis@cholesky:~/sparse/LAGraph/Test/DNN\[0;36mcholesky $[0m 
+kdavis@cholesky:~/sparse/LAGraph/Test/DNN\[0;36mcholesky $[0m 
+kdavis@cholesky:~/sparse/LAGraph/Test/DNN\[0;36mcholesky $[0m 
+kdavis@cholesky:~/sparse/LAGraph/Test/DNN\[0;36mcholesky $[0m 
+kdavis@cholesky:~/sparse/LAGraph/Test/DNN\[0;36mcholesky $[0m 
