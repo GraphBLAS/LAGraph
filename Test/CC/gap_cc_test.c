@@ -53,7 +53,7 @@
     GrB_free (&A) ;         \
 }
 
-#define NTHREAD_LIST 4
+#define NTHREAD_LIST 1
 #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 6

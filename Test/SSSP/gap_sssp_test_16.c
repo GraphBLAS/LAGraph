@@ -46,8 +46,8 @@
 
 #include "sssp_test.h"
 
-#define NTHREAD_LIST 5
-#define THREAD_LIST 16,8,4,2,1
+#define NTHREAD_LIST 2
+#define THREAD_LIST 0
 
 #define LAGRAPH_FREE_ALL            \
 {                                   \

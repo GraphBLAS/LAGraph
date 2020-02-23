@@ -1,0 +1,8 @@
+
+From: /home/u32248/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sun Feb 23 06:35:27 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 32
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : w/tree:pushpull
+# threads used: 32 time: 3.07065

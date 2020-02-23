@@ -1,0 +1,8 @@
+
+From: /home/u32248/LAGraph/Test/PageRank3/gap_pr_test.c
+Date: Sun Feb 23 06:37:58 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 32
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : pagerank:3f
+# threads used: 32 time: 16.319

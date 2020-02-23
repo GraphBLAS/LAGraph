@@ -291,6 +291,9 @@ for (int tt = 1 ; tt <= nt ; tt++)
 {
     int nthreads = Nthreads [tt] ;
     if (nthreads > nthreads_max) continue ;
+
+    if (nthreads == 64) { printf ("SSSP: 64 threads; skipped\n") ; continue ; }
+
     LAGraph_set_nthreads (nthreads) ;
 
     double total_time1 = 0 ;

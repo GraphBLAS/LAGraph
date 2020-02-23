@@ -39,7 +39,7 @@ See LICENSE file for more details.
 // usage:
 // p3test < in > out
 
-#define NTHREAD_LIST 2
+#define NTHREAD_LIST 1
 #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 6
