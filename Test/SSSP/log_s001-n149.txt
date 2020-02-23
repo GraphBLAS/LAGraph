@@ -1,0 +1,16 @@
+
+From: /home/u32248/LAGraph/Test/SSSP/gap_sssp_test.c
+Date: Sat Feb 22 19:42:59 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 16
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : SSSP12
+# threads used: 16 time: 25.2716
+
+From: /home/u32248/LAGraph/Test/SSSP/gap_sssp_test.c
+Date: Sat Feb 22 19:42:59 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 16
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : SSSP12c
+# threads used: 16 time: 24.7582
