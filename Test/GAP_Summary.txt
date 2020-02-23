@@ -59,28 +59,33 @@ with numactl --interleave=all, all other defaults (affinity, # threads):
 BC GrB          29.287      41.483      14.169      8.185      54.181
 BFS GrB          2.767       2.068       1.043      1.010       7.455
 CC GrB           3.002       3.931       1.335      1.718       0.716
-PR GrB          15.303      18.202      11.642      5.915       0.769
+PR GrB          15.258      18.083      11.642      5.643       0.769
 SSSP GrB        16.315      18.870       7.634     11.981      62.739
-TC GrB         829.292      29.849     197.667     36.653       0.300
+TC GrB         829.292      29.849     197.667     36.653       0.292
 
 BC:  same as SET 1, but with 64 threads for kron, urand, web;
      32 threads for web, 8 threads for road.
+     using gcc exclusively.
 
-BFS: same as SET 1, but with 64 threads for kron, urand, web;
-     32 threads for web, 16 threads for road
+BFS: same as SET 1, but with 64 threads for kron, urand, web, web;
+     web, 16 threads for road
      (but results almost identical for all # threads for road)
+     icc: kron, twitter, web.  gcc: urand, road.
 
-CC:  same as SET 1, but with 64 threads for all matrices
+CC:  same as SET 1, but with 64 threads for all matrices.
+     using gcc exclusively.
 
 PR:  using method x4 (import/export) and 64 threads for all matrices
-    (method 3f, pure GraphBLAS nearly as fast, however).  For comparison,
-    all results with 64 threads:
+     (method 3f, pure GraphBLAS nearly as fast, however).  For comparison,
+     all results with 64 threads:
                 kron        urand       twitter      web        road
                 -----       -----       -------     ----        ----
      3f,#64:    15.508      18.401      11.833      6.091       0.870
      x4,#64:    15.303      18.202      11.642      5.915       0.769
      maybe just report 3f since it's pure GraphBLAS and only slightly
      slower?
+     PR:x4 is faster with icc for kron, urand, and web.
+     gcc is used for twitter and road.
 
 SSSP: same as SET1 (32 threads for each, except using 16 threads for
     road, and 64 for urand).
@@ -90,11 +95,14 @@ SSSP: same as SET1 (32 threads for each, except using 16 threads for
 TC:  using 64 for all but road, and 'dot' method instead of the default
     'dot2' for urand, twitter, and web.  Road graph with 32 threads
     (same as SET1).  The primary difference is to use 64 threads
-    for all but road:
-                kron        urand       twitter      web        road
-                -----       -----       -------     ----        ----
-TC (dot) #64    837.070     30.222 *    212.248 *   36.653 *    0.355
-TC (dot2)#64    829.292 *   31.356      219.430     38.040      0.345 *
+    for all but road. (results on gcc):
+                    kron        urand       twitter      web        road
+                    -----       -----       -------     ----        ----
+    TC (dot) #64    837.070     30.222 *    212.248 *   36.653 *    0.355
+    TC (dot2)#64    829.292 *   31.356      219.430     38.040      0.345 *
+
+    TC with icc is faster for urand, twitter, road.  using gcc for web.
+    kron: TODO (in progress).
 
 SuiteSparse:GraphBLAS has an autotuning mechanism for selecting the number of
 threads to use in each parallel region of each internal kernel.  It uses fewer

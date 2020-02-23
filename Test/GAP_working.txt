@@ -24,12 +24,12 @@ BC GrB(v4)#16   73.89        82.73      25.84      11.53        56.78
 BC GrB(v4)#8   139.24       147.89      53.99      19.96        54.18 *
 
 n149:
-BC GrB(v4)#32   36.308         .          .          .            .
-BC GrB(v4)#16   72.644         .          .          .            .
-BC GrB(v4)#8   136.063         .          .          .            .
-BC GrB(v4)#4   398.698         .          .          .            .
-BC GrB(v4)#2   711.457         .          .          .            .
-BC GrB(v4)#1  1258.620         .          .          .            .
+BC GrB(v4)#32   36.308      (job terminated; results not needed)
+BC GrB(v4)#16   72.644
+BC GrB(v4)#8   136.063
+BC GrB(v4)#4   398.698
+BC GrB(v4)#2   711.457
+BC GrB(v4)#1  1258.620
 
 n150:
 BFS GrB (#32)    3.125 =     2.183 =     1.157 =    1.072 =     7.557 = 
@@ -208,8 +208,7 @@ Feb 23. Results on plat8153, using icc 19.1.0.20191031 with v3.2.0: SET 1
 
 modified GraphBLAS to replace atomic read/writes with plain read/writes,
 and use icc.  Repeat set 1 above.  Summary: gcc 7.4 is faster than icc 19.1,
-in most cases.  Exceptions noted with (*).  Best result for SET2, above,
-noted with ***
+in most cases.  Exceptions noted with (*).
 
                 kron        urand       twitter      web        road
                 -----       -----       -------     ----        ----
@@ -219,7 +218,7 @@ BC GrB(v4)#16   82.748       95.567     29.062     20.792       62.516
 BC GrB(v4)#8   155.540      172.673     59.900     66.945       59.450
 
 n148:
-BFS GrB (#32)    3.071 *      2.549      1.152      1.032 ***    8.280
+BFS GrB (#32)    3.071 *      2.549      1.152      1.032 *      8.280
 BFS GrB (#16)    5.092        4.222      1.736      1.365        8.258
 
 n149:
@@ -237,15 +236,15 @@ SSSP12  #16     26.673       30.830     11.954     12.490         .
 SSSP12c #32     17.522       19.833      8.244     11.644         .
 SSSP12c #16     27.220       31.704     12.029     12.925         .
 
-TC (dot) #32  1331.62        45.940 *  307.678 *   53.410        0.300 ***
-TC (dot2)#32      .          45.635 *  378.234     60.785        0.312
+TC (dot) #32  1331.621       45.940 *  307.678 *   53.410        0.300
+TC (dot2)#32  1523.083       45.635 *  378.234     60.785        0.312
 
 --------------------------------------------------------------------------------
 Feb 23. Results on plat8153, using icc 19.1.0.20191031 with v3.2.0: SET 2
 --------------------------------------------------------------------------------
 
 modified GraphBLAS to replace atomic read/writes with plain read/writes,
-and use icc.  Repeat set 2 above.
+and use icc.  Repeat set 2 above.  Best result for SET 2 marked as (***).
 
                 kron        urand       twitter      web        road
                 -----       -----       -------     ----        ----
@@ -264,19 +263,14 @@ CC (sv5) #64    15.696       13.389      7.160      2.016        1.466
 CC (sv5b)#64     3.104        4.092      1.414      1.884        0.805
 
 n150:
-PR 3f #64       15.426       18.257     11.880       .            .
-PR x4 #64       15.258       18.083     11.719       .            .
+PR 3f #64       15.426       18.257     11.880      5.790        0.956
+PR x4 #64       15.258***    18.083***  11.719      5.643 ***    0.859
 
-n147:
-SSSP12  #64       .            .          .          .            .
-SSSP12  #32     17.708         .          .          .            .
-SSSP12  #16       .            .          .          .            .
---
-SSSP12c #64       .            .          .          .            .
-SSSP12c #32     17.824         .          .          .            .
-SSSP12c #16       .            .          .          .            .
+n147: (just 32 threads)
+SSSP12  #32     17.708       20.007       .          .            .
+SSSP12c #32     17.824       20.398       .          .            .
 
 n148:
-TC (dot) #64      .          29.849*** 197.667***    .            .
-TC (dot2)#64      .          30.149    254.442       .            .
+TC (dot) #64      .          29.849*** 197.667***  39.253        0.292 ***
+TC (dot2)#64      .          30.149    254.442     44.536        0.301
 
