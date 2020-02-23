@@ -190,3 +190,19 @@ max # of threads: 16
 SuiteSparse:GraphBLAS Feb 20, 2020
 Message: /home/u32248/GAP/GAP-road/GAP-road.grb : SSSP12c
 # threads used: 16 time: 62.7393
+
+From: /home/u32248/LAGraph/Test/SSSP/gap_sssp_test.c
+Date: Sun Feb 23 13:40:35 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 32
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : SSSP12
+# threads used: 32 time: 17.7081
+
+From: /home/u32248/LAGraph/Test/SSSP/gap_sssp_test.c
+Date: Sun Feb 23 13:40:37 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 32
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : SSSP12c
+# threads used: 32 time: 17.8241
