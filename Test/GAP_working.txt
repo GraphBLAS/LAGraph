@@ -129,12 +129,18 @@ PR:3f #32       16.406      18.764      12.858      6.292       0.916
 PR:x4 #64       15.303 *    18.202 *    11.642 *    5.915 *     0.769 *
 PR:x4 #32       16.192      18.547      12.662      6.079       0.812
 
-n148:
-SSSP12  #64     16.578      18.983       9.869      26.906      in progress
-SSSP12  #32     16.904      18.870 *     8.012      12.001 *    in progress
+SSSP12  #64     16.578      18.983       9.869      26.906      -
+SSSP12  #32     16.904      18.870 *     8.012      12.001 *    -
 --
-SSSP12c #64     16.332 *    19.490      10.163      27.484      in progress
-SSSP12c #32     16.502      19.178       7.901 *    12.278      in progress
+SSSP12c #64     16.332 *    19.490      10.163      27.484      -
+SSSP12c #32     16.502      19.178       7.901 *    12.278      -
+
+n149:
+SSSP12  #16     25.272      27.239      11.245      12.383     65.014
+SSSP12  #8      45.601      27.820      19.469      16.306      .
+--
+SSSP12c #16     24.758      49.201      11.134      12.708     65.216
+SSSP12c #8      44.635      50.269      19.292      16.783      .
 
 n147: pick all dot or all dot?  a mix?
 TC (dot) #64    837.070     30.222 *    212.248 *   36.653 *    0.355
@@ -154,7 +160,8 @@ affinity, default numactl):
         ./do_gap
 
 This is slower.  The only difference is the 'numactl --interleave=all' in SET2,
-whereas SET3 uses the default numactl.  Clearly, --interleave=all is faster.
+whereas SET3 uses the default numactl.  Clearly, --interleave=all is faster,
+regardless of the method and thread count.
 
                 kron        urand       twitter      web        road
                 -----       -----       -------     ----        ----
@@ -183,18 +190,93 @@ CC (sv5b)#16     5.471       7.567       2.334      2.274       1.263
 CC (sv5b)#8      9.822      14.269       3.993      3.666       2.295
 
 n149:
-PR:3f #64       18.223      24.086
-PR:3f #32       18.611      24.373
+PR:3f #64       18.223      24.086      12.707      8.562       0.855
+PR:3f #32       18.611      24.373      13.004      8.087       0.997
 --
-PR:x4 #64       15.633      21.176
-PR:x4 #32       16.455        .
+PR:x4 #64       15.633      21.176      11.855      8.458       0.783
+PR:x4 #32       16.455      21.374      12.806      8.192       0.793
+
+SSSP: terminated (not enough plat8153 nodes up and running)
+
+n147:
+TC (dot) #64    841.811     31.400     214.305      38.680      0.463
+TC (dot2)#64    828.117     32.544     219.529      39.153      0.366
 
 --------------------------------------------------------------------------------
-Feb 20. Results on plat8153, using icc .4 with v3.2.0: SET 1,2,3
+Feb 23. Results on plat8153, using icc 19.1.0.20191031 with v3.2.0: SET 1
 --------------------------------------------------------------------------------
 
-TODO: modify GraphBLAS to replace atomic read/writes with plain read/writes,
-and use icc.  Repeat sets 1,2,3 above.
+modified GraphBLAS to replace atomic read/writes with plain read/writes,
+and use icc.  Repeat set 1 above.  Summary: gcc 7.4 is faster than icc 19.1,
+in most cases.  Exceptions noted with (*).  Best result for SET2, above,
+noted with ***
 
-Also try clang?
+                kron        urand       twitter      web        road
+                -----       -----       -------     ----        ----
+n147:
+BC GrB(v4)#32   41.244       53.321     17.484      8.210       66.945
+BC GrB(v4)#16   82.748       95.567     29.062     20.792       62.516
+BC GrB(v4)#8   155.540      172.673     59.900     66.945       59.450
+
+n148:
+BFS GrB (#32)    3.071 *      2.549      1.152      1.032 ***    8.280
+BFS GrB (#16)    5.092        4.222      1.736      1.365        8.258
+
+n149:
+CC (sv5) #32    17.266       14.269      7.828      2.104        1.425
+CC (sv5b)#32     3.612        4.764      1.585      1.864        0.867
+
+n150:
+PR 3f #32       16.319 *     18.476 *   12.898      6.011        0.980
+PR x4 #32       16.098       18.257     12.799      5.810        0.876
+
+n149:
+SSSP12  #32     17.380       19.405      8.257     11.390         .
+SSSP12  #16     26.673       30.830     11.954     12.490         .
+--
+SSSP12c #32     17.522       19.833      8.244     11.644         .
+SSSP12c #16     27.220       31.704     12.029     12.925         .
+
+TC (dot) #32  1331.62        45.940 *  307.678 *   53.410        0.300 ***
+TC (dot2)#32      .          45.635 *  378.234     60.785        0.312
+
+--------------------------------------------------------------------------------
+Feb 23. Results on plat8153, using icc 19.1.0.20191031 with v3.2.0: SET 2
+--------------------------------------------------------------------------------
+
+modified GraphBLAS to replace atomic read/writes with plain read/writes,
+and use icc.  Repeat set 2 above.
+
+                kron        urand       twitter      web        road
+                -----       -----       -------     ----        ----
+
+n148:
+BC GrB(v4)#64   32.223       44.899      16.142      7.992       79.278
+BC GrB(v4)#32   42.644       53.867      17.359      8.278       66.297
+BC GrB(v4)#16   84.004       90.709      29.440     11.300       61.048
+
+n147:
+BFS GrB (#64)    2.767 ***    2.252      1.043 ***  1.010 ***    8.408
+BFS GrB (#32)    3.099        2.534      1.147      1.032        8.169
+
+n148:
+CC (sv5) #64    15.696       13.389      7.160      2.016        1.466
+CC (sv5b)#64     3.104        4.092      1.414      1.884        0.805
+
+n150:
+PR 3f #64       15.426       18.257     11.880       .            .
+PR x4 #64       15.258       18.083     11.719       .            .
+
+n147:
+SSSP12  #64       .            .          .          .            .
+SSSP12  #32     17.708         .          .          .            .
+SSSP12  #16       .            .          .          .            .
+--
+SSSP12c #64       .            .          .          .            .
+SSSP12c #32     17.824         .          .          .            .
+SSSP12c #16       .            .          .          .            .
+
+n148:
+TC (dot) #64      .          29.849*** 197.667***    .            .
+TC (dot2)#64      .          30.149    254.442       .            .
 
