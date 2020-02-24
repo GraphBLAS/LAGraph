@@ -76,10 +76,130 @@
     FOPENR(filename) ;                                      \
     OK (LAGraph_mmread (&D, f)) ;                           \
     fclose(f);                                              \
-    OK (LAGraph_isequal(&result, C, D, APPROX_Complex));    \
-    assert(result);                                         \
+    OK (LAGraph_isequal(&bval, C, D, APPROX_Complex));      \
+    if (!bval)                                              \
+      exit(1);                                              \
 }                                                           \
 
+#define GET(M, I, J)                            \
+  {                                             \
+    OK(GrB_Matrix_extractElement_UDT(           \
+    &val,                                       \
+    M,                                          \
+    I,                                          \
+    J));                                        \
+  }                                             \
+
+#define GET_BOOL(M, I, J)                       \
+  {                                             \
+    OK(GrB_Matrix_extractElement_BOOL(          \
+    &bval,                                      \
+    M,                                          \
+    I,                                          \
+    J));                                        \
+  }                                             \
+
+#define GET_DOUBLE(M, I, J)                     \
+  {                                             \
+    OK(GrB_Matrix_extractElement_FP64(          \
+    &dval,                                      \
+    M,                                          \
+    I,                                          \
+    J));                                        \
+  }                                             \
+
+#define SET(M, I, J, V)                         \
+  {                                             \
+    val = V;                                    \
+    OK(GrB_Matrix_setElement_UDT(               \
+    M,                                          \
+    &val,                                       \
+    I,                                          \
+    J));                                        \
+  }                                             \
+
+#define SET_DOUBLE(M, I, J, V)                  \
+  {                                             \
+    dval = V;                                   \
+    OK(GrB_Matrix_setElement_FP64(              \
+    M,                                          \
+    dval,                                       \
+    I,                                          \
+    J));                                        \
+  }                                             \
+
+#define ZERO CMPLX(0, 0)
+#define ONE CMPLX(1, 0)
+#define LL CMPLX(1.0, 1.0)
+#define RR CMPLX(2.0, 2.0)
+
+#define TEST_BINOP(L, R, OP, V)                             \
+  {                                                         \
+    SET(A, 1, 1, L);                                        \
+    SET(B, 1, 1, R);                                        \
+    OK(GrB_eWiseAdd                                         \
+       (C, NULL, NULL, OP, A, B, NULL)) ;                   \
+    GET(C, 1, 1);                                           \
+    printf("%s, %f + i%f\n", #OP, creal(val), cimag(val));  \
+    if (val != V)                                           \
+      exit(1);                                              \
+  }                                                         \
+
+#define TEST_BINOP_BOOL(L, R, OP, V)                        \
+  {                                                         \
+    SET(A, 1, 1, L);                                        \
+    SET(B, 1, 1, R);                                        \
+    OK(GrB_eWiseMult                                        \
+       (C, NULL, NULL, OP, A, B, NULL)) ;                   \
+    GET_BOOL(C, 1, 1);                                      \
+    printf("%s, %i\n", #OP, bval);                          \
+    if (bval != V)                                          \
+      exit(1);                                              \
+  }                                                         \
+
+#define TEST_UOP(L, OP, V)                                  \
+  {                                                         \
+    SET(A, 1, 1, L);                                        \
+    OK(GrB_apply                                            \
+       (C, NULL, NULL, OP, A, NULL)) ;                      \
+    GET(C, 1, 1);                                           \
+    printf("%s, %f + i%f\n", #OP, creal(val), cimag(val));  \
+    if (val != V)                                           \
+      exit(1);                                              \
+  }                                                         \
+
+#define TEST_UOP_BOOL(L, OP, V)                             \
+  {                                                         \
+    SET(A, 1, 1, L);                                        \
+    OK(GrB_apply                                            \
+       (C, NULL, NULL, OP, A, NULL)) ;                      \
+    GET_BOOL(C, 1, 1);                                      \
+    printf("%s, %i\n", #OP, bval);                          \
+    if (bval != V)                                          \
+      exit(1);                                              \
+  }                                                         \
+
+#define TEST_UOP_DOUBLE(L, OP, V)                           \
+  {                                                         \
+    SET(A, 1, 1, L);                                        \
+    OK(GrB_apply                                            \
+       (C, NULL, NULL, OP, A, NULL)) ;                      \
+    GET_DOUBLE(C, 1, 1);                                    \
+    printf("%s, %f\n", #OP, dval);                          \
+    if (dval != V)                                          \
+      exit(1);                                              \
+  }                                                         \
+
+#define TEST_UOP_CMPLX(L, OP, V)                            \
+  {                                                         \
+    SET_DOUBLE(A, 1, 1, L);                                 \
+    OK(GrB_apply                                            \
+       (C, NULL, NULL, OP, A, NULL)) ;                      \
+    GET(C, 1, 1);                                           \
+    printf("%s, %f + i%f\n", #OP, creal(val), cimag(val));  \
+    if (val != V)                                           \
+      exit(1);                                              \
+  }                                                         \
 
 void complex_approx
 (
@@ -111,11 +231,12 @@ int main (int argc, char **argv)
 
     GrB_BinaryOp APPROX_Complex;
 
-    GrB_Matrix A = NULL, B = NULL, C = NULL, D = NULL;
+    GrB_Matrix A = NULL, B = NULL, C = NULL, D = NULL, E = NULL;
     uint64_t aseed = 42;
     uint64_t bseed = 43;
     double complex val = 3.0 + 4.0i;
-    bool result = false;
+    bool bval = false;
+    double dval = 0.0;
     FILE *f = NULL ;
 
     OK (GrB_BinaryOp_new(
@@ -154,6 +275,9 @@ int main (int argc, char **argv)
     OK(GrB_Matrix_new
        (&C, LAGraph_Complex, 2, 2)) ;
 
+    OK(GrB_Matrix_new
+       (&E, GrB_BOOL, 2, 2)) ;
+
     // Add matrices
 
     OK(GrB_eWiseAdd
@@ -172,4 +296,69 @@ int main (int argc, char **argv)
        (C, NULL, NULL, LAGraph_PLUS_TIMES_Complex, A, B, NULL)) ;
 
     CHECK("data/test_mxm.mtx");
+
+    TEST_BINOP(LL, RR, LAGraph_MAX_Complex, RR);
+    TEST_BINOP(LL, RR, LAGraph_MIN_Complex, LL);
+    TEST_BINOP(LL, RR, LAGraph_FIRST_Complex, LL);
+    TEST_BINOP(LL, RR, LAGraph_SECOND_Complex, RR);
+    TEST_BINOP(LL, RR, LAGraph_PLUS_Complex, CMPLX(3, 3));
+    TEST_BINOP(LL, RR, LAGraph_MINUS_Complex, CMPLX(-1, -1));
+    TEST_BINOP(LL, RR, LAGraph_RMINUS_Complex, LL);
+    TEST_BINOP(LL, RR, LAGraph_TIMES_Complex, CMPLX(0, 4));
+    TEST_BINOP(LL, RR, LAGraph_DIV_Complex, CMPLX(0.5, 0));
+    TEST_BINOP(LL, RR, LAGraph_RDIV_Complex, CMPLX(2, 0));
+    TEST_BINOP(LL, RR, LAGraph_PAIR_Complex, CMPLX(1, 0));
+    TEST_BINOP(LL, RR, LAGraph_ANY_Complex, RR);
+    TEST_BINOP(LL, RR, LAGraph_ISEQ_Complex, ZERO);
+    TEST_BINOP(LL, RR, LAGraph_ISNE_Complex, ONE);
+    TEST_BINOP(LL, RR, LAGraph_ISGT_Complex, ZERO);
+    TEST_BINOP(LL, RR, LAGraph_ISLT_Complex, ONE);
+    TEST_BINOP(LL, RR, LAGraph_ISGE_Complex, ZERO);
+    TEST_BINOP(LL, RR, LAGraph_ISLE_Complex, ONE);
+    TEST_BINOP(LL, RR, LAGraph_OR_Complex, ONE);
+    TEST_BINOP(LL, RR, LAGraph_AND_Complex, ONE);
+    TEST_BINOP(LL, RR, LAGraph_XOR_Complex, ZERO);
+
+    TEST_UOP(LL, LAGraph_ONE_Complex, ONE);
+    TEST_UOP(RR, LAGraph_IDENTITY_Complex, RR);
+    TEST_UOP(RR, LAGraph_AINV_Complex, CMPLX(-2, -2));
+    TEST_UOP(CMPLX(-2, 0), LAGraph_ABS_Complex, CMPLX(2, 0));
+    TEST_UOP(CMPLX(-2, 0), LAGraph_MINV_Complex, CMPLX(-0.5, -0));
+    TEST_UOP(CMPLX(-2, 0), LAGraph_NOT_Complex, CMPLX(0, 0));
+    TEST_UOP(CMPLX(-2, 2), LAGraph_CONJ_Complex, CMPLX(-2, -2));
+
+    OK(GrB_free(&C));
+    OK(GrB_Matrix_new
+       (&C, GrB_BOOL, 2, 2)) ;
+
+    TEST_BINOP_BOOL(LL, RR, LAGraph_EQ_Complex, false);
+    TEST_BINOP_BOOL(LL, RR, LAGraph_NE_Complex, true);
+    TEST_BINOP_BOOL(LL, RR, LAGraph_GT_Complex, false);
+    TEST_BINOP_BOOL(LL, RR, LAGraph_LT_Complex, true);
+    TEST_BINOP_BOOL(LL, RR, LAGraph_GE_Complex, false);
+    TEST_BINOP_BOOL(LL, RR, LAGraph_LE_Complex, true);
+    TEST_BINOP_BOOL(LL, RR, LAGraph_SKEW_Complex, false);
+    TEST_BINOP_BOOL(LL, RR, LAGraph_HERMITIAN_Complex, false);
+    TEST_UOP_BOOL(CMPLX(1, 0), LAGraph_ISONE_Complex, true);
+    TEST_UOP_BOOL(CMPLX(-2, 2), LAGraph_TRUE_BOOL_Complex, true);
+
+    OK(GrB_free(&C));
+    OK(GrB_Matrix_new
+       (&C, GrB_FP64, 2, 2)) ;
+
+    TEST_UOP_DOUBLE(CMPLX(-2, 0), LAGraph_REAL_Complex, -2);
+    TEST_UOP_DOUBLE(CMPLX(-2, 2), LAGraph_IMAG_Complex, 2);
+    TEST_UOP_DOUBLE(CMPLX(-2, 0), LAGraph_CABS_Complex, 2);
+    TEST_UOP_DOUBLE(CMPLX(1, 0), LAGraph_ANGLE_Complex, 0);
+
+    OK(GrB_free(&A));
+    OK(GrB_Matrix_new
+       (&A, GrB_FP64, 2, 2)) ;
+
+    OK(GrB_free(&C));
+    OK(GrB_Matrix_new
+       (&C, LAGraph_Complex, 2, 2)) ;
+
+    TEST_UOP_CMPLX(-2, LAGraph_COMPLEX_REAL_Complex, CMPLX(-2, 0));
+    TEST_UOP_CMPLX(2, LAGraph_COMPLEX_IMAG_Complex, CMPLX(0, 2));
 }

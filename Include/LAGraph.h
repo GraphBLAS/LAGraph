@@ -525,7 +525,7 @@ GrB_UnaryOp
     LAGraph_MINV_Complex              ,
     LAGraph_NOT_Complex               ,
     LAGraph_CONJ_Complex              ,
-    LAGraph_ONE_UINT32                ,
+    LAGraph_ONE_Complex               ,
     LAGraph_ISONE_Complex             ,
     LAGraph_ABS_Complex               ,
     LAGraph_TRUE_BOOL_Complex         ;
