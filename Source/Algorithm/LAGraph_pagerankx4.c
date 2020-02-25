@@ -76,7 +76,7 @@ GrB_Info LAGraph_pagerankx4 // PageRank definition
 (
     GrB_Vector *result,     // output: array of LAGraph_PageRank structs
     GrB_Matrix A,           // binary input graph, not modified
-    const float *restrict d_out, // out degree of each node (GrB_FP32, size n)
+    const float *LA_RESTRICT d_out, // out degree of each node (GrB_FP32, size n)
     float damping,          // damping factor (typically 0.85)
     int itermax,            // maximum number of iterations
     int *iters              // output: number of iterations taken
@@ -91,9 +91,9 @@ GrB_Info LAGraph_pagerankx4 // PageRank definition
     GrB_Index n ;
     GrB_Vector v = NULL, w = NULL ;
     GrB_Index *vi = NULL, *wi = NULL ;
-    float *restrict vx = NULL ;
-    float *restrict wx = NULL ;
-    float *restrict prior = NULL ;
+    float *LA_RESTRICT vx = NULL ;
+    float *LA_RESTRICT wx = NULL ;
+    float *LA_RESTRICT prior = NULL ;
     GrB_Type type = GrB_FP32 ;
     (*result) = NULL ;
     LAGr_Matrix_nrows (&n, A) ;
