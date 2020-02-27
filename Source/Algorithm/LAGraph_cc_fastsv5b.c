@@ -144,9 +144,12 @@ static GrB_Info Reduce_assign32
         {
             uint32_t *buf = mem + t * P;
             for (int h = 0; h < P; h++)
+            {
                 if (ht_key [h] != -1)
+                {
                     buf [h] = w_x [ht_key [h]];
-
+                }
+            }
             int st = (n * t + nthreads - 1) / nthreads;
             int ed = (n * t + n + nthreads - 1) / nthreads;
 
@@ -155,12 +158,18 @@ static GrB_Info Reduce_assign32
                 uint32_t i = index [k] ;
                 int h = HASH(i);
                 while (ht_key [h] != -1 && ht_key [h] != i)
+                {
                     h = NEXT (h);
+                }
 
                 if (ht_key [h] == -1)
+                {
                     w_x [i] = LAGRAPH_MIN (w_x [i], s_x [k]);
+                }
                 else
+                {
                     buf [h] = LAGRAPH_MIN (buf [h], s_x [k]);
+                }
             }
         }
 
@@ -168,8 +177,12 @@ static GrB_Info Reduce_assign32
         {
             int i = ht_key [h];
             if (i != -1)
+            {
                 for (int j = 0; j < nthreads; j++)
+                {
                     w_x [i] = LAGRAPH_MIN (w_x [i], mem [j * P + h]);
+                }
+            }
         }
 
         LAGRAPH_FREE (mem);
@@ -259,11 +272,14 @@ GrB_Info LAGraph_cc_fastsv5b
 
     // determine # of threads to use for Reduce_assign
     int nthreads = LAGraph_get_nthreads ( ) ;
+    nthreads = LAGRAPH_MIN (nthreads, n / 16) ;
+    nthreads = LAGRAPH_MAX (nthreads, 1) ;
 
     // # of threads to use for typecast
     int nthreads2 = n / (64*1024) ;
     nthreads2 = LAGRAPH_MIN (nthreads2, nthreads) ;
     nthreads2 = LAGRAPH_MAX (nthreads2, 1) ;
+    // printf ("nthreads %d nthreads2 %d\n", nthreads, nthreads2) ;
 
     // vectors
     LAGr_Vector_new (&f,      GrB_UINT32, n) ;
@@ -309,7 +325,9 @@ GrB_Info LAGraph_cc_fastsv5b
         memset (count,  0, sizeof (GrB_Index) * (nthreads + 1)) ;
 
         for (int i = 0; i <= nthreads; i++)
+        {
             range [i] = (n * i + nthreads - 1) / nthreads;
+        }
 
         #pragma omp parallel for num_threads(nthreads) schedule(static)
         for (int t = 0; t < nthreads; t++)
@@ -322,7 +340,9 @@ GrB_Info LAGraph_cc_fastsv5b
         }
 
         for (int i = 0; i < nthreads; i++)
+        {
             count [i + 1] += count [i];
+        }
 
         #pragma omp parallel for num_threads(nthreads) schedule(static)
         for (int t = 0; t < nthreads; t++)
@@ -331,8 +351,11 @@ GrB_Info LAGraph_cc_fastsv5b
             Tp [range [t]] = p;
             for (int i = range[t]; i < range[t + 1]; i++)
             {
-                for (int j = 0; j < FASTSV_SAMPLES && Sp [i] + j < Sp [i + 1]; j++)
+                for (int j = 0; j < FASTSV_SAMPLES && Sp [i] + j < Sp [i + 1];
+                    j++)
+                {
                     Tj [p++] = Sj [Sp [i] + j];
+                }
                 Tp [i + 1] = p;
             }
         }
@@ -349,7 +372,9 @@ GrB_Info LAGraph_cc_fastsv5b
             LAGr_mxv (mngp, NULL, GrB_MIN_UINT32, GxB_MIN_SECOND_UINT32, T, gp,
                 NULL) ;
             if (!is_first)
+            {
                 LAGRAPH_OK (Reduce_assign32 (&f, &mngp, V32, n, nthreads)) ;
+            }
             // old:
             // LAGr_eWiseMult (f, NULL, NULL, GrB_MIN_UINT32, f, mngp, NULL) ;
             // LAGr_eWiseMult (f, NULL, NULL, GrB_MIN_UINT32, f, gp, NULL) ;
@@ -394,10 +419,14 @@ GrB_Info LAGraph_cc_fastsv5b
                     {
                         int u = Sj [i];
                         if (V32 [u] != key)
+                        {
                             Tj [ptr++] = u;
+                        }
                     }
                     if (ptr - Tp[v] < Sp [v + 1] - Sp [v])
+                    {
                         Tj [ptr++] = key;
+                    }
                 }
             }
             count[t] = ptr - Tp [range [t]];
@@ -416,7 +445,9 @@ GrB_Info LAGraph_cc_fastsv5b
         {
             GrB_Index ptr = Tp [range [t]];
             for (int v = range[t]; v < range[t + 1]; v++)
+            {
                 Tp [v] -= ptr - count[t];
+            }
         }
         Tp [n] = offset;
         LAGRAPH_FREE (count);
@@ -470,11 +501,17 @@ GrB_Info LAGraph_cc_fastsv5b
     *result = f ;
     f = NULL ;
     if (!sanitize)
+    {
         *A = S;
+    }
     else
+    {
         LAGr_free (&S) ;
+    }
     if (sampling)
+    {
         LAGr_free (&T) ;
+    }
     LAGRAPH_FREE_ALL ;
     return (GrB_SUCCESS) ;
 }
