@@ -3,20 +3,20 @@
 # run all GAP benchmarks
 
 cd BetweennessCentrality
-./do_gap
+numactl --interleave=all ./do_gap
 
 cd ../BFS
-./do_gap
+numactl --interleave=all ./do_gap
 
 cd ../CC
-./do_gap
+numactl --interleave=all ./do_gap
 
 cd ../PageRank3
-./do_gap
+numactl --interleave=all ./do_gap
 
 cd ../SSSP
-./do_gap
+numactl --interleave=all ./do_gap
 
 cd ../TriangleCount
-./do_gap
+numactl --interleave=all ./do_gap
 
