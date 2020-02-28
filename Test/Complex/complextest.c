@@ -57,7 +57,7 @@
     GrB_free (&A) ;                 \
     GrB_free (&B) ;                 \
     GrB_free (&C) ;                 \
-    GrB_free (&APPROX_Complex) ;    \
+    GrB_free (&APPROX_ComplexFP64) ;    \
 }                                   \
 
 #define FOPENR(filename)                                        \
@@ -76,7 +76,7 @@
     FOPENR(filename) ;                                      \
     OK (LAGraph_mmread (&D, f)) ;                           \
     fclose(f);                                              \
-    OK (LAGraph_isequal(&bval, C, D, APPROX_Complex));      \
+    OK (LAGraph_isequal(&bval, C, D, APPROX_ComplexFP64));      \
     if (!bval)                                              \
       exit(1);                                              \
 }                                                           \
@@ -219,7 +219,7 @@ int main (int argc, char **argv)
 {
 
     printf ("Complex/complex: "
-        "testing LAGraph_Complex and its operators:\n") ;
+        "testing LAGraph_ComplexFP64 and its operators:\n") ;
 
     #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
     printf ("LAGraph_xinit (requires SuiteSparse:GraphBLAS)\n") ;
@@ -229,7 +229,7 @@ int main (int argc, char **argv)
     LAGraph_init ( ) ;
     #endif
 
-    GrB_BinaryOp APPROX_Complex;
+    GrB_BinaryOp APPROX_ComplexFP64;
 
     GrB_Matrix A = NULL, B = NULL, C = NULL, D = NULL, E = NULL;
     uint64_t aseed = 42;
@@ -240,13 +240,13 @@ int main (int argc, char **argv)
     FILE *f = NULL ;
 
     OK (GrB_BinaryOp_new(
-         &APPROX_Complex,
+         &APPROX_ComplexFP64,
          (LAGraph_binary_function) (&complex_approx),
-         GrB_BOOL, LAGraph_Complex, LAGraph_Complex)) ;
+         GrB_BOOL, LAGraph_ComplexFP64, LAGraph_ComplexFP64)) ;
 
     OK(LAGraph_random
        (&A,
-        LAGraph_Complex,
+        LAGraph_ComplexFP64,
         2,
         2,
         3,
@@ -260,7 +260,7 @@ int main (int argc, char **argv)
 
     OK(LAGraph_random
        (&B,
-        LAGraph_Complex,
+        LAGraph_ComplexFP64,
         2,
         2,
         3,
@@ -273,7 +273,7 @@ int main (int argc, char **argv)
         )) ;
 
     OK(GrB_Matrix_new
-       (&C, LAGraph_Complex, 2, 2)) ;
+       (&C, LAGraph_ComplexFP64, 2, 2)) ;
 
     OK(GrB_Matrix_new
        (&E, GrB_BOOL, 2, 2)) ;
@@ -281,75 +281,75 @@ int main (int argc, char **argv)
     // Add matrices
 
     OK(GrB_eWiseAdd
-       (C, NULL, NULL, LAGraph_PLUS_Complex, A, B, NULL)) ;
+       (C, NULL, NULL, LAGraph_PLUS_ComplexFP64, A, B, NULL)) ;
 
     CHECK("data/test_eadd.mtx");
 
     /* // Multi matrices */
     OK(GrB_eWiseMult
-       (C, NULL, NULL, LAGraph_TIMES_Complex, A, B, NULL)) ;
+       (C, NULL, NULL, LAGraph_TIMES_ComplexFP64, A, B, NULL)) ;
 
     CHECK("data/test_emul.mtx");
 
     // Matrix Mult matrices
     OK(GrB_mxm
-       (C, NULL, NULL, LAGraph_PLUS_TIMES_Complex, A, B, NULL)) ;
+       (C, NULL, NULL, LAGraph_PLUS_TIMES_ComplexFP64, A, B, NULL)) ;
 
     CHECK("data/test_mxm.mtx");
 
-    TEST_BINOP(LL, RR, LAGraph_MAX_Complex, RR);
-    TEST_BINOP(LL, RR, LAGraph_MIN_Complex, LL);
-    TEST_BINOP(LL, RR, LAGraph_FIRST_Complex, LL);
-    TEST_BINOP(LL, RR, LAGraph_SECOND_Complex, RR);
-    TEST_BINOP(LL, RR, LAGraph_PLUS_Complex, CMPLX(3, 3));
-    TEST_BINOP(LL, RR, LAGraph_MINUS_Complex, CMPLX(-1, -1));
-    TEST_BINOP(LL, RR, LAGraph_RMINUS_Complex, LL);
-    TEST_BINOP(LL, RR, LAGraph_TIMES_Complex, CMPLX(0, 4));
-    TEST_BINOP(LL, RR, LAGraph_DIV_Complex, CMPLX(0.5, 0));
-    TEST_BINOP(LL, RR, LAGraph_RDIV_Complex, CMPLX(2, 0));
-    TEST_BINOP(LL, RR, LAGraph_PAIR_Complex, CMPLX(1, 0));
-    TEST_BINOP(LL, RR, LAGraph_ANY_Complex, RR);
-    TEST_BINOP(LL, RR, LAGraph_ISEQ_Complex, ZERO);
-    TEST_BINOP(LL, RR, LAGraph_ISNE_Complex, ONE);
-    TEST_BINOP(LL, RR, LAGraph_ISGT_Complex, ZERO);
-    TEST_BINOP(LL, RR, LAGraph_ISLT_Complex, ONE);
-    TEST_BINOP(LL, RR, LAGraph_ISGE_Complex, ZERO);
-    TEST_BINOP(LL, RR, LAGraph_ISLE_Complex, ONE);
-    TEST_BINOP(LL, RR, LAGraph_OR_Complex, ONE);
-    TEST_BINOP(LL, RR, LAGraph_AND_Complex, ONE);
-    TEST_BINOP(LL, RR, LAGraph_XOR_Complex, ZERO);
+    TEST_BINOP(LL, RR, LAGraph_MAX_ComplexFP64, RR);
+    TEST_BINOP(LL, RR, LAGraph_MIN_ComplexFP64, LL);
+    TEST_BINOP(LL, RR, LAGraph_FIRST_ComplexFP64, LL);
+    TEST_BINOP(LL, RR, LAGraph_SECOND_ComplexFP64, RR);
+    TEST_BINOP(LL, RR, LAGraph_PLUS_ComplexFP64, CMPLX(3, 3));
+    TEST_BINOP(LL, RR, LAGraph_MINUS_ComplexFP64, CMPLX(-1, -1));
+    TEST_BINOP(LL, RR, LAGraph_RMINUS_ComplexFP64, LL);
+    TEST_BINOP(LL, RR, LAGraph_TIMES_ComplexFP64, CMPLX(0, 4));
+    TEST_BINOP(LL, RR, LAGraph_DIV_ComplexFP64, CMPLX(0.5, 0));
+    TEST_BINOP(LL, RR, LAGraph_RDIV_ComplexFP64, CMPLX(2, 0));
+    TEST_BINOP(LL, RR, LAGraph_PAIR_ComplexFP64, CMPLX(1, 0));
+    TEST_BINOP(LL, RR, LAGraph_ANY_ComplexFP64, RR);
+    TEST_BINOP(LL, RR, LAGraph_ISEQ_ComplexFP64, ZERO);
+    TEST_BINOP(LL, RR, LAGraph_ISNE_ComplexFP64, ONE);
+    TEST_BINOP(LL, RR, LAGraph_ISGT_ComplexFP64, ZERO);
+    TEST_BINOP(LL, RR, LAGraph_ISLT_ComplexFP64, ONE);
+    TEST_BINOP(LL, RR, LAGraph_ISGE_ComplexFP64, ZERO);
+    TEST_BINOP(LL, RR, LAGraph_ISLE_ComplexFP64, ONE);
+    TEST_BINOP(LL, RR, LAGraph_OR_ComplexFP64, ONE);
+    TEST_BINOP(LL, RR, LAGraph_AND_ComplexFP64, ONE);
+    TEST_BINOP(LL, RR, LAGraph_XOR_ComplexFP64, ZERO);
 
-    TEST_UOP(LL, LAGraph_ONE_Complex, ONE);
-    TEST_UOP(RR, LAGraph_IDENTITY_Complex, RR);
-    TEST_UOP(RR, LAGraph_AINV_Complex, CMPLX(-2, -2));
-    TEST_UOP(CMPLX(-2, 0), LAGraph_ABS_Complex, CMPLX(2, 0));
-    TEST_UOP(CMPLX(-2, 0), LAGraph_MINV_Complex, CMPLX(-0.5, -0));
-    TEST_UOP(CMPLX(-2, 0), LAGraph_NOT_Complex, CMPLX(0, 0));
-    TEST_UOP(CMPLX(-2, 2), LAGraph_CONJ_Complex, CMPLX(-2, -2));
+    TEST_UOP(LL, LAGraph_ONE_ComplexFP64, ONE);
+    TEST_UOP(RR, LAGraph_IDENTITY_ComplexFP64, RR);
+    TEST_UOP(RR, LAGraph_AINV_ComplexFP64, CMPLX(-2, -2));
+    TEST_UOP(CMPLX(-2, 0), LAGraph_ABS_ComplexFP64, CMPLX(2, 0));
+    TEST_UOP(CMPLX(-2, 0), LAGraph_MINV_ComplexFP64, CMPLX(-0.5, -0));
+    TEST_UOP(CMPLX(-2, 0), LAGraph_NOT_ComplexFP64, CMPLX(0, 0));
+    TEST_UOP(CMPLX(-2, 2), LAGraph_CONJ_ComplexFP64, CMPLX(-2, -2));
 
     OK(GrB_free(&C));
     OK(GrB_Matrix_new
        (&C, GrB_BOOL, 2, 2)) ;
 
-    TEST_BINOP_BOOL(LL, RR, LAGraph_EQ_Complex, false);
-    TEST_BINOP_BOOL(LL, RR, LAGraph_NE_Complex, true);
-    TEST_BINOP_BOOL(LL, RR, LAGraph_GT_Complex, false);
-    TEST_BINOP_BOOL(LL, RR, LAGraph_LT_Complex, true);
-    TEST_BINOP_BOOL(LL, RR, LAGraph_GE_Complex, false);
-    TEST_BINOP_BOOL(LL, RR, LAGraph_LE_Complex, true);
-    TEST_BINOP_BOOL(LL, RR, LAGraph_SKEW_Complex, false);
-    TEST_BINOP_BOOL(LL, RR, LAGraph_HERMITIAN_Complex, false);
-    TEST_UOP_BOOL(CMPLX(1, 0), LAGraph_ISONE_Complex, true);
-    TEST_UOP_BOOL(CMPLX(-2, 2), LAGraph_TRUE_BOOL_Complex, true);
+    TEST_BINOP_BOOL(LL, RR, LAGraph_EQ_ComplexFP64, false);
+    TEST_BINOP_BOOL(LL, RR, LAGraph_NE_ComplexFP64, true);
+    TEST_BINOP_BOOL(LL, RR, LAGraph_GT_ComplexFP64, false);
+    TEST_BINOP_BOOL(LL, RR, LAGraph_LT_ComplexFP64, true);
+    TEST_BINOP_BOOL(LL, RR, LAGraph_GE_ComplexFP64, false);
+    TEST_BINOP_BOOL(LL, RR, LAGraph_LE_ComplexFP64, true);
+    TEST_BINOP_BOOL(LL, RR, LAGraph_SKEW_ComplexFP64, false);
+    TEST_BINOP_BOOL(LL, RR, LAGraph_HERMITIAN_ComplexFP64, false);
+    TEST_UOP_BOOL(CMPLX(1, 0), LAGraph_ISONE_ComplexFP64, true);
+    TEST_UOP_BOOL(CMPLX(-2, 2), LAGraph_TRUE_BOOL_ComplexFP64, true);
 
     OK(GrB_free(&C));
     OK(GrB_Matrix_new
        (&C, GrB_FP64, 2, 2)) ;
 
-    TEST_UOP_DOUBLE(CMPLX(-2, 0), LAGraph_REAL_Complex, -2);
-    TEST_UOP_DOUBLE(CMPLX(-2, 2), LAGraph_IMAG_Complex, 2);
-    TEST_UOP_DOUBLE(CMPLX(-2, 0), LAGraph_CABS_Complex, 2);
-    TEST_UOP_DOUBLE(CMPLX(1, 0), LAGraph_ANGLE_Complex, 0);
+    TEST_UOP_DOUBLE(CMPLX(-2, 0), LAGraph_REAL_ComplexFP64, -2);
+    TEST_UOP_DOUBLE(CMPLX(-2, 2), LAGraph_IMAG_ComplexFP64, 2);
+    TEST_UOP_DOUBLE(CMPLX(-2, 0), LAGraph_CABS_ComplexFP64, 2);
+    TEST_UOP_DOUBLE(CMPLX(1, 0), LAGraph_ANGLE_ComplexFP64, 0);
 
     OK(GrB_free(&A));
     OK(GrB_Matrix_new
@@ -357,8 +357,8 @@ int main (int argc, char **argv)
 
     OK(GrB_free(&C));
     OK(GrB_Matrix_new
-       (&C, LAGraph_Complex, 2, 2)) ;
+       (&C, LAGraph_ComplexFP64, 2, 2)) ;
 
-    TEST_UOP_CMPLX(-2, LAGraph_COMPLEX_REAL_Complex, CMPLX(-2, 0));
-    TEST_UOP_CMPLX(2, LAGraph_COMPLEX_IMAG_Complex, CMPLX(0, 2));
+    TEST_UOP_CMPLX(-2, LAGraph_COMPLEX_REAL_ComplexFP64, CMPLX(-2, 0));
+    TEST_UOP_CMPLX(2, LAGraph_COMPLEX_IMAG_ComplexFP64, CMPLX(0, 2));
 }
