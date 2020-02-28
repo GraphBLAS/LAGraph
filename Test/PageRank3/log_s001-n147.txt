@@ -1,0 +1,160 @@
+
+From: /home/u32248/LAGraph/Test/PageRank3/gap_pr_test.c
+Date: Thu Feb 20 14:54:04 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 32
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : pagerank:3f
+# threads used: 32 time: 16.541
+
+From: /home/u32248/LAGraph/Test/PageRank3/gap_pr_test.c
+Date: Thu Feb 20 15:01:38 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 16
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : pagerank:3f
+# threads used: 16 time: 28.377
+
+From: /home/u32248/LAGraph/Test/PageRank3/gap_pr_test.c
+Date: Thu Feb 20 15:06:00 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 32
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : pagerank:x4
+# threads used: 32 time: 16.3626
+
+From: /home/u32248/LAGraph/Test/PageRank3/gap_pr_test.c
+Date: Thu Feb 20 15:13:28 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 16
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-kron/GAP-kron.grb : pagerank:x4
+# threads used: 16 time: 27.991
+
+From: /home/u32248/LAGraph/Test/PageRank3/gap_pr_test.c
+Date: Thu Feb 20 15:33:20 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 32
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : pagerank:3f
+# threads used: 32 time: 18.8602
+
+From: /home/u32248/LAGraph/Test/PageRank3/gap_pr_test.c
+Date: Thu Feb 20 15:41:41 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 16
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : pagerank:3f
+# threads used: 16 time: 31.3042
+
+From: /home/u32248/LAGraph/Test/PageRank3/gap_pr_test.c
+Date: Thu Feb 20 15:46:40 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 32
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : pagerank:x4
+# threads used: 32 time: 18.6759
+
+From: /home/u32248/LAGraph/Test/PageRank3/gap_pr_test.c
+Date: Thu Feb 20 15:54:56 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 16
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-urand/GAP-urand.grb : pagerank:x4
+# threads used: 16 time: 30.9934
+
+From: /home/u32248/LAGraph/Test/PageRank3/gap_pr_test.c
+Date: Thu Feb 20 16:02:51 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 32
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb : pagerank:3f
+# threads used: 32 time: 12.8913
+
+From: /home/u32248/LAGraph/Test/PageRank3/gap_pr_test.c
+Date: Thu Feb 20 16:08:59 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 16
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb : pagerank:3f
+# threads used: 16 time: 23.0373
+
+From: /home/u32248/LAGraph/Test/PageRank3/gap_pr_test.c
+Date: Thu Feb 20 16:12:23 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 32
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb : pagerank:x4
+# threads used: 32 time: 12.7165
+
+From: /home/u32248/LAGraph/Test/PageRank3/gap_pr_test.c
+Date: Thu Feb 20 16:18:28 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 16
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb : pagerank:x4
+# threads used: 16 time: 22.817
+
+From: /home/u32248/LAGraph/Test/PageRank3/gap_pr_test.c
+Date: Thu Feb 20 16:29:12 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 32
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-web/GAP-web.grb : pagerank:3f
+# threads used: 32 time: 6.34489
+
+From: /home/u32248/LAGraph/Test/PageRank3/gap_pr_test.c
+Date: Thu Feb 20 16:31:56 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 16
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-web/GAP-web.grb : pagerank:3f
+# threads used: 16 time: 10.2286
+
+From: /home/u32248/LAGraph/Test/PageRank3/gap_pr_test.c
+Date: Thu Feb 20 16:33:34 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 32
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-web/GAP-web.grb : pagerank:x4
+# threads used: 32 time: 6.15822
+
+From: /home/u32248/LAGraph/Test/PageRank3/gap_pr_test.c
+Date: Thu Feb 20 16:36:13 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 16
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-web/GAP-web.grb : pagerank:x4
+# threads used: 16 time: 9.89772
+
+From: /home/u32248/LAGraph/Test/PageRank3/gap_pr_test.c
+Date: Thu Feb 20 16:37:01 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 32
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-road/GAP-road.grb : pagerank:3f
+# threads used: 32 time: 0.91941
+
+From: /home/u32248/LAGraph/Test/PageRank3/gap_pr_test.c
+Date: Thu Feb 20 16:37:24 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 16
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-road/GAP-road.grb : pagerank:3f
+# threads used: 16 time: 1.43067
+
+From: /home/u32248/LAGraph/Test/PageRank3/gap_pr_test.c
+Date: Thu Feb 20 16:37:37 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 32
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-road/GAP-road.grb : pagerank:x4
+# threads used: 32 time: 0.813334
+
+From: /home/u32248/LAGraph/Test/PageRank3/gap_pr_test.c
+Date: Thu Feb 20 16:37:57 2020
+CPU:  Intel(R) Xeon(R) Platinum 8153 CPU @ 2.00GHz
+max # of threads: 16
+SuiteSparse:GraphBLAS Feb 20, 2020
+Message: /home/u32248/GAP/GAP-road/GAP-road.grb : pagerank:x4
+# threads used: 16 time: 1.25672

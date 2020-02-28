@@ -430,16 +430,16 @@ GrB_Info LAGraph_sssp12c        // single source shortest paths
     t = NULL;
 
     // LAGraph_tic (tic) ;
-    // GrB_free (&lBound) ;
-    // GrB_free (&uBound) ;
-    // GrB_free (&Inf) ;
-    // GrB_free (&tmasked) ;
-    // GrB_free (&tReq) ;
-    // GrB_free (&tless) ;
-    // GrB_free (&s) ;
-    // GrB_free(&reach);
-    // GrB_free (&AL) ;
-    // GrB_free (&AH) ;
+    GrB_free (&lBound) ;
+    GrB_free (&uBound) ;
+    GrB_free (&Inf) ;
+    GrB_free (&tmasked) ;
+    GrB_free (&tReq) ;
+    GrB_free (&tless) ;
+    GrB_free (&s) ;
+    GrB_free (&reach) ;
+    GrB_free (&AL) ;
+    GrB_free (&AH) ;
     // double t_free = LAGraph_toc (tic) ;
 
     // double total_time = LAGraph_toc(tic1);

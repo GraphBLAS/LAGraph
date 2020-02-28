@@ -1,0 +1,799 @@
+
+########################################################################
+#      Date:           Sat Feb 22 14:35:49 PST 2020
+#    Job ID:           512362.v-qsvr-1.aidevcloud
+#      User:           u32248
+# Resources:           neednodes=1:ppn=2:plat8153,nodes=1:ppn=2:plat8153,walltime=24:00:00
+########################################################################
+
+SuiteSparse:GraphBLAS Feb 20, 2020
+threads to test:  64 32 16 8
+matrix: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+# of nodes: 134217726  # of edges: 4223264644
+# of edges in S = A|A':  4223264644 (A symmetric)
+# of trials: 16
+
+SV5:  trial:  0 time:    18.2486 sec
+SV5:  trial:  1 time:    17.7561 sec
+SV5:  trial:  2 time:    17.3155 sec
+SV5:  trial:  3 time:    17.3455 sec
+SV5:  trial:  4 time:    17.9823 sec
+SV5:  trial:  5 time:    17.7536 sec
+SV5:  trial:  6 time:    17.9850 sec
+SV5:  trial:  7 time:    18.0976 sec
+SV5:  trial:  8 time:    17.9351 sec
+SV5:  trial:  9 time:    17.7670 sec
+SV5:  trial: 10 time:    17.4028 sec
+SV5:  trial: 11 time:    17.3337 sec
+SV5:  trial: 12 time:    17.5125 sec
+SV5:  trial: 13 time:    17.8050 sec
+SV5:  trial: 14 time:    17.4486 sec
+SV5:  trial: 15 time:    17.3344 sec
+FastSV5:  threads: 64 time:    17.6890  # of CC: 71164263
+
+SV5b: trial:  0 time:     3.5250 sec
+SV5b: trial:  1 time:     3.3894 sec
+SV5b: trial:  2 time:     3.4122 sec
+SV5b: trial:  3 time:     3.3130 sec
+SV5b: trial:  4 time:     3.3009 sec
+SV5b: trial:  5 time:     3.3421 sec
+SV5b: trial:  6 time:     3.2963 sec
+SV5b: trial:  7 time:     3.3671 sec
+SV5b: trial:  8 time:     3.2743 sec
+SV5b: trial:  9 time:     3.3629 sec
+SV5b: trial: 10 time:     3.2606 sec
+SV5b: trial: 11 time:     3.3772 sec
+SV5b: trial: 12 time:     3.2979 sec
+SV5b: trial: 13 time:     3.3412 sec
+SV5b: trial: 14 time:     3.3563 sec
+SV5b: trial: 15 time:     3.3866 sec
+FastSV5b: threads: 64 time:     3.3502  # of CC: 71164263
+
+
+SV5:  trial:  0 time:    20.1497 sec
+SV5:  trial:  1 time:    19.3437 sec
+SV5:  trial:  2 time:    19.3130 sec
+SV5:  trial:  3 time:    19.2899 sec
+SV5:  trial:  4 time:    19.0274 sec
+SV5:  trial:  5 time:    19.4023 sec
+SV5:  trial:  6 time:    19.3205 sec
+SV5:  trial:  7 time:    19.5599 sec
+SV5:  trial:  8 time:    18.5203 sec
+SV5:  trial:  9 time:    18.7506 sec
+SV5:  trial: 10 time:    18.5162 sec
+SV5:  trial: 11 time:    18.8780 sec
+SV5:  trial: 12 time:    18.5528 sec
+SV5:  trial: 13 time:    18.8849 sec
+SV5:  trial: 14 time:    18.4288 sec
+SV5:  trial: 15 time:    18.7991 sec
+FastSV5:  threads: 32 time:    19.0461  # of CC: 71164263
+
+SV5b: trial:  0 time:     4.1226 sec
+SV5b: trial:  1 time:     3.9965 sec
+SV5b: trial:  2 time:     4.0631 sec
+SV5b: trial:  3 time:     4.1162 sec
+SV5b: trial:  4 time:     3.9935 sec
+SV5b: trial:  5 time:     3.8543 sec
+SV5b: trial:  6 time:     3.8007 sec
+SV5b: trial:  7 time:     3.4601 sec
+SV5b: trial:  8 time:     3.7950 sec
+SV5b: trial:  9 time:     3.8765 sec
+SV5b: trial: 10 time:     3.7938 sec
+SV5b: trial: 11 time:     3.8974 sec
+SV5b: trial: 12 time:     3.8548 sec
+SV5b: trial: 13 time:     3.8683 sec
+SV5b: trial: 14 time:     3.8100 sec
+SV5b: trial: 15 time:     3.8907 sec
+FastSV5b: threads: 32 time:     3.8871  # of CC: 71164263
+
+
+SV5:  trial:  0 time:    30.0330 sec
+SV5:  trial:  1 time:    29.9572 sec
+SV5:  trial:  2 time:    29.6658 sec
+SV5:  trial:  3 time:    29.7325 sec
+SV5:  trial:  4 time:    30.5131 sec
+SV5:  trial:  5 time:    30.0407 sec
+SV5:  trial:  6 time:    29.9905 sec
+SV5:  trial:  7 time:    30.2178 sec
+SV5:  trial:  8 time:    30.0656 sec
+SV5:  trial:  9 time:    30.2765 sec
+SV5:  trial: 10 time:    30.3194 sec
+SV5:  trial: 11 time:    30.6907 sec
+SV5:  trial: 12 time:    29.8471 sec
+SV5:  trial: 13 time:    29.5223 sec
+SV5:  trial: 14 time:    29.8015 sec
+SV5:  trial: 15 time:    29.5578 sec
+FastSV5:  threads: 16 time:    30.0145  # of CC: 71164263
+
+SV5b: trial:  0 time:     6.0130 sec
+SV5b: trial:  1 time:     5.4798 sec
+SV5b: trial:  2 time:     5.6956 sec
+SV5b: trial:  3 time:     5.4567 sec
+SV5b: trial:  4 time:     5.4673 sec
+SV5b: trial:  5 time:     5.4700 sec
+SV5b: trial:  6 time:     5.5844 sec
+SV5b: trial:  7 time:     5.3121 sec
+SV5b: trial:  8 time:     5.3075 sec
+SV5b: trial:  9 time:     5.3890 sec
+SV5b: trial: 10 time:     5.3515 sec
+SV5b: trial: 11 time:     5.3423 sec
+SV5b: trial: 12 time:     5.4628 sec
+SV5b: trial: 13 time:     5.4002 sec
+SV5b: trial: 14 time:     5.3577 sec
+SV5b: trial: 15 time:     5.4512 sec
+FastSV5b: threads: 16 time:     5.4713  # of CC: 71164263
+
+
+SV5:  trial:  0 time:    57.2269 sec
+SV5:  trial:  1 time:    56.4951 sec
+SV5:  trial:  2 time:    56.3483 sec
+SV5:  trial:  3 time:    56.8103 sec
+SV5:  trial:  4 time:    57.7805 sec
+SV5:  trial:  5 time:    55.4268 sec
+SV5:  trial:  6 time:    56.7586 sec
+SV5:  trial:  7 time:    58.4728 sec
+SV5:  trial:  8 time:    55.2003 sec
+SV5:  trial:  9 time:    55.9966 sec
+SV5:  trial: 10 time:    57.2573 sec
+SV5:  trial: 11 time:    55.7337 sec
+SV5:  trial: 12 time:    57.0316 sec
+SV5:  trial: 13 time:    56.7373 sec
+SV5:  trial: 14 time:    55.6083 sec
+SV5:  trial: 15 time:    57.4532 sec
+FastSV5:  threads:  8 time:    56.6461  # of CC: 71164263
+
+SV5b: trial:  0 time:     9.9414 sec
+SV5b: trial:  1 time:    10.1064 sec
+SV5b: trial:  2 time:     9.7120 sec
+SV5b: trial:  3 time:     9.7059 sec
+SV5b: trial:  4 time:     9.5994 sec
+SV5b: trial:  5 time:     9.6643 sec
+SV5b: trial:  6 time:     9.7583 sec
+SV5b: trial:  7 time:     9.7968 sec
+SV5b: trial:  8 time:     9.7055 sec
+SV5b: trial:  9 time:     9.5853 sec
+SV5b: trial: 10 time:     9.8949 sec
+SV5b: trial: 11 time:     9.7986 sec
+SV5b: trial: 12 time:     9.8851 sec
+SV5b: trial: 13 time:     9.8953 sec
+SV5b: trial: 14 time:    10.0473 sec
+SV5b: trial: 15 time:    10.0523 sec
+FastSV5b: threads:  8 time:     9.8218  # of CC: 71164263
+
+
+SuiteSparse:GraphBLAS Feb 20, 2020
+threads to test:  64 32 16 8
+matrix: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+# of nodes: 134217728  # of edges: 4294966740
+# of edges in S = A|A':  4294966740 (A symmetric)
+# of trials: 16
+
+SV5:  trial:  0 time:    15.7927 sec
+SV5:  trial:  1 time:    16.7208 sec
+SV5:  trial:  2 time:    15.4504 sec
+SV5:  trial:  3 time:    15.3268 sec
+SV5:  trial:  4 time:    15.3100 sec
+SV5:  trial:  5 time:    15.3692 sec
+SV5:  trial:  6 time:    15.8143 sec
+SV5:  trial:  7 time:    15.5155 sec
+SV5:  trial:  8 time:    15.5760 sec
+SV5:  trial:  9 time:    15.2541 sec
+SV5:  trial: 10 time:    15.2843 sec
+SV5:  trial: 11 time:    15.3399 sec
+SV5:  trial: 12 time:    15.3048 sec
+SV5:  trial: 13 time:    15.2855 sec
+SV5:  trial: 14 time:    15.2692 sec
+SV5:  trial: 15 time:    15.2197 sec
+FastSV5:  threads: 64 time:    15.4896  # of CC: 1
+
+SV5b: trial:  0 time:     4.7702 sec
+SV5b: trial:  1 time:     4.6138 sec
+SV5b: trial:  2 time:     4.6384 sec
+SV5b: trial:  3 time:     4.6726 sec
+SV5b: trial:  4 time:     4.6314 sec
+SV5b: trial:  5 time:     4.6384 sec
+SV5b: trial:  6 time:     4.6324 sec
+SV5b: trial:  7 time:     4.7087 sec
+SV5b: trial:  8 time:     4.6446 sec
+SV5b: trial:  9 time:     4.5742 sec
+SV5b: trial: 10 time:     4.6459 sec
+SV5b: trial: 11 time:     4.6813 sec
+SV5b: trial: 12 time:     4.5850 sec
+SV5b: trial: 13 time:     4.6154 sec
+SV5b: trial: 14 time:     4.5034 sec
+SV5b: trial: 15 time:     4.5007 sec
+FastSV5b: threads: 64 time:     4.6285  # of CC: 1
+
+
+SV5:  trial:  0 time:    16.2101 sec
+SV5:  trial:  1 time:    16.2420 sec
+SV5:  trial:  2 time:    16.2941 sec
+SV5:  trial:  3 time:    16.2368 sec
+SV5:  trial:  4 time:    16.2564 sec
+SV5:  trial:  5 time:    16.2336 sec
+SV5:  trial:  6 time:    16.6684 sec
+SV5:  trial:  7 time:    16.9604 sec
+SV5:  trial:  8 time:    16.6919 sec
+SV5:  trial:  9 time:    16.3062 sec
+SV5:  trial: 10 time:    16.1473 sec
+SV5:  trial: 11 time:    16.1759 sec
+SV5:  trial: 12 time:    16.2399 sec
+SV5:  trial: 13 time:    16.1831 sec
+SV5:  trial: 14 time:    16.2073 sec
+SV5:  trial: 15 time:    16.2317 sec
+FastSV5:  threads: 32 time:    16.3303  # of CC: 1
+
+SV5b: trial:  0 time:     5.3601 sec
+SV5b: trial:  1 time:     5.0902 sec
+SV5b: trial:  2 time:     5.3025 sec
+SV5b: trial:  3 time:     5.2227 sec
+SV5b: trial:  4 time:     5.3226 sec
+SV5b: trial:  5 time:     5.2934 sec
+SV5b: trial:  6 time:     5.3617 sec
+SV5b: trial:  7 time:     5.1212 sec
+SV5b: trial:  8 time:     5.0872 sec
+SV5b: trial:  9 time:     5.2832 sec
+SV5b: trial: 10 time:     5.2382 sec
+SV5b: trial: 11 time:     5.4329 sec
+SV5b: trial: 12 time:     5.4182 sec
+SV5b: trial: 13 time:     5.1051 sec
+SV5b: trial: 14 time:     5.3758 sec
+SV5b: trial: 15 time:     5.1414 sec
+FastSV5b: threads: 32 time:     5.2598  # of CC: 1
+
+
+SV5:  trial:  0 time:    24.1500 sec
+SV5:  trial:  1 time:    23.7883 sec
+SV5:  trial:  2 time:    23.4783 sec
+SV5:  trial:  3 time:    23.6618 sec
+SV5:  trial:  4 time:    23.8399 sec
+SV5:  trial:  5 time:    23.8880 sec
+SV5:  trial:  6 time:    23.5890 sec
+SV5:  trial:  7 time:    23.6264 sec
+SV5:  trial:  8 time:    23.7645 sec
+SV5:  trial:  9 time:    23.7203 sec
+SV5:  trial: 10 time:    23.7402 sec
+SV5:  trial: 11 time:    23.4220 sec
+SV5:  trial: 12 time:    23.5506 sec
+SV5:  trial: 13 time:    23.5262 sec
+SV5:  trial: 14 time:    24.1859 sec
+SV5:  trial: 15 time:    23.8677 sec
+FastSV5:  threads: 16 time:    23.7374  # of CC: 1
+
+SV5b: trial:  0 time:     8.0972 sec
+SV5b: trial:  1 time:     7.4340 sec
+SV5b: trial:  2 time:     7.3771 sec
+SV5b: trial:  3 time:     7.4387 sec
+SV5b: trial:  4 time:     7.2158 sec
+SV5b: trial:  5 time:     7.2697 sec
+SV5b: trial:  6 time:     7.3767 sec
+SV5b: trial:  7 time:     7.6633 sec
+SV5b: trial:  8 time:     7.6518 sec
+SV5b: trial:  9 time:     7.7281 sec
+SV5b: trial: 10 time:     7.4892 sec
+SV5b: trial: 11 time:     7.6196 sec
+SV5b: trial: 12 time:     7.7088 sec
+SV5b: trial: 13 time:     7.8188 sec
+SV5b: trial: 14 time:     7.6199 sec
+SV5b: trial: 15 time:     7.5599 sec
+FastSV5b: threads: 16 time:     7.5668  # of CC: 1
+
+
+SV5:  trial:  0 time:    43.3154 sec
+SV5:  trial:  1 time:    43.0385 sec
+SV5:  trial:  2 time:    42.6854 sec
+SV5:  trial:  3 time:    42.7625 sec
+SV5:  trial:  4 time:    43.5126 sec
+SV5:  trial:  5 time:    43.2111 sec
+SV5:  trial:  6 time:    42.6286 sec
+SV5:  trial:  7 time:    42.9329 sec
+SV5:  trial:  8 time:    44.0312 sec
+SV5:  trial:  9 time:    43.1670 sec
+SV5:  trial: 10 time:    43.0675 sec
+SV5:  trial: 11 time:    43.3098 sec
+SV5:  trial: 12 time:    44.3607 sec
+SV5:  trial: 13 time:    45.3556 sec
+SV5:  trial: 14 time:    43.1014 sec
+SV5:  trial: 15 time:    43.5177 sec
+FastSV5:  threads:  8 time:    43.3749  # of CC: 1
+
+SV5b: trial:  0 time:    14.2141 sec
+SV5b: trial:  1 time:    14.4581 sec
+SV5b: trial:  2 time:    14.6153 sec
+SV5b: trial:  3 time:    14.5744 sec
+SV5b: trial:  4 time:    14.1397 sec
+SV5b: trial:  5 time:    14.8438 sec
+SV5b: trial:  6 time:    14.8665 sec
+SV5b: trial:  7 time:    13.1944 sec
+SV5b: trial:  8 time:    13.4621 sec
+SV5b: trial:  9 time:    13.2001 sec
+SV5b: trial: 10 time:    14.5229 sec
+SV5b: trial: 11 time:    13.5799 sec
+SV5b: trial: 12 time:    13.6039 sec
+SV5b: trial: 13 time:    14.3114 sec
+SV5b: trial: 14 time:    16.0360 sec
+SV5b: trial: 15 time:    14.6780 sec
+FastSV5b: threads:  8 time:    14.2688  # of CC: 1
+
+
+SuiteSparse:GraphBLAS Feb 20, 2020
+threads to test:  64 32 16 8
+matrix: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+# of nodes: 61578415  # of edges: 1468364884
+# of edges in S = A|A':  2405026092 (A unsymmetric)
+# of trials: 16
+
+SV5:  trial:  0 time:     8.2510 sec
+SV5:  trial:  1 time:     7.6924 sec
+SV5:  trial:  2 time:     7.6491 sec
+SV5:  trial:  3 time:     7.6382 sec
+SV5:  trial:  4 time:     7.5986 sec
+SV5:  trial:  5 time:     7.6207 sec
+SV5:  trial:  6 time:     7.6360 sec
+SV5:  trial:  7 time:     8.1304 sec
+SV5:  trial:  8 time:     7.8682 sec
+SV5:  trial:  9 time:     7.7583 sec
+SV5:  trial: 10 time:     7.8177 sec
+SV5:  trial: 11 time:     8.0778 sec
+SV5:  trial: 12 time:     8.6696 sec
+SV5:  trial: 13 time:     7.6784 sec
+SV5:  trial: 14 time:     7.7320 sec
+SV5:  trial: 15 time:     7.5970 sec
+FastSV5:  threads: 64 time:     7.8385  # of CC: 19926186
+
+SV5b: trial:  0 time:     1.5143 sec
+SV5b: trial:  1 time:     1.5031 sec
+SV5b: trial:  2 time:     1.4908 sec
+SV5b: trial:  3 time:     1.4942 sec
+SV5b: trial:  4 time:     1.5032 sec
+SV5b: trial:  5 time:     1.4844 sec
+SV5b: trial:  6 time:     1.4702 sec
+SV5b: trial:  7 time:     1.4488 sec
+SV5b: trial:  8 time:     1.4948 sec
+SV5b: trial:  9 time:     1.5111 sec
+SV5b: trial: 10 time:     1.4514 sec
+SV5b: trial: 11 time:     1.4659 sec
+SV5b: trial: 12 time:     1.4606 sec
+SV5b: trial: 13 time:     1.5502 sec
+SV5b: trial: 14 time:     1.5095 sec
+SV5b: trial: 15 time:     1.4391 sec
+FastSV5b: threads: 64 time:     1.4870  # of CC: 19926186
+
+
+SV5:  trial:  0 time:     8.5259 sec
+SV5:  trial:  1 time:     8.4188 sec
+SV5:  trial:  2 time:     8.4673 sec
+SV5:  trial:  3 time:     8.5361 sec
+SV5:  trial:  4 time:     8.5202 sec
+SV5:  trial:  5 time:     8.5597 sec
+SV5:  trial:  6 time:     8.6152 sec
+SV5:  trial:  7 time:     8.6498 sec
+SV5:  trial:  8 time:     8.5766 sec
+SV5:  trial:  9 time:     8.6614 sec
+SV5:  trial: 10 time:     8.4877 sec
+SV5:  trial: 11 time:     8.4250 sec
+SV5:  trial: 12 time:     8.4422 sec
+SV5:  trial: 13 time:     8.4628 sec
+SV5:  trial: 14 time:     8.4480 sec
+SV5:  trial: 15 time:     8.4418 sec
+FastSV5:  threads: 32 time:     8.5149  # of CC: 19926186
+
+SV5b: trial:  0 time:     1.7707 sec
+SV5b: trial:  1 time:     1.7418 sec
+SV5b: trial:  2 time:     1.6553 sec
+SV5b: trial:  3 time:     1.6181 sec
+SV5b: trial:  4 time:     1.6953 sec
+SV5b: trial:  5 time:     1.6598 sec
+SV5b: trial:  6 time:     1.6089 sec
+SV5b: trial:  7 time:     1.6245 sec
+SV5b: trial:  8 time:     1.6679 sec
+SV5b: trial:  9 time:     1.6118 sec
+SV5b: trial: 10 time:     1.6012 sec
+SV5b: trial: 11 time:     1.6251 sec
+SV5b: trial: 12 time:     1.6074 sec
+SV5b: trial: 13 time:     1.5969 sec
+SV5b: trial: 14 time:     1.6172 sec
+SV5b: trial: 15 time:     1.6773 sec
+FastSV5b: threads: 32 time:     1.6487  # of CC: 19926186
+
+
+SV5:  trial:  0 time:    13.4529 sec
+SV5:  trial:  1 time:    13.3379 sec
+SV5:  trial:  2 time:    13.2737 sec
+SV5:  trial:  3 time:    13.2536 sec
+SV5:  trial:  4 time:    13.1920 sec
+SV5:  trial:  5 time:    13.2680 sec
+SV5:  trial:  6 time:    13.2013 sec
+SV5:  trial:  7 time:    13.2750 sec
+SV5:  trial:  8 time:    13.2495 sec
+SV5:  trial:  9 time:    13.4816 sec
+SV5:  trial: 10 time:    13.2733 sec
+SV5:  trial: 11 time:    13.2030 sec
+SV5:  trial: 12 time:    13.2004 sec
+SV5:  trial: 13 time:    13.1963 sec
+SV5:  trial: 14 time:    13.2216 sec
+SV5:  trial: 15 time:    13.1826 sec
+FastSV5:  threads: 16 time:    13.2664  # of CC: 19926186
+
+SV5b: trial:  0 time:     2.3871 sec
+SV5b: trial:  1 time:     2.3492 sec
+SV5b: trial:  2 time:     2.2915 sec
+SV5b: trial:  3 time:     2.4037 sec
+SV5b: trial:  4 time:     2.3527 sec
+SV5b: trial:  5 time:     2.2693 sec
+SV5b: trial:  6 time:     2.3687 sec
+SV5b: trial:  7 time:     2.3030 sec
+SV5b: trial:  8 time:     2.3470 sec
+SV5b: trial:  9 time:     2.3494 sec
+SV5b: trial: 10 time:     2.3298 sec
+SV5b: trial: 11 time:     2.2868 sec
+SV5b: trial: 12 time:     2.3406 sec
+SV5b: trial: 13 time:     2.3073 sec
+SV5b: trial: 14 time:     2.3063 sec
+SV5b: trial: 15 time:     2.3581 sec
+FastSV5b: threads: 16 time:     2.3344  # of CC: 19926186
+
+
+SV5:  trial:  0 time:    24.6218 sec
+SV5:  trial:  1 time:    24.8854 sec
+SV5:  trial:  2 time:    25.1699 sec
+SV5:  trial:  3 time:    25.2982 sec
+SV5:  trial:  4 time:    24.8826 sec
+SV5:  trial:  5 time:    24.4600 sec
+SV5:  trial:  6 time:    24.8556 sec
+SV5:  trial:  7 time:    25.3303 sec
+SV5:  trial:  8 time:    24.7738 sec
+SV5:  trial:  9 time:    24.5855 sec
+SV5:  trial: 10 time:    24.8934 sec
+SV5:  trial: 11 time:    25.3492 sec
+SV5:  trial: 12 time:    25.4725 sec
+SV5:  trial: 13 time:    25.1016 sec
+SV5:  trial: 14 time:    24.4946 sec
+SV5:  trial: 15 time:    24.7408 sec
+FastSV5:  threads:  8 time:    24.9322  # of CC: 19926186
+
+SV5b: trial:  0 time:     4.2560 sec
+SV5b: trial:  1 time:     3.8585 sec
+SV5b: trial:  2 time:     3.8848 sec
+SV5b: trial:  3 time:     3.9483 sec
+SV5b: trial:  4 time:     3.8896 sec
+SV5b: trial:  5 time:     4.1034 sec
+SV5b: trial:  6 time:     4.1479 sec
+SV5b: trial:  7 time:     3.9703 sec
+SV5b: trial:  8 time:     3.8424 sec
+SV5b: trial:  9 time:     4.1237 sec
+SV5b: trial: 10 time:     4.1662 sec
+SV5b: trial: 11 time:     4.1489 sec
+SV5b: trial: 12 time:     4.0241 sec
+SV5b: trial: 13 time:     4.0344 sec
+SV5b: trial: 14 time:     3.7330 sec
+SV5b: trial: 15 time:     3.7491 sec
+FastSV5b: threads:  8 time:     3.9925  # of CC: 19926186
+
+
+SuiteSparse:GraphBLAS Feb 20, 2020
+threads to test:  64 32 16 8
+matrix: /home/u32248/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-web/GAP-web.grb
+# of nodes: 50636151  # of edges: 1930292948
+# of edges in S = A|A':  3620126660 (A unsymmetric)
+# of trials: 16
+
+SV5:  trial:  0 time:     2.1116 sec
+SV5:  trial:  1 time:     2.0689 sec
+SV5:  trial:  2 time:     2.1154 sec
+SV5:  trial:  3 time:     2.1174 sec
+SV5:  trial:  4 time:     2.0976 sec
+SV5:  trial:  5 time:     2.2052 sec
+SV5:  trial:  6 time:     2.5296 sec
+SV5:  trial:  7 time:     2.5173 sec
+SV5:  trial:  8 time:     2.1557 sec
+SV5:  trial:  9 time:     2.5165 sec
+SV5:  trial: 10 time:     2.5473 sec
+SV5:  trial: 11 time:     2.5161 sec
+SV5:  trial: 12 time:     2.5736 sec
+SV5:  trial: 13 time:     2.6652 sec
+SV5:  trial: 14 time:     2.2723 sec
+SV5:  trial: 15 time:     2.0206 sec
+FastSV5:  threads: 64 time:     2.3144  # of CC: 123
+
+SV5b: trial:  0 time:     2.2571 sec
+SV5b: trial:  1 time:     1.8508 sec
+SV5b: trial:  2 time:     1.8240 sec
+SV5b: trial:  3 time:     1.8414 sec
+SV5b: trial:  4 time:     1.8265 sec
+SV5b: trial:  5 time:     1.8137 sec
+SV5b: trial:  6 time:     1.8258 sec
+SV5b: trial:  7 time:     2.0151 sec
+SV5b: trial:  8 time:     2.2095 sec
+SV5b: trial:  9 time:     1.9454 sec
+SV5b: trial: 10 time:     1.9702 sec
+SV5b: trial: 11 time:     1.9340 sec
+SV5b: trial: 12 time:     2.0379 sec
+SV5b: trial: 13 time:     1.9733 sec
+SV5b: trial: 14 time:     1.9663 sec
+SV5b: trial: 15 time:     1.9702 sec
+FastSV5b: threads: 64 time:     1.9538  # of CC: 123
+
+
+SV5:  trial:  0 time:     2.5669 sec
+SV5:  trial:  1 time:     2.2915 sec
+SV5:  trial:  2 time:     2.3101 sec
+SV5:  trial:  3 time:     2.2087 sec
+SV5:  trial:  4 time:     2.1712 sec
+SV5:  trial:  5 time:     2.1967 sec
+SV5:  trial:  6 time:     2.1641 sec
+SV5:  trial:  7 time:     2.1854 sec
+SV5:  trial:  8 time:     2.1867 sec
+SV5:  trial:  9 time:     2.3248 sec
+SV5:  trial: 10 time:     2.2987 sec
+SV5:  trial: 11 time:     2.3568 sec
+SV5:  trial: 12 time:     2.3211 sec
+SV5:  trial: 13 time:     2.1808 sec
+SV5:  trial: 14 time:     2.1686 sec
+SV5:  trial: 15 time:     2.1684 sec
+FastSV5:  threads: 32 time:     2.2563  # of CC: 123
+
+SV5b: trial:  0 time:     2.2180 sec
+SV5b: trial:  1 time:     1.9386 sec
+SV5b: trial:  2 time:     1.9635 sec
+SV5b: trial:  3 time:     1.9451 sec
+SV5b: trial:  4 time:     1.8921 sec
+SV5b: trial:  5 time:     1.9565 sec
+SV5b: trial:  6 time:     1.9741 sec
+SV5b: trial:  7 time:     1.9385 sec
+SV5b: trial:  8 time:     1.9538 sec
+SV5b: trial:  9 time:     1.8882 sec
+SV5b: trial: 10 time:     1.9849 sec
+SV5b: trial: 11 time:     2.0100 sec
+SV5b: trial: 12 time:     1.9311 sec
+SV5b: trial: 13 time:     2.0608 sec
+SV5b: trial: 14 time:     1.9162 sec
+SV5b: trial: 15 time:     1.9974 sec
+FastSV5b: threads: 32 time:     1.9731  # of CC: 123
+
+
+SV5:  trial:  0 time:     3.0031 sec
+SV5:  trial:  1 time:     2.8499 sec
+SV5:  trial:  2 time:     2.8293 sec
+SV5:  trial:  3 time:     2.8493 sec
+SV5:  trial:  4 time:     2.8534 sec
+SV5:  trial:  5 time:     2.8556 sec
+SV5:  trial:  6 time:     2.8843 sec
+SV5:  trial:  7 time:     2.8185 sec
+SV5:  trial:  8 time:     2.8222 sec
+SV5:  trial:  9 time:     2.8281 sec
+SV5:  trial: 10 time:     2.8480 sec
+SV5:  trial: 11 time:     2.8143 sec
+SV5:  trial: 12 time:     2.8212 sec
+SV5:  trial: 13 time:     2.8341 sec
+SV5:  trial: 14 time:     2.8326 sec
+SV5:  trial: 15 time:     2.8316 sec
+FastSV5:  threads: 16 time:     2.8485  # of CC: 123
+
+SV5b: trial:  0 time:     2.3586 sec
+SV5b: trial:  1 time:     2.3251 sec
+SV5b: trial:  2 time:     2.3338 sec
+SV5b: trial:  3 time:     2.2563 sec
+SV5b: trial:  4 time:     2.2530 sec
+SV5b: trial:  5 time:     2.2521 sec
+SV5b: trial:  6 time:     2.3012 sec
+SV5b: trial:  7 time:     2.2394 sec
+SV5b: trial:  8 time:     2.2377 sec
+SV5b: trial:  9 time:     2.3234 sec
+SV5b: trial: 10 time:     2.3220 sec
+SV5b: trial: 11 time:     2.2369 sec
+SV5b: trial: 12 time:     2.2457 sec
+SV5b: trial: 13 time:     2.2322 sec
+SV5b: trial: 14 time:     2.2321 sec
+SV5b: trial: 15 time:     2.2319 sec
+FastSV5b: threads: 16 time:     2.2738  # of CC: 123
+
+
+SV5:  trial:  0 time:     4.6460 sec
+SV5:  trial:  1 time:     4.5436 sec
+SV5:  trial:  2 time:     4.5619 sec
+SV5:  trial:  3 time:     4.5410 sec
+SV5:  trial:  4 time:     4.5870 sec
+SV5:  trial:  5 time:     4.5945 sec
+SV5:  trial:  6 time:     4.5543 sec
+SV5:  trial:  7 time:     4.5795 sec
+SV5:  trial:  8 time:     4.7044 sec
+SV5:  trial:  9 time:     4.7418 sec
+SV5:  trial: 10 time:     4.7027 sec
+SV5:  trial: 11 time:     4.8102 sec
+SV5:  trial: 12 time:     4.5383 sec
+SV5:  trial: 13 time:     4.5342 sec
+SV5:  trial: 14 time:     4.5737 sec
+SV5:  trial: 15 time:     4.6907 sec
+FastSV5:  threads:  8 time:     4.6190  # of CC: 123
+
+SV5b: trial:  0 time:     3.8401 sec
+SV5b: trial:  1 time:     3.5547 sec
+SV5b: trial:  2 time:     3.6628 sec
+SV5b: trial:  3 time:     3.5814 sec
+SV5b: trial:  4 time:     3.6695 sec
+SV5b: trial:  5 time:     3.5543 sec
+SV5b: trial:  6 time:     3.6920 sec
+SV5b: trial:  7 time:     3.5729 sec
+SV5b: trial:  8 time:     3.5771 sec
+SV5b: trial:  9 time:     3.6856 sec
+SV5b: trial: 10 time:     3.7612 sec
+SV5b: trial: 11 time:     3.6093 sec
+SV5b: trial: 12 time:     3.6603 sec
+SV5b: trial: 13 time:     3.7332 sec
+SV5b: trial: 14 time:     3.8464 sec
+SV5b: trial: 15 time:     3.6591 sec
+FastSV5b: threads:  8 time:     3.6662  # of CC: 123
+
+
+SuiteSparse:GraphBLAS Feb 20, 2020
+threads to test:  64 32 16 8
+matrix: /home/u32248/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-road/GAP-road.grb
+# of nodes: 23947347  # of edges: 57708624
+# of edges in S = A|A':  57708624 (A symmetric)
+# of trials: 16
+
+SV5:  trial:  0 time:     1.9348 sec
+SV5:  trial:  1 time:     1.7353 sec
+SV5:  trial:  2 time:     2.1106 sec
+SV5:  trial:  3 time:     2.5628 sec
+SV5:  trial:  4 time:     1.5387 sec
+SV5:  trial:  5 time:     1.4704 sec
+SV5:  trial:  6 time:     1.4703 sec
+SV5:  trial:  7 time:     1.7499 sec
+SV5:  trial:  8 time:     1.8358 sec
+SV5:  trial:  9 time:     1.5863 sec
+SV5:  trial: 10 time:     1.4725 sec
+SV5:  trial: 11 time:     1.4668 sec
+SV5:  trial: 12 time:     1.4685 sec
+SV5:  trial: 13 time:     1.4680 sec
+SV5:  trial: 14 time:     1.4680 sec
+SV5:  trial: 15 time:     1.8121 sec
+FastSV5:  threads: 64 time:     1.6969  # of CC: 1
+
+SV5b: trial:  0 time:     1.1605 sec
+SV5b: trial:  1 time:     0.7215 sec
+SV5b: trial:  2 time:     0.7251 sec
+SV5b: trial:  3 time:     0.7161 sec
+SV5b: trial:  4 time:     0.7544 sec
+SV5b: trial:  5 time:     0.7306 sec
+SV5b: trial:  6 time:     0.7246 sec
+SV5b: trial:  7 time:     0.7399 sec
+SV5b: trial:  8 time:     0.7265 sec
+SV5b: trial:  9 time:     0.7137 sec
+SV5b: trial: 10 time:     0.7188 sec
+SV5b: trial: 11 time:     0.7524 sec
+SV5b: trial: 12 time:     0.7357 sec
+SV5b: trial: 13 time:     0.7252 sec
+SV5b: trial: 14 time:     0.7150 sec
+SV5b: trial: 15 time:     0.7098 sec
+FastSV5b: threads: 64 time:     0.7544  # of CC: 1
+
+
+SV5:  trial:  0 time:     1.5328 sec
+SV5:  trial:  1 time:     1.5278 sec
+SV5:  trial:  2 time:     1.5130 sec
+SV5:  trial:  3 time:     1.4953 sec
+SV5:  trial:  4 time:     1.4955 sec
+SV5:  trial:  5 time:     1.4956 sec
+SV5:  trial:  6 time:     1.4923 sec
+SV5:  trial:  7 time:     1.4933 sec
+SV5:  trial:  8 time:     1.4941 sec
+SV5:  trial:  9 time:     1.5605 sec
+SV5:  trial: 10 time:     1.5582 sec
+SV5:  trial: 11 time:     1.5431 sec
+SV5:  trial: 12 time:     1.5503 sec
+SV5:  trial: 13 time:     1.5446 sec
+SV5:  trial: 14 time:     1.5493 sec
+SV5:  trial: 15 time:     1.5477 sec
+FastSV5:  threads: 32 time:     1.5246  # of CC: 1
+
+SV5b: trial:  0 time:     0.9179 sec
+SV5b: trial:  1 time:     0.8421 sec
+SV5b: trial:  2 time:     0.8392 sec
+SV5b: trial:  3 time:     0.8498 sec
+SV5b: trial:  4 time:     0.8437 sec
+SV5b: trial:  5 time:     0.8418 sec
+SV5b: trial:  6 time:     0.8378 sec
+SV5b: trial:  7 time:     0.8383 sec
+SV5b: trial:  8 time:     0.8500 sec
+SV5b: trial:  9 time:     0.8288 sec
+SV5b: trial: 10 time:     0.8477 sec
+SV5b: trial: 11 time:     0.8525 sec
+SV5b: trial: 12 time:     0.8355 sec
+SV5b: trial: 13 time:     0.8545 sec
+SV5b: trial: 14 time:     0.8423 sec
+SV5b: trial: 15 time:     0.8230 sec
+FastSV5b: threads: 32 time:     0.8465  # of CC: 1
+
+
+SV5:  trial:  0 time:     1.7319 sec
+SV5:  trial:  1 time:     1.7444 sec
+SV5:  trial:  2 time:     1.7277 sec
+SV5:  trial:  3 time:     1.7477 sec
+SV5:  trial:  4 time:     1.7441 sec
+SV5:  trial:  5 time:     1.7333 sec
+SV5:  trial:  6 time:     1.7317 sec
+SV5:  trial:  7 time:     1.7297 sec
+SV5:  trial:  8 time:     1.7262 sec
+SV5:  trial:  9 time:     1.7242 sec
+SV5:  trial: 10 time:     1.7227 sec
+SV5:  trial: 11 time:     1.7265 sec
+SV5:  trial: 12 time:     1.7294 sec
+SV5:  trial: 13 time:     1.7241 sec
+SV5:  trial: 14 time:     1.7288 sec
+SV5:  trial: 15 time:     1.7267 sec
+FastSV5:  threads: 16 time:     1.7312  # of CC: 1
+
+SV5b: trial:  0 time:     1.2316 sec
+SV5b: trial:  1 time:     1.2099 sec
+SV5b: trial:  2 time:     1.2206 sec
+SV5b: trial:  3 time:     1.2934 sec
+SV5b: trial:  4 time:     1.2425 sec
+SV5b: trial:  5 time:     1.2703 sec
+SV5b: trial:  6 time:     1.2595 sec
+SV5b: trial:  7 time:     1.2647 sec
+SV5b: trial:  8 time:     1.3160 sec
+SV5b: trial:  9 time:     1.2827 sec
+SV5b: trial: 10 time:     1.2852 sec
+SV5b: trial: 11 time:     1.2434 sec
+SV5b: trial: 12 time:     1.2423 sec
+SV5b: trial: 13 time:     1.2973 sec
+SV5b: trial: 14 time:     1.2936 sec
+SV5b: trial: 15 time:     1.2604 sec
+FastSV5b: threads: 16 time:     1.2633  # of CC: 1
+
+
+SV5:  trial:  0 time:     2.3714 sec
+SV5:  trial:  1 time:     2.3847 sec
+SV5:  trial:  2 time:     2.3919 sec
+SV5:  trial:  3 time:     2.3903 sec
+SV5:  trial:  4 time:     2.3735 sec
+SV5:  trial:  5 time:     2.3577 sec
+SV5:  trial:  6 time:     2.3564 sec
+SV5:  trial:  7 time:     2.3566 sec
+SV5:  trial:  8 time:     2.3752 sec
+SV5:  trial:  9 time:     2.3931 sec
+SV5:  trial: 10 time:     2.3924 sec
+SV5:  trial: 11 time:     2.3886 sec
+SV5:  trial: 12 time:     2.3862 sec
+SV5:  trial: 13 time:     2.3853 sec
+SV5:  trial: 14 time:     2.4331 sec
+SV5:  trial: 15 time:     2.3637 sec
+FastSV5:  threads:  8 time:     2.3813  # of CC: 1
+
+SV5b: trial:  0 time:     2.2714 sec
+SV5b: trial:  1 time:     2.5945 sec
+SV5b: trial:  2 time:     2.2738 sec
+SV5b: trial:  3 time:     2.3478 sec
+SV5b: trial:  4 time:     2.2873 sec
+SV5b: trial:  5 time:     2.2501 sec
+SV5b: trial:  6 time:     2.2292 sec
+SV5b: trial:  7 time:     2.2612 sec
+SV5b: trial:  8 time:     2.3496 sec
+SV5b: trial:  9 time:     2.2309 sec
+SV5b: trial: 10 time:     2.2022 sec
+SV5b: trial: 11 time:     2.2256 sec
+SV5b: trial: 12 time:     2.3337 sec
+SV5b: trial: 13 time:     2.3405 sec
+SV5b: trial: 14 time:     2.2641 sec
+SV5b: trial: 15 time:     2.2502 sec
+FastSV5b: threads:  8 time:     2.2945  # of CC: 1
+
+
+
+########################################################################
+# End of output for job 512362.v-qsvr-1.aidevcloud
+# Date: Sat Feb 22 16:51:07 PST 2020
+########################################################################
+

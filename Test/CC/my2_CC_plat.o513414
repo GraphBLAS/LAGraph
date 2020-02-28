@@ -1,0 +1,244 @@
+
+########################################################################
+#      Date:           Sun Feb 23 11:35:31 PST 2020
+#    Job ID:           513414.v-qsvr-1.aidevcloud
+#      User:           u32248
+# Resources:           neednodes=1:ppn=2:plat8153,nodes=1:ppn=2:plat8153,walltime=24:00:00
+########################################################################
+
+SuiteSparse:GraphBLAS Feb 20, 2020
+threads to test:  64
+matrix: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+# of nodes: 134217726  # of edges: 4223264644
+# of edges in S = A|A':  4223264644 (A symmetric)
+# of trials: 16
+
+SV5:  trial:  0 time:    15.7938 sec
+SV5:  trial:  1 time:    15.7253 sec
+SV5:  trial:  2 time:    15.7342 sec
+SV5:  trial:  3 time:    15.6921 sec
+SV5:  trial:  4 time:    15.7000 sec
+SV5:  trial:  5 time:    15.6761 sec
+SV5:  trial:  6 time:    15.6528 sec
+SV5:  trial:  7 time:    15.6624 sec
+SV5:  trial:  8 time:    15.6791 sec
+SV5:  trial:  9 time:    15.6458 sec
+SV5:  trial: 10 time:    15.6471 sec
+SV5:  trial: 11 time:    15.6360 sec
+SV5:  trial: 12 time:    15.7568 sec
+SV5:  trial: 13 time:    15.6873 sec
+SV5:  trial: 14 time:    15.7051 sec
+SV5:  trial: 15 time:    15.7412 sec
+FastSV5:  threads: 64 time:    15.6959  # of CC: 71164263
+
+SV5b: trial:  0 time:     3.1121 sec
+SV5b: trial:  1 time:     3.0716 sec
+SV5b: trial:  2 time:     3.2171 sec
+SV5b: trial:  3 time:     3.0675 sec
+SV5b: trial:  4 time:     3.1000 sec
+SV5b: trial:  5 time:     3.0914 sec
+SV5b: trial:  6 time:     3.0737 sec
+SV5b: trial:  7 time:     3.0827 sec
+SV5b: trial:  8 time:     3.0833 sec
+SV5b: trial:  9 time:     3.0644 sec
+SV5b: trial: 10 time:     3.0657 sec
+SV5b: trial: 11 time:     3.1151 sec
+SV5b: trial: 12 time:     3.1186 sec
+SV5b: trial: 13 time:     3.1193 sec
+SV5b: trial: 14 time:     3.1579 sec
+SV5b: trial: 15 time:     3.1229 sec
+FastSV5b: threads: 64 time:     3.1040  # of CC: 71164263
+
+
+SuiteSparse:GraphBLAS Feb 20, 2020
+threads to test:  64
+matrix: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+# of nodes: 134217728  # of edges: 4294966740
+# of edges in S = A|A':  4294966740 (A symmetric)
+# of trials: 16
+
+SV5:  trial:  0 time:    13.3538 sec
+SV5:  trial:  1 time:    13.3829 sec
+SV5:  trial:  2 time:    13.3397 sec
+SV5:  trial:  3 time:    13.3955 sec
+SV5:  trial:  4 time:    13.4068 sec
+SV5:  trial:  5 time:    13.3781 sec
+SV5:  trial:  6 time:    13.4395 sec
+SV5:  trial:  7 time:    13.4710 sec
+SV5:  trial:  8 time:    13.3967 sec
+SV5:  trial:  9 time:    13.3924 sec
+SV5:  trial: 10 time:    13.3701 sec
+SV5:  trial: 11 time:    13.3448 sec
+SV5:  trial: 12 time:    13.3652 sec
+SV5:  trial: 13 time:    13.3791 sec
+SV5:  trial: 14 time:    13.4228 sec
+SV5:  trial: 15 time:    13.3772 sec
+FastSV5:  threads: 64 time:    13.3885  # of CC: 1
+
+SV5b: trial:  0 time:     4.1415 sec
+SV5b: trial:  1 time:     4.1097 sec
+SV5b: trial:  2 time:     4.0963 sec
+SV5b: trial:  3 time:     4.0799 sec
+SV5b: trial:  4 time:     4.0429 sec
+SV5b: trial:  5 time:     4.1400 sec
+SV5b: trial:  6 time:     4.0737 sec
+SV5b: trial:  7 time:     4.1165 sec
+SV5b: trial:  8 time:     4.0545 sec
+SV5b: trial:  9 time:     4.1342 sec
+SV5b: trial: 10 time:     4.0828 sec
+SV5b: trial: 11 time:     4.0725 sec
+SV5b: trial: 12 time:     4.1162 sec
+SV5b: trial: 13 time:     4.0972 sec
+SV5b: trial: 14 time:     4.0612 sec
+SV5b: trial: 15 time:     4.0558 sec
+FastSV5b: threads: 64 time:     4.0922  # of CC: 1
+
+
+SuiteSparse:GraphBLAS Feb 20, 2020
+threads to test:  64
+matrix: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+# of nodes: 61578415  # of edges: 1468364884
+# of edges in S = A|A':  2405026092 (A unsymmetric)
+# of trials: 16
+
+SV5:  trial:  0 time:     7.1462 sec
+SV5:  trial:  1 time:     7.2001 sec
+SV5:  trial:  2 time:     7.2417 sec
+SV5:  trial:  3 time:     7.1784 sec
+SV5:  trial:  4 time:     7.1645 sec
+SV5:  trial:  5 time:     7.1549 sec
+SV5:  trial:  6 time:     7.1491 sec
+SV5:  trial:  7 time:     7.1302 sec
+SV5:  trial:  8 time:     7.1457 sec
+SV5:  trial:  9 time:     7.1403 sec
+SV5:  trial: 10 time:     7.1480 sec
+SV5:  trial: 11 time:     7.1426 sec
+SV5:  trial: 12 time:     7.1441 sec
+SV5:  trial: 13 time:     7.1434 sec
+SV5:  trial: 14 time:     7.1435 sec
+SV5:  trial: 15 time:     7.1838 sec
+FastSV5:  threads: 64 time:     7.1598  # of CC: 19926186
+
+SV5b: trial:  0 time:     1.4157 sec
+SV5b: trial:  1 time:     1.4217 sec
+SV5b: trial:  2 time:     1.4122 sec
+SV5b: trial:  3 time:     1.4059 sec
+SV5b: trial:  4 time:     1.4207 sec
+SV5b: trial:  5 time:     1.4079 sec
+SV5b: trial:  6 time:     1.4150 sec
+SV5b: trial:  7 time:     1.4124 sec
+SV5b: trial:  8 time:     1.4129 sec
+SV5b: trial:  9 time:     1.4109 sec
+SV5b: trial: 10 time:     1.4194 sec
+SV5b: trial: 11 time:     1.4124 sec
+SV5b: trial: 12 time:     1.4061 sec
+SV5b: trial: 13 time:     1.4133 sec
+SV5b: trial: 14 time:     1.4170 sec
+SV5b: trial: 15 time:     1.4139 sec
+FastSV5b: threads: 64 time:     1.4136  # of CC: 19926186
+
+
+SuiteSparse:GraphBLAS Feb 20, 2020
+threads to test:  64
+matrix: /home/u32248/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-web/GAP-web.grb
+# of nodes: 50636151  # of edges: 1930292948
+# of edges in S = A|A':  3620126660 (A unsymmetric)
+# of trials: 16
+
+SV5:  trial:  0 time:     2.0164 sec
+SV5:  trial:  1 time:     2.0212 sec
+SV5:  trial:  2 time:     2.0166 sec
+SV5:  trial:  3 time:     2.0213 sec
+SV5:  trial:  4 time:     2.0240 sec
+SV5:  trial:  5 time:     2.0138 sec
+SV5:  trial:  6 time:     2.0075 sec
+SV5:  trial:  7 time:     2.0151 sec
+SV5:  trial:  8 time:     2.0175 sec
+SV5:  trial:  9 time:     2.0206 sec
+SV5:  trial: 10 time:     2.0199 sec
+SV5:  trial: 11 time:     2.0182 sec
+SV5:  trial: 12 time:     2.0186 sec
+SV5:  trial: 13 time:     2.0122 sec
+SV5:  trial: 14 time:     2.0108 sec
+SV5:  trial: 15 time:     2.0102 sec
+FastSV5:  threads: 64 time:     2.0165  # of CC: 123
+
+SV5b: trial:  0 time:     1.9084 sec
+SV5b: trial:  1 time:     1.8889 sec
+SV5b: trial:  2 time:     1.8821 sec
+SV5b: trial:  3 time:     1.8800 sec
+SV5b: trial:  4 time:     1.8842 sec
+SV5b: trial:  5 time:     1.8829 sec
+SV5b: trial:  6 time:     1.8846 sec
+SV5b: trial:  7 time:     1.8811 sec
+SV5b: trial:  8 time:     1.8829 sec
+SV5b: trial:  9 time:     1.8789 sec
+SV5b: trial: 10 time:     1.8765 sec
+SV5b: trial: 11 time:     1.8738 sec
+SV5b: trial: 12 time:     1.8777 sec
+SV5b: trial: 13 time:     1.8856 sec
+SV5b: trial: 14 time:     1.8937 sec
+SV5b: trial: 15 time:     1.8751 sec
+FastSV5b: threads: 64 time:     1.8835  # of CC: 123
+
+
+SuiteSparse:GraphBLAS Feb 20, 2020
+threads to test:  64
+matrix: /home/u32248/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-road/GAP-road.grb
+# of nodes: 23947347  # of edges: 57708624
+# of edges in S = A|A':  57708624 (A symmetric)
+# of trials: 16
+
+SV5:  trial:  0 time:     1.6809 sec
+SV5:  trial:  1 time:     1.4470 sec
+SV5:  trial:  2 time:     1.4487 sec
+SV5:  trial:  3 time:     1.4935 sec
+SV5:  trial:  4 time:     1.4481 sec
+SV5:  trial:  5 time:     1.4488 sec
+SV5:  trial:  6 time:     1.4547 sec
+SV5:  trial:  7 time:     1.4451 sec
+SV5:  trial:  8 time:     1.4451 sec
+SV5:  trial:  9 time:     1.4448 sec
+SV5:  trial: 10 time:     1.4452 sec
+SV5:  trial: 11 time:     1.4449 sec
+SV5:  trial: 12 time:     1.4697 sec
+SV5:  trial: 13 time:     1.4451 sec
+SV5:  trial: 14 time:     1.4438 sec
+SV5:  trial: 15 time:     1.4444 sec
+FastSV5:  threads: 64 time:     1.4656  # of CC: 1
+
+SV5b: trial:  0 time:     0.8025 sec
+SV5b: trial:  1 time:     0.8015 sec
+SV5b: trial:  2 time:     0.8074 sec
+SV5b: trial:  3 time:     0.7945 sec
+SV5b: trial:  4 time:     0.8457 sec
+SV5b: trial:  5 time:     0.8119 sec
+SV5b: trial:  6 time:     0.8042 sec
+SV5b: trial:  7 time:     0.8201 sec
+SV5b: trial:  8 time:     0.8040 sec
+SV5b: trial:  9 time:     0.7891 sec
+SV5b: trial: 10 time:     0.7984 sec
+SV5b: trial: 11 time:     0.8364 sec
+SV5b: trial: 12 time:     0.7897 sec
+SV5b: trial: 13 time:     0.8005 sec
+SV5b: trial: 14 time:     0.7920 sec
+SV5b: trial: 15 time:     0.7869 sec
+FastSV5b: threads: 64 time:     0.8053  # of CC: 1
+
+
+
+########################################################################
+# End of output for job 513414.v-qsvr-1.aidevcloud
+# Date: Sun Feb 23 12:45:21 PST 2020
+########################################################################
+

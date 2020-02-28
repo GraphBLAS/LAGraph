@@ -1,0 +1,589 @@
+
+########################################################################
+#      Date:           Sun Feb 23 07:59:46 PST 2020
+#    Job ID:           513412.v-qsvr-1.aidevcloud
+#      User:           u32248
+# Resources:           neednodes=1:ppn=2:plat8153,nodes=1:ppn=2:plat8153,walltime=24:00:00
+########################################################################
+
+SuiteSparse:GraphBLAS Feb 20, 2020
+threads to test:  64 32 16
+matrix: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+sources: /home/u32248/GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 928.775 sec
+A is symmetric
+transpose time: 76.5175
+
+========== input graph: nodes: 134217726 edges: 64
+
+Trial 1 : sources: [ 2338012 31997659 23590940 43400604 ]
+
+Batch v4 time 64:      32.8569 (sec)
+Batch v4 time 32:      42.8025 (sec)
+Batch v4 time 16:     123.5104 (sec)
+
+Trial 2 : sources: [ 75337937 169867 104041220 94177942 ]
+
+Batch v4 time 64:      30.8858 (sec)
+Batch v4 time 32:      38.8365 (sec)
+Batch v4 time 16:      68.0786 (sec)
+
+Trial 3 : sources: [ 32871357 56230002 69883037 9346345 ]
+
+Batch v4 time 64:      32.4948 (sec)
+Batch v4 time 32:      46.2120 (sec)
+Batch v4 time 16:      78.1970 (sec)
+
+Trial 4 : sources: [ 48915358 122571173 6183279 86323663 ]
+
+Batch v4 time 64:      31.4994 (sec)
+Batch v4 time 32:      39.0923 (sec)
+Batch v4 time 16:      85.0290 (sec)
+
+Trial 5 : sources: [ 106725780 92389938 16210738 59816700 ]
+
+Batch v4 time 64:      34.3501 (sec)
+Batch v4 time 32:      41.9355 (sec)
+Batch v4 time 16:      71.1113 (sec)
+
+Trial 6 : sources: [ 111669929 102831411 113384800 43872564 ]
+
+Batch v4 time 64:      31.9421 (sec)
+Batch v4 time 32:      40.4916 (sec)
+Batch v4 time 16:      76.3233 (sec)
+
+Trial 7 : sources: [ 80508827 26105648 8807516 118452455 ]
+
+Batch v4 time 64:      32.7750 (sec)
+Batch v4 time 32:      40.6714 (sec)
+Batch v4 time 16:      77.4784 (sec)
+
+Trial 8 : sources: [ 121818859 42361928 29493053 98461503 ]
+
+Batch v4 time 64:      29.1326 (sec)
+Batch v4 time 32:      36.9967 (sec)
+Batch v4 time 16:      63.0982 (sec)
+
+Trial 9 : sources: [ 71931337 103808468 4092345 115276241 ]
+
+Batch v4 time 64:      30.5283 (sec)
+Batch v4 time 32:      37.7972 (sec)
+Batch v4 time 16:      76.7172 (sec)
+
+Trial 10 : sources: [ 4649343 76656189 31312001 111334127 ]
+
+Batch v4 time 64:      34.1147 (sec)
+Batch v4 time 32:      44.6823 (sec)
+Batch v4 time 16:      71.1575 (sec)
+
+Trial 11 : sources: [ 100962918 41823215 22631240 42848461 ]
+
+Batch v4 time 64:      31.0596 (sec)
+Batch v4 time 32:      65.2496 (sec)
+Batch v4 time 16:     101.6107 (sec)
+
+Trial 12 : sources: [ 79485148 106818742 73347974 78848445 ]
+
+Batch v4 time 64:      28.8501 (sec)
+Batch v4 time 32:      36.3866 (sec)
+Batch v4 time 16:      61.9759 (sec)
+
+Trial 13 : sources: [ 109920510 121492133 101037296 15438600 ]
+
+Batch v4 time 64:      31.1136 (sec)
+Batch v4 time 32:      37.6112 (sec)
+Batch v4 time 16:     118.9017 (sec)
+
+Trial 14 : sources: [ 4584784 124503845 87241743 108297008 ]
+
+Batch v4 time 64:      39.5005 (sec)
+Batch v4 time 32:      53.4368 (sec)
+Batch v4 time 16:     125.2303 (sec)
+
+Trial 15 : sources: [ 33955082 79934823 8608481 82435063 ]
+
+Batch v4 time 64:      32.7607 (sec)
+Batch v4 time 32:      41.5470 (sec)
+Batch v4 time 16:      75.4777 (sec)
+
+Trial 16 : sources: [ 46579271 515421 121530467 127978736 ]
+
+Batch v4 time 64:      31.6992 (sec)
+Batch v4 time 32:      38.5615 (sec)
+Batch v4 time 16:      70.1692 (sec)
+
+ntrials: 16
+
+
+Ave (Batch4)  64:     32.223 sec, rate      0.000
+Ave (Batch4)  32:     42.644 sec, rate      0.000
+Ave (Batch4)  16:     84.004 sec, rate      0.000
+./build/gap_bc_test: all tests passed
+SuiteSparse:GraphBLAS Feb 20, 2020
+threads to test:  64 32 16
+matrix: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+sources: /home/u32248/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 860.834 sec
+A is symmetric
+transpose time: 83.0431
+
+========== input graph: nodes: 134217728 edges: 64
+
+Trial 1 : sources: [ 27691419 121280314 2413431 37512113 ]
+
+Batch v4 time 64:      45.3964 (sec)
+Batch v4 time 32:      54.6020 (sec)
+Batch v4 time 16:      91.4398 (sec)
+
+Trial 2 : sources: [ 38390877 56651037 128461248 33029842 ]
+
+Batch v4 time 64:      46.1659 (sec)
+Batch v4 time 32:      55.0415 (sec)
+Batch v4 time 16:      92.6409 (sec)
+
+Trial 3 : sources: [ 71406328 117872827 24351938 15444519 ]
+
+Batch v4 time 64:      44.7462 (sec)
+Batch v4 time 32:      53.6882 (sec)
+Batch v4 time 16:      90.0070 (sec)
+
+Trial 4 : sources: [ 127526281 112279428 13631649 110379302 ]
+
+Batch v4 time 64:      43.8466 (sec)
+Batch v4 time 32:      52.5866 (sec)
+Batch v4 time 16:      89.2307 (sec)
+
+Trial 5 : sources: [ 44800623 77768193 175347 107397389 ]
+
+Batch v4 time 64:      44.0800 (sec)
+Batch v4 time 32:      52.3591 (sec)
+Batch v4 time 16:      88.4827 (sec)
+
+Trial 6 : sources: [ 43457209 97215940 73575165 44449715 ]
+
+Batch v4 time 64:      44.9734 (sec)
+Batch v4 time 32:      54.5866 (sec)
+Batch v4 time 16:      91.7424 (sec)
+
+Trial 7 : sources: [ 33931724 55526610 14422051 58043873 ]
+
+Batch v4 time 64:      44.2275 (sec)
+Batch v4 time 32:      53.0688 (sec)
+Batch v4 time 16:      89.4668 (sec)
+
+Trial 8 : sources: [ 72137329 9647840 15940695 14209952 ]
+
+Batch v4 time 64:      46.2131 (sec)
+Batch v4 time 32:      54.9892 (sec)
+Batch v4 time 16:      93.1443 (sec)
+
+Trial 9 : sources: [ 49020883 28901138 50493273 49150069 ]
+
+Batch v4 time 64:      44.9189 (sec)
+Batch v4 time 32:      53.6887 (sec)
+Batch v4 time 16:      90.0261 (sec)
+
+Trial 10 : sources: [ 126525082 6382740 89108297 9239735 ]
+
+Batch v4 time 64:      45.1367 (sec)
+Batch v4 time 32:      54.6555 (sec)
+Batch v4 time 16:      91.7010 (sec)
+
+Trial 11 : sources: [ 110168548 95370259 116653530 123410703 ]
+
+Batch v4 time 64:      44.6791 (sec)
+Batch v4 time 32:      53.3926 (sec)
+Batch v4 time 16:      89.8966 (sec)
+
+Trial 12 : sources: [ 16733665 49030282 108545121 99095665 ]
+
+Batch v4 time 64:      45.0434 (sec)
+Batch v4 time 32:      54.2773 (sec)
+Batch v4 time 16:      91.0865 (sec)
+
+Trial 13 : sources: [ 133850077 63499301 21541382 6230751 ]
+
+Batch v4 time 64:      46.0026 (sec)
+Batch v4 time 32:      55.2046 (sec)
+Batch v4 time 16:      92.9386 (sec)
+
+Trial 14 : sources: [ 89077456 70392765 6670455 61746271 ]
+
+Batch v4 time 64:      44.7968 (sec)
+Batch v4 time 32:      54.1939 (sec)
+Batch v4 time 16:      90.4908 (sec)
+
+Trial 15 : sources: [ 83349535 115272184 20129908 106148553 ]
+
+Batch v4 time 64:      44.0889 (sec)
+Batch v4 time 32:      53.0912 (sec)
+Batch v4 time 16:      89.4981 (sec)
+
+Trial 16 : sources: [ 117042375 71431187 45287808 107702120 ]
+
+Batch v4 time 64:      44.0704 (sec)
+Batch v4 time 32:      52.4508 (sec)
+Batch v4 time 16:      89.5555 (sec)
+
+ntrials: 16
+
+
+Ave (Batch4)  64:     44.899 sec, rate      0.000
+Ave (Batch4)  32:     53.867 sec, rate      0.000
+Ave (Batch4)  16:     90.709 sec, rate      0.000
+./build/gap_bc_test: all tests passed
+SuiteSparse:GraphBLAS Feb 20, 2020
+threads to test:  64 32 16
+matrix: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+sources: /home/u32248/GAP/GAP-twitter/GAP-twitter_sources.mtx
+read time: 295.816 sec
+A is unsymmetric
+transpose time: 22.535
+
+========== input graph: nodes: 61578415 edges: 64
+
+Trial 1 : sources: [ 12441072 54488257 25451915 57714473 ]
+
+Batch v4 time 64:      17.4696 (sec)
+Batch v4 time 32:      16.0969 (sec)
+Batch v4 time 16:      29.5976 (sec)
+
+Trial 2 : sources: [ 14839494 32081104 52957357 50444380 ]
+
+Batch v4 time 64:      18.3582 (sec)
+Batch v4 time 32:      21.6334 (sec)
+Batch v4 time 16:      33.1909 (sec)
+
+Trial 3 : sources: [ 49590701 20127816 34939333 48251001 ]
+
+Batch v4 time 64:      14.6994 (sec)
+Batch v4 time 32:      16.4661 (sec)
+Batch v4 time 16:      26.8068 (sec)
+
+Trial 4 : sources: [ 19524253 43676726 33055508 15244687 ]
+
+Batch v4 time 64:      12.6414 (sec)
+Batch v4 time 32:      16.2361 (sec)
+Batch v4 time 16:      27.8666 (sec)
+
+Trial 5 : sources: [ 24946738 6479472 26077682 22023875 ]
+
+Batch v4 time 64:      17.4265 (sec)
+Batch v4 time 32:      18.2778 (sec)
+Batch v4 time 16:      30.9979 (sec)
+
+Trial 6 : sources: [ 22081915 40034162 49496014 42847507 ]
+
+Batch v4 time 64:      14.7527 (sec)
+Batch v4 time 32:      16.0754 (sec)
+Batch v4 time 16:      24.5743 (sec)
+
+Trial 7 : sources: [ 52409557 55445388 22028097 48766648 ]
+
+Batch v4 time 64:      15.2822 (sec)
+Batch v4 time 32:      19.6027 (sec)
+Batch v4 time 16:      32.5711 (sec)
+
+Trial 8 : sources: [ 44521241 60135542 28528671 9678012 ]
+
+Batch v4 time 64:      19.1213 (sec)
+Batch v4 time 32:      23.6286 (sec)
+Batch v4 time 16:      29.7651 (sec)
+
+Trial 9 : sources: [ 40020306 31625735 37446892 51788952 ]
+
+Batch v4 time 64:      13.8193 (sec)
+Batch v4 time 32:      13.8541 (sec)
+Batch v4 time 16:      22.0608 (sec)
+
+Trial 10 : sources: [ 52584255 20346696 48387909 37337427 ]
+
+Batch v4 time 64:      12.8437 (sec)
+Batch v4 time 32:      13.5452 (sec)
+Batch v4 time 16:      36.5021 (sec)
+
+Trial 11 : sources: [ 50501084 30130061 41185893 56495703 ]
+
+Batch v4 time 64:      16.1358 (sec)
+Batch v4 time 32:      17.0399 (sec)
+Batch v4 time 16:      31.2841 (sec)
+
+Trial 12 : sources: [ 45663305 33359460 48143058 33291513 ]
+
+Batch v4 time 64:      16.6670 (sec)
+Batch v4 time 32:      19.4727 (sec)
+Batch v4 time 16:      36.4208 (sec)
+
+Trial 13 : sources: [ 53461445 29340610 34148498 49171806 ]
+
+Batch v4 time 64:      18.2168 (sec)
+Batch v4 time 32:      15.1402 (sec)
+Batch v4 time 16:      25.9189 (sec)
+
+Trial 14 : sources: [ 35550696 14521507 51633218 46823382 ]
+
+Batch v4 time 64:      16.6647 (sec)
+Batch v4 time 32:      17.1104 (sec)
+Batch v4 time 16:      27.0557 (sec)
+
+Trial 15 : sources: [ 19396273 19871750 36862677 49539126 ]
+
+Batch v4 time 64:      18.1488 (sec)
+Batch v4 time 32:      18.3286 (sec)
+Batch v4 time 16:      33.3923 (sec)
+
+Trial 16 : sources: [ 34016452 36567395 55487793 14391370 ]
+
+Batch v4 time 64:      16.0239 (sec)
+Batch v4 time 32:      15.2342 (sec)
+Batch v4 time 16:      23.0366 (sec)
+
+ntrials: 16
+
+
+Ave (Batch4)  64:     16.142 sec, rate      0.000
+Ave (Batch4)  32:     17.359 sec, rate      0.000
+Ave (Batch4)  16:     29.440 sec, rate      0.000
+./build/gap_bc_test: all tests passed
+SuiteSparse:GraphBLAS Feb 20, 2020
+threads to test:  64 32 16
+matrix: /home/u32248/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-web/GAP-web.grb
+sources: /home/u32248/GAP/GAP-web/GAP-web_sources.mtx
+read time: 269.3 sec
+A is unsymmetric
+transpose time: 6.44771
+
+========== input graph: nodes: 50636151 edges: 64
+
+Trial 1 : sources: [ 10219452 44758211 890671 13843756 ]
+
+Batch v4 time 64:       8.1546 (sec)
+Batch v4 time 32:       8.3545 (sec)
+Batch v4 time 16:      11.5673 (sec)
+
+Trial 2 : sources: [ 14168062 20906930 12189584 26352335 ]
+
+Batch v4 time 64:       7.7954 (sec)
+Batch v4 time 32:       7.8296 (sec)
+Batch v4 time 16:      10.7194 (sec)
+
+Trial 3 : sources: [ 43500686 8987024 5699762 41436455 ]
+
+Batch v4 time 64:       7.7328 (sec)
+Batch v4 time 32:       7.9383 (sec)
+Batch v4 time 16:      10.4220 (sec)
+
+Trial 4 : sources: [ 5030727 40735218 16533563 28700166 ]
+
+Batch v4 time 64:      10.5348 (sec)
+Batch v4 time 32:      10.6882 (sec)
+Batch v4 time 16:      16.7325 (sec)
+
+Trial 5 : sources: [ 64711 39634750 16037779 27152739 ]
+
+Batch v4 time 64:       9.9313 (sec)
+Batch v4 time 32:      10.3547 (sec)
+Batch v4 time 16:      13.7244 (sec)
+
+Trial 6 : sources: [ 16404061 20491963 5322423 21420953 ]
+
+Batch v4 time 64:      10.4939 (sec)
+Batch v4 time 32:      11.0341 (sec)
+Batch v4 time 16:      16.6143 (sec)
+
+Trial 7 : sources: [ 26622109 5882875 18091040 10665896 ]
+
+Batch v4 time 64:       7.9011 (sec)
+Batch v4 time 32:       8.1260 (sec)
+Batch v4 time 16:      11.0234 (sec)
+
+Trial 8 : sources: [ 18634422 18138715 2355535 32885205 ]
+
+Batch v4 time 64:       7.5198 (sec)
+Batch v4 time 32:       7.8009 (sec)
+Batch v4 time 16:      10.6198 (sec)
+
+Trial 9 : sources: [ 40657440 35196167 45544426 6175519 ]
+
+Batch v4 time 64:       7.3838 (sec)
+Batch v4 time 32:       7.6280 (sec)
+Batch v4 time 16:      10.0625 (sec)
+
+Trial 10 : sources: [ 40058318 50626230 36571019 49397052 ]
+
+Batch v4 time 64:       9.5729 (sec)
+Batch v4 time 32:      10.1815 (sec)
+Batch v4 time 16:      13.2336 (sec)
+
+Trial 11 : sources: [ 23434265 2299444 32873823 25978282 ]
+
+Batch v4 time 64:       7.4762 (sec)
+Batch v4 time 32:       7.6512 (sec)
+Batch v4 time 16:      10.4552 (sec)
+
+Trial 12 : sources: [ 2461715 22787314 30759947 7428894 ]
+
+Batch v4 time 64:       5.5474 (sec)
+Batch v4 time 32:       5.6632 (sec)
+Batch v4 time 16:       7.2557 (sec)
+
+Trial 13 : sources: [ 39173870 43194209 26361509 39747211 ]
+
+Batch v4 time 64:       0.8485 (sec)
+Batch v4 time 32:       0.7704 (sec)
+Batch v4 time 16:       0.8561 (sec)
+
+Trial 14 : sources: [ 30670029 41483033 9358666 9945008 ]
+
+Batch v4 time 64:       9.8907 (sec)
+Batch v4 time 32:      10.3402 (sec)
+Batch v4 time 16:      13.7005 (sec)
+
+Trial 15 : sources: [ 3355244 33831269 45124744 16137877 ]
+
+Batch v4 time 64:       7.6856 (sec)
+Batch v4 time 32:       8.1243 (sec)
+Batch v4 time 16:      10.5745 (sec)
+
+Trial 16 : sources: [ 11235448 37509144 27402414 39546083 ]
+
+Batch v4 time 64:       9.3962 (sec)
+Batch v4 time 32:       9.9684 (sec)
+Batch v4 time 16:      13.2426 (sec)
+
+ntrials: 16
+
+
+Ave (Batch4)  64:      7.992 sec, rate      0.000
+Ave (Batch4)  32:      8.278 sec, rate      0.000
+Ave (Batch4)  16:     11.300 sec, rate      0.000
+./build/gap_bc_test: all tests passed
+SuiteSparse:GraphBLAS Feb 20, 2020
+threads to test:  64 32 16
+matrix: /home/u32248/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-road/GAP-road.grb
+sources: /home/u32248/GAP/GAP-road/GAP-road_sources.mtx
+read time: 9.48489 sec
+A is symmetric
+transpose time: 1.05481
+
+========== input graph: nodes: 23947347 edges: 64
+
+Trial 1 : sources: [ 4795720 21003853 417968 6496511 ]
+
+Batch v4 time 64:      79.5128 (sec)
+Batch v4 time 32:      67.3782 (sec)
+Batch v4 time 16:      61.8150 (sec)
+
+Trial 2 : sources: [ 6648699 9811073 22247478 5720252 ]
+
+Batch v4 time 64:      78.4438 (sec)
+Batch v4 time 32:      66.0648 (sec)
+Batch v4 time 16:      60.7279 (sec)
+
+Trial 3 : sources: [ 12366459 20413729 4217374 2674749 ]
+
+Batch v4 time 64:      78.7945 (sec)
+Batch v4 time 32:      65.0699 (sec)
+Batch v4 time 16:      60.2085 (sec)
+
+Trial 4 : sources: [ 22085557 19445040 2360788 19115968 ]
+
+Batch v4 time 64:      79.0981 (sec)
+Batch v4 time 32:      66.7674 (sec)
+Batch v4 time 16:      60.9996 (sec)
+
+Trial 5 : sources: [ 7758767 13468234 30367 18599547 ]
+
+Batch v4 time 64:      83.4629 (sec)
+Batch v4 time 32:      65.9817 (sec)
+Batch v4 time 16:      61.2033 (sec)
+
+Trial 6 : sources: [ 7526108 16836280 12742067 7697995 ]
+
+Batch v4 time 64:      79.1943 (sec)
+Batch v4 time 32:      65.9334 (sec)
+Batch v4 time 16:      60.6313 (sec)
+
+Trial 7 : sources: [ 5876443 9616340 2497673 10052290 ]
+
+Batch v4 time 64:      79.0849 (sec)
+Batch v4 time 32:      66.5467 (sec)
+Batch v4 time 16:      61.5769 (sec)
+
+Trial 8 : sources: [ 12493057 1670855 2760679 2460941 ]
+
+Batch v4 time 64:      79.1305 (sec)
+Batch v4 time 32:      65.7773 (sec)
+Batch v4 time 16:      60.4079 (sec)
+
+Trial 9 : sources: [ 8489650 5005225 8744645 8512023 ]
+
+Batch v4 time 64:      79.6059 (sec)
+Batch v4 time 32:      66.7685 (sec)
+Batch v4 time 16:      61.7238 (sec)
+
+Trial 10 : sources: [ 21912165 1105390 15432163 1600177 ]
+
+Batch v4 time 64:      78.9610 (sec)
+Batch v4 time 32:      65.6581 (sec)
+Batch v4 time 16:      60.7065 (sec)
+
+Trial 11 : sources: [ 19079469 16516637 20202566 21372803 ]
+
+Batch v4 time 64:      79.8301 (sec)
+Batch v4 time 32:      67.0401 (sec)
+Batch v4 time 16:      60.9452 (sec)
+
+Trial 12 : sources: [ 2898009 8491277 18798317 23757560 ]
+
+Batch v4 time 64:      79.0693 (sec)
+Batch v4 time 32:      67.0460 (sec)
+Batch v4 time 16:      61.3239 (sec)
+
+Trial 13 : sources: [ 17161819 23180739 10997085 3730630 ]
+
+Batch v4 time 64:      78.8199 (sec)
+Batch v4 time 32:      66.1294 (sec)
+Batch v4 time 16:      60.7151 (sec)
+
+Trial 14 : sources: [ 1079068 15426822 12190925 1155218 ]
+
+Batch v4 time 64:      78.6835 (sec)
+Batch v4 time 32:      66.5149 (sec)
+Batch v4 time 16:      61.9942 (sec)
+
+Trial 15 : sources: [ 10693488 14434835 19963339 3486185 ]
+
+Batch v4 time 64:      78.6227 (sec)
+Batch v4 time 32:      65.8918 (sec)
+Batch v4 time 16:      60.5711 (sec)
+
+Trial 16 : sources: [ 18383269 20269908 12370764 7843140 ]
+
+Batch v4 time 64:      78.1359 (sec)
+Batch v4 time 32:      66.1806 (sec)
+Batch v4 time 16:      61.2122 (sec)
+
+ntrials: 16
+
+
+Ave (Batch4)  64:     79.278 sec, rate      0.000
+Ave (Batch4)  32:     66.297 sec, rate      0.000
+Ave (Batch4)  16:     61.048 sec, rate      0.000
+./build/gap_bc_test: all tests passed
+
+########################################################################
+# End of output for job 513412.v-qsvr-1.aidevcloud
+# Date: Sun Feb 23 11:35:28 PST 2020
+########################################################################
+

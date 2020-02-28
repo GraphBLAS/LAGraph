@@ -211,12 +211,18 @@ set (SSSP_TEST_SRC
      gap_sssp_test.c LAGraph_sssp11a.c LAGraph_sssp11b.c LAGraph_sssp12a.c LAGraph_sssp12b.c
      LAGraph_sssp2.c)
 
+set (SSSP_TEST_SRC_16
+     gap_sssp_test_16.c 
+     )
+
 set (SSSP_CHECK_SRC
         sssp_check.c)
 
 add_executable ( gap_sssp_test ${SSSP_TEST_SRC} )
+add_executable ( gap_sssp_test_16 ${SSSP_TEST_SRC_16} )
 add_executable ( sssp_check ${SSSP_CHECK_SRC} )
 
 # Libraries required for Demo programs
 target_link_libraries ( gap_sssp_test graphblas lagraph m )
+target_link_libraries ( gap_sssp_test_16 graphblas lagraph m )
 target_link_libraries ( sssp_check graphblas lagraph m )

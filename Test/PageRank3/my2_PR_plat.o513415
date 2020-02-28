@@ -1,0 +1,295 @@
+
+########################################################################
+#      Date:           Sun Feb 23 12:32:13 PST 2020
+#    Job ID:           513415.v-qsvr-1.aidevcloud
+#      User:           u32248
+# Resources:           neednodes=1:ppn=2:plat8153,nodes=1:ppn=2:plat8153,walltime=24:00:00
+########################################################################
+
+SuiteSparse:GraphBLAS Feb 20, 2020
+threads to test:  64
+matrix: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+original # of edges: 4223264644
+Matrix has 71143742 empty rows
+Matrix has 71143742 empty cols
+
+==========input graph: nodes: 134217726 edges: 4223264644
+diag entries added: 71143742
+read time: 1780.21 sec
+# of trials: 16
+chunk: 65536
+warmup (3f):     15.718 (threads: 64)
+
+Method 3f:
+
+--------------------------- nthreads: 64
+trial:  0 time:    15.3053 sec
+trial:  1 time:    15.3559 sec
+trial:  2 time:    15.4165 sec
+trial:  3 time:    15.4098 sec
+trial:  4 time:    15.4466 sec
+trial:  5 time:    15.4157 sec
+trial:  6 time:    15.4488 sec
+trial:  7 time:    15.4292 sec
+trial:  8 time:    15.4323 sec
+trial:  9 time:    15.4485 sec
+trial: 10 time:    15.4496 sec
+trial: 11 time:    15.4621 sec
+trial: 12 time:    15.4542 sec
+trial: 13 time:    15.4560 sec
+trial: 14 time:    15.4381 sec
+trial: 15 time:    15.4494 sec
+3f: 64: avg time:     15.426 (sec), rate:   1916.416 iters: 7
+
+Method x4:
+
+--------------------------- nthreads: 64
+trial:  0 time:    15.2740 sec
+trial:  1 time:    15.2498 sec
+trial:  2 time:    15.2495 sec
+trial:  3 time:    15.2541 sec
+trial:  4 time:    15.2653 sec
+trial:  5 time:    15.2599 sec
+trial:  6 time:    15.2546 sec
+trial:  7 time:    15.2541 sec
+trial:  8 time:    15.2623 sec
+trial:  9 time:    15.2574 sec
+trial: 10 time:    15.2432 sec
+trial: 11 time:    15.2508 sec
+trial: 12 time:    15.2682 sec
+trial: 13 time:    15.2591 sec
+trial: 14 time:    15.2608 sec
+trial: 15 time:    15.2639 sec
+x4: 64: avg time:     15.258 (sec), rate:   1937.539 iters: 7
+SuiteSparse:GraphBLAS Feb 20, 2020
+threads to test:  64
+matrix: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+original # of edges: 4294966740
+
+==========input graph: nodes: 134217728 edges: 4294966740
+diag entries added: 0
+read time: 925.57 sec
+# of trials: 16
+chunk: 65536
+warmup (3f):     18.154 (threads: 64)
+
+Method 3f:
+
+--------------------------- nthreads: 64
+trial:  0 time:    18.2406 sec
+trial:  1 time:    18.2471 sec
+trial:  2 time:    18.2293 sec
+trial:  3 time:    18.2578 sec
+trial:  4 time:    18.2593 sec
+trial:  5 time:    18.2540 sec
+trial:  6 time:    18.2514 sec
+trial:  7 time:    18.2430 sec
+trial:  8 time:    18.2574 sec
+trial:  9 time:    18.2677 sec
+trial: 10 time:    18.2543 sec
+trial: 11 time:    18.2632 sec
+trial: 12 time:    18.2653 sec
+trial: 13 time:    18.2780 sec
+trial: 14 time:    18.2641 sec
+trial: 15 time:    18.2730 sec
+3f: 64: avg time:     18.257 (sec), rate:   1411.534 iters: 6
+
+Method x4:
+
+--------------------------- nthreads: 64
+trial:  0 time:    18.0628 sec
+trial:  1 time:    18.0707 sec
+trial:  2 time:    18.0760 sec
+trial:  3 time:    18.0773 sec
+trial:  4 time:    18.0794 sec
+trial:  5 time:    18.0990 sec
+trial:  6 time:    18.0809 sec
+trial:  7 time:    18.0740 sec
+trial:  8 time:    18.1062 sec
+trial:  9 time:    18.1062 sec
+trial: 10 time:    18.0698 sec
+trial: 11 time:    18.0702 sec
+trial: 12 time:    18.0893 sec
+trial: 13 time:    18.0712 sec
+trial: 14 time:    18.0948 sec
+trial: 15 time:    18.0932 sec
+x4: 64: avg time:     18.083 (sec), rate:   1425.119 iters: 6
+SuiteSparse:GraphBLAS Feb 20, 2020
+threads to test:  64
+matrix: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+original # of edges: 1468364884
+Matrix has 21475137 empty rows
+Matrix has 25889280 empty cols
+
+==========input graph: nodes: 61578415 edges: 1468364884
+diag entries added: 27438232
+read time: 260.51 sec
+# of trials: 16
+chunk: 65536
+warmup (3f):     11.841 (threads: 64)
+
+Method 3f:
+
+--------------------------- nthreads: 64
+trial:  0 time:    11.8116 sec
+trial:  1 time:    11.8197 sec
+trial:  2 time:    11.8075 sec
+trial:  3 time:    11.8399 sec
+trial:  4 time:    11.8550 sec
+trial:  5 time:    11.8840 sec
+trial:  6 time:    11.8996 sec
+trial:  7 time:    11.8902 sec
+trial:  8 time:    11.9115 sec
+trial:  9 time:    11.9098 sec
+trial: 10 time:    11.9037 sec
+trial: 11 time:    11.9177 sec
+trial: 12 time:    11.8956 sec
+trial: 13 time:    11.9177 sec
+trial: 14 time:    11.8976 sec
+trial: 15 time:    11.9228 sec
+3f: 64: avg time:     11.880 (sec), rate:   2719.137 iters: 22
+
+Method x4:
+
+--------------------------- nthreads: 64
+trial:  0 time:    11.7176 sec
+trial:  1 time:    11.7178 sec
+trial:  2 time:    11.6975 sec
+trial:  3 time:    11.7419 sec
+trial:  4 time:    11.7167 sec
+trial:  5 time:    11.7132 sec
+trial:  6 time:    11.7291 sec
+trial:  7 time:    11.7281 sec
+trial:  8 time:    11.7250 sec
+trial:  9 time:    11.7052 sec
+trial: 10 time:    11.7352 sec
+trial: 11 time:    11.7184 sec
+trial: 12 time:    11.7159 sec
+trial: 13 time:    11.6963 sec
+trial: 14 time:    11.7185 sec
+trial: 15 time:    11.7189 sec
+x4: 64: avg time:     11.718 (sec), rate:   2756.676 iters: 22
+SuiteSparse:GraphBLAS Feb 20, 2020
+threads to test:  64
+matrix: /home/u32248/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-web/GAP-web.grb
+original # of edges: 1930292948
+Matrix has 7236618 empty rows
+Matrix has 438 empty cols
+
+==========input graph: nodes: 50636151 edges: 1930292948
+diag entries added: 7236964
+read time: 769.106 sec
+# of trials: 16
+chunk: 65536
+warmup (3f):      5.804 (threads: 64)
+
+Method 3f:
+
+--------------------------- nthreads: 64
+trial:  0 time:     5.7669 sec
+trial:  1 time:     5.7960 sec
+trial:  2 time:     5.7810 sec
+trial:  3 time:     5.7766 sec
+trial:  4 time:     5.7892 sec
+trial:  5 time:     5.7915 sec
+trial:  6 time:     5.7746 sec
+trial:  7 time:     5.8096 sec
+trial:  8 time:     5.7810 sec
+trial:  9 time:     5.7888 sec
+trial: 10 time:     5.7750 sec
+trial: 11 time:     5.8005 sec
+trial: 12 time:     5.8044 sec
+trial: 13 time:     5.7892 sec
+trial: 14 time:     5.8014 sec
+trial: 15 time:     5.8091 sec
+3f: 64: avg time:      5.790 (sec), rate:   9668.660 iters: 29
+
+Method x4:
+
+--------------------------- nthreads: 64
+trial:  0 time:     5.6192 sec
+trial:  1 time:     5.6502 sec
+trial:  2 time:     5.6319 sec
+trial:  3 time:     5.6375 sec
+trial:  4 time:     5.6402 sec
+trial:  5 time:     5.6362 sec
+trial:  6 time:     5.6333 sec
+trial:  7 time:     5.6365 sec
+trial:  8 time:     5.6574 sec
+trial:  9 time:     5.6426 sec
+trial: 10 time:     5.6460 sec
+trial: 11 time:     5.6457 sec
+trial: 12 time:     5.6601 sec
+trial: 13 time:     5.6602 sec
+trial: 14 time:     5.6585 sec
+trial: 15 time:     5.6371 sec
+x4: 64: avg time:      5.643 (sec), rate:   9919.476 iters: 29
+SuiteSparse:GraphBLAS Feb 20, 2020
+threads to test:  64
+matrix: /home/u32248/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-road/GAP-road.grb
+original # of edges: 57708624
+
+==========input graph: nodes: 23947347 edges: 57708624
+diag entries added: 0
+read time: 38.1935 sec
+# of trials: 16
+chunk: 65536
+warmup (3f):      1.279 (threads: 64)
+
+Method 3f:
+
+--------------------------- nthreads: 64
+trial:  0 time:     0.9598 sec
+trial:  1 time:     0.9579 sec
+trial:  2 time:     0.9569 sec
+trial:  3 time:     0.9574 sec
+trial:  4 time:     0.9569 sec
+trial:  5 time:     0.9559 sec
+trial:  6 time:     0.9558 sec
+trial:  7 time:     0.9564 sec
+trial:  8 time:     0.9567 sec
+trial:  9 time:     0.9560 sec
+trial: 10 time:     0.9554 sec
+trial: 11 time:     0.9554 sec
+trial: 12 time:     0.9548 sec
+trial: 13 time:     0.9546 sec
+trial: 14 time:     0.9541 sec
+trial: 15 time:     0.9543 sec
+3f: 64: avg time:      0.956 (sec), rate:   2353.867 iters: 39
+
+Method x4:
+
+--------------------------- nthreads: 64
+trial:  0 time:     0.8572 sec
+trial:  1 time:     0.8559 sec
+trial:  2 time:     0.8633 sec
+trial:  3 time:     0.8571 sec
+trial:  4 time:     0.8564 sec
+trial:  5 time:     0.8564 sec
+trial:  6 time:     0.8570 sec
+trial:  7 time:     0.8683 sec
+trial:  8 time:     0.8815 sec
+trial:  9 time:     0.8594 sec
+trial: 10 time:     0.8560 sec
+trial: 11 time:     0.8566 sec
+trial: 12 time:     0.8567 sec
+trial: 13 time:     0.8565 sec
+trial: 14 time:     0.8560 sec
+trial: 15 time:     0.8556 sec
+x4: 64: avg time:      0.859 (sec), rate:   2618.949 iters: 39
+
+########################################################################
+# End of output for job 513415.v-qsvr-1.aidevcloud
+# Date: Sun Feb 23 14:04:19 PST 2020
+########################################################################
+

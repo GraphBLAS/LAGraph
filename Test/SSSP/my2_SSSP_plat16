@@ -1,0 +1,12 @@
+#PBS -l nodes=1:ppn=2:plat8153
+#PBS -l walltime=24:00:00
+
+cat /proc/meminfo
+cd $PBS_O_WORKDIR
+
+export OMP_NUM_THREADS=16
+# export KMP_AFFINITY="verbose,explicit,proclist=[0-31]"
+# export GOMP_CPU_AFFINITY="0-31"
+
+numactl --interleave=all ./do_gap_16
+

@@ -252,7 +252,7 @@ int main (int argc, char **argv)
 
     // convert input matrix to INT32
     GrB_Type type ;
-    GxB_Matrix_type (&type, A) ;
+    GxB_Matrix_type (&type, A_in) ;
     if (type == GrB_INT32)
     {
         A = A_in ;
@@ -273,7 +273,7 @@ int main (int argc, char **argv)
     // try converting to column format (this is slower than the default)
     // GxB_set (A, GxB_FORMAT, GxB_BY_COL) ;
 
-    // GxB_fprint (A, 2, stdout) ;
+    GxB_fprint (A, 2, stdout) ;
     // GxB_fprint (SourceNodes, GxB_COMPLETE, stdout) ;
 
     //--------------------------------------------------------------------------
@@ -291,6 +291,9 @@ for (int tt = 1 ; tt <= nt ; tt++)
 {
     int nthreads = Nthreads [tt] ;
     if (nthreads > nthreads_max) continue ;
+
+    if (nthreads == 64) { printf ("SSSP: 64 threads; skipped\n") ; continue ; }
+
     LAGraph_set_nthreads (nthreads) ;
 
     double total_time1 = 0 ;

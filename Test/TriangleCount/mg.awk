@@ -3,6 +3,7 @@ BEGIN {
 printf "host = host + 1 ;\n" 
 printf "Host {host} = hostname ;\n\n"
 i = 1 ;
+j = 0 ;
 }
 
 /Message/ {
@@ -21,25 +22,23 @@ i = 1 ;
     else if (match ($0, "descend")) {
         sort = "-"
     }
-
 }
 
 /time:/ {
     t = $6
+    nthreads = $4
     if (is_urand) {
         if (match (method, "Dot:")) {
-            if (match (sort, "\-")) {
-                i = 1 ;
-            }
+            j = j + 1 ;
+            i = 1 ;
         }
-        printf "    t(%d) = %10.3f ; %%  %s %s\n", i, t, method, sort
-        i = i + 1 ;
-
-        if (match (method, "Dot2")) {
-            if (match (sort, "\+")) {
-                printf ("\nk = k + 1 ;\n") ;
-                printf ("Results {host}{k} = t ;\n\n") ;
-            }
+        if (nthreads == 64) {
+            printf "    t(%d,%2d) = %10.3f ; %%  %s %s\n", i, j, t, method, sort
+            i = i + 1 ;
         }
     }
+}
+
+END {
+    printf ("Results {host} = t ; clear t\n\n") ;
 }

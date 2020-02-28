@@ -1,0 +1,259 @@
+
+########################################################################
+#      Date:           Sun Feb 23 12:45:26 PST 2020
+#    Job ID:           513417.v-qsvr-1.aidevcloud
+#      User:           u32248
+# Resources:           neednodes=1:ppn=2:plat8153,nodes=1:ppn=2:plat8153,walltime=24:00:00
+########################################################################
+
+SuiteSparse:GraphBLAS Feb 20, 2020
+# of trials: 3
+threads to test:  64
+matrix: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+
+read A time:        1224.102921 sec
+process A time:       96.580900 sec
+# of nodes: 134217728   number of entries: 4294966740
+compute degree: 11.4273 sec
+average degree: 31.874
+median  degree: 32
+auto sorting: 0: none
+# of triangles: 5378
+nthreads:  64 time:    30.191024 rate: 142.26 (SandiaDot, one trial)
+
+Method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+average degree: 31.874
+median  degree: 32
+auto sorting: 0: none
+trial  0: 29.8422 sec
+average degree: 31.874
+median  degree: 32
+auto sorting: 0: none
+trial  1: 29.8402 sec
+average degree: 31.874
+median  degree: 32
+auto sorting: 0: none
+trial  2: 29.8634 sec
+nthreads:  64 time:    29.848607 rate: 143.89
+
+Method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+average degree: 31.874
+median  degree: 32
+auto sorting: 0: none
+trial  0: 30.1915 sec
+average degree: 31.874
+median  degree: 32
+auto sorting: 0: none
+trial  1: 30.0928 sec
+average degree: 31.874
+median  degree: 32
+auto sorting: 0: none
+trial  2: 30.1635 sec
+nthreads:  64 time:    30.149273 rate: 142.46
+
+Best method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+nthreads:  64 time:    29.848607 rate: 143.89
+SuiteSparse:GraphBLAS Feb 20, 2020
+# of trials: 3
+threads to test:  64
+matrix: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+
+read A time:         371.334646 sec
+process A time:       30.818887 sec
+# of nodes: 61578415   number of entries: 2405026092
+compute degree: 5.82216 sec
+average degree: 32.78
+median  degree: 5
+auto sorting: -1: descending
+sort descending
+# of triangles: 34824916864
+nthreads:  64 time:   254.872220 rate:   9.44 (SandiaDot, one trial)
+
+Method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+average degree: 32.78
+median  degree: 5
+auto sorting: 1: ascending
+sort ascending
+trial  0: 197.116 sec
+average degree: 32.78
+median  degree: 5
+auto sorting: 1: ascending
+sort ascending
+trial  1: 198.323 sec
+average degree: 32.78
+median  degree: 5
+auto sorting: 1: ascending
+sort ascending
+trial  2: 197.563 sec
+nthreads:  64 time:   197.667123 rate:  12.17
+
+Method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+average degree: 32.78
+median  degree: 5
+auto sorting: -1: descending
+sort descending
+trial  0: 253.922 sec
+average degree: 32.78
+median  degree: 5
+auto sorting: -1: descending
+sort descending
+trial  1: 254.992 sec
+average degree: 32.78
+median  degree: 5
+auto sorting: -1: descending
+sort descending
+trial  2: 254.412 sec
+nthreads:  64 time:   254.442166 rate:   9.45
+
+Best method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+nthreads:  64 time:   197.667123 rate:  12.17
+SuiteSparse:GraphBLAS Feb 20, 2020
+# of trials: 3
+threads to test:  64
+matrix: /home/u32248/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-web/GAP-web.grb
+
+read A time:         691.759353 sec
+process A time:       16.443741 sec
+# of nodes: 50636151   number of entries: 3620126660
+compute degree: 2.21352 sec
+average degree: 107.673
+median  degree: 30
+auto sorting: 0: none
+# of triangles: 84907041475
+nthreads:  64 time:    45.394994 rate:  79.75 (SandiaDot, one trial)
+
+Method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+average degree: 107.673
+median  degree: 30
+auto sorting: 0: none
+trial  0: 39.1994 sec
+average degree: 107.673
+median  degree: 30
+auto sorting: 0: none
+trial  1: 39.3127 sec
+average degree: 107.673
+median  degree: 30
+auto sorting: 0: none
+trial  2: 39.2462 sec
+nthreads:  64 time:    39.252766 rate:  92.23
+
+Method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+average degree: 107.673
+median  degree: 30
+auto sorting: 0: none
+trial  0: 44.563 sec
+average degree: 107.673
+median  degree: 30
+auto sorting: 0: none
+trial  1: 44.5463 sec
+average degree: 107.673
+median  degree: 30
+auto sorting: 0: none
+trial  2: 44.4978 sec
+nthreads:  64 time:    44.535690 rate:  81.29
+
+Best method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+nthreads:  64 time:    39.252766 rate:  92.23
+SuiteSparse:GraphBLAS Feb 20, 2020
+# of trials: 3
+threads to test:  64
+matrix: /home/u32248/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-road/GAP-road.grb
+
+read A time:           9.539236 sec
+process A time:        2.773655 sec
+# of nodes: 23947347   number of entries: 57708624
+compute degree: 0.133979 sec
+auto sorting: 0: none
+# of triangles: 438804
+nthreads:  64 time:     0.285326 rate: 202.26 (SandiaDot, one trial)
+
+Method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+auto sorting: 0: none
+trial  0: 0.291965 sec
+auto sorting: 0: none
+trial  1: 0.292338 sec
+auto sorting: 0: none
+trial  2: 0.292411 sec
+nthreads:  64 time:     0.292238 rate: 197.47
+
+Method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+auto sorting: 0: none
+trial  0: 0.299529 sec
+auto sorting: 0: none
+trial  1: 0.303792 sec
+auto sorting: 0: none
+trial  2: 0.299173 sec
+nthreads:  64 time:     0.300831 rate: 191.83
+
+Best method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+nthreads:  64 time:     0.292238 rate: 197.47
+SuiteSparse:GraphBLAS Feb 20, 2020
+# of trials: 3
+threads to test:  64
+matrix: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+
+read A time:         607.222191 sec
+process A time:       90.226428 sec
+# of nodes: 134217726   number of entries: 4223264644
+compute degree: 10.6366 sec
+average degree: 18.445
+median  degree: 0
+auto sorting: -1: descending
+sort descending
+# of triangles: 106873365648
+nthreads:  64 time:   958.086372 rate:   4.41 (SandiaDot, one trial)
+
+Method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+average degree: 18.445
+median  degree: 0
+auto sorting: 1: ascending
+sort ascending
+trial  0: 800.876 sec
+average degree: 18.445
+median  degree: 0
+auto sorting: 1: ascending
+sort ascending
+trial  1: 805.802 sec
+average degree: 18.445
+median  degree: 0
+auto sorting: 1: ascending
+sort ascending
+trial  2: 800.815 sec
+nthreads:  64 time:   802.497375 rate:   5.26
+
+Method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+average degree: 18.445
+median  degree: 0
+auto sorting: -1: descending
+sort descending
+trial  0: 956.581 sec
+average degree: 18.445
+median  degree: 0
+auto sorting: -1: descending
+sort descending
+trial  1: 958.346 sec
+average degree: 18.445
+median  degree: 0
+auto sorting: -1: descending
+sort descending
+trial  2: 956.289 sec
+nthreads:  64 time:   957.071853 rate:   4.41
+
+Best method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+nthreads:  64 time:   802.497375 rate:   5.26
+
+########################################################################
+# End of output for job 513417.v-qsvr-1.aidevcloud
+# Date: Sun Feb 23 15:58:44 PST 2020
+########################################################################
+
