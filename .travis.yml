@@ -1,8 +1,5 @@
 # based on travis.yml from graphalytics
 language: c
-os:
-  - linux
-  - osx
 jobs:
   include:
     - os: linux
