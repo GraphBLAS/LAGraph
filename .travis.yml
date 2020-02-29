@@ -15,7 +15,7 @@ install:
   - sudo ldconfig
   - cd ..
   # LAGraph
-  - git clone --depth 1 --branch ${TRAVIS_COMMIT} https://github.com/GraphBLAS/LAGraph
+  - git clone --depth 1 --branch ${TRAVIS_COMMIT} https://github.com/${TRAVIS_REPO_SLUG}
   - cd LAGraph
   - JOBS=$(nproc) make
   - sudo make install
