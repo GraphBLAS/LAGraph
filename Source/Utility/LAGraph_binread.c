@@ -147,7 +147,7 @@ GrB_Info LAGraph_binread
         case 8:  type = GrB_UINT64      ; break ;
         case 9:  type = GrB_FP32        ; break ;
         case 10: type = GrB_FP64        ; break ;
-        case 11: type = LAGraph_Complex ; break ;
+        case 11: type = LAGraph_ComplexFP64 ; break ;
         default: LAGRAPH_ERROR ("unknown type", GrB_INVALID_VALUE) ;
     }
 

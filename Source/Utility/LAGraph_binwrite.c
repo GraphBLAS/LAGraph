@@ -219,7 +219,7 @@ GrB_Info LAGraph_binwrite
         snprintf (typename, LEN, "GrB_FP64  ") ;
         typecode = 10 ;
     }
-    else if (type == LAGraph_Complex)
+    else if (type == LAGraph_ComplexFP64)
     {
         snprintf (typename, LEN, "USER      ") ;
         typecode = 11 ;
