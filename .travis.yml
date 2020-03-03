@@ -6,22 +6,20 @@ jobs:
       dist: bionic
     - os: osx
       osx_image: xcode11.3
-  allow_failures:
-    - os: osx
+      env:
+        - MATRIX_EVAL="brew install gcc && CC=gcc-7 && CXX=g++-7"
 install:
   # GraphBLAS
-  - git clone --depth 1 --branch v3.2.0 https://github.com/DrTimothyAldenDavis/GraphBLAS
-  - cd GraphBLAS
-  - JOBS=$(nproc) CFLAGS=-DGBCOMPACT make
-  - sudo make install
-  - if [ `command -v ldconfig` ]; then sudo ldconfig; fi
-  - cd ..
-  # LAGraph
-  - git clone --depth 1 --branch ${TRAVIS_BRANCH} https://github.com/${TRAVIS_REPO_SLUG}
-  - cd LAGraph
+  - git clone --depth 1 --branch master https://github.com/DrTimothyAldenDavis/GraphBLAS
+  - cd GraphBLAS/build
+  - cmake -DGBCOMPACT=1 ..
   - JOBS=$(nproc) make
-  - sudo make install
-  - if [ `command -v ldconfig` ]; then sudo ldconfig; fi
+  - cd ../..
+script:
+  - git clone --depth 1 --branch ${TRAVIS_BRANCH} https://github.com/${TRAVIS_REPO_SLUG}
+  - cd LAGraph/build
+  - cmake ..
+  - JOBS=$(nproc) make
   - cd ..
 script:
   - make tests
