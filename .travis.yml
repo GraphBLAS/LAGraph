@@ -4,22 +4,21 @@ jobs:
   include:
     - os: linux
       dist: bionic
-#    - os: osx
-#      osx_image: xcode11.3
+    - os: osx
+      osx_image: xcode11.3
 install:
-  # GraphBLAS
-  - git clone --depth 1 --branch v3.2.0 https://github.com/DrTimothyAldenDavis/GraphBLAS
-  - cd GraphBLAS
-  - JOBS=$(nproc) make
-  - sudo make install
-  - sudo ldconfig
+  # clone GraphBLAS next to LAGraph's directory
+  - pushd .
   - cd ..
-  # LAGraph
-  - git clone --depth 1 --branch ${TRAVIS_BRANCH} https://github.com/${TRAVIS_REPO_SLUG}
-  - cd LAGraph
-  - JOBS=$(nproc) make
-  - sudo make install
-  - sudo ldconfig
-  - cd ..
+  - git clone --depth 1 --branch master https://github.com/DrTimothyAldenDavis/GraphBLAS
+  - cd GraphBLAS/build
+  - cmake -DGBCOMPACT=1 -DCMAKE_C_FLAGS="$(CMAKE_C_FLAGS) -w" ..
+  - JOBS=2 make
+  - popd
 script:
+  # build and test LAGraph
+  - cd build
+  - cmake ..
+  - JOBS=2 make
+  - cd ..
   - make tests

@@ -54,8 +54,8 @@ GrB_Type LAGraph_ComplexFP64 = NULL ;
 #define Y *y
 #define Z *z
 
-#define ONE  CMPLX(1,0)
-#define ZERO CMPLX(0,0)
+#define ONE  (CMPLX(1.0,0.0))
+#define ZERO (CMPLX(0.0,0.0))
 #define T ONE
 #define F ZERO
 #define BOOL(X) (X != ZERO)
