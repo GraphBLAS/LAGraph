@@ -10,7 +10,7 @@ install:
   # GraphBLAS
   - git clone --depth 1 --branch v3.2.0 https://github.com/DrTimothyAldenDavis/GraphBLAS
   - cd GraphBLAS
-  - JOBS=$(nproc) make
+  - JOBS=$(nproc) CFLAGS=-DGBCOMPACT make
   - sudo make install
   - sudo ldconfig
   - cd ..
