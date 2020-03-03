@@ -13,13 +13,13 @@ install:
   - git clone --depth 1 --branch master https://github.com/DrTimothyAldenDavis/GraphBLAS
   - cd GraphBLAS/build
   - cmake -DGBCOMPACT=1 ..
-  - JOBS=$(nproc) make
+  - JOBS=$(nproc) make install
   - cd ../..
 script:
   - git clone --depth 1 --branch ${TRAVIS_BRANCH} https://github.com/${TRAVIS_REPO_SLUG}
   - cd LAGraph/build
   - cmake ..
-  - JOBS=$(nproc) make
+  - JOBS=$(nproc) make install
   - cd ..
 script:
   - make tests
