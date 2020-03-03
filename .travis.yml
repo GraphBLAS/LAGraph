@@ -12,7 +12,7 @@ install:
   # GraphBLAS
   - git clone --depth 1 --branch master https://github.com/DrTimothyAldenDavis/GraphBLAS
   - cd GraphBLAS/build
-  - cmake -DGBCOMPACT=1 ..
+  - cmake -DGBCOMPACT=1 -DCMAKE_C_FLAGS="$(CMAKE_C_FLAGS) -w" ..
   - JOBS=$(nproc) make
   - cd ../..
 script:
