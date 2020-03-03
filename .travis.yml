@@ -6,6 +6,8 @@ jobs:
       dist: bionic
     - os: osx
       osx_image: xcode11.3
+  allow_failures:
+    - os: osx
 install:
   # GraphBLAS
   - git clone --depth 1 --branch v3.2.0 https://github.com/DrTimothyAldenDavis/GraphBLAS
