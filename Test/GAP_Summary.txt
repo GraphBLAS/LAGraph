@@ -67,8 +67,8 @@ BC:  same as SET 1, but with 64 threads for kron, urand, web;
      32 threads for web, 8 threads for road.
      using gcc exclusively.
 
-BFS: same as SET 1, but with 64 threads for kron, urand, web, web;
-     web, 16 threads for road
+BFS: same as SET 1, but with 64 threads for kron, urand, twitter, web;
+     16 threads for road
      (but results almost identical for all # threads for road)
      icc: kron, twitter, web.  gcc: urand, road.
 
@@ -77,13 +77,21 @@ CC:  same as SET 1, but with 64 threads for all matrices.
 
 PR:  using method x4 (import/export) and 64 threads for all matrices
      (method 3f, pure GraphBLAS nearly as fast, however).  For comparison,
-     all results with 64 threads:
+     all results with 64 threads (with gcc):
                 kron        urand       twitter      web        road
                 -----       -----       -------     ----        ----
      3f,#64:    15.508      18.401      11.833      6.091       0.870
      x4,#64:    15.303      18.202      11.642      5.915       0.769
+
      maybe just report 3f since it's pure GraphBLAS and only slightly
-     slower?
+     slower?  If I use PR:3f instead of PR:x4, with 64 threads, I get the
+     following (using icc for kron, urand, web; gcc for twitter and road):
+
+                kron        urand       twitter      web        road
+                -----       -----       -------     ----        ----
+     PR:3f #64: 15.426      18.257      11.833      5.790       0.855
+
+     For SET2:
      PR:x4 is faster with icc for kron, urand, and web.
      gcc is used for twitter and road.
 

@@ -458,24 +458,133 @@ LAGraph_Context ;
 // global objects
 //------------------------------------------------------------------------------
 
-// LAGraph_Complex is a GrB_Type containing the ANSI C11 double complex
-// type.  This is required so that any arbitrary Matrix Market format
-// can be read into GraphBLAS.
-extern GrB_Type LAGraph_Complex ;
+// LAGraph_ComplexFP64 operators
+//------------------------------------------------------------------------------
+// 10 binary functions, z=f(x,y), where CxC -> C
+//------------------------------------------------------------------------------
+
+extern
+GrB_BinaryOp
+    LAGraph_FIRST_ComplexFP64           ,
+    LAGraph_SECOND_ComplexFP64          ,
+    LAGraph_MIN_ComplexFP64             ,
+    LAGraph_MAX_ComplexFP64             ,
+    LAGraph_PLUS_ComplexFP64            ,
+    LAGraph_MINUS_ComplexFP64           ,
+    LAGraph_TIMES_ComplexFP64           ,
+    LAGraph_DIV_ComplexFP64             ,
+    LAGraph_RDIV_ComplexFP64            ,
+    LAGraph_RMINUS_ComplexFP64          ,
+    LAGraph_SKEW_ComplexFP64            ,
+    LAGraph_PAIR_ComplexFP64            ,
+    LAGraph_ANY_ComplexFP64            ,
+    LAGraph_HERMITIAN_ComplexFP64       ;
+
+//------------------------------------------------------------------------------
+// 6 binary comparison functions, z = f(x,y), where CxC -> C
+//------------------------------------------------------------------------------
+
+extern
+GrB_BinaryOp
+    LAGraph_ISEQ_ComplexFP64              ,
+    LAGraph_ISNE_ComplexFP64              ,
+    LAGraph_ISGT_ComplexFP64              ,
+    LAGraph_ISLT_ComplexFP64              ,
+    LAGraph_ISGE_ComplexFP64              ,
+    LAGraph_ISLE_ComplexFP64              ;
+
+//------------------------------------------------------------------------------
+// 3 binary boolean functions, z=f(x,y), where CxC -> C
+//------------------------------------------------------------------------------
+
+extern
+GrB_BinaryOp
+    LAGraph_OR_ComplexFP64                ,
+    LAGraph_AND_ComplexFP64               ,
+    LAGraph_XOR_ComplexFP64               ;
+
+//------------------------------------------------------------------------------
+// 6 binary comparison functions, z=f(x,y), where CxC -> bool
+//------------------------------------------------------------------------------
+
+extern
+GrB_BinaryOp
+    LAGraph_EQ_ComplexFP64                ,
+    LAGraph_NE_ComplexFP64                ,
+    LAGraph_GT_ComplexFP64                ,
+    LAGraph_LT_ComplexFP64                ,
+    LAGraph_GE_ComplexFP64                ,
+    LAGraph_LE_ComplexFP64                ;
+
+//------------------------------------------------------------------------------
+// 1 binary function, z=f(x,y), where double x double -> C
+//------------------------------------------------------------------------------
+
+extern GrB_BinaryOp LAGraph_COMPLEX_ComplexFP64 ;
+
+//------------------------------------------------------------------------------
+// 5 unary functions, z=f(x) where C -> C
+//------------------------------------------------------------------------------
+
+extern
+GrB_UnaryOp
+    LAGraph_IDENTITY_ComplexFP64          ,
+    LAGraph_AINV_ComplexFP64              ,
+    LAGraph_MINV_ComplexFP64              ,
+    LAGraph_NOT_ComplexFP64               ,
+    LAGraph_CONJ_ComplexFP64              ,
+    LAGraph_ONE_ComplexFP64               ,
+    LAGraph_ISONE_ComplexFP64             ,
+    LAGraph_ABS_ComplexFP64               ,
+    LAGraph_TRUE_BOOL_ComplexFP64         ;
+
+//------------------------------------------------------------------------------
+// 4 unary functions, z=f(x) where C -> double
+//------------------------------------------------------------------------------
+
+extern 
+GrB_UnaryOp
+    LAGraph_REAL_ComplexFP64              ,
+    LAGraph_IMAG_ComplexFP64              ,
+    LAGraph_CABS_ComplexFP64              ,
+    LAGraph_ANGLE_ComplexFP64             ;
+
+//------------------------------------------------------------------------------
+// 2 unary functions, z=f(x) where double -> C
+//------------------------------------------------------------------------------
+
+extern GrB_UnaryOp
+    LAGraph_COMPLEX_REAL_ComplexFP64      ,
+    LAGraph_COMPLEX_IMAG_ComplexFP64      ;
+
+//------------------------------------------------------------------------------
+// Complex type, scalars, monoids, and semiring
+//------------------------------------------------------------------------------
+
+extern GrB_Type LAGraph_ComplexFP64 ;
+
+extern GrB_Monoid
+    LAGraph_PLUS_ComplexFP64_MONOID       ,
+    LAGraph_TIMES_ComplexFP64_MONOID      ;
+    
+extern GrB_Semiring LAGraph_PLUS_TIMES_ComplexFP64 ;
+
+extern double complex LAGraph_ComplexFP64_1  ;
+extern double complex LAGraph_ComplexFP64_0 ;
+
+GrB_Info LAGraph_Complex_init ( ) ;
+GrB_Info LAGraph_Complex_finalize ( ) ;
 
 extern GrB_BinaryOp
 
     // binary operators to test for symmetry, skew-symmetry
     // and Hermitian property
-    LAGraph_EQ_Complex          ,
     LAGraph_SKEW_INT8           ,
     LAGraph_SKEW_INT16          ,
     LAGraph_SKEW_INT32          ,
     LAGraph_SKEW_INT64          ,
     LAGraph_SKEW_FP32           ,
     LAGraph_SKEW_FP64           ,
-    LAGraph_SKEW_Complex        ,
-    LAGraph_Hermitian           ,
     LAGraph_LOR_UINT32          ,
     LAGraph_LOR_INT64           ;
 
@@ -492,7 +601,6 @@ extern GrB_UnaryOp
     LAGraph_ISONE_UINT64        ,
     LAGraph_ISONE_FP32          ,
     LAGraph_ISONE_FP64          ,
-    LAGraph_ISONE_Complex       ,
 
     // unary operators to check if the entry is equal to 2
     LAGraph_ISTWO_UINT32        ,
@@ -518,8 +626,7 @@ extern GrB_UnaryOp
     LAGraph_ONE_UINT32          ,
     LAGraph_ONE_INT64           ,
     LAGraph_ONE_FP64            ,
-    LAGraph_TRUE_BOOL           ,
-    LAGraph_TRUE_BOOL_Complex   ;
+    LAGraph_TRUE_BOOL           ;
 
 // monoids and semirings
 extern GrB_Monoid
@@ -652,7 +759,7 @@ GrB_Info LAGraph_ispattern  // return GrB_SUCCESS if successful
     GrB_Matrix A,
     GrB_UnaryOp userop      // for A with arbitrary user-defined type.
                             // Ignored if A and B are of built-in types or
-                            // LAGraph_Complex.
+                            // LAGraph_ComplexFP64.
 ) ;
 
 GrB_Info LAGraph_pattern    // return GrB_SUCCESS if successful
@@ -669,7 +776,7 @@ GrB_Info LAGraph_isequal    // return GrB_SUCCESS if successful
     GrB_Matrix B,
     GrB_BinaryOp userop     // for A and B with arbitrary user-defined types.
                             // Ignored if A and B are of built-in types or
-                            // LAGraph_Complex.
+                            // LAGraph_ComplexFP64.
 ) ;
 
 GrB_Info LAGraph_Vector_isequal    // return GrB_SUCCESS if successful
@@ -679,7 +786,7 @@ GrB_Info LAGraph_Vector_isequal    // return GrB_SUCCESS if successful
     GrB_Vector B,
     GrB_BinaryOp userop     // for A and B with arbitrary user-defined types.
                             // Ignored if A and B are of built-in types or
-                            // LAGraph_Complex.
+                            // LAGraph_ComplexFP64.
 ) ;
 
 GrB_Info LAGraph_isall      // return GrB_SUCCESS if successful
@@ -711,7 +818,7 @@ double LAGraph_randx (uint64_t *seed) ;
 GrB_Info LAGraph_random         // create a random matrix
 (
     GrB_Matrix *A,              // handle of matrix to create
-    GrB_Type type,              // built-in type, or LAGraph_Complex
+    GrB_Type type,              // built-in type, or LAGraph_ComplexFP64
     GrB_Index nrows,            // number of rows
     GrB_Index ncols,            // number of columns
     GrB_Index nvals,            // number of values
