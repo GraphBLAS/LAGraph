@@ -7,7 +7,8 @@ jobs:
     - os: osx
       osx_image: xcode11.3
       env:
-        - MATRIX_EVAL="brew install gcc && CC=gcc-7 && CXX=g++-7"install:
+        - MATRIX_EVAL="brew install gcc && CC=gcc-7 && CXX=g++-7"
+install:
   # GraphBLAS
   - git clone --depth 1 --branch master https://github.com/DrTimothyAldenDavis/GraphBLAS
   - cd GraphBLAS/build
