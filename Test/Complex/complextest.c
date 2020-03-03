@@ -130,8 +130,8 @@
 
 #define ZERO (CMPLX(0, 0))
 #define ONE (CMPLX(1, 0))
-#define LL (CMPLX(1.0, 1.0))
-#define RR (CMPLX(2.0, 2.0))
+#define LL (CMPLX(1, 1))
+#define RR (CMPLX(2, 2))
 
 #define TEST_BINOP(L, R, OP, V)                             \
   {                                                         \
