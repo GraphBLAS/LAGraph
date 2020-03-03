@@ -12,14 +12,14 @@ install:
   - cd GraphBLAS
   - JOBS=$(nproc) CFLAGS=-DGBCOMPACT make
   - sudo make install
-  - sudo ldconfig
+#  - sudo ldconfig
   - cd ..
   # LAGraph
   - git clone --depth 1 --branch ${TRAVIS_BRANCH} https://github.com/${TRAVIS_REPO_SLUG}
   - cd LAGraph
   - JOBS=$(nproc) make
   - sudo make install
-  - sudo ldconfig
+#  - sudo ldconfig
   - cd ..
 script:
   - make tests
