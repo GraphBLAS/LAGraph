@@ -569,8 +569,8 @@ extern GrB_Monoid
     
 extern GrB_Semiring LAGraph_PLUS_TIMES_ComplexFP64 ;
 
-extern double complex LAGraph_ComplexFP64_1  ;
-extern double complex LAGraph_ComplexFP64_0 ;
+extern double _Complex LAGraph_ComplexFP64_1 ;
+extern double _Complex LAGraph_ComplexFP64_0 ;
 
 GrB_Info LAGraph_Complex_init ( ) ;
 GrB_Info LAGraph_Complex_finalize ( ) ;
