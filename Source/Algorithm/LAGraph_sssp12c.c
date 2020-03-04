@@ -91,7 +91,6 @@ GrB_Info LAGraph_sssp12c        // single source shortest paths
 )
 {
     GrB_Info info;
-    // int32_t print_lvl = 0; // change to 2 to show calculation step results
 
     (*path_length) = NULL;
     GrB_Index nrows, ncols, n = 0; // graph info
@@ -118,19 +117,6 @@ GrB_Info LAGraph_sssp12c        // single source shortest paths
     // initially, there tends to have more Inf, so we do t<Inf first to
     // get sparser result
     bool do_LT_first = true;
-
-    // double total_time1 = 0;
-    // double total_time2 = 0;
-    // double total_time3 = 0;
-    // double total_time4 = 0;
-    // double total_time5 = 0;
-    // double total_time6 = 0;
-    // double total_time7 = 0;
-    // double total_time9 = 0;
-    // double total_time10= 0;
-    // double tic1[2], tic[2];
-    // LAGraph_tic(tic1);
-    // LAGraph_tic(tic);
 
     if (A == NULL || path_length == NULL)
     {
@@ -187,7 +173,6 @@ GrB_Info LAGraph_sssp12c        // single source shortest paths
     // AL = A .* (A <= delta) with lBound = delta
     LAGr_Matrix_new(&AL, GrB_INT32, n, n);
     LAGr_select(AL, NULL, NULL, GxB_LE_THUNK, A, lBound, NULL) ;
-    // GxB_print(AL, print_lvl);
 
     // AH = A .* (A > delta) with lBound = delta
     LAGr_Matrix_new(&AH, GrB_INT32, n, n);
@@ -195,12 +180,8 @@ GrB_Info LAGraph_sssp12c        // single source shortest paths
 
     GrB_Index nvals = 0;
     LAGr_Matrix_nvals(&nvals, A);
-    // printf("A has nvals = %"PRIu64"\n", nvals);
     LAGr_Matrix_nvals(&nvals, AL);
-    // printf("AL has nvals = %"PRIu64"\n", nvals);
     LAGr_Matrix_nvals(&nvals, AH);
-    // printf("AH has nvals = %"PRIu64"\n", nvals);
-    // GxB_print(AH, print_lvl);
 
     int32_t i = 0;
 
@@ -212,17 +193,8 @@ GrB_Info LAGraph_sssp12c        // single source shortest paths
     //LAGr_Scalar_setElement (lBound, i * delta);
     LAGr_Vector_setElement(tmasked, 0, source);
     LAGr_Vector_setElement(s, true, source);
-    // GxB_print(tmasked, print_lvl);
 
     LAGr_Vector_nvals(&tmasked_nvals, tmasked);
-
-//    if (print_lvl > 0)
-//    {
-//        fprintf (stderr, "outter tmasked has %ld nnz\n",tmasked_nvals);
-//    }
-    // double t_pre = LAGraph_toc(tic);
-    //printf("pre-handling time %12.6g sec\n", t1);
-    // double t1 ;
 
     //--------------------------------------------------------------------------
     // while (t >= i*delta) not empty
@@ -230,15 +202,11 @@ GrB_Info LAGraph_sssp12c        // single source shortest paths
 
     while (remain)
     {
-        // printf ("\n============================= outer: %d\n", i) ;
         // tmasked = select (tmasked < (i+1)*delta)
-        // LAGraph_tic (tic);
         LAGr_Vector_clear (tmasked) ;
         LAGr_Scalar_setElement (uBound, (i+1) * delta);
         LAGr_assign (tmasked, reach, NULL, t, GrB_ALL, n, NULL) ;
         LAGr_select(tmasked, NULL, NULL, GxB_LT_THUNK, tmasked, uBound, NULL);
-        // t1 = LAGraph_toc(tic);
-        // total_time1 += t1;
 
         LAGr_Vector_nvals(&tmasked_nvals, tmasked);
 
@@ -248,13 +216,8 @@ GrB_Info LAGraph_sssp12c        // single source shortest paths
 
         while (tmasked_nvals > 0)
         {
-            //printf ("\n=============== inner tmasked has %ld nnz\n",tmasked_nvals);
             // tReq = AL' (min.+) tmasked
-            // LAGraph_tic (tic);
             LAGr_vxm (tReq, NULL, NULL, GxB_MIN_PLUS_INT32, tmasked, AL, NULL) ;
-            // t1 = LAGraph_toc(tic);
-            // total_time2 += t1;
-            //GxB_print(tReq, 2);
 
             // Even though GrB_assign is faster than eWiseAdd here, the
             // total time of getting s with assign and tmasked = (s.*t)
@@ -262,25 +225,7 @@ GrB_Info LAGraph_sssp12c        // single source shortest paths
             // Time taken here and time to get tmasked =(s.*t) is commented
             // below for kron matrix
             // s = (s | pattern of tmasked)
-            // LAGraph_tic (tic);
-
-            //printf("-------------------------------------------------\n");
-            //GxB_print(s, 2);
-            //GxB_print(tmasked, 2);
-            // best:0.35+1.17=1.52sec
             LAGr_eWiseAdd (s, NULL, NULL, GxB_PAIR_BOOL, s, tmasked, NULL);
-            // 2nd best:0.50+1.22=1.72sec
-            //LAGr_apply(s, NULL, GrB_LOR, GxB_ONE_BOOL, tmasked, NULL);
-            // worse:0.14+2.27=2.41sec
-            //LAGr_assign (s, NULL, GxB_PAIR_BOOL, tmasked, GrB_ALL, n,
-            //    NULL) ;
-            //LAGr_Vector_nvals (&ignore, s) ; // finish the work for assign
-            // TODO why this is slow that the eWiseAdd above
-            //LAGr_assign (s, tmasked, NULL, true, GrB_ALL, n, GrB_DESC_S) ;
-            //GxB_print(s, 2);
-
-            // t1 = LAGraph_toc(tic);
-            // total_time3 += t1;
 
             // if nnz(tReq) == 0, no need to continue the rest of this loop
             GrB_Index tReq_nvals ;
@@ -288,35 +233,23 @@ GrB_Info LAGraph_sssp12c        // single source shortest paths
             if (tReq_nvals == 0) { break; }
 
             // tless<tReq> = tReq .< t
-            // TODO can tReq be a structural mask? see next line
-            // If A(src,src) is not explicit 0 and A is all positive, then
-            // yes
+
             // TODO currently assuming all edges weights > 0 (FIXME), so 
             // we're using a structural mask.  Explicit zeros in A would
             // require a valued mask.
-            //printf("-------------------------------------------------\n");
-            //GxB_print(tReq, 2);
-            //GxB_print(t, 2);
-            // LAGraph_tic (tic);
-            // TODO: try clearing explicitly ...
+
             LAGr_Vector_clear (tless) ;
             LAGr_eWiseAdd (tless, tReq, NULL, GrB_LT_INT32, tReq, t,
                 GrB_DESC_S  /* assumes all entries in A are > 0 */) ;
-            // finish the work for assign
-            //LAGr_Vector_nvals (&ignore, tless) ;
 
             // remove explicit zeros from tless so it can be used as a
             // structural mask
             GrB_Index tless_nvals ;
             LAGr_select (tless, NULL, NULL, GxB_NONZERO, tless, NULL, NULL);
             LAGr_Vector_nvals (&tless_nvals, tless) ;
-            // t1 = LAGraph_toc(tic);
-            // total_time4 += t1;
             if (tless_nvals == 0) { break ; }
 
             // update reachable node list/mask
-            //LAGr_eWiseAdd (reach, NULL, NULL, GxB_PAIR_BOOL, reach, tless,
-            //    NULL);
             LAGr_assign (reach, tless, NULL, true, GrB_ALL, n, GrB_DESC_S) ;
 
             // tmasked<tless> = select (i*delta <= tReq < (i+1)*delta)
@@ -325,8 +258,6 @@ GrB_Info LAGraph_sssp12c        // single source shortest paths
             // tReq = tmasked min.+ AL must be >= i*delta.
             // Therefore, there is no need to perform GxB_select with
             // GxB_GE_THUNK to find tmasked >= i*delta from tReq 
-            // LAGraph_tic (tic);
-            // better to clear vector before select (TODO: fix in GraphBLAS)
             LAGr_Vector_clear (tmasked) ;
             LAGr_select (tmasked, tless, NULL, GxB_LT_THUNK,
                 tReq, uBound, GrB_DESC_S /* GrB_DESC_RS */) ;
@@ -339,97 +270,47 @@ GrB_Info LAGraph_sssp12c        // single source shortest paths
                 LAGr_select (tmasked, NULL, NULL, GxB_GE_THUNK, 
                     tmasked, lBound, NULL) ;
             }
-            // t1 = LAGraph_toc(tic);
-            // total_time5 += t1;
-            // GxB_print(tmasked, print_lvl);
 
             // t<tless> = tReq
-            // GrB_apply is faster than GrB_eWiseAdd or GrB_assign here 
-            // even when t is dense
-            // LAGraph_tic (tic);
-            // TODO use assign (but my apply should be fast too...)
             LAGr_apply (t, tless, NULL, GrB_IDENTITY_INT32, tReq,
                 GrB_DESC_S) ;
-            //LAGr_assign (t, tless, NULL, tReq, GrB_ALL, n, GrB_DESC_S) ;
-            //LAGr_Vector_nvals (&ignore, t) ;
-            // t1 = LAGraph_toc(tic);
-            // total_time6 += t1;
 
             LAGr_Vector_nvals(&tmasked_nvals, tmasked);
-
         }
 
-        // printf ("\n=============== next outer:\n") ;
-
         // tmasked<s> = t
-        // LAGraph_tic (tic);
         LAGr_assign (tmasked, s, NULL, t, GrB_ALL, n, GrB_DESC_RS) ;
-        // t1 = LAGraph_toc(tic);
-        // total_time10 += t1;
 
         // tReq = AH'*tmasked
-        // LAGraph_tic (tic);
         LAGr_vxm (tReq, NULL, NULL, GxB_MIN_PLUS_INT32, tmasked, AH, NULL) ;
-        // t1 = LAGraph_toc(tic);
-        // total_time2 += t1;
 
         // t = min(t, tReq)
         // When t is dense, it is best to get tless<tReq> = tReq .< t,
         // and use tless as mask to update t.
-        //printf("----------------------------------------------------\n");
-        //GxB_print(t, 2);
-        // LAGraph_tic (tic);
-        //------
-        // best for sparse t:
-        //LAGr_eWiseAdd(t, NULL, NULL, GrB_MIN_INT32, t, tReq, NULL);
-        //------
-        // best for dense t:  TODO use this instead when t is dense:
         LAGr_Vector_clear (tless) ;
         LAGr_eWiseAdd (tless, tReq, NULL, GrB_LT_INT32, tReq, t,
             GrB_DESC_S);
         LAGr_apply(t, tless, NULL, GrB_IDENTITY_INT32, tReq, NULL);
-        //------
-        // worse:
-        //LAGr_eWiseAdd(t, tReq, NULL, GrB_MIN_INT32, t, tReq, NULL);
-        // t1 = LAGraph_toc(tic);
-        // total_time9 += t1;
-        //GxB_print(t, 2);
 
         //------------------------------------------------------------------
         // find out how many left to be computed
         //------------------------------------------------------------------
 
-        // LAGraph_tic (tic);
-        // eWiseAdd is twice faster than assign TODO: why
         // update reachable node list/mask
         LAGr_assign (reach, tless, NULL, true, GrB_ALL, n, NULL) ;
 
         // remove previous buckets
         LAGr_assign (reach, s, NULL, false, GrB_ALL, n, GrB_DESC_S) ;
         LAGr_reduce (&remain, NULL, GxB_LOR_BOOL_MONOID, reach, NULL) ;
-        // t1 = LAGraph_toc(tic);
-        // total_time7 += t1;
-        //GxB_print(reach, 2);
 
         LAGr_Vector_clear (s) ; // clear s for the next loop
         ++i;
-
     }
-
-    /*
-    printf("total time, select LT time, vxm time, update s, find tless,"
-    "update tmasked, update t, select GE, update t time2, get t.*s time:\n"
-    "%12.6g\n %12.6g\n %12.6g\n %12.6g\n %12.6g\n %12.6g\n"
-    "%12.6g\n %12.6g\n %12.6g\n %12.6g \n",
-    total_time, total_time1, total_time2, total_time3, total_time4,
-    total_time5, total_time6, total_time7, total_time9, total_time10);
-    */
 
     // result = t
     *path_length = t;
     t = NULL;
 
-    // LAGraph_tic (tic) ;
     GrB_free (&lBound) ;
     GrB_free (&uBound) ;
     GrB_free (&Inf) ;
@@ -440,21 +321,6 @@ GrB_Info LAGraph_sssp12c        // single source shortest paths
     GrB_free (&reach) ;
     GrB_free (&AL) ;
     GrB_free (&AH) ;
-    // double t_free = LAGraph_toc (tic) ;
 
-    // double total_time = LAGraph_toc(tic1);
-    // printf("total time      %12.3f sec\n", total_time);
-    // printf("init time       %12.3f sec, ratio %8.3f\n", t_pre, t_pre/total_time);
-    // printf("select LT time  %12.3f sec, ratio %8.3f\n", total_time1, total_time1/total_time);
-    // printf("vxm time        %12.3f sec, ratio %8.3f\n", total_time2, total_time2/total_time);
-    // printf("update s time   %12.3f sec, ratio %8.3f\n", total_time3, total_time3/total_time);
-    // printf("find tless time %12.3f sec, ratio %8.3f\n", total_time4, total_time4/total_time);
-    // printf("update tmasked  %12.3f sec, ratio %8.3f\n", total_time5, total_time5/total_time);
-    // printf("update t time   %12.3f sec, ratio %8.3f\n", total_time6, total_time6/total_time);
-    // printf("select GE time  %12.3f sec, ratio %8.3f\n", total_time7, total_time7/total_time);
-    // printf("update t time2  %12.3f sec, ratio %8.3f\n", total_time9, total_time9/total_time);
-    // printf("tmasked<s>=t    %12.3f sec, ratio %8.3f\n", total_time10, total_time10/total_time);
-// 
-    // printf("free workspace  %12.3f sec, ratio %8.3f\n", t_free, t_free / total_time) ;
     return GrB_SUCCESS;
 }
