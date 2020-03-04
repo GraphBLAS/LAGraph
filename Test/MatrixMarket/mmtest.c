@@ -212,7 +212,7 @@ int main (int argc, char **argv)
     GrB_Type types [NTYPES] = { GrB_BOOL,
         GrB_INT8,  GrB_INT16,  GrB_INT32,  GrB_INT64,
         GrB_UINT8, GrB_UINT16, GrB_UINT32, GrB_UINT64,
-        GrB_FP32,  GrB_FP64,   LAGraph_Complex } ;
+        GrB_FP32,  GrB_FP64,   LAGraph_ComplexFP64 } ;
 
     char *typenames [NTYPES] = { "bool",
         "int8",  "int16",  "int32",  "int64",

@@ -1,7 +1,24 @@
-services:
-  - docker
-
+# based on travis.yml from graphalytics
+language: c
+jobs:
+  include:
+    - os: linux
+      dist: bionic
+    - os: osx
+      osx_image: xcode11.3
+install:
+  # clone GraphBLAS next to LAGraph's directory
+  - pushd .
+  - cd ..
+  - git clone --depth 1 --branch master https://github.com/DrTimothyAldenDavis/GraphBLAS
+  - cd GraphBLAS/build
+  - cmake -DGBCOMPACT=1 -DCMAKE_C_FLAGS="$(CMAKE_C_FLAGS) -w" ..
+  - JOBS=2 make
+  - popd
 script:
-  - docker build -t graphblas/lagraph:${TRAVIS_COMMIT} .
-  - docker run -w /LAGraph -it graphblas/lagraph:${TRAVIS_COMMIT} make tests
-
+  # build and test LAGraph
+  - cd build
+  - cmake ..
+  - JOBS=2 make
+  - cd ..
+  - make tests
