@@ -321,3 +321,14 @@ SSSP12c #20    21.5930     28.9661      9.0798       9.6989     56.0314
 TC(dot)  #40  953.7096     36.0968    240.3020      41.6584      0.3074
 TC(dot2) #40  984.3086     37.7154    258.7417      43.9863      0.3080
 
+
+--------------------------------------------------------------------------------
+Mar 6. Results on hypersparse, using gcc 5.4.0 with v3.2.0: in MATLAB
+--------------------------------------------------------------------------------
+
+in progress: 5 of the 6 benchmarks are written, except the TC in MATLAB does
+not yet do the pre-sort (needed for kron and twitter).  CC is not written.
+Using MATLAB R2018a.
+
+BFS     #40      8.715       
+

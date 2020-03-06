@@ -46,7 +46,7 @@
 
 #include "sssp_test.h"
 
-#define NTHREAD_LIST 2
+#define NTHREAD_LIST 1
 #define THREAD_LIST 0
 
 #define LAGRAPH_FREE_ALL            \
@@ -276,6 +276,16 @@ int main (int argc, char **argv)
     GxB_fprint (A, 2, stdout) ;
     // GxB_fprint (SourceNodes, GxB_COMPLETE, stdout) ;
 
+    #if 1
+    {
+        char outfile [256] ;
+        sprintf (outfile, "sources_%ld.mtx", n) ;
+        FILE *f = fopen (outfile, "w") ;
+        LAGraph_mmwrite ((GrB_Matrix) SourceNodes, f) ;
+        fclose (f) ;
+    }
+    #endif
+
     //--------------------------------------------------------------------------
     // Begin tests
     //--------------------------------------------------------------------------
@@ -292,7 +302,7 @@ for (int tt = 1 ; tt <= nt ; tt++)
     int nthreads = Nthreads [tt] ;
     if (nthreads > nthreads_max) continue ;
 
-    if (nthreads == 64) { printf ("SSSP: 64 threads; skipped\n") ; continue ; }
+//  if (nthreads == 64) { printf ("SSSP: 64 threads; skipped\n") ; continue ; }
 
     LAGraph_set_nthreads (nthreads) ;
 
@@ -435,6 +445,7 @@ for (int tt = 1 ; tt <= nt ; tt++)
 //      printf ("\n----sssp12: nthreads %d trial: %d source: %lu (0-based)\n",
 //          nthreads, trial, s) ;
 
+#if 1
         // Start the timer
         LAGraph_tic (tic) ;
         GrB_free (&path_lengths1) ;
@@ -445,6 +456,7 @@ for (int tt = 1 ; tt <= nt ; tt++)
         printf ("sssp12 : threads: %2d trial: %2d source %9lu "
             "time: %10.4f sec\n", nthreads, trial, s, t3) ;
         total_time_sssp12 += t3 ;
+#endif
 
         //----------------------------------------------------------------------
         // sssp12c: with dense vector t
@@ -463,6 +475,16 @@ for (int tt = 1 ; tt <= nt ; tt++)
         printf ("sssp12c: threads: %2d trial: %2d source %9lu "
             "time: %10.4f sec\n", nthreads, trial, s, t3) ;
         total_time_sssp12c += t3 ;
+
+        #if 1
+        {
+            char outfile [256] ;
+            sprintf (outfile, "pathlen_%02d_%ld.mtx", trial, n) ;
+            FILE *f = fopen (outfile, "w") ;
+            LAGraph_mmwrite ((GrB_Matrix) path_lengths1, f) ;
+            fclose (f) ;
+        }
+        #endif
 
         #if 0
         // save the results
@@ -645,6 +667,9 @@ for (int tt = 1 ; tt <= nt ; tt++)
             // free the result from LAGraph_BF_pure_c
             // LAGRAPH_FREE (d) ;
         }
+
+        // HACK
+        // break ;
     }
 
     //--------------------------------------------------------------------------

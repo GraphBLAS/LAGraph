@@ -21,7 +21,8 @@ default: compile
 	#./build/gap_sssp_test jagmesh7.mtx 3 > jagmesh7.out #2>stderr.txt
 	#./build/gap_sssp_check jagmesh7.out jagmesh7.check
 	./build/gap_sssp_test cover.mtx 3
-	./build/gap_sssp_test_16 cover.mtx 3
+	# ./build/gap_sssp_test_16 cover.mtx 3
+	# ./build/gap_sssp_test jagmesh7.mtx 3
 
 # build test
 compile:
@@ -38,4 +39,5 @@ purge: distclean
 # remove all files not in the distribution
 distclean:
 	rm -rf build/* stderr.txt gap_sssp_test sssp_check *.out
+	rm -rf pathlen_*.mtx sources_*.mtx
 
