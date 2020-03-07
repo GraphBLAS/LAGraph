@@ -109,7 +109,7 @@
 // In the example, this gives the following:
 //
 // AL = A min.sel2nd diag(L) = | 0 5 4 5 4 |
-//                             | . . .     |
+//                             | 3 . . . . |
 //
 // ## Selecting the minimum mode value
 //
