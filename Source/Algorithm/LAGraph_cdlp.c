@@ -150,8 +150,6 @@
     GrB_free (&L_prev) ;                                                       \
     if (sanitize) GrB_free (&S) ;                                              \
     GrB_free (&AT) ;                                                           \
-    GrB_free (&AL_in) ;                                                        \
-    GrB_free (&AL_out) ;                                                       \
     GrB_free (&desc) ;                                                         \
 }
 
@@ -175,15 +173,16 @@ GrB_Info LAGraph_cdlp
     GrB_Matrix S = NULL;
     // Transposed matrix for the unsymmetric case
     GrB_Matrix AT = NULL;
-    // S*L matrix
-    GrB_Matrix AL_in = NULL;
-    GrB_Matrix AL_out = NULL;
     // Result CDLP vector
     GrB_Vector CDLP = NULL;
 
     GrB_Descriptor desc = NULL;
 
-    // Arrays holding extracted tuples
+    // Arrays holding extracted tuples if the matrix needs to be copied
+    GrB_Index *AI = NULL;
+    GrB_Index *AJ = NULL;
+    GrB_Index *AX = NULL;
+    // Arrays holding extracted tuples during the algorithm
     GrB_Index *I = NULL;
     GrB_Index *X = NULL;
 
@@ -204,20 +203,39 @@ GrB_Info LAGraph_cdlp
     t [0] = 0;         // sanitize time
     t [1] = 0;         // CDLP time
 
+    // n = size of A (# of nodes in the graph)
+    // nz = # of non-zero elements in the matrix
+    // nnz = # of non-zero elements used in the computations
+    //   (twice as many for directed graphs)
+    GrB_Index n, nz, nnz;
+    LAGRAPH_OK (GrB_Matrix_nrows(&n, A))
+    LAGRAPH_OK (GrB_Matrix_nvals(&nz, A))
+    if (!symmetric)
+    {
+        nnz = 2 * nz;
+    }
+    else
+    {
+        nnz = nz;
+    }
+
     if (sanitize)
     {
         LAGraph_tic (tic) ;
 
-        // S = binary pattern of A
-        LAGRAPH_OK (LAGraph_pattern(&S, A, GrB_UINT64))
-        // Remove all self edges
-        LAGRAPH_OK (LAGraph_prune_diag(S))
+        AI = LAGraph_malloc(nz, sizeof(GrB_Index));
+        AJ = LAGraph_malloc(nz, sizeof(GrB_Index));
+        LAGRAPH_OK (GrB_Matrix_extractTuples_UINT64(AI, AJ, GrB_NULL, &nz, A))
+
+        AX = LAGraph_malloc(nz, sizeof(GrB_Index));
+        LAGRAPH_OK (GrB_Matrix_new(&S, GrB_UINT64, n, n));
+        LAGRAPH_OK (GrB_Matrix_build(S, AI, AJ, AX, nz, GrB_PLUS_UINT64))
 
         t [0] = LAGraph_toc (tic) ;
     }
     else
     {
-        // Use the input as-is, and assume it is binary with no self edges.
+        // Use the input as-is, and assume it is UINT64(!) with no self edges.
         // Results are undefined if this condition does not hold.
         S = A;
     }
@@ -236,28 +254,9 @@ GrB_Info LAGraph_cdlp
     }
 
     // TODO: heap is no longer in SuiteSparse, as of 3.2.0draftx.
-    // the new saxpy method is used instead (Gustavson + Hash)
-    LAGRAPH_OK(GrB_Descriptor_new(&desc))
-    LAGRAPH_OK(GrB_Descriptor_set(desc, GrB_OUTP, GrB_REPLACE))
-    LAGRAPH_OK(GrB_Descriptor_set(desc, GxB_AxB_METHOD, GxB_AxB_HEAP))
-
-    // n = size of A (# of nodes in the graph)
-    GrB_Index n;
-    LAGRAPH_OK (GrB_Matrix_nrows(&n, A))
-
-    // nz = # of non-zero elements in the matrix
-    // nnz = # of non-zero elements used in the computations
-    //   (twice as many for directed graphs)
-    GrB_Index nz, nnz;
-    LAGRAPH_OK (GrB_Matrix_nvals(&nz, A))
-    if (!symmetric)
-    {
-        nnz = 2 * nz;
-    }
-    else
-    {
-        nnz = nz;
-    }
+    // the new saxpy method is used instead (Gustavson + Hash) --> TODO: use saxpy?
+    LAGRAPH_OK (GrB_Descriptor_new(&desc))
+//    LAGRAPH_OK (GrB_Descriptor_set(desc, GxB_AxB_METHOD, GxB_AxB_SAXPY))
 
     // Initialize L with diagonal elements 1..n
     I = LAGraph_malloc (n, sizeof (GrB_Index)) ;
@@ -281,7 +280,7 @@ GrB_Info LAGraph_cdlp
     if (!symmetric)
     {
         // compute AT for the unsymmetric case as it will be used
-        // to compute AL_out = A' min.2nd L in each iteration
+        // to compute A' = A' min.2nd L in each iteration
         LAGRAPH_OK (GrB_Matrix_new (&AT, GrB_UINT64, n, n)) ;
         LAGRAPH_OK (GrB_transpose (AT, NULL, NULL, A, NULL)) ;
     }
@@ -293,21 +292,17 @@ GrB_Info LAGraph_cdlp
         I = LAGraph_malloc(nnz, sizeof(GrB_Index));
         X = LAGraph_malloc(nnz, sizeof(GrB_Index));
 
-        // AL_in = A min.2nd L
+        // A = A min.2nd L
         // (using the "push" (saxpy) method)
-        LAGRAPH_OK(GrB_Matrix_new(&AL_in, GrB_UINT64, n, n))
-        LAGRAPH_OK(GrB_mxm(AL_in, GrB_NULL, GrB_NULL, GxB_MIN_SECOND_UINT64, S, L, desc))
-        LAGRAPH_OK(GrB_Matrix_extractTuples_UINT64(I, GrB_NULL, X, &nz, AL_in))
-        LAGRAPH_OK(GrB_free(&AL_in))
+        LAGRAPH_OK(GrB_mxm(S, GrB_NULL, GrB_NULL, GxB_MIN_SECOND_UINT64, S, L, desc))
+        LAGRAPH_OK(GrB_Matrix_extractTuples_UINT64(I, GrB_NULL, X, &nz, S))
 
         if (!symmetric)
         {
-            // AL_out = A' min.2nd L
+            // A' = A' min.2nd L
             // (using the "push" (saxpy) method)
-            LAGRAPH_OK(GrB_Matrix_new(&AL_out, GrB_UINT64, n, n))
-            LAGRAPH_OK(GrB_mxm(AL_out, GrB_NULL, GrB_NULL, GxB_MIN_SECOND_UINT64, AT, L, desc))
-            LAGRAPH_OK(GrB_Matrix_extractTuples_UINT64(&I[nz], GrB_NULL, &X[nz], &nz, AL_out))
-            LAGRAPH_OK(GrB_free(&AL_out))
+            LAGRAPH_OK(GrB_mxm(AT, GrB_NULL, GrB_NULL, GxB_MIN_SECOND_UINT64, AT, L, desc))
+            LAGRAPH_OK(GrB_Matrix_extractTuples_UINT64(&I[nz], GrB_NULL, &X[nz], &nz, AT))
         }
 
         uint64_t *workspace1 = LAGraph_malloc(nnz, sizeof(GrB_Index));
@@ -355,28 +350,11 @@ GrB_Info LAGraph_cdlp
         LAGRAPH_FREE (I) ;
         LAGRAPH_FREE (X) ;
 
-        // TODO comment from Tim.  I don't understand this test.
-        // if L_prev == L then they are the same matrix, and their
-        // contents will always be the same and thus the for loop
-        // with always report same == true.
-        if (L_prev == L)
-        {
-            // TODO: this might be slow.  See LAGraph_isequal instead
-            bool same = true;
-            for (GrB_Index i = 0; i < n; i++)
-            {
-                uint64_t x_previous;
-                GrB_Matrix_extractElement(&x_previous, L_prev, i, i);
 
-                uint64_t x;
-                GrB_Matrix_extractElement(&x, L, i, i);
-
-                if (x != x_previous) same = false;
-            }
-            if (same)
-            {
-                break;
-            }
+        bool isequal;
+        LAGraph_isequal(&isequal, L_prev, L, GrB_NULL);
+        if (isequal) {
+            break;
         }
     }
 
