@@ -41,4 +41,5 @@ purge: distclean
 # remove all files not in the distribution
 distclean:
 	rm -rf build/* A.mtx v_batch v_brandes stderr.txt bc_test
+	rm -rf batch_*.mtx
 

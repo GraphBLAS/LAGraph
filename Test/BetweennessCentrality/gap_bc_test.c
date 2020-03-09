@@ -34,7 +34,7 @@
 
 //------------------------------------------------------------------------------
 
-#define NTHREAD_LIST 3
+#define NTHREAD_LIST 1
 #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 6
@@ -294,6 +294,17 @@ int main (int argc, char **argv)
         total_time_4  [t] = 0 ;
     }
 
+
+    #if 1
+    {
+        char filename [256] ;
+        sprintf (filename, "batch_src_%lu.mtx", n) ;
+        FILE *f = fopen (filename, "w") ;
+        LAGraph_mmwrite (SourceNodes, f) ;
+        fclose (f) ;
+    }
+    #endif
+
     for (int64_t kstart = 0 ; kstart < nsource ; kstart += batch_size)
     {
 
@@ -496,11 +507,18 @@ int main (int argc, char **argv)
             FILE *f = fopen ("brandes_result.mtx", "w") ;
             LAGraph_mmwrite ((GrB_Matrix) v_brandes, f) ;
             fclose (f) ;
-            f = fopen ("batch_result.mtx", "w") ;
-            LAGraph_mmwrite ((GrB_Matrix) v_batch, f) ;
-            fclose (f) ;
             #endif
         }
+
+        #if 1
+        {
+            char filename [256] ;
+            sprintf (filename, "batch_%02ld_%lu.mtx", kstart, n) ;
+            FILE *f = fopen (filename, "w") ;
+            LAGraph_mmwrite ((GrB_Matrix) v_batch4, f) ;
+            fclose (f) ;
+        }
+        #endif
 
         GrB_free (&v_brandes) ;
         GrB_free (&v_batch) ;

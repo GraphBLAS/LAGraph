@@ -131,13 +131,16 @@ int main (int argc, char **argv)
     printf(" - ntrials: %d\n", ntrials);
 
     // Create batch of vertices to use in traversal
+    printf ("source nodes: ") ;
     int n_batch = 4 ;
     GrB_Index *vertex_list = calloc (n, sizeof (GrB_Index)) ;
     srand (1) ;
     for (int i = 0 ; i < n_batch ; i++)
     {
         vertex_list [i] = rand ( ) % n ;
+        printf (" %lu", vertex_list [i]) ;
     }
+    printf ("\n") ;
 
     //--------------------------------------------------------------------------
     // Compute betweenness centrality from all nodes (Brandes)
