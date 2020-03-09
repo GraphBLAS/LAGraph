@@ -329,14 +329,22 @@ Mar 6-9. Results on hypersparse, using gcc 5.4.0 with v3.2.0: in MATLAB
 in progress: 5 of the 6 benchmarks are written; CC is not written.  Using
 MATLAB R2018a.
 
-
                 kron        urand       twitter      web        road
                 -----       -----       -------     ----        ----
+BC (#40)       49.732        .            .           .           .
+BC (#20)         .           .            .           .           .
 
-BC (#40)         .           .            .           .           .
 BFS (#40)       8.715        .            .           .           .
+BFS (#20)        .           .            .           .           .
+
 CC               -           -            -           -           -
+
 PR #40         25.0035     30.5335      20.7394     12.7925      4.3011
+PR #20           .           .            .           .           .
+
 SSSP (#40)       .           .            .           .           .
+SSSP (#20)       .           .            .           .           .
+
 TC(dot2) #40 1017.260      39.395      275.368      46.840       0.355
+TC(dot2) #20     .           .            .           .           .
 
