@@ -33,7 +33,7 @@
 
 #include "LAGraph.h"
 
-GrB_Info LAGraph_BF_pure_c
+GrB_Info LAGraph_BF_pure_c_double
 (
     double **pd,     // pointer to distance vector d, d(k) = shorstest distance
                      // between s and k if k is reachable from s
@@ -63,3 +63,11 @@ GrB_Info LAGraph_BF_full_mxv
     const GrB_Index s           //given index of the source
 );
 
+GrB_Info LAGraph_BF_full1
+(
+    GrB_Vector *pd_output,      //the pointer to the vector of distance
+    GrB_Vector *ppi_output,     //the pointer to the vector of parent
+    GrB_Vector *ph_output,      //the pointer to the vector of hops
+    const GrB_Matrix A,         //matrix for the graph
+    const GrB_Index s           //given index of the source
+);

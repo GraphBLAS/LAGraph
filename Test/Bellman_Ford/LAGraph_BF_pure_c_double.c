@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// BF_pure_c.c: Bellman-Ford method, not using GraphBLAS
+// BF_pure_c_double.c: Bellman-Ford method, not using GraphBLAS
 //------------------------------------------------------------------------------
 
 /*
@@ -34,11 +34,11 @@
 
 //------------------------------------------------------------------------------
 
-// LAGraph_BF_full_mxv: Bellman-Ford single source shortest paths, returning
-// both the path lengths and the shortest-path tree.  contributed by Jinhao Chen
-// and Tim Davis, Texas A&M.
+// LAGraph_BF_pure_c_double: Bellman-Ford single source shortest paths,
+// returning both the path lengths and the shortest-path tree.  contributed by
+// Jinhao Chen and Tim Davis, Texas A&M.
 
-// LAGraph_BF_pure_c performs a Bellman-Ford to find out shortest path
+// LAGraph_BF_pure_c_double performs a Bellman-Ford to find out shortest path
 // length, parent nodes along the path from given source vertex s in the range
 // of [0, n) on graph with n nodes. It is implemented purely using conventional
 // method. It is used here for checking the correctness of the result and
@@ -48,12 +48,12 @@
 // vertices and number of edges.
 
 // TODO: think about the retrun values
-// LAGraph_BF_pure_c returns GrB_SUCCESS regardless of existence of negative-
-// weight cycle. However, the vector d(k) and pi(k) (i.e., *pd, and *ppi
-// respectively) will be NULL when negative-weight cycle detected. Otherwise,
-// the vector d has d(k) as the shortest distance from s to k. pi(k) = p, where
-// p is the parent node of k-th node in the shortest path. In particular,
-// pi(s) = -1.
+// LAGraph_BF_pure_c_double returns GrB_SUCCESS regardless of existence of
+// negative- weight cycle. However, the vector d(k) and pi(k) (i.e., *pd, and
+// *ppi respectively) will be NULL when negative-weight cycle detected.
+// Otherwise, the vector d has d(k) as the shortest distance from s to k. pi(k)
+// = p, where p is the parent node of k-th node in the shortest path. In
+// particular, pi(s) = -1.
 
 //------------------------------------------------------------------------------
 
@@ -70,7 +70,7 @@
 // cycle reachable from s, returns GrB_SUCCESS and the shortest distance
 // d and the shortest path tree pi. Otherwise return NULL pointer for d
 // and pi.
-GrB_Info LAGraph_BF_pure_c
+GrB_Info LAGraph_BF_pure_c_double
 (
     double **pd,     // pointer to distance vector d, d(k) = shorstest distance
                      // between s and k if k is reachable from s

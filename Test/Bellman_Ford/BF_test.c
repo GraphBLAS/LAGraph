@@ -60,6 +60,9 @@
     GrB_free (&h2) ;                \
     GrB_free (&d3) ;                \
     GrB_free (&d4) ;                \
+    GrB_free (&d5) ;                \
+    GrB_free (&pi5) ;               \
+    GrB_free (&h5) ;                \
 }
 
 int main (int argc, char **argv)
@@ -80,6 +83,9 @@ int main (int argc, char **argv)
     GrB_Vector h2 = NULL ;
     GrB_Vector d3 = NULL ;
     GrB_Vector d4 = NULL ;
+    GrB_Vector d5 = NULL ;
+    GrB_Vector pi5 = NULL ;
+    GrB_Vector h5 = NULL ;
 
     LAGRAPH_OK (LAGraph_init ( )) ;
 
@@ -108,6 +114,34 @@ int main (int argc, char **argv)
     W = LAGraph_malloc (nvals, sizeof(double)) ;
 
     LAGRAPH_OK (GrB_Matrix_extractTuples_FP64(I, J, W, &nvals, A));
+    //--------------------------------------------------------------------------
+    // get the source node
+    //--------------------------------------------------------------------------
+
+    GrB_Index s = 0 ;
+    if (argc > 1)
+    {
+        sscanf (argv [1], "%" PRIu64, &s) ;
+    }
+
+    fprintf (stderr, "\n=========="
+        "input graph: nodes: %lu edges: %lu source node: %lu\n", n, nvals, s) ;
+
+    //--------------------------------------------------------------------------
+    // run LAGraph_BF_full1 before setting the diagonal to 0
+    //--------------------------------------------------------------------------
+    // start the timer
+    LAGraph_tic (tic) ;
+
+    GrB_free (&d5) ;
+    GrB_free (&pi5) ;
+    GrB_free (&h5) ;
+    LAGRAPH_OK (LAGraph_BF_full1 (&d5, &pi5, &h5, A, s)) ;
+
+    // stop the timer
+    double t5 = LAGraph_toc (tic) ;
+    fprintf (stderr, "BF_full1      time: %12.6e (sec), rate:"
+        " %g (1e6 edges/sec)\n", t5, 1e-6*((double) nvals) / t5) ;
 
     //--------------------------------------------------------------------------
     // set the diagonal to 0
@@ -126,18 +160,6 @@ int main (int argc, char **argv)
     LAGRAPH_OK (GrB_transpose (AT, NULL, NULL, A, NULL)) ;
     double transpose_time = LAGraph_toc (tic) ;
     fprintf (stderr, "transpose     time: %g\n", transpose_time) ;
-    //--------------------------------------------------------------------------
-    // get the source node
-    //--------------------------------------------------------------------------
-
-    GrB_Index s = 0 ;
-    if (argc > 1)
-    {
-        sscanf (argv [1], "%" PRIu64, &s) ;
-    }
-
-    fprintf (stderr, "\n=========="
-        "input graph: nodes: %lu edges: %lu source node: %lu\n", n, nvals, s) ;
 
     //--------------------------------------------------------------------------
     // run the LAGraph_BF_full on node s
@@ -153,6 +175,7 @@ int main (int argc, char **argv)
     {
         GrB_free (&d1) ;
         GrB_free (&pi1) ;
+        GrB_free (&h1) ;
         LAGRAPH_OK (LAGraph_BF_full (&d1, &pi1, &h1, A, s)) ;
     }
 
@@ -160,7 +183,7 @@ int main (int argc, char **argv)
     double t1 = LAGraph_toc (tic) / ntrials ;
     fprintf (stderr, "BF_full       time: %12.6e (sec), rate:"
         " %g (1e6 edges/sec)\n", t1, 1e-6*((double) nvals) / t1) ;
-
+#if 0
     //--------------------------------------------------------------------------
     // run the BF on node s with LAGraph_BF_basic
     //--------------------------------------------------------------------------
@@ -179,7 +202,7 @@ int main (int argc, char **argv)
     fprintf (stderr, "BF_basic      time: %12.6e (sec), rate:"
         " %g (1e6 edges/sec)\n", t2, 1e-6*((double) nvals) / t2) ;
     fprintf (stderr, "speedup of BF_basic:       %g\n", t1/t2) ;
-
+#endif
     //--------------------------------------------------------------------------
     // run the BF on node s with LAGraph_pure_c
     //--------------------------------------------------------------------------
@@ -191,7 +214,7 @@ int main (int argc, char **argv)
     {
         free (d) ;
         free (pi) ;
-        LAGRAPH_OK (LAGraph_BF_pure_c (&d, &pi, s, n, nvals, I, J, W)) ;
+        LAGRAPH_OK (LAGraph_BF_pure_c_double (&d, &pi, s, n, nvals, I, J, W)) ;
     }
 
     // stop the timer
@@ -200,7 +223,7 @@ int main (int argc, char **argv)
         " %g (1e6 edges/sec)\n", t3, 1e-6*((double) nvals) / t3) ;
     fprintf (stderr, "speedup of BF_pure_c:      %g\n", t1/t3) ;
 
-
+#if 0
     //--------------------------------------------------------------------------
     // run the LAGraph_BF_full_mxv on node s
     //--------------------------------------------------------------------------
@@ -212,6 +235,7 @@ int main (int argc, char **argv)
     {
         GrB_free (&d2) ;
         GrB_free (&pi2) ;
+        GrB_free (&h2) ;
         LAGRAPH_OK (LAGraph_BF_full_mxv (&d2, &pi2, &h2, AT, s)) ;
     }
 
@@ -239,7 +263,7 @@ int main (int argc, char **argv)
     fprintf (stderr, "BF_basic_mxv  time: %12.6e (sec), rate:"
         " %g (1e6 edges/sec)\n", t5, 1e-6*((double) nvals) / t5) ;
     fprintf (stderr, "speedup of BF_basic_mxv:   %g\n", t1/t5) ;
-
+#endif
     //--------------------------------------------------------------------------
     // check results
     //--------------------------------------------------------------------------
@@ -278,6 +302,7 @@ int main (int argc, char **argv)
             (d == NULL) ? "found":"didn't find");
         ok = false ;
     }
+#if 0
     LAGRAPH_OK (LAGraph_Vector_isequal (&isequal, d1, d3, NULL)) ;
     if (!isequal)
     {
@@ -293,7 +318,14 @@ int main (int argc, char **argv)
     LAGRAPH_OK (LAGraph_Vector_isequal (&isequal, d1, d2, NULL)) ;
     if (!isequal)
     {
-        fprintf (stderr, "ERROR! BF_full and BF_full_mxv d   differ\n") ;
+        fprintf (stderr, "ERROR! BF_full and BF_full_mxv    differ\n") ;
+        ok = false ;
+    }
+#endif
+    LAGRAPH_OK (LAGraph_Vector_isequal (&isequal, d1, d5, NULL)) ;
+    if (!isequal)
+    {
+        fprintf (stderr, "ERROR! BF_full and BF_full1   differ\n") ;
         ok = false ;
     }
 /*
@@ -308,6 +340,7 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
     // write the result to stdout (check them outside of this main program)
     //--------------------------------------------------------------------------
+#if 0
     fprintf (stderr,
     "\n------------------------------------------------------------\n\n") ;
     // pure c
@@ -322,6 +355,26 @@ int main (int argc, char **argv)
         for (int64_t i = 0 ; i < n ; i++)
         {
             fprintf (stderr, "%4" PRIu64 "  ", pi[i]+1) ;
+        }
+        fprintf (stderr, "\n") ;
+        fprintf (stderr, "\n") ;
+    }
+    // BF full1
+    if (d5 != NULL)
+    {
+        fprintf (stderr, "BF full result\n");
+        for (int64_t i = 0 ; i < n ; i++)
+        {
+            double di = 0 ;
+            LAGRAPH_OK (GrB_Vector_extractElement (&di, d5, i)) ;
+            fprintf (stderr, "%4.2f  ", di) ;
+        }
+        fprintf (stderr, "\n") ;
+        for (int64_t i = 0 ; i < n ; i++)
+        {
+            int64_t x = 0 ;
+            LAGRAPH_OK (GrB_Vector_extractElement (&x, pi5, i)) ;
+            fprintf (stderr, "%4" PRIu64 "  ", x) ;
         }
         fprintf (stderr, "\n") ;
         fprintf (stderr, "\n") ;
@@ -408,6 +461,7 @@ int main (int argc, char **argv)
             fprintf (stderr, "\n") ;
         }
     }
+#endif
     //--------------------------------------------------------------------------
     // free all workspace and finish
     //--------------------------------------------------------------------------
