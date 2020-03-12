@@ -326,15 +326,14 @@ GrB_Info LAGraph_BF_full
     //--------------------------------------------------------------------------
     // extract tuple from "distance" vector d and create GrB_Vectors for output
     //--------------------------------------------------------------------------
-    LAGRAPH_OK (GrB_Vector_extractTuples_UDT (I, (void *) W, &n, d));
-    h  = LAGraph_malloc (n, sizeof(GrB_Index)) ;
-    pi = LAGraph_malloc (n, sizeof(GrB_Index)) ;
+    LAGRAPH_OK (GrB_Vector_extractTuples_UDT (I, (void *) W, &nz, d));
+    h  = LAGraph_malloc (nz, sizeof(GrB_Index)) ;
+    pi = LAGraph_malloc (nz, sizeof(GrB_Index)) ;
     if (w == NULL || h == NULL || pi == NULL)
     {
         LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
     }
-
-    for (GrB_Index k = 0; k < n; k++)
+    for (GrB_Index k = 0; k < nz; k++)
     {
         w [k] = W[k].w ;
         h [k] = W[k].h ;
@@ -343,9 +342,9 @@ GrB_Info LAGraph_BF_full
     LAGRAPH_OK (GrB_Vector_new(pd_output,  GrB_FP64,   n));
     LAGRAPH_OK (GrB_Vector_new(ppi_output, GrB_UINT64, n));
     LAGRAPH_OK (GrB_Vector_new(ph_output,  GrB_UINT64, n));
-    LAGRAPH_OK (GrB_Vector_build_FP64  (*pd_output , I, w , n, GrB_MIN_FP64  ));
-    LAGRAPH_OK (GrB_Vector_build_UINT64(*ppi_output, I, pi, n, GrB_MIN_UINT64));
-    LAGRAPH_OK (GrB_Vector_build_UINT64(*ph_output , I, h , n, GrB_MIN_UINT64));
+    LAGRAPH_OK (GrB_Vector_build_FP64  (*pd_output , I, w , nz,GrB_MIN_FP64  ));
+    LAGRAPH_OK (GrB_Vector_build_UINT64(*ppi_output, I, pi, nz,GrB_MIN_UINT64));
+    LAGRAPH_OK (GrB_Vector_build_UINT64(*ph_output , I, h , nz,GrB_MIN_UINT64));
     LAGRAPH_FREE_ALL;
     return (GrB_SUCCESS) ;
 }

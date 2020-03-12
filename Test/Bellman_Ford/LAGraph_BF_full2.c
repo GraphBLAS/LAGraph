@@ -1,5 +1,7 @@
-﻿//------------------------------------------------------------------------------
-// LAGraph_BF_full.c: Bellman-Ford single-source shortest paths, returns tree
+//------------------------------------------------------------------------------
+// LAGraph_BF_full2.c: Bellman-Ford single-source shortest paths, returns tree,
+// while diagonal of input matrix A needs not to be explicit 0, using the
+// frontier idea from Roi Lipman
 //------------------------------------------------------------------------------
 
 /*
@@ -34,22 +36,19 @@
 
 //------------------------------------------------------------------------------
 
-// LAGraph_BF_full_mxv: Bellman-Ford single source shortest paths, returning
-// both the path lengths and the shortest-path tree.  contributed by Jinhao Chen
-// and Tim Davis, Texas A&M.
+// LAGraph_BF_full2: Bellman-Ford single source shortest paths, returning both
+// the path lengths and the shortest-path tree.  contributed by Jinhao Chen and
+// Tim Davis, Texas A&M.
 
-// LAGraph_BF_full_mxv performs a Bellman-Ford to find out shortest path
-// length, parent nodes along the path and the hops (number of edges) in the
-// path from given source vertex s in the range of [0, n) on graph with n nodes.
-// It works almost the same as LAGraph_BF_full except that it performs update
-// using GrB_mxv instead of GrB_vxm, therefore, it require the input matrix as
-// the transpose of adjacency matrix A with size n by n. That is, the input
-// sparse matrix has entry AT(i, j) if there is edge from vertex j to vertex i
-// with weight w, then AT(i, j) = w. While same as LAGraph_BF_full, it requires
-// AT(i, i) = 0 for all 0 <= i < n.
+// LAGraph_BF_full2 performs a Bellman-Ford to find out shortest path, parent
+// nodes along the path and the hops (number of edges) in the path from given
+// source vertex s in the range of [0, n) on graph given as matrix A with size
+// n*n. The sparse matrix A has entry A(i, j) if there is an edge from vertex i
+// to vertex j with weight w, then A(i, j) = w.
 
-// TODO: think about the retrun values
-// LAGraph_BF_full_mxv returns GrB_SUCCESS regardless of existence of negative-
+// TODO: think about the return values
+
+// LAGraph_BF_full2 returns GrB_SUCCESS regardless of existence of negative-
 // weight cycle. However, the GrB_Vector d(k), pi(k) and h(k)  (i.e.,
 // *pd_output, *ppi_output and *ph_output respectively) will be NULL when
 // negative-weight cycle detected. Otherwise, the vector d has d(k) as the
@@ -64,6 +63,7 @@
 {                                      \
     GrB_free(&d);                      \
     GrB_free(&dtmp);                   \
+    GrB_free(&dfrontier);              \
     GrB_free(&Atmp);                   \
     GrB_free(&BF_Tuple3);              \
     GrB_free(&BF_lMIN_Tuple3);         \
@@ -97,11 +97,11 @@ BF_Tuple3_struct;
 //------------------------------------------------------------------------------
 // 2 binary functions, z=f(x,y), where Tuple3xTuple3 -> Tuple3
 //------------------------------------------------------------------------------
-void BF_lMIN_mxv
+void BF_lMIN2
 (
     BF_Tuple3_struct *z,
-    const BF_Tuple3_struct *y,
-    const BF_Tuple3_struct *x
+    const BF_Tuple3_struct *x,
+    const BF_Tuple3_struct *y
 )
 {
     if (x->w < y->w
@@ -116,11 +116,11 @@ void BF_lMIN_mxv
     }
 }
 
-void BF_PLUSrhs_mxv
+void BF_PLUSrhs2
 (
     BF_Tuple3_struct *z,
-    const BF_Tuple3_struct *y,
-    const BF_Tuple3_struct *x
+    const BF_Tuple3_struct *x,
+    const BF_Tuple3_struct *y
 )
 {
     z->w = x->w + y->w;
@@ -135,11 +135,11 @@ void BF_PLUSrhs_mxv
     }
 }
 
-void BF_EQ_mxv
+void BF_EQ
 (
     bool *z,
-    const BF_Tuple3_struct *y,
-    const BF_Tuple3_struct *x
+    const BF_Tuple3_struct *x,
+    const BF_Tuple3_struct *y
 )
 {
     if (x->w == y->w && x->h == y->h && x->pi == y->pi)
@@ -152,7 +152,7 @@ void BF_EQ_mxv
     }
 }
 
-// Given the transpose of a n-by-n adjacency matrix A and a source vertex s.
+// Given a n-by-n adjacency matrix A and a source vertex s.
 // If there is no negative-weight cycle reachable from s, return the distances
 // of shortest paths from s and parents along the paths as vector d. Otherwise,
 // returns d=NULL if there is a negtive-weight cycle.
@@ -162,20 +162,20 @@ void BF_EQ_mxv
 //   parent of i-th vertex in the shortest path
 // ph_output is pointer to a GrB_Vector, where the i-th entry is h(s,i), the
 //   number of edges from s to i in the shortest path
-// AT has zeros on diagonal and weights on corresponding entries of edges
+// A has weights on corresponding entries of edges
 // s is given index for source vertex
-GrB_Info LAGraph_BF_full_mxv
+GrB_Info LAGraph_BF_full2
 (
     GrB_Vector *pd_output,      //the pointer to the vector of distance
     GrB_Vector *ppi_output,     //the pointer to the vector of parent
-    GrB_Vector *ph_output,      //the pointer to the vector of hops
-    const GrB_Matrix AT,         //matrix for the graph
+    GrB_Vector *ph_output,       //the pointer to the vector of hops
+    const GrB_Matrix A,         //matrix for the graph
     const GrB_Index s           //given index of the source
 )
 {
     GrB_Info info;
     // tmp vector to store distance vector after n (i.e., V) loops
-    GrB_Vector d = NULL, dtmp = NULL;
+    GrB_Vector d = NULL, dtmp = NULL, dfrontier = NULL;
     GrB_Matrix Atmp = NULL;
     GrB_Type BF_Tuple3;
 
@@ -187,12 +187,12 @@ GrB_Info LAGraph_BF_full_mxv
     GrB_Semiring BF_lMIN_PLUSrhs_Tuple3;
 
     GrB_Index nrows, ncols, n, nz;  // n = # of row/col, nz = # of nnz in graph
-    GrB_Index *I = NULL, *J = NULL; // for col/row indices of entries from AT
+    GrB_Index *I = NULL, *J = NULL; // for col/row indices of entries from A
     GrB_Index *h = NULL, *pi = NULL;
     double *w = NULL;
     BF_Tuple3_struct *W = NULL;
 
-    if (AT == NULL || pd_output == NULL ||
+    if (A == NULL || pd_output == NULL ||
         ppi_output == NULL || ph_output == NULL)
     {
         // required argument is missing
@@ -202,13 +202,13 @@ GrB_Info LAGraph_BF_full_mxv
     *pd_output  = NULL;
     *ppi_output = NULL;
     *ph_output  = NULL;
-    LAGRAPH_OK (GrB_Matrix_nrows (&nrows, AT)) ;
-    LAGRAPH_OK (GrB_Matrix_ncols (&ncols, AT)) ;
-    LAGRAPH_OK (GrB_Matrix_nvals (&nz, AT));
+    LAGRAPH_OK (GrB_Matrix_nrows (&nrows, A)) ;
+    LAGRAPH_OK (GrB_Matrix_ncols (&ncols, A)) ;
+    LAGRAPH_OK (GrB_Matrix_nvals (&nz, A));
     if (nrows != ncols)
     {
-        // AT must be square
-        LAGRAPH_ERROR ("AT must be square", GrB_INVALID_VALUE) ;
+        // A must be square
+        LAGRAPH_ERROR ("A must be square", GrB_INVALID_VALUE) ;
     }
     n = nrows;
 
@@ -224,13 +224,12 @@ GrB_Info LAGraph_BF_full_mxv
 
     // GrB_BinaryOp
     LAGRAPH_OK (GrB_BinaryOp_new(&BF_EQ_Tuple3,
-        (LAGraph_binary_function) (&BF_EQ_mxv),
-        GrB_BOOL, BF_Tuple3, BF_Tuple3));
+        (LAGraph_binary_function) (&BF_EQ), GrB_BOOL, BF_Tuple3, BF_Tuple3));
     LAGRAPH_OK (GrB_BinaryOp_new(&BF_lMIN_Tuple3,
-        (LAGraph_binary_function) (&BF_lMIN_mxv),
+        (LAGraph_binary_function) (&BF_lMIN2),
         BF_Tuple3, BF_Tuple3, BF_Tuple3));
     LAGRAPH_OK (GrB_BinaryOp_new(&BF_PLUSrhs_Tuple3,
-        (LAGraph_binary_function)(&BF_PLUSrhs_mxv),
+        (LAGraph_binary_function)(&BF_PLUSrhs2),
         BF_Tuple3, BF_Tuple3, BF_Tuple3));
 
     // GrB_Monoid
@@ -256,9 +255,12 @@ GrB_Info LAGraph_BF_full_mxv
     }
 
     //--------------------------------------------------------------------------
-    // create matrix Atmp based on AT, while its entries become BF_Tuple3 type
+    // create matrix Atmp based on A, while its entries become BF_Tuple3 type
     //--------------------------------------------------------------------------
-    LAGRAPH_OK (GrB_Matrix_extractTuples_FP64(I, J, w, &nz, AT));
+    LAGRAPH_OK (GrB_Matrix_extractTuples_FP64(I, J, w, &nz, A));
+    int nthreads = LAGraph_get_nthreads ( ) ;
+    printf ("nthreads %d\n", nthreads) ;
+    #pragma omp parallel for num_threads(nthreads) schedule(static)
     for (GrB_Index k = 0; k < nz; k++)
     {
         if (w[k] == 0)             //diagonal entries
@@ -267,9 +269,7 @@ GrB_Info LAGraph_BF_full_mxv
         }
         else
         {
-            // w(i, j) is the weight of edge from j to i, so the parent here
-            // should be j
-            W[k] = (BF_Tuple3_struct) { .w = w[k], .h = 1, .pi = J[k] + 1 };
+            W[k] = (BF_Tuple3_struct) { .w = w[k], .h = 1, .pi = I[k] + 1 };
         }
     }
     LAGRAPH_OK (GrB_Matrix_new(&Atmp, BF_Tuple3, n, n));
@@ -288,15 +288,21 @@ GrB_Info LAGraph_BF_full_mxv
     //--------------------------------------------------------------------------
     // copy d to dtmp in order to create a same size of vector
     LAGRAPH_OK (GrB_Vector_dup(&dtmp, d));
+    LAGRAPH_OK (GrB_Vector_dup(&dfrontier, d));
     bool same= false;          // variable indicating if d == dtmp
     int64_t iter = 0;          // number of iterations
 
     // terminate when no new path is found or more than V-1 loops
     while (!same && iter < n - 1)
     {
-        // execute semiring on d and AT, and save the result to dtmp
-        LAGRAPH_OK (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, BF_lMIN_PLUSrhs_Tuple3,
-            Atmp, d, GrB_NULL));
+        // execute semiring on d and A, and save the result to dtmp
+        LAGRAPH_OK (GrB_vxm(dfrontier, GrB_NULL, GrB_NULL,
+            BF_lMIN_PLUSrhs_Tuple3, dfrontier, Atmp, GrB_NULL));
+
+        // dtmp[i] = min(d[i], dfrontier[i]).
+        GrB_eWiseAdd_Vector_BinaryOp(dtmp, GrB_NULL, GrB_NULL, BF_lMIN_Tuple3,
+            d, dfrontier, GrB_NULL);
+        
         LAGRAPH_OK (LAGraph_Vector_isequal(&same, dtmp, d, BF_EQ_Tuple3));
         if (!same)
         {
@@ -312,11 +318,15 @@ GrB_Info LAGraph_BF_full_mxv
     if (!same)
     {
         // execute semiring again to check for negative-weight cycle
-        LAGRAPH_OK (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, BF_lMIN_PLUSrhs_Tuple3,
-            Atmp, d, GrB_NULL));
-        LAGRAPH_OK (LAGraph_Vector_isequal(&same, dtmp, d, BF_EQ_Tuple3));
+        LAGRAPH_OK (GrB_vxm(dfrontier, GrB_NULL, GrB_NULL,
+            BF_lMIN_PLUSrhs_Tuple3, dfrontier, Atmp, GrB_NULL));
+
+        // dtmp[i] = min(d[i], dfrontier[i]).
+        GrB_eWiseAdd_Vector_BinaryOp(dtmp, GrB_NULL, GrB_NULL, BF_lMIN_Tuple3,
+            d, dfrontier, GrB_NULL);
 
         // if d != dtmp, then there is a negative-weight cycle in the graph
+        LAGRAPH_OK (LAGraph_Vector_isequal(&same, dtmp, d, BF_EQ_Tuple3));
         if (!same)
         {
             // printf("A negative-weight cycle found. \n");
@@ -329,13 +339,12 @@ GrB_Info LAGraph_BF_full_mxv
     // extract tuple from "distance" vector d and create GrB_Vectors for output
     //--------------------------------------------------------------------------
     LAGRAPH_OK (GrB_Vector_extractTuples_UDT (I, (void *) W, &nz, d));
-    h  = LAGraph_malloc(nz, sizeof(GrB_Index));
-    pi = LAGraph_malloc(nz, sizeof(GrB_Index));
-    if (h == NULL || pi == NULL)
+    h  = LAGraph_malloc (nz, sizeof(GrB_Index)) ;
+    pi = LAGraph_malloc (nz, sizeof(GrB_Index)) ;
+    if (w == NULL || h == NULL || pi == NULL)
     {
         LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
     }
-
     for (GrB_Index k = 0; k < nz; k++)
     {
         w [k] = W[k].w ;

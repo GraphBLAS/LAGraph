@@ -63,6 +63,9 @@
     GrB_free (&d5) ;                \
     GrB_free (&pi5) ;               \
     GrB_free (&h5) ;                \
+    GrB_free (&d6) ;                \
+    GrB_free (&pi6) ;               \
+    GrB_free (&h6) ;                \
 }
 
 int main (int argc, char **argv)
@@ -86,6 +89,9 @@ int main (int argc, char **argv)
     GrB_Vector d5 = NULL ;
     GrB_Vector pi5 = NULL ;
     GrB_Vector h5 = NULL ;
+    GrB_Vector d6 = NULL ;
+    GrB_Vector pi6 = NULL ;
+    GrB_Vector h6 = NULL ;
 
     LAGRAPH_OK (LAGraph_init ( )) ;
 
@@ -130,18 +136,45 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
     // run LAGraph_BF_full1 before setting the diagonal to 0
     //--------------------------------------------------------------------------
+
+    int ntrials = 1 ;       // increase this to 10, 100, whatever, for more
+                            // accurate timing
     // start the timer
     LAGraph_tic (tic) ;
 
-    GrB_free (&d5) ;
-    GrB_free (&pi5) ;
-    GrB_free (&h5) ;
-    LAGRAPH_OK (LAGraph_BF_full1 (&d5, &pi5, &h5, A, s)) ;
+    for (int trial = 0 ; trial < ntrials ; trial++)
+    {
+        GrB_free (&d5) ;
+        GrB_free (&pi5) ;
+        GrB_free (&h5) ;
+        LAGRAPH_OK (LAGraph_BF_full1 (&d5, &pi5, &h5, A, s)) ;
+    }
 
     // stop the timer
-    double t5 = LAGraph_toc (tic) ;
+    double t5 = LAGraph_toc (tic) / ntrials;
     fprintf (stderr, "BF_full1      time: %12.6e (sec), rate:"
         " %g (1e6 edges/sec)\n", t5, 1e-6*((double) nvals) / t5) ;
+    
+    //--------------------------------------------------------------------------
+    // run LAGraph_BF_full2 before setting the diagonal to 0
+    //--------------------------------------------------------------------------
+
+    // start the timer
+    LAGraph_tic (tic) ;
+
+    for (int trial = 0 ; trial < ntrials ; trial++)
+    {
+        GrB_free (&d6) ;
+        GrB_free (&pi6) ;
+        GrB_free (&h6) ;
+        LAGRAPH_OK (LAGraph_BF_full2 (&d6, &pi6, &h6, A, s)) ;
+    }
+
+    // stop the timer
+    double t6 = LAGraph_toc (tic) / ntrials;
+    fprintf (stderr, "BF_full2      time: %12.6e (sec), rate:"
+        " %g (1e6 edges/sec)\n", t6, 1e-6*((double) nvals) / t6) ;
+
 
     //--------------------------------------------------------------------------
     // set the diagonal to 0
@@ -165,9 +198,6 @@ int main (int argc, char **argv)
     // run the LAGraph_BF_full on node s
     //--------------------------------------------------------------------------
 
-    int ntrials = 1 ;       // increase this to 10, 100, whatever, for more
-                            // accurate timing
-
     // start the timer
     LAGraph_tic (tic) ;
 
@@ -183,6 +213,7 @@ int main (int argc, char **argv)
     double t1 = LAGraph_toc (tic) / ntrials ;
     fprintf (stderr, "BF_full       time: %12.6e (sec), rate:"
         " %g (1e6 edges/sec)\n", t1, 1e-6*((double) nvals) / t1) ;
+    fprintf (stderr, "t(BF_full1) / t(BF_full):      %g\n", t5/t1) ;
 #if 0
     //--------------------------------------------------------------------------
     // run the BF on node s with LAGraph_BF_basic
@@ -326,6 +357,12 @@ int main (int argc, char **argv)
     if (!isequal)
     {
         fprintf (stderr, "ERROR! BF_full and BF_full1   differ\n") ;
+        ok = false ;
+    }
+    LAGRAPH_OK (LAGraph_Vector_isequal (&isequal, d1, d6, NULL)) ;
+    if (!isequal)
+    {
+        fprintf (stderr, "ERROR! BF_full and BF_full2   differ\n") ;
         ok = false ;
     }
 /*
