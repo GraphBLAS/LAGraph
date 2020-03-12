@@ -305,12 +305,24 @@ int main (int argc, char **argv)
     {
         for (int64_t i = 0 ; i < n ; i++)
         {
-            double di = 0 ;
+            double di = INFINITY ;
             int64_t pii = 0;
             LAGRAPH_OK (GrB_Vector_extractElement (&di, d1, i)) ;
             if (di != d[i])
             {
+                printf("full[%ld] %4.2f %4.2f\n", i, di, d[i]);
                 fprintf (stderr, "ERROR! BF_full and BF_pure_c d  differ\n") ;
+                ok = false ;
+                break;
+            }
+
+            // since d5 is a dense vector filled with infinity, we have to
+            // compare it against d seperaterly
+            LAGRAPH_OK (GrB_Vector_extractElement (&di, d5, i)) ;
+            if (di != d[i])
+            {
+                printf("full1[%ld] %4.2f %4.2f\n", i, di, d[i]);
+                fprintf (stderr, "ERROR! BF_full1 and BF_pure_c d  differ\n") ;
                 ok = false ;
                 break;
             }
@@ -353,12 +365,6 @@ int main (int argc, char **argv)
         ok = false ;
     }
 #endif
-    LAGRAPH_OK (LAGraph_Vector_isequal (&isequal, d1, d5, NULL)) ;
-    if (!isequal)
-    {
-        fprintf (stderr, "ERROR! BF_full and BF_full1   differ\n") ;
-        ok = false ;
-    }
     LAGRAPH_OK (LAGraph_Vector_isequal (&isequal, d1, d6, NULL)) ;
     if (!isequal)
     {
