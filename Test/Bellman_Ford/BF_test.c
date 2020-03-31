@@ -63,6 +63,9 @@
     GrB_free (&d5) ;                \
     GrB_free (&pi5) ;               \
     GrB_free (&h5) ;                \
+    GrB_free (&d5a) ;               \
+    GrB_free (&pi5a) ;              \
+    GrB_free (&h5a) ;               \
     GrB_free (&d6) ;                \
     GrB_free (&pi6) ;               \
     GrB_free (&h6) ;                \
@@ -89,6 +92,9 @@ int main (int argc, char **argv)
     GrB_Vector d5 = NULL ;
     GrB_Vector pi5 = NULL ;
     GrB_Vector h5 = NULL ;
+    GrB_Vector d5a = NULL ;
+    GrB_Vector pi5a = NULL ;
+    GrB_Vector h5a = NULL ;
     GrB_Vector d6 = NULL ;
     GrB_Vector pi6 = NULL ;
     GrB_Vector h6 = NULL ;
@@ -154,6 +160,25 @@ int main (int argc, char **argv)
     double t5 = LAGraph_toc (tic) / ntrials;
     fprintf (stderr, "BF_full1      time: %12.6e (sec), rate:"
         " %g (1e6 edges/sec)\n", t5, 1e-6*((double) nvals) / t5) ;
+    //--------------------------------------------------------------------------
+    // run LAGraph_BF_full1a before setting the diagonal to 0
+    //--------------------------------------------------------------------------
+
+    // start the timer
+    LAGraph_tic (tic) ;
+
+    for (int trial = 0 ; trial < ntrials ; trial++)
+    {
+        GrB_free (&d5a) ;
+        GrB_free (&pi5a) ;
+        GrB_free (&h5a) ;
+        LAGRAPH_OK (LAGraph_BF_full1a (&d5a, &pi5a, &h5a, A, s)) ;
+    }
+
+    // stop the timer
+    double t5a = LAGraph_toc (tic) / ntrials;
+    fprintf (stderr, "BF_full1a     time: %12.6e (sec), rate:"
+        " %g (1e6 edges/sec)\n", t5a, 1e-6*((double) nvals) / t5a) ;
     
     //--------------------------------------------------------------------------
     // run LAGraph_BF_full2 before setting the diagonal to 0
@@ -326,6 +351,17 @@ int main (int argc, char **argv)
                 ok = false ;
                 break;
             }
+
+            // since d5a is a dense vector filled with infinity, we have to
+            // compare it against d seperaterly
+            LAGRAPH_OK (GrB_Vector_extractElement (&di, d5a, i)) ;
+            if (di != d[i])
+            {
+                printf("full1[%ld] %4.2f %4.2f\n", i, di, d[i]);
+                fprintf (stderr, "ERROR! BF_full1a and BF_pure_c d  differ\n") ;
+                ok = false ;
+                break;
+            }
             /*
             LAGRAPH_OK (GrB_Vector_extractElement (&pii, pi1, i)) ;
             if (pii != pi[i]+1)
@@ -405,7 +441,7 @@ int main (int argc, char **argv)
     // BF full1
     if (d5 != NULL)
     {
-        fprintf (stderr, "BF full result\n");
+        fprintf (stderr, "BF full1 result\n");
         for (int64_t i = 0 ; i < n ; i++)
         {
             double di = 0 ;
@@ -417,6 +453,26 @@ int main (int argc, char **argv)
         {
             int64_t x = 0 ;
             LAGRAPH_OK (GrB_Vector_extractElement (&x, pi5, i)) ;
+            fprintf (stderr, "%4" PRIu64 "  ", x) ;
+        }
+        fprintf (stderr, "\n") ;
+        fprintf (stderr, "\n") ;
+    }
+    // BF full1a
+    if (d5a != NULL)
+    {
+        fprintf (stderr, "BF full1a result\n");
+        for (int64_t i = 0 ; i < n ; i++)
+        {
+            double di = 0 ;
+            LAGRAPH_OK (GrB_Vector_extractElement (&di, d5a, i)) ;
+            fprintf (stderr, "%4.2f  ", di) ;
+        }
+        fprintf (stderr, "\n") ;
+        for (int64_t i = 0 ; i < n ; i++)
+        {
+            int64_t x = 0 ;
+            LAGRAPH_OK (GrB_Vector_extractElement (&x, pi5a, i)) ;
             fprintf (stderr, "%4" PRIu64 "  ", x) ;
         }
         fprintf (stderr, "\n") ;

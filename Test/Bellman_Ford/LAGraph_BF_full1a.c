@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_BF_full1.c: Bellman-Ford single-source shortest paths, returns tree,
+// LAGraph_BF_full1a.c: Bellman-Ford single-source shortest paths, returns tree,
 // while diagonal of input matrix A needs not to be explicit 0
 //------------------------------------------------------------------------------
 
@@ -35,7 +35,7 @@
 
 //------------------------------------------------------------------------------
 
-// LAGraph_BF_full1: Bellman-Ford single source shortest paths, returning both
+// LAGraph_BF_full1a: Bellman-Ford single source shortest paths, returning both
 // the path lengths and the shortest-path tree.  contributed by Jinhao Chen and
 // Tim Davis, Texas A&M.
 
@@ -47,7 +47,7 @@
 
 // TODO: think about the return values
 
-// LAGraph_BF_full1 returns GrB_SUCCESS regardless of existence of negative-
+// LAGraph_BF_full1a returns GrB_SUCCESS regardless of existence of negative-
 // weight cycle. However, the GrB_Vector d(k), pi(k) and h(k)  (i.e.,
 // *pd_output, *ppi_output and *ph_output respectively) will be NULL when
 // negative-weight cycle detected. Otherwise, the vector d has d(k) as the
@@ -67,7 +67,6 @@
     GrB_free(&BF_Tuple3);              \
     GrB_free(&BF_lMIN_Tuple3);         \
     GrB_free(&BF_PLUSrhs_Tuple3);      \
-    GrB_free(&BF_Identity_Tuple3);     \
     GrB_free(&BF_LT_Tuple3);           \
     GrB_free(&BF_lMIN_Tuple3_Monoid);  \
     GrB_free(&BF_lMIN_PLUSrhs_Tuple3); \
@@ -97,7 +96,7 @@ BF_Tuple3_struct;
 //------------------------------------------------------------------------------
 // 2 binary functions, z=f(x,y), where Tuple3xTuple3 -> Tuple3
 //------------------------------------------------------------------------------
-void BF_lMIN
+void BF_lMIN3
 (
     BF_Tuple3_struct *z,
     const BF_Tuple3_struct *x,
@@ -116,7 +115,7 @@ void BF_lMIN
     }
 }
 
-void BF_PLUSrhs
+void BF_PLUSrhs3
 (
     BF_Tuple3_struct *z,
     const BF_Tuple3_struct *x,
@@ -135,16 +134,7 @@ void BF_PLUSrhs
     }
 }
 
-void BF_Identity
-(
-    BF_Tuple3_struct *z,
-    const BF_Tuple3_struct *x
-)
-{
-    *z = *x;
-}
-
-void BF_LT
+void BF_LT3
 (
     bool *z,
     const BF_Tuple3_struct *x,
@@ -174,7 +164,7 @@ void BF_LT
 //   number of edges from s to i in the shortest path
 // A has weights on corresponding entries of edges
 // s is given index for source vertex
-GrB_Info LAGraph_BF_full1
+GrB_Info LAGraph_BF_full1a
 (
     GrB_Vector *pd_output,      //the pointer to the vector of distance
     GrB_Vector *ppi_output,     //the pointer to the vector of parent
@@ -191,7 +181,6 @@ GrB_Info LAGraph_BF_full1
 
     GrB_BinaryOp BF_lMIN_Tuple3;
     GrB_BinaryOp BF_PLUSrhs_Tuple3;
-    GrB_UnaryOp BF_Identity_Tuple3;
     GrB_BinaryOp BF_LT_Tuple3;
 
     GrB_Monoid BF_lMIN_Tuple3_Monoid;
@@ -234,14 +223,12 @@ GrB_Info LAGraph_BF_full1
     LAGRAPH_OK (GrB_Type_new(&BF_Tuple3, sizeof(BF_Tuple3_struct)));
 
     // GrB_BinaryOp
-    LAGRAPH_OK (GrB_UnaryOp_new(&BF_Identity_Tuple3,
-        (void*) (&BF_Identity), BF_Tuple3, BF_Tuple3));
     LAGRAPH_OK (GrB_BinaryOp_new(&BF_LT_Tuple3,
-        (LAGraph_binary_function) (&BF_LT), GrB_BOOL, BF_Tuple3, BF_Tuple3));
+        (LAGraph_binary_function) (&BF_LT3), GrB_BOOL, BF_Tuple3, BF_Tuple3));
     LAGRAPH_OK (GrB_BinaryOp_new(&BF_lMIN_Tuple3,
-        (LAGraph_binary_function) (&BF_lMIN), BF_Tuple3, BF_Tuple3, BF_Tuple3));
+        (LAGraph_binary_function) (&BF_lMIN3), BF_Tuple3, BF_Tuple3,BF_Tuple3));
     LAGRAPH_OK (GrB_BinaryOp_new(&BF_PLUSrhs_Tuple3,
-        (LAGraph_binary_function)(&BF_PLUSrhs),
+        (LAGraph_binary_function)(&BF_PLUSrhs3),
         BF_Tuple3, BF_Tuple3, BF_Tuple3));
 
     // GrB_Monoid
@@ -323,15 +310,16 @@ GrB_Info LAGraph_BF_full1
         if(any_dless)
         {
             // update all entries with smaller distances
-            LAGRAPH_OK (GrB_apply(d, dless, NULL, BF_Identity_Tuple3,
-                dmasked, NULL));
+            //LAGRAPH_OK (GrB_apply(d, dless, NULL, BF_Identity_Tuple3,
+            //    dmasked, NULL));
+            LAGr_assign(d, dless, NULL, dmasked, GrB_ALL, n, NULL);
 
             // only use entries that were just updated
-            LAGRAPH_OK (GrB_Vector_clear(dmasked));
-            LAGRAPH_OK (GrB_apply(dmasked, dless, NULL, BF_Identity_Tuple3,
-                d, NULL));
+            //LAGRAPH_OK (GrB_Vector_clear(dmasked));
+            //LAGRAPH_OK (GrB_apply(dmasked, dless, NULL, BF_Identity_Tuple3,
+            //    d, NULL));
             //try:
-            //LAGr_assign(dmasked, dless, NULL, d, GrB_ALL, n, GrB_DESC_R);
+            LAGr_assign(dmasked, dless, NULL, d, GrB_ALL, n, GrB_DESC_R);
         }
         iter ++;
     }
