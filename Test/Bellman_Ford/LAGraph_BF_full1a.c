@@ -47,18 +47,25 @@
 
 // TODO: think about the return values
 
-// LAGraph_BF_full1a returns GrB_SUCCESS regardless of existence of negative-
-// weight cycle. However, the GrB_Vector d(k), pi(k) and h(k)  (i.e.,
-// *pd_output, *ppi_output and *ph_output respectively) will be NULL when
-// negative-weight cycle detected. Otherwise, the vector d has d(k) as the
-// shortest distance from s to k. pi(k) = p+1, where p is the parent node of
-// k-th node in the shortest path. In particular, pi(s) = 0. h(k) = hop(s, k),
-// the number of edges from s to k in the shortest path.
+// LAGraph_BF_full1a returns GrB_SUCCESS if it succeeds.  In this case, there
+// are no negative-weight cycles in the graph, and d, pi, and h are returned.
+// The vector d has d(k) as the shortest distance from s to k. pi(k) = p+1,
+// where p is the parent node of k-th node in the shortest path. In particular,
+// pi(s) = 0. h(k) = hop(s, k), the number of edges from s to k in the shortest
+// path.
+
+// If the graph has a negative-weight cycle, GrB_NO_VALUE is returned, and the
+// GrB_Vectors d(k), pi(k) and h(k)  (i.e., *pd_output, *ppi_output and
+// *ph_output respectively) will be NULL when negative-weight cycle detected.
+
+// Otherwise, other errors such as GrB_OUT_OF_MEMORY, GrB_INVALID_OBJECT, and
+// so on, can be returned, if these errors are found by the underlying
+// GrB_* functions.
 
 //------------------------------------------------------------------------------
 #include "BF_test.h"
 
-#define LAGRAPH_FREE_ALL               \
+#define LAGRAPH_FREE_WORK              \
 {                                      \
     GrB_free(&d);                      \
     GrB_free(&dmasked);                \
@@ -76,6 +83,14 @@
     LAGRAPH_FREE (W);                  \
     LAGRAPH_FREE (h);                  \
     LAGRAPH_FREE (pi);                 \
+}
+
+#define LAGRAPH_FREE_ALL               \
+{                                      \
+    LAGRAPH_FREE_WORK                  \
+    GrB_free (pd_output);              \
+    GrB_free (ppi_output);             \
+    GrB_free (ph_output);              \
 }
 
 //------------------------------------------------------------------------------
@@ -192,6 +207,10 @@ GrB_Info LAGraph_BF_full1a
     double *w = NULL;
     BF_Tuple3_struct *W = NULL;
 
+    if (pd_output  != NULL) *pd_output  = NULL;
+    if (ppi_output != NULL) *ppi_output = NULL;
+    if (ph_output  != NULL) *ph_output  = NULL;
+
     if (A == NULL || pd_output == NULL ||
         ppi_output == NULL || ph_output == NULL)
     {
@@ -199,9 +218,6 @@ GrB_Info LAGraph_BF_full1a
         LAGRAPH_ERROR ("required arguments are NULL", GrB_NULL_POINTER) ;
     }
 
-    *pd_output  = NULL;
-    *ppi_output = NULL;
-    *ph_output  = NULL;
     LAGRAPH_OK (GrB_Matrix_nrows (&nrows, A)) ;
     LAGRAPH_OK (GrB_Matrix_ncols (&ncols, A)) ;
     LAGRAPH_OK (GrB_Matrix_nvals (&nz, A));
@@ -244,6 +260,7 @@ GrB_Info LAGraph_BF_full1a
     //--------------------------------------------------------------------------
     // allocate arrays used for tuplets
     //--------------------------------------------------------------------------
+#if 1
     I = LAGraph_malloc (nz, sizeof(GrB_Index)) ;
     J = LAGraph_malloc (nz, sizeof(GrB_Index)) ;
     w = LAGraph_malloc (nz, sizeof(double)) ;
@@ -266,6 +283,36 @@ GrB_Info LAGraph_BF_full1a
     }
     LAGRAPH_OK (GrB_Matrix_new(&Atmp, BF_Tuple3, n, n));
     LAGRAPH_OK (GrB_Matrix_build_UDT(Atmp, I, J, W, nz, BF_lMIN_Tuple3));
+    LAGRAPH_FREE (I);
+    LAGRAPH_FREE (J);
+    LAGRAPH_FREE (W);
+    LAGRAPH_FREE (w);
+
+#else
+    
+    TODO: GraphBLAS could use a new kind of unary operator, not z=f(x), but
+
+    [z,flag] = f (aij, i, j, k, nrows, ncols, nvals, etc, ...)
+    flag: keep or discard.  Combines GrB_apply and GxB_select.
+
+    builtins:
+        f(...) =
+            i, bool is true
+            j, bool is true
+            i+j*nrows, etc.
+            k
+            tril, triu (like GxB_select): return aij, and true/false boolean
+
+        z=f(x,i).  x: double, z:tuple3, i:GrB_Index with the row index of x
+        // z = (BF_Tuple3_struct) { .w = x, .h = 1, .pi = i + 1 };
+
+    GrB_apply (Atmp, op, A, ...)
+
+    in the BFS, this is used:
+        op:  z = f ( .... ) = i
+        to replace x(i) with i
+
+#endif
 
     //--------------------------------------------------------------------------
     // create and initialize "distance" vector d, dmasked and dless
@@ -294,7 +341,7 @@ GrB_Info LAGraph_BF_full1a
     // terminate when no new path is found or more than V-1 loops
     while (any_dless && iter < n - 1)
     {
-        // execute semiring on d and A, and save the result to dtmp
+        // execute semiring on dmasked and A, and save the result to dmasked
         LAGRAPH_OK (GrB_vxm(dmasked, GrB_NULL, GrB_NULL,
             BF_lMIN_PLUSrhs_Tuple3, dmasked, Atmp, GrB_NULL));
 
@@ -333,7 +380,7 @@ GrB_Info LAGraph_BF_full1a
             BF_lMIN_PLUSrhs_Tuple3, dmasked, Atmp, GrB_NULL));
 
         // dless = d .< dtmp
-        LAGRAPH_OK (GrB_Vector_clear(dless));
+        // LAGRAPH_OK (GrB_Vector_clear(dless));
         LAGRAPH_OK (GrB_eWiseMult(dless, NULL, NULL, BF_LT_Tuple3, dmasked, d,
             NULL));
 
@@ -345,20 +392,27 @@ GrB_Info LAGraph_BF_full1a
         {
             // printf("A negative-weight cycle found. \n");
             LAGRAPH_FREE_ALL;
-            return (GrB_SUCCESS) ;
+            return (GrB_NO_VALUE) ;
         }
     }
 
     //--------------------------------------------------------------------------
     // extract tuple from "distance" vector d and create GrB_Vectors for output
     //--------------------------------------------------------------------------
-    LAGRAPH_OK (GrB_Vector_extractTuples_UDT (I, (void *) W, &n, d));
+
+    I = LAGraph_malloc (n, sizeof(GrB_Index)) ;
+    W = LAGraph_malloc (n, sizeof(BF_Tuple3_struct)) ;
+    w = LAGraph_malloc (n, sizeof(double)) ;
     h  = LAGraph_malloc (n, sizeof(GrB_Index)) ;
     pi = LAGraph_malloc (n, sizeof(GrB_Index)) ;
-    if (w == NULL || h == NULL || pi == NULL)
+    if (I == NULL || W == NULL || w == NULL || h == NULL || pi == NULL)
     {
         LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
     }
+
+    // TODO: create 3 unary ops, and use GrB_apply?
+
+    LAGRAPH_OK (GrB_Vector_extractTuples_UDT (I, (void *) W, &n, d));
 
     for (GrB_Index k = 0; k < n; k++)
     {
@@ -372,6 +426,6 @@ GrB_Info LAGraph_BF_full1a
     LAGRAPH_OK (GrB_Vector_build_FP64  (*pd_output , I, w , n, GrB_MIN_FP64  ));
     LAGRAPH_OK (GrB_Vector_build_UINT64(*ppi_output, I, pi, n, GrB_MIN_UINT64));
     LAGRAPH_OK (GrB_Vector_build_UINT64(*ph_output , I, h , n, GrB_MIN_UINT64));
-    LAGRAPH_FREE_ALL;
+    LAGRAPH_FREE_WORK;
     return (GrB_SUCCESS) ;
 }
