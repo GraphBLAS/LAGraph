@@ -63,7 +63,8 @@
 // GrB_* functions.
 
 //------------------------------------------------------------------------------
-#include "BF_test.h"
+
+#include "LAGraph_internal.h"
 
 #define LAGRAPH_FREE_WORK              \
 {                                      \
