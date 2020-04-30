@@ -74,46 +74,63 @@ int main (int argc, char **argv)
 
     LAGRAPH_OK (LAGraph_binread(&A, argv[1])) ;
 
+    GrB_Index n;
+    GrB_Matrix_nrows(&n, A);
 
-    //--------------------------------------------------------------------------
-    // extract induced subgraph
-    // - method 1: multiply matrix from left and right with diagm(nodes)
-    // - method 2: use select operator
-    //--------------------------------------------------------------------------
+    for (GrB_Index k = 2; k <= 2; k++) {
+        // select every kth vertex in the graph
+        GrB_Index nv = n / k;
 
-    #define NTRIALS 7
-    int nthread_list [NTRIALS] = { 1, 2, 4, 8, 16, 32, 64 } ;
+        //--------------------------------------------------------------------------
+        // extract induced subgraph
+        // - method 1: multiply matrix from left and right with diagm(nodes)
+        // - method 2: use select operator
+        //--------------------------------------------------------------------------
 
-    for (int trial = 0 ; trial < NTRIALS ; trial++)
-    {
-        int nthreads = nthread_list [trial] ;
-        if (nthreads > nthreads_max) break ;
-        LAGraph_set_nthreads (nthreads) ;
+        #define NTRIALS 1
+        int nthread_list[NTRIALS] = {1, 2, 4, 8, 16, 32, 64};
 
-        // ignore the sanitize time;  assume the user could have provided an
-        // input graph that is already binary with no self-edges
+        for (int trial = 0; trial < NTRIALS; trial++) {
+            int nthreads = nthread_list[trial];
+            if (nthreads > nthreads_max) break;
+            LAGraph_set_nthreads(nthreads);
 
-        GrB_Matrix C;
-        GrB_Index n;
-        GrB_Matrix_nrows(&n, A);
+            GrB_Matrix C = NULL;
 
-        // select every other vertex in the graph
-        GrB_Index nv = n / 2;
-        GrB_Index* V = LAGraph_malloc(nv, sizeof(GrB_Index));
-        for (int k = 0; k < nv; k++) {
-            V[k] = 2*k;
+            double tic[2];
+            LAGraph_tic(tic);
+            GrB_Index *Vsparse = LAGraph_malloc(nv, sizeof(GrB_Index));
+            for (int i = 0; i < nv; i++) {
+                Vsparse[i] = k * i;
+            }
+            LAGRAPH_OK(LAGraph_inducedsubgraph(&C, A, Vsparse, NULL, nv));
+            LAGRAPH_FREE(Vsparse);
+            double time = LAGraph_toc(tic);
+            printf("Vsparse,%d,%.2f\n", k, time);
+
+            LAGRAPH_FREE(C);
         }
 
-        double tic [2] ;
-        LAGraph_tic (tic) ;
-        LAGRAPH_OK (LAGraph_inducedsubgraph(&C, A, V, nv, true)) ;
-//        LAGRAPH_OK (LAGraph_inducedsubgraph(&C, A, V, nv, false)) ;
-        double time = LAGraph_toc (tic) ;
-        printf("Time elapsed: %10.2f seconds, %d threads\n", time, nthreads) ;
+        for (int trial = 0; trial < NTRIALS; trial++) {
+            int nthreads = nthread_list[trial];
+            if (nthreads > nthreads_max) break;
+            LAGraph_set_nthreads(nthreads);
 
-        //LAGRAPH_OK ( GxB_print(C, GxB_SHORT)) ;
+            GrB_Matrix C = NULL;
 
-        LAGRAPH_FREE(C);
+            double tic[2];
+            LAGraph_tic(tic);
+            bool *Vdense = LAGraph_calloc(nv, sizeof(bool));
+            for (int i = 0; i < nv; i++) {
+                Vdense[i] = true;
+            }
+            LAGRAPH_OK(LAGraph_inducedsubgraph(&C, A, NULL, Vdense, nv));
+            LAGRAPH_FREE(Vdense);
+            double time = LAGraph_toc(tic);
+            printf("Vdense,%d,%.2f\n", k, time);
+
+            LAGRAPH_FREE(C);
+        }
     }
 
     LAGRAPH_FREE_ALL ;

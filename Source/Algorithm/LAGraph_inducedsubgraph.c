@@ -51,28 +51,15 @@
 typedef struct
 {
     const GrB_Index nv; // number of vertices
-    const GrB_Index* V; // vertex indices
+    const bool* Vdense; // array denoting whether a vertex should be kept
 } V_ind_struct;
 
-int cmpfunc(const void *a, const void *b) {
-    return ( *(GrB_Index *)a - *(GrB_Index *)b );
-}
 
 static bool func(const GrB_Index i, const GrB_Index j, const GrB_Index nrows,
                  const GrB_Index ncols, const void *x, const void *thunk)
 {
     V_ind_struct* indices = (V_ind_struct*) (thunk);
-
-    if (bsearch (&i, indices->V, indices->nv, sizeof (GrB_Index), cmpfunc))
-    {
-        return false;
-    }
-    if (bsearch (&j, indices->V, indices->nv, sizeof (GrB_Index), cmpfunc))
-    {
-        return false;
-    }
-
-    return true;
+    return indices->Vdense[i] && indices->Vdense[j];
 }
 
 //------------------------------------------------------------------------------
@@ -82,9 +69,9 @@ GrB_Info LAGraph_inducedsubgraph // compute the subgraph induced by vertices V
 (
     GrB_Matrix *Chandle,         // output matrix
     const GrB_Matrix A,          // input matrix
-    const GrB_Index *V,          // sorted list of vertex indices
-    GrB_Index nv,                // number of vertex indices
-    bool use_select              // use GxB_select
+    const GrB_Index *Vsparse,    // sorted list of vertex indices
+    const bool *Vdense,          // boolean array of verices
+    GrB_Index nv                 // number of vertex indices
 )
 {
     //--------------------------------------------------------------------------
@@ -101,9 +88,14 @@ GrB_Info LAGraph_inducedsubgraph // compute the subgraph induced by vertices V
     LAGRAPH_OK (GrB_Matrix_nrows (&n, A)) ;
     LAGRAPH_OK (GrB_Matrix_new (&C, type, n, n)) ;
 
-    if (use_select)
+    if (Vsparse == NULL && Vdense == NULL)
     {
-        V_ind_struct indices = {.nv = nv, .V = V};
+        LAGRAPH_ERROR("Both Vsparse and Vdense are set to NULL", GrB_NULL_POINTER)
+    }
+
+    if (Vsparse == NULL) // use Vdense and GxB_select
+    {
+        V_ind_struct indices = {.nv = nv, .Vdense = Vdense};
 
         GrB_Type V_ind_type;
         LAGRAPH_OK (GrB_Type_new (&V_ind_type, sizeof(indices)));
@@ -134,10 +126,20 @@ GrB_Info LAGraph_inducedsubgraph // compute the subgraph induced by vertices V
         for (GrB_Index i = 0; i < nv; i++) {
             X[i] = true;
         }
-        LAGRAPH_OK (GrB_Matrix_build (D, V, V, X, nv, GrB_LOR)) ;
+        LAGRAPH_OK (GrB_Matrix_build (D, Vsparse, Vsparse, X, nv, GrB_LOR)) ;
 
-        LAGRAPH_OK (GrB_mxm (C, NULL, NULL, GxB_ANY_SECOND_FP64, D, A, NULL)) ;
-        LAGRAPH_OK (GrB_mxm (C, NULL, NULL, GxB_ANY_FIRST_FP64,  C, D, NULL)) ;
+        GxB_Format_Value A_format;
+        LAGRAPH_OK (GxB_get(A, GxB_FORMAT, &A_format))
+        if (A_format == GxB_BY_ROW) // C = (D*A)*D
+        {
+            LAGRAPH_OK (GrB_mxm(C, NULL, NULL, GxB_ANY_SECOND_FP64, D, A, NULL));
+            LAGRAPH_OK (GrB_mxm(C, NULL, NULL, GxB_ANY_FIRST_FP64, C, D, NULL));
+        }
+        else // A_format == GxB_BY_COL: C = D*(A*D)
+        {
+            LAGRAPH_OK (GrB_mxm(C, NULL, NULL, GxB_ANY_FIRST_FP64, A, D, NULL));
+            LAGRAPH_OK (GrB_mxm(C, NULL, NULL, GxB_ANY_SECOND_FP64, D, C, NULL));
+        }
 
         LAGRAPH_FREE(D);
     }
