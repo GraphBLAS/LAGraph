@@ -1337,4 +1337,15 @@ GrB_Info LAGraph_bfs_both       // push-pull BFS, or push-only if AT = NULL
     , FILE * logfile
 ) ;
 
+
+GrB_Info LAGraph_inducedsubgraph // compute the subgraph induced by vertices V
+                                 // in A
+(
+    GrB_Matrix *C,               // output matrix
+    const GrB_Matrix A,          // input matrix
+    const GrB_Index *V,          // vertex indices
+    GrB_Index nv,                // number of vertex indices
+    bool use_select              // use GxB_select (faster but not portable)
+) ;
+
 #endif
