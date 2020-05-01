@@ -87,7 +87,7 @@ int main (int argc, char **argv)
         // - method 2: use select operator
         //--------------------------------------------------------------------------
 
-        #define NTRIALS 1
+        #define NTRIALS 7
         int nthread_list[NTRIALS] = {1, 2, 4, 8, 16, 32, 64};
 
         for (int trial = 0; trial < NTRIALS; trial++) {
@@ -103,10 +103,10 @@ int main (int argc, char **argv)
             for (int i = 0; i < nv; i++) {
                 Vsparse[i] = k * i;
             }
-            LAGRAPH_OK(LAGraph_inducedsubgraph(&C, A, Vsparse, NULL, nv));
+            LAGRAPH_OK(LAGraph_Matrix_extract_keep_dimensions(&C, A, Vsparse, NULL, nv));
             LAGRAPH_FREE(Vsparse);
             double time = LAGraph_toc(tic);
-            printf("Vsparse,%d,%.2f\n", k, time);
+            printf("Vsparse\t%ld\t%d\t%.2f\n", k, nthreads, time);
 
             LAGRAPH_FREE(C);
         }
@@ -124,10 +124,10 @@ int main (int argc, char **argv)
             for (int i = 0; i < nv; i++) {
                 Vdense[i] = true;
             }
-            LAGRAPH_OK(LAGraph_inducedsubgraph(&C, A, NULL, Vdense, nv));
+            LAGRAPH_OK(LAGraph_Matrix_extract_keep_dimensions(&C, A, NULL, Vdense, nv));
             LAGRAPH_FREE(Vdense);
             double time = LAGraph_toc(tic);
-            printf("Vdense,%d,%.2f\n", k, time);
+            printf("Vdense\t%ld\t%d\t%.2f\n", k, nthreads, time);
 
             LAGRAPH_FREE(C);
         }

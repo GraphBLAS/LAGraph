@@ -52,20 +52,22 @@ typedef struct
 {
     const GrB_Index nv; // number of vertices
     const bool* Vdense; // array denoting whether a vertex should be kept
-} V_ind_struct;
+} Vdense_struct_type;
 
 
-static bool func(const GrB_Index i, const GrB_Index j, const GrB_Index nrows,
-                 const GrB_Index ncols, const void *x, const void *thunk)
+static bool select_submatrix_elements_fun(const GrB_Index i, const GrB_Index j,
+        const GrB_Index nrows, const GrB_Index ncols,
+        const void *x, const void *thunk)
 {
-    V_ind_struct* indices = (V_ind_struct*) (thunk);
+    Vdense_struct_type* indices = (Vdense_struct_type*) (thunk);
     return indices->Vdense[i] && indices->Vdense[j];
 }
 
 //------------------------------------------------------------------------------
 
-GrB_Info LAGraph_inducedsubgraph // compute the subgraph induced by vertices V
-                                 // in A
+GrB_Info LAGraph_Matrix_extract_keep_dimensions // extract submatrix but keep
+                                                // the dimensions of the
+                                                // original matrix
 (
     GrB_Matrix *Chandle,         // output matrix
     const GrB_Matrix A,          // input matrix
@@ -95,22 +97,22 @@ GrB_Info LAGraph_inducedsubgraph // compute the subgraph induced by vertices V
 
     if (Vsparse == NULL) // use Vdense and GxB_select
     {
-        V_ind_struct indices = {.nv = nv, .Vdense = Vdense};
+        Vdense_struct_type vdense_struct = {.nv = nv, .Vdense = Vdense};
 
-        GrB_Type V_ind_type;
-        LAGRAPH_OK (GrB_Type_new (&V_ind_type, sizeof(indices)));
+        GrB_Type Vdense_type;
+        LAGRAPH_OK (GrB_Type_new (&Vdense_type, sizeof(vdense_struct)));
 
-        GxB_Scalar Thunk;
-        LAGRAPH_OK (GxB_Scalar_new (&Thunk, V_ind_type)) ;
-        LAGRAPH_OK (GxB_Scalar_setElement_UDT (Thunk, &indices)) ;
+        GxB_Scalar vdense_thunk;
+        LAGRAPH_OK (GxB_Scalar_new (&vdense_thunk, Vdense_type)) ;
+        LAGRAPH_OK (GxB_Scalar_setElement_UDT (vdense_thunk, &vdense_struct)) ;
 
-        GxB_SelectOp sel_op;
-        LAGRAPH_OK (GxB_SelectOp_new (&sel_op, func, GrB_NULL, V_ind_type));
-        LAGRAPH_OK (GxB_select (C, NULL, NULL, sel_op, A, Thunk, NULL)) ;
+        GxB_SelectOp select_submatrix_elements_op;
+        LAGRAPH_OK (GxB_SelectOp_new (&select_submatrix_elements_op, select_submatrix_elements_fun, NULL, Vdense_type));
+        LAGRAPH_OK (GxB_select (C, NULL, NULL, select_submatrix_elements_op, A, vdense_thunk, NULL)) ;
 
-        LAGRAPH_FREE(sel_op)
-        LAGRAPH_FREE(Thunk)
-        LAGRAPH_FREE(V_ind_type)
+        LAGRAPH_FREE(select_submatrix_elements_op)
+        LAGRAPH_FREE(vdense_thunk)
+        LAGRAPH_FREE(Vdense_type)
     }
     else
     {
@@ -123,7 +125,10 @@ GrB_Info LAGraph_inducedsubgraph // compute the subgraph induced by vertices V
         {
             LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
         }
-        for (GrB_Index i = 0; i < nv; i++) {
+        int nthreads = LAGraph_get_nthreads( ) ;
+        #pragma omp parallel for num_threads(nthreads) schedule(static)
+        for (GrB_Index i = 0; i < nv; i++)
+        {
             X[i] = true;
         }
         LAGRAPH_OK (GrB_Matrix_build (D, Vsparse, Vsparse, X, nv, GrB_LOR)) ;

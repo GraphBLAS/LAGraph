@@ -1338,8 +1338,9 @@ GrB_Info LAGraph_bfs_both       // push-pull BFS, or push-only if AT = NULL
 ) ;
 
 
-GrB_Info LAGraph_inducedsubgraph // compute the subgraph induced by vertices V
-                                 // in A
+GrB_Info LAGraph_Matrix_extract_keep_dimensions // extract submatrix but keep
+                                                // the dimensions of the
+                                                // original matrix
 (
     GrB_Matrix *Chandle,         // output matrix
     const GrB_Matrix A,          // input matrix
