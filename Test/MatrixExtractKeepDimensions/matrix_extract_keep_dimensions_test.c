@@ -1,5 +1,6 @@
 //------------------------------------------------------------------------------
-// LAGraph/Test/LCC/extractsubmatrixtest.c: test program for LAGraph_extractsubmatrix
+// LAGraph/Test/MatrixExtractKeepDimensions/matrix_extract_keep_dimensions_test.c:
+// test program for LAGraph_Matrix_extract_keep_dimensions
 //------------------------------------------------------------------------------
 
 /*
@@ -36,9 +37,9 @@
 
 // Contributed by Tim Davis, Texas A&M and Gabor Szarnyas, BME
 
-// Usage: inducedsubgraphtest can be used with binary input graphs
+// Usage: matrix_extract_keep_dimensions_test can be used with binary input graphs
 //
-// inducedsubgraphtest binarymatrixfile.grb
+// matrix_extract_keep_dimensions_test binarymatrixfile.grb
 
 #include "LAGraph.h"
 
@@ -68,7 +69,7 @@ int main (int argc, char **argv)
 
     if (argc < 1)
     {
-        printf ("Usage: inducedsubgraphtest binarymatrixfile.grb\n") ;
+        printf ("Usage: matrix_extract_keep_dimensions_test binarymatrixfile.grb\n") ;
         return (GrB_INVALID_VALUE) ;
     }
 
@@ -82,9 +83,9 @@ int main (int argc, char **argv)
         GrB_Index nv = n / k;
 
         //--------------------------------------------------------------------------
-        // extract induced subgraph
-        // - method 1: multiply matrix from left and right with diagm(nodes)
-        // - method 2: use select operator
+        // extract matrix while keeping the dimensions
+        // - with Vsparse: multiply matrix from left and right with diagm(Vsparse)
+        // - with Vdense: use select operator
         //--------------------------------------------------------------------------
 
         #define NTRIALS 7

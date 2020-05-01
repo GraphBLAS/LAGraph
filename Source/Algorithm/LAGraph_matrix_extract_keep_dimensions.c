@@ -1,6 +1,7 @@
 //------------------------------------------------------------------------------
-// LAGraph_inducedsubgraph: extract the induced subgraph for a set of vertices
-//------------------------------------------------------------------------------
+// LAGraph_matrix_extract_keep_dimensions: extract submatrix but keep the
+// dimensions of the original matrix
+// ------------------------------------------------------------------------------
 
 /*
     LAGraph:  graph algorithms based on GraphBLAS
@@ -34,7 +35,7 @@
 
 //------------------------------------------------------------------------------
 
-// LAGraph_inducedsubgraph: Contributed by Gabor Szarnyas.
+// LAGraph_Matrix_extract_keep_dimensions: Contributed by Gabor Szarnyas.
 // Budapest University of Technology and Economics
 // (with accented characters: G\'{a}bor Sz\'{a}rnyas).
 

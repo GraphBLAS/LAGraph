@@ -1,5 +1,5 @@
 %-------------------------------------------------------------------------------
-# Test/InducedSubgraph/Makefile
+# Test/MatrixExtractKeepDimensions/Makefile
 #-------------------------------------------------------------------------------
 
 # LAGraph, (... list all authors here) (c) 2019, All Rights Reserved.
@@ -7,7 +7,7 @@
 
 #-------------------------------------------------------------------------------
 
-# simple Makefile for LAGraph/Test/InducedSubgraph/inducedsubgraphtest
+# simple Makefile for LAGraph/Test/MatrixExtractKeepDimensions/matrix_extract_keep_dimensions
 
 # relies on cmake to do the actual build.  Use the CMAKE_OPTIONS argument to
 # this Makefile to pass options to cmake.
@@ -18,9 +18,8 @@ JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/inducedsubgraphtest < ../BFS/west0067.mtx
-	./build/inducedsubgraphtest ../../Data/ldbc-directed-example-unweighted.mtx 0
-	./build/inducedsubgraphtest ../../Data/ldbc-undirected-example-unweighted.mtx 1
+	./build/matrix_extract_keep_dimensions ../../Data/ldbc-directed-example-unweighted.mtx 0
+	./build/matrix_extract_keep_dimensions ../../Data/ldbc-undirected-example-unweighted.mtx 1
 
 # build test
 compile:
@@ -36,4 +35,4 @@ purge: distclean
 
 # remove all files not in the distribution
 distclean:
-	rm -rf build/* A.mtx inducedsubgraphtest stderr.txt
+	rm -rf build/* A.mtx matrix_extract_keep_dimensions stderr.txt
