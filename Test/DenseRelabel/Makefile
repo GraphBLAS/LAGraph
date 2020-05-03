@@ -18,8 +18,7 @@ JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/lcctest ../../Data/ldbc-directed-example-unweighted.mtx 0
-	./build/lcctest ../../Data/ldbc-undirected-example-unweighted.mtx 1
+	./build/denserelabeltest
 
 # build test
 compile:
