@@ -44,32 +44,65 @@
 
 #define LAGRAPH_FREE_ALL            \
 {                                   \
+    GrB_free (MMapping_handle) ;    \
+    GrB_free (VMapping_handle) ;    \
+    LAGRAPH_FREE (indices) ;        \
+    LAGRAPH_FREE (true_values) ;    \
 }
 
 //------------------------------------------------------------------------------
 
 GrB_Info LAGraph_dense_relabel   // compute dense relabel
-(
-    GrB_Matrix *MMapping_handle, // output matrix with the mapping (unfilled if NULL)
-    GrB_Vector *VMapping_handle, // output vector with the mapping (unfilled if NULL)
-    const GrB_Index nids,        // number of identifiers
-    const GrB_Index *ids         // array of identifiers
-)
-{
+        (
+                GrB_Matrix *MMapping_handle, // output matrix with the mapping (unfilled if NULL)
+                GrB_Vector *VMapping_handle, // output vector with the mapping (unfilled if NULL)
+                const GrB_Index *ids,        // array of identifiers
+                GrB_Index nids               // number of identifiers
+        ) {
+
+    GrB_Info info;
+    GrB_Index *indices = NULL;
+    bool *true_values = NULL;
 
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------
 
-    if (MMapping_handle == NULL && VMapping_handle == NULL)
-    {
-        LAGRAPH_ERROR ("Both mapping arguments are NULL", GrB_NULL_POINTER) ;
+    if (!MMapping_handle && !VMapping_handle) {
+        LAGRAPH_ERROR ("Both mapping arguments are NULL", GrB_NULL_POINTER);
     }
 
-    GrB_Info info ;
+    // the largest valid dimension in SuiteSparse:GraphBLAS
+    GrB_Index id_max_dimension = ((GrB_Index) (1ULL << 60));
 
-    // ... TODO
+    // set indices 0...nids-1
+    indices = LAGraph_malloc(nids, sizeof(*indices));
+    if (!indices) {
+        LAGRAPH_ERROR ("Out of Memory", GrB_OUT_OF_MEMORY);
+    }
+    for (size_t i = 0; i < nids; ++i) {
+        indices[i] = i;
+    }
 
-    return (GrB_SUCCESS) ;
+    // build vector VMapping[original_id] = index
+    if (VMapping_handle) {
+        LAGRAPH_OK(GrB_Vector_new(VMapping_handle, GrB_UINT64, id_max_dimension));
+        LAGRAPH_OK(GrB_Vector_build_UINT64(*VMapping_handle, ids, indices, nids, GrB_SECOND_UINT64));
+    }
+    if (MMapping_handle) {
+        // initilize true values of the matrix
+        true_values = LAGraph_malloc(nids, sizeof(*true_values));
+        if (!true_values) {
+            LAGRAPH_ERROR ("Out of Memory", GrB_OUT_OF_MEMORY);
+        }
+        for (size_t i = 0; i < nids; ++i) {
+            true_values[i] = true;
+        }
+
+        // build matrix MMapping[index, original_id] = 1
+        LAGRAPH_OK(GrB_Matrix_new(MMapping_handle, GrB_BOOL, nids, id_max_dimension));
+        LAGRAPH_OK(GrB_Matrix_build_BOOL(*MMapping_handle, indices, ids, true_values, nids, GrB_SECOND_UINT64));
+    }
+
+    return GrB_SUCCESS;
 }
-

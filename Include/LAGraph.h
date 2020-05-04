@@ -1238,8 +1238,8 @@ GrB_Info LAGraph_dense_relabel   // compute dense relabel
 (
     GrB_Matrix *MMapping_handle, // output matrix with the mapping (unfilled if NULL)
     GrB_Vector *VMapping_handle, // output vector with the mapping (unfilled if NULL)
-    const GrB_Index nids,        // number of identifiers
-    const GrB_Index *ids         // array of identifiers
+    const GrB_Index *ids,        // array of identifiers
+    GrB_Index nids               // number of identifiers
 ) ;
 
 GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful

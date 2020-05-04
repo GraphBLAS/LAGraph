@@ -42,24 +42,40 @@
 
 #include "LAGraph.h"
 
-#define LAGRAPH_FREE_ALL                            \
-{                                                   \
+#include <inttypes.h>
+
+#define LAGRAPH_FREE_ALL            \
+{                                   \
+    GrB_free (&MMapping) ;          \
+    GrB_free (&VMapping) ;          \
 }
 
-int main (int argc, char **argv)
-{
+int main(int argc, char **argv) {
 
     //--------------------------------------------------------------------------
     // initialize LAGraph and GraphBLAS
     //--------------------------------------------------------------------------
 
-    GrB_Info info ;
+    GrB_Info info;
+    GrB_Matrix MMapping = NULL;
+    GrB_Vector VMapping = NULL;
 
-    LAGraph_init ( ) ;
+    LAGRAPH_OK (LAGraph_init());
 
-    printf("TODO\n");
+    GrB_Index big_id = ((GrB_Index) 1) << 48;
+    GrB_Index identifiers[] = {42, 0, big_id, 1};
+    GrB_Index nids = sizeof(identifiers) / sizeof(identifiers[0]);
 
-    LAGRAPH_FREE_ALL ;
-    LAGraph_finalize ( ) ;
+    for (size_t i = 0; i < nids; ++i) {
+        printf("%" PRIu64 "\n", identifiers[i]);
+    }
+
+    LAGRAPH_OK(LAGraph_dense_relabel(&MMapping, &VMapping, identifiers, nids));
+
+    LAGRAPH_OK(GxB_fprint(MMapping, GxB_COMPLETE, stdout));
+    LAGRAPH_OK(GxB_fprint(VMapping, GxB_COMPLETE, stdout));
+
+
+    LAGRAPH_FREE_ALL;
+    LAGraph_finalize();
 }
-
