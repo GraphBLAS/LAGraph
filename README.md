@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/GraphBLAS/LAGraph.svg?branch=master)](https://travis-ci.org/GraphBLAS/LAGraph)
-<br />
+
 # LAGraph
+
 This is a library plus a test harness for collecting algorithms that use the
 GraphBLAS.  It contains the following files and folders:
 
@@ -45,6 +46,16 @@ file for GraphBLAS will be assumed to appear in ../GraphBLAS/Include, and the
 compiled GraphBLAS library is assumed to appear in ../GraphBLAS/build.  If you
 use a GraphBLAS library that uses a different structure, then edit the
 CMakeLists.txt file to point to right location.
+
+On systems where the SuiteSparse:GraphBLAS 3.2.0+ is available as a package,
+LAGraph can be compiled after installing the corresponding package. E.g., on
+Ubuntu 20.04, the `libsuitesparse-dev` package contains the required binaries
+and source files:
+
+```bash
+sudo apt install -y libsuitesparse-dev
+make
+```
 
 Authors: (... list them here)
 
