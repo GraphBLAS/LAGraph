@@ -42,39 +42,108 @@
 
 #include "LAGraph.h"
 
-#include <inttypes.h>
-
 #define LAGRAPH_FREE_ALL            \
 {                                   \
-    GrB_free (&MMapping) ;          \
-    GrB_free (&VMapping) ;          \
+    GrB_free (&Id2index) ;          \
+    GrB_free (&Index2id) ;          \
+    GrB_free (&id2index) ;          \
+    GrB_free (&id_vec) ;            \
+    GrB_free (&index_vec) ;         \
+    GrB_free (&ref_id_vec) ;        \
+    GrB_free (&ref_index_vec) ;     \
 }
 
-int main(int argc, char **argv) {
+#define ASSERT_TRUE(expr)                                   \
+{                                                           \
+    if(!(expr)) {                                           \
+        fprintf(stderr, "Test failed: %s\nFile: %s:%d\n",   \
+                #expr, __FILE__, __LINE__);                 \
+        LAGRAPH_FREE_ALL;                                   \
+        exit(EXIT_FAILURE);                                 \
+    }                                                       \
+}
+
+
+int main(void) {
 
     //--------------------------------------------------------------------------
     // initialize LAGraph and GraphBLAS
     //--------------------------------------------------------------------------
 
-    GrB_Info info;
-    GrB_Matrix MMapping = NULL;
-    GrB_Vector VMapping = NULL;
+    GrB_Matrix Id2index = NULL;
+    GrB_Matrix Index2id = NULL;
+    GrB_Vector id2index = NULL;
+    GrB_Vector id_vec = NULL;
+    GrB_Vector index_vec = NULL;
+    GrB_Vector ref_id_vec = NULL;
+    GrB_Vector ref_index_vec = NULL;
 
-    LAGRAPH_OK (LAGraph_init());
+    LAGRAPH_TRY_CATCH (LAGraph_init());
 
-    GrB_Index big_id = ((GrB_Index) 1) << 48;
-    GrB_Index identifiers[] = {42, 0, big_id, 1};
-    GrB_Index nids = sizeof(identifiers) / sizeof(identifiers[0]);
+    // prepare array of IDs
+    const GrB_Index big_id = 1ULL << 48;
+    const GrB_Index index_of_big_id = 2;
+    const GrB_Index identifiers[] = {42, 0, big_id, 1};
+    const GrB_Index nids = sizeof(identifiers) / sizeof(identifiers[0]);
 
-    for (size_t i = 0; i < nids; ++i) {
-        printf("%" PRIu64 "\n", identifiers[i]);
+    // build mappings
+    GrB_Index id_dimension;
+    LAGRAPH_TRY_CATCH(LAGraph_dense_relabel(&Id2index, &Index2id, &id2index, identifiers, nids, &id_dimension));
+
+#ifndef NDEBUG
+    LAGRAPH_TRY_CATCH(GxB_fprint(Id2index, GxB_COMPLETE, stdout));
+    LAGRAPH_TRY_CATCH(GxB_fprint(Index2id, GxB_COMPLETE, stdout));
+    LAGRAPH_TRY_CATCH(GxB_fprint(id2index, GxB_COMPLETE, stdout));
+#endif
+
+    //--------------------------------------------------------------------------
+    // use id2index vector (original_id -> index)
+    //--------------------------------------------------------------------------
+    GrB_Index index = 0;
+    LAGr_Vector_extractElement(&index, id2index, big_id);
+    ASSERT_TRUE(index_of_big_id == index);
+
+    //--------------------------------------------------------------------------
+    // use Id2index (original_id -> index)
+    //--------------------------------------------------------------------------
+    LAGr_Vector_new(&id_vec, GrB_BOOL, id_dimension);
+    LAGr_Vector_setElement(id_vec, true, big_id);
+#ifndef NDEBUG
+    LAGRAPH_TRY_CATCH(GxB_fprint(id_vec, GxB_COMPLETE, stdout));
+#endif
+
+    LAGr_Vector_new(&index_vec, GrB_BOOL, nids);
+    LAGr_vxm(index_vec, GrB_NULL, GrB_NULL, GxB_LOR_LAND_BOOL, id_vec, Id2index, GrB_NULL);
+#ifndef NDEBUG
+    LAGRAPH_TRY_CATCH(GxB_fprint(index_vec, GxB_COMPLETE, stdout));
+#endif
+
+    // test
+    LAGr_Vector_new(&ref_index_vec, GrB_BOOL, nids);
+    LAGr_Vector_setElement(ref_index_vec, true, index_of_big_id);
+    {
+        bool isequal = false;
+        LAGRAPH_TRY_CATCH(LAGraph_Vector_isequal(&isequal, index_vec, ref_index_vec, GrB_NULL));
+        ASSERT_TRUE(isequal);
     }
 
-    LAGRAPH_OK(LAGraph_dense_relabel(&MMapping, &VMapping, identifiers, nids));
+    //--------------------------------------------------------------------------
+    // use Index2id (index -> original_id)
+    //--------------------------------------------------------------------------
+    LAGr_Vector_clear(id_vec);
+    LAGr_vxm(id_vec, GrB_NULL, GrB_NULL, GxB_LOR_LAND_BOOL, index_vec, Index2id, GrB_NULL);
+#ifndef NDEBUG
+    LAGRAPH_TRY_CATCH(GxB_fprint(id_vec, GxB_COMPLETE, stdout));
+#endif
 
-    LAGRAPH_OK(GxB_fprint(MMapping, GxB_COMPLETE, stdout));
-    LAGRAPH_OK(GxB_fprint(VMapping, GxB_COMPLETE, stdout));
-
+    // test
+    LAGr_Vector_new(&ref_id_vec, GrB_BOOL, id_dimension);
+    LAGr_Vector_setElement(ref_id_vec, true, big_id);
+    {
+        bool isequal = false;
+        LAGRAPH_TRY_CATCH(LAGraph_Vector_isequal(&isequal, id_vec, ref_id_vec, GrB_NULL));
+        ASSERT_TRUE(isequal);
+    }
 
     LAGRAPH_FREE_ALL;
     LAGraph_finalize();

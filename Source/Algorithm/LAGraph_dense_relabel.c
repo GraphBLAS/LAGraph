@@ -34,74 +34,104 @@
 
 //------------------------------------------------------------------------------
 
-// LAGraph_dense_relabel: Contributed by Marton Elekes and Gabor Szarnyas,
+// LAGraph_dense_relabel: relabel sparse IDs to dense row/column indices
+// Contributed by Marton Elekes and Gabor Szarnyas,
 // Budapest University of Technology and Economics
 // (with accented characters: M\'{a}rton Elekes and G\'{a}bor Sz\'{a}rnyas.
 
-// ...
+// Converts array of sparse IDs (ids) to row/column indices between 0...(nids-1).
+//
+// Gives back two binary matrices for conversion between ID- and index-based vertices.
+// id2index vector can be used to look up for indices of chosen IDs.
+// id_dimension gives back the height of Id2index matrix and id2index vector. (Same as width of Index2id_handle matrix.)
+//   id_dimension is the size that can store the largest ID in the array.
+//   Currently it is the largest valid dimension in SuiteSparse:GraphBLAS (GB_INDEX_MAX = 2^60)
+//
+// Find usage example in /Test/DenseRelabel/denserelabeltest.c
 
 #include "LAGraph_internal.h"
+#include <string.h>
 
 #define LAGRAPH_FREE_ALL            \
 {                                   \
-    GrB_free (MMapping_handle) ;    \
-    GrB_free (VMapping_handle) ;    \
+    GrB_free (Id2index_handle) ;    \
+    GrB_free (Index2id_handle) ;    \
+    GrB_free (id2index_handle) ;    \
     LAGRAPH_FREE (indices) ;        \
     LAGRAPH_FREE (true_values) ;    \
 }
 
 //------------------------------------------------------------------------------
 
-GrB_Info LAGraph_dense_relabel   // compute dense relabel
+GrB_Info LAGraph_dense_relabel               // relabel sparse IDs to dense row/column indices
         (
-                GrB_Matrix *MMapping_handle, // output matrix with the mapping (unfilled if NULL)
-                GrB_Vector *VMapping_handle, // output vector with the mapping (unfilled if NULL)
-                const GrB_Index *ids,        // array of identifiers
-                GrB_Index nids               // number of identifiers
+                GrB_Matrix *Id2index_handle, // output matrix: A(id, index)=1 (unfilled if NULL)
+                GrB_Matrix *Index2id_handle, // output matrix: B(index, id)=1 (unfilled if NULL)
+                GrB_Vector *id2index_handle, // output vector: v(id)=index (unfilled if NULL)
+                const GrB_Index *ids,        // array of unique identifiers (under GB_INDEX_MAX=2^60)
+                GrB_Index nids,              // number of identifiers
+                GrB_Index *id_dimension      // number of rows in Id2index matrix, id2index vector (unfilled if NULL)
         ) {
 
-    GrB_Info info;
     GrB_Index *indices = NULL;
     bool *true_values = NULL;
+
+    // from LAGraph_1_to_n.c
+    int nthreads = LAGraph_get_nthreads();
+    nthreads = LAGRAPH_MIN ((int64_t) (nids / 4096), nthreads);
+    nthreads = LAGRAPH_MAX (nthreads, 1);
 
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------
 
-    if (!MMapping_handle && !VMapping_handle) {
-        LAGRAPH_ERROR ("Both mapping arguments are NULL", GrB_NULL_POINTER);
+    if (!Id2index_handle && !Index2id_handle && !id2index_handle) {
+        LAGRAPH_ERROR ("All output mapping arguments are NULL", GrB_NULL_POINTER);
+    }
+    if (!ids) {
+        LAGRAPH_ERROR ("ids is NULL", GrB_NULL_POINTER);
     }
 
-    // the largest valid dimension in SuiteSparse:GraphBLAS
+    // the largest valid dimension in SuiteSparse:GraphBLAS (GB_INDEX_MAX)
     GrB_Index id_max_dimension = ((GrB_Index) (1ULL << 60));
+    if (id_dimension)
+        *id_dimension = id_max_dimension;
 
-    // set indices 0...nids-1
+    // set indices 0..(nids-1)
     indices = LAGraph_malloc(nids, sizeof(*indices));
     if (!indices) {
         LAGRAPH_ERROR ("Out of Memory", GrB_OUT_OF_MEMORY);
     }
+#pragma omp parallel for num_threads(nthreads) schedule(static)
     for (size_t i = 0; i < nids; ++i) {
         indices[i] = i;
     }
 
-    // build vector VMapping[original_id] = index
-    if (VMapping_handle) {
-        LAGRAPH_OK(GrB_Vector_new(VMapping_handle, GrB_UINT64, id_max_dimension));
-        LAGRAPH_OK(GrB_Vector_build_UINT64(*VMapping_handle, ids, indices, nids, GrB_SECOND_UINT64));
+    // build vector id2index(original_id) = index
+    if (id2index_handle) {
+        LAGr_Vector_new(id2index_handle, GrB_UINT64, id_max_dimension);
+        LAGr_Vector_build(*id2index_handle, ids, indices, nids, GrB_SECOND_UINT64);
     }
-    if (MMapping_handle) {
-        // initilize true values of the matrix
+
+    if (Id2index_handle || Index2id_handle) {
+        // initialize true values of the matrix
         true_values = LAGraph_malloc(nids, sizeof(*true_values));
         if (!true_values) {
             LAGRAPH_ERROR ("Out of Memory", GrB_OUT_OF_MEMORY);
         }
-        for (size_t i = 0; i < nids; ++i) {
-            true_values[i] = true;
+        memset(true_values, true, nids * sizeof(*true_values));
+
+        // build matrix Index2id(index, original_id) = 1
+        if (Index2id_handle) {
+            LAGr_Matrix_new(Index2id_handle, GrB_BOOL, nids, id_max_dimension);
+            LAGr_Matrix_build(*Index2id_handle, indices, ids, true_values, nids, GrB_SECOND_UINT64);
         }
 
-        // build matrix MMapping[index, original_id] = 1
-        LAGRAPH_OK(GrB_Matrix_new(MMapping_handle, GrB_BOOL, nids, id_max_dimension));
-        LAGRAPH_OK(GrB_Matrix_build_BOOL(*MMapping_handle, indices, ids, true_values, nids, GrB_SECOND_UINT64));
+        // build matrix Id2index(original_id, index) = 1
+        if (Id2index_handle) {
+            LAGr_Matrix_new(Id2index_handle, GrB_BOOL, id_max_dimension, nids);
+            LAGr_Matrix_build(*Id2index_handle, ids, indices, true_values, nids, GrB_SECOND_UINT64);
+        }
     }
 
     return GrB_SUCCESS;

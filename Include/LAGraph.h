@@ -1234,12 +1234,14 @@ GrB_Info LAGraph_cdlp           // compute cdlp for all nodes in A
                                 // in seconds
 ) ;
 
-GrB_Info LAGraph_dense_relabel   // compute dense relabel
+GrB_Info LAGraph_dense_relabel   // relabel sparse IDs to dense row/column indices
 (
-    GrB_Matrix *MMapping_handle, // output matrix with the mapping (unfilled if NULL)
-    GrB_Vector *VMapping_handle, // output vector with the mapping (unfilled if NULL)
-    const GrB_Index *ids,        // array of identifiers
-    GrB_Index nids               // number of identifiers
+    GrB_Matrix *Id2index_handle, // output matrix: A(id, index)=1 (unfilled if NULL)
+    GrB_Matrix *Index2id_handle, // output matrix: B(index, id)=1 (unfilled if NULL)
+    GrB_Vector *id2index_handle, // output vector: v(id)=index (unfilled if NULL)
+    const GrB_Index *ids,        // array of unique identifiers (under GB_INDEX_MAX=2^60)
+    GrB_Index nids,              // number of identifiers
+    GrB_Index *id_dimension      // number of rows in Id2index matrix, id2index vector (unfilled if NULL)
 ) ;
 
 GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
