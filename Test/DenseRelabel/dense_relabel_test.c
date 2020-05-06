@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/Test/DenseRelabel/denserelabeltest.c: test program for LAGraph_dense_relabel
+// LAGraph/Test/DenseRelabel/dense_relabel_test.c: test program for LAGraph_dense_relabel
 //------------------------------------------------------------------------------
 
 /*
@@ -38,7 +38,7 @@
 
 // Usage:
 //
-// denserelabeltest
+// dense_relabel_test
 
 #include "LAGraph.h"
 

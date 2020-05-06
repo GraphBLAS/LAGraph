@@ -47,7 +47,7 @@
 //   id_dimension is the size that can store the largest ID in the array.
 //   Currently it is the largest valid dimension in SuiteSparse:GraphBLAS (GB_INDEX_MAX = 2^60)
 //
-// Find usage example in /Test/DenseRelabel/denserelabeltest.c
+// Find usage example in /Test/DenseRelabel/dense_relabel_test.c
 
 #include "LAGraph_internal.h"
 #include <string.h>

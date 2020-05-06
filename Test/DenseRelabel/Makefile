@@ -7,7 +7,7 @@
 
 #-------------------------------------------------------------------------------
 
-# simple Makefile for LAGraph/Test/DenseRelabel/denserelabeltest
+# simple Makefile for LAGraph/Test/DenseRelabel/dense_relabel_test
 
 # relies on cmake to do the actual build.  Use the CMAKE_OPTIONS argument to
 # this Makefile to pass options to cmake.
@@ -18,7 +18,7 @@ JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/denserelabeltest
+	./build/dense_relabel_test
 
 # build test
 compile:
