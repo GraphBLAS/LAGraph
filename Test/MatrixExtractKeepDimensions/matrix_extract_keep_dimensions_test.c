@@ -67,13 +67,24 @@ int main (int argc, char **argv)
     // get the input matrix
     //--------------------------------------------------------------------------
 
-    if (argc < 1)
+    FILE *out = stdout ;
+
+    FILE *f ;
+    if (argc < 2)
     {
-        printf ("Usage: matrix_extract_keep_dimensions_test binarymatrixfile.grb\n") ;
+        printf ("Usage: matrix_extract_keep_dimensions_test matrix_file.mtx\n") ;
         return (GrB_INVALID_VALUE) ;
     }
-
-    LAGRAPH_OK (LAGraph_binread(&A, argv[1])) ;
+    else
+    {
+        f = fopen (argv[1], "r") ;
+        if (f == NULL)
+        {
+            printf ("unable to open file [%s]\n", argv[1]) ;
+            return (GrB_INVALID_VALUE) ;
+        }
+    }
+    LAGRAPH_OK (LAGraph_mmread (&A, f)) ;
 
     GrB_Index n;
     GrB_Matrix_nrows(&n, A);
