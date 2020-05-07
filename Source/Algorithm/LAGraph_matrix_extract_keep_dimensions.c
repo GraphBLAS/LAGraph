@@ -87,9 +87,9 @@ GrB_Info LAGraph_Matrix_extract_keep_dimensions // extract submatrix but keep
     GrB_Index n ;
     GrB_Matrix C = NULL ;
 
-    LAGRAPH_OK (GxB_Matrix_type (&type, A)) ;
-    LAGRAPH_OK (GrB_Matrix_nrows (&n, A)) ;
-    LAGRAPH_OK (GrB_Matrix_new (&C, type, n, n)) ;
+    LAGr_Matrix_type(&type, A)
+    LAGr_Matrix_nrows (&n, A)
+    LAGr_Matrix_new (&C, type, n, n)
 
     if (Vsparse == NULL && Vdense == NULL)
     {
@@ -101,15 +101,15 @@ GrB_Info LAGraph_Matrix_extract_keep_dimensions // extract submatrix but keep
         Vdense_struct_type vdense_struct = {.nv = nv, .Vdense = Vdense};
 
         GrB_Type Vdense_type;
-        LAGRAPH_OK (GrB_Type_new (&Vdense_type, sizeof(vdense_struct)));
+        LAGr_Type_new(&Vdense_type, sizeof(vdense_struct))
 
         GxB_Scalar vdense_thunk;
-        LAGRAPH_OK (GxB_Scalar_new (&vdense_thunk, Vdense_type)) ;
-        LAGRAPH_OK (GxB_Scalar_setElement_UDT (vdense_thunk, &vdense_struct)) ;
+        LAGr_Scalar_new(&vdense_thunk, Vdense_type)
+        LAGr_Scalar_setElement(vdense_thunk, (void*) &vdense_struct)
 
         GxB_SelectOp select_submatrix_elements_op;
-        LAGRAPH_OK (GxB_SelectOp_new (&select_submatrix_elements_op, select_submatrix_elements_fun, NULL, Vdense_type));
-        LAGRAPH_OK (GxB_select (C, NULL, NULL, select_submatrix_elements_op, A, vdense_thunk, NULL)) ;
+        LAGr_SelectOp_new(&select_submatrix_elements_op, select_submatrix_elements_fun, NULL, Vdense_type)
+        LAGr_select(C, NULL, NULL, select_submatrix_elements_op, A, vdense_thunk, NULL)
 
         LAGRAPH_FREE(select_submatrix_elements_op)
         LAGRAPH_FREE(vdense_thunk)
@@ -119,12 +119,12 @@ GrB_Info LAGraph_Matrix_extract_keep_dimensions // extract submatrix but keep
     {
         GrB_Matrix D; // diagonal matrix used to select rows/columns
 
-        LAGRAPH_OK (GrB_Matrix_new(&D, GrB_BOOL, n, n));
+        LAGr_Matrix_new(&D, GrB_BOOL, n, n);
 
-        bool* X = LAGraph_malloc (nv, sizeof (GrB_BOOL)) ;
+        bool* X = LAGraph_malloc(nv, sizeof(GrB_BOOL)) ;
         if (X == NULL)
         {
-            LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
+            LAGRAPH_ERROR("out of memory", GrB_OUT_OF_MEMORY)
         }
         int nthreads = LAGraph_get_nthreads( ) ;
         #pragma omp parallel for num_threads(nthreads) schedule(static)
@@ -132,19 +132,19 @@ GrB_Info LAGraph_Matrix_extract_keep_dimensions // extract submatrix but keep
         {
             X[i] = true;
         }
-        LAGRAPH_OK (GrB_Matrix_build (D, Vsparse, Vsparse, X, nv, GrB_LOR)) ;
+        LAGr_Matrix_build(D, Vsparse, Vsparse, X, nv, GrB_LOR)
 
         GxB_Format_Value A_format;
-        LAGRAPH_OK (GxB_get(A, GxB_FORMAT, &A_format))
+        LAGRAPH_OK(GxB_get(A, GxB_FORMAT, &A_format))
         if (A_format == GxB_BY_ROW) // C = (D*A)*D
         {
-            LAGRAPH_OK (GrB_mxm(C, NULL, NULL, GxB_ANY_SECOND_FP64, D, A, NULL));
-            LAGRAPH_OK (GrB_mxm(C, NULL, NULL, GxB_ANY_FIRST_FP64, C, D, NULL));
+            LAGr_mxm(C, NULL, NULL, GxB_ANY_SECOND_FP64, D, A, NULL)
+            LAGr_mxm(C, NULL, NULL, GxB_ANY_FIRST_FP64, C, D, NULL)
         }
         else // A_format == GxB_BY_COL: C = D*(A*D)
         {
-            LAGRAPH_OK (GrB_mxm(C, NULL, NULL, GxB_ANY_FIRST_FP64, A, D, NULL));
-            LAGRAPH_OK (GrB_mxm(C, NULL, NULL, GxB_ANY_SECOND_FP64, D, C, NULL));
+            LAGr_mxm(C, NULL, NULL, GxB_ANY_FIRST_FP64, A, D, NULL)
+            LAGr_mxm(C, NULL, NULL, GxB_ANY_SECOND_FP64, D, C, NULL)
         }
 
         LAGRAPH_FREE(D);

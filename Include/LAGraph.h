@@ -127,6 +127,11 @@ extern bool LAGraph_malloc_is_thread_safe ;
     LAGRAPH_TRY_CATCH(GrB_BinaryOp_new(__VA_ARGS__));                       \
 }
 
+#define LAGr_SelectOp_new(...)                                              \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GxB_SelectOp_new(__VA_ARGS__));                       \
+}
+
 #define LAGr_Monoid_new(...)                                                \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Monoid_new(__VA_ARGS__));                         \
@@ -221,6 +226,11 @@ extern bool LAGraph_malloc_is_thread_safe ;
 #define LAGr_Matrix_new(...)                                                \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Matrix_new(__VA_ARGS__));                         \
+}
+
+#define LAGr_Matrix_type(...)                                               \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GxB_Matrix_type(__VA_ARGS__));                        \
 }
 
 #define LAGr_Matrix_dup(...)                                                \
