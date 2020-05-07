@@ -127,6 +127,11 @@ extern bool LAGraph_malloc_is_thread_safe ;
     LAGRAPH_TRY_CATCH(GrB_BinaryOp_new(__VA_ARGS__));                       \
 }
 
+#define LAGr_SelectOp_new(...)                                              \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GxB_SelectOp_new(__VA_ARGS__));                       \
+}
+
 #define LAGr_Monoid_new(...)                                                \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Monoid_new(__VA_ARGS__));                         \
@@ -221,6 +226,11 @@ extern bool LAGraph_malloc_is_thread_safe ;
 #define LAGr_Matrix_new(...)                                                \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GrB_Matrix_new(__VA_ARGS__));                         \
+}
+
+#define LAGr_Matrix_type(...)                                               \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GxB_Matrix_type(__VA_ARGS__));                        \
 }
 
 #define LAGr_Matrix_dup(...)                                                \
@@ -1335,6 +1345,18 @@ GrB_Info LAGraph_bfs_both       // push-pull BFS, or push-only if AT = NULL
     int64_t max_level,      // optional limit of # levels to search
     bool vsparse            // if true, v is expected to be very sparse
     , FILE * logfile
+) ;
+
+
+GrB_Info LAGraph_Matrix_extract_keep_dimensions // extract submatrix but keep
+                                                // the dimensions of the
+                                                // original matrix
+(
+    GrB_Matrix *Chandle,         // output matrix
+    const GrB_Matrix A,          // input matrix
+    const GrB_Index *Vsparse,    // sorted list of vertex indices
+    const bool *Vdense,          // boolean array of verices
+    GrB_Index nv                 // number of vertex indices
 ) ;
 
 #endif

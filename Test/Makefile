@@ -32,6 +32,7 @@ default:
 	( cd BuildMatrix           ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd BinRead               ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd SSSP                  ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
+	( cd MatrixExtractKeepDimensions ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 
 clean: distclean
 
@@ -54,4 +55,4 @@ distclean:
 	( cd BuildMatrix           ; $(MAKE) distclean )
 	( cd BinRead               ; $(MAKE) distclean )
 	( cd SSSP                  ; $(MAKE) distclean )
-
+	( cd MatrixExtractKeepDimensions ; $(MAKE) distclean )
