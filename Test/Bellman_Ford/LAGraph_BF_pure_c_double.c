@@ -48,12 +48,14 @@
 // vertices and number of edges.
 
 // TODO: think about the retrun values
-// LAGraph_BF_pure_c_double returns GrB_SUCCESS regardless of existence of
-// negative- weight cycle. However, the vector d(k) and pi(k) (i.e., *pd, and
-// *ppi respectively) will be NULL when negative-weight cycle detected.
-// Otherwise, the vector d has d(k) as the shortest distance from s to k. pi(k)
-// = p, where p is the parent node of k-th node in the shortest path. In
+// LAGraph_BF_pure_c_double returns GrB_SUCCESS if it succeeds. In this case,
+// there are no negative-weight cycle in the graph, and d and pi are returned.
+// The vector d has d(k) as the distance from source noce to k-th node. pi(k) =
+// p, where p is the parent node of k-th node in the shortest path. In
 // particular, pi(s) = -1.
+
+// If the graph has a negative-weight cycle, GrB_NO_VALUE is returned, and the
+// vectors d and pi (i.e., pd and ppi) will be NULL.
 
 //------------------------------------------------------------------------------
 
@@ -155,7 +157,7 @@ GrB_Info LAGraph_BF_pure_c_double
             {
                 // printf("A negative-weight cycle exists. \n");
                 LAGRAPH_FREE_ALL;
-                return (GrB_SUCCESS) ;
+                return (GrB_NO_VALUE) ;
             }
         }
     }

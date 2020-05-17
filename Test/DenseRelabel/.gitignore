@@ -1,0 +1,5 @@
+# Ignore these files
+stderr.txt
+
+# Do not ignore this file
+!.gitignore

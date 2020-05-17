@@ -47,11 +47,16 @@
 // with weight w, then AT(i, j) = w. While same as LAGraph_BF_basic, it requires
 // AT(i, i) = 0 for all 0 <= i < n.
 
-// LAGraph_BF_basic_mxv returns GrB_SUCCESS regardless of existence of
-// negative-weight cycle. However, the GrB_Vector d(k) (i.e., *pd_output) will
-// be NULL when negative-weight cycle detected. Otherwise, the vector d has
-// d(k) as the shortest distance from s to k.
+// LAGraph_BF_basic_mxv returns GrB_SUCCESS if it succeeds. In this case, there
+// are no negative-weight cycles in the graph, and the vector d is returned.
+// d(k) is the shortest distance from s to k.
 
+// If the graph has a negative-weight cycle, GrB_NO_VALUE is returned, and the
+// GrB_Vector d (i.e., *pd_output) will be NULL.
+
+// Otherwise, other errors such as GrB_OUT_OF_MEMORY, GrB_INVALID_OBJECT, and 
+// so on, can be returned, if these errors are found by the underlying 
+// GrB_* functions.
 //------------------------------------------------------------------------------
 
 #include "BF_test.h"
@@ -90,8 +95,8 @@ GrB_Info LAGraph_BF_basic_mxv
     }
 
     *pd_output = NULL;
-    LAGRAPH_OK (GrB_Matrix_nrows (&nrows, AT)) ;
-    LAGRAPH_OK (GrB_Matrix_ncols (&ncols, AT)) ;
+    LAGr_Matrix_nrows (&nrows, AT) ;
+    LAGr_Matrix_ncols (&ncols, AT) ;
     if (nrows != ncols)
     {
         // AT must be square
@@ -105,11 +110,11 @@ GrB_Info LAGraph_BF_basic_mxv
     }
 
     // Initialize distance vector, change the d[s] to 0
-    LAGRAPH_OK (GrB_Vector_new(&d, GrB_FP64, n));
-    LAGRAPH_OK (GrB_Vector_setElement_FP64(d, 0, s));
+    LAGr_Vector_new(&d, GrB_FP64, n);
+    LAGRAPH_OK(GrB_Vector_setElement_FP64(d, 0, s));
 
     // copy d to dtmp in order to create a same size of vector
-    LAGRAPH_OK (GrB_Vector_dup(&dtmp, d));
+    LAGr_Vector_dup(&dtmp, d);
 
     int64_t iter = 0;      //number of iterations
     bool same = false;     //variable indicating if d == dtmp
@@ -120,8 +125,8 @@ GrB_Info LAGraph_BF_basic_mxv
     while (!same && iter < n - 1)
     {
         // excute semiring on d and AT, and save the result to d
-        LAGRAPH_OK (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, GxB_MIN_PLUS_FP64, AT,
-            d, GrB_NULL));
+        LAGr_mxv(dtmp, GrB_NULL, GrB_NULL, GxB_MIN_PLUS_FP64, AT,
+            d, GrB_NULL);
 
         LAGRAPH_OK (LAGraph_Vector_isequal(&same, dtmp, d, GrB_NULL));
         if (!same)
@@ -138,8 +143,8 @@ GrB_Info LAGraph_BF_basic_mxv
     if (!same)
     {
         // excute semiring again to check for negative-weight cycle
-        LAGRAPH_OK (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, GxB_MIN_PLUS_FP64, AT,
-            d, GrB_NULL));
+        LAGr_mxv(dtmp, GrB_NULL, GrB_NULL, GxB_MIN_PLUS_FP64, AT,
+            d, GrB_NULL);
 
         // if d != dtmp, then there is a negative-weight cycle in the graph
         LAGRAPH_OK (LAGraph_Vector_isequal(&same, dtmp, d, GrB_NULL));
@@ -147,7 +152,7 @@ GrB_Info LAGraph_BF_basic_mxv
         {
             // printf("AT negative-weight cycle found. \n");
             LAGRAPH_FREE_ALL;
-            return (GrB_SUCCESS) ;
+            return (GrB_NO_VALUE) ;
         }
     }
 
