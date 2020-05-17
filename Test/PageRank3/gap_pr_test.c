@@ -66,6 +66,7 @@ int main (int argc, char **argv)
     GrB_Matrix A = NULL, A_orig = NULL, A_temp = NULL ;
     GrB_Vector PR = NULL, d_out = NULL, d_in = NULL ;
     LAGRAPH_OK (LAGraph_init ( )) ;
+    LAGRAPH_OK (GxB_set (GxB_BURBLE, true)) ;
 
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;
