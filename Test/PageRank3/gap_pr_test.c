@@ -448,6 +448,7 @@ int main (int argc, char **argv)
     // method x4
     //--------------------------------------------------------------------------
 
+#if 0
     printf ("\nMethod x4:\n") ;
     for (int kk = 1 ; kk <= nt ; kk++)
     {
@@ -479,6 +480,7 @@ int main (int argc, char **argv)
             LAGr_log (matrix_name, "pagerank:x4", nthreads, t) ;
         }
     }
+#endif
 
     // f = fopen ("rankx4.mtx", "w") ;
     // LAGraph_mmwrite (PR, f) ;

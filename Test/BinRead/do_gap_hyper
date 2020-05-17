@@ -1,0 +1,8 @@
+#!/bin/sh
+
+./build/mtx2bin /raid/GAP/GAP-kron/GAP-kron.mtx       /raid/GAP/GAP-kron/GAP-kron.grb
+./build/mtx2bin /raid/GAP/GAP-urand/GAP-urand.mtx     /raid/GAP/GAP-urand/GAP-urand.grb
+./build/mtx2bin /raid/GAP/GAP-twitter/GAP-twitter.mtx /raid/GAP/GAP-twitter/GAP-twitter.grb
+./build/mtx2bin /raid/GAP/GAP-web/GAP-web.mtx         /raid/GAP/GAP-web/GAP-web.grb
+./build/mtx2bin /raid/GAP/GAP-road/GAP-road.mtx       /raid/GAP/GAP-road/GAP-road.grb
+
