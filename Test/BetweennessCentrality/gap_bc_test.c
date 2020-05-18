@@ -73,6 +73,7 @@ int main (int argc, char **argv)
     GrB_Vector v_batch4 = NULL ;
     GrB_Matrix SourceNodes = NULL ;
     LAGRAPH_OK (LAGraph_init ( )) ;
+    LAGRAPH_OK (GxB_set (GxB_BURBLE, true)) ;
 
     uint64_t seed = 1;
     bool tests_pass = true;
