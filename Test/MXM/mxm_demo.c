@@ -15,6 +15,70 @@
 #include "/home/davis/sparse/GraphBLAS/Source/GB_Global.h"
 
 #define LAGRAPH_FREE_ALL    \
+    (*ok) = false ;         \
+    FREE_WORK ;
+
+#define FREE_WORK           \
+    LAGr_free (&S1) ;       \
+    LAGr_free (&S2) ;       \
+    LAGr_free (&E) ;
+
+GrB_Info check_results
+(
+    bool *ok,
+    GrB_Matrix C1,
+    GrB_Matrix C2,
+    GrB_Type type
+)
+{
+    GrB_Info info ;
+    GrB_Matrix S1 = NULL, S2 = NULL, E = NULL ;
+    (*ok) = false ;
+    if (type == GrB_FP32 || type == GrB_FP64)
+    {
+        // pattern must be equal.  values can differ by O(eps)
+        LAGRAPH_OK (LAGraph_pattern (&S1, C1, NULL)) ;
+        LAGRAPH_OK (LAGraph_pattern (&S2, C2, NULL)) ;
+        LAGRAPH_OK (LAGraph_isequal (ok, S1, S2, NULL)) ;
+        LAGr_free (&S1) ;
+        LAGr_free (&S2) ;
+        if (!(*ok))
+        {
+            printf ("ERROR: pattern of C1 and C2 differ!\n") ;
+        }
+        // err = sum (abs (C1-C2))
+        (*ok) = false ;
+        GrB_Index m, n ;
+        LAGr_Matrix_nrows (&m, C1) ;
+        LAGr_Matrix_ncols (&n, C1) ;
+        LAGr_Matrix_new (&E, GrB_FP64, m, n) ;
+        LAGr_eWiseMult (E, NULL, NULL, GrB_MINUS_FP64, C1, C2, NULL) ;
+        LAGr_apply (E, NULL, NULL, GrB_ABS_FP64, E, NULL) ;
+        double err = 1 ;
+        LAGr_reduce (&err, NULL, GrB_PLUS_MONOID_FP64, E, NULL) ;
+        LAGr_free (&E) ;
+        printf ("norm (C1-C2) = %g  ", err) ;
+        (*ok) = (err < ((type == GrB_FP32) ? 1e-6 : 1e-12)) ;
+        if (!(*ok))
+        {
+            printf ("ERROR: norm too high!\n") ;
+        }
+        printf ("\n") ;
+    }
+    else
+    {
+        // matrices must be identical
+        LAGRAPH_OK (LAGraph_isequal (ok, C1, C2, NULL)) ;
+        if (!(*ok))
+        {
+            printf ("ERROR: C1 and C2 differ!\n") ;
+        }
+    }
+    return (GrB_SUCCESS) ;
+}
+
+#undef  FREE_WORK
+#define FREE_WORK           \
     LAGr_free (&C1) ;       \
     LAGr_free (&C2) ;       \
     LAGr_free (&Cin) ;      \
@@ -22,10 +86,14 @@
     LAGr_free (&A) ;        \
     LAGr_free (&B) ;
 
+#undef  LAGRAPH_FREE_ALL
+#define LAGRAPH_FREE_ALL    \
+    FREE_WORK ;             \
+    LAGraph_finalize ( ) ;
+
 int main (int argc, char **argv)
 {
-    GrB_Matrix Cin = NULL, C1 = NULL, A = NULL, B = NULL, M = NULL,
-        C2 = NULL ;
+    GrB_Matrix Cin = NULL, C1 = NULL, A = NULL, B = NULL, M = NULL, C2 = NULL ;
     GrB_Info info ;
     double tic [2], r1, r2 ;
     LAGraph_init () ;
@@ -81,6 +149,8 @@ int main (int argc, char **argv)
     // test each semiring
     //--------------------------------------------------------------------------
 
+    int nfail = 0 ;
+
     for (int s = 0 ; s < NSEMIRINGS ; s++)
     {
         GrB_Semiring semiring = Semirings [s] ;
@@ -114,36 +184,49 @@ int main (int argc, char **argv)
             GxB_print (A, 3) ;
             GxB_print (B, 3) ;
 
-            //------------------------------------------------------------------
-            // C1 = A*B without MKL
-            //------------------------------------------------------------------
+            for (int mask = 0 ; mask <= 1 ; mask++)
+            {
+                printf ("mask:%d\n", mask) ;
+                GrB_Matrix M1 = mask ? M : NULL ;
 
-            GB_Global_hack_set (0) ;
+                //--------------------------------------------------------------
+                // C1=A*B or C1<M>=A*B without MKL
+                //--------------------------------------------------------------
 
-            LAGr_Matrix_dup (&C1, Cin) ;
-            LAGr_mxm (C1, NULL, NULL, semiring, A, B, NULL) ;
-            GxB_print (C1, 3) ;
+                GB_Global_hack_set (0) ;
 
-            //------------------------------------------------------------------
-            // C2 = A*B with MKL
-            //------------------------------------------------------------------
+                LAGr_Matrix_dup (&C1, Cin) ;
+                LAGr_mxm (C1, M1, NULL, semiring, A, B, NULL) ;
+                GxB_print (C1, 3) ;
 
-            GB_Global_hack_set (1) ;
+                //--------------------------------------------------------------
+                // C2=A*B or C2<M>=A*B without MKL
+                //--------------------------------------------------------------
 
-            LAGr_Matrix_dup (&C2, Cin) ;
-            LAGr_mxm (C2, NULL, NULL, semiring, A, B, NULL) ;
-            GxB_print (C2, 3) ;
+                GB_Global_hack_set (1) ;
 
-            //------------------------------------------------------------------
-            // compare results
-            //------------------------------------------------------------------
+                LAGr_Matrix_dup (&C2, Cin) ;
+                LAGr_mxm (C2, M1, NULL, semiring, A, B, NULL) ;
+                GxB_print (C2, 3) ;
+
+                //--------------------------------------------------------------
+                // compare results
+                //--------------------------------------------------------------
+
+                bool ok = false ;
+                LAGRAPH_OK (check_results (&ok, C1, C2, type))
+                if (!ok) nfail++ ;
+            }
 
             //------------------------------------------------------------------
             // free all matrices
             //------------------------------------------------------------------
 
-            LAGRAPH_FREE_ALL  ;
+            FREE_WORK  ;
         }
     }
+
+    printf ("test failures: %d\n", nfail) ;
+    LAGraph_finalize ( ) ;
 }
 
