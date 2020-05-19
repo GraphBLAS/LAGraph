@@ -15,7 +15,8 @@
 #include "/home/davis/sparse/GraphBLAS/Source/GB_Global.h"
 
 #define LAGRAPH_FREE_ALL    \
-    LAGr_free (&Cout) ;     \
+    LAGr_free (&C1) ;       \
+    LAGr_free (&C2) ;       \
     LAGr_free (&Cin) ;      \
     LAGr_free (&M) ;        \
     LAGr_free (&A) ;        \
@@ -23,7 +24,8 @@
 
 int main (int argc, char **argv)
 {
-    GrB_Matrix Cin = NULL, Cout = NULL, A = NULL, B = NULL, M = NULL ;
+    GrB_Matrix Cin = NULL, C1 = NULL, A = NULL, B = NULL, M = NULL,
+        C2 = NULL ;
     GrB_Info info ;
     double tic [2], r1, r2 ;
     LAGraph_init () ;
@@ -113,13 +115,32 @@ int main (int argc, char **argv)
             GxB_print (B, 3) ;
 
             //------------------------------------------------------------------
-            // C = A*B
+            // C1 = A*B without MKL
             //------------------------------------------------------------------
 
-            LAGr_Matrix_dup (&Cout, Cin) ;
-            LAGr_mxm (Cout, NULL, NULL, semiring, A, B, NULL) ;
-            GxB_print (Cout, 3) ;
-            LAGr_free (&Cout) ;
+            GB_Global_hack_set (0) ;
+
+            LAGr_Matrix_dup (&C1, Cin) ;
+            LAGr_mxm (C1, NULL, NULL, semiring, A, B, NULL) ;
+            GxB_print (C1, 3) ;
+
+            //------------------------------------------------------------------
+            // C2 = A*B with MKL
+            //------------------------------------------------------------------
+
+            GB_Global_hack_set (1) ;
+
+            LAGr_Matrix_dup (&C2, Cin) ;
+            LAGr_mxm (C2, NULL, NULL, semiring, A, B, NULL) ;
+            GxB_print (C2, 3) ;
+
+            //------------------------------------------------------------------
+            // compare results
+            //------------------------------------------------------------------
+
+            //------------------------------------------------------------------
+            // free all matrices
+            //------------------------------------------------------------------
 
             LAGRAPH_FREE_ALL  ;
         }
