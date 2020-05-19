@@ -835,10 +835,15 @@ GrB_Info LAGraph_random         // create a random matrix
     bool make_pattern,          // if true, A is a pattern
     bool make_symmetric,        // if true, A is symmetric
     bool make_skew_symmetric,   // if true, A is skew-symmetric
-    bool make_hermitian,        // if trur, A is hermitian
+    bool make_hermitian,        // if true, A is hermitian
     bool no_diagonal,           // if true, A has no entries on the diagonal
     uint64_t *seed              // random number seed; modified on return
 ) ;
+
+#define LAGr_random(...)                                \
+{                                                       \
+    LAGRAPH_TRY_CATCH (LAGraph_random (__VA_ARGS__)) ;  \
+}
 
 GrB_Info LAGraph_alloc_global ( ) ;
 
