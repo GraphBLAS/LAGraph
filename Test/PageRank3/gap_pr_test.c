@@ -281,6 +281,7 @@ int main (int argc, char **argv)
     printf ("warmup (3f): %10.3f (threads: %d)\n", t_warmup, nthreads_max) ;
     fflush (stdout) ;
     GrB_free (&PR) ;
+    LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
 
     //--------------------------------------------------------------------------
     // method 3e
