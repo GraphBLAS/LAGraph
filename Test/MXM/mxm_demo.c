@@ -216,6 +216,8 @@ int main (int argc, char **argv)
                 bool ok = false ;
                 LAGRAPH_OK (check_results (&ok, C1, C2, type))
                 if (!ok) nfail++ ;
+                LAGr_free (&C1) ;
+                LAGr_free (&C2) ;
             }
 
             //------------------------------------------------------------------

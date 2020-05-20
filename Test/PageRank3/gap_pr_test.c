@@ -46,6 +46,7 @@ See LICENSE file for more details.
 // #define THREAD_LIST 64, 32, 24, 12, 8, 4
 
 #include "LAGraph.h"
+#include "GB_Global.h"
 
 #define LAGRAPH_FREE_ALL                        \
 {                                               \
@@ -67,6 +68,7 @@ int main (int argc, char **argv)
     GrB_Vector PR = NULL, d_out = NULL, d_in = NULL ;
     LAGRAPH_OK (LAGraph_init ( )) ;
     LAGRAPH_OK (GxB_set (GxB_BURBLE, true)) ;
+    GB_Global_hack_set (1) ;
 
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;

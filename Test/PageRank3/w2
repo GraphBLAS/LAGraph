@@ -1,0 +1,33 @@
+threads to test:  8
+matrix: ../BinRead/west0067.grb
+[.grb]
+Reading binary file: ../BinRead/west0067.grb
+ [ GxB_Matrix_import_CSR 1.8e-05 sec ]
+ [ GxB_set 1.42e-05 sec ]
+ [ GrB_apply (shallow-op) generic 0.000226 sec ]
+ [ GxB_set (transpose) 6.07e-05 sec ]
+ [ GrB_Matrix_nvals 2.34e-06 sec ]
+ [ GrB_Matrix_dup 6.52e-06 sec ]
+original # of edges: 294
+ [ GrB_reduce generic 6.18e-05 sec ]
+ [ GrB_reduce generic 8.68e-05 sec ]
+ [ GrB_Vector_nvals 4.64e-07 sec ]
+ [ GrB_Vector_nvals 2.02e-07 sec ]
+ [ GrB_reduce generic 5.02e-05 sec ]
+ [ GrB_Vector_nvals 1.36e-07 sec ]
+ [ GrB_Vector_dup 2.86e-06 sec ]
+ [ GxB_Vector_export 1.52e-06 sec ]
+
+==========input graph: nodes: 67 edges: 294
+diag entries added: 0
+ [ GrB_Matrix_nvals 2.71e-07 sec ]
+read time: 0.000966059 sec
+# of trials: 16
+chunk: 65536
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar 7.17e-05 sec ]
+ [ GrB_Vector_dup 2.44e-06 sec ]
+ [ GrB_assign (C dense) Method 22: (C dense) += scalar 4.75e-05 sec ]
+ [ GrB_eWiseMult (A dense) (B dense) dense C=A+B 3.58e-05 sec ]
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar 2.08e-05 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place Testing MKL mvx here: C += A'*b where b is a dense vector
+assert(semiring == GrB_PLUS_TIMES_SEMIRING_FP32 || semiring == GrB_PLUS_TIMES_SEMIRING_FP32) failed: ../Source/GB_AxB_dot4_mkl.c line 75
