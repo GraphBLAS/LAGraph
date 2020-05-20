@@ -38,3 +38,19 @@ max # of threads: 4
 SuiteSparse:GraphBLAS May 13, 2020 (DRAFT)
 Message: /home/davis/GAP/GAP-road/GAP-road.grb : pagerank:3f
 # threads used: 4 time: 8.8009
+
+From: /home/davis/sparse/LAGraph/Test/PageRank3/gap_pr_test.c
+Date: Wed May 20 06:37:45 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 13, 2020 (DRAFT)
+Message: /home/davis/GAP/GAP-road/GAP-road.grb : pagerank:3f
+# threads used: 8 time: 7.7244
+
+From: /home/davis/sparse/LAGraph/Test/PageRank3/gap_pr_test.c
+Date: Wed May 20 06:38:03 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 4
+SuiteSparse:GraphBLAS May 13, 2020 (DRAFT)
+Message: /home/davis/GAP/GAP-road/GAP-road.grb : pagerank:3f
+# threads used: 4 time: 8.6731

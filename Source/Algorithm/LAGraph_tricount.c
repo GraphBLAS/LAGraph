@@ -212,6 +212,23 @@ static GrB_Info tricount_prep
     LAGRAPH_FREE (P) ;          \
     LAGRAPH_FREE (D) ; 
 
+#if 0
+// easy mode:
+LAGr_info LAGraph_tricount 
+(
+    uint64_t *ntriangles,   // # of triangles
+    LAGr_Graph G,           // a graph
+    LAGr_descriptor d
+) ;
+
+LAGr_info LAGraph_tricount 
+(
+    uint64_t *ntriangles,   // # of triangles
+    bool directed,
+    LAGr_Matrix A           // adj matrix of an directed graph
+) ;
+#endif
+
 GrB_Info LAGraph_tricount   // count # of triangles
 (
     int64_t *ntri,          // # of triangles
