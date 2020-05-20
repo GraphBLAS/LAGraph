@@ -159,7 +159,9 @@ int main (int argc, char **argv)
     // LAGraph_mmwrite (A, stdout) ;
 
     // convert to bool
-    LAGRAPH_OK (LAGraph_pattern (&A_temp, A, GrB_BOOL)) ;
+    // HACK
+    // LAGRAPH_OK (LAGraph_pattern (&A_temp, A, GrB_BOOL)) ;
+    LAGRAPH_OK (LAGraph_pattern (&A_temp, A, GrB_FP32)) ;
     // LAGraph_mmwrite (A_temp, stdout) ;
     GrB_free (&A) ;
     A = A_temp ;
@@ -444,7 +446,7 @@ int main (int argc, char **argv)
     // f = fopen ("rank3f.mtx", "w") ;
     // LAGraph_mmwrite (PR, f) ;
     // fclose (f) ;
-    // GxB_print (PR, GxB_SHORT) ;
+    GxB_print (PR, GxB_SHORT) ;
 
     //--------------------------------------------------------------------------
     // method x4
