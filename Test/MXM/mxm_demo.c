@@ -12,7 +12,7 @@
 //  mxm_demo
 
 #include "LAGraph.h"
-#include "/home/davis/sparse/GraphBLAS/Source/GB_Global.h"
+#include "../../../GraphBLAS/Source/GB_Global.h"
 
 #define LAGRAPH_FREE_ALL    \
     (*ok) = false ;         \
@@ -97,6 +97,7 @@ int main (int argc, char **argv)
     GrB_Info info ;
     double tic [2], r1, r2 ;
     LAGraph_init () ;
+    GxB_set (GxB_BURBLE, true) ;
     int nthreads ;
     LAGr_get (GxB_NTHREADS, &nthreads) ;
     fprintf (stderr, "mxm_demo: nthreads %d\n", nthreads) ;
