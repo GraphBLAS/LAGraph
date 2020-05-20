@@ -274,13 +274,22 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     LAGraph_set_nthreads (nthreads_max) ;
+
+for (int hack = 0 ; hack <= 1 ; hack++)
+{
+    printf ("\nMethod 3f: with MKL: %d\n", hack) ;
+    GB_Global_hack_set (hack) ;
+
     LAGraph_tic (tic) ;
     LAGRAPH_OK (LAGraph_pagerank3f (&PR, A_orig, d_out, 0.85, itermax,
                 &iters)) ;
     double t_warmup = LAGraph_toc (tic) ;
-    printf ("warmup (3f): %10.3f (threads: %d)\n", t_warmup, nthreads_max) ;
+    printf ("warmup (3f): %10.3f (threads: %d) MKL: %d\n",
+        t_warmup, nthreads_max, hack) ;
     fflush (stdout) ;
     GrB_free (&PR) ;
+}
+
     LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
 
     //--------------------------------------------------------------------------
@@ -412,7 +421,11 @@ int main (int argc, char **argv)
     // method 3f
     //--------------------------------------------------------------------------
 
-    printf ("\nMethod 3f:\n") ;
+for (int hack = 0 ; hack <= 1 ; hack++)
+{
+    printf ("\nMethod 3f: with MKL: %d\n", hack) ;
+    GB_Global_hack_set (hack) ;
+
     for (int kk = 1 ; kk <= nt ; kk++)
     {
         int nthreads = Nthreads [kk] ;
@@ -448,6 +461,7 @@ int main (int argc, char **argv)
     // LAGraph_mmwrite (PR, f) ;
     // fclose (f) ;
     GxB_print (PR, GxB_SHORT) ;
+}
 
     //--------------------------------------------------------------------------
     // method x4
