@@ -17,6 +17,7 @@ JOBS ?= 1
 # build all the tests
 default:
 	( cd Complex               ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
+	( cd MXM                   ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd LCC                   ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd AllKTruss             ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd KTruss                ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
@@ -41,6 +42,7 @@ purge: distclean
 
 # remove all files not in the distribution
 distclean:
+	( cd MXM                   ; $(MAKE) distclean )
 	( cd LCC                   ; $(MAKE) distclean )
 	( cd AllKTruss             ; $(MAKE) distclean )
 	( cd KTruss                ; $(MAKE) distclean )

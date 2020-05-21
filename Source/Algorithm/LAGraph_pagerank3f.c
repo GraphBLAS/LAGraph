@@ -110,6 +110,11 @@ GrB_Info LAGraph_pagerank3f // PageRank definition
     LAGr_Vector_dup (&d, d_out) ;
     LAGr_assign (d, NULL, GrB_DIV_FP32, damping, GrB_ALL, n, NULL) ;
 
+    #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
+        && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,3,0) )
+    LAGRAPH_OK (GxB_mxv_optimize (A, itermax/4, NULL)) ;
+    #endif
+
     //--------------------------------------------------------------------------
     // pagerank iterations
     //--------------------------------------------------------------------------
@@ -142,6 +147,11 @@ GrB_Info LAGraph_pagerank3f // PageRank definition
     //--------------------------------------------------------------------------
     // free workspace and return result
     //--------------------------------------------------------------------------
+
+    #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
+        && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,3,0) )
+    LAGRAPH_OK (GxB_mxv_optimize_free (A)) ;
+    #endif
 
     (*result) = r ;
     r = NULL ;

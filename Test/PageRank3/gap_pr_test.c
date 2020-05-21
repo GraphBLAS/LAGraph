@@ -47,6 +47,7 @@ See LICENSE file for more details.
 
 #include "LAGraph.h"
 #include "GB_Global.h"
+#include <assert.h>
 
 #define LAGRAPH_FREE_ALL                        \
 {                                               \
@@ -56,6 +57,7 @@ See LICENSE file for more details.
     GrB_free (&A_temp) ;                        \
     GrB_free (&PR) ;                            \
     GrB_free (&d_in) ;                          \
+    LAGRAPH_FREE (dout) ;                       \
     GrB_free (&d_out) ;                         \
 }
 
@@ -66,9 +68,10 @@ int main (int argc, char **argv)
     LAGraph_PageRank *P = NULL ;
     GrB_Matrix A = NULL, A_orig = NULL, A_temp = NULL ;
     GrB_Vector PR = NULL, d_out = NULL, d_in = NULL ;
+    float *dout = NULL ;
     LAGRAPH_OK (LAGraph_init ( )) ;
     LAGRAPH_OK (GxB_set (GxB_BURBLE, true)) ;
-    GB_Global_hack_set (1) ;
+    GB_Global_hack_set (0) ;
 
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;
@@ -205,10 +208,10 @@ int main (int argc, char **argv)
         printf ("Matrix has %"PRId64" empty cols\n", n - n_d_in) ;
         for (GrB_Index i = 0; i < n; i++)
         {
-            float din = 0, dout = 0 ;
+            float din = 0, dot = 0 ;
             LAGRAPH_OK (GrB_Vector_extractElement (&din , d_in , i)) ;
-            LAGRAPH_OK (GrB_Vector_extractElement (&dout, d_out, i)) ;
-            if (din == 0 || dout == 0)
+            LAGRAPH_OK (GrB_Vector_extractElement (&dot, d_out, i)) ;
+            if (din == 0 || dot == 0)
             {
                 edges_added++ ;
                 LAGRAPH_OK (GrB_Matrix_setElement (A, 1, i, i));
@@ -231,7 +234,6 @@ int main (int argc, char **argv)
     }
 
     // copy into a double vector for pagerank3c
-    float *dout = NULL ;
     GrB_Index *dI = NULL ;
     GrB_Type dtype ;
     GrB_Vector d_out2 = NULL ;
@@ -263,7 +265,7 @@ int main (int argc, char **argv)
     printf ("# of trials: %d\n", ntrials) ;
 
     float tol = 1e-4 ;
-    int iters, itermax = 100 ;
+    int iters = 0, itermax = 100 ;
 
     double chunk ; // = 64 * 1024 ;
     GxB_get (GxB_CHUNK, &chunk) ;
@@ -280,9 +282,12 @@ for (int hack = 0 ; hack <= 1 ; hack++)
     printf ("\nMethod 3f: with MKL: %d\n", hack) ;
     GB_Global_hack_set (hack) ;
 
+    assert (PR == NULL) ;
     LAGraph_tic (tic) ;
-    LAGRAPH_OK (LAGraph_pagerank3f (&PR, A_orig, d_out, 0.85, itermax,
-                &iters)) ;
+    iters = 0 ;
+    info = LAGraph_pagerank3f (&PR, A_orig, d_out, 0.85, itermax, &iters) ;
+    printf ("info %d\n", info) ;
+    printf ("iters %d\n", iters) ;
     double t_warmup = LAGraph_toc (tic) ;
     printf ("warmup (3f): %10.3f (threads: %d) MKL: %d\n",
         t_warmup, nthreads_max, hack) ;
@@ -421,6 +426,7 @@ for (int hack = 0 ; hack <= 1 ; hack++)
     // method 3f
     //--------------------------------------------------------------------------
 
+#if 1
 for (int hack = 0 ; hack <= 1 ; hack++)
 {
     printf ("\nMethod 3f: with MKL: %d\n", hack) ;
@@ -462,6 +468,7 @@ for (int hack = 0 ; hack <= 1 ; hack++)
     // fclose (f) ;
     GxB_print (PR, GxB_SHORT) ;
 }
+#endif
 
     //--------------------------------------------------------------------------
     // method x4
@@ -510,6 +517,7 @@ for (int hack = 0 ; hack <= 1 ; hack++)
     // free all workspace and finish
     //--------------------------------------------------------------------------
 
+    LAGRAPH_FREE (dout) ;
     LAGRAPH_FREE_ALL ;
     LAGRAPH_OK (LAGraph_finalize ( )) ;
     return (GrB_SUCCESS) ;
