@@ -201,7 +201,7 @@ int main (int argc, char **argv)
                 GxB_print (C1, 3) ;
 
                 //--------------------------------------------------------------
-                // C2=A*B or C2<M>=A*B without MKL
+                // C2=A*B or C2<M>=A*B with MKL
                 //--------------------------------------------------------------
 
                 GB_Global_hack_set (1) ;
