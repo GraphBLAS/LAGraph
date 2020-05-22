@@ -112,7 +112,7 @@ GrB_Info LAGraph_pagerank3f // PageRank definition
 
     #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
         && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,3,0) )
-    LAGRAPH_OK (GxB_mxv_optimize (A, itermax/4, NULL)) ;
+    // LAGRAPH_OK (GxB_mxv_optimize (A, itermax/4, NULL)) ;
     #endif
 
     //--------------------------------------------------------------------------
@@ -150,7 +150,7 @@ GrB_Info LAGraph_pagerank3f // PageRank definition
 
     #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
         && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,3,0) )
-    LAGRAPH_OK (GxB_mxv_optimize_free (A)) ;
+    // LAGRAPH_OK (GxB_mxv_optimize_free (A)) ;
     #endif
 
     (*result) = r ;
