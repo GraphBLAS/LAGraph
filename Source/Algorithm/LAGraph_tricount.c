@@ -262,6 +262,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
         GrB_Descriptor desc_s   = GrB_DESC_S ;
         GrB_Descriptor desc_st1 = GrB_DESC_ST1 ;
         GrB_Semiring   semiring = GxB_PLUS_PAIR_INT64 ;
+//      GrB_Semiring   semiring = GxB_PLUS_PAIR_INT32 ;
     #else
         // f(x,y)=x*y, so x and y must be 1 to compute the correct count, and
         // thus the input matrix A must be binary.
@@ -272,6 +273,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
 
     GrB_Monoid sum = LAGraph_PLUS_INT64_MONOID ;
     LAGr_Matrix_new (&C, GrB_INT64, n, n) ;
+//  LAGr_Matrix_new (&C, GrB_INT32, n, n) ;
 
     //--------------------------------------------------------------------------
     // heuristic sort rule

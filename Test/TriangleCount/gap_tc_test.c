@@ -108,7 +108,7 @@ int main (int argc, char **argv)
     GrB_Vector thunk = NULL ;     // unused, for LAGRAPH_FREE_ALL
     #endif
     LAGRAPH_OK (LAGraph_init ( )) ;
-    LAGRAPH_OK (GxB_set (GxB_BURBLE, true)) ;
+    LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
 
     int ntrials = 3 ;
     printf ("# of trials: %d\n", ntrials) ;
@@ -306,8 +306,9 @@ int main (int argc, char **argv)
                     printf ("trial %2d: %g sec\n", trial, ttrial [trial]) ;
                 }
                 ttot = ttot / ntrials ;
-                printf ("nthreads: %3d time: %12.6f rate: %6.2f\n", nthreads,
+                printf ("nthreads: %3d time: %12.6f rate: %6.2f", nthreads,
                     ttot, 1e-6 * nvals / ttot) ;
+                printf ("   # of triangles: %" PRId64 "\n", ntriangles) ;
                 if (nt2 != ntriangles)
                 {
                     printf ("Test failure!\n") ;
