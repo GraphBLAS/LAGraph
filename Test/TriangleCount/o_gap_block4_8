@@ -1,0 +1,240 @@
+# of trials: 3
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+
+read A time:          67.004179 sec
+process A time:       93.212433 sec
+# of nodes: 134217728   number of entries: 4294966740
+compute degree: 13.975 sec
+average degree: 31.874
+median  degree: 32
+auto sorting: 0: none
+# of triangles: 5378
+nthreads:  40 time:    34.639247 rate: 123.99 (SandiaDot, one trial)
+
+Method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+average degree: 31.874
+median  degree: 32
+auto sorting: 0: none
+trial  0: 33.0139 sec
+average degree: 31.874
+median  degree: 32
+auto sorting: 0: none
+trial  1: 33.0664 sec
+average degree: 31.874
+median  degree: 32
+auto sorting: 0: none
+trial  2: 33.0486 sec
+nthreads:  40 time:    33.042966 rate: 129.98   # of triangles: 5378
+
+Method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+average degree: 31.874
+median  degree: 32
+auto sorting: 0: none
+trial  0: 34.6345 sec
+average degree: 31.874
+median  degree: 32
+auto sorting: 0: none
+trial  1: 34.62 sec
+average degree: 31.874
+median  degree: 32
+auto sorting: 0: none
+trial  2: 34.6507 sec
+nthreads:  40 time:    34.635075 rate: 124.01   # of triangles: 5378
+
+Best method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+nthreads:  40 time:    33.042966 rate: 129.98
+# of trials: 3
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+
+read A time:          20.458781 sec
+process A time:       25.796894 sec
+# of nodes: 61578415   number of entries: 2405026092
+compute degree: 4.49927 sec
+average degree: 32.78
+median  degree: 5
+auto sorting: -1: descending
+sort descending
+# of triangles: 34824916864
+nthreads:  40 time:   255.843780 rate:   9.40 (SandiaDot, one trial)
+
+Method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+average degree: 32.78
+median  degree: 5
+auto sorting: 1: ascending
+sort ascending
+trial  0: 220.826 sec
+average degree: 32.78
+median  degree: 5
+auto sorting: 1: ascending
+sort ascending
+trial  1: 220.72 sec
+average degree: 32.78
+median  degree: 5
+auto sorting: 1: ascending
+sort ascending
+trial  2: 220.912 sec
+nthreads:  40 time:   220.819669 rate:  10.89   # of triangles: 34824916864
+
+Method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+average degree: 32.78
+median  degree: 5
+auto sorting: -1: descending
+sort descending
+trial  0: 255.654 sec
+average degree: 32.78
+median  degree: 5
+auto sorting: -1: descending
+sort descending
+trial  1: 255.509 sec
+average degree: 32.78
+median  degree: 5
+auto sorting: -1: descending
+sort descending
+trial  2: 256.549 sec
+nthreads:  40 time:   255.904158 rate:   9.40   # of triangles: 34824916864
+
+Best method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+nthreads:  40 time:   220.819669 rate:  10.89
+# of trials: 3
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+
+read A time:          18.582887 sec
+process A time:       11.183437 sec
+# of nodes: 50636151   number of entries: 3620126660
+compute degree: 2.03176 sec
+average degree: 107.673
+median  degree: 30
+auto sorting: 0: none
+# of triangles: 84907041475
+nthreads:  40 time:    44.305676 rate:  81.71 (SandiaDot, one trial)
+
+Method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+average degree: 107.673
+median  degree: 30
+auto sorting: 0: none
+trial  0: 39.118 sec
+average degree: 107.673
+median  degree: 30
+auto sorting: 0: none
+trial  1: 39.1128 sec
+average degree: 107.673
+median  degree: 30
+auto sorting: 0: none
+trial  2: 39.0483 sec
+nthreads:  40 time:    39.093021 rate:  92.60   # of triangles: 84907041475
+
+Method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+average degree: 107.673
+median  degree: 30
+auto sorting: 0: none
+trial  0: 42.7358 sec
+average degree: 107.673
+median  degree: 30
+auto sorting: 0: none
+trial  1: 42.6568 sec
+average degree: 107.673
+median  degree: 30
+auto sorting: 0: none
+trial  2: 42.5931 sec
+nthreads:  40 time:    42.661910 rate:  84.86   # of triangles: 84907041475
+
+Best method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+nthreads:  40 time:    39.093021 rate:  92.60
+# of trials: 3
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+
+read A time:           0.573457 sec
+process A time:        2.126861 sec
+# of nodes: 23947347   number of entries: 57708624
+compute degree: 0.139886 sec
+auto sorting: 0: none
+# of triangles: 438804
+nthreads:  40 time:     0.284918 rate: 202.54 (SandiaDot, one trial)
+
+Method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+auto sorting: 0: none
+trial  0: 0.298271 sec
+auto sorting: 0: none
+trial  1: 0.299834 sec
+auto sorting: 0: none
+trial  2: 0.297884 sec
+nthreads:  40 time:     0.298663 rate: 193.22   # of triangles: 438804
+
+Method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+auto sorting: 0: none
+trial  0: 0.302299 sec
+auto sorting: 0: none
+trial  1: 0.302623 sec
+auto sorting: 0: none
+trial  2: 0.302468 sec
+nthreads:  40 time:     0.302463 rate: 190.80   # of triangles: 438804
+
+Best method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+nthreads:  40 time:     0.298663 rate: 193.22
+# of trials: 3
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+
+read A time:          45.364992 sec
+process A time:       87.193067 sec
+# of nodes: 134217726   number of entries: 4223264644
+compute degree: 9.87037 sec
+average degree: 18.445
+median  degree: 0
+auto sorting: -1: descending
+sort descending
+# of triangles: 106873365648
+nthreads:  40 time:   947.987924 rate:   4.45 (SandiaDot, one trial)
+
+Method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+average degree: 18.445
+median  degree: 0
+auto sorting: 1: ascending
+sort ascending
+trial  0: 891.43 sec
+average degree: 18.445
+median  degree: 0
+auto sorting: 1: ascending
+sort ascending
+trial  1: 887.522 sec
+average degree: 18.445
+median  degree: 0
+auto sorting: 1: ascending
+sort ascending
+trial  2: 892.739 sec
+nthreads:  40 time:   890.563768 rate:   4.74   # of triangles: 106873365648
+
+Method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+average degree: 18.445
+median  degree: 0
+auto sorting: -1: descending
+sort descending
+trial  0: 946.36 sec
+average degree: 18.445
+median  degree: 0
+auto sorting: -1: descending
+sort descending
+trial  1: 947.111 sec
+average degree: 18.445
+median  degree: 0
+auto sorting: -1: descending
+sort descending
+trial  2: 945.964 sec
+nthreads:  40 time:   946.478174 rate:   4.46   # of triangles: 106873365648
+
+Best method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+nthreads:  40 time:   890.563768 rate:   4.74

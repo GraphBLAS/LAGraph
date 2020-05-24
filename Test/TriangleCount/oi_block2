@@ -1,0 +1,260 @@
+# of trials: 3
+threads to test:  40
+matrix: /home/faculty/davis/roadNet-CA.mtx
+[.mtx]
+Reading Matrix Market file: /home/faculty/davis/roadNet-CA.mtx
+
+read A time:           1.337369 sec
+ [ GrB_apply wait (zombies: 0, pending: 5533214) (shallow-op) 0.0806 sec ]
+ [ GrB_eWiseAdd wait (zombies: 0, pending: 1971281) (B transpose) add (C<!M>=Z via assign) (C cleared early) (C empty) Method 14: C(:,:)<!M> = Z ; using S 0.0706 sec ]
+ [ GrB_Matrix_nvals wait (zombies: 0, pending: 5533214) 0.00344 sec ]
+process A time:        0.275985 sec
+# of nodes: 1971281   number of entries: 5533214
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar calloc 0.00149 sec ]
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar calloc 0.00294 sec ]
+ [ GrB_vxm C=A*B, saxpy axbflops 5.53321e+06 Mwork 0 nthreads 40 ntasks 85 coarse: (gus: 0 hash: 0) fine: (gus: 85 hash: 0) (C+=Z via assign) (C dense) Method 23: (C dense) += Z 0.00796 sec ]
+ [ GxB_Vector_export 2.99e-07 sec ]
+compute degree: 0.0124493 sec
+ [ GrB_Matrix_nvals 4.25e-07 sec ]
+auto sorting: 0: none
+ [ GxB_select 0.00883 sec ]
+ [ GxB_select 0.00622 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product dot3 nthreads 40 ntasks 108 0.00812 sec ]
+ [ GrB_reduce wait (zombies: 2647505, pending: 0) 0.00451 sec ]
+# of triangles: 120676
+nthreads:  40 time:     0.027883 rate: 198.45 (SandiaDot, one trial)
+
+Method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+ [ GrB_Matrix_nvals 5.2e-07 sec ]
+auto sorting: 0: none
+ [ GxB_select 0.0104 sec ]
+ [ GxB_select 0.00615 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product dot3 nthreads 40 ntasks 108 0.00884 sec ]
+ [ GrB_reduce wait (zombies: 2647505, pending: 0) 0.00468 sec ]
+trial  0: 0.03025 sec
+ [ GrB_Matrix_nvals 7.54e-07 sec ]
+auto sorting: 0: none
+ [ GxB_select 0.00792 sec ]
+ [ GxB_select 0.00611 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product dot3 nthreads 40 ntasks 108 0.0088 sec ]
+ [ GrB_reduce wait (zombies: 2647505, pending: 0) 0.00467 sec ]
+trial  1: 0.0276504 sec
+ [ GrB_Matrix_nvals 6.98e-07 sec ]
+auto sorting: 0: none
+ [ GxB_select 0.00663 sec ]
+ [ GxB_select 0.00619 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product dot3 nthreads 40 ntasks 108 0.00854 sec ]
+ [ GrB_reduce wait (zombies: 2647505, pending: 0) 0.00462 sec ]
+trial  2: 0.0261318 sec
+nthreads:  40 time:     0.028011 rate: 197.54
+
+Method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+ [ GrB_Matrix_nvals 6.04e-07 sec ]
+auto sorting: 0: none
+ [ GxB_select 0.00695 sec ]
+ [ GxB_select 0.00655 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product dot3 nthreads 40 ntasks 108 0.0122 sec ]
+ [ GrB_reduce wait (zombies: 2647505, pending: 0) 0.00471 sec ]
+trial  0: 0.0306004 sec
+ [ GrB_Matrix_nvals 8.19e-07 sec ]
+auto sorting: 0: none
+ [ GxB_select 0.00647 sec ]
+ [ GxB_select 0.00614 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product dot3 nthreads 40 ntasks 108 0.00771 sec ]
+ [ GrB_reduce wait (zombies: 2647505, pending: 0) 0.00498 sec ]
+trial  1: 0.025452 sec
+ [ GrB_Matrix_nvals 5.1e-07 sec ]
+auto sorting: 0: none
+ [ GxB_select 0.00636 sec ]
+ [ GxB_select 0.00614 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product dot3 nthreads 40 ntasks 108 0.00946 sec ]
+ [ GrB_reduce wait (zombies: 2647505, pending: 0) 0.00471 sec ]
+trial  2: 0.026834 sec
+nthreads:  40 time:     0.027629 rate: 200.27
+
+Best method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+nthreads:  40 time:     0.027629 rate: 200.27
+# of trials: 3
+threads to test:  40
+matrix: /home/faculty/davis/soc-Pokec.grb
+[.grb]
+Reading binary file: /home/faculty/davis/soc-Pokec.grb
+ [ GxB_Matrix_import_CSR 1.22e-05 sec ]
+ [ GxB_set 7.83e-06 sec ]
+
+read A time:           0.544410 sec
+ [ GrB_apply (shallow-op) 0.0236 sec ]
+ [ GrB_eWiseAdd wait (zombies: 0, pending: 1632803) (B transpose) add mask 0.356 sec ]
+ [ GrB_Matrix_nvals 2.39e-06 sec ]
+process A time:        0.462676 sec
+# of nodes: 1632803   number of entries: 44603928
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar calloc 0.00155 sec ]
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar calloc 0.00275 sec ]
+ [ GrB_vxm C=A*B, saxpy axbflops 4.46039e+07 Mwork 0 nthreads 40 ntasks 160 coarse: (gus: 0 hash: 0) fine: (gus: 160 hash: 0) (C+=Z via assign) (C dense) Method 23: (C dense) += Z (Z dense) 0.0499 sec ]
+ [ GxB_Vector_export 5.17e-07 sec ]
+compute degree: 0.0542996 sec
+ [ GrB_Matrix_nvals 4.36e-07 sec ]
+average degree: 25.918
+median  degree: 12
+auto sorting: 0: none
+ [ GxB_select 0.022 sec ]
+ [ GxB_select 0.0218 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product dot3 nthreads 40 ntasks 1280 0.252 sec ]
+ [ GrB_reduce wait (zombies: 12403028, pending: 0) 0.0222 sec ]
+# of triangles: 32557458
+nthreads:  40 time:     0.318317 rate: 140.12 (SandiaDot, one trial)
+
+Method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+ [ GrB_Matrix_nvals 4.81e-07 sec ]
+average degree: 25.918
+median  degree: 12
+auto sorting: 0: none
+ [ GxB_select 0.0211 sec ]
+ [ GxB_select 0.0219 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product dot3 nthreads 40 ntasks 1280 0.247 sec ]
+ [ GrB_reduce wait (zombies: 12403028, pending: 0) 0.0175 sec ]
+trial  0: 0.307701 sec
+ [ GrB_Matrix_nvals 5.1e-07 sec ]
+average degree: 25.918
+median  degree: 12
+auto sorting: 0: none
+ [ GxB_select 0.0212 sec ]
+ [ GxB_select 0.0218 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product dot3 nthreads 40 ntasks 1280 0.246 sec ]
+ [ GrB_reduce wait (zombies: 12403028, pending: 0) 0.0176 sec ]
+trial  1: 0.307138 sec
+ [ GrB_Matrix_nvals 4.14e-07 sec ]
+average degree: 25.918
+median  degree: 12
+auto sorting: 0: none
+ [ GxB_select 0.0211 sec ]
+ [ GxB_select 0.0219 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product dot3 nthreads 40 ntasks 1280 0.247 sec ]
+ [ GrB_reduce wait (zombies: 12403028, pending: 0) 0.0174 sec ]
+trial  2: 0.308116 sec
+nthreads:  40 time:     0.307652 rate: 144.98
+
+Method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+ [ GrB_Matrix_nvals 3.33e-07 sec ]
+average degree: 25.918
+median  degree: 12
+auto sorting: 0: none
+ [ GxB_select 0.0214 sec ]
+ [ GxB_select 0.0217 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product dot3 nthreads 40 ntasks 1280 0.246 sec ]
+ [ GrB_reduce wait (zombies: 12403028, pending: 0) 0.0186 sec ]
+trial  0: 0.307476 sec
+ [ GrB_Matrix_nvals 3.52e-07 sec ]
+average degree: 25.918
+median  degree: 12
+auto sorting: 0: none
+ [ GxB_select 0.021 sec ]
+ [ GxB_select 0.0219 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product dot3 nthreads 40 ntasks 1280 0.246 sec ]
+ [ GrB_reduce wait (zombies: 12403028, pending: 0) 0.0186 sec ]
+trial  1: 0.30828 sec
+ [ GrB_Matrix_nvals 4.19e-07 sec ]
+average degree: 25.918
+median  degree: 12
+auto sorting: 0: none
+ [ GxB_select 0.0213 sec ]
+ [ GxB_select 0.0216 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product dot3 nthreads 40 ntasks 1280 0.247 sec ]
+ [ GrB_reduce wait (zombies: 12403028, pending: 0) 0.0187 sec ]
+trial  2: 0.308697 sec
+nthreads:  40 time:     0.308151 rate: 144.75
+
+Best method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+nthreads:  40 time:     0.307652 rate: 144.98
+# of trials: 3
+threads to test:  40
+matrix: /home/faculty/davis/com-Orkut.grb
+[.grb]
+Reading binary file: /home/faculty/davis/com-Orkut.grb
+ [ GxB_Matrix_import_CSR 1.32e-05 sec ]
+ [ GxB_set 7.16e-06 sec ]
+
+read A time:           4.068014 sec
+ [ GrB_apply (shallow-op) 0.107 sec ]
+ [ GrB_eWiseAdd wait (zombies: 0, pending: 3072441) (B transpose) add (C<!M>=Z via assign) (C cleared early) (C empty) Method 14: C(:,:)<!M> = Z ; using S 2.26 sec ]
+ [ GrB_Matrix_nvals wait (zombies: 0, pending: 234370166) 0.0849 sec ]
+process A time:        2.612240 sec
+# of nodes: 3072441   number of entries: 234370166
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar calloc 0.00154 sec ]
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar calloc 0.00399 sec ]
+ [ GrB_vxm C=A*B, saxpy axbflops 2.3437e+08 Mwork 0 nthreads 40 ntasks 160 coarse: (gus: 0 hash: 0) fine: (gus: 160 hash: 0) (C+=Z via assign) (C dense) Method 23: (C dense) += Z (Z dense) 0.221 sec ]
+ [ GxB_Vector_export 6.58e-07 sec ]
+compute degree: 0.226857 sec
+ [ GrB_Matrix_nvals 4.17e-07 sec ]
+average degree: 70.625
+median  degree: 47
+auto sorting: 0: none
+ [ GxB_select 0.0885 sec ]
+ [ GxB_select 0.0883 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product dot3 nthreads 40 ntasks 1280 3.3 sec ]
+ [ GrB_reduce wait (zombies: 39756548, pending: 0) 0.0874 sec ]
+# of triangles: 627584181
+nthreads:  40 time:     3.562384 rate:  65.79 (SandiaDot, one trial)
+
+Method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+ [ GrB_Matrix_nvals 4.69e-07 sec ]
+average degree: 70.625
+median  degree: 47
+auto sorting: 0: none
+ [ GxB_select 0.0873 sec ]
+ [ GxB_select 0.0881 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product dot3 nthreads 40 ntasks 1280 3.39 sec ]
+ [ GrB_reduce wait (zombies: 39756548, pending: 0) 0.0967 sec ]
+trial  0: 3.65813 sec
+ [ GrB_Matrix_nvals 8.05e-07 sec ]
+average degree: 70.625
+median  degree: 47
+auto sorting: 0: none
+ [ GxB_select 0.0886 sec ]
+ [ GxB_select 0.0883 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product dot3 nthreads 40 ntasks 1280 3.39 sec ]
+ [ GrB_reduce wait (zombies: 39756548, pending: 0) 0.0951 sec ]
+trial  1: 3.66298 sec
+ [ GrB_Matrix_nvals 4.41e-07 sec ]
+average degree: 70.625
+median  degree: 47
+auto sorting: 0: none
+ [ GxB_select 0.0872 sec ]
+ [ GxB_select 0.0882 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product dot3 nthreads 40 ntasks 1280 3.38 sec ]
+ [ GrB_reduce wait (zombies: 39756548, pending: 0) 0.0952 sec ]
+trial  2: 3.65551 sec
+nthreads:  40 time:     3.658875 rate:  64.06
+
+Method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+ [ GrB_Matrix_nvals 3.49e-07 sec ]
+average degree: 70.625
+median  degree: 47
+auto sorting: 0: none
+ [ GxB_select 0.0874 sec ]
+ [ GxB_select 0.0886 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product dot3 nthreads 40 ntasks 1280 3.29 sec ]
+ [ GrB_reduce wait (zombies: 39756548, pending: 0) 0.0966 sec ]
+trial  0: 3.56655 sec
+ [ GrB_Matrix_nvals 4.26e-07 sec ]
+average degree: 70.625
+median  degree: 47
+auto sorting: 0: none
+ [ GxB_select 0.0871 sec ]
+ [ GxB_select 0.0883 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product dot3 nthreads 40 ntasks 1280 3.29 sec ]
+ [ GrB_reduce wait (zombies: 39756548, pending: 0) 0.0963 sec ]
+trial  1: 3.56673 sec
+ [ GrB_Matrix_nvals 2.36e-07 sec ]
+average degree: 70.625
+median  degree: 47
+auto sorting: 0: none
+ [ GxB_select 0.0876 sec ]
+ [ GxB_select 0.0882 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product dot3 nthreads 40 ntasks 1280 3.3 sec ]
+ [ GrB_reduce wait (zombies: 39756548, pending: 0) 0.0959 sec ]
+trial  2: 3.57102 sec
+nthreads:  40 time:     3.568099 rate:  65.68
+
+Best method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+nthreads:  40 time:     3.568099 rate:  65.68

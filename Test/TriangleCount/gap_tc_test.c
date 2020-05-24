@@ -83,9 +83,9 @@ char *method_name (int method, int sorting)
 }
 
 
-void print_method (int method, int sorting)
+void print_method (FILE *f, int method, int sorting)
 {
-    printf ("%s\n", method_name (method, sorting)) ;
+    fprintf (f, "%s\n", method_name (method, sorting)) ;
 }
 
 int main (int argc, char **argv)
@@ -169,12 +169,14 @@ int main (int argc, char **argv)
 
         if (is_binary)
         {
-            printf ("Reading binary file: %s\n", filename) ;
+            printf ("\nReading binary file: %s\n", filename) ;
+            fprintf (stderr, "\nReading binary file: %s\n", filename) ;
             LAGRAPH_OK (LAGraph_binread (&C, filename)) ;
         }
         else
         {
-            printf ("Reading Matrix Market file: %s\n", filename) ;
+            printf ("\nReading Matrix Market file: %s\n", filename) ;
+            fprintf (stderr, "\nReading Matrix Market file: %s\n", filename) ;
             FILE *f = fopen (filename, "r") ;
             if (f == NULL)
             {
@@ -262,6 +264,8 @@ int main (int argc, char **argv)
     double ttot = LAGraph_toc (tic) ;
     printf ("nthreads: %3d time: %12.6f rate: %6.2f (SandiaDot, one trial)\n",
             nthreads_max, ttot, 1e-6 * nvals / ttot) ;
+    fprintf (stderr, "nthreads: %3d time: %12.6f rate: %6.2f (SandiaDot, one trial)\n",
+            nthreads_max, ttot, 1e-6 * nvals / ttot) ;
 
     double t_best = INFINITY ;
     int method_best = -1 ;
@@ -282,7 +286,9 @@ int main (int argc, char **argv)
         int sorting = 2 ;
         {
             printf ("\nMethod: ") ;
-            print_method (method, sorting) ;
+            print_method (stdout, method, sorting) ;
+            fprintf (stderr, "\nMethod: ") ;
+            print_method (stderr, method, sorting) ;
             if (n == 134217726 && method < 5)
             {
                 printf ("kron fails on method %d; skipped\n", method) ;
@@ -304,6 +310,9 @@ int main (int argc, char **argv)
                     ttrial [trial] = LAGraph_toc (tic) ;
                     ttot += ttrial [trial] ;
                     printf ("trial %2d: %g sec\n", trial, ttrial [trial]) ;
+
+                    fprintf (stderr, "trial %2d: %12.6f sec rate %6.2f  # triangles: %ld\n",
+                        trial, ttrial [trial], 1e-6 * nvals / ttrial [trial], nt2) ;
                 }
                 ttot = ttot / ntrials ;
                 printf ("nthreads: %3d time: %12.6f rate: %6.2f", nthreads,
@@ -333,7 +342,7 @@ int main (int argc, char **argv)
     }
 
     printf ("\nBest method: ") ;
-    print_method (method_best, sorting_best) ;
+    print_method (stdout, method_best, sorting_best) ;
     printf ("nthreads: %3d time: %12.6f rate: %6.2f\n",
         nthreads_best, t_best, 1e-6 * nvals / t_best) ;
     LAGRAPH_FREE_ALL ;
