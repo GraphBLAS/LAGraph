@@ -40,6 +40,7 @@
 // (with accented characters: M\'{a}rton Elekes and G\'{a}bor Sz\'{a}rnyas.
 
 // Converts array of sparse IDs (ids) to row/column indices between 0...(nids-1).
+// The order of IDs is kept, therefore ids can be used for index -> ID conversion: ids[index]=id.
 //
 // Gives back two binary matrices for conversion between ID- and index-based vertices.
 // id2index vector can be used to look up for indices of chosen IDs.
