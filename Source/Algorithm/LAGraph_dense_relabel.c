@@ -135,5 +135,8 @@ GrB_Info LAGraph_dense_relabel               // relabel sparse IDs to dense row/
         }
     }
 
+    LAGRAPH_FREE(indices);
+    LAGRAPH_FREE(true_values);
+
     return GrB_SUCCESS;
 }
