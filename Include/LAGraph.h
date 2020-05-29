@@ -1370,7 +1370,7 @@ GrB_Info LAGraph_Matrix_extract_keep_dimensions // extract submatrix but keep
     GrB_Matrix *Chandle,         // output matrix
     const GrB_Matrix A,          // input matrix
     const GrB_Index *Vsparse,    // sorted list of vertex indices
-    const bool *Vdense,          // boolean array of verices
+    const bool *Vdense,          // boolean array of vertices
     GrB_Index nv                 // number of vertex indices
 ) ;
 
