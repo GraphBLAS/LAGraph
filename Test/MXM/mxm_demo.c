@@ -97,16 +97,18 @@ int main (int argc, char **argv)
     GrB_Info info ;
     double tic [2], r1, r2 ;
     LAGraph_init () ;
-    GxB_set (GxB_BURBLE, true) ;
+    GxB_set (GxB_BURBLE, false) ;
     int nthreads ;
     LAGr_get (GxB_NTHREADS, &nthreads) ;
     fprintf (stderr, "mxm_demo: nthreads %d\n", nthreads) ;
-    printf ("--------------------------------------------------------------\n");
+//  printf ("--------------------------------------------------------------\n");
 
     // GraphBLAS semirings supported by MKL
     #define NSEMIRINGS 13
     GrB_Semiring Semirings [NSEMIRINGS] =
     {
+        #if 0 && (GxB_IMPLEMENTATION >= GxB_VERSION (3,3,0))
+
         GrB_LOR_LAND_SEMIRING_BOOL,
         GrB_PLUS_TIMES_SEMIRING_INT32,
         GrB_PLUS_TIMES_SEMIRING_INT64,
@@ -120,6 +122,24 @@ int main (int argc, char **argv)
         GrB_MAX_FIRST_SEMIRING_INT64,
         GrB_MAX_FIRST_SEMIRING_FP32,
         GrB_MAX_FIRST_SEMIRING_FP64,
+
+        #else
+
+        GxB_LOR_LAND_BOOL,
+        GxB_PLUS_TIMES_INT32,
+        GxB_PLUS_TIMES_INT64,
+        GxB_PLUS_TIMES_FP32,
+        GxB_PLUS_TIMES_FP64,
+        GxB_MIN_PLUS_INT32,
+        GxB_MIN_PLUS_INT64,
+        GxB_MIN_PLUS_FP32,
+        GxB_MIN_PLUS_FP64,
+        GxB_MAX_FIRST_INT32,
+        GxB_MAX_FIRST_INT64,
+        GxB_MAX_FIRST_FP32,
+        GxB_MAX_FIRST_FP64,
+
+        #endif
     } ;
 
     // corresponding data types for the 13 semirings:
@@ -157,10 +177,10 @@ int main (int argc, char **argv)
         GrB_Semiring semiring = Semirings [s] ;
         GrB_Type type = Types [s] ;
 
-        printf ("\n======================================================\n") ;
+//      printf ("\n======================================================\n") ;
         GxB_print (semiring, 3) ;
         GxB_print (type, 3) ;
-        printf ("\n======================================================\n") ;
+//      printf ("\n======================================================\n") ;
 
         //----------------------------------------------------------------------
         // test each problem
@@ -173,21 +193,21 @@ int main (int argc, char **argv)
             // create Cin, M, A, and B
             //------------------------------------------------------------------
 
-            printf ("\n    ----------------------------------------------\n") ;
+//          printf ("\n    ----------------------------------------------\n") ;
             uint64_t seed = t ;
             RANDOM (Cin, type, m [t], n [t], v [t]) ;
             RANDOM (M,   type, m [t], n [t], v [t]) ;
             RANDOM (A,   type, m [t], k [t], v [t]) ;
             RANDOM (B,   type, k [t], n [t], v [t]) ;
 
-            GxB_print (Cin, 3) ;
-            GxB_print (M, 3) ;
-            GxB_print (A, 3) ;
-            GxB_print (B, 3) ;
+            // GxB_print (Cin, 3) ;
+            // GxB_print (M, 3) ;
+            // GxB_print (A, 3) ;
+            // GxB_print (B, 3) ;
 
             for (int mask = 0 ; mask <= 1 ; mask++)
             {
-                printf ("mask:%d\n", mask) ;
+//              printf ("mask:%d\n", mask) ;
                 GrB_Matrix M1 = mask ? M : NULL ;
 
                 //--------------------------------------------------------------
@@ -198,7 +218,7 @@ int main (int argc, char **argv)
 
                 LAGr_Matrix_dup (&C1, Cin) ;
                 LAGr_mxm (C1, M1, NULL, semiring, A, B, NULL) ;
-                GxB_print (C1, 3) ;
+                // GxB_print (C1, 3) ;
 
                 //--------------------------------------------------------------
                 // C2=A*B or C2<M>=A*B with MKL
@@ -208,7 +228,7 @@ int main (int argc, char **argv)
 
                 LAGr_Matrix_dup (&C2, Cin) ;
                 LAGr_mxm (C2, M1, NULL, semiring, A, B, NULL) ;
-                GxB_print (C2, 3) ;
+                // GxB_print (C2, 3) ;
 
                 //--------------------------------------------------------------
                 // compare results

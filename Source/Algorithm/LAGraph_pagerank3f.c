@@ -131,8 +131,7 @@ GrB_Info LAGraph_pagerank3f // PageRank definition
         LAGr_assign (r, NULL, NULL, teleport, GrB_ALL, n, NULL) ;
 
         // r += A'*w
-        LAGr_mxv (r, NULL, GrB_PLUS_FP32, GrB_PLUS_TIMES_SEMIRING_FP32 /* HACK
-            TODO GxB_PLUS_SECOND_FP32 */, A, w, desc_t0) ;
+        LAGr_mxv (r, NULL, GrB_PLUS_FP32, GxB_PLUS_SECOND_FP32, A, w, desc_t0) ;
 
         // t -= r
         LAGr_assign (t, NULL, GrB_MINUS_FP32, r, GrB_ALL, n, NULL) ;

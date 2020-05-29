@@ -2350,3 +2350,1083 @@ max # of threads: 8
 SuiteSparse:GraphBLAS May 13, 2020 (DRAFT)
 Message: /home/davis/com-Orkut.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
 # threads used: 8 time: 18.1484
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sat May 23 21:15:15 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 13, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 0.063273
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sat May 23 21:15:15 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 13, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 0.0660442
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sat May 23 21:15:24 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 13, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 1.5952
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sat May 23 21:15:29 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 13, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 1.6035
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sat May 23 21:17:03 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 13, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 20.9101
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sat May 23 21:18:03 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 13, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 19.8468
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sat May 23 21:20:22 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 13, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 0.0633565
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sat May 23 21:20:23 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 13, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 0.0669013
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sat May 23 21:20:31 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 13, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 1.55656
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sat May 23 21:20:36 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 13, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 1.59761
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sat May 23 21:22:06 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 13, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 19.9744
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sat May 23 21:23:06 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 13, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 20.1016
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sat May 23 21:26:03 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 13, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 0.0635739
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sat May 23 21:26:04 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 13, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 0.0664545
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sat May 23 21:26:12 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 13, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 1.65324
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sat May 23 21:26:17 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 13, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 1.63192
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sat May 23 21:27:53 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 13, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 20.6646
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sat May 23 21:28:55 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 13, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 20.7827
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sat May 23 22:16:03 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 13, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 0.0642893
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sat May 23 22:16:04 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 13, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 0.0671416
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sat May 23 22:16:12 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 13, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 1.53611
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sat May 23 22:16:16 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 13, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 1.53049
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sat May 23 22:17:47 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 13, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 20.2138
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sat May 23 22:18:46 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 13, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 19.5269
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 16:21:41 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 0.0765768
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 16:21:42 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 0.0804256
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 16:21:50 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 1.64244
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 16:21:55 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 1.62614
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 16:23:38 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 22.6254
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 16:24:43 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 21.6633
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 16:53:36 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 0.0655288
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 16:53:36 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 0.0696983
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 16:53:45 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 1.82618
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 16:53:50 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 1.58521
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 16:56:07 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 0.0659007
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 16:56:07 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 0.0730013
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 16:56:16 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 1.88141
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 16:56:22 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 1.88946
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:03:00 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 0.0876377
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:03:00 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 0.0746239
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:03:09 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 1.88149
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:03:15 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 1.71165
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:04:41 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 0.0674552
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:04:42 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 0.0672571
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:04:50 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 1.63967
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:04:55 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 1.58168
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:07:06 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 30.1487
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:08:32 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 28.5975
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:09:21 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 0.0646935
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:09:21 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 0.0672699
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:09:30 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 1.68274
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:09:35 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 1.56294
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:11:10 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 0.0676756
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:11:10 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 0.0664776
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:11:19 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 1.76628
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:11:24 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 1.6955
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:12:39 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 0.065136
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:12:39 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 0.0698919
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:12:47 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 1.63919
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:12:52 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 1.61648
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:16:06 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 0.0654934
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:16:06 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 0.0669301
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:16:15 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 1.61515
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:16:20 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 1.60013
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:18:31 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 0.0650943
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:18:31 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 0.0673956
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:18:40 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 1.62978
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:18:45 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 1.76163
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:20:27 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 0.0651534
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:20:27 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 0.069611
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:20:36 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 1.62452
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:20:41 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 1.61952
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:21:46 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 0.074638
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:21:47 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 0.101443
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:21:57 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 1.98608
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:22:03 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 2.03095
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:22:57 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 0.0661481
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:22:57 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 0.0692485
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:23:06 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 1.73677
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:23:11 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 1.71035
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:24:37 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 0.0659778
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:24:37 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 0.0663609
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:24:46 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 1.61038
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:24:51 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 1.60949
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:27:11 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 0.0659902
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:27:12 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 0.0698271
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:27:20 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 1.71324
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:27:25 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 1.69342
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:28:49 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 0.0662227
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:28:49 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 0.0684382
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:28:58 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 2.01461
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:29:03 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 1.55992
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:32:51 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 0.066473
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:32:51 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 0.0688457
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:33:00 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 2.03798
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:33:05 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 1.59666
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:34:59 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 0.0705628
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:35:00 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 0.0701288
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:35:09 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 2.01557
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:35:14 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 1.53368
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:37:27 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 32.5706
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:38:32 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 21.7236
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:40:10 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 0.0661717
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:40:10 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 0.066862
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:40:19 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 2.01604
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:40:24 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 1.57715
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:42:44 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 0.0651405
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:42:44 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 0.0698029
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:42:52 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 1.55595
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:42:57 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 1.56294
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:44:40 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 22.7762
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 17:45:44 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 21.0667
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 21:39:40 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 0.062459
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 21:39:41 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 0.0668211
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 21:39:49 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 1.56108
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 21:39:53 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 1.53409
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 21:41:35 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 23.1846
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 21:42:38 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 20.9473
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 22:12:37 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 0.0627428
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 22:12:37 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 0.0651735
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 22:12:46 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 1.57802
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 22:12:50 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 1.5264
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 22:14:32 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 22.7766
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 22:15:35 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 20.9407
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 22:16:22 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 0.118402
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 22:16:22 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 0.0987348
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 22:16:31 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 1.73994
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 22:16:37 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 1.6883
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 22:18:25 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 24.5208
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 23:05:07 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 0.0717607
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 23:05:08 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/roadNet-CA.mtx : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 0.0658384
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 23:05:16 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 1.59449
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 23:05:21 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/soc-Pokec.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 1.58708
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 23:07:08 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 8 time: 23.7795
+
+From: /home/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Sun May 24 23:08:15 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS May 24, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 8 time: 22.3082
