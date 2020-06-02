@@ -1,0 +1,62 @@
+( cd build ; cmake  .. ; make --jobs=1 )
+-- CMAKE build type:          Release
+-- CMAKE C Flags release:     -O3 -DNDEBUG
+-- CMAKE compiler ID:         GNU
+-- CMAKE thread library:      -lpthread
+-- CMAKE have pthreads:       1
+-- CMAKE have Win32 pthreads: 
+-- CMAKE have OpenMP:         TRUE
+-- Automatic selection of synchronization method
+-- Using OpenMP to synchronize user threads
+-- CMAKE C flags:  -std=c11 -lm -Wno-pragmas  -O3 -DNDEBUG -fopenmp -DUSER_OPENMP_THREADS  -DHAVE_PTHREADS 
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/davis/sparse/LAGraph/Test/extract/build
+make[1]: Entering directory '/home/davis/sparse/LAGraph/Test/extract/build'
+make[2]: Entering directory '/home/davis/sparse/LAGraph/Test/extract/build'
+make[3]: Entering directory '/home/davis/sparse/LAGraph/Test/extract/build'
+make[3]: Leaving directory '/home/davis/sparse/LAGraph/Test/extract/build'
+[100%] Built target extract_test
+make[2]: Leaving directory '/home/davis/sparse/LAGraph/Test/extract/build'
+make[1]: Leaving directory '/home/davis/sparse/LAGraph/Test/extract/build'
+./build/extract_test
+extract test: n = 67108864
+set     time     2.544358 n/sec    26.375563 million
+wait    time     0.022595 n/sec  2970.039410 million
+
+  67108864x1 GraphBLAS uint64_t vector, sparse by col:
+  X, 67108863 entries
+
+    (1,0)   1
+    (2,0)   2
+    (3,0)   3
+    (4,0)   4
+    (5,0)   5
+    (6,0)   6
+    (7,0)   7
+    (8,0)   8
+    (9,0)   9
+    (10,0)   10
+    (11,0)   11
+    (12,0)   12
+    (13,0)   13
+    (14,0)   14
+    (15,0)   15
+    (16,0)   16
+    (17,0)   17
+    (18,0)   18
+    (19,0)   19
+    (20,0)   20
+    (21,0)   21
+    (22,0)   22
+    (23,0)   23
+    (24,0)   24
+    (25,0)   25
+    (26,0)   26
+    (27,0)   27
+    (28,0)   28
+    (29,0)   29
+    (30,0)   30
+    ...
+check   time     0.310778 n/sec   215.938521 million
+extract time     5.386432 n/sec    12.458871 million
