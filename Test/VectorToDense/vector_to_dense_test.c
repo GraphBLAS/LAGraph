@@ -1,5 +1,6 @@
 //------------------------------------------------------------------------------
-// LAGraph/Test/VectorToDense/vector_to_dense_test.c: test program for LAGraph_Vector_to_dense
+// LAGraph/Test/VectorToDense/vector_to_dense_test.c: test program for
+// LAGraph_Vector_to_dense
 //------------------------------------------------------------------------------
 
 /*
@@ -71,6 +72,16 @@ int main(void) {
     GrB_Vector v_dense_ref = NULL;
 
     LAGRAPH_TRY_CATCH (LAGraph_init());
+    GxB_set (GxB_BURBLE, true) ;
+    char *date, *compile_date, *compile_time ;
+    int version [3] ;
+    GxB_get (GxB_LIBRARY_VERSION, version) ;
+    GxB_get (GxB_LIBRARY_DATE, &date) ;
+    GxB_get (GxB_LIBRARY_COMPILE_DATE, &compile_date) ;
+    GxB_get (GxB_LIBRARY_COMPILE_TIME, &compile_time) ;
+    printf ("Library version %d.%d.%d\n", version [0], version [1], version [2]) ;
+    printf ("Library date: %s\n", date) ;
+    printf ("Compiled at %s on %s\n", compile_time, compile_date) ;
 
     GrB_Index I[] = {4, 0, 1};
     uint64_t X[] = {1, 2, 3};
