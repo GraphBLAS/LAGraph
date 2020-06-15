@@ -34,7 +34,7 @@
 
 //------------------------------------------------------------------------------
 
-#define NTHREAD_LIST 2
+#define NTHREAD_LIST 1
 #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 6
@@ -503,7 +503,7 @@ int main (int argc, char **argv)
             }
             printf ("%g %g\n", maxerr_x3 / xmax, maxerr_4 / xmax) ;
 
-            #if 0
+            #if 1
             printf ("writing results to mtx files:\n") ;
             FILE *f = fopen ("brandes_result.mtx", "w") ;
             LAGraph_mmwrite ((GrB_Matrix) v_brandes, f) ;
@@ -526,7 +526,7 @@ int main (int argc, char **argv)
         GrB_free (&v_batch4) ;
 
         // HACK: just do the first batch
-        // break ;
+        break ;
     }
 
     //--------------------------------------------------------------------------
