@@ -296,7 +296,7 @@ int main (int argc, char **argv)
     }
 
 
-    #if 1
+    #if 0
     {
         char filename [256] ;
         sprintf (filename, "batch_src_%lu.mtx", n) ;
@@ -503,7 +503,7 @@ int main (int argc, char **argv)
             }
             printf ("%g %g\n", maxerr_x3 / xmax, maxerr_4 / xmax) ;
 
-            #if 1
+            #if 0
             printf ("writing results to mtx files:\n") ;
             FILE *f = fopen ("brandes_result.mtx", "w") ;
             LAGraph_mmwrite ((GrB_Matrix) v_brandes, f) ;
@@ -511,7 +511,7 @@ int main (int argc, char **argv)
             #endif
         }
 
-        #if 1
+        #if 0
         {
             char filename [256] ;
             sprintf (filename, "batch_%02ld_%lu.mtx", kstart, n) ;

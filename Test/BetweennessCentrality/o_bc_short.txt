@@ -1,0 +1,67 @@
+./build/gap_bc_test west0067.mtx
+threads to test:  40
+matrix: west0067.mtx
+[.mtx]
+Reading Matrix Market file: west0067.mtx
+read time: 0.000587734 sec
+ [ GrB_apply wait (zombies: 0, pending: 294) (assemble S into T, no casting) (shallow-op) generic 0.000182 sec ]
+ [ GrB_Matrix_nvals 4.64e-07 sec ]
+ [ *_setElement wait (zombies: 0, pending: 32) 1.5e-05 sec ]
+ [ GrB_Matrix_nvals 9.8e-08 sec ]
+ [ GrB_transpose (transpose) 1.66e-05 sec ]
+ [ GrB_Matrix_nvals 6.5e-08 sec ]
+ [ GrB_Matrix_nvals 4.59e-08 sec ]
+ [ GrB_eWiseMult emult 0.000147 sec ]
+ [ GrB_Matrix_nvals 7.68e-08 sec ]
+A is unsymmetric
+transpose time: 0.000197715
+
+========== input graph: nodes: 67 edges: 32
+
+Trial 1 : sources: [ 19 33 13 50 ]
+
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar calloc 1.99e-05 sec ]
+ [ GrB_mxm wait (zombies: 0, pending: 4) generic C<!M>=A*B, saxpy axbflops 17 Mwork 268 (use mask) nthreads 1 ntasks 1 coarse: (gus: 1 hash: 0) fine: (gus: 0 hash: 0) 6.53e-05 sec ]
+ [ GrB_Matrix_nvals 7.8e-08 sec ]
+ [ GrB_apply (shallow-op) 1.21e-05 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z 1.39e-05 sec ]
+ [ GrB_mxm C<!M>=A*B, saxpy axbflops 73 Mwork 268 (use mask) nthreads 1 ntasks 1 coarse: (gus: 1 hash: 0) fine: (gus: 0 hash: 0) 2.97e-05 sec ]
+ [ GrB_Matrix_nvals 8.41e-08 sec ]
+ [ GrB_apply (shallow-op) 5.72e-06 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z 8.11e-06 sec ]
+ [ GrB_mxm C<!M>=A*B, saxpy axbflops 249 Mwork 268 (use mask) nthreads 1 ntasks 1 coarse: (gus: 1 hash: 0) fine: (gus: 0 hash: 0) 3.23e-05 sec ]
+ [ GrB_Matrix_nvals 7.5e-08 sec ]
+ [ GrB_apply (shallow-op) 5.89e-06 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z 7.77e-06 sec ]
+ [ GrB_mxm C<!M>=A*B, saxpy axbflops 515 Mwork 268 (use mask) nthreads 1 ntasks 1 coarse: (gus: 1 hash: 0) fine: (gus: 0 hash: 0) 3.57e-05 sec ]
+ [ GrB_Matrix_nvals 7.8e-08 sec ]
+ [ GrB_apply (shallow-op) 5.58e-06 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z 7.74e-06 sec ]
+ [ GrB_mxm C<!M>=A*B, saxpy axbflops 309 Mwork 268 (use mask) nthreads 1 ntasks 1 coarse: (gus: 1 hash: 0) fine: (gus: 0 hash: 0) 2.58e-05 sec ]
+ [ GrB_Matrix_nvals 7.59e-08 sec ]
+ [ GrB_apply (shallow-op) 5.42e-06 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z 7.65e-06 sec ]
+ [ GrB_mxm C<!M>=A*B, saxpy axbflops 13 Mwork 67 (use mask) nthreads 1 ntasks 1 coarse: (gus: 1 hash: 0) fine: (gus: 0 hash: 0) 2.66e-05 sec ]
+ [ GrB_Matrix_nvals 8.2e-08 sec ]
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar 1.36e-05 sec ]
+ [ GrB_eWiseMult (A dense) (B dense) (mask is easy) masked_emult 6.72e-05 sec ]
+ [ GrB_mxm C<M>=A*B, saxpy axbflops 10 Mwork 25 (use mask) nthreads 1 ntasks 1 coarse: (gus: 1 hash: 0) fine: (gus: 0 hash: 0) 2.59e-05 sec ]
+ [ GrB_eWiseMult (C dense) (B dense) emult (C+=Z via assign) (C dense) Method 23: (C dense) += Z 6.51e-05 sec ]
+ [ GrB_eWiseMult (A dense) (B dense) (mask is easy) masked_emult 5.17e-05 sec ]
+ [ GrB_mxm C<M>=A*B, saxpy axbflops 291 Mwork 119 (use mask) nthreads 1 ntasks 1 coarse: (gus: 1 hash: 0) fine: (gus: 0 hash: 0) 3.43e-05 sec ]
+ [ GrB_eWiseMult (C dense) (B dense) emult (C+=Z via assign) (C dense) Method 23: (C dense) += Z 6.13e-05 sec ]
+ [ GrB_eWiseMult (A dense) (B dense) (mask is easy) masked_emult 5.27e-05 sec ]
+ [ GrB_mxm C<M>=A*B, saxpy axbflops 513 Mwork 55 (use mask) nthreads 1 ntasks 1 coarse: (gus: 1 hash: 0) fine: (gus: 0 hash: 0) 3.45e-05 sec ]
+ [ GrB_eWiseMult (C dense) (B dense) emult (C+=Z via assign) (C dense) Method 23: (C dense) += Z 6.12e-05 sec ]
+ [ GrB_eWiseMult (A dense) (B dense) (mask is easy) masked_emult 5.23e-05 sec ]
+ [ GrB_mxm C<M>=A*B, saxpy axbflops 249 Mwork 16 (use mask) nthreads 1 ntasks 1 coarse: (gus: 1 hash: 0) fine: (gus: 0 hash: 0) 2.83e-05 sec ]
+ [ GrB_eWiseMult (C dense) (B dense) emult (C+=Z via assign) (C dense) Method 23: (C dense) += Z 5.99e-05 sec ]
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar 1.16e-05 sec ]
+ [ GrB_reduce (C+=Z via assign) (C dense) Method 23: (C dense) += Z (Z dense) 2.53e-05 sec ]
+Batch v4 time 40:       0.0012 (sec)
+
+ntrials: 1
+
+
+Ave (Batch4)  40:      0.001 sec, rate      0.027
+./build/gap_bc_test: all tests passed
