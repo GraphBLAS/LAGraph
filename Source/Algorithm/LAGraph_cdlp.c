@@ -267,7 +267,7 @@ GrB_Info LAGraph_cdlp
     }
     for (GrB_Index i = 0; i < n; i++) {
         I[i] = i;
-        X[i] = i+1;
+        X[i] = i;
     }
     LAGRAPH_OK (GrB_Matrix_new (&L, GrB_UINT64, n, n)) ;
     LAGRAPH_OK (GrB_Matrix_build (L, I, I, X, n, GrB_PLUS_UINT64)) ;
