@@ -12,7 +12,7 @@
 //  mxm_demo
 
 #include "LAGraph.h"
-#include "../../../GraphBLAS/Source/GB_Global.h"
+#include "GB_Global.h"
 
 #define LAGRAPH_FREE_ALL    \
     (*ok) = false ;         \
