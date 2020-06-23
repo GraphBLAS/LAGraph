@@ -141,7 +141,6 @@ GrB_Info LAGraph_pagerank3f // PageRank definition
 
         // rdiff = sum (t)
         LAGr_reduce (&rdiff, NULL, GxB_PLUS_FP32_MONOID, t, NULL) ;
-        printf ("rdiff %g\n", rdiff) ;
     }
 
     //--------------------------------------------------------------------------

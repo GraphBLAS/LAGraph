@@ -1,0 +1,291 @@
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+sources: /home/faculty/davis/GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 57.7634 sec
+A is symmetric
+transpose time: 72.098
+
+========== input graph: nodes: 134217726 edges: 64
+
+Trial 1 : sources: [ 2338012 31997659 23590940 43400604 ]
+
+Batch v4 time 40:      43.2207 (sec)
+
+ntrials: 1
+
+
+Ave (Batch4)  40:     43.221 sec, rate      0.000
+./build/gap_bc_test: all tests passed
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+sources: /home/faculty/davis/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 65.8202 sec
+A is symmetric
+transpose time: 80.5998
+
+========== input graph: nodes: 134217728 edges: 64
+
+Trial 1 : sources: [ 27691419 121280314 2413431 37512113 ]
+
+Batch v4 time 40:      68.0931 (sec)
+
+ntrials: 1
+
+
+Ave (Batch4)  40:     68.093 sec, rate      0.000
+./build/gap_bc_test: all tests passed
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+sources: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter_sources.mtx
+read time: 17.5781 sec
+A is unsymmetric
+transpose time: 21.1054
+
+========== input graph: nodes: 61578415 edges: 64
+
+Trial 1 : sources: [ 12441072 54488257 25451915 57714473 ]
+
+Batch v4 time 40:      15.3322 (sec)
+
+ntrials: 1
+
+
+Ave (Batch4)  40:     15.332 sec, rate      0.000
+./build/gap_bc_test: all tests passed
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+sources: /home/faculty/davis/GAP/GAP-web/GAP-web_sources.mtx
+read time: 30.0123 sec
+A is unsymmetric
+transpose time: 5.31585
+
+========== input graph: nodes: 50636151 edges: 64
+
+Trial 1 : sources: [ 10219452 44758211 890671 13843756 ]
+
+Batch v4 time 40:       7.8525 (sec)
+
+ntrials: 1
+
+
+Ave (Batch4)  40:      7.852 sec, rate      0.000
+./build/gap_bc_test: all tests passed
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+sources: /home/faculty/davis/GAP/GAP-road/GAP-road_sources.mtx
+read time: 0.767118 sec
+A is symmetric
+transpose time: 0.726305
+
+========== input graph: nodes: 23947347 edges: 64
+
+Trial 1 : sources: [ 4795720 21003853 417968 6496511 ]
+
+Batch v4 time 40:      62.4298 (sec)
+
+ntrials: 1
+
+
+Ave (Batch4)  40:     62.430 sec, rate      0.000
+./build/gap_bc_test: all tests passed
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+original # of edges: 4223264644
+Matrix has 71143742 empty rows
+Matrix has 71143742 empty cols
+
+==========input graph: nodes: 134217726 edges: 4223264644
+diag entries added: 71143742
+read time: 206.567 sec
+# of trials: 16
+chunk: 65536
+
+Method 3f: with MKL: 0
+info 0
+iters 7
+warmup (3f):     24.601 (threads: 40) MKL: 0
+
+Method 3f: with MKL: 0
+
+--------------------------- nthreads: 40
+trial:  0 time:    24.5986 sec
+trial:  1 time:    24.5786 sec
+trial:  2 time:    24.6116 sec
+trial:  3 time:    24.6125 sec
+trial:  4 time:    24.6204 sec
+trial:  5 time:    24.6065 sec
+trial:  6 time:    24.6163 sec
+trial:  7 time:    24.6078 sec
+trial:  8 time:    24.6003 sec
+trial:  9 time:    24.6058 sec
+trial: 10 time:    24.5715 sec
+trial: 11 time:    24.5808 sec
+trial: 12 time:    24.6341 sec
+trial: 13 time:    24.6070 sec
+trial: 14 time:    24.5973 sec
+trial: 15 time:    24.6011 sec
+3f: 40: avg time:     24.603 (sec), rate:   1201.589 iters: 7
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+original # of edges: 4294966740
+
+==========input graph: nodes: 134217728 edges: 4294966740
+diag entries added: 0
+read time: 201.592 sec
+# of trials: 16
+chunk: 65536
+
+Method 3f: with MKL: 0
+info 0
+iters 6
+warmup (3f):     27.764 (threads: 40) MKL: 0
+
+Method 3f: with MKL: 0
+
+--------------------------- nthreads: 40
+trial:  0 time:    27.7651 sec
+trial:  1 time:    27.7707 sec
+trial:  2 time:    27.7598 sec
+trial:  3 time:    27.7979 sec
+trial:  4 time:    27.8120 sec
+trial:  5 time:    27.7664 sec
+trial:  6 time:    27.8222 sec
+trial:  7 time:    27.7681 sec
+trial:  8 time:    27.7581 sec
+trial:  9 time:    27.7688 sec
+trial: 10 time:    27.7718 sec
+trial: 11 time:    27.7699 sec
+trial: 12 time:    27.7614 sec
+trial: 13 time:    27.7811 sec
+trial: 14 time:    27.7690 sec
+trial: 15 time:    27.8124 sec
+3f: 40: avg time:     27.778 (sec), rate:    927.691 iters: 6
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+original # of edges: 1468364884
+Matrix has 21475137 empty rows
+Matrix has 25889280 empty cols
+
+==========input graph: nodes: 61578415 edges: 1468364884
+diag entries added: 27438232
+read time: 65.0031 sec
+# of trials: 16
+chunk: 65536
+
+Method 3f: with MKL: 0
+info 0
+iters 22
+warmup (3f):     19.051 (threads: 40) MKL: 0
+
+Method 3f: with MKL: 0
+
+--------------------------- nthreads: 40
+trial:  0 time:    19.4800 sec
+trial:  1 time:    19.5989 sec
+trial:  2 time:    19.0395 sec
+trial:  3 time:    18.9459 sec
+trial:  4 time:    18.9303 sec
+trial:  5 time:    18.9390 sec
+trial:  6 time:    18.9424 sec
+trial:  7 time:    18.9579 sec
+trial:  8 time:    18.9557 sec
+trial:  9 time:    18.9394 sec
+trial: 10 time:    18.9339 sec
+trial: 11 time:    18.9442 sec
+trial: 12 time:    18.9405 sec
+trial: 13 time:    18.9387 sec
+trial: 14 time:    18.9460 sec
+trial: 15 time:    18.9371 sec
+3f: 40: avg time:     19.023 (sec), rate:   1698.148 iters: 22
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+original # of edges: 1930292948
+Matrix has 7236618 empty rows
+Matrix has 438 empty cols
+
+==========input graph: nodes: 50636151 edges: 1930292948
+diag entries added: 7236964
+read time: 39.8128 sec
+# of trials: 16
+chunk: 65536
+
+Method 3f: with MKL: 0
+info 0
+iters 30
+warmup (3f):      9.464 (threads: 40) MKL: 0
+
+Method 3f: with MKL: 0
+
+--------------------------- nthreads: 40
+trial:  0 time:     9.4620 sec
+trial:  1 time:     9.4637 sec
+trial:  2 time:     9.4723 sec
+trial:  3 time:     9.4756 sec
+trial:  4 time:     9.4697 sec
+trial:  5 time:     9.4576 sec
+trial:  6 time:     9.4606 sec
+trial:  7 time:     9.4550 sec
+trial:  8 time:     9.4602 sec
+trial:  9 time:     9.4509 sec
+trial: 10 time:     9.4693 sec
+trial: 11 time:     9.4596 sec
+trial: 12 time:     9.4636 sec
+trial: 13 time:     9.4628 sec
+trial: 14 time:     9.4617 sec
+trial: 15 time:     9.4692 sec
+3f: 40: avg time:      9.463 (sec), rate:   6119.267 iters: 30
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+original # of edges: 57708624
+
+==========input graph: nodes: 23947347 edges: 57708624
+diag entries added: 0
+read time: 1.88456 sec
+# of trials: 16
+chunk: 65536
+
+Method 3f: with MKL: 0
+info 0
+iters 39
+warmup (3f):      1.460 (threads: 40) MKL: 0
+
+Method 3f: with MKL: 0
+
+--------------------------- nthreads: 40
+trial:  0 time:     1.4538 sec
+trial:  1 time:     1.4576 sec
+trial:  2 time:     1.4524 sec
+trial:  3 time:     1.4609 sec
+trial:  4 time:     1.4499 sec
+trial:  5 time:     1.4456 sec
+trial:  6 time:     1.4568 sec
+trial:  7 time:     1.4574 sec
+trial:  8 time:     1.4648 sec
+trial:  9 time:     1.4631 sec
+trial: 10 time:     1.4576 sec
+trial: 11 time:     1.4638 sec
+trial: 12 time:     1.4574 sec
+trial: 13 time:     1.4643 sec
+trial: 14 time:     1.4568 sec
+trial: 15 time:     1.4554 sec
+3f: 40: avg time:      1.457 (sec), rate:   1544.331 iters: 39

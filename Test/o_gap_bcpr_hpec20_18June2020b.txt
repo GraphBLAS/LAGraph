@@ -1,0 +1,591 @@
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+sources: /home/faculty/davis/GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 35.8168 sec
+A is symmetric
+transpose time: 75.5745
+
+========== input graph: nodes: 134217726 edges: 64
+
+Trial 1 : sources: [ 2338012 31997659 23590940 43400604 ]
+
+Batch v4 time 40:      42.7850 (sec)
+
+Trial 2 : sources: [ 75337937 169867 104041220 94177942 ]
+
+Batch v4 time 40:      39.9298 (sec)
+
+Trial 3 : sources: [ 32871357 56230002 69883037 9346345 ]
+
+Batch v4 time 40:      42.0485 (sec)
+
+Trial 4 : sources: [ 48915358 122571173 6183279 86323663 ]
+
+Batch v4 time 40:      40.5608 (sec)
+
+Trial 5 : sources: [ 106725780 92389938 16210738 59816700 ]
+
+Batch v4 time 40:      43.0914 (sec)
+
+Trial 6 : sources: [ 111669929 102831411 113384800 43872564 ]
+
+Batch v4 time 40:      41.6104 (sec)
+
+Trial 7 : sources: [ 80508827 26105648 8807516 118452455 ]
+
+Batch v4 time 40:      43.1210 (sec)
+
+Trial 8 : sources: [ 121818859 42361928 29493053 98461503 ]
+
+Batch v4 time 40:      38.7219 (sec)
+
+Trial 9 : sources: [ 71931337 103808468 4092345 115276241 ]
+
+Batch v4 time 40:      39.4577 (sec)
+
+Trial 10 : sources: [ 4649343 76656189 31312001 111334127 ]
+
+Batch v4 time 40:      43.2259 (sec)
+
+Trial 11 : sources: [ 100962918 41823215 22631240 42848461 ]
+
+Batch v4 time 40:      43.3604 (sec)
+
+Trial 12 : sources: [ 79485148 106818742 73347974 78848445 ]
+
+Batch v4 time 40:      37.1436 (sec)
+
+Trial 13 : sources: [ 109920510 121492133 101037296 15438600 ]
+
+Batch v4 time 40:      40.6943 (sec)
+
+Trial 14 : sources: [ 4584784 124503845 87241743 108297008 ]
+
+Batch v4 time 40:      47.2333 (sec)
+
+Trial 15 : sources: [ 33955082 79934823 8608481 82435063 ]
+
+Batch v4 time 40:      42.8758 (sec)
+
+Trial 16 : sources: [ 46579271 515421 121530467 127978736 ]
+
+Batch v4 time 40:      40.4016 (sec)
+
+ntrials: 16
+
+
+Ave (Batch4)  40:     41.641 sec, rate      0.000
+./build/gap_bc_test: all tests passed
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+sources: /home/faculty/davis/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 66.9169 sec
+A is symmetric
+transpose time: 81.1101
+
+========== input graph: nodes: 134217728 edges: 64
+
+Trial 1 : sources: [ 27691419 121280314 2413431 37512113 ]
+
+Batch v4 time 40:      62.7576 (sec)
+
+Trial 2 : sources: [ 38390877 56651037 128461248 33029842 ]
+
+Batch v4 time 40:      63.1614 (sec)
+
+Trial 3 : sources: [ 71406328 117872827 24351938 15444519 ]
+
+Batch v4 time 40:      62.3599 (sec)
+
+Trial 4 : sources: [ 127526281 112279428 13631649 110379302 ]
+
+Batch v4 time 40:      60.8478 (sec)
+
+Trial 5 : sources: [ 44800623 77768193 175347 107397389 ]
+
+Batch v4 time 40:      61.6523 (sec)
+
+Trial 6 : sources: [ 43457209 97215940 73575165 44449715 ]
+
+Batch v4 time 40:      63.0493 (sec)
+
+Trial 7 : sources: [ 33931724 55526610 14422051 58043873 ]
+
+Batch v4 time 40:      60.9752 (sec)
+
+Trial 8 : sources: [ 72137329 9647840 15940695 14209952 ]
+
+Batch v4 time 40:      65.0122 (sec)
+
+Trial 9 : sources: [ 49020883 28901138 50493273 49150069 ]
+
+Batch v4 time 40:      62.1876 (sec)
+
+Trial 10 : sources: [ 126525082 6382740 89108297 9239735 ]
+
+Batch v4 time 40:      63.7010 (sec)
+
+Trial 11 : sources: [ 110168548 95370259 116653530 123410703 ]
+
+Batch v4 time 40:      62.3913 (sec)
+
+Trial 12 : sources: [ 16733665 49030282 108545121 99095665 ]
+
+Batch v4 time 40:      63.0721 (sec)
+
+Trial 13 : sources: [ 133850077 63499301 21541382 6230751 ]
+
+Batch v4 time 40:      63.6740 (sec)
+
+Trial 14 : sources: [ 89077456 70392765 6670455 61746271 ]
+
+Batch v4 time 40:      62.0632 (sec)
+
+Trial 15 : sources: [ 83349535 115272184 20129908 106148553 ]
+
+Batch v4 time 40:      61.0305 (sec)
+
+Trial 16 : sources: [ 117042375 71431187 45287808 107702120 ]
+
+Batch v4 time 40:      60.9222 (sec)
+
+ntrials: 16
+
+
+Ave (Batch4)  40:     62.429 sec, rate      0.000
+./build/gap_bc_test: all tests passed
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+sources: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter_sources.mtx
+read time: 16.7986 sec
+A is unsymmetric
+transpose time: 21.1292
+
+========== input graph: nodes: 61578415 edges: 64
+
+Trial 1 : sources: [ 12441072 54488257 25451915 57714473 ]
+
+Batch v4 time 40:      13.8229 (sec)
+
+Trial 2 : sources: [ 14839494 32081104 52957357 50444380 ]
+
+Batch v4 time 40:      18.6578 (sec)
+
+Trial 3 : sources: [ 49590701 20127816 34939333 48251001 ]
+
+Batch v4 time 40:      14.3917 (sec)
+
+Trial 4 : sources: [ 19524253 43676726 33055508 15244687 ]
+
+Batch v4 time 40:      13.9556 (sec)
+
+Trial 5 : sources: [ 24946738 6479472 26077682 22023875 ]
+
+Batch v4 time 40:      16.5906 (sec)
+
+Trial 6 : sources: [ 22081915 40034162 49496014 42847507 ]
+
+Batch v4 time 40:      15.9921 (sec)
+
+Trial 7 : sources: [ 52409557 55445388 22028097 48766648 ]
+
+Batch v4 time 40:      14.4211 (sec)
+
+Trial 8 : sources: [ 44521241 60135542 28528671 9678012 ]
+
+Batch v4 time 40:      18.0380 (sec)
+
+Trial 9 : sources: [ 40020306 31625735 37446892 51788952 ]
+
+Batch v4 time 40:      13.5503 (sec)
+
+Trial 10 : sources: [ 52584255 20346696 48387909 37337427 ]
+
+Batch v4 time 40:      13.2241 (sec)
+
+Trial 11 : sources: [ 50501084 30130061 41185893 56495703 ]
+
+Batch v4 time 40:      13.8812 (sec)
+
+Trial 12 : sources: [ 45663305 33359460 48143058 33291513 ]
+
+Batch v4 time 40:      15.1680 (sec)
+
+Trial 13 : sources: [ 53461445 29340610 34148498 49171806 ]
+
+Batch v4 time 40:      14.1535 (sec)
+
+Trial 14 : sources: [ 35550696 14521507 51633218 46823382 ]
+
+Batch v4 time 40:      14.1670 (sec)
+
+Trial 15 : sources: [ 19396273 19871750 36862677 49539126 ]
+
+Batch v4 time 40:      15.7723 (sec)
+
+Trial 16 : sources: [ 34016452 36567395 55487793 14391370 ]
+
+Batch v4 time 40:      14.5405 (sec)
+
+ntrials: 16
+
+
+Ave (Batch4)  40:     15.020 sec, rate      0.000
+./build/gap_bc_test: all tests passed
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+sources: /home/faculty/davis/GAP/GAP-web/GAP-web_sources.mtx
+read time: 26.3431 sec
+A is unsymmetric
+transpose time: 5.33865
+
+========== input graph: nodes: 50636151 edges: 64
+
+Trial 1 : sources: [ 10219452 44758211 890671 13843756 ]
+
+Batch v4 time 40:       7.8933 (sec)
+
+Trial 2 : sources: [ 14168062 20906930 12189584 26352335 ]
+
+Batch v4 time 40:       7.5380 (sec)
+
+Trial 3 : sources: [ 43500686 8987024 5699762 41436455 ]
+
+Batch v4 time 40:       7.5714 (sec)
+
+Trial 4 : sources: [ 5030727 40735218 16533563 28700166 ]
+
+Batch v4 time 40:      10.1756 (sec)
+
+Trial 5 : sources: [ 64711 39634750 16037779 27152739 ]
+
+Batch v4 time 40:       9.8607 (sec)
+
+Trial 6 : sources: [ 16404061 20491963 5322423 21420953 ]
+
+Batch v4 time 40:      10.3412 (sec)
+
+Trial 7 : sources: [ 26622109 5882875 18091040 10665896 ]
+
+Batch v4 time 40:       7.7522 (sec)
+
+Trial 8 : sources: [ 18634422 18138715 2355535 32885205 ]
+
+Batch v4 time 40:       7.4820 (sec)
+
+Trial 9 : sources: [ 40657440 35196167 45544426 6175519 ]
+
+Batch v4 time 40:       7.3487 (sec)
+
+Trial 10 : sources: [ 40058318 50626230 36571019 49397052 ]
+
+Batch v4 time 40:       9.5132 (sec)
+
+Trial 11 : sources: [ 23434265 2299444 32873823 25978282 ]
+
+Batch v4 time 40:       7.4643 (sec)
+
+Trial 12 : sources: [ 2461715 22787314 30759947 7428894 ]
+
+Batch v4 time 40:       5.3320 (sec)
+
+Trial 13 : sources: [ 39173870 43194209 26361509 39747211 ]
+
+Batch v4 time 40:       0.5872 (sec)
+
+Trial 14 : sources: [ 30670029 41483033 9358666 9945008 ]
+
+Batch v4 time 40:       9.8326 (sec)
+
+Trial 15 : sources: [ 3355244 33831269 45124744 16137877 ]
+
+Batch v4 time 40:       7.6765 (sec)
+
+Trial 16 : sources: [ 11235448 37509144 27402414 39546083 ]
+
+Batch v4 time 40:       9.4282 (sec)
+
+ntrials: 16
+
+
+Ave (Batch4)  40:      7.862 sec, rate      0.000
+./build/gap_bc_test: all tests passed
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+sources: /home/faculty/davis/GAP/GAP-road/GAP-road_sources.mtx
+read time: 0.882018 sec
+A is symmetric
+transpose time: 0.697717
+
+========== input graph: nodes: 23947347 edges: 64
+
+Trial 1 : sources: [ 4795720 21003853 417968 6496511 ]
+
+Batch v4 time 40:      62.3415 (sec)
+
+Trial 2 : sources: [ 6648699 9811073 22247478 5720252 ]
+
+Batch v4 time 40:      61.9150 (sec)
+
+Trial 3 : sources: [ 12366459 20413729 4217374 2674749 ]
+
+Batch v4 time 40:      62.2681 (sec)
+
+Trial 4 : sources: [ 22085557 19445040 2360788 19115968 ]
+
+Batch v4 time 40:      61.9430 (sec)
+
+Trial 5 : sources: [ 7758767 13468234 30367 18599547 ]
+
+Batch v4 time 40:      60.5844 (sec)
+
+Trial 6 : sources: [ 7526108 16836280 12742067 7697995 ]
+
+Batch v4 time 40:      60.8461 (sec)
+
+Trial 7 : sources: [ 5876443 9616340 2497673 10052290 ]
+
+Batch v4 time 40:      61.1463 (sec)
+
+Trial 8 : sources: [ 12493057 1670855 2760679 2460941 ]
+
+Batch v4 time 40:      61.1324 (sec)
+
+Trial 9 : sources: [ 8489650 5005225 8744645 8512023 ]
+
+Batch v4 time 40:      61.5948 (sec)
+
+Trial 10 : sources: [ 21912165 1105390 15432163 1600177 ]
+
+Batch v4 time 40:      62.5762 (sec)
+
+Trial 11 : sources: [ 19079469 16516637 20202566 21372803 ]
+
+Batch v4 time 40:      62.4146 (sec)
+
+Trial 12 : sources: [ 2898009 8491277 18798317 23757560 ]
+
+Batch v4 time 40:      61.0260 (sec)
+
+Trial 13 : sources: [ 17161819 23180739 10997085 3730630 ]
+
+Batch v4 time 40:      61.6324 (sec)
+
+Trial 14 : sources: [ 1079068 15426822 12190925 1155218 ]
+
+Batch v4 time 40:      60.9596 (sec)
+
+Trial 15 : sources: [ 10693488 14434835 19963339 3486185 ]
+
+Batch v4 time 40:      60.8957 (sec)
+
+Trial 16 : sources: [ 18383269 20269908 12370764 7843140 ]
+
+Batch v4 time 40:      60.8035 (sec)
+
+ntrials: 16
+
+
+Ave (Batch4)  40:     61.505 sec, rate      0.000
+./build/gap_bc_test: all tests passed
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+original # of edges: 4223264644
+Matrix has 71143742 empty rows
+Matrix has 71143742 empty cols
+
+==========input graph: nodes: 134217726 edges: 4223264644
+diag entries added: 71143742
+read time: 211.672 sec
+# of trials: 16
+chunk: 65536
+
+Method 3f: with MKL: 0
+info 0
+iters 7
+warmup (3f):     24.270 (threads: 40) MKL: 0
+
+Method 3f: with MKL: 0
+
+--------------------------- nthreads: 40
+trial:  0 time:    24.3352 sec
+trial:  1 time:    24.2846 sec
+trial:  2 time:    24.2909 sec
+trial:  3 time:    24.2923 sec
+trial:  4 time:    24.2742 sec
+trial:  5 time:    24.2827 sec
+trial:  6 time:    24.2684 sec
+trial:  7 time:    24.2671 sec
+trial:  8 time:    24.2636 sec
+trial:  9 time:    24.2643 sec
+trial: 10 time:    24.2844 sec
+trial: 11 time:    24.2648 sec
+trial: 12 time:    24.2752 sec
+trial: 13 time:    24.2819 sec
+trial: 14 time:    24.2776 sec
+trial: 15 time:    24.2878 sec
+3f: 40: avg time:     24.281 (sec), rate:   1217.533 iters: 7
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+original # of edges: 4294966740
+
+==========input graph: nodes: 134217728 edges: 4294966740
+diag entries added: 0
+read time: 182.333 sec
+# of trials: 16
+chunk: 65536
+
+Method 3f: with MKL: 0
+info 0
+iters 6
+warmup (3f):     27.630 (threads: 40) MKL: 0
+
+Method 3f: with MKL: 0
+
+--------------------------- nthreads: 40
+trial:  0 time:    27.6635 sec
+trial:  1 time:    27.5950 sec
+trial:  2 time:    27.6117 sec
+trial:  3 time:    27.5989 sec
+trial:  4 time:    27.6029 sec
+trial:  5 time:    27.6030 sec
+trial:  6 time:    27.5987 sec
+trial:  7 time:    27.6044 sec
+trial:  8 time:    27.5976 sec
+trial:  9 time:    27.6047 sec
+trial: 10 time:    27.8375 sec
+trial: 11 time:    27.9735 sec
+trial: 12 time:    27.6022 sec
+trial: 13 time:    27.5979 sec
+trial: 14 time:    27.6136 sec
+trial: 15 time:    27.6083 sec
+3f: 40: avg time:     27.645 (sec), rate:    932.183 iters: 6
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+original # of edges: 1468364884
+Matrix has 21475137 empty rows
+Matrix has 25889280 empty cols
+
+==========input graph: nodes: 61578415 edges: 1468364884
+diag entries added: 27438232
+read time: 64.7663 sec
+# of trials: 16
+chunk: 65536
+
+Method 3f: with MKL: 0
+info 0
+iters 22
+warmup (3f):     17.332 (threads: 40) MKL: 0
+
+Method 3f: with MKL: 0
+
+--------------------------- nthreads: 40
+trial:  0 time:    17.3400 sec
+trial:  1 time:    17.3577 sec
+trial:  2 time:    17.3441 sec
+trial:  3 time:    17.3365 sec
+trial:  4 time:    17.3433 sec
+trial:  5 time:    17.3344 sec
+trial:  6 time:    17.3857 sec
+trial:  7 time:    17.3609 sec
+trial:  8 time:    17.3651 sec
+trial:  9 time:    17.3440 sec
+trial: 10 time:    17.3435 sec
+trial: 11 time:    17.3481 sec
+trial: 12 time:    17.3495 sec
+trial: 13 time:    17.3302 sec
+trial: 14 time:    17.3326 sec
+trial: 15 time:    17.3437 sec
+3f: 40: avg time:     17.347 (sec), rate:   1862.177 iters: 22
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+original # of edges: 1930292948
+Matrix has 7236618 empty rows
+Matrix has 438 empty cols
+
+==========input graph: nodes: 50636151 edges: 1930292948
+diag entries added: 7236964
+read time: 39.7897 sec
+# of trials: 16
+chunk: 65536
+
+Method 3f: with MKL: 0
+info 0
+iters 30
+warmup (3f):      8.923 (threads: 40) MKL: 0
+
+Method 3f: with MKL: 0
+
+--------------------------- nthreads: 40
+trial:  0 time:     8.9185 sec
+trial:  1 time:     8.9194 sec
+trial:  2 time:     8.9149 sec
+trial:  3 time:     8.9172 sec
+trial:  4 time:     8.9199 sec
+trial:  5 time:     8.9226 sec
+trial:  6 time:     8.9135 sec
+trial:  7 time:     8.9183 sec
+trial:  8 time:     8.9139 sec
+trial:  9 time:     8.9125 sec
+trial: 10 time:     8.9169 sec
+trial: 11 time:     8.9258 sec
+trial: 12 time:     8.9243 sec
+trial: 13 time:     8.9214 sec
+trial: 14 time:     8.9256 sec
+trial: 15 time:     8.9213 sec
+3f: 40: avg time:      8.919 (sec), rate:   6492.659 iters: 30
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+original # of edges: 57708624
+
+==========input graph: nodes: 23947347 edges: 57708624
+diag entries added: 0
+read time: 1.91232 sec
+# of trials: 16
+chunk: 65536
+
+Method 3f: with MKL: 0
+info 0
+iters 39
+warmup (3f):      1.423 (threads: 40) MKL: 0
+
+Method 3f: with MKL: 0
+
+--------------------------- nthreads: 40
+trial:  0 time:     1.4054 sec
+trial:  1 time:     1.4087 sec
+trial:  2 time:     1.4096 sec
+trial:  3 time:     1.4195 sec
+trial:  4 time:     1.4077 sec
+trial:  5 time:     1.4072 sec
+trial:  6 time:     1.4146 sec
+trial:  7 time:     1.4230 sec
+trial:  8 time:     1.4193 sec
+trial:  9 time:     1.4141 sec
+trial: 10 time:     1.4239 sec
+trial: 11 time:     1.4124 sec
+trial: 12 time:     1.4185 sec
+trial: 13 time:     1.4107 sec
+trial: 14 time:     1.4231 sec
+trial: 15 time:     1.4153 sec
+3f: 40: avg time:      1.415 (sec), rate:   1591.041 iters: 39

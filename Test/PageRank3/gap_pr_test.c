@@ -39,7 +39,7 @@ See LICENSE file for more details.
 // usage:
 // p3test < in > out
 
-#define NTHREAD_LIST 2
+#define NTHREAD_LIST 1
 #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 6
@@ -70,7 +70,7 @@ int main (int argc, char **argv)
     GrB_Vector PR = NULL, d_out = NULL, d_in = NULL ;
     float *dout = NULL ;
     LAGRAPH_OK (LAGraph_init ( )) ;
-    LAGRAPH_OK (GxB_set (GxB_BURBLE, true)) ;
+    LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
     GB_Global_hack_set (0) ;
 
     int nt = NTHREAD_LIST ;
@@ -261,7 +261,7 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     // the GAP benchmark requires 16 trials
-    int ntrials = 2 ; // 16 ;
+    int ntrials = 16 ;
     printf ("# of trials: %d\n", ntrials) ;
 
     float tol = 1e-4 ;
@@ -277,7 +277,7 @@ int main (int argc, char **argv)
 
     LAGraph_set_nthreads (nthreads_max) ;
 
-for (int hack = 0 ; hack <= 1 ; hack++)
+for (int hack = 0 ; hack <= 0 ; hack++)
 {
     printf ("\nMethod 3f: with MKL: %d\n", hack) ;
     GB_Global_hack_set (hack) ;
@@ -427,7 +427,7 @@ for (int hack = 0 ; hack <= 1 ; hack++)
     //--------------------------------------------------------------------------
 
 #if 1
-for (int hack = 0 ; hack <= 1 ; hack++)
+for (int hack = 0 ; hack <= 0 ; hack++)
 {
     printf ("\nMethod 3f: with MKL: %d\n", hack) ;
     GB_Global_hack_set (hack) ;
@@ -466,7 +466,7 @@ for (int hack = 0 ; hack <= 1 ; hack++)
     // f = fopen ("rank3f.mtx", "w") ;
     // LAGraph_mmwrite (PR, f) ;
     // fclose (f) ;
-    GxB_print (PR, GxB_SHORT) ;
+    // GxB_print (PR, GxB_SHORT) ;
 }
 #endif
 
