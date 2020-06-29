@@ -12,7 +12,6 @@
 //  mxm_demo
 
 #include "LAGraph.h"
-#include "GB_Global.h"
 
 #define LAGRAPH_FREE_ALL    \
     (*ok) = false ;         \
@@ -214,7 +213,7 @@ int main (int argc, char **argv)
                 // C1=A*B or C1<M>=A*B without MKL
                 //--------------------------------------------------------------
 
-                GB_Global_hack_set (0) ;
+                GxB_set (GxB_MKL, false) ;
 
                 LAGr_Matrix_dup (&C1, Cin) ;
                 LAGr_mxm (C1, M1, NULL, semiring, A, B, NULL) ;
@@ -224,7 +223,7 @@ int main (int argc, char **argv)
                 // C2=A*B or C2<M>=A*B with MKL
                 //--------------------------------------------------------------
 
-                GB_Global_hack_set (1) ;
+                GxB_set (GxB_MKL, true) ;
 
                 LAGr_Matrix_dup (&C2, Cin) ;
                 LAGr_mxm (C2, M1, NULL, semiring, A, B, NULL) ;
