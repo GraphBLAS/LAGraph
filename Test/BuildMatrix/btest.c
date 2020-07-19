@@ -46,7 +46,7 @@
     GrB_Info this_info = method ;                                           \
     if (! (this_info == GrB_SUCCESS || this_info == GrB_NO_VALUE))          \
     {                                                                       \
-        printf ("btest failure: [%d] %s\n", this_info, GrB_error ( )) ;     \
+        printf ("btest failure: [%d]\n", this_info) ;                       \
         FREE_ALL ;                                                          \
         return (this_info) ;                                                \
     }                                                                       \

@@ -39,8 +39,11 @@ See LICENSE file for more details.
 // usage:
 // p3test < in > out
 
-#define NTHREAD_LIST 1
-#define THREAD_LIST 0
+// #define NTHREAD_LIST 1
+// #define THREAD_LIST 0
+
+#define NTHREAD_LIST 4
+#define THREAD_LIST 40, 20, 10, 1
 
 // #define NTHREAD_LIST 6
 // #define THREAD_LIST 64, 32, 24, 12, 8, 4
@@ -70,7 +73,7 @@ int main (int argc, char **argv)
     GrB_Vector PR = NULL, d_out = NULL, d_in = NULL ;
     float *dout = NULL ;
     LAGRAPH_OK (LAGraph_init ( )) ;
-    LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
+    LAGRAPH_OK (GxB_set (GxB_BURBLE, true)) ;
     GB_Global_hack_set (0) ;
 
     int nt = NTHREAD_LIST ;
@@ -261,7 +264,7 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     // the GAP benchmark requires 16 trials
-    int ntrials = 16 ;
+    int ntrials = 4 ;
     printf ("# of trials: %d\n", ntrials) ;
 
     float tol = 1e-4 ;

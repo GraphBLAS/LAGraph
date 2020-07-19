@@ -32,7 +32,6 @@
 
 */
 
-// TODO: need to add an error reporting mechanism, like GrB_error.
 // TODO: need to add a GrB_Descriptor to all LAGraph functions.
 
 //------------------------------------------------------------------------------
@@ -1003,9 +1002,7 @@ GrB_Info LAGraph_mmread
                     printf ("LAGraph_mmread: I/O error on indices\n") ;
                     return (GrB_INVALID_VALUE) ;
                 }
-                // convert from 1-based to 0-based.  If zero, the value
-                // underflows to UINT64_MAX, and will be reported as such
-                // by GrB_error ( ).  TODO: use a better error report.
+                // convert from 1-based to 0-based.
                 i-- ;
                 j-- ;
                 // printf ("got (%g,%g)\n", (double) i, (double) j) ;

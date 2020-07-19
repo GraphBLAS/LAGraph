@@ -177,7 +177,6 @@ GrB_Info LAGraph_sssp12         // single source shortest paths
     // AL = A .* (A <= delta) with lBound = delta
     LAGr_Matrix_new(&AL, GrB_INT32, n, n);
     LAGr_select(AL, NULL, NULL, GxB_LE_THUNK, A, lBound, NULL) ;
-    // GxB_print(AL, print_lvl);
 
     // AH = A .* (A > delta) with lBound = delta
     LAGr_Matrix_new(&AH, GrB_INT32, n, n);
@@ -190,7 +189,6 @@ GrB_Info LAGraph_sssp12         // single source shortest paths
     // printf("AL has nvals = %"PRIu64"\n", nvals);
     LAGr_Matrix_nvals(&nvals, AH);
     // printf("AH has nvals = %"PRIu64"\n", nvals);
-    // GxB_print(AH, print_lvl);
 
     int32_t i = 0;
 
@@ -202,7 +200,6 @@ GrB_Info LAGraph_sssp12         // single source shortest paths
     LAGr_Scalar_setElement (lBound, i * delta);
     LAGr_Vector_setElement(tmasked, 0, source);
     LAGr_Vector_setElement(s, true, source);
-    // GxB_print(tmasked, print_lvl);
 
     LAGr_Vector_nvals(&tmasked_nvals, tmasked);
 
@@ -215,19 +212,12 @@ GrB_Info LAGraph_sssp12         // single source shortest paths
     //printf("pre-handling time %12.6g sec\n", t1);
     // double t1 ;
 
-printf ("\nINIT===================================\n") ;
-GxB_print (AL, 3) ;
-GxB_print (AH, 3) ;
-GxB_print (tmasked, 3) ;
-GxB_print (s, 3) ;
-
     //--------------------------------------------------------------------------
     // while (t >= i*delta) not empty
     //--------------------------------------------------------------------------
 
     while (tmasked_nvals > 0)
     {
-printf ("\ni = %d ================================\n", i) ;
 
         // printf ("\n============================= outer: %d\n", i) ;
         // tmasked = select (tmasked < (i+1)*delta)
@@ -245,8 +235,6 @@ printf ("\ni = %d ================================\n", i) ;
 //          fprintf (stderr, "inner tmasked has %ld nnz\n",tmasked_nvals);
 //      }
 
-GxB_print (tmasked, 3) ;
-
         //----------------------------------------------------------------------
         // continue while the current bucket B[i] is not empty
         //----------------------------------------------------------------------
@@ -254,16 +242,12 @@ GxB_print (tmasked, 3) ;
         while (tmasked_nvals > 0)
         {
 
-printf ("\n inner -------------------------------------------\n") ;
-
             // printf ("\n=============== inner:\n") ;
             // tReq = AL' (min.+) tmasked
             // LAGraph_tic (tic);
             LAGr_vxm (tReq, NULL, NULL, GxB_MIN_PLUS_INT32, tmasked, AL, NULL) ;
             // t1 = LAGraph_toc(tic);
             // total_time2 += t1;
-            // GxB_print(tReq, print_lvl);
-GxB_print (tReq, 3) ;
 
             // Even though GrB_assign is faster than eWiseAdd here, the total
             // time of getting s with assign and tmasked = (s.*t) later is
@@ -274,8 +258,6 @@ GxB_print (tReq, 3) ;
             // LAGraph_tic (tic);
 
             //printf("----------------------------------------------------\n");
-            //GxB_print(s, 2);
-            //GxB_print(tmasked, 2);
             // best:0.35+1.17=1.52sec
             LAGr_eWiseAdd (s, NULL, NULL, GxB_PAIR_BOOL, s, tmasked, NULL) ;
             // 2nd best:0.50+1.22=1.72sec
@@ -283,8 +265,6 @@ GxB_print (tReq, 3) ;
             // worse:0.14+2.27=2.41sec
             //LAGr_assign (s, NULL, GxB_PAIR_BOOL, tmasked, GrB_ALL, n, NULL) ;
             //LAGr_Vector_nvals (&ignore, s) ; // finish the work for assign
-            //GxB_print(s, 2);
-GxB_print (s, 3) ;
 
             // t1 = LAGraph_toc(tic);
             // total_time3 += t1;
@@ -301,15 +281,12 @@ GxB_print (s, 3) ;
             // we're using a structural mask.  Explicit zeros in A would
             // require a valued mask.
             //printf("----------------------------------------------------\n");
-            // GxB_print(tReq, 2);
-            // GxB_print(t, 2);
             // LAGraph_tic (tic);
             // TODO: try clearing explicitly ...
             LAGr_Vector_clear (tless) ;
             LAGr_eWiseAdd (tless, tReq, NULL, GrB_LT_INT32, tReq, t,
                 GrB_DESC_S  /* assumes all entries in A are > 0 */) ;
             //LAGr_Vector_nvals (&ignore, tless) ; // finish the work for assign
-GxB_print (tless, 3) ;
 
             // remove explicit zeros from tless so it can be used as a
             // structural mask
@@ -318,8 +295,6 @@ GxB_print (tless, 3) ;
             LAGr_Vector_nvals (&tless_nvals, tless) ;
             // t1 = LAGraph_toc(tic);
             // total_time4 += t1;
-            // GxB_print(tless, 2);
-GxB_print (tless, 3) ;
             if (tless_nvals == 0) { break ; }
 
             // tmasked<tless> = select (i*delta <= tReq < (i+1)*delta)
@@ -343,8 +318,6 @@ GxB_print (tless, 3) ;
             }
             // t1 = LAGraph_toc(tic);
             // total_time5 += t1;
-            // GxB_print(tmasked, print_lvl);
-GxB_print (tmasked, 3) ;
 
             // t<tless> = tReq
             // GrB_apply is faster than GrB_eWiseAdd or GrB_assign here 
@@ -356,7 +329,6 @@ GxB_print (tmasked, 3) ;
             //LAGr_Vector_nvals (&ignore, t) ;
             // t1 = LAGraph_toc(tic);
             // total_time6 += t1;
-GxB_print (t, 3) ;
 
             LAGr_Vector_nvals(&tmasked_nvals, tmasked);
 
@@ -366,7 +338,6 @@ GxB_print (t, 3) ;
 //          }
         }
 
-printf ("\nnext outer loop ------------------------------------\n") ;
         // printf ("\n=============== next outer:\n") ;
 
         // tmasked<s> = t
@@ -374,20 +345,16 @@ printf ("\nnext outer loop ------------------------------------\n") ;
         LAGr_assign (tmasked, s, NULL, t, GrB_ALL, n, GrB_DESC_RS) ;
         // t1 = LAGraph_toc(tic);
         // total_time10 += t1;
-GxB_print (tmasked, 3) ;
 
         // tReq = AH'*tmasked
         // LAGraph_tic (tic);
         LAGr_vxm (tReq, NULL, NULL, GxB_MIN_PLUS_INT32, tmasked, AH, NULL) ;
         // t1 = LAGraph_toc(tic);
         // total_time2 += t1;
-GxB_print (tReq, 3) ;
 
         // t = min(t, tReq)
         // When t is dense, it is best to get tless<tReq> = tReq .< t,
         // and use tless as mask to update t.
-        //printf("----------------------------------------------------\n");
-        //GxB_print(t, 2);
         // LAGraph_tic (tic);
         //------
         // best for sparse t:
@@ -396,15 +363,12 @@ GxB_print (tReq, 3) ;
         // best for dense t:  TODO use this instead when t is dense:
         LAGr_Vector_clear (tless) ;
         LAGr_eWiseAdd (tless, tReq, NULL, GrB_LT_INT32, tReq, t, GrB_DESC_S);
-GxB_print (tless, 3) ;
         LAGr_apply(t, tless, NULL, GrB_IDENTITY_INT32, tReq, NULL);
-GxB_print (t, 3) ;
         //------
         // worse:
         //LAGr_eWiseAdd(t, tReq, NULL, GrB_MIN_INT32, t, tReq, NULL);
         // t1 = LAGraph_toc(tic);
         // total_time9 += t1;
-        //GxB_print(t, 2);
 
         //----------------------------------------------------------------------
         // prepare for the next loop, and find out how many left to be computed
@@ -443,8 +407,6 @@ GxB_print (t, 3) ;
         }
         // t1 = LAGraph_toc(tic);
         // total_time7 += t1;
-        // GxB_print(tmasked, print_lvl);
-GxB_print (tmasked, 3) ;
 
         LAGr_Vector_clear (s) ; // clear s for the next loop
 
@@ -466,7 +428,6 @@ GxB_print (tmasked, 3) ;
     // result = t
     *path_length = t;
     t = NULL;
-GxB_print (*path_length, 3) ;
 
     // LAGraph_tic (tic) ;
     GrB_free (&lBound) ;

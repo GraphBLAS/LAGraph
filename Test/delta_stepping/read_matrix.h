@@ -77,7 +77,8 @@ extern int32_t level ;
     {                                                                   \
         /* free the result and all workspace, and return NULL */        \
         FREE_ALL ;                                                      \
-        printf ("Failure: line %d file %s\n", __LINE__, __FILE__) ;     \
+        printf ("Failure: info: %d line %d file %s\n",                  \
+            __LINE__, __FILE__, info) ;                                 \
         return (info) ;                                                 \
     }                                                                   \
 }
@@ -95,7 +96,6 @@ extern int32_t level ;
     info = method ;                                                     \
     if (info != GrB_SUCCESS)                                            \
     {                                                                   \
-        printf ("GraphBLAS error:\n%s\n", GrB_error ( )) ;              \
         CHECK (false, info) ;                                           \
     }                                                                   \
 }

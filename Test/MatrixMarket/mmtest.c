@@ -43,7 +43,7 @@
     GrB_Info this_info = method ;                                           \
     if (! (this_info == GrB_SUCCESS || this_info == GrB_NO_VALUE))          \
     {                                                                       \
-        printf ("mmtest failure: [%d] %s\n", this_info, GrB_error ( )) ;    \
+        printf ("mmtest failure: [%d]\n", this_info) ;                      \
         FREE_ALL ;                                                          \
         return (this_info) ;                                                \
     }                                                                       \
@@ -265,8 +265,8 @@ int main (int argc, char **argv)
                                             skew, herm, nod, &seed) ;
                                         if (info != GrB_SUCCESS)
                                         {
-                                            printf ("test failure: %s\n",
-                                            GrB_error ( )) ;
+                                            printf ("test failure: %d\n",
+                                            info) ;
                                             LAGraph_finalize ( ) ;
                                             abort ( ) ;
                                         }

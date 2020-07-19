@@ -40,15 +40,15 @@
 // #include "LAGraph.h"
 #include "LAGraph_FW.c"
 
-#define OK(method) ({                                                                           \
+#define OK(method) {                                                                            \
     info = method;                                                                              \
     if (! (info == GrB_SUCCESS || info == GrB_NO_VALUE))                                        \
     {                                                                                           \
-        printf ("Error! File: %s line %d [%d] %s\n", __FILE__, __LINE__, info, GrB_error());    \
+        printf ("Error! File: %s line %d [%d]\n", __FILE__, __LINE__, info);                    \
         FREE_ALL;                                                                               \
         return (info);                                                                          \
     }                                                                                           \
-})
+}
 
 // Used as global variable, otherwise run out of memory when creating second graph
 // of size VxV to keep track of floyd warshall distances.

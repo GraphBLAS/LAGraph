@@ -36,14 +36,39 @@
 
 // TODO: add more comments to this file.
 
-//------------------------------------------------------------------------------
-// include files and global #defines
-//------------------------------------------------------------------------------
-
 #ifndef LAGRAPH_INCLUDE
 #define LAGRAPH_INCLUDE
 
+//------------------------------------------------------------------------------
+// GraphBLAS.h and version control
+//------------------------------------------------------------------------------
+
 #include "GraphBLAS.h"
+
+// the C API v1.3 now has GRB_VERSION and GRB_SUBVERSION.  If this macro
+// is not defined, assume the spec is v1.2.
+#ifndef GRB_VERSION
+#define GRB_VERSION 1
+#define GRB_SUBVERSION 2
+#endif
+
+// LAGRAPH_SPEC_VERSION: a single integer for comparing spec and version levels
+// for the GraphBLAS C API.
+#define LAGRAPH_SPEC_VERSION(major,minor,sub)       \
+    (((major)*1000ULL + (minor))*1000ULL + (sub))
+
+// LAGRAPH_SPEC: the current version of the GraphBLAS C API being used
+#define LAGRAPH_SPEC LAGRAPH_SPEC_VERSION (GRB_VERSION, GRB_SUBVERSION, 0)
+
+#if (LAGRAPH_SPEC >= LAGRAPH_SPEC_VERSION (1,3,0))
+// GrB_error has changed in the v1.3 C API Specification of GraphBLAS
+#define GRB_ERROR(string,object) GrB_error (&string, object)
+#else
+#define GRB_ERROR(string,object) (string = GrB_error ( ))
+#endif
+
+//------------------------------------------------------------------------------
+
 #include <complex.h>
 #include <ctype.h>
 
@@ -418,8 +443,8 @@ extern bool LAGraph_malloc_is_thread_safe ;
 
 #define LAGRAPH_ERROR(message,info)                                         \
 {                                                                           \
-    fprintf (stderr, "LAGraph error: %s\n[%d]\n%s\nFile: %s Line: %d\n",    \
-        message, info, GrB_error ( ), __FILE__, __LINE__) ;                 \
+    fprintf (stderr, "LAGraph error: %s\n[%d]\nFile: %s Line: %d\n",        \
+        message, info, __FILE__, __LINE__) ;                                \
     LAGRAPH_FREE_ALL ;                                                      \
     return (info) ;                                                         \
 }
@@ -459,8 +484,6 @@ typedef struct
 {
     int nthreads ;          // # of threads to use.  If <= 0, use defaults
                             // (from omp_get_max_threads)
-
-    // TODO more can go here, like info, the GrB_error() results, etc.
 }
 LAGraph_Context ;
 
