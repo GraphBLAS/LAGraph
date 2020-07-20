@@ -35,7 +35,10 @@
 //------------------------------------------------------------------------------
 
 #define NTHREAD_LIST 1
-#define THREAD_LIST 0
+#define THREAD_LIST 1
+
+// #define NTHREAD_LIST 1
+// #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 4
 // #define THREAD_LIST 40, 20, 10, 1
@@ -529,7 +532,7 @@ int main (int argc, char **argv)
         GrB_free (&v_batch4) ;
 
         // HACK: uncomment this to just do the first batch
-        // break ;
+        break ;
     }
 
     //--------------------------------------------------------------------------
