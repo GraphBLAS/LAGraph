@@ -75,7 +75,7 @@ int main (int argc, char **argv)
     GrB_Vector pi = NULL ;
     GrB_Matrix SourceNodes = NULL ;
     LAGRAPH_OK (LAGraph_init ( )) ;
-    LAGRAPH_OK (GxB_set (GxB_BURBLE, true)) ;
+    LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
 
     uint64_t seed = 1 ;
     FILE *f ;

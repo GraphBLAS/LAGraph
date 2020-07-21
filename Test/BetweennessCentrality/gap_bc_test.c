@@ -34,11 +34,11 @@
 
 //------------------------------------------------------------------------------
 
-#define NTHREAD_LIST 1
-#define THREAD_LIST 1
-
-// #define NTHREAD_LIST 1
+// #define NTHREAD_LIST 2
 // #define THREAD_LIST 0
+
+#define NTHREAD_LIST 1
+#define THREAD_LIST 0
 
 // #define NTHREAD_LIST 4
 // #define THREAD_LIST 40, 20, 10, 1
@@ -79,7 +79,7 @@ int main (int argc, char **argv)
     GrB_Vector v_batch4 = NULL ;
     GrB_Matrix SourceNodes = NULL ;
     LAGRAPH_OK (LAGraph_init ( )) ;
-    LAGRAPH_OK (GxB_set (GxB_BURBLE, true)) ;
+    LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
 
     uint64_t seed = 1;
     bool tests_pass = true;
@@ -532,7 +532,7 @@ int main (int argc, char **argv)
         GrB_free (&v_batch4) ;
 
         // HACK: uncomment this to just do the first batch
-        break ;
+        // break ;
     }
 
     //--------------------------------------------------------------------------

@@ -1,0 +1,22 @@
+threads to test:  40 20
+matrix: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+sources: /home/faculty/davis/GAP/GAP-road/GAP-road_sources.mtx
+read time: 0.597008 sec
+A is symmetric
+transpose time: 0.679615
+
+========== input graph: nodes: 23947347 edges: 64
+
+Trial 1 : sources: [ 4795720 21003853 417968 6496511 ]
+
+Batch v4 time 40:      50.2120 (sec)
+Batch v4 time 20:      43.0902 (sec)
+
+ntrials: 1
+
+
+Ave (Batch4)  40:     50.212 sec, rate      0.000
+Ave (Batch4)  20:     43.090 sec, rate      0.000
+./build/gap_bc_test: all tests passed
