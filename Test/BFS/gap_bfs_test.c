@@ -45,8 +45,8 @@
 #include "../../Source/Utility/LAGraph_internal.h"
 #include "bfs_test.h"
 
-#define NTHREAD_LIST 1
-#define THREAD_LIST 1
+#define NTHREAD_LIST 4
+#define THREAD_LIST 40, 20, 8, 1
 
 // #define NTHREAD_LIST 2
 // #define THREAD_LIST 0

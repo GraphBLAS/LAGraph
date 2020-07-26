@@ -87,4 +87,6 @@ Trial 4 : sources: [ 48915358 122571173 6183279 86323663 ]
 [0;36mhypersparse $[0m 
 [0;36mhypersparse $[0m 
 [0;36mhypersparse $[0m 
-[0;36mhypersparse $[0m 
+exit
+
+Script done on Tue 21 Jul 2020 02:31:14 PM CDT
