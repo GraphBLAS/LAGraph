@@ -45,8 +45,11 @@
 #include "../../Source/Utility/LAGraph_internal.h"
 #include "bfs_test.h"
 
-#define NTHREAD_LIST 2
-#define THREAD_LIST 0
+#define NTHREAD_LIST 1
+#define THREAD_LIST 1
+
+// #define NTHREAD_LIST 2
+// #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 8
 // #define THREAD_LIST 8, 7, 6, 5, 4, 3, 2, 1
@@ -111,6 +114,8 @@ int main (int argc, char **argv)
     double chunk ; // = 64 * 1024 ;
     GxB_get (GxB_CHUNK, &chunk) ;
     printf ("chunk: %g\n", chunk) ;
+
+    double t_save ;
 
     //--------------------------------------------------------------------------
     // read in a matrix from a file and convert to boolean
@@ -203,8 +208,6 @@ int main (int argc, char **argv)
     double t_read = LAGraph_toc (tic) ;
     printf ("read time: %g\n", t_read) ;
 
-    // GxB_print (A, 2) ;
-
     //--------------------------------------------------------------------------
     // AT = A'
     //--------------------------------------------------------------------------
@@ -260,6 +263,8 @@ int main (int argc, char **argv)
     // run the BFS on all source nodes
     //--------------------------------------------------------------------------
 
+    char filename [1024] ;
+
 #if 0
 
     printf ( "simple all-push (no tree):\n") ;
@@ -292,7 +297,6 @@ int main (int argc, char **argv)
     LAGraph_set_nthreads (nthreads_max) ;
     printf ( "\n") ;
 
-    char filename [1024] ;
     #if 0
     // dump the results so it can be checked
     sprintf (filename, "v_%d_simple.mtx", (int) n) ;
@@ -337,10 +341,10 @@ int main (int argc, char **argv)
 #endif
 
     //--------------------------------------------------------------------------
-    // BFS: pushpull, with tree
+    // BFS: pushpull, with depth and tree
     //--------------------------------------------------------------------------
 
-    printf ( "pushpull (with tree):\n") ;
+    printf ( "pushpull (with depth and tree):\n") ;
     for (int tt = 1 ; tt <= nt ; tt++)
     {
         int nthreads = Nthreads [tt] ;
@@ -377,6 +381,7 @@ int main (int argc, char **argv)
     LAGraph_set_nthreads (nthreads_max) ;
     printf ( "\n") ;
 
+    // LAGRAPH_OK (GxB_print (pi, 2)) ;
     #if 0
     LAGraph_tic (tic) ;
     printf ("saving results ...\n")  ;
@@ -402,9 +407,73 @@ int main (int argc, char **argv)
     GrB_free (&v) ;
     GrB_free (&pi) ;
 
-    double t_save = LAGraph_toc (tic) ;
+    t_save = LAGraph_toc (tic) ;
     printf ("save time: %g sec\n\n", t_save) ;
     #endif
+
+    //--------------------------------------------------------------------------
+    // BFS: pushpull, with tree only
+    //--------------------------------------------------------------------------
+
+    printf ( "pushpull (with tree only):\n") ;
+    for (int tt = 1 ; tt <= nt ; tt++)
+    {
+        int nthreads = Nthreads [tt] ;
+        if (nthreads > nthreads_max) continue ;
+        LAGraph_set_nthreads (nthreads) ;
+        t [nthreads] = 0 ;
+        printf ("\n------------------------------------------- threads: %2d\n",
+            nthreads) ;
+
+        for (int trial = 0 ; trial < ntrials ; trial++)
+        {
+            int64_t s ; 
+            // s = SourceNodes [i]
+            LAGRAPH_OK (GrB_Matrix_extractElement (&s, SourceNodes, trial, 0)) ;
+            s-- ; // convert from 1-based to 0-based
+            GrB_free (&pi) ;
+            LAGraph_tic (tic) ;
+            LAGRAPH_OK (LAGraph_bfs_parent (&pi, A, AT, s)) ;
+            double ttrial = LAGraph_toc (tic) ;
+            t [nthreads] += ttrial ;
+            printf ("trial: %2d threads: %2d source: %9ld time: %10.4f sec\n",
+                trial, nthreads, s, ttrial) ;
+        }
+        t [nthreads] = t [nthreads] / ntrials ;
+        printf ( ":%2d:pushpull (onlytree): %12.3f (sec), rate: %6.2f\n",
+            nthreads, t [nthreads], 1e-6*((double) nvals) / t [nthreads]) ;
+        if (n > 1000)
+        {
+            LAGr_log (matrix_name, "treeonly:pushpull", nthreads, t [nthreads]) ;
+        }
+    }
+    // restore default
+    LAGraph_set_nthreads (nthreads_max) ;
+    printf ( "\n") ;
+
+    // LAGRAPH_OK (GxB_print (pi, 2)) ;
+    #if 0
+    LAGraph_tic (tic) ;
+    printf ("saving results ...\n")  ;
+
+    // dump the last result so it can be checked
+    sprintf (filename, "s_%d.mtx", (int) n) ;
+    f = fopen (filename, "w") ;
+    LAGraph_mmwrite ((GrB_Matrix) SourceNodes, f) ;
+    fclose (f) ;
+
+    sprintf (filename, "ponly_%d.mtx", (int) n) ;
+    f = fopen (filename, "w") ;
+    LAGraph_mmwrite ((GrB_Matrix) pi, f) ;
+    fclose (f) ;
+
+    LAGRAPH_OK (GxB_print (pi, 2)) ;
+    GrB_free (&pi) ;
+
+    t_save = LAGraph_toc (tic) ;
+    printf ("save time: %g sec\n\n", t_save) ;
+    #endif
+
 
     //--------------------------------------------------------------------------
     // BFS: both push and pull, with tree (log all timings)

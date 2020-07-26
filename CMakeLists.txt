@@ -48,7 +48,7 @@ if ( CMAKE_VERSION VERSION_GREATER "3.0" )
 endif ( )
 
 # version of LAGraph
-set ( LAGraph_DATE "Feb 7, 2020" )
+set ( LAGraph_DATE "July 26, 2020" )
 set ( LAGraph_VERSION_MAJOR 0 )
 set ( LAGraph_VERSION_MINOR 1 )
 set ( LAGraph_VERSION_SUB   0 )
@@ -177,8 +177,7 @@ if ( "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -std=c11 -lm -Wno-pragmas " )
     # check all warnings:
 #   set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -Wall -Wextra -Wpedantic -Werror " )
-    # TODO -g is on
-    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -g " )
+#   set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -g " )
     if ( CMAKE_C_COMPILER_VERSION VERSION_LESS 4.9 )
         message ( FATAL_ERROR "gcc version must be at least 4.9" )
     endif ( )

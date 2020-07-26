@@ -33,3 +33,5 @@ v = mread ('v_3072441.mtx') ;
 s = full (s (end))
 bfs_check (A, s, v, pi)
 %}
+pi2 = mread ('ponly_3072441.mtx') ;
+bfs_check (A, s, v, pi2)
