@@ -44,9 +44,10 @@
 
 #include "../../Source/Utility/LAGraph_internal.h"
 #include "bfs_test.h"
+#include "../../../GraphBLAS/Source/GB_Global.h"
 
-#define NTHREAD_LIST 4
-#define THREAD_LIST 40, 20, 8, 1
+#define NTHREAD_LIST 1
+#define THREAD_LIST 0
 
 // #define NTHREAD_LIST 2
 // #define THREAD_LIST 0
@@ -212,7 +213,7 @@ int main (int argc, char **argv)
     // AT = A'
     //--------------------------------------------------------------------------
 
-    // HACK: AT not needed for push-only BFS
+    // AT not needed for push-only BFS
     AT = NULL ;
 
 #if 1
@@ -255,6 +256,9 @@ int main (int argc, char **argv)
 
     int64_t ntrials ;
     GrB_Matrix_nrows (&ntrials, SourceNodes) ;
+
+    // HACK
+    // ntrials = 5 ;
 
     printf ( "\n==========input graph: nodes: %lu edges: %lu ntrials: %lu\n",
         n, nvals, ntrials) ;
@@ -344,6 +348,7 @@ int main (int argc, char **argv)
     // BFS: pushpull, with depth and tree
     //--------------------------------------------------------------------------
 
+#if 0
     printf ( "pushpull (with depth and tree):\n") ;
     for (int tt = 1 ; tt <= nt ; tt++)
     {
@@ -380,6 +385,7 @@ int main (int argc, char **argv)
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;
     printf ( "\n") ;
+#endif
 
     // LAGRAPH_OK (GxB_print (pi, 2)) ;
     #if 0
@@ -415,6 +421,8 @@ int main (int argc, char **argv)
     // BFS: pushpull, with tree only
     //--------------------------------------------------------------------------
 
+    GB_Global_timing_clear_all ( ) ;
+
     printf ( "pushpull (with tree only):\n") ;
     for (int tt = 1 ; tt <= nt ; tt++)
     {
@@ -444,12 +452,18 @@ int main (int argc, char **argv)
             nthreads, t [nthreads], 1e-6*((double) nvals) / t [nthreads]) ;
         if (n > 1000)
         {
-            LAGr_log (matrix_name, "treeonly:pushpull", nthreads, t [nthreads]) ;
+            LAGr_log (matrix_name, "treeonly:pushpull", nthreads, t [nthreads]);
         }
     }
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;
     printf ( "\n") ;
+
+    for (int k = 0 ; k < 20 ; k++)
+    {
+        double t = GB_Global_timing_get (k) ;
+        if (t > 0) printf ("phase %2d: %12.4f msec\n", k, t*1e3) ;
+    }
 
     // LAGRAPH_OK (GxB_print (pi, 2)) ;
     #if 0
