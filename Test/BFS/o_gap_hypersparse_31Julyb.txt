@@ -1,0 +1,17 @@
+threads to test:  40
+chunk: 65536
+matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+sources: /home/faculty/davis/GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 41.2388
+A is symmetric
+transpose time: 73.469
+
+==========input graph: nodes: 134217726 edges: 4223264644 ntrials: 64
+allpush (log, with tree-only):
+:40:allpush   (w/ tree):        3.358 (sec), rate: 1257.76
+
+allpull (log, with tree-only):
+:40:allpull   (w/ tree):        4.490 (sec), rate: 940.68
+

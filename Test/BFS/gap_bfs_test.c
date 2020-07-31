@@ -690,7 +690,7 @@ int main (int argc, char **argv)
     nthreads = nthreads_max ;
     sprintf (filename, "allpull_%lu.m", n) ;
     f = fopen (filename, "w") ;
-    fprintf (f, "function [results, name, n, nvals] = allpush_%lu\n", n);
+    fprintf (f, "function [results, name, n, nvals] = allpull_%lu\n", n);
     fprintf (f, "%% bfs_log: all-pull\n") ;
     fprintf (f, "name = '%s' ;\n", matrix_name) ;
     fprintf (f, "n = %lu ;\n", n) ;

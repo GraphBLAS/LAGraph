@@ -3214,3 +3214,21 @@ pull  101984064     30.48682
 pull      62674      0.05923
 pull          0      0.02772
 trial: 28 threads: 40 source:  72137329 time:   141.0624 sec
+pull         32      0.52392
+pull       1044      1.20330
+pull      33662      8.05368
+pull    1069682     21.44312
+pull   29972060     77.06808
+pull  103059784     31.76656
+pull      81463      0.06045
+pull          0      0.02736
+trial: 29 threads: 40 source:   9647840 time:   140.2670 sec
+pull         37      0.52549
+pull       1219      1.34736
+pull      38993      8.30011
+pull    1242739     26.68051
+pull   34084225     77.23698
+pull   98821283     26.99310
+pull      29231      0.05683
+pull          0      0.02733
+trial: 30 threads: 40 source:  15940695 time:   141.2905 sec
