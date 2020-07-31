@@ -46,6 +46,17 @@
 #include "bfs_test.h"
 #include "../../../GraphBLAS/Source/GB_Global.h"
 
+GrB_Info bfs_log_parent // push-pull BFS, compute the tree only
+(
+    // output:
+    GrB_Vector *pi_output,  // pi(i) = p+1 if p is the parent of node i
+    // inputs:
+    GrB_Matrix A,           // input graph, any type
+    GrB_Matrix AT,          // transpose of A (optional; push-only if NULL)
+    int64_t source          // starting node of the BFS
+    , FILE *file
+) ;
+
 #define NTHREAD_LIST 1
 #define THREAD_LIST 0
 
@@ -258,7 +269,7 @@ int main (int argc, char **argv)
     GrB_Matrix_nrows (&ntrials, SourceNodes) ;
 
     // HACK
-    // ntrials = 5 ;
+    // ntrials = 1 ;
 
     printf ( "\n==========input graph: nodes: %lu edges: %lu ntrials: %lu\n",
         n, nvals, ntrials) ;
@@ -421,8 +432,7 @@ int main (int argc, char **argv)
     // BFS: pushpull, with tree only
     //--------------------------------------------------------------------------
 
-    GB_Global_timing_clear_all ( ) ;
-
+#if 0
     printf ( "pushpull (with tree only):\n") ;
     for (int tt = 1 ; tt <= nt ; tt++)
     {
@@ -432,7 +442,7 @@ int main (int argc, char **argv)
         t [nthreads] = 0 ;
         printf ("\n------------------------------------------- threads: %2d\n",
             nthreads) ;
-
+        GB_Global_timing_clear_all ( ) ;
         for (int trial = 0 ; trial < ntrials ; trial++)
         {
             int64_t s ; 
@@ -446,6 +456,7 @@ int main (int argc, char **argv)
             t [nthreads] += ttrial ;
             printf ("trial: %2d threads: %2d source: %9ld time: %10.4f sec\n",
                 trial, nthreads, s, ttrial) ;
+            fflush (stdout) ;
         }
         t [nthreads] = t [nthreads] / ntrials ;
         printf ( ":%2d:pushpull (onlytree): %12.3f (sec), rate: %6.2f\n",
@@ -454,18 +465,19 @@ int main (int argc, char **argv)
         {
             LAGr_log (matrix_name, "treeonly:pushpull", nthreads, t [nthreads]);
         }
+        for (int k = 0 ; k < 20 ; k++)
+        {
+            double t = GB_Global_timing_get (k) ;
+            if (t > 0) printf ("phase %2d: %12.4f msec\n", k, t*1e3) ;
+        }
     }
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;
     printf ( "\n") ;
 
-    for (int k = 0 ; k < 20 ; k++)
-    {
-        double t = GB_Global_timing_get (k) ;
-        if (t > 0) printf ("phase %2d: %12.4f msec\n", k, t*1e3) ;
-    }
-
     // LAGRAPH_OK (GxB_print (pi, 2)) ;
+#endif
+
     #if 0
     LAGraph_tic (tic) ;
     printf ("saving results ...\n")  ;
@@ -488,6 +500,103 @@ int main (int argc, char **argv)
     printf ("save time: %g sec\n\n", t_save) ;
     #endif
 
+    //--------------------------------------------------------------------------
+    // BFS: push-only, with tree only
+    //--------------------------------------------------------------------------
+
+#if 0
+    printf ( "push-only (with tree only):\n") ;
+    for (int tt = 1 ; tt <= nt ; tt++)
+    {
+        int nthreads = Nthreads [tt] ;
+        if (nthreads > nthreads_max) continue ;
+        LAGraph_set_nthreads (nthreads) ;
+        t [nthreads] = 0 ;
+        printf ("\n------------------------------------------- threads: %2d\n",
+            nthreads) ;
+        GB_Global_timing_clear_all ( ) ;
+        for (int trial = 0 ; trial < ntrials ; trial++)
+        {
+            int64_t s ; 
+            // s = SourceNodes [i]
+            LAGRAPH_OK (GrB_Matrix_extractElement (&s, SourceNodes, trial, 0)) ;
+            s-- ; // convert from 1-based to 0-based
+            GrB_free (&pi) ;
+            LAGraph_tic (tic) ;
+            LAGRAPH_OK (LAGraph_bfs_parent (&pi, A, NULL, s)) ;
+            double ttrial = LAGraph_toc (tic) ;
+            t [nthreads] += ttrial ;
+            printf ("trial: %2d threads: %2d source: %9ld time: %10.4f sec\n",
+                trial, nthreads, s, ttrial) ;
+            fflush (stdout) ;
+        }
+        t [nthreads] = t [nthreads] / ntrials ;
+        printf ( ":%2d:push-only (onlytree): %12.3f (sec), rate: %6.2f\n",
+            nthreads, t [nthreads], 1e-6*((double) nvals) / t [nthreads]) ;
+        if (n > 1000)
+        {
+            LAGr_log (matrix_name, "treeonly:push-only",
+                nthreads, t [nthreads]);
+        }
+        for (int k = 0 ; k < 20 ; k++)
+        {
+            double t = GB_Global_timing_get (k) ;
+            if (t > 0) printf ("phase %2d: %12.4f msec\n", k, t*1e3) ;
+        }
+    }
+    // restore default
+    LAGraph_set_nthreads (nthreads_max) ;
+    printf ( "\n") ;
+#endif
+
+    //--------------------------------------------------------------------------
+    // BFS: pull-only, with tree only
+    //--------------------------------------------------------------------------
+
+#if 0
+    printf ( "pull-only (with tree only):\n") ;
+    for (int tt = 1 ; tt <= nt ; tt++)
+    {
+        int nthreads = Nthreads [tt] ;
+        if (nthreads > nthreads_max) continue ;
+        LAGraph_set_nthreads (nthreads) ;
+        t [nthreads] = 0 ;
+        printf ("\n------------------------------------------- threads: %2d\n",
+            nthreads) ;
+        GB_Global_timing_clear_all ( ) ;
+        for (int trial = 0 ; trial < ntrials ; trial++)
+        {
+            int64_t s ; 
+            // s = SourceNodes [i]
+            LAGRAPH_OK (GrB_Matrix_extractElement (&s, SourceNodes, trial, 0)) ;
+            s-- ; // convert from 1-based to 0-based
+            GrB_free (&pi) ;
+            LAGraph_tic (tic) ;
+            LAGRAPH_OK (LAGraph_bfs_parent (&pi, NULL, AT, s)) ;
+            double ttrial = LAGraph_toc (tic) ;
+            t [nthreads] += ttrial ;
+            printf ("trial: %2d threads: %2d source: %9ld time: %10.4f sec\n",
+                trial, nthreads, s, ttrial) ;
+            fflush (stdout) ;
+        }
+        t [nthreads] = t [nthreads] / ntrials ;
+        printf ( ":%2d:push-only (onlytree): %12.3f (sec), rate: %6.2f\n",
+            nthreads, t [nthreads], 1e-6*((double) nvals) / t [nthreads]) ;
+        if (n > 1000)
+        {
+            LAGr_log (matrix_name, "treeonly:push-only",
+                nthreads, t [nthreads]);
+        }
+        for (int k = 0 ; k < 20 ; k++)
+        {
+            double t = GB_Global_timing_get (k) ;
+            if (t > 0) printf ("phase %2d: %12.4f msec\n", k, t*1e3) ;
+        }
+    }
+    // restore default
+    LAGraph_set_nthreads (nthreads_max) ;
+    printf ( "\n") ;
+#endif
 
     //--------------------------------------------------------------------------
     // BFS: both push and pull, with tree (log all timings)
@@ -526,20 +635,24 @@ int main (int argc, char **argv)
     printf ( "\n") ;
 #endif
 
-#if 0
+    //--------------------------------------------------------------------------
+    // BFS: all-push, with tree only (log all timings)
+    //--------------------------------------------------------------------------
+
+#if 1
 
     sprintf (filename, "allpush_%lu.m", n) ;
     f = fopen (filename, "w") ;
-    fprintf (f, "function [results, name] = allpush_%lu\n", n);
+    fprintf (f, "function [results, name, n, nvals] = allpush_%lu\n", n);
     fprintf (f, "%% bfs_log: all-push\n") ;
     fprintf (f, "name = '%s' ;\n", matrix_name) ;
     fprintf (f, "n = %lu ;\n", n) ;
+    fprintf (f, "k = 0 ;\n") ;
     fprintf (f, "nvals = %lu ;\n", nvals) ;
     fprintf (f, "d = %g ;\n", ((double) nvals) / (double) n) ;
     fprintf (f, "%%%% columns in results:\n") ;
     fprintf (f, "%%%% s, n, d, nthreads, do_push, level, nq, nvisited, time\n");
-    fprintf (f, "results = [\n") ;
-    printf ( "allpush (log, with tree):\n") ;
+    printf ( "allpush (log, with tree-only):\n") ;
     for (int tt = 1 ; tt <= nt ; tt++)
     {
         int nthreads = Nthreads [tt] ;
@@ -554,7 +667,7 @@ int main (int argc, char **argv)
             s-- ; // convert from 1-based to 0-based
             GrB_free (&v) ;
             GrB_free (&pi) ;
-            LAGRAPH_OK (bfs_log (&v, &pi, A, NULL, s, 0, false, f)) ;
+            LAGRAPH_OK (bfs_log_parent (&pi, A, NULL, s, f)) ;
         }
         t [nthreads] = LAGraph_toc (tic) / ntrials ;
         printf ( ":%2d:allpush   (w/ tree): %12.3f (sec), rate: %6.2f\n",
@@ -563,35 +676,30 @@ int main (int argc, char **argv)
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;
     printf ( "\n") ;
-    // TODO: check results
-    // LAGRAPH_OK (GxB_print (v, 2)) ;
-    // LAGRAPH_OK (GxB_print (pi, 2)) ;
-    GrB_free (&v) ;
     GrB_free (&pi) ;
-    fprintf (f, "] ;\n") ;
     fclose (f) ;
 
 #endif
 
     //--------------------------------------------------------------------------
-    // BFS: all-pull, with tree (log all timings)
+    // BFS: all-pull, with tree only (log all timings)
     //--------------------------------------------------------------------------
 
-#if 0
+#if 1
 
     nthreads = nthreads_max ;
     sprintf (filename, "allpull_%lu.m", n) ;
     f = fopen (filename, "w") ;
-    fprintf (f, "function [results, name] = allpush_%lu\n", n);
+    fprintf (f, "function [results, name, n, nvals] = allpush_%lu\n", n);
     fprintf (f, "%% bfs_log: all-pull\n") ;
     fprintf (f, "name = '%s' ;\n", matrix_name) ;
     fprintf (f, "n = %lu ;\n", n) ;
+    fprintf (f, "k = 0 ;\n") ;
     fprintf (f, "nvals = %lu ;\n", nvals) ;
     fprintf (f, "d = %g ;\n", ((double) nvals) / (double) n) ;
     fprintf (f, "%%%% columns in results:\n") ;
-    fprintf (f, "%%%% s, n, d, nthreads, do_push, level, nq, nvisited, time\n");
-    fprintf (f, "results = [\n") ;
-    printf ( "allpull (log, with tree):\n") ;
+    fprintf (f, "%%%% do_push, nq, nvisited, time\n");
+    printf ( "allpull (log, with tree-only):\n") ;
     for (int tt = 1 ; tt <= nt ; tt++)
     {
         int nthreads = Nthreads [tt] ;
@@ -606,7 +714,7 @@ int main (int argc, char **argv)
             s-- ; // convert from 1-based to 0-based
             GrB_free (&v) ;
             GrB_free (&pi) ;
-            LAGRAPH_OK (bfs_log (&v, &pi, NULL, AT, s, 0, false, f)) ;
+            LAGRAPH_OK (bfs_log_parent (&pi, NULL, AT, s, f)) ;
         }
         t [nthreads] = LAGraph_toc (tic) / ntrials ;
         printf ( ":%2d:allpull   (w/ tree): %12.3f (sec), rate: %6.2f\n",
@@ -615,12 +723,7 @@ int main (int argc, char **argv)
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;
     printf ( "\n") ;
-    // TODO: check results
-    // LAGRAPH_OK (GxB_print (v, 2)) ;
-    // LAGRAPH_OK (GxB_print (pi, 2)) ;
-    GrB_free (&v) ;
     GrB_free (&pi) ;
-    fprintf (f, "] ;\n") ;
     fclose (f) ;
 
 #endif

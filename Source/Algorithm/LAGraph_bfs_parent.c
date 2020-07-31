@@ -184,6 +184,7 @@ GrB_Info LAGraph_bfs_parent // push-pull BFS, compute the tree only
                     GrB_INVALID_VALUE) ;
             }
         }
+#if 0
         else
         {
             // only A or AT are provided.  Refuse to do the pull-only version.
@@ -206,6 +207,7 @@ GrB_Info LAGraph_bfs_parent // push-pull BFS, compute the tree only
                     GrB_INVALID_VALUE) ;
             }
         }
+#endif
 
     //--------------------------------------------------------------------------
     // initializations
@@ -271,6 +273,8 @@ GrB_Info LAGraph_bfs_parent // push-pull BFS, compute the tree only
         // q = next level of the BFS
         //----------------------------------------------------------------------
 
+double t = omp_get_wtime ( ) ;
+
         if (use_vxm_with_A)
         {
             // q'<!pi> = q'*A
@@ -284,7 +288,10 @@ GrB_Info LAGraph_bfs_parent // push-pull BFS, compute the tree only
             LAGr_mxv (q, pi, NULL, semiring, AT, q, GrB_DESC_RC) ;
         }
 
+t = omp_get_wtime ( ) - t ;
+
         LAGr_Vector_nvals (&nq, q) ;
+printf ("%s %10ld %12.5f\n", use_vxm_with_A ? "push" : "pull", nq, t) ;
         if (nq == 0) break ;
 
         //----------------------------------------------------------------------

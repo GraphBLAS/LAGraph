@@ -1,0 +1,474 @@
+Script started on Thu 30 Jul 2020 07:57:08 AM CDT
+Intel Suite:
+Copyright (C) 2009-2019 Intel Corporation. All rights reserved.
+Intel(R) VTune(TM) Amplifier 2019 (build 591499)
+[0;36mhypersparse $[0m ./do_gap
+threads to test:  40
+chunk: 65536
+matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+sources: /home/faculty/davis/GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 72.3505
+A is symmetric
+transpose time: 75.2454
+
+==========input graph: nodes: 134217726 edges: 4223264644 ntrials: 64
+pushpull (with tree only):
+
+------------------------------------------- threads: 40
+trial:  0 threads: 40 source:   2338012 time:     3.4894 sec
+trial:  1 threads: 40 source:  31997659 time:     3.5356 sec
+trial:  2 threads: 40 source:  23590940 time:     3.5153 sec
+trial:  3 threads: 40 source:  43400604 time:     3.5251 sec
+trial:  4 threads: 40 source:  75337937 time:     3.5409 sec
+trial:  5 threads: 40 source:    169867 time:     3.4714 sec
+trial:  6 threads: 40 source: 104041220 time:     3.4227 sec
+trial:  7 threads: 40 source:  94177942 time:     3.5436 sec
+trial:  8 threads: 40 source:  32871357 time:     3.4422 sec
+trial:  9 threads: 40 source:  56230002 time:     3.4436 sec
+trial: 10 threads: 40 source:  69883037 time:     3.5165 sec
+trial: 11 threads: 40 source:   9346345 time:     3.4867 sec
+trial: 12 threads: 40 source:  48915358 time:     3.4211 sec
+trial: 13 threads: 40 source: 122571173 time:     3.4728 sec
+trial: 14 threads: 40 source:   6183279 time:     3.4839 sec
+trial: 15 threads: 40 source:  86323663 time:     3.5139 sec
+trial: 16 threads: 40 source: 106725780 time:     3.5139 sec
+trial: 17 threads: 40 source:  92389938 time:     3.5178 sec
+trial: 18 threads: 40 source:  16210738 time:     3.5240 sec
+trial: 19 threads: 40 source:  59816700 time:     3.4605 sec
+trial: 20 threads: 40 source: 111669929 time:     3.4813 sec
+trial: 21 threads: 40 source: 102831411 time:     3.4700 sec
+trial: 22 threads: 40 source: 113384800 time:     3.4612 sec
+trial: 23 threads: 40 source:  43872564 time:     3.5177 sec
+trial: 24 threads: 40 source:  80508827 time:     3.4561 sec
+trial: 25 threads: 40 source:  26105648 time:     3.5037 sec
+trial: 26 threads: 40 source:   8807516 time:     3.5266 sec
+trial: 27 threads: 40 source: 118452455 time:     3.5269 sec
+trial: 28 threads: 40 source: 121818859 time:     3.4925 sec
+trial: 29 threads: 40 source:  42361928 time:     3.4747 sec
+trial: 30 threads: 40 source:  29493053 time:     3.4599 sec
+trial: 31 threads: 40 source:  98461503 time:     3.4271 sec
+trial: 32 threads: 40 source:  71931337 time:     3.4792 sec
+trial: 33 threads: 40 source: 103808468 time:     3.4400 sec
+trial: 34 threads: 40 source:   4092345 time:     3.4976 sec
+trial: 35 threads: 40 source: 115276241 time:     3.4545 sec
+trial: 36 threads: 40 source:   4649343 time:     3.5186 sec
+trial: 37 threads: 40 source:  76656189 time:     3.4883 sec
+trial: 38 threads: 40 source:  31312001 time:     3.4954 sec
+trial: 39 threads: 40 source: 111334127 time:     3.5071 sec
+trial: 40 threads: 40 source: 100962918 time:     3.4378 sec
+trial: 41 threads: 40 source:  41823215 time:     3.5141 sec
+trial: 42 threads: 40 source:  22631240 time:     3.4971 sec
+trial: 43 threads: 40 source:  42848461 time:     3.4693 sec
+trial: 44 threads: 40 source:  79485148 time:     3.4998 sec
+trial: 45 threads: 40 source: 106818742 time:     3.4270 sec
+trial: 46 threads: 40 source:  73347974 time:     3.4416 sec
+trial: 47 threads: 40 source:  78848445 time:     3.4496 sec
+trial: 48 threads: 40 source: 109920510 time:     3.4629 sec
+trial: 49 threads: 40 source: 121492133 time:     3.4635 sec
+trial: 50 threads: 40 source: 101037296 time:     3.4366 sec
+trial: 51 threads: 40 source:  15438600 time:     3.4618 sec
+trial: 52 threads: 40 source:   4584784 time:     3.5272 sec
+trial: 53 threads: 40 source: 124503845 time:     3.5061 sec
+trial: 54 threads: 40 source:  87241743 time:     3.5099 sec
+trial: 55 threads: 40 source: 108297008 time:     3.4293 sec
+trial: 56 threads: 40 source:  33955082 time:     3.5180 sec
+trial: 57 threads: 40 source:  79934823 time:     3.4836 sec
+trial: 58 threads: 40 source:   8608481 time:     3.4697 sec
+trial: 59 threads: 40 source:  82435063 time:     3.4549 sec
+trial: 60 threads: 40 source:  46579271 time:     3.4952 sec
+trial: 61 threads: 40 source:    515421 time:     3.5219 sec
+trial: 62 threads: 40 source: 121530467 time:     3.5104 sec
+trial: 63 threads: 40 source: 127978736 time:     3.4728 sec
+:40:pushpull (onlytree):        3.484 (sec), rate: 1212.17
+phase  0:       1.9609 msec
+phase  1:  216094.2687 msec
+phase  2:       1.6948 msec
+phase  3:       1.1164 msec
+phase  4:    2761.5809 msec
+phase  5:    8173.2318 msec
+phase  6:    5796.9933 msec
+phase  7:  199359.7026 msec
+phase  8:       0.5676 msec
+phase  9:  195346.0143 msec
+phase 10:     668.7000 msec
+phase 11:       1.1896 msec
+phase 12:    3342.6385 msec
+
+threads to test:  40
+chunk: 65536
+matrix: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+sources: /home/faculty/davis/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 41.9947
+A is symmetric
+transpose time: 79.5847
+
+==========input graph: nodes: 134217728 edges: 4294966740 ntrials: 64
+pushpull (with tree only):
+
+------------------------------------------- threads: 40
+trial:  0 threads: 40 source:  27691419 time:     1.8690 sec
+trial:  1 threads: 40 source: 121280314 time:     2.0680 sec
+trial:  2 threads: 40 source:   2413431 time:     1.8766 sec
+trial:  3 threads: 40 source:  37512113 time:     2.1533 sec
+trial:  4 threads: 40 source:  38390877 time:     2.1261 sec
+trial:  5 threads: 40 source:  56651037 time:     2.0130 sec
+trial:  6 threads: 40 source: 128461248 time:     2.0915 sec
+trial:  7 threads: 40 source:  33029842 time:     1.9351 sec
+trial:  8 threads: 40 source:  71406328 time:     1.7773 sec
+trial:  9 threads: 40 source: 117872827 time:     2.1886 sec
+trial: 10 threads: 40 source:  24351938 time:     1.8295 sec
+trial: 11 threads: 40 source:  15444519 time:     1.9051 sec
+trial: 12 threads: 40 source: 127526281 time:     1.8658 sec
+trial: 13 threads: 40 source: 112279428 time:     1.7646 sec
+trial: 14 threads: 40 source:  13631649 time:     2.1084 sec
+trial: 15 threads: 40 source: 110379302 time:     1.7368 sec
+trial: 16 threads: 40 source:  44800623 time:     1.8378 sec
+trial: 17 threads: 40 source:  77768193 time:     1.8384 sec
+trial: 18 threads: 40 source:    175347 time:     2.0384 sec
+trial: 19 threads: 40 source: 107397389 time:     1.7445 sec
+trial: 20 threads: 40 source:  43457209 time:     1.9952 sec
+trial: 21 threads: 40 source:  97215940 time:     1.9994 sec
+trial: 22 threads: 40 source:  73575165 time:     1.9366 sec
+trial: 23 threads: 40 source:  44449715 time:     2.0490 sec
+trial: 24 threads: 40 source:  33931724 time:     1.8563 sec
+trial: 25 threads: 40 source:  55526610 time:     1.9424 sec
+trial: 26 threads: 40 source:  14422051 time:     1.6849 sec
+trial: 27 threads: 40 source:  58043873 time:     1.9457 sec
+trial: 28 threads: 40 source:  72137329 time:     1.9686 sec
+trial: 29 threads: 40 source:   9647840 time:     1.9374 sec
+trial: 30 threads: 40 source:  15940695 time:     2.0685 sec
+trial: 31 threads: 40 source:  14209952 time:     2.3144 sec
+trial: 32 threads: 40 source:  49020883 time:     1.9360 sec
+trial: 33 threads: 40 source:  28901138 time:     1.9360 sec
+trial: 34 threads: 40 source:  50493273 time:     2.0034 sec
+trial: 35 threads: 40 source:  49150069 time:     1.9127 sec
+trial: 36 threads: 40 source: 126525082 time:     1.9817 sec
+trial: 37 threads: 40 source:   6382740 time:     1.8535 sec
+trial: 38 threads: 40 source:  89108297 time:     2.2162 sec
+trial: 39 threads: 40 source:   9239735 time:     1.9740 sec
+trial: 40 threads: 40 source: 110168548 time:     1.7636 sec
+trial: 41 threads: 40 source:  95370259 time:     2.0439 sec
+trial: 42 threads: 40 source: 116653530 time:     2.0292 sec
+trial: 43 threads: 40 source: 123410703 time:     1.8629 sec
+trial: 44 threads: 40 source:  16733665 time:     2.0999 sec
+trial: 45 threads: 40 source:  49030282 time:     2.0352 sec
+trial: 46 threads: 40 source: 108545121 time:     1.8779 sec
+trial: 47 threads: 40 source:  99095665 time:     1.9554 sec
+trial: 48 threads: 40 source: 133850077 time:     2.0855 sec
+trial: 49 threads: 40 source:  63499301 time:     2.0971 sec
+trial: 50 threads: 40 source:  21541382 time:     2.0310 sec
+trial: 51 threads: 40 source:   6230751 time:     1.9894 sec
+trial: 52 threads: 40 source:  89077456 time:     1.9998 sec
+trial: 53 threads: 40 source:  70392765 time:     1.8929 sec
+trial: 54 threads: 40 source:   6670455 time:     1.7928 sec
+trial: 55 threads: 40 source:  61746271 time:     2.0368 sec
+trial: 56 threads: 40 source:  83349535 time:     1.8973 sec
+trial: 57 threads: 40 source: 115272184 time:     1.8771 sec
+trial: 58 threads: 40 source:  20129908 time:     1.7622 sec
+trial: 59 threads: 40 source: 106148553 time:     1.9356 sec
+trial: 60 threads: 40 source: 117042375 time:     1.8622 sec
+trial: 61 threads: 40 source:  71431187 time:     1.9049 sec
+trial: 62 threads: 40 source:  45287808 time:     1.7332 sec
+trial: 63 threads: 40 source: 107702120 time:     1.9336 sec
+:40:pushpull (onlytree):        1.950 (sec), rate: 2202.91
+phase  0:       2.0217 msec
+phase  1:  116970.6782 msec
+phase  2:       3.3519 msec
+phase  3:       0.7073 msec
+phase  4:    1518.0363 msec
+phase  5:    4838.0421 msec
+phase  6:    2788.5899 msec
+phase  7:  102081.0152 msec
+phase  8:       0.4978 msec
+phase  9:   96763.5753 msec
+phase 10:     494.4201 msec
+phase 11:       1.0122 msec
+phase 12:    4821.3790 msec
+
+threads to test:  40
+chunk: 65536
+matrix: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+sources: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter_sources.mtx
+read time: 23.8611
+A is unsymmetric
+transpose time: 20.345
+
+==========input graph: nodes: 61578415 edges: 1468364884 ntrials: 64
+pushpull (with tree only):
+
+------------------------------------------- threads: 40
+trial:  0 threads: 40 source:  12441072 time:     1.0185 sec
+trial:  1 threads: 40 source:  54488257 time:     0.9977 sec
+trial:  2 threads: 40 source:  25451915 time:     0.9954 sec
+trial:  3 threads: 40 source:  57714473 time:     1.0196 sec
+trial:  4 threads: 40 source:  14839494 time:     1.0610 sec
+trial:  5 threads: 40 source:  32081104 time:     1.0696 sec
+trial:  6 threads: 40 source:  52957357 time:     0.9862 sec
+trial:  7 threads: 40 source:  50444380 time:     1.0008 sec
+trial:  8 threads: 40 source:  49590701 time:     1.0349 sec
+trial:  9 threads: 40 source:  20127816 time:     0.9964 sec
+trial: 10 threads: 40 source:  34939333 time:     0.9790 sec
+trial: 11 threads: 40 source:  48251001 time:     0.9871 sec
+trial: 12 threads: 40 source:  19524253 time:     1.0021 sec
+trial: 13 threads: 40 source:  43676726 time:     0.9836 sec
+trial: 14 threads: 40 source:  33055508 time:     0.9936 sec
+trial: 15 threads: 40 source:  15244687 time:     0.9846 sec
+trial: 16 threads: 40 source:  24946738 time:     1.1299 sec
+trial: 17 threads: 40 source:   6479472 time:     1.0426 sec
+trial: 18 threads: 40 source:  26077682 time:     0.9952 sec
+trial: 19 threads: 40 source:  22023875 time:     0.9922 sec
+trial: 20 threads: 40 source:  22081915 time:     1.0101 sec
+trial: 21 threads: 40 source:  40034162 time:     0.9914 sec
+trial: 22 threads: 40 source:  49496014 time:     0.9980 sec
+trial: 23 threads: 40 source:  42847507 time:     1.0154 sec
+trial: 24 threads: 40 source:  52409557 time:     1.0105 sec
+trial: 25 threads: 40 source:  55445388 time:     1.0193 sec
+trial: 26 threads: 40 source:  22028097 time:     1.1096 sec
+trial: 27 threads: 40 source:  48766648 time:     1.0381 sec
+trial: 28 threads: 40 source:  44521241 time:     0.9912 sec
+trial: 29 threads: 40 source:  60135542 time:     0.9841 sec
+trial: 30 threads: 40 source:  28528671 time:     0.9756 sec
+trial: 31 threads: 40 source:   9678012 time:     1.0102 sec
+trial: 32 threads: 40 source:  40020306 time:     0.9945 sec
+trial: 33 threads: 40 source:  31625735 time:     0.9991 sec
+trial: 34 threads: 40 source:  37446892 time:     1.0011 sec
+trial: 35 threads: 40 source:  51788952 time:     0.9824 sec
+trial: 36 threads: 40 source:  52584255 time:     1.0116 sec
+trial: 37 threads: 40 source:  20346696 time:     1.0126 sec
+trial: 38 threads: 40 source:  48387909 time:     0.9863 sec
+trial: 39 threads: 40 source:  37337427 time:     0.9985 sec
+trial: 40 threads: 40 source:  50501084 time:     0.9948 sec
+trial: 41 threads: 40 source:  30130061 time:     1.0138 sec
+trial: 42 threads: 40 source:  41185893 time:     0.9960 sec
+trial: 43 threads: 40 source:  56495703 time:     0.9972 sec
+trial: 44 threads: 40 source:  45663305 time:     0.9915 sec
+trial: 45 threads: 40 source:  33359460 time:     0.9950 sec
+trial: 46 threads: 40 source:  48143058 time:     0.9941 sec
+trial: 47 threads: 40 source:  33291513 time:     1.0569 sec
+trial: 48 threads: 40 source:  53461445 time:     0.9822 sec
+trial: 49 threads: 40 source:  29340610 time:     0.9997 sec
+trial: 50 threads: 40 source:  34148498 time:     1.0175 sec
+trial: 51 threads: 40 source:  49171806 time:     1.0066 sec
+trial: 52 threads: 40 source:  35550696 time:     0.9844 sec
+trial: 53 threads: 40 source:  14521507 time:     0.9902 sec
+trial: 54 threads: 40 source:  51633218 time:     1.0025 sec
+trial: 55 threads: 40 source:  46823382 time:     0.9971 sec
+trial: 56 threads: 40 source:  19396273 time:     0.9991 sec
+trial: 57 threads: 40 source:  19871750 time:     1.1291 sec
+trial: 58 threads: 40 source:  36862677 time:     0.9928 sec
+trial: 59 threads: 40 source:  49539126 time:     0.9958 sec
+trial: 60 threads: 40 source:  34016452 time:     1.0758 sec
+trial: 61 threads: 40 source:  36567395 time:     1.0963 sec
+trial: 62 threads: 40 source:  55487793 time:     0.9994 sec
+trial: 63 threads: 40 source:  14391370 time:     1.0320 sec
+:40:pushpull (onlytree):        1.012 (sec), rate: 1451.36
+phase  0:       2.3216 msec
+phase  1:   61228.4164 msec
+phase  2:       2.4674 msec
+phase  3:       1.5580 msec
+phase  4:    1811.4912 msec
+phase  5:    5195.4048 msec
+phase  6:    4267.5212 msec
+phase  7:   49950.1942 msec
+phase  8:       0.8324 msec
+phase  9:   47328.9875 msec
+phase 10:     505.4273 msec
+phase 11:       1.5365 msec
+phase 12:    2113.1874 msec
+
+threads to test:  40
+chunk: 65536
+matrix: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+sources: /home/faculty/davis/GAP/GAP-web/GAP-web_sources.mtx
+read time: 31.1404
+A is unsymmetric
+transpose time: 5.22107
+
+==========input graph: nodes: 50636151 edges: 1930292948 ntrials: 64
+pushpull (with tree only):
+
+------------------------------------------- threads: 40
+trial:  0 threads: 40 source:  10219452 time:     1.3098 sec
+trial:  1 threads: 40 source:  44758211 time:     1.3500 sec
+trial:  2 threads: 40 source:    890671 time:     1.3009 sec
+trial:  3 threads: 40 source:  13843756 time:     0.0303 sec
+trial:  4 threads: 40 source:  14168062 time:     1.3187 sec
+trial:  5 threads: 40 source:  20906930 time:     1.3054 sec
+trial:  6 threads: 40 source:  12189584 time:     1.2933 sec
+trial:  7 threads: 40 source:  26352335 time:     0.0282 sec
+trial:  8 threads: 40 source:  43500686 time:     1.3198 sec
+trial:  9 threads: 40 source:   8987024 time:     1.3068 sec
+trial: 10 threads: 40 source:   5699762 time:     0.0281 sec
+trial: 11 threads: 40 source:  41436455 time:     1.3690 sec
+trial: 12 threads: 40 source:   5030727 time:     1.3026 sec
+trial: 13 threads: 40 source:  40735218 time:     1.2998 sec
+trial: 14 threads: 40 source:  16533563 time:     1.2847 sec
+trial: 15 threads: 40 source:  28700166 time:     1.2900 sec
+trial: 16 threads: 40 source:     64711 time:     1.3170 sec
+trial: 17 threads: 40 source:  39634750 time:     1.3251 sec
+trial: 18 threads: 40 source:  16037779 time:     1.3419 sec
+trial: 19 threads: 40 source:  27152739 time:     1.3446 sec
+trial: 20 threads: 40 source:  16404061 time:     1.2986 sec
+trial: 21 threads: 40 source:  20491963 time:     1.3099 sec
+trial: 22 threads: 40 source:   5322423 time:     1.3409 sec
+trial: 23 threads: 40 source:  21420953 time:     1.3194 sec
+trial: 24 threads: 40 source:  26622109 time:     1.3075 sec
+trial: 25 threads: 40 source:   5882875 time:     1.3293 sec
+trial: 26 threads: 40 source:  18091040 time:     1.3449 sec
+trial: 27 threads: 40 source:  10665896 time:     0.0484 sec
+trial: 28 threads: 40 source:  18634422 time:     1.3086 sec
+trial: 29 threads: 40 source:  18138715 time:     1.3078 sec
+trial: 30 threads: 40 source:   2355535 time:     1.3035 sec
+trial: 31 threads: 40 source:  32885205 time:     0.0370 sec
+trial: 32 threads: 40 source:  40657440 time:     1.2988 sec
+trial: 33 threads: 40 source:  35196167 time:     1.3139 sec
+trial: 34 threads: 40 source:  45544426 time:     1.3254 sec
+trial: 35 threads: 40 source:   6175519 time:     0.0230 sec
+trial: 36 threads: 40 source:  40058318 time:     1.3147 sec
+trial: 37 threads: 40 source:  50626230 time:     1.3262 sec
+trial: 38 threads: 40 source:  36571019 time:     1.2884 sec
+trial: 39 threads: 40 source:  49397052 time:     1.2862 sec
+trial: 40 threads: 40 source:  23434265 time:     1.3240 sec
+trial: 41 threads: 40 source:   2299444 time:     1.2990 sec
+trial: 42 threads: 40 source:  32873823 time:     0.0373 sec
+trial: 43 threads: 40 source:  25978282 time:     1.3023 sec
+trial: 44 threads: 40 source:   2461715 time:     0.0499 sec
+trial: 45 threads: 40 source:  22787314 time:     1.2967 sec
+trial: 46 threads: 40 source:  30759947 time:     1.3343 sec
+trial: 47 threads: 40 source:   7428894 time:     0.0230 sec
+trial: 48 threads: 40 source:  39173870 time:     0.0231 sec
+trial: 49 threads: 40 source:  43194209 time:     0.0261 sec
+trial: 50 threads: 40 source:  26361509 time:     0.0284 sec
+trial: 51 threads: 40 source:  39747211 time:     0.0231 sec
+trial: 52 threads: 40 source:  30670029 time:     1.3461 sec
+trial: 53 threads: 40 source:  41483033 time:     1.3491 sec
+trial: 54 threads: 40 source:   9358666 time:     1.3056 sec
+trial: 55 threads: 40 source:   9945008 time:     1.2930 sec
+trial: 56 threads: 40 source:   3355244 time:     1.2946 sec
+trial: 57 threads: 40 source:  33831269 time:     1.3180 sec
+trial: 58 threads: 40 source:  45124744 time:     1.3205 sec
+trial: 59 threads: 40 source:  16137877 time:     0.0351 sec
+trial: 60 threads: 40 source:  11235448 time:     1.2983 sec
+trial: 61 threads: 40 source:  37509144 time:     1.2905 sec
+trial: 62 threads: 40 source:  27402414 time:     1.2803 sec
+trial: 63 threads: 40 source:  39546083 time:     1.3181 sec
+:40:pushpull (onlytree):        1.033 (sec), rate: 1868.54
+phase  0:       5.3186 msec
+phase  1:   62932.3488 msec
+phase  2:       9.2795 msec
+phase  3:       6.0399 msec
+phase  4:    2560.0972 msec
+phase  5:   11675.9698 msec
+phase  6:   20892.5904 msec
+phase  7:   27789.2615 msec
+phase  8:       2.9587 msec
+phase  9:   21918.1126 msec
+phase 10:    2105.1212 msec
+phase 11:       6.0932 msec
+phase 12:    3756.4910 msec
+
+threads to test:  40
+chunk: 65536
+matrix: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+sources: /home/faculty/davis/GAP/GAP-road/GAP-road_sources.mtx
+read time: 1.12957
+A is symmetric
+transpose time: 0.676975
+
+==========input graph: nodes: 23947347 edges: 57708624 ntrials: 64
+pushpull (with tree only):
+
+------------------------------------------- threads: 40
+trial:  0 threads: 40 source:   4795720 time:     2.7690 sec
+trial:  1 threads: 40 source:  21003853 time:     2.8458 sec
+trial:  2 threads: 40 source:    417968 time:     2.9117 sec
+trial:  3 threads: 40 source:   6496511 time:     2.7488 sec
+trial:  4 threads: 40 source:   6648699 time:     2.9149 sec
+trial:  5 threads: 40 source:   9811073 time:     2.6947 sec
+trial:  6 threads: 40 source:  22247478 time:     2.7910 sec
+trial:  7 threads: 40 source:   5720252 time:     2.7270 sec
+trial:  8 threads: 40 source:  12366459 time:     2.8065 sec
+trial:  9 threads: 40 source:  20413729 time:     2.8117 sec
+trial: 10 threads: 40 source:   4217374 time:     2.6769 sec
+trial: 11 threads: 40 source:   2674749 time:     2.6751 sec
+trial: 12 threads: 40 source:  22085557 time:     2.8133 sec
+trial: 13 threads: 40 source:  19445040 time:     2.8530 sec
+trial: 14 threads: 40 source:   2360788 time:     2.7201 sec
+trial: 15 threads: 40 source:  19115968 time:     2.7149 sec
+trial: 16 threads: 40 source:   7758767 time:     2.8682 sec
+trial: 17 threads: 40 source:  13468234 time:     2.6991 sec
+trial: 18 threads: 40 source:     30367 time:     2.8207 sec
+trial: 19 threads: 40 source:  18599547 time:     2.7774 sec
+trial: 20 threads: 40 source:   7526108 time:     2.9191 sec
+trial: 21 threads: 40 source:  16836280 time:     2.6971 sec
+trial: 22 threads: 40 source:  12742067 time:     2.7051 sec
+trial: 23 threads: 40 source:   7697995 time:     2.8726 sec
+trial: 24 threads: 40 source:   5876443 time:     2.9145 sec
+trial: 25 threads: 40 source:   9616340 time:     2.8295 sec
+trial: 26 threads: 40 source:   2497673 time:     2.6738 sec
+trial: 27 threads: 40 source:  10052290 time:     2.8653 sec
+trial: 28 threads: 40 source:  12493057 time:     2.7175 sec
+trial: 29 threads: 40 source:   1670855 time:     2.7254 sec
+trial: 30 threads: 40 source:   2760679 time:     2.7833 sec
+trial: 31 threads: 40 source:   2460941 time:     2.6745 sec
+trial: 32 threads: 40 source:   8489650 time:     2.8638 sec
+trial: 33 threads: 40 source:   5005225 time:     2.7393 sec
+trial: 34 threads: 40 source:   8744645 time:     2.8686 sec
+trial: 35 threads: 40 source:   8512023 time:     2.8621 sec
+trial: 36 threads: 40 source:  21912165 time:     2.6420 sec
+trial: 37 threads: 40 source:   1105390 time:     2.8334 sec
+trial: 38 threads: 40 source:  15432163 time:     2.8880 sec
+trial: 39 threads: 40 source:   1600177 time:     2.7211 sec
+trial: 40 threads: 40 source:  19079469 time:     2.7063 sec
+trial: 41 threads: 40 source:  16516637 time:     2.6432 sec
+trial: 42 threads: 40 source:  20202566 time:     2.8181 sec
+trial: 43 threads: 40 source:  21372803 time:     2.8472 sec
+trial: 44 threads: 40 source:   2898009 time:     2.7417 sec
+trial: 45 threads: 40 source:   8491277 time:     2.8697 sec
+trial: 46 threads: 40 source:  18798317 time:     2.7801 sec
+trial: 47 threads: 40 source:  23757560 time:     2.7756 sec
+trial: 48 threads: 40 source:  17161819 time:     2.8327 sec
+trial: 49 threads: 40 source:  23180739 time:     2.6469 sec
+trial: 50 threads: 40 source:  10997085 time:     2.9373 sec
+trial: 51 threads: 40 source:   3730630 time:     2.7440 sec
+trial: 52 threads: 40 source:   1079068 time:     2.8185 sec
+trial: 53 threads: 40 source:  15426822 time:     2.8648 sec
+trial: 54 threads: 40 source:  12190925 time:     2.8658 sec
+trial: 55 threads: 40 source:   1155218 time:     2.8257 sec
+trial: 56 threads: 40 source:  10693488 time:     2.8703 sec
+trial: 57 threads: 40 source:  14434835 time:     2.7063 sec
+trial: 58 threads: 40 source:  19963339 time:     2.7201 sec
+trial: 59 threads: 40 source:   3486185 time:     2.7648 sec
+trial: 60 threads: 40 source:  18383269 time:     2.8261 sec
+trial: 61 threads: 40 source:  20269908 time:     2.8493 sec
+trial: 62 threads: 40 source:  12370764 time:     2.6999 sec
+trial: 63 threads: 40 source:   7843140 time:     2.8244 sec
+:40:pushpull (onlytree):        2.788 (sec), rate:  20.70
+phase  0:     157.1692 msec
+phase  1:  167217.5038 msec
+phase  2:     369.2563 msec
+phase  3:     207.5491 msec
+phase  4:   17502.2254 msec
+phase  5:    5018.4789 msec
+phase  6:     600.3018 msec
+phase  7:  143540.7400 msec
+phase  8:     181.5962 msec
+phase  9:  108433.0767 msec
+phase 10:   10628.7830 msec
+phase 11:     256.9120 msec
+phase 12:   24066.5294 msec
+
+[0;36mhypersparse $[0m exit
+exit
+
+Script done on Thu 30 Jul 2020 08:20:20 AM CDT
