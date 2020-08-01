@@ -53,6 +53,7 @@ GrB_Info bfs_log_parent // push-pull BFS, compute the tree only
     // inputs:
     GrB_Matrix A,           // input graph, any type
     GrB_Matrix AT,          // transpose of A (optional; push-only if NULL)
+    GrB_Vector Degree,      // Degree(i) is the out-degree of node i
     int64_t source          // starting node of the BFS
     , FILE *file
 ) ;
@@ -76,6 +77,8 @@ GrB_Info bfs_log_parent // push-pull BFS, compute the tree only
     GrB_free (&Abool) ;             \
     GrB_free (&v) ;                 \
     GrB_free (&pi) ;                \
+    GrB_free (&X) ;                 \
+    GrB_free (&Degree) ;            \
     GrB_free (&SourceNodes) ;       \
 }
 
@@ -88,9 +91,11 @@ int main (int argc, char **argv)
     GrB_Matrix Abool = NULL ;
     GrB_Vector v = NULL ;
     GrB_Vector pi = NULL ;
+    GrB_Vector X = NULL ;
+    GrB_Vector Degree = NULL ;
     GrB_Matrix SourceNodes = NULL ;
     LAGRAPH_OK (LAGraph_init ( )) ;
-    LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
+    LAGRAPH_OK (GxB_set (GxB_BURBLE, true)) ;
 
     uint64_t seed = 1 ;
     FILE *f ;
@@ -219,6 +224,18 @@ int main (int argc, char **argv)
     if (nrows != ncols) { printf ("A must be square\n") ; abort ( ) ; }
     double t_read = LAGraph_toc (tic) ;
     printf ("read time: %g\n", t_read) ;
+
+    //--------------------------------------------------------------------------
+    // compute the out-degree of each node (TODO: make this an LAGraph utility)
+    //--------------------------------------------------------------------------
+
+    LAGraph_tic (tic) ;
+    LAGr_Vector_new (&Degree, GrB_INT64, n) ;
+    LAGr_assign (Degree, NULL, NULL, 0, GrB_ALL, n, NULL) ;
+    LAGr_mxv (Degree, NULL, GrB_PLUS_INT64, GxB_PLUS_PAIR_INT64, A, Degree,
+        NULL) ;
+    double t_degree = LAGraph_toc (tic) ;
+    printf ("compute degree: %g sec\n", t_degree) ;
 
     //--------------------------------------------------------------------------
     // AT = A'
@@ -432,8 +449,20 @@ int main (int argc, char **argv)
     // BFS: pushpull, with tree only
     //--------------------------------------------------------------------------
 
-#if 0
-    printf ( "pushpull (with tree only):\n") ;
+#if 1
+    printf ( "pushpull (log, with tree only):\n") ;
+
+    sprintf (filename, "pushpull_%lu.m", n) ;
+    f = fopen (filename, "w") ;
+    fprintf (f, "function [results, name, n, nvals] = pushpull_%lu\n", n);
+    fprintf (f, "%% bfs_log: push-pull\n") ;
+    fprintf (f, "name = '%s' ;\n", matrix_name) ;
+    fprintf (f, "n = %lu ;\n", n) ;
+    fprintf (f, "k = 0 ;\n") ;
+    fprintf (f, "nvals = %lu ;\n", nvals) ;
+    fprintf (f, "d = %g ;\n", ((double) nvals) / (double) n) ;
+    fprintf (f, "%%%% columns in results:\n") ;
+    fprintf (f, "%%%% do_push, nq, nvisited, in_frontier, time\n");
     for (int tt = 1 ; tt <= nt ; tt++)
     {
         int nthreads = Nthreads [tt] ;
@@ -451,7 +480,7 @@ int main (int argc, char **argv)
             s-- ; // convert from 1-based to 0-based
             GrB_free (&pi) ;
             LAGraph_tic (tic) ;
-            LAGRAPH_OK (LAGraph_bfs_parent (&pi, A, AT, s)) ;
+            LAGRAPH_OK (bfs_log_parent (&pi, A, AT, Degree, s, f)) ;
             double ttrial = LAGraph_toc (tic) ;
             t [nthreads] += ttrial ;
             printf ("trial: %2d threads: %2d source: %9ld time: %10.4f sec\n",
@@ -651,7 +680,7 @@ int main (int argc, char **argv)
     fprintf (f, "nvals = %lu ;\n", nvals) ;
     fprintf (f, "d = %g ;\n", ((double) nvals) / (double) n) ;
     fprintf (f, "%%%% columns in results:\n") ;
-    fprintf (f, "%%%% s, n, d, nthreads, do_push, level, nq, nvisited, time\n");
+    fprintf (f, "%%%% do_push, nq, nvisited, in_frontier, time\n");
     printf ( "allpush (log, with tree-only):\n") ;
     for (int tt = 1 ; tt <= nt ; tt++)
     {
@@ -667,11 +696,12 @@ int main (int argc, char **argv)
             s-- ; // convert from 1-based to 0-based
             GrB_free (&v) ;
             GrB_free (&pi) ;
-            LAGRAPH_OK (bfs_log_parent (&pi, A, NULL, s, f)) ;
+            LAGRAPH_OK (bfs_log_parent (&pi, A, NULL, Degree, s, f)) ;
         }
         t [nthreads] = LAGraph_toc (tic) / ntrials ;
         printf ( ":%2d:allpush   (w/ tree): %12.3f (sec), rate: %6.2f\n",
             nthreads, t [nthreads], 1e-6*((double) nvals) / t [nthreads]) ;
+        fflush (f) ; fflush (stdout) ;
     }
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;
@@ -698,8 +728,9 @@ int main (int argc, char **argv)
     fprintf (f, "nvals = %lu ;\n", nvals) ;
     fprintf (f, "d = %g ;\n", ((double) nvals) / (double) n) ;
     fprintf (f, "%%%% columns in results:\n") ;
-    fprintf (f, "%%%% do_push, nq, nvisited, time\n");
+    fprintf (f, "%%%% do_push, nq, nvisited, in_frontier, time\n");
     printf ( "allpull (log, with tree-only):\n") ;
+
     for (int tt = 1 ; tt <= nt ; tt++)
     {
         int nthreads = Nthreads [tt] ;
@@ -714,11 +745,12 @@ int main (int argc, char **argv)
             s-- ; // convert from 1-based to 0-based
             GrB_free (&v) ;
             GrB_free (&pi) ;
-            LAGRAPH_OK (bfs_log_parent (&pi, NULL, AT, s, f)) ;
+            LAGRAPH_OK (bfs_log_parent (&pi, NULL, AT, Degree, s, f)) ;
         }
         t [nthreads] = LAGraph_toc (tic) / ntrials ;
         printf ( ":%2d:allpull   (w/ tree): %12.3f (sec), rate: %6.2f\n",
             nthreads, t [nthreads], 1e-6*((double) nvals) / t [nthreads]) ;
+        fflush (f) ; fflush (stdout) ;
     }
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;
