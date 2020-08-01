@@ -2286,3 +2286,11 @@ max # of threads: 40
 SuiteSparse:GraphBLAS July 30, 2020 (DRAFT:restored)
 Message: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb : treeonly:push-only
 # threads used: 40 time: 4.9203
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Aug  1 07:40:55 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS July 30, 2020 (DRAFT:restored)
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : treeonly:pushpull
+# threads used: 40 time: 3.52842
