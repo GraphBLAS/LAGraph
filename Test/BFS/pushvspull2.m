@@ -1,4 +1,4 @@
-function pushvspull (name, allpush_results, allpull_results, n, nz, fig)
+function pushvspull (name, allpush_results, allpull_results, pushpull_results, n, nz, fig)
 % pushvspull ('kron', allpush_results, allpull_results, n, nz, 1) ;
 
 d = nz / n 
@@ -13,11 +13,13 @@ t_pull_tot = 0 ;
 t_push_tot = 0 ;
 t_auto_tot = 0 ;
 t_best_tot = 0 ;
+t_pushpull_tot = 0 ;
 
 for k = 1:ntrials
 
     push_result = allpush_results {k}  ;
     pull_result = allpull_results {k}  ;
+    pushpull_result = pushpull_results {k}  ;
 
     edges_unexplored = nz ;
     last_nq = 0 ;
@@ -25,9 +27,10 @@ for k = 1:ntrials
 
     nq = push_result (:,2) ;
     nvisited = push_result (:,3) ;
-    edges_in_frontier = push_result (:,4) ;
+    edges_in_frontier = pushpull_result (:,4) ;
     t_pull = pull_result (:,5) ;
     t_push = push_result (:,5) ;
+    t_pushpull = pushpull_result (:,5) ;
 
     reltime = t_push ./ t_pull ;
 
@@ -38,28 +41,29 @@ for k = 1:ntrials
     edges_unexploreds = nan (nlevels, 1) ;
     growings = nan (nlevels, 1) ;
 
-    alpha = 3 ;
-    beta = 0.005 ;
+    alpha = 0.5 ;
+    beta = 20.0 ;
 
     for level = 1:nlevels
         % select push or pull
         this_nq = nq (level) ;
-
         edges_unexplored = edges_unexplored - edges_in_frontier (level) ;
         edges_unexploreds (level) = edges_unexplored ;
 
         growing = this_nq > last_nq ;
         growings (level) = growing ;
         if (do_push)
-%           big_frontier = edges_in_frontier (level) > (edges_unexplored / 15) ;
-            big_frontier = ...
-                ((edges_in_frontier (level)) ./ edges_unexplored) > alpha ;
+            big_frontier =  ...
+                edges_in_frontier (level) > (edges_unexplored / alpha) ;
+%           big_frontier = ...
+%               ((edges_in_frontier (level)) ./ edges_unexplored) > alpha ;
+
             if (big_frontier && growing)
                 do_push = false ;
             end
         else
             shrinking = ~growing ;
-            if ((this_nq/n < beta) & shrinking)
+            if ((this_nq < n / beta) && shrinking)
                 do_push = true ;
             end
         end
@@ -79,7 +83,7 @@ for k = 1:ntrials
                 fprintf (' pull ');
             end
             if (bad_choice)
-                fprintf (' (oops)') ;
+                fprintf (' (oops %d)', growing) ;
             end
             fprintf ('\n') ;
         end
@@ -90,7 +94,9 @@ for k = 1:ntrials
     fprintf ('push %10.4f ', sum (t_push)) ;
     fprintf ('pull %10.4f ', sum (t_pull)) ;
     fprintf ('auto %10.4f ', sum (t_auto)) ;
-    fprintf ('best %10.4f ', sum (t_best)) ;
+    fprintf ('actual push/pull %10.4f ', sum (t_pushpull)) ;
+    fprintf ('(%10.3f) ', sum (t_auto) / sum (t_pushpull)) ;
+    fprintf (': best %10.4f ', sum (t_best)) ;
     fprintf ('(%10.3f) ', sum (t_auto) / sum (t_push)) ;
     fprintf ('(%10.3f)\n', sum (t_auto) / sum (t_best)) ;
 
@@ -98,27 +104,28 @@ for k = 1:ntrials
     t_push_tot = t_push_tot + sum (t_push) ;
     t_auto_tot = t_auto_tot + sum (t_auto) ;
     t_best_tot = t_best_tot + sum (t_best) ;
+    t_pushpull_tot = t_pushpull_tot + sum (t_pushpull) ;
 
-    relalpha =  (edges_in_frontier) ./ edges_unexploreds ;
+    relalpha =   edges_unexploreds ./ (edges_in_frontier) ;
     relnq = nq / n ;
 
     % relalpha
     % reltime
     % growings
 
-    subplot (2,2,1)
+    subplot (1,2,1)
     loglog ( relalpha (growings ~= 0), reltime (growings ~= 0), 'o', ...
              [1e-4 100], [1 1], 'g-', ...
              [alpha alpha], [1e-3 10], 'g-') ;
     ylabel ('pushtime / pulltime') ;
-    xlabel ('growing: (edges in frontier) / (edges unexplored)') ;
+    xlabel ('growing: (edges unexplored - edges in frontier)/(edges in frontier) ') ;
     hold on
     title (name) ;
 
-    subplot (2,2,2) ;
+    subplot (1,2,2) ;
     loglog ( relnq (growings == 0), reltime (growings == 0), 'o', ...
-             [1e-4 100], [1 1], 'g-', ...
-             [beta beta], [1e-3 10], 'g-') ;
+             [1e-4 1], [1 1], 'g-', ...
+             [(1/beta) (1/beta)], [1e-3 10], 'g-') ;
     ylabel ('pushtime / pulltime') ;
     xlabel ('shrinking: nq/n') ;
     title (name) ;
@@ -157,6 +164,13 @@ for k = 1:ntrials
 end
 hold off
 
-fprintf ('all trials: allpush: %10.3f allpull: %10.3f auto: %10.3f best: %10.3f\n', ...
-    t_push_tot, t_pull_tot, t_auto_tot, t_best_tot) ;
+    t_pull_tot = t_pull_tot / ntrials ;
+    t_push_tot = t_push_tot / ntrials ;
+    t_auto_tot = t_auto_tot / ntrials ;
+    t_best_tot = t_best_tot / ntrials ;
+    t_pushpull_tot = t_pushpull_tot / ntrials ;
+
+fprintf ('\n-------\n') ;
+fprintf ('all trials: allpush: %10.3f allpull: %10.3f auto: %10.3f pushpull %10.3f best: %10.3f (%10.3f)\n', ...
+    t_push_tot, t_pull_tot, t_auto_tot, t_pushpull_tot, t_best_tot, t_pushpull_tot / t_best_tot) ;
 

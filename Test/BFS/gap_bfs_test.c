@@ -503,6 +503,7 @@ int main (int argc, char **argv)
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;
     printf ( "\n") ;
+    fclose (f) ;
 
     // LAGRAPH_OK (GxB_print (pi, 2)) ;
 #endif

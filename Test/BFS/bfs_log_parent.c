@@ -112,7 +112,7 @@ GrB_Info bfs_log_parent // push-pull BFS, compute the tree only
     #else
 
     GrB_Info info ;
-    GrB_Vector q = NULL ;           // nodes visited at each level
+    GrB_Vector q = NULL ;           // the current frontier
     GrB_Vector pi = NULL ;          // parent vector
     GrB_Vector w = NULL ;           // to compute work remaining
 
@@ -122,23 +122,20 @@ GrB_Info bfs_log_parent // push-pull BFS, compute the tree only
         LAGRAPH_ERROR ("required arguments are NULL", GrB_NULL_POINTER) ;
     }
 
-    bool use_vxm_with_A ;
-    GrB_Index nrows, ncols, nvalA ;
+    GrB_Index nrows, ncols, nvals ;
     if (A == NULL)
     {
         // only AT is provided
         LAGr_Matrix_ncols (&nrows, AT) ;
         LAGr_Matrix_nrows (&ncols, AT) ;
-        LAGr_Matrix_nvals (&nvalA, AT) ;
-        use_vxm_with_A = false ;
+        LAGr_Matrix_nvals (&nvals, AT) ;
     }
     else
     {
         // A is provided.  AT may or may not be provided
         LAGr_Matrix_nrows (&nrows, A) ;
         LAGr_Matrix_ncols (&ncols, A) ;
-        LAGr_Matrix_nvals (&nvalA, A) ;
-        use_vxm_with_A = true ;
+        LAGr_Matrix_nvals (&nvals, A) ;
     }
 
     if (nrows != ncols)
@@ -154,30 +151,28 @@ GrB_Info bfs_log_parent // push-pull BFS, compute the tree only
     bool A_csr = true, AT_csr = true ;
     if (A != NULL)
     {
-        // A_csr is true if accessing A(i,:) is fast
         GxB_Format_Value A_format ;
         LAGr_get (A , GxB_FORMAT, &A_format) ;
         A_csr = (A_format == GxB_BY_ROW) ;
     }
     if (AT != NULL)
     {
-        // AT_csr is true if accessing AT(i,:) is fast
         GxB_Format_Value AT_format ;
         LAGr_get (AT, GxB_FORMAT, &AT_format) ;
         AT_csr = (AT_format == GxB_BY_ROW) ;
     }
 
     bool vxm_is_push = (A  != NULL &&  A_csr ) ;    // vxm (q,A) is a push step
-    bool mxv_is_push = (AT != NULL && !AT_csr) ;    // mxv (AT,q) is a push step
-
     bool vxm_is_pull = (A  != NULL && !A_csr ) ;    // vxm (q,A) is a pull step
-    bool mxv_is_pull = (AT != NULL && !AT_csr) ;    // mxv (AT,q) is a pull step
+
+    bool mxv_is_push = (AT != NULL && !AT_csr) ;    // mxv (AT,q) is a push step
+    bool mxv_is_pull = (AT != NULL &&  AT_csr) ;    // mxv (AT,q) is a pull step
 
     // can_push is true if the push-step can be performed
     bool can_push = vxm_is_push || mxv_is_push ;
     // can_pull is true if the pull-step can be performed
     bool can_pull = vxm_is_pull || mxv_is_pull ;
-    // direction-optimizatio requires both push and pull
+    // direction-optimization requires both push and pull
     bool push_pull = can_push && can_pull ;
 
     //--------------------------------------------------------------------------
@@ -210,12 +205,16 @@ GrB_Info bfs_log_parent // push-pull BFS, compute the tree only
     LAGr_Vector_setElement (pi, source+1, source) ;
 
     // average node degree
-    double d = (n == 0) ? 0 : (((double) nvalA) / (double) n) ;
+    double d = (n == 0) ? 0 : (((double) nvals) / (double) n) ;
 
     LAGr_Vector_new (&w, GrB_INT64, n) ;
 
 fprintf (file, "\nk = k+1 ; s{k} = %lu ;\n", source) ;
 fprintf (file, "results{k} = [\n") ;
+
+    double alpha = 0.5 ;
+    double beta = 20.0 ;
+    int64_t n_over_beta = (int64_t) (((double) n) / beta) ;
 
     //--------------------------------------------------------------------------
     // BFS traversal and label the nodes
@@ -225,7 +224,7 @@ fprintf (file, "results{k} = [\n") ;
     int level = 0 ;
     GrB_Index last_nq = 0 ;
     int64_t edges_in_frontier = 0 ;
-    int64_t edges_unexplored = nvalA ;
+    int64_t edges_unexplored = nvals ;
 
     for (int64_t nvisited = 0 ; nvisited < n ; nvisited += nq)
     {
@@ -235,32 +234,39 @@ fprintf (file, "results{k} = [\n") ;
         //----------------------------------------------------------------------
 
         printf ("\n---------------- level %d\n", level) ;
-        // if (push_pull)
+        if (push_pull)
         {
             // w<q>=Degree
             // w(i) = outdegree of node i if node i is in the queue
             LAGr_assign (w, q, NULL, Degree, GrB_ALL, n, GrB_DESC_RS) ;
-            // edges_in_frontier = sum (w)
+            // edges_in_frontier = sum (w) = # of edges incident on all
+            // nodes in the current frontier
             LAGr_reduce (&edges_in_frontier, NULL, GrB_PLUS_MONOID_INT64, w,
                 NULL) ;
             edges_unexplored -= edges_in_frontier ;
             printf ("level %d edges_in_frontier %ld edges_unexplored %ld\n",
                 level, edges_in_frontier, edges_unexplored) ;
-
             if (do_push && can_pull)
             {
                 // check for switch from push to pull
+                printf ("  check for push to pull:\n") ;
                 bool growing = nq > last_nq ;
-                if (edges_in_frontier > edges_unexplored / 15 && growing)
+                printf ("      nq %ld, last_nq %ld: growing %d\n", nq, last_nq, growing) ;
+                printf ("      edges_in_frontier (%ld) > (edges_unexplored / alpha) (%g):  %d\n",
+                    edges_in_frontier, (edges_unexplored / alpha),
+                   (edges_in_frontier > (edges_unexplored / alpha))) ;
+                if ((edges_in_frontier > (edges_unexplored / alpha)) && growing)
                 {
+                    // the # of edges incident on 
                     do_push = false ;
                 }
             }
             else if (!do_push && can_push)
             {
                 // check for switch from pull to push
+                printf ("  check for pull to push:\n") ;
                 bool shrinking = nq < last_nq ;
-                if ((nq < n / 18) && shrinking)
+                if ((nq < n_over_beta) && shrinking)
                 {
                     do_push = true ;
                 }
@@ -273,18 +279,16 @@ fprintf (file, "results{k} = [\n") ;
 
 double t = omp_get_wtime ( ) ;
 
-        use_vxm_with_A = (do_push && vxm_is_push) || (!do_push && vxm_is_pull) ;
-
-        if (use_vxm_with_A)
+        if ((do_push && vxm_is_push) || (!do_push && vxm_is_pull))
         {
             // q'<!pi> = q'*A
-            // this is a push step if A is in CSR format; pull if CSC
+            // this is a push if A is in CSR format; pull if A is in CSC
             LAGr_vxm (q, pi, NULL, semiring, q, A, GrB_DESC_RC) ;
         }
-        else
+        else // ((!do_push && mxv_is_pull) || (do_push && mxv_is_push))
         {
             // q<!pi> = AT*q
-            // this is a pull step if AT is in CSR format; push if CSC
+            // this is a pull if AT is in CSR format; push if AT is in CSC
             LAGr_mxv (q, pi, NULL, semiring, AT, q, GrB_DESC_RC) ;
         }
 
@@ -292,9 +296,9 @@ t = omp_get_wtime ( ) - t ;
 fprintf (file, "%d  %16lu %16lu %16ld    %g\n",
     do_push, nq, nvisited, edges_in_frontier, t) ;
 
+        last_nq = nq ;
         LAGr_Vector_nvals (&nq, q) ;
         if (nq == 0) break ;
-        last_nq = nq ;
 
         //----------------------------------------------------------------------
         // assign parents
