@@ -46,4 +46,14 @@ GrB_Info bfs_log   // push, pull, or push-pull, and log timings
     FILE *file
 ) ;
 
-
+GrB_Info bfs_log_parent // push-pull BFS, compute the tree only
+(
+    // output:
+    GrB_Vector *pi_output,  // pi(i) = p+1 if p is the parent of node i
+    // inputs:
+    GrB_Matrix A,           // input graph, any type
+    GrB_Matrix AT,          // transpose of A (optional; push-only if NULL)
+    GrB_Vector Degree,      // Degree(i) is the out-degree of node i
+    int64_t source          // starting node of the BFS
+    , FILE *file
+) ;

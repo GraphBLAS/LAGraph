@@ -96,6 +96,7 @@ GrB_Info bfs_log_parent // push-pull BFS, compute the tree only
     GrB_Matrix A,           // input graph, any type
     GrB_Matrix AT,          // transpose of A (optional; push-only if NULL)
     GrB_Vector Degree,      // Degree(i) is the out-degree of node i
+                            // (optional: push-only if NULL)
     int64_t source          // starting node of the BFS
     , FILE *file
 )
@@ -170,10 +171,12 @@ GrB_Info bfs_log_parent // push-pull BFS, compute the tree only
 
     // can_push is true if the push-step can be performed
     bool can_push = vxm_is_push || mxv_is_push ;
+
     // can_pull is true if the pull-step can be performed
     bool can_pull = vxm_is_pull || mxv_is_pull ;
-    // direction-optimization requires both push and pull
-    bool push_pull = can_push && can_pull ;
+
+    // direction-optimization requires both push and pull, and Degree
+    bool push_pull = can_push && can_pull && (Degree != NULL) ;
 
     //--------------------------------------------------------------------------
     // initializations
@@ -204,15 +207,12 @@ GrB_Info bfs_log_parent // push-pull BFS, compute the tree only
     // pi (source) = source+1 denotes a root of the BFS tree
     LAGr_Vector_setElement (pi, source+1, source) ;
 
-    // average node degree
-    double d = (n == 0) ? 0 : (((double) nvals) / (double) n) ;
-
-    LAGr_Vector_new (&w, GrB_INT64, n) ;
+    if (push_pull) LAGr_Vector_new (&w, GrB_INT64, n) ;
 
 fprintf (file, "\nk = k+1 ; s{k} = %lu ;\n", source) ;
 fprintf (file, "results{k} = [\n") ;
 
-    double alpha = 0.5 ;
+    double alpha = 0.15 ;
     double beta = 20.0 ;
     int64_t n_over_beta = (int64_t) (((double) n) / beta) ;
 
@@ -220,7 +220,7 @@ fprintf (file, "results{k} = [\n") ;
     // BFS traversal and label the nodes
     //--------------------------------------------------------------------------
 
-    bool do_push = can_push ;   // start with push, if available
+    bool do_push = can_push ; // start with push, if available
     int level = 0 ;
     GrB_Index last_nq = 0 ;
     int64_t edges_in_frontier = 0 ;
@@ -233,7 +233,7 @@ fprintf (file, "results{k} = [\n") ;
         // select push vs pull
         //----------------------------------------------------------------------
 
-        printf ("\n---------------- level %d\n", level) ;
+        // printf ("\n---------------- level %d\n", level) ;
         if (push_pull)
         {
             // w<q>=Degree
@@ -244,17 +244,10 @@ fprintf (file, "results{k} = [\n") ;
             LAGr_reduce (&edges_in_frontier, NULL, GrB_PLUS_MONOID_INT64, w,
                 NULL) ;
             edges_unexplored -= edges_in_frontier ;
-            printf ("level %d edges_in_frontier %ld edges_unexplored %ld\n",
-                level, edges_in_frontier, edges_unexplored) ;
             if (do_push && can_pull)
             {
                 // check for switch from push to pull
-                printf ("  check for push to pull:\n") ;
                 bool growing = nq > last_nq ;
-                printf ("      nq %ld, last_nq %ld: growing %d\n", nq, last_nq, growing) ;
-                printf ("      edges_in_frontier (%ld) > (edges_unexplored / alpha) (%g):  %d\n",
-                    edges_in_frontier, (edges_unexplored / alpha),
-                   (edges_in_frontier > (edges_unexplored / alpha))) ;
                 if ((edges_in_frontier > (edges_unexplored / alpha)) && growing)
                 {
                     // the # of edges incident on 
@@ -264,7 +257,6 @@ fprintf (file, "results{k} = [\n") ;
             else if (!do_push && can_push)
             {
                 // check for switch from pull to push
-                printf ("  check for pull to push:\n") ;
                 bool shrinking = nq < last_nq ;
                 if ((nq < n_over_beta) && shrinking)
                 {

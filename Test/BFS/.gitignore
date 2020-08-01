@@ -13,3 +13,6 @@ ponly_*
 v_*
 s_*
 logtime_*txt
+allpush*.m
+allpull*.m
+pushpull_*.m

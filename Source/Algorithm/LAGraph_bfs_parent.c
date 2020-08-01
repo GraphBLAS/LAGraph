@@ -40,7 +40,7 @@
 
 // Usage:
 
-// info = LAGraph_bfs_parent (&pi, A, AT, source) ;
+// info = LAGraph_bfs_parent (&pi, A, AT, Degree, source) ;
 
 //      GrB_Vector *pi:  a vector containing the BFS tree, in 1-based indexing.
 //          pi(source) = source+1 for source node.  pi(i) = p+1 if p is the
@@ -59,12 +59,15 @@
 //          LAGraph_bfs_pushpull).  Results are undefined if AT is not NULL but
 //          not identical to the transpose of A.
 
+//      GrB_Vector Degree: a vector of outdegrees, where Degree(i) is the
+//          out-degree of node i (the # of entries in A(i,:)).
+
 //      int64_t source: the source node for the BFS.
 
 // This algorithm can use the push-pull strategy, which requires both A and
-// AT=A' to be passed in.  If the graph is known to be symmetric, then the same
-// matrix A can be passed in for both arguments.  Results are undefined if AT
-// is not the transpose of A.
+// AT=A', and Degree to be passed in.  If the graph is known to be symmetric,
+// then the same matrix A can be passed in for both arguments.  Results are
+// undefined if AT is not the transpose of A.
 
 // See LAGraph_bfs_pushpull for a discussion of the push/pull strategy.
 
@@ -83,6 +86,7 @@
 
 #define LAGRAPH_FREE_ALL    \
 {                           \
+    GrB_free (&w) ;         \
     GrB_free (&q) ;         \
     GrB_free (&pi) ;        \
 }
@@ -94,6 +98,8 @@ GrB_Info LAGraph_bfs_parent // push-pull BFS, compute the tree only
     // inputs:
     GrB_Matrix A,           // input graph, any type
     GrB_Matrix AT,          // transpose of A (optional; push-only if NULL)
+    GrB_Vector Degree,      // Degree(i) is the out-degree of node i
+                            // (optional: push-only if NULL)
     int64_t source          // starting node of the BFS
 )
 {
@@ -109,8 +115,9 @@ GrB_Info LAGraph_bfs_parent // push-pull BFS, compute the tree only
     #else
 
     GrB_Info info ;
-    GrB_Vector q = NULL ;           // nodes visited at each level
+    GrB_Vector q = NULL ;           // the current frontier
     GrB_Vector pi = NULL ;          // parent vector
+    GrB_Vector w = NULL ;           // to compute work remaining
 
     if (pi_output == NULL || (A == NULL && AT == NULL))
     {
@@ -118,27 +125,21 @@ GrB_Info LAGraph_bfs_parent // push-pull BFS, compute the tree only
         LAGRAPH_ERROR ("required arguments are NULL", GrB_NULL_POINTER) ;
     }
 
-    bool use_vxm_with_A ;
-    GrB_Index nrows, ncols, nvalA ;
+    GrB_Index nrows, ncols, nvals ;
     if (A == NULL)
     {
         // only AT is provided
         LAGr_Matrix_ncols (&nrows, AT) ;
         LAGr_Matrix_nrows (&ncols, AT) ;
-        LAGr_Matrix_nvals (&nvalA, AT) ;
-        use_vxm_with_A = false ;
+        LAGr_Matrix_nvals (&nvals, AT) ;
     }
     else
     {
         // A is provided.  AT may or may not be provided
         LAGr_Matrix_nrows (&nrows, A) ;
         LAGr_Matrix_ncols (&ncols, A) ;
-        LAGr_Matrix_nvals (&nvalA, A) ;
-        use_vxm_with_A = true ;
+        LAGr_Matrix_nvals (&nvals, A) ;
     }
-
-    // push/pull requires both A and AT
-    bool push_pull = (A != NULL && AT != NULL) ;
 
     if (nrows != ncols)
     {
@@ -150,64 +151,34 @@ GrB_Info LAGraph_bfs_parent // push-pull BFS, compute the tree only
     // check the format of A and AT
     //--------------------------------------------------------------------------
 
-    bool csr = true ;
+    bool A_csr = true, AT_csr = true ;
+    if (A != NULL)
+    {
+        GxB_Format_Value A_format ;
+        LAGr_get (A , GxB_FORMAT, &A_format) ;
+        A_csr = (A_format == GxB_BY_ROW) ;
+    }
+    if (AT != NULL)
+    {
+        GxB_Format_Value AT_format ;
+        LAGr_get (AT, GxB_FORMAT, &AT_format) ;
+        AT_csr = (AT_format == GxB_BY_ROW) ;
+    }
 
-    // csr is true if A and AT are known (or assumed) to be in CSR format; if
-    // false, they are known to be in CSC format.
+    bool vxm_is_push = (A  != NULL &&  A_csr ) ;    // vxm (q,A) is a push step
+    bool vxm_is_pull = (A  != NULL && !A_csr ) ;    // vxm (q,A) is a pull step
 
-        GxB_Format_Value A_format = -1, AT_format = -1 ;
-        bool A_csr = true, AT_csr = true ;
-        if (A != NULL)
-        {
-            // A_csr is true if accessing A(i,:) is fast
-            LAGr_get (A , GxB_FORMAT, &A_format) ;
-            A_csr = (A_format == GxB_BY_ROW) ;
-        }
-        if (AT != NULL)
-        {
-            // AT_csr is true if accessing AT(i,:) is fast
-            LAGr_get (AT, GxB_FORMAT, &AT_format) ;
-            AT_csr = (AT_format == GxB_BY_ROW) ;
-        }
-        // Assume CSR if A(i,:) and AT(i,:) are both fast.  If csr is false,
-        // then the algorithm below will reverse the use of vxm and mxv.
-        csr = A_csr && AT_csr ;
-        if (push_pull)
-        {
-            // both A and AT are provided.  Require they have the same format.
-            // Either both A(i,:) and AT(i,:) are efficient to accesss, or both
-            // A(:,j) and AT(:,j) are efficient to access.
-            if (A_csr != AT_csr)
-            {
-                LAGRAPH_ERROR ("A and AT must in the same format:\n"
-                    "both GxB_BY_ROW, or both GxB_BY_COL",
-                    GrB_INVALID_VALUE) ;
-            }
-        }
-#if 0
-        else
-        {
-            // only A or AT are provided.  Refuse to do the pull-only version.
-            if (A != NULL && A_format == GxB_BY_COL)
-            {
-                // this would result in a pull-only BFS ... exceedingly slow
-                LAGRAPH_ERROR (
-                    "SuiteSparse: AT not provided, so A must be GxB_BY_ROW\n"
-                    "(or provide both A and AT, both in the same format,\n"
-                    "either both GxB_BY_COL or both GxB_BY_ROW)",
-                    GrB_INVALID_VALUE) ;
-            }
-            if (AT != NULL && AT_format == GxB_BY_ROW)
-            {
-                // this would result in a pull-only BFS ... exceedingly slow
-                LAGRAPH_ERROR (
-                    "SuiteSparse: A not provided, so AT must be GxB_BY_COL\n"
-                    "(or provide both A and AT, both in the same format,\n"
-                    "either both GxB_BY_COL or both GxB_BY_ROW)",
-                    GrB_INVALID_VALUE) ;
-            }
-        }
-#endif
+    bool mxv_is_push = (AT != NULL && !AT_csr) ;    // mxv (AT,q) is a push step
+    bool mxv_is_pull = (AT != NULL &&  AT_csr) ;    // mxv (AT,q) is a pull step
+
+    // can_push is true if the push-step can be performed
+    bool can_push = vxm_is_push || mxv_is_push ;
+
+    // can_pull is true if the pull-step can be performed
+    bool can_pull = vxm_is_pull || mxv_is_pull ;
+
+    // direction-optimization requires both push and pull, and Degree
+    bool push_pull = can_push && can_pull && (Degree != NULL) ;
 
     //--------------------------------------------------------------------------
     // initializations
@@ -238,12 +209,20 @@ GrB_Info LAGraph_bfs_parent // push-pull BFS, compute the tree only
     // pi (source) = source+1 denotes a root of the BFS tree
     LAGr_Vector_setElement (pi, source+1, source) ;
 
-    // average node degree
-    double d = (n == 0) ? 0 : (((double) nvalA) / (double) n) ;
+    if (push_pull) LAGr_Vector_new (&w, GrB_INT64, n) ;
+
+    double alpha = 0.15 ;
+    double beta = 20.0 ;
+    int64_t n_over_beta = (int64_t) (((double) n) / beta) ;
 
     //--------------------------------------------------------------------------
     // BFS traversal and label the nodes
     //--------------------------------------------------------------------------
+
+    bool do_push = can_push ; // start with push, if available
+    GrB_Index last_nq = 0 ;
+    int64_t edges_in_frontier = 0 ;
+    int64_t edges_unexplored = nvals ;
 
     for (int64_t nvisited = 0 ; nvisited < n ; nvisited += nq)
     {
@@ -254,18 +233,32 @@ GrB_Info LAGraph_bfs_parent // push-pull BFS, compute the tree only
 
         if (push_pull)
         {
-            double pushwork = d * nq ;
-            double expected = (double) n / (double) (nvisited+1) ;
-            double per_dot = LAGRAPH_MIN (d, expected) ;
-            double binarysearch = (3 * (1 + log2 ((double) nq))) ;
-            double pullwork = (n-nvisited) * per_dot * binarysearch ;
-            use_vxm_with_A = (pushwork < pullwork) ;
-            if (!csr)
+            // w<q>=Degree
+            // w(i) = outdegree of node i if node i is in the queue
+            LAGr_assign (w, q, NULL, Degree, GrB_ALL, n, GrB_DESC_RS) ;
+            // edges_in_frontier = sum (w) = # of edges incident on all
+            // nodes in the current frontier
+            LAGr_reduce (&edges_in_frontier, NULL, GrB_PLUS_MONOID_INT64, w,
+                NULL) ;
+            edges_unexplored -= edges_in_frontier ;
+            if (do_push && can_pull)
             {
-                // Neither A(i,:) nor AT(i,:) is efficient.  Instead, both
-                // A(:,j) and AT(:,j) is fast (that is, the two matrices
-                // are in CSC format).  Swap vxm and mxv.
-                use_vxm_with_A = !use_vxm_with_A ;
+                // check for switch from push to pull
+                bool growing = nq > last_nq ;
+                if ((edges_in_frontier > (edges_unexplored / alpha)) && growing)
+                {
+                    // the # of edges incident on 
+                    do_push = false ;
+                }
+            }
+            else if (!do_push && can_push)
+            {
+                // check for switch from pull to push
+                bool shrinking = nq < last_nq ;
+                if ((nq < n_over_beta) && shrinking)
+                {
+                    do_push = true ;
+                }
             }
         }
 
@@ -273,33 +266,28 @@ GrB_Info LAGraph_bfs_parent // push-pull BFS, compute the tree only
         // q = next level of the BFS
         //----------------------------------------------------------------------
 
-double t = omp_get_wtime ( ) ;
-
-        if (use_vxm_with_A)
+        if ((do_push && vxm_is_push) || (!do_push && vxm_is_pull))
         {
             // q'<!pi> = q'*A
-            // this is a push step if A is in CSR format; pull if CSC
+            // this is a push if A is in CSR format; pull if A is in CSC
             LAGr_vxm (q, pi, NULL, semiring, q, A, GrB_DESC_RC) ;
         }
-        else
+        else // ((!do_push && mxv_is_pull) || (do_push && mxv_is_push))
         {
             // q<!pi> = AT*q
-            // this is a pull step if AT is in CSR format; push if CSC
+            // this is a pull if AT is in CSR format; push if AT is in CSC
             LAGr_mxv (q, pi, NULL, semiring, AT, q, GrB_DESC_RC) ;
         }
 
-t = omp_get_wtime ( ) - t ;
-
+        last_nq = nq ;
         LAGr_Vector_nvals (&nq, q) ;
-printf ("%s %10ld %12.5f\n", use_vxm_with_A ? "push" : "pull", nq, t) ;
         if (nq == 0) break ;
 
         //----------------------------------------------------------------------
         // assign parents
         //----------------------------------------------------------------------
 
-        // q(i) currently contains the parent+1 of node i in tree (off by one
-        // so it won't have any zero values, for valued mask).
+        // q(i) currently contains the parent+1 of node i in tree.
         // pi<q> = q
         LAGr_assign (pi, q, NULL, q, GrB_ALL, n, GrB_DESC_S) ;
     }

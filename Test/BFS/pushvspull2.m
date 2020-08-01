@@ -1,13 +1,13 @@
 function pushvspull (name, allpush_results, allpull_results, pushpull_results, n, nz, fig)
 % pushvspull ('kron', allpush_results, allpull_results, n, nz, 1) ;
 
-d = nz / n 
+d = nz / n  ;
 ntrials = length (allpush_results) ;
 format long g
 figure (fig)
 clf (fig)
 
-fprintf ('\n--------------- %s:\n', name) ;
+fprintf ('--------------- %s:\n', name) ;
 
 t_pull_tot = 0 ;
 t_push_tot = 0 ;
@@ -41,7 +41,7 @@ for k = 1:ntrials
     edges_unexploreds = nan (nlevels, 1) ;
     growings = nan (nlevels, 1) ;
 
-    alpha = 0.5 ;
+    alpha = 0.15 ;
     beta = 20.0 ;
 
     for level = 1:nlevels
@@ -74,6 +74,8 @@ for k = 1:ntrials
             t_auto (level) = t_pull (level);
         end
         bad_choice = (t_auto (level) > t_best (level)) ;
+
+if (0)
         if (bad_choice)
             fprintf ('   level %2d: push %10.4f pull %10.3f ', ...
                 level, t_push (level), t_pull (level)) ;
@@ -87,9 +89,12 @@ for k = 1:ntrials
             end
             fprintf ('\n') ;
         end
+end
+
         last_nq = this_nq ;
     end
 
+if (0)
     fprintf ('trial %2d : ', k) ;
     fprintf ('push %10.4f ', sum (t_push)) ;
     fprintf ('pull %10.4f ', sum (t_pull)) ;
@@ -99,6 +104,7 @@ for k = 1:ntrials
     fprintf (': best %10.4f ', sum (t_best)) ;
     fprintf ('(%10.3f) ', sum (t_auto) / sum (t_push)) ;
     fprintf ('(%10.3f)\n', sum (t_auto) / sum (t_best)) ;
+end
 
     t_pull_tot = t_pull_tot + sum (t_pull) ;
     t_push_tot = t_push_tot + sum (t_push) ;
@@ -170,7 +176,7 @@ hold off
     t_best_tot = t_best_tot / ntrials ;
     t_pushpull_tot = t_pushpull_tot / ntrials ;
 
-fprintf ('\n-------\n') ;
+% fprintf ('\n-------\n') ;
 fprintf ('all trials: allpush: %10.3f allpull: %10.3f auto: %10.3f pushpull %10.3f best: %10.3f (%10.3f)\n', ...
     t_push_tot, t_pull_tot, t_auto_tot, t_pushpull_tot, t_best_tot, t_pushpull_tot / t_best_tot) ;
 
