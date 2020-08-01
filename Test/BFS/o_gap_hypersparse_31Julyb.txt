@@ -15,3 +15,71 @@ allpush (log, with tree-only):
 allpull (log, with tree-only):
 :40:allpull   (w/ tree):        4.490 (sec), rate: 940.68
 
+threads to test:  40
+chunk: 65536
+matrix: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+sources: /home/faculty/davis/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 49.4726
+A is symmetric
+transpose time: 80.687
+
+==========input graph: nodes: 134217728 edges: 4294966740 ntrials: 64
+allpush (log, with tree-only):
+:40:allpush   (w/ tree):        5.192 (sec), rate: 827.19
+
+allpull (log, with tree-only):
+:40:allpull   (w/ tree):      224.553 (sec), rate:  19.13
+
+threads to test:  40
+chunk: 65536
+matrix: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+sources: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter_sources.mtx
+read time: 23.8831
+A is unsymmetric
+transpose time: 20.795
+
+==========input graph: nodes: 61578415 edges: 1468364884 ntrials: 64
+allpush (log, with tree-only):
+:40:allpush   (w/ tree):        0.971 (sec), rate: 1512.29
+
+allpull (log, with tree-only):
+:40:allpull   (w/ tree):        4.498 (sec), rate: 326.46
+
+threads to test:  40
+chunk: 65536
+matrix: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+sources: /home/faculty/davis/GAP/GAP-web/GAP-web_sources.mtx
+read time: 31.1535
+A is unsymmetric
+transpose time: 5.34815
+
+==========input graph: nodes: 50636151 edges: 1930292948 ntrials: 64
+allpush (log, with tree-only):
+:40:allpush   (w/ tree):        1.051 (sec), rate: 1836.33
+
+allpull (log, with tree-only):
+:40:allpull   (w/ tree):        5.705 (sec), rate: 338.37
+
+threads to test:  40
+chunk: 65536
+matrix: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+sources: /home/faculty/davis/GAP/GAP-road/GAP-road_sources.mtx
+read time: 1.13337
+A is symmetric
+transpose time: 0.680812
+
+==========input graph: nodes: 23947347 edges: 57708624 ntrials: 64
+allpush (log, with tree-only):
+:40:allpush   (w/ tree):        2.737 (sec), rate:  21.09
+
+allpull (log, with tree-only):
+:40:allpull   (w/ tree):      184.674 (sec), rate:   0.31
+
