@@ -23,11 +23,11 @@ for k = 1:ntrials
     last_nq = 0 ;
     do_push = true ;
 
-    nq = push_result (:,2)
-    nvisited = push_result (:,3)
-    edges_in_frontier = push_result (:,4)
-    t_pull = pull_result (:,5)
-    t_push = push_result (:,5)
+    nq = push_result (:,2) ;
+    nvisited = push_result (:,3) ;
+    edges_in_frontier = push_result (:,4) ;
+    t_pull = pull_result (:,5) ;
+    t_push = push_result (:,5) ;
 
     reltime = t_push ./ t_pull ;
 
@@ -38,24 +38,32 @@ for k = 1:ntrials
     edges_unexploreds = nan (nlevels, 1) ;
     growings = nan (nlevels, 1) ;
 
+    alpha = 3 ;
+    beta = 0.005 ;
+
     for level = 1:nlevels
         % select push or pull
         this_nq = nq (level) ;
+
         edges_unexplored = edges_unexplored - edges_in_frontier (level) ;
         edges_unexploreds (level) = edges_unexplored ;
+
         growing = this_nq > last_nq ;
         growings (level) = growing ;
         if (do_push)
-            big_frontier = edges_in_frontier (level) > (edges_unexplored / 15) ;
+%           big_frontier = edges_in_frontier (level) > (edges_unexplored / 15) ;
+            big_frontier = ...
+                ((edges_in_frontier (level)) ./ edges_unexplored) > alpha ;
             if (big_frontier && growing)
                 do_push = false ;
             end
         else
             shrinking = ~growing ;
-            if ((this_nq < n / 18) & shrinking)
+            if ((this_nq/n < beta) & shrinking)
                 do_push = true ;
             end
         end
+
         if (do_push)
             t_auto (level) = t_push (level);
         else
@@ -91,18 +99,28 @@ for k = 1:ntrials
     t_auto_tot = t_auto_tot + sum (t_auto) ;
     t_best_tot = t_best_tot + sum (t_best) ;
 
-    relalpha = (edges_unexploreds) ./ (edges_in_frontier) ;
+    relalpha =  (edges_in_frontier) ./ edges_unexploreds ;
+    relnq = nq / n ;
 
-    relalpha
-    reltime
-    growings
+    % relalpha
+    % reltime
+    % growings
 
-    % subplot (2,2,1)
-    loglog ( relalpha (growings ~= 0), reltime (growings ~= 0), 'o') ;
-%            [1e-8 100], [1 1], 'g-', ...
-%            [1 1], [1e-3 10], 'g-') ;
+    subplot (2,2,1)
+    loglog ( relalpha (growings ~= 0), reltime (growings ~= 0), 'o', ...
+             [1e-4 100], [1 1], 'g-', ...
+             [alpha alpha], [1e-3 10], 'g-') ;
     ylabel ('pushtime / pulltime') ;
-    xlabel ('alpha') ;
+    xlabel ('growing: (edges in frontier) / (edges unexplored)') ;
+    hold on
+    title (name) ;
+
+    subplot (2,2,2) ;
+    loglog ( relnq (growings == 0), reltime (growings == 0), 'o', ...
+             [1e-4 100], [1 1], 'g-', ...
+             [beta beta], [1e-3 10], 'g-') ;
+    ylabel ('pushtime / pulltime') ;
+    xlabel ('shrinking: nq/n') ;
     title (name) ;
     hold on
     drawnow
