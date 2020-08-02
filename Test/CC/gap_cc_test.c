@@ -53,7 +53,7 @@
     GrB_free (&A) ;         \
 }
 
-#define NTHREAD_LIST 1
+#define NTHREAD_LIST 2
 #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 6
@@ -87,7 +87,7 @@ int main (int argc, char **argv)
     GrB_Matrix A = NULL, S = NULL ;
     GrB_Vector result = NULL ;
     LAGRAPH_OK (LAGraph_init ( )) ;
-    LAGRAPH_OK (GxB_set (GxB_BURBLE, true)) ;
+    LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
 
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;

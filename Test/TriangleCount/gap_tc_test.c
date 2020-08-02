@@ -42,7 +42,7 @@
 
 #include "LAGraph.h"
 
-#define NTHREAD_LIST 1
+#define NTHREAD_LIST 2
 #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 6
@@ -108,7 +108,7 @@ int main (int argc, char **argv)
     GrB_Vector thunk = NULL ;     // unused, for LAGRAPH_FREE_ALL
     #endif
     LAGRAPH_OK (LAGraph_init ( )) ;
-    LAGRAPH_OK (GxB_set (GxB_BURBLE, true)) ;
+    LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
 
     int ntrials = 3 ;
     printf ("# of trials: %d\n", ntrials) ;

@@ -46,11 +46,8 @@
 #include "bfs_test.h"
 #include "../../../GraphBLAS/Source/GB_Global.h"
 
-#define NTHREAD_LIST 1
+#define NTHREAD_LIST 2
 #define THREAD_LIST 0
-
-// #define NTHREAD_LIST 2
-// #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 8
 // #define THREAD_LIST 8, 7, 6, 5, 4, 3, 2, 1

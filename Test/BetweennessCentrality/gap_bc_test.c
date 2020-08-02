@@ -34,10 +34,7 @@
 
 //------------------------------------------------------------------------------
 
-// #define NTHREAD_LIST 2
-// #define THREAD_LIST 0
-
-#define NTHREAD_LIST 1
+#define NTHREAD_LIST 2
 #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 4

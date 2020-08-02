@@ -46,7 +46,7 @@
 
 #include "sssp_test.h"
 
-#define NTHREAD_LIST 1
+#define NTHREAD_LIST 2
 #define THREAD_LIST 0
 
 #define LAGRAPH_FREE_ALL            \
@@ -77,7 +77,7 @@ int main (int argc, char **argv)
     GrB_Vector path_lengths = NULL ;
     GrB_Vector path_lengths1 = NULL ;
     LAGRAPH_OK (LAGraph_init ( )) ;
-    LAGRAPH_OK (GxB_set (GxB_BURBLE, true)) ;
+    LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
 
     GrB_Index ignore, s = 0 ;
     int32_t delta = 3;
