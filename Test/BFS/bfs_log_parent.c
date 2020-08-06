@@ -281,17 +281,16 @@ double t = omp_get_wtime ( ) ;
         {
             // q<!pi> = AT*q
             // this is a pull if AT is in CSR format; push if AT is in CSC
-        printf ("before changing to bitmap:\n") ; GxB_print (q, 2) ;
+        // printf ("before changing to bitmap:\n") ; GxB_print (q, 2) ;
             GxB_set ((GrB_Matrix) q, GxB_SPARSITY, GxB_BITMAP) ;
-        printf ("after changing to bitmap:\n") ; GxB_print (q, 2) ;
+        // printf ("after changing to bitmap:\n") ; GxB_print (q, 2) ;
             LAGr_mxv (q, pi, NULL, semiring, AT, q, GrB_DESC_RC) ;
-        printf ("after mxv:\n") ; GxB_print (q, 2) ;
+        // printf ("after mxv:\n") ; GxB_print (q, 2) ;
             GxB_set ((GrB_Matrix) q, GxB_SPARSITY, GxB_SPARSE) ;
-        printf ("after changing to sparse:\n") ; GxB_print (q, 2) ;
+        // printf ("after changing to sparse:\n") ; GxB_print (q, 2) ;
         }
-        printf ("\n----------------- level: %ld\n", level) ;
-        printf ("FINAL q:\n") ;
-        GxB_print (q, 2) ;
+        // printf ("\n----------------- level: %ld\n", level) ;
+        // printf ("FINAL q:\n") ; GxB_print (q, 2) ;
 
 t = omp_get_wtime ( ) - t ;
 fprintf (file, "%d  %16lu %16lu %16ld    %g\n",
@@ -300,7 +299,7 @@ fprintf (file, "%d  %16lu %16lu %16ld    %g\n",
 
         last_nq = nq ;
         LAGr_Vector_nvals (&nq, q) ;
-        printf ("::: nvals: %ld\n", nq) ;
+        // printf ("::: nvals: %ld\n", nq) ;
         if (nq == 0) break ;
 
         //----------------------------------------------------------------------
@@ -309,13 +308,11 @@ fprintf (file, "%d  %16lu %16lu %16ld    %g\n",
 
         // q(i) currently contains the parent+1 of node i in tree.
         // pi<q> = q
-        printf ("::: ASSIGN:\n") ;
-        GxB_print (pi, 2) ;
+        // printf ("::: ASSIGN:\n") ; GxB_print (pi, 2) ;
 
         LAGr_assign (pi, q, NULL, q, GrB_ALL, n, GrB_DESC_S) ;
 
-        printf ("::: AFTER ASSIGN:\n") ;
-        GxB_print (pi, 2) ;
+        // printf ("::: AFTER ASSIGN:\n") ; GxB_print (pi, 2) ;
 
         level++ ;
     }
