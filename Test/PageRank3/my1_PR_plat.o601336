@@ -1,0 +1,2479 @@
+
+########################################################################
+#      Date:           Thu May 21 19:50:11 PDT 2020
+#    Job ID:           601336.v-qsvr-1.aidevcloud
+#      User:           u32248
+# Resources:           neednodes=1:ppn=2:plat8153,nodes=1:ppn=2:plat8153,walltime=24:00:00
+########################################################################
+
+MKL version: 202101
+threads to test:  32 16
+matrix: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-kron/GAP-kron.grb
+ [ GxB_Matrix_import_CSR 2.86e-05 sec ]
+ [ GxB_set 1.86e-05 sec ]
+ [ GrB_apply (shallow-op) generic 5.14 sec ]
+ [ GxB_set (transpose) 68.2 sec ]
+ [ GrB_Matrix_nvals 5.99e-06 sec ]
+ [ GrB_Matrix_dup 1.21 sec ]
+original # of edges: 4223264644
+ [ GrB_reduce 10.8 sec ]
+ [ GrB_reduce wait (zombies: 71143742, pending: 0) 1.15 sec ]
+ [ GrB_Vector_nvals 9.58e-07 sec ]
+ [ GrB_Vector_nvals 4.66e-08 sec ]
+Matrix has 71143742 empty rows
+Matrix has 71143742 empty cols
+ [ GrB_reduce wait (zombies: 0, pending: 71143742) generic add 13 sec ]
+ [ GrB_Vector_nvals 5.56e-07 sec ]
+ [ GrB_Vector_dup 0.0379 sec ]
+ [ GxB_Vector_export 3.41e-06 sec ]
+
+==========input graph: nodes: 134217726 edges: 4223264644
+diag entries added: 71143742
+ [ GrB_Matrix_nvals 1.31e-06 sec ]
+read time: 6008.18 sec
+# of trials: 2
+chunk: 65536
+
+Method 3f: with MKL: 0
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar 0.0597 sec ]
+ [ GrB_Vector_dup 0.0381 sec ]
+ [ GrB_assign (C dense) Method 22: (C dense) += scalar 0.00873 sec ]
+ [ GxB_mxv_optimize 2.32e-06 sec ]
+ [ GrB_eWiseMult (A dense) (B dense) dense C=A+B 0.0458 sec ]
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar 0.0594 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 2.57 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 3.09 sec ]
+ [ GrB_apply (inplace-op) 0.00875 sec ]
+ [ GrB_reduce 0.00551 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0182 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00799 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 2.6 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0131 sec ]
+ [ GrB_apply (inplace-op) 0.00861 sec ]
+ [ GrB_reduce 0.00529 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0182 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00802 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 2.58 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0131 sec ]
+ [ GrB_apply (inplace-op) 0.00861 sec ]
+ [ GrB_reduce 0.00527 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0181 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00796 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 2.58 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0133 sec ]
+ [ GrB_apply (inplace-op) 0.00857 sec ]
+ [ GrB_reduce 0.00529 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0181 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00798 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 2.56 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0131 sec ]
+ [ GrB_apply (inplace-op) 0.00874 sec ]
+ [ GrB_reduce 0.00536 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.018 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00792 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 2.57 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0131 sec ]
+ [ GrB_apply (inplace-op) 0.0086 sec ]
+ [ GrB_reduce 0.00534 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0181 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00801 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 2.57 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0133 sec ]
+ [ GrB_apply (inplace-op) 0.00879 sec ]
+ [ GrB_reduce 0.00526 sec ]
+ [ GxB_mxv_optimize_free info 0
+iters 7
+warmup (3f):     21.661 (threads: 32) MKL: 0
+
+Method 3f: with MKL: 1
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar 0.0591 sec ]
+ [ GrB_Vector_dup 0.0389 sec ]
+ [ GrB_assign (C dense) Method 22: (C dense) += scalar 0.00864 sec ]
+ [ GxB_mxv_optimize 8.15 sec ]
+ [ GrB_eWiseMult (A dense) (B dense) dense C=A+B 0.044 sec ]
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar 0.0596 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 3.96089) (cblas_saxpy) 4.09 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0125 sec ]
+ [ GrB_apply (inplace-op) 0.00858 sec ]
+ [ GrB_reduce 0.00534 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0176 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00796 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 3.93681) (cblas_saxpy) 4.06 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0125 sec ]
+ [ GrB_apply (inplace-op) 0.0086 sec ]
+ [ GrB_reduce 0.00536 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0177 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00803 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 3.93376) (cblas_saxpy) 4.06 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0124 sec ]
+ [ GrB_apply (inplace-op) 0.00853 sec ]
+ [ GrB_reduce 0.00538 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0176 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00793 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 3.94148) (cblas_saxpy) 4.07 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0125 sec ]
+ [ GrB_apply (inplace-op) 0.00855 sec ]
+ [ GrB_reduce 0.00539 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0176 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00803 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 3.93476) (cblas_saxpy) 4.06 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0125 sec ]
+ [ GrB_apply (inplace-op) 0.00854 sec ]
+ [ GrB_reduce 0.00538 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0175 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00793 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 3.92212) (cblas_saxpy) 4.05 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0125 sec ]
+ [ GrB_apply (inplace-op) 0.00862 sec ]
+ [ GrB_reduce 0.00539 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0177 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00802 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 3.93146) (cblas_saxpy) 4.06 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0125 sec ]
+ [ GrB_apply (inplace-op) 0.00853 sec ]
+ [ GrB_reduce 0.00542 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0176 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00794 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 3.94088) (cblas_saxpy) 4.07 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0125 sec ]
+ [ GrB_apply (inplace-op) 0.00861 sec ]
+ [ GrB_reduce 0.00535 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0177 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00799 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 3.94078) (cblas_saxpy) 4.07 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0125 sec ]
+ [ GrB_apply (inplace-op) 0.00853 sec ]
+ [ GrB_reduce 0.00542 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0176 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00798 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 3.9325) (cblas_saxpy) 4.06 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0125 sec ]
+ [ GrB_apply (inplace-op) 0.00855 sec ]
+ [ GrB_reduce 0.00536 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0176 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00808 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 3.93577) (cblas_saxpy) 4.06 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0125 sec ]
+ [ GrB_apply (inplace-op) 0.0085 sec ]
+ [ GrB_reduce 0.00535 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0175 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00791 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 3.93552) (cblas_saxpy) 4.06 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0125 sec ]
+ [ GrB_apply (inplace-op) 0.0086 sec ]
+ [ GrB_reduce 0.00535 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0177 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00802 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 3.93851) (cblas_saxpy) 4.06 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0125 sec ]
+ [ GrB_apply (inplace-op) 0.0085 sec ]
+ [ GrB_reduce 0.00536 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0176 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00794 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 3.93882) (cblas_saxpy) 4.06 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0125 sec ]
+ [ GrB_apply (inplace-op) 0.00859 sec ]
+ [ GrB_reduce 0.00537 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0176 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.008 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 3.9348) (cblas_saxpy) 4.06 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0125 sec ]
+ [ GrB_apply (inplace-op) 0.00856 sec ]
+ [ GrB_reduce 0.00536 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0176 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.008 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 3.94079) (cblas_saxpy) 4.07 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0125 sec ]
+ [ GrB_apply (inplace-op) 0.0086 sec ]
+ [ GrB_reduce 0.00544 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0176 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00803 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 3.93696) (cblas_saxpy) 4.06 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0125 sec ]
+ [ GrB_apply (inplace-op) 0.00853 sec ]
+ [ GrB_reduce 0.00538 sec ]
+ [ GxB_mxv_optimize_free info 0
+iters 17
+warmup (3f):     78.284 (threads: 32) MKL: 1
+
+Method 3f: with MKL: 0
+
+--------------------------- nthreads: 32
+trial:  0 time:    18.5636 sec
+trial:  1 time:    18.6022 sec
+3f: 32: avg time:     18.583 (sec), rate:   1590.865 iters: 7
+
+--------------------------- nthreads: 16
+trial:  0 time:    32.4398 sec
+trial:  1 time:    32.3728 sec
+3f: 16: avg time:     32.406 (sec), rate:    912.257 iters: 7
+
+  134217726x1 GraphBLAS float vector, sparse by col:
+  PR, 134217726 entries
+
+    (0,0)    1.11759e-09
+    (1,0)    1.21291e-09
+    (2,0)    1.21297e-09
+    (3,0)    1.11759e-09
+    (4,0)    1.11759e-09
+    (5,0)    1.11759e-09
+    (6,0)    1.11759e-09
+    (7,0)    1.11759e-09
+    (8,0)    1.11759e-09
+    (9,0)    1.52821e-09
+    (10,0)    1.11759e-09
+    (11,0)    2.92415e-09
+    (12,0)    1.11759e-09
+    (13,0)    1.11759e-09
+    (14,0)    1.68495e-09
+    (15,0)    1.60349e-09
+    (16,0)    1.11759e-09
+    (17,0)    1.11759e-09
+    (18,0)    1.11759e-09
+    (19,0)    1.6263e-09
+    (20,0)    1.11759e-09
+    (21,0)    1.11759e-09
+    (22,0)    1.11759e-09
+    (23,0)    1.11759e-09
+    (24,0)    1.1994e-09
+    (25,0)    1.45084e-09
+    (26,0)    9.28271e-09
+    (27,0)    1.35811e-09
+    (28,0)    2.13301e-09
+    (29,0)    1.52126e-09
+    ...
+
+Method 3f: with MKL: 1
+
+--------------------------- nthreads: 32
+trial:  0 time:    76.9704 sec
+trial:  1 time:    77.0700 sec
+3f: 32: avg time:     77.020 (sec), rate:    932.165 iters: 17
+
+--------------------------- nthreads: 16
+trial:  0 time:    77.4288 sec
+trial:  1 time:    77.4134 sec
+3f: 16: avg time:     77.421 (sec), rate:    927.337 iters: 17
+
+  134217726x1 GraphBLAS float vector, sparse by col:
+  PR, 134217726 entries
+
+    (0,0)    1.1825e-09
+    (1,0)    1.18066e-09
+    (2,0)    1.33977e-09
+    (3,0)    4.12253e-09
+    (4,0)    1.52316e-09
+    (5,0)    1.31944e-09
+    (6,0)    1.38714e-09
+    (7,0)    1.11771e-09
+    (8,0)    1.26326e-09
+    (9,0)    5.64546e-09
+    (10,0)    1.33961e-09
+    (11,0)    1.89349e-09
+    (12,0)    1.42799e-09
+    (13,0)    1.1177e-09
+    (14,0)    1.20687e-09
+    (15,0)    1.2193e-09
+    (16,0)    1.19267e-09
+    (17,0)    1.20552e-09
+    (18,0)    2.21616e-09
+    (19,0)    1.19176e-09
+    (20,0)    5.08504e-08
+    (21,0)    1.19161e-09
+    (22,0)    1.52429e-09
+    (23,0)    1.18859e-09
+    (24,0)    1.13096e-09
+    (25,0)    1.25301e-09
+    (26,0)    1.19913e-09
+    (27,0)    2.82556e-09
+    (28,0)    1.12293e-09
+    (29,0)    1.95427e-09
+    ...
+MKL version: 202101
+threads to test:  32 16
+matrix: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-urand/GAP-urand.grb
+ [ GxB_Matrix_import_CSR 1.32e-05 sec ]
+ [ GxB_set 2.09e-05 sec ]
+ [ GrB_apply (shallow-op) generic 5.15 sec ]
+ [ GxB_set (transpose) 73.7 sec ]
+ [ GrB_Matrix_nvals 5.08e-06 sec ]
+ [ GrB_Matrix_dup 1.22 sec ]
+original # of edges: 4294966740
+ [ GrB_reduce 14.5 sec ]
+ [ GrB_reduce 0.234 sec ]
+ [ GrB_Vector_nvals 9.47e-07 sec ]
+ [ GrB_Vector_nvals 4.28e-08 sec ]
+ [ GrB_reduce 13.7 sec ]
+ [ GrB_Vector_nvals 4.85e-07 sec ]
+ [ GrB_Vector_dup 0.0383 sec ]
+ [ GxB_Vector_export 3.93e-06 sec ]
+
+==========input graph: nodes: 134217728 edges: 4294966740
+diag entries added: 0
+ [ GrB_Matrix_nvals 8.23e-07 sec ]
+read time: 6069.78 sec
+# of trials: 2
+chunk: 65536
+
+Method 3f: with MKL: 0
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar 0.0594 sec ]
+ [ GrB_Vector_dup 0.0395 sec ]
+ [ GrB_assign (C dense) Method 22: (C dense) += scalar 0.0086 sec ]
+ [ GxB_mxv_optimize 2.66e-06 sec ]
+ [ GrB_eWiseMult (A dense) (B dense) dense C=A+B 0.0443 sec ]
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar 0.0631 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 3.3 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0241 sec ]
+ [ GrB_apply (inplace-op) 0.00869 sec ]
+ [ GrB_reduce 0.0053 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0185 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00796 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 3.3 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0132 sec ]
+ [ GrB_apply (inplace-op) 0.0086 sec ]
+ [ GrB_reduce 0.00528 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0186 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00791 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 3.3 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0132 sec ]
+ [ GrB_apply (inplace-op) 0.00879 sec ]
+ [ GrB_reduce 0.00525 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0186 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00796 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 3.3 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0134 sec ]
+ [ GrB_apply (inplace-op) 0.00874 sec ]
+ [ GrB_reduce 0.00534 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0187 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00797 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 3.3 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.013 sec ]
+ [ GrB_apply (inplace-op) 0.00871 sec ]
+ [ GrB_reduce 0.00525 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0187 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00795 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 3.31 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0131 sec ]
+ [ GrB_apply (inplace-op) 0.00874 sec ]
+ [ GrB_reduce 0.00529 sec ]
+ [ GxB_mxv_optimize_free info 0
+iters 6
+warmup (3f):     20.331 (threads: 32) MKL: 0
+
+Method 3f: with MKL: 1
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar 0.0592 sec ]
+ [ GrB_Vector_dup 0.0389 sec ]
+ [ GrB_assign (C dense) Method 22: (C dense) += scalar 0.00875 sec ]
+ [ GxB_mxv_optimize 6.8 sec ]
+ [ GrB_eWiseMult (A dense) (B dense) dense C=A+B 0.0451 sec ]
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar 0.0599 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 3.10906) (cblas_saxpy) 3.24 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0128 sec ]
+ [ GrB_apply (inplace-op) 0.0085 sec ]
+ [ GrB_reduce 0.00537 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0185 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00797 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 3.0538) (cblas_saxpy) 3.18 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0127 sec ]
+ [ GrB_apply (inplace-op) 0.00861 sec ]
+ [ GrB_reduce 0.0053 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0187 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.008 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 3.05711) (cblas_saxpy) 3.18 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0128 sec ]
+ [ GrB_apply (inplace-op) 0.00854 sec ]
+ [ GrB_reduce 0.0053 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0186 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00796 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 3.06064) (cblas_saxpy) 3.18 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0127 sec ]
+ [ GrB_apply (inplace-op) 0.00871 sec ]
+ [ GrB_reduce 0.00533 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0188 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.008 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 3.04766) (cblas_saxpy) 3.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0129 sec ]
+ [ GrB_apply (inplace-op) 0.00855 sec ]
+ [ GrB_reduce 0.00533 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0184 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00793 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 3.05111) (cblas_saxpy) 3.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0127 sec ]
+ [ GrB_apply (inplace-op) 0.00861 sec ]
+ [ GrB_reduce 0.00554 sec ]
+ [ GxB_mxv_optimize_free info 0
+iters 6
+warmup (3f):     26.427 (threads: 32) MKL: 1
+
+Method 3f: with MKL: 0
+
+--------------------------- nthreads: 32
+trial:  0 time:    20.3045 sec
+trial:  1 time:    20.3348 sec
+3f: 32: avg time:     20.320 (sec), rate:   1268.221 iters: 6
+
+--------------------------- nthreads: 16
+trial:  0 time:    34.7270 sec
+trial:  1 time:    34.6437 sec
+3f: 16: avg time:     34.685 (sec), rate:    742.960 iters: 6
+
+  134217728x1 GraphBLAS float vector, sparse by col:
+  PR, 134217728 entries
+
+    (0,0)    8.25985e-09
+    (1,0)    7.23841e-09
+    (2,0)    8.28931e-09
+    (3,0)    7.71854e-09
+    (4,0)    8.2541e-09
+    (5,0)    9.05594e-09
+    (6,0)    8.01646e-09
+    (7,0)    7.62977e-09
+    (8,0)    8.79943e-09
+    (9,0)    7.01721e-09
+    (10,0)    7.44634e-09
+    (11,0)    7.82501e-09
+    (12,0)    9.04071e-09
+    (13,0)    4.5071e-09
+    (14,0)    6.88887e-09
+    (15,0)    5.91511e-09
+    (16,0)    9.80993e-09
+    (17,0)    7.49341e-09
+    (18,0)    7.61506e-09
+    (19,0)    6.4787e-09
+    (20,0)    6.24013e-09
+    (21,0)    7.03518e-09
+    (22,0)    7.64445e-09
+    (23,0)    7.88618e-09
+    (24,0)    6.68367e-09
+    (25,0)    8.81481e-09
+    (26,0)    7.06337e-09
+    (27,0)    5.87844e-09
+    (28,0)    7.54203e-09
+    (29,0)    8.4015e-09
+    ...
+
+Method 3f: with MKL: 1
+
+--------------------------- nthreads: 32
+trial:  0 time:    26.0856 sec
+trial:  1 time:    26.0661 sec
+3f: 32: avg time:     26.076 (sec), rate:    988.264 iters: 6
+
+--------------------------- nthreads: 16
+trial:  0 time:    26.3034 sec
+trial:  1 time:    26.2671 sec
+3f: 16: avg time:     26.285 (sec), rate:    980.391 iters: 6
+
+  134217728x1 GraphBLAS float vector, sparse by col:
+  PR, 134217728 entries
+
+    (0,0)    8.25985e-09
+    (1,0)    7.23841e-09
+    (2,0)    8.28931e-09
+    (3,0)    7.71854e-09
+    (4,0)    8.2541e-09
+    (5,0)    9.05594e-09
+    (6,0)    8.01646e-09
+    (7,0)    7.62977e-09
+    (8,0)    8.79943e-09
+    (9,0)    7.01721e-09
+    (10,0)    7.44634e-09
+    (11,0)    7.82501e-09
+    (12,0)    9.04071e-09
+    (13,0)    4.5071e-09
+    (14,0)    6.88888e-09
+    (15,0)    5.91511e-09
+    (16,0)    9.80993e-09
+    (17,0)    7.49341e-09
+    (18,0)    7.61506e-09
+    (19,0)    6.4787e-09
+    (20,0)    6.24013e-09
+    (21,0)    7.03518e-09
+    (22,0)    7.64445e-09
+    (23,0)    7.88618e-09
+    (24,0)    6.68367e-09
+    (25,0)    8.81481e-09
+    (26,0)    7.06337e-09
+    (27,0)    5.87844e-09
+    (28,0)    7.54203e-09
+    (29,0)    8.4015e-09
+    ...
+MKL version: 202101
+threads to test:  32 16
+matrix: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-twitter/GAP-twitter.grb
+ [ GxB_Matrix_import_CSR 1.41e-05 sec ]
+ [ GxB_set 2.12e-05 sec ]
+ [ GrB_apply (shallow-op) generic 1.8 sec ]
+ [ GxB_set (transpose) 22.1 sec ]
+ [ GrB_Matrix_nvals 6.35e-06 sec ]
+ [ GrB_Matrix_dup 0.42 sec ]
+original # of edges: 1468364884
+ [ GrB_reduce 3.19 sec ]
+ [ GrB_reduce wait (zombies: 25889280, pending: 0) 1.05 sec ]
+ [ GrB_Vector_nvals 7.23e-07 sec ]
+ [ GrB_Vector_nvals 4.47e-08 sec ]
+Matrix has 21475137 empty rows
+Matrix has 25889280 empty cols
+ [ GrB_reduce wait (zombies: 0, pending: 27438232) generic add 4.2 sec ]
+ [ GrB_Vector_nvals 7.86e-07 sec ]
+ [ GrB_Vector_dup 0.0168 sec ]
+ [ GxB_Vector_export 2.9e-06 sec ]
+
+==========input graph: nodes: 61578415 edges: 1468364884
+diag entries added: 27438232
+ [ GrB_Matrix_nvals 1.06e-06 sec ]
+read time: 2085.23 sec
+# of trials: 2
+chunk: 65536
+
+Method 3f: with MKL: 0
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar 0.028 sec ]
+ [ GrB_Vector_dup 0.0177 sec ]
+ [ GrB_assign (C dense) Method 22: (C dense) += scalar 0.00389 sec ]
+ [ GxB_mxv_optimize 2.94e-06 sec ]
+ [ GrB_eWiseMult (A dense) (B dense) dense C=A+B 0.0208 sec ]
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar 0.0275 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.633 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0147 sec ]
+ [ GrB_apply (inplace-op) 0.00382 sec ]
+ [ GrB_reduce 0.00254 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00803 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00354 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.646 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00575 sec ]
+ [ GrB_apply (inplace-op) 0.00396 sec ]
+ [ GrB_reduce 0.00257 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00799 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.64 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00583 sec ]
+ [ GrB_apply (inplace-op) 0.00389 sec ]
+ [ GrB_reduce 0.0026 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00807 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00353 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.641 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00575 sec ]
+ [ GrB_apply (inplace-op) 0.00395 sec ]
+ [ GrB_reduce 0.00255 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00799 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.655 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00585 sec ]
+ [ GrB_apply (inplace-op) 0.00388 sec ]
+ [ GrB_reduce 0.00259 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00798 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00353 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.64 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00579 sec ]
+ [ GrB_apply (inplace-op) 0.00396 sec ]
+ [ GrB_reduce 0.00254 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00801 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00354 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.639 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00587 sec ]
+ [ GrB_apply (inplace-op) 0.00389 sec ]
+ [ GrB_reduce 0.00259 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.008 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00353 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.643 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00578 sec ]
+ [ GrB_apply (inplace-op) 0.00395 sec ]
+ [ GrB_reduce 0.00252 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.008 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.643 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00586 sec ]
+ [ GrB_apply (inplace-op) 0.00385 sec ]
+ [ GrB_reduce 0.00265 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.008 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.647 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00575 sec ]
+ [ GrB_apply (inplace-op) 0.00394 sec ]
+ [ GrB_reduce 0.00254 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00802 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.643 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00583 sec ]
+ [ GrB_apply (inplace-op) 0.00394 sec ]
+ [ GrB_reduce 0.00261 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00801 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00355 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.644 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00576 sec ]
+ [ GrB_apply (inplace-op) 0.00388 sec ]
+ [ GrB_reduce 0.00252 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00797 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00354 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.642 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00584 sec ]
+ [ GrB_apply (inplace-op) 0.00399 sec ]
+ [ GrB_reduce 0.00257 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.008 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00354 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.645 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00576 sec ]
+ [ GrB_apply (inplace-op) 0.00402 sec ]
+ [ GrB_reduce 0.00265 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00812 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.653 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00635 sec ]
+ [ GrB_apply (inplace-op) 0.00466 sec ]
+ [ GrB_reduce 0.00318 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00909 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00373 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.649 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00578 sec ]
+ [ GrB_apply (inplace-op) 0.00392 sec ]
+ [ GrB_reduce 0.00253 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.008 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00358 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.648 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00581 sec ]
+ [ GrB_apply (inplace-op) 0.0038 sec ]
+ [ GrB_reduce 0.0026 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00807 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00353 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.651 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00576 sec ]
+ [ GrB_apply (inplace-op) 0.0039 sec ]
+ [ GrB_reduce 0.00257 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00802 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00355 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.649 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00581 sec ]
+ [ GrB_apply (inplace-op) 0.00391 sec ]
+ [ GrB_reduce 0.00259 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00803 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00355 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.646 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00579 sec ]
+ [ GrB_apply (inplace-op) 0.00384 sec ]
+ [ GrB_reduce 0.00257 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00802 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.643 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00586 sec ]
+ [ GrB_apply (inplace-op) 0.00389 sec ]
+ [ GrB_reduce 0.00257 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00798 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00354 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.64 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00577 sec ]
+ [ GrB_apply (inplace-op) 0.00388 sec ]
+ [ GrB_reduce 0.00253 sec ]
+ [ GxB_mxv_optimize_free info 0
+iters 22
+warmup (3f):     14.809 (threads: 32) MKL: 0
+
+Method 3f: with MKL: 1
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar 0.0297 sec ]
+ [ GrB_Vector_dup 0.0178 sec ]
+ [ GrB_assign (C dense) Method 22: (C dense) += scalar 0.00379 sec ]
+ [ GxB_mxv_optimize 2.5 sec ]
+ [ GrB_eWiseMult (A dense) (B dense) dense C=A+B 0.0209 sec ]
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar 0.0308 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.12139) (cblas_saxpy) 1.18 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00582 sec ]
+ [ GrB_apply (inplace-op) 0.00396 sec ]
+ [ GrB_reduce 0.00247 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00821 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11046) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00594 sec ]
+ [ GrB_apply (inplace-op) 0.00412 sec ]
+ [ GrB_reduce 0.00251 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00818 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10518) (cblas_saxpy) 1.16 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00578 sec ]
+ [ GrB_apply (inplace-op) 0.00397 sec ]
+ [ GrB_reduce 0.00246 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00813 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10897) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00592 sec ]
+ [ GrB_apply (inplace-op) 0.004 sec ]
+ [ GrB_reduce 0.0025 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00821 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10996) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00579 sec ]
+ [ GrB_apply (inplace-op) 0.00393 sec ]
+ [ GrB_reduce 0.0025 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00822 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11238) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00591 sec ]
+ [ GrB_apply (inplace-op) 0.00394 sec ]
+ [ GrB_reduce 0.00247 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00829 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10972) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00579 sec ]
+ [ GrB_apply (inplace-op) 0.00405 sec ]
+ [ GrB_reduce 0.00246 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00822 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10998) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00592 sec ]
+ [ GrB_apply (inplace-op) 0.00403 sec ]
+ [ GrB_reduce 0.00249 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00826 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11403) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00581 sec ]
+ [ GrB_apply (inplace-op) 0.004 sec ]
+ [ GrB_reduce 0.00246 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00824 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00355 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11034) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00591 sec ]
+ [ GrB_apply (inplace-op) 0.00396 sec ]
+ [ GrB_reduce 0.00248 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00825 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11104) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00581 sec ]
+ [ GrB_apply (inplace-op) 0.00396 sec ]
+ [ GrB_reduce 0.00246 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00819 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00355 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11202) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0059 sec ]
+ [ GrB_apply (inplace-op) 0.00405 sec ]
+ [ GrB_reduce 0.00248 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0082 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.1417) (cblas_saxpy) 1.2 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0058 sec ]
+ [ GrB_apply (inplace-op) 0.00392 sec ]
+ [ GrB_reduce 0.00252 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00825 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00353 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11365) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00595 sec ]
+ [ GrB_apply (inplace-op) 0.00406 sec ]
+ [ GrB_reduce 0.00249 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00825 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00355 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.1111) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00579 sec ]
+ [ GrB_apply (inplace-op) 0.00395 sec ]
+ [ GrB_reduce 0.00246 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00825 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11062) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00587 sec ]
+ [ GrB_apply (inplace-op) 0.00392 sec ]
+ [ GrB_reduce 0.00248 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00824 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.1105) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0058 sec ]
+ [ GrB_apply (inplace-op) 0.00407 sec ]
+ [ GrB_reduce 0.00248 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00821 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11166) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00588 sec ]
+ [ GrB_apply (inplace-op) 0.00395 sec ]
+ [ GrB_reduce 0.00245 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00825 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.112) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0058 sec ]
+ [ GrB_apply (inplace-op) 0.00402 sec ]
+ [ GrB_reduce 0.00249 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00821 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10981) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0059 sec ]
+ [ GrB_apply (inplace-op) 0.004 sec ]
+ [ GrB_reduce 0.00248 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00822 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11298) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0058 sec ]
+ [ GrB_apply (inplace-op) 0.00394 sec ]
+ [ GrB_reduce 0.00245 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00821 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11003) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00592 sec ]
+ [ GrB_apply (inplace-op) 0.00397 sec ]
+ [ GrB_reduce 0.00247 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0082 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11211) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0058 sec ]
+ [ GrB_apply (inplace-op) 0.00396 sec ]
+ [ GrB_reduce 0.00247 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00818 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.0036 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11113) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00593 sec ]
+ [ GrB_apply (inplace-op) 0.00404 sec ]
+ [ GrB_reduce 0.0025 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00833 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11115) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00579 sec ]
+ [ GrB_apply (inplace-op) 0.00403 sec ]
+ [ GrB_reduce 0.00249 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00814 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00358 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11127) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00594 sec ]
+ [ GrB_apply (inplace-op) 0.00394 sec ]
+ [ GrB_reduce 0.00252 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00829 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11106) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0058 sec ]
+ [ GrB_apply (inplace-op) 0.00398 sec ]
+ [ GrB_reduce 0.00246 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00823 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11043) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.006 sec ]
+ [ GrB_apply (inplace-op) 0.00401 sec ]
+ [ GrB_reduce 0.00247 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0083 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10972) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0058 sec ]
+ [ GrB_apply (inplace-op) 0.00409 sec ]
+ [ GrB_reduce 0.00247 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00819 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11077) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00592 sec ]
+ [ GrB_apply (inplace-op) 0.00401 sec ]
+ [ GrB_reduce 0.00248 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00833 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11259) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0058 sec ]
+ [ GrB_apply (inplace-op) 0.00413 sec ]
+ [ GrB_reduce 0.00252 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00815 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11069) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00593 sec ]
+ [ GrB_apply (inplace-op) 0.00399 sec ]
+ [ GrB_reduce 0.00246 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00822 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11202) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0058 sec ]
+ [ GrB_apply (inplace-op) 0.00395 sec ]
+ [ GrB_reduce 0.00248 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00832 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00355 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11081) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00593 sec ]
+ [ GrB_apply (inplace-op) 0.00398 sec ]
+ [ GrB_reduce 0.00249 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00822 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11104) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0058 sec ]
+ [ GrB_apply (inplace-op) 0.00399 sec ]
+ [ GrB_reduce 0.00247 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00821 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00358 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.1115) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00591 sec ]
+ [ GrB_apply (inplace-op) 0.004 sec ]
+ [ GrB_reduce 0.00251 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00819 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00355 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.1105) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00581 sec ]
+ [ GrB_apply (inplace-op) 0.00396 sec ]
+ [ GrB_reduce 0.00251 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00816 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00358 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11117) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00591 sec ]
+ [ GrB_apply (inplace-op) 0.00397 sec ]
+ [ GrB_reduce 0.00247 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00827 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00358 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10779) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00579 sec ]
+ [ GrB_apply (inplace-op) 0.00396 sec ]
+ [ GrB_reduce 0.00246 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00821 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11041) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00589 sec ]
+ [ GrB_apply (inplace-op) 0.00395 sec ]
+ [ GrB_reduce 0.0025 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00828 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11221) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00581 sec ]
+ [ GrB_apply (inplace-op) 0.00398 sec ]
+ [ GrB_reduce 0.00244 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00827 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00354 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11945) (cblas_saxpy) 1.18 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00592 sec ]
+ [ GrB_apply (inplace-op) 0.00397 sec ]
+ [ GrB_reduce 0.00249 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00825 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00358 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10985) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00583 sec ]
+ [ GrB_apply (inplace-op) 0.00398 sec ]
+ [ GrB_reduce 0.00249 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00814 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11048) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0059 sec ]
+ [ GrB_apply (inplace-op) 0.00396 sec ]
+ [ GrB_reduce 0.00249 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00834 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00358 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11108) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0058 sec ]
+ [ GrB_apply (inplace-op) 0.00398 sec ]
+ [ GrB_reduce 0.00248 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00818 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00355 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11012) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00591 sec ]
+ [ GrB_apply (inplace-op) 0.00401 sec ]
+ [ GrB_reduce 0.00251 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00819 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11202) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00581 sec ]
+ [ GrB_apply (inplace-op) 0.00411 sec ]
+ [ GrB_reduce 0.00249 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00811 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10982) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00594 sec ]
+ [ GrB_apply (inplace-op) 0.00399 sec ]
+ [ GrB_reduce 0.00246 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00827 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11119) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00581 sec ]
+ [ GrB_apply (inplace-op) 0.00401 sec ]
+ [ GrB_reduce 0.00246 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00815 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00355 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10725) (cblas_saxpy) 1.16 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00592 sec ]
+ [ GrB_apply (inplace-op) 0.00401 sec ]
+ [ GrB_reduce 0.00248 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00829 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11198) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0058 sec ]
+ [ GrB_apply (inplace-op) 0.00414 sec ]
+ [ GrB_reduce 0.00248 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00823 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10954) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00589 sec ]
+ [ GrB_apply (inplace-op) 0.00398 sec ]
+ [ GrB_reduce 0.0025 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00827 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00359 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.1144) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00578 sec ]
+ [ GrB_apply (inplace-op) 0.00403 sec ]
+ [ GrB_reduce 0.00247 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00821 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.1101) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0059 sec ]
+ [ GrB_apply (inplace-op) 0.00396 sec ]
+ [ GrB_reduce 0.00251 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00822 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.1121) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00581 sec ]
+ [ GrB_apply (inplace-op) 0.00398 sec ]
+ [ GrB_reduce 0.00247 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00821 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11222) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00593 sec ]
+ [ GrB_apply (inplace-op) 0.00399 sec ]
+ [ GrB_reduce 0.00249 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00827 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00355 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10999) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00581 sec ]
+ [ GrB_apply (inplace-op) 0.00401 sec ]
+ [ GrB_reduce 0.00248 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0083 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11256) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0059 sec ]
+ [ GrB_apply (inplace-op) 0.004 sec ]
+ [ GrB_reduce 0.00249 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00817 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10925) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00579 sec ]
+ [ GrB_apply (inplace-op) 0.00402 sec ]
+ [ GrB_reduce 0.00249 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00825 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00358 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11202) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0059 sec ]
+ [ GrB_apply (inplace-op) 0.004 sec ]
+ [ GrB_reduce 0.00246 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00822 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10954) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00579 sec ]
+ [ GrB_apply (inplace-op) 0.00392 sec ]
+ [ GrB_reduce 0.00248 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00821 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10917) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00595 sec ]
+ [ GrB_apply (inplace-op) 0.004 sec ]
+ [ GrB_reduce 0.0025 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00815 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10554) (cblas_saxpy) 1.16 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00584 sec ]
+ [ GrB_apply (inplace-op) 0.00394 sec ]
+ [ GrB_reduce 0.00246 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00827 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11021) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00594 sec ]
+ [ GrB_apply (inplace-op) 0.00404 sec ]
+ [ GrB_reduce 0.00248 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00826 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10972) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0058 sec ]
+ [ GrB_apply (inplace-op) 0.00399 sec ]
+ [ GrB_reduce 0.00245 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00829 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00358 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11153) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00589 sec ]
+ [ GrB_apply (inplace-op) 0.00391 sec ]
+ [ GrB_reduce 0.00247 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00828 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10975) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00582 sec ]
+ [ GrB_apply (inplace-op) 0.00398 sec ]
+ [ GrB_reduce 0.00247 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00825 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00358 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11168) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00589 sec ]
+ [ GrB_apply (inplace-op) 0.004 sec ]
+ [ GrB_reduce 0.00247 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00832 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11044) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00578 sec ]
+ [ GrB_apply (inplace-op) 0.00395 sec ]
+ [ GrB_reduce 0.0025 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00813 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11299) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00589 sec ]
+ [ GrB_apply (inplace-op) 0.00399 sec ]
+ [ GrB_reduce 0.00247 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00825 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10965) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00581 sec ]
+ [ GrB_apply (inplace-op) 0.00398 sec ]
+ [ GrB_reduce 0.00247 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00818 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00355 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11032) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00592 sec ]
+ [ GrB_apply (inplace-op) 0.00402 sec ]
+ [ GrB_reduce 0.00248 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00818 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11154) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00582 sec ]
+ [ GrB_apply (inplace-op) 0.00406 sec ]
+ [ GrB_reduce 0.0025 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00824 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10931) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00594 sec ]
+ [ GrB_apply (inplace-op) 0.00399 sec ]
+ [ GrB_reduce 0.00247 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00818 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10974) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00582 sec ]
+ [ GrB_apply (inplace-op) 0.00407 sec ]
+ [ GrB_reduce 0.00249 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00816 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00358 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11228) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00589 sec ]
+ [ GrB_apply (inplace-op) 0.00402 sec ]
+ [ GrB_reduce 0.00249 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00822 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10983) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0058 sec ]
+ [ GrB_apply (inplace-op) 0.00402 sec ]
+ [ GrB_reduce 0.00251 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00817 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11016) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00591 sec ]
+ [ GrB_apply (inplace-op) 0.004 sec ]
+ [ GrB_reduce 0.00245 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00823 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11076) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00581 sec ]
+ [ GrB_apply (inplace-op) 0.00398 sec ]
+ [ GrB_reduce 0.00248 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00819 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00358 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10799) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0059 sec ]
+ [ GrB_apply (inplace-op) 0.00393 sec ]
+ [ GrB_reduce 0.00247 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00827 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11032) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00579 sec ]
+ [ GrB_apply (inplace-op) 0.00397 sec ]
+ [ GrB_reduce 0.00248 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00822 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00358 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10999) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0059 sec ]
+ [ GrB_apply (inplace-op) 0.00395 sec ]
+ [ GrB_reduce 0.00247 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00827 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11221) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00581 sec ]
+ [ GrB_apply (inplace-op) 0.00394 sec ]
+ [ GrB_reduce 0.00247 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00813 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00355 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10585) (cblas_saxpy) 1.16 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00594 sec ]
+ [ GrB_apply (inplace-op) 0.00391 sec ]
+ [ GrB_reduce 0.00247 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00829 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11076) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00583 sec ]
+ [ GrB_apply (inplace-op) 0.00402 sec ]
+ [ GrB_reduce 0.00249 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00822 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11149) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00591 sec ]
+ [ GrB_apply (inplace-op) 0.00397 sec ]
+ [ GrB_reduce 0.00247 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0083 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11035) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00578 sec ]
+ [ GrB_apply (inplace-op) 0.00397 sec ]
+ [ GrB_reduce 0.00247 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00818 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00358 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10996) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00593 sec ]
+ [ GrB_apply (inplace-op) 0.00396 sec ]
+ [ GrB_reduce 0.00248 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0083 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10699) (cblas_saxpy) 1.16 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00579 sec ]
+ [ GrB_apply (inplace-op) 0.00401 sec ]
+ [ GrB_reduce 0.00249 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00812 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11206) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00592 sec ]
+ [ GrB_apply (inplace-op) 0.00398 sec ]
+ [ GrB_reduce 0.00246 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00832 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.1081) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0058 sec ]
+ [ GrB_apply (inplace-op) 0.00398 sec ]
+ [ GrB_reduce 0.00246 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00822 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11044) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00596 sec ]
+ [ GrB_apply (inplace-op) 0.00398 sec ]
+ [ GrB_reduce 0.00251 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00828 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11417) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00579 sec ]
+ [ GrB_apply (inplace-op) 0.00396 sec ]
+ [ GrB_reduce 0.00247 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00816 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00354 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11211) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00591 sec ]
+ [ GrB_apply (inplace-op) 0.00405 sec ]
+ [ GrB_reduce 0.0025 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00849 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11107) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00578 sec ]
+ [ GrB_apply (inplace-op) 0.00408 sec ]
+ [ GrB_reduce 0.00247 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00822 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00358 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.10957) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0059 sec ]
+ [ GrB_apply (inplace-op) 0.00398 sec ]
+ [ GrB_reduce 0.00248 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00814 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11057) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0058 sec ]
+ [ GrB_apply (inplace-op) 0.00399 sec ]
+ [ GrB_reduce 0.00247 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00812 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00357 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11165) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00594 sec ]
+ [ GrB_apply (inplace-op) 0.00397 sec ]
+ [ GrB_reduce 0.00247 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0083 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11068) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00581 sec ]
+ [ GrB_apply (inplace-op) 0.00396 sec ]
+ [ GrB_reduce 0.00251 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00821 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00356 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 1.11333) (cblas_saxpy) 1.17 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00593 sec ]
+ [ GrB_apply (inplace-op) 0.00397 sec ]
+ [ GrB_reduce 0.0025 sec ]
+ [ GxB_mxv_optimize_free info 0
+iters 100
+warmup (3f):    121.877 (threads: 32) MKL: 1
+
+Method 3f: with MKL: 0
+
+--------------------------- nthreads: 32
+trial:  0 time:    14.7988 sec
+trial:  1 time:    14.7898 sec
+3f: 32: avg time:     14.794 (sec), rate:   2183.551 iters: 22
+
+--------------------------- nthreads: 16
+trial:  0 time:    26.9562 sec
+trial:  1 time:    26.9266 sec
+3f: 16: avg time:     26.941 (sec), rate:   1199.046 iters: 22
+
+  61578415x1 GraphBLAS float vector, sparse by col:
+  PR, 61578415 entries
+
+    (0,0)    2.43592e-09
+    (1,0)    2.43592e-09
+    (2,0)    2.43592e-09
+    (3,0)    2.43592e-09
+    (4,0)    2.43592e-09
+    (5,0)    2.43592e-09
+    (6,0)    2.43592e-09
+    (7,0)    2.43592e-09
+    (8,0)    2.43592e-09
+    (9,0)    2.43592e-09
+    (10,0)    2.43592e-09
+    (11,0)    2.43592e-09
+    (12,0)    4.28999e-08
+    (13,0)    1.2926e-08
+    (14,0)    9.12961e-09
+    (15,0)    2.06278e-08
+    (16,0)    2.98579e-08
+    (17,0)    1.53682e-08
+    (18,0)    6.56924e-09
+    (19,0)    2.43592e-09
+    (20,0)    3.5879e-08
+    (21,0)    4.50838e-08
+    (22,0)    2.62213e-08
+    (23,0)    9.79812e-09
+    (24,0)    9.27327e-09
+    (25,0)    2.43592e-09
+    (26,0)    2.43592e-09
+    (27,0)    2.43592e-09
+    (28,0)    2.43592e-09
+    (29,0)    2.43592e-09
+    ...
+
+Method 3f: with MKL: 1
+
+--------------------------- nthreads: 32
+trial:  0 time:   121.7239 sec
+trial:  1 time:   121.6779 sec
+3f: 32: avg time:    121.701 (sec), rate:   1206.536 iters: 100
+
+--------------------------- nthreads: 16
+trial:  0 time:   122.7064 sec
+trial:  1 time:   122.6944 sec
+3f: 16: avg time:    122.700 (sec), rate:   1196.707 iters: 100
+
+  61578415x1 GraphBLAS float vector, sparse by col:
+  PR, 61578415 entries
+
+    (0,0)    2.82986e-06
+    (1,0)    4.12913e-07
+    (2,0)    2.66543e-07
+    (3,0)    4.65607e-07
+    (4,0)    1.70477e-05
+    (5,0)    4.12705e-07
+    (6,0)    8.33231e-08
+    (7,0)    1.10289e-06
+    (8,0)    1.76326e-06
+    (9,0)    6.77368e-07
+    (10,0)    9.44423e-07
+    (11,0)    1.65323e-07
+    (12,0)    7.8012e-07
+    (13,0)    2.76072e-08
+    (14,0)    2.04231e-07
+    (15,0)    7.505e-07
+    (16,0)    5.78122e-06
+    (17,0)    2.69996e-08
+    (18,0)    6.34142e-07
+    (19,0)    2.74336e-07
+    (20,0)    1.57666e-06
+    (21,0)    6.18638e-07
+    (22,0)    6.8039e-07
+    (23,0)    3.60927e-07
+    (24,0)    6.73362e-07
+    (25,0)    7.87918e-08
+    (26,0)    3.98534e-08
+    (27,0)    5.70966e-09
+    (28,0)    2.93436e-07
+    (29,0)    3.43484e-09
+    ...
+MKL version: 202101
+threads to test:  32 16
+matrix: /home/u32248/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-web/GAP-web.grb
+ [ GxB_Matrix_import_CSR 1.35e-05 sec ]
+ [ GxB_set 1.95e-05 sec ]
+ [ GrB_apply (shallow-op) generic 2.31 sec ]
+ [ GxB_set (transpose) 5.26 sec ]
+ [ GrB_Matrix_nvals 4.68e-06 sec ]
+ [ GrB_Matrix_dup 0.548 sec ]
+original # of edges: 1930292948
+ [ GrB_reduce 0.746 sec ]
+ [ GrB_reduce wait (zombies: 438, pending: 0) 0.147 sec ]
+ [ GrB_Vector_nvals 7.72e-07 sec ]
+ [ GrB_Vector_nvals 4.66e-08 sec ]
+Matrix has 7236618 empty rows
+Matrix has 438 empty cols
+ [ GrB_reduce wait (zombies: 0, pending: 7236964) generic add 1.9 sec ]
+ [ GrB_Vector_nvals 5.34e-07 sec ]
+ [ GrB_Vector_dup 0.0144 sec ]
+ [ GxB_Vector_export 4.41e-06 sec ]
+
+==========input graph: nodes: 50636151 edges: 1930292948
+diag entries added: 7236964
+ [ GrB_Matrix_nvals 1.25e-06 sec ]
+read time: 2682.1 sec
+# of trials: 2
+chunk: 65536
+
+Method 3f: with MKL: 0
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar 0.0227 sec ]
+ [ GrB_Vector_dup 0.0146 sec ]
+ [ GrB_assign (C dense) Method 22: (C dense) += scalar 0.00315 sec ]
+ [ GxB_mxv_optimize 2.73e-06 sec ]
+ [ GrB_eWiseMult (A dense) (B dense) dense C=A+B 0.0175 sec ]
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar 0.0237 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.247 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0134 sec ]
+ [ GrB_apply (inplace-op) 0.00301 sec ]
+ [ GrB_reduce 0.00213 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00669 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00283 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.253 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0047 sec ]
+ [ GrB_apply (inplace-op) 0.00293 sec ]
+ [ GrB_reduce 0.00206 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00683 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00282 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.251 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00479 sec ]
+ [ GrB_apply (inplace-op) 0.00298 sec ]
+ [ GrB_reduce 0.0021 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00666 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00283 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.255 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00469 sec ]
+ [ GrB_apply (inplace-op) 0.00295 sec ]
+ [ GrB_reduce 0.00201 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00688 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00282 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.25 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00481 sec ]
+ [ GrB_apply (inplace-op) 0.003 sec ]
+ [ GrB_reduce 0.00206 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0067 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00283 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.251 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00467 sec ]
+ [ GrB_apply (inplace-op) 0.00293 sec ]
+ [ GrB_reduce 0.00204 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00691 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00281 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.25 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00479 sec ]
+ [ GrB_apply (inplace-op) 0.00298 sec ]
+ [ GrB_reduce 0.00206 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00673 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00285 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.251 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00467 sec ]
+ [ GrB_apply (inplace-op) 0.00297 sec ]
+ [ GrB_reduce 0.00202 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00685 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00283 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.249 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00478 sec ]
+ [ GrB_apply (inplace-op) 0.003 sec ]
+ [ GrB_reduce 0.00207 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00673 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00281 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.251 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00472 sec ]
+ [ GrB_apply (inplace-op) 0.00298 sec ]
+ [ GrB_reduce 0.00203 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00681 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00281 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.254 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00479 sec ]
+ [ GrB_apply (inplace-op) 0.00298 sec ]
+ [ GrB_reduce 0.00208 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00671 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00282 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.253 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00518 sec ]
+ [ GrB_apply (inplace-op) 0.00297 sec ]
+ [ GrB_reduce 0.00205 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00681 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00285 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.256 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00478 sec ]
+ [ GrB_apply (inplace-op) 0.00302 sec ]
+ [ GrB_reduce 0.00207 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0067 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00282 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.256 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00469 sec ]
+ [ GrB_apply (inplace-op) 0.00296 sec ]
+ [ GrB_reduce 0.00207 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00687 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00281 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.253 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0048 sec ]
+ [ GrB_apply (inplace-op) 0.00297 sec ]
+ [ GrB_reduce 0.00206 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00675 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00281 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.254 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00471 sec ]
+ [ GrB_apply (inplace-op) 0.00294 sec ]
+ [ GrB_reduce 0.00204 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00687 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00286 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.25 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00484 sec ]
+ [ GrB_apply (inplace-op) 0.00297 sec ]
+ [ GrB_reduce 0.00211 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0067 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00281 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.247 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00467 sec ]
+ [ GrB_apply (inplace-op) 0.00296 sec ]
+ [ GrB_reduce 0.00202 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00679 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00286 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.255 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00477 sec ]
+ [ GrB_apply (inplace-op) 0.00301 sec ]
+ [ GrB_reduce 0.00209 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00669 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00279 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.252 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0047 sec ]
+ [ GrB_apply (inplace-op) 0.00294 sec ]
+ [ GrB_reduce 0.00206 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00676 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00284 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.254 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00481 sec ]
+ [ GrB_apply (inplace-op) 0.00302 sec ]
+ [ GrB_reduce 0.00208 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00676 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00282 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.255 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00472 sec ]
+ [ GrB_apply (inplace-op) 0.00296 sec ]
+ [ GrB_reduce 0.00205 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0068 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00284 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.253 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00482 sec ]
+ [ GrB_apply (inplace-op) 0.00299 sec ]
+ [ GrB_reduce 0.00211 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00669 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00281 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.258 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0047 sec ]
+ [ GrB_apply (inplace-op) 0.00294 sec ]
+ [ GrB_reduce 0.00205 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00678 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00285 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.254 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00477 sec ]
+ [ GrB_apply (inplace-op) 0.00299 sec ]
+ [ GrB_reduce 0.00211 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00666 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00283 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.253 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00469 sec ]
+ [ GrB_apply (inplace-op) 0.00299 sec ]
+ [ GrB_reduce 0.00205 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00676 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00289 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.249 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0048 sec ]
+ [ GrB_apply (inplace-op) 0.003 sec ]
+ [ GrB_reduce 0.00212 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00669 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00282 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.246 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00469 sec ]
+ [ GrB_apply (inplace-op) 0.00296 sec ]
+ [ GrB_reduce 0.00202 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00683 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00284 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.248 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0048 sec ]
+ [ GrB_apply (inplace-op) 0.00298 sec ]
+ [ GrB_reduce 0.00205 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00673 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.0028 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.254 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00469 sec ]
+ [ GrB_apply (inplace-op) 0.00296 sec ]
+ [ GrB_reduce 0.00204 sec ]
+ [ GxB_mxv_optimize_free info 0
+iters 30
+warmup (3f):      8.226 (threads: 32) MKL: 0
+
+Method 3f: with MKL: 1
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar 0.0224 sec ]
+ [ GrB_Vector_dup 0.0151 sec ]
+ [ GrB_assign (C dense) Method 22: (C dense) += scalar 0.00314 sec ]
+ [ GxB_mxv_optimize 3.05 sec ]
+ [ GrB_eWiseMult (A dense) (B dense) dense C=A+B 0.0167 sec ]
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar 0.0251 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.325194) (cblas_saxpy) 0.372 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00474 sec ]
+ [ GrB_apply (inplace-op) 0.00374 sec ]
+ [ GrB_reduce 0.00214 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00639 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00286 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.30458) (cblas_saxpy) 0.352 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00473 sec ]
+ [ GrB_apply (inplace-op) 0.00328 sec ]
+ [ GrB_reduce 0.00211 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00638 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00284 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.303607) (cblas_saxpy) 0.351 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00474 sec ]
+ [ GrB_apply (inplace-op) 0.00333 sec ]
+ [ GrB_reduce 0.00207 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00637 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00288 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.302049) (cblas_saxpy) 0.349 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00473 sec ]
+ [ GrB_apply (inplace-op) 0.00326 sec ]
+ [ GrB_reduce 0.00229 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00648 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00286 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.305032) (cblas_saxpy) 0.352 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00474 sec ]
+ [ GrB_apply (inplace-op) 0.00329 sec ]
+ [ GrB_reduce 0.00208 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00638 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00287 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.305889) (cblas_saxpy) 0.353 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00471 sec ]
+ [ GrB_apply (inplace-op) 0.00329 sec ]
+ [ GrB_reduce 0.00209 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00647 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00286 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.30463) (cblas_saxpy) 0.352 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00475 sec ]
+ [ GrB_apply (inplace-op) 0.00328 sec ]
+ [ GrB_reduce 0.00207 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00633 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00288 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.303207) (cblas_saxpy) 0.35 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00475 sec ]
+ [ GrB_apply (inplace-op) 0.00323 sec ]
+ [ GrB_reduce 0.00205 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00641 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00285 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.303708) (cblas_saxpy) 0.351 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00475 sec ]
+ [ GrB_apply (inplace-op) 0.00332 sec ]
+ [ GrB_reduce 0.00206 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00633 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00288 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.30413) (cblas_saxpy) 0.351 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00474 sec ]
+ [ GrB_apply (inplace-op) 0.00331 sec ]
+ [ GrB_reduce 0.00208 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0064 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00286 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.304906) (cblas_saxpy) 0.352 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00475 sec ]
+ [ GrB_apply (inplace-op) 0.00327 sec ]
+ [ GrB_reduce 0.00208 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00635 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00287 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.300862) (cblas_saxpy) 0.347 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00473 sec ]
+ [ GrB_apply (inplace-op) 0.00334 sec ]
+ [ GrB_reduce 0.00208 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00641 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00287 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.302984) (cblas_saxpy) 0.35 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00475 sec ]
+ [ GrB_apply (inplace-op) 0.00329 sec ]
+ [ GrB_reduce 0.00207 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00638 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00287 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.304273) (cblas_saxpy) 0.351 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00471 sec ]
+ [ GrB_apply (inplace-op) 0.00336 sec ]
+ [ GrB_reduce 0.00208 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00642 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00286 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.302685) (cblas_saxpy) 0.35 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00476 sec ]
+ [ GrB_apply (inplace-op) 0.00327 sec ]
+ [ GrB_reduce 0.00203 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00634 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00288 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.304315) (cblas_saxpy) 0.351 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00475 sec ]
+ [ GrB_apply (inplace-op) 0.00333 sec ]
+ [ GrB_reduce 0.00206 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00641 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00285 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.306077) (cblas_saxpy) 0.353 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00474 sec ]
+ [ GrB_apply (inplace-op) 0.00328 sec ]
+ [ GrB_reduce 0.00205 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00633 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00285 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.304973) (cblas_saxpy) 0.352 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00472 sec ]
+ [ GrB_apply (inplace-op) 0.00326 sec ]
+ [ GrB_reduce 0.00207 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00643 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00286 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.303243) (cblas_saxpy) 0.35 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00476 sec ]
+ [ GrB_apply (inplace-op) 0.00334 sec ]
+ [ GrB_reduce 0.00207 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00636 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00286 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.302517) (cblas_saxpy) 0.349 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00475 sec ]
+ [ GrB_apply (inplace-op) 0.00325 sec ]
+ [ GrB_reduce 0.00207 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00641 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00286 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.304506) (cblas_saxpy) 0.352 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00476 sec ]
+ [ GrB_apply (inplace-op) 0.00329 sec ]
+ [ GrB_reduce 0.00207 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00637 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00287 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.304075) (cblas_saxpy) 0.351 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00473 sec ]
+ [ GrB_apply (inplace-op) 0.00326 sec ]
+ [ GrB_reduce 0.00208 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0064 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00286 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.304655) (cblas_saxpy) 0.352 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00475 sec ]
+ [ GrB_apply (inplace-op) 0.00337 sec ]
+ [ GrB_reduce 0.00209 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00637 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00287 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.303725) (cblas_saxpy) 0.351 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00474 sec ]
+ [ GrB_apply (inplace-op) 0.00335 sec ]
+ [ GrB_reduce 0.00205 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00641 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00286 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.304138) (cblas_saxpy) 0.351 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00475 sec ]
+ [ GrB_apply (inplace-op) 0.00329 sec ]
+ [ GrB_reduce 0.00208 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00635 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00286 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.304799) (cblas_saxpy) 0.352 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00474 sec ]
+ [ GrB_apply (inplace-op) 0.00332 sec ]
+ [ GrB_reduce 0.00207 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00641 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00285 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.304553) (cblas_saxpy) 0.352 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00474 sec ]
+ [ GrB_apply (inplace-op) 0.00333 sec ]
+ [ GrB_reduce 0.00212 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00634 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00287 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.304446) (cblas_saxpy) 0.351 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0047 sec ]
+ [ GrB_apply (inplace-op) 0.00338 sec ]
+ [ GrB_reduce 0.00214 sec ]
+ [ GxB_mxv_optimize_free info 0
+iters 28
+warmup (3f):     13.519 (threads: 32) MKL: 1
+
+Method 3f: with MKL: 0
+
+--------------------------- nthreads: 32
+trial:  0 time:     8.2101 sec
+trial:  1 time:     8.1911 sec
+3f: 32: avg time:      8.201 (sec), rate:   7061.522 iters: 30
+
+--------------------------- nthreads: 16
+trial:  0 time:    12.6180 sec
+trial:  1 time:    12.5957 sec
+3f: 16: avg time:     12.607 (sec), rate:   4593.449 iters: 30
+
+  50636151x1 GraphBLAS float vector, sparse by col:
+  PR, 50636151 entries
+
+    (0,0)    3.04448e-09
+    (1,0)    3.04448e-09
+    (2,0)    3.04448e-09
+    (3,0)    3.04448e-09
+    (4,0)    3.04448e-09
+    (5,0)    3.04448e-09
+    (6,0)    3.04448e-09
+    (7,0)    3.04448e-09
+    (8,0)    3.04448e-09
+    (9,0)    3.04448e-09
+    (10,0)    5.78254e-09
+    (11,0)    3.31792e-09
+    (12,0)    3.04448e-09
+    (13,0)    3.04448e-09
+    (14,0)    3.04448e-09
+    (15,0)    3.04448e-09
+    (16,0)    3.04448e-09
+    (17,0)    3.04448e-09
+    (18,0)    3.06634e-09
+    (19,0)    3.06634e-09
+    (20,0)    3.06634e-09
+    (21,0)    3.06634e-09
+    (22,0)    3.06634e-09
+    (23,0)    3.06634e-09
+    (24,0)    3.05126e-09
+    (25,0)    3.05126e-09
+    (26,0)    3.05126e-09
+    (27,0)    3.05126e-09
+    (28,0)    3.05126e-09
+    (29,0)    3.05126e-09
+    ...
+
+Method 3f: with MKL: 1
+
+--------------------------- nthreads: 32
+trial:  0 time:    13.3574 sec
+trial:  1 time:    13.3255 sec
+3f: 32: avg time:     13.341 (sec), rate:   4051.157 iters: 28
+
+--------------------------- nthreads: 16
+trial:  0 time:    13.6352 sec
+trial:  1 time:    13.6195 sec
+3f: 16: avg time:     13.627 (sec), rate:   3966.165 iters: 28
+
+  50636151x1 GraphBLAS float vector, sparse by col:
+  PR, 50636151 entries
+
+    (0,0)    3.02613e-09
+    (1,0)    3.02613e-09
+    (2,0)    3.02613e-09
+    (3,0)    3.02613e-09
+    (4,0)    3.02613e-09
+    (5,0)    3.02613e-09
+    (6,0)    3.02613e-09
+    (7,0)    3.02613e-09
+    (8,0)    3.02613e-09
+    (9,0)    3.02613e-09
+    (10,0)    5.58832e-09
+    (11,0)    3.08942e-09
+    (12,0)    3.02613e-09
+    (13,0)    3.02613e-09
+    (14,0)    3.02613e-09
+    (15,0)    3.02613e-09
+    (16,0)    3.02613e-09
+    (17,0)    3.02613e-09
+    (18,0)    3.04325e-09
+    (19,0)    3.04325e-09
+    (20,0)    3.04325e-09
+    (21,0)    3.04325e-09
+    (22,0)    3.04325e-09
+    (23,0)    3.04325e-09
+    (24,0)    2.98567e-09
+    (25,0)    2.98567e-09
+    (26,0)    2.98567e-09
+    (27,0)    2.98567e-09
+    (28,0)    2.98567e-09
+    (29,0)    2.98567e-09
+    ...
+MKL version: 202101
+threads to test:  32 16
+matrix: /home/u32248/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/u32248/GAP/GAP-road/GAP-road.grb
+ [ GxB_Matrix_import_CSR 1.46e-05 sec ]
+ [ GxB_set 2.27e-05 sec ]
+ [ GrB_apply (shallow-op) generic 0.0986 sec ]
+ [ GxB_set (transpose) 0.834 sec ]
+ [ GrB_Matrix_nvals 4.41e-06 sec ]
+ [ GrB_Matrix_dup 0.0221 sec ]
+original # of edges: 57708624
+ [ GrB_reduce 0.205 sec ]
+ [ GrB_reduce 0.021 sec ]
+ [ GrB_Vector_nvals 7.79e-07 sec ]
+ [ GrB_Vector_nvals 4.56e-08 sec ]
+ [ GrB_reduce 0.202 sec ]
+ [ GrB_Vector_nvals 4.22e-07 sec ]
+ [ GrB_Vector_dup 0.00696 sec ]
+ [ GxB_Vector_export 2.8e-06 sec ]
+
+==========input graph: nodes: 23947347 edges: 57708624
+diag entries added: 0
+ [ GrB_Matrix_nvals 1.5e-06 sec ]
+read time: 96.2305 sec
+# of trials: 2
+chunk: 65536
+
+Method 3f: with MKL: 0
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar 0.0172 sec ]
+ [ GrB_Vector_dup 0.0256 sec ]
+ [ GrB_assign (C dense) Method 22: (C dense) += scalar 0.00142 sec ]
+ [ GxB_mxv_optimize 1.72e-06 sec ]
+ [ GrB_eWiseMult (A dense) (B dense) dense C=A+B 0.0254 sec ]
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar 0.0253 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0155 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.012 sec ]
+ [ GrB_apply (inplace-op) 0.00148 sec ]
+ [ GrB_reduce 0.000945 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00313 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00109 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0159 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0022 sec ]
+ [ GrB_apply (inplace-op) 0.0013 sec ]
+ [ GrB_reduce 0.000893 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00315 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00106 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0156 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00224 sec ]
+ [ GrB_apply (inplace-op) 0.00133 sec ]
+ [ GrB_reduce 0.000939 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00311 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00111 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0159 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00218 sec ]
+ [ GrB_apply (inplace-op) 0.0013 sec ]
+ [ GrB_reduce 0.00091 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00316 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00109 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0157 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00217 sec ]
+ [ GrB_apply (inplace-op) 0.00133 sec ]
+ [ GrB_reduce 0.000914 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00314 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00109 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0157 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00218 sec ]
+ [ GrB_apply (inplace-op) 0.00134 sec ]
+ [ GrB_reduce 0.000913 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00323 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00107 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0158 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00219 sec ]
+ [ GrB_apply (inplace-op) 0.00133 sec ]
+ [ GrB_reduce 0.000907 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00315 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00106 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0156 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00217 sec ]
+ [ GrB_apply (inplace-op) 0.0013 sec ]
+ [ GrB_reduce 0.000896 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00324 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00105 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0155 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00219 sec ]
+ [ GrB_apply (inplace-op) 0.00132 sec ]
+ [ GrB_reduce 0.000892 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00315 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00107 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0156 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00217 sec ]
+ [ GrB_apply (inplace-op) 0.0013 sec ]
+ [ GrB_reduce 0.000896 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0032 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00105 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0159 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00221 sec ]
+ [ GrB_apply (inplace-op) 0.00131 sec ]
+ [ GrB_reduce 0.00094 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00312 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00111 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0156 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00217 sec ]
+ [ GrB_apply (inplace-op) 0.00129 sec ]
+ [ GrB_reduce 0.000906 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00314 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00107 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0156 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00219 sec ]
+ [ GrB_apply (inplace-op) 0.00131 sec ]
+ [ GrB_reduce 0.000951 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0031 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00111 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0157 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00217 sec ]
+ [ GrB_apply (inplace-op) 0.00132 sec ]
+ [ GrB_reduce 0.000906 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00319 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.0011 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0157 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00221 sec ]
+ [ GrB_apply (inplace-op) 0.00133 sec ]
+ [ GrB_reduce 0.00091 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00315 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00108 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0157 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00217 sec ]
+ [ GrB_apply (inplace-op) 0.00133 sec ]
+ [ GrB_reduce 0.000904 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00322 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00105 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0157 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00219 sec ]
+ [ GrB_apply (inplace-op) 0.00132 sec ]
+ [ GrB_reduce 0.000909 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00315 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00107 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0156 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00218 sec ]
+ [ GrB_apply (inplace-op) 0.00129 sec ]
+ [ GrB_reduce 0.000896 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00326 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00105 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0157 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00222 sec ]
+ [ GrB_apply (inplace-op) 0.00132 sec ]
+ [ GrB_reduce 0.000919 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00315 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00107 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0159 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00219 sec ]
+ [ GrB_apply (inplace-op) 0.0013 sec ]
+ [ GrB_reduce 0.000902 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00318 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00107 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0157 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0022 sec ]
+ [ GrB_apply (inplace-op) 0.00132 sec ]
+ [ GrB_reduce 0.000962 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00308 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.0011 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0157 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00217 sec ]
+ [ GrB_apply (inplace-op) 0.00134 sec ]
+ [ GrB_reduce 0.000918 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00317 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.0011 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0157 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00218 sec ]
+ [ GrB_apply (inplace-op) 0.00136 sec ]
+ [ GrB_reduce 0.000894 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00311 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00108 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0156 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00217 sec ]
+ [ GrB_apply (inplace-op) 0.00132 sec ]
+ [ GrB_reduce 0.000888 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0032 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00107 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0157 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0022 sec ]
+ [ GrB_apply (inplace-op) 0.00134 sec ]
+ [ GrB_reduce 0.00092 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00318 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00107 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0158 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0022 sec ]
+ [ GrB_apply (inplace-op) 0.0013 sec ]
+ [ GrB_reduce 0.000901 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00322 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00106 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0158 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00222 sec ]
+ [ GrB_apply (inplace-op) 0.00131 sec ]
+ [ GrB_reduce 0.000894 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00316 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00106 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0157 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0022 sec ]
+ [ GrB_apply (inplace-op) 0.00131 sec ]
+ [ GrB_reduce 0.000917 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00316 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00107 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0157 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00219 sec ]
+ [ GrB_apply (inplace-op) 0.00132 sec ]
+ [ GrB_reduce 0.000924 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00309 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00109 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0158 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00217 sec ]
+ [ GrB_apply (inplace-op) 0.00133 sec ]
+ [ GrB_reduce 0.000929 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00316 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.0011 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0156 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00218 sec ]
+ [ GrB_apply (inplace-op) 0.00133 sec ]
+ [ GrB_reduce 0.000927 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00311 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.0011 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0155 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00217 sec ]
+ [ GrB_apply (inplace-op) 0.00132 sec ]
+ [ GrB_reduce 0.000899 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00323 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00107 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0156 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00219 sec ]
+ [ GrB_apply (inplace-op) 0.00136 sec ]
+ [ GrB_reduce 0.00091 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00314 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00107 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0157 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00218 sec ]
+ [ GrB_apply (inplace-op) 0.00131 sec ]
+ [ GrB_reduce 0.000885 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0032 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00105 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0157 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00219 sec ]
+ [ GrB_apply (inplace-op) 0.00132 sec ]
+ [ GrB_reduce 0.000934 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00316 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00107 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0157 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00219 sec ]
+ [ GrB_apply (inplace-op) 0.0013 sec ]
+ [ GrB_reduce 0.000902 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00322 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00105 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0157 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00222 sec ]
+ [ GrB_apply (inplace-op) 0.00131 sec ]
+ [ GrB_reduce 0.000919 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00313 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.0011 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0156 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00218 sec ]
+ [ GrB_apply (inplace-op) 0.00129 sec ]
+ [ GrB_reduce 0.000931 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00317 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00108 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place 0.0157 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00217 sec ]
+ [ GrB_apply (inplace-op) 0.00133 sec ]
+ [ GrB_reduce 0.000925 sec ]
+ [ GxB_mxv_optimize_free info 0
+iters 39
+warmup (3f):      1.055 (threads: 32) MKL: 0
+
+Method 3f: with MKL: 1
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar 0.0103 sec ]
+ [ GrB_Vector_dup 0.00718 sec ]
+ [ GrB_assign (C dense) Method 22: (C dense) += scalar 0.00147 sec ]
+ [ GxB_mxv_optimize 0.194 sec ]
+ [ GrB_eWiseMult (A dense) (B dense) dense C=A+B 0.00826 sec ]
+ [ GrB_assign (C empty) Method 21: (C dense) = scalar 0.0282 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0592509) (cblas_saxpy) 0.0741 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.0022 sec ]
+ [ GrB_apply (inplace-op) 0.0013 sec ]
+ [ GrB_reduce 0.000958 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00308 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00113 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0169999) (cblas_saxpy) 0.0391 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00228 sec ]
+ [ GrB_apply (inplace-op) 0.00132 sec ]
+ [ GrB_reduce 0.000965 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00307 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00111 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0173293) (cblas_saxpy) 0.0395 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00223 sec ]
+ [ GrB_apply (inplace-op) 0.00133 sec ]
+ [ GrB_reduce 0.000937 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00308 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00112 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0174357) (cblas_saxpy) 0.0396 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00228 sec ]
+ [ GrB_apply (inplace-op) 0.00134 sec ]
+ [ GrB_reduce 0.000949 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0031 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.0011 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0174484) (cblas_saxpy) 0.0397 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00222 sec ]
+ [ GrB_apply (inplace-op) 0.00135 sec ]
+ [ GrB_reduce 0.000913 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00312 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00108 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0174796) (cblas_saxpy) 0.0397 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00227 sec ]
+ [ GrB_apply (inplace-op) 0.00132 sec ]
+ [ GrB_reduce 0.000926 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00307 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00109 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0176153) (cblas_saxpy) 0.0399 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00225 sec ]
+ [ GrB_apply (inplace-op) 0.00131 sec ]
+ [ GrB_reduce 0.000908 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00314 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00108 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0175271) (cblas_saxpy) 0.0398 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00231 sec ]
+ [ GrB_apply (inplace-op) 0.00132 sec ]
+ [ GrB_reduce 0.000931 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00307 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00109 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0171973) (cblas_saxpy) 0.0393 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00228 sec ]
+ [ GrB_apply (inplace-op) 0.0013 sec ]
+ [ GrB_reduce 0.000902 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00314 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00109 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0173123) (cblas_saxpy) 0.0395 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00232 sec ]
+ [ GrB_apply (inplace-op) 0.00133 sec ]
+ [ GrB_reduce 0.000939 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00309 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00109 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0173826) (cblas_saxpy) 0.0395 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00228 sec ]
+ [ GrB_apply (inplace-op) 0.0013 sec ]
+ [ GrB_reduce 0.000931 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00307 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00109 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0175774) (cblas_saxpy) 0.0398 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00231 sec ]
+ [ GrB_apply (inplace-op) 0.00135 sec ]
+ [ GrB_reduce 0.00092 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00305 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00112 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0171054) (cblas_saxpy) 0.0393 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00224 sec ]
+ [ GrB_apply (inplace-op) 0.00133 sec ]
+ [ GrB_reduce 0.000928 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00309 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00112 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0171291) (cblas_saxpy) 0.0393 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00228 sec ]
+ [ GrB_apply (inplace-op) 0.00134 sec ]
+ [ GrB_reduce 0.000942 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00309 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00111 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.01789) (cblas_saxpy) 0.0401 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00221 sec ]
+ [ GrB_apply (inplace-op) 0.00133 sec ]
+ [ GrB_reduce 0.000916 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00313 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00109 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0175868) (cblas_saxpy) 0.04 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00226 sec ]
+ [ GrB_apply (inplace-op) 0.00132 sec ]
+ [ GrB_reduce 0.000917 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00313 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00109 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0173123) (cblas_saxpy) 0.0395 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00228 sec ]
+ [ GrB_apply (inplace-op) 0.00132 sec ]
+ [ GrB_reduce 0.0009 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00313 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00108 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0173187) (cblas_saxpy) 0.0395 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00231 sec ]
+ [ GrB_apply (inplace-op) 0.00131 sec ]
+ [ GrB_reduce 0.000926 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00312 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00109 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0174588) (cblas_saxpy) 0.0397 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00228 sec ]
+ [ GrB_apply (inplace-op) 0.0013 sec ]
+ [ GrB_reduce 0.000907 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00312 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.0011 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0174295) (cblas_saxpy) 0.0396 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00232 sec ]
+ [ GrB_apply (inplace-op) 0.00133 sec ]
+ [ GrB_reduce 0.000962 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00305 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00111 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0175609) (cblas_saxpy) 0.0397 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00223 sec ]
+ [ GrB_apply (inplace-op) 0.00132 sec ]
+ [ GrB_reduce 0.000916 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00308 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00113 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0172831) (cblas_saxpy) 0.0394 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00228 sec ]
+ [ GrB_apply (inplace-op) 0.00133 sec ]
+ [ GrB_reduce 0.000945 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00309 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00111 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0171765) (cblas_saxpy) 0.0394 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00221 sec ]
+ [ GrB_apply (inplace-op) 0.00132 sec ]
+ [ GrB_reduce 0.000913 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0031 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.0011 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0175524) (cblas_saxpy) 0.0398 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00224 sec ]
+ [ GrB_apply (inplace-op) 0.00134 sec ]
+ [ GrB_reduce 0.00092 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00313 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00109 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0174468) (cblas_saxpy) 0.0396 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00225 sec ]
+ [ GrB_apply (inplace-op) 0.00133 sec ]
+ [ GrB_reduce 0.000908 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00313 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00108 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0174293) (cblas_saxpy) 0.0397 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00226 sec ]
+ [ GrB_apply (inplace-op) 0.00133 sec ]
+ [ GrB_reduce 0.000929 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00312 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00112 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0174469) (cblas_saxpy) 0.0396 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00228 sec ]
+ [ GrB_apply (inplace-op) 0.00131 sec ]
+ [ GrB_reduce 0.00092 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00315 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00108 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0176425) (cblas_saxpy) 0.0399 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00235 sec ]
+ [ GrB_apply (inplace-op) 0.00132 sec ]
+ [ GrB_reduce 0.000938 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00309 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.0011 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0175349) (cblas_saxpy) 0.0398 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00226 sec ]
+ [ GrB_apply (inplace-op) 0.00131 sec ]
+ [ GrB_reduce 0.000949 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00307 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00111 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0175622) (cblas_saxpy) 0.0397 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00226 sec ]
+ [ GrB_apply (inplace-op) 0.00135 sec ]
+ [ GrB_reduce 0.000942 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00309 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00111 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0185133) (cblas_saxpy) 0.0407 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00224 sec ]
+ [ GrB_apply (inplace-op) 0.00132 sec ]
+ [ GrB_reduce 0.000911 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00312 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00108 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0171117) (cblas_saxpy) 0.0393 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00228 sec ]
+ [ GrB_apply (inplace-op) 0.00133 sec ]
+ [ GrB_reduce 0.00092 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00332 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00114 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0172412) (cblas_saxpy) 0.0395 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00227 sec ]
+ [ GrB_apply (inplace-op) 0.0013 sec ]
+ [ GrB_reduce 0.000913 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00317 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00108 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0174631) (cblas_saxpy) 0.0397 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00233 sec ]
+ [ GrB_apply (inplace-op) 0.00132 sec ]
+ [ GrB_reduce 0.00095 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.0031 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.0011 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0175791) (cblas_saxpy) 0.0397 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00225 sec ]
+ [ GrB_apply (inplace-op) 0.0013 sec ]
+ [ GrB_reduce 0.000946 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00307 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00112 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0171742) (cblas_saxpy) 0.0394 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00228 sec ]
+ [ GrB_apply (inplace-op) 0.00131 sec ]
+ [ GrB_reduce 0.000972 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00306 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00112 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0175752) (cblas_saxpy) 0.0401 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00222 sec ]
+ [ GrB_apply (inplace-op) 0.00136 sec ]
+ [ GrB_reduce 0.000916 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00311 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.0011 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.0173047) (cblas_saxpy) 0.0395 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00225 sec ]
+ [ GrB_apply (inplace-op) 0.00137 sec ]
+ [ GrB_reduce 0.000925 sec ]
+ [ GrB_eWiseMult (C dense) (A dense) (B dense) dense C=A+B 0.00312 sec ]
+ [ GrB_assign (C dense) Method 21: (C dense) = scalar 0.00109 sec ]
+ [ GrB_mxv C=A'*B, dot_product dense, C+=A'*B in place (MKL mxv time: 0.017401) (cblas_saxpy) 0.0397 sec ]
+ [ GrB_assign (C dense) Method 23: (C dense) += Z (Z dense) (cblas_saxpy) 0.00224 sec ]
+ [ GrB_apply (inplace-op) 0.00131 sec ]
+ [ GrB_reduce 0.000899 sec ]
+ [ GxB_mxv_optimize_free info 0
+iters 39
+warmup (3f):      2.170 (threads: 32) MKL: 1
+
+Method 3f: with MKL: 0
+
+--------------------------- nthreads: 32
+trial:  0 time:     0.9806 sec
+trial:  1 time:     0.9832 sec
+3f: 32: avg time:      0.982 (sec), rate:   2292.085 iters: 39
+
+--------------------------- nthreads: 16
+trial:  0 time:     1.5394 sec
+trial:  1 time:     1.5299 sec
+3f: 16: avg time:      1.535 (sec), rate:   1466.571 iters: 39
+
+  23947347x1 GraphBLAS float vector, sparse by col:
+  PR, 23947347 entries
+
+    (0,0)    4.75579e-08
+    (1,0)    3.20307e-08
+    (2,0)    4.95218e-08
+    (3,0)    3.69073e-08
+    (4,0)    3.75892e-08
+    (5,0)    5.17024e-08
+    (6,0)    5.35032e-08
+    (7,0)    2.14235e-08
+    (8,0)    3.78229e-08
+    (9,0)    4.74456e-08
+    (10,0)    4.79489e-08
+    (11,0)    4.80614e-08
+    (12,0)    4.3424e-08
+    (13,0)    5.12736e-08
+    (14,0)    3.66438e-08
+    (15,0)    3.99929e-08
+    (16,0)    6.02066e-08
+    (17,0)    2.33178e-08
+    (18,0)    2.27628e-08
+    (19,0)    5.77866e-08
+    (20,0)    3.66638e-08
+    (21,0)    3.55786e-08
+    (22,0)    6.66583e-08
+    (23,0)    2.18603e-08
+    (24,0)    2.51435e-08
+    (25,0)    5.51881e-08
+    (26,0)    5.21458e-08
+    (27,0)    3.66357e-08
+    (28,0)    7.3439e-08
+    (29,0)    5.27261e-08
+    ...
+
+Method 3f: with MKL: 1
+
+--------------------------- nthreads: 32
+trial:  0 time:     2.0694 sec
+trial:  1 time:     2.0671 sec
+3f: 32: avg time:      2.068 (sec), rate:   1088.186 iters: 39
+
+--------------------------- nthreads: 16
+trial:  0 time:     2.5366 sec
+trial:  1 time:     2.4916 sec
+3f: 16: avg time:      2.514 (sec), rate:    895.223 iters: 39
+
+  23947347x1 GraphBLAS float vector, sparse by col:
+  PR, 23947347 entries
+
+    (0,0)    4.75579e-08
+    (1,0)    3.20307e-08
+    (2,0)    4.95218e-08
+    (3,0)    3.69073e-08
+    (4,0)    3.75892e-08
+    (5,0)    5.17024e-08
+    (6,0)    5.35032e-08
+    (7,0)    2.14235e-08
+    (8,0)    3.78229e-08
+    (9,0)    4.74456e-08
+    (10,0)    4.79489e-08
+    (11,0)    4.80614e-08
+    (12,0)    4.3424e-08
+    (13,0)    5.12736e-08
+    (14,0)    3.66438e-08
+    (15,0)    3.99929e-08
+    (16,0)    6.02066e-08
+    (17,0)    2.33178e-08
+    (18,0)    2.27628e-08
+    (19,0)    5.77866e-08
+    (20,0)    3.66638e-08
+    (21,0)    3.55786e-08
+    (22,0)    6.66583e-08
+    (23,0)    2.18603e-08
+    (24,0)    2.51435e-08
+    (25,0)    5.51881e-08
+    (26,0)    5.21458e-08
+    (27,0)    3.66357e-08
+    (28,0)    7.3439e-08
+    (29,0)    5.27261e-08
+    ...
+
+########################################################################
+# End of output for job 601336.v-qsvr-1.aidevcloud
+# Date: Fri May 22 01:00:24 PDT 2020
+########################################################################
+
