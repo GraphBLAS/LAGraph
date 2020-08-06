@@ -213,15 +213,16 @@ fprintf (file, "\nk = k+1 ; s{k} = %lu ;\n", source) ;
 fprintf (file, "results{k} = [\n") ;
 
     double alpha = 0.15 ;
-    double beta = 20.0 ;
-    int64_t n_over_beta = (int64_t) (((double) n) / beta) ;
+    double beta1 = 8.0 ;
+    double beta2 = 500.0 ;
+    int64_t n_over_beta1 = (int64_t) (((double) n) / beta1) ;
+    int64_t n_over_beta2 = (int64_t) (((double) n) / beta2) ;
 
     //--------------------------------------------------------------------------
     // BFS traversal and label the nodes
     //--------------------------------------------------------------------------
 
     bool do_push = can_push ; // start with push, if available
-    GrB_Index level = 0 ;
     GrB_Index last_nq = 0 ;
     int64_t edges_in_frontier = 0 ;
     int64_t edges_unexplored = nvals ;
@@ -233,22 +234,25 @@ fprintf (file, "results{k} = [\n") ;
         // select push vs pull
         //----------------------------------------------------------------------
 
-        // printf ("\n---------------- level %d\n", level) ;
         if (push_pull)
         {
+            #if 0
             // w<q>=Degree
             // w(i) = outdegree of node i if node i is in the queue
+            GxB_set ((GrB_Matrix) q, GxB_SPARSITY, GxB_SPARSE) ;
             LAGr_assign (w, q, NULL, Degree, GrB_ALL, n, GrB_DESC_RS) ;
             // edges_in_frontier = sum (w) = # of edges incident on all
             // nodes in the current frontier
             LAGr_reduce (&edges_in_frontier, NULL, GrB_PLUS_MONOID_INT64, w,
                 NULL) ;
             edges_unexplored -= edges_in_frontier ;
+            #endif
             if (do_push && can_pull)
             {
                 // check for switch from push to pull
                 bool growing = nq > last_nq ;
-                if ((edges_in_frontier > (edges_unexplored / alpha)) && growing)
+                // if ((edges_in_frontier > (edges_unexplored / alpha)) && growing)
+                if (growing && nq > n_over_beta1)
                 {
                     // the # of edges incident on 
                     do_push = false ;
@@ -258,7 +262,7 @@ fprintf (file, "results{k} = [\n") ;
             {
                 // check for switch from pull to push
                 bool shrinking = nq < last_nq ;
-                if ((nq < n_over_beta) && shrinking)
+                if ((nq < n_over_beta2) && shrinking)
                 {
                     do_push = true ;
                 }
@@ -269,28 +273,24 @@ fprintf (file, "results{k} = [\n") ;
         // q = next level of the BFS
         //----------------------------------------------------------------------
 
-double t = omp_get_wtime ( ) ;
+double t ;
 
         if ((do_push && vxm_is_push) || (!do_push && vxm_is_pull))
         {
             // q'<!pi> = q'*A
             // this is a push if A is in CSR format; pull if A is in CSC
+            GxB_set ((GrB_Matrix) q, GxB_SPARSITY, GxB_SPARSE) ;
+t = omp_get_wtime ( ) ;
             LAGr_vxm (q, pi, NULL, semiring, q, A, GrB_DESC_RC) ;
         }
         else // ((!do_push && mxv_is_pull) || (do_push && mxv_is_push))
         {
             // q<!pi> = AT*q
             // this is a pull if AT is in CSR format; push if AT is in CSC
-        // printf ("before changing to bitmap:\n") ; GxB_print (q, 2) ;
             GxB_set ((GrB_Matrix) q, GxB_SPARSITY, GxB_BITMAP) ;
-        // printf ("after changing to bitmap:\n") ; GxB_print (q, 2) ;
+t = omp_get_wtime ( ) ;
             LAGr_mxv (q, pi, NULL, semiring, AT, q, GrB_DESC_RC) ;
-        // printf ("after mxv:\n") ; GxB_print (q, 2) ;
-            GxB_set ((GrB_Matrix) q, GxB_SPARSITY, GxB_SPARSE) ;
-        // printf ("after changing to sparse:\n") ; GxB_print (q, 2) ;
         }
-        // printf ("\n----------------- level: %ld\n", level) ;
-        // printf ("FINAL q:\n") ; GxB_print (q, 2) ;
 
 t = omp_get_wtime ( ) - t ;
 fprintf (file, "%d  %16lu %16lu %16ld    %g\n",
@@ -299,7 +299,6 @@ fprintf (file, "%d  %16lu %16lu %16ld    %g\n",
 
         last_nq = nq ;
         LAGr_Vector_nvals (&nq, q) ;
-        // printf ("::: nvals: %ld\n", nq) ;
         if (nq == 0) break ;
 
         //----------------------------------------------------------------------
@@ -308,13 +307,7 @@ fprintf (file, "%d  %16lu %16lu %16ld    %g\n",
 
         // q(i) currently contains the parent+1 of node i in tree.
         // pi<q> = q
-        // printf ("::: ASSIGN:\n") ; GxB_print (pi, 2) ;
-
         LAGr_assign (pi, q, NULL, q, GrB_ALL, n, GrB_DESC_S) ;
-
-        // printf ("::: AFTER ASSIGN:\n") ; GxB_print (pi, 2) ;
-
-        level++ ;
     }
 
 fprintf (file, "] ;\n") ;

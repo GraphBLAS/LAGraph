@@ -46,8 +46,8 @@
 #include "bfs_test.h"
 #include "../../../GraphBLAS/Source/GB_Global.h"
 
-#define NTHREAD_LIST 3
-#define THREAD_LIST 40,8,1
+#define NTHREAD_LIST 1
+#define THREAD_LIST 0
 
 // #define NTHREAD_LIST 8
 // #define THREAD_LIST 8, 7, 6, 5, 4, 3, 2, 1
@@ -88,6 +88,7 @@ int main (int argc, char **argv)
     GrB_Vector Degree = NULL ;
     GrB_Matrix SourceNodes = NULL ;
     LAGRAPH_OK (LAGraph_init ( )) ;
+    // LAGRAPH_OK (GxB_set (GxB_CHUNK, 1)) ;
     LAGRAPH_OK (GxB_set (GxB_BURBLE, true)) ;
 
     uint64_t seed = 1 ;
@@ -279,7 +280,7 @@ int main (int argc, char **argv)
     GrB_Matrix_nrows (&ntrials, SourceNodes) ;
 
     // HACK
-    ntrials = 1 ;
+    // ntrials = 1 ;
 
     printf ( "\n==========input graph: nodes: %lu edges: %lu ntrials: %lu\n",
         n, nvals, ntrials) ;
@@ -451,8 +452,7 @@ int main (int argc, char **argv)
         if (nthreads > nthreads_max) continue ;
         LAGraph_set_nthreads (nthreads) ;
         t [nthreads] = 0 ;
-        printf ("\n------------------------------------------- threads: %2d\n",
-            nthreads) ;
+        printf ("\n------------------------------------------- threads: %2d\n", nthreads) ;
         GB_Global_timing_clear_all ( ) ;
         for (int trial = 0 ; trial < ntrials ; trial++)
         {
@@ -543,7 +543,7 @@ int main (int argc, char **argv)
     // BFS: pushpull, with tree only
     //--------------------------------------------------------------------------
 
-#if 0
+#if 1
     printf ( "pushpull (log, with tree only):\n") ;
     sprintf (filename, "pushpull_%lu.m", n) ;
     f = fopen (filename, "w") ;
@@ -786,9 +786,7 @@ int main (int argc, char **argv)
     }
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;
-    printf ( "\n") ;
-    printf ("###################################### ALLPUSH\n") ;
-    GxB_print (pi, 2) ;
+    printf ("\n") ;
     GrB_free (&pi) ;
     fclose (f) ;
 
@@ -838,8 +836,6 @@ int main (int argc, char **argv)
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;
     printf ("\n") ;
-    printf ("###################################### ALLPULL\n") ;
-    GxB_print (pi, 2) ;
     GrB_free (&pi) ;
     fclose (f) ;
 

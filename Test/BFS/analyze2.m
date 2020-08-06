@@ -5,21 +5,24 @@
 % pushvspull2 ('simple', allpush_results, allpull_results, n, nz, 1)
 
 % orkut:
+%{
 [pushpull_results, name, n, nz] = pushpull_3072441_slash ;
 [ allpull_results, name, n, nz] = allpull_3072441_slash ;
 % fprintf ('\n\n=================== %s\n', name) ;
 [ allpush_results, name, n, nz] = allpush_3072441_slash ;
 pushvspull2 ('orkut (slash)', allpush_results, allpull_results, ...
     pushpull_results, n, nz, 1)
+%}
 
 % orkut:
 [pushpull_results, name, n, nz] = pushpull_3072441 ;
 [ allpull_results, name, n, nz] = allpull_3072441 ;
 % fprintf ('\n\n=================== %s\n', name) ;
 [ allpush_results, name, n, nz] = allpush_3072441 ;
-pushvspull2 ('orkut (hypersparse)', allpush_results, allpull_results, ...
+pushvspull2 ('orkut (slash)', allpush_results, allpull_results, ...
     pushpull_results, n, nz, 2)
 
+%{
 % kron
 [pushpull_results, name, n, nz] = pushpull_134217726 ;
 [ allpull_results, name, n, nz] = allpull_134217726 ;
@@ -60,4 +63,4 @@ pushvspull2 ('web', allpush_results, allpull_results, pushpull_results, ...
 pushvspull2 ('twitter', allpush_results, allpull_results, pushpull_results, ...
     n, nz, 6)
 
-
+%}

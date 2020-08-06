@@ -17,6 +17,8 @@ t_pushpull_tot = 0 ;
 
 for k = 1:ntrials
 
+    % fprintf ('%d:\n', k) ;
+
     push_result = allpush_results {k}  ;
     pull_result = allpull_results {k}  ;
     pushpull_result = pushpull_results {k}  ;
@@ -42,7 +44,9 @@ for k = 1:ntrials
     growings = nan (nlevels, 1) ;
 
     alpha = 0.15 ;
-    beta = 20.0 ;
+    beta1 = 8 ;
+    beta2 = 500 ;
+    % beta = 20.0 ;
 
     for level = 1:nlevels
         % select push or pull
@@ -58,12 +62,13 @@ for k = 1:ntrials
 %           big_frontier = ...
 %               ((edges_in_frontier (level)) ./ edges_unexplored) > alpha ;
 
+            big_frontier = (this_nq > n / beta1) ;
             if (big_frontier && growing)
                 do_push = false ;
             end
         else
             shrinking = ~growing ;
-            if ((this_nq < n / beta) && shrinking)
+            if ((this_nq < n / beta2) && shrinking)
                 do_push = true ;
             end
         end
@@ -75,8 +80,8 @@ for k = 1:ntrials
         end
         bad_choice = (t_auto (level) > t_best (level)) ;
 
-if (0)
-        if (bad_choice)
+if (1)
+%       if (bad_choice)
             fprintf ('   level %2d: push %10.4f pull %10.3f ', ...
                 level, t_push (level), t_pull (level)) ;
             if (do_push)
@@ -88,13 +93,13 @@ if (0)
                 fprintf (' (oops %d)', growing) ;
             end
             fprintf ('\n') ;
-        end
+%       end
 end
 
         last_nq = this_nq ;
     end
 
-if (0)
+if (1)
     fprintf ('trial %2d : ', k) ;
     fprintf ('push %10.4f ', sum (t_push)) ;
     fprintf ('pull %10.4f ', sum (t_pull)) ;
@@ -119,7 +124,8 @@ end
     % reltime
     % growings
 
-    subplot (1,2,1)
+%{
+    subplot (1,3,1)
     loglog ( relalpha (growings ~= 0), reltime (growings ~= 0), 'o', ...
              [1e-4 100], [1 1], 'g-', ...
              [alpha alpha], [1e-3 10], 'g-') ;
@@ -127,11 +133,21 @@ end
     xlabel ('growing: (edges unexplored - edges in frontier)/(edges in frontier) ') ;
     hold on
     title (name) ;
+%}
+
+    subplot (1,2,1)
+    loglog ( relnq (growings ~= 0), reltime (growings ~= 0), 'o', ...
+             [1e-6 1], [1 1], 'g-', ...
+             [1/beta1 1/beta1], [1e-3 10], 'g-') ;
+    ylabel ('pushtime / pulltime') ;
+    xlabel ('growing: nq/n') ;
+    hold on
+    title (name) ;
 
     subplot (1,2,2) ;
     loglog ( relnq (growings == 0), reltime (growings == 0), 'o', ...
-             [1e-4 1], [1 1], 'g-', ...
-             [(1/beta) (1/beta)], [1e-3 10], 'g-') ;
+             [1e-6 1], [1 1], 'g-', ...
+             [(1/beta2) (1/beta2)], [1e-3 10], 'g-') ;
     ylabel ('pushtime / pulltime') ;
     xlabel ('shrinking: nq/n') ;
     title (name) ;
