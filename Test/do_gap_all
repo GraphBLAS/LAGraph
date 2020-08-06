@@ -2,10 +2,10 @@
 
 # run all GAP benchmarks
 
-cd BetweennessCentrality
+cd BFS
 numactl --interleave=all ./do_gap
 
-cd ../BFS
+cd ../BetweennessCentrality
 numactl --interleave=all ./do_gap
 
 cd ../CC

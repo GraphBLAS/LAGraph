@@ -1558,3 +1558,163 @@ max # of threads: 40
 SuiteSparse:GraphBLAS June 2, 2020 (DRAFT)
 Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
 # threads used: 40 time: 1204.74
+
+From: /home/faculty/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Mon Aug  3 04:26:46 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Aug 2, 2020 (DRAFT)
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 40 time: 1095.83
+
+From: /home/faculty/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Mon Aug  3 06:02:18 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Aug 2, 2020 (DRAFT)
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 20 time: 1910.46
+
+From: /home/faculty/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Mon Aug  3 07:04:49 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Aug 2, 2020 (DRAFT)
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 40 time: 1250.37
+
+From: /home/faculty/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Mon Aug  3 08:48:11 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Aug 2, 2020 (DRAFT)
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 20 time: 2067.43
+
+From: /home/faculty/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Mon Aug  3 08:53:34 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Aug 2, 2020 (DRAFT)
+Message: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 40 time: 35.5946
+
+From: /home/faculty/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Mon Aug  3 08:56:21 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Aug 2, 2020 (DRAFT)
+Message: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 20 time: 55.8979
+
+From: /home/faculty/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Mon Aug  3 08:58:12 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Aug 2, 2020 (DRAFT)
+Message: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 40 time: 37.0062
+
+From: /home/faculty/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Mon Aug  3 09:01:10 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Aug 2, 2020 (DRAFT)
+Message: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 20 time: 59.298
+
+From: /home/faculty/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Mon Aug  3 09:20:40 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Aug 2, 2020 (DRAFT)
+Message: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 40 time: 257.891
+
+From: /home/faculty/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Mon Aug  3 09:42:16 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Aug 2, 2020 (DRAFT)
+Message: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 20 time: 432.149
+
+From: /home/faculty/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Mon Aug  3 09:59:08 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Aug 2, 2020 (DRAFT)
+Message: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 40 time: 337.112
+
+From: /home/faculty/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Mon Aug  3 10:25:47 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Aug 2, 2020 (DRAFT)
+Message: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 20 time: 532.963
+
+From: /home/faculty/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Mon Aug  3 10:30:17 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Aug 2, 2020 (DRAFT)
+Message: /home/faculty/davis/GAP/GAP-web/GAP-web.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 40 time: 55.1324
+
+From: /home/faculty/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Mon Aug  3 10:34:39 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Aug 2, 2020 (DRAFT)
+Message: /home/faculty/davis/GAP/GAP-web/GAP-web.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 20 time: 87.2133
+
+From: /home/faculty/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Mon Aug  3 10:37:43 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Aug 2, 2020 (DRAFT)
+Message: /home/faculty/davis/GAP/GAP-web/GAP-web.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 40 time: 61.5106
+
+From: /home/faculty/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Mon Aug  3 10:42:36 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Aug 2, 2020 (DRAFT)
+Message: /home/faculty/davis/GAP/GAP-web/GAP-web.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 20 time: 97.4178
+
+From: /home/faculty/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Mon Aug  3 10:42:45 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Aug 2, 2020 (DRAFT)
+Message: /home/faculty/davis/GAP/GAP-road/GAP-road.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 40 time: 0.310679
+
+From: /home/faculty/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Mon Aug  3 10:42:46 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Aug 2, 2020 (DRAFT)
+Message: /home/faculty/davis/GAP/GAP-road/GAP-road.grb : SandiaDot:  sum ((L*U') .* L)    auto-sort
+# threads used: 20 time: 0.302924
+
+From: /home/faculty/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Mon Aug  3 10:42:47 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Aug 2, 2020 (DRAFT)
+Message: /home/faculty/davis/GAP/GAP-road/GAP-road.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 40 time: 0.314854
+
+From: /home/faculty/davis/sparse/LAGraph/Test/TriangleCount/gap_tc_test.c
+Date: Mon Aug  3 10:42:48 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Aug 2, 2020 (DRAFT)
+Message: /home/faculty/davis/GAP/GAP-road/GAP-road.grb : SandiaDot2: sum ((U*L') .* U)    auto-sort
+# threads used: 20 time: 0.32178
