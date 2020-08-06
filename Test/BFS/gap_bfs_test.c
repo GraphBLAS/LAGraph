@@ -46,8 +46,8 @@
 #include "bfs_test.h"
 #include "../../../GraphBLAS/Source/GB_Global.h"
 
-#define NTHREAD_LIST 2
-#define THREAD_LIST 0
+#define NTHREAD_LIST 3
+#define THREAD_LIST 40,8,1
 
 // #define NTHREAD_LIST 8
 // #define THREAD_LIST 8, 7, 6, 5, 4, 3, 2, 1
@@ -279,7 +279,7 @@ int main (int argc, char **argv)
     GrB_Matrix_nrows (&ntrials, SourceNodes) ;
 
     // HACK
-    // ntrials = 1 ;
+    ntrials = 1 ;
 
     printf ( "\n==========input graph: nodes: %lu edges: %lu ntrials: %lu\n",
         n, nvals, ntrials) ;
@@ -442,7 +442,7 @@ int main (int argc, char **argv)
     // BFS: pushpull, with tree only
     //--------------------------------------------------------------------------
 
-#if 1
+#if 0
     printf ( "pushpull (no log, with tree only):\n") ;
 
     for (int tt = 1 ; tt <= nt ; tt++)
@@ -492,7 +492,7 @@ int main (int argc, char **argv)
     // BFS: all-push, with tree only
     //--------------------------------------------------------------------------
 
-#if 1
+#if 0
     printf ( "allpush (no log, with tree only):\n") ;
 
     for (int tt = 1 ; tt <= nt ; tt++)
@@ -535,6 +535,7 @@ int main (int argc, char **argv)
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;
     printf ( "\n") ;
+    LAGRAPH_OK (GxB_print (pi, 2)) ;
 
 #endif
 
@@ -542,7 +543,7 @@ int main (int argc, char **argv)
     // BFS: pushpull, with tree only
     //--------------------------------------------------------------------------
 
-#if 1
+#if 0
     printf ( "pushpull (log, with tree only):\n") ;
     sprintf (filename, "pushpull_%lu.m", n) ;
     f = fopen (filename, "w") ;
@@ -584,7 +585,7 @@ int main (int argc, char **argv)
     printf ( "\n") ;
     fclose (f) ;
 
-    // LAGRAPH_OK (GxB_print (pi, 2)) ;
+    LAGRAPH_OK (GxB_print (pi, 2)) ;
 #endif
 
     #if 0
@@ -786,6 +787,8 @@ int main (int argc, char **argv)
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;
     printf ( "\n") ;
+    printf ("###################################### ALLPUSH\n") ;
+    GxB_print (pi, 2) ;
     GrB_free (&pi) ;
     fclose (f) ;
 
@@ -795,7 +798,7 @@ int main (int argc, char **argv)
     // BFS: all-pull, with tree only (log all timings)
     //--------------------------------------------------------------------------
 
-#if 0
+#if 1
 
     nthreads = nthreads_max ;
     sprintf (filename, "allpull_%lu.m", n) ;
@@ -834,7 +837,9 @@ int main (int argc, char **argv)
     }
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;
-    printf ( "\n") ;
+    printf ("\n") ;
+    printf ("###################################### ALLPULL\n") ;
+    GxB_print (pi, 2) ;
     GrB_free (&pi) ;
     fclose (f) ;
 
