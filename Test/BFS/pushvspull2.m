@@ -93,7 +93,7 @@ for k = 1:ntrials
         end
         bad_choice = (t_auto (level) > t_best (level)) ;
 
-if (1)
+if (0)
         if (bad_choice)
             fprintf ('   level %2d: push %10.4f pull %10.3f ', ...
                 level, t_push (level), t_pull (level)) ;
@@ -114,7 +114,7 @@ end
         last_nq = this_nq ;
     end
 
-if (1)
+if (0)
     fprintf ('trial %2d : ', k) ;
     fprintf ('push %10.4f ', sum (t_push)) ;
     fprintf ('pull %10.4f ', sum (t_pull)) ;

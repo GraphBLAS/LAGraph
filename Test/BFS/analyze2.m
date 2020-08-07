@@ -23,7 +23,7 @@ addpath ('/home/davis/xfer_6Augc') ;
 pushvspull2 ('orkut ', allpush_results, allpull_results, ...
     pushpull_results, n, nz, 2)
 drawnow
-pause
+% pause
 
 % kron
 [pushpull_results, name, n, nz] = pushpull_134217726 ;
@@ -33,7 +33,7 @@ pause
 pushvspull2 ('kron', allpush_results, allpull_results, pushpull_results, ...
     n, nz, 3)
 drawnow
-pause
+% pause
 
 % urand
 [pushpull_results, name, n, nz] = pushpull_134217728 ;
@@ -43,7 +43,7 @@ pause
 pushvspull2 ('urand', allpush_results, allpull_results, pushpull_results, ...
     n, nz, 4)
 drawnow
-pause
+% pause
 
 % road
 % [pushpull_results, name, n, nz] = pushpull_23947347 ;
@@ -61,7 +61,7 @@ pause
 pushvspull2 ('web', allpush_results, allpull_results, pushpull_results, ...
     n, nz, 5)
 drawnow
-pause
+% pause
 
 % twitter
 [pushpull_results, name, n, nz] = pushpull_61578415 ;

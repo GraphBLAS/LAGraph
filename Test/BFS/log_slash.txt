@@ -495,3 +495,51 @@ SuiteSparse:GraphBLAS Aug 2, 2020 (DRAFT)
 Message: /home/davis/GAP/GAP-road/GAP-road.grb : treeonly:allpush
 # threads used: 4 time: 2.23118
 
+
+From: /home/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Fri Aug  7 12:54:55 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS Aug 5, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : w/tree:pushpull
+# threads used: 8 time: 0.139227
+
+From: /home/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Fri Aug  7 12:55:06 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 4
+SuiteSparse:GraphBLAS Aug 5, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : w/tree:pushpull
+# threads used: 4 time: 0.167067
+
+From: /home/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Fri Aug  7 12:55:12 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS Aug 5, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : treeonly:pushpull
+# threads used: 8 time: 0.0736972
+
+From: /home/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Fri Aug  7 12:55:18 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 4
+SuiteSparse:GraphBLAS Aug 5, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : treeonly:pushpull
+# threads used: 4 time: 0.084334
+
+From: /home/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Fri Aug  7 12:55:31 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 8
+SuiteSparse:GraphBLAS Aug 5, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : treeonly:allpush
+# threads used: 8 time: 0.205005
+
+From: /home/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Fri Aug  7 12:55:48 2020
+CPU:  Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+max # of threads: 4
+SuiteSparse:GraphBLAS Aug 5, 2020 (DRAFT)
+Message: /home/davis/com-Orkut.grb : treeonly:allpush
+# threads used: 4 time: 0.257561

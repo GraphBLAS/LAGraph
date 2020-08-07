@@ -28,10 +28,12 @@ bfs_check (A, s, v, pi)
 Prob = ssget ('SNAP/com-Orkut')
 A = spones (Prob.A) ;
 pi = mread ('p_3072441.mtx') ;
-s = mread ('s_3072441.mtx') + 1 ;
+s = mread ('s_3072441.mtx') ;   % already 1-based
 v = mread ('v_3072441.mtx') ;
 s = full (s (end))
+A = GrB (A)
 bfs_check (A, s, v, pi)
 %}
 pi2 = mread ('ponly_3072441.mtx') ;
 bfs_check (A, s, v, pi2)
+

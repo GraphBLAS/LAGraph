@@ -30,6 +30,7 @@ nlevels = max (v) ;
 
 for k = 1:n
 
+    fprintf ('.') ;
     % get all nodes at the current level k
     q = find (v == k) ;
 
@@ -69,5 +70,5 @@ if (nargin > 3 && n < 10000)
     treeplot (pi') ;
 end
 
-fprintf ('BFS ok\n') ;
+fprintf ('\nBFS ok\n') ;
 
