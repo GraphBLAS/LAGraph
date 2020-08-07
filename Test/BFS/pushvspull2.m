@@ -43,31 +43,35 @@ for k = 1:ntrials
     edges_unexploreds = nan (nlevels, 1) ;
     growings = nan (nlevels, 1) ;
 
-    alpha = 0.15 ;
+    alpha = 4 ;
     beta1 = 8 ;
     beta2 = 500 ;
-    % beta = 20.0 ;
 
+    any_pull = false ;
     for level = 1:nlevels
         % select push or pull
         this_nq = nq (level) ;
-        edges_unexplored = edges_unexplored - edges_in_frontier (level) ;
-        edges_unexploreds (level) = edges_unexplored ;
 
         growing = this_nq > last_nq ;
+        shrinking = this_nq < last_nq ;
         growings (level) = growing ;
+
         if (do_push)
-            big_frontier =  ...
-                edges_in_frontier (level) > (edges_unexplored / alpha) ;
+            if (any_pull)
+                switch_to_pull = (growing && this_nq > n / beta1) ;
+            else
+                edges_unexplored = edges_unexplored - edges_in_frontier (level) ;
+                edges_unexploreds (level) = edges_unexplored ;
+                big_frontier =  ...
+                    alpha * edges_in_frontier (level) > edges_unexplored  ;
+                switch_to_pull = (growing && big_frontier) ;
+            end
 %           big_frontier = ...
 %               ((edges_in_frontier (level)) ./ edges_unexplored) > alpha ;
-
-            big_frontier = (this_nq > n / beta1) ;
             if (big_frontier && growing)
                 do_push = false ;
             end
         else
-            shrinking = ~growing ;
             if ((this_nq < n / beta2) && shrinking)
                 do_push = true ;
             end
@@ -76,6 +80,7 @@ for k = 1:ntrials
         if (do_push)
             t_auto (level) = t_push (level);
         else
+            any_pull = true ;
             t_auto (level) = t_pull (level);
         end
         bad_choice = (t_auto (level) > t_best (level)) ;
@@ -89,6 +94,7 @@ if (1)
             else
                 fprintf (' pull ');
             end
+            fprintf (' %15.4f ', edges_unexplored / edges_in_frontier (level)) ;
             if (bad_choice)
                 fprintf (' (oops %d)', growing) ;
             end
@@ -124,18 +130,16 @@ end
     % reltime
     % growings
 
-%{
     subplot (1,3,1)
     loglog ( relalpha (growings ~= 0), reltime (growings ~= 0), 'o', ...
-             [1e-4 100], [1 1], 'g-', ...
+             [1e-4 200], [1 1], 'g-', ...
              [alpha alpha], [1e-3 10], 'g-') ;
     ylabel ('pushtime / pulltime') ;
     xlabel ('growing: (edges unexplored - edges in frontier)/(edges in frontier) ') ;
     hold on
     title (name) ;
-%}
 
-    subplot (1,2,1)
+    subplot (1,3,2)
     loglog ( relnq (growings ~= 0), reltime (growings ~= 0), 'o', ...
              [1e-6 1], [1 1], 'g-', ...
              [1/beta1 1/beta1], [1e-3 10], 'g-') ;
@@ -144,7 +148,7 @@ end
     hold on
     title (name) ;
 
-    subplot (1,2,2) ;
+    subplot (1,3,3)
     loglog ( relnq (growings == 0), reltime (growings == 0), 'o', ...
              [1e-6 1], [1 1], 'g-', ...
              [(1/beta2) (1/beta2)], [1e-3 10], 'g-') ;
