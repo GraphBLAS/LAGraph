@@ -43,9 +43,17 @@ for k = 1:ntrials
     edges_unexploreds = nan (nlevels, 1) ;
     growings = nan (nlevels, 1) ;
 
-    alpha = 4 ;
+    % good for kron, urand, twitter:
+    alpha = 12 ;
     beta1 = 8 ;
-    beta2 = 500 ;
+    beta2 = 100 ;
+
+    % good for orkut, web.
+    % seems OK for the other matrices too
+    alpha = 8 ;
+    beta1 = 8 ;
+    beta2 = 500 ;     % better for web
+    % beta2 = 100 ;
 
     any_pull = false ;
     for level = 1:nlevels
@@ -68,7 +76,7 @@ for k = 1:ntrials
             end
 %           big_frontier = ...
 %               ((edges_in_frontier (level)) ./ edges_unexplored) > alpha ;
-            if (big_frontier && growing)
+            if (switch_to_pull && growing)
                 do_push = false ;
             end
         else
@@ -86,7 +94,7 @@ for k = 1:ntrials
         bad_choice = (t_auto (level) > t_best (level)) ;
 
 if (1)
-%       if (bad_choice)
+        if (bad_choice)
             fprintf ('   level %2d: push %10.4f pull %10.3f ', ...
                 level, t_push (level), t_pull (level)) ;
             if (do_push)
@@ -95,11 +103,12 @@ if (1)
                 fprintf (' pull ');
             end
             fprintf (' %15.4f ', edges_unexplored / edges_in_frontier (level)) ;
+            fprintf (' %15.4f ', 1/(this_nq / n)) ;
             if (bad_choice)
                 fprintf (' (oops %d)', growing) ;
             end
             fprintf ('\n') ;
-%       end
+        end
 end
 
         last_nq = this_nq ;

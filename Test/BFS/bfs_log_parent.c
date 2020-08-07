@@ -101,6 +101,7 @@ GrB_Info bfs_log_parent // push-pull BFS, compute the tree only
     , FILE *file
 )
 {
+double t1 = omp_get_wtime ( ) ;
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -209,10 +210,7 @@ GrB_Info bfs_log_parent // push-pull BFS, compute the tree only
 
     if (push_pull) LAGr_Vector_new (&w, GrB_INT64, n) ;
 
-fprintf (file, "\nk = k+1 ; s{k} = %lu ;\n", source) ;
-fprintf (file, "results{k} = [\n") ;
-
-    double alpha = 4.0 ;
+    double alpha = 8.0 ;
     double beta1 = 8.0 ;
     double beta2 = 500.0 ;
     int64_t n_over_beta1 = (int64_t) (((double) n) / beta1) ;
@@ -227,12 +225,23 @@ fprintf (file, "results{k} = [\n") ;
     int64_t edges_unexplored = nvals ;
     bool any_pull = false ;     // true if any pull phase has been done
 
+t1 = omp_get_wtime ( ) - t1 ;
+double t2 = 0 ;
+double t3 = 0 ;
+double t4 = 0 ;
+double t5 = 0 ;
+
+fprintf (file, "\nk = k+1 ; s{k} = %lu ;\n", source) ;
+fprintf (file, "results{k} = [\n") ;
+
     for (int64_t nvisited = 0 ; nvisited < n ; nvisited += nq)
     {
 
         //----------------------------------------------------------------------
         // select push vs pull
         //----------------------------------------------------------------------
+
+double tt = omp_get_wtime ( ) ;
 
         int64_t edges_in_frontier = 0 ;
         if (push_pull)
@@ -285,6 +294,10 @@ fprintf (file, "results{k} = [\n") ;
         }
         any_pull = any_pull || (!do_push) ;
 
+tt = omp_get_wtime ( ) - tt ;
+t2 += tt ;
+tt = omp_get_wtime ( ) ;
+
         //----------------------------------------------------------------------
         // q = next level of the BFS
         //----------------------------------------------------------------------
@@ -292,27 +305,29 @@ fprintf (file, "results{k} = [\n") ;
         GxB_set ((GrB_Matrix) q, GxB_SPARSITY,  
             do_push ? GxB_SPARSE : GxB_BITMAP) ;
 
-double t ;
+tt = omp_get_wtime ( ) - tt ;
+t3 += tt ;
+
+tt = omp_get_wtime ( ) ;
 
         if ((do_push && vxm_is_push) || (!do_push && vxm_is_pull))
         {
             // q'<!pi> = q'*A
             // this is a push if A is in CSR format; pull if A is in CSC
-t = omp_get_wtime ( ) ;
             LAGr_vxm (q, pi, NULL, semiring, q, A, GrB_DESC_RC) ;
         }
         else // ((!do_push && mxv_is_pull) || (do_push && mxv_is_push))
         {
             // q<!pi> = AT*q
             // this is a pull if AT is in CSR format; push if AT is in CSC
-t = omp_get_wtime ( ) ;
             LAGr_mxv (q, pi, NULL, semiring, AT, q, GrB_DESC_RC) ;
         }
 
-t = omp_get_wtime ( ) - t ;
+tt = omp_get_wtime ( ) - tt ;
 fprintf (file, "%d  %16lu %16lu %16ld    %g\n",
-    do_push, nq, nvisited, edges_in_frontier, t) ;
-
+    do_push, nq, nvisited, edges_in_frontier, tt) ;
+t4 += tt ;
+tt = omp_get_wtime ( ) ;
 
         last_nq = nq ;
         LAGr_Vector_nvals (&nq, q) ;
@@ -325,9 +340,15 @@ fprintf (file, "%d  %16lu %16lu %16ld    %g\n",
         // q(i) currently contains the parent+1 of node i in tree.
         // pi<q> = q
         LAGr_assign (pi, q, NULL, q, GrB_ALL, n, GrB_DESC_S) ;
+tt = omp_get_wtime ( ) - tt ;
+t5 += tt ;
+
     }
 
 fprintf (file, "] ;\n") ;
+double tot = t1 + t2 + t3 + t4 + t5 ;
+printf ("phases: %12.2f %12.2f %12.2f %12.2f %12.2f\n",
+    100 * t1/tot, 100*t2/tot, 100*t3/tot, 100*t4/tot, 100*t5/tot) ;
 
     //--------------------------------------------------------------------------
     // free workspace and return result
