@@ -2,7 +2,7 @@
 A.mtx
 stderr.txt
 w
-o
+o*
 v
 bfs2_n*.m
 bfs_pull_n*.m

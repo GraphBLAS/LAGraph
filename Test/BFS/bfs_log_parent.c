@@ -283,7 +283,7 @@ fprintf (file, "results{k} = [\n") ;
                 }
             }
         }
-        any_pull = any_pull | (!do_push) ;
+        any_pull = any_pull || (!do_push) ;
 
         //----------------------------------------------------------------------
         // q = next level of the BFS
