@@ -46,7 +46,7 @@
 #include "bfs_test.h"
 #include "../../../GraphBLAS/Source/GB_Global.h"
 
-#define NTHREAD_LIST 1
+#define NTHREAD_LIST 2
 #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 8
@@ -88,8 +88,7 @@ int main (int argc, char **argv)
     GrB_Vector Degree = NULL ;
     GrB_Matrix SourceNodes = NULL ;
     LAGRAPH_OK (LAGraph_init ( )) ;
-    // LAGRAPH_OK (GxB_set (GxB_CHUNK, 1)) ;
-    LAGRAPH_OK (GxB_set (GxB_BURBLE, true)) ;
+    LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
 
     uint64_t seed = 1 ;
     FILE *f ;
@@ -370,7 +369,7 @@ int main (int argc, char **argv)
     // BFS: pushpull, with depth and tree
     //--------------------------------------------------------------------------
 
-#if 0
+#if 1
     printf ( "pushpull (with depth and tree):\n") ;
     for (int tt = 1 ; tt <= nt ; tt++)
     {
@@ -410,7 +409,7 @@ int main (int argc, char **argv)
 #endif
 
     // LAGRAPH_OK (GxB_print (pi, 2)) ;
-    #if 0
+    #if 1
     LAGraph_tic (tic) ;
     printf ("saving results ...\n")  ;
 
@@ -443,7 +442,7 @@ int main (int argc, char **argv)
     // BFS: pushpull, with tree only
     //--------------------------------------------------------------------------
 
-#if 0
+#if 1
     printf ( "pushpull (no log, with tree only):\n") ;
 
     for (int tt = 1 ; tt <= nt ; tt++)
@@ -486,13 +485,19 @@ int main (int argc, char **argv)
     LAGraph_set_nthreads (nthreads_max) ;
     printf ( "\n") ;
 
+    sprintf (filename, "ponly_%d.mtx", (int) n) ;
+    f = fopen (filename, "w") ;
+    LAGraph_mmwrite ((GrB_Matrix) pi, f) ;
+    fclose (f) ;
+
+    GrB_free (&pi) ;
 #endif
 
     //--------------------------------------------------------------------------
     // BFS: all-push, with tree only
     //--------------------------------------------------------------------------
 
-#if 0
+#if 1
     printf ( "allpush (no log, with tree only):\n") ;
 
     for (int tt = 1 ; tt <= nt ; tt++)
@@ -535,7 +540,7 @@ int main (int argc, char **argv)
     // restore default
     LAGraph_set_nthreads (nthreads_max) ;
     printf ( "\n") ;
-    LAGRAPH_OK (GxB_print (pi, 2)) ;
+    // LAGRAPH_OK (GxB_print (pi, 2)) ;
 
 #endif
 
@@ -543,7 +548,7 @@ int main (int argc, char **argv)
     // BFS: pushpull, with tree only
     //--------------------------------------------------------------------------
 
-#if 1
+#if 0
     printf ( "pushpull (log, with tree only):\n") ;
     sprintf (filename, "pushpull_%lu.m", n) ;
     f = fopen (filename, "w") ;
@@ -578,7 +583,7 @@ int main (int argc, char **argv)
             fflush (stdout) ;
         }
         t [nthreads] = t [nthreads] / ntrials ;
-        printf ( ":%2d:pushpull (onlytree): %12.3f (sec), rate: %6.2f\n",
+        printf ( ":%2d:pushpull (log,tree): %12.3f (sec), rate: %6.2f\n",
             nthreads, t [nthreads], 1e-6*((double) nvals) / t [nthreads]) ;
     }
     // restore default
@@ -586,7 +591,7 @@ int main (int argc, char **argv)
     printf ( "\n") ;
     fclose (f) ;
 
-    LAGRAPH_OK (GxB_print (pi, 2)) ;
+    // LAGRAPH_OK (GxB_print (pi, 2)) ;
 #endif
 
     #if 0
@@ -750,7 +755,7 @@ int main (int argc, char **argv)
     // BFS: all-push, with tree only (log all timings)
     //--------------------------------------------------------------------------
 
-#if 1
+#if 0
 
     sprintf (filename, "allpush_%lu.m", n) ;
     f = fopen (filename, "w") ;
@@ -787,7 +792,7 @@ int main (int argc, char **argv)
             fflush (stdout) ;
         }
         t [nthreads] = t [nthreads] / ntrials ;
-        printf ( ":%2d:allpush   (w/ tree): %12.3f (sec), rate: %6.2f\n",
+        printf ( ":%2d:allpush  (log,tree): %12.3f (sec), rate: %6.2f\n",
             nthreads, t [nthreads], 1e-6*((double) nvals) / t [nthreads]) ;
         fflush (f) ; fflush (stdout) ;
     }
@@ -803,7 +808,7 @@ int main (int argc, char **argv)
     // BFS: all-pull, with tree only (log all timings)
     //--------------------------------------------------------------------------
 
-#if 1
+#if 0
 
     nthreads = nthreads_max ;
     sprintf (filename, "allpull_%lu.m", n) ;
@@ -843,7 +848,7 @@ int main (int argc, char **argv)
             fflush (stdout) ;
         }
         t [nthreads] = t [nthreads] / ntrials ;
-        printf ( ":%2d:allpull   (w/ tree): %12.3f (sec), rate: %6.2f\n",
+        printf ( ":%2d:allpull (log, tree): %12.3f (sec), rate: %6.2f\n",
             nthreads, t [nthreads], 1e-6*((double) nvals) / t [nthreads]) ;
         fflush (f) ; fflush (stdout) ;
     }

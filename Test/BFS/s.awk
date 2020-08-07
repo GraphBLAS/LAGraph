@@ -1,3 +1,3 @@
-/phase/
+/file/
 
 /rate/

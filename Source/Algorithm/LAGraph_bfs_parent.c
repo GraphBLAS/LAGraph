@@ -40,7 +40,7 @@
 
 // Usage:
 
-// info = LAGraph_bfs_parent (&pi, A, AT, Degree, source) ;
+// info = LAGraph_bfs_parent (&pi, A, AT, source) ;
 
 //      GrB_Vector *pi:  a vector containing the BFS tree, in 1-based indexing.
 //          pi(source) = source+1 for source node.  pi(i) = p+1 if p is the
@@ -59,15 +59,12 @@
 //          LAGraph_bfs_pushpull).  Results are undefined if AT is not NULL but
 //          not identical to the transpose of A.
 
-//      GrB_Vector Degree: a vector of outdegrees, where Degree(i) is the
-//          out-degree of node i (the # of entries in A(i,:)).
-
 //      int64_t source: the source node for the BFS.
 
 // This algorithm can use the push-pull strategy, which requires both A and
-// AT=A', and Degree to be passed in.  If the graph is known to be symmetric,
-// then the same matrix A can be passed in for both arguments.  Results are
-// undefined if AT is not the transpose of A.
+// AT=A' to be passed in.  If the graph is known to be symmetric, then the same
+// matrix A can be passed in for both arguments.  Results are undefined if AT
+// is not the transpose of A.
 
 // See LAGraph_bfs_pushpull for a discussion of the push/pull strategy.
 
@@ -211,18 +208,20 @@ GrB_Info LAGraph_bfs_parent // push-pull BFS, compute the tree only
 
     if (push_pull) LAGr_Vector_new (&w, GrB_INT64, n) ;
 
-    double alpha = 0.15 ;
-    double beta = 20.0 ;
-    int64_t n_over_beta = (int64_t) (((double) n) / beta) ;
+    double alpha = 8.0 ;
+    double beta1 = 8.0 ;
+    double beta2 = 500.0 ;
+    int64_t n_over_beta1 = (int64_t) (((double) n) / beta1) ;
+    int64_t n_over_beta2 = (int64_t) (((double) n) / beta2) ;
 
     //--------------------------------------------------------------------------
     // BFS traversal and label the nodes
     //--------------------------------------------------------------------------
 
-    bool do_push = can_push ; // start with push, if available
+    bool do_push = can_push ;   // start with push, if available
     GrB_Index last_nq = 0 ;
-    int64_t edges_in_frontier = 0 ;
     int64_t edges_unexplored = nvals ;
+    bool any_pull = false ;     // true if any pull phase has been done
 
     for (int64_t nvisited = 0 ; nvisited < n ; nvisited += nq)
     {
@@ -231,21 +230,40 @@ GrB_Info LAGraph_bfs_parent // push-pull BFS, compute the tree only
         // select push vs pull
         //----------------------------------------------------------------------
 
+        int64_t edges_in_frontier = 0 ;
         if (push_pull)
         {
-            // w<q>=Degree
-            // w(i) = outdegree of node i if node i is in the queue
-            LAGr_assign (w, q, NULL, Degree, GrB_ALL, n, GrB_DESC_RS) ;
-            // edges_in_frontier = sum (w) = # of edges incident on all
-            // nodes in the current frontier
-            LAGr_reduce (&edges_in_frontier, NULL, GrB_PLUS_MONOID_INT64, w,
-                NULL) ;
-            edges_unexplored -= edges_in_frontier ;
             if (do_push && can_pull)
             {
                 // check for switch from push to pull
                 bool growing = nq > last_nq ;
-                if ((edges_in_frontier > (edges_unexplored / alpha)) && growing)
+                bool switch_to_pull ;
+                if (any_pull)
+                { 
+                    // once any pull phase has been done, the # of edges in the
+                    // frontier has no longer been tracked.  But now the BFS
+                    // has switched back to push, and we're checking for yet
+                    // another switch to pull.  This switch is unlikely, so
+                    // just keep track of the size of the frontier, and switch
+                    // if it starts growing again and is getting big.
+                    switch_to_pull = (growing && nq > n_over_beta1) ;
+                }
+                else
+                {
+                    // update the # of unexplored edges
+                    // w<q>=Degree
+                    // w(i) = outdegree of node i if node i is in the queue
+                    // GxB_set ((GrB_Matrix) q, GxB_SPARSITY, GxB_SPARSE) ;
+                    LAGr_assign (w, q, NULL, Degree, GrB_ALL, n, GrB_DESC_RS) ;
+                    // edges_in_frontier = sum (w) = # of edges incident on all
+                    // nodes in the current frontier
+                    LAGr_reduce (&edges_in_frontier, NULL,
+                        GrB_PLUS_MONOID_INT64, w, NULL) ;
+                    edges_unexplored -= edges_in_frontier ;
+                    switch_to_pull = growing &&
+                        (edges_in_frontier > (edges_unexplored / alpha)) ;
+                }
+                if (switch_to_pull)
                 {
                     // the # of edges incident on 
                     do_push = false ;
@@ -255,16 +273,20 @@ GrB_Info LAGraph_bfs_parent // push-pull BFS, compute the tree only
             {
                 // check for switch from pull to push
                 bool shrinking = nq < last_nq ;
-                if ((nq < n_over_beta) && shrinking)
+                if (shrinking && (nq < n_over_beta2))
                 {
                     do_push = true ;
                 }
             }
         }
+        any_pull = any_pull || (!do_push) ;
 
         //----------------------------------------------------------------------
         // q = next level of the BFS
         //----------------------------------------------------------------------
+
+        GxB_set ((GrB_Matrix) q, GxB_SPARSITY,  
+            do_push ? GxB_SPARSE : GxB_BITMAP) ;
 
         if ((do_push && vxm_is_push) || (!do_push && vxm_is_pull))
         {
@@ -290,6 +312,7 @@ GrB_Info LAGraph_bfs_parent // push-pull BFS, compute the tree only
         // q(i) currently contains the parent+1 of node i in tree.
         // pi<q> = q
         LAGr_assign (pi, q, NULL, q, GrB_ALL, n, GrB_DESC_S) ;
+
     }
 
     //--------------------------------------------------------------------------
