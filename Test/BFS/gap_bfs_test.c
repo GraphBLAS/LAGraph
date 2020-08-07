@@ -574,6 +574,7 @@ int main (int argc, char **argv)
             LAGRAPH_OK (bfs_log_parent (&pi, A, AT, Degree, s, f)) ;
             double ttrial = LAGraph_toc (tic) ;
             t [nthreads] += ttrial ;
+            printf ("pushpull trial %2d: %12.4f sec\n", trial, ttrial) ;
             fflush (stdout) ;
         }
         t [nthreads] = t [nthreads] / ntrials ;
@@ -769,6 +770,7 @@ int main (int argc, char **argv)
         if (nthreads > nthreads_max) continue ;
         LAGraph_set_nthreads (nthreads) ;
         LAGraph_tic (tic) ;
+        t [nthreads] = 0 ;
         for (int trial = 0 ; trial < ntrials ; trial++)
         {
             int64_t s ; 
@@ -777,9 +779,14 @@ int main (int argc, char **argv)
             s-- ; // convert from 1-based to 0-based
             GrB_free (&v) ;
             GrB_free (&pi) ;
+            LAGraph_tic (tic) ;
             LAGRAPH_OK (bfs_log_parent (&pi, A, NULL, Degree, s, f)) ;
+            double ttrial = LAGraph_toc (tic) ;
+            t [nthreads] += ttrial ;
+            printf ("allpush  trial %2d: %12.4f sec\n", trial, ttrial) ;
+            fflush (stdout) ;
         }
-        t [nthreads] = LAGraph_toc (tic) / ntrials ;
+        t [nthreads] = t [nthreads] / ntrials ;
         printf ( ":%2d:allpush   (w/ tree): %12.3f (sec), rate: %6.2f\n",
             nthreads, t [nthreads], 1e-6*((double) nvals) / t [nthreads]) ;
         fflush (f) ; fflush (stdout) ;
@@ -818,6 +825,7 @@ int main (int argc, char **argv)
         if (nthreads > nthreads_max) continue ;
         LAGraph_set_nthreads (nthreads) ;
         LAGraph_tic (tic) ;
+        t [nthreads] = 0 ;
         for (int trial = 0 ; trial < ntrials ; trial++)
         {
             int64_t s ; 
@@ -826,9 +834,15 @@ int main (int argc, char **argv)
             s-- ; // convert from 1-based to 0-based
             GrB_free (&v) ;
             GrB_free (&pi) ;
+
+            LAGraph_tic (tic) ;
             LAGRAPH_OK (bfs_log_parent (&pi, NULL, AT, Degree, s, f)) ;
+            double ttrial = LAGraph_toc (tic) ;
+            t [nthreads] += ttrial ;
+            printf ("allpull  trial %2d: %12.4f sec\n", trial, ttrial) ;
+            fflush (stdout) ;
         }
-        t [nthreads] = LAGraph_toc (tic) / ntrials ;
+        t [nthreads] = t [nthreads] / ntrials ;
         printf ( ":%2d:allpull   (w/ tree): %12.3f (sec), rate: %6.2f\n",
             nthreads, t [nthreads], 1e-6*((double) nvals) / t [nthreads]) ;
         fflush (f) ; fflush (stdout) ;
