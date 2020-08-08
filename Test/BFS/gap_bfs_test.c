@@ -369,7 +369,7 @@ int main (int argc, char **argv)
     // BFS: pushpull, with depth and tree
     //--------------------------------------------------------------------------
 
-#if 1
+#if 0
     printf ( "pushpull (with depth and tree):\n") ;
     for (int tt = 1 ; tt <= nt ; tt++)
     {
@@ -409,7 +409,7 @@ int main (int argc, char **argv)
 #endif
 
     // LAGRAPH_OK (GxB_print (pi, 2)) ;
-    #if 1
+    #if 0
     LAGraph_tic (tic) ;
     printf ("saving results ...\n")  ;
 
@@ -485,10 +485,12 @@ int main (int argc, char **argv)
     LAGraph_set_nthreads (nthreads_max) ;
     printf ( "\n") ;
 
+    #if 0
     sprintf (filename, "ponly_%d.mtx", (int) n) ;
     f = fopen (filename, "w") ;
     LAGraph_mmwrite ((GrB_Matrix) pi, f) ;
     fclose (f) ;
+    #endif
 
     GrB_free (&pi) ;
 #endif

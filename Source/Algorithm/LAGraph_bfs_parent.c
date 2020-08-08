@@ -210,7 +210,7 @@ GrB_Info LAGraph_bfs_parent // push-pull BFS, compute the tree only
 
     double alpha = 8.0 ;
     double beta1 = 8.0 ;
-    double beta2 = 500.0 ;
+    double beta2 = 512.0 ;  // was 500
     int64_t n_over_beta1 = (int64_t) (((double) n) / beta1) ;
     int64_t n_over_beta2 = (int64_t) (((double) n) / beta2) ;
 
@@ -273,7 +273,7 @@ GrB_Info LAGraph_bfs_parent // push-pull BFS, compute the tree only
             {
                 // check for switch from pull to push
                 bool shrinking = nq < last_nq ;
-                if (shrinking && (nq < n_over_beta2))
+                if (shrinking && (nq <= n_over_beta2))
                 {
                     do_push = true ;
                 }
