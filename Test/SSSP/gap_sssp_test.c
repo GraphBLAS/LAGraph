@@ -477,7 +477,7 @@ for (int tt = 1 ; tt <= nt ; tt++)
             "time: %10.4f sec\n", nthreads, trial, s, t3) ;
         total_time_sssp12c += t3 ;
 
-        #if 1
+        #if 0
         {
             char outfile [256] ;
             sprintf (outfile, "pathlen_%02d_%ld.mtx", trial, n) ;
