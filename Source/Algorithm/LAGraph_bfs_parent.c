@@ -223,7 +223,7 @@ GrB_Info LAGraph_bfs_parent // push-pull BFS, compute the tree only
     int64_t edges_unexplored = nvals ;
     bool any_pull = false ;     // true if any pull phase has been done
 
-    for (int64_t nvisited = 0 ; nvisited < n ; nvisited += nq)
+    for (int64_t nvisited = 1 ; nvisited < n ; nvisited += nq)
     {
 
         //----------------------------------------------------------------------
@@ -238,7 +238,12 @@ GrB_Info LAGraph_bfs_parent // push-pull BFS, compute the tree only
                 // check for switch from push to pull
                 bool growing = nq > last_nq ;
                 bool switch_to_pull ;
-                if (any_pull)
+                if (edges_unexplored < n)
+                { 
+                    // very little of the graph is left; disable the pull
+                    push_pull = false ;
+                }
+                else if (any_pull)
                 { 
                     // once any pull phase has been done, the # of edges in the
                     // frontier has no longer been tracked.  But now the BFS
@@ -312,7 +317,6 @@ GrB_Info LAGraph_bfs_parent // push-pull BFS, compute the tree only
         // q(i) currently contains the parent+1 of node i in tree.
         // pi<q> = q
         LAGr_assign (pi, q, NULL, q, GrB_ALL, n, GrB_DESC_S) ;
-
     }
 
     //--------------------------------------------------------------------------

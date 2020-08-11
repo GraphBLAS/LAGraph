@@ -55,6 +55,9 @@ for k = 1:ntrials
     beta2 = 500 ;     % better for web
     % beta2 = 100 ;
 
+    npull = 0 ;
+    npush = 0 ;
+
     any_pull = false ;
     for level = 1:nlevels
         % select push or pull
@@ -67,8 +70,11 @@ for k = 1:ntrials
         if (do_push)
             if (any_pull)
                 switch_to_pull = (growing && this_nq > n / beta1) ;
+            elseif (edges_unexplored < n)
+                % turn off the pull
+                fprintf ('turn off pull\n') ;
             else
-                edges_unexplored = edges_unexplored - edges_in_frontier (level) ;
+                edges_unexplored = edges_unexplored - edges_in_frontier (level);
                 edges_unexploreds (level) = edges_unexplored ;
                 big_frontier =  ...
                     alpha * edges_in_frontier (level) > edges_unexplored  ;
@@ -86,9 +92,11 @@ for k = 1:ntrials
         end
 
         if (do_push)
+            npush = npush + 1 ;
             t_auto (level) = t_push (level);
         else
             any_pull = true ;
+            npull = npull + 1 ;
             t_auto (level) = t_pull (level);
         end
         bad_choice = (t_auto (level) > t_best (level)) ;
@@ -116,6 +124,7 @@ end
 
 if (0)
     fprintf ('trial %2d : ', k) ;
+    fprintf ('npush %4d npull %4d ', npush, npull) ;
     fprintf ('push %10.4f ', sum (t_push)) ;
     fprintf ('pull %10.4f ', sum (t_pull)) ;
     fprintf ('auto %10.4f ', sum (t_auto)) ;

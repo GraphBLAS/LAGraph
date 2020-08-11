@@ -109,7 +109,7 @@ TC:  using 64 for all but road, and 'dot' method instead of the default
     TC (dot) #64    837.070     30.222 *    212.248 *   36.653 *    0.355
     TC (dot2)#64    829.292 *   31.356      219.430     38.040      0.345 *
 
-    TC with icc is faster for kronk, urand, twitter, road.  using gcc for web.
+    TC with icc is faster for kron, urand, twitter, road.  using gcc for web.
 
 SuiteSparse:GraphBLAS has an autotuning mechanism for selecting the number of
 threads to use in each parallel region of each internal kernel.  It uses fewer
@@ -138,4 +138,43 @@ work to do.  Clearly, from the SSSP results on the road graph, alpha needs to
 be added to the appropriate internal parallel regions in GraphBLAS, so that
 this excessive run time does not occur for the SSSP problem on the road graph
 when hyperthreading is enabled.
+
+--------------------------------------------------------------------------------
+Aug 8, 2020, on plat8153, gcc 7.4.0, GraphBLAS v4.0.0draft3
+--------------------------------------------------------------------------------
+
+BFS with LAGraph_bfs_parent, SET 1:
+my1_BFS_plat.o665323 my2_BFS_plat.o665324
+
+                kron        urand       twitter      web        road
+                -----       -----       -------     ----        ----
+BFS (SET1)      0.628       1.116       0.410       0.824       3.321
+BFS (SET2)      0.574       1.046       0.396       0.824       3.001
+
+SET1: push/pull, 32 threads
+SET2: push/pull and 64 threads for kron, urand, twitter
+    road: push-only, 64 threads.
+    web: same as SET1.
+
+Feb 20, for comparison:
+BFS GrB (SET1)   3.125       2.183       1.157      1.072       7.557
+BFS GrB (SET2)   2.767       2.068       1.043      1.010       7.455
+
+speedup vs Feb 20 results:
+                 5.0x        2.0x        2.8x       1.3x        2.3x
+                 4.8x        2.0x        2.6x       1.2x        2.5x
+
+GAP results
+BFS GAP set1     0.365      0.570       0.248       0.329       0.456
+BFS GAP set2     0.365      0.570       0.248       0.329       0.456
+
+GAP time / my Feb 20 time:
+                11.68%     26.11%      21.43%      30.69%     6.03% 
+                13.20%     27.56%      23.78%      32.57%     6.12% 
+
+
+GAP time / my Aug8 time:
+
+                58.12%     51.08%      60.49%      39.93%    13.73%  
+                63.59%     54.50%      62.63%      39.93%    15.19%  
 
