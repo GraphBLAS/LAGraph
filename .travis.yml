@@ -10,7 +10,7 @@ install:
   # clone GraphBLAS next to LAGraph's directory
   - pushd .
   - cd ..
-  - git clone --depth 1 --branch master https://github.com/DrTimothyAldenDavis/GraphBLAS
+  - git clone --depth 1 --branch v3.3.3 https://github.com/DrTimothyAldenDavis/GraphBLAS
   - cd GraphBLAS/build
   - cmake -DGBCOMPACT=1 -DCMAKE_C_FLAGS="$(CMAKE_C_FLAGS) -w" ..
   - JOBS=2 make
