@@ -21,4 +21,6 @@ script:
   - cmake ..
   - JOBS=2 make
   - cd ..
+  # drop BFS test which requires SuiteSparse:GraphBLAS 4.0+
+  - sed -i.bkp '/( cd BFS                   ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )/d' Test/Makefile
   - make tests

@@ -25,7 +25,6 @@ default:
 	( cd PageRank              ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd PageRank2             ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd PageRank3             ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
-	( cd BFS                   ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd BetweennessCentrality ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd CC                    ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd CDLP                  ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
