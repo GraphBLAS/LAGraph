@@ -46,11 +46,8 @@
 #include "LAGraph.h"
 
 #define LAGRAPH_FREE_ALL {       \
-    GrB_free(&transpose_desc);   \
-    GrB_free(&invmask_desc);     \
     GrB_free(&A);                \
     GrB_free(&d_out);            \
-    GrB_free(&nondangling_mask); \
     GrB_free(&importance_vec);   \
     GrB_free(&dangling_vec);     \
     GrB_free(&pr);               \
@@ -67,10 +64,7 @@ GrB_Info LAGraph_pagerank2 // alternative PageRank definition
     GrB_Info info;
     GrB_Index n;
 
-    GrB_Descriptor invmask_desc;
-    GrB_Descriptor transpose_desc;
     GrB_Vector d_out;
-    GrB_Vector nondangling_mask;
 
     GrB_Vector importance_vec;
     GrB_Vector dangling_vec;
@@ -80,17 +74,6 @@ GrB_Info LAGraph_pagerank2 // alternative PageRank definition
     LAGRAPH_OK(GrB_Matrix_nrows(&n, A))
     GrB_Index nvals;
     LAGRAPH_OK(GrB_Matrix_nvals(&nvals, A))
-
-    // Create complement descriptor
-
-    LAGRAPH_OK(GrB_Descriptor_new(&invmask_desc))
-    LAGRAPH_OK(GrB_Descriptor_set(invmask_desc, GrB_MASK, GrB_SCMP))
-
-    // Create transpose descriptor
-
-    LAGRAPH_OK(GrB_Descriptor_new(&transpose_desc))
-    LAGRAPH_OK(GrB_Descriptor_set(transpose_desc, GrB_INP0, GrB_TRAN))
-    LAGRAPH_OK(GrB_Descriptor_set(transpose_desc, GrB_OUTP, GrB_REPLACE))
 
     //
     // Matrix A row sum
@@ -103,22 +86,6 @@ GrB_Info LAGraph_pagerank2 // alternative PageRank definition
         GrB_NULL,
         GrB_NULL,
         GxB_PLUS_UINT64_MONOID,
-        A,
-        GrB_NULL
-    ))
-
-    //
-    // Determine vector of non-dangling vertices
-    //
-    // These vertices are the ones which have outgoing edges. In subsequent
-    // operations, this mask can be negated to select dangling vertices.
-    //
-    LAGRAPH_OK(GrB_Vector_new(&nondangling_mask, GrB_BOOL, n))
-    LAGRAPH_OK(GrB_reduce(
-        nondangling_mask,
-        GrB_NULL,
-        GrB_NULL,
-        GxB_LOR_BOOL_MONOID,
         A,
         GrB_NULL
     ))
@@ -176,14 +143,14 @@ GrB_Info LAGraph_pagerank2 // alternative PageRank definition
         ))
 
         // Calculate total PR of all inbound vertices
-        LAGRAPH_OK(GrB_mxv(
+        LAGRAPH_OK(GrB_vxm(
             importance_vec,
             GrB_NULL,
             GrB_NULL,
             GxB_PLUS_TIMES_FP64,
-            A,
             importance_vec,
-            transpose_desc
+            A,
+            NULL
         ))
 
         //
@@ -193,12 +160,12 @@ GrB_Info LAGraph_pagerank2 // alternative PageRank definition
         // Extract all the dangling PR entries from the previous result
         LAGRAPH_OK(GrB_extract(
             dangling_vec,
-            nondangling_mask,
+            d_out,
             GrB_NULL,
             pr,
             GrB_ALL,
             n,
-            invmask_desc
+            GrB_DESC_C
         ))
 
         // Sum the previous PR values of dangling vertices together
