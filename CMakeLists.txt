@@ -48,9 +48,9 @@ if ( CMAKE_VERSION VERSION_GREATER "3.0" )
 endif ( )
 
 # version of LAGraph
-set ( LAGraph_DATE "July 26, 2020" )
+set ( LAGraph_DATE "Oct 14, 2020" )
 set ( LAGraph_VERSION_MAJOR 0 )
-set ( LAGraph_VERSION_MINOR 1 )
+set ( LAGraph_VERSION_MINOR 2 )
 set ( LAGraph_VERSION_SUB   0 )
 
 if ( CMAKE_MAJOR_VERSION GREATER 2 )
@@ -163,7 +163,7 @@ message ( STATUS "CMAKE have OpenMP:         " ${OPENMP_FOUND} )
 
 set ( CMAKE_INCLUDE_CURRENT_DIR ON )
 
-include_directories ( Source/Utility Source/Algorithm Include )
+include_directories ( Experimental/Utility Experimental/Algorithm Include )
 
 #-------------------------------------------------------------------------------
 # compiler options
@@ -217,7 +217,7 @@ endif ( )
 # dynamic lagraph library properties
 #-------------------------------------------------------------------------------
 
-file ( GLOB LAGRAPH_SOURCES "Source/Utility/*.c" "Source/Algorithm/*.c" )
+file ( GLOB LAGRAPH_SOURCES "Experimental/Utility/*.c" "Experimental/Algorithm/*.c" )
 
 add_library ( lagraph SHARED ${LAGRAPH_SOURCES} )
 SET_TARGET_PROPERTIES ( lagraph PROPERTIES

@@ -34,6 +34,7 @@
 
 //------------------------------------------------------------------------------
 
+#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
 #include "LAGraph.h"
 //#include "simple_timer.h"
 #include "LAGraph_FW.c"

@@ -31,6 +31,7 @@
 
 // Contributed by Jinhao Chen, Texas A&M
 
+#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
 #include "LAGraph.h"
 
 GrB_Info LAGraph_BF_pure_c_double

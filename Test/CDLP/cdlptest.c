@@ -39,6 +39,7 @@
 // Usage:  cdlptest < matrixmarketfile.mtx
 //         cdlptest matrixmarketfile.mtx
 
+#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
 #include "LAGraph.h"
 
 #define LAGRAPH_FREE_ALL                            \

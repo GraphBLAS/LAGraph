@@ -39,6 +39,7 @@
 
 //------------------------------------------------------------------------------
 
+#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
 #include "LAGraph.h"
 
 #define OK(method)                                                          \

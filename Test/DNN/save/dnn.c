@@ -45,6 +45,7 @@
 // NOTE: this test currently uses many GxB_* extensions in
 // SuiteSparse:GraphBLAS.  It optionally uses OpenMP.
 
+#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
 #include <LAGraph.h>
 
 #define LAGRAPH_FREE_ALL ;

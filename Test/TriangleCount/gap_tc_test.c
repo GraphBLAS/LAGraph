@@ -40,6 +40,7 @@
 //         ttest matrixmarketfile.mtx
 //         ttest matrixmarketfile.grb
 
+#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
 #include "LAGraph.h"
 
 #define NTHREAD_LIST 2
@@ -238,8 +239,14 @@ int main (int argc, char **argv)
     // GxB_print (D, 2) ;
     GrB_free (&X) ;
     GrB_Type type ;
-    GrB_Index n2, nvals2 ;
+    GrB_Index n2, nvals2, dsize ;
+    bool jumbled ;
+    #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,0)
+    LAGr_Vector_export_CSC (&D, &type, &n2, &dsize, &nvals2, &jumbled,
+        &Di, (void **) &degree, NULL) ;
+    #else
     LAGr_Vector_export (&D, &type, &n2, &nvals2, &Di, (void **) &degree, NULL) ;
+    #endif
     if (n != n2 || n != nvals2) { printf ("??\n") ; abort ( ) ; }
     LAGRAPH_FREE (Di) ;
     double t_degree = LAGraph_toc (tic) ;

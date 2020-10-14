@@ -39,6 +39,7 @@
 // usage:
 // p2test < in > out
 
+#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
 #include "LAGraph.h"
 
 #define LAGRAPH_FREE_ALL                        \

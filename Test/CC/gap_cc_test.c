@@ -43,6 +43,7 @@
 // cctest unsymmetric-matrixmarketfile.mtx 0
 // cctest symmetric-matrixmarketfile.mtx 1
 
+#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
 #include "LAGraph.h"
 // #include <sys/time.h>
 

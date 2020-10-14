@@ -39,6 +39,7 @@
 // scctest < matrixmarketfile.mtx
 // scctest matrixmarketfile.mtx
 
+#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
 #include "LAGraph.h"
 #include <string.h>
 #include <stdlib.h>
@@ -69,8 +70,14 @@ GrB_Index verify_scc (GrB_Matrix *A, GrB_Vector result)
     uint64_t *pos, *csr;
     int64_t nonempty;
     void *val;
+    #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,0)
+    bool jumbled ;
+    GxB_Matrix_export_CSR (A, &ty, &nrows, &ncols, &nvals, &jumbled,
+            &nonempty, &pos, &csr, &val, 0);
+    #else
     GxB_Matrix_export_CSR (A, &ty, &nrows, &ncols, &nvals, &nonempty,
             &pos, &csr, &val, 0);
+    #endif
 
     int64_t *indexes = malloc (sizeof(int64_t) * n);
     int64_t *lowlink = malloc (sizeof(int64_t) * n);
@@ -165,8 +172,13 @@ GrB_Index verify_scc (GrB_Matrix *A, GrB_Vector result)
         exit(0);
     }
 
+    #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,0)
+    GxB_Matrix_import_CSR (A, ty, nrows, ncols, nvals, jumbled, nonempty,
+            &pos, &csr, &val, 0);
+    #else
     GxB_Matrix_import_CSR (A, ty, nrows, ncols, nvals, nonempty,
             &pos, &csr, &val, 0);
+    #endif
 
     free (indexes); free (lowlink); free (onstack);
     free (stack); free (scc);

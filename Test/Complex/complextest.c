@@ -36,6 +36,7 @@
 
 // Contributed by Michel Pelletier
 
+#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
 #include "LAGraph.h"
 #include <float.h>
 #include <complex.h>

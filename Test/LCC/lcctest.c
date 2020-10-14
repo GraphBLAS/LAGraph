@@ -45,6 +45,7 @@
 // lcctest unsymmetric-matrixmarketfile.mtx 0
 // lcctest symmetric-matrixmarketfile.mtx 1
 
+#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
 #include "LAGraph.h"
 
 #define LAGRAPH_FREE_ALL                            \

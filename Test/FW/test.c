@@ -34,6 +34,8 @@
 
 //------------------------------------------------------------------------------
 
+#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
+
 #include <stdio.h>
 #include <limits.h>
 #include <float.h>

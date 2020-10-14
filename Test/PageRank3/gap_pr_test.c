@@ -45,6 +45,7 @@ See LICENSE file for more details.
 // #define NTHREAD_LIST 6
 // #define THREAD_LIST 64, 32, 24, 12, 8, 4
 
+#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
 #include "LAGraph.h"
 #include "GB_Global.h"
 #include <assert.h>
@@ -238,8 +239,14 @@ int main (int argc, char **argv)
     GrB_Type dtype ;
     GrB_Vector d_out2 = NULL ;
     GrB_Vector_dup (&d_out2, d_out) ;
+
+    #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,0)
+    LAGr_Vector_export_Full (&d_out2, &dtype, &n, (void **) (&dout), NULL) ;
+    #else
     LAGr_Vector_export (&d_out2, &dtype, &n, &n_d_out, &dI,
         (void **) (&dout), NULL) ;
+    #endif
+
     LAGRAPH_FREE (dI) ;
 
     printf ("\n=========="

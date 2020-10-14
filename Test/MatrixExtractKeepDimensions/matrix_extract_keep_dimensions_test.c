@@ -41,6 +41,7 @@
 //
 // matrix_extract_keep_dimensions_test binarymatrixfile.grb
 
+#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
 #include "LAGraph.h"
 
 #define LAGRAPH_FREE_ALL                            \

@@ -42,7 +42,7 @@
 
 // TODO clean this up
 
-#include "../../Source/Utility/LAGraph_internal.h"
+#include "../../Experimental/Utility/LAGraph_internal.h"
 #include "bfs_test.h"
 #include "../../../GraphBLAS/Source/GB_Global.h"
 

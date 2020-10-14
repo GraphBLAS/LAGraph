@@ -25,7 +25,6 @@ default:
 	( cd PageRank              ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd PageRank2             ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd PageRank3             ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
-	( cd BFS                   ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd BetweennessCentrality ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd CC                    ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd CDLP                  ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
@@ -37,12 +36,17 @@ default:
 	( cd MatrixExtractKeepDimensions ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd VectorToDense         ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 
+# requires SuiteSparse:GraphBLAS 4.0
+bfs:
+	( cd BFS                   ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
+
 clean: distclean
 
 purge: distclean
 
 # remove all files not in the distribution
 distclean:
+	( cd Complex               ; $(MAKE) distclean )
 	( cd MXM                   ; $(MAKE) distclean )
 	( cd LCC                   ; $(MAKE) distclean )
 	( cd AllKTruss             ; $(MAKE) distclean )
@@ -62,3 +66,4 @@ distclean:
 	( cd SSSP                  ; $(MAKE) distclean )
 	( cd MatrixExtractKeepDimensions ; $(MAKE) distclean )
 	( cd VectorToDense         ; $(MAKE) distclean )
+	( cd extract               ; $(MAKE) distclean )

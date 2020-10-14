@@ -79,7 +79,7 @@
 // The GAP Benchmark Suite, http://arxiv.org/abs/1508.03619, 2015.
 // http://gap.cs.berkeley.edu/
 
-#include "../../Source/Utility/LAGraph_internal.h"
+#include "../../Experimental/Utility/LAGraph_internal.h"
 
 #define LAGRAPH_FREE_ALL    \
 {                           \

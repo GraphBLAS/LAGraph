@@ -45,6 +45,7 @@
 // Negative weights are OK, unless there is a negative weight cycle.  In
 // that case, the output is undefined.
 
+#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
 #include "LAGraph.h"
 
 #define LAGRAPH_FREE_ALL                                                   \

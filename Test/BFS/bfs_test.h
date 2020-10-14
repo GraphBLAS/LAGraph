@@ -31,6 +31,7 @@
 
 // Contributed by Tim Davis, Texas A&M
 
+#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
 #include "LAGraph.h"
 
 GrB_Info bfs_log   // push, pull, or push-pull, and log timings

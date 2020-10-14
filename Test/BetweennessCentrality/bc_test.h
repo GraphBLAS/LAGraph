@@ -31,5 +31,6 @@
 
 // Contributed by Scott Kolodziej, Texas A&M University
 
+#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
 #include "LAGraph.h"
 

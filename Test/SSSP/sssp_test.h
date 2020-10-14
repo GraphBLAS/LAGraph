@@ -31,6 +31,7 @@
 
 // Contributed by Scott Kolodziej, Texas A&M University
 
+#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
 #include "LAGraph.h"
 
 GrB_Info LAGraph_sssp11a         // single source shortest paths

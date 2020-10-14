@@ -45,6 +45,23 @@
 
 #include "GraphBLAS.h"
 
+//==============================================================================
+// Stable methods in Source/Algorithm and Source/Utility
+//==============================================================================
+
+// none yet
+
+//==============================================================================
+// Experimental methods: in Experimental/Algorithm and Experimental/Source
+//==============================================================================
+
+// Do not rely on these in production.  Do not use for benchmarking, without
+// asking the LAGraph authors.  LAGraph is still under development, and you
+// might benchmark the wrong method, or a method that is intended only for
+// illustration not benchmarking.
+
+#ifdef LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
+
 // the C API v1.3 now has GRB_VERSION and GRB_SUBVERSION.  If this macro
 // is not defined, assume the spec is v1.2.
 #ifndef GRB_VERSION
@@ -244,6 +261,26 @@ extern bool LAGraph_malloc_is_thread_safe ;
 #define LAGr_Vector_export(...)                                             \
 {                                                                           \
     LAGRAPH_TRY_CATCH(GxB_Vector_export (__VA_ARGS__)) ;                    \
+}
+
+#define LAGr_Vector_import_Full(...)                                        \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GxB_Vector_import_Full (__VA_ARGS__)) ;               \
+}
+
+#define LAGr_Vector_export_Full(...)                                        \
+{                                                                           \
+    LAGRAPH_TRY_CATCH(GxB_Vector_export_Full (__VA_ARGS__)) ;               \
+}
+
+#define LAGr_Vector_import_CSC(...)                                        \
+{                                                                          \
+    LAGRAPH_TRY_CATCH(GxB_Vector_import_CSC (__VA_ARGS__)) ;               \
+}
+
+#define LAGr_Vector_export_CSC(...)                                        \
+{                                                                          \
+    LAGRAPH_TRY_CATCH(GxB_Vector_export_CSC (__VA_ARGS__)) ;               \
 }
 
 // Matrix Methods //////////////////////////////////////////////////////////////
@@ -1412,3 +1449,5 @@ GrB_Info LAGraph_Matrix_extract_keep_dimensions // extract submatrix but keep
 ) ;
 
 #endif
+#endif
+

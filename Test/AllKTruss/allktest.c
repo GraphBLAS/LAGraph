@@ -37,6 +37,7 @@
 // Usage:  allktest < matrixmarketfile.mtx
 // Contributed by Tim Davis, Texas A&M
 
+#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
 #include "LAGraph.h"
 
 #define LAGRAPH_FREE_ALL                            \

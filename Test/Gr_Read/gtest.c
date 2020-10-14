@@ -40,7 +40,7 @@
 
 //      ./build/gtest filename edgetype
 
-// See LAGraph/Source/Utility/LAGraph_grread.c for a description of the
+// See LAGraph/Experimental/Utility/LAGraph_grread.c for a description of the
 // file format.
 
 // The filename is required.  See t1.gr and t2.gr as examples.  The edgetype
@@ -66,6 +66,7 @@
 
 //------------------------------------------------------------------------------
 
+#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
 #include "LAGraph.h"
 
 #define LAGRAPH_FREE_ALL            \

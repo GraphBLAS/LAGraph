@@ -21,13 +21,20 @@ GraphBLAS.  It contains the following files and folders:
 
     README.md: this file
 
-    Source: source code for the LAGraph library
+    Source: stable source code for the LAGraph library
 
         * Algorithms: graph algorithms such as BFS, connected components,
             centrality, etc, will go here
 
         * Utilities: read/write a graph from a file, etc, will go here...
-        
+
+    Experimental: draft code under development: do not benchmark without
+        asking the LAGraph authors first
+
+        * Algorithms: graph algorithms such as BFS, connected components,
+            centrality, etc
+
+        * Utilities: read/write a graph from a file, etc
 
     Test: main programs that test LAGraph.  To run the tests, first compile
         GraphBLAS and LAGraph, and then do "make tests" in this directory.

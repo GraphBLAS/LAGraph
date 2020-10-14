@@ -43,6 +43,7 @@
 // msftest unsymmetric-matrixmarketfile.mtx 0
 // msftest symmetric-matrixmarketfile.mtx 1
 
+#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
 #include "LAGraph.h"
 #include <sys/time.h>
 #include <stdlib.h>

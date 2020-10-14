@@ -50,6 +50,7 @@
 // vertex to all other vertices in the graph.
 //------------------------------------------------------------------------------
 
+#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
 #include "LAGraph.h"
 
 #define TIMING 0
