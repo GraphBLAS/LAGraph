@@ -147,7 +147,7 @@ GrB_Info LAGraph_pagerank2 // alternative PageRank definition
             importance_vec,
             GrB_NULL,
             GrB_NULL,
-            GxB_PLUS_TIMES_FP64,
+            GxB_PLUS_FIRST_FP64,
             importance_vec,
             A,
             NULL
