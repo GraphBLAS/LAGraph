@@ -266,7 +266,7 @@ fprintf (file, "results{k} = [\n") ;
                     // update the # of unexplored edges
                     // w<q>=Degree
                     // w(i) = outdegree of node i if node i is in the queue
-                    // GxB_set ((GrB_Matrix) q, GxB_SPARSITY, GxB_SPARSE) ;
+                    // GxB_set ((GrB_Matrix) q, GxB_SPARSITY_CONTROL, GxB_SPARSE) ;
                     LAGr_assign (w, q, NULL, Degree, GrB_ALL, n, GrB_DESC_RS) ;
                     // edges_in_frontier = sum (w) = # of edges incident on all
                     // nodes in the current frontier
@@ -302,7 +302,7 @@ fprintf (file, "results{k} = [\n") ;
         // q = next level of the BFS
         //----------------------------------------------------------------------
 
-        GxB_set ((GrB_Matrix) q, GxB_SPARSITY,  
+        GxB_set ((GrB_Matrix) q, GxB_SPARSITY_CONTROL,  
             do_push ? GxB_SPARSE : GxB_BITMAP) ;
 
 // tt = omp_get_wtime ( ) - tt ;
