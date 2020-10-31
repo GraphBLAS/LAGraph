@@ -258,7 +258,7 @@ GrB_Info LAGraph_bfs_parent // push-pull BFS, compute the tree only
                     // update the # of unexplored edges
                     // w<q>=Degree
                     // w(i) = outdegree of node i if node i is in the queue
-                    // GxB_set ((GrB_Matrix) q, GxB_SPARSITY, GxB_SPARSE) ;
+                    // GxB_set ((GrB_Matrix) q, GxB_SPARSITY_CONTROL, GxB_SPARSE) ;
                     LAGr_assign (w, q, NULL, Degree, GrB_ALL, n, GrB_DESC_RS) ;
                     // edges_in_frontier = sum (w) = # of edges incident on all
                     // nodes in the current frontier
@@ -290,7 +290,7 @@ GrB_Info LAGraph_bfs_parent // push-pull BFS, compute the tree only
         // q = next level of the BFS
         //----------------------------------------------------------------------
 
-        GxB_set ((GrB_Matrix) q, GxB_SPARSITY,  
+        GxB_set ((GrB_Matrix) q, GxB_SPARSITY_CONTROL,  
             do_push ? GxB_SPARSE : GxB_BITMAP) ;
 
         if ((do_push && vxm_is_push) || (!do_push && vxm_is_pull))
