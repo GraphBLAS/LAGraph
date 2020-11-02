@@ -2,8 +2,18 @@
 
 # LAGraph
 
-This is a library plus a test harness for collecting algorithms that use the
-GraphBLAS.  It contains the following files and folders:
+LAGraph is a draft library plus a test harness for collecting algorithms that
+use the GraphBLAS.
+
+Since it's a draft, it contains are many draft/experimental codes with known
+sub-par performance.  Performance of the best methods is highly sensitive on
+which version of SuiteSparse:GraphBLAS is being used, as well.  No one other
+than the authors of this code are aware of which methods are the best, and how
+to achieve that performance.
+
+Thus, do not benchmark LAGraph on your own without asking the authors first.
+
+LAGraph contains the following files and folders:
 
     CMakeLists.txt: a CMake script for compiling.  Do not run cmake in this
         top-level directory.  Do "make" here, which does the build in the
@@ -21,7 +31,8 @@ GraphBLAS.  It contains the following files and folders:
 
     README.md: this file
 
-    Source: stable source code for the LAGraph library
+    Source: stable source code for the LAGraph library:  this is currently
+        empty.
 
         * Algorithms: graph algorithms such as BFS, connected components,
             centrality, etc, will go here
@@ -31,10 +42,10 @@ GraphBLAS.  It contains the following files and folders:
     Experimental: draft code under development: do not benchmark without
         asking the LAGraph authors first
 
-        * Algorithms: graph algorithms such as BFS, connected components,
+        * Algorithms: draft graph algorithms such as BFS, connected components,
             centrality, etc
 
-        * Utilities: read/write a graph from a file, etc
+        * Utilities: draft utilities go here
 
     Test: main programs that test LAGraph.  To run the tests, first compile
         GraphBLAS and LAGraph, and then do "make tests" in this directory.

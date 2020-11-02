@@ -52,7 +52,7 @@
 // none yet
 
 //==============================================================================
-// Experimental methods: in Experimental/Algorithm and Experimental/Source
+// Experimental methods: in Experimental/Algorithm and Experimental/Utility
 //==============================================================================
 
 // Do not rely on these in production.  Do not use for benchmarking, without
