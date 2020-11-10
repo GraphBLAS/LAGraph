@@ -1,0 +1,32 @@
+name: LAGraph CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+        grb_version: [v3.3.3]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2.0.0
+    - name: Build project
+      run: |
+        # clone GraphBLAS next to LAGraph's directory
+        pushd .
+        cd ..
+        git clone --depth 1 --branch ${{ matrix.grb_version }} https://github.com/DrTimothyAldenDavis/GraphBLAS
+        cd GraphBLAS/build
+        cmake -DGBCOMPACT=1 ..
+        JOBS=2 make
+        popd
+        # build and test LAGraph
+        cd build
+        cmake ..
+        JOBS=2 make
+        cd ..
+        # drop BFS test which requires SuiteSparse:GraphBLAS 4.0+
+        sed -i.bkp '/( cd BFS                   ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )/d' Test/Makefile
+        make tests
