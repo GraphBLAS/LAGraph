@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/GraphBLAS/LAGraph.svg?branch=master)](https://travis-ci.org/GraphBLAS/LAGraph)
+[![Build Status](https://github.com/GraphBLAS/LAGraph/workflows/LAGraph%20CI/badge.svg)](https://github.com/GraphBLAS/LAGraph/actions)
 
 # LAGraph
 
