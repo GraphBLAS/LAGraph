@@ -51,7 +51,7 @@
 //
 // The algorithm is based on the one given in the following paper:
 //
-// Usha Raghavan, Réka Albert, and Soundar Kumara. "Near linear time algorithm
+// Usha Raghavan, Reka Albert, and Soundar Kumara. "Near linear time algorithm
 // to detect community structures in large-scale networks". In: Physical
 // Review E 76.3 (2007), p. 036106, https://arxiv.org/abs/0709.2938
 //
