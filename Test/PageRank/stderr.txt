@@ -1,3 +1,0 @@
-
-==========input graph: nodes: 7 edges: 12
-pagerank  time: 1.238823e-03 (sec), rate: 0.00968661 (1e6 edges/sec) iters: 5

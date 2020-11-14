@@ -402,19 +402,6 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
     (*v_output) = NULL ;
     bool compute_tree = (pi_output != NULL) ;
 
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
-        && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,2,0) )
-    GrB_Descriptor desc_s  = GrB_DESC_S ;
-    GrB_Descriptor desc_sc = GrB_DESC_SC ;
-    GrB_Descriptor desc_rc = GrB_DESC_RC ;
-    GrB_Descriptor desc_r  = GrB_DESC_R ;
-    #else
-    GrB_Descriptor desc_s  = NULL ;
-    GrB_Descriptor desc_sc = LAGraph_desc_ooco ;
-    GrB_Descriptor desc_rc = LAGraph_desc_oocr ;
-    GrB_Descriptor desc_r  = LAGraph_desc_ooor ;
-    #endif
-
     bool use_vxm_with_A ;
     GrB_Index nrows, ncols, nvalA, ignore, nvals ;
     if (A == NULL)
@@ -624,7 +611,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
         //----------------------------------------------------------------------
 
         // v<q> = level: set v(i) = level for all nodes i in q
-        LAGr_assign (v, q, NULL, level, GrB_ALL, n, desc_s) ;
+        LAGr_assign (v, q, NULL, level, GrB_ALL, n, GrB_DESC_S) ;
 
         //----------------------------------------------------------------------
         // check if done
@@ -643,14 +630,14 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
             // If this case is triggered, it would have been faster to pass in
             // vsparse = false on input.
             // v <!v> = 0
-            LAGr_assign (v, v, NULL, 0, GrB_ALL, n, desc_sc) ;
+            LAGr_assign (v, v, NULL, 0, GrB_ALL, n, GrB_DESC_SC) ;
             LAGr_Vector_nvals (&ignore, v) ;
 
             if (compute_tree)
             {
                 // Convert pi from sparse to dense, to speed up the work.
                 // pi<!pi> = 0
-                LAGr_assign (pi, pi, NULL, 0, GrB_ALL, n, desc_sc) ;
+                LAGr_assign (pi, pi, NULL, 0, GrB_ALL, n, GrB_DESC_SC) ;
                 LAGr_Vector_nvals (&ignore, pi) ;
             }
 
@@ -687,13 +674,13 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
         {
             // q'<!v> = q'*A
             // this is a push step if A is in CSR format; pull if CSC
-            LAGr_vxm (q, v, NULL, first_semiring, q, A, desc_rc) ;
+            LAGr_vxm (q, v, NULL, first_semiring, q, A, GrB_DESC_RC) ;
         }
         else
         {
             // q<!v> = AT*q
             // this is a pull step if AT is in CSR format; push if CSC
-            LAGr_mxv (q, v, NULL, second_semiring, AT, q, desc_rc) ;
+            LAGr_mxv (q, v, NULL, second_semiring, AT, q, GrB_DESC_RC) ;
         }
 
         //----------------------------------------------------------------------
@@ -710,7 +697,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
             // q(i) currently contains the parent of node i in tree (off by one
             // so it won't have any zero values, for valued mask).
             // pi<q> = q
-            LAGr_assign (pi, q, NULL, q, GrB_ALL, n, desc_s) ;
+            LAGr_assign (pi, q, NULL, q, GrB_ALL, n, GrB_DESC_S) ;
 
             //------------------------------------------------------------------
             // replace q with current node numbers
@@ -722,12 +709,17 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
             #ifdef GxB_SUITESPARSE_GRAPHBLAS
             GrB_Index *qi ;
             bool jumbled ;
-            int64_t qsize ;
+            int64_t q_size ;
+            GrB_Index qi_size, qx_size ;
             if (n > INT32_MAX)
             {
                 int64_t *qx ;
-                #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,0)
-                LAGr_Vector_export_CSC (&q, &int_type, &n, &qsize, &nq,
+                #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,1)
+                LAGr_Vector_export_CSC (&q, &int_type, &n,
+                    &qi, (void **) (&qx), &qi_size, &qx_size, &nq,
+                    &jumbled, NULL) ;
+                #elif GxB_IMPLEMENTATION == GxB_VERSION (4,0,0)
+                LAGr_Vector_export_CSC (&q, &int_type, &n, &q_size, &nq,
                     &jumbled, &qi, (void **) (&qx), NULL) ;
                 #else
                 LAGr_Vector_export (&q, &int_type, &n, &nq, &qi,
@@ -740,8 +732,12 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
                 {
                     qx [k] = qi [k] + 1 ;
                 }
-                #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,0)
-                LAGr_Vector_import_CSC (&q, int_type, n, qsize, nq,
+                #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,1)
+                LAGr_Vector_import_CSC (&q, int_type, n,
+                    &qi, (void **) (&qx), qi_size, qx_size, nq,
+                    jumbled, NULL) ;
+                #elif GxB_IMPLEMENTATION == GxB_VERSION (4,0,0)
+                LAGr_Vector_import_CSC (&q, int_type, n, q_size, nq,
                     jumbled, &qi, (void **) (&qx), NULL) ;
                 #else
                 LAGr_Vector_import (&q, int_type, n, nq, &qi,
@@ -751,8 +747,12 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
             else
             {
                 int32_t *qx ;
-                #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,0)
-                LAGr_Vector_export_CSC (&q, &int_type, &n, &qsize, &nq,
+                #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,1)
+                LAGr_Vector_export_CSC (&q, &int_type, &n,
+                    &qi, (void **) (&qx), &qi_size, &qx_size, &nq,
+                    &jumbled, NULL) ;
+                #elif GxB_IMPLEMENTATION == GxB_VERSION (4,0,0)
+                LAGr_Vector_export_CSC (&q, &int_type, &n, &q_size, &nq,
                     &jumbled, &qi, (void **) (&qx), NULL) ;
                 #else
                 LAGr_Vector_export (&q, &int_type, &n, &nq, &qi,
@@ -765,9 +765,13 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
                 {
                     qx [k] = qi [k] + 1 ;
                 }
-                #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,0)
-                LAGr_Vector_import_CSC (&q, int_type, n, qsize, nq,
-                    jumbled, &qi, (void **) (&qx), NULL) ; 
+                #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,1)
+                LAGr_Vector_import_CSC (&q, int_type, n,
+                    &qi, (void **) (&qx), qi_size, qx_size, nq,
+                    jumbled, NULL) ;
+                #elif GxB_IMPLEMENTATION == GxB_VERSION (4,0,0)
+                LAGr_Vector_import_CSC (&q, int_type, n, q_size, nq,
+                    jumbled, &qi, (void **) (&qx), NULL) ;
                 #else
                 LAGr_Vector_import (&q, int_type, n, nq, &qi,
                     (void **) (&qx), NULL) ;

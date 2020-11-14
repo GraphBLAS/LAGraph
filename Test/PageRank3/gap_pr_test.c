@@ -241,6 +241,10 @@ int main (int argc, char **argv)
     GrB_Vector_dup (&d_out2, d_out) ;
 
     #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,0)
+    GrB_Index dx_size ;
+    LAGr_Vector_export_Full (&d_out2, &dtype, &n, (void **) (&dout),
+        &dx_size, NULL) ;
+    #elif GxB_IMPLEMENTATION >= GxB_VERSION (4,0,0)
     LAGr_Vector_export_Full (&d_out2, &dtype, &n, (void **) (&dout), NULL) ;
     #else
     LAGr_Vector_export (&d_out2, &dtype, &n, &n_d_out, &dI,

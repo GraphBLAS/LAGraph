@@ -105,9 +105,10 @@ GrB_Info LAGraph_bfs_parent // push-pull BFS, compute the tree only
     // check inputs
     //--------------------------------------------------------------------------
 
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
-        && ( GxB_IMPLEMENTATION < GxB_VERSION (4,0,0) )
-    // SuiteSparse GraphBLAS v4.0 or later required
+    // SuiteSparse GraphBLAS v4.0.1 or later required
+    #if !defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    return (GrB_INVALID_VALUE) ;
+    #elif ( GxB_IMPLEMENTATION < GxB_VERSION (4,0,1) )
     return (GrB_INVALID_VALUE) ;
     #else
 
@@ -258,7 +259,6 @@ GrB_Info LAGraph_bfs_parent // push-pull BFS, compute the tree only
                     // update the # of unexplored edges
                     // w<q>=Degree
                     // w(i) = outdegree of node i if node i is in the queue
-                    // GxB_set ((GrB_Matrix) q, GxB_SPARSITY_CONTROL, GxB_SPARSE) ;
                     LAGr_assign (w, q, NULL, Degree, GrB_ALL, n, GrB_DESC_RS) ;
                     // edges_in_frontier = sum (w) = # of edges incident on all
                     // nodes in the current frontier

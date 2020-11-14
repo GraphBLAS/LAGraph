@@ -48,8 +48,7 @@
 // 64-bit version of this method instead.  TODO combine the two versions into a
 // single user-callable code.
 
-#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
-#include "LAGraph.h"
+#include "LAGraph_internal.h"
 
 //------------------------------------------------------------------------------
 // Reduce_assign32:  w (index) += src, using MIN as the "+=" accum operator
@@ -113,10 +112,15 @@ static inline GrB_Info Reduce_assign32
 )
 {
     GrB_Type w_type, s_type ;
-    GrB_Index w_n, s_n, w_nvals, s_nvals, *w_i, *s_i ;
+    GrB_Index w_n, s_n, w_nvals, s_nvals, *w_i, *s_i, w_size, s_size ;
     uint32_t *w_x, *s_x ;
 
-    #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,0)
+    #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,1)
+    LAGr_Vector_export_Full (w_handle, &w_type, &w_n, (void **) &w_x, 
+        &w_size, NULL) ;
+    LAGr_Vector_export_Full (s_handle, &s_type, &s_n, (void **) &s_x,
+        &s_size, NULL) ;
+    #elif GxB_IMPLEMENTATION == GxB_VERSION (4,0,0)
     LAGr_Vector_export_Full (w_handle, &w_type, &w_n, (void **) &w_x, NULL) ;
     LAGr_Vector_export_Full (s_handle, &s_type, &s_n, (void **) &s_x, NULL) ;
     #else
@@ -191,7 +195,12 @@ static inline GrB_Info Reduce_assign32
         }
     }
 
-    #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,0)
+    #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,1)
+    LAGr_Vector_import_Full (w_handle, w_type, w_n, (void **) &w_x, 
+        w_size, NULL) ;
+    LAGr_Vector_import_Full (s_handle, s_type, s_n, (void **) &s_x,
+        s_size, NULL) ;
+    #elif GxB_IMPLEMENTATION == GxB_VERSION (4,0,0)
     LAGr_Vector_import_Full (w_handle, w_type, w_n, (void **) &w_x, NULL) ;
     LAGr_Vector_import_Full (s_handle, s_type, s_n, (void **) &s_x, NULL) ;
     #else
@@ -315,19 +324,28 @@ GrB_Info LAGraph_cc_fastsv5b
         int64_t nonempty;
         GrB_Index *Sp, *Sj;
         void *Sx;
-        bool jumbled ;
+        bool S_jumbled = false ;
+        GrB_Index Sp_size, Sj_size, Sx_size ;
 
-        #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,0)
+        #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,1)
+        GrB_Matrix_nvals (&nvals, S) ;
+        GxB_Matrix_export_CSR (&S, &type, &nrows, &ncols,
+                &Sp, &Sj, &Sx, &Sp_size, &Sj_size, &Sx_size, &S_jumbled, NULL) ;
+        #elif GxB_IMPLEMENTATION == GxB_VERSION (4,0,0)
         GxB_Matrix_export_CSR (&S, &type, &nrows, &ncols, &nvals,
-                &jumbled, &nonempty, &Sp, &Sj, &Sx, NULL);
+                &S_jumbled, &nonempty, &Sp, &Sj, &Sx, NULL);
         #else
         GxB_Matrix_export_CSR (&S, &type, &nrows, &ncols, &nvals,
                 &nonempty, &Sp, &Sj, &Sx, NULL);
         #endif
 
-        GrB_Index *Tp = LAGraph_malloc (nrows+1, sizeof (GrB_Index)) ;
-        GrB_Index *Tj = LAGraph_malloc (nvals, sizeof (GrB_Index)) ;
-        void *Tx = LAGraph_malloc (nvals, 1) ;
+        GrB_Index Tp_size = nrows+1 ;
+        GrB_Index Tj_size = nvals ;
+        GrB_Index Tx_size = nvals ;
+
+        GrB_Index *Tp = LAGraph_malloc (Tp_size, sizeof (GrB_Index)) ;
+        GrB_Index *Tj = LAGraph_malloc (Tj_size, sizeof (GrB_Index)) ;
+        void *Tx = LAGraph_malloc (Tx_size, 1) ;
 
         int *range = LAGraph_malloc (nthreads + 1, sizeof (int)) ;
         GrB_Index *count = LAGraph_malloc (nthreads + 1, sizeof (GrB_Index)) ;
@@ -371,9 +389,12 @@ GrB_Info LAGraph_cc_fastsv5b
 
         GrB_Index t_nvals = Tp[nrows];
 
-        #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,0)
+        #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,1)
+        GxB_Matrix_import_CSR (&T, type, nrows, ncols,
+                &Tp, &Tj, &Tx, Tp_size, Tj_size, Tx_size, S_jumbled, NULL) ;
+        #elif GxB_IMPLEMENTATION == GxB_VERSION (4,0,0)
         GxB_Matrix_import_CSR (&T, type, nrows, ncols, t_nvals,
-                jumbled, -1, &Tp, &Tj, &Tx, NULL);
+                S_jumbled, -1, &Tp, &Tj, &Tx, NULL);
         #else
         GxB_Matrix_import_CSR (&T, type, nrows, ncols, t_nvals,
                 -1, &Tp, &Tj, &Tx, NULL);
@@ -415,12 +436,16 @@ GrB_Info LAGraph_cc_fastsv5b
         ht_sample (V32, n, 864, ht_key, ht_val) ;
         int key = ht_most_frequent(ht_key, ht_val) ;
 
-        int64_t t_nonempty;
-        bool t_jumbled ;
+        int64_t t_nonempty = -1 ;
+        bool T_jumbled = false ;
 
-        #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,0)
+        #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,1)
+        GxB_Matrix_export_CSR (&T, &type, &nrows, &ncols,
+                &Tp, &Tj, &Tx, &Tp_size, &Tj_size, &Tx_size,
+                &T_jumbled, NULL) ;
+        #elif GxB_IMPLEMENTATION == GxB_VERSION (4,0,0)
         GxB_Matrix_export_CSR (&T, &type, &nrows, &ncols, &t_nvals,
-                &t_jumbled, &t_nonempty, &Tp, &Tj, &Tx, NULL);
+                &T_jumbled, &t_nonempty, &Tp, &Tj, &Tx, NULL);
         #else
         GxB_Matrix_export_CSR (&T, &type, &nrows, &ncols, &t_nvals,
                 &t_nonempty, &Tp, &Tj, &Tx, NULL);
@@ -474,11 +499,16 @@ GrB_Info LAGraph_cc_fastsv5b
         LAGRAPH_FREE (count);
         LAGRAPH_FREE (range);
 
-        #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,0)
+        #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,1)
+        GxB_Matrix_import_CSR (&S, type, nrows, ncols,
+                &Sp, &Sj, &Sx, Sp_size, Sj_size, Sx_size, S_jumbled, NULL);
+        GxB_Matrix_import_CSR (&T, type, nrows, ncols,
+                &Tp, &Tj, &Tx, Tp_size, Tj_size, Tx_size, T_jumbled, NULL) ;
+        #elif GxB_IMPLEMENTATION == GxB_VERSION (4,0,0)
         GxB_Matrix_import_CSR (&S, type, nrows, ncols, nvals,
-                t_jumbled, nonempty, &Sp, &Sj, &Sx, NULL);
+                S_jumbled, nonempty, &Sp, &Sj, &Sx, NULL);
         GxB_Matrix_import_CSR (&T, type, nrows, ncols, offset,
-                t_jumbled, -1, &Tp, &Tj, &Tx, NULL);
+                T_jumbled, -1, &Tp, &Tj, &Tx, NULL);
         #else
         GxB_Matrix_import_CSR (&S, type, nrows, ncols, nvals,
                 nonempty, &Sp, &Sj, &Sx, NULL);

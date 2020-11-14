@@ -428,34 +428,6 @@ GrB_Info LAGraph_tricount   // count # of triangles
         A = A_in ;
     }
 
-#if 0
-    printf ("permuted:\n") ;
-    GrB_Index ignore ;
-    GrB_Matrix_nvals (&ignore, A) ;
-    GxB_print (A, 3) ;
-
-    // compute the degree of each node (TODO: make this an LAGraph utility)
-    GrB_Vector X, D2 ;
-    LAGr_Vector_new (&X, GrB_BOOL, n) ;
-    LAGr_Vector_new (&D2, GrB_INT64, n) ;
-    LAGr_assign (X, NULL, NULL, 0, GrB_ALL, n, NULL) ;
-    LAGr_assign (D2, NULL, NULL, 0, GrB_ALL, n, NULL) ;
-    LAGr_vxm (D2, NULL, GrB_PLUS_INT64, GxB_PLUS_PAIR_INT64, X, A, NULL) ;
-    GxB_print (D2, 3) ;
-    GrB_free (&X) ;
-    GrB_Type type ;
-    GrB_Index n2, nvals2, *Di ;
-    int64_t *deg ;
-    LAGr_Vector_export (&D2, &type, &n2, &nvals2, &Di, (void **) &deg, NULL) ;
-    if (n != n2 || n != nvals2) { printf ("??\n") ; abort ( ) ; }
-
-    printf ("\nNew: sorting %d\n", sorting) ;
-    for (int i = 0 ; i < 67 ; i++)
-    {
-        printf ("node: %d degree %ld\n", i, deg [i]) ;
-    }
-#endif
-
     // free workspace
     LAGRAPH_FREE (W0) ; 
     LAGRAPH_FREE (W1) ; 

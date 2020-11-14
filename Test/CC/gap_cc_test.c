@@ -221,6 +221,7 @@ int main (int argc, char **argv)
         }
         #endif
 
+        #if 0
         t1 = 0 ;
         for (int k = 0 ; k < NTRIALS ; k++)
         {
@@ -238,6 +239,7 @@ int main (int argc, char **argv)
         {
             LAGr_log (matrix_name, "FastSV5", nthreads, t1/NTRIALS) ;
         }
+        #endif
 
         #if 0
         t1 = 0 ;

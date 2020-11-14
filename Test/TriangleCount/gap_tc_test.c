@@ -239,9 +239,13 @@ int main (int argc, char **argv)
     // GxB_print (D, 2) ;
     GrB_free (&X) ;
     GrB_Type type ;
-    GrB_Index n2, nvals2, dsize ;
+    GrB_Index n2, nvals2, dsize, Di_size, Dx_size ;
     bool jumbled ;
     #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,0)
+    LAGr_Vector_export_CSC (&D, &type, &n2,
+        &Di, (void **) &degree, &Di_size, &Dx_size,
+        &nvals2, &jumbled, NULL) ;
+    #elif GxB_IMPLEMENTATION >= GxB_VERSION (4,0,0)
     LAGr_Vector_export_CSC (&D, &type, &n2, &dsize, &nvals2, &jumbled,
         &Di, (void **) &degree, NULL) ;
     #else
