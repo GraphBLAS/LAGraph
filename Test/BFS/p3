@@ -1,0 +1,3243 @@
+SuiteSparse:GraphBLAS v4.0.1 [Nov 11, 2020 (DRAFT)] with bitmap parent
+threads to test:  40
+chunk: 65536
+matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+ [ GxB_Matrix_import_CSR 7.81e-06 sec ]
+ [ GxB_set 0.0214 sec ]
+sources: /home/faculty/davis/GAP/GAP-kron/GAP-kron_sources.mtx
+ [ *_setElement (wait: 0 zombies, 64 pending) 6.28e-05 sec ]
+ [ GrB_apply (shallow-op) (generic apply: ((void (*)(void *, const void *)) LAGraph_true_bool)) 2.35 sec ]
+ [ GrB_Matrix_nvals 9.03e-07 sec ]
+read time: 46.1673
+ [ GrB_assign (C empty) Method 21: (C full) = scalar 0.0183 sec ]
+ [ GrB_mxv (C full) (B full) C=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+(C+=Z via assign) Method 23: (C full) += Z (Z packed) 0.208 sec ]
+compute degree: 0.226419 sec
+ [ GrB_transpose (transpose) 95.8 sec ]
+ [ GrB_Matrix_nvals 6.76e-07 sec ]
+ [ GrB_Matrix_nvals 1.15e-07 sec ]
+ [ GrB_eWiseMult emult:(S<.>=S.*S) 6.19 sec ]
+ [ GrB_Matrix_nvals 8.61e-07 sec ]
+ [ GrB_reduce 0.122 sec ]
+A is symmetric
+transpose time: 102.095
+
+==========input graph: nodes: 134217726 edges: 4223264644 ntrials: 64
+pushpull (no log, with tree only (PI BITMAP)):
+
+------------------------------------------- threads: 40
+ [ GrB_Matrix_nvals 3.82e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00572 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.000505 sec ]
+ [ GrB_reduce 1.28e-05 sec ]
+ [ GxB_set 7.1e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2562 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000761 sec ]
+ [ GrB_Vector_nvals 4.75e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.000171 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.000293 sec ]
+ [ GrB_reduce 3.85e-06 sec ]
+ [ GxB_set 2.28e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 3.66235e+07 mwork 0 (use dense mask) (nthreads 40 fine: 90) 0.101 sec ]
+ [ GrB_Vector_nvals 2.9e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.02 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0203 sec ]
+ [ GrB_reduce 0.00119 sec ]
+ [ GxB_set (sparse to bitmap) 0.0226 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.152 sec ]
+ [ GrB_Vector_nvals 4.6e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0322 sec ]
+ [ GxB_set 5.75e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0592 sec ]
+ [ GrB_Vector_nvals 3.5e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0148 sec ]
+ [ GxB_set 4.41e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0497 sec ]
+ [ GrB_Vector_nvals 2.67e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00619 sec ]
+ [ GxB_set (bitmap to sparse) 0.00877 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 4677 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00139 sec ]
+ [ GrB_Vector_nvals 3.43e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.61e-05 sec ]
+ [ GxB_set 2.28e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 15 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.7e-05 sec ]
+ [ GrB_Vector_nvals 1.15e-07 sec ]
+trial:  0 threads: 40 source:   2338012 time:     0.4982 sec
+ [ GrB_Matrix_nvals 1.13e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00167 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 5.11e-05 sec ]
+ [ GrB_reduce 3.39e-06 sec ]
+ [ GxB_set 2.76e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 8 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 6.55e-05 sec ]
+ [ GrB_Vector_nvals 2.09e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 9.53e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.44e-05 sec ]
+ [ GrB_reduce 1.2e-06 sec ]
+ [ GxB_set 1.62e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 325790 mwork 0 (use dense mask in-place) (nthreads 4 fine hash: 5) 0.0106 sec ]
+ [ GrB_Vector_nvals 3.33e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00317 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00184 sec ]
+ [ GrB_reduce 4.95e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.01 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.227 sec ]
+ [ GrB_Vector_nvals 7.78e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0325 sec ]
+ [ GxB_set 4.59e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.107 sec ]
+ [ GrB_Vector_nvals 4.48e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.03 sec ]
+ [ GxB_set 3.24e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0507 sec ]
+ [ GrB_Vector_nvals 2.55e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00618 sec ]
+ [ GxB_set (bitmap to sparse) 0.00758 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 80037 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.0127 sec ]
+ [ GrB_Vector_nvals 3.57e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 2.48e-05 sec ]
+ [ GxB_set 2.41e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 223 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 6.6e-05 sec ]
+ [ GrB_Vector_nvals 8.66e-08 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 5.92e-06 sec ]
+ [ GxB_set 1.14e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 2.86e-05 sec ]
+ [ GrB_Vector_nvals 6.33e-08 sec ]
+trial:  1 threads: 40 source:  31997659 time:     0.5019 sec
+ [ GrB_Matrix_nvals 8.66e-08 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00174 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 5e-05 sec ]
+ [ GrB_reduce 3.74e-06 sec ]
+ [ GxB_set 1.98e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 13 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.23e-05 sec ]
+ [ GrB_Vector_nvals 1.93e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 9.71e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.47e-05 sec ]
+ [ GrB_reduce 1.52e-06 sec ]
+ [ GxB_set 2.04e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 192232 mwork 0 (use dense mask in-place) (nthreads 2 fine hash: 3) 0.00763 sec ]
+ [ GrB_Vector_nvals 2.78e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00358 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00222 sec ]
+ [ GrB_reduce 4.29e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.00931 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.237 sec ]
+ [ GrB_Vector_nvals 4.66e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0328 sec ]
+ [ GxB_set 4.56e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.115 sec ]
+ [ GrB_Vector_nvals 3.47e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.031 sec ]
+ [ GxB_set 6.37e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0506 sec ]
+ [ GrB_Vector_nvals 2.03e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00539 sec ]
+ [ GxB_set (bitmap to sparse) 0.00764 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 111178 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.0174 sec ]
+ [ GrB_Vector_nvals 2.03e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 2.84e-05 sec ]
+ [ GxB_set 1.83e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 286 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 7.91e-05 sec ]
+ [ GrB_Vector_nvals 6.71e-08 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 6.4e-06 sec ]
+ [ GxB_set 1.06e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 2.89e-05 sec ]
+ [ GrB_Vector_nvals 7.45e-08 sec ]
+trial:  2 threads: 40 source:  23590940 time:     0.5221 sec
+ [ GrB_Matrix_nvals 1.02e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00178 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 5.04e-05 sec ]
+ [ GrB_reduce 4.25e-06 sec ]
+ [ GxB_set 3.01e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 4 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.17e-05 sec ]
+ [ GrB_Vector_nvals 2.06e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 8.77e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.42e-05 sec ]
+ [ GrB_reduce 1.35e-06 sec ]
+ [ GxB_set 2.08e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 80930 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00405 sec ]
+ [ GrB_Vector_nvals 1.15e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00296 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00191 sec ]
+ [ GrB_reduce 3.29e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.00535 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.258 sec ]
+ [ GrB_Vector_nvals 4.32e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0315 sec ]
+ [ GxB_set 3.35e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.126 sec ]
+ [ GrB_Vector_nvals 3.96e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0311 sec ]
+ [ GxB_set 6.34e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0512 sec ]
+ [ GrB_Vector_nvals 2.37e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00567 sec ]
+ [ GxB_set (bitmap to sparse) 0.00771 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 184680 mwork 0 (use dense mask in-place) (nthreads 2 fine hash: 3) 0.0234 sec ]
+ [ GrB_Vector_nvals 2.63e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 4.69e-05 sec ]
+ [ GxB_set 3.32e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 505 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000167 sec ]
+ [ GrB_Vector_nvals 1.58e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 9.09e-06 sec ]
+ [ GxB_set 2.17e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 4 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.01e-05 sec ]
+ [ GrB_Vector_nvals 1.28e-07 sec ]
+trial:  3 threads: 40 source:  43400604 time:     0.5512 sec
+ [ GrB_Matrix_nvals 1.63e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00436 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 6.93e-05 sec ]
+ [ GrB_reduce 3.62e-06 sec ]
+ [ GxB_set 3.18e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 6 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.44e-05 sec ]
+ [ GrB_Vector_nvals 3.65e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.03e-05 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.42e-05 sec ]
+ [ GrB_reduce 1.12e-06 sec ]
+ [ GxB_set 1.96e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 114258 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00483 sec ]
+ [ GrB_Vector_nvals 2.36e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00392 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00243 sec ]
+ [ GrB_reduce 4.25e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.00725 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.25 sec ]
+ [ GrB_Vector_nvals 2.79e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0325 sec ]
+ [ GxB_set 3.97e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.122 sec ]
+ [ GrB_Vector_nvals 2.47e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0321 sec ]
+ [ GxB_set 3.68e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0509 sec ]
+ [ GrB_Vector_nvals 3.22e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00557 sec ]
+ [ GxB_set (bitmap to sparse) 0.00873 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 152146 mwork 0 (use dense mask in-place) (nthreads 2 coarse hash: 1) 0.0276 sec ]
+ [ GrB_Vector_nvals 4.61e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 4.69e-05 sec ]
+ [ GxB_set 1.78e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 419 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000132 sec ]
+ [ GrB_Vector_nvals 1.38e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 9e-06 sec ]
+ [ GxB_set 1.58e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4e-05 sec ]
+ [ GrB_Vector_nvals 7.82e-08 sec ]
+trial:  4 threads: 40 source:  75337937 time:     0.5530 sec
+ [ GrB_Matrix_nvals 1.01e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00338 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 6.48e-05 sec ]
+ [ GrB_reduce 4.22e-06 sec ]
+ [ GxB_set 2.8e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 6.97e-05 sec ]
+ [ GrB_Vector_nvals 2.04e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.22e-05 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.9e-05 sec ]
+ [ GrB_reduce 1.47e-06 sec ]
+ [ GxB_set 2.36e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2565 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000264 sec ]
+ [ GrB_Vector_nvals 1.63e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.000168 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.000136 sec ]
+ [ GrB_reduce 3.82e-06 sec ]
+ [ GxB_set 3.31e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 4.20786e+07 mwork 0 (use dense mask) (nthreads 40 fine: 91) 0.115 sec ]
+ [ GrB_Vector_nvals 4.26e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0207 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0211 sec ]
+ [ GrB_reduce 0.00129 sec ]
+ [ GxB_set (sparse to bitmap) 0.023 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.154 sec ]
+ [ GrB_Vector_nvals 4.56e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0331 sec ]
+ [ GxB_set 5.5e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0587 sec ]
+ [ GrB_Vector_nvals 4.33e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0142 sec ]
+ [ GxB_set 3.02e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.05 sec ]
+ [ GrB_Vector_nvals 2.48e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00512 sec ]
+ [ GxB_set (bitmap to sparse) 0.00829 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 4089 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00124 sec ]
+ [ GrB_Vector_nvals 2.26e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.53e-05 sec ]
+ [ GxB_set 2.64e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 13 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.45e-05 sec ]
+ [ GrB_Vector_nvals 9.59e-08 sec ]
+trial:  5 threads: 40 source:    169867 time:     0.5107 sec
+ [ GrB_Matrix_nvals 1.12e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00166 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.82e-05 sec ]
+ [ GrB_reduce 3.19e-06 sec ]
+ [ GxB_set 3.44e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.87e-05 sec ]
+ [ GrB_Vector_nvals 2.68e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 9.14e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.38e-05 sec ]
+ [ GrB_reduce 8.76e-07 sec ]
+ [ GxB_set 1.71e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 8065 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000528 sec ]
+ [ GrB_Vector_nvals 1.42e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.000415 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00032 sec ]
+ [ GrB_reduce 5.47e-06 sec ]
+ [ GxB_set 2.39e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1.08176e+08 mwork 0 (use dense mask) (nthreads 40 fine: 103) 0.179 sec ]
+ [ GrB_Vector_nvals 4.53e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0236 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0279 sec ]
+ [ GrB_reduce 0.00326 sec ]
+ [ GxB_set (sparse to bitmap) 0.026 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.146 sec ]
+ [ GrB_Vector_nvals 3.73e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0319 sec ]
+ [ GxB_set 3.73e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0544 sec ]
+ [ GrB_Vector_nvals 2.61e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00877 sec ]
+ [ GxB_set 3.46e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0491 sec ]
+ [ GrB_Vector_nvals 2.51e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0059 sec ]
+ [ GxB_set (bitmap to sparse) 0.00843 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2045 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000692 sec ]
+ [ GrB_Vector_nvals 2.27e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.58e-05 sec ]
+ [ GxB_set 2.85e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 11 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 6.39e-05 sec ]
+ [ GrB_Vector_nvals 1.33e-07 sec ]
+trial:  6 threads: 40 source: 104041220 time:     0.5695 sec
+ [ GrB_Matrix_nvals 1.78e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00167 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.79e-05 sec ]
+ [ GrB_reduce 3.43e-06 sec ]
+ [ GxB_set 2.66e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 8 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.08e-05 sec ]
+ [ GrB_Vector_nvals 3.02e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 9.45e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.47e-05 sec ]
+ [ GrB_reduce 1.16e-06 sec ]
+ [ GxB_set 2.1e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 276298 mwork 0 (use dense mask in-place) (nthreads 4 fine hash: 5) 0.0106 sec ]
+ [ GrB_Vector_nvals 3.51e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00266 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00157 sec ]
+ [ GrB_reduce 4.83e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.00776 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.231 sec ]
+ [ GrB_Vector_nvals 4.88e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0318 sec ]
+ [ GxB_set 4.94e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.11 sec ]
+ [ GrB_Vector_nvals 3.72e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0302 sec ]
+ [ GxB_set 5.45e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0513 sec ]
+ [ GrB_Vector_nvals 4.9e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00539 sec ]
+ [ GxB_set (bitmap to sparse) 0.0084 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 87608 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.014 sec ]
+ [ GrB_Vector_nvals 2.01e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 2.73e-05 sec ]
+ [ GxB_set 2.67e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 253 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 7.15e-05 sec ]
+ [ GrB_Vector_nvals 9.69e-08 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 6.33e-06 sec ]
+ [ GxB_set 1.3e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 2.87e-05 sec ]
+ [ GrB_Vector_nvals 9.5e-08 sec ]
+trial:  7 threads: 40 source:  94177942 time:     0.5073 sec
+ [ GrB_Matrix_nvals 6.89e-08 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00179 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 5.01e-05 sec ]
+ [ GrB_reduce 3.39e-06 sec ]
+ [ GxB_set 3.04e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.01e-05 sec ]
+ [ GrB_Vector_nvals 2.14e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 8.98e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.36e-05 sec ]
+ [ GrB_reduce 1.04e-06 sec ]
+ [ GxB_set 1.88e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 8156 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000512 sec ]
+ [ GrB_Vector_nvals 1.22e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.000417 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00032 sec ]
+ [ GrB_reduce 5.74e-06 sec ]
+ [ GxB_set 2.65e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1.06345e+08 mwork 0 (use dense mask) (nthreads 40 fine: 103) 0.176 sec ]
+ [ GrB_Vector_nvals 3.18e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0237 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0278 sec ]
+ [ GrB_reduce 0.00215 sec ]
+ [ GxB_set (sparse to bitmap) 0.0259 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.146 sec ]
+ [ GrB_Vector_nvals 1.99e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0321 sec ]
+ [ GxB_set 3.28e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0553 sec ]
+ [ GrB_Vector_nvals 2.85e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00801 sec ]
+ [ GxB_set 3.66e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0506 sec ]
+ [ GrB_Vector_nvals 2.87e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00517 sec ]
+ [ GxB_set (bitmap to sparse) 0.00829 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2117 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000719 sec ]
+ [ GrB_Vector_nvals 2.16e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.5e-05 sec ]
+ [ GxB_set 2.79e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 10 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.41e-05 sec ]
+ [ GrB_Vector_nvals 1.44e-07 sec ]
+trial:  8 threads: 40 source:  32871357 time:     0.5663 sec
+ [ GrB_Matrix_nvals 1.05e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00165 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.84e-05 sec ]
+ [ GrB_reduce 4.16e-06 sec ]
+ [ GxB_set 3.09e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 4 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.93e-05 sec ]
+ [ GrB_Vector_nvals 2.21e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 9.14e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.39e-05 sec ]
+ [ GrB_reduce 1.08e-06 sec ]
+ [ GxB_set 1.75e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 25242 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00145 sec ]
+ [ GrB_Vector_nvals 1.64e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00111 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.000761 sec ]
+ [ GrB_reduce 1.18e-05 sec ]
+ [ GxB_set 1.98e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2.66571e+08 mwork 0 (use dense mask) (nthreads 40 fine: 120) 0.327 sec ]
+ [ GrB_Vector_nvals 3.02e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0257 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0351 sec ]
+ [ GrB_reduce 0.00317 sec ]
+ [ GxB_set (sparse to bitmap) 0.0282 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.134 sec ]
+ [ GrB_Vector_nvals 2.78e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0433 sec ]
+ [ GxB_set 6.27e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0589 sec ]
+ [ GrB_Vector_nvals 4.59e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00609 sec ]
+ [ GxB_set 3.92e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0499 sec ]
+ [ GrB_Vector_nvals 2.57e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00508 sec ]
+ [ GxB_set (bitmap to sparse) 0.00759 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1006 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000392 sec ]
+ [ GrB_Vector_nvals 2.16e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.41e-05 sec ]
+ [ GxB_set 3.13e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 3 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.16e-05 sec ]
+ [ GrB_Vector_nvals 8.57e-08 sec ]
+trial:  9 threads: 40 source:  56230002 time:     0.7309 sec
+ [ GrB_Matrix_nvals 1.22e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00166 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 5.09e-05 sec ]
+ [ GrB_reduce 3.55e-06 sec ]
+ [ GxB_set 3.18e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 68 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.64e-05 sec ]
+ [ GrB_Vector_nvals 1.98e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.24e-05 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.73e-05 sec ]
+ [ GrB_reduce 1.37e-06 sec ]
+ [ GxB_set 2.02e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 540474 mwork 0 (use dense mask in-place) (nthreads 8 fine hash: 9) 0.00823 sec ]
+ [ GrB_Vector_nvals 3.24e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00314 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00164 sec ]
+ [ GrB_reduce 4.18e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.00859 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.217 sec ]
+ [ GrB_Vector_nvals 4.49e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0331 sec ]
+ [ GxB_set 3.69e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.102 sec ]
+ [ GrB_Vector_nvals 2.61e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0296 sec ]
+ [ GxB_set 3.41e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0495 sec ]
+ [ GrB_Vector_nvals 3.2e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0053 sec ]
+ [ GxB_set (bitmap to sparse) 0.00752 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 62174 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00997 sec ]
+ [ GrB_Vector_nvals 2.03e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 2.03e-05 sec ]
+ [ GxB_set 2.15e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 166 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.58e-05 sec ]
+ [ GrB_Vector_nvals 1.09e-07 sec ]
+trial: 10 threads: 40 source:  69883037 time:     0.4777 sec
+ [ GrB_Matrix_nvals 1.01e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.0017 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.91e-05 sec ]
+ [ GrB_reduce 4.11e-06 sec ]
+ [ GxB_set 2.93e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.02e-05 sec ]
+ [ GrB_Vector_nvals 2.2e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 9.02e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.33e-05 sec ]
+ [ GrB_reduce 8.32e-07 sec ]
+ [ GxB_set 1.97e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 231 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.46e-05 sec ]
+ [ GrB_Vector_nvals 8.66e-08 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.83e-05 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.69e-05 sec ]
+ [ GrB_reduce 1.68e-06 sec ]
+ [ GxB_set 2.13e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 4.31152e+06 mwork 0 (use dense mask in-place) (nthreads 40 fine hash: 66) 0.0545 sec ]
+ [ GrB_Vector_nvals 3.79e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00806 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00536 sec ]
+ [ GrB_reduce 0.000225 sec ]
+ [ GxB_set (sparse to bitmap) 0.0121 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.176 sec ]
+ [ GrB_Vector_nvals 4.26e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0328 sec ]
+ [ GxB_set 2.89e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0754 sec ]
+ [ GrB_Vector_nvals 2.56e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0269 sec ]
+ [ GxB_set 2.13e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0502 sec ]
+ [ GrB_Vector_nvals 3.06e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00521 sec ]
+ [ GxB_set (bitmap to sparse) 0.00836 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 17529 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00358 sec ]
+ [ GrB_Vector_nvals 2.07e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.41e-05 sec ]
+ [ GxB_set 2.24e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 52 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 3.97e-05 sec ]
+ [ GrB_Vector_nvals 6.05e-08 sec ]
+trial: 11 threads: 40 source:   9346345 time:     0.4610 sec
+ [ GrB_Matrix_nvals 6.52e-08 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00169 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.86e-05 sec ]
+ [ GrB_reduce 4.08e-06 sec ]
+ [ GxB_set 3.05e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.92e-05 sec ]
+ [ GrB_Vector_nvals 1.78e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 8.96e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.33e-05 sec ]
+ [ GrB_reduce 8.54e-07 sec ]
+ [ GxB_set 2.1e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 8085 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000498 sec ]
+ [ GrB_Vector_nvals 1.09e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.000404 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.000311 sec ]
+ [ GrB_reduce 5.33e-06 sec ]
+ [ GxB_set 2.29e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1.09393e+08 mwork 0 (use dense mask) (nthreads 40 fine: 104) 0.179 sec ]
+ [ GrB_Vector_nvals 2.58e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0237 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0292 sec ]
+ [ GrB_reduce 0.00215 sec ]
+ [ GxB_set (sparse to bitmap) 0.0269 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.146 sec ]
+ [ GrB_Vector_nvals 1.97e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0328 sec ]
+ [ GxB_set 3.69e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0561 sec ]
+ [ GrB_Vector_nvals 4.6e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0158 sec ]
+ [ GxB_set 7.5e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0527 sec ]
+ [ GrB_Vector_nvals 4.95e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00516 sec ]
+ [ GxB_set (bitmap to sparse) 0.0076 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2022 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000687 sec ]
+ [ GrB_Vector_nvals 4.29e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.64e-05 sec ]
+ [ GxB_set 3.21e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 10 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.46e-05 sec ]
+ [ GrB_Vector_nvals 1.28e-07 sec ]
+trial: 12 threads: 40 source:  48915358 time:     0.5810 sec
+ [ GrB_Matrix_nvals 1.26e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00167 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.96e-05 sec ]
+ [ GrB_reduce 3.55e-06 sec ]
+ [ GxB_set 3.96e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.05e-05 sec ]
+ [ GrB_Vector_nvals 2.18e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 8.96e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.38e-05 sec ]
+ [ GrB_reduce 9.94e-07 sec ]
+ [ GxB_set 2.52e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 84 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.71e-05 sec ]
+ [ GrB_Vector_nvals 1.2e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.21e-05 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.87e-05 sec ]
+ [ GrB_reduce 1.23e-06 sec ]
+ [ GxB_set 2.7e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1.42253e+06 mwork 0 (use dense mask in-place) (nthreads 21 fine hash: 22) 0.0166 sec ]
+ [ GrB_Vector_nvals 4.98e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00444 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00272 sec ]
+ [ GrB_reduce 6.33e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.00835 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.198 sec ]
+ [ GrB_Vector_nvals 4.44e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0321 sec ]
+ [ GxB_set 4.24e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0892 sec ]
+ [ GrB_Vector_nvals 3.41e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.028 sec ]
+ [ GxB_set 4.05e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0522 sec ]
+ [ GrB_Vector_nvals 3.44e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00517 sec ]
+ [ GxB_set (bitmap to sparse) 0.00757 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 34358 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00641 sec ]
+ [ GrB_Vector_nvals 2.03e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.69e-05 sec ]
+ [ GxB_set 2.43e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 95 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.72e-05 sec ]
+ [ GrB_Vector_nvals 9.13e-08 sec ]
+trial: 13 threads: 40 source: 122571173 time:     0.4535 sec
+ [ GrB_Matrix_nvals 6.8e-08 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.0017 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 5.06e-05 sec ]
+ [ GrB_reduce 3.39e-06 sec ]
+ [ GxB_set 3.15e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 3 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.02e-05 sec ]
+ [ GrB_Vector_nvals 2.29e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 8.72e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 2.86e-05 sec ]
+ [ GrB_reduce 1.12e-06 sec ]
+ [ GxB_set 1.71e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 52382 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00255 sec ]
+ [ GrB_Vector_nvals 1.28e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00201 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00137 sec ]
+ [ GrB_reduce 2.1e-05 sec ]
+ [ GxB_set 1.6e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 4.40471e+08 mwork 0 (use dense mask) (nthreads 40 fine: 130) 0.459 sec ]
+ [ GrB_Vector_nvals 2.57e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.027 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0371 sec ]
+ [ GrB_reduce 0.00389 sec ]
+ [ GxB_set (sparse to bitmap) 0.0295 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.127 sec ]
+ [ GrB_Vector_nvals 5.42e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0322 sec ]
+ [ GxB_set 4e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0525 sec ]
+ [ GrB_Vector_nvals 3.75e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00703 sec ]
+ [ GxB_set (bitmap to sparse) 0.00785 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 244088 mwork 0 (use dense mask in-place) (nthreads 3 fine hash: 4) 0.0188 sec ]
+ [ GrB_Vector_nvals 4.09e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 5.14e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.00394 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.054 sec ]
+ [ GrB_Vector_nvals 2.65e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00524 sec ]
+ [ GxB_set 2.06e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0504 sec ]
+ [ GrB_Vector_nvals 2.57e-07 sec ]
+trial: 14 threads: 40 source:   6183279 time:     0.9238 sec
+ [ GrB_Matrix_nvals 2.64e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00167 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 5.11e-05 sec ]
+ [ GrB_reduce 3.76e-06 sec ]
+ [ GxB_set 2.6e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 6 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.6e-05 sec ]
+ [ GrB_Vector_nvals 1.8e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.06e-05 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.43e-05 sec ]
+ [ GrB_reduce 1.21e-06 sec ]
+ [ GxB_set 1.73e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 78829 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00395 sec ]
+ [ GrB_Vector_nvals 1.36e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0029 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00189 sec ]
+ [ GrB_reduce 3.21e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.00524 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.258 sec ]
+ [ GrB_Vector_nvals 2.8e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0327 sec ]
+ [ GxB_set 6.8e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.126 sec ]
+ [ GrB_Vector_nvals 5.29e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.031 sec ]
+ [ GxB_set 3.96e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0511 sec ]
+ [ GrB_Vector_nvals 2.77e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00644 sec ]
+ [ GxB_set (bitmap to sparse) 0.00887 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 187138 mwork 0 (use dense mask in-place) (nthreads 2 fine hash: 3) 0.0158 sec ]
+ [ GrB_Vector_nvals 8.64e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 4.3e-05 sec ]
+ [ GxB_set 2.97e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 502 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000123 sec ]
+ [ GrB_Vector_nvals 1.56e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 7.12e-06 sec ]
+ [ GxB_set 1.17e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 3 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 2.91e-05 sec ]
+ [ GrB_Vector_nvals 7.54e-08 sec ]
+trial: 15 threads: 40 source:  86323663 time:     0.5470 sec
+ [ GrB_Matrix_nvals 6.89e-08 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00694 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 5.21e-05 sec ]
+ [ GrB_reduce 3.93e-06 sec ]
+ [ GxB_set 3.25e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 23 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.6e-05 sec ]
+ [ GrB_Vector_nvals 2.87e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.05e-05 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.53e-05 sec ]
+ [ GrB_reduce 1.23e-06 sec ]
+ [ GxB_set 2.1e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 377743 mwork 0 (use dense mask in-place) (nthreads 5 fine hash: 6) 0.00773 sec ]
+ [ GrB_Vector_nvals 3.43e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00334 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00185 sec ]
+ [ GrB_reduce 4.37e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.01 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.223 sec ]
+ [ GrB_Vector_nvals 4.74e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.032 sec ]
+ [ GxB_set 4.23e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.106 sec ]
+ [ GrB_Vector_nvals 2.92e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0304 sec ]
+ [ GxB_set 4.95e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0507 sec ]
+ [ GrB_Vector_nvals 2.23e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0132 sec ]
+ [ GxB_set (bitmap to sparse) 0.0259 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 75266 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.0128 sec ]
+ [ GrB_Vector_nvals 2.05e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 2.36e-05 sec ]
+ [ GxB_set 5.5e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 205 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 6.35e-05 sec ]
+ [ GrB_Vector_nvals 9.87e-08 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 6.08e-06 sec ]
+ [ GxB_set 1.29e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 2.8e-05 sec ]
+ [ GrB_Vector_nvals 6.71e-08 sec ]
+trial: 16 threads: 40 source: 106725780 time:     0.5253 sec
+ [ GrB_Matrix_nvals 7.64e-08 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.0038 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 8.13e-05 sec ]
+ [ GrB_reduce 4.59e-06 sec ]
+ [ GxB_set 4.62e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 32 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000117 sec ]
+ [ GrB_Vector_nvals 4.06e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.58e-05 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 2.28e-05 sec ]
+ [ GrB_reduce 1.86e-06 sec ]
+ [ GxB_set 2.78e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 775397 mwork 0 (use dense mask in-place) (nthreads 11 fine hash: 12) 0.0142 sec ]
+ [ GrB_Vector_nvals 3.38e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00349 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00202 sec ]
+ [ GrB_reduce 5.16e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.0112 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.207 sec ]
+ [ GrB_Vector_nvals 4.68e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0319 sec ]
+ [ GxB_set 4.3e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0964 sec ]
+ [ GrB_Vector_nvals 2.55e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.029 sec ]
+ [ GxB_set 5.42e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0507 sec ]
+ [ GrB_Vector_nvals 2.74e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0052 sec ]
+ [ GxB_set (bitmap to sparse) 0.0076 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 48516 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00817 sec ]
+ [ GrB_Vector_nvals 4.1e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.93e-05 sec ]
+ [ GxB_set 2.1e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 132 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.13e-05 sec ]
+ [ GrB_Vector_nvals 1.2e-07 sec ]
+trial: 17 threads: 40 source:  92389938 time:     0.4720 sec
+ [ GrB_Matrix_nvals 6.8e-08 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00176 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 5.03e-05 sec ]
+ [ GrB_reduce 3.67e-06 sec ]
+ [ GxB_set 2.59e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 33 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.58e-05 sec ]
+ [ GrB_Vector_nvals 2.36e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.11e-05 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.64e-05 sec ]
+ [ GrB_reduce 1.37e-06 sec ]
+ [ GxB_set 2.17e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 597070 mwork 0 (use dense mask in-place) (nthreads 9 fine hash: 10) 0.0141 sec ]
+ [ GrB_Vector_nvals 2.66e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00308 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00185 sec ]
+ [ GrB_reduce 5.99e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.00756 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.218 sec ]
+ [ GrB_Vector_nvals 4.46e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0319 sec ]
+ [ GxB_set 2.92e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.1 sec ]
+ [ GrB_Vector_nvals 4.77e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0295 sec ]
+ [ GxB_set 3.2e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0508 sec ]
+ [ GrB_Vector_nvals 3.16e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00526 sec ]
+ [ GxB_set (bitmap to sparse) 0.00766 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 57075 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00942 sec ]
+ [ GrB_Vector_nvals 4.51e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 2.05e-05 sec ]
+ [ GxB_set 2.1e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 145 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.59e-05 sec ]
+ [ GrB_Vector_nvals 1.16e-07 sec ]
+trial: 18 threads: 40 source:  16210738 time:     0.4819 sec
+ [ GrB_Matrix_nvals 6.8e-08 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00256 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 5.3e-05 sec ]
+ [ GrB_reduce 3.7e-06 sec ]
+ [ GxB_set 2.51e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 11 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.44e-05 sec ]
+ [ GrB_Vector_nvals 2.83e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 9.3e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.45e-05 sec ]
+ [ GrB_reduce 1.26e-06 sec ]
+ [ GxB_set 1.62e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 32046 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00177 sec ]
+ [ GrB_Vector_nvals 1.2e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00129 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00089 sec ]
+ [ GrB_reduce 1.31e-05 sec ]
+ [ GxB_set 1.13e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 3.11021e+08 mwork 0 (use dense mask) (nthreads 40 fine: 123) 0.371 sec ]
+ [ GrB_Vector_nvals 5.88e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0266 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0355 sec ]
+ [ GrB_reduce 0.00373 sec ]
+ [ GxB_set (sparse to bitmap) 0.0285 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.133 sec ]
+ [ GrB_Vector_nvals 3.63e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0315 sec ]
+ [ GxB_set 6.1e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0523 sec ]
+ [ GrB_Vector_nvals 3.38e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00593 sec ]
+ [ GxB_set 4.07e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0502 sec ]
+ [ GrB_Vector_nvals 3.14e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00509 sec ]
+ [ GxB_set (bitmap to sparse) 0.00754 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 886 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000341 sec ]
+ [ GrB_Vector_nvals 2.27e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.28e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.0021 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0505 sec ]
+ [ GrB_Vector_nvals 2.77e-07 sec ]
+trial: 19 threads: 40 source:  59816700 time:     0.8105 sec
+ [ GrB_Matrix_nvals 2.5e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00164 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 5.13e-05 sec ]
+ [ GrB_reduce 3.05e-06 sec ]
+ [ GxB_set 2.39e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 6.89e-05 sec ]
+ [ GrB_Vector_nvals 3.22e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 9.5e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.34e-05 sec ]
+ [ GrB_reduce 8.38e-07 sec ]
+ [ GxB_set 1.65e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2651 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000235 sec ]
+ [ GrB_Vector_nvals 1.27e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.000149 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.000119 sec ]
+ [ GrB_reduce 3.18e-06 sec ]
+ [ GxB_set 2.15e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 4.44677e+07 mwork 0 (use dense mask) (nthreads 40 fine: 92) 0.112 sec ]
+ [ GrB_Vector_nvals 4.71e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0209 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0218 sec ]
+ [ GrB_reduce 0.00132 sec ]
+ [ GxB_set (sparse to bitmap) 0.0231 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.153 sec ]
+ [ GrB_Vector_nvals 2.22e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0322 sec ]
+ [ GxB_set 3.77e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.058 sec ]
+ [ GrB_Vector_nvals 2.87e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0135 sec ]
+ [ GxB_set 3.56e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.049 sec ]
+ [ GrB_Vector_nvals 2.78e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00517 sec ]
+ [ GxB_set (bitmap to sparse) 0.00756 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 3887 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00117 sec ]
+ [ GrB_Vector_nvals 2.95e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.53e-05 sec ]
+ [ GxB_set 2.94e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 16 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.66e-05 sec ]
+ [ GrB_Vector_nvals 1.28e-07 sec ]
+trial: 20 threads: 40 source: 111669929 time:     0.5020 sec
+ [ GrB_Matrix_nvals 1.25e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00164 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.63e-05 sec ]
+ [ GrB_reduce 3.26e-06 sec ]
+ [ GxB_set 2.64e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.86e-05 sec ]
+ [ GrB_Vector_nvals 2.66e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 8.85e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.34e-05 sec ]
+ [ GrB_reduce 1.08e-06 sec ]
+ [ GxB_set 2.25e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1522 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000145 sec ]
+ [ GrB_Vector_nvals 1.08e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 8.79e-05 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 7.74e-05 sec ]
+ [ GrB_reduce 2.26e-06 sec ]
+ [ GxB_set 1.64e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2.63706e+07 mwork 0 (use dense mask) (nthreads 40 fine: 88) 0.091 sec ]
+ [ GrB_Vector_nvals 4.32e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0189 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0213 sec ]
+ [ GrB_reduce 0.000975 sec ]
+ [ GxB_set (sparse to bitmap) 0.0221 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.157 sec ]
+ [ GrB_Vector_nvals 2.08e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0322 sec ]
+ [ GxB_set 3.81e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0606 sec ]
+ [ GrB_Vector_nvals 3.48e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0164 sec ]
+ [ GxB_set 4.93e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.05 sec ]
+ [ GrB_Vector_nvals 2.67e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00516 sec ]
+ [ GxB_set (bitmap to sparse) 0.00753 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 5581 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.0016 sec ]
+ [ GrB_Vector_nvals 1.97e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.57e-05 sec ]
+ [ GxB_set 2.89e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 21 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 3.95e-05 sec ]
+ [ GrB_Vector_nvals 8.85e-08 sec ]
+trial: 21 threads: 40 source: 102831411 time:     0.4880 sec
+ [ GrB_Matrix_nvals 1.09e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00163 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.66e-05 sec ]
+ [ GrB_reduce 3.91e-06 sec ]
+ [ GxB_set 2.65e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.88e-05 sec ]
+ [ GrB_Vector_nvals 3.53e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 8.95e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.35e-05 sec ]
+ [ GrB_reduce 9.7e-07 sec ]
+ [ GxB_set 1.97e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 16129 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000931 sec ]
+ [ GrB_Vector_nvals 1.36e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.000728 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.000517 sec ]
+ [ GrB_reduce 7.85e-06 sec ]
+ [ GxB_set 1.29e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1.8904e+08 mwork 0 (use dense mask) (nthreads 40 fine: 114) 0.25 sec ]
+ [ GrB_Vector_nvals 2.51e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.025 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0318 sec ]
+ [ GrB_reduce 0.00274 sec ]
+ [ GxB_set (sparse to bitmap) 0.0287 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.138 sec ]
+ [ GrB_Vector_nvals 2.7e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0315 sec ]
+ [ GxB_set 2.86e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0534 sec ]
+ [ GrB_Vector_nvals 2.72e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00659 sec ]
+ [ GxB_set 3.81e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0491 sec ]
+ [ GrB_Vector_nvals 2.65e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00586 sec ]
+ [ GxB_set (bitmap to sparse) 0.00763 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1326 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000479 sec ]
+ [ GrB_Vector_nvals 3.9e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.46e-05 sec ]
+ [ GxB_set 2.47e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 4 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.15e-05 sec ]
+ [ GrB_Vector_nvals 1.6e-07 sec ]
+trial: 22 threads: 40 source: 113384800 time:     0.6356 sec
+ [ GrB_Matrix_nvals 1.49e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00206 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.78e-05 sec ]
+ [ GrB_reduce 2.91e-06 sec ]
+ [ GxB_set 2.93e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 73 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.58e-05 sec ]
+ [ GrB_Vector_nvals 3.38e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.27e-05 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.86e-05 sec ]
+ [ GrB_reduce 1.39e-06 sec ]
+ [ GxB_set 2.13e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1.1811e+06 mwork 0 (use dense mask in-place) (nthreads 18 fine hash: 19) 0.0146 sec ]
+ [ GrB_Vector_nvals 3.92e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00408 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00264 sec ]
+ [ GrB_reduce 6.59e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.0078 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.201 sec ]
+ [ GrB_Vector_nvals 4.52e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.032 sec ]
+ [ GxB_set 2.44e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0913 sec ]
+ [ GrB_Vector_nvals 2.78e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0285 sec ]
+ [ GxB_set 4.09e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0496 sec ]
+ [ GrB_Vector_nvals 2.79e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00517 sec ]
+ [ GxB_set (bitmap to sparse) 0.0085 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 38472 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00679 sec ]
+ [ GrB_Vector_nvals 3.5e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.73e-05 sec ]
+ [ GxB_set 2.38e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 99 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.68e-05 sec ]
+ [ GrB_Vector_nvals 7.64e-08 sec ]
+trial: 23 threads: 40 source:  43872564 time:     0.4554 sec
+ [ GrB_Matrix_nvals 8.66e-08 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.0017 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.81e-05 sec ]
+ [ GrB_reduce 3.92e-06 sec ]
+ [ GxB_set 2.89e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.84e-05 sec ]
+ [ GrB_Vector_nvals 2.23e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 9.05e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.34e-05 sec ]
+ [ GrB_reduce 8.2e-07 sec ]
+ [ GxB_set 1.83e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 753 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 8.98e-05 sec ]
+ [ GrB_Vector_nvals 1.25e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 4.55e-05 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.65e-05 sec ]
+ [ GrB_reduce 1.92e-06 sec ]
+ [ GxB_set 2.14e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1.55871e+07 mwork 0 (use dense mask) (nthreads 40 fine: 85) 0.0848 sec ]
+ [ GrB_Vector_nvals 2.64e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0173 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0143 sec ]
+ [ GrB_reduce 0.000706 sec ]
+ [ GxB_set (sparse to bitmap) 0.0196 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.161 sec ]
+ [ GrB_Vector_nvals 2.74e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.032 sec ]
+ [ GxB_set 4.42e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0628 sec ]
+ [ GrB_Vector_nvals 3.3e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0189 sec ]
+ [ GxB_set 2.93e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0501 sec ]
+ [ GrB_Vector_nvals 2.51e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0051 sec ]
+ [ GxB_set (bitmap to sparse) 0.00828 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 7738 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00197 sec ]
+ [ GrB_Vector_nvals 1.83e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.2e-05 sec ]
+ [ GxB_set 2.14e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 26 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 3.41e-05 sec ]
+ [ GrB_Vector_nvals 8.2e-08 sec ]
+trial: 24 threads: 40 source:  80508827 time:     0.4799 sec
+ [ GrB_Matrix_nvals 1.22e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00166 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.7e-05 sec ]
+ [ GrB_reduce 2.93e-06 sec ]
+ [ GxB_set 3.35e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 8 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5e-05 sec ]
+ [ GrB_Vector_nvals 2.18e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 9.36e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.4e-05 sec ]
+ [ GrB_reduce 1.18e-06 sec ]
+ [ GxB_set 1.83e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 42154 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.0022 sec ]
+ [ GrB_Vector_nvals 1.18e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0016 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0011 sec ]
+ [ GrB_reduce 1.72e-05 sec ]
+ [ GxB_set 1.71e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 3.79891e+08 mwork 0 (use dense mask) (nthreads 40 fine: 127) 0.416 sec ]
+ [ GrB_Vector_nvals 2.34e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0266 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.036 sec ]
+ [ GrB_reduce 0.00368 sec ]
+ [ GxB_set (sparse to bitmap) 0.029 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.128 sec ]
+ [ GrB_Vector_nvals 2.5e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0313 sec ]
+ [ GxB_set 3.76e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0521 sec ]
+ [ GrB_Vector_nvals 2.61e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00675 sec ]
+ [ GxB_set 3.46e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0487 sec ]
+ [ GrB_Vector_nvals 2.66e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00509 sec ]
+ [ GxB_set (bitmap to sparse) 0.00752 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 720 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000285 sec ]
+ [ GrB_Vector_nvals 1.71e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.17e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.00174 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.049 sec ]
+ [ GrB_Vector_nvals 4.24e-07 sec ]
+trial: 25 threads: 40 source:  26105648 time:     0.8496 sec
+ [ GrB_Matrix_nvals 2.51e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00165 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.91e-05 sec ]
+ [ GrB_reduce 3.9e-06 sec ]
+ [ GxB_set 2.87e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 11 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.79e-05 sec ]
+ [ GrB_Vector_nvals 2.18e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.01e-05 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.46e-05 sec ]
+ [ GrB_reduce 1.42e-06 sec ]
+ [ GxB_set 2.22e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 254797 mwork 0 (use dense mask in-place) (nthreads 3 fine hash: 4) 0.00943 sec ]
+ [ GrB_Vector_nvals 2.63e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00312 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0019 sec ]
+ [ GrB_reduce 4.46e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.00785 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.229 sec ]
+ [ GrB_Vector_nvals 8.68e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0325 sec ]
+ [ GxB_set 3.65e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.111 sec ]
+ [ GrB_Vector_nvals 2.61e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0305 sec ]
+ [ GxB_set 3.77e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0513 sec ]
+ [ GrB_Vector_nvals 2.61e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00539 sec ]
+ [ GxB_set (bitmap to sparse) 0.00863 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 91552 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.0147 sec ]
+ [ GrB_Vector_nvals 1.58e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 2.56e-05 sec ]
+ [ GxB_set 2.38e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 241 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 7.09e-05 sec ]
+ [ GrB_Vector_nvals 1.15e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 6.19e-06 sec ]
+ [ GxB_set 1.29e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 2.88e-05 sec ]
+ [ GrB_Vector_nvals 9.03e-08 sec ]
+trial: 26 threads: 40 source:   8807516 time:     0.5083 sec
+ [ GrB_Matrix_nvals 8.57e-08 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00279 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 5.27e-05 sec ]
+ [ GrB_reduce 3.61e-06 sec ]
+ [ GxB_set 4.92e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 34 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.94e-05 sec ]
+ [ GrB_Vector_nvals 2.03e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.04e-05 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.65e-05 sec ]
+ [ GrB_reduce 1.35e-06 sec ]
+ [ GxB_set 2.08e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 545319 mwork 0 (use dense mask in-place) (nthreads 8 fine hash: 9) 0.0145 sec ]
+ [ GrB_Vector_nvals 3.11e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00296 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00169 sec ]
+ [ GrB_reduce 5.95e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.00792 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.223 sec ]
+ [ GrB_Vector_nvals 5.01e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0331 sec ]
+ [ GxB_set 4.36e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.101 sec ]
+ [ GrB_Vector_nvals 2.61e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0295 sec ]
+ [ GxB_set 3.91e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.051 sec ]
+ [ GrB_Vector_nvals 4.08e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00528 sec ]
+ [ GxB_set (bitmap to sparse) 0.00846 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 60257 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.0101 sec ]
+ [ GrB_Vector_nvals 1.97e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 2.15e-05 sec ]
+ [ GxB_set 2.28e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 161 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 6.02e-05 sec ]
+ [ GrB_Vector_nvals 9.78e-08 sec ]
+trial: 27 threads: 40 source: 118452455 time:     0.4921 sec
+ [ GrB_Matrix_nvals 8.75e-08 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00179 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 5.47e-05 sec ]
+ [ GrB_reduce 3.42e-06 sec ]
+ [ GxB_set 2.68e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.24e-05 sec ]
+ [ GrB_Vector_nvals 2.68e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 8.92e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.38e-05 sec ]
+ [ GrB_reduce 1.12e-06 sec ]
+ [ GxB_set 1.83e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2805 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000237 sec ]
+ [ GrB_Vector_nvals 1.26e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00016 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.000127 sec ]
+ [ GrB_reduce 3.24e-06 sec ]
+ [ GxB_set 2.36e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 4.36006e+07 mwork 0 (use dense mask) (nthreads 40 fine: 92) 0.116 sec ]
+ [ GrB_Vector_nvals 2.68e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0208 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0216 sec ]
+ [ GrB_reduce 0.00133 sec ]
+ [ GxB_set (sparse to bitmap) 0.0233 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.154 sec ]
+ [ GrB_Vector_nvals 2.12e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0332 sec ]
+ [ GxB_set 4.12e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0592 sec ]
+ [ GrB_Vector_nvals 3.14e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0131 sec ]
+ [ GxB_set 6.91e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0502 sec ]
+ [ GrB_Vector_nvals 2.51e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00518 sec ]
+ [ GxB_set (bitmap to sparse) 0.00754 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 3972 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00121 sec ]
+ [ GrB_Vector_nvals 2.11e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.64e-05 sec ]
+ [ GxB_set 2.9e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 14 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.61e-05 sec ]
+ [ GrB_Vector_nvals 9.97e-08 sec ]
+trial: 28 threads: 40 source: 121818859 time:     0.5092 sec
+ [ GrB_Matrix_nvals 9.59e-08 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00164 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 5.92e-05 sec ]
+ [ GrB_reduce 3.39e-06 sec ]
+ [ GxB_set 2.09e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.95e-05 sec ]
+ [ GrB_Vector_nvals 3.5e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 9.06e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.38e-05 sec ]
+ [ GrB_reduce 8.85e-07 sec ]
+ [ GxB_set 1.73e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2557 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000224 sec ]
+ [ GrB_Vector_nvals 1.45e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.000144 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.000117 sec ]
+ [ GrB_reduce 3.18e-06 sec ]
+ [ GxB_set 2.97e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 3.75284e+07 mwork 0 (use dense mask) (nthreads 40 fine: 90) 0.105 sec ]
+ [ GrB_Vector_nvals 4.22e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.02 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0198 sec ]
+ [ GrB_reduce 0.00119 sec ]
+ [ GxB_set (sparse to bitmap) 0.0225 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.157 sec ]
+ [ GrB_Vector_nvals 4.43e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0324 sec ]
+ [ GxB_set 3.47e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0587 sec ]
+ [ GrB_Vector_nvals 3.04e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0147 sec ]
+ [ GxB_set 3.39e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0499 sec ]
+ [ GrB_Vector_nvals 2.34e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0051 sec ]
+ [ GxB_set (bitmap to sparse) 0.00758 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 4624 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00139 sec ]
+ [ GrB_Vector_nvals 2.17e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.62e-05 sec ]
+ [ GxB_set 3.25e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 16 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.67e-05 sec ]
+ [ GrB_Vector_nvals 1.01e-07 sec ]
+trial: 29 threads: 40 source:  42361928 time:     0.4978 sec
+ [ GrB_Matrix_nvals 7.08e-08 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00166 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.68e-05 sec ]
+ [ GrB_reduce 3.09e-06 sec ]
+ [ GxB_set 3.01e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.77e-05 sec ]
+ [ GrB_Vector_nvals 2.75e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 8.68e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.34e-05 sec ]
+ [ GrB_reduce 1.08e-06 sec ]
+ [ GxB_set 1.82e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 8095 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00052 sec ]
+ [ GrB_Vector_nvals 1.29e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.000415 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.000319 sec ]
+ [ GrB_reduce 5.62e-06 sec ]
+ [ GxB_set 2.53e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1.04772e+08 mwork 0 (use dense mask) (nthreads 40 fine: 103) 0.179 sec ]
+ [ GrB_Vector_nvals 4.4e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0236 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0271 sec ]
+ [ GrB_reduce 0.00211 sec ]
+ [ GxB_set (sparse to bitmap) 0.0258 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.147 sec ]
+ [ GrB_Vector_nvals 2.68e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0329 sec ]
+ [ GxB_set 3.8e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0546 sec ]
+ [ GrB_Vector_nvals 3.35e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00935 sec ]
+ [ GxB_set 3.03e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0507 sec ]
+ [ GrB_Vector_nvals 4.34e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00515 sec ]
+ [ GxB_set (bitmap to sparse) 0.00871 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2109 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000717 sec ]
+ [ GrB_Vector_nvals 3.48e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.5e-05 sec ]
+ [ GxB_set 2.77e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 9 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.41e-05 sec ]
+ [ GrB_Vector_nvals 1.25e-07 sec ]
+trial: 30 threads: 40 source:  29493053 time:     0.5701 sec
+ [ GrB_Matrix_nvals 1.31e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00166 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.7e-05 sec ]
+ [ GrB_reduce 2.89e-06 sec ]
+ [ GxB_set 2.95e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 6.37e-05 sec ]
+ [ GrB_Vector_nvals 2.87e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 8.83e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.37e-05 sec ]
+ [ GrB_reduce 9.88e-07 sec ]
+ [ GxB_set 1.7e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 8033 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000527 sec ]
+ [ GrB_Vector_nvals 1.16e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00041 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.000332 sec ]
+ [ GrB_reduce 5.06e-06 sec ]
+ [ GxB_set 2.37e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1.09719e+08 mwork 0 (use dense mask) (nthreads 40 fine: 104) 0.18 sec ]
+ [ GrB_Vector_nvals 4.33e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0237 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0273 sec ]
+ [ GrB_reduce 0.00215 sec ]
+ [ GxB_set (sparse to bitmap) 0.026 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.146 sec ]
+ [ GrB_Vector_nvals 6.06e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0328 sec ]
+ [ GxB_set 3.24e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0551 sec ]
+ [ GrB_Vector_nvals 2.53e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00891 sec ]
+ [ GxB_set 3.94e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.049 sec ]
+ [ GrB_Vector_nvals 2.31e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00619 sec ]
+ [ GxB_set (bitmap to sparse) 0.00761 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2058 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.0007 sec ]
+ [ GrB_Vector_nvals 3.44e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.46e-05 sec ]
+ [ GxB_set 2.86e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 7 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.31e-05 sec ]
+ [ GrB_Vector_nvals 1.16e-07 sec ]
+trial: 31 threads: 40 source:  98461503 time:     0.5690 sec
+ [ GrB_Matrix_nvals 1.29e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00168 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.95e-05 sec ]
+ [ GrB_reduce 3.54e-06 sec ]
+ [ GxB_set 4.64e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 9 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.97e-05 sec ]
+ [ GrB_Vector_nvals 2.65e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 8.99e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.41e-05 sec ]
+ [ GrB_reduce 1.13e-06 sec ]
+ [ GxB_set 1.77e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 44930 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00234 sec ]
+ [ GrB_Vector_nvals 1.34e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00177 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0012 sec ]
+ [ GrB_reduce 1.82e-05 sec ]
+ [ GxB_set 1.86e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 3.98465e+08 mwork 0 (use dense mask) (nthreads 40 fine: 128) 0.412 sec ]
+ [ GrB_Vector_nvals 4.53e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0268 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0376 sec ]
+ [ GrB_reduce 0.00377 sec ]
+ [ GxB_set (sparse to bitmap) 0.0291 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.128 sec ]
+ [ GrB_Vector_nvals 2.36e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0321 sec ]
+ [ GxB_set 3.71e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.052 sec ]
+ [ GrB_Vector_nvals 3.02e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00653 sec ]
+ [ GxB_set 3.82e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0504 sec ]
+ [ GrB_Vector_nvals 2.38e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00585 sec ]
+ [ GxB_set (bitmap to sparse) 0.00752 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 709 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00029 sec ]
+ [ GrB_Vector_nvals 1.66e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.12e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.00176 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.051 sec ]
+ [ GrB_Vector_nvals 2.46e-07 sec ]
+trial: 32 threads: 40 source:  71931337 time:     0.8520 sec
+ [ GrB_Matrix_nvals 1.92e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00166 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 5.01e-05 sec ]
+ [ GrB_reduce 3.13e-06 sec ]
+ [ GxB_set 2.44e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 6.87e-05 sec ]
+ [ GrB_Vector_nvals 2.24e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 9.47e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.37e-05 sec ]
+ [ GrB_reduce 1.05e-06 sec ]
+ [ GxB_set 1.97e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 8098 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000546 sec ]
+ [ GrB_Vector_nvals 1.21e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.000418 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00032 sec ]
+ [ GrB_reduce 5.26e-06 sec ]
+ [ GxB_set 1.86e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1.14778e+08 mwork 0 (use dense mask) (nthreads 40 fine: 104) 0.186 sec ]
+ [ GrB_Vector_nvals 2.63e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0239 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0284 sec ]
+ [ GrB_reduce 0.00218 sec ]
+ [ GxB_set (sparse to bitmap) 0.0267 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.145 sec ]
+ [ GrB_Vector_nvals 3.32e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0326 sec ]
+ [ GxB_set 3.25e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0544 sec ]
+ [ GrB_Vector_nvals 2.54e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00774 sec ]
+ [ GxB_set 4.49e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0499 sec ]
+ [ GrB_Vector_nvals 2.51e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00511 sec ]
+ [ GxB_set (bitmap to sparse) 0.0076 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1975 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000668 sec ]
+ [ GrB_Vector_nvals 2.1e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.51e-05 sec ]
+ [ GxB_set 2.88e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 9 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.44e-05 sec ]
+ [ GrB_Vector_nvals 9.69e-08 sec ]
+trial: 33 threads: 40 source: 103808468 time:     0.5740 sec
+ [ GrB_Matrix_nvals 1.42e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00166 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.9e-05 sec ]
+ [ GrB_reduce 3.03e-06 sec ]
+ [ GxB_set 2.64e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.74e-05 sec ]
+ [ GrB_Vector_nvals 2.66e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 8.48e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.35e-05 sec ]
+ [ GrB_reduce 9.18e-07 sec ]
+ [ GxB_set 2.13e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 250 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.77e-05 sec ]
+ [ GrB_Vector_nvals 9.87e-08 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.98e-05 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 2.63e-05 sec ]
+ [ GrB_reduce 1.75e-06 sec ]
+ [ GxB_set 1.76e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 5.31964e+06 mwork 0 (use dense mask in-place) (nthreads 40 fine hash: 82) 0.0567 sec ]
+ [ GrB_Vector_nvals 2.76e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00913 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00719 sec ]
+ [ GrB_reduce 0.000275 sec ]
+ [ GxB_set (sparse to bitmap) 0.0126 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.173 sec ]
+ [ GrB_Vector_nvals 3.31e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0324 sec ]
+ [ GxB_set 6.46e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0734 sec ]
+ [ GrB_Vector_nvals 2.57e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0251 sec ]
+ [ GxB_set 5.87e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0508 sec ]
+ [ GrB_Vector_nvals 2.53e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00631 sec ]
+ [ GxB_set (bitmap to sparse) 0.00755 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 15524 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00332 sec ]
+ [ GrB_Vector_nvals 2.06e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.45e-05 sec ]
+ [ GxB_set 5.42e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 43 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 3.97e-05 sec ]
+ [ GrB_Vector_nvals 7.36e-08 sec ]
+trial: 34 threads: 40 source:   4092345 time:     0.4604 sec
+ [ GrB_Matrix_nvals 1.2e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00169 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.73e-05 sec ]
+ [ GrB_reduce 3.31e-06 sec ]
+ [ GxB_set 2.87e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 7 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5e-05 sec ]
+ [ GrB_Vector_nvals 2.86e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 9.02e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.41e-05 sec ]
+ [ GrB_reduce 1.01e-06 sec ]
+ [ GxB_set 2.29e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 22452 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00135 sec ]
+ [ GrB_Vector_nvals 1.54e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.000997 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.000666 sec ]
+ [ GrB_reduce 1.02e-05 sec ]
+ [ GxB_set 1.38e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2.48631e+08 mwork 0 (use dense mask) (nthreads 40 fine: 119) 0.305 sec ]
+ [ GrB_Vector_nvals 5.71e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0256 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0327 sec ]
+ [ GrB_reduce 0.0031 sec ]
+ [ GxB_set (sparse to bitmap) 0.0279 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.135 sec ]
+ [ GrB_Vector_nvals 2.68e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0336 sec ]
+ [ GxB_set 3.68e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.052 sec ]
+ [ GrB_Vector_nvals 3.33e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00705 sec ]
+ [ GxB_set 5.73e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0506 sec ]
+ [ GrB_Vector_nvals 2.4e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00517 sec ]
+ [ GxB_set (bitmap to sparse) 0.00861 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1046 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000407 sec ]
+ [ GrB_Vector_nvals 2.19e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.43e-05 sec ]
+ [ GxB_set 2.97e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 3 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.54e-05 sec ]
+ [ GrB_Vector_nvals 9.59e-08 sec ]
+trial: 35 threads: 40 source: 115276241 time:     0.6931 sec
+ [ GrB_Matrix_nvals 1.35e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00169 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 5.01e-05 sec ]
+ [ GrB_reduce 4.25e-06 sec ]
+ [ GxB_set 2.93e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 24 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.3e-05 sec ]
+ [ GrB_Vector_nvals 2.85e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.03e-05 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.51e-05 sec ]
+ [ GrB_reduce 1.29e-06 sec ]
+ [ GxB_set 2.24e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 919427 mwork 0 (use dense mask in-place) (nthreads 14 fine hash: 15) 0.0272 sec ]
+ [ GrB_Vector_nvals 2.51e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00403 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00249 sec ]
+ [ GrB_reduce 5.69e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.00993 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.203 sec ]
+ [ GrB_Vector_nvals 4.68e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0334 sec ]
+ [ GxB_set 3.47e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.093 sec ]
+ [ GrB_Vector_nvals 2.8e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0286 sec ]
+ [ GxB_set 3.99e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0507 sec ]
+ [ GrB_Vector_nvals 3.59e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00602 sec ]
+ [ GxB_set (bitmap to sparse) 0.00757 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 41612 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00722 sec ]
+ [ GrB_Vector_nvals 2.11e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.78e-05 sec ]
+ [ GxB_set 2.2e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 99 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.65e-05 sec ]
+ [ GrB_Vector_nvals 1.05e-07 sec ]
+trial: 36 threads: 40 source:   4649343 time:     0.4756 sec
+ [ GrB_Matrix_nvals 9.78e-08 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00177 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 5.3e-05 sec ]
+ [ GrB_reduce 3.52e-06 sec ]
+ [ GxB_set 2.92e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 11 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.43e-05 sec ]
+ [ GrB_Vector_nvals 1.98e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 9.07e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.46e-05 sec ]
+ [ GrB_reduce 1.11e-06 sec ]
+ [ GxB_set 1.81e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 65418 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00294 sec ]
+ [ GrB_Vector_nvals 1.29e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00226 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00152 sec ]
+ [ GrB_reduce 2.44e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.00469 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.276 sec ]
+ [ GrB_Vector_nvals 2.12e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0317 sec ]
+ [ GxB_set 3.91e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.124 sec ]
+ [ GrB_Vector_nvals 2.72e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0311 sec ]
+ [ GxB_set 3.48e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.051 sec ]
+ [ GrB_Vector_nvals 2.6e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00647 sec ]
+ [ GxB_set (bitmap to sparse) 0.00875 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 211479 mwork 0 (use dense mask in-place) (nthreads 3 fine hash: 4) 0.0162 sec ]
+ [ GrB_Vector_nvals 3.83e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 4.67e-05 sec ]
+ [ GxB_set 2.61e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 542 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000136 sec ]
+ [ GrB_Vector_nvals 1.58e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 7.04e-06 sec ]
+ [ GxB_set 1.03e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 4 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 2.99e-05 sec ]
+ [ GrB_Vector_nvals 1.17e-07 sec ]
+trial: 37 threads: 40 source:  76656189 time:     0.5599 sec
+ [ GrB_Matrix_nvals 1.32e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00633 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 6.53e-05 sec ]
+ [ GrB_reduce 4.68e-06 sec ]
+ [ GxB_set 3.59e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 7.32e-05 sec ]
+ [ GrB_Vector_nvals 4.37e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.29e-05 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.9e-05 sec ]
+ [ GrB_reduce 1.23e-06 sec ]
+ [ GxB_set 2.53e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2512 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000275 sec ]
+ [ GrB_Vector_nvals 1.91e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00016 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.000133 sec ]
+ [ GrB_reduce 4.2e-06 sec ]
+ [ GxB_set 2.56e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 4.12271e+07 mwork 0 (use dense mask) (nthreads 40 fine: 91) 0.113 sec ]
+ [ GrB_Vector_nvals 2.7e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0211 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0213 sec ]
+ [ GrB_reduce 0.00129 sec ]
+ [ GxB_set (sparse to bitmap) 0.0229 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.154 sec ]
+ [ GrB_Vector_nvals 4.34e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0318 sec ]
+ [ GxB_set 3.03e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.059 sec ]
+ [ GrB_Vector_nvals 3.45e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0139 sec ]
+ [ GxB_set 3.4e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0499 sec ]
+ [ GrB_Vector_nvals 2.39e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00615 sec ]
+ [ GxB_set (bitmap to sparse) 0.00868 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 4138 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00128 sec ]
+ [ GrB_Vector_nvals 2.29e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.68e-05 sec ]
+ [ GxB_set 4.51e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 21 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 6.22e-05 sec ]
+ [ GrB_Vector_nvals 1.13e-07 sec ]
+trial: 38 threads: 40 source:  31312001 time:     0.5122 sec
+ [ GrB_Matrix_nvals 1.12e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00167 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.83e-05 sec ]
+ [ GrB_reduce 3.53e-06 sec ]
+ [ GxB_set 2.79e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 92 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 6.01e-05 sec ]
+ [ GrB_Vector_nvals 2.94e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.43e-05 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.89e-05 sec ]
+ [ GrB_reduce 1.67e-06 sec ]
+ [ GxB_set 1.95e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1.06763e+06 mwork 0 (use dense mask in-place) (nthreads 16 fine hash: 17) 0.0148 sec ]
+ [ GrB_Vector_nvals 2.51e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00363 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00241 sec ]
+ [ GrB_reduce 5.91e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.00592 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.203 sec ]
+ [ GrB_Vector_nvals 9.03e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.032 sec ]
+ [ GxB_set 3.71e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0931 sec ]
+ [ GrB_Vector_nvals 2.53e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0286 sec ]
+ [ GxB_set 3.38e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0509 sec ]
+ [ GrB_Vector_nvals 3.32e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00519 sec ]
+ [ GxB_set (bitmap to sparse) 0.00756 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 41249 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00736 sec ]
+ [ GrB_Vector_nvals 2.06e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.85e-05 sec ]
+ [ GxB_set 2.18e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 116 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.04e-05 sec ]
+ [ GrB_Vector_nvals 9.97e-08 sec ]
+trial: 39 threads: 40 source: 111334127 time:     0.4572 sec
+ [ GrB_Matrix_nvals 6.98e-08 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00172 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.76e-05 sec ]
+ [ GrB_reduce 3.49e-06 sec ]
+ [ GxB_set 2.84e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 8 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.14e-05 sec ]
+ [ GrB_Vector_nvals 3.37e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 9.06e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.4e-05 sec ]
+ [ GrB_reduce 1.43e-06 sec ]
+ [ GxB_set 2.14e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 16576 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00108 sec ]
+ [ GrB_Vector_nvals 1.39e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.000777 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.000533 sec ]
+ [ GrB_reduce 7.75e-06 sec ]
+ [ GxB_set 1.27e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1.97046e+08 mwork 0 (use dense mask) (nthreads 40 fine: 114) 0.26 sec ]
+ [ GrB_Vector_nvals 4.41e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0252 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0312 sec ]
+ [ GrB_reduce 0.00278 sec ]
+ [ GxB_set (sparse to bitmap) 0.0275 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.138 sec ]
+ [ GrB_Vector_nvals 2.35e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0316 sec ]
+ [ GxB_set 4.97e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0539 sec ]
+ [ GrB_Vector_nvals 2.43e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00645 sec ]
+ [ GxB_set 3.23e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.051 sec ]
+ [ GrB_Vector_nvals 2.38e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00588 sec ]
+ [ GxB_set (bitmap to sparse) 0.0076 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1294 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000481 sec ]
+ [ GrB_Vector_nvals 2.24e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.58e-05 sec ]
+ [ GxB_set 2.53e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 6 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.12e-05 sec ]
+ [ GrB_Vector_nvals 1.05e-07 sec ]
+trial: 40 threads: 40 source: 100962918 time:     0.6469 sec
+ [ GrB_Matrix_nvals 1.01e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00168 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.97e-05 sec ]
+ [ GrB_reduce 3.31e-06 sec ]
+ [ GxB_set 2.83e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 22 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.2e-05 sec ]
+ [ GrB_Vector_nvals 2.05e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1e-05 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.49e-05 sec ]
+ [ GrB_reduce 1.1e-06 sec ]
+ [ GxB_set 1.87e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 179135 mwork 0 (use dense mask in-place) (nthreads 2 fine hash: 3) 0.00604 sec ]
+ [ GrB_Vector_nvals 2.29e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00308 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00188 sec ]
+ [ GrB_reduce 4.03e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.00765 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.239 sec ]
+ [ GrB_Vector_nvals 4.76e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0328 sec ]
+ [ GxB_set 4.41e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.116 sec ]
+ [ GrB_Vector_nvals 4.27e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0306 sec ]
+ [ GxB_set 6.52e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.051 sec ]
+ [ GrB_Vector_nvals 4.13e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00972 sec ]
+ [ GxB_set (bitmap to sparse) 0.0088 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 116309 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.0176 sec ]
+ [ GrB_Vector_nvals 2.03e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 3.1e-05 sec ]
+ [ GxB_set 2.78e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 320 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 8.25e-05 sec ]
+ [ GrB_Vector_nvals 8.85e-08 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 6.2e-06 sec ]
+ [ GxB_set 1.2e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.02e-05 sec ]
+ [ GrB_Vector_nvals 6.71e-08 sec ]
+trial: 41 threads: 40 source:  41823215 time:     0.5271 sec
+ [ GrB_Matrix_nvals 9.03e-08 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00254 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 5.12e-05 sec ]
+ [ GrB_reduce 3.85e-06 sec ]
+ [ GxB_set 2.64e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 3 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.35e-05 sec ]
+ [ GrB_Vector_nvals 2.04e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 8.36e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.34e-05 sec ]
+ [ GrB_reduce 9.83e-07 sec ]
+ [ GxB_set 1.7e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 3599 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000284 sec ]
+ [ GrB_Vector_nvals 1.33e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.000192 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.000157 sec ]
+ [ GrB_reduce 3.61e-06 sec ]
+ [ GxB_set 2.24e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 5.60027e+07 mwork 0 (use dense mask) (nthreads 40 fine: 94) 0.13 sec ]
+ [ GrB_Vector_nvals 3.47e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0227 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0234 sec ]
+ [ GrB_reduce 0.00149 sec ]
+ [ GxB_set (sparse to bitmap) 0.0245 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.151 sec ]
+ [ GrB_Vector_nvals 2.56e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0319 sec ]
+ [ GxB_set 6.08e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0564 sec ]
+ [ GrB_Vector_nvals 3.33e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0115 sec ]
+ [ GxB_set 3.6e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0502 sec ]
+ [ GrB_Vector_nvals 2.56e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00517 sec ]
+ [ GxB_set (bitmap to sparse) 0.00755 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 3345 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00103 sec ]
+ [ GrB_Vector_nvals 2.23e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.55e-05 sec ]
+ [ GxB_set 2.83e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 17 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.54e-05 sec ]
+ [ GrB_Vector_nvals 9.69e-08 sec ]
+trial: 42 threads: 40 source:  22631240 time:     0.5205 sec
+ [ GrB_Matrix_nvals 1.19e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00259 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.87e-05 sec ]
+ [ GrB_reduce 3.19e-06 sec ]
+ [ GxB_set 3.45e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.25e-05 sec ]
+ [ GrB_Vector_nvals 2.02e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 8.46e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.34e-05 sec ]
+ [ GrB_reduce 8.87e-07 sec ]
+ [ GxB_set 1.64e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 3 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 3.72e-05 sec ]
+ [ GrB_Vector_nvals 7.92e-08 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 6.95e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.3e-05 sec ]
+ [ GrB_reduce 1.04e-06 sec ]
+ [ GxB_set 2.02e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 25795 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00145 sec ]
+ [ GrB_Vector_nvals 1.32e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0011 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.000762 sec ]
+ [ GrB_reduce 1.15e-05 sec ]
+ [ GxB_set 1.53e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2.70259e+08 mwork 0 (use dense mask) (nthreads 40 fine: 121) 0.343 sec ]
+ [ GrB_Vector_nvals 3.73e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0259 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0346 sec ]
+ [ GrB_reduce 0.00323 sec ]
+ [ GxB_set (sparse to bitmap) 0.0292 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.134 sec ]
+ [ GrB_Vector_nvals 3.56e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0315 sec ]
+ [ GxB_set 5.31e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0525 sec ]
+ [ GrB_Vector_nvals 2.46e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00606 sec ]
+ [ GxB_set 3.26e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0495 sec ]
+ [ GrB_Vector_nvals 3.36e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00509 sec ]
+ [ GxB_set (bitmap to sparse) 0.00843 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1006 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000384 sec ]
+ [ GrB_Vector_nvals 3.45e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.46e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.00166 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0505 sec ]
+ [ GrB_Vector_nvals 7.07e-07 sec ]
+trial: 43 threads: 40 source:  42848461 time:     0.7825 sec
+ [ GrB_Matrix_nvals 2.87e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00278 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 5.15e-05 sec ]
+ [ GrB_reduce 3.27e-06 sec ]
+ [ GxB_set 2.27e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.7e-05 sec ]
+ [ GrB_Vector_nvals 1.84e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 9.52e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.35e-05 sec ]
+ [ GrB_reduce 9e-07 sec ]
+ [ GxB_set 1.97e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 75330 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00354 sec ]
+ [ GrB_Vector_nvals 1.33e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00267 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00178 sec ]
+ [ GrB_reduce 2.97e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.00503 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.26 sec ]
+ [ GrB_Vector_nvals 2.69e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0322 sec ]
+ [ GxB_set 4.22e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.126 sec ]
+ [ GrB_Vector_nvals 2.53e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0307 sec ]
+ [ GxB_set 3.64e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0508 sec ]
+ [ GrB_Vector_nvals 2.58e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00561 sec ]
+ [ GxB_set (bitmap to sparse) 0.0088 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 193488 mwork 0 (use dense mask in-place) (nthreads 2 fine hash: 3) 0.0158 sec ]
+ [ GrB_Vector_nvals 3.18e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 4.26e-05 sec ]
+ [ GxB_set 2.95e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 511 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000123 sec ]
+ [ GrB_Vector_nvals 9.41e-08 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 6.78e-06 sec ]
+ [ GxB_set 1.13e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 3 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 2.93e-05 sec ]
+ [ GrB_Vector_nvals 6.71e-08 sec ]
+trial: 44 threads: 40 source:  79485148 time:     0.5469 sec
+ [ GrB_Matrix_nvals 6.8e-08 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.0034 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 5.13e-05 sec ]
+ [ GrB_reduce 3.56e-06 sec ]
+ [ GxB_set 3.17e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 4 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.26e-05 sec ]
+ [ GrB_Vector_nvals 2.1e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 9.21e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.37e-05 sec ]
+ [ GrB_reduce 9.74e-07 sec ]
+ [ GxB_set 1.82e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 11036 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000735 sec ]
+ [ GrB_Vector_nvals 2.14e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.000542 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.000377 sec ]
+ [ GrB_reduce 5.94e-06 sec ]
+ [ GxB_set 1.52e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1.41828e+08 mwork 0 (use dense mask) (nthreads 40 fine: 108) 0.212 sec ]
+ [ GrB_Vector_nvals 4.09e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0242 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0298 sec ]
+ [ GrB_reduce 0.00241 sec ]
+ [ GxB_set (sparse to bitmap) 0.0278 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.142 sec ]
+ [ GrB_Vector_nvals 8.47e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0316 sec ]
+ [ GxB_set 3.17e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0542 sec ]
+ [ GrB_Vector_nvals 2.39e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00837 sec ]
+ [ GxB_set 3.27e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0493 sec ]
+ [ GrB_Vector_nvals 2.35e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00511 sec ]
+ [ GxB_set (bitmap to sparse) 0.00835 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1676 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000579 sec ]
+ [ GrB_Vector_nvals 2.22e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.58e-05 sec ]
+ [ GxB_set 2.94e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 7 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.46e-05 sec ]
+ [ GrB_Vector_nvals 9.41e-08 sec ]
+trial: 45 threads: 40 source: 106818742 time:     0.6017 sec
+ [ GrB_Matrix_nvals 8.94e-08 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00166 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 6.39e-05 sec ]
+ [ GrB_reduce 3.02e-06 sec ]
+ [ GxB_set 2.62e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.89e-05 sec ]
+ [ GrB_Vector_nvals 3.31e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 8.85e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.36e-05 sec ]
+ [ GrB_reduce 8.54e-07 sec ]
+ [ GxB_set 2.01e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 25022 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00141 sec ]
+ [ GrB_Vector_nvals 1.37e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00108 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.000747 sec ]
+ [ GrB_reduce 1.1e-05 sec ]
+ [ GxB_set 2.16e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2.65824e+08 mwork 0 (use dense mask) (nthreads 40 fine: 120) 0.317 sec ]
+ [ GrB_Vector_nvals 4.31e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0258 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0345 sec ]
+ [ GrB_reduce 0.00315 sec ]
+ [ GxB_set (sparse to bitmap) 0.0281 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.134 sec ]
+ [ GrB_Vector_nvals 2.51e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0317 sec ]
+ [ GxB_set 4.71e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0526 sec ]
+ [ GrB_Vector_nvals 2.4e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00699 sec ]
+ [ GxB_set 5.97e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.049 sec ]
+ [ GrB_Vector_nvals 2.36e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00513 sec ]
+ [ GxB_set (bitmap to sparse) 0.00827 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 995 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000376 sec ]
+ [ GrB_Vector_nvals 3.65e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.42e-05 sec ]
+ [ GxB_set 2.73e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 4 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.16e-05 sec ]
+ [ GrB_Vector_nvals 1.02e-07 sec ]
+trial: 46 threads: 40 source:  73347974 time:     0.7026 sec
+ [ GrB_Matrix_nvals 9.22e-08 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00166 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.92e-05 sec ]
+ [ GrB_reduce 2.88e-06 sec ]
+ [ GxB_set 2.75e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.88e-05 sec ]
+ [ GrB_Vector_nvals 2.11e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 8.75e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.34e-05 sec ]
+ [ GrB_reduce 7.81e-07 sec ]
+ [ GxB_set 2.02e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 8133 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000535 sec ]
+ [ GrB_Vector_nvals 1.24e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.000412 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.000316 sec ]
+ [ GrB_reduce 5.27e-06 sec ]
+ [ GxB_set 1.89e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1.07395e+08 mwork 0 (use dense mask) (nthreads 40 fine: 103) 0.185 sec ]
+ [ GrB_Vector_nvals 2.51e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0236 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0279 sec ]
+ [ GrB_reduce 0.00217 sec ]
+ [ GxB_set (sparse to bitmap) 0.0259 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.147 sec ]
+ [ GrB_Vector_nvals 2.6e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0319 sec ]
+ [ GxB_set 6.48e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0548 sec ]
+ [ GrB_Vector_nvals 3.32e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00805 sec ]
+ [ GxB_set 3.34e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0502 sec ]
+ [ GrB_Vector_nvals 2.44e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00511 sec ]
+ [ GxB_set (bitmap to sparse) 0.00753 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2079 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000692 sec ]
+ [ GrB_Vector_nvals 2.24e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.47e-05 sec ]
+ [ GxB_set 5.84e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 8 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.33e-05 sec ]
+ [ GrB_Vector_nvals 9.97e-08 sec ]
+trial: 47 threads: 40 source:  78848445 time:     0.5733 sec
+ [ GrB_Matrix_nvals 9.5e-08 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00165 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.69e-05 sec ]
+ [ GrB_reduce 3.61e-06 sec ]
+ [ GxB_set 2.91e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 803 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000108 sec ]
+ [ GrB_Vector_nvals 3.4e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 5.19e-05 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.94e-05 sec ]
+ [ GrB_reduce 1.92e-06 sec ]
+ [ GxB_set 1.62e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1.34646e+07 mwork 0 (use dense mask) (nthreads 40 fine: 84) 0.0795 sec ]
+ [ GrB_Vector_nvals 4.12e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0166 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0135 sec ]
+ [ GrB_reduce 0.00063 sec ]
+ [ GxB_set (sparse to bitmap) 0.0191 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.163 sec ]
+ [ GrB_Vector_nvals 3.31e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0332 sec ]
+ [ GxB_set 3.54e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.065 sec ]
+ [ GrB_Vector_nvals 2.39e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0203 sec ]
+ [ GxB_set 4e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0494 sec ]
+ [ GrB_Vector_nvals 3.08e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0059 sec ]
+ [ GxB_set (bitmap to sparse) 0.0075 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 8500 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00214 sec ]
+ [ GrB_Vector_nvals 2.59e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.28e-05 sec ]
+ [ GxB_set 2.28e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 30 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 3.5e-05 sec ]
+ [ GrB_Vector_nvals 8.75e-08 sec ]
+trial: 48 threads: 40 source: 109920510 time:     0.4778 sec
+ [ GrB_Matrix_nvals 1.81e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00169 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.81e-05 sec ]
+ [ GrB_reduce 3.23e-06 sec ]
+ [ GxB_set 2.87e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 4 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.06e-05 sec ]
+ [ GrB_Vector_nvals 3.2e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 8.79e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.35e-05 sec ]
+ [ GrB_reduce 9.95e-07 sec ]
+ [ GxB_set 1.73e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 35891 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00197 sec ]
+ [ GrB_Vector_nvals 1.15e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00142 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.000985 sec ]
+ [ GrB_reduce 1.47e-05 sec ]
+ [ GxB_set 1.6e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 3.40362e+08 mwork 0 (use dense mask) (nthreads 40 fine: 125) 0.377 sec ]
+ [ GrB_Vector_nvals 4.14e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0265 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0363 sec ]
+ [ GrB_reduce 0.00371 sec ]
+ [ GxB_set (sparse to bitmap) 0.0287 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.131 sec ]
+ [ GrB_Vector_nvals 2.65e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0314 sec ]
+ [ GxB_set 3.2e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0523 sec ]
+ [ GrB_Vector_nvals 2.56e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0059 sec ]
+ [ GxB_set 3.79e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0503 sec ]
+ [ GrB_Vector_nvals 3.09e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00509 sec ]
+ [ GxB_set (bitmap to sparse) 0.00755 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 818 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000314 sec ]
+ [ GrB_Vector_nvals 2.1e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.23e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.00174 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0507 sec ]
+ [ GrB_Vector_nvals 2.62e-07 sec ]
+trial: 49 threads: 40 source: 121492133 time:     0.8154 sec
+ [ GrB_Matrix_nvals 2.7e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00165 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.96e-05 sec ]
+ [ GrB_reduce 3.1e-06 sec ]
+ [ GxB_set 3.01e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 6 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.43e-05 sec ]
+ [ GrB_Vector_nvals 2.06e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 9.45e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.41e-05 sec ]
+ [ GrB_reduce 1.04e-06 sec ]
+ [ GxB_set 1.61e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 10231 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000701 sec ]
+ [ GrB_Vector_nvals 1.43e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.000496 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00038 sec ]
+ [ GrB_reduce 5.48e-06 sec ]
+ [ GxB_set 1.76e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1.35385e+08 mwork 0 (use dense mask) (nthreads 40 fine: 107) 0.201 sec ]
+ [ GrB_Vector_nvals 4.09e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0242 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0296 sec ]
+ [ GrB_reduce 0.00234 sec ]
+ [ GxB_set (sparse to bitmap) 0.0267 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.142 sec ]
+ [ GrB_Vector_nvals 4.14e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0316 sec ]
+ [ GxB_set 3.89e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.054 sec ]
+ [ GrB_Vector_nvals 2.65e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00744 sec ]
+ [ GxB_set 5.31e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0494 sec ]
+ [ GrB_Vector_nvals 2.36e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00516 sec ]
+ [ GxB_set (bitmap to sparse) 0.00759 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1761 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000614 sec ]
+ [ GrB_Vector_nvals 4.55e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.52e-05 sec ]
+ [ GxB_set 2.76e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 8 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.36e-05 sec ]
+ [ GrB_Vector_nvals 9.5e-08 sec ]
+trial: 50 threads: 40 source: 101037296 time:     0.5857 sec
+ [ GrB_Matrix_nvals 1.35e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00165 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.9e-05 sec ]
+ [ GrB_reduce 3.45e-06 sec ]
+ [ GxB_set 3.01e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.89e-05 sec ]
+ [ GrB_Vector_nvals 2.13e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 8.53e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.35e-05 sec ]
+ [ GrB_reduce 8.86e-07 sec ]
+ [ GxB_set 2.03e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2531 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000215 sec ]
+ [ GrB_Vector_nvals 1.2e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.000139 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.000118 sec ]
+ [ GrB_reduce 3.36e-06 sec ]
+ [ GxB_set 1.79e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 3.81769e+07 mwork 0 (use dense mask) (nthreads 40 fine: 90) 0.107 sec ]
+ [ GrB_Vector_nvals 4.07e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0218 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0205 sec ]
+ [ GrB_reduce 0.00124 sec ]
+ [ GxB_set (sparse to bitmap) 0.0225 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.155 sec ]
+ [ GrB_Vector_nvals 2.62e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.032 sec ]
+ [ GxB_set 4.04e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.059 sec ]
+ [ GrB_Vector_nvals 2.38e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0138 sec ]
+ [ GxB_set 5.8e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0491 sec ]
+ [ GrB_Vector_nvals 3.48e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00591 sec ]
+ [ GxB_set (bitmap to sparse) 0.00759 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 4374 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00132 sec ]
+ [ GrB_Vector_nvals 2.24e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.52e-05 sec ]
+ [ GxB_set 2.83e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 15 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.5e-05 sec ]
+ [ GrB_Vector_nvals 9.78e-08 sec ]
+trial: 51 threads: 40 source:  15438600 time:     0.5005 sec
+ [ GrB_Matrix_nvals 1.61e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00166 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.63e-05 sec ]
+ [ GrB_reduce 4.09e-06 sec ]
+ [ GxB_set 2.49e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.91e-05 sec ]
+ [ GrB_Vector_nvals 2.11e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 8.71e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.36e-05 sec ]
+ [ GrB_reduce 8.52e-07 sec ]
+ [ GxB_set 1.84e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 267 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.84e-05 sec ]
+ [ GrB_Vector_nvals 1.24e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 2.01e-05 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 2.67e-05 sec ]
+ [ GrB_reduce 1.63e-06 sec ]
+ [ GxB_set 1.98e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 5.38384e+06 mwork 0 (use dense mask in-place) (nthreads 40 fine hash: 83) 0.0977 sec ]
+ [ GrB_Vector_nvals 3.05e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0104 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00762 sec ]
+ [ GrB_reduce 0.000298 sec ]
+ [ GxB_set (sparse to bitmap) 0.0123 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.171 sec ]
+ [ GrB_Vector_nvals 4.41e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0335 sec ]
+ [ GxB_set 5.66e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0719 sec ]
+ [ GrB_Vector_nvals 2.44e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0251 sec ]
+ [ GxB_set 3.84e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0494 sec ]
+ [ GrB_Vector_nvals 7.28e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00514 sec ]
+ [ GxB_set (bitmap to sparse) 0.0076 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 14643 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00311 sec ]
+ [ GrB_Vector_nvals 5.13e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.41e-05 sec ]
+ [ GxB_set 2.1e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 42 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 3.8e-05 sec ]
+ [ GrB_Vector_nvals 7.92e-08 sec ]
+trial: 52 threads: 40 source:   4584784 time:     0.4978 sec
+ [ GrB_Matrix_nvals 1.04e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00169 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.7e-05 sec ]
+ [ GrB_reduce 3.8e-06 sec ]
+ [ GxB_set 2.98e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.94e-05 sec ]
+ [ GrB_Vector_nvals 3.43e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 8.94e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.34e-05 sec ]
+ [ GrB_reduce 8.6e-07 sec ]
+ [ GxB_set 1.87e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 8 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 3.97e-05 sec ]
+ [ GrB_Vector_nvals 9.69e-08 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 7.8e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.37e-05 sec ]
+ [ GrB_reduce 9.63e-07 sec ]
+ [ GxB_set 2.01e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 61372 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00274 sec ]
+ [ GrB_Vector_nvals 1.13e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00219 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00148 sec ]
+ [ GrB_reduce 2.33e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.00503 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.268 sec ]
+ [ GrB_Vector_nvals 3.67e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0313 sec ]
+ [ GxB_set 4.3e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.129 sec ]
+ [ GrB_Vector_nvals 4.24e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0312 sec ]
+ [ GxB_set 3.67e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0502 sec ]
+ [ GrB_Vector_nvals 2.44e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00567 sec ]
+ [ GxB_set (bitmap to sparse) 0.0102 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 223230 mwork 0 (use dense mask in-place) (nthreads 3 fine hash: 4) 0.0171 sec ]
+ [ GrB_Vector_nvals 3.74e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 4.88e-05 sec ]
+ [ GxB_set 2.91e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 565 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000137 sec ]
+ [ GrB_Vector_nvals 9.59e-08 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 6.92e-06 sec ]
+ [ GxB_set 1.33e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 4 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 2.9e-05 sec ]
+ [ GrB_Vector_nvals 6.89e-08 sec ]
+trial: 53 threads: 40 source: 124503845 time:     0.5566 sec
+ [ GrB_Matrix_nvals 7.17e-08 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00417 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 5.43e-05 sec ]
+ [ GrB_reduce 3.91e-06 sec ]
+ [ GxB_set 3.07e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 30 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.94e-05 sec ]
+ [ GrB_Vector_nvals 3.03e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.15e-05 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.7e-05 sec ]
+ [ GrB_reduce 1.54e-06 sec ]
+ [ GxB_set 1.81e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 801920 mwork 0 (use dense mask in-place) (nthreads 12 fine hash: 13) 0.0124 sec ]
+ [ GrB_Vector_nvals 2.72e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00335 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00205 sec ]
+ [ GrB_reduce 5.22e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.0075 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.207 sec ]
+ [ GrB_Vector_nvals 5.44e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0332 sec ]
+ [ GxB_set 2.73e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0963 sec ]
+ [ GrB_Vector_nvals 3.19e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.029 sec ]
+ [ GxB_set 4.36e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0507 sec ]
+ [ GrB_Vector_nvals 4.23e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00526 sec ]
+ [ GxB_set (bitmap to sparse) 0.0084 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 47808 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00808 sec ]
+ [ GrB_Vector_nvals 2.03e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.78e-05 sec ]
+ [ GxB_set 1.96e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 127 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.12e-05 sec ]
+ [ GrB_Vector_nvals 1.12e-07 sec ]
+trial: 54 threads: 40 source:  87241743 time:     0.4683 sec
+ [ GrB_Matrix_nvals 7.26e-08 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00173 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.75e-05 sec ]
+ [ GrB_reduce 3.81e-06 sec ]
+ [ GxB_set 3.04e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.06e-05 sec ]
+ [ GrB_Vector_nvals 1.78e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 9.04e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.35e-05 sec ]
+ [ GrB_reduce 8.15e-07 sec ]
+ [ GxB_set 1.98e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 8077 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000498 sec ]
+ [ GrB_Vector_nvals 1.2e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.000404 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.000313 sec ]
+ [ GrB_reduce 5.16e-06 sec ]
+ [ GxB_set 1.99e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1.06303e+08 mwork 0 (use dense mask) (nthreads 40 fine: 103) 0.182 sec ]
+ [ GrB_Vector_nvals 2.64e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0237 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0278 sec ]
+ [ GrB_reduce 0.00213 sec ]
+ [ GxB_set (sparse to bitmap) 0.0259 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.146 sec ]
+ [ GrB_Vector_nvals 2.6e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0318 sec ]
+ [ GxB_set 8.06e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0549 sec ]
+ [ GrB_Vector_nvals 2.52e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00812 sec ]
+ [ GxB_set 6.8e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0503 sec ]
+ [ GrB_Vector_nvals 2.46e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00511 sec ]
+ [ GxB_set (bitmap to sparse) 0.0076 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2113 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000702 sec ]
+ [ GrB_Vector_nvals 2.21e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.39e-05 sec ]
+ [ GxB_set 2.02e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 6 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.12e-05 sec ]
+ [ GrB_Vector_nvals 1.02e-07 sec ]
+trial: 55 threads: 40 source: 108297008 time:     0.5702 sec
+ [ GrB_Matrix_nvals 1.61e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00166 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.78e-05 sec ]
+ [ GrB_reduce 3.05e-06 sec ]
+ [ GxB_set 2.71e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 10 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.21e-05 sec ]
+ [ GrB_Vector_nvals 2.15e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 9.78e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.46e-05 sec ]
+ [ GrB_reduce 1.16e-06 sec ]
+ [ GxB_set 1.96e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 98186 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00426 sec ]
+ [ GrB_Vector_nvals 1.24e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00329 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00213 sec ]
+ [ GrB_reduce 3.65e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.00562 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.252 sec ]
+ [ GrB_Vector_nvals 2.64e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0324 sec ]
+ [ GxB_set 3.67e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.123 sec ]
+ [ GrB_Vector_nvals 4.57e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.031 sec ]
+ [ GxB_set 3.37e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0513 sec ]
+ [ GrB_Vector_nvals 2.57e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00561 sec ]
+ [ GxB_set (bitmap to sparse) 0.00767 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 165645 mwork 0 (use dense mask in-place) (nthreads 2 fine hash: 3) 0.0142 sec ]
+ [ GrB_Vector_nvals 3.22e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 3.88e-05 sec ]
+ [ GxB_set 2.92e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 441 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000108 sec ]
+ [ GrB_Vector_nvals 9.69e-08 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 6.56e-06 sec ]
+ [ GxB_set 1.27e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 2.87e-05 sec ]
+ [ GrB_Vector_nvals 8.01e-08 sec ]
+trial: 56 threads: 40 source:  33955082 time:     0.5353 sec
+ [ GrB_Matrix_nvals 2.1e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00671 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 6.94e-05 sec ]
+ [ GrB_reduce 4.86e-06 sec ]
+ [ GxB_set 3.71e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 73 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 8.3e-05 sec ]
+ [ GrB_Vector_nvals 4.33e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 2.11e-05 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 2.51e-05 sec ]
+ [ GrB_reduce 2.11e-06 sec ]
+ [ GxB_set 2.31e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1.36582e+06 mwork 0 (use dense mask in-place) (nthreads 20 fine hash: 21) 0.0301 sec ]
+ [ GrB_Vector_nvals 4.07e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00436 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00392 sec ]
+ [ GrB_reduce 7.41e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.0079 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.197 sec ]
+ [ GrB_Vector_nvals 1.02e-06 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0321 sec ]
+ [ GxB_set 3.73e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0886 sec ]
+ [ GrB_Vector_nvals 2.9e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0281 sec ]
+ [ GxB_set 3.77e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0508 sec ]
+ [ GrB_Vector_nvals 4.49e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00518 sec ]
+ [ GxB_set (bitmap to sparse) 0.00756 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 33973 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00627 sec ]
+ [ GrB_Vector_nvals 2.08e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.75e-05 sec ]
+ [ GxB_set 2.11e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 97 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.7e-05 sec ]
+ [ GrB_Vector_nvals 1.16e-07 sec ]
+trial: 57 threads: 40 source:  79934823 time:     0.4700 sec
+ [ GrB_Matrix_nvals 6.89e-08 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00171 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.99e-05 sec ]
+ [ GrB_reduce 3.93e-06 sec ]
+ [ GxB_set 2.97e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 8 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.18e-05 sec ]
+ [ GrB_Vector_nvals 2.12e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 9.39e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.41e-05 sec ]
+ [ GrB_reduce 1.11e-06 sec ]
+ [ GxB_set 2.12e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 31949 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00172 sec ]
+ [ GrB_Vector_nvals 1.62e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00133 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.000917 sec ]
+ [ GrB_reduce 1.36e-05 sec ]
+ [ GxB_set 2.64e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 3.12136e+08 mwork 0 (use dense mask) (nthreads 40 fine: 124) 0.35 sec ]
+ [ GrB_Vector_nvals 4.48e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0262 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0356 sec ]
+ [ GrB_reduce 0.0036 sec ]
+ [ GxB_set (sparse to bitmap) 0.0285 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.132 sec ]
+ [ GrB_Vector_nvals 7.61e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0309 sec ]
+ [ GxB_set 5.31e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0528 sec ]
+ [ GrB_Vector_nvals 2.4e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00597 sec ]
+ [ GxB_set 4.09e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0495 sec ]
+ [ GrB_Vector_nvals 2.47e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00513 sec ]
+ [ GxB_set (bitmap to sparse) 0.00752 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 873 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00034 sec ]
+ [ GrB_Vector_nvals 2.18e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.25e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.00287 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.051 sec ]
+ [ GrB_Vector_nvals 4.37e-07 sec ]
+trial: 58 threads: 40 source:   8608481 time:     0.7890 sec
+ [ GrB_Matrix_nvals 1.67e-07 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00164 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 6.64e-05 sec ]
+ [ GrB_reduce 3.33e-06 sec ]
+ [ GxB_set 3.99e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.77e-05 sec ]
+ [ GrB_Vector_nvals 3.47e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 9.59e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.38e-05 sec ]
+ [ GrB_reduce 8.54e-07 sec ]
+ [ GxB_set 2.47e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 829 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000102 sec ]
+ [ GrB_Vector_nvals 1.3e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 5.28e-05 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 5.16e-05 sec ]
+ [ GrB_reduce 2.35e-06 sec ]
+ [ GxB_set 1.7e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1.43056e+07 mwork 0 (use dense mask) (nthreads 40 fine: 85) 0.0719 sec ]
+ [ GrB_Vector_nvals 2.51e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0167 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0135 sec ]
+ [ GrB_reduce 0.000647 sec ]
+ [ GxB_set (sparse to bitmap) 0.0192 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.162 sec ]
+ [ GrB_Vector_nvals 2.62e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.032 sec ]
+ [ GxB_set 3.91e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.064 sec ]
+ [ GrB_Vector_nvals 2.49e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.02 sec ]
+ [ GxB_set 3.41e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0495 sec ]
+ [ GrB_Vector_nvals 2.43e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0051 sec ]
+ [ GxB_set (bitmap to sparse) 0.0075 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 8412 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00214 sec ]
+ [ GrB_Vector_nvals 1.71e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.21e-05 sec ]
+ [ GxB_set 2.24e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 25 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 3.49e-05 sec ]
+ [ GrB_Vector_nvals 7.17e-08 sec ]
+trial: 59 threads: 40 source:  82435063 time:     0.4672 sec
+ [ GrB_Matrix_nvals 8.2e-08 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.0028 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.89e-05 sec ]
+ [ GrB_reduce 3.08e-06 sec ]
+ [ GxB_set 3.03e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 7 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.08e-05 sec ]
+ [ GrB_Vector_nvals 1.84e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 9.13e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.39e-05 sec ]
+ [ GrB_reduce 9.11e-07 sec ]
+ [ GxB_set 2.08e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 78399 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00365 sec ]
+ [ GrB_Vector_nvals 1.38e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00272 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0018 sec ]
+ [ GrB_reduce 2.94e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.00509 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.259 sec ]
+ [ GrB_Vector_nvals 5.36e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0327 sec ]
+ [ GxB_set 4.27e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.126 sec ]
+ [ GrB_Vector_nvals 1.54e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.031 sec ]
+ [ GxB_set 3.09e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.051 sec ]
+ [ GrB_Vector_nvals 3.6e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00568 sec ]
+ [ GxB_set (bitmap to sparse) 0.00855 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 189592 mwork 0 (use dense mask in-place) (nthreads 2 fine hash: 3) 0.0158 sec ]
+ [ GrB_Vector_nvals 3.35e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 4.23e-05 sec ]
+ [ GxB_set 2.84e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 499 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000121 sec ]
+ [ GrB_Vector_nvals 8.57e-08 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 6.74e-06 sec ]
+ [ GxB_set 1.31e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 3 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 2.89e-05 sec ]
+ [ GrB_Vector_nvals 7.54e-08 sec ]
+trial: 60 threads: 40 source:  46579271 time:     0.5469 sec
+ [ GrB_Matrix_nvals 8.66e-08 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00422 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 5.31e-05 sec ]
+ [ GrB_reduce 3.5e-06 sec ]
+ [ GxB_set 3.24e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 25 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.55e-05 sec ]
+ [ GrB_Vector_nvals 3.59e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.08e-05 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.55e-05 sec ]
+ [ GrB_reduce 1.26e-06 sec ]
+ [ GxB_set 2.03e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 527116 mwork 0 (use dense mask in-place) (nthreads 8 fine hash: 9) 0.0124 sec ]
+ [ GrB_Vector_nvals 3.26e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00325 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00172 sec ]
+ [ GrB_reduce 4.27e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.0105 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.215 sec ]
+ [ GrB_Vector_nvals 4.43e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0321 sec ]
+ [ GxB_set 5.96e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.102 sec ]
+ [ GrB_Vector_nvals 2.64e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0296 sec ]
+ [ GxB_set 3.18e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0501 sec ]
+ [ GrB_Vector_nvals 2.42e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00531 sec ]
+ [ GxB_set (bitmap to sparse) 0.00759 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 61079 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.0101 sec ]
+ [ GrB_Vector_nvals 2.04e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 2.01e-05 sec ]
+ [ GxB_set 2.37e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 151 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.5e-05 sec ]
+ [ GrB_Vector_nvals 1.05e-07 sec ]
+trial: 61 threads: 40 source:    515421 time:     0.4842 sec
+ [ GrB_Matrix_nvals 8.94e-08 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00172 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.83e-05 sec ]
+ [ GrB_reduce 3.76e-06 sec ]
+ [ GxB_set 3.15e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 5 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.02e-05 sec ]
+ [ GrB_Vector_nvals 1.67e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 9.38e-06 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.42e-05 sec ]
+ [ GrB_reduce 1.18e-06 sec ]
+ [ GxB_set 1.64e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 323710 mwork 0 (use dense mask in-place) (nthreads 4 fine hash: 5) 0.0115 sec ]
+ [ GrB_Vector_nvals 3.14e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00332 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.00189 sec ]
+ [ GrB_reduce 4.86e-05 sec ]
+ [ GxB_set (sparse to bitmap) 0.00839 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.225 sec ]
+ [ GrB_Vector_nvals 4.84e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0329 sec ]
+ [ GxB_set 3.86e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.107 sec ]
+ [ GrB_Vector_nvals 4.1e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0305 sec ]
+ [ GxB_set 4.65e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0504 sec ]
+ [ GrB_Vector_nvals 2.81e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00615 sec ]
+ [ GxB_set (bitmap to sparse) 0.00761 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 80284 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.0127 sec ]
+ [ GrB_Vector_nvals 2.04e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 2.24e-05 sec ]
+ [ GxB_set 2.26e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 192 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 5.87e-05 sec ]
+ [ GrB_Vector_nvals 8.66e-08 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 5.84e-06 sec ]
+ [ GxB_set 1.09e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 2.77e-05 sec ]
+ [ GrB_Vector_nvals 7.82e-08 sec ]
+trial: 62 threads: 40 source: 121530467 time:     0.5002 sec
+ [ GrB_Matrix_nvals 9.03e-08 sec ]
+ [ GxB_set (vector option) (sparse to bitmap) 0.00174 sec ]
+ [ GrB_assign (wait: 0 zombies, 1 pending) (hyper to sparse) (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 4.99e-05 sec ]
+ [ GrB_reduce 3.49e-06 sec ]
+ [ GxB_set 2.81e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 1 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.98e-05 sec ]
+ [ GrB_Vector_nvals 2.08e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 2.07e-05 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 1.34e-05 sec ]
+ [ GrB_reduce 9.01e-07 sec ]
+ [ GxB_set 1.63e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 2594 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.000206 sec ]
+ [ GrB_Vector_nvals 1.4e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.000142 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.000118 sec ]
+ [ GrB_reduce 2.96e-06 sec ]
+ [ GxB_set 1.97e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 3.71318e+07 mwork 0 (use dense mask) (nthreads 40 fine: 90) 0.104 sec ]
+ [ GrB_Vector_nvals 2.89e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.02 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C empty) Method 25: (C empty)<M> = (Z full) 0.0202 sec ]
+ [ GrB_reduce 0.00117 sec ]
+ [ GxB_set (sparse to bitmap) 0.0224 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.156 sec ]
+ [ GrB_Vector_nvals 4.35e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0311 sec ]
+ [ GxB_set 4.01e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0589 sec ]
+ [ GrB_Vector_nvals 2.76e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.0148 sec ]
+ [ GxB_set 4e-07 sec ]
+ [ GrB_mxv (C bitmap) (B bitmap) (M bitmap) C<!M>=A'*B, dot_product 
+C_sparsity 4 naslice 10240 nbslice 1
+/home/faculty/davis/sparse/GraphBLAS/Source/Generated/GB_AxB__any_firstj1_int32.c:
+0.0489 sec ]
+ [ GrB_Vector_nvals 2.69e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 0.00516 sec ]
+ [ GxB_set (bitmap to sparse) 0.0075 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 4587 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 0.00135 sec ]
+ [ GrB_Vector_nvals 2.16e-07 sec ]
+ [ GrB_assign Method 06d: (C full)<Z> = Z 1.52e-05 sec ]
+ [ GxB_set 2.51e-07 sec ]
+ [ GrB_vxm (M bitmap) C<!M>=A*B, saxpy axbwork 17 mwork 0 (use dense mask in-place) (nthreads 1 fine hash: 1) 4.58e-05 sec ]
+ [ GrB_Vector_nvals 1.11e-07 sec ]
+trial: 63 threads: 40 source: 127978736 time:     0.4948 sec
+:40:pushpull (onlytree):        0.563 (sec), rate: 7498.10
+phase  0:       3.8788 msec
+phase  1:   28454.6966 msec
+phase  3:       0.5192 msec
+phase  4:      95.3059 msec
+phase  5:     639.9298 msec
+phase  6:     293.1255 msec
+phase  7:    7261.4767 msec
+phase  8:       0.2681 msec
+phase  9:    6428.8663 msec
+phase 10:     142.1476 msec
+phase 11:       0.3692 msec
+phase 12:     689.3143 msec
+phase 17:     327.5762 msec
+phase 18:    2990.1901 msec
+phase 19:   16841.7939 msec
+

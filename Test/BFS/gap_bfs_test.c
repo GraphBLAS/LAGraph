@@ -46,7 +46,8 @@
 #include "bfs_test.h"
 #include "../../../GraphBLAS/Source/GB_Global.h"
 
-#define NTHREAD_LIST 2
+// #define NTHREAD_LIST 2
+#define NTHREAD_LIST 1
 #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 8
@@ -76,6 +77,12 @@ int main (int argc, char **argv)
     printf ("SuiteSparse GraphBLAS v4.0 or later required\n") ;
     return (GrB_INVALID_VALUE) ;
 #else
+    printf ("%s v%d.%d.%d [%s] with bitmap parent\n",
+        GxB_IMPLEMENTATION_NAME,
+        GxB_IMPLEMENTATION_MAJOR,
+        GxB_IMPLEMENTATION_MINOR,
+        GxB_IMPLEMENTATION_SUB,
+        GxB_IMPLEMENTATION_DATE) ;
 
     GrB_Info info ;
 
@@ -239,10 +246,13 @@ int main (int argc, char **argv)
 
 #if 1
     LAGraph_tic (tic);
-    bool A_is_symmetric ;
-    LAGRAPH_OK (GrB_Matrix_new (&AT, GrB_BOOL, n, n)) ;
-    LAGRAPH_OK (GrB_transpose (AT, NULL, NULL, A, NULL)) ;
-    LAGRAPH_OK (LAGraph_isequal (&A_is_symmetric, A, AT, NULL)) ;
+    bool A_is_symmetric = (n == 134217726) ;        // HACK for kron
+    if (!A_is_symmetric)
+    {
+        LAGRAPH_OK (GrB_Matrix_new (&AT, GrB_BOOL, n, n)) ;
+        LAGRAPH_OK (GrB_transpose (AT, NULL, NULL, A, NULL)) ;
+        LAGRAPH_OK (LAGraph_isequal (&A_is_symmetric, A, AT, NULL)) ;
+    }
     if (A_is_symmetric)
     {
         printf ("A is symmetric\n") ;
@@ -443,7 +453,7 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
 #if 1
-    printf ( "pushpull (no log, with tree only):\n") ;
+    printf ( "pushpull (no log, with tree only (PI BITMAP)):\n") ;
 
     for (int tt = 1 ; tt <= nt ; tt++)
     {
@@ -461,6 +471,7 @@ int main (int argc, char **argv)
             s-- ; // convert from 1-based to 0-based
             GrB_free (&pi) ;
             LAGraph_tic (tic) ;
+            // USING BITMAP PARENT:
             LAGRAPH_OK (LAGraph_bfs_parent (&pi, A, AT, Degree, s)) ;
             double ttrial = LAGraph_toc (tic) ;
             t [nthreads] += ttrial ;
@@ -473,7 +484,7 @@ int main (int argc, char **argv)
             nthreads, t [nthreads], 1e-6*((double) nvals) / t [nthreads]) ;
         if (n > 1000)
         {
-            LAGr_log (matrix_name, "treeonly:pushpull", nthreads, t [nthreads]);
+//            LAGr_log (matrix_name, "treeonly:pushpull", nthreads, t [nthreads]);
         }
         for (int k = 0 ; k < 20 ; k++)
         {
@@ -499,7 +510,7 @@ int main (int argc, char **argv)
     // BFS: all-push, with tree only
     //--------------------------------------------------------------------------
 
-#if 1
+#if 0
     printf ( "allpush (no log, with tree only):\n") ;
 
     for (int tt = 1 ; tt <= nt ; tt++)

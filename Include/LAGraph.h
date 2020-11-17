@@ -1066,6 +1066,18 @@ GrB_Info LAGraph_bfs_parent // push-pull BFS, compute the tree only
     int64_t source          // starting node of the BFS
 ) ;
 
+GrB_Info LAGraph_bfs_parent2 // push-pull BFS, compute the tree only
+(
+    // output:
+    GrB_Vector *pi_output,  // pi(i) = p+1 if p is the parent of node i
+    // inputs:
+    GrB_Matrix A,           // input graph, any type
+    GrB_Matrix AT,          // transpose of A (optional; push-only if NULL)
+    GrB_Vector Degree,      // Degree(i) is the out-degree of node i
+                            // (optional: push-only if NULL)
+    int64_t source          // starting node of the BFS
+) ;
+
 GrB_Info bfs_log                // push-pull BFS, or push-only if AT = NULL
 (
     GrB_Vector *v_output,   // v(i) is the BFS level of node i in the graph

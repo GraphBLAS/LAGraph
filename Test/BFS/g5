@@ -1,0 +1,15 @@
+:40:pushpull (onlytree):        0.551 (sec), rate: 7657.81
+phase  0:      18.5305 msec
+phase  1:   27602.4088 msec
+phase  3:       0.5833 msec
+phase  4:      93.7270 msec
+phase  5:     645.1198 msec
+phase  6:     281.6696 msec
+phase  7:    7260.5120 msec
+phase  8:       0.2694 msec
+phase  9:    6415.4661 msec
+phase 10:     143.8931 msec
+phase 11:       0.3776 msec
+phase 12:     700.4224 msec
+phase 15:    3000.9885 msec
+phase 16:   16187.6320 msec

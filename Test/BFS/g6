@@ -1,0 +1,99 @@
+hypersparse $ pwd
+/home/faculty/davis/sparse/LAGraph/Test/BFS
+hypersparse $ ./do_kron
+SuiteSparse:GraphBLAS v4.0.1 [Nov 16, 2020 (DRAFT)] with bitmap parent
+threads to test:  40
+chunk: 65536
+matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+sources: /home/faculty/davis/GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 32.136
+compute degree: 0.227803 sec
+A is symmetric
+transpose time: 71.9099
+
+==========input graph: nodes: 134217726 edges: 4223264644 ntrials: 64
+pushpull (no log, with tree only (PI BITMAP)):
+
+------------------------------------------- threads: 40
+trial:  0 threads: 40 source:   2338012 time:     0.6076 sec
+trial:  1 threads: 40 source:  31997659 time:     0.5679 sec
+trial:  2 threads: 40 source:  23590940 time:     0.5893 sec
+trial:  3 threads: 40 source:  43400604 time:     0.6215 sec
+trial:  4 threads: 40 source:  75337937 time:     0.6173 sec
+trial:  5 threads: 40 source:    169867 time:     0.5906 sec
+trial:  6 threads: 40 source: 104041220 time:     0.6433 sec
+trial:  7 threads: 40 source:  94177942 time:     0.5743 sec
+trial:  8 threads: 40 source:  32871357 time:     0.6467 sec
+trial:  9 threads: 40 source:  56230002 time:     0.7808 sec
+trial: 10 threads: 40 source:  69883037 time:     0.5541 sec
+trial: 11 threads: 40 source:   9346345 time:     0.5467 sec
+trial: 12 threads: 40 source:  48915358 time:     0.6452 sec
+trial: 13 threads: 40 source: 122571173 time:     0.5335 sec
+trial: 14 threads: 40 source:   6183279 time:     1.0251 sec
+trial: 15 threads: 40 source:  86323663 time:     0.6240 sec
+trial: 16 threads: 40 source: 106725780 time:     0.5707 sec
+trial: 17 threads: 40 source:  92389938 time:     0.5464 sec
+trial: 18 threads: 40 source:  16210738 time:     0.5520 sec
+trial: 19 threads: 40 source:  59816700 time:     0.8908 sec
+trial: 20 threads: 40 source: 111669929 time:     0.5888 sec
+trial: 21 threads: 40 source: 102831411 time:     0.5717 sec
+trial: 22 threads: 40 source: 113384800 time:     0.7196 sec
+trial: 23 threads: 40 source:  43872564 time:     0.5408 sec
+trial: 24 threads: 40 source:  80508827 time:     0.5595 sec
+trial: 25 threads: 40 source:  26105648 time:     0.9381 sec
+trial: 26 threads: 40 source:   8807516 time:     0.5791 sec
+trial: 27 threads: 40 source: 118452455 time:     0.5526 sec
+trial: 28 threads: 40 source: 121818859 time:     0.5861 sec
+trial: 29 threads: 40 source:  42361928 time:     0.5748 sec
+trial: 30 threads: 40 source:  29493053 time:     0.6450 sec
+trial: 31 threads: 40 source:  98461503 time:     0.6459 sec
+trial: 32 threads: 40 source:  71931337 time:     0.9484 sec
+trial: 33 threads: 40 source: 103808468 time:     0.6467 sec
+trial: 34 threads: 40 source:   4092345 time:     0.5411 sec
+trial: 35 threads: 40 source: 115276241 time:     0.7578 sec
+trial: 36 threads: 40 source:   4649343 time:     0.5475 sec
+trial: 37 threads: 40 source:  76656189 time:     0.6273 sec
+trial: 38 threads: 40 source:  31312001 time:     0.5822 sec
+trial: 39 threads: 40 source: 111334127 time:     0.5405 sec
+trial: 40 threads: 40 source: 100962918 time:     0.7155 sec
+trial: 41 threads: 40 source:  41823215 time:     0.5977 sec
+trial: 42 threads: 40 source:  22631240 time:     0.5935 sec
+trial: 43 threads: 40 source:  42848461 time:     0.8514 sec
+trial: 44 threads: 40 source:  79485148 time:     0.6215 sec
+trial: 45 threads: 40 source: 106818742 time:     0.6793 sec
+trial: 46 threads: 40 source:  73347974 time:     0.7756 sec
+trial: 47 threads: 40 source:  78848445 time:     0.6456 sec
+trial: 48 threads: 40 source: 109920510 time:     0.5606 sec
+trial: 49 threads: 40 source: 121492133 time:     0.9004 sec
+trial: 50 threads: 40 source: 101037296 time:     0.6682 sec
+trial: 51 threads: 40 source:  15438600 time:     0.5767 sec
+trial: 52 threads: 40 source:   4584784 time:     0.5891 sec
+trial: 53 threads: 40 source: 124503845 time:     0.6323 sec
+trial: 54 threads: 40 source:  87241743 time:     0.5443 sec
+trial: 55 threads: 40 source: 108297008 time:     0.6405 sec
+trial: 56 threads: 40 source:  33955082 time:     0.6047 sec
+trial: 57 threads: 40 source:  79934823 time:     0.5491 sec
+trial: 58 threads: 40 source:   8608481 time:     0.8956 sec
+trial: 59 threads: 40 source:  82435063 time:     0.5536 sec
+trial: 60 threads: 40 source:  46579271 time:     0.6195 sec
+trial: 61 threads: 40 source:    515421 time:     0.5614 sec
+trial: 62 threads: 40 source: 121530467 time:     0.5682 sec
+trial: 63 threads: 40 source: 127978736 time:     0.5810 sec
+:40:pushpull (onlytree):        0.640 (sec), rate: 6600.98
+phase  0:       0.9885 msec
+phase  1:   33370.5721 msec
+phase  3:       0.4798 msec
+phase  4:      94.1909 msec
+phase  5:     632.9943 msec
+phase  6:     281.2595 msec
+phase  7:    7204.4471 msec
+phase  8:       0.2433 msec
+phase  9:    6368.6100 msec
+phase 10:     145.2633 msec
+phase 11:       0.3731 msec
+phase 12:     689.8375 msec
+phase 17:      47.6263 msec
+phase 18:    2976.6542 msec
+phase 19:   22131.1208 msec

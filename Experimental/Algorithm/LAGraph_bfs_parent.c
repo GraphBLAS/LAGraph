@@ -75,9 +75,8 @@
 // Conference on Parallel Processing (ICPP 2018). ACM, New York, NY, USA,
 // Article 89, 11 pages. DOI: https://doi.org/10.1145/3225058.3225122
 
-// Scott Beamer, Krste Asanovic and David A. Patterson,
-// The GAP Benchmark Suite, http://arxiv.org/abs/1508.03619, 2015.
-// http://gap.cs.berkeley.edu/
+// Scott Beamer, Krste Asanovic and David A. Patterson, The GAP Benchmark
+// Suite, http://arxiv.org/abs/1508.03619, 2015.  http://gap.cs.berkeley.edu/
 
 #include "LAGraph_internal.h"
 
@@ -194,10 +193,12 @@ GrB_Info LAGraph_bfs_parent // push-pull BFS, compute the tree only
     if (n > INT32_MAX)
     {
         semiring = GxB_ANY_SECONDI1_INT64 ;
+        // semiring = GxB_ANY_SECONDI1_INT64 ;
     }
     else
     {
         semiring = GxB_ANY_SECONDI1_INT32 ;
+        // semiring = GxB_ANY_PAIR_INT32 ;
     }
 
     // pi = a dense vector of all zeros

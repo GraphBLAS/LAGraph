@@ -1,0 +1,2217 @@
+SuiteSparse:GraphBLAS v4.0.1 [Nov 11, 2020 (DRAFT)] with bitmap parent
+threads to test:  40
+chunk: 65536
+matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+sources: /home/faculty/davis/GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 34.0799
+C_sparsity 4 naslice 1280 nbslice 1
+compute degree: 0.226857 sec
+A is symmetric
+transpose time: 71.9882
+
+==========input graph: nodes: 134217726 edges: 4223264644 ntrials: 64
+pushpull (no log, with tree only (PI BITMAP)):
+
+------------------------------------------- threads: 40
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  0 threads: 40 source:   2338012 time:     0.4859 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  1 threads: 40 source:  31997659 time:     0.5016 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  2 threads: 40 source:  23590940 time:     0.5249 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  3 threads: 40 source:  43400604 time:     0.5462 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  4 threads: 40 source:  75337937 time:     0.5482 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  5 threads: 40 source:    169867 time:     0.5019 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  6 threads: 40 source: 104041220 time:     0.5661 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  7 threads: 40 source:  94177942 time:     0.5053 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  8 threads: 40 source:  32871357 time:     0.5639 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  9 threads: 40 source:  56230002 time:     0.6978 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 10 threads: 40 source:  69883037 time:     0.4808 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 11 threads: 40 source:   9346345 time:     0.4618 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 12 threads: 40 source:  48915358 time:     0.5650 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 13 threads: 40 source: 122571173 time:     0.4671 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 14 threads: 40 source:   6183279 time:     0.9440 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 15 threads: 40 source:  86323663 time:     0.5475 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 16 threads: 40 source: 106725780 time:     0.5015 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 17 threads: 40 source:  92389938 time:     0.4738 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 18 threads: 40 source:  16210738 time:     0.4776 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 19 threads: 40 source:  59816700 time:     0.7963 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 20 threads: 40 source: 111669929 time:     0.5043 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 21 threads: 40 source: 102831411 time:     0.4793 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 22 threads: 40 source: 113384800 time:     0.6303 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 23 threads: 40 source:  43872564 time:     0.4722 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 24 threads: 40 source:  80508827 time:     0.4772 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 25 threads: 40 source:  26105648 time:     0.8522 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 26 threads: 40 source:   8807516 time:     0.5081 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 27 threads: 40 source: 118452455 time:     0.4849 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 28 threads: 40 source: 121818859 time:     0.5034 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 29 threads: 40 source:  42361928 time:     0.4909 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 30 threads: 40 source:  29493053 time:     0.5624 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 31 threads: 40 source:  98461503 time:     0.5661 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 32 threads: 40 source:  71931337 time:     0.8750 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 33 threads: 40 source: 103808468 time:     0.5696 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 34 threads: 40 source:   4092345 time:     0.4579 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 35 threads: 40 source: 115276241 time:     0.6840 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 36 threads: 40 source:   4649343 time:     0.4721 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 37 threads: 40 source:  76656189 time:     0.5524 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 38 threads: 40 source:  31312001 time:     0.4987 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 39 threads: 40 source: 111334127 time:     0.4715 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 40 threads: 40 source: 100962918 time:     0.6408 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 41 threads: 40 source:  41823215 time:     0.5243 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 42 threads: 40 source:  22631240 time:     0.5124 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 43 threads: 40 source:  42848461 time:     0.7596 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 44 threads: 40 source:  79485148 time:     0.5480 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 45 threads: 40 source: 106818742 time:     0.6157 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 46 threads: 40 source:  73347974 time:     0.7119 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 47 threads: 40 source:  78848445 time:     0.5660 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 48 threads: 40 source: 109920510 time:     0.4817 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 49 threads: 40 source: 121492133 time:     0.8166 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 50 threads: 40 source: 101037296 time:     0.5926 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 51 threads: 40 source:  15438600 time:     0.4975 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 52 threads: 40 source:   4584784 time:     0.5076 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 53 threads: 40 source: 124503845 time:     0.5568 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 54 threads: 40 source:  87241743 time:     0.4753 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 55 threads: 40 source: 108297008 time:     0.5632 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 56 threads: 40 source:  33955082 time:     0.5344 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 57 threads: 40 source:  79934823 time:     0.4882 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 58 threads: 40 source:   8608481 time:     0.7957 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 59 threads: 40 source:  82435063 time:     0.4653 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 60 threads: 40 source:  46579271 time:     0.5436 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 61 threads: 40 source:    515421 time:     0.4880 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 62 threads: 40 source: 121530467 time:     0.5045 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 63 threads: 40 source: 127978736 time:     0.4918 sec
+:40:pushpull (onlytree):        0.562 (sec), rate: 7518.24
+phase  0:       1.1020 msec
+phase  1:   28451.1762 msec
+phase  3:       0.5350 msec
+phase  4:      94.1330 msec
+phase  5:     640.2764 msec
+phase  6:     292.3930 msec
+phase  7:    7332.3170 msec
+phase  8:       0.2722 msec
+phase  9:    6503.4948 msec
+phase 10:     143.2743 msec
+phase 11:       0.3636 msec
+phase 12:     684.8008 msec
+phase 17:      47.1700 msec
+phase 18:    2988.1821 msec
+phase 19:   17054.2166 msec
+
+SuiteSparse:GraphBLAS v4.0.1 [Nov 11, 2020 (DRAFT)] with bitmap parent
+threads to test:  40
+chunk: 65536
+matrix: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+sources: /home/faculty/davis/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 47.0789
+C_sparsity 4 naslice 1280 nbslice 1
+compute degree: 0.54106 sec
+A is symmetric
+transpose time: 80.3519
+
+==========input graph: nodes: 134217728 edges: 4294966740 ntrials: 64
+pushpull (no log, with tree only (PI BITMAP)):
+
+------------------------------------------- threads: 40
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  0 threads: 40 source:  27691419 time:     1.1798 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  1 threads: 40 source: 121280314 time:     1.0924 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  2 threads: 40 source:   2413431 time:     1.1586 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  3 threads: 40 source:  37512113 time:     1.0543 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  4 threads: 40 source:  38390877 time:     1.0771 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  5 threads: 40 source:  56651037 time:     1.0935 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  6 threads: 40 source: 128461248 time:     1.0868 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  7 threads: 40 source:  33029842 time:     1.1365 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  8 threads: 40 source:  71406328 time:     1.2157 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  9 threads: 40 source: 117872827 time:     1.0468 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 10 threads: 40 source:  24351938 time:     1.1835 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 11 threads: 40 source:  15444519 time:     1.1514 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 12 threads: 40 source: 127526281 time:     1.1570 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 13 threads: 40 source: 112279428 time:     1.2217 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 14 threads: 40 source:  13631649 time:     1.0796 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 15 threads: 40 source: 110379302 time:     1.2399 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 16 threads: 40 source:  44800623 time:     1.1880 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 17 threads: 40 source:  77768193 time:     1.1799 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 18 threads: 40 source:    175347 time:     1.0933 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 19 threads: 40 source: 107397389 time:     1.2525 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 20 threads: 40 source:  43457209 time:     1.1081 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 21 threads: 40 source:  97215940 time:     1.1148 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 22 threads: 40 source:  73575165 time:     1.1284 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 23 threads: 40 source:  44449715 time:     1.0931 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 24 threads: 40 source:  33931724 time:     1.1701 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 25 threads: 40 source:  55526610 time:     1.1405 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 26 threads: 40 source:  14422051 time:     1.3155 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 27 threads: 40 source:  58043873 time:     1.1439 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 28 threads: 40 source:  72137329 time:     1.1353 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 29 threads: 40 source:   9647840 time:     1.1450 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 30 threads: 40 source:  15940695 time:     1.0989 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 31 threads: 40 source:  14209952 time:     1.0364 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 32 threads: 40 source:  49020883 time:     1.1955 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 33 threads: 40 source:  28901138 time:     1.1409 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 34 threads: 40 source:  50493273 time:     1.1701 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 35 threads: 40 source:  49150069 time:     1.2043 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 36 threads: 40 source: 126525082 time:     1.1219 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 37 threads: 40 source:   6382740 time:     1.1908 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 38 threads: 40 source:  89108297 time:     1.0541 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 39 threads: 40 source:   9239735 time:     1.1137 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 40 threads: 40 source: 110168548 time:     1.2298 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 41 threads: 40 source:  95370259 time:     1.1053 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 42 threads: 40 source: 116653530 time:     1.1013 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 43 threads: 40 source: 123410703 time:     1.1754 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 44 threads: 40 source:  16733665 time:     1.0897 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 45 threads: 40 source:  49030282 time:     1.0956 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 46 threads: 40 source: 108545121 time:     1.1697 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 47 threads: 40 source:  99095665 time:     1.1285 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 48 threads: 40 source: 133850077 time:     1.0819 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 49 threads: 40 source:  63499301 time:     1.0824 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 50 threads: 40 source:  21541382 time:     1.0999 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 51 threads: 40 source:   6230751 time:     1.1129 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 52 threads: 40 source:  89077456 time:     1.1106 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 53 threads: 40 source:  70392765 time:     1.1610 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 54 threads: 40 source:   6670455 time:     1.2029 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 55 threads: 40 source:  61746271 time:     1.1165 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 56 threads: 40 source:  83349535 time:     1.1777 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 57 threads: 40 source: 115272184 time:     1.1633 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 58 threads: 40 source:  20129908 time:     1.2339 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 59 threads: 40 source: 106148553 time:     1.1492 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 60 threads: 40 source: 117042375 time:     1.1647 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 61 threads: 40 source:  71431187 time:     1.1654 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 62 threads: 40 source:  45287808 time:     1.2741 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 63 threads: 40 source: 107702120 time:     1.1355 sec
+:40:pushpull (onlytree):        1.144 (sec), rate: 3753.28
+phase  0:       0.8789 msec
+phase  1:   63816.1048 msec
+phase  3:       0.4792 msec
+phase  4:     223.1406 msec
+phase  5:    1359.4723 msec
+phase  6:     706.1638 msec
+phase  7:   11793.3634 msec
+phase  8:       0.3708 msec
+phase  9:    9827.4286 msec
+phase 10:     279.1889 msec
+phase 11:       0.6567 msec
+phase 12:    1685.5937 msec
+phase 17:      30.5239 msec
+phase 18:    1947.6669 msec
+phase 19:   47753.5384 msec
+
+SuiteSparse:GraphBLAS v4.0.1 [Nov 11, 2020 (DRAFT)] with bitmap parent
+threads to test:  40
+chunk: 65536
+matrix: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+sources: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter_sources.mtx
+read time: 23.8214
+C_sparsity 4 naslice 1280 nbslice 1
+compute degree: 0.118063 sec
+A is unsymmetric
+transpose time: 20.462
+
+==========input graph: nodes: 61578415 edges: 1468364884 ntrials: 64
+pushpull (no log, with tree only (PI BITMAP)):
+
+------------------------------------------- threads: 40
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  0 threads: 40 source:  12441072 time:     0.3194 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  1 threads: 40 source:  54488257 time:     0.3242 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  2 threads: 40 source:  25451915 time:     0.3866 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  3 threads: 40 source:  57714473 time:     0.3186 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  4 threads: 40 source:  14839494 time:     0.3827 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  5 threads: 40 source:  32081104 time:     0.3707 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  6 threads: 40 source:  52957357 time:     0.3593 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  7 threads: 40 source:  50444380 time:     0.3893 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  8 threads: 40 source:  49590701 time:     0.3408 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  9 threads: 40 source:  20127816 time:     0.3224 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 10 threads: 40 source:  34939333 time:     0.3264 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 11 threads: 40 source:  48251001 time:     0.3665 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 12 threads: 40 source:  19524253 time:     0.3160 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 13 threads: 40 source:  43676726 time:     0.3301 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 14 threads: 40 source:  33055508 time:     0.3198 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 15 threads: 40 source:  15244687 time:     0.3378 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 16 threads: 40 source:  24946738 time:     0.4458 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 17 threads: 40 source:   6479472 time:     0.3674 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 18 threads: 40 source:  26077682 time:     0.3128 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 19 threads: 40 source:  22023875 time:     0.3818 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 20 threads: 40 source:  22081915 time:     0.3177 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 21 threads: 40 source:  40034162 time:     0.3576 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 22 threads: 40 source:  49496014 time:     0.3973 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 23 threads: 40 source:  42847507 time:     0.3142 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 24 threads: 40 source:  52409557 time:     0.3299 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 25 threads: 40 source:  55445388 time:     0.3317 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 26 threads: 40 source:  22028097 time:     0.3807 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 27 threads: 40 source:  48766648 time:     0.3684 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 28 threads: 40 source:  44521241 time:     0.3855 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 29 threads: 40 source:  60135542 time:     0.3896 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 30 threads: 40 source:  28528671 time:     0.3597 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 31 threads: 40 source:   9678012 time:     0.3144 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 32 threads: 40 source:  40020306 time:     0.3486 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 33 threads: 40 source:  31625735 time:     0.3299 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 34 threads: 40 source:  37446892 time:     0.3568 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 35 threads: 40 source:  51788952 time:     0.3476 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 36 threads: 40 source:  52584255 time:     0.3291 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 37 threads: 40 source:  20346696 time:     0.3717 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 38 threads: 40 source:  48387909 time:     0.4065 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 39 threads: 40 source:  37337427 time:     0.3907 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 40 threads: 40 source:  50501084 time:     0.3385 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 41 threads: 40 source:  30130061 time:     0.3361 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 42 threads: 40 source:  41185893 time:     0.3170 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 43 threads: 40 source:  56495703 time:     0.3238 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 44 threads: 40 source:  45663305 time:     0.3959 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 45 threads: 40 source:  33359460 time:     0.3368 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 46 threads: 40 source:  48143058 time:     0.3578 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 47 threads: 40 source:  33291513 time:     0.4317 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 48 threads: 40 source:  53461445 time:     0.3645 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 49 threads: 40 source:  29340610 time:     0.3240 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 50 threads: 40 source:  34148498 time:     0.3199 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 51 threads: 40 source:  49171806 time:     0.3815 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 52 threads: 40 source:  35550696 time:     0.3183 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 53 threads: 40 source:  14521507 time:     0.3200 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 54 threads: 40 source:  51633218 time:     0.3859 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 55 threads: 40 source:  46823382 time:     0.3230 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 56 threads: 40 source:  19396273 time:     0.3537 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 57 threads: 40 source:  19871750 time:     0.3993 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 58 threads: 40 source:  36862677 time:     0.3423 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 59 threads: 40 source:  49539126 time:     0.3952 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 60 threads: 40 source:  34016452 time:     0.3647 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 61 threads: 40 source:  36567395 time:     0.3770 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 62 threads: 40 source:  55487793 time:     0.3312 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 63 threads: 40 source:  14391370 time:     0.3774 sec
+:40:pushpull (onlytree):        0.354 (sec), rate: 4146.91
+phase  0:       1.3637 msec
+phase  1:   18345.3112 msec
+phase  3:       0.7060 msec
+phase  4:     145.6867 msec
+phase  5:     394.9545 msec
+phase  6:     202.9197 msec
+phase  7:    3165.3721 msec
+phase  8:       0.4220 msec
+phase  9:    2700.1048 msec
+phase 10:      97.9959 msec
+phase 11:       0.5588 msec
+phase 12:     366.2519 msec
+phase 17:      65.4768 msec
+phase 18:    1940.5202 msec
+phase 19:   12427.3376 msec
+
+SuiteSparse:GraphBLAS v4.0.1 [Nov 11, 2020 (DRAFT)] with bitmap parent
+threads to test:  40
+chunk: 65536
+matrix: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+sources: /home/faculty/davis/GAP/GAP-web/GAP-web_sources.mtx
+read time: 31.0367
+C_sparsity 4 naslice 1280 nbslice 1
+compute degree: 0.128879 sec
+A is unsymmetric
+transpose time: 5.24723
+
+==========input graph: nodes: 50636151 edges: 1930292948 ntrials: 64
+pushpull (no log, with tree only (PI BITMAP)):
+
+------------------------------------------- threads: 40
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  0 threads: 40 source:  10219452 time:     0.9766 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  1 threads: 40 source:  44758211 time:     1.0409 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  2 threads: 40 source:    890671 time:     0.9605 sec
+trial:  3 threads: 40 source:  13843756 time:     0.0161 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  4 threads: 40 source:  14168062 time:     0.9557 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  5 threads: 40 source:  20906930 time:     0.9380 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  6 threads: 40 source:  12189584 time:     0.9387 sec
+trial:  7 threads: 40 source:  26352335 time:     0.0119 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  8 threads: 40 source:  43500686 time:     0.9838 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial:  9 threads: 40 source:   8987024 time:     0.9617 sec
+trial: 10 threads: 40 source:   5699762 time:     0.0108 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 11 threads: 40 source:  41436455 time:     1.0206 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 12 threads: 40 source:   5030727 time:     0.9527 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 13 threads: 40 source:  40735218 time:     0.9635 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 14 threads: 40 source:  16533563 time:     0.9188 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 15 threads: 40 source:  28700166 time:     0.9212 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 16 threads: 40 source:     64711 time:     1.0406 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 17 threads: 40 source:  39634750 time:     0.9856 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 18 threads: 40 source:  16037779 time:     0.9418 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 19 threads: 40 source:  27152739 time:     1.0392 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 20 threads: 40 source:  16404061 time:     0.9509 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 21 threads: 40 source:  20491963 time:     0.9313 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 22 threads: 40 source:   5322423 time:     0.9913 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 23 threads: 40 source:  21420953 time:     1.0313 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 24 threads: 40 source:  26622109 time:     0.9460 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 25 threads: 40 source:   5882875 time:     0.9809 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 26 threads: 40 source:  18091040 time:     1.0359 sec
+trial: 27 threads: 40 source:  10665896 time:     0.0315 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 28 threads: 40 source:  18634422 time:     0.9216 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 29 threads: 40 source:  18138715 time:     0.9540 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 30 threads: 40 source:   2355535 time:     0.9814 sec
+trial: 31 threads: 40 source:  32885205 time:     0.0202 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 32 threads: 40 source:  40657440 time:     0.9563 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 33 threads: 40 source:  35196167 time:     0.9633 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 34 threads: 40 source:  45544426 time:     0.9646 sec
+trial: 35 threads: 40 source:   6175519 time:     0.0042 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 36 threads: 40 source:  40058318 time:     0.9811 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 37 threads: 40 source:  50626230 time:     1.0036 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 38 threads: 40 source:  36571019 time:     1.0044 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 39 threads: 40 source:  49397052 time:     0.9485 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 40 threads: 40 source:  23434265 time:     0.9467 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 41 threads: 40 source:   2299444 time:     0.9217 sec
+trial: 42 threads: 40 source:  32873823 time:     0.0216 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 43 threads: 40 source:  25978282 time:     1.0214 sec
+trial: 44 threads: 40 source:   2461715 time:     0.0353 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 45 threads: 40 source:  22787314 time:     0.9385 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 46 threads: 40 source:  30759947 time:     0.9747 sec
+trial: 47 threads: 40 source:   7428894 time:     0.0032 sec
+trial: 48 threads: 40 source:  39173870 time:     0.0007 sec
+trial: 49 threads: 40 source:  43194209 time:     0.0064 sec
+trial: 50 threads: 40 source:  26361509 time:     0.0091 sec
+trial: 51 threads: 40 source:  39747211 time:     0.0007 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 52 threads: 40 source:  30670029 time:     0.9775 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 53 threads: 40 source:  41483033 time:     1.0514 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 54 threads: 40 source:   9358666 time:     0.9471 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 55 threads: 40 source:   9945008 time:     0.9551 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 56 threads: 40 source:   3355244 time:     0.9817 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 57 threads: 40 source:  33831269 time:     0.9180 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 58 threads: 40 source:  45124744 time:     0.9708 sec
+trial: 59 threads: 40 source:  16137877 time:     0.0175 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 60 threads: 40 source:  11235448 time:     0.9436 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 61 threads: 40 source:  37509144 time:     0.9418 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 62 threads: 40 source:  27402414 time:     0.9394 sec
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+C_sparsity 4 naslice 1280 nbslice 1
+trial: 63 threads: 40 source:  39546083 time:     0.9951 sec
+:40:pushpull (onlytree):        0.761 (sec), rate: 2536.73
+phase  0:       4.0094 msec
+phase  1:   42931.7150 msec
+phase  3:       2.1060 msec
+phase  4:     656.0840 msec
+phase  5:    3061.2768 msec
+phase  6:    1616.9030 msec
+phase  7:    5839.5148 msec
+phase  8:       1.4960 msec
+phase  9:    4051.7047 msec
+phase 10:     692.0057 msec
+phase 11:       2.2934 msec
+phase 12:    1091.7386 msec
+phase 17:     258.2954 msec
+phase 18:    6009.9122 msec
+phase 19:   25478.7764 msec
+
+SuiteSparse:GraphBLAS v4.0.1 [Nov 11, 2020 (DRAFT)] with bitmap parent
+threads to test:  40
+chunk: 65536
+matrix: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+sources: /home/faculty/davis/GAP/GAP-road/GAP-road_sources.mtx
+read time: 1.13304
+C_sparsity 4 naslice 1280 nbslice 1
+compute degree: 0.0327706 sec
+A is symmetric
+transpose time: 0.717238
+
+==========input graph: nodes: 23947347 edges: 57708624 ntrials: 64
+pushpull (no log, with tree only (PI BITMAP)):
+
+------------------------------------------- threads: 40
+trial:  0 threads: 40 source:   4795720 time:     3.4156 sec
+trial:  1 threads: 40 source:  21003853 time:     3.4702 sec
+trial:  2 threads: 40 source:    417968 time:     3.5255 sec
+trial:  3 threads: 40 source:   6496511 time:     3.3971 sec
+trial:  4 threads: 40 source:   6648699 time:     3.5160 sec
+trial:  5 threads: 40 source:   9811073 time:     3.3543 sec
+trial:  6 threads: 40 source:  22247478 time:     3.4227 sec
+trial:  7 threads: 40 source:   5720252 time:     3.3727 sec
+trial:  8 threads: 40 source:  12366459 time:     3.4341 sec
+trial:  9 threads: 40 source:  20413729 time:     3.4360 sec
+trial: 10 threads: 40 source:   4217374 time:     3.3412 sec
+trial: 11 threads: 40 source:   2674749 time:     3.3428 sec
+trial: 12 threads: 40 source:  22085557 time:     3.4472 sec
+trial: 13 threads: 40 source:  19445040 time:     3.4788 sec
+trial: 14 threads: 40 source:   2360788 time:     3.3721 sec
+trial: 15 threads: 40 source:  19115968 time:     3.3700 sec
+trial: 16 threads: 40 source:   7758767 time:     3.4856 sec
+trial: 17 threads: 40 source:  13468234 time:     3.3567 sec
+trial: 18 threads: 40 source:     30367 time:     3.4495 sec
+trial: 19 threads: 40 source:  18599547 time:     3.4149 sec
+trial: 20 threads: 40 source:   7526108 time:     3.5217 sec
+trial: 21 threads: 40 source:  16836280 time:     3.3586 sec
+trial: 22 threads: 40 source:  12742067 time:     3.3636 sec
+trial: 23 threads: 40 source:   7697995 time:     3.4834 sec
+trial: 24 threads: 40 source:   5876443 time:     3.5254 sec
+trial: 25 threads: 40 source:   9616340 time:     3.4541 sec
+trial: 26 threads: 40 source:   2497673 time:     3.3377 sec
+trial: 27 threads: 40 source:  10052290 time:     3.4792 sec
+trial: 28 threads: 40 source:  12493057 time:     3.3738 sec
+trial: 29 threads: 40 source:   1670855 time:     3.3721 sec
+trial: 30 threads: 40 source:   2760679 time:     3.4158 sec
+trial: 31 threads: 40 source:   2460941 time:     3.3418 sec
+trial: 32 threads: 40 source:   8489650 time:     3.4743 sec
+trial: 33 threads: 40 source:   5005225 time:     3.3922 sec
+trial: 34 threads: 40 source:   8744645 time:     3.4870 sec
+trial: 35 threads: 40 source:   8512023 time:     3.4712 sec
+trial: 36 threads: 40 source:  21912165 time:     3.3151 sec
+trial: 37 threads: 40 source:   1105390 time:     3.4638 sec
+trial: 38 threads: 40 source:  15432163 time:     3.4974 sec
+trial: 39 threads: 40 source:   1600177 time:     3.3714 sec
+trial: 40 threads: 40 source:  19079469 time:     3.3658 sec
+trial: 41 threads: 40 source:  16516637 time:     3.3129 sec
+trial: 42 threads: 40 source:  20202566 time:     3.4520 sec
+trial: 43 threads: 40 source:  21372803 time:     3.4751 sec
+trial: 44 threads: 40 source:   2898009 time:     3.3992 sec
+trial: 45 threads: 40 source:   8491277 time:     3.4778 sec
+trial: 46 threads: 40 source:  18798317 time:     3.4218 sec
+trial: 47 threads: 40 source:  23757560 time:     3.4100 sec
+trial: 48 threads: 40 source:  17161819 time:     3.4532 sec
+trial: 49 threads: 40 source:  23180739 time:     3.3217 sec
+trial: 50 threads: 40 source:  10997085 time:     3.5397 sec
+trial: 51 threads: 40 source:   3730630 time:     3.4011 sec
+trial: 52 threads: 40 source:   1079068 time:     3.4506 sec
+trial: 53 threads: 40 source:  15426822 time:     3.4794 sec
+trial: 54 threads: 40 source:  12190925 time:     3.4877 sec
+trial: 55 threads: 40 source:   1155218 time:     3.4588 sec
+trial: 56 threads: 40 source:  10693488 time:     3.4818 sec
+trial: 57 threads: 40 source:  14434835 time:     3.3575 sec
+trial: 58 threads: 40 source:  19963339 time:     3.3709 sec
+trial: 59 threads: 40 source:   3486185 time:     3.4015 sec
+trial: 60 threads: 40 source:  18383269 time:     3.4536 sec
+trial: 61 threads: 40 source:  20269908 time:     3.4700 sec
+trial: 62 threads: 40 source:  12370764 time:     3.3518 sec
+trial: 63 threads: 40 source:   7843140 time:     3.4514 sec
+:40:pushpull (onlytree):        3.424 (sec), rate:  16.85
+phase  0:     167.0620 msec
+phase  1:  185451.0963 msec
+phase  3:     224.2868 msec
+phase  4:   17874.3135 msec
+phase  5:    4705.8271 msec
+phase  6:     579.8320 msec
+phase  7:  161654.3175 msec
+phase  8:     202.7882 msec
+phase  9:  126896.8921 msec
+phase 10:   10518.8788 msec
+phase 11:     239.1385 msec
+phase 12:   23848.3170 msec
+
