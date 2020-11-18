@@ -95,7 +95,7 @@ int main (int argc, char **argv)
     GrB_Vector Degree = NULL ;
     GrB_Matrix SourceNodes = NULL ;
     LAGRAPH_OK (LAGraph_init ( )) ;
-    LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
+    LAGRAPH_OK (GxB_set (GxB_BURBLE, true)) ;
 
     uint64_t seed = 1 ;
     FILE *f ;
@@ -453,7 +453,7 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
 #if 1
-    printf ( "pushpull (no log, with tree only (PI BITMAP)):\n") ;
+    printf ( "pushpull (no log, with tree only):\n") ;
 
     for (int tt = 1 ; tt <= nt ; tt++)
     {
@@ -471,7 +471,8 @@ int main (int argc, char **argv)
             s-- ; // convert from 1-based to 0-based
             GrB_free (&pi) ;
             LAGraph_tic (tic) ;
-            // USING BITMAP PARENT:
+            // USING FULL PARENT:   LAGraph_bfs_parent
+            // USING BITMAP PARENT: LAGraph_bfs_parent2
             LAGRAPH_OK (LAGraph_bfs_parent (&pi, A, AT, Degree, s)) ;
             double ttrial = LAGraph_toc (tic) ;
             t [nthreads] += ttrial ;
