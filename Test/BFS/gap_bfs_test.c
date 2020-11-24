@@ -95,7 +95,7 @@ int main (int argc, char **argv)
     GrB_Vector Degree = NULL ;
     GrB_Matrix SourceNodes = NULL ;
     LAGRAPH_OK (LAGraph_init ( )) ;
-    LAGRAPH_OK (GxB_set (GxB_BURBLE, true)) ;
+    LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
 
     uint64_t seed = 1 ;
     FILE *f ;
@@ -246,7 +246,9 @@ int main (int argc, char **argv)
 
 #if 1
     LAGraph_tic (tic);
-    bool A_is_symmetric = (n == 134217726) ;        // HACK for kron
+    bool A_is_symmetric =
+        (n == 134217726 ||  // HACK for kron
+         n == 134217728) ;  // HACK for urand
     if (!A_is_symmetric)
     {
         LAGRAPH_OK (GrB_Matrix_new (&AT, GrB_BOOL, n, n)) ;
@@ -471,9 +473,9 @@ int main (int argc, char **argv)
             s-- ; // convert from 1-based to 0-based
             GrB_free (&pi) ;
             LAGraph_tic (tic) ;
-            // USING FULL PARENT:   LAGraph_bfs_parent
-            // USING BITMAP PARENT: LAGraph_bfs_parent2
-            LAGRAPH_OK (LAGraph_bfs_parent (&pi, A, AT, Degree, s)) ;
+            // USING FULL PARENT:   LAGraph_bfs_parent (uses dot5)
+            // USING BITMAP PARENT: LAGraph_bfs_parent2 (uses dot2:specialized)
+            LAGRAPH_OK (LAGraph_bfs_parent2 (&pi, A, AT, Degree, s)) ;
             double ttrial = LAGraph_toc (tic) ;
             t [nthreads] += ttrial ;
             printf ("trial: %2d threads: %2d source: %9ld time: %10.4f sec\n",
