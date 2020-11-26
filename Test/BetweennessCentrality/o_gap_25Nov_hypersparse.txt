@@ -1,0 +1,506 @@
+SuiteSparse:GraphBLAS v4.0.1 [Nov 25, 2020 (DRAFT)]
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+sources: /home/faculty/davis/GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 40.0398 sec
+A is symmetric
+transpose time: 2.04146e-06
+
+========== input graph: nodes: 134217726 edges: 64
+
+Trial 1 : sources: [ 2338012 31997659 23590940 43400604 ]
+phase1:
+     phase1 2 frontier       2587 (  0.0000) paths       2591 (  0.0000) time     0.1843 sec
+     phase1 2 frontier   10472676 (  0.0195) paths   10475267 (  0.0195) time    11.9367 sec
+pull phase1 2 frontier  174510732 (  0.3251) paths  184985999 (  0.3446) time     0.9845 sec
+pull phase1 4 frontier   66766664 (  0.1244) paths  251752663 (  0.4689) time     0.3329 sec
+     phase1 4 frontier     377880 (  0.0007) paths  252130543 (  0.4696) time     0.2211 sec
+     phase1 2 frontier       1022 (  0.0000) paths  252131565 (  0.4696) time     0.0003 sec
+     phase1 2 frontier          7 (  0.0000) paths  252131572 (  0.4696) time     0.0000 sec
+
+phase2:
+     phase2 2 W          7 (  0.0000) s       1022 (  0.0000) [     0.01 ] time     0.0024 sec
+     phase2 2 W       1022 (  0.0000) s     377880 (  0.0007) [     0.00 ] time     0.0027 sec
+     phase2 2 W     377880 (  0.0007) s   66766664 (  0.1244) [     0.01 ] time     0.0541 sec
+     phase2 2 W   66766664 (  0.1244) s  174510732 (  0.3251) [     0.38 ] time     1.7135 sec
+pull phase2 2 W  174510732 (  0.3251) s   10472676 (  0.0195) [    16.66 ] time     7.4871 sec
+pull phase2 4 W   10472676 (  0.0195) s       2587 (  0.0000) [  4048.19 ] time     0.2810 sec
+Batch v5 time 40:      23.6553 (sec)
+
+Trial 2 : sources: [ 75337937 169867 104041220 94177942 ]
+phase1:
+     phase1 2 frontier         17 (  0.0000) paths         21 (  0.0000) time     0.0206 sec
+     phase1 2 frontier     383353 (  0.0007) paths     383374 (  0.0007) time     5.1880 sec
+pull phase1 2 frontier  111423688 (  0.2075) paths  111807062 (  0.2083) time     2.1755 sec
+pull phase1 4 frontier  137802043 (  0.2567) paths  249609105 (  0.4649) time     0.4193 sec
+     phase1 4 frontier    2515662 (  0.0047) paths  252124767 (  0.4696) time     0.1633 sec
+     phase1 2 frontier       6777 (  0.0000) paths  252131544 (  0.4696) time     0.0028 sec
+     phase1 2 frontier         28 (  0.0000) paths  252131572 (  0.4696) time     0.0000 sec
+
+phase2:
+     phase2 2 W         28 (  0.0000) s       6777 (  0.0000) [     0.00 ] time     0.0011 sec
+     phase2 2 W       6777 (  0.0000) s    2515662 (  0.0047) [     0.00 ] time     0.0055 sec
+     phase2 2 W    2515662 (  0.0047) s  137802043 (  0.2567) [     0.02 ] time     0.4858 sec
+pull phase2 2 W  137802043 (  0.2567) s  111423688 (  0.2075) [     1.24 ] time    13.9476 sec
+pull phase2 4 W  111423688 (  0.2075) s     383353 (  0.0007) [   290.66 ] time     3.4546 sec
+     phase2 4 W     383353 (  0.0007) s         17 (  0.0000) [ 22550.18 ] time     0.2091 sec
+Batch v5 time 40:      26.5353 (sec)
+
+Trial 3 : sources: [ 32871357 56230002 69883037 9346345 ]
+phase1:
+     phase1 2 frontier         75 (  0.0000) paths         79 (  0.0000) time     0.0117 sec
+     phase1 2 frontier     464769 (  0.0009) paths     464848 (  0.0009) time     4.9057 sec
+pull phase1 2 frontier   94381779 (  0.1758) paths   94846627 (  0.1767) time     3.8967 sec
+pull phase1 4 frontier  150361642 (  0.2801) paths  245208269 (  0.4567) time     0.4651 sec
+     phase1 4 frontier    6902491 (  0.0129) paths  252110760 (  0.4696) time     0.2845 sec
+     phase1 2 frontier      20747 (  0.0000) paths  252131507 (  0.4696) time     0.0063 sec
+     phase1 2 frontier         65 (  0.0000) paths  252131572 (  0.4696) time     0.0000 sec
+
+phase2:
+     phase2 2 W         65 (  0.0000) s      20747 (  0.0000) [     0.00 ] time     0.0012 sec
+     phase2 2 W      20747 (  0.0000) s    6902491 (  0.0129) [     0.00 ] time     0.0141 sec
+     phase2 2 W    6902491 (  0.0129) s  150361642 (  0.2801) [     0.05 ] time     0.9695 sec
+pull phase2 2 W  150361642 (  0.2801) s   94381779 (  0.1758) [     1.59 ] time    14.0157 sec
+pull phase2 4 W   94381779 (  0.1758) s     464769 (  0.0009) [   203.07 ] time     3.1938 sec
+     phase2 4 W     464769 (  0.0009) s         75 (  0.0000) [  6196.92 ] time     0.6234 sec
+Batch v5 time 40:      28.8452 (sec)
+
+Trial 4 : sources: [ 48915358 122571173 6183279 86323663 ]
+phase1:
+     phase1 2 frontier         12 (  0.0000) paths         16 (  0.0000) time     0.0064 sec
+     phase1 2 frontier     137494 (  0.0003) paths     137510 (  0.0003) time     3.2834 sec
+pull phase1 2 frontier   86686108 (  0.1615) paths   86823618 (  0.1617) time     4.7342 sec
+pull phase1 4 frontier  154338408 (  0.2875) paths  241162026 (  0.4492) time     0.4828 sec
+     phase1 4 frontier   10932085 (  0.0204) paths  252094111 (  0.4696) time     0.3931 sec
+     phase1 2 frontier      37351 (  0.0001) paths  252131462 (  0.4696) time     0.0119 sec
+     phase1 2 frontier        110 (  0.0000) paths  252131572 (  0.4696) time     0.0001 sec
+
+phase2:
+     phase2 2 W        110 (  0.0000) s      37351 (  0.0001) [     0.00 ] time     0.0151 sec
+     phase2 2 W      37351 (  0.0001) s   10932085 (  0.0204) [     0.00 ] time     0.0392 sec
+     phase2 2 W   10932085 (  0.0204) s  154338408 (  0.2875) [     0.07 ] time     1.3558 sec
+pull phase2 2 W  154338408 (  0.2875) s   86686108 (  0.1615) [     1.78 ] time    14.3635 sec
+pull phase2 4 W   86686108 (  0.1615) s     137494 (  0.0003) [   630.47 ] time     2.2123 sec
+     phase2 4 W     137494 (  0.0003) s         12 (  0.0000) [ 11457.83 ] time     0.1737 sec
+Batch v5 time 40:      27.5402 (sec)
+
+Trial 5 : sources: [ 106725780 92389938 16210738 59816700 ]
+phase1:
+     phase1 2 frontier         99 (  0.0000) paths        103 (  0.0000) time     0.0224 sec
+     phase1 2 frontier    1481303 (  0.0028) paths    1481406 (  0.0028) time    12.1607 sec
+pull phase1 2 frontier  172689388 (  0.3217) paths  174170794 (  0.3244) time     1.0780 sec
+pull phase1 4 frontier   77447217 (  0.1443) paths  251618011 (  0.4687) time     0.3599 sec
+     phase1 4 frontier     512193 (  0.0010) paths  252130204 (  0.4696) time     0.2080 sec
+     phase1 2 frontier       1363 (  0.0000) paths  252131567 (  0.4696) time     0.0004 sec
+     phase1 2 frontier          5 (  0.0000) paths  252131572 (  0.4696) time     0.0000 sec
+
+phase2:
+     phase2 2 W          5 (  0.0000) s       1363 (  0.0000) [     0.00 ] time     0.0010 sec
+     phase2 2 W       1363 (  0.0000) s     512193 (  0.0010) [     0.00 ] time     0.0035 sec
+     phase2 2 W     512193 (  0.0010) s   77447217 (  0.1443) [     0.01 ] time     0.1059 sec
+     phase2 2 W   77447217 (  0.1443) s  172689388 (  0.3217) [     0.45 ] time     1.9688 sec
+pull phase2 2 W  172689388 (  0.3217) s    1481303 (  0.0028) [   116.58 ] time     7.5077 sec
+     phase2 4 W    1481303 (  0.0028) s         99 (  0.0000) [ 14962.66 ] time     1.0589 sec
+Batch v5 time 40:      24.9083 (sec)
+
+Trial 6 : sources: [ 111669929 102831411 113384800 43872564 ]
+phase1:
+     phase1 2 frontier         78 (  0.0000) paths         82 (  0.0000) time     0.0176 sec
+     phase1 2 frontier     898121 (  0.0017) paths     898203 (  0.0017) time     5.4916 sec
+pull phase1 2 frontier   94157995 (  0.1754) paths   95056198 (  0.1771) time     2.9035 sec
+pull phase1 4 frontier  153047379 (  0.2851) paths  248103577 (  0.4621) time     0.4411 sec
+     phase1 4 frontier    4017103 (  0.0075) paths  252120680 (  0.4696) time     0.2024 sec
+     phase1 2 frontier      10851 (  0.0000) paths  252131531 (  0.4696) time     0.0037 sec
+     phase1 2 frontier         41 (  0.0000) paths  252131572 (  0.4696) time     0.0000 sec
+
+phase2:
+     phase2 2 W         41 (  0.0000) s      10851 (  0.0000) [     0.00 ] time     0.0013 sec
+     phase2 2 W      10851 (  0.0000) s    4017103 (  0.0075) [     0.00 ] time     0.0080 sec
+     phase2 2 W    4017103 (  0.0075) s  153047379 (  0.2851) [     0.03 ] time     0.6131 sec
+pull phase2 2 W  153047379 (  0.2851) s   94157995 (  0.1754) [     1.63 ] time    13.7234 sec
+pull phase2 4 W   94157995 (  0.1754) s     898121 (  0.0017) [   104.84 ] time     3.6186 sec
+     phase2 4 W     898121 (  0.0017) s         78 (  0.0000) [ 11514.37 ] time     0.5800 sec
+Batch v5 time 40:      28.0631 (sec)
+
+Trial 7 : sources: [ 80508827 26105648 8807516 118452455 ]
+phase1:
+     phase1 2 frontier         54 (  0.0000) paths         58 (  0.0000) time     0.0178 sec
+     phase1 2 frontier     747539 (  0.0014) paths     747597 (  0.0014) time     8.0507 sec
+pull phase1 2 frontier  128832253 (  0.2400) paths  129579850 (  0.2414) time     2.3589 sec
+pull phase1 4 frontier  119358727 (  0.2223) paths  248938577 (  0.4637) time     0.4164 sec
+     phase1 4 frontier    3184136 (  0.0059) paths  252122713 (  0.4696) time     0.2035 sec
+     phase1 2 frontier       8829 (  0.0000) paths  252131542 (  0.4696) time     0.0035 sec
+     phase1 2 frontier         30 (  0.0000) paths  252131572 (  0.4696) time     0.0000 sec
+
+phase2:
+     phase2 2 W         30 (  0.0000) s       8829 (  0.0000) [     0.00 ] time     0.0011 sec
+     phase2 2 W       8829 (  0.0000) s    3184136 (  0.0059) [     0.00 ] time     0.0062 sec
+     phase2 2 W    3184136 (  0.0059) s  119358727 (  0.2223) [     0.03 ] time     0.6792 sec
+     phase2 2 W  119358727 (  0.2223) s  128832253 (  0.2400) [     0.93 ] time     3.6946 sec
+pull phase2 2 W  128832253 (  0.2400) s     747539 (  0.0014) [   172.34 ] time     4.8938 sec
+     phase2 4 W     747539 (  0.0014) s         54 (  0.0000) [ 13843.31 ] time     0.7875 sec
+Batch v5 time 40:      21.5728 (sec)
+
+Trial 8 : sources: [ 121818859 42361928 29493053 98461503 ]
+phase1:
+     phase1 2 frontier          6 (  0.0000) paths         10 (  0.0000) time     0.0014 sec
+     phase1 2 frontier      21483 (  0.0000) paths      21493 (  0.0000) time     1.0607 sec
+pull phase1 2 frontier   56402346 (  0.1051) paths   56423839 (  0.1051) time     3.2990 sec
+pull phase1 4 frontier  190982376 (  0.3557) paths  247406215 (  0.4608) time     0.4658 sec
+     phase1 4 frontier    4712596 (  0.0088) paths  252118811 (  0.4696) time     0.2101 sec
+     phase1 2 frontier      12715 (  0.0000) paths  252131526 (  0.4696) time     0.0046 sec
+     phase1 2 frontier         46 (  0.0000) paths  252131572 (  0.4696) time     0.0000 sec
+
+phase2:
+     phase2 2 W         46 (  0.0000) s      12715 (  0.0000) [     0.00 ] time     0.0012 sec
+     phase2 2 W      12715 (  0.0000) s    4712596 (  0.0088) [     0.00 ] time     0.0091 sec
+     phase2 2 W    4712596 (  0.0088) s  190982376 (  0.3557) [     0.02 ] time     0.5944 sec
+pull phase2 2 W  190982376 (  0.3557) s   56402346 (  0.1051) [     3.39 ] time    11.9153 sec
+pull phase2 4 W   56402346 (  0.1051) s      21483 (  0.0000) [  2625.44 ] time     0.8299 sec
+     phase2 4 W      21483 (  0.0000) s          6 (  0.0000) [  3580.50 ] time     0.0951 sec
+Batch v5 time 40:      18.9402 (sec)
+
+Trial 9 : sources: [ 71931337 103808468 4092345 115276241 ]
+phase1:
+     phase1 2 frontier         19 (  0.0000) paths         23 (  0.0000) time     0.0046 sec
+     phase1 2 frontier      73809 (  0.0001) paths      73832 (  0.0001) time     2.3060 sec
+pull phase1 2 frontier   77992291 (  0.1453) paths   78066123 (  0.1454) time     3.8488 sec
+pull phase1 4 frontier  167522439 (  0.3120) paths  245588562 (  0.4574) time     0.4689 sec
+     phase1 4 frontier    6523763 (  0.0122) paths  252112325 (  0.4696) time     0.2639 sec
+     phase1 2 frontier      19189 (  0.0000) paths  252131514 (  0.4696) time     0.0071 sec
+     phase1 2 frontier         58 (  0.0000) paths  252131572 (  0.4696) time     0.0000 sec
+
+phase2:
+     phase2 2 W         58 (  0.0000) s      19189 (  0.0000) [     0.00 ] time     0.0012 sec
+     phase2 2 W      19189 (  0.0000) s    6523763 (  0.0122) [     0.00 ] time     0.0135 sec
+     phase2 2 W    6523763 (  0.0122) s  167522439 (  0.3120) [     0.04 ] time     0.8838 sec
+pull phase2 2 W  167522439 (  0.3120) s   77992291 (  0.1453) [     2.15 ] time    15.1602 sec
+pull phase2 4 W   77992291 (  0.1453) s      73809 (  0.0001) [  1056.68 ] time     1.7149 sec
+     phase2 4 W      73809 (  0.0001) s         19 (  0.0000) [  3884.68 ] time     0.1512 sec
+Batch v5 time 40:      25.2859 (sec)
+
+Trial 10 : sources: [ 4649343 76656189 31312001 111334127 ]
+phase1:
+     phase1 2 frontier        128 (  0.0000) paths        132 (  0.0000) time     0.0406 sec
+     phase1 2 frontier    1656879 (  0.0031) paths    1657011 (  0.0031) time    10.7985 sec
+pull phase1 2 frontier  146980668 (  0.2738) paths  148637679 (  0.2769) time     1.7520 sec
+pull phase1 4 frontier  101672375 (  0.1894) paths  250310054 (  0.4662) time     0.4024 sec
+     phase1 4 frontier    1816624 (  0.0034) paths  252126678 (  0.4696) time     0.1670 sec
+     phase1 2 frontier       4869 (  0.0000) paths  252131547 (  0.4696) time     0.0019 sec
+     phase1 2 frontier         25 (  0.0000) paths  252131572 (  0.4696) time     0.0000 sec
+
+phase2:
+     phase2 2 W         25 (  0.0000) s       4869 (  0.0000) [     0.01 ] time     0.0011 sec
+     phase2 2 W       4869 (  0.0000) s    1816624 (  0.0034) [     0.00 ] time     0.0046 sec
+     phase2 2 W    1816624 (  0.0034) s  101672375 (  0.1894) [     0.02 ] time     0.4867 sec
+     phase2 2 W  101672375 (  0.1894) s  146980668 (  0.2738) [     0.69 ] time     3.0748 sec
+pull phase2 2 W  146980668 (  0.2738) s    1656879 (  0.0031) [    88.71 ] time     6.6358 sec
+     phase2 4 W    1656879 (  0.0031) s        128 (  0.0000) [ 12944.37 ] time     1.4523 sec
+Batch v5 time 40:      25.2683 (sec)
+
+Trial 11 : sources: [ 100962918 41823215 22631240 42848461 ]
+phase1:
+     phase1 2 frontier         34 (  0.0000) paths         38 (  0.0000) time     0.0069 sec
+     phase1 2 frontier     183184 (  0.0003) paths     183222 (  0.0003) time     3.1879 sec
+pull phase1 2 frontier   77505412 (  0.1444) paths   77688634 (  0.1447) time     4.6749 sec
+pull phase1 4 frontier  136217159 (  0.2537) paths  213905793 (  0.3984) time     0.7158 sec
+     phase1 4 frontier   37844073 (  0.0705) paths  251749866 (  0.4689) time     0.7890 sec
+     phase1 2 frontier     380676 (  0.0007) paths  252130542 (  0.4696) time     0.0168 sec
+     phase1 2 frontier       1025 (  0.0000) paths  252131567 (  0.4696) time     0.0003 sec
+     phase1 2 frontier          5 (  0.0000) paths  252131572 (  0.4696) time     0.0000 sec
+
+phase2:
+     phase2 2 W          5 (  0.0000) s       1025 (  0.0000) [     0.00 ] time     0.0010 sec
+     phase2 2 W       1025 (  0.0000) s     380676 (  0.0007) [     0.00 ] time     0.0029 sec
+     phase2 2 W     380676 (  0.0007) s   37844073 (  0.0705) [     0.01 ] time     0.0670 sec
+     phase2 2 W   37844073 (  0.0705) s  136217159 (  0.2537) [     0.28 ] time     1.2620 sec
+pull phase2 2 W  136217159 (  0.2537) s   77505412 (  0.1444) [     1.76 ] time    11.1816 sec
+pull phase2 4 W   77505412 (  0.1444) s     183184 (  0.0003) [   423.10 ] time     2.2100 sec
+     phase2 4 W     183184 (  0.0003) s         34 (  0.0000) [  5387.76 ] time     0.2310 sec
+Batch v5 time 40:      24.7782 (sec)
+
+Trial 12 : sources: [ 79485148 106818742 73347974 78848445 ]
+phase1:
+     phase1 2 frontier          7 (  0.0000) paths         11 (  0.0000) time     0.0075 sec
+     phase1 2 frontier     119431 (  0.0002) paths     119442 (  0.0002) time     3.1809 sec
+pull phase1 2 frontier   99363142 (  0.1851) paths   99482584 (  0.1853) time     2.0108 sec
+pull phase1 4 frontier  150652674 (  0.2806) paths  250135258 (  0.4659) time     0.4114 sec
+     phase1 4 frontier    1991053 (  0.0037) paths  252126311 (  0.4696) time     0.1545 sec
+     phase1 2 frontier       5239 (  0.0000) paths  252131550 (  0.4696) time     0.0023 sec
+     phase1 2 frontier         22 (  0.0000) paths  252131572 (  0.4696) time     0.0000 sec
+
+phase2:
+     phase2 2 W         22 (  0.0000) s       5239 (  0.0000) [     0.00 ] time     0.0012 sec
+     phase2 2 W       5239 (  0.0000) s    1991053 (  0.0037) [     0.00 ] time     0.0046 sec
+     phase2 2 W    1991053 (  0.0037) s  150652674 (  0.2806) [     0.01 ] time     0.3908 sec
+pull phase2 2 W  150652674 (  0.2806) s   99363142 (  0.1851) [     1.52 ] time    14.8310 sec
+pull phase2 4 W   99363142 (  0.1851) s     119431 (  0.0002) [   831.97 ] time     2.1828 sec
+     phase2 4 W     119431 (  0.0002) s          7 (  0.0000) [ 17061.57 ] time     0.1957 sec
+Batch v5 time 40:      23.8026 (sec)
+
+Trial 13 : sources: [ 109920510 121492133 101037296 15438600 ]
+phase1:
+     phase1 2 frontier        814 (  0.0000) paths        818 (  0.0000) time     0.1573 sec
+     phase1 2 frontier    5693330 (  0.0106) paths    5694148 (  0.0106) time     6.8209 sec
+pull phase1 2 frontier  113569107 (  0.2115) paths  119263255 (  0.2221) time     2.1567 sec
+pull phase1 4 frontier  130276371 (  0.2427) paths  249539626 (  0.4648) time     0.4126 sec
+     phase1 4 frontier    2584965 (  0.0048) paths  252124591 (  0.4696) time     0.1657 sec
+     phase1 2 frontier       6955 (  0.0000) paths  252131546 (  0.4696) time     0.0026 sec
+     phase1 2 frontier         26 (  0.0000) paths  252131572 (  0.4696) time     0.0000 sec
+
+phase2:
+     phase2 2 W         26 (  0.0000) s       6955 (  0.0000) [     0.00 ] time     0.0011 sec
+     phase2 2 W       6955 (  0.0000) s    2584965 (  0.0048) [     0.00 ] time     0.0057 sec
+     phase2 2 W    2584965 (  0.0048) s  130276371 (  0.2427) [     0.02 ] time     0.5014 sec
+pull phase2 2 W  130276371 (  0.2427) s  113569107 (  0.2115) [     1.15 ] time    12.1117 sec
+pull phase2 4 W  113569107 (  0.2115) s    5693330 (  0.0106) [    19.95 ] time     4.3749 sec
+pull phase2 4 W    5693330 (  0.0106) s        814 (  0.0000) [  6994.26 ] time     0.2442 sec
+Batch v5 time 40:      27.3827 (sec)
+
+Trial 14 : sources: [ 4584784 124503845 87241743 108297008 ]
+phase1:
+     phase1 2 frontier         33 (  0.0000) paths         37 (  0.0000) time     0.0146 sec
+     phase1 2 frontier     656608 (  0.0012) paths     656645 (  0.0012) time     4.5677 sec
+pull phase1 2 frontier   70789583 (  0.1319) paths   71446228 (  0.1331) time     6.3133 sec
+pull phase1 4 frontier  145392948 (  0.2708) paths  216839176 (  0.4039) time     0.6838 sec
+     phase1 4 frontier   35053850 (  0.0653) paths  251893026 (  0.4692) time     0.7937 sec
+     phase1 2 frontier     237933 (  0.0004) paths  252130959 (  0.4696) time     0.0187 sec
+     phase1 2 frontier        609 (  0.0000) paths  252131568 (  0.4696) time     0.0002 sec
+     phase1 2 frontier          4 (  0.0000) paths  252131572 (  0.4696) time     0.0000 sec
+
+phase2:
+     phase2 2 W          4 (  0.0000) s        609 (  0.0000) [     0.01 ] time     0.0010 sec
+     phase2 2 W        609 (  0.0000) s     237933 (  0.0004) [     0.00 ] time     0.0021 sec
+     phase2 2 W     237933 (  0.0004) s   35053850 (  0.0653) [     0.01 ] time     0.0597 sec
+     phase2 2 W   35053850 (  0.0653) s  145392948 (  0.2708) [     0.24 ] time     1.1731 sec
+pull phase2 2 W  145392948 (  0.2708) s   70789583 (  0.1319) [     2.05 ] time    11.1209 sec
+pull phase2 4 W   70789583 (  0.1319) s     656608 (  0.0012) [   107.81 ] time     3.0781 sec
+     phase2 4 W     656608 (  0.0012) s         33 (  0.0000) [ 19897.21 ] time     0.3330 sec
+Batch v5 time 40:      28.5908 (sec)
+
+Trial 15 : sources: [ 33955082 79934823 8608481 82435063 ]
+phase1:
+     phase1 2 frontier         92 (  0.0000) paths         96 (  0.0000) time     0.0399 sec
+     phase1 2 frontier    1194057 (  0.0022) paths    1194153 (  0.0022) time     7.6824 sec
+pull phase1 2 frontier  123448244 (  0.2299) paths  124642397 (  0.2322) time     2.4785 sec
+pull phase1 4 frontier  124003552 (  0.2310) paths  248645949 (  0.4631) time     0.4212 sec
+     phase1 4 frontier    3475803 (  0.0065) paths  252121752 (  0.4696) time     0.1964 sec
+     phase1 2 frontier       9788 (  0.0000) paths  252131540 (  0.4696) time     0.0034 sec
+     phase1 2 frontier         32 (  0.0000) paths  252131572 (  0.4696) time     0.0000 sec
+
+phase2:
+     phase2 2 W         32 (  0.0000) s       9788 (  0.0000) [     0.00 ] time     0.0011 sec
+     phase2 2 W       9788 (  0.0000) s    3475803 (  0.0065) [     0.00 ] time     0.0077 sec
+     phase2 2 W    3475803 (  0.0065) s  124003552 (  0.2310) [     0.03 ] time     0.6621 sec
+pull phase2 2 W  124003552 (  0.2310) s  123448244 (  0.2299) [     1.00 ] time    12.9455 sec
+pull phase2 4 W  123448244 (  0.2299) s    1194057 (  0.0022) [   103.39 ] time     4.9204 sec
+     phase2 4 W    1194057 (  0.0022) s         92 (  0.0000) [ 12978.88 ] time     1.7193 sec
+Batch v5 time 40:      31.5087 (sec)
+
+Trial 16 : sources: [ 46579271 515421 121530467 127978736 ]
+phase1:
+     phase1 2 frontier         38 (  0.0000) paths         42 (  0.0000) time     0.0209 sec
+     phase1 2 frontier     827169 (  0.0015) paths     827211 (  0.0015) time     8.8779 sec
+pull phase1 2 frontier  138753813 (  0.2584) paths  139581024 (  0.2600) time     1.8595 sec
+pull phase1 4 frontier  110541107 (  0.2059) paths  250122131 (  0.4659) time     0.4067 sec
+     phase1 4 frontier    2004013 (  0.0037) paths  252126144 (  0.4696) time     0.1708 sec
+     phase1 2 frontier       5407 (  0.0000) paths  252131551 (  0.4696) time     0.0022 sec
+     phase1 2 frontier         21 (  0.0000) paths  252131572 (  0.4696) time     0.0000 sec
+
+phase2:
+     phase2 2 W         21 (  0.0000) s       5407 (  0.0000) [     0.00 ] time     0.0011 sec
+     phase2 2 W       5407 (  0.0000) s    2004013 (  0.0037) [     0.00 ] time     0.0049 sec
+     phase2 2 W    2004013 (  0.0037) s  110541107 (  0.2059) [     0.02 ] time     0.5299 sec
+     phase2 2 W  110541107 (  0.2059) s  138753813 (  0.2584) [     0.80 ] time     3.0830 sec
+pull phase2 2 W  138753813 (  0.2584) s     827169 (  0.0015) [   167.75 ] time     5.3505 sec
+     phase2 4 W     827169 (  0.0015) s         38 (  0.0000) [ 21767.61 ] time     0.3498 sec
+Batch v5 time 40:      21.1282 (sec)
+
+ntrials: 16
+
+
+Ave (Batch5)  40:     25.488 sec, rate      0.000
+./build/gap_bc_test: all tests passed
+SuiteSparse:GraphBLAS v4.0.1 [Nov 25, 2020 (DRAFT)]
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+sources: /home/faculty/davis/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 34.9247 sec
+A is symmetric
+transpose time: 1.9148e-06
+
+========== input graph: nodes: 134217728 edges: 64
+
+Trial 1 : sources: [ 27691419 121280314 2413431 37512113 ]
+phase1:
+     phase1 2 frontier        142 (  0.0000) paths        146 (  0.0000) time     0.0004 sec
+     phase1 2 frontier       4528 (  0.0000) paths       4674 (  0.0000) time     0.0074 sec
+     phase1 2 frontier     144471 (  0.0003) paths     149145 (  0.0003) time     0.0651 sec
+     phase1 2 frontier    4600022 (  0.0086) paths    4749167 (  0.0088) time     1.1234 sec
+pull phase1 2 frontier  127302212 (  0.2371) paths  132051379 (  0.2460) time    17.8676 sec
+pull phase1 4 frontier  404525131 (  0.7535) paths  536576510 (  0.9995) time     0.4732 sec
+     phase1 4 frontier     294402 (  0.0005) paths  536870912 (  1.0000) time     0.2740 sec
+
+phase2:
+     phase2 2 W     294402 (  0.0005) s  404525131 (  0.7535) [     0.00 ] time     0.4445 sec
+pull phase2 2 W  404525131 (  0.7535) s  127302212 (  0.2371) [     3.18 ] time     9.8957 sec
+pull phase2 4 W  127302212 (  0.2371) s    4600022 (  0.0086) [    27.67 ] time     0.7212 sec
+     phase2 4 W    4600022 (  0.0086) s     144471 (  0.0003) [    31.84 ] time     0.4093 sec
+     phase2 2 W     144471 (  0.0003) s       4528 (  0.0000) [    31.91 ] time     0.0378 sec
+     phase2 2 W       4528 (  0.0000) s        142 (  0.0000) [    31.89 ] time     0.0046 sec
+Batch v5 time 40:      31.7598 (sec)
+
+Trial 2 : sources: [ 38390877 56651037 128461248 33029842 ]
+phase1:
+     phase1 2 frontier        146 (  0.0000) paths        150 (  0.0000) time     0.0005 sec
+     phase1 2 frontier       4750 (  0.0000) paths       4900 (  0.0000) time     0.0082 sec
+     phase1 2 frontier     152521 (  0.0003) paths     157421 (  0.0003) time     0.0698 sec
+     phase1 2 frontier    4858175 (  0.0090) paths    5015596 (  0.0093) time     1.1317 sec
+pull phase1 2 frontier  133601956 (  0.2489) paths  138617552 (  0.2582) time    17.9294 sec
+pull phase1 4 frontier  398088419 (  0.7415) paths  536705971 (  0.9997) time     0.4614 sec
+     phase1 4 frontier     164941 (  0.0003) paths  536870912 (  1.0000) time     0.3632 sec
+
+phase2:
+     phase2 2 W     164941 (  0.0003) s  398088419 (  0.7415) [     0.00 ] time     0.2606 sec
+pull phase2 2 W  398088419 (  0.7415) s  133601956 (  0.2489) [     2.98 ] time    10.3304 sec
+pull phase2 4 W  133601956 (  0.2489) s    4858175 (  0.0090) [    27.50 ] time     0.7418 sec
+     phase2 4 W    4858175 (  0.0090) s     152521 (  0.0003) [    31.85 ] time     0.4341 sec
+     phase2 2 W     152521 (  0.0003) s       4750 (  0.0000) [    32.11 ] time     0.0401 sec
+     phase2 2 W       4750 (  0.0000) s        146 (  0.0000) [    32.53 ] time     0.0053 sec
+Batch v5 time 40:      32.2115 (sec)
+
+Trial 3 : sources: [ 71406328 117872827 24351938 15444519 ]
+phase1:
+     phase1 2 frontier        134 (  0.0000) paths        138 (  0.0000) time     0.0004 sec
+     phase1 2 frontier       4214 (  0.0000) paths       4352 (  0.0000) time     0.0070 sec
+     phase1 2 frontier     134253 (  0.0003) paths     138605 (  0.0003) time     0.0597 sec
+     phase1 2 frontier    4277102 (  0.0080) paths    4415707 (  0.0082) time     1.0236 sec
+pull phase1 2 frontier  119301520 (  0.2222) paths  123717227 (  0.2304) time    18.0898 sec
+pull phase1 4 frontier  412606392 (  0.7685) paths  536323619 (  0.9990) time     0.4901 sec
+     phase1 4 frontier     547293 (  0.0010) paths  536870912 (  1.0000) time     0.2811 sec
+
+phase2:
+     phase2 2 W     547293 (  0.0010) s  412606392 (  0.7685) [     0.00 ] time     0.9449 sec
+pull phase2 2 W  412606392 (  0.7685) s  119301520 (  0.2222) [     3.46 ] time     9.3621 sec
+pull phase2 4 W  119301520 (  0.2222) s    4277102 (  0.0080) [    27.89 ] time     0.6923 sec
+     phase2 4 W    4277102 (  0.0080) s     134253 (  0.0003) [    31.86 ] time     0.3851 sec
+     phase2 2 W     134253 (  0.0003) s       4214 (  0.0000) [    31.86 ] time     0.0356 sec
+     phase2 2 W       4214 (  0.0000) s        134 (  0.0000) [    31.45 ] time     0.0083 sec
+Batch v5 time 40:      31.7797 (sec)
+
+Trial 4 : sources: [ 127526281 112279428 13631649 110379302 ]
+phase1:
+     phase1 2 frontier        124 (  0.0000) paths        128 (  0.0000) time     0.0004 sec
+     phase1 2 frontier       3906 (  0.0000) paths       4034 (  0.0000) time     0.0063 sec
+     phase1 2 frontier     124683 (  0.0002) paths     128717 (  0.0002) time     0.0636 sec
+     phase1 2 frontier    3975795 (  0.0074) paths    4104512 (  0.0076) time     1.0204 sec
+pull phase1 2 frontier  111974100 (  0.2086) paths  116078612 (  0.2162) time    18.3404 sec
+pull phase1 4 frontier  419968363 (  0.7823) paths  536046975 (  0.9985) time     0.5024 sec
+     phase1 4 frontier     823937 (  0.0015) paths  536870912 (  1.0000) time     0.2921 sec
+
+phase2:
+     phase2 2 W     823937 (  0.0015) s  419968363 (  0.7823) [     0.00 ] time     1.3165 sec
+pull phase2 2 W  419968363 (  0.7823) s  111974100 (  0.2086) [     3.75 ] time     8.8675 sec
+pull phase2 4 W  111974100 (  0.2086) s    3975795 (  0.0074) [    28.16 ] time     0.6626 sec
+     phase2 4 W    3975795 (  0.0074) s     124683 (  0.0002) [    31.89 ] time     0.3792 sec
+     phase2 2 W     124683 (  0.0002) s       3906 (  0.0000) [    31.92 ] time     0.0259 sec
+     phase2 2 W       3906 (  0.0000) s        124 (  0.0000) [    31.50 ] time     0.0048 sec
+Batch v5 time 40:      31.8847 (sec)
+
+Trial 5 : sources: [ 44800623 77768193 175347 107397389 ]
+phase1:
+     phase1 2 frontier        122 (  0.0000) paths        126 (  0.0000) time     0.0004 sec
+     phase1 2 frontier       3892 (  0.0000) paths       4018 (  0.0000) time     0.0068 sec
+     phase1 2 frontier     124444 (  0.0002) paths     128462 (  0.0002) time     0.0608 sec
+     phase1 2 frontier    3965880 (  0.0074) paths    4094342 (  0.0076) time     1.0176 sec
+pull phase1 2 frontier  111925364 (  0.2085) paths  116019706 (  0.2161) time    18.2290 sec
+pull phase1 4 frontier  420144961 (  0.7826) paths  536164667 (  0.9987) time     0.4905 sec
+     phase1 4 frontier     706245 (  0.0013) paths  536870912 (  1.0000) time     0.2860 sec
+
+phase2:
+     phase2 2 W     706245 (  0.0013) s  420144961 (  0.7826) [     0.00 ] time     1.1694 sec
+pull phase2 2 W  420144961 (  0.7826) s  111925364 (  0.2085) [     3.75 ] time     8.8828 sec
+pull phase2 4 W  111925364 (  0.2085) s    3965880 (  0.0074) [    28.22 ] time     0.6643 sec
+     phase2 4 W    3965880 (  0.0074) s     124444 (  0.0002) [    31.87 ] time     0.3694 sec
+     phase2 2 W     124444 (  0.0002) s       3892 (  0.0000) [    31.97 ] time     0.0271 sec
+     phase2 2 W       3892 (  0.0000) s        122 (  0.0000) [    31.90 ] time     0.0055 sec
+Batch v5 time 40:      31.6266 (sec)
+
+Trial 6 : sources: [ 43457209 97215940 73575165 44449715 ]
+phase1:
+     phase1 2 frontier        138 (  0.0000) paths        142 (  0.0000) time     0.0004 sec
+     phase1 2 frontier       4537 (  0.0000) paths       4679 (  0.0000) time     0.0078 sec
+     phase1 2 frontier     145452 (  0.0003) paths     150131 (  0.0003) time     0.0686 sec
+     phase1 2 frontier    4636288 (  0.0086) paths    4786419 (  0.0089) time     1.1711 sec
+pull phase1 2 frontier  128432827 (  0.2392) paths  133219246 (  0.2481) time    17.8064 sec
+pull phase1 4 frontier  403452516 (  0.7515) paths  536671762 (  0.9996) time     0.4649 sec
+     phase1 4 frontier     199150 (  0.0004) paths  536870912 (  1.0000) time     0.2923 sec
+
+phase2:
+     phase2 2 W     199150 (  0.0004) s  403452516 (  0.7515) [     0.00 ] time     0.2871 sec
+pull phase2 2 W  403452516 (  0.7515) s  128432827 (  0.2392) [     3.14 ] time     9.9442 sec
+pull phase2 4 W  128432827 (  0.2392) s    4636288 (  0.0086) [    27.70 ] time     0.7206 sec
+     phase2 4 W    4636288 (  0.0086) s     145452 (  0.0003) [    31.88 ] time     0.4108 sec
+     phase2 2 W     145452 (  0.0003) s       4537 (  0.0000) [    32.06 ] time     0.0402 sec
+     phase2 2 W       4537 (  0.0000) s        138 (  0.0000) [    32.88 ] time     0.0059 sec
+Batch v5 time 40:      31.6654 (sec)
+
+Trial 7 : sources: [ 33931724 55526610 14422051 58043873 ]
+phase1:
+     phase1 2 frontier        120 (  0.0000) paths        124 (  0.0000) time     0.0004 sec
+     phase1 2 frontier       3803 (  0.0000) paths       3927 (  0.0000) time     0.0097 sec
+     phase1 2 frontier     121866 (  0.0002) paths     125793 (  0.0002) time     0.0606 sec
+     phase1 2 frontier    3885574 (  0.0072) paths    4011367 (  0.0075) time     0.9448 sec
+pull phase1 2 frontier  109922208 (  0.2047) paths  113933575 (  0.2122) time    18.2427 sec
+pull phase1 4 frontier  422037191 (  0.7861) paths  535970766 (  0.9983) time     0.5061 sec
+     phase1 4 frontier     900146 (  0.0017) paths  536870912 (  1.0000) time     0.2647 sec
+
+phase2:
+     phase2 2 W     900146 (  0.0017) s  422037191 (  0.7861) [     0.00 ] time     1.8917 sec
+pull phase2 2 W  422037191 (  0.7861) s  109922208 (  0.2047) [     3.84 ] time     8.7099 sec
+pull phase2 4 W  109922208 (  0.2047) s    3885574 (  0.0072) [    28.29 ] time     0.6548 sec
+     phase2 4 W    3885574 (  0.0072) s     121866 (  0.0002) [    31.88 ] time     0.3632 sec
+     phase2 2 W     121866 (  0.0002) s       3803 (  0.0000) [    32.04 ] time     0.0304 sec
+     phase2 2 W       3803 (  0.0000) s        120 (  0.0000) [    31.69 ] time     0.0042 sec
+Batch v5 time 40:      32.1134 (sec)
+
+Trial 8 : sources: [ 72137329 9647840 15940695 14209952 ]
+phase1:
+     phase1 2 frontier        151 (  0.0000) paths        155 (  0.0000) time     0.0005 sec
+     phase1 2 frontier       4897 (  0.0000) paths       5052 (  0.0000) time     0.0083 sec
+     phase1 2 frontier     157161 (  0.0003) paths     162213 (  0.0003) time     0.0687 sec
+     phase1 2 frontier    5001827 (  0.0093) paths    5164040 (  0.0096) time     1.2227 sec
+pull phase1 2 frontier  136617772 (  0.2545) paths  141781812 (  0.2641) time    17.7963 sec
+pull phase1 4 frontier  394911213 (  0.7356) paths  536693025 (  0.9997) time     0.4631 sec
+     phase1 4 frontier     177887 (  0.0003) paths  536870912 (  1.0000) time     0.3602 sec
+
+phase2:
+     phase2 2 W     177887 (  0.0003) s  394911213 (  0.7356) [     0.00 ] time     0.2904 sec
+pull phase2 2 W  394911213 (  0.7356) s  136617772 (  0.2545) [     2.89 ] time    10.5285 sec
+pull phase2 4 W  136617772 (  0.2545) s    5001827 (  0.0093) [    27.31 ] time     0.7568 sec
+     phase2 4 W    5001827 (  0.0093) s     157161 (  0.0003) [    31.83 ] time     0.4346 sec
+     phase2 2 W     157161 (  0.0003) s       4897 (  0.0000) [    32.09 ] time     0.0391 sec
+     phase2 2 W       4897 (  0.0000) s        151 (  0.0000) [    32.43 ] time     0.0060 sec
+Batch v5 time 40:      32.3750 (sec)
+
+Trial 9 : sources: [ 49020883 28901138 50493273 49150069 ]
+phase1:
+     phase1 2 frontier        131 (  0.0000) paths        135 (  0.0000) time     0.0010 sec
+     phase1 2 frontier       4221 (  0.0000) paths       4356 (  0.0000) time     0.0073 sec
+     phase1 2 frontier     135707 (  0.0003) paths     140063 (  0.0003) time     0.0668 sec
+     phase1 2 frontier    4324094 (  0.0081) paths    4464157 (  0.0083) time     1.0805 sec
+pull phase1 2 frontier  120927404 (  0.2252) paths  125391561 (  0.2336) time    17.8759 sec
+pull phase1 4 frontier  411164818 (  0.7659) paths  536556379 (  0.9994) time     0.4694 sec
+     phase1 4 frontier     314533 (  0.0006) paths  536870912 (  1.0000) time     0.2816 sec
+
+phase2:
+     phase2 2 W     314533 (  0.0006) s  411164818 (  0.7659) [     0.00 ] time     0.3912 sec
+pull phase2 2 W  411164818 (  0.7659) s  120927404 (  0.2252) [     3.40 ] time     9.4433 sec
+pull phase2 4 W  120927404 (  0.2252) s    4324094 (  0.0081) [    27.97 ] time     0.6915 sec
+     phase2 4 W    4324094 (  0.0081) s     135707 (  0.0003) [    31.86 ] time     0.4032 sec
+     phase2 2 W     135707 (  0.0003) s       4221 (  0.0000) [    32.15 ] time     0.0403 sec
+     phase2 2 W

@@ -387,6 +387,7 @@ int main (int argc, char **argv)
 #endif
 
 
+#if 0
         // version 4
 //      GB_Global_timing_clear_all ( ) ;
         {
@@ -405,6 +406,7 @@ int main (int argc, char **argv)
                 total_time_4 [t] += t2 ;
             }
         }
+#endif
 
 //      for (int k = 0 ; k < 20 ; k++)
 //      {
@@ -570,6 +572,7 @@ int main (int argc, char **argv)
         GrB_free (&v_brandes) ;
         GrB_free (&v_batch) ;
         GrB_free (&v_batch4) ;
+        GrB_free (&v_batch5) ;
 
         // HACK: uncomment this to just do the first batch
         // break ;

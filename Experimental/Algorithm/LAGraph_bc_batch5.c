@@ -142,7 +142,8 @@ GrB_Info LAGraph_bc_batch5      // betweeness centrality, batch algorithm
 
     // Initialize paths to source vertices with ones, and the other
     // entries equal to zero.  The paths matrix is dense, and stays that way.
-    LAGr_assign (paths, NULL, NULL, 0, GrB_ALL, ns, GrB_ALL, n, NULL) ;
+    // LAGr_assign (paths, NULL, NULL, 0, GrB_ALL, ns, GrB_ALL, n, NULL) ;
+    GxB_set (paths, GxB_SPARSITY_CONTROL, GxB_BITMAP + GxB_FULL) ;
     for (GrB_Index i = 0 ; i < ns ; i++)
     {
         // paths (i,s(i)) = 1
@@ -164,7 +165,7 @@ GrB_Info LAGraph_bc_batch5      // betweeness centrality, batch algorithm
     }
 
     // === Breadth-first search stage ==========================================
-    double ttt = omp_get_wtime ( ) ;
+    printf ("phase1:\n") ;
 
     GrB_Index frontier_size ;
     LAGr_Matrix_nvals (&frontier_size, frontier) ;
@@ -172,6 +173,7 @@ GrB_Info LAGraph_bc_batch5      // betweeness centrality, batch algorithm
     int64_t depth ;
     for (depth = 0 ; frontier_size > 0 && depth < n ; depth++)
     {
+        double ttt = omp_get_wtime ( ) ;
 
         // S [depth] = pattern of frontier
         LAGr_Matrix_new (&(S [depth]), GrB_BOOL, ns, n) ;
@@ -182,26 +184,48 @@ GrB_Info LAGraph_bc_batch5      // betweeness centrality, batch algorithm
             ns, NULL) ;
 
         // Update frontier: frontier<!paths> = frontier*A
-        int fstat, pstat ;
+        int fstat ;
         GxB_get (frontier, GxB_SPARSITY_STATUS, &fstat) ;
-        if (fstat == GxB_BITMAP || fstat == GxB_FULL)
+        int64_t fsize = frontier_size ;
+        int64_t psize ;
+        GrB_Matrix_nvals (&psize, paths) ;
+
+        // pull if frontier is more than 10% dense
+        bool do_pull = (((double) fsize) / (double) (ns*n)) > 0.1 ;
+
+        if (do_pull)
         {
             // pull
-            LAGr_mxm (frontier, paths, NULL, GxB_PLUS_FIRST_FP32, frontier, AT, GrB_DESC_RCT1) ;
+            printf ("pull ") ;
+            GxB_set (frontier, GxB_SPARSITY_CONTROL, GxB_BITMAP) ;
+            LAGr_mxm (frontier, paths, NULL, GxB_PLUS_FIRST_FP32, frontier, AT,
+                GrB_DESC_RCT1) ;
         }
         else
         {
             // push
-            LAGr_mxm (frontier, paths, NULL, GxB_PLUS_FIRST_FP32, frontier, A, GrB_DESC_RC) ;
+            printf ("     ") ;
+            GxB_set (frontier, GxB_SPARSITY_CONTROL, GxB_SPARSE) ;
+            LAGr_mxm (frontier, paths, NULL, GxB_PLUS_FIRST_FP32, frontier, A,
+                GrB_DESC_RC) ;
         }
 
         // Get the size of the current frontier
         LAGr_Matrix_nvals (&frontier_size, frontier) ;
+
+        ttt = omp_get_wtime ( ) - ttt ;
+        printf ("phase1 %d frontier %10ld (%8.4f) paths %10ld (%8.4f) "
+            "time %10.4f sec\n",
+            fstat,
+            fsize, (double) fsize / (double) (n*ns),
+            psize, (double) psize / (double) (n*ns), ttt) ;
     }
 
     LAGr_free (&frontier) ;
 
     // === Betweenness centrality computation phase ============================
+
+    printf ("\nphase2:\n") ;
 
     // bc_update = ones (ns, n) ; a dense matrix (and stays dense)
     LAGr_Matrix_new (&bc_update, GrB_FP32, ns, n) ;
@@ -212,30 +236,58 @@ GrB_Info LAGraph_bc_batch5      // betweeness centrality, batch algorithm
     // Backtrack through the BFS and compute centrality updates for each vertex
     for (int64_t i = depth-1 ; i > 0 ; i--)
     {
+        double ttt = omp_get_wtime ( ) ;
+
         // Add contributions by successors and mask with that level's frontier
 
         // W<S[i]> = bc_update ./ paths
         LAGr_eWiseMult (W, S [i], NULL, GrB_DIV_FP32, bc_update, paths,
             GrB_DESC_RS) ;
+        GrB_Index wsize, ssize ;
+        GrB_Matrix_nvals (&wsize, W) ;
+        GrB_Matrix_nvals (&ssize, S [i-1]) ;
 
         // W<S[i−1]> = W * A'
         int wstat ;
-        GxB_get (W, GxB_SPARSITY_STATUS, &wstat) ;
-        if (wstat == GxB_BITMAP || wstat == GxB_FULL)
+        // GxB_get (W, GxB_SPARSITY_STATUS, &wstat) ;
+
+        // pull if S[i] is more than 10% dense and Si/Si-1 > 1
+        // or if Si > 1% and Si/Si-1 > 10
+        double si_density = (((double) wsize) / (double) (ns*n)) ;
+        double si_ratio   = ((double) wsize) / ((double) ssize) ;
+        bool do_pull =
+            (si_density > 0.1  && si_ratio > 1.) ||
+            (si_density > 0.01 && si_ratio > 10.) ;
+
+        if (do_pull)
         {
             // pull
-            LAGr_mxm (W, S [i-1], NULL, GxB_PLUS_FIRST_FP32, W, AT, GrB_DESC_RS) ;
+            printf ("pull ") ;
+            GxB_set (W, GxB_SPARSITY_CONTROL, GxB_BITMAP) ;
+            LAGr_mxm (W, S [i-1], NULL, GxB_PLUS_FIRST_FP32, W, A,
+                GrB_DESC_RST1) ;
         }
         else
         {
             // push
-            LAGr_mxm (W, S [i-1], NULL, GxB_PLUS_FIRST_FP32, W, A, GrB_DESC_RST1) ;
+            printf ("     ") ;
+            GxB_set (W, GxB_SPARSITY_CONTROL, GxB_SPARSE) ;
+            LAGr_mxm (W, S [i-1], NULL, GxB_PLUS_FIRST_FP32, W, AT,
+                GrB_DESC_RS) ;
         }
 
         // bc_update += W .* paths
         // bc_update and paths are both dense, but W is sparse
         LAGr_eWiseMult (bc_update, NULL, GrB_PLUS_FP32, GrB_TIMES_FP32, W,
             paths, NULL) ;
+
+        ttt = omp_get_wtime ( ) - ttt ;
+        printf ("phase2 %d W %10ld (%8.4f) s %10ld (%8.4f) "
+            "[ %8.2f ] time %10.4f sec\n",
+            wstat,
+            wsize, (double) wsize / (double) (n*ns),
+            ssize, (double) ssize / (double) (n*ns),
+            (double) wsize / (double) ssize, ttt) ;
     }
 
     // Initialize the centrality array with -ns to avoid counting
