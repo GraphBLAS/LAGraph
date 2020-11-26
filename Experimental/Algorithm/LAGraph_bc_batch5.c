@@ -150,20 +150,9 @@ GrB_Info LAGraph_bc_batch5      // betweeness centrality, batch algorithm
         LAGr_Matrix_setElement (frontier, 1, i, sources [i]) ;
     }
 
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
-        && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,2,0) )
-    GrB_Descriptor desc_rc = GrB_DESC_RC ;
-    GrB_Descriptor desc_rs = GrB_DESC_RS ;
-    GrB_Descriptor desc_t0 = GrB_DESC_T0 ;
-    #else
-    GrB_Descriptor desc_rc = LAGraph_desc_oocr ;
-    GrB_Descriptor desc_rs = LAGraph_desc_ooor ;
-    GrB_Descriptor desc_t0 = LAGraph_desc_tooo  ;
-    #endif
-
     // Initial frontier: frontier<!paths>= frontier*A
     LAGr_mxm (frontier, paths, NULL, GxB_PLUS_FIRST_FP32, frontier, A,
-        desc_rc) ;
+        GrB_DESC_RC) ;
 
     // Allocate memory for the array of S matrices
     S = (GrB_Matrix *) LAGraph_calloc  (n, sizeof (GrB_Matrix)) ;
@@ -175,7 +164,6 @@ GrB_Info LAGraph_bc_batch5      // betweeness centrality, batch algorithm
     }
 
     // === Breadth-first search stage ==========================================
-    // printf ("\n-------------------- bfs phase:\n") ;
     double ttt = omp_get_wtime ( ) ;
 
     GrB_Index frontier_size ;
@@ -228,7 +216,7 @@ GrB_Info LAGraph_bc_batch5      // betweeness centrality, batch algorithm
 
         // W<S[i]> = bc_update ./ paths
         LAGr_eWiseMult (W, S [i], NULL, GrB_DIV_FP32, bc_update, paths,
-            desc_rs) ;
+            GrB_DESC_RS) ;
 
         // W<S[i−1]> = W * A'
         int wstat ;
@@ -256,7 +244,7 @@ GrB_Info LAGraph_bc_batch5      // betweeness centrality, batch algorithm
 
     // centrality (i) = sum (bc_update (:,i)) for all nodes i
     LAGr_reduce (*centrality, NULL, GrB_PLUS_FP32, GrB_PLUS_FP32, bc_update,
-        desc_t0) ;
+        GrB_DESC_T0) ;
 
     LAGRAPH_FREE_WORK ;
     return (GrB_SUCCESS) ;
