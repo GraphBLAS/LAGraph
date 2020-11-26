@@ -181,21 +181,13 @@ GrB_Info LAGraph_bfs_parent2 // push-pull BFS, compute the tree only
 
     GrB_Index n = nrows ;
     GrB_Type int_type = (n > INT32_MAX) ? GrB_INT64 : GrB_INT32 ;
-    GrB_Semiring semiring ;
+    GrB_Semiring semiring =
+        (n > INT32_MAX) ? GxB_ANY_SECONDI_INT64 : GxB_ANY_SECONDI_INT32 ;
 
     // create an sparse integer vector q, and set q(source) = source
     LAGr_Vector_new (&q, int_type, n) ;
     LAGr_Vector_setElement (q, source, source) ;
     GrB_Index nq = 1 ;          // number of nodes in the current level
-
-    if (n > INT32_MAX)
-    {
-        semiring = GxB_ANY_SECONDI_INT64 ;
-    }
-    else
-    {
-        semiring = GxB_ANY_SECONDI_INT32 ;
-    }
 
     // pi = an empty bitmap vector
     LAGr_Vector_new (&pi, int_type, n) ;
@@ -228,6 +220,9 @@ GrB_Info LAGraph_bfs_parent2 // push-pull BFS, compute the tree only
         // select push vs pull
         //----------------------------------------------------------------------
 
+// double ttt = omp_get_wtime ( ) ;
+// if (nq > last_nq) printf ("grow ") ; else printf ("     ") ;
+
         int64_t edges_in_frontier = 0 ;
         if (push_pull)
         {
@@ -235,7 +230,7 @@ GrB_Info LAGraph_bfs_parent2 // push-pull BFS, compute the tree only
             {
                 // check for switch from push to pull
                 bool growing = nq > last_nq ;
-                bool switch_to_pull ;
+                bool switch_to_pull = false ;
                 if (edges_unexplored < n)
                 { 
                     // very little of the graph is left; disable the pull
@@ -250,6 +245,7 @@ GrB_Info LAGraph_bfs_parent2 // push-pull BFS, compute the tree only
                     // just keep track of the size of the frontier, and switch
                     // if it starts growing again and is getting big.
                     switch_to_pull = (growing && nq > n_over_beta1) ;
+// if (switch_to_pull) printf ("back to pull: %g\n", (double) n / (double) nq) ;
                 }
                 else
                 {
@@ -287,25 +283,32 @@ GrB_Info LAGraph_bfs_parent2 // push-pull BFS, compute the tree only
         // q = next level of the BFS
         //----------------------------------------------------------------------
 
-        GxB_set ((GrB_Matrix) q, GxB_SPARSITY_CONTROL,  
-            do_push ? GxB_SPARSE : GxB_BITMAP) ;
+        GxB_set (q, GxB_SPARSITY_CONTROL, do_push ? GxB_SPARSE : GxB_BITMAP) ;
 
         if ((do_push && vxm_is_push) || (!do_push && vxm_is_pull))
         {
             // q'<!pi> = q'*A
             // this is a push if A is in CSR format; pull if A is in CSC
+// printf ("push") ;
             LAGr_vxm (q, pi, NULL, semiring, q, A, GrB_DESC_RSC) ;
         }
-        else // ((!do_push && mxv_is_pull) || (do_push && mxv_is_push))
+        else
         {
             // q<!pi> = AT*q
             // this is a pull if AT is in CSR format; push if AT is in CSC
+// printf ("pull") ;
             LAGr_mxv (q, pi, NULL, semiring, AT, q, GrB_DESC_RSC) ;
         }
 
         last_nq = nq ;
         LAGr_Vector_nvals (&nq, q) ;
-        if (nq == 0) break ;
+// printf (" %10ld", nq) ;
+        if (nq == 0)
+        {
+// double tt2 = omp_get_wtime ( ) ;
+// printf (" %12.6f sec\n", tt2-ttt) ;
+            break ;
+        }
 
         //----------------------------------------------------------------------
         // assign parents
@@ -314,7 +317,12 @@ GrB_Info LAGraph_bfs_parent2 // push-pull BFS, compute the tree only
         // q(i) currently contains the parent id of node i in tree.
         // pi<q> = q
         LAGr_assign (pi, q, NULL, q, GrB_ALL, n, GrB_DESC_S) ;
+
+// double tt2 = omp_get_wtime ( ) ;
+// printf (" %12.6f sec\n", tt2-ttt) ;
+
     }
+// printf ("\n") ;
 
     //--------------------------------------------------------------------------
     // free workspace and return result

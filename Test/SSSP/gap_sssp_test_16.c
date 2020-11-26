@@ -77,7 +77,7 @@ int main (int argc, char **argv)
     GrB_Vector path_lengths = NULL ;
     GrB_Vector path_lengths1 = NULL ;
     LAGRAPH_OK (LAGraph_init ( )) ;
-    LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
+    LAGRAPH_OK (GxB_set (GxB_BURBLE, true)) ;
 
     GrB_Index ignore, s = 0 ;
     int32_t delta = 3;

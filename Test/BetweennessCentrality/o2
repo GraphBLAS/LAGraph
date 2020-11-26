@@ -1,0 +1,84 @@
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+ [ GxB_Matrix_import_CSR 7.74e-06 sec ]
+ [ GxB_set 0.0208 sec ]
+sources: /home/faculty/davis/GAP/GAP-kron/GAP-kron_sources.mtx
+ [ *_setElement (wait: 0 zombies, 64 pending) 6.21e-05 sec ]
+read time: 32.4216 sec
+ [ GrB_apply (shallow-op) (generic apply: ((void (*)(void *, const void *)) LAGraph_true_bool)) 2.15 sec ]
+ [ GrB_Matrix_nvals 1.26e-06 sec ]
+ [ GrB_Matrix_nvals 2.24e-07 sec ]
+ [ GrB_transpose (transpose) 68.5 sec ]
+ [ GrB_Matrix_nvals 6.59e-07 sec ]
+ [ GrB_Matrix_nvals 6.71e-08 sec ]
+ [ GrB_eWiseMult emult:(S<.>=S.*S) 3.37 sec ]
+ [ GrB_Matrix_nvals 4.12e-07 sec ]
+ [ GrB_reduce 0.0875 sec ]
+A is symmetric
+transpose time: 71.93
+
+========== input graph: nodes: 134217726 edges: 64
+
+Trial 1 : sources: [ 2338012 31997659 23590940 43400604 ]
+
+ [ GrB_assign (C empty) Method 21: (C full) = scalar 0.0364 sec ]
+ [ GrB_mxm (wait: 0 zombies, 4 pending) (generic build with typecast) (hyper to sparse) (M full) C<!M>=A*B, saxpy axbwork 2587 mwork 0 (use dense mask in-place) (nthreads 1 coarse hash: 1) 0.000383 sec ]
+ [ GrB_Matrix_nvals 8.1e-07 sec ]
+ [ GrB_apply (wait: 0 zombies, 0 pending, jumbled) (shallow-op) 4.26e-05 sec ]
+ [ GrB_assign Method 23: (C full) += Z 0.000138 sec ]
+ [ GrB_mxm (M full) C<!M>=A*B, saxpy axbwork 3.72225e+07 mwork 0 (use dense mask in-place) (nthreads 40 coarse hash: 2 fine: 158) 0.18 sec ]
+ [ GrB_Matrix_nvals 4.25e-07 sec ]
+ [ GrB_apply (wait: 0 zombies, 0 pending, jumbled) (shallow-op) 0.0225 sec ]
+ [ GrB_assign Method 23: (C full) += Z 0.0171 sec ]
+ [ GrB_mxm (M full) C<!M>=A*B, saxpy axbwork 6.41067e+09 mwork 0 (use dense mask) (nthreads 40 fine: 159) (sparse to bitmap) 12.5 sec ]
+ [ GrB_Matrix_nvals 4.49e-07 sec ]
+ [ GrB_apply (A bitmap) (shallow-op) 0.102 sec ]
+ [ GrB_assign Method 23: (C full) += Z (Z packed) 0.109 sec ]
+ [ GrB_mxm (C bitmap) (A bitmap) (M full) C<!M>=A*B, saxpy 11.4 sec ]
+ [ GrB_Matrix_nvals 5.2e-07 sec ]
+ [ GrB_apply (A bitmap) (shallow-op) 0.0805 sec ]
+ [ GrB_assign Method 23: (C full) += Z (Z packed) 0.0925 sec ]
+ [ GrB_mxm (C bitmap) (A bitmap) (M full) C<!M>=A*B, saxpy (bitmap to sparse) 0.549 sec ]
+ [ GrB_Matrix_nvals 4.86e-07 sec ]
+ [ GrB_apply (shallow-op) 0.000272 sec ]
+ [ GrB_assign Method 23: (C full) += Z 0.00235 sec ]
+ [ GrB_mxm (M full) C<!M>=A*B, saxpy axbwork 380572 mwork 0 (use dense mask in-place) (nthreads 5 coarse hash: 3 fine hash: 3) 0.0301 sec ]
+ [ GrB_Matrix_nvals 3.24e-07 sec ]
+ [ GrB_apply (wait: 0 zombies, 0 pending, jumbled) (shallow-op) 8.97e-05 sec ]
+ [ GrB_assign Method 23: (C full) += Z 4.43e-05 sec ]
+ [ GrB_mxm (M full) C<!M>=A*B, saxpy axbwork 1029 mwork 0 (use dense mask in-place) (nthreads 1 coarse hash: 1) 0.000173 sec ]
+ [ GrB_Matrix_nvals 1.38e-07 sec ]
+ [ GrB_apply (wait: 0 zombies, 0 pending, jumbled) (shallow-op) 1.42e-05 sec ]
+ [ GrB_assign Method 23: (C full) += Z 7.61e-06 sec ]
+ [ GrB_mxm (M full) C<!M>=A*B, saxpy axbwork 7 mwork 0 (use dense mask in-place) (nthreads 1 coarse hash: 1) (sparse to hyper) 4.83e-05 sec ]
+ [ GrB_Matrix_nvals 1.15e-07 sec ]
+ [ GrB_assign (C empty) Method 21: (C full) = scalar 0.0777 sec ]
+ [ GrB_eWiseMult (A full) (B full) add:(S<S>=F+F) 0.000447 sec ]
+ [ GrB_mxm C<M>=A*B, saxpy axbwork 7 mwork 1007 (discard mask) (nthreads 1 coarse hash: 1) (mask later) (C<M>=Z via assign) (C(:,:)<any mask>: C_replace early) (C empty) Method 06s: C(:,:)<M> = Z ; using S (wait: 0 zombies, 0 pending, jumbled) 0.000206 sec ]
+ [ GrB_eWiseMult (wait: 0 zombies, 7 pending) (hyper to sparse) (C full) (B full) emult:(S<.>=S.*F) (C+=Z via assign) Method 23: (C full) += Z 0.000581 sec ]
+ [ GrB_eWiseMult (A full) (B full) add:(S<S>=F+F) 0.000396 sec ]
+ [ GrB_mxm C<M>=A*B, saxpy axbwork 1029 mwork 377880 (discard mask) (nthreads 1 coarse hash: 1) (mask later) (wait: 0 zombies, 0 pending, jumbled) masker:(S:H{S}=S) 0.00155 sec ]
+ [ GrB_eWiseMult (C full) (B full) emult:(S<.>=S.*F) (C+=Z via assign) Method 23: (C full) += Z 0.00074 sec ]
+ [ GrB_eWiseMult (A full) (B full) add:(S<S>=F+F) 0.00249 sec ]
+ [ GrB_mxm (M bitmap) C<M>=A*B, saxpy axbwork 380572 mwork 0 (use dense mask in-place) (nthreads 5 coarse hash: 3 fine hash: 3) 0.0873 sec ]
+ [ GrB_eWiseMult (wait: 0 zombies, 0 pending, jumbled) (C full) (B full) emult:(S<.>=S.*F) (C+=Z via assign) Method 23: (C full) += Z 0.0271 sec ]
+ [ GrB_eWiseMult (M bitmap) (A full) (B full) add:(B<B>=F+F) 0.202 sec ]
+ [ GrB_mxm (C bitmap) (A bitmap) (M bitmap) C<M>=A*B, saxpy 0.914 sec ]
+ [ GrB_eWiseMult (C full) (A bitmap) (B full) emult:(B<.>=B.*F) (C+=Z via assign) Method 23: (C full) += Z (Z packed) 0.27 sec ]
+ [ GrB_eWiseMult (C bitmap) (M bitmap) (A full) (B full) add:(B<B>=F+F) 0.223 sec ]
+ [ GrB_mxm (C bitmap) (A bitmap) C<M>=A*B, saxpy axbwork 1.03031e+10 mwork 1.04727e+07 (use mask) (nthreads 40 fine: 163) 42.4 sec ]
+ [ GrB_eWiseMult (C full) (B full) emult:(S<.>=S.*F) (C+=Z via assign) Method 23: (C full) += Z 0.0331 sec ]
+ [ GrB_eWiseMult (A full) (B full) add:(S<S>=F+F) 0.0269 sec ]
+ [ GrB_mxm C<M>=A*B, saxpy axbwork 3.81898e+09 mwork 2587 (use mask) (nthreads 40 coarse: 3 fine: 153) 5.55 sec ]
+ [ GrB_eWiseMult (wait: 0 zombies, 0 pending, jumbled) (C full) (B full) emult:(S<.>=S.*F) (C+=Z via assign) Method 23: (C full) += Z 0.00174 sec ]
+ [ GrB_assign (C empty) Method 21: (C full) = scalar 0.0179 sec ]
+ [ GrB_reduce (C full) (A full) (B full) C=A*B, saxpy (C+=Z via assign) Method 23: (C full) += Z (Z packed) 0.237 sec ]
+Batch v4 time 40:      75.3802 (sec)
+
+ntrials: 1
+
+
+Ave (Batch4)  40:     75.380 sec, rate      0.000
+./build/gap_bc_test: all tests passed

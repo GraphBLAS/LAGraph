@@ -71,7 +71,7 @@ int main (int argc, char **argv)
     GrB_Vector PR = NULL, d_out = NULL, d_in = NULL ;
     float *dout = NULL ;
     LAGRAPH_OK (LAGraph_init ( )) ;
-    LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
+    // LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
     GB_Global_hack_set (0) ;
 
     int nt = NTHREAD_LIST ;
@@ -306,7 +306,7 @@ for (int hack = 0 ; hack <= 0 ; hack++)
     GrB_free (&PR) ;
 }
 
-    LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
+    LAGRAPH_OK (GxB_set (GxB_BURBLE, true)) ;
 
     //--------------------------------------------------------------------------
     // method 3e

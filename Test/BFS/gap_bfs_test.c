@@ -46,8 +46,8 @@
 #include "bfs_test.h"
 #include "../../../GraphBLAS/Source/GB_Global.h"
 
-// #define NTHREAD_LIST 2
-#define NTHREAD_LIST 1
+#define NTHREAD_LIST 2
+// #define NTHREAD_LIST 1
 #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 8
@@ -95,7 +95,7 @@ int main (int argc, char **argv)
     GrB_Vector Degree = NULL ;
     GrB_Matrix SourceNodes = NULL ;
     LAGRAPH_OK (LAGraph_init ( )) ;
-    LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
+    LAGRAPH_OK (GxB_set (GxB_BURBLE, true)) ;
 
     uint64_t seed = 1 ;
     FILE *f ;
@@ -247,8 +247,8 @@ int main (int argc, char **argv)
 #if 1
     LAGraph_tic (tic);
     bool A_is_symmetric =
-        (n == 134217726 ||  // HACK for kron
-         n == 134217728) ;  // HACK for urand
+        (nrows == 134217726 ||  // HACK for kron
+         nrows == 134217728) ;  // HACK for urand
     if (!A_is_symmetric)
     {
         LAGRAPH_OK (GrB_Matrix_new (&AT, GrB_BOOL, n, n)) ;
@@ -487,7 +487,8 @@ int main (int argc, char **argv)
             nthreads, t [nthreads], 1e-6*((double) nvals) / t [nthreads]) ;
         if (n > 1000)
         {
-//            LAGr_log (matrix_name, "treeonly:pushpull", nthreads, t [nthreads]);
+            LAGr_log (matrix_name, "treeonly:pushpull(bitmap)",
+                nthreads, t [nthreads]);
         }
         for (int k = 0 ; k < 20 ; k++)
         {

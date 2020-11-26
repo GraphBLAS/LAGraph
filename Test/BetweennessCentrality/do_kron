@@ -1,0 +1,3 @@
+#!/bin/sh
+
+./build/gap_bc_test ~/GAP/GAP-kron/GAP-kron.grb ~/GAP/GAP-kron/GAP-kron_sources.mtx

@@ -109,7 +109,7 @@ int main (int argc, char **argv)
     GrB_Vector thunk = NULL ;     // unused, for LAGRAPH_FREE_ALL
     #endif
     LAGRAPH_OK (LAGraph_init ( )) ;
-    LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
+    LAGRAPH_OK (GxB_set (GxB_BURBLE, true)) ;
 
     int ntrials = 3 ;
     printf ("# of trials: %d\n", ntrials) ;

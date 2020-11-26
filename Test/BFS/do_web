@@ -1,0 +1,4 @@
+#!/bin/sh
+
+./build/gap_bfs_test ~/GAP/GAP-web/GAP-web.grb ~/GAP/GAP-web/GAP-web_sources.mtx
+

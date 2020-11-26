@@ -34,7 +34,8 @@
 
 //------------------------------------------------------------------------------
 
-#define NTHREAD_LIST 2
+#define NTHREAD_LIST 1
+// #define NTHREAD_LIST 2
 #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 4
@@ -50,6 +51,7 @@
 // in is the Matrix Market file, out is the level set.
 
 #include "bc_test.h"
+#include "../../../GraphBLAS/Source/GB_Global.h"
 
 #define LAGRAPH_FREE_ALL            \
 {                                   \
@@ -60,6 +62,7 @@
     GrB_free (&v_brandes);          \
     GrB_free (&v_batch);            \
     GrB_free (&v_batch4);           \
+    GrB_free (&v_batch5);           \
     GrB_free (&SourceNodes) ;       \
 }
 
@@ -74,9 +77,17 @@ int main (int argc, char **argv)
     GrB_Vector v_brandes = NULL ;
     GrB_Vector v_batch = NULL ;
     GrB_Vector v_batch4 = NULL ;
+    GrB_Vector v_batch5 = NULL ;
     GrB_Matrix SourceNodes = NULL ;
     LAGRAPH_OK (LAGraph_init ( )) ;
     LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
+
+    printf ("%s v%d.%d.%d [%s]\n",
+        GxB_IMPLEMENTATION_NAME,
+        GxB_IMPLEMENTATION_MAJOR,
+        GxB_IMPLEMENTATION_MINOR,
+        GxB_IMPLEMENTATION_SUB,
+        GxB_IMPLEMENTATION_DATE) ;
 
     uint64_t seed = 1;
     bool tests_pass = true;
@@ -242,10 +253,15 @@ int main (int argc, char **argv)
 
     // AT = A'
     LAGraph_tic (tic);
-    bool A_is_symmetric ;
-    LAGRAPH_OK (GrB_Matrix_new (&AT, GrB_BOOL, n, n)) ;
-    LAGRAPH_OK (GrB_transpose (AT, NULL, NULL, A, NULL)) ;
-    LAGRAPH_OK (LAGraph_isequal (&A_is_symmetric, A, AT, NULL)) ;
+    bool A_is_symmetric =
+        (n == 134217726 ||  // HACK for kron
+         n == 134217728) ;  // HACK for urand
+    if (!A_is_symmetric)
+    {
+        LAGRAPH_OK (GrB_Matrix_new (&AT, GrB_BOOL, n, n)) ;
+        LAGRAPH_OK (GrB_transpose (AT, NULL, NULL, A, NULL)) ;
+        LAGRAPH_OK (LAGraph_isequal (&A_is_symmetric, A, AT, NULL)) ;
+    }
     if (A_is_symmetric)
     {
         printf ("A is symmetric\n") ;
@@ -290,12 +306,14 @@ int main (int argc, char **argv)
     double total_time_1 = 0 ;
     double total_time_x3 [8+1] ;
     double total_time_4  [8+1] ;
+    double total_time_5  [8+1] ;
     double total_timing  [3] = { 0, 0, 0 } ;
 
     for (int t = 0 ; t < 9 ; t++)
     {
         total_time_x3 [t] = 0 ;
         total_time_4  [t] = 0 ;
+        total_time_5  [t] = 0 ;
     }
 
 
@@ -370,8 +388,8 @@ int main (int argc, char **argv)
 
 
         // version 4
+//      GB_Global_timing_clear_all ( ) ;
         {
-            printf ("\n") ;
             for (int t = 1 ; t <= nt ; t++)
             {
                 if (Nthreads [t] > nthreads_max) continue ;
@@ -388,10 +406,35 @@ int main (int argc, char **argv)
             }
         }
 
+//      for (int k = 0 ; k < 20 ; k++)
+//      {
+//          double t = GB_Global_timing_get (k) ;
+//          if (t > 0) printf ("phase %2d: %12.4f msec\n", k, t*1e3) ;
+//      }
+
         // back to default
         GxB_set (GxB_NTHREADS, nthreads_max) ;
 
         // GxB_print (v_batch4, 2) ;
+
+        // version 5
+//      GB_Global_timing_clear_all ( ) ;
+        {
+            for (int t = 1 ; t <= nt ; t++)
+            {
+                if (Nthreads [t] > nthreads_max) continue ;
+                GxB_set (GxB_NTHREADS, Nthreads [t]) ;
+                GrB_free (&v_batch5) ;
+                LAGraph_tic (tic) ;
+                LAGRAPH_OK (LAGraph_bc_batch5 (&v_batch5, A,
+                    ((AT == NULL) ? A : AT),
+                    vertex_list, batch_size)) ;
+                double t2 = LAGraph_toc (tic) ;
+                printf ("Batch v5 time %2d: %12.4f (sec)\n",
+                    Nthreads [t], t2) ;
+                total_time_5 [t] += t2 ;
+            }
+        }
 
 #if 0
         LAGRAPH_OK (GrB_Vector_new(&v_batch, GrB_FP64, n));
@@ -572,6 +615,22 @@ int main (int argc, char **argv)
             if (n > 1000)
             {
                 LAGr_log (matrix_name, "Batch4", Nthreads [t], t2) ;
+            }
+        }
+    }
+
+    if (total_time_5 [1] > 0) // && ntrials > 1)
+    {
+        printf ("\n") ;
+        for (int t = 1 ; t <= nt ; t++)
+        {
+            if (Nthreads [t] > nthreads_max) continue ;
+            double t2 = total_time_5 [t] / ntrials ;
+            printf ("Ave (Batch5)  %2d: %10.3f sec, rate %10.3f\n",
+                Nthreads [t], t2, 1e-6*((double) nvals) / t2) ;
+            if (n > 1000)
+            {
+                LAGr_log (matrix_name, "Batch5", Nthreads [t], t2) ;
             }
         }
     }
