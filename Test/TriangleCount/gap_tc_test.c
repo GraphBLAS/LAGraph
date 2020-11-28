@@ -43,7 +43,8 @@
 #define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
 #include "LAGraph.h"
 
-#define NTHREAD_LIST 2
+#define NTHREAD_LIST 1
+// #define NTHREAD_LIST 2
 #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 6
@@ -102,14 +103,9 @@ int main (int argc, char **argv)
     GrB_Vector X = NULL, D = NULL ;
     int64_t *degree = NULL ;
     GrB_Index *Di = NULL ;
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
-        && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,0,1) )
     GxB_Scalar thunk = NULL ;
-    #else
-    GrB_Vector thunk = NULL ;     // unused, for LAGRAPH_FREE_ALL
-    #endif
     LAGRAPH_OK (LAGraph_init ( )) ;
-    LAGRAPH_OK (GxB_set (GxB_BURBLE, true)) ;
+    LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
 
     int ntrials = 3 ;
     printf ("# of trials: %d\n", ntrials) ;
@@ -171,13 +167,13 @@ int main (int argc, char **argv)
         if (is_binary)
         {
             printf ("\nReading binary file: %s\n", filename) ;
-            fprintf (stderr, "\nReading binary file: %s\n", filename) ;
+            // fprintf (stderr, "\nReading binary file: %s\n", filename) ;
             LAGRAPH_OK (LAGraph_binread (&C, filename)) ;
         }
         else
         {
             printf ("\nReading Matrix Market file: %s\n", filename) ;
-            fprintf (stderr, "\nReading Matrix Market file: %s\n", filename) ;
+            // fprintf (stderr, "\nReading Matrix Market file: %s\n", filename) ;
             FILE *f = fopen (filename, "r") ;
             if (f == NULL)
             {
@@ -270,12 +266,12 @@ int main (int argc, char **argv)
     // warmup for more accurate timing, and also print # of triangles
     int64_t ntriangles ;
     LAGraph_tic (tic) ;
+    printf ("\nwarmup method: ") ;
+    print_method (stdout, 6, 2) ;
     LAGRAPH_OK (LAGraph_tricount (&ntriangles, 6, 2, degree, A)) ;
     printf ("# of triangles: %" PRId64 "\n", ntriangles) ;
     double ttot = LAGraph_toc (tic) ;
-    printf ("nthreads: %3d time: %12.6f rate: %6.2f (SandiaDot, one trial)\n",
-            nthreads_max, ttot, 1e-6 * nvals / ttot) ;
-    fprintf (stderr, "nthreads: %3d time: %12.6f rate: %6.2f (SandiaDot, one trial)\n",
+    printf ("nthreads: %3d time: %12.6f rate: %6.2f (SandiaDot2, one trial)\n",
             nthreads_max, ttot, 1e-6 * nvals / ttot) ;
 
     double t_best = INFINITY ;
@@ -287,10 +283,10 @@ int main (int argc, char **argv)
     // fails on methods 3 and 4.
 
     // try all methods 3 to 6
-    // for (int method = 3 ; method <= 6 ; method++)
+    for (int method = 3 ; method <= 6 ; method++)
 
     // just try methods 5 and 6
-    for (int method = 5 ; method <= 6 ; method++)
+    // for (int method = 5 ; method <= 6 ; method++)
     {
         // for (int sorting = -1 ; sorting <= 2 ; sorting++)
 
@@ -298,8 +294,8 @@ int main (int argc, char **argv)
         {
             printf ("\nMethod: ") ;
             print_method (stdout, method, sorting) ;
-            fprintf (stderr, "\nMethod: ") ;
-            print_method (stderr, method, sorting) ;
+            // fprintf (stderr, "\nMethod: ") ;
+            // print_method (stderr, method, sorting) ;
             if (n == 134217726 && method < 5)
             {
                 printf ("kron fails on method %d; skipped\n", method) ;
@@ -320,9 +316,8 @@ int main (int argc, char **argv)
                         degree, A)) ;
                     ttrial [trial] = LAGraph_toc (tic) ;
                     ttot += ttrial [trial] ;
-                    printf ("trial %2d: %g sec\n", trial, ttrial [trial]) ;
 
-                    fprintf (stderr, "trial %2d: %12.6f sec rate %6.2f  # triangles: %ld\n",
+                    printf ("trial %2d: %12.6f sec rate %6.2f  # triangles: %ld\n",
                         trial, ttrial [trial], 1e-6 * nvals / ttrial [trial], nt2) ;
                 }
                 ttot = ttot / ntrials ;
