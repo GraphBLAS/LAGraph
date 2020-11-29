@@ -301,6 +301,12 @@ int main (int argc, char **argv)
                 printf ("kron fails on method %d; skipped\n", method) ;
                 continue ;
             }
+            if (n != 134217728 && method < 5)
+            {
+                printf ("all but urand is slow with method %d: skipped\n",
+                    method) ;
+                continue ;
+            }
 
             for (int t = 1 ; t <= nt ; t++)
             {
