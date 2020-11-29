@@ -259,21 +259,15 @@ GrB_Info LAGraph_tricount   // count # of triangles
     #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
         && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,2,0) )
         // the PAIR function is f(x,y)=1, ignoring input values and type
-        GrB_Descriptor desc_s   = GrB_DESC_S ;
-        GrB_Descriptor desc_st1 = GrB_DESC_ST1 ;
         GrB_Semiring   semiring = GxB_PLUS_PAIR_INT64 ;
-//      GrB_Semiring   semiring = GxB_PLUS_PAIR_INT32 ;
     #else
         // f(x,y)=x*y, so x and y must be 1 to compute the correct count, and
         // thus the input matrix A must be binary.
-        GrB_Descriptor desc_s   = NULL ;
-        GrB_Descriptor desc_st1 = LAGraph_desc_otoo ;
         GrB_Semiring   semiring = LAGraph_PLUS_TIMES_INT64 ;
     #endif
 
     GrB_Monoid sum = LAGraph_PLUS_INT64_MONOID ;
     LAGr_Matrix_new (&C, GrB_INT64, n, n) ;
-//  LAGr_Matrix_new (&C, GrB_INT32, n, n) ;
 
     //--------------------------------------------------------------------------
     // heuristic sort rule
@@ -404,18 +398,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
             }
         }
 
-//          for (int64_t k = 0 ; k < n ; k++)
-//          {
-//              printf ("before [%3ld %3ld]\n", D [k], P [k]) ;
-//          }
-
         GB_msort_2 (D, P, W0, W1, n, nthreads) ;
-
-//          printf ("\n") ;
-//          for (int64_t k = 0 ; k < n ; k++)
-//          {
-//              printf ("after  [%3ld %3ld]\n", D [k], P [k]) ;
-//          }
 
         // T = A_in (P,P) and typecast to boolean
         LAGr_Matrix_new (&T, GrB_BOOL, n, n) ;
@@ -459,7 +442,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
 
         case 1:  // Burkhardt:  ntri = sum (sum ((A^2) .* A)) / 6
 
-            LAGr_mxm (C, A, NULL, semiring, A, A, desc_s) ;
+            LAGr_mxm (C, A, NULL, semiring, A, A, GrB_DESC_S) ;
             LAGr_reduce (ntri, NULL, sum, C, NULL) ;
             (*ntri) /= 6 ;
             break ;
@@ -467,7 +450,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
         case 2:  // Cohen:      ntri = sum (sum ((L * U) .* A)) / 2
 
             LAGRAPH_OK (tricount_prep (&L, &U, A)) ;
-            LAGr_mxm (C, A, NULL, semiring, L, U, desc_s) ;
+            LAGr_mxm (C, A, NULL, semiring, L, U, GrB_DESC_S) ;
             LAGr_reduce (ntri, NULL, sum, C, NULL) ;
             (*ntri) /= 2 ;
             break ;
@@ -476,7 +459,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
 
             // using the masked saxpy3 method
             LAGRAPH_OK (tricount_prep (&L, NULL, A)) ;
-            LAGr_mxm (C, L, NULL, semiring, L, L, desc_s) ;
+            LAGr_mxm (C, L, NULL, semiring, L, L, GrB_DESC_S) ;
             LAGr_reduce (ntri, NULL, sum, C, NULL) ;
             break ;
 
@@ -484,7 +467,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
 
             // using the masked saxpy3 method
             LAGRAPH_OK (tricount_prep (NULL, &U, A)) ;
-            LAGr_mxm (C, U, NULL, semiring, U, U, desc_s) ;
+            LAGr_mxm (C, U, NULL, semiring, U, U, GrB_DESC_S) ;
             LAGr_reduce (ntri, NULL, sum, C, NULL) ;
             break ;
 
@@ -495,7 +478,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
 
             // using the masked dot product
             LAGRAPH_OK (tricount_prep (&L, &U, A)) ;
-            LAGr_mxm (C, L, NULL, semiring, L, U, desc_st1) ;
+            LAGr_mxm (C, L, NULL, semiring, L, U, GrB_DESC_ST1) ;
             LAGr_reduce (ntri, NULL, sum, C, NULL) ;
             break ;
 
@@ -503,7 +486,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
 
             // using the masked dot product
             LAGRAPH_OK (tricount_prep (&L, &U, A)) ;
-            LAGr_mxm (C, U, NULL, semiring, U, L, desc_st1) ;
+            LAGr_mxm (C, U, NULL, semiring, U, L, GrB_DESC_ST1) ;
             LAGr_reduce (ntri, NULL, sum, C, NULL) ;
             break ;
 
