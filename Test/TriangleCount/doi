@@ -2,4 +2,5 @@
 ./build/gap_tc_test ~/roadNet-CA.mtx
 ./build/gap_tc_test ~/soc-Pokec.grb
 ./build/gap_tc_test ~/com-Orkut.grb
+./build/gap_tc_test ~/indochina-2004.grb
 
