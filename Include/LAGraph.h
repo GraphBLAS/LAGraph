@@ -1443,6 +1443,59 @@ GrB_Info LAGraph_sssp12c        // single source shortest paths
                                // matrix A are all positive
 );
 
+GrB_Info LAGraph_sssp15         // single source shortest paths
+(
+    GrB_Vector *path_length,   // path_length(i) is the length of the shortest
+                               // path from the source vertex to vertex i
+    GrB_Matrix A,              // input graph, treated as if boolean in
+                               // semiring (INT32)
+    GrB_Index source,          // source vertex from which to compute
+                               // shortest paths
+    int32_t delta,             // delta value for delta stepping
+
+    // TODO: make this an enum:
+    //      case 0: A can have negative, zero, or positive entries
+    //      case 1: A can have zero or positive entries
+    //      case 2: A only has positive entries (see FIXME below)
+    bool AIsAllPositive        // A boolean indicating whether the entries of
+                               // matrix A are all positive
+);
+
+GrB_Info LAGraph_sssp13         // single source shortest paths
+(
+    GrB_Vector *path_length,   // path_length(i) is the length of the shortest
+                               // path from the source vertex to vertex i
+    GrB_Matrix A,              // input graph, treated as if boolean in
+                               // semiring (INT32)
+    GrB_Matrix AT,             // AT = A'
+    GrB_Index source,          // source vertex from which to compute
+                               // shortest paths
+    int32_t delta,             // delta value for delta stepping
+    // TODO: make this an enum:
+    //      case 0: A can have negative, zero, or positive entries
+    //      case 1: A can have zero or positive entries
+    //      case 2: A only has positive entries (see FIXME below)
+    bool AIsAllPositive        // A boolean indicating whether the entries of
+                               // matrix A are all positive
+) ;
+
+GrB_Info LAGraph_sssp14         // single source shortest paths
+(
+    GrB_Vector *path_length,   // path_length(i) is the length of the shortest
+                               // path from the source vertex to vertex i
+    GrB_Matrix A,              // input graph, treated as if boolean in
+                               // semiring (INT32)
+    GrB_Index source,          // source vertex from which to compute
+                               // shortest paths
+    int32_t delta,             // delta value for delta stepping
+    // TODO: make this an enum:
+    //      case 0: A can have negative, zero, or positive entries
+    //      case 1: A can have zero or positive entries
+    //      case 2: A only has positive entries (see FIXME below)
+    bool AIsAllPositive        // A boolean indicating whether the entries of
+                               // matrix A are all positive
+) ;
+
 
 GrB_Info LAGraph_bfs_both       // push-pull BFS, or push-only if AT = NULL
 (

@@ -89,13 +89,6 @@ GrB_Info LAGraph_pagerank3f // PageRank definition
     (*result) = NULL ;
     LAGr_Matrix_nrows (&n, A) ;
 
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
-        && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,2,0) )
-    GrB_Descriptor desc_t0 = GrB_DESC_T0 ;
-    #else
-    GrB_Descriptor desc_t0 = LAGraph_desc_tooo ;
-    #endif
-
     const float teleport = (1 - damping) / n ;
     const float tol = 1e-4 ;
     float rdiff = 1 ;       // first iteration is always done
@@ -110,11 +103,6 @@ GrB_Info LAGraph_pagerank3f // PageRank definition
     // d = d_out / damping ;
     LAGr_Vector_dup (&d, d_out) ;
     LAGr_assign (d, NULL, GrB_DIV_FP32, damping, GrB_ALL, n, NULL) ;
-
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
-        && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,3,0) )
-    // LAGRAPH_OK (GxB_mxv_optimize (A, itermax/4, NULL)) ;
-    #endif
 
     //--------------------------------------------------------------------------
     // pagerank iterations
@@ -132,7 +120,8 @@ GrB_Info LAGraph_pagerank3f // PageRank definition
         LAGr_assign (r, NULL, NULL, teleport, GrB_ALL, n, NULL) ;
 
         // r += A'*w
-        LAGr_mxv (r, NULL, GrB_PLUS_FP32, GxB_PLUS_SECOND_FP32, A, w, desc_t0) ;
+        LAGr_mxv (r, NULL, GrB_PLUS_FP32, GxB_PLUS_SECOND_FP32, A, w,
+            GrB_DESC_T0) ;
 
         // t -= r
         LAGr_assign (t, NULL, GrB_MINUS_FP32, r, GrB_ALL, n, NULL) ;
@@ -147,11 +136,6 @@ GrB_Info LAGraph_pagerank3f // PageRank definition
     //--------------------------------------------------------------------------
     // free workspace and return result
     //--------------------------------------------------------------------------
-
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
-        && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,3,0) )
-    // LAGRAPH_OK (GxB_mxv_optimize_free (A)) ;
-    #endif
 
     (*result) = r ;
     r = NULL ;

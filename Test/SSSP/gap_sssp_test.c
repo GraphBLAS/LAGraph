@@ -46,13 +46,15 @@
 
 #include "sssp_test.h"
 
-#define NTHREAD_LIST 2
+#define NTHREAD_LIST 1
+// #define NTHREAD_LIST 2
 #define THREAD_LIST 0
 
 #define LAGRAPH_FREE_ALL            \
 {                                   \
     GrB_free (&A_in);               \
     GrB_free (&A);                  \
+    GrB_free (&AT) ;                \
     GrB_free (&SourceNodes) ;       \
     LAGRAPH_FREE (I);               \
     LAGRAPH_FREE (J);               \
@@ -69,6 +71,7 @@ int main (int argc, char **argv)
 
     GrB_Matrix A_in = NULL ;
     GrB_Matrix A = NULL ;
+    GrB_Matrix AT = NULL ;
     GrB_Matrix SourceNodes = NULL ;
     GrB_Index *I = NULL, *J = NULL ;    // for col/row indices of entries from A
     int32_t *W = NULL ;
@@ -77,7 +80,7 @@ int main (int argc, char **argv)
     GrB_Vector path_lengths = NULL ;
     GrB_Vector path_lengths1 = NULL ;
     LAGRAPH_OK (LAGraph_init ( )) ;
-    LAGRAPH_OK (GxB_set (GxB_BURBLE, true)) ;
+    LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
 
     GrB_Index ignore, s = 0 ;
     int32_t delta = 3;
@@ -274,7 +277,7 @@ int main (int argc, char **argv)
     // try converting to column format (this is slower than the default)
     // GxB_set (A, GxB_FORMAT, GxB_BY_COL) ;
 
-    GxB_fprint (A, 2, stdout) ;
+    // GxB_fprint (A, 2, stdout) ;
     // GxB_fprint (SourceNodes, GxB_COMPLETE, stdout) ;
 
     #if 1
@@ -288,6 +291,38 @@ int main (int argc, char **argv)
     #endif
 
     //--------------------------------------------------------------------------
+    // AT = A'
+    //--------------------------------------------------------------------------
+
+    // AT not needed for push-only BFS
+    AT = NULL ;
+
+#if 1
+    LAGraph_tic (tic);
+    bool A_is_symmetric =
+        (nrows == 134217726 ||  // HACK for kron
+         nrows == 134217728) ;  // HACK for urand
+    if (!A_is_symmetric)
+    {
+        LAGRAPH_OK (GrB_Matrix_new (&AT, GrB_INT32, n, n)) ;
+        LAGRAPH_OK (GrB_transpose (AT, NULL, NULL, A, NULL)) ;
+        LAGRAPH_OK (LAGraph_isequal (&A_is_symmetric, A, AT, NULL)) ;
+    }
+    if (A_is_symmetric)
+    {
+        printf ("A is symmetric\n") ;
+        GrB_free (&AT) ;
+        AT = A ;
+    }
+    else
+    {
+        printf ("A is unsymmetric\n") ;
+    }
+    double t_transpose = LAGraph_toc (tic) ;
+    printf ("transpose time: %g\n", t_transpose) ;
+#endif
+
+    //--------------------------------------------------------------------------
     // Begin tests
     //--------------------------------------------------------------------------
 
@@ -296,7 +331,9 @@ int main (int argc, char **argv)
         n, anz, nthreads) ;
     printf ("# of source nodes: %lu\n", nsource) ;
 
-    int ntrials = (int) nsource ;
+    // HACK
+    int ntrials = 1 ;
+    // int ntrials = (int) nsource ;
 
 for (int tt = 1 ; tt <= nt ; tt++)
 {
@@ -314,6 +351,9 @@ for (int tt = 1 ; tt <= nt ; tt++)
     double total_time32 = 0 ;
     double total_time_sssp12 = 0 ;
     double total_time_sssp12c = 0 ;
+    double total_time_sssp13 = 0 ;
+    double total_time_sssp14 = 0 ;
+    double total_time_sssp15 = 0 ;
     double t1, t2, t3;
 
     for (int trial = 0 ; trial < ntrials ; trial++)
@@ -446,7 +486,7 @@ for (int tt = 1 ; tt <= nt ; tt++)
 //      printf ("\n----sssp12: nthreads %d trial: %d source: %lu (0-based)\n",
 //          nthreads, trial, s) ;
 
-#if 1
+#if 0
         // Start the timer
         LAGraph_tic (tic) ;
         GrB_free (&path_lengths1) ;
@@ -457,6 +497,43 @@ for (int tt = 1 ; tt <= nt ; tt++)
         printf ("sssp12 : threads: %2d trial: %2d source %9lu "
             "time: %10.4f sec\n", nthreads, trial, s, t3) ;
         total_time_sssp12 += t3 ;
+
+#endif
+
+        //----------------------------------------------------------------------
+        // sssp15:
+        //----------------------------------------------------------------------
+
+        // Start the timer
+        LAGraph_tic (tic) ;
+        GrB_free (&path_lengths1) ;
+        LAGRAPH_OK (LAGraph_sssp15 (&path_lengths1, A, s, delta, true)) ;
+
+        // Stop the timer
+        t3 = LAGraph_toc (tic) ;
+        printf ("sssp15:  threads: %2d trial: %2d source %9lu "
+            "time: %10.4f sec\n", nthreads, trial, s, t3) ;
+        total_time_sssp15 += t3 ;
+
+        // GxB_print (path_lengths1, 2) ;
+
+        //----------------------------------------------------------------------
+        // sssp14: with bitmap vector t
+        //----------------------------------------------------------------------
+
+#if 1
+        // Start the timer
+        LAGraph_tic (tic) ;
+        GrB_free (&path_lengths1) ;
+        LAGRAPH_OK (LAGraph_sssp14 (&path_lengths1, A, s, delta, true)) ;
+
+        // Stop the timer
+        t3 = LAGraph_toc (tic) ;
+        printf ("sssp14:  threads: %2d trial: %2d source %9lu "
+            "time: %10.4f sec\n", nthreads, trial, s, t3) ;
+        total_time_sssp14 += t3 ;
+
+        // GxB_print (path_lengths1, 2) ;
 #endif
 
         //----------------------------------------------------------------------
@@ -466,6 +543,7 @@ for (int tt = 1 ; tt <= nt ; tt++)
 //      printf ("\n----sssp12c: nthreads %d trial: %d source: %lu (0-based)\n",
 //          nthreads, trial, s) ;
 
+#if 0
         // Start the timer
         LAGraph_tic (tic) ;
         GrB_free (&path_lengths1) ;
@@ -476,6 +554,9 @@ for (int tt = 1 ; tt <= nt ; tt++)
         printf ("sssp12c: threads: %2d trial: %2d source %9lu "
             "time: %10.4f sec\n", nthreads, trial, s, t3) ;
         total_time_sssp12c += t3 ;
+
+        // GxB_print (path_lengths1, 2) ;
+#endif
 
         #if 0
         {
@@ -737,6 +818,39 @@ for (int tt = 1 ; tt <= nt ; tt++)
         if (n > 1000)
         {
             LAGr_log (matrix_name, "SSSP12c", nthreads, total_time_sssp12c) ;
+        }
+    }
+
+    if (total_time_sssp13 > 0)
+    {
+        total_time_sssp13 = total_time_sssp13 / ntrials ;
+        printf ("%2d: SSSP13  time: %14.6f sec  rate: %8.2f (delta %d)\n",
+            nthreads, total_time_sssp13, 1e-6 * e / total_time_sssp13, delta);
+        if (n > 1000)
+        {
+            LAGr_log (matrix_name, "SSSP13", nthreads, total_time_sssp13) ;
+        }
+    }
+
+    if (total_time_sssp14 > 0)
+    {
+        total_time_sssp14 = total_time_sssp14 / ntrials ;
+        printf ("%2d: SSSP14  time: %14.6f sec  rate: %8.2f (delta %d)\n",
+            nthreads, total_time_sssp14, 1e-6 * e / total_time_sssp14, delta);
+        if (n > 1000)
+        {
+            LAGr_log (matrix_name, "SSSP14", nthreads, total_time_sssp14) ;
+        }
+    }
+
+    if (total_time_sssp15 > 0)
+    {
+        total_time_sssp15 = total_time_sssp15 / ntrials ;
+        printf ("%2d: SSSP15  time: %14.6f sec  rate: %8.2f (delta %d)\n",
+            nthreads, total_time_sssp15, 1e-6 * e / total_time_sssp15, delta);
+        if (n > 1000)
+        {
+            LAGr_log (matrix_name, "SSSP15", nthreads, total_time_sssp15) ;
         }
     }
 

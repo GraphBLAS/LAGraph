@@ -1,0 +1,225 @@
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+delta: 27
+sources: /home/faculty/davis/GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 32.3012 sec
+A is symmetric
+transpose time: 1.08965e-06
+input graph: nodes: 134217726 edges: 4223264644 max nthreads 40
+# of source nodes: 64
+
+delta: 27
+AL nnz: 0.453417 billion
+AH nnz: 3.76985 billion
+phase 0 :     0.0022 sec
+phase 1 :     1.4068 sec
+phase 2 :     2.6760 sec
+phase 3 :     3.2928 sec
+phase 4 :     3.6268 sec
+phase 5 :     2.8351 sec
+phase 6 :     0.3643 sec
+phase 7 :     9.7111 sec
+phase 8 :     1.1926 sec
+phase 9 :     0.3973 sec
+sssp14:  threads: 40 trial:  0 source   2338012 time:    25.5050 sec
+delta: 27
+AL nnz: 0.453417 billion
+AH nnz: 3.76985 billion
+phase 0 :     0.0263 sec
+phase 1 :     1.4087 sec
+phase 2 :     2.6717 sec
+phase 3 :     1.3422 sec
+phase 4 :     3.9961 sec
+phase 5 :     1.1150 sec
+phase 6 :     0.1274 sec
+phase 7 :    10.4544 sec
+phase 8 :     0.7827 sec
+phase 9 :     0.2122 sec
+sssp15:  threads: 40 trial:  0 source   2338012 time:    22.1368 sec
+sssp12c: threads: 40 trial:  0 source   2338012 time:    23.4129 sec
+
+40: SSSP12c time:      23.412895 sec  rate:   180.38 (delta 27)
+40: SSSP14  time:      25.505042 sec  rate:   165.59 (delta 27)
+40: SSSP15  time:      22.136834 sec  rate:   190.78 (delta 27)
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+delta: 35
+sources: /home/faculty/davis/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 51.4381 sec
+A is symmetric
+transpose time: 1.12131e-06
+input graph: nodes: 134217728 edges: 4294966740 max nthreads 40
+# of source nodes: 64
+
+delta: 35
+AL nnz: 0.589537 billion
+AH nnz: 3.70543 billion
+phase 0 :     0.0052 sec
+phase 1 :     1.4865 sec
+phase 2 :     2.6714 sec
+phase 3 :     1.1763 sec
+phase 4 :     3.9383 sec
+phase 5 :     6.2467 sec
+phase 6 :     0.2731 sec
+phase 7 :    13.1003 sec
+phase 8 :     1.2517 sec
+phase 9 :     0.6062 sec
+sssp14:  threads: 40 trial:  0 source  27691419 time:    30.7558 sec
+delta: 35
+AL nnz: 0.589537 billion
+AH nnz: 3.70543 billion
+phase 0 :     0.0274 sec
+phase 1 :     1.4835 sec
+phase 2 :     2.6709 sec
+phase 3 :     0.5992 sec
+phase 4 :     4.6672 sec
+phase 5 :     3.1423 sec
+phase 6 :     0.1133 sec
+phase 7 :    13.5649 sec
+phase 8 :     0.9119 sec
+phase 9 :     0.8720 sec
+sssp15:  threads: 40 trial:  0 source  27691419 time:    28.0528 sec
+sssp12c: threads: 40 trial:  0 source  27691419 time:    29.7505 sec
+
+40: SSSP12c time:      29.750530 sec  rate:   144.37 (delta 35)
+40: SSSP14  time:      30.755815 sec  rate:   139.65 (delta 35)
+40: SSSP15  time:      28.052806 sec  rate:   153.10 (delta 35)
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+delta: 51
+sources: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter_sources.mtx
+read time: 23.0575 sec
+A is unsymmetric
+transpose time: 21.9533
+input graph: nodes: 61578415 edges: 1468364884 max nthreads 40
+# of source nodes: 64
+
+delta: 51
+AL nnz: 0.293695 billion
+AH nnz: 1.17467 billion
+phase 0 :     0.0017 sec
+phase 1 :     0.5879 sec
+phase 2 :     0.8414 sec
+phase 3 :     1.4089 sec
+phase 4 :     1.4753 sec
+phase 5 :     2.6785 sec
+phase 6 :     0.1206 sec
+phase 7 :     2.5839 sec
+phase 8 :     0.7300 sec
+phase 9 :     0.2747 sec
+sssp14:  threads: 40 trial:  0 source  12441072 time:    10.7032 sec
+delta: 51
+AL nnz: 0.293695 billion
+AH nnz: 1.17467 billion
+phase 0 :     0.0132 sec
+phase 1 :     0.5841 sec
+phase 2 :     0.9205 sec
+phase 3 :     0.6247 sec
+phase 4 :     1.6218 sec
+phase 5 :     1.4070 sec
+phase 6 :     0.0569 sec
+phase 7 :     2.6845 sec
+phase 8 :     0.5545 sec
+phase 9 :     0.2509 sec
+sssp15:  threads: 40 trial:  0 source  12441072 time:     8.7183 sec
+sssp12c: threads: 40 trial:  0 source  12441072 time:     9.4400 sec
+
+40: SSSP12c time:       9.440034 sec  rate:   155.55 (delta 51)
+40: SSSP14  time:      10.703159 sec  rate:   137.19 (delta 51)
+40: SSSP15  time:       8.718277 sec  rate:   168.42 (delta 51)
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+delta: 150
+sources: /home/faculty/davis/GAP/GAP-web/GAP-web_sources.mtx
+read time: 30.0395 sec
+A is unsymmetric
+transpose time: 5.59967
+input graph: nodes: 50636151 edges: 1930292948 max nthreads 40
+# of source nodes: 64
+
+delta: 150
+AL nnz: 1.13548 billion
+AH nnz: 0.794817 billion
+phase 0 :     0.0006 sec
+phase 1 :     0.9823 sec
+phase 2 :     1.4047 sec
+phase 3 :     1.2891 sec
+phase 4 :     4.7228 sec
+phase 5 :     9.9690 sec
+phase 6 :     0.1338 sec
+phase 7 :     1.1456 sec
+phase 8 :     0.7240 sec
+phase 9 :     2.0575 sec
+sssp14:  threads: 40 trial:  0 source  10219452 time:    22.4298 sec
+delta: 150
+AL nnz: 1.13548 billion
+AH nnz: 0.794817 billion
+phase 0 :     0.0094 sec
+phase 1 :     0.9848 sec
+phase 2 :     0.8569 sec
+phase 3 :     0.6601 sec
+phase 4 :     4.9832 sec
+phase 5 :     4.9597 sec
+phase 6 :     0.0640 sec
+phase 7 :     1.2252 sec
+phase 8 :     0.4971 sec
+phase 9 :     1.1278 sec
+sssp15:  threads: 40 trial:  0 source  10219452 time:    15.3684 sec
+sssp12c: threads: 40 trial:  0 source  10219452 time:    18.2755 sec
+
+40: SSSP12c time:      18.275532 sec  rate:   105.62 (delta 150)
+40: SSSP14  time:      22.429756 sec  rate:    86.06 (delta 150)
+40: SSSP15  time:      15.368408 sec  rate:   125.60 (delta 150)
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+delta: 200000
+sources: /home/faculty/davis/GAP/GAP-road/GAP-road_sources.mtx
+read time: 1.08152 sec
+A is symmetric
+transpose time: 0.770894
+input graph: nodes: 23947347 edges: 57708624 max nthreads 40
+# of source nodes: 64
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0004 sec
+phase 1 :     0.0898 sec
+phase 2 :     0.0657 sec
+phase 3 :     4.3078 sec
+phase 4 :    15.0965 sec
+phase 5 :   210.2212 sec
+phase 6 :     0.0825 sec
+phase 7 :     0.4439 sec
+phase 8 :     1.7539 sec
+phase 9 :    23.1050 sec
+sssp14:  threads: 40 trial:  0 source   4795720 time:   255.1773 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0143 sec
+phase 1 :     0.0971 sec
+phase 2 :     0.0803 sec
+phase 3 :     1.6120 sec
+phase 4 :    14.2954 sec
+phase 5 :   203.3110 sec
+phase 6 :     0.0920 sec
+phase 7 :     0.4444 sec
+phase 8 :     1.6209 sec
+phase 9 :    21.8165 sec
+sssp15:  threads: 40 trial:  0 source   4795720 time:   243.3955 sec
+sssp12c: threads: 40 trial:  0 source   4795720 time:   181.3945 sec
+
+40: SSSP12c time:     181.394541 sec  rate:     0.32 (delta 200000)
+40: SSSP14  time:     255.177325 sec  rate:     0.23 (delta 200000)
+40: SSSP15  time:     243.395506 sec  rate:     0.24 (delta 200000)
