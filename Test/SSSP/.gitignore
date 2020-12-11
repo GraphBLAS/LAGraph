@@ -6,7 +6,7 @@ w
 o
 v
 pathlen_*.mtx
-sources_7.mtx
+sources_*.mtx
 
 # Do not ignore this file
 !.gitignore
