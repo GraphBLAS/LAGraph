@@ -171,7 +171,7 @@ GrB_Info LAGraph_bc_batch5      // betweeness centrality, batch algorithm
     int64_t depth ;
     for (depth = 0 ; frontier_size > 0 && depth < n ; depth++)
     {
-        double ttt = omp_get_wtime ( ) ;
+//      double ttt = omp_get_wtime ( ) ;
 
         // S [depth] = pattern of frontier
         LAGr_Matrix_new (&(S [depth]), GrB_BOOL, ns, n) ;
