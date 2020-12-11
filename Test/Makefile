@@ -33,9 +33,6 @@ default:
 	( cd SSSP                  ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd MatrixExtractKeepDimensions ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd VectorToDense         ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
-
-# requires SuiteSparse:GraphBLAS 4.0
-bfs:
 	( cd BFS                   ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 
 clean: distclean

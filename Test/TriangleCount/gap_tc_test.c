@@ -107,6 +107,7 @@ int main (int argc, char **argv)
     LAGRAPH_OK (LAGraph_init ( )) ;
     LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
 
+    // HACK
     int ntrials = 3 ;
     printf ("# of trials: %d\n", ntrials) ;
 
@@ -167,13 +168,11 @@ int main (int argc, char **argv)
         if (is_binary)
         {
             printf ("\nReading binary file: %s\n", filename) ;
-            // fprintf (stderr, "\nReading binary file: %s\n", filename) ;
             LAGRAPH_OK (LAGraph_binread (&C, filename)) ;
         }
         else
         {
             printf ("\nReading Matrix Market file: %s\n", filename) ;
-            // fprintf (stderr, "\nReading Matrix Market file: %s\n", filename) ;
             FILE *f = fopen (filename, "r") ;
             if (f == NULL)
             {
@@ -294,8 +293,6 @@ int main (int argc, char **argv)
         {
             printf ("\nMethod: ") ;
             print_method (stdout, method, sorting) ;
-            // fprintf (stderr, "\nMethod: ") ;
-            // print_method (stderr, method, sorting) ;
             if (n == 134217726 && method < 5)
             {
                 printf ("kron fails on method %d; skipped\n", method) ;
@@ -335,6 +332,8 @@ int main (int argc, char **argv)
                     printf ("Test failure!\n") ;
                     abort ( ) ;
                 }
+                fprintf (stderr, "Avg: TC method%d.%d %3d: %10.3f sec: %s\n",
+                     method, sorting, nthreads, ttot, matrix_name) ;
 
                 if (n > 1000)
                 {

@@ -54,7 +54,8 @@
     GrB_free (&A) ;         \
 }
 
-#define NTHREAD_LIST 2
+#define NTHREAD_LIST 1
+// #define NTHREAD_LIST 2
 #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 6
@@ -88,7 +89,7 @@ int main (int argc, char **argv)
     GrB_Matrix A = NULL, S = NULL ;
     GrB_Vector result = NULL ;
     LAGRAPH_OK (LAGraph_init ( )) ;
-    LAGRAPH_OK (GxB_set (GxB_BURBLE, true)) ;
+    LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
 
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;
@@ -270,11 +271,15 @@ int main (int argc, char **argv)
             nCC = countCC (result, n) ;
             LAGr_free (&result) ;
         }
+        double ttt = t1 / NTRIALS ;
         printf("FastSV5b: threads: %2d time: %10.4f  # of CC: %lu\n\n",
-            nthreads, t1 / NTRIALS, nCC) ;
+            nthreads, ttt, nCC) ;
+        fprintf (stderr,
+            "Avg: CC (sv5b)    %3d: %10.3f sec: %s\n",
+            nthreads, ttt, matrix_name) ;
         if (n > 1000)
         {
-            LAGr_log (matrix_name, "FastSV5b", nthreads, t1/NTRIALS) ;
+            LAGr_log (matrix_name, "FastSV5b", nthreads, ttt) ;
         }
 
         /*

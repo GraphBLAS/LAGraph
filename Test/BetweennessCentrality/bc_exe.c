@@ -93,18 +93,18 @@ int main (int argc, char **argv)
     // Begin tests
     //--------------------------------------------------------------------------
 
-    fprintf (stderr, "\n=========="
+    printf ( "\n=========="
         "input graph: nodes: %"PRIu64" edges: %"PRIu64"\n", n, nvals) ;
 
     int nthreads = LAGraph_get_nthreads();
-    fprintf(stderr, "Starting bc_exe\n");
-    fprintf(stderr, " - nthreads: %d\n", nthreads);
+    printf ( "Starting bc_exe\n");
+    printf ( " - nthreads: %d\n", nthreads);
 
     //--------------------------------------------------------------------------
     // Compute betweenness centrality from all nodes (Brandes)
     //--------------------------------------------------------------------------
 
-    fprintf(stderr, " - Start: Betweenness Centrality (Brandes Algorithm)\n");
+    printf ( " - Start: Betweenness Centrality (Brandes Algorithm)\n");
 
     LAGRAPH_OK (GrB_Vector_new(&v_brandes, GrB_FP64, n));
 
@@ -115,7 +115,7 @@ int main (int argc, char **argv)
         LAGRAPH_OK (GrB_eWiseAdd(v_brandes, GrB_NULL, GrB_NULL, GrB_PLUS_FP64, v_brandes, v, GrB_NULL));
     }
 
-    fprintf(stderr, " - End: Betweenness Centrality (Brandes Algorithm)\n");
+    printf ( " - End: Betweenness Centrality (Brandes Algorithm)\n");
 
     //--------------------------------------------------------------------------
     // write the result to stdout

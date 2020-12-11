@@ -100,7 +100,7 @@ int main (int argc, char **argv)
     GxB_set (GxB_BURBLE, false) ;
     int nthreads ;
     LAGr_get (GxB_NTHREADS, &nthreads) ;
-    fprintf (stderr, "mxm_demo: nthreads %d\n", nthreads) ;
+    printf ("mxm_demo: nthreads %d\n", nthreads) ;
 //  printf ("--------------------------------------------------------------\n");
 
     // GraphBLAS semirings supported by MKL

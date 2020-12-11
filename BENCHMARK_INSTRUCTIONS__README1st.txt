@@ -1,4 +1,19 @@
-To run all of the GAP benchmarks on the Intel DevCloud:
+################################################################################
+################################################################################
+##                                                                            ##
+##  To benchmark LAGraph: please contact Tim Davis at davis@tamu.edu first.   ##
+##                                                                            ##
+################################################################################
+################################################################################
+
+LAGraph is a draft package, and its performance is not yet stable.  It includes
+many draft algorithms that are sometimes posted on github in debug mode, or
+with known suboptimal performance.  We ask that you not benchmark LAGraph on
+your own without contacting the authors to make sure you have the right
+version, and the right version of SuiteSparse:GraphBLAS to go with it.
+
+However, assuming things are stable, the following instructions should work
+for the GAP benchmarks.
 
 Edit your .bash_profile, assuming you put GraphBLAS and LAGraph in $HOME:
 
@@ -6,10 +21,12 @@ Edit your .bash_profile, assuming you put GraphBLAS and LAGraph in $HOME:
     export LD_LIBRARY_PATH
 
 Download GraphBLAS and LAGraph to $HOME, side-by-side (not one inside the
-other):
+other).  For the latest bleeding edge versions:
 
-    git clone -b master https://github.com/DrTimothyAldenDavis/GraphBLAS
+    git clone -b cuda_merge_in_progress https://github.com/DrTimothyAldenDavis/GraphBLAS
     git clone https://github.com/GraphBLAS/LAGraph
+
+But better yet, get a tagged version of each package, with the same date.
 
 You should have two folders, ~/GraphBLAS and ~/LAGraph, side-by-side.
 
@@ -18,7 +35,43 @@ branch is non-functional; you may want to use a tagged pre-release instead:
 See https://github.com/DrTimothyAldenDavis/GraphBLAS/releases .
 So please ask me first (email: davis@tamu.edu), just in case.
 
-Next, submit this to compile GraphBLAS and LAGraph (see contents below):
+--------------------------------------------------------------------------------
+To compile and run interactively, assuming 40 threads to compile:
+--------------------------------------------------------------------------------
+
+    cd GraphBLAS
+    make CC=gcc CXX=gcc JOBS=40
+    cd ../LAGraph
+    make
+    cd Test
+    make
+
+Then, edit LAGraph/Test/BinRead/do_gap to fix the filnames, and do this once
+to create the binary *.grb files:
+
+    cd LAGraph/BinRead
+    ./do_gap
+
+Then to run the GAP benchmark do:
+
+    cd LAGraph/Test
+    ./do_gap_all > lengthy_output.txt
+
+and watch stderr for a single line result for each benchmark.  To edit the
+# of threads used:
+
+    cd LAGraph/Test
+    vi */gap*.c
+
+and edit the "#define NTHREAD_LIST" and THREAD_LIST settings.  If THREAD_LIST
+is zero, the # of threads is chosen automatically, as the max number from
+omp_get_num_threads, and then cutting in half for NTHREAD_LIST iterations.
+
+--------------------------------------------------------------------------------
+To compile and run on the Intel DevCloud:
+--------------------------------------------------------------------------------
+
+To compile, submit this to compile GraphBLAS and LAGraph (see contents below):
 
     qsub myjob_compile_plat_gcc
 
@@ -51,18 +104,7 @@ myjob_compile_plat_gcc contains the following:
 Note that will break if you do not have the m4 command.
 
 DO NOT USE icc; IT WILL GIVE POOR PERFORMANCE, because of how it does atomics.
-I'm exploring workarounds.  Probably can use this in
-GraphBLAS/Source/GB_atomics.h: 
-
-    #define GB_ATOMIC_READ
-    #define GB_ATOMIC_WRITE
-
-instead of the current:
-
-    #define GB_ATOMIC_READ    GB_PRAGMA (omp atomic read)
-    #define GB_ATOMIC_WRITE   GB_PRAGMA (omp atomic write)
-
-Then I think icc should be fast.
+I'm exploring workarounds.
 
 You then need to convert the *mtx files to GraphBLAS binary *grb files for
 faster I/O times.  My scripts assume the matrices are in ~/GAP/GAP-xxx/*.*

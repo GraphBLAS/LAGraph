@@ -117,7 +117,7 @@ int main (int argc, char **argv)
     // Begin tests
     //--------------------------------------------------------------------------
 
-    fprintf (stderr, "\n=========="
+    printf ( "\n=========="
         "input graph: nodes: %"PRIu64" edges: %"PRIu64"\n", n, nvals) ;
 
     int nthreads = LAGraph_get_nthreads();
@@ -167,7 +167,7 @@ int main (int argc, char **argv)
 
     // Stop the timer
     double t1 = LAGraph_toc (tic) / ntrials ;
-    fprintf (stderr, "Brandes  time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
+    printf ( "Brandes  time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
         t1, 1e-6*((double) nvals) / t1) ;
 
     printf(" - End Test: Betweenness Centrality (Brandes Algorithm)\n");
@@ -194,7 +194,7 @@ int main (int argc, char **argv)
 
     // Stop the timer
     double t2 = LAGraph_toc (tic) / ntrials ;
-    fprintf (stderr, "Batch    time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
+    printf ( "Batch    time: %12.6e (sec), rate: %g (1e6 edges/sec)\n",
         t2, 1e-6*((double) nvals) / t2) ;
 
     printf(" - End Test: Betweenness Centrality (Batch Algorithm)\n");
@@ -255,10 +255,10 @@ int main (int argc, char **argv)
         tests_pass &= test_result;
         if (!test_result)
         {
-            fprintf(stderr, "Failure at index %"PRId64"\n", i);
-            fprintf(stderr, "x1 = %f\n", x1);
-            fprintf(stderr, "x2 = %f\n", x2);
-            fprintf(stderr, "Error = %f\n", fabs(x1-x2) / (1E-6 + fmax(x1,x2)));
+            printf ( "Failure at index %"PRId64"\n", i);
+            printf ( "x1 = %f\n", x1);
+            printf ( "x2 = %f\n", x2);
+            printf ( "Error = %f\n", fabs(x1-x2) / (1E-6 + fmax(x1,x2)));
         }
     }
 
@@ -270,18 +270,18 @@ int main (int argc, char **argv)
 
     LAGRAPH_FREE_ALL;
     LAGRAPH_OK (LAGraph_finalize());
-    fprintf (stderr, "bc_test: ");
+    printf ( "bc_test: ");
     if (tests_pass)
     {
-        fprintf (stderr, "all tests passed\n");
+        printf ( "all tests passed\n");
         printf("all tests passed\n");
     }
     else
     {
-        fprintf (stderr, "TEST FAILURE\n");
+        printf ( "TEST FAILURE\n");
         printf("TEST FAILURE\n");
     }
-    fprintf (stderr,
+    printf (
     "------------------------------------------------------------\n\n");
     return (GrB_SUCCESS);
 }

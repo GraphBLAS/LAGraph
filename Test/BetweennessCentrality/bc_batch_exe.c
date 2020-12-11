@@ -90,18 +90,18 @@ int main (int argc, char **argv)
     // Begin tests
     //--------------------------------------------------------------------------
 
-    fprintf (stderr, "\n=========="
+    printf ( "\n=========="
         "input graph: nodes: %"PRIu64" edges: %"PRIu64"\n", n, nvals);
 
     int nthreads = LAGraph_get_nthreads();
-    fprintf(stderr, "Starting bc_batch_exe\n");
-    fprintf(stderr, " - nthreads: %d\n", nthreads);
+    printf ( "Starting bc_batch_exe\n");
+    printf ( " - nthreads: %d\n", nthreads);
 
     //--------------------------------------------------------------------------
     // Compute betweenness centrality using batch algorithm from all nodes
     //--------------------------------------------------------------------------
 
-    fprintf(stderr, " - Start: Betweenness Centrality (Batch Algorithm)\n");
+    printf ( " - Start: Betweenness Centrality (Batch Algorithm)\n");
 
     // Create batch of vertices to use in traversal
     // int n_batch = /* size_of_batch */;
@@ -114,7 +114,7 @@ int main (int argc, char **argv)
     GrB_free (&v_batch);
     LAGRAPH_OK (LAGraph_bc_batch (&v_batch, A, vertex_list, n_batch));
 
-    fprintf(stderr, " - End: Betweenness Centrality (Batch Algorithm)\n");
+    printf ( " - End: Betweenness Centrality (Batch Algorithm)\n");
 
     //--------------------------------------------------------------------------
     // write the result to stdout

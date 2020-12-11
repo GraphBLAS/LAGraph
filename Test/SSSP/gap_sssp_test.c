@@ -332,8 +332,7 @@ int main (int argc, char **argv)
     printf ("# of source nodes: %lu\n", nsource) ;
 
     // HACK
-    int ntrials = 1 ;
-    // int ntrials = (int) nsource ;
+    int ntrials = (int) nsource ;
 
 for (int tt = 1 ; tt <= nt ; tt++)
 {
@@ -815,6 +814,8 @@ for (int tt = 1 ; tt <= nt ; tt++)
         total_time_sssp12c = total_time_sssp12c / ntrials ;
         printf ("%2d: SSSP12c time: %14.6f sec  rate: %8.2f (delta %d)\n",
             nthreads, total_time_sssp12c, 1e-6 * e / total_time_sssp12c, delta);
+        fprintf (stderr, "Avg: SSSP (v12c)  %3d: %10.3f sec: %s\n",
+             nthreads, total_time_sssp12c, matrix_name) ;
         if (n > 1000)
         {
             LAGr_log (matrix_name, "SSSP12c", nthreads, total_time_sssp12c) ;
@@ -837,6 +838,8 @@ for (int tt = 1 ; tt <= nt ; tt++)
         total_time_sssp14 = total_time_sssp14 / ntrials ;
         printf ("%2d: SSSP14  time: %14.6f sec  rate: %8.2f (delta %d)\n",
             nthreads, total_time_sssp14, 1e-6 * e / total_time_sssp14, delta);
+        fprintf (stderr, "Avg: SSSP (v14)   %3d: %10.3f sec: %s\n",
+             nthreads, total_time_sssp14, matrix_name) ;
         if (n > 1000)
         {
             LAGr_log (matrix_name, "SSSP14", nthreads, total_time_sssp14) ;
@@ -848,6 +851,8 @@ for (int tt = 1 ; tt <= nt ; tt++)
         total_time_sssp15 = total_time_sssp15 / ntrials ;
         printf ("%2d: SSSP15  time: %14.6f sec  rate: %8.2f (delta %d)\n",
             nthreads, total_time_sssp15, 1e-6 * e / total_time_sssp15, delta);
+        fprintf (stderr, "Avg: SSSP (v15)   %3d: %10.3f sec: %s\n",
+             nthreads, total_time_sssp15, matrix_name) ;
         if (n > 1000)
         {
             LAGr_log (matrix_name, "SSSP15", nthreads, total_time_sssp15) ;

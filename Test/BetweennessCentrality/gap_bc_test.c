@@ -82,7 +82,7 @@ int main (int argc, char **argv)
     LAGRAPH_OK (LAGraph_init ( )) ;
     LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
 
-    printf ("%s v%d.%d.%d [%s]\n",
+    printf ("using: %s v%d.%d.%d [%s]\n",
         GxB_IMPLEMENTATION_NAME,
         GxB_IMPLEMENTATION_MAJOR,
         GxB_IMPLEMENTATION_MINOR,
@@ -631,6 +631,8 @@ int main (int argc, char **argv)
             double t2 = total_time_5 [t] / ntrials ;
             printf ("Ave (Batch5)  %2d: %10.3f sec, rate %10.3f\n",
                 Nthreads [t], t2, 1e-6*((double) nvals) / t2) ;
+            fprintf (stderr, "Avg: BC (batch5)  %3d: %10.3f sec: %s\n",
+                Nthreads [t], t2, matrix_name) ;
             if (n > 1000)
             {
                 LAGr_log (matrix_name, "Batch5", Nthreads [t], t2) ;

@@ -72,7 +72,7 @@ int main (int argc, char **argv)
     GrB_Vector PR = NULL, d_out = NULL, d_in = NULL ;
     float *dout = NULL ;
     LAGRAPH_OK (LAGraph_init ( )) ;
-    LAGRAPH_OK (GxB_set (GxB_BURBLE, true)) ;
+    LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
     GB_Global_hack_set (0) ;
 
     int nt = NTHREAD_LIST ;
@@ -289,11 +289,11 @@ int main (int argc, char **argv)
 
     LAGraph_set_nthreads (nthreads_max) ;
 
+#if 0
 for (int hack = 0 ; hack <= 0 ; hack++)
 {
     printf ("\nMethod 3f: with MKL: %d\n", hack) ;
     GB_Global_hack_set (hack) ;
-
     assert (PR == NULL) ;
     LAGraph_tic (tic) ;
     iters = 0 ;
@@ -306,8 +306,9 @@ for (int hack = 0 ; hack <= 0 ; hack++)
     fflush (stdout) ;
     GrB_free (&PR) ;
 }
+#endif
 
-    LAGRAPH_OK (GxB_set (GxB_BURBLE, true)) ;
+    LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
 
     //--------------------------------------------------------------------------
     // method 3e
@@ -469,6 +470,8 @@ for (int hack = 0 ; hack <= 0 ; hack++)
         printf ("3f:%3d: avg time: %10.3f (sec), "
                 "rate: %10.3f iters: %d\n", nthreads,
                 t, 1e-6*((double) nvals) * iters / t, iters) ;
+        fprintf (stderr, "Avg: PR (3f)      %3d: %10.3f sec: %s\n",
+             nthreads, t, matrix_name) ;
         if (n > 1000)
         {
             LAGr_log (matrix_name, "pagerank:3f", nthreads, t) ;

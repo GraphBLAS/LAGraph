@@ -289,24 +289,19 @@ GrB_Info LAGraph_bfs_parent2 // push-pull BFS, compute the tree only
         {
             // q'<!pi> = q'*A
             // this is a push if A is in CSR format; pull if A is in CSC
-// printf ("push") ;
             LAGr_vxm (q, pi, NULL, semiring, q, A, GrB_DESC_RSC) ;
         }
         else
         {
             // q<!pi> = AT*q
             // this is a pull if AT is in CSR format; push if AT is in CSC
-// printf ("pull") ;
             LAGr_mxv (q, pi, NULL, semiring, AT, q, GrB_DESC_RSC) ;
         }
 
         last_nq = nq ;
         LAGr_Vector_nvals (&nq, q) ;
-// printf (" %10ld", nq) ;
         if (nq == 0)
         {
-// double tt2 = omp_get_wtime ( ) ;
-// printf (" %12.6f sec\n", tt2-ttt) ;
             break ;
         }
 
@@ -317,9 +312,6 @@ GrB_Info LAGraph_bfs_parent2 // push-pull BFS, compute the tree only
         // q(i) currently contains the parent id of node i in tree.
         // pi<q> = q
         LAGr_assign (pi, q, NULL, q, GrB_ALL, n, GrB_DESC_S) ;
-
-// double tt2 = omp_get_wtime ( ) ;
-// printf (" %12.6f sec\n", tt2-ttt) ;
 
     }
 // printf ("\n") ;

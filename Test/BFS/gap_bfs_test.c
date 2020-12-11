@@ -485,6 +485,9 @@ int main (int argc, char **argv)
         t [nthreads] = t [nthreads] / ntrials ;
         printf ( ":%2d:pushpull (onlytree): %12.3f (sec), rate: %6.2f\n",
             nthreads, t [nthreads], 1e-6*((double) nvals) / t [nthreads]) ;
+        double ttt = t [nthreads] ;
+        fprintf (stderr, "Avg: BFS parent2  %3d: %10.3f sec: %s\n",
+             nthreads, ttt, matrix_name) ;
         if (n > 1000)
         {
             LAGr_log (matrix_name, "treeonly:pushpull(bitmap)",
