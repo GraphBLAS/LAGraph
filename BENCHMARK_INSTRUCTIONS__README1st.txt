@@ -27,6 +27,9 @@ other).  For the latest bleeding edge versions:
     git clone https://github.com/GraphBLAS/LAGraph
 
 But better yet, get a tagged version of each package, with the same date.
+In particular, the versions of both codes with "11Dec2020" in their tag name
+can be used together to give good results on BFS, BC, CC, and PR, but not
+yet SSSP and TC.
 
 You should have two folders, ~/GraphBLAS and ~/LAGraph, side-by-side.
 

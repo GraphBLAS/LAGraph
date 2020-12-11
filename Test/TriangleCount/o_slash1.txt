@@ -835,4 +835,106 @@ nthreads:   8 time:    18.915106 rate:  12.39   # of triangles: 627584181
 Method: SandiaDot2: sum ((U*L') .* U)    auto-sort
 average degree: 70.625
 median  degree: 47
-auto so
+auto sorting: 0: none
+trial  0:    19.275281 sec rate  12.16  # triangles: 627584181
+average degree: 70.625
+median  degree: 47
+auto sorting: 0: none
+trial  1:    19.268065 sec rate  12.16  # triangles: 627584181
+average degree: 70.625
+median  degree: 47
+auto sorting: 0: none
+trial  2:    19.265952 sec rate  12.16  # triangles: 627584181
+nthreads:   8 time:    19.269766 rate:  12.16   # of triangles: 627584181
+
+Best method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+nthreads:   8 time:    18.915106 rate:  12.39
+# of trials: 3
+threads to test:  8
+matrix: /home/davis/indochina-2004.grb
+[.grb]
+
+Reading binary file: /home/davis/indochina-2004.grb
+
+read A time:           0.805851 sec
+process A time:        2.646069 sec
+# of nodes: 7414866   number of entries: 301969638
+compute degree: 0.764841 sec
+
+warmup method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+average degree: 38.55
+median  degree: 10
+auto sorting: 0: none
+# of triangles: 60115561372
+nthreads:   8 time:    71.678324 rate:   4.21 (SandiaDot2, one trial)
+
+Method: Sandia:     sum ((L*L) .* L)     auto-sort
+average degree: 38.55
+median  degree: 10
+auto sorting: 0: none
+trial  0:    91.683971 sec rate   3.29  # triangles: 60115561372
+average degree: 38.55
+median  degree: 10
+auto sorting: 0: none
+trial  1:    93.390392 sec rate   3.23  # triangles: 60115561372
+average degree: 38.55
+median  degree: 10
+auto sorting: 0: none
+trial  2:    92.408871 sec rate   3.27  # triangles: 60115561372
+nthreads:   8 time:    92.494412 rate:   3.26   # of triangles: 60115561372
+
+Method: Sandia2:    sum ((U*U) .* U)     auto-sort
+average degree: 38.55
+median  degree: 10
+auto sorting: 0: none
+trial  0:    90.730118 sec rate   3.33  # triangles: 60115561372
+average degree: 38.55
+median  degree: 10
+auto sorting: 0: none
+trial  1:    90.296370 sec rate   3.34  # triangles: 60115561372
+average degree: 38.55
+median  degree: 10
+auto sorting: 0: none
+trial  2:    88.962486 sec rate   3.39  # triangles: 60115561372
+nthreads:   8 time:    89.996325 rate:   3.36   # of triangles: 60115561372
+
+Method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+average degree: 38.55
+median  degree: 10
+auto sorting: 0: none
+trial  0:    64.407036 sec rate   4.69  # triangles: 60115561372
+average degree: 38.55
+median  degree: 10
+auto sorting: 0: none
+trial  1:    65.070665 sec rate   4.64  # triangles: 60115561372
+average degree: 38.55
+median  degree: 10
+auto sorting: 0: none
+trial  2:    63.935229 sec rate   4.72  # triangles: 60115561372
+nthreads:   8 time:    64.470977 rate:   4.68   # of triangles: 60115561372
+
+Method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+average degree: 38.55
+median  degree: 10
+auto sorting: 0: none
+trial  0:    71.092863 sec rate   4.25  # triangles: 60115561372
+average degree: 38.55
+median  degree: 10
+auto sorting: 0: none
+trial  1:    70.932213 sec rate   4.26  # triangles: 60115561372
+average degree: 38.55
+median  degree: 10
+auto sorting: 0: none
+trial  2:    71.998457 sec rate   4.19  # triangles: 60115561372
+nthreads:   8 time:    71.341178 rate:   4.23   # of triangles: 60115561372
+
+Best method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+nthreads:   8 time:    64.470977 rate:   4.68
+[0;36mslash $[0m 
+[0;36mslash $[0m 
+[0;36mslash $[0m 
+[0;36mslash $[0m 
+[0;36mslash $[0m exit
+exit
+
+Script done on 2020-11-28 19:40:59-0600
