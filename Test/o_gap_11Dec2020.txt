@@ -11477,4 +11477,1474 @@ phase 4 :    11.9245 sec
 phase 5 :    44.1831 sec
 phase 6 :     1.1068 sec
 phase 7 :     0.3843 sec
-phase 8 :     0.51
+phase 8 :     0.5135 sec
+phase 9 :     7.5737 sec
+phase 10 :     1.8954 sec
+sssp14:  threads: 40 trial: 30 source   2760679 time:    71.4482 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0090 sec
+phase  1 :     0.0859 sec
+phase  2 :     0.0633 sec
+phase  3 :     1.3805 sec
+phase  4 :    12.7934 sec
+phase  5 :    38.2006 sec
+phase  6 :     1.5312 sec
+phase  7 :     0.4611 sec
+phase  8 :     0.6891 sec
+phase  9 :     7.7695 sec
+phase 10 :     0.0650 sec
+init:      0.1582 sec
+vxm:      13.2545 sec
+inner:    45.9701 sec
+outer:     3.6658 sec
+sssp15:  threads: 40 trial: 31 source   2460941 time:    63.0578 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0025 sec
+phase 1 :     0.0848 sec
+phase 2 :     0.0624 sec
+phase 3 :     4.6637 sec
+phase 4 :    12.5817 sec
+phase 5 :    47.1124 sec
+phase 6 :     1.5234 sec
+phase 7 :     0.4637 sec
+phase 8 :     0.6579 sec
+phase 9 :     7.4568 sec
+phase 10 :     2.5803 sec
+sssp14:  threads: 40 trial: 31 source   2460941 time:    77.1978 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0088 sec
+phase  1 :     0.0867 sec
+phase  2 :     0.0622 sec
+phase  3 :     1.0510 sec
+phase  4 :    12.4836 sec
+phase  5 :    31.3303 sec
+phase  6 :     0.9219 sec
+phase  7 :     0.3435 sec
+phase  8 :     0.4549 sec
+phase  9 :     7.8431 sec
+phase 10 :     0.0398 sec
+init:      0.1577 sec
+vxm:      12.8271 sec
+inner:    39.1735 sec
+outer:     2.4675 sec
+sssp15:  threads: 40 trial: 32 source   8489650 time:    54.6318 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0026 sec
+phase 1 :     0.0861 sec
+phase 2 :     0.0630 sec
+phase 3 :     3.2388 sec
+phase 4 :    12.1316 sec
+phase 5 :    43.6398 sec
+phase 6 :     0.9637 sec
+phase 7 :     0.3460 sec
+phase 8 :     0.4282 sec
+phase 9 :     7.8196 sec
+phase 10 :     1.6178 sec
+sssp14:  threads: 40 trial: 32 source   8489650 time:    70.3425 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0088 sec
+phase  1 :     0.0854 sec
+phase  2 :     0.0634 sec
+phase  3 :     1.3134 sec
+phase  4 :    12.5548 sec
+phase  5 :    35.0933 sec
+phase  6 :     1.4586 sec
+phase  7 :     0.4099 sec
+phase  8 :     0.5225 sec
+phase  9 :     7.7862 sec
+phase 10 :     0.0530 sec
+init:      0.1576 sec
+vxm:      12.9647 sec
+inner:    42.8795 sec
+outer:     3.3474 sec
+sssp15:  threads: 40 trial: 33 source   5005225 time:    59.3573 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0025 sec
+phase 1 :     0.0855 sec
+phase 2 :     0.0631 sec
+phase 3 :     5.1448 sec
+phase 4 :    12.3839 sec
+phase 5 :    46.1924 sec
+phase 6 :     1.4901 sec
+phase 7 :     0.4104 sec
+phase 8 :     0.5574 sec
+phase 9 :     7.7172 sec
+phase 10 :     2.3942 sec
+sssp14:  threads: 40 trial: 33 source   5005225 time:    76.4487 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0097 sec
+phase  1 :     0.0867 sec
+phase  2 :     0.0630 sec
+phase  3 :     1.1493 sec
+phase  4 :    12.5878 sec
+phase  5 :    34.3929 sec
+phase  6 :     1.3254 sec
+phase  7 :     0.4065 sec
+phase  8 :     0.4982 sec
+phase  9 :     7.8346 sec
+phase 10 :     0.0495 sec
+init:      0.1593 sec
+vxm:      12.9943 sec
+inner:    42.2275 sec
+outer:     3.0224 sec
+sssp15:  threads: 40 trial: 34 source   8744645 time:    58.4109 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0025 sec
+phase 1 :     0.0856 sec
+phase 2 :     0.0643 sec
+phase 3 :     4.7092 sec
+phase 4 :    12.3780 sec
+phase 5 :    46.0184 sec
+phase 6 :     1.3570 sec
+phase 7 :     0.4108 sec
+phase 8 :     0.4979 sec
+phase 9 :     7.9893 sec
+phase 10 :     2.1775 sec
+sssp14:  threads: 40 trial: 34 source   8744645 time:    75.6970 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0090 sec
+phase  1 :     0.0855 sec
+phase  2 :     0.0631 sec
+phase  3 :     1.0431 sec
+phase  4 :    12.5589 sec
+phase  5 :    32.1172 sec
+phase  6 :     0.9159 sec
+phase  7 :     0.3377 sec
+phase  8 :     0.4533 sec
+phase  9 :     7.8925 sec
+phase 10 :     0.0393 sec
+init:      0.1576 sec
+vxm:      12.8966 sec
+inner:    40.0096 sec
+outer:     2.4516 sec
+sssp15:  threads: 40 trial: 35 source   8512023 time:    55.5215 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0026 sec
+phase 1 :     0.0858 sec
+phase 2 :     0.0630 sec
+phase 3 :     3.1968 sec
+phase 4 :    12.1460 sec
+phase 5 :    43.2844 sec
+phase 6 :     0.9494 sec
+phase 7 :     0.3414 sec
+phase 8 :     0.4361 sec
+phase 9 :     7.8624 sec
+phase 10 :     1.6137 sec
+sssp14:  threads: 40 trial: 35 source   8512023 time:    69.9869 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0088 sec
+phase  1 :     0.0877 sec
+phase  2 :     0.0621 sec
+phase  3 :     1.4497 sec
+phase  4 :    12.7832 sec
+phase  5 :    38.0108 sec
+phase  6 :     1.6213 sec
+phase  7 :     0.4383 sec
+phase  8 :     0.6261 sec
+phase  9 :     7.8755 sec
+phase 10 :     0.0606 sec
+init:      0.1586 sec
+vxm:      13.2214 sec
+inner:    45.8864 sec
+outer:     3.7576 sec
+sssp15:  threads: 40 trial: 36 source  21912165 time:    63.0336 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0026 sec
+phase 1 :     0.0857 sec
+phase 2 :     0.0632 sec
+phase 3 :     4.4857 sec
+phase 4 :    12.6063 sec
+phase 5 :    48.2321 sec
+phase 6 :     1.6833 sec
+phase 7 :     0.4394 sec
+phase 8 :     0.6422 sec
+phase 9 :     7.5959 sec
+phase 10 :     2.6964 sec
+sssp14:  threads: 40 trial: 36 source  21912165 time:    78.5417 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0089 sec
+phase  1 :     0.0863 sec
+phase  2 :     0.0630 sec
+phase  3 :     1.1578 sec
+phase  4 :    12.5694 sec
+phase  5 :    35.0020 sec
+phase  6 :     1.3496 sec
+phase  7 :     0.4084 sec
+phase  8 :     0.5080 sec
+phase  9 :     7.9046 sec
+phase 10 :     0.0486 sec
+init:      0.1581 sec
+vxm:      12.9778 sec
+inner:    42.9066 sec
+outer:     3.0640 sec
+sssp15:  threads: 40 trial: 37 source   1105390 time:    59.1143 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0023 sec
+phase 1 :     0.0855 sec
+phase 2 :     0.0635 sec
+phase 3 :     4.7766 sec
+phase 4 :    12.1917 sec
+phase 5 :    46.2950 sec
+phase 6 :     1.4107 sec
+phase 7 :     0.4089 sec
+phase 8 :     0.5207 sec
+phase 9 :     7.9507 sec
+phase 10 :     2.2202 sec
+sssp14:  threads: 40 trial: 37 source   1105390 time:    75.9330 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0085 sec
+phase  1 :     0.0877 sec
+phase  2 :     0.0625 sec
+phase  3 :     1.0948 sec
+phase  4 :    12.5759 sec
+phase  5 :    33.1227 sec
+phase  6 :     1.0727 sec
+phase  7 :     0.3905 sec
+phase  8 :     0.4976 sec
+phase  9 :     7.8800 sec
+phase 10 :     0.0484 sec
+init:      0.1587 sec
+vxm:      12.9665 sec
+inner:    41.0027 sec
+outer:     2.7135 sec
+sssp15:  threads: 40 trial: 38 source  15432163 time:    56.8484 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0022 sec
+phase 1 :     0.0855 sec
+phase 2 :     0.0645 sec
+phase 3 :     4.1090 sec
+phase 4 :    12.0828 sec
+phase 5 :   108.9001 sec
+phase 6 :     1.2113 sec
+phase 7 :     0.3874 sec
+phase 8 :     0.8968 sec
+phase 9 :     7.5833 sec
+phase 10 :     1.9476 sec
+sssp14:  threads: 40 trial: 38 source  15432163 time:   137.2770 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0085 sec
+phase  1 :     0.0859 sec
+phase  2 :     0.0635 sec
+phase  3 :     1.3795 sec
+phase  4 :    12.8576 sec
+phase  5 :    36.9072 sec
+phase  6 :     1.3075 sec
+phase  7 :     0.4236 sec
+phase  8 :     0.6293 sec
+phase  9 :     7.9169 sec
+phase 10 :     0.0579 sec
+init:      0.1579 sec
+vxm:      13.2812 sec
+inner:    44.8241 sec
+outer:     3.3742 sec
+sssp15:  threads: 40 trial: 39 source   1600177 time:    61.6458 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0022 sec
+phase 1 :     0.0856 sec
+phase 2 :     0.0632 sec
+phase 3 :     4.3136 sec
+phase 4 :    12.4004 sec
+phase 5 :    46.1508 sec
+phase 6 :     1.3355 sec
+phase 7 :     0.4227 sec
+phase 8 :     0.6219 sec
+phase 9 :     7.5568 sec
+phase 10 :     2.2496 sec
+sssp14:  threads: 40 trial: 39 source   1600177 time:    75.2103 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0085 sec
+phase  1 :     0.0871 sec
+phase  2 :     0.0644 sec
+phase  3 :     1.2987 sec
+phase  4 :    12.5941 sec
+phase  5 :    35.3521 sec
+phase  6 :     1.5135 sec
+phase  7 :     0.4112 sec
+phase  8 :     0.5113 sec
+phase  9 :     7.7317 sec
+phase 10 :     0.0540 sec
+init:      0.1600 sec
+vxm:      13.0053 sec
+inner:    43.0838 sec
+outer:     3.3775 sec
+sssp15:  threads: 40 trial: 40 source  19079469 time:    59.6351 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0025 sec
+phase 1 :     0.0850 sec
+phase 2 :     0.0626 sec
+phase 3 :     5.1774 sec
+phase 4 :    12.2185 sec
+phase 5 :    46.6630 sec
+phase 6 :     1.5318 sec
+phase 7 :     0.4144 sec
+phase 8 :     0.5738 sec
+phase 9 :     7.6736 sec
+phase 10 :     2.4690 sec
+sssp14:  threads: 40 trial: 40 source  19079469 time:    76.8795 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0088 sec
+phase  1 :     0.0857 sec
+phase  2 :     0.0629 sec
+phase  3 :     1.4041 sec
+phase  4 :    12.8100 sec
+phase  5 :    37.8828 sec
+phase  6 :     1.5896 sec
+phase  7 :     0.4430 sec
+phase  8 :     0.6289 sec
+phase  9 :     7.8243 sec
+phase 10 :     0.0610 sec
+init:      0.1574 sec
+vxm:      13.2530 sec
+inner:    45.7071 sec
+outer:     3.6835 sec
+sssp15:  threads: 40 trial: 41 source  16516637 time:    62.8103 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0025 sec
+phase 1 :     0.0848 sec
+phase 2 :     0.0624 sec
+phase 3 :     4.4705 sec
+phase 4 :    12.3999 sec
+phase 5 :    47.8782 sec
+phase 6 :     1.6171 sec
+phase 7 :     0.4476 sec
+phase 8 :     0.6075 sec
+phase 9 :     7.5472 sec
+phase 10 :     2.5867 sec
+sssp14:  threads: 40 trial: 41 source  16516637 time:    77.7132 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0088 sec
+phase  1 :     0.0874 sec
+phase  2 :     0.0628 sec
+phase  3 :     1.0711 sec
+phase  4 :    12.5220 sec
+phase  5 :    33.6050 sec
+phase  6 :     1.1126 sec
+phase  7 :     0.4054 sec
+phase  8 :     0.5819 sec
+phase  9 :     7.8542 sec
+phase 10 :     0.0516 sec
+init:      0.1590 sec
+vxm:      12.9274 sec
+inner:    41.4591 sec
+outer:     2.8173 sec
+sssp15:  threads: 40 trial: 42 source  20202566 time:    57.3700 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0026 sec
+phase 1 :     0.0858 sec
+phase 2 :     0.0645 sec
+phase 3 :     3.9161 sec
+phase 4 :    12.0865 sec
+phase 5 :    44.8117 sec
+phase 6 :     1.1602 sec
+phase 7 :     0.4085 sec
+phase 8 :     0.6041 sec
+phase 9 :     7.7795 sec
+phase 10 :     2.0400 sec
+sssp14:  threads: 40 trial: 42 source  20202566 time:    72.9660 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0088 sec
+phase  1 :     0.0850 sec
+phase  2 :     0.0625 sec
+phase  3 :     1.1436 sec
+phase  4 :    12.7525 sec
+phase  5 :    33.8201 sec
+phase  6 :     1.1344 sec
+phase  7 :     0.3990 sec
+phase  8 :     0.5591 sec
+phase  9 :     7.9524 sec
+phase 10 :     0.0514 sec
+init:      0.1563 sec
+vxm:      13.1516 sec
+inner:    41.7724 sec
+outer:     2.8885 sec
+sssp15:  threads: 40 trial: 43 source  21372803 time:    57.9760 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0025 sec
+phase 1 :     0.0852 sec
+phase 2 :     0.0627 sec
+phase 3 :     4.0711 sec
+phase 4 :    12.1564 sec
+phase 5 :    44.9386 sec
+phase 6 :     1.1640 sec
+phase 7 :     0.4010 sec
+phase 8 :     0.5636 sec
+phase 9 :     7.7651 sec
+phase 10 :     2.0077 sec
+sssp14:  threads: 40 trial: 43 source  21372803 time:    73.2245 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0088 sec
+phase  1 :     0.0860 sec
+phase  2 :     0.0634 sec
+phase  3 :     1.3541 sec
+phase  4 :    12.7214 sec
+phase  5 :    40.7567 sec
+phase  6 :     1.5346 sec
+phase  7 :     0.4284 sec
+phase  8 :     0.6124 sec
+phase  9 :     7.9231 sec
+phase 10 :     0.0552 sec
+init:      0.1582 sec
+vxm:      13.1498 sec
+inner:    48.6798 sec
+outer:     3.5563 sec
+sssp15:  threads: 40 trial: 44 source   2898009 time:    65.5528 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0026 sec
+phase 1 :     0.0861 sec
+phase 2 :     0.0631 sec
+phase 3 :     5.3020 sec
+phase 4 :    12.3516 sec
+phase 5 :    47.7214 sec
+phase 6 :     1.5418 sec
+phase 7 :     0.4315 sec
+phase 8 :     0.5722 sec
+phase 9 :     7.8212 sec
+phase 10 :     2.4868 sec
+sssp14:  threads: 40 trial: 44 source   2898009 time:    78.3887 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0088 sec
+phase  1 :     0.0874 sec
+phase  2 :     0.0631 sec
+phase  3 :     1.0461 sec
+phase  4 :    12.4751 sec
+phase  5 :    31.1633 sec
+phase  6 :     0.9304 sec
+phase  7 :     0.3451 sec
+phase  8 :     0.4121 sec
+phase  9 :     7.8921 sec
+phase 10 :     0.0390 sec
+init:      0.1593 sec
+vxm:      12.8202 sec
+inner:    39.0554 sec
+outer:     2.4276 sec
+sssp15:  threads: 40 trial: 45 source   8491277 time:    54.4683 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0026 sec
+phase 1 :     0.0861 sec
+phase 2 :     0.0635 sec
+phase 3 :     3.2022 sec
+phase 4 :    11.9294 sec
+phase 5 :    43.7985 sec
+phase 6 :     0.9758 sec
+phase 7 :     0.3519 sec
+phase 8 :     0.4410 sec
+phase 9 :     7.8646 sec
+phase 10 :     1.6251 sec
+sssp14:  threads: 40 trial: 45 source   8491277 time:    70.3459 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0089 sec
+phase  1 :     0.0859 sec
+phase  2 :     0.0640 sec
+phase  3 :     1.1451 sec
+phase  4 :    12.5151 sec
+phase  5 :    33.7428 sec
+phase  6 :     1.1441 sec
+phase  7 :     0.3903 sec
+phase  8 :     0.5635 sec
+phase  9 :     7.9136 sec
+phase 10 :     0.0508 sec
+init:      0.1588 sec
+vxm:      12.9054 sec
+inner:    41.6564 sec
+outer:     2.9035 sec
+sssp15:  threads: 40 trial: 46 source  18798317 time:    57.6312 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0025 sec
+phase 1 :     0.0848 sec
+phase 2 :     0.0630 sec
+phase 3 :     3.8652 sec
+phase 4 :    12.1719 sec
+phase 5 :    45.0275 sec
+phase 6 :     1.1631 sec
+phase 7 :     0.3937 sec
+phase 8 :     0.5542 sec
+phase 9 :     7.8437 sec
+phase 10 :     2.0493 sec
+sssp14:  threads: 40 trial: 46 source  18798317 time:    73.2257 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0088 sec
+phase  1 :     0.0852 sec
+phase  2 :     0.0621 sec
+phase  3 :     1.2107 sec
+phase  4 :    12.7099 sec
+phase  5 :    35.0078 sec
+phase  6 :     1.3592 sec
+phase  7 :     0.4170 sec
+phase  8 :     0.5556 sec
+phase  9 :     7.9285 sec
+phase 10 :     0.0531 sec
+init:      0.1561 sec
+vxm:      13.1269 sec
+inner:    42.9363 sec
+outer:     3.1787 sec
+sssp15:  threads: 40 trial: 47 source  23757560 time:    59.4057 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0025 sec
+phase 1 :     0.0852 sec
+phase 2 :     0.0627 sec
+phase 3 :     4.8348 sec
+phase 4 :    12.2780 sec
+phase 5 :    46.3535 sec
+phase 6 :     1.3762 sec
+phase 7 :     0.4174 sec
+phase 8 :     0.5538 sec
+phase 9 :     7.8559 sec
+phase 10 :     2.2681 sec
+sssp14:  threads: 40 trial: 47 source  23757560 time:    76.0954 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0089 sec
+phase  1 :     0.0873 sec
+phase  2 :     0.0642 sec
+phase  3 :     1.1053 sec
+phase  4 :    12.6071 sec
+phase  5 :    32.5831 sec
+phase  6 :     0.9865 sec
+phase  7 :     0.3647 sec
+phase  8 :     0.5001 sec
+phase  9 :     7.9668 sec
+phase 10 :     0.0481 sec
+init:      0.1603 sec
+vxm:      12.9718 sec
+inner:    40.5499 sec
+outer:     2.6401 sec
+sssp15:  threads: 40 trial: 48 source  17161819 time:    56.3286 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0025 sec
+phase 1 :     0.0851 sec
+phase 2 :     0.0620 sec
+phase 3 :     3.5066 sec
+phase 4 :    12.0509 sec
+phase 5 :    44.3009 sec
+phase 6 :     1.0138 sec
+phase 7 :     0.3661 sec
+phase 8 :     0.5260 sec
+phase 9 :     7.7186 sec
+phase 10 :     1.7684 sec
+sssp14:  threads: 40 trial: 48 source  17161819 time:    71.4068 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0090 sec
+phase  1 :     0.0882 sec
+phase  2 :     0.0633 sec
+phase  3 :     1.3962 sec
+phase  4 :    12.8228 sec
+phase  5 :    37.3927 sec
+phase  6 :     1.5513 sec
+phase  7 :     0.4349 sec
+phase  8 :     0.6400 sec
+phase  9 :     7.8962 sec
+phase 10 :     0.0614 sec
+init:      0.1605 sec
+vxm:      13.2577 sec
+inner:    45.2888 sec
+outer:     3.6489 sec
+sssp15:  threads: 40 trial: 49 source  23180739 time:    62.3650 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0025 sec
+phase 1 :     0.0849 sec
+phase 2 :     0.0622 sec
+phase 3 :     4.4075 sec
+phase 4 :    12.4256 sec
+phase 5 :    47.8088 sec
+phase 6 :     1.5614 sec
+phase 7 :     0.4379 sec
+phase 8 :     0.6488 sec
+phase 9 :     7.6242 sec
+phase 10 :     2.5392 sec
+sssp14:  threads: 40 trial: 49 source  23180739 time:    77.6116 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0092 sec
+phase  1 :     0.0859 sec
+phase  2 :     0.0626 sec
+phase  3 :     1.0241 sec
+phase  4 :    12.5884 sec
+phase  5 :    33.5750 sec
+phase  6 :     1.1337 sec
+phase  7 :     0.3866 sec
+phase  8 :     0.4569 sec
+phase  9 :     7.9820 sec
+phase 10 :     0.0438 sec
+init:      0.1576 sec
+vxm:      12.9750 sec
+inner:    41.5570 sec
+outer:     2.6586 sec
+sssp15:  threads: 40 trial: 50 source  10997085 time:    57.3549 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0025 sec
+phase 1 :     0.0852 sec
+phase 2 :     0.0625 sec
+phase 3 :     4.0520 sec
+phase 4 :    12.0567 sec
+phase 5 :    44.8497 sec
+phase 6 :     1.1800 sec
+phase 7 :     0.3829 sec
+phase 8 :     0.4664 sec
+phase 9 :     7.9242 sec
+phase 10 :     1.9393 sec
+sssp14:  threads: 40 trial: 50 source  10997085 time:    73.0074 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0099 sec
+phase  1 :     0.0870 sec
+phase  2 :     0.0626 sec
+phase  3 :     1.3800 sec
+phase  4 :    12.6413 sec
+phase  5 :    37.6930 sec
+phase  6 :     1.6772 sec
+phase  7 :     0.4290 sec
+phase  8 :     0.5776 sec
+phase  9 :     7.8179 sec
+phase 10 :     0.0561 sec
+init:      0.1595 sec
+vxm:      13.0704 sec
+inner:    45.5109 sec
+outer:     3.6909 sec
+sssp15:  threads: 40 trial: 51 source   3730630 time:    62.4409 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0023 sec
+phase 1 :     0.0854 sec
+phase 2 :     0.0637 sec
+phase 3 :     5.3800 sec
+phase 4 :    12.3090 sec
+phase 5 :    48.4127 sec
+phase 6 :     1.7130 sec
+phase 7 :     0.4361 sec
+phase 8 :     0.5810 sec
+phase 9 :     7.7812 sec
+phase 10 :     2.6761 sec
+sssp14:  threads: 40 trial: 51 source   3730630 time:    79.4494 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0092 sec
+phase  1 :     0.0876 sec
+phase  2 :     0.0627 sec
+phase  3 :     1.6732 sec
+phase  4 :    12.6356 sec
+phase  5 :   108.5092 sec
+phase  6 :     1.4371 sec
+phase  7 :     0.4060 sec
+phase  8 :     0.9909 sec
+phase  9 :     7.8509 sec
+phase 10 :     0.1181 sec
+init:      0.1594 sec
+vxm:      13.0416 sec
+inner:   116.3601 sec
+outer:     4.2193 sec
+sssp15:  threads: 40 trial: 52 source   1079068 time:   133.7880 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0021 sec
+phase 1 :     0.0850 sec
+phase 2 :     0.0620 sec
+phase 3 :     4.8156 sec
+phase 4 :    12.0378 sec
+phase 5 :    46.2597 sec
+phase 6 :     1.3790 sec
+phase 7 :     0.4046 sec
+phase 8 :     0.5233 sec
+phase 9 :     7.8226 sec
+phase 10 :     2.1982 sec
+sssp14:  threads: 40 trial: 52 source   1079068 time:    75.5970 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0081 sec
+phase  1 :     0.0867 sec
+phase  2 :     0.0630 sec
+phase  3 :     1.0782 sec
+phase  4 :    12.6592 sec
+phase  5 :    32.4773 sec
+phase  6 :     1.0255 sec
+phase  7 :     0.3559 sec
+phase  8 :     0.4776 sec
+phase  9 :     7.9323 sec
+phase 10 :     0.0430 sec
+init:      0.1578 sec
+vxm:      13.0151 sec
+inner:    40.4096 sec
+outer:     2.6242 sec
+sssp15:  threads: 40 trial: 53 source  15426822 time:    56.2131 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0021 sec
+phase 1 :     0.0862 sec
+phase 2 :     0.0633 sec
+phase 3 :     3.4878 sec
+phase 4 :    11.9503 sec
+phase 5 :    43.6242 sec
+phase 6 :     1.0414 sec
+phase 7 :     0.3564 sec
+phase 8 :     0.4899 sec
+phase 9 :     7.7195 sec
+phase 10 :     1.7528 sec
+sssp14:  threads: 40 trial: 53 source  15426822 time:    70.5799 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0086 sec
+phase  1 :     0.0877 sec
+phase  2 :     0.0633 sec
+phase  3 :     1.1844 sec
+phase  4 :    12.5911 sec
+phase  5 :    35.0869 sec
+phase  6 :     1.3272 sec
+phase  7 :     0.4043 sec
+phase  8 :     0.4824 sec
+phase  9 :     7.9293 sec
+phase 10 :     0.0495 sec
+init:      0.1596 sec
+vxm:      12.9954 sec
+inner:    43.0162 sec
+outer:     3.0436 sec
+sssp15:  threads: 40 trial: 54 source  12190925 time:    59.2223 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0022 sec
+phase 1 :     0.0849 sec
+phase 2 :     0.0626 sec
+phase 3 :     4.5771 sec
+phase 4 :    12.2709 sec
+phase 5 :    46.1715 sec
+phase 6 :     1.3562 sec
+phase 7 :     0.4003 sec
+phase 8 :     0.4891 sec
+phase 9 :     7.8614 sec
+phase 10 :     2.2064 sec
+sssp14:  threads: 40 trial: 54 source  12190925 time:    75.4898 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0084 sec
+phase  1 :     0.0862 sec
+phase  2 :     0.0622 sec
+phase  3 :     1.1625 sec
+phase  4 :    12.5965 sec
+phase  5 :    34.7211 sec
+phase  6 :     1.3838 sec
+phase  7 :     0.4108 sec
+phase  8 :     0.5143 sec
+phase  9 :     7.9289 sec
+phase 10 :     0.0497 sec
+init:      0.1568 sec
+vxm:      13.0073 sec
+inner:    42.6500 sec
+outer:     3.1103 sec
+sssp15:  threads: 40 trial: 55 source   1155218 time:    58.9320 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0021 sec
+phase 1 :     0.0846 sec
+phase 2 :     0.0620 sec
+phase 3 :     4.7764 sec
+phase 4 :    12.1108 sec
+phase 5 :    46.3017 sec
+phase 6 :     1.4095 sec
+phase 7 :     0.4117 sec
+phase 8 :     0.5335 sec
+phase 9 :     7.8501 sec
+phase 10 :     2.2608 sec
+sssp14:  threads: 40 trial: 55 source   1155218 time:    75.8103 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0085 sec
+phase  1 :     0.0870 sec
+phase  2 :     0.0631 sec
+phase  3 :     0.9772 sec
+phase  4 :    12.5823 sec
+phase  5 :    32.0368 sec
+phase  6 :     1.0217 sec
+phase  7 :     0.3619 sec
+phase  8 :     0.4694 sec
+phase  9 :     8.0061 sec
+phase 10 :     0.0421 sec
+init:      0.1586 sec
+vxm:      12.9442 sec
+inner:    40.0429 sec
+outer:     2.5103 sec
+sssp15:  threads: 40 trial: 56 source  10693488 time:    55.6621 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0022 sec
+phase 1 :     0.0872 sec
+phase 2 :     0.0630 sec
+phase 3 :     3.0607 sec
+phase 4 :    11.8702 sec
+phase 5 :    43.2909 sec
+phase 6 :     1.0762 sec
+phase 7 :     0.3669 sec
+phase 8 :     0.4665 sec
+phase 9 :     7.8441 sec
+phase 10 :     1.7832 sec
+sssp14:  threads: 40 trial: 56 source  10693488 time:    69.9167 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0091 sec
+phase  1 :     0.0867 sec
+phase  2 :     0.0625 sec
+phase  3 :     1.3670 sec
+phase  4 :    12.8298 sec
+phase  5 :    36.0679 sec
+phase  6 :     1.2849 sec
+phase  7 :     0.4145 sec
+phase  8 :     0.6082 sec
+phase  9 :     7.8958 sec
+phase 10 :     0.0574 sec
+init:      0.1583 sec
+vxm:      13.2443 sec
+inner:    43.9637 sec
+outer:     3.3175 sec
+sssp15:  threads: 40 trial: 57 source  14434835 time:    60.6918 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0025 sec
+phase 1 :     0.0849 sec
+phase 2 :     0.0620 sec
+phase 3 :     4.1625 sec
+phase 4 :    12.2602 sec
+phase 5 :    45.6066 sec
+phase 6 :     1.2693 sec
+phase 7 :     0.4145 sec
+phase 8 :     0.5999 sec
+phase 9 :     7.5799 sec
+phase 10 :     2.1585 sec
+sssp14:  threads: 40 trial: 57 source  14434835 time:    74.2081 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0090 sec
+phase  1 :     0.0866 sec
+phase  2 :     0.0629 sec
+phase  3 :     1.3294 sec
+phase  4 :    12.8467 sec
+phase  5 :    35.4748 sec
+phase  6 :     1.3950 sec
+phase  7 :     0.4237 sec
+phase  8 :     0.5828 sec
+phase  9 :     7.8621 sec
+phase 10 :     0.0590 sec
+init:      0.1584 sec
+vxm:      13.2704 sec
+inner:    43.3368 sec
+outer:     3.3662 sec
+sssp15:  threads: 40 trial: 58 source  19963339 time:    60.1401 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0025 sec
+phase 1 :     0.0852 sec
+phase 2 :     0.0621 sec
+phase 3 :     4.9380 sec
+phase 4 :    12.3420 sec
+phase 5 :    46.4082 sec
+phase 6 :     1.3945 sec
+phase 7 :     0.4235 sec
+phase 8 :     0.6037 sec
+phase 9 :     7.5349 sec
+phase 10 :     2.3332 sec
+sssp14:  threads: 40 trial: 58 source  19963339 time:    76.1354 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0088 sec
+phase  1 :     0.0870 sec
+phase  2 :     0.0623 sec
+phase  3 :     1.2472 sec
+phase  4 :    12.6540 sec
+phase  5 :    33.9001 sec
+phase  6 :     1.0987 sec
+phase  7 :     0.3858 sec
+phase  8 :     0.5388 sec
+phase  9 :     7.8054 sec
+phase 10 :     0.0499 sec
+init:      0.1581 sec
+vxm:      13.0398 sec
+inner:    41.7055 sec
+outer:     2.9346 sec
+sssp15:  threads: 40 trial: 59 source   3486185 time:    57.8454 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0025 sec
+phase 1 :     0.0853 sec
+phase 2 :     0.0633 sec
+phase 3 :     3.8546 sec
+phase 4 :    12.1528 sec
+phase 5 :    45.0704 sec
+phase 6 :     1.1283 sec
+phase 7 :     0.3895 sec
+phase 8 :     0.5308 sec
+phase 9 :     7.6170 sec
+phase 10 :     1.9258 sec
+sssp14:  threads: 40 trial: 59 source   3486185 time:    72.8271 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0088 sec
+phase  1 :     0.0869 sec
+phase  2 :     0.0666 sec
+phase  3 :     1.1523 sec
+phase  4 :    12.7145 sec
+phase  5 :    34.7700 sec
+phase  6 :     1.3508 sec
+phase  7 :     0.4093 sec
+phase  8 :     0.5210 sec
+phase  9 :     7.9279 sec
+phase 10 :     0.0497 sec
+init:      0.1623 sec
+vxm:      13.1238 sec
+inner:    42.6979 sec
+outer:     3.0738 sec
+sssp15:  threads: 40 trial: 60 source  18383269 time:    59.0653 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0026 sec
+phase 1 :     0.0860 sec
+phase 2 :     0.0631 sec
+phase 3 :     4.8215 sec
+phase 4 :    12.2165 sec
+phase 5 :    45.9745 sec
+phase 6 :     1.3897 sec
+phase 7 :     0.4137 sec
+phase 8 :     0.5286 sec
+phase 9 :     7.9095 sec
+phase 10 :     2.2224 sec
+sssp14:  threads: 40 trial: 60 source  18383269 time:    75.6349 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0097 sec
+phase  1 :     0.0868 sec
+phase  2 :     0.0631 sec
+phase  3 :     1.1121 sec
+phase  4 :    12.6841 sec
+phase  5 :    33.0937 sec
+phase  6 :     1.0827 sec
+phase  7 :     0.3742 sec
+phase  8 :     0.5219 sec
+phase  9 :     7.9836 sec
+phase 10 :     0.0497 sec
+init:      0.1595 sec
+vxm:      13.0583 sec
+inner:    41.0773 sec
+outer:     2.7664 sec
+sssp15:  threads: 40 trial: 61 source  20269908 time:    57.0684 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0025 sec
+phase 1 :     0.0851 sec
+phase 2 :     0.0626 sec
+phase 3 :     3.7572 sec
+phase 4 :    12.1748 sec
+phase 5 :    44.4172 sec
+phase 6 :     1.1125 sec
+phase 7 :     0.3804 sec
+phase 8 :     0.5239 sec
+phase 9 :     7.7650 sec
+phase 10 :     1.8937 sec
+sssp14:  threads: 40 trial: 61 source  20269908 time:    72.1809 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0089 sec
+phase  1 :     0.0860 sec
+phase  2 :     0.0627 sec
+phase  3 :     1.2885 sec
+phase  4 :    12.8403 sec
+phase  5 :    36.3794 sec
+phase  6 :     1.3298 sec
+phase  7 :     0.4213 sec
+phase  8 :     0.5824 sec
+phase  9 :     7.9503 sec
+phase 10 :     0.0572 sec
+init:      0.1576 sec
+vxm:      13.2616 sec
+inner:    44.3297 sec
+outer:     3.2578 sec
+sssp15:  threads: 40 trial: 62 source  12370764 time:    61.0152 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0025 sec
+phase 1 :     0.0852 sec
+phase 2 :     0.0629 sec
+phase 3 :     4.1040 sec
+phase 4 :    12.3494 sec
+phase 5 :    46.5558 sec
+phase 6 :     1.3511 sec
+phase 7 :     0.4222 sec
+phase 8 :     0.5700 sec
+phase 9 :     7.6879 sec
+phase 10 :     2.2894 sec
+sssp14:  threads: 40 trial: 62 source  12370764 time:    75.4880 sec
+
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase  0 :     0.0096 sec
+phase  1 :     0.0876 sec
+phase  2 :     0.0625 sec
+phase  3 :     1.1778 sec
+phase  4 :    12.7080 sec
+phase  5 :    35.0798 sec
+phase  6 :     1.3094 sec
+phase  7 :     0.4032 sec
+phase  8 :     0.5329 sec
+phase  9 :     7.9348 sec
+phase 10 :     0.0499 sec
+init:      0.1597 sec
+vxm:      13.1112 sec
+inner:    43.0146 sec
+outer:     3.0700 sec
+sssp15:  threads: 40 trial: 63 source   7843140 time:    59.3630 sec
+delta: 200000
+AL nnz: 0.0577086 billion
+AH nnz: 2.2e-08 billion
+phase 0 :     0.0026 sec
+phase 1 :     0.0857 sec
+phase 2 :     0.0630 sec
+phase 3 :     4.7020 sec
+phase 4 :    12.1663 sec
+phase 5 :    45.8249 sec
+phase 6 :     1.3209 sec
+phase 7 :     0.4034 sec
+phase 8 :     0.5152 sec
+phase 9 :     7.8526 sec
+phase 10 :     2.1708 sec
+sssp14:  threads: 40 trial: 63 source   7843140 time:    75.1145 sec
+
+40: SSSP14  time:      76.494344 sec  rate:     0.75 (delta 200000)
+40: SSSP15  time:      62.175299 sec  rate:     0.93 (delta 200000)
+# of trials: 3
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+
+Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+
+read A time:          40.245464 sec
+process A time:       71.069162 sec
+# of nodes: 134217726   number of entries: 4223264644
+compute degree: 10.2537 sec
+
+warmup method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+average degree: 18.445
+median  degree: 0
+auto sorting: -1: descending
+sort descending
+# of triangles: 106873365648
+nthreads:  40 time:  1232.778505 rate:   3.43 (SandiaDot2, one trial)
+
+Method: Sandia:     sum ((L*L) .* L)     auto-sort
+kron fails on method 3; skipped
+
+Method: Sandia2:    sum ((U*U) .* U)     auto-sort
+kron fails on method 4; skipped
+
+Method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+average degree: 18.445
+median  degree: 0
+auto sorting: 1: ascending
+sort ascending
+trial  0:  1091.441002 sec rate   3.87  # triangles: 106873365648
+average degree: 18.445
+median  degree: 0
+auto sorting: 1: ascending
+sort ascending
+trial  1:  1092.134271 sec rate   3.87  # triangles: 106873365648
+average degree: 18.445
+median  degree: 0
+auto sorting: 1: ascending
+sort ascending
+trial  2:  1086.219497 sec rate   3.89  # triangles: 106873365648
+nthreads:  40 time:  1089.931590 rate:   3.87   # of triangles: 106873365648
+
+Method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+average degree: 18.445
+median  degree: 0
+auto sorting: -1: descending
+sort descending
+trial  0:  1230.582506 sec rate   3.43  # triangles: 106873365648
+average degree: 18.445
+median  degree: 0
+auto sorting: -1: descending
+sort descending
+trial  1:  1231.070232 sec rate   3.43  # triangles: 106873365648
+average degree: 18.445
+median  degree: 0
+auto sorting: -1: descending
+sort descending
+trial  2:  1225.579715 sec rate   3.45  # triangles: 106873365648
+nthreads:  40 time:  1229.077484 rate:   3.44   # of triangles: 106873365648
+
+Best method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+nthreads:  40 time:  1089.931590 rate:   3.87
+# of trials: 3
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+
+Reading binary file: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+
+read A time:          59.109946 sec
+process A time:       73.816719 sec
+# of nodes: 134217728   number of entries: 4294966740
+compute degree: 14.1918 sec
+
+warmup method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+average degree: 31.874
+median  degree: 32
+auto sorting: 0: none
+# of triangles: 5378
+nthreads:  40 time:    36.360062 rate: 118.12 (SandiaDot2, one trial)
+
+Method: Sandia:     sum ((L*L) .* L)     auto-sort
+average degree: 31.874
+median  degree: 32
+auto sorting: 0: none
+trial  0:    29.006063 sec rate 148.07  # triangles: 5378
+average degree: 31.874
+median  degree: 32
+auto sorting: 0: none
+trial  1:    29.245270 sec rate 146.86  # triangles: 5378
+average degree: 31.874
+median  degree: 32
+auto sorting: 0: none
+trial  2:    29.236424 sec rate 146.90  # triangles: 5378
+nthreads:  40 time:    29.162585 rate: 147.28   # of triangles: 5378
+
+Method: Sandia2:    sum ((U*U) .* U)     auto-sort
+average degree: 31.874
+median  degree: 32
+auto sorting: 0: none
+trial  0:    32.595213 sec rate 131.77  # triangles: 5378
+average degree: 31.874
+median  degree: 32
+auto sorting: 0: none
+trial  1:    33.113160 sec rate 129.71  # triangles: 5378
+average degree: 31.874
+median  degree: 32
+auto sorting: 0: none
+trial  2:    32.527637 sec rate 132.04  # triangles: 5378
+nthreads:  40 time:    32.745337 rate: 131.16   # of triangles: 5378
+
+Method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+average degree: 31.874
+median  degree: 32
+auto sorting: 0: none
+trial  0:    34.249342 sec rate 125.40  # triangles: 5378
+average degree: 31.874
+median  degree: 32
+auto sorting: 0: none
+trial  1:    34.215519 sec rate 125.53  # triangles: 5378
+average degree: 31.874
+median  degree: 32
+auto sorting: 0: none
+trial  2:    34.194015 sec rate 125.61  # triangles: 5378
+nthreads:  40 time:    34.219625 rate: 125.51   # of triangles: 5378
+
+Method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+average degree: 31.874
+median  degree: 32
+auto sorting: 0: none
+trial  0:    36.344967 sec rate 118.17  # triangles: 5378
+average degree: 31.874
+median  degree: 32
+auto sorting: 0: none
+trial  1:    36.335188 sec rate 118.20  # triangles: 5378
+average degree: 31.874
+median  degree: 32
+auto sorting: 0: none
+trial  2:    36.762429 sec rate 116.83  # triangles: 5378
+nthreads:  40 time:    36.480862 rate: 117.73   # of triangles: 5378
+
+Best method: Sandia:     sum ((L*L) .* L)     auto-sort
+nthreads:  40 time:    29.162585 rate: 147.28
+# of trials: 3
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+
+Reading binary file: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+
+read A time:          21.804310 sec
+process A time:       21.299432 sec
+# of nodes: 61578415   number of entries: 2405026092
+compute degree: 4.53193 sec
+
+warmup method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+average degree: 32.78
+median  degree: 5
+auto sorting: -1: descending
+sort descending
+# of triangles: 34824916864
+nthreads:  40 time:   324.821804 rate:   7.40 (SandiaDot2, one trial)
+
+Method: Sandia:     sum ((L*L) .* L)     auto-sort
+all but urand is slow with method 3: skipped
+
+Method: Sandia2:    sum ((U*U) .* U)     auto-sort
+all but urand is slow with method 4: skipped
+
+Method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+average degree: 32.78
+median  degree: 5
+auto sorting: 1: ascending
+sort ascending
+trial  0:   272.406777 sec rate   8.83  # triangles: 34824916864
+average degree: 32.78
+median  degree: 5
+auto sorting: 1: ascending
+sort ascending
+trial  1:   270.194913 sec rate   8.90  # triangles: 34824916864
+average degree: 32.78
+median  degree: 5
+auto sorting: 1: ascending
+sort ascending
+trial  2:   273.728140 sec rate   8.79  # triangles: 34824916864
+nthreads:  40 time:   272.109943 rate:   8.84   # of triangles: 34824916864
+
+Method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+average degree: 32.78
+median  degree: 5
+auto sorting: -1: descending
+sort descending
+trial  0:   323.762409 sec rate   7.43  # triangles: 34824916864
+average degree: 32.78
+median  degree: 5
+auto sorting: -1: descending
+sort descending
+trial  1:   323.467723 sec rate   7.44  # triangles: 34824916864
+average degree: 32.78
+median  degree: 5
+auto sorting: -1: descending
+sort descending
+trial  2:   323.512354 sec rate   7.43  # triangles: 34824916864
+nthreads:  40 time:   323.580829 rate:   7.43   # of triangles: 34824916864
+
+Best method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+nthreads:  40 time:   272.109943 rate:   8.84
+# of trials: 3
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[.grb]
+
+Reading binary file: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+
+read A time:          15.639181 sec
+process A time:       11.650785 sec
+# of nodes: 50636151   number of entries: 3620126660
+compute degree: 2.08702 sec
+
+warmup method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+average degree: 107.673
+median  degree: 30
+auto sorting: 0: none
+# of triangles: 84907041475
+nthreads:  40 time:    61.371196 rate:  58.99 (SandiaDot2, one trial)
+
+Method: Sandia:     sum ((L*L) .* L)     auto-sort
+all but urand is slow with method 3: skipped
+
+Method: Sandia2:    sum ((U*U) .* U)     auto-sort
+all but urand is slow with method 4: skipped
+
+Method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+average degree: 107.673
+median  degree: 30
+auto sorting: 0: none
+trial  0:    52.706104 sec rate  68.69  # triangles: 84907041475
+average degree: 107.673
+median  degree: 30
+auto sorting: 0: none
+trial  1:    51.280479 sec rate  70.59  # triangles: 84907041475
+average degree: 107.673
+median  degree: 30
+auto sorting: 0: none
+trial  2:    51.567824 sec rate  70.20  # triangles: 84907041475
+nthreads:  40 time:    51.851469 rate:  69.82   # of triangles: 84907041475
+
+Method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+average degree: 107.673
+median  degree: 30
+auto sorting: 0: none
+trial  0:    59.415783 sec rate  60.93  # triangles: 84907041475
+average degree: 107.673
+median  degree: 30
+auto sorting: 0: none
+trial  1:    59.544395 sec rate  60.80  # triangles: 84907041475
+average degree: 107.673
+median  degree: 30
+auto sorting: 0: none
+trial  2:    59.505830 sec rate  60.84  # triangles: 84907041475
+nthreads:  40 time:    59.488670 rate:  60.85   # of triangles: 84907041475
+
+Best method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+nthreads:  40 time:    51.851469 rate:  69.82
+# of trials: 3
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+[.grb]
+
+Reading binary file: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+
+read A time:           0.596712 sec
+process A time:        1.651263 sec
+# of nodes: 23947347   number of entries: 57708624
+compute degree: 0.0616636 sec
+
+warmup method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+auto sorting: 0: none
+# of triangles: 438804
+nthreads:  40 time:     0.240698 rate: 239.76 (SandiaDot2, one trial)
+
+Method: Sandia:     sum ((L*L) .* L)     auto-sort
+all but urand is slow with method 3: skipped
+
+Method: Sandia2:    sum ((U*U) .* U)     auto-sort
+all but urand is slow with method 4: skipped
+
+Method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+auto sorting: 0: none
+trial  0:     0.237237 sec rate 243.25  # triangles: 438804
+auto sorting: 0: none
+trial  1:     0.239158 sec rate 241.30  # triangles: 438804
+auto sorting: 0: none
+trial  2:     0.239428 sec rate 241.03  # triangles: 438804
+nthreads:  40 time:     0.238608 rate: 241.86   # of triangles: 438804
+
+Method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+auto sorting: 0: none
+trial  0:     0.241999 sec rate 238.47  # triangles: 438804
+auto sorting: 0: none
+trial  1:     0.243526 sec rate 236.97  # triangles: 438804
+auto sorting: 0: none
+trial  2:     0.241131 sec rate 239.32  # triangles: 438804
+nthreads:  40 time:     0.242219 rate: 238.25   # of triangles: 438804
+
+Best method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+nthreads:  40 time:     0.238608 rate: 241.86

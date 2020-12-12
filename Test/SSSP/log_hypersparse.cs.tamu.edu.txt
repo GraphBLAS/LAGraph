@@ -3166,3 +3166,19 @@ max # of threads: 40
 SuiteSparse:GraphBLAS Dec 11, 2020 (DRAFT)
 Message: /home/faculty/davis/GAP/GAP-web/GAP-web.grb : SSSP15
 # threads used: 40 time: 11.4811
+
+From: /home/faculty/davis/sparse/LAGraph/Test/SSSP/gap_sssp_test.c
+Date: Fri Dec 11 16:43:32 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Dec 11, 2020 (DRAFT)
+Message: /home/faculty/davis/GAP/GAP-road/GAP-road.grb : SSSP14
+# threads used: 40 time: 76.4943
+
+From: /home/faculty/davis/sparse/LAGraph/Test/SSSP/gap_sssp_test.c
+Date: Fri Dec 11 16:43:32 2020
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Dec 11, 2020 (DRAFT)
+Message: /home/faculty/davis/GAP/GAP-road/GAP-road.grb : SSSP15
+# threads used: 40 time: 62.1753
