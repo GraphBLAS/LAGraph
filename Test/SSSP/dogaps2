@@ -2,18 +2,8 @@
 
 # Looking for delta
 
-# kron: 27
-./build/gap_sssp_test ~/GAP/GAP-kron/GAP-kron.grb 20 ~/GAP/GAP-kron/GAP-kron_sources.mtx
-./build/gap_sssp_test ~/GAP/GAP-kron/GAP-kron.grb 25 ~/GAP/GAP-kron/GAP-kron_sources.mtx
-./build/gap_sssp_test ~/GAP/GAP-kron/GAP-kron.grb 30 ~/GAP/GAP-kron/GAP-kron_sources.mtx
-./build/gap_sssp_test ~/GAP/GAP-kron/GAP-kron.grb 35 ~/GAP/GAP-kron/GAP-kron_sources.mtx
-./build/gap_sssp_test ~/GAP/GAP-kron/GAP-kron.grb 40 ~/GAP/GAP-kron/GAP-kron_sources.mtx
-./build/gap_sssp_test ~/GAP/GAP-kron/GAP-kron.grb 50 ~/GAP/GAP-kron/GAP-kron_sources.mtx
-./build/gap_sssp_test ~/GAP/GAP-kron/GAP-kron.grb 60 ~/GAP/GAP-kron/GAP-kron_sources.mtx
-./build/gap_sssp_test ~/GAP/GAP-kron/GAP-kron.grb 70 ~/GAP/GAP-kron/GAP-kron_sources.mtx
 
-
-# twitter: 51
+# twitter: was 51, now 31:49, probably 40
 ./build/gap_sssp_test ~/GAP/GAP-twitter/GAP-twitter.grb 30 ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
 ./build/gap_sssp_test ~/GAP/GAP-twitter/GAP-twitter.grb 40 ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
 ./build/gap_sssp_test ~/GAP/GAP-twitter/GAP-twitter.grb 50 ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
@@ -26,7 +16,7 @@
 ./build/gap_sssp_test ~/GAP/GAP-twitter/GAP-twitter.grb 120 ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
 ./build/gap_sssp_test ~/GAP/GAP-twitter/GAP-twitter.grb 130 ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
 
-# urand: 35
+# urand: was 35, now 21:39, maybe 30 or 35
 ./build/gap_sssp_test ~/GAP/GAP-urand/GAP-urand.grb 20 ~/GAP/GAP-urand/GAP-urand_sources.mtx
 ./build/gap_sssp_test ~/GAP/GAP-urand/GAP-urand.grb 30 ~/GAP/GAP-urand/GAP-urand_sources.mtx
 ./build/gap_sssp_test ~/GAP/GAP-urand/GAP-urand.grb 40 ~/GAP/GAP-urand/GAP-urand_sources.mtx

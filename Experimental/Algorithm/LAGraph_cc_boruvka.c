@@ -56,8 +56,9 @@ static GrB_Info Reduce_assign (GrB_Vector w,
 }
 
 static GrB_Index *I, *V;
-static bool func(const GrB_Index i, const GrB_Index j, const GrB_Index nrows,
-        const GrB_Index ncols, const void *x, const void *thunk)
+bool func(const GrB_Index i, const GrB_Index j, const void *x, const void *thunk) ;
+
+bool func(const GrB_Index i, const GrB_Index j, const void *x, const void *thunk)
 {
     return V[i] != V[j];
 }

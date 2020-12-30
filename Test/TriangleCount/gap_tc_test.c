@@ -281,8 +281,8 @@ int main (int argc, char **argv)
     // kron: input graph: nodes: 134217726 edges: 4223264644
     // fails on methods 3 and 4.
 
-    // try all methods 3 to 6
-    for (int method = 3 ; method <= 6 ; method++)
+    // try all methods 3 to 5
+    for (int method = 3 ; method <= 5 ; method++)
 
     // just try methods 5 and 6
     // for (int method = 5 ; method <= 6 ; method++)

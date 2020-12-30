@@ -60,8 +60,9 @@ Then to run the GAP benchmark do:
     cd LAGraph/Test
     ./do_gap_all > lengthy_output.txt
 
-and watch stderr for a single line result for each benchmark.  To edit the
-# of threads used:
+and watch stderr for a single line result for each benchmark.  Each line will
+report method, the # of threads used ("40:" for example), the average run time,
+and the matrix name, in that order.  To edit the # of threads used:
 
     cd LAGraph/Test
     vi */gap*.c

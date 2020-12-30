@@ -77,16 +77,16 @@ static GrB_Index *weight, *parent, *partner;
 // for each element A(i, j), it is selected if
 //   1. weight[i] == A(i, j)    -- where weight[i] stores i's minimum edge weight
 //   2. parent[j] == partner[i] -- j belongs to the specified connected component
-static bool f1 (GrB_Index i, GrB_Index j, GrB_Index nrows, GrB_Index ncols,
-        const void *x, const void *thunk)
+bool f1 (GrB_Index i, GrB_Index j, const void *x, const void *thunk) ;
+bool f1 (GrB_Index i, GrB_Index j, const void *x, const void *thunk)
 {
     uint64_t *aij = (uint64_t*) x;
     return (weight[i] == *aij) && (parent[j] == partner[i]);
 }
 // edge removal:
 // A(i, j) is removed when parent[i] == parent[j]
-static bool f2 (GrB_Index i, GrB_Index j, GrB_Index nrows, GrB_Index ncols,
-        const void *x, const void *thunk)
+bool f2 (GrB_Index i, GrB_Index j, const void *x, const void *thunk) ;
+bool f2 (GrB_Index i, GrB_Index j, const void *x, const void *thunk)
 {
     uint64_t *aij = (uint64_t*) x;
     return (parent[i] != parent[j]);

@@ -5,6 +5,8 @@
 LAGraph is a draft library plus a test harness for collecting algorithms that
 use the GraphBLAS.
 
+SuiteSparse:GraphBLAS v4.0.1 is required.
+
 Since it's a draft, it contains are many draft/experimental codes with known
 sub-par performance.  Performance of the best methods is highly sensitive on
 which version of SuiteSparse:GraphBLAS is being used, as well.  No one other

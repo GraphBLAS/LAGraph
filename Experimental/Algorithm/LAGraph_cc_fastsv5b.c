@@ -36,7 +36,14 @@
  * Code is based on the algorithm described in the following paper
  * Zhang, Azad, Hu. FastSV: FastSV: A Distributed-Memory Connected Component
  * Algorithm with Fast Convergence (SIAM PP20)
- *
+
+  a subsequent update to the algorithm is here (which might not be reflected
+  in this code):
+
+  Yongzhe Zhang, Ariful Azad, Aydin Buluc: Parallel algorithms for finding
+  connected components using linear algebra. J. Parallel Distributed Comput.
+  144: 14-27 (2020).
+
  * Modified by Tim Davis, Texas A&M University
  **/
 

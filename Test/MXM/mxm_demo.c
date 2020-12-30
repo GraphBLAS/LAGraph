@@ -214,7 +214,7 @@ int main (int argc, char **argv)
                 // C1=A*B or C1<M>=A*B without MKL
                 //--------------------------------------------------------------
 
-                GxB_set (GxB_MKL, false) ;
+//             GxB_set (GxB_MKL, false) ;
 
                 LAGr_Matrix_dup (&C1, Cin) ;
                 LAGr_mxm (C1, M1, NULL, semiring, A, B, NULL) ;
@@ -224,7 +224,7 @@ int main (int argc, char **argv)
                 // C2=A*B or C2<M>=A*B with MKL
                 //--------------------------------------------------------------
 
-                GxB_set (GxB_MKL, true) ;
+//              GxB_set (GxB_MKL, true) ;
 
                 LAGr_Matrix_dup (&C2, Cin) ;
                 LAGr_mxm (C2, M1, NULL, semiring, A, B, NULL) ;

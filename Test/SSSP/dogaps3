@@ -1,0 +1,87 @@
+#!/bin/sh
+
+# Looking for delta
+
+# kron: was 27, now 21:29
+./build/gap_sssp_test ~/GAP/GAP-kron/GAP-kron.grb 21 ~/GAP/GAP-kron/GAP-kron_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-kron/GAP-kron.grb 22 ~/GAP/GAP-kron/GAP-kron_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-kron/GAP-kron.grb 23 ~/GAP/GAP-kron/GAP-kron_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-kron/GAP-kron.grb 24 ~/GAP/GAP-kron/GAP-kron_sources.mtx
+# ./build/gap_sssp_test ~/GAP/GAP-kron/GAP-kron.grb 25 ~/GAP/GAP-kron/GAP-kron_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-kron/GAP-kron.grb 26 ~/GAP/GAP-kron/GAP-kron_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-kron/GAP-kron.grb 27 ~/GAP/GAP-kron/GAP-kron_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-kron/GAP-kron.grb 28 ~/GAP/GAP-kron/GAP-kron_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-kron/GAP-kron.grb 29 ~/GAP/GAP-kron/GAP-kron_sources.mtx
+
+# twitter: 31:49, probably 40
+./build/gap_sssp_test ~/GAP/GAP-twitter/GAP-twitter.grb 31 ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-twitter/GAP-twitter.grb 32 ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-twitter/GAP-twitter.grb 33 ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-twitter/GAP-twitter.grb 34 ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-twitter/GAP-twitter.grb 35 ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-twitter/GAP-twitter.grb 36 ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-twitter/GAP-twitter.grb 37 ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-twitter/GAP-twitter.grb 38 ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-twitter/GAP-twitter.grb 39 ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
+# ./build/gap_sssp_test ~/GAP/GAP-twitter/GAP-twitter.grb 40 ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-twitter/GAP-twitter.grb 41 ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-twitter/GAP-twitter.grb 42 ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-twitter/GAP-twitter.grb 43 ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-twitter/GAP-twitter.grb 44 ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-twitter/GAP-twitter.grb 45 ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-twitter/GAP-twitter.grb 46 ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-twitter/GAP-twitter.grb 47 ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-twitter/GAP-twitter.grb 48 ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-twitter/GAP-twitter.grb 49 ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
+
+# urand: was 35, now 21:39, maybe 30 or 35
+./build/gap_sssp_test ~/GAP/GAP-urand/GAP-urand.grb 21 ~/GAP/GAP-urand/GAP-urand_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-urand/GAP-urand.grb 22 ~/GAP/GAP-urand/GAP-urand_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-urand/GAP-urand.grb 23 ~/GAP/GAP-urand/GAP-urand_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-urand/GAP-urand.grb 24 ~/GAP/GAP-urand/GAP-urand_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-urand/GAP-urand.grb 25 ~/GAP/GAP-urand/GAP-urand_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-urand/GAP-urand.grb 26 ~/GAP/GAP-urand/GAP-urand_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-urand/GAP-urand.grb 27 ~/GAP/GAP-urand/GAP-urand_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-urand/GAP-urand.grb 28 ~/GAP/GAP-urand/GAP-urand_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-urand/GAP-urand.grb 29 ~/GAP/GAP-urand/GAP-urand_sources.mtx
+# ./build/gap_sssp_test ~/GAP/GAP-urand/GAP-urand.grb 30 ~/GAP/GAP-urand/GAP-urand_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-urand/GAP-urand.grb 31 ~/GAP/GAP-urand/GAP-urand_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-urand/GAP-urand.grb 32 ~/GAP/GAP-urand/GAP-urand_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-urand/GAP-urand.grb 33 ~/GAP/GAP-urand/GAP-urand_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-urand/GAP-urand.grb 34 ~/GAP/GAP-urand/GAP-urand_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-urand/GAP-urand.grb 35 ~/GAP/GAP-urand/GAP-urand_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-urand/GAP-urand.grb 36 ~/GAP/GAP-urand/GAP-urand_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-urand/GAP-urand.grb 37 ~/GAP/GAP-urand/GAP-urand_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-urand/GAP-urand.grb 38 ~/GAP/GAP-urand/GAP-urand_sources.mtx
+./build/gap_sssp_test ~/GAP/GAP-urand/GAP-urand.grb 39 ~/GAP/GAP-urand/GAP-urand_sources.mtx
+
+# web: 150 or 200, now 110:150.  Maybe 140
+# ./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb 110 ~/GAP/GAP-web/GAP-web_sources.mtx 
+./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb 121 ~/GAP/GAP-web/GAP-web_sources.mtx 
+./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb 122 ~/GAP/GAP-web/GAP-web_sources.mtx 
+./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb 123 ~/GAP/GAP-web/GAP-web_sources.mtx 
+./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb 124 ~/GAP/GAP-web/GAP-web_sources.mtx 
+./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb 125 ~/GAP/GAP-web/GAP-web_sources.mtx 
+./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb 126 ~/GAP/GAP-web/GAP-web_sources.mtx 
+./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb 127 ~/GAP/GAP-web/GAP-web_sources.mtx 
+./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb 129 ~/GAP/GAP-web/GAP-web_sources.mtx 
+# ./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb 130 ~/GAP/GAP-web/GAP-web_sources.mtx 
+./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb 131 ~/GAP/GAP-web/GAP-web_sources.mtx 
+./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb 132 ~/GAP/GAP-web/GAP-web_sources.mtx 
+./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb 133 ~/GAP/GAP-web/GAP-web_sources.mtx 
+./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb 134 ~/GAP/GAP-web/GAP-web_sources.mtx 
+./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb 135 ~/GAP/GAP-web/GAP-web_sources.mtx 
+./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb 136 ~/GAP/GAP-web/GAP-web_sources.mtx 
+./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb 137 ~/GAP/GAP-web/GAP-web_sources.mtx 
+./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb 139 ~/GAP/GAP-web/GAP-web_sources.mtx 
+# ./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb 140 ~/GAP/GAP-web/GAP-web_sources.mtx 
+./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb 141 ~/GAP/GAP-web/GAP-web_sources.mtx 
+./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb 142 ~/GAP/GAP-web/GAP-web_sources.mtx 
+./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb 143 ~/GAP/GAP-web/GAP-web_sources.mtx 
+./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb 144 ~/GAP/GAP-web/GAP-web_sources.mtx 
+./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb 145 ~/GAP/GAP-web/GAP-web_sources.mtx 
+./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb 146 ~/GAP/GAP-web/GAP-web_sources.mtx 
+./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb 147 ~/GAP/GAP-web/GAP-web_sources.mtx 
+./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb 149 ~/GAP/GAP-web/GAP-web_sources.mtx 
+# ./build/gap_sssp_test ~/GAP/GAP-web/GAP-web.grb 150 ~/GAP/GAP-web/GAP-web_sources.mtx 
+

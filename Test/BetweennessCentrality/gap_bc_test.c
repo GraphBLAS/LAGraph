@@ -299,6 +299,7 @@ int main (int argc, char **argv)
     // Begin tests
     //--------------------------------------------------------------------------
 
+    GrB_Matrix_nvals (&nvals, A);
     printf ("\n========== input graph: nodes: %"PRIu64" edges: %"PRIu64"\n",
         n, nvals) ;
 
@@ -434,6 +435,7 @@ int main (int argc, char **argv)
                 double t2 = LAGraph_toc (tic) ;
                 printf ("Batch v5 time %2d: %12.4f (sec)\n",
                     Nthreads [t], t2) ;
+                fflush (stdout) ;
                 total_time_5 [t] += t2 ;
             }
         }

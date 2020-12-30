@@ -520,7 +520,7 @@ for (int tt = 1 ; tt <= nt ; tt++)
         // sssp14: with bitmap vector t
         //----------------------------------------------------------------------
 
-#if 1
+#if 0
         // Start the timer
         LAGraph_tic (tic) ;
         GrB_free (&path_lengths1) ;

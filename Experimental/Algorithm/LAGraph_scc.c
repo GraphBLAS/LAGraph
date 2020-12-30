@@ -58,8 +58,8 @@ GrB_Index *I, *V, *F, *B, *M;
 // hold. The converse is not true unless F[u]==B[u]. However, we can safely remove
 // an edge (u, v) if either F[u]!=F[v] or B[u]!=B[v] holds, which can accelerate
 // the SCC computation in the future rounds.
-static bool edge_removal (GrB_Index i, GrB_Index j, GrB_Index nrows, GrB_Index ncols,
-        const void *x, const void *thunk)
+bool edge_removal (GrB_Index i, GrB_Index j, const void *x, const void *thunk) ;
+bool edge_removal (GrB_Index i, GrB_Index j, const void *x, const void *thunk)
 {
     return !M[i] && !M[j] && F[i] == F[j] && B[i] == B[j];
 }
@@ -68,8 +68,8 @@ static bool edge_removal (GrB_Index i, GrB_Index j, GrB_Index nrows, GrB_Index n
 //  - A vertex is a trivial SCC if it has no incoming or outgoing edges.
 //  - M[i] = i   | if vertex i is a trivial SCC
 //    M[i] = n   | otherwise
-static bool trim_one (GrB_Index i, GrB_Index j, GrB_Index nrows, GrB_Index ncols,
-        const void *x, const void *thunk)
+bool trim_one (GrB_Index i, GrB_Index j, const void *x, const void *thunk) ;
+bool trim_one (GrB_Index i, GrB_Index j, const void *x, const void *thunk)
 {
     return M[i] == M[j];
 }

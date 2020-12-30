@@ -45,7 +45,7 @@
 //    Betweenness centrality =    \    ----------------
 //           of node i            /       sigma(s,t)
 //                               /___
-//                             s ≠ i ≠ t
+//                            s != i != t
 //
 // Where sigma(s,t) is the total number of shortest paths from node s to
 // node t, and sigma(s,t | i) is the total number of shortest paths from
@@ -66,8 +66,9 @@
 // A represents the graph, and AT must equal A'.  A must be square, and can be
 // unsymmetric.  Self-edges are OK.  The values of A and AT are ignored; just
 // the pattern of two matrices are used.  For best performance, A and AT should
-// be in their default format (by row); in this case, both phases use a "push"
-// direction (a saxpy-based multiply) in SuiteSparse:GraphBLAS.
+// be in their default format (by row).
+
+// Each phases uses push-pull direction optimization.
 
 //------------------------------------------------------------------------------
 
@@ -107,9 +108,15 @@ GrB_Info LAGraph_bc_batch5      // betweeness centrality, batch algorithm
     int32_t ns                  // number of source vertices
 )
 {
+
+    // =========================================================================
+    // === initializations =====================================================
+    // =========================================================================
+
+    double tt1 = omp_get_wtime ( ) ;
     GrB_Info info ;
     (*centrality) = NULL ;
-    GrB_Index n = 0 ;           // # nodes in the graph
+    GrB_Index n ;                   // # nodes in the graph
 
     // Array of BFS search matrices.
     // S [i] is a sparse matrix that stores the depth at which each vertex is
@@ -133,19 +140,15 @@ GrB_Info LAGraph_bc_batch5      // betweeness centrality, batch algorithm
     // Temporary workspace matrix (sparse).
     GrB_Matrix W = NULL ;
 
-    LAGr_Matrix_nrows (&n, A) ;      // # of nodes
-
-    // Create the result vector, one entry for each node
-    LAGr_Vector_new (centrality, GrB_FP32, n) ;
+    // Initialize paths and frontier with source notes
+    LAGr_Matrix_nrows (&n, A) ;
     LAGr_Matrix_new (&paths,     GrB_FP32, ns, n) ;
     LAGr_Matrix_new (&frontier,  GrB_FP32, ns, n) ;
-
-    // Initialize paths to source vertices with ones, as a bitmap.
     GxB_set (paths, GxB_SPARSITY_CONTROL, GxB_BITMAP + GxB_FULL) ;
     for (GrB_Index i = 0 ; i < ns ; i++)
     {
         // paths (i,s(i)) = 1
-        LAGr_Matrix_setElement (paths, 1, i, sources [i]) ;
+        LAGr_Matrix_setElement (paths,    1, i, sources [i]) ;
         LAGr_Matrix_setElement (frontier, 1, i, sources [i]) ;
     }
 
@@ -162,25 +165,63 @@ GrB_Info LAGraph_bc_batch5      // betweeness centrality, batch algorithm
         return (GrB_OUT_OF_MEMORY) ;
     }
 
+    // =========================================================================
     // === Breadth-first search stage ==========================================
+    // =========================================================================
 
-    GrB_Index frontier_size ;
+    bool last_was_pull = false ;
+    GrB_Index frontier_size, last_frontier_size = 0 ;
     LAGr_Matrix_nvals (&frontier_size, frontier) ;
+
+    tt1 = omp_get_wtime ( ) - tt1 ;
+    printf ("init phase:    %.3g sec\n", tt1) ;
+    tt1 = omp_get_wtime ( ) ;
 
     int64_t depth ;
     for (depth = 0 ; frontier_size > 0 && depth < n ; depth++)
     {
+
+        //----------------------------------------------------------------------
         // S [depth] = pattern of frontier
+        //----------------------------------------------------------------------
+
+//      double ttt = omp_get_wtime ( ) ;
         LAGr_Matrix_new (&(S [depth]), GrB_BOOL, ns, n) ;
         LAGr_apply (S [depth], NULL, NULL, GxB_ONE_BOOL, frontier, NULL) ;
 
+        // TODO (in SuiteSparse:GraphBLAS, not LAGraph): constructing S will be
+        // faster with uniform-valued matrices, once they are added to
+        // SuiteSparse:GraphBLAS.
+
+        // TODO (in SuiteSparse:GraphBLAS, not LAGraph): mxm can produce a
+        // jumbled matrix (frontier), which is then sorted by the apply (here)
+        // and the eMult (below).  Both the apply and the eMult could tolerate
+        // jumbled inputs, and produce jumbled outputs, so if enough
+        // jumbled-exploit is added, the lazy sort could be so lazy that it
+        // never happens (like the BFS).
+
+        //----------------------------------------------------------------------
         // Accumulate path counts: paths += frontier
+        //----------------------------------------------------------------------
+
         LAGr_assign (paths, NULL, GrB_PLUS_FP32, frontier, GrB_ALL, n, GrB_ALL,
             ns, NULL) ;
 
+        //----------------------------------------------------------------------
         // Update frontier: frontier<!paths> = frontier*A
-        // pull if frontier is more than 10% dense
-        bool do_pull = (((double) frontier_size) / (double) (ns*n)) > 0.1 ;
+        //----------------------------------------------------------------------
+
+        double frontier_density = ((double) frontier_size) / (double) (ns*n) ;
+        bool growing = frontier_size > last_frontier_size ;
+        // pull if frontier is more than 10% dense,
+        // or > 6% dense and last step was pull
+        bool do_pull = (frontier_density > 0.10) ||
+                      ((frontier_density > 0.06) && last_was_pull) ;
+//      // pull if frontier is more than 4% dense and growing, or
+//      // more than 10% dense yet shrinking.
+//      bool do_pull = frontier_density > ((growing) ? 0.04 : 0.10) ;
+//      // pull if frontier is more than 10% dense
+//      bool do_pull = (frontier_density > 0.10) ;
 
         if (do_pull)
         {
@@ -195,15 +236,31 @@ GrB_Info LAGraph_bc_batch5      // betweeness centrality, batch algorithm
                 GrB_DESC_RC) ;
         }
 
+        //----------------------------------------------------------------------
         // Get the size of the current frontier
+        //----------------------------------------------------------------------
+
+        last_frontier_size = frontier_size ;
+        last_was_pull = do_pull ;
         LAGr_Matrix_nvals (&frontier_size, frontier) ;
+
+//      ttt = omp_get_wtime ( ) - ttt ;
+//      printf ("frontier_size %12ld %8.2f%% growing: %d   %s %0.3g sec\n",
+//          last_frontier_size, 100 * frontier_density, growing,
+//          do_pull ? "pull" : "    ", ttt) ;
     }
 
     LAGr_free (&frontier) ;
 
-    // === Betweenness centrality computation phase ============================
+    tt1 = omp_get_wtime ( ) - tt1 ;
+    printf ("forward phase: %.3g sec\n", tt1) ;
+    tt1 = omp_get_wtime ( ) ;
 
-    // bc_update = ones (ns, n) ; a dense matrix (and stays dense)
+    // =========================================================================
+    // === Betweenness centrality computation phase ============================
+    // =========================================================================
+
+    // bc_update = ones (ns, n) ; a full matrix (and stays full)
     LAGr_Matrix_new (&bc_update, GrB_FP32, ns, n) ;
     LAGr_assign (bc_update, NULL, NULL, 1, GrB_ALL, ns, GrB_ALL, n, NULL) ;
     // W: empty ns-by-n array, as workspace
@@ -212,23 +269,29 @@ GrB_Info LAGraph_bc_batch5      // betweeness centrality, batch algorithm
     // Backtrack through the BFS and compute centrality updates for each vertex
     for (int64_t i = depth-1 ; i > 0 ; i--)
     {
-        // Add contributions by successors and mask with that level's frontier
+//      double ttt = omp_get_wtime ( ) ;
 
+        //----------------------------------------------------------------------
         // W<S[i]> = bc_update ./ paths
+        //----------------------------------------------------------------------
+
+        // Add contributions by successors and mask with that level's frontier
         LAGr_eWiseMult (W, S [i], NULL, GrB_DIV_FP32, bc_update, paths,
             GrB_DESC_RS) ;
+
+        //----------------------------------------------------------------------
+        // W<S[i−1]> = W * A'
+        //----------------------------------------------------------------------
+
+        // pull if W is more than 10% dense and nnz(W)/nnz(S[i-1]) > 1
+        // or if W is more than 1% dense and nnz(W)/nnz(S[i-1]) > 10
         GrB_Index wsize, ssize ;
         GrB_Matrix_nvals (&wsize, W) ;
         GrB_Matrix_nvals (&ssize, S [i-1]) ;
-
-        // W<S[i−1]> = W * A'
-
-        // pull if S[i] is more than 10% dense and Si/Si-1 > 1
-        // or if Si > 1% and Si/Si-1 > 10
-        double si_density = (((double) wsize) / (double) (ns*n)) ;
-        double si_ratio   = ((double) wsize) / ((double) ssize) ;
-        bool do_pull = (si_density > 0.1  && si_ratio > 1.) ||
-                       (si_density > 0.01 && si_ratio > 10.) ;
+        double w_density    = ((double) wsize) / ((double) (ns*n)) ;
+        double w_to_s_ratio = ((double) wsize) / ((double) ssize) ;
+        bool do_pull = (w_density > 0.1  && w_to_s_ratio > 1.) ||
+                       (w_density > 0.01 && w_to_s_ratio > 10.) ;
 
         if (do_pull)
         {
@@ -243,14 +306,27 @@ GrB_Info LAGraph_bc_batch5      // betweeness centrality, batch algorithm
                 GrB_DESC_RS) ;
         }
 
+        //----------------------------------------------------------------------
         // bc_update += W .* paths
-        // bc_update and paths are both dense, but W is sparse
+        //----------------------------------------------------------------------
+
+        // bc_update is full, paths is bitmap/full, W is sparse/bitmap
         LAGr_eWiseMult (bc_update, NULL, GrB_PLUS_FP32, GrB_TIMES_FP32, W,
             paths, NULL) ;
+
+//      ttt = omp_get_wtime ( ) - ttt ;
+//      printf ("back wsize    %12ld %8.2f%% w/s %8.2f %s %0.3g sec\n",
+//          wsize, 100 * w_density, w_to_s_ratio,
+//          do_pull ? "pull" : "    ", ttt) ;
     }
+
+    // =========================================================================
+    // === finalize the centrality =============================================
+    // =========================================================================
 
     // Initialize the centrality array with -ns to avoid counting
     // zero length paths
+    LAGr_Vector_new (centrality, GrB_FP32, n) ;
     LAGr_assign (*centrality, NULL, NULL, -ns, GrB_ALL, n, NULL) ;
 
     // centrality (i) = sum (bc_update (:,i)) for all nodes i
@@ -258,6 +334,8 @@ GrB_Info LAGraph_bc_batch5      // betweeness centrality, batch algorithm
         GrB_DESC_T0) ;
 
     LAGRAPH_FREE_WORK ;
+    tt1 = omp_get_wtime ( ) - tt1 ;
+    printf ("back phase:    %.3g sec\n", tt1) ;
     return (GrB_SUCCESS) ;
 }
 
