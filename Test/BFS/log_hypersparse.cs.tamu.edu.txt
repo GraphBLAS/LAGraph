@@ -4833,3 +4833,459 @@ max # of threads: 20
 SuiteSparse:GraphBLAS Dec 29, 2020
 Message: /home/faculty/davis/GAP/GAP-road/GAP-road.grb : treeonly:pushpull(bitmap)
 # threads used: 20 time: 3.24402
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 07:14:29 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Dec 31, 2020
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 0.508883
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 07:15:07 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Dec 31, 2020
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : treeonly:pushpull(bitmap)
+# threads used: 20 time: 0.592827
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 07:19:24 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Dec 31, 2020
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 0.518321
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 07:20:02 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Dec 31, 2020
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : treeonly:pushpull(bitmap)
+# threads used: 20 time: 0.596663
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 07:22:08 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Dec 31, 2020
+Message: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 1.29125
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 07:23:46 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Dec 31, 2020
+Message: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb : treeonly:pushpull(bitmap)
+# threads used: 20 time: 1.53899
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 07:24:51 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Dec 31, 2020
+Message: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 0.352744
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 07:26:28 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Dec 31, 2020
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 0.508981
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 07:27:06 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Dec 31, 2020
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : treeonly:pushpull(bitmap)
+# threads used: 20 time: 0.593989
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 07:29:11 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Dec 31, 2020
+Message: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 1.32861
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 07:30:46 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Dec 31, 2020
+Message: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb : treeonly:pushpull(bitmap)
+# threads used: 20 time: 1.49326
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 07:31:38 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Dec 31, 2020
+Message: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 0.329557
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 07:32:03 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Dec 31, 2020
+Message: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb : treeonly:pushpull(bitmap)
+# threads used: 20 time: 0.387009
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 07:33:19 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Dec 31, 2020
+Message: /home/faculty/davis/GAP/GAP-web/GAP-web.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 0.66115
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 07:34:01 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Dec 31, 2020
+Message: /home/faculty/davis/GAP/GAP-web/GAP-web.grb : treeonly:pushpull(bitmap)
+# threads used: 20 time: 0.659127
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 07:37:40 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Dec 31, 2020
+Message: /home/faculty/davis/GAP/GAP-road/GAP-road.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 3.36082
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 07:41:16 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Dec 31, 2020
+Message: /home/faculty/davis/GAP/GAP-road/GAP-road.grb : treeonly:pushpull(bitmap)
+# threads used: 20 time: 3.37531
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 13:46:22 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Dec 31, 2020
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 0.511871
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 13:47:00 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Dec 31, 2020
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : treeonly:pushpull(bitmap)
+# threads used: 20 time: 0.593305
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 13:49:25 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Dec 31, 2020
+Message: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 1.18393
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 13:50:55 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Dec 31, 2020
+Message: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb : treeonly:pushpull(bitmap)
+# threads used: 20 time: 1.41361
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 13:51:50 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Dec 31, 2020
+Message: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 0.324847
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 13:52:14 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Dec 31, 2020
+Message: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb : treeonly:pushpull(bitmap)
+# threads used: 20 time: 0.38301
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 13:53:20 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Dec 31, 2020
+Message: /home/faculty/davis/GAP/GAP-web/GAP-web.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 0.66644
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 13:54:02 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Dec 31, 2020
+Message: /home/faculty/davis/GAP/GAP-web/GAP-web.grb : treeonly:pushpull(bitmap)
+# threads used: 20 time: 0.661702
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 13:57:33 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Dec 31, 2020
+Message: /home/faculty/davis/GAP/GAP-road/GAP-road.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 3.24663
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 14:01:01 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Dec 31, 2020
+Message: /home/faculty/davis/GAP/GAP-road/GAP-road.grb : treeonly:pushpull(bitmap)
+# threads used: 20 time: 3.25189
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 19:53:49 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Jan 2, 2020
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 0.516099
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 19:54:27 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Jan 2, 2020
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : treeonly:pushpull(bitmap)
+# threads used: 20 time: 0.597257
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 19:56:56 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Jan 2, 2020
+Message: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 1.27987
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 19:58:34 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Jan 2, 2020
+Message: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb : treeonly:pushpull(bitmap)
+# threads used: 20 time: 1.52008
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 19:59:38 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Jan 2, 2020
+Message: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 0.36108
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 20:00:05 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Jan 2, 2020
+Message: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb : treeonly:pushpull(bitmap)
+# threads used: 20 time: 0.419006
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 20:01:14 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Jan 2, 2020
+Message: /home/faculty/davis/GAP/GAP-web/GAP-web.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 0.661073
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 20:01:56 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Jan 2, 2020
+Message: /home/faculty/davis/GAP/GAP-web/GAP-web.grb : treeonly:pushpull(bitmap)
+# threads used: 20 time: 0.657583
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 20:05:28 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Jan 2, 2020
+Message: /home/faculty/davis/GAP/GAP-road/GAP-road.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 3.26211
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sat Jan  2 20:08:57 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Jan 2, 2020
+Message: /home/faculty/davis/GAP/GAP-road/GAP-road.grb : treeonly:pushpull(bitmap)
+# threads used: 20 time: 3.26255
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sun Jan  3 08:46:20 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Jan 4, 2021
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 0.511059
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sun Jan  3 08:46:58 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Jan 4, 2021
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : treeonly:pushpull(bitmap)
+# threads used: 20 time: 0.597079
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sun Jan  3 08:49:24 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Jan 4, 2021
+Message: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 1.27895
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sun Jan  3 08:50:55 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Jan 4, 2021
+Message: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb : treeonly:pushpull(bitmap)
+# threads used: 20 time: 1.42561
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sun Jan  3 08:51:49 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Jan 4, 2021
+Message: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 0.329751
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sun Jan  3 08:52:14 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Jan 4, 2021
+Message: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb : treeonly:pushpull(bitmap)
+# threads used: 20 time: 0.388415
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sun Jan  3 08:53:30 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Jan 4, 2021
+Message: /home/faculty/davis/GAP/GAP-web/GAP-web.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 0.661159
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sun Jan  3 08:54:12 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Jan 4, 2021
+Message: /home/faculty/davis/GAP/GAP-web/GAP-web.grb : treeonly:pushpull(bitmap)
+# threads used: 20 time: 0.658932
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sun Jan  3 08:57:51 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Jan 4, 2021
+Message: /home/faculty/davis/GAP/GAP-road/GAP-road.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 3.37276
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sun Jan  3 09:01:24 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Jan 4, 2021
+Message: /home/faculty/davis/GAP/GAP-road/GAP-road.grb : treeonly:pushpull(bitmap)
+# threads used: 20 time: 3.33395
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sun Jan  3 13:10:42 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Jan 4, 2021
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 0.514083
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sun Jan  3 13:11:21 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Jan 4, 2021
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : treeonly:pushpull(bitmap)
+# threads used: 20 time: 0.596406
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sun Jan  3 13:13:39 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Jan 4, 2021
+Message: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 1.2161
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sun Jan  3 13:15:12 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Jan 4, 2021
+Message: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb : treeonly:pushpull(bitmap)
+# threads used: 20 time: 1.45094
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sun Jan  3 13:16:06 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Jan 4, 2021
+Message: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 0.329053
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sun Jan  3 13:16:31 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Jan 4, 2021
+Message: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb : treeonly:pushpull(bitmap)
+# threads used: 20 time: 0.386803
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sun Jan  3 13:17:42 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Jan 4, 2021
+Message: /home/faculty/davis/GAP/GAP-web/GAP-web.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 0.662423
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sun Jan  3 13:18:24 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Jan 4, 2021
+Message: /home/faculty/davis/GAP/GAP-web/GAP-web.grb : treeonly:pushpull(bitmap)
+# threads used: 20 time: 0.659747
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sun Jan  3 13:21:59 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Jan 4, 2021
+Message: /home/faculty/davis/GAP/GAP-road/GAP-road.grb : treeonly:pushpull(bitmap)
+# threads used: 40 time: 3.31669
+
+From: /home/faculty/davis/sparse/LAGraph/Test/BFS/gap_bfs_test.c
+Date: Sun Jan  3 13:25:33 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 20
+SuiteSparse:GraphBLAS Jan 4, 2021
+Message: /home/faculty/davis/GAP/GAP-road/GAP-road.grb : treeonly:pushpull(bitmap)
+# threads used: 20 time: 3.33772

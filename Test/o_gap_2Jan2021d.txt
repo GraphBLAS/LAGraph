@@ -1,0 +1,113 @@
+using: SuiteSparse:GraphBLAS v4.0.1 [Dec 31, 2020]
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+sources: /home/faculty/davis/GAP/GAP-web/GAP-web_sources.mtx
+read time: 21.2755 sec
+A is unsymmetric
+transpose time: 5.11291
+
+========== input graph: nodes: 50636151 edges: 1930292948
+
+Trial 1 : sources: [ 10219452 44758211 890671 13843756 ]
+init phase:    0.069 sec
+forward phase: 5.58 sec
+back phase:    3.66 sec
+Batch v5 time 40:       9.3075 (sec)
+
+Trial 2 : sources: [ 14168062 20906930 12189584 26352335 ]
+init phase:    0.0716 sec
+forward phase: 5.4 sec
+back phase:    4.11 sec
+Batch v5 time 40:       9.5771 (sec)
+
+Trial 3 : sources: [ 43500686 8987024 5699762 41436455 ]
+init phase:    0.0712 sec
+forward phase: 5.59 sec
+back phase:    4.39 sec
+Batch v5 time 40:      10.0544 (sec)
+
+Trial 4 : sources: [ 5030727 40735218 16533563 28700166 ]
+init phase:    0.0712 sec
+forward phase: 6.26 sec
+back phase:    5.22 sec
+Batch v5 time 40:      11.5546 (sec)
+
+Trial 5 : sources: [ 64711 39634750 16037779 27152739 ]
+init phase:    0.0735 sec
+forward phase: 5.18 sec
+back phase:    5.31 sec
+Batch v5 time 40:      10.5555 (sec)
+
+Trial 6 : sources: [ 16404061 20491963 5322423 21420953 ]
+init phase:    0.0674 sec
+forward phase: 5.96 sec
+back phase:    5.64 sec
+Batch v5 time 40:      11.6656 (sec)
+
+Trial 7 : sources: [ 26622109 5882875 18091040 10665896 ]
+init phase:    0.0687 sec
+forward phase: 5.69 sec
+back phase:    3.94 sec
+Batch v5 time 40:       9.7056 (sec)
+
+Trial 8 : sources: [ 18634422 18138715 2355535 32885205 ]
+init phase:    0.0718 sec
+forward phase: 5.1 sec
+back phase:    4.14 sec
+Batch v5 time 40:       9.3038 (sec)
+
+Trial 9 : sources: [ 40657440 35196167 45544426 6175519 ]
+init phase:    0.0715 sec
+forward phase: 5.17 sec
+back phase:    4.08 sec
+Batch v5 time 40:       9.3137 (sec)
+
+Trial 10 : sources: [ 40058318 50626230 36571019 49397052 ]
+init phase:    0.0738 sec
+forward phase: 4.93 sec
+back phase:    5.27 sec
+Batch v5 time 40:      10.2726 (sec)
+
+Trial 11 : sources: [ 23434265 2299444 32873823 25978282 ]
+init phase:    0.0718 sec
+forward phase: 4.89 sec
+back phase:    4.13 sec
+Batch v5 time 40:       9.0919 (sec)
+
+Trial 12 : sources: [ 2461715 22787314 30759947 7428894 ]
+init phase:    0.0666 sec
+forward phase: 4.77 sec
+back phase:    2.36 sec
+Batch v5 time 40:       7.1906 (sec)
+
+Trial 13 : sources: [ 39173870 43194209 26361509 39747211 ]
+init phase:    0.0729 sec
+forward phase: 0.00979 sec
+back phase:    0.156 sec
+Batch v5 time 40:       0.2390 (sec)
+
+Trial 14 : sources: [ 30670029 41483033 9358666 9945008 ]
+init phase:    0.0687 sec
+forward phase: 5.22 sec
+back phase:    5.2 sec
+Batch v5 time 40:      10.4853 (sec)
+
+Trial 15 : sources: [ 3355244 33831269 45124744 16137877 ]
+init phase:    0.071 sec
+forward phase: 5.26 sec
+back phase:    4.17 sec
+Batch v5 time 40:       9.5023 (sec)
+
+Trial 16 : sources: [ 11235448 37509144 27402414 39546083 ]
+init phase:    0.0744 sec
+forward phase: 4.92 sec
+back phase:    4.68 sec
+Batch v5 time 40:       9.6706 (sec)
+
+ntrials: 16
+
+
+Ave (Batch5)  40:      9.218 sec, rate    209.402
+./build/gap_bc_test: all tests passed
