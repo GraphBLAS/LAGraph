@@ -343,29 +343,33 @@ struct LAGraph_Graph_struct
     GrB_Matrix AT ;         // AT = A', the transpose of A
 
     GrB_Vector rowdegree ;  // a GrB_INT64 vector of length m, if A is m-by-n.
-                            // where rowdegree(i) is the number of entries in
-           // A(i,:).  If rowdegree is sparse and the entry rowdegree(i) is not
-           // present, then it is assumed to be zero.
+           // where rowdegree(i) is the number of entries in A(i,:).  If
+           // rowdegree is sparse and the entry rowdegree(i) is not present,
+           // then it is assumed to be zero.
 
     GrB_Vector coldegree ;  // a GrB_INT64 vector of length n, if A is m-by-n.
-                            // where coldegree(j) is the number of entries in
-            // A(:,j).  If coldegree is sparse and the entry coldegree(j) is
-            // not present, then it is assumed to be zero.  If A is known to
-            // have a symmetric pattern, the convention is that the degree is
-            // held in rowdegree, and coldegree is left as NULL.
+            // where coldegree(j) is the number of entries in A(:,j).  If
+            // coldegree is sparse and the entry coldegree(j) is not present,
+            // then it is assumed to be zero.  If A is known to have a
+            // symmetric pattern, the convention is that the degree is held in
+            // rowdegree, and coldegree is left as NULL.
 
-    LAGraph_BooleanProperty A_pattern_is_symmetric ;
-            // For an undirected graph, this property will always be implicitly
-            // true and can be ignored.  The matrix A for a directed weighted
-            // graph will typically by unsymmetric, but might have a symmetric
-            // pattern.  In that case, this scalar property can be set to true.
+    LAGraph_BooleanProperty A_pattern_is_symmetric ;    // For an undirected
+            // graph, this property will always be implicitly true and can be
+            // ignored.  The matrix A for a directed weighted graph will
+            // typically by unsymmetric, but might have a symmetric pattern.
+            // In that case, this scalar property can be set to true.
+
+    int64_t ndiag ; // # of entries on the diagonal of A, or -1 if unknown.
+            // For the adjacency matrix of a directed or undirected graph,
+            // this is the # of self-edges in the graph.
+            // TODO: discuss this.
 
     // possible future cached properties:
     // GrB_Vector rowsum, colsum ;
     // rowsum (i) = sum (A (i,:)), regardless of kind
     // colsum (j) = sum (A (:,j)), regardless of kind
     // LAGraph_BooleanProperty connected ;   // true if G is a connected graph
-    // int64_t ndiagonal_entries ; or nselfedges
 
 } ;
 

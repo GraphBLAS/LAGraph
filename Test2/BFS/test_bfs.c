@@ -217,8 +217,14 @@ int main (int argc, char **argv)
         LAGraph_TRY (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, false,
             msg)) ;
         LAGraph_TRY (LAGraph_Property_ASymmetricPattern (G, msg)) ;
-        // if G->A has a symmetric pattern, declare the graph undirected
-        if (G->A_pattern_is_symmetric) G->kind = LAGRAPH_ADJACENCY_UNDIRECTED ;
+        if (G->A_pattern_is_symmetric)
+        {
+            // if G->A has a symmetric pattern, declare the graph undirected
+            // and free G->AT since it isn't needed.  The BFS only looks at
+            // the pattern of A anyway.
+            G->kind = LAGRAPH_ADJACENCY_UNDIRECTED ;
+            GrB_TRY (GrB_Matrix_free (&(G->AT))) ;
+        }
     }
 
     // compute G->rowdegree

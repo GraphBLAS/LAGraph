@@ -16,6 +16,7 @@ JOBS ?= 1
 default: compile
 	./build/test_bfs < ../../Matrices/cover.mtx
 	./build/test_bfs < ../../Matrices/west0067.mtx
+	./build/test_bfs < ../../Matrices/jagmesh7.mtx
 
 # build test
 compile:

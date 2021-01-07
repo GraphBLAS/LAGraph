@@ -46,9 +46,21 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
 
     if (pr >= 0)
     {
+        // print the basic scalar properties
         printf ("Graph: kind: %s %s, nodes: %ld entries: %ld type: %s\n",
             weighted ? "weighted" : "unweighted", kindname, n, nvals,
             typename) ;
+
+        // print the scalar cached properties
+        printf ("    pattern symmetry: ") ;
+        switch (G->A_pattern_is_symmetric)
+        {
+            case LAGRAPH_FALSE : printf ("unsymmetric") ; break ;
+            case LAGRAPH_TRUE  : printf ("symmetric")   ; break ;
+            default            : printf ("unknown")     ; break ;
+        }
+        if (G->ndiag >= 0) printf ("  self-edges: %ld", G->ndiag) ;
+        printf ("\n") ;
     }
 
     GrB_TRY (GxB_print (A, pr)) ;

@@ -47,7 +47,12 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
     }
     else
     {
-        // move &A into the graph and set &A to NULL
+        // move &A into the graph and set &A to NULL to denote to the caller
+        // that it is now a component of G.  The graph G is not opaque, so the
+        // caller can get A back with A = G->A, but this helps with memory
+        // management, since LAGraph_Delete (&G,msg) frees G->A, and if the
+        // caller also does GrB_free (&A), a double-free would occur if this
+        // move does not set A to NULL.
         (*G)->A = (*A) ;
         (*A) = NULL ;
     }
@@ -62,6 +67,7 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
     (*G)->rowdegree = NULL ;
     (*G)->coldegree = NULL ;
     (*G)->A_pattern_is_symmetric = LAGRAPH_UNKNOWN ;
+    (*G)->ndiag = LAGRAPH_UNKNOWN ;
 
     return (0) ;
 }
