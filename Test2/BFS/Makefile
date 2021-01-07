@@ -1,25 +1,21 @@
 #-------------------------------------------------------------------------------
-# Test/BFS/Makefile
+# Test2/BFS/Makefile
 #-------------------------------------------------------------------------------
 
-# LAGraph, (... list all authors here) (c) 2019, All Rights Reserved.
-# http://graphblas.org  See LAGraph/LICENSE for license.
+# LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+# SPDX-License-Identifier: BSD-2-Clause
 
 #-------------------------------------------------------------------------------
 
-# simple Makefile for LAGraph/Test/BFS/bfs_test,
-
-# relies on cmake to do the actual build.  Use the CMAKE_OPTIONS argument to
-# this Makefile to pass options to cmake.
+# simple Makefile for LAGraph/Test2/BFS/test_bfs
 
 # Install LAGraph and GraphBLAS before trying to compile LAGraph.
-
 JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/gap_bfs_test < ../../Matrices/cover.mtx
-	./build/gap_bfs_test < ../../Matrices/west0067.mtx
+	./build/test_bfs < ../../Matrices/cover.mtx
+	./build/test_bfs < ../../Matrices/west0067.mtx
 
 # build test
 compile:
@@ -35,5 +31,5 @@ purge: distclean
 
 # remove all files not in the distribution
 distclean:
-	rm -rf build/* A.mtx bfs_test gap_bfs_test
+	rm -rf build/* test_bfs
 

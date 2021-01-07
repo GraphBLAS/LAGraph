@@ -1,0 +1,80 @@
+//------------------------------------------------------------------------------
+// LAGraph_DisplayGraph: print the contents of a graph
+//------------------------------------------------------------------------------
+
+// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+
+//------------------------------------------------------------------------------
+
+#include "LAGraph_Internal.h"
+
+int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
+(
+    LAGraph_Graph G,        // graph to display
+    int pr,                 // -1: nothing, 0: single line, 1: terse,
+                            // 2: summary, 3: all,
+                            // 4: same as 2 but with %0.15g for doubles
+                            // 5: same as 3 but with %0.15g for doubles
+    char *msg
+)
+{
+
+    //--------------------------------------------------------------------------
+    // clear the msg and check the graph
+    //--------------------------------------------------------------------------
+
+    LAGraph_CLEAR_MSG ;
+    LAGraph_TRY (LAGraph_CheckGraph (G, msg)) ;
+
+    //--------------------------------------------------------------------------
+    // display the primary graph components
+    //--------------------------------------------------------------------------
+
+    GrB_Matrix A = G->A ;
+    LAGraph_Kind kind = G->kind ;
+    bool weighted = G->weighted ;
+
+    GrB_Type type ;
+    GrB_Index n, nvals ;
+    GrB_TRY (GxB_Matrix_type (&type, A)) ;
+    GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
+    GrB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
+    char *typename, *kindname ;
+    LAGraph_TRY (LAGraph_TypeName (&typename, type, msg)) ;
+    LAGraph_TRY (LAGraph_KindName (&kindname, kind, msg)) ;
+
+    if (pr >= 0)
+    {
+        printf ("Graph: kind: %s %s, nodes: %ld entries: %ld type: %s\n",
+            weighted ? "weighted" : "unweighted", kindname, n, nvals,
+            typename) ;
+    }
+
+    GrB_TRY (GxB_print (A, pr)) ;
+
+    //--------------------------------------------------------------------------
+    // display the cached properties
+    //--------------------------------------------------------------------------
+
+    GrB_Matrix AT = G->AT ;
+    if (AT != NULL)
+    {
+        GrB_TRY (GxB_print (AT, pr)) ;
+    }
+
+    GrB_Vector rowdegree = G->rowdegree ;
+    if (rowdegree != NULL)
+    {
+        GrB_TRY (GxB_print (rowdegree, pr)) ;
+    }
+
+    GrB_Vector coldegree = G->coldegree ;
+    if (coldegree != NULL)
+    {
+        GrB_TRY (GxB_print (coldegree, pr)) ;
+    }
+
+    return (0) ;
+}
+

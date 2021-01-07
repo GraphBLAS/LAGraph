@@ -53,6 +53,7 @@ purge: distclean
 distclean:
 	rm -rf build/*
 	rm -rf Doc/html/*
-	( cd Doc  ; $(MAKE) distclean )
-	( cd Test ; $(MAKE) distclean )
+	( cd Doc   ; $(MAKE) distclean )
+	( cd Test  ; $(MAKE) distclean )
+	( cd Test2 ; $(MAKE) distclean )
 

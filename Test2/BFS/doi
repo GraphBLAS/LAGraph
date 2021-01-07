@@ -1,0 +1,5 @@
+#!/bin/sh
+./build/test_bfs ~/indochina-2004.grb ~/indochina-sources.mtx
+./build/test_bfs ~/roadNet-CA.mtx ~/roadNet-CA_sources.mtx
+./build/test_bfs ~/com-Orkut.grb
+

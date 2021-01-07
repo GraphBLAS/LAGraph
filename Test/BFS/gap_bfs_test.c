@@ -481,6 +481,8 @@ int main (int argc, char **argv)
             printf ("trial: %2d threads: %2d source: %9ld time: %10.4f sec\n",
                 trial, nthreads, s, ttrial) ;
             fflush (stdout) ;
+
+            // GxB_print (pi, 2) ;
         }
         t [nthreads] = t [nthreads] / ntrials ;
         printf ( ":%2d:pushpull (onlytree): %12.3f (sec), rate: %6.2f\n",
