@@ -123,21 +123,34 @@ int LAGraph_BreadthFirstSearch      // returns -1 on failure, 0 if successful
 
     // determine the semiring type
     GrB_Type int_type = (n > INT32_MAX) ? GrB_INT64 : GrB_INT32 ;
-    GrB_Semiring semiring =
-        (n > INT32_MAX) ? GxB_ANY_SECONDI_INT64 : GxB_ANY_SECONDI_INT32 ;
+    GrB_Semiring semiring ;
 
-    // create a sparse integer vector q, and set q(src) = src
-    GrB_TRY (GrB_Vector_new (&q, int_type, n)) ;
-    GrB_TRY (GrB_Vector_setElement (q, src, src)) ;
-    GrB_Index nq = 1 ;          // number of nodes in the current level
 
     if (compute_parent)
     {
+        // use the ANY_SECONDI_INT* semiring: either 32 or 64-bit depending on
+        // the # of nodes in the graph.
+        semiring = (n > INT32_MAX) ? 
+            GxB_ANY_SECONDI_INT64 : GxB_ANY_SECONDI_INT32 ;
+
         // create the parent vector.  pi(i) is the parent id of node i
         GrB_TRY (GrB_Vector_new (&pi, int_type, n)) ;
         GrB_TRY (GxB_set (pi, GxB_SPARSITY_CONTROL, GxB_BITMAP + GxB_FULL)) ;
         // pi (src) = src denotes the root of the BFS tree
         GrB_TRY (GrB_Vector_setElement (pi, src, src)) ;
+
+        // create a sparse integer vector q, and set q(src) = src
+        GrB_TRY (GrB_Vector_new (&q, int_type, n)) ;
+        GrB_TRY (GrB_Vector_setElement (q, src, src)) ;
+    }
+    else
+    {
+        // only the level is needed, use the ANY_PAIR_BOOL semiring
+        semiring = GxB_ANY_PAIR_BOOL ;
+
+        // create a sparse boolean vector q, and set q(src) = true
+        GrB_TRY (GrB_Vector_new (&q, GrB_BOOL, n)) ;
+        GrB_TRY (GrB_Vector_setElement (q, true, src)) ;
     }
 
     if (compute_level)
@@ -155,6 +168,7 @@ int LAGraph_BreadthFirstSearch      // returns -1 on failure, 0 if successful
         GrB_TRY (GrB_Vector_new (&w, GrB_INT64, n)) ;
     }
 
+    GrB_Index nq = 1 ;          // number of nodes in the current level
     double alpha = 8.0 ;
     double beta1 = 8.0 ;
     double beta2 = 512.0 ;
