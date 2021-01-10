@@ -125,12 +125,11 @@ int LAGraph_BreadthFirstSearch      // returns -1 on failure, 0 if successful
     GrB_Type int_type = (n > INT32_MAX) ? GrB_INT64 : GrB_INT32 ;
     GrB_Semiring semiring ;
 
-
     if (compute_parent)
     {
         // use the ANY_SECONDI_INT* semiring: either 32 or 64-bit depending on
         // the # of nodes in the graph.
-        semiring = (n > INT32_MAX) ? 
+        semiring = (n > INT32_MAX) ?
             GxB_ANY_SECONDI_INT64 : GxB_ANY_SECONDI_INT32 ;
 
         // create the parent vector.  pi(i) is the parent id of node i
@@ -234,7 +233,7 @@ int LAGraph_BreadthFirstSearch      // returns -1 on failure, 0 if successful
                 }
                 if (switch_to_pull)
                 {
-                    // the # of edges incident on 
+                    // switch from push to pull
                     do_push = false ;
                 }
             }
@@ -244,6 +243,7 @@ int LAGraph_BreadthFirstSearch      // returns -1 on failure, 0 if successful
                 bool shrinking = nq < last_nq ;
                 if (shrinking && (nq <= n_over_beta2))
                 {
+                    // switch from pull to push
                     do_push = true ;
                 }
             }
@@ -269,7 +269,7 @@ int LAGraph_BreadthFirstSearch      // returns -1 on failure, 0 if successful
             GrB_TRY (GrB_mxv (q, mask, NULL, semiring, AT, q, GrB_DESC_RSC)) ;
         }
 
-        //---------------------------------------------------------------------/
+        //----------------------------------------------------------------------
         // done if q is empty
         //----------------------------------------------------------------------
 
@@ -280,7 +280,7 @@ int LAGraph_BreadthFirstSearch      // returns -1 on failure, 0 if successful
             break ;
         }
 
-        //---------------------------------------------------------------------/
+        //----------------------------------------------------------------------
         // assign parents/levels
         //----------------------------------------------------------------------
 
