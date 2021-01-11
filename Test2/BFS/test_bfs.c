@@ -208,8 +208,11 @@ int main (int argc, char **argv)
     if (A_is_symmetric)
     {
         // A is known to be symmetric
+        // TODO: LAGraph_New should set G->A_pattern_is_symmetric if
+        // the G->kind is LAGRAPH_ADJACENCY_UNDIRECTED
         LAGraph_TRY (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, false,
             msg)) ;
+        G->A_pattern_is_symmetric = true ;
     }
     else
     {
