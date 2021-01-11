@@ -293,6 +293,7 @@ LAGraph_BooleanProperty ;
 //      A           the adjacency matrix of the graph
 //      kind        the kind of graph (undirected, directed, bipartite, ...)
 //      weighted    true if the graph has edge weights, false if no edge weights
+//      TODO:       vertex weights?
 
 // (2) cached properties of the graph, which can be recreated any time:
 //      AT          AT = A'
@@ -318,6 +319,7 @@ struct LAGraph_Graph_struct
     // multigraph ..
     // GrB_Matrix *Amult ; // array of size nmatrices
     // int nmatrices ;
+    // GrB_Vector VertexWeights ;
 
     //--------------------------------------------------------------------------
     // cached properties of the graph
@@ -331,10 +333,13 @@ struct LAGraph_Graph_struct
     // If present, the properties must be valid and accurate.  If the graph
     // changes, these properties can either be recomputed or deleted to denoted
     // the fact that they are unknown.  This choice is up to individual LAGraph
-    // methods and utilities.  LAGraph methods can set non-scalar properties
-    // only if they are constructing the graph.  They cannot modify them or
-    // create them if the graph is declared as a read-only object in the
-    // parameter list of the method.
+    // methods and utilities (TODO: define a default rule, and give user
+    // control over this decision).
+
+    // LAGraph methods can set non-scalar properties only if they are
+    // constructing the graph.  They cannot modify them or create them if the
+    // graph is declared as a read-only object in the parameter list of the
+    // method.
 
     // TODO: discuss this: "However, scalar properties can be set even if the
     // graph is a read-only parameter, but only if they are accessed with
