@@ -21,8 +21,10 @@ default: compile
 	./build/bc_test < sample.mtx
 	./build/bc_test < sample2.mtx
 	./build/bc_test < west0067.mtx
-	./build/gap_bc_test LFAT5.mtx
-	./build/gap_bc_test west0067.mtx
+	./build/gap_bc_test < ../../Matrices/cover.mtx
+	./build/gap_bc_test < ../../Matrices/west0067.mtx
+	./build/gap_bc_test < ../../Matrices/jagmesh7.mtx
+	./build/gap_bc_test < ../../Matrices/LFAT5.mtx
 #	./build/bc_test < jagmesh7.mtx
 #	./build/gap_bc_test ~/indochina-2004.grb ~/indochina-sources.mtx
 

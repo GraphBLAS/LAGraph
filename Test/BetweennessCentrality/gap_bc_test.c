@@ -435,6 +435,7 @@ int main (int argc, char **argv)
                 double t2 = LAGraph_toc (tic) ;
                 printf ("Batch v5 time %2d: %12.4f (sec)\n",
                     Nthreads [t], t2) ;
+                // GxB_print (v_batch5, 2) ;
                 fflush (stdout) ;
                 total_time_5 [t] += t2 ;
             }
@@ -599,7 +600,7 @@ int main (int argc, char **argv)
             double t2 = total_time_x3 [t] / ntrials ;
             printf ("Ave (BatchX3) %2d: %10.3f sec, rate %10.3f\n",
                 Nthreads [t], t2, 1e-6*((double) nvals) / t2) ;
-            if (n > 1000)
+            if (n > 2000)
             {
                 LAGr_log (matrix_name, "BatchX3", Nthreads [t], t2) ;
             }
@@ -617,7 +618,7 @@ int main (int argc, char **argv)
             double t2 = total_time_4 [t] / ntrials ;
             printf ("Ave (Batch4)  %2d: %10.3f sec, rate %10.3f\n",
                 Nthreads [t], t2, 1e-6*((double) nvals) / t2) ;
-            if (n > 1000)
+            if (n > 2000)
             {
                 LAGr_log (matrix_name, "Batch4", Nthreads [t], t2) ;
             }
@@ -635,7 +636,7 @@ int main (int argc, char **argv)
                 Nthreads [t], t2, 1e-6*((double) nvals) / t2) ;
             fprintf (stderr, "Avg: BC (batch5)  %3d: %10.3f sec: %s\n",
                 Nthreads [t], t2, matrix_name) ;
-            if (n > 1000)
+            if (n > 2000)
             {
                 LAGr_log (matrix_name, "Batch5", Nthreads [t], t2) ;
             }

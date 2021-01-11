@@ -1,0 +1,4 @@
+#!/bin/sh
+./build/test_bc ~/indochina-2004.grb ~/indochina-sources.mtx
+./build/test_bc ~/roadNet-CA.mtx ~/roadNet-CA_sources.mtx
+

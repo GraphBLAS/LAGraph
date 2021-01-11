@@ -1,0 +1,8 @@
+#!/bin/sh
+
+./build/test_bc ~/GAP/GAP-kron/GAP-kron.grb ~/GAP/GAP-kron/GAP-kron_sources.mtx
+./build/test_bc ~/GAP/GAP-urand/GAP-urand.grb ~/GAP/GAP-urand/GAP-urand_sources.mtx
+./build/test_bc ~/GAP/GAP-twitter/GAP-twitter.grb ~/GAP/GAP-twitter/GAP-twitter_sources.mtx
+./build/test_bc ~/GAP/GAP-web/GAP-web.grb ~/GAP/GAP-web/GAP-web_sources.mtx
+./build/test_bc ~/GAP/GAP-road/GAP-road.grb ~/GAP/GAP-road/GAP-road_sources.mtx
+

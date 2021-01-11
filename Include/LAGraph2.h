@@ -582,5 +582,16 @@ int LAGraph_BreadthFirstSearch      // returns -1 on failure, 0 if successful
     char *msg
 ) ;
 
+int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
+(
+    // outputs:
+    GrB_Vector *centrality,     // centrality(i): betweeness centrality of i
+    // inputs:
+    LAGraph_Graph G,            // input graph
+    const GrB_Index *sources,   // source vertices to compute shortest paths
+    int32_t ns,                 // number of source vertices
+    char *msg
+) ;
+
 #endif
 
