@@ -1,0 +1,8 @@
+#!/bin/bash
+
+./build/test_gappagerank ~/GAP/GAP-kron/GAP-kron.grb
+./build/test_gappagerank ~/GAP/GAP-urand/GAP-urand.grb
+./build/test_gappagerank ~/GAP/GAP-twitter/GAP-twitter.grb
+./build/test_gappagerank ~/GAP/GAP-web/GAP-web.grb
+./build/test_gappagerank ~/GAP/GAP-road/GAP-road.grb
+

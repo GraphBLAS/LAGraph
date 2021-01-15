@@ -1,0 +1,3 @@
+#!/bin/bash
+
+valgrind --leak-check=full ./build/test_gappagerank ../BinRead/west0067.grb

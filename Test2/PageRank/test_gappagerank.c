@@ -1,37 +1,27 @@
 //------------------------------------------------------------------------------
-// test_bc: betweenness centrality for the GAP benchmark
+// test_gappagerank: read in (or create) a matrix and test the GAP PageRank
 //------------------------------------------------------------------------------
-
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
-// SPDX-License-Identifier: BSD-2-Clause
 
 //------------------------------------------------------------------------------
 
-// Contributed by Scott Kolodziej and Tim Davis, Texas A&M University
+// Contributed by Tim Davis, Texas A&M and Gabor Szarnyas, BME
 
-// usage:
-// test_bc < matrixfile.mtx
-// test_bc matrixfile.mtx sourcenodes.mtx
-
-#include "LAGraph2.h"
-
-#define NTHREAD_LIST 2
+#define NTHREAD_LIST 1
 // #define NTHREAD_LIST 2
 #define THREAD_LIST 0
-
-// #define NTHREAD_LIST 4
-// #define THREAD_LIST 40, 20, 10, 1
 
 // #define NTHREAD_LIST 6
 // #define THREAD_LIST 64, 32, 24, 12, 8, 4
 
-#define LAGRAPH_FREE_ALL            \
-{                                   \
-    GrB_free (&A) ;                 \
-    GrB_free (&Abool) ;             \
-    GrB_free (&centrality) ;        \
-    GrB_free (&SourceNodes) ;       \
-    if (f != NULL) fclose (f) ;     \
+#include "LAGraph2.h"
+
+#define LAGRAPH_FREE_ALL                        \
+{                                               \
+    GrB_free (&A) ;                             \
+    GrB_free (&Abool) ;                         \
+    GrB_free (&PR) ;                            \
+    LAGraph_Delete (&G, msg) ;                  \
+    if (f != NULL) fclose (f) ;                 \
 }
 
 #define LAGraph_CATCH(status)                                               \
@@ -62,23 +52,21 @@ int main (int argc, char **argv)
 
     char msg [LAGRAPH_MSG_LEN] ;
 
-    FILE *f = NULL ;
     LAGraph_Graph G = NULL ;
+
     GrB_Matrix A = NULL ;
     GrB_Matrix Abool = NULL ;
-    GrB_Vector centrality = NULL ;
-    GrB_Matrix SourceNodes = NULL ;
+    GrB_Vector PR = NULL ;
+    FILE *f = NULL ;
 
     // start GraphBLAS and LAGraph
     LAGraph_TRY (LAGraph_Init (msg)) ;
     GrB_TRY (GxB_set (GxB_BURBLE, false)) ;
 
-    uint64_t seed = 1;
-
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;
     int nthreads_max ;
-    LAGraph_TRY (LAGraph_GetNumThreads (&nthreads_max, NULL)) ;
+    GrB_TRY (GxB_get (GxB_NTHREADS, &nthreads_max)) ;
     if (Nthreads [1] == 0)
     {
         // create thread list automatically
@@ -98,10 +86,6 @@ int main (int argc, char **argv)
     }
     printf ("\n") ;
 
-    double tt [nthreads_max+1] ;
-
-    int batch_size = 4 ;
-
     //--------------------------------------------------------------------------
     // read in a matrix from a file (TODO: make this a Test2/Utility)
     //--------------------------------------------------------------------------
@@ -113,8 +97,8 @@ int main (int argc, char **argv)
     if (argc > 1)
     {
         // Usage:
-        //      ./test_bc matrixfile.mtx sources.mtx
-        //      ./test_bc matrixfile.grb sources.mtx
+        //      ./test_gappagerank matrixfile.mtx sources.mtx
+        //      ./test_gappagerank matrixfile.grb sources.mtx
 
         // read in the file in Matrix Market format from the input file
         char *filename = argv [1] ;
@@ -153,26 +137,11 @@ int main (int argc, char **argv)
             f = NULL ;
         }
 
-        // read in source nodes in Matrix Market format from the input file
-        if (argc > 2)
-        {
-            filename = argv [2] ;
-            printf ("sources: %s\n", filename) ;
-            f = fopen (filename, "r") ;
-            if (f == NULL)
-            {
-                printf ("Source node file not found: [%s]\n", filename) ;
-                exit (1) ;
-            }
-            LAGraph_TRY (LAGraph_MMRead (&SourceNodes, f, msg)) ;
-            fclose (f) ;
-            f = NULL ;
-        }
     }
     else
     {
 
-        // Usage:  ./test_bc < matrixfile.mtx
+        // Usage:  ./test_gappagerank < matrixfile.mtx
         printf ("matrix: from stdin\n") ;
 
         // read in the file in Matrix Market format from stdin
@@ -226,7 +195,8 @@ int main (int argc, char **argv)
         LAGraph_TRY (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, false,
             msg)) ;
         LAGraph_TRY (LAGraph_Property_ASymmetricPattern (G, msg)) ;
-        if (G->A_pattern_is_symmetric)
+        A_is_symmetric = G->A_pattern_is_symmetric ;
+        if (A_is_symmetric)
         {
             // if G->A has a symmetric pattern, declare the graph undirected
             // and free G->AT since it isn't needed.  The BFS only looks at
@@ -236,118 +206,127 @@ int main (int argc, char **argv)
         }
     }
 
+    //--------------------------------------------------------------------------
+    // ensure the matrix has no empty rows or columns
+    //--------------------------------------------------------------------------
+
+    LAGraph_TRY (LAGraph_Property_RowDegree (G, msg)) ;
+    LAGraph_TRY (LAGraph_Property_ColDegree (G, msg)) ;
+
+    GrB_Vector d_out = G->rowdegree ;
+    GrB_Vector d_in  = G->coldegree ;
+
+    GrB_Index n_d_out, n_d_in ;
+    GrB_TRY (GrB_Vector_nvals (&n_d_out, d_out)) ;
+    if (d_in == NULL)
+    {
+        n_d_in = n_d_out ;
+    }
+    else
+    {
+        GrB_TRY (GrB_Vector_nvals (&n_d_in,  d_in)) ;
+    }
+
+    int64_t d_min_out = 0 ;
+    int64_t d_min_in = 0 ;
+    GrB_TRY (GrB_reduce (&d_min_out, NULL, GrB_MIN_MONOID_INT64, d_out, NULL)) ;
+    if (d_in != NULL)
+    {
+        GrB_TRY (GrB_reduce (&d_min_in , NULL, GrB_MIN_MONOID_INT64, d_in,
+            NULL)) ;
+    }
+
+    int64_t edges_added = 0 ;
+    if (n_d_out < n || n_d_in < n || d_min_out <= 0 || d_min_in <= 0)
+    {
+        // A = A+I if A has any dangling nodes
+        A = G->A ;
+        for (GrB_Index i = 0; i < n; i++)
+        {
+            float dot = 0 ;
+            GrB_TRY (GrB_Vector_extractElement (&dot, d_out, i)) ;
+            float din = dot ;
+            if (d_in != NULL)
+            {
+                GrB_TRY (GrB_Vector_extractElement (&din, d_in, i)) ;
+            }
+            if (din == 0 || dot == 0)
+            {
+                edges_added++ ;
+                GrB_TRY (GrB_Matrix_setElement (A, 1, i, i)) ;
+            }
+        }
+
+        // recompute the graph properties
+        LAGraph_TRY (LAGraph_DeleteProperties (G, msg)) ;
+        G->A_pattern_is_symmetric = A_is_symmetric ;
+        if (!A_is_symmetric)
+        {
+            LAGraph_TRY (LAGraph_Property_AT (G, msg)) ;
+        }
+        LAGraph_TRY (LAGraph_Property_RowDegree (G, msg)) ;
+        LAGraph_TRY (LAGraph_Property_ColDegree (G, msg)) ;
+    }
+
+    printf ("diag entries added: %"PRId64"\n", edges_added) ;
+
     LAGraph_TRY (LAGraph_DisplayGraph (G, 0, msg)) ;
 
     //--------------------------------------------------------------------------
-    // get the source nodes
+    // compute the pagerank
     //--------------------------------------------------------------------------
 
-    #define NSOURCES 32
+    // the GAP benchmark requires 16 trials
+    int ntrials = 16 ;
+    // ntrials = 1 ;    // HACK to run just one trial
+    printf ("# of trials: %d\n", ntrials) ;
 
-    if (SourceNodes == NULL)
+    float damping = 0.85 ;
+    float tol = 1e-4 ;
+    int iters = 0, itermax = 100 ;
+
+    for (int kk = 1 ; kk <= nt ; kk++)
     {
-        GrB_TRY (GrB_Matrix_new (&SourceNodes, GrB_INT64, NSOURCES, 1)) ;
-        srand (1) ;
-        for (int k = 0 ; k < NSOURCES ; k++)
+        int nthreads = Nthreads [kk] ;
+        if (nthreads > nthreads_max) continue ;
+        GxB_set (GxB_NTHREADS, nthreads) ;
+        printf ("\n--------------------------- nthreads: %2d\n", nthreads) ;
+
+        double total_time = 0 ;
+
+        for (int trial = 0 ; trial < ntrials ; trial++)
         {
-            int64_t i = 1 + (rand ( ) % n) ;    // in range 1 to n
-            // SourceNodes [k] = i 
-            LAGraph_TRY (GrB_Matrix_setElement (SourceNodes, i, k, 0)) ;
-        }
-    }
-
-    GrB_Index nsource ;
-    GrB_TRY (GrB_Matrix_nrows (&nsource, SourceNodes)) ;
-    if (nsource % batch_size != 0)
-    {
-        printf ("SourceNode size must be multiple of batch_size (%d)\n",
-            batch_size) ;
-        exit (1) ;
-    }
-
-    //--------------------------------------------------------------------------
-    // Begin tests
-    //--------------------------------------------------------------------------
-
-    int ntrials = 0 ;
-
-    for (int64_t kstart = 0 ; kstart < nsource ; kstart += batch_size)
-    {
-
-        //----------------------------------------------------------------------
-        // Create batch of vertices to use in traversal
-        //----------------------------------------------------------------------
-
-        ntrials++ ;
-        printf ("\nTrial %d : sources: [", ntrials) ;
-        GrB_Index vertex_list [batch_size] ;
-        for (int64_t k = 0 ; k < batch_size ; k++)
-        {
-            // get the kth source node
-            int64_t source = -1 ;
-            GrB_TRY (GrB_Matrix_extractElement (&source, SourceNodes,
-                k + kstart, 0)) ;
-            // subtract one to convert from 1-based to 0-based
-            source-- ;
-            vertex_list [k] = source  ;
-            printf (" %"PRIu64, source) ;
-        }
-        printf (" ]\n") ;
-
-        //----------------------------------------------------------------------
-        // Compute betweenness centrality using batch algorithm
-        //----------------------------------------------------------------------
-
-        // back to default
-        GxB_set (GxB_NTHREADS, nthreads_max) ;
-
-        for (int t = 1 ; t <= nt ; t++)
-        {
-            if (Nthreads [t] > nthreads_max) continue ;
-            GrB_TRY (GxB_set (GxB_NTHREADS, Nthreads [t])) ;
-            GrB_free (&centrality) ;
+            GrB_free (&PR) ;
             LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-            LAGraph_TRY (LAGraph_VertexCentrality_Betweenness
-                (&centrality, G, vertex_list, batch_size, msg)) ;
-
-            double t2 ;
-            LAGraph_TRY (LAGraph_Toc (&t2, tic, msg)) ;
-            printf ("BC time %2d: %12.4f (sec)\n", Nthreads [t], t2) ;
-            fflush (stdout) ;
-            tt [t] += t2 ;
+            LAGraph_TRY (LAGraph_VertexCentrality_PageRankGAP (&PR, G,
+                damping, tol, itermax, &iters, msg)) ;
+            double t1 ;
+            LAGraph_TRY (LAGraph_Toc (&t1, tic, NULL)) ;
+            printf ("trial: %2d time: %10.4f sec\n", trial, t1) ;
+            total_time += t1 ;
         }
 
-        //----------------------------------------------------------------------
-        // check result
-        //----------------------------------------------------------------------
+        double t = total_time / ntrials ;
+        printf ("3f:%3d: avg time: %10.3f (sec), "
+                "rate: %10.3f iters: %d\n", nthreads,
+                t, 1e-6*((double) nvals) * iters / t, iters) ;
+        fprintf (stderr, "Avg: PR (3f)      %3d: %10.3f sec: %s\n",
+             nthreads, t, matrix_name) ;
 
-        // TODO
-
-        // GrB_TRY (GxB_print (centrality, 2)) ;
-        GrB_free (&centrality) ;
-
-        // HACK: uncomment this to just do the first batch
-        // break ;
     }
+    
+    //--------------------------------------------------------------------------
+    // check result
+    //--------------------------------------------------------------------------
+
+    // GxB_print (PR, 2) ;
+    // TODO
 
     //--------------------------------------------------------------------------
     // free all workspace and finish
     //--------------------------------------------------------------------------
 
-    printf ("\nntrials: %d\n", ntrials) ;
-
-    printf ("\n") ;
-    for (int t = 1 ; t <= nt ; t++)
-    {
-        if (Nthreads [t] > nthreads_max) continue ;
-        double t2 = tt [t] / ntrials ;
-        printf ("Ave BC %2d: %10.3f sec, rate %10.3f\n",
-            Nthreads [t], t2, 1e-6*((double) nvals) / t2) ;
-        fprintf (stderr, "Avg: BC %3d: %10.3f sec: %s\n",
-            Nthreads [t], t2, matrix_name) ;
-    }
-
-    LAGRAPH_FREE_ALL;
+    LAGRAPH_FREE_ALL ;
     LAGraph_TRY (LAGraph_Finalize (msg)) ;
     return (0) ;
 }
