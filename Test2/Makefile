@@ -19,7 +19,7 @@ clean: distclean
 
 purge: distclean
 
-# remove all files not in the distribution
+# remove all files not in the distribution.
 distclean:
 	( cd BFS                   ; $(MAKE) distclean )
 	( cd BetweennessCentrality ; $(MAKE) distclean )
