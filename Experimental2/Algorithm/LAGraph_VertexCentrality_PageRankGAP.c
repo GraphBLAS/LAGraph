@@ -13,13 +13,6 @@
 // https://arxiv.org/abs/1508.03619 which assumes that both A and A' are
 // already available, as are the row and column degrees.
 
-// The GAP Benchmark algorithm assumes the graph has no nodes with no out-going
-// edges (otherwise, a divide-by-zero occurs).  In terms of the adjacency
-// matrix, it assumes there are no rows in A that have no entries.  As a
-// result, this method should only be used for the GAP benchmark.  A more
-// robust method would check this condition and handle nodes with no outgoing
-// edges properly.
-
 // The G->AT and G->rowdegree properties must be defined for this method.  If G
 // is undirected or G->A is known to have a symmetric pattern, then G->A is
 // used instead of G->AT, however.
@@ -30,6 +23,7 @@
 
 #define LAGRAPH_FREE_WORK           \
 {                                   \
+    GrB_free (&d1) ;                \
     GrB_free (&d) ;                 \
     GrB_free (&t) ;                 \
     GrB_free (&w) ;                 \
@@ -60,7 +54,7 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
     //--------------------------------------------------------------------------
 
     LAGraph_CLEAR_MSG ;
-    GrB_Vector r = NULL, d = NULL, t = NULL, w = NULL ;
+    GrB_Vector r = NULL, d = NULL, t = NULL, w = NULL, d1 = NULL ;
     LAGraph_CHECK (centrality == NULL, -1, "centrality is NULL") ;
     LAGraph_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
     LAGraph_Kind kind = G->kind ; 
@@ -102,12 +96,21 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
     GrB_TRY (GrB_Vector_new (&d, GrB_FP32, n)) ;
     GrB_TRY (GrB_apply (d, NULL, NULL, GrB_DIV_FP32, d_out, damping, NULL)) ;
 
+    // d1 = 1 / damping
+    float dmin = 1.0 / damping ;
+    GrB_TRY (GrB_Vector_new (&d1, GrB_FP32, n)) ;
+    GrB_TRY (GrB_assign (d1, NULL, NULL, dmin, GrB_ALL, n, NULL)) ;
+    // d = max (d1, d)
+    GrB_TRY (GrB_eWiseAdd (d, NULL, NULL, GrB_MAX_FP32, d1, d, NULL)) ;
+    GrB_free (&d1) ;
+
     //--------------------------------------------------------------------------
     // pagerank iterations
     //--------------------------------------------------------------------------
 
     for ((*iters) = 0 ; (*iters) < itermax && rdiff > tol ; (*iters)++)
     {
+
         // swap t and r ; now t is the old score
         GrB_Vector temp = t ; t = r ; r = temp ;
 

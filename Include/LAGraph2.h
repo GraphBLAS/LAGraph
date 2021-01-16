@@ -573,7 +573,7 @@ int LAGraph_Property_ColDegree  // 0 if successful, -1 if failure
 ) ;
 
 //==============================================================================
-// LAGraph algorithms
+// LAGraph "simple" algorithms
 //==============================================================================
 
 int LAGraph_BreadthFirstSearch      // returns -1 on failure, 0 if successful
@@ -587,9 +587,36 @@ int LAGraph_BreadthFirstSearch      // returns -1 on failure, 0 if successful
     char *msg
 ) ;
 
+
+// the following is a draft
+typedef enum
+{
+    LAGRAPH_CENTRALITY_BETWEENNESS = 0,     // node or edge centrality
+    LAGRAPH_CENTRALITY_PAGERANKGAP = 1,     // GAP-style PageRank
+    LAGRAPH_CENTRALITY_PAGERANKP = 2,       // PageRank (handle dangling nodes)
+    // ...
+}
+LAGraph_Centrality_Kind ;
+
+int LAGraph_VertexCentrality    // returns -1 on on failure, 0 if successful
+(
+    // output:
+    GrB_Vector *centrality,     // centrality(i): centrality metric of node i
+    // inputs:
+    LAGraph_Graph G,            // input graph
+    LAGraph_Centrality_Kind,    // kind of centrality to compute
+//  int accuracy,               // TODO: 0:quick, 1:better, ... max:exact
+//  LAGraph_Random_Seed seed,   // random number seed (TODO?)
+    char *msg
+) ;
+
+//==============================================================================
+// LAGraph "expert" algorithms
+//==============================================================================
+
 int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
 (
-    // outputs:
+    // output:
     GrB_Vector *centrality,     // centrality(i): betweeness centrality of i
     // inputs:
     LAGraph_Graph G,            // input graph

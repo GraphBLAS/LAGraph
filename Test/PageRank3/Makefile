@@ -18,9 +18,12 @@ JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/gap_pr_test ../BinRead/west0067.grb
+#       ./build/gap_pr_test ../BinRead/west0067.grb
 #	./build/gap_pr_test ~/indochina-2004.grb
 #	./build/gap_pr_test < ../../Data/ldbc-directed-example-unweighted.mtx
+	./build/gap_pr_test < ../../Matrices/cover.mtx
+	./build/gap_pr_test < ../../Matrices/west0067.mtx
+	./build/gap_pr_test < ../../Matrices/jagmesh7.mtx
 
 # build test
 compile:

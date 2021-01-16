@@ -206,71 +206,7 @@ int main (int argc, char **argv)
         }
     }
 
-    //--------------------------------------------------------------------------
-    // ensure the matrix has no empty rows or columns
-    //--------------------------------------------------------------------------
-
     LAGraph_TRY (LAGraph_Property_RowDegree (G, msg)) ;
-    LAGraph_TRY (LAGraph_Property_ColDegree (G, msg)) ;
-
-    GrB_Vector d_out = G->rowdegree ;
-    GrB_Vector d_in  = G->coldegree ;
-
-    GrB_Index n_d_out, n_d_in ;
-    GrB_TRY (GrB_Vector_nvals (&n_d_out, d_out)) ;
-    if (d_in == NULL)
-    {
-        n_d_in = n_d_out ;
-    }
-    else
-    {
-        GrB_TRY (GrB_Vector_nvals (&n_d_in,  d_in)) ;
-    }
-
-    int64_t d_min_out = 0 ;
-    int64_t d_min_in = 0 ;
-    GrB_TRY (GrB_reduce (&d_min_out, NULL, GrB_MIN_MONOID_INT64, d_out, NULL)) ;
-    if (d_in != NULL)
-    {
-        GrB_TRY (GrB_reduce (&d_min_in , NULL, GrB_MIN_MONOID_INT64, d_in,
-            NULL)) ;
-    }
-
-    int64_t edges_added = 0 ;
-    if (n_d_out < n || n_d_in < n || d_min_out <= 0 || d_min_in <= 0)
-    {
-        // A = A+I if A has any dangling nodes
-        A = G->A ;
-        for (GrB_Index i = 0; i < n; i++)
-        {
-            float dot = 0 ;
-            GrB_TRY (GrB_Vector_extractElement (&dot, d_out, i)) ;
-            float din = dot ;
-            if (d_in != NULL)
-            {
-                GrB_TRY (GrB_Vector_extractElement (&din, d_in, i)) ;
-            }
-            if (din == 0 || dot == 0)
-            {
-                edges_added++ ;
-                GrB_TRY (GrB_Matrix_setElement (A, 1, i, i)) ;
-            }
-        }
-
-        // recompute the graph properties
-        LAGraph_TRY (LAGraph_DeleteProperties (G, msg)) ;
-        G->A_pattern_is_symmetric = A_is_symmetric ;
-        if (!A_is_symmetric)
-        {
-            LAGraph_TRY (LAGraph_Property_AT (G, msg)) ;
-        }
-        LAGraph_TRY (LAGraph_Property_RowDegree (G, msg)) ;
-        LAGraph_TRY (LAGraph_Property_ColDegree (G, msg)) ;
-    }
-
-    printf ("diag entries added: %"PRId64"\n", edges_added) ;
-
-    LAGraph_TRY (LAGraph_DisplayGraph (G, 0, msg)) ;
 
     //--------------------------------------------------------------------------
     // compute the pagerank

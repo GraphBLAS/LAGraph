@@ -274,6 +274,7 @@ int main (int argc, char **argv)
 
     // the GAP benchmark requires 16 trials
     int ntrials = 16 ;
+    // ntrials = 1 ;   // HACK
     printf ("# of trials: %d\n", ntrials) ;
 
     float tol = 1e-4 ;
@@ -307,8 +308,6 @@ for (int hack = 0 ; hack <= 0 ; hack++)
     GrB_free (&PR) ;
 }
 #endif
-
-    LAGRAPH_OK (GxB_set (GxB_BURBLE, false)) ;
 
     //--------------------------------------------------------------------------
     // method 3e
@@ -472,10 +471,10 @@ for (int hack = 0 ; hack <= 0 ; hack++)
                 t, 1e-6*((double) nvals) * iters / t, iters) ;
         fprintf (stderr, "Avg: PR (3f)      %3d: %10.3f sec: %s\n",
              nthreads, t, matrix_name) ;
-        if (n > 1000)
-        {
-            LAGr_log (matrix_name, "pagerank:3f", nthreads, t) ;
-        }
+//      if (n > 1000)
+//      {
+//          LAGr_log (matrix_name, "pagerank:3f", nthreads, t) ;
+//      }
     }
 
     // f = fopen ("rank3f.mtx", "w") ;

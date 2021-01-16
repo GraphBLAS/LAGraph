@@ -1,0 +1,137 @@
+hypersparse $ ./do_gap
+SuiteSparse:GraphBLAS v4.0.2 [Jan 13, 2021]
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+read time: 55.9524
+# of trials: 16
+
+--------------------------- nthreads: 40
+trial:  0 time:    21.8039 sec
+trial:  1 time:    21.8850 sec
+trial:  2 time:    21.9031 sec
+trial:  3 time:    21.9461 sec
+trial:  4 time:    21.8269 sec
+trial:  5 time:    21.8826 sec
+trial:  6 time:    21.8497 sec
+trial:  7 time:    21.8931 sec
+trial:  8 time:    21.9190 sec
+trial:  9 time:    21.8612 sec
+trial: 10 time:    21.8563 sec
+trial: 11 time:    21.8608 sec
+trial: 12 time:    21.7985 sec
+trial: 13 time:    21.8229 sec
+trial: 14 time:    21.8266 sec
+trial: 15 time:    21.8604 sec
+3f: 40: avg time:     21.862 (sec), rate:   1352.232 iters: 7
+Avg: PR (3f)       40:     21.862 sec: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+SuiteSparse:GraphBLAS v4.0.2 [Jan 13, 2021]
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+read time: 42.1556
+# of trials: 16
+
+--------------------------- nthreads: 40
+trial:  0 time:    27.6064 sec
+trial:  1 time:    27.5743 sec
+trial:  2 time:    27.5898 sec
+trial:  3 time:    27.5456 sec
+trial:  4 time:    27.5879 sec
+trial:  5 time:    27.5079 sec
+trial:  6 time:    27.5356 sec
+trial:  7 time:    27.5311 sec
+trial:  8 time:    27.5936 sec
+trial:  9 time:    27.5544 sec
+trial: 10 time:    27.5342 sec
+trial: 11 time:    27.5332 sec
+trial: 12 time:    27.5464 sec
+trial: 13 time:    27.5342 sec
+trial: 14 time:    27.5266 sec
+trial: 15 time:    27.5577 sec
+3f: 40: avg time:     27.554 (sec), rate:    935.258 iters: 6
+Avg: PR (3f)       40:     27.554 sec: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+SuiteSparse:GraphBLAS v4.0.2 [Jan 13, 2021]
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+read time: 14.8455
+# of trials: 16
+
+--------------------------- nthreads: 40
+trial:  0 time:    17.0214 sec
+trial:  1 time:    16.9732 sec
+trial:  2 time:    16.9799 sec
+trial:  3 time:    17.0445 sec
+trial:  4 time:    17.0494 sec
+trial:  5 time:    16.9998 sec
+trial:  6 time:    17.0043 sec
+trial:  7 time:    17.0015 sec
+trial:  8 time:    17.0242 sec
+trial:  9 time:    17.0074 sec
+trial: 10 time:    17.0548 sec
+trial: 11 time:    17.0012 sec
+trial: 12 time:    17.0237 sec
+trial: 13 time:    16.9926 sec
+trial: 14 time:    16.9844 sec
+trial: 15 time:    17.0103 sec
+3f: 40: avg time:     17.011 (sec), rate:   1899.032 iters: 22
+Avg: PR (3f)       40:     17.011 sec: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+SuiteSparse:GraphBLAS v4.0.2 [Jan 13, 2021]
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+read time: 30.7489
+# of trials: 16
+
+--------------------------- nthreads: 40
+trial:  0 time:     9.2948 sec
+trial:  1 time:     9.2928 sec
+trial:  2 time:     9.2761 sec
+trial:  3 time:     9.2900 sec
+trial:  4 time:     9.2880 sec
+trial:  5 time:     9.2907 sec
+trial:  6 time:     9.3025 sec
+trial:  7 time:     9.3154 sec
+trial:  8 time:     9.2798 sec
+trial:  9 time:     9.3573 sec
+trial: 10 time:     9.2835 sec
+trial: 11 time:     9.2861 sec
+trial: 12 time:     9.2859 sec
+trial: 13 time:     9.5858 sec
+trial: 14 time:     9.3792 sec
+trial: 15 time:     9.2936 sec
+3f: 40: avg time:      9.319 (sec), rate:   6214.163 iters: 30
+Avg: PR (3f)       40:      9.319 sec: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+SuiteSparse:GraphBLAS v4.0.2 [Jan 13, 2021]
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+read time: 1.11818
+# of trials: 16
+
+--------------------------- nthreads: 40
+trial:  0 time:     1.3239 sec
+trial:  1 time:     1.3255 sec
+trial:  2 time:     1.3202 sec
+trial:  3 time:     1.3232 sec
+trial:  4 time:     1.3202 sec
+trial:  5 time:     1.3257 sec
+trial:  6 time:     1.3197 sec
+trial:  7 time:     1.3211 sec
+trial:  8 time:     1.3186 sec
+trial:  9 time:     1.3217 sec
+trial: 10 time:     1.3265 sec
+trial: 11 time:     1.3195 sec
+trial: 12 time:     1.4449 sec
+trial: 13 time:     1.7240 sec
+trial: 14 time:     1.8071 sec
+trial: 15 time:     1.5669 sec
+3f: 40: avg time:      1.401 (sec), rate:   1606.979 iters: 39
+Avg: PR (3f)       40:      1.401 sec: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+hypersparse $ 
