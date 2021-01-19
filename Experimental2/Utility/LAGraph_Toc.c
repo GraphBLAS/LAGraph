@@ -4,10 +4,11 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
+// Contributed by Tim Davis, Texas A&M University.
 
 //------------------------------------------------------------------------------
 
-#include "LAGraph_Internal.h"
+#include "LG_internal.h"
 
 int LAGraph_Toc             // 0 if successful, -1 on failure
 (
@@ -21,8 +22,8 @@ int LAGraph_Toc             // 0 if successful, -1 on failure
     // check inputs
     //--------------------------------------------------------------------------
 
-    LAGraph_CLEAR_MSG ;
-    LAGraph_CHECK (t == NULL, -1, "&t is NULL") ;
+    LG_CLEAR_MSG ;
+    LG_CHECK (t == NULL, -1, "&t is NULL") ;
 
     //--------------------------------------------------------------------------
     // get the time since the last call to LAGraph_Toc

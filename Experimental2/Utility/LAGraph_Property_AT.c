@@ -4,12 +4,13 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
+// Contributed by Tim Davis, Texas A&M University.
 
 //------------------------------------------------------------------------------
 
 #define LAGraph_FREE_ALL GrB_free (&AT) ;
 
-#include "LAGraph_Internal.h"
+#include "LG_internal.h"
 
 int LAGraph_Property_AT     // returns 0 if successful, -1 if failure
 (
@@ -23,7 +24,7 @@ int LAGraph_Property_AT     // returns 0 if successful, -1 if failure
     //--------------------------------------------------------------------------
 
     GrB_Matrix AT = NULL ;
-    LAGraph_CHECK_INIT (G, msg) ;
+    LG_CHECK_INIT (G, msg) ;
     GrB_Matrix A = G->A ;
     LAGraph_Kind kind = G->kind ;
 

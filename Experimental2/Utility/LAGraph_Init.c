@@ -4,15 +4,16 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
+// Contributed by Tim Davis, Texas A&M University.
 
 //------------------------------------------------------------------------------
 
-#include "LAGraph_Internal.h"
+#include "LG_internal.h"
 
 int LAGraph_Init (char *msg)        // return 0 if success, -1 if failure
 {
 
-    LAGraph_CLEAR_MSG ;
+    LG_CLEAR_MSG ;
 
     #ifdef MATLAB_MEX_FILE
     // use MATLAB memory allocation functions

@@ -4,10 +4,11 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
+// Contributed by Tim Davis, Texas A&M University.
 
 //------------------------------------------------------------------------------
 
-#include "LAGraph_Internal.h"
+#include "LG_internal.h"
 
 int LAGraph_TypeName        // returns 0 if successful, -1 if failure
 (
@@ -21,9 +22,9 @@ int LAGraph_TypeName        // returns 0 if successful, -1 if failure
     // check inputs
     //--------------------------------------------------------------------------
 
-    LAGraph_CLEAR_MSG ;
-    LAGraph_CHECK (type == NULL, -1, "type is NULL") ;
-    LAGraph_CHECK (name == NULL, -1, "name is NULL") ;
+    LG_CLEAR_MSG ;
+    LG_CHECK (type == NULL, -1, "type is NULL") ;
+    LG_CHECK (name == NULL, -1, "name is NULL") ;
 
     //--------------------------------------------------------------------------
     // determine the name of the type

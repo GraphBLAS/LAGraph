@@ -4,13 +4,14 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
+// Contributed by Tim Davis and Scott Kolodziej, Texas A&M University.
 
 //------------------------------------------------------------------------------
 
 // LAGraph_pattern: return the pattern of a matrix (spones(A) in MATLAB)
-// as a boolean matrix. Contributed by Tim Davis and Scott Kolodziej, Texas A&M.
+// as a boolean matrix.
 
-#include "LAGraph_Internal.h"
+#include "LG_internal.h"
 
 #define LAGRAPH_FREE_ALL \
     GrB_free (C) ;
@@ -27,10 +28,10 @@ int LAGraph_Pattern     // return 0 if successful, -1 if failure
     // check inputs
     //--------------------------------------------------------------------------
 
-    LAGraph_CLEAR_MSG ;
+    LG_CLEAR_MSG ;
     GrB_Index nrows, ncols ;
-    LAGraph_CHECK (C == NULL, -1, "&C is NULL") ;
-    LAGraph_CHECK (A == NULL, -1, "A is NULL") ;
+    LG_CHECK (C == NULL, -1, "&C is NULL") ;
+    LG_CHECK (A == NULL, -1, "A is NULL") ;
     (*C) = NULL ;
 
     // GxB_fprint (A, GxB_COMPLETE, stdout) ;

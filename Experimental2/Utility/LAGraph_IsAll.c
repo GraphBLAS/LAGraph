@@ -4,16 +4,15 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
+// Contributed by Tim Davis, Texas A&M University.
 
 //------------------------------------------------------------------------------
-
-// Contributed by Tim Davis, Texas A&M
 
 // Applies a binary operator to two matrices A and B, and returns result = true
 // if the pattern of A and B are identical, and if the result of C = A op B is
 // true for all entries in C.
 
-#include "LAGraph_Internal.h"
+#include "LG_internal.h"
 
 #define LAGRAPH_FREE_WORK   \
     GrB_free (&C) ;         \
@@ -35,7 +34,7 @@ int LAGraph_IsAll           // returns 0 if successful, -1 if failure
     //--------------------------------------------------------------------------
 
     GrB_Matrix C = NULL ;
-    LAGraph_CHECK (result == NULL, -1, "bad args") ;
+    LG_CHECK (result == NULL, -1, "bad args") ;
     (*result) = false ;
 
     //--------------------------------------------------------------------------

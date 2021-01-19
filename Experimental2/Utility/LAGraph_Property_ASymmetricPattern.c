@@ -4,6 +4,7 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
+// Contributed by Tim Davis, Texas A&M University.
 
 //------------------------------------------------------------------------------
 
@@ -12,7 +13,7 @@
 
 #define LAGraph_FREE_WORK GrB_free (&C) ;
 
-#include "LAGraph_Internal.h"
+#include "LG_internal.h"
 
 int LAGraph_Property_ASymmetricPattern  // 0 if successful, -1 if failure
 (
@@ -26,7 +27,7 @@ int LAGraph_Property_ASymmetricPattern  // 0 if successful, -1 if failure
     //--------------------------------------------------------------------------
 
     GrB_Matrix C = NULL ;
-    LAGraph_CHECK_INIT (G, msg) ;
+    LG_CHECK_INIT (G, msg) ;
     G->A_pattern_is_symmetric = LAGRAPH_UNKNOWN ;
     LAGraph_Kind kind = G->kind ;
     if (kind == LAGRAPH_ADJACENCY_UNDIRECTED)

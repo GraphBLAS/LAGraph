@@ -4,6 +4,7 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
+// Contributed by Tim Davis and Mohsen Aznaveh, Texas A&M University.
 
 //------------------------------------------------------------------------------
 
@@ -17,9 +18,7 @@
 // is undirected or G->A is known to have a symmetric pattern, then G->A is
 // used instead of G->AT, however.
 
-// Contributed by Tim Davis and Mohsen Aznaveh.
-
-#include "LAGraph_Internal.h"
+#include "LG_internal.h"
 
 #define LAGRAPH_FREE_WORK           \
 {                                   \
@@ -53,10 +52,10 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
     // check inputs
     //--------------------------------------------------------------------------
 
-    LAGraph_CLEAR_MSG ;
+    LG_CLEAR_MSG ;
     GrB_Vector r = NULL, d = NULL, t = NULL, w = NULL, d1 = NULL ;
-    LAGraph_CHECK (centrality == NULL, -1, "centrality is NULL") ;
-    LAGraph_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
+    LG_CHECK (centrality == NULL, -1, "centrality is NULL") ;
+    LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
     LAGraph_Kind kind = G->kind ; 
     int A_sym_pattern = G->A_pattern_is_symmetric ;
     GrB_Matrix AT ;
@@ -69,7 +68,7 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
     {
         // A and A' differ
         AT = G->AT ;
-        LAGraph_CHECK (AT == NULL, -1, "G->AT is required") ;
+        LG_CHECK (AT == NULL, -1, "G->AT is required") ;
     }
     GrB_Vector d_out = G->rowdegree ;
     if (d_out == NULL, -1, "G->rowdegree is required") ;

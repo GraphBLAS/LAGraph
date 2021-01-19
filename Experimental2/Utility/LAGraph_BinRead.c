@@ -4,10 +4,11 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
+// Contributed by Tim Davis, Texas A&M University.
 
 //------------------------------------------------------------------------------
 
-#include "LAGraph_Internal.h"
+#include "LG_internal.h"
 
 #define LAGRAPH_FREE_ALL    \
 {                           \
@@ -27,7 +28,7 @@
 #define FREAD(p,s,n)                                                \
 {                                                                   \
     size_t result = fread (p, s, n, f) ;                            \
-    LAGraph_CHECK (result != n, -1, "file I/O error") ;             \
+    LG_CHECK (result != n, -1, "file I/O error") ;                  \
 }
 
 int LAGraph_BinRead         // returns 0 if successful, -1 if failure
@@ -47,8 +48,8 @@ int LAGraph_BinRead         // returns 0 if successful, -1 if failure
     void *Ax = NULL ;
     FILE *f = NULL ;
 
-    LAGraph_CHECK (A == NULL, -1, "&A is NULL") ;
-    LAGraph_CHECK (filename == NULL, -1, "filename is NULL") ;
+    LG_CHECK (A == NULL, -1, "&A is NULL") ;
+    LG_CHECK (filename == NULL, -1, "filename is NULL") ;
     (*A) = NULL ;
 
     //--------------------------------------------------------------------------
@@ -56,7 +57,7 @@ int LAGraph_BinRead         // returns 0 if successful, -1 if failure
     //--------------------------------------------------------------------------
 
     f = fopen (filename, "r") ;
-    LAGraph_CHECK (f == NULL, -1, "cannot open file") ;
+    LG_CHECK (f == NULL, -1, "cannot open file") ;
 
     //--------------------------------------------------------------------------
     // basic matrix properties
@@ -117,7 +118,7 @@ int LAGraph_BinRead         // returns 0 if successful, -1 if failure
         case 10: type = GrB_FP64        ; break ;
         case 11: type = GxB_FC32        ; break ;
         case 12: type = GxB_FC64        ; break ;
-        default: LAGraph_CHECK (false, -1, "unknown type") ;
+        default: LG_CHECK (false, -1, "unknown type") ;
     }
 
     //--------------------------------------------------------------------------
@@ -166,10 +167,10 @@ int LAGraph_BinRead         // returns 0 if successful, -1 if failure
     }
     else
     {
-        LAGraph_CHECK (false, -1, "unknown matrix format") ;
+        LG_CHECK (false, -1, "unknown matrix format") ;
     }
     Ax = LAGraph_Malloc (Ax_size, typesize) ;
-    LAGraph_CHECK (!ok || Ax == NULL, -1, "out of memory") ;
+    LG_CHECK (!ok || Ax == NULL, -1, "out of memory") ;
 
     //--------------------------------------------------------------------------
     // read the array content
@@ -251,7 +252,7 @@ int LAGraph_BinRead         // returns 0 if successful, -1 if failure
     }
     else
     {
-        LAGraph_CHECK (false, -1, "unknown format") ;
+        LG_CHECK (false, -1, "unknown format") ;
     }
 
     GrB_TRY (GxB_set (*A, GxB_HYPER_SWITCH, hyper)) ;

@@ -4,10 +4,11 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
+// Contributed by Tim Davis, Texas A&M University.
 
 //------------------------------------------------------------------------------
 
-#include "LAGraph_Internal.h"
+#include "LG_internal.h"
 
 // These are modified by LAGraph_Init and LAGraph_Xinit.
 

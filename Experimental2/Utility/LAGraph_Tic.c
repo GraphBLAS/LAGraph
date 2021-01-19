@@ -4,6 +4,7 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
+// Contributed by Tim Davis, Texas A&M University.
 
 //------------------------------------------------------------------------------
 
@@ -20,7 +21,7 @@
     printf ("time to 'do stuff' and 'more stuff': %g (seconds)\n', t) ;
 */
 
-#include "LAGraph_Internal.h"
+#include "LG_internal.h"
 
 int LAGraph_Tic             // returns 0 if successful, -1 if failure
 (
@@ -29,7 +30,7 @@ int LAGraph_Tic             // returns 0 if successful, -1 if failure
 )
 {
 
-    LAGraph_CLEAR_MSG ;
+    LG_CLEAR_MSG ;
 
     #if defined ( _OPENMP )
 

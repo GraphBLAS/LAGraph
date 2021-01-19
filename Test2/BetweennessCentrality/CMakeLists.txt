@@ -25,7 +25,7 @@ link_directories ( ../../build )
 
 # include_directories ( /usr/local/include )
 include_directories ( ../../../GraphBLAS/Include )
-include_directories ( ../../Include )
+include_directories ( ../../Include .. )
 
 # find OpenMP
 include ( FindOpenMP  )

@@ -37,7 +37,7 @@
 #define GB_partition GB_partition_1a
 #define GB_quicksort GB_quicksort_1a
 
-#include "GB_qsort_template.i"
+#include "GB_qsort_template.c"
 
 void GB_qsort_1a    // sort array A of size 1-by-n
 (

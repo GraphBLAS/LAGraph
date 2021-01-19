@@ -4,13 +4,13 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
+// Contributed by Scott Kolodziej and Tim Davis, Texas A&M University;
+// Adapted and revised from GraphBLAS C API Spec, Appendix B.4.
 
 //------------------------------------------------------------------------------
 
 // LAGraph_VertexCentrality_Betweenness: Batch algorithm for computing
-// betweeness centrality.  Contributed by Scott Kolodziej and Tim Davis, Texas
-// A&M University.  Adapted and revised from GraphBLAS C API Spec, Appendix
-// B.4.
+// betweeness centrality, using push-pull optimization.
 
 // This method computes an approximation of the betweenness algorithm.
 //                               ____
@@ -49,7 +49,7 @@
 
 //------------------------------------------------------------------------------
 
-#include "LAGraph_Internal.h"
+#include "LG_internal.h"
 
 #define LAGRAPH_FREE_WORK                       \
 {                                               \
@@ -94,7 +94,7 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
     // check inputs
     //--------------------------------------------------------------------------
 
-    LAGraph_CLEAR_MSG ;
+    LG_CLEAR_MSG ;
 
     // Array of BFS search matrices.
     // S [i] is a sparse matrix that stores the depth at which each vertex is
@@ -118,9 +118,9 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
     // Temporary workspace matrix (sparse).
     GrB_Matrix W = NULL ;
 
-    LAGraph_CHECK (centrality == NULL, -1, "centrality is NULL") ;
+    LG_CHECK (centrality == NULL, -1, "centrality is NULL") ;
     (*centrality) = NULL ;
-    LAGraph_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
+    LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
     LAGraph_Kind kind = G->kind ; 
     int A_sym_pattern = G->A_pattern_is_symmetric ;
 
@@ -135,7 +135,7 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
     {
         // A and A' differ
         AT = G->AT ;
-        LAGraph_CHECK (AT == NULL, -1, "G->AT is required") ;
+        LG_CHECK (AT == NULL, -1, "G->AT is required") ;
     }
 
     // =========================================================================
@@ -161,7 +161,7 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
 
     // Allocate memory for the array of S matrices
     S = (GrB_Matrix *) LAGraph_Calloc  (n, sizeof (GrB_Matrix)) ;
-    LAGraph_CHECK (S == NULL, -1, "out of memory") ;
+    LG_CHECK (S == NULL, -1, "out of memory") ;
 
     // =========================================================================
     // === Breadth-first search stage ==========================================

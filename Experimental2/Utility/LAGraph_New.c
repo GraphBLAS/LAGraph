@@ -4,13 +4,14 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
+// Contributed by Tim Davis, Texas A&M University.
 
 //------------------------------------------------------------------------------
 
 // If succesful, the matrix A is "moved" into G->A, and the caller's A is set
 // to NULL.
 
-#include "LAGraph_Internal.h"
+#include "LG_internal.h"
 
 int LAGraph_New         // returns 0 if successful, -1 if failure
 (
@@ -26,15 +27,15 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
     // check inputs
     //--------------------------------------------------------------------------
 
-    LAGraph_CLEAR_MSG ;
-    LAGraph_CHECK (G == NULL, -1, "&G cannot be NULL on input") ;
+    LG_CLEAR_MSG ;
+    LG_CHECK (G == NULL, -1, "&G cannot be NULL on input") ;
 
     //--------------------------------------------------------------------------
     // allocate the graph
     //--------------------------------------------------------------------------
 
     (*G) = LAGraph_Malloc (1, sizeof (struct LAGraph_Graph_struct)) ;
-    LAGraph_CHECK (*G == NULL, -1, "out of memory") ;
+    LG_CHECK (*G == NULL, -1, "out of memory") ;
 
     //--------------------------------------------------------------------------
     // assign its primary components

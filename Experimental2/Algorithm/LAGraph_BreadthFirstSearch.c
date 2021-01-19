@@ -55,7 +55,7 @@
     GrB_free (&v) ;         \
 }
 
-#include "LAGraph_Internal.h"
+#include "LG_internal.h"
 
 int LAGraph_BreadthFirstSearch      // returns -1 on failure, 0 if successful
 (
@@ -73,7 +73,7 @@ int LAGraph_BreadthFirstSearch      // returns -1 on failure, 0 if successful
     // check inputs
     //--------------------------------------------------------------------------
 
-    LAGraph_CLEAR_MSG ;
+    LG_CLEAR_MSG ;
     GrB_Vector q = NULL ;           // the current frontier
     GrB_Vector w = NULL ;           // to compute work remaining
     GrB_Vector pi = NULL ;          // parent vector
@@ -84,7 +84,7 @@ int LAGraph_BreadthFirstSearch      // returns -1 on failure, 0 if successful
     if (compute_level ) (*level ) = NULL ;
     if (compute_parent) (*parent) = NULL ;
 
-    LAGraph_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
+    LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
 
     if (!(compute_level || compute_parent))
     {

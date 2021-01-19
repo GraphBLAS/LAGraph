@@ -4,12 +4,13 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
+// Contributed by Tim Davis, Texas A&M University.
 
 //------------------------------------------------------------------------------
 
 // LAGraph_get_nthreads: get # of threads that will be used by LAGraph.
 
-#include "LAGraph_Internal.h"
+#include "LG_internal.h"
 
 int LAGraph_GetNumThreads   // returns 0 if successful, or -1 if failure
 (
@@ -18,7 +19,7 @@ int LAGraph_GetNumThreads   // returns 0 if successful, or -1 if failure
 )
 {
 
-    LAGraph_CLEAR_MSG ;
+    LG_CLEAR_MSG ;
     #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
     {
         // SuiteSparse:GraphBLAS: get # of threads from global setting

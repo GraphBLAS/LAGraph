@@ -4,6 +4,7 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
+// Contributed by Tim Davis, Texas A&M University.
 
 //------------------------------------------------------------------------------
 
@@ -29,7 +30,7 @@
 //          unchanged.  This case never occurs if nnew < nold.
 //      }
 
-#include "LAGraph_Internal.h"
+#include "LG_internal.h"
 
 void *LAGraph_Realloc       // returns pointer to reallocated block of memory,
 (                           // or original block if reallocation fails.
@@ -49,8 +50,8 @@ void *LAGraph_Realloc       // returns pointer to reallocated block of memory,
     // make sure at least one byte is allocated
     size_of_item = LAGraph_MAX (1, size_of_item) ;
 
-    (*ok) = LAGraph_Multiply_size_t (&size,    nitems_new, size_of_item)
-         && LAGraph_Multiply_size_t (&oldsize, nitems_old, size_of_item) ;
+    (*ok) = LG_Multiply_size_t (&size,    nitems_new, size_of_item)
+         && LG_Multiply_size_t (&oldsize, nitems_old, size_of_item) ;
 
     if (!(*ok) || nitems_new > GxB_INDEX_MAX || size_of_item > GxB_INDEX_MAX)
     { 

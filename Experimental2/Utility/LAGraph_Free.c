@@ -4,13 +4,14 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
+// Contributed by Tim Davis, Texas A&M University.
 
 //------------------------------------------------------------------------------
 
 // LAGraph_Free frees a block of memory obtained by LAGraph_Malloc.  It does
 // nothing if p is NULL.
 
-#include "LAGraph_Internal.h"
+#include "LG_internal.h"
 
 void LAGraph_Free
 (

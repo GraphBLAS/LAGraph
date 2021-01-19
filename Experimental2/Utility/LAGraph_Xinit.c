@@ -4,10 +4,11 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
+// Contributed by Tim Davis, Texas A&M University.
 
 //------------------------------------------------------------------------------
 
-#include "LAGraph_Internal.h"
+#include "LG_internal.h"
 
 int LAGraph_Xinit           // returns 0 if successful, -1 if failure
 (
@@ -27,9 +28,9 @@ int LAGraph_Xinit           // returns 0 if successful, -1 if failure
 
     // malloc and free are required; realloc and calloc may be NULL
 
-    LAGraph_CLEAR_MSG ;
-    LAGraph_CHECK (user_malloc_function == NULL, -1, "malloc is NULL") ;
-    LAGraph_CHECK (user_free_function   == NULL, -1, "free is NULL") ;
+    LG_CLEAR_MSG ;
+    LG_CHECK (user_malloc_function == NULL, -1, "malloc is NULL") ;
+    LG_CHECK (user_free_function   == NULL, -1, "free is NULL") ;
 
     //--------------------------------------------------------------------------
     // start GraphBLAS

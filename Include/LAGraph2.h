@@ -39,16 +39,25 @@
 #undef I
 
 #if defined ( _OPENMP )
-#include <omp.h>
+    #include <omp.h>
 #endif
 
 #if defined ( __linux__ ) || defined ( __GNU__ )
-#include <sys/time.h>
+    #include <sys/time.h>
 #endif
 
 #if defined ( __MACH__ ) && defined ( __APPLE__ )
-#include <mach/clock.h>
-#include <mach/mach.h>
+    #include <mach/clock.h>
+    #include <mach/mach.h>
+#endif
+
+#if ( _MSC_VER && !__INTEL_COMPILER )
+    #include <malloc.h>
+    #define LG_MICROSOFT 1
+    #define LAGRAPH_RESTRICT __restrict
+#else
+    #define LG_MICROSOFT 0
+    #define LAGRAPH_RESTRICT restrict
 #endif
 
 //==============================================================================
@@ -475,7 +484,7 @@ int LAGraph_Toc             // returns 0 if successful, -1 if failure
 int LAGraph_BinRead         // returns 0 if successful, -1 if failure
 (
     GrB_Matrix *A,          // matrix to read from the file
-    char *filename,         // file to read it from
+    char *filename,         // file to read it from TODO: make this FILE *f
     char *msg
 ) ;
 
@@ -572,6 +581,102 @@ int LAGraph_Property_ColDegree  // 0 if successful, -1 if failure
     char *msg
 ) ;
 
+// LAGraph_SortByDegree: sort a graph by its row or column degree
+int LAGraph_SortByDegree    // returns 0 if successful, -1 if failure
+(
+    // output
+    int64_t **P_handle,     // permutation vector of size n
+    // input
+    LAGraph_Graph G,        // graph of n nodes
+    bool byrow,             // if true, sort G->rowdegree, else G->coldegree
+    bool ascending,         // sort in ascending or descending order
+    char *msg
+) ;
+
+// LAGraph_SampleDegree: sample the degree median and mean
+int LAGraph_SampleDegree        // returns 0 if successful, -1 if failure
+(
+    double *sample_mean,        // sampled mean degree
+    double *sample_median,      // sampled median degree
+    // input
+    LAGraph_Graph G,        // graph of n nodes
+    bool byrow,             // if true, sample G->rowdegree, else G->coldegree
+    int64_t nsamples,       // number of samples
+    uint64_t seed,          // random number seed
+    char *msg
+) ;
+
+// LAGraph_Test_ReadProblem: read in a graph from a file, for testing
+int LAGraph_Test_ReadProblem    // returns 0 if successful, -1 if failure
+(
+    // output
+    LAGraph_Graph *G,           // graph from the file
+    GrB_Matrix *SourceNodes,    // source nodes
+    // inputs
+    bool make_symmetric,        // if true, always return G as undirected
+    bool no_self_edges,         // if true, remove self edges
+    bool pattern,               // if true, return G as boolean
+    int argc,                   // input to main test program
+    char **argv,                // input to main test program
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
+// simple and portable random number generator
+//------------------------------------------------------------------------------
+
+#define LAGRAPH_RANDOM15_MAX 32767
+#define LAGRAPH_RANDOM60_MAX (GxB_INDEX_MAX-1)
+
+// return a random number between 0 and LAGRAPH_RANDOM15_MAX
+static inline GrB_Index LAGraph_Random15 (uint64_t *seed)
+{ 
+   (*seed) = (*seed) * 1103515245 + 12345 ;
+   return (((*seed) / 65536) % (LAGRAPH_RANDOM15_MAX + 1)) ;
+}
+
+// return a random uint64_t, in range 0 to LAGRAPH_RANDOM60_MAX
+static inline GrB_Index LAGraph_Random60 (uint64_t *seed)
+{ 
+    GrB_Index i = LAGraph_Random15 (seed) ;
+    i = LAGRAPH_RANDOM15_MAX * i + LAGraph_Random15 (seed) ;
+    i = LAGRAPH_RANDOM15_MAX * i + LAGraph_Random15 (seed) ;
+    i = LAGRAPH_RANDOM15_MAX * i + LAGraph_Random15 (seed) ;
+    i = i % (LAGRAPH_RANDOM60_MAX + 1) ;
+    return (i) ;
+}
+
+//------------------------------------------------------------------------------
+// parallel sorting methods
+//------------------------------------------------------------------------------
+
+int LAGraph_Sort1    // sort array A of size n
+(
+    int64_t *LAGRAPH_RESTRICT A_0,   // size n array
+    const int64_t n,
+    int nthreads,               // # of threads to use
+    char *msg
+) ;
+
+int LAGraph_Sort2    // sort array A of size 2-by-n, using 2 keys (A [0:1][])
+(
+    int64_t *LAGRAPH_RESTRICT A_0,   // size n array
+    int64_t *LAGRAPH_RESTRICT A_1,   // size n array
+    const int64_t n,
+    int nthreads,               // # of threads to use
+    char *msg
+) ;
+
+int LAGraph_Sort3    // sort array A of size 3-by-n, using 3 keys (A [0:2][])
+(
+    int64_t *LAGRAPH_RESTRICT A_0,   // size n array
+    int64_t *LAGRAPH_RESTRICT A_1,   // size n array
+    int64_t *LAGRAPH_RESTRICT A_2,   // size n array
+    const int64_t n,
+    int nthreads,               // # of threads to use
+    char *msg
+) ;
+
 //==============================================================================
 // LAGraph "simple" algorithms
 //==============================================================================
@@ -593,26 +698,38 @@ typedef enum
 {
     LAGRAPH_CENTRALITY_BETWEENNESS = 0,     // node or edge centrality
     LAGRAPH_CENTRALITY_PAGERANKGAP = 1,     // GAP-style PageRank
-    LAGRAPH_CENTRALITY_PAGERANKP = 2,       // PageRank (handle dangling nodes)
+    LAGRAPH_CENTRALITY_PAGERANK = 2,        // PageRank (handle dangling nodes)
     // ...
 }
 LAGraph_Centrality_Kind ;
 
-int LAGraph_VertexCentrality    // returns -1 on on failure, 0 if successful
+int LAGraph_VertexCentrality    // returns -1 on failure, 0 if successful
 (
     // output:
     GrB_Vector *centrality,     // centrality(i): centrality metric of node i
     // inputs:
     LAGraph_Graph G,            // input graph
-    LAGraph_Centrality_Kind,    // kind of centrality to compute
-//  int accuracy,               // TODO: 0:quick, 1:better, ... max:exact
+    LAGraph_Centrality_Kind kind,    // kind of centrality to compute
+//  int accuracy,               // TODO?: 0:quick, 1:better, ... max:exact
 //  LAGraph_Random_Seed seed,   // random number seed (TODO?)
+    char *msg
+) ;
+
+int LAGraph_TriangleCount   // returns -1 on failure, 0 if successful
+(
+    uint64_t *ntriangles,   // # of triangles
+    // input:
+    LAGraph_Graph G,
     char *msg
 ) ;
 
 //==============================================================================
 // LAGraph "expert" algorithms
 //==============================================================================
+
+// TODO: should an expert method compute needed properties?
+// or fail if not pre-computed?
+// Or have thread safety only if properties precomputed?
 
 int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
 (
@@ -635,6 +752,22 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
     float tol,              // stopping tolerance (typically 1e-4) ;
     int itermax,            // maximum number of iterations (typically 100)
     int *iters,             // output: number of iterations taken
+    char *msg
+) ;
+
+int LAGraph_TriangleCount_Methods   // returns -1 on failure, 0 if successful
+(
+    uint64_t *ntriangles,   // # of triangles
+    // input:
+    LAGraph_Graph G,
+    int method,             // selects the method to use (TODO: enum)
+    int presort,            // controls the presort of the graph (TODO: enum)
+        //  0: no sort
+        //  1: sort by degree, ascending order
+        // -1: sort by degree, descending order
+        //  2: auto selection: no sort if rule is not triggered.  Otherise:
+        //  sort in ascending order for methods 3 and 5, descending ordering
+        //  for methods 4 and 6.
     char *msg
 ) ;
 

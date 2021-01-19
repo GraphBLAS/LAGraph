@@ -2,10 +2,13 @@
 // LAGraph_MMRead: read a matrix from a Matrix Market file
 //------------------------------------------------------------------------------
 
+// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+// Contributed by Tim Davis, Texas A&M University.
+
 //------------------------------------------------------------------------------
 
 // LAGraph_MMRead:  read a matrix from a Matrix Market file.
-// Contributed by Tim Davis, Texas A&M
 
 // The file format used here is compatible with all variations of the Matrix
 // Market "coordinate" and "array" format (http://www.nist.gov/MatrixMarket).
@@ -139,7 +142,7 @@
 
 #define LAGraph_FREE_ALL GrB_free (A) ;
 
-#include "LAGraph_Internal.h"
+#include "LG_internal.h"
 
 //------------------------------------------------------------------------------
 // get_line
@@ -553,9 +556,9 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
     // check inputs
     //--------------------------------------------------------------------------
 
-    LAGraph_CLEAR_MSG ;
-    LAGraph_CHECK (A == NULL, -1, "&A is NULL") ;
-    LAGraph_CHECK (f == NULL, -1, "f is NULL") ;
+    LG_CLEAR_MSG ;
+    LG_CHECK (A == NULL, -1, "&A is NULL") ;
+    LG_CHECK (f == NULL, -1, "f is NULL") ;
     (*A) = NULL ;
 
     //--------------------------------------------------------------------------
@@ -636,7 +639,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             if (strncmp (p, "matrix", 6) != 0)
             {
                 // invalid Matrix Market object
-                LAGraph_CHECK (false, -1, "bad object") ;
+                LG_CHECK (false, -1, "bad object") ;
             }
             p += 6 ;                                // skip past token "matrix"
 
@@ -659,7 +662,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             else
             {
                 // invalid Matrix Market format
-                LAGraph_CHECK (false, -1, "bad format") ;
+                LG_CHECK (false, -1, "bad format") ;
             }
 
             //------------------------------------------------------------------
@@ -695,7 +698,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             else
             {
                 // invalid Matrix Market type
-                LAGraph_CHECK (false, -1, "bad type") ;
+                LG_CHECK (false, -1, "bad type") ;
             }
 
             //------------------------------------------------------------------
@@ -723,7 +726,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             else
             {
                 // invalid Matrix Market storage
-                LAGraph_CHECK (false, -1, "bad type") ;
+                LG_CHECK (false, -1, "bad type") ;
             }
 
             //------------------------------------------------------------------
@@ -733,7 +736,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             if (MM_type == MM_pattern)
             {
                 // (coodinate) x (pattern) x (general or symmetric)
-                LAGraph_CHECK (!
+                LG_CHECK (!
                     (MM_fmt == MM_coordinate &&
                     (MM_storage == MM_general || MM_storage == MM_symmetric)),
                     -1, "bad pattern combo\n") ;
@@ -742,7 +745,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             if (MM_storage == MM_hermitian)
             {
                 // (coordinate or array) x (complex) x (Hermitian)
-                LAGraph_CHECK (! (MM_type == MM_complex), -1,
+                LG_CHECK (! (MM_type == MM_complex), -1,
                     "bad complex combo") ;
             }
 
@@ -825,7 +828,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             else
             {
                 // type not supported
-                LAGraph_CHECK (false, -1, "type not supported") ;
+                LG_CHECK (false, -1, "type not supported") ;
             }
 
         }
@@ -881,13 +884,13 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             else
             {
                 // wrong number of items in first data line
-                LAGraph_CHECK (false, -1, "bad 1st line") ;
+                LG_CHECK (false, -1, "bad 1st line") ;
             }
 
             if (nrows != ncols)
             {
                 // a rectangular matrix must be in the general storage
-                LAGraph_CHECK (! (MM_storage == MM_general), -1,
+                LG_CHECK (! (MM_storage == MM_general), -1,
                     "bad rectangular") ;
             }
 
@@ -936,7 +939,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             // read the file until finding the next triplet
             //------------------------------------------------------------------
 
-            LAGraph_CHECK (!get_line (f, buf), -1, "premature EOF") ;
+            LG_CHECK (!get_line (f, buf), -1, "premature EOF") ;
             if (is_blank_line (buf))
             {
                 // blank line or comment
@@ -960,7 +963,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             {
                 // coordinate format; read the row and column index
                 p = buf ;
-                LAGraph_CHECK (sscanf (p, "%" SCNu64 " %" SCNu64, &i, &j) != 2,
+                LG_CHECK (sscanf (p, "%" SCNu64 " %" SCNu64, &i, &j) != 2,
                     -1, "I/O error on indices\n") ;
                 // convert from 1-based to 0-based.
                 i-- ;
@@ -980,7 +983,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
 
             while (*p && isspace (*p)) p++ ;        // skip any spaces
 
-            LAGraph_CHECK (read_entry (p, type, MM_type == MM_pattern, x),
+            LG_CHECK (read_entry (p, type, MM_type == MM_pattern, x),
                 -1, "entry invalid") ;
 
             //------------------------------------------------------------------

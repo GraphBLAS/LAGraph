@@ -41,7 +41,7 @@ LAGraph contains the following files and folders:
 
         * Utilities: read/write a graph from a file, etc, will go here...
 
-    Experimental: draft code under development: do not benchmark without
+    Experimental*: draft code under development: do not benchmark without
         asking the LAGraph authors first
 
         * Algorithms: draft graph algorithms such as BFS, connected components,
@@ -49,7 +49,7 @@ LAGraph contains the following files and folders:
 
         * Utilities: draft utilities go here
 
-    Test: main programs that test LAGraph.  To run the tests, first compile
+    Test*: main programs that test LAGraph.  To run the tests, first compile
         GraphBLAS and LAGraph, and then do "make tests" in this directory.
 
     build: initially empty

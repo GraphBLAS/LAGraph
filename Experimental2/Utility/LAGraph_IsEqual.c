@@ -4,13 +4,12 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
+// Contributed by Tim Davis, Texas A&M University.
 
 //------------------------------------------------------------------------------
 
 // LAGraph_isequal: check if two matrices are identically equal (same size,
 // type, pattern, size, and values).
-
-// Contributed by Tim Davis, Texas A&M University.
 
 // For both methods, if the two matrices are GrB_FP32, GrB_FP64, GxB_FC32,
 // or GxB_FC64 and have NaNs, then these functions will return false,
@@ -18,7 +17,7 @@
 // isequalwithequalnans in MATLAB), use LAGraph_IsAll with a user-defined
 // operator f(x,y) that returns true if x and y are both NaN.
 
-#include "LAGraph_Internal.h"
+#include "LG_internal.h"
 
 int LAGraph_IsEqual         // returns 0 if successful, -1 if failure
 (
@@ -35,9 +34,9 @@ int LAGraph_IsEqual         // returns 0 if successful, -1 if failure
     // check inputs
     //--------------------------------------------------------------------------
 
-    LAGraph_CLEAR_MSG ;
+    LG_CLEAR_MSG ;
     GrB_Type atype, btype ;
-    LAGraph_CHECK (result == NULL, -1, "bad arguments") ;
+    LG_CHECK (result == NULL, -1, "bad arguments") ;
     (*result) = false ;
 
     //--------------------------------------------------------------------------

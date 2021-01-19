@@ -4,10 +4,11 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
+// Contributed by Tim Davis, Texas A&M University.
 
 //------------------------------------------------------------------------------
 
-#include "LAGraph_Internal.h"
+#include "LG_internal.h"
 
 int LAGraph_KindName        // returns 0 if successful, -1 if failure
 (
@@ -21,8 +22,8 @@ int LAGraph_KindName        // returns 0 if successful, -1 if failure
     // check inputs
     //--------------------------------------------------------------------------
 
-    LAGraph_CLEAR_MSG ;
-    LAGraph_CHECK (name == NULL, -1, "name is NULL") ;
+    LG_CLEAR_MSG ;
+    LG_CHECK (name == NULL, -1, "name is NULL") ;
 
     //--------------------------------------------------------------------------
     // determine the name of the kind
@@ -33,7 +34,7 @@ int LAGraph_KindName        // returns 0 if successful, -1 if failure
         case LAGRAPH_ADJACENCY_UNDIRECTED : (*name) = "undirected" ; break ;
         case LAGRAPH_ADJACENCY_DIRECTED :   (*name) = "directed"   ; break ;
         case LAGRAPH_KIND_UNKNOWN :         (*name) = "unknown"    ; break ;
-        default : LAGraph_CHECK (false, -1, "invalid kind") ;
+        default : LG_CHECK (false, -1, "invalid kind") ;
     }
 
     return (0) ;

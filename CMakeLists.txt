@@ -163,7 +163,9 @@ message ( STATUS "CMAKE have OpenMP:         " ${OPENMP_FOUND} )
 
 set ( CMAKE_INCLUDE_CURRENT_DIR ON )
 
-include_directories ( Include Experimental/Utility Experimental2/Utility )
+include_directories ( Include
+    Experimental/Utility Experimental2/Utility 
+    Experimental/Utility/Template Experimental2/Utility/Template )
 
 #-------------------------------------------------------------------------------
 # compiler options

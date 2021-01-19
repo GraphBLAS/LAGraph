@@ -4,10 +4,11 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
+// Contributed by Tim Davis, Texas A&M University.
 
 //------------------------------------------------------------------------------
 
-#include "LAGraph_Internal.h"
+#include "LG_internal.h"
 
 int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
 (
@@ -24,7 +25,7 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
     // clear the msg and check the graph
     //--------------------------------------------------------------------------
 
-    LAGraph_CLEAR_MSG ;
+    LG_CLEAR_MSG ;
     LAGraph_TRY (LAGraph_CheckGraph (G, msg)) ;
 
     //--------------------------------------------------------------------------

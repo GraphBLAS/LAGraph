@@ -4,12 +4,13 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
+// Contributed by Tim Davis, Texas A&M University.
 
 //------------------------------------------------------------------------------
 
 #define LAGraph_FREE_ALL GrB_free (&rowdegree) ;
 
-#include "LAGraph_Internal.h"
+#include "LG_internal.h"
 
 int LAGraph_Property_RowDegree  // 0 if successful, -1 if failure
 (
@@ -23,7 +24,7 @@ int LAGraph_Property_RowDegree  // 0 if successful, -1 if failure
     //--------------------------------------------------------------------------
 
     GrB_Vector rowdegree = NULL ;
-    LAGraph_CHECK_INIT (G, msg) ;
+    LG_CHECK_INIT (G, msg) ;
 
     if (G->rowdegree != NULL)
     {
