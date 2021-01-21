@@ -723,6 +723,15 @@ int LAGraph_TriangleCount   // returns -1 on failure, 0 if successful
     char *msg
 ) ;
 
+int LAGraph_ConnectedComponents
+(
+    // output
+    GrB_Vector *component,  // component(i)=k if node is in the kth component
+    // inputs
+    LAGraph_Graph G,        // input graph, G->A can change (ptr, not contents)
+    char *msg
+) ;
+
 //==============================================================================
 // LAGraph "expert" algorithms
 //==============================================================================

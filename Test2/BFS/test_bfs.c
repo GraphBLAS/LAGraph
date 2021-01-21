@@ -7,7 +7,7 @@
 
 //------------------------------------------------------------------------------
 
-#include "LAGraph2.h"
+#include "LAGraph_Test.h"
 
 #define NTHREAD_LIST 2
 // #define NTHREAD_LIST 1
@@ -27,22 +27,6 @@
     GrB_free (&parent) ;            \
     GrB_free (&level) ;             \
     GrB_free (&SourceNodes) ;       \
-}
-
-#define LAGraph_CATCH(status)                                               \
-{                                                                           \
-    printf ("LAGraph error: %s line: %d, status: %d: %s\n", __FILE__,       \
-        __LINE__, status, msg) ;                                            \
-    LAGRAPH_FREE_ALL ;                                                      \
-    return (-1) ;                                                           \
-}
-
-#define GrB_CATCH(info)                                                     \
-{                                                                           \
-    printf ("GraphBLAS error: %s line: %d, info: %d: %s\n", __FILE__,       \
-        __LINE__, info, msg) ;                                              \
-    LAGRAPH_FREE_ALL ;                                                      \
-    return (-1) ;                                                           \
 }
 
 int main (int argc, char **argv)

@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# LAGraph/Test2/TriangleCount/CMakeLists.txt:  cmake script for LAGraph test
+# LAGraph/Test2/ConnectedComponents/CMakeLists.txt: cmake for LAGraph test
 #-------------------------------------------------------------------------------
 
 # cmake 3.0 is preferred.
@@ -9,7 +9,7 @@ if ( CMAKE_VERSION VERSION_GREATER "3.0" )
     cmake_policy ( SET CMP0048 NEW )
 endif ( )
 
-project ( test_tc )
+project ( test_cc )
 
 include ( GNUInstallDirs )
 
@@ -96,8 +96,8 @@ message ( STATUS "CMAKE C flags: " ${CMAKE_C_FLAGS} )
 
 file ( GLOB SOURCES "*.c" )
 
-add_executable ( test_tc test_tc.c )
+add_executable ( test_cc test_cc.c )
 
 # Libraries required for Demo programs
-target_link_libraries ( test_tc graphblas lagraph m )
+target_link_libraries ( test_cc graphblas lagraph m )
 

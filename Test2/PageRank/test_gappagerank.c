@@ -2,9 +2,14 @@
 // test_gappagerank: read in (or create) a matrix and test the GAP PageRank
 //------------------------------------------------------------------------------
 
+// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+
 //------------------------------------------------------------------------------
 
 // Contributed by Tim Davis, Texas A&M and Gabor Szarnyas, BME
+
+#include "LAGraph_Test.h"
 
 #define NTHREAD_LIST 1
 // #define NTHREAD_LIST 2
@@ -13,8 +18,6 @@
 // #define NTHREAD_LIST 6
 // #define THREAD_LIST 64, 32, 24, 12, 8, 4
 
-#include "LAGraph2.h"
-
 #define LAGRAPH_FREE_ALL                        \
 {                                               \
     GrB_free (&A) ;                             \
@@ -22,22 +25,6 @@
     GrB_free (&PR) ;                            \
     LAGraph_Delete (&G, msg) ;                  \
     if (f != NULL) fclose (f) ;                 \
-}
-
-#define LAGraph_CATCH(status)                                               \
-{                                                                           \
-    printf ("LAGraph error: %s line: %d, status: %d: %s\n", __FILE__,       \
-        __LINE__, status, msg) ;                                            \
-    LAGRAPH_FREE_ALL ;                                                      \
-    return (-1) ;                                                           \
-}
-
-#define GrB_CATCH(info)                                                     \
-{                                                                           \
-    printf ("GraphBLAS error: %s line: %d, info: %d: %s\n", __FILE__,       \
-        __LINE__, info, msg) ;                                              \
-    LAGRAPH_FREE_ALL ;                                                      \
-    return (-1) ;                                                           \
 }
 
 int main (int argc, char **argv)
