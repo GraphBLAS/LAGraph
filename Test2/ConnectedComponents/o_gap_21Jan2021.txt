@@ -1,0 +1,145 @@
+SuiteSparse:GraphBLAS v4.0.3 [Jan 19, 2021]
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+read time: 40.6566
+Graph: kind: unweighted undirected, nodes: 134217726 entries: 4223264644 type: bool
+    pattern symmetry: symmetric
+# of trials: 16
+
+SV5b: trial:  0 time:     3.4035 sec
+SV5b: trial:  1 time:     3.4106 sec
+SV5b: trial:  2 time:     3.3980 sec
+SV5b: trial:  3 time:     3.4107 sec
+SV5b: trial:  4 time:     3.4006 sec
+SV5b: trial:  5 time:     3.4482 sec
+SV5b: trial:  6 time:     3.3986 sec
+SV5b: trial:  7 time:     3.4200 sec
+SV5b: trial:  8 time:     3.4204 sec
+SV5b: trial:  9 time:     3.4019 sec
+SV5b: trial: 10 time:     3.4030 sec
+SV5b: trial: 11 time:     3.3934 sec
+SV5b: trial: 12 time:     3.4015 sec
+SV5b: trial: 13 time:     3.4390 sec
+SV5b: trial: 14 time:     3.4107 sec
+SV5b: trial: 15 time:     3.3973 sec
+LG2:SV5b: threads: 40 time:     3.4098  # of CC: 71164263
+
+
+SuiteSparse:GraphBLAS v4.0.3 [Jan 19, 2021]
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+read time: 72.1983
+Graph: kind: unweighted undirected, nodes: 134217728 entries: 4294966740 type: bool
+    pattern symmetry: symmetric
+# of trials: 16
+
+SV5b: trial:  0 time:     4.4519 sec
+SV5b: trial:  1 time:     4.4511 sec
+SV5b: trial:  2 time:     4.4465 sec
+SV5b: trial:  3 time:     4.4519 sec
+SV5b: trial:  4 time:     4.4561 sec
+SV5b: trial:  5 time:     4.4538 sec
+SV5b: trial:  6 time:     4.4515 sec
+SV5b: trial:  7 time:     4.4535 sec
+SV5b: trial:  8 time:     4.4576 sec
+SV5b: trial:  9 time:     4.4492 sec
+SV5b: trial: 10 time:     4.4520 sec
+SV5b: trial: 11 time:     4.4558 sec
+SV5b: trial: 12 time:     4.4584 sec
+SV5b: trial: 13 time:     4.4540 sec
+SV5b: trial: 14 time:     4.4648 sec
+SV5b: trial: 15 time:     4.4513 sec
+LG2:SV5b: threads: 40 time:     4.4537  # of CC: 1
+
+
+SuiteSparse:GraphBLAS v4.0.3 [Jan 19, 2021]
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+read time: 29.6054
+Graph: kind: unweighted undirected, nodes: 61578415 entries: 2405026092 type: bool
+    pattern symmetry: unsymmetric
+# of trials: 16
+
+SV5b: trial:  0 time:     1.4915 sec
+SV5b: trial:  1 time:     1.5066 sec
+SV5b: trial:  2 time:     1.4989 sec
+SV5b: trial:  3 time:     1.5005 sec
+SV5b: trial:  4 time:     1.4970 sec
+SV5b: trial:  5 time:     1.4982 sec
+SV5b: trial:  6 time:     1.4936 sec
+SV5b: trial:  7 time:     1.5001 sec
+SV5b: trial:  8 time:     1.4960 sec
+SV5b: trial:  9 time:     1.4983 sec
+SV5b: trial: 10 time:     1.4962 sec
+SV5b: trial: 11 time:     1.4992 sec
+SV5b: trial: 12 time:     1.4946 sec
+SV5b: trial: 13 time:     1.5012 sec
+SV5b: trial: 14 time:     1.4999 sec
+SV5b: trial: 15 time:     1.5040 sec
+LG2:SV5b: threads: 40 time:     1.4985  # of CC: 19926186
+
+
+SuiteSparse:GraphBLAS v4.0.3 [Jan 19, 2021]
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+read time: 30.1655
+Graph: kind: unweighted undirected, nodes: 50636151 entries: 3620126660 type: bool
+    pattern symmetry: unsymmetric
+# of trials: 16
+
+SV5b: trial:  0 time:     2.0862 sec
+SV5b: trial:  1 time:     2.0347 sec
+SV5b: trial:  2 time:     2.0386 sec
+SV5b: trial:  3 time:     2.0423 sec
+SV5b: trial:  4 time:     2.0380 sec
+SV5b: trial:  5 time:     2.0512 sec
+SV5b: trial:  6 time:     2.0445 sec
+SV5b: trial:  7 time:     2.0396 sec
+SV5b: trial:  8 time:     2.0421 sec
+SV5b: trial:  9 time:     2.0449 sec
+SV5b: trial: 10 time:     2.0403 sec
+SV5b: trial: 11 time:     2.0458 sec
+SV5b: trial: 12 time:     2.0413 sec
+SV5b: trial: 13 time:     2.0473 sec
+SV5b: trial: 14 time:     2.0448 sec
+SV5b: trial: 15 time:     2.0373 sec
+LG2:SV5b: threads: 40 time:     2.0449  # of CC: 123
+
+
+SuiteSparse:GraphBLAS v4.0.3 [Jan 19, 2021]
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+read time: 0.918858
+Graph: kind: unweighted undirected, nodes: 23947347 entries: 57708624 type: bool
+    pattern symmetry: symmetric
+# of trials: 16
+
+SV5b: trial:  0 time:     0.9999 sec
+SV5b: trial:  1 time:     0.9994 sec
+SV5b: trial:  2 time:     1.0006 sec
+SV5b: trial:  3 time:     0.9942 sec
+SV5b: trial:  4 time:     1.0027 sec
+SV5b: trial:  5 time:     0.9917 sec
+SV5b: trial:  6 time:     0.9947 sec
+SV5b: trial:  7 time:     0.9962 sec
+SV5b: trial:  8 time:     0.9873 sec
+SV5b: trial:  9 time:     0.9931 sec
+SV5b: trial: 10 time:     0.9917 sec
+SV5b: trial: 11 time:     0.9924 sec
+SV5b: trial: 12 time:     1.0012 sec
+SV5b: trial: 13 time:     0.9961 sec
+SV5b: trial: 14 time:     0.9952 sec
+SV5b: trial: 15 time:     0.9944 sec
+LG2:SV5b: threads: 40 time:     0.9957  # of CC: 1
+
+

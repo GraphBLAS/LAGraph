@@ -11,7 +11,7 @@ JOBS ?= 1
 
 # build all the tests
 default:
-	( cd BFS                   ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
+	( cd BreadthFirstSearch    ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd BetweennessCentrality ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd PageRank              ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd TriangleCount         ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
@@ -24,7 +24,7 @@ purge: distclean
 
 # remove all files not in the distribution.
 distclean:
-	( cd BFS                   ; $(MAKE) distclean )
+	( cd BreadthFirstSearch    ; $(MAKE) distclean )
 	( cd BetweennessCentrality ; $(MAKE) distclean )
 	( cd PageRank              ; $(MAKE) distclean )
 	( cd TriangleCount         ; $(MAKE) distclean )

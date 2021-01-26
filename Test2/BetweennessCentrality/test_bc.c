@@ -15,7 +15,7 @@
 
 #include "LAGraph_Test.h"
 
-#define NTHREAD_LIST 2
+#define NTHREAD_LIST 1
 // #define NTHREAD_LIST 2
 #define THREAD_LIST 0
 

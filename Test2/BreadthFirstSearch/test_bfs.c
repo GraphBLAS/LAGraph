@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/Test2/BFS/test_bfs.c: test LAGraph_BreadthFirstSearch
+// LAGraph/Test2/BreadthFirstSearch/test_bfs.c: test LAGraph_BreadthFirstSearch
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.

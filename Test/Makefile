@@ -60,3 +60,4 @@ distclean:
 	( cd MatrixExtractKeepDimensions ; $(MAKE) distclean )
 	( cd VectorToDense         ; $(MAKE) distclean )
 	( cd extract               ; $(MAKE) distclean )
+	( cd DNN                   ; $(MAKE) distclean )

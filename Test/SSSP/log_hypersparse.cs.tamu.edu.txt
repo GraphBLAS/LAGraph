@@ -4734,3 +4734,83 @@ max # of threads: 40
 SuiteSparse:GraphBLAS Jan 4, 2021
 Message: /home/faculty/davis/GAP/GAP-road/GAP-road.grb : SSSP15
 # threads used: 40 time: 48.9867
+
+From: /home/faculty/davis/sparse/LAGraph/Test/SSSP/gap_sssp_test.c
+Date: Tue Jan 19 13:20:07 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Jan 19, 2021
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : SSSP15
+# threads used: 40 time: 17.4601
+
+From: /home/faculty/davis/sparse/LAGraph/Test/SSSP/gap_sssp_test.c
+Date: Tue Jan 19 13:48:07 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Jan 19, 2021
+Message: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb : SSSP15
+# threads used: 40 time: 25.6703
+
+From: /home/faculty/davis/sparse/LAGraph/Test/SSSP/gap_sssp_test.c
+Date: Tue Jan 19 13:57:38 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Jan 19, 2021
+Message: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb : SSSP15
+# threads used: 40 time: 8.24784
+
+From: /home/faculty/davis/sparse/LAGraph/Test/SSSP/gap_sssp_test.c
+Date: Tue Jan 19 14:09:06 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Jan 19, 2021
+Message: /home/faculty/davis/GAP/GAP-web/GAP-web.grb : SSSP15
+# threads used: 40 time: 10.1401
+
+From: /home/faculty/davis/sparse/LAGraph/Test/SSSP/gap_sssp_test.c
+Date: Tue Jan 19 14:59:07 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Jan 19, 2021
+Message: /home/faculty/davis/GAP/GAP-road/GAP-road.grb : SSSP15
+# threads used: 40 time: 46.8381
+
+From: /home/faculty/davis/sparse/LAGraph/Test/SSSP/gap_sssp_test.c
+Date: Tue Jan 19 17:03:28 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Jan 19, 2021
+Message: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb : SSSP15
+# threads used: 40 time: 17.6578
+
+From: /home/faculty/davis/sparse/LAGraph/Test/SSSP/gap_sssp_test.c
+Date: Tue Jan 19 17:31:58 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Jan 19, 2021
+Message: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb : SSSP15
+# threads used: 40 time: 25.5664
+
+From: /home/faculty/davis/sparse/LAGraph/Test/SSSP/gap_sssp_test.c
+Date: Tue Jan 19 17:41:36 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Jan 19, 2021
+Message: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb : SSSP15
+# threads used: 40 time: 8.37723
+
+From: /home/faculty/davis/sparse/LAGraph/Test/SSSP/gap_sssp_test.c
+Date: Tue Jan 19 17:52:27 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Jan 19, 2021
+Message: /home/faculty/davis/GAP/GAP-web/GAP-web.grb : SSSP15
+# threads used: 40 time: 9.62516
+
+From: /home/faculty/davis/sparse/LAGraph/Test/SSSP/gap_sssp_test.c
+Date: Tue Jan 19 18:44:09 2021
+CPU:  Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+max # of threads: 40
+SuiteSparse:GraphBLAS Jan 19, 2021
+Message: /home/faculty/davis/GAP/GAP-road/GAP-road.grb : SSSP15
+# threads used: 40 time: 48.4038

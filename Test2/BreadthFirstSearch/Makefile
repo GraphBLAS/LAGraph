@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Test2/BFS/Makefile
+# Test2/BreadthFirstSearch/Makefile
 #-------------------------------------------------------------------------------
 
 # LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -7,7 +7,7 @@
 
 #-------------------------------------------------------------------------------
 
-# simple Makefile for LAGraph/Test2/BFS/test_bfs
+# simple Makefile for LAGraph/Test2/BreadthFirstSearch/test_bfs
 
 # Install LAGraph and GraphBLAS before trying to compile this test.
 JOBS ?= 1

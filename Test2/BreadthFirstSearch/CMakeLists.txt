@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# LAGraph/Test2/BFS/CMakeLists.txt:  cmake script for LAGraph test
+# LAGraph/Test2/BreadthFirstSearch/CMakeLists.txt:  cmake for LAGraph test
 #-------------------------------------------------------------------------------
 
 # cmake 3.0 is preferred.
@@ -14,8 +14,7 @@ project ( test_bfs )
 include ( GNUInstallDirs )
 
 # For development only, not for end-users:
-# TODO: debug is on
-set ( CMAKE_BUILD_TYPE Debug )
+# set ( CMAKE_BUILD_TYPE Debug )
 if ( NOT CMAKE_BUILD_TYPE )
     set ( CMAKE_BUILD_TYPE Release )
 endif ( )
