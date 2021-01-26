@@ -52,7 +52,11 @@ int main (int argc, char **argv)
     LAGraph_TRY (LAGraph_Init (msg)) ;
     GrB_TRY (GxB_set (GxB_BURBLE, false)) ;
 
-    uint64_t seed = 1;
+    int batch_size = 4 ;
+
+    //--------------------------------------------------------------------------
+    // determine # of threads to use (TODO: make this a utility
+    //--------------------------------------------------------------------------
 
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;
@@ -79,15 +83,13 @@ int main (int argc, char **argv)
 
     double tt [nthreads_max+1] ;
 
-    int batch_size = 4 ;
-
     //--------------------------------------------------------------------------
     // read in the graph
     //--------------------------------------------------------------------------
 
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ; 
     LAGraph_TRY (LAGraph_Test_ReadProblem (&G, &SourceNodes,
-        false, false, true, argc, argv, msg)) ;
+        false, false, true, NULL, false, argc, argv, msg)) ;
     GrB_Index n, nvals ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;

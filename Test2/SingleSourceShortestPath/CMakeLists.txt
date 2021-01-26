@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# LAGraph/Test2/BFS/CMakeLists.txt:  cmake script for LAGraph test
+# LAGraph/Test2/SingleSourceShortestPath/CMakeLists.txt:  cmake test script
 #-------------------------------------------------------------------------------
 
 # cmake 3.0 is preferred.
@@ -9,13 +9,12 @@ if ( CMAKE_VERSION VERSION_GREATER "3.0" )
     cmake_policy ( SET CMP0048 NEW )
 endif ( )
 
-project ( test_bfs )
+project ( test_sssp )
 
 include ( GNUInstallDirs )
 
 # For development only, not for end-users:
-# TODO: debug is on
-set ( CMAKE_BUILD_TYPE Debug )
+# set ( CMAKE_BUILD_TYPE Debug )
 if ( NOT CMAKE_BUILD_TYPE )
     set ( CMAKE_BUILD_TYPE Release )
 endif ( )
@@ -97,8 +96,8 @@ message ( STATUS "CMAKE C flags: " ${CMAKE_C_FLAGS} )
 
 file ( GLOB SOURCES "*.c" )
 
-add_executable ( test_bfs test_bfs.c )
+add_executable ( test_sssp test_sssp.c )
 
 # Libraries required for Demo programs
-target_link_libraries ( test_bfs graphblas lagraph m )
+target_link_libraries ( test_sssp graphblas lagraph m )
 

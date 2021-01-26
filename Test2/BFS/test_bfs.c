@@ -84,162 +84,22 @@ int main (int argc, char **argv)
     double tl [nthreads_max+1] ;
 
     //--------------------------------------------------------------------------
-    // read in a matrix from a file (TODO: make this a Test2/Utility)
+    // read in the graph
     //--------------------------------------------------------------------------
 
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
-    double tic [2] ;
-    LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-
-    if (argc > 1)
-    {
-        // Usage:
-        //      ./test_bfs matrixfile.mtx sources.mtx
-        //      ./test_bfs matrixfile.grb sources.mtx
-
-        // read in the file in Matrix Market format from the input file
-        char *filename = argv [1] ;
-        printf ("matrix: %s\n", filename) ;
-
-        // find the filename extension
-        size_t len = strlen (filename) ;
-        char *ext = NULL ;
-        for (int k = len-1 ; k >= 0 ; k--)
-        {
-            if (filename [k] == '.')
-            {
-                ext = filename + k ;
-                printf ("[%s]\n", ext) ;
-                break ;
-            }
-        }
-        bool is_binary = (ext != NULL && strncmp (ext, ".grb", 4) == 0) ;
-
-        if (is_binary)
-        {
-            printf ("Reading binary file: %s\n", filename) ;
-            LAGraph_TRY (LAGraph_BinRead (&A, filename, msg)) ;
-        }
-        else
-        {
-            printf ("Reading Matrix Market file: %s\n", filename) ;
-            f = fopen (filename, "r") ;
-            if (f == NULL)
-            {
-                printf ("Matrix file not found: [%s]\n", filename) ;
-                exit (1) ;
-            }
-            LAGraph_TRY (LAGraph_MMRead (&A, f, msg)) ;
-            fclose (f) ;
-        }
-
-        // read in source nodes in Matrix Market format from the input file
-        if (argc > 2)
-        {
-            filename = argv [2] ;
-            printf ("sources: %s\n", filename) ;
-            f = fopen (filename, "r") ;
-            if (f == NULL)
-            {
-                printf ("Source node file not found: [%s]\n", filename) ;
-                exit (1) ;
-            }
-            LAGraph_TRY (LAGraph_MMRead (&SourceNodes, f, msg)) ;
-            fclose (f) ;
-        }
-    }
-    else
-    {
-
-        // Usage:  ./test_bfs < matrixfile.mtx
-        printf ("matrix: from stdin\n") ;
-
-        // read in the file in Matrix Market format from stdin
-        LAGraph_TRY (LAGraph_MMRead (&A, stdin, msg)) ;
-    }
-
-    //--------------------------------------------------------------------------
-    // convert to boolean, pattern-only
-    //--------------------------------------------------------------------------
-
-    LAGraph_TRY (LAGraph_Pattern (&Abool, A, msg)) ;
-    GrB_free (&A) ;
-    A = Abool ;
-    Abool = NULL ;
-    GrB_TRY (GrB_wait (&A)) ;
-
-    //--------------------------------------------------------------------------
-    // get the size of the problem.
-    //--------------------------------------------------------------------------
-
-    GrB_Index nrows, ncols, nvals ;
-    GrB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
-    GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
-    GrB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
-    GrB_Index n = nrows ;
-    if (nrows != ncols) { printf ("A must be square\n") ; abort ( ) ; }
-    double t_read ;
-    LAGraph_TRY (LAGraph_Toc (&t_read, tic, msg)) ;
-    printf ("read time: %g\n", t_read) ;
-
-    //--------------------------------------------------------------------------
-    // construct the graph
-    //--------------------------------------------------------------------------
-
-    bool A_is_symmetric =
-        (nrows == 134217726 ||  // HACK for kron
-         nrows == 134217728) ;  // HACK for urand
-
-    if (A_is_symmetric)
-    {
-        // A is known to be symmetric
-        // TODO: LAGraph_New should set G->A_pattern_is_symmetric if
-        // the G->kind is LAGRAPH_ADJACENCY_UNDIRECTED
-        LAGraph_TRY (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, false,
-            msg)) ;
-        G->A_pattern_is_symmetric = true ;
-    }
-    else
-    {
-        // compute G->AT and determine if A has a symmetric pattern
-        LAGraph_TRY (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, false,
-            msg)) ;
-        LAGraph_TRY (LAGraph_Property_ASymmetricPattern (G, msg)) ;
-        if (G->A_pattern_is_symmetric)
-        {
-            // if G->A has a symmetric pattern, declare the graph undirected
-            // and free G->AT since it isn't needed.  The BFS only looks at
-            // the pattern of A anyway.
-            G->kind = LAGRAPH_ADJACENCY_UNDIRECTED ;
-            GrB_TRY (GrB_Matrix_free (&(G->AT))) ;
-        }
-    }
+    LAGraph_TRY (LAGraph_Test_ReadProblem (&G, &SourceNodes,
+        false, false, true, NULL, false, argc, argv, msg)) ;
 
     // compute G->rowdegree
     LAGraph_TRY (LAGraph_Property_RowDegree (G, msg)) ;
 
-    // compute G->coldegree, just to test it (not needed for BFS)
+    // compute G->coldegree, just to test it (not needed for any tests)
     LAGraph_TRY (LAGraph_Property_ColDegree (G, msg)) ;
-
-    LAGraph_TRY (LAGraph_DisplayGraph (G, 0, msg)) ;
 
     //--------------------------------------------------------------------------
     // get the source nodes
     //--------------------------------------------------------------------------
-
-    #define NSOURCES 64
-
-    if (SourceNodes == NULL)
-    {
-        GrB_TRY (GrB_Matrix_new (&SourceNodes, GrB_INT64, NSOURCES, 1)) ;
-        srand (1) ;
-        for (int k = 0 ; k < NSOURCES ; k++)
-        {
-            int64_t i = 1 + (rand ( ) % n) ;    // in range 1 to n
-            // SourceNodes [k] = i 
-            GrB_TRY (GrB_Matrix_setElement (SourceNodes, i, k, 0)) ;
-        }
-    }
 
     int64_t ntrials ;
     GrB_TRY (GrB_Matrix_nrows (&ntrials, SourceNodes)) ;
@@ -249,12 +109,6 @@ int main (int argc, char **argv)
 
     //--------------------------------------------------------------------------
     // run the BFS on all source nodes
-    //--------------------------------------------------------------------------
-
-    char filename [1024] ;
-
-    //--------------------------------------------------------------------------
-    // BFS
     //--------------------------------------------------------------------------
 
     for (int tt = 1 ; tt <= nt ; tt++)
@@ -268,11 +122,11 @@ int main (int argc, char **argv)
         printf ("\n------------------------------- threads: %2d\n", nthreads) ;
         for (int trial = 0 ; trial < ntrials ; trial++)
         {
-            int64_t s ; 
-            // s = SourceNodes [i]
-            GrB_TRY (GrB_Matrix_extractElement (&s, SourceNodes, trial, 0)) ;
-            s-- ; // convert from 1-based to 0-based
-            double ttrial ;
+            int64_t src ; 
+            // src = SourceNodes [trial]
+            GrB_TRY (GrB_Matrix_extractElement (&src, SourceNodes, trial, 0)) ;
+            src-- ; // convert from 1-based to 0-based
+            double ttrial, tic [2] ;
 
             //------------------------------------------------------------------
             // BFS to compute just parent
@@ -281,12 +135,11 @@ int main (int argc, char **argv)
             GrB_free (&parent) ;
             LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
             LAGraph_TRY (LAGraph_BreadthFirstSearch (NULL, &parent,
-                G, s, msg)) ;
+                G, src, msg)) ;
             LAGraph_TRY (LAGraph_Toc (&ttrial, tic, msg)) ;
             tp [nthreads] += ttrial ;
             printf ("parent only  trial: %2d threads: %2d src: %9ld "
-                "%10.4f sec\n",
-                trial, nthreads, s, ttrial) ;
+                "%10.4f sec\n", trial, nthreads, src, ttrial) ;
             fflush (stdout) ;
             // GrB_TRY (GxB_print (parent, 2)) ;
             GrB_free (&parent) ;
@@ -298,7 +151,7 @@ int main (int argc, char **argv)
             GrB_free (&level) ;
             LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
             LAGraph_TRY (LAGraph_BreadthFirstSearch (&level, NULL,
-                G, s, msg)) ;
+                G, src, msg)) ;
             LAGraph_TRY (LAGraph_Toc (&ttrial, tic, msg)) ;
             tl [nthreads] += ttrial ;
 
@@ -308,7 +161,7 @@ int main (int argc, char **argv)
 
             printf ("level only   trial: %2d threads: %2d src: %9ld "
                 "%10.4f sec maxlevel %d\n",
-                trial, nthreads, s, ttrial, maxlevel) ;
+                trial, nthreads, src, ttrial, maxlevel) ;
             fflush (stdout) ;
             // GrB_TRY (GxB_print (level, 2)) ;
 
@@ -322,7 +175,7 @@ int main (int argc, char **argv)
             GrB_free (&level) ;
             LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
             LAGraph_TRY (LAGraph_BreadthFirstSearch (&level, &parent,
-                G, s, msg)) ;
+                G, src, msg)) ;
             LAGraph_TRY (LAGraph_Toc (&ttrial, tic, msg)) ;
             tpl [nthreads] += ttrial ;
 
@@ -330,7 +183,7 @@ int main (int argc, char **argv)
                 NULL)) ;
             printf ("parent+level trial: %2d threads: %2d src: %9ld "
                 "%10.4f sec maxlevel %d\n",
-                trial, nthreads, s, ttrial, maxlevel) ;
+                trial, nthreads, src, ttrial, maxlevel) ;
             fflush (stdout) ;
             // GrB_TRY (GxB_print (parent, 2)) ;
             // GrB_TRY (GxB_print (level, 2)) ;
@@ -357,16 +210,12 @@ int main (int argc, char **argv)
     LAGraph_TRY (LAGraph_SetNumThreads (nthreads_max, msg)) ;
     printf ("\n") ;
 
-    GrB_free (&parent) ;
-    GrB_free (&level) ;
-
     //--------------------------------------------------------------------------
     // free all workspace and finish
     //--------------------------------------------------------------------------
 
     LAGRAPH_FREE_ALL ;
     LAGraph_TRY (LAGraph_Finalize (msg)) ;
-
     return (0) ;
 }
 

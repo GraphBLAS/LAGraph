@@ -112,8 +112,9 @@ int main (int argc, char **argv)
 
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ; 
     LAGraph_TRY (LAGraph_Test_ReadProblem (&G, NULL,
-        true, true, true, argc, argv, msg)) ;
+        true, true, true, NULL, false, argc, argv, msg)) ;
 
+    // determine the row degree property
     LAGraph_TRY (LAGraph_Property_RowDegree (G, msg)) ;
 
     GrB_Index n, nvals ;

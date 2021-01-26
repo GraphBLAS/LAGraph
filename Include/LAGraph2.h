@@ -496,6 +496,8 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
     char *msg
 ) ;
 
+// TODO: compression
+
 // LAGraph_Pattern: return the pattern of a matrix (spones(A) in MATLAB)
 int LAGraph_Pattern     // return 0 if successful, -1 if failure
 (
@@ -606,7 +608,7 @@ int LAGraph_SampleDegree        // returns 0 if successful, -1 if failure
     char *msg
 ) ;
 
-// LAGraph_Test_ReadProblem: read in a graph from a file, for testing
+// LAGraph_Test_ReadProblem: read in a graph from a file
 int LAGraph_Test_ReadProblem    // returns 0 if successful, -1 if failure
 (
     // output
@@ -614,8 +616,10 @@ int LAGraph_Test_ReadProblem    // returns 0 if successful, -1 if failure
     GrB_Matrix *SourceNodes,    // source nodes
     // inputs
     bool make_symmetric,        // if true, always return G as undirected
-    bool no_self_edges,         // if true, remove self edges
-    bool pattern,               // if true, return G as boolean
+    bool remove_self_edges,     // if true, remove self edges
+    bool pattern,               // if true, return G->A as bool (all true)
+    GrB_Type pref,              // if non-NULL, typecast G->A to this type
+    bool ensure_positive,       // if true, ensure all entries are > 0
     int argc,                   // input to main test program
     char **argv,                // input to main test program
     char *msg
@@ -681,6 +685,16 @@ int LAGraph_Sort3    // sort array A of size 3-by-n, using 3 keys (A [0:2][])
 // LAGraph "simple" algorithms
 //==============================================================================
 
+// "Simple" algorithm are meant to be easy to use.  They may encompass many
+// underlying expert algorithms, each with various parameters that may be
+// controlled.  For the "simple" API, these parameters are determined
+// automatically.  Graph properties may be determined, and as a result, the
+// graph G is both an input and an output of these methods, since they may be
+// modified.
+
+// simple method: computes and *saves* any properties.
+// G is input/output.
+
 int LAGraph_BreadthFirstSearch      // returns -1 on failure, 0 if successful
 (
     // outputs:
@@ -711,7 +725,6 @@ int LAGraph_VertexCentrality    // returns -1 on failure, 0 if successful
     LAGraph_Graph G,            // input graph
     LAGraph_Centrality_Kind kind,    // kind of centrality to compute
 //  int accuracy,               // TODO?: 0:quick, 1:better, ... max:exact
-//  LAGraph_Random_Seed seed,   // random number seed (TODO?)
     char *msg
 ) ;
 
@@ -726,9 +739,30 @@ int LAGraph_TriangleCount   // returns -1 on failure, 0 if successful
 int LAGraph_ConnectedComponents
 (
     // output
-    GrB_Vector *component,  // component(i)=k if node is in the kth component
+    GrB_Vector *component,  // component(i)=k if node i is in the kth component
     // inputs
     LAGraph_Graph G,        // input graph, G->A can change (ptr, not contents)
+    char *msg
+) ;
+
+int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
+(
+    // output:
+    GrB_Vector *path_length,    // path_length (i) is the length of the shortest
+                                // path from the source vertex to vertex i
+    // inputs:
+    LAGraph_Graph G,
+    GrB_Index source,           // source vertex
+    int32_t delta,              // delta value for delta stepping
+                                // TODO: use GxB_Scalar for delta?
+    // TODO: make this an enum, and add to LAGraph_Graph properties, and then
+    // remove it from the inputs to this function
+    //      case 0: A can have negative, zero, or positive entries
+    //      case 1: A can have zero or positive entries
+    //      case 2: A only has positive entries (see FIXME below)
+    // TODO: add AIsAllPositive to G->A_is_something...
+    bool AIsAllPositive,       // A boolean indicating whether the entries of
+                               // matrix A are all positive
     char *msg
 ) ;
 
@@ -736,9 +770,11 @@ int LAGraph_ConnectedComponents
 // LAGraph "expert" algorithms
 //==============================================================================
 
-// TODO: should an expert method compute needed properties?
-// or fail if not pre-computed?
-// Or have thread safety only if properties precomputed?
+// The "expert" methods require the caller to select the algorithm and choose
+// any parameter settings.  G is not modified, and so it is an input-only
+// parameter to these methods.  If an "expert" algorithm requires a graph
+// property to be computed, it must be computed prior to calling the "expert"
+// method.
 
 int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
 (
@@ -779,6 +815,7 @@ int LAGraph_TriangleCount_Methods   // returns -1 on failure, 0 if successful
         //  for methods 4 and 6.
     char *msg
 ) ;
+
 
 #endif
 

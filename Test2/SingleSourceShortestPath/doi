@@ -1,0 +1,6 @@
+#!/bin/bash
+
+./build/test_sssp ~/com-Orkut.grb      - 2
+# ./build/test_sssp ~/indochina-2004.grb - 2
+# ./build/test_sssp ~/roadNet-CA.mtx     - 10000
+

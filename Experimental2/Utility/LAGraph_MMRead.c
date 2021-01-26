@@ -255,7 +255,7 @@ static inline bool read_double      // true if successful, false if failure
     {
         if (sscanf (p, "%lg", rval) != 1)
         {
-            // bad file format, EOF, or other I/O error
+            // invalid file format, EOF, or other I/O error
             return (false) ;
         }
     }
@@ -639,7 +639,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             if (strncmp (p, "matrix", 6) != 0)
             {
                 // invalid Matrix Market object
-                LG_CHECK (false, -1, "bad object") ;
+                LG_CHECK (false, -1, "invalid object") ;
             }
             p += 6 ;                                // skip past token "matrix"
 
@@ -662,7 +662,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             else
             {
                 // invalid Matrix Market format
-                LG_CHECK (false, -1, "bad format") ;
+                LG_CHECK (false, -1, "invalid format") ;
             }
 
             //------------------------------------------------------------------
@@ -698,8 +698,10 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             else
             {
                 // invalid Matrix Market type
-                LG_CHECK (false, -1, "bad type") ;
+                LG_CHECK (false, -1, "invalid type") ;
             }
+
+            GxB_print (type, 3) ;
 
             //------------------------------------------------------------------
             // get the storage token
@@ -726,7 +728,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             else
             {
                 // invalid Matrix Market storage
-                LG_CHECK (false, -1, "bad type") ;
+                LG_CHECK (false, -1, "invalid storage") ;
             }
 
             //------------------------------------------------------------------
@@ -739,14 +741,14 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
                 LG_CHECK (!
                     (MM_fmt == MM_coordinate &&
                     (MM_storage == MM_general || MM_storage == MM_symmetric)),
-                    -1, "bad pattern combo\n") ;
+                    -1, "invalid pattern combo\n") ;
             }
 
             if (MM_storage == MM_hermitian)
             {
                 // (coordinate or array) x (complex) x (Hermitian)
                 LG_CHECK (! (MM_type == MM_complex), -1,
-                    "bad complex combo") ;
+                    "invalid complex combo") ;
             }
 
         }
@@ -884,14 +886,14 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             else
             {
                 // wrong number of items in first data line
-                LG_CHECK (false, -1, "bad 1st line") ;
+                LG_CHECK (false, -1, "invalid 1st line") ;
             }
 
             if (nrows != ncols)
             {
                 // a rectangular matrix must be in the general storage
                 LG_CHECK (! (MM_storage == MM_general), -1,
-                    "bad rectangular") ;
+                    "invalid rectangular") ;
             }
 
             //------------------------------------------------------------------

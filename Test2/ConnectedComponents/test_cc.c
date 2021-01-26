@@ -90,7 +90,7 @@ int main (int argc, char **argv)
 
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ; 
     LAGraph_TRY (LAGraph_Test_ReadProblem (&G, NULL,
-        true, false, true, argc, argv, msg)) ;
+        true, false, true, NULL, false, argc, argv, msg)) ;
     GrB_Index n, nvals ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;

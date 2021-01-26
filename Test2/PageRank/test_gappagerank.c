@@ -73,126 +73,20 @@ int main (int argc, char **argv)
     }
     printf ("\n") ;
 
+    double tic [2] ;
+
     //--------------------------------------------------------------------------
-    // read in a matrix from a file (TODO: make this a Test2/Utility)
+    // read in the graph
     //--------------------------------------------------------------------------
 
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ; 
-    double tic [2] ;
-    LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
+    LAGraph_TRY (LAGraph_Test_ReadProblem (&G, NULL,
+        true, false, true, NULL, false, argc, argv, msg)) ;
+    GrB_Index n, nvals ;
+    GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
+    GrB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
 
-    if (argc > 1)
-    {
-        // Usage:
-        //      ./test_gappagerank matrixfile.mtx sources.mtx
-        //      ./test_gappagerank matrixfile.grb sources.mtx
-
-        // read in the file in Matrix Market format from the input file
-        char *filename = argv [1] ;
-        printf ("matrix: %s\n", filename) ;
-
-        // find the filename extension
-        size_t len = strlen (filename) ;
-        char *ext = NULL ;
-        for (int k = len-1 ; k >= 0 ; k--)
-        {
-            if (filename [k] == '.')
-            {
-                ext = filename + k ;
-                printf ("[%s]\n", ext) ;
-                break ;
-            }
-        }
-        bool is_binary = (ext != NULL && strncmp (ext, ".grb", 4) == 0) ;
-
-        if (is_binary)
-        {
-            printf ("Reading binary file: %s\n", filename) ;
-            LAGraph_TRY (LAGraph_BinRead (&A, filename, msg)) ;
-        }
-        else
-        {
-            printf ("Reading Matrix Market file: %s\n", filename) ;
-            f = fopen (filename, "r") ;
-            if (f == NULL)
-            {
-                printf ("Matrix file not found: [%s]\n", filename) ;
-                exit (1) ;
-            }
-            LAGraph_TRY (LAGraph_MMRead (&A, f, msg)) ;
-            fclose (f) ;
-            f = NULL ;
-        }
-
-    }
-    else
-    {
-
-        // Usage:  ./test_gappagerank < matrixfile.mtx
-        printf ("matrix: from stdin\n") ;
-
-        // read in the file in Matrix Market format from stdin
-        LAGraph_TRY (LAGraph_MMRead (&A, stdin, msg)) ;
-    }
-
-    //--------------------------------------------------------------------------
-    // convert to boolean, pattern-only
-    //--------------------------------------------------------------------------
-
-    LAGraph_TRY (LAGraph_Pattern (&Abool, A, msg)) ;
-    GrB_free (&A) ;
-    A = Abool ;
-    Abool = NULL ;
-    GrB_TRY (GrB_wait (&A)) ;
-
-    //--------------------------------------------------------------------------
-    // get the size of the problem.
-    //--------------------------------------------------------------------------
-
-    GrB_Index nrows, ncols, nvals ;
-    GrB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
-    GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
-    GrB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
-    GrB_Index n = nrows ;
-    if (nrows != ncols) { printf ("A must be square\n") ; abort ( ) ; }
-    double t_read ;
-    LAGraph_TRY (LAGraph_Toc (&t_read, tic, msg)) ;
-    printf ("read time: %g\n", t_read) ;
-
-    //--------------------------------------------------------------------------
-    // construct the graph
-    //--------------------------------------------------------------------------
-
-    bool A_is_symmetric =
-        (nrows == 134217726 ||  // HACK for kron
-         nrows == 134217728) ;  // HACK for urand
-
-    if (A_is_symmetric)
-    {
-        // A is known to be symmetric
-        // TODO: LAGraph_New should set G->A_pattern_is_symmetric if
-        // the G->kind is LAGRAPH_ADJACENCY_UNDIRECTED
-        LAGraph_TRY (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, false,
-            msg)) ;
-        G->A_pattern_is_symmetric = true ;
-    }
-    else
-    {
-        // compute G->AT and determine if A has a symmetric pattern
-        LAGraph_TRY (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, false,
-            msg)) ;
-        LAGraph_TRY (LAGraph_Property_ASymmetricPattern (G, msg)) ;
-        A_is_symmetric = G->A_pattern_is_symmetric ;
-        if (A_is_symmetric)
-        {
-            // if G->A has a symmetric pattern, declare the graph undirected
-            // and free G->AT since it isn't needed.  The BFS only looks at
-            // the pattern of A anyway.
-            G->kind = LAGRAPH_ADJACENCY_UNDIRECTED ;
-            GrB_TRY (GrB_Matrix_free (&(G->AT))) ;
-        }
-    }
-
+    // determine the row degree property
     LAGraph_TRY (LAGraph_Property_RowDegree (G, msg)) ;
 
     //--------------------------------------------------------------------------
