@@ -55,7 +55,12 @@ int LAGraph_IsEqual         // returns 0 if successful, -1 if failure
     // select the comparator operator
     //--------------------------------------------------------------------------
 
+
     GrB_BinaryOp compare ;
+    // LAGraph_BinaryOp_Picker (&compare, "==", atype) ;
+    // LAGraph_BinaryOp_Picker (&compare, "+", atype) ;
+    // LAGraph_BinaryOp_Picker (&compare, "plus", atype) ;
+
     if      (atype == GrB_BOOL  ) compare = GrB_EQ_BOOL   ;
     else if (atype == GrB_INT8  ) compare = GrB_EQ_INT8   ;
     else if (atype == GrB_INT16 ) compare = GrB_EQ_INT16  ;

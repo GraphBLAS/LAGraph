@@ -30,7 +30,7 @@
 int main (int argc, char **argv)
 {
 
-    printf ("%s v%d.%d.%d [%s]\n",
+    printf ("PageRank test with %s v%d.%d.%d [%s]\n",
         GxB_IMPLEMENTATION_NAME,
         GxB_IMPLEMENTATION_MAJOR,
         GxB_IMPLEMENTATION_MINOR,
@@ -81,7 +81,7 @@ int main (int argc, char **argv)
 
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ; 
     LAGraph_TRY (LAGraph_Test_ReadProblem (&G, NULL,
-        true, false, true, NULL, false, argc, argv, msg)) ;
+        false, false, true, NULL, false, argc, argv, msg)) ;
     GrB_Index n, nvals ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;

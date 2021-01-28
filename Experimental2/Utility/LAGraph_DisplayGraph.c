@@ -34,7 +34,6 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
 
     GrB_Matrix A = G->A ;
     LAGraph_Kind kind = G->kind ;
-    bool weighted = G->weighted ;
 
     GrB_Type type ;
     GrB_Index n, nvals ;
@@ -48,9 +47,8 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
     if (pr >= 0)
     {
         // print the basic scalar properties
-        printf ("Graph: kind: %s %s, nodes: %ld entries: %ld type: %s\n",
-            weighted ? "weighted" : "unweighted", kindname, n, nvals,
-            typename) ;
+        printf ("Graph: kind: %s, nodes: %ld entries: %ld type: %s\n",
+            kindname, n, nvals, typename) ;
 
         // print the scalar cached properties
         printf ("    pattern symmetry: ") ;

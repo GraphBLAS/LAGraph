@@ -241,17 +241,13 @@ int LAGraph_Test_ReadProblem    // returns 0 if successful, -1 if failure
     if (A_is_symmetric)
     {
         // A is known to be symmetric
-        // TODO: LAGraph_New should set G->A_pattern_is_symmetric if
-        // the G->kind is LAGRAPH_ADJACENCY_UNDIRECTED
-        LAGraph_TRY (LAGraph_New (G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, false,
-            msg)) ;
-        (*G)->A_pattern_is_symmetric = true ;
+        LAGraph_TRY (LAGraph_New (G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+        ASSERT ((*G)->A_pattern_is_symmetric == true) ;
     }
     else
     {
         // compute G->AT and determine if A has a symmetric pattern
-        LAGraph_TRY (LAGraph_New (G, &A, LAGRAPH_ADJACENCY_DIRECTED, false,
-            msg)) ;
+        LAGraph_TRY (LAGraph_New (G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
         LAGraph_TRY (LAGraph_Property_ASymmetricPattern (*G, msg)) ;
         if ((*G)->A_pattern_is_symmetric && pattern)
         {
@@ -285,9 +281,10 @@ int LAGraph_Test_ReadProblem    // returns 0 if successful, -1 if failure
                 else if (type == GxB_FC64  ) op = GxB_PLUS_FC64 ;
                 GrB_TRY (GrB_eWiseAdd ((*G)->A, NULL, NULL, op,
                     (*G)->A, (*G)->AT, NULL)) ;
-                (*G)->kind = LAGRAPH_ADJACENCY_UNDIRECTED ;
                 GrB_TRY (GrB_Matrix_free (&((*G)->AT))) ;
             }
+            (*G)->kind = LAGRAPH_ADJACENCY_UNDIRECTED ;
+            (*G)->A_pattern_is_symmetric = true ;
         }
     }
 

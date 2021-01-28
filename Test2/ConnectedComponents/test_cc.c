@@ -109,7 +109,7 @@ int main (int argc, char **argv)
     {
         int nthreads = Nthreads [trial] ;
         if (nthreads > nthreads_max) continue ;
-        LAGraph_set_nthreads (nthreads) ;
+        LAGraph_TRY (LAGraph_SetNumThreads (nthreads, NULL)) ;
 
         t1 = 0 ;
         for (int k = 0 ; k < NTRIALS ; k++)

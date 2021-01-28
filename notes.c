@@ -94,13 +94,21 @@ GrB_Info LAGraph_BreadthFirstSearch_Frontier
 
 // SCC graph = Community * G * Community', a contracted graph
 
+    uint64_t nc ;
+    GrB_Vector c ;
+    LAGraph_Community_Map (&nc, &c, Commun, NULL) ;     // constructor, like dup
+    ...
+    GrB_free (&c) ;
+
+
 GrB_Info LAGraph_Community_Map
 (
     // output:
     uint64_t *ncomponents,
     GrB_Vector *component,  // vertex i is in component(i), a dense vector.
     // input:
-    GrB_Matrix Community    // Community(c,i)=1 becomes c=component(i)
+    GrB_Matrix Community,   // Community(c,i)=1 becomes c=component(i)
+    char *msg
 ) ;
 
 // Gnew = Perm * G *Perm', then Gnew is block diagonal

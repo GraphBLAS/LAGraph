@@ -18,7 +18,6 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
     LAGraph_Graph *G,   // the graph to create, NULL if failure
     GrB_Matrix *A,      // the adjacency matrix of the graph, may be NULL
     LAGraph_Kind kind,  // the kind of graph, may be LAGRAPH_UNKNOWN
-    bool weighted,      // true if the graph is weighted, false if unweighted
     char *msg
 )
 {
@@ -58,7 +57,6 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
         (*A) = NULL ;
     }
     (*G)->kind = kind ;
-    (*G)->weighted = weighted ;
 
     //--------------------------------------------------------------------------
     // clear its cached properties
@@ -67,7 +65,8 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
     (*G)->AT = NULL ;
     (*G)->rowdegree = NULL ;
     (*G)->coldegree = NULL ;
-    (*G)->A_pattern_is_symmetric = LAGRAPH_UNKNOWN ;
+    (*G)->A_pattern_is_symmetric =
+        (kind == LAGRAPH_ADJACENCY_UNDIRECTED) ? LAGRAPH_TRUE : LAGRAPH_UNKNOWN ;
     (*G)->ndiag = LAGRAPH_UNKNOWN ;
 
     return (0) ;

@@ -1,0 +1,278 @@
+hypersparse $ ./build/test_gappagerank ~/GAP/GAP-twitter/GAP-twitter.grb
+PageRank test with SuiteSparse:GraphBLAS v4.0.3 [Jan 19, 2021]
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+read time: 25.7025
+Graph: kind: directed, nodes: 61578415 entries: 1468364884 type: bool
+    pattern symmetry: unsymmetric
+Graph: kind: directed, nodes: 61578415 entries: 1468364884 type: bool
+    pattern symmetry: unsymmetric
+
+  61578415x61578415 GraphBLAS bool matrix, sparse by row
+  A, 1468364884 entries
+
+    (12,13)   1
+    (12,14)   1
+    (12,15)   1
+    (12,16)   1
+    (12,17)   1
+    (12,18)   1
+    (12,20)   1
+    (12,21)   1
+    (12,22)   1
+    (12,23)   1
+    (12,24)   1
+    (12,31)   1
+    (12,38)   1
+    (12,41)   1
+    (12,47)   1
+    (12,52)   1
+    (12,53)   1
+    (12,56)   1
+    (12,57)   1
+    (12,58)   1
+    (12,59)   1
+    (12,60)   1
+    (12,61)   1
+    (12,62)   1
+    (12,64)   1
+    (12,67)   1
+    (12,69)   1
+    (12,70)   1
+    (12,76)   1
+    ...
+
+  61578415x61578415 GraphBLAS bool matrix, sparse by row
+  AT, 1468364884 entries
+
+    (12,13)   1
+    (12,14)   1
+    (12,15)   1
+    (12,16)   1
+    (12,17)   1
+    (12,18)   1
+    (12,20)   1
+    (12,21)   1
+    (12,22)   1
+    (12,23)   1
+    (12,24)   1
+    (12,31)   1
+    (12,38)   1
+    (12,41)   1
+    (12,53)   1
+    (12,56)   1
+    (12,57)   1
+    (12,58)   1
+    (12,59)   1
+    (12,60)   1
+    (12,61)   1
+    (12,62)   1
+    (12,64)   1
+    (12,67)   1
+    (12,70)   1
+    (12,76)   1
+    (12,87)   1
+    (12,92)   1
+    (12,94)   1
+    ...
+
+  61578415x1 GraphBLAS int64_t vector, full by col
+  rowdegree, 61578415 entries
+
+    (0,0)   0
+    (1,0)   0
+    (2,0)   0
+    (3,0)   0
+    (4,0)   0
+    (5,0)   0
+    (6,0)   0
+    (7,0)   0
+    (8,0)   0
+    (9,0)   0
+    (10,0)   0
+    (11,0)   0
+    (12,0)   1001061
+    (13,0)   1031830
+    (14,0)   8808
+    (15,0)   14342
+    (16,0)   218
+    (17,0)   6948
+    (18,0)   6532
+    (19,0)   0
+    (20,0)   1213787
+    (21,0)   9027
+    (22,0)   3791
+    (23,0)   2627
+    (24,0)   41
+    (25,0)   0
+    (26,0)   0
+    (27,0)   0
+    (28,0)   0
+    ...
+# of trials: 16
+
+--------------------------- nthreads: 40
+trial:  0 time:    17.2481 sec
+trial:  1 time:    17.2166 sec
+trial:  2 time:    17.2379 sec
+trial:  3 time:    17.2139 sec
+trial:  4 time:    17.1925 sec
+trial:  5 time:    17.2114 sec
+trial:  6 time:    17.2089 sec
+trial:  7 time:    17.1905 sec
+trial:  8 time:    17.2520 sec
+trial:  9 time:    17.2070 sec
+trial: 10 time:    17.2203 sec
+trial: 11 time:    17.1978 sec
+trial: 12 time:    17.2139 sec
+trial: 13 time:    17.1971 sec
+trial: 14 time:    17.2175 sec
+trial: 15 time:    17.2358 sec
+3f: 40: avg time:     17.216 (sec), rate:   1876.361 iters: 22
+Avg: PR (3f)       40:     17.216 sec: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+hypersparse $ cat do_gap 
+#!/bin/bash
+
+./build/test_gappagerank ~/GAP/GAP-kron/GAP-kron.grb
+./build/test_gappagerank ~/GAP/GAP-urand/GAP-urand.grb
+./build/test_gappagerank ~/GAP/GAP-twitter/GAP-twitter.grb
+./build/test_gappagerank ~/GAP/GAP-web/GAP-web.grb
+./build/test_gappagerank ~/GAP/GAP-road/GAP-road.grb
+
+hypersparse $ ./build/test_gappagerank ~/GAP/GAP-web/GAP-web.grb
+PageRank test with SuiteSparse:GraphBLAS v4.0.3 [Jan 19, 2021]
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+read time: 19.6144
+Graph: kind: directed, nodes: 50636151 entries: 1930292948 type: bool
+    pattern symmetry: unsymmetric
+Graph: kind: directed, nodes: 50636151 entries: 1930292948 type: bool
+    pattern symmetry: unsymmetric
+
+  50636151x50636151 GraphBLAS bool matrix, sparse by row
+  A, 1930292948 entries
+
+    (10,49817219)   1
+    (10,49824797)   1
+    (10,49824842)   1
+    (10,49824843)   1
+    (10,49824846)   1
+    (10,49826026)   1
+    (10,49826027)   1
+    (10,49826709)   1
+    (10,49826710)   1
+    (10,49826711)   1
+    (10,49826712)   1
+    (10,49826713)   1
+    (10,49826714)   1
+    (10,49826715)   1
+    (10,49826716)   1
+    (10,49826717)   1
+    (10,49826719)   1
+    (10,49827761)   1
+    (10,49853332)   1
+    (10,49853570)   1
+    (10,49853571)   1
+    (10,49853572)   1
+    (10,49853573)   1
+    (10,49853574)   1
+    (10,49853575)   1
+    (10,49855627)   1
+    (10,50184826)   1
+    (10,50284715)   1
+    (10,50284718)   1
+    ...
+
+  50636151x50636151 GraphBLAS bool matrix, sparse by row
+  AT, 1930292948 entries
+
+    (0,50395004)   1
+    (1,50395004)   1
+    (2,50395004)   1
+    (3,50395004)   1
+    (4,50395004)   1
+    (5,50395004)   1
+    (6,50395004)   1
+    (7,50395004)   1
+    (8,50395004)   1
+    (9,50395004)   1
+    (10,11)   1
+    (11,50394996)   1
+    (12,50395004)   1
+    (13,50395004)   1
+    (14,50395004)   1
+    (15,50395004)   1
+    (16,50395004)   1
+    (17,50395004)   1
+    (18,50395006)   1
+    (19,50395006)   1
+    (20,50395006)   1
+    (21,50395006)   1
+    (22,50395006)   1
+    (23,50395006)   1
+    (24,21650758)   1
+    (25,21650758)   1
+    (26,21650758)   1
+    (27,21650758)   1
+    (28,21650758)   1
+    ...
+
+  50636151x1 GraphBLAS int64_t vector, full by col
+  rowdegree, 50636151 entries
+
+    (0,0)   0
+    (1,0)   0
+    (2,0)   0
+    (3,0)   0
+    (4,0)   0
+    (5,0)   0
+    (6,0)   0
+    (7,0)   0
+    (8,0)   0
+    (9,0)   0
+    (10,0)   33
+    (11,0)   1
+    (12,0)   0
+    (13,0)   0
+    (14,0)   0
+    (15,0)   0
+    (16,0)   0
+    (17,0)   0
+    (18,0)   0
+    (19,0)   0
+    (20,0)   0
+    (21,0)   0
+    (22,0)   0
+    (23,0)   0
+    (24,0)   0
+    (25,0)   0
+    (26,0)   0
+    (27,0)   0
+    (28,0)   0
+    ...
+# of trials: 16
+
+--------------------------- nthreads: 40
+trial:  0 time:     9.3031 sec
+trial:  1 time:     9.2943 sec
+trial:  2 time:     9.2892 sec
+trial:  3 time:     9.2950 sec
+trial:  4 time:     9.3229 sec
+trial:  5 time:     9.2822 sec
+trial:  6 time:     9.2799 sec
+trial:  7 time:     9.2860 sec
+trial:  8 time:     9.2833 sec
+trial:  9 time:     9.2977 sec
+trial: 10 time:     9.3039 sec
+trial: 11 time:     9.3010 sec
+trial: 12 time:     9.3012 sec
+trial: 13 time:     9.2989 sec
+trial: 14 time:     9.2987 sec
+trial: 15 time:     9.3122 sec
+3f: 40: avg time:      9.297 (sec), rate:   6228.862 iters: 30
+Avg: PR (3f)       40:      9.297 sec: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+

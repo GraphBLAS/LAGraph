@@ -80,7 +80,6 @@ int LAGraph_SortByDegree    // returns 0 if successful, -1 if failure
     else
     {
         // A is not known to be symmetric
-        // TODO: make this a warning, not an error
         Degree = (byrow) ? G->rowdegree : G->coldegree ;
     }
 
@@ -123,7 +122,7 @@ int LAGraph_SortByDegree    // returns 0 if successful, -1 if failure
     }
 
     // extract the degrees
-    GrB_Index nvals ;
+    GrB_Index nvals = n ;
     GrB_TRY (GrB_Vector_extractTuples ((GrB_Index *) W0, W1, &nvals, Degree)) ;
 
     if (ascending)

@@ -17,7 +17,7 @@
 #ifndef LAGraph_CATCH
 #define LAGraph_CATCH(status)                                               \
 {                                                                           \
-    printf ("LAGraph error: %s line: %d, status: %d: %s\n", __FILE__,       \
+    printf ("LAGraph error: %s line: %d, status: %d: [%s]\n", __FILE__,     \
         __LINE__, status, msg) ;                                            \
     LAGRAPH_FREE_ALL ;                                                      \
     return (-1) ;                                                           \
@@ -27,7 +27,7 @@
 #ifndef GrB_CATCH
 #define GrB_CATCH(info)                                                     \
 {                                                                           \
-    printf ("GraphBLAS error: %s line: %d, info: %d: %s\n", __FILE__,       \
+    printf ("GraphBLAS error: %s line: %d, info: %d: [%s]\n", __FILE__,     \
         __LINE__, info, msg) ;                                              \
     LAGRAPH_FREE_ALL ;                                                      \
     return (-1) ;                                                           \

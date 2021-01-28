@@ -6,7 +6,7 @@ Jan 2021 to date: in-progress comparisons of LAGraph +
 SuiteSparse:GraphBLAS vs GAP.  Results for Jan 26 and following are for
 algorithms in the Experimental2 folder.
 
-Jan 26: SS:GrB v4.0.3 with LAGraph/Experimental2
+Jan 26+: SS:GrB v4.0.3 with LAGraph/Experimental2
 Jan 19: SS:GrB v4.0.3 with LAGraph/Experimental
 Jan  3: SS:GrB v4.0.1 with LAGraph/Experimental
 
@@ -34,14 +34,11 @@ BFS  SS           .514       1.216        .329        .662       3.317 (Jan 3b)
 PR   GAP        19.813      25.285      15.159       5.128       1.007
               ------------------------------------------------------------------
 
-PR   SS         21.957      27.746      44.072 ??   21.633 ??    1.344 (Jan 26)
+PR   SS         21.957      27.746      17.216       9.297       1.344 (Jan 28)
 PR   SS         21.836      27.527      17.021       9.683       1.340 (Jan 19)
 PR   SS         21.781      27.493      16.988      10.331 ??    1.323 (Jan 3b)
 
 Timing jitter for Jan 3b; timing should be identical to Jan 19.
-Jan 26 results are slow for twitter & web (only change was converting from
-Experimental/ to Experimental2/; probably broke something in the process.
-Maybe G->rowdegree is sparse, and should be full.
 
                 kron        urand       twitter     web         road
               ------------------------------------------------------------------

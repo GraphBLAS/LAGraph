@@ -248,8 +248,8 @@ void LAGraph_Free
 //------------------------------------------------------------------------------
 
 // Currently, only two types of graphs are supported: undirected graphs and
-// directed graphs.  Both kinds of graphs can be weighted or unweighted.
-// Additional types of graphs will be added in the future.
+// directed graphs.  Both kinds of graphs can be weighted or unweighted (in the
+// future).  Additional types of graphs will be added in the future.
 
 typedef enum
 {
@@ -260,6 +260,8 @@ typedef enum
     LAGRAPH_ADJACENCY_DIRECTED = 1,
 
     // possible future kinds of graphs:
+    // LAGRAPH_ADJACENCY_UNDIRECTED_UNWEIGHTED
+    // LAGRAPH_ADJACENCY_DIRECTED_UNWEIGHTED
     // LAGRAPH_ADJACENCY_UNDIRECTED_TRIL
     // LAGRAPH_ADJACENCY_UNDIRECTED_TRIU
     // LAGRAPH_BIPARTITE
@@ -301,8 +303,6 @@ LAGraph_BooleanProperty ;
 // (1) primary components of the graph, which fully define the graph:
 //      A           the adjacency matrix of the graph
 //      kind        the kind of graph (undirected, directed, bipartite, ...)
-//      weighted    true if the graph has edge weights, false if no edge weights
-//      TODO:       vertex weights?
 
 // (2) cached properties of the graph, which can be recreated any time:
 //      AT          AT = A'
@@ -319,10 +319,6 @@ struct LAGraph_Graph_struct
 
     GrB_Matrix A ;          // the adjacency matrix of the graph
     LAGraph_Kind kind ;     // the kind of graph
-    bool weighted ;         // if true, the graph is weighted. if false, only
-                            // the structure of A should be considered.  A may
-                            // have values but its values are ignored.
-                            // TODO: discuss this
 
     // possible future components:
     // multigraph ..
@@ -421,9 +417,6 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
     LAGraph_Graph *G,   // the graph to create, NULL if failure
     GrB_Matrix *A,      // the adjacency matrix of the graph, may be NULL
     LAGraph_Kind kind,  // the kind of graph, may be LAGRAPH_UNKNOWN
-    bool weighted,      // true if the graph is weighted, false if unweighted
-                        // TODO: discuss the weighted parameter.  Should it
-                        // exist? is it an LAGraph_BooleanProperty?
     char *msg
 ) ;
 
@@ -441,10 +434,39 @@ int LAGraph_DeleteProperties    // returns 0 if successful, -1 if failure
     char *msg
 ) ;
 
+// LAGraph_Property_AT: construct G->AT for a graph
+int LAGraph_Property_AT     // returns 0 if successful, -1 if failure
+(
+    LAGraph_Graph G,        // graph to compute G->AT for
+    char *msg
+) ;
+
+// LAGraph_Property_ASymmetricPattern: determine G->A_pattern_is_symmetric
+int LAGraph_Property_ASymmetricPattern  // 0 if successful, -1 if failure
+(
+    LAGraph_Graph G,        // graph to determine the symmetry of pattern of A
+    char *msg
+) ;
+
+// LAGraph_Property_RowDegree: determine G->rowdegree
+int LAGraph_Property_RowDegree  // 0 if successful, -1 if failure
+(
+    LAGraph_Graph G,        // graph to determine G->rowdegree
+    char *msg
+) ;
+
+// LAGraph_Property_ColDegree: determine G->coldegree
+int LAGraph_Property_ColDegree  // 0 if successful, -1 if failure
+(
+    LAGraph_Graph G,        // graph to determine G->coldegree
+    char *msg
+) ;
+
 // LAGraph_CheckGraph: determine if a graph is valid
 int LAGraph_CheckGraph      // returns 0 if successful, -1 if failure
 (
     LAGraph_Graph G,        // graph to check
+    // TODO: int level,     // 0:quick, O(1), 1:a bit more, 2: still more, 3: exhaustive!
     char *msg
 ) ;
 
@@ -552,34 +574,6 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
     int pr,                 // 0: nothing, 1: terse, 2: summary, 3: all,
                             // 4: same as 2 but with %0.15g for doubles
                             // 5: same as 3 but with %0.15g for doubles
-    char *msg
-) ;
-
-// LAGraph_Property_AT: construct G->AT for a graph
-int LAGraph_Property_AT     // returns 0 if successful, -1 if failure
-(
-    LAGraph_Graph G,        // graph to compute G->AT for
-    char *msg
-) ;
-
-// LAGraph_Property_ASymmetricPattern: determine G->A_pattern_is_symmetric
-int LAGraph_Property_ASymmetricPattern  // 0 if successful, -1 if failure
-(
-    LAGraph_Graph G,        // graph to determine the symmetry of pattern of A
-    char *msg
-) ;
-
-// LAGraph_Property_RowDegree: determine G->rowdegree
-int LAGraph_Property_RowDegree  // 0 if successful, -1 if failure
-(
-    LAGraph_Graph G,        // graph to determine G->rowdegree
-    char *msg
-) ;
-
-// LAGraph_Property_ColDegree: determine G->coldegree
-int LAGraph_Property_ColDegree  // 0 if successful, -1 if failure
-(
-    LAGraph_Graph G,        // graph to determine G->coldegree
     char *msg
 ) ;
 
@@ -692,6 +686,8 @@ int LAGraph_Sort3    // sort array A of size 3-by-n, using 3 keys (A [0:2][])
 // graph G is both an input and an output of these methods, since they may be
 // modified.
 
+// TODO: call this mode "easy", "standard", "simple" ??
+
 // simple method: computes and *saves* any properties.
 // G is input/output.
 
@@ -775,6 +771,8 @@ int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
 // parameter to these methods.  If an "expert" algorithm requires a graph
 // property to be computed, it must be computed prior to calling the "expert"
 // method.
+
+// TODO: call this "expert", "advanced", "arcane" ... ??
 
 int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
 (

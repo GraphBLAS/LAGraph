@@ -120,6 +120,9 @@ int LAGraph_TriangleCount_Methods   // returns -1 on failure, 0 if successful
     GrB_Matrix C = NULL, L = NULL, U = NULL, T = NULL, A ;
     LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
 
+    LAGraph_DisplayGraph (G, 2, msg) ;
+    printf ("kind %d\n", G->kind) ;
+
     if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
         G->A_pattern_is_symmetric == LAGRAPH_TRUE))
@@ -130,7 +133,6 @@ int LAGraph_TriangleCount_Methods   // returns -1 on failure, 0 if successful
     else
     {
         // A is not known to be symmetric
-        // TODO: make this a warning, not an error
         LG_CHECK (false, -1, "adjacency matrix must be symmetric") ;
     }
 

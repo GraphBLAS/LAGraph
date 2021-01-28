@@ -60,6 +60,7 @@ typedef unsigned char LG_void ;
 
 #define LG_ERROR_MSG(...)                                           \
 {                                                                   \
+    printf ("error msg [%s]\n", (msg == NULL) ? "(null)" : msg) ;   \
     if (msg != NULL) snprintf (msg, LAGRAPH_MSG_LEN, __VA_ARGS__) ; \
 }
 
@@ -93,10 +94,10 @@ typedef unsigned char LG_void ;
 #ifndef GrB_CATCH
 #define GrB_CATCH(info)                                 \
 {                                                       \
-    LG_ERROR_MSG ("%s, line %d: failure: %d\n",         \
+    LG_ERROR_MSG ("%s, line %d: GrB failure: %d\n",     \
         __FILE__, __LINE__, info) ;                     \
     LAGraph_FREE_ALL ;                                  \
-    return (-1) ;                                       \
+    return (-(info)) ;                                  \
 }
 #endif
 
@@ -104,16 +105,22 @@ typedef unsigned char LG_void ;
 // LAGraph_CATCH: catch an error from LAGraph
 //------------------------------------------------------------------------------
 
-// A simple LAGraph_CATCH macro:  same as GrB_CATCH
+// A simple LAGraph_CATCH macro
 #ifndef LAGraph_CATCH
-#define LAGraph_CATCH(status) GrB_CATCH(status)
+#define LAGraph_CATCH(status)                           \
+{                                                       \
+    LG_ERROR_MSG ("%s, line %d: LAGraph failure: %d\n", \
+        __FILE__, __LINE__, status) ;                   \
+    LAGraph_FREE_ALL ;                                  \
+    return (status) ;                                   \
+}
 #endif
 
 //------------------------------------------------------------------------------
 // LG_CHECK: check an error condition
 //------------------------------------------------------------------------------
 
-#define LG_CHECK(error_condition,error_status,...) \
+#define LG_CHECK(error_condition,error_status,...)      \
 {                                                       \
     if (error_condition)                                \
     {                                                   \
