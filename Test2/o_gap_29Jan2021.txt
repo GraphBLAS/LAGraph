@@ -1,0 +1,160 @@
+hypersparse $ ./do_gap
+SuiteSparse:GraphBLAS v4.0.3 [Jan 19, 2021]
+# of trials: 3
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+read time: 34.4021
+Graph: kind: undirected, nodes: 134217726 entries: 4223264644 type: bool
+    pattern symmetry: symmetric  self-edges: 0
+
+warmup method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+# of triangles: 106873365648
+SandiaDot2: sum ((U*L') .* U)    sort: descending degree
+nthreads:  40 time:  1053.670850 rate:   4.01 (SandiaDot2, one trial)
+
+Method: Sandia:     sum ((L*L) .* L)     auto-sort
+kron fails on method 3; skipped
+
+Method: Sandia2:    sum ((U*U) .* U)     auto-sort
+kron fails on method 4; skipped
+
+Method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+trial  0:   945.821060 sec rate   4.47  # triangles: 106873365648
+trial  1:   941.143948 sec rate   4.49  # triangles: 106873365648
+trial  2:   943.443882 sec rate   4.48  # triangles: 106873365648
+nthreads:  40 time:   943.469630 rate:   4.48   # of triangles: 106873365648 presort: 1
+Avg: TC method5.2  40:    943.470 sec: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+
+Best method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+nthreads:  40 time:   943.469630 rate:   4.48
+SuiteSparse:GraphBLAS v4.0.3 [Jan 19, 2021]
+# of trials: 3
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+read time: 61.0924
+Graph: kind: undirected, nodes: 134217728 entries: 4294966740 type: bool
+    pattern symmetry: symmetric  self-edges: 0
+
+warmup method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+# of triangles: 5378
+SandiaDot2: sum ((U*L') .* U)    sort: none
+nthreads:  40 time:    34.951842 rate: 122.88 (SandiaDot2, one trial)
+
+Method: Sandia:     sum ((L*L) .* L)     auto-sort
+trial  0:    26.011662 sec rate 165.12  # triangles: 5378
+trial  1:    25.877588 sec rate 165.97  # triangles: 5378
+trial  2:    26.027952 sec rate 165.01  # triangles: 5378
+nthreads:  40 time:    25.972400 rate: 165.37   # of triangles: 5378 presort: 0
+Avg: TC method3.2  40:     25.972 sec: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+
+Method: Sandia2:    sum ((U*U) .* U)     auto-sort
+trial  0:    25.934102 sec rate 165.61  # triangles: 5378
+trial  1:    26.114744 sec rate 164.47  # triangles: 5378
+trial  2:    26.047793 sec rate 164.89  # triangles: 5378
+nthreads:  40 time:    26.032213 rate: 164.99   # of triangles: 5378 presort: 0
+Avg: TC method4.2  40:     26.032 sec: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+
+Method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+trial  0:    34.134913 sec rate 125.82  # triangles: 5378
+trial  1:    34.118030 sec rate 125.89  # triangles: 5378
+trial  2:    34.057360 sec rate 126.11  # triangles: 5378
+nthreads:  40 time:    34.103434 rate: 125.94   # of triangles: 5378 presort: 0
+Avg: TC method5.2  40:     34.103 sec: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+
+Best method: Sandia:     sum ((L*L) .* L)     auto-sort
+nthreads:  40 time:    25.972400 rate: 165.37
+SuiteSparse:GraphBLAS v4.0.3 [Jan 19, 2021]
+# of trials: 3
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+read time: 36.6512
+Graph: kind: undirected, nodes: 61578415 entries: 2405026092 type: bool
+    pattern symmetry: symmetric  self-edges: 0
+
+warmup method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+# of triangles: 34824916864
+SandiaDot2: sum ((U*L') .* U)    sort: descending degree
+nthreads:  40 time:   268.259080 rate:   8.97 (SandiaDot2, one trial)
+
+Method: Sandia:     sum ((L*L) .* L)     auto-sort
+all but urand is slow with method 3: skipped
+
+Method: Sandia2:    sum ((U*U) .* U)     auto-sort
+all but urand is slow with method 4: skipped
+
+Method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+trial  0:   241.594230 sec rate   9.95  # triangles: 34824916864
+trial  1:   242.069092 sec rate   9.94  # triangles: 34824916864
+trial  2:   243.407970 sec rate   9.88  # triangles: 34824916864
+nthreads:  40 time:   242.357097 rate:   9.92   # of triangles: 34824916864 presort: 1
+Avg: TC method5.2  40:    242.357 sec: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+
+Best method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+nthreads:  40 time:   242.357097 rate:   9.92
+SuiteSparse:GraphBLAS v4.0.3 [Jan 19, 2021]
+# of trials: 3
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+read time: 40.8889
+Graph: kind: undirected, nodes: 50636151 entries: 3620126660 type: bool
+    pattern symmetry: symmetric  self-edges: 0
+
+warmup method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+# of triangles: 84907041475
+SandiaDot2: sum ((U*L') .* U)    sort: none
+nthreads:  40 time:    40.004622 rate:  90.49 (SandiaDot2, one trial)
+
+Method: Sandia:     sum ((L*L) .* L)     auto-sort
+all but urand is slow with method 3: skipped
+
+Method: Sandia2:    sum ((U*U) .* U)     auto-sort
+all but urand is slow with method 4: skipped
+
+Method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+trial  0:    34.999889 sec rate 103.43  # triangles: 84907041475
+trial  1:    35.013339 sec rate 103.39  # triangles: 84907041475
+trial  2:    35.436927 sec rate 102.16  # triangles: 84907041475
+nthreads:  40 time:    35.150052 rate: 102.99   # of triangles: 84907041475 presort: 0
+Avg: TC method5.2  40:     35.150 sec: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+
+Best method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+nthreads:  40 time:    35.150052 rate: 102.99
+SuiteSparse:GraphBLAS v4.0.3 [Jan 19, 2021]
+# of trials: 3
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+read time: 1.55782
+Graph: kind: undirected, nodes: 23947347 entries: 57708624 type: bool
+    pattern symmetry: symmetric  self-edges: 0
+
+warmup method: SandiaDot2: sum ((U*L') .* U)    auto-sort
+# of triangles: 438804
+SandiaDot2: sum ((U*L') .* U)    sort: none
+nthreads:  40 time:     0.292794 rate: 197.10 (SandiaDot2, one trial)
+
+Method: Sandia:     sum ((L*L) .* L)     auto-sort
+all but urand is slow with method 3: skipped
+
+Method: Sandia2:    sum ((U*U) .* U)     auto-sort
+all but urand is slow with method 4: skipped
+
+Method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+trial  0:     0.285012 sec rate 202.48  # triangles: 438804
+trial  1:     0.282942 sec rate 203.96  # triangles: 438804
+trial  2:     0.289925 sec rate 199.05  # triangles: 438804
+nthreads:  40 time:     0.285960 rate: 201.81   # of triangles: 438804 presort: 0
+Avg: TC method5.2  40:      0.286 sec: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+
+Best method: SandiaDot:  sum ((L*U') .* L)    auto-sort
+nthreads:  40 time:     0.285960 rate: 201.81
+
