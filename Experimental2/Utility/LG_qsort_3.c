@@ -26,8 +26,8 @@
 
 // argument list for defining a function
 #define LG_args(A)                      \
-    int64_t *LG_RESTRICT A ## _0,          \
-    int64_t *LG_RESTRICT A ## _1,          \
+    int64_t *LG_RESTRICT A ## _0,       \
+    int64_t *LG_RESTRICT A ## _1,       \
     int64_t *LG_RESTRICT A ## _2
 
 // each entry has a 3-integer key
@@ -48,9 +48,9 @@
 
 void LG_qsort_3     // sort array A of size 3-by-n, using 3 keys (A [0:2][])
 (
-    int64_t *LG_RESTRICT A_0,      // size n array
-    int64_t *LG_RESTRICT A_1,      // size n array
-    int64_t *LG_RESTRICT A_2,      // size n array
+    int64_t *LG_RESTRICT A_0,       // size n array
+    int64_t *LG_RESTRICT A_1,       // size n array
+    int64_t *LG_RESTRICT A_2,       // size n array
     const int64_t n
 )
 { 

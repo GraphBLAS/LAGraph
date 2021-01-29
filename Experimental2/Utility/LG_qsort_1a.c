@@ -44,7 +44,7 @@
 
 void LG_qsort_1a    // sort array A of size 1-by-n
 (
-    int64_t *LG_RESTRICT A_0,      // size n array
+    int64_t *LG_RESTRICT A_0,       // size n array
     const int64_t n
 )
 { 

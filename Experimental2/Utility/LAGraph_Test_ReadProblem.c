@@ -288,6 +288,8 @@ int LAGraph_Test_ReadProblem    // returns 0 if successful, -1 if failure
         }
     }
 
+    (*G)->ndiag = (remove_self_edges) ? 0 : LAGRAPH_UNKNOWN ;
+
     //--------------------------------------------------------------------------
     // generate 64 random source nodes, if requested but not provided on input
     //--------------------------------------------------------------------------

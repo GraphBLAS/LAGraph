@@ -130,9 +130,12 @@ int main (int argc, char **argv)
     double tic [2] ;
     LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
     printf ("\nwarmup method: ") ;
-    print_method (stdout, 6, 2) ;
-    LAGraph_TRY (LAGraph_TriangleCount_Methods (&ntriangles, G, 6, 2, msg)) ;
+    int presort = 2 ;
+    print_method (stdout, 6, presort) ;
+    LAGraph_TRY (LAGraph_TriangleCount_Methods (&ntriangles, G, 6, &presort,
+        msg)) ;
     printf ("# of triangles: %" PRId64 "\n", ntriangles) ;
+    print_method (stdout, 6, presort) ;
     double ttot ;
     LAGraph_TRY (LAGraph_Toc (&ttot, tic, NULL)) ;
     printf ("nthreads: %3d time: %12.6f rate: %6.2f (SandiaDot2, one trial)\n",
@@ -154,9 +157,10 @@ int main (int argc, char **argv)
     {
         // for (int sorting = -1 ; sorting <= 2 ; sorting++)
 
-        int sorting = 2 ;
+        int sorting = 2 ;       // just use auto-sort
         {
             printf ("\nMethod: ") ;
+            int presort ;
             print_method (stdout, method, sorting) ;
             if (n == 134217726 && method < 5)
             {
@@ -180,11 +184,11 @@ int main (int argc, char **argv)
                 for (int trial = 0 ; trial < ntrials ; trial++)
                 {
                     LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
+                    presort = sorting ;
                     LAGraph_TRY (LAGraph_TriangleCount_Methods (&nt2,
-                        G, method, sorting, msg)) ;
+                        G, method, &presort, msg)) ;
                     LAGraph_TRY (LAGraph_Toc (&ttrial [trial], tic, NULL)) ;
                     ttot += ttrial [trial] ;
-
                     printf ("trial %2d: %12.6f sec rate %6.2f  "
                         "# triangles: %ld\n",
                         trial, ttrial [trial], 1e-6 * nvals / ttrial [trial],
@@ -193,7 +197,8 @@ int main (int argc, char **argv)
                 ttot = ttot / ntrials ;
                 printf ("nthreads: %3d time: %12.6f rate: %6.2f", nthreads,
                     ttot, 1e-6 * nvals / ttot) ;
-                printf ("   # of triangles: %" PRId64 "\n", ntriangles) ;
+                printf ("   # of triangles: %" PRId64 " presort: %d\n",
+                    ntriangles, presort) ;
                 if (nt2 != ntriangles)
                 {
                     printf ("Test failure!\n") ;

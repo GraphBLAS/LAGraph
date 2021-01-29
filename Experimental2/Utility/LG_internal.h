@@ -60,7 +60,6 @@ typedef unsigned char LG_void ;
 
 #define LG_ERROR_MSG(...)                                           \
 {                                                                   \
-    printf ("error msg [%s]\n", (msg == NULL) ? "(null)" : msg) ;   \
     if (msg != NULL) snprintf (msg, LAGRAPH_MSG_LEN, __VA_ARGS__) ; \
 }
 
@@ -87,7 +86,7 @@ typedef unsigned char LG_void ;
 // GrB_CATCH: catch an error from GraphBLAS
 //------------------------------------------------------------------------------
 
-// A simple GrB_CATCH macro to be used by GrB_TRY.  If the LAGraph function
+// A simple GrB_CATCH macro to be used by GrB_TRY.  If an LAGraph function
 // wants something else, then #define a GrB_CATCH macro before the #include
 // "LG_internal.h" statement.
 
@@ -105,7 +104,10 @@ typedef unsigned char LG_void ;
 // LAGraph_CATCH: catch an error from LAGraph
 //------------------------------------------------------------------------------
 
-// A simple LAGraph_CATCH macro
+// A simple LAGraph_CATCH macro to be used by LAGraph_TRY.  If an LAGraph
+// function wants something else, then #define a LAGraph_CATCH macro before the
+// #include "LG_internal.h" statement.
+
 #ifndef LAGraph_CATCH
 #define LAGraph_CATCH(status)                           \
 {                                                       \
@@ -304,9 +306,9 @@ static inline void LG_eslice
 
 int LG_qsort_1b    // sort array A of size 2-by-n, using 1 key (A [0][])
 (
-    int64_t *LG_RESTRICT A_0,      // size n array
-    LG_void *LG_RESTRICT A_1,      // size n array
-    const size_t xsize,         // size of entries in A_1
+    int64_t *LG_RESTRICT A_0,       // size n array
+    LG_void *LG_RESTRICT A_1,       // size n array
+    const size_t xsize,             // size of entries in A_1
     const int64_t n
 ) ;
 
@@ -353,22 +355,22 @@ void LG_qsort_1b_size16 // LG_qsort_1b with A_1 with sizeof = 16
 
 void LG_qsort_1a    // sort array A of size 1-by-n
 (
-    int64_t *LG_RESTRICT A_0,      // size n array
+    int64_t *LG_RESTRICT A_0,       // size n array
     const int64_t n
 ) ;
 
 void LG_qsort_2     // sort array A of size 2-by-n, using 2 keys (A [0:1][])
 (
-    int64_t *LG_RESTRICT A_0,      // size n array
-    int64_t *LG_RESTRICT A_1,      // size n array
+    int64_t *LG_RESTRICT A_0,       // size n array
+    int64_t *LG_RESTRICT A_1,       // size n array
     const int64_t n
 ) ;
 
 void LG_qsort_3     // sort array A of size 3-by-n, using 3 keys (A [0:2][])
 (
-    int64_t *LG_RESTRICT A_0,      // size n array
-    int64_t *LG_RESTRICT A_1,      // size n array
-    int64_t *LG_RESTRICT A_2,      // size n array
+    int64_t *LG_RESTRICT A_0,       // size n array
+    int64_t *LG_RESTRICT A_1,       // size n array
+    int64_t *LG_RESTRICT A_2,       // size n array
     const int64_t n
 ) ;
 

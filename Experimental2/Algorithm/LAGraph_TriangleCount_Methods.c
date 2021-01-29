@@ -14,10 +14,11 @@
 // counts the number of triangles in the graph.  A triangle is a clique of size
 // three, that is, 3 nodes that are all pairwise connected.
 
-// One of TODO methods are used, defined below where L and U are the strictly
+// One of 6 methods are used, defined below where L and U are the strictly
 // lower and strictly upper triangular parts of the symmetrix matrix A,
 // respectively.  Each method computes the same result, ntri:
 
+//  0:  minitri:    ntri = nnz (A*E == 2) / 3 ; this method is disabled. 
 //  1:  Burkhardt:  ntri = sum (sum ((A^2) .* A)) / 6
 //  2:  Cohen:      ntri = sum (sum ((L * U) .* A)) / 2
 //  3:  Sandia:     ntri = sum (sum ((L * L) .* L))
@@ -26,8 +27,17 @@
 //  6:  SandiaDot2: ntri = sum (sum ((U * L') .* U)).  Note that U=L'.
 
 // A is a square symmetric matrix, of any type.  Its values are ignored.
-// Results are undefined for methods 1 and 2 if self-edges exist in A.
-// Results are undefined for all methods if A is unsymmetric.
+// Results are undefined for methods 1 and 2 if self-edges exist in A.  Results
+// are undefined for all methods if A is unsymmetric.  Method 0 (minitri) is
+// not yet available, since it requires G to include both an adjacency matrix
+// and an incidence matrix (in any case, minitri is the slowest method and
+// is included only for reference).
+
+// The Sandia* methods all tend to be faster than the Burkhard or Cohen
+// methods.  For the largest graphs, SandiaDot tends to be fastest, except for
+// the GAP-urand matrix, where the saxpy-based Sandia method (L*L.*L) is
+// fastest.  For many small graphs, the saxpy-based Sandia and Sandia2 methods
+// are often faster that the dot-product-base methods.
 
 // TODO use an enum for the above methods.
 
@@ -49,11 +59,11 @@
     GrB_free (U) ;              \
 }
 
-static int tricount_prep
+static int tricount_prep        // return 0 if successful, < 0 on error
 (
-    GrB_Matrix *L,
-    GrB_Matrix *U,
-    GrB_Matrix A,
+    GrB_Matrix *L,      // if present, compute L = tril (A,-1)
+    GrB_Matrix *U,      // if present, compute U = triu (A, 1)
+    GrB_Matrix A,       // input matrix
     char *msg
 )
 {
@@ -93,21 +103,25 @@ static int tricount_prep
     GrB_free (&L) ;             \
     GrB_free (&T) ;             \
     GrB_free (&U) ;             \
+    LAGraph_FREE (P) ;          \
 }
 
-int LAGraph_TriangleCount_Methods   // returns -1 on failure, 0 if successful
+int LAGraph_TriangleCount_Methods   // returns 0 if successful, < 0 if failure
 (
     uint64_t *ntriangles,   // # of triangles
     // input:
     LAGraph_Graph G,
     int method,             // selects the method to use (TODO: enum)
-    int presort,            // controls the presort of the graph (TODO: enum)
+    // input/output:
+    int *presort,           // controls the presort of the graph (TODO: enum)
         //  0: no sort
         //  1: sort by degree, ascending order
         // -1: sort by degree, descending order
         //  2: auto selection: no sort if rule is not triggered.  Otherise:
         //  sort in ascending order for methods 3 and 5, descending ordering
-        //  for methods 4 and 6.
+        //  for methods 4 and 6.  On output, presort is modified to reflect the
+        //  sorting method used (0, -1, or 1).  If presort is NULL on input, no
+        //  sort is performed.
     char *msg
 )
 {
@@ -118,10 +132,10 @@ int LAGraph_TriangleCount_Methods   // returns -1 on failure, 0 if successful
 
     LG_CLEAR_MSG ;
     GrB_Matrix C = NULL, L = NULL, U = NULL, T = NULL, A ;
+    int64_t *P = NULL ;
     LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
-
-    LAGraph_DisplayGraph (G, 2, msg) ;
-    printf ("kind %d\n", G->kind) ;
+    LG_CHECK (ntriangles == NULL, -1, "ntriangles is null") ;
+    LG_CHECK (G->ndiag != 0, -1, "G->ndiag must be zero") ;
 
     if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
@@ -133,11 +147,12 @@ int LAGraph_TriangleCount_Methods   // returns -1 on failure, 0 if successful
     else
     {
         // A is not known to be symmetric
-        LG_CHECK (false, -1, "adjacency matrix must be symmetric") ;
+        LG_CHECK (false, -1, "G->A must be symmetric") ;
     }
 
     GrB_Vector Degree = G->rowdegree ;
-    if (presort == 2 && method >= 3 && method <= 6)
+    bool auto_sort = (presort != NULL && (*presort) == 2) ;
+    if (auto_sort && method >= 3 && method <= 6)
     {
         LG_CHECK (Degree == NULL, -1, "G->rowdegree must be defined") ;
     }
@@ -148,18 +163,18 @@ int LAGraph_TriangleCount_Methods   // returns -1 on failure, 0 if successful
 
     GrB_Index n ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
+    GrB_TRY (GrB_Matrix_new (&C, GrB_INT64, n, n)) ;
     GrB_Semiring semiring = GxB_PLUS_PAIR_INT64 ;
     GrB_Monoid monoid = GrB_PLUS_MONOID_INT64 ;
-    GrB_TRY (GrB_Matrix_new (&C, GrB_INT64, n, n)) ;
 
     //--------------------------------------------------------------------------
     // heuristic sort rule
     //--------------------------------------------------------------------------
 
-    if (presort == 2)
+    if (auto_sort)
     {
         // auto selection of sorting method
-        presort = 0 ;       // default is not to sort
+        (*presort) = 0 ;       // default is not to sort
 
         if (method >= 3 && method <= 6)
         {
@@ -175,8 +190,8 @@ int LAGraph_TriangleCount_Methods   // returns -1 on failure, 0 if successful
 
             // With this rule, the GAP-kron and GAP-twitter matrices are
             // sorted, and the others remain unsorted.  With the rule in the
-            // GAP tc.cc benchmark, GAP-web is also sorted, but it is not
-            // sorted here.
+            // GAP tc.cc benchmark, GAP-kron and GAP-twitter are sorted, and so
+            // is GAP-web, but GAP-web is not sorted here.
 
             #define NSAMPLES 1000
             GrB_Index nvals ;
@@ -192,32 +207,25 @@ int LAGraph_TriangleCount_Methods   // returns -1 on failure, 0 if successful
                 {
                     switch (method)
                     {
-                        case 3:  presort =  1 ; break ;     // sort ascending
-                        case 4:  presort = -1 ; break ;     // sort descending
-                        case 5:  presort =  1 ; break ;     // sort ascending
-                        case 6:  presort = -1 ; break ;     // sort descending
-                        default: presort =  0 ; break ;     // no sort
+                        case 3:  (*presort) =  1 ; break ;  // sort ascending
+                        case 4:  (*presort) = -1 ; break ;  // sort descending
+                        case 5:  (*presort) =  1 ; break ;  // sort ascending
+                        case 6:  (*presort) = -1 ; break ;  // sort descending
+                        default: (*presort) =  0 ; break ;  // no sort
                     }
                 }
             }
         }
-
-        // printf ("auto sorting: %d: ", presort) ;
-        // if (presort == 0) printf ("none") ;
-        // else if (presort == -1) printf ("descending") ;
-        // else if (presort ==  1) printf ("ascending") ;
-        // printf ("\n") ;
     }
 
     //--------------------------------------------------------------------------
     // sort the input matrix, if requested
     //--------------------------------------------------------------------------
 
-    if (presort != 0)
+    if (presort != NULL && (*presort) != 0)
     {
         // P = permutation that sorts the rows by their degree
-        int64_t *P ;
-        LAGraph_TRY (LAGraph_SortByDegree (&P, G, true, presort > 0, msg)) ;
+        LAGraph_TRY (LAGraph_SortByDegree (&P, G, true, (*presort) > 0, msg)) ;
 
         // T = A (P,P) and typecast to boolean
         GrB_TRY (GrB_Matrix_new (&T, GrB_BOOL, n, n)) ;

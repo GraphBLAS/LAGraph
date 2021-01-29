@@ -703,7 +703,7 @@ int LAGraph_BreadthFirstSearch      // returns -1 on failure, 0 if successful
 ) ;
 
 
-// the following is a draft
+// the following is a draft:
 typedef enum
 {
     LAGRAPH_CENTRALITY_BETWEENNESS = 0,     // node or edge centrality
@@ -724,7 +724,10 @@ int LAGraph_VertexCentrality    // returns -1 on failure, 0 if successful
     char *msg
 ) ;
 
-int LAGraph_TriangleCount   // returns -1 on failure, 0 if successful
+// TODO: pick a default method (say 5, with presort = 2 (auto)).
+// Compute G->ndiag, and G->rowdegree if needed.  Determine if G->A is
+// symmetric, if not known.
+int LAGraph_TriangleCount   // returns 0 if successful, < 0 if failure
 (
     uint64_t *ntriangles,   // # of triangles
     // input:
@@ -732,6 +735,7 @@ int LAGraph_TriangleCount   // returns -1 on failure, 0 if successful
     char *msg
 ) ;
 
+// TODO: this is a "simple" method, since G is input/output.
 int LAGraph_ConnectedComponents
 (
     // output
@@ -741,6 +745,8 @@ int LAGraph_ConnectedComponents
     char *msg
 ) ;
 
+// TODO: add AIsAllPositive or related as a G->property.
+// TODO: Should a "simple" method pick delta automatically?
 int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
 (
     // output:
@@ -798,22 +804,24 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
     char *msg
 ) ;
 
-int LAGraph_TriangleCount_Methods   // returns -1 on failure, 0 if successful
+int LAGraph_TriangleCount_Methods   // returns 0 if successful, < 0 if failure
 (
     uint64_t *ntriangles,   // # of triangles
     // input:
     LAGraph_Graph G,
     int method,             // selects the method to use (TODO: enum)
-    int presort,            // controls the presort of the graph (TODO: enum)
+    // input/output:
+    int *presort,           // controls the presort of the graph (TODO: enum)
         //  0: no sort
         //  1: sort by degree, ascending order
         // -1: sort by degree, descending order
         //  2: auto selection: no sort if rule is not triggered.  Otherise:
         //  sort in ascending order for methods 3 and 5, descending ordering
-        //  for methods 4 and 6.
+        //  for methods 4 and 6.  On output, presort is modified to reflect the
+        //  sorting method used (0, -1, or 1).  If presort is NULL on input, no
+        //  sort is performed.
     char *msg
 ) ;
-
 
 #endif
 

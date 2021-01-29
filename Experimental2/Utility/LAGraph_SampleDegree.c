@@ -54,7 +54,6 @@ int LAGraph_SampleDegree        // returns 0 if successful, -1 if failure
     else
     {
         // A is not known to be symmetric
-        // TODO: make this a warning, not an error
         Degree = (byrow) ? G->rowdegree : G->coldegree ;
     }
 
