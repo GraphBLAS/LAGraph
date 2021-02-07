@@ -249,6 +249,8 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
     // W: empty ns-by-n array, as workspace
     GrB_TRY (GrB_Matrix_new (&W, GrB_FP32, ns, n)) ;
 
+//  printf ("\nback =========================================\n") ;
+
     // Backtrack through the BFS and compute centrality updates for each vertex
     for (int64_t i = depth-1 ; i > 0 ; i--)
     {
@@ -258,6 +260,7 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
         //----------------------------------------------------------------------
 
         // Add contributions by successors and mask with that level's frontier
+//      printf ("\newiseMult W<S[i]> = bc_update ./ paths=================\n") ;
         GrB_TRY (GrB_eWiseMult (W, S [i], NULL, GrB_DIV_FP32, bc_update, paths,
             GrB_DESC_RS)) ;
 
@@ -275,6 +278,7 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
         bool do_pull = (w_density > 0.1  && w_to_s_ratio > 1.) ||
                        (w_density > 0.01 && w_to_s_ratio > 10.) ;
 
+//      printf ("\n================== W<S[i−1]> = W * A'\n") ;
         if (do_pull)
         {
             GrB_TRY (GxB_set (W, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
@@ -293,6 +297,7 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
         //----------------------------------------------------------------------
 
         // bc_update is full, paths is bitmap/full, W is sparse/bitmap
+//      printf ("\n====================== bc_update += W .* paths\n") ;
         GrB_TRY (GrB_eWiseMult (bc_update, NULL, GrB_PLUS_FP32, GrB_TIMES_FP32,
             W, paths, NULL)) ;
     }
@@ -300,6 +305,7 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
     // =========================================================================
     // === finalize the centrality =============================================
     // =========================================================================
+//  printf ("\n=================finalize the centrality =============================================\n") ;
 
     // Initialize the centrality array with -ns to avoid counting
     // zero length paths
