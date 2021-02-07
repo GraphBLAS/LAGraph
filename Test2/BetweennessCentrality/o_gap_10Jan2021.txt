@@ -1,0 +1,390 @@
+SuiteSparse:GraphBLAS v4.0.1 [Jan 4, 2021]
+threads to test:  40 20
+matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+sources: /home/faculty/davis/GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 56.6601
+Graph: kind: unweighted undirected, nodes: 134217726 entries: 4223264644 type: bool
+    pattern symmetry: symmetric
+
+Trial 1 : sources: [ 2338012 31997659 23590940 43400604 ]
+BC time 40:      24.2300 (sec)
+BC time 20:      26.7048 (sec)
+
+Trial 2 : sources: [ 75337937 169867 104041220 94177942 ]
+BC time 40:      26.0265 (sec)
+BC time 20:      27.9327 (sec)
+
+Trial 3 : sources: [ 32871357 56230002 69883037 9346345 ]
+BC time 40:      28.0600 (sec)
+BC time 20:      31.6324 (sec)
+
+Trial 4 : sources: [ 48915358 122571173 6183279 86323663 ]
+BC time 40:      26.5752 (sec)
+BC time 20:      28.8290 (sec)
+
+Trial 5 : sources: [ 106725780 92389938 16210738 59816700 ]
+BC time 40:      24.8220 (sec)
+BC time 20:      27.5556 (sec)
+
+Trial 6 : sources: [ 111669929 102831411 113384800 43872564 ]
+BC time 40:      27.7237 (sec)
+BC time 20:      31.4836 (sec)
+
+Trial 7 : sources: [ 80508827 26105648 8807516 118452455 ]
+BC time 40:      21.4616 (sec)
+BC time 20:      24.7024 (sec)
+
+Trial 8 : sources: [ 121818859 42361928 29493053 98461503 ]
+BC time 40:      22.5556 (sec)
+BC time 20:      23.9761 (sec)
+
+Trial 9 : sources: [ 71931337 103808468 4092345 115276241 ]
+BC time 40:      24.9874 (sec)
+BC time 20:      26.9906 (sec)
+
+Trial 10 : sources: [ 4649343 76656189 31312001 111334127 ]
+BC time 40:      24.6434 (sec)
+BC time 20:      28.6624 (sec)
+
+Trial 11 : sources: [ 100962918 41823215 22631240 42848461 ]
+BC time 40:      24.3645 (sec)
+BC time 20:      26.0620 (sec)
+
+Trial 12 : sources: [ 79485148 106818742 73347974 78848445 ]
+BC time 40:      23.4134 (sec)
+BC time 20:      24.4843 (sec)
+
+Trial 13 : sources: [ 109920510 121492133 101037296 15438600 ]
+BC time 40:      28.1825 (sec)
+BC time 20:      36.0181 (sec)
+
+Trial 14 : sources: [ 4584784 124503845 87241743 108297008 ]
+BC time 40:      27.8304 (sec)
+BC time 20:      31.9402 (sec)
+
+Trial 15 : sources: [ 33955082 79934823 8608481 82435063 ]
+BC time 40:      30.3788 (sec)
+BC time 20:      34.1289 (sec)
+
+Trial 16 : sources: [ 46579271 515421 121530467 127978736 ]
+BC time 40:      20.9843 (sec)
+BC time 20:      25.1026 (sec)
+
+ntrials: 16
+
+Ave BC 40:     25.390 sec, rate    166.336
+Ave BC 20:     28.513 sec, rate    148.118
+SuiteSparse:GraphBLAS v4.0.1 [Jan 4, 2021]
+threads to test:  40 20
+matrix: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+sources: /home/faculty/davis/GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 43.4478
+Graph: kind: unweighted undirected, nodes: 134217728 entries: 4294966740 type: bool
+    pattern symmetry: symmetric
+
+Trial 1 : sources: [ 27691419 121280314 2413431 37512113 ]
+BC time 40:      31.6341 (sec)
+BC time 20:      33.6941 (sec)
+
+Trial 2 : sources: [ 38390877 56651037 128461248 33029842 ]
+BC time 40:      31.8815 (sec)
+BC time 20:      33.9405 (sec)
+
+Trial 3 : sources: [ 71406328 117872827 24351938 15444519 ]
+BC time 40:      31.6488 (sec)
+BC time 20:      32.8490 (sec)
+
+Trial 4 : sources: [ 127526281 112279428 13631649 110379302 ]
+BC time 40:      31.7779 (sec)
+BC time 20:      34.4222 (sec)
+
+Trial 5 : sources: [ 44800623 77768193 175347 107397389 ]
+BC time 40:      32.1034 (sec)
+BC time 20:      34.1612 (sec)
+
+Trial 6 : sources: [ 43457209 97215940 73575165 44449715 ]
+BC time 40:      32.4024 (sec)
+BC time 20:      34.9848 (sec)
+
+Trial 7 : sources: [ 33931724 55526610 14422051 58043873 ]
+BC time 40:      31.8263 (sec)
+BC time 20:      33.6533 (sec)
+
+Trial 8 : sources: [ 72137329 9647840 15940695 14209952 ]
+BC time 40:      32.0476 (sec)
+BC time 20:      34.0550 (sec)
+
+Trial 9 : sources: [ 49020883 28901138 50493273 49150069 ]
+BC time 40:      31.0425 (sec)
+BC time 20:      32.6425 (sec)
+
+Trial 10 : sources: [ 126525082 6382740 89108297 9239735 ]
+BC time 40:      31.7406 (sec)
+BC time 20:      33.7340 (sec)
+
+Trial 11 : sources: [ 110168548 95370259 116653530 123410703 ]
+BC time 40:      31.6560 (sec)
+BC time 20:      33.0367 (sec)
+
+Trial 12 : sources: [ 16733665 49030282 108545121 99095665 ]
+BC time 40:      31.1551 (sec)
+BC time 20:      33.0331 (sec)
+
+Trial 13 : sources: [ 133850077 63499301 21541382 6230751 ]
+BC time 40:      31.4995 (sec)
+BC time 20:      33.5606 (sec)
+
+Trial 14 : sources: [ 89077456 70392765 6670455 61746271 ]
+BC time 40:      31.2739 (sec)
+BC time 20:      33.1289 (sec)
+
+Trial 15 : sources: [ 83349535 115272184 20129908 106148553 ]
+BC time 40:      31.0058 (sec)
+BC time 20:      32.6899 (sec)
+
+Trial 16 : sources: [ 117042375 71431187 45287808 107702120 ]
+BC time 40:      31.2871 (sec)
+BC time 20:      33.1106 (sec)
+
+ntrials: 16
+
+Ave BC 40:     31.624 sec, rate    135.814
+Ave BC 20:     33.544 sec, rate    128.042
+SuiteSparse:GraphBLAS v4.0.1 [Jan 4, 2021]
+threads to test:  40 20
+matrix: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+sources: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter_sources.mtx
+read time: 15.1528
+Graph: kind: unweighted directed, nodes: 61578415 entries: 1468364884 type: bool
+    pattern symmetry: unsymmetric
+
+Trial 1 : sources: [ 12441072 54488257 25451915 57714473 ]
+BC time 40:       9.2126 (sec)
+BC time 20:      12.3255 (sec)
+
+Trial 2 : sources: [ 14839494 32081104 52957357 50444380 ]
+BC time 40:      11.9768 (sec)
+BC time 20:      13.1239 (sec)
+
+Trial 3 : sources: [ 49590701 20127816 34939333 48251001 ]
+BC time 40:       8.8094 (sec)
+BC time 20:      10.9480 (sec)
+
+Trial 4 : sources: [ 19524253 43676726 33055508 15244687 ]
+BC time 40:       8.7293 (sec)
+BC time 20:      10.2836 (sec)
+
+Trial 5 : sources: [ 24946738 6479472 26077682 22023875 ]
+BC time 40:      10.4696 (sec)
+BC time 20:      12.4976 (sec)
+
+Trial 6 : sources: [ 22081915 40034162 49496014 42847507 ]
+BC time 40:       9.0231 (sec)
+BC time 20:      10.2396 (sec)
+
+Trial 7 : sources: [ 52409557 55445388 22028097 48766648 ]
+BC time 40:       9.8066 (sec)
+BC time 20:      11.6046 (sec)
+
+Trial 8 : sources: [ 44521241 60135542 28528671 9678012 ]
+BC time 40:      10.7630 (sec)
+BC time 20:      12.6267 (sec)
+
+Trial 9 : sources: [ 40020306 31625735 37446892 51788952 ]
+BC time 40:       9.5327 (sec)
+BC time 20:      11.2943 (sec)
+
+Trial 10 : sources: [ 52584255 20346696 48387909 37337427 ]
+BC time 40:       9.4077 (sec)
+BC time 20:      11.0498 (sec)
+
+Trial 11 : sources: [ 50501084 30130061 41185893 56495703 ]
+BC time 40:       9.3155 (sec)
+BC time 20:      10.9278 (sec)
+
+Trial 12 : sources: [ 45663305 33359460 48143058 33291513 ]
+BC time 40:      10.9059 (sec)
+BC time 20:      11.2640 (sec)
+
+Trial 13 : sources: [ 53461445 29340610 34148498 49171806 ]
+BC time 40:      10.0463 (sec)
+BC time 20:      11.5111 (sec)
+
+Trial 14 : sources: [ 35550696 14521507 51633218 46823382 ]
+BC time 40:       9.8539 (sec)
+BC time 20:      13.5632 (sec)
+
+Trial 15 : sources: [ 19396273 19871750 36862677 49539126 ]
+BC time 40:      10.2987 (sec)
+BC time 20:      12.4044 (sec)
+
+Trial 16 : sources: [ 34016452 36567395 55487793 14391370 ]
+BC time 40:       9.0093 (sec)
+BC time 20:      10.4439 (sec)
+
+ntrials: 16
+
+Ave BC 40:      9.823 sec, rate    149.490
+Ave BC 20:     11.632 sec, rate    126.238
+SuiteSparse:GraphBLAS v4.0.1 [Jan 4, 2021]
+threads to test:  40 20
+matrix: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+sources: /home/faculty/davis/GAP/GAP-web/GAP-web_sources.mtx
+read time: 28.5799
+Graph: kind: unweighted directed, nodes: 50636151 entries: 1930292948 type: bool
+    pattern symmetry: unsymmetric
+
+Trial 1 : sources: [ 10219452 44758211 890671 13843756 ]
+BC time 40:       9.4025 (sec)
+BC time 20:       9.9645 (sec)
+
+Trial 2 : sources: [ 14168062 20906930 12189584 26352335 ]
+BC time 40:       9.6053 (sec)
+BC time 20:       9.8939 (sec)
+
+Trial 3 : sources: [ 43500686 8987024 5699762 41436455 ]
+BC time 40:       9.9115 (sec)
+BC time 20:      10.3251 (sec)
+
+Trial 4 : sources: [ 5030727 40735218 16533563 28700166 ]
+BC time 40:      11.4698 (sec)
+BC time 20:      13.0570 (sec)
+
+Trial 5 : sources: [ 64711 39634750 16037779 27152739 ]
+BC time 40:      10.3956 (sec)
+BC time 20:      10.9903 (sec)
+
+Trial 6 : sources: [ 16404061 20491963 5322423 21420953 ]
+BC time 40:      11.6252 (sec)
+BC time 20:      12.4382 (sec)
+
+Trial 7 : sources: [ 26622109 5882875 18091040 10665896 ]
+BC time 40:       9.4492 (sec)
+BC time 20:       9.8933 (sec)
+
+Trial 8 : sources: [ 18634422 18138715 2355535 32885205 ]
+BC time 40:       9.2361 (sec)
+BC time 20:      10.0263 (sec)
+
+Trial 9 : sources: [ 40657440 35196167 45544426 6175519 ]
+BC time 40:       9.2507 (sec)
+BC time 20:       9.6730 (sec)
+
+Trial 10 : sources: [ 40058318 50626230 36571019 49397052 ]
+BC time 40:       9.9582 (sec)
+BC time 20:      10.5786 (sec)
+
+Trial 11 : sources: [ 23434265 2299444 32873823 25978282 ]
+BC time 40:       9.1370 (sec)
+BC time 20:       9.7645 (sec)
+
+Trial 12 : sources: [ 2461715 22787314 30759947 7428894 ]
+BC time 40:       7.3101 (sec)
+BC time 20:       7.2757 (sec)
+
+Trial 13 : sources: [ 39173870 43194209 26361509 39747211 ]
+BC time 40:       0.2371 (sec)
+BC time 20:       0.2369 (sec)
+
+Trial 14 : sources: [ 30670029 41483033 9358666 9945008 ]
+BC time 40:      10.4392 (sec)
+BC time 20:      10.8480 (sec)
+
+Trial 15 : sources: [ 3355244 33831269 45124744 16137877 ]
+BC time 40:       9.5048 (sec)
+BC time 20:       9.7917 (sec)
+
+Trial 16 : sources: [ 11235448 37509144 27402414 39546083 ]
+BC time 40:       9.5508 (sec)
+BC time 20:      10.0564 (sec)
+
+ntrials: 16
+
+Ave BC 40:      9.155 sec, rate    210.841
+Ave BC 20:      9.676 sec, rate    199.496
+SuiteSparse:GraphBLAS v4.0.1 [Jan 4, 2021]
+threads to test:  40 20
+matrix: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+sources: /home/faculty/davis/GAP/GAP-road/GAP-road_sources.mtx
+read time: 0.648367
+Graph: kind: unweighted undirected, nodes: 23947347 entries: 57708624 type: bool
+    pattern symmetry: symmetric
+
+Trial 1 : sources: [ 4795720 21003853 417968 6496511 ]
+BC time 40:      50.4833 (sec)
+BC time 20:      44.3048 (sec)
+
+Trial 2 : sources: [ 6648699 9811073 22247478 5720252 ]
+BC time 40:      52.8549 (sec)
+BC time 20:      43.3908 (sec)
+
+Trial 3 : sources: [ 12366459 20413729 4217374 2674749 ]
+BC time 40:      49.4304 (sec)
+BC time 20:      42.9698 (sec)
+
+Trial 4 : sources: [ 22085557 19445040 2360788 19115968 ]
+BC time 40:      49.5998 (sec)
+BC time 20:      44.2750 (sec)
+
+Trial 5 : sources: [ 7758767 13468234 30367 18599547 ]
+BC time 40:      50.0630 (sec)
+BC time 20:      43.0382 (sec)
+
+Trial 6 : sources: [ 7526108 16836280 12742067 7697995 ]
+BC time 40:     118.6693 (sec)
+BC time 20:      43.0299 (sec)
+
+Trial 7 : sources: [ 5876443 9616340 2497673 10052290 ]
+BC time 40:      50.1807 (sec)
+BC time 20:      44.3764 (sec)
+
+Trial 8 : sources: [ 12493057 1670855 2760679 2460941 ]
+BC time 40:      49.8370 (sec)
+BC time 20:      42.9973 (sec)
+
+Trial 9 : sources: [ 8489650 5005225 8744645 8512023 ]
+BC time 40:      49.9293 (sec)
+BC time 20:      43.9172 (sec)
+
+Trial 10 : sources: [ 21912165 1105390 15432163 1600177 ]
+BC time 40:      50.4600 (sec)
+BC time 20:      43.9589 (sec)
+
+Trial 11 : sources: [ 19079469 16516637 20202566 21372803 ]
+BC time 40:      50.1718 (sec)
+BC time 20:      43.3069 (sec)
+
+Trial 12 : sources: [ 2898009 8491277 18798317 23757560 ]
+BC time 40:      50.4398 (sec)
+BC time 20:      43.5123 (sec)
+
+Trial 13 : sources: [ 17161819 23180739 10997085 3730630 ]
+BC time 40:      50.4911 (sec)
+BC time 20:      44.3394 (sec)
+
+Trial 14 : sources: [ 1079068 15426822 12190925 1155218 ]
+BC time 40:      48.4667 (sec)
+BC time 20:      42.9881 (sec)
+
+Trial 15 : sources: [ 10693488 14434835 19963339 3486185 ]
+BC time 40:      48.6790 (sec)
+BC time 20:      42.7814 (sec)
+
+Trial 16 : sources: [ 18383269 20269908 12370764 7843140 ]
+BC time 40:      49.0797 (sec)
+BC time 20:      43.3312 (sec)
+
+ntrials: 16
+
+Ave BC 40:     54.302 sec, rate      1.063
+Ave BC 20:     43.532 sec, rate      1.326

@@ -50,7 +50,8 @@ int main (int argc, char **argv)
 
     // start GraphBLAS and LAGraph
     LAGraph_TRY (LAGraph_Init (msg)) ;
-    GrB_TRY (GxB_set (GxB_BURBLE, false)) ;
+    bool burble = false ;
+    GrB_TRY (GxB_set (GxB_BURBLE, burble)) ;
 
     int batch_size = 4 ;
 
@@ -87,7 +88,7 @@ int main (int argc, char **argv)
     // read in the graph
     //--------------------------------------------------------------------------
 
-    char *matrix_name = (argc > 1) ? argv [1] : "stdin" ; 
+    char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
     LAGraph_TRY (LAGraph_Test_ReadProblem (&G, &SourceNodes,
         false, false, true, NULL, false, argc, argv, msg)) ;
     GrB_Index n, nvals ;
@@ -107,7 +108,7 @@ int main (int argc, char **argv)
         for (int k = 0 ; k < NSOURCES ; k++)
         {
             int64_t i = 1 + (rand ( ) % n) ;    // in range 1 to n
-            // SourceNodes [k] = i 
+            // SourceNodes [k] = i
             LAGraph_TRY (GrB_Matrix_setElement (SourceNodes, i, k, 0)) ;
         }
     }
@@ -178,13 +179,13 @@ int main (int argc, char **argv)
         // check result
         //----------------------------------------------------------------------
 
-        // TODO
+        // TODO: check results
 
         // GrB_TRY (GxB_print (centrality, 2)) ;
         GrB_free (&centrality) ;
 
-        // HACK: uncomment this to just do the first batch
-        // break ;
+        // if burble is on, just do the first batch
+        if (burble) break ;
     }
 
     //--------------------------------------------------------------------------
