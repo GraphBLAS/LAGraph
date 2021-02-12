@@ -185,17 +185,6 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
         GrB_TRY (GrB_apply (S [depth], NULL, NULL, GxB_ONE_BOOL, frontier,
             NULL)) ;
 
-        // TODO (in SuiteSparse:GraphBLAS, not LAGraph): constructing S will be
-        // faster with uniform-valued matrices, once they are added to
-        // SuiteSparse:GraphBLAS.
-
-        // TODO (in SuiteSparse:GraphBLAS, not LAGraph): mxm can produce a
-        // jumbled matrix (frontier), which is then sorted by the apply (here)
-        // and the eMult (below).  Both the apply and the eMult could tolerate
-        // jumbled inputs, and produce jumbled outputs, so if enough
-        // jumbled-exploit is added, the lazy sort could be so lazy that it
-        // never happens (like the BFS).
-
         //----------------------------------------------------------------------
         // Accumulate path counts: paths += frontier
         //----------------------------------------------------------------------
@@ -216,19 +205,21 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
 
         if (do_pull)
         {
+            // frontier<!paths> = frontier*AT'
             GrB_TRY (GxB_set (frontier, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
             GrB_TRY (GrB_mxm (frontier, paths, NULL, GxB_PLUS_FIRST_FP32,
                 frontier, AT, GrB_DESC_RCT1)) ;
         }
         else // push
         {
+            // frontier<!paths> = frontier*A
             GrB_TRY (GxB_set (frontier, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
             GrB_TRY (GrB_mxm (frontier, paths, NULL, GxB_PLUS_FIRST_FP32,
                 frontier, A, GrB_DESC_RC)) ;
         }
 
         //----------------------------------------------------------------------
-        // Get the size of the current frontier
+        // Get size of current frontier: frontier_size = nvals(frontier)
         //----------------------------------------------------------------------
 
         last_frontier_size = frontier_size ;
@@ -249,7 +240,6 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
     // W: empty ns-by-n array, as workspace
     GrB_TRY (GrB_Matrix_new (&W, GrB_FP32, ns, n)) ;
 
-//  printf ("\nback =========================================\n") ;
 
     // Backtrack through the BFS and compute centrality updates for each vertex
     for (int64_t i = depth-1 ; i > 0 ; i--)
@@ -260,7 +250,6 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
         //----------------------------------------------------------------------
 
         // Add contributions by successors and mask with that level's frontier
-//      printf ("\newiseMult W<S[i]> = bc_update ./ paths=================\n") ;
         GrB_TRY (GrB_eWiseMult (W, S [i], NULL, GrB_DIV_FP32, bc_update, paths,
             GrB_DESC_RS)) ;
 
@@ -278,15 +267,16 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
         bool do_pull = (w_density > 0.1  && w_to_s_ratio > 1.) ||
                        (w_density > 0.01 && w_to_s_ratio > 10.) ;
 
-//      printf ("\n================== W<S[i−1]> = W * A'\n") ;
         if (do_pull)
         {
+            // W<S[i−1]> = W * A'
             GrB_TRY (GxB_set (W, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
             GrB_TRY (GrB_mxm (W, S [i-1], NULL, GxB_PLUS_FIRST_FP32, W, A,
                 GrB_DESC_RST1)) ;
         }
         else // push
         {
+            // W<S[i−1]> = W * AT
             GrB_TRY (GxB_set (W, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
             GrB_TRY (GrB_mxm (W, S [i-1], NULL, GxB_PLUS_FIRST_FP32, W, AT,
                 GrB_DESC_RS)) ;
@@ -296,8 +286,6 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
         // bc_update += W .* paths
         //----------------------------------------------------------------------
 
-        // bc_update is full, paths is bitmap/full, W is sparse/bitmap
-//      printf ("\n====================== bc_update += W .* paths\n") ;
         GrB_TRY (GrB_eWiseMult (bc_update, NULL, GrB_PLUS_FP32, GrB_TIMES_FP32,
             W, paths, NULL)) ;
     }
@@ -305,7 +293,6 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
     // =========================================================================
     // === finalize the centrality =============================================
     // =========================================================================
-//  printf ("\n=================finalize the centrality =============================================\n") ;
 
     // Initialize the centrality array with -ns to avoid counting
     // zero length paths
