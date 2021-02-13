@@ -129,8 +129,8 @@ int LAGraph_Louvain_LSMP // returns -1 on failure, 0 on success
             if (GrB_Vector_extractElement(&changed, Sj, r)
                 == GrB_NO_VALUE)                             //  if Sj.get(r) is None:
                 changed = true;
+			LAGraph_FREE (ts) ;
         }
-        LAGraph_FREE (ts) ;
     }
 
     // S.cast(INT64).apply(INT64.POSITIONJ).reduce_vector()
