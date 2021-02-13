@@ -6,7 +6,8 @@
 // SPDX-License-Identifier: BSD-2-Clause
 // Based on the paper Linear Algebraic Louvain Method in Python
 // by Tze Meng Low, Daniele G. Spampinato, Scott McMillan and Michel Pelletier (LSMP)
-// Translated to C by Michel Pelletier
+// Translated to from Python to C by Michel Pelletier
+// Python Notebook: https://github.com/Graphegon/pygraphblas/blob/main/demo/Louvain.ipynb
 
 //------------------------------------------------------------------------------
 
