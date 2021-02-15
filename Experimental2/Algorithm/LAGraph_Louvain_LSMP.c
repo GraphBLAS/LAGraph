@@ -80,6 +80,11 @@ int LAGraph_Louvain_LSMP // returns -1 on failure, 0 on success
     GrB_TRY (GrB_Vector_new (&t,     GrB_FP32, n)) ;
     GrB_TRY (GxB_Scalar_new (&max,   GrB_FP32)) ;
 
+    // S = Matrix.identity(BOOL, An)
+    for (int Si = 0; Si < n; Si++) {
+        GrB_TRY(GrB_Matrix_setElement(S, true, Si, Si));
+    }
+
     // ApAT = A.T + A
     GrB_TRY (GrB_eWiseAdd  (ApAT, NULL, NULL, GrB_PLUS_FP32, GA, GA, GrB_DESC_T0)) ;
 
@@ -88,7 +93,7 @@ int LAGraph_Louvain_LSMP // returns -1 on failure, 0 on success
     GrB_TRY (GrB_apply  (k,    NULL, NULL, GrB_AINV_FP32, k, NULL)) ;              // k = (-k) / m
     GrB_TRY (GrB_apply  (k,    NULL, NULL, GrB_DIV_FP32, k, m, NULL)) ;
 
-    GrB_TRY (GrB_Vector_size (&kn, k)) ;
+    GrB_TRY (GrB_Vector_nvals (&kn, k)) ;
     ks = LAGraph_Malloc (kn, sizeof (GrB_Index)) ;
     GrB_TRY (GrB_Vector_extractTuples (ks, (double*)NULL, &kn, k)) ;
 
@@ -104,7 +109,8 @@ int LAGraph_Louvain_LSMP // returns -1 on failure, 0 on success
             GrB_TRY (GrB_extract  (Sj,     NULL, NULL, S, GrB_ALL, n, kj, GrB_DESC_T0)) ;
             // S[j] = empty
             GrB_TRY (GrB_assign   (S,      NULL, NULL, empty, kj, GrB_ALL, n, NULL)) ;
-            GrB_TRY (GrB_extract  (v,      NULL, NULL, GA, GrB_ALL, n, kj, GrB_DESC_T0)) ;
+            // v = ApAT[j]
+            GrB_TRY (GrB_extract  (v,      NULL, NULL, ApAT, GrB_ALL, n, kj, GrB_DESC_T0)) ;
             // v += k[j]
             GrB_TRY (GrB_Vector_extractElement    (&f,     v, kj)) ;
             GrB_TRY (GrB_apply    (v,      NULL, NULL, GrB_PLUS_FP32, v, f, NULL)) ;
@@ -128,10 +134,15 @@ int LAGraph_Louvain_LSMP // returns -1 on failure, 0 on success
             else
                 r = ts[rand() % tn] ;
 
-            GrB_TRY (GrB_Matrix_setElement(S, true, j, r)) ; //  S[j, r] = True
-            if (GrB_Vector_extractElement(&changed, Sj, r)
-                == GrB_NO_VALUE)                             //  if Sj.get(r) is None:
+            //  S[j, r] = True
+            GrB_TRY (GrB_Matrix_setElement(S, true, j, r)) ;
+            //  if Sj.get(r) is None:
+            GrB_Info Sjr_info = GrB_Vector_extractElement(&changed, Sj, r);
+            if (Sjr_info == GrB_NO_VALUE)
                 changed = true;
+            else if (Sjr_info != GrB_SUCCESS)
+                GrB_CATCH(Sjr_info)
+            
 			LAGraph_FREE (ts) ;
         }
     }

@@ -14,7 +14,7 @@ JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/test_louvain_lsmp < ../../Matrices/simulated_blockmodel_graph_500_nodes.mm
+	./build/test_louvain_lsmp < ../../Matrices/simulated_blockmodel_graph_50_nodes.mm
 
 
 # build test

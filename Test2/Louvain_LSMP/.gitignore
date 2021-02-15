@@ -5,6 +5,7 @@ w
 o
 v
 rg
+build/*
 
 # Do not ignore this file
 !.gitignore
