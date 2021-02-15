@@ -87,7 +87,6 @@ int LAGraph_Louvain_LSMP // returns -1 on failure, 0 on success
 
     GrB_TRY (GrB_Vector_size (&kn, k)) ;
     ks = LAGraph_Malloc (kn, sizeof (GrB_Index)) ;
-
     GrB_TRY (GrB_Vector_extractTuples (ks, NULL, &kn, k)) ;
 
     //     while changed and i < max_iters:

@@ -17,6 +17,7 @@ default:
 	( cd TriangleCount         ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd ConnectedComponents   ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 	( cd SingleSourceShortestPath ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
+	( cd Louvain_LMSP          ; $(MAKE) --jobs=$(JOBS) CC=$(CC) CXX=$(CC) )
 
 clean: distclean
 
@@ -30,4 +31,5 @@ distclean:
 	( cd TriangleCount         ; $(MAKE) distclean )
 	( cd ConnectedComponents   ; $(MAKE) distclean )
 	( cd SingleSourceShortestPath ; $(MAKE) distclean )
+	( cd Louvain_LMSP          ; $(MAKE) distclean )
 
