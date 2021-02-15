@@ -67,9 +67,7 @@ int LAGraph_Louvain_LSMP // returns -1 on failure, 0 on success
     GrB_Index kj;
 
     GA = G->A ;
-
     GrB_TRY (GrB_Matrix_nrows (&n, GA)) ;
-
     GrB_TRY (GrB_Matrix_new (&S,     GrB_BOOL, n, n)) ;
     GrB_TRY (GrB_Matrix_new (&ApAT,  GrB_FP32, n, n)) ;
     GrB_TRY (GrB_Vector_new (&Sj,    GrB_BOOL, n)) ;
@@ -90,12 +88,15 @@ int LAGraph_Louvain_LSMP // returns -1 on failure, 0 on success
 
     // k = A.reduce_vector()
     GrB_TRY (GrB_reduce (k,    NULL, NULL, GrB_PLUS_MONOID_FP32, GA, NULL)) ;
+    
     // m = k.reduce_int()
     GrB_TRY (GrB_reduce (&m,   NULL, GrB_PLUS_MONOID_FP32, k, NULL)) ;
+    
     // k = (-k) / m
     GrB_TRY (GrB_apply  (k,    NULL, NULL, GrB_AINV_FP32, k, NULL)) ;
     GrB_TRY (GrB_apply  (k,    NULL, NULL, GrB_DIV_FP32, k, m, NULL)) ;
 
+    // extract indexes of k
     GrB_TRY (GrB_Vector_nvals (&kn, k)) ;
     ks = LAGraph_Malloc (kn, sizeof (GrB_Index)) ;
     GrB_TRY (GrB_Vector_extractTuples (ks, (double*)NULL, &kn, k)) ;
@@ -104,7 +105,6 @@ int LAGraph_Louvain_LSMP // returns -1 on failure, 0 on success
     for ((*iters) = 0 ; (*iters) < itermax && changed ; (*iters)++)
     {
         changed = false ;
-
         // for j in set(k.indexes):
         for (GrB_Index j = 0; j < kn; j++) {
             kj = ks[j];
@@ -120,6 +120,7 @@ int LAGraph_Louvain_LSMP // returns -1 on failure, 0 on success
             // q = v @ S
             GrB_TRY (GrB_vxm      (q,      NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP32, v, S, NULL)) ;
 
+            // bail early if no entries in q
             GrB_TRY (GrB_Vector_nvals (&tn, q)) ;
             if (tn == 0)
                 continue;
@@ -141,6 +142,7 @@ int LAGraph_Louvain_LSMP // returns -1 on failure, 0 on success
 
             //  S[j, r] = True
             GrB_TRY (GrB_Matrix_setElement(S, true, j, r)) ;
+            
             //  if Sj.get(r) is None:
             GrB_Info Sjr_info = GrB_Vector_extractElement(&changed, Sj, r);
             if (Sjr_info == GrB_NO_VALUE)
@@ -148,7 +150,7 @@ int LAGraph_Louvain_LSMP // returns -1 on failure, 0 on success
             else if (Sjr_info != GrB_SUCCESS)
                 GrB_CATCH(Sjr_info)
 
-			LAGraph_FREE (ts) ;
+            LAGraph_FREE (ts) ;
         }
     }
 
