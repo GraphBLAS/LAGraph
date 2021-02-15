@@ -14,9 +14,8 @@ JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/test_louvain_lsmp < ../../Matrices/cover.mtx
-	./build/test_louvain_lsmp < ../../Matrices/west0067.mtx
-	./build/test_louvain_lsmp < ../../Matrices/jagmesh7.mtx
+	./build/test_louvain_lsmp < ../../Matrices/simulated_blockmodel_graph_500_nodes.mm
+
 
 # build test
 compile:

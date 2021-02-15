@@ -819,5 +819,16 @@ int LAGraph_TriangleCount_Methods   // returns 0 if successful, < 0 if failure
     char *msg
 ) ;
 
+int LAGraph_Louvain_LSMP // returns -1 on failure, 0 on success
+(
+    // outputs:
+    GrB_Vector *community_assignment, // community assignment
+    // inputs:
+    LAGraph_Graph G,        // input graph
+    int itermax,            // maximum number of iterations (typically 100)
+    int *iters,             // output: number of iterations taken
+    char *msg
+) ;
+
 #endif
 

@@ -21,8 +21,6 @@
 
 #define LAGRAPH_FREE_ALL                        \
 {                                               \
-    GrB_free (&G) ;                            \
-    LAGraph_Delete (&G, msg) ;                  \
     if (f != NULL) fclose (f) ;                 \
 }
 
@@ -38,7 +36,10 @@ int main (int argc, char **argv)
 
     char msg [LAGRAPH_MSG_LEN] ;
 
+
+    LAGraph_Graph G = NULL ;
     GrB_Matrix A = NULL ;
+    GrB_Vector C = NULL ;
     FILE *f = NULL ;
 
     // start GraphBLAS and LAGraph
@@ -70,9 +71,13 @@ int main (int argc, char **argv)
 
     double tic [2] ;
 
+    char *matrix_name = (argc > 1) ? argv [1] : "stdin" ; 
+    LAGraph_TRY (LAGraph_Test_ReadProblem (&G, NULL,
+        false, false, true, NULL, false, argc, argv, msg)) ;
+    
     GrB_Index n, nvals ;
-    GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
-    GrB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
+    GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
+    GrB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
 
     //--------------------------------------------------------------------------
     // compute the louvain_lsmp
@@ -95,9 +100,9 @@ int main (int argc, char **argv)
 
         for (int trial = 0 ; trial < ntrials ; trial++)
         {
-            GrB_free (&GC) ;
+            GrB_free (&C) ;
             LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-            LAGraph_TRY (LAGraph_Louvain_Lsmp (&GC, G, itermax, &iters, msg)) ;
+            LAGraph_TRY (LAGraph_Louvain_LSMP (&C, G, itermax, &iters, msg)) ;
             double t1 ;
             LAGraph_TRY (LAGraph_Toc (&t1, tic, NULL)) ;
             printf ("trial: %2d time: %10.4f sec\n", trial, t1) ;

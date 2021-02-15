@@ -51,7 +51,7 @@ int LAGraph_Louvain_LSMP // returns -1 on failure, 0 on success
     GrB_Matrix ApAT = NULL, S = NULL, W = NULL, GA = NULL;
     GxB_Scalar max;
 
-    LG_CHECK (community_assignment == NULL, -1, "centrality is NULL") ;
+    LG_CHECK (community_assignment == NULL, -1, "community_assignment is NULL") ;
     LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
 
     //--------------------------------------------------------------------------
@@ -59,6 +59,7 @@ int LAGraph_Louvain_LSMP // returns -1 on failure, 0 on success
     //--------------------------------------------------------------------------
 
     GrB_Index n, kn, tn, r;
+    float *tx;
     (*community_assignment) = NULL ;
     bool changed = true;
     float m, f, max_f;
@@ -71,6 +72,8 @@ int LAGraph_Louvain_LSMP // returns -1 on failure, 0 on success
 
     GrB_TRY (GrB_Matrix_new (&S,     GrB_BOOL, n, n)) ;
     GrB_TRY (GrB_Matrix_new (&ApAT,  GrB_FP32, n, n)) ;
+    GrB_TRY (GrB_Vector_new (&Sj,    GrB_BOOL, n)) ;
+    GrB_TRY (GrB_Vector_new (&k,     GrB_FP32, n)) ;
     GrB_TRY (GrB_Vector_new (&empty, GrB_BOOL, n)) ;
     GrB_TRY (GrB_Vector_new (&v,     GrB_FP32, n)) ;
     GrB_TRY (GrB_Vector_new (&q,     GrB_FP32, n)) ;
@@ -87,7 +90,7 @@ int LAGraph_Louvain_LSMP // returns -1 on failure, 0 on success
 
     GrB_TRY (GrB_Vector_size (&kn, k)) ;
     ks = LAGraph_Malloc (kn, sizeof (GrB_Index)) ;
-    GrB_TRY (GrB_Vector_extractTuples (ks, NULL, &kn, k)) ;
+    GrB_TRY (GrB_Vector_extractTuples (ks, (double*)NULL, &kn, k)) ;
 
     //     while changed and i < max_iters:
     for ((*iters) = 0 ; (*iters) < itermax && changed ; (*iters)++)
@@ -113,12 +116,13 @@ int LAGraph_Louvain_LSMP // returns -1 on failure, 0 on success
             GrB_TRY (GxB_select   (t,      NULL, NULL, GxB_EQ_THUNK, q, max, NULL)) ;
 
             // if t:
-            GrB_TRY (GrB_Vector_size (&tn, t)) ;
+            GrB_TRY (GrB_Vector_nvals (&tn, t)) ;
             if (tn == 0)
                 continue;
-
+             
             ts = LAGraph_Malloc (tn, sizeof (GrB_Index));
-            GrB_TRY (GrB_Vector_extractTuples (ts, NULL, &tn, t)) ;
+            GrB_TRY (GrB_Vector_extractTuples (ts, (float*)NULL, &tn, t)) ;
+
             if (tn == 1)
                 r = ts[0] ;
             else
@@ -133,9 +137,10 @@ int LAGraph_Louvain_LSMP // returns -1 on failure, 0 on success
     }
 
     // S.cast(INT64).apply(INT64.POSITIONJ).reduce_vector()
-    GrB_TRY (GrB_Matrix_new (&W,     GrB_INT64, n, n)) ;
-    GrB_TRY (GrB_apply  (W,      S, NULL, GxB_POSITIONJ_INT64, W, NULL)) ;
-    GrB_TRY (GrB_reduce (result, NULL, NULL, GxB_ANY_INT64, W, NULL)) ;
+    GrB_TRY (GrB_Matrix_new (&W,      GrB_INT64, n, n)) ;
+    GrB_TRY (GrB_apply      (W,       NULL, NULL, GxB_POSITIONJ_INT64, S, NULL)) ;
+    GrB_TRY (GrB_Vector_new (&result, GrB_INT64, n)) ;
+    GrB_TRY (GrB_reduce     (result,  NULL, NULL, GxB_ANY_INT64, W, NULL)) ;
 
     (*community_assignment) = result ;
     LAGRAPH_FREE_WORK ;
