@@ -164,19 +164,20 @@ int main (int argc, char **argv)
         {
             if (Nthreads [t] > nthreads_max) continue ;
             GrB_TRY (GxB_set (GxB_NTHREADS, Nthreads [t])) ;
+
             GrB_free (&centrality) ;
             double tic [2] ;
             LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
             LAGraph_TRY (LAGraph_VertexCentrality_Betweenness
                 (&centrality, G, vertex_list, batch_size, msg)) ;
-
             double t2 ;
             LAGraph_TRY (LAGraph_Toc (&t2, tic, msg)) ;
             printf ("BC time %2d: %12.4f (sec)\n", Nthreads [t], t2) ;
             fflush (stdout) ;
             tt [t] += t2 ;
 
-            // try structural mask
+#if 0
+            // try a variant
             GrB_free (&c2) ;
             LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
             LAGraph_TRY (LAGraph_B2
@@ -218,6 +219,7 @@ int main (int argc, char **argv)
                 }
             }
             tt2 [t] += t1 ;
+#endif
         }
 
         //----------------------------------------------------------------------

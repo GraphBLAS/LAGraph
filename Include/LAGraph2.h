@@ -676,19 +676,17 @@ int LAGraph_Sort3    // sort array A of size 3-by-n, using 3 keys (A [0:2][])
 ) ;
 
 //==============================================================================
-// LAGraph "simple" algorithms
+// LAGraph Basic algorithms
 //==============================================================================
 
-// "Simple" algorithm are meant to be easy to use.  They may encompass many
-// underlying expert algorithms, each with various parameters that may be
-// controlled.  For the "simple" API, these parameters are determined
+// Basic algorithm are meant to be easy to use.  They may encompass many
+// underlying Advanced algorithms, each with various parameters that may be
+// controlled.  For the Basic API, these parameters are determined
 // automatically.  Graph properties may be determined, and as a result, the
 // graph G is both an input and an output of these methods, since they may be
 // modified.
 
-// TODO: call this mode "easy", "standard", "simple" ??
-
-// simple method: computes and *saves* any properties.
+// Basic method: computes and *saves* any properties.
 // G is input/output.
 
 int LAGraph_BreadthFirstSearch      // returns -1 on failure, 0 if successful
@@ -735,7 +733,7 @@ int LAGraph_TriangleCount   // returns 0 if successful, < 0 if failure
     char *msg
 ) ;
 
-// TODO: this is a "simple" method, since G is input/output.
+// TODO: this is a Basic method, since G is input/output.
 int LAGraph_ConnectedComponents
 (
     // output
@@ -746,7 +744,7 @@ int LAGraph_ConnectedComponents
 ) ;
 
 // TODO: add AIsAllPositive or related as a G->property.
-// TODO: Should a "simple" method pick delta automatically?
+// TODO: Should a Basic method pick delta automatically?
 int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
 (
     // output:
@@ -769,29 +767,16 @@ int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
 ) ;
 
 //==============================================================================
-// LAGraph "expert" algorithms
+// LAGraph Advanced algorithms
 //==============================================================================
 
-// The "expert" methods require the caller to select the algorithm and choose
+// The Advanced methods require the caller to select the algorithm and choose
 // any parameter settings.  G is not modified, and so it is an input-only
-// parameter to these methods.  If an "expert" algorithm requires a graph
-// property to be computed, it must be computed prior to calling the "expert"
+// parameter to these methods.  If an Advanced algorithm requires a graph
+// property to be computed, it must be computed prior to calling the Advanced
 // method.
 
-// TODO: call this "expert", "advanced", "arcane" ... ??
-
 int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
-(
-    // output:
-    GrB_Vector *centrality,     // centrality(i): betweeness centrality of i
-    // inputs:
-    LAGraph_Graph G,            // input graph
-    const GrB_Index *sources,   // source vertices to compute shortest paths
-    int32_t ns,                 // number of source vertices
-    char *msg
-) ;
-
-int LAGraph_B2    // vertex betweenness-centrality
 (
     // output:
     GrB_Vector *centrality,     // centrality(i): betweeness centrality of i

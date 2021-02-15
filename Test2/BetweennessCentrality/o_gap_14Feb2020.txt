@@ -1,0 +1,568 @@
+hypersparse $ ./do_gap
+SuiteSparse:GraphBLAS v4.0.4 [Feb 6, 2021]
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+sources: /home/faculty/davis/GAP/GAP-kron/GAP-kron_sources.mtx
+    GraphBLAS type: type double size: 8
+read time: 56.0911
+Graph: kind: undirected, nodes: 134217726 entries: 4223264644 type: bool
+    pattern symmetry: symmetric
+
+Trial 1 : sources: [ 2338012 31997659 23590940 43400604 ]
+BC time 40:      25.1223 (sec)
+B2 time 40:      24.5327 (sec)
+isequal: 0
+err 1.16415e-10 5.53464e+07 relative: 2.1034e-18
+
+Trial 2 : sources: [ 75337937 169867 104041220 94177942 ]
+BC time 40:      27.5508 (sec)
+B2 time 40:      23.8458 (sec)
+isequal: 0
+err 1.2666e-07 6.30332e+07 relative: 2.00942e-15
+
+Trial 3 : sources: [ 32871357 56230002 69883037 9346345 ]
+BC time 40:      28.5749 (sec)
+B2 time 40:      25.4848 (sec)
+isequal: 0
+err 8.3819e-09 6.30329e+07 relative: 1.32977e-16
+
+Trial 4 : sources: [ 48915358 122571173 6183279 86323663 ]
+BC time 40:      27.0287 (sec)
+B2 time 40:      23.7302 (sec)
+isequal: 0
+err 9.68575e-08 6.30333e+07 relative: 1.53661e-15
+
+Trial 5 : sources: [ 106725780 92389938 16210738 59816700 ]
+BC time 40:      25.3102 (sec)
+B2 time 40:      24.9885 (sec)
+isequal: 0
+err 7.26432e-08 1.6256e+07 relative: 4.46869e-15
+
+Trial 6 : sources: [ 111669929 102831411 113384800 43872564 ]
+BC time 40:      28.4458 (sec)
+B2 time 40:      25.3888 (sec)
+isequal: 0
+err 7.45058e-09 6.3033e+07 relative: 1.18201e-16
+
+Trial 7 : sources: [ 80508827 26105648 8807516 118452455 ]
+BC time 40:      21.4238 (sec)
+B2 time 40:      21.1627 (sec)
+isequal: 0
+err 2.5332e-07 6.30329e+07 relative: 4.01885e-15
+
+Trial 8 : sources: [ 121818859 42361928 29493053 98461503 ]
+BC time 40:      23.5839 (sec)
+B2 time 40:      19.3555 (sec)
+isequal: 0
+err 1.11759e-07 6.30388e+07 relative: 1.77286e-15
+
+Trial 9 : sources: [ 71931337 103808468 4092345 115276241 ]
+BC time 40:      25.3540 (sec)
+B2 time 40:      21.6980 (sec)
+isequal: 0
+err 6.70552e-08 6.30329e+07 relative: 1.06381e-15
+
+Trial 10 : sources: [ 4649343 76656189 31312001 111334127 ]
+BC time 40:      25.1744 (sec)
+B2 time 40:      24.5485 (sec)
+isequal: 0
+err 9.31323e-08 6.3033e+07 relative: 1.47752e-15
+
+Trial 11 : sources: [ 100962918 41823215 22631240 42848461 ]
+BC time 40:      24.9295 (sec)
+B2 time 40:      22.9898 (sec)
+isequal: 0
+err 1.11759e-08 6.30329e+07 relative: 1.77302e-16
+
+Trial 12 : sources: [ 79485148 106818742 73347974 78848445 ]
+BC time 40:      24.1883 (sec)
+B2 time 40:      20.4468 (sec)
+isequal: 0
+err 1.19209e-07 6.30556e+07 relative: 1.89054e-15
+
+Trial 13 : sources: [ 109920510 121492133 101037296 15438600 ]
+BC time 40:      27.2340 (sec)
+B2 time 40:      24.3651 (sec)
+isequal: 0
+err 3.55271e-15 6.30329e+07 relative: 5.63628e-23
+
+Trial 14 : sources: [ 4584784 124503845 87241743 108297008 ]
+BC time 40:      28.7361 (sec)
+B2 time 40:      26.0492 (sec)
+isequal: 0
+err 8.19564e-08 6.30333e+07 relative: 1.30021e-15
+
+Trial 15 : sources: [ 33955082 79934823 8608481 82435063 ]
+BC time 40:      30.9611 (sec)
+B2 time 40:      28.2329 (sec)
+isequal: 0
+err 1.86265e-08 6.30329e+07 relative: 2.95504e-16
+
+Trial 16 : sources: [ 46579271 515421 121530467 127978736 ]
+BC time 40:      21.2945 (sec)
+B2 time 40:      20.8933 (sec)
+isequal: 0
+err 1.86265e-07 6.3033e+07 relative: 2.95503e-15
+
+ntrials: 16
+
+Ave BC 40:     25.932 sec, rate    162.859
+Avg: BC  40:     25.932 sec: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+Ave B2 40:     23.607 sec, rate    178.899
+Avg: B2  40:     23.607 sec: /home/faculty/davis/GAP/GAP-kron/GAP-kron.grb
+SuiteSparse:GraphBLAS v4.0.4 [Feb 6, 2021]
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+sources: /home/faculty/davis/GAP/GAP-urand/GAP-urand_sources.mtx
+    GraphBLAS type: type double size: 8
+read time: 54.4963
+Graph: kind: undirected, nodes: 134217728 entries: 4294966740 type: bool
+    pattern symmetry: symmetric
+
+Trial 1 : sources: [ 27691419 121280314 2413431 37512113 ]
+BC time 40:      33.4226 (sec)
+B2 time 40:      32.9311 (sec)
+isequal: 0
+err 9.31323e-10 6.39735e+06 relative: 1.45579e-16
+
+Trial 2 : sources: [ 38390877 56651037 128461248 33029842 ]
+BC time 40:      33.8479 (sec)
+B2 time 40:      33.2856 (sec)
+isequal: 0
+err 1.39698e-09 5.68737e+06 relative: 2.45629e-16
+
+Trial 3 : sources: [ 71406328 117872827 24351938 15444519 ]
+BC time 40:      33.1215 (sec)
+B2 time 40:      32.3926 (sec)
+isequal: 0
+err 1.86265e-09 7.59109e+06 relative: 2.45373e-16
+
+Trial 4 : sources: [ 127526281 112279428 13631649 110379302 ]
+BC time 40:      32.6761 (sec)
+B2 time 40:      32.1966 (sec)
+isequal: 0
+err 9.31323e-10 7.11372e+06 relative: 1.30919e-16
+
+Trial 5 : sources: [ 44800623 77768193 175347 107397389 ]
+BC time 40:      32.4114 (sec)
+B2 time 40:      32.1753 (sec)
+isequal: 0
+err 9.31323e-10 7.29047e+06 relative: 1.27745e-16
+
+Trial 6 : sources: [ 43457209 97215940 73575165 44449715 ]
+BC time 40:      32.5158 (sec)
+B2 time 40:      32.7404 (sec)
+isequal: 0
+err 1.39698e-09 6.6175e+06 relative: 2.11104e-16
+
+Trial 7 : sources: [ 33931724 55526610 14422051 58043873 ]
+BC time 40:      32.1758 (sec)
+B2 time 40:      31.5081 (sec)
+isequal: 0
+err 1.86265e-09 8.02169e+06 relative: 2.32201e-16
+
+Trial 8 : sources: [ 72137329 9647840 15940695 14209952 ]
+BC time 40:      33.8942 (sec)
+B2 time 40:      33.2737 (sec)
+isequal: 0
+err 9.31323e-10 5.71703e+06 relative: 1.62903e-16
+
+Trial 9 : sources: [ 49020883 28901138 50493273 49150069 ]
+BC time 40:      32.4192 (sec)
+B2 time 40:      32.2850 (sec)
+isequal: 0
+err 1.86265e-09 6.42787e+06 relative: 2.89777e-16
+
+Trial 10 : sources: [ 126525082 6382740 89108297 9239735 ]
+BC time 40:      33.4592 (sec)
+B2 time 40:      34.0136 (sec)
+isequal: 0
+err 9.31323e-10 6.40951e+06 relative: 1.45303e-16
+
+Trial 11 : sources: [ 110168548 95370259 116653530 123410703 ]
+BC time 40:      33.3525 (sec)
+B2 time 40:      33.1786 (sec)
+isequal: 0
+err 9.31323e-10 6.91043e+06 relative: 1.34771e-16
+
+Trial 12 : sources: [ 16733665 49030282 108545121 99095665 ]
+BC time 40:      34.4566 (sec)
+B2 time 40:      33.1834 (sec)
+isequal: 0
+err 9.31323e-10 6.68093e+06 relative: 1.394e-16
+
+Trial 13 : sources: [ 133850077 63499301 21541382 6230751 ]
+BC time 40:      33.2910 (sec)
+B2 time 40:      33.5149 (sec)
+isequal: 0
+err 9.31323e-10 5.24503e+06 relative: 1.77563e-16
+
+Trial 14 : sources: [ 89077456 70392765 6670455 61746271 ]
+BC time 40:      32.3884 (sec)
+B2 time 40:      32.4517 (sec)
+isequal: 0
+err 9.31323e-10 6.37051e+06 relative: 1.46193e-16
+
+Trial 15 : sources: [ 83349535 115272184 20129908 106148553 ]
+BC time 40:      32.4800 (sec)
+B2 time 40:      31.6170 (sec)
+isequal: 0
+err 1.86265e-09 7.40078e+06 relative: 2.51682e-16
+
+Trial 16 : sources: [ 117042375 71431187 45287808 107702120 ]
+BC time 40:      32.3617 (sec)
+B2 time 40:      32.2498 (sec)
+isequal: 0
+err 9.31323e-10 6.92941e+06 relative: 1.34402e-16
+
+ntrials: 16
+
+Ave BC 40:     33.017 sec, rate    130.083
+Avg: BC  40:     33.017 sec: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+Ave B2 40:     32.687 sec, rate    131.395
+Avg: B2  40:     32.687 sec: /home/faculty/davis/GAP/GAP-urand/GAP-urand.grb
+SuiteSparse:GraphBLAS v4.0.4 [Feb 6, 2021]
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+sources: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter_sources.mtx
+    GraphBLAS type: type double size: 8
+read time: 35.4578
+Graph: kind: directed, nodes: 61578415 entries: 1468364884 type: bool
+    pattern symmetry: unsymmetric
+
+Trial 1 : sources: [ 12441072 54488257 25451915 57714473 ]
+BC time 40:       9.2412 (sec)
+B2 time 40:       8.8584 (sec)
+isequal: 0
+err 2.55182e-07 3.38273e+07 relative: 7.54368e-15
+
+Trial 2 : sources: [ 14839494 32081104 52957357 50444380 ]
+BC time 40:      11.8569 (sec)
+B2 time 40:      11.1287 (sec)
+isequal: 0
+err 6.33299e-07 6.04791e+07 relative: 1.04714e-14
+
+Trial 3 : sources: [ 49590701 20127816 34939333 48251001 ]
+BC time 40:       8.8033 (sec)
+B2 time 40:       9.5260 (sec)
+isequal: 0
+err 4.17233e-07 3.50161e+07 relative: 1.19154e-14
+
+Trial 4 : sources: [ 19524253 43676726 33055508 15244687 ]
+BC time 40:       8.9922 (sec)
+B2 time 40:       8.0349 (sec)
+isequal: 0
+err 1.49012e-08 3.50161e+07 relative: 4.25551e-16
+
+Trial 5 : sources: [ 24946738 6479472 26077682 22023875 ]
+BC time 40:      10.2046 (sec)
+B2 time 40:       9.5957 (sec)
+isequal: 0
+err 2.98023e-08 4.16601e+07 relative: 7.15368e-16
+
+Trial 6 : sources: [ 22081915 40034162 49496014 42847507 ]
+BC time 40:       9.0813 (sec)
+B2 time 40:       8.8755 (sec)
+isequal: 0
+err 2.6077e-08 3.04635e+07 relative: 8.5601e-16
+
+Trial 7 : sources: [ 52409557 55445388 22028097 48766648 ]
+BC time 40:       9.6637 (sec)
+B2 time 40:       8.8581 (sec)
+isequal: 0
+err 5.58794e-09 3.50162e+07 relative: 1.59582e-16
+
+Trial 8 : sources: [ 44521241 60135542 28528671 9678012 ]
+BC time 40:      10.2465 (sec)
+B2 time 40:       9.9620 (sec)
+isequal: 0
+err 3.35276e-08 3.50161e+07 relative: 9.5749e-16
+
+Trial 9 : sources: [ 40020306 31625735 37446892 51788952 ]
+BC time 40:       9.3097 (sec)
+B2 time 40:       8.4421 (sec)
+isequal: 0
+err 2.23517e-08 3.35766e+07 relative: 6.65694e-16
+
+Trial 10 : sources: [ 52584255 20346696 48387909 37337427 ]
+BC time 40:       9.4446 (sec)
+B2 time 40:       8.5481 (sec)
+isequal: 0
+err 4.93601e-08 1.4325e+07 relative: 3.44574e-15
+
+Trial 11 : sources: [ 50501084 30130061 41185893 56495703 ]
+BC time 40:       9.6146 (sec)
+B2 time 40:       8.7999 (sec)
+isequal: 0
+err 5.58794e-09 2.41265e+07 relative: 2.31609e-16
+
+Trial 12 : sources: [ 45663305 33359460 48143058 33291513 ]
+BC time 40:       9.7622 (sec)
+B2 time 40:       9.0162 (sec)
+isequal: 0
+err 1.43051e-06 3.79786e+07 relative: 3.76663e-14
+
+Trial 13 : sources: [ 53461445 29340610 34148498 49171806 ]
+BC time 40:       9.3806 (sec)
+B2 time 40:       9.0863 (sec)
+isequal: 0
+err 4.47035e-08 3.50161e+07 relative: 1.27665e-15
+
+Trial 14 : sources: [ 35550696 14521507 51633218 46823382 ]
+BC time 40:       9.7406 (sec)
+B2 time 40:       8.9152 (sec)
+isequal: 0
+err 8.19564e-08 3.30944e+07 relative: 2.47644e-15
+
+Trial 15 : sources: [ 19396273 19871750 36862677 49539126 ]
+BC time 40:      10.2270 (sec)
+B2 time 40:      11.5717 (sec)
+isequal: 0
+err 8.41916e-07 3.50161e+07 relative: 2.40436e-14
+
+Trial 16 : sources: [ 34016452 36567395 55487793 14391370 ]
+BC time 40:       8.8845 (sec)
+B2 time 40:       8.8385 (sec)
+isequal: 0
+err 2.63099e-08 3.95124e+07 relative: 6.65863e-16
+
+ntrials: 16
+
+Ave BC 40:      9.653 sec, rate    152.110
+Avg: BC  40:      9.653 sec: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+Ave B2 40:      9.254 sec, rate    158.681
+Avg: B2  40:      9.254 sec: /home/faculty/davis/GAP/GAP-twitter/GAP-twitter.grb
+SuiteSparse:GraphBLAS v4.0.4 [Feb 6, 2021]
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+sources: /home/faculty/davis/GAP/GAP-web/GAP-web_sources.mtx
+    GraphBLAS type: type double size: 8
+read time: 31.9783
+Graph: kind: directed, nodes: 50636151 entries: 1930292948 type: bool
+    pattern symmetry: unsymmetric
+
+Trial 1 : sources: [ 10219452 44758211 890671 13843756 ]
+BC time 40:       8.9113 (sec)
+B2 time 40:       8.7431 (sec)
+isequal: 0
+err 1.49012e-08 7.48305e+07 relative: 1.99132e-16
+
+Trial 2 : sources: [ 14168062 20906930 12189584 26352335 ]
+BC time 40:       8.8364 (sec)
+B2 time 40:       8.2550 (sec)
+isequal: 0
+err 7.45058e-09 1.04073e+08 relative: 7.15902e-17
+
+Trial 3 : sources: [ 43500686 8987024 5699762 41436455 ]
+BC time 40:       9.4040 (sec)
+B2 time 40:       8.5720 (sec)
+isequal: 0
+err 5.58794e-09 5.39352e+07 relative: 1.03605e-16
+
+Trial 4 : sources: [ 5030727 40735218 16533563 28700166 ]
+BC time 40:      10.8334 (sec)
+B2 time 40:      10.1158 (sec)
+isequal: 0
+err 3.72529e-08 9.37031e+07 relative: 3.97563e-16
+
+Trial 5 : sources: [ 64711 39634750 16037779 27152739 ]
+BC time 40:       9.7957 (sec)
+B2 time 40:       9.5936 (sec)
+isequal: 0
+err 3.72529e-09 6.93875e+07 relative: 5.36882e-17
+
+Trial 6 : sources: [ 16404061 20491963 5322423 21420953 ]
+BC time 40:      10.8887 (sec)
+B2 time 40:      10.2094 (sec)
+isequal: 0
+err 2.98023e-08 1.15522e+08 relative: 2.57979e-16
+
+Trial 7 : sources: [ 26622109 5882875 18091040 10665896 ]
+BC time 40:       8.9054 (sec)
+B2 time 40:       8.6763 (sec)
+isequal: 0
+err 1.49012e-08 6.72342e+07 relative: 2.21631e-16
+
+Trial 8 : sources: [ 18634422 18138715 2355535 32885205 ]
+BC time 40:       8.7325 (sec)
+B2 time 40:       7.9960 (sec)
+isequal: 0
+err 7.45058e-09 5.15528e+07 relative: 1.44523e-16
+
+Trial 9 : sources: [ 40657440 35196167 45544426 6175519 ]
+BC time 40:       8.7465 (sec)
+B2 time 40:       8.0722 (sec)
+isequal: 0
+err 1.49012e-08 6.79473e+07 relative: 2.19305e-16
+
+Trial 10 : sources: [ 40058318 50626230 36571019 49397052 ]
+BC time 40:       9.3519 (sec)
+B2 time 40:       9.2670 (sec)
+isequal: 0
+err 1.86265e-09 1.03895e+08 relative: 1.79282e-17
+
+Trial 11 : sources: [ 23434265 2299444 32873823 25978282 ]
+BC time 40:       8.6028 (sec)
+B2 time 40:       7.9184 (sec)
+isequal: 0
+err 1.49012e-08 1.09767e+08 relative: 1.35752e-16
+
+Trial 12 : sources: [ 2461715 22787314 30759947 7428894 ]
+BC time 40:       6.8585 (sec)
+B2 time 40:       6.8410 (sec)
+isequal: 0
+err 7.45058e-09 3.89748e+07 relative: 1.91164e-16
+
+Trial 13 : sources: [ 39173870 43194209 26361509 39747211 ]
+BC time 40:       0.2715 (sec)
+B2 time 40:       0.2724 (sec)
+isequal: 0
+err 5.68434e-14 3306.48 relative: 1.71915e-17
+
+Trial 14 : sources: [ 30670029 41483033 9358666 9945008 ]
+BC time 40:       9.6928 (sec)
+B2 time 40:       9.5433 (sec)
+isequal: 0
+err 1.49012e-08 1.2501e+08 relative: 1.19199e-16
+
+Trial 15 : sources: [ 3355244 33831269 45124744 16137877 ]
+BC time 40:       8.9305 (sec)
+B2 time 40:       8.2729 (sec)
+isequal: 0
+err 1.49012e-08 5.88292e+07 relative: 2.53296e-16
+
+Trial 16 : sources: [ 11235448 37509144 27402414 39546083 ]
+BC time 40:       9.0375 (sec)
+B2 time 40:       9.0465 (sec)
+isequal: 0
+err 7.45058e-09 1.38797e+08 relative: 5.36798e-17
+
+ntrials: 16
+
+Ave BC 40:      8.612 sec, rate    224.128
+Avg: BC  40:      8.612 sec: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+Ave B2 40:      8.212 sec, rate    235.052
+Avg: B2  40:      8.212 sec: /home/faculty/davis/GAP/GAP-web/GAP-web.grb
+SuiteSparse:GraphBLAS v4.0.4 [Feb 6, 2021]
+threads to test:  40
+matrix: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+sources: /home/faculty/davis/GAP/GAP-road/GAP-road_sources.mtx
+    GraphBLAS type: type double size: 8
+read time: 0.868791
+Graph: kind: undirected, nodes: 23947347 entries: 57708624 type: bool
+    pattern symmetry: symmetric
+
+Trial 1 : sources: [ 4795720 21003853 417968 6496511 ]
+BC time 40:      34.6898 (sec)
+B2 time 40:      34.4642 (sec)
+isequal: 1
+err 0 2.39582e+07 relative: 0
+
+Trial 2 : sources: [ 6648699 9811073 22247478 5720252 ]
+BC time 40:      34.5631 (sec)
+B2 time 40:      34.3365 (sec)
+isequal: 1
+err 0 2.6128e+07 relative: 0
+
+Trial 3 : sources: [ 12366459 20413729 4217374 2674749 ]
+BC time 40:      34.5966 (sec)
+B2 time 40:      34.2366 (sec)
+isequal: 1
+err 0 3.45774e+07 relative: 0
+
+Trial 4 : sources: [ 22085557 19445040 2360788 19115968 ]
+BC time 40:      34.4072 (sec)
+B2 time 40:      34.2344 (sec)
+isequal: 1
+err 0 2.41665e+07 relative: 0
+
+Trial 5 : sources: [ 7758767 13468234 30367 18599547 ]
+BC time 40:      34.3965 (sec)
+B2 time 40:      34.6875 (sec)
+isequal: 1
+err 0 2.39474e+07 relative: 0
+
+Trial 6 : sources: [ 7526108 16836280 12742067 7697995 ]
+BC time 40:      34.1953 (sec)
+B2 time 40:      34.4153 (sec)
+isequal: 1
+err 0 2.4118e+07 relative: 0
+
+Trial 7 : sources: [ 5876443 9616340 2497673 10052290 ]
+BC time 40:      34.3795 (sec)
+B2 time 40:      34.4143 (sec)
+isequal: 1
+err 0 2.39475e+07 relative: 0
+
+Trial 8 : sources: [ 12493057 1670855 2760679 2460941 ]
+BC time 40:      34.7118 (sec)
+B2 time 40:      34.1168 (sec)
+isequal: 1
+err 0 2.56672e+07 relative: 0
+
+Trial 9 : sources: [ 8489650 5005225 8744645 8512023 ]
+BC time 40:      34.3313 (sec)
+B2 time 40:      34.2995 (sec)
+isequal: 1
+err 0 2.39473e+07 relative: 0
+
+Trial 10 : sources: [ 21912165 1105390 15432163 1600177 ]
+BC time 40:      34.8987 (sec)
+B2 time 40:      34.3386 (sec)
+isequal: 1
+err 0 2.40489e+07 relative: 0
+
+Trial 11 : sources: [ 19079469 16516637 20202566 21372803 ]
+BC time 40:      34.2950 (sec)
+B2 time 40:      34.4608 (sec)
+isequal: 1
+err 0 2.3986e+07 relative: 0
+
+Trial 12 : sources: [ 2898009 8491277 18798317 23757560 ]
+BC time 40:      34.3671 (sec)
+B2 time 40:      34.5364 (sec)
+isequal: 1
+err 0 2.39504e+07 relative: 0
+
+Trial 13 : sources: [ 17161819 23180739 10997085 3730630 ]
+BC time 40:      34.4113 (sec)
+B2 time 40:      34.3574 (sec)
+isequal: 1
+err 0 2.42338e+07 relative: 0
+
+Trial 14 : sources: [ 1079068 15426822 12190925 1155218 ]
+BC time 40:      34.6031 (sec)
+B2 time 40:      34.5651 (sec)
+isequal: 1
+err 0 2.39474e+07 relative: 0
+
+Trial 15 : sources: [ 10693488 14434835 19963339 3486185 ]
+BC time 40:      35.4873 (sec)
+B2 time 40:      34.2431 (sec)
+isequal: 1
+err 0 2.98301e+07 relative: 0
+
+Trial 16 : sources: [ 18383269 20269908 12370764 7843140 ]
+BC time 40:      34.3738 (sec)
+B2 time 40:      34.6626 (sec)
+isequal: 1
+err 0 2.39628e+07 relative: 0
+
+ntrials: 16
+
+Ave BC 40:     34.544 sec, rate      1.671
+Avg: BC  40:     34.544 sec: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+Ave B2 40:     34.398 sec, rate      1.678
+Avg: B2  40:     34.398 sec: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+hypersparse $ 
+
