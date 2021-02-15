@@ -119,12 +119,12 @@ int LAGraph_Louvain_LSMP // returns -1 on failure, 0 on success
             GrB_TRY (GrB_apply    (v,      NULL, NULL, GrB_PLUS_FP32, v, f, NULL)) ;
             // q = v @ S
             GrB_TRY (GrB_vxm      (q,      NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP32, v, S, NULL)) ;
-            // t = q.select('max')
 
             GrB_TRY (GrB_Vector_nvals (&tn, q)) ;
             if (tn == 0)
                 continue;
 
+            // t = q.select('max')
             GrB_TRY (GrB_reduce   (&max_f, NULL, GrB_MAX_MONOID_FP32, q, NULL)) ;
             GrB_TRY (GxB_Scalar_setElement    (max,    max_f)) ;
             GrB_TRY (GxB_select   (t,      NULL, NULL, GxB_EQ_THUNK, q, max, NULL)) ;
