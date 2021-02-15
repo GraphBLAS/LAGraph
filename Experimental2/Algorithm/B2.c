@@ -78,7 +78,7 @@
 // LAGraph_VertexCentrality_Betweenness: vertex betweenness-centrality
 //------------------------------------------------------------------------------
 
-int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
+int B2    // vertex betweenness-centrality
 (
     // outputs:
     GrB_Vector *centrality,     // centrality(i): betweeness centrality of i
@@ -187,8 +187,12 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
         // Accumulate path counts: paths += frontier
         //----------------------------------------------------------------------
 
-        GrB_TRY (GrB_assign (paths, NULL, GrB_PLUS_FP64, frontier, GrB_ALL, ns,
-            GrB_ALL, n, NULL)) ;
+//      GrB_TRY (GrB_assign (paths, NULL, GrB_PLUS_FP64, frontier, GrB_ALL, n,
+//          GrB_ALL, ns, NULL)) ;
+
+        // paths<frontier,s> = frontier
+        GrB_TRY (GrB_assign (paths, frontier, NULL, frontier, GrB_ALL, n,
+            GrB_ALL, ns, GrB_DESC_S)) ;
 
         //----------------------------------------------------------------------
         // Update frontier: frontier<!paths> = frontier*A
