@@ -254,7 +254,7 @@ int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
         // and use tless as mask to update t.
         GrB_TRY (GrB_Vector_clear (tless)) ;
         GrB_TRY (GrB_eWiseAdd (tless, tReq, NULL,
-            GrB_LT_INT32,           // TUDO: any type
+            GrB_LT_INT32,           // TODO: any type
             tReq, t, GrB_DESC_S)) ;
         // t<tless> = tReq
         // TODO: use assign, not apply

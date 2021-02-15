@@ -287,12 +287,12 @@ int LAGraph_BreadthFirstSearch      // returns -1 on failure, 0 if successful
         if (compute_parent)
         {
             // q(i) currently contains the parent id of node i in tree.
-            // pi{q} = q
+            // pi<s(q)> = q
             GrB_TRY (GrB_assign (pi, q, NULL, q, GrB_ALL, n, GrB_DESC_S)) ;
         }
         if (compute_level)
         {
-            // v{q} = k, the kth level of the BFS
+            // v<s(q)> = k, the kth level of the BFS
             GrB_TRY (GrB_assign (v, q, NULL, k, GrB_ALL, n, GrB_DESC_S)) ;
         }
     }
