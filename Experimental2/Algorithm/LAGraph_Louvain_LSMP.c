@@ -88,9 +88,12 @@ int LAGraph_Louvain_LSMP // returns -1 on failure, 0 on success
     // ApAT = A.T + A
     GrB_TRY (GrB_eWiseAdd  (ApAT, NULL, NULL, GrB_PLUS_FP32, GA, GA, GrB_DESC_T0)) ;
 
-    GrB_TRY (GrB_reduce (k,    NULL, NULL, GrB_PLUS_MONOID_FP32, GA, NULL)) ; // k = A.reduce_vector()
-    GrB_TRY (GrB_reduce (&m,   NULL, GrB_PLUS_MONOID_FP32, k, NULL)) ;       // m = k.reduce_int()
-    GrB_TRY (GrB_apply  (k,    NULL, NULL, GrB_AINV_FP32, k, NULL)) ;              // k = (-k) / m
+    // k = A.reduce_vector()
+    GrB_TRY (GrB_reduce (k,    NULL, NULL, GrB_PLUS_MONOID_FP32, GA, NULL)) ;
+    // m = k.reduce_int()
+    GrB_TRY (GrB_reduce (&m,   NULL, GrB_PLUS_MONOID_FP32, k, NULL)) ;
+    // k = (-k) / m
+    GrB_TRY (GrB_apply  (k,    NULL, NULL, GrB_AINV_FP32, k, NULL)) ;
     GrB_TRY (GrB_apply  (k,    NULL, NULL, GrB_DIV_FP32, k, m, NULL)) ;
 
     GrB_TRY (GrB_Vector_nvals (&kn, k)) ;
@@ -117,11 +120,11 @@ int LAGraph_Louvain_LSMP // returns -1 on failure, 0 on success
             // q = v @ S
             GrB_TRY (GrB_vxm      (q,      NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP32, v, S, NULL)) ;
             // t = q.select('max')
-            
+
             GrB_TRY (GrB_Vector_nvals (&tn, q)) ;
             if (tn == 0)
                 continue;
-             
+
             GrB_TRY (GrB_reduce   (&max_f, NULL, GrB_MAX_MONOID_FP32, q, NULL)) ;
             GrB_TRY (GxB_Scalar_setElement    (max,    max_f)) ;
             GrB_TRY (GxB_select   (t,      NULL, NULL, GxB_EQ_THUNK, q, max, NULL)) ;
@@ -143,7 +146,7 @@ int LAGraph_Louvain_LSMP // returns -1 on failure, 0 on success
                 changed = true;
             else if (Sjr_info != GrB_SUCCESS)
                 GrB_CATCH(Sjr_info)
-            
+
 			LAGraph_FREE (ts) ;
         }
     }
