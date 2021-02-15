@@ -28,6 +28,7 @@
 #define LAGRAPH_FREE_ALL            \
 {                                   \
     LAGraph_Delete (&G, NULL) ;     \
+    GrB_free (&c2) ;                \
     GrB_free (&centrality) ;        \
     GrB_free (&SourceNodes) ;       \
 }
@@ -45,7 +46,7 @@ int main (int argc, char **argv)
     char msg [LAGRAPH_MSG_LEN] ;
 
     LAGraph_Graph G = NULL ;
-    GrB_Vector centrality = NULL ;
+    GrB_Vector centrality = NULL, c2 = NULL ;
     GrB_Matrix SourceNodes = NULL ;
 
     // start GraphBLAS and LAGraph
@@ -83,6 +84,7 @@ int main (int argc, char **argv)
     printf ("\n") ;
 
     double tt [nthreads_max+1] ;
+    double tt2 [nthreads_max+1] ;
 
     //--------------------------------------------------------------------------
     // read in the graph
@@ -173,6 +175,49 @@ int main (int argc, char **argv)
             printf ("BC time %2d: %12.4f (sec)\n", Nthreads [t], t2) ;
             fflush (stdout) ;
             tt [t] += t2 ;
+
+            // try structural mask
+            GrB_free (&c2) ;
+            LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
+            LAGraph_TRY (LAGraph_B2
+                (&c2, G, vertex_list, batch_size, msg)) ;
+            double t1 ;
+            LAGraph_TRY (LAGraph_Toc (&t1, tic, msg)) ;
+            printf ("B2 time %2d: %12.4f (sec)\n", Nthreads [t], t1) ;
+            fflush (stdout) ;
+
+            // check result
+            bool isequal ;
+            LAGraph_TRY (LAGraph_IsEqual (&isequal,
+                (GrB_Matrix) c2, (GrB_Matrix) centrality, NULL, msg)) ;
+            printf ("isequal: %d\n", isequal) ;
+            // if (!isequal)
+            {
+                // check if they differ by epsilon, which can occur because of
+                // different parallel roundoff errors
+                // c2 -= centrality
+                LAGraph_TRY (GrB_assign (c2, NULL, GrB_MINUS_FP64, centrality,
+                    GrB_ALL, n, NULL)) ;
+                // c2 = abs (c2)
+                LAGraph_TRY (GrB_apply (c2, NULL, NULL, GrB_ABS_FP64, c2,
+                    NULL)) ;
+                // err = max (c2)
+                double err = 0 ;
+                LAGraph_TRY (GrB_reduce (&err, NULL, GrB_MAX_MONOID_FP64,
+                    c2, NULL)) ;
+                // cmax = max (centrality)
+                double cmax = 0 ;
+                LAGraph_TRY (GrB_reduce (&cmax, NULL, GrB_MAX_MONOID_FP64,
+                    centrality, NULL)) ;
+                double relerr = err/cmax ;
+                printf ("err %g %g relative: %g\n", err, cmax, relerr) ;
+                if (relerr > 1e-6)
+                {
+                    GxB_print (c2, 2) ; GxB_print (centrality, 2) ;
+                    printf ("Hey!\n") ; abort ( ) ;
+                }
+            }
+            tt2 [t] += t1 ;
         }
 
         //----------------------------------------------------------------------
@@ -202,6 +247,16 @@ int main (int argc, char **argv)
         printf ("Ave BC %2d: %10.3f sec, rate %10.3f\n",
             Nthreads [t], t2, 1e-6*((double) nvals) / t2) ;
         fprintf (stderr, "Avg: BC %3d: %10.3f sec: %s\n",
+            Nthreads [t], t2, matrix_name) ;
+    }
+
+    for (int t = 1 ; t <= nt ; t++)
+    {
+        if (Nthreads [t] > nthreads_max) continue ;
+        double t2 = tt2 [t] / ntrials ;
+        printf ("Ave B2 %2d: %10.3f sec, rate %10.3f\n",
+            Nthreads [t], t2, 1e-6*((double) nvals) / t2) ;
+        fprintf (stderr, "Avg: B2 %3d: %10.3f sec: %s\n",
             Nthreads [t], t2, matrix_name) ;
     }
 

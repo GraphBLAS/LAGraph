@@ -8,13 +8,11 @@
 
 //------------------------------------------------------------------------------
 
-// LAGraph_pattern: return the pattern of a matrix (spones(A) in MATLAB)
-// as a boolean matrix.
+// LAGraph_pattern: return the pattern of a matrix as a boolean matrix.
 
 #include "LG_internal.h"
 
-#define LAGRAPH_FREE_ALL \
-    GrB_free (C) ;
+#define LAGRAPH_FREE_ALL GrB_free (C) ;
 
 int LAGraph_Pattern     // return 0 if successful, -1 if failure
 (
@@ -34,8 +32,6 @@ int LAGraph_Pattern     // return 0 if successful, -1 if failure
     LG_CHECK (A == NULL, -1, "A is NULL") ;
     (*C) = NULL ;
 
-    // GxB_fprint (A, GxB_COMPLETE, stdout) ;
-
     //--------------------------------------------------------------------------
     // get the size of A
     //--------------------------------------------------------------------------
@@ -44,13 +40,13 @@ int LAGraph_Pattern     // return 0 if successful, -1 if failure
     GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
 
     //--------------------------------------------------------------------------
-    // C = spones (A), typecasting to bool
+    // C<A,s> = true
     //--------------------------------------------------------------------------
 
     GrB_TRY (GrB_Matrix_new (C, GrB_BOOL, nrows, ncols)) ;
-    GrB_TRY (GrB_apply (*C, NULL, NULL, GxB_ONE_BOOL, A, NULL)) ;
+    GrB_TRY (GrB_assign (*C, A, NULL, (bool) true,
+        GrB_ALL, nrows, GrB_ALL, nrows, GrB_DESC_S)) ;
 
-    // free workspace and return result
     return (0) ;
 }
 

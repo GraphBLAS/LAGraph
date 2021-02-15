@@ -6,6 +6,8 @@ Jan 2021 to date: in-progress comparisons of LAGraph +
 SuiteSparse:GraphBLAS vs GAP.  Results for Jan 26 and following are for
 algorithms in the Experimental2 folder.
 
+Feb 14: BC changed to FP64 (slower, needed only for Road),
+    and using faster LAGraph_Pattern
 Feb 6: SS:GrB draft v4.0.4 (on master branch), LAGraph/Experimental2
 Jan 26+: SS:GrB v4.0.3 with LAGraph/Experimental2
 Jan 19: SS:GrB v4.0.3 with LAGraph/Experimental
@@ -17,8 +19,9 @@ Jan  3: SS:GrB v4.0.1 with LAGraph/Experimental
 BC   GAP        31.521      46.361      10.821       3.008       1.503
               ------------------------------------------------------------------
 
-BC   SS         24.517 *    30.687 *     9.113 *     8.428      34.061 (Feb 7)
+BC   SS         23.607 *    32.687 *     9.254 *     8.201      34.398 (Feb 14)
 
+BC   SS         24.517 *    30.687 *     9.113 *     8.428      34.061 (Feb 7)
 BC   SS         24.752 *    30.656 *     9.283 *     8.971      43.660 (Feb 6)
 BC   SS         26.851 *    31.782 *    10.036 *     9.250      51.910 (Jan 26)
 BC   SS         25.552 *    32.004 *    10.049 *     9.193      50.153 (Jan 19)

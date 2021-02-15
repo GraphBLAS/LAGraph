@@ -78,7 +78,7 @@
 // LAGraph_VertexCentrality_Betweenness: vertex betweenness-centrality
 //------------------------------------------------------------------------------
 
-int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
+int LAGraph_B2    // vertex betweenness-centrality
 (
     // outputs:
     GrB_Vector *centrality,     // centrality(i): betweeness centrality of i
@@ -181,9 +181,7 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
         // S [depth] = pattern of frontier
         //----------------------------------------------------------------------
 
-        GrB_TRY (GrB_Matrix_new (&(S [depth]), GrB_BOOL, ns, n)) ;
-        GrB_TRY (GrB_apply (S [depth], NULL, NULL, GxB_ONE_BOOL, frontier,
-            NULL)) ;
+        LAGraph_TRY (LAGraph_Pattern (&(S [depth]), frontier, msg)) ;
 
         //----------------------------------------------------------------------
         // Accumulate path counts: paths += frontier
@@ -191,25 +189,6 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
 
         GrB_TRY (GrB_assign (paths, NULL, GrB_PLUS_FP64, frontier, GrB_ALL, n,
             GrB_ALL, ns, NULL)) ;
-
-#if 0
-{
-    GrB_Matrix crud ;
-    GrB_Matrix_new (&crud, GrB_BOOL, ns, n) ;
-    GrB_apply (crud, NULL, NULL, GxB_ISINF_FP64, paths, NULL) ;
-    int64_t infcount = 0 ;
-    GrB_reduce (&infcount, NULL, GrB_PLUS_MONOID_INT64, crud, NULL) ;
-    GrB_free (&crud) ;
-    GrB_Matrix_new (&crud, GrB_BOOL, ns, n) ;
-    GrB_apply (crud, NULL, NULL, GxB_ISNAN_FP64, paths, NULL) ;
-    int64_t nancount = 0 ;
-    GrB_reduce (&nancount, NULL, GrB_PLUS_MONOID_INT64, crud, NULL) ;
-    GrB_free (&crud) ;
-    if (infcount > 0 || nancount > 0) printf ("%5ld: inf %ld nan %ld\n",
-        depth, infcount, nancount) ;
-}
-#endif
-
 
         //----------------------------------------------------------------------
         // Update frontier: frontier<!paths> = frontier*A
@@ -247,12 +226,6 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
     }
 
     GrB_TRY (GrB_free (&frontier)) ;
-
-#if 0
-double maxpath ;
-GrB_TRY (GrB_reduce (&maxpath, NULL, GrB_MAX_MONOID_FP64, paths, NULL)) ;
-printf ("max(paths): %g\n", maxpath) ;
-#endif
 
     // =========================================================================
     // === Betweenness centrality computation phase ============================
