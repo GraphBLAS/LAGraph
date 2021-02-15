@@ -133,6 +133,7 @@ int LAGraph_Louvain_LSMP // returns -1 on failure, 0 on success
             ts = LAGraph_Malloc (tn, sizeof (GrB_Index));
             GrB_TRY (GrB_Vector_extractTuples (ts, (float*)NULL, &tn, t)) ;
 
+            // r = random.choice(list(t.indexes))
             if (tn == 1)
                 r = ts[0] ;
             else
