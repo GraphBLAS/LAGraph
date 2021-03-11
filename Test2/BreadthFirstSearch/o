@@ -1,0 +1,206 @@
+SuiteSparse:GraphBLAS v5.0.0 [Mar 9, 2021]
+threads to test:  8
+matrix: /home/davis/GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: /home/davis/GAP/GAP-road/GAP-road.grb
+malloc 0x55c0c14e24c0 256
+sources: /home/davis/GAP/GAP-road/GAP-road_sources.mtx
+    GraphBLAS type: type double size: 8
+malloc 0x55c103c293d0 256
+malloc 0x55c0c14e3430 16
+malloc 0x55c0c14e3450 8
+malloc 0x55c103c294e0 128
+malloc 0x55c103c29570 2048
+malloc 0x55c103c29d80 2048
+malloc 0x55c103c2a590 2048
+GB_builder J_work 0x55c103c29d80 J_work_handle 0x55c103c29510
+malloc 0x55c103c2ada0 1024
+malloc 0x55c103c2b1b0 512
+realloc mimic
+malloc 0x55c103c2b3c0 512
+realloc 2048 512
+malloc 0x55c103c283c0 256
+malloc 0x55c103c2b5d0 191578784
+malloc 0x55c10f2df880 461668992
+malloc 0x55c12ab27b10 57708624
+hard free 0x55c0c14e34d0 191578784
+hard free 0x55c0ccb97780 461668992
+hard free 0x55c0e83dfa10 461668992
+malloc 0x55c0c14e3470 191578784
+malloc 0x55c0ccb97720 461668992
+malloc 0x55c0e83df9b0 57708624
+malloc 0x55c0ebae8a10 191578784
+hard free 0x55c0ebae8a10 191578784
+malloc 0x55c103c28510 256
+malloc 0x55c0ebae8a10 65536
+realloc 88 45144
+malloc 0x55c0ebaf8a20 191578784
+hard free 0x55c0ebaf8a20 191578784
+malloc 0x55c0ebaf8a20 191578784
+malloc 0x55c12e230b70 461668992
+malloc 0x55c0f71accd0 57708624
+hard free 0x55c0ebaf8a20 191578784
+hard free 0x55c12e230b70 461668992
+hard free 0x55c0f71accd0 57708624
+hard free 0x55c0c14e3470 191578784
+hard free 0x55c0ccb97720 461668992
+hard free 0x55c0e83df9b0 57708624
+read time: 2.2605
+Graph: kind: undirected, nodes: 23947347 entries: 57708624 type: bool
+    pattern symmetry: symmetric
+malloc 0x55c0ebaf8a20 191578776
+malloc 0x55c0f71accc0 23947347
+malloc 0x55c0c14e3470 191578776
+hard free 0x55c0f71accc0 23947347
+hard free 0x55c0c14e3470 191578776
+
+------------------------------- threads:  8
+malloc 0x55c0f71accc0 23947347
+malloc 0x55c0f8883520 95789388
+malloc 0x55c103c28620 256
+malloc 0x55c103c28730 256
+malloc 0x55c103c28840 16
+GB_builder J_work (nil) J_work_handle 0x55c103c29510
+malloc 0x55c103c28860 16
+realloc mimic
+malloc 0x55c103c28880 8
+realloc 2048 8
+malloc 0x55c103c288a0 8
+malloc 0x55c103c288c0 8
+malloc 0x55c103c288e0 64
+malloc 0x55c103c28930 32
+malloc 0x55c103c28960 16
+malloc 0x55c103c28980 8
+malloc 0x55c103c289a0 16
+malloc 0x55c103c289c0 16
+malloc 0x55c103c289e0 128
+malloc 0x55c103c28a70 16
+malloc 0x55c103c28a90 32
+malloc 0x55c103c28ac0 32
+malloc 0x55c103c28af0 256
+malloc 0x55c103c28c00 32
+malloc 0x55c103c28c30 64
+malloc 0x55c103c28c80 64
+malloc 0x55c103c28cd0 64
+malloc 0x55c103c28d20 128
+malloc 0x55c103c28db0 128
+malloc 0x55c103c28e40 128
+malloc 0x55c103c28ed0 256
+malloc 0x55c103c28fe0 256
+malloc 0x55c103c290f0 256
+malloc 0x55c0fe3dd680 512
+malloc 0x55c0fe3dd890 512
+malloc 0x55c0fe3ddaa0 4096
+malloc 0x55c0fe3deab0 1024
+malloc 0x55c0fe3deec0 1024
+malloc 0x55c0fe3df2d0 1024
+malloc 0x55c0fe3df6e0 8192
+malloc 0x55c0fe3e16f0 2048
+malloc 0x55c0fe3e1f00 2048
+malloc 0x55c0fe3e2710 16384
+malloc 0x55c0fe3e6720 4096
+malloc 0x55c0fe3e7730 4096
+malloc 0x55c0fe3e8740 4096
+malloc 0x55c0fe3e9750 32768
+malloc 0x55c0fe3f1760 8192
+malloc 0x55c0fe3f3770 8192
+malloc 0x55c0fe3f5780 8192
+malloc 0x55c0fe3f7790 16384
+malloc 0x55c0fe3fb7a0 16384
+malloc 0x55c0fe3ff7b0 16384
+malloc 0x55c0fe4037c0 131072
+malloc 0x55c0fe4237d0 32768
+malloc 0x55c0fe42b7e0 32768
+malloc 0x55c0fe4337f0 32768
+malloc 0x55c0fe43b800 262144
+malloc 0x55c0fe47b810 65536
+malloc 0x55c0fe48b820 65536
+malloc 0x55c0fe49b830 65536
+malloc 0x55c0fe4ab840 524288
+malloc 0x55c0fe52b850 131072
+malloc 0x55c0fe54b860 131072
+malloc 0x55c0fe56b870 131072
+parent only  trial:  0 threads:  8 src:   4795720     4.5982 sec
+hard free 0x55c0f71accc0 23947347
+hard free 0x55c0f8883520 95789388
+
+hard free 0x55c0ebaf8a20 191578776
+hard free 0x55c103c2b5d0 191578784
+hard free 0x55c10f2df880 461668992
+hard free 0x55c12ab27b10 57708624
+
+================== free all pools
+hard free 0x55c103c28980 8
+hard free 0x55c103c288c0 8
+hard free 0x55c0c14e3450 8
+hard free 0x55c103c288a0 8
+hard free 0x55c103c28880 8
+hard free 0x55c103c28960 16
+hard free 0x55c103c28860 16
+hard free 0x55c103c28840 16
+hard free 0x55c103c289a0 16
+hard free 0x55c0c14e3430 16
+hard free 0x55c103c28a70 16
+hard free 0x55c103c289c0 16
+hard free 0x55c103c28a90 32
+hard free 0x55c103c28930 32
+hard free 0x55c103c28c00 32
+hard free 0x55c103c28ac0 32
+hard free 0x55c103c28cd0 64
+hard free 0x55c103c288e0 64
+hard free 0x55c103c28c30 64
+hard free 0x55c103c28c80 64
+hard free 0x55c103c28d20 128
+hard free 0x55c103c289e0 128
+hard free 0x55c103c28e40 128
+hard free 0x55c103c294e0 128
+hard free 0x55c103c28db0 128
+hard free 0x55c103c293d0 256
+hard free 0x55c103c283c0 256
+hard free 0x55c0c14e24c0 256
+hard free 0x55c103c28510 256
+hard free 0x55c103c28620 256
+hard free 0x55c103c28730 256
+hard free 0x55c103c290f0 256
+hard free 0x55c103c28fe0 256
+hard free 0x55c103c28ed0 256
+hard free 0x55c103c28af0 256
+hard free 0x55c103c2b3c0 512
+hard free 0x55c103c2b1b0 512
+hard free 0x55c0fe3dd680 512
+hard free 0x55c0fe3dd890 512
+hard free 0x55c0fe3df2d0 1024
+hard free 0x55c0fe3deec0 1024
+hard free 0x55c103c2ada0 1024
+hard free 0x55c0fe3deab0 1024
+hard free 0x55c103c2a590 2048
+hard free 0x55c0fe3e1f00 2048
+hard free 0x55c103c29d80 2048
+hard free 0x55c0fe3e16f0 2048
+hard free 0x55c103c29570 2048
+hard free 0x55c0fe3e6720 4096
+hard free 0x55c0fe3e7730 4096
+hard free 0x55c0fe3ddaa0 4096
+hard free 0x55c0fe3e8740 4096
+hard free 0x55c0fe3df6e0 8192
+hard free 0x55c0fe3f5780 8192
+hard free 0x55c0fe3f1760 8192
+hard free 0x55c0fe3f3770 8192
+hard free 0x55c0fe3fb7a0 16384
+hard free 0x55c0fe3ff7b0 16384
+hard free 0x55c0fe3f7790 16384
+hard free 0x55c0fe3e2710 16384
+hard free 0x55c0fe3e9750 32768
+hard free 0x55c0fe4337f0 32768
+hard free 0x55c0fe4237d0 32768
+hard free 0x55c0fe42b7e0 32768
+hard free 0x55c0fe49b830 65536
+hard free 0x55c0fe47b810 65536
+hard free 0x55c0ebae8a10 65536
+hard free 0x55c0fe48b820 65536
+hard free 0x55c0fe52b850 131072
+hard free 0x55c0fe4037c0 131072
+hard free 0x55c0fe56b870 131072
+hard free 0x55c0fe54b860 131072
+hard free 0x55c0fe43b800 262144
+hard free 0x55c0fe4ab840 524288

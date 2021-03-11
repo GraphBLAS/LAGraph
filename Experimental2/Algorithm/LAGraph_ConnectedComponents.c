@@ -397,7 +397,7 @@ int LAGraph_ConnectedComponents
         // read by the parallel loops below.
 
         GrB_Type type ;
-        GrB_Index nrows, ncols, nvals ;
+        GrB_Index nrows, ncols, nvals, typesize ;
         int64_t nonempty ;
         GrB_Index *Sp, *Sj ;
         void *Sx ;
@@ -407,6 +407,7 @@ int LAGraph_ConnectedComponents
         GrB_TRY (GrB_Matrix_nvals (&nvals, S)) ;
         GrB_TRY (GxB_Matrix_export_CSR (&S, &type, &nrows, &ncols, &Sp, &Sj,
             &Sx, &Sp_size, &Sj_size, &Sx_size, &S_jumbled, NULL)) ;
+        GrB_TRY (GxB_Type_size (&typesize, type)) ;
         G->A = NULL ;
 
         //----------------------------------------------------------------------
@@ -418,7 +419,7 @@ int LAGraph_ConnectedComponents
         GrB_Index Tx_size = nvals ;
         GrB_Index *Tp = LAGraph_Malloc (Tp_size, sizeof (GrB_Index)) ;
         GrB_Index *Tj = LAGraph_Malloc (Tj_size, sizeof (GrB_Index)) ;
-        void *Tx = LAGraph_Malloc (Tx_size, 1) ;
+        void *Tx = LAGraph_Malloc (Tx_size, typesize) ;
         // TODO check out-of-memory conditions
 
         //----------------------------------------------------------------------
@@ -499,6 +500,13 @@ int LAGraph_ConnectedComponents
         // Note that Tx is unmodified and contains uninitialized values.
         // TODO: T should held as a uniform-valued matrix, once GraphBLAS
         // allows for this, with Tx_size = 1.
+
+        #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
+        // in SuiteSparse:GraphBLAS v5, sizes are in bytes, not entries
+        Tp_size *= sizeof (int64_t) ;
+        Tj_size *= sizeof (int64_t) ;
+        Tx_size *= typesize ;
+        #endif
 
         GrB_Index t_nvals = Tp [nrows] ;
         GrB_TRY (GxB_Matrix_import_CSR (&T, type, nrows, ncols,

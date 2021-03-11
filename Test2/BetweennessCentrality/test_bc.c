@@ -252,6 +252,7 @@ int main (int argc, char **argv)
             Nthreads [t], t2, matrix_name) ;
     }
 
+#if 0
     for (int t = 1 ; t <= nt ; t++)
     {
         if (Nthreads [t] > nthreads_max) continue ;
@@ -261,6 +262,7 @@ int main (int argc, char **argv)
         fprintf (stderr, "Avg: B2 %3d: %10.3f sec: %s\n",
             Nthreads [t], t2, matrix_name) ;
     }
+#endif
 
     LAGRAPH_FREE_ALL;
     LAGraph_TRY (LAGraph_Finalize (msg)) ;

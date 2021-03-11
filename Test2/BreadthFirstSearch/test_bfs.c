@@ -9,8 +9,8 @@
 
 #include "LAGraph_Test.h"
 
-#define NTHREAD_LIST 2
-// #define NTHREAD_LIST 1
+// #define NTHREAD_LIST 2
+#define NTHREAD_LIST 1
 #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 8
@@ -149,6 +149,7 @@ int main (int argc, char **argv)
             //------------------------------------------------------------------
 
             GrB_free (&level) ;
+#if 1
             LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
             LAGraph_TRY (LAGraph_BreadthFirstSearch (&level, NULL,
                 G, src, msg)) ;
@@ -187,7 +188,7 @@ int main (int argc, char **argv)
             fflush (stdout) ;
             // GrB_TRY (GxB_print (parent, 2)) ;
             // GrB_TRY (GxB_print (level, 2)) ;
-
+#endif
             GrB_free (&parent) ;
             GrB_free (&level) ;
         }
