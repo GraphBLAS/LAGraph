@@ -200,6 +200,14 @@ int LAGraph_BinRead         // returns 0 if successful, -1 if failure
     // import the matrix
     //--------------------------------------------------------------------------
 
+    #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
+    // in SuiteSparse:GraphBLAS v5, sizes are in bytes, not entries
+    Ap_size *= sizeof (int64_t) ;
+    Ah_size *= sizeof (int64_t) ;
+    Ai_size *= sizeof (int64_t) ;
+    Ax_size *= typesize ;
+    #endif
+
     if (fmt == GxB_BY_COL && is_hyper)
     {
         // hypersparse CSC
