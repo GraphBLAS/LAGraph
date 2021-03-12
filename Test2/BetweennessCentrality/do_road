@@ -1,0 +1,4 @@
+#!/bin/sh
+
+./build/test_bc ~/GAP/GAP-road/GAP-road.grb ~/GAP/GAP-road/GAP-road_sources.mtx
+
