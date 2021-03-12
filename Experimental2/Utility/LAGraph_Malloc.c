@@ -8,12 +8,20 @@
 
 //------------------------------------------------------------------------------
 
+// The 3rd parameter has been added, since some memory managers (PMR in C++,
+// and the Rapids Memory Manager) require it passed back to the deallocate
+// method.  For now, size_allocated is the same as nitems*size_of_item, but
+// another memory manager could allocate more space than that, for better
+// performance.
+
 #include "LG_internal.h"
 
 void *LAGraph_Malloc
 (
     size_t nitems,          // number of items
-    size_t size_of_item     // size of each item
+    size_t size_of_item,    // size of each item
+    // output:
+    size_t *size_allocated  // # of bytes actually allocated
 )
 {
 
@@ -29,10 +37,13 @@ void *LAGraph_Malloc
     if (!ok || nitems > GxB_INDEX_MAX || size_of_item > GxB_INDEX_MAX)
     {
         // overflow
+        (*size_allocated) = 0 ;
         return (NULL) ;
     }
 
     // malloc the space
-    return (LAGraph_Malloc_function (size)) ;
+    void *p = LAGraph_Malloc_function (size) ;
+    (*size_allocated) = (p == NULL) ? 0 : size ;
+    return (p) ;
 }
 
