@@ -15,13 +15,15 @@
 
 void LAGraph_Free
 (
-    void *p                 // pointer to object to free, does nothing if NULL
+    void **p,               // pointer to object to free, does nothing if NULL
+    size_t size_allocated   // # of bytes actually allocated
 )
 {
 
-    if (p != NULL)
+    if (p != NULL && (*p) != NULL)
     {
-        LAGraph_Free_function (p) ;
+        LAGraph_Free_function (*p) ;
+        (*p) = NULL ;
     }
 }
 

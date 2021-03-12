@@ -122,7 +122,7 @@
         /* free any internal workspace and return the status */     \
         GrB_free (*parent) ;                                        \
         GrB_free (workvector) ;                                     \
-        LAGraph_FREE (W) ;                                          \
+        LAGraph_Free ((void **) &W, W_size) ;                       \
         return (status) ;                                           \
     }
 
@@ -184,10 +184,9 @@
 // from realloc, since the ANSI C11 realloc syntax is difficult to use safely.
 
 // Only LAGraph_Malloc_function and LAGraph_Free_function are required.
-// LAGraph_Calloc_function may be NULL, in which case LAGraph_Malloc_function
-// and memset are used.  Likewise, LAGraph_Realloc_function may be NULL, in
-// which case LAGraph_Malloc_function, memcpy, and LAGraph_Free_function are
-// used.
+// LAGraph_Calloc_function may be NULL, in which case LAGraph_Malloc and memset
+// are used.  Likewise, LAGraph_Realloc_function may be NULL, in which case
+// LAGraph_Malloc, memcpy, and LAGraph_Free are used.
 
 extern void * (* LAGraph_Malloc_function  ) (size_t)         ;
 extern void * (* LAGraph_Calloc_function  ) (size_t, size_t) ;
@@ -196,41 +195,41 @@ extern void   (* LAGraph_Free_function    ) (void *)         ;
 extern bool LAGraph_Malloc_is_thread_safe ;
 
 // LAGraph_Malloc:  allocate a block of memory (wrapper for malloc)
-void *LAGraph_Malloc        // returns pointer to malloc'd space, or NULL
+void *LAGraph_Malloc
 (
     size_t nitems,          // number of items
-    size_t size_of_item     // size of each item
+    size_t size_of_item,    // size of each item
+    // output:
+    size_t *size_allocated  // # of bytes actually allocated
 ) ;
 
 // LAGraph_Calloc:  allocate a block of memory (wrapper for calloc)
-void *LAGraph_Calloc        // returns pointer to calloc'd space, or NULL
+void *LAGraph_Calloc
 (
     size_t nitems,          // number of items
-    size_t size_of_item     // size of each item
+    size_t size_of_item,    // size of each item
+    // output:
+    size_t *size_allocated  // # of bytes actually allocated
 ) ;
 
-// LAGraph_Realloc: reallocate a block a memory (wrapper for realloc)
 void *LAGraph_Realloc       // returns pointer to reallocated block of memory,
 (                           // or original block if reallocation fails.
     size_t nitems_new,      // new number of items in the object
     size_t nitems_old,      // old number of items in the object
     size_t size_of_item,    // size of each item
-    void *p,                // old object to reallocate
+    // input/output
+    void *p,                // old block to reallocate
+    size_t *size_allocated, // # of bytes actually allocated
+    // output
     bool *ok                // true if successful, false otherwise
 ) ;
 
 // LAGraph_Free:  free a block of memory (wrapper for free)
 void LAGraph_Free
 (
-    void *p                 // pointer to object to free, does nothing if NULL
+    void **p,               // pointer to object to free, does nothing if NULL
+    size_t size_allocated   // # of bytes actually allocated
 ) ;
-
-// LAGraph_FREE: free a block of memory and set the pointer to NULL
-#define LAGraph_FREE(p)     \
-{                           \
-    LAGraph_Free (p) ;      \
-    p = NULL ;              \
-}
 
 //==============================================================================
 // LAGraph data structures
@@ -381,6 +380,11 @@ struct LAGraph_Graph_struct
     // colsum (j) = sum (A (:,j)), regardless of kind
     // LAGraph_BooleanProperty connected ;   // true if G is a connected graph
 
+    //--------------------------------------------------------------------------
+    // for internal use only -- do not modify this parameter
+    //--------------------------------------------------------------------------
+
+    size_t size ;
 } ;
 
 typedef struct LAGraph_Graph_struct *LAGraph_Graph ;
@@ -581,7 +585,8 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
 int LAGraph_SortByDegree    // returns 0 if successful, -1 if failure
 (
     // output
-    int64_t **P_handle,     // permutation vector of size n
+    int64_t **P_handle,     // P is returned as a permutation vector of size n
+    size_t *P_size,         // size of P in bytes
     // input
     LAGraph_Graph G,        // graph of n nodes
     bool byrow,             // if true, sort G->rowdegree, else G->coldegree

@@ -64,7 +64,7 @@
             if (S [i] == NULL) break ;          \
             GrB_free (&(S [i])) ;               \
         }                                       \
-        LAGraph_FREE (S) ;                      \
+        LAGraph_Free ((void **) &S, S_size) ;   \
     }                                           \
 }
 
@@ -101,6 +101,7 @@ int B2    // vertex betweenness-centrality
     // first seen thus far in each BFS at the current depth i. Each column
     // corresponds to a BFS traversal starting from a source node.
     GrB_Matrix *S = NULL ;
+    size_t S_size = 0 ;
 
     // Frontier matrix, a sparse matrix.
     // Stores # of shortest paths to vertices at current BFS depth
@@ -162,8 +163,9 @@ int B2    // vertex betweenness-centrality
         GrB_DESC_RSC)) ;
 
     // Allocate memory for the array of S matrices
-    S = (GrB_Matrix *) LAGraph_Calloc (n, sizeof (GrB_Matrix)) ;
+    S = (GrB_Matrix *) LAGraph_Malloc (n+1, sizeof (GrB_Matrix), &S_size) ;
     LG_CHECK (S == NULL, -1, "out of memory") ;
+    S [0] = NULL ;
 
     // =========================================================================
     // === Breadth-first search stage ==========================================
@@ -181,6 +183,7 @@ int B2    // vertex betweenness-centrality
         // S [depth] = pattern of frontier
         //----------------------------------------------------------------------
 
+        S [depth+1] = NULL ;
         LAGraph_TRY (LAGraph_Pattern (&(S [depth]), frontier, msg)) ;
 
         //----------------------------------------------------------------------
