@@ -125,51 +125,51 @@ int LAGraph_BinRead         // returns 0 if successful, -1 if failure
     // allocate the array content
     //--------------------------------------------------------------------------
 
-    GrB_Index Ap_size = 0 ;
-    GrB_Index Ah_size = 0 ;
-    GrB_Index Ab_size = 0 ;
-    GrB_Index Ai_size = 0 ;
-    GrB_Index Ax_size = 0 ;
+    GrB_Index Ap_len = 0, Ap_size = 0 ;
+    GrB_Index Ah_len = 0, Ah_size = 0 ;
+    GrB_Index Ab_len = 0, Ab_size = 0 ;
+    GrB_Index Ai_len = 0, Ai_size = 0 ;
+    GrB_Index Ax_len = 0, Ax_size = 0 ;
 
     // v4.0.1: hypersparse, sparse, bitmap, and full
     // v3.3.3 and v4.0.0: only hypersparse and sparse
     bool ok = true ;
     if (is_hyper)
     {
-        Ap_size = nvec+1 ;
-        Ah_size = nvec ;
-        Ai_size = nvals ;
-        Ax_size = nvals ;
-        Ap = LAGraph_Malloc (Ap_size, sizeof (GrB_Index)) ;
-        Ah = LAGraph_Malloc (Ah_size, sizeof (GrB_Index)) ;
-        Ai = LAGraph_Malloc (Ai_size, sizeof (GrB_Index)) ;
+        Ap_len = nvec+1 ;
+        Ah_len = nvec ;
+        Ai_len = nvals ;
+        Ax_len = nvals ;
+        Ap = LAGraph_Malloc (Ap_len, sizeof (GrB_Index), &Ap_size) ;
+        Ah = LAGraph_Malloc (Ah_len, sizeof (GrB_Index), &Ah_size) ;
+        Ai = LAGraph_Malloc (Ai_len, sizeof (GrB_Index), &Ai_size) ;
         ok = (Ap != NULL && Ah != NULL && Ai != NULL) ;
     }
     else if (is_sparse)
     {
-        Ap_size = nvec+1 ;
-        Ai_size = nvals ;
-        Ax_size = nvals ;
-        Ap = LAGraph_Malloc (Ap_size, sizeof (GrB_Index)) ;
-        Ai = LAGraph_Malloc (Ai_size, sizeof (GrB_Index)) ;
+        Ap_len = nvec+1 ;
+        Ai_len = nvals ;
+        Ax_len = nvals ;
+        Ap = LAGraph_Malloc (Ap_len, sizeof (GrB_Index), &Ap_size) ;
+        Ai = LAGraph_Malloc (Ai_len, sizeof (GrB_Index), &Ai_size) ;
         ok = (Ap != NULL && Ai != NULL) ;
     }
     else if (is_bitmap)
     {
-        Ab_size = nrows*ncols ;
-        Ax_size = nrows*ncols ;
-        Ab = LAGraph_Malloc (nrows*ncols, sizeof (int8_t)) ;
+        Ab_len = nrows*ncols ;
+        Ax_len = nrows*ncols ;
+        Ab = LAGraph_Malloc (nrows*ncols, sizeof (int8_t), &Ab_size) ;
         ok = (Ab != NULL) ;
     }
     else if (is_full)
     {
-        Ax_size = nrows*ncols ;
+        Ax_len = nrows*ncols ;
     }
     else
     {
         LG_CHECK (false, -1, "unknown matrix format") ;
     }
-    Ax = LAGraph_Malloc (Ax_size, typesize) ;
+    Ax = LAGraph_Malloc (Ax_len, typesize, &Ax_size) ;
     LG_CHECK (!ok || Ax == NULL, -1, "out of memory") ;
 
     //--------------------------------------------------------------------------
@@ -178,21 +178,21 @@ int LAGraph_BinRead         // returns 0 if successful, -1 if failure
 
     if (is_hyper)
     {
-        FREAD (Ap, sizeof (GrB_Index), Ap_size) ;
-        FREAD (Ah, sizeof (GrB_Index), Ah_size) ;
-        FREAD (Ai, sizeof (GrB_Index), Ai_size) ;
+        FREAD (Ap, sizeof (GrB_Index), Ap_len) ;
+        FREAD (Ah, sizeof (GrB_Index), Ah_len) ;
+        FREAD (Ai, sizeof (GrB_Index), Ai_len) ;
     }
     else if (is_sparse)
     {
-        FREAD (Ap, sizeof (GrB_Index), Ap_size) ;
-        FREAD (Ai, sizeof (GrB_Index), Ai_size) ;
+        FREAD (Ap, sizeof (GrB_Index), Ap_len) ;
+        FREAD (Ai, sizeof (GrB_Index), Ai_len) ;
     }
     else if (is_bitmap)
     {
-        FREAD (Ab, sizeof (int8_t), Ab_size) ;
+        FREAD (Ab, sizeof (int8_t), Ab_len) ;
     }
 
-    FREAD (Ax, typesize, Ax_size) ;
+    FREAD (Ax, typesize, Ax_len) ;
     fclose (f) ;
     f = NULL ;
 
@@ -202,61 +202,69 @@ int LAGraph_BinRead         // returns 0 if successful, -1 if failure
 
     #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
     // in SuiteSparse:GraphBLAS v5, sizes are in bytes, not entries
-    Ap_size *= sizeof (int64_t) ;
-    Ah_size *= sizeof (int64_t) ;
-    Ai_size *= sizeof (int64_t) ;
-    Ax_size *= typesize ;
+    GrB_Index Ap_siz = Ap_size ;
+    GrB_Index Ah_siz = Ah_size ;
+    GrB_Index Ab_siz = Ab_size ;
+    GrB_Index Ai_siz = Ai_size ;
+    GrB_Index Ax_siz = Ax_size ;
+    #else
+    // in SuiteSparse:GraphBLAS v4, sizes are in # of entries, not bytes
+    GrB_Index Ap_siz = Ap_len ;
+    GrB_Index Ah_siz = Ah_len ;
+    GrB_Index Ab_siz = Ab_len ;
+    GrB_Index Ai_siz = Ai_len ;
+    GrB_Index Ax_siz = Ax_len ;
     #endif
 
     if (fmt == GxB_BY_COL && is_hyper)
     {
         // hypersparse CSC
         GrB_TRY (GxB_Matrix_import_HyperCSC (A, type, nrows, ncols,
-            &Ap, &Ah, &Ai, &Ax, Ap_size, Ah_size, Ai_size, Ax_size,
+            &Ap, &Ah, &Ai, &Ax, Ap_siz, Ah_siz, Ai_siz, Ax_siz,
             nvec, false, NULL)) ;
     }
     else if (fmt == GxB_BY_ROW && is_hyper)
     {
         // hypersparse CSR
         GrB_TRY (GxB_Matrix_import_HyperCSR (A, type, nrows, ncols,
-            &Ap, &Ah, &Ai, &Ax, Ap_size, Ah_size, Ai_size, Ax_size,
+            &Ap, &Ah, &Ai, &Ax, Ap_siz, Ah_siz, Ai_siz, Ax_siz,
             nvec, false, NULL)) ;
     }
     else if (fmt == GxB_BY_COL && is_sparse)
     {
         // standard CSC
         GrB_TRY (GxB_Matrix_import_CSC (A, type, nrows, ncols,
-            &Ap, &Ai, &Ax, Ap_size, Ai_size, Ax_size, false, NULL)) ;
+            &Ap, &Ai, &Ax, Ap_siz, Ai_siz, Ax_siz, false, NULL)) ;
     }
     else if (fmt == GxB_BY_ROW && is_sparse)
     {
         // standard CSR
         GrB_TRY (GxB_Matrix_import_CSR (A, type, nrows, ncols,
-            &Ap, &Ai, &Ax, Ap_size, Ai_size, Ax_size, false, NULL)) ;
+            &Ap, &Ai, &Ax, Ap_siz, Ai_siz, Ax_siz, false, NULL)) ;
     }
     else if (fmt == GxB_BY_COL && is_bitmap)
     {
         // bitmap by col
         GrB_TRY (GxB_Matrix_import_BitmapC (A, type, nrows, ncols,
-            &Ab, &Ax, Ab_size, Ax_size, nvals, NULL)) ;
+            &Ab, &Ax, Ab_siz, Ax_siz, nvals, NULL)) ;
     }
     else if (fmt == GxB_BY_ROW && is_bitmap)
     {
         // bitmap by row
         GrB_TRY (GxB_Matrix_import_BitmapR (A, type, nrows, ncols,
-            &Ab, &Ax, Ab_size, Ax_size, nvals, NULL)) ;
+            &Ab, &Ax, Ab_siz, Ax_siz, nvals, NULL)) ;
     }
     else if (fmt == GxB_BY_COL && is_full)
     {
         // full by col
         GrB_TRY (GxB_Matrix_import_FullC (A, type, nrows, ncols,
-            &Ax, Ax_size, NULL)) ;
+            &Ax, Ax_siz, NULL)) ;
     }
     else if (fmt == GxB_BY_ROW && is_full)
     {
         // full by row
         GrB_TRY (GxB_Matrix_import_FullR (A, type, nrows, ncols,
-            &Ax, Ax_size, NULL)) ;
+            &Ax, Ax_siz, NULL)) ;
     }
     else
     {

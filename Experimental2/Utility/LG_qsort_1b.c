@@ -61,10 +61,11 @@ int LG_qsort_1b    // sort array A of size 2-by-n, using 1 key (A [0][])
 )
 { 
     uint64_t seed = n ;
-    LG_void *tx = LAGraph_Malloc (1, xsize) ;
+    size_t tx_size = 0 ;
+    LG_void *tx = LAGraph_Malloc (1, xsize, &tx_size) ;
     if (tx == NULL) return (-1) ;
     LG_quicksort (LG_arg (A), n, &seed, tx) ;
-    LAGraph_FREE (tx) ;
+    LAGraph_Free ((void **) &tx, tx_size) ;
     return (0) ;
 }
 

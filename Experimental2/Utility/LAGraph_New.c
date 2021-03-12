@@ -33,8 +33,10 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
     // allocate the graph
     //--------------------------------------------------------------------------
 
-    (*G) = LAGraph_Malloc (1, sizeof (struct LAGraph_Graph_struct)) ;
+    size_t G_size ;
+    (*G) = LAGraph_Malloc (1, sizeof (struct LAGraph_Graph_struct), &G_size) ;
     LG_CHECK (*G == NULL, -1, "out of memory") ;
+    (*G)->size = G_size ;
 
     //--------------------------------------------------------------------------
     // assign its primary components
@@ -66,7 +68,7 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
     (*G)->rowdegree = NULL ;
     (*G)->coldegree = NULL ;
     (*G)->A_pattern_is_symmetric =
-        (kind == LAGRAPH_ADJACENCY_UNDIRECTED) ? LAGRAPH_TRUE : LAGRAPH_UNKNOWN ;
+        (kind == LAGRAPH_ADJACENCY_UNDIRECTED) ? LAGRAPH_TRUE : LAGRAPH_UNKNOWN;
     (*G)->ndiag = LAGRAPH_UNKNOWN ;
 
     return (0) ;
