@@ -704,9 +704,9 @@ int LAGraph_BreadthFirstSearch      // returns -1 on failure, 0 if successful
     // inputs:
     LAGraph_Graph G,        // graph to traverse
     GrB_Index src,          // source node
+    bool pushpull,          // if true, use push/pull, otherwise pushonly
     char *msg
 ) ;
-
 
 // the following is a draft:
 typedef enum

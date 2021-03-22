@@ -9,7 +9,7 @@
 
 // Usage:
 
-// status = LAGraph_BreadthFirstSearch (&parent, &level, G, src, msg) ;
+// status = LAGraph_BreadthFirstSearch (&parent, &level, G, src, pushpull, msg);
 
 // GrB_Vector *parent: a vector containing the BFS tree.  parent(src) = src for
 //      source node.  parent(i) = p if p is the parent of i.  If parent(i) is
@@ -27,6 +27,10 @@
 //      must also be present to use the push-pull method.
 
 // int64_t src: the source node for the BFS.
+
+// bool pushpull:  if true, and if the G->AT and G->rowdegree properties exist
+//      on input, then a push/pull method is used.  Otherwise, a push-only
+//      method is used.
 
 // int status: 0 if successful, -1 on error
 
@@ -56,18 +60,21 @@
 }
 
 #include "LG_internal.h"
+#include "/home/davis/master/GraphBLAS/Source/GB_Global.h"
 
 int LAGraph_BreadthFirstSearch      // returns -1 on failure, 0 if successful
 (
     // outputs:
-    GrB_Vector *level,              // if NULL do not compute
-    GrB_Vector *parent,             // if NULL do not compute
+    GrB_Vector *level,      // not computed if NULL
+    GrB_Vector *parent,     // not computed if NULL
     // inputs:
-    LAGraph_Graph G,
-    GrB_Index src,
+    LAGraph_Graph G,        // graph to traverse
+    GrB_Index src,          // source node
+    bool pushpull,          // if true, use push/pull, otherwise pushonly
     char *msg
 )
 {
+double ttt = omp_get_wtime ( ) ;
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -119,7 +126,7 @@ int LAGraph_BreadthFirstSearch      // returns -1 on failure, 0 if successful
     GrB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
 
     // direction-optimization requires AT and Degree
-    bool push_pull = (AT != NULL) && (Degree != NULL) ;
+    bool push_pull = pushpull && (AT != NULL) && (Degree != NULL) ;
 
     // determine the semiring type
     GrB_Type int_type = (n > INT32_MAX) ? GrB_INT64 : GrB_INT32 ;
@@ -186,14 +193,19 @@ int LAGraph_BreadthFirstSearch      // returns -1 on failure, 0 if successful
     // {!mask} is the set of unvisited nodes
     GrB_Vector mask = (compute_parent) ? pi : v ;
 
+ttt = omp_get_wtime ( ) - ttt ;
+GB_Global_timing_add (13, ttt) ;
+ttt = omp_get_wtime ( ) ;
+
     for (int64_t nvisited = 1, k = 1 ; nvisited < n ; nvisited += nq, k++)
     {
+
+ttt = omp_get_wtime ( ) ;
 
         //----------------------------------------------------------------------
         // select push vs pull
         //----------------------------------------------------------------------
 
-        int64_t edges_in_frontier = 0 ;
         if (push_pull)
         {
             if (do_push)
@@ -225,6 +237,7 @@ int LAGraph_BreadthFirstSearch      // returns -1 on failure, 0 if successful
                         GrB_DESC_RS)) ;
                     // edges_in_frontier = sum (w) = # of edges incident on all
                     // nodes in the current frontier
+                    int64_t edges_in_frontier = 0 ;
                     GrB_TRY (GrB_reduce (&edges_in_frontier, NULL,
                         GrB_PLUS_MONOID_INT64, w, NULL)) ;
                     edges_unexplored -= edges_in_frontier ;
@@ -247,8 +260,12 @@ int LAGraph_BreadthFirstSearch      // returns -1 on failure, 0 if successful
                     do_push = true ;
                 }
             }
+            any_pull = any_pull || (!do_push) ;
         }
-        any_pull = any_pull || (!do_push) ;
+
+ttt = omp_get_wtime ( ) - ttt ;
+GB_Global_timing_add (14, ttt) ;
+ttt = omp_get_wtime ( ) ;
 
         //----------------------------------------------------------------------
         // q = kth level of the BFS
@@ -257,16 +274,30 @@ int LAGraph_BreadthFirstSearch      // returns -1 on failure, 0 if successful
         int sparsity = do_push ? GxB_SPARSE : GxB_BITMAP ;
         GrB_TRY (GxB_set (q, GxB_SPARSITY_CONTROL, sparsity)) ;
 
+ttt = omp_get_wtime ( ) - ttt ;
+GB_Global_timing_add (15, ttt) ;
+ttt = omp_get_wtime ( ) ;
+
         // mask is pi if computing parent, v if computing just level
         if (do_push)
         {
             // q'{!mask} = q'*A
-            GrB_TRY (GrB_vxm (q, mask, NULL, semiring, q, A, GrB_DESC_RSC)) ;
+            GrB_vxm (q, mask, NULL, semiring, q, A, GrB_DESC_RSC) ;
+
+ttt = omp_get_wtime ( ) - ttt ;
+GB_Global_timing_add (16, ttt) ;
+ttt = omp_get_wtime ( ) ;
+
         }
         else
         {
             // q{!mask} = AT*q
             GrB_TRY (GrB_mxv (q, mask, NULL, semiring, AT, q, GrB_DESC_RSC)) ;
+
+ttt = omp_get_wtime ( ) - ttt ;
+GB_Global_timing_add (17, ttt) ;
+ttt = omp_get_wtime ( ) ;
+
         }
 
         //----------------------------------------------------------------------
@@ -289,12 +320,22 @@ int LAGraph_BreadthFirstSearch      // returns -1 on failure, 0 if successful
             // q(i) currently contains the parent id of node i in tree.
             // pi<s(q)> = q
             GrB_TRY (GrB_assign (pi, q, NULL, q, GrB_ALL, n, GrB_DESC_S)) ;
+
+ttt = omp_get_wtime ( ) - ttt ;
+GB_Global_timing_add (18, ttt) ;
+ttt = omp_get_wtime ( ) ;
+
         }
         if (compute_level)
         {
             // v<s(q)> = k, the kth level of the BFS
             GrB_TRY (GrB_assign (v, q, NULL, k, GrB_ALL, n, GrB_DESC_S)) ;
+
+ttt = omp_get_wtime ( ) - ttt ;
+GB_Global_timing_add (19, ttt) ;
+ttt = omp_get_wtime ( ) ;
         }
+
     }
 
     //--------------------------------------------------------------------------

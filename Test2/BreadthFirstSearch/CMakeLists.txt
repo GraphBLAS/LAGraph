@@ -25,6 +25,7 @@ link_directories ( ../../build )
 
 # include_directories ( /usr/local/include )
 include_directories ( ../../../GraphBLAS/Include )
+include_directories ( ../../../GraphBLAS/Source )
 include_directories ( ../../Include ../Include )
 
 # find OpenMP
@@ -51,7 +52,8 @@ set ( CMAKE_INCLUDE_CURRENT_DIR ON )
 if ( "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
     # cmake 2.8 workaround: gcc needs to be told to do ANSI C11.
     # cmake 3.0 doesn't have this problem.
-    # set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -g " )
+    # TODO:
+    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -g " )
     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -std=c11 -lm -Wno-pragmas " )
     # check all warnings:
 #   set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -Wall -Wextra -Wpedantic -Werror " )
@@ -80,7 +82,8 @@ endif ( )
 if ( ${CMAKE_BUILD_TYPE} STREQUAL "Debug")
     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG}" )
 else ( )
-    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE}" )
+    # TODO:
+    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE} -g" )
 endif ( )
 
 #-------------------------------------------------------------------------------
