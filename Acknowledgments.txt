@@ -15,15 +15,11 @@ THIS WORK IS FUNDED IN PART BY:
 
 THIS WORK BUILDS UPON THE FOLLOWING PRIOR WORKS:
 
-1.  GraphBLAS Template Library (GBTL), Version 1.
-    (https://github.com/cmu-sei/gbtl/blob/1.0.0/LICENSE) 
-    Copyright 2015 Carnegie Mellon University and The Trustees of Indiana. 
-    DM17-0037, DM-0002659
-2.  GraphBLAS Template Library (GBTL), Version 2. 
-    (https://github.com/cmu-sei/gbtl) 
-    Copyright 2015-2018 Carnegie Mellon University, Battelle Memorial Institute,
-    and Authors. DM18-0559
-3.  SuiteSparse:GraphBLAS, 
+1.  GraphBLAS Template Library (GBTL), Version 3.0 (and prior versions)
+    (https://github.com/cmu-sei/gbtl/blob/3.0.0) 
+    Copyright 2015-2020 Carnegie Mellon University, Battelle Memorial Institute,
+    and Authors. DM20-0442
+2.  SuiteSparse:GraphBLAS, 
     (http://faculty.cse.tamu.edu/davis/GraphBLAS.html) 
     Copyright (c) 2017-2019 Timothy A. Davis (Author), AldenMath.com and 
     Texas A&M University. (Portions of LAGraph are derived from 
