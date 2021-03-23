@@ -8,13 +8,12 @@
 //------------------------------------------------------------------------------
 
 #include "LAGraph_Test.h"
+#if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
 #include "GB_Global.h"
+#endif
 
-#define NTHREAD_LIST 1
-#define THREAD_LIST 1
-
-// #define NTHREAD_LIST 4
-// #define THREAD_LIST 8, 4, 2, 1
+#define NTHREAD_LIST 4
+#define THREAD_LIST 8, 4, 2, 1
 
 // #define NTHREAD_LIST 8
 // #define THREAD_LIST 8, 7, 6, 5, 4, 3, 2, 1
@@ -54,7 +53,9 @@ int main (int argc, char **argv)
     // start GraphBLAS and LAGraph
     LAGraph_TRY (LAGraph_Init (msg)) ;
     GrB_TRY (GxB_set (GxB_BURBLE, false)) ;
+    #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
     GB_Global_hack_set (1) ;
+    #endif
 
     uint64_t seed = 1 ;
     FILE *f ;
@@ -109,7 +110,7 @@ int main (int argc, char **argv)
     GrB_TRY (GrB_Matrix_nrows (&ntrials, SourceNodes)) ;
 
     // HACK
-    ntrials = 1 ;
+    // ntrials = 4 ;
 
     //--------------------------------------------------------------------------
     // run the BFS on all source nodes

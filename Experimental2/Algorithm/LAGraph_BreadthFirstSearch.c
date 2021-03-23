@@ -60,7 +60,9 @@
 }
 
 #include "LG_internal.h"
+#if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
 #include "/home/davis/master/GraphBLAS/Source/GB_Global.h"
+#endif
 
 int LAGraph_BreadthFirstSearch      // returns -1 on failure, 0 if successful
 (
@@ -193,14 +195,18 @@ double ttt = omp_get_wtime ( ) ;
     // {!mask} is the set of unvisited nodes
     GrB_Vector mask = (compute_parent) ? pi : v ;
 
+#if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
 ttt = omp_get_wtime ( ) - ttt ;
 GB_Global_timing_add (13, ttt) ;
 ttt = omp_get_wtime ( ) ;
+#endif
 
     for (int64_t nvisited = 1, k = 1 ; nvisited < n ; nvisited += nq, k++)
     {
 
+#if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
 ttt = omp_get_wtime ( ) ;
+#endif
 
         //----------------------------------------------------------------------
         // select push vs pull
@@ -263,9 +269,11 @@ ttt = omp_get_wtime ( ) ;
             any_pull = any_pull || (!do_push) ;
         }
 
+#if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
 ttt = omp_get_wtime ( ) - ttt ;
 GB_Global_timing_add (14, ttt) ;
 ttt = omp_get_wtime ( ) ;
+#endif
 
         //----------------------------------------------------------------------
         // q = kth level of the BFS
@@ -274,19 +282,23 @@ ttt = omp_get_wtime ( ) ;
         int sparsity = do_push ? GxB_SPARSE : GxB_BITMAP ;
         GrB_TRY (GxB_set (q, GxB_SPARSITY_CONTROL, sparsity)) ;
 
+#if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
 ttt = omp_get_wtime ( ) - ttt ;
 GB_Global_timing_add (15, ttt) ;
 ttt = omp_get_wtime ( ) ;
+#endif
 
         // mask is pi if computing parent, v if computing just level
         if (do_push)
         {
             // q'{!mask} = q'*A
-            GrB_vxm (q, mask, NULL, semiring, q, A, GrB_DESC_RSC) ;
+            GrB_TRY (GrB_vxm (q, mask, NULL, semiring, q, A, GrB_DESC_RSC)) ;
 
+#if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
 ttt = omp_get_wtime ( ) - ttt ;
 GB_Global_timing_add (16, ttt) ;
 ttt = omp_get_wtime ( ) ;
+#endif
 
         }
         else
@@ -294,9 +306,11 @@ ttt = omp_get_wtime ( ) ;
             // q{!mask} = AT*q
             GrB_TRY (GrB_mxv (q, mask, NULL, semiring, AT, q, GrB_DESC_RSC)) ;
 
+#if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
 ttt = omp_get_wtime ( ) - ttt ;
 GB_Global_timing_add (17, ttt) ;
 ttt = omp_get_wtime ( ) ;
+#endif
 
         }
 
@@ -321,9 +335,11 @@ ttt = omp_get_wtime ( ) ;
             // pi<s(q)> = q
             GrB_TRY (GrB_assign (pi, q, NULL, q, GrB_ALL, n, GrB_DESC_S)) ;
 
+#if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
 ttt = omp_get_wtime ( ) - ttt ;
 GB_Global_timing_add (18, ttt) ;
 ttt = omp_get_wtime ( ) ;
+#endif
 
         }
         if (compute_level)
@@ -331,9 +347,11 @@ ttt = omp_get_wtime ( ) ;
             // v<s(q)> = k, the kth level of the BFS
             GrB_TRY (GrB_assign (v, q, NULL, k, GrB_ALL, n, GrB_DESC_S)) ;
 
+#if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
 ttt = omp_get_wtime ( ) - ttt ;
 GB_Global_timing_add (19, ttt) ;
 ttt = omp_get_wtime ( ) ;
+#endif
         }
 
     }
