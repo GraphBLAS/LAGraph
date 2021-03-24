@@ -8,12 +8,9 @@
 //------------------------------------------------------------------------------
 
 #include "LAGraph_Test.h"
-#if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
-#include "GB_Global.h"
-#endif
 
-#define NTHREAD_LIST 4
-#define THREAD_LIST 8, 4, 2, 1
+#define NTHREAD_LIST 6
+#define THREAD_LIST 0
 
 // #define NTHREAD_LIST 8
 // #define THREAD_LIST 8, 7, 6, 5, 4, 3, 2, 1
@@ -53,9 +50,6 @@ int main (int argc, char **argv)
     // start GraphBLAS and LAGraph
     LAGraph_TRY (LAGraph_Init (msg)) ;
     GrB_TRY (GxB_set (GxB_BURBLE, false)) ;
-    #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
-    GB_Global_hack_set (1) ;
-    #endif
 
     uint64_t seed = 1 ;
     FILE *f ;
@@ -122,8 +116,6 @@ int main (int argc, char **argv)
         if (nthreads > nthreads_max) continue ;
         LAGraph_TRY (LAGraph_SetNumThreads (nthreads, msg)) ;
 
-        GB_Global_timing_clear_all ( ) ;
-
         tp [nthreads][0] = 0 ;
         tl [nthreads][0] = 0 ;
         tpl [nthreads][0] = 0 ;
@@ -141,8 +133,7 @@ int main (int argc, char **argv)
             src-- ; // convert from 1-based to 0-based
             double ttrial, tic [2] ;
         
-            // for (int pp = 0 ; pp <= 1 ; pp++)
-            int pp = 0 ;
+            for (int pp = 0 ; pp <= 1 ; pp++)
             {
 
                 bool pushpull = (pp == 1) ;
@@ -168,7 +159,7 @@ int main (int argc, char **argv)
                 // BFS to compute just level
                 //--------------------------------------------------------------
 
-#if 0
+#if 1
                 GrB_free (&level) ;
 
                 LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
@@ -216,8 +207,7 @@ int main (int argc, char **argv)
             }
         }
 
-        // for (int pp = 0 ; pp <= 1 ; pp++)
-        int pp = 0 ;
+        for (int pp = 0 ; pp <= 1 ; pp++)
         {
             tp  [nthreads][pp] = tp  [nthreads][pp] / ntrials ;
             tl  [nthreads][pp] = tl  [nthreads][pp] / ntrials ;
@@ -226,7 +216,7 @@ int main (int argc, char **argv)
             fprintf (stderr, "Avg: BFS pushpull: %d parent only  threads %3d: "
                 "%10.3f sec: %s\n",
                  pp, nthreads, tp [nthreads][pp], matrix_name) ;
-#if 0
+#if 1
             fprintf (stderr, "Avg: BFS pushpull: %d level only   threads %3d: "
                 "%10.3f sec: %s\n",
                  pp, nthreads, tl [nthreads][pp], matrix_name) ;
@@ -240,7 +230,7 @@ int main (int argc, char **argv)
                 "%10.3f sec: %s\n",
                  pp, nthreads, tp [nthreads][pp], matrix_name) ;
 
-#if 0
+#if 1
             printf ("Avg: BFS pushpull: %d level only   threads %3d: "
                 "%10.3f sec: %s\n",
                  pp, nthreads, tl [nthreads][pp], matrix_name) ;
@@ -249,15 +239,6 @@ int main (int argc, char **argv)
                 "%10.3f sec: %s\n",
                  pp, nthreads, tpl [nthreads][pp], matrix_name) ;
 #endif
-        }
-
-        for (int k = 0 ; k < 20 ; k++)
-        {
-            double t = GB_Global_timing_get (k) ;
-            if (t > 0)
-            {
-                printf ("timing phase %2d: %18.5f\n", k, t) ;
-            }
         }
     }
     // restore default
