@@ -148,9 +148,10 @@ int main (int argc, char **argv)
                     G, src, pushpull, msg)) ;
                 LAGraph_TRY (LAGraph_Toc (&ttrial, tic, msg)) ;
                 tp [nthreads][pp] += ttrial ;
-                printf ("parent only  pushpull: %d trial: %2d threads: %2d "
+                printf ("parent only  %s trial: %2d threads: %2d "
                     "src: %9ld %10.4f sec\n",
-                    pp, trial, nthreads, src, ttrial) ;
+                    (pp == 0) ? "pushonly" : "pushpull",
+                    trial, nthreads, src, ttrial) ;
                 fflush (stdout) ;
                 // GrB_TRY (GxB_print (parent, 2)) ;
                 GrB_free (&parent) ;
@@ -171,10 +172,10 @@ int main (int argc, char **argv)
                 int32_t maxlevel ;
                 GrB_TRY (GrB_reduce (&maxlevel, NULL, GrB_MAX_MONOID_INT32,
                     level, NULL)) ;
-
-                printf ("level only   pushpull: %d trial: %2d threads: %2d "
-                    "src: %9ld %10.4f sec maxlevel %d\n",
-                    pp, trial, nthreads, src, ttrial, maxlevel) ;
+                printf ("level only   %s trial: %2d threads: %2d "
+                    "src: %9ld %10.4f sec\n",
+                    (pp == 0) ? "pushonly" : "pushpull",
+                    trial, nthreads, src, ttrial) ;
                 fflush (stdout) ;
                 // GrB_TRY (GxB_print (level, 2)) ;
 
@@ -194,9 +195,10 @@ int main (int argc, char **argv)
 
                 GrB_TRY (GrB_reduce (&maxlevel, NULL, GrB_MAX_MONOID_INT32,
                     level, NULL)) ;
-                printf ("parent+level pushpull: %d trial: %2d threads: %2d "
-                    "src: %9ld %10.4f sec maxlevel %d\n",
-                    pp, trial, nthreads, src, ttrial, maxlevel) ;
+                printf ("parent+level %s trial: %2d threads: %2d "
+                    "src: %9ld %10.4f sec\n",
+                    (pp == 0) ? "pushonly" : "pushpull",
+                    trial, nthreads, src, ttrial) ;
                 fflush (stdout) ;
 
                 // GrB_TRY (GxB_print (parent, 2)) ;
@@ -213,31 +215,37 @@ int main (int argc, char **argv)
             tl  [nthreads][pp] = tl  [nthreads][pp] / ntrials ;
             tpl [nthreads][pp] = tpl [nthreads][pp] / ntrials ;
 
-            fprintf (stderr, "Avg: BFS pushpull: %d parent only  threads %3d: "
+            fprintf (stderr, "Avg: BFS %s parent only  threads %3d: "
                 "%10.3f sec: %s\n",
-                 pp, nthreads, tp [nthreads][pp], matrix_name) ;
+                 (pp == 0) ? "pushonly" : "pushpull",
+                 nthreads, tp [nthreads][pp], matrix_name) ;
 #if 1
-            fprintf (stderr, "Avg: BFS pushpull: %d level only   threads %3d: "
+            fprintf (stderr, "Avg: BFS %s level only   threads %3d: "
                 "%10.3f sec: %s\n",
-                 pp, nthreads, tl [nthreads][pp], matrix_name) ;
+                 (pp == 0) ? "pushonly" : "pushpull",
+                 nthreads, tl [nthreads][pp], matrix_name) ;
 
-            fprintf (stderr, "Avg: BFS pushpull: %d level+parent threads %3d: "
+            fprintf (stderr, "Avg: BFS %s level+parent threads %3d: "
                 "%10.3f sec: %s\n",
-                 pp, nthreads, tpl [nthreads][pp], matrix_name) ;
+                 (pp == 0) ? "pushonly" : "pushpull",
+                 nthreads, tpl [nthreads][pp], matrix_name) ;
 #endif
 
-            printf ("Avg: BFS pushpull: %d parent only  threads %3d: "
+            printf ("Avg: BFS %s parent only  threads %3d: "
                 "%10.3f sec: %s\n",
-                 pp, nthreads, tp [nthreads][pp], matrix_name) ;
+                 (pp == 0) ? "pushonly" : "pushpull",
+                 nthreads, tp [nthreads][pp], matrix_name) ;
 
 #if 1
-            printf ("Avg: BFS pushpull: %d level only   threads %3d: "
+            printf ("Avg: BFS %s level only   threads %3d: "
                 "%10.3f sec: %s\n",
-                 pp, nthreads, tl [nthreads][pp], matrix_name) ;
+                 (pp == 0) ? "pushonly" : "pushpull",
+                 nthreads, tl [nthreads][pp], matrix_name) ;
 
-            printf ("Avg: BFS pushpull: %d level+parent threads %3d: "
+            printf ("Avg: BFS %s level+parent threads %3d: "
                 "%10.3f sec: %s\n",
-                 pp, nthreads, tpl [nthreads][pp], matrix_name) ;
+                 (pp == 0) ? "pushonly" : "pushpull",
+                 nthreads, tpl [nthreads][pp], matrix_name) ;
 #endif
         }
     }
