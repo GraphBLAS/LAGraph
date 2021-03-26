@@ -23,6 +23,7 @@ jobs:
         JOBS=2 make
         popd
         # build and test LAGraph
+        # mkdir build
         cd build
         CC=gcc cmake ..
         JOBS=2 make
