@@ -17,7 +17,7 @@
 // include files
 //------------------------------------------------------------------------------
 
-#include "LAGraph2.h"
+#include <LAGraph.h>
 
 #if defined ( __linux__ )
 #include <malloc.h>
@@ -198,19 +198,19 @@ static bool LG_Multiply_size_t  // true if ok, false if overflow
 
     (*c) = 0 ;
     if (a == 0 || b == 0)
-    { 
+    {
         return (true) ;
     }
 
     if (a > SIZE_MAX / 2 || b > SIZE_MAX / 2)
-    { 
+    {
         // a or b are out of range
         return (false) ;
     }
 
     // a + b is now safe to compute
     if ((a + b) > (SIZE_MAX / LAGraph_MIN (a,b)))
-    { 
+    {
         // a * b may overflow
         return (false) ;
     }
@@ -286,7 +286,7 @@ static inline void LG_eslice
 {
     Slice [0] = 0 ;
     for (int tid = 0 ; tid < ntasks ; tid++)
-    { 
+    {
         Slice [tid] = LG_PART (tid, e, ntasks) ;
     }
     Slice [ntasks] = e ;
@@ -466,4 +466,3 @@ void LG_qsort_3     // sort array A of size 3-by-n, using 3 keys (A [0:2][])
 )
 
 #endif
-

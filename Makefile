@@ -15,6 +15,7 @@
 
 # Install GraphBLAS before trying to compile LAGraph.
 
+build_directory = `pwd`/build
 JOBS ?= 1
 
 # build the LAGraph library (static and dynamic)
@@ -23,7 +24,7 @@ library:
 
 # run all tests (do "make ; make tests")
 tests:
-	( cd Test ; $(MAKE) --jobs=$(JOBS) )
+	( cd test ; $(MAKE) --jobs=$(JOBS) )
 
 # just run cmake; do not compile
 cmake:
@@ -39,7 +40,7 @@ install:
 
 # TODO create the Doc/LAGraph.pdf
 docs:
-	( cd Doc ; $(MAKE) )
+	( cd coc ; $(MAKE) )
 
 # remove any installed libraries and #include files
 uninstall:
@@ -52,8 +53,8 @@ purge: distclean
 # remove all files not in the distribution
 distclean:
 	rm -rf build/*
-	rm -rf Doc/html/*
-	( cd Doc   ; $(MAKE) distclean )
-	( cd Test  ; $(MAKE) distclean )
-	( cd Test2 ; $(MAKE) distclean )
+	rm -rf doc/html/*
+	( cd doc   ; $(MAKE) distclean )
+	( cd test  ; $(MAKE) distclean )
+	( cd experimental/test ; $(MAKE) distclean )
 
