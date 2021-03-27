@@ -1,4 +1,4 @@
-%%MatrixMarket matrix coordinate real symmetric
+%%MatrixMarket matrix coordinate integer symmetric
 %%GraphBLAS GrB_BOOL
 8 8 13
 2 1 1

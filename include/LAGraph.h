@@ -4,6 +4,7 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
+//
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
@@ -609,23 +610,6 @@ int LAGraph_SampleDegree        // returns 0 if successful, -1 if failure
     char *msg
 ) ;
 
-// LAGraph_Test_ReadProblem: read in a graph from a file
-int LAGraph_Test_ReadProblem    // returns 0 if successful, -1 if failure
-(
-    // output
-    LAGraph_Graph *G,           // graph from the file
-    GrB_Matrix *SourceNodes,    // source nodes
-    // inputs
-    bool make_symmetric,        // if true, always return G as undirected
-    bool remove_self_edges,     // if true, remove self edges
-    bool pattern,               // if true, return G->A as bool (all true)
-    GrB_Type pref,              // if non-NULL, typecast G->A to this type
-    bool ensure_positive,       // if true, ensure all entries are > 0
-    int argc,                   // input to main test program
-    char **argv,                // input to main test program
-    char *msg
-) ;
-
 //------------------------------------------------------------------------------
 // simple and portable random number generator
 //------------------------------------------------------------------------------
@@ -635,14 +619,14 @@ int LAGraph_Test_ReadProblem    // returns 0 if successful, -1 if failure
 
 // return a random number between 0 and LAGRAPH_RANDOM15_MAX
 static inline GrB_Index LAGraph_Random15 (uint64_t *seed)
-{ 
+{
    (*seed) = (*seed) * 1103515245 + 12345 ;
    return (((*seed) / 65536) % (LAGRAPH_RANDOM15_MAX + 1)) ;
 }
 
 // return a random uint64_t, in range 0 to LAGRAPH_RANDOM60_MAX
 static inline GrB_Index LAGraph_Random60 (uint64_t *seed)
-{ 
+{
     GrB_Index i = LAGraph_Random15 (seed) ;
     i = LAGRAPH_RANDOM15_MAX * i + LAGraph_Random15 (seed) ;
     i = LAGRAPH_RANDOM15_MAX * i + LAGraph_Random15 (seed) ;
@@ -827,4 +811,3 @@ int LAGraph_TriangleCount_Methods   // returns 0 if successful, < 0 if failure
 ) ;
 
 #endif
-

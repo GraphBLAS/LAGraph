@@ -1,24 +1,27 @@
 #-------------------------------------------------------------------------------
-# Test2/ConnectedComponents/Makefile
+# test/ConnectedComponents/Makefile
 #-------------------------------------------------------------------------------
 
 # LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 # SPDX-License-Identifier: BSD-2-Clause
+#
+# See additional acknowledgments in the LICENSE file,
+# or contact permission@sei.cmu.edu for the full terms.
 
 #-------------------------------------------------------------------------------
 
-# simple Makefile for LAGraph/Test2/ConnectedComponents/test_cc
+# simple Makefile for LAGraph/test/ConnectedComponents/test_cc
 
 # Install LAGraph and GraphBLAS before trying to compile this test.
 JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/test_cc ../../Matrices/cover.mtx
-	./build/test_cc ../../Matrices/west0067.mtx
-	./build/test_cc ../../Matrices/jagmesh7.mtx
-	./build/test_cc ../../Matrices/ldbc-wcc-example.mtx
-	./build/test_cc ../../Matrices/tree-example.mtx
+	./build/test_cc ../data/cover.mtx
+	./build/test_cc ../data/west0067.mtx
+	./build/test_cc ../data/jagmesh7.mtx
+	./build/test_cc ../data/ldbc-wcc-example.mtx
+	./build/test_cc ../data/tree-example.mtx
 
 # build test
 compile:

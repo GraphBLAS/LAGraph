@@ -1,22 +1,25 @@
 #-------------------------------------------------------------------------------
-# Test2/TriangleCount/Makefile
+# test/TriangleCount/Makefile
 #-------------------------------------------------------------------------------
 
 # LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 # SPDX-License-Identifier: BSD-2-Clause
+#
+# See additional acknowledgments in the LICENSE file,
+# or contact permission@sei.cmu.edu for the full terms.
 
 #-------------------------------------------------------------------------------
 
-# simple Makefile for LAGraph/Test2/TriangleCount/test_tc
+# simple Makefile for LAGraph/test/TriangleCount/test_tc
 
 # Install LAGraph and GraphBLAS before trying to compile this test.
 JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/test_tc < ../../Matrices/cover.mtx
-	./build/test_tc < ../../Matrices/west0067.mtx
-	./build/test_tc < ../../Matrices/jagmesh7.mtx
+	./build/test_tc < ../data/cover.mtx
+	./build/test_tc < ../data/west0067.mtx
+	./build/test_tc < ../data/jagmesh7.mtx
 
 # build test
 compile:

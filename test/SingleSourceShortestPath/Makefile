@@ -1,24 +1,27 @@
 #-------------------------------------------------------------------------------
-# Test2/SingleSourceShortestPath/Makefile
+# test/SingleSourceShortestPath/Makefile
 #-------------------------------------------------------------------------------
 
 # LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 # SPDX-License-Identifier: BSD-2-Clause
+#
+# See additional acknowledgments in the LICENSE file,
+# or contact permission@sei.cmu.edu for the full terms.
 
 #-------------------------------------------------------------------------------
 
-# simple Makefile for LAGraph/Test2/SingleSourceShortestPath/test_sssp
+# simple Makefile for LAGraph/test/SingleSourceShortestPath/test_sssp
 
 # Install LAGraph and GraphBLAS before trying to compile this test.
 JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/test_sssp ../../Matrices/cover.mtx    - 3
-	./build/test_sssp ../../Matrices/jagmesh7.mtx - 3
+	./build/test_sssp ../data/cover.mtx    - 3
+	./build/test_sssp ../data/jagmesh7.mtx - 3
 
 more:
-	./build/test_sssp ../../Matrices/west0067.mtx - 3
+	./build/test_sssp ../data/west0067.mtx - 3
 
 # build test
 compile:

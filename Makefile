@@ -2,8 +2,11 @@
 # LAGraph/Makefile
 #-------------------------------------------------------------------------------
 
-# LAGraph, (... list all authors here) (c) 2019, All Rights Reserved.
-# http://graphblas.org  See LAGraph/LICENSE for license.
+# LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+# SPDX-License-Identifier: BSD-2-Clause
+#
+# See additional acknowledgments in the LICENSE file,
+# or contact permission@sei.cmu.edu for the full terms.
 
 #-------------------------------------------------------------------------------
 

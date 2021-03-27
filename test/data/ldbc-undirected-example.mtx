@@ -1,4 +1,4 @@
-%%MatrixMarket matrix coordinate integer symmetric
+%%MatrixMarket matrix coordinate real symmetric
 %%GraphBLAS GrB_FP64
 9 9 12
 2 1 0.9

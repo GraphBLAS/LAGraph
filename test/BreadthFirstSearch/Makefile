@@ -1,22 +1,25 @@
 #-------------------------------------------------------------------------------
-# Test2/BreadthFirstSearch/Makefile
+# test/BreadthFirstSearch/Makefile
 #-------------------------------------------------------------------------------
 
 # LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 # SPDX-License-Identifier: BSD-2-Clause
+#
+# See additional acknowledgments in the LICENSE file,
+# or contact permission@sei.cmu.edu for the full terms.
 
 #-------------------------------------------------------------------------------
 
-# simple Makefile for LAGraph/Test2/BreadthFirstSearch/test_bfs
+# simple Makefile for LAGraph/test/BreadthFirstSearch/test_bfs
 
 # Install LAGraph and GraphBLAS before trying to compile this test.
 JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/test_bfs < ../../Matrices/cover.mtx
-	./build/test_bfs < ../../Matrices/west0067.mtx
-	./build/test_bfs < ../../Matrices/jagmesh7.mtx
+	./build/test_bfs < ../data/cover.mtx
+	./build/test_bfs < ../data/west0067.mtx
+	./build/test_bfs < ../data/jagmesh7.mtx
 
 # build test
 compile:

@@ -1,23 +1,26 @@
 #-------------------------------------------------------------------------------
-# Test2/BetweennessCentrality/Makefile
+# test/BetweennessCentrality/Makefile
 #-------------------------------------------------------------------------------
 
 # LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 # SPDX-License-Identifier: BSD-2-Clause
+#
+# See additional acknowledgments in the LICENSE file,
+# or contact permission@sei.cmu.edu for the full terms.
 
 #-------------------------------------------------------------------------------
 
-# simple Makefile for LAGraph/Test2/BetweennessCentrality/test_bc
+# simple Makefile for LAGraph/test/BetweennessCentrality/test_bc
 
 # Install LAGraph and GraphBLAS before trying to compile this test.
 JOBS ?= 1
 
 # build and run test
 default: compile
-	./build/test_bc < ../../Matrices/cover.mtx
-	./build/test_bc < ../../Matrices/west0067.mtx
-	./build/test_bc < ../../Matrices/jagmesh7.mtx
-	./build/test_bc < ../../Matrices/LFAT5.mtx
+	./build/test_bc < ../data/cover.mtx
+	./build/test_bc < ../data/west0067.mtx
+	./build/test_bc < ../data/jagmesh7.mtx
+	./build/test_bc < ../data/LFAT5.mtx
 
 # build test
 compile:

@@ -1,5 +1,13 @@
 #-------------------------------------------------------------------------------
-# LAGraph/Test2/BreadthFirstSearch/CMakeLists.txt:  cmake for LAGraph test
+# LAGraph/test/BreadthFirstSearch/CMakeLists.txt:  cmake for LAGraph test
+#-------------------------------------------------------------------------------
+
+# LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+# SPDX-License-Identifier: BSD-2-Clause
+#
+# See additional acknowledgments in the LICENSE file,
+# or contact permission@sei.cmu.edu for the full terms.
+
 #-------------------------------------------------------------------------------
 
 # cmake 3.0 is preferred.
@@ -26,7 +34,7 @@ link_directories ( ../../build )
 # include_directories ( /usr/local/include )
 include_directories ( ../../../GraphBLAS/Include )
 include_directories ( ../../../GraphBLAS/Source )
-include_directories ( ../../Include ../Include )
+include_directories ( ../../include ../include )
 
 # find OpenMP
 include ( FindOpenMP  )

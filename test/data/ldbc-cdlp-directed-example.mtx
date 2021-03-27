@@ -1,4 +1,4 @@
-%%MatrixMarket matrix coordinate real general
+%%MatrixMarket matrix coordinate integer general
 %%GraphBLAS GrB_BOOL
 8 8 18
 1 2 1
