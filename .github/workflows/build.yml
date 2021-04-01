@@ -19,7 +19,7 @@ jobs:
         cd ..
         git clone --depth 1 --branch ${{ matrix.grb_version }} https://github.com/DrTimothyAldenDavis/GraphBLAS
         cd GraphBLAS/build
-        CC=gcc cmake -DGBCOMPACT=1 ..
+        CC=gcc cmake .. -DGBCOMPACT=1
         JOBS=2 make
         popd
         # build and test LAGraph
