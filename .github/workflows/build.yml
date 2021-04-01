@@ -29,3 +29,4 @@ jobs:
         JOBS=2 make
         cd ..
         make tests
+        sudo make install
