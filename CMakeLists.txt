@@ -88,12 +88,12 @@ link_directories ( ../GraphBLAS/build )
 include_directories ( ../GraphBLAS/Include )
 
 #-------------------------------------------------------------------------------
-# Configure Include/LAGraph.h and documentation with version number
+# Configure include/LAGraph.h and documentation with version number
 #-------------------------------------------------------------------------------
 
 #   configure_file (
 #       "Config/LAGraph.h.tmp" 
-#       "${PROJECT_SOURCE_DIR}/Include/LAGraph.h" 
+#       "${PROJECT_SOURCE_DIR}/include/LAGraph.h"
 #   )
 #   configure_file (
 #       "Config/LAGraph_version.tex.in"
@@ -234,7 +234,7 @@ SET_TARGET_PROPERTIES ( lagraph PROPERTIES
     VERSION ${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}
     SOVERSION ${LAGraph_VERSION_MAJOR}
     C_STANDARD_REQUIRED 11
-    PUBLIC_HEADER "Include/LAGraph.h" )
+    PUBLIC_HEADER "include/LAGraph.h" )
 set_property ( TARGET lagraph PROPERTY C_STANDARD 11 )
 
 #-------------------------------------------------------------------------------
@@ -248,7 +248,7 @@ SET_TARGET_PROPERTIES ( lagraph_static PROPERTIES
     POSITION_INDEPENDENT_CODE OFF
     SOVERSION ${LAGraph_VERSION_MAJOR}
     C_STANDARD_REQUIRED 11
-    PUBLIC_HEADER "Include/LAGraph.h" )
+    PUBLIC_HEADER "include/LAGraph.h" )
 set_property ( TARGET lagraph_static PROPERTY C_STANDARD 11 )
 
 #-------------------------------------------------------------------------------
