@@ -54,13 +54,12 @@
     #include <mach/mach.h>
 #endif
 
-#if ( _MSC_VER && !__INTEL_COMPILER )
-    #include <malloc.h>
-    #define LG_MICROSOFT 1
+#if !defined(__cplusplus)
+    #define LAGRAPH_RESTRICT restrict
+#elif defined(_MSC_BUILD) || defined(__clang__) || defined(__GNUC__) || defined(__INTEL_COMPILER)
     #define LAGRAPH_RESTRICT __restrict
 #else
-    #define LG_MICROSOFT 0
-    #define LAGRAPH_RESTRICT restrict
+    #define LAGRAPH_RESTRICT
 #endif
 
 //==============================================================================
