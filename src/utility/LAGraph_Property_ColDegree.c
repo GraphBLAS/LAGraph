@@ -60,7 +60,7 @@ int LAGraph_Property_ColDegree  // 0 if successful, -1 if failure
     }
 
     G->coldegree = coldegree ;
+    G->coldegree_type = GrB_INT64;
 
     return (0) ;
 }
-

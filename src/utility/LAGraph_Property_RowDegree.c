@@ -49,7 +49,7 @@ int LAGraph_Property_RowDegree  // 0 if successful, -1 if failure
     GrB_TRY (GrB_mxv (rowdegree, NULL, GrB_PLUS_INT64, GxB_PLUS_PAIR_INT64,
         A, rowdegree, NULL)) ;
     G->rowdegree = rowdegree ;
+    G->rowdegree_type = GrB_INT64;
 
     return (0) ;
 }
-

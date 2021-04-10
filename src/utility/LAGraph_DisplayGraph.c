@@ -35,13 +35,11 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
     GrB_Matrix A = G->A ;
     LAGraph_Kind kind = G->kind ;
 
-    GrB_Type type ;
     GrB_Index n, nvals ;
-    GrB_TRY (GxB_Matrix_type (&type, A)) ;
     GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
     GrB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
     char *typename, *kindname ;
-    LAGraph_TRY (LAGraph_TypeName (&typename, type, msg)) ;
+    LAGraph_TRY (LAGraph_TypeName (&typename, G->A_type, msg)) ;
     LAGraph_TRY (LAGraph_KindName (&kindname, kind, msg)) ;
 
     if (pr >= 0)
@@ -88,4 +86,3 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
 
     return (0) ;
 }
-

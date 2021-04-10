@@ -97,4 +97,3 @@ int LAGraph_SampleDegree        // returns 0 if successful, -1 if failure
     LAGRAPH_FREE_ALL ;
     return (0) ;
 }
-

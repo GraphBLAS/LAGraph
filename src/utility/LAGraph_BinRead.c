@@ -34,7 +34,8 @@
 int LAGraph_BinRead         // returns 0 if successful, -1 if failure
 (
     GrB_Matrix *A,          // matrix to read from the file
-    char *filename,         // file to read it from
+    GrB_Type   *A_type,     // type of the scalar stored in A
+    FILE *f,                // file to read it from, already open
     char *msg
 )
 {
@@ -46,18 +47,11 @@ int LAGraph_BinRead         // returns 0 if successful, -1 if failure
     GrB_Index *Ap = NULL, *Ai = NULL, *Ah = NULL ;
     int8_t *Ab = NULL ;
     void *Ax = NULL ;
-    FILE *f = NULL ;
 
     LG_CHECK (A == NULL, -1, "&A is NULL") ;
-    LG_CHECK (filename == NULL, -1, "filename is NULL") ;
+    LG_CHECK (f == NULL, -1, "f is NULL") ;
     (*A) = NULL ;
-
-    //--------------------------------------------------------------------------
-    // open the file
-    //--------------------------------------------------------------------------
-
-    f = fopen (filename, "r") ;
-    LG_CHECK (f == NULL, -1, "cannot open file") ;
+    (*A_type) = NULL;
 
     //--------------------------------------------------------------------------
     // basic matrix properties
@@ -273,6 +267,6 @@ int LAGraph_BinRead         // returns 0 if successful, -1 if failure
 
     GrB_TRY (GxB_set (*A, GxB_HYPER_SWITCH, hyper)) ;
 
+    *A_type = type;
     return (0) ;
 }
-

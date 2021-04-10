@@ -22,6 +22,7 @@
 # If that fails for any reason, make sure your compiler supports ANSI C11.  You
 # could try changing your compiler, for example:
 #
+#   mkdir buld
 #   cd build
 #   CC=icc cmake ..
 #   cd ..
@@ -45,7 +46,9 @@
 #-------------------------------------------------------------------------------
 
 # cmake 3.13 is preferred.
-cmake_minimum_required ( VERSION 2.8.12 )
+cmake_minimum_required ( VERSION 3.0 )
+
+set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 
 if ( CMAKE_VERSION VERSION_GREATER "3.0" )
     cmake_policy ( SET CMP0042 NEW )
@@ -53,17 +56,13 @@ if ( CMAKE_VERSION VERSION_GREATER "3.0" )
 endif ( )
 
 # version of LAGraph
-set ( LAGraph_DATE "Mar 26, 2020" )
+set ( LAGraph_DATE "Mar 26May 17, 2021" )
 set ( LAGraph_VERSION_MAJOR 0 )
-set ( LAGraph_VERSION_MINOR 4 )
-set ( LAGraph_VERSION_SUB   0 )
+set ( LAGraph_VERSION_MINOR 9 )
+set ( LAGraph_VERSION_SUB   9 )
 
-if ( CMAKE_MAJOR_VERSION GREATER 2 )
-    project ( lagraph
-        VERSION "${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}" )
-else ( )
-    project ( lagraph )
-endif ( )
+project ( lagraph
+          VERSION "${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}" )
 
 #-------------------------------------------------------------------------------
 # determine build type
@@ -79,13 +78,20 @@ if ( NOT CMAKE_BUILD_TYPE )
 endif ( )
 
 #-------------------------------------------------------------------------------
-# edit these lines to select your GraphBLAS library
+# Find the GraphBLAS installation
 #-------------------------------------------------------------------------------
 
-# link_directories ( /usr/local/lib )
-link_directories ( ../GraphBLAS/build )
-# include_directories ( /usr/local/include )
-include_directories ( ../GraphBLAS/Include )
+# If GraphBLAS is not in a standard installation location, either
+#     export GRAPHBLAS_ROOT <path>
+# or
+#     GRAPHBLAS_ROOT=<path> cmake ..
+# or uncomment the next line:
+
+set ( ENV{GRAPHBLAS_ROOT} ${CMAKE_SOURCE_DIR}/../GraphBLAS )
+
+find_package (GraphBLAS REQUIRED MODULE)
+include_directories (${GRAPHBLAS_INCLUDE_DIR})
+
 
 #-------------------------------------------------------------------------------
 # Configure include/LAGraph.h and documentation with version number
@@ -168,8 +174,13 @@ message ( STATUS "CMAKE have OpenMP:         " ${OPENMP_FOUND} )
 
 set ( CMAKE_INCLUDE_CURRENT_DIR ON )
 
-include_directories ( include src/utility src/utility/Template test/include )
-#    experimental/include experimental/utility experimental/utility/Template )
+include_directories ( ${CMAKE_SOURCE_DIR}/include
+                      ${CMAKE_SOURCE_DIR}/src/utility
+                      ${CMAKE_SOURCE_DIR}/src/utility/Template
+                      ${CMAKE_SOURCE_DIR}/test/include )
+#                      ${CMAKE_SOURCE_DIR}/experimental/include
+#                      ${CMAKE_SOURCE_DIR}/experimental/utility
+#                      ${CMAKE_SOURCE_DIR}/experimental/utility/Template )
 
 #-------------------------------------------------------------------------------
 # compiler options
@@ -226,8 +237,8 @@ endif ( )
 file ( GLOB LAGRAPH_SOURCES
     "src/utility/*.c"
     "src/algorithm/*.c" )
-#    "Experimental2/Utility/*.c"
-#    "Experimental2/Algorithm/*.c")
+#    "experimental/utility/*.c"
+#    "experimental/algorithm/*.c")
 
 add_library ( lagraph SHARED ${LAGRAPH_SOURCES} )
 SET_TARGET_PROPERTIES ( lagraph PROPERTIES
@@ -302,8 +313,8 @@ if ( CMAKE_THREAD_LIBS_INIT )
     target_link_libraries ( lagraph_static ${CMAKE_THREAD_LIBS_INIT} )
 endif ( )
 
-target_link_libraries ( lagraph        graphblas )
-target_link_libraries ( lagraph_static graphblas )
+target_link_libraries ( lagraph        ${GRAPHBLAS_LIBRARIES} )
+target_link_libraries ( lagraph_static ${GRAPHBLAS_LIBRARIES} )
 
 if ( CMAKE_USE_PTHREADS_INIT )
     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DHAVE_PTHREADS " )

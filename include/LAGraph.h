@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph2.h: user-visible include file for LAGraph (TODO: rename LAGraph.h)
+// LAGraph.h: user-visible include file for LAGraph (TODO: rename LAGraph.h)
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -31,36 +31,17 @@
 // include files
 //==============================================================================
 
-#include "GraphBLAS.h"
-
 #include <time.h>
-#include <complex.h>
 #include <ctype.h>
 
+#include <GraphBLAS.h>
+#include <LAGraph_platform.h>
+#include <LAGraph_internal.h>
+
+//#include <complex.h>
 // "I" is defined by <complex.h>, but is used in LAGraph and GraphBLAS to
 // denote a list of row indices; remove it here.
-#undef I
-
-#if defined ( _OPENMP )
-    #include <omp.h>
-#endif
-
-#if defined ( __linux__ ) || defined ( __GNU__ )
-    #include <sys/time.h>
-#endif
-
-#if defined ( __MACH__ ) && defined ( __APPLE__ )
-    #include <mach/clock.h>
-    #include <mach/mach.h>
-#endif
-
-#if !defined(__cplusplus)
-    #define LAGRAPH_RESTRICT restrict
-#elif defined(_MSC_BUILD) || defined(__clang__) || defined(__GNUC__) || defined(__INTEL_COMPILER)
-    #define LAGRAPH_RESTRICT __restrict
-#else
-    #define LAGRAPH_RESTRICT
-#endif
+//#undef I
 
 //==============================================================================
 // LAGraph error handling
@@ -318,8 +299,9 @@ struct LAGraph_Graph_struct
     // primary components of the graph
     //--------------------------------------------------------------------------
 
-    GrB_Matrix A ;          // the adjacency matrix of the graph
-    LAGraph_Kind kind ;     // the kind of graph
+    GrB_Matrix   A;          // the adjacency matrix of the graph
+    GrB_Type     A_type;     // the type of scalar stored in A
+    LAGraph_Kind kind;       // the kind of graph
 
     // possible future components:
     // multigraph ..
@@ -351,12 +333,14 @@ struct LAGraph_Graph_struct
     // graph is a read-only parameter, but only if they are accessed with
     // OpenMP atomic read/write operations."  OK?
 
-    GrB_Matrix AT ;         // AT = A', the transpose of A
+    GrB_Matrix AT;          // AT = A', the transpose of A
+    GrB_Type   AT_type;     // The type of scalar stored in AT
 
-    GrB_Vector rowdegree ;  // a GrB_INT64 vector of length m, if A is m-by-n.
+    GrB_Vector rowdegree;   // a GrB_INT64 vector of length m, if A is m-by-n.
            // where rowdegree(i) is the number of entries in A(i,:).  If
            // rowdegree is sparse and the entry rowdegree(i) is not present,
            // then it is assumed to be zero.
+    GrB_Type   rowdegree_type;   // the type of scalar stored in rowdegree
 
     GrB_Vector coldegree ;  // a GrB_INT64 vector of length n, if A is m-by-n.
             // where coldegree(j) is the number of entries in A(:,j).  If
@@ -364,6 +348,7 @@ struct LAGraph_Graph_struct
             // then it is assumed to be zero.  If A is known to have a
             // symmetric pattern, the convention is that the degree is held in
             // rowdegree, and coldegree is left as NULL.
+    GrB_Type   coldegree_type;   // the type of scalar stored in coldegree
 
     LAGraph_BooleanProperty A_pattern_is_symmetric ;    // For an undirected
             // graph, this property will always be implicitly true and can be
@@ -420,9 +405,10 @@ int LAGraph_Finalize (char *msg) ;  // returns 0 if successful, -1 if failure
 // LAGraph_New: create a new graph
 int LAGraph_New         // returns 0 if successful, -1 if failure
 (
-    LAGraph_Graph *G,   // the graph to create, NULL if failure
-    GrB_Matrix *A,      // the adjacency matrix of the graph, may be NULL
-    LAGraph_Kind kind,  // the kind of graph, may be LAGRAPH_UNKNOWN
+    LAGraph_Graph *G,       // the graph to create, NULL if failure
+    GrB_Matrix    *A,       // the adjacency matrix of the graph, may be NULL
+    GrB_Type       A_type,  // the type of scalar stored in A
+    LAGraph_Kind   kind,    // the kind of graph, may be LAGRAPH_UNKNOWN
     char *msg
 ) ;
 
@@ -512,7 +498,8 @@ int LAGraph_Toc             // returns 0 if successful, -1 if failure
 int LAGraph_BinRead         // returns 0 if successful, -1 if failure
 (
     GrB_Matrix *A,          // matrix to read from the file
-    char *filename,         // file to read it from TODO: make this FILE *f
+    GrB_Type   *A_type,     // type of the scalar stored in A
+    FILE *f,                // file to read it from, already open
     char *msg
 ) ;
 
@@ -520,6 +507,7 @@ int LAGraph_BinRead         // returns 0 if successful, -1 if failure
 int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
 (
     GrB_Matrix *A,          // handle of matrix to create
+    GrB_Type   *A_type,     // type of the scalar stored in A
     FILE *f,                // file to read from, already open
     char *msg
 ) ;
@@ -606,62 +594,6 @@ int LAGraph_SampleDegree        // returns 0 if successful, -1 if failure
     bool byrow,             // if true, sample G->rowdegree, else G->coldegree
     int64_t nsamples,       // number of samples
     uint64_t seed,          // random number seed
-    char *msg
-) ;
-
-//------------------------------------------------------------------------------
-// simple and portable random number generator
-//------------------------------------------------------------------------------
-
-#define LAGRAPH_RANDOM15_MAX 32767
-#define LAGRAPH_RANDOM60_MAX (GxB_INDEX_MAX-1)
-
-// return a random number between 0 and LAGRAPH_RANDOM15_MAX
-static inline GrB_Index LAGraph_Random15 (uint64_t *seed)
-{
-   (*seed) = (*seed) * 1103515245 + 12345 ;
-   return (((*seed) / 65536) % (LAGRAPH_RANDOM15_MAX + 1)) ;
-}
-
-// return a random uint64_t, in range 0 to LAGRAPH_RANDOM60_MAX
-static inline GrB_Index LAGraph_Random60 (uint64_t *seed)
-{
-    GrB_Index i = LAGraph_Random15 (seed) ;
-    i = LAGRAPH_RANDOM15_MAX * i + LAGraph_Random15 (seed) ;
-    i = LAGRAPH_RANDOM15_MAX * i + LAGraph_Random15 (seed) ;
-    i = LAGRAPH_RANDOM15_MAX * i + LAGraph_Random15 (seed) ;
-    i = i % (LAGRAPH_RANDOM60_MAX + 1) ;
-    return (i) ;
-}
-
-//------------------------------------------------------------------------------
-// parallel sorting methods
-//------------------------------------------------------------------------------
-
-int LAGraph_Sort1    // sort array A of size n
-(
-    int64_t *LAGRAPH_RESTRICT A_0,   // size n array
-    const int64_t n,
-    int nthreads,               // # of threads to use
-    char *msg
-) ;
-
-int LAGraph_Sort2    // sort array A of size 2-by-n, using 2 keys (A [0:1][])
-(
-    int64_t *LAGRAPH_RESTRICT A_0,   // size n array
-    int64_t *LAGRAPH_RESTRICT A_1,   // size n array
-    const int64_t n,
-    int nthreads,               // # of threads to use
-    char *msg
-) ;
-
-int LAGraph_Sort3    // sort array A of size 3-by-n, using 3 keys (A [0:2][])
-(
-    int64_t *LAGRAPH_RESTRICT A_0,   // size n array
-    int64_t *LAGRAPH_RESTRICT A_1,   // size n array
-    int64_t *LAGRAPH_RESTRICT A_2,   // size n array
-    const int64_t n,
-    int nthreads,               // # of threads to use
     char *msg
 ) ;
 
@@ -791,6 +723,25 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
 ) ;
 
 int LAGraph_TriangleCount_Methods   // returns 0 if successful, < 0 if failure
+(
+    uint64_t *ntriangles,   // # of triangles
+    // input:
+    LAGraph_Graph G,
+    int method,             // selects the method to use (TODO: enum)
+    // input/output:
+    int *presort,           // controls the presort of the graph (TODO: enum)
+        //  0: no sort
+        //  1: sort by degree, ascending order
+        // -1: sort by degree, descending order
+        //  2: auto selection: no sort if rule is not triggered.  Otherise:
+        //  sort in ascending order for methods 3 and 5, descending ordering
+        //  for methods 4 and 6.  On output, presort is modified to reflect the
+        //  sorting method used (0, -1, or 1).  If presort is NULL on input, no
+        //  sort is performed.
+    char *msg
+) ;
+
+int LAGraph_TriangleCount_vanilla   // returns 0 if successful, < 0 if failure
 (
     uint64_t *ntriangles,   // # of triangles
     // input:

@@ -15,10 +15,11 @@
 
 int LAGraph_New         // returns 0 if successful, -1 if failure
 (
-    LAGraph_Graph *G,   // the graph to create, NULL if failure
-    GrB_Matrix *A,      // the adjacency matrix of the graph, may be NULL
-    LAGraph_Kind kind,  // the kind of graph, may be LAGRAPH_UNKNOWN
-    char *msg
+    LAGraph_Graph *G,      // the graph to create, NULL if failure
+    GrB_Matrix    *A,      // the adjacency matrix of the graph, may be NULL
+    GrB_Type       A_type, // type of scalars stored in A
+    LAGraph_Kind   kind,   // the kind of graph, may be LAGRAPH_UNKNOWN
+    char          *msg
 )
 {
 
@@ -42,10 +43,11 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
     // assign its primary components
     //--------------------------------------------------------------------------
 
-    if (A == NULL || *A == NULL)
+    if (A == NULL || *A == NULL || A_type == NULL)
     {
         // G is incomplete, to be finalized later
-        (*G)->A = NULL ;
+        (*G)->A      = NULL ;
+        (*G)->A_type = NULL ;
     }
     else
     {
@@ -56,6 +58,7 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
         // caller also does GrB_free (&A), a double-free would occur if this
         // move does not set A to NULL.
         (*G)->A = (*A) ;
+        (*G)->A_type = A_type;
         (*A) = NULL ;
     }
     (*G)->kind = kind ;
@@ -73,4 +76,3 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
 
     return (0) ;
 }
-

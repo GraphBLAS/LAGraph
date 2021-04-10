@@ -10,8 +10,8 @@
 
 // These definitions are not meant for the end-user of LAGraph or GraphBLAS
 
-#ifndef LAGRAPH_INTERNAL_H
-#define LAGRAPH_INTERNAL_H
+#ifndef LG_INTERNAL_H
+#define LG_INTERNAL_H
 
 //------------------------------------------------------------------------------
 // include files
@@ -140,9 +140,9 @@ typedef unsigned char LG_void ;
 {                                                                           \
     LG_CLEAR_MSG ;                                                          \
     LG_CHECK (G == NULL, -1, "graph is NULL") ;                             \
-    LG_CHECK (G->A == NULL, -1, "graph adjacency matrix is NULL") ;         \
+    LG_CHECK (G->A == NULL, -2, "graph adjacency matrix is NULL") ;         \
     LG_CHECK (G->kind <= LAGRAPH_UNKNOWN ||                                 \
-        G->kind > LAGRAPH_ADJACENCY_DIRECTED, -1, "graph kind invalid") ;   \
+        G->kind > LAGRAPH_ADJACENCY_DIRECTED, -3, "graph kind invalid") ;   \
 }
 
 //------------------------------------------------------------------------------

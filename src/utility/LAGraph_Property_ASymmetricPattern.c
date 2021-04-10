@@ -11,7 +11,7 @@
 // Also computes G->AT if not already computed, if G is not an undirected
 // graph and G->A is square.
 
-#define LAGraph_FREE_WORK GrB_free (&C) ;
+#define LAGraph_FREE_WORK GrB_free(&C) ;
 
 #include "LG_internal.h"
 
@@ -21,13 +21,13 @@ int LAGraph_Property_ASymmetricPattern  // 0 if successful, -1 if failure
     char *msg
 )
 {
-
     //--------------------------------------------------------------------------
     // clear msg and check G
     //--------------------------------------------------------------------------
 
     GrB_Matrix C = NULL ;
     LG_CHECK_INIT (G, msg) ;
+
     G->A_pattern_is_symmetric = LAGRAPH_UNKNOWN ;
     LAGraph_Kind kind = G->kind ;
     if (kind == LAGRAPH_ADJACENCY_UNDIRECTED)
@@ -80,4 +80,3 @@ int LAGraph_Property_ASymmetricPattern  // 0 if successful, -1 if failure
     LAGraph_FREE_WORK ;
     return (0) ;
 }
-

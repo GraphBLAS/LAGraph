@@ -13,7 +13,7 @@
 //         test_tc matrixmarketfile.mtx
 //         test_tc matrixmarketfile.grb
 
-#include "LAGraph_Test.h"
+#include <LAGraph_Test.h>
 
 #define NTHREAD_LIST 1
 // #define NTHREAD_LIST 2
@@ -65,19 +65,24 @@ int main (int argc, char **argv)
     // initialize LAGraph and GraphBLAS
     //--------------------------------------------------------------------------
 
+#if defined(GxB_SUITESPARSE_GRAPHBLAS)
     printf ("%s v%d.%d.%d [%s]\n",
         GxB_IMPLEMENTATION_NAME,
         GxB_IMPLEMENTATION_MAJOR,
         GxB_IMPLEMENTATION_MINOR,
         GxB_IMPLEMENTATION_SUB,
         GxB_IMPLEMENTATION_DATE) ;
+#endif
 
     char msg [LAGRAPH_MSG_LEN] ;
 
     GrB_Matrix A = NULL ;
     LAGraph_Graph G = NULL ;
     LAGraph_TRY (LAGraph_Init (msg)) ;
+
+#if defined(GxB_SUITESPARSE_GRAPHBLAS)
     GrB_TRY (GxB_set (GxB_BURBLE, false)) ;
+#endif
 
     int ntrials = 3 ;
     // ntrials = 1 ;        // HACK
@@ -110,9 +115,9 @@ int main (int argc, char **argv)
     // read in the graph
     //--------------------------------------------------------------------------
 
-    char *matrix_name = (argc > 1) ? argv [1] : "stdin" ; 
-    LAGraph_TRY (LAGraph_Test_ReadProblem (&G, NULL,
-        true, true, true, NULL, false, argc, argv, msg)) ;
+    char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
+    LAGraph_TRY (LAGraph_Test_ReadProblem (&G, NULL, true, true, true,
+                                           NULL, false, argc, argv, msg)) ;
 
     // determine the row degree property
     LAGraph_TRY (LAGraph_Property_RowDegree (G, msg)) ;
@@ -132,8 +137,13 @@ int main (int argc, char **argv)
     printf ("\nwarmup method: ") ;
     int presort = 2 ;
     print_method (stdout, 6, presort) ;
+#if 0   // defined(GxB_SUITESPARSE_GRAPHBLAS)
     LAGraph_TRY (LAGraph_TriangleCount_Methods (&ntriangles, G, 6, &presort,
         msg)) ;
+#else
+    LAGraph_TRY( LAGraph_TriangleCount_vanilla(&ntriangles, G,
+                                               6, &presort, msg) );
+#endif
     printf ("# of triangles: %" PRId64 "\n", ntriangles) ;
     print_method (stdout, 6, presort) ;
     double ttot ;
@@ -185,8 +195,15 @@ int main (int argc, char **argv)
                 {
                     LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
                     presort = sorting ;
-                    LAGraph_TRY (LAGraph_TriangleCount_Methods (&nt2,
-                        G, method, &presort, msg)) ;
+#if 0   // defined(GxB_SUITESPARSE_GRAPHBLAS)
+                    LAGraph_TRY(
+                        LAGraph_TriangleCount_Methods (&nt2, G, method,
+                                                       &presort, msg) );
+#else
+                    LAGraph_TRY(
+                        LAGraph_TriangleCount_vanilla(&nt2, G, method,
+                                                      &presort, msg) );
+#endif
                     LAGraph_TRY (LAGraph_Toc (&ttrial [trial], tic, NULL)) ;
                     ttot += ttrial [trial] ;
                     printf ("trial %2d: %12.6f sec rate %6.2f  "
@@ -225,4 +242,3 @@ int main (int argc, char **argv)
     LAGRAPH_FREE_ALL ;
     LAGraph_TRY (LAGraph_Finalize (msg)) ;
 }
-

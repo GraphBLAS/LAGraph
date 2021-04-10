@@ -27,9 +27,8 @@
 //      <type> is one of: real, complex, pattern, or integer.  The real,
 //      integer, and pattern formats are returned as GrB_FP64, GrB_INT64, and
 //      GrB_BOOL, respectively, but these types are modified the %GraphBLAS
-//      structured comment described below.  Complex matrices are returned
-//      using the GxB_FC64 type (which is a GraphBLAS type corresponding
-//      to the ANSI C11 double complex type).
+//      structured comment described below.  Complex matrices are currently not
+//      supported.
 
 //      <storage> is one of: general, Hermitian, symmetric, or skew-symmetric.
 //      The Matrix Market format is case-insensitive, so "hermitian" and
@@ -366,6 +365,7 @@ static inline int read_entry   // returns 0 if successful, -1 if failure
         double *result = (double *) x ;
         result [0] = rval ;
     }
+#if 0
     else if (type == GxB_FC32)
     {
         if (!pattern && !read_double (p, &rval)) return (false) ;
@@ -388,6 +388,7 @@ static inline int read_entry   // returns 0 if successful, -1 if failure
         result [0] = rval ;     // real part
         result [1] = zval ;     // imaginary part
     }
+#endif
     else
     {
         // type not supported
@@ -547,6 +548,7 @@ static inline GrB_Info set_value
 int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
 (
     GrB_Matrix *A,          // handle of matrix to create
+    GrB_Type   *A_type,     // type of the scalar stored in A
     FILE *f,                // file to read from, already open
     char *msg
 )
@@ -560,6 +562,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
     LG_CHECK (A == NULL, -1, "&A is NULL") ;
     LG_CHECK (f == NULL, -1, "f is NULL") ;
     (*A) = NULL ;
+    (*A_type) = NULL;
 
     //--------------------------------------------------------------------------
     // set the default properties
@@ -688,6 +691,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
                 MM_type = MM_complex ;
                 type = GxB_FC64 ;
                 p += 7 ;
+                LG_CHECK(false, -1, "complex types not supported");
             }
             else if (strncmp (p, "pattern", 7) == 0)
             {
@@ -819,6 +823,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             {
                 type = GrB_FP64 ;
             }
+#if 0
             else if (strncmp (p, "grb_fc32", 8) == 0)
             {
                 type = GxB_FC32 ;
@@ -827,6 +832,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             {
                 type = GxB_FC64 ;
             }
+#endif
             else
             {
                 // type not supported
@@ -909,6 +915,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
     //--------------------------------------------------------------------------
 
     GrB_TRY (GrB_Matrix_new (A, type, nrows, ncols)) ;
+    *A_type = type;
 
     //--------------------------------------------------------------------------
     // quick return for empty matrix
@@ -1026,4 +1033,3 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
 
     return (0) ;
 }
-
