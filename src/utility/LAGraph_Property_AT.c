@@ -40,13 +40,12 @@ int LAGraph_Property_AT     // returns 0 if successful, -1 if failure
 
     GrB_Type type ;
     GrB_Index nrows, ncols ;
-    GrB_TRY (GxB_Matrix_type (&type, A)) ;
     GrB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
-    GrB_TRY (GrB_Matrix_new (&AT, type, ncols, nrows)) ;
+    GrB_TRY (GrB_Matrix_new (&AT, G->A_type, ncols, nrows)) ;
     GrB_TRY (GrB_transpose (AT, NULL, NULL, A, NULL)) ;
     G->AT = AT ;
+    G->AT_type = G->A_type;
 
     return (0) ;
 }
-

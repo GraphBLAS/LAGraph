@@ -40,16 +40,26 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
     (*G)->size = G_size ;
 
     //--------------------------------------------------------------------------
+    // initialize its members
+    //--------------------------------------------------------------------------
+
+    (*G)->A      = NULL ;
+    (*G)->A_type = NULL ;
+    (*G)->kind = LAGRAPH_KIND_UNKNOWN;
+    (*G)->AT = NULL ;
+    (*G)->AT_type = NULL;
+    (*G)->rowdegree = NULL ;
+    (*G)->rowdegree_type = NULL;
+    (*G)->coldegree = NULL ;
+    (*G)->coldegree_type = NULL ;
+    (*G)->A_pattern_is_symmetric = LAGRAPH_UNKNOWN;
+    (*G)->ndiag = LAGRAPH_UNKNOWN ;
+
+    //--------------------------------------------------------------------------
     // assign its primary components
     //--------------------------------------------------------------------------
 
-    if (A == NULL || *A == NULL || A_type == NULL)
-    {
-        // G is incomplete, to be finalized later
-        (*G)->A      = NULL ;
-        (*G)->A_type = NULL ;
-    }
-    else
+    if ((A != NULL) && (*A != NULL) && (A_type != NULL))
     {
         // move &A into the graph and set &A to NULL to denote to the caller
         // that it is now a component of G.  The graph G is not opaque, so the
@@ -60,19 +70,13 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
         (*G)->A = (*A) ;
         (*G)->A_type = A_type;
         (*A) = NULL ;
+
+        (*G)->kind = kind ;
+        (*G)->A_pattern_is_symmetric =
+            (kind == LAGRAPH_ADJACENCY_UNDIRECTED)
+            ? LAGRAPH_TRUE
+            : LAGRAPH_UNKNOWN;
     }
-    (*G)->kind = kind ;
-
-    //--------------------------------------------------------------------------
-    // clear its cached properties
-    //--------------------------------------------------------------------------
-
-    (*G)->AT = NULL ;
-    (*G)->rowdegree = NULL ;
-    (*G)->coldegree = NULL ;
-    (*G)->A_pattern_is_symmetric =
-        (kind == LAGRAPH_ADJACENCY_UNDIRECTED) ? LAGRAPH_TRUE : LAGRAPH_UNKNOWN;
-    (*G)->ndiag = LAGRAPH_UNKNOWN ;
 
     return (0) ;
 }
