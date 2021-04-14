@@ -33,7 +33,6 @@ link_directories ( ../../build )
 
 # include_directories ( /usr/local/include )
 include_directories ( ../../../GraphBLAS/Include )
-include_directories ( ../../../GraphBLAS/Source )
 include_directories ( ../../include ../include )
 
 # find OpenMP
