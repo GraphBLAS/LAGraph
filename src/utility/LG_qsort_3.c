@@ -44,7 +44,7 @@
 #define LG_partition LG_partition_3
 #define LG_quicksort LG_quicksort_3
 
-#include "LG_qsort_template.c"
+#include "LG_qsort_template.h"
 
 void LG_qsort_3     // sort array A of size 3-by-n, using 3 keys (A [0:2][])
 (
@@ -53,8 +53,7 @@ void LG_qsort_3     // sort array A of size 3-by-n, using 3 keys (A [0:2][])
     int64_t *LG_RESTRICT A_2,       // size n array
     const int64_t n
 )
-{ 
+{
     uint64_t seed = n ;
     LG_quicksort (LG_arg (A), n, &seed, NULL) ;
 }
-

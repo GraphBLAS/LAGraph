@@ -27,6 +27,4 @@ jobs:
         cd build
         CC=gcc cmake ..
         JOBS=2 make
-        cd ..
-        make tests
-        sudo make install
+        # sudo make install

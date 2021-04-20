@@ -42,7 +42,7 @@
 #define LG_partition LG_partition_2
 #define LG_quicksort LG_quicksort_2
 
-#include "LG_qsort_template.c"
+#include "LG_qsort_template.h"
 
 void LG_qsort_2     // sort array A of size 2-by-n, using 2 keys (A [0:1][])
 (
@@ -50,8 +50,7 @@ void LG_qsort_2     // sort array A of size 2-by-n, using 2 keys (A [0:1][])
     int64_t *LG_RESTRICT A_1,       // size n array
     const int64_t n
 )
-{ 
+{
     uint64_t seed = n ;
     LG_quicksort (LG_arg (A), n, &seed, NULL) ;
 }
-

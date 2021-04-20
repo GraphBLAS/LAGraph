@@ -50,7 +50,7 @@
 #define LG_partition LG_partition_1b
 #define LG_quicksort LG_quicksort_1b
 
-#include "LG_qsort_template.c"
+#include "LG_qsort_template.h"
 
 int LG_qsort_1b    // sort array A of size 2-by-n, using 1 key (A [0][])
 (
@@ -59,7 +59,7 @@ int LG_qsort_1b    // sort array A of size 2-by-n, using 1 key (A [0][])
     const size_t xsize,             // size of entries in A_1
     const int64_t n
 )
-{ 
+{
     uint64_t seed = n ;
     size_t tx_size = 0 ;
     LG_void *tx = LAGraph_Malloc (1, xsize, &tx_size) ;
@@ -106,7 +106,7 @@ int LG_qsort_1b    // sort array A of size 2-by-n, using 1 key (A [0][])
 #undef  LG_quicksort
 #define LG_quicksort LG_quicksort_1b_size1
 
-#include "LG_qsort_template.c"
+#include "LG_qsort_template.h"
 
 void LG_qsort_1b_size1  // LG_qsort_1b with A_1 with sizeof = 1
 (
@@ -114,7 +114,7 @@ void LG_qsort_1b_size1  // LG_qsort_1b with A_1 with sizeof = 1
     uint8_t *LG_RESTRICT A_1,       // size n array
     const int64_t n
 )
-{ 
+{
     uint64_t seed = n ;
     LG_quicksort (LG_arg (A), n, &seed, NULL) ;
 }
@@ -132,7 +132,7 @@ void LG_qsort_1b_size1  // LG_qsort_1b with A_1 with sizeof = 1
 #undef  LG_quicksort
 #define LG_quicksort LG_quicksort_1b_size2
 
-#include "LG_qsort_template.c"
+#include "LG_qsort_template.h"
 
 void LG_qsort_1b_size2  // LG_qsort_1b with A_1 with sizeof = 2
 (
@@ -140,7 +140,7 @@ void LG_qsort_1b_size2  // LG_qsort_1b with A_1 with sizeof = 2
     uint16_t *LG_RESTRICT A_1,      // size n array
     const int64_t n
 )
-{ 
+{
     uint64_t seed = n ;
     LG_quicksort (LG_arg (A), n, &seed, NULL) ;
 }
@@ -159,7 +159,7 @@ void LG_qsort_1b_size2  // LG_qsort_1b with A_1 with sizeof = 2
 #undef  LG_quicksort
 #define LG_quicksort LG_quicksort_1b_size4
 
-#include "LG_qsort_template.c"
+#include "LG_qsort_template.h"
 
 void LG_qsort_1b_size4  // LG_qsort_1b with A_1 with sizeof = 4
 (
@@ -167,7 +167,7 @@ void LG_qsort_1b_size4  // LG_qsort_1b with A_1 with sizeof = 4
     uint32_t *LG_RESTRICT A_1,      // size n array
     const int64_t n
 )
-{ 
+{
     uint64_t seed = n ;
     LG_quicksort (LG_arg (A), n, &seed, NULL) ;
 }
@@ -186,7 +186,7 @@ void LG_qsort_1b_size4  // LG_qsort_1b with A_1 with sizeof = 4
 #undef  LG_quicksort
 #define LG_quicksort LG_quicksort_1b_size8
 
-#include "LG_qsort_template.c"
+#include "LG_qsort_template.h"
 
 void LG_qsort_1b_size8  // LG_qsort_1b with A_1 with sizeof = 8
 (
@@ -194,7 +194,7 @@ void LG_qsort_1b_size8  // LG_qsort_1b with A_1 with sizeof = 8
     uint64_t *LG_RESTRICT A_1,      // size n array
     const int64_t n
 )
-{ 
+{
     uint64_t seed = n ;
     LG_quicksort (LG_arg (A), n, &seed, NULL) ;
 }
@@ -212,7 +212,7 @@ void LG_qsort_1b_size8  // LG_qsort_1b with A_1 with sizeof = 8
 #undef  LG_quicksort
 #define LG_quicksort LG_quicksort_1b_size16
 
-#include "LG_qsort_template.c"
+#include "LG_qsort_template.h"
 
 void LG_qsort_1b_size16 // LG_qsort_1b with A_1 with sizeof = 16
 (
@@ -220,9 +220,8 @@ void LG_qsort_1b_size16 // LG_qsort_1b with A_1 with sizeof = 16
     LG_blob16 *LG_RESTRICT A_1,     // size n array
     const int64_t n
 )
-{ 
+{
     ASSERT (sizeof (LG_blob16) == 16) ;
     uint64_t seed = n ;
     LG_quicksort (LG_arg (A), n, &seed, NULL) ;
 }
-

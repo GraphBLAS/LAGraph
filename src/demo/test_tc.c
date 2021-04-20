@@ -13,7 +13,7 @@
 //         test_tc matrixmarketfile.mtx
 //         test_tc matrixmarketfile.grb
 
-#include <LAGraph_Test.h>
+#include "LAGraph_Test.h"
 
 #define NTHREAD_LIST 1
 // #define NTHREAD_LIST 2

@@ -40,15 +40,14 @@
 #define LG_partition LG_partition_1a
 #define LG_quicksort LG_quicksort_1a
 
-#include "LG_qsort_template.c"
+#include "LG_qsort_template.h"
 
 void LG_qsort_1a    // sort array A of size 1-by-n
 (
     int64_t *LG_RESTRICT A_0,       // size n array
     const int64_t n
 )
-{ 
+{
     uint64_t seed = n ;
     LG_quicksort (LG_arg (A), n, &seed, NULL) ;
 }
-
