@@ -32,14 +32,14 @@
 
 #define LAGRAPH_FREE_WORK                   \
 {                                           \
-    LAGraph_Free ((void **) &W, W_size) ;   \
-    LAGraph_Free ((void **) &D, D_size) ;   \
+    LAGraph_Free ((void **) &W) ;   \
+    LAGraph_Free ((void **) &D) ;   \
 }
 
 #define LAGRAPH_FREE_ALL                    \
 {                                           \
     LAGRAPH_FREE_WORK ;                     \
-    LAGraph_Free ((void **) &P, Psize) ;    \
+    LAGraph_Free ((void **) &P) ;    \
 }
 
 #include "LG_internal.h"
@@ -48,7 +48,6 @@ int LAGraph_SortByDegree    // returns 0 if successful, -1 if failure
 (
     // output
     int64_t **P_handle,     // P is returned as a permutation vector of size n
-    size_t *P_size,         // size of P in bytes
     // input
     LAGraph_Graph G,        // graph of n nodes
     bool byrow,             // if true, sort G->rowdegree, else G->coldegree
@@ -62,13 +61,11 @@ int LAGraph_SortByDegree    // returns 0 if successful, -1 if failure
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    int64_t *P = NULL ; size_t Psize = 0 ;
-    int64_t *W = NULL ; size_t W_size = 0 ;
-    int64_t *D = NULL ; size_t D_size = 0 ;
+    int64_t *P = NULL ;
+    int64_t *W = NULL ;
+    int64_t *D = NULL ;
     LG_CHECK (P_handle == NULL, -1, "P is null") ;
-    LG_CHECK (P_size == NULL, -1, "P_size is null") ;
     (*P_handle) = NULL ;
-    (*P_size) = 0 ;
     LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
 
     GrB_Vector Degree ;
@@ -106,9 +103,9 @@ int LAGraph_SortByDegree    // returns 0 if successful, -1 if failure
     // allocate result and workspace
     //--------------------------------------------------------------------------
 
-    P = LAGraph_Malloc (n, sizeof (int64_t), &Psize) ;
-    D = LAGraph_Malloc (n, sizeof (int64_t), &D_size) ;
-    W = LAGraph_Malloc (2*n, sizeof (int64_t), &W_size) ;
+    P = LAGraph_Malloc (n, sizeof (int64_t)) ;
+    D = LAGraph_Malloc (n, sizeof (int64_t)) ;
+    W = LAGraph_Malloc (2*n, sizeof (int64_t)) ;
     LG_CHECK (D == NULL || P == NULL || W == NULL, -1, "out of memory") ;
     int64_t *W0 = W ;
     int64_t *W1 = W + n ;
@@ -147,7 +144,7 @@ int LAGraph_SortByDegree    // returns 0 if successful, -1 if failure
         }
     }
 
-    LAGraph_Free ((void **) &W, W_size) ;
+    LAGraph_Free ((void **) &W) ;
 
     //--------------------------------------------------------------------------
     // sort by degrees, with ties by node id
@@ -161,7 +158,5 @@ int LAGraph_SortByDegree    // returns 0 if successful, -1 if failure
 
     LAGRAPH_FREE_WORK ;
     (*P_handle) = P ;
-    (*P_size) = Psize ;
     return (0) ;
 }
-

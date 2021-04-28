@@ -8,133 +8,7 @@
 
 //------------------------------------------------------------------------------
 
-// LAGraph_MMRead:  read a matrix from a Matrix Market file.
-
-// The file format used here is compatible with all variations of the Matrix
-// Market "coordinate" and "array" format (http://www.nist.gov/MatrixMarket).
-// The format is fully described in LAGraph/Doc/MatrixMarket.pdf, and
-// summarized here (with extensions for LAGraph).
-
-// The first line of the file starts with %%MatrixMarket, with the following
-// format:
-
-//      %%MatrixMarket matrix <fmt> <type> <storage>
-
-//      <fmt> is one of: coordinate or array.  The former is a sparse matrix in
-//      triplet form.  The latter is a dense matrix in column-major form.
-//      Both formats are returned as a GrB_Matrix.
-
-//      <type> is one of: real, complex, pattern, or integer.  The real,
-//      integer, and pattern formats are returned as GrB_FP64, GrB_INT64, and
-//      GrB_BOOL, respectively, but these types are modified the %GraphBLAS
-//      structured comment described below.  Complex matrices are currently not
-//      supported.
-
-//      <storage> is one of: general, Hermitian, symmetric, or skew-symmetric.
-//      The Matrix Market format is case-insensitive, so "hermitian" and
-//      "Hermitian" are treated the same).
-
-//      Not all combinations are permitted.  Only the following are meaningful:
-
-//      (1) (coordinate or array) x (real, integer, or complex)
-//          x (general, symmetric, or skew-symmetric)
-
-//      (2) (coordinate or array) x (complex) x (Hermitian)
-
-//      (3) (coodinate) x (pattern) x (general or symmetric)
-
-// The second line is an optional extension to the Matrix Market format:
-
-//      %%GraphBLAS <entrytype>
-
-//      <entrytype> is one of the 13 built-in types (GrB_BOOL, GrB_INT8,
-//      GrB_INT16, GrB_INT32, GrB_INT64, GrB_UINT8, GrB_UINT16, GrB_UINT32,
-//      GrB_UINT64, GrB_FP32, GrB_FP64, GxB_FC32, or GxB_FC64).
-
-//      If this second line is included, it overrides the default GraphBLAS
-//      types for the Matrix Market <type> on line one of the file: real,
-//      pattern, and integer.  The Matrix Market complex <type> is not
-//      modified, and is always returned as GxB_FC64.
-
-// Any other lines starting with "%" are treated as comments, and are ignored.
-// Comments may be interspersed throughout the file.  Blank lines are ignored.
-// The Matrix Market header is optional in this routine (it is not optional in
-// the Matrix Market format).  If not present, the <fmt> defaults to
-// coordinate, <type> defaults to real, and <storage> defaults to general.  The
-// remaining lines are space delimited, and free format (one or more spaces can
-// appear, and each field has arbitrary width).
-
-// The Matrix Market file <fmt> can be coordinate or array:
-
-//      coordinate:  for this format, the first non-comment line must appear,
-//          and it must contain three integers:
-
-//              nrows ncols nvals
-
-//          For example, a 5-by-12 matrix with 42 entries would have:
-
-//              5 12 42
-
-//          Each of the remaining lines defines one entry.  The order is
-//          arbitrary.  If the Matrix Market <type> is real or integer, each
-//          line contains three numbers: row index, column index, and value.
-//          For example, if A(3,4) is equal to 5.77, a line:
-
-//              3 4 5.77
-
-//          would appear in the file.  The indices in the Matrix Market are
-//          1-based, so this entry becomes A(2,3) in the GrB_Matrix returned to
-//          the caller.  If the <type> is pattern, then only the row and column
-//          index appears.  If <type> is complex, four values appear.  If
-//          A(8,4) has a real part of 6.2 and an imaginary part of -9.3, then
-//          the line is:
-
-//              8 4 6.2 -9.3
-
-//          and since the file is 1-based but a GraphBLAS matrix is always
-//          0-based, one is subtracted from the row and column indices in the
-//          file, so this entry becomes A(7,3).
-
-//      array: for this format, the first non-comment line must appear, and
-//          it must contain just two integers:
-
-//              nrows ncols
-
-//          A 5-by-12 matrix would thus have the line
-
-//              5 12
-
-//          Each of the remaining lines defines one entry, in column major
-//          order.  If the <type> is real or integer, this is the value of the
-//          entry.  An entry if <type> of complex consists of two values, the
-//          real and imaginary part.  The <type> cannot be pattern in this
-//          case.
-
-//      For both coordinate and array formats, real and complex values may use
-//      the terms INF, +INF, -INF, and NAN to represent floating-point infinity
-//      and NaN values.
-
-// The <storage> token is general, symmetric, skew-symmetric, or Hermitian:
-
-//      general: the matrix has no symmetry properties (or at least none
-//          that were exploited when the file was created).
-
-//      symmetric:  A(i,j) == A(j,i).  Only entries on or below the diagonal
-//          appear in the file.  Each off-diagonal entry in the file creates
-//          two entries in the GrB_Matrix that is returned.
-
-//      skew-symmetric:  A(i,j) == -A(i,j).  There are no entries on the
-//          diagonal.  Only entries below the diagonal appear in the file.
-//          Each off-diagonal entry in the file creates two entries in the
-//          GrB_Matrix that is returned.
-
-//      Hermitian: square complex matrix with A(i,j) = conj (A(j,i)).
-//          All entries on the diagonal are real.  Each off-diagonal entry in
-//          the file creates two entries in the GrB_Matrix that is returned.
-
-// According to the Matrix Market format, entries are always listed in
-// column-major order.  This rule is follwed by LAGraph_mmwrite.  However,
-// LAGraph_MMRead can read the entries in any order.
+// LAGraph_MMRead: read a matrix from a Matrix Market file
 
 // Parts of this code are from SuiteSparse/CHOLMOD/Check/cholmod_read.c, and
 // are used here by permission of the author of CHOLMOD/Check (T. A. Davis).
@@ -441,6 +315,7 @@ static inline void negate_scalar
         double *value = (double *) x ;
         (*value) = - (*value) ;
     }
+#if 0
     else if (type == GxB_FC32)
     {
         float complex *value = (float complex *) x ;
@@ -451,6 +326,7 @@ static inline void negate_scalar
         double complex *value = (double complex *) x ;
         (*value) = - (*value) ;
     }
+#endif
 }
 
 //------------------------------------------------------------------------------
@@ -524,6 +400,7 @@ static inline GrB_Info set_value
         double *value = (double *) x ;
         return (GrB_Matrix_setElement_FP64 (A, *value, i, j)) ;
     }
+#if 0
     else if (type == GxB_FC32)
     {
         float complex *value = (float complex *) x ;
@@ -534,6 +411,7 @@ static inline GrB_Info set_value
         double complex *value = (double complex *) x ;
         return (GxB_Matrix_setElement_FC64 (A, *value, i, j)) ;
     }
+#endif
     else
     {
         // type not supported

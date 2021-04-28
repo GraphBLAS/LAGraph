@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph.h: user-visible include file for LAGraph (TODO: rename LAGraph.h)
+// LAGraph.h: user-visible include file for LAGraph
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -105,7 +105,7 @@
         /* free any internal workspace and return the status */     \
         GrB_free (*parent) ;                                        \
         GrB_free (workvector) ;                                     \
-        LAGraph_Free ((void **) &W, W_size) ;                       \
+        LAGraph_Free ((void **) &W) ;                       \
         return (status) ;                                           \
     }
 
@@ -181,18 +181,14 @@ extern bool LAGraph_Malloc_is_thread_safe ;
 void *LAGraph_Malloc
 (
     size_t nitems,          // number of items
-    size_t size_of_item,    // size of each item
-    // output:
-    size_t *size_allocated  // # of bytes actually allocated
+    size_t size_of_item     // size of each item
 ) ;
 
 // LAGraph_Calloc:  allocate a block of memory (wrapper for calloc)
 void *LAGraph_Calloc
 (
     size_t nitems,          // number of items
-    size_t size_of_item,    // size of each item
-    // output:
-    size_t *size_allocated  // # of bytes actually allocated
+    size_t size_of_item     // size of each item
 ) ;
 
 void *LAGraph_Realloc       // returns pointer to reallocated block of memory,
@@ -202,7 +198,6 @@ void *LAGraph_Realloc       // returns pointer to reallocated block of memory,
     size_t size_of_item,    // size of each item
     // input/output
     void *p,                // old block to reallocate
-    size_t *size_allocated, // # of bytes actually allocated
     // output
     bool *ok                // true if successful, false otherwise
 ) ;
@@ -210,8 +205,7 @@ void *LAGraph_Realloc       // returns pointer to reallocated block of memory,
 // LAGraph_Free:  free a block of memory (wrapper for free)
 void LAGraph_Free
 (
-    void **p,               // pointer to object to free, does nothing if NULL
-    size_t size_allocated   // # of bytes actually allocated
+    void **p                // pointer to object to free, does nothing if NULL
 ) ;
 
 //==============================================================================
@@ -366,12 +360,6 @@ struct LAGraph_Graph_struct
     // rowsum (i) = sum (A (i,:)), regardless of kind
     // colsum (j) = sum (A (:,j)), regardless of kind
     // LAGraph_BooleanProperty connected ;   // true if G is a connected graph
-
-    //--------------------------------------------------------------------------
-    // for internal use only -- do not modify this parameter
-    //--------------------------------------------------------------------------
-
-    size_t size ;
 } ;
 
 typedef struct LAGraph_Graph_struct *LAGraph_Graph ;
@@ -491,26 +479,153 @@ int LAGraph_Toc             // returns 0 if successful, -1 if failure
     char *msg
 ) ;
 
-// ascii header prepended to all *.grb files
-#define LAGRAPH_BIN_HEADER 512
 
-// LAGraph_BinRead: read a matrix from a binary file
-int LAGraph_BinRead         // returns 0 if successful, -1 if failure
-(
-    GrB_Matrix *A,          // matrix to read from the file
-    GrB_Type   *A_type,     // type of the scalar stored in A
-    FILE *f,                // file to read it from, already open
-    char *msg
-) ;
-
-// LAGraph_MMRead: read a matrix from a Matrix Market file
+/****************************************************************************
+ *
+ * LAGraph_MMRead:  read a matrix from a Matrix Market file.
+ *
+ * The file format used here is compatible with all variations of the Matrix
+ * Market "coordinate" and "array" format (http://www.nist.gov/MatrixMarket).
+ * The format is fully described in LAGraph/Doc/MatrixMarket.pdf, and
+ * summarized here (with extensions for LAGraph).
+ *
+ * The first line of the file starts with %%MatrixMarket, with the following
+ * format:
+ *
+ *      %%MatrixMarket matrix <fmt> <type> <storage>
+ *
+ *      <fmt> is one of: coordinate or array.  The former is a sparse matrix in
+ *      triplet form.  The latter is a dense matrix in column-major form.
+ *      Both formats are returned as a GrB_Matrix.
+ *
+ *      <type> is one of: real, complex, pattern, or integer.  The real,
+ *      integer, and pattern formats are returned as GrB_FP64, GrB_INT64, and
+ *      GrB_BOOL, respectively, but these types are modified the %GraphBLAS
+ *      structured comment described below.  Complex matrices are currently not
+ *      supported.
+ *
+ *      <storage> is one of: general, Hermitian, symmetric, or skew-symmetric.
+ *      The Matrix Market format is case-insensitive, so "hermitian" and
+ *      "Hermitian" are treated the same).
+ *
+ *      Not all combinations are permitted.  Only the following are meaningful:
+ *
+ *      (1) (coordinate or array) x (real, integer, or complex)
+ *          x (general, symmetric, or skew-symmetric)
+ *
+ *      (2) (coordinate or array) x (complex) x (Hermitian)
+ *
+ *      (3) (coodinate) x (pattern) x (general or symmetric)
+ *
+ * The second line is an optional extension to the Matrix Market format:
+ *
+ *      %%GraphBLAS <entrytype>
+ *
+ *      <entrytype> is one of the 13 built-in types (GrB_BOOL, GrB_INT8,
+ *      GrB_INT16, GrB_INT32, GrB_INT64, GrB_UINT8, GrB_UINT16, GrB_UINT32,
+ *      GrB_UINT64, GrB_FP32, GrB_FP64, GxB_FC32, or GxB_FC64).
+ *
+ *      If this second line is included, it overrides the default GraphBLAS
+ *      types for the Matrix Market <type> on line one of the file: real,
+ *      pattern, and integer.  The Matrix Market complex <type> is not
+ *      modified, and is always returned as GxB_FC64.
+ *
+ * Any other lines starting with "%" are treated as comments, and are ignored.
+ * Comments may be interspersed throughout the file.  Blank lines are ignored.
+ * The Matrix Market header is optional in this routine (it is not optional in
+ * the Matrix Market format).  If not present, the <fmt> defaults to
+ * coordinate, <type> defaults to real, and <storage> defaults to general.  The
+ * remaining lines are space delimited, and free format (one or more spaces can
+ * appear, and each field has arbitrary width).
+ *
+ * The Matrix Market file <fmt> can be coordinate or array:
+ *
+ *      coordinate:  for this format, the first non-comment line must appear,
+ *          and it must contain three integers:
+ *
+ *              nrows ncols nvals
+ *
+ *          For example, a 5-by-12 matrix with 42 entries would have:
+ *
+ *              5 12 42
+ *
+ *          Each of the remaining lines defines one entry.  The order is
+ *          arbitrary.  If the Matrix Market <type> is real or integer, each
+ *          line contains three numbers: row index, column index, and value.
+ *          For example, if A(3,4) is equal to 5.77, a line:
+ *
+ *              3 4 5.77
+ *
+ *          would appear in the file.  The indices in the Matrix Market are
+ *          1-based, so this entry becomes A(2,3) in the GrB_Matrix returned to
+ *          the caller.  If the <type> is pattern, then only the row and column
+ *          index appears.  If <type> is complex, four values appear.  If
+ *          A(8,4) has a real part of 6.2 and an imaginary part of -9.3, then
+ *          the line is:
+ *
+ *              8 4 6.2 -9.3
+ *
+ *          and since the file is 1-based but a GraphBLAS matrix is always
+ *          0-based, one is subtracted from the row and column indices in the
+ *          file, so this entry becomes A(7,3).
+ *
+ *      array: for this format, the first non-comment line must appear, and
+ *          it must contain just two integers:
+ *
+ *              nrows ncols
+ *
+ *          A 5-by-12 matrix would thus have the line
+ *
+ *              5 12
+ *
+ *          Each of the remaining lines defines one entry, in column major
+ *          order.  If the <type> is real or integer, this is the value of the
+ *          entry.  An entry if <type> of complex consists of two values, the
+ *          real and imaginary part.  The <type> cannot be pattern in this
+ *          case.
+ *
+ *      For both coordinate and array formats, real and complex values may use
+ *      the terms INF, +INF, -INF, and NAN to represent floating-point infinity
+ *      and NaN values.
+ *
+ * The <storage> token is general, symmetric, skew-symmetric, or Hermitian:
+ *
+ *      general: the matrix has no symmetry properties (or at least none
+ *          that were exploited when the file was created).
+ *
+ *      symmetric:  A(i,j) == A(j,i).  Only entries on or below the diagonal
+ *          appear in the file.  Each off-diagonal entry in the file creates
+ *          two entries in the GrB_Matrix that is returned.
+ *
+ *      skew-symmetric:  A(i,j) == -A(i,j).  There are no entries on the
+ *          diagonal.  Only entries below the diagonal appear in the file.
+ *          Each off-diagonal entry in the file creates two entries in the
+ *          GrB_Matrix that is returned.
+ *
+ *      Hermitian: square complex matrix with A(i,j) = conj (A(j,i)).
+ *          All entries on the diagonal are real.  Each off-diagonal entry in
+ *          the file creates two entries in the GrB_Matrix that is returned.
+ *
+ * According to the Matrix Market format, entries are always listed in
+ * column-major order.  This rule is follwed by LAGraph_mmwrite.  However,
+ * LAGraph_MMRead can read the entries in any order.
+ *
+ * @param[out]    A       handle of the matrix to create
+ * @param[out]    A_type  type of the scalar stored in A
+ * @param[in]     f       handle to an open file to read from
+ * @param[in,out] msg     any error messages
+ *
+ * @retval 0 successful
+ * @retval -1 if failure
+ *
+ */
 int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
 (
     GrB_Matrix *A,          // handle of matrix to create
     GrB_Type   *A_type,     // type of the scalar stored in A
     FILE *f,                // file to read from, already open
     char *msg
-) ;
+);
 
 // TODO: compression
 
@@ -576,7 +691,6 @@ int LAGraph_SortByDegree    // returns 0 if successful, -1 if failure
 (
     // output
     int64_t **P_handle,     // P is returned as a permutation vector of size n
-    size_t *P_size,         // size of P in bytes
     // input
     LAGraph_Graph G,        // graph of n nodes
     bool byrow,             // if true, sort G->rowdegree, else G->coldegree

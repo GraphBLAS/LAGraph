@@ -11,10 +11,10 @@
 #-------------------------------------------------------------------------------
 
 file( GLOB DEMO_SOURCES LIST_DIRECTORIES false *.c )
-foreach( testsourcefile ${DEMO_SOURCES} )
-    get_filename_component(justname ${testsourcefile} NAME)
-    string( REPLACE ".c" "" testname ${justname} )
-    message("Adding: ${testname}")
-    add_executable( ${testname} ${testsourcefile})
-    target_link_libraries( ${testname} lagraph ${GRAPHBLAS_LIBRARIES} )
-endforeach( testsourcefile ${DEMO_SOURCES} )
+foreach( demosourcefile ${DEMO_SOURCES} )
+    get_filename_component(justname ${demosourcefile} NAME)
+    string( REPLACE ".c" "" demoname ${justname} )
+    message("Adding: ${demoname}")
+    add_executable( ${demoname} ${demosourcefile})
+    target_link_libraries( ${demoname} lagraph ${GRAPHBLAS_LIBRARIES} )
+endforeach( demosourcefile ${DEMO_SOURCES} )

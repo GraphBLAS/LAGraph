@@ -22,7 +22,6 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
     char          *msg
 )
 {
-
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------
@@ -34,10 +33,8 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
     // allocate the graph
     //--------------------------------------------------------------------------
 
-    size_t G_size ;
-    (*G) = LAGraph_Malloc (1, sizeof (struct LAGraph_Graph_struct), &G_size) ;
+    (*G) = LAGraph_Malloc (1, sizeof (struct LAGraph_Graph_struct)) ;
     LG_CHECK (*G == NULL, -1, "out of memory") ;
-    (*G)->size = G_size ;
 
     //--------------------------------------------------------------------------
     // initialize its members

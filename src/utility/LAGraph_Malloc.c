@@ -19,9 +19,7 @@
 void *LAGraph_Malloc
 (
     size_t nitems,          // number of items
-    size_t size_of_item,    // size of each item
-    // output:
-    size_t *size_allocated  // # of bytes actually allocated
+    size_t size_of_item     // size of each item   TODO: refactor to one parameter
 )
 {
 
@@ -37,13 +35,10 @@ void *LAGraph_Malloc
     if (!ok || nitems > GxB_INDEX_MAX || size_of_item > GxB_INDEX_MAX)
     {
         // overflow
-        (*size_allocated) = 0 ;
         return (NULL) ;
     }
 
     // malloc the space
     void *p = LAGraph_Malloc_function (size) ;
-    (*size_allocated) = (p == NULL) ? 0 : size ;
     return (p) ;
 }
-

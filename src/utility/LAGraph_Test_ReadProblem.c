@@ -104,6 +104,9 @@ int LAGraph_Test_ReadProblem    // returns 0 if successful, -1 if failure
                 break ;
             }
         }
+
+#if 0
+        // TODO binary (.grb) format is currently experimental
         bool is_binary = (ext != NULL && strncmp (ext, ".grb", 4) == 0) ;
 
         if (is_binary)
@@ -118,6 +121,7 @@ int LAGraph_Test_ReadProblem    // returns 0 if successful, -1 if failure
             LAGraph_TRY (LAGraph_BinRead (&A, &A_type, f, msg)) ;
         }
         else
+#endif
         {
             printf ("Reading matrix market file: %s\n", filename) ;
             f = fopen (filename, "r") ;

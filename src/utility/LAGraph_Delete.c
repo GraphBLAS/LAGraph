@@ -23,7 +23,7 @@ int LAGraph_Delete      // returns 0 if successful, -1 if failure
 
     LG_CLEAR_MSG ;
     if (G == NULL || (*G) == NULL)
-    { 
+    {
         // success: nothing to do
         return (0) ;
     }
@@ -39,9 +39,8 @@ int LAGraph_Delete      // returns 0 if successful, -1 if failure
     //--------------------------------------------------------------------------
 
     GrB_TRY (GrB_free (&((*G)->A))) ;
-    LAGraph_Free ((void **) G, (*G)->size) ;
+    LAGraph_Free ((void **) G) ;
 
     // success
     return (0) ;
 }
-

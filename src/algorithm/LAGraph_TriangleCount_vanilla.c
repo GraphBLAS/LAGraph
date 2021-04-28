@@ -270,7 +270,7 @@ static int tricount_prep_vanilla        // return 0 if successful, < 0 on error
     GrB_free (&L) ;                         \
     GrB_free (&T) ;                         \
     GrB_free (&U) ;                         \
-    LAGraph_Free ((void **) &P, P_size) ;   \
+    LAGraph_Free ((void **) &P) ;   \
 }
 
 int LAGraph_TriangleCount_vanilla   // returns 0 if successful, < 0 if failure
@@ -299,7 +299,7 @@ int LAGraph_TriangleCount_vanilla   // returns 0 if successful, < 0 if failure
 
     LG_CLEAR_MSG ;
     GrB_Matrix C = NULL, L = NULL, U = NULL, T = NULL, A ;
-    int64_t *P = NULL ; size_t P_size = 0 ;
+    int64_t *P = NULL ;
     LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
     LG_CHECK (ntriangles == NULL, -1, "ntriangles is null") ;
     LG_CHECK (G->ndiag != 0, -1, "G->ndiag must be zero") ;
@@ -392,8 +392,7 @@ int LAGraph_TriangleCount_vanilla   // returns 0 if successful, < 0 if failure
     if (presort != NULL && (*presort) != 0)
     {
         // P = permutation that sorts the rows by their degree
-        LAGraph_TRY (LAGraph_SortByDegree (&P, &P_size, G, true,
-                                           (*presort) > 0, msg)) ;
+        LAGraph_TRY (LAGraph_SortByDegree (&P, G, true, (*presort) > 0, msg)) ;
 
         // T = A (P,P) and typecast to boolean
         GrB_TRY (GrB_Matrix_new (&T, GrB_BOOL, n, n)) ;
@@ -401,7 +400,8 @@ int LAGraph_TriangleCount_vanilla   // returns 0 if successful, < 0 if failure
         A = T ;
 
         // free workspace
-        LAGraph_Free((void **) &P, P_size) ;
+        LAGraph_Free((void **) &P) ;
+        P = NULL;
     }
 
     //--------------------------------------------------------------------------

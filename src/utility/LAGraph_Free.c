@@ -15,8 +15,7 @@
 
 void LAGraph_Free
 (
-    void **p,               // pointer to object to free, does nothing if NULL
-    size_t size_allocated   // # of bytes actually allocated
+    void **p                // pointer to object to free, does nothing if NULL
 )
 {
 
@@ -26,4 +25,3 @@ void LAGraph_Free
         (*p) = NULL ;
     }
 }
-

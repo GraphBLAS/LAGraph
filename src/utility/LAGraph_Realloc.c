@@ -46,7 +46,6 @@ void *LAGraph_Realloc       // returns pointer to reallocated block of memory,
     size_t size_of_item,    // size of each item
     // input/output
     void *p,                // old block to reallocate
-    size_t *size_allocated, // # of bytes actually allocated
     // output
     bool *ok                // true if successful, false otherwise
 )
@@ -57,8 +56,8 @@ void *LAGraph_Realloc       // returns pointer to reallocated block of memory,
     //--------------------------------------------------------------------------
 
     if (p == NULL)
-    { 
-        p = LAGraph_Malloc (nitems_new, size_of_item, size_allocated) ;
+    {
+        p = LAGraph_Malloc (nitems_new, size_of_item) ;
         (*ok) = (p != NULL) ;
         return (p) ;
     }
@@ -79,7 +78,7 @@ void *LAGraph_Realloc       // returns pointer to reallocated block of memory,
          && LG_Multiply_size_t (&oldsize, nitems_old, size_of_item) ;
 
     if (!(*ok) || nitems_new > GxB_INDEX_MAX || size_of_item > GxB_INDEX_MAX)
-    { 
+    {
         // overflow
         (*ok) = false ;
         return (NULL) ;
@@ -89,16 +88,12 @@ void *LAGraph_Realloc       // returns pointer to reallocated block of memory,
     // reallocate an existing block to accommodate the change in # of items
     //--------------------------------------------------------------------------
 
-    int64_t oldsize_allocated = (*size_allocated) ;
-
     //--------------------------------------------------------------------------
     // check for quick return
     //--------------------------------------------------------------------------
 
-    if ((newsize == oldsize)
-        || (newsize < oldsize && newsize >= oldsize_allocated/2)
-        || (newsize > oldsize && newsize <= oldsize_allocated))
-    { 
+    if (newsize == oldsize)
+    {
         // If the block does not change, or is shrinking but only by a small
         // amount, or is growing but still fits inside the existing block,
         // then leave the block as-is.
@@ -111,7 +106,6 @@ void *LAGraph_Realloc       // returns pointer to reallocated block of memory,
     //--------------------------------------------------------------------------
 
     void *pnew = NULL ;
-    size_t newsize_allocated = newsize ;
 
     if (LAGraph_Realloc_function == NULL)
     {
@@ -121,14 +115,14 @@ void *LAGraph_Realloc       // returns pointer to reallocated block of memory,
         //----------------------------------------------------------------------
 
         // allocate the new space
-        pnew = LAGraph_Malloc (nitems_new, size_of_item, &newsize_allocated) ;
+        pnew = LAGraph_Malloc (nitems_new, size_of_item) ;
         // copy over the data from the old block to the new block
         if (pnew != NULL)
         {
             // TODO: use a parallel memcpy
             memcpy (pnew, p, LAGraph_MIN (oldsize, newsize)) ;
             // free the old space
-            LAGraph_Free (&p, oldsize_allocated) ;
+            LAGraph_Free (&p) ;
         }
     }
     else
@@ -138,7 +132,7 @@ void *LAGraph_Realloc       // returns pointer to reallocated block of memory,
         // use realloc
         //----------------------------------------------------------------------
 
-        pnew = LAGraph_Realloc_function (p, newsize_allocated) ;
+        pnew = LAGraph_Realloc_function (p, newsize) ;
     }
 
     //--------------------------------------------------------------------------
@@ -149,7 +143,7 @@ void *LAGraph_Realloc       // returns pointer to reallocated block of memory,
     {
         // realloc failed
         if (newsize < oldsize)
-        { 
+        {
             // the attempt to reduce the size of the block failed, but the old
             // block is unchanged.  So pretend to succeed, but do not change
             // size_allocated since it must reflect the actual size of the
@@ -157,19 +151,17 @@ void *LAGraph_Realloc       // returns pointer to reallocated block of memory,
             (*ok) = true ;
         }
         else
-        { 
+        {
             // out of memory.  the old block is unchanged
             (*ok) = false ;
         }
     }
     else
-    { 
+    {
         // realloc succeeded
         p = pnew ;
         (*ok) = true ;
-        (*size_allocated) = newsize_allocated ;
     }
 
     return (p) ;
 }
-

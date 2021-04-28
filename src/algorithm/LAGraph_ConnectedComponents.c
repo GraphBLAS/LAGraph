@@ -77,7 +77,7 @@ static inline void ht_init
 // ht_sample: TODO describe me
 //------------------------------------------------------------------------------
 
-// 
+//
 
 static inline void ht_sample
 (
@@ -171,17 +171,15 @@ static inline int Reduce_assign32
     // their contents.  Note that this would fail if w or s are not full, with
     // all entries present.
     GrB_TRY (GxB_Vector_export_Full (w_handle, &w_type, &w_n, (void **) &w_x,
-        &w_size, NULL)) ;
+                                     &w_size, NULL)) ;
     GrB_TRY (GxB_Vector_export_Full (s_handle, &s_type, &s_n, (void **) &s_x,
-        &s_size, NULL)) ;
+                                     &s_size, NULL)) ;
 
     if (nthreads >= 4)
     {
 
         // allocate a buf array for each thread, of size HASH_SIZE
-        size_t mem_size = 0 ;
-        uint32_t *mem = LAGraph_Malloc (nthreads*HASH_SIZE, sizeof (uint32_t),
-            &mem_size) ;
+        uint32_t *mem = LAGraph_Malloc (nthreads*HASH_SIZE, sizeof (uint32_t)) ;
         // TODO: check out-of-memory condition here
 
         // TODO why is hashing needed here?  hashing is slow for what needs
@@ -207,7 +205,7 @@ static inline int Reduce_assign32
                 }
             }
 
-            // this thread works on index [kstart:kend] 
+            // this thread works on index [kstart:kend]
             int32_t kstart = (n * tid + nthreads - 1) / nthreads ;
             int32_t kend = (n * tid + n + nthreads - 1) / nthreads ;
             for (int32_t k = kstart ; k < kend ; k++)
@@ -246,7 +244,7 @@ static inline int Reduce_assign32
             }
         }
 
-        LAGraph_Free ((void **) &mem, mem_size) ;
+        LAGraph_Free ((void **) &mem) ;
     }
     else
     {
@@ -279,10 +277,10 @@ static inline int Reduce_assign32
 #undef  LAGRAPH_FREE_ALL
 #define LAGRAPH_FREE_ALL                            \
 {                                                   \
-    LAGraph_Free ((void **) &I, I_size) ;           \
-    LAGraph_Free ((void **) &V32, V32_size) ;       \
-    LAGraph_Free ((void **) &ht_key, ht_key_size) ; \
-    LAGraph_Free ((void **) &ht_val, ht_val_size) ; \
+    LAGraph_Free ((void **) &I) ;           \
+    LAGraph_Free ((void **) &V32) ;         \
+    LAGraph_Free ((void **) &ht_key) ;      \
+    LAGraph_Free ((void **) &ht_val) ;      \
     /* TODO why is T not freed?? */                 \
     GrB_free (&f) ;                                 \
     GrB_free (&gp) ;                                \
@@ -312,7 +310,6 @@ int LAGraph_ConnectedComponents
     GrB_Index n, nnz, *I = NULL ;
     GrB_Vector f = NULL, gp_new = NULL, mngp = NULL, mod = NULL, gp = NULL ;
     GrB_Matrix T = NULL ;
-    size_t I_size = 0, V32_size = 0, ht_key_size = 0, ht_val_size = 0 ;
 
     LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
     LG_CHECK (component == NULL, -1, "component parameter is NULL") ;
@@ -364,8 +361,8 @@ int LAGraph_ConnectedComponents
     GrB_TRY (GrB_Vector_new (&mod,    GrB_BOOL,   n)) ;
 
     // temporary arrays
-    I   = LAGraph_Malloc (n, sizeof (GrB_Index), &I_size) ;
-    V32 = LAGraph_Malloc (n, sizeof (uint32_t), &V32_size) ;
+    I   = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
+    V32 = LAGraph_Malloc (n, sizeof (uint32_t)) ;
     // TODO: check out-of-memory condition
 
     // prepare vectors
@@ -381,8 +378,8 @@ int LAGraph_ConnectedComponents
     GrB_TRY (GrB_Vector_dup (&mngp, f)) ;
 
     // allocate the hash table
-    ht_key = LAGraph_Malloc (HASH_SIZE, sizeof (int32_t), &ht_key_size) ;
-    ht_val = LAGraph_Malloc (HASH_SIZE, sizeof (int32_t), &ht_val_size) ;
+    ht_key = LAGraph_Malloc (HASH_SIZE, sizeof (int32_t)) ;
+    ht_val = LAGraph_Malloc (HASH_SIZE, sizeof (int32_t)) ;
     LG_CHECK (ht_key == NULL || ht_val == NULL, -1, "out of memory") ;
 
     //--------------------------------------------------------------------------
@@ -417,23 +414,20 @@ int LAGraph_ConnectedComponents
         // allocate space to construct T
         //----------------------------------------------------------------------
 
-        GrB_Index Tp_len = nrows+1, Tp_size = 0 ;
-        GrB_Index Tj_len = nvals,   Tj_size = 0 ;
-        GrB_Index Tx_len = nvals,   Tx_size = 0 ;
-        GrB_Index *Tp = LAGraph_Malloc (Tp_len, sizeof (GrB_Index), &Tp_size) ;
-        GrB_Index *Tj = LAGraph_Malloc (Tj_len, sizeof (GrB_Index), &Tj_size) ;
-        void *Tx = LAGraph_Malloc (Tx_len, typesize, &Tx_size) ;
+        GrB_Index Tp_len = nrows+1, Tp_size = Tp_len*sizeof(GrB_Index);
+        GrB_Index Tj_len = nvals,   Tj_size = Tj_len*sizeof(GrB_Index);
+        GrB_Index Tx_len = nvals,   Tx_size = Tx_len*typesize;
+        GrB_Index *Tp = LAGraph_Malloc (Tp_len, sizeof (GrB_Index)) ;
+        GrB_Index *Tj = LAGraph_Malloc (Tj_len, sizeof (GrB_Index)) ;
+        void      *Tx = LAGraph_Malloc (Tx_len, typesize) ;
         // TODO check out-of-memory conditions
 
         //----------------------------------------------------------------------
         // allocate workspace
         //----------------------------------------------------------------------
 
-        size_t range_size = 0, count_size = 0 ;
-        int32_t *range = LAGraph_Malloc (nthreads + 1, sizeof (int32_t),
-            &range_size) ;
-        GrB_Index *count = LAGraph_Malloc (nthreads + 1, sizeof (GrB_Index),
-            &count_size) ;
+        int32_t *range = LAGraph_Malloc (nthreads + 1, sizeof (int32_t)) ;
+        GrB_Index *count = LAGraph_Malloc (nthreads + 1, sizeof (GrB_Index)) ;
         // TODO check out-of-memory conditions
 
         memset (count, 0, sizeof (GrB_Index) * (nthreads + 1)) ;
@@ -589,7 +583,7 @@ int LAGraph_ConnectedComponents
         // TODO what is this phase doing?  It is constructing a matrix T that
         // depends only on S, key, and V32.  T contains a subset of the entries
         // in S, except that T (i,:) is empty if
-        
+
         // The prior content of T is ignored; it is exported from the earlier
         // phase, only to reuse the allocated space for T.  However, T_jumbled
         // is preserved from the prior matrix T, which doesn't make sense.
@@ -661,8 +655,8 @@ int LAGraph_ConnectedComponents
         Tp [n] = offset ;
 
         // free workspace
-        LAGraph_Free ((void **) &count, count_size) ;
-        LAGraph_Free ((void **) &range, range_size) ;
+        LAGraph_Free ((void **) &count) ;
+        LAGraph_Free ((void **) &range) ;
 
         // import S (unchanged since last export)
         GrB_TRY (GxB_Matrix_import_CSR (&S, type, nrows, ncols,
@@ -695,11 +689,11 @@ int LAGraph_ConnectedComponents
     {
         // hooking & shortcutting
         GrB_TRY (GrB_mxv (mngp, NULL, GrB_MIN_UINT32, GxB_MIN_SECOND_UINT32,
-            T, gp, NULL)) ;
+                          T, gp, NULL)) ;
         GrB_TRY (Reduce_assign32 (&f, &mngp, V32, n, nthreads, ht_key,
-            ht_val, &seed, msg)) ;
+                                  ht_val, &seed, msg)) ;
         GrB_TRY (GrB_eWiseAdd (f, NULL, GrB_MIN_UINT32, GrB_MIN_UINT32,
-            mngp, gp, NULL)) ;
+                               mngp, gp, NULL)) ;
 
         // calculate grandparent
         GrB_TRY (GrB_Vector_extractTuples (NULL, V32, &n, f)) ;
@@ -732,4 +726,3 @@ int LAGraph_ConnectedComponents
     LAGRAPH_FREE_ALL ;
     return (0) ;
 }
-

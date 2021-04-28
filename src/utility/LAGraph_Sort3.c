@@ -11,7 +11,7 @@
 // A parallel mergesort of an array of 3-by-n integers.  Each key
 // consists of three integers.
 
-#define LAGRAPH_FREE_ALL LAGraph_Free ((void **) &W, W_size) ;
+#define LAGRAPH_FREE_ALL LAGraph_Free ((void **) &W) ;
 
 #include "LG_internal.h"
 
@@ -82,7 +82,7 @@ static int64_t LG_msort_3b_binary_search    // return pleft
     int64_t pleft = p_start ;
     int64_t pright = p_end - 1 ;
     while (pleft < pright)
-    { 
+    {
         int64_t pmiddle = (pleft + pright) >> 1 ;
         // less = (X [pmiddle] < Pivot)
         bool less = LG_lt_3 (X_0, X_1, X_2, pmiddle,
@@ -109,11 +109,11 @@ static int64_t LG_msort_3b_binary_search    // return pleft
     {
         if (LG_lt_3 (X_0, X_1, X_2, pleft,
                      Y_0, Y_1, Y_2, pivot))
-        { 
+        {
             pleft++ ;
         }
         else
-        { 
+        {
 //          pright++ ;  // (not needed)
         }
     }
@@ -192,7 +192,7 @@ void LG_msort_3b_create_merge_tasks
     //--------------------------------------------------------------------------
 
     if (ntasks == 1)
-    { 
+    {
 
         //----------------------------------------------------------------------
         // a single task will merge all of Left and Right into Sresult
@@ -212,7 +212,7 @@ void LG_msort_3b_create_merge_tasks
 
         int64_t pleft, pright ;
         if (nleft >= nright)
-        { 
+        {
             // split Left in half, and search for its pivot in Right
             pleft = (pL_end + pL_start) >> 1 ;
             pright = LG_msort_3b_binary_search (
@@ -220,7 +220,7 @@ void LG_msort_3b_create_merge_tasks
                         R_0, R_1, R_2, pR_start, pR_end) ;
         }
         else
-        { 
+        {
             // split Right in half, and search for its pivot in Left
             pright = (pR_end + pR_start) >> 1 ;
             pleft = LG_msort_3b_binary_search (
@@ -298,7 +298,7 @@ static void LG_msort_3b_merge
     {
         if (LG_lt_3 (Left_0,  Left_1,  Left_2,  pleft,
                      Right_0, Right_1, Right_2, pright))
-        { 
+        {
             // S [p] = Left [pleft++]
             S_0 [p] = Left_0 [pleft] ;
             S_1 [p] = Left_1 [pleft] ;
@@ -306,7 +306,7 @@ static void LG_msort_3b_merge
             pleft++ ;
         }
         else
-        { 
+        {
             // S [p] = Right [pright++]
             S_0 [p] = Right_0 [pright] ;
             S_1 [p] = Right_1 [pright] ;
@@ -317,14 +317,14 @@ static void LG_msort_3b_merge
 
     // either input is exhausted; copy the remaining list into S
     if (pleft < nleft)
-    { 
+    {
         int64_t nremaining = (nleft - pleft) ;
         memcpy (S_0 + p, Left_0 + pleft, nremaining * sizeof (int64_t)) ;
         memcpy (S_1 + p, Left_1 + pleft, nremaining * sizeof (int64_t)) ;
         memcpy (S_2 + p, Left_2 + pleft, nremaining * sizeof (int64_t)) ;
     }
     else if (pright < nright)
-    { 
+    {
         int64_t nremaining = (nright - pright) ;
         memcpy (S_0 + p, Right_0 + pright, nremaining * sizeof (int64_t)) ;
         memcpy (S_1 + p, Right_1 + pright, nremaining * sizeof (int64_t)) ;
@@ -353,7 +353,6 @@ int LAGraph_Sort3    // sort array A of size 3-by-n, using 3 keys (A [0:2][])
 
     LG_CLEAR_MSG ;
     int64_t *LG_RESTRICT W = NULL ;
-    size_t W_size = 0 ;
     LG_CHECK (A_0 == NULL, -1, "A_0 is NULL") ;
     LG_CHECK (A_1 == NULL, -1, "A_1 is NULL") ;
     LG_CHECK (A_2 == NULL, -1, "A_2 is NULL") ;
@@ -363,7 +362,7 @@ int LAGraph_Sort3    // sort array A of size 3-by-n, using 3 keys (A [0:2][])
     //--------------------------------------------------------------------------
 
     if (nthreads <= 1 || n <= LG_BASECASE)
-    { 
+    {
         // sequential quicksort
         LG_qsort_3 (A_0, A_1, A_2, n) ;
         return (0) ;
@@ -391,7 +390,7 @@ int LAGraph_Sort3    // sort array A of size 3-by-n, using 3 keys (A [0:2][])
     // allocate workspace
     //--------------------------------------------------------------------------
 
-    W = LAGraph_Malloc (3*n + 6*ntasks + 1, sizeof (int64_t), &W_size) ;
+    W = LAGraph_Malloc (3*n + 6*ntasks + 1, sizeof (int64_t)) ;
     LG_CHECK (W == NULL, -1, "out of memory") ;
 
     int64_t *T = W ;
@@ -403,7 +402,7 @@ int LAGraph_Sort3    // sort array A of size 3-by-n, using 3 keys (A [0:2][])
     int64_t *LG_RESTRICT R_task = T ; T += ntasks ;
     int64_t *LG_RESTRICT R_len  = T ; T += ntasks ;
     int64_t *LG_RESTRICT S_task = T ; T += ntasks ;
-    int64_t *LG_RESTRICT Slice  = T ; T += (ntasks+1) ;  
+    int64_t *LG_RESTRICT Slice  = T ; T += (ntasks+1) ;
 
     //--------------------------------------------------------------------------
     // partition and sort the leaves
@@ -413,7 +412,7 @@ int LAGraph_Sort3    // sort array A of size 3-by-n, using 3 keys (A [0:2][])
     int tid ;
     #pragma omp parallel for num_threads(nthreads) schedule(dynamic,1)
     for (tid = 0 ; tid < ntasks ; tid++)
-    { 
+    {
         int64_t leaf = Slice [tid] ;
         int64_t leafsize = Slice [tid+1] - leaf ;
         LG_qsort_3 (A_0 + leaf, A_1 + leaf, A_2 + leaf, leafsize) ;
@@ -433,7 +432,7 @@ int LAGraph_Sort3    // sort array A of size 3-by-n, using 3 keys (A [0:2][])
 
         // this could be done in parallel if ntasks was large
         for (int tid = 0 ; tid < ntasks ; tid += 2*nt)
-        { 
+        {
             // create 2*nt tasks to merge two A sublists into one W sublist
             LG_msort_3b_create_merge_tasks (
                 L_task, L_len, R_task, R_len, S_task, tid, 2*nt, Slice [tid],
@@ -443,7 +442,7 @@ int LAGraph_Sort3    // sort array A of size 3-by-n, using 3 keys (A [0:2][])
 
         #pragma omp parallel for num_threads(nthreads) schedule(dynamic,1)
         for (tid = 0 ; tid < ntasks ; tid++)
-        { 
+        {
             // merge A [pL...pL+nL-1] and A [pR...pR+nR-1] into W [pS..]
             int64_t pL = L_task [tid], nL = L_len [tid] ;
             int64_t pR = R_task [tid], nR = R_len [tid] ;
@@ -462,7 +461,7 @@ int LAGraph_Sort3    // sort array A of size 3-by-n, using 3 keys (A [0:2][])
 
         // this could be done in parallel if ntasks was large
         for (int tid = 0 ; tid < ntasks ; tid += 2*nt)
-        { 
+        {
             // create 2*nt tasks to merge two W sublists into one A sublist
             LG_msort_3b_create_merge_tasks (
                 L_task, L_len, R_task, R_len, S_task, tid, 2*nt, Slice [tid],
@@ -472,7 +471,7 @@ int LAGraph_Sort3    // sort array A of size 3-by-n, using 3 keys (A [0:2][])
 
         #pragma omp parallel for num_threads(nthreads) schedule(dynamic,1)
         for (tid = 0 ; tid < ntasks ; tid++)
-        { 
+        {
             // merge A [pL...pL+nL-1] and A [pR...pR+nR-1] into W [pS..]
             int64_t pL = L_task [tid], nL = L_len [tid] ;
             int64_t pR = R_task [tid], nR = R_len [tid] ;
@@ -492,4 +491,3 @@ int LAGraph_Sort3    // sort array A of size 3-by-n, using 3 keys (A [0:2][])
     LAGRAPH_FREE_ALL ;
     return (0) ;
 }
-

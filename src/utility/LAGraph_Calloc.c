@@ -19,9 +19,7 @@
 void *LAGraph_Calloc
 (
     size_t nitems,          // number of items
-    size_t size_of_item,    // size of each item
-    // output:
-    size_t *size_allocated  // # of bytes actually allocated
+    size_t size_of_item     // size of each item
 )
 {
 
@@ -37,7 +35,6 @@ void *LAGraph_Calloc
     if (!ok || nitems > GxB_INDEX_MAX || size_of_item > GxB_INDEX_MAX)
     {
         // overflow
-        (*size_allocated) = 0 ;
         return (NULL) ;
     }
 
@@ -47,12 +44,11 @@ void *LAGraph_Calloc
     {
         // use the calloc function
         p = LAGraph_Calloc_function (nitems, size_of_item) ;
-        (*size_allocated) = (p == NULL) ? 0 : size ;
     }
     else
     {
         // calloc function not available; use malloc and memset
-        void *p = LAGraph_Malloc (nitems, size_of_item, size_allocated) ;
+        void *p = LAGraph_Malloc (nitems, size_of_item) ;
         if (p != NULL)
         {
             memset (p, 0, size) ;
@@ -60,4 +56,3 @@ void *LAGraph_Calloc
     }
     return (p) ;
 }
-
