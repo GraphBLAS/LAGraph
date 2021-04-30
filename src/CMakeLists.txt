@@ -46,6 +46,7 @@ set_property ( TARGET lagraph_static PROPERTY C_STANDARD 11 )
 # applications
 #-------------------------------------------------------------------------------
 
+add_subdirectory(test)
 add_subdirectory(demo)
 #add_subdirectory(utility/test)
 #add_subdirectory(algorithm/test)
