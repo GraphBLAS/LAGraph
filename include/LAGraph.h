@@ -229,11 +229,8 @@ void LAGraph_Free
 
 typedef enum
 {
-    // A(i,j) is the edge (i,j)
-    // undirected: A is square, symmetric (both tril and triu present)
-    // directed: A is square, unsymmetric or might happen to symmetric
-    LAGRAPH_ADJACENCY_UNDIRECTED = 0,
-    LAGRAPH_ADJACENCY_DIRECTED = 1,
+    LAGRAPH_ADJACENCY_UNDIRECTED = 0, //  A is square, symmetric (both tril and triu present)
+    LAGRAPH_ADJACENCY_DIRECTED = 1,   //  A is square, unsymmetric or might happen to symmetric
 
     // possible future kinds of graphs:
     // LAGRAPH_ADJACENCY_UNDIRECTED_UNWEIGHTED
@@ -839,9 +836,19 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
 int LAGraph_TriangleCount_Methods   // returns 0 if successful, < 0 if failure
 (
     uint64_t *ntriangles,   // # of triangles
+
     // input:
-    LAGraph_Graph G,
-    int method,             // selects the method to use (TODO: enum)
+    LAGraph_Graph G, // Must contain a Matrix that is known to be symmetric
+
+    int method,      // selects the method to use (TODO: enum)
+                     //  0:  DISABLED.
+                     //  1:  Burkhardt:  ntri = sum (sum ((A^2) .* A)) / 6
+                     //  2:  Cohen:      ntri = sum (sum ((L * U) .* A)) / 2
+                     //  3:  Sandia:     ntri = sum (sum ((L * L) .* L))
+                     //  4:  Sandia2:    ntri = sum (sum ((U * U) .* U))
+                     //  5:  SandiaDot:  ntri = sum (sum ((L * U') .* L)).
+                     //  6:  SandiaDot2: ntri = sum (sum ((U * L') .* U)).
+
     // input/output:
     int *presort,           // controls the presort of the graph (TODO: enum)
         //  0: no sort

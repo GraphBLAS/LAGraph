@@ -16,14 +16,13 @@ int LAGraph_DeleteProperties    // returns 0 if successful, -1 if failure
     char *msg
 )
 {
-
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
     if (G == NULL)
-    { 
+    {
         // success: nothing to do
         return (0) ;
     }
@@ -34,9 +33,10 @@ int LAGraph_DeleteProperties    // returns 0 if successful, -1 if failure
 
     GrB_TRY (GrB_free (&(G->AT))) ;
     GrB_TRY (GrB_free (&(G->rowdegree))) ;
+    G->rowdegree_type = NULL;
     GrB_TRY (GrB_free (&(G->coldegree))) ;
+    G->coldegree_type = NULL;
 
     // success
     return (0) ;
 }
-

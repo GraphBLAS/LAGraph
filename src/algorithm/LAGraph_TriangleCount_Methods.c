@@ -117,7 +117,7 @@ int LAGraph_TriangleCount_Methods   // returns 0 if successful, < 0 if failure
         //  0: no sort
         //  1: sort by degree, ascending order
         // -1: sort by degree, descending order
-        //  2: auto selection: no sort if rule is not triggered.  Otherise:
+        //  2: auto selection: no sort if rule is not triggered.  Otherwise:
         //  sort in ascending order for methods 3 and 5, descending ordering
         //  for methods 4 and 6.  On output, presort is modified to reflect the
         //  sorting method used (0, -1, or 1).  If presort is NULL on input, no
@@ -134,8 +134,8 @@ int LAGraph_TriangleCount_Methods   // returns 0 if successful, < 0 if failure
     GrB_Matrix C = NULL, L = NULL, U = NULL, T = NULL, A ;
     int64_t *P = NULL ;
     LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
-    LG_CHECK (ntriangles == NULL, -1, "ntriangles is null") ;
-    LG_CHECK (G->ndiag != 0, -1, "G->ndiag must be zero") ;
+    LG_CHECK (ntriangles == NULL, -2, "ntriangles is null") ;
+    LG_CHECK (G->ndiag != 0, -3, "G->ndiag must be zero") ;
 
     if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
@@ -147,14 +147,14 @@ int LAGraph_TriangleCount_Methods   // returns 0 if successful, < 0 if failure
     else
     {
         // A is not known to be symmetric
-        LG_CHECK (false, -1, "G->A must be symmetric") ;
+        LG_CHECK (false, -4, "G->A must be symmetric") ;
     }
 
     GrB_Vector Degree = G->rowdegree ;
     bool auto_sort = (presort != NULL && (*presort) == 2) ;
     if (auto_sort && method >= 3 && method <= 6)
     {
-        LG_CHECK (Degree == NULL, -1, "G->rowdegree must be defined") ;
+        LG_CHECK (Degree == NULL, -5, "G->rowdegree must be defined") ;
     }
 
     //--------------------------------------------------------------------------
@@ -170,7 +170,6 @@ int LAGraph_TriangleCount_Methods   // returns 0 if successful, < 0 if failure
     //--------------------------------------------------------------------------
     // heuristic sort rule
     //--------------------------------------------------------------------------
-
     if (auto_sort)
     {
         // auto selection of sorting method
@@ -221,7 +220,6 @@ int LAGraph_TriangleCount_Methods   // returns 0 if successful, < 0 if failure
     //--------------------------------------------------------------------------
     // sort the input matrix, if requested
     //--------------------------------------------------------------------------
-
     if (presort != NULL && (*presort) != 0)
     {
         // P = permutation that sorts the rows by their degree
@@ -239,7 +237,6 @@ int LAGraph_TriangleCount_Methods   // returns 0 if successful, < 0 if failure
     //--------------------------------------------------------------------------
     // count triangles
     //--------------------------------------------------------------------------
-
     int64_t ntri ;
 
     switch (method)
