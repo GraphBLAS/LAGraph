@@ -34,7 +34,9 @@ void setup(void)
 
     retval = LAGraph_New(&G, &A, GrB_UINT32, LAGRAPH_ADJACENCY_UNDIRECTED, msg);
     TEST_CHECK(retval == 0);
-    G->ndiag = 0;
+    TEST_MSG("retval = %d (%s)", retval, msg);
+
+    G->ndiag = 0;         // just trust that the graph has no self loops.
 }
 
 //****************************************************************************
@@ -42,6 +44,8 @@ void teardown(void)
 {
     int retval = LAGraph_Delete(&G, msg);
     TEST_CHECK(retval == 0);
+    TEST_MSG("retval = %d (%s)", retval, msg);
+
     G = NULL;
     LAGraph_Finalize(msg);
 }
@@ -51,22 +55,6 @@ void test_TriangleCount_Methods1(void)
 {
     setup();
     int retval;
-
-#if 0
-    LAGraph_Init(msg);
-
-    GrB_Matrix A = NULL;
-    LAGraph_Graph G = NULL;
-
-    GrB_Matrix_new(&A, GrB_UINT32, ZACHARY_NUM_NODES, ZACHARY_NUM_NODES);
-    GrB_Matrix_build(A, ZACHARY_I, ZACHARY_J, ZACHARY_V, ZACHARY_NUM_EDGES,
-                     GrB_LOR);
-
-    retval = LAGraph_New(&G, &A, GrB_UINT32, LAGRAPH_ADJACENCY_UNDIRECTED, msg);
-    TEST_CHECK(retval == 0);
-    G->ndiag = 0;
-#endif
-
     uint64_t ntriangles = 0UL;
 
 #if 0
@@ -83,7 +71,10 @@ void test_TriangleCount_Methods1(void)
     retval = LAGraph_TriangleCount_Methods(&ntriangles, G, 1, &presort, msg);
 
     TEST_CHECK(retval == 0);
+    TEST_MSG("retval = %d (%s)", retval, msg);
+
     TEST_CHECK( ntriangles == 45 );
+    TEST_MSG("numtri = %ld", ntriangles);
 
     teardown();
 }
@@ -93,22 +84,6 @@ void test_TriangleCount_Methods2(void)
 {
     setup();
     int retval;
-
-#if 0
-    LAGraph_Init(msg);
-
-    GrB_Matrix A = NULL;
-    LAGraph_Graph G = NULL;
-
-    GrB_Matrix_new(&A, GrB_UINT32, ZACHARY_NUM_NODES, ZACHARY_NUM_NODES);
-    GrB_Matrix_build(A, ZACHARY_I, ZACHARY_J, ZACHARY_V, ZACHARY_NUM_EDGES,
-                     GrB_LOR);
-
-    retval = LAGraph_New(&G, &A, GrB_UINT32, LAGRAPH_ADJACENCY_UNDIRECTED, msg);
-    TEST_CHECK(retval == 0);
-    G->ndiag = 0;
-#endif
-
     uint64_t ntriangles = 0UL;
 
 #if 0
@@ -120,9 +95,11 @@ void test_TriangleCount_Methods2(void)
     int presort = 2;
     ntriangles = 0UL;
     retval = LAGraph_TriangleCount_Methods(&ntriangles, G, 2, &presort, msg);
-
     TEST_CHECK(retval == 0);
+    TEST_MSG("retval = %d (%s)", retval, msg);
+
     TEST_CHECK( ntriangles == 45 );
+    TEST_MSG("numtri = %ld", ntriangles);
 
     teardown();
 }
@@ -132,22 +109,6 @@ void test_TriangleCount_Methods3(void)
 {
     setup();
     int retval;
-
-#if 0
-    LAGraph_Init(msg);
-
-    GrB_Matrix A = NULL;
-    LAGraph_Graph G = NULL;
-
-    GrB_Matrix_new(&A, GrB_UINT32, ZACHARY_NUM_NODES, ZACHARY_NUM_NODES);
-    GrB_Matrix_build(A, ZACHARY_I, ZACHARY_J, ZACHARY_V, ZACHARY_NUM_EDGES,
-                     GrB_LOR);
-
-    retval = LAGraph_New(&G, &A, GrB_UINT32, LAGRAPH_ADJACENCY_UNDIRECTED, msg);
-    TEST_CHECK(retval == 0);
-    G->ndiag = 0;
-#endif
-
     uint64_t ntriangles = 0UL;
 
 #if 0
@@ -164,9 +125,11 @@ void test_TriangleCount_Methods3(void)
 
     retval = LAGraph_Property_RowDegree(G, msg);
     TEST_CHECK(retval == 0);
+    TEST_MSG("retval = %d (%s)", retval, msg);
 
     retval = LAGraph_TriangleCount_Methods(&ntriangles, G, 3, &presort, msg);
     TEST_CHECK(retval == 0);
+    TEST_MSG("retval = %d (%s)", retval, msg);
 
     TEST_CHECK( ntriangles == 45 );
     TEST_MSG("numtri = %ld", ntriangles);
@@ -179,22 +142,6 @@ void test_TriangleCount_Methods4(void)
 {
     setup();
     int retval;
-
-#if 0
-    LAGraph_Init(msg);
-
-    GrB_Matrix A = NULL;
-    LAGraph_Graph G = NULL;
-
-    GrB_Matrix_new(&A, GrB_UINT32, ZACHARY_NUM_NODES, ZACHARY_NUM_NODES);
-    GrB_Matrix_build(A, ZACHARY_I, ZACHARY_J, ZACHARY_V, ZACHARY_NUM_EDGES,
-                     GrB_LOR);
-
-    retval = LAGraph_New(&G, &A, GrB_UINT32, LAGRAPH_ADJACENCY_UNDIRECTED, msg);
-    TEST_CHECK(retval == 0);
-    G->ndiag = 0;
-#endif
-
     uint64_t ntriangles = 0UL;
 
 #if 0
@@ -212,6 +159,7 @@ void test_TriangleCount_Methods4(void)
 
     retval = LAGraph_Property_RowDegree(G, msg);
     TEST_CHECK(retval == 0);
+    TEST_MSG("retval = %d (%s)", retval, msg);
 
     retval = LAGraph_TriangleCount_Methods(&ntriangles, G, 3, &presort, msg);
     TEST_CHECK(retval == 0);
@@ -228,22 +176,6 @@ void test_TriangleCount_Methods5(void)
 {
     setup();
     int retval;
-
-#if 0
-    LAGraph_Init(msg);
-
-    GrB_Matrix A = NULL;
-    LAGraph_Graph G = NULL;
-
-    GrB_Matrix_new(&A, GrB_UINT32, ZACHARY_NUM_NODES, ZACHARY_NUM_NODES);
-    GrB_Matrix_build(A, ZACHARY_I, ZACHARY_J, ZACHARY_V, ZACHARY_NUM_EDGES,
-                     GrB_LOR);
-
-    retval = LAGraph_New(&G, &A, GrB_UINT32, LAGRAPH_ADJACENCY_UNDIRECTED, msg);
-    TEST_CHECK(retval == 0);
-    G->ndiag = 0;
-#endif
-
     uint64_t ntriangles = 0UL;
 
 #if 0
@@ -261,11 +193,14 @@ void test_TriangleCount_Methods5(void)
 
     retval = LAGraph_Property_RowDegree(G, msg);
     TEST_CHECK(retval == 0);
+    TEST_MSG("retval = %d (%s)", retval, msg);
 
     retval = LAGraph_TriangleCount_Methods(&ntriangles, G, 3, &presort, msg);
     TEST_CHECK(retval == 0);
+    TEST_MSG("retval = %d (%s)", retval, msg);
 
     TEST_CHECK( ntriangles == 45 );
+    TEST_MSG("numtri = %ld", ntriangles);
 
     teardown();
 }
@@ -275,22 +210,6 @@ void test_TriangleCount_Methods6(void)
 {
     setup();
     int retval;
-
-#if 0
-    LAGraph_Init(msg);
-
-    GrB_Matrix A = NULL;
-    LAGraph_Graph G = NULL;
-
-    GrB_Matrix_new(&A, GrB_UINT32, ZACHARY_NUM_NODES, ZACHARY_NUM_NODES);
-    GrB_Matrix_build(A, ZACHARY_I, ZACHARY_J, ZACHARY_V, ZACHARY_NUM_EDGES,
-                     GrB_LOR);
-
-    retval = LAGraph_New(&G, &A, GrB_UINT32, LAGRAPH_ADJACENCY_UNDIRECTED, msg);
-    TEST_CHECK(retval == 0);
-    G->ndiag = 0;
-#endif
-
     uint64_t ntriangles = 0UL;
 
 #if 0
@@ -307,11 +226,14 @@ void test_TriangleCount_Methods6(void)
 
     retval = LAGraph_Property_RowDegree(G, msg);
     TEST_CHECK(retval == 0);
+    TEST_MSG("retval = %d (%s)", retval, msg);
 
     retval = LAGraph_TriangleCount_Methods(&ntriangles, G, 3, &presort, msg);
     TEST_CHECK(retval == 0);
+    TEST_MSG("retval = %d (%s)", retval, msg);
 
     TEST_CHECK( ntriangles == 45 );
+    TEST_MSG("numtri = %ld", ntriangles);
 
     teardown();
 }
@@ -325,22 +247,6 @@ void test_TriangleCount_vanilla1(void)
 {
     setup();
     int retval;
-
-#if 0
-    LAGraph_Init(msg);
-
-    GrB_Matrix A = NULL;
-    LAGraph_Graph G = NULL;
-
-    GrB_Matrix_new(&A, GrB_UINT32, ZACHARY_NUM_NODES, ZACHARY_NUM_NODES);
-    GrB_Matrix_build(A, ZACHARY_I, ZACHARY_J, ZACHARY_V, ZACHARY_NUM_EDGES,
-                     GrB_LOR);
-
-    retval = LAGraph_New(&G, &A, GrB_UINT32, LAGRAPH_ADJACENCY_UNDIRECTED, msg);
-    TEST_CHECK(retval == 0);
-    G->ndiag = 0;
-#endif
-
     uint64_t ntriangles = 0UL;
 
 #if 0
@@ -357,7 +263,10 @@ void test_TriangleCount_vanilla1(void)
     retval = LAGraph_TriangleCount_vanilla(&ntriangles, G, 1, &presort, msg);
 
     TEST_CHECK(retval == 0);
+    TEST_MSG("retval = %d (%s)", retval, msg);
+
     TEST_CHECK( ntriangles == 45 );
+    TEST_MSG("numtri = %ld", ntriangles);
 
     teardown();
 }
@@ -367,22 +276,6 @@ void test_TriangleCount_vanilla2(void)
 {
     setup();
     int retval;
-
-#if 0
-    LAGraph_Init(msg);
-
-    GrB_Matrix A = NULL;
-    LAGraph_Graph G = NULL;
-
-    GrB_Matrix_new(&A, GrB_UINT32, ZACHARY_NUM_NODES, ZACHARY_NUM_NODES);
-    GrB_Matrix_build(A, ZACHARY_I, ZACHARY_J, ZACHARY_V, ZACHARY_NUM_EDGES,
-                     GrB_LOR);
-
-    retval = LAGraph_New(&G, &A, GrB_UINT32, LAGRAPH_ADJACENCY_UNDIRECTED, msg);
-    TEST_CHECK(retval == 0);
-    G->ndiag = 0;
-#endif
-
     uint64_t ntriangles = 0UL;
 
 #if 0
@@ -394,9 +287,11 @@ void test_TriangleCount_vanilla2(void)
     int presort = 2;
     ntriangles = 0UL;
     retval = LAGraph_TriangleCount_vanilla(&ntriangles, G, 2, &presort, msg);
-
     TEST_CHECK(retval == 0);
+    TEST_MSG("retval = %d (%s)", retval, msg);
+
     TEST_CHECK( ntriangles == 45 );
+    TEST_MSG("numtri = %ld", ntriangles);
 
     teardown();
 }
@@ -406,22 +301,6 @@ void test_TriangleCount_vanilla3(void)
 {
     setup();
     int retval;
-
-#if 0
-    LAGraph_Init(msg);
-
-    GrB_Matrix A = NULL;
-    LAGraph_Graph G = NULL;
-
-    GrB_Matrix_new(&A, GrB_UINT32, ZACHARY_NUM_NODES, ZACHARY_NUM_NODES);
-    GrB_Matrix_build(A, ZACHARY_I, ZACHARY_J, ZACHARY_V, ZACHARY_NUM_EDGES,
-                     GrB_LOR);
-
-    retval = LAGraph_New(&G, &A, GrB_UINT32, LAGRAPH_ADJACENCY_UNDIRECTED, msg);
-    TEST_CHECK(retval == 0);
-    G->ndiag = 0;
-#endif
-
     uint64_t ntriangles = 0UL;
 
 #if 0
@@ -438,9 +317,11 @@ void test_TriangleCount_vanilla3(void)
 
     retval = LAGraph_Property_RowDegree(G, msg);
     TEST_CHECK(retval == 0);
+    TEST_MSG("retval = %d (%s)", retval, msg);
 
     retval = LAGraph_TriangleCount_vanilla(&ntriangles, G, 3, &presort, msg);
     TEST_CHECK(retval == 0);
+    TEST_MSG("retval = %d (%s)", retval, msg);
 
     TEST_CHECK( ntriangles == 45 );
     TEST_MSG("numtri = %ld", ntriangles);
@@ -453,29 +334,12 @@ void test_TriangleCount_vanilla4(void)
 {
     setup();
     int retval;
-
-#if 0
-    LAGraph_Init(msg);
-
-    GrB_Matrix A = NULL;
-    LAGraph_Graph G = NULL;
-
-    GrB_Matrix_new(&A, GrB_UINT32, ZACHARY_NUM_NODES, ZACHARY_NUM_NODES);
-    GrB_Matrix_build(A, ZACHARY_I, ZACHARY_J, ZACHARY_V, ZACHARY_NUM_EDGES,
-                     GrB_LOR);
-
-    retval = LAGraph_New(&G, &A, GrB_UINT32, LAGRAPH_ADJACENCY_UNDIRECTED, msg);
-    TEST_CHECK(retval == 0);
-    G->ndiag = 0;
-#endif
-
     uint64_t ntriangles = 0UL;
 
 #if 0
     retval = LAGraph_TriangleCount_vanilla(&ntriangles, G, 4, NULL, msg);
     TEST_CHECK(retval == 0);
     TEST_CHECK( ntriangles == 45 );
-
 #endif
 
     int presort = 2;
@@ -486,6 +350,7 @@ void test_TriangleCount_vanilla4(void)
 
     retval = LAGraph_Property_RowDegree(G, msg);
     TEST_CHECK(retval == 0);
+    TEST_MSG("retval = %d (%s)", retval, msg);
 
     retval = LAGraph_TriangleCount_vanilla(&ntriangles, G, 3, &presort, msg);
     TEST_CHECK(retval == 0);
@@ -502,22 +367,6 @@ void test_TriangleCount_vanilla5(void)
 {
     setup();
     int retval;
-
-#if 0
-    LAGraph_Init(msg);
-
-    GrB_Matrix A = NULL;
-    LAGraph_Graph G = NULL;
-
-    GrB_Matrix_new(&A, GrB_UINT32, ZACHARY_NUM_NODES, ZACHARY_NUM_NODES);
-    GrB_Matrix_build(A, ZACHARY_I, ZACHARY_J, ZACHARY_V, ZACHARY_NUM_EDGES,
-                     GrB_LOR);
-
-    retval = LAGraph_New(&G, &A, GrB_UINT32, LAGRAPH_ADJACENCY_UNDIRECTED, msg);
-    TEST_CHECK(retval == 0);
-    G->ndiag = 0;
-#endif
-
     uint64_t ntriangles = 0UL;
 
 #if 0
@@ -535,11 +384,14 @@ void test_TriangleCount_vanilla5(void)
 
     retval = LAGraph_Property_RowDegree(G, msg);
     TEST_CHECK(retval == 0);
+    TEST_MSG("retval = %d (%s)", retval, msg);
 
     retval = LAGraph_TriangleCount_vanilla(&ntriangles, G, 3, &presort, msg);
     TEST_CHECK(retval == 0);
+    TEST_MSG("retval = %d (%s)", retval, msg);
 
     TEST_CHECK( ntriangles == 45 );
+    TEST_MSG("numtri = %ld", ntriangles);
 
     teardown();
 }
@@ -549,22 +401,6 @@ void test_TriangleCount_vanilla6(void)
 {
     setup();
     int retval;
-
-#if 0
-    LAGraph_Init(msg);
-
-    GrB_Matrix A = NULL;
-    LAGraph_Graph G = NULL;
-
-    GrB_Matrix_new(&A, GrB_UINT32, ZACHARY_NUM_NODES, ZACHARY_NUM_NODES);
-    GrB_Matrix_build(A, ZACHARY_I, ZACHARY_J, ZACHARY_V, ZACHARY_NUM_EDGES,
-                     GrB_LOR);
-
-    retval = LAGraph_New(&G, &A, GrB_UINT32, LAGRAPH_ADJACENCY_UNDIRECTED, msg);
-    TEST_CHECK(retval == 0);
-    G->ndiag = 0;
-#endif
-
     uint64_t ntriangles = 0UL;
 
 #if 0
@@ -581,11 +417,14 @@ void test_TriangleCount_vanilla6(void)
 
     retval = LAGraph_Property_RowDegree(G, msg);
     TEST_CHECK(retval == 0);
+    TEST_MSG("retval = %d (%s)", retval, msg);
 
     retval = LAGraph_TriangleCount_vanilla(&ntriangles, G, 3, &presort, msg);
     TEST_CHECK(retval == 0);
+    TEST_MSG("retval = %d (%s)", retval, msg);
 
     TEST_CHECK( ntriangles == 45 );
+    TEST_MSG("numtri = %ld", ntriangles);
 
     teardown();
 }
