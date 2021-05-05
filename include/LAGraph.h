@@ -833,33 +833,54 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
     char *msg
 ) ;
 
+/****************************************************************************
+ *
+ * Count the triangles in a graph.
+ *
+ * @param[out]    ntriangles On successful return, contains the number of tris.
+ * @param[in]     G          The graph, symmetric, no self loops, and for some
+ *                           methods, must have the row degree property calculated
+ * @param[in]     method     specifies which algorithm to use (todo: use enum)
+ *                             0: DISABLED
+ *                             1:  Burkhardt:  ntri = sum (sum ((A^2) .* A)) / 6
+ *                             2:  Cohen:      ntri = sum (sum ((L * U) .* A)) / 2
+ *                             3:  Sandia:     ntri = sum (sum ((L * L) .* L))
+ *                             4:  Sandia2:    ntri = sum (sum ((U * U) .* U))
+ *                             5:  SandiaDot:  ntri = sum (sum ((L * U') .* L)).
+ *                             6:  SandiaDot2: ntri = sum (sum ((U * L') .* U)).
+ * @param[in,out] presort    controls the presort of the graph (TODO: enum). If set
+ *                           to 2 on input, presort will be set to sort type used
+ *                           on output:
+ *                             0: no sort
+ *                             1: sort by degree, ascending order
+ *                            -1: sort by degree, descending order
+ *                             2: auto selection:
+ *                                Method   Presort return value
+ *                                1        0
+ *                                2        0
+ *                                3        1
+ *                                4       -1
+ *                                5        1
+ *                                6       -1
+ * @param[out]    msg        Error message if a failure code is returned.
+ *
+ * @todo pick return values that do not conflict with GraphBLAS errors.
+ *
+ * @retval         0         successful
+ * @retval        -1         invalid method value
+ * @retval        -2         Graph is invalid (LAGraph_Check failed) (todo: number)
+ * @retval        -3         ntriangles is NULL
+ * @retval        -4         G->ndiag (self loops) is nonzero
+ * @retval        -5         graph is not "known" to be symmetric
+ * @retval        -6         G->rowdegree was not precalculated (for modes 3-6)
+ */
 int LAGraph_TriangleCount_Methods   // returns 0 if successful, < 0 if failure
 (
-    uint64_t *ntriangles,   // # of triangles
-
-    // input:
-    LAGraph_Graph G, // Must contain a Matrix that is known to be symmetric
-
-    int method,      // selects the method to use (TODO: enum)
-                     //  0:  DISABLED.
-                     //  1:  Burkhardt:  ntri = sum (sum ((A^2) .* A)) / 6
-                     //  2:  Cohen:      ntri = sum (sum ((L * U) .* A)) / 2
-                     //  3:  Sandia:     ntri = sum (sum ((L * L) .* L))
-                     //  4:  Sandia2:    ntri = sum (sum ((U * U) .* U))
-                     //  5:  SandiaDot:  ntri = sum (sum ((L * U') .* L)).
-                     //  6:  SandiaDot2: ntri = sum (sum ((U * L') .* U)).
-
-    // input/output:
-    int *presort,           // controls the presort of the graph (TODO: enum)
-        //  0: no sort
-        //  1: sort by degree, ascending order
-        // -1: sort by degree, descending order
-        //  2: auto selection: no sort if rule is not triggered.  Otherise:
-        //  sort in ascending order for methods 3 and 5, descending ordering
-        //  for methods 4 and 6.  On output, presort is modified to reflect the
-        //  sorting method used (0, -1, or 1).  If presort is NULL on input, no
-        //  sort is performed.
-    char *msg
+    uint64_t       *ntriangles,
+    LAGraph_Graph   G,
+    int             method,
+    int            *presort,
+    char           *msg
 ) ;
 
 int LAGraph_TriangleCount_vanilla   // returns 0 if successful, < 0 if failure
