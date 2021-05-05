@@ -299,7 +299,7 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
     GrB_TRY (GrB_assign (*centrality, NULL, NULL, -ns, GrB_ALL, n, NULL)) ;
 
     // centrality (i) = sum (bc_update (:,i)) for all nodes i
-    GrB_TRY (GrB_reduce (*centrality, NULL, GrB_PLUS_FP64, GrB_PLUS_FP64,
+    GrB_TRY (GrB_reduce (*centrality, NULL, GrB_PLUS_FP64, GrB_PLUS_MONOID_FP64,
         bc_update, GrB_DESC_T0)) ;
 
     LAGRAPH_FREE_WORK ;
