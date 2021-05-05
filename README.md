@@ -5,7 +5,7 @@
 LAGraph is a draft library plus a test harness for collecting algorithms that
 use the GraphBLAS.
 
-SuiteSparse:GraphBLAS v4.0.1 is required.
+SuiteSparse:GraphBLAS v4.0.3 is required.
 
 Since it's a draft, it contains are many draft/experimental codes with known
 sub-par performance.  Performance of the best methods is highly sensitive on
@@ -14,6 +14,16 @@ than the authors of this code are aware of which methods are the best, and how
 to achieve that performance.
 
 Thus, do not benchmark LAGraph on your own without asking the authors first.
+
+To build do the following from the top level directory:
+```
+  $ mkdir build
+  $ cd build
+  $ cmake ..
+  $ make [-j#]
+  $ make test
+
+# The rest of this README is outdated and needs to be updated.
 
 LAGraph contains the following files and folders:
 
