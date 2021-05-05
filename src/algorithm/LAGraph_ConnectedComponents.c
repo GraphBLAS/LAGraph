@@ -162,6 +162,7 @@ static inline int Reduce_assign32
     GrB_Type w_type, s_type ;
     GrB_Index w_n, s_n, w_nvals, s_nvals, *w_i, *s_i, w_size, s_size ;
     uint32_t *w_x, *s_x ;
+    bool ignore ;
 
     //--------------------------------------------------------------------------
     // export w and s
@@ -171,9 +172,17 @@ static inline int Reduce_assign32
     // their contents.  Note that this would fail if w or s are not full, with
     // all entries present.
     GrB_TRY (GxB_Vector_export_Full (w_handle, &w_type, &w_n, (void **) &w_x,
-                                     &w_size, NULL)) ;
+        &w_size,
+        #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
+        &ignore,
+        #endif
+        NULL)) ;
     GrB_TRY (GxB_Vector_export_Full (s_handle, &s_type, &s_n, (void **) &s_x,
-                                     &s_size, NULL)) ;
+        &s_size,
+        #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
+        &ignore,
+        #endif
+        NULL)) ;
 
     if (nthreads >= 4)
     {
@@ -263,9 +272,17 @@ static inline int Reduce_assign32
     // s is unchanged.  It was exported only to compute w (index) += s
 
     GrB_TRY (GxB_Vector_import_Full (w_handle, w_type, w_n, (void **) &w_x,
-        w_size, NULL)) ;
+        w_size,
+        #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
+        false,
+        #endif
+        NULL)) ;
     GrB_TRY (GxB_Vector_import_Full (s_handle, s_type, s_n, (void **) &s_x,
-        s_size, NULL)) ;
+        s_size,
+        #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
+        false,
+        #endif
+        NULL)) ;
 
     return (0) ;
 }
@@ -403,10 +420,15 @@ int LAGraph_ConnectedComponents
         void *Sx ;
         bool S_jumbled = false ;
         GrB_Index Sp_size, Sj_size, Sx_size ;
+        bool ignore ;
 
         GrB_TRY (GrB_Matrix_nvals (&nvals, S)) ;
         GrB_TRY (GxB_Matrix_export_CSR (&S, &type, &nrows, &ncols, &Sp, &Sj,
-            &Sx, &Sp_size, &Sj_size, &Sx_size, &S_jumbled, NULL)) ;
+            &Sx, &Sp_size, &Sj_size, &Sx_size,
+            #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
+            &ignore,
+            #endif
+            &S_jumbled, NULL)) ;
         GrB_TRY (GxB_Type_size (&typesize, type)) ;
         G->A = NULL ;
 
@@ -515,7 +537,11 @@ int LAGraph_ConnectedComponents
 
         GrB_Index t_nvals = Tp [nrows] ;
         GrB_TRY (GxB_Matrix_import_CSR (&T, type, nrows, ncols,
-                &Tp, &Tj, &Tx, Tp_siz, Tj_siz, Tx_siz, S_jumbled, NULL)) ;
+                &Tp, &Tj, &Tx, Tp_siz, Tj_siz, Tx_siz,
+                #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
+                false,
+                #endif
+                S_jumbled, NULL)) ;
 
         //----------------------------------------------------------------------
         // find the connected components of T
@@ -578,7 +604,11 @@ int LAGraph_ConnectedComponents
 
         // export T
         GrB_TRY (GxB_Matrix_export_CSR (&T, &type, &nrows, &ncols, &Tp, &Tj,
-            &Tx, &Tp_siz, &Tj_siz, &Tx_siz, &T_jumbled, NULL)) ;
+            &Tx, &Tp_siz, &Tj_siz, &Tx_siz,
+            #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
+            &ignore,
+            #endif
+            &T_jumbled, NULL)) ;
 
         // TODO what is this phase doing?  It is constructing a matrix T that
         // depends only on S, key, and V32.  T contains a subset of the entries
@@ -660,11 +690,19 @@ int LAGraph_ConnectedComponents
 
         // import S (unchanged since last export)
         GrB_TRY (GxB_Matrix_import_CSR (&S, type, nrows, ncols,
-                &Sp, &Sj, &Sx, Sp_size, Sj_size, Sx_size, S_jumbled, NULL)) ;
+                &Sp, &Sj, &Sx, Sp_size, Sj_size, Sx_size,
+                #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
+                false,
+                #endif
+                S_jumbled, NULL)) ;
 
         // import T for the final phase
         GrB_TRY (GxB_Matrix_import_CSR (&T, type, nrows, ncols,
-                &Tp, &Tj, &Tx, Tp_siz, Tj_siz, Tx_siz, T_jumbled, NULL)) ;
+                &Tp, &Tj, &Tx, Tp_siz, Tj_siz, Tx_siz,
+                #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
+                false,
+                #endif
+                T_jumbled, NULL)) ;
 
         // restore G->A
         G->A = S ;
