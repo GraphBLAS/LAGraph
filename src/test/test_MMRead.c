@@ -21,8 +21,8 @@ GrB_Info info ;
 char msg [LAGRAPH_MSG_LEN] ;
 GrB_Matrix A = NULL, B = NULL ;
 GrB_Type atype = NULL, btype = NULL ;
+const char *name, *date ;
 int ver [3] ;
-const char *date, *name ;
 GrB_Index nrows, ncols, nvals ;
 #define LEN 512
 char filename [LEN+1] ;
@@ -30,8 +30,6 @@ char filename [LEN+1] ;
 //------------------------------------------------------------------------------
 // test matrices
 //------------------------------------------------------------------------------
-
-#define TEMP_DIR "/tmp/"
 
 typedef struct
 {
@@ -43,8 +41,9 @@ typedef struct
 }
 matrix_info ;
 
-const matrix_info files [ ] = {
-//    nrows ncols  nvals type         name
+const matrix_info files [ ] = 
+{
+    // nrows ncols nvals type         name
     {    7,    7,    30, "GrB_BOOL",  "A.mtx" },
     {    7,    7,    12, "GrB_INT32", "cover.mtx" },
     { 1138, 1138,  7450, "GrB_BOOL",  "jagmesh7.mtx" },
@@ -72,7 +71,7 @@ const matrix_info files [ ] = {
     {   27,   51,   102, "GrB_FP64",  "lp_afiro.mtx" },
     {   34,   34,   156, "GrB_BOOL",  "karate.mtx" },
     { 0, 0, 0, "", "" },
-    } ;
+} ;
 
 //------------------------------------------------------------------------------
 // setup: start a test
@@ -97,7 +96,9 @@ void teardown (void)
 {
     printf ("%s %d.%d.%d (%s)\n", name, ver [0], ver [1], ver [2], date) ;
     OK (GrB_free (&A)) ;
+    OK (GrB_free (&B)) ;
     TEST_CHECK (A == NULL) ;
+    TEST_CHECK (B == NULL) ;
     OK (LAGraph_Finalize (msg)) ;
 }
 
@@ -129,6 +130,7 @@ void test_MMRead (void)
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
         OK (fclose (f)) ;
+        TEST_MSG ("Failed to load %s\n", aname) ;
 
         //----------------------------------------------------------------------
         // check its stats
@@ -147,6 +149,7 @@ void test_MMRead (void)
         const char *tname = typename (atype) ;
         TEST_CHECK (tname != NULL) ;
         OK (strcmp (tname, files [k].type)) ;
+        TEST_MSG ("Stats are wrong for %s\n", aname) ;
 
         //----------------------------------------------------------------------
         // write it to a temporary file
@@ -154,6 +157,7 @@ void test_MMRead (void)
 
         f = tmpfile ( ) ;
         OK (LAGraph_MMWrite (A, f, msg)) ;
+        TEST_MSG ("Failed to write %s to a temp file\n", aname) ;
 
         //----------------------------------------------------------------------
         // load it back in again
@@ -161,12 +165,8 @@ void test_MMRead (void)
 
         rewind (f) ;
         OK (LAGraph_MMRead (&B, &btype, f, msg)) ;
-
-        //----------------------------------------------------------------------
-        // close and delete the temporary file
-        //----------------------------------------------------------------------
-
-        OK (fclose (f)) ;
+        TEST_MSG ("Failed to load %s from a temp file\n", aname) ;
+        OK (fclose (f)) ;       // close and delete the temporary file
 
         //----------------------------------------------------------------------
         // ensure A and B are the same
@@ -176,6 +176,7 @@ void test_MMRead (void)
         bool A_and_B_are_identical ;
         OK (LAGraph_IsEqual (&A_and_B_are_identical, A, B, NULL, msg)) ;
         TEST_CHECK (A_and_B_are_identical) ;
+        TEST_MSG ("Failed test for equality, file: %s\n", aname) ;
 
         //----------------------------------------------------------------------
         // free workspace
@@ -215,6 +216,7 @@ void test_karate (void)
     TEST_CHECK (atype == GrB_BOOL) ;
     OK (fclose (f)) ;
     OK (GxB_print (A, 2)) ;
+    TEST_MSG ("Loading of A matrix failed: karate matrix") ;
 
     //--------------------------------------------------------------------------
     // load in the matrix defined by graph_zachary_karate.h as the matrix B
@@ -224,6 +226,7 @@ void test_karate (void)
     OK (GrB_Matrix_build (B, ZACHARY_I, ZACHARY_J, ZACHARY_V,
         ZACHARY_NUM_EDGES, GrB_LOR)) ;
     OK (GxB_print (B, 2)) ;
+    TEST_MSG ("Loading of B matrix failed: karate matrix") ;
 
     //--------------------------------------------------------------------------
     // ensure A and B are the same
@@ -232,6 +235,7 @@ void test_karate (void)
     bool A_and_B_are_identical ;
     OK (LAGraph_IsEqual (&A_and_B_are_identical, A, B, NULL, msg)) ;
     TEST_CHECK (A_and_B_are_identical) ;
+    TEST_MSG ("Test for A and B equal failed: karate matrix") ;
 
     //--------------------------------------------------------------------------
     // free workspace and finish the test
