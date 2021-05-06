@@ -383,6 +383,11 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
 )
 {
 
+#if defined ( GxB_SUITESPARSE_GRAPHBLAS ) && ( GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0) )
+printf ("v5.0.0 not supported\n") ;
+return (GrB_PANIC) ;
+#else
+
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------
@@ -821,5 +826,6 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
     v = NULL ;              // set to NULL so LAGRAPH_FREE_ALL doesn't free it
     LAGRAPH_FREE_ALL ;      // free all workspace (except for result v)
     return (GrB_SUCCESS) ;
+#endif
 }
 

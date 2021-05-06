@@ -200,13 +200,24 @@ int LAGraph_BinRead         // returns 0 if successful, -1 if failure
     // import the matrix
     //--------------------------------------------------------------------------
 
-    #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
+    #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,1)
     // in SuiteSparse:GraphBLAS v5, sizes are in bytes, not entries
     GrB_Index Ap_siz = Ap_size ;
     GrB_Index Ah_siz = Ah_size ;
     GrB_Index Ab_siz = Ab_size ;
     GrB_Index Ai_siz = Ai_size ;
     GrB_Index Ax_siz = Ax_size ;
+    #define IS_UNIFORM ,false
+
+    #elif GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
+    // in SuiteSparse:GraphBLAS v5, sizes are in bytes, not entries
+    GrB_Index Ap_siz = Ap_size ;
+    GrB_Index Ah_siz = Ah_size ;
+    GrB_Index Ab_siz = Ab_size ;
+    GrB_Index Ai_siz = Ai_size ;
+    GrB_Index Ax_siz = Ax_size ;
+    #define IS_UNIFORM
+
     #else
     // in SuiteSparse:GraphBLAS v4, sizes are in # of entries, not bytes
     GrB_Index Ap_siz = Ap_len ;
@@ -214,57 +225,58 @@ int LAGraph_BinRead         // returns 0 if successful, -1 if failure
     GrB_Index Ab_siz = Ab_len ;
     GrB_Index Ai_siz = Ai_len ;
     GrB_Index Ax_siz = Ax_len ;
+    #define IS_UNIFORM
     #endif
 
     if (fmt == GxB_BY_COL && is_hyper)
     {
         // hypersparse CSC
         GrB_TRY (GxB_Matrix_import_HyperCSC (A, type, nrows, ncols,
-            &Ap, &Ah, &Ai, &Ax, Ap_siz, Ah_siz, Ai_siz, Ax_siz,
+            &Ap, &Ah, &Ai, &Ax, Ap_siz, Ah_siz, Ai_siz, Ax_siz IS_UNIFORM,
             nvec, false, NULL)) ;
     }
     else if (fmt == GxB_BY_ROW && is_hyper)
     {
         // hypersparse CSR
         GrB_TRY (GxB_Matrix_import_HyperCSR (A, type, nrows, ncols,
-            &Ap, &Ah, &Ai, &Ax, Ap_siz, Ah_siz, Ai_siz, Ax_siz,
+            &Ap, &Ah, &Ai, &Ax, Ap_siz, Ah_siz, Ai_siz, Ax_siz IS_UNIFORM,
             nvec, false, NULL)) ;
     }
     else if (fmt == GxB_BY_COL && is_sparse)
     {
         // standard CSC
         GrB_TRY (GxB_Matrix_import_CSC (A, type, nrows, ncols,
-            &Ap, &Ai, &Ax, Ap_siz, Ai_siz, Ax_siz, false, NULL)) ;
+            &Ap, &Ai, &Ax, Ap_siz, Ai_siz, Ax_siz IS_UNIFORM, false, NULL)) ;
     }
     else if (fmt == GxB_BY_ROW && is_sparse)
     {
         // standard CSR
         GrB_TRY (GxB_Matrix_import_CSR (A, type, nrows, ncols,
-            &Ap, &Ai, &Ax, Ap_siz, Ai_siz, Ax_siz, false, NULL)) ;
+            &Ap, &Ai, &Ax, Ap_siz, Ai_siz, Ax_siz IS_UNIFORM, false, NULL)) ;
     }
     else if (fmt == GxB_BY_COL && is_bitmap)
     {
         // bitmap by col
         GrB_TRY (GxB_Matrix_import_BitmapC (A, type, nrows, ncols,
-            &Ab, &Ax, Ab_siz, Ax_siz, nvals, NULL)) ;
+            &Ab, &Ax, Ab_siz, Ax_siz IS_UNIFORM, nvals, NULL)) ;
     }
     else if (fmt == GxB_BY_ROW && is_bitmap)
     {
         // bitmap by row
         GrB_TRY (GxB_Matrix_import_BitmapR (A, type, nrows, ncols,
-            &Ab, &Ax, Ab_siz, Ax_siz, nvals, NULL)) ;
+            &Ab, &Ax, Ab_siz, Ax_siz IS_UNIFORM, nvals, NULL)) ;
     }
     else if (fmt == GxB_BY_COL && is_full)
     {
         // full by col
         GrB_TRY (GxB_Matrix_import_FullC (A, type, nrows, ncols,
-            &Ax, Ax_siz, NULL)) ;
+            &Ax, Ax_siz IS_UNIFORM, NULL)) ;
     }
     else if (fmt == GxB_BY_ROW && is_full)
     {
         // full by row
         GrB_TRY (GxB_Matrix_import_FullR (A, type, nrows, ncols,
-            &Ax, Ax_siz, NULL)) ;
+            &Ax, Ax_siz IS_UNIFORM, NULL)) ;
     }
     else
     {

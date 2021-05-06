@@ -153,6 +153,11 @@ GrB_Info LAGraph_grread     // read a matrix from a binary file
 )
 {
 
+#if defined ( GxB_SUITESPARSE_GRAPHBLAS ) && ( GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0) )
+printf ("v5.0.0 not supported\n") ;
+return (GrB_PANIC) ;
+#else
+
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------
@@ -339,5 +344,6 @@ GrB_Info LAGraph_grread     // read a matrix from a binary file
 
     fclose (fp) ;
     return (GrB_SUCCESS) ;
+#endif
 }
 

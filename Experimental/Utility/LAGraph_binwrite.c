@@ -75,6 +75,11 @@ GrB_Info LAGraph_binwrite
 )
 {
 
+#if defined ( GxB_SUITESPARSE_GRAPHBLAS ) && ( GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0) )
+printf ("v5.0.0 not supported\n") ;
+return (GrB_PANIC) ;
+#else
+
     GrB_Index *Ap = NULL, *Ai = NULL, *Ah = NULL ;
     void *Ax = NULL ;
     int8_t *Ab = NULL ;
@@ -539,5 +544,6 @@ GrB_Info LAGraph_binwrite
     #endif
 
     return (GrB_SUCCESS) ;
+#endif
 }
 

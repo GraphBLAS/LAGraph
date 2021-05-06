@@ -118,6 +118,12 @@ static inline GrB_Info Reduce_assign32
     int *ht_val
 )
 {
+
+#if defined ( GxB_SUITESPARSE_GRAPHBLAS ) && ( GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0) )
+printf ("v5.0.0 not supported\n") ;
+return (GrB_PANIC) ;
+#else
+
     GrB_Type w_type, s_type ;
     GrB_Index w_n, s_n, w_nvals, s_nvals, *w_i, *s_i, w_size, s_size ;
     uint32_t *w_x, *s_x ;
@@ -217,6 +223,8 @@ static inline GrB_Info Reduce_assign32
         (void **) &s_x, NULL) ;
     #endif
     return (GrB_SUCCESS) ;
+
+#endif
 }
 
 #undef  LAGRAPH_FREE_ALL
@@ -245,6 +253,12 @@ GrB_Info LAGraph_cc_fastsv5b
     bool sanitize           // if true, ensure A is symmetric
 )
 {
+
+#if defined ( GxB_SUITESPARSE_GRAPHBLAS ) && ( GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0) )
+printf ("v5.0.0 not supported\n") ;
+return (GrB_PANIC) ;
+#else
+
     GrB_Info info ;
     uint32_t *V32 = NULL ;
     int *ht_key = NULL, *ht_val = NULL;
@@ -578,5 +592,6 @@ GrB_Info LAGraph_cc_fastsv5b
     }
     LAGRAPH_FREE_ALL ;
     return (GrB_SUCCESS) ;
+#endif
 }
 
