@@ -624,6 +624,14 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
     char *msg
 );
 
+int LAGraph_MMWrite
+(
+    GrB_Matrix A,           // matrix to write to the file
+    FILE *f,                // file to write it to, must be already open
+    // TODO , FILE *fcomments         // optional file with extra comments
+    char *msg
+) ;
+
 // TODO: compression
 
 // LAGraph_Pattern: return the pattern of a matrix (spones(A) in MATLAB)

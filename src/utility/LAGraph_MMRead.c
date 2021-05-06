@@ -809,6 +809,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
     // read the entries
     //--------------------------------------------------------------------------
 
+    GrB_Index nvals2 = 0 ;
     for (int64_t k = 0 ; k < nvals ; k++)
     {
 
@@ -877,6 +878,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             // set the value in the matrix
             //------------------------------------------------------------------
 
+            nvals2++ ;
             GrB_TRY (set_value (*A, type, i, j, x)) ;
 
             // GxB_fprint (*A, GxB_COMPLETE, stdout) ;
@@ -889,15 +891,18 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             {
                 if (MM_storage == MM_symmetric)
                 {
+                    nvals2++ ;
                     GrB_TRY (set_value (*A, type, j, i, x)) ;
                 }
                 else if (MM_storage == MM_skew_symmetric)
                 {
+                    nvals2++ ;
                     negate_scalar (type, x) ;
                     GrB_TRY (set_value (*A, type, j, i, x)) ;
                 }
                 else if (MM_storage == MM_hermitian)
                 {
+                    nvals2++ ;
                     double complex *value = (double complex *) x ;
                     (*value) = conj (*value) ;
                     GrB_TRY (set_value (*A, type, j, i, x)) ;
@@ -908,6 +913,15 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             break ;
         }
     }
+
+    //--------------------------------------------------------------------------
+    // check for duplicates
+    //--------------------------------------------------------------------------
+
+    GrB_Index nvals3 = 0 ;
+    GrB_TRY (GrB_Matrix_nvals (&nvals3, *A)) ;
+    // printf ("nvals %ld %ld %ld\n", nvals, nvals2, nvals3) ;
+    LG_CHECK (nvals2 != nvals3, -1099, "invalid file: duplicate entries") ;
 
     return (0) ;
 }
