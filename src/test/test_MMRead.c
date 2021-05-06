@@ -37,7 +37,7 @@ char filename [LEN+1] ;
 //------------------------------------------------------------------------------
 
 // FIXME: this is a relative path, but still fragile
-#define DATA_DIR "../data/"
+#define DATA_DIR "/home/davis/master/LAGraph/data/"
 #define TEMP_DIR "/tmp/"
 
 typedef struct
