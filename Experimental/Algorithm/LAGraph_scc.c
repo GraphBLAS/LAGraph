@@ -190,8 +190,8 @@ GrB_Info LAGraph_scc
     LAGRAPH_OK (GxB_SelectOp_new (&sel2, edge_removal, GrB_BOOL, GrB_NULL));
 
     // remove trivial SCCs
-    LAGRAPH_OK (GrB_reduce (f, 0, GrB_PLUS_UINT64, GrB_PLUS_UINT64, FW, 0));
-    LAGRAPH_OK (GrB_reduce (b, 0, GrB_PLUS_UINT64, GrB_PLUS_UINT64, BW, 0));
+    LAGRAPH_OK (GrB_reduce (f, 0, GrB_PLUS_UINT64, GrB_PLUS_MONOID_UINT64, FW, 0));
+    LAGRAPH_OK (GrB_reduce (b, 0, GrB_PLUS_UINT64, GrB_PLUS_MONOID_UINT64, BW, 0));
     LAGRAPH_OK (GrB_eWiseMult (mask, 0, GxB_LAND_UINT64, GxB_LAND_UINT64, f, b, 0));
     LAGRAPH_OK (GrB_Vector_nvals (&nvals, mask));
 

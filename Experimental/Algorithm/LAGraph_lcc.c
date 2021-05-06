@@ -213,7 +213,7 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
 
     // W(i) = sum (C (i,:))
     LAGRAPH_OK (GrB_Vector_new (&W, GrB_FP64, n)) ;
-    LAGRAPH_OK (GrB_reduce (W, NULL, NULL, GrB_PLUS_FP64, C, NULL)) ;
+    LAGRAPH_OK (GrB_reduce (W, NULL, NULL, GrB_PLUS_MONOID_FP64, C, NULL)) ;
 
     // Compute vector W defining the number of wedges per vertex
     if (symmetric)
@@ -246,7 +246,7 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
 
     // LCC(i) = sum (CL (i,:)) = # of triangles at each node
     LAGRAPH_OK (GrB_Vector_new (&LCC, GrB_FP64, n)) ;
-    LAGRAPH_OK (GrB_reduce (LCC, NULL, NULL, GrB_PLUS_FP64, CL, NULL)) ;
+    LAGRAPH_OK (GrB_reduce (LCC, NULL, NULL, GrB_PLUS_MONOID_FP64, CL, NULL)) ;
     GrB_free (&CL) ;
 
     // LCC = LCC ./ W

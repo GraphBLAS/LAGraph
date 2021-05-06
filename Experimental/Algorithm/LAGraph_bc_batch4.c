@@ -231,7 +231,7 @@ GrB_Info LAGraph_bc_batch4      // betweeness centrality, batch algorithm
     LAGr_assign (*centrality, NULL, NULL, -ns, GrB_ALL, n, NULL) ;
 
     // centrality (i) = sum (bc_update (:,i)) for all nodes i
-    LAGr_reduce (*centrality, NULL, GrB_PLUS_FP32, GrB_PLUS_FP32, bc_update,
+    LAGr_reduce (*centrality, NULL, GrB_PLUS_FP32, GrB_PLUS_MONOID_FP64, bc_update,
         desc_t0) ;
 
     LAGRAPH_FREE_WORK ;
