@@ -22,6 +22,7 @@ To build do the following from the top level directory:
   $ cmake ..
   $ make [-j#]
   $ make test
+```
 
 # The rest of this README is outdated and needs to be updated.
 
