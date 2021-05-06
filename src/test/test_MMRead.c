@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/test/test_MMRead.c:  test cases for LAGraph_MMRead
+// LAGraph/src/test/test_MMRead.c:  test LAGraph_MMRead and LAGraph_MMWrite
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -19,10 +19,9 @@
 int status ;
 GrB_Info info ;
 char msg [LAGRAPH_MSG_LEN] ;
-// LAGraph_Graph G = NULL ;
 GrB_Matrix A = NULL, B = NULL ;
 GrB_Type atype = NULL, btype = NULL ;
-int version [3] ;
+int ver [3] ;
 const char *date, *name ;
 GrB_Index nrows, ncols, nvals ;
 #define LEN 512
@@ -76,31 +75,6 @@ const matrix_info files [ ] = {
     } ;
 
 //------------------------------------------------------------------------------
-// typename: return the name of a type
-//------------------------------------------------------------------------------
-
-const char *typename (GrB_Type type)
-{
-    if      (type == GrB_BOOL  ) return ("GrB_BOOL") ;
-    else if (type == GrB_INT8  ) return ("GrB_INT8") ;
-    else if (type == GrB_INT16 ) return ("GrB_INT16") ;
-    else if (type == GrB_INT32 ) return ("GrB_INT32") ;
-    else if (type == GrB_INT64 ) return ("GrB_INT64") ;
-    else if (type == GrB_UINT8 ) return ("GrB_UINT8") ;
-    else if (type == GrB_UINT16) return ("GrB_UINT16") ;
-    else if (type == GrB_UINT32) return ("GrB_UINT32") ;
-    else if (type == GrB_UINT64) return ("GrB_UINT64") ;
-    else if (type == GrB_FP32  ) return ("GrB_FP32") ;
-    else if (type == GrB_FP64  ) return ("GrB_FP64") ;
-    #if 0
-    else if (type == GxB_FC32  ) return ("GxB_FC32") ;
-    else if (type == GxB_FC64  ) return ("GxB_FC64") ;
-    #endif
-    TEST_CHECK (false) ;
-    return ("(none)") ;
-}
-
-//------------------------------------------------------------------------------
 // setup: start a test
 //------------------------------------------------------------------------------
 
@@ -111,9 +85,8 @@ void setup (void)
     OK (LAGraph_Init (msg)) ;
     OK (GxB_get (GxB_LIBRARY_NAME, &name)) ;
     OK (GxB_get (GxB_LIBRARY_DATE, &date)) ;
-    OK (GxB_get (GxB_LIBRARY_VERSION, version)) ;
-    printf ("%s %d.%d.%d (%s)\n", name,
-        version [0], version [1], version [2], date) ;
+    OK (GxB_get (GxB_LIBRARY_VERSION, ver)) ;
+    printf ("%s %d.%d.%d (%s)\n", name, ver [0], ver [1], ver [2], date) ;
 }
 
 //------------------------------------------------------------------------------
@@ -122,10 +95,7 @@ void setup (void)
 
 void teardown (void)
 {
-    printf ("%s %d.%d.%d (%s)\n", name,
-        version [0], version [1], version [2], date) ;
-//  OK (LAGraph_Delete (&G, msg)) ;
-//  TEST_CHECK (G == NULL) ;
+    printf ("%s %d.%d.%d (%s)\n", name, ver [0], ver [1], ver [2], date) ;
     OK (GrB_free (&A)) ;
     TEST_CHECK (A == NULL) ;
     OK (LAGraph_Finalize (msg)) ;
@@ -137,7 +107,11 @@ void teardown (void)
 
 void test_MMRead (void)
 {
-    FILE *f = NULL ;
+
+    //--------------------------------------------------------------------------
+    // start up the test
+    //--------------------------------------------------------------------------
+
     setup ( ) ;
 
     for (int k = 0 ; ; k++)
@@ -151,11 +125,10 @@ void test_MMRead (void)
         if (strlen (aname) == 0) break;
         printf ("\n============= %2d: %s\n", k, aname) ;
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
-        f = fopen (filename, "r") ;
+        FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
         OK (fclose (f)) ;
-        OK (GrB_wait (&A)) ;
 
         //----------------------------------------------------------------------
         // check its stats
@@ -172,40 +145,49 @@ void test_MMRead (void)
         OK (GxB_print (A, 2)) ;
 
         const char *tname = typename (atype) ;
+        TEST_CHECK (tname != NULL) ;
         OK (strcmp (tname, files [k].type)) ;
 
         //----------------------------------------------------------------------
-        // write it to /tmp
+        // write it to a temporary file
         //----------------------------------------------------------------------
 
-        snprintf (filename, LEN, TEMP_DIR "%s", aname) ;
-        f = fopen (filename, "w") ;
+        f = tmpfile ( ) ;
         OK (LAGraph_MMWrite (A, f, msg)) ;
-        OK (fclose (f)) ;
 
         //----------------------------------------------------------------------
         // load it back in again
         //----------------------------------------------------------------------
 
-        f = fopen (filename, "r") ;
+        rewind (f) ;
         OK (LAGraph_MMRead (&B, &btype, f, msg)) ;
+
+        //----------------------------------------------------------------------
+        // close and delete the temporary file
+        //----------------------------------------------------------------------
+
         OK (fclose (f)) ;
-        OK (GrB_wait (&B)) ;
-        OK (GxB_print (B, 2)) ;
 
         //----------------------------------------------------------------------
         // ensure A and B are the same
         //----------------------------------------------------------------------
 
         TEST_CHECK (atype == btype) ;
-
         bool A_and_B_are_identical ;
         OK (LAGraph_IsEqual (&A_and_B_are_identical, A, B, NULL, msg)) ;
         TEST_CHECK (A_and_B_are_identical) ;
 
+        //----------------------------------------------------------------------
+        // free workspace
+        //----------------------------------------------------------------------
+
         OK (GrB_free (&A)) ;
         OK (GrB_free (&B)) ;
     }
+
+    //--------------------------------------------------------------------------
+    // finish the test
+    //--------------------------------------------------------------------------
 
     teardown ( ) ;
 }
@@ -216,7 +198,16 @@ void test_MMRead (void)
 
 void test_karate (void)
 {
+
+    //--------------------------------------------------------------------------
+    // start up the test
+    //--------------------------------------------------------------------------
+
     setup ( ) ;
+
+    //--------------------------------------------------------------------------
+    // load in the data/karate.mtx file as the matrix A
+    //--------------------------------------------------------------------------
 
     FILE *f = fopen (LG_DATA_DIR "karate.mtx", "r") ;
     TEST_CHECK (f != NULL) ;
@@ -225,18 +216,29 @@ void test_karate (void)
     OK (fclose (f)) ;
     OK (GxB_print (A, 2)) ;
 
+    //--------------------------------------------------------------------------
+    // load in the matrix defined by graph_zachary_karate.h as the matrix B
+    //--------------------------------------------------------------------------
+
     OK (GrB_Matrix_new (&B, GrB_BOOL, ZACHARY_NUM_NODES, ZACHARY_NUM_NODES)) ;
     OK (GrB_Matrix_build (B, ZACHARY_I, ZACHARY_J, ZACHARY_V,
         ZACHARY_NUM_EDGES, GrB_LOR)) ;
     OK (GxB_print (B, 2)) ;
 
+    //--------------------------------------------------------------------------
+    // ensure A and B are the same
+    //--------------------------------------------------------------------------
+
     bool A_and_B_are_identical ;
     OK (LAGraph_IsEqual (&A_and_B_are_identical, A, B, NULL, msg)) ;
     TEST_CHECK (A_and_B_are_identical) ;
 
+    //--------------------------------------------------------------------------
+    // free workspace and finish the test
+    //--------------------------------------------------------------------------
+
     OK (GrB_free (&A)) ;
     OK (GrB_free (&B)) ;
-
     teardown ( ) ;
 }
 
