@@ -1,4 +1,16 @@
 %%MatrixMarket matrix coordinate real general
+%-------------------------------------------------------------------------------
+% UF Sparse Matrix Collection, Tim Davis
+% http://www.cise.ufl.edu/research/sparse/matrices/HB/west0067
+% name: HB/west0067
+% [U CAVETT PROBLEM WITH 5 COMPONENTS ( CHEM. ENG. FROM WESTERBERG )]
+% id: 262
+% date: 1983
+% author: A. Westerberg
+% ed: I. Duff, R. Grimes, J. Lewis
+% fields: title A name id date author ed kind
+% kind: chemical process simulation problem
+%-------------------------------------------------------------------------------
 67 67 294
 5 1 -.2788416
 6 1 -.2680186

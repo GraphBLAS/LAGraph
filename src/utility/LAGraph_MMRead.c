@@ -583,7 +583,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
                 LG_CHECK (false, -1, "invalid type") ;
             }
 
-            GxB_print (type, 3) ;
+            // GxB_print (type, 3) ;
 
             //------------------------------------------------------------------
             // get the storage token
