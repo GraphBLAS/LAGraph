@@ -29,6 +29,8 @@ GrB_Type atype = NULL, btype = NULL ;
 int version [3] ;
 const char *date, *name ;
 GrB_Index nrows, ncols, nvals ;
+#define LEN 512
+char filename [LEN+1] ;
 
 //------------------------------------------------------------------------------
 // test matrices
@@ -78,9 +80,6 @@ const matrix_info files [ ] = {
     {   34,   34,   156, "GrB_BOOL",  "karate.mtx" },
     { 0, 0, 0, "", "" },
     } ;
-
-#define LEN 512
-char filename [LEN+1] ;
 
 //------------------------------------------------------------------------------
 // typename: return the name of a type
