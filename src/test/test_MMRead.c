@@ -10,11 +10,7 @@
 
 //------------------------------------------------------------------------------
 
-#include <LAGraph.h>
-#include <acutest.h>
-#include <graph_zachary_karate.h>
-
-#define OK(method) TEST_CHECK (method == 0)
+#include "LAGraph_test.h"
 
 //------------------------------------------------------------------------------
 // global variables
@@ -36,8 +32,6 @@ char filename [LEN+1] ;
 // test matrices
 //------------------------------------------------------------------------------
 
-// FIXME: this is a relative path, but still fragile
-#define DATA_DIR "/home/davis/master/LAGraph/data/"
 #define TEMP_DIR "/tmp/"
 
 typedef struct
@@ -113,7 +107,7 @@ const char *typename (GrB_Type type)
 void setup (void)
 {
     printf ("\nsetup: %s\n", __FILE__) ;
-    printf ("data is in [%s]\n", DATA_DIR) ;
+    printf ("data is in [%s]\n", LG_DATA_DIR) ;
     OK (LAGraph_Init (msg)) ;
     OK (GxB_get (GxB_LIBRARY_NAME, &name)) ;
     OK (GxB_get (GxB_LIBRARY_DATE, &date)) ;
@@ -156,7 +150,7 @@ void test_MMRead (void)
         const char *aname = files [k].name ;
         if (strlen (aname) == 0) break;
         printf ("\n============= %2d: %s\n", k, aname) ;
-        snprintf (filename, LEN, DATA_DIR "%s", aname) ;
+        snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
@@ -224,7 +218,7 @@ void test_karate (void)
 {
     setup ( ) ;
 
-    FILE *f = fopen (DATA_DIR "karate.mtx", "r") ;
+    FILE *f = fopen (LG_DATA_DIR "karate.mtx", "r") ;
     TEST_CHECK (f != NULL) ;
     OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
     TEST_CHECK (atype == GrB_BOOL) ;

@@ -95,6 +95,7 @@ include ( FindThreads )
 #-------------------------------------------------------------------------------
 
 message ( STATUS "CMAKE build type:          " ${CMAKE_BUILD_TYPE} )
+message ( STATUS "CMAKE source directory     " ${CMAKE_SOURCE_DIR} )
 
 if ( ${CMAKE_BUILD_TYPE} STREQUAL "Debug")
     message ( STATUS "CMAKE C Flags debug:       " ${CMAKE_C_FLAGS_DEBUG} )
@@ -120,6 +121,8 @@ include_directories ( ${CMAKE_SOURCE_DIR}/include
 #                      ${CMAKE_SOURCE_DIR}/experimental/include
 #                      ${CMAKE_SOURCE_DIR}/experimental/utility
 #                      ${CMAKE_SOURCE_DIR}/experimental/utility/Template )
+
+set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLGDIR=${CMAKE_SOURCE_DIR}")
 
 #-------------------------------------------------------------------------------
 # compiler options

@@ -10,32 +10,30 @@
 
 //-----------------------------------------------------------------------------
 
-#include <LAGraph.h>
-#include <acutest.h>
+#include "LAGraph_test.h"
 
-//****************************************************************************
+//-----------------------------------------------------------------------------
+// test fopen, as an example of how to use LG_SOURCE_DIR
+//-----------------------------------------------------------------------------
+
 void test_fopen(void)
 {
     char buffer [1000] ;
-    TEST_MSG ("Testing fopen") ;
-//  relative paths cause a segfault:
-//  FILE *f = fopen ("../data/A.mtx", "r") ;
-//  this works:
-    FILE *f = fopen ("/tmp/A.mtx", "r") ;
-    printf ("f %p\n", f) ;
+    printf ("\nLAGraph source directory: [%s]\n", LG_SOURCE_DIR) ;
+    FILE *f = fopen (LG_SOURCE_DIR "/data/A.mtx", "r") ;
+    TEST_CHECK (f != NULL) ;
     char *r = fgets (buffer, 512, f) ;
     TEST_CHECK (r != NULL) ;
-    TEST_CHECK (f != NULL) ;
+    printf ("[%s]\n", buffer) ;
     fclose (f) ;
-    printf ("[%s] errno %d\n", buffer, errno) ;
-    // I thought I would try this but it doesn't help;
-    // it's already zero.
-    errno = 0 ;
 }
 
-//****************************************************************************
-//****************************************************************************
-TEST_LIST = {
-    {"fopen", test_fopen},
-    {NULL, NULL}
-};
+//-----------------------------------------------------------------------------
+// run the test
+//-----------------------------------------------------------------------------
+
+TEST_LIST =
+{
+    { "fopen", test_fopen },
+    { NULL, NULL }
+} ;
