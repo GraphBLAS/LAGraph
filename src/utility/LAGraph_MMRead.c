@@ -13,6 +13,12 @@
 // Parts of this code are from SuiteSparse/CHOLMOD/Check/cholmod_read.c, and
 // are used here by permission of the author of CHOLMOD/Check (T. A. Davis).
 
+// TODO: need to decide on error codes to return. Currently:
+//  -1001:  an input parameter is NULL
+//  -1002:  the contents of the file are invalid in some way
+// It would be possible to return a wider range of error codes that explain
+// why the contents of the input file are invalid.
+
 #define LAGraph_FREE_ALL GrB_free (A) ;
 
 #include "LG_internal.h"
@@ -139,7 +145,7 @@ static inline bool read_double      // true if successful, false if failure
 // read_entry
 //------------------------------------------------------------------------------
 
-static inline int read_entry   // returns 0 if successful, -1 if failure
+static inline bool read_entry   // returns true if successful, false if failure
 (
     char *p,        // string containing the value
     GrB_Type type,  // type of value to read
@@ -159,7 +165,11 @@ static inline int read_entry   // returns 0 if successful, -1 if failure
     {
         if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
         // printf ("%" PRId64 "\n", ival) ;
-        if (ival < 0 || ival > 1) return (false) ;
+        if (ival < 0 || ival > 1)
+        {
+            // entry out of range
+            return (false) ;
+        }
         bool *result = (bool *) x ;
         result [0] = (bool) ival ;
     }
@@ -167,7 +177,11 @@ static inline int read_entry   // returns 0 if successful, -1 if failure
     {
         if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
         // printf ("%" PRId64 "\n", ival) ;
-        if (ival < INT8_MIN || ival > INT8_MAX) return (false) ;
+        if (ival < INT8_MIN || ival > INT8_MAX)
+        {
+            // entry out of range
+            return (false) ;
+        }
         int8_t *result = (int8_t *) x ;
         result [0] = (int8_t) ival ;
     }
@@ -175,7 +189,11 @@ static inline int read_entry   // returns 0 if successful, -1 if failure
     {
         if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
         // printf ("%" PRId64 "\n", ival) ;
-        if (ival < INT16_MIN || ival > INT16_MAX) return (false) ;
+        if (ival < INT16_MIN || ival > INT16_MAX)
+        {
+            // entry out of range
+            return (false) ;
+        }
         int16_t *result = (int16_t *) x ;
         result [0] = (int16_t) ival ;
     }
@@ -183,7 +201,11 @@ static inline int read_entry   // returns 0 if successful, -1 if failure
     {
         if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
         // printf ("%" PRId64 "\n", ival) ;
-        if (ival < INT32_MIN || ival > INT32_MAX) return (false) ;
+        if (ival < INT32_MIN || ival > INT32_MAX)
+        {
+            // entry out of range
+            return (false) ;
+        }
         int32_t *result = (int32_t *) x ;
         result [0] = (int32_t) ival ;
     }
@@ -198,7 +220,11 @@ static inline int read_entry   // returns 0 if successful, -1 if failure
     {
         if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
         // printf ("%" PRId64 "\n", ival) ;
-        if (ival < 0 || ival > UINT8_MAX) return (false) ;
+        if (ival < 0 || ival > UINT8_MAX)
+        {
+            // entry out of range
+            return (false) ;
+        }
         uint8_t *result = (uint8_t *) x ;
         result [0] = (uint8_t) ival ;
     }
@@ -206,7 +232,11 @@ static inline int read_entry   // returns 0 if successful, -1 if failure
     {
         if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
         // printf ("%" PRId64 "\n", ival) ;
-        if (ival < 0 || ival > UINT16_MAX) return (false) ;
+        if (ival < 0 || ival > UINT16_MAX)
+        {
+            // entry out of range
+            return (false) ;
+        }
         uint16_t *result = (uint16_t *) x ;
         result [0] = (uint16_t) ival ;
     }
@@ -214,7 +244,11 @@ static inline int read_entry   // returns 0 if successful, -1 if failure
     {
         if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
         // printf ("%" PRId64 "\n", ival) ;
-        if (ival < 0 || ival > UINT32_MAX) return (false) ;
+        if (ival < 0 || ival > UINT32_MAX)
+        {
+            // entry out of range
+            return (false) ;
+        }
         uint32_t *result = (uint32_t *) x ;
         result [0] = (uint32_t) ival ;
     }
@@ -266,10 +300,10 @@ static inline int read_entry   // returns 0 if successful, -1 if failure
     else
     {
         // type not supported
-        return (-1) ;
+        return (false) ;
     }
 
-    return (0) ;
+    return (true) ;
 }
 
 //------------------------------------------------------------------------------
@@ -437,8 +471,9 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    LG_CHECK (A == NULL, -1, "&A is NULL") ;
-    LG_CHECK (f == NULL, -1, "f is NULL") ;
+    LG_CHECK (A == NULL, -1001, "&A is NULL") ;
+    LG_CHECK (A_type == NULL, -1001, "&A_type is NULL") ;
+    LG_CHECK (f == NULL, -1001, "f is NULL") ;
     (*A) = NULL ;
     (*A_type) = NULL;
 
@@ -514,13 +549,10 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
 
             while (*p && isspace (*p)) p++ ;        // skip any leading spaces
 
-            // printf ("header now [%s]\n", p) ;
-            // printf ("compare %d\n", (strncmp (p, "matrix", 6))) ;
-
             if (strncmp (p, "matrix", 6) != 0)
             {
                 // invalid Matrix Market object
-                LG_CHECK (false, -1, "invalid object") ;
+                LG_CHECK (true, -1002, "invalid object") ;
             }
             p += 6 ;                                // skip past token "matrix"
 
@@ -543,7 +575,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             else
             {
                 // invalid Matrix Market format
-                LG_CHECK (false, -1, "invalid format") ;
+                LG_CHECK (true, -1002, "invalid format") ;
             }
 
             //------------------------------------------------------------------
@@ -567,9 +599,11 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             else if (strncmp (p, "complex", 7) == 0)
             {
                 MM_type = MM_complex ;
+#if 0
                 type = GxB_FC64 ;
                 p += 7 ;
-                LG_CHECK(false, -1, "complex types not supported");
+#endif
+                LG_CHECK (true, -1, "complex types not yet supported") ;
             }
             else if (strncmp (p, "pattern", 7) == 0)
             {
@@ -580,7 +614,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             else
             {
                 // invalid Matrix Market type
-                LG_CHECK (false, -1, "invalid type") ;
+                LG_CHECK (true, -1002, "invalid type") ;
             }
 
             // GxB_print (type, 3) ;
@@ -610,7 +644,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             else
             {
                 // invalid Matrix Market storage
-                LG_CHECK (false, -1, "invalid storage") ;
+                LG_CHECK (true, -1002, "invalid storage") ;
             }
 
             //------------------------------------------------------------------
@@ -623,14 +657,14 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
                 LG_CHECK (!
                     (MM_fmt == MM_coordinate &&
                     (MM_storage == MM_general || MM_storage == MM_symmetric)),
-                    -1, "invalid pattern combo\n") ;
+                    -1002, "invalid pattern combination") ;
             }
 
             if (MM_storage == MM_hermitian)
             {
                 // (coordinate or array) x (complex) x (Hermitian)
-                LG_CHECK (! (MM_type == MM_complex), -1,
-                    "invalid complex combo") ;
+                LG_CHECK (! (MM_type == MM_complex), -1002,
+                    "invalid complex combination") ;
             }
 
         }
@@ -651,9 +685,10 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
 
             while (*p && isspace (*p)) p++ ;        // skip any leading spaces
 
-            // <entrytype> is one of the 13 built-in types (GrB_BOOL, GrB_INT8,
-            // GrB_INT16, GrB_INT32, GrB_INT64, GrB_UINT8, GrB_UINT16,
-            // GrB_UINT32, GrB_UINT64, GrB_FP32, GrB_FP64, GxB_FC32, GxB_FC64).
+            // <entrytype> is one of the 11 real built-in types (GrB_BOOL,
+            // GrB_INT8, GrB_INT16, GrB_INT32, GrB_INT64, GrB_UINT8,
+            // GrB_UINT16, GrB_UINT32, GrB_UINT64, GrB_FP32, GrB_FP64).  The
+            // complex types GxB_FC32, GxB_FC64 are not yet supported.
 
             // printf ("for type: compare [%s]\n", p) ;
 
@@ -714,7 +749,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             else
             {
                 // type not supported
-                LG_CHECK (false, -1, "type not supported") ;
+                LG_CHECK (true, -1002, "type not supported") ;
             }
 
         }
@@ -770,13 +805,13 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             else
             {
                 // wrong number of items in first data line
-                LG_CHECK (false, -1, "invalid 1st line") ;
+                LG_CHECK (true, -1002, "invalid 1st line") ;
             }
 
             if (nrows != ncols)
             {
                 // a rectangular matrix must be in the general storage
-                LG_CHECK (! (MM_storage == MM_general), -1,
+                LG_CHECK (! (MM_storage == MM_general), -1002,
                     "invalid rectangular") ;
             }
 
@@ -827,7 +862,8 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             // read the file until finding the next triplet
             //------------------------------------------------------------------
 
-            LG_CHECK (!get_line (f, buf), -1, "premature EOF") ;
+            bool ok = get_line (f, buf) ;
+            LG_CHECK (!ok, -1002, "premature EOF") ;
             if (is_blank_line (buf))
             {
                 // blank line or comment
@@ -852,7 +888,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
                 // coordinate format; read the row and column index
                 p = buf ;
                 LG_CHECK (sscanf (p, "%" SCNu64 " %" SCNu64, &i, &j) != 2,
-                    -1, "I/O error on indices\n") ;
+                    -1002, "indices invalid") ;
                 // convert from 1-based to 0-based.
                 i-- ;
                 j-- ;
@@ -871,8 +907,8 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
 
             while (*p && isspace (*p)) p++ ;        // skip any spaces
 
-            LG_CHECK (read_entry (p, type, MM_type == MM_pattern, x),
-                -1, "entry invalid") ;
+            ok = read_entry (p, type, MM_type == MM_pattern, x) ;
+            LG_CHECK (!ok, -1002, "entry invalid") ;
 
             //------------------------------------------------------------------
             // set the value in the matrix
@@ -921,7 +957,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
     GrB_Index nvals3 = 0 ;
     GrB_TRY (GrB_Matrix_nvals (&nvals3, *A)) ;
     // printf ("nvals %ld %ld %ld\n", nvals, nvals2, nvals3) ;
-    LG_CHECK (nvals2 != nvals3, -1099, "invalid file: duplicate entries") ;
-
+    LG_CHECK (nvals2 != nvals3, -1002, "duplicate entries present") ;
     return (0) ;
 }
+

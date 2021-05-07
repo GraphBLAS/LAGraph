@@ -70,6 +70,17 @@ const matrix_info files [ ] =
     {   67,   67,   294, "GrB_FP64",  "west0067.mtx" },
     {   27,   51,   102, "GrB_FP64",  "lp_afiro.mtx" },
     {   34,   34,   156, "GrB_BOOL",  "karate.mtx" },
+    {    7,    7,    12, "GrB_BOOL",  "matrix_bool.mtx" },
+    {    7,    7,    12, "GrB_INT8",  "matrix_int8.mtx" },
+    {    7,    7,    12, "GrB_INT16", "matrix_int16.mtx" },
+    {    7,    7,    12, "GrB_INT32", "matrix_int32.mtx" },
+    {    7,    7,    12, "GrB_INT64", "matrix_int64.mtx" },
+    {    7,    7,    12, "GrB_UINT8", "matrix_uint8.mtx" },
+    {    7,    7,    12, "GrB_UINT16","matrix_uint16.mtx" },
+    {    7,    7,    12, "GrB_UINT32","matrix_uint32.mtx" },
+    {    7,    7,    12, "GrB_UINT64","matrix_uint64.mtx" },
+    {    7,    7,    12, "GrB_FP32",  "matrix_fp32.mtx" },
+    {    7,    7,    12, "GrB_FP64",  "matrix_fp64.mtx" },
     { 0, 0, 0, "", "" },
 } ;
 
@@ -124,6 +135,7 @@ void test_MMRead (void)
 
         const char *aname = files [k].name ;
         if (strlen (aname) == 0) break;
+        TEST_CASE (aname) ;
         printf ("\n============= %2d: %s\n", k, aname) ;
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
@@ -247,6 +259,80 @@ void test_karate (void)
 }
 
 //-----------------------------------------------------------------------------
+// test_failures: test for failure modes of LAGraph_MMRead and MMWrite
+//-----------------------------------------------------------------------------
+
+typedef struct
+{
+    int error ;
+    const char *name ;
+}
+mangled_matrix_info ;
+
+const mangled_matrix_info mangled_files [ ] =
+{
+//  error  filename              how the matrix is mangled
+    -1002, "mangled1.mtx",       // bad header
+    -1002, "mangled2.mtx",       // bad header
+    -1002, "mangled3.mtx",       // bad type
+    -1,    "complex.mtx",        // valid complex matrix, not supported
+    -1002, "mangled4.mtx",       // bad format
+    -1002, "mangled5.mtx",       // invalid combination of format options
+    -1002, "mangled6.mtx",       // invalid combination of format options
+    -1002, "mangled7.mtx",       // invalid GraphBLAS type
+    -1002, "mangled8.mtx",       // invalid first line
+    -1002, "mangled9.mtx",       // invalid matrix: symmetric and rectangular
+    -1002, "mangled10.mtx",      // invalid matrix: truncated
+    -1002, "mangled11.mtx",      // invalid matrix: entries mangled
+    -1002, "mangled12.mtx",      // invalid matrix: entries mangled
+    -GrB_INVALID_INDEX, "mangled13.mtx", // invalid matrix: indices out of range
+    -1002, "mangled14.mtx",      // invalid matrix: duplicate entries
+    -1002, "mangled_bool.mtx",   // invalid matrix: entry value out of range
+    -1002, "mangled_int8.mtx",   // invalid matrix: entry value out of range
+    -1002, "mangled_int16.mtx",  // invalid matrix: entry value out of range
+    -1002, "mangled_int32.mtx",  // invalid matrix: entry value out of range
+    -1002, "mangled_uint8.mtx",  // invalid matrix: entry value out of range
+    -1002, "mangled_uint16.mtx", // invalid matrix: entry value out of range
+    -1002, "mangled_uint32.mtx", // invalid matrix: entry value out of range
+    0, "",
+} ;
+
+void test_MMRW_failures (void)
+{
+    setup ( ) ;
+    printf ("\nTesting error handling of LAGraph_MMRead when giving it "
+        "mangled matrices:\n") ;
+
+    // input arguments are NULL
+    TEST_CHECK (LAGraph_MMRead (NULL, NULL, NULL, msg) == -1001) ;
+    TEST_CHECK (LAGraph_MMRead (&A, NULL, NULL, msg) == -1001) ;
+    TEST_CHECK (LAGraph_MMRead (&A, &atype, NULL, msg) == -1001) ;
+
+    // matrix files are mangled in some way, or unsupported
+    for (int k = 0 ; ; k++)
+    {
+        const char *aname = mangled_files [k].name ;
+        if (strlen (aname) == 0) break;
+        TEST_CASE (aname) ;
+        int error = mangled_files [k].error ;
+        snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
+        printf ("file: [%s]\n", filename) ;
+        FILE *f = fopen (filename, "r") ;
+        TEST_CHECK (f != NULL) ;
+        int status = LAGraph_MMRead (&A, &atype, f, msg) ;
+        TEST_CHECK (status == error) ;
+        if (status == error)
+        {
+            printf ("    got the error we expected: %d [%s]\n", status, msg) ;
+        }
+        OK (fclose (f)) ;
+        TEST_CHECK (A == NULL) ;
+    }
+
+    teardown ( ) ;
+}
+
+//-----------------------------------------------------------------------------
 // TEST_LIST: the list of tasks for this entire test
 //-----------------------------------------------------------------------------
 
@@ -254,6 +340,7 @@ TEST_LIST =
 {
     { "MMRead", test_MMRead },
     { "karate", test_karate },
+    { "MMRW_failures", test_MMRW_failures },
     { NULL, NULL }
 } ;
 

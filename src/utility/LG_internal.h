@@ -52,7 +52,7 @@ typedef unsigned char LG_void ;
 /*
     if (src < 0 || src >= n)
     {
-        LG_ERROR_MSG ("Source node %ld must be in range 0 to n-1,\n"
+        LG_ERROR_MSG ("Source node %ld must be in range 0 to n-1, "
             "where n = %ld is the number of nodes in the graph.", src, n) ;
         return (-1) ;
     }
@@ -93,7 +93,7 @@ typedef unsigned char LG_void ;
 #ifndef GrB_CATCH
 #define GrB_CATCH(info)                                 \
 {                                                       \
-    LG_ERROR_MSG ("%s, line %d: GrB failure: %d\n",     \
+    LG_ERROR_MSG ("%s, line %d: GrB failure: %d",       \
         __FILE__, __LINE__, info) ;                     \
     LAGraph_FREE_ALL ;                                  \
     return (-(info)) ;                                  \
@@ -111,7 +111,7 @@ typedef unsigned char LG_void ;
 #ifndef LAGraph_CATCH
 #define LAGraph_CATCH(status)                           \
 {                                                       \
-    LG_ERROR_MSG ("%s, line %d: LAGraph failure: %d\n", \
+    LG_ERROR_MSG ("%s, line %d: LAGraph failure: %d",   \
         __FILE__, __LINE__, status) ;                   \
     LAGraph_FREE_ALL ;                                  \
     return (status) ;                                   \
