@@ -604,7 +604,7 @@ int LAGraph_Toc             // returns 0 if successful, -1 if failure
  *          the file creates two entries in the GrB_Matrix that is returned.
  *
  * According to the Matrix Market format, entries are always listed in
- * column-major order.  This rule is follwed by LAGraph_mmwrite.  However,
+ * column-major order.  This rule is follwed by LAGraph_MMWrite.  However,
  * LAGraph_MMRead can read the entries in any order.
  *
  * @param[out]    A       handle of the matrix to create
@@ -616,7 +616,8 @@ int LAGraph_Toc             // returns 0 if successful, -1 if failure
  * @retval -1 if failure
  *
  */
-int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
+
+int LAGraph_MMRead
 (
     GrB_Matrix *A,          // handle of matrix to create
     GrB_Type   *A_type,     // type of the scalar stored in A
@@ -626,9 +627,9 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
 
 int LAGraph_MMWrite
 (
-    GrB_Matrix A,           // matrix to write to the file
-    FILE *f,                // file to write it to, must be already open
-    // TODO , FILE *fcomments         // optional file with extra comments
+    GrB_Matrix A,       // matrix to write to the file
+    FILE *f,            // file to write it to, must be already open
+    FILE *fcomments,    // optional file with extra comments, may be NULL
     char *msg
 ) ;
 

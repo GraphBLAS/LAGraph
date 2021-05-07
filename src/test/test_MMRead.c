@@ -81,6 +81,17 @@ const matrix_info files [ ] =
     {    7,    7,    12, "GrB_UINT64","matrix_uint64.mtx" },
     {    7,    7,    12, "GrB_FP32",  "matrix_fp32.mtx" },
     {    7,    7,    12, "GrB_FP64",  "matrix_fp64.mtx" },
+    {   67,   67,   294, "GrB_FP64",  "west0067_jumbled.mtx" },
+    {    6,    6,    20, "GrB_FP32",  "skew_fp32.mtx" },
+    {    6,    6,    20, "GrB_FP64",  "skew_fp64.mtx" },
+    {    6,    6,    20, "GrB_INT8",  "skew_int8.mtx" },
+    {    6,    6,    20, "GrB_INT16", "skew_int16.mtx" },
+    {    6,    6,    20, "GrB_INT32", "skew_int32.mtx" },
+    {    6,    6,    20, "GrB_INT64", "skew_int64.mtx" },
+    {    7,    7,    12, "GrB_INT32", "pattern.mtx" },
+    {    3,    3,     9, "GrB_FP64",  "full.mtx" },
+    {    4,    4,    16, "GrB_FP64",  "full_symmetric.mtx" },
+    {    3,    4,     0, "GrB_INT32", "empty.mtx" },
     { 0, 0, 0, "", "" },
 } ;
 
@@ -96,7 +107,6 @@ void setup (void)
     OK (GxB_get (GxB_LIBRARY_NAME, &name)) ;
     OK (GxB_get (GxB_LIBRARY_DATE, &date)) ;
     OK (GxB_get (GxB_LIBRARY_VERSION, ver)) ;
-    printf ("%s %d.%d.%d (%s)\n", name, ver [0], ver [1], ver [2], date) ;
 }
 
 //------------------------------------------------------------------------------
@@ -105,7 +115,7 @@ void setup (void)
 
 void teardown (void)
 {
-    printf ("%s %d.%d.%d (%s)\n", name, ver [0], ver [1], ver [2], date) ;
+    printf ("\n%s %d.%d.%d (%s)\n", name, ver [0], ver [1], ver [2], date) ;
     OK (GrB_free (&A)) ;
     OK (GrB_free (&B)) ;
     TEST_CHECK (A == NULL) ;
@@ -155,6 +165,7 @@ void test_MMRead (void)
         TEST_CHECK (ncols == files [k].ncols) ;
         TEST_CHECK (nvals == files [k].nvals) ;
         OK (GxB_Matrix_type (&btype, A)) ;
+        OK (GxB_print (btype, 3)) ;
         TEST_CHECK (atype == btype) ;
         OK (GxB_print (A, 2)) ;
 
@@ -168,7 +179,7 @@ void test_MMRead (void)
         //----------------------------------------------------------------------
 
         f = tmpfile ( ) ;
-        OK (LAGraph_MMWrite (A, f, msg)) ;
+        OK (LAGraph_MMWrite (A, f, NULL, msg)) ;
         TEST_MSG ("Failed to write %s to a temp file\n", aname) ;
 
         //----------------------------------------------------------------------
@@ -294,10 +305,11 @@ const mangled_matrix_info mangled_files [ ] =
     -1002, "mangled_uint8.mtx",  // invalid matrix: entry value out of range
     -1002, "mangled_uint16.mtx", // invalid matrix: entry value out of range
     -1002, "mangled_uint32.mtx", // invalid matrix: entry value out of range
+    -1002, "mangled_skew.mtx",   // invalid matrix: unsigned skew invalid
     0, "",
 } ;
 
-void test_MMRW_failures (void)
+void test_MMRead_failures (void)
 {
     setup ( ) ;
     printf ("\nTesting error handling of LAGraph_MMRead when giving it "
@@ -333,6 +345,186 @@ void test_MMRW_failures (void)
 }
 
 //-----------------------------------------------------------------------------
+// test_jumbled: test reading a jumbled matrix
+//-----------------------------------------------------------------------------
+
+void test_jumbled (void)
+{
+
+    //--------------------------------------------------------------------------
+    // start up the test
+    //--------------------------------------------------------------------------
+
+    setup ( ) ;
+
+    //--------------------------------------------------------------------------
+    // load in the data/west0067.mtx file as the matrix A
+    //--------------------------------------------------------------------------
+
+    FILE *f = fopen (LG_DATA_DIR "west0067.mtx", "r") ;
+    TEST_CHECK (f != NULL) ;
+    OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+    TEST_CHECK (atype == GrB_FP64) ;
+    OK (fclose (f)) ;
+    TEST_MSG ("Loading of west0067.mtx failed") ;
+
+    //--------------------------------------------------------------------------
+    // load in the data/west0067_jumbled.mtx file as the matrix B
+    //--------------------------------------------------------------------------
+
+    f = fopen (LG_DATA_DIR "west0067_jumbled.mtx", "r") ;
+    TEST_CHECK (f != NULL) ;
+    OK (LAGraph_MMRead (&B, &btype, f, msg)) ;
+    TEST_CHECK (btype == GrB_FP64) ;
+    OK (fclose (f)) ;
+    TEST_MSG ("Loading of west0067_jumbled.mtx failed") ;
+
+    //--------------------------------------------------------------------------
+    // ensure A and B are the same
+    //--------------------------------------------------------------------------
+
+    bool A_and_B_are_identical ;
+    OK (LAGraph_IsEqual (&A_and_B_are_identical, A, B, NULL, msg)) ;
+    TEST_CHECK (A_and_B_are_identical) ;
+    TEST_MSG ("Test for A and B equal failed: west0067_jumbled.mtx matrix") ;
+
+    //--------------------------------------------------------------------------
+    // free workspace and finish the test
+    //--------------------------------------------------------------------------
+
+    OK (GrB_free (&A)) ;
+    OK (GrB_free (&B)) ;
+    teardown ( ) ;
+}
+
+//-----------------------------------------------------------------------------
+// test_MMWrite: test LAGraph_MMWrite
+//-----------------------------------------------------------------------------
+
+const char* files_for_MMWrite [ ] =
+{
+    "west0067.mtx",
+    "full.mtx",
+    ""
+} ;
+
+void test_MMWrite (void)
+{
+
+    //--------------------------------------------------------------------------
+    // start up the test
+    //--------------------------------------------------------------------------
+
+    setup ( ) ;
+
+    for (int k = 0 ; ; k++)
+    {
+
+        //----------------------------------------------------------------------
+        // load in the kth file
+        //----------------------------------------------------------------------
+
+        const char *aname = files_for_MMWrite [k] ;
+        if (strlen (aname) == 0) break;
+        TEST_CASE (aname) ;
+        printf ("\n============= %2d: %s\n", k, aname) ;
+        snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
+        FILE *f = fopen (filename, "r") ;
+        TEST_CHECK (f != NULL) ;
+        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (fclose (f)) ;
+        TEST_MSG ("Failed to load %s\n", aname) ;
+
+        //----------------------------------------------------------------------
+        // create a file for comments
+        //----------------------------------------------------------------------
+
+        FILE *fcomments = fopen (LG_DATA_DIR "comments.txt", "w") ;
+        TEST_CHECK (fcomments != NULL) ;
+        fprintf (fcomments, " comments for %s\n", aname) ;
+        fprintf (fcomments, " this file was created by test_MMRead.c\n") ;
+        fclose (fcomments) ;
+        TEST_MSG ("Failed to create comments.txt") ;
+
+        //----------------------------------------------------------------------
+        // write the matrix to the data/comments_*.mtx file
+        //----------------------------------------------------------------------
+
+        snprintf (filename, LEN, LG_DATA_DIR "comments_%s", aname) ;
+        fcomments = fopen (LG_DATA_DIR "comments.txt", "r") ;
+        FILE *foutput = fopen (filename, "w") ;
+        TEST_CHECK (foutput != NULL) ;
+        TEST_CHECK (fcomments != NULL) ;
+        OK (LAGraph_MMWrite (A, foutput, fcomments, msg)) ;
+        fclose (fcomments) ;
+        fclose (foutput) ;
+        TEST_MSG ("Failed to create %s", filename) ;
+
+        //----------------------------------------------------------------------
+        // load in the data/comments_.mtx file as the matrix B
+        //----------------------------------------------------------------------
+
+        f = fopen (filename, "r") ;
+        TEST_CHECK (f != NULL) ;
+        OK (LAGraph_MMRead (&B, &btype, f, msg)) ;
+        TEST_CHECK (btype == atype) ;
+        OK (fclose (f)) ;
+        TEST_MSG ("Loading of %s failed", filename) ;
+
+        //----------------------------------------------------------------------
+        // ensure A and B are the same
+        //----------------------------------------------------------------------
+
+        bool A_and_B_are_identical ;
+        OK (LAGraph_IsEqual (&A_and_B_are_identical, A, B, NULL, msg)) ;
+        TEST_CHECK (A_and_B_are_identical) ;
+        TEST_MSG ("Test for A and B equal failed: %s", filename) ;
+
+        //----------------------------------------------------------------------
+        // free workspace
+        //----------------------------------------------------------------------
+
+        OK (GrB_free (&A)) ;
+        OK (GrB_free (&B)) ;
+    }
+
+    //--------------------------------------------------------------------------
+    // finish the test
+    //--------------------------------------------------------------------------
+
+    teardown ( ) ;
+}
+
+//-----------------------------------------------------------------------------
+// test_MMWrite_failures: test error handling of LAGraph_MMWrite
+//-----------------------------------------------------------------------------
+
+typedef int mytype ;
+
+void test_MMWrite_failures (void)
+{
+    setup ( ) ;
+    printf ("\nTesting error handling of LAGraph_MMWrite\n") ;
+
+    // input arguments are NULL
+    TEST_CHECK (LAGraph_MMWrite (NULL, NULL, NULL, msg) == -1001) ;
+
+    // attempt to print a matrix with a user-defined type, which should fail
+    FILE *f = tmpfile ( ) ;
+    TEST_CHECK (f != NULL) ;
+    OK (GrB_Type_new (&atype, sizeof (mytype))) ;
+    OK (GrB_Matrix_new (&A, atype, 4, 4)) ;
+    OK (GxB_print (A, 3)) ;
+    int status = LAGraph_MMWrite (A, f, NULL, msg) ;
+    TEST_CHECK (status == -1006) ;
+    OK (GrB_free (&atype)) ;
+    OK (GrB_free (&A)) ;
+    OK (fclose (f)) ;       // close and delete the temporary file
+
+    teardown ( ) ;
+}
+
+//-----------------------------------------------------------------------------
 // TEST_LIST: the list of tasks for this entire test
 //-----------------------------------------------------------------------------
 
@@ -340,7 +532,10 @@ TEST_LIST =
 {
     { "MMRead", test_MMRead },
     { "karate", test_karate },
-    { "MMRW_failures", test_MMRW_failures },
+    { "MMRead_failures", test_MMRead_failures },
+    { "jumbled", test_jumbled },
+    { "MMWrite", test_MMWrite },
+    { "MMWrite_failures", test_MMWrite_failures },
     { NULL, NULL }
 } ;
 

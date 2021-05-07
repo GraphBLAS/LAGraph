@@ -1,0 +1,2 @@
+ comments for full.mtx
+ this file was created by test_MMRead.c

@@ -2,46 +2,17 @@
 // LAGraph_MMWrite:  write a matrix to a Matrix Market file
 //------------------------------------------------------------------------------
 
-/*
-    LAGraph:  graph algorithms based on GraphBLAS
-
-    Copyright 2019 LAGraph Contributors.
-
-    (see Contributors.txt for a full list of Contributors; see
-    ContributionInstructions.txt for information on how you can Contribute to
-    this project).
-
-    All Rights Reserved.
-
-    NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
-    CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
-    AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
-    PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
-    THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
-    RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
-
-    Released under a BSD license, please see the LICENSE file distributed with
-    this Software or contact permission@sei.cmu.edu for full terms.
-
-    Created, in part, with funding and support from the United States
-    Government.  (see Acknowledgments.txt file).
-
-    This program includes and/or can make use of certain third party source
-    code, object code, documentation and other files ("Third Party Software").
-    See LICENSE file for more details.
-
-*/
+// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+// Contributed by Tim Davis, Texas A&M University.
 
 //------------------------------------------------------------------------------
 
 // LAGraph_MMWrite:  write a matrix to a Matrix Market file.
 // Contributed by Tim Davis, Texas A&M.
 
-// Writes a matrix to a file in the Matrix Market format.  See LAGraph_mmread
+// Writes a matrix to a file in the Matrix Market format.  See LAGraph_MMRead
 // for a description of the format.
-
-// TODO output is yet not sorted, as required by the Matrix Market format.
-// The LAGraph_MMRead can read in an unsorted file, however.
 
 // Parts of this code are from SuiteSparse/CHOLMOD/Check/cholmod_write.c, and
 // are used here by permission of the author of CHOLMOD/Check (T. A. Davis).
@@ -62,44 +33,6 @@
 
 #undef  LAGraph_FREE_ALL
 #define LAGraph_FREE_ALL LAGraph_FREE_WORK
-
-//------------------------------------------------------------------------------
-// TODO: include_comments
-//------------------------------------------------------------------------------
-
-// Read in the comments file, if it exists, and copy it to the Matrix Market
-// file.  A "%" is prepended to each line.  Returns true if successful, false
-// if an I/O error occu.
-
-#if 0
-static bool include_comments
-(
-    FILE *f,
-    const char *comments
-)
-{
-    FILE *cf = NULL ;
-    char buffer [MAXLINE] ;
-    int ok = TRUE ;
-    if (comments != NULL && comments [0] != '\0')
-    {
-        cf = fopen (comments, "r") ;
-        if (cf == NULL)
-        {
-            return (FALSE) ;
-        }
-        while (ok && fgets (buffer, MAXLINE, cf) != NULL)
-        {
-            // ensure the line is not too long
-            buffer [MMLEN-1] = '\0' ;
-            buffer [MMLEN-2] = '\n' ;
-            ok = ok && (fprintf (f, "%%%s", buffer) > 0) ;
-        }
-        fclose (cf) ;
-    }
-    return (ok) ;
-}
-#endif
 
 //------------------------------------------------------------------------------
 // print_double
@@ -230,19 +163,6 @@ static bool print_double
 // FPRINTF: fprintf and check result
 //------------------------------------------------------------------------------
 
-#if 0
-#define FPRINTF(f,...)                  \
-{                                       \
-    if (fprintf (f, __VA_ARGS__) < 0)   \
-    {                                   \
-        /* file I/O error */            \
-        printf ("LAGraph_MMWrite: file I/O error\n") ; \
-        LAGraph_FREE_ALL ;              \
-        return (GrB_INVALID_VALUE) ;    \
-    }                                   \
-}
-#endif
-
 #define FPRINTF(f,...)                  \
 {                                       \
     LG_CHECK (fprintf (f, __VA_ARGS__) < 0, -2, "Unable to write to file") ; \
@@ -254,9 +174,9 @@ static bool print_double
 
 int LAGraph_MMWrite
 (
-    GrB_Matrix A,           // matrix to write to the file
-    FILE *f,                // file to write it to, must be already open
-    // TODO , FILE *fcomments         // optional file with extra comments
+    GrB_Matrix A,       // matrix to write to the file
+    FILE *f,            // file to write it to, must be already open
+    FILE *fcomments,    // optional file with extra comments, may be NULL
     char *msg
 )
 {
@@ -269,7 +189,7 @@ int LAGraph_MMWrite
     void *X = NULL ;
     GrB_Index *I = NULL, *J = NULL, *K = NULL ;
     GrB_Matrix M = NULL, AT = NULL, C = NULL ;
-    LG_CHECK (A == NULL || f == NULL, -1005, "invalid inputs") ;
+    LG_CHECK (A == NULL || f == NULL, -1001, "inputs are NULL") ;
 
     //--------------------------------------------------------------------------
     // determine the basic matrix properties
@@ -290,14 +210,12 @@ int LAGraph_MMWrite
 
     MM_fmt_enum MM_fmt = MM_coordinate ;
 
-/*  TODO this requires column-major order
     // guard against integer overflow
     if (((double) nrows * (double) ncols < (double) INT64_MAX) &&
         (nvals == nrows * ncols))
     {
         MM_fmt = MM_array ;
     }
-*/
 
     //--------------------------------------------------------------------------
     // determine the entry type
@@ -324,7 +242,7 @@ int LAGraph_MMWrite
     else
     {
         // type not supported
-        LG_CHECK (false, -1006, "unsupported matrix type") ;
+        LG_CHECK (true, -1006, "unsupported matrix type") ;
     }
 
     //--------------------------------------------------------------------------
@@ -469,27 +387,34 @@ int LAGraph_MMWrite
     }
 
     FPRINTF (f, "%%%%GraphBLAS ") ;
-    if      (type == GrB_BOOL  ) FPRINTF (f, "GrB_BOOL\n")
-    else if (type == GrB_INT8  ) FPRINTF (f, "GrB_INT8\n")
-    else if (type == GrB_INT16 ) FPRINTF (f, "GrB_INT16\n")
-    else if (type == GrB_INT32 ) FPRINTF (f, "GrB_INT32\n")
-    else if (type == GrB_INT64 ) FPRINTF (f, "GrB_INT64\n")
-    else if (type == GrB_UINT8 ) FPRINTF (f, "GrB_UINT8\n")
-    else if (type == GrB_UINT16) FPRINTF (f, "GrB_UINT16\n")
-    else if (type == GrB_UINT32) FPRINTF (f, "GrB_UINT32\n")
-    else if (type == GrB_UINT64) FPRINTF (f, "GrB_UINT64\n")
-    else if (type == GrB_FP32  ) FPRINTF (f, "GrB_FP32\n")
-    else if (type == GrB_FP64  ) FPRINTF (f, "GrB_FP64\n")
+    if      (type == GrB_BOOL  ) { FPRINTF (f, "GrB_BOOL\n")   ; }
+    else if (type == GrB_INT8  ) { FPRINTF (f, "GrB_INT8\n")   ; }
+    else if (type == GrB_INT16 ) { FPRINTF (f, "GrB_INT16\n")  ; }
+    else if (type == GrB_INT32 ) { FPRINTF (f, "GrB_INT32\n")  ; }
+    else if (type == GrB_INT64 ) { FPRINTF (f, "GrB_INT64\n")  ; }
+    else if (type == GrB_UINT8 ) { FPRINTF (f, "GrB_UINT8\n")  ; }
+    else if (type == GrB_UINT16) { FPRINTF (f, "GrB_UINT16\n") ; }
+    else if (type == GrB_UINT32) { FPRINTF (f, "GrB_UINT32\n") ; }
+    else if (type == GrB_UINT64) { FPRINTF (f, "GrB_UINT64\n") ; }
+    else if (type == GrB_FP32  ) { FPRINTF (f, "GrB_FP32\n")   ; }
+    else if (type == GrB_FP64  ) { FPRINTF (f, "GrB_FP64\n")   ; }
     #if 0
-    else if (type == GxB_FC32  ) FPRINTF (f, "GxB_FC32\n")
-    else if (type == GxB_FC64  ) FPRINTF (f, "GxB_FC64\n")
+    else if (type == GxB_FC32  ) { FPRINTF (f, "GxB_FC32\n")   ; }
+    else if (type == GxB_FC64  ) { FPRINTF (f, "GxB_FC64\n")   ; }
     #endif
 
     //--------------------------------------------------------------------------
     // include any additional comments
     //--------------------------------------------------------------------------
 
-    // TODO: read comments from the file fcomments, until reaching EOF
+    if (fcomments != NULL)
+    {
+        char buffer [MAXLINE] ;
+        while (fgets (buffer, MAXLINE-1, fcomments) != NULL)
+        {
+            FPRINTF (f, "%%%s", buffer) ;
+        }
+    }
 
     //--------------------------------------------------------------------------
     // print the first line
@@ -543,7 +468,7 @@ int LAGraph_MMWrite
         ctype *X = NULL ;                                                   \
         X = LAGraph_Malloc (nvals, sizeof (ctype)) ;                        \
         LG_CHECK (X == NULL, -1010, "out of memory") ;                      \
-        GrB_TRY (GrB_Matrix_extractTuples (I, J, ARG(X), &nvals, A)) ;      \
+        GrB_TRY (GrB_Matrix_extractTuples (I, J, X, &nvals, A)) ;           \
         LAGraph_TRY (LAGraph_Sort3 ((int64_t *) J, (int64_t *) I,           \
             (int64_t *) K, nvals, nthreads, msg)) ;                         \
         for (int64_t k = 0 ; k < nvals ; k++)                               \
@@ -588,8 +513,6 @@ int LAGraph_MMWrite
         }                                                                   \
         LAGraph_Free ((void **) &X) ;                                       \
     }
-
-    #define ARG(X) X
 
     if      (type == GrB_BOOL   ) WRITE_TUPLES (bool    , 1, 0, 0, 0)
     else if (type == GrB_INT8   ) WRITE_TUPLES (int8_t  , 0, 1, 0, 0)

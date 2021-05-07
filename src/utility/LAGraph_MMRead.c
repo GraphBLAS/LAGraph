@@ -471,9 +471,8 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    LG_CHECK (A == NULL, -1001, "&A is NULL") ;
-    LG_CHECK (A_type == NULL, -1001, "&A_type is NULL") ;
-    LG_CHECK (f == NULL, -1001, "f is NULL") ;
+    LG_CHECK (A == NULL || A_type == NULL || f == NULL, -1001,
+        "inputs are NULL") ;
     (*A) = NULL ;
     (*A_type) = NULL;
 
@@ -752,6 +751,15 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
                 LG_CHECK (true, -1002, "type not supported") ;
             }
 
+            if (MM_storage == MM_skew_symmetric && (type == GrB_BOOL ||
+                type == GrB_UINT8  || type == GrB_UINT16 ||
+                type == GrB_UINT32 || type == GrB_UINT64))
+            {
+                // matrices with unsigned types cannot be skew-symmetric
+                LG_CHECK (true, -1002, "skew-symmetric matrices cannot have an"
+                    " unsigned type") ;
+            }
+
         }
         else if (is_blank_line (buf))
         {
@@ -767,7 +775,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
         {
 
             // -----------------------------------------------------------------
-            // read the first data line and return
+            // read the first data line
             // -----------------------------------------------------------------
 
             // format: [nrows ncols nvals] or just [nrows ncols]
@@ -787,7 +795,16 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
                     MM_storage = MM_general ;
                     type = GrB_FP64 ;
                 }
-                nvals = nrows * ncols ;
+                if (MM_storage == MM_general)
+                {
+                    // dense general matrix
+                    nvals = nrows * ncols ;
+                }
+                else
+                {
+                    // dense symmetric, skew-symmetric, or hermitian matrix
+                    nvals = nrows + ((nrows * nrows - nrows) / 2) ;
+                }
             }
             else if (nitems == 3)
             {
@@ -844,6 +861,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
     // read the entries
     //--------------------------------------------------------------------------
 
+    GrB_Index i = -1, j = 0 ;
     GrB_Index nvals2 = 0 ;
     for (int64_t k = 0 ; k < nvals ; k++)
     {
@@ -852,7 +870,6 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
         // get the next triplet, skipping blank lines and comment lines
         //----------------------------------------------------------------------
 
-        GrB_Index i, j ;
         char x [MAXLINE] ;
 
         for ( ; ; )
@@ -874,19 +891,31 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             // get the row and column index
             //------------------------------------------------------------------
 
-            char *p ;
+            char *p = buf ;
             if (MM_fmt == MM_array)
             {
                 // array format, column major order
-                i = k % nrows ;
-                j = k / nrows ;
-                p = buf ;
+                i++ ;
+                if (i == nrows)
+                {
+                    j++ ;
+                    if (MM_storage == MM_general)
+                    {
+                        // dense matrix in column major order 
+                        i = 0 ;
+                    }
+                    else
+                    {
+                        // dense matrix in column major order, only the lower
+                        // triangular form is present, including the diagonal
+                        i = j ;
+                    }
+                }
                 // printf ("array now [%s]\n", p) ;
             }
             else
             {
                 // coordinate format; read the row and column index
-                p = buf ;
                 LG_CHECK (sscanf (p, "%" SCNu64 " %" SCNu64, &i, &j) != 2,
                     -1002, "indices invalid") ;
                 // convert from 1-based to 0-based.
@@ -936,6 +965,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
                     negate_scalar (type, x) ;
                     GrB_TRY (set_value (*A, type, j, i, x)) ;
                 }
+                #if 0
                 else if (MM_storage == MM_hermitian)
                 {
                     nvals2++ ;
@@ -943,6 +973,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
                     (*value) = conj (*value) ;
                     GrB_TRY (set_value (*A, type, j, i, x)) ;
                 }
+                #endif
             }
 
             // one more entry has been read in
@@ -956,7 +987,6 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
 
     GrB_Index nvals3 = 0 ;
     GrB_TRY (GrB_Matrix_nvals (&nvals3, *A)) ;
-    // printf ("nvals %ld %ld %ld\n", nvals, nvals2, nvals3) ;
     LG_CHECK (nvals2 != nvals3, -1002, "duplicate entries present") ;
     return (0) ;
 }
