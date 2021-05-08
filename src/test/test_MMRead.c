@@ -46,6 +46,7 @@ const matrix_info files [ ] =
     // nrows ncols nvals type         name
     {    7,    7,    30, "GrB_BOOL",  "A.mtx" },
     {    7,    7,    12, "GrB_INT32", "cover.mtx" },
+    {    7,    7,    12, "GrB_BOOL",  "cover_pattern.mtx" },
     { 1138, 1138,  7450, "GrB_BOOL",  "jagmesh7.mtx" },
     {    8,    8,    18, "GrB_BOOL",  "ldbc-cdlp-directed-example.mtx" },
     {    8,    8,    24, "GrB_BOOL",  "ldbc-cdlp-undirected-example.mtx" },
@@ -69,6 +70,7 @@ const matrix_info files [ ] =
     {    6,    6,    10, "GrB_INT64", "tree-example.mtx" },
     {   67,   67,   294, "GrB_FP64",  "west0067.mtx" },
     {   27,   51,   102, "GrB_FP64",  "lp_afiro.mtx" },
+    {   27,   51,   102, "GrB_BOOL",  "lp_afiro_pattern.mtx" },
     {   34,   34,   156, "GrB_BOOL",  "karate.mtx" },
     {    7,    7,    12, "GrB_BOOL",  "matrix_bool.mtx" },
     {    7,    7,    12, "GrB_INT8",  "matrix_int8.mtx" },
@@ -80,6 +82,7 @@ const matrix_info files [ ] =
     {    7,    7,    12, "GrB_UINT32","matrix_uint32.mtx" },
     {    7,    7,    12, "GrB_UINT64","matrix_uint64.mtx" },
     {    7,    7,    12, "GrB_FP32",  "matrix_fp32.mtx" },
+    {    7,    7,    12, "GrB_BOOL",  "matrix_fp32_pattern.mtx" },
     {    7,    7,    12, "GrB_FP64",  "matrix_fp64.mtx" },
     {   67,   67,   294, "GrB_FP64",  "west0067_jumbled.mtx" },
     {    6,    6,    20, "GrB_FP32",  "skew_fp32.mtx" },
@@ -317,8 +320,11 @@ void test_MMRead_failures (void)
 
     // input arguments are NULL
     TEST_CHECK (LAGraph_MMRead (NULL, NULL, NULL, msg) == -1001) ;
+    printf ("msg: [%s]\n", msg) ;
     TEST_CHECK (LAGraph_MMRead (&A, NULL, NULL, msg) == -1001) ;
+    printf ("msg: [%s]\n", msg) ;
     TEST_CHECK (LAGraph_MMRead (&A, &atype, NULL, msg) == -1001) ;
+    printf ("msg: [%s]\n", msg) ;
 
     // matrix files are mangled in some way, or unsupported
     for (int k = 0 ; ; k++)
@@ -508,6 +514,7 @@ void test_MMWrite_failures (void)
 
     // input arguments are NULL
     TEST_CHECK (LAGraph_MMWrite (NULL, NULL, NULL, msg) == -1001) ;
+    printf ("msg: [%s]\n", msg) ;
 
     // attempt to print a matrix with a user-defined type, which should fail
     FILE *f = tmpfile ( ) ;
@@ -516,6 +523,7 @@ void test_MMWrite_failures (void)
     OK (GrB_Matrix_new (&A, atype, 4, 4)) ;
     OK (GxB_print (A, 3)) ;
     int status = LAGraph_MMWrite (A, f, NULL, msg) ;
+    printf ("msg: [%s]\n", msg) ;
     TEST_CHECK (status == -1006) ;
     OK (GrB_free (&atype)) ;
     OK (GrB_free (&A)) ;
