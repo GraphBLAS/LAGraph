@@ -77,7 +77,7 @@ void test_New (void)
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
         OK (fclose (f)) ;
-        OK (GxB_print (A, 2)) ;
+        // OK (GxB_print (A, 2)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
         // create the graph
@@ -98,6 +98,7 @@ void test_New (void)
 
         // free the graph
         OK (LAGraph_Delete (&G, msg)) ;
+        TEST_CHECK (G == NULL) ;
     }
     teardown ( ) ;
 }
@@ -122,6 +123,7 @@ void test_New_failures (void)
     TEST_CHECK (LAGraph_CheckGraph (G, msg) == -2) ;
     printf ("msg: %s\n", msg) ;
     OK (LAGraph_Delete (&G, msg)) ;
+    TEST_CHECK (G == NULL) ;
 
     teardown ( ) ;
 }
