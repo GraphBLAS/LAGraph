@@ -41,6 +41,7 @@ if ( CMAKE_VERSION VERSION_GREATER "3.0" )
     cmake_policy ( SET CMP0042 NEW )
     cmake_policy ( SET CMP0048 NEW )
 endif ( )
+set ( CMAKE_MACOSX_RPATH TRUE )
 
 # version of LAGraph
 set ( LAGraph_DATE "April 1, 2021" )
