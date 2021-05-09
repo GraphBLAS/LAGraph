@@ -32,8 +32,11 @@ void test_dummy_fails(void)
 
 //****************************************************************************
 //****************************************************************************
+
+// uncomment the line below to create an intentional test failure.
+
 TEST_LIST = {
     {"dummy", test_dummy},
-    {"dummy_fails", test_dummy_fails},
+//  {"dummy_fails", test_dummy_fails},
     {NULL, NULL}
 };
