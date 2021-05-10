@@ -14,15 +14,13 @@ jobs:
       uses: actions/checkout@v2.0.0
     - name: Build project
       run: |
+        # clone GraphBLAS next to LAGraph's directory
         pushd .
-        # grab GraphBLAS binaries
-        mkdir graphblas-binaries
-        cd graphblas-binaries
-        export GRAPHBLAS_ROOT=`pwd`
-        wget https://anaconda.org/conda-forge/graphblas/4.0.3/download/osx-64/graphblas-4.0.3-h046ec9c_0.tar.bz2
-        wget https://anaconda.org/conda-forge/graphblas/4.0.3/download/linux-64/graphblas-4.0.3-h9c3ff4c_0.tar.bz2
-        tar xf graphblas-4.0.3-h046ec9c_0.tar.bz2
-        tar xf graphblas-4.0.3-h9c3ff4c_0.tar.bz2
+        cd ..
+        git clone --depth 1 --branch ${{ matrix.grb_version }} https://github.com/DrTimothyAldenDavis/GraphBLAS
+        cd GraphBLAS/build
+        CC=gcc cmake .. -DGBCOMPACT=1
+        JOBS=2 make
         popd
         # build and test LAGraph
         mkdir build
