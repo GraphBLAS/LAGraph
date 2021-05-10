@@ -13,6 +13,12 @@
 #ifndef GRAPH_ZACHARY_KARATE_H
 #define GRAPH_ZACHARY_KARATE_H
 
+// The graph "karate" contains the network of friendships between the 34
+// members of a karate club at a US university, as described by Wayne Zachary
+// in 1977: W. W. Zachary, An information flow model for conflict and fission
+// in small groups, Journal of Anthropological Research 33, 452-473 (1977).
+// This data is also contained in the LAGraph/data/karate.mtx file, in
+// MatrixMarket format.
 
 //****************************************************************************
 GrB_Index const ZACHARY_NUM_NODES = 34;

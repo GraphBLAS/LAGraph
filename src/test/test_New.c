@@ -18,7 +18,7 @@
 
 LAGraph_Graph G = NULL ;
 char msg [LAGRAPH_MSG_LEN] ;
-GrB_Matrix A = NULL, C = NULL ;
+GrB_Matrix A = NULL ;
 GrB_Type atype = NULL ;
 #define LEN 512
 char filename [LEN+1] ;
