@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/test/test_Property_AT.c:  test LAGraph_Property_AT
+// LAGraph/src/test/test_DeleteProperties.c:  test LAGraph_DeleteProperties
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -18,7 +18,7 @@
 
 LAGraph_Graph G = NULL ;
 char msg [LAGRAPH_MSG_LEN] ;
-GrB_Matrix A = NULL, B = NULL ;
+GrB_Matrix A = NULL ;
 GrB_Type atype = NULL ;
 #define LEN 512
 char filename [LEN+1] ;
@@ -42,7 +42,7 @@ void teardown (void)
 }
 
 //------------------------------------------------------------------------------
-// test_Property_AT:  test LAGraph_Property_AT
+// test_DeleteProperties:  test LAGraph_DeleteProperties
 //------------------------------------------------------------------------------
 
 typedef struct
@@ -57,10 +57,12 @@ const matrix_info files [ ] =
     LAGRAPH_ADJACENCY_DIRECTED,   "cover.mtx",
     LAGRAPH_ADJACENCY_DIRECTED,   "ldbc-directed-example.mtx",
     LAGRAPH_ADJACENCY_UNDIRECTED, "ldbc-undirected-example.mtx",
+    LAGRAPH_ADJACENCY_UNDIRECTED, "A.mtx",
+    LAGRAPH_ADJACENCY_UNDIRECTED, "bcsstk13.mtx",
     LAGRAPH_UNKNOWN,              ""
 } ;
 
-void test_Property_AT (void)
+void test_DeleteProperties (void)
 {
     setup ( ) ;
 
@@ -69,54 +71,57 @@ void test_Property_AT (void)
 
         // load the matrix as A
         const char *aname = files [k].name ;
-        int kind = files [k].kind ;
         if (strlen (aname) == 0) break;
+        LAGraph_Kind kind = files [k].kind ;
         TEST_CASE (aname) ;
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
         OK (fclose (f)) ;
-        // GxB_print (A, 2) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
         // construct the graph G with adjacency matrix A
         OK (LAGraph_New (&G, &A, atype, kind, msg)) ;
         TEST_CHECK (A == NULL) ;
 
-        // create the G->AT property
+        // create all properties (see test_Property_* for tests of content)
+        OK (LAGraph_Property_RowDegree (G, msg)) ;
+        OK (LAGraph_Property_ColDegree (G, msg)) ;
         OK (LAGraph_Property_AT (G, msg)) ;
+        OK (LAGraph_Property_ASymmetricPattern (G, msg)) ;
 
-        // try to create it again; this should safely do nothing
-        OK (LAGraph_Property_AT (G, msg)) ;
-
-        // check the result
-        if (kind == LAGRAPH_ADJACENCY_UNDIRECTED)
+        // print them
+        printf ("\nGraph: ndiag %ld, symmetric pattern: %d\n", G->ndiag,
+            G->A_pattern_is_symmetric) ;
+        OK (GxB_print (G->A, 2)) ;
+        OK (GxB_print (G->rowdegree, 2)) ;
+        if (kind == LAGRAPH_ADJACENCY_DIRECTED)
         {
-            TEST_CHECK (G->AT == NULL) ;
+            OK (GxB_print (G->AT, 2)) ;
+            OK (GxB_print (G->coldegree, 3)) ;
         }
         else
         {
-            // ensure G->A and G->AT are transposed of each other;
-            // B = (G->AT)'
-            // GxB_print (G->AT, 2) ;
-            GrB_Index nrows, ncols ;
-            OK (GrB_Matrix_nrows (&nrows, G->A)) ;
-            OK (GrB_Matrix_nrows (&ncols, G->A)) ;
-            OK (GrB_Matrix_new (&B, atype, nrows, ncols)) ;
-            OK (GrB_transpose (B, NULL, NULL, G->AT, NULL)) ;
+            TEST_CHECK (G->AT == NULL) ;
+            TEST_CHECK (G->coldegree == NULL) ;
+        }
 
-            // ensure B and G->A are the same
-            bool GA_and_B_are_identical ;
-            OK (LAGraph_IsEqual (&GA_and_B_are_identical, G->A, B, NULL, msg)) ;
-            TEST_CHECK (GA_and_B_are_identical) ;
-            TEST_MSG ("Test for G->A and B equal failed") ;
-            // GxB_print (B, 2) ;
-            OK (GrB_free (&B)) ;
+        for (int k = 0 ; k <= 1 ; k++)
+        {
+            // delete all the properties
+            OK (LAGraph_DeleteProperties (G, msg)) ;
+            TEST_CHECK (G->AT == NULL) ;
+            TEST_CHECK (G->rowdegree == NULL) ;
+            TEST_CHECK (G->rowdegree_type == NULL) ;
+            TEST_CHECK (G->coldegree == NULL) ;
+            TEST_CHECK (G->coldegree_type == NULL) ;
         }
 
         OK (LAGraph_Delete (&G, msg)) ;
     }
+
+    OK (LAGraph_DeleteProperties (NULL, msg)) ;
 
     teardown ( ) ;
 }
@@ -127,7 +132,7 @@ void test_Property_AT (void)
 
 TEST_LIST =
 {
-    { "Property_AT", test_Property_AT },
+    { "Property_DeleteProperties", test_DeleteProperties },
     { NULL, NULL }
 } ;
 

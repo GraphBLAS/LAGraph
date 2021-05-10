@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/test/test_New.c:  test LAGraph_New
+// LAGraph/src/test/test_New.c:  test LAGraph_New and LAGraph_Delete
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -124,7 +124,9 @@ void test_New_failures (void)
     printf ("msg: %s\n", msg) ;
     OK (LAGraph_Delete (&G, msg)) ;
     TEST_CHECK (G == NULL) ;
-
+    OK (LAGraph_Delete (&G, msg)) ;
+    TEST_CHECK (G == NULL) ;
+    OK (LAGraph_Delete (NULL, msg)) ;
     teardown ( ) ;
 }
 
