@@ -9,7 +9,7 @@
 
 // Contributed by Tim Davis, Texas A&M and Gabor Szarnyas, BME
 
-#include "LAGraph_Test.h"
+#include "LAGraph_demo.h"
 
 #define NTHREAD_LIST 1
 // #define NTHREAD_LIST 2
@@ -79,7 +79,7 @@ int main (int argc, char **argv)
     // read in the graph
     //--------------------------------------------------------------------------
 
-    char *matrix_name = (argc > 1) ? argv [1] : "stdin" ; 
+    char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
     LAGraph_TRY (LAGraph_Test_ReadProblem (&G, NULL,
         false, false, true, NULL, false, argc, argv, msg)) ;
     GrB_Index n, nvals ;
@@ -131,7 +131,7 @@ int main (int argc, char **argv)
              nthreads, t, matrix_name) ;
 
     }
-    
+
     //--------------------------------------------------------------------------
     // check result
     //--------------------------------------------------------------------------
@@ -147,4 +147,3 @@ int main (int argc, char **argv)
     LAGraph_TRY (LAGraph_Finalize (msg)) ;
     return (0) ;
 }
-

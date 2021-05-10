@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include <acutest.h>
 
-#include <LAGraph.h>
+#include <LAGraph_test.h>
 #include <graph_zachary_karate.h>
 
 char msg[LAGRAPH_MSG_LEN];
@@ -120,7 +120,7 @@ void test_TriangleCount_Methods3(void)
     int presort = 2;
     ntriangles = 0UL;
     retval = LAGraph_TriangleCount_Methods(&ntriangles, G, 3, &presort, msg);
-    TEST_CHECK(retval == -6);  // should fail (rowdegrees needs to be defined)
+    TEST_CHECK(retval == -106);  // should fail (rowdegrees needs to be defined)
     TEST_MSG("retval = %d (%s)", retval, msg);
 
     retval = LAGraph_Property_RowDegree(G, msg);
@@ -154,7 +154,7 @@ void test_TriangleCount_Methods4(void)
     int presort = 2;
     ntriangles = 0UL;
     retval = LAGraph_TriangleCount_Methods(&ntriangles, G, 4, &presort, msg);
-    TEST_CHECK(retval == -6);  // should fail (rowdegrees needs to be defined)
+    TEST_CHECK(retval == -106);  // should fail (rowdegrees needs to be defined)
     TEST_MSG("retval = %d (%s)", retval, msg);
 
     retval = LAGraph_Property_RowDegree(G, msg);
@@ -188,7 +188,7 @@ void test_TriangleCount_Methods5(void)
     ntriangles = 0UL;
     ntriangles = 0UL;
     retval = LAGraph_TriangleCount_Methods(&ntriangles, G, 5, &presort, msg);
-    TEST_CHECK(retval == -6);  // should fail (rowdegrees needs to be defined)
+    TEST_CHECK(retval == -106);  // should fail (rowdegrees needs to be defined)
     TEST_MSG("retval = %d (%s)", retval, msg);
 
     retval = LAGraph_Property_RowDegree(G, msg);
@@ -221,7 +221,7 @@ void test_TriangleCount_Methods6(void)
     int presort = 2;
     ntriangles = 0UL;
     retval = LAGraph_TriangleCount_Methods(&ntriangles, G, 6, &presort, msg);
-    TEST_CHECK(retval == -6);  // should fail (rowdegrees needs to be defined)
+    TEST_CHECK(retval == -106);  // should fail (rowdegrees needs to be defined)
     TEST_MSG("retval = %d (%s)", retval, msg);
 
     retval = LAGraph_Property_RowDegree(G, msg);
@@ -312,7 +312,7 @@ void test_TriangleCount_vanilla3(void)
     int presort = 2;
     ntriangles = 0UL;
     retval = LAGraph_TriangleCount_vanilla(&ntriangles, G, 3, &presort, msg);
-    TEST_CHECK(retval == -6);  // should fail (rowdegrees needs to be defined)
+    TEST_CHECK(retval == -106);  // should fail (rowdegrees needs to be defined)
     TEST_MSG("retval = %d (%s)", retval, msg);
 
     retval = LAGraph_Property_RowDegree(G, msg);
@@ -345,7 +345,7 @@ void test_TriangleCount_vanilla4(void)
     int presort = 2;
     ntriangles = 0UL;
     retval = LAGraph_TriangleCount_vanilla(&ntriangles, G, 4, &presort, msg);
-    TEST_CHECK(retval == -6);  // should fail (rowdegrees needs to be defined)
+    TEST_CHECK(retval == -106);  // should fail (rowdegrees needs to be defined)
     TEST_MSG("retval = %d (%s)", retval, msg);
 
     retval = LAGraph_Property_RowDegree(G, msg);
@@ -379,7 +379,7 @@ void test_TriangleCount_vanilla5(void)
     ntriangles = 0UL;
     ntriangles = 0UL;
     retval = LAGraph_TriangleCount_vanilla(&ntriangles, G, 5, &presort, msg);
-    TEST_CHECK(retval == -6);  // should fail (rowdegrees needs to be defined)
+    TEST_CHECK(retval == -106);  // should fail (rowdegrees needs to be defined)
     TEST_MSG("retval = %d (%s)", retval, msg);
 
     retval = LAGraph_Property_RowDegree(G, msg);
@@ -412,7 +412,7 @@ void test_TriangleCount_vanilla6(void)
     int presort = 2;
     ntriangles = 0UL;
     retval = LAGraph_TriangleCount_vanilla(&ntriangles, G, 6, &presort, msg);
-    TEST_CHECK(retval == -6);  // should fail (rowdegrees needs to be defined)
+    TEST_CHECK(retval == -106);  // should fail (rowdegrees needs to be defined)
     TEST_MSG("retval = %d (%s)", retval, msg);
 
     retval = LAGraph_Property_RowDegree(G, msg);

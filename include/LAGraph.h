@@ -728,20 +728,58 @@ int LAGraph_SampleDegree        // returns 0 if successful, -1 if failure
 // graph G is both an input and an output of these methods, since they may be
 // modified.
 
-// Basic method: computes and *saves* any properties.
-// G is input/output.
-
-int LAGraph_BreadthFirstSearch      // returns -1 on failure, 0 if successful
+/****************************************************************************
+ *
+ * Perform breadth-first traversal, computing parent vertex ID's
+ * and/or level encountered.
+ *
+ * @param[out]    level      If non-NULL on input, on successful return, it
+ *                           contains the levels of each vertex reached. The
+ *                           src vertex is assigned level 0. If a vertex i is not
+ *                           reached, parent(i) is not present.
+ *                           The level vector is not computed if NULL.
+ * @param[out]    parent     If non-NULL on input, on successful return, it
+ *                           contains parent vertex IDs for each vertex reached.
+ *                           The src vertex will have itself as its parent. If a
+ *                           vertex i is not reached, parent(i) is not present.
+ *                           The parent vector is not computed if NULL.
+ * @param[in]     G          The graph, directed or undirected.
+ * @param[in]     src        The index of the src vertex (0-based)
+ * @param[in]     pushpull   if true, use push/pull; otherwise, use pushonly.
+ *                           Push/pull requires G->AT, G->rowdegree,
+ *                           and library support.
+ *                           TODO: consider removing this option or reverse logic
+ * @param[out]    msg        Error message if a failure code is returned.
+ *
+ * @todo pick return values that do not conflict with GraphBLAS errors.
+ *
+ * @retval         0         successful
+ * @retval      -102         Graph is invalid (LAGraph_CheckGraph failed)
+ */
+int LAGraph_BreadthFirstSearch
 (
-    // outputs:
-    GrB_Vector *level,      // not computed if NULL
-    GrB_Vector *parent,     // not computed if NULL
-    // inputs:
-    LAGraph_Graph G,        // graph to traverse
-    GrB_Index src,          // source node
-    bool pushpull,          // if true, use push/pull, otherwise pushonly
-    char *msg
+    GrB_Vector    *level,
+    GrB_Vector    *parent,
+    LAGraph_Graph  G,
+    GrB_Index      src,
+    bool           pushpull,
+    char          *msg
 ) ;
+
+/****************************************************************************
+ *
+ *  Temporary entry point.
+ *
+ */
+int LAGraph_BreadthFirstSearch_vanilla
+(
+    GrB_Vector    *level,
+    GrB_Vector    *parent,
+    LAGraph_Graph  G,
+    GrB_Index      src,
+    bool           pushpull,
+    char          *msg
+);
 
 // the following is a draft:
 typedef enum
@@ -847,8 +885,8 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
  * Count the triangles in a graph.
  *
  * @param[out]    ntriangles On successful return, contains the number of tris.
- * @param[in]     G          The graph, symmetric, no self loops, and for some
- *                           methods, must have the row degree property calculated
+ * @param[in]     G          The graph, symmetric, no self loops, and for some methods
+ *                           (3-6), must have the row degree property calculated
  * @param[in]     method     specifies which algorithm to use (todo: use enum)
  *                             0: DISABLED
  *                             1:  Burkhardt:  ntri = sum (sum ((A^2) .* A)) / 6
@@ -876,14 +914,14 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
  * @todo pick return values that do not conflict with GraphBLAS errors.
  *
  * @retval         0         successful
- * @retval        -1         invalid method value
- * @retval        -2         Graph is invalid (LAGraph_Check failed) (todo: number)
- * @retval        -3         ntriangles is NULL
- * @retval        -4         G->ndiag (self loops) is nonzero
- * @retval        -5         graph is not "known" to be symmetric
- * @retval        -6         G->rowdegree was not precalculated (for modes 3-6)
+ * @retval      -101         invalid method value
+ * @retval      -102         Graph is invalid (LAGraph_CheckGraph failed)
+ * @retval      -103         ntriangles is NULL
+ * @retval      -104         G->ndiag (self loops) is nonzero
+ * @retval      -105         graph is not "known" to be symmetric
+ * @retval      -106         G->rowdegree was not precalculated (for modes 3-6)
  */
-int LAGraph_TriangleCount_Methods   // returns 0 if successful, < 0 if failure
+int LAGraph_TriangleCount_Methods
 (
     uint64_t       *ntriangles,
     LAGraph_Graph   G,
@@ -892,23 +930,18 @@ int LAGraph_TriangleCount_Methods   // returns 0 if successful, < 0 if failure
     char           *msg
 ) ;
 
-int LAGraph_TriangleCount_vanilla   // returns 0 if successful, < 0 if failure
+/****************************************************************************
+ *
+ * Count the triangles in a graph.  Temporary entry point.
+ *
+ */
+int LAGraph_TriangleCount_vanilla
 (
-    uint64_t *ntriangles,   // # of triangles
-    // input:
-    LAGraph_Graph G,
-    int method,             // selects the method to use (TODO: enum)
-    // input/output:
-    int *presort,           // controls the presort of the graph (TODO: enum)
-        //  0: no sort
-        //  1: sort by degree, ascending order
-        // -1: sort by degree, descending order
-        //  2: auto selection: no sort if rule is not triggered.  Otherise:
-        //  sort in ascending order for methods 3 and 5, descending ordering
-        //  for methods 4 and 6.  On output, presort is modified to reflect the
-        //  sorting method used (0, -1, or 1).  If presort is NULL on input, no
-        //  sort is performed.
-    char *msg
+    uint64_t      *ntriangles,
+    LAGraph_Graph  G,
+    int            method,
+    int           *presort,
+    char          *msg
 ) ;
 
 #endif

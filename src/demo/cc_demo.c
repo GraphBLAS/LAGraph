@@ -9,7 +9,7 @@
 // Usage: test_cc can be used with both stdin or a file as its input,
 // in either grb or mtx format.
 
-#include "LAGraph_Test.h"
+#include "LAGraph_demo.h"
 
 #define LAGRAPH_FREE_ALL            \
 {                                   \
@@ -88,7 +88,7 @@ int main (int argc, char **argv)
     // read in the graph
     //--------------------------------------------------------------------------
 
-    char *matrix_name = (argc > 1) ? argv [1] : "stdin" ; 
+    char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
     LAGraph_TRY (LAGraph_Test_ReadProblem (&G, NULL,
         true, false, true, NULL, false, argc, argv, msg)) ;
     GrB_Index n, nvals ;
@@ -141,4 +141,3 @@ int main (int argc, char **argv)
     LAGraph_TRY (LAGraph_Finalize (msg)) ;
     return (0) ;
 }
-

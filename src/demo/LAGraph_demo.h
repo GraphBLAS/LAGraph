@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_Test.h: include file for LAGraph/Test2
+// LAGraph_demo.h: include file for LAGraph/src/demo programs
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -9,8 +9,8 @@
 
 // Contributed by Tim Davis, Texas A&M University
 
-#ifndef LAGRAPH_TEST_H
-#define LAGRAPH_TEST_H
+#ifndef LAGRAPH_DEMO_H
+#define LAGRAPH_DEMO_H
 
 #include <LAGraph.h>
 

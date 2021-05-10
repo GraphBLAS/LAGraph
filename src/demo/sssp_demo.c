@@ -14,7 +14,7 @@
 // test_sssp matrix.mtx sourcenodes.mtx delta
 // test_sssp matrix.grb sourcenodes.mtx delta
 
-#include "LAGraph_Test.h"
+#include "LAGraph_demo.h"
 
 // #define NTHREAD_LIST 1
 // #define NTHREAD_LIST 2
@@ -83,7 +83,7 @@ int main (int argc, char **argv)
     // read in the graph
     //--------------------------------------------------------------------------
 
-    char *matrix_name = (argc > 1) ? argv [1] : "stdin" ; 
+    char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
     LAGraph_TRY (LAGraph_Test_ReadProblem (&G, &SourceNodes,
         false, false, false, GrB_INT32, false, argc, argv, msg)) ;
     GrB_Index n, nvals ;
@@ -136,7 +136,7 @@ int main (int argc, char **argv)
             GrB_Index src = -1 ;
             GrB_TRY (GrB_Matrix_extractElement (&src, SourceNodes, trial, 0)) ;
             src-- ;     // convert from 1-based to 0-based
-            double ttrial ; 
+            double ttrial ;
 
             //------------------------------------------------------------------
             // sssp
@@ -175,4 +175,3 @@ int main (int argc, char **argv)
     LAGraph_TRY (LAGraph_Finalize (msg)) ;
     return (0) ;
 }
-

@@ -13,7 +13,7 @@
 // test_bc < matrixfile.mtx
 // test_bc matrixfile.mtx sourcenodes.mtx
 
-#include "LAGraph_Test.h"
+#include "LAGraph_demo.h"
 
 #define NTHREAD_LIST 1
 // #define NTHREAD_LIST 2

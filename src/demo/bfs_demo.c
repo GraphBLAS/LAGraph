@@ -7,7 +7,7 @@
 
 //------------------------------------------------------------------------------
 
-#include "LAGraph_Test.h"
+#include "LAGraph_demo.h"
 
 #define NTHREAD_LIST 6
 #define THREAD_LIST 0
@@ -57,7 +57,7 @@ int main (int argc, char **argv)
 
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;
-    int nthreads_max ; 
+    int nthreads_max ;
     LAGraph_TRY (LAGraph_GetNumThreads (&nthreads_max, NULL)) ;
     if (Nthreads [1] == 0)
     {
@@ -127,12 +127,12 @@ int main (int argc, char **argv)
         printf ("\n------------------------------- threads: %2d\n", nthreads) ;
         for (int trial = 0 ; trial < ntrials ; trial++)
         {
-            int64_t src ; 
+            int64_t src ;
             // src = SourceNodes [trial]
             GrB_TRY (GrB_Matrix_extractElement (&src, SourceNodes, trial, 0)) ;
             src-- ; // convert from 1-based to 0-based
             double ttrial, tic [2] ;
-        
+
             for (int pp = 0 ; pp <= 1 ; pp++)
             {
 
@@ -261,4 +261,3 @@ int main (int argc, char **argv)
     LAGraph_TRY (LAGraph_Finalize (msg)) ;
     return (0) ;
 }
-
