@@ -18,15 +18,15 @@ jobs:
         # grab GraphBLAS binaries
         mkdir graphblas-binaries
         cd graphblas-binaries
-        export GRAPHBLAS_ROOT=`pwd`
-        wget https://anaconda.org/conda-forge/graphblas/4.0.3/download/osx-64/graphblas-4.0.3-h046ec9c_0.tar.bz2
-        wget https://anaconda.org/conda-forge/graphblas/4.0.3/download/linux-64/graphblas-4.0.3-h9c3ff4c_0.tar.bz2
+        export GRAPHBLAS_INCLUDE_DIR=`pwd`/include
+        export GRAPHBLAS_LIBRARY=`pwd`/lib
+        wget --quiet https://anaconda.org/conda-forge/graphblas/4.0.3/download/osx-64/graphblas-4.0.3-h046ec9c_0.tar.bz2
+        wget --quiet https://anaconda.org/conda-forge/graphblas/4.0.3/download/linux-64/graphblas-4.0.3-h9c3ff4c_0.tar.bz2
         tar xf graphblas-4.0.3-h046ec9c_0.tar.bz2
         tar xf graphblas-4.0.3-h9c3ff4c_0.tar.bz2
         popd
         # build and test LAGraph
         mkdir build
         cd build
-        CC=gcc cmake ..
+        CC=gcc cmake .. -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY}
         JOBS=2 make
-        # sudo make install
