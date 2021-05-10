@@ -42,7 +42,7 @@ void teardown (void)
 }
 
 //------------------------------------------------------------------------------
-// test_Property_AT:  test LAGraph_Pattern
+// test_Property_AT:  test LAGraph_Property_AT
 //------------------------------------------------------------------------------
 
 typedef struct
