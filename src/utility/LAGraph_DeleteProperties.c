@@ -8,6 +8,9 @@
 
 //------------------------------------------------------------------------------
 
+// TODO: this should also probably set A_pattern_is_symmetric to unknown,
+// and ndiag to -1
+
 #include "LG_internal.h"
 
 int LAGraph_DeleteProperties    // returns 0 if successful, -1 if failure
@@ -23,7 +26,7 @@ int LAGraph_DeleteProperties    // returns 0 if successful, -1 if failure
     LG_CLEAR_MSG ;
     if (G == NULL)
     {
-        // success: nothing to do
+        // success: nothing to do   TODO: or is this an error?
         return (0) ;
     }
 
