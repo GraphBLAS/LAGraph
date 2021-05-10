@@ -25,7 +25,7 @@ SET_TARGET_PROPERTIES ( lagraph PROPERTIES
     C_STANDARD_REQUIRED 11
     PUBLIC_HEADER "include/LAGraph.h" )
 set_property ( TARGET lagraph PROPERTY C_STANDARD 11 )
-#target_link_libraries(lagraph ${GRAPHBLAS_LIBRARIES})
+target_link_libraries(lagraph ${GRAPHBLAS_LIBRARIES})
 
 #-------------------------------------------------------------------------------
 # static lagraph library properties
@@ -40,7 +40,7 @@ SET_TARGET_PROPERTIES ( lagraph_static PROPERTIES
     C_STANDARD_REQUIRED 11
     PUBLIC_HEADER "include/LAGraph.h" )
 set_property ( TARGET lagraph_static PROPERTY C_STANDARD 11 )
-#target_link_libraries(lagraph_static ${GRAPHBLAS_LIBRARIES})
+target_link_libraries(lagraph_static ${GRAPHBLAS_LIBRARIES})
 
 #-------------------------------------------------------------------------------
 # applications
