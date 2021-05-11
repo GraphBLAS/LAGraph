@@ -8,12 +8,6 @@
 
 //------------------------------------------------------------------------------
 
-// The 3rd parameter has been added, since some memory managers (PMR in C++,
-// and the Rapids Memory Manager) require it passed back to the deallocate
-// method.  For now, size_allocated is the same as nitems*size_of_item, but
-// another memory manager could allocate more space than that, for better
-// performance.
-
 #include "LG_internal.h"
 
 void *LAGraph_Calloc

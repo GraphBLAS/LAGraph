@@ -260,7 +260,7 @@ void test_Property_Degree (void)
 
         for (int trial = 0 ; trial <= 2 ; trial++)
         {
-            // create the G->RowDegree property and check it
+            // create the G->rowdegree property and check it
             OK (LAGraph_Property_RowDegree (G, msg)) ;
             GrB_Index n ;
             OK (GrB_Matrix_nrows (&n, G->A)) ;

@@ -30,16 +30,16 @@
 // the permutation (or P [k] = j if column j is the kth column in the
 // permutation, with byrow false).
 
-#define LAGRAPH_FREE_WORK                   \
-{                                           \
+#define LAGRAPH_FREE_WORK           \
+{                                   \
     LAGraph_Free ((void **) &W) ;   \
     LAGraph_Free ((void **) &D) ;   \
 }
 
-#define LAGRAPH_FREE_ALL                    \
-{                                           \
-    LAGRAPH_FREE_WORK ;                     \
-    LAGraph_Free ((void **) &P) ;    \
+#define LAGRAPH_FREE_ALL            \
+{                                   \
+    LAGRAPH_FREE_WORK ;             \
+    LAGraph_Free ((void **) &P) ;   \
 }
 
 #include "LG_internal.h"
