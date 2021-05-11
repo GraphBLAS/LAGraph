@@ -26,8 +26,7 @@ int LAGraph_Xinit           // returns 0 if successful, -1 if failure
     // check inputs
     //--------------------------------------------------------------------------
 
-    // malloc and free are required; realloc and calloc may be NULL
-
+    // malloc and free are required; realloc is optional
     LG_CLEAR_MSG ;
     LG_CHECK (user_malloc_function == NULL, -1, "malloc is NULL") ;
     LG_CHECK (user_free_function   == NULL, -1, "free is NULL") ;
@@ -37,6 +36,13 @@ int LAGraph_Xinit           // returns 0 if successful, -1 if failure
     //--------------------------------------------------------------------------
 
     #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+
+        #if ( GxB_IMPLEMENTATION >= GxB_VERSION (5,0,2) )
+        // calloc may be NULL
+        #else
+        // calloc is required
+        LG_CHECK (user_calloc_function == NULL, -1, "calloc is NULL") ;
+        #endif
 
         GrB_TRY (GxB_init (GrB_NONBLOCKING,
             user_malloc_function,

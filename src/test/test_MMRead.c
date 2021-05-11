@@ -107,9 +107,11 @@ void setup (void)
     printf ("\nsetup: %s\n", __FILE__) ;
     printf ("data is in [%s]\n", LG_DATA_DIR) ;
     OK (LAGraph_Init (msg)) ;
-    OK (GxB_get (GxB_LIBRARY_NAME, &name)) ;        // FIXME
-    OK (GxB_get (GxB_LIBRARY_DATE, &date)) ;        // FIXME
-    OK (GxB_get (GxB_LIBRARY_VERSION, ver)) ;       // FIXME
+    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    OK (GxB_get (GxB_LIBRARY_NAME, &name)) ;
+    OK (GxB_get (GxB_LIBRARY_DATE, &date)) ;
+    OK (GxB_get (GxB_LIBRARY_VERSION, ver)) ;
+    #endif
 }
 
 //------------------------------------------------------------------------------
@@ -118,7 +120,9 @@ void setup (void)
 
 void teardown (void)
 {
+    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
     printf ("\n%s %d.%d.%d (%s)\n", name, ver [0], ver [1], ver [2], date) ;
+    #endif
     OK (GrB_free (&A)) ;
     OK (GrB_free (&B)) ;
     TEST_CHECK (A == NULL) ;
@@ -167,9 +171,11 @@ void test_MMRead (void)
         TEST_CHECK (nrows == files [k].nrows) ;
         TEST_CHECK (ncols == files [k].ncols) ;
         TEST_CHECK (nvals == files [k].nvals) ;
-        OK (GxB_Matrix_type (&btype, A)) ;      // FIXME
-        OK (GxB_print (btype, 3)) ;     // FIXME
+        #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+        OK (GxB_Matrix_type (&btype, A)) ;
+        OK (GxB_print (btype, 3)) ;
         TEST_CHECK (atype == btype) ;
+        #endif
         OK (GxB_print (A, 2)) ;     // FIXME
 
         const char *tname = typename (atype) ;

@@ -36,7 +36,7 @@ void test_Xinit (void)
     TEST_CHECK (LAGraph_Xinit (NULL, NULL, NULL, free, true, msg) == -1) ;
     printf ("msg: %s\n", msg) ;
 
-    OK (LAGraph_Xinit (malloc, NULL, NULL, free, true, msg)) ;
+    OK (LAGraph_Xinit (malloc, calloc, realloc, free, true, msg)) ;
     printf ("msg: [%s]\n", msg) ;
 
     // LAGraph_Xinit cannot be called twice
