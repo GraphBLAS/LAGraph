@@ -28,8 +28,7 @@ int LAGraph_Property_NDiag  // returns 0 if successful, -1 if failure
     // clear msg and check G
     //--------------------------------------------------------------------------
 
-    GrB_Matrix D = NULL ;
-    GrB_Matrix M = NULL ;
+    GrB_Matrix D = NULL, M = NULL ;
     GrB_Vector d = NULL ;
     LG_CHECK_INIT (G, msg) ;
     G->ndiag = LAGRAPH_UNKNOWN ;
@@ -85,8 +84,6 @@ int LAGraph_Property_NDiag  // returns 0 if successful, -1 if failure
         // D<M,struct> = A
         GrB_TRY (GrB_assign (D, M, NULL, A, GrB_ALL, nrows, GrB_ALL, ncols,
             GrB_DESC_S)) ;
-
-        GxB_print (D, 3) ;
         GrB_TRY (GrB_Matrix_nvals (&(G->ndiag), D)) ;
 
     #endif
