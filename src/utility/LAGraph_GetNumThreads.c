@@ -20,6 +20,8 @@ int LAGraph_GetNumThreads   // returns 0 if successful, or -1 if failure
 {
 
     LG_CLEAR_MSG ;
+    LG_CHECK (nthreads == NULL, -1, "nthreads is NULL") ;
+
     #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
     {
         // SuiteSparse:GraphBLAS: get # of threads from global setting
@@ -27,12 +29,12 @@ int LAGraph_GetNumThreads   // returns 0 if successful, or -1 if failure
     }
     #elif defined ( _OPENMP )
     {
-        // get # of theads from OpenMP global setting
+        // get # of threads from OpenMP global setting
         (*nthreads) = omp_get_max_threads ( ) ;
     }
     #else
     {
-        // single-threade if not using SuiteSparse:GraphBLAS or OpenMP
+        // single-threaded if not using SuiteSparse:GraphBLAS or OpenMP
         (*nthreads) = 1 ;
     }
     #endif

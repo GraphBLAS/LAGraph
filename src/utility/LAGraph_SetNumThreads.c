@@ -17,12 +17,22 @@ int LAGraph_SetNumThreads       // returns 0 if successful, -1 if failure
 )
 {
 
+    LG_CLEAR_MSG ;
+
     #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
-    GrB_TRY (GxB_set (GxB_NTHREADS, nthreads)) ;
+    {
+        // SuiteSparse:GraphBLAS: set # of threads with global setting
+        GrB_TRY (GxB_set (GxB_NTHREADS, nthreads)) ;
+    }
     #elif defined ( _OPENMP )
-    omp_set_num_threads (nthreads) ;
+    {
+        // set # of threads with OpenMP global setting
+        omp_set_num_threads (nthreads) ;
+    }
     #else
-    // nothing to do ...
+    {
+        // nothing to do
+    }
     #endif
 
     return (0) ;
