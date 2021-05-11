@@ -381,6 +381,6 @@ int LAGraph_Test_ReadProblem    // returns 0 if successful, -1 if failure
     printf ("read time: %g\n", t_read) ;
 
     LAGRAPH_FREE_WORK ;
-    LAGraph_TRY (LAGraph_DisplayGraph (*G, 0, msg)) ;
+    LAGraph_TRY (LAGraph_DisplayGraph (*G, 0, stdout, msg)) ;
     return (0) ;
 }

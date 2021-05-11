@@ -8,8 +8,6 @@
 
 //------------------------------------------------------------------------------
 
-// TODO: we should add a FILE *f parameter
-
 #include "LG_internal.h"
 
 int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
@@ -19,6 +17,7 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
                             // 2: summary, 3: all,
                             // 4: same as 2 but with %0.15g for doubles
                             // 5: same as 3 but with %0.15g for doubles
+    FILE *f,                // file to write to, must already be open
     char *msg
 )
 {
@@ -28,6 +27,7 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
+    LG_CHECK (f == NULL, -1001, "f is NULL") ;
     LAGraph_TRY (LAGraph_CheckGraph (G, msg)) ;
     pr = LAGraph_MAX (pr, -1) ;
     pr = LAGraph_MIN (pr, 5) ;
@@ -50,25 +50,25 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
     if (pr >= 0)
     {
         // print the basic scalar properties
-        printf ("Graph: kind: %s, nodes: %ld entries: %ld type: %s\n",
+        FPRINTF (f, "Graph: kind: %s, nodes: %ld entries: %ld type: %s\n",
             kindname, n, nvals, typename) ;
     }
 
     if (pr <= 0) return (0) ;
 
     // print the scalar cached properties
-    printf ("  pattern symmetry: ") ;
+    FPRINTF (f, "  pattern symmetry: ") ;
     switch (G->A_pattern_is_symmetric)
     {
-        case LAGRAPH_FALSE : printf ("unsymmetric") ; break ;
-        case LAGRAPH_TRUE  : printf ("symmetric")   ; break ;
-        default            : printf ("unknown")     ; break ;
+        case LAGRAPH_FALSE : FPRINTF (f, "unsymmetric") ; break ;
+        case LAGRAPH_TRUE  : FPRINTF (f, "symmetric")   ; break ;
+        default            : FPRINTF (f, "unknown")     ; break ;
     }
-    if (G->ndiag >= 0) printf ("  self-edges: %ld", G->ndiag) ;
-    printf ("\n") ;
+    if (G->ndiag >= 0) FPRINTF (f, "  self-edges: %ld", G->ndiag) ;
+    FPRINTF (f, "\n") ;
 
     // pr = LAGraph_MAX (pr, 0) ;
-    printf ("  adjacency matrix: ") ;
+    FPRINTF (f, "  adjacency matrix: ") ;
 
     LAGraph_TRY (LAGraph_Matrix_print_type (A, atype, pr, stdout, msg)) ;
 
@@ -79,14 +79,14 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
     GrB_Matrix AT = G->AT ;
     if (AT != NULL)
     {
-        printf ("  adjacency matrix transposed: ") ;
+        FPRINTF (f, "  adjacency matrix transposed: ") ;
         LAGraph_TRY (LAGraph_Matrix_print_type (AT, atype, pr, stdout, msg)) ;
     }
 
     GrB_Vector rowdegree = G->rowdegree ;
     if (rowdegree != NULL)
     {
-        printf ("  row degree: ") ;
+        FPRINTF (f, "  row degree: ") ;
         LAGraph_TRY (LAGraph_Vector_print_type (rowdegree,
             G->rowdegree_type, pr, stdout, msg)) ;
     }
@@ -94,7 +94,7 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
     GrB_Vector coldegree = G->coldegree ;
     if (coldegree != NULL)
     {
-        printf ("  column degree: ") ;
+        FPRINTF (f, "  column degree: ") ;
         LAGraph_TRY (LAGraph_Vector_print_type (coldegree,
             G->coldegree_type, pr, stdout, msg)) ;
     }

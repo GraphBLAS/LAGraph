@@ -159,12 +159,9 @@ static inline bool read_entry   // returns true if successful, false if failure
 
     while (*p && isspace (*p)) p++ ;   // skip any spaces
 
-    // printf ("read entry [%s]: ", p) ;
-
     if (type == GrB_BOOL)
     {
         if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
-        // printf ("%" PRId64 "\n", ival) ;
         if (ival < 0 || ival > 1)
         {
             // entry out of range
@@ -176,7 +173,6 @@ static inline bool read_entry   // returns true if successful, false if failure
     else if (type == GrB_INT8)
     {
         if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
-        // printf ("%" PRId64 "\n", ival) ;
         if (ival < INT8_MIN || ival > INT8_MAX)
         {
             // entry out of range
@@ -188,7 +184,6 @@ static inline bool read_entry   // returns true if successful, false if failure
     else if (type == GrB_INT16)
     {
         if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
-        // printf ("%" PRId64 "\n", ival) ;
         if (ival < INT16_MIN || ival > INT16_MAX)
         {
             // entry out of range
@@ -200,7 +195,6 @@ static inline bool read_entry   // returns true if successful, false if failure
     else if (type == GrB_INT32)
     {
         if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
-        // printf ("%" PRId64 "\n", ival) ;
         if (ival < INT32_MIN || ival > INT32_MAX)
         {
             // entry out of range
@@ -212,14 +206,12 @@ static inline bool read_entry   // returns true if successful, false if failure
     else if (type == GrB_INT64)
     {
         if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
-        // printf ("%" PRId64 "\n", ival) ;
         int64_t *result = (int64_t *) x ;
         result [0] = (int64_t) ival ;
     }
     else if (type == GrB_UINT8)
     {
         if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
-        // printf ("%" PRId64 "\n", ival) ;
         if (ival < 0 || ival > UINT8_MAX)
         {
             // entry out of range
@@ -231,7 +223,6 @@ static inline bool read_entry   // returns true if successful, false if failure
     else if (type == GrB_UINT16)
     {
         if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
-        // printf ("%" PRId64 "\n", ival) ;
         if (ival < 0 || ival > UINT16_MAX)
         {
             // entry out of range
@@ -243,7 +234,6 @@ static inline bool read_entry   // returns true if successful, false if failure
     else if (type == GrB_UINT32)
     {
         if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
-        // printf ("%" PRId64 "\n", ival) ;
         if (ival < 0 || ival > UINT32_MAX)
         {
             // entry out of range
@@ -256,7 +246,6 @@ static inline bool read_entry   // returns true if successful, false if failure
     {
         uint64_t uval = 1 ;
         if (!pattern && sscanf (p, "%" SCNu64, &uval) != 1) return (false) ;
-        // printf ("%" PRIu64 "\n", uval) ;
         uint64_t *result = (uint64_t *) x ;
         result [0] = (uint64_t) uval ;
     }
@@ -269,7 +258,6 @@ static inline bool read_entry   // returns true if successful, false if failure
     else if (type == GrB_FP64)
     {
         if (!pattern && !read_double (p, &rval)) return (false) ;
-        // printf ("%g\n", rval) ;
         double *result = (double *) x ;
         result [0] = rval ;
     }
@@ -277,10 +265,8 @@ static inline bool read_entry   // returns true if successful, false if failure
     else if (type == GxB_FC32)
     {
         if (!pattern && !read_double (p, &rval)) return (false) ;
-        // printf ("(%g, ", rval) ;
         while (*p && !isspace (*p)) p++ ;   // skip real part
         if (!pattern && !read_double (p, &zval)) return (false) ;
-        // printf ("%g)\n", zval) ;
         float *result = (float *) x ;
         result [0] = (float) rval ;     // real part
         result [1] = (float) zval ;     // imaginary part
@@ -288,10 +274,8 @@ static inline bool read_entry   // returns true if successful, false if failure
     else if (type == GxB_FC64)
     {
         if (!pattern && !read_double (p, &rval)) return (false) ;
-        // printf ("(%g, ", rval) ;
         while (*p && !isspace (*p)) p++ ;   // skip real part
         if (!pattern && !read_double (p, &zval)) return (false) ;
-        // printf ("%g)\n", zval) ;
         double *result = (double *) x ;
         result [0] = rval ;     // real part
         result [1] = zval ;     // imaginary part
@@ -687,8 +671,6 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             // GrB_UINT16, GrB_UINT32, GrB_UINT64, GrB_FP32, GrB_FP64).  The
             // complex types GxB_FC32, GxB_FC64 are not yet supported.
 
-            // printf ("for type: compare [%s]\n", p) ;
-
             if (strncmp (p, "grb_bool", 8) == 0)
             {
                 type = GrB_BOOL ;
@@ -909,7 +891,6 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
                         i = j ;
                     }
                 }
-                // printf ("array now [%s]\n", p) ;
             }
             else
             {
@@ -919,13 +900,11 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
                 // convert from 1-based to 0-based.
                 i-- ;
                 j-- ;
-                // printf ("got (%g,%g)\n", (double) i, (double) j) ;
                 // advance p to the 3rd token to get the value of the entry
                 while (*p &&  isspace (*p)) p++ ;   // skip any leading spaces
                 while (*p && !isspace (*p)) p++ ;   // skip nrows
                 while (*p &&  isspace (*p)) p++ ;   // skip any spaces
                 while (*p && !isspace (*p)) p++ ;   // skip nrows
-                // printf ("now [%s]\n", p) ;
             }
 
             //------------------------------------------------------------------

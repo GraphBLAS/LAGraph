@@ -689,16 +689,6 @@ int LAGraph_KindName        // returns 0 if successful, -1 if failure
     char *msg
 ) ;
 
-// LAGraph_DisplayGraph: print the contents of a graph
-int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
-(
-    LAGraph_Graph G,        // graph to display
-    int pr,                 // 0: nothing, 1: terse, 2: summary, 3: all,
-                            // 4: same as 2 but with %0.15g for doubles
-                            // 5: same as 3 but with %0.15g for doubles
-    char *msg
-) ;
-
 // LAGraph_SortByDegree: sort a graph by its row or column degree
 int LAGraph_SortByDegree    // returns 0 if successful, -1 if failure
 (
@@ -721,6 +711,17 @@ int LAGraph_SampleDegree        // returns 0 if successful, -1 if failure
     bool byrow,             // if true, sample G->rowdegree, else G->coldegree
     int64_t nsamples,       // number of samples
     uint64_t seed,          // random number seed
+    char *msg
+) ;
+
+// LAGraph_DisplayGraph: print the contents of a graph
+int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
+(
+    LAGraph_Graph G,        // graph to display
+    int pr,                 // 0: nothing, 1: terse, 2: summary, 3: all,
+                            // 4: same as 2 but with %0.15g for doubles
+                            // 5: same as 3 but with %0.15g for doubles
+    FILE *f,                // file to write to, must already be open
     char *msg
 ) ;
 

@@ -117,7 +117,7 @@ void test_DisplayGraph (void)
             {
                 printf ("\n########### %s: pr: %d (%s)\n",
                     aname, pr, prwhat (pr)) ;
-                OK (LAGraph_DisplayGraph (G, pr, msg)) ;
+                OK (LAGraph_DisplayGraph (G, pr, stdout, msg)) ;
             }
             OK (LAGraph_Property_AT (G, msg)) ;
             OK (LAGraph_Property_ASymmetricPattern (G, msg)) ;
@@ -137,7 +137,7 @@ void test_DisplayGraph (void)
 //------------------------------------------------------------------------------
 
 #if 0
-void test_DisplayGraph_failures (void)
+void test_DisplayGraph_failures (void)      // TODO
 {
     setup ( ) ;
 
