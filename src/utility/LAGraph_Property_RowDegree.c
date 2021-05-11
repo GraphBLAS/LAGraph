@@ -8,7 +8,17 @@
 
 //------------------------------------------------------------------------------
 
-#define LAGraph_FREE_ALL GrB_free (&rowdegree) ;
+#define LAGraph_FREE_WORK       \
+{                               \
+    GrB_free (&S) ;             \
+    GrB_free (&x) ;             \
+}
+
+#define LAGraph_FREE_ALL        \
+{                               \
+    LAGraph_FREE_WORK ;         \
+    GrB_free (&rowdegree) ;     \
+}
 
 #include "LG_internal.h"
 
@@ -23,7 +33,8 @@ int LAGraph_Property_RowDegree  // 0 if successful, -1 if failure
     // clear msg and check G
     //--------------------------------------------------------------------------
 
-    GrB_Vector rowdegree = NULL ;
+    GrB_Matrix S = NULL ;
+    GrB_Vector rowdegree = NULL, x = NULL ;
     LG_CHECK_INIT (G, msg) ;
 
     if (G->rowdegree != NULL)
@@ -37,20 +48,40 @@ int LAGraph_Property_RowDegree  // 0 if successful, -1 if failure
     //--------------------------------------------------------------------------
 
     GrB_Matrix A = G->A ;
-    GrB_Index n ;
-    GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
+    GrB_Index nrows, ncols ;
+    GrB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
+    GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
 
     //--------------------------------------------------------------------------
     // compute the rowdegree
     //--------------------------------------------------------------------------
 
-    GrB_TRY (GrB_Vector_new (&rowdegree, GrB_INT64, n)) ;
-    GrB_TRY (GrB_assign (rowdegree, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
-    GrB_TRY (GrB_mxv (rowdegree, NULL, GrB_PLUS_INT64,
-        GxB_PLUS_PAIR_INT64,        // FIXME
-        A, rowdegree, NULL)) ;
+    GrB_TRY (GrB_Vector_new (&rowdegree, GrB_INT64, nrows)) ;
+
+    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+
+        // x = zeros (ncols,1)
+        GrB_TRY (GrB_Vector_new (&x, GrB_INT64, ncols)) ;
+        GrB_TRY (GrB_assign (x, NULL, NULL, 0, GrB_ALL, ncols, NULL)) ;
+        // rowdegree = A*x using the PLUS_PAIR semiring
+        GrB_TRY (GrB_mxv (rowdegree, NULL, NULL, GxB_PLUS_PAIR_INT64,
+            A, x, NULL)) ;
+
+    #else
+
+        // S<A,struct> = 1
+        GrB_TRY (GrB_Matrix_new (&S, GrB_INT64, nrows, ncols)) ;
+        GrB_TRY (GrB_Matrix_assign_INT64 (S, A, NULL, (int64_t) 1,
+            GrB_ALL, nrows, GrB_ALL, ncols, GrB_DESC_S)) ;
+        // rowdegree = reduce (S) to vector, using the PLUS_MONOID
+        GrB_TRY (GrB_Matrix_reduce_Monoid (rowdegree, NULL, NULL,
+            GrB_PLUS_MONOID_INT64, S, NULL)) ;
+
+    #endif
+
     G->rowdegree = rowdegree ;
     G->rowdegree_type = GrB_INT64;
 
+    LAGraph_FREE_WORK ;
     return (0) ;
 }
