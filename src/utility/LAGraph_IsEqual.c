@@ -43,8 +43,8 @@ int LAGraph_IsEqual         // returns 0 if successful, -1 if failure
     // compare the type of A and B
     //--------------------------------------------------------------------------
 
-    GrB_TRY (GxB_Matrix_type (&atype, A)) ;
-    GrB_TRY (GxB_Matrix_type (&btype, B)) ;
+    GrB_TRY (GxB_Matrix_type (&atype, A)) ; // FIXME
+    GrB_TRY (GxB_Matrix_type (&btype, B)) ; // FIXME
     if (atype != btype)
     {
         // types differ

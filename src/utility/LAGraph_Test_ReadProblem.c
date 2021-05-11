@@ -15,22 +15,26 @@
 // The matrixfile may also have a grb suffix.
 
 #if defined(GxB_SUITESPARSE_GRAPHBLAS)
-#define LAGRAPH_FREE_WORK           \
-{                                   \
-    GrB_free (&thunk) ;             \
-    GrB_free (&A) ;                 \
-    GrB_free (&A2) ;                \
-    if (f != NULL) fclose (f) ;     \
-    f = NULL ;                      \
-}
+
+    #define LAGRAPH_FREE_WORK           \
+    {                                   \
+        GrB_free (&thunk) ;             \
+        GrB_free (&A) ;                 \
+        GrB_free (&A2) ;                \
+        if (f != NULL) fclose (f) ;     \
+        f = NULL ;                      \
+    }
+
 #else
-#define LAGRAPH_FREE_WORK           \
-{                                   \
-    GrB_free (&A) ;                 \
-    GrB_free (&A2) ;                \
-    if (f != NULL) fclose (f) ;     \
-    f = NULL ;                      \
-}
+
+    #define LAGRAPH_FREE_WORK           \
+    {                                   \
+        GrB_free (&A) ;                 \
+        GrB_free (&A2) ;                \
+        if (f != NULL) fclose (f) ;     \
+        f = NULL ;                      \
+    }
+
 #endif
 
 #define LAGRAPH_FREE_ALL            \

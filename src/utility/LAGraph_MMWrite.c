@@ -198,7 +198,7 @@ int LAGraph_MMWrite
     GrB_Type type ;
     GrB_Index nrows, ncols, nvals ;
 
-    GrB_TRY (GxB_Matrix_type  (&type,  A)) ;
+    GrB_TRY (GxB_Matrix_type  (&type,  A)) ;        // FIXME
     GrB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
     GrB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
@@ -426,11 +426,8 @@ int LAGraph_MMWrite
     if (!is_general)
     {
         // count the entries on the diagonal
-        GrB_TRY (GrB_Matrix_new (&C, type, nrows, ncols)) ;
-        GrB_TRY (GxB_select (C, NULL, NULL, GxB_DIAG, A, NULL, NULL)) ;
         GrB_Index ndiag = 0 ;
-        GrB_TRY (GrB_Matrix_nvals (&ndiag, C)) ;
-        GrB_free (&C) ;
+        LAGraph_TRY (LG_ndiag (&ndiag, A, type, msg)) ;
         // nvals_to_print = # of entries in tril(A), including diagonal
         nvals_to_print = ndiag + (nvals - ndiag) / 2 ;
     }

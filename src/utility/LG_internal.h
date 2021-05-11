@@ -465,4 +465,18 @@ void LG_qsort_3     // sort array A of size 3-by-n, using 3 keys (A [0:2][])
     (A_0 [a] == B_0 [b])                                                    \
 )
 
+//------------------------------------------------------------------------------
+// count entries on the diagonal of a matrix
+//------------------------------------------------------------------------------
+
+int LG_ndiag                // returns 0 if successful, < 0 if failure
+(
+    // output
+    int64_t *ndiag,         // # of entries 
+    // input
+    GrB_Matrix A,           // matrix to count
+    GrB_Type atype,         // type of A
+    char *msg               // error message
+) ;
+
 #endif

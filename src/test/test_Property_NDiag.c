@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/test/test_NDiag.c:  test LAGraph_NDiag
+// LAGraph/src/test/test_Property_NDiag.c:  test LAGraph_Property_NDiag
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -107,10 +107,10 @@ void teardown (void)
 }
 
 //------------------------------------------------------------------------------
-// test_NDiag:  test LAGraph_Property_NDiag
+// test_Property_NDiag:  test LAGraph_Property_NDiag
 //------------------------------------------------------------------------------
 
-void test_NDiag (void)
+void test_Property_NDiag (void)
 {
 
     //--------------------------------------------------------------------------
@@ -166,7 +166,7 @@ void test_NDiag (void)
 
 TEST_LIST =
 {
-    { "NDiag", test_NDiag },
+    { "NDiag", test_Property_NDiag },
     { NULL, NULL }
 } ;
 

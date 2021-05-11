@@ -50,12 +50,14 @@ int LAGraph_Property_ColDegree  // 0 if successful, -1 if failure
     if (G->AT != NULL)
     {
         // G->coldegree = row degree of AT
-        GrB_TRY (GrB_mxv (coldegree, NULL, GrB_PLUS_INT64, GxB_PLUS_PAIR_INT64,
+        GrB_TRY (GrB_mxv (coldegree, NULL, GrB_PLUS_INT64,
+            GxB_PLUS_PAIR_INT64,        // FIXME
             G->AT, coldegree, NULL)) ;
     }
     else
     {
-        GrB_TRY (GrB_mxv (coldegree, NULL, GrB_PLUS_INT64, GxB_PLUS_PAIR_INT64,
+        GrB_TRY (GrB_mxv (coldegree, NULL, GrB_PLUS_INT64,
+            GxB_PLUS_PAIR_INT64,        // FIXME
             A, coldegree, GrB_DESC_T0)) ;
     }
 

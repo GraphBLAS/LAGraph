@@ -64,7 +64,7 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
 
     pr = LAGraph_MAX (pr, 0) ;
 
-    GrB_TRY (GxB_print (A, pr)) ;
+    GrB_TRY (GxB_print (A, pr)) ;       // FIXME
 
     //--------------------------------------------------------------------------
     // display the cached properties
@@ -73,19 +73,19 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
     GrB_Matrix AT = G->AT ;
     if (AT != NULL)
     {
-        GrB_TRY (GxB_print (AT, pr)) ;
+        GrB_TRY (GxB_print (AT, pr)) ;      // FIXME
     }
 
     GrB_Vector rowdegree = G->rowdegree ;
     if (rowdegree != NULL)
     {
-        GrB_TRY (GxB_print (rowdegree, pr)) ;
+        GrB_TRY (GxB_print (rowdegree, pr)) ;       // FIXME
     }
 
     GrB_Vector coldegree = G->coldegree ;
     if (coldegree != NULL)
     {
-        GrB_TRY (GxB_print (coldegree, pr)) ;
+        GrB_TRY (GxB_print (coldegree, pr)) ;       // FIXME
     }
 
     return (0) ;

@@ -66,7 +66,9 @@ int LAGraph_Property_ASymmetricPattern  // 0 if successful, -1 if failure
     //--------------------------------------------------------------------------
 
     GrB_TRY (GrB_Matrix_new (&C, GrB_BOOL, n, n)) ;
-    GrB_TRY (GrB_eWiseMult (C, NULL, NULL, GxB_PAIR_BOOL, A, G->AT, NULL)) ;
+    GrB_TRY (GrB_eWiseMult (C, NULL, NULL,
+        GxB_PAIR_BOOL,      // FIXME
+        A, G->AT, NULL)) ;
 
     GrB_Index nvals1, nvals2 ;
     GrB_TRY (GrB_Matrix_nvals (&nvals1, C)) ;

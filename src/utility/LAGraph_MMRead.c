@@ -616,8 +616,6 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
                 LG_CHECK (true, -1002, "invalid type") ;
             }
 
-            // GxB_print (type, 3) ;
-
             //------------------------------------------------------------------
             // get the storage token
             //------------------------------------------------------------------
@@ -945,8 +943,6 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
 
             nvals2++ ;
             GrB_TRY (set_value (*A, type, i, j, x)) ;
-
-            // GxB_fprint (*A, GxB_COMPLETE, stdout) ;
 
             //------------------------------------------------------------------
             // also set the A(j,i) entry, if symmetric
