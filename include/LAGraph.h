@@ -724,6 +724,60 @@ int LAGraph_SampleDegree        // returns 0 if successful, -1 if failure
     char *msg
 ) ;
 
+// LAGraph_Matrix_print: pretty-print a matrix, determining type automatically
+int LAGraph_Matrix_print
+(
+    GrB_Matrix A,       // matrix to pretty-print to the file
+    int pr,             // print level: -1 nothing, 0: one line, 1: terse,
+                        //      2: summary, 3: all,
+                        //      4: as 2 but with %0.15g for float/double
+                        //      5: as 3 but with %0.15g for float/double
+    FILE *f,            // file to write it to, must be already open; use
+                        // stdout or stderr to print to those locations.
+    char *msg
+) ;
+
+// LAGraph_Matrix_print_type: pretty-print a matrix with a given type
+int LAGraph_Matrix_print_type
+(
+    GrB_Matrix A,       // matrix to pretty-print to the file
+    GrB_Type type,      // type to print
+    int pr,             // print level: -1 nothing, 0: one line, 1: terse,
+                        //      2: summary, 3: all,
+                        //      4: as 2 but with %0.15g for float/double
+                        //      5: as 3 but with %0.15g for float/double
+    FILE *f,            // file to write it to, must be already open; use
+                        // stdout or stderr to print to those locations.
+    char *msg
+) ;
+
+// LAGraph_Vector_print: pretty-print a matrix, determining type automatically
+int LAGraph_Vector_print
+(
+    GrB_Vector v,       // vector to pretty-print to the file
+    int pr,             // print level: -1 nothing, 0: one line, 1: terse,
+                        //      2: summary, 3: all,
+                        //      4: as 2 but with %0.15g for float/double
+                        //      5: as 3 but with %0.15g for float/double
+    FILE *f,            // file to write it to, must be already open; use
+                        // stdout or stderr to print to those locations.
+    char *msg
+) ;
+
+// LAGraph_Vector_print_type: pretty-print a matrix with a given type
+int LAGraph_Vector_print_type
+(
+    GrB_Vector v,       // vector to pretty-print to the file
+    GrB_Type type,      // type to print
+    int pr,             // print level: -1 nothing, 0: one line, 1: terse,
+                        //      2: summary, 3: all,
+                        //      4: as 2 but with %0.15g for float/double
+                        //      5: as 3 but with %0.15g for float/double
+    FILE *f,            // file to write it to, must be already open; use
+                        // stdout or stderr to print to those locations.
+    char *msg
+) ;
+
 //==============================================================================
 // LAGraph Basic algorithms
 //==============================================================================

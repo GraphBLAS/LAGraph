@@ -92,7 +92,6 @@ int LAGraph_SortByDegree    // returns 0 if successful, -1 if failure
     GrB_Index n ;
     GrB_TRY (GrB_Vector_size (&n, Degree)) ;
 
-    // TODO: need to use the future GrB_Context
     #define CHUNK (64*1024)
     int nthreads ;
     LAGraph_TRY (LAGraph_GetNumThreads (&nthreads, msg)) ;

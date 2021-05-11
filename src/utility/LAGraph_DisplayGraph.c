@@ -8,6 +8,8 @@
 
 //------------------------------------------------------------------------------
 
+// TODO: we should add a FILE *f parameter
+
 #include "LG_internal.h"
 
 int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
@@ -36,12 +38,13 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
 
     GrB_Matrix A = G->A ;
     LAGraph_Kind kind = G->kind ;
+    GrB_Type atype = G->A_type ;
 
     GrB_Index n, nvals ;
     GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
     GrB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
     char *typename, *kindname ;
-    LAGraph_TRY (LAGraph_TypeName (&typename, G->A_type, msg)) ;
+    LAGraph_TRY (LAGraph_TypeName (&typename, atype, msg)) ;
     LAGraph_TRY (LAGraph_KindName (&kindname, kind, msg)) ;
 
     if (pr >= 0)
@@ -49,22 +52,25 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
         // print the basic scalar properties
         printf ("Graph: kind: %s, nodes: %ld entries: %ld type: %s\n",
             kindname, n, nvals, typename) ;
-
-        // print the scalar cached properties
-        printf ("    pattern symmetry: ") ;
-        switch (G->A_pattern_is_symmetric)
-        {
-            case LAGRAPH_FALSE : printf ("unsymmetric") ; break ;
-            case LAGRAPH_TRUE  : printf ("symmetric")   ; break ;
-            default            : printf ("unknown")     ; break ;
-        }
-        if (G->ndiag >= 0) printf ("  self-edges: %ld", G->ndiag) ;
-        printf ("\n") ;
     }
 
-    pr = LAGraph_MAX (pr, 0) ;
+    if (pr <= 0) return (0) ;
 
-    GrB_TRY (GxB_print (A, pr)) ;       // FIXME
+    // print the scalar cached properties
+    printf ("  pattern symmetry: ") ;
+    switch (G->A_pattern_is_symmetric)
+    {
+        case LAGRAPH_FALSE : printf ("unsymmetric") ; break ;
+        case LAGRAPH_TRUE  : printf ("symmetric")   ; break ;
+        default            : printf ("unknown")     ; break ;
+    }
+    if (G->ndiag >= 0) printf ("  self-edges: %ld", G->ndiag) ;
+    printf ("\n") ;
+
+    // pr = LAGraph_MAX (pr, 0) ;
+    printf ("  adjacency matrix: ") ;
+
+    LAGraph_TRY (LAGraph_Matrix_print_type (A, atype, pr, stdout, msg)) ;
 
     //--------------------------------------------------------------------------
     // display the cached properties
@@ -73,19 +79,24 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
     GrB_Matrix AT = G->AT ;
     if (AT != NULL)
     {
-        GrB_TRY (GxB_print (AT, pr)) ;      // FIXME
+        printf ("  adjacency matrix transposed: ") ;
+        LAGraph_TRY (LAGraph_Matrix_print_type (AT, atype, pr, stdout, msg)) ;
     }
 
     GrB_Vector rowdegree = G->rowdegree ;
     if (rowdegree != NULL)
     {
-        GrB_TRY (GxB_print (rowdegree, pr)) ;       // FIXME
+        printf ("  row degree: ") ;
+        LAGraph_TRY (LAGraph_Vector_print_type (rowdegree,
+            G->rowdegree_type, pr, stdout, msg)) ;
     }
 
     GrB_Vector coldegree = G->coldegree ;
     if (coldegree != NULL)
     {
-        GrB_TRY (GxB_print (coldegree, pr)) ;       // FIXME
+        printf ("  column degree: ") ;
+        LAGraph_TRY (LAGraph_Vector_print_type (coldegree,
+            G->coldegree_type, pr, stdout, msg)) ;
     }
 
     return (0) ;
