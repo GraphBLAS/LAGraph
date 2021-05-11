@@ -94,12 +94,12 @@ void test_DeleteProperties (void)
         // print them
         printf ("\nGraph: ndiag %ld, symmetric pattern: %d\n", G->ndiag,
             G->A_pattern_is_symmetric) ;
-        OK (GxB_print (G->A, 2)) ;
-        OK (GxB_print (G->rowdegree, 2)) ;
+        OK (GxB_print (G->A, 2)) ;      // FIXME
+        OK (GxB_print (G->rowdegree, 2)) ;      // FIXME
         if (kind == LAGRAPH_ADJACENCY_DIRECTED)
         {
-            OK (GxB_print (G->AT, 2)) ;
-            OK (GxB_print (G->coldegree, 3)) ;
+            OK (GxB_print (G->AT, 2)) ;     // FIXME
+            OK (GxB_print (G->coldegree, 3)) ;      // FIXME
         }
         else
         {

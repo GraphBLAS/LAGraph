@@ -77,7 +77,6 @@ void test_Property_AT (void)
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
         OK (fclose (f)) ;
-        // GxB_print (A, 2) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
         // construct the graph G with adjacency matrix A
@@ -99,7 +98,6 @@ void test_Property_AT (void)
         {
             // ensure G->A and G->AT are transposed of each other;
             // B = (G->AT)'
-            // GxB_print (G->AT, 2) ;
             GrB_Index nrows, ncols ;
             OK (GrB_Matrix_nrows (&nrows, G->A)) ;
             OK (GrB_Matrix_nrows (&ncols, G->A)) ;
@@ -111,7 +109,6 @@ void test_Property_AT (void)
             OK (LAGraph_IsEqual (&GA_and_B_are_identical, G->A, B, NULL, msg)) ;
             TEST_CHECK (GA_and_B_are_identical) ;
             TEST_MSG ("Test for G->A and B equal failed") ;
-            // GxB_print (B, 2) ;
             OK (GrB_free (&B)) ;
         }
 

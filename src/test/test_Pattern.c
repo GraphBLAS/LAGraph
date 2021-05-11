@@ -68,7 +68,6 @@ void test_Pattern (void)
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
         OK (fclose (f)) ;
-        // OK (GxB_print (A, 2)) ;
         TEST_MSG ("Loading of valued matrix failed") ;
 
         // load the pattern as B
@@ -78,7 +77,6 @@ void test_Pattern (void)
         OK (LAGraph_MMRead (&B, &btype, f, msg)) ;
         TEST_CHECK (btype == GrB_BOOL) ;
         OK (fclose (f)) ;
-        // OK (GxB_print (B, 2)) ;
         TEST_MSG ("Loading of pattern matrix failed") ;
 
         // C = pattern (A)

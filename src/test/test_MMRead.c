@@ -107,9 +107,9 @@ void setup (void)
     printf ("\nsetup: %s\n", __FILE__) ;
     printf ("data is in [%s]\n", LG_DATA_DIR) ;
     OK (LAGraph_Init (msg)) ;
-    OK (GxB_get (GxB_LIBRARY_NAME, &name)) ;
-    OK (GxB_get (GxB_LIBRARY_DATE, &date)) ;
-    OK (GxB_get (GxB_LIBRARY_VERSION, ver)) ;
+    OK (GxB_get (GxB_LIBRARY_NAME, &name)) ;        // FIXME
+    OK (GxB_get (GxB_LIBRARY_DATE, &date)) ;        // FIXME
+    OK (GxB_get (GxB_LIBRARY_VERSION, ver)) ;       // FIXME
 }
 
 //------------------------------------------------------------------------------
@@ -167,10 +167,10 @@ void test_MMRead (void)
         TEST_CHECK (nrows == files [k].nrows) ;
         TEST_CHECK (ncols == files [k].ncols) ;
         TEST_CHECK (nvals == files [k].nvals) ;
-        OK (GxB_Matrix_type (&btype, A)) ;
-        OK (GxB_print (btype, 3)) ;
+        OK (GxB_Matrix_type (&btype, A)) ;      // FIXME
+        OK (GxB_print (btype, 3)) ;     // FIXME
         TEST_CHECK (atype == btype) ;
-        OK (GxB_print (A, 2)) ;
+        OK (GxB_print (A, 2)) ;     // FIXME
 
         const char *tname = typename (atype) ;
         TEST_CHECK (tname != NULL) ;
@@ -241,7 +241,7 @@ void test_karate (void)
     OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
     TEST_CHECK (atype == GrB_BOOL) ;
     OK (fclose (f)) ;
-    OK (GxB_print (A, 2)) ;
+    OK (GxB_print (A, 2)) ;     // FIXME
     TEST_MSG ("Loading of A matrix failed: karate matrix") ;
 
     //--------------------------------------------------------------------------
@@ -251,7 +251,7 @@ void test_karate (void)
     OK (GrB_Matrix_new (&B, GrB_BOOL, ZACHARY_NUM_NODES, ZACHARY_NUM_NODES)) ;
     OK (GrB_Matrix_build (B, ZACHARY_I, ZACHARY_J, ZACHARY_V,
         ZACHARY_NUM_EDGES, GrB_LOR)) ;
-    OK (GxB_print (B, 2)) ;
+    OK (GxB_print (B, 2)) ;     // FIXME
     TEST_MSG ("Loading of B matrix failed: karate matrix") ;
 
     //--------------------------------------------------------------------------
@@ -521,7 +521,7 @@ void test_MMWrite_failures (void)
     TEST_CHECK (f != NULL) ;
     OK (GrB_Type_new (&atype, sizeof (mytype))) ;
     OK (GrB_Matrix_new (&A, atype, 4, 4)) ;
-    OK (GxB_print (A, 3)) ;
+    OK (GxB_print (A, 3)) ;     // FIXME
     int status = LAGraph_MMWrite (A, f, NULL, msg) ;
     printf ("msg: [%s]\n", msg) ;
     TEST_CHECK (status == -1006) ;

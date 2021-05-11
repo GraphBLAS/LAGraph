@@ -131,7 +131,6 @@ void test_Property_ASymmetric_Pattern (void)
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
         OK (fclose (f)) ;
-        // GxB_print (A, 2) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
         // construct a directed graph G with adjacency matrix A

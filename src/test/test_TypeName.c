@@ -64,7 +64,6 @@ void test_TypeName (void)
     OK (strcmp (name, "double")) ;
 
     OK (GrB_Type_new (&type, sizeof (myint))) ;
-    // OK (GxB_print (type, 3)) ;
     OK (LAGraph_TypeName (&name, type, msg)) ;
     OK (strcmp (name, "user-defined")) ;
 

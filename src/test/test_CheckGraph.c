@@ -78,7 +78,6 @@ void test_CheckGraph (void)
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
         OK (fclose (f)) ;
-        // OK (GxB_print (A, 2)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
         // create the graph
@@ -132,7 +131,6 @@ void test_CheckGraph_failures (void)
     TEST_CHECK (f != NULL) ;
     OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
     OK (fclose (f)) ;
-    // OK (GxB_print (A, 2)) ;
     TEST_MSG ("Loading of lp_afiro.mtx failed") ;
 
     // create an invalid graph
@@ -153,7 +151,6 @@ void test_CheckGraph_failures (void)
     TEST_CHECK (f != NULL) ;
     OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
     OK (fclose (f)) ;
-    // OK (GxB_print (A, 2)) ;
     TEST_MSG ("Loading of cover.mtx failed") ;
 
     // create an valid graph
