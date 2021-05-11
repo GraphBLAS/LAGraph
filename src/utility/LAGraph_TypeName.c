@@ -41,8 +41,10 @@ int LAGraph_TypeName        // returns 0 if successful, -1 if failure
     else if (type == GrB_UINT64) (*name) = "uint64" ;
     else if (type == GrB_FP32  ) (*name) = "single" ;
     else if (type == GrB_FP64  ) (*name) = "double" ;
+    #if 0
     else if (type == GxB_FC32  ) (*name) = "single complex" ;
     else if (type == GxB_FC64  ) (*name) = "double complex" ;
+    #endif
     else (*name) = "user-defined" ;
 
     return (0) ;

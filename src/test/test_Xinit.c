@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/test/test_Xinit.c:  test LAGraph_Xinit
+// LAGraph/src/test/test_Xinit.c:  test LAGraph_Xinit and LAGraph_Global
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
