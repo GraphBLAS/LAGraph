@@ -258,7 +258,7 @@ void test_Property_Degree (void)
         OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
         TEST_CHECK (A == NULL) ;
 
-        for (int k = 0 ; k <= 2 ; k++)
+        for (int trial = 0 ; trial <= 2 ; trial++)
         {
             // create the G->RowDegree property and check it
             OK (LAGraph_Property_RowDegree (G, msg)) ;
@@ -266,7 +266,7 @@ void test_Property_Degree (void)
             OK (GrB_Matrix_nrows (&n, G->A)) ;
             check_degree (G->rowdegree, n, rowdeg) ;
 
-            if (k == 2)
+            if (trial == 2)
             {
                 // use G->AT to compute G->coldegree 
                 OK (LAGraph_DeleteProperties (G, msg)) ;

@@ -27,6 +27,8 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
 
     LG_CLEAR_MSG ;
     LAGraph_TRY (LAGraph_CheckGraph (G, msg)) ;
+    pr = LAGraph_MAX (pr, -1) ;
+    pr = LAGraph_MIN (pr, 5) ;
 
     //--------------------------------------------------------------------------
     // display the primary graph components
@@ -59,6 +61,8 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
         if (G->ndiag >= 0) printf ("  self-edges: %ld", G->ndiag) ;
         printf ("\n") ;
     }
+
+    pr = LAGraph_MAX (pr, 0) ;
 
     GrB_TRY (GxB_print (A, pr)) ;
 

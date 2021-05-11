@@ -8,9 +8,6 @@
 
 //------------------------------------------------------------------------------
 
-// TODO: this should also probably set A_pattern_is_symmetric to unknown,
-// and ndiag to -1
-
 #include "LG_internal.h"
 
 int LAGraph_DeleteProperties    // returns 0 if successful, -1 if failure
@@ -26,7 +23,7 @@ int LAGraph_DeleteProperties    // returns 0 if successful, -1 if failure
     LG_CLEAR_MSG ;
     if (G == NULL)
     {
-        // success: nothing to do   TODO: or is this an error?
+        // success: nothing to do
         return (0) ;
     }
 
@@ -39,6 +36,13 @@ int LAGraph_DeleteProperties    // returns 0 if successful, -1 if failure
     G->rowdegree_type = NULL;
     GrB_TRY (GrB_free (&(G->coldegree))) ;
     G->coldegree_type = NULL;
+
+    //--------------------------------------------------------------------------
+    // clear the scalar properties of the graph
+    //--------------------------------------------------------------------------
+
+    G->A_pattern_is_symmetric = LAGRAPH_UNKNOWN ;
+    G->ndiag = LAGRAPH_UNKNOWN ;
 
     // success
     return (0) ;

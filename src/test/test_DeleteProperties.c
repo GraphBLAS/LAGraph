@@ -107,7 +107,7 @@ void test_DeleteProperties (void)
             TEST_CHECK (G->coldegree == NULL) ;
         }
 
-        for (int k = 0 ; k <= 1 ; k++)
+        for (int trial = 0 ; trial <= 1 ; trial++)
         {
             // delete all the properties
             OK (LAGraph_DeleteProperties (G, msg)) ;

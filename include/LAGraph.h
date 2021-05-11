@@ -439,6 +439,13 @@ int LAGraph_Property_ColDegree  // 0 if successful, -1 if failure
     char *msg
 ) ;
 
+// LAGraph_Property_NDiag: determine G->ndiag
+int LAGraph_Property_NDiag  // returns 0 if successful, -1 if failure
+(
+    LAGraph_Graph G,        // graph to compute G->ndiag for
+    char *msg
+) ;
+
 // LAGraph_CheckGraph: determine if a graph is valid
 int LAGraph_CheckGraph      // returns 0 if successful, -1 if failure
 (
