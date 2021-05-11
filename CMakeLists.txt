@@ -177,69 +177,6 @@ else ( )
 endif ( )
 
 #-------------------------------------------------------------------------------
-# select the threading library 
-#-------------------------------------------------------------------------------
-
-if ( USER_OPENMP )
-    # user insists on OpenMP synchronization inside LAGraph
-    message ( STATUS "cmake -DUSER_OPENMP=1: insisting on using OpenMP" )
-    set ( USE_OPENMP true )
-elseif ( USER_POSIX )
-    # user insists on POSIX synchronization inside LAGraph
-    message ( STATUS "cmake -DUSER_POSIX=1: insisting on using POSIX" )
-    set ( USE_POSIX true )
-elseif ( USER_NONE )
-    message ( STATUS "cmake -DUSER_NONE=1: insisting on using no threading" )
-    set ( USE_NONE true )
-else ( )
-    # default: automatic selection
-    if ( OPENMP_FOUND )
-        set ( USE_OPENMP true )
-        message ( STATUS "Automatic selection of synchronization method: openmp" )
-    elseif ( CMAKE_USE_PTHREADS_INIT )
-        set ( USE_POSIX true )
-        message ( STATUS "Automatic selection of synchronization method: pthreads" )
-    endif ( )
-endif ( )
-
-# add the threading library
-# if ( USE_OPENMP )
-#     # use OpenMP
-#     message ( STATUS "Using OpenMP to synchronize user threads" )
-#     target_link_libraries ( lagraph        m ${OpenMP_C_LIBRARIES} )
-#     target_link_libraries ( lagraph_static m ${OpenMP_C_LIBRARIES} )
-#     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS} -DUSER_OPENMP_THREADS " )
-# elseif ( USE_POSIX )
-#     # use POSIX
-#     message ( STATUS "Using POSIX pthreads to synchronize user threads" )
-#     target_link_libraries ( lagraph        m )
-#     target_link_libraries ( lagraph_static m )
-#     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -pthread -DUSER_POSIX_THREADS " )
-# else ( )
-#     # use no threading at all
-#     message ( WARNING "No support for user threads; LAGraph will not be thread-safe" )
-#     target_link_libraries ( lagraph        m )
-#     target_link_libraries ( lagraph_static m )
-#     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DUSER_NO_THREADS " )
-# endif ( )
-
-# if ( CMAKE_THREAD_LIBS_INIT )
-#     target_link_libraries ( lagraph        ${CMAKE_THREAD_LIBS_INIT} )
-#     target_link_libraries ( lagraph_static ${CMAKE_THREAD_LIBS_INIT} )
-# endif ( )
-
-# target_link_libraries ( lagraph        ${GRAPHBLAS_LIBRARIES} )
-# target_link_libraries ( lagraph_static ${GRAPHBLAS_LIBRARIES} )
-
-# if ( CMAKE_USE_PTHREADS_INIT )
-#     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DHAVE_PTHREADS " )
-# endif ( )
-
-# if ( CMAKE_USE_WIN32_THREADS_INIT )
-#     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DHAVE_WINDOWS_THREADS " )
-# endif ( )
-
-#-------------------------------------------------------------------------------
 # print final C flags
 #-------------------------------------------------------------------------------
 
