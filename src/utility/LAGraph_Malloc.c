@@ -8,18 +8,12 @@
 
 //------------------------------------------------------------------------------
 
-// The 3rd parameter has been added, since some memory managers (PMR in C++,
-// and the Rapids Memory Manager) require it passed back to the deallocate
-// method.  For now, size_allocated is the same as nitems*size_of_item, but
-// another memory manager could allocate more space than that, for better
-// performance.
-
 #include "LG_internal.h"
 
 void *LAGraph_Malloc
 (
     size_t nitems,          // number of items
-    size_t size_of_item     // size of each item   TODO: refactor to one parameter
+    size_t size_of_item     // size of each item
 )
 {
 
@@ -32,7 +26,7 @@ void *LAGraph_Malloc
     // compute the size and check for integer overflow
     size_t size ;
     bool ok = LG_Multiply_size_t (&size, nitems, size_of_item) ;
-    if (!ok || nitems > GxB_INDEX_MAX || size_of_item > GxB_INDEX_MAX)
+    if (!ok || nitems > LAGRAPH_INDEX_MAX || size_of_item > LAGRAPH_INDEX_MAX)
     {
         // overflow
         return (NULL) ;

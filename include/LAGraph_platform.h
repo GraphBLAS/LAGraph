@@ -52,10 +52,22 @@
 // GraphBLAS platform specifics
 
 // what is the correct system 64-bit maximum integer?
-#if defined(GxB_SUITESPARSE_GRAPHBLAS)
-   #define LAGRAPH_INDEX_MAX GxB_INDEX_MAX
+#if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    #define LAGRAPH_INDEX_MAX GxB_INDEX_MAX
 #else
-   #define LAGRAPH_INDEX_MAX ULONG_MAX
+    // Note by Tim: ULONG_MAX will break all kinds of things, like
+    // malloc/calloc/realloc/free wrappers, which guard against size_t
+    // overflow, but will fail unless RSIZE_MAX is used (at least).
+    // SIZE_MAX is the largest size_t, and INT64_MAX is the
+    // largest signed int64_t.  However, the ANSI C11 standard recommends
+    // a definition of RSIZE_MAX, which guards against overflow, as something
+    // smaller than SIZE_MAX.  So instead of this value:
+
+    // #define LAGRAPH_INDEX_MAX ULONG_MAX
+
+    // I recommend just using 2^60.
+    // This definition is the same as GxB_INDEX_MAX in SuiteSparse:GraphBLAS:
+    #define LAGRAPH_INDEX_MAX ((GrB_Index) (1ULL << 60))
 #endif
 
 #endif  // LAGRAPH_PLATFORM_H

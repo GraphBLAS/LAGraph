@@ -30,7 +30,7 @@
 //------------------------------------------------------------------------------
 
 #define LAGRAPH_RANDOM15_MAX 32767
-#define LAGRAPH_RANDOM60_MAX (GxB_INDEX_MAX-1)
+#define LAGRAPH_RANDOM60_MAX (LAGRAPH_INDEX_MAX-1)
 
 // return a random number between 0 and LAGRAPH_RANDOM15_MAX
 static inline GrB_Index LAGraph_Random15 (uint64_t *seed)

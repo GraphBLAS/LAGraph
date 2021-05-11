@@ -32,7 +32,7 @@ void *LAGraph_Calloc
     // compute the size and check for integer overflow
     size_t size ;
     bool ok = LG_Multiply_size_t (&size, nitems, size_of_item) ;
-    if (!ok || nitems > GxB_INDEX_MAX || size_of_item > GxB_INDEX_MAX)
+    if (!ok || nitems > LAGRAPH_INDEX_MAX || size_of_item > LAGRAPH_INDEX_MAX)
     {
         // overflow
         return (NULL) ;
