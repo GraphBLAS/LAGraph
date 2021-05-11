@@ -24,6 +24,7 @@ int LAGraph_Toc             // 0 if successful, -1 on failure
 
     LG_CLEAR_MSG ;
     LG_CHECK (t == NULL, -1, "&t is NULL") ;
+    LG_CHECK (tic == NULL, -1, "tic is NULL") ;
 
     //--------------------------------------------------------------------------
     // get the time since the last call to LAGraph_Toc

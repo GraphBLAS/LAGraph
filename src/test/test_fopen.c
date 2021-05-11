@@ -28,6 +28,12 @@ void test_fopen(void)
     fclose (f) ;
 }
 
+void test_fopen_failure (void)
+{
+    FILE *f = fopen ("garbage", "r") ;
+    TEST_CHECK (f == NULL) ;
+}
+
 //-----------------------------------------------------------------------------
 // run the test
 //-----------------------------------------------------------------------------
@@ -35,5 +41,6 @@ void test_fopen(void)
 TEST_LIST =
 {
     { "fopen", test_fopen },
+    { "fopen_failure", test_fopen_failure },
     { NULL, NULL }
 } ;
