@@ -624,6 +624,7 @@ int LAGraph_Toc             // returns 0 if successful, -1 if failure
  *
  */
 
+// LAGraph_MMRead: read a matrix in MatrixMarket format
 int LAGraph_MMRead
 (
     GrB_Matrix *A,          // handle of matrix to create
@@ -632,6 +633,7 @@ int LAGraph_MMRead
     char *msg
 );
 
+// LAGraph_MMWrite: write a matrix in MatrixMarket format
 int LAGraph_MMWrite
 (
     GrB_Matrix A,       // matrix to write to the file
@@ -640,32 +642,11 @@ int LAGraph_MMWrite
     char *msg
 ) ;
 
-// TODO: compression
-
 // LAGraph_Pattern: return the pattern of a matrix (spones(A) in MATLAB)
 int LAGraph_Pattern     // return 0 if successful, -1 if failure
 (
     GrB_Matrix *C,      // a boolean matrix with the pattern of A
     GrB_Matrix A,
-    char *msg
-) ;
-
-// LAGraph_IsEqual_type: compare two matrices for exact equality
-int LAGraph_IsEqual_type    // returns 0 if successful, < 0 if failure
-(
-    bool *result,           // true if A == B, false if A != B or error
-    GrB_Matrix A,
-    GrB_Matrix B,
-    GrB_Type type,          // use GrB_EQ_type operator to compare A and B
-    char *msg
-) ;
-
-// LAGraph_IsEqual: compare for exact equality, auto selection of type
-int LAGraph_IsEqual         // returns 0 if successful, -1 if failure
-(
-    bool *result,           // true if A == B, false if A != B or error
-    GrB_Matrix A,
-    GrB_Matrix B,
     char *msg
 ) ;
 
@@ -718,6 +699,25 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
                             // 4: same as 2 but with %0.15g for doubles
                             // 5: same as 3 but with %0.15g for doubles
     FILE *f,                // file to write to, must already be open
+    char *msg
+) ;
+
+// LAGraph_IsEqual: compare for exact equality, auto selection of type
+int LAGraph_IsEqual         // returns 0 if successful, -1 if failure
+(
+    bool *result,           // true if A == B, false if A != B or error
+    GrB_Matrix A,
+    GrB_Matrix B,
+    char *msg
+) ;
+
+// LAGraph_IsEqual_type: compare two matrices for exact equality
+int LAGraph_IsEqual_type    // returns 0 if successful, < 0 if failure
+(
+    bool *result,           // true if A == B, false if A != B or error
+    GrB_Matrix A,
+    GrB_Matrix B,
+    GrB_Type type,          // use GrB_EQ_type operator to compare A and B
     char *msg
 ) ;
 
