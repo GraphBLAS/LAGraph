@@ -106,7 +106,8 @@ void test_Property_AT (void)
 
             // ensure B and G->A are the same
             bool GA_and_B_are_identical ;
-            OK (LAGraph_IsEqual (&GA_and_B_are_identical, G->A, B, NULL, msg)) ;
+            OK (LAGraph_IsEqual_type (&GA_and_B_are_identical, G->A, B, atype,
+                msg)) ;
             TEST_CHECK (GA_and_B_are_identical) ;
             TEST_MSG ("Test for G->A and B equal failed") ;
             OK (GrB_free (&B)) ;

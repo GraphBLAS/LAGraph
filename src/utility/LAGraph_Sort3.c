@@ -11,7 +11,7 @@
 // A parallel mergesort of an array of 3-by-n integers.  Each key
 // consists of three integers.
 
-#define LAGRAPH_FREE_ALL LAGraph_Free ((void **) &W) ;
+#define LAGraph_FREE_ALL LAGraph_Free ((void **) &W) ;
 
 #include "LG_internal.h"
 
@@ -488,6 +488,6 @@ int LAGraph_Sort3    // sort array A of size 3-by-n, using 3 keys (A [0:2][])
     // free workspace and return result
     //--------------------------------------------------------------------------
 
-    LAGRAPH_FREE_ALL ;
+    LAGraph_FREE_ALL ;
     return (0) ;
 }

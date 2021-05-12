@@ -30,15 +30,15 @@
 // the permutation (or P [k] = j if column j is the kth column in the
 // permutation, with byrow false).
 
-#define LAGRAPH_FREE_WORK           \
+#define LAGraph_FREE_WORK           \
 {                                   \
     LAGraph_Free ((void **) &W) ;   \
     LAGraph_Free ((void **) &D) ;   \
 }
 
-#define LAGRAPH_FREE_ALL            \
+#define LAGraph_FREE_ALL            \
 {                                   \
-    LAGRAPH_FREE_WORK ;             \
+    LAGraph_FREE_WORK ;             \
     LAGraph_Free ((void **) &P) ;   \
 }
 
@@ -155,7 +155,7 @@ int LAGraph_SortByDegree    // returns 0 if successful, -1 if failure
     // free workspace and return result
     //--------------------------------------------------------------------------
 
-    LAGRAPH_FREE_WORK ;
+    LAGraph_FREE_WORK ;
     (*P_handle) = P ;
     return (0) ;
 }

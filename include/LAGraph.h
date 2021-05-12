@@ -650,26 +650,22 @@ int LAGraph_Pattern     // return 0 if successful, -1 if failure
     char *msg
 ) ;
 
-// LAGraph_IsEqual: compare two matrices for exact equality
+// LAGraph_IsEqual_type: compare two matrices for exact equality
+int LAGraph_IsEqual_type    // returns 0 if successful, < 0 if failure
+(
+    bool *result,           // true if A == B, false if A != B or error
+    GrB_Matrix A,
+    GrB_Matrix B,
+    GrB_Type type,          // use GrB_EQ_type operator to compare A and B
+    char *msg
+) ;
+
+// LAGraph_IsEqual: compare for exact equality, auto selection of type
 int LAGraph_IsEqual         // returns 0 if successful, -1 if failure
 (
     bool *result,           // true if A == B, false if A != B or error
     GrB_Matrix A,
     GrB_Matrix B,
-    GrB_BinaryOp op,        // for A and B with arbitrary user-defined types.
-                            // Ignored if A and B have built-in types.
-    char *msg
-) ;
-
-// LAGraph_IsAll: compare two matrices (types can differ)
-int LAGraph_IsAll           // returns 0 if successful, -1 if failure
-(
-    bool *result,           // true if A == B, false if A != B or error
-    GrB_Matrix A,
-    GrB_Matrix B,
-    GrB_BinaryOp op,        // GrB_EQ_<type>, for the type of A and B,
-                            // to check for equality.  Or use any desired
-                            // operator.  The operator should return GrB_BOOL.
     char *msg
 ) ;
 

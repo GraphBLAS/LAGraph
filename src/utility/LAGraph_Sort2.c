@@ -11,7 +11,7 @@
 // A parallel mergesort of an array of 2-by-n integers.  Each key
 // consists of two integers.
 
-#define LAGRAPH_FREE_ALL LAGraph_Free ((void **) &W) ;
+#define LAGraph_FREE_ALL LAGraph_Free ((void **) &W) ;
 
 #include "LG_internal.h"
 
@@ -475,6 +475,6 @@ int LAGraph_Sort2    // sort array A of size 2-by-n, using 2 keys (A [0:1][])
     // free workspace and return result
     //--------------------------------------------------------------------------
 
-    LAGRAPH_FREE_ALL ;
+    LAGraph_FREE_ALL ;
     return (0) ;
 }

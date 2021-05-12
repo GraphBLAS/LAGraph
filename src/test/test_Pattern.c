@@ -84,7 +84,8 @@ void test_Pattern (void)
 
         // ensure B and C are the same
         bool C_and_B_are_identical ;
-        OK (LAGraph_IsEqual (&C_and_B_are_identical, C, B, NULL, msg)) ;
+        OK (LAGraph_IsEqual_type (&C_and_B_are_identical, C, B, GrB_BOOL,
+            msg)) ;
         TEST_CHECK (C_and_B_are_identical) ;
         TEST_MSG ("Test for C and B equal failed") ;
 

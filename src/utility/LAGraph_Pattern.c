@@ -10,9 +10,9 @@
 
 // LAGraph_pattern: return the pattern of a matrix as a boolean matrix.
 
-#include "LG_internal.h"
+#define LAGraph_FREE_ALL GrB_free (C) ;
 
-#define LAGRAPH_FREE_ALL GrB_free (C) ;
+#include "LG_internal.h"
 
 int LAGraph_Pattern     // return 0 if successful, -1 if failure
 (

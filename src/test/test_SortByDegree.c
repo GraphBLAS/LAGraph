@@ -211,7 +211,8 @@ void test_SortByDegree (void)
                 // if G->A is symmetric, then continue the outer iteration to
                 // create an undirected graph.  Otherwise just do the directed
                 // graph
-                OK (LAGraph_IsEqual (&is_symmetric, G->A, G->AT, NULL, msg)) ;
+                OK (LAGraph_IsEqual_type (&is_symmetric, G->A, G->AT,
+                    atype, msg)) ;
                 if (!is_symmetric)
                 {
                     printf ("matrix is unsymmetric; skip undirected case\n") ;

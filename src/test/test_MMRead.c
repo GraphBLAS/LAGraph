@@ -205,7 +205,7 @@ void test_MMRead (void)
 
         TEST_CHECK (atype == btype) ;
         bool A_and_B_are_identical ;
-        OK (LAGraph_IsEqual (&A_and_B_are_identical, A, B, NULL, msg)) ;
+        OK (LAGraph_IsEqual_type (&A_and_B_are_identical, A, B, atype, msg)) ;
         TEST_CHECK (A_and_B_are_identical) ;
         TEST_MSG ("Failed test for equality, file: %s\n", aname) ;
 
@@ -264,7 +264,7 @@ void test_karate (void)
     //--------------------------------------------------------------------------
 
     bool A_and_B_are_identical ;
-    OK (LAGraph_IsEqual (&A_and_B_are_identical, A, B, NULL, msg)) ;
+    OK (LAGraph_IsEqual_type (&A_and_B_are_identical, A, B, GrB_BOOL, msg)) ;
     TEST_CHECK (A_and_B_are_identical) ;
     TEST_MSG ("Test for A and B equal failed: karate matrix") ;
 
@@ -395,7 +395,7 @@ void test_jumbled (void)
     //--------------------------------------------------------------------------
 
     bool A_and_B_are_identical ;
-    OK (LAGraph_IsEqual (&A_and_B_are_identical, A, B, NULL, msg)) ;
+    OK (LAGraph_IsEqual_type (&A_and_B_are_identical, A, B, atype, msg)) ;
     TEST_CHECK (A_and_B_are_identical) ;
     TEST_MSG ("Test for A and B equal failed: west0067_jumbled.mtx matrix") ;
 
@@ -487,7 +487,7 @@ void test_MMWrite (void)
         //----------------------------------------------------------------------
 
         bool A_and_B_are_identical ;
-        OK (LAGraph_IsEqual (&A_and_B_are_identical, A, B, NULL, msg)) ;
+        OK (LAGraph_IsEqual_type (&A_and_B_are_identical, A, B, atype, msg)) ;
         TEST_CHECK (A_and_B_are_identical) ;
         TEST_MSG ("Test for A and B equal failed: %s", filename) ;
 

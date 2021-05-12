@@ -16,7 +16,7 @@
 
 #if defined(GxB_SUITESPARSE_GRAPHBLAS)
 
-    #define LAGRAPH_FREE_WORK           \
+    #define LAGraph_FREE_WORK           \
     {                                   \
         GrB_free (&thunk) ;             \
         GrB_free (&A) ;                 \
@@ -27,7 +27,7 @@
 
 #else
 
-    #define LAGRAPH_FREE_WORK           \
+    #define LAGraph_FREE_WORK           \
     {                                   \
         GrB_free (&A) ;                 \
         GrB_free (&A2) ;                \
@@ -37,11 +37,11 @@
 
 #endif
 
-#define LAGRAPH_FREE_ALL            \
+#define LAGraph_FREE_ALL            \
 {                                   \
-    LAGRAPH_FREE_WORK ;             \
+    LAGraph_FREE_WORK ;             \
     LAGraph_Delete (G, NULL) ;      \
-    GrB_free (SourceNodes) ;        \
+    GrB_free (src_nodes) ;          \
 }
 
 #include "LG_internal.h"
@@ -316,7 +316,7 @@ int LAGraph_Test_ReadProblem    // returns 0 if successful, -1 if failure
         {
             // make sure G->A is symmetric
             bool sym ;
-            LAGraph_TRY (LAGraph_IsEqual (&sym, (*G)->A, (*G)->AT, NULL, msg)) ;
+            LAGraph_TRY (LAGraph_IsEqual (&sym, (*G)->A, (*G)->AT, msg)) ;
             if (!sym)
             {
                 GrB_BinaryOp op = NULL ;
@@ -380,7 +380,7 @@ int LAGraph_Test_ReadProblem    // returns 0 if successful, -1 if failure
     LAGraph_TRY (LAGraph_Toc (&t_read, tic, msg)) ;
     printf ("read time: %g\n", t_read) ;
 
-    LAGRAPH_FREE_WORK ;
+    LAGraph_FREE_WORK ;
     LAGraph_TRY (LAGraph_DisplayGraph (*G, 0, stdout, msg)) ;
     return (0) ;
 }
