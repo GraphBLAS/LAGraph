@@ -108,10 +108,6 @@ void test_BreadthFirstSearch_invalid_graph(void)
     TEST_CHECK(retval == -101);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LAGraph_BreadthFirstSearch_vanilla(NULL, NULL, graph, 0, false, msg);
-    TEST_CHECK(retval == -101);
-    TEST_MSG("retval = %d (%s)", retval, msg);
-
     teardown();
 }
 
@@ -130,14 +126,6 @@ void test_BreadthFirstSearch_invalid_src(void)
     TEST_MSG("retval = %d (%s)", retval, msg);
 
     retval = LAGraph_BreadthFirstSearch(NULL, &parent, G, n, false, msg);
-    TEST_CHECK(retval == -102);
-    TEST_MSG("retval = %d (%s)", retval, msg);
-
-    retval = LAGraph_BreadthFirstSearch_vanilla(NULL, NULL, G, n, false, msg);
-    TEST_CHECK(retval == 0);
-    TEST_MSG("retval = %d (%s)", retval, msg);
-
-    retval = LAGraph_BreadthFirstSearch_vanilla(NULL, &parent, G, n, false, msg);
     TEST_CHECK(retval == -102);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
@@ -160,11 +148,6 @@ void test_BreadthFirstSearch_neither(void)
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    // no extensions
-    retval = LAGraph_BreadthFirstSearch_vanilla(NULL, NULL, G, 0, true, msg);
-    TEST_CHECK(retval == 0);
-    TEST_MSG("retval = %d (%s)", retval, msg);
-
     teardown();
 }
 
@@ -176,7 +159,6 @@ void test_BreadthFirstSearch_parent(void)
 
     GrB_Vector parent    = NULL;
     GrB_Vector parent_do = NULL;
-    GrB_Vector parent_v  = NULL;
 
     retval = LAGraph_BreadthFirstSearch(NULL, &parent, G, 30, false, msg);
     TEST_CHECK(retval == 0);
@@ -194,17 +176,8 @@ void test_BreadthFirstSearch_parent(void)
     //printf("parent BFS (pushpull) source = 30\n");
     //LAGraph_Vector_print_type(parent_do, GrB_INT32, 3, stdout, msg);
 
-    retval = LAGraph_BreadthFirstSearch_vanilla(NULL, &parent_v, G, 30, false, msg);
-    TEST_CHECK(retval == 0);
-    TEST_MSG("retval = %d (%s)", retval, msg);
-    TEST_CHECK(check_karate_parents30(parent_v));
-
-    //printf("parent BFS (vanilla) source = 30\n");
-    //LAGraph_Vector_print_type(parent_v, GrB_INT32, 3, stdout, msg);
-
     TEST_CHECK(0 == GrB_free(&parent));
     TEST_CHECK(0 == GrB_free(&parent_do));
-    TEST_CHECK(0 == GrB_free(&parent_v));
 
     teardown();
 }
@@ -217,26 +190,18 @@ void test_BreadthFirstSearch_level(void)
 
     GrB_Vector level    = NULL;
     GrB_Vector level_do = NULL;
-    GrB_Vector level_v  = NULL;
 
     retval = LAGraph_BreadthFirstSearch(&level, NULL, G, 30, false, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
     TEST_CHECK(check_karate_levels30(level));
+    TEST_CHECK(0 == GrB_free(&level));
 
     retval = LAGraph_BreadthFirstSearch(&level_do, NULL, G, 30, true, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
     TEST_CHECK(check_karate_levels30(level_do));
-
-    retval = LAGraph_BreadthFirstSearch_vanilla(&level_v, NULL, G, 30, false, msg);
-    TEST_CHECK(retval == 0);
-    TEST_MSG("retval = %d (%s)", retval, msg);
-    TEST_CHECK(check_karate_levels30(level_v));
-
-    TEST_CHECK(0 == GrB_free(&level));
     TEST_CHECK(0 == GrB_free(&level_do));
-    TEST_CHECK(0 == GrB_free(&level_v));
 
     teardown();
 }
@@ -248,12 +213,7 @@ void test_BreadthFirstSearch_both(void)
     int retval;
 
     GrB_Vector parent    = NULL;
-    GrB_Vector parent_do = NULL;
-    GrB_Vector parent_v  = NULL;
     GrB_Vector level    = NULL;
-    GrB_Vector level_do = NULL;
-    GrB_Vector level_v  = NULL;
-
     retval = LAGraph_BreadthFirstSearch(&level, &parent,
                                         G, 30, false, msg);
     TEST_CHECK(retval == 0);
@@ -261,6 +221,11 @@ void test_BreadthFirstSearch_both(void)
     TEST_CHECK(check_karate_levels30(level));
     TEST_CHECK(check_karate_parents30(parent));
 
+    TEST_CHECK(0 == GrB_free(&parent));
+    TEST_CHECK(0 == GrB_free(&level));
+
+    GrB_Vector parent_do = NULL;
+    GrB_Vector level_do = NULL;
     retval = LAGraph_BreadthFirstSearch(&level_do, &parent_do,
                                         G, 30, true, msg);
     TEST_CHECK(retval == 0);
@@ -268,19 +233,8 @@ void test_BreadthFirstSearch_both(void)
     TEST_CHECK(check_karate_levels30(level_do));
     TEST_CHECK(check_karate_parents30(parent_do));
 
-    retval = LAGraph_BreadthFirstSearch_vanilla(&level_v, &parent_v,
-                                                G, 30, false, msg);
-    TEST_CHECK(retval == 0);
-    TEST_MSG("retval = %d (%s)", retval, msg);
-    TEST_CHECK(check_karate_levels30(level_v));
-    TEST_CHECK(check_karate_parents30(parent_v));
-
-    TEST_CHECK(0 == GrB_free(&parent));
     TEST_CHECK(0 == GrB_free(&parent_do));
-    TEST_CHECK(0 == GrB_free(&parent_v));
-    TEST_CHECK(0 == GrB_free(&level));
     TEST_CHECK(0 == GrB_free(&level_do));
-    TEST_CHECK(0 == GrB_free(&level_v));
 
     teardown();
 }

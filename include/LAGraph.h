@@ -822,23 +822,9 @@ int LAGraph_BreadthFirstSearch
     GrB_Index      src,
     bool           pushpull,
     char          *msg
-) ;
-
-/****************************************************************************
- *
- *  Temporary entry point.
- *
- */
-int LAGraph_BreadthFirstSearch_vanilla
-(
-    GrB_Vector    *level,
-    GrB_Vector    *parent,
-    LAGraph_Graph  G,
-    GrB_Index      src,
-    bool           pushpull,
-    char          *msg
 );
 
+//****************************************************************************
 // the following is a draft:
 typedef enum
 {
