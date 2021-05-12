@@ -26,6 +26,7 @@
     GrB_free (&d) ;                 \
     GrB_free (&t) ;                 \
     GrB_free (&w) ;                 \
+    GrB_free (&plus_second_fp32) ;  \
 }
 
 #define LAGRAPH_FREE_ALL            \
@@ -77,6 +78,12 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
     // initializations
     //--------------------------------------------------------------------------
 
+    // SuiteSparse:GraphBLAS has GxB_PLUS_SECOND_FP32, which is the same speed
+    // as using the created semiring below.  Create it so this runs in vanilla.
+    GrB_Semiring plus_second_fp32 = NULL ;
+    GrB_TRY (GrB_Semiring_new (&plus_second_fp32, GrB_PLUS_MONOID_FP32,
+        GrB_SECOND_FP32)) ;
+
     GrB_Index n ;
     (*centrality) = NULL ;
     GrB_TRY (GrB_Matrix_nrows (&n, AT)) ;
@@ -120,17 +127,17 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
         GrB_TRY (GrB_assign (r, NULL, NULL, teleport, GrB_ALL, n, NULL)) ;
 
         // r += A'*w
-        GrB_TRY (GrB_mxv (r, NULL, GrB_PLUS_FP32, GxB_PLUS_SECOND_FP32, AT, w,
+        GrB_TRY (GrB_mxv (r, NULL, GrB_PLUS_FP32, plus_second_fp32, AT, w,
             NULL)) ;
 
         // t -= r
         GrB_TRY (GrB_assign (t, NULL, GrB_MINUS_FP32, r, GrB_ALL, n, NULL)) ;
 
         // t = abs (t)
-        GrB_TRY (GrB_apply (t, NULL, NULL, GxB_ABS_FP32, t, NULL)) ;
+        GrB_TRY (GrB_apply (t, NULL, NULL, GrB_ABS_FP32, t, NULL)) ;
 
         // rdiff = sum (t)
-        GrB_TRY (GrB_reduce (&rdiff, NULL, GxB_PLUS_FP32_MONOID, t, NULL)) ;
+        GrB_TRY (GrB_reduce (&rdiff, NULL, GrB_PLUS_MONOID_FP32, t, NULL)) ;
     }
 
     //--------------------------------------------------------------------------
