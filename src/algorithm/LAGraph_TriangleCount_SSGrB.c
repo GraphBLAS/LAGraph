@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LG_TriangleCount_vanilla: count the number of triangles in a graph
+// LG_TriangleCount_SSGrB: Triangle counting using SuiteSparse extensions
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -10,8 +10,8 @@
 
 //------------------------------------------------------------------------------
 
-// LAGraph_tricount: count the number of triangles in a graph,
-// Contributed by Scott McMillan, CMU and Tim Davis, Texas A&M.
+// Count the number of triangles in a graph,
+// Contributed by Tim Davis, Texas A&M.
 
 // Given a symmetric graph A with no-self edges, LAGraph_TriangleCount_methods
 // counts the number of triangles in the graph.  A triangle is a clique of size
@@ -48,9 +48,7 @@
 // Rajamanickam, 'Fast linear algebra- based triangle counting with
 // KokkosKernels', IEEE HPEC'17, https://dx.doi.org/10.1109/HPEC.2017.8091043,
 
-#include <LG_internal.h>
-
-#define NO_GRB_SELECT 1
+#include "LG_internal.h"
 
 //------------------------------------------------------------------------------
 // tricount_prep: construct L and U for LAGraph_TriangleCount_Methods
@@ -64,198 +62,36 @@
     GrB_free (U) ;              \
 }
 
-static int tricount_prep_vanilla        // return 0 if successful, < 0 on error
+static int tricount_prep        // return 0 if successful, < 0 on error
 (
     GrB_Matrix *L,      // if present, compute L = tril (A,-1)
     GrB_Matrix *U,      // if present, compute U = triu (A, 1)
-    GrB_Matrix  A,      // input matrix
-    GrB_Type    type,
+    GrB_Matrix A,       // input matrix
     char *msg
 )
 {
-    if ((L == NULL) && (U == NULL))
-    {
-        return -1;
-    }
-
-    GrB_Index n, nvals;
-    GrB_TRY( GrB_Matrix_nrows (&n, A) );
-    GrB_TRY( GrB_Matrix_nvals (&nvals, A) );
-
-#if defined(NO_GRB_SELECT)
-    // Allocate space to do the extract
-    size_t     sz  = 0;
-    size_t     vsz = 0;
-    GrB_Index *row_ids;
-    GrB_Index *col_ids;
-    GrB_Index  nv   = nvals;
-    row_ids = (GrB_Index*) malloc(nvals*sizeof(GrB_Index));
-    col_ids = (GrB_Index*) malloc(nvals*sizeof(GrB_Index));
-
-    if (type == GrB_BOOL)
-    {
-        bool *values = (bool*)malloc(nvals*sizeof(bool));
-        GrB_TRY( GrB_Matrix_extractTuples(row_ids, col_ids, values, &nv, A) );
-        free(values);
-    }
-    else if (type == GrB_INT8)
-    {
-        int8_t *values = malloc(nvals*sizeof(int8_t));
-        GrB_TRY( GrB_Matrix_extractTuples(row_ids, col_ids, values, &nv, A) );
-        free(values);
-    }
-    else if (type == GrB_INT16)
-    {
-        int16_t *values = malloc(nvals*sizeof(int16_t));
-        GrB_TRY( GrB_Matrix_extractTuples(row_ids, col_ids, values, &nv, A) );
-        free(values);
-    }
-    else if (type == GrB_INT32)
-    {
-        int32_t *values = malloc(nvals*sizeof(int32_t));
-        GrB_TRY( GrB_Matrix_extractTuples(row_ids, col_ids, values, &nv, A) );
-        free(values);
-    }
-    else if (type == GrB_INT64)
-    {
-        int64_t *values = malloc(nvals*sizeof(int64_t));
-        GrB_TRY( GrB_Matrix_extractTuples(row_ids, col_ids, values, &nv, A) );
-        free(values);
-    }
-    else if (type == GrB_UINT8)
-    {
-        uint8_t *values = malloc(nvals*sizeof(uint8_t));
-        GrB_TRY( GrB_Matrix_extractTuples(row_ids, col_ids, values, &nv, A) );
-        free(values);
-    }
-    else if (type == GrB_UINT16)
-    {
-        uint16_t *values = malloc(nvals*sizeof(uint16_t));
-        GrB_TRY( GrB_Matrix_extractTuples(row_ids, col_ids, values, &nv, A) );
-        free(values);
-    }
-    else if (type == GrB_UINT32)
-    {
-        uint32_t *values = malloc(nvals*sizeof(uint32_t));
-        GrB_TRY( GrB_Matrix_extractTuples(row_ids, col_ids, values, &nv, A) );
-        free(values);
-    }
-    else if (type == GrB_UINT64)
-    {
-        uint64_t *values = malloc(nvals*sizeof(uint64_t));
-        GrB_TRY( GrB_Matrix_extractTuples(row_ids, col_ids, values, &nv, A) );
-        free(values);
-    }
-    else if (type == GrB_FP32)
-    {
-        float *values = malloc(nvals*sizeof(float));
-        GrB_TRY( GrB_Matrix_extractTuples(row_ids, col_ids, values, &nv, A) );
-        free(values);
-    }
-    else if (type == GrB_FP64)
-    {
-        double *values = malloc(nvals*sizeof(double));
-        GrB_TRY( GrB_Matrix_extractTuples(row_ids, col_ids, values, &nv, A) );
-        free(values);
-    }
-    else
-    {
-        // unknown type
-        free(row_ids);
-        free(col_ids);
-        return -2;
-    }
-
-    GrB_Index l_nvals = 0;
-    GrB_Index u_nvals = 0;
-    for (GrB_Index ix = 0; ix < nvals; ++ix)
-    {
-        if (row_ids[ix] > col_ids[ix])
-        {
-            ++l_nvals;
-        }
-        else if (row_ids[ix] < col_ids[ix])
-        {
-            ++u_nvals;
-        }
-    }
-#endif
+    GrB_Index n ;
+    GxB_Scalar thunk ;
+    GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
+    GrB_TRY (GxB_Scalar_new (&thunk, GrB_INT64)) ;
 
     if (L != NULL)
     {
         // L = tril (A,-1)
-        GrB_TRY( GrB_Matrix_new (L, GrB_BOOL, n, n) );
-#if defined(NO_GRB_SELECT)
-        size_t     lsz  = 0;
-        size_t     lvsz = 0;
-        GrB_Index *lrow_ids;
-        GrB_Index *lcol_ids;
-        bool      *lvals;
-        lrow_ids = (GrB_Index*) malloc(l_nvals*sizeof(GrB_Index));
-        lcol_ids = (GrB_Index*) malloc(l_nvals*sizeof(GrB_Index));
-        lvals    = (bool*)      malloc(l_nvals*sizeof(bool));
-        GrB_Index idx = 0;
-        for (GrB_Index ix = 0; ix < nvals; ++ix)
-        {
-            if (row_ids[ix] > col_ids[ix])
-            {
-                lrow_ids[idx] = row_ids[ix];
-                lcol_ids[idx] = col_ids[ix];
-                lvals[idx] = true;
-                ++idx;
-            }
-        }
-        GrB_TRY( GrB_Matrix_build(*L, lrow_ids, lcol_ids, lvals, idx,
-                                  GrB_SECOND_BOOL) );
-        free(lrow_ids);
-        free(lcol_ids);
-        free(lvals);
-#else
-        GrB_TRY( GrB_select (*L, GrB_NULL, GrB_NULL,
-                             GrB_TRIL_BOOL, A, 0UL, GrB_NULL) );
-#endif
+        GrB_TRY (GrB_Matrix_new (L, GrB_BOOL, n, n)) ;
+        GrB_TRY (GxB_Scalar_setElement (thunk, -1)) ;
+        GrB_TRY (GxB_select (*L, NULL, NULL, GxB_TRIL, A, thunk, NULL)) ;
     }
 
     if (U != NULL)
     {
         // U = triu (A,1)
-        GrB_TRY( GrB_Matrix_new (U, GrB_BOOL, n, n) );
-#if defined(NO_GRB_SELECT)
-        size_t     usz  = 0;
-        size_t     uvsz = 0;
-        GrB_Index *urow_ids;
-        GrB_Index *ucol_ids;
-        bool      *uvals;
-        urow_ids = (GrB_Index*) malloc(u_nvals*sizeof(GrB_Index));
-        ucol_ids = (GrB_Index*) malloc(u_nvals*sizeof(GrB_Index));
-        uvals    = (bool*)      malloc(u_nvals*sizeof(bool));
-        GrB_Index idx = 0;
-        for (GrB_Index ix = 0; ix < nvals; ++ix)
-        {
-            if (row_ids[ix] < col_ids[ix])
-            {
-                urow_ids[idx] = row_ids[ix];
-                ucol_ids[idx] = col_ids[ix];
-                uvals[idx] = true;
-                ++idx;
-            }
-        }
-        GrB_TRY( GrB_Matrix_build(*U, urow_ids, ucol_ids, uvals, idx,
-                                  GrB_SECOND_BOOL) );
-        free(urow_ids);
-        free(ucol_ids);
-        free(uvals);
-#else
-        GrB_TRY( GrB_select (*U, GrB_NULL, GrB_NULL,
-                             GrB_TRIU_BOOL, A, 0UL, GrB_NULL) );
-#endif
+        GrB_TRY (GrB_Matrix_new (U, GrB_BOOL, n, n)) ;
+        GrB_TRY (GxB_Scalar_setElement (thunk, 1)) ;
+        GrB_TRY (GxB_select (*U, NULL, NULL, GxB_TRIU, A, thunk, NULL)) ;
     }
 
-#if defined(NO_GRB_SELECT)
-    free(row_ids);
-    free(col_ids);
-#endif
-
+    GrB_free (&thunk) ;
     return (0) ;
 }
 
@@ -270,10 +106,10 @@ static int tricount_prep_vanilla        // return 0 if successful, < 0 on error
     GrB_free (&L) ;                         \
     GrB_free (&T) ;                         \
     GrB_free (&U) ;                         \
-    LAGraph_Free ((void **) &P) ;   \
+    LAGraph_Free ((void **) &P) ;           \
 }
 
-int LG_TriangleCount_vanilla   // returns 0 if successful, < 0 if failure
+int LG_TriangleCount_SSGrB  // returns 0 if successful, < 0 if failure
 (
     uint64_t *ntriangles,   // # of triangles
     // input:
@@ -284,7 +120,7 @@ int LG_TriangleCount_vanilla   // returns 0 if successful, < 0 if failure
         //  0: no sort
         //  1: sort by degree, ascending order
         // -1: sort by degree, descending order
-        //  2: auto selection: no sort if rule is not triggered.  Otherise:
+        //  2: auto selection: no sort if rule is not triggered.  Otherwise:
         //  sort in ascending order for methods 3 and 5, descending ordering
         //  for methods 4 and 6.  On output, presort is modified to reflect the
         //  sorting method used (0, -1, or 1).  If presort is NULL on input, no
@@ -332,13 +168,12 @@ int LG_TriangleCount_vanilla   // returns 0 if successful, < 0 if failure
     GrB_Index n ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_new (&C, GrB_INT64, n, n)) ;
-    GrB_Semiring semiring = GrB_PLUS_TIMES_SEMIRING_INT64 ;
+    GrB_Semiring semiring = GxB_PLUS_PAIR_INT64 ;
     GrB_Monoid monoid = GrB_PLUS_MONOID_INT64 ;
 
     //--------------------------------------------------------------------------
     // heuristic sort rule
     //--------------------------------------------------------------------------
-
     if (auto_sort)
     {
         // auto selection of sorting method
@@ -369,7 +204,7 @@ int LG_TriangleCount_vanilla   // returns 0 if successful, < 0 if failure
                 // estimate the mean and median degrees
                 double mean, median ;
                 LAGraph_TRY (LAGraph_SampleDegree (&mean, &median,
-                                                   G, true, NSAMPLES, n, msg)) ;
+                    G, true, NSAMPLES, n, msg)) ;
                 // sort if the average degree is very high vs the median
                 if (mean > 4 * median)
                 {
@@ -389,7 +224,6 @@ int LG_TriangleCount_vanilla   // returns 0 if successful, < 0 if failure
     //--------------------------------------------------------------------------
     // sort the input matrix, if requested
     //--------------------------------------------------------------------------
-
     if (presort != NULL && (*presort) != 0)
     {
         // P = permutation that sorts the rows by their degree
@@ -401,14 +235,12 @@ int LG_TriangleCount_vanilla   // returns 0 if successful, < 0 if failure
         A = T ;
 
         // free workspace
-        LAGraph_Free((void **) &P) ;
-        P = NULL;
+        LAGraph_Free ((void **) &P) ;
     }
 
     //--------------------------------------------------------------------------
     // count triangles
     //--------------------------------------------------------------------------
-
     int64_t ntri ;
 
     switch (method)
@@ -440,7 +272,7 @@ int LG_TriangleCount_vanilla   // returns 0 if successful, < 0 if failure
 
         case 2:  // Cohen:      ntri = sum (sum ((L * U) .* A)) / 2
 
-            LAGraph_TRY (tricount_prep_vanilla (&L, &U, A, G->A_type, msg)) ;
+            LAGraph_TRY (tricount_prep (&L, &U, A, msg)) ;
             GrB_TRY (GrB_mxm (C, A, NULL, semiring, L, U, GrB_DESC_S)) ;
             GrB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             ntri /= 2 ;
@@ -449,7 +281,7 @@ int LG_TriangleCount_vanilla   // returns 0 if successful, < 0 if failure
         case 3:  // Sandia:     ntri = sum (sum ((L * L) .* L))
 
             // using the masked saxpy3 method
-            LAGraph_TRY (tricount_prep_vanilla (&L, NULL, A, G->A_type, msg)) ;
+            LAGraph_TRY (tricount_prep (&L, NULL, A, msg)) ;
             GrB_TRY (GrB_mxm (C, L, NULL, semiring, L, L, GrB_DESC_S)) ;
             GrB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             break ;
@@ -457,7 +289,7 @@ int LG_TriangleCount_vanilla   // returns 0 if successful, < 0 if failure
         case 4:  // Sandia2:    ntri = sum (sum ((U * U) .* U))
 
             // using the masked saxpy3 method
-            LAGraph_TRY (tricount_prep_vanilla (NULL, &U, A, G->A_type, msg)) ;
+            LAGraph_TRY (tricount_prep (NULL, &U, A, msg)) ;
             GrB_TRY (GrB_mxm (C, U, NULL, semiring, U, U, GrB_DESC_S)) ;
             GrB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             break ;
@@ -468,7 +300,7 @@ int LG_TriangleCount_vanilla   // returns 0 if successful, < 0 if failure
             // the SandiaDot2 method is also very fast.
 
             // using the masked dot product
-            LAGraph_TRY (tricount_prep_vanilla (&L, &U, A, G->A_type, msg)) ;
+            LAGraph_TRY (tricount_prep (&L, &U, A, msg)) ;
             GrB_TRY (GrB_mxm (C, L, NULL, semiring, L, U, GrB_DESC_ST1)) ;
             GrB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             break ;
@@ -476,7 +308,7 @@ int LG_TriangleCount_vanilla   // returns 0 if successful, < 0 if failure
         case 6:  // SandiaDot2: ntri = sum (sum ((U * L') .* U))
 
             // using the masked dot product
-            LAGraph_TRY (tricount_prep_vanilla (&L, &U, A, G->A_type, msg)) ;
+            LAGraph_TRY (tricount_prep (&L, &U, A, msg)) ;
             GrB_TRY (GrB_mxm (C, U, NULL, semiring, U, L, GrB_DESC_ST1)) ;
             GrB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             break ;

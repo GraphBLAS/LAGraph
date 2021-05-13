@@ -846,15 +846,29 @@ int LAGraph_VertexCentrality    // returns -1 on failure, 0 if successful
     char *msg
 ) ;
 
-// TODO: pick a default method (say 5, with presort = 2 (auto)).
-// Compute G->ndiag, and G->rowdegree if needed.  Determine if G->A is
-// symmetric, if not known.
+/****************************************************************************
+ *
+ * Count the triangles in a graph.
+ *
+ * @param[out]    ntriangles On successful return, contains the number of tris.
+ * @param[in,out] G          The graph, symmetric, no self loops.
+ * @param[out]    msg        Error message if a failure code is returned.
+ *
+ * @todo pick return values that do not conflict with GraphBLAS errors.
+ *
+ * @retval         0         successful
+ * @retval      -102         Graph is invalid (LAGraph_CheckGraph failed)
+ * @retval      -103         ntriangles is NULL
+ * @retval      -104         G->ndiag (self loops) is nonzero
+ * @retval      -105         graph is not symmetric
+ * @retval      -106         G->rowdegree was not precalculated (for modes 3-6)
+ */
 int LAGraph_TriangleCount   // returns 0 if successful, < 0 if failure
 (
-    uint64_t *ntriangles,   // # of triangles
+    uint64_t      *ntriangles,   // # of triangles
     // input:
-    LAGraph_Graph G,
-    char *msg
+    LAGraph_Graph  G,
+    char          *msg
 ) ;
 
 // TODO: this is a Basic method, since G is input/output.
@@ -926,7 +940,7 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
 
 /****************************************************************************
  *
- * Count the triangles in a graph.
+ * Count the triangles in a graph. Advanced API
  *
  * @param[out]    ntriangles On successful return, contains the number of tris.
  * @param[in]     G          The graph, symmetric, no self loops, and for some methods
@@ -955,8 +969,6 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
  *                                6       -1
  * @param[out]    msg        Error message if a failure code is returned.
  *
- * @todo pick return values that do not conflict with GraphBLAS errors.
- *
  * @retval         0         successful
  * @retval      -101         invalid method value
  * @retval      -102         Graph is invalid (LAGraph_CheckGraph failed)
@@ -972,20 +984,6 @@ int LAGraph_TriangleCount_Methods
     int             method,
     int            *presort,
     char           *msg
-) ;
-
-/****************************************************************************
- *
- * Count the triangles in a graph.  Temporary entry point.
- *
- */
-int LAGraph_TriangleCount_vanilla
-(
-    uint64_t      *ntriangles,
-    LAGraph_Graph  G,
-    int            method,
-    int           *presort,
-    char          *msg
 ) ;
 
 #endif

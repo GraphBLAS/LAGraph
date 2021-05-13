@@ -57,6 +57,7 @@
     GrB_free (&paths) ;                         \
     GrB_free (&bc_update) ;                     \
     GrB_free (&W) ;                             \
+    GrB_free (&plus_first_fp64) ;               \
     if (S != NULL)                              \
     {                                           \
         for (int64_t i = 0 ; i < n ; i++)       \
@@ -64,7 +65,7 @@
             if (S [i] == NULL) break ;          \
             GrB_free (&(S [i])) ;               \
         }                                       \
-        LAGraph_Free ((void **) &S) ;   \
+        LAGraph_Free ((void **) &S) ;           \
     }                                           \
 }
 
@@ -142,12 +143,20 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
     // === initializations =====================================================
     // =========================================================================
 
+    // SuiteSparse:GraphBLAS has GxB_PLUS_FIRST_FP64, which is the same speed
+    // as using the created semiring below.  Create it so this runs in vanilla.
+    GrB_Semiring plus_first_fp64 = NULL ;
+    GrB_TRY (GrB_Semiring_new (&plus_first_fp64, GrB_PLUS_MONOID_FP64,
+                               GrB_FIRST_FP64)) ;
+
     // Initialize paths and frontier with source notes
     GrB_Index n ;                   // # nodes in the graph
     GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
     GrB_TRY (GrB_Matrix_new (&paths,    GrB_FP64, ns, n)) ;
     GrB_TRY (GrB_Matrix_new (&frontier, GrB_FP64, ns, n)) ;
+#if !defined(LG_VANILLA) && defined(GxB_SUITESPARSE_GRAPHBLAS)
     GrB_TRY (GxB_set (paths, GxB_SPARSITY_CONTROL, GxB_BITMAP + GxB_FULL)) ;
+#endif
     for (GrB_Index i = 0 ; i < ns ; i++)
     {
         // paths (i,s(i)) = 1
@@ -158,7 +167,7 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
     }
 
     // Initial frontier: frontier<!paths>= frontier*A
-    GrB_TRY (GrB_mxm (frontier, paths, NULL, GxB_PLUS_FIRST_FP64, frontier, A,
+    GrB_TRY (GrB_mxm (frontier, paths, NULL, plus_first_fp64, frontier, A,
         GrB_DESC_RSC)) ;
 
     // Allocate memory for the array of S matrices
@@ -206,22 +215,25 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
         if (do_pull)
         {
             // frontier<!paths> = frontier*AT'
+#if !defined(LG_VANILLA) && defined(GxB_SUITESPARSE_GRAPHBLAS)
             GrB_TRY (GxB_set (frontier, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
-            GrB_TRY (GrB_mxm (frontier, paths, NULL, GxB_PLUS_FIRST_FP64,
+#endif
+            GrB_TRY (GrB_mxm (frontier, paths, NULL, plus_first_fp64,
                 frontier, AT, GrB_DESC_RSCT1)) ;
         }
         else // push
         {
             // frontier<!paths> = frontier*A
+#if !defined(LG_VANILLA) && defined(GxB_SUITESPARSE_GRAPHBLAS)
             GrB_TRY (GxB_set (frontier, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
-            GrB_TRY (GrB_mxm (frontier, paths, NULL, GxB_PLUS_FIRST_FP64,
+#endif
+            GrB_TRY (GrB_mxm (frontier, paths, NULL, plus_first_fp64,
                 frontier, A, GrB_DESC_RSC)) ;
         }
 
         //----------------------------------------------------------------------
         // Get size of current frontier: frontier_size = nvals(frontier)
         //----------------------------------------------------------------------
-
         last_frontier_size = frontier_size ;
         last_was_pull = do_pull ;
         GrB_TRY (GrB_Matrix_nvals (&frontier_size, frontier)) ;
@@ -269,15 +281,19 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
         if (do_pull)
         {
             // W<S[i−1]> = W * A'
+#if !defined(LG_VANILLA) && defined(GxB_SUITESPARSE_GRAPHBLAS)
             GrB_TRY (GxB_set (W, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
-            GrB_TRY (GrB_mxm (W, S [i-1], NULL, GxB_PLUS_FIRST_FP64, W, A,
+#endif
+            GrB_TRY (GrB_mxm (W, S [i-1], NULL, plus_first_fp64, W, A,
                 GrB_DESC_RST1)) ;
         }
         else // push
         {
             // W<S[i−1]> = W * AT
+#if !defined(LG_VANILLA) && defined(GxB_SUITESPARSE_GRAPHBLAS)
             GrB_TRY (GxB_set (W, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
-            GrB_TRY (GrB_mxm (W, S [i-1], NULL, GxB_PLUS_FIRST_FP64, W, AT,
+#endif
+            GrB_TRY (GrB_mxm (W, S [i-1], NULL, plus_first_fp64, W, AT,
                 GrB_DESC_RS)) ;
         }
 

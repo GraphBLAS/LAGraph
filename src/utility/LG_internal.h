@@ -4,6 +4,10 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
+//
+// See additional acknowledgments in the LICENSE file,
+// or contact permission@sei.cmu.edu for the full terms.
+
 // Contributed by Tim Davis, Texas A&M University.
 
 //------------------------------------------------------------------------------
@@ -488,7 +492,7 @@ void LG_qsort_3     // sort array A of size 3-by-n, using 3 keys (A [0:2][])
 int LG_ndiag                // returns 0 if successful, < 0 if failure
 (
     // output
-    int64_t *ndiag,         // # of entries 
+    int64_t *ndiag,         // # of entries
     // input
     GrB_Matrix A,           // matrix to count
     GrB_Type atype,         // type of A

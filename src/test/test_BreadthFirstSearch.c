@@ -38,12 +38,13 @@ bool check_karate_parents30(GrB_Vector parents)
     TEST_CHECK(0 == GrB_Vector_nvals(&n, parents));
     TEST_CHECK(ZACHARY_NUM_NODES == n);
 
-    int32_t parent_id;
+    int64_t parent_id;
     for (GrB_Index ix = 0; ix < ZACHARY_NUM_NODES; ++ix)
     {
         TEST_CHECK(0 == GrB_Vector_extractElement(&parent_id, parents, ix));
         TEST_CHECK(parent_id == PARENT30[ix]);
-        TEST_MSG("Parent check failed for node %ld\n", ix);
+        TEST_MSG("Parent check failed for node %ld: ans,comp = %ld,%ld\n",
+                 ix, PARENT30[ix], parent_id);
     }
 
     return true;
@@ -58,12 +59,13 @@ bool check_karate_levels30(GrB_Vector levels)
     TEST_CHECK(0 == GrB_Vector_nvals(&n, levels) );
     TEST_CHECK(ZACHARY_NUM_NODES == n);
 
-    int32_t lvl;
+    int64_t lvl;
     for (GrB_Index ix = 0; ix < ZACHARY_NUM_NODES; ++ix)
     {
         TEST_CHECK(0 == GrB_Vector_extractElement(&lvl, levels, ix) );
         TEST_CHECK(lvl == LEVELS30[ix] );
-        TEST_MSG("Level check failed for node %ld\n", ix);
+        TEST_MSG("Level check failed for node %ld: ans,comp = %ld,%ld\n",
+                 ix, LEVELS30[ix], lvl);
     }
 
     return true;

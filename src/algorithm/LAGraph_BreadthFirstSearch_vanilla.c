@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_BreadthFirstSearch_vanilla:  BFS using only GraphBLAS API
+// LG_BreadthFirstSearch_vanilla:  BFS using only GraphBLAS API
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -12,8 +12,8 @@
 
 // References:
 //
-// Derived by Scott McMillan from examples in
-// The GraphBLAS C API Specification, v1.3
+// Contribute by Scott McMillan, derived from examples in the appendix of
+// The GraphBLAS C API Specification, v1.3.0
 
 #define LAGRAPH_FREE_WORK   \
 {                           \
@@ -31,7 +31,7 @@
 #include "LG_internal.h"
 
 //****************************************************************************
-int LAGraph_BreadthFirstSearch_vanilla
+int LG_BreadthFirstSearch_vanilla
 (
     GrB_Vector    *level,
     GrB_Vector    *parent,

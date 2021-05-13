@@ -137,13 +137,9 @@ int main (int argc, char **argv)
     printf ("\nwarmup method: ") ;
     int presort = 2 ;
     print_method (stdout, 6, presort) ;
-#if 0   // defined(GxB_SUITESPARSE_GRAPHBLAS)
-    LAGraph_TRY (LAGraph_TriangleCount_Methods (&ntriangles, G, 6, &presort,
-        msg)) ;
-#else
-    LAGraph_TRY( LAGraph_TriangleCount_vanilla(&ntriangles, G,
-                                               6, &presort, msg) );
-#endif
+
+    LAGraph_TRY (LAGraph_TriangleCount_Methods(&ntriangles, G, 6, &presort, msg) );
+
     printf ("# of triangles: %" PRId64 "\n", ntriangles) ;
     print_method (stdout, 6, presort) ;
     double ttot ;
@@ -180,7 +176,7 @@ int main (int argc, char **argv)
             if (n != 134217728 && method < 5)
             {
                 printf ("all but urand is slow with method %d: skipped\n",
-                    method) ;
+                        method) ;
                 continue ;
             }
 
@@ -195,34 +191,29 @@ int main (int argc, char **argv)
                 {
                     LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
                     presort = sorting ;
-#if 0   // defined(GxB_SUITESPARSE_GRAPHBLAS)
+
                     LAGraph_TRY(
-                        LAGraph_TriangleCount_Methods (&nt2, G, method,
-                                                       &presort, msg) );
-#else
-                    LAGraph_TRY(
-                        LAGraph_TriangleCount_vanilla(&nt2, G, method,
+                        LAGraph_TriangleCount_Methods(&nt2, G, method,
                                                       &presort, msg) );
-#endif
+
                     LAGraph_TRY (LAGraph_Toc (&ttrial [trial], tic, NULL)) ;
                     ttot += ttrial [trial] ;
-                    printf ("trial %2d: %12.6f sec rate %6.2f  "
-                        "# triangles: %ld\n",
-                        trial, ttrial [trial], 1e-6 * nvals / ttrial [trial],
-                        nt2) ;
+                    printf ("trial %2d: %12.6f sec rate %6.2f  # triangles: %ld\n",
+                            trial, ttrial [trial], 1e-6 * nvals / ttrial [trial],
+                            nt2) ;
                 }
                 ttot = ttot / ntrials ;
                 printf ("nthreads: %3d time: %12.6f rate: %6.2f", nthreads,
-                    ttot, 1e-6 * nvals / ttot) ;
+                        ttot, 1e-6 * nvals / ttot) ;
                 printf ("   # of triangles: %" PRId64 " presort: %d\n",
-                    ntriangles, presort) ;
+                        ntriangles, presort) ;
                 if (nt2 != ntriangles)
                 {
                     printf ("Test failure!\n") ;
                     abort ( ) ;
                 }
                 fprintf (stderr, "Avg: TC method%d.%d %3d: %10.3f sec: %s\n",
-                     method, sorting, nthreads, ttot, matrix_name) ;
+                         method, sorting, nthreads, ttot, matrix_name) ;
 
                 if (ttot < t_best)
                 {

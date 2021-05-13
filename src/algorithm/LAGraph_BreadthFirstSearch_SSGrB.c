@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_BreadthFirstSearch_SSGrB:  BFS using Suitesparse extensions
+// LG_BreadthFirstSearch_SSGrB:  BFS using Suitesparse extensions
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -36,7 +36,7 @@
 #include "LG_internal.h"
 
 //****************************************************************************
-int LAGraph_BreadthFirstSearch_SSGrB
+int LG_BreadthFirstSearch_SSGrB
 (
     GrB_Vector    *level,
     GrB_Vector    *parent,

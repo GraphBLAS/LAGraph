@@ -11,28 +11,8 @@
 //------------------------------------------------------------------------------
 
 #include <LAGraph.h>
-
-//***************************************************************************
-int LAGraph_BreadthFirstSearch_SSGrB
-(
-    GrB_Vector    *level,
-    GrB_Vector    *parent,
-    LAGraph_Graph  G,
-    GrB_Index      src,
-    bool           pushpull,
-    char          *msg
-);
-
-//***************************************************************************
-int LAGraph_BreadthFirstSearch_vanilla
-(
-    GrB_Vector    *level,
-    GrB_Vector    *parent,
-    LAGraph_Graph  G,
-    GrB_Index      src,
-    bool           pushpull,
-    char          *msg
-);
+#include "LG_internal.h"
+#include "LG_alg_internal.h"
 
 //****************************************************************************
 int LAGraph_BreadthFirstSearch
@@ -46,10 +26,10 @@ int LAGraph_BreadthFirstSearch
 )
 {
 #if !defined(LG_VANILLA) && defined(GxB_SUITESPARSE_GRAPHBLAS)
-    return LAGraph_BreadthFirstSearch_SSGrB(level, parent,
-                                            G, src, pushpull, msg);
+    return LG_BreadthFirstSearch_SSGrB(level, parent,
+                                       G, src, pushpull, msg);
 #else
-    return LAGraph_BreadthFirstSearch_vanilla(level, parent,
-                                              G, src, pushpull, msg);
+    return LG_BreadthFirstSearch_vanilla(level, parent,
+                                         G, src, pushpull, msg);
 #endif
 }

@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_TriangleCount_Methods:  triangle counting dispatch, advanced API
+// LAGraph_TriangleCount:  triangle counting dispatch, basic API
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -21,20 +21,28 @@
 }
 
 //****************************************************************************
-// Advanced API: Compute G->ndiag, G->A_pattern_is_symmetric, and G->rowdegree
-// (if needed) before calling.
-int LAGraph_TriangleCount_Methods
+// Pick a default method (say 3 or 5, with presort = 2 (auto)).
+// Compute G->ndiag, and G->rowdegree if needed.  Determine if G->A is
+// symmetric, if not known.
+int LAGraph_TriangleCount
 (
-    uint64_t       *ntriangles,
-    LAGraph_Graph   G,
-    int             method,
-    int            *presort,
-    char           *msg
+    uint64_t *ntriangles,
+    LAGraph_Graph G,
+    char *msg
 )
 {
+    // find out if graph is symmetric
+    LAGraph_TRY( LAGraph_Property_ASymmetricPattern(G, msg) );
+    LAGraph_TRY( LAGraph_Property_RowDegree(G, msg) );
+    LAGraph_TRY( LAGraph_Property_NDiag(G, msg) );
+
 #if !defined(LG_VANILLA) && defined(GxB_SUITESPARSE_GRAPHBLAS)
-    return LG_TriangleCount_SSGrB(ntriangles, G, method, presort, msg);
+    int method = 5;
+    int presort = 2;
+    return LG_TriangleCount_SSGrB(ntriangles, G, method, &presort, msg);
 #else
-    return LG_TriangleCount_vanilla(ntriangles, G, method, presort, msg);
+    int method = 3;
+    int presort = 2;
+    return LG_TriangleCount_vanilla(ntriangles, G, method, &presort, msg);
 #endif
 }
