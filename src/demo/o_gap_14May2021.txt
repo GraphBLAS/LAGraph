@@ -2138,3 +2138,107 @@ level only   pushonly trial: 47 threads: 40 src:  23757560     2.7854 sec
 parent+level pushonly trial: 47 threads: 40 src:  23757560     3.2890 sec
 parent only  pushpull trial: 47 threads: 40 src:  23757560     2.9507 sec
 level only   pushpull trial: 47 threads: 40 src:  23757560     2.9291 sec
+parent+level pushpull trial: 47 threads: 40 src:  23757560     3.4327 sec
+parent only  pushonly trial: 48 threads: 40 src:  17161819     2.8594 sec
+level only   pushonly trial: 48 threads: 40 src:  17161819     2.8349 sec
+parent+level pushonly trial: 48 threads: 40 src:  17161819     3.3395 sec
+parent only  pushpull trial: 48 threads: 40 src:  17161819     3.0056 sec
+level only   pushpull trial: 48 threads: 40 src:  17161819     2.9777 sec
+parent+level pushpull trial: 48 threads: 40 src:  17161819     3.4781 sec
+parent only  pushonly trial: 49 threads: 40 src:  23180739     2.6998 sec
+level only   pushonly trial: 49 threads: 40 src:  23180739     2.6801 sec
+parent+level pushonly trial: 49 threads: 40 src:  23180739     3.1910 sec
+parent only  pushpull trial: 49 threads: 40 src:  23180739     2.8548 sec
+level only   pushpull trial: 49 threads: 40 src:  23180739     2.8363 sec
+parent+level pushpull trial: 49 threads: 40 src:  23180739     3.3397 sec
+parent only  pushonly trial: 50 threads: 40 src:  10997085     2.9476 sec
+level only   pushonly trial: 50 threads: 40 src:  10997085     2.9136 sec
+parent+level pushonly trial: 50 threads: 40 src:  10997085     3.4196 sec
+parent only  pushpull trial: 50 threads: 40 src:  10997085     3.0924 sec
+level only   pushpull trial: 50 threads: 40 src:  10997085     3.0577 sec
+parent+level pushpull trial: 50 threads: 40 src:  10997085     3.5623 sec
+parent only  pushonly trial: 51 threads: 40 src:   3730630     2.7793 sec
+level only   pushonly trial: 51 threads: 40 src:   3730630     2.7603 sec
+parent+level pushonly trial: 51 threads: 40 src:   3730630     3.2708 sec
+parent only  pushpull trial: 51 threads: 40 src:   3730630     2.9313 sec
+level only   pushpull trial: 51 threads: 40 src:   3730630     2.9126 sec
+parent+level pushpull trial: 51 threads: 40 src:   3730630     3.4160 sec
+parent only  pushonly trial: 52 threads: 40 src:   1079068     2.8488 sec
+level only   pushonly trial: 52 threads: 40 src:   1079068     2.8241 sec
+parent+level pushonly trial: 52 threads: 40 src:   1079068     3.3332 sec
+parent only  pushpull trial: 52 threads: 40 src:   1079068     2.9973 sec
+level only   pushpull trial: 52 threads: 40 src:   1079068     2.9697 sec
+parent+level pushpull trial: 52 threads: 40 src:   1079068     3.4734 sec
+parent only  pushonly trial: 53 threads: 40 src:  15426822     2.8856 sec
+level only   pushonly trial: 53 threads: 40 src:  15426822     2.8578 sec
+parent+level pushonly trial: 53 threads: 40 src:  15426822     3.3603 sec
+parent only  pushpull trial: 53 threads: 40 src:  15426822     3.0303 sec
+level only   pushpull trial: 53 threads: 40 src:  15426822     3.0006 sec
+parent+level pushpull trial: 53 threads: 40 src:  15426822     3.4994 sec
+parent only  pushonly trial: 54 threads: 40 src:  12190925     2.8862 sec
+level only   pushonly trial: 54 threads: 40 src:  12190925     2.8602 sec
+parent+level pushonly trial: 54 threads: 40 src:  12190925     3.3658 sec
+parent only  pushpull trial: 54 threads: 40 src:  12190925     3.0332 sec
+level only   pushpull trial: 54 threads: 40 src:  12190925     3.0042 sec
+parent+level pushpull trial: 54 threads: 40 src:  12190925     3.5063 sec
+parent only  pushonly trial: 55 threads: 40 src:   1155218     2.8529 sec
+level only   pushonly trial: 55 threads: 40 src:   1155218     2.8280 sec
+parent+level pushonly trial: 55 threads: 40 src:   1155218     3.3342 sec
+parent only  pushpull trial: 55 threads: 40 src:   1155218     3.0015 sec
+level only   pushpull trial: 55 threads: 40 src:   1155218     2.9733 sec
+parent+level pushpull trial: 55 threads: 40 src:   1155218     3.4774 sec
+parent only  pushonly trial: 56 threads: 40 src:  10693488     2.8893 sec
+level only   pushonly trial: 56 threads: 40 src:  10693488     2.8579 sec
+parent+level pushonly trial: 56 threads: 40 src:  10693488     3.3652 sec
+parent only  pushpull trial: 56 threads: 40 src:  10693488     3.0405 sec
+level only   pushpull trial: 56 threads: 40 src:  10693488     3.0044 sec
+parent+level pushpull trial: 56 threads: 40 src:  10693488     3.5066 sec
+parent only  pushonly trial: 57 threads: 40 src:  14434835     2.7460 sec
+level only   pushonly trial: 57 threads: 40 src:  14434835     2.7258 sec
+parent+level pushonly trial: 57 threads: 40 src:  14434835     3.2359 sec
+parent only  pushpull trial: 57 threads: 40 src:  14434835     2.8971 sec
+level only   pushpull trial: 57 threads: 40 src:  14434835     2.8783 sec
+parent+level pushpull trial: 57 threads: 40 src:  14434835     3.3825 sec
+parent only  pushonly trial: 58 threads: 40 src:  19963339     2.7654 sec
+level only   pushonly trial: 58 threads: 40 src:  19963339     2.7281 sec
+parent+level pushonly trial: 58 threads: 40 src:  19963339     3.2304 sec
+parent only  pushpull trial: 58 threads: 40 src:  19963339     2.8983 sec
+level only   pushpull trial: 58 threads: 40 src:  19963339     2.8773 sec
+parent+level pushpull trial: 58 threads: 40 src:  19963339     3.3719 sec
+parent only  pushonly trial: 59 threads: 40 src:   3486185     2.7857 sec
+level only   pushonly trial: 59 threads: 40 src:   3486185     2.7605 sec
+parent+level pushonly trial: 59 threads: 40 src:   3486185     3.2687 sec
+parent only  pushpull trial: 59 threads: 40 src:   3486185     2.9764 sec
+level only   pushpull trial: 59 threads: 40 src:   3486185     2.9153 sec
+parent+level pushpull trial: 59 threads: 40 src:   3486185     3.4196 sec
+parent only  pushonly trial: 60 threads: 40 src:  18383269     2.8526 sec
+level only   pushonly trial: 60 threads: 40 src:  18383269     2.8266 sec
+parent+level pushonly trial: 60 threads: 40 src:  18383269     3.3341 sec
+parent only  pushpull trial: 60 threads: 40 src:  18383269     2.9973 sec
+level only   pushpull trial: 60 threads: 40 src:  18383269     2.9699 sec
+parent+level pushpull trial: 60 threads: 40 src:  18383269     3.4738 sec
+parent only  pushonly trial: 61 threads: 40 src:  20269908     2.8691 sec
+level only   pushonly trial: 61 threads: 40 src:  20269908     2.8455 sec
+parent+level pushonly trial: 61 threads: 40 src:  20269908     3.3472 sec
+parent only  pushpull trial: 61 threads: 40 src:  20269908     3.0161 sec
+level only   pushpull trial: 61 threads: 40 src:  20269908     2.9886 sec
+parent+level pushpull trial: 61 threads: 40 src:  20269908     3.4923 sec
+parent only  pushonly trial: 62 threads: 40 src:  12370764     2.7407 sec
+level only   pushonly trial: 62 threads: 40 src:  12370764     2.7180 sec
+parent+level pushonly trial: 62 threads: 40 src:  12370764     3.2290 sec
+parent only  pushpull trial: 62 threads: 40 src:  12370764     2.8898 sec
+level only   pushpull trial: 62 threads: 40 src:  12370764     2.8676 sec
+parent+level pushpull trial: 62 threads: 40 src:  12370764     3.3746 sec
+parent only  pushonly trial: 63 threads: 40 src:   7843140     2.8588 sec
+level only   pushonly trial: 63 threads: 40 src:   7843140     2.8247 sec
+parent+level pushonly trial: 63 threads: 40 src:   7843140     3.3326 sec
+parent only  pushpull trial: 63 threads: 40 src:   7843140     2.9945 sec
+level only   pushpull trial: 63 threads: 40 src:   7843140     2.9665 sec
+parent+level pushpull trial: 63 threads: 40 src:   7843140     3.4725 sec
+Avg: BFS pushonly parent only  threads  40:      2.821 sec: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+Avg: BFS pushonly level only   threads  40:      2.796 sec: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+Avg: BFS pushonly level+parent threads  40:      3.306 sec: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+Avg: BFS pushpull parent only  threads  40:      2.971 sec: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+Avg: BFS pushpull level only   threads  40:      2.945 sec: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+Avg: BFS pushpull level+parent threads  40:      3.448 sec: /home/faculty/davis/GAP/GAP-road/GAP-road.grb
+
