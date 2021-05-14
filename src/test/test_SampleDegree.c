@@ -109,9 +109,9 @@ const matrix_info files [ ] =
         1.8, 2.0,
         5, 123456 },
      { "ldbc-directed-example-bool.mtx",
-        2.4, 3.0,
-        1.9, 2.0,
-        10, 123 },
+        2.5, 3.0,
+        3.8, 3.0,
+        10, 123456 },
     { "", 0.0, 0.0, 0.0, 0.0, 1, 0 }
 } ;
 
@@ -125,8 +125,6 @@ void test_SampleDegree (void)
         // load the matrix as A
         const char *aname = files [k].name ;
         if (strlen (aname) == 0) break;
-        //const int *rowdeg = files [k].rowdeg ;
-        //const int *coldeg = files [k].coldeg ;
         TEST_CASE (aname) ;
         printf ("\n==================== Test case: %s\n", aname) ;
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
@@ -139,27 +137,6 @@ void test_SampleDegree (void)
         // construct the graph G with adjacency matrix A
         OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
         TEST_CHECK (A == NULL) ;
-
-//        for (int trial = 0 ; trial <= 2 ; trial++)
-//        {
-//            // create the G->rowdegree property and check it
-//            OK (LAGraph_Property_RowDegree (G, msg)) ;
-//            GrB_Index n ;
-//            OK (GrB_Matrix_nrows (&n, G->A)) ;
-//            check_degree (G->rowdegree, n, rowdeg) ;
-//
-//            if (trial == 2)
-//            {
-//                // use G->AT to compute G->coldegree
-//                OK (LAGraph_DeleteProperties (G, msg)) ;
-//                OK (LAGraph_Property_AT (G, msg)) ;
-//            }
-//
-//            // create the G->ColDegree property and check it
-//            OK (LAGraph_Property_ColDegree (G, msg)) ;
-//            OK (GrB_Matrix_ncols (&n, G->A)) ;
-//            check_degree (G->coldegree, n, coldeg) ;
-//        }
 
         // SampleDegree requires degrees to be precomputed
         ret_code = LAGraph_SampleDegree (&mean, &median, G, 1, files [k].nsamples, files [k].seed, msg) ;
