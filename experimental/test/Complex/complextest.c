@@ -222,7 +222,7 @@ int main (int argc, char **argv)
     printf ("Complex/complex: "
         "testing LAGraph_ComplexFP64 and its operators:\n") ;
 
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    #if LG_SUITESPARSE
     printf ("LAGraph_xinit (requires SuiteSparse:GraphBLAS)\n") ;
     LAGraph_xinit (malloc, calloc, realloc, free, true) ;
     #else

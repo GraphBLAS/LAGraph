@@ -32,7 +32,7 @@ int LAGraph_TriangleCount_Methods
     char           *msg
 )
 {
-#if !defined(LG_VANILLA) && defined(GxB_SUITESPARSE_GRAPHBLAS)
+#if LG_SUITESPARSE
     return LG_TriangleCount_SSGrB(ntriangles, G, method, presort, msg);
 #else
     return LG_TriangleCount_vanilla(ntriangles, G, method, presort, msg);

@@ -129,7 +129,7 @@ int LAGraph_get_nthreads    // returns # threads to use, 1 if unknown
 
     int nthreads = 1 ;
 
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    #if LG_SUITESPARSE
     GrB_Info info = GxB_get (GxB_NTHREADS, &nthreads) ;
     if (info != GrB_SUCCESS)
     {

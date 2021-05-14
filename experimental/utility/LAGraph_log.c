@@ -125,7 +125,7 @@ GrB_Info LAGraph_log
 
     fprintf (f, "max # of threads: %d\n", LAGraph_get_nthreads ( )) ;
 
-    #ifdef GxB_SUITESPARSE_GRAPHBLAS
+    #if LG_SUITESPARSE
     char *library_date ;
     GxB_get (GxB_LIBRARY_DATE, &library_date) ;
     fprintf (f, "SuiteSparse:GraphBLAS %s\n", library_date) ;

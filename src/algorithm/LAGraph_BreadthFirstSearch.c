@@ -25,7 +25,7 @@ int LAGraph_BreadthFirstSearch
     char          *msg
 )
 {
-#if !defined(LG_VANILLA) && defined(GxB_SUITESPARSE_GRAPHBLAS)
+#if LG_SUITESPARSE
     return LG_BreadthFirstSearch_SSGrB(level, parent,
                                        G, src, pushpull, msg);
 #else

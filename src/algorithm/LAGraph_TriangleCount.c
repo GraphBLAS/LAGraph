@@ -36,7 +36,7 @@ int LAGraph_TriangleCount
     LAGraph_TRY( LAGraph_Property_RowDegree(G, msg) );
     LAGraph_TRY( LAGraph_Property_NDiag(G, msg) );
 
-#if !defined(LG_VANILLA) && defined(GxB_SUITESPARSE_GRAPHBLAS)
+#if LG_SUITESPARSE
     int method = 5;
     int presort = 2;
     return LG_TriangleCount_SSGrB(ntriangles, G, method, &presort, msg);

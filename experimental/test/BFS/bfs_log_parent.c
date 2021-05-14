@@ -107,8 +107,7 @@ GrB_Info bfs_log_parent // push-pull BFS, compute the tree only
     // check inputs
     //--------------------------------------------------------------------------
 
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
-        && ( GxB_IMPLEMENTATION < GxB_VERSION (4,0,0) )
+    #if !LG_SUITESPARSE
     // SuiteSparse GraphBLAS v4.0 or later required
     return (GrB_INVALID_VALUE) ;
     #else

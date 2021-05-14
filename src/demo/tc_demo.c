@@ -65,7 +65,7 @@ int main (int argc, char **argv)
     // initialize LAGraph and GraphBLAS
     //--------------------------------------------------------------------------
 
-#if defined(GxB_SUITESPARSE_GRAPHBLAS)
+#if LG_SUITESPARSE
     printf ("%s v%d.%d.%d [%s]\n",
         GxB_IMPLEMENTATION_NAME,
         GxB_IMPLEMENTATION_MAJOR,
@@ -80,7 +80,7 @@ int main (int argc, char **argv)
     LAGraph_Graph G = NULL ;
     LAGraph_TRY (LAGraph_Init (msg)) ;
 
-#if defined(GxB_SUITESPARSE_GRAPHBLAS)
+#if LG_SUITESPARSE
     GrB_TRY (GxB_set (GxB_BURBLE, false)) ;
 #endif
 

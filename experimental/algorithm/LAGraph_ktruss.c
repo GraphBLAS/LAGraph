@@ -97,8 +97,7 @@ GrB_Info LAGraph_ktruss         // compute the k-truss of a graph
     if (Chandle == NULL) return (GrB_NULL_POINTER) ;
     (*Chandle) = NULL ;
 
-#if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
-    && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,0,1) )
+#if LG_SUITESPARSE
 
     //--------------------------------------------------------------------------
     // initializations

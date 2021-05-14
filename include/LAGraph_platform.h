@@ -51,8 +51,18 @@
 //==============================================================================
 // GraphBLAS platform specifics
 
+// vanilla vs SuiteSparse:
+#if !defined ( LG_VANILLA ) && defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    // use SuiteSparse, and its GxB* extensions
+    #define LG_SUITESPARSE 1
+#else
+    // use any GraphBLAS library (possibly SuiteSparse) but with no GxB*
+    #define LG_SUITESPARSE 0
+#endif
+
 // what is the correct system 64-bit maximum integer?
-#if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+#if LG_SUITESPARSE
+    // SuiteSparse: use GxB_INDEX_MAX
     #define LAGRAPH_INDEX_MAX GxB_INDEX_MAX
 #else
     // Note by Tim: ULONG_MAX will break all kinds of things, like
@@ -68,15 +78,6 @@
     // I recommend just using 2^60.
     // This definition is the same as GxB_INDEX_MAX in SuiteSparse:GraphBLAS:
     #define LAGRAPH_INDEX_MAX ((GrB_Index) (1ULL << 60))
-#endif
-
-// vanilla vs SuiteSparse:
-#if !defined ( LG_VANILLA ) && defined ( GxB_SUITESPARSE_GRAPHBLAS )
-    // use SuiteSparse, and its GxB* extensions
-    #define LG_SUITESPARSE 1
-#else
-    // use any GraphBLAS library (possibly SuiteSparse) but with no GxB*
-    #define LG_SUITESPARSE 0
 #endif
 
 #endif  // LAGRAPH_PLATFORM_H

@@ -449,7 +449,7 @@ GrB_Info bfs_log   // push, pull, or push-pull, and log timings
     // behaviour will be unpredicatble, however, unless the library's default
     // format is CSR.
 
-    #ifdef GxB_SUITESPARSE_GRAPHBLAS
+    #if LG_SUITESPARSE
 
         // The CSR vs CSC status can be tested in SuiteSparse:GraphBLAS.
         // However, even with SuiteSparse:GraphBLAS, this step is optional.
@@ -703,7 +703,7 @@ fprintf (file, "%d  %16lu %16lu     %g\n", do_push, nq, nvisited, time) ;
 
             // q(i) = i+1 for all entries in q.
 
-            #ifdef GxB_SUITESPARSE_GRAPHBLAS
+            #if LG_SUITESPARSE
             GrB_Index *qi ;
             if (n > INT32_MAX)
             {

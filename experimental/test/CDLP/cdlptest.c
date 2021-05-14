@@ -157,7 +157,7 @@ int main (int argc, char **argv)
 #endif
 
     LAGRAPH_OK (GrB_Matrix_nvals (&ne, A)) ;
-    #ifdef GxB_SUITESPARSE_GRAPHBLAS
+    #if LG_SUITESPARSE
     // GxB_fprint (A, GxB_SUMMARY, out) ;
     #endif
     fprintf (out, "Matrix n: %0.16g, ne: %0.16g\n", (double) n, (double) ne) ;

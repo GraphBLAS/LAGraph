@@ -47,7 +47,7 @@ int LAGraph_set_nthreads        // returns # threads set, 0 if nothing done
 )
 {
 
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    #if LG_SUITESPARSE
     GxB_set (GxB_NTHREADS, nthreads) ;
     #elif defined ( _OPENMP )
     omp_set_num_threads (nthreads) ;

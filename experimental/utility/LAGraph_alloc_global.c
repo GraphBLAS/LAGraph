@@ -461,8 +461,7 @@ GrB_Descriptor
 // LAGraph_support_function:  select function for GxB_SelectOp and GxB_select
 //------------------------------------------------------------------------------
 
-#if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
-    && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,0,1) )
+#if LG_SUITESPARSE
 // requires SuiteSparse:GraphBLAS v3.0.1
 GxB_SelectOp LAGraph_support = NULL ;
 #endif
@@ -514,7 +513,7 @@ GrB_Info LAGraph_alloc_global ( )
         F_BINARY (LAGraph_skew_double),
         GrB_BOOL, GrB_FP64, GrB_FP64)) ;
 
-    #ifdef GxB_SUITESPARSE_GRAPHBLAS
+    #if LG_SUITESPARSE
     // use the built-in binary operator
     LAGraph_LOR_UINT32 = GxB_LOR_UINT32 ;
     LAGraph_LOR_INT64  = GxB_LOR_INT64  ;
@@ -632,7 +631,7 @@ GrB_Info LAGraph_alloc_global ( )
         F_UNARY (LAGraph_true_bool),
         GrB_BOOL, GrB_BOOL)) ;
 
-    #ifdef GxB_SUITESPARSE_GRAPHBLAS
+    #if LG_SUITESPARSE
     // use the built-in unary operator
     LAGraph_ONE_INT64  = GxB_ONE_INT64 ;
     LAGraph_ONE_UINT32 = GxB_ONE_UINT32 ;
@@ -811,8 +810,7 @@ GrB_Info LAGraph_alloc_global ( )
     // allocate the select function for ktruss and allktruss
     //--------------------------------------------------------------------------
 
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
-        && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,0,1) )
+    #if LG_SUITESPARSE
     // Note the added parameter (SuiteSparse:GraphBLAS, July 19, V3.0.1 draft)
     LAGRAPH_OK (GxB_SelectOp_new (&LAGraph_support,
         F_SELECT (LAGraph_support_function), GrB_UINT32, GrB_UINT32)) ;

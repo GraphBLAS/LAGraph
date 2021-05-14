@@ -195,7 +195,7 @@ int main (int argc, char **argv)
     printf ("MatrixMarket/mmtest: "
         "testing LAGraph_mmread, _mmwrite, and _random:\n") ;
 
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    #if LG_SUITESPARSE
     printf ("testing LAGraph_xinit (requires SuiteSparse:GraphBLAS)\n") ;
     LAGraph_xinit (malloc, calloc, realloc, free, true) ;
     #else

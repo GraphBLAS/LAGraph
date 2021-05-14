@@ -152,8 +152,7 @@ GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
         LAGRAPH_OK (GrB_mxm (Y, NULL, NULL, plus_plus, Y, Bias [layer], NULL)) ;
 
         // delete entries from Y: keep only those entries greater than zero
-        #if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
-            && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,0,0) )
+        #if LG_SUITESPARSE
         // using SuiteSparse:GraphBLAS 3.0.0 or later.
         LAGRAPH_OK (GxB_select (Y, NULL, NULL, GxB_GT_ZERO, Y, NULL, NULL)) ;
 

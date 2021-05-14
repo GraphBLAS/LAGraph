@@ -449,7 +449,7 @@ fprintf (file, "%%%%%%%%%% n %lu nvals %lu s %lu\n", nrows, nvalA, s) ;
     // behaviour will be unpredicatble, however, unless the library's default
     // format is CSR.
 
-    #ifdef GxB_SUITESPARSE_GRAPHBLAS
+    #if LG_SUITESPARSE
 
         // The CSR vs CSC status can be tested in SuiteSparse:GraphBLAS.
         // However, even with SuiteSparse:GraphBLAS, this step is optional.
@@ -709,7 +709,7 @@ fprintf (file, "%ld %lu %g  %2d %d %ld %lu %ld  %g\n",
 
             // q(i) = i+1 for all entries in q.
 
-            #ifdef GxB_SUITESPARSE_GRAPHBLAS
+            #if LG_SUITESPARSE
             GrB_Index *qi ;
             if (n > INT32_MAX)
             {

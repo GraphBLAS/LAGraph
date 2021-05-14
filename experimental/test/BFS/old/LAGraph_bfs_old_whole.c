@@ -460,7 +460,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
     // TODO: SPEC: this is one reason a GraphBLAS library should identify
     // itself with a #define.
 
-    #ifdef GxB_SUITESPARSE_GRAPHBLAS
+    #if LG_SUITESPARSE
 
         // The CSR vs CSC status can be tested in SuiteSparse:GraphBLAS.
         // However, even with SuiteSparse:GraphBLAS, this step is optional.
@@ -756,7 +756,7 @@ GrB_Info LAGraph_bfs_pushpull   // push-pull BFS, or push-only if AT = NULL
 
                 // TODO: use q(i)=i when q can be used as a structure-only mask
 
-                #ifdef GxB_SUITESPARSE_GRAPHBLAS
+                #if LG_SUITESPARSE
                 GrB_Index *qi ;
                 if (n > INT32_MAX)
                 {

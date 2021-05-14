@@ -71,12 +71,11 @@
 int main (int argc, char **argv)
 {
 
-#if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
-        && ( GxB_IMPLEMENTATION < GxB_VERSION (4,0,0) )
-    // SuiteSparse GraphBLAS v4.0 or later required
-    printf ("SuiteSparse GraphBLAS v4.0 or later required\n") ;
+#if !LG_SUITESPARSE
+    printf ("SuiteSparse required\n") ;
     return (GrB_INVALID_VALUE) ;
 #else
+
     printf ("%s v%d.%d.%d [%s] with bitmap parent\n",
         GxB_IMPLEMENTATION_NAME,
         GxB_IMPLEMENTATION_MAJOR,

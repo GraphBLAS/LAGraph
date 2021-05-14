@@ -75,9 +75,7 @@ GrB_Info LAGraph_xinit
     // initialize GraphBLAS
     GrB_Info info ;
 
-#if defined ( GxB_SUITESPARSE_GRAPHBLAS )
-
-    #if ( GxB_IMPLEMENTATION_MAJOR >= 3 )
+#if LG_SUITESPARSE
 
     LAGRAPH_OK (GxB_init (GrB_NONBLOCKING,
         user_malloc_function,
@@ -85,16 +83,6 @@ GrB_Info LAGraph_xinit
         user_realloc_function,
         user_free_function,
         user_malloc_is_thread_safe)) ;
-
-    #else
-
-    LAGRAPH_OK (GxB_init (GrB_NONBLOCKING,
-        user_malloc_function,
-        user_calloc_function,
-        user_realloc_function,
-        user_free_function)) ;
-
-    #endif
 
 #else
 

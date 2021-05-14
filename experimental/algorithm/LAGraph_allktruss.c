@@ -133,8 +133,7 @@ GrB_Info LAGraph_allktruss      // compute all k-trusses of a graph
     (*kmax) = 0 ;
     k = 0 ;
 
-#if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
-    && ( GxB_IMPLEMENTATION >= GxB_VERSION (3,0,1) )
+#if LG_SUITESPARSE
 
     GrB_Info info ;
 

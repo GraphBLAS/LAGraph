@@ -756,8 +756,7 @@ extern GrB_Descriptor
     LAGraph_desc_ttco ,   // A', B', compl mask
     LAGraph_desc_ttcr ;   // A', B', compl mask, replace
 
-#if defined ( GxB_SUITESPARSE_GRAPHBLAS ) \
-    && GxB_IMPLEMENTATION >= GxB_VERSION (3,0,1)
+#if LA_SUITESPARSE
 // requires SuiteSparse:GraphBLAS v3.0.1 or later
 extern GxB_SelectOp LAGraph_support ;
 #endif
