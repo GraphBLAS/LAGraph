@@ -74,7 +74,7 @@ int LAGraph_SampleDegree        // returns 0 if successful, -1 if failure
     for (int k = 0 ; k < nsamples ; k++)
     {
         uint64_t result = LAGraph_Random60 (&seed) ;
-        printf ("    result %lu\n", result) ;
+        printf ("    result %lu new seed %lu\n", result, seed) ;
         int64_t i = result % n ;
         // d = Degree (i)
         int64_t d ;
