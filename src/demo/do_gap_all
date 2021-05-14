@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# run all GAP benchmarks
+
+./do_gap_bfs
+./do_gap_bc
+./do_gap_cc
+./do_gap_pagerank
+./do_gap_sssp
+./do_gap_tc
+

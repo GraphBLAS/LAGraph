@@ -23,7 +23,7 @@
 #define NTHREAD_LIST 1
 #define THREAD_LIST 0
 
-#define LAGRAPH_FREE_ALL            \
+#define LAGraph_FREE_ALL            \
 {                                   \
     LAGraph_Delete (&G, NULL) ;     \
     GrB_free (&SourceNodes) ;       \
@@ -32,6 +32,10 @@
 
 int main (int argc, char **argv)
 {
+#if !SUITESPARSE
+    printf ("SuiteSparse:GraphBLAS v5 or later required\n") ;
+    exit (1) ;
+#else
 
     printf ("%s v%d.%d.%d [%s]\n",
         GxB_IMPLEMENTATION_NAME,
@@ -84,8 +88,8 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
-    LAGraph_TRY (LAGraph_Test_ReadProblem (&G, &SourceNodes,
-        false, false, false, GrB_INT32, false, argc, argv, msg)) ;
+    if (readproblem (&G, &SourceNodes,
+        false, false, false, GrB_INT32, false, argc, argv) != 0) ERROR ;
     GrB_Index n, nvals ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
@@ -171,7 +175,8 @@ int main (int argc, char **argv)
     // free all workspace and finish
     //--------------------------------------------------------------------------
 
-    LAGRAPH_FREE_ALL ;
+    LAGraph_FREE_ALL ;
     LAGraph_TRY (LAGraph_Finalize (msg)) ;
     return (0) ;
+#endif
 }

@@ -11,7 +11,7 @@
 
 #include "LAGraph_demo.h"
 
-#define LAGRAPH_FREE_ALL            \
+#define LAGraph_FREE_ALL            \
 {                                   \
     LAGraph_Delete (&G, NULL) ;     \
     GrB_free (&components) ;        \
@@ -26,6 +26,7 @@
 
 GrB_Index countCC (GrB_Vector f, GrB_Index n)
 {
+    // FIXME: use LAGraph_Malloc and LAGraph_Free
     GrB_Index nCC = 0;
     GrB_Index *w_val = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
     GrB_Vector_extractTuples (NULL, w_val, &n, f) ;
@@ -42,6 +43,10 @@ GrB_Index countCC (GrB_Vector f, GrB_Index n)
 
 int main (int argc, char **argv)
 {
+#if !SUITESPARSE
+    printf ("SuiteSparse:GraphBLAS v5 or later required\n") ;
+    exit (1) ;
+#else
 
     printf ("%s v%d.%d.%d [%s]\n",
         GxB_IMPLEMENTATION_NAME,
@@ -89,8 +94,8 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
-    LAGraph_TRY (LAGraph_Test_ReadProblem (&G, NULL,
-        true, false, true, NULL, false, argc, argv, msg)) ;
+    if (readproblem (&G, NULL,
+        true, false, true, NULL, false, argc, argv) != 0) ERROR ;
     GrB_Index n, nvals ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
@@ -137,7 +142,8 @@ int main (int argc, char **argv)
     // free all workspace and finish
     //--------------------------------------------------------------------------
 
-    LAGRAPH_FREE_ALL;
+    LAGraph_FREE_ALL;
     LAGraph_TRY (LAGraph_Finalize (msg)) ;
     return (0) ;
+#endif
 }

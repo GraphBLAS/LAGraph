@@ -18,7 +18,7 @@
 // #define NTHREAD_LIST 6
 // #define THREAD_LIST 64, 32, 24, 12, 8, 4
 
-#define LAGRAPH_FREE_ALL            \
+#define LAGraph_FREE_ALL            \
 {                                   \
     LAGraph_Delete (&G, msg) ;      \
     GrB_free (&A) ;                 \
@@ -31,12 +31,24 @@
 int main (int argc, char **argv)
 {
 
+#if !SUITESPARSE
+    printf ("SuiteSparse:GraphBLAS v5 or later required\n") ;
+    exit (1) ;
+#else
+
     printf ("%s v%d.%d.%d [%s]\n",
         GxB_IMPLEMENTATION_NAME,
         GxB_IMPLEMENTATION_MAJOR,
         GxB_IMPLEMENTATION_MINOR,
         GxB_IMPLEMENTATION_SUB,
         GxB_IMPLEMENTATION_DATE) ;
+
+    #if defined ( _OPENMP )
+    printf ("OpenMP is enabled\n") ;
+    #else
+    printf ("OpenMP is required\n") ;
+    exit (1) ;
+    #endif
 
     char msg [LAGRAPH_MSG_LEN] ;
 
@@ -59,6 +71,7 @@ int main (int argc, char **argv)
     int Nthreads [20] = { 0, THREAD_LIST } ;
     int nthreads_max ;
     LAGraph_TRY (LAGraph_GetNumThreads (&nthreads_max, NULL)) ;
+    printf ("nthreads_max: %d\n", nthreads_max) ;
     if (Nthreads [1] == 0)
     {
         // create thread list automatically
@@ -87,8 +100,8 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
-    LAGraph_TRY (LAGraph_Test_ReadProblem (&G, &SourceNodes,
-        false, false, true, NULL, false, argc, argv, msg)) ;
+    if (readproblem (&G, &SourceNodes,
+        false, false, true, NULL, false, argc, argv) != 0) ERROR ;
 
     // compute G->rowdegree
     LAGraph_TRY (LAGraph_Property_RowDegree (G, msg)) ;
@@ -257,7 +270,8 @@ int main (int argc, char **argv)
     // free all workspace and finish
     //--------------------------------------------------------------------------
 
-    LAGRAPH_FREE_ALL ;
+    LAGraph_FREE_ALL ;
     LAGraph_TRY (LAGraph_Finalize (msg)) ;
     return (0) ;
+#endif
 }

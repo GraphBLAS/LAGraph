@@ -18,7 +18,7 @@
 // #define NTHREAD_LIST 6
 // #define THREAD_LIST 64, 32, 24, 12, 8, 4
 
-#define LAGRAPH_FREE_ALL                        \
+#define LAGraph_FREE_ALL                        \
 {                                               \
     GrB_free (&A) ;                             \
     GrB_free (&Abool) ;                         \
@@ -29,6 +29,10 @@
 
 int main (int argc, char **argv)
 {
+#if !SUITESPARSE
+    printf ("SuiteSparse:GraphBLAS v5 or later required\n") ;
+    exit (1) ;
+#else
 
     printf ("PageRank test with %s v%d.%d.%d [%s]\n",
         GxB_IMPLEMENTATION_NAME,
@@ -80,8 +84,8 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
-    LAGraph_TRY (LAGraph_Test_ReadProblem (&G, NULL,
-        false, false, true, NULL, false, argc, argv, msg)) ;
+    if (readproblem (&G, NULL,
+        false, false, true, NULL, false, argc, argv) != 0) ERROR ;
     GrB_Index n, nvals ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
@@ -143,7 +147,8 @@ int main (int argc, char **argv)
     // free all workspace and finish
     //--------------------------------------------------------------------------
 
-    LAGRAPH_FREE_ALL ;
+    LAGraph_FREE_ALL ;
     LAGraph_TRY (LAGraph_Finalize (msg)) ;
     return (0) ;
+#endif
 }

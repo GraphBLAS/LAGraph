@@ -1,0 +1,8 @@
+#!/bin/sh
+
+../../build/src/demo/sssp_demo ~/GAP/GAP-kron/GAP-kron.grb       ~/GAP/GAP-kron/GAP-kron_sources.mtx         29     
+../../build/src/demo/sssp_demo ~/GAP/GAP-urand/GAP-urand.grb     ~/GAP/GAP-urand/GAP-urand_sources.mtx       41      
+../../build/src/demo/sssp_demo ~/GAP/GAP-twitter/GAP-twitter.grb ~/GAP/GAP-twitter/GAP-twitter_sources.mtx   51     
+../../build/src/demo/sssp_demo ~/GAP/GAP-web/GAP-web.grb         ~/GAP/GAP-web/GAP-web_sources.mtx           140    
+../../build/src/demo/sssp_demo ~/GAP/GAP-road/GAP-road.grb       ~/GAP/GAP-road/GAP-road_sources.mtx         50000 
+

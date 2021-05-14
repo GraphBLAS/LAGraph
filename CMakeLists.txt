@@ -82,6 +82,10 @@ include_directories (${GRAPHBLAS_INCLUDE_DIR})
 # Is this really necessary?
 #-------------------------------------------------------------------------------
 
+# Tim: yes, if we want a "sudo make install" to work.
+# With also need to use the "install ( ... )" command.
+# See the last part of the SuiteSparse:GraphBLAS CMakeLists.txt
+
 include ( GNUInstallDirs )
 
 #-------------------------------------------------------------------------------
@@ -90,6 +94,10 @@ include ( GNUInstallDirs )
 
 include ( FindOpenMP  )
 include ( FindThreads )
+
+if ( OPENMP_FOUND )
+    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS} " )
+endif ( )
 
 #-------------------------------------------------------------------------------
 # report status
@@ -179,6 +187,7 @@ endif ( )
 #-------------------------------------------------------------------------------
 # force use of vanilla code
 #-------------------------------------------------------------------------------
+
 if ( LG_VANILLA )
     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DLG_VANILLA=1 " )
 endif ( )
@@ -202,4 +211,3 @@ enable_testing()
 
 add_subdirectory(src)
 #add_subdirectory(experimental)
-

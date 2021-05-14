@@ -1,0 +1,8 @@
+#!/bin/sh
+
+../../build/src/demo/mtx2bin_demo /data/sparse.tamu.edu/gap/GAP-kron/GAP-kron.mtx       ~/GAP/GAP-kron/GAP-kron.grb
+../../build/src/demo/mtx2bin_demo /data/sparse.tamu.edu/gap/GAP-urand/GAP-urand.mtx     ~/GAP/GAP-urand/GAP-urand.grb
+../../build/src/demo/mtx2bin_demo /data/sparse.tamu.edu/gap/GAP-twitter/GAP-twitter.mtx ~/GAP/GAP-twitter/GAP-twitter.grb
+../../build/src/demo/mtx2bin_demo /data/sparse.tamu.edu/gap/GAP-web/GAP-web.mtx         ~/GAP/GAP-web/GAP-web.grb
+../../build/src/demo/mtx2bin_demo /data/sparse.tamu.edu/gap/GAP-road/GAP-road.mtx       ~/GAP/GAP-road/GAP-road.grb
+

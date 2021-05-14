@@ -22,7 +22,7 @@
 // #define NTHREAD_LIST 6
 // #define THREAD_LIST 64, 32, 24, 12, 8, 4
 
-#define LAGRAPH_FREE_ALL            \
+#define LAGraph_FREE_ALL            \
 {                                   \
     LAGraph_Delete (&G, NULL) ;     \
     GrB_free (&A) ;                 \
@@ -60,29 +60,28 @@ void print_method (FILE *f, int method, int sorting)
 
 int main (int argc, char **argv)
 {
+#if !SUITESPARSE
+    printf ("SuiteSparse:GraphBLAS v5 or later required\n") ;
+    exit (1) ;
+#else
 
     //--------------------------------------------------------------------------
     // initialize LAGraph and GraphBLAS
     //--------------------------------------------------------------------------
 
-#if LG_SUITESPARSE
     printf ("%s v%d.%d.%d [%s]\n",
         GxB_IMPLEMENTATION_NAME,
         GxB_IMPLEMENTATION_MAJOR,
         GxB_IMPLEMENTATION_MINOR,
         GxB_IMPLEMENTATION_SUB,
         GxB_IMPLEMENTATION_DATE) ;
-#endif
 
     char msg [LAGRAPH_MSG_LEN] ;
 
     GrB_Matrix A = NULL ;
     LAGraph_Graph G = NULL ;
     LAGraph_TRY (LAGraph_Init (msg)) ;
-
-#if LG_SUITESPARSE
     GrB_TRY (GxB_set (GxB_BURBLE, false)) ;
-#endif
 
     int ntrials = 3 ;
     // ntrials = 1 ;        // HACK
@@ -116,8 +115,8 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
-    LAGraph_TRY (LAGraph_Test_ReadProblem (&G, NULL, true, true, true,
-                                           NULL, false, argc, argv, msg)) ;
+    if (readproblem (&G, NULL,
+        true, true, true, NULL, false, argc, argv) != 0) ERROR ;
 
     // determine the row degree property
     LAGraph_TRY (LAGraph_Property_RowDegree (G, msg)) ;
@@ -198,9 +197,9 @@ int main (int argc, char **argv)
 
                     LAGraph_TRY (LAGraph_Toc (&ttrial [trial], tic, NULL)) ;
                     ttot += ttrial [trial] ;
-                    printf ("trial %2d: %12.6f sec rate %6.2f  # triangles: %ld\n",
-                            trial, ttrial [trial], 1e-6 * nvals / ttrial [trial],
-                            nt2) ;
+                    printf ("trial %2d: %12.6f sec rate %6.2f  # triangles: "
+                        "%ld\n", trial, ttrial [trial],
+                        1e-6 * nvals / ttrial [trial], nt2) ;
                 }
                 ttot = ttot / ntrials ;
                 printf ("nthreads: %3d time: %12.6f rate: %6.2f", nthreads,
@@ -230,6 +229,9 @@ int main (int argc, char **argv)
     print_method (stdout, method_best, sorting_best) ;
     printf ("nthreads: %3d time: %12.6f rate: %6.2f\n",
         nthreads_best, t_best, 1e-6 * nvals / t_best) ;
-    LAGRAPH_FREE_ALL ;
+    LAGraph_FREE_ALL ;
     LAGraph_TRY (LAGraph_Finalize (msg)) ;
+    return (0) ;
+#endif
 }
+
