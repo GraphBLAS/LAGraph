@@ -69,10 +69,12 @@ int LAGraph_SampleDegree        // returns 0 if successful, -1 if failure
     GrB_Index n ;
     GrB_TRY (GrB_Vector_size (&n, Degree)) ;
 
+    printf ("\nnsamples: %ld n: %ld seed: %lu\n", nsamples, n, seed) ;
     int64_t dsum = 0 ;
     for (int k = 0 ; k < nsamples ; k++)
     {
         uint64_t result = LAGraph_Random60 (&seed) ;
+        printf ("    result %lu\n", result) ;
         int64_t i = result % n ;
         // d = Degree (i)
         int64_t d ;

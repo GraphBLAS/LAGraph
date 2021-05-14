@@ -160,12 +160,13 @@ static bool print_double
 }
 
 //------------------------------------------------------------------------------
-// LAGraph_MMWrite
+// LAGraph_MMWrite_type: write a matrix to a MatrixMarket file with given type
 //------------------------------------------------------------------------------
 
-int LAGraph_MMWrite
+int LAGraph_MMWrite_type
 (
     GrB_Matrix A,       // matrix to write to the file
+    GrB_Type type,      // type to write to the file
     FILE *f,            // file to write it to, must be already open
     FILE *fcomments,    // optional file with extra comments, may be NULL
     char *msg
@@ -180,16 +181,14 @@ int LAGraph_MMWrite
     void *X = NULL ;
     GrB_Index *I = NULL, *J = NULL, *K = NULL ;
     GrB_Matrix M = NULL, AT = NULL, C = NULL ;
-    LG_CHECK (A == NULL || f == NULL, -1001, "inputs are NULL") ;
+    LG_CHECK (A == NULL || f == NULL || type == NULL, -1001,
+        "inputs are NULL") ;
 
     //--------------------------------------------------------------------------
     // determine the basic matrix properties
     //--------------------------------------------------------------------------
 
-    GrB_Type type ;
     GrB_Index nrows, ncols, nvals ;
-
-    GrB_TRY (GxB_Matrix_type  (&type,  A)) ;        // FIXME
     GrB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
     GrB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
@@ -526,5 +525,48 @@ int LAGraph_MMWrite
 
     LAGraph_FREE_ALL ;
     return (0) ;
+}
+
+//------------------------------------------------------------------------------
+// LAGraph_MMWrite: write a matrix to a MatrixMarket file, auto select type
+//------------------------------------------------------------------------------
+
+#undef  LAGraph_FREE_WORK
+#define LAGraph_FREE_WORK ;
+
+int LAGraph_MMWrite
+(
+    GrB_Matrix A,       // matrix to write to the file
+    FILE *f,            // file to write it to, must be already open
+    FILE *fcomments,    // optional file with extra comments, may be NULL
+    char *msg
+)
+{
+
+    //--------------------------------------------------------------------------
+    // check inputs
+    //--------------------------------------------------------------------------
+
+    LG_CLEAR_MSG ;
+    LG_CHECK (A == NULL || f == NULL, -1001, "inputs are NULL") ;
+
+    //--------------------------------------------------------------------------
+    // determine the type
+    //--------------------------------------------------------------------------
+
+    GrB_Type type ;
+    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+        // SuiteSparse:GraphBLAS: query the type and print accordingly
+        GrB_TRY (GxB_Matrix_type (&type, A)) ;
+    #else
+        // no way to determine the type with pure GrB*; print as if FP64
+        type = GrB_FP64 ;
+    #endif
+
+    //--------------------------------------------------------------------------
+    // write the matrix
+    //--------------------------------------------------------------------------
+
+    return (LAGraph_MMWrite_type (A, type, f, fcomments, msg)) ;
 }
 

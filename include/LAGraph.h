@@ -633,7 +633,17 @@ int LAGraph_MMRead
     char *msg
 );
 
-// LAGraph_MMWrite: write a matrix in MatrixMarket format
+// LAGraph_MMWrite: write a matrix in MatrixMarket format with given type
+int LAGraph_MMWrite_type
+(
+    GrB_Matrix A,       // matrix to write to the file
+    GrB_Type type,      // type to write to the file
+    FILE *f,            // file to write it to, must be already open
+    FILE *fcomments,    // optional file with extra comments, may be NULL
+    char *msg
+) ;
+
+// LAGraph_MMWrite: write a matrix in MatrixMarket format, auto select type
 int LAGraph_MMWrite
 (
     GrB_Matrix A,       // matrix to write to the file

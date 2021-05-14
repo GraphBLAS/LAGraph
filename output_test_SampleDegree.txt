@@ -1,0 +1,199 @@
+Test SampleDegree...                            
+==================== Test case: A.mtx
+
+nsamples: 5 n: 7 seed: 123456
+    result 731672081141293441
+    result 288175086271170360
+    result 1136655146860550193
+    result 58406921968524570
+    result 902238658499331771
+
+nsamples: 5 n: 7 seed: 123456
+    result 731672081141293441
+    result 288175086271170360
+    result 1136655146860550193
+    result 58406921968524570
+    result 902238658499331771
+
+==================== Test case: LFAT5.mtx
+
+nsamples: 5 n: 14 seed: 123456
+    result 731672081141293441
+    result 288175086271170360
+    result 1136655146860550193
+    result 58406921968524570
+    result 902238658499331771
+
+nsamples: 5 n: 14 seed: 123456
+    result 731672081141293441
+    result 288175086271170360
+    result 1136655146860550193
+    result 58406921968524570
+    result 902238658499331771
+
+==================== Test case: cover.mtx
+
+nsamples: 5 n: 7 seed: 123456
+    result 731672081141293441
+    result 288175086271170360
+    result 1136655146860550193
+    result 58406921968524570
+    result 902238658499331771
+
+nsamples: 5 n: 7 seed: 123456
+    result 731672081141293441
+    result 288175086271170360
+    result 1136655146860550193
+    result 58406921968524570
+    result 902238658499331771
+
+==================== Test case: full.mtx
+
+nsamples: 5 n: 3 seed: 123456
+    result 731672081141293441
+    result 288175086271170360
+    result 1136655146860550193
+    result 58406921968524570
+    result 902238658499331771
+
+nsamples: 5 n: 3 seed: 123456
+    result 731672081141293441
+    result 288175086271170360
+    result 1136655146860550193
+    result 58406921968524570
+    result 902238658499331771
+
+==================== Test case: full_symmetric.mtx
+
+nsamples: 5 n: 4 seed: 123456
+    result 731672081141293441
+    result 288175086271170360
+    result 1136655146860550193
+    result 58406921968524570
+    result 902238658499331771
+
+nsamples: 5 n: 4 seed: 123456
+    result 731672081141293441
+    result 288175086271170360
+    result 1136655146860550193
+    result 58406921968524570
+    result 902238658499331771
+
+==================== Test case: karate.mtx
+
+nsamples: 5 n: 34 seed: 123456
+    result 731672081141293441
+    result 288175086271170360
+    result 1136655146860550193
+    result 58406921968524570
+    result 902238658499331771
+
+nsamples: 5 n: 34 seed: 123456
+    result 731672081141293441
+    result 288175086271170360
+    result 1136655146860550193
+    result 58406921968524570
+    result 902238658499331771
+
+==================== Test case: karate.mtx
+
+nsamples: 15 n: 34 seed: 123456
+    result 731672081141293441
+    result 288175086271170360
+    result 1136655146860550193
+    result 58406921968524570
+    result 902238658499331771
+    result 63649759747628304
+    result 782570312776056923
+    result 311151871899098201
+    result 640245675625966939
+    result 670623038347638618
+    result 918436376942399277
+    result 545463790978438548
+    result 511114892172133474
+    result 705889606747155875
+    result 253094403459812525
+
+nsamples: 15 n: 34 seed: 123456
+    result 731672081141293441
+    result 288175086271170360
+    result 1136655146860550193
+    result 58406921968524570
+    result 902238658499331771
+    result 63649759747628304
+    result 782570312776056923
+    result 311151871899098201
+    result 640245675625966939
+    result 670623038347638618
+    result 918436376942399277
+    result 545463790978438548
+    result 511114892172133474
+    result 705889606747155875
+    result 253094403459812525
+
+==================== Test case: karate.mtx
+
+nsamples: 5 n: 34 seed: 87654432
+    result 1074213504293355682
+    result 977463504786069596
+    result 729827802284490811
+    result 862832436210854467
+    result 44643575991252361
+
+nsamples: 5 n: 34 seed: 87654432
+    result 1074213504293355682
+    result 977463504786069596
+    result 729827802284490811
+    result 862832436210854467
+    result 44643575991252361
+
+==================== Test case: ldbc-cdlp-directed-example.mtx
+
+nsamples: 5 n: 8 seed: 123456
+    result 731672081141293441
+    result 288175086271170360
+    result 1136655146860550193
+    result 58406921968524570
+    result 902238658499331771
+
+nsamples: 5 n: 8 seed: 123456
+    result 731672081141293441
+    result 288175086271170360
+    result 1136655146860550193
+    result 58406921968524570
+    result 902238658499331771
+
+==================== Test case: ldbc-directed-example-bool.mtx
+
+nsamples: 10 n: 10 seed: 123
+    result 236687786837872076
+    result 613844292634715201
+    result 833055430985444244
+    result 31062834126486789
+    result 767682497461737005
+    result 1052380405173044382
+    result 193309008762104714
+    result 419764801539310420
+    result 640229372794794816
+    result 23896941306832135
+
+nsamples: 10 n: 10 seed: 123
+    result 236687786837872076
+    result 613844292634715201
+    result 833055430985444244
+    result 31062834126486789
+    result 767682497461737005
+    result 1052380405173044382
+    result 193309008762104714
+    result 419764801539310420
+    result 640229372794794816
+    result 23896941306832135
+[ FAILED ]
+  Case ldbc-directed-example-bool.mtx:
+    test_SampleDegree.c:191: Check is_close(mean, files [k].col_mean)... failed
+      Column Mean Expected: 1.900000
+      Column Mean Produced: 3.900000
+    test_SampleDegree.c:195: Check is_close(median, files [k].col_median)... failed
+      Column Median Expected: 2.000000
+      Column Median Produced: 3.000000
+FAILED: 1 of 1 unit tests has failed.

@@ -128,6 +128,7 @@ void test_SampleDegree (void)
         //const int *rowdeg = files [k].rowdeg ;
         //const int *coldeg = files [k].coldeg ;
         TEST_CASE (aname) ;
+        printf ("\n==================== Test case: %s\n", aname) ;
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;

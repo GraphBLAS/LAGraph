@@ -187,7 +187,7 @@ void test_MMRead (void)
         //----------------------------------------------------------------------
 
         f = tmpfile ( ) ;
-        OK (LAGraph_MMWrite (A, f, NULL, msg)) ;
+        OK (LAGraph_MMWrite_type (A, atype, f, NULL, msg)) ;
         TEST_MSG ("Failed to write %s to a temp file\n", aname) ;
 
         //----------------------------------------------------------------------
@@ -466,7 +466,16 @@ void test_MMWrite (void)
         FILE *foutput = fopen (filename, "w") ;
         TEST_CHECK (foutput != NULL) ;
         TEST_CHECK (fcomments != NULL) ;
-        OK (LAGraph_MMWrite (A, foutput, fcomments, msg)) ;
+        if (atype == GrB_FP64)
+        {
+            // select the type automatically
+            OK (LAGraph_MMWrite (A, foutput, fcomments, msg)) ;
+        }
+        else
+        {
+            // pass in the type
+            OK (LAGraph_MMWrite_type (A, atype, foutput, fcomments, msg)) ;
+        }
         fclose (fcomments) ;
         fclose (foutput) ;
         TEST_MSG ("Failed to create %s", filename) ;
@@ -520,6 +529,7 @@ void test_MMWrite_failures (void)
     // input arguments are NULL
     TEST_CHECK (LAGraph_MMWrite (NULL, NULL, NULL, msg) == -1001) ;
     printf ("msg: [%s]\n", msg) ;
+    TEST_CHECK (LAGraph_MMWrite_type (NULL, NULL, NULL, NULL, msg) == -1001) ;
 
     // attempt to print a matrix with a user-defined type, which should fail
     FILE *f = tmpfile ( ) ;
@@ -529,7 +539,7 @@ void test_MMWrite_failures (void)
     int status = LAGraph_Matrix_print_type (A, atype, 3, stdout, msg) ;
     printf ("msg: [%s]\n", msg) ;
     TEST_CHECK (status == -1002) ;
-    status = LAGraph_MMWrite (A, f, NULL, msg) ;
+    status = LAGraph_MMWrite_type (A, atype, f, NULL, msg) ;
     printf ("msg: [%s]\n", msg) ;
     TEST_CHECK (status == -1006) ;
     OK (GrB_free (&atype)) ;
