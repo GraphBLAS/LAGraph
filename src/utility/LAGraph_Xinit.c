@@ -35,7 +35,7 @@ int LAGraph_Xinit           // returns 0 if successful, -1 if failure
     // start GraphBLAS
     //--------------------------------------------------------------------------
 
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    #if LG_SUITESPARSE
 
         #if ( GxB_IMPLEMENTATION >= GxB_VERSION (5,0,2) )
         // calloc may be NULL

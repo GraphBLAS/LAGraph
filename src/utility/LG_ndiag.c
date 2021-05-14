@@ -42,7 +42,7 @@ int LG_ndiag                // returns 0 if successful, < 0 if failure
     GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
     GrB_Index n = LAGraph_MIN (nrows, ncols) ;
 
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    #if LG_SUITESPARSE
 
         #if ( GxB_IMPLEMENTATION >= GxB_VERSION (5,0,2) )
 

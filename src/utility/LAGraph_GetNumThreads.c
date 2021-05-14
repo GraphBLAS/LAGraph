@@ -22,7 +22,7 @@ int LAGraph_GetNumThreads   // returns 0 if successful, or -1 if failure
     LG_CLEAR_MSG ;
     LG_CHECK (nthreads == NULL, -1, "nthreads is NULL") ;
 
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    #if LG_SUITESPARSE
     {
         // SuiteSparse:GraphBLAS: get # of threads from global setting
         GrB_TRY (GxB_get (GxB_NTHREADS, nthreads)) ;

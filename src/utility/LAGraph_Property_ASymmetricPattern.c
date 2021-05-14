@@ -72,7 +72,7 @@ int LAGraph_Property_ASymmetricPattern  // 0 if successful, -1 if failure
 
     GrB_TRY (GrB_Matrix_new (&C, GrB_BOOL, n, n)) ;
 
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    #if LG_SUITESPARSE
 
         // C(i,j) = 1 if both A(i,j) and AT(i,j) exist
         GrB_TRY (GrB_eWiseMult (C, NULL, NULL, GxB_PAIR_BOOL, A, G->AT, NULL)) ;

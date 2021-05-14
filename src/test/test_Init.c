@@ -39,7 +39,7 @@ void test_Init (void)
     // for SuiteSparse, it returns GrB_SUCCESS
     int status = LAGraph_Finalize (msg) ;
     printf ("status %d\n", status) ;
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    #if LG_SUITESPARSE
     TEST_CHECK (status == GrB_SUCCESS) ;
     #endif
 }

@@ -19,7 +19,7 @@ int LAGraph_SetNumThreads       // returns 0 if successful, -1 if failure
 
     LG_CLEAR_MSG ;
 
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    #if LG_SUITESPARSE
     {
         // SuiteSparse:GraphBLAS: set # of threads with global setting
         GrB_TRY (GxB_set (GxB_NTHREADS, nthreads)) ;

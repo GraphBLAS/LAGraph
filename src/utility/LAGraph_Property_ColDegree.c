@@ -66,7 +66,7 @@ int LAGraph_Property_ColDegree  // 0 if successful, -1 if failure
         // G->coldegree = row degree of AT
         //----------------------------------------------------------------------
 
-        #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+        #if LG_SUITESPARSE
 
             // x = zeros (nrows,1)
             GrB_TRY (GrB_Vector_new (&x, GrB_INT64, nrows)) ;
@@ -95,7 +95,7 @@ int LAGraph_Property_ColDegree  // 0 if successful, -1 if failure
         // G->coldegree = column degree of A
         //----------------------------------------------------------------------
 
-        #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+        #if LG_SUITESPARSE
 
             // x = zeros (nrows,1)
             GrB_TRY (GrB_Vector_new (&x, GrB_INT64, nrows)) ;

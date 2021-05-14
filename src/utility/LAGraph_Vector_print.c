@@ -207,7 +207,7 @@ int LAGraph_Vector_print
     //--------------------------------------------------------------------------
 
     GrB_Type type ;
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    #if LG_SUITESPARSE
         // SuiteSparse:GraphBLAS: query the type and print accordingly
         GrB_TRY (GxB_Vector_type (&type, v)) ;
     #else

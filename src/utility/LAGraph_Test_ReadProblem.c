@@ -14,7 +14,7 @@
 
 // The matrixfile may also have a grb suffix.
 
-#if defined(GxB_SUITESPARSE_GRAPHBLAS)
+#if LG_SUITESPARSE
 
     #define LAGraph_FREE_WORK           \
     {                                   \
@@ -70,7 +70,7 @@ int LAGraph_Test_ReadProblem    // returns 0 if successful, -1 if failure
     LG_CLEAR_MSG ;
     GrB_Matrix A = NULL, A2 = NULL ;
     GrB_Type A_type = NULL;
-#if defined(GxB_SUITESPARSE_GRAPHBLAS)
+#if LG_SUITESPARSE
     GxB_Scalar thunk = NULL ;  // TODO
 #endif
     FILE *f = NULL ;
@@ -228,7 +228,7 @@ int LAGraph_Test_ReadProblem    // returns 0 if successful, -1 if failure
 
     if (remove_self_edges)
     {
-#if defined(GxB_SUITESPARSE_GRAPHBLAS)
+#if LG_SUITESPARSE
         GrB_TRY (GxB_Scalar_new (&thunk, GrB_INT64)) ;
         GrB_TRY (GxB_Scalar_setElement (thunk, 0)) ;
         GrB_TRY (GxB_select (A, NULL, NULL, GxB_OFFDIAG, A, thunk, NULL)) ;
@@ -248,10 +248,10 @@ int LAGraph_Test_ReadProblem    // returns 0 if successful, -1 if failure
     if (!pattern && ensure_positive)
     {
         // drop explicit zeros
-#if defined(GxB_SUITESPARSE_GRAPHBLAS)
+        GrB_UnaryOp op = NULL ;
+#if LG_SUITESPARSE
         GrB_TRY (GxB_select (A, NULL, NULL, GxB_NONZERO, A, NULL, NULL)) ;
 #else
-        GrB_UnaryOp op = NULL ;
         if      (A_type == GrB_INT8  )  op = GrB_IDENTITY_INT8 ;
         else if (A_type == GrB_INT16 )  op = GrB_IDENTITY_INT16 ;
         else if (A_type == GrB_INT32 )  op = GrB_IDENTITY_INT32 ;
@@ -267,7 +267,7 @@ int LAGraph_Test_ReadProblem    // returns 0 if successful, -1 if failure
 #endif
 
         // A = abs (A)
-        GrB_UnaryOp op = NULL ;
+        op = NULL ;
         if      (A_type == GrB_INT8  ) op = GrB_ABS_INT8 ;
         else if (A_type == GrB_INT16 ) op = GrB_ABS_INT16 ;
         else if (A_type == GrB_INT32 ) op = GrB_ABS_INT32 ;

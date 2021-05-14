@@ -38,8 +38,8 @@ int LAGraph_CheckGraph      // returns 0 if successful, -1 if failure
         LG_CHECK (nrows != ncols, -1, "adjacency matrix invalid") ;
     }
 
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
-        // only by-row format is supported
+    #if LG_SUITESPARSE
+        // only by-row format is supported when using SuiteSparse
         GxB_Format_Value fmt ;
         GrB_TRY (GxB_get (A, GxB_FORMAT, &fmt)) ;
         LG_CHECK (fmt != GxB_BY_ROW, -2, "only by-row format supported") ;
@@ -58,8 +58,8 @@ int LAGraph_CheckGraph      // returns 0 if successful, -1 if failure
         LG_CHECK (nrows != ncols2 || ncols != nrows2, -3,
             "G->AT matrix invalid") ;
 
-        #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
-            // only by-row format is supported
+        #if LG_SUITESPARSE
+            // only by-row format is supported when using SuiteSparse
             GxB_Format_Value fmt ;
             GrB_TRY (GxB_get (AT, GxB_FORMAT, &fmt)) ;
             LG_CHECK (fmt != GxB_BY_ROW, -4, "only by-row format supported") ;

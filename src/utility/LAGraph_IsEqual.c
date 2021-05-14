@@ -179,7 +179,7 @@ int LAGraph_IsEqual         // returns 0 if successful, < 0 if failure
     //--------------------------------------------------------------------------
 
     GrB_Type type ;
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    #if LG_SUITESPARSE
         // SuiteSparse:GraphBLAS: query the type and compare accordingly
         GrB_TRY (GxB_Matrix_type (&type, A)) ;
     #else

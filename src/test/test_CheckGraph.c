@@ -173,7 +173,7 @@ void test_CheckGraph_failures (void)
     TEST_CHECK (LAGraph_CheckGraph (G, msg) == -5) ;
     printf ("msg: %s\n", msg) ;
 
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    #if LG_SUITESPARSE
     // G->AT must be by-row
     OK (GxB_set (G->AT, GxB_FORMAT, GxB_BY_COL)) ;
     TEST_CHECK (LAGraph_CheckGraph (G, msg) == -4) ;
@@ -206,7 +206,7 @@ void test_CheckGraph_failures (void)
 
     G->coldegree = NULL ;
 
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    #if LG_SUITESPARSE
     // G->A must be by-row
     OK (GxB_set (G->A, GxB_FORMAT, GxB_BY_COL)) ;
     TEST_CHECK (LAGraph_CheckGraph (G, msg) == -2) ;

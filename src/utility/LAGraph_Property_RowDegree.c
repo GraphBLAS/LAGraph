@@ -58,7 +58,7 @@ int LAGraph_Property_RowDegree  // 0 if successful, -1 if failure
 
     GrB_TRY (GrB_Vector_new (&rowdegree, GrB_INT64, nrows)) ;
 
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    #if LG_SUITESPARSE
 
         // x = zeros (ncols,1)
         GrB_TRY (GrB_Vector_new (&x, GrB_INT64, ncols)) ;

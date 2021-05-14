@@ -107,7 +107,7 @@ void setup (void)
     printf ("\nsetup: %s\n", __FILE__) ;
     printf ("data is in [%s]\n", LG_DATA_DIR) ;
     OK (LAGraph_Init (msg)) ;
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    #if LG_SUITESPARSE
     OK (GxB_get (GxB_LIBRARY_NAME, &name)) ;
     OK (GxB_get (GxB_LIBRARY_DATE, &date)) ;
     OK (GxB_get (GxB_LIBRARY_VERSION, ver)) ;
@@ -120,7 +120,7 @@ void setup (void)
 
 void teardown (void)
 {
-    #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    #if LG_SUITESPARSE
     printf ("\n%s %d.%d.%d (%s)\n", name, ver [0], ver [1], ver [2], date) ;
     #endif
     OK (GrB_free (&A)) ;
@@ -171,7 +171,7 @@ void test_MMRead (void)
         TEST_CHECK (nrows == files [k].nrows) ;
         TEST_CHECK (ncols == files [k].ncols) ;
         TEST_CHECK (nvals == files [k].nvals) ;
-        #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+        #if LG_SUITESPARSE
         OK (GxB_Matrix_type (&btype, A)) ;
         TEST_CHECK (atype == btype) ;
         #endif

@@ -70,4 +70,13 @@
     #define LAGRAPH_INDEX_MAX ((GrB_Index) (1ULL << 60))
 #endif
 
+// vanilla vs SuiteSparse:
+#if !defined ( LG_VANILLA ) && defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    // use SuiteSparse, and its GxB* extensions
+    #define LG_SUITESPARSE 1
+#else
+    // use any GraphBLAS library (possibly SuiteSparse) but with no GxB*
+    #define LG_SUITESPARSE 0
+#endif
+
 #endif  // LAGRAPH_PLATFORM_H
