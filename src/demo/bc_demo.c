@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// test_bc: betweenness centrality for the GAP benchmark
+// LAGraph/src/demo/bc_demo: betweenness centrality for the GAP benchmark
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -10,19 +10,32 @@
 // Contributed by Scott Kolodziej and Tim Davis, Texas A&M University
 
 // usage:
-// test_bc < matrixfile.mtx
-// test_bc matrixfile.mtx sourcenodes.mtx
+// bc_demo < matrixfile.mtx
+// bc_demo matrixfile.mtx sourcenodes.mtx
 
 #include "LAGraph_demo.h"
 
-// FIXME: describe how NTHREAD_LIST works
+// NTHREAD_LIST and THREAD_LIST are used together to select the # of OpenMP
+// threads to use in this demo.  If THREAD_LIST is zero, then the # of threads
+// is chosen automatically.  Let p = omp_get_max_threads ( ).  Then if
+// NTHREAD_LIST is 4, the experiment will be run 4 times, with p, p/2, p/4, and
+// p/8 threads.  If you instead wish to exactly specify the number of threads
+// for each run, the define THREAD_LIST as a list of integers.  Each of the
+// *_demo.c main programs has its own NTHREAD_LIST and THREAD_LIST definitions.
+
+// to run just once, with p = omp_get_max_threads() threads
 #define NTHREAD_LIST 1
-// #define NTHREAD_LIST 2
 #define THREAD_LIST 0
 
+// to run with p and p/2 threads, if p = omp_get_max_threads()
+// #define NTHREAD_LIST 2
+// #define THREAD_LIST 0
+
+// to run with 40, 20, 10, and 1 thread:
 // #define NTHREAD_LIST 4
 // #define THREAD_LIST 40, 20, 10, 1
 
+// to run with 64, 32, 24, 12, 8, and 4 threads:
 // #define NTHREAD_LIST 6
 // #define THREAD_LIST 64, 32, 24, 12, 8, 4
 

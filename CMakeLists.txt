@@ -14,12 +14,13 @@
 # compiler is required.  First, install any GraphBLAS library.  Alternatively,
 # use ../GraphBLAS (see comments below).
 #
-# To compile the LAGraph library, all of its tests and demos:
+# To compile the LAGraph library and its tests and demos, and run the tests:
 #
-#   mkdir buld
+#   mkdir build
 #   cd build
 #   cmake ..
 #   make
+#   make test
 #
 # If that fails for any reason, make sure your compiler supports ANSI C11.  You
 # could try changing your compiler for the cmake command, for example:
@@ -44,7 +45,7 @@ endif ( )
 set ( CMAKE_MACOSX_RPATH TRUE )
 
 # version of LAGraph
-set ( LAGraph_DATE "April 1, 2021" )
+set ( LAGraph_DATE "May 14, 2021" )
 set ( LAGraph_VERSION_MAJOR 0 )
 set ( LAGraph_VERSION_MINOR 9 )
 set ( LAGraph_VERSION_SUB   9 )
@@ -77,7 +78,6 @@ set ( ENV{GRAPHBLAS_ROOT} ${CMAKE_SOURCE_DIR}/../GraphBLAS )
 find_package (GraphBLAS REQUIRED MODULE)
 include_directories (${GRAPHBLAS_INCLUDE_DIR})
 
-
 #-------------------------------------------------------------------------------
 # Is this really necessary?
 #-------------------------------------------------------------------------------
@@ -104,7 +104,8 @@ endif ( )
 #-------------------------------------------------------------------------------
 
 message ( STATUS "CMAKE build type:          " ${CMAKE_BUILD_TYPE} )
-message ( STATUS "CMAKE source directory     " ${CMAKE_SOURCE_DIR} )
+message ( STATUS "CMAKE source directory:    " ${CMAKE_SOURCE_DIR} )
+message ( STATUS "CMAKE build directory:     " ${CMAKE_BINARY_DIR} )
 
 if ( ${CMAKE_BUILD_TYPE} STREQUAL "Debug")
     message ( STATUS "CMAKE C Flags debug:       " ${CMAKE_C_FLAGS_DEBUG} )
