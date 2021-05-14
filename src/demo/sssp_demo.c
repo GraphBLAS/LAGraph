@@ -32,18 +32,6 @@
 
 int main (int argc, char **argv)
 {
-#if !SUITESPARSE
-    printf ("SuiteSparse:GraphBLAS v5 or later required\n") ;
-    exit (1) ;
-#else
-
-    printf ("%s v%d.%d.%d [%s]\n",
-        GxB_IMPLEMENTATION_NAME,
-        GxB_IMPLEMENTATION_MAJOR,
-        GxB_IMPLEMENTATION_MINOR,
-        GxB_IMPLEMENTATION_SUB,
-        GxB_IMPLEMENTATION_DATE) ;
-
     char msg [LAGRAPH_MSG_LEN] ;
 
     LAGraph_Graph G = NULL ;
@@ -51,8 +39,8 @@ int main (int argc, char **argv)
     GrB_Vector pathlen = NULL ;
 
     // start GraphBLAS and LAGraph
-    LAGraph_TRY (LAGraph_Init (msg)) ;
-    GrB_TRY (GxB_set (GxB_BURBLE, false)) ;
+    bool burble = false ;
+    demo_init (burble) ;
 
     double tic [2] ;
 
@@ -155,7 +143,6 @@ int main (int argc, char **argv)
             printf ("sssp15:  threads: %2d trial: %2d source %9lu "
                 "time: %10.4f sec\n", nthreads, trial, src, ttrial) ;
             total_time += ttrial ;
-            // GxB_print (pathlen, 2) ;
         }
 
         //----------------------------------------------------------------------
@@ -178,5 +165,4 @@ int main (int argc, char **argv)
     LAGraph_FREE_ALL ;
     LAGraph_TRY (LAGraph_Finalize (msg)) ;
     return (0) ;
-#endif
 }

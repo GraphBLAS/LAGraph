@@ -43,17 +43,6 @@ GrB_Index countCC (GrB_Vector f, GrB_Index n)
 
 int main (int argc, char **argv)
 {
-#if !SUITESPARSE
-    printf ("SuiteSparse:GraphBLAS v5 or later required\n") ;
-    exit (1) ;
-#else
-
-    printf ("%s v%d.%d.%d [%s]\n",
-        GxB_IMPLEMENTATION_NAME,
-        GxB_IMPLEMENTATION_MAJOR,
-        GxB_IMPLEMENTATION_MINOR,
-        GxB_IMPLEMENTATION_SUB,
-        GxB_IMPLEMENTATION_DATE) ;
 
     char msg [LAGRAPH_MSG_LEN] ;
 
@@ -61,8 +50,8 @@ int main (int argc, char **argv)
     GrB_Vector components = NULL ;
 
     // start GraphBLAS and LAGraph
-    LAGraph_TRY (LAGraph_Init (msg)) ;
-    GrB_TRY (GxB_set (GxB_BURBLE, false)) ;
+    bool burble = false ;
+    demo_init (burble) ;
 
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;
@@ -145,5 +134,4 @@ int main (int argc, char **argv)
     LAGraph_FREE_ALL;
     LAGraph_TRY (LAGraph_Finalize (msg)) ;
     return (0) ;
-#endif
 }

@@ -116,3 +116,9 @@ files (SuiteSparse-only), and to run the GAP benchmarks, do the following:
 To control the number of OpenMP threads used in each demo, see the instructions
 in bc_demo.c regarding NTHREAD_LIST.
 
+You can also run these demos on the .mtx files in the LAGraph/data folder.
+For example, to run the BFS on 64 randomly selected source nodes on the
+bcsstk13.mtx, do:
+
+    ../../build/src/demo/bfs_demo < ../data/bcsstk13.mtx
+

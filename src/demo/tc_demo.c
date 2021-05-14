@@ -60,28 +60,19 @@ void print_method (FILE *f, int method, int sorting)
 
 int main (int argc, char **argv)
 {
-#if !SUITESPARSE
-    printf ("SuiteSparse:GraphBLAS v5 or later required\n") ;
-    exit (1) ;
-#else
 
     //--------------------------------------------------------------------------
     // initialize LAGraph and GraphBLAS
     //--------------------------------------------------------------------------
 
-    printf ("%s v%d.%d.%d [%s]\n",
-        GxB_IMPLEMENTATION_NAME,
-        GxB_IMPLEMENTATION_MAJOR,
-        GxB_IMPLEMENTATION_MINOR,
-        GxB_IMPLEMENTATION_SUB,
-        GxB_IMPLEMENTATION_DATE) ;
-
     char msg [LAGRAPH_MSG_LEN] ;
 
     GrB_Matrix A = NULL ;
     LAGraph_Graph G = NULL ;
-    LAGraph_TRY (LAGraph_Init (msg)) ;
-    GrB_TRY (GxB_set (GxB_BURBLE, false)) ;
+
+    // start GraphBLAS and LAGraph
+    bool burble = false ;
+    demo_init (burble) ;
 
     int ntrials = 3 ;
     // ntrials = 1 ;        // HACK
@@ -232,6 +223,5 @@ int main (int argc, char **argv)
     LAGraph_FREE_ALL ;
     LAGraph_TRY (LAGraph_Finalize (msg)) ;
     return (0) ;
-#endif
 }
 

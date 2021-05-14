@@ -50,17 +50,6 @@
 int main (int argc, char **argv)
 {
 
-#if !SUITESPARSE
-    printf ("SuiteSparse:GraphBLAS v5 or later required\n") ;
-    exit (1) ;
-#else
-    printf ("%s v%d.%d.%d [%s]\n",
-        GxB_IMPLEMENTATION_NAME,
-        GxB_IMPLEMENTATION_MAJOR,
-        GxB_IMPLEMENTATION_MINOR,
-        GxB_IMPLEMENTATION_SUB,
-        GxB_IMPLEMENTATION_DATE) ;
-
     char msg [LAGRAPH_MSG_LEN] ;
 
     LAGraph_Graph G = NULL ;
@@ -68,9 +57,8 @@ int main (int argc, char **argv)
     GrB_Matrix SourceNodes = NULL ;
 
     // start GraphBLAS and LAGraph
-    LAGraph_TRY (LAGraph_Init (msg)) ;
     bool burble = false ;
-    GrB_TRY (GxB_set (GxB_BURBLE, burble)) ;
+    demo_init (burble) ;
 
     int batch_size = 4 ;
 
@@ -162,12 +150,12 @@ int main (int argc, char **argv)
         //----------------------------------------------------------------------
 
         // back to default
-        GxB_set (GxB_NTHREADS, nthreads_max) ;
+        LAGraph_TRY (LAGraph_SetNumThreads (nthreads_max, msg)) ;
 
         for (int t = 1 ; t <= nt ; t++)
         {
             if (Nthreads [t] > nthreads_max) continue ;
-            GrB_TRY (GxB_set (GxB_NTHREADS, Nthreads [t])) ;
+            LAGraph_TRY (LAGraph_SetNumThreads (Nthreads [t], msg)) ;
 
             GrB_free (&centrality) ;
             double tic [2] ;
@@ -187,8 +175,6 @@ int main (int argc, char **argv)
         //----------------------------------------------------------------------
 
         // TODO: check results
-
-        // GrB_TRY (GxB_print (centrality, 2)) ;
         GrB_free (&centrality) ;
 
         // if burble is on, just do the first batch
@@ -215,5 +201,4 @@ int main (int argc, char **argv)
     LAGraph_FREE_ALL;
     LAGraph_TRY (LAGraph_Finalize (msg)) ;
     return (0) ;
-#endif
 }

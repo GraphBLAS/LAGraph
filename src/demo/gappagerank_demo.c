@@ -29,17 +29,6 @@
 
 int main (int argc, char **argv)
 {
-#if !SUITESPARSE
-    printf ("SuiteSparse:GraphBLAS v5 or later required\n") ;
-    exit (1) ;
-#else
-
-    printf ("PageRank test with %s v%d.%d.%d [%s]\n",
-        GxB_IMPLEMENTATION_NAME,
-        GxB_IMPLEMENTATION_MAJOR,
-        GxB_IMPLEMENTATION_MINOR,
-        GxB_IMPLEMENTATION_SUB,
-        GxB_IMPLEMENTATION_DATE) ;
 
     char msg [LAGRAPH_MSG_LEN] ;
 
@@ -51,13 +40,13 @@ int main (int argc, char **argv)
     FILE *f = NULL ;
 
     // start GraphBLAS and LAGraph
-    LAGraph_TRY (LAGraph_Init (msg)) ;
-    GrB_TRY (GxB_set (GxB_BURBLE, false)) ;
+    bool burble = false ;
+    demo_init (burble) ;
 
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;
     int nthreads_max ;
-    GrB_TRY (GxB_get (GxB_NTHREADS, &nthreads_max)) ;
+    LAGraph_TRY (LAGraph_GetNumThreads (&nthreads_max, NULL)) ;
     if (Nthreads [1] == 0)
     {
         // create thread list automatically
@@ -110,7 +99,7 @@ int main (int argc, char **argv)
     {
         int nthreads = Nthreads [kk] ;
         if (nthreads > nthreads_max) continue ;
-        GxB_set (GxB_NTHREADS, nthreads) ;
+        LAGraph_TRY (LAGraph_SetNumThreads (nthreads, msg)) ;
         printf ("\n--------------------------- nthreads: %2d\n", nthreads) ;
 
         double total_time = 0 ;
@@ -140,7 +129,6 @@ int main (int argc, char **argv)
     // check result
     //--------------------------------------------------------------------------
 
-    // GxB_print (PR, 2) ;
     // TODO
 
     //--------------------------------------------------------------------------
@@ -150,5 +138,4 @@ int main (int argc, char **argv)
     LAGraph_FREE_ALL ;
     LAGraph_TRY (LAGraph_Finalize (msg)) ;
     return (0) ;
-#endif
 }

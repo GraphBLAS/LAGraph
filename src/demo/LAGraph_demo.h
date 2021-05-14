@@ -74,7 +74,8 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
     //--------------------------------------------------------------------------
 
 #if !SUITESPARSE
-    printf ("SuiteSparse:GraphBLAS v5 or later is required\n") ;
+    printf ("SuiteSparse:GraphBLAS v5 or later is required to write"
+            " binary *.grb files\n") ;
     return (-1) ;
 #else
 
@@ -448,7 +449,8 @@ static inline int binread   // returns 0 if successful, -1 if failure
     //--------------------------------------------------------------------------
 
 #if !SUITESPARSE
-    printf ("SuiteSparse:GraphBLAS v5 or later is required\n") ;
+    printf ("SuiteSparse:GraphBLAS v5 or later is required to read"
+            " binary *.grb files\n") ;
     return (-1) ;
 #else
 
@@ -683,6 +685,7 @@ static inline int binread   // returns 0 if successful, -1 if failure
     GrB_free (&thunk) ;             \
     GrB_free (&A) ;                 \
     GrB_free (&A2) ;                \
+    GrB_free (&M) ;                 \
     if (f != NULL) fclose (f) ;     \
     f = NULL ;                      \
 }
@@ -720,14 +723,13 @@ static int readproblem          // returns 0 if successful, -1 if failure
     // check inputs
     //--------------------------------------------------------------------------
 
-#if !SUITESPARSE
-    printf ("SuiteSparse:GraphBLAS v5 or later is required\n") ;
-    return (-1) ;
-#else
-
-    GrB_Matrix A = NULL, A2 = NULL ;
+    GrB_Matrix A = NULL, A2 = NULL, M = NULL ;
     GrB_Type A_type = NULL;
+    #if SUITESPARSE
     GxB_Scalar thunk = NULL ;
+    #else
+    GrB_Vector thunk = NULL ;
+    #endif
     FILE *f = NULL ;
     if (G == NULL) ERROR ;
     (*G) = NULL ;
@@ -867,6 +869,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
         else if (pref == GxB_FC64  ) op = GxB_IDENTITY_FC64 ;
         #endif
         else ERROR ;    // unsupported type
+
         GrB_TRY (GrB_apply (A2, NULL, NULL, op, A, NULL)) ;
     }
 
@@ -884,10 +887,30 @@ static int readproblem          // returns 0 if successful, -1 if failure
 
     if (remove_self_edges)
     {
+        // TODO make this a utility function, LAGraph_OffDiag
+        #if SUITESPARSE
         GrB_TRY (GxB_Scalar_new (&thunk, GrB_INT64)) ;
         GrB_TRY (GxB_Scalar_setElement (thunk, 0)) ;
         GrB_TRY (GxB_select (A, NULL, NULL, GxB_OFFDIAG, A, thunk, NULL)) ;
         GrB_free (&thunk) ;
+        #else
+        GrB_TRY (GrB_Matrix_new (&M, GrB_BOOL, n, n)) ;
+        for (int64_t i = 0 ; i < n ; i++)
+        {
+            GrB_TRY (GrB_Matrix_setElement_BOOL (M, 1, i, i)) ;
+        }
+        // A<!M,struct,replace> = A
+        GrB_TRY (GrB_assign (A, M, NULL, A, GrB_ALL, n, GrB_ALL, n,
+            GrB_DESC_RSC)) ;
+        GrB_free (&M) ;
+        // check results:
+//      GrB_Index ndiag ;
+//      GrB_TRY (GrB_Vector_new (&thunk, A_type, n)) ;
+//      GrB_TRY (GxB_Vector_diag (thunk, A, 0, NULL)) ;
+//      GrB_TRY (GrB_Vector_nvals (&ndiag, thunk)) ;
+//      GrB_free (&thunk) ;
+//      if (ndiag != 0) { printf ("Hey! %ld\n", ndiag) ; exit (1) ; }
+        #endif
     }
 
     //--------------------------------------------------------------------------
@@ -896,12 +919,17 @@ static int readproblem          // returns 0 if successful, -1 if failure
 
     if (!pattern && ensure_positive)
     {
-        // drop explicit zeros
-        GrB_UnaryOp op = NULL ;
+        // TODO: make this a utility function, to drop explicit zeros
+        #if SUITESPARSE
         GrB_TRY (GxB_select (A, NULL, NULL, GxB_NONZERO, A, NULL, NULL)) ;
+        #else
+        // A<A,replace> = A
+        GrB_TRY (GrB_assign (A, A, NULL, A, GrB_ALL, n, GrB_ALL, n,
+            GrB_DESC_R)) ;
+        #endif
 
         // A = abs (A)
-        op = NULL ;
+        GrB_UnaryOp op = NULL ;
         if      (A_type == GrB_INT8  ) op = GrB_ABS_INT8 ;
         else if (A_type == GrB_INT16 ) op = GrB_ABS_INT16 ;
         else if (A_type == GrB_INT32 ) op = GrB_ABS_INT32 ;
@@ -957,7 +985,6 @@ static int readproblem          // returns 0 if successful, -1 if failure
             {
                 GrB_BinaryOp op = NULL ;
                 GrB_Type type ;
-                //GrB_TRY (GxB_Matrix_type (&type, (*G)->A)) ;
                 if      ((*G)->A_type == GrB_BOOL  ) op = GrB_LOR ;
                 else if ((*G)->A_type == GrB_INT8  ) op = GrB_PLUS_INT8 ;
                 else if ((*G)->A_type == GrB_INT16 ) op = GrB_PLUS_INT16 ;
@@ -1020,10 +1047,33 @@ static int readproblem          // returns 0 if successful, -1 if failure
     LAGraph_FREE_WORK ;
     LAGraph_TRY (LAGraph_DisplayGraph (*G, 2, stdout, msg)) ;
     return (0) ;
-#endif
 }
 
+//------------------------------------------------------------------------------
+// demo_init: initialize LAGraph for a demo
+//------------------------------------------------------------------------------
+
 #undef  LAGraph_FREE_WORK
+#undef  LAGraph_FREE_ALL
+#define LAGraph_FREE_ALL ;
+
+static inline int demo_init (bool burble)
+{
+    LAGraph_TRY (LAGraph_Init (NULL)) ;
+    #if SUITESPARSE
+    printf ("%s v%d.%d.%d [%s]\n",
+        GxB_IMPLEMENTATION_NAME,
+        GxB_IMPLEMENTATION_MAJOR,
+        GxB_IMPLEMENTATION_MINOR,
+        GxB_IMPLEMENTATION_SUB,
+        GxB_IMPLEMENTATION_DATE) ;
+    GrB_TRY (GxB_set (GxB_BURBLE, burble)) ;
+    #else
+    printf ("Vanilla GraphBLAS ... do not publish these results!\n") ;
+    #endif
+    return (0) ;
+}
+
 #undef  LAGraph_FREE_ALL
 #endif
 

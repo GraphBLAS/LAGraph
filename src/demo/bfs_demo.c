@@ -31,25 +31,6 @@
 int main (int argc, char **argv)
 {
 
-#if !SUITESPARSE
-    printf ("SuiteSparse:GraphBLAS v5 or later required\n") ;
-    exit (1) ;
-#else
-
-    printf ("%s v%d.%d.%d [%s]\n",
-        GxB_IMPLEMENTATION_NAME,
-        GxB_IMPLEMENTATION_MAJOR,
-        GxB_IMPLEMENTATION_MINOR,
-        GxB_IMPLEMENTATION_SUB,
-        GxB_IMPLEMENTATION_DATE) ;
-
-    #if defined ( _OPENMP )
-    printf ("OpenMP is enabled\n") ;
-    #else
-    printf ("OpenMP is required\n") ;
-    exit (1) ;
-    #endif
-
     char msg [LAGRAPH_MSG_LEN] ;
 
     LAGraph_Graph G = NULL ;
@@ -60,8 +41,8 @@ int main (int argc, char **argv)
     GrB_Matrix SourceNodes = NULL ;
 
     // start GraphBLAS and LAGraph
-    LAGraph_TRY (LAGraph_Init (msg)) ;
-    GrB_TRY (GxB_set (GxB_BURBLE, false)) ;
+    bool burble = false ;
+    demo_init (burble) ;
 
     uint64_t seed = 1 ;
     FILE *f ;
@@ -166,7 +147,6 @@ int main (int argc, char **argv)
                     (pp == 0) ? "pushonly" : "pushpull",
                     trial, nthreads, src, ttrial) ;
                 fflush (stdout) ;
-                // GrB_TRY (GxB_print (parent, 2)) ;
                 GrB_free (&parent) ;
 
                 //--------------------------------------------------------------
@@ -190,7 +170,6 @@ int main (int argc, char **argv)
                     (pp == 0) ? "pushonly" : "pushpull",
                     trial, nthreads, src, ttrial) ;
                 fflush (stdout) ;
-                // GrB_TRY (GxB_print (level, 2)) ;
 
                 GrB_free (&level) ;
 
@@ -214,8 +193,6 @@ int main (int argc, char **argv)
                     trial, nthreads, src, ttrial) ;
                 fflush (stdout) ;
 
-                // GrB_TRY (GxB_print (parent, 2)) ;
-                // GrB_TRY (GxB_print (level, 2)) ;
 #endif
                 GrB_free (&parent) ;
                 GrB_free (&level) ;
@@ -273,5 +250,4 @@ int main (int argc, char **argv)
     LAGraph_FREE_ALL ;
     LAGraph_TRY (LAGraph_Finalize (msg)) ;
     return (0) ;
-#endif
 }
