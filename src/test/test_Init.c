@@ -24,6 +24,9 @@ char msg [LAGRAPH_MSG_LEN] ;
 
 void test_Init (void)
 {
+
+    OK (LAGraph_Init (msg)) ;
+
     #if LG_SUITESPARSE
     const char *name, *date ;
     int ver [3] ;
@@ -34,8 +37,6 @@ void test_Init (void)
     #else
     printf ("\nVanilla GraphBLAS: no GxB* extensions\n") ;
     #endif
-
-    OK (LAGraph_Init (msg)) ;
 
     // LAGraph_Init cannot be called twice
     TEST_CHECK (LAGraph_Init (msg) == -GrB_INVALID_VALUE) ;
