@@ -24,6 +24,16 @@ char msg [LAGRAPH_MSG_LEN] ;
 
 void test_Init (void)
 {
+    #if LG_SUITESPARSE
+    const char *name, *date ;
+    int ver [3] ;
+    OK (GxB_get (GxB_LIBRARY_NAME, &name)) ;
+    OK (GxB_get (GxB_LIBRARY_DATE, &date)) ;
+    OK (GxB_get (GxB_LIBRARY_VERSION, ver)) ;
+    printf ("\n%s %d.%d.%d (%s)\n", name, ver [0], ver [1], ver [2], date) ;
+    #else
+    printf ("\nVanilla GraphBLAS: no GxB* extensions\n") ;
+    #endif
 
     OK (LAGraph_Init (msg)) ;
 
