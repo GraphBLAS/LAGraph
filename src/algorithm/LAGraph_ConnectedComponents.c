@@ -565,7 +565,8 @@ int LAGraph_ConnectedComponents
                 mngp, gp, NULL)) ;
 
             // calculate grandparent
-            GrB_TRY (GrB_Vector_extractTuples (NULL, V32, &n, f)) ;
+            // FIXME: NULL parameter is SS:GrB extension
+            GrB_TRY (GrB_Vector_extractTuples (NULL, V32, &n, f)) ; // FIXME
             #pragma omp parallel for num_threads(nthreads2) schedule(static)
             for (uint32_t i = 0 ; i < n ; i++)
             {
@@ -734,7 +735,8 @@ int LAGraph_ConnectedComponents
                                mngp, gp, NULL)) ;
 
         // calculate grandparent
-        GrB_TRY (GrB_Vector_extractTuples (NULL, V32, &n, f)) ;
+        // FIXME: NULL parameter is SS:GrB extension
+        GrB_TRY (GrB_Vector_extractTuples (NULL, V32, &n, f)) ; // FIXME
         #pragma omp parallel for num_threads(nthreads2) schedule(static)
         for (uint32_t k = 0 ; k < n ; k++)
         {
