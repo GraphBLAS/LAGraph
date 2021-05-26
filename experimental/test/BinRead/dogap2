@@ -1,7 +1,0 @@
-#!/bin/sh
-
-./build/binread ~/GAP/GAP-kron/GAP-kron.grb ~/GAP/GAP-kron/GAP-kron_uint8.grb uint8
-./build/binread ~/GAP/GAP-road/GAP-road.grb ~/GAP/GAP-road/GAP-road_int32.grb int32
-./build/binread ~/GAP/GAP-twitter/GAP-twitter.grb ~/GAP/GAP-twitter/GAP-twitter_uint8.grb uint8
-./build/binread ~/GAP/GAP-urand/GAP-urand.grb ~/GAP/GAP-urand/GAP-urand_uint8.grb uint8
-./build/binread ~/GAP/GAP-web/GAP-web.grb ~/GAP/GAP-web/GAP-web_uint8.grb uint8

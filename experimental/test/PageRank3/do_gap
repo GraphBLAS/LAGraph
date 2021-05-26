@@ -1,8 +1,0 @@
-#!/bin/bash
-
-./build/gap_pr_test ~/GAP/GAP-kron/GAP-kron.grb
-./build/gap_pr_test ~/GAP/GAP-urand/GAP-urand.grb
-./build/gap_pr_test ~/GAP/GAP-twitter/GAP-twitter.grb
-./build/gap_pr_test ~/GAP/GAP-web/GAP-web.grb
-./build/gap_pr_test ~/GAP/GAP-road/GAP-road.grb
-

@@ -1,6 +1,0 @@
-#!/bin/sh
-
-./build/gap_bc_test ~/com-Orkut.grb > o1
-
-# ./build/bc_gap_test ~/roadNet-CA.mtx ~/roadNet-CA_sources.mtx
-
