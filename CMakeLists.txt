@@ -14,7 +14,8 @@
 # compiler is required.  First, install any GraphBLAS library.  Alternatively,
 # use ../GraphBLAS (see comments below).
 #
-# To compile the LAGraph library and its tests and demos, and run the tests:
+# To compile the LAGraph library and its tests and benchmarks, and run the
+# tests:
 #
 #   mkdir build
 #   cd build

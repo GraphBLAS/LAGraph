@@ -35,8 +35,11 @@
 #include <ctype.h>
 
 #include <GraphBLAS.h>
+// #include "GxB_hiding.h"
+
 #include <LAGraph_platform.h>
 #include <LAGraph_internal.h>
+
 
 //#include <complex.h>
 // "I" is defined by <complex.h>, but is used in LAGraph and GraphBLAS to

@@ -56,7 +56,7 @@ endif ( )
 #-------------------------------------------------------------------------------
 
 add_subdirectory(test)
-add_subdirectory(demo)
+add_subdirectory(benchmark)
 #add_subdirectory(utility/test)
 #add_subdirectory(algorithm/test)
 
