@@ -40,7 +40,6 @@
 #include <limits.h>
 #include <float.h>
 // #include "LAGraph.h"
-#include "LAGraph_FW.c"
 
 #define OK(method) {                                                                            \
     info = method;                                                                              \

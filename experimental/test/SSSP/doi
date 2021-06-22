@@ -1,5 +1,0 @@
-#!/bin/bash
-# ./build/gap_sssp_test ~/soc-Pokec.grb 2
-./build/gap_sssp_test ~/com-Orkut.grb 2
-# ./build/gap_sssp_test ~/indochina-2004.grb 2
-# ./build/gap_sssp_test ~/roadNet-CA.mtx 10000

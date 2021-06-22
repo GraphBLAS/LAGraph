@@ -1,4 +1,0 @@
-#!/bin/bash
-
-./build/ttest < ~/indochina-2004.mtx
-

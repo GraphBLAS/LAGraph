@@ -1,6 +1,0 @@
-stderr.txt
-batch_result.mtx
-brandes_result.mtx
-batch_*.mtx
-!.gitignore
-o*

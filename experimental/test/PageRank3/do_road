@@ -1,4 +1,0 @@
-#!/bin/bash
-
-./build/gap_pr_test ~/GAP/GAP-road/GAP-road.grb
-

@@ -1,6 +1,0 @@
-# Ignore these files:
-west0067.grb
-west0067_int32.grb
-
-# Do not ignore this file
-!.gitignore

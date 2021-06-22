@@ -1,4 +1,0 @@
-#!/bin/sh
-
-./build/gap_bfs_test ~/GAP/GAP-kron/GAP-kron.grb ~/GAP/GAP-kron/GAP-kron_sources.mtx
-

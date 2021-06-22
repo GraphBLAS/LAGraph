@@ -1,9 +1,0 @@
-#!/bin/bash
-
-for f in log_*
-do
-    echo
-    echo hostname = ${f}
-    echo
-    awk -f m.awk < ${f}
-done
