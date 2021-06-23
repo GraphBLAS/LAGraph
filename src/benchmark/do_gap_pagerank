@@ -34,9 +34,9 @@ echo "Matrix input file format: " $KIND
 if [ -z "$2" ]; then GAP="../../../GAP" ; else GAP=$2 ; fi
 echo "GAP matrices located in:  " $GAP
 
-../../build/src/demo/gappagerank_demo $GAP/GAP-kron/GAP-kron.$KIND
-../../build/src/demo/gappagerank_demo $GAP/GAP-urand/GAP-urand.$KIND
-../../build/src/demo/gappagerank_demo $GAP/GAP-twitter/GAP-twitter.$KIND
-../../build/src/demo/gappagerank_demo $GAP/GAP-web/GAP-web.$KIND
-../../build/src/demo/gappagerank_demo $GAP/GAP-road/GAP-road.$KIND
+../../build/src/benchmark/gappagerank_demo $GAP/GAP-kron/GAP-kron.$KIND
+../../build/src/benchmark/gappagerank_demo $GAP/GAP-urand/GAP-urand.$KIND
+../../build/src/benchmark/gappagerank_demo $GAP/GAP-twitter/GAP-twitter.$KIND
+../../build/src/benchmark/gappagerank_demo $GAP/GAP-web/GAP-web.$KIND
+../../build/src/benchmark/gappagerank_demo $GAP/GAP-road/GAP-road.$KIND
 
