@@ -1,36 +1,12 @@
 //------------------------------------------------------------------------------
-// LAGraph/Test/AllKTruss/allktest.c: test program for LAGraph_ktruss
+// LAGraph/experimental/test/allktruss_test.c: test program for LAGraph_ktruss
 //------------------------------------------------------------------------------
 
-/*
-    LAGraph:  graph algorithms based on GraphBLAS
-
-    Copyright 2019 LAGraph Contributors.
-
-    (see Contributors.txt for a full list of Contributors; see
-    ContributionInstructions.txt for information on how you can Contribute to
-    this project).
-
-    All Rights Reserved.
-
-    NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
-    CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
-    AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
-    PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
-    THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
-    RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
-
-    Released under a BSD license, please see the LICENSE file distributed with
-    this Software or contact permission@sei.cmu.edu for full terms.
-
-    Created, in part, with funding and support from the United States
-    Government.  (see Acknowledgments.txt file).
-
-    This program includes and/or can make use of certain third party source
-    code, object code, documentation and other files ("Third Party Software").
-    See LICENSE file for more details.
-
-*/
+// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// See additional acknowledgments in the LICENSE file,
+// or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
 
@@ -38,7 +14,8 @@
 // Contributed by Tim Davis, Texas A&M
 
 #define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
-#include "LAGraph.h"
+#include <LAGraph.h>
+#include <LAGraphX.h>
 
 #define LAGRAPH_FREE_ALL                            \
 {                                                   \
@@ -51,9 +28,30 @@
     }                                               \
     GrB_free (&A) ;                                 \
     GrB_free (&M) ;                                 \
-    LAGRAPH_FREE (ntris) ;                          \
-    LAGRAPH_FREE (nedges) ;                         \
-    LAGRAPH_FREE (nstepss) ;                        \
+    GrB_free (&LAGraph_ONE_UINT32) ;                \
+    GrB_free (&LAGraph_LOR_UINT32) ;                \
+    LAGraph_Free ((void **) &ntris) ;                          \
+    LAGraph_Free ((void **) &nedges) ;                         \
+    LAGraph_Free ((void **) &nstepss) ;                        \
+}
+
+void LAGraph_one_uint32
+(
+    uint32_t *z,
+    const uint32_t *x       // ignored
+)
+{
+    (*z) = 1 ;
+}
+
+void LAGraph_lor_uint32
+(
+    uint32_t *z,
+    const uint32_t *x,
+    const uint32_t *y
+)
+{
+    (*z) = (((*x) != 0) || ((*y) != 0)) ;
 }
 
 int main (int argc, char **argv)
@@ -65,19 +63,38 @@ int main (int argc, char **argv)
 
     GrB_Info info ;
     GrB_Matrix A = NULL, C = NULL, M = NULL ;
+    GrB_Type C_type = NULL;
     GrB_Matrix *Cset = NULL ;
+    GrB_UnaryOp  LAGraph_ONE_UINT32 = NULL;
+    GrB_BinaryOp LAGraph_LOR_UINT32 = NULL;
     int64_t kmax = 0 ;
     int64_t *ntris = NULL, *nedges  = NULL, *nstepss = NULL ;
 
-    LAGraph_init ( ) ;
-    int nthreads_max = LAGraph_get_nthreads ( ) ;
+    LAGRAPH_OK (LAGraph_Init (NULL)) ;
+    int nthreads_max;
+    LAGRAPH_OK (LAGraph_GetNumThreads (&nthreads_max, NULL)) ;
+
+#if LG_SUITESPARSE
+    LAGraph_ONE_UINT32 = GxB_ONE_UINT32 ;
+    LAGraph_LOR_UINT32 = GxB_LOR_UINT32 ;
+#else
+    // create a new built-in unary operator using LAGraph_one_uint32
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ONE_UINT32,
+        F_UNARY (LAGraph_one_uint32),
+        GrB_UINT32, GrB_UINT32)) ;
+
+    // create a new built-in binary operator using LAGraph_lor_uint32
+    LAGRAPH_OK (GrB_BinaryOp_new (&LAGraph_LOR_UINT32,
+        F_BINARY (LAGraph_lor_uint32),
+        GrB_UINT32, GrB_UINT32, GrB_UINT32)) ;
+#endif
 
     //--------------------------------------------------------------------------
     // get the input matrix
     //--------------------------------------------------------------------------
 
     double tic [2] ;
-    LAGraph_tic (tic) ;
+    LAGRAPH_OK (LAGraph_Tic (tic, NULL)) ;
 
     FILE *f ;
     if (argc == 1)
@@ -93,11 +110,12 @@ int main (int argc, char **argv)
             return (GrB_INVALID_VALUE) ;
         }
     }
-    LAGRAPH_OK (LAGraph_mmread (&C, f)) ;
-    double t_read = LAGraph_toc (tic) ;
+    LAGRAPH_OK (LAGraph_MMRead (&C, &C_type, f, NULL)) ;
+    double t_read;
+    LAGRAPH_OK (LAGraph_Toc (&t_read, tic, NULL)) ;
     printf ("\nread A time:     %14.6f sec\n", t_read) ;
 
-    LAGraph_tic (tic) ;
+    LAGRAPH_OK (LAGraph_Tic (tic, NULL)) ;
     GrB_Index n, ne ;
     LAGRAPH_OK (GrB_Matrix_nrows (&n, C)) ;
 
@@ -116,12 +134,13 @@ int main (int argc, char **argv)
 
     // make A symmetric (A = spones (A+A')) and remove self edges (via M)
     LAGRAPH_OK (GrB_eWiseAdd (A, M, NULL, LAGraph_LOR_UINT32, A, A,
-        LAGraph_desc_otcr)) ;
+        GrB_DESC_RCT1)) ;
     GrB_free (&M) ;
 
     LAGRAPH_OK (GrB_Matrix_nvals (&ne, A)) ;
 
-    double t_process = LAGraph_toc (tic) ;
+    double t_process;
+    LAGRAPH_OK (LAGraph_Toc (&t_process, tic, NULL)) ;
     printf ("process A time:  %14.6f sec\n", t_process) ;
 
     //--------------------------------------------------------------------------
@@ -129,9 +148,9 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     Cset = NULL ; // LAGraph_malloc (n, sizeof (GrB_Matrix)) ;
-    ntris   = LAGraph_malloc (n, sizeof (int64_t)) ;
-    nedges  = LAGraph_malloc (n, sizeof (int64_t)) ;
-    nstepss = LAGraph_malloc (n, sizeof (int64_t)) ;
+    ntris   = LAGraph_Malloc (n, sizeof (int64_t)) ;
+    nedges  = LAGraph_Malloc (n, sizeof (int64_t)) ;
+    nstepss = LAGraph_Malloc (n, sizeof (int64_t)) ;
 
     if (ntris == NULL || nedges == NULL || nstepss == NULL)
     {
@@ -142,12 +161,13 @@ int main (int argc, char **argv)
     double t1 ;
     for (int nthreads = 1 ; nthreads <= nthreads_max ; )
     {
-        LAGraph_set_nthreads (nthreads) ;
+        LAGRAPH_OK (LAGraph_SetNumThreads (nthreads, NULL)) ;
 
         double tic [2] ;
-        LAGraph_tic (tic) ;
+        LAGRAPH_OK (LAGraph_Tic (tic, NULL)) ;
         LAGRAPH_OK (LAGraph_allktruss (Cset, A, &kmax, ntris, nedges, nstepss));
-        double t = LAGraph_toc (tic) ;
+        double t;
+        LAGRAPH_OK (LAGraph_Toc (&t, tic, NULL)) ;
 
         if (nthreads == 1)
         {
@@ -181,6 +201,5 @@ int main (int argc, char **argv)
 
     printf ("\n") ;
     LAGRAPH_FREE_ALL ;
-    LAGraph_finalize ( ) ;
+    LAGraph_Finalize (NULL) ;
 }
-

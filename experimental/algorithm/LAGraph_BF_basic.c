@@ -2,35 +2,11 @@
 // LAGraph_BF_basic: Bellman-Ford method for single source shortest paths
 //------------------------------------------------------------------------------
 
-/*
-    LAGraph:  graph algorithms based on GraphBLAS
-
-    Copyright 2019 LAGraph Contributors.
-
-    (see Contributors.txt for a full list of Contributors; see
-    ContributionInstructions.txt for information on how you can Contribute to
-    this project).
-
-    All Rights Reserved.
-
-    NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
-    CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
-    AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
-    PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
-    THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
-    RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
-
-    Released under a BSD license, please see the LICENSE file distributed with
-    this Software or contact permission@sei.cmu.edu for full terms.
-
-    Created, in part, with funding and support from the United States
-    Government.  (see Acknowledgments.txt file).
-
-    This program includes and/or can make use of certain third party source
-    code, object code, documentation and other files ("Third Party Software").
-    See LICENSE file for more details.
-
-*/
+// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// See additional acknowledgments in the LICENSE file,
+// or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
 
@@ -52,7 +28,10 @@
 
 //------------------------------------------------------------------------------
 
-#include "LAGraph_internal.h"
+//#include "LAGraph_internal.h"
+#include <LAGraph.h>
+#include <LAGraphX.h>
+#include <LG_internal.h>  // from src/utility
 
 #define LAGRAPH_FREE_ALL   \
 {                          \
@@ -117,12 +96,12 @@ GrB_Info LAGraph_BF_basic
     {
 
         double tic [2] ;
-        LAGraph_tic (tic) ;
+        LAGraph_Tic(tic, NULL);
 
-        // excute semiring on d and A, and save the result to d
-        LAGRAPH_OK (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, GxB_MIN_PLUS_FP64, d, A,
+        // execute semiring on d and A, and save the result to d
+        LAGRAPH_OK (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, GrB_MIN_PLUS_SEMIRING_FP64, d, A,
             GrB_NULL));
-        LAGRAPH_OK (LAGraph_Vector_isequal(&same, dtmp, d, GrB_NULL));
+        LAGRAPH_OK (LAGraph_Vector_IsEqual_type(&same, dtmp, d, GrB_FP64, NULL));
         if (!same)
         {
             GrB_Vector ttmp = dtmp;
@@ -130,11 +109,11 @@ GrB_Info LAGraph_BF_basic
             d = ttmp;
         }
         iter++;
-
-        double t = LAGraph_toc (tic) ;
+        double t;
+        LAGraph_Toc (&t, tic, NULL );
         GrB_Index dnz ;
         LAGRAPH_OK (GrB_Vector_nvals (&dnz, d)) ;
-//      printf ("step %3d time %16.4f sec, nvals %.16g\n", iter, t, (double) dnz) ;
+//      printf ("step %3d time %16.4f sec, nvals %.16g\n", iter, t, (double) dnz);
         fflush (stdout) ;
     }
 
@@ -142,17 +121,17 @@ GrB_Info LAGraph_BF_basic
     // last loop, otherwise, there can't be a negative-weight cycle.
     if (!same)
     {
-        // excute semiring again to check for negative-weight cycle
-        LAGRAPH_OK (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, GxB_MIN_PLUS_FP64, d, A,
+        // execute semiring again to check for negative-weight cycle
+        LAGRAPH_OK (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, GrB_MIN_PLUS_SEMIRING_FP64, d, A,
             GrB_NULL));
-        LAGRAPH_OK (LAGraph_Vector_isequal(&same, dtmp, d, GrB_NULL));
+        LAGRAPH_OK (LAGraph_Vector_IsEqual_type(&same, dtmp, d, GrB_FP64, NULL));
 
         // if d != dtmp, then there is a negative-weight cycle in the graph
         if (!same)
         {
             // printf("A negative-weight cycle found. \n");
             LAGRAPH_FREE_ALL;
-            return (GrB_SUCCESS) ;
+            return (GrB_SUCCESS) ;  // TODO: should be an error code
         }
     }
 

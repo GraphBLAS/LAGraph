@@ -2,35 +2,11 @@
 // LAGraph_allktruss.c: find all k-trusses of a graph
 //------------------------------------------------------------------------------
 
-/*
-    LAGraph:  graph algorithms based on GraphBLAS
-
-    Copyright 2019 LAGraph Contributors.
-
-    (see Contributors.txt for a full list of Contributors; see
-    ContributionInstructions.txt for information on how you can Contribute to
-    this project).
-
-    All Rights Reserved.
-
-    NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
-    CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
-    AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
-    PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
-    THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
-    RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
-
-    Released under a BSD license, please see the LICENSE file distributed with
-    this Software or contact permission@sei.cmu.edu for full terms.
-
-    Created, in part, with funding and support from the United States
-    Government.  (see Acknowledgments.txt file).
-
-    This program includes and/or can make use of certain third party source
-    code, object code, documentation and other files ("Third Party Software").
-    See LICENSE file for more details.
-
-*/
+// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// See additional acknowledgments in the LICENSE file,
+// or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
 
@@ -75,18 +51,29 @@
 // LAGraph/Test/AllKTruss.  This function is derived from SuiteSparse/
 // GraphBLAS/Extras/ktruss/allktruss_graphblas.c
 
+#include <LAGraph.h>
+#include <LAGraphX.h>
+
 #define LAGRAPH_FREE_ALL                        \
-    if (keep_all_ktrusses)                      \
+    if (!keep_all_ktrusses)                     \
     {                                           \
         for (int64_t kk = 3 ; kk <= k ; kk++)   \
         {                                       \
             GrB_free (&(Cset [kk])) ;           \
         }                                       \
     }                                           \
+    GrB_free (&LAGraph_support) ;               \
     GrB_free (&Support) ;                       \
     GrB_free (&C) ;
 
 #include "LAGraph_internal.h"
+
+bool LAGraph_support_function (const GrB_Index i, const GrB_Index j, const uint32_t *x, const uint32_t *support)
+{
+    return ((*x) >= (*support)) ;
+}
+
+#define F_SELECT(f) ((bool (*)(const GrB_Index, const GrB_Index, const void *, const void *)) f)
 
 //------------------------------------------------------------------------------
 // C = LAGraph_allktruss (A,k): find all k-trusses a graph
@@ -140,6 +127,13 @@ GrB_Info LAGraph_allktruss      // compute all k-trusses of a graph
     // the current k-truss
     GrB_Matrix C = NULL ;
     GxB_Scalar Support = NULL ;
+
+    // requires SuiteSparse:GraphBLAS v3.0.1 or later
+    GxB_SelectOp LAGraph_support = NULL;
+
+    // Note the added parameter (SuiteSparse:GraphBLAS, July 19, V3.0.1 draft)
+    LAGRAPH_OK (GxB_SelectOp_new (&LAGraph_support,
+        F_SELECT (LAGraph_support_function), GrB_UINT32, GrB_UINT32)) ;
 
     // Support scalar for GxB_select
     LAGRAPH_OK (GxB_Scalar_new (&Support, GrB_UINT32)) ;
@@ -235,9 +229,11 @@ GrB_Info LAGraph_allktruss      // compute all k-trusses of a graph
         }
     }
 
+    LAGRAPH_FREE_ALL ;
+
 #else
-    // requires SuiteSparse:GraphBLAS v3.0.1
+    // TODO: implement a vanilla version of this algorithm (or wait for
+    // GraphBLAS 2.0 spec release and support.
     return (GrB_NO_VALUE) ;
 #endif
 }
-

@@ -2,35 +2,11 @@
 // LAGraph_BF_full.c: Bellman-Ford single-source shortest paths, returns tree
 //------------------------------------------------------------------------------
 
-/*
-    LAGraph:  graph algorithms based on GraphBLAS
-
-    Copyright 2019 LAGraph Contributors.
-
-    (see Contributors.txt for a full list of Contributors; see
-    ContributionInstructions.txt for information on how you can Contribute to
-    this project).
-
-    All Rights Reserved.
-
-    NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
-    CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
-    AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
-    PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
-    THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
-    RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
-
-    Released under a BSD license, please see the LICENSE file distributed with
-    this Software or contact permission@sei.cmu.edu for full terms.
-
-    Created, in part, with funding and support from the United States
-    Government.  (see Acknowledgments.txt file).
-
-    This program includes and/or can make use of certain third party source
-    code, object code, documentation and other files ("Third Party Software").
-    See LICENSE file for more details.
-
-*/
+// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// See additional acknowledgments in the LICENSE file,
+// or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
 
@@ -56,7 +32,10 @@
 // the number of edges from s to k in the shortest path.
 
 //------------------------------------------------------------------------------
-#include "LAGraph_internal.h"
+
+#include <LAGraph.h>
+#include <LAGraphX.h>
+#include <LG_internal.h>  // from src/utility
 
 #define LAGRAPH_FREE_ALL               \
 {                                      \
@@ -69,13 +48,15 @@
     GrB_free(&BF_EQ_Tuple3);           \
     GrB_free(&BF_lMIN_Tuple3_Monoid);  \
     GrB_free(&BF_lMIN_PLUSrhs_Tuple3); \
-    LAGRAPH_FREE (I);                  \
-    LAGRAPH_FREE (J);                  \
-    LAGRAPH_FREE (w);                  \
-    LAGRAPH_FREE (W);                  \
-    LAGRAPH_FREE (h);                  \
-    LAGRAPH_FREE (pi);                 \
+    LAGraph_Free ((void**)&I);                  \
+    LAGraph_Free ((void**)&J);                  \
+    LAGraph_Free ((void**)&w);                  \
+    LAGraph_Free ((void**)&W);                  \
+    LAGraph_Free ((void**)&h);                  \
+    LAGraph_Free ((void**)&pi);                 \
 }
+
+typedef void (*LAGraph_binary_function) (void *, const void *, const void *) ;
 
 //------------------------------------------------------------------------------
 // data type for each entry of the adjacent matrix A and "distance" vector d;
@@ -242,10 +223,10 @@ GrB_Info LAGraph_BF_full
     //--------------------------------------------------------------------------
     // allocate arrays used for tuplets
     //--------------------------------------------------------------------------
-    I = LAGraph_malloc (nz, sizeof(GrB_Index)) ;
-    J = LAGraph_malloc (nz, sizeof(GrB_Index)) ;
-    w = LAGraph_malloc (nz, sizeof(double)) ;
-    W = LAGraph_malloc (nz, sizeof(BF_Tuple3_struct)) ;
+    I = LAGraph_Malloc (nz, sizeof(GrB_Index)) ;
+    J = LAGraph_Malloc (nz, sizeof(GrB_Index)) ;
+    w = LAGraph_Malloc (nz, sizeof(double)) ;
+    W = LAGraph_Malloc (nz, sizeof(BF_Tuple3_struct)) ;
     if (I == NULL || J == NULL || w == NULL || W == NULL)
     {
         LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
@@ -255,7 +236,8 @@ GrB_Info LAGraph_BF_full
     // create matrix Atmp based on A, while its entries become BF_Tuple3 type
     //--------------------------------------------------------------------------
     LAGRAPH_OK (GrB_Matrix_extractTuples_FP64(I, J, w, &nz, A));
-    int nthreads = LAGraph_get_nthreads ( ) ;
+    int nthreads;
+    LAGRAPH_OK (LAGraph_GetNumThreads (&nthreads, NULL)) ;
     printf ("nthreads %d\n", nthreads) ;
     #pragma omp parallel for num_threads(nthreads) schedule(static)
     for (GrB_Index k = 0; k < nz; k++)
@@ -295,7 +277,7 @@ GrB_Info LAGraph_BF_full
         LAGRAPH_OK (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, BF_lMIN_PLUSrhs_Tuple3,
             d, Atmp, GrB_NULL));
 
-        LAGRAPH_OK (LAGraph_Vector_isequal(&same, dtmp, d, BF_EQ_Tuple3));
+        LAGRAPH_OK (LAGraph_Vector_IsEqual_op(&same, dtmp, d, BF_EQ_Tuple3, NULL));
         if (!same)
         {
             GrB_Vector ttmp = dtmp;
@@ -314,7 +296,7 @@ GrB_Info LAGraph_BF_full
             d, Atmp, GrB_NULL));
 
         // if d != dtmp, then there is a negative-weight cycle in the graph
-        LAGRAPH_OK (LAGraph_Vector_isequal(&same, dtmp, d, BF_EQ_Tuple3));
+        LAGRAPH_OK (LAGraph_Vector_IsEqual_op(&same, dtmp, d, BF_EQ_Tuple3, NULL));
         if (!same)
         {
             // printf("A negative-weight cycle found. \n");
@@ -327,8 +309,8 @@ GrB_Info LAGraph_BF_full
     // extract tuple from "distance" vector d and create GrB_Vectors for output
     //--------------------------------------------------------------------------
     LAGRAPH_OK (GrB_Vector_extractTuples_UDT (I, (void *) W, &nz, d));
-    h  = LAGraph_malloc (nz, sizeof(GrB_Index)) ;
-    pi = LAGraph_malloc (nz, sizeof(GrB_Index)) ;
+    h  = LAGraph_Malloc (nz, sizeof(GrB_Index)) ;
+    pi = LAGraph_Malloc (nz, sizeof(GrB_Index)) ;
     if (w == NULL || h == NULL || pi == NULL)
     {
         LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
