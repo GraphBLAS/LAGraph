@@ -1,46 +1,47 @@
+//------------------------------------------------------------------------------
+// LAGraph_cc_lacc.c
+//------------------------------------------------------------------------------
 
-/*
-    LAGraph:  graph algorithms based on GraphBLAS
+// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// See additional acknowledgments in the LICENSE file,
+// or contact permission@sei.cmu.edu for the full terms.
 
-    Copyright 2019 LAGraph Contributors.
-
-    (see Contributors.txt for a full list of Contributors; see
-    ContributionInstructions.txt for information on how you can Contribute to
-    this project).
-
-    All Rights Reserved.
-
-    NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
-    CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
-    AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
-    PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
-    THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
-    RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
-
-    Released under a BSD license, please see the LICENSE file distributed with
-    this Software or contact permission@sei.cmu.edu for full terms.
-
-    Created, in part, with funding and support from the United States
-    Government.  (see Acknowledgments.txt file).
-
-    This program includes and/or can make use of certain third party source
-    code, object code, documentation and other files ("Third Party Software").
-    See LICENSE file for more details.
-
-*/
+//------------------------------------------------------------------------------
 
 /**
  * Code is based on the algorithm described in the following paper
  * Azad, Buluç. LACC: a linear-algebraic algorithm for finding connected components in distributed memory (IPDPS 2019)
  **/
 
-#define LAGRAPH_FREE_ALL
+#include <LAGraph.h>
+#include <LAGraphX.h>
+
+#include "LAGraph_internal.h"
+
+#define LAGRAPH_FREE_ALL                \
+    free(I);                            \
+    free(V);                            \
+    GrB_free (&stars);     \
+    GrB_free (&mask);      \
+    GrB_free (&parents);   \
+    GrB_free (&gp);        \
+    GrB_free (&mnp);       \
+    GrB_free (&hookMNP);   \
+    GrB_free (&hookP);     \
+    GrB_free (&pNonstars); \
+    GrB_free (&tmp);       \
+    GrB_free (&nsgp);
 
 #define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
-#include "LAGraph.h"
 
+//****************************************************************************
 // mask = NULL, accumulator = GrB_MIN_UINT64, descriptor = NULL
-static GrB_Info Reduce_assign (GrB_Vector w, GrB_Vector src, GrB_Index *index, GrB_Index nLocs)
+static GrB_Info Reduce_assign (GrB_Vector w,
+                               GrB_Vector src,
+                               GrB_Index *index,
+                               GrB_Index nLocs)
 {
     GrB_Index nw, ns;
     GrB_Vector_nvals(&nw, w);
@@ -58,6 +59,7 @@ static GrB_Info Reduce_assign (GrB_Vector w, GrB_Vector src, GrB_Index *index, G
     return GrB_SUCCESS;
 }
 
+//****************************************************************************
 GrB_Info LAGraph_cc_lacc
 (
     GrB_Vector *result,     // output: array of component identifiers
@@ -66,6 +68,14 @@ GrB_Info LAGraph_cc_lacc
 )
 {
     GrB_Info info;
+
+    GrB_Vector stars = NULL, mask = NULL;
+    GrB_Vector parents = NULL, gp = NULL, mnp = NULL;
+    GrB_Vector hookMNP = NULL, hookP = NULL;
+    GrB_Vector tmp = NULL, pNonstars = NULL, nsgp = NULL; // temporary
+    GrB_Index *I = NULL;
+    GrB_Index *V = NULL;
+
     GrB_Index n ;
     LAGRAPH_OK (GrB_Matrix_nrows (&n, A)) ;
     //GrB_Index nnz ;
@@ -76,13 +86,8 @@ GrB_Info LAGraph_cc_lacc
     GrB_Matrix S = NULL;
     if (sanitize)
     {
-        GrB_Descriptor desc = NULL ;
-        LAGRAPH_OK(GrB_Descriptor_new(&desc)) ;
-        LAGRAPH_OK(GrB_Descriptor_set(desc, GrB_INP1, GrB_TRAN)) ;
-
         LAGRAPH_OK (GrB_Matrix_new (&S, GrB_BOOL, n, n)) ;
-        LAGRAPH_OK (GrB_eWiseAdd (S, NULL, NULL, GrB_LOR, A, A, desc)) ;
-        LAGRAPH_FREE(desc) ;
+        LAGRAPH_OK (GrB_eWiseAdd (S, NULL, NULL, GrB_LOR, A, A, GrB_DESC_T1)) ;
     }
     else
     {
@@ -91,10 +96,6 @@ GrB_Info LAGraph_cc_lacc
     }
 
     // vectors
-    GrB_Vector stars, mask;
-    GrB_Vector parents, gp, mnp;
-    GrB_Vector hookMNP, hookP;
-    GrB_Vector tmp, pNonstars, nsgp; // temporary
     LAGRAPH_OK (GrB_Vector_new (&stars, GrB_BOOL, n));
     LAGRAPH_OK (GrB_Vector_new (&mask, GrB_BOOL, n));
     LAGRAPH_OK (GrB_Vector_new (&parents, GrB_UINT64, n));
@@ -102,30 +103,28 @@ GrB_Info LAGraph_cc_lacc
     LAGRAPH_OK (GrB_Vector_new (&hookMNP, GrB_UINT64, n));
     LAGRAPH_OK (GrB_Vector_new (&hookP, GrB_UINT64, n));
     LAGRAPH_OK (GrB_Vector_new (&pNonstars, GrB_UINT64, n));
+
     // temporary arrays
-    GrB_Index *I = malloc(sizeof(GrB_Index) * n);
-    GrB_Index *V = malloc(sizeof(GrB_Index) * n);
+    I = malloc(sizeof(GrB_Index) * n);
+    V = malloc(sizeof(GrB_Index) * n);
+
     // prepare the vectors
     for (GrB_Index i = 0 ; i < n ; i++)
         I[i] = V[i] = i;
     LAGRAPH_OK (GrB_Vector_build (parents, I, V, n, GrB_PLUS_UINT64));
     LAGRAPH_OK (GrB_Vector_dup (&mnp, parents));
     LAGRAPH_OK (GrB_assign (stars, 0, 0, true, GrB_ALL, 0, 0)) ;
-    // semiring & monoid
-    GrB_Monoid Min, Add;
-    GrB_Semiring Sel2ndMin; // (Sel2nd,Min) semiring
-    LAGRAPH_OK (GrB_Monoid_new (&Min, GrB_MIN_UINT64, (GrB_Index) UINT_MAX));
-    LAGRAPH_OK (GrB_Monoid_new (&Add, GrB_PLUS_UINT64, (GrB_Index) 0));
-    LAGRAPH_OK (GrB_Semiring_new (&Sel2ndMin, Min, GrB_SECOND_UINT64));
+
     // main computation
     GrB_Index nHooks, nStars, nNonstars;
     while (true) {
         // ---------------------------------------------------------
         // CondHook(A, parents, stars);
         // ---------------------------------------------------------
-        LAGRAPH_OK (GrB_mxv (mnp, 0, 0, Sel2ndMin, S, parents, 0));
+        LAGRAPH_OK (GrB_mxv (mnp, 0, 0, GrB_MIN_SECOND_SEMIRING_UINT64,
+                             S, parents, 0));
         LAGRAPH_OK (GrB_Vector_clear (mask));
-        LAGRAPH_OK (GrB_eWiseMult(mask, stars, 0, GxB_ISLT_UINT64, mnp, parents, 0));
+        LAGRAPH_OK (GrB_eWiseMult(mask, stars, 0, GrB_LT_UINT64, mnp, parents, 0));
         LAGRAPH_OK (GrB_assign (hookMNP, mask, 0, mnp, GrB_ALL, n, 0));
         LAGRAPH_OK (GrB_eWiseMult (hookP, 0, 0, GrB_SECOND_UINT64, hookMNP, parents, 0));
         LAGRAPH_OK (GrB_Vector_clear (mnp));
@@ -152,10 +151,11 @@ GrB_Info LAGraph_cc_lacc
         // ---------------------------------------------------------
         LAGRAPH_OK (GrB_assign (pNonstars, 0, 0, parents, GrB_ALL, 0, 0));
         LAGRAPH_OK (GrB_assign (pNonstars, stars, 0, n, GrB_ALL, 0, 0));
-        LAGRAPH_OK (GrB_mxv (hookMNP, stars, 0, Sel2ndMin, S, pNonstars, 0));
+        LAGRAPH_OK (GrB_mxv (hookMNP, stars, 0, GrB_MIN_SECOND_SEMIRING_UINT64,
+                             S, pNonstars, 0));
         // select the valid elemenets (<n) of hookMNP
         LAGRAPH_OK (GrB_assign (pNonstars, 0, 0, n, GrB_ALL, 0, 0));
-        LAGRAPH_OK (GrB_eWiseMult (mask, 0, 0, GxB_ISLT_UINT64, hookMNP, pNonstars, 0));
+        LAGRAPH_OK (GrB_eWiseMult (mask, 0, 0, GrB_LT_UINT64, hookMNP, pNonstars, 0));
         LAGRAPH_OK (GrB_eWiseMult (hookP, mask, 0, GrB_SECOND_UINT64, hookMNP, parents, 0));
         LAGRAPH_OK (GrB_Vector_nvals (&nHooks, hookP));
         LAGRAPH_OK (GrB_Vector_extractTuples (I, V, &nHooks, hookP));
@@ -169,7 +169,7 @@ GrB_Info LAGraph_cc_lacc
         LAGRAPH_OK (GrB_extract (mask, 0, 0, stars, V, n, 0));
         LAGRAPH_OK (GrB_assign (stars, 0, GrB_LAND, mask, GrB_ALL, 0, 0));
         // check termination
-        LAGRAPH_OK (GrB_reduce (&nStars, 0, Add, stars, 0));
+        LAGRAPH_OK (GrB_reduce (&nStars, 0, GrB_PLUS_MONOID_UINT64, stars, 0));
         if (nStars == n) break;
         // clean up
         LAGRAPH_OK (GrB_Vector_clear(hookMNP));
@@ -206,20 +206,6 @@ GrB_Info LAGraph_cc_lacc
     }
     *result = parents;
 
-    free(I);
-    free(V);
-    
-    LAGRAPH_OK (GrB_free (&stars));
-    LAGRAPH_OK (GrB_free (&mask));
-    LAGRAPH_OK (GrB_free (&gp));
-    LAGRAPH_OK (GrB_free (&mnp));
-    LAGRAPH_OK (GrB_free (&pNonstars));
-    LAGRAPH_OK (GrB_free (&tmp));
-    LAGRAPH_OK (GrB_free (&nsgp));
-    LAGRAPH_OK (GrB_free (&hookMNP));
-    LAGRAPH_OK (GrB_free (&hookP));
-    LAGRAPH_OK (GrB_free (&Min));
-    LAGRAPH_OK (GrB_free (&Add));
-    LAGRAPH_OK (GrB_free (&Sel2ndMin));
+    LAGRAPH_FREE_ALL;
     return GrB_SUCCESS;
 }

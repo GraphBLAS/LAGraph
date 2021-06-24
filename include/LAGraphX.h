@@ -59,29 +59,21 @@
 // ascii header prepended to all *.grb files
 #define LAGRAPH_BIN_HEADER 512
 
+GrB_Info LAGraph_log
+(
+    char *caller,           // calling function
+    char *message1,         // message to include (may be NULL)
+    char *message2,         // message to include (may be NULL)
+    int nthreads,           // # of threads used
+    double t                // time taken by the test
+) ;
+
 // LAGraph_BinRead: read a matrix from a binary file
-int LAGraph_BinRead         // returns 0 if successful, -1 if failure
+int LAGraph_binread         // returns 0 if successful, -1 if failure
 (
     GrB_Matrix *A,          // matrix to read from the file
     GrB_Type   *A_type,     // type of the scalar stored in A
-    FILE       *f,          // file to read it from, already open
-    char       *msg
-) ;
-
-#endif
-
-int LAGraph_BinWrite
-(
-    GrB_Matrix *A,          // matrix to write to the file
-    GrB_Type   *A_type,     // type of the scalar stored in A
-    FILE       *f,          // file to read it from, already open
-    FILE *fcomments,    // optional file with extra comments, may be NULL
-    char       *msg
-//    char *filename,         // file to write it to
-//    const char *comments    // comments to add to the file, up to 220 characters
-                            // in length, not including the terminating null
-                            // byte. Ignored if NULL.  Characters past
-                            // the 220 limit are silently ignored.
+    FILE       *f           // file to read it from, already open
 ) ;
 
 GrB_Info LAGraph_Vector_IsEqual_op    // return GrB_SUCCESS if successful
@@ -141,6 +133,22 @@ GrB_Info LAGraph_allktruss      // compute all k-trusses of a graph
     int64_t *ntris,             // size n, ntris [k] is #triangles in k-truss
     int64_t *nedges,            // size n, nedges [k] is #edges in k-truss
     int64_t *nstepss            // size n, nstepss [k] is #steps for k-truss
+) ;
+
+//****************************************************************************
+// Connected components
+//****************************************************************************
+
+GrB_Info LAGraph_cc_lacc (
+    GrB_Vector *result,     // output: array of component identifiers
+    GrB_Matrix A,           // input matrix
+    bool sanitize           // if true, ensure A is symmetric
+) ;
+
+GrB_Info LAGraph_cc_boruvka (
+    GrB_Vector *result,     // output: array of component identifiers
+    GrB_Matrix A,           // input matrix
+    bool sanitize           // if true, ensure A is symmetric
 ) ;
 
 //****************************************************************************
@@ -241,3 +249,5 @@ GrB_Info LAGraph_BF_pure_c_double
     const int64_t *J,// column index vector
     const double  *W // weight vector, W(i) = weight of edge (I(i),J(i))
 );
+
+#endif

@@ -53,6 +53,7 @@
 
 #include <LAGraph.h>
 #include <LAGraphX.h>
+#include "LAGraph_internal.h"
 
 #define LAGRAPH_FREE_ALL                        \
     if (!keep_all_ktrusses)                     \
@@ -66,7 +67,6 @@
     GrB_free (&Support) ;                       \
     GrB_free (&C) ;
 
-#include "LAGraph_internal.h"
 
 bool LAGraph_support_function (const GrB_Index i, const GrB_Index j, const uint32_t *x, const uint32_t *support)
 {

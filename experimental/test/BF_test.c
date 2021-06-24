@@ -19,7 +19,6 @@
 
 #include <LAGraph.h>
 #include <LAGraphX.h>
-#include "BF_test.h"
 
 #define LAGRAPH_FREE_ALL            \
 {                                   \
