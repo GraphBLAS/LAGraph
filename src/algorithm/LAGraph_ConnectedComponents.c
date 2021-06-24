@@ -25,9 +25,9 @@
 // pattern is accessed.
 
 // The matrix A must have dimension 2^32 or less.
-// TODO: Need a 64-bit version of this method.
+// todo: Need a 64-bit version of this method.
 
-// TODO: this function is not thread-safe, since it exports G->A and then
+// todo: this function is not thread-safe, since it exports G->A and then
 // reimports it back.  G->A is unchanged when the function returns, but during
 // execution G->A is invalid.
 
@@ -36,14 +36,14 @@
 #define LAGRAPH_FREE_ALL
 
 //------------------------------------------------------------------------------
-// hash functions: TODO describe me
+// hash functions: todo describe me
 //------------------------------------------------------------------------------
 
 // hash table size must be a power of 2
 #define HASH_SIZE 1024
 
 // number of samples to insert into the hash table
-// TODO: this seems to be a lot of entries for a HASH_SIZE of 1024.
+// todo: this seems to be a lot of entries for a HASH_SIZE of 1024.
 // There could be lots of collisions.
 #define HASH_SAMPLES 864
 
@@ -51,15 +51,15 @@
 #define NEXT(x) ((x + 23) & (HASH_SIZE-1))
 
 //------------------------------------------------------------------------------
-// ht_init: TODO describe me
+// ht_init: todo describe me
 //------------------------------------------------------------------------------
 
 // Clear the hash table counts (ht_val [0:HASH_SIZE-1] = 0), and set all hash
 // table entries as empty (ht_key [0:HASH_SIZE-1] =-1).
 
-// TODO: the memset of ht_key is confusing
+// todo: the memset of ht_key is confusing
 
-// TODO: the name "ht_val" is confusing.  It is not a value, but a count of
+// todo: the name "ht_val" is confusing.  It is not a value, but a count of
 // the number of times the value x = ht_key [h] has been inserted into the
 // hth position in the hash table.  It should be renamed ht_cnt.
 
@@ -74,14 +74,14 @@ static inline void ht_init
 }
 
 //------------------------------------------------------------------------------
-// ht_sample: TODO describe me
+// ht_sample: todo describe me
 //------------------------------------------------------------------------------
 
 //
 
 static inline void ht_sample
 (
-    uint32_t *V32,      // array of size n (TODO: this is a bad variable name)
+    uint32_t *V32,      // array of size n (todo: this is a bad variable name)
     int32_t n,
     int32_t samples,    // number of samples to take from V32
     int32_t *ht_key,
@@ -95,7 +95,7 @@ static inline void ht_sample
         int32_t x = V32 [LAGraph_Random60 (seed) % n] ;
 
         // find x in the hash table
-        // TODO: make this loop a static inline function (see also below)
+        // todo: make this loop a static inline function (see also below)
         int32_t h = HASH (x) ;
         while (ht_key [h] != -1 && ht_key [h] != x)
         {
@@ -108,10 +108,10 @@ static inline void ht_sample
 }
 
 //------------------------------------------------------------------------------
-// ht_most_frequent: TODO describe me
+// ht_most_frequent: todo describe me
 //------------------------------------------------------------------------------
 
-// TODO what if key is returned as -1?  Code breaks.  TODO: handle this case
+// todo what if key is returned as -1?  Code breaks.  todo: handle this case
 
 static inline int32_t ht_most_frequent
 (
@@ -142,7 +142,7 @@ static inline int32_t ht_most_frequent
 // in undefined behavior.  GrB_assign in SuiteSparse:GraphBLAS follows the
 // MATLAB rule, which discards all but the first of the duplicates.
 
-// TODO: add this to GraphBLAS as a variant of GrB_assign, either as
+// todo: add this to GraphBLAS as a variant of GrB_assign, either as
 // GxB_assign_accum (or another name), or as a GxB_* descriptor setting.
 
 static inline int Reduce_assign32
@@ -162,7 +162,7 @@ static inline int Reduce_assign32
     GrB_Type w_type, s_type ;
     GrB_Index w_n, s_n, w_nvals, s_nvals, *w_i, *s_i, w_size, s_size ;
     uint32_t *w_x, *s_x ;
-    bool ignore ;
+    bool s_iso = false ;
 
     //--------------------------------------------------------------------------
     // export w and s
@@ -174,13 +174,13 @@ static inline int Reduce_assign32
     GrB_TRY (GxB_Vector_export_Full (w_handle, &w_type, &w_n, (void **) &w_x,
         &w_size,
         #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
-        &ignore,
+        NULL,
         #endif
         NULL)) ;
     GrB_TRY (GxB_Vector_export_Full (s_handle, &s_type, &s_n, (void **) &s_x,
         &s_size,
         #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
-        &ignore,
+        &s_iso,
         #endif
         NULL)) ;
 
@@ -189,9 +189,9 @@ static inline int Reduce_assign32
 
         // allocate a buf array for each thread, of size HASH_SIZE
         uint32_t *mem = LAGraph_Malloc (nthreads*HASH_SIZE, sizeof (uint32_t)) ;
-        // TODO: check out-of-memory condition here
+        // todo: check out-of-memory condition here
 
-        // TODO why is hashing needed here?  hashing is slow for what needs
+        // todo why is hashing needed here?  hashing is slow for what needs
         // to be computed here.  GraphBLAS has fast MIN atomic monoids that
         // do not require hashing.
         ht_init (ht_key, ht_val) ;
@@ -201,7 +201,7 @@ static inline int Reduce_assign32
         for (int tid = 0 ; tid < nthreads ; tid++)
         {
             // get the thread-specific buf array of size HASH_SIZE
-            // TODO: buf is a bad variable name; it's not a "buffer",
+            // todo: buf is a bad variable name; it's not a "buffer",
             // but a local workspace to compute the local version of w_x.
             uint32_t *buf = mem + tid * HASH_SIZE ;
 
@@ -221,7 +221,7 @@ static inline int Reduce_assign32
             {
                 uint32_t i = index [k] ;
 
-                // TODO: make this loop a static inline function
+                // todo: make this loop a static inline function
                 int32_t h = HASH (i) ;
                 while (ht_key [h] != -1 && ht_key [h] != i)
                 {
@@ -230,12 +230,12 @@ static inline int Reduce_assign32
 
                 if (ht_key [h] == -1)
                 {
-                    // TODO is this a race condition?
-                    w_x [i] = LAGraph_MIN (w_x [i], s_x [k]) ;
+                    // todo is this a race condition?
+                    w_x [i] = LAGraph_MIN (w_x [i], s_x [s_iso?0:k]) ;
                 }
                 else
                 {
-                    buf [h] = LAGraph_MIN (buf [h], s_x [k]) ;
+                    buf [h] = LAGraph_MIN (buf [h], s_x [s_iso?0:k]) ;
                 }
             }
         }
@@ -261,7 +261,7 @@ static inline int Reduce_assign32
         for (GrB_Index k = 0 ; k < n ; k++)
         {
             uint32_t i = index [k] ;
-            w_x [i] = LAGraph_MIN (w_x [i], s_x [k]) ;
+            w_x [i] = LAGraph_MIN (w_x [i], s_x [s_iso?0:k]) ;
         }
     }
 
@@ -280,7 +280,7 @@ static inline int Reduce_assign32
     GrB_TRY (GxB_Vector_import_Full (s_handle, s_type, s_n, (void **) &s_x,
         s_size,
         #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
-        false,
+        s_iso,
         #endif
         NULL)) ;
 
@@ -298,7 +298,7 @@ static inline int Reduce_assign32
     LAGraph_Free ((void **) &V32) ;         \
     LAGraph_Free ((void **) &ht_key) ;      \
     LAGraph_Free ((void **) &ht_val) ;      \
-    /* TODO why is T not freed?? */                 \
+    /* todo why is T not freed?? */                 \
     GrB_free (&f) ;                                 \
     GrB_free (&gp) ;                                \
     GrB_free (&mngp) ;                              \
@@ -348,7 +348,7 @@ int LAGraph_ConnectedComponents
     GrB_TRY (GrB_Matrix_nrows (&n, S)) ;
     GrB_TRY (GrB_Matrix_nvals (&nnz, S)) ;
 
-    LG_CHECK (n > UINT32_MAX, -1, "problem too large (FIXME)") ;
+    LG_CHECK (n > UINT32_MAX, -1, "problem too large (fixme)") ;
 
     #define FASTSV_SAMPLES 4
 
@@ -380,7 +380,7 @@ int LAGraph_ConnectedComponents
     // temporary arrays
     I   = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
     V32 = LAGraph_Malloc (n, sizeof (uint32_t)) ;
-    // TODO: check out-of-memory condition
+    // todo: check out-of-memory condition
 
     // prepare vectors
     #pragma omp parallel for num_threads(nthreads2) schedule(static)
@@ -420,13 +420,15 @@ int LAGraph_ConnectedComponents
         void *Sx ;
         bool S_jumbled = false ;
         GrB_Index Sp_size, Sj_size, Sx_size ;
-        bool ignore ;
+        bool S_iso = false ;
 
         GrB_TRY (GrB_Matrix_nvals (&nvals, S)) ;
         GrB_TRY (GxB_Matrix_export_CSR (&S, &type, &nrows, &ncols, &Sp, &Sj,
             &Sx, &Sp_size, &Sj_size, &Sx_size,
-            #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
-            &ignore,
+            #if GxB_IMPLEMENTATION >= GxB_VERSION (5,1,0)
+            &S_iso,
+            #elif GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
+            NULL,
             #endif
             &S_jumbled, NULL)) ;
         GrB_TRY (GxB_Type_size (&typesize, type)) ;
@@ -438,11 +440,17 @@ int LAGraph_ConnectedComponents
 
         GrB_Index Tp_len = nrows+1, Tp_size = Tp_len*sizeof(GrB_Index);
         GrB_Index Tj_len = nvals,   Tj_size = Tj_len*sizeof(GrB_Index);
-        GrB_Index Tx_len = nvals,   Tx_size = Tx_len*typesize;
+        GrB_Index Tx_len = nvals ;
         GrB_Index *Tp = LAGraph_Malloc (Tp_len, sizeof (GrB_Index)) ;
         GrB_Index *Tj = LAGraph_Malloc (Tj_len, sizeof (GrB_Index)) ;
-        void      *Tx = LAGraph_Malloc (Tx_len, typesize) ;
-        // TODO check out-of-memory conditions
+        #if GxB_IMPLEMENTATION >= GxB_VERSION (5,1,0)
+        GrB_Index Tx_size = typesize ;
+        void *Tx = LAGraph_Calloc (1, typesize) ;   // T is iso
+        #else
+        GrB_Index Tx_size = Tx_len*typesize ;
+        void *Tx = LAGraph_Malloc (Tx_len, typesize) ;
+        #endif
+        // todo check out-of-memory conditions
 
         //----------------------------------------------------------------------
         // allocate workspace
@@ -450,7 +458,7 @@ int LAGraph_ConnectedComponents
 
         int32_t *range = LAGraph_Malloc (nthreads + 1, sizeof (int32_t)) ;
         GrB_Index *count = LAGraph_Malloc (nthreads + 1, sizeof (GrB_Index)) ;
-        // TODO check out-of-memory conditions
+        // todo check out-of-memory conditions
 
         memset (count, 0, sizeof (GrB_Index) * (nthreads + 1)) ;
 
@@ -493,7 +501,7 @@ int LAGraph_ConnectedComponents
 
         // T (i,:) consists of the first FASTSV_SAMPLES of S (i,:).
 
-        // TODO: this could be done by GxB_Select, using a new operator.  Need
+        // todo: this could be done by GxB_Select, using a new operator.  Need
         // to define a set of GxB_SelectOp operators that would allow for this.
 
         // Note that Tx is not modified.  Only Tp and Tj are constructed.
@@ -519,9 +527,7 @@ int LAGraph_ConnectedComponents
         // import the result into the GrB_Matrix T
         //----------------------------------------------------------------------
 
-        // Note that Tx is unmodified and contains uninitialized values.
-        // TODO: T should held as a uniform-valued matrix, once GraphBLAS
-        // allows for this.
+        // Note that Tx is unmodified.
 
         #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
         // in SuiteSparse:GraphBLAS v5, sizes are in bytes, not entries
@@ -538,7 +544,9 @@ int LAGraph_ConnectedComponents
         GrB_Index t_nvals = Tp [nrows] ;
         GrB_TRY (GxB_Matrix_import_CSR (&T, type, nrows, ncols,
                 &Tp, &Tj, &Tx, Tp_siz, Tj_siz, Tx_siz,
-                #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
+                #if GxB_IMPLEMENTATION >= GxB_VERSION (5,1,0)
+                true,   // T is iso
+                #elif GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
                 false,
                 #endif
                 S_jumbled, NULL)) ;
@@ -547,7 +555,7 @@ int LAGraph_ConnectedComponents
         // find the connected components of T
         //----------------------------------------------------------------------
 
-        // TODO: this is nearly identical to the final phase below.
+        // todo: this is nearly identical to the final phase below.
         // Make this a function
 
         bool change = true, is_first = true ;
@@ -565,8 +573,8 @@ int LAGraph_ConnectedComponents
                 mngp, gp, NULL)) ;
 
             // calculate grandparent
-            // FIXME: NULL parameter is SS:GrB extension
-            GrB_TRY (GrB_Vector_extractTuples (NULL, V32, &n, f)) ; // FIXME
+            // fixme: NULL parameter is SS:GrB extension
+            GrB_TRY (GrB_Vector_extractTuples (NULL, V32, &n, f)) ; // fixme
             #pragma omp parallel for num_threads(nthreads2) schedule(static)
             for (uint32_t i = 0 ; i < n ; i++)
             {
@@ -574,7 +582,7 @@ int LAGraph_ConnectedComponents
             }
             GrB_TRY (GrB_extract (gp_new, NULL, NULL, f, I, n, NULL)) ;
 
-            // TODO: GrB_Vector_extract should have a variant where the index
+            // todo: GrB_Vector_extract should have a variant where the index
             // list is not given by an array I, but as a GrB_Vector of type
             // GrB_UINT64 (or which can be typecast to GrB_UINT64).  This is a
             // common issue that arises in other algorithms as well.
@@ -592,26 +600,28 @@ int LAGraph_ConnectedComponents
         }
 
         //----------------------------------------------------------------------
-        // TODO: describe me
+        // todo: describe me
         //----------------------------------------------------------------------
 
         ht_init (ht_key, ht_val) ;
         ht_sample (V32, n, HASH_SAMPLES, ht_key, ht_val, &seed) ;
         int32_t key = ht_most_frequent (ht_key, ht_val) ;
-        // TODO: what if key is returned as -1?  Then T below is invalid.
+        // todo: what if key is returned as -1?  Then T below is invalid.
 
         int64_t t_nonempty = -1 ;
-        bool T_jumbled = false ;
+        bool T_jumbled = false, T_iso = true ;
 
         // export T
         GrB_TRY (GxB_Matrix_export_CSR (&T, &type, &nrows, &ncols, &Tp, &Tj,
             &Tx, &Tp_siz, &Tj_siz, &Tx_siz,
-            #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
-            &ignore,
+            #if GxB_IMPLEMENTATION >= GxB_VERSION (5,1,0)
+            &T_iso,
+            #elif GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
+            NULL,
             #endif
             &T_jumbled, NULL)) ;
 
-        // TODO what is this phase doing?  It is constructing a matrix T that
+        // todo what is this phase doing?  It is constructing a matrix T that
         // depends only on S, key, and V32.  T contains a subset of the entries
         // in S, except that T (i,:) is empty if
 
@@ -692,7 +702,9 @@ int LAGraph_ConnectedComponents
         // import S (unchanged since last export)
         GrB_TRY (GxB_Matrix_import_CSR (&S, type, nrows, ncols,
                 &Sp, &Sj, &Sx, Sp_size, Sj_size, Sx_size,
-                #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
+                #if GxB_IMPLEMENTATION >= GxB_VERSION (5,1,0)
+                S_iso,
+                #elif GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
                 false,
                 #endif
                 S_jumbled, NULL)) ;
@@ -700,7 +712,9 @@ int LAGraph_ConnectedComponents
         // import T for the final phase
         GrB_TRY (GxB_Matrix_import_CSR (&T, type, nrows, ncols,
                 &Tp, &Tj, &Tx, Tp_siz, Tj_siz, Tx_siz,
-                #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
+                #if GxB_IMPLEMENTATION >= GxB_VERSION (5,1,0)
+                T_iso,
+                #elif GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
                 false,
                 #endif
                 T_jumbled, NULL)) ;
@@ -735,8 +749,8 @@ int LAGraph_ConnectedComponents
                                mngp, gp, NULL)) ;
 
         // calculate grandparent
-        // FIXME: NULL parameter is SS:GrB extension
-        GrB_TRY (GrB_Vector_extractTuples (NULL, V32, &n, f)) ; // FIXME
+        // fixme: NULL parameter is SS:GrB extension
+        GrB_TRY (GrB_Vector_extractTuples (NULL, V32, &n, f)) ; // fixme
         #pragma omp parallel for num_threads(nthreads2) schedule(static)
         for (uint32_t k = 0 ; k < n ; k++)
         {

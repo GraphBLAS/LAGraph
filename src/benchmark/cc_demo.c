@@ -110,7 +110,9 @@ int main (int argc, char **argv)
         for (int k = 0 ; k < NTRIALS ; k++)
         {
             LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-            LAGraph_TRY (LAGraph_ConnectedComponents (&components, G, msg)) ;
+            int status = (LAGraph_ConnectedComponents (&components, G, msg)) ;
+            // printf ("status : %d msg: %s\n", status, msg) ;
+            LAGraph_TRY (status) ;
             double ttrial ;
             LAGraph_TRY (LAGraph_Toc (&ttrial, tic, NULL)) ;
             t1 += ttrial ;

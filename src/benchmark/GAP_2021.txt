@@ -6,6 +6,7 @@ Jan 2021 to date: in-progress comparisons of LAGraph +
 SuiteSparse:GraphBLAS vs GAP.  Results for Jan 26 and following are for
 algorithms in the Experimental2 folder.
 
+Jun 23: v5.1.0beta1
 May 14: in the reorg branch, v5.0.4
 May 12: v5.0.3
 May 2: v5.0.1beta2 with refactored saxpy3
@@ -24,6 +25,7 @@ Jan  3: SS:GrB v4.0.1 with LAGraph/Experimental
 BC   GAP        31.521      46.361      10.821       3.008       1.503
               ------------------------------------------------------------------
 
+BC   SS         23.900 *    32.545 *     9.126 *     6.482      35.048 (Jun 23) 
 --- reorg
 BC   SS         24.803 *    32.090 *     9.210 *     6.653      34.503 (May 12) 
 BC   SS         23.013 *    32.321 *     8.955 *     6.453      34.473 (May 2b) 
@@ -45,6 +47,7 @@ BC   SS:Feb2020 41.687      59.171      14.521       8.790      50.896 (Feb 21)
 BFS  GAP          .313        .575        .219        .338        .245
               ------------------------------------------------------------------
 
+BFS  SS           .526       1.206        .366        .705       3.050 (Jun 23) 
 BFS  SS           .503       1.280        .344        .696       2.971 (May 14) 
 --- reorg
 BFS  SS           .506       1.209        .340        .692       3.002 (May 12) 
@@ -84,6 +87,7 @@ Timing jitter for Jan 3b; timing should be identical to Jan 19.
 CC   GAP          .534       1.659        .234        .222        .045
               ------------------------------------------------------------------
 
+CC   SS          3.422       4.501       1.510       1.999        .992 (Jun 23) 
 --- reorg
 CC   SS          3.365       4.643       1.483       1.973        .983 (May 12) 
 CC   SS          3.354       4.517       1.473       1.957        .965 (May 2b) 
