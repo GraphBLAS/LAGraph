@@ -2,41 +2,18 @@
 // LAGraph/Test/DNN/dnn: run all neural networks from http://graphchallenge.org
 //------------------------------------------------------------------------------
 
-/*
-    LAGraph:  graph algorithms based on GraphBLAS
-
-    Copyright 2019 LAGraph Contributors.
-
-    (see Contributors.txt for a full list of Contributors; see
-    ContributionInstructions.txt for information on how you can Contribute to
-    this project).
-
-    All Rights Reserved.
-
-    NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
-    CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
-    AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
-    PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
-    THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
-    RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
-
-    Released under a BSD license, please see the LICENSE file distributed with
-    this Software or contact permission@sei.cmu.edu for full terms.
-
-    Created, in part, with funding and support from the United States
-    Government.  (see Acknowledgments.txt file).
-
-    This program includes and/or can make use of certain third party source
-    code, object code, documentation and other files ("Third Party Software").
-    See LICENSE file for more details.
-*/
+// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// See additional acknowledgments in the LICENSE file,
+// or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
 
 // LAGraph/Test/DNN/dnn: test for LAGraph_dnn.  Contributed by Tim Davis,
 // Texas A&M University.
 
-// Usage: ./build/dnn nproblems
+// Usage: ./dnn_test nproblems
 
 // nproblems is the # of test problems to solve.  If not present, it defaults
 // to 12 (run all 12 DNN's).  The problems are solved in order from small to
@@ -47,6 +24,7 @@
 
 #define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
 #include <LAGraph.h>
+#include <LAGraphX.h>
 
 #define LAGRAPH_FREE_ALL ;
 
@@ -58,7 +36,7 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     GrB_Info info ;
-    LAGRAPH_OK (LAGraph_init ( )) ;
+    LAGRAPH_OK (LAGraph_Init (NULL)) ;
 
     //--------------------------------------------------------------------------
     // problem size definitions
@@ -157,7 +135,8 @@ int main (int argc, char **argv)
     if (type == GrB_FP64) printf ("double\n") ; else printf ("float\n") ;
 
     // get the max # of threads that can be used
-    int nthreads_max = LAGraph_get_nthreads ( ) ;
+    int nthreads_max;
+    LAGRAPH_OK( LAGraph_GetNumThreads (&nthreads_max, NULL)) ;
     printf ("max # of nthreads: %d\n", nthreads_max) ;
 
     #define NNTHREADS 12
@@ -195,7 +174,7 @@ int main (int argc, char **argv)
         //----------------------------------------------------------------------
 
         double tic [2] ;
-        LAGraph_tic (tic) ;
+        LAGraph_Tic (tic, NULL) ;
 
         int nneurons = Nneurons [kn] ;
         double b = neuralNetBias [kn] ;
@@ -210,8 +189,9 @@ int main (int argc, char **argv)
         if (!f) { printf ("cannot open %s\n", filename) ; abort ( ) ; }
         LAGRAPH_OK (LAGraph_tsvread (&Y0, f, type, nfeatures, nneurons)) ;
         fclose (f) ;
-        double t = LAGraph_toc (tic) ;
-        printf ("# features: %" PRIu64 " read time: %g sec\n", nfeatures, t) ;
+        double t;
+        LAGraph_Toc (&t, tic, NULL) ;
+        printf ("# features: %d" PRIu64 " read time: %g sec\n", nfeatures, t) ;
         GrB_Index nvals ;
         LAGRAPH_OK (GrB_Matrix_nvals (&nvals, Y0)) ;
         printf ("# entries in Y0: %g million\n", (double) nvals / 1e6) ;
@@ -243,7 +223,7 @@ int main (int argc, char **argv)
             // read in the layers in parallel
             //------------------------------------------------------------------
 
-            LAGraph_tic (tic) ;
+            LAGraph_Tic (tic, NULL) ;
             int first_layer = (kl == 0) ? 0 : maxLayers [kl-1] ;
             bool ok = true ;
 
@@ -295,7 +275,7 @@ int main (int argc, char **argv)
                 abort ( ) ;
             }
 
-            t = LAGraph_toc (tic) ;
+            LAGraph_Toc (&t, tic, NULL) ;
             printf ("read net time %g sec\n", t) ;
 
             double nedges = 0 ;
@@ -348,7 +328,7 @@ int main (int argc, char **argv)
 
                 int nthreads = nthreads_list [kth] ;
                 if (nthreads > nthreads_max) break ;
-                LAGraph_set_nthreads (nthreads) ;
+                LAGraph_SetNumThreads (nthreads, NULL) ;
                 printf ("nthreads %3d: ", nthreads) ;
                 fflush (stdout) ;
 
@@ -356,9 +336,9 @@ int main (int argc, char **argv)
                 // solve the problem
                 //--------------------------------------------------------------
 
-                LAGraph_tic (tic) ;
+                LAGraph_Tic (tic, NULL) ;
                 LAGRAPH_OK (LAGraph_dnn (&Y, W, Bias, nlayers, Y0)) ;
-                t = LAGraph_toc (tic) ;
+                LAGraph_Toc (&t, tic, NULL) ;
 
                 printf ("soln time %12.2f sec", t) ;
 
@@ -380,7 +360,7 @@ int main (int argc, char **argv)
                 //--------------------------------------------------------------
 
                 // this is so fast, it's hardly worth timing ...
-                LAGraph_tic (tic) ;
+                LAGraph_Tic (tic, NULL) ;
                 LAGRAPH_OK (GrB_Matrix_nvals (&final_ynvals, Y)) ;
 
                 // C = sum (Y)
@@ -409,8 +389,9 @@ int main (int argc, char **argv)
                 {
                     // check if Categories and TrueCategories are the same
                     bool isequal ;
-                    LAGRAPH_OK (LAGraph_Vector_isequal (&isequal,
-                        TrueCategories, Categories, NULL)) ;
+                    LAGRAPH_OK (LAGraph_Vector_IsEqual_type (
+                                    &isequal, TrueCategories, Categories,
+                                    GrB_BOOL, NULL)) ;
                     if (!isequal)
                     {
                         // GxB_print (TrueCategories, 3) ;
@@ -422,16 +403,16 @@ int main (int argc, char **argv)
                 }
                 printf ("\n") ;
 
-                GrB_free (&Categories) ;
-                GrB_free (&C) ;
-                GrB_free (&Y) ;
-                tcheck = LAGraph_toc (tic) ;
+                GrB_free (&Categories) ; Categories = NULL;
+                GrB_free (&C) ; C = NULL;
+                GrB_free (&Y) ; Y = NULL;
+                LAGraph_Toc (&tcheck, tic, NULL) ;
             }
 
             printf ("\n# entries in final Y: %g million\n",
                 (double) final_ynvals / 1e6) ;
             printf ("check time: %g sec\n", tcheck) ;
-            LAGraph_set_nthreads (nthreads_max) ;
+            LAGraph_SetNumThreads (nthreads_max, NULL) ;
         }
 
         //----------------------------------------------------------------------
@@ -445,8 +426,7 @@ int main (int argc, char **argv)
     // finalize LAGraph and GraphBLAS
     //--------------------------------------------------------------------------
 
-    LAGRAPH_OK (LAGraph_finalize ( )) ;
+    LAGRAPH_OK (LAGraph_Finalize (NULL)) ;
     printf ("all tests passed\n") ;
     return (GrB_SUCCESS) ;
 }
-

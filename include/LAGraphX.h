@@ -76,6 +76,15 @@ int LAGraph_binread         // returns 0 if successful, -1 if failure
     FILE       *f           // file to read it from, already open
 ) ;
 
+GrB_Info LAGraph_tsvread        // returns GrB_SUCCESS if successful
+(
+    GrB_Matrix *Chandle,        // C, created on output
+    FILE *f,                    // file to read from (already open)
+    GrB_Type type,              // the type of C to create
+    GrB_Index nrows,            // C is nrows-by-ncols
+    GrB_Index ncols
+) ;
+
 GrB_Info LAGraph_dense_relabel   // relabel sparse IDs to dense row/column indices
 (
     GrB_Matrix *Id2index_handle, // output matrix: A(id, index)=1 (unfilled if NULL)
@@ -258,6 +267,19 @@ GrB_Info LAGraph_BF_pure_c_double
     const int64_t *I,// row index vector
     const int64_t *J,// column index vector
     const double  *W // weight vector, W(i) = weight of edge (I(i),J(i))
+);
+
+//****************************************************************************
+
+GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
+(
+    // output
+    GrB_Matrix *Yhandle,    // Y, created on output
+    // input: not modified
+    GrB_Matrix *W,      // W [0..nlayers-1], each nneurons-by-nneurons
+    GrB_Matrix *Bias,   // Bias [0..nlayers-1], diagonal nneurons-by-nneurons
+    int nlayers,        // # of layers
+    GrB_Matrix Y0       // input features: nfeatures-by-nneurons
 );
 
 #endif
