@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// cctest: test LAGraph_cc_*.c
+// CC_test.c
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -12,14 +12,14 @@
 
 // Contributed by Tim Davis, Texas A&M
 
-// Usage: cctest can be used with both stdin or a file as its input.
+// Usage: CC_test can be used with both stdin or a file as its input.
 // We assume by default that the matrix is symmetric. To override this,
 // use the file-based input and pass 1 as the last argument.
 //
-// cctest < matrixmarketfile.mtx
-// cctest matrixmarketfile.mtx
-// cctest unsymmetric-matrixmarketfile.mtx 0
-// cctest symmetric-matrixmarketfile.mtx 1
+// CC_test < matrixmarketfile.mtx
+// CC_test matrixmarketfile.mtx
+// CC_test unsymmetric-matrixmarketfile.mtx 0
+// CC_test symmetric-matrixmarketfile.mtx 1
 
 //------------------------------------------------------------------------------
 
@@ -145,7 +145,7 @@ int main (int argc, char **argv)
     }
     else
     {
-        // Usage:  ./cctest < matrixfile.mtx
+        // Usage:  ./CC_test < matrixfile.mtx
         printf ("matrix: from stdin\n") ;
 
         // read in the file in Matrix Market format from stdin
