@@ -2,35 +2,11 @@
 // LAGraph_dnn: sparse deep neural network
 //------------------------------------------------------------------------------
 
-/*
-    LAGraph:  graph algorithms based on GraphBLAS
-
-    Copyright 2019 LAGraph Contributors.
-
-    (see Contributors.txt for a full list of Contributors; see
-    ContributionInstructions.txt for information on how you can Contribute to
-    this project).
-
-    All Rights Reserved.
-
-    NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
-    CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
-    AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
-    PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
-    THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
-    RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
-
-    Released under a BSD license, please see the LICENSE file distributed with
-    this Software or contact permission@sei.cmu.edu for full terms.
-
-    Created, in part, with funding and support from the United States
-    Government.  (see Acknowledgments.txt file).
-
-    This program includes and/or can make use of certain third party source
-    code, object code, documentation and other files ("Third Party Software").
-    See LICENSE file for more details.
-
-*/
+// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// See additional acknowledgments in the LICENSE file,
+// or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
 
@@ -56,14 +32,59 @@
 // On output, Y is the computed result, of the same size and type as Y0.
 
 #define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
-#include "LAGraph.h"
+#include <LAGraph.h>
+#include <LAGraphX.h>
 
 #define LAGRAPH_FREE_ALL    \
 {                           \
+    GrB_free (&gt0) ;         \
+    GrB_free (&ymax) ;         \
     GrB_free (&M) ;         \
     GrB_free (Yhandle) ;    \
 }
 
+//****************************************************************************
+#define F_UNARY(f)  ((void (*)(void *, const void *)) f)
+
+// unary ops to check if greater than zero
+void LAGraph_gt0_fp32
+(
+    bool *z,
+    const float *x
+)
+{
+    (*z) = ((*x) > 0) ;
+}
+
+void LAGraph_gt0_fp64
+(
+    bool *z,
+    const double *x
+)
+{
+    (*z) = ((*x) > 0) ;
+}
+
+// unary operators to threshold a max value for DNN
+void LAGraph_ymax_fp32
+(
+    float *z,
+    const float *x
+)
+{
+    (*z) = fminf ((*x), (float) 32.0) ;
+}
+
+void LAGraph_ymax_fp64
+(
+    double *z,
+    const double *x
+)
+{
+    (*z) = fmin ((*x), (double) 32.0) ;
+}
+
+//****************************************************************************
 GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
 (
     // output
@@ -75,41 +96,70 @@ GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
     GrB_Matrix Y0       // input features: nfeatures-by-nneurons
 )
 {
+    GrB_Info info ;
 
+#if !defined(LG_SUITESPARSE)
+    // GxB_type, semirings and select required
+    return GrB_PANIC;
+#else
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------
 
-    GrB_Info info ;
     if (Yhandle == NULL || W == NULL || Bias == NULL || Y0 == NULL)
     {
         return (GrB_NULL_POINTER) ;
     }
 
+    // unary ops to check if greater than zero
     GrB_Matrix Y = NULL ;
     GrB_Matrix M = NULL ;
     (*Yhandle) = NULL ;
 
+    GrB_UnaryOp gt0 = NULL ;
+    GrB_UnaryOp ymax = NULL ;
+
+    //--------------------------------------------------------------------------
+    // create the unary greater-than-zero operators
+    //--------------------------------------------------------------------------
+
+    //--------------------------------------------------------------------------
+    // create the unary YMAX operators
+    //--------------------------------------------------------------------------
+
+    //--------------------------------------------------------------------------
+    GrB_Semiring plus_times, plus_plus ;
+    GrB_UnaryOp id ;
+
     GrB_Type type ;
     LAGRAPH_OK (GxB_Matrix_type (&type, Y0)) ;
 
-    GrB_Semiring plus_times, plus_plus ;
-    GrB_UnaryOp gt0, id, ymax ;
-
     if (type == GrB_FP32)
     {
-        plus_times = LAGraph_PLUS_TIMES_FP32 ;
-        plus_plus  = LAGraph_PLUS_PLUS_FP32 ;
-        gt0        = LAGraph_GT0_FP32 ;
-        ymax       = LAGraph_YMAX_FP32 ;
+        LAGRAPH_OK (GrB_UnaryOp_new (&gt0,
+                                     F_UNARY (LAGraph_gt0_fp32),
+                                     GrB_BOOL, GrB_FP32)) ;
+
+        LAGRAPH_OK (GrB_UnaryOp_new (&ymax,
+                                     F_UNARY (LAGraph_ymax_fp32),
+                                     GrB_FP32, GrB_FP32)) ;
+
+        plus_times = GrB_PLUS_TIMES_SEMIRING_FP32 ;
+        plus_plus  = GxB_PLUS_PLUS_FP32 ;
         id         = GrB_IDENTITY_FP32 ;
     }
     else if (type == GrB_FP64)
     {
-        plus_times = LAGraph_PLUS_TIMES_FP64 ;
-        plus_plus  = LAGraph_PLUS_PLUS_FP64 ;
-        gt0        = LAGraph_GT0_FP64 ;
-        ymax       = LAGraph_YMAX_FP64 ;
+        LAGRAPH_OK (GrB_UnaryOp_new (&gt0,
+                                     F_UNARY (LAGraph_gt0_fp64),
+                                     GrB_BOOL, GrB_FP64)) ;
+
+        LAGRAPH_OK (GrB_UnaryOp_new (&ymax,
+                                     F_UNARY (LAGraph_ymax_fp64),
+                                     GrB_FP64, GrB_FP64)) ;
+
+        plus_times = GrB_PLUS_TIMES_SEMIRING_FP64 ;
+        plus_plus  = GxB_PLUS_PLUS_FP64 ;
         id         = GrB_IDENTITY_FP64 ;
     }
     else
@@ -174,5 +224,5 @@ GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
     GrB_free (&M) ;
     (*Yhandle) = Y ;
     return (GrB_SUCCESS) ;
+#endif
 }
-

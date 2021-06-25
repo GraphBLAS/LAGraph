@@ -16,9 +16,12 @@ include_directories ( ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/src/utilit
 file ( GLOB LAGRAPHX_LIB_SOURCES
   "utility/LAGraph_Vector_IsEqual.c"
   "utility/LAGraph_binread.c"
+  "utility/LAGraph_tsvread.c"
+  "utility/LAGraph_dense_relabel.c"
+  "algorithm/LAGraph_allktruss.c"
   "algorithm/LAGraph_BF_*.c"
   "algorithm/LAGraph_cc_*.c"
-  "algorithm/LAGraph_allktruss.c" )
+  "algorithm/LAGraph_dnn.c" )
 
 #-------------------------------------------------------------------------------
 # dynamic lagraphx library properties
