@@ -282,4 +282,13 @@ GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
     GrB_Matrix Y0       // input features: nfeatures-by-nneurons
 );
 
+//****************************************************************************
+
+GrB_Info LAGraph_FW
+(
+    const GrB_Matrix G,     // input graph, with edge weights
+    GrB_Matrix *D,          // output graph, created on output
+    GrB_Type   *D_type
+);
+
 #endif

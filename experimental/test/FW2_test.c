@@ -2,54 +2,22 @@
 // FW/test.c: test Floyd-Warshall method: all pairs shortest paths
 //------------------------------------------------------------------------------
 
-/*
-
-    LAGraph:  graph algorithms based on GraphBLAS
-
-    Copyright 2019 LAGraph Contributors.
-
-    (see Contributors.txt for a full list of Contributors; see
-    ContributionInstructions.txt for information on how you can Contribute to
-    this project).
-
-    All Rights Reserved.
-
-    NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
-    CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
-    AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
-    PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
-    THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
-    RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
-
-    Released under a BSD license, please see the LICENSE file distributed with
-    this Software or contact permission@sei.cmu.edu for full terms.
-
-    Created, in part, with funding and support from the United States
-    Government.  (see Acknowledgments.txt file).
-
-    This program includes and/or can make use of certain third party source
-    code, object code, documentation and other files ("Third Party Software").
-    See LICENSE file for more details.
-*/
+// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// See additional acknowledgments in the LICENSE file,
+// or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
 
 #define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <limits.h>
 #include <float.h>
-// #include "LAGraph.h"
-
-#define OK(method) {                                                                            \
-    info = method;                                                                              \
-    if (! (info == GrB_SUCCESS || info == GrB_NO_VALUE))                                        \
-    {                                                                                           \
-        printf ("Error! File: %s line %d [%d]\n", __FILE__, __LINE__, info);                    \
-        FREE_ALL;                                                                               \
-        return (info);                                                                          \
-    }                                                                                           \
-}
+#include <LAGraph.h>
+#include <LAGraphX.h>
 
 // Used as global variable, otherwise run out of memory when creating second graph
 // of size VxV to keep track of floyd warshall distances.
@@ -96,22 +64,39 @@ void floydWarshallParents(int V) {
     }
 }
 
-#undef FREE_ALL
-#define FREE_ALL                                                                            \
-    GrB_free (&A) ;                                                                         \
-    GrB_free (&Output) ;
+#define LAGRAPH_FREE_ALL                        \
+    GrB_free (&A) ;                             \
+    GrB_free (&Output) ;                        \
+    GrB_free (&regResult) ;                     \
+    if (graph != NULL)                          \
+    {                                           \
+        for (int i = 0; i < V; i++)             \
+        {                                       \
+            free(graph[i]);                     \
+        }                                       \
+        free(graph);                            \
+    }
 
-int main(int argc, char *argv[]) {
-    LAGraph_init();
-
+//****************************************************************************
+int main(int argc, char *argv[])
+{
     GrB_Matrix A = NULL, Output = NULL ;
+    GrB_Type A_type = NULL, Output_type = NULL;
+    GrB_Matrix regResult = NULL;
     GrB_Info info ;
+    graph = NULL;
+
+    if (argc < 3)
+        return -1;
+
+    LAGraph_Init(NULL);
+
     int V = atoi(argv[2]);
     graph = (int **) malloc(V * sizeof(int*));
     for (int i = 0; i < V; i++)
         graph[i] = (int *)malloc(V * sizeof(int));
 
-    OK (GrB_Matrix_new(&A, GrB_FP64, V, V));
+    LAGRAPH_OK (GrB_Matrix_new(&A, GrB_FP64, V, V));
 
     FILE *file;
     file = fopen(argv[1], "r");
@@ -121,16 +106,16 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    OK (LAGraph_mmread(&A, file));
+    LAGRAPH_OK (LAGraph_MMRead(&A, &A_type, file, NULL));
     GrB_Index nrows, ncols;
 
-    OK (GrB_Matrix_nrows(&nrows, A));
-    OK (GrB_Matrix_ncols(&ncols, A));
+    LAGRAPH_OK (GrB_Matrix_nrows(&nrows, A));
+    LAGRAPH_OK (GrB_Matrix_ncols(&ncols, A));
 
     int val;
     for (GrB_Index i = 0; i < V; i++) {
         for (GrB_Index j = 0; j < V; j++) {
-            OK (GrB_Matrix_extractElement(&val, A, i, j));
+            LAGRAPH_OK (GrB_Matrix_extractElement(&val, A, i, j));
             if (info == GrB_SUCCESS)
                 graph[i][j] = val;
             else
@@ -140,19 +125,17 @@ int main(int argc, char *argv[]) {
 
     double tic[2], t1, t2 ;
 
-    LAGraph_tic (tic);
+    LAGraph_Tic (tic, NULL);
     floydWarshall(V);
-    t1 = LAGraph_toc (tic);
+    LAGraph_Toc (&t1, tic, NULL);
     printf("Non-GraphBLAS Floyd Warshall time in seconds: %14.6f\n", t1);
 
-    LAGraph_tic (tic);
-    LAGraph_FW(A, &Output);
-    t2 = LAGraph_toc (tic);
-
+    LAGraph_Tic (tic, NULL);
+    LAGraph_FW(A, &Output, &Output_type);
+    LAGraph_Toc (&t2, tic, NULL);
     printf("GraphBLAS Floyd Warshall time in seconds:     %14.6f\n", t2);
 
-    GrB_Matrix regResult = NULL;
-    OK (GrB_Matrix_new(&regResult, GrB_FP64, V, V));
+    LAGRAPH_OK (GrB_Matrix_new(&regResult, Output_type, V, V));
     for (int i = 0; i < V; i++) {
         for (int j = 0; j < V; j++) {
             if (graph[i][j] != INT_MAX)
@@ -161,12 +144,14 @@ int main(int argc, char *argv[]) {
     }
 
     bool isSame;
-    OK(LAGraph_isequal(&isSame, regResult, Output, GrB_EQ_INT32));
+    LAGRAPH_OK(LAGraph_IsEqual_type(&isSame, regResult,
+                                    Output, Output_type, NULL));
     if (isSame)
         printf("Test passed for file: %s\n\n", argv[1]);
     else
         printf("Test failed for file: %s\n\n", argv[1]);
 
-    LAGraph_finalize();
+    LAGRAPH_FREE_ALL;
+    LAGraph_Finalize(NULL);
     return 0;
 }

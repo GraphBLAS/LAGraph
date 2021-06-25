@@ -2,34 +2,11 @@
 // LAGraph_FW: Floyd-Warshall method: all pairs shortest paths
 //------------------------------------------------------------------------------
 
-/*
-    LAGraph:  graph algorithms based on GraphBLAS
-
-    Copyright 2019 LAGraph Contributors.
-
-    (see Contributors.txt for a full list of Contributors; see
-    ContributionInstructions.txt for information on how you can Contribute to
-    this project).
-
-    All Rights Reserved.
-
-    NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
-    CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
-    AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
-    PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
-    THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
-    RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
-
-    Released under a BSD license, please see the LICENSE file distributed with
-    this Software or contact permission@sei.cmu.edu for full terms.
-
-    Created, in part, with funding and support from the United States
-    Government.  (see Acknowledgments.txt file).
-
-    This program includes and/or can make use of certain third party source
-    code, object code, documentation and other files ("Third Party Software").
-    See LICENSE file for more details.
-*/
+// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// See additional acknowledgments in the LICENSE file,
+// or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
 
@@ -49,7 +26,9 @@
 // that case, the output is undefined.
 
 #define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
-#include "LAGraph.h"
+#include <LAGraph.h>
+#include <LAGraphX.h>
+
 
 #define FW_FREE_WORK            \
     GrB_free (&A);              \
@@ -57,12 +36,14 @@
 
 #define LAGRAPH_FREE_ALL        \
     FW_FREE_WORK ;              \
-    GrB_free (D);               \
+    GrB_free (D);
 
+//****************************************************************************
 GrB_Info LAGraph_FW
 (
     const GrB_Matrix G,     // input graph, with edge weights
-    GrB_Matrix *D           // output graph, created on output
+    GrB_Matrix *D,          // output graph, created on output
+    GrB_Type   *D_type      // output type
 )
 {
     GrB_Info info;
@@ -108,6 +89,7 @@ GrB_Info LAGraph_FW
     }
 
     LAGRAPH_OK (GrB_Matrix_new (D,  otype, n, n)) ;
+    *D_type = otype;
     LAGRAPH_OK (GrB_Matrix_new (&A, otype, n, 1));
     LAGRAPH_OK (GrB_Matrix_new (&B, otype, 1, n));
 
