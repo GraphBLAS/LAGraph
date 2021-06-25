@@ -1,0 +1,413 @@
+Script started on Thu 24 Jun 2021 07:43:36 PM CDT
+groups: cannot find name for group ID 8047
+Intel Suite:
+Copyright (C) 2009-2019 Intel Corporation. All rights reserved.
+Intel(R) VTune(TM) Amplifier 2019 (build 591499)
+[1;34m==>[0m 71 installed packages
+-- [0;35mlinux-ubuntu16.04-broadwell[0m / [0;32mgcc@5.4.0[0m ----------------------
+autoconf[0;36m@2.69[0m                expat[0;36m@2.2.9[0m     hwloc[0;36m@2.4.0[0m           libsigsegv[0;36m@2.12[0m      openmpi[0;36m@4.0.5[0m         python[0;36m@3.7.7[0m
+autoconf[0;36m@2.69[0m                expat[0;36m@2.2.10[0m    isl[0;36m@0.18[0m              libtool[0;36m@2.4.6[0m        openssh[0;36m@8.4p1[0m         python[0;36m@3.8.0[0m
+autoconf-archive[0;36m@2019.01.06[0m  gcc[0;36m@6.3.0[0m       isl[0;36m@0.20[0m              libunistring[0;36m@0.9.10[0m  openssl[0;36m@1.1.1g[0m        readline[0;36m@8.0[0m
+automake[0;36m@1.16.2[0m              gcc[0;36m@9.3.0[0m       isl[0;36m@0.21[0m              libxml2[0;36m@2.9.10[0m       openssl[0;36m@1.1.1j[0m        sqlite[0;36m@3.31.1[0m
+automake[0;36m@1.16.3[0m              gcc[0;36m@10.1.0[0m      libbsd[0;36m@0.10.0[0m         libxml2[0;36m@2.9.10[0m       pcre2[0;36m@10.31[0m           tar[0;36m@1.32[0m
+berkeley-db[0;36m@18.1.40[0m          gdbm[0;36m@1.18.1[0m     libedit[0;36m@3.1-20191231[0m  m4[0;36m@1.4.18[0m            pcre2[0;36m@10.35[0m           util-macros[0;36m@1.19.1[0m
+boost[0;36m@1.75.0[0m                 gettext[0;36m@0.20.2[0m  libevent[0;36m@2.1.12[0m       mpc[0;36m@1.1.0[0m            perl[0;36m@5.30.2[0m           valgrind[0;36m@3.16.1[0m
+bzip2[0;36m@1.0.8[0m                  gettext[0;36m@0.21[0m    libffi[0;36m@3.3[0m            mpc[0;36m@1.1.0[0m            perl[0;36m@5.32.1[0m           xz[0;36m@5.2.5[0m
+cmake[0;36m@3.19.5[0m                 git[0;36m@2.26.0[0m      libiconv[0;36m@1.16[0m         mpfr[0;36m@3.1.6[0m           pkgconf[0;36m@1.6.3[0m         xz[0;36m@5.2.5[0m
+curl[0;36m@7.68.0[0m                  git[0;36m@2.29.0[0m      libidn2[0;36m@2.1.1a[0m        mpfr[0;36m@4.0.2[0m           pkgconf[0;36m@1.7.3[0m         zlib[0;36m@1.2.11[0m
+curl[0;36m@7.74.0[0m                  gmp[0;36m@6.1.2[0m       libidn2[0;36m@2.3.0[0m         ncurses[0;36m@6.2[0m          py-pip[0;36m@19.3[0m           zstd[0;36m@1.4.4[0m
+diffutils[0;36m@3.7[0m                gmp[0;36m@6.2.1[0m       libpciaccess[0;36m@0.16[0m     numactl[0;36m@2.0.14[0m       py-setuptools[0;36m@46.1.3[0m
+[0;36mhypersparse $[0m ./do_gap_pagerank grb
+ 
+======================================================================
+GAP benchmarks using LAGraph+GraphBLAS: PageRank
+======================================================================
+Matrix input file format:  grb
+GAP matrices located in:   ../../../GAP
+SuiteSparse:GraphBLAS v5.1.0 [June 22, 2021 (BETA1)]
+threads to test:  40
+matrix: ../../../GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-kron/GAP-kron.grb
+^X^C^C
+[0;36mhypersparse $[0m exit[K
+[0;36mhypersparse $[0m ./do_gap_pagerank grb
+ 
+======================================================================
+GAP benchmarks using LAGraph+GraphBLAS: PageRank
+======================================================================
+Matrix input file format:  grb
+GAP matrices located in:   ../../../GAP
+SuiteSparse:GraphBLAS v5.1.0 [June 22, 2021 (BETA1)]
+threads to test:  40
+matrix: ../../../GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-kron/GAP-kron.grb
+read time: 32.2193
+Graph: kind: undirected, nodes: 134217726 entries: 4223264644 type: bool
+  pattern symmetry: symmetric
+  adjacency matrix: GrB_BOOL matrix: 134217726-by-134217726 entries: 4223264644
+    (1, 83111928)   1
+    (2, 113772338)   1
+    (9, 26920261)   1
+    (9, 33335674)   1
+    (9, 90905511)   1
+    (9, 92964069)   1
+    (9, 126874301)   1
+    (11, 3075467)   1
+    (11, 11283179)   1
+    (11, 14136330)   1
+    (11, 18241662)   1
+    (11, 21256905)   1
+    (11, 26197037)   1
+    (11, 34992956)   1
+    (11, 49762924)   1
+    (11, 54231301)   1
+    (11, 55275316)   1
+    (11, 55896288)   1
+    (11, 56613538)   1
+    (11, 69378808)   1
+    (11, 76391974)   1
+    (11, 77970070)   1
+    (11, 80121717)   1
+    (11, 113872174)   1
+    (11, 115829864)   1
+    (11, 125066355)   1
+    (11, 129708509)   1
+    (11, 131285585)   1
+    (11, 132549336)   1
+    (14, 11049596)   1
+    ...
+# of trials: 16
+
+--------------------------- nthreads: 40
+trial:  0 time:    21.7282 sec
+trial:  1 time:    21.6701 sec
+trial:  2 time:    21.6955 sec
+trial:  3 time:    21.7037 sec
+trial:  4 time:    21.6823 sec
+trial:  5 time:    21.7372 sec
+trial:  6 time:    21.7388 sec
+trial:  7 time:    21.6972 sec
+trial:  8 time:    21.6608 sec
+trial:  9 time:    21.7321 sec
+trial: 10 time:    21.5762 sec
+trial: 11 time:    21.6797 sec
+trial: 12 time:    21.6267 sec
+trial: 13 time:    21.7049 sec
+trial: 14 time:    21.6765 sec
+trial: 15 time:    21.6822 sec
+3f: 40: avg time:     21.687 (sec), rate:   1363.159 iters: 7
+Avg: PR (3f)       40:     21.687 sec: ../../../GAP/GAP-kron/GAP-kron.grb
+SuiteSparse:GraphBLAS v5.1.0 [June 22, 2021 (BETA1)]
+threads to test:  40
+matrix: ../../../GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-urand/GAP-urand.grb
+read time: 54.6448
+Graph: kind: undirected, nodes: 134217728 entries: 4294966740 type: bool
+  pattern symmetry: symmetric
+  adjacency matrix: GrB_BOOL matrix: 134217728-by-134217728 entries: 4294966740
+    (0, 8291853)   1
+    (0, 9845139)   1
+    (0, 14571172)   1
+    (0, 16459757)   1
+    (0, 27302127)   1
+    (0, 27726180)   1
+    (0, 30303523)   1
+    (0, 32640525)   1
+    (0, 33360373)   1
+    (0, 40782998)   1
+    (0, 41057943)   1
+    (0, 43348321)   1
+    (0, 50206206)   1
+    (0, 52510658)   1
+    (0, 53390371)   1
+    (0, 53579654)   1
+    (0, 54622695)   1
+    (0, 57696071)   1
+    (0, 59385788)   1
+    (0, 60365539)   1
+    (0, 64764501)   1
+    (0, 64889445)   1
+    (0, 72706136)   1
+    (0, 77394182)   1
+    (0, 82101150)   1
+    (0, 86364056)   1
+    (0, 86790574)   1
+    (0, 90287459)   1
+    (0, 104674459)   1
+    (0, 109716228)   1
+    ...
+# of trials: 16
+
+--------------------------- nthreads: 40
+trial:  0 time:    27.6409 sec
+trial:  1 time:    27.6161 sec
+trial:  2 time:    27.5614 sec
+trial:  3 time:    27.6072 sec
+trial:  4 time:    27.6428 sec
+trial:  5 time:    27.6566 sec
+trial:  6 time:    27.6997 sec
+trial:  7 time:    27.5818 sec
+trial:  8 time:    27.6060 sec
+trial:  9 time:    27.6298 sec
+trial: 10 time:    27.6816 sec
+trial: 11 time:    27.6196 sec
+trial: 12 time:    27.6354 sec
+trial: 13 time:    27.6136 sec
+trial: 14 time:    27.6816 sec
+trial: 15 time:    27.6327 sec
+3f: 40: avg time:     27.632 (sec), rate:    932.618 iters: 6
+Avg: PR (3f)       40:     27.632 sec: ../../../GAP/GAP-urand/GAP-urand.grb
+SuiteSparse:GraphBLAS v5.1.0 [June 22, 2021 (BETA1)]
+threads to test:  40
+matrix: ../../../GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-twitter/GAP-twitter.grb
+read time: 29.8536
+Graph: kind: directed, nodes: 61578415 entries: 1468364884 type: bool
+  pattern symmetry: unsymmetric
+  adjacency matrix: GrB_BOOL matrix: 61578415-by-61578415 entries: 1468364884
+    (12, 13)   1
+    (12, 14)   1
+    (12, 15)   1
+    (12, 16)   1
+    (12, 17)   1
+    (12, 18)   1
+    (12, 20)   1
+    (12, 21)   1
+    (12, 22)   1
+    (12, 23)   1
+    (12, 24)   1
+    (12, 31)   1
+    (12, 38)   1
+    (12, 41)   1
+    (12, 47)   1
+    (12, 52)   1
+    (12, 53)   1
+    (12, 56)   1
+    (12, 57)   1
+    (12, 58)   1
+    (12, 59)   1
+    (12, 60)   1
+    (12, 61)   1
+    (12, 62)   1
+    (12, 64)   1
+    (12, 67)   1
+    (12, 69)   1
+    (12, 70)   1
+    (12, 76)   1
+    (12, 87)   1
+    ...
+  adjacency matrix transposed: GrB_BOOL matrix: 61578415-by-61578415 entries: 1468364884
+    (12, 13)   1
+    (12, 14)   1
+    (12, 15)   1
+    (12, 16)   1
+    (12, 17)   1
+    (12, 18)   1
+    (12, 20)   1
+    (12, 21)   1
+    (12, 22)   1
+    (12, 23)   1
+    (12, 24)   1
+    (12, 31)   1
+    (12, 38)   1
+    (12, 41)   1
+    (12, 53)   1
+    (12, 56)   1
+    (12, 57)   1
+    (12, 58)   1
+    (12, 59)   1
+    (12, 60)   1
+    (12, 61)   1
+    (12, 62)   1
+    (12, 64)   1
+    (12, 67)   1
+    (12, 70)   1
+    (12, 76)   1
+    (12, 87)   1
+    (12, 92)   1
+    (12, 94)   1
+    (12, 104)   1
+    ...
+# of trials: 16
+
+--------------------------- nthreads: 40
+trial:  0 time:    17.2319 sec
+trial:  1 time:    17.2666 sec
+trial:  2 time:    17.2645 sec
+trial:  3 time:    17.2326 sec
+trial:  4 time:    17.2284 sec
+trial:  5 time:    17.2611 sec
+trial:  6 time:    17.3641 sec
+trial:  7 time:    17.3716 sec
+trial:  8 time:    17.2773 sec
+trial:  9 time:    17.2265 sec
+trial: 10 time:    17.3179 sec
+trial: 11 time:    17.2526 sec
+trial: 12 time:    17.2674 sec
+trial: 13 time:    17.2914 sec
+trial: 14 time:    17.3049 sec
+trial: 15 time:    17.2670 sec
+3f: 40: avg time:     17.277 (sec), rate:   1869.813 iters: 22
+Avg: PR (3f)       40:     17.277 sec: ../../../GAP/GAP-twitter/GAP-twitter.grb
+SuiteSparse:GraphBLAS v5.1.0 [June 22, 2021 (BETA1)]
+threads to test:  40
+matrix: ../../../GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-web/GAP-web.grb
+read time: 34.8482
+Graph: kind: directed, nodes: 50636151 entries: 1930292948 type: bool
+  pattern symmetry: unsymmetric
+  adjacency matrix: GrB_BOOL matrix: 50636151-by-50636151 entries: 1930292948
+    (10, 49817219)   1
+    (10, 49824797)   1
+    (10, 49824842)   1
+    (10, 49824843)   1
+    (10, 49824846)   1
+    (10, 49826026)   1
+    (10, 49826027)   1
+    (10, 49826709)   1
+    (10, 49826710)   1
+    (10, 49826711)   1
+    (10, 49826712)   1
+    (10, 49826713)   1
+    (10, 49826714)   1
+    (10, 49826715)   1
+    (10, 49826716)   1
+    (10, 49826717)   1
+    (10, 49826719)   1
+    (10, 49827761)   1
+    (10, 49853332)   1
+    (10, 49853570)   1
+    (10, 49853571)   1
+    (10, 49853572)   1
+    (10, 49853573)   1
+    (10, 49853574)   1
+    (10, 49853575)   1
+    (10, 49855627)   1
+    (10, 50184826)   1
+    (10, 50284715)   1
+    (10, 50284718)   1
+    (10, 50284719)   1
+    ...
+  adjacency matrix transposed: GrB_BOOL matrix: 50636151-by-50636151 entries: 1930292948
+    (0, 50395004)   1
+    (1, 50395004)   1
+    (2, 50395004)   1
+    (3, 50395004)   1
+    (4, 50395004)   1
+    (5, 50395004)   1
+    (6, 50395004)   1
+    (7, 50395004)   1
+    (8, 50395004)   1
+    (9, 50395004)   1
+    (10, 11)   1
+    (11, 50394996)   1
+    (12, 50395004)   1
+    (13, 50395004)   1
+    (14, 50395004)   1
+    (15, 50395004)   1
+    (16, 50395004)   1
+    (17, 50395004)   1
+    (18, 50395006)   1
+    (19, 50395006)   1
+    (20, 50395006)   1
+    (21, 50395006)   1
+    (22, 50395006)   1
+    (23, 50395006)   1
+    (24, 21650758)   1
+    (25, 21650758)   1
+    (26, 21650758)   1
+    (27, 21650758)   1
+    (28, 21650758)   1
+    (29, 21650758)   1
+    ...
+# of trials: 16
+
+--------------------------- nthreads: 40
+trial:  0 time:     9.5942 sec
+trial:  1 time:     9.6228 sec
+trial:  2 time:     9.6022 sec
+trial:  3 time:     9.6341 sec
+trial:  4 time:     9.6088 sec
+trial:  5 time:     9.6314 sec
+trial:  6 time:     9.6032 sec
+trial:  7 time:     9.6037 sec
+trial:  8 time:     9.5886 sec
+trial:  9 time:     9.5968 sec
+trial: 10 time:     9.5886 sec
+trial: 11 time:     9.4804 sec
+trial: 12 time:     9.5556 sec
+trial: 13 time:     9.6397 sec
+trial: 14 time:     9.6610 sec
+trial: 15 time:     9.5588 sec
+3f: 40: avg time:      9.598 (sec), rate:   6033.355 iters: 30
+Avg: PR (3f)       40:      9.598 sec: ../../../GAP/GAP-web/GAP-web.grb
+SuiteSparse:GraphBLAS v5.1.0 [June 22, 2021 (BETA1)]
+threads to test:  40
+matrix: ../../../GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-road/GAP-road.grb
+read time: 0.88997
+Graph: kind: undirected, nodes: 23947347 entries: 57708624 type: bool
+  pattern symmetry: symmetric
+  adjacency matrix: GrB_BOOL matrix: 23947347-by-23947347 entries: 57708624
+    (0, 1)   1
+    (0, 709)   1
+    (0, 1049673)   1
+    (1, 0)   1
+    (1, 2097154)   1
+    (2, 9)   1
+    (2, 2097152)   1
+    (2, 2097156)   1
+    (3, 1903)   1
+    (3, 1048578)   1
+    (4, 5)   1
+    (4, 2097153)   1
+    (5, 4)   1
+    (5, 11)   1
+    (5, 1048579)   1
+    (6, 7)   1
+    (6, 1048580)   1
+    (6, 1048582)   1
+    (7, 6)   1
+    (8, 33976)   1
+    (8, 1048581)   1
+    (9, 2)   1
+    (9, 10)   1
+    (9, 2097155)   1
+    (10, 9)   1
+    (10, 11)   1
+    (10, 2097152)   1
+    (11, 5)   1
+    (11, 10)   1
+    (11, 2097155)   1
+    ...
+# of trials: 16
+
+--------------------------- nthreads: 40
+trial:  0 time:     1.3943 sec
+trial:  1 time:     1.2439 sec
+trial:  2 time:     1.2403 sec
+trial:  3 time:     1.2368 sec
+trial:  4 time:     1.2444 sec
+trial:  5 time:     1.2311 sec
+trial:  6 time:     1.2448 sec
+trial:  7 time:     1.2437 sec
+trial:  8 time:     1.2381 sec
+trial:  9 time:     1.2499 sec
+trial: 10 time:     1.2469 sec
+trial: 11 time:     1.2444 sec
+trial: 12 time:     1.2329 sec
+trial: 13 time:     1.2343 sec
+trial: 14 time:     1.2288 sec
+trial: 15 time:     1.2469 sec
+3f: 40: avg time:      1.250 (sec), rate:   1800.373 iters: 39
+Avg: PR (3f)       40:      1.250 sec: ../../../GAP/GAP-road/GAP-road.grb
+[0;36mhypersparse $[0m exit
+exit
+
+Script done on Thu 24 Jun 2021 08:13:45 PM CDT
