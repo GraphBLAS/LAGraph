@@ -24,7 +24,8 @@ file ( GLOB LAGRAPHX_LIB_SOURCES
   "algorithm/LAGraph_cc_*.c"
   "algorithm/LAGraph_cdlp.c"
   "algorithm/LAGraph_dnn.c"
-  "algorithm/LAGraph_FW.c" )
+  "algorithm/LAGraph_FW.c"
+  "algorithm/LAGraph_ktruss.c" )
 
 #-------------------------------------------------------------------------------
 # dynamic lagraphx library properties

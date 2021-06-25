@@ -271,6 +271,20 @@ GrB_Info LAGraph_BF_pure_c_double
 
 //****************************************************************************
 
+GrB_Info LAGraph_cdlp
+(
+    GrB_Vector *CDLP_handle, // output vector
+    GrB_Type *CDLP_type,     // scalar type of output vector
+    const GrB_Matrix A,      // input matrix
+    bool symmetric,          // denote whether the matrix is symmetric
+    bool sanitize,           // if true, ensure A is binary
+    int itermax,             // max number of iterations,
+    double *t                // t [0] = sanitize time, t [1] = cdlp time,
+                             // in seconds
+);
+
+//****************************************************************************
+
 GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
 (
     // output
@@ -293,16 +307,13 @@ GrB_Info LAGraph_FW
 
 //****************************************************************************
 
-GrB_Info LAGraph_cdlp
+GrB_Info LAGraph_ktruss         // compute the k-truss of a graph
 (
-    GrB_Vector *CDLP_handle, // output vector
-    GrB_Type *CDLP_type,     // scalar type of output vector
-    const GrB_Matrix A,      // input matrix
-    bool symmetric,          // denote whether the matrix is symmetric
-    bool sanitize,           // if true, ensure A is binary
-    int itermax,             // max number of iterations,
-    double *t                // t [0] = sanitize time, t [1] = cdlp time,
-                             // in seconds
-);
+    GrB_Matrix *C,              // output: k-truss subgraph, C
+    GrB_Type   *C_type,
+    const GrB_Matrix A,         // input adjacency matrix, A, not modified
+    const uint32_t k,           // find the k-truss, where k >= 3
+    int32_t *nsteps             // # of steps taken (ignored if NULL)
+) ;
 
 #endif

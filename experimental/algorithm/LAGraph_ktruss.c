@@ -2,35 +2,11 @@
 // LAGraph_ktruss: k-truss subgraph
 //------------------------------------------------------------------------------
 
-/*
-    LAGraph:  graph algorithms based on GraphBLAS
-
-    Copyright 2019 LAGraph Contributors.
-
-    (see Contributors.txt for a full list of Contributors; see
-    ContributionInstructions.txt for information on how you can Contribute to
-    this project).
-
-    All Rights Reserved.
-
-    NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
-    CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
-    AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
-    PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
-    THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
-    RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
-
-    Released under a BSD license, please see the LICENSE file distributed with
-    this Software or contact permission@sei.cmu.edu for full terms.
-
-    Created, in part, with funding and support from the United States
-    Government.  (see Acknowledgments.txt file).
-
-    This program includes and/or can make use of certain third party source
-    code, object code, documentation and other files ("Third Party Software").
-    See LICENSE file for more details.
-
-*/
+// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// See additional acknowledgments in the LICENSE file,
+// or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
 
@@ -68,11 +44,23 @@
 
 // TODO add cite
 
+#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
+#include <LAGraph.h>
+#include <LAGraphX.h>
+
 #define LAGRAPH_FREE_ALL                \
     GrB_free (&Support) ;               \
+    GrB_free (&LAGraph_support) ;       \
     GrB_free (&C) ;
 
-#include "LAGraph_internal.h"
+//****************************************************************************
+
+#define F_SELECT(f) ((bool (*)(const GrB_Index, const GrB_Index, const void *, const void *)) f)
+
+static bool LAGraph_support_function (const GrB_Index i, const GrB_Index j, const uint32_t *x, const uint32_t *support)
+{
+    return ((*x) >= (*support)) ;
+}
 
 //------------------------------------------------------------------------------
 // C = ktruss_graphblas (A,k): find the k-truss subgraph of a graph
@@ -81,6 +69,7 @@
 GrB_Info LAGraph_ktruss         // compute the k-truss of a graph
 (
     GrB_Matrix *Chandle,        // output k-truss subgraph, C
+    GrB_Type *C_type,
     const GrB_Matrix A,         // input adjacency matrix, A, not modified
     const uint32_t k,           // find the k-truss, where k >= 3
     int32_t *p_nsteps           // # of steps taken (ignored if NULL)
@@ -94,8 +83,10 @@ GrB_Info LAGraph_ktruss         // compute the k-truss of a graph
     // ensure k is 3 or more
     if (k < 3) return (GrB_INVALID_VALUE) ;
 
-    if (Chandle == NULL) return (GrB_NULL_POINTER) ;
+    if ((Chandle == NULL) || (C_type == NULL))
+        return (GrB_NULL_POINTER) ;
     (*Chandle) = NULL ;
+    (*C_type) = NULL;
 
 #if LG_SUITESPARSE
 
@@ -108,8 +99,11 @@ GrB_Info LAGraph_ktruss         // compute the k-truss of a graph
     GrB_Index n ;
     GrB_Matrix C = NULL ;
     GxB_Scalar Support = NULL ;
+    GxB_SelectOp LAGraph_support = NULL ;
+
     LAGRAPH_OK (GrB_Matrix_nrows (&n, A)) ;
     LAGRAPH_OK (GrB_Matrix_new (&C, GrB_UINT32, n, n)) ;
+    *C_type = GrB_UINT32;
 
     // for the select operator
     uint32_t support = (k-2) ;
@@ -122,6 +116,10 @@ GrB_Info LAGraph_ktruss         // compute the k-truss of a graph
     GrB_Index cnz, last_cnz ;
     LAGRAPH_OK (GrB_Matrix_nvals (&last_cnz, A)) ;
 
+    // allocate the select function for ktruss and allktruss
+    LAGRAPH_OK (GxB_SelectOp_new (&LAGraph_support,
+        F_SELECT (LAGraph_support_function), GrB_UINT32, GrB_UINT32)) ;
+
     //--------------------------------------------------------------------------
     // find the k-truss of A
     //--------------------------------------------------------------------------
@@ -130,7 +128,7 @@ GrB_Info LAGraph_ktruss         // compute the k-truss of a graph
     {
 
         double tic [2] ;
-        LAGraph_tic (tic) ;
+        LAGraph_Tic (tic, NULL) ;
 
         //----------------------------------------------------------------------
         // C<C> = C*C
@@ -144,15 +142,17 @@ GrB_Info LAGraph_ktruss         // compute the k-truss of a graph
         //----------------------------------------------------------------------
 
         LAGRAPH_OK (GxB_select (C, NULL, NULL, LAGraph_support, C, Support,
-            NULL)) ;
+                                NULL)) ;
 
         //----------------------------------------------------------------------
         // check if the k-truss has been found
         //----------------------------------------------------------------------
 
         LAGRAPH_OK (GrB_Matrix_nvals (&cnz, C)) ;
-        double t = LAGraph_toc (tic) ;
-//      printf ("step %3d time %16.4f sec, nvals %.16g\n", nsteps, t, (double) cnz) ;
+        double t;
+        LAGraph_Toc (&t, tic, NULL) ;
+        printf ("step %3d time %16.4f sec, nvals %.16g\n",
+                nsteps, t, (double) cnz) ;
         fflush (stdout) ;
         if (cnz == last_cnz)
         {
@@ -161,7 +161,7 @@ GrB_Info LAGraph_ktruss         // compute the k-truss of a graph
             {
                 (*p_nsteps) = nsteps ;              // return # of steps
             }
-            GrB_free (&Support) ;
+            GrB_free (&Support) ;  Support = NULL;
             return (GrB_SUCCESS) ;
         }
         last_cnz = cnz ;
@@ -172,4 +172,3 @@ GrB_Info LAGraph_ktruss         // compute the k-truss of a graph
     return (GrB_NO_VALUE) ;
 #endif
 }
-

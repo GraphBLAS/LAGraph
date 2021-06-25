@@ -35,6 +35,11 @@
     LAGraph_Free ((void **) &nstepss) ;                        \
 }
 
+//****************************************************************************
+
+#define F_UNARY(f)  ((void (*)(void *, const void *)) f)
+#define F_BINARY(f) ((void (*)(void *, const void *, const void *)) f)
+
 void LAGraph_one_uint32
 (
     uint32_t *z,
@@ -54,6 +59,7 @@ void LAGraph_lor_uint32
     (*z) = (((*x) != 0) || ((*y) != 0)) ;
 }
 
+//****************************************************************************
 int main (int argc, char **argv)
 {
 
@@ -74,7 +80,7 @@ int main (int argc, char **argv)
     int nthreads_max;
     LAGRAPH_OK (LAGraph_GetNumThreads (&nthreads_max, NULL)) ;
 
-#if LG_SUITESPARSE
+#if 0 //LG_SUITESPARSE
     LAGraph_ONE_UINT32 = GxB_ONE_UINT32 ;
     LAGraph_LOR_UINT32 = GxB_LOR_UINT32 ;
 #else
