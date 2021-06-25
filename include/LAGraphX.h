@@ -121,15 +121,17 @@ int LAGraph_Vector_IsEqual         // returns 0 if successful, < 0 if failure
     char *msg
 );
 
-//int LAGraph_TSVRread
-//(
-//    GrB_Matrix *C,             // C, created on output
-//    FILE       *f,                    // file to read from (already open)
-//    GrB_Type    type,              // the type of C to create
-//    GrB_Index   nrows,            // C is nrows-by-ncols
-//    GrB_Index   ncols,
-//    char       *msg
-//) ;
+GrB_Info LAGraph_pattern    // return GrB_SUCCESS if successful
+(
+    GrB_Matrix *C,          // a boolean matrix with the pattern of A
+    GrB_Matrix A,
+    GrB_Type C_type         // return type for C
+) ;
+
+GrB_Info LAGraph_prune_diag // remove all entries from the diagonal
+(
+    GrB_Matrix A
+) ;
 
 //GrB_Info LAGraph_IsPattern  // return GrB_SUCCESS if successful
 //(
@@ -315,5 +317,18 @@ GrB_Info LAGraph_ktruss         // compute the k-truss of a graph
     const uint32_t k,           // find the k-truss, where k >= 3
     int32_t *nsteps             // # of steps taken (ignored if NULL)
 ) ;
+
+//****************************************************************************
+
+GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
+(
+    GrB_Vector *LCC_handle,     // output vector
+    GrB_Type   *LCC_type,
+    const GrB_Matrix A,         // input matrix
+    bool symmetric,             // if true, the matrix is symmetric
+    bool sanitize,              // if true, ensure A is binary
+    double t [2]                // t [0] = sanitize time, t [1] = lcc time,
+                                // in seconds
+);
 
 #endif

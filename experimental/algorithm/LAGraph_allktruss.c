@@ -53,7 +53,6 @@
 
 #include <LAGraph.h>
 #include <LAGraphX.h>
-//#include "LAGraph_internal.h"
 
 #define LAGRAPH_FREE_ALL                        \
     if (!keep_all_ktrusses)                     \

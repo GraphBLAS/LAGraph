@@ -18,6 +18,8 @@ file ( GLOB LAGRAPHX_LIB_SOURCES
   "utility/LAGraph_binread.c"
   "utility/LAGraph_tsvread.c"
   "utility/LAGraph_dense_relabel.c"
+  "utility/LAGraph_pattern.c"
+  "utility/LAGraph_prune_diag.c"
   "utility/GB_msort_2.c"
   "algorithm/LAGraph_allktruss.c"
   "algorithm/LAGraph_BF_*.c"
@@ -25,7 +27,8 @@ file ( GLOB LAGRAPHX_LIB_SOURCES
   "algorithm/LAGraph_cdlp.c"
   "algorithm/LAGraph_dnn.c"
   "algorithm/LAGraph_FW.c"
-  "algorithm/LAGraph_ktruss.c" )
+  "algorithm/LAGraph_ktruss.c"
+  "algorithm/LAGraph_lcc.c" )
 
 #-------------------------------------------------------------------------------
 # dynamic lagraphx library properties

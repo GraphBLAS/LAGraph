@@ -2,35 +2,11 @@
 // LAGraph_lcc: local clustering coefficient
 //------------------------------------------------------------------------------
 
-/*
-    LAGraph:  graph algorithms based on GraphBLAS
-
-    Copyright 2019 LAGraph Contributors.
-
-    (see Contributors.txt for a full list of Contributors; see
-    ContributionInstructions.txt for information on how you can Contribute to
-    this project).
-
-    All Rights Reserved.
-
-    NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
-    CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
-    AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
-    PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
-    THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
-    RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
-
-    Released under a BSD license, please see the LICENSE file distributed with
-    this Software or contact permission@sei.cmu.edu for full terms.
-
-    Created, in part, with funding and support from the United States
-    Government.  (see Acknowledgments.txt file).
-
-    This program includes and/or can make use of certain third party source
-    code, object code, documentation and other files ("Third Party Software").
-    See LICENSE file for more details.
-
-*/
+// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// See additional acknowledgments in the LICENSE file,
+// or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
 
@@ -83,7 +59,8 @@
 // not equal to 1 (even zero-weight edges are not allowed), or if it has self
 // edges.
 
-#include "LAGraph_internal.h"
+#include <LAGraph.h>
+#include <LAGraphX.h>
 
 #define LAGRAPH_FREE_ALL            \
 {                                   \
@@ -93,6 +70,38 @@
     GrB_free (&U) ;                 \
     GrB_free (&W) ;                 \
     GrB_free (&LCC) ;               \
+    GrB_free (&LAGraph_COMB_DIR_FP64) ;                 \
+    GrB_free (&LAGraph_COMB_UNDIR_FP64) ;                 \
+}
+
+//------------------------------------------------------------------------------
+
+#define F_UNARY(f)  ((void (*)(void *, const void *)) f)
+
+// z = x * (x - 1), used by LAGraph_lcc.
+// This operator calculates the 2-permutation of d(v).
+void LAGraph_comb_dir_fp64
+(
+    void *z,
+    const void *x
+)
+{
+    double xd = *(double *) x ;
+    double *zd = (double *) z ;
+    (*zd) = ((xd) * (xd - 1)) ;
+}
+
+// z = x * (x - 1) / 2, used by LAGraph_lcc.
+// This operator calculates the 2-combination of d(v).
+void LAGraph_comb_undir_fp64
+(
+    void *z,
+    const void *x
+)
+{
+    double xd = *(double *) x ;
+    double *zd = (double *) z ;
+    (*zd) = ((xd) * (xd - 1)) / 2;
 }
 
 //------------------------------------------------------------------------------
@@ -100,6 +109,7 @@
 GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
 (
     GrB_Vector *LCC_handle,     // output vector
+    GrB_Type   *LCC_type,
     const GrB_Matrix A,         // input matrix
     bool symmetric,             // if true, the matrix is symmetric
     bool sanitize,              // if true, ensure A is binary
@@ -107,18 +117,24 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
                                 // in seconds
 )
 {
+#if !defined(LG_SUITESPARSE)
+    return GrB_PANIC;
+#endif
 
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------
 
-    if (LCC_handle == NULL)
+    if (LCC_handle == NULL || LCC_type == NULL)
     {
         return (GrB_NULL_POINTER) ;
     }
 
     GrB_Matrix C = NULL, CL = NULL, S = NULL, U = NULL ;
     GrB_Vector W = NULL, LCC = NULL ;
+    (*LCC_type) = NULL;
+    GrB_UnaryOp LAGraph_COMB_DIR_FP64 = NULL ;
+    GrB_UnaryOp LAGraph_COMB_UNDIR_FP64 = NULL ;
     GrB_Info info ;
 
     // n = size of A (# of nodes in the graph)
@@ -141,14 +157,14 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
 
     if (sanitize)
     {
-        LAGraph_tic (tic) ;
+        LAGraph_Tic (tic, NULL) ;
 
         // S = binary pattern of A
         LAGRAPH_OK (LAGraph_pattern (&S, A, GrB_FP64)) ;
 
         // remove all self edges
         LAGRAPH_OK (LAGraph_prune_diag (S)) ;
-        t [0] = LAGraph_toc (tic) ;
+        LAGraph_Toc (&t[0], tic, NULL) ;
     }
     else
     {
@@ -157,7 +173,19 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
         S = A ;
     }
 
-    LAGraph_tic (tic) ;
+    LAGraph_Tic (tic, NULL) ;
+
+    //--------------------------------------------------------------------------
+    // create the operators for LAGraph_lcc
+    //--------------------------------------------------------------------------
+
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_COMB_DIR_FP64,
+                                 F_UNARY (LAGraph_comb_dir_fp64),
+                                 GrB_FP64, GrB_FP64)) ;
+
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_COMB_UNDIR_FP64,
+                                 F_UNARY (LAGraph_comb_undir_fp64),
+                                 GrB_FP64, GrB_FP64)) ;
 
     LAGRAPH_OK (GrB_Matrix_new (&C, GrB_FP64, n, n)) ;
     LAGRAPH_OK (GrB_Matrix_new (&U, GrB_UINT32, n, n)) ;
@@ -236,9 +264,9 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     // SuiteSparse:GraphBLAS, both v3.1 and v3.2, followed by the masked dot
     // product.  Using U' instead of L avoids the tranpose of L.
     LAGRAPH_OK (GrB_Matrix_new (&CL, GrB_FP64, n, n)) ;
-    LAGRAPH_OK (GrB_mxm (CL, C, NULL, LAGraph_PLUS_TIMES_FP64, C, U, 
-        LAGraph_desc_otoo)) ;
-    GrB_free (&U) ;
+    LAGRAPH_OK (GrB_mxm (CL, C, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, C, U,
+                         GrB_DESC_T1));
+    GrB_free (&U) ; U = NULL;
 
     //--------------------------------------------------------------------------
     // Calculate LCC
@@ -247,7 +275,7 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     // LCC(i) = sum (CL (i,:)) = # of triangles at each node
     LAGRAPH_OK (GrB_Vector_new (&LCC, GrB_FP64, n)) ;
     LAGRAPH_OK (GrB_reduce (LCC, NULL, NULL, GrB_PLUS_FP64, CL, NULL)) ;
-    GrB_free (&CL) ;
+    GrB_free (&CL) ; CL = NULL;
 
     // LCC = LCC ./ W
     LAGRAPH_OK (GrB_eWiseMult (LCC, NULL, NULL, GrB_DIV_FP64, LCC, W, NULL)) ;
@@ -256,10 +284,10 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     // free workspace and return result
     //--------------------------------------------------------------------------
 
-    (*LCC_handle) = LCC ;
-    LCC = NULL ;            // set to NULL so LAGRAPH_FREE_ALL doesn't free it
+    (*LCC_handle) = LCC ; LCC = NULL ;
+    (*LCC_type) = GrB_FP64;
+
     LAGRAPH_FREE_ALL ;
-    t [1] = LAGraph_toc (tic) ;
+    LAGraph_Toc (&t[1], tic, NULL) ;
     return (GrB_SUCCESS) ;
 }
-
