@@ -2,6 +2,14 @@
 // GB_sort.h: definitions for sorting functions
 //------------------------------------------------------------------------------
 
+// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// See additional acknowledgments in the LICENSE file,
+// or contact permission@sei.cmu.edu for the full terms.
+
+//------------------------------------------------------------------------------
+
 // SuiteSparse:GraphBLAS, Timothy A. Davis, (c) 2017-2019, All Rights Reserved.
 // http://suitesparse.com   See GraphBLAS/Doc/License.txt for license.
 
@@ -12,10 +20,11 @@
 // guaranteed to be stable, but they are always used in GraphBLAS with unique
 // keys.
 
-#include "GraphBLAS.h"
+#include <GraphBLAS.h>
 
 #define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
-#include "LAGraph.h"
+#include <LAGraph.h>
+#include <LAGraphX.h>
 
 // from GB.h
 typedef unsigned char GB_void ;
@@ -27,51 +36,51 @@ typedef unsigned char GB_void ;
 
 void GB_qsort_1a    // sort array A of size 1-by-n
 (
-    int64_t *LA_RESTRICT A_0,      // size n array
+    int64_t *LAGRAPH_RESTRICT A_0,      // size n array
     const int64_t n
 ) ;
 
 void GB_qsort_1b    // sort array A of size 2-by-n, using 1 key (A [0][])
 (
-    int64_t *LA_RESTRICT A_0,   // size n array
-    GB_void *LA_RESTRICT A_1,   // size n array
+    int64_t *LAGRAPH_RESTRICT A_0,   // size n array
+    GB_void *LAGRAPH_RESTRICT A_1,   // size n array
     const size_t xsize,         // size of entries in A_1
     const int64_t n
 ) ;
 
 void GB_qsort_2     // sort array A of size 2-by-n, using 2 keys (A [0:1][])
 (
-    int64_t *LA_RESTRICT A_0,      // size n array
-    int64_t *LA_RESTRICT A_1,      // size n array
+    int64_t *LAGRAPH_RESTRICT A_0,      // size n array
+    int64_t *LAGRAPH_RESTRICT A_1,      // size n array
     const int64_t n
 ) ;
 
 void GB_qsort_3     // sort array A of size 3-by-n, using 3 keys (A [0:2][])
 (
-    int64_t *LA_RESTRICT A_0,      // size n array
-    int64_t *LA_RESTRICT A_1,      // size n array
-    int64_t *LA_RESTRICT A_2,      // size n array
+    int64_t *LAGRAPH_RESTRICT A_0,      // size n array
+    int64_t *LAGRAPH_RESTRICT A_1,      // size n array
+    int64_t *LAGRAPH_RESTRICT A_2,      // size n array
     const int64_t n
 ) ;
 
 void GB_msort_2     // sort array A of size 2-by-n, using 2 keys (A [0:1][])
 (
-    int64_t *LA_RESTRICT A_0,   // size n array
-    int64_t *LA_RESTRICT A_1,   // size n array
-    int64_t *LA_RESTRICT W_0,   // size n array, workspace
-    int64_t *LA_RESTRICT W_1,   // size n array, workspace
+    int64_t *LAGRAPH_RESTRICT A_0,   // size n array
+    int64_t *LAGRAPH_RESTRICT A_1,   // size n array
+    int64_t *LAGRAPH_RESTRICT W_0,   // size n array, workspace
+    int64_t *LAGRAPH_RESTRICT W_1,   // size n array, workspace
     const int64_t n,
     const int nthreads          // # of threads to use
 ) ;
 
 void GB_msort_3     // sort array A of size 3-by-n, using 3 keys (A [0:2][])
 (
-    int64_t *LA_RESTRICT A_0,   // size n array
-    int64_t *LA_RESTRICT A_1,   // size n array
-    int64_t *LA_RESTRICT A_2,   // size n array
-    int64_t *LA_RESTRICT W_0,   // size n array, workspace
-    int64_t *LA_RESTRICT W_1,   // size n array, workspace
-    int64_t *LA_RESTRICT W_2,   // size n array, workspace
+    int64_t *LAGRAPH_RESTRICT A_0,   // size n array
+    int64_t *LAGRAPH_RESTRICT A_1,   // size n array
+    int64_t *LAGRAPH_RESTRICT A_2,   // size n array
+    int64_t *LAGRAPH_RESTRICT W_0,   // size n array, workspace
+    int64_t *LAGRAPH_RESTRICT W_1,   // size n array, workspace
+    int64_t *LAGRAPH_RESTRICT W_2,   // size n array, workspace
     const int64_t n,
     const int nthreads          // # of threads to use
 ) ;
@@ -114,7 +123,7 @@ void GB_msort_3     // sort array A of size 3-by-n, using 3 keys (A [0:2][])
         )                                                                   \
     )                                                                       \
 )
-    
+
 //------------------------------------------------------------------------------
 // GB_lt_3: sorting comparator function, three keys
 //------------------------------------------------------------------------------
@@ -152,14 +161,14 @@ void GB_msort_3     // sort array A of size 3-by-n, using 3 keys (A [0:2][])
 
 // return a random number between 0 and GB_RAND_MAX
 static inline GrB_Index GB_rand15 (uint64_t *seed)
-{ 
+{
    (*seed) = (*seed) * 1103515245 + 12345 ;
    return (((*seed) / 65536) % (GB_RAND_MAX + 1)) ;
 }
 
 // return a random GrB_Index, in range 0 to 2^60
 static inline GrB_Index GB_rand (uint64_t *seed)
-{ 
+{
     GrB_Index i = GB_rand15 (seed) ;
     i = GB_RAND_MAX * i + GB_rand15 (seed) ;
     i = GB_RAND_MAX * i + GB_rand15 (seed) ;
@@ -168,4 +177,3 @@ static inline GrB_Index GB_rand (uint64_t *seed)
 }
 
 #endif
-

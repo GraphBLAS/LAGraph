@@ -2,35 +2,11 @@
 // LAGraph/Test/CDLP/cdlptest.c: test program for LAGraph_cdlp
 //------------------------------------------------------------------------------
 
-/*
-    LAGraph:  graph algorithms based on GraphBLAS
-
-    Copyright 2019 LAGraph Contributors.
-
-    (see Contributors.txt for a full list of Contributors; see
-    ContributionInstructions.txt for information on how you can Contribute to
-    this project).
-
-    All Rights Reserved.
-
-    NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
-    CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
-    AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
-    PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
-    THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
-    RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
-
-    Released under a BSD license, please see the LICENSE file distributed with
-    this Software or contact permission@sei.cmu.edu for full terms.
-
-    Created, in part, with funding and support from the United States
-    Government.  (see Acknowledgments.txt file).
-
-    This program includes and/or can make use of certain third party source
-    code, object code, documentation and other files ("Third Party Software").
-    See LICENSE file for more details.
-
-*/
+// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// See additional acknowledgments in the LICENSE file,
+// or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
 
@@ -40,15 +16,33 @@
 //         cdlptest matrixmarketfile.mtx
 
 #define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
-#include "LAGraph.h"
+
+#include <stdio.h>
+#include <LAGraph.h>
+#include <LAGraphX.h>
 
 #define LAGRAPH_FREE_ALL                            \
 {                                                   \
     GrB_free (&C) ;                                 \
     GrB_free (&A) ;                                 \
     GrB_free (&M) ;                                 \
+    GrB_free (&LAGraph_ONE_FP64) ;                  \
 }
 
+//****************************************************************************
+
+#define F_UNARY(f)  ((void (*)(void *, const void *)) f)
+
+void LAGraph_one_fp64
+(
+    double *z,
+    const double *x       // ignored
+)
+{
+    (*z) = 1 ;
+}
+
+//****************************************************************************
 void Print_Label_Matrix(GrB_Matrix m)
 {
     GrB_Index row_vals;
@@ -74,19 +68,23 @@ void Print_Label_Matrix(GrB_Matrix m)
     printf(" ]\n");
 }
 
+//****************************************************************************
 int main (int argc, char **argv)
 {
-
     //--------------------------------------------------------------------------
     // initialize LAGraph and GraphBLAS
     //--------------------------------------------------------------------------
 
-    GrB_Info info ;
-    GrB_Matrix A = NULL, C = NULL, M = NULL ;
-    GrB_Vector CDLP = NULL, CDLP1 = NULL ;
+    GrB_Info    info ;
+    GrB_Matrix  A = NULL, C = NULL, M = NULL ;
+    GrB_Type    C_type = NULL;
+    GrB_Vector  CDLP = NULL, CDLP1 = NULL ;
+    GrB_Type    CDLP_type = NULL;
+    GrB_UnaryOp LAGraph_ONE_FP64 = NULL;
 
-    LAGraph_init ( ) ;
-    int nthreads_max = LAGraph_get_nthreads ( ) ;
+    LAGraph_Init (NULL) ;
+    int nthreads_max;
+    LAGraph_GetNumThreads(&nthreads_max, NULL);
     if (nthreads_max == 0) nthreads_max = 1 ;
 
     //--------------------------------------------------------------------------
@@ -94,7 +92,7 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     double tic [2] ;
-    LAGraph_tic (tic) ;
+    LAGraph_Tic (tic, NULL) ;
 
     FILE *out = stdout ;
 
@@ -118,20 +116,30 @@ int main (int argc, char **argv)
         itermax = atoi(argv[3]) ;
     }
 
-    LAGRAPH_OK (LAGraph_mmread (&C, f)) ;
+    LAGRAPH_OK (LAGraph_MMRead (&C, &C_type, f, NULL)) ;
     GrB_Index n, ne ;
     LAGRAPH_OK (GrB_Matrix_nrows (&n, C)) ;
     LAGRAPH_OK (GrB_Matrix_nvals (&ne, C)) ;
-    double t_read = LAGraph_toc (tic) ;
+    double t_read;
+    LAGraph_Toc (&t_read, tic, NULL) ;
     fprintf (out, "\nread A time:     %14.6f sec\n", t_read) ;
 
-    LAGraph_tic (tic) ;
+    LAGraph_Tic (tic, NULL) ;
 
-#if 0
+#if 1
+#if LG_SUITESPARSE
+    LAGraph_ONE_FP64   = GxB_ONE_FP64 ;
+#else
+    // create a new built-in unary operator using LAGraph_one_fp64
+    LAGRAPH_OK (GrB_UnaryOp_new (&LAGraph_ONE_FP64,
+                                 F_UNARY (LAGraph_one_fp64),
+                                 GrB_FP64, GrB_FP64)) ;
+#endif
+
     // A = spones (C), and typecast to FP64
     LAGRAPH_OK (GrB_Matrix_new (&A, GrB_FP64, n, n)) ;
     LAGRAPH_OK (GrB_apply (A, NULL, NULL, LAGraph_ONE_FP64, C, NULL)) ;
-    GrB_free (&C) ;
+    GrB_free (&C) ; C = NULL;
 
     // M = diagonal mask matrix
     LAGRAPH_OK (GrB_Matrix_new (&M, GrB_BOOL, n, n)) ;
@@ -143,12 +151,13 @@ int main (int argc, char **argv)
 
     // remove self edges (via M)
     LAGRAPH_OK (GrB_assign (A, M, NULL, A, GrB_ALL, n, GrB_ALL, n,
-        LAGraph_desc_oocr)) ;
-    GrB_free (&M) ;
+                            GrB_DESC_RC));
+    GrB_free (&M) ;  M = NULL;
 
     LAGRAPH_OK (GrB_Matrix_nvals (&ne, A)) ;
 
-    // double t_process = LAGraph_toc (tic) ;
+    double t_process;
+    LAGraph_Toc (&t_process, tic, NULL) ;
     fprintf (out, "process A time:  %14.6f sec\n", t_process) ;
 
 #else
@@ -157,9 +166,9 @@ int main (int argc, char **argv)
 #endif
 
     LAGRAPH_OK (GrB_Matrix_nvals (&ne, A)) ;
-    #if LG_SUITESPARSE
+#if LG_SUITESPARSE
     // GxB_fprint (A, GxB_SUMMARY, out) ;
-    #endif
+#endif
     fprintf (out, "Matrix n: %0.16g, ne: %0.16g\n", (double) n, (double) ne) ;
     fflush (out) ;
 
@@ -178,14 +187,17 @@ int main (int argc, char **argv)
 
         int nthreads = nthread_list [trial] ;
         if (nthreads > nthreads_max) break ;
-        LAGraph_set_nthreads (nthreads) ;
+        LAGraph_SetNumThreads (nthreads, NULL) ;
 
         // ignore the sanitize time;  assume the user could have provided an
         // input graph that is already binary with no self-edges
         double timing [2] ;
-        LAGRAPH_OK (LAGraph_cdlp(&CDLP, A, symmetric, true, itermax, timing)) ;
+        LAGRAPH_OK (LAGraph_cdlp(&CDLP, &CDLP_type,
+                                 A, symmetric, true, itermax, timing)) ;
         double t = timing [1] ;
-//        GxB_print(CDLP, GxB_COMPLETE);
+#if LG_SUITESPARSE
+        //GxB_print(CDLP, GxB_COMPLETE);
+#endif
 
         if (CDLP1 == NULL)
         {
@@ -197,9 +209,10 @@ int main (int argc, char **argv)
         else if (CDLP1 != NULL)
         {
             bool ok ;
-            LAGRAPH_OK (LAGraph_Vector_isequal (&ok, CDLP, CDLP1, GrB_EQ_FP64)) ;
+            LAGRAPH_OK (LAGraph_Vector_IsEqual_type(&ok, CDLP, CDLP1,
+                                                    CDLP_type, NULL)) ;
             if (!ok) { fprintf (out, "error!\n") ; abort ( ) ; }
-            GrB_free (&CDLP) ;
+            GrB_free (&CDLP) ; CDLP = NULL;
         }
 
         fprintf (out, "nthreads: %3d sanitize %12.2f sec, CDLP time: %10.2f"
@@ -215,6 +228,5 @@ int main (int argc, char **argv)
 
     fprintf (out, "\n") ;
     LAGRAPH_FREE_ALL ;
-    LAGraph_finalize ( ) ;
+    LAGraph_Finalize (NULL) ;
 }
-
