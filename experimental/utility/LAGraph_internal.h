@@ -39,6 +39,8 @@
 // Include file for LAGraph functions.  This file should not be included in
 // user applications.  See LAGraph.h instead.
 
+#if 0
+
 #define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
 #include "LAGraph.h"
 
@@ -143,3 +145,4 @@ MM_storage_enum ;
 #define MMLEN 1024
 #define MAXLINE MMLEN+6
 
+#endif

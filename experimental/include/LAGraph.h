@@ -36,6 +36,8 @@
 
 // TODO: add more comments to this file.
 
+#if 0
+
 #ifndef LAGRAPH_INCLUDE
 #define LAGRAPH_INCLUDE
 
@@ -495,7 +497,7 @@ extern bool LAGraph_malloc_is_thread_safe ;
     }                                                                       \
 }
 
-GrB_Info LAGraph_log 
+GrB_Info LAGraph_log
 (
     char *caller,           // calling function
     char *message1,         // message to include (may be NULL)
@@ -612,7 +614,7 @@ GrB_UnaryOp
 // 4 unary functions, z=f(x) where C -> double
 //------------------------------------------------------------------------------
 
-extern 
+extern
 GrB_UnaryOp
     LAGraph_REAL_ComplexFP64              ,
     LAGraph_IMAG_ComplexFP64              ,
@@ -636,7 +638,7 @@ extern GrB_Type LAGraph_ComplexFP64 ;
 extern GrB_Monoid
     LAGraph_PLUS_ComplexFP64_MONOID       ,
     LAGraph_TIMES_ComplexFP64_MONOID      ;
-    
+
 extern GrB_Semiring LAGraph_PLUS_TIMES_ComplexFP64 ;
 
 extern double _Complex LAGraph_ComplexFP64_1 ;
@@ -1275,7 +1277,7 @@ GrB_Info LAGraph_tricount   // count # of triangles
                             //  1: sort by degree, ascending order
                             // -1: sort by degree, descending order
     const int64_t *degree,  // degree of each node, may be NULL if sorting==0.
-                            // of size n, unmodified. 
+                            // of size n, unmodified.
     const GrB_Matrix A_in   // input matrix, must be symmetric, no diag entries
 ) ;
 
@@ -1524,3 +1526,4 @@ GrB_Info LAGraph_Matrix_extract_keep_dimensions // extract submatrix but keep
 #endif
 #endif
 
+#endif

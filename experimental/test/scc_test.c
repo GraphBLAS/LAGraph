@@ -1,49 +1,28 @@
 //------------------------------------------------------------------------------
-// scctest: test LAGraph_scc
+// scc_test: test LAGraph_scc
 //------------------------------------------------------------------------------
 
-/*
-    LAGraph:  graph algorithms based on GraphBLAS
+// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// See additional acknowledgments in the LICENSE file,
+// or contact permission@sei.cmu.edu for the full terms.
 
-    Copyright 2019 LAGraph Contributors.
+//------------------------------------------------------------------------------
 
-    (see Contributors.txt for a full list of Contributors; see
-    ContributionInstructions.txt for information on how you can Contribute to
-    this project).
-
-    All Rights Reserved.
-
-    NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
-    CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
-    AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
-    PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
-    THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
-    RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
-
-    Released under a BSD license, please see the LICENSE file distributed with
-    this Software or contact permission@sei.cmu.edu for full terms.
-
-    Created, in part, with funding and support from the United States
-    Government.  (see Acknowledgments.txt file).
-
-    This program includes and/or can make use of certain third party source
-    code, object code, documentation and other files ("Third Party Software").
-    See LICENSE file for more details.
-
-*/
-
-// Usage: cctest can be used with both stdin or a file as its input.
+// Usage: scc_test can be used with both stdin or a file as its input.
 // We assume by default that the matrix is symmetric. To override this,
 // use the file-based input and pass 1 as the last argument.
 //
-// scctest < matrixmarketfile.mtx
-// scctest matrixmarketfile.mtx
+// scc_test < matrixmarketfile.mtx
+// scc_test matrixmarketfile.mtx
 
 #define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
-#include "LAGraph.h"
+
 #include <string.h>
 #include <stdlib.h>
-#include <sys/time.h>
+#include <LAGraph.h>
+#include <LAGraphX.h>
 
 #define LAGRAPH_FREE_ALL    \
 {                           \
@@ -51,15 +30,7 @@
     GrB_free (&A) ;         \
 }
 
-double to_sec(struct timeval t1, struct timeval t2)
-{
-    return
-        (t2.tv_sec  - t1.tv_sec ) + 
-        (t2.tv_usec - t1.tv_usec) * 1e-6;
-}
-
-#define MIN(a, b) ((a) < (b) ? (a) : (b))
-
+//****************************************************************************
 GrB_Index verify_scc (GrB_Matrix *A, GrB_Vector result)
 {
     GrB_Index n;
@@ -70,13 +41,15 @@ GrB_Index verify_scc (GrB_Matrix *A, GrB_Vector result)
     uint64_t *pos, *csr;
     int64_t nonempty;
     void *val;
+
+    exit -2;
     #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,0)
     bool jumbled ;
-    GxB_Matrix_export_CSR (A, &ty, &nrows, &ncols, &nvals, &jumbled,
-            &nonempty, &pos, &csr, &val, 0);
+    //GxB_Matrix_export_CSR (A, &ty, &nrows, &ncols, &nvals, &jumbled,
+    //        &nonempty, &pos, &csr, &val, 0);
     #else
-    GxB_Matrix_export_CSR (A, &ty, &nrows, &ncols, &nvals, &nonempty,
-            &pos, &csr, &val, 0);
+    //GxB_Matrix_export_CSR (A, &ty, &nrows, &ncols, &nvals, &nonempty,
+    //        &pos, &csr, &val, 0);
     #endif
 
     int64_t *indexes = malloc (sizeof(int64_t) * n);
@@ -139,18 +112,18 @@ GrB_Index verify_scc (GrB_Matrix *A, GrB_Vector result)
                     continue;
                 }
                 if (s_step[s_top] == 0 && onstack[l]) {
-                    lowlink[k] = MIN(lowlink[k], indexes[l]);
+                    lowlink[k] = LAGraph_MIN(lowlink[k], indexes[l]);
                     s_next[s_top] += 1;
                     s_step[s_top] = 0;
                     continue;
                 }
                 if (s_step[s_top] == 1) {
-                    lowlink[k] = MIN(lowlink[k], lowlink[l]);
+                    lowlink[k] = LAGraph_MIN(lowlink[k], lowlink[l]);
                     s_next[s_top] += 1;
                     s_step[s_top] = 0;
                     continue;
                 }
-                // others 
+                // others
                 s_next[s_top] += 1;
                 s_step[s_top] = 0;
                 continue;
@@ -172,12 +145,13 @@ GrB_Index verify_scc (GrB_Matrix *A, GrB_Vector result)
         exit(0);
     }
 
+    exit -3;
     #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,0)
-    GxB_Matrix_import_CSR (A, ty, nrows, ncols, nvals, jumbled, nonempty,
-            &pos, &csr, &val, 0);
+    //GxB_Matrix_import_CSR (A, ty, nrows, ncols, nvals, jumbled, nonempty,
+    //        &pos, &csr, &val, 0);
     #else
-    GxB_Matrix_import_CSR (A, ty, nrows, ncols, nvals, nonempty,
-            &pos, &csr, &val, 0);
+    //GxB_Matrix_import_CSR (A, ty, nrows, ncols, nvals, nonempty,
+    //        &pos, &csr, &val, 0);
     #endif
 
     free (indexes); free (lowlink); free (onstack);
@@ -187,12 +161,20 @@ GrB_Index verify_scc (GrB_Matrix *A, GrB_Vector result)
     return nSCC;
 }
 
+//****************************************************************************
+//****************************************************************************
 int main (int argc, char **argv)
 {
+#if !defined(LG_SUITESPARSE)
+    return -1;
+#else
     GrB_Info info ;
     GrB_Matrix A ;
+    GrB_Type A_type;
     GrB_Vector result ;
-    GrB_init (GrB_NONBLOCKING) ;
+
+    LAGraph_Init(NULL);
+
     LAGRAPH_OK (GxB_set (GxB_FORMAT, GxB_BY_ROW)) ;
 
     FILE *f ;
@@ -215,32 +197,33 @@ int main (int argc, char **argv)
     }
 
     GrB_Index n;
-    LAGRAPH_OK (LAGraph_mmread (&A, f)) ;
+    LAGRAPH_OK (LAGraph_MMRead (&A, &A_type, f, NULL));
     LAGRAPH_OK (GrB_Matrix_nrows (&n, A)) ;
 
     #define NTRIALS 5
     int nthreads_max;
     int nthread_list [NTRIALS] = { 1, 4, 16, 20, 40 } ;
-    struct timeval t1, t2;
+    double tic[2], t;
 
-    LAGRAPH_OK (GxB_get (GxB_NTHREADS, &nthreads_max)) ;
+    LAGraph_GetNumThreads(&nthreads_max, NULL);
 
     for (int trial = 0 ; trial < NTRIALS ; trial++)
     {
         int nthreads = nthread_list [trial] ;
         if (nthreads > nthreads_max) break ;
-        LAGraph_set_nthreads (nthreads) ;
+        LAGraph_SetNumThreads (nthreads, NULL) ;
         printf("number of threads: %d\n", nthreads) ;
 
-        gettimeofday (&t1, 0) ;
+        LAGraph_Tic(tic, NULL);
         LAGRAPH_OK (LAGraph_scc (&result, A)) ;
-        gettimeofday (&t2, 0) ;
+        LAGraph_Toc(&t, tic, NULL);
 
         GrB_Index nSCC = verify_scc (&A, result);
         printf("number of SCCs: %lu\n", (long) nSCC);
-        printf("elapsed time: %f\n", to_sec(t1, t2));
+        printf("elapsed time: %f\n", t);
     }
 
     LAGRAPH_FREE_ALL ;
-    LAGRAPH_OK (GrB_finalize ( )) ;
+    LAGraph_Finalize (NULL) ;
+#endif
 }

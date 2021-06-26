@@ -331,4 +331,17 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
                                 // in seconds
 );
 
+//****************************************************************************
+
+GrB_Info LAGraph_msf (
+    GrB_Matrix *result,     // output: an unsymmetrical matrix, the spanning forest
+    GrB_Matrix A,           // input matrix
+    bool sanitize           // if true, ensure A is symmetric
+) ;
+
+GrB_Info LAGraph_scc (
+    GrB_Vector *result,     // output: array of component identifiers
+    GrB_Matrix A            // input matrix
+) ;
+
 #endif

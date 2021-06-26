@@ -2,35 +2,13 @@
 // msftest: test LAGraph_msf
 //------------------------------------------------------------------------------
 
-/*
-    LAGraph:  graph algorithms based on GraphBLAS
+// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// See additional acknowledgments in the LICENSE file,
+// or contact permission@sei.cmu.edu for the full terms.
 
-    Copyright 2019 LAGraph Contributors.
-
-    (see Contributors.txt for a full list of Contributors; see
-    ContributionInstructions.txt for information on how you can Contribute to
-    this project).
-
-    All Rights Reserved.
-
-    NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
-    CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
-    AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
-    PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
-    THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
-    RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
-
-    Released under a BSD license, please see the LICENSE file distributed with
-    this Software or contact permission@sei.cmu.edu for full terms.
-
-    Created, in part, with funding and support from the United States
-    Government.  (see Acknowledgments.txt file).
-
-    This program includes and/or can make use of certain third party source
-    code, object code, documentation and other files ("Third Party Software").
-    See LICENSE file for more details.
-
-*/
+//------------------------------------------------------------------------------
 
 // Contributed by Tim Davis, Texas A&M
 
@@ -44,29 +22,25 @@
 // msftest symmetric-matrixmarketfile.mtx 1
 
 #define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
-#include "LAGraph.h"
-#include <sys/time.h>
-#include <stdlib.h>
+
+#include <stdlib.h>  // for qsort
+#include <LAGraph.h>
+#include <LAGraphX.h>
 
 #define LAGRAPH_FREE_ALL    \
 {                           \
-    GrB_free (&result);    \
-    GrB_free (&A);         \
+    GrB_free (&result);     \
+    GrB_free (&A);          \
 }
 
-double to_sec(struct timeval t1, struct timeval t2)
-{
-    return
-        (t2.tv_sec  - t1.tv_sec ) + 
-        (t2.tv_usec - t1.tv_usec) * 1e-6;
-}
-
+//****************************************************************************
 GrB_Index *I, *J, *X;
 int compare (const void * a, const void * b)
 {
   return ( X[*(uint64_t*) a] - X[*(uint64_t*) b] );
 }
 
+//****************************************************************************
 void check_solution (GrB_Matrix S, GrB_Matrix R)
 {
     // check dimension
@@ -75,10 +49,12 @@ void check_solution (GrB_Matrix S, GrB_Matrix R)
     GrB_Matrix_nvals (&rvals, R);
     GrB_Matrix_nrows (&ns, S);
     GrB_Matrix_nrows (&nr, R);
-    if (ns != nr) {
+    if (ns != nr)
+    {
         printf("wrong dimension\n");
         exit(0);
     }
+
     // check subset
     GrB_Index n = ns, cval, sum;
     GrB_Matrix U, C;
@@ -92,10 +68,12 @@ void check_solution (GrB_Matrix S, GrB_Matrix R)
     GrB_reduce (&sum, 0, Add, C, 0);
     GrB_free (&U);
     GrB_free (&C);
-    if (sum != cval || cval != svals) {
+    if (sum != cval || cval != svals)
+    {
         printf("invalid set of edges\n");
         exit(0);
     }
+
     // check the spanning forest
     GrB_Index my_sol, answer = 0;
     GrB_reduce (&my_sol, 0, Add, R, 0);
@@ -110,13 +88,17 @@ void check_solution (GrB_Matrix S, GrB_Matrix R)
     for (GrB_Index i = 0; i < n; i++)
         f[i] = i;
     qsort (ind, svals, sizeof(uint64_t), compare);
-    for (GrB_Index i = 0; i < svals; i++) {
+    for (GrB_Index i = 0; i < svals; i++)
+    {
         GrB_Index x = I[ind[i]];
         GrB_Index y = J[ind[i]];
         bool comb = false;
-        while (f[x] != f[y]) {
-            if (f[x] > f[y]) {
-                if (f[x] == x) {
+        while (f[x] != f[y])
+        {
+            if (f[x] > f[y])
+            {
+                if (f[x] == x)
+                {
                     comb = true;
                     f[x] = f[y];
                     break;
@@ -124,8 +106,11 @@ void check_solution (GrB_Matrix S, GrB_Matrix R)
                 GrB_Index t = f[x];
                 f[x] = f[y];
                 x = t;
-            } else {
-                if (f[y] == y) {
+            }
+            else
+            {
+                if (f[y] == y)
+                {
                     comb = true;
                     f[y] = f[x];
                     break;
@@ -138,24 +123,29 @@ void check_solution (GrB_Matrix S, GrB_Matrix R)
         if (comb)
             answer += X[ind[i]];
     }
-    if (answer != my_sol) {
+    if (answer != my_sol)
+    {
         printf("wrong answer!\n");
         printf("expected : %lu\n", answer);
         printf("actual   : %lu\n", my_sol);
         exit(0);
-    } else {
+    }
+    else
+    {
         printf("correct (sum = %lu)\n", sum);
     }
     free(I); free(J); free(X); free(ind); free(f);
     GrB_free (&Add);
 }
 
+//****************************************************************************
 int main (int argc, char **argv)
 {
     GrB_Info info;
-    GrB_Matrix A, S, result;
+    GrB_Matrix A = NULL, S = NULL, result = NULL;
+    GrB_Type A_type = NULL;
     GrB_init (GrB_NONBLOCKING);
-    LAGRAPH_OK (GxB_set (GxB_FORMAT, GxB_BY_ROW));
+    //LAGRAPH_OK (GxB_set (GxB_FORMAT, GxB_BY_ROW));
 
     FILE *f ;
     int symm = 0;
@@ -176,40 +166,36 @@ int main (int argc, char **argv)
     }
 
     GrB_Index n;
-    LAGRAPH_OK (LAGraph_mmread (&A, f));
+    LAGRAPH_OK (LAGraph_MMRead (&A, &A_type, f, NULL));
     LAGRAPH_OK (GrB_Matrix_nrows (&n, A));
 
-    GrB_Descriptor desc = 0 ;
-    LAGRAPH_OK (GrB_Descriptor_new(&desc));
-    LAGRAPH_OK (GrB_Descriptor_set(desc, GrB_INP1, GrB_TRAN));
     LAGRAPH_OK (GrB_Matrix_new (&S, GrB_UINT64, n, n));
-    LAGRAPH_OK (GrB_eWiseAdd (S, 0, 0, GrB_MIN_UINT64, A, A, desc));
-    LAGRAPH_FREE (desc);
+    LAGRAPH_OK (GrB_eWiseAdd (S, 0, 0, GrB_MIN_UINT64, A, A, GrB_DESC_T1));
 
     #define NTRIALS 5
     int nthreads_max;
     int nthread_list [NTRIALS] = { 1, 4, 16, 20, 40 };
-    struct timeval t1, t2;
 
-    LAGRAPH_OK (GxB_get (GxB_NTHREADS, &nthreads_max));
+    LAGRAPH_OK (LAGraph_GetNumThreads(&nthreads_max, NULL));
+
+    double tic[2], t;
 
     for (int trial = 0 ; trial < NTRIALS ; trial++)
     {
         int nthreads = nthread_list [trial];
         if (nthreads > nthreads_max) break ;
-        LAGraph_set_nthreads (nthreads);
+        LAGraph_SetNumThreads (nthreads, NULL);
         printf("number of threads: %d\n", nthreads);
 
-        gettimeofday (&t1, 0);
+        LAGraph_Tic(tic, NULL);
         LAGRAPH_OK (LAGraph_msf (&result, S, true));
-        gettimeofday (&t2, 0);
+        LAGraph_Toc(&t, tic, NULL);
         check_solution (S, result);
 
-        printf("Boruvka MSF: %f\n", to_sec (t1, t2));
+        printf("Boruvka MSF: %f\n", t);
         printf("\n");
     }
 
     LAGRAPH_FREE_ALL ;
     LAGRAPH_OK (GrB_finalize ( ));
 }
-
