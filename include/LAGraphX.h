@@ -207,6 +207,10 @@ GrB_Info LAGraph_Vector_to_dense
     void *id                // pointer to value to fill vdense with
 );
 
+uint64_t LAGraph_rand64 (uint64_t *seed);
+double LAGraph_rand_double (uint64_t *seed);
+
+
 //****************************************************************************
 // Algorithms
 //****************************************************************************

@@ -53,7 +53,8 @@
 
 // seed: random number seed for LAGraph_rand.
 
-#include "LAGraph_internal.h"
+#include <LAGraph.h>
+#include <LAGraphX.h>
 
 #define LAGRAPH_FREE_ALL    \
     GrB_free (A) ;

@@ -7,7 +7,8 @@
 // LAGraph_rand_double: return a random double between 0 and 1, inclusive.
 // Contributed by Tim Davis, Texas A&M
 
-#include "LAGraph_internal.h"
+#include <limits.h>
+#include <LAGraphX.h>
 
 double LAGraph_rand_double (uint64_t *seed)
 {
