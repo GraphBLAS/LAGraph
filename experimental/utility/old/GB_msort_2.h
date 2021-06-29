@@ -18,7 +18,8 @@
 // A parallel mergesort of an array of 2-by-n integers.  Each key consists
 // of two integers.
 
-#include "GB_sort.h"
+#ifndef GB_MSORT_2_H
+#define GB_MSORT_2_H
 
 //------------------------------------------------------------------------------
 // prototypes only needed for GB_msort_2
@@ -56,3 +57,36 @@ void GB_mergesort_2 // sort array A of size 2-by-n, using 2 keys (A [0:1][])
     int64_t *LAGRAPH_RESTRICT W_1,      // size n array, workspace
     const int64_t n
 ) ;
+
+
+#define GB_BASECASE (64 * 1024)
+
+//------------------------------------------------------------------------------
+// GB_lt_2: sorting comparator function, two keys
+//------------------------------------------------------------------------------
+
+// A [a] and B [b] are keys of two integers.
+
+// GB_lt_2 returns true if A [a] < B [b], for GB_qsort_2 and GB_msort_2
+
+#define GB_lt_2(A_0, A_1, a, B_0, B_1, b)                                   \
+(                                                                           \
+    (A_0 [a] < B_0 [b]) ?                                                   \
+    (                                                                       \
+        true                                                                \
+    )                                                                       \
+    :                                                                       \
+    (                                                                       \
+        (A_0 [a] == B_0 [b]) ?                                              \
+        (                                                                   \
+            /* primary key is the same; tie-break on the 2nd key */         \
+            (A_1 [a] < B_1 [b])                                             \
+        )                                                                   \
+        :                                                                   \
+        (                                                                   \
+            false                                                           \
+        )                                                                   \
+    )                                                                       \
+)
+
+#endif

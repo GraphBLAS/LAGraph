@@ -13,6 +13,7 @@
 #include <assert.h>
 #include <LAGraph.h>
 #include <LAGraphX.h>
+#include <LG_internal.h>
 #include "GB_msort_2.h"
 
 //------------------------------------------------------------------------------
@@ -300,7 +301,7 @@ void GB_mergesort_2           // sort array A of size 2-by-n, using 2 keys (A [0
         // sequential quicksort; no workspace needed
         // ---------------------------------------------------------------------
 
-        GB_qsort_2 (A_0, A_1, n) ;
+        LG_qsort_2 (A_0, A_1, n) ;
 
     }
     else

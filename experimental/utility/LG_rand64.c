@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_randx: return a random double
+// LAGraph_rand64: return a random 64-bit integer
 //------------------------------------------------------------------------------
 
 /*
@@ -34,13 +34,19 @@
 
 //------------------------------------------------------------------------------
 
-// LAGraph_randx: return a random double between 0 and 1, inclusive.
-// Contributed by Tim Davis, Texas A&M
+// LAGraph_rand64: return a random 64-bit unsigned integer.
+// Contributed by Tim Davis, Texas A&M.
 
-#include "LAGraph_internal.h"
+#include <LAGraph_internal.h>
 
-double LAGraph_randx (uint64_t *seed)
+#define LAGRAPH_RAND_MAX 32767
+
+uint64_t LAGraph_rand64 (uint64_t *seed)
 {
-    return (((double) LAGraph_rand64 (seed)) / ((double) UINT64_MAX)) ;
+    uint64_t i = 0 ;
+    for (int k = 0 ; k < 5 ; k++)
+    {
+        i = LAGRAPH_RAND_MAX * i + LAGraph_Random15 (seed) ;
+    }
+    return (i) ;
 }
-

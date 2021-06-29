@@ -1,12 +1,31 @@
-#include "LAGraph_internal.h"
+//------------------------------------------------------------------------------
+// LAGraph_1_to_n.c
+//------------------------------------------------------------------------------
+
+// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// See additional acknowledgments in the LICENSE file,
+// or contact permission@sei.cmu.edu for the full terms.
+
+//****************************************************************************
+
+// Create either a GrB_INT64 or GrB_INT32 "ramp" vector 1:n
+
+#include <LAGraph.h>
+#include <LAGraphX.h>
 
 #define LAGRAPH_FREE_ALL    \
 {                           \
     GrB_free (&v) ;         \
-    LAGRAPH_FREE (I) ;      \
-    LAGRAPH_FREE (X) ;      \
+    LAGraph_Free ((void **)&I) ;                 \
+    LAGraph_Free ((void **)&X) ;                 \
 }
 
+//****************************************************************************
+/// @todo If this method gets promoted it should return GrB_Type for scalar
+///       that is stored in the output vector.
+///
 GrB_Info LAGraph_1_to_n     // create an integer vector v = 1:n
 (
     GrB_Vector *v_handle,   // vector to create
@@ -16,17 +35,18 @@ GrB_Info LAGraph_1_to_n     // create an integer vector v = 1:n
 
     GrB_Info info ;
     GrB_Vector v = NULL ;
-    int nthreads = LAGraph_get_nthreads ( ) ;
-    nthreads = LAGRAPH_MIN (n / 4096, nthreads) ;
-    nthreads = LAGRAPH_MAX (nthreads, 1) ;
+    int nthreads;
+    LAGraph_GetNumThreads (&nthreads, NULL) ;
+    nthreads = LAGraph_MIN (n / 4096, nthreads) ;
+    nthreads = LAGraph_MAX (nthreads, 1) ;
 
     // allocate workspace
-    GrB_Index *I = LAGraph_malloc (n, sizeof (GrB_Index)) ;
+    GrB_Index *I = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
 
     // create a 32-bit or 64-bit integer vector 1:n
     if (n > INT32_MAX)
     {
-        int64_t *X = LAGraph_malloc (n, sizeof (int64_t)) ;
+        int64_t *X = LAGraph_Malloc (n, sizeof (int64_t)) ;
         if (I == NULL || X == NULL)
         {
             LAGRAPH_FREE_ALL ;
@@ -40,11 +60,11 @@ GrB_Info LAGraph_1_to_n     // create an integer vector v = 1:n
         }
         LAGRAPH_OK (GrB_Vector_new (&v, GrB_INT64, n)) ;
         LAGRAPH_OK (GrB_Vector_build (v, I, X, n, GrB_PLUS_INT64)) ;
-        LAGRAPH_FREE (X) ;
+        LAGraph_Free ((void **)&X) ;  X = NULL;
     }
     else
     {
-        int32_t *X = LAGraph_malloc (n, sizeof (int32_t)) ;
+        int32_t *X = LAGraph_Malloc (n, sizeof (int32_t)) ;
         if (I == NULL || X == NULL)
         {
             LAGRAPH_FREE_ALL ;
@@ -58,12 +78,11 @@ GrB_Info LAGraph_1_to_n     // create an integer vector v = 1:n
         }
         LAGRAPH_OK (GrB_Vector_new (&v, GrB_INT32, n)) ;
         LAGRAPH_OK (GrB_Vector_build (v, I, X, n, GrB_PLUS_INT32)) ;
-        LAGRAPH_FREE (X) ;
+        LAGraph_Free ((void **)&X) ;  X = NULL;
     }
-    LAGRAPH_FREE (I) ;
+    LAGraph_Free ((void **)&I) ;  I = NULL;
 
     // return result
-    (*v_handle) = v ;
+    (*v_handle) = v ;  v = NULL;
     return (GrB_SUCCESS) ;
 }
-

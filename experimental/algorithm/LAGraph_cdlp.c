@@ -119,7 +119,7 @@
 
 #include <LAGraph.h>
 #include <LAGraphX.h>
-#include "GB_msort_2.h"
+//#include "GB_msort_2.h"
 
 #define LAGRAPH_FREE_ALL                                                \
 {                                                                       \
@@ -290,11 +290,12 @@ GrB_Info LAGraph_cdlp
                                                        GrB_NULL, &X[nz], &nz, AT));
         }
 
-        uint64_t *workspace1 = LAGraph_Malloc(nnz, sizeof(GrB_Index));
-        uint64_t *workspace2 = LAGraph_Malloc(nnz, sizeof(GrB_Index));
-        GB_msort_2(I, X, workspace1, workspace2, nnz, nthreads);
-        LAGraph_Free ((void **)&workspace1) ;  workspace1 = NULL;
-        LAGraph_Free ((void **)&workspace2) ;  workspace2 = NULL;
+        //uint64_t *workspace1 = LAGraph_Malloc(nnz, sizeof(GrB_Index));
+        //uint64_t *workspace2 = LAGraph_Malloc(nnz, sizeof(GrB_Index));
+        //GB_msort_2(I, X, workspace1, workspace2, nnz, nthreads);
+        //LAGraph_Free ((void **)&workspace1) ;  workspace1 = NULL;
+        //LAGraph_Free ((void **)&workspace2) ;  workspace2 = NULL;
+        LAGraph_Sort2(I, X, nnz, nthreads, NULL);
 
         // save current labels for comparison by swapping L and L_prev
         GrB_Matrix L_swap = L;

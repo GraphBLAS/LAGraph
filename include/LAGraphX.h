@@ -55,18 +55,27 @@
 // Utilities
 //****************************************************************************
 
+//------------------------------------------------------------------------------
+// Complex type, scalars, monoids, and semiring
+//------------------------------------------------------------------------------
+
+extern GrB_Type LAGraph_ComplexFP64 ;
+
+extern GrB_Monoid
+    LAGraph_PLUS_ComplexFP64_MONOID       ,
+    LAGraph_TIMES_ComplexFP64_MONOID      ;
+
+extern GrB_Semiring LAGraph_PLUS_TIMES_ComplexFP64 ;
+
+extern double _Complex LAGraph_ComplexFP64_1 ;
+extern double _Complex LAGraph_ComplexFP64_0 ;
+
+GrB_Info LAGraph_Complex_init ( ) ;
+GrB_Info LAGraph_Complex_finalize ( ) ;
+
 //****************************************************************************
 // ascii header prepended to all *.grb files
 #define LAGRAPH_BIN_HEADER 512
-
-GrB_Info LAGraph_log
-(
-    char *caller,           // calling function
-    char *message1,         // message to include (may be NULL)
-    char *message2,         // message to include (may be NULL)
-    int nthreads,           // # of threads used
-    double t                // time taken by the test
-) ;
 
 // LAGraph_BinRead: read a matrix from a binary file
 int LAGraph_binread         // returns 0 if successful, -1 if failure
@@ -84,6 +93,16 @@ GrB_Info LAGraph_tsvread        // returns GrB_SUCCESS if successful
     GrB_Index nrows,            // C is nrows-by-ncols
     GrB_Index ncols
 ) ;
+
+GrB_Info LAGraph_grread     // read a matrix from a binary file
+(
+    GrB_Matrix *G,          // handle of matrix to create
+    uint64_t *G_version,    // the version in the file
+    const char *filename,   // name of file to open
+    GrB_Type gtype          // type of matrix to read, NULL if no edge weights
+                            // (in that case, G has type GrB_BOOL with all
+                            // edge weights equal to 1).
+);
 
 GrB_Info LAGraph_dense_relabel   // relabel sparse IDs to dense row/column indices
 (
@@ -133,13 +152,60 @@ GrB_Info LAGraph_prune_diag // remove all entries from the diagonal
     GrB_Matrix A
 ) ;
 
-//GrB_Info LAGraph_IsPattern  // return GrB_SUCCESS if successful
-//(
-//    bool        *result,           // true if A is all one, false otherwise
-//    GrB_Matrix   A,
-//    GrB_UnaryOp  userop,      // for A with arbitrary user-defined type.
-//    char        *msg
-//) ;
+//****************************************************************************
+// Unused and/ordeprecated methods
+//****************************************************************************
+
+GrB_Info LAGraph_log
+(
+    char *caller,           // calling function
+    char *message1,         // message to include (may be NULL)
+    char *message2,         // message to include (may be NULL)
+    int nthreads,           // # of threads used
+    double t                // time taken by the test
+) ;
+
+GrB_Info LAGraph_1_to_n     // create an integer vector v = 1:n
+(
+    GrB_Vector *v_handle,   // vector to create
+    GrB_Index n             // size of vector to create
+);
+
+GrB_Info LAGraph_ispattern  // return GrB_SUCCESS if successful
+(
+    bool *result,           // true if A is all one, false otherwise
+    GrB_Matrix A,
+    GrB_UnaryOp userop      // for A with arbitrary user-defined type.
+                            // Ignored if A and B are of built-in types or
+                            // LAGraph_ComplexFP64.
+);
+
+GrB_Info LAGraph_isall      // return GrB_SUCCESS if successful
+(
+    bool *result,           // true if A == B, false if A != B or error
+    GrB_Matrix A,
+    GrB_Matrix B,
+    GrB_BinaryOp op         // GrB_EQ_<type>, for the type of A and B,
+                            // to check for equality.  Or use any desired
+                            // operator.  The operator should return GrB_BOOL.
+);
+
+GrB_Info LAGraph_Vector_isall      // return GrB_SUCCESS if successful
+(
+    bool *result,           // true if A == B, false if A != B or error
+    GrB_Vector A,
+    GrB_Vector B,
+    GrB_BinaryOp op         // GrB_EQ_<type>, for the type of A and B,
+                            // to check for equality.  Or use any desired
+                            // operator.  The operator should return GrB_BOOL.
+);
+
+GrB_Info LAGraph_Vector_to_dense
+(
+    GrB_Vector *vdense,     // output vector
+    GrB_Vector v,           // input vector
+    void *id                // pointer to value to fill vdense with
+);
 
 //****************************************************************************
 // Algorithms

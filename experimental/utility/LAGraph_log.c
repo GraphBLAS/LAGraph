@@ -12,12 +12,13 @@
 
 // LAGraph_log:  log a result from LAGraph, contributed by Tim Davis, Texas A&M
 
+#include <time.h>
 #include <LAGraph.h>
+#include <LAGraphX.h>
 
 #define LAGRAPH_FREE_ALL
-//#include "LAGraph_internal.h"
-#include <time.h>
 
+//****************************************************************************
 static void delete_newline (char *p)
 {
     for ( ; *p ; p++)
@@ -30,6 +31,7 @@ static void delete_newline (char *p)
     }
 }
 
+//****************************************************************************
 GrB_Info LAGraph_log
 (
     char *caller,           // calling function
@@ -101,13 +103,15 @@ GrB_Info LAGraph_log
         }
     }
 
-    fprintf (f, "max # of threads: %d\n", LAGraph_get_nthreads ( )) ;
+    int max_threads;
+    LAGraph_GetNumThreads (&max_threads, NULL);
+    fprintf (f, "max # of threads: %d\n", max_threads) ;
 
-    #if LG_SUITESPARSE
+#if LG_SUITESPARSE
     char *library_date ;
     GxB_get (GxB_LIBRARY_DATE, &library_date) ;
     fprintf (f, "SuiteSparse:GraphBLAS %s\n", library_date) ;
-    #endif
+#endif
 
     fprintf (f, "Message: %s : %s\n# threads used: %d time: %g\n",
         (message1 == NULL) ? "" : message1,
