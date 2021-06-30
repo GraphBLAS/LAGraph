@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Test/AllKTruss/Makefile
+# Test/BFS/Makefile
 #-------------------------------------------------------------------------------
 
 # LAGraph, (... list all authors here) (c) 2019, All Rights Reserved.
@@ -7,7 +7,7 @@
 
 #-------------------------------------------------------------------------------
 
-# simple Makefile for LAGraph/Test/AllKTruss/ktest
+# simple Makefile for LAGraph/Test/Bellman_Ford/BF_test,
 
 # relies on cmake to do the actual build.  Use the CMAKE_OPTIONS argument to
 # this Makefile to pass options to cmake.
@@ -17,22 +17,6 @@
 JOBS ?= 1
 
 # build and run test
-default: compile
-	./build/allktest < ../BFS/west0067.mtx
-
-# build test
-compile:
-	( cd build ; cmake $(CMAKE_OPTIONS) .. ; $(MAKE) --jobs=$(JOBS) )
-
-# just run cmake; do not compile
-cmake:
-	( cd build ; cmake $(CMAKE_OPTIONS) .. ; )
-
-clean: distclean
-
-purge: distclean
-
-# remove all files not in the distribution
-distclean:
-	rm -rf build/* A.mtx allktest stderr.txt
+default:
+	../build/experimental/BF_test < cover_pattern.mtx 1 #>stderr.txt
 

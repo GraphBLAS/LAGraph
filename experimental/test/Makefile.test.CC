@@ -17,24 +17,7 @@
 JOBS ?= 1
 
 # build and run test
-default: compile
-	./build/gap_cc_test ../BFS/west0067.mtx
-	./build/gap_cc_test ldbc-wcc-example.mtx
-	./build/gap_cc_test tree-example.mtx
-
-# build test
-compile:
-	( cd build ; cmake $(CMAKE_OPTIONS) .. ; $(MAKE) --jobs=$(JOBS) )
-
-# just run cmake; do not compile
-cmake:
-	( cd build ; cmake $(CMAKE_OPTIONS) .. ; )
-
-clean: distclean
-
-purge: distclean
-
-# remove all files not in the distribution
-distclean:
-	rm -rf build/* A.mtx gap_cc_test
-
+default:
+	../build/experimental/CC_test ../data/west0067.mtx
+	../build/experimental/CC_test ../data/ldbc-wcc-example.mtx
+	../build/experimental/CC_test ../data/tree-example.mtx

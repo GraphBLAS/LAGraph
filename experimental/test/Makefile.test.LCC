@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Test/DNN/Makefile
+# Test/LCC/Makefile
 #-------------------------------------------------------------------------------
 
 # LAGraph, (... list all authors here) (c) 2019, All Rights Reserved.
@@ -7,7 +7,7 @@
 
 #-------------------------------------------------------------------------------
 
-# simple Makefile for LAGraph/Test/DNN/dnn
+# simple Makefile for LAGraph/Test/LCC/lcctest
 
 # relies on cmake to do the actual build.  Use the CMAKE_OPTIONS argument to
 # this Makefile to pass options to cmake.
@@ -17,22 +17,8 @@
 JOBS ?= 1
 
 # build and run test
-default: compile
-	./build/dnn 1
-
-# build test
-compile:
-	( cd build ; cmake $(CMAKE_OPTIONS) .. ; $(MAKE) --jobs=$(JOBS) )
-
-# just run cmake; do not compile
-cmake:
-	( cd build ; cmake $(CMAKE_OPTIONS) .. ; )
-
-clean: distclean
-
-purge: distclean
-
-# remove all files not in the distribution
-distclean:
-	rm -rf build/* dnn
+default:
+	../build/experimental/LCC_test < ../data/west0067.mtx
+	../build/experimental/LCC_test ../data/ldbc-directed-example-unweighted.mtx 0
+	../build/experimental/LCC_test ../data/ldbc-undirected-example-unweighted.mtx 1
 
