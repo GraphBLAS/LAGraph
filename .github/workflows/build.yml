@@ -30,7 +30,7 @@ jobs:
         cmake .. -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY}
         JOBS=2 make
   macos:
-    runs-on: macos-11
+    runs-on: macos-10.15
     strategy:
       matrix:
         config:
