@@ -4,7 +4,12 @@ on: [push, pull_request]
 
 jobs:
   linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        config:
+        - {grb_version: 4.0.3, conda_grb_package_hash: h9c3ff4c}
+        #- {grb_version: 5.0.3, conda_grb_package_hash: h9c3ff4c}
     steps:
     - name: Checkout
       uses: actions/checkout@v2.0.0
@@ -14,8 +19,8 @@ jobs:
         # grab GraphBLAS binaries
         mkdir graphblas-binaries
         cd graphblas-binaries
-        wget --quiet https://anaconda.org/conda-forge/graphblas/4.0.3/download/linux-64/graphblas-4.0.3-h9c3ff4c_0.tar.bz2
-        tar xf graphblas-4.0.3-h9c3ff4c_0.tar.bz2
+        wget --quiet https://anaconda.org/conda-forge/graphblas/${{ matrix.config.grb_version }}/download/linux-64/graphblas-${{ matrix.config.grb_version }}-${{ matrix.config.conda_grb_package_hash }}_0.tar.bz2
+        tar xf graphblas-${{ matrix.config.grb_version }}-${{ matrix.config.conda_grb_package_hash }}_0.tar.bz2
         export GRAPHBLAS_INCLUDE_DIR=`pwd`/include
         export GRAPHBLAS_LIBRARY=`pwd`/lib/libgraphblas.so
         popd
@@ -25,7 +30,12 @@ jobs:
         cmake .. -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY}
         JOBS=2 make
   macos:
-    runs-on: macos-latest
+    runs-on: macos-11
+    strategy:
+      matrix:
+        config:
+        - {grb_version: 4.0.3, conda_grb_package_hash: h046ec9c}
+        #- {grb_version: 5.0.3, conda_grb_package_hash: he49afe7}
     steps:
     - name: Checkout
       uses: actions/checkout@v2.0.0
@@ -35,8 +45,8 @@ jobs:
         # grab GraphBLAS binaries
         mkdir graphblas-binaries
         cd graphblas-binaries
-        wget --quiet https://anaconda.org/conda-forge/graphblas/4.0.3/download/osx-64/graphblas-4.0.3-h046ec9c_0.tar.bz2
-        tar xf graphblas-4.0.3-h046ec9c_0.tar.bz2
+        wget --quiet https://anaconda.org/conda-forge/graphblas/${{ matrix.config.grb_version }}/download/osx-64/graphblas-${{ matrix.config.grb_version }}-${{ matrix.config.conda_grb_package_hash }}_0.tar.bz2
+        tar xf graphblas-${{ matrix.config.grb_version }}-${{ matrix.config.conda_grb_package_hash }}_0.tar.bz2
         export GRAPHBLAS_INCLUDE_DIR=`pwd`/include
         export GRAPHBLAS_LIBRARY=`pwd`/lib/libgraphblas.dylib
         popd
