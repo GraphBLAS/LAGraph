@@ -123,7 +123,7 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
     size_t typesize ;
     int64_t nonempty = -1 ;
     char *fmt_string ;
-    bool jumbled, is_uniform ;
+    bool jumbled, iso ;
     GrB_Index Ap_size, Ah_size, Ab_size, Ai_size, Ax_size ;
 
     if (fmt == GxB_BY_COL && is_hyper)
@@ -131,7 +131,7 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
         // hypersparse CSC
         GrB_TRY (GxB_Matrix_export_HyperCSC (A, &type, &nrows, &ncols,
             &Ap, &Ah, &Ai, &Ax, &Ap_size, &Ah_size, &Ai_size, &Ax_size,
-            &is_uniform, &nvec, &jumbled, NULL)) ;
+            &iso, &nvec, &jumbled, NULL)) ;
         fmt_string = "HCSC" ;
     }
     else if (fmt == GxB_BY_ROW && is_hyper)
@@ -139,7 +139,7 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
         // hypersparse CSR
         GrB_TRY (GxB_Matrix_export_HyperCSR (A, &type, &nrows, &ncols,
             &Ap, &Ah, &Ai, &Ax, &Ap_size, &Ah_size, &Ai_size, &Ax_size,
-            &is_uniform, &nvec, &jumbled, NULL)) ;
+            &iso, &nvec, &jumbled, NULL)) ;
         fmt_string = "HCSR" ;
     }
     else if (fmt == GxB_BY_COL && is_sparse)
@@ -147,7 +147,7 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
         // standard CSC
         GrB_TRY (GxB_Matrix_export_CSC (A, &type, &nrows, &ncols,
             &Ap, &Ai, &Ax, &Ap_size, &Ai_size, &Ax_size,
-            &is_uniform, &jumbled, NULL)) ;
+            &iso, &jumbled, NULL)) ;
         nvec = ncols ;
         fmt_string = "CSC " ;
     }
@@ -156,7 +156,7 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
         // standard CSR
         GrB_TRY (GxB_Matrix_export_CSR (A, &type, &nrows, &ncols,
             &Ap, &Ai, &Ax, &Ap_size, &Ai_size, &Ax_size,
-            &is_uniform, &jumbled, NULL)) ;
+            &iso, &jumbled, NULL)) ;
         nvec = nrows ;
         fmt_string = "CSR " ;
     }
@@ -165,7 +165,7 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
         // bitmap by col
         GrB_TRY (GxB_Matrix_export_BitmapC (A, &type, &nrows, &ncols,
             &Ab, &Ax, &Ab_size, &Ax_size,
-            &is_uniform, &nvals, NULL)) ;
+            &iso, &nvals, NULL)) ;
         nvec = ncols ;
         fmt_string = "BITMAPC" ;
     }
@@ -174,7 +174,7 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
         // bitmap by row
         GrB_TRY (GxB_Matrix_export_BitmapR (A, &type, &nrows, &ncols,
             &Ab, &Ax, &Ab_size, &Ax_size,
-            &is_uniform, &nvals, NULL)) ;
+            &iso, &nvals, NULL)) ;
         nvec = nrows ;
         fmt_string = "BITMAPR" ;
     }
@@ -183,7 +183,7 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
         // full by col
         GrB_TRY (GxB_Matrix_export_FullC (A, &type, &nrows, &ncols,
             &Ax, &Ax_size,
-            &is_uniform, NULL)) ;
+            &iso, NULL)) ;
         nvec = ncols ;
         fmt_string = "FULLC" ;
     }
@@ -192,7 +192,7 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
         // full by row
         GrB_TRY (GxB_Matrix_export_FullR (A, &type, &nrows, &ncols,
             &Ax, &Ax_size,
-            &is_uniform, NULL)) ;
+            &iso, NULL)) ;
         nvec = nrows ;
         fmt_string = "FULLC" ;
     }
@@ -202,8 +202,8 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
         ERROR ;
     }
 
-    // uniform-valued matrices not yet supported
-    if (is_uniform) ERROR ;
+    // iso matrices not yet supported
+    if (iso) ERROR ;
 
     //--------------------------------------------------------------------------
     // create the type string
@@ -342,18 +342,23 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
         FWRITE (Ap, sizeof (GrB_Index), nvec+1) ;
         FWRITE (Ah, sizeof (GrB_Index), nvec) ;
         FWRITE (Ai, sizeof (GrB_Index), nvals) ;
+        FWRITE (Ax, typesize, nvals) ;
     }
     else if (is_sparse)
     {
         FWRITE (Ap, sizeof (GrB_Index), nvec+1) ;
         FWRITE (Ai, sizeof (GrB_Index), nvals) ;
+        FWRITE (Ax, typesize, nvals) ;
     }
     else if (is_bitmap)
     {
         FWRITE (Ab, sizeof (int8_t), nrows*ncols) ;
+        FWRITE (Ax, typesize, nrows*ncols) ;
     }
-
-    FWRITE (Ax, typesize, nrows*ncols) ;
+    else
+    {
+        FWRITE (Ax, typesize, nrows*ncols) ;
+    }
 
     //--------------------------------------------------------------------------
     // re-import the matrix
@@ -364,56 +369,56 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
         // hypersparse CSC
         GrB_TRY (GxB_Matrix_import_HyperCSC (A, type, nrows, ncols,
             &Ap, &Ah, &Ai, &Ax, Ap_size, Ah_size, Ai_size, Ax_size,
-            is_uniform, nvec, jumbled, NULL)) ;
+            iso, nvec, jumbled, NULL)) ;
     }
     else if (fmt == GxB_BY_ROW && is_hyper)
     {
         // hypersparse CSR
         GrB_TRY (GxB_Matrix_import_HyperCSR (A, type, nrows, ncols,
             &Ap, &Ah, &Ai, &Ax, Ap_size, Ah_size, Ai_size, Ax_size,
-            is_uniform, nvec, jumbled, NULL)) ;
+            iso, nvec, jumbled, NULL)) ;
     }
     else if (fmt == GxB_BY_COL && is_sparse)
     {
         // standard CSC
         GrB_TRY (GxB_Matrix_import_CSC (A, type, nrows, ncols,
             &Ap, &Ai, &Ax, Ap_size, Ai_size, Ax_size,
-            is_uniform, jumbled, NULL)) ;
+            iso, jumbled, NULL)) ;
     }
     else if (fmt == GxB_BY_ROW && is_sparse)
     {
         // standard CSR
         GrB_TRY (GxB_Matrix_import_CSR (A, type, nrows, ncols,
             &Ap, &Ai, &Ax, Ap_size, Ai_size, Ax_size,
-            is_uniform, jumbled, NULL)) ;
+            iso, jumbled, NULL)) ;
     }
     else if (fmt == GxB_BY_COL && is_bitmap)
     {
         // bitmap by col
         GrB_TRY (GxB_Matrix_import_BitmapC (A, type, nrows, ncols,
             &Ab, &Ax, Ab_size, Ax_size,
-            is_uniform, nvals, NULL)) ;
+            iso, nvals, NULL)) ;
     }
     else if (fmt == GxB_BY_ROW && is_bitmap)
     {
         // bitmap by row
         GrB_TRY (GxB_Matrix_import_BitmapR (A, type, nrows, ncols,
             &Ab, &Ax, Ab_size, Ax_size,
-            is_uniform, nvals, NULL)) ;
+            iso, nvals, NULL)) ;
     }
     else if (fmt == GxB_BY_COL && is_full)
     {
         // full by col
         GrB_TRY (GxB_Matrix_import_FullC (A, type, nrows, ncols,
             &Ax, Ax_size,
-            is_uniform, NULL)) ;
+            iso, NULL)) ;
     }
     else if (fmt == GxB_BY_ROW && is_full)
     {
         // full by row
         GrB_TRY (GxB_Matrix_import_FullR (A, type, nrows, ncols,
             &Ax, Ax_size,
-            is_uniform, NULL)) ;
+            iso, NULL)) ;
     }
     else
     {
@@ -504,8 +509,8 @@ static inline int binread   // returns 0 if successful, -1 if failure
     is_bitmap = (kind == GxB_BITMAP) ;
     is_full   = (kind == GxB_FULL) ;
 
-    // uniform-valued matrices not yet supported
-    bool is_uniform = false ;
+    // iso matrices not yet supported
+    bool iso = false ;
 
     switch (typecode)
     {
@@ -614,56 +619,56 @@ static inline int binread   // returns 0 if successful, -1 if failure
         // hypersparse CSC
         GrB_TRY (GxB_Matrix_import_HyperCSC (A, type, nrows, ncols,
             &Ap, &Ah, &Ai, &Ax, Ap_size, Ah_size, Ai_size, Ax_size,
-            is_uniform, nvec, false, NULL)) ;
+            iso, nvec, false, NULL)) ;
     }
     else if (fmt == GxB_BY_ROW && is_hyper)
     {
         // hypersparse CSR
         GrB_TRY (GxB_Matrix_import_HyperCSR (A, type, nrows, ncols,
             &Ap, &Ah, &Ai, &Ax, Ap_size, Ah_size, Ai_size, Ax_size,
-            is_uniform, nvec, false, NULL)) ;
+            iso, nvec, false, NULL)) ;
     }
     else if (fmt == GxB_BY_COL && is_sparse)
     {
         // standard CSC
         GrB_TRY (GxB_Matrix_import_CSC (A, type, nrows, ncols,
             &Ap, &Ai, &Ax, Ap_size, Ai_size, Ax_size,
-            is_uniform, false, NULL)) ;
+            iso, false, NULL)) ;
     }
     else if (fmt == GxB_BY_ROW && is_sparse)
     {
         // standard CSR
         GrB_TRY (GxB_Matrix_import_CSR (A, type, nrows, ncols,
             &Ap, &Ai, &Ax, Ap_size, Ai_size, Ax_size,
-            is_uniform, false, NULL)) ;
+            iso, false, NULL)) ;
     }
     else if (fmt == GxB_BY_COL && is_bitmap)
     {
         // bitmap by col
         GrB_TRY (GxB_Matrix_import_BitmapC (A, type, nrows, ncols,
             &Ab, &Ax, Ab_size, Ax_size,
-            is_uniform, nvals, NULL)) ;
+            iso, nvals, NULL)) ;
     }
     else if (fmt == GxB_BY_ROW && is_bitmap)
     {
         // bitmap by row
         GrB_TRY (GxB_Matrix_import_BitmapR (A, type, nrows, ncols,
             &Ab, &Ax, Ab_size, Ax_size,
-            is_uniform, nvals, NULL)) ;
+            iso, nvals, NULL)) ;
     }
     else if (fmt == GxB_BY_COL && is_full)
     {
         // full by col
         GrB_TRY (GxB_Matrix_import_FullC (A, type, nrows, ncols,
             &Ax, Ax_size,
-            is_uniform, NULL)) ;
+            iso, NULL)) ;
     }
     else if (fmt == GxB_BY_ROW && is_full)
     {
         // full by row
         GrB_TRY (GxB_Matrix_import_FullR (A, type, nrows, ncols,
             &Ax, Ax_size,
-            is_uniform, NULL)) ;
+            iso, NULL)) ;
     }
     else
     {
@@ -1045,7 +1050,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
     printf ("read time: %g\n", t_read) ;
 
     LAGraph_FREE_WORK ;
-    LAGraph_TRY (LAGraph_DisplayGraph (*G, 2, stdout, msg)) ;
+    // LAGraph_TRY (LAGraph_DisplayGraph (*G, 2, stdout, msg)) ;
     return (0) ;
 }
 

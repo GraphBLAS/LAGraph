@@ -4,9 +4,12 @@ Single socket system (no NUMA effects).
 
 Jan 2021 to date: in-progress comparisons of LAGraph +
 SuiteSparse:GraphBLAS vs GAP.  Results for Jan 26 and following are for
-algorithms in the Experimental2 folder.
+algorithms in the Experimental2 folder.  May 14 and following are for
+algorithms in LAGraph/src/algorithm, using LAGraph/src/benchmark.
 
-Jun 22: v5.1.0beta1
+Jun 25c: v5.1.0beta1 (June 25 version)
+Jun 25a: reading in *.grb matrices as iso, for all but SSSP
+Jun 22: v5.1.0beta1 with iso matrices
 May 14: in the reorg branch, v5.0.4
 May 12: v5.0.3
 May 2: v5.0.1beta2 with refactored saxpy3
@@ -19,12 +22,14 @@ Jan 26+: SS:GrB v4.0.3 with LAGraph/Experimental2
 Jan 19: SS:GrB v4.0.3 with LAGraph/Experimental
 Jan  3: SS:GrB v4.0.1 with LAGraph/Experimental
 
-
                 kron        urand       twitter     web         road
               ------------------------------------------------------------------
 BC   GAP        31.521      46.361      10.821       3.008       1.503
               ------------------------------------------------------------------
 
+BC   SS   ???   24.031 ???  33.149 ???   8.754 *     7.226 ???  34.478 (Jun 25c) 
+BC   SS         23.051 *    32.721 *     8.785 *     6.488      34.759 (Jun 25a) 
+BC   SS         23.159 *    32.080 *     9.496 *     6.530      33.833 (Jun 24) 
 BC   SS         23.553 *    32.017 *     8.954 *     6.497      34.601 (Jun 23) 
 BC   SS         23.900 *    32.545 *     9.126 *     6.482      35.048 (Jun 22) 
 --- reorg
@@ -48,6 +53,9 @@ BC   SS:Feb2020 41.687      59.171      14.521       8.790      50.896 (Feb 21)
 BFS  GAP          .313        .575        .219        .338        .245
               ------------------------------------------------------------------
 
+BFS  SS           .524       1.219        .351        .697       3.074 (Jun 25c) 
+BFS  SS           .526       1.231        .352        .700       3.051 (Jun 25a) 
+BFS  SS           .534       1.233        .354        .701       3.057 (Jun 24) 
 BFS  SS           .531       1.223        .352        .698       3.039 (Jun 23) 
 BFS  SS           .526       1.206        .366        .705       3.050 (Jun 22) 
 BFS  SS           .503       1.280        .344        .696       2.971 (May 14) 
@@ -71,6 +79,8 @@ BFS  SS:Feb2020  3.612       2.818       1.100       1.072       7.170 (2/21/20)
 PR   GAP        19.813      25.285      15.159       5.128       1.007
               ------------------------------------------------------------------
 
+PR   SS         21.940      27.873      17.605       9.366       1.667 (Jun 25a)
+PR   SS         21.720      27.625      17.560       9.126       1.267 (Jun 24)
 PR   SS         21.687      27.632      17.277       9.598       1.250 (Jun 24)
 --- reorg
 PR   SS         21.877      27.659      17.998       9.384       1.396 (May 12) 
@@ -90,6 +100,8 @@ Timing jitter for Jan 3b; timing should be identical to Jan 19.
 CC   GAP          .534       1.659        .234        .222        .045
               ------------------------------------------------------------------
 
+CC   SS          3.436       4.603       1.591       2.025       1.008 (Jun 25a) 
+CC   SS          3.441       4.518       1.510       2.024        .997 (Jun 24) 
 CC   SS          3.419       4.749       1.489       1.998        .981 (Jun 23) 
 CC   SS          3.422       4.501       1.510       1.999        .992 (Jun 22) 
 --- reorg
@@ -110,6 +122,8 @@ CC   SS:Feb2020  4.042       4.906       1.811       2.342       1.474 (Feb 21)
 SSSP GAP         4.908       7.227       2.017        .805        .206
               ------------------------------------------------------------------
 
+SSSP SS         17.128      25.200       8.625       9.096      49.905 (Jun 25a) 
+SSSP SS         17.154      25.141       7.920       8.647      48.860 (Jun 24) 
 SSSP SS         17.109      25.106       7.970       8.682      48.524 (May 12) 
 --- reorg
 SSSP SS         17.054      25.978       8.265       9.384      48.793 (May 12) 
@@ -128,6 +142,14 @@ Note change from Jan 3b (v4.0.1) to Jan 19 (v4.0.3), due to faster max monoid.
               ------------------------------------------------------------------
 TC GAP         374.082      21.825      79.576      22.184        .026
               ------------------------------------------------------------------
+
+TC SS:LL.L                  27.920                                     (Jun 25a) 
+TC SS:UU.U                  26.974                                     (Jun 25a) 
+TC SS:dot      927.983      33.655     237.103      34.644        .192 (Jun 25a) 
+
+TC SS:LL.L                  28.083                                     (Jun 24) 
+TC SS:UU.U                  26.818                                     (Jun 24) 
+TC SS:dot      926.715      34.030     237.701      34.396        .197 (Jun 24) 
 
 TC SS:LL.L                  27.639                                     (Jun 23) 
 TC SS:UU.U                  26.856                                     (Jun 23) 
