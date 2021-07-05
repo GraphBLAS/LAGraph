@@ -2,35 +2,11 @@
 // LAGraph_grread:  read a matrix from a binary file
 //------------------------------------------------------------------------------
 
-/*
-    LAGraph:  graph algorithms based on GraphBLAS
-
-    Copyright 2019 LAGraph Contributors.
-
-    (see Contributors.txt for a full list of Contributors; see
-    ContributionInstructions.txt for information on how you can Contribute to
-    this project).
-
-    All Rights Reserved.
-
-    NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
-    CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
-    AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
-    PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
-    THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
-    RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
-
-    Released under a BSD license, please see the LICENSE file distributed with
-    this Software or contact permission@sei.cmu.edu for full terms.
-
-    Created, in part, with funding and support from the United States
-    Government.  (see Acknowledgments.txt file).
-
-    This program includes and/or can make use of certain third party source
-    code, object code, documentation and other files ("Third Party Software").
-    See LICENSE file for more details.
-
-*/
+// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// See additional acknowledgments in the LICENSE file,
+// or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
 
@@ -70,7 +46,8 @@
 // GrB_OUT_OF_MEMORY if out of memory, GrB_INVALID_VALUE if a file I/O error
 // occurs or the edge size is not what was expected.
 
-#include "LAGraph_internal.h"
+#include <LAGraph.h>
+#include <LAGraphX.h>
 
 //------------------------------------------------------------------------------
 // gr_header
@@ -127,15 +104,15 @@ static GrB_Info LAGraph_binary_read
 
 // Free all allocated space; used only for error return.
 
-#define LAGRAPH_FREE_ALL        \
-{                               \
-    GrB_free (G) ;              \
-    LAGRAPH_FREE (Gp) ;         \
-    LAGRAPH_FREE (Gj) ;         \
-    LAGRAPH_FREE (Gj_32) ;      \
-    LAGRAPH_FREE (Gx) ;         \
-    if (fp != NULL) fclose (fp) ; \
-    fp = NULL ;                 \
+#define LAGRAPH_FREE_ALL                 \
+    {                                    \
+    GrB_free (G) ;                       \
+    LAGraph_Free ((void**)&Gp) ;         \
+    LAGraph_Free ((void**)&Gj) ;         \
+    LAGraph_Free ((void**)&Gj_32) ;      \
+    LAGraph_Free ((void**)&Gx) ;         \
+    if (fp != NULL) fclose (fp) ;        \
+    fp = NULL ;                          \
 }
 
 //------------------------------------------------------------------------------
@@ -152,7 +129,9 @@ GrB_Info LAGraph_grread     // read a matrix from a binary file
                             // edge weights equal to 1).
 )
 {
-
+#if !defined(LG_SUITESPARSE)
+    return GrB_PANIC;
+#else
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------
@@ -223,7 +202,7 @@ GrB_Info LAGraph_grread     // read a matrix from a binary file
     // allocate and read in the pointers
     //--------------------------------------------------------------------------
 
-    Gp = LAGraph_malloc (n+1, sizeof (GrB_Index)) ;
+    Gp = LAGraph_Malloc (n+1, sizeof (GrB_Index)) ;
     if (Gp == NULL)
     {
         LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
@@ -237,7 +216,7 @@ GrB_Info LAGraph_grread     // read a matrix from a binary file
     // allocate and read in the indices
     //--------------------------------------------------------------------------
 
-    Gj = LAGraph_malloc (e, sizeof (GrB_Index)) ;
+    Gj = LAGraph_Malloc (e, sizeof (GrB_Index)) ;
     if (Gj == NULL)
     {
         LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
@@ -252,8 +231,8 @@ GrB_Info LAGraph_grread     // read a matrix from a binary file
 
         // allocate workspace for a single chunk
         #define CHUNK (10 * 1024 * 1024)
-        int64_t chunk = LAGRAPH_MIN (CHUNK, e) ;
-        Gj_32 = LAGraph_malloc (chunk, sizeof (int32_t)) ;
+        int64_t chunk = LAGraph_MIN (CHUNK, e) ;
+        Gj_32 = LAGraph_Malloc (chunk, sizeof (int32_t)) ;
         if (Gj_32 == NULL)
         {
             LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
@@ -263,7 +242,7 @@ GrB_Info LAGraph_grread     // read a matrix from a binary file
         for (int64_t k = 0 ; k < e ; k += CHUNK)
         {
             // read in the next chunk
-            int64_t chunk = LAGRAPH_MIN (CHUNK, e-k) ;
+            int64_t chunk = LAGraph_MIN (CHUNK, e-k) ;
             LAGRAPH_OK (LAGraph_binary_read ("indices",
                 fp, Gj_32, chunk, sizeof (int32_t))) ;
             // convert the chunk to 64-bit
@@ -273,7 +252,7 @@ GrB_Info LAGraph_grread     // read a matrix from a binary file
                 Gj [k + p] = (GrB_Index) Gj_32 [p] ;
             }
         }
-        LAGRAPH_FREE (Gj_32) ;
+        LAGraph_Free ((void**)&Gj_32) ; Gj_32 = NULL;
 
     }
     else
@@ -299,7 +278,7 @@ GrB_Info LAGraph_grread     // read a matrix from a binary file
         esize = sizeof (bool) ;
     }
 
-    Gx = LAGraph_malloc (e, esize) ;
+    Gx = LAGraph_Malloc (e, esize) ;
     if (Gx == NULL) LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
 
     if (no_edge_weights)
@@ -339,5 +318,5 @@ GrB_Info LAGraph_grread     // read a matrix from a binary file
 
     fclose (fp) ;
     return (GrB_SUCCESS) ;
+#endif
 }
-

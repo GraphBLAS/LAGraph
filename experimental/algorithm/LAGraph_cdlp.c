@@ -2,35 +2,11 @@
 // LAGraph_cdlp: community detection using label propagation
 //------------------------------------------------------------------------------
 
-/*
-    LAGraph:  graph algorithms based on GraphBLAS
-
-    Copyright 2019 LAGraph Contributors.
-
-    (see Contributors.txt for a full list of Contributors; see
-    ContributionInstructions.txt for information on how you can Contribute to
-    this project).
-
-    All Rights Reserved.
-
-    NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
-    CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
-    AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
-    PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
-    THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
-    RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
-
-    Released under a BSD license, please see the LICENSE file distributed with
-    this Software or contact permission@sei.cmu.edu for full terms.
-
-    Created, in part, with funding and support from the United States
-    Government.  (see Acknowledgments.txt file).
-
-    This program includes and/or can make use of certain third party source
-    code, object code, documentation and other files ("Third Party Software").
-    See LICENSE file for more details.
-
-*/
+// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// See additional acknowledgments in the LICENSE file,
+// or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
 
@@ -141,21 +117,24 @@
 //   label of its neighbors (connected through either an incoming or through
 //   an outgoing edge).
 
-#include "LAGraph_internal.h"
-#include "GB_msort_2.h"
+#include <LAGraph.h>
+#include <LAGraphX.h>
+//#include "GB_msort_2.h"
 
-#define LAGRAPH_FREE_ALL                                                       \
-{                                                                              \
-    GrB_free (&L) ;                                                            \
-    GrB_free (&L_prev) ;                                                       \
-    if (sanitize) GrB_free (&S) ;                                              \
-    GrB_free (&AT) ;                                                           \
-    GrB_free (&desc) ;                                                         \
+#define LAGRAPH_FREE_ALL                                                \
+{                                                                       \
+    GrB_free (&L) ;                                                     \
+    GrB_free (&L_prev) ;                                                \
+    if (sanitize) GrB_free (&S) ;                                       \
+    GrB_free (&AT) ;                                                    \
+    GrB_free (&desc) ;                                                  \
 }
 
+//****************************************************************************
 GrB_Info LAGraph_cdlp
 (
     GrB_Vector *CDLP_handle, // output vector
+    GrB_Type *CDLP_type,     // scalar type of output vector
     const GrB_Matrix A,      // input matrix
     bool symmetric,          // denote whether the matrix is symmetric
     bool sanitize,           // if true, ensure A is binary
@@ -221,17 +200,17 @@ GrB_Info LAGraph_cdlp
 
     if (sanitize)
     {
-        LAGraph_tic (tic) ;
+        LAGraph_Tic (tic, NULL) ;
 
-        AI = LAGraph_malloc(nz, sizeof(GrB_Index));
-        AJ = LAGraph_malloc(nz, sizeof(GrB_Index));
+        AI = LAGraph_Malloc(nz, sizeof(GrB_Index));
+        AJ = LAGraph_Malloc(nz, sizeof(GrB_Index));
         LAGRAPH_OK (GrB_Matrix_extractTuples_UINT64(AI, AJ, GrB_NULL, &nz, A))
 
-        AX = LAGraph_malloc(nz, sizeof(GrB_Index));
+        AX = LAGraph_Malloc(nz, sizeof(GrB_Index));
         LAGRAPH_OK (GrB_Matrix_new(&S, GrB_UINT64, n, n));
-        LAGRAPH_OK (GrB_Matrix_build(S, AI, AJ, AX, nz, GrB_PLUS_UINT64))
+        LAGRAPH_OK (GrB_Matrix_build(S, AI, AJ, AX, nz, GrB_PLUS_UINT64));
 
-        t [0] = LAGraph_toc (tic) ;
+        LAGraph_Toc (&t[0], tic, NULL) ;
     }
     else
     {
@@ -240,8 +219,9 @@ GrB_Info LAGraph_cdlp
         S = A;
     }
 
-    LAGraph_tic (tic) ;
+    LAGraph_Tic (tic, NULL) ;
 
+#ifdef LG_SUITESPARSE
     GxB_Format_Value A_format = -1, global_format = -1 ;
     LAGRAPH_OK (GxB_get(A, GxB_FORMAT, &A_format))
     LAGRAPH_OK (GxB_get(GxB_FORMAT, &global_format))
@@ -252,15 +232,16 @@ GrB_Info LAGraph_cdlp
             GrB_INVALID_OBJECT
         )
     }
+#endif
 
     // TODO: heap is no longer in SuiteSparse, as of 3.2.0draftx.
     // the new saxpy method is used instead (Gustavson + Hash) --> TODO: use saxpy?
     LAGRAPH_OK (GrB_Descriptor_new(&desc))
-//    LAGRAPH_OK (GrB_Descriptor_set(desc, GxB_AxB_METHOD, GxB_AxB_SAXPY))
+    //LAGRAPH_OK (GrB_Descriptor_set(desc, GxB_AxB_METHOD, GxB_AxB_SAXPY))
 
     // Initialize L with diagonal elements 1..n
-    I = LAGraph_malloc (n, sizeof (GrB_Index)) ;
-    X = LAGraph_malloc (n, sizeof (GrB_Index)) ;
+    I = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
+    X = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
     if (I == NULL || X == NULL)
     {
         LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
@@ -271,8 +252,8 @@ GrB_Info LAGraph_cdlp
     }
     LAGRAPH_OK (GrB_Matrix_new (&L, GrB_UINT64, n, n)) ;
     LAGRAPH_OK (GrB_Matrix_build (L, I, I, X, n, GrB_PLUS_UINT64)) ;
-    LAGRAPH_FREE (I) ;
-    LAGRAPH_FREE (X) ;
+    LAGraph_Free ((void **)&I) ; I = NULL;
+    LAGraph_Free ((void **)&X) ; X = NULL;
 
     // Initialize matrix for storing previous labels
     LAGRAPH_OK(GrB_Matrix_new(&L_prev, GrB_UINT64, n, n))
@@ -285,31 +266,36 @@ GrB_Info LAGraph_cdlp
         LAGRAPH_OK (GrB_transpose (AT, NULL, NULL, A, NULL)) ;
     }
 
-    const int nthreads = LAGraph_get_nthreads();
+    int nthreads;
+    LAGraph_GetNumThreads(&nthreads, NULL);
     for (int iteration = 0; iteration < itermax; iteration++)
     {
         // Initialize data structures for extraction from 'AL_in' and (for directed graphs) 'AL_out'
-        I = LAGraph_malloc(nnz, sizeof(GrB_Index));
-        X = LAGraph_malloc(nnz, sizeof(GrB_Index));
+        I = LAGraph_Malloc(nnz, sizeof(GrB_Index));
+        X = LAGraph_Malloc(nnz, sizeof(GrB_Index));
 
         // A = A min.2nd L
         // (using the "push" (saxpy) method)
-        LAGRAPH_OK(GrB_mxm(S, GrB_NULL, GrB_NULL, GxB_MIN_SECOND_UINT64, S, L, desc))
-        LAGRAPH_OK(GrB_Matrix_extractTuples_UINT64(I, GrB_NULL, X, &nz, S))
+        LAGRAPH_OK(GrB_mxm(S, GrB_NULL, GrB_NULL,
+                           GrB_MIN_SECOND_SEMIRING_UINT64, S, L, desc));
+        LAGRAPH_OK(GrB_Matrix_extractTuples_UINT64(I, GrB_NULL, X, &nz, S));
 
         if (!symmetric)
         {
             // A' = A' min.2nd L
             // (using the "push" (saxpy) method)
-            LAGRAPH_OK(GrB_mxm(AT, GrB_NULL, GrB_NULL, GxB_MIN_SECOND_UINT64, AT, L, desc))
-            LAGRAPH_OK(GrB_Matrix_extractTuples_UINT64(&I[nz], GrB_NULL, &X[nz], &nz, AT))
+            LAGRAPH_OK(GrB_mxm(AT, GrB_NULL, GrB_NULL,
+                               GrB_MIN_SECOND_SEMIRING_UINT64, AT, L, desc));
+            LAGRAPH_OK(GrB_Matrix_extractTuples_UINT64(&I[nz],
+                                                       GrB_NULL, &X[nz], &nz, AT));
         }
 
-        uint64_t *workspace1 = LAGraph_malloc(nnz, sizeof(GrB_Index));
-        uint64_t *workspace2 = LAGraph_malloc(nnz, sizeof(GrB_Index));
-        GB_msort_2(I, X, workspace1, workspace2, nnz, nthreads);
-        LAGRAPH_FREE (workspace1) ;
-        LAGRAPH_FREE (workspace2) ;
+        //uint64_t *workspace1 = LAGraph_Malloc(nnz, sizeof(GrB_Index));
+        //uint64_t *workspace2 = LAGraph_Malloc(nnz, sizeof(GrB_Index));
+        //GB_msort_2(I, X, workspace1, workspace2, nnz, nthreads);
+        //LAGraph_Free ((void **)&workspace1) ;  workspace1 = NULL;
+        //LAGraph_Free ((void **)&workspace2) ;  workspace2 = NULL;
+        LAGraph_Sort2(I, X, nnz, nthreads, NULL);
 
         // save current labels for comparison by swapping L and L_prev
         GrB_Matrix L_swap = L;
@@ -326,9 +312,9 @@ GrB_Info LAGraph_cdlp
         for (GrB_Index k = 1; k <= nnz; k++)
         {
             // check if we have a reason to recompute the mode value
-            if (k == nnz        // we surpassed the last element
-             || I[k-1] != I[k]  // the row index has changed
-             || X[k-1] != X[k]) // the run value has changed
+            if (k == nnz           // we surpassed the last element
+                || I[k-1] != I[k]  // the row index has changed
+                || X[k-1] != X[k]) // the run value has changed
             {
                 if (run_length > mode_length)
                 {
@@ -340,19 +326,19 @@ GrB_Info LAGraph_cdlp
             run_length++;
 
             // check if we passed a row
-            if (k == nnz        // we surpassed the last element
-             || I[k-1] != I[k]) // the row index has changed
+            if (k == nnz           // we surpassed the last element
+                || I[k-1] != I[k]) // or the row index has changed
             {
                 GrB_Matrix_setElement(L, mode_value, I[k-1], I[k-1]);
                 mode_length = 0;
             }
         }
-        LAGRAPH_FREE (I) ;
-        LAGRAPH_FREE (X) ;
+        LAGraph_Free ((void**)&I) ; I = NULL;
+        LAGraph_Free ((void**)&X) ; X = NULL;
 
 
         bool isequal;
-        LAGraph_isequal(&isequal, L_prev, L, GrB_NULL);
+        LAGraph_IsEqual_type(&isequal, L_prev, L, GrB_UINT64, NULL);
         if (isequal) {
             break;
         }
@@ -363,6 +349,7 @@ GrB_Info LAGraph_cdlp
     //--------------------------------------------------------------------------
 
     LAGRAPH_OK (GrB_Vector_new(&CDLP, GrB_UINT64, n))
+    *CDLP_type = GrB_UINT64;
     for (GrB_Index i = 0; i < n; i++)
     {
         uint64_t x;
@@ -376,9 +363,9 @@ GrB_Info LAGraph_cdlp
 
     (*CDLP_handle) = CDLP;
     CDLP = NULL;            // set to NULL so LAGRAPH_FREE_ALL doesn't free it
-    LAGRAPH_FREE_ALL
+    LAGRAPH_FREE_ALL;
 
-    t [1] = LAGraph_toc (tic) ;
+    t[1] = LAGraph_Toc (&t[1], tic, NULL) ;
 
     return (GrB_SUCCESS);
 }

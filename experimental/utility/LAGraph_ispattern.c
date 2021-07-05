@@ -2,46 +2,182 @@
 // LAGraph_ispattern: check if a matrix is all 1
 //------------------------------------------------------------------------------
 
-/*
-    LAGraph:  graph algorithms based on GraphBLAS
-
-    Copyright 2019 LAGraph Contributors.
-
-    (see Contributors.txt for a full list of Contributors; see
-    ContributionInstructions.txt for information on how you can Contribute to
-    this project).
-
-    All Rights Reserved.
-
-    NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
-    CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
-    AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
-    PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
-    THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
-    RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
-
-    Released under a BSD license, please see the LICENSE file distributed with
-    this Software or contact permission@sei.cmu.edu for full terms.
-
-    Created, in part, with funding and support from the United States
-    Government.  (see Acknowledgments.txt file).
-
-    This program includes and/or can make use of certain third party source
-    code, object code, documentation and other files ("Third Party Software").
-    See LICENSE file for more details.
-
-*/
+// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// See additional acknowledgments in the LICENSE file,
+// or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
 
 // LAGraph_ispattern: check if a matrix values are all equal to 1.
 // Contributed by Tim Davis, Texas A&M.
 
-#include "LAGraph_internal.h"
+#include <LAGraph.h>
+#include <LAGraphX.h>
 
 #define LAGRAPH_FREE_ALL    \
     GrB_free (&C) ;
 
+//****************************************************************************
+// "is one" operators
+#define F_UNARY(f)  ((void (*)(void *, const void *)) f)
+
+
+void LAGraph_isone_int8
+(
+    bool *z,
+    const int8_t *x
+)
+{
+    (*z) = ((*x) == 1) ;
+}
+
+void LAGraph_isone_int16
+(
+    bool *z,
+    const int16_t *x
+)
+{
+    (*z) = ((*x) == 1) ;
+}
+
+void LAGraph_isone_int32
+(
+    bool *z,
+    const int32_t *x
+)
+{
+    (*z) = ((*x) == 1) ;
+}
+
+void LAGraph_isone_int64
+(
+    bool *z,
+    const int64_t *x
+)
+{
+    (*z) = ((*x) == 1) ;
+}
+
+void LAGraph_isone_uint8
+(
+    bool *z,
+    const uint8_t *x
+)
+{
+    (*z) = ((*x) == 1) ;
+}
+
+void LAGraph_isone_uint16
+(
+    bool *z,
+    const uint16_t *x
+)
+{
+    (*z) = ((*x) == 1) ;
+}
+
+void LAGraph_isone_uint32
+(
+    bool *z,
+    const uint32_t *x
+)
+{
+    (*z) = ((*x) == 1) ;
+}
+
+void LAGraph_isone_uint64
+(
+    bool *z,
+    const uint64_t *x
+)
+{
+    (*z) = ((*x) == 1) ;
+}
+
+void LAGraph_isone_float
+(
+    bool *z,
+    const float *x
+)
+{
+    (*z) = ((*x) == 1) ;
+}
+
+void LAGraph_isone_double
+(
+    bool *z,
+    const double *x
+)
+{
+    (*z) = ((*x) == 1) ;
+}
+
+void create_isone_op(GrB_UnaryOp *op, GrB_Type type)
+{
+    *op = NULL;
+
+    if      (type == GrB_INT8  )
+    {
+        GrB_UnaryOp_new (op, F_UNARY (LAGraph_isone_int8),
+                         GrB_BOOL, GrB_INT8) ;
+    }
+    else if (type == GrB_INT16 )
+    {
+        GrB_UnaryOp_new (op, F_UNARY (LAGraph_isone_int16),
+                         GrB_BOOL, GrB_INT16) ;
+    }
+    else if (type == GrB_INT32 )
+    {
+        GrB_UnaryOp_new (op, F_UNARY (LAGraph_isone_int32),
+                         GrB_BOOL, GrB_INT32) ;
+    }
+    else if (type == GrB_INT64 )
+    {
+        GrB_UnaryOp_new (op, F_UNARY (LAGraph_isone_int64),
+                         GrB_BOOL, GrB_INT64) ;
+    }
+    else if (type == GrB_UINT8 )
+    {
+        GrB_UnaryOp_new (op, F_UNARY (LAGraph_isone_uint8),
+                         GrB_BOOL, GrB_UINT8) ;
+    }
+    else if (type == GrB_UINT16)
+    {
+        GrB_UnaryOp_new (op, F_UNARY (LAGraph_isone_uint16),
+                         GrB_BOOL, GrB_UINT16) ;
+    }
+    else if (type == GrB_UINT32)
+    {
+        GrB_UnaryOp_new (op, F_UNARY (LAGraph_isone_uint32),
+                         GrB_BOOL, GrB_UINT32) ;
+    }
+    else if (type == GrB_UINT64)
+    {
+        GrB_UnaryOp_new (op, F_UNARY (LAGraph_isone_uint64),
+                         GrB_BOOL, GrB_UINT64) ;
+    }
+    else if (type == GrB_FP32  )
+    {
+        GrB_UnaryOp_new (op, F_UNARY (LAGraph_isone_float),
+                         GrB_BOOL, GrB_FP32) ;
+    }
+    else if (type == GrB_FP64  )
+    {
+        GrB_UnaryOp_new (op, F_UNARY (LAGraph_isone_double),
+                         GrB_BOOL, GrB_FP64) ;
+    }
+#if 0
+    else if (type == LAGraph_ComplexFP64)
+    {
+        GrB_UnaryOp_new (op, F_UNARY (LAGraph_isone_fc64),
+                         GrB_BOOL, GxB_FC64) ;
+    }
+#endif
+}
+
+//****************************************************************************
 GrB_Info LAGraph_ispattern  // return GrB_SUCCESS if successful
 (
     bool *result,           // true if A is all one, false otherwise
@@ -51,7 +187,9 @@ GrB_Info LAGraph_ispattern  // return GrB_SUCCESS if successful
                             // LAGraph_ComplexFP64.
 )
 {
-
+#if !defined(LG_SUITESPARSE)
+    return GrB_PANIC
+#else
     GrB_Info info ;
     GrB_Matrix C = NULL ;
     GrB_Type type ;
@@ -73,25 +211,15 @@ GrB_Info LAGraph_ispattern  // return GrB_SUCCESS if successful
     if (type == GrB_BOOL)
     {
         // result = and (A)
-        LAGRAPH_OK (GrB_reduce (result, NULL, LAGraph_LAND_MONOID, A, NULL)) ;
+        LAGRAPH_OK (GrB_reduce (result, NULL, GrB_LAND_MONOID_BOOL, A, NULL)) ;
     }
     else
     {
-
         // select the unary operator
         GrB_UnaryOp op = NULL ;
-        if      (type == GrB_INT8  ) op = LAGraph_ISONE_INT8   ;
-        else if (type == GrB_INT16 ) op = LAGraph_ISONE_INT16  ;
-        else if (type == GrB_INT32 ) op = LAGraph_ISONE_INT32  ;
-        else if (type == GrB_INT64 ) op = LAGraph_ISONE_INT64  ;
-        else if (type == GrB_UINT8 ) op = LAGraph_ISONE_UINT8  ;
-        else if (type == GrB_UINT16) op = LAGraph_ISONE_UINT16 ;
-        else if (type == GrB_UINT32) op = LAGraph_ISONE_UINT32 ;
-        else if (type == GrB_UINT64) op = LAGraph_ISONE_UINT64 ;
-        else if (type == GrB_FP32  ) op = LAGraph_ISONE_FP32   ;
-        else if (type == GrB_FP64  ) op = LAGraph_ISONE_FP64   ;
-        else if (type == LAGraph_ComplexFP64) op = LAGraph_ISONE_ComplexFP64 ;
-        else op = userop ;
+        create_isone_op(&op, type);
+
+        if (op == NULL) op = userop ;
 
         if (op == NULL)
         {
@@ -105,11 +233,11 @@ GrB_Info LAGraph_ispattern  // return GrB_SUCCESS if successful
         LAGRAPH_OK (GrB_apply (C, NULL, NULL, op, A, NULL)) ;
 
         // result = and (C)
-        LAGRAPH_OK (GrB_reduce (result, NULL, LAGraph_LAND_MONOID, C, NULL)) ;
+        LAGRAPH_OK (GrB_reduce (result, NULL, GrB_LAND_MONOID_BOOL, C, NULL)) ;
     }
 
     // free workspace and return result
     LAGRAPH_FREE_ALL ;
     return (GrB_SUCCESS) ;
+#endif
 }
-

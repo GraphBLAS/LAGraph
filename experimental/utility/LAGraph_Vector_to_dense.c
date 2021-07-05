@@ -2,35 +2,11 @@
 // LAGraph_Vector_to_dense: convert a vector to dense
 //------------------------------------------------------------------------------
 
-/*
-    LAGraph:  graph algorithms based on GraphBLAS
-
-    Copyright 2019 LAGraph Contributors.
-
-    (see Contributors.txt for a full list of Contributors; see
-    ContributionInstructions.txt for information on how you can Contribute to
-    this project).
-
-    All Rights Reserved.
-
-    NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
-    CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
-    AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
-    PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
-    THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
-    RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
-
-    Released under a BSD license, please see the LICENSE file distributed with
-    this Software or contact permission@sei.cmu.edu for full terms.
-
-    Created, in part, with funding and support from the United States
-    Government.  (see Acknowledgments.txt file).
-
-    This program includes and/or can make use of certain third party source
-    code, object code, documentation and other files ("Third Party Software").
-    See LICENSE file for more details.
-
-*/
+// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// See additional acknowledgments in the LICENSE file,
+// or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
 
@@ -40,11 +16,14 @@
 // vdense is a dense copy of v.  Where v(i) exists, vdense(i) = v(i).  If v(i)
 // is not in the pattern, it is assigned the value v(i) = id.
 
-#include "LAGraph_internal.h"
+#include <LAGraph.h>
+#include <LAGraphX.h>
 
 #define LAGRAPH_FREE_ALL \
     GrB_free (&u) ;
 
+//****************************************************************************
+/// @todo Pass GrB_Type to avoid GxB_Vector_type
 GrB_Info LAGraph_Vector_to_dense
 (
     GrB_Vector *vdense,     // output vector
@@ -52,7 +31,9 @@ GrB_Info LAGraph_Vector_to_dense
     void *id                // pointer to value to fill vdense with
 )
 {
-
+#if !defined(LG_SUITESPARSE)
+    return GrB_PANIC;
+#else
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------
@@ -111,7 +92,9 @@ GrB_Info LAGraph_Vector_to_dense
     else if (type == GrB_UINT64      ) FILL (uint64_t      , UINT64, value)
     else if (type == GrB_FP32        ) FILL (float         , FP32  , value)
     else if (type == GrB_FP64        ) FILL (double        , FP64  , value)
+#if 0
     else if (type == LAGraph_ComplexFP64 ) FILL (double complex, UDT   , id   )
+#endif
     else
     {
         LAGRAPH_ERROR ("type not supported", GrB_INVALID_VALUE) ;
@@ -127,7 +110,7 @@ GrB_Info LAGraph_Vector_to_dense
 
     if (nvals > 0)
     {
-        if (id_is_zero && type != LAGraph_ComplexFP64)
+        if (id_is_zero) // && type != LAGraph_ComplexFP64)
         {
             // use v itself for the mask for built-in types, if (*id) is zero
             // u (v != 0) = v
@@ -153,5 +136,5 @@ GrB_Info LAGraph_Vector_to_dense
 
     (*vdense) = u ;
     return (GrB_SUCCESS) ;
+#endif
 }
-

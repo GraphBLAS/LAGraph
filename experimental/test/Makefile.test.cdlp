@@ -1,0 +1,25 @@
+#-------------------------------------------------------------------------------
+# Test/CDLP/Makefile
+#-------------------------------------------------------------------------------
+
+# LAGraph, (... list all authors here) (c) 2019, All Rights Reserved.
+# http://graphblas.org  See LAGraph/LICENSE for license.
+
+#-------------------------------------------------------------------------------
+
+# simple Makefile for LAGraph/Test/CDLP/cdlptest
+
+# relies on cmake to do the actual build.  Use the CMAKE_OPTIONS argument to
+# this Makefile to pass options to cmake.
+
+# Install LAGraph and GraphBLAS before trying to compile LAGraph.
+
+JOBS ?= 1
+
+# build and run test
+default:
+	../build/experimental/cdlp_test ../data/ldbc-cdlp-directed-example.mtx 0 5
+	../build/experimental/cdlp_test ../data/ldbc-cdlp-undirected-example.mtx 1 5
+	../build/experimental/cdlp_test ../data/ldbc-directed-example-unweighted.mtx 0 2
+	../build/experimental/cdlp_test ../data/ldbc-undirected-example-unweighted.mtx 1 2
+

@@ -53,7 +53,6 @@
 
 #include <LAGraph.h>
 #include <LAGraphX.h>
-#include "LAGraph_internal.h"
 
 #define LAGRAPH_FREE_ALL                        \
     if (!keep_all_ktrusses)                     \
@@ -67,13 +66,14 @@
     GrB_free (&Support) ;                       \
     GrB_free (&C) ;
 
+//****************************************************************************
 
-bool LAGraph_support_function (const GrB_Index i, const GrB_Index j, const uint32_t *x, const uint32_t *support)
+#define F_SELECT(f) ((bool (*)(const GrB_Index, const GrB_Index, const void *, const void *)) f)
+
+static bool LAGraph_support_function (const GrB_Index i, const GrB_Index j, const uint32_t *x, const uint32_t *support)
 {
     return ((*x) >= (*support)) ;
 }
-
-#define F_SELECT(f) ((bool (*)(const GrB_Index, const GrB_Index, const void *, const void *)) f)
 
 //------------------------------------------------------------------------------
 // C = LAGraph_allktruss (A,k): find all k-trusses a graph

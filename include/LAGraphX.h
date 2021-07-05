@@ -55,18 +55,27 @@
 // Utilities
 //****************************************************************************
 
+//------------------------------------------------------------------------------
+// Complex type, scalars, monoids, and semiring
+//------------------------------------------------------------------------------
+
+extern GrB_Type LAGraph_ComplexFP64 ;
+
+extern GrB_Monoid
+    LAGraph_PLUS_ComplexFP64_MONOID       ,
+    LAGraph_TIMES_ComplexFP64_MONOID      ;
+
+extern GrB_Semiring LAGraph_PLUS_TIMES_ComplexFP64 ;
+
+extern double _Complex LAGraph_ComplexFP64_1 ;
+extern double _Complex LAGraph_ComplexFP64_0 ;
+
+GrB_Info LAGraph_Complex_init ( ) ;
+GrB_Info LAGraph_Complex_finalize ( ) ;
+
 //****************************************************************************
 // ascii header prepended to all *.grb files
 #define LAGRAPH_BIN_HEADER 512
-
-GrB_Info LAGraph_log
-(
-    char *caller,           // calling function
-    char *message1,         // message to include (may be NULL)
-    char *message2,         // message to include (may be NULL)
-    int nthreads,           // # of threads used
-    double t                // time taken by the test
-) ;
 
 // LAGraph_BinRead: read a matrix from a binary file
 int LAGraph_binread         // returns 0 if successful, -1 if failure
@@ -84,6 +93,16 @@ GrB_Info LAGraph_tsvread        // returns GrB_SUCCESS if successful
     GrB_Index nrows,            // C is nrows-by-ncols
     GrB_Index ncols
 ) ;
+
+GrB_Info LAGraph_grread     // read a matrix from a binary file
+(
+    GrB_Matrix *G,          // handle of matrix to create
+    uint64_t *G_version,    // the version in the file
+    const char *filename,   // name of file to open
+    GrB_Type gtype          // type of matrix to read, NULL if no edge weights
+                            // (in that case, G has type GrB_BOOL with all
+                            // edge weights equal to 1).
+);
 
 GrB_Info LAGraph_dense_relabel   // relabel sparse IDs to dense row/column indices
 (
@@ -121,23 +140,76 @@ int LAGraph_Vector_IsEqual         // returns 0 if successful, < 0 if failure
     char *msg
 );
 
-//int LAGraph_TSVRread
-//(
-//    GrB_Matrix *C,             // C, created on output
-//    FILE       *f,                    // file to read from (already open)
-//    GrB_Type    type,              // the type of C to create
-//    GrB_Index   nrows,            // C is nrows-by-ncols
-//    GrB_Index   ncols,
-//    char       *msg
-//) ;
+GrB_Info LAGraph_pattern    // return GrB_SUCCESS if successful
+(
+    GrB_Matrix *C,          // a boolean matrix with the pattern of A
+    GrB_Matrix A,
+    GrB_Type C_type         // return type for C
+) ;
 
-//GrB_Info LAGraph_IsPattern  // return GrB_SUCCESS if successful
-//(
-//    bool        *result,           // true if A is all one, false otherwise
-//    GrB_Matrix   A,
-//    GrB_UnaryOp  userop,      // for A with arbitrary user-defined type.
-//    char        *msg
-//) ;
+GrB_Info LAGraph_prune_diag // remove all entries from the diagonal
+(
+    GrB_Matrix A
+) ;
+
+//****************************************************************************
+// Unused and/ordeprecated methods
+//****************************************************************************
+
+GrB_Info LAGraph_log
+(
+    char *caller,           // calling function
+    char *message1,         // message to include (may be NULL)
+    char *message2,         // message to include (may be NULL)
+    int nthreads,           // # of threads used
+    double t                // time taken by the test
+) ;
+
+GrB_Info LAGraph_1_to_n     // create an integer vector v = 1:n
+(
+    GrB_Vector *v_handle,   // vector to create
+    GrB_Index n             // size of vector to create
+);
+
+GrB_Info LAGraph_ispattern  // return GrB_SUCCESS if successful
+(
+    bool *result,           // true if A is all one, false otherwise
+    GrB_Matrix A,
+    GrB_UnaryOp userop      // for A with arbitrary user-defined type.
+                            // Ignored if A and B are of built-in types or
+                            // LAGraph_ComplexFP64.
+);
+
+GrB_Info LAGraph_isall      // return GrB_SUCCESS if successful
+(
+    bool *result,           // true if A == B, false if A != B or error
+    GrB_Matrix A,
+    GrB_Matrix B,
+    GrB_BinaryOp op         // GrB_EQ_<type>, for the type of A and B,
+                            // to check for equality.  Or use any desired
+                            // operator.  The operator should return GrB_BOOL.
+);
+
+GrB_Info LAGraph_Vector_isall      // return GrB_SUCCESS if successful
+(
+    bool *result,           // true if A == B, false if A != B or error
+    GrB_Vector A,
+    GrB_Vector B,
+    GrB_BinaryOp op         // GrB_EQ_<type>, for the type of A and B,
+                            // to check for equality.  Or use any desired
+                            // operator.  The operator should return GrB_BOOL.
+);
+
+GrB_Info LAGraph_Vector_to_dense
+(
+    GrB_Vector *vdense,     // output vector
+    GrB_Vector v,           // input vector
+    void *id                // pointer to value to fill vdense with
+);
+
+uint64_t LAGraph_rand64 (uint64_t *seed);
+double LAGraph_rand_double (uint64_t *seed);
+
 
 //****************************************************************************
 // Algorithms
@@ -271,6 +343,20 @@ GrB_Info LAGraph_BF_pure_c_double
 
 //****************************************************************************
 
+GrB_Info LAGraph_cdlp
+(
+    GrB_Vector *CDLP_handle, // output vector
+    GrB_Type *CDLP_type,     // scalar type of output vector
+    const GrB_Matrix A,      // input matrix
+    bool symmetric,          // denote whether the matrix is symmetric
+    bool sanitize,           // if true, ensure A is binary
+    int itermax,             // max number of iterations,
+    double *t                // t [0] = sanitize time, t [1] = cdlp time,
+                             // in seconds
+);
+
+//****************************************************************************
+
 GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
 (
     // output
@@ -281,5 +367,51 @@ GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
     int nlayers,        // # of layers
     GrB_Matrix Y0       // input features: nfeatures-by-nneurons
 );
+
+//****************************************************************************
+
+GrB_Info LAGraph_FW
+(
+    const GrB_Matrix G,     // input graph, with edge weights
+    GrB_Matrix *D,          // output graph, created on output
+    GrB_Type   *D_type
+);
+
+//****************************************************************************
+
+GrB_Info LAGraph_ktruss         // compute the k-truss of a graph
+(
+    GrB_Matrix *C,              // output: k-truss subgraph, C
+    GrB_Type   *C_type,
+    const GrB_Matrix A,         // input adjacency matrix, A, not modified
+    const uint32_t k,           // find the k-truss, where k >= 3
+    int32_t *nsteps             // # of steps taken (ignored if NULL)
+) ;
+
+//****************************************************************************
+
+GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
+(
+    GrB_Vector *LCC_handle,     // output vector
+    GrB_Type   *LCC_type,
+    const GrB_Matrix A,         // input matrix
+    bool symmetric,             // if true, the matrix is symmetric
+    bool sanitize,              // if true, ensure A is binary
+    double t [2]                // t [0] = sanitize time, t [1] = lcc time,
+                                // in seconds
+);
+
+//****************************************************************************
+
+GrB_Info LAGraph_msf (
+    GrB_Matrix *result,     // output: an unsymmetrical matrix, the spanning forest
+    GrB_Matrix A,           // input matrix
+    bool sanitize           // if true, ensure A is symmetric
+) ;
+
+GrB_Info LAGraph_scc (
+    GrB_Vector *result,     // output: array of component identifiers
+    GrB_Matrix A            // input matrix
+) ;
 
 #endif

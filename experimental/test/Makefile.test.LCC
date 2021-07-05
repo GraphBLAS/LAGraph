@@ -1,0 +1,24 @@
+#-------------------------------------------------------------------------------
+# Test/LCC/Makefile
+#-------------------------------------------------------------------------------
+
+# LAGraph, (... list all authors here) (c) 2019, All Rights Reserved.
+# http://graphblas.org  See LAGraph/LICENSE for license.
+
+#-------------------------------------------------------------------------------
+
+# simple Makefile for LAGraph/Test/LCC/lcctest
+
+# relies on cmake to do the actual build.  Use the CMAKE_OPTIONS argument to
+# this Makefile to pass options to cmake.
+
+# Install LAGraph and GraphBLAS before trying to compile LAGraph.
+
+JOBS ?= 1
+
+# build and run test
+default:
+	../build/experimental/LCC_test < ../data/west0067.mtx
+	../build/experimental/LCC_test ../data/ldbc-directed-example-unweighted.mtx 0
+	../build/experimental/LCC_test ../data/ldbc-undirected-example-unweighted.mtx 1
+

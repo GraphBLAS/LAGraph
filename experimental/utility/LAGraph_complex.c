@@ -2,42 +2,19 @@
 // LAGraph_complex:  complex number support for LAGraph
 //------------------------------------------------------------------------------
 
-/*
-    LAGraph:  graph algorithms based on GraphBLAS
-
-    Copyright 2019 LAGraph Contributors.
-
-    (see Contributors.txt for a full list of Contributors; see
-    ContributionInstructions.txt for information on how you can Contribute to
-    this project).
-
-    All Rights Reserved.
-
-    NO WARRANTY. THIS MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. THE LAGRAPH
-    CONTRIBUTORS MAKE NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
-    AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR
-    PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF
-    THE MATERIAL. THE CONTRIBUTORS DO NOT MAKE ANY WARRANTY OF ANY KIND WITH
-    RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
-
-    Released under a BSD license, please see the LICENSE file distributed with
-    this Software or contact permission@sei.cmu.edu for full terms.
-
-    Created, in part, with funding and support from the United States
-    Government.  (see Acknowledgments.txt file).
-
-    This program includes and/or can make use of certain third party source
-    code, object code, documentation and other files ("Third Party Software").
-    See LICENSE file for more details.
-
-*/
+// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// See additional acknowledgments in the LICENSE file,
+// or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
 
 // Contributed by Michel Pelletier. Adapted from 'usercomplex.c' code
 // in SuiteSparse Demo by Dr. Tim Davis.
 
-#include "LAGraph_internal.h"
+#include <LAGraph.h>
+#include <LAGraphX.h>
 
 // a global value for returning the complex type in a Matrix Market file:
 GrB_Type LAGraph_ComplexFP64 = NULL ;
@@ -249,7 +226,7 @@ void complexfp64_one      (C Z, const C X) { Z =       1. ; }
 void complexfp64_identity (C Z, const C X) { Z =       X  ; }
 void complexfp64_ainv     (C Z, const C X) { Z =      -X  ; }
 void complexfp64_abs      (C Z, const C X) { Z = CMPLX (cabs (X), 0) ; }
-void complexfp64_minv     (C Z, const C X) { Z =  1. / X  ; } 
+void complexfp64_minv     (C Z, const C X) { Z =  1. / X  ; }
 void complexfp64_not      (C Z, const C X) { Z = BOOL (X) ? F : T ; }
 void complexfp64_conj     (C Z, const C X) { Z = conj (X) ; }
 
@@ -271,7 +248,7 @@ GrB_UnaryOp
     LAGraph_CONJ_ComplexFP64 = NULL            ,
     LAGraph_ONE_ComplexFP64 = NULL             ,
     LAGraph_ABS_ComplexFP64  = NULL            ,
-    LAGraph_TRUE_BOOL_ComplexFP64 = NULL       ,     
+    LAGraph_TRUE_BOOL_ComplexFP64 = NULL       ,
     LAGraph_ISONE_ComplexFP64  = NULL          ;
 
 //------------------------------------------------------------------------------
@@ -307,7 +284,7 @@ GrB_UnaryOp
 GrB_Monoid
     LAGraph_PLUS_ComplexFP64_MONOID = NULL     ,
     LAGraph_TIMES_ComplexFP64_MONOID = NULL    ;
-    
+
 GrB_Semiring LAGraph_PLUS_TIMES_ComplexFP64 = NULL ;
 C LAGraph_ComplexFP64_1  = ONE ;
 C LAGraph_ComplexFP64_0 = ZERO ;
@@ -549,4 +526,3 @@ GrB_Info LAGraph_Complex_finalize ( )
 
     return (GrB_SUCCESS) ;
 }
-
