@@ -64,7 +64,7 @@
 int LAGraph_binread   // returns 0 if successful, -1 if failure
 (
     GrB_Matrix *A,          // matrix to read from the file
-    GrB_Matrix *A_type,     // Scalar type
+    GrB_Type *A_type,       // Scalar type
     FILE *f                 // file to read it from, already open
 )
 {
@@ -296,7 +296,7 @@ int LAGraph_binread   // returns 0 if successful, -1 if failure
     }
 
     GrB_TRY (GxB_set (*A, GxB_HYPER_SWITCH, hyper)) ;
-    A_type = &type;
+    (*A_type) = type;
     type = NULL;
     return (0) ;
 #endif

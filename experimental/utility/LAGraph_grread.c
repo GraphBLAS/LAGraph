@@ -301,7 +301,13 @@ GrB_Info LAGraph_grread     // read a matrix from a binary file
     // import the data into the GrB_Matrix
     //--------------------------------------------------------------------------
 
-    #if GxB_IMPLEMENTATION >= GxB_VERSION (4,0,1)
+    #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
+    GrB_Index Gp_size = (n+1) * sizeof (GrB_Index) ;
+    GrB_Index Gj_size = (e) * sizeof (GrB_Index) ;
+    GrB_Index Gx_size = (e) * esize ;
+    LAGRAPH_OK (GxB_Matrix_import_CSR (G, gtype, n, n,
+        &Gp, &Gj, &Gx, Gp_size, Gj_size, Gx_size, false, false, NULL)) ;
+    #elif GxB_IMPLEMENTATION >= GxB_VERSION (4,0,1)
     LAGRAPH_OK (GxB_Matrix_import_CSR (G, gtype, n, n,
         &Gp, &Gj, &Gx, n+1, e, e, false, NULL)) ;
     #elif GxB_IMPLEMENTATION == GxB_VERSION (4,0,0)
