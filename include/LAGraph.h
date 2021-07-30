@@ -951,6 +951,15 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
     char *msg
 ) ;
 
+int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
+(
+    // outputs:
+    GrB_Vector *centrality,     // centrality(i): triangle centrality of i
+    // inputs:
+    LAGraph_Graph G,            // input graph
+    char *msg
+) ;
+
 /****************************************************************************
  *
  * Count the triangles in a graph. Advanced API
