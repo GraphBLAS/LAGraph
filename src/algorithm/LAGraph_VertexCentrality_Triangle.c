@@ -26,6 +26,8 @@
     GrB_free (&u) ;                 \
     GrB_free (&w) ;                 \
     GrB_free (&y) ;                 \
+    GrB_free (&M) ;                 \
+    GrB_free (&thunk) ;             \
 }
 
 #define LAGRAPH_FREE_ALL            \
@@ -53,8 +55,9 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    GrB_Matrix T = NULL, A = NULL ;
+    GrB_Matrix T = NULL, M = NULL, A = NULL ;
     GrB_Vector y = NULL, u = NULL, w = NULL ;
+    GxB_Scalar thunk = NULL ;
 
     LG_CHECK (centrality == NULL, -1, "centrality is NULL") ;
     (*centrality) = NULL ;
@@ -76,13 +79,59 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
     // no self edges can be present
     LG_CHECK (G->ndiag != 0, -104, "G->ndiag must be zero") ;
 
+GxB_set (GxB_BURBLE, true) ;    // FIXME: remove
     //--------------------------------------------------------------------------
     // count triangles: T<A> = A*A' using the plus_pair semiring
     //--------------------------------------------------------------------------
 
+    // TODO: try computing just L = tril(T), which would be faster.
+    // to do this, use M = tril(A) as the structural mask.
+    // Then the computations below would be:
+    //      y = sum (L) + sum (L')
+    //      k = 2 * sum (L)
+    //      centrality = (3*A*y - 2*(L*y + L'*y) + y) / k
+
     GrB_Index n ;
     GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
     GrB_TRY (GrB_Matrix_new (&T, GrB_FP64, n, n)) ;
+
+#if 1
+    GrB_TRY (GrB_Matrix_new (&M, GrB_FP64, n, n)) ;
+
+    // M = tril (A,-1)
+    GrB_TRY (GxB_Scalar_new (&thunk, GrB_INT64)) ;
+    GrB_TRY (GxB_Scalar_setElement (thunk, (int64_t) (-1))) ;
+    GrB_TRY (GxB_select (M, NULL, NULL, GxB_TRIL, A, thunk, NULL)) ;
+    GrB_TRY (GrB_free (&thunk)) ;
+
+    // T<M>= A*A'
+    GrB_TRY (GrB_mxm (T, M, NULL, GxB_PLUS_PAIR_FP64, A, A, GrB_DESC_T1)) ;
+    GrB_TRY (GrB_free (&M)) ;
+
+    // y = sum (T'), where y(j) = sum (T (:,j)) and y(j)=0 if T(:,j) is empty
+    GrB_TRY (GrB_Vector_new (&y, GrB_FP64, n)) ;
+    GrB_TRY (GrB_assign (y, NULL, NULL, ((double) 0), GrB_ALL, n, NULL)) ;
+    GrB_TRY (GrB_reduce (y, NULL, GrB_PLUS_FP64, GrB_PLUS_MONOID_FP64, T,
+        GrB_DESC_T0)) ;
+    // y += sum (T)
+    GrB_TRY (GrB_reduce (y, NULL, GrB_PLUS_FP64, GrB_PLUS_MONOID_FP64, T,
+        NULL)) ;
+
+    // k = sum (y)
+    double k = 0 ;
+    GrB_TRY (GrB_reduce (&k, NULL, GrB_PLUS_MONOID_FP64, y, NULL)) ;
+
+    // centrality = (3*A*y - 2* (T*y + T'*y) + y) / k
+
+    // w = T*y
+    GrB_TRY (GrB_Vector_new (&w, GrB_FP64, n)) ;
+    GrB_TRY (GrB_mxv (w, NULL, NULL, GxB_PLUS_SECOND_FP64, T, y, NULL)) ;
+    // w += T'*y
+    GrB_TRY (GrB_mxv (w, NULL, GrB_PLUS_FP64, GxB_PLUS_SECOND_FP64, T, y,
+        GrB_DESC_T0)) ;
+
+#else
+
     GrB_TRY (GrB_mxm (T, A, NULL, GxB_PLUS_PAIR_FP64, A, A, GrB_DESC_T1)) ;
 
     //--------------------------------------------------------------------------
@@ -95,19 +144,21 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
         NULL)) ;
 
     //--------------------------------------------------------------------------
-    // ntriangles = sum (y), the total number of triangles
+    // k = sum (y)
     //--------------------------------------------------------------------------
 
-    double ntriangles = 0 ;
-    GrB_TRY (GrB_reduce (&ntriangles, NULL, GrB_PLUS_MONOID_FP64, y, NULL)) ;
+    double k = 0 ;
+    GrB_TRY (GrB_reduce (&k, NULL, GrB_PLUS_MONOID_FP64, y, NULL)) ;
 
     //--------------------------------------------------------------------------
-    // centrality = (3*A*y - 2*T*y + y) / ntriangles
+    // centrality = (3*A*y - 2*T*y + y) / k
     //--------------------------------------------------------------------------
 
     // w = T*y
     GrB_TRY (GrB_Vector_new (&w, GrB_FP64, n)) ;
     GrB_TRY (GrB_mxv (w, NULL, NULL, GxB_PLUS_SECOND_FP64, T, y, NULL)) ;
+
+#endif
 
     // w = (-2)*w
     double minus_two = -2 ;
@@ -126,17 +177,19 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
     GrB_TRY (GrB_eWiseAdd (*centrality, NULL, GrB_PLUS_FP64, GrB_PLUS_FP64,
         u, w, NULL)) ;
 
-    // centrality = centrality / ntriangles
+    // centrality = centrality / k
     GrB_TRY (GrB_apply (*centrality, NULL, NULL, GrB_TIMES_FP64,
-        ((ntriangles == 0) ? 1.0 : (1.0/ntriangles)), *centrality, NULL)) ;
+        ((k == 0) ? 1.0 : (1.0/k)), *centrality, NULL)) ;
 
-    // TODO: also return # of triangles
+    // TODO: # of triangles is k/6, which could be returned as well
+    printf ("# of triangles: %g\n", k/6) ;
 
     //--------------------------------------------------------------------------
     // free workspace and return result
     //--------------------------------------------------------------------------
 
     LAGRAPH_FREE_WORK ;
+GxB_set (GxB_BURBLE, false) ;   // FIXME: remove
     return (0) ;
 }
 

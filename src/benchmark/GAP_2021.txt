@@ -143,9 +143,9 @@ Note change from Jan 3b (v4.0.1) to Jan 19 (v4.0.3), due to faster max monoid.
 TC GAP         374.082      21.825      79.576      22.184        .026
               ------------------------------------------------------------------
 
-TC SS:LL.L                  27.920                                     (Jun 25a) 
-TC SS:UU.U                  26.974                                     (Jun 25a) 
-TC SS:dot      927.983      33.655     237.103      34.644        .192 (Jun 25a) 
+TC SS:LL.L                  27.920                                     (Jun 25a)
+TC SS:UU.U                  26.974                                     (Jun 25a)
+TC SS:dot      927.983      33.655     237.103      34.644        .192 (Jun 25a)
 
 TC SS:LL.L                  28.083                                     (Jun 24) 
 TC SS:UU.U                  26.818                                     (Jun 24) 

@@ -1,0 +1,533 @@
+      rse $ ./do_gap_tcc grb
+ 
+======================================================================
+GAP benchmarks using LAGraph+GraphBLAS: Triangle Counting
+======================================================================
+Matrix input file format:  grb
+GAP matrices located in:   ../../../GAP
+SuiteSparse:GraphBLAS v5.1.5 [July 15, 2021]
+# of trials: 3
+threads to test:  40
+matrix: ../../../GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-kron/GAP-kron.grb
+read time: 69.0633
+ [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   8.13e+03 sec ]
+ [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   4.08e-05 sec ]
+ [ GrB_reduce (wait:A 962622548 zombies, 0 pending) C=A'*B, dot_product (dot4) (F+=S'*F) (C in place) 
+   3.43 sec ]
+ [ GrB_reduce (A full) 
+   0.0175 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   2.25 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0379 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   3.13 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0487 sec ]
+ [ GrB_Vector_dup (iso dup) 
+   0.0463 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
+   0.153 sec ]
+ [ GrB_apply (in-place-op) 
+   0.039 sec ]
+ [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   8.11e+03 sec ]
+ [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   5.5e-05 sec ]
+ [ GrB_reduce (wait:A 962622548 zombies, 0 pending) C=A'*B, dot_product (dot4) (F+=S'*F) (C in place) 
+   3.75 sec ]
+ [ GrB_reduce (A full) 
+   0.0165 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   2.25 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0377 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   3.12 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0495 sec ]
+ [ GrB_Vector_dup (iso dup) 
+   0.0444 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
+   0.147 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0387 sec ]
+trial  0:  8119.962293 sec rate   0.52  # triangles: 0
+ [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   8.11e+03 sec ]
+ [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   4.76e-05 sec ]
+ [ GrB_reduce (wait:A 962622548 zombies, 0 pending) C=A'*B, dot_product (dot4) (F+=S'*F) (C in place) 
+   3.72 sec ]
+ [ GrB_reduce (A full) 
+   0.0168 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   2.27 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0391 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   3.13 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0468 sec ]
+ [ GrB_Vector_dup (iso dup) 
+   0.044 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
+   0.141 sec ]
+ [ GrB_apply (in-place-op) 
+   0.039 sec ]
+trial  1:  8122.224538 sec rate   0.52  # triangles: 0
+ [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   8.12e+03 sec ]
+ [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   5.65e-05 sec ]
+ [ GrB_reduce (wait:A 962622548 zombies, 0 pending) C=A'*B, dot_product (dot4) (F+=S'*F) (C in place) 
+   3.72 sec ]
+ [ GrB_reduce (A full) 
+   0.0169 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   2.25 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0388 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   3.14 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0499 sec ]
+ [ GrB_Vector_dup (iso dup) 
+   0.0434 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
+   0.143 sec ]
+ [ GrB_apply (in-place-op) 
+   0.039 sec ]
+trial  2:  8125.086200 sec rate   0.52  # triangles: 0
+Avg: TCentrality threads: 40  time:   8122.424 sec, matrix: ../../../GAP/GAP-kron/GAP-kron.grb
+nthreads:  40 time:  8122.424344 rate:   0.52
+
+./do_gap_tcc: line 38: D: command not found
+
+SuiteSparse:GraphBLAS v5.1.5 [July 15, 2021]
+# of trials: 3
+threads to test:  40
+matrix: ../../../GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-urand/GAP-urand.grb
+read time: 71.0283
+ [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   94.7 sec ]
+ [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   0.000285 sec ]
+ [ GrB_reduce (wait:A 4294934472 zombies, 0 pending) (sparse to hyper) C=A'*B, dot_product (dot4) (F+=H'*F) (C in place) 
+   1.19 sec ]
+ [ GrB_reduce (A full) 
+   0.0162 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=H'*F) 
+   0.000893 sec ]
+ [ GrB_apply (in-place-op) 
+   5.7e-05 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   4.7 sec ]
+ [ GrB_apply (in-place-op) 
+   0.216 sec ]
+ [ GrB_Vector_dup (iso dup) 
+   0.0451 sec ]
+ [ GrB_eWiseAdd add:(F<.>=Bf+S) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
+   0.0968 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0379 sec ]
+# of triangles: -nan
+ [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   96.8 sec ]
+ [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   6.18e-05 sec ]
+ [ GrB_reduce (wait:A 4294934472 zombies, 0 pending) (sparse to hyper) C=A'*B, dot_product (dot4) (F+=H'*F) (C in place) 
+   1.21 sec ]
+ [ GrB_reduce (A full) 
+   0.0193 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=H'*F) 
+   0.00448 sec ]
+ [ GrB_apply (in-place-op) 
+   3.44e-05 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   4.74 sec ]
+ [ GrB_apply (in-place-op) 
+   0.3 sec ]
+ [ GrB_Vector_dup (iso dup) 
+   0.0475 sec ]
+ [ GrB_eWiseAdd add:(F<.>=Bf+S) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
+   0.0975 sec ]
+ [ GrB_apply (in-place-op) 
+   0.337 sec ]
+# of triangles: 5378
+trial  0:   103.583384 sec rate  41.46  # triangles: 0
+ [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   96.3 sec ]
+ [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   0.000302 sec ]
+ [ GrB_reduce (wait:A 4294934472 zombies, 0 pending) (sparse to hyper) C=A'*B, dot_product (dot4) (F+=H'*F) (C in place) 
+   1.19 sec ]
+ [ GrB_reduce (A full) 
+   0.0154 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=H'*F) 
+   0.000455 sec ]
+ [ GrB_apply (in-place-op) 
+   3.52e-05 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   4.71 sec ]
+ [ GrB_apply (in-place-op) 
+   0.221 sec ]
+ [ GrB_Vector_dup (iso dup) 
+   0.0455 sec ]
+ [ GrB_eWiseAdd add:(F<.>=Bf+S) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
+   0.096 sec ]
+ [ GrB_apply (in-place-op) 
+   0.202 sec ]
+# of triangles: 5378
+trial  1:   102.792714 sec rate  41.78  # triangles: 0
+ [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   94.7 sec ]
+ [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   3.95e-05 sec ]
+ [ GrB_reduce (wait:A 4294934472 zombies, 0 pending) (sparse to hyper) C=A'*B, dot_product (dot4) (F+=H'*F) (C in place) 
+   1.19 sec ]
+ [ GrB_reduce (A full) 
+   0.0156 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=H'*F) 
+   0.000573 sec ]
+ [ GrB_apply (in-place-op) 
+   7.72e-05 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   4.69 sec ]
+ [ GrB_apply (in-place-op) 
+   0.217 sec ]
+ [ GrB_Vector_dup (iso dup) 
+   0.0442 sec ]
+ [ GrB_eWiseAdd add:(F<.>=Bf+S) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
+   0.0956 sec ]
+ [ GrB_apply (in-place-op) 
+   0.204 sec ]
+# of triangles: 5378
+trial  2:   101.113398 sec rate  42.48  # triangles: 0
+Avg: TCentrality threads: 40  time:    102.496 sec, matrix: ../../../GAP/GAP-urand/GAP-urand.grb
+nthreads:  40 time:   102.496498 rate:  41.90
+
+
+SuiteSparse:GraphBLAS v5.1.5 [July 15, 2021]
+# of trials: 3
+threads to test:  40
+matrix: ../../../GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-twitter/GAP-twitter.grb
+read time: 38.7484
+ [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   2.2e+03 sec ]
+ [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   3.96e-05 sec ]
+ [ GrB_reduce (wait:A 717442408 zombies, 0 pending) C=A'*B, dot_product (dot4) (F+=S'*F) (C in place) 
+   5.15 sec ]
+ [ GrB_reduce (A full) 
+   0.00763 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   1.01 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0163 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   1.48 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0165 sec ]
+ [ GrB_Vector_dup (iso dup) 
+   0.0231 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
+   0.0704 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0187 sec ]
+# of triangles: 3.48249e+10
+ [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   2.21e+03 sec ]
+ [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   3.97e-05 sec ]
+ [ GrB_reduce (wait:A 717442408 zombies, 0 pending) C=A'*B, dot_product (dot4) (F+=S'*F) (C in place) 
+   1.98 sec ]
+ [ GrB_reduce (A full) 
+   0.00833 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   1.05 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0159 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   1.54 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0173 sec ]
+ [ GrB_Vector_dup (iso dup) 
+   0.0228 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
+   0.0646 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0187 sec ]
+# of triangles: 3.48249e+10
+trial  0:  2212.261163 sec rate   1.09  # triangles: 0
+ [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   2.2e+03 sec ]
+ [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   4.09e-05 sec ]
+ [ GrB_reduce (wait:A 717442408 zombies, 0 pending) C=A'*B, dot_product (dot4) (F+=S'*F) (C in place) 
+   1.97 sec ]
+ [ GrB_reduce (A full) 
+   0.0075 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   1.01 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0159 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   1.49 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0166 sec ]
+ [ GrB_Vector_dup (iso dup) 
+   0.023 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
+   0.0616 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0179 sec ]
+# of triangles: 3.48249e+10
+trial  1:  2206.452896 sec rate   1.09  # triangles: 0
+ [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   2.2e+03 sec ]
+ [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   4.05e-05 sec ]
+ [ GrB_reduce (wait:A 717442408 zombies, 0 pending) C=A'*B, dot_product (dot4) (F+=S'*F) (C in place) 
+   1.98 sec ]
+ [ GrB_reduce (A full) 
+   0.00872 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   1.01 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0166 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   1.49 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0165 sec ]
+ [ GrB_Vector_dup (iso dup) 
+   0.0227 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
+   0.0694 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0179 sec ]
+# of triangles: 3.48249e+10
+trial  2:  2209.018553 sec rate   1.09  # triangles: 0
+Avg: TCentrality threads: 40  time:   2209.244 sec, matrix: ../../../GAP/GAP-twitter/GAP-twitter.grb
+nthreads:  40 time:  2209.244204 rate:   1.09
+
+SuiteSparse:GraphBLAS v5.1.5 [July 15, 2021]
+# of trials: 3
+threads to test:  40
+matrix: ../../../GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-web/GAP-web.grb
+read time: 38.7281
+ [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   185 sec ]
+ [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   3.9e-05 sec ]
+ [ GrB_reduce (wait:A 74498450 zombies, 0 pending) C=A'*B, dot_product (dot4) (F+=S'*F) (C in place) 
+   9.76 sec ]
+ [ GrB_reduce (A full) 
+   0.00969 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   0.484 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0142 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   0.495 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0148 sec ]
+ [ GrB_Vector_dup (iso dup) 
+   0.0176 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
+   0.0564 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0168 sec ]
+# of triangles: 8.4907e+10
+ [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   182 sec ]
+ [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   5.78e-05 sec ]
+ [ GrB_reduce (wait:A 74498450 zombies, 0 pending) C=A'*B, dot_product (dot4) (F+=S'*F) (C in place) 
+   3.57 sec ]
+ [ GrB_reduce (A full) 
+   0.00653 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   0.479 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0136 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   0.492 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0149 sec ]
+ [ GrB_Vector_dup (iso dup) 
+   0.0177 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
+   0.0574 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0168 sec ]
+# of triangles: 8.4907e+10
+trial  0:   186.568037 sec rate  19.40  # triangles: 0
+ [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   183 sec ]
+ [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   3.99e-05 sec ]
+ [ GrB_reduce (wait:A 74498450 zombies, 0 pending) C=A'*B, dot_product (dot4) (F+=S'*F) (C in place) 
+   3.56 sec ]
+ [ GrB_reduce (A full) 
+   0.00634 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   0.483 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0146 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   0.496 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0145 sec ]
+ [ GrB_Vector_dup (iso dup) 
+   0.0174 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
+   0.0565 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0168 sec ]
+# of triangles: 8.4907e+10
+trial  1:   187.184508 sec rate  19.34  # triangles: 0
+ [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   182 sec ]
+ [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   0.000107 sec ]
+ [ GrB_reduce (wait:A 74498450 zombies, 0 pending) C=A'*B, dot_product (dot4) (F+=S'*F) (C in place) 
+   3.56 sec ]
+ [ GrB_reduce (A full) 
+   0.00696 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   0.481 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0143 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   0.496 sec ]
+ [ GrB_apply (in-place-op) 
+   0.015 sec ]
+ [ GrB_Vector_dup (iso dup) 
+   0.0177 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
+   0.059 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0152 sec ]
+# of triangles: 8.4907e+10
+trial  2:   186.623297 sec rate  19.40  # triangles: 0
+Avg: TCentrality threads: 40  time:    186.792 sec, matrix: ../../../GAP/GAP-web/GAP-web.grb
+nthreads:  40 time:   186.791948 rate:  19.38
+
+
+SuiteSparse:GraphBLAS v5.1.5 [July 15, 2021]
+# of trials: 3
+threads to test:  40
+matrix: ../../../GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-road/GAP-road.grb
+read time: 1.43823
+ [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   0.164 sec ]
+ [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   5.17e-05 sec ]
+ [ GrB_reduce (wait:A 55118994 zombies, 0 pending) (sparse to hyper) C=A'*B, dot_product (dot4) (F+=H'*F) (C in place) 
+   0.0698 sec ]
+ [ GrB_reduce (A full) 
+   0.00651 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=H'*F) (sparse to bitmap) 
+   0.0126 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00663 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   0.0277 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0492 sec ]
+ [ GrB_Vector_dup (iso dup) 
+   0.00822 sec ]
+ [ GrB_eWiseAdd add:(F<.>=Bf+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
+   0.025 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0412 sec ]
+# of triangles: 438804
+ [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   0.163 sec ]
+ [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   5.45e-05 sec ]
+ [ GrB_reduce (wait:A 55118994 zombies, 0 pending) (sparse to hyper) C=A'*B, dot_product (dot4) (F+=H'*F) (C in place) 
+   0.0677 sec ]
+ [ GrB_reduce (A full) 
+   0.00335 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=H'*F) (sparse to bitmap) 
+   0.0115 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00505 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   0.0241 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0435 sec ]
+ [ GrB_Vector_dup (iso dup) 
+   0.0111 sec ]
+ [ GrB_eWiseAdd add:(F<.>=Bf+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
+   0.0215 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0477 sec ]
+# of triangles: 438804
+trial  0:     0.399688 sec rate 144.38  # triangles: 0
+ [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   0.166 sec ]
+ [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   4.69e-05 sec ]
+ [ GrB_reduce (wait:A 55118994 zombies, 0 pending) (sparse to hyper) C=A'*B, dot_product (dot4) (F+=H'*F) (C in place) 
+   0.0713 sec ]
+ [ GrB_reduce (A full) 
+   0.00534 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=H'*F) (sparse to bitmap) 
+   0.00909 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00504 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   0.0253 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0392 sec ]
+ [ GrB_Vector_dup (iso dup) 
+   0.00969 sec ]
+ [ GrB_eWiseAdd add:(F<.>=Bf+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
+   0.0209 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0417 sec ]
+# of triangles: 438804
+trial  1:     0.393955 sec rate 146.49  # triangles: 0
+ [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   0.169 sec ]
+ [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   3.86e-05 sec ]
+ [ GrB_reduce (wait:A 55118994 zombies, 0 pending) (sparse to hyper) C=A'*B, dot_product (dot4) (F+=H'*F) (C in place) 
+   0.0684 sec ]
+ [ GrB_reduce (A full) 
+   0.00347 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=H'*F) (sparse to bitmap) 
+   0.013 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00732 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   0.0253 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0427 sec ]
+ [ GrB_Vector_dup (iso dup) 
+   0.0109 sec ]
+ [ GrB_eWiseAdd add:(F<.>=Bf+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
+   0.0235 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0428 sec ]
+# of triangles: 438804
+trial  2:     0.407132 sec rate 141.74  # triangles: 0
+Avg: TCentrality threads: 40  time:      0.400 sec, matrix: ../../../GAP/GAP-road/GAP-road.grb
+nthreads:  40 time:     0.400258 rate: 144.18
+hypersparse $ 
+
