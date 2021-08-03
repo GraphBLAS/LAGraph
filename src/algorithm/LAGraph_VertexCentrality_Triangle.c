@@ -95,7 +95,7 @@ GxB_set (GxB_BURBLE, true) ;    // FIXME: remove
     GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
     GrB_TRY (GrB_Matrix_new (&T, GrB_FP64, n, n)) ;
 
-#if 1
+#if 0
     GrB_TRY (GrB_Matrix_new (&M, GrB_FP64, n, n)) ;
 
     // M = tril (A,-1)
