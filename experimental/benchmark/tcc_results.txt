@@ -58,7 +58,7 @@ com-Friendster: TC3 about 3x slower than Burkhardt's results
     nthreads:   2 time:  3062.387983 
     nthreads:   1 time:  6057.713364 
 
-Move to experimental, retest TC3 with 40 threads
+Move to experimental, retest TC3 with 40 threads (o_tcc_3h):
 
     nthreads:  40 time:     0.118935 matrix: com-Youtube
     nthreads:  40 time:     0.344083 matrix: as-Skitter
@@ -66,4 +66,12 @@ Move to experimental, retest TC3 with 40 threads
     nthreads:  40 time:     9.979035 matrix: com-Orkut
     nthreads:  40 time:   229.765197 matrix: com-Friendster
 
+method TC2 (o_tcc_2g)
 
+    nthreads:  40 time:     0.144131 matrix: com-Youtube
+    nthreads:  40 time:     0.532977 matrix: as-Skitter
+    nthreads:  40 time:     2.132107 matrix: com-LiveJournal
+    nthreads:  40 time:    19.338932 matrix: com-Orkut
+    nthreads:  40 time:   437.765544 matrix: com-Friendster
+
+method TC1.5 (o_tcc_16g)

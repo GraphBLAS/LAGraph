@@ -1,0 +1,52 @@
+ 
+======================================================================
+benchmarks using LAGraph+GraphBLAS: Triangle Centrality
+======================================================================
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+# of trials: 1
+threads to test:  40
+matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+[.grb]
+Reading binary file: /raid/matrices/com-Youtube/com-Youtube.grb
+read time: 0.110334
+TC1.5: # of triangles: 3056386
+warmup time 0.153867 sec
+TC1.5: # of triangles: 3056386
+threads 40 trial  0:     0.149100 sec
+Avg: TCentrality nthreads:  40 time:     0.149100 matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+# of trials: 1
+threads to test:  40
+matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+[.grb]
+Reading binary file: /raid/matrices/as-Skitter/as-Skitter.grb
+read time: 0.220398
+TC1.5: # of triangles: 28769868
+warmup time 0.547 sec
+TC1.5: # of triangles: 28769868
+threads 40 trial  0:     0.545664 sec
+Avg: TCentrality nthreads:  40 time:     0.545664 matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+# of trials: 1
+threads to test:  40
+matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+[.grb]
+Reading binary file: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+read time: 0.677624
+TC1.5: # of triangles: 177820130
+warmup time 2.13331 sec
+TC1.5: # of triangles: 177820130
+threads 40 trial  0:     2.147791 sec
+Avg: TCentrality nthreads:  40 time:     2.147791 matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+# of trials: 1
+threads to test:  40
+matrix: /raid/matrices/com-Orkut/com-Orkut.grb
+[.grb]
+Reading binary file: /raid/matrices/com-Orkut/com-Orkut.grb
+read time: 2.35776
+TC1.5: # of triangles: 627584181
+warmup time 19.5565 sec
+TC1.5: # of triangles: 627584181
+threads 40 trial  0:    19.586499 sec
+Avg: TCentrality nthreads:  40 time:    19.586499 matrix: /raid/matrices/com-Orkut/com-Orkut.grb

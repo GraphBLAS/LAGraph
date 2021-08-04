@@ -50,3 +50,15 @@ warmup time 19.3537 sec
 TC2: # of triangles: 627584181
 threads 40 trial  0:    19.338932 sec
 Avg: TCentrality nthreads:  40 time:    19.338932 matrix: /raid/matrices/com-Orkut/com-Orkut.grb
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+# of trials: 1
+threads to test:  40
+matrix: /raid/matrices/com-Friendster/com-Friendster.grb
+[.grb]
+Reading binary file: /raid/matrices/com-Friendster/com-Friendster.grb
+read time: 56.2065
+TC2: # of triangles: 4173724142
+warmup time 437.236 sec
+TC2: # of triangles: 4173724142
+threads 40 trial  0:   437.765544 sec
+Avg: TCentrality nthreads:  40 time:   437.765544 matrix: /raid/matrices/com-Friendster/com-Friendster.grb
