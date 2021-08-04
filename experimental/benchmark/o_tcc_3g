@@ -1,0 +1,1156 @@
+ 
+======================================================================
+benchmarks using LAGraph+GraphBLAS: Triangle Centrality
+======================================================================
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+# of trials: 1
+threads to test:  40 20 16 8 4 2 1
+matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+[.grb]
+Reading binary file: /raid/matrices/com-Youtube/com-Youtube.grb
+read time: 0.111485
+
+  1134890x1134890 GraphBLAS double matrix, sparse by row
+  G->A, 5975248 entries, memory: 54.2 MB
+  iso value:    1
+
+    (0,1)    1
+    (0,2)    1
+    (0,3)    1
+    (0,4)    1
+    (0,5)    1
+    (0,6)    1
+    (0,7)    1
+    (0,8)    1
+    (0,9)    1
+    (0,10)    1
+    (0,11)    1
+    (0,12)    1
+    (0,13)    1
+    (0,14)    1
+    (0,15)    1
+    (0,16)    1
+    (0,17)    1
+    (0,18)    1
+    (0,19)    1
+    (0,20)    1
+    (0,21)    1
+    (0,375)    1
+    (0,1218)    1
+    (0,268634)    1
+    (0,317879)    1
+    (0,644185)    1
+    (0,644186)    1
+    (0,644187)    1
+    (0,644188)    1
+    ...
+TC3:  [ GxB_select (iso select) 
+   0.0131 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   0.0833 sec ]
+ [ GrB_reduce (wait:A 1590346 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 21, relwspace: 6.5, intensity: 1.23: atomic) 
+   0.0149 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00331 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.000263 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.00497 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 21, relwspace: 6.5, intensity: 1.23: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00804 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000444 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.00453 sec ]
+ [ GrB_apply (shallow-op) 
+   0.000808 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00196 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000318 sec ]
+# of triangles: 3056386
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   0.0121 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   0.0716 sec ]
+ [ GrB_reduce (wait:A 1590346 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 21, relwspace: 6.5, intensity: 1.23: atomic) 
+   0.0122 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00303 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.000222 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.0022 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 21, relwspace: 6.5, intensity: 1.23: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00654 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000277 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.00392 sec ]
+ [ GrB_apply (shallow-op) 
+   0.000574 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00168 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00032 sec ]
+# of triangles: 3056386
+threads 40 trial  0:     0.114840 sec
+Avg: TCentrality nthreads:  40 time:     0.114840 matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   0.0047 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 20 ntasks 640 
+   0.0988 sec ]
+ [ GrB_reduce (wait:A 1590346 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 20, relwspace: 6.19, intensity: 1.23: atomic) 
+   0.00906 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00127 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.000233 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.000751 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 20, relwspace: 6.19, intensity: 1.23: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00622 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000349 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.00288 sec ]
+ [ GrB_apply (shallow-op) 
+   0.000501 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00173 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000391 sec ]
+# of triangles: 3056386
+threads 20 trial  0:     0.127153 sec
+Avg: TCentrality nthreads:  20 time:     0.127153 matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   0.00488 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 16 ntasks 512 
+   0.115 sec ]
+ [ GrB_reduce (wait:A 1590346 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 16, relwspace: 4.95, intensity: 1.23: atomic) 
+   0.00935 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00135 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.00025 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.000737 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 16, relwspace: 4.95, intensity: 1.23: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00673 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000332 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.00318 sec ]
+ [ GrB_apply (shallow-op) 
+   0.000553 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00155 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000378 sec ]
+# of triangles: 3056386
+threads 16 trial  0:     0.144558 sec
+Avg: TCentrality nthreads:  16 time:     0.144558 matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   0.00674 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 8 ntasks 256 
+   0.223 sec ]
+ [ GrB_reduce (wait:A 1590346 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 8, relwspace: 2.48, intensity: 1.23: atomic) 
+   0.0117 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00241 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.00043 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.00129 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 8, relwspace: 2.48, intensity: 1.23: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00924 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000573 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.00571 sec ]
+ [ GrB_apply (shallow-op) 
+   0.000591 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00246 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000435 sec ]
+# of triangles: 3056386
+threads  8 trial  0:     0.265227 sec
+Avg: TCentrality nthreads:   8 time:     0.265227 matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   0.0113 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 4 ntasks 128 
+   0.441 sec ]
+ [ GrB_reduce (wait:A 1590346 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 4, relwspace: 1.24, intensity: 1.23: atomic) 
+   0.0182 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00451 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.000806 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.00244 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 4, relwspace: 1.24, intensity: 1.23: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0119 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00111 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.0111 sec ]
+ [ GrB_apply (shallow-op) 
+   0.000972 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00433 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000809 sec ]
+# of triangles: 3056386
+threads  4 trial  0:     0.508943 sec
+Avg: TCentrality nthreads:   4 time:     0.508943 matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   0.0183 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 2 ntasks 64 
+   0.875 sec ]
+ [ GrB_reduce (wait:A 1590346 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 2, relwspace: 0.619, intensity: 1.23: atomic) 
+   0.0319 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0073 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.0016 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.00467 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 2, relwspace: 0.619, intensity: 1.23: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0174 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00195 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.0217 sec ]
+ [ GrB_apply (shallow-op) 
+   0.00169 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00688 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00154 sec ]
+# of triangles: 3056386
+threads  2 trial  0:     0.989561 sec
+Avg: TCentrality nthreads:   2 time:     0.989561 matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   0.0288 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 1 ntasks 1 
+   1.74 sec ]
+ [ GrB_reduce (wait:A 1590346 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (coarse, threads: 1) 
+   0.042 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0122 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.00298 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.00898 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (coarse, threads: 1) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0203 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00306 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.0435 sec ]
+ [ GrB_apply (shallow-op) 
+   0.00276 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0107 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00252 sec ]
+# of triangles: 3056386
+threads  1 trial  0:     1.921933 sec
+Avg: TCentrality nthreads:   1 time:     1.921933 matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+# of trials: 1
+threads to test:  40 20 16 8 4 2 1
+matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+[.grb]
+Reading binary file: /raid/matrices/as-Skitter/as-Skitter.grb
+read time: 0.244241
+
+  1696415x1696415 GraphBLAS double matrix, sparse by row
+  G->A, 22190596 entries, memory: 182.2 MB
+  iso value:    1
+
+    (0,1)    1
+    (0,2)    1
+    (0,3)    1
+    (0,4)    1
+    (0,5)    1
+    (0,6)    1
+    (0,7)    1
+    (0,8)    1
+    (0,9)    1
+    (0,10)    1
+    (0,11)    1
+    (0,12)    1
+    (0,13)    1
+    (0,14)    1
+    (0,15)    1
+    (0,16)    1
+    (0,17)    1
+    (0,18)    1
+    (0,19)    1
+    (0,20)    1
+    (0,21)    1
+    (0,22)    1
+    (0,23)    1
+    (0,24)    1
+    (0,25)    1
+    (0,26)    1
+    (0,27)    1
+    (0,28)    1
+    (0,29)    1
+    ...
+TC3:  [ GxB_select (iso select) 
+   0.0184 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   0.272 sec ]
+ [ GrB_reduce (wait:A 2319807 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 5.58, intensity: 5.17: atomic) 
+   0.0306 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0033 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.00114 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.00388 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 40, relwspace: 5.58, intensity: 5.17: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0169 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000372 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.00555 sec ]
+ [ GrB_apply (shallow-op) 
+   0.000612 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00295 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000266 sec ]
+# of triangles: 28769868
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   0.0143 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   0.263 sec ]
+ [ GrB_reduce (wait:A 2319807 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 5.58, intensity: 5.17: atomic) 
+   0.031 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00312 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.000232 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.00258 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 40, relwspace: 5.58, intensity: 5.17: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0191 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000321 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.00698 sec ]
+ [ GrB_apply (shallow-op) 
+   0.000688 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00289 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000267 sec ]
+# of triangles: 28769868
+threads 40 trial  0:     0.344543 sec
+Avg: TCentrality nthreads:  40 time:     0.344543 matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   0.011 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 20 ntasks 640 
+   0.387 sec ]
+ [ GrB_reduce (wait:A 2319807 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 20, relwspace: 2.79, intensity: 5.17: atomic) 
+   0.0289 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00301 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.000242 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.00248 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 20, relwspace: 2.79, intensity: 5.17: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0188 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000381 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.0057 sec ]
+ [ GrB_apply (shallow-op) 
+   0.000548 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00275 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000352 sec ]
+# of triangles: 28769868
+threads 20 trial  0:     0.461922 sec
+Avg: TCentrality nthreads:  20 time:     0.461922 matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   0.0112 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 16 ntasks 512 
+   0.466 sec ]
+ [ GrB_reduce (wait:A 2319807 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 16, relwspace: 2.23, intensity: 5.17: atomic) 
+   0.0307 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00318 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.000282 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.00291 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 16, relwspace: 2.23, intensity: 5.17: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0194 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000371 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.0065 sec ]
+ [ GrB_apply (shallow-op) 
+   0.000525 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00233 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000312 sec ]
+# of triangles: 28769868
+threads 16 trial  0:     0.543969 sec
+Avg: TCentrality nthreads:  16 time:     0.543969 matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   0.0147 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 8 ntasks 256 
+   0.897 sec ]
+ [ GrB_reduce (wait:A 2319807 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 8, relwspace: 1.12, intensity: 5.17: atomic) 
+   0.0433 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00642 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.000598 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.00535 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 8, relwspace: 1.12, intensity: 5.17: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0292 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000858 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.0123 sec ]
+ [ GrB_apply (shallow-op) 
+   0.00068 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00571 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000558 sec ]
+# of triangles: 28769868
+threads  8 trial  0:     1.017208 sec
+Avg: TCentrality nthreads:   8 time:     1.017208 matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   0.0244 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 4 ntasks 128 
+   1.79 sec ]
+ [ GrB_reduce (wait:A 2319807 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 4, relwspace: 0.558, intensity: 5.17: atomic) 
+   0.072 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0127 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.00137 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.01 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 4, relwspace: 0.558, intensity: 5.17: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0509 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00149 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.024 sec ]
+ [ GrB_apply (shallow-op) 
+   0.000969 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00757 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000934 sec ]
+# of triangles: 28769868
+threads  4 trial  0:     1.993559 sec
+Avg: TCentrality nthreads:   4 time:     1.993559 matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   0.0444 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 2 ntasks 64 
+   3.54 sec ]
+ [ GrB_reduce (wait:A 2319807 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 2, relwspace: 0.279, intensity: 5.17: atomic) 
+   0.103 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0202 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.00206 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.0188 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 2, relwspace: 0.279, intensity: 5.17: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.064 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00283 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.0435 sec ]
+ [ GrB_apply (shallow-op) 
+   0.00155 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0125 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00128 sec ]
+# of triangles: 28769868
+threads  2 trial  0:     3.852487 sec
+Avg: TCentrality nthreads:   2 time:     3.852487 matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   0.0657 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 1 ntasks 1 
+   7.09 sec ]
+ [ GrB_reduce (wait:A 2319807 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (coarse, threads: 1) 
+   0.124 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0364 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.0038 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.0359 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (coarse, threads: 1) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.066 sec ]
+ [ GrB_apply (in-place-op) 
+   0.004 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.0855 sec ]
+ [ GrB_apply (shallow-op) 
+   0.00299 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0223 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00226 sec ]
+# of triangles: 28769868
+threads  1 trial  0:     7.542552 sec
+Avg: TCentrality nthreads:   1 time:     7.542552 matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+# of trials: 1
+threads to test:  40 20 16 8 4 2 1
+matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+[.grb]
+Reading binary file: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+read time: 0.791252
+
+  3997962x3997962 GraphBLAS double matrix, sparse by row
+  G->A, 69362378 entries, memory: 559.7 MB
+  iso value:    1
+
+    (0,1)    1
+    (0,2)    1
+    (0,31)    1
+    (0,73)    1
+    (0,80)    1
+    (0,113619)    1
+    (0,2468396)    1
+    (0,2823480)    1
+    (0,2823484)    1
+    (0,2846482)    1
+    (0,2947405)    1
+    (0,3011065)    1
+    (0,3696095)    1
+    (0,3836941)    1
+    (0,3997948)    1
+    (0,3997949)    1
+    (0,3997951)    1
+    (0,3997953)    1
+    (0,3997955)    1
+    (0,3997957)    1
+    (0,3997958)    1
+    (0,3997960)    1
+    (0,3997961)    1
+    (1,0)    1
+    (1,2)    1
+    (1,3)    1
+    (1,4)    1
+    (1,5)    1
+    (1,6)    1
+    ...
+TC3:  [ GxB_select (iso select) 
+   0.05 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   1.02 sec ]
+ [ GrB_reduce (wait:A 5809704 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 4.34, intensity: 7.22: atomic) 
+   0.0852 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00752 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.000478 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.00876 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 40, relwspace: 4.34, intensity: 7.22: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0327 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000655 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.0229 sec ]
+ [ GrB_apply (shallow-op) 
+   0.0014 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00816 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00052 sec ]
+# of triangles: 177820130
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   0.0345 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   1.01 sec ]
+ [ GrB_reduce (wait:A 5809704 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 4.34, intensity: 7.22: atomic) 
+   0.0813 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0103 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.000466 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.00879 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 40, relwspace: 4.34, intensity: 7.22: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.032 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00061 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.0249 sec ]
+ [ GrB_apply (shallow-op) 
+   0.00312 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00837 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000545 sec ]
+# of triangles: 177820130
+threads 40 trial  0:     1.212467 sec
+Avg: TCentrality nthreads:  40 time:     1.212467 matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   0.0371 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 20 ntasks 640 
+   1.51 sec ]
+ [ GrB_reduce (wait:A 5809704 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 20, relwspace: 2.17, intensity: 7.22: atomic) 
+   0.0764 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00909 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.000872 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.0108 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 20, relwspace: 2.17, intensity: 7.22: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0486 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00129 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.0283 sec ]
+ [ GrB_apply (shallow-op) 
+   0.00153 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00652 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00138 sec ]
+# of triangles: 177820130
+threads 20 trial  0:     1.729623 sec
+Avg: TCentrality nthreads:  20 time:     1.729623 matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   0.0372 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 16 ntasks 512 
+   1.8 sec ]
+ [ GrB_reduce (wait:A 5809704 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 16, relwspace: 1.74, intensity: 7.22: atomic) 
+   0.0767 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.01 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.00091 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.0117 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 16, relwspace: 1.74, intensity: 7.22: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0471 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00128 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.0327 sec ]
+ [ GrB_apply (shallow-op) 
+   0.00158 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00603 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00132 sec ]
+# of triangles: 177820130
+threads 16 trial  0:     2.027622 sec
+Avg: TCentrality nthreads:  16 time:     2.027622 matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   0.0513 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 8 ntasks 256 
+   3.56 sec ]
+ [ GrB_reduce (wait:A 5809704 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 8, relwspace: 0.868, intensity: 7.22: atomic) 
+   0.124 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0173 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.00167 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.0217 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 8, relwspace: 0.868, intensity: 7.22: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0742 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00498 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.0598 sec ]
+ [ GrB_apply (shallow-op) 
+   0.0018 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.014 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00148 sec ]
+# of triangles: 177820130
+threads  8 trial  0:     3.931443 sec
+Avg: TCentrality nthreads:   8 time:     3.931443 matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   0.079 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 4 ntasks 128 
+   7.03 sec ]
+ [ GrB_reduce (wait:A 5809704 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 4, relwspace: 0.434, intensity: 7.22: atomic) 
+   0.187 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0295 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.00315 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.0396 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 4, relwspace: 0.434, intensity: 7.22: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.128 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00506 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.112 sec ]
+ [ GrB_apply (shallow-op) 
+   0.00232 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0164 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00193 sec ]
+# of triangles: 177820130
+threads  4 trial  0:     7.636297 sec
+Avg: TCentrality nthreads:   4 time:     7.636297 matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   0.133 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 2 ntasks 64 
+   14 sec ]
+ [ GrB_reduce (wait:A 5809704 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 2, relwspace: 0.217, intensity: 7.22: atomic) 
+   0.338 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0554 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.00625 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.0781 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 2, relwspace: 0.217, intensity: 7.22: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.215 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00757 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.222 sec ]
+ [ GrB_apply (shallow-op) 
+   0.00407 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0318 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00323 sec ]
+# of triangles: 177820130
+threads  2 trial  0:    15.093490 sec
+Avg: TCentrality nthreads:   2 time:    15.093490 matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   0.203 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 1 ntasks 1 
+   27.6 sec ]
+ [ GrB_reduce (wait:A 5809704 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (coarse, threads: 1) 
+   0.438 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.104 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.0113 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.151 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (coarse, threads: 1) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.248 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0119 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.428 sec ]
+ [ GrB_apply (shallow-op) 
+   0.00736 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0584 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00562 sec ]
+# of triangles: 177820130
+threads  1 trial  0:    29.250163 sec
+Avg: TCentrality nthreads:   1 time:    29.250163 matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+# of trials: 1
+threads to test:  40 20 16 8 4 2 1
+matrix: /raid/matrices/com-Orkut/com-Orkut.grb
+[.grb]
+Reading binary file: /raid/matrices/com-Orkut/com-Orkut.grb
+read time: 2.37348
+
+  3072441x3072441 GraphBLAS double matrix, sparse by row
+  G->A, 234370166 entries, memory: 1.8 GB
+  iso value:    1
+
+    (0,1)    1
+    (0,2)    1
+    (0,3)    1
+    (0,4)    1
+    (0,5)    1
+    (0,6)    1
+    (0,7)    1
+    (0,8)    1
+    (0,9)    1
+    (0,10)    1
+    (0,11)    1
+    (0,12)    1
+    (1,0)    1
+    (1,4)    1
+    (1,5)    1
+    (1,14)    1
+    (1,59)    1
+    (1,61)    1
+    (1,62)    1
+    (1,66)    1
+    (1,73)    1
+    (1,80)    1
+    (1,172)    1
+    (1,174)    1
+    (1,618)    1
+    (1,626)    1
+    (1,642)    1
+    (1,652)    1
+    (1,657)    1
+    ...
+TC3:  [ GxB_select (iso select) 
+   0.0843 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   9.49 sec ]
+ [ GrB_reduce (wait:A 15988540 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 1.14, intensity: 32.9: atomic) 
+   0.201 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0173 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.000258 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.0315 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 40, relwspace: 1.14, intensity: 32.9: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.101 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000486 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.0836 sec ]
+ [ GrB_apply (shallow-op) 
+   0.0011 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00506 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000225 sec ]
+# of triangles: 627584181
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   0.08 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   9.57 sec ]
+ [ GrB_reduce (wait:A 15988540 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 1.14, intensity: 32.9: atomic) 
+   0.2 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0152 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.000241 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.0311 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 40, relwspace: 1.14, intensity: 32.9: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0993 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00163 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.0834 sec ]
+ [ GrB_apply (shallow-op) 
+   0.00115 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00577 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00022 sec ]
+# of triangles: 627584181
+threads 40 trial  0:    10.085590 sec
+Avg: TCentrality nthreads:  40 time:    10.085590 matrix: /raid/matrices/com-Orkut/com-Orkut.grb
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   0.084 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 20 ntasks 640 
+   14.1 sec ]
+ [ GrB_reduce (wait:A 15988540 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 20, relwspace: 0.572, intensity: 32.9: atomic) 
+   0.246 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0166 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.000292 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.034 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 20, relwspace: 0.572, intensity: 32.9: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.138 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000627 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.0909 sec ]
+ [ GrB_apply (shallow-op) 
+   0.00119 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00496 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000374 sec ]
+# of triangles: 627584181
+threads 20 trial  0:    14.676326 sec
+Avg: TCentrality nthreads:  20 time:    14.676326 matrix: /raid/matrices/com-Orkut/com-Orkut.grb
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   0.0809 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 16 ntasks 512 
+   17.3 sec ]
+ [ GrB_reduce (wait:A 15988540 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 16, relwspace: 0.458, intensity: 32.9: non-atomic) 
+   0.234 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0162 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.000325 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.0395 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 16, relwspace: 0.458, intensity: 32.9: non-atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.125 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000559 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.104 sec ]
+ [ GrB_apply (shallow-op) 
+   0.00104 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.00639 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000478 sec ]
+# of triangles: 627584181
+threads 16 trial  0:    17.910358 sec
+Avg: TCentrality nthreads:  16 time:    17.910358 matrix: /raid/matrices/com-Orkut/com-Orkut.grb
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   0.0923 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 8 ntasks 256 
+   34.1 sec ]
+ [ GrB_reduce (wait:A 15988540 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 8, relwspace: 0.229, intensity: 32.9: non-atomic) 
+   0.3 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0212 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.000615 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.0759 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 8, relwspace: 0.229, intensity: 32.9: non-atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.179 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000899 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.2 sec ]
+ [ GrB_apply (shallow-op) 
+   0.00111 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.01 sec ]
+ [ GrB_apply (in-place-op) 
+   0.000865 sec ]
+# of triangles: 627584181
+threads  8 trial  0:    34.960762 sec
+Avg: TCentrality nthreads:   8 time:    34.960762 matrix: /raid/matrices/com-Orkut/com-Orkut.grb
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   0.133 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 4 ntasks 128 
+   66.5 sec ]
+ [ GrB_reduce (wait:A 15988540 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 4, relwspace: 0.114, intensity: 32.9: non-atomic) 
+   0.457 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0389 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.00119 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.145 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 4, relwspace: 0.114, intensity: 32.9: non-atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.271 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00145 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.392 sec ]
+ [ GrB_apply (shallow-op) 
+   0.00157 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0194 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00095 sec ]
+# of triangles: 627584181
+threads  4 trial  0:    67.951326 sec
+Avg: TCentrality nthreads:   4 time:    67.951326 matrix: /raid/matrices/com-Orkut/com-Orkut.grb
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   0.245 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 2 ntasks 64 
+   133 sec ]
+ [ GrB_reduce (wait:A 15988540 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 2, relwspace: 0.0572, intensity: 32.9: non-atomic) 
+   0.783 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0751 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.00238 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.288 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 2, relwspace: 0.0572, intensity: 32.9: non-atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.45 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00263 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.778 sec ]
+ [ GrB_apply (shallow-op) 
+   0.00284 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0213 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00184 sec ]
+# of triangles: 627584181
+threads  2 trial  0:   135.454423 sec
+Avg: TCentrality nthreads:   2 time:   135.454423 matrix: /raid/matrices/com-Orkut/com-Orkut.grb
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   0.432 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 1 ntasks 1 
+   262 sec ]
+ [ GrB_reduce (wait:A 15988540 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (coarse, threads: 1) 
+   1.39 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.147 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.00415 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   0.578 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (coarse, threads: 1) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.795 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00482 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   1.57 sec ]
+ [ GrB_apply (shallow-op) 
+   0.00538 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0418 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00371 sec ]
+# of triangles: 627584181
+threads  1 trial  0:   267.342754 sec
+Avg: TCentrality nthreads:   1 time:   267.342754 matrix: /raid/matrices/com-Orkut/com-Orkut.grb
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+# of trials: 1
+threads to test:  40 20 16 8 4 2 1
+matrix: /raid/matrices/com-Friendster/com-Friendster.grb
+[.grb]
+Reading binary file: /raid/matrices/com-Friendster/com-Friendster.grb
+read time: 56.9353
+
+  65608366x65608366 GraphBLAS double matrix, sparse by row
+  G->A, 3612134270 entries, memory: 27.4 GB
+  iso value:    1
+
+    (0,1)    1
+    (0,2)    1
+    (0,3)    1
+    (0,6)    1
+    (0,13)    1
+    (0,16)    1
+    (0,18)    1
+    (0,22)    1
+    (0,23)    1
+    (0,24)    1
+    (0,25)    1
+    (0,36)    1
+    (0,37)    1
+    (0,60)    1
+    (0,88)    1
+    (0,106)    1
+    (0,107)    1
+    (0,113)    1
+    (0,122)    1
+    (0,124)    1
+    (0,126)    1
+    (0,127)    1
+    (0,130)    1
+    (0,134)    1
+    (0,135)    1
+    (0,138)    1
+    (0,141)    1
+    (0,142)    1
+    (0,149)    1
+    ...
+TC3:  [ GxB_select (iso select) 
+   1.2 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
+   218 sec ]
+ [ GrB_reduce (wait:A 361040101 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 1.66, intensity: 22: atomic) 
+   5.27 sec ]
+ [ GrB_reduce C=A'*B, dot_product (dot2) (B=S'*F) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.224 sec ]
+ [ GrB_reduce (A bitmap) 
+   0.0097 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   1.69 sec ]
+ [ GrB_mxv C=A*B, saxpy (B=S*B) (bitmap saxpy) (fine, threads: 40, relwspace: 1.66, intensity: 22: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   3.63 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0191 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*B) 
+   5.27 sec ]
+ [ GrB_apply (shallow-op) 
+   0.0278 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
+   0.0668 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0188 sec ]
+# of triangles: 4173724142
+
+start trial 0
+TC3:  [ GxB_select (iso select) 
+   1.19 sec ]
+ [ GrB_mxm C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 

@@ -414,4 +414,13 @@ GrB_Info LAGraph_scc (
     GrB_Matrix A            // input matrix
 ) ;
 
+int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
+(
+    // outputs:
+    GrB_Vector *centrality,     // centrality(i): triangle centrality of i
+    // inputs:
+    LAGraph_Graph G,            // input graph
+    char *msg
+) ;
+
 #endif

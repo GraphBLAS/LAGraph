@@ -13,18 +13,19 @@
 //         tcc_demo matrixmarketfile.mtx
 //         tcc_demo matrixmarketfile.grb
 
-#include "LAGraph_demo.h"
+#include "../../src/benchmark/LAGraph_demo.h"
+#include "LAGraphX.h"
 
 // #define NTHREAD_LIST 2
 
-// #define NTHREAD_LIST 1
-// #define THREAD_LIST 0
+#define NTHREAD_LIST 1
+#define THREAD_LIST 0
 
 // #define NTHREAD_LIST 6
 // #define THREAD_LIST 64, 32, 24, 12, 8, 4
 
-#define NTHREAD_LIST 7
-#define THREAD_LIST 40, 20, 16, 8, 4, 2, 1
+// #define NTHREAD_LIST 7
+// #define THREAD_LIST 40, 20, 16, 8, 4, 2, 1
 
 #define LAGraph_FREE_ALL            \
 {                                   \
@@ -51,7 +52,7 @@ int main (int argc, char **argv)
     demo_init (burble) ;
 
     int ntrials = 3 ;
-    // ntrials = 1 ;        // HACK
+    ntrials = 1 ;
     printf ("# of trials: %d\n", ntrials) ;
 
     int nt = NTHREAD_LIST ;
@@ -95,18 +96,20 @@ int main (int argc, char **argv)
         GrB_ALL, n, GrB_ALL, n, GrB_DESC_S)) ;
     GrB_free (&(G->A)) ;
     G->A = A ;
-    GrB_TRY (GxB_Matrix_fprint (G->A, "G->A", 2, stdout)) ;
-    fprintf (stderr, "Matrix: %s\n", matrix_name) ;
+    // GrB_TRY (GxB_Matrix_fprint (G->A, "G->A", 2, stdout)) ;
+    // fprintf (stderr, "Matrix: %s\n", matrix_name) ;
 
     //--------------------------------------------------------------------------
     // triangle centrality
     //--------------------------------------------------------------------------
 
     // warmup for more accurate timing
-    double tic [2] ;
+    double tic [2], tt ;
     LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
     LAGraph_TRY (LAGraph_VertexCentrality_Triangle (&c, G, msg)) ;
+    LAGraph_TRY (LAGraph_Toc (&tt, tic, NULL)) ;
     GrB_TRY (GrB_free (&c)) ;
+    printf ("warmup time %g sec\n", tt) ;
 
     for (int t = 1 ; t <= nt ; t++)
     {
@@ -116,12 +119,9 @@ int main (int argc, char **argv)
         double ttot = 0, ttrial [100] ;
         for (int trial = 0 ; trial < ntrials ; trial++)
         {
-            printf ("\nstart trial %d\n", trial) ;
             LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-
             LAGraph_TRY (LAGraph_VertexCentrality_Triangle (&c, G, msg)) ;
             GrB_TRY (GrB_free (&c)) ;
-
             LAGraph_TRY (LAGraph_Toc (&ttrial [trial], tic, NULL)) ;
             ttot += ttrial [trial] ;
             printf ("threads %2d trial %2d: %12.6f sec\n",

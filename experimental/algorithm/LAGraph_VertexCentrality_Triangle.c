@@ -62,6 +62,10 @@
 // Note: the python TC3 forms T_T explicitly; but METHOD 3 below uses the
 // descriptor to transpose T.
 
+//------------------------------------------------------------------------------
+
+#include "LG_internal.h"
+
 // METHOD is 1, 15, 2, or 3 to select the above methods
 #define METHOD 3
 
@@ -72,10 +76,6 @@
     #define METHOD 15
 #endif
 #endif
-
-//------------------------------------------------------------------------------
-
-#include "LG_internal.h"
 
 #define LAGRAPH_FREE_WORK           \
 {                                   \
@@ -298,14 +298,15 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
     // centrality = (3*u + w + y) / k for all 4 methods
     //--------------------------------------------------------------------------
 
-    // u = 3*u
-    double three = 3 ;
-    GrB_TRY (GrB_apply (u, NULL, NULL, GrB_TIMES_FP64, three, u, NULL)) ;
+    // centrality = 3*u
+    GrB_TRY (GrB_Vector_new (centrality, GrB_FP64, n)) ;
+    const double three = 3 ;
+    GrB_TRY (GrB_apply (*centrality, NULL, NULL, GrB_TIMES_FP64, three, u,
+        NULL)) ;
 
-    // centrality = (u + w + y)
-    GrB_TRY (GrB_Vector_dup (centrality, y)) ;
+    // centrality += (w + y)
     GrB_TRY (GrB_eWiseAdd (*centrality, NULL, GrB_PLUS_FP64, GrB_PLUS_FP64,
-        u, w, NULL)) ;
+        w, y, NULL)) ;
 
     // centrality = centrality / k
     GrB_TRY (GrB_apply (*centrality, NULL, NULL, GrB_TIMES_FP64,
