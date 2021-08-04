@@ -1,0 +1,172 @@
+ 
+======================================================================
+benchmarks using LAGraph+GraphBLAS: Triangle Centrality
+======================================================================
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+# of trials: 3
+threads to test:  40
+matrix: /raid/matrices/as-Skitter/as-Skitter.mtx
+[.mtx]
+Reading matrix market file: /raid/matrices/as-Skitter/as-Skitter.mtx
+read time: 5.4464
+
+  1696415x1696415 GraphBLAS double matrix, sparse by row
+  G->A, 22190596 entries, memory: 182.2 MB
+  iso value:    1
+
+    (0,1)    1
+    (0,2)    1
+    (0,3)    1
+    (0,4)    1
+    (0,5)    1
+    (0,6)    1
+    (0,7)    1
+    (0,8)    1
+    (0,9)    1
+    (0,10)    1
+    (0,11)    1
+    (0,12)    1
+    (0,13)    1
+    (0,14)    1
+    (0,15)    1
+    (0,16)    1
+    (0,17)    1
+    (0,18)    1
+    (0,19)    1
+    (0,20)    1
+    (0,21)    1
+    (0,22)    1
+    (0,23)    1
+    (0,24)    1
+    (0,25)    1
+    (0,26)    1
+    (0,27)    1
+    (0,28)    1
+    (0,29)    1
+    ...
+TC2: # of triangles:                         28769868
+
+start trial 0
+TC2: # of triangles:                         28769868
+trial  0:     0.535332 sec rate  41.45
+
+start trial 1
+TC2: # of triangles:                         28769868
+trial  1:     0.539578 sec rate  41.13
+
+start trial 2
+TC2: # of triangles:                         28769868
+trial  2:     0.534018 sec rate  41.55
+Avg: TCentrality nthreads:  40 time:     0.536309 matrix: /raid/matrices/as-Skitter/as-Skitter.mtx
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+# of trials: 3
+threads to test:  40
+matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.mtx
+[.mtx]
+Reading matrix market file: /raid/matrices/com-LiveJournal/com-LiveJournal.mtx
+read time: 17.7234
+
+  3997962x3997962 GraphBLAS double matrix, sparse by row
+  G->A, 69362378 entries, memory: 559.7 MB
+  iso value:    1
+
+    (0,1)    1
+    (0,2)    1
+    (0,31)    1
+    (0,73)    1
+    (0,80)    1
+    (0,113619)    1
+    (0,2468396)    1
+    (0,2823480)    1
+    (0,2823484)    1
+    (0,2846482)    1
+    (0,2947405)    1
+    (0,3011065)    1
+    (0,3696095)    1
+    (0,3836941)    1
+    (0,3997948)    1
+    (0,3997949)    1
+    (0,3997951)    1
+    (0,3997953)    1
+    (0,3997955)    1
+    (0,3997957)    1
+    (0,3997958)    1
+    (0,3997960)    1
+    (0,3997961)    1
+    (1,0)    1
+    (1,2)    1
+    (1,3)    1
+    (1,4)    1
+    (1,5)    1
+    (1,6)    1
+    ...
+TC2: # of triangles:                        177820130
+
+start trial 0
+TC2: # of triangles:                        177820130
+trial  0:     2.116405 sec rate  32.77
+
+start trial 1
+TC2: # of triangles:                        177820130
+trial  1:     2.109766 sec rate  32.88
+
+start trial 2
+TC2: # of triangles:                        177820130
+trial  2:     2.111202 sec rate  32.85
+Avg: TCentrality nthreads:  40 time:     2.112458 matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.mtx
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+# of trials: 3
+threads to test:  40
+matrix: /raid/matrices/com-Orkut/com-Orkut.mtx
+[.mtx]
+Reading matrix market file: /raid/matrices/com-Orkut/com-Orkut.mtx
+read time: 58.737
+
+  3072441x3072441 GraphBLAS double matrix, sparse by row
+  G->A, 234370166 entries, memory: 1.8 GB
+  iso value:    1
+
+    (0,1)    1
+    (0,2)    1
+    (0,3)    1
+    (0,4)    1
+    (0,5)    1
+    (0,6)    1
+    (0,7)    1
+    (0,8)    1
+    (0,9)    1
+    (0,10)    1
+    (0,11)    1
+    (0,12)    1
+    (1,0)    1
+    (1,4)    1
+    (1,5)    1
+    (1,14)    1
+    (1,59)    1
+    (1,61)    1
+    (1,62)    1
+    (1,66)    1
+    (1,73)    1
+    (1,80)    1
+    (1,172)    1
+    (1,174)    1
+    (1,618)    1
+    (1,626)    1
+    (1,642)    1
+    (1,652)    1
+    (1,657)    1
+    ...
+TC2: # of triangles:                        627584181
+
+start trial 0
+TC2: # of triangles:                        627584181
+trial  0:    19.384008 sec rate  12.09
+
+start trial 1
+TC2: # of triangles:                        627584181
+trial  1:    19.391143 sec rate  12.09
+
+start trial 2
+TC2: # of triangles:                        627584181
+trial  2:    19.457578 sec rate  12.05
+Avg: TCentrality nthreads:  40 time:    19.410910 matrix: /raid/matrices/com-Orkut/com-Orkut.mtx

@@ -19,6 +19,7 @@
 char msg [LAGRAPH_MSG_LEN] ;
 LAGraph_Graph G = NULL ;
 GrB_Matrix A = NULL ;
+GrB_Matrix C = NULL ;
 GrB_Type atype = NULL ;
 GxB_Scalar thunk = NULL ;
 #define LEN 512
@@ -55,12 +56,21 @@ void test_TriangleCentrality (void)
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        // C = spones (A), in FP64
+        GrB_Index n ;
+        OK (GrB_Matrix_nrows (&n, A)) ;
+        OK (GrB_Matrix_new (&C, GrB_FP64, n, n)) ;
+        OK (GrB_assign (C, A, NULL, (double) 1, GrB_ALL, n, GrB_ALL, n,
+            GrB_DESC_S)) ;
+        OK (GrB_free (&A)) ;
+        TEST_CHECK (A == NULL) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
         // construct an undirected graph G with adjacency matrix A
-        OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
-        TEST_CHECK (A == NULL) ;
+        OK (LAGraph_New (&G, &C, atype, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+        TEST_CHECK (C == NULL) ;
+        OK (GxB_Matrix_fprint (G->A, "G->A", 2, stdout)) ;
 
         // check for self-edges
         OK (LAGraph_Property_NDiag (G, msg)) ;
@@ -86,8 +96,6 @@ void test_TriangleCentrality (void)
         TEST_CHECK (retval == 0) ;
         TEST_MSG ("retval = %d (%s)", retval, msg) ;
 
-        GrB_Index n ;
-        OK (GrB_Matrix_nrows (&n, G->A)) ;
         int pr = (n <= 100) ? GxB_COMPLETE : GxB_SHORT ;
         OK (GxB_Vector_fprint (c, "centrality", pr, stdout)) ;
         OK (GrB_free (&c)) ;

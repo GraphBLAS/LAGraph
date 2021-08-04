@@ -84,6 +84,14 @@ int main (int argc, char **argv)
     GrB_Index n, nvals ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
+    // LAGraph_TRY (LAGraph_DisplayGraph (G, 2, stdout, msg)) ;
+    // ensure G->A is FP64 and all 1
+    GrB_TRY (GrB_Matrix_new (&A, GrB_FP64, n, n)) ;
+    GrB_TRY (GrB_assign (A, G->A, NULL, (double) 1,
+        GrB_ALL, n, GrB_ALL, n, GrB_DESC_S)) ;
+    GrB_free (&(G->A)) ;
+    G->A = A ;
+    GrB_TRY (GxB_Matrix_fprint (G->A, "G->A", 2, stdout)) ;
 
     //--------------------------------------------------------------------------
     // triangle centrality
@@ -116,10 +124,13 @@ int main (int argc, char **argv)
         }
         ttot = ttot / ntrials ;
 
-        printf ("nthreads: %3d time: %12.6f rate: %6.2f\n", nthreads,
-                ttot, 1e-6 * nvals / ttot) ;
-        fprintf (stderr, "Avg: TCentrality threads: %2d  time: %10.3f sec, "
-            "matrix: %s\n", nthreads, ttot, matrix_name) ;
+        printf ("Avg: TCentrality "
+            "nthreads: %3d time: %12.6f matrix: %s\n",
+            nthreads, ttot, matrix_name) ;
+
+        fprintf (stderr, "Avg: TCentrality "
+            "nthreads: %3d time: %12.6f matrix: %s\n",
+            nthreads, ttot, matrix_name) ;
     }
 
     LAGraph_FREE_ALL ;
