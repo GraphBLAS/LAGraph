@@ -1,5 +1,4 @@
-Burkhardt's results ("28 cores" E5-2680).  Is this 28 threads on 14 cores,
-on the Xeon E5-2680v4?  Or is it a dual socket with 28 cores?
+Burkhardt's results (28 hardware cores E5-2680v4, in 2 sockets).
 
     com-Youtube     0.231 sec
     as-Skitter      0.589 sec
@@ -7,7 +6,7 @@ on the Xeon E5-2680v4?  Or is it a dual socket with 28 cores?
     com-Orkut       4.87 sec
     com-Friendster  68.4 sec
 
-TC3 method on hypersparse.engr.tamu.edu (Xeon E5-2698v4, 20 cores)
+TC3 method on hypersparse.engr.tamu.edu (Xeon E5-2698v4, 20 cores, 1 socket)
 
 com-Youtube: TC3 is almost 2x faster than Burkhardt's result
 
@@ -58,5 +57,13 @@ com-Friendster: TC3 about 3x slower than Burkhardt's results
     nthreads:   4 time:  1536.624585 
     nthreads:   2 time:  3062.387983 
     nthreads:   1 time:  6057.713364 
+
+Move to experimental, retest TC3 with 40 threads
+
+    nthreads:  40 time:     0.118935 matrix: com-Youtube
+    nthreads:  40 time:     0.344083 matrix: as-Skitter
+    nthreads:  40 time:     1.157001 matrix: com-LiveJournal
+    nthreads:  40 time:     9.979035 matrix: com-Orkut
+    nthreads:  40 time:   229.765197 matrix: com-Friendster
 
 

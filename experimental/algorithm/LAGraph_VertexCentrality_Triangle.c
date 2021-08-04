@@ -67,7 +67,7 @@
 #include "LG_internal.h"
 
 // METHOD is 1, 15, 2, or 3 to select the above methods
-#define METHOD 3
+#define METHOD 2
 
 #if ( !LG_SUITESPARSE )
 // methods 2 and 3 require SuiteSparse

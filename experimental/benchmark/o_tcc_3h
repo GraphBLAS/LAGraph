@@ -1,0 +1,76 @@
+
+ 
+======================================================================
+benchmarks using LAGraph+GraphBLAS: Triangle Centrality
+======================================================================
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+# of trials: 1
+threads to test:  40
+matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+[.grb]
+Reading binary file: /raid/matrices/com-Youtube/com-Youtube.grb
+read time: 0.114272
+TC3: # of triangles: 3056386
+warmup time 0.120405 sec
+TC3: # of triangles: 3056386
+threads 40 trial  0:     0.118935 sec
+threads 40 trial  0:     0.118935 sec
+Avg: TCentrality nthreads:  40 time:     0.118935 matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+Avg: TCentrality nthreads:  40 time:     0.118935 matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+# of trials: 1
+threads to test:  40
+matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+[.grb]
+Reading binary file: /raid/matrices/as-Skitter/as-Skitter.grb
+read time: 0.219834
+TC3: # of triangles: 28769868
+warmup time 0.355191 sec
+TC3: # of triangles: 28769868
+threads 40 trial  0:     0.344083 sec
+threads 40 trial  0:     0.344083 sec
+Avg: TCentrality nthreads:  40 time:     0.344083 matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+Avg: TCentrality nthreads:  40 time:     0.344083 matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+# of trials: 1
+threads to test:  40
+matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+[.grb]
+Reading binary file: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+read time: 0.670233
+TC3: # of triangles: 177820130
+warmup time 1.16248 sec
+TC3: # of triangles: 177820130
+threads 40 trial  0:     1.157001 sec
+threads 40 trial  0:     1.157001 sec
+Avg: TCentrality nthreads:  40 time:     1.157001 matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+Avg: TCentrality nthreads:  40 time:     1.157001 matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+# of trials: 1
+threads to test:  40
+matrix: /raid/matrices/com-Orkut/com-Orkut.grb
+[.grb]
+Reading binary file: /raid/matrices/com-Orkut/com-Orkut.grb
+read time: 2.30394
+TC3: # of triangles: 627584181
+warmup time 10.0175 sec
+TC3: # of triangles: 627584181
+threads 40 trial  0:     9.979035 sec
+threads 40 trial  0:     9.979035 sec
+Avg: TCentrality nthreads:  40 time:     9.979035 matrix: /raid/matrices/com-Orkut/com-Orkut.grb
+Avg: TCentrality nthreads:  40 time:     9.979035 matrix: /raid/matrices/com-Orkut/com-Orkut.grb
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+# of trials: 1
+threads to test:  40
+matrix: /raid/matrices/com-Friendster/com-Friendster.grb
+[.grb]
+Reading binary file: /raid/matrices/com-Friendster/com-Friendster.grb
+read time: 56.8532
+TC3: # of triangles: 4173724142
+warmup time 229.108 sec
+TC3: # of triangles: 4173724142
+threads 40 trial  0:   229.765197 sec
+threads 40 trial  0:   229.765197 sec
+Avg: TCentrality nthreads:  40 time:   229.765197 matrix: /raid/matrices/com-Friendster/com-Friendster.grb
+Avg: TCentrality nthreads:  40 time:   229.765197 matrix: /raid/matrices/com-Friendster/com-Friendster.grb
+
