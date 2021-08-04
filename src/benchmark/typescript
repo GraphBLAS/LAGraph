@@ -1,807 +1,129 @@
-Script started on Mon 02 Aug 2021 01:20:18 PM CDT
+Script started on Tue 03 Aug 2021 09:35:21 PM CDT
 groups: cannot find name for group ID 8047
 Intel Suite:
 Copyright (C) 2009-2019 Intel Corporation. All rights reserved.
 Intel(R) VTune(TM) Amplifier 2019 (build 591499)
 [1;34m==>[0m 71 installed packages
 -- [0;35mlinux-ubuntu16.04-broadwell[0m / [0;32mgcc@5.4.0[0m ----------------------
-autoconf[0;36m@2.69[0m                cmake[0;36m@3.19.5[0m   gcc[0;36m@10.1.0[0m      hwloc[0;36m@2.4.0[0m           libiconv[0;36m@1.16[0m        libxml2[0;36m@2.9.10[0m  openmpi[0;36m@4.0.5[0m   pkgconf[0;36m@1.6.3[0m         tar[0;36m@1.32[0m
-autoconf[0;36m@2.69[0m                curl[0;36m@7.68.0[0m    gdbm[0;36m@1.18.1[0m     isl[0;36m@0.18[0m              libidn2[0;36m@2.1.1a[0m       m4[0;36m@1.4.18[0m       openssh[0;36m@8.4p1[0m   pkgconf[0;36m@1.7.3[0m         util-macros[0;36m@1.19.1[0m
-autoconf-archive[0;36m@2019.01.06[0m  curl[0;36m@7.74.0[0m    gettext[0;36m@0.20.2[0m  isl[0;36m@0.20[0m              libidn2[0;36m@2.3.0[0m        mpc[0;36m@1.1.0[0m       openssl[0;36m@1.1.1g[0m  py-pip[0;36m@19.3[0m           valgrind[0;36m@3.16.1[0m
-automake[0;36m@1.16.2[0m              diffutils[0;36m@3.7[0m  gettext[0;36m@0.21[0m    isl[0;36m@0.21[0m              libpciaccess[0;36m@0.16[0m    mpc[0;36m@1.1.0[0m       openssl[0;36m@1.1.1j[0m  py-setuptools[0;36m@46.1.3[0m  xz[0;36m@5.2.5[0m
-automake[0;36m@1.16.3[0m              expat[0;36m@2.2.9[0m    git[0;36m@2.26.0[0m      libbsd[0;36m@0.10.0[0m         libsigsegv[0;36m@2.12[0m      mpfr[0;36m@3.1.6[0m      pcre2[0;36m@10.31[0m     python[0;36m@3.7.7[0m          xz[0;36m@5.2.5[0m
-berkeley-db[0;36m@18.1.40[0m          expat[0;36m@2.2.10[0m   git[0;36m@2.29.0[0m      libedit[0;36m@3.1-20191231[0m  libtool[0;36m@2.4.6[0m        mpfr[0;36m@4.0.2[0m      pcre2[0;36m@10.35[0m     python[0;36m@3.8.0[0m          zlib[0;36m@1.2.11[0m
-boost[0;36m@1.75.0[0m                 gcc[0;36m@6.3.0[0m      gmp[0;36m@6.1.2[0m       libevent[0;36m@2.1.12[0m       libunistring[0;36m@0.9.10[0m  ncurses[0;36m@6.2[0m     perl[0;36m@5.30.2[0m     readline[0;36m@8.0[0m          zstd[0;36m@1.4.4[0m
-bzip2[0;36m@1.0.8[0m                  gcc[0;36m@9.3.0[0m      gmp[0;36m@6.2.1[0m       libffi[0;36m@3.3[0m            libxml2[0;36m@2.9.10[0m       numactl[0;36m@2.0.14[0m  perl[0;36m@5.32.1[0m     sqlite[0;36m@3.31.1[0m
-[0;36mhypersparse $[0m 
-[0;36mhypersparse $[0m 
-[0;36mhypersparse $[0m ./do_gap_tcc
- 
-======================================================================
-GAP benchmarks using LAGraph+GraphBLAS: Triangle Centrality
-======================================================================
-Matrix input file format:  mtx
-GAP matrices located in:   ../../../GAP
-SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
-# of trials: 3
-threads to test:  40
-matrix: ../../../GAP/GAP-kron/GAP-kron.mtx
-[.mtx]
-Reading matrix market file: ../../../GAP/GAP-kron/GAP-kron.mtx
-^C^C
-[0;36mhypersparse $[0m 
-[0;36mhypersparse $[0m 
-[0;36mhypersparse $[0m 
-[0;36mhypersparse $[0m ./go_[K[K[Kdo_gap_tcc grb
- 
-======================================================================
-GAP benchmarks using LAGraph+GraphBLAS: Triangle Centrality
-======================================================================
-Matrix input file format:  grb
-GAP matrices located in:   ../../../GAP
-SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
-# of trials: 3
-threads to test:  40
-matrix: ../../../GAP/GAP-kron/GAP-kron.grb
-[.grb]
-Reading binary file: ../../../GAP/GAP-kron/GAP-kron.grb
-read time: 70.0002
- [ GxB_select (iso select) 
-   1.15 sec ]
- [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
-   4.22e+03 sec ]
- [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
-   4.01e-05 sec ]
- [ GrB_reduce (wait:A 481311274 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 2.83, intensity: 12.1: atomic) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   5.14 sec ]
- [ GrB_reduce C=A'*B, dot_product (dot4) (F+=S'*F) (C in place) 
-   0.241 sec ]
- [ GrB_reduce (A full) 
-   0.0161 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   1.1 sec ]
- [ GrB_mxv C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 2.83, intensity: 12.1: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
-   3.14 sec ]
- [ GrB_apply (in-place-op) 
-   0.0373 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   3.16 sec ]
- [ GrB_apply (in-place-op) 
-   0.0442 sec ]
- [ GrB_Vector_dup (iso dup) 
-   0.0472 sec ]
- [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   0.159 sec ]
- [ GrB_apply (in-place-op) 
-   0.04 sec ]
-# of triangles: 1.06873e+11
-
-start trial 0
- [ GxB_select (iso select) 
-   1.14 sec ]
- [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
-   4.2e+03 sec ]
- [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
-   3.94e-05 sec ]
- [ GrB_reduce (wait:A 481311274 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 2.83, intensity: 12.1: atomic) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   5.1 sec ]
- [ GrB_reduce C=A'*B, dot_product (dot4) (F+=S'*F) (C in place) 
-   0.24 sec ]
- [ GrB_reduce (A full) 
-   0.0166 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   1.08 sec ]
- [ GrB_mxv C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 2.83, intensity: 12.1: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
-   3.11 sec ]
- [ GrB_apply (in-place-op) 
-   0.0369 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   3.14 sec ]
- [ GrB_apply (in-place-op) 
-   0.0468 sec ]
- [ GrB_Vector_dup (iso dup) 
-   0.0402 sec ]
- [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   0.144 sec ]
- [ GrB_apply (in-place-op) 
-   0.038 sec ]
-# of triangles: 1.06873e+11
-trial  0:  4212.578755 sec rate   1.00
-
-start trial 1
- [ GxB_select (iso select) 
-   1.14 sec ]
- [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
-   4.2e+03 sec ]
- [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
-   2.49e-05 sec ]
- [ GrB_reduce (wait:A 481311274 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 2.83, intensity: 12.1: atomic) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   5.12 sec ]
- [ GrB_reduce C=A'*B, dot_product (dot4) (F+=S'*F) (C in place) 
-   0.241 sec ]
- [ GrB_reduce (A full) 
-   0.0159 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   1.08 sec ]
- [ GrB_mxv C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 2.83, intensity: 12.1: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
-   3.12 sec ]
- [ GrB_apply (in-place-op) 
-   0.0374 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   3.16 sec ]
- [ GrB_apply (in-place-op) 
-   0.048 sec ]
- [ GrB_Vector_dup (iso dup) 
-   0.0405 sec ]
- [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   0.146 sec ]
- [ GrB_apply (in-place-op) 
-   0.0403 sec ]
-# of triangles: 1.06873e+11
-trial  1:  4216.790227 sec rate   1.00
-
-start trial 2
- [ GxB_select (iso select) 
-   1.14 sec ]
- [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
-   4.2e+03 sec ]
- [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
-   4.13e-05 sec ]
- [ GrB_reduce (wait:A 481311274 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 2.83, intensity: 12.1: atomic) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   5.12 sec ]
- [ GrB_reduce C=A'*B, dot_product (dot4) (F+=S'*F) (C in place) 
-   0.24 sec ]
- [ GrB_reduce (A full) 
-   0.0188 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   1.08 sec ]
- [ GrB_mxv C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 2.83, intensity: 12.1: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
-   3.13 sec ]
- [ GrB_apply (in-place-op) 
-   0.0383 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   3.15 sec ]
- [ GrB_apply (in-place-op) 
-   0.048 sec ]
- [ GrB_Vector_dup (iso dup) 
-   0.0446 sec ]
- [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   0.157 sec ]
- [ GrB_apply (in-place-op) 
-   0.04 sec ]
-# of triangles: 1.06873e+11
-trial  2:  4212.279367 sec rate   1.00
-nthreads:  40 time:  4213.882783 rate:   1.00
-Avg: TCentrality threads: 40  time:   4213.883 sec, matrix: ../../../GAP/GAP-kron/GAP-kron.grb
-SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
-# of trials: 3
-threads to test:  40
-matrix: ../../../GAP/GAP-urand/GAP-urand.grb
-[.grb]
-Reading binary file: ../../../GAP/GAP-urand/GAP-urand.grb
-read time: 75.1414
- [ GxB_select (iso select) 
-   1.71 sec ]
- [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
-   47.7 sec ]
- [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
-   4.01e-05 sec ]
- [ GrB_reduce (wait:A 2147467236 zombies, 0 pending) (sparse to hyper) C=A*B', dot_product (transposed A: 134217728-by-134217728, double, 16134 entries) (transpose) (build) (dot4) (F+=H'*F) (C in place) 
-   0.7 sec ]
- [ GrB_reduce C=A'*B, dot_product (dot4) (F+=H'*F) (C in place) 
-   9.17e-05 sec ]
- [ GrB_reduce (A full) 
-   0.0156 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=H'*F) 
-   0.000455 sec ]
- [ GrB_mxv C=A*B', dot_product (transposed A: 134217728-by-134217728, double, 16134 entries) (iso transpose) (iso build) (dot2) (B=H'*F) (C+=Z via add) add:(S<.>=S+S) 
-   0.00239 sec ]
- [ GrB_apply (in-place-op) 
-   4.12e-05 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   4.72 sec ]
- [ GrB_apply (in-place-op) 
-   0.232 sec ]
- [ GrB_Vector_dup (iso dup) 
-   0.0445 sec ]
- [ GrB_eWiseAdd add:(F<.>=Bf+S) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   0.0973 sec ]
- [ GrB_apply (in-place-op) 
-   0.0376 sec ]
-# of triangles: -nan
-
-start trial 0
- [ GxB_select (iso select) 
-   1.71 sec ]
- [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
-   47.6 sec ]
- [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
-   8.79e-05 sec ]
- [ GrB_reduce (wait:A 2147467236 zombies, 0 pending) (sparse to hyper) C=A*B', dot_product (transposed A: 134217728-by-134217728, double, 16134 entries) (transpose) (build) (dot4) (F+=H'*F) (C in place) 
-   0.696 sec ]
- [ GrB_reduce C=A'*B, dot_product (dot4) (F+=H'*F) (C in place) 
-   9.13e-05 sec ]
- [ GrB_reduce (A full) 
-   0.0154 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=H'*F) 
-   0.000404 sec ]
- [ GrB_mxv C=A*B', dot_product (transposed A: 134217728-by-134217728, double, 16134 entries) (iso transpose) (iso build) (dot2) (B=H'*F) (C+=Z via add) add:(S<.>=S+S) 
-   0.00395 sec ]
- [ GrB_apply (in-place-op) 
-   4.34e-05 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   4.68 sec ]
- [ GrB_apply (in-place-op) 
-   0.224 sec ]
- [ GrB_Vector_dup (iso dup) 
-   0.0438 sec ]
- [ GrB_eWiseAdd add:(F<.>=Bf+S) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   0.0952 sec ]
- [ GrB_apply (in-place-op) 
-   0.202 sec ]
-# of triangles: 5378
-trial  0:    55.274089 sec rate  77.70
-
-start trial 1
- [ GxB_select (iso select) 
-   1.71 sec ]
- [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
-   49 sec ]
- [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
-   2.36e-05 sec ]
- [ GrB_reduce (wait:A 2147467236 zombies, 0 pending) (sparse to hyper) C=A*B', dot_product (transposed A: 134217728-by-134217728, double, 16134 entries) (transpose) (build) (dot4) (F+=H'*F) (C in place) 
-   0.714 sec ]
- [ GrB_reduce C=A'*B, dot_product (dot4) (F+=H'*F) (C in place) 
-   0.00426 sec ]
- [ GrB_reduce (A full) 
-   0.0195 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=H'*F) 
-   0.0051 sec ]
- [ GrB_mxv C=A*B', dot_product (transposed A: 134217728-by-134217728, double, 16134 entries) (iso transpose) (iso build) (dot2) (B=H'*F) (C+=Z via add) add:(S<.>=S+S) 
-   0.00577 sec ]
- [ GrB_apply (in-place-op) 
-   2.45e-05 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   4.75 sec ]
- [ GrB_apply (in-place-op) 
-   0.357 sec ]
- [ GrB_Vector_dup (iso dup) 
-   0.0457 sec ]
- [ GrB_eWiseAdd add:(F<.>=Bf+S) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   0.098 sec ]
- [ GrB_apply (in-place-op) 
-   0.316 sec ]
-# of triangles: 5378
-trial  1:    57.061768 sec rate  75.27
-
-start trial 2
- [ GxB_select (iso select) 
-   1.74 sec ]
- [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
-   49.1 sec ]
- [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
-   0.000117 sec ]
- [ GrB_reduce (wait:A 2147467236 zombies, 0 pending) (sparse to hyper) C=A*B', dot_product (transposed A: 134217728-by-134217728, double, 16134 entries) (transpose) (build) (dot4) (F+=H'*F) (C in place) 
-   0.706 sec ]
- [ GrB_reduce C=A'*B, dot_product (dot4) (F+=H'*F) (C in place) 
-   0.0001 sec ]
- [ GrB_reduce (A full) 
-   0.0159 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=H'*F) 
-   0.000371 sec ]
- [ GrB_mxv C=A*B', dot_product (transposed A: 134217728-by-134217728, double, 16134 entries) (iso transpose) (iso build) (dot2) (B=H'*F) (C+=Z via add) add:(S<.>=S+S) 
-   0.00224 sec ]
- [ GrB_apply (in-place-op) 
-   4.13e-05 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   4.74 sec ]
- [ GrB_apply (in-place-op) 
-   0.286 sec ]
- [ GrB_Vector_dup (iso dup) 
-   0.0443 sec ]
- [ GrB_eWiseAdd add:(F<.>=Bf+S) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   0.0983 sec ]
- [ GrB_apply (in-place-op) 
-   0.322 sec ]
-# of triangles: 5378
-trial  2:    57.089085 sec rate  75.23
-nthreads:  40 time:    56.474981 rate:  76.05
-Avg: TCentrality threads: 40  time:     56.475 sec, matrix: ../../../GAP/GAP-urand/GAP-urand.grb
-SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
-# of trials: 3
-threads to test:  40
-matrix: ../../../GAP/GAP-twitter/GAP-twitter.grb
-[.grb]
-Reading binary file: ../../../GAP/GAP-twitter/GAP-twitter.grb
-read time: 38.5593
- [ GxB_select (iso select) 
-   0.709 sec ]
- [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
-   1.34e+03 sec ]
- [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
-   3.84e-05 sec ]
- [ GrB_reduce (wait:A 358721204 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 2.55, intensity: 13.7: atomic) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   2.2 sec ]
- [ GrB_reduce C=A'*B, dot_product (dot4) (F+=S'*F) (C in place) 
-   0.123 sec ]
- [ GrB_reduce (A full) 
-   0.00741 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   0.391 sec ]
- [ GrB_mxv C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 2.55, intensity: 13.7: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
-   1.31 sec ]
- [ GrB_apply (in-place-op) 
-   0.0192 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   1.48 sec ]
- [ GrB_apply (in-place-op) 
-   0.0159 sec ]
- [ GrB_Vector_dup (iso dup) 
-   0.0192 sec ]
- [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   0.0668 sec ]
- [ GrB_apply (in-place-op) 
-   0.0193 sec ]
-# of triangles: 3.48249e+10
-
-start trial 0
- [ GxB_select (iso select) 
-   0.706 sec ]
- [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
-   1.34e+03 sec ]
- [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
-   4e-05 sec ]
- [ GrB_reduce (wait:A 358721204 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 2.55, intensity: 13.7: atomic) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   2.28 sec ]
- [ GrB_reduce C=A'*B, dot_product (dot4) (F+=S'*F) (C in place) 
-   0.124 sec ]
- [ GrB_reduce (A full) 
-   0.00752 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   0.393 sec ]
- [ GrB_mxv C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 2.55, intensity: 13.7: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
-   1.31 sec ]
- [ GrB_apply (in-place-op) 
-   0.0183 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   1.49 sec ]
- [ GrB_apply (in-place-op) 
-   0.0169 sec ]
- [ GrB_Vector_dup (iso dup) 
-   0.0212 sec ]
- [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   0.0685 sec ]
- [ GrB_apply (in-place-op) 
-   0.0195 sec ]
-# of triangles: 3.48249e+10
-trial  0:  1346.716180 sec rate   1.79
-
-start trial 1
- [ GxB_select (iso select) 
-   0.71 sec ]
- [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
-   1.34e+03 sec ]
- [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
-   3.88e-05 sec ]
- [ GrB_reduce (wait:A 358721204 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 2.55, intensity: 13.7: atomic) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   2.27 sec ]
- [ GrB_reduce C=A'*B, dot_product (dot4) (F+=S'*F) (C in place) 
-   0.124 sec ]
- [ GrB_reduce (A full) 
-   0.00726 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   0.393 sec ]
- [ GrB_mxv C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 2.55, intensity: 13.7: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
-   1.29 sec ]
- [ GrB_apply (in-place-op) 
-   0.0188 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   1.48 sec ]
- [ GrB_apply (in-place-op) 
-   0.0159 sec ]
- [ GrB_Vector_dup (iso dup) 
-   0.0198 sec ]
- [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   0.067 sec ]
- [ GrB_apply (in-place-op) 
-   0.019 sec ]
-# of triangles: 3.48249e+10
-trial  1:  1345.267103 sec rate   1.79
-
-start trial 2
- [ GxB_select (iso select) 
-   0.709 sec ]
- [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
-   1.34e+03 sec ]
- [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
-   4.02e-05 sec ]
- [ GrB_reduce (wait:A 358721204 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 2.55, intensity: 13.7: atomic) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   2.3 sec ]
- [ GrB_reduce C=A'*B, dot_product (dot4) (F+=S'*F) (C in place) 
-   0.124 sec ]
- [ GrB_reduce (A full) 
-   0.00899 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   0.393 sec ]
- [ GrB_mxv C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 2.55, intensity: 13.7: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
-   1.31 sec ]
- [ GrB_apply (in-place-op) 
-   0.0216 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   1.49 sec ]
- [ GrB_apply (in-place-op) 
-   0.0165 sec ]
- [ GrB_Vector_dup (iso dup) 
-   0.0205 sec ]
- [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   0.0661 sec ]
- [ GrB_apply (in-place-op) 
-   0.0196 sec ]
-# of triangles: 3.48249e+10
-trial  2:  1347.699626 sec rate   1.78
-nthreads:  40 time:  1346.560970 rate:   1.79
-Avg: TCentrality threads: 40  time:   1346.561 sec, matrix: ../../../GAP/GAP-twitter/GAP-twitter.grb
-SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
-# of trials: 3
-threads to test:  40
-matrix: ../../../GAP/GAP-web/GAP-web.grb
-[.grb]
-Reading binary file: ../../../GAP/GAP-web/GAP-web.grb
-read time: 41.9493
- [ GxB_select (iso select) 
-   0.998 sec ]
- [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
-   85.9 sec ]
- [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
-   2.58e-05 sec ]
- [ GrB_reduce (wait:A 37249225 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 1.08, intensity: 35: atomic) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   2.47 sec ]
- [ GrB_reduce C=A'*B, dot_product (dot4) (F+=S'*F) (C in place) 
-   0.236 sec ]
- [ GrB_reduce (A full) 
-   0.00604 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   0.248 sec ]
- [ GrB_mxv C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 1.08, intensity: 35: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
-   0.893 sec ]
- [ GrB_apply (in-place-op) 
-   0.0174 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   0.494 sec ]
- [ GrB_apply (in-place-op) 
-   0.0145 sec ]
- [ GrB_Vector_dup (iso dup) 
-   0.0178 sec ]
- [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   0.0567 sec ]
- [ GrB_apply (in-place-op) 
-   0.0181 sec ]
-# of triangles: 8.4907e+10
-
-start trial 0
- [ GxB_select (iso select) 
-   0.989 sec ]
- [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
-   85.2 sec ]
- [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
-   0.000569 sec ]
- [ GrB_reduce (wait:A 37249225 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 1.08, intensity: 35: atomic) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   2.47 sec ]
- [ GrB_reduce C=A'*B, dot_product (dot4) (F+=S'*F) (C in place) 
-   0.237 sec ]
- [ GrB_reduce (A full) 
-   0.00743 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   0.249 sec ]
- [ GrB_mxv C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 1.08, intensity: 35: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
-   0.874 sec ]
- [ GrB_apply (in-place-op) 
-   0.0173 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   0.495 sec ]
- [ GrB_apply (in-place-op) 
-   0.0146 sec ]
- [ GrB_Vector_dup (iso dup) 
-   0.0178 sec ]
- [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   0.0574 sec ]
- [ GrB_apply (in-place-op) 
-   0.0181 sec ]
-# of triangles: 8.4907e+10
-trial  0:    90.679334 sec rate  39.92
-
-start trial 1
- [ GxB_select (iso select) 
-   0.99 sec ]
- [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
-   85.6 sec ]
- [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
-   2.77e-05 sec ]
- [ GrB_reduce (wait:A 37249225 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 1.08, intensity: 35: atomic) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   2.49 sec ]
- [ GrB_reduce C=A'*B, dot_product (dot4) (F+=S'*F) (C in place) 
-   0.237 sec ]
- [ GrB_reduce (A full) 
-   0.00747 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   0.248 sec ]
- [ GrB_mxv C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 1.08, intensity: 35: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
-   0.885 sec ]
- [ GrB_apply (in-place-op) 
-   0.0164 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   0.493 sec ]
- [ GrB_apply (in-place-op) 
-   0.0149 sec ]
- [ GrB_Vector_dup (iso dup) 
-   0.0182 sec ]
- [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   0.0552 sec ]
- [ GrB_apply (in-place-op) 
-   0.0167 sec ]
-# of triangles: 8.4907e+10
-trial  1:    91.061303 sec rate  39.75
-
-start trial 2
- [ GxB_select (iso select) 
-   0.989 sec ]
- [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
-   85.4 sec ]
- [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
-   8.19e-05 sec ]
- [ GrB_reduce (wait:A 37249225 zombies, 0 pending) C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 1.08, intensity: 35: atomic) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   2.49 sec ]
- [ GrB_reduce C=A'*B, dot_product (dot4) (F+=S'*F) (C in place) 
-   0.236 sec ]
- [ GrB_reduce (A full) 
-   0.00639 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   0.249 sec ]
- [ GrB_mxv C=A*B, saxpy (B=S*F) (bitmap saxpy) (fine, threads: 40, relwspace: 1.08, intensity: 35: atomic) (C+=Z via assign) (pending: 0) Method: bitmap_subassign Method:bit5:whole C += A 
-   0.867 sec ]
- [ GrB_apply (in-place-op) 
-   0.016 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   0.494 sec ]
- [ GrB_apply (in-place-op) 
-   0.0145 sec ]
- [ GrB_Vector_dup (iso dup) 
-   0.0183 sec ]
- [ GrB_eWiseAdd add:(B<.>=B+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   0.0579 sec ]
- [ GrB_apply (in-place-op) 
-   0.0167 sec ]
-# of triangles: 8.4907e+10
-trial  2:    90.849728 sec rate  39.85
-nthreads:  40 time:    90.863455 rate:  39.84
-Avg: TCentrality threads: 40  time:     90.863 sec, matrix: ../../../GAP/GAP-web/GAP-web.grb
-SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
-# of trials: 3
-threads to test:  40
-matrix: ../../../GAP/GAP-road/GAP-road.grb
-[.grb]
-Reading binary file: ../../../GAP/GAP-road/GAP-road.grb
-read time: 1.43005
- [ GxB_select (iso select) 
-   0.0701 sec ]
- [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
-   0.0906 sec ]
- [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
-   0.000103 sec ]
- [ GrB_reduce (wait:A 27559497 zombies, 0 pending) (sparse to hyper) C=A*B, saxpy (B=H*F) (bitmap saxpy) (fine, threads: 19, relwspace: 9.25, intensity: 0.0541: atomic) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   0.0699 sec ]
- [ GrB_reduce C=A'*B, dot_product (dot4) (F+=H'*F) (C in place) 
-   0.00422 sec ]
- [ GrB_reduce (A full) 
-   0.00721 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=H'*F) 
-   0.00863 sec ]
- [ GrB_mxv C=A*B, saxpy (B=H*F) (bitmap saxpy) (fine, threads: 19, relwspace: 9.25, intensity: 0.0541: atomic) (C+=Z via assign) (pending: 0) Method 04: C(:,:) += Z ; using S 
-   0.013 sec ]
- [ GrB_apply (wait:A 0 zombies, 413266 pending) (build) add:(S<.>=S+H) (sparse to bitmap) (in-place-op) 
-   0.0121 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   0.026 sec ]
- [ GrB_apply (in-place-op) 
-   0.00616 sec ]
- [ GrB_Vector_dup (iso dup) 
-   0.00867 sec ]
- [ GrB_eWiseAdd add:(F<.>=Bf+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   0.0236 sec ]
- [ GrB_apply (in-place-op) 
-   0.00642 sec ]
-# of triangles: 438804
-
-start trial 0
- [ GxB_select (iso select) 
-   0.0646 sec ]
- [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
-   0.0976 sec ]
- [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
-   0.000111 sec ]
- [ GrB_reduce (wait:A 27559497 zombies, 0 pending) (sparse to hyper) C=A*B, saxpy (B=H*F) (bitmap saxpy) (fine, threads: 19, relwspace: 9.25, intensity: 0.0541: atomic) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   0.075 sec ]
- [ GrB_reduce C=A'*B, dot_product (dot4) (F+=H'*F) (C in place) 
-   0.00202 sec ]
- [ GrB_reduce (A full) 
-   0.00325 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=H'*F) 
-   0.0027 sec ]
- [ GrB_mxv C=A*B, saxpy (B=H*F) (bitmap saxpy) (fine, threads: 19, relwspace: 9.25, intensity: 0.0541: atomic) (C+=Z via assign) (pending: 0) Method 04: C(:,:) += Z ; using S 
-   0.0189 sec ]
- [ GrB_apply (wait:A 0 zombies, 413266 pending) (build) add:(S<.>=S+H) (sparse to bitmap) (in-place-op) 
-   0.014 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   0.0255 sec ]
- [ GrB_apply (in-place-op) 
-   0.00786 sec ]
- [ GrB_Vector_dup (iso dup) 
-   0.00966 sec ]
- [ GrB_eWiseAdd add:(F<.>=Bf+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   0.0215 sec ]
- [ GrB_apply (in-place-op) 
-   0.00949 sec ]
-# of triangles: 438804
-trial  0:     0.354533 sec rate 162.77
-
-start trial 1
- [ GxB_select (iso select) 
-   0.0658 sec ]
- [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
-   0.0959 sec ]
- [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
-   8.97e-05 sec ]
- [ GrB_reduce (wait:A 27559497 zombies, 0 pending) (sparse to hyper) C=A*B, saxpy (B=H*F) (bitmap saxpy) (fine, threads: 19, relwspace: 9.25, intensity: 0.0541: atomic) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   0.0688 sec ]
- [ GrB_reduce C=A'*B, dot_product (dot4) (F+=H'*F) (C in place) 
-   0.0021 sec ]
- [ GrB_reduce (A full) 
-   0.00311 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=H'*F) 
-   0.00232 sec ]
- [ GrB_mxv C=A*B, saxpy (B=H*F) (bitmap saxpy) (fine, threads: 19, relwspace: 9.25, intensity: 0.0541: atomic) (C+=Z via assign) (pending: 0) Method 04: C(:,:) += Z ; using S 
-   0.0167 sec ]
- [ GrB_apply (wait:A 0 zombies, 413266 pending) (build) add:(S<.>=S+H) (sparse to bitmap) (in-place-op) 
-   0.0131 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   0.0268 sec ]
- [ GrB_apply (in-place-op) 
-   0.00738 sec ]
- [ GrB_Vector_dup (iso dup) 
-   0.0076 sec ]
- [ GrB_eWiseAdd add:(F<.>=Bf+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   0.0252 sec ]
- [ GrB_apply (in-place-op) 
-   0.00787 sec ]
-# of triangles: 438804
-trial  1:     0.345116 sec rate 167.22
-
-start trial 2
- [ GxB_select (iso select) 
-   0.064 sec ]
- [ GrB_mxm (iso mask: struct) C<M>=A'*B, masked_dot_product (dot3) (S{S}=S'*S) nthreads 40 ntasks 1280 
-   0.0999 sec ]
- [ GrB_assign (iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
-   9.89e-05 sec ]
- [ GrB_reduce (wait:A 27559497 zombies, 0 pending) (sparse to hyper) C=A*B, saxpy (B=H*F) (bitmap saxpy) (fine, threads: 19, relwspace: 9.25, intensity: 0.0541: atomic) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   0.0748 sec ]
- [ GrB_reduce C=A'*B, dot_product (dot4) (F+=H'*F) (C in place) 
-   0.00444 sec ]
- [ GrB_reduce (A full) 
-   0.0046 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=H'*F) 
-   0.00274 sec ]
- [ GrB_mxv C=A*B, saxpy (B=H*F) (bitmap saxpy) (fine, threads: 19, relwspace: 9.25, intensity: 0.0541: atomic) (C+=Z via assign) (pending: 0) Method 04: C(:,:) += Z ; using S 
-   0.02 sec ]
- [ GrB_apply (wait:A 0 zombies, 413266 pending) (build) add:(S<.>=S+H) (sparse to bitmap) (in-place-op) 
-   0.0155 sec ]
- [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
-   0.0264 sec ]
- [ GrB_apply (in-place-op) 
-   0.01 sec ]
- [ GrB_Vector_dup (iso dup) 
-   0.0091 sec ]
- [ GrB_eWiseAdd add:(F<.>=Bf+B) (C+=Z via assign) (pending: 0) Method 23: (C full) += Z (Z bitmap/as-if-full) 
-   0.0208 sec ]
- [ GrB_apply (in-place-op) 
-   0.00936 sec ]
-# of triangles: 438804
-trial  2:     0.363099 sec rate 158.93
-nthreads:  40 time:     0.354249 rate: 162.90
-Avg: TCentrality threads: 40  time:      0.354 sec, matrix: ../../../GAP/GAP-road/GAP-road.grb
-[0;36mhypersparse $[0m 
-[0;36mhypersparse $[0m 
-[0;36mhypersparse $[0m 
-[0;36mhypersparse $[0m pwd
-/home/faculty/davis/master/LAGraph/src/benchmark
-[0;36mhypersparse $[0m vi [Kdir *.c
- 8 bc_demo.c  12 bfs_demo.c   8 cc_demo.c   8 gappagerank_demo.c   4 mtx2bin_demo.c   8 sssp_demo.c   8 tcc_demo.c   8 tc_demo.c
-[0;36mhypersparse $[0m vi tcc_demo.c 
-[?1000h[?1049h[?1h=[2;1H▽[6n[2;1H  [1;1H[1;84r[?12;25h[?12l[?25h[27m[23m[m[97m[40m[H[2J[?25l[84;1H"tcc_demo.c" 129L, 4153C[>c[1;1H[96m//------------------------------------------------------------------------------
-// LAGraph/src/benchmark/tcc_demo.c: benchmark for triangle centrality
-//------------------------------------------------------------------------------
-
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
-// SPDX-License-Identifier: BSD-2-Clause
-
-//------------------------------------------------------------------------------
-
-// Contributed by Tim Davis, Texas A&M
-
-// Usage:  tcc_demo < matrixmarketfile.mtx
-//         tcc_demo matrixmarketfile.mtx
-//         tcc_demo matrixmarketfile.grb[m[97m[40m
-
-[95m#include [m[97m[40m[91m"LAGraph_demo.h"[m[97m[40m
-
-[95m#define NTHREAD_LIST [m[97m[40m[92m1[m[97m[40m
-[96m// #define NTHREAD_LIST 2[m[97m[40m
-[95m#define THREAD_LIST [m[97m[40m[92m0[m[97m[40m
-
-[96m// #define NTHREAD_LIST 6
-// #define THREAD_LIST 64, 32, 24, 12, 8, 4[m[97m[40m
-
-[95m#define LAGraph_FREE_ALL            \
-{                                   \
-    LAGraph_Delete (&G, [m[97m[40m[92mNULL[m[97m[40m[95m) ;     \
-    GrB_free (&A) ;                 \
-    GrB_free (&c) ;                 \
-}[m[97m[40m
-
-[92mint[m[97m[40m main ([92mint[m[97m[40m argc, [92mchar[m[97m[40m **argv)
-{[35;5H[96m//--------------------------------------------------------------------------
-[m[97m[40m    [96m// initialize LAGraph and GraphBLAS
-[m[97m[40m    [96m//--------------------------------------------------------------------------[m[97m[40m[39;5H[92mchar[m[97m[40m msg [LAGRAPH_MSG_LEN] ;[41;5HGrB_Vector c = [92mNULL[m[97m[40m ;
-    GrB_Matrix A = [92mNULL[m[97m[40m ;
-    LAGraph_Graph G = [92mNULL[m[97m[40m ;[45;5H[96m// start GraphBLAS and LAGraph[m[97m[40m
-    [92mbool[m[97m[40m burble = [92mfalse[m[97m[40m ;
-    demo_init (burble) ;[49;5H[92mint[m[97m[40m ntrials = [92m3[m[97m[40m ;
-    [96m// ntrials = 1 ;        // HACK[m[97m[40m
-    printf ([91m"# of trials: [m[97m[40m[91m[40m%d\n[m[97m[40m[91m"[m[97m[40m, ntrials) ;[53;5H[92mint[m[97m[40m nt = NTHREAD_LIST ;
-    [92mint[m[97m[40m Nthreads [[92m20[m[97m[40m] = { [92m0[m[97m[40m, THREAD_LIST } ;
-    [92mint[m[97m[40m nthreads_max ;
-    LAGraph_TRY (LAGraph_GetNumThreads (&nthreads_max, [92mNULL[m[97m[40m)) ;
-    [92mif[m[97m[40m (Nthreads [[92m1[m[97m[40m] == [92m0[m[97m[40m)
-    {[59;9H[96m// create thread list automatically[m[97m[40m[60;9HNthreads [[92m1[m[97m[40m] = nthreads_max ;[61;9H[92mfor[m[97m[40m ([92mint[m[97m[40m t = [92m2[m[97m[40m ; t <= nt ; t++)[62;9H{[63;13HNthreads [t] = Nthreads [t-[92m1[m[97m[40m] / [92m2[m[97m[40m ;[64;13H[92mif[m[97m[40m (Nthreads [t] == [92m0[m[97m[40m) nt = t-[92m1[m[97m[40m ;[65;9H}
-    }
-    printf ([91m"threads to test: "[m[97m[40m) ;
-    [92mfor[m[97m[40m ([92mint[m[97m[40m t = [92m1[m[97m[40m ; t <= nt ; t++)
-    {[70;9H[92mint[m[97m[40m nthreads = Nthreads [t] ;[71;9H[92mif[m[97m[40m (nthreads > nthreads_max) [92mcontinue[m[97m[40m ;[72;9Hprintf ([91m" [m[97m[40m[91m[40m%d[m[97m[40m[91m"[m[97m[40m, nthreads) ;
-    }
-    printf ([91m"[m[97m[40m[91m[40m\n[m[97m[40m[91m"[m[97m[40m) ;[76;5H[96m//--------------------------------------------------------------------------
-[m[97m[40m    [96m// read in the graph
-[m[97m[40m    [96m//--------------------------------------------------------------------------[m[97m[40m[80;5H[92mchar[m[97m[40m *matrix_name = (argc > [92m1[m[97m[40m) ? argv [[92m1[m[97m[40m] : [91m"stdin"[m[97m[40m ;
-    [92mif[m[97m[40m (readproblem (&G, [92mNULL[m[97m[40m,[82;9H[92mtrue[m[97m[40m, [92mtrue[m[97m[40m, [92mtrue[m[97m[40m, [92mNULL[m[97m[40m, [92mfalse[m[97m[40m, argc, argv) != [92m0[m[97m[40m) ERROR ;[84;168H1,1[11CTop[1;1H[?12l[?25h[?1000l[?1006h[?1002h[?1006l[?1002l[?1006h[?1002hP+q436f\P+q6b75\P+q6b64\P+q6b72\P+q6b6c\P+q2332\P+q2334\P+q2569\P+q2a37\P+q6b31\[?25l[84;1H[K[84;1H/[?12l[?25hA[?25l[?12l[?25hv[?25l[?12l[?25hg[?25l[?12l[?25h[?25l[1;83r[1;1H[38M[1;84r[46;5HGrB_Index n, nvals ;
-    GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
-    GrB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;[50;5H[96m//--------------------------------------------------------------------------
-[m[97m[40m    [96m// triangle centrality
-[m[97m[40m    [96m//--------------------------------------------------------------------------[54;5H// warmup for more accurate timing[m[97m[40m
-    [92mdouble[m[97m[40m tic [[92m2[m[97m[40m] ;
-    LAGraph_TRY (LAGraph_Tic (tic, [92mNULL[m[97m[40m)) ;
-    LAGraph_TRY (LAGraph_VertexCentrality_Triangle (&c, G, msg)) ;
-    GrB_TRY (GrB_free (&c)) ;[60;5H[92mfor[m[97m[40m ([92mint[m[97m[40m t = [92m1[m[97m[40m ; t <= nt ; t++)
-    {[62;9H[92mint[m[97m[40m nthreads = Nthreads [t] ;[63;9H[92mif[m[97m[40m (nthreads > nthreads_max) [92mcontinue[m[97m[40m ;[64;9HLAGraph_TRY (LAGraph_SetNumThreads (nthreads, msg)) ;[65;9H[92mdouble[m[97m[40m ttot = [92m0[m[97m[40m, ttrial [[92m100[m[97m[40m] ;[66;9H[92mfor[m[97m[40m ([92mint[m[97m[40m trial = [92m0[m[97m[40m ; trial < ntrials ; trial++)[67;9H{[68;13Hprintf ([91m"[m[97m[40m[91m[40m\n[m[97m[40m[91mstart trial [m[97m[40m[91m[40m%d\n[m[97m[40m[91m"[m[97m[40m, trial) ;[69;13HLAGraph_TRY (LAGraph_Tic (tic, [92mNULL[m[97m[40m)) ;[71;13HLAGraph_TRY (LAGraph_VertexCentrality_Triangle (&c, G, msg)) ;[72;13HGrB_TRY (GrB_free (&c)) ;[74;13HLAGraph_TRY (LAGraph_Toc (&ttrial [trial], tic, [92mNULL[m[97m[40m)) ;[75;13Httot += ttrial [trial] ;[76;13Hprintf ([91m"trial [m[97m[40m[91m[40m%2d[m[97m[40m[91m: [m[97m[40m[91m[40m%12.6f[m[97m[40m[91m sec rate [m[97m[40m[91m[40m%6.2f\n[m[97m[40m[91m"[m[97m[40m,[77;17Htrial, ttrial [trial], [92m1e-6[m[97m[40m * nvals / ttrial [trial]) ;[78;9H}[79;9Httot = ttot / ntrials ;[81;9Hprintf ([91m"nthreads: [m[97m[40m[91m[40m%3d[m[97m[40m[91m time: [m[97m[40m[91m[40m%12.6f[m[97m[40m[91m rate: [m[97m[40m[91m[40m%6.2f\n[m[97m[40m[91m"[m[97m[40m, nthreads,[82;17Httot, [92m1e-6[m[97m[40m * nvals / ttot) ;[83;9Hfprintf ([92mstderr[m[97m[40m, [91m"[m[97m[40m[4m[30m[103mAvg[m[97m[40m[91m: TCentrality threads: [m[97m[40m[91m[40m%2d[m[97m[40m[91m  time: [m[97m[40m[91m[40m%10.3f[m[97m[40m[91m sec, "[m[97m[40m[84;1H[K[84;168H121,27[8C82%[83;27H[?12l[?25h[?25l
-/Avg[84;168H[K[84;1H[38;5;224msearch hit BOTTOM, continuing at TOP[m[97m[40m/Avg[84;5H[K[84;1H[38;5;224msearch hit BOTTOM, continuing at TOP[m[97m[40m[131C121,27[8C82%[84;168H[K[84;168H121,27[8C82%[83;27H[?12l[?25h[?25l[1;83r[83;1H
-[1;84r[83;13H[91m"matrix: [m[97m[40m[91m[40m%s\n[m[97m[40m[91m"[m[97m[40m, nthreads, ttot, matrix_name) ;[84;1H[K[84;168H122,27[8C84%[83;27H[?12l[?25h[?25l[1;83r[83;1H
-[1;84r[83;5H}[84;168H[K[84;168H123,5[9C86%[83;5H[?12l[?25h[?25l[1;83r[83;1H
-[1;84r[84;168H[K[84;168H124,0-1[7C89%[83;1H[?12l[?25h[?25l[1;83r[83;1H
-[1;84r[83;5HLAGraph_FREE_ALL ;[84;168H[K[84;168H125,22[8C91%[83;22H[?12l[?25h[?25l[1;83r[83;1H
-[1;84r[83;5HLAGraph_TRY (LAGraph_Finalize (msg)) ;[84;168H[K[84;168H126,27[8C93%[83;27H[?12l[?25h[?25l[1;83r[83;1H
-[1;84r[83;5H[92mreturn[m[97m[40m ([92m0[m[97m[40m) ;[84;168H[K[84;168H127,16[8C95%[83;16H[?12l[?25h[?25l[1;83r[83;1H
-[1;84r[83;1H}[84;168H[K[84;168H128,1[9C97%[83;1H[?12l[?25h[?25l[1;83r[83;1H
-[1;84r[84;168H[K[84;168H129,0-1[7CBot[83;1H[?12l[?25h[?25l[84;170H8,1  [82;1H[?12l[?25h[?25l[84;170H7,16[81;16H[?12l[?25h[?25l[84;170H6,27[80;27H[?12l[?25h[?25l[84;170H5,22[79;22H[?12l[?25h[?25l[84;170H4,0-1[78;1H[?12l[?25h[?25l[84;170H3,5  [77;5H[?12l[?25h[?25l[84;170H2,27[76;27H[?12l[?25h[?25l[84;170H1[75;27H[?12l[?25h[?25l[84;170H0[74;27H[?12l[?25h[?25l[84;170H1[75;27H[?12l[?25h[?25l[84;170H2[76;27H[?12l[?25h[?25l[84;170H1[75;27H[?12l[?25h[?25l[84;170H0[74;27H[?12l[?25h[?25l[84;170H1[75;27H[?12l[?25h[?25l[84;170H2[76;27H[?12l[?25h[?25l[84;173H9[76;29H[?12l[?25h[?25l[84;172H37[76;37H[?12l[?25h[?25l[84;173H9[76;39H[?12l[?25h[?25l[84;1H?\<ttot\>[84;168H[K[84;1H[57;16H[4m[30m[103mttot[67;13Httot[71;9Httot[m[97m[40m = [4m[30m[103mttot[74;17Httot[17Cttot[m[97m[40m[75;27H[91mAvg[m[97m[40m[76;39H[4m[30m[103mttot[m[97m[40m[84;168H120,38[8CBot[74;38H[?12l[?25h[?25l[84;172H1 [74;1H[?12l[?25h[?25l[84;173H7[74;17H[?12l[?25h[?25l[84;169H19[73;17H[?12l[?25h[84;1H[?1006l[?1002l[84;1H[K[84;1H[?1l>[?1049l[0;36mhypersparse $[0m grep rate: o_tcc_tc2.txt 
-nthreads:  40 time:     0.547363 [01;31m[Krate:[m[K  40.54
-nthreads:  40 time:     2.103219 [01;31m[Krate:[m[K  32.98
-[0;36mhypersparse $[0m 
-[0;36mhypersparse $[0m 
-[0;36mhypersparse $[0m grep rate: o_tcc_tc2.txt [K[K[K[K[K[K3.txt 
-nthreads:  40 time:     0.351638 [01;31m[Krate:[m[K  63.11
-nthreads:  40 time:     1.181160 [01;31m[Krate:[m[K  58.72
-nthreads:  40 time:    10.049760 [01;31m[Krate:[m[K  23.32
-[0;36mhypersparse $[0m 
-[0;36mhypersparse $[0m 
-[0;36mhypersparse $[0m 
-[0;36mhypersparse $[0m exit
-exit
-
-Script done on Tue 03 Aug 2021 01:45:17 PM CDT
+autoconf[0;36m@2.69[0m                hwloc[0;36m@2.4.0[0m           openmpi[0;36m@4.0.5[0m
+autoconf[0;36m@2.69[0m                isl[0;36m@0.18[0m              openssh[0;36m@8.4p1[0m
+autoconf-archive[0;36m@2019.01.06[0m  isl[0;36m@0.20[0m              openssl[0;36m@1.1.1g[0m
+automake[0;36m@1.16.2[0m              isl[0;36m@0.21[0m              openssl[0;36m@1.1.1j[0m
+automake[0;36m@1.16.3[0m              libbsd[0;36m@0.10.0[0m         pcre2[0;36m@10.31[0m
+berkeley-db[0;36m@18.1.40[0m          libedit[0;36m@3.1-20191231[0m  pcre2[0;36m@10.35[0m
+boost[0;36m@1.75.0[0m                 libevent[0;36m@2.1.12[0m       perl[0;36m@5.30.2[0m
+bzip2[0;36m@1.0.8[0m                  libffi[0;36m@3.3[0m            perl[0;36m@5.32.1[0m
+cmake[0;36m@3.19.5[0m                 libiconv[0;36m@1.16[0m         pkgconf[0;36m@1.6.3[0m
+curl[0;36m@7.68.0[0m                  libidn2[0;36m@2.1.1a[0m        pkgconf[0;36m@1.7.3[0m
+curl[0;36m@7.74.0[0m                  libidn2[0;36m@2.3.0[0m         py-pip[0;36m@19.3[0m
+diffutils[0;36m@3.7[0m                libpciaccess[0;36m@0.16[0m     py-setuptools[0;36m@46.1.3[0m
+expat[0;36m@2.2.9[0m                  libsigsegv[0;36m@2.12[0m       python[0;36m@3.7.7[0m
+expat[0;36m@2.2.10[0m                 libtool[0;36m@2.4.6[0m         python[0;36m@3.8.0[0m
+gcc[0;36m@6.3.0[0m                    libunistring[0;36m@0.9.10[0m   readline[0;36m@8.0[0m
+gcc[0;36m@9.3.0[0m                    libxml2[0;36m@2.9.10[0m        sqlite[0;36m@3.31.1[0m
+gcc[0;36m@10.1.0[0m                   libxml2[0;36m@2.9.10[0m        tar[0;36m@1.32[0m
+gdbm[0;36m@1.18.1[0m                  m4[0;36m@1.4.18[0m             util-macros[0;36m@1.19.1[0m
+gettext[0;36m@0.20.2[0m               mpc[0;36m@1.1.0[0m             valgrind[0;36m@3.16.1[0m
+gettext[0;36m@0.21[0m                 mpc[0;36m@1.1.0[0m             xz[0;36m@5.2.5[0m
+git[0;36m@2.26.0[0m                   mpfr[0;36m@3.1.6[0m            xz[0;36m@5.2.5[0m
+git[0;36m@2.29.0[0m                   mpfr[0;36m@4.0.2[0m            zlib[0;36m@1.2.11[0m
+gmp[0;36m@6.1.2[0m                    ncurses[0;36m@6.2[0m           zstd[0;36m@1.4.4[0m
+gmp[0;36m@6.2.1[0m                    numactl[0;36m@2.0.14[0m
+[0;36mhypersparse $[0m ./do_gap[K[K[Khpec21_tcc > o_tcc_3c
+Matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+threads 40 trial  0:     0.147933 sec
+threads 40 trial  1:     0.108110 sec
+threads 40 trial  2:     0.126889 sec
+Avg: TCentrality nthreads:  40 time:     0.127644 matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+threads 20 trial  0:     0.137309 sec
+threads 20 trial  1:     0.121330 sec
+threads 20 trial  2:     0.120005 sec
+Avg: TCentrality nthreads:  20 time:     0.126214 matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+threads 16 trial  0:     0.138971 sec
+threads 16 trial  1:     0.138201 sec
+threads 16 trial  2:     0.138939 sec
+Avg: TCentrality nthreads:  16 time:     0.138704 matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+threads  8 trial  0:     0.259624 sec
+threads  8 trial  1:     0.262334 sec
+threads  8 trial  2:     0.262738 sec
+Avg: TCentrality nthreads:   8 time:     0.261565 matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+threads  4 trial  0:     0.505891 sec
+threads  4 trial  1:     0.503139 sec
+threads  4 trial  2:     0.499583 sec
+Avg: TCentrality nthreads:   4 time:     0.502871 matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+threads  2 trial  0:     0.971287 sec
+threads  2 trial  1:     0.972034 sec
+threads  2 trial  2:     0.972092 sec
+Avg: TCentrality nthreads:   2 time:     0.971805 matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+threads  1 trial  0:     1.888403 sec
+threads  1 trial  1:     1.888968 sec
+threads  1 trial  2:     1.888802 sec
+Avg: TCentrality nthreads:   1 time:     1.888724 matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+Matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+threads 40 trial  0:     0.347013 sec
+threads 40 trial  1:     0.347634 sec
+threads 40 trial  2:     0.347108 sec
+Avg: TCentrality nthreads:  40 time:     0.347252 matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+threads 20 trial  0:     0.453506 sec
+threads 20 trial  1:     0.451139 sec
+threads 20 trial  2:     0.453680 sec
+Avg: TCentrality nthreads:  20 time:     0.452775 matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+threads 16 trial  0:     0.542008 sec
+threads 16 trial  1:     0.541026 sec
+threads 16 trial  2:     0.540233 sec
+Avg: TCentrality nthreads:  16 time:     0.541089 matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+threads  8 trial  0:     1.003251 sec
+threads  8 trial  1:     1.008618 sec
+threads  8 trial  2:     1.006413 sec
+Avg: TCentrality nthreads:   8 time:     1.006094 matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+threads  4 trial  0:     1.965097 sec
+threads  4 trial  1:     1.964083 sec
+threads  4 trial  2:     1.962871 sec
+Avg: TCentrality nthreads:   4 time:     1.964017 matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+threads  2 trial  0:     3.855522 sec
+threads  2 trial  1:     3.877973 sec
+threads  2 trial  2:     3.854081 sec
+Avg: TCentrality nthreads:   2 time:     3.862526 matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+threads  1 trial  0:     7.498997 sec
+threads  1 trial  1:     7.501531 sec
+threads  1 trial  2:     7.498065 sec
+Avg: TCentrality nthreads:   1 time:     7.499531 matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+Matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+threads 40 trial  0:     1.156566 sec
+threads 40 trial  1:     1.154034 sec
+threads 40 trial  2:     1.156656 sec
+Avg: TCentrality nthreads:  40 time:     1.155752 matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+threads 20 trial  0:     1.663258 sec
+threads 20 trial  1:     1.671061 sec
+threads 20 trial  2:     1.684286 sec
+Avg: TCentrality nthreads:  20 time:     1.672868 matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+threads 16 trial  0:     1.981933 sec
+^[[A^[[A^[[A^[[A^[[A^[[A^[[A^[[Athreads 16 trial  1:     1.984092 sec
+ threads 16 trial  2:     1.982512 sec
+Avg: TCentrality nthreads:  16 time:     1.982846 matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+                               threads  8 trial  0:     3.814872 sec
+threads  8 trial  1:     3.817562 sec
+threads  8 trial  2:     3.828265 sec
+Avg: TCentrality nthreads:   8 time:     3.820233 matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+threads  4 trial  0:     7.519838 sec
+threads  4 trial  1:     7.515192 sec
+threads  4 trial  2:     7.522906 sec
+Avg: TCentrality nthreads:   4 time:     7.519312 matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+threads  2 trial  0:    14.777810 sec
+threads  2 trial  1:    14.782718 sec
+threads  2 trial  2:    14.792189 sec
+Avg: TCentrality nthreads:   2 time:    14.784239 matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+threads  1 trial  0:    28.844834 sec
+threads  1 trial  1:    28.840733 sec
+threads  1 trial  2:    28.842369 sec
+Avg: TCentrality nthreads:   1 time:    28.842645 matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+Matrix: /raid/matrices/com-Orkut/com-Orkut.grb
+threads 40 trial  0:    10.003350 sec
+threads 40 trial  1:    10.006655 sec
+threads 40 trial  2:    10.002874 sec
+Avg: TCentrality nthreads:  40 time:    10.004293 matrix: /raid/matrices/com-Orkut/com-Orkut.grb
+threads 20 trial  0:    14.688895 sec
+threads 20 trial  1:    14.606099 sec
+threads 20 trial  2:    14.570589 sec
+Avg: TCentrality nthreads:  20 time:    14.621861 matrix: /raid/matrices/com-Orkut/com-Orkut.grb
+threads 16 trial  0:    17.931415 sec

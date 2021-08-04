@@ -10,11 +10,16 @@
 
 // LAGraph_VertexCentrality_Triangle: computes the TriangleCentrality of
 // an undirected graph.  No self edges are allowed on the input graph.
+// Methods 2 and 3 can tolerate any edge weights (they are ignored; only the
+// pattern of G->A is used).  Methods 1 and 1.5 require unit edge weights
+// (this could be modified); results are undefined if this condition doesn't
+// hold.
 
 // P. Burkhardt, "Triangle centrality," https://arxiv.org/pdf/2105.00110.pdf,
 // April 2021.
 
-// TODO: this uses GxB* methods
+// Methods 2 and 3 require SuiteSparse:GraphBLAS.  Method 3 is by far the
+// fastest.
 
 // TC1: in python
 //
@@ -23,7 +28,17 @@
 //          y = T.reduce_vector()
 //          k = y.reduce_float()
 //          return(1/k)*(3*(A @ y) - 2*(T @ y) + y)
+//          note: T@y is wrong. should be plus_second semiring
+
+// TC1.5: in python
 //
+//      def triangle_centrality1(A):
+//          T = A.mxm(A, mask=A, desc=descriptor.ST1)
+//          y = T.reduce_vector()
+//          k = y.reduce_float()
+//          return(1/k)*(3*(A @ y) - 2*(T @ y) + y)
+//          note: T@y is wrong. should be plus_second semiring
+
 // TC2: in python
 //
 //      def triangle_centrality2(A):
@@ -32,7 +47,7 @@
 //          T.reduce_vector(out=y, accum=FP64.plus)
 //          k = y.reduce_float()
 //          return(1/k)*(3*A.plus_second(y) -2*T.plus_second(y) + y)
-//
+
 // TC3: in python:
 //
 //      def triangle_centrality3(A):
@@ -41,10 +56,22 @@
 //          T_T = T.T
 //          y = T.reduce() + T_T.reduce()
 //          k = y.reduce_float()
-//          return (3 * A.plus_second(y) - (2 * (T.plus_second(y) + T_T.plus_second(y))) + y) / k
+//          return (3 * A.plus_second(y) - (2 * (T.plus_second(y)
+//                                           + T_T.plus_second(y))) + y) / k
 
-// METHOD is 1, 2, or 3 to select the above methods
+// Note: the python TC3 forms T_T explicitly; but METHOD 3 below uses the
+// descriptor to transpose T.
+
+// METHOD is 1, 15, 2, or 3 to select the above methods
 #define METHOD 3
+
+#if ( !LG_SUITESPARSE )
+// methods 2 and 3 require SuiteSparse
+#if ( METHOD >= 2 )
+    #undef  METHOD
+    #define METHOD 15
+#endif
+#endif
 
 //------------------------------------------------------------------------------
 
@@ -87,7 +114,12 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
     LG_CLEAR_MSG ;
     GrB_Matrix T = NULL, L = NULL, A = NULL ;
     GrB_Vector y = NULL, u = NULL, w = NULL ;
+    #if LG_SUITESPARSE
     GxB_Scalar thunk = NULL ;
+    #else
+    // not used, just to allow GrB_free to be done, in LAGRAPH_FREE_WORK
+    GrB_Vector thunk = NULL ;
+    #endif
 
     LG_CHECK (centrality == NULL, -1, "centrality is NULL") ;
     (*centrality) = NULL ;
@@ -119,10 +151,10 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
     GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
     GrB_TRY (GrB_Matrix_new (&T, GrB_FP64, n, n)) ;
 
-#if (METHOD == 1)
+#if (METHOD == 1 || METHOD == 15)
 
     //--------------------------------------------------------------------------
-    // TC1: simplest method, requires that A has all entries equal to 1
+    // TC1, TC1.5: simplest method, requires that A has all entries equal to 1
     //--------------------------------------------------------------------------
 
 //          T = A.mxm(A, mask=A)
@@ -131,11 +163,19 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
 //          T = pattern of T        FIXME
 //          return(1/k)*(3*(A @ y) - 2*(T @ y) + y)
 
-    printf ("TC1: ")  ;
 
-    // T<A> = A*A'
-    GrB_TRY (GrB_mxm (T, A, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, A, A,
-        GrB_DESC_T1)) ;
+    #if ( METHOD == 1)
+        printf ("TC1: ")  ; // FIXME: remove
+        // T<A> = A*A : method 1
+        GrB_TRY (GrB_mxm (T, A, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, A, A,
+            NULL)) ;
+    #else
+        // this should be faster than METHOD 1
+        printf ("TC1.5: ") ;   // FIXME: remove
+        // T<A> = A*A' : method 1.5
+        GrB_TRY (GrB_mxm (T, A, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, A, A,
+            GrB_DESC_T1)) ;
+    #endif
 
     // y = sum (T), where y(i) = sum (T (i,:)) and y(i)=0 of T(i,:) is empty
     GrB_TRY (GrB_Vector_new (&y, GrB_FP64, n)) ;
@@ -171,7 +211,7 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
 
     // only uses the pattern of A
 
-    printf ("TC2: ")  ;
+    printf ("TC2: ")  ;     // FIXME: remove
 
     // T{A} = A*A'
     GrB_TRY (GrB_mxm (T, A, NULL, GxB_PLUS_PAIR_FP64, A, A, GrB_DESC_ST1)) ;
@@ -203,12 +243,12 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
 #elif (METHOD == 3)
 
     //--------------------------------------------------------------------------
-    // TC3: using tril
+    // TC3: using tril.  This is the fastest method.
     //--------------------------------------------------------------------------
 
     // only uses the pattern of A
 
-    printf ("TC3: ")  ;
+    printf ("TC3: ")  ;     // FIXME: remove
 
     GrB_TRY (GrB_Matrix_new (&L, GrB_FP64, n, n)) ;
 
@@ -255,7 +295,7 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
 #endif
 
     //--------------------------------------------------------------------------
-    // centrality = (3*u + w + y) / k for all 3 methods
+    // centrality = (3*u + w + y) / k for all 4 methods
     //--------------------------------------------------------------------------
 
     // u = 3*u
@@ -272,14 +312,14 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
         ((k == 0) ? 1.0 : (1.0/k)), *centrality, NULL)) ;
 
     // TODO: # of triangles is k/6, which could be returned as well
-    printf ("# of triangles: %.32g\n", k/6) ;
+    printf ("# of triangles: %.32g\n", k/6) ;   // FIXME: remove
 
     //--------------------------------------------------------------------------
     // free workspace and return result
     //--------------------------------------------------------------------------
 
     LAGRAPH_FREE_WORK ;
-GxB_set (GxB_BURBLE, false) ;   // FIXME: remove
+// GxB_set (GxB_BURBLE, false) ;   // FIXME: remove
     return (0) ;
 }
 

@@ -1,0 +1,681 @@
+ 
+======================================================================
+benchmarks using LAGraph+GraphBLAS: Triangle Centrality
+======================================================================
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+# of trials: 3
+threads to test:  40 20 16 8 4 2 1
+matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+[.grb]
+Reading binary file: /raid/matrices/com-Youtube/com-Youtube.grb
+read time: 0.110142
+
+  1134890x1134890 GraphBLAS double matrix, sparse by row
+  G->A, 5975248 entries, memory: 54.2 MB
+  iso value:    1
+
+    (0,1)    1
+    (0,2)    1
+    (0,3)    1
+    (0,4)    1
+    (0,5)    1
+    (0,6)    1
+    (0,7)    1
+    (0,8)    1
+    (0,9)    1
+    (0,10)    1
+    (0,11)    1
+    (0,12)    1
+    (0,13)    1
+    (0,14)    1
+    (0,15)    1
+    (0,16)    1
+    (0,17)    1
+    (0,18)    1
+    (0,19)    1
+    (0,20)    1
+    (0,21)    1
+    (0,375)    1
+    (0,1218)    1
+    (0,268634)    1
+    (0,317879)    1
+    (0,644185)    1
+    (0,644186)    1
+    (0,644187)    1
+    (0,644188)    1
+    ...
+TC3: # of triangles: 3056386
+
+start trial 0
+TC3: # of triangles: 3056386
+threads 40 trial  0:     0.147933 sec
+
+start trial 1
+TC3: # of triangles: 3056386
+threads 40 trial  1:     0.108110 sec
+
+start trial 2
+TC3: # of triangles: 3056386
+threads 40 trial  2:     0.126889 sec
+Avg: TCentrality nthreads:  40 time:     0.127644 matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+
+start trial 0
+TC3: # of triangles: 3056386
+threads 20 trial  0:     0.137309 sec
+
+start trial 1
+TC3: # of triangles: 3056386
+threads 20 trial  1:     0.121330 sec
+
+start trial 2
+TC3: # of triangles: 3056386
+threads 20 trial  2:     0.120005 sec
+Avg: TCentrality nthreads:  20 time:     0.126214 matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+
+start trial 0
+TC3: # of triangles: 3056386
+threads 16 trial  0:     0.138971 sec
+
+start trial 1
+TC3: # of triangles: 3056386
+threads 16 trial  1:     0.138201 sec
+
+start trial 2
+TC3: # of triangles: 3056386
+threads 16 trial  2:     0.138939 sec
+Avg: TCentrality nthreads:  16 time:     0.138704 matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+
+start trial 0
+TC3: # of triangles: 3056386
+threads  8 trial  0:     0.259624 sec
+
+start trial 1
+TC3: # of triangles: 3056386
+threads  8 trial  1:     0.262334 sec
+
+start trial 2
+TC3: # of triangles: 3056386
+threads  8 trial  2:     0.262738 sec
+Avg: TCentrality nthreads:   8 time:     0.261565 matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+
+start trial 0
+TC3: # of triangles: 3056386
+threads  4 trial  0:     0.505891 sec
+
+start trial 1
+TC3: # of triangles: 3056386
+threads  4 trial  1:     0.503139 sec
+
+start trial 2
+TC3: # of triangles: 3056386
+threads  4 trial  2:     0.499583 sec
+Avg: TCentrality nthreads:   4 time:     0.502871 matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+
+start trial 0
+TC3: # of triangles: 3056386
+threads  2 trial  0:     0.971287 sec
+
+start trial 1
+TC3: # of triangles: 3056386
+threads  2 trial  1:     0.972034 sec
+
+start trial 2
+TC3: # of triangles: 3056386
+threads  2 trial  2:     0.972092 sec
+Avg: TCentrality nthreads:   2 time:     0.971805 matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+
+start trial 0
+TC3: # of triangles: 3056386
+threads  1 trial  0:     1.888403 sec
+
+start trial 1
+TC3: # of triangles: 3056386
+threads  1 trial  1:     1.888968 sec
+
+start trial 2
+TC3: # of triangles: 3056386
+threads  1 trial  2:     1.888802 sec
+Avg: TCentrality nthreads:   1 time:     1.888724 matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+# of trials: 3
+threads to test:  40 20 16 8 4 2 1
+matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+[.grb]
+Reading binary file: /raid/matrices/as-Skitter/as-Skitter.grb
+read time: 0.256504
+
+  1696415x1696415 GraphBLAS double matrix, sparse by row
+  G->A, 22190596 entries, memory: 182.2 MB
+  iso value:    1
+
+    (0,1)    1
+    (0,2)    1
+    (0,3)    1
+    (0,4)    1
+    (0,5)    1
+    (0,6)    1
+    (0,7)    1
+    (0,8)    1
+    (0,9)    1
+    (0,10)    1
+    (0,11)    1
+    (0,12)    1
+    (0,13)    1
+    (0,14)    1
+    (0,15)    1
+    (0,16)    1
+    (0,17)    1
+    (0,18)    1
+    (0,19)    1
+    (0,20)    1
+    (0,21)    1
+    (0,22)    1
+    (0,23)    1
+    (0,24)    1
+    (0,25)    1
+    (0,26)    1
+    (0,27)    1
+    (0,28)    1
+    (0,29)    1
+    ...
+TC3: # of triangles: 28769868
+
+start trial 0
+TC3: # of triangles: 28769868
+threads 40 trial  0:     0.347013 sec
+
+start trial 1
+TC3: # of triangles: 28769868
+threads 40 trial  1:     0.347634 sec
+
+start trial 2
+TC3: # of triangles: 28769868
+threads 40 trial  2:     0.347108 sec
+Avg: TCentrality nthreads:  40 time:     0.347252 matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+
+start trial 0
+TC3: # of triangles: 28769868
+threads 20 trial  0:     0.453506 sec
+
+start trial 1
+TC3: # of triangles: 28769868
+threads 20 trial  1:     0.451139 sec
+
+start trial 2
+TC3: # of triangles: 28769868
+threads 20 trial  2:     0.453680 sec
+Avg: TCentrality nthreads:  20 time:     0.452775 matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+
+start trial 0
+TC3: # of triangles: 28769868
+threads 16 trial  0:     0.542008 sec
+
+start trial 1
+TC3: # of triangles: 28769868
+threads 16 trial  1:     0.541026 sec
+
+start trial 2
+TC3: # of triangles: 28769868
+threads 16 trial  2:     0.540233 sec
+Avg: TCentrality nthreads:  16 time:     0.541089 matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+
+start trial 0
+TC3: # of triangles: 28769868
+threads  8 trial  0:     1.003251 sec
+
+start trial 1
+TC3: # of triangles: 28769868
+threads  8 trial  1:     1.008618 sec
+
+start trial 2
+TC3: # of triangles: 28769868
+threads  8 trial  2:     1.006413 sec
+Avg: TCentrality nthreads:   8 time:     1.006094 matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+
+start trial 0
+TC3: # of triangles: 28769868
+threads  4 trial  0:     1.965097 sec
+
+start trial 1
+TC3: # of triangles: 28769868
+threads  4 trial  1:     1.964083 sec
+
+start trial 2
+TC3: # of triangles: 28769868
+threads  4 trial  2:     1.962871 sec
+Avg: TCentrality nthreads:   4 time:     1.964017 matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+
+start trial 0
+TC3: # of triangles: 28769868
+threads  2 trial  0:     3.855522 sec
+
+start trial 1
+TC3: # of triangles: 28769868
+threads  2 trial  1:     3.877973 sec
+
+start trial 2
+TC3: # of triangles: 28769868
+threads  2 trial  2:     3.854081 sec
+Avg: TCentrality nthreads:   2 time:     3.862526 matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+
+start trial 0
+TC3: # of triangles: 28769868
+threads  1 trial  0:     7.498997 sec
+
+start trial 1
+TC3: # of triangles: 28769868
+threads  1 trial  1:     7.501531 sec
+
+start trial 2
+TC3: # of triangles: 28769868
+threads  1 trial  2:     7.498065 sec
+Avg: TCentrality nthreads:   1 time:     7.499531 matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+# of trials: 3
+threads to test:  40 20 16 8 4 2 1
+matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+[.grb]
+Reading binary file: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+read time: 0.71251
+
+  3997962x3997962 GraphBLAS double matrix, sparse by row
+  G->A, 69362378 entries, memory: 559.7 MB
+  iso value:    1
+
+    (0,1)    1
+    (0,2)    1
+    (0,31)    1
+    (0,73)    1
+    (0,80)    1
+    (0,113619)    1
+    (0,2468396)    1
+    (0,2823480)    1
+    (0,2823484)    1
+    (0,2846482)    1
+    (0,2947405)    1
+    (0,3011065)    1
+    (0,3696095)    1
+    (0,3836941)    1
+    (0,3997948)    1
+    (0,3997949)    1
+    (0,3997951)    1
+    (0,3997953)    1
+    (0,3997955)    1
+    (0,3997957)    1
+    (0,3997958)    1
+    (0,3997960)    1
+    (0,3997961)    1
+    (1,0)    1
+    (1,2)    1
+    (1,3)    1
+    (1,4)    1
+    (1,5)    1
+    (1,6)    1
+    ...
+TC3: # of triangles: 177820130
+
+start trial 0
+TC3: # of triangles: 177820130
+threads 40 trial  0:     1.156566 sec
+
+start trial 1
+TC3: # of triangles: 177820130
+threads 40 trial  1:     1.154034 sec
+
+start trial 2
+TC3: # of triangles: 177820130
+threads 40 trial  2:     1.156656 sec
+Avg: TCentrality nthreads:  40 time:     1.155752 matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+
+start trial 0
+TC3: # of triangles: 177820130
+threads 20 trial  0:     1.663258 sec
+
+start trial 1
+TC3: # of triangles: 177820130
+threads 20 trial  1:     1.671061 sec
+
+start trial 2
+TC3: # of triangles: 177820130
+threads 20 trial  2:     1.684286 sec
+Avg: TCentrality nthreads:  20 time:     1.672868 matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+
+start trial 0
+TC3: # of triangles: 177820130
+threads 16 trial  0:     1.981933 sec
+
+start trial 1
+TC3: # of triangles: 177820130
+threads 16 trial  1:     1.984092 sec
+
+start trial 2
+TC3: # of triangles: 177820130
+threads 16 trial  2:     1.982512 sec
+Avg: TCentrality nthreads:  16 time:     1.982846 matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+
+start trial 0
+TC3: # of triangles: 177820130
+threads  8 trial  0:     3.814872 sec
+
+start trial 1
+TC3: # of triangles: 177820130
+threads  8 trial  1:     3.817562 sec
+
+start trial 2
+TC3: # of triangles: 177820130
+threads  8 trial  2:     3.828265 sec
+Avg: TCentrality nthreads:   8 time:     3.820233 matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+
+start trial 0
+TC3: # of triangles: 177820130
+threads  4 trial  0:     7.519838 sec
+
+start trial 1
+TC3: # of triangles: 177820130
+threads  4 trial  1:     7.515192 sec
+
+start trial 2
+TC3: # of triangles: 177820130
+threads  4 trial  2:     7.522906 sec
+Avg: TCentrality nthreads:   4 time:     7.519312 matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+
+start trial 0
+TC3: # of triangles: 177820130
+threads  2 trial  0:    14.777810 sec
+
+start trial 1
+TC3: # of triangles: 177820130
+threads  2 trial  1:    14.782718 sec
+
+start trial 2
+TC3: # of triangles: 177820130
+threads  2 trial  2:    14.792189 sec
+Avg: TCentrality nthreads:   2 time:    14.784239 matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+
+start trial 0
+TC3: # of triangles: 177820130
+threads  1 trial  0:    28.844834 sec
+
+start trial 1
+TC3: # of triangles: 177820130
+threads  1 trial  1:    28.840733 sec
+
+start trial 2
+TC3: # of triangles: 177820130
+threads  1 trial  2:    28.842369 sec
+Avg: TCentrality nthreads:   1 time:    28.842645 matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+# of trials: 3
+threads to test:  40 20 16 8 4 2 1
+matrix: /raid/matrices/com-Orkut/com-Orkut.grb
+[.grb]
+Reading binary file: /raid/matrices/com-Orkut/com-Orkut.grb
+read time: 2.393
+
+  3072441x3072441 GraphBLAS double matrix, sparse by row
+  G->A, 234370166 entries, memory: 1.8 GB
+  iso value:    1
+
+    (0,1)    1
+    (0,2)    1
+    (0,3)    1
+    (0,4)    1
+    (0,5)    1
+    (0,6)    1
+    (0,7)    1
+    (0,8)    1
+    (0,9)    1
+    (0,10)    1
+    (0,11)    1
+    (0,12)    1
+    (1,0)    1
+    (1,4)    1
+    (1,5)    1
+    (1,14)    1
+    (1,59)    1
+    (1,61)    1
+    (1,62)    1
+    (1,66)    1
+    (1,73)    1
+    (1,80)    1
+    (1,172)    1
+    (1,174)    1
+    (1,618)    1
+    (1,626)    1
+    (1,642)    1
+    (1,652)    1
+    (1,657)    1
+    ...
+TC3: # of triangles: 627584181
+
+start trial 0
+TC3: # of triangles: 627584181
+threads 40 trial  0:    10.003350 sec
+
+start trial 1
+TC3: # of triangles: 627584181
+threads 40 trial  1:    10.006655 sec
+
+start trial 2
+TC3: # of triangles: 627584181
+threads 40 trial  2:    10.002874 sec
+Avg: TCentrality nthreads:  40 time:    10.004293 matrix: /raid/matrices/com-Orkut/com-Orkut.grb
+
+start trial 0
+TC3: # of triangles: 627584181
+threads 20 trial  0:    14.688895 sec
+
+start trial 1
+TC3: # of triangles: 627584181
+threads 20 trial  1:    14.606099 sec
+
+start trial 2
+TC3: # of triangles: 627584181
+threads 20 trial  2:    14.570589 sec
+Avg: TCentrality nthreads:  20 time:    14.621861 matrix: /raid/matrices/com-Orkut/com-Orkut.grb
+
+start trial 0
+TC3: # of triangles: 627584181
+threads 16 trial  0:    17.931415 sec
+
+start trial 1
+TC3: # of triangles: 627584181
+threads 16 trial  1:    17.932490 sec
+
+start trial 2
+TC3: # of triangles: 627584181
+threads 16 trial  2:    17.932990 sec
+Avg: TCentrality nthreads:  16 time:    17.932298 matrix: /raid/matrices/com-Orkut/com-Orkut.grb
+
+start trial 0
+TC3: # of triangles: 627584181
+threads  8 trial  0:    34.982333 sec
+
+start trial 1
+TC3: # of triangles: 627584181
+threads  8 trial  1:    34.971766 sec
+
+start trial 2
+TC3: # of triangles: 627584181
+threads  8 trial  2:    34.938505 sec
+Avg: TCentrality nthreads:   8 time:    34.964201 matrix: /raid/matrices/com-Orkut/com-Orkut.grb
+
+start trial 0
+TC3: # of triangles: 627584181
+threads  4 trial  0:    67.986892 sec
+
+start trial 1
+TC3: # of triangles: 627584181
+threads  4 trial  1:    67.906819 sec
+
+start trial 2
+TC3: # of triangles: 627584181
+threads  4 trial  2:    68.066849 sec
+Avg: TCentrality nthreads:   4 time:    67.986853 matrix: /raid/matrices/com-Orkut/com-Orkut.grb
+
+start trial 0
+TC3: # of triangles: 627584181
+threads  2 trial  0:   134.902494 sec
+
+start trial 1
+TC3: # of triangles: 627584181
+threads  2 trial  1:   134.865724 sec
+
+start trial 2
+TC3: # of triangles: 627584181
+threads  2 trial  2:   134.861225 sec
+Avg: TCentrality nthreads:   2 time:   134.876481 matrix: /raid/matrices/com-Orkut/com-Orkut.grb
+
+start trial 0
+TC3: # of triangles: 627584181
+threads  1 trial  0:   265.580833 sec
+
+start trial 1
+TC3: # of triangles: 627584181
+threads  1 trial  1:   265.567789 sec
+
+start trial 2
+TC3: # of triangles: 627584181
+threads  1 trial  2:   266.140844 sec
+Avg: TCentrality nthreads:   1 time:   265.763156 matrix: /raid/matrices/com-Orkut/com-Orkut.grb
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+# of trials: 3
+threads to test:  40 20 16 8 4 2 1
+matrix: /raid/matrices/com-Orkut/com-Friendster.grb
+[.grb]
+Reading binary file: /raid/matrices/com-Orkut/com-Friendster.grb
+Binary file not found: [/raid/matrices/com-Orkut/com-Friendster.grb]
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+# of trials: 3
+threads to test:  40 20 16 8 4 2 1
+matrix: /raid/matrices/com-Friendster/com-Friendster.grb
+[.grb]
+Reading binary file: /raid/matrices/com-Friendster/com-Friendster.grb
+read time: 56.5337
+
+  65608366x65608366 GraphBLAS double matrix, sparse by row
+  G->A, 3612134270 entries, memory: 27.4 GB
+  iso value:    1
+
+    (0,1)    1
+    (0,2)    1
+    (0,3)    1
+    (0,6)    1
+    (0,13)    1
+    (0,16)    1
+    (0,18)    1
+    (0,22)    1
+    (0,23)    1
+    (0,24)    1
+    (0,25)    1
+    (0,36)    1
+    (0,37)    1
+    (0,60)    1
+    (0,88)    1
+    (0,106)    1
+    (0,107)    1
+    (0,113)    1
+    (0,122)    1
+    (0,124)    1
+    (0,126)    1
+    (0,127)    1
+    (0,130)    1
+    (0,134)    1
+    (0,135)    1
+    (0,138)    1
+    (0,141)    1
+    (0,142)    1
+    (0,149)    1
+    ...
+TC3: # of triangles: 4173724142
+
+start trial 0
+TC3: # of triangles: 4173724142
+threads 40 trial  0:   228.293982 sec
+
+start trial 1
+TC3: # of triangles: 4173724142
+threads 40 trial  1:   227.766861 sec
+
+start trial 2
+TC3: # of triangles: 4173724142
+threads 40 trial  2:   228.079696 sec
+Avg: TCentrality nthreads:  40 time:   228.046847 matrix: /raid/matrices/com-Friendster/com-Friendster.grb
+
+start trial 0
+TC3: # of triangles: 4173724142
+threads 20 trial  0:   333.001074 sec
+
+start trial 1
+TC3: # of triangles: 4173724142
+threads 20 trial  1:   334.607691 sec
+
+start trial 2
+TC3: # of triangles: 4173724142
+threads 20 trial  2:   337.766334 sec
+Avg: TCentrality nthreads:  20 time:   335.125033 matrix: /raid/matrices/com-Friendster/com-Friendster.grb
+
+start trial 0
+TC3: # of triangles: 4173724142
+threads 16 trial  0:   401.621121 sec
+
+start trial 1
+TC3: # of triangles: 4173724142
+threads 16 trial  1:   400.759075 sec
+
+start trial 2
+TC3: # of triangles: 4173724142
+threads 16 trial  2:   401.111202 sec
+Avg: TCentrality nthreads:  16 time:   401.163799 matrix: /raid/matrices/com-Friendster/com-Friendster.grb
+
+start trial 0
+TC3: # of triangles: 4173724142
+threads  8 trial  0:   782.088661 sec
+
+start trial 1
+TC3: # of triangles: 4173724142
+threads  8 trial  1:   780.855854 sec
+
+start trial 2
+TC3: # of triangles: 4173724142
+threads  8 trial  2:   783.378016 sec
+Avg: TCentrality nthreads:   8 time:   782.107510 matrix: /raid/matrices/com-Friendster/com-Friendster.grb
+
+start trial 0
+TC3: # of triangles: 4173724142
+threads  4 trial  0:  1535.369662 sec
+
+start trial 1
+TC3: # of triangles: 4173724142
+threads  4 trial  1:  1537.012223 sec
+
+start trial 2
+TC3: # of triangles: 4173724142
+threads  4 trial  2:  1537.491870 sec
+Avg: TCentrality nthreads:   4 time:  1536.624585 matrix: /raid/matrices/com-Friendster/com-Friendster.grb
+
+start trial 0
+TC3: # of triangles: 4173724142
+threads  2 trial  0:  3060.989578 sec
+
+start trial 1
+TC3: # of triangles: 4173724142
+threads  2 trial  1:  3066.778169 sec
+
+start trial 2
+TC3: # of triangles: 4173724142
+threads  2 trial  2:  3059.396201 sec
+Avg: TCentrality nthreads:   2 time:  3062.387983 matrix: /raid/matrices/com-Friendster/com-Friendster.grb
+
+start trial 0
+TC3: # of triangles: 4173724142
+threads  1 trial  0:  6054.365756 sec
+
+start trial 1
+TC3: # of triangles: 4173724142
+threads  1 trial  1:  6055.611708 sec
+
+start trial 2
+TC3: # of triangles: 4173724142
+threads  1 trial  2:  6063.162630 sec
+Avg: TCentrality nthreads:   1 time:  6057.713364 matrix: /raid/matrices/com-Friendster/com-Friendster.grb
