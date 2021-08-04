@@ -202,9 +202,6 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
         ERROR ;
     }
 
-    // iso matrices not yet supported
-    if (iso) ERROR ;
-
     //--------------------------------------------------------------------------
     // create the type string
     //--------------------------------------------------------------------------
@@ -309,9 +306,10 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
         "format: %-8s\n"
         "size:   %-18" PRIu64 "\n"
         "type:   %-72s\n"
+        "iso:    %1d\n"
         "%-220s\n\n",
         version, nrows, ncols, nvec, nvals, fmt_string, (uint64_t) typesize,
-        typename, user) ;
+        typename, iso, user) ;
 
     // printf ("header len %d\n", len) ;
     for (int32_t k = len ; k < LAGRAPH_BIN_HEADER ; k++) header [k] = ' ' ;
@@ -321,6 +319,12 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
     //--------------------------------------------------------------------------
     // write the scalar content
     //--------------------------------------------------------------------------
+
+    if (iso)
+    {
+        // kind is 1, 2, 4, or 8: add 100 if the matrix is iso
+        kind = kind + 100 ;
+    }
 
     FWRITE (&fmt,      sizeof (GxB_Format_Value), 1) ;
     FWRITE (&kind,     sizeof (int32_t), 1) ;
@@ -342,22 +346,22 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
         FWRITE (Ap, sizeof (GrB_Index), nvec+1) ;
         FWRITE (Ah, sizeof (GrB_Index), nvec) ;
         FWRITE (Ai, sizeof (GrB_Index), nvals) ;
-        FWRITE (Ax, typesize, nvals) ;
+        FWRITE (Ax, typesize, (iso ? 1 : nvals)) ;
     }
     else if (is_sparse)
     {
         FWRITE (Ap, sizeof (GrB_Index), nvec+1) ;
         FWRITE (Ai, sizeof (GrB_Index), nvals) ;
-        FWRITE (Ax, typesize, nvals) ;
+        FWRITE (Ax, typesize, (iso ? 1 : nvals)) ;
     }
     else if (is_bitmap)
     {
         FWRITE (Ab, sizeof (int8_t), nrows*ncols) ;
-        FWRITE (Ax, typesize, nrows*ncols) ;
+        FWRITE (Ax, typesize, (iso ? 1 : (nrows*ncols))) ;
     }
     else
     {
-        FWRITE (Ax, typesize, nrows*ncols) ;
+        FWRITE (Ax, typesize, (iso ? 1 : (nrows*ncols))) ;
     }
 
     //--------------------------------------------------------------------------
@@ -504,13 +508,17 @@ static inline int binread   // returns 0 if successful, -1 if failure
     FREAD (&typecode, sizeof (int32_t), 1) ;
     FREAD (&typesize, sizeof (size_t), 1) ;
 
+    bool iso = false ;
+    if (kind > 100)
+    {
+        iso = true ;
+        kind = kind - 100 ;
+    }
+
     is_hyper  = (kind == 1) ;
     is_sparse = (kind == 0 || kind == GxB_SPARSE) ;
     is_bitmap = (kind == GxB_BITMAP) ;
     is_full   = (kind == GxB_FULL) ;
-
-    // iso matrices not yet supported
-    bool iso = false ;
 
     switch (typecode)
     {
@@ -584,8 +592,9 @@ static inline int binread   // returns 0 if successful, -1 if failure
     {
         ERROR ;     // unknown matrix format
     }
-    Ax = LAGraph_Malloc (Ax_len, typesize) ;
-    Ax_size = Ax_len * typesize ;
+    Ax = LAGraph_Malloc (iso ? 1 : Ax_len, typesize) ;
+    Ax_size = (iso ? 1 : Ax_len) * typesize ;
+    ok = ok && (Ax != NULL) ;
     if (!ok) ERROR ;        // out of memory
 
     //--------------------------------------------------------------------------
@@ -608,7 +617,7 @@ static inline int binread   // returns 0 if successful, -1 if failure
         FREAD (Ab, sizeof (int8_t), Ab_len) ;
     }
 
-    FREAD (Ax, typesize, Ax_len) ;
+    FREAD (Ax, typesize, (iso ? 1 : Ax_len)) ;
 
     //--------------------------------------------------------------------------
     // import the matrix

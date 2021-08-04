@@ -15,12 +15,16 @@
 
 #include "LAGraph_demo.h"
 
-#define NTHREAD_LIST 1
 // #define NTHREAD_LIST 2
-#define THREAD_LIST 0
+
+// #define NTHREAD_LIST 1
+// #define THREAD_LIST 0
 
 // #define NTHREAD_LIST 6
 // #define THREAD_LIST 64, 32, 24, 12, 8, 4
+
+#define NTHREAD_LIST 7
+#define THREAD_LIST 40, 20, 16, 8, 4, 2, 1
 
 #define LAGraph_FREE_ALL            \
 {                                   \
@@ -92,6 +96,7 @@ int main (int argc, char **argv)
     GrB_free (&(G->A)) ;
     G->A = A ;
     GrB_TRY (GxB_Matrix_fprint (G->A, "G->A", 2, stdout)) ;
+    fprintf (stderr, "Matrix: %s\n", matrix_name) ;
 
     //--------------------------------------------------------------------------
     // triangle centrality
@@ -119,8 +124,10 @@ int main (int argc, char **argv)
 
             LAGraph_TRY (LAGraph_Toc (&ttrial [trial], tic, NULL)) ;
             ttot += ttrial [trial] ;
-            printf ("trial %2d: %12.6f sec rate %6.2f\n",
-                trial, ttrial [trial], 1e-6 * nvals / ttrial [trial]) ;
+            printf ("threads %2d trial %2d: %12.6f sec\n",
+                nthreads, trial, ttrial [trial]) ;
+            fprintf (stderr, "threads %2d trial %2d: %12.6f sec\n", 
+                nthreads, trial, ttrial [trial]) ;
         }
         ttot = ttot / ntrials ;
 
