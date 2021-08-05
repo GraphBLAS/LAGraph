@@ -10,7 +10,9 @@
 
 #-------------------------------------------------------------------------------
 
-file( GLOB DEMO_SOURCES LIST_DIRECTORIES false *_test.c )
+include_directories ( ${CMAKE_SOURCE_DIR}/src/test/include )
+
+file( GLOB DEMO_SOURCES LIST_DIRECTORIES false *_test.c test*.c )
 foreach( demosourcefile ${DEMO_SOURCES} )
     get_filename_component(justname ${demosourcefile} NAME)
     string( REPLACE ".c" "" demoname ${justname} )

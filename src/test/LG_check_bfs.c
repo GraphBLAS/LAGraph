@@ -80,11 +80,12 @@ int LG_check_bfs
     // check inputs
     //--------------------------------------------------------------------------
 
+    double tic [2], tt ;
+    LAGraph_Tic (tic, msg) ;
     GrB_Vector Row = NULL ;
     GrB_Index *Ap = NULL, *Aj = NULL, *neighbors = NULL ;
     void *Ax = NULL ;
     GrB_Index Ap_size, Aj_size, Ax_size, n, ncols ;
-    bool iso, jumbled ;
     int64_t *queue = NULL, *level_in = NULL, *parent_in = NULL,
         *level_check = NULL ;
     bool *visited = NULL ;
@@ -92,17 +93,6 @@ int LG_check_bfs
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
     LG_CHECK (n != ncols, -1001, "G->A must be square") ;
-
-//  printf ("\nTEST BFS\n") ;
-//  GrB_TRY (GxB_Matrix_fprint (G->A, "adjacency matrix", 2, stdout)) ;
-//  if (Level != NULL)
-//  {
-//      GrB_TRY (GxB_Vector_fprint (Level, "level", 2, stdout)) ;
-//  }
-//  if (Parent != NULL)
-//  {
-//      GrB_TRY (GxB_Vector_fprint (Parent, "parent", 2, stdout)) ;
-//  }
 
     //--------------------------------------------------------------------------
     // allocate workspace
@@ -131,8 +121,22 @@ int LG_check_bfs
     }
 
     //--------------------------------------------------------------------------
+    // unpack the matrix in CSR form for SuiteSparse:GraphBLAS
+    //--------------------------------------------------------------------------
+
+    #if LG_SUITESPARSE
+    bool iso, jumbled ;
+    GrB_TRY (GxB_Matrix_unpack_CSR (G->A, &Ap, &Aj, &Ax, &Ap_size, &Aj_size,
+        &Ax_size, &iso, &jumbled, NULL)) ;
+    #endif
+
+    //--------------------------------------------------------------------------
     // compute the level of each node
     //--------------------------------------------------------------------------
+
+    LAGraph_Toc (&tt, tic, msg) ;
+    printf ("LG_check_bfs init  time: %g sec\n", tt) ;
+    LAGraph_Tic (tic, msg) ;
 
     queue [0] = src ;
     int64_t head = 0 ;
@@ -147,27 +151,35 @@ int LG_check_bfs
     }
     level_check [src] = 0 ;
 
+    #if !LG_SUITESPARSE
     GrB_TRY (GrB_Vector_new (&Row, GrB_BOOL, n)) ;
     neighbors = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
     LG_CHECK (neighbors == NULL, -1003, "out of memory") ;
+    #endif
 
     while (head < tail)
     {
         // dequeue the node at the head of the queue
         int64_t u = queue [head++] ;
 
+        #if LG_SUITESPARSE
+        // directly access the indices of entries in A(u,:)
+        GrB_Index degree = Ap [u+1] - Ap [u] ;
+        GrB_Index *node_u_adjacency_list = Aj + Ap [u] ;
+        #else
         // extract the indices of entries in A(u,:)
+        GrB_Index degree = n ;
         GrB_TRY (GrB_Col_extract (Row, NULL, NULL, G->A, GrB_ALL, n, u,
             GrB_DESC_T0)) ;
-        GrB_Index degree = n ;
-        GrB_TRY (GrB_Vector_extractTuples_BOOL (neighbors, NULL, &degree,
-            Row)) ;
+        GrB_TRY (GrB_Vector_extractTuples_BOOL (neighbors, NULL, &degree, Row));
+        GrB_Index *node_u_adjacency_list = neighbors ;
+        #endif
 
         // traverse all entries in A(u,:)
         for (int64_t k = 0 ; k < degree ; k++)
         {
             // consider edge (u,v)
-            int64_t v = neighbors [k] ;
+            int64_t v = node_u_adjacency_list [k] ;
             if (!visited [v])
             {
                 // node v is not yet visited; set its level and add to the
@@ -178,6 +190,19 @@ int LG_check_bfs
             }
         }
     }
+
+    LAGraph_Toc (&tt, tic, msg) ;
+    printf ("LG_check_bfs bfs   time: %g sec\n", tt) ;
+    LAGraph_Tic (tic, msg) ;
+
+    //--------------------------------------------------------------------------
+    // repack the matrix in CSR form for SuiteSparse:GraphBLAS
+    //--------------------------------------------------------------------------
+
+    #if LG_SUITESPARSE
+    GrB_TRY (GxB_Matrix_pack_CSR (G->A, &Ap, &Aj, &Ax, Ap_size, Aj_size,
+        Ax_size, iso, jumbled, NULL)) ;
+    #endif
 
     //--------------------------------------------------------------------------
     // check the level of each node
@@ -229,6 +254,10 @@ int LG_check_bfs
     //--------------------------------------------------------------------------
 
     LAGRAPH_FREE_WORK ;
+
+    LAGraph_Toc (&tt, tic, msg) ;
+    printf ("LG_check_bfs check time: %g sec\n", tt) ;
+
     return (0) ;
 }
 

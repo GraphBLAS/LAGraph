@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <acutest.h>
 
+#include <LAGraphX.h>
 #include <LAGraph_test.h>
 
 char msg [LAGRAPH_MSG_LEN] ;

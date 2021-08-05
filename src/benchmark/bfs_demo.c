@@ -150,6 +150,20 @@ int main (int argc, char **argv)
                     (pp == 0) ? "pushonly" : "pushpull",
                     trial, nthreads, src, ttrial) ;
                 fflush (stdout) ;
+
+                // check the result (this is very slow so only do it for one trial)
+                int32_t maxlevel ;
+                int64_t nvisited ;
+                if (trial == 0)
+                {
+                    LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
+                    LAGraph_TRY (LG_check_bfs (NULL, parent, G, src, msg)) ;
+                    GrB_TRY (GrB_Vector_nvals (&nvisited, level)) ;
+                    LAGraph_TRY (LAGraph_Toc (&tcheck, tic, msg)) ;
+                    printf ("    n: %ld max level: %d nvisited: %ld check: %g sec\n",
+                        n, maxlevel, nvisited, tcheck) ;
+                }
+
                 GrB_free (&parent) ;
 
                 //--------------------------------------------------------------
@@ -165,7 +179,6 @@ int main (int argc, char **argv)
                 LAGraph_TRY (LAGraph_Toc (&ttrial, tic, msg)) ;
                 tl [nthreads][pp] += ttrial ;
 
-                int32_t maxlevel ;
                 GrB_TRY (GrB_reduce (&maxlevel, NULL, GrB_MAX_MONOID_INT32,
                     level, NULL)) ;
                 printf ("level only   %s trial: %2d threads: %2d "
@@ -173,6 +186,17 @@ int main (int argc, char **argv)
                     (pp == 0) ? "pushonly" : "pushpull",
                     trial, nthreads, src, ttrial) ;
                 fflush (stdout) ;
+
+                // check the result (this is very slow so only do it for one trial)
+                if (trial == 0)
+                {
+                    LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
+                    LAGraph_TRY (LG_check_bfs (level, NULL, G, src, msg)) ;
+                    GrB_TRY (GrB_Vector_nvals (&nvisited, level)) ;
+                    LAGraph_TRY (LAGraph_Toc (&tcheck, tic, msg)) ;
+                    printf ("    n: %ld max level: %d nvisited: %ld check: %g sec\n",
+                        n, maxlevel, nvisited, tcheck) ;
+                }
 
                 GrB_free (&level) ;
 
@@ -196,18 +220,18 @@ int main (int argc, char **argv)
                     trial, nthreads, src, ttrial) ;
                 fflush (stdout) ;
 
-#endif
                 // check the result (this is very slow so only do it for one trial)
                 if (trial == 0)
                 {
                     LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
                     LAGraph_TRY (LG_check_bfs (level, parent, G, src, msg)) ;
-                    int64_t nvisited ;
                     GrB_TRY (GrB_Vector_nvals (&nvisited, level)) ;
                     LAGraph_TRY (LAGraph_Toc (&tcheck, tic, msg)) ;
                     printf ("    n: %ld max level: %d nvisited: %ld check: %g sec\n",
                         n, maxlevel, nvisited, tcheck) ;
                 }
+
+#endif
 
                 GrB_free (&parent) ;
                 GrB_free (&level) ;
