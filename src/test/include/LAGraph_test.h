@@ -18,6 +18,7 @@
 //------------------------------------------------------------------------------
 
 #include <LAGraph.h>
+#include <LG_test.h>
 #include <acutest.h>
 #include <graph_zachary_karate.h>
 

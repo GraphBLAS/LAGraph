@@ -67,7 +67,7 @@
 #include "LG_internal.h"
 
 // METHOD is 1, 15, 2, or 3 to select the above methods
-#define METHOD 3
+#define METHOD 1
 
 #if ( !LG_SUITESPARSE )
 // methods 2 and 3 require SuiteSparse
@@ -138,6 +138,8 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
         LG_CHECK (false, -105, "G->A must be symmetric") ;
     }
 
+    // FIXME: could remove any self-edges, if present; do this in the
+    // non-expert version.
     // no self edges can be present
     LG_CHECK (G->ndiag != 0, -104, "G->ndiag must be zero") ;
 

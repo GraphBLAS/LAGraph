@@ -9,10 +9,54 @@
 # or contact permission@sei.cmu.edu for the full terms.
 
 #-------------------------------------------------------------------------------
-# This will only build tests from files with the name "test_*.c"
+# build the lagraphtest library
 #-------------------------------------------------------------------------------
 
 include_directories ( ${CMAKE_SOURCE_DIR}/src/test/include )
+
+file ( GLOB LAGRAPHTEST_LIB_SOURCES "LG_*.c" )
+
+#-------------------------------------------------------------------------------
+# dynamic lagraphtest library properties
+#-------------------------------------------------------------------------------
+
+add_library ( lagraphtest SHARED ${LAGRAPHTEST_LIB_SOURCES} )
+SET_TARGET_PROPERTIES ( lagraphtest PROPERTIES
+    VERSION ${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}
+    SOVERSION ${LAGraph_VERSION_MAJOR}
+    C_STANDARD_REQUIRED 11
+    PUBLIC_HEADER "include/LG_test.h" )
+set_property ( TARGET lagraphtest PROPERTY C_STANDARD 11 )
+target_link_libraries(lagraphtest PUBLIC ${GRAPHBLAS_LIBRARIES})
+
+#-------------------------------------------------------------------------------
+# static lagraphtest library properties
+#-------------------------------------------------------------------------------
+
+add_library ( lagraphtest_static STATIC ${LAGRAPHTEST_LIB_SOURCES} )
+SET_TARGET_PROPERTIES ( lagraphtest_static PROPERTIES
+    VERSION ${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}
+    OUTPUT_NAME lagraphtest
+    POSITION_INDEPENDENT_CODE OFF
+    SOVERSION ${LAGraph_VERSION_MAJOR}
+    C_STANDARD_REQUIRED 11
+    PUBLIC_HEADER "include/LG_test.h" )
+set_property ( TARGET lagraphtest_static PROPERTY C_STANDARD 11 )
+target_link_libraries(lagraphtest_static PUBLIC ${GRAPHBLAS_LIBRARIES})
+
+#-------------------------------------------------------------------------------
+# add OpenMP
+#-------------------------------------------------------------------------------
+
+if ( OPENMP_FOUND )
+    target_link_libraries ( lagraphtest PUBLIC ${OpenMP_C_LIBRARIES} )
+    target_link_libraries ( lagraphtest_static PUBLIC ${OpenMP_C_LIBRARIES} )
+endif ( )
+
+
+#-------------------------------------------------------------------------------
+# This will only build tests from files with the name "test_*.c"
+#-------------------------------------------------------------------------------
 
 file( GLOB TEST_SOURCES LIST_DIRECTORIES false test_*.c )
 foreach( testsourcefile ${TEST_SOURCES} )
@@ -20,7 +64,8 @@ foreach( testsourcefile ${TEST_SOURCES} )
     string( REPLACE ".c" "" testname ${justname} )
     message("Adding: ${testname}")
     add_executable( ${testname} ${testsourcefile})
-    target_link_libraries( ${testname} lagraph ${GRAPHBLAS_LIBRARIES} )
+    target_link_libraries( ${testname} lagraph lagraphtest ${GRAPHBLAS_LIBRARIES} )
     string( REPLACE "test_" "ctest_" ctestname ${testname})
     add_test( ${ctestname} ${testname})
 endforeach( testsourcefile ${TEST_SOURCES} )
+
