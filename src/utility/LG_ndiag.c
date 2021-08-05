@@ -52,7 +52,7 @@ int LG_ndiag                // returns 0 if successful, < 0 if failure
 
             GrB_TRY (GrB_Vector_new (&d, atype, n)) ;
             GrB_TRY (GxB_Vector_diag (d, A, 0, NULL)) ;
-            GrB_TRY (GrB_Vector_nvals (ndiag, d)) ;
+            GrB_TRY (GrB_Vector_nvals ((GrB_Index *) ndiag, d)) ;
 
         #else
 
@@ -62,7 +62,7 @@ int LG_ndiag                // returns 0 if successful, < 0 if failure
 
             GrB_TRY (GrB_Matrix_new (&D, atype, nrows, ncols)) ;
             GrB_TRY (GxB_select (D, NULL, NULL, GxB_DIAG, A, NULL, NULL)) ;
-            GrB_TRY (GrB_Matrix_nvals (ndiag, D)) ;
+            GrB_TRY (GrB_Matrix_nvals ((GrB_Index *) ndiag, D)) ;
 
         #endif
 

@@ -81,12 +81,12 @@ int LG_check_bfs
     //--------------------------------------------------------------------------
 
     GrB_Vector Row = NULL ;
-    GrB_Index *Ap = NULL, *Aj = NULL ;
+    GrB_Index *Ap = NULL, *Aj = NULL, *neighbors = NULL ;
     void *Ax = NULL ;
     GrB_Index Ap_size, Aj_size, Ax_size, n, ncols ;
     bool iso, jumbled ;
     int64_t *queue = NULL, *level_in = NULL, *parent_in = NULL,
-        *level_check = NULL, *neighbors = NULL ;
+        *level_check = NULL ;
     bool *visited = NULL ;
     LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
@@ -159,7 +159,7 @@ int LG_check_bfs
         // extract the indices of entries in A(u,:)
         GrB_TRY (GrB_Col_extract (Row, NULL, NULL, G->A, GrB_ALL, n, u,
             GrB_DESC_T0)) ;
-        int64_t degree = n ;
+        GrB_Index degree = n ;
         GrB_TRY (GrB_Vector_extractTuples_BOOL (neighbors, NULL, &degree,
             Row)) ;
 

@@ -90,6 +90,9 @@ int main (int argc, char **argv)
     // compute G->coldegree, just to test it (not needed for any tests)
     LAGraph_TRY (LAGraph_Property_ColDegree (G, msg)) ;
 
+    GrB_Index n ;
+    GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
+
     //--------------------------------------------------------------------------
     // get the source nodes
     //--------------------------------------------------------------------------
@@ -125,7 +128,7 @@ int main (int argc, char **argv)
             // src = SourceNodes [trial]
             GrB_TRY (GrB_Matrix_extractElement (&src, SourceNodes, trial, 0)) ;
             src-- ; // convert from 1-based to 0-based
-            double ttrial, tic [2] ;
+            double tcheck, ttrial, tic [2] ;
 
             for (int pp = 0 ; pp <= 1 ; pp++)
             {
@@ -194,6 +197,18 @@ int main (int argc, char **argv)
                 fflush (stdout) ;
 
 #endif
+                // check the result (this is very slow so only do it for one trial)
+                if (trial == 0)
+                {
+                    LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
+                    LAGraph_TRY (LG_check_bfs (level, parent, G, src, msg)) ;
+                    int64_t nvisited ;
+                    GrB_TRY (GrB_Vector_nvals (&nvisited, level)) ;
+                    LAGraph_TRY (LAGraph_Toc (&tcheck, tic, msg)) ;
+                    printf ("    n: %ld max level: %d nvisited: %ld check: %g sec\n",
+                        n, maxlevel, nvisited, tcheck) ;
+                }
+
                 GrB_free (&parent) ;
                 GrB_free (&level) ;
             }

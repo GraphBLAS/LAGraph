@@ -27,7 +27,7 @@ SET_TARGET_PROPERTIES ( lagraphtest PROPERTIES
     C_STANDARD_REQUIRED 11
     PUBLIC_HEADER "include/LG_test.h" )
 set_property ( TARGET lagraphtest PROPERTY C_STANDARD 11 )
-target_link_libraries(lagraphtest PUBLIC ${GRAPHBLAS_LIBRARIES})
+target_link_libraries(lagraphtest PUBLIC lagraph ${GRAPHBLAS_LIBRARIES})
 
 #-------------------------------------------------------------------------------
 # static lagraphtest library properties
@@ -42,7 +42,7 @@ SET_TARGET_PROPERTIES ( lagraphtest_static PROPERTIES
     C_STANDARD_REQUIRED 11
     PUBLIC_HEADER "include/LG_test.h" )
 set_property ( TARGET lagraphtest_static PROPERTY C_STANDARD 11 )
-target_link_libraries(lagraphtest_static PUBLIC ${GRAPHBLAS_LIBRARIES})
+target_link_libraries(lagraphtest_static PUBLIC lagraph ${GRAPHBLAS_LIBRARIES})
 
 #-------------------------------------------------------------------------------
 # add OpenMP

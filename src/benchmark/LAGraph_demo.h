@@ -13,6 +13,7 @@
 #define LAGRAPH_DEMO_H
 
 #include <LAGraph.h>
+#include <LG_test.h>
 
 #define CATCH(status)                                                         \
 {                                                                             \
