@@ -20,6 +20,30 @@
 char msg[LAGRAPH_MSG_LEN];
 LAGraph_Graph G = NULL;
 
+#define LEN 512
+char filename [LEN+1] ;
+
+typedef struct
+{
+    uint64_t ntriangles ;
+    const char *name ;
+}
+matrix_info ;
+
+const matrix_info files [ ] = 
+{
+    {     45, "karate.mtx" }, 
+    {     11, "A.mtx" }, 
+    {   2016, "jagmesh7.mtx" }, 
+    {      6, "ldbc-cdlp-undirected-example.mtx" }, 
+    {      4, "ldbc-undirected-example.mtx" }, 
+    {      5, "ldbc-wcc-example.mtx" }, 
+    {      0, "LFAT5.mtx" }, 
+    { 342300, "bcsstk13.mtx" }, 
+    {      0, "tree-example.mtx" }, 
+    {      0, "" }, 
+} ;
+
 //****************************************************************************
 void setup(void)
 {
@@ -255,7 +279,52 @@ void test_TriangleCount(void)
     TEST_CHECK( ntriangles == 45 );
     TEST_MSG("numtri = %ld", ntriangles);
 
+    OK (LG_check_tri (&ntriangles, G, msg)) ;
+    TEST_CHECK( ntriangles == 45 );
+
     teardown();
+}
+
+//****************************************************************************
+void test_TriangleCount_brutal (void)
+{
+    LAGraph_Init(msg);
+    GrB_Matrix A = NULL ;
+    GrB_Type atype = NULL ;
+
+    for (int k = 0 ; ; k++)
+    {
+
+        // load the adjacency matrix as A
+        const char *aname = files [k].name ;
+        uint64_t ntriangles = files [k].ntriangles ;
+        if (strlen (aname) == 0) break;
+        TEST_CASE (aname) ;
+        snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
+        FILE *f = fopen (filename, "r") ;
+        TEST_CHECK (f != NULL) ;
+        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (fclose (f)) ;
+        TEST_MSG ("Loading of adjacency matrix failed") ;
+
+        // create the graph
+        OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+        TEST_CHECK (A == NULL) ;    // A has been moved into G->A
+
+        // delete any diagonal entries
+        OK (LAGraph_DeleteDiag (G, msg)) ;
+
+        // get the # of triangles
+        uint64_t nt0, nt1 ;
+        OK (LG_check_tri (&nt0, G, msg)) ;
+        printf ("\nnt: %6lu Matrix: %s\n", nt0, aname) ;
+        OK (LAGraph_TriangleCount (&nt1, G, msg)) ;
+        TEST_CHECK (nt0 == nt1) ;
+
+        OK (LAGraph_Delete (&G, msg)) ;
+    }
+
+    LAGraph_Finalize(msg);
 }
 
 //****************************************************************************
@@ -268,5 +337,6 @@ TEST_LIST = {
     {"TriangleCount_Methods5", test_TriangleCount_Methods5},
     {"TriangleCount_Methods6", test_TriangleCount_Methods6},
     {"TriangleCount", test_TriangleCount},
+    {"TriangleCount_brutal", test_TriangleCount_brutal},
     {NULL, NULL}
 };

@@ -416,6 +416,7 @@ void test_BreadthFirstSearch_brutal(void)
                 OK (GrB_free(&level));
             }
         }
+        OK (LAGraph_Delete (&G, msg)) ;
     }
 
     LAGraph_Finalize(msg);

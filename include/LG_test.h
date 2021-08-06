@@ -26,4 +26,13 @@ int LG_check_bfs
     char *msg
 ) ;
 
+int LG_check_tri        // -1 if out of memory, 0 if successful
+(
+    // output
+    uint64_t *ntri,     // # of triangles in A
+    // input
+    LAGraph_Graph G,    // the pattern of G->A must be symmetric
+    char *msg
+) ;
+
 #endif

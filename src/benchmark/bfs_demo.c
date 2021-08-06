@@ -158,10 +158,8 @@ int main (int argc, char **argv)
                 {
                     LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
                     LAGraph_TRY (LG_check_bfs (NULL, parent, G, src, msg)) ;
-                    GrB_TRY (GrB_Vector_nvals (&nvisited, level)) ;
                     LAGraph_TRY (LAGraph_Toc (&tcheck, tic, msg)) ;
-                    printf ("    n: %ld max level: %d nvisited: %ld check: %g sec\n",
-                        n, maxlevel, nvisited, tcheck) ;
+                    printf ("    n: %ld check: %g sec\n", n, tcheck) ;
                 }
 
                 GrB_free (&parent) ;

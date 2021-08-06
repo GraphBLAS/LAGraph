@@ -449,6 +449,13 @@ int LAGraph_Property_NDiag  // returns 0 if successful, -1 if failure
     char *msg
 ) ;
 
+//  LAGraph_DeleteDiag: remove all diagonal entries fromG->A
+int LAGraph_DeleteDiag      // returns 0 if successful, < 0 if failure
+(
+    LAGraph_Graph G,        // diagonal entries removed, most properties cleared
+    char *msg
+) ;
+
 // LAGraph_CheckGraph: determine if a graph is valid
 int LAGraph_CheckGraph      // returns 0 if successful, -1 if failure
 (

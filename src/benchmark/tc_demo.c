@@ -13,7 +13,18 @@
 //         test_tc matrixmarketfile.mtx
 //         test_tc matrixmarketfile.grb
 
+//  Known triangle counts:
+//      kron:       106873365648
+//      urand:      5378
+//      twitter:    34824916864
+//      web:        84907041475
+//      road:       438804
+
 #include "LAGraph_demo.h"
+
+// 1: check result with LG_check_tri (takes a long time)
+// 0: do not check result
+#define CHECK_RESULT 1
 
 #define NTHREAD_LIST 1
 // #define NTHREAD_LIST 2
@@ -108,6 +119,7 @@ int main (int argc, char **argv)
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
     if (readproblem (&G, NULL,
         true, true, true, NULL, false, argc, argv) != 0) ERROR ;
+    LAGraph_TRY (LAGraph_DisplayGraph (G, 2, stdout, msg)) ;
 
     // determine the row degree property
     LAGraph_TRY (LAGraph_Property_RowDegree (G, msg)) ;
@@ -120,22 +132,40 @@ int main (int argc, char **argv)
     // triangle counting
     //--------------------------------------------------------------------------
 
-    // warmup for more accurate timing, and also print # of triangles
-    int64_t ntriangles ;
+    int64_t ntriangles, ntsimple = 0 ;
     double tic [2] ;
+
+    #if CHECK_RESULT
+    // check # of triangles
+    LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
+    LAGraph_TRY (LG_check_tri (&ntsimple, G, NULL)) ;
+    double tsimple ;
+    LAGraph_TRY (LAGraph_Toc (&tsimple, tic, NULL)) ;
+    printf ("# of triangles: %" PRId64 " slow time: %g sec\n",
+        ntsimple, tsimple) ;
+    #endif
+
+    // warmup for more accurate timing, and also print # of triangles
     LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
     printf ("\nwarmup method: ") ;
     int presort = 2 ;
     print_method (stdout, 6, presort) ;
 
     LAGraph_TRY (LAGraph_TriangleCount_Methods(&ntriangles, G, 6, &presort, msg) );
-
     printf ("# of triangles: %" PRId64 "\n", ntriangles) ;
     print_method (stdout, 6, presort) ;
     double ttot ;
     LAGraph_TRY (LAGraph_Toc (&ttot, tic, NULL)) ;
     printf ("nthreads: %3d time: %12.6f rate: %6.2f (SandiaDot2, one trial)\n",
             nthreads_max, ttot, 1e-6 * nvals / ttot) ;
+
+    #if CHECK_RESULT
+    if (ntriangles != ntsimple)
+    {
+        printf ("wrong # triangles: %ld %ld\n", ntriangles, ntsimple) ;
+        abort ( ) ;
+    }
+    #endif
 
     double t_best = INFINITY ;
     int method_best = -1 ;
