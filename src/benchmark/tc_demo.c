@@ -26,6 +26,12 @@
 // 0: do not check result
 #define CHECK_RESULT 1
 
+#if !LG_SUITESPARSE
+// LG_check_tri requires SuiteSparse
+#undef  CHECK_RESULT
+#define CHECK_RESULT 0
+#endif
+
 #define NTHREAD_LIST 1
 // #define NTHREAD_LIST 2
 #define THREAD_LIST 0

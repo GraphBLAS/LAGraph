@@ -55,7 +55,6 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
     bool *restrict Mark = NULL ;
     GrB_Index *Ap = NULL, *Aj = NULL, *Ai = NULL ;
     void *Ax = NULL ;
-    GrB_Matrix A = NULL ;
     GrB_Index Ap_size, Aj_size, Ax_size, n, ncols ;
     LG_CHECK (ntri == NULL, -1003, "ntri is NULL") ;
     LG_CHECK (LAGraph_CheckGraph (G, msg), -1002, "graph is invalid") ;
@@ -65,15 +64,15 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
         G->A_pattern_is_symmetric == LAGRAPH_TRUE))
     {
         // the pattern of A is known to be symmetric
-        A = G->A ;
+        ;
     }
     else
     {
         // A is not known to be symmetric
         LG_CHECK (false, -1005, "G->A must be symmetric") ;
     }
-    GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
-    GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
+    GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
+    GrB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
     LG_CHECK (n != ncols, -1001, "A must be square") ;
 
     //--------------------------------------------------------------------------
@@ -89,8 +88,15 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
 
     #if LG_SUITESPARSE
     bool iso, jumbled ;
-    GrB_TRY (GxB_Matrix_unpack_CSR (A, &Ap, &Aj, &Ax, &Ap_size, &Aj_size,
-        &Ax_size, &iso, &jumbled, NULL)) ;
+    #if (GxB_IMPLEMENTATION >= GxB_VERSION(5,1,0))
+    GrB_TRY (GxB_Matrix_unpack_CSR (G->A,
+        &Ap, &Aj, &Ax, &Ap_size, &Aj_size, &Ax_size, &iso, &jumbled, NULL)) ;
+    #else
+    GrB_Type atype ;
+    GrB_Index nrows ;
+    GrB_TRY (GxB_Matrix_export_CSR (&(G->A), &atype, &nrows, &ncols,
+        &Ap, &Aj, &Ax, &Ap_size, &Aj_size, &Ax_size, &iso, &jumbled, NULL)) ;
+    #endif
     #endif
 
     //--------------------------------------------------------------------------
@@ -133,8 +139,13 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
     //--------------------------------------------------------------------------
 
     #if LG_SUITESPARSE
-    GrB_TRY (GxB_Matrix_pack_CSR (A, &Ap, &Aj, &Ax, Ap_size, Aj_size,
-        Ax_size, iso, jumbled, NULL)) ;
+    #if (GxB_IMPLEMENTATION >= GxB_VERSION(5,1,0))
+    GrB_TRY (GxB_Matrix_pack_CSR (G->A,
+        &Ap, &Aj, &Ax, Ap_size, Aj_size, Ax_size, iso, jumbled, NULL)) ;
+    #else
+    GrB_TRY (GxB_Matrix_import_CSR (&(G->A), atype, nrows, ncols,
+        &Ap, &Aj, &Ax, Ap_size, Aj_size, Ax_size, iso, jumbled, NULL)) ;
+    #endif
     #endif
 
     //--------------------------------------------------------------------------

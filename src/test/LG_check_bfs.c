@@ -126,8 +126,15 @@ int LG_check_bfs
 
     #if LG_SUITESPARSE
     bool iso, jumbled ;
-    GrB_TRY (GxB_Matrix_unpack_CSR (G->A, &Ap, &Aj, &Ax, &Ap_size, &Aj_size,
-        &Ax_size, &iso, &jumbled, NULL)) ;
+    #if (GxB_IMPLEMENTATION >= GxB_VERSION(5,1,0))
+    GrB_TRY (GxB_Matrix_unpack_CSR (G->A,
+        &Ap, &Aj, &Ax, &Ap_size, &Aj_size, &Ax_size, &iso, &jumbled, NULL)) ;
+    #else
+    GrB_Type atype ;
+    GrB_Index nrows ;
+    GrB_TRY (GxB_Matrix_export_CSR (&(G->A), &atype, &nrows, &ncols,
+        &Ap, &Aj, &Ax, &Ap_size, &Aj_size, &Ax_size, &iso, &jumbled, NULL)) ;
+    #endif
     #endif
 
     //--------------------------------------------------------------------------
@@ -200,8 +207,13 @@ int LG_check_bfs
     //--------------------------------------------------------------------------
 
     #if LG_SUITESPARSE
-    GrB_TRY (GxB_Matrix_pack_CSR (G->A, &Ap, &Aj, &Ax, Ap_size, Aj_size,
-        Ax_size, iso, jumbled, NULL)) ;
+    #if (GxB_IMPLEMENTATION >= GxB_VERSION(5,1,0))
+    GrB_TRY (GxB_Matrix_pack_CSR (G->A,
+        &Ap, &Aj, &Ax, Ap_size, Aj_size, Ax_size, iso, jumbled, NULL)) ;
+    #else
+    GrB_TRY (GxB_Matrix_import_CSR (&(G->A), atype, nrows, ncols,
+        &Ap, &Aj, &Ax, Ap_size, Aj_size, Ax_size, iso, jumbled, NULL)) ;
+    #endif
     #endif
 
     //--------------------------------------------------------------------------

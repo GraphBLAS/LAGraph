@@ -291,6 +291,7 @@ void test_TriangleCount_brutal (void)
     LAGraph_Init(msg);
     GrB_Matrix A = NULL ;
     GrB_Type atype = NULL ;
+    printf ("\n") ;
 
     for (int k = 0 ; ; k++)
     {
@@ -316,10 +317,13 @@ void test_TriangleCount_brutal (void)
 
         // get the # of triangles
         uint64_t nt0, nt1 ;
-        OK (LG_check_tri (&nt0, G, msg)) ;
-        printf ("\nnt: %6lu Matrix: %s\n", nt0, aname) ;
         OK (LAGraph_TriangleCount (&nt1, G, msg)) ;
+        printf ("# triangles: %6lu Matrix: %s\n", nt1, aname) ;
+        TEST_CHECK (nt1 == ntriangles) ;
+        #if LG_SUITESPARSE
+        OK (LG_check_tri (&nt0, G, msg)) ;
         TEST_CHECK (nt0 == nt1) ;
+        #endif
 
         OK (LAGraph_Delete (&G, msg)) ;
     }
