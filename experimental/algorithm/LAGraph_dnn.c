@@ -209,7 +209,7 @@ GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
         #else
         // using SuiteSparse v2.x or earlier, or any other GraphBLAS library.
         LAGRAPH_OK (GrB_apply (M, NULL, NULL, gt0, Y, NULL)) ;
-        LAGRAPH_OK (GrB_apply (Y, M, NULL, id, Y, LAGraph_desc_ooor)) ;
+        LAGRAPH_OK (GrB_apply (Y, M, NULL, id, Y, GrB_DESC_R)) ;
         #endif
 
         // threshold maximum values: Y (Y > 32) = 32

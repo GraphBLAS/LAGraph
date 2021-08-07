@@ -279,8 +279,10 @@ void test_TriangleCount(void)
     TEST_CHECK( ntriangles == 45 );
     TEST_MSG("numtri = %ld", ntriangles);
 
+    #if LG_SUITESPARSE
     OK (LG_check_tri (&ntriangles, G, msg)) ;
     TEST_CHECK( ntriangles == 45 );
+    #endif
 
     teardown();
 }
@@ -291,7 +293,11 @@ void test_TriangleCount_brutal (void)
     LAGraph_Init(msg);
     GrB_Matrix A = NULL ;
     GrB_Type atype = NULL ;
+    #if LG_SUITESPARSE
+    printf ("\nResults compared with LG_check_tri:\n") ;
+    #else
     printf ("\n") ;
+    #endif
 
     for (int k = 0 ; ; k++)
     {

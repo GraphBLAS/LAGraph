@@ -49,8 +49,22 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    #if !LG_SUITESPARSE
-    LG_CHECK (false, -1006, "SuiteSparse:GraphBLAS required") ;
+
+//  printf ("LG_SuiteSparse: %d\n", LG_SUITESPARSE) ;
+//  #if defined ( LG_VANILLA )
+//  printf ("vanilla\n") ;
+//  #else
+//  printf ("not vanilla\n") ;
+//  #endif
+//  #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
+//  printf ("SS:GrB\n") ;
+//  #else
+//  printf ("not SS:GrB\n") ;
+//  #endif
+
+    #if !(LG_SUITESPARSE)
+    printf ("LG_check_tri requires SuiteSparse:GraphBLAS\n") ;
+    LG_CHECK (true, -1006, "SuiteSparse:GraphBLAS required") ;
     #endif
     bool *restrict Mark = NULL ;
     GrB_Index *Ap = NULL, *Aj = NULL, *Ai = NULL ;
@@ -76,13 +90,6 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
     LG_CHECK (n != ncols, -1001, "A must be square") ;
 
     //--------------------------------------------------------------------------
-    // allocate worspace
-    //--------------------------------------------------------------------------
-
-    Mark = (bool *) LAGraph_Calloc (n, sizeof (bool)) ;
-    LG_CHECK (Mark == NULL, -1005, "out of memory") ;
-
-    //--------------------------------------------------------------------------
     // unpack the matrix in CSR form (SuiteSparse:GraphBLAS required)
     //--------------------------------------------------------------------------
 
@@ -103,11 +110,57 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
     // compute the # of triangles (each triangle counted 6 times)
     //--------------------------------------------------------------------------
 
+    int64_t ntriangles = 0 ;
+    Ai = Aj ;       // assume A is symmetric and in CSC format instead
+
+    // masked dot-product method
+    for (int64_t j = 0 ; j < n ; j++)
+    {
+        // for each entry in the lower triangular part of A
+        for (int64_t p = Ap [j] ; p < Ap [j+1] ; p++)
+        {
+            const int64_t i = Ai [p] ;
+            if (i > j)
+            {
+                // ntriangles += A(:,i)' * A(:,j)
+                int64_t p1 = Ap [i] ;
+                int64_t p1_end = Ap [i+1] ;
+                int64_t p2 = Ap [j] ;
+                int64_t p2_end = Ap [j+1] ;
+                while (p1 < p1_end && p2 < p2_end)
+                {
+                    int64_t i1 = Ai [p1] ;
+                    int64_t i2 = Ai [p2] ;
+                    if (i1 < i2)
+                    { 
+                        // A(i1,i) appears before A(i2,j)
+                        p1++ ;
+                    }
+                    else if (i2 < i1)
+                    { 
+                        // A(i2,j) appears before A(i1,i)
+                        p2++ ;
+                    }
+                    else // i1 == i2 == k
+                    { 
+                        // A(k,i) and A(k,j) are the next entries to merge
+                        ntriangles++ ;
+                        p1++ ;
+                        p2++ ;
+                    }
+                }
+            }
+        }
+    }
+    ntriangles = ntriangles / 3 ;
+
+#if 0
+    // saxpy-based method
     // The comments below are written as if A were in CSC format, but it's
     // symmetric, so the CSR and CSC formats are the same.
 
-    int64_t ntriangles = 0 ;
-    Ai = Aj ;       // assume A is symmetric and in CSC format instead
+    Mark = (bool *) LAGraph_Calloc (n, sizeof (bool)) ;
+    LG_CHECK (Mark == NULL, -1005, "out of memory") ;
 
     for (int64_t j = 0 ; j < n ; j++)
     {
@@ -133,6 +186,8 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
             Mark [Ai [p]] = 0 ;
         }
     }
+    ntriangles = ntriangles / 6 ;
+#endif
 
     //--------------------------------------------------------------------------
     // repack the matrix in CSR form for SuiteSparse:GraphBLAS
@@ -153,7 +208,7 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
     //--------------------------------------------------------------------------
 
     LAGRAPH_FREE_WORK ;
-    (*ntri) = ntriangles / 6 ;
+    (*ntri) = ntriangles ;
     return (0) ;
 }
 

@@ -63,10 +63,10 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
 (
     GrB_Matrix *A,          // matrix to write to the file
     FILE *f,                // file to write it to
-    const char *comments    // comments to add to the file, up to 220 characters
+    const char *comments    // comments to add to the file, up to 210 characters
                             // in length, not including the terminating null
                             // byte. Ignored if NULL.  Characters past
-                            // the 220 limit are silently ignored.
+                            // the 210 limit are silently ignored.
 )
 {
 
@@ -293,9 +293,9 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
     user [0] = '\n' ;
     if (comments != NULL)
     {
-        strncpy (user, comments, 220) ;
+        strncpy (user, comments, 210) ;
     }
-    user [220] = '\0' ;
+    user [210] = '\0' ;
 
     char header [LAGRAPH_BIN_HEADER] ;
     int32_t len = snprintf (header, LAGRAPH_BIN_HEADER,
@@ -308,7 +308,7 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
         "size:   %-18" PRIu64 "\n"
         "type:   %-72s\n"
         "iso:    %1d\n"
-        "%-220s\n\n",
+        "%-210s\n\n",
         version, nrows, ncols, nvec, nvals, fmt_string, (uint64_t) typesize,
         typename, iso, user) ;
 

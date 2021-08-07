@@ -16,6 +16,14 @@ include_directories ( ${CMAKE_SOURCE_DIR}/src/test/include )
 
 file ( GLOB LAGRAPHTEST_LIB_SOURCES "LG_*.c" )
 
+# Uncomment this line for for development only, not for end-users:
+set ( CMAKE_BUILD_TYPE Debug )
+if ( ${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG}" )
+else ( )
+    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE}")
+endif ( )
+
 #-------------------------------------------------------------------------------
 # dynamic lagraphtest library properties
 #-------------------------------------------------------------------------------

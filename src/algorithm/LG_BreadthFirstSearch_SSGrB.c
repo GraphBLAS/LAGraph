@@ -266,12 +266,12 @@ int LG_BreadthFirstSearch_SSGrB
         if (compute_parent)
         {
             // q(i) currently contains the parent id of node i in tree.
-            // pi<s(q)> = q
+            // pi{q} = q
             GrB_TRY (GrB_assign (pi, q, NULL, q, GrB_ALL, n, GrB_DESC_S)) ;
         }
         if (compute_level)
         {
-            // v<s(q)> = k, the kth level of the BFS
+            // v{q} = k, the kth level of the BFS
             GrB_TRY (GrB_assign (v, q, NULL, k, GrB_ALL, n, GrB_DESC_S)) ;
         }
     }
