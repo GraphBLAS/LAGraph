@@ -77,11 +77,19 @@ void test_cc_matrices (void)
         OK (LAGraph_ConnectedComponents (&C, G, msg)) ;
         GxB_print (C, 2) ;
 
-        uint32_t ncomponents ;
-        OK (GrB_reduce (&ncomponents, NULL, GrB_MAX_MONOID_UINT32, C, NULL)) ;
-        printf ("# components: %6u Matrix: %s\n", ncomponents+1, aname) ;
+        // count the # of connected components
+        int ncomponents = 0 ;
+        GrB_Index n ;
+        OK (GrB_Matrix_nrows (&n, G->A)) ;
+        for (int i = 0 ; i < n ; i++)
+        {
+            int comp = -1 ;
+            OK (GrB_Vector_extractElement (&comp, C, i)) ;
+            if (comp == i) ncomponents++ ;
+        }
+        printf ("# components: %6u Matrix: %s\n", ncomponents, aname) ;
 
-        // TEST_CHECK (ncomponents == ncomp) ;
+        TEST_CHECK (ncomponents == ncomp) ;
         int result = (LG_check_cc (C, G, msg)) ;
         printf ("msg: %s\n", msg) ;
         OK (result) ;
