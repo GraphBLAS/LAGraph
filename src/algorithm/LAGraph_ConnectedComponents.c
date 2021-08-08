@@ -291,6 +291,12 @@ static inline int Reduce_assign32
 // LAGraph_ConnectedComponents
 //------------------------------------------------------------------------------
 
+// The output of LAGraph_ConnectedComponents is a vector component, where
+// component(i)=s if node i is in the connected compononent whose
+// representative node is node s.  If s is a representative, then
+// component(s)=s.  The number of connected components in the graph G is the
+// number of representatives.
+
 #undef  LAGRAPH_FREE_ALL
 #define LAGRAPH_FREE_ALL                            \
 {                                                   \
@@ -309,7 +315,7 @@ static inline int Reduce_assign32
 int LAGraph_ConnectedComponents
 (
     // output
-    GrB_Vector *component,  // component(i)=k if node is in the kth component
+    GrB_Vector *component,  // component(i)=s if node is in the component s
     // inputs
     LAGraph_Graph G,        // input graph, G->A can change
     char *msg

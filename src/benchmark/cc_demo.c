@@ -99,7 +99,7 @@ int main (int argc, char **argv)
     #define NTRIALS 16
     printf ("# of trials: %d\n\n", NTRIALS) ;
 
-    GrB_Index nCC ;
+    GrB_Index nCC, nCC_first = -1 ;
     for (int trial = 1 ; trial <= nt ; trial++)
     {
         int nthreads = Nthreads [trial] ;
@@ -118,10 +118,11 @@ int main (int argc, char **argv)
             t1 += ttrial ;
             printf ("SV5b: trial: %2d time: %10.4f sec\n", k, ttrial) ;
             nCC = countCC (components, n) ;
-            printf ("nCC: %ld\n", nCC) ;
             if (k == 0)
             {
                 // check the result
+                printf ("nCC: %ld\n", nCC) ;
+                nCC_first = nCC ;
                 LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
                 int result = LG_check_cc (components, G, msg) ;
                 if (result != 0)
@@ -131,6 +132,14 @@ int main (int argc, char **argv)
                 LAGraph_TRY (LAGraph_Toc (&tcheck, tic, NULL)) ;
                 LAGraph_TRY (result) ;
                 printf ("LG_check_cc passed, time: %g\n", tcheck) ;
+            }
+            else
+            {
+                if (nCC != nCC_first)
+                {
+                    printf ("test failure: # components differs %ld %ld\n",
+                        nCC, nCC_first) ;
+                }
             }
             GrB_free (&components) ;
         }
