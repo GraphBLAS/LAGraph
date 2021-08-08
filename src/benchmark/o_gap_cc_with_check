@@ -1,0 +1,55 @@
+Script started on Sun 08 Aug 2021 06:14:38 PM CDT
+groups: cannot find name for group ID 8047
+Intel Suite:
+Copyright (C) 2009-2019 Intel Corporation. All rights reserved.
+Intel(R) VTune(TM) Amplifier 2019 (build 591499)
+[1;34m==>[0m 71 installed packages
+-- [0;35mlinux-ubuntu16.04-broadwell[0m / [0;32mgcc@5.4.0[0m ----------------------
+autoconf[0;36m@2.69[0m                gettext[0;36m@0.20.2[0m        libsigsegv[0;36m@2.12[0m      perl[0;36m@5.30.2[0m
+autoconf[0;36m@2.69[0m                gettext[0;36m@0.21[0m          libtool[0;36m@2.4.6[0m        perl[0;36m@5.32.1[0m
+autoconf-archive[0;36m@2019.01.06[0m  git[0;36m@2.26.0[0m            libunistring[0;36m@0.9.10[0m  pkgconf[0;36m@1.6.3[0m
+automake[0;36m@1.16.2[0m              git[0;36m@2.29.0[0m            libxml2[0;36m@2.9.10[0m       pkgconf[0;36m@1.7.3[0m
+automake[0;36m@1.16.3[0m              gmp[0;36m@6.1.2[0m             libxml2[0;36m@2.9.10[0m       py-pip[0;36m@19.3[0m
+berkeley-db[0;36m@18.1.40[0m          gmp[0;36m@6.2.1[0m             m4[0;36m@1.4.18[0m            py-setuptools[0;36m@46.1.3[0m
+boost[0;36m@1.75.0[0m                 hwloc[0;36m@2.4.0[0m           mpc[0;36m@1.1.0[0m            python[0;36m@3.7.7[0m
+bzip2[0;36m@1.0.8[0m                  isl[0;36m@0.18[0m              mpc[0;36m@1.1.0[0m            python[0;36m@3.8.0[0m
+cmake[0;36m@3.19.5[0m                 isl[0;36m@0.20[0m              mpfr[0;36m@3.1.6[0m           readline[0;36m@8.0[0m
+curl[0;36m@7.68.0[0m                  isl[0;36m@0.21[0m              mpfr[0;36m@4.0.2[0m           sqlite[0;36m@3.31.1[0m
+curl[0;36m@7.74.0[0m                  libbsd[0;36m@0.10.0[0m         ncurses[0;36m@6.2[0m          tar[0;36m@1.32[0m
+diffutils[0;36m@3.7[0m                libedit[0;36m@3.1-20191231[0m  numactl[0;36m@2.0.14[0m       util-macros[0;36m@1.19.1[0m
+expat[0;36m@2.2.9[0m                  libevent[0;36m@2.1.12[0m       openmpi[0;36m@4.0.5[0m        valgrind[0;36m@3.16.1[0m
+expat[0;36m@2.2.10[0m                 libffi[0;36m@3.3[0m            openssh[0;36m@8.4p1[0m        xz[0;36m@5.2.5[0m
+gcc[0;36m@6.3.0[0m                    libiconv[0;36m@1.16[0m         openssl[0;36m@1.1.1g[0m       xz[0;36m@5.2.5[0m
+gcc[0;36m@9.3.0[0m                    libidn2[0;36m@2.1.1a[0m        openssl[0;36m@1.1.1j[0m       zlib[0;36m@1.2.11[0m
+gcc[0;36m@10.1.0[0m                   libidn2[0;36m@2.3.0[0m         pcre2[0;36m@10.31[0m          zstd[0;36m@1.4.4[0m
+gdbm[0;36m@1.18.1[0m                  libpciaccess[0;36m@0.16[0m     pcre2[0;36m@10.35[0m
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m ./do_gap_cc grb
+ 
+======================================================================
+GAP benchmarks using LAGraph+GraphBLAS: Connected Components
+======================================================================
+Matrix input file format:  grb
+GAP matrices located in:   ../../../GAP
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+threads to test:  40
+matrix: ../../../GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-kron/GAP-kron.grb
+read time: 34.0497
+# of trials: 16
+
+SV5b: trial:  0 time:     3.4804 sec
+# of components: 134217720
+error: /home/faculty/davis/master/LAGraph/src/benchmark/cc_demo.c line: 125, status: -1007
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+threads to test:  40
+matrix: ../../../GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-urand/GAP-urand.grb
+^C
+[0;36mhypersparse $[0m exit
+exit
+
+Script done on Sun 08 Aug 2021 06:15:56 PM CDT

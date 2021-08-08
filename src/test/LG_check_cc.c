@@ -109,10 +109,16 @@ int LG_check_cc
     // make sure each connected component is non-empty
     //--------------------------------------------------------------------------
 
+    bool ok = true ;
     for (int64_t i = 0 ; i < ncomp_in ; i++)
     {
-        LG_CHECK (count [i] == 0, -1007, "test failure: empty component") ;
+        if (count [i] == 0)
+        {
+            printf ("No node in component %ld\n", i) ;
+            ok = false ;
+        }
     }
+    LG_CHECK (!ok, -1007, "test failure: empty component") ;
 
     //--------------------------------------------------------------------------
     // unpack the matrix in CSR form for SuiteSparse:GraphBLAS

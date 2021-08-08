@@ -113,11 +113,25 @@ int main (int argc, char **argv)
             int status = (LAGraph_ConnectedComponents (&components, G, msg)) ;
             // printf ("status : %d msg: %s\n", status, msg) ;
             LAGraph_TRY (status) ;
-            double ttrial ;
+            double ttrial, tcheck ;
             LAGraph_TRY (LAGraph_Toc (&ttrial, tic, NULL)) ;
             t1 += ttrial ;
             printf ("SV5b: trial: %2d time: %10.4f sec\n", k, ttrial) ;
             nCC = countCC (components, n) ;
+            printf ("nCC: %ld\n", nCC) ;
+            if (k == 0)
+            {
+                // check the result
+                LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
+                int result = LG_check_cc (components, G, msg) ;
+                if (result != 0)
+                {
+                    printf ("test failure: (%d) %s\n", result, msg) ;
+                }
+                LAGraph_TRY (LAGraph_Toc (&tcheck, tic, NULL)) ;
+                LAGraph_TRY (result) ;
+                printf ("LG_check_cc passed, time: %g\n", tcheck) ;
+            }
             GrB_free (&components) ;
         }
         double ttt = t1 / NTRIALS ;
