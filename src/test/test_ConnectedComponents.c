@@ -36,6 +36,7 @@ const matrix_info files [ ] =
     {      0, "ldbc-undirected-example.mtx" }, 
     {      0, "ldbc-wcc-example.mtx" }, 
     {      0, "LFAT5.mtx" }, 
+    {      0, "LFAT5_two.mtx" }, 
     {      0, "bcsstk13.mtx" }, 
     {      0, "tree-example.mtx" }, 
     {      0, "" }, 

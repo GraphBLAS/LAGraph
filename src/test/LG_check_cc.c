@@ -28,6 +28,12 @@
 #include "LG_internal.h"
 #include "LG_test.h"
 
+// The output of LAGraph_ConnectedComponents is a vector Component, where
+// Component(i)=s if node i is in the connected compononent whose
+// representative node is node s.  If s is a representative, then
+// Component(s)=s.  The number of connected components in the graph G is the
+// number of representatives.
+
 //------------------------------------------------------------------------------
 // test the results from LAGraph_ConnectedComponents 
 //------------------------------------------------------------------------------
@@ -35,7 +41,7 @@
 int LG_check_cc
 (
     // input
-    GrB_Vector Component,   // Component(i)=k if node is in the kth Component
+    GrB_Vector Component,   // Component(i)=s if node is in Component s
     LAGraph_Graph G,
     char *msg
 )
@@ -93,32 +99,31 @@ int LG_check_cc
     //--------------------------------------------------------------------------
 
     int64_t *count = queue ;        // use queue as workspace
-    int64_t ncomp_in = -1 ;
+    int64_t ncomp_in = 0 ;
     for (int64_t i = 0 ; i < n ; i++)
     {
         int64_t comp = component_in [i] ; 
         LG_CHECK (comp < 0 || comp >= n, -1007,
             "test failure: component out of range") ;
         count [comp]++ ;
-        if (comp > ncomp_in) ncomp_in = comp ;
-    }
-    ncomp_in++ ;
-    printf ("# of components: %ld\n", ncomp_in) ;
-
-    //--------------------------------------------------------------------------
-    // make sure each connected component is non-empty
-    //--------------------------------------------------------------------------
-
-    bool ok = true ;
-    for (int64_t i = 0 ; i < ncomp_in ; i++)
-    {
-        if (count [i] == 0)
+        if (comp == i)
         {
-            printf ("No node in component %ld\n", i) ;
-            ok = false ;
+            // this is the representative of its component
+            ncomp_in++ ;
         }
     }
-    LG_CHECK (!ok, -1007, "test failure: empty component") ;
+    printf ("# of components: %ld\n", ncomp_in) ;
+
+    if (n < 1000)
+    {
+        for (int64_t i = 0 ; i < n ; i++)
+        {
+            if (component_in [i] == i)
+            {
+                printf ("Component %ld, size %ld\n", i, count [i]) ;
+            }
+        }
+    }
 
     //--------------------------------------------------------------------------
     // unpack the matrix in CSR form for SuiteSparse:GraphBLAS
