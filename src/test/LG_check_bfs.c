@@ -31,37 +31,6 @@
 #include "LG_test.h"
 
 //------------------------------------------------------------------------------
-// extract the contents of an int64 vector
-//------------------------------------------------------------------------------
-
-bool get_vector
-(
-    int64_t *x,
-    GrB_Vector X,
-    int64_t n
-)
-{
-    for (int64_t i = 0 ; i < n ; i++)
-    {
-        int64_t t ;
-        int info = GrB_Vector_extractElement_INT64 (&t, X, i) ;
-        if (info == GrB_SUCCESS)
-        {
-            x [i] = t ;
-        }
-        else if (info == GrB_NO_VALUE)
-        {
-            x [i] = -1 ;
-        }
-        else
-        {
-            return (false) ;    // method failed
-        }
-    }
-    return (true) ;             // success
-}
-
-//------------------------------------------------------------------------------
 // test the results from a BFS
 //------------------------------------------------------------------------------
 
@@ -110,14 +79,15 @@ int LG_check_bfs
     {
         level_in = LAGraph_Malloc (n, sizeof (int64_t)) ;
         LG_CHECK (level_in == NULL, -1003, "out of memory") ;
-        LG_CHECK (!get_vector (level_in, Level, n), -1004, "invalid level") ;
+        LG_CHECK (!LG_get_vector (level_in, Level, n), -1004, "invalid level") ;
     }
 
     if (Parent != NULL)
     {
         parent_in = LAGraph_Malloc (n, sizeof (int64_t)) ;
         LG_CHECK (parent_in == NULL, -1003, "out of memory") ;
-        LG_CHECK (!get_vector (parent_in, Parent, n), -1005, "invalid parent") ;
+        LG_CHECK (!LG_get_vector (parent_in, Parent, n), -1005,
+            "invalid parent") ;
     }
 
     //--------------------------------------------------------------------------

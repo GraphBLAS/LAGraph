@@ -35,4 +35,19 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
     char *msg
 ) ;
 
+int LG_check_cc
+(
+    // input
+    GrB_Vector Component,   // Component(i)=k if node is in the kth Component
+    LAGraph_Graph G,
+    char *msg
+) ;
+
+bool LG_get_vector
+(
+    int64_t *x,
+    GrB_Vector X,
+    int64_t n
+) ;
+
 #endif
