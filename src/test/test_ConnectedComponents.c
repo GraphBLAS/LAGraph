@@ -29,16 +29,16 @@ matrix_info ;
 
 const matrix_info files [ ] = 
 {
-    {      0, "karate.mtx" }, 
-    {      0, "A.mtx" }, 
-    {      0, "jagmesh7.mtx" }, 
-    {      0, "ldbc-cdlp-undirected-example.mtx" }, 
-    {      0, "ldbc-undirected-example.mtx" }, 
-    {      0, "ldbc-wcc-example.mtx" }, 
-    {      0, "LFAT5.mtx" }, 
-    {      0, "LFAT5_two.mtx" }, 
-    {      0, "bcsstk13.mtx" }, 
-    {      0, "tree-example.mtx" }, 
+    {      1, "karate.mtx" }, 
+    {      1, "A.mtx" }, 
+    {      1, "jagmesh7.mtx" }, 
+    {      1, "ldbc-cdlp-undirected-example.mtx" }, 
+    {      1, "ldbc-undirected-example.mtx" }, 
+    {      1, "ldbc-wcc-example.mtx" }, 
+    {      3, "LFAT5.mtx" }, 
+    {      6, "LFAT5_two.mtx" }, 
+    {      1, "bcsstk13.mtx" }, 
+    {      1, "tree-example.mtx" }, 
     {      0, "" }, 
 } ;
 
