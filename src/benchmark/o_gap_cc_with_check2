@@ -68,4 +68,176 @@ SV5b: trial:  7 time:     3.5278 sec
 nCC: 71164263
 SV5b: trial:  8 time:     3.4980 sec
 nCC: 71164263
-SV5b: trial:  9 time:     3.
+SV5b: trial:  9 time:     3.4780 sec
+nCC: 71164263
+SV5b: trial: 10 time:     3.4918 sec
+nCC: 71164263
+SV5b: trial: 11 time:     3.4852 sec
+nCC: 71164263
+SV5b: trial: 12 time:     3.5163 sec
+nCC: 71164263
+SV5b: trial: 13 time:     3.4716 sec
+nCC: 71164263
+SV5b: trial: 14 time:     3.4811 sec
+nCC: 71164263
+SV5b: trial: 15 time:     3.5081 sec
+nCC: 71164263
+LG2:SV5b: threads: 40 time:     3.4944  # of CC: 71164263
+
+Avg: CC (sv5b.2)   40:      3.494 sec: ../../../GAP/GAP-kron/GAP-kron.grb
+
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+threads to test:  40
+matrix: ../../../GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-urand/GAP-urand.grb
+read time: 32.2903
+# of trials: 16
+
+SV5b: trial:  0 time:     4.9255 sec
+nCC: 1
+# of components: 1
+LG_check_cc init  time: 3.50924 sec
+LG_check_cc component time: 102.16 sec
+LG_check_cc check time: 1.55913e-05 sec
+LG_check_cc passed, time: 105.67
+SV5b: trial:  1 time:     4.7573 sec
+nCC: 1
+SV5b: trial:  2 time:     5.0096 sec
+nCC: 1
+SV5b: trial:  3 time:     5.0827 sec
+nCC: 1
+SV5b: trial:  4 time:     5.0903 sec
+nCC: 1
+SV5b: trial:  5 time:     5.0703 sec
+nCC: 1
+SV5b: trial:  6 time:     4.7401 sec
+nCC: 1
+SV5b: trial:  7 time:     4.7290 sec
+nCC: 1
+SV5b: trial:  8 time:     4.7287 sec
+nCC: 1
+SV5b: trial:  9 time:     4.8082 sec
+nCC: 1
+SV5b: trial: 10 time:     4.7809 sec
+nCC: 1
+SV5b: trial: 11 time:     4.7662 sec
+nCC: 1
+SV5b: trial: 12 time:     4.7890 sec
+nCC: 1
+SV5b: trial: 13 time:     4.7611 sec
+nCC: 1
+SV5b: trial: 14 time:     4.7613 sec
+nCC: 1
+SV5b: trial: 15 time:     4.7855 sec
+nCC: 1
+LG2:SV5b: threads: 40 time:     4.8491  # of CC: 1
+
+Avg: CC (sv5b.2)   40:      4.849 sec: ../../../GAP/GAP-urand/GAP-urand.grb
+
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+threads to test:  40
+matrix: ../../../GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-twitter/GAP-twitter.grb
+read time: 33.9039
+# of trials: 16
+
+SV5b: trial:  0 time:     1.5227 sec
+nCC: 19926186
+# of components: 19926186
+LG_check_cc init  time: 1.60263 sec
+LG_check_cc component time: 25.4878 sec
+LG_check_cc check time: 1.57449e-05 sec
+LG_check_cc passed, time: 27.0905
+SV5b: trial:  1 time:     1.5222 sec
+SV5b: trial:  2 time:     1.5511 sec
+SV5b: trial:  3 time:     1.5732 sec
+SV5b: trial:  4 time:     1.5264 sec
+SV5b: trial:  5 time:     1.5535 sec
+SV5b: trial:  6 time:     1.5486 sec
+SV5b: trial:  7 time:     1.5417 sec
+SV5b: trial:  8 time:     1.5406 sec
+SV5b: trial:  9 time:     1.5438 sec
+SV5b: trial: 10 time:     1.5400 sec
+SV5b: trial: 11 time:     1.5488 sec
+SV5b: trial: 12 time:     1.5394 sec
+SV5b: trial: 13 time:     1.5537 sec
+SV5b: trial: 14 time:     1.5666 sec
+SV5b: trial: 15 time:     1.5622 sec
+LG2:SV5b: threads: 40 time:     1.5459  # of CC: 19926186
+
+Avg: CC (sv5b.2)   40:      1.546 sec: ../../../GAP/GAP-twitter/GAP-twitter.grb
+
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+threads to test:  40
+matrix: ../../../GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-web/GAP-web.grb
+read time: 35.3012
+# of trials: 16
+
+SV5b: trial:  0 time:     2.2299 sec
+nCC: 123
+# of components: 123
+LG_check_cc init  time: 1.32418 sec
+LG_check_cc component time: 6.96834 sec
+LG_check_cc check time: 1.25561e-05 sec
+LG_check_cc passed, time: 8.29257
+SV5b: trial:  1 time:     2.0779 sec
+SV5b: trial:  2 time:     2.0664 sec
+SV5b: trial:  3 time:     2.0710 sec
+SV5b: trial:  4 time:     2.0229 sec
+SV5b: trial:  5 time:     2.0642 sec
+SV5b: trial:  6 time:     2.1024 sec
+SV5b: trial:  7 time:     2.0956 sec
+SV5b: trial:  8 time:     2.0653 sec
+SV5b: trial:  9 time:     2.0824 sec
+SV5b: trial: 10 time:     2.1110 sec
+SV5b: trial: 11 time:     2.0209 sec
+SV5b: trial: 12 time:     2.0858 sec
+SV5b: trial: 13 time:     2.0616 sec
+SV5b: trial: 14 time:     2.1048 sec
+SV5b: trial: 15 time:     2.1101 sec
+LG2:SV5b: threads: 40 time:     2.0858  # of CC: 123
+
+Avg: CC (sv5b.2)   40:      2.086 sec: ../../../GAP/GAP-web/GAP-web.grb
+
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+threads to test:  40
+matrix: ../../../GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-road/GAP-road.grb
+read time: 0.870818
+# of trials: 16
+
+SV5b: trial:  0 time:     1.0785 sec
+nCC: 1
+# of components: 1
+LG_check_cc init  time: 0.630294 sec
+LG_check_cc component time: 1.29596 sec
+LG_check_cc check time: 1.57049e-05 sec
+LG_check_cc passed, time: 1.9263
+SV5b: trial:  1 time:     1.1119 sec
+SV5b: trial:  2 time:     1.0660 sec
+SV5b: trial:  3 time:     1.0366 sec
+SV5b: trial:  4 time:     1.1593 sec
+SV5b: trial:  5 time:     1.0799 sec
+SV5b: trial:  6 time:     1.0138 sec
+SV5b: trial:  7 time:     1.0718 sec
+SV5b: trial:  8 time:     1.0840 sec
+SV5b: trial:  9 time:     1.0177 sec
+SV5b: trial: 10 time:     1.0763 sec
+SV5b: trial: 11 time:     1.0845 sec
+SV5b: trial: 12 time:     1.0203 sec
+SV5b: trial: 13 time:     1.0847 sec
+SV5b: trial: 14 time:     1.0866 sec
+SV5b: trial: 15 time:     1.0434 sec
+LG2:SV5b: threads: 40 time:     1.0697  # of CC: 1
+
+Avg: CC (sv5b.2)   40:      1.070 sec: ../../../GAP/GAP-road/GAP-road.grb
+
+[0;36mhypersparse $[0m exit
+exit
+
+Script done on Sun 08 Aug 2021 06:56:54 PM CDT
