@@ -64,7 +64,8 @@ void test_TriangleCentrality (void)
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
-        // C = spones (A), in FP64
+
+        // C = spones (A), in FP64, required for methods 1 and 1.5
         GrB_Index n ;
         OK (GrB_Matrix_nrows (&n, A)) ;
         OK (GrB_Matrix_new (&C, GrB_FP64, n, n)) ;
@@ -78,13 +79,12 @@ void test_TriangleCentrality (void)
         // construct an undirected graph G with adjacency matrix A
         OK (LAGraph_New (&G, &C, atype, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
         TEST_CHECK (C == NULL) ;
-        // OK (GxB_Matrix_fprint (G->A, "G->A", 2, stdout)) ;
 
         // check for self-edges
         OK (LAGraph_Property_NDiag (G, msg)) ;
         if (G->ndiag != 0)
         {
-            // remove self-edges (TODO: make this an LAGraph utility)
+            // remove self-edges
             printf ("graph has %ld self edges\n", G->ndiag) ;
             OK (LAGraph_DeleteDiag (G, msg)) ;
             printf ("now has %ld self edges\n", G->ndiag) ;
@@ -96,7 +96,6 @@ void test_TriangleCentrality (void)
         uint64_t ntri ;
         int retval = LAGraph_VertexCentrality_Triangle (&c, &ntri, G, msg) ;
         TEST_CHECK (retval == 0) ;
-        // TEST_MSG ("retval = %d (%s)", retval, msg) ;
         printf ("# of triangles: %lu\n", ntri) ;
         TEST_CHECK (ntri == ntriangles) ;
 
