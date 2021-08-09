@@ -99,12 +99,12 @@ static GrB_Info LAGraph_binary_read
 }
 
 //------------------------------------------------------------------------------
-// LAGRAPH_FREE_ALL
+// LAGraph_FREE_ALL
 //------------------------------------------------------------------------------
 
 // Free all allocated space; used only for error return.
 
-#define LAGRAPH_FREE_ALL                 \
+#define LAGraph_FREE_ALL                 \
     {                                    \
     GrB_free (G) ;                       \
     LAGraph_Free ((void**)&Gp) ;         \

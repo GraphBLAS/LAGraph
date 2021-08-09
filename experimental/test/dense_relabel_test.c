@@ -20,7 +20,7 @@
 #include <LAGraph.h>
 #include <LAGraphX.h>
 
-#define LAGRAPH_FREE_ALL            \
+#define LAGraph_FREE_ALL            \
 {                                   \
     GrB_free (&Id2index) ;          \
     GrB_free (&Index2id) ;          \
@@ -36,7 +36,7 @@
     if(!(expr)) {                                           \
         fprintf(stderr, "Test failed: %s\nFile: %s:%d\n",   \
                 #expr, __FILE__, __LINE__);                 \
-        LAGRAPH_FREE_ALL;                                   \
+        LAGraph_FREE_ALL;                                   \
         exit(EXIT_FAILURE);                                 \
     }                                                       \
 }
@@ -127,7 +127,7 @@ int main(void)
         ASSERT_TRUE(isequal);
     }
 
-    LAGRAPH_FREE_ALL;
+    LAGraph_FREE_ALL;
     LAGraph_Finalize(NULL);
     return 0;
 }

@@ -36,7 +36,7 @@
 #include <LAGraphX.h>
 #include <LG_internal.h>  // from src/utility
 
-#define LAGRAPH_FREE_ALL            \
+#define LAGraph_FREE_ALL            \
 {                                   \
     LAGraph_Free ((void **)&indices) ;            \
     LAGraph_Free ((void **)&true_values) ;         \
@@ -132,6 +132,6 @@ GrB_Info LAGraph_dense_relabel   // relabel sparse IDs to dense row/column indic
         }
     }
 
-    LAGRAPH_FREE_ALL;
+    LAGraph_FREE_ALL;
     return GrB_SUCCESS;
 }

@@ -64,6 +64,22 @@
 
 //------------------------------------------------------------------------------
 
+#define LAGraph_FREE_WORK           \
+{                                   \
+    GrB_free (&T) ;                 \
+    GrB_free (&u) ;                 \
+    GrB_free (&w) ;                 \
+    GrB_free (&y) ;                 \
+    GrB_free (&L) ;                 \
+    GrB_free (&thunk) ;             \
+}
+
+#define LAGraph_FREE_ALL            \
+{                                   \
+    LAGraph_FREE_WORK ;             \
+    GrB_free (centrality) ;         \
+}
+
 #include "LG_internal.h"
 
 // METHOD is 1, 15, 2, or 3 to select the above methods
@@ -76,22 +92,6 @@
     #define METHOD 15
 #endif
 #endif
-
-#define LAGRAPH_FREE_WORK           \
-{                                   \
-    GrB_free (&T) ;                 \
-    GrB_free (&u) ;                 \
-    GrB_free (&w) ;                 \
-    GrB_free (&y) ;                 \
-    GrB_free (&L) ;                 \
-    GrB_free (&thunk) ;             \
-}
-
-#define LAGRAPH_FREE_ALL            \
-{                                   \
-    LAGRAPH_FREE_WORK ;             \
-    GrB_free (centrality) ;         \
-}
 
 //------------------------------------------------------------------------------
 // LAGraph_VertexCentrality_Triangle: vertex triangle-centrality
@@ -117,7 +117,7 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
     #if LG_SUITESPARSE
     GxB_Scalar thunk = NULL ;
     #else
-    // not used, just to allow GrB_free to be done, in LAGRAPH_FREE_WORK
+    // not used, just to allow GrB_free to be done, in LAGraph_FREE_WORK
     GrB_Vector thunk = NULL ;
     #endif
 
@@ -321,7 +321,7 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
     // free workspace and return result
     //--------------------------------------------------------------------------
 
-    LAGRAPH_FREE_WORK ;
+    LAGraph_FREE_WORK ;
 // GxB_set (GxB_BURBLE, false) ;   // FIXME: remove
     return (0) ;
 }

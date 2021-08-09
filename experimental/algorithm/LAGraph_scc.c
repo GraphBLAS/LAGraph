@@ -22,10 +22,10 @@
 
 #define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
 
+#define LAGraph_FREE_ALL ;
+
 #include <LAGraph.h>
 #include <LAGraphX.h>
-
-#define LAGRAPH_FREE_ALL
 
 //****************************************************************************
 // global C arrays used in SelectOp

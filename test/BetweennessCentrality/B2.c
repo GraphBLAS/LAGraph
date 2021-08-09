@@ -51,7 +51,7 @@
 
 #include "LG_internal.h"
 
-#define LAGRAPH_FREE_WORK                       \
+#define LAGraph_FREE_WORK                       \
 {                                               \
     GrB_free (&frontier) ;                      \
     GrB_free (&paths) ;                         \
@@ -68,9 +68,9 @@
     }                                           \
 }
 
-#define LAGRAPH_FREE_ALL            \
+#define LAGraph_FREE_ALL            \
 {                                   \
-    LAGRAPH_FREE_WORK ;             \
+    LAGraph_FREE_WORK ;             \
     GrB_free (centrality) ;         \
 }
 
@@ -307,7 +307,7 @@ int B2    // vertex betweenness-centrality
     GrB_TRY (GrB_reduce (*centrality, NULL, GrB_PLUS_FP64, GrB_PLUS_FP64,
         bc_update, GrB_DESC_T0)) ;
 
-    LAGRAPH_FREE_WORK ;
+    LAGraph_FREE_WORK ;
     return (0) ;
 }
 

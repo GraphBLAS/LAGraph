@@ -17,10 +17,9 @@
 
 #include <LAGraph.h>
 #include <LAGraphX.h>
-
 #include "LAGraph_internal.h"
 
-#define LAGRAPH_FREE_ALL                \
+#define LAGraph_FREE_ALL                \
     free(I);                            \
     free(V);                            \
     GrB_free (&stars);     \
@@ -206,6 +205,6 @@ GrB_Info LAGraph_cc_lacc
     }
     *result = parents;
 
-    LAGRAPH_FREE_ALL;
+    LAGraph_FREE_ALL;
     return GrB_SUCCESS;
 }

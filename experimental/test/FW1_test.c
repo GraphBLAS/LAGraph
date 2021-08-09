@@ -14,7 +14,7 @@
 #include <LAGraph.h>
 #include <LAGraphX.h>
 
-#define LAGRAPH_FREE_ALL        \
+#define LAGraph_FREE_ALL        \
     GrB_free (&A);              \
     GrB_free (&Output) ;
 
@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
     outputFile = fopen(argv[2], "w");
     LAGraph_MMWrite_type(Output, Output_type, outputFile, NULL, NULL);
 
-    LAGRAPH_FREE_ALL;
+    LAGraph_FREE_ALL;
     LAGraph_Finalize(NULL);
 
     return 0;

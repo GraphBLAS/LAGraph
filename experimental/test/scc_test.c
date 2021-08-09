@@ -24,7 +24,7 @@
 #include <LAGraph.h>
 #include <LAGraphX.h>
 
-#define LAGRAPH_FREE_ALL    \
+#define LAGraph_FREE_ALL    \
 {                           \
     GrB_free (&result) ;    \
     GrB_free (&A) ;         \
@@ -223,7 +223,7 @@ int main (int argc, char **argv)
         printf("elapsed time: %f\n", t);
     }
 
-    LAGRAPH_FREE_ALL ;
+    LAGraph_FREE_ALL ;
     LAGraph_Finalize (NULL) ;
 #endif
 }

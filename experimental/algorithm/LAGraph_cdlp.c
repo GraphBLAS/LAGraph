@@ -121,7 +121,7 @@
 #include <LAGraphX.h>
 //#include "GB_msort_2.h"
 
-#define LAGRAPH_FREE_ALL                                                \
+#define LAGraph_FREE_ALL                                                \
 {                                                                       \
     GrB_free (&L) ;                                                     \
     GrB_free (&L_prev) ;                                                \
@@ -362,8 +362,8 @@ GrB_Info LAGraph_cdlp
     //--------------------------------------------------------------------------
 
     (*CDLP_handle) = CDLP;
-    CDLP = NULL;            // set to NULL so LAGRAPH_FREE_ALL doesn't free it
-    LAGRAPH_FREE_ALL;
+    CDLP = NULL;            // set to NULL so LAGraph_FREE_ALL doesn't free it
+    LAGraph_FREE_ALL;
 
     t[1] = LAGraph_Toc (&t[1], tic, NULL) ;
 

@@ -17,10 +17,7 @@
 
 #define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
 
-#include <LAGraph.h>
-#include <LAGraphX.h>
-
-#define LAGRAPH_FREE_ALL                             \
+#define LAGraph_FREE_ALL                             \
 {                                                    \
     GrB_free (&S);                                   \
     GrB_free (&T);                                   \
@@ -42,6 +39,9 @@
     GrB_free (&s1);                     \
     GrB_free (&s2);                     \
 }
+
+#include <LAGraph.h>
+#include <LAGraphX.h>
 
 //****************************************************************************
 // encode each edge into a single uint64_t
@@ -260,7 +260,7 @@ GrB_Info LAGraph_msf
     LAGRAPH_OK (GrB_Matrix_build (T, SI, SJ, SX, ntuples, GrB_SECOND_UINT64));
     *result = T;
 
-    LAGRAPH_FREE_ALL;
+    LAGraph_FREE_ALL;
     return GrB_SUCCESS;
 #endif
 }

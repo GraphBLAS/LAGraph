@@ -31,17 +31,17 @@
 
 // On output, Y is the computed result, of the same size and type as Y0.
 
-#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
-#include <LAGraph.h>
-#include <LAGraphX.h>
-
-#define LAGRAPH_FREE_ALL    \
+#define LAGraph_FREE_ALL    \
 {                           \
-    GrB_free (&gt0) ;         \
-    GrB_free (&ymax) ;         \
+    GrB_free (&gt0) ;       \
+    GrB_free (&ymax) ;      \
     GrB_free (&M) ;         \
     GrB_free (Yhandle) ;    \
 }
+
+#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
+#include <LAGraph.h>
+#include <LAGraphX.h>
 
 //****************************************************************************
 #define F_UNARY(f)  ((void (*)(void *, const void *)) f)

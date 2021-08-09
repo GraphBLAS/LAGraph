@@ -20,7 +20,7 @@
 #include <LAGraph.h>
 #include <LAGraphX.h>
 
-#define LAGRAPH_FREE_ALL            \
+#define LAGraph_FREE_ALL            \
 {                                   \
     GrB_free (&A_type) ;            \
     GrB_free (&A) ;                 \
@@ -560,7 +560,7 @@ int main (int argc, char **argv)
     // free all workspace and finish
     //--------------------------------------------------------------------------
 
-    LAGRAPH_FREE_ALL ;
+    LAGraph_FREE_ALL ;
     LAGRAPH_OK (LAGraph_Finalize (NULL)) ;
     fprintf (stderr, "BF_test: ") ;
     if (ok)

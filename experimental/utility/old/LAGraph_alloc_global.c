@@ -42,7 +42,7 @@
 
 #include "LAGraph_internal.h"
 
-#define LAGRAPH_FREE_ALL                    \
+#define LAGraph_FREE_ALL                    \
 {                                           \
     LAGraph_free_global ( ) ;               \
 }

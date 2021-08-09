@@ -18,17 +18,17 @@
 // of other, faster methods.  Do not benchmark this method; it is slow and
 // simple by design.
 
-#define LAGRAPH_FREE_WORK                   \
-{                                           \
-    LAGraph_Free ((void **) &Mark) ;        \
+#define LAGraph_FREE_WORK                       \
+{                                               \
+    LAGraph_Free ((void **) &Mark) ;            \
 }
 
-#define LAGRAPH_FREE_ALL                    \
-{                                           \
-    LAGRAPH_FREE_WORK ;                     \
-    LAGraph_Free (&Ap) ;                    \
-    LAGraph_Free (&Aj) ;                    \
-    LAGraph_Free (&Ax) ;                    \
+#define LAGraph_FREE_ALL                        \
+{                                               \
+    LAGraph_FREE_WORK ;                         \
+    LAGraph_Free ((void **) &Ap) ;              \
+    LAGraph_Free ((void **) &Aj) ;              \
+    LAGraph_Free ((void **) &Ax) ;              \
 }
 
 #include "LG_internal.h"
@@ -208,7 +208,7 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
     // free workspace and return result
     //--------------------------------------------------------------------------
 
-    LAGRAPH_FREE_WORK ;
+    LAGraph_FREE_WORK ;
     (*ntri) = ntriangles ;
     return (0) ;
 }

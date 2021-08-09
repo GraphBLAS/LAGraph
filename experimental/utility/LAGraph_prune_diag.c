@@ -15,7 +15,7 @@
 
 //------------------------------------------------------------------------------
 
-#define LAGRAPH_FREE_ALL GrB_free (&M)
+#define LAGraph_FREE_ALL GrB_free (&M)
 
 #include <LAGraph.h>
 #include <LAGraphX.h>
@@ -47,6 +47,6 @@ GrB_Info LAGraph_prune_diag // remove all entries from the diagonal
     LAGRAPH_OK (GrB_assign (A, M, NULL, A, GrB_ALL, m, GrB_ALL, n,
                             GrB_DESC_RC)) ;
 
-    LAGRAPH_FREE_ALL ;
+    LAGraph_FREE_ALL ;
     return (GrB_SUCCESS) ;
 }

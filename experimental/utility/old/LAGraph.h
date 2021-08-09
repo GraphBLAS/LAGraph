@@ -475,7 +475,7 @@ extern bool LAGraph_malloc_is_thread_safe ;
 //------------------------------------------------------------------------------
 
 // To use LAGRAPH_OK, the #include'ing file must declare a scalar GrB_Info
-// info, and must define LAGRAPH_FREE_ALL as a macro that frees all workspace
+// info, and must define LAGraph_FREE_ALL as a macro that frees all workspace
 // if an error occurs.  The method can be a GrB_Info scalar as well, so that
 // LAGRAPH_OK(info) works.  The function that uses this macro must return
 // GrB_Info, or int.
@@ -484,7 +484,7 @@ extern bool LAGraph_malloc_is_thread_safe ;
 {                                                                           \
     fprintf (stderr, "LAGraph error: %s\n[%d]\nFile: %s Line: %d\n",        \
         message, info, __FILE__, __LINE__) ;                                \
-    LAGRAPH_FREE_ALL ;                                                      \
+    LAGraph_FREE_ALL ;                                                      \
     return (info) ;                                                         \
 }
 

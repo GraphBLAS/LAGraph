@@ -64,7 +64,7 @@ void floydWarshallParents(int V) {
     }
 }
 
-#define LAGRAPH_FREE_ALL                        \
+#define LAGraph_FREE_ALL                        \
     GrB_free (&A) ;                             \
     GrB_free (&Output) ;                        \
     GrB_free (&regResult) ;                     \
@@ -151,7 +151,7 @@ int main(int argc, char *argv[])
     else
         printf("Test failed for file: %s\n\n", argv[1]);
 
-    LAGRAPH_FREE_ALL;
+    LAGraph_FREE_ALL;
     LAGraph_Finalize(NULL);
     return 0;
 }

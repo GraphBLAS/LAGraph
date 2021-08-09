@@ -17,7 +17,7 @@
 #include <LAGraph.h>
 #include <LAGraphX.h>
 
-#define LAGRAPH_FREE_ALL                            \
+#define LAGraph_FREE_ALL                            \
 {                                                   \
     if (Cset != NULL)                               \
     {                                               \
@@ -161,7 +161,7 @@ int main (int argc, char **argv)
     if (ntris == NULL || nedges == NULL || nstepss == NULL)
     {
         printf ("out of memory\n") ;
-        LAGRAPH_FREE_ALL ;
+        LAGraph_FREE_ALL ;
     }
 
     double t1 ;
@@ -206,6 +206,6 @@ int main (int argc, char **argv)
     }
 
     printf ("\n") ;
-    LAGRAPH_FREE_ALL ;
+    LAGraph_FREE_ALL ;
     LAGraph_Finalize (NULL) ;
 }

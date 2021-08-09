@@ -24,7 +24,7 @@
 // TODO: this method gets stuck in an infinite loop when there are negative-
 // weight cycles in the graph
 
-#define LAGRAPH_FREE_WORK   \
+#define LAGraph_FREE_WORK   \
 {                           \
     GrB_free (&AL) ;        \
     GrB_free (&AH) ;        \
@@ -38,9 +38,9 @@
     GrB_free (&Empty) ;     \
 }
 
-#define LAGRAPH_FREE_ALL    \
+#define LAGraph_FREE_ALL    \
 {                           \
-    LAGRAPH_FREE_WORK ;     \
+    LAGraph_FREE_WORK ;     \
     GrB_free (&t) ;         \
 }
 
@@ -285,7 +285,7 @@ int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
     //--------------------------------------------------------------------------
 
     (*path_length) = t ;
-    LAGRAPH_FREE_WORK ;
+    LAGraph_FREE_WORK ;
     return (0) ;
 }
 

@@ -9,16 +9,13 @@
 // or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
+#define LAGraph_FREE_ALL ;
+
+//------------------------------------------------------------------------------
 
 #include <LAGraph.h>
 #include "LG_internal.h"
 #include "LG_alg_internal.h"
-
-//------------------------------------------------------------------------------
-#undef  LAGRAPH_FREE_ALL
-#define LAGRAPH_FREE_ALL                    \
-{                                           \
-}
 
 //****************************************************************************
 // Advanced API: Compute G->ndiag, G->A_pattern_is_symmetric, and G->rowdegree

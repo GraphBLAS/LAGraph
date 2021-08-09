@@ -25,18 +25,17 @@
 // Negative weights are OK, unless there is a negative weight cycle.  In
 // that case, the output is undefined.
 
-#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
-#include <LAGraph.h>
-#include <LAGraphX.h>
-
-
 #define FW_FREE_WORK            \
     GrB_free (&A);              \
     GrB_free (&B);
 
-#define LAGRAPH_FREE_ALL        \
+#define LAGraph_FREE_ALL        \
     FW_FREE_WORK ;              \
     GrB_free (D);
+
+#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
+#include <LAGraph.h>
+#include <LAGraphX.h>
 
 //****************************************************************************
 GrB_Info LAGraph_FW

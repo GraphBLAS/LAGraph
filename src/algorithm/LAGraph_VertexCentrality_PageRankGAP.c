@@ -18,9 +18,7 @@
 // is undirected or G->A is known to have a symmetric pattern, then G->A is
 // used instead of G->AT, however.
 
-#include "LG_internal.h"
-
-#define LAGRAPH_FREE_WORK           \
+#define LAGraph_FREE_WORK           \
 {                                   \
     GrB_free (&d1) ;                \
     GrB_free (&d) ;                 \
@@ -29,11 +27,13 @@
     GrB_free (&plus_second_fp32) ;  \
 }
 
-#define LAGRAPH_FREE_ALL            \
+#define LAGraph_FREE_ALL            \
 {                                   \
-    LAGRAPH_FREE_WORK ;             \
+    LAGraph_FREE_WORK ;             \
     GrB_free (&r) ;                 \
 }
+
+#include "LG_internal.h"
 
 int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
 (
@@ -55,6 +55,7 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
 
     LG_CLEAR_MSG ;
     GrB_Vector r = NULL, d = NULL, t = NULL, w = NULL, d1 = NULL ;
+    GrB_Semiring plus_second_fp32 = NULL ;
     LG_CHECK (centrality == NULL, -1, "centrality is NULL") ;
     LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
     LAGraph_Kind kind = G->kind ; 
@@ -80,7 +81,6 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
 
     // SuiteSparse:GraphBLAS has GxB_PLUS_SECOND_FP32, which is the same speed
     // as using the created semiring below.  Create it so this runs in vanilla.
-    GrB_Semiring plus_second_fp32 = NULL ;
     GrB_TRY (GrB_Semiring_new (&plus_second_fp32, GrB_PLUS_MONOID_FP32,
         GrB_SECOND_FP32)) ;
 
@@ -145,7 +145,7 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
     //--------------------------------------------------------------------------
 
     (*centrality) = r ;
-    LAGRAPH_FREE_WORK ;
+    LAGraph_FREE_WORK ;
     return (0) ;
 }
 

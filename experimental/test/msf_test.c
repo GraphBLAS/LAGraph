@@ -27,7 +27,7 @@
 #include <LAGraph.h>
 #include <LAGraphX.h>
 
-#define LAGRAPH_FREE_ALL    \
+#define LAGraph_FREE_ALL    \
 {                           \
     GrB_free (&result);     \
     GrB_free (&A);          \
@@ -196,6 +196,6 @@ int main (int argc, char **argv)
         printf("\n");
     }
 
-    LAGRAPH_FREE_ALL ;
+    LAGraph_FREE_ALL ;
     LAGRAPH_OK (GrB_finalize ( ));
 }

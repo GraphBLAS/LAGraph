@@ -59,10 +59,7 @@
 // not equal to 1 (even zero-weight edges are not allowed), or if it has self
 // edges.
 
-#include <LAGraph.h>
-#include <LAGraphX.h>
-
-#define LAGRAPH_FREE_ALL            \
+#define LAGraph_FREE_ALL            \
 {                                   \
     GrB_free (&C) ;                 \
     GrB_free (&CL) ;                \
@@ -73,6 +70,9 @@
     GrB_free (&LAGraph_COMB_DIR_FP64) ;                 \
     GrB_free (&LAGraph_COMB_UNDIR_FP64) ;                 \
 }
+
+#include <LAGraph.h>
+#include <LAGraphX.h>
 
 //------------------------------------------------------------------------------
 
@@ -287,7 +287,7 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     (*LCC_handle) = LCC ; LCC = NULL ;
     (*LCC_type) = GrB_FP64;
 
-    LAGRAPH_FREE_ALL ;
+    LAGraph_FREE_ALL ;
     LAGraph_Toc (&t[1], tic, NULL) ;
     return (GrB_SUCCESS) ;
 }

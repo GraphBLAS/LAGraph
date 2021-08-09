@@ -51,10 +51,7 @@
 // LAGraph/Test/AllKTruss.  This function is derived from SuiteSparse/
 // GraphBLAS/Extras/ktruss/allktruss_graphblas.c
 
-#include <LAGraph.h>
-#include <LAGraphX.h>
-
-#define LAGRAPH_FREE_ALL                        \
+#define LAGraph_FREE_ALL                        \
     if (!keep_all_ktrusses)                     \
     {                                           \
         for (int64_t kk = 3 ; kk <= k ; kk++)   \
@@ -65,6 +62,9 @@
     GrB_free (&LAGraph_support) ;               \
     GrB_free (&Support) ;                       \
     GrB_free (&C) ;
+
+#include <LAGraph.h>
+#include <LAGraphX.h>
 
 //****************************************************************************
 
@@ -229,7 +229,7 @@ GrB_Info LAGraph_allktruss      // compute all k-trusses of a graph
         }
     }
 
-    LAGRAPH_FREE_ALL ;
+    LAGraph_FREE_ALL ;
 
 #else
     // TODO: implement a vanilla version of this algorithm (or wait for

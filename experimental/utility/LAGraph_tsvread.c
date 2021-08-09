@@ -25,7 +25,7 @@
 #include <LAGraph.h>
 #include <LAGraphX.h>
 
-#define LAGRAPH_FREE_ALL GrB_free (Chandle) ;
+#define LAGraph_FREE_ALL GrB_free (Chandle) ;
 
 GrB_Info LAGraph_tsvread        // returns GrB_SUCCESS if successful
 (

@@ -26,7 +26,7 @@
 #include <LAGraph.h>
 #include <LAGraphX.h>
 
-#define LAGRAPH_FREE_ALL ;
+#define LAGraph_FREE_ALL ;
 
 int main (int argc, char **argv)
 {
@@ -112,8 +112,8 @@ int main (int argc, char **argv)
         Bias [layer] = NULL ;
     }
 
-    #undef  LAGRAPH_FREE_ALL
-    #define LAGRAPH_FREE_ALL                            \
+    #undef  LAGraph_FREE_ALL
+    #define LAGraph_FREE_ALL                            \
     {                                                   \
         GrB_free (&TrueCategories) ;                    \
         GrB_free (&Categories) ;                        \
@@ -397,7 +397,7 @@ int main (int argc, char **argv)
                         // GxB_print (TrueCategories, 3) ;
                         // GxB_print (Categories, 3) ;
                         printf ("test failure!\n") ;
-                        // LAGRAPH_FREE_ALL ;
+                        // LAGraph_FREE_ALL ;
                         // abort ( ) ;
                     }
                 }
@@ -419,7 +419,7 @@ int main (int argc, char **argv)
         // free the problem
         //----------------------------------------------------------------------
 
-        LAGRAPH_FREE_ALL ;
+        LAGraph_FREE_ALL ;
     }
 
     //--------------------------------------------------------------------------

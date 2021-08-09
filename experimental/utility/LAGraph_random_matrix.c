@@ -56,7 +56,7 @@
 #include <LAGraph.h>
 #include <LAGraphX.h>
 
-#define LAGRAPH_FREE_ALL    \
+#define LAGraph_FREE_ALL    \
     GrB_free (A) ;
 
 GrB_Info LAGraph_random_matrix  // create a random matrix
@@ -212,7 +212,7 @@ GrB_Info LAGraph_random_matrix  // create a random matrix
     else
     {
         // type not supported
-        LAGRAPH_FREE_ALL ;
+        LAGraph_FREE_ALL ;
         return (GrB_INVALID_VALUE) ;
     }
 

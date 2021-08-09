@@ -16,7 +16,7 @@
 #include <LAGraph.h>
 #include <LAGraphX.h>
 
-#define LAGRAPH_FREE_ALL    \
+#define LAGraph_FREE_ALL    \
     GrB_free (&C) ;
 
 //****************************************************************************
@@ -237,7 +237,7 @@ GrB_Info LAGraph_ispattern  // return GrB_SUCCESS if successful
     }
 
     // free workspace and return result
-    LAGRAPH_FREE_ALL ;
+    LAGraph_FREE_ALL ;
     return (GrB_SUCCESS) ;
 #endif
 }

@@ -49,9 +49,7 @@
 
 //------------------------------------------------------------------------------
 
-#include "LG_internal.h"
-
-#define LAGRAPH_FREE_WORK                       \
+#define LAGraph_FREE_WORK                       \
 {                                               \
     GrB_free (&frontier) ;                      \
     GrB_free (&paths) ;                         \
@@ -69,11 +67,13 @@
     }                                           \
 }
 
-#define LAGRAPH_FREE_ALL            \
+#define LAGraph_FREE_ALL            \
 {                                   \
-    LAGRAPH_FREE_WORK ;             \
+    LAGraph_FREE_WORK ;             \
     GrB_free (centrality) ;         \
 }
+
+#include "LG_internal.h"
 
 //------------------------------------------------------------------------------
 // LAGraph_VertexCentrality_Betweenness: vertex betweenness-centrality
@@ -119,6 +119,9 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
     // Temporary workspace matrix (sparse).
     GrB_Matrix W = NULL ;
 
+    GrB_Index n = 0 ;                   // # nodes in the graph
+    GrB_Semiring plus_first_fp64 = NULL ;
+
     LG_CHECK (centrality == NULL, -1, "centrality is NULL") ;
     (*centrality) = NULL ;
     LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
@@ -145,12 +148,10 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
 
     // SuiteSparse:GraphBLAS has GxB_PLUS_FIRST_FP64, which is the same speed
     // as using the created semiring below.  Create it so this runs in vanilla.
-    GrB_Semiring plus_first_fp64 = NULL ;
     GrB_TRY (GrB_Semiring_new (&plus_first_fp64, GrB_PLUS_MONOID_FP64,
                                GrB_FIRST_FP64)) ;
 
     // Initialize paths and frontier with source notes
-    GrB_Index n ;                   // # nodes in the graph
     GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
     GrB_TRY (GrB_Matrix_new (&paths,    GrB_FP64, ns, n)) ;
     GrB_TRY (GrB_Matrix_new (&frontier, GrB_FP64, ns, n)) ;
@@ -318,6 +319,6 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
     GrB_TRY (GrB_reduce (*centrality, NULL, GrB_PLUS_FP64, GrB_PLUS_MONOID_FP64,
         bc_update, GrB_DESC_T0)) ;
 
-    LAGRAPH_FREE_WORK ;
+    LAGraph_FREE_WORK ;
     return (0) ;
 }

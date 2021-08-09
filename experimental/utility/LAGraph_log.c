@@ -16,7 +16,7 @@
 #include <LAGraph.h>
 #include <LAGraphX.h>
 
-#define LAGRAPH_FREE_ALL
+#define LAGraph_FREE_ALL
 
 //****************************************************************************
 static void delete_newline (char *p)

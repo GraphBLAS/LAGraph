@@ -15,15 +15,15 @@
 // Contribute by Scott McMillan, derived from examples in the appendix of
 // The GraphBLAS C API Specification, v1.3.0
 
-#define LAGRAPH_FREE_WORK   \
+#define LAGraph_FREE_WORK   \
 {                           \
     GrB_free (&frontier);   \
     GrB_free (&index_ramp); \
 }
 
-#define LAGRAPH_FREE_ALL    \
+#define LAGraph_FREE_ALL    \
 {                           \
-    LAGRAPH_FREE_WORK ;     \
+    LAGraph_FREE_WORK ;     \
     GrB_free (&l_parent);   \
     GrB_free (&l_level);    \
 }
@@ -183,6 +183,6 @@ int LG_BreadthFirstSearch_vanilla
 
     if (compute_parent) (*parent) = l_parent ;
     if (compute_level ) (*level ) = l_level ;
-    LAGRAPH_FREE_WORK ;
+    LAGraph_FREE_WORK ;
     return (0) ;
 }

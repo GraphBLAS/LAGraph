@@ -35,15 +35,15 @@
 // GrB_* functions.
 //------------------------------------------------------------------------------
 
-#include <LAGraph.h>
-#include <LAGraphX.h>
-#include <LG_internal.h>  // from src/utility
-
-#define LAGRAPH_FREE_ALL   \
+#define LAGraph_FREE_ALL   \
 {                          \
     GrB_free(&d) ;         \
     GrB_free(&dtmp) ;      \
 }
+
+#include <LAGraph.h>
+#include <LAGraphX.h>
+#include <LG_internal.h>  // from src/utility
 
 
 // Given the transposed of a n-by-n adjacency matrix A and a source vertex s.
@@ -129,13 +129,13 @@ GrB_Info LAGraph_BF_basic_mxv
         if (!same)
         {
             // printf("AT negative-weight cycle found. \n");
-            LAGRAPH_FREE_ALL;
+            LAGraph_FREE_ALL;
             return (GrB_NO_VALUE) ;
         }
     }
 
     (*pd_output) = d;
     d = NULL;
-    LAGRAPH_FREE_ALL;
+    LAGraph_FREE_ALL;
     return (GrB_SUCCESS) ;
 }

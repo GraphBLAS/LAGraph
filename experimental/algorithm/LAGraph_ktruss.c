@@ -44,14 +44,14 @@
 
 // TODO add cite
 
-#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
-#include <LAGraph.h>
-#include <LAGraphX.h>
-
-#define LAGRAPH_FREE_ALL                \
+#define LAGraph_FREE_ALL                \
     GrB_free (&Support) ;               \
     GrB_free (&LAGraph_support) ;       \
     GrB_free (&C) ;
+
+#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
+#include <LAGraph.h>
+#include <LAGraphX.h>
 
 //****************************************************************************
 

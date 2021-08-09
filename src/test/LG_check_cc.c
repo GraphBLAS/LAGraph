@@ -8,7 +8,7 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
-#define LAGRAPH_FREE_WORK                       \
+#define LAGraph_FREE_WORK                       \
 {                                               \
     LAGraph_Free ((void **) &queue) ;           \
     LAGraph_Free ((void **) &component_in) ;    \
@@ -17,12 +17,12 @@
     GrB_free (&Row) ;                           \
 }
 
-#define LAGRAPH_FREE_ALL                        \
+#define LAGraph_FREE_ALL                        \
 {                                               \
-    LAGRAPH_FREE_WORK ;                         \
-    LAGraph_Free (&Ap) ;                        \
-    LAGraph_Free (&Aj) ;                        \
-    LAGraph_Free (&Ax) ;                        \
+    LAGraph_FREE_WORK ;                         \
+    LAGraph_Free ((void **) &Ap) ;              \
+    LAGraph_Free ((void **) &Aj) ;              \
+    LAGraph_Free ((void **) &Ax) ;              \
 }
 
 #include "LG_internal.h"
@@ -239,7 +239,7 @@ int LG_check_cc
     #endif
     #endif
 
-    LAGRAPH_FREE_WORK ;
+    LAGraph_FREE_WORK ;
 
     LAGraph_Toc (&tt, tic, msg) ;
     printf ("LG_check_cc check time: %g sec\n", tt) ;

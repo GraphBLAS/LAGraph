@@ -35,16 +35,15 @@
 
 //------------------------------------------------------------------------------
 
-#include <LAGraph.h>
-#include <LAGraphX.h>
-#include <LG_internal.h>  // from src/utility
-
-
-#define LAGRAPH_FREE_ALL      \
+#define LAGraph_FREE_ALL      \
 {                             \
     LAGraph_Free((void**)&d);                  \
     LAGraph_Free((void**)&pi);                 \
 }
+
+#include <LAGraph.h>
+#include <LAGraphX.h>
+#include <LG_internal.h>  // from src/utility
 
 // Given the edges and corresponding weights of a graph in tuple
 // form {I, J, W} and a source vertex s. If there is no negative-weight
@@ -135,7 +134,7 @@ GrB_Info LAGraph_BF_pure_c_double
             if (d[j] > d[i] + W[k])
             {
                 // printf("A negative-weight cycle exists. \n");
-                LAGRAPH_FREE_ALL;
+                LAGraph_FREE_ALL;
                 return (GrB_NO_VALUE) ;
             }
         }

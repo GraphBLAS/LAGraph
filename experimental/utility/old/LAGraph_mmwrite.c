@@ -221,7 +221,7 @@ static bool print_double
     {                                   \
         /* file I/O error */            \
         printf ("LAGraph_mmwrite: file I/O error\n") ; \
-        LAGRAPH_FREE_ALL ;              \
+        LAGraph_FREE_ALL ;              \
         return (GrB_INVALID_VALUE) ;    \
     }                                   \
 }
@@ -258,7 +258,7 @@ GrB_Info LAGraph_mmwrite
     GrB_Index *I = NULL, *J = NULL ;
     GrB_Matrix M = NULL, AT = NULL, C = NULL ;
 
-    #define LAGRAPH_FREE_ALL        \
+    #define LAGraph_FREE_ALL        \
     {                               \
         LAGRAPH_FREE (I) ;          \
         LAGRAPH_FREE (J) ;          \
@@ -497,7 +497,7 @@ GrB_Info LAGraph_mmwrite
     if (nvals_to_print == 0)
     {
         // quick return if nothing more to do
-        LAGRAPH_FREE_ALL ;
+        LAGraph_FREE_ALL ;
         return (GrB_SUCCESS) ;
     }
 
@@ -511,7 +511,7 @@ GrB_Info LAGraph_mmwrite
     {
         // out of memory
         printf ("LAGraph_mmwrite: out of memory\n") ;
-        LAGRAPH_FREE_ALL ;
+        LAGraph_FREE_ALL ;
         return (GrB_OUT_OF_MEMORY) ;
     }
 
@@ -532,7 +532,7 @@ GrB_Info LAGraph_mmwrite
         {                                                                   \
             /* out of memory */                                             \
             printf ("LAGraph_mmwrite: out of memory\n") ;                   \
-            LAGRAPH_FREE_ALL ;                                              \
+            LAGraph_FREE_ALL ;                                              \
             return (GrB_OUT_OF_MEMORY) ;                                    \
         }                                                                   \
         LAGRAPH_OK (GrB_Matrix_extractTuples (I, J, ARG(X), &nvals, A)) ;   \
@@ -602,7 +602,7 @@ GrB_Info LAGraph_mmwrite
     // free workspace and return
     //--------------------------------------------------------------------------
 
-    LAGRAPH_FREE_ALL ;
+    LAGraph_FREE_ALL ;
     return (GrB_SUCCESS) ;
 }
 

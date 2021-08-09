@@ -31,9 +31,9 @@
 // reimports it back.  G->A is unchanged when the function returns, but during
 // execution G->A is invalid.
 
-#include "LG_internal.h"
+#define LAGraph_FREE_ALL ;
 
-#define LAGRAPH_FREE_ALL
+#include "LG_internal.h"
 
 //------------------------------------------------------------------------------
 // hash functions: todo describe me
@@ -297,8 +297,8 @@ static inline int Reduce_assign32
 // component(s)=s.  The number of connected components in the graph G is the
 // number of representatives.
 
-#undef  LAGRAPH_FREE_ALL
-#define LAGRAPH_FREE_ALL                            \
+#undef  LAGraph_FREE_ALL
+#define LAGraph_FREE_ALL                            \
 {                                                   \
     LAGraph_Free ((void **) &I) ;           \
     LAGraph_Free ((void **) &V32) ;         \
@@ -783,6 +783,6 @@ int LAGraph_ConnectedComponents
     {
         GrB_free (&T) ;
     }
-    LAGRAPH_FREE_ALL ;
+    LAGraph_FREE_ALL ;
     return (0) ;
 }

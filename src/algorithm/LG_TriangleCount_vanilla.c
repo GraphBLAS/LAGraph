@@ -48,6 +48,12 @@
 // Rajamanickam, 'Fast linear algebra- based triangle counting with
 // KokkosKernels', IEEE HPEC'17, https://dx.doi.org/10.1109/HPEC.2017.8091043,
 
+#define LAGraph_FREE_ALL        \
+{                               \
+    GrB_free (L) ;              \
+    GrB_free (U) ;              \
+}
+
 #include <LG_internal.h>
 
 #define NO_GRB_SELECT 1
@@ -55,14 +61,6 @@
 //------------------------------------------------------------------------------
 // tricount_prep: construct L and U for LAGraph_TriangleCount_Methods
 //------------------------------------------------------------------------------
-
-#undef  LAGRAPH_FREE_ALL
-#define LAGRAPH_FREE_ALL        \
-{                               \
-    GrB_free (&thunk) ;         \
-    GrB_free (L) ;              \
-    GrB_free (U) ;              \
-}
 
 static int tricount_prep_vanilla        // return 0 if successful, < 0 on error
 (
@@ -263,8 +261,8 @@ static int tricount_prep_vanilla        // return 0 if successful, < 0 on error
 // LAGraph_tricount: count the number of triangles in a graph
 //------------------------------------------------------------------------------
 
-#undef  LAGRAPH_FREE_ALL
-#define LAGRAPH_FREE_ALL                    \
+#undef  LAGraph_FREE_ALL
+#define LAGraph_FREE_ALL                    \
 {                                           \
     GrB_free (&C) ;                         \
     GrB_free (&L) ;                         \
@@ -491,7 +489,7 @@ int LG_TriangleCount_vanilla   // returns 0 if successful, < 0 if failure
     // return result
     //--------------------------------------------------------------------------
 
-    LAGRAPH_FREE_ALL ;
+    LAGraph_FREE_ALL ;
     (*ntriangles) = (uint64_t) ntri ;
     return (0) ;
 }

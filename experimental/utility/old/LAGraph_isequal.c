@@ -53,7 +53,7 @@
 
 #include "LAGraph_internal.h"
 
-#define LAGRAPH_FREE_ALL ;
+#define LAGraph_FREE_ALL ;
 
 GrB_Info LAGraph_isequal    // return GrB_SUCCESS if successful
 (

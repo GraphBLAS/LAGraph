@@ -15,7 +15,7 @@
 #include <LAGraph.h>
 #include <LAGraphX.h>
 
-#define LAGRAPH_FREE_ALL    \
+#define LAGraph_FREE_ALL    \
 {                           \
     GrB_free (&v) ;         \
     LAGraph_Free ((void **)&I) ;                 \
@@ -49,7 +49,7 @@ GrB_Info LAGraph_1_to_n     // create an integer vector v = 1:n
         int64_t *X = LAGraph_Malloc (n, sizeof (int64_t)) ;
         if (I == NULL || X == NULL)
         {
-            LAGRAPH_FREE_ALL ;
+            LAGraph_FREE_ALL ;
             return (GrB_OUT_OF_MEMORY) ;
         }
         #pragma omp parallel for num_threads(nthreads) schedule(static)
@@ -67,7 +67,7 @@ GrB_Info LAGraph_1_to_n     // create an integer vector v = 1:n
         int32_t *X = LAGraph_Malloc (n, sizeof (int32_t)) ;
         if (I == NULL || X == NULL)
         {
-            LAGRAPH_FREE_ALL ;
+            LAGraph_FREE_ALL ;
             return (GrB_OUT_OF_MEMORY) ;
         }
         #pragma omp parallel for num_threads(nthreads) schedule(static)
