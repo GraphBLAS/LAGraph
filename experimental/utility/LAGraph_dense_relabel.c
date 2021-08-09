@@ -30,17 +30,17 @@
 //
 // Find usage example in /Test/DenseRelabel/dense_relabel_test.c
 
-#include <string.h>       // for memset
-
-#include <LAGraph.h>
-#include <LAGraphX.h>
-#include <LG_internal.h>  // from src/utility
-
 #define LAGraph_FREE_ALL            \
 {                                   \
     LAGraph_Free ((void **)&indices) ;            \
     LAGraph_Free ((void **)&true_values) ;         \
 }
+
+#include <string.h>       // for memset
+
+#include <LAGraph.h>
+#include <LAGraphX.h>
+#include <LG_internal.h>  // from src/utility
 
 // These should be freed by the calling code
 //    GrB_free (Id2index_handle) ;  \

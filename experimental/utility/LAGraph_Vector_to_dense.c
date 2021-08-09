@@ -16,11 +16,11 @@
 // vdense is a dense copy of v.  Where v(i) exists, vdense(i) = v(i).  If v(i)
 // is not in the pattern, it is assigned the value v(i) = id.
 
-#include <LAGraph.h>
-#include <LAGraphX.h>
-
 #define LAGraph_FREE_ALL \
     GrB_free (&u) ;
+
+#include <LAGraph.h>
+#include <LAGraphX.h>
 
 //****************************************************************************
 /// @todo Pass GrB_Type to avoid GxB_Vector_type
