@@ -47,7 +47,18 @@ bool LG_get_vector
 (
     int64_t *x,
     GrB_Vector X,
-    int64_t n
+    int64_t n,
+    int64_t missing
+) ;
+
+int LG_check_sssp
+(
+    // input
+    GrB_Vector Path_Length,     // Path_Length(i) is the length of the
+                                // shortest path from src to node i.
+    LAGraph_Graph G,            // all edge weights must be > 0
+    GrB_Index src,
+    char *msg
 ) ;
 
 #endif

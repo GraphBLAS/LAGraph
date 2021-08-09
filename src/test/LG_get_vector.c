@@ -15,7 +15,8 @@ bool LG_get_vector
 (
     int64_t *x,
     GrB_Vector X,
-    int64_t n
+    int64_t n,
+    int64_t missing
 )
 {
 
@@ -29,7 +30,7 @@ bool LG_get_vector
         }
         else if (info == GrB_NO_VALUE)
         {
-            x [i] = -1 ;
+            x [i] = missing ;
         }
         else
         {

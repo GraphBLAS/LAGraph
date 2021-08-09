@@ -1,15 +1,7 @@
 %%MatrixMarket matrix coordinate real general
 %-------------------------------------------------------------------------------
-% UF Sparse Matrix Collection, Tim Davis
-% http://www.cise.ufl.edu/research/sparse/matrices/Bai/cryg2500
-% name: Bai/cryg2500
-% [CRYSTAL GROWTH EIGENMODES     C. YANG]
-% id: 1613
-% date: 1996
-% author: C. Yang
-% ed: Z. Bai, D. Day, J. Demmel, J. Dongarra
-% fields: name title A id date author ed kind
-% kind: materials problem
+% derived from http://www.cise.ufl.edu/research/sparse/matrices/Bai/cryg2500
+% pattern is a subset of cryg2500, and values are different.
 %-------------------------------------------------------------------------------
 2500 2500 7852
 1 1 5679

@@ -91,7 +91,7 @@ int LG_check_cc
 
     component_in = LAGraph_Malloc (n, sizeof (int64_t)) ;
     LG_CHECK (component_in == NULL, -1003, "out of memory") ;
-    LG_CHECK (!LG_get_vector (component_in, Component, n), -1004,
+    LG_CHECK (!LG_get_vector (component_in, Component, n, -1), -1004,
         "invalid Component") ;
 
     //--------------------------------------------------------------------------

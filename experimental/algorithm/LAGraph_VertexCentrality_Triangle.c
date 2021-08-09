@@ -83,7 +83,7 @@
 #include "LG_internal.h"
 
 // METHOD is 1, 15, 2, or 3 to select the above methods
-#define METHOD 1
+#define METHOD 3
 
 #if ( !LG_SUITESPARSE )
 // methods 2 and 3 require SuiteSparse
@@ -164,7 +164,6 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
 //          k = y.reduce_float()
 //          T = pattern of T        FIXME
 //          return(1/k)*(3*(A @ y) - 2*(T @ y) + y)
-
 
     #if ( METHOD == 1)
         printf ("TC1: ")  ; // FIXME: remove

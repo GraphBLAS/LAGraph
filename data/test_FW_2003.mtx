@@ -1,15 +1,6 @@
-%%MatrixMarket matrix coordinate real symmetric
+%%MatrixMarket matrix coordinate real general
 %-------------------------------------------------------------------------------
-% UF Sparse Matrix Collection, Tim Davis
-% http://www.cise.ufl.edu/research/sparse/matrices/HB/bcsstk13
-% name: HB/bcsstk13
-% [SYMMETRIC STIFFNESS MATRIX, FLUID FLOW GENERALIZED EIGENVALUES]
-% id: 35
-% date: 1982
-% author: J. Lewis
-% ed: I. Duff, R. Grimes, J. Lewis
-% fields: title A name id date author ed kind
-% kind: computational fluid dynamics problem
+% derived from http://www.cise.ufl.edu/research/sparse/matrices/HB/bcsstk13
 %-------------------------------------------------------------------------------
 2003 2003 23973
 1 1 27

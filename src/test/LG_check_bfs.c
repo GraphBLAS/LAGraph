@@ -79,14 +79,15 @@ int LG_check_bfs
     {
         level_in = LAGraph_Malloc (n, sizeof (int64_t)) ;
         LG_CHECK (level_in == NULL, -1003, "out of memory") ;
-        LG_CHECK (!LG_get_vector (level_in, Level, n), -1004, "invalid level") ;
+        LG_CHECK (!LG_get_vector (level_in, Level, n, -1), -1004,
+            "invalid level") ;
     }
 
     if (Parent != NULL)
     {
         parent_in = LAGraph_Malloc (n, sizeof (int64_t)) ;
         LG_CHECK (parent_in == NULL, -1003, "out of memory") ;
-        LG_CHECK (!LG_get_vector (parent_in, Parent, n), -1005,
+        LG_CHECK (!LG_get_vector (parent_in, Parent, n, -1), -1005,
             "invalid parent") ;
     }
 

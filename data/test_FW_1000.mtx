@@ -1,15 +1,7 @@
 %%MatrixMarket matrix coordinate real general
 %-------------------------------------------------------------------------------
-% UF Sparse Matrix Collection, Tim Davis
-% http://www.cise.ufl.edu/research/sparse/matrices/Bai/olm1000
-% name: Bai/olm1000
-% [OLMSTEAD FLOW MODEL]
-% id: 319
-% date: 1994
-% author: K. Meerbergen
-% ed: Z. Bai, D. Day, J. Demmel, J. Dongarra
-% fields: title A name id date author ed kind
-% kind: computational fluid dynamics problem
+% same pattern as http://www.cise.ufl.edu/research/sparse/matrices/Bai/olm1000
+% but with different values
 %-------------------------------------------------------------------------------
 1000 1000 3996
 1 1 50
