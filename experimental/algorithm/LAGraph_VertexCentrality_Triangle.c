@@ -101,6 +101,7 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
 (
     // outputs:
     GrB_Vector *centrality,     // centrality(i): triangle centrality of i
+    uint64_t *ntriangles,       // # of triangles in the graph
     // inputs:
     LAGraph_Graph G,            // input graph
     char *msg
@@ -122,6 +123,7 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
     #endif
 
     LG_CHECK (centrality == NULL, -1, "centrality is NULL") ;
+    LG_CHECK (ntriangles == NULL, -1, "ntriangles is NULL") ;
     (*centrality) = NULL ;
     LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
 
@@ -138,12 +140,11 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
         LG_CHECK (false, -105, "G->A must be symmetric") ;
     }
 
-    // FIXME: could remove any self-edges, if present; do this in the
+    // TODO: could remove any self-edges, if present; do this in the
     // non-expert version.
+
     // no self edges can be present
     LG_CHECK (G->ndiag != 0, -104, "G->ndiag must be zero") ;
-
-// GxB_set (GxB_BURBLE, true) ;    // FIXME: remove
 
     //--------------------------------------------------------------------------
     // count triangles: T<A> = A*A' using the plus_pair semiring
@@ -162,17 +163,17 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
 //          T = A.mxm(A, mask=A)
 //          y = T.reduce_vector()
 //          k = y.reduce_float()
-//          T = pattern of T        FIXME
+//          T = pattern of T
 //          return(1/k)*(3*(A @ y) - 2*(T @ y) + y)
 
     #if ( METHOD == 1)
-        printf ("TC1: ")  ; // FIXME: remove
+        printf ("TC1: ")  ; // FIXME: remove printf
         // T<A> = A*A : method 1
         GrB_TRY (GrB_mxm (T, A, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, A, A,
             NULL)) ;
     #else
         // this should be faster than METHOD 1
-        printf ("TC1.5: ") ;   // FIXME: remove
+        printf ("TC1.5: ") ;   // FIXME: remove printf
         // T<A> = A*A' : method 1.5
         GrB_TRY (GrB_mxm (T, A, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, A, A,
             GrB_DESC_T1)) ;
@@ -212,9 +213,9 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
 
     // only uses the pattern of A
 
-    printf ("TC2: ")  ;     // FIXME: remove
+    printf ("TC2: ")  ;     // FIXME: remove printf
 
-    // T{A} = A*A'
+    // T{A} = A*A' (each triangle is seen 6 times)
     GrB_TRY (GrB_mxm (T, A, NULL, GxB_PLUS_PAIR_FP64, A, A, GrB_DESC_ST1)) ;
 
     // y = sum (T), where y(i) = sum (T (i,:)) and y(i)=0 of T(i,:) is empty
@@ -249,7 +250,7 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
 
     // only uses the pattern of A
 
-    printf ("TC3: ")  ;     // FIXME: remove
+    printf ("TC3: ")  ;     // FIXME: remove printf
 
     GrB_TRY (GrB_Matrix_new (&L, GrB_FP64, n, n)) ;
 
@@ -259,7 +260,7 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
     GrB_TRY (GxB_select (L, NULL, NULL, GxB_TRIL, A, thunk, NULL)) ;
     GrB_TRY (GrB_free (&thunk)) ;
 
-    // T{L}= A*A'
+    // T{L}= A*A' (each triangle is seen 3 times; T is lower triangular)
     GrB_TRY (GrB_mxm (T, L, NULL, GxB_PLUS_PAIR_FP64, A, A, GrB_DESC_ST1)) ;
     GrB_TRY (GrB_free (&L)) ;
 
@@ -272,7 +273,9 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
     GrB_TRY (GrB_reduce (y, NULL, GrB_PLUS_FP64, GrB_PLUS_MONOID_FP64, T,
         NULL)) ;
 
-    // k = sum (y)
+    // k = sum (y).  y is the same as the other methods, above, just computed
+    // using the lower triangular matrix T.  So k/6 is the total number of
+    // triangles in the graph.
     double k = 0 ;
     GrB_TRY (GrB_reduce (&k, NULL, GrB_PLUS_MONOID_FP64, y, NULL)) ;
 
@@ -313,15 +316,13 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
     GrB_TRY (GrB_apply (*centrality, NULL, NULL, GrB_TIMES_FP64,
         ((k == 0) ? 1.0 : (1.0/k)), *centrality, NULL)) ;
 
-    // TODO: # of triangles is k/6, which could be returned as well
-    printf ("# of triangles: %.32g\n", k/6) ;   // FIXME: remove
+    (*ntriangles) = (uint64_t) (k/6) ;     // # triangles is k/6 for all methods
 
     //--------------------------------------------------------------------------
     // free workspace and return result
     //--------------------------------------------------------------------------
 
     LAGraph_FREE_WORK ;
-// GxB_set (GxB_BURBLE, false) ;   // FIXME: remove
     return (0) ;
 }
 
