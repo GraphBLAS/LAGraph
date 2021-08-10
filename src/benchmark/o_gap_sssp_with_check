@@ -1,0 +1,1719 @@
+Script started on Mon 09 Aug 2021 02:02:14 PM CDT
+groups: cannot find name for group ID 8047
+Intel Suite:
+Copyright (C) 2009-2019 Intel Corporation. All rights reserved.
+Intel(R) VTune(TM) Amplifier 2019 (build 591499)
+[1;34m==>[0m 71 installed packages
+-- [0;35mlinux-ubuntu16.04-broadwell[0m / [0;32mgcc@5.4.0[0m ----------------------
+autoconf[0;36m@2.69[0m                hwloc[0;36m@2.4.0[0m           openmpi[0;36m@4.0.5[0m
+autoconf[0;36m@2.69[0m                isl[0;36m@0.18[0m              openssh[0;36m@8.4p1[0m
+autoconf-archive[0;36m@2019.01.06[0m  isl[0;36m@0.20[0m              openssl[0;36m@1.1.1g[0m
+automake[0;36m@1.16.2[0m              isl[0;36m@0.21[0m              openssl[0;36m@1.1.1j[0m
+automake[0;36m@1.16.3[0m              libbsd[0;36m@0.10.0[0m         pcre2[0;36m@10.31[0m
+berkeley-db[0;36m@18.1.40[0m          libedit[0;36m@3.1-20191231[0m  pcre2[0;36m@10.35[0m
+boost[0;36m@1.75.0[0m                 libevent[0;36m@2.1.12[0m       perl[0;36m@5.30.2[0m
+bzip2[0;36m@1.0.8[0m                  libffi[0;36m@3.3[0m            perl[0;36m@5.32.1[0m
+cmake[0;36m@3.19.5[0m                 libiconv[0;36m@1.16[0m         pkgconf[0;36m@1.6.3[0m
+curl[0;36m@7.68.0[0m                  libidn2[0;36m@2.1.1a[0m        pkgconf[0;36m@1.7.3[0m
+curl[0;36m@7.74.0[0m                  libidn2[0;36m@2.3.0[0m         py-pip[0;36m@19.3[0m
+diffutils[0;36m@3.7[0m                libpciaccess[0;36m@0.16[0m     py-setuptools[0;36m@46.1.3[0m
+expat[0;36m@2.2.9[0m                  libsigsegv[0;36m@2.12[0m       python[0;36m@3.7.7[0m
+expat[0;36m@2.2.10[0m                 libtool[0;36m@2.4.6[0m         python[0;36m@3.8.0[0m
+gcc[0;36m@6.3.0[0m                    libunistring[0;36m@0.9.10[0m   readline[0;36m@8.0[0m
+gcc[0;36m@9.3.0[0m                    libxml2[0;36m@2.9.10[0m        sqlite[0;36m@3.31.1[0m
+gcc[0;36m@10.1.0[0m                   libxml2[0;36m@2.9.10[0m        tar[0;36m@1.32[0m
+gdbm[0;36m@1.18.1[0m                  m4[0;36m@1.4.18[0m             util-macros[0;36m@1.19.1[0m
+gettext[0;36m@0.20.2[0m               mpc[0;36m@1.1.0[0m             valgrind[0;36m@3.16.1[0m
+gettext[0;36m@0.21[0m                 mpc[0;36m@1.1.0[0m             xz[0;36m@5.2.5[0m
+git[0;36m@2.26.0[0m                   mpfr[0;36m@3.1.6[0m            xz[0;36m@5.2.5[0m
+git[0;36m@2.29.0[0m                   mpfr[0;36m@4.0.2[0m            zlib[0;36m@1.2.11[0m
+gmp[0;36m@6.1.2[0m                    ncurses[0;36m@6.2[0m           zstd[0;36m@1.4.4[0m
+gmp[0;36m@6.2.1[0m                    numactl[0;36m@2.0.14[0m
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m ./do_gap_sssp grb
+ 
+======================================================================
+GAP benchmarks using LAGraph+GraphBLAS: Single-Source Shortest Path
+======================================================================
+Matrix input file format:  grb
+GAP matrices located in:   ../../../GAP
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+threads to test:  40
+matrix: ../../../GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-kron/GAP-kron.grb
+sources: ../../../GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 49.9839
+delta: 29
+LG_check_sssp init  time: 2.29555 sec
+^C
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m pwd
+/home/faculty/davis/master/LAGraph/src/benchmark
+[0;36mhypersparse $[0m ./pwd./do_gap_sssp grb
+ 
+======================================================================
+GAP benchmarks using LAGraph+GraphBLAS: Single-Source Shortest Path
+======================================================================
+Matrix input file format:  grb
+GAP matrices located in:   ../../../GAP
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+threads to test:  40
+matrix: ../../../GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-kron/GAP-kron.grb
+sources: ../../../GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 42.0926
+delta: 29
+sssp15:  threads: 40 trial:  0 source   2338012 time:    17.9590 sec
+LG_check_sssp init  time: 2.29598 sec
+LG_check_sssp time: 201.556 sec
+LG_check_sssp check time: 0.18273 sec
+total check time: 204.035 sec
+sssp15:  threads: 40 trial:  1 source  31997659 time:    17.5198 sec
+LG_check_sssp init  time: 2.29438 sec
+LG_check_sssp time: 202.173 sec
+LG_check_sssp check time: 0.185839 sec
+total check time: 204.653 sec
+sssp15:  threads: 40 trial:  2 source  23590940 time:    16.7026 sec
+LG_check_sssp init  time: 2.29306 sec
+LG_check_sssp time: 198.815 sec
+LG_check_sssp check time: 0.179067 sec
+total check time: 201.287 sec
+sssp15:  threads: 40 trial:  3 source  43400604 time:    18.4287 sec
+LG_check_sssp init  time: 2.29342 sec
+LG_check_sssp time: 200.315 sec
+LG_check_sssp check time: 0.185939 sec
+total check time: 202.794 sec
+sssp15:  threads: 40 trial:  4 source  75337937 time:    17.1303 sec
+LG_check_sssp init  time: 2.293 sec
+LG_check_sssp time: 189.615 sec
+LG_check_sssp check time: 0.178942 sec
+total check time: 192.087 sec
+sssp15:  threads: 40 trial:  5 source    169867 time:    16.8847 sec
+LG_check_sssp init  time: 2.29314 sec
+LG_check_sssp time: 200.109 sec
+LG_check_sssp check time: 0.177724 sec
+total check time: 202.579 sec
+sssp15:  threads: 40 trial:  6 source 104041220 time:    18.3849 sec
+LG_check_sssp init  time: 2.30245 sec
+LG_check_sssp time: 201.288 sec
+LG_check_sssp check time: 0.18215 sec
+total check time: 203.772 sec
+sssp15:  threads: 40 trial:  7 source  94177942 time:    18.3782 sec
+LG_check_sssp init  time: 2.29402 sec
+LG_check_sssp time: 203.489 sec
+LG_check_sssp check time: 0.185909 sec
+total check time: 205.969 sec
+sssp15:  threads: 40 trial:  8 source  32871357 time:    17.3555 sec
+LG_check_sssp init  time: 2.31247 sec
+LG_check_sssp time: 196.727 sec
+LG_check_sssp check time: 0.177367 sec
+total check time: 199.217 sec
+sssp15:  threads: 40 trial:  9 source  56230002 time:    17.6503 sec
+LG_check_sssp init  time: 2.29391 sec
+LG_check_sssp time: 195.155 sec
+LG_check_sssp check time: 0.180785 sec
+total check time: 197.63 sec
+sssp15:  threads: 40 trial: 10 source  69883037 time:    17.6202 sec
+LG_check_sssp init  time: 2.29618 sec
+LG_check_sssp time: 200.968 sec
+LG_check_sssp check time: 0.184846 sec
+total check time: 203.449 sec
+sssp15:  threads: 40 trial: 11 source   9346345 time:    16.7119 sec
+LG_check_sssp init  time: 2.29398 sec
+LG_check_sssp time: 198.736 sec
+LG_check_sssp check time: 0.179398 sec
+total check time: 201.21 sec
+sssp15:  threads: 40 trial: 12 source  48915358 time:    16.4068 sec
+LG_check_sssp init  time: 2.2942 sec
+LG_check_sssp time: 194.629 sec
+LG_check_sssp check time: 0.179265 sec
+total check time: 197.102 sec
+sssp15:  threads: 40 trial: 13 source 122571173 time:    18.4962 sec
+LG_check_sssp init  time: 2.31917 sec
+LG_check_sssp time: 192.033 sec
+LG_check_sssp check time: 0.181582 sec
+total check time: 194.534 sec
+sssp15:  threads: 40 trial: 14 source   6183279 time:    16.7780 sec
+LG_check_sssp init  time: 2.29319 sec
+LG_check_sssp time: 188.83 sec
+LG_check_sssp check time: 0.179832 sec
+total check time: 191.303 sec
+sssp15:  threads: 40 trial: 15 source  86323663 time:    16.7212 sec
+LG_check_sssp init  time: 2.29372 sec
+LG_check_sssp time: 199.459 sec
+LG_check_sssp check time: 0.179842 sec
+total check time: 201.932 sec
+sssp15:  threads: 40 trial: 16 source 106725780 time:    17.3009 sec
+LG_check_sssp init  time: 2.31283 sec
+LG_check_sssp time: 200.344 sec
+LG_check_sssp check time: 0.181201 sec
+total check time: 202.838 sec
+sssp15:  threads: 40 trial: 17 source  92389938 time:    18.4236 sec
+LG_check_sssp init  time: 2.29421 sec
+LG_check_sssp time: 201.567 sec
+LG_check_sssp check time: 0.180373 sec
+total check time: 204.042 sec
+sssp15:  threads: 40 trial: 18 source  16210738 time:    17.4313 sec
+LG_check_sssp init  time: 2.29446 sec
+LG_check_sssp time: 195.592 sec
+LG_check_sssp check time: 0.180067 sec
+total check time: 198.067 sec
+sssp15:  threads: 40 trial: 19 source  59816700 time:    17.2218 sec
+LG_check_sssp init  time: 2.30091 sec
+LG_check_sssp time: 195.718 sec
+LG_check_sssp check time: 0.181894 sec
+total check time: 198.201 sec
+sssp15:  threads: 40 trial: 20 source 111669929 time:    16.7543 sec
+LG_check_sssp init  time: 2.29323 sec
+LG_check_sssp time: 199.681 sec
+LG_check_sssp check time: 0.182452 sec
+total check time: 202.156 sec
+sssp15:  threads: 40 trial: 21 source 102831411 time:    17.9749 sec
+LG_check_sssp init  time: 2.29295 sec
+LG_check_sssp time: 201.49 sec
+LG_check_sssp check time: 0.183869 sec
+total check time: 203.967 sec
+sssp15:  threads: 40 trial: 22 source 113384800 time:    16.1514 sec
+LG_check_sssp init  time: 2.29718 sec
+LG_check_sssp time: 199.185 sec
+LG_check_sssp check time: 0.180894 sec
+total check time: 201.663 sec
+sssp15:  threads: 40 trial: 23 source  43872564 time:    17.6248 sec
+LG_check_sssp init  time: 2.29724 sec
+LG_check_sssp time: 197.744 sec
+LG_check_sssp check time: 0.184727 sec
+total check time: 200.226 sec
+sssp15:  threads: 40 trial: 24 source  80508827 time:    17.2474 sec
+LG_check_sssp init  time: 2.29541 sec
+LG_check_sssp time: 196.323 sec
+LG_check_sssp check time: 0.184417 sec
+total check time: 198.803 sec
+sssp15:  threads: 40 trial: 25 source  26105648 time:    17.2080 sec
+LG_check_sssp init  time: 2.29525 sec
+LG_check_sssp time: 196.17 sec
+LG_check_sssp check time: 0.180157 sec
+total check time: 198.645 sec
+sssp15:  threads: 40 trial: 26 source   8807516 time:    16.7390 sec
+LG_check_sssp init  time: 2.29336 sec
+LG_check_sssp time: 200.282 sec
+LG_check_sssp check time: 0.184619 sec
+total check time: 202.76 sec
+sssp15:  threads: 40 trial: 27 source 118452455 time:    17.1768 sec
+LG_check_sssp init  time: 2.29328 sec
+LG_check_sssp time: 196.3 sec
+LG_check_sssp check time: 0.179262 sec
+total check time: 198.773 sec
+sssp15:  threads: 40 trial: 28 source 121818859 time:    17.3626 sec
+LG_check_sssp init  time: 2.29396 sec
+LG_check_sssp time: 199.205 sec
+LG_check_sssp check time: 0.185117 sec
+total check time: 201.684 sec
+sssp15:  threads: 40 trial: 29 source  42361928 time:    16.7693 sec
+LG_check_sssp init  time: 2.29317 sec
+LG_check_sssp time: 195.348 sec
+LG_check_sssp check time: 0.180726 sec
+total check time: 197.822 sec
+sssp15:  threads: 40 trial: 30 source  29493053 time:    16.9367 sec
+LG_check_sssp init  time: 2.30944 sec
+LG_check_sssp time: 196.16 sec
+LG_check_sssp check time: 0.179525 sec
+total check time: 198.649 sec
+sssp15:  threads: 40 trial: 31 source  98461503 time:    16.8553 sec
+LG_check_sssp init  time: 2.29351 sec
+LG_check_sssp time: 202.301 sec
+LG_check_sssp check time: 0.186295 sec
+total check time: 204.781 sec
+sssp15:  threads: 40 trial: 32 source  71931337 time:    16.2444 sec
+LG_check_sssp init  time: 2.30114 sec
+LG_check_sssp time: 196.6 sec
+LG_check_sssp check time: 0.180676 sec
+total check time: 199.082 sec
+sssp15:  threads: 40 trial: 33 source 103808468 time:    17.6895 sec
+LG_check_sssp init  time: 2.29418 sec
+LG_check_sssp time: 201.992 sec
+LG_check_sssp check time: 0.188199 sec
+total check time: 204.474 sec
+sssp15:  threads: 40 trial: 34 source   4092345 time:    17.3526 sec
+LG_check_sssp init  time: 2.30135 sec
+LG_check_sssp time: 199.109 sec
+LG_check_sssp check time: 0.183385 sec
+total check time: 201.594 sec
+sssp15:  threads: 40 trial: 35 source 115276241 time:    17.3547 sec
+LG_check_sssp init  time: 2.29624 sec
+LG_check_sssp time: 203.191 sec
+LG_check_sssp check time: 0.18752 sec
+total check time: 205.674 sec
+sssp15:  threads: 40 trial: 36 source   4649343 time:    17.5473 sec
+LG_check_sssp init  time: 2.29355 sec
+LG_check_sssp time: 197.644 sec
+LG_check_sssp check time: 0.180804 sec
+total check time: 200.118 sec
+sssp15:  threads: 40 trial: 37 source  76656189 time:    17.1554 sec
+LG_check_sssp init  time: 2.29464 sec
+LG_check_sssp time: 199.884 sec
+LG_check_sssp check time: 0.182186 sec
+total check time: 202.361 sec
+sssp15:  threads: 40 trial: 38 source  31312001 time:    17.4275 sec
+LG_check_sssp init  time: 2.29406 sec
+LG_check_sssp time: 199.092 sec
+LG_check_sssp check time: 0.183518 sec
+total check time: 201.57 sec
+sssp15:  threads: 40 trial: 39 source 111334127 time:    17.3476 sec
+LG_check_sssp init  time: 2.29729 sec
+LG_check_sssp time: 198.06 sec
+LG_check_sssp check time: 0.18224 sec
+total check time: 200.54 sec
+sssp15:  threads: 40 trial: 40 source 100962918 time:    18.2434 sec
+LG_check_sssp init  time: 2.29693 sec
+LG_check_sssp time: 199.55 sec
+LG_check_sssp check time: 0.182152 sec
+total check time: 202.03 sec
+sssp15:  threads: 40 trial: 41 source  41823215 time:    18.8144 sec
+LG_check_sssp init  time: 2.29379 sec
+LG_check_sssp time: 206.276 sec
+LG_check_sssp check time: 0.185223 sec
+total check time: 208.755 sec
+sssp15:  threads: 40 trial: 42 source  22631240 time:    16.2227 sec
+LG_check_sssp init  time: 2.30647 sec
+LG_check_sssp time: 196.197 sec
+LG_check_sssp check time: 0.1812 sec
+total check time: 198.685 sec
+sssp15:  threads: 40 trial: 43 source  42848461 time:    16.8806 sec
+LG_check_sssp init  time: 2.3328 sec
+LG_check_sssp time: 199.701 sec
+LG_check_sssp check time: 0.182603 sec
+total check time: 202.216 sec
+sssp15:  threads: 40 trial: 44 source  79485148 time:    18.1987 sec
+LG_check_sssp init  time: 2.35715 sec
+LG_check_sssp time: 199.137 sec
+LG_check_sssp check time: 0.179284 sec
+total check time: 201.673 sec
+sssp15:  threads: 40 trial: 45 source 106818742 time:    16.9571 sec
+LG_check_sssp init  time: 2.29368 sec
+LG_check_sssp time: 201.629 sec
+LG_check_sssp check time: 0.187755 sec
+total check time: 204.111 sec
+sssp15:  threads: 40 trial: 46 source  73347974 time:    16.6699 sec
+LG_check_sssp init  time: 2.2993 sec
+LG_check_sssp time: 202.117 sec
+LG_check_sssp check time: 0.180184 sec
+total check time: 204.597 sec
+sssp15:  threads: 40 trial: 47 source  78848445 time:    16.4894 sec
+LG_check_sssp init  time: 2.29509 sec
+LG_check_sssp time: 195.481 sec
+LG_check_sssp check time: 0.181782 sec
+total check time: 197.958 sec
+sssp15:  threads: 40 trial: 48 source 109920510 time:    17.8206 sec
+LG_check_sssp init  time: 2.29598 sec
+LG_check_sssp time: 196.491 sec
+LG_check_sssp check time: 0.180642 sec
+total check time: 198.968 sec
+sssp15:  threads: 40 trial: 49 source 121492133 time:    17.2285 sec
+LG_check_sssp init  time: 2.29324 sec
+LG_check_sssp time: 199.144 sec
+LG_check_sssp check time: 0.185947 sec
+total check time: 201.623 sec
+sssp15:  threads: 40 trial: 50 source 101037296 time:    16.9509 sec
+LG_check_sssp init  time: 2.29523 sec
+LG_check_sssp time: 195.399 sec
+LG_check_sssp check time: 0.181602 sec
+total check time: 197.876 sec
+sssp15:  threads: 40 trial: 51 source  15438600 time:    17.6996 sec
+LG_check_sssp init  time: 2.3239 sec
+LG_check_sssp time: 195.765 sec
+LG_check_sssp check time: 0.182424 sec
+total check time: 198.272 sec
+sssp15:  threads: 40 trial: 52 source   4584784 time:    16.6869 sec
+LG_check_sssp init  time: 2.29309 sec
+LG_check_sssp time: 199.643 sec
+LG_check_sssp check time: 0.183594 sec
+total check time: 202.12 sec
+sssp15:  threads: 40 trial: 53 source 124503845 time:    17.3317 sec
+LG_check_sssp init  time: 2.29965 sec
+LG_check_sssp time: 194.483 sec
+LG_check_sssp check time: 0.182336 sec
+total check time: 196.965 sec
+sssp15:  threads: 40 trial: 54 source  87241743 time:    16.9051 sec
+LG_check_sssp init  time: 2.29428 sec
+LG_check_sssp time: 194.21 sec
+LG_check_sssp check time: 0.179348 sec
+total check time: 196.683 sec
+sssp15:  threads: 40 trial: 55 source 108297008 time:    16.4263 sec
+LG_check_sssp init  time: 2.29454 sec
+LG_check_sssp time: 194.868 sec
+LG_check_sssp check time: 0.179994 sec
+total check time: 197.342 sec
+sssp15:  threads: 40 trial: 56 source  33955082 time:    17.0826 sec
+LG_check_sssp init  time: 2.29334 sec
+LG_check_sssp time: 194.829 sec
+LG_check_sssp check time: 0.180251 sec
+total check time: 197.302 sec
+sssp15:  threads: 40 trial: 57 source  79934823 time:    17.0746 sec
+LG_check_sssp init  time: 2.29305 sec
+LG_check_sssp time: 198.859 sec
+LG_check_sssp check time: 0.183266 sec
+total check time: 201.336 sec
+sssp15:  threads: 40 trial: 58 source   8608481 time:    16.1381 sec
+LG_check_sssp init  time: 2.29442 sec
+LG_check_sssp time: 200.534 sec
+LG_check_sssp check time: 0.173649 sec
+total check time: 203.002 sec
+sssp15:  threads: 40 trial: 59 source  82435063 time:    19.0080 sec
+LG_check_sssp init  time: 2.29402 sec
+LG_check_sssp time: 198.676 sec
+LG_check_sssp check time: 0.183984 sec
+total check time: 201.154 sec
+sssp15:  threads: 40 trial: 60 source  46579271 time:    16.9316 sec
+LG_check_sssp init  time: 2.29293 sec
+LG_check_sssp time: 196.296 sec
+LG_check_sssp check time: 0.181143 sec
+total check time: 198.77 sec
+sssp15:  threads: 40 trial: 61 source    515421 time:    18.7645 sec
+LG_check_sssp init  time: 2.29396 sec
+LG_check_sssp time: 198.839 sec
+LG_check_sssp check time: 0.183157 sec
+total check time: 201.316 sec
+sssp15:  threads: 40 trial: 62 source 121530467 time:    16.7703 sec
+LG_check_sssp init  time: 2.29563 sec
+LG_check_sssp time: 201.341 sec
+LG_check_sssp check time: 0.185654 sec
+total check time: 203.822 sec
+sssp15:  threads: 40 trial: 63 source 127978736 time:    17.3777 sec
+LG_check_sssp init  time: 2.29445 sec
+LG_check_sssp time: 196.076 sec
+LG_check_sssp check time: 0.181648 sec
+total check time: 198.552 sec
+
+40: SSSP    time:      17.298416 sec  rate:   244.14 (delta 29)
+Avg: SSSP          40:     17.298 sec: ../../../GAP/GAP-kron/GAP-kron.grb
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+threads to test:  40
+matrix: ../../../GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-urand/GAP-urand.grb
+sources: ../../../GAP/GAP-urand/GAP-urand_sources.mtx
+read time: 69.4808
+delta: 41
+sssp15:  threads: 40 trial:  0 source  27691419 time:    25.0260 sec
+LG_check_sssp init  time: 2.29616 sec
+LG_check_sssp time: 325.324 sec
+LG_check_sssp check time: 0.176353 sec
+total check time: 327.796 sec
+sssp15:  threads: 40 trial:  1 source 121280314 time:    25.5876 sec
+LG_check_sssp init  time: 2.30178 sec
+LG_check_sssp time: 325.386 sec
+LG_check_sssp check time: 0.176391 sec
+total check time: 327.864 sec
+sssp15:  threads: 40 trial:  2 source   2413431 time:    24.1839 sec
+LG_check_sssp init  time: 2.30222 sec
+LG_check_sssp time: 331.597 sec
+LG_check_sssp check time: 0.174604 sec
+total check time: 334.074 sec
+sssp15:  threads: 40 trial:  3 source  37512113 time:    24.9653 sec
+LG_check_sssp init  time: 2.29311 sec
+LG_check_sssp time: 335.068 sec
+LG_check_sssp check time: 0.178254 sec
+total check time: 337.54 sec
+sssp15:  threads: 40 trial:  4 source  38390877 time:    25.7427 sec
+LG_check_sssp init  time: 2.29296 sec
+LG_check_sssp time: 337.229 sec
+LG_check_sssp check time: 0.177115 sec
+total check time: 339.699 sec
+sssp15:  threads: 40 trial:  5 source  56651037 time:    25.8301 sec
+LG_check_sssp init  time: 2.29972 sec
+LG_check_sssp time: 328.14 sec
+LG_check_sssp check time: 0.176772 sec
+total check time: 330.617 sec
+sssp15:  threads: 40 trial:  6 source 128461248 time:    25.5875 sec
+LG_check_sssp init  time: 2.29283 sec
+LG_check_sssp time: 337.563 sec
+LG_check_sssp check time: 0.179245 sec
+total check time: 340.035 sec
+sssp15:  threads: 40 trial:  7 source  33029842 time:    24.7121 sec
+LG_check_sssp init  time: 2.29387 sec
+LG_check_sssp time: 336.491 sec
+LG_check_sssp check time: 0.180708 sec
+total check time: 338.966 sec
+sssp15:  threads: 40 trial:  8 source  71406328 time:    24.5189 sec
+LG_check_sssp init  time: 2.29277 sec
+LG_check_sssp time: 326.75 sec
+LG_check_sssp check time: 0.175155 sec
+total check time: 329.218 sec
+sssp15:  threads: 40 trial:  9 source 117872827 time:    28.0800 sec
+LG_check_sssp init  time: 2.32806 sec
+LG_check_sssp time: 332.489 sec
+LG_check_sssp check time: 0.174783 sec
+total check time: 334.992 sec
+sssp15:  threads: 40 trial: 10 source  24351938 time:    24.0519 sec
+LG_check_sssp init  time: 2.2942 sec
+LG_check_sssp time: 332.573 sec
+LG_check_sssp check time: 0.17823 sec
+total check time: 335.045 sec
+sssp15:  threads: 40 trial: 11 source  15444519 time:    24.3307 sec
+LG_check_sssp init  time: 2.29284 sec
+LG_check_sssp time: 329.053 sec
+LG_check_sssp check time: 0.173417 sec
+total check time: 331.519 sec
+sssp15:  threads: 40 trial: 12 source 127526281 time:    24.7701 sec
+LG_check_sssp init  time: 2.34762 sec
+LG_check_sssp time: 333.693 sec
+LG_check_sssp check time: 0.176193 sec
+total check time: 336.217 sec
+sssp15:  threads: 40 trial: 13 source 112279428 time:    24.8281 sec
+LG_check_sssp init  time: 2.388 sec
+LG_check_sssp time: 327.357 sec
+LG_check_sssp check time: 0.174885 sec
+total check time: 329.92 sec
+sssp15:  threads: 40 trial: 14 source  13631649 time:    24.6538 sec
+LG_check_sssp init  time: 2.29443 sec
+LG_check_sssp time: 327.054 sec
+LG_check_sssp check time: 0.174479 sec
+total check time: 329.523 sec
+sssp15:  threads: 40 trial: 15 source 110379302 time:    24.0411 sec
+LG_check_sssp init  time: 2.29353 sec
+LG_check_sssp time: 328.944 sec
+LG_check_sssp check time: 0.175363 sec
+total check time: 331.413 sec
+sssp15:  threads: 40 trial: 16 source  44800623 time:    26.0520 sec
+LG_check_sssp init  time: 2.293 sec
+LG_check_sssp time: 333.533 sec
+LG_check_sssp check time: 0.176683 sec
+total check time: 336.003 sec
+sssp15:  threads: 40 trial: 17 source  77768193 time:    24.7203 sec
+LG_check_sssp init  time: 2.29308 sec
+LG_check_sssp time: 327.233 sec
+LG_check_sssp check time: 0.173599 sec
+total check time: 329.699 sec
+sssp15:  threads: 40 trial: 18 source    175347 time:    25.2708 sec
+LG_check_sssp init  time: 2.29297 sec
+LG_check_sssp time: 336.083 sec
+LG_check_sssp check time: 0.179867 sec
+total check time: 338.556 sec
+sssp15:  threads: 40 trial: 19 source 107397389 time:    25.7962 sec
+LG_check_sssp init  time: 2.30003 sec
+LG_check_sssp time: 332.856 sec
+LG_check_sssp check time: 0.176161 sec
+total check time: 335.332 sec
+sssp15:  threads: 40 trial: 20 source  43457209 time:    25.8985 sec
+LG_check_sssp init  time: 2.33703 sec
+LG_check_sssp time: 329.476 sec
+LG_check_sssp check time: 0.175839 sec
+total check time: 331.989 sec
+sssp15:  threads: 40 trial: 21 source  97215940 time:    25.4359 sec
+LG_check_sssp init  time: 2.29304 sec
+LG_check_sssp time: 327.233 sec
+LG_check_sssp check time: 0.177824 sec
+total check time: 329.704 sec
+sssp15:  threads: 40 trial: 22 source  73575165 time:    24.0505 sec
+LG_check_sssp init  time: 2.29443 sec
+LG_check_sssp time: 327.245 sec
+LG_check_sssp check time: 0.175567 sec
+total check time: 329.715 sec
+sssp15:  threads: 40 trial: 23 source  44449715 time:    26.1626 sec
+LG_check_sssp init  time: 2.29317 sec
+LG_check_sssp time: 334.942 sec
+LG_check_sssp check time: 0.177494 sec
+total check time: 337.413 sec
+sssp15:  threads: 40 trial: 24 source  33931724 time:    25.0717 sec
+LG_check_sssp init  time: 2.29401 sec
+LG_check_sssp time: 337.077 sec
+LG_check_sssp check time: 0.174442 sec
+total check time: 339.545 sec
+sssp15:  threads: 40 trial: 25 source  55526610 time:    24.2153 sec
+LG_check_sssp init  time: 2.29353 sec
+LG_check_sssp time: 330.283 sec
+LG_check_sssp check time: 0.178051 sec
+total check time: 332.754 sec
+sssp15:  threads: 40 trial: 26 source  14422051 time:    23.6671 sec
+LG_check_sssp init  time: 2.29586 sec
+LG_check_sssp time: 332.156 sec
+LG_check_sssp check time: 0.176153 sec
+total check time: 334.628 sec
+sssp15:  threads: 40 trial: 27 source  58043873 time:    24.4609 sec
+LG_check_sssp init  time: 2.29283 sec
+LG_check_sssp time: 323.812 sec
+LG_check_sssp check time: 0.175727 sec
+total check time: 326.281 sec
+sssp15:  threads: 40 trial: 28 source  72137329 time:    26.3211 sec
+LG_check_sssp init  time: 2.30607 sec
+LG_check_sssp time: 325.501 sec
+LG_check_sssp check time: 0.17486 sec
+total check time: 327.982 sec
+sssp15:  threads: 40 trial: 29 source   9647840 time:    24.8008 sec
+LG_check_sssp init  time: 2.29443 sec
+LG_check_sssp time: 327.725 sec
+LG_check_sssp check time: 0.175449 sec
+total check time: 330.195 sec
+sssp15:  threads: 40 trial: 30 source  15940695 time:    25.9944 sec
+LG_check_sssp init  time: 2.29296 sec
+LG_check_sssp time: 333.194 sec
+LG_check_sssp check time: 0.177627 sec
+total check time: 335.664 sec
+sssp15:  threads: 40 trial: 31 source  14209952 time:    25.0830 sec
+LG_check_sssp init  time: 2.31838 sec
+LG_check_sssp time: 332.997 sec
+LG_check_sssp check time: 0.181606 sec
+total check time: 335.497 sec
+sssp15:  threads: 40 trial: 32 source  49020883 time:    25.8280 sec
+LG_check_sssp init  time: 2.29261 sec
+LG_check_sssp time: 326.4 sec
+LG_check_sssp check time: 0.177689 sec
+total check time: 328.871 sec
+sssp15:  threads: 40 trial: 33 source  28901138 time:    26.1443 sec
+LG_check_sssp init  time: 2.29476 sec
+LG_check_sssp time: 325.048 sec
+LG_check_sssp check time: 0.176374 sec
+total check time: 327.519 sec
+sssp15:  threads: 40 trial: 34 source  50493273 time:    24.4425 sec
+LG_check_sssp init  time: 2.29686 sec
+LG_check_sssp time: 325.648 sec
+LG_check_sssp check time: 0.173752 sec
+total check time: 328.118 sec
+sssp15:  threads: 40 trial: 35 source  49150069 time:    24.7497 sec
+LG_check_sssp init  time: 2.30747 sec
+LG_check_sssp time: 329.302 sec
+LG_check_sssp check time: 0.180551 sec
+total check time: 331.79 sec
+sssp15:  threads: 40 trial: 36 source 126525082 time:    25.8442 sec
+LG_check_sssp init  time: 2.29269 sec
+LG_check_sssp time: 328.175 sec
+LG_check_sssp check time: 0.183371 sec
+total check time: 330.652 sec
+sssp15:  threads: 40 trial: 37 source   6382740 time:    26.1407 sec
+LG_check_sssp init  time: 2.3467 sec
+LG_check_sssp time: 327.3 sec
+LG_check_sssp check time: 0.17669 sec
+total check time: 329.824 sec
+sssp15:  threads: 40 trial: 38 source  89108297 time:    27.3730 sec
+LG_check_sssp init  time: 2.29294 sec
+LG_check_sssp time: 329.094 sec
+LG_check_sssp check time: 0.176373 sec
+total check time: 331.563 sec
+sssp15:  threads: 40 trial: 39 source   9239735 time:    24.6297 sec
+LG_check_sssp init  time: 2.33933 sec
+LG_check_sssp time: 327.789 sec
+LG_check_sssp check time: 0.177695 sec
+total check time: 330.306 sec
+sssp15:  threads: 40 trial: 40 source 110168548 time:    24.4473 sec
+LG_check_sssp init  time: 2.29299 sec
+LG_check_sssp time: 327.566 sec
+LG_check_sssp check time: 0.177565 sec
+total check time: 330.037 sec
+sssp15:  threads: 40 trial: 41 source  95370259 time:    25.6625 sec
+LG_check_sssp init  time: 2.29594 sec
+LG_check_sssp time: 331.365 sec
+LG_check_sssp check time: 0.175627 sec
+total check time: 333.837 sec
+sssp15:  threads: 40 trial: 42 source 116653530 time:    24.7685 sec
+LG_check_sssp init  time: 2.34734 sec
+LG_check_sssp time: 326.879 sec
+LG_check_sssp check time: 0.17712 sec
+total check time: 329.404 sec
+sssp15:  threads: 40 trial: 43 source 123410703 time:    25.8187 sec
+LG_check_sssp init  time: 2.29301 sec
+LG_check_sssp time: 335.337 sec
+LG_check_sssp check time: 0.177714 sec
+total check time: 337.808 sec
+sssp15:  threads: 40 trial: 44 source  16733665 time:    24.6134 sec
+LG_check_sssp init  time: 2.35094 sec
+LG_check_sssp time: 332.477 sec
+LG_check_sssp check time: 0.181469 sec
+total check time: 335.01 sec
+sssp15:  threads: 40 trial: 45 source  49030282 time:    26.3783 sec
+LG_check_sssp init  time: 2.29392 sec
+LG_check_sssp time: 327.853 sec
+LG_check_sssp check time: 0.175487 sec
+total check time: 330.323 sec
+sssp15:  threads: 40 trial: 46 source 108545121 time:    26.3752 sec
+LG_check_sssp init  time: 2.29313 sec
+LG_check_sssp time: 333.111 sec
+LG_check_sssp check time: 0.179778 sec
+total check time: 335.584 sec
+sssp15:  threads: 40 trial: 47 source  99095665 time:    25.4998 sec
+LG_check_sssp init  time: 2.29288 sec
+LG_check_sssp time: 331.985 sec
+LG_check_sssp check time: 0.176845 sec
+total check time: 334.455 sec
+sssp15:  threads: 40 trial: 48 source 133850077 time:    25.5599 sec
+LG_check_sssp init  time: 2.29326 sec
+LG_check_sssp time: 328.846 sec
+LG_check_sssp check time: 0.176281 sec
+total check time: 331.316 sec
+sssp15:  threads: 40 trial: 49 source  63499301 time:    26.9941 sec
+LG_check_sssp init  time: 2.29951 sec
+LG_check_sssp time: 336.723 sec
+LG_check_sssp check time: 0.183784 sec
+total check time: 339.207 sec
+sssp15:  threads: 40 trial: 50 source  21541382 time:    24.7809 sec
+LG_check_sssp init  time: 2.34819 sec
+LG_check_sssp time: 325.544 sec
+LG_check_sssp check time: 0.175887 sec
+total check time: 328.068 sec
+sssp15:  threads: 40 trial: 51 source   6230751 time:    24.7266 sec
+LG_check_sssp init  time: 2.29294 sec
+LG_check_sssp time: 325.392 sec
+LG_check_sssp check time: 0.177308 sec
+total check time: 327.862 sec
+sssp15:  threads: 40 trial: 52 source  89077456 time:    24.8052 sec
+LG_check_sssp init  time: 2.29566 sec
+LG_check_sssp time: 326.072 sec
+LG_check_sssp check time: 0.178522 sec
+total check time: 328.546 sec
+sssp15:  threads: 40 trial: 53 source  70392765 time:    26.3474 sec
+LG_check_sssp init  time: 2.29302 sec
+LG_check_sssp time: 333.606 sec
+LG_check_sssp check time: 0.178923 sec
+total check time: 336.078 sec
+sssp15:  threads: 40 trial: 54 source   6670455 time:    24.6730 sec
+LG_check_sssp init  time: 2.29307 sec
+LG_check_sssp time: 337.509 sec
+LG_check_sssp check time: 0.183494 sec
+total check time: 339.986 sec
+sssp15:  threads: 40 trial: 55 source  61746271 time:    24.5915 sec
+LG_check_sssp init  time: 2.29299 sec
+LG_check_sssp time: 337.096 sec
+LG_check_sssp check time: 0.183626 sec
+total check time: 339.573 sec
+sssp15:  threads: 40 trial: 56 source  83349535 time:    24.5895 sec
+LG_check_sssp init  time: 2.29331 sec
+LG_check_sssp time: 338.418 sec
+LG_check_sssp check time: 0.184229 sec
+total check time: 340.896 sec
+sssp15:  threads: 40 trial: 57 source 115272184 time:    24.6264 sec
+LG_check_sssp init  time: 2.29666 sec
+LG_check_sssp time: 337.252 sec
+LG_check_sssp check time: 0.184799 sec
+total check time: 339.734 sec
+sssp15:  threads: 40 trial: 58 source  20129908 time:    24.9046 sec
+LG_check_sssp init  time: 2.29286 sec
+LG_check_sssp time: 332.997 sec
+LG_check_sssp check time: 0.180499 sec
+total check time: 335.47 sec
+sssp15:  threads: 40 trial: 59 source 106148553 time:    24.3313 sec
+LG_check_sssp init  time: 2.29357 sec
+LG_check_sssp time: 335.834 sec
+LG_check_sssp check time: 0.178183 sec
+total check time: 338.306 sec
+sssp15:  threads: 40 trial: 60 source 117042375 time:    26.2242 sec
+LG_check_sssp init  time: 2.30233 sec
+LG_check_sssp time: 326.409 sec
+LG_check_sssp check time: 0.176078 sec
+total check time: 328.887 sec
+sssp15:  threads: 40 trial: 61 source  71431187 time:    24.5053 sec
+LG_check_sssp init  time: 2.29277 sec
+LG_check_sssp time: 328.618 sec
+LG_check_sssp check time: 0.177451 sec
+total check time: 331.088 sec
+sssp15:  threads: 40 trial: 62 source  45287808 time:    25.5823 sec
+LG_check_sssp init  time: 2.29638 sec
+LG_check_sssp time: 331.444 sec
+LG_check_sssp check time: 0.179086 sec
+total check time: 333.919 sec
+sssp15:  threads: 40 trial: 63 source 107702120 time:    26.4115 sec
+LG_check_sssp init  time: 2.29291 sec
+LG_check_sssp time: 325.466 sec
+LG_check_sssp check time: 0.177703 sec
+total check time: 327.937 sec
+
+40: SSSP    time:      25.254380 sec  rate:   170.07 (delta 41)
+Avg: SSSP          40:     25.254 sec: ../../../GAP/GAP-urand/GAP-urand.grb
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+threads to test:  40
+matrix: ../../../GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-twitter/GAP-twitter.grb
+sources: ../../../GAP/GAP-twitter/GAP-twitter_sources.mtx
+read time: 39.1928
+delta: 51
+sssp15:  threads: 40 trial:  0 source  12441072 time:     7.1960 sec
+LG_check_sssp init  time: 1.05263 sec
+LG_check_sssp time: 68.2659 sec
+LG_check_sssp check time: 0.0815764 sec
+total check time: 69.4002 sec
+sssp15:  threads: 40 trial:  1 source  54488257 time:     8.3133 sec
+LG_check_sssp init  time: 1.05278 sec
+LG_check_sssp time: 69.3132 sec
+LG_check_sssp check time: 0.0808005 sec
+total check time: 70.4468 sec
+sssp15:  threads: 40 trial:  2 source  25451915 time:     8.6119 sec
+LG_check_sssp init  time: 1.05268 sec
+LG_check_sssp time: 68.1692 sec
+LG_check_sssp check time: 0.0807901 sec
+total check time: 69.3028 sec
+sssp15:  threads: 40 trial:  3 source  57714473 time:     8.3601 sec
+LG_check_sssp init  time: 1.05275 sec
+LG_check_sssp time: 69.3904 sec
+LG_check_sssp check time: 0.0822463 sec
+total check time: 70.5254 sec
+sssp15:  threads: 40 trial:  4 source  14839494 time:     8.2513 sec
+LG_check_sssp init  time: 1.05265 sec
+LG_check_sssp time: 68.1752 sec
+LG_check_sssp check time: 0.0807887 sec
+total check time: 69.3087 sec
+sssp15:  threads: 40 trial:  5 source  32081104 time:     7.6227 sec
+LG_check_sssp init  time: 1.05268 sec
+LG_check_sssp time: 68.2375 sec
+LG_check_sssp check time: 0.0823525 sec
+total check time: 69.3726 sec
+sssp15:  threads: 40 trial:  6 source  52957357 time:     7.9240 sec
+LG_check_sssp init  time: 1.05394 sec
+LG_check_sssp time: 68.9681 sec
+LG_check_sssp check time: 0.0794985 sec
+total check time: 70.1016 sec
+sssp15:  threads: 40 trial:  7 source  50444380 time:     8.2356 sec
+LG_check_sssp init  time: 1.05263 sec
+LG_check_sssp time: 69.535 sec
+LG_check_sssp check time: 0.0828426 sec
+total check time: 70.6705 sec
+sssp15:  threads: 40 trial:  8 source  49590701 time:     7.6063 sec
+LG_check_sssp init  time: 1.06027 sec
+LG_check_sssp time: 68.3481 sec
+LG_check_sssp check time: 0.0807434 sec
+total check time: 69.4891 sec
+sssp15:  threads: 40 trial:  9 source  20127816 time:     9.6738 sec
+LG_check_sssp init  time: 1.05259 sec
+LG_check_sssp time: 70.7676 sec
+LG_check_sssp check time: 0.0832044 sec
+total check time: 71.9034 sec
+sssp15:  threads: 40 trial: 10 source  34939333 time:     8.6422 sec
+LG_check_sssp init  time: 1.05578 sec
+LG_check_sssp time: 69.6487 sec
+LG_check_sssp check time: 0.0828014 sec
+total check time: 70.7873 sec
+sssp15:  threads: 40 trial: 11 source  48251001 time:     8.5919 sec
+LG_check_sssp init  time: 1.05698 sec
+LG_check_sssp time: 68.8516 sec
+LG_check_sssp check time: 0.0808537 sec
+total check time: 69.9895 sec
+sssp15:  threads: 40 trial: 12 source  19524253 time:     7.4345 sec
+LG_check_sssp init  time: 1.05283 sec
+LG_check_sssp time: 68.3928 sec
+LG_check_sssp check time: 0.081203 sec
+total check time: 69.5269 sec
+sssp15:  threads: 40 trial: 13 source  43676726 time:     8.3165 sec
+LG_check_sssp init  time: 1.05349 sec
+LG_check_sssp time: 68.2521 sec
+LG_check_sssp check time: 0.0821542 sec
+total check time: 69.3878 sec
+sssp15:  threads: 40 trial: 14 source  33055508 time:     7.7819 sec
+LG_check_sssp init  time: 1.05446 sec
+LG_check_sssp time: 68.3441 sec
+LG_check_sssp check time: 0.079343 sec
+total check time: 69.478 sec
+sssp15:  threads: 40 trial: 15 source  15244687 time:     7.5677 sec
+LG_check_sssp init  time: 1.05272 sec
+LG_check_sssp time: 68.6743 sec
+LG_check_sssp check time: 0.082248 sec
+total check time: 69.8093 sec
+sssp15:  threads: 40 trial: 16 source  24946738 time:     9.1925 sec
+LG_check_sssp init  time: 1.0715 sec
+LG_check_sssp time: 69.0076 sec
+LG_check_sssp check time: 0.0807964 sec
+total check time: 70.1599 sec
+sssp15:  threads: 40 trial: 17 source   6479472 time:     8.1096 sec
+LG_check_sssp init  time: 1.07022 sec
+LG_check_sssp time: 68.9061 sec
+LG_check_sssp check time: 0.0845399 sec
+total check time: 70.061 sec
+sssp15:  threads: 40 trial: 18 source  26077682 time:     8.2331 sec
+LG_check_sssp init  time: 1.05324 sec
+LG_check_sssp time: 69.569 sec
+LG_check_sssp check time: 0.0794766 sec
+total check time: 70.7017 sec
+sssp15:  threads: 40 trial: 19 source  22023875 time:     8.1785 sec
+LG_check_sssp init  time: 1.05329 sec
+LG_check_sssp time: 68.5374 sec
+LG_check_sssp check time: 0.0802222 sec
+total check time: 69.671 sec
+sssp15:  threads: 40 trial: 20 source  22081915 time:     8.4279 sec
+LG_check_sssp init  time: 1.0533 sec
+LG_check_sssp time: 69.2726 sec
+LG_check_sssp check time: 0.0806282 sec
+total check time: 70.4066 sec
+sssp15:  threads: 40 trial: 21 source  40034162 time:     7.2828 sec
+LG_check_sssp init  time: 1.05401 sec
+LG_check_sssp time: 70.3618 sec
+LG_check_sssp check time: 0.0818061 sec
+total check time: 71.4977 sec
+sssp15:  threads: 40 trial: 22 source  49496014 time:     8.6680 sec
+LG_check_sssp init  time: 1.05345 sec
+LG_check_sssp time: 70.2491 sec
+LG_check_sssp check time: 0.0816602 sec
+total check time: 71.3843 sec
+sssp15:  threads: 40 trial: 23 source  42847507 time:     9.6968 sec
+LG_check_sssp init  time: 1.05323 sec
+LG_check_sssp time: 68.2585 sec
+LG_check_sssp check time: 0.081217 sec
+total check time: 69.393 sec
+sssp15:  threads: 40 trial: 24 source  52409557 time:     8.1246 sec
+LG_check_sssp init  time: 1.05667 sec
+LG_check_sssp time: 69.9136 sec
+LG_check_sssp check time: 0.0815117 sec
+total check time: 71.0518 sec
+sssp15:  threads: 40 trial: 25 source  55445388 time:     7.1008 sec
+LG_check_sssp init  time: 1.05329 sec
+LG_check_sssp time: 67.381 sec
+LG_check_sssp check time: 0.0790825 sec
+total check time: 68.5134 sec
+sssp15:  threads: 40 trial: 26 source  22028097 time:     7.9051 sec
+LG_check_sssp init  time: 1.05355 sec
+LG_check_sssp time: 70.2077 sec
+LG_check_sssp check time: 0.0809201 sec
+total check time: 71.3422 sec
+sssp15:  threads: 40 trial: 27 source  48766648 time:     8.3985 sec
+LG_check_sssp init  time: 1.05346 sec
+LG_check_sssp time: 69.2863 sec
+LG_check_sssp check time: 0.0809584 sec
+total check time: 70.4208 sec
+sssp15:  threads: 40 trial: 28 source  44521241 time:     7.9290 sec
+LG_check_sssp init  time: 1.05439 sec
+LG_check_sssp time: 68.058 sec
+LG_check_sssp check time: 0.0776699 sec
+total check time: 69.1901 sec
+sssp15:  threads: 40 trial: 29 source  60135542 time:     7.3620 sec
+LG_check_sssp init  time: 1.05339 sec
+LG_check_sssp time: 69.1691 sec
+LG_check_sssp check time: 0.081509 sec
+total check time: 70.304 sec
+sssp15:  threads: 40 trial: 30 source  28528671 time:     7.1952 sec
+LG_check_sssp init  time: 1.05351 sec
+LG_check_sssp time: 68.2302 sec
+LG_check_sssp check time: 0.0792065 sec
+total check time: 69.363 sec
+sssp15:  threads: 40 trial: 31 source   9678012 time:     8.2582 sec
+LG_check_sssp init  time: 1.05339 sec
+LG_check_sssp time: 67.9011 sec
+LG_check_sssp check time: 0.0796842 sec
+total check time: 69.0342 sec
+sssp15:  threads: 40 trial: 32 source  40020306 time:     8.4683 sec
+LG_check_sssp init  time: 1.0534 sec
+LG_check_sssp time: 69.013 sec
+LG_check_sssp check time: 0.0809247 sec
+total check time: 70.1474 sec
+sssp15:  threads: 40 trial: 33 source  31625735 time:     8.1968 sec
+LG_check_sssp init  time: 1.05364 sec
+LG_check_sssp time: 68.1538 sec
+LG_check_sssp check time: 0.0792044 sec
+total check time: 69.2867 sec
+sssp15:  threads: 40 trial: 34 source  37446892 time:     8.3591 sec
+LG_check_sssp init  time: 1.05329 sec
+LG_check_sssp time: 68.0708 sec
+LG_check_sssp check time: 0.0791809 sec
+total check time: 69.2033 sec
+sssp15:  threads: 40 trial: 35 source  51788952 time:    10.3257 sec
+LG_check_sssp init  time: 1.05279 sec
+LG_check_sssp time: 69.8493 sec
+LG_check_sssp check time: 0.0801185 sec
+total check time: 70.9823 sec
+sssp15:  threads: 40 trial: 36 source  52584255 time:     9.0783 sec
+LG_check_sssp init  time: 1.05498 sec
+LG_check_sssp time: 68.4077 sec
+LG_check_sssp check time: 0.0794889 sec
+total check time: 69.5422 sec
+sssp15:  threads: 40 trial: 37 source  20346696 time:     8.0215 sec
+LG_check_sssp init  time: 1.05285 sec
+LG_check_sssp time: 68.0622 sec
+LG_check_sssp check time: 0.0786197 sec
+total check time: 69.1937 sec
+sssp15:  threads: 40 trial: 38 source  48387909 time:     7.6869 sec
+LG_check_sssp init  time: 1.05909 sec
+LG_check_sssp time: 67.9715 sec
+LG_check_sssp check time: 0.080268 sec
+total check time: 69.1109 sec
+sssp15:  threads: 40 trial: 39 source  37337427 time:     7.3758 sec
+LG_check_sssp init  time: 1.05344 sec
+LG_check_sssp time: 68.4227 sec
+LG_check_sssp check time: 0.0786965 sec
+total check time: 69.5549 sec
+sssp15:  threads: 40 trial: 40 source  50501084 time:     7.6042 sec
+LG_check_sssp init  time: 1.0533 sec
+LG_check_sssp time: 69.388 sec
+LG_check_sssp check time: 0.0794017 sec
+total check time: 70.5208 sec
+sssp15:  threads: 40 trial: 41 source  30130061 time:     8.2116 sec
+LG_check_sssp init  time: 1.05352 sec
+LG_check_sssp time: 69.4048 sec
+LG_check_sssp check time: 0.0811772 sec
+total check time: 70.5396 sec
+sssp15:  threads: 40 trial: 42 source  41185893 time:     8.4955 sec
+LG_check_sssp init  time: 1.05621 sec
+LG_check_sssp time: 67.7912 sec
+LG_check_sssp check time: 0.0801396 sec
+total check time: 68.9277 sec
+sssp15:  threads: 40 trial: 43 source  56495703 time:     7.6549 sec
+LG_check_sssp init  time: 1.05393 sec
+LG_check_sssp time: 68.3773 sec
+LG_check_sssp check time: 0.0804482 sec
+total check time: 69.5118 sec
+sssp15:  threads: 40 trial: 44 source  45663305 time:     7.8399 sec
+LG_check_sssp init  time: 1.05682 sec
+LG_check_sssp time: 68.9523 sec
+LG_check_sssp check time: 0.0804521 sec
+total check time: 70.0897 sec
+sssp15:  threads: 40 trial: 45 source  33359460 time:     7.6884 sec
+LG_check_sssp init  time: 1.05841 sec
+LG_check_sssp time: 68.6907 sec
+LG_check_sssp check time: 0.079835 sec
+total check time: 69.829 sec
+sssp15:  threads: 40 trial: 46 source  48143058 time:     7.6813 sec
+LG_check_sssp init  time: 1.05345 sec
+LG_check_sssp time: 68.3123 sec
+LG_check_sssp check time: 0.0793623 sec
+total check time: 69.4452 sec
+sssp15:  threads: 40 trial: 47 source  33291513 time:     7.3457 sec
+LG_check_sssp init  time: 1.06359 sec
+LG_check_sssp time: 67.9369 sec
+LG_check_sssp check time: 0.0792235 sec
+total check time: 69.0798 sec
+sssp15:  threads: 40 trial: 48 source  53461445 time:     8.0970 sec
+LG_check_sssp init  time: 1.06724 sec
+LG_check_sssp time: 68.5137 sec
+LG_check_sssp check time: 0.0792745 sec
+total check time: 69.6603 sec
+sssp15:  threads: 40 trial: 49 source  29340610 time:     7.6155 sec
+LG_check_sssp init  time: 1.05438 sec
+LG_check_sssp time: 69.3133 sec
+LG_check_sssp check time: 0.079499 sec
+total check time: 70.4473 sec
+sssp15:  threads: 40 trial: 50 source  34148498 time:     7.8752 sec
+LG_check_sssp init  time: 1.05305 sec
+LG_check_sssp time: 68.3193 sec
+LG_check_sssp check time: 0.0812826 sec
+total check time: 69.4536 sec
+sssp15:  threads: 40 trial: 51 source  49171806 time:     7.9934 sec
+LG_check_sssp init  time: 1.05355 sec
+LG_check_sssp time: 68.3337 sec
+LG_check_sssp check time: 0.0791545 sec
+total check time: 69.4665 sec
+sssp15:  threads: 40 trial: 52 source  35550696 time:     8.0056 sec
+LG_check_sssp init  time: 1.05356 sec
+LG_check_sssp time: 70.322 sec
+LG_check_sssp check time: 0.0808521 sec
+total check time: 71.4565 sec
+sssp15:  threads: 40 trial: 53 source  14521507 time:     8.1853 sec
+LG_check_sssp init  time: 1.05334 sec
+LG_check_sssp time: 67.7575 sec
+LG_check_sssp check time: 0.0791894 sec
+total check time: 68.8901 sec
+sssp15:  threads: 40 trial: 54 source  51633218 time:     8.4479 sec
+LG_check_sssp init  time: 1.05324 sec
+LG_check_sssp time: 69.5853 sec
+LG_check_sssp check time: 0.0809994 sec
+total check time: 70.7196 sec
+sssp15:  threads: 40 trial: 55 source  46823382 time:     7.8334 sec
+LG_check_sssp init  time: 1.05994 sec
+LG_check_sssp time: 68.4635 sec
+LG_check_sssp check time: 0.0790222 sec
+total check time: 69.6026 sec
+sssp15:  threads: 40 trial: 56 source  19396273 time:     8.7319 sec
+LG_check_sssp init  time: 1.05343 sec
+LG_check_sssp time: 68.4598 sec
+LG_check_sssp check time: 0.0796352 sec
+total check time: 69.5929 sec
+sssp15:  threads: 40 trial: 57 source  19871750 time:     8.3788 sec
+LG_check_sssp init  time: 1.0537 sec
+LG_check_sssp time: 70.004 sec
+LG_check_sssp check time: 0.0820591 sec
+total check time: 71.1399 sec
+sssp15:  threads: 40 trial: 58 source  36862677 time:     8.9170 sec
+LG_check_sssp init  time: 1.05394 sec
+LG_check_sssp time: 69.3514 sec
+LG_check_sssp check time: 0.0800974 sec
+total check time: 70.4855 sec
+sssp15:  threads: 40 trial: 59 source  49539126 time:     8.4272 sec
+LG_check_sssp init  time: 1.05304 sec
+LG_check_sssp time: 69.3539 sec
+LG_check_sssp check time: 0.0806856 sec
+total check time: 70.4877 sec
+sssp15:  threads: 40 trial: 60 source  34016452 time:     7.3175 sec
+LG_check_sssp init  time: 1.05329 sec
+LG_check_sssp time: 68.2987 sec
+LG_check_sssp check time: 0.0794962 sec
+total check time: 69.4316 sec
+sssp15:  threads: 40 trial: 61 source  36567395 time:     7.7528 sec
+LG_check_sssp init  time: 1.05276 sec
+LG_check_sssp time: 70.3784 sec
+LG_check_sssp check time: 0.0834259 sec
+total check time: 71.5147 sec
+sssp15:  threads: 40 trial: 62 source  55487793 time:     9.2267 sec
+LG_check_sssp init  time: 1.05766 sec
+LG_check_sssp time: 69.2557 sec
+LG_check_sssp check time: 0.0794662 sec
+total check time: 70.3928 sec
+sssp15:  threads: 40 trial: 63 source  14391370 time:     8.9648 sec
+LG_check_sssp init  time: 1.05271 sec
+LG_check_sssp time: 67.9104 sec
+LG_check_sssp check time: 0.0815588 sec
+total check time: 69.0448 sec
+
+40: SSSP    time:       8.156190 sec  rate:   180.03 (delta 51)
+Avg: SSSP          40:      8.156 sec: ../../../GAP/GAP-twitter/GAP-twitter.grb
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+threads to test:  40
+matrix: ../../../GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-web/GAP-web.grb
+sources: ../../../GAP/GAP-web/GAP-web_sources.mtx
+read time: 29.5221
+delta: 140
+sssp15:  threads: 40 trial:  0 source  10219452 time:    10.8045 sec
+LG_check_sssp init  time: 0.881818 sec
+LG_check_sssp time: 52.6596 sec
+LG_check_sssp check time: 0.0677278 sec
+total check time: 53.6093 sec
+sssp15:  threads: 40 trial:  1 source  44758211 time:    10.9798 sec
+LG_check_sssp init  time: 0.866708 sec
+LG_check_sssp time: 53.4757 sec
+LG_check_sssp check time: 0.0657756 sec
+total check time: 54.4082 sec
+sssp15:  threads: 40 trial:  2 source    890671 time:    10.8519 sec
+LG_check_sssp init  time: 0.866511 sec
+LG_check_sssp time: 52.6802 sec
+LG_check_sssp check time: 0.0640499 sec
+total check time: 53.6108 sec
+sssp15:  threads: 40 trial:  3 source  13843756 time:     1.9497 sec
+LG_check_sssp init  time: 0.866522 sec
+LG_check_sssp time: 0.722208 sec
+LG_check_sssp check time: 0.0665934 sec
+total check time: 1.65538 sec
+sssp15:  threads: 40 trial:  4 source  14168062 time:    11.1134 sec
+LG_check_sssp init  time: 0.866649 sec
+LG_check_sssp time: 53.2363 sec
+LG_check_sssp check time: 0.0655387 sec
+total check time: 54.1685 sec
+sssp15:  threads: 40 trial:  5 source  20906930 time:    10.7382 sec
+LG_check_sssp init  time: 0.884023 sec
+LG_check_sssp time: 53.5182 sec
+LG_check_sssp check time: 0.0662091 sec
+total check time: 54.4685 sec
+sssp15:  threads: 40 trial:  6 source  12189584 time:    10.9608 sec
+LG_check_sssp init  time: 0.881694 sec
+LG_check_sssp time: 54.0398 sec
+LG_check_sssp check time: 0.0687322 sec
+total check time: 54.9903 sec
+sssp15:  threads: 40 trial:  7 source  26352335 time:     1.9652 sec
+LG_check_sssp init  time: 0.86626 sec
+LG_check_sssp time: 0.711882 sec
+LG_check_sssp check time: 0.0657405 sec
+total check time: 1.64393 sec
+sssp15:  threads: 40 trial:  8 source  43500686 time:    10.7261 sec
+LG_check_sssp init  time: 0.866304 sec
+LG_check_sssp time: 53.4893 sec
+LG_check_sssp check time: 0.0672155 sec
+total check time: 54.4229 sec
+sssp15:  threads: 40 trial:  9 source   8987024 time:    11.0102 sec
+LG_check_sssp init  time: 0.866752 sec
+LG_check_sssp time: 52.6816 sec
+LG_check_sssp check time: 0.0657038 sec
+total check time: 53.6141 sec
+sssp15:  threads: 40 trial: 10 source   5699762 time:     1.9425 sec
+LG_check_sssp init  time: 0.867868 sec
+LG_check_sssp time: 0.686799 sec
+LG_check_sssp check time: 0.0651091 sec
+total check time: 1.61983 sec
+sssp15:  threads: 40 trial: 11 source  41436455 time:    10.7358 sec
+LG_check_sssp init  time: 0.86667 sec
+LG_check_sssp time: 52.7881 sec
+LG_check_sssp check time: 0.0654301 sec
+total check time: 53.7202 sec
+sssp15:  threads: 40 trial: 12 source   5030727 time:    11.0207 sec
+LG_check_sssp init  time: 0.867079 sec
+LG_check_sssp time: 52.7356 sec
+LG_check_sssp check time: 0.0653008 sec
+total check time: 53.6681 sec
+sssp15:  threads: 40 trial: 13 source  40735218 time:    10.7075 sec
+LG_check_sssp init  time: 0.895604 sec
+LG_check_sssp time: 53.5965 sec
+LG_check_sssp check time: 0.0670662 sec
+total check time: 54.5593 sec
+sssp15:  threads: 40 trial: 14 source  16533563 time:    10.5267 sec
+LG_check_sssp init  time: 0.905665 sec
+LG_check_sssp time: 52.6727 sec
+LG_check_sssp check time: 0.0652097 sec
+total check time: 53.6437 sec
+sssp15:  threads: 40 trial: 15 source  28700166 time:    10.9997 sec
+LG_check_sssp init  time: 0.947631 sec
+LG_check_sssp time: 52.5567 sec
+LG_check_sssp check time: 0.0652669 sec
+total check time: 53.5697 sec
+sssp15:  threads: 40 trial: 16 source     64711 time:    10.8982 sec
+LG_check_sssp init  time: 0.866455 sec
+LG_check_sssp time: 53.4783 sec
+LG_check_sssp check time: 0.0672273 sec
+total check time: 54.412 sec
+sssp15:  threads: 40 trial: 17 source  39634750 time:    10.7179 sec
+LG_check_sssp init  time: 0.866447 sec
+LG_check_sssp time: 52.7074 sec
+LG_check_sssp check time: 0.0658377 sec
+total check time: 53.6398 sec
+sssp15:  threads: 40 trial: 18 source  16037779 time:    10.8070 sec
+LG_check_sssp init  time: 0.86665 sec
+LG_check_sssp time: 52.6519 sec
+LG_check_sssp check time: 0.0645155 sec
+total check time: 53.5831 sec
+sssp15:  threads: 40 trial: 19 source  27152739 time:    11.0031 sec
+LG_check_sssp init  time: 0.922863 sec
+LG_check_sssp time: 54.07 sec
+LG_check_sssp check time: 0.068066 sec
+total check time: 55.061 sec
+sssp15:  threads: 40 trial: 20 source  16404061 time:    10.9260 sec
+LG_check_sssp init  time: 0.889397 sec
+LG_check_sssp time: 52.6465 sec
+LG_check_sssp check time: 0.0656511 sec
+total check time: 53.6016 sec
+sssp15:  threads: 40 trial: 21 source  20491963 time:    11.0354 sec
+LG_check_sssp init  time: 0.866579 sec
+LG_check_sssp time: 53.235 sec
+LG_check_sssp check time: 0.0664736 sec
+total check time: 54.1681 sec
+sssp15:  threads: 40 trial: 22 source   5322423 time:    11.0917 sec
+LG_check_sssp init  time: 0.911791 sec
+LG_check_sssp time: 53.7026 sec
+LG_check_sssp check time: 0.0663569 sec
+total check time: 54.6808 sec
+sssp15:  threads: 40 trial: 23 source  21420953 time:    10.8294 sec
+LG_check_sssp init  time: 0.866228 sec
+LG_check_sssp time: 52.7919 sec
+LG_check_sssp check time: 0.066875 sec
+total check time: 53.7251 sec
+sssp15:  threads: 40 trial: 24 source  26622109 time:    10.8991 sec
+LG_check_sssp init  time: 0.866131 sec
+LG_check_sssp time: 52.3777 sec
+LG_check_sssp check time: 0.0675267 sec
+total check time: 53.3114 sec
+sssp15:  threads: 40 trial: 25 source   5882875 time:    10.9050 sec
+LG_check_sssp init  time: 0.90617 sec
+LG_check_sssp time: 52.0421 sec
+LG_check_sssp check time: 0.0667534 sec
+total check time: 53.0151 sec
+sssp15:  threads: 40 trial: 26 source  18091040 time:    11.2202 sec
+LG_check_sssp init  time: 0.926059 sec
+LG_check_sssp time: 52.53 sec
+LG_check_sssp check time: 0.0677694 sec
+total check time: 53.5239 sec
+sssp15:  threads: 40 trial: 27 source  10665896 time:     2.0710 sec
+LG_check_sssp init  time: 0.866749 sec
+LG_check_sssp time: 0.751804 sec
+LG_check_sssp check time: 0.0659391 sec
+total check time: 1.68455 sec
+sssp15:  threads: 40 trial: 28 source  18634422 time:    10.7249 sec
+LG_check_sssp init  time: 0.866183 sec
+LG_check_sssp time: 52.5598 sec
+LG_check_sssp check time: 0.0650825 sec
+total check time: 53.4911 sec
+sssp15:  threads: 40 trial: 29 source  18138715 time:    10.7872 sec
+LG_check_sssp init  time: 0.884555 sec
+LG_check_sssp time: 54.0867 sec
+LG_check_sssp check time: 0.0675516 sec
+total check time: 55.0389 sec
+sssp15:  threads: 40 trial: 30 source   2355535 time:    11.0668 sec
+LG_check_sssp init  time: 0.866228 sec
+LG_check_sssp time: 53.5826 sec
+LG_check_sssp check time: 0.0669292 sec
+total check time: 54.5158 sec
+sssp15:  threads: 40 trial: 31 source  32885205 time:     2.1049 sec
+LG_check_sssp init  time: 0.873186 sec
+LG_check_sssp time: 0.748184 sec
+LG_check_sssp check time: 0.0670117 sec
+total check time: 1.68843 sec
+sssp15:  threads: 40 trial: 32 source  40657440 time:    10.8710 sec
+LG_check_sssp init  time: 0.909597 sec
+LG_check_sssp time: 53.0415 sec
+LG_check_sssp check time: 0.0672545 sec
+total check time: 54.0184 sec
+sssp15:  threads: 40 trial: 33 source  35196167 time:    17.7606 sec
+LG_check_sssp init  time: 0.869727 sec
+LG_check_sssp time: 53.4999 sec
+LG_check_sssp check time: 0.0673751 sec
+total check time: 54.437 sec
+sssp15:  threads: 40 trial: 34 source  45544426 time:    13.3509 sec
+LG_check_sssp init  time: 0.866184 sec
+LG_check_sssp time: 52.2805 sec
+LG_check_sssp check time: 0.066488 sec
+total check time: 53.2133 sec
+sssp15:  threads: 40 trial: 35 source   6175519 time:     1.8864 sec
+LG_check_sssp init  time: 0.868221 sec
+LG_check_sssp time: 0.689024 sec
+LG_check_sssp check time: 0.0654163 sec
+total check time: 1.62273 sec
+sssp15:  threads: 40 trial: 36 source  40058318 time:    10.8955 sec
+LG_check_sssp init  time: 0.868117 sec
+LG_check_sssp time: 52.667 sec
+LG_check_sssp check time: 0.0664351 sec
+total check time: 53.6016 sec
+sssp15:  threads: 40 trial: 37 source  50626230 time:    10.8957 sec
+LG_check_sssp init  time: 0.866282 sec
+LG_check_sssp time: 52.6135 sec
+LG_check_sssp check time: 0.0663098 sec
+total check time: 53.5462 sec
+sssp15:  threads: 40 trial: 38 source  36571019 time:    10.9827 sec
+LG_check_sssp init  time: 0.891379 sec
+LG_check_sssp time: 52.7674 sec
+LG_check_sssp check time: 0.0663382 sec
+total check time: 53.7251 sec
+sssp15:  threads: 40 trial: 39 source  49397052 time:    10.3059 sec
+LG_check_sssp init  time: 0.920346 sec
+LG_check_sssp time: 52.7399 sec
+LG_check_sssp check time: 0.0664029 sec
+total check time: 53.7267 sec
+sssp15:  threads: 40 trial: 40 source  23434265 time:    10.7854 sec
+LG_check_sssp init  time: 0.866067 sec
+LG_check_sssp time: 51.8843 sec
+LG_check_sssp check time: 0.0650993 sec
+total check time: 52.8155 sec
+sssp15:  threads: 40 trial: 41 source   2299444 time:    10.4679 sec
+LG_check_sssp init  time: 0.866026 sec
+LG_check_sssp time: 51.9617 sec
+LG_check_sssp check time: 0.0641599 sec
+total check time: 52.892 sec
+sssp15:  threads: 40 trial: 42 source  32873823 time:     2.0042 sec
+LG_check_sssp init  time: 0.867255 sec
+LG_check_sssp time: 0.712524 sec
+LG_check_sssp check time: 0.064965 sec
+total check time: 1.64481 sec
+sssp15:  threads: 40 trial: 43 source  25978282 time:    10.8320 sec
+LG_check_sssp init  time: 0.883488 sec
+LG_check_sssp time: 52.0241 sec
+LG_check_sssp check time: 0.0658255 sec
+total check time: 52.9735 sec
+sssp15:  threads: 40 trial: 44 source   2461715 time:     2.1459 sec
+LG_check_sssp init  time: 0.868724 sec
+LG_check_sssp time: 0.745506 sec
+LG_check_sssp check time: 0.0648788 sec
+total check time: 1.67917 sec
+sssp15:  threads: 40 trial: 45 source  22787314 time:    10.6388 sec
+LG_check_sssp init  time: 0.866719 sec
+LG_check_sssp time: 52.6164 sec
+LG_check_sssp check time: 0.0660313 sec
+total check time: 53.5492 sec
+sssp15:  threads: 40 trial: 46 source  30759947 time:    10.8203 sec
+LG_check_sssp init  time: 0.913642 sec
+LG_check_sssp time: 53.2198 sec
+LG_check_sssp check time: 0.0666175 sec
+total check time: 54.2001 sec
+sssp15:  threads: 40 trial: 47 source   7428894 time:     1.8333 sec
+LG_check_sssp init  time: 0.866054 sec
+LG_check_sssp time: 0.699747 sec
+LG_check_sssp check time: 0.0661593 sec
+total check time: 1.63201 sec
+sssp15:  threads: 40 trial: 48 source  39173870 time:     1.8054 sec
+LG_check_sssp init  time: 0.866147 sec
+LG_check_sssp time: 0.692075 sec
+LG_check_sssp check time: 0.0648237 sec
+total check time: 1.6231 sec
+sssp15:  threads: 40 trial: 49 source  43194209 time:     1.8750 sec
+LG_check_sssp init  time: 0.866289 sec
+LG_check_sssp time: 0.702976 sec
+LG_check_sssp check time: 0.0663853 sec
+total check time: 1.63571 sec
+sssp15:  threads: 40 trial: 50 source  26361509 time:     1.9510 sec
+LG_check_sssp init  time: 0.866002 sec
+LG_check_sssp time: 0.703932 sec
+LG_check_sssp check time: 0.0666432 sec
+total check time: 1.63663 sec
+sssp15:  threads: 40 trial: 51 source  39747211 time:     1.8091 sec
+LG_check_sssp init  time: 0.867104 sec
+LG_check_sssp time: 0.695798 sec
+LG_check_sssp check time: 0.0667073 sec
+total check time: 1.62966 sec
+sssp15:  threads: 40 trial: 52 source  30670029 time:    10.8583 sec
+LG_check_sssp init  time: 0.871578 sec
+LG_check_sssp time: 51.7442 sec
+LG_check_sssp check time: 0.0646482 sec
+total check time: 52.6805 sec
+sssp15:  threads: 40 trial: 53 source  41483033 time:    10.7046 sec
+LG_check_sssp init  time: 0.883877 sec
+LG_check_sssp time: 51.5047 sec
+LG_check_sssp check time: 0.0651508 sec
+total check time: 52.4538 sec
+sssp15:  threads: 40 trial: 54 source   9358666 time:    10.7939 sec
+LG_check_sssp init  time: 0.911288 sec
+LG_check_sssp time: 52.7103 sec
+LG_check_sssp check time: 0.0664796 sec
+total check time: 53.6881 sec
+sssp15:  threads: 40 trial: 55 source   9945008 time:    10.7281 sec
+LG_check_sssp init  time: 0.888281 sec
+LG_check_sssp time: 52.8047 sec
+LG_check_sssp check time: 0.0660786 sec
+total check time: 53.7591 sec
+sssp15:  threads: 40 trial: 56 source   3355244 time:    10.4222 sec
+LG_check_sssp init  time: 0.866098 sec
+LG_check_sssp time: 52.0067 sec
+LG_check_sssp check time: 0.0649032 sec
+total check time: 52.9377 sec
+sssp15:  threads: 40 trial: 57 source  33831269 time:    10.6780 sec
+LG_check_sssp init  time: 0.866336 sec
+LG_check_sssp time: 53.2863 sec
+LG_check_sssp check time: 0.0669386 sec
+total check time: 54.2196 sec
+sssp15:  threads: 40 trial: 58 source  45124744 time:    11.0099 sec
+LG_check_sssp init  time: 0.865981 sec
+LG_check_sssp time: 51.9205 sec
+LG_check_sssp check time: 0.0656911 sec
+total check time: 52.8522 sec
+sssp15:  threads: 40 trial: 59 source  16137877 time:     1.9957 sec
+LG_check_sssp init  time: 0.866207 sec
+LG_check_sssp time: 0.730562 sec
+LG_check_sssp check time: 0.0653902 sec
+total check time: 1.66222 sec
+sssp15:  threads: 40 trial: 60 source  11235448 time:    10.5375 sec
+LG_check_sssp init  time: 0.866033 sec
+LG_check_sssp time: 51.7789 sec
+LG_check_sssp check time: 0.0658415 sec
+total check time: 52.7108 sec
+sssp15:  threads: 40 trial: 61 source  37509144 time:    11.0438 sec
+LG_check_sssp init  time: 0.866144 sec
+LG_check_sssp time: 52.6486 sec
+LG_check_sssp check time: 0.0668803 sec
+total check time: 53.5817 sec
+sssp15:  threads: 40 trial: 62 source  27402414 time:    10.4622 sec
+LG_check_sssp init  time: 0.866011 sec
+LG_check_sssp time: 51.9868 sec
+LG_check_sssp check time: 0.0653342 sec
+total check time: 52.9182 sec
+sssp15:  threads: 40 trial: 63 source  39546083 time:    11.1999 sec
+LG_check_sssp init  time: 0.866144 sec
+LG_check_sssp time: 52.0049 sec
+LG_check_sssp check time: 0.0658604 sec
+total check time: 52.937 sec
+
+40: SSSP    time:       9.038618 sec  rate:   213.56 (delta 140)
+Avg: SSSP          40:      9.039 sec: ../../../GAP/GAP-web/GAP-web.grb
+SuiteSparse:GraphBLAS v5.1.6 [July 31, 2021]
+threads to test:  40
+matrix: ../../../GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-road/GAP-road.grb
+sources: ../../../GAP/GAP-road/GAP-road_sources.mtx
+read time: 1.44123
+delta: 50000
+sssp15:  threads: 40 trial:  0 source   4795720 time:    50.3845 sec
+LG_check_sssp init  time: 0.415496 sec
+LG_check_sssp time: 19.0676 sec
+LG_check_sssp check time: 0.0311511 sec
+total check time: 19.5143 sec
+sssp15:  threads: 40 trial:  1 source  21003853 time:    46.1187 sec
+LG_check_sssp init  time: 0.410151 sec
+LG_check_sssp time: 19.0025 sec
+LG_check_sssp check time: 0.0311361 sec
+total check time: 19.4438 sec
+sssp15:  threads: 40 trial:  2 source    417968 time:    45.2121 sec
+LG_check_sssp init  time: 0.410127 sec
+LG_check_sssp time: 20.1362 sec
+LG_check_sssp check time: 0.0325279 sec
+total check time: 20.579 sec
+sssp15:  threads: 40 trial:  3 source   6496511 time:    49.8045 sec
+LG_check_sssp init  time: 0.410028 sec
+LG_check_sssp time: 18.66 sec
+LG_check_sssp check time: 0.0316712 sec
+total check time: 19.1018 sec
+sssp15:  threads: 40 trial:  4 source   6648699 time:    43.6293 sec
+LG_check_sssp init  time: 0.410105 sec
+LG_check_sssp time: 20.0158 sec
+LG_check_sssp check time: 0.0329263 sec
+total check time: 20.4589 sec
+sssp15:  threads: 40 trial:  5 source   9811073 time:    52.5332 sec
+LG_check_sssp init  time: 0.41008 sec
+LG_check_sssp time: 17.7199 sec
+LG_check_sssp check time: 0.0316111 sec
+total check time: 18.1616 sec
+sssp15:  threads: 40 trial:  6 source  22247478 time:    46.7581 sec
+LG_check_sssp init  time: 0.414288 sec
+LG_check_sssp time: 19.2588 sec
+LG_check_sssp check time: 0.0320408 sec
+total check time: 19.7052 sec
+sssp15:  threads: 40 trial:  7 source   5720252 time:   137.6578 sec
+LG_check_sssp init  time: 0.410164 sec
+LG_check_sssp time: 18.1661 sec
+LG_check_sssp check time: 0.0317531 sec
+total check time: 18.608 sec
+sssp15:  threads: 40 trial:  8 source  12366459 time:    45.8985 sec
+LG_check_sssp init  time: 0.411818 sec
+LG_check_sssp time: 19.1044 sec
+LG_check_sssp check time: 0.0315771 sec
+total check time: 19.5479 sec
+sssp15:  threads: 40 trial:  9 source  20413729 time:    45.7188 sec
+LG_check_sssp init  time: 0.414693 sec
+LG_check_sssp time: 19.151 sec
+LG_check_sssp check time: 0.0312658 sec
+total check time: 19.597 sec
+sssp15:  threads: 40 trial: 10 source   4217374 time:    52.7824 sec
+LG_check_sssp init  time: 0.410077 sec
+LG_check_sssp time: 17.8975 sec
+LG_check_sssp check time: 0.0309971 sec
+total check time: 18.3387 sec
+sssp15:  threads: 40 trial: 11 source   2674749 time:    56.8293 sec
+LG_check_sssp init  time: 0.41009 sec
+LG_check_sssp time: 17.2976 sec
+LG_check_sssp check time: 0.0315298 sec
+total check time: 17.7393 sec
+sssp15:  threads: 40 trial: 12 source  22085557 time:    46.8678 sec
+LG_check_sssp init  time: 0.412339 sec
+LG_check_sssp time: 19.3245 sec
+LG_check_sssp check time: 0.032117 sec
+total check time: 19.769 sec
+sssp15:  threads: 40 trial: 13 source  19445040 time:    48.0475 sec
+LG_check_sssp init  time: 0.410113 sec
+LG_check_sssp time: 20.0606 sec
+LG_check_sssp check time: 0.0332817 sec
+total check time: 20.504 sec
+sssp15:  threads: 40 trial: 14 source   2360788 time:    50.4923 sec
+LG_check_sssp init  time: 0.410164 sec
+LG_check_sssp time: 17.9084 sec
+LG_check_sssp check time: 0.0327024 sec
+total check time: 18.3513 sec
+sssp15:  threads: 40 trial: 15 source  19115968 time:    50.1136 sec
+LG_check_sssp init  time: 0.41013 sec
+LG_check_sssp time: 19.2381 sec
+LG_check_sssp check time: 0.0332247 sec
+total check time: 19.6815 sec
+sssp15:  threads: 40 trial: 16 source   7758767 time:    48.0166 sec
+LG_check_sssp init  time: 0.410264 sec
+LG_check_sssp time: 19.9715 sec
+LG_check_sssp check time: 0.0322119 sec
+total check time: 20.414 sec
+sssp15:  threads: 40 trial: 17 source  13468234 time:    54.9682 sec
+LG_check_sssp init  time: 0.410226 sec
+LG_check_sssp time: 18.6887 sec
+LG_check_sssp check time: 0.0326448 sec
+total check time: 19.1316 sec
+sssp15:  threads: 40 trial: 18 source     30367 time:    49.1510 sec
+LG_check_sssp init  time: 0.410124 sec
+LG_check_sssp time: 19.9237 sec
+LG_check_sssp check time: 0.0320967 sec
+total check time: 20.366 sec
+sssp15:  threads: 40 trial: 19 source  18599547 time:    47.6978 sec
+LG_check_sssp init  time: 0.41008 sec
+LG_check_sssp time: 18.9395 sec
+LG_check_sssp check time: 0.0322924 sec
+total check time: 19.3819 sec
+sssp15:  threads: 40 trial: 20 source   7526108 time:    45.5900 sec
+LG_check_sssp init  time: 0.41028 sec
+LG_check_sssp time: 19.5295 sec
+LG_check_sssp check time: 0.0315417 sec
+total check time: 19.9714 sec
+sssp15:  threads: 40 trial: 21 source  16836280 time:    52.1103 sec
+LG_check_sssp init  time: 0.410083 sec
+LG_check_sssp time: 17.8082 sec
+LG_check_sssp check time: 0.0306508 sec
+total check time: 18.249 sec
+sssp15:  threads: 40 trial: 22 source  12742067 time:    51.7581 sec
+LG_check_sssp init  time: 0.413846 sec
+LG_check_sssp time: 19.2111 sec
+LG_check_sssp check time: 0.0326928 sec
+total check time: 19.6577 sec
+sssp15:  threads: 40 trial: 23 source   7697995 time:    43.1296 sec
+LG_check_sssp init  time: 0.413082 sec
+LG_check_sssp time: 20.2299 sec
+LG_check_sssp check time: 0.032732 sec
+total check time: 20.6758 sec
+sssp15:  threads: 40 trial: 24 source   5876443 time:    46.6996 sec
+LG_check_sssp init  time: 0.410089 sec
+LG_check_sssp time: 20.1027 sec
+LG_check_sssp check time: 0.0320189 sec
+total check time: 20.5449 sec
+sssp15:  threads: 40 trial: 25 source   9616340 time:    48.3538 sec
+LG_check_sssp init  time: 0.410057 sec
+LG_check_sssp time: 19.2306 sec
+LG_check_sssp check time: 0.0316445 sec
+total check time: 19.6723 sec
+sssp15:  threads: 40 trial: 26 source   2497673 time:    53.3861 sec
+LG_check_sssp init  time: 0.415433 sec
+LG_check_sssp time: 17.362 sec
+LG_check_sssp check time: 0.0326333 sec
+total check time: 17.8101 sec
+sssp15:  threads: 40 trial: 27 source  10052290 time:    47.3416 sec
+LG_check_sssp init  time: 0.410104 sec
+LG_check_sssp time: 18.8343 sec
+LG_check_sssp check time: 0.0317721 sec
+total check time: 19.2763 sec
+sssp15:  threads: 40 trial: 28 source  12493057 time:    51.2340 sec
+LG_check_sssp init  time: 0.41015 sec
+LG_check_sssp time: 18.2982 sec
+LG_check_sssp check time: 0.0324918 sec
+total check time: 18.7409 sec
+sssp15:  threads: 40 trial: 29 source   1670855 time:    51.0535 sec
+LG_check_sssp init  time: 0.410129 sec
+LG_check_sssp time: 17.9985 sec
+LG_check_sssp check time: 0.0315401 sec
+total check time: 18.4402 sec
+sssp15:  threads: 40 trial: 30 source   2760679 time:    46.6969 sec
+LG_check_sssp init  time: 0.416014 sec
+LG_check_sssp time: 18.9672 sec
+LG_check_sssp check time: 0.0317942 sec
+total check time: 19.4151 sec
+sssp15:  threads: 40 trial: 31 source   2460941 time:    53.7387 sec
+LG_check_sssp init  time: 0.410176 sec
+LG_check_sssp time: 18.2264 sec
+LG_check_sssp check time: 0.0323728 sec
+total check time: 18.669 sec
+sssp15:  threads: 40 trial: 32 source   8489650 time:    43.3693 sec
+LG_check_sssp init  time: 0.41045 sec
+LG_check_sssp time: 20.2611 sec
+LG_check_sssp check time: 0.0322634 sec
+total check time: 20.7039 sec
+sssp15:  threads: 40 trial: 33 source   5005225 time:    50.2748 sec
+LG_check_sssp init  time: 0.410128 sec
+LG_check_sssp time: 18.476 sec
+LG_check_sssp check time: 0.0314339 sec
+total check time: 18.9176 sec
+sssp15:  threads: 40 trial: 34 source   8744645 time:    47.9732 sec
+LG_check_sssp init  time: 0.41011 sec
+LG_check_sssp time: 19.3372 sec
+LG_check_sssp check time: 0.0308053 sec
+total check time: 19.7782 sec
+sssp15:  threads: 40 trial: 35 source   8512023 time:    42.8181 sec
+LG_check_sssp init  time: 0.410775 sec
+LG_check_sssp time: 20.1083 sec
+LG_check_sssp check time: 0.0303901 sec
+total check time: 20.5495 sec
+sssp15:  threads: 40 trial: 36 source  21912165 time:    54.6860 sec
+LG_check_sssp init  time: 0.41004 sec
+LG_check_sssp time: 17.4312 sec
+LG_check_sssp check time: 0.0312458 sec
+total check time: 17.8726 sec
+sssp15:  threads: 40 trial: 37 source   1105390 time:   137.8761 sec
+LG_check_sssp init  time: 0.410346 sec
+LG_check_sssp time: 21.3078 sec
+LG_check_sssp check time: 0.0343792 sec
+total check time: 21.7526 sec
+sssp15:  threads: 40 trial: 38 source  15432163 time:    45.8634 sec
+LG_check_sssp init  time: 0.410091 sec
+LG_check_sssp time: 19.3466 sec
+LG_check_sssp check time: 0.0321568 sec
+total check time: 19.7889 sec
+sssp15:  threads: 40 trial: 39 source   1600177 time:    50.5689 sec
+LG_check_sssp init  time: 0.410786 sec
+LG_check_sssp time: 17.8356 sec
+LG_check_sssp check time: 0.0307506 sec
+total check time: 18.2772 sec
+sssp15:  threads: 40 trial: 40 source  19079469 time:    50.5756 sec
+LG_check_sssp init  time: 0.410304 sec
+LG_check_sssp time: 18.2413 sec
+LG_check_sssp check time: 0.0323365 sec
+total check time: 18.684 sec
+sssp15:  threads: 40 trial: 41 source  16516637 time:    53.8235 sec
+LG_check_sssp init  time: 0.410175 sec
+LG_check_sssp time: 17.3053 sec
+LG_check_sssp check time: 0.0316055 sec
+total check time: 17.7471 sec
+sssp15:  threads: 40 trial: 42 source  20202566 time:    46.2242 sec
+LG_check_sssp init  time: 0.410095 sec
+LG_check_sssp time: 18.729 sec
+LG_check_sssp check time: 0.0316759 sec
+total check time: 19.1708 sec
+sssp15:  threads: 40 trial: 43 source  21372803 time:    46.8620 sec
+LG_check_sssp init  time: 0.411796 sec
+LG_check_sssp time: 18.7468 sec
+LG_check_sssp check time: 0.0313643 sec
+total check time: 19.1901 sec
+sssp15:  threads: 40 trial: 44 source   2898009 time:    52.3827 sec
+LG_check_sssp init  time: 0.410004 sec
+LG_check_sssp time: 18.2185 sec
+LG_check_sssp check time: 0.0315991 sec
+total check time: 18.6602 sec
+sssp15:  threads: 40 trial: 45 source   8491277 time:    43.2152 sec
+LG_check_sssp init  time: 0.41564 sec
+LG_check_sssp time: 20.2587 sec
+LG_check_sssp check time: 0.0327648 sec
+total check time: 20.7072 sec
+sssp15:  threads: 40 trial: 46 source  18798317 time:    46.7324 sec
+LG_check_sssp init  time: 0.410079 sec
+LG_check_sssp time: 19.6648 sec
+LG_check_sssp check time: 0.0326615 sec
+total check time: 20.1076 sec
+sssp15:  threads: 40 trial: 47 source  23757560 time:    49.2160 sec
+LG_check_sssp init  time: 0.410173 sec
+LG_check_sssp time: 18.991 sec
+LG_check_sssp check time: 0.0320585 sec
+total check time: 19.4333 sec
+sssp15:  threads: 40 trial: 48 source  17161819 time:    44.4540 sec
+LG_check_sssp init  time: 0.410035 sec
+LG_check_sssp time: 19.8095 sec
+LG_check_sssp check time: 0.0334075 sec
+total check time: 20.253 sec
+sssp15:  threads: 40 trial: 49 source  23180739 time:    53.5761 sec
+LG_check_sssp init  time: 0.410031 sec
+LG_check_sssp time: 17.4342 sec
+LG_check_sssp check time: 0.0314516 sec
+total check time: 17.8757 sec
+sssp15:  threads: 40 trial: 50 source  10997085 time:    46.4435 sec
+LG_check_sssp init  time: 0.410074 sec
+LG_check_sssp time: 19.7539 sec
+LG_check_sssp check time: 0.0311178 sec
+total check time: 20.1951 sec
+sssp15:  threads: 40 trial: 51 source   3730630 time:    54.0629 sec
+LG_check_sssp init  time: 0.410085 sec
+LG_check_sssp time: 18.3877 sec
+LG_check_sssp check time: 0.0334369 sec
+total check time: 18.8312 sec
+sssp15:  threads: 40 trial: 52 source   1079068 time:    48.6870 sec
+LG_check_sssp init  time: 0.410455 sec
+LG_check_sssp time: 19.7442 sec
+LG_check_sssp check time: 0.0315562 sec
+total check time: 20.1863 sec
+sssp15:  threads: 40 trial: 53 source  15426822 time:    44.8459 sec
+LG_check_sssp init  time: 0.410383 sec
+LG_check_sssp time: 19.488 sec
+LG_check_sssp check time: 0.0326695 sec
+total check time: 19.9311 sec
+sssp15:  threads: 40 trial: 54 source  12190925 time:    48.8391 sec
+LG_check_sssp init  time: 0.424388 sec
+LG_check_sssp time: 19.0915 sec
+LG_check_sssp check time: 0.032025 sec
+total check time: 19.5479 sec
+sssp15:  threads: 40 trial: 55 source   1155218 time:    48.4624 sec
+LG_check_sssp init  time: 0.413623 sec
+LG_check_sssp time: 19.2073 sec
+LG_check_sssp check time: 0.0325445 sec
+total check time: 19.6535 sec
+sssp15:  threads: 40 trial: 56 source  10693488 time:    43.5196 sec
+LG_check_sssp init  time: 0.410136 sec
+LG_check_sssp time: 19.1526 sec
+LG_check_sssp check time: 0.0316603 sec
+total check time: 19.5944 sec
+sssp15:  threads: 40 trial: 57 source  14434835 time:    49.6088 sec
+LG_check_sssp init  time: 0.410033 sec
+LG_check_sssp time: 18.0005 sec
+LG_check_sssp check time: 0.0315783 sec
+total check time: 18.4421 sec
+sssp15:  threads: 40 trial: 58 source  19963339 time:    49.9312 sec
+LG_check_sssp init  time: 0.410106 sec
+LG_check_sssp time: 19.1835 sec
+LG_check_sssp check time: 0.0319359 sec
+total check time: 19.6256 sec
+sssp15:  threads: 40 trial: 59 source   3486185 time:    48.1658 sec
+LG_check_sssp init  time: 0.41101 sec
+LG_check_sssp time: 19.1377 sec
+LG_check_sssp check time: 0.0305325 sec
+total check time: 19.5793 sec
+sssp15:  threads: 40 trial: 60 source  18383269 time:    48.5569 sec
+LG_check_sssp init  time: 0.410041 sec
+LG_check_sssp time: 19.7522 sec
+LG_check_sssp check time: 0.0329187 sec
+total check time: 20.1952 sec
+sssp15:  threads: 40 trial: 61 source  20269908 time:    45.1010 sec
+LG_check_sssp init  time: 0.410382 sec
+LG_check_sssp time: 19.1037 sec
+LG_check_sssp check time: 0.031156 sec
+total check time: 19.5453 sec
+sssp15:  threads: 40 trial: 62 source  12370764 time:    52.7728 sec
+LG_check_sssp init  time: 0.410112 sec
+LG_check_sssp time: 18.0657 sec
+LG_check_sssp check time: 0.0314283 sec
+total check time: 18.5073 sec
+sssp15:  threads: 40 trial: 63 source   7843140 time:    48.9282 sec
+LG_check_sssp init  time: 0.410305 sec
+LG_check_sssp time: 19.2804 sec
+LG_check_sssp check time: 0.0322918 sec
+total check time: 19.723 sec
+
+40: SSSP    time:      51.534230 sec  rate:     1.12 (delta 50000)
+Avg: SSSP          40:     51.534 sec: ../../../GAP/GAP-road/GAP-road.grb
+[0;36mhypersparse $[0m cd
+

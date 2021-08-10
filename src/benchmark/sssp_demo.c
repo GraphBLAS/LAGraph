@@ -143,6 +143,18 @@ int main (int argc, char **argv)
             printf ("sssp15:  threads: %2d trial: %2d source %9lu "
                 "time: %10.4f sec\n", nthreads, trial, src, ttrial) ;
             total_time += ttrial ;
+
+            // check result
+            if (trial == 0)
+            {
+                // all trials can be checked, but this is slow so do just
+                // for the first trial
+                double tcheck ;
+                LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
+                LAGraph_TRY (LG_check_sssp (pathlen, G, src, msg)) ;
+                LAGraph_TRY (LAGraph_Toc (&tcheck, tic, msg)) ;
+                printf ("total check time: %g sec\n", tcheck) ;
+            }
         }
 
         //----------------------------------------------------------------------
