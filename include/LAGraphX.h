@@ -420,6 +420,7 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
     GrB_Vector *centrality,     // centrality(i): triangle centrality of i
     uint64_t *ntriangles,       // # of triangles in the graph
     // inputs:
+    int method,                 // 0, 1, 2, or 3
     LAGraph_Graph G,            // input graph
     char *msg
 ) ;

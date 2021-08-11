@@ -52,7 +52,7 @@ int main (int argc, char **argv)
     demo_init (burble) ;
 
     int ntrials = 3 ;
-    ntrials = 1 ;
+    ntrials = 3 ;
     printf ("# of trials: %d\n", ntrials) ;
 
     int nt = NTHREAD_LIST ;
@@ -105,41 +105,44 @@ int main (int argc, char **argv)
 
     // warmup for more accurate timing
     double tic [2], tt ;
-    uint64_t ntriangles ;
+    uint64_t ntri ;
     LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-    LAGraph_TRY (LAGraph_VertexCentrality_Triangle (&c, &ntriangles, G, msg)) ;
+    LAGraph_TRY (LAGraph_VertexCentrality_Triangle (&c, &ntri, 3, G, msg)) ;
     LAGraph_TRY (LAGraph_Toc (&tt, tic, NULL)) ;
     GrB_TRY (GrB_free (&c)) ;
-    printf ("warmup time %g sec, # triangles: %lu\n", tt, ntriangles) ;
+    printf ("warmup time %g sec, # triangles: %lu\n", tt, ntri) ;
 
-    for (int t = 1 ; t <= nt ; t++)
+    for (int method = 1 ; method <= 3 ; method += 2)
     {
-        int nthreads = Nthreads [t] ;
-        if (nthreads > nthreads_max) continue ;
-        LAGraph_TRY (LAGraph_SetNumThreads (nthreads, msg)) ;
-        double ttot = 0, ttrial [100] ;
-        for (int trial = 0 ; trial < ntrials ; trial++)
+        for (int t = 1 ; t <= nt ; t++)
         {
-            LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-            LAGraph_TRY (LAGraph_VertexCentrality_Triangle
-                (&c, &ntriangles, G, msg)) ;
-            GrB_TRY (GrB_free (&c)) ;
-            LAGraph_TRY (LAGraph_Toc (&ttrial [trial], tic, NULL)) ;
-            ttot += ttrial [trial] ;
-            printf ("threads %2d trial %2d: %12.6f sec\n",
-                nthreads, trial, ttrial [trial]) ;
-            fprintf (stderr, "threads %2d trial %2d: %12.6f sec\n", 
-                nthreads, trial, ttrial [trial]) ;
+            int nthreads = Nthreads [t] ;
+            if (nthreads > nthreads_max) continue ;
+            LAGraph_TRY (LAGraph_SetNumThreads (nthreads, msg)) ;
+            double ttot = 0, ttrial [100] ;
+            for (int trial = 0 ; trial < ntrials ; trial++)
+            {
+                LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
+                LAGraph_TRY (LAGraph_VertexCentrality_Triangle (&c, &ntri,
+                    method, G, msg)) ;
+                GrB_TRY (GrB_free (&c)) ;
+                LAGraph_TRY (LAGraph_Toc (&ttrial [trial], tic, NULL)) ;
+                ttot += ttrial [trial] ;
+                printf ("threads %2d trial %2d: %12.6f sec\n",
+                    nthreads, trial, ttrial [trial]) ;
+                fprintf (stderr, "threads %2d trial %2d: %12.6f sec\n", 
+                    nthreads, trial, ttrial [trial]) ;
+            }
+            ttot = ttot / ntrials ;
+
+            printf ("Avg: TCentrality(%d) "
+                "nthreads: %3d time: %12.6f matrix: %s\n",
+                method, nthreads, ttot, matrix_name) ;
+
+            fprintf (stderr, "Avg: TCentrality(%d) "
+                "nthreads: %3d time: %12.6f matrix: %s\n",
+                method, nthreads, ttot, matrix_name) ;
         }
-        ttot = ttot / ntrials ;
-
-        printf ("Avg: TCentrality "
-            "nthreads: %3d time: %12.6f matrix: %s\n",
-            nthreads, ttot, matrix_name) ;
-
-        fprintf (stderr, "Avg: TCentrality "
-            "nthreads: %3d time: %12.6f matrix: %s\n",
-            nthreads, ttot, matrix_name) ;
     }
 
     LAGraph_FREE_ALL ;

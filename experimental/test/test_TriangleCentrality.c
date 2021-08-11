@@ -91,19 +91,25 @@ void test_TriangleCentrality (void)
             TEST_CHECK (G->ndiag == 0) ;
         }
 
-        // compute the triangle centrality
-        GrB_Vector c = NULL ;
-        uint64_t ntri ;
-        int retval = LAGraph_VertexCentrality_Triangle (&c, &ntri, G, msg) ;
-        TEST_CHECK (retval == 0) ;
-        printf ("# of triangles: %lu\n", ntri) ;
-        TEST_CHECK (ntri == ntriangles) ;
+        for (int method = 0 ; method <= 3 ; method++)
+        {
+            printf ("\nMethod: %d\n", method) ;
 
-        #if LG_SUITESPARSE
-        int pr = (n <= 100) ? GxB_COMPLETE : GxB_SHORT ;
-        OK (GxB_Vector_fprint (c, "centrality", pr, stdout)) ;
-        #endif
-        OK (GrB_free (&c)) ;
+            // compute the triangle centrality
+            GrB_Vector c = NULL ;
+            uint64_t ntri ;
+            int retval = LAGraph_VertexCentrality_Triangle (&c, &ntri, method,
+                G, msg) ;
+            TEST_CHECK (retval == 0) ;
+            printf ("# of triangles: %lu\n", ntri) ;
+            TEST_CHECK (ntri == ntriangles) ;
+
+            #if LG_SUITESPARSE
+            int pr = (n <= 100) ? GxB_COMPLETE : GxB_SHORT ;
+            OK (GxB_Vector_fprint (c, "centrality", pr, stdout)) ;
+            #endif
+            OK (GrB_free (&c)) ;
+        }
 
         OK (LAGraph_Delete (&G, msg)) ;
     }
