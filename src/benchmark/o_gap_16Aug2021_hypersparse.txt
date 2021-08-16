@@ -1,0 +1,158 @@
+Matrix input file format:  grb
+GAP matrices located in:   ../../../GAP
+ 
+======================================================================
+GAP benchmarks using LAGraph+GraphBLAS: Breadth First Search
+======================================================================
+Matrix input file format:  grb
+GAP matrices located in:   ../../../GAP
+SuiteSparse:GraphBLAS v5.1.6 [Aug 16, 2021]
+nthreads_max: 40
+threads to test:  40
+matrix: ../../../GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-kron/GAP-kron.grb
+sources: ../../../GAP/GAP-kron/GAP-kron_sources.mtx
+read time: 53.5579
+
+------------------------------- threads: 40
+parent only  pushonly trial:  0 threads: 40 src:   2338012     3.4731 sec
+level only   pushonly trial:  0 threads: 40 src:   2338012     3.1821 sec maxlevel: 6
+parent+level pushonly trial:  0 threads: 40 src:   2338012     3.5576 sec
+parent only  pushpull trial:  0 threads: 40 src:   2338012     0.4281 sec
+level only   pushpull trial:  0 threads: 40 src:   2338012     0.3644 sec maxlevel: 6
+parent+level pushpull trial:  0 threads: 40 src:   2338012     0.5372 sec
+parent only  pushonly trial:  1 threads: 40 src:  31997659     3.4428 sec
+level only   pushonly trial:  1 threads: 40 src:  31997659     3.3076 sec maxlevel: 7
+parent+level pushonly trial:  1 threads: 40 src:  31997659     3.4981 sec
+parent only  pushpull trial:  1 threads: 40 src:  31997659     0.4685 sec
+level only   pushpull trial:  1 threads: 40 src:  31997659     0.4054 sec maxlevel: 7
+parent+level pushpull trial:  1 threads: 40 src:  31997659     0.6171 sec
+parent only  pushonly trial:  2 threads: 40 src:  23590940     3.3658 sec
+level only   pushonly trial:  2 threads: 40 src:  23590940     3.2303 sec maxlevel: 7
+parent+level pushonly trial:  2 threads: 40 src:  23590940     3.5035 sec
+parent only  pushpull trial:  2 threads: 40 src:  23590940     0.4643 sec
+level only   pushpull trial:  2 threads: 40 src:  23590940     0.4290 sec maxlevel: 7
+parent+level pushpull trial:  2 threads: 40 src:  23590940     0.5612 sec
+parent only  pushonly trial:  3 threads: 40 src:  43400604     3.3855 sec
+level only   pushonly trial:  3 threads: 40 src:  43400604     3.2656 sec maxlevel: 7
+parent+level pushonly trial:  3 threads: 40 src:  43400604     3.5419 sec
+parent only  pushpull trial:  3 threads: 40 src:  43400604     0.4840 sec
+level only   pushpull trial:  3 threads: 40 src:  43400604     0.4566 sec maxlevel: 7
+parent+level pushpull trial:  3 threads: 40 src:  43400604     0.5729 sec
+parent only  pushonly trial:  4 threads: 40 src:  75337937     3.2243 sec
+level only   pushonly trial:  4 threads: 40 src:  75337937     3.0457 sec maxlevel: 7
+parent+level pushonly trial:  4 threads: 40 src:  75337937     3.3661 sec
+parent only  pushpull trial:  4 threads: 40 src:  75337937     0.4861 sec
+level only   pushpull trial:  4 threads: 40 src:  75337937     0.4500 sec maxlevel: 7
+parent+level pushpull trial:  4 threads: 40 src:  75337937     0.6466 sec
+parent only  pushonly trial:  5 threads: 40 src:    169867     3.4600 sec
+level only   pushonly trial:  5 threads: 40 src:    169867     3.1948 sec maxlevel: 7
+parent+level pushonly trial:  5 threads: 40 src:    169867     3.5732 sec
+parent only  pushpull trial:  5 threads: 40 src:    169867     0.4383 sec
+level only   pushpull trial:  5 threads: 40 src:    169867     0.3710 sec maxlevel: 7
+parent+level pushpull trial:  5 threads: 40 src:    169867     0.5431 sec
+parent only  pushonly trial:  6 threads: 40 src: 104041220     3.3397 sec
+level only   pushonly trial:  6 threads: 40 src: 104041220     3.2426 sec maxlevel: 7
+parent+level pushonly trial:  6 threads: 40 src: 104041220     3.4573 sec
+parent only  pushpull trial:  6 threads: 40 src: 104041220     0.5034 sec
+level only   pushpull trial:  6 threads: 40 src: 104041220     0.4202 sec maxlevel: 7
+parent+level pushpull trial:  6 threads: 40 src: 104041220     0.6372 sec
+parent only  pushonly trial:  7 threads: 40 src:  94177942     3.4506 sec
+level only   pushonly trial:  7 threads: 40 src:  94177942     3.2789 sec maxlevel: 7
+parent+level pushonly trial:  7 threads: 40 src:  94177942     3.5819 sec
+parent only  pushpull trial:  7 threads: 40 src:  94177942     0.5047 sec
+level only   pushpull trial:  7 threads: 40 src:  94177942     0.4149 sec maxlevel: 7
+parent+level pushpull trial:  7 threads: 40 src:  94177942     0.5484 sec
+parent only  pushonly trial:  8 threads: 40 src:  32871357     3.4159 sec
+level only   pushonly trial:  8 threads: 40 src:  32871357     3.2406 sec maxlevel: 7
+parent+level pushonly trial:  8 threads: 40 src:  32871357     3.4980 sec
+parent only  pushpull trial:  8 threads: 40 src:  32871357     0.4934 sec
+level only   pushpull trial:  8 threads: 40 src:  32871357     0.4212 sec maxlevel: 7
+parent+level pushpull trial:  8 threads: 40 src:  32871357     0.6047 sec
+parent only  pushonly trial:  9 threads: 40 src:  56230002     3.1378 sec
+level only   pushonly trial:  9 threads: 40 src:  56230002     2.9939 sec maxlevel: 7
+parent+level pushonly trial:  9 threads: 40 src:  56230002     3.2359 sec
+parent only  pushpull trial:  9 threads: 40 src:  56230002     0.6893 sec
+level only   pushpull trial:  9 threads: 40 src:  56230002     0.5195 sec maxlevel: 7
+parent+level pushpull trial:  9 threads: 40 src:  56230002     0.7269 sec
+parent only  pushonly trial: 10 threads: 40 src:  69883037     3.4806 sec
+level only   pushonly trial: 10 threads: 40 src:  69883037     3.1988 sec maxlevel: 6
+parent+level pushonly trial: 10 threads: 40 src:  69883037     3.5587 sec
+parent only  pushpull trial: 10 threads: 40 src:  69883037     0.4351 sec
+level only   pushpull trial: 10 threads: 40 src:  69883037     0.3851 sec maxlevel: 6
+parent+level pushpull trial: 10 threads: 40 src:  69883037     0.5354 sec
+parent only  pushonly trial: 11 threads: 40 src:   9346345     3.4277 sec
+level only   pushonly trial: 11 threads: 40 src:   9346345     3.1153 sec maxlevel: 7
+parent+level pushonly trial: 11 threads: 40 src:   9346345     3.5352 sec
+parent only  pushpull trial: 11 threads: 40 src:   9346345     0.4819 sec
+level only   pushpull trial: 11 threads: 40 src:   9346345     0.3590 sec maxlevel: 7
+parent+level pushpull trial: 11 threads: 40 src:   9346345     0.5887 sec
+parent only  pushonly trial: 12 threads: 40 src:  48915358     3.4118 sec
+level only   pushonly trial: 12 threads: 40 src:  48915358     3.1314 sec maxlevel: 7
+parent+level pushonly trial: 12 threads: 40 src:  48915358     3.5395 sec
+parent only  pushpull trial: 12 threads: 40 src:  48915358     0.4995 sec
+level only   pushpull trial: 12 threads: 40 src:  48915358     0.4361 sec maxlevel: 7
+parent+level pushpull trial: 12 threads: 40 src:  48915358     0.6183 sec
+parent only  pushonly trial: 13 threads: 40 src: 122571173     3.3580 sec
+level only   pushonly trial: 13 threads: 40 src: 122571173     3.0611 sec maxlevel: 7
+parent+level pushonly trial: 13 threads: 40 src: 122571173     3.4162 sec
+parent only  pushpull trial: 13 threads: 40 src: 122571173     0.4334 sec
+level only   pushpull trial: 13 threads: 40 src: 122571173     0.3630 sec maxlevel: 7
+parent+level pushpull trial: 13 threads: 40 src: 122571173     0.5191 sec
+parent only  pushonly trial: 14 threads: 40 src:   6183279     3.3559 sec
+level only   pushonly trial: 14 threads: 40 src:   6183279     3.1832 sec maxlevel: 7
+parent+level pushonly trial: 14 threads: 40 src:   6183279     3.5274 sec
+parent only  pushpull trial: 14 threads: 40 src:   6183279     0.7507 sec
+level only   pushpull trial: 14 threads: 40 src:   6183279     0.6321 sec maxlevel: 7
+parent+level pushpull trial: 14 threads: 40 src:   6183279     0.8284 sec
+parent only  pushonly trial: 15 threads: 40 src:  86323663     3.3644 sec
+level only   pushonly trial: 15 threads: 40 src:  86323663     3.2008 sec maxlevel: 7
+parent+level pushonly trial: 15 threads: 40 src:  86323663     3.4796 sec
+parent only  pushpull trial: 15 threads: 40 src:  86323663     0.4807 sec
+level only   pushpull trial: 15 threads: 40 src:  86323663     0.4434 sec maxlevel: 7
+parent+level pushpull trial: 15 threads: 40 src:  86323663     0.6208 sec
+parent only  pushonly trial: 16 threads: 40 src: 106725780     3.3768 sec
+level only   pushonly trial: 16 threads: 40 src: 106725780     3.2318 sec maxlevel: 7
+parent+level pushonly trial: 16 threads: 40 src: 106725780     3.4899 sec
+parent only  pushpull trial: 16 threads: 40 src: 106725780     0.4425 sec
+level only   pushpull trial: 16 threads: 40 src: 106725780     0.4013 sec maxlevel: 7
+parent+level pushpull trial: 16 threads: 40 src: 106725780     0.5369 sec
+parent only  pushonly trial: 17 threads: 40 src:  92389938     3.3779 sec
+level only   pushonly trial: 17 threads: 40 src:  92389938     3.1161 sec maxlevel: 6
+parent+level pushonly trial: 17 threads: 40 src:  92389938     3.4213 sec
+parent only  pushpull trial: 17 threads: 40 src:  92389938     0.4438 sec
+level only   pushpull trial: 17 threads: 40 src:  92389938     0.3763 sec maxlevel: 6
+parent+level pushpull trial: 17 threads: 40 src:  92389938     0.5313 sec
+parent only  pushonly trial: 18 threads: 40 src:  16210738     3.4608 sec
+level only   pushonly trial: 18 threads: 40 src:  16210738     3.2492 sec maxlevel: 6
+parent+level pushonly trial: 18 threads: 40 src:  16210738     3.5848 sec
+parent only  pushpull trial: 18 threads: 40 src:  16210738     0.4397 sec
+level only   pushpull trial: 18 threads: 40 src:  16210738     0.3824 sec maxlevel: 6
+parent+level pushpull trial: 18 threads: 40 src:  16210738     0.5336 sec
+parent only  pushonly trial: 19 threads: 40 src:  59816700     3.3729 sec
+level only   pushonly trial: 19 threads: 40 src:  59816700     3.1703 sec maxlevel: 7
+parent+level pushonly trial: 19 threads: 40 src:  59816700     3.4669 sec
+parent only  pushpull trial: 19 threads: 40 src:  59816700     0.6640 sec
+level only   pushpull trial: 19 threads: 40 src:  59816700     0.5687 sec maxlevel: 7
+parent+level pushpull trial: 19 threads: 40 src:  59816700     0.7553 sec
+parent only  pushonly trial: 20 threads: 40 src: 111669929     3.3541 sec
+level only   pushonly trial: 20 threads: 40 src: 111669929     3.1615 sec maxlevel: 7
+parent+level pushonly trial: 20 threads: 40 src: 111669929     3.4883 sec
+parent only  pushpull trial: 20 threads: 40 src: 111669929     0.4419 sec
+level only   pushpull trial: 20 threads: 40 src: 111669929     0.3790 sec maxlevel: 7
+parent+level pushpull trial: 20 threads: 40 src: 111669929     0.6322 sec
+parent only  pushonly trial: 21 threads: 40 src: 102831411     3.2474 sec
+level only   pushonly trial: 21 threads: 40 src: 102831411     3.0255 sec maxlevel: 7
+parent+level pushonly trial: 21 threads: 40 src: 102831411     3.3593 sec
+parent only  pushpull trial: 21 threads: 40 src: 102831411     0.4283 sec
+level only   pushpull trial: 21 threads: 40 src: 102831411     0.3571 sec maxlevel: 7
+parent+level pushpull trial: 21 threads: 40 src: 102831411     0.5457 sec
+parent only  pushonly trial: 22 threads: 40 src: 113384800     3.4396 sec
+level only   pushonly trial: 22 threads: 40 src: 113384800     3.1650 sec maxlevel: 7
+parent+level pushonly trial: 22 threads: 40 src: 113384800     3.4867 sec
+parent only  pushpull trial: 22 threads: 40 src: 113384800     0.5600 sec
+level only   pushpull trial: 22 threads: 40 src: 113384800     0.4871 sec maxlevel: 7
+parent+level pushpull trial: 22 threads: 40 src: 113384800     0.6676 sec
+parent only  pushonly trial: 23 threads: 40 src:  43872564     3.4655 sec
+level only   pushonly trial: 23 threads: 40 src:  43872564     3.2036 sec maxlevel: 6

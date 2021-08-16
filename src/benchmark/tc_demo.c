@@ -22,14 +22,10 @@
 
 #include "LAGraph_demo.h"
 
-// 1: check result with LG_check_tri (takes a long time)
-// 0: do not check result
-#define CHECK_RESULT 1
-
 #if !LG_SUITESPARSE
 // LG_check_tri requires SuiteSparse
-#undef  CHECK_RESULT
-#define CHECK_RESULT 0
+#undef  LG_CHECK_RESULT
+#define LG_CHECK_RESULT 0
 #endif
 
 #define NTHREAD_LIST 1
@@ -141,7 +137,7 @@ int main (int argc, char **argv)
     int64_t ntriangles, ntsimple = 0 ;
     double tic [2] ;
 
-    #if CHECK_RESULT
+    #if LG_CHECK_RESULT
     // check # of triangles
     LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
     LAGraph_TRY (LG_check_tri (&ntsimple, G, NULL)) ;
@@ -165,7 +161,7 @@ int main (int argc, char **argv)
     printf ("nthreads: %3d time: %12.6f rate: %6.2f (SandiaDot2, one trial)\n",
             nthreads_max, ttot, 1e-6 * nvals / ttot) ;
 
-    #if CHECK_RESULT
+    #if LG_CHECK_RESULT
     if (ntriangles != ntsimple)
     {
         printf ("wrong # triangles: %ld %ld\n", ntriangles, ntsimple) ;

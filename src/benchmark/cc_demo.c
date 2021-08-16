@@ -123,6 +123,7 @@ int main (int argc, char **argv)
                 // check the result
                 printf ("nCC: %ld\n", nCC) ;
                 nCC_first = nCC ;
+#if LG_CHECK_RESULT
                 LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
                 int result = LG_check_cc (components, G, msg) ;
                 if (result != 0)
@@ -132,6 +133,7 @@ int main (int argc, char **argv)
                 LAGraph_TRY (LAGraph_Toc (&tcheck, tic, NULL)) ;
                 LAGraph_TRY (result) ;
                 printf ("LG_check_cc passed, time: %g\n", tcheck) ;
+#endif
             }
             else
             {

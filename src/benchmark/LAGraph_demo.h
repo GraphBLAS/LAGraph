@@ -15,6 +15,9 @@
 #include <LAGraph.h>
 #include <LG_test.h>
 
+// set this to 1 to check the results using a slow method
+#define LG_CHECK_RESULT 0
+
 #define CATCH(status)                                                         \
 {                                                                             \
     printf ("error: %s line: %d, status: %d\n", __FILE__, __LINE__, status) ; \
