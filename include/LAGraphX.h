@@ -15,6 +15,11 @@
 
 #include <GraphBLAS.h>
 #include <LAGraph.h>
+#include <complex.h>
+#ifndef CMPLX
+    // gcc 6.2 on the the Mac doesn't #define CMPLX
+    #define CMPLX(r,i) ((double complex)((double)(r)) + (double complex)((double)(i) * _Complex_I))
+#endif
 
 //==============================================================================
 // Experimental methods: in experimental/algorithm and experimental/utility

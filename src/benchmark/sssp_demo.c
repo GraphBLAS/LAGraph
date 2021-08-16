@@ -144,6 +144,7 @@ int main (int argc, char **argv)
                 "time: %10.4f sec\n", nthreads, trial, src, ttrial) ;
             total_time += ttrial ;
 
+#if LG_CHECK_RESULT
             // check result
             if (trial == 0)
             {
@@ -155,6 +156,7 @@ int main (int argc, char **argv)
                 LAGraph_TRY (LAGraph_Toc (&tcheck, tic, msg)) ;
                 printf ("total check time: %g sec\n", tcheck) ;
             }
+#endif
         }
 
         //----------------------------------------------------------------------

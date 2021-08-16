@@ -151,9 +151,11 @@ int main (int argc, char **argv)
                     trial, nthreads, src, ttrial) ;
                 fflush (stdout) ;
 
-                // check the result (this is very slow so only do it for one trial)
                 int32_t maxlevel ;
                 int64_t nvisited ;
+
+#if LG_CHECK_RESULT
+                // check the result (this is very slow so only do it for one trial)
                 if (trial == 0)
                 {
                     LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
@@ -161,6 +163,7 @@ int main (int argc, char **argv)
                     LAGraph_TRY (LAGraph_Toc (&tcheck, tic, msg)) ;
                     printf ("    n: %ld check: %g sec\n", n, tcheck) ;
                 }
+#endif
 
                 GrB_free (&parent) ;
 
@@ -168,7 +171,6 @@ int main (int argc, char **argv)
                 // BFS to compute just level
                 //--------------------------------------------------------------
 
-#if 1
                 GrB_free (&level) ;
 
                 LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
@@ -180,11 +182,12 @@ int main (int argc, char **argv)
                 GrB_TRY (GrB_reduce (&maxlevel, NULL, GrB_MAX_MONOID_INT32,
                     level, NULL)) ;
                 printf ("level only   %s trial: %2d threads: %2d "
-                    "src: %9ld %10.4f sec\n",
+                    "src: %9ld %10.4f sec maxlevel: %d\n",
                     (pp == 0) ? "pushonly" : "pushpull",
-                    trial, nthreads, src, ttrial) ;
+                    trial, nthreads, src, ttrial, maxlevel) ;
                 fflush (stdout) ;
 
+#if LG_CHECK_RESULT
                 // check the result (this is very slow so only do it for one trial)
                 if (trial == 0)
                 {
@@ -195,6 +198,7 @@ int main (int argc, char **argv)
                     printf ("    n: %ld max level: %d nvisited: %ld check: %g sec\n",
                         n, maxlevel, nvisited, tcheck) ;
                 }
+#endif
 
                 GrB_free (&level) ;
 
@@ -218,6 +222,7 @@ int main (int argc, char **argv)
                     trial, nthreads, src, ttrial) ;
                 fflush (stdout) ;
 
+#if LG_CHECK_RESULT
                 // check the result (this is very slow so only do it for one trial)
                 if (trial == 0)
                 {
@@ -228,7 +233,6 @@ int main (int argc, char **argv)
                     printf ("    n: %ld max level: %d nvisited: %ld check: %g sec\n",
                         n, maxlevel, nvisited, tcheck) ;
                 }
-
 #endif
 
                 GrB_free (&parent) ;
