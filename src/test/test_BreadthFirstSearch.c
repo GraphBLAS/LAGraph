@@ -132,6 +132,11 @@ bool check_karate_parents30(GrB_Vector parents)
     for (GrB_Index ix = 0; ix < ZACHARY_NUM_NODES; ++ix)
     {
         TEST_CHECK(0 == GrB_Vector_extractElement(&parent_id, parents, ix));
+        // prior test:
+//      TEST_CHECK(parent_id == PARENT30[ix][0]);
+//      TEST_MSG("Parent check failed for node %ld: ans,comp = %ld,%ld\n",
+//          ix, PARENT30[ix][0], parent_id);
+        // more general test:
         bool ok = false ;
         for (int k = 0 ; k <= 2 ; k++)
         {
