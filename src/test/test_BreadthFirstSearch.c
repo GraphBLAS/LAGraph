@@ -20,13 +20,60 @@
 char msg[LAGRAPH_MSG_LEN];
 LAGraph_Graph G = NULL;
 
+//-----------------------------------------------------------------------------
+// Valid results for Karate graph:
+//-----------------------------------------------------------------------------
+
 GrB_Index const SRC = 30;
+// the levels of the tree for the Karate graph, assuming source node 30:
 GrB_Index const LEVELS30[] = {2, 1, 2, 2, 3, 3, 3, 2, 1, 2, 3, 3,
                               3, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2,
                               3, 3, 2, 2, 2, 2, 0, 2, 1, 1};
-GrB_Index const PARENT30[] = { 1, 30,  1,  1,  0,  0,  0,  1, 30, 33,  0,  0,
-                               0,  1, 32, 32,  5,  1, 32,  1, 32,  1, 32, 32,
-                              27, 23, 33, 33, 33, 32, 30, 32, 30, 30};
+// Karate BFS parents, with source node 30.  This assumes the parent is the min
+// of the valid set of parents:
+// GrB_Index const PARENT30[] = { 1, 30,  1,  1,  0,  0,  0,  1, 30, 33,  0,  0,
+//                                0,  1, 32, 32,  5,  1, 32,  1, 32,  1, 32, 32,
+//                               27, 23, 33, 33, 33, 32, 30, 32, 30, 30};
+#define xx (-1)
+// The following are valid parents for each node, with source node of 30:
+GrB_Index const PARENT30 [34][3] = {
+    {  1,  8, xx },     // node 0 can have parents 1 or 8
+    { 30, xx, xx },     // node 1, parent 30
+    {  1,  8, 32 },     // node 2, parents 1, 8, or 32, etc
+    {  1, xx, xx },     // node 3
+    {  0, xx, xx },     // node 4
+    {  0, xx, xx },     // node 5
+    {  0, xx, xx },     // node 6
+    {  1, xx, xx },     // node 7
+    { 30, xx, xx },     // node 8
+    { 33, xx, xx },     // node 9
+    {  0, xx, xx },     // node 10
+    {  0, xx, xx },     // node 11
+    {  0,  3, xx },     // node 12
+    {  1, 33, xx },     // node 13
+    { 32, 33, xx },     // node 14
+    { 32, 33, xx },     // node 15
+    {  5,  6, xx },     // node 16
+    {  1, xx, xx },     // node 17
+    { 32, 33, xx },     // node 18
+    {  1, 33, xx },     // node 19
+    { 32, 33, xx },     // node 20
+    {  1, xx, xx },     // node 21
+    { 32, 33, xx },     // node 22
+    { 32, 33, xx },     // node 23
+    { 27, 31, xx },     // node 24
+    { 23, 31, xx },     // node 25
+    { 33, xx, xx },     // node 26
+    { 33, xx, xx },     // node 27
+    { 33, xx, xx },     // node 28
+    { 32, 33, xx },     // node 29
+    { 30, xx, xx },     // node 30, source node
+    { 32, 33, xx },     // node 31
+    { 30, xx, xx },     // node 32
+    { 30, xx, xx }} ;   // node 33
+#undef xx
+
+//-----------------------------------------------------------------------------
 
 #define LEN 512
 char filename [LEN+1] ;
@@ -69,6 +116,12 @@ const matrix_info files [ ] =
 bool check_karate_parents30(GrB_Vector parents)
 {
     // TODO: this may not work in multithreaded code (w/ benign races)
+
+    // Tim D: fixed. An update to SS:GrB has resulted in different, yet valid,
+    // parent vectors (even single-threaded).  The LG_check_bfs works fine and
+    // those tests pass.  I rewrote the parent test to look for any valid
+    // parent vector.
+
     GrB_Index n = 0;
     TEST_CHECK(0 == GrB_Vector_size(&n, parents));
     TEST_CHECK(ZACHARY_NUM_NODES == n);
@@ -79,9 +132,26 @@ bool check_karate_parents30(GrB_Vector parents)
     for (GrB_Index ix = 0; ix < ZACHARY_NUM_NODES; ++ix)
     {
         TEST_CHECK(0 == GrB_Vector_extractElement(&parent_id, parents, ix));
-        TEST_CHECK(parent_id == PARENT30[ix]);
-        TEST_MSG("Parent check failed for node %ld: ans,comp = %ld,%ld\n",
-                 ix, PARENT30[ix], parent_id);
+        bool ok = false ;
+        for (int k = 0 ; k <= 2 ; k++)
+        {
+            int valid_parent_id = PARENT30 [ix][k] ;
+            if (valid_parent_id < 0)
+            {
+                // end of the list of valid parent ids
+                ok = false ;
+                break ;
+            }
+            if (parent_id == valid_parent_id)
+            {
+                // a match is found
+                ok = true ;
+                break ;
+            }
+        }
+
+        TEST_CHECK (ok) ;
+        TEST_MSG("Parent check failed for node %ld\n", ix) ;
     }
 
     return true;
