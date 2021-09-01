@@ -62,6 +62,7 @@ int LG_check_bfs
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
     LG_CHECK (n != ncols, -1001, "G->A must be square") ;
+    bool print_timings = (n >= 3000) ;
 
     //--------------------------------------------------------------------------
     // allocate workspace
@@ -112,9 +113,12 @@ int LG_check_bfs
     // compute the level of each node
     //--------------------------------------------------------------------------
 
-    LAGraph_Toc (&tt, tic, msg) ;
-    printf ("LG_check_bfs init  time: %g sec\n", tt) ;
-    LAGraph_Tic (tic, msg) ;
+    if (print_timings)
+    {
+        LAGraph_Toc (&tt, tic, msg) ;
+        printf ("LG_check_bfs init  time: %g sec\n", tt) ;
+        LAGraph_Tic (tic, msg) ;
+    }
 
     queue [0] = src ;
     int64_t head = 0 ;
@@ -169,9 +173,12 @@ int LG_check_bfs
         }
     }
 
-    LAGraph_Toc (&tt, tic, msg) ;
-    printf ("LG_check_bfs bfs   time: %g sec\n", tt) ;
-    LAGraph_Tic (tic, msg) ;
+    if (print_timings)
+    {
+        LAGraph_Toc (&tt, tic, msg) ;
+        printf ("LG_check_bfs bfs   time: %g sec\n", tt) ;
+        LAGraph_Tic (tic, msg) ;
+    }
 
     //--------------------------------------------------------------------------
     // repack the matrix in CSR form for SuiteSparse:GraphBLAS
@@ -238,9 +245,11 @@ int LG_check_bfs
 
     LAGraph_FREE_WORK ;
 
-    LAGraph_Toc (&tt, tic, msg) ;
-    printf ("LG_check_bfs check time: %g sec\n", tt) ;
-
+    if (print_timings)
+    {
+        LAGraph_Toc (&tt, tic, msg) ;
+        printf ("LG_check_bfs check time: %g sec\n", tt) ;
+    }
     return (0) ;
 }
 

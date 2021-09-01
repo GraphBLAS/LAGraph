@@ -125,8 +125,7 @@ void test_SingleSourceShortestPath(void)
             for (int32_t kk = 0 ; kk < 3 ; kk++)
             {
                 int32_t delta = Deltas [kk] ;
-                printf ("\n========================= src %ld delta %d n %ld\n",
-                    src, delta, n) ;
+                printf ("src %ld delta %d n %ld\n", src, delta, n) ;
                 OK (LAGraph_SingleSourceShortestPath (&path_length,
                     G, src, delta, true, msg)) ;
                 int result = LG_check_sssp (path_length, G, src, msg) ;

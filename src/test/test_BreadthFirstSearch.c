@@ -461,7 +461,6 @@ void test_BreadthFirstSearch_brutal(void)
         int64_t step = (n > 100) ? (3*n/4) : ((n/4) + 1) ;
         for (int64_t src = 0 ; src < n ; src += step)
         {
-            printf ("src %ld\n", src) ;
             GrB_Vector parent = NULL ;
             GrB_Vector level = NULL ;
             for (int pushpull = 0 ; pushpull <= 1 ; pushpull++)
@@ -474,9 +473,11 @@ void test_BreadthFirstSearch_brutal(void)
                 OK (GrB_reduce (&maxlevel, NULL, GrB_MAX_MONOID_INT64,
                     level, NULL)) ;
                 OK (GrB_Vector_nvals (&nvisited, level)) ;
-                printf (" n: %ld max level: %ld nvisited: %ld\n", n,
-                    maxlevel, nvisited) ;
-
+                if (pushpull == 0)
+                {
+                    printf ("src %ld n: %ld max level: %ld nvisited: %ld\n",
+                        src, n, maxlevel, nvisited) ;
+                }
                 OK (GrB_free(&parent));
                 OK (GrB_free(&level));
 

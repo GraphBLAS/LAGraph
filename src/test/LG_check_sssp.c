@@ -76,6 +76,7 @@ int LG_check_sssp
     GrB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
     LG_CHECK (n != ncols, -1001, "G->A must be square") ;
     LG_CHECK (G->A_type != GrB_INT32, -1001, "G->A must be int32") ;
+    bool print_timings = (n >= 3000) ;
 
     //--------------------------------------------------------------------------
     // get the contents of the Path_Length vector
@@ -110,9 +111,12 @@ int LG_check_sssp
     // compute the SSSP of the graph, via Dijskstra's algorithm
     //--------------------------------------------------------------------------
 
-    LAGraph_Toc (&tt, tic, msg) ;
-    printf ("LG_check_sssp init  time: %g sec\n", tt) ;
-    LAGraph_Tic (tic, msg) ;
+    if (print_timings)
+    {
+        LAGraph_Toc (&tt, tic, msg) ;
+        printf ("LG_check_sssp init  time: %g sec\n", tt) ;
+        LAGraph_Tic (tic, msg) ;
+    }
 
     // initializations
     distance = LAGraph_Malloc (n, sizeof (int64_t)) ;
@@ -246,9 +250,12 @@ int LG_check_sssp
 
     }
 
-    LAGraph_Toc (&tt, tic, msg) ;
-    printf ("LG_check_sssp time: %g sec\n", tt) ;
-    LAGraph_Tic (tic, msg) ;
+    if (print_timings)
+    {
+        LAGraph_Toc (&tt, tic, msg) ;
+        printf ("LG_check_sssp time: %g sec\n", tt) ;
+        LAGraph_Tic (tic, msg) ;
+    }
 
     //--------------------------------------------------------------------------
     // repack the matrix in CSR form for SuiteSparse:GraphBLAS
@@ -284,8 +291,11 @@ int LG_check_sssp
 
     LAGraph_FREE_WORK ;
 
-    LAGraph_Toc (&tt, tic, msg) ;
-    printf ("LG_check_sssp check time: %g sec\n", tt) ;
+    if (print_timings)
+    {
+        LAGraph_Toc (&tt, tic, msg) ;
+        printf ("LG_check_sssp check time: %g sec\n", tt) ;
+    }
     return (0) ;
 }
 
