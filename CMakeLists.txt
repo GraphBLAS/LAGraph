@@ -78,6 +78,9 @@ set ( ENV{GRAPHBLAS_ROOT} ${CMAKE_SOURCE_DIR}/../GraphBLAS )
 
 find_package (GraphBLAS REQUIRED MODULE)
 include_directories (${GRAPHBLAS_INCLUDE_DIR})
+message ( STATUS "GraphBLAS library:           " ${GRAPHBLAS_LIBRARY} )
+message ( STATUS "GraphBLAS version:           " ${GRAPHBLAS_VERSION} )
+message ( STATUS "GraphBLAS include directory: " ${GRAPHBLAS_INCLUDE_DIR} )
 
 #-------------------------------------------------------------------------------
 # Is this really necessary?

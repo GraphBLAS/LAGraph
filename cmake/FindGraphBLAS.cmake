@@ -39,7 +39,7 @@ module where to look.
 find_path(
   GRAPHBLAS_INCLUDE_DIR
   NAMES GraphBLAS.h
-  PATHS ENV GRAPHBLAS_ROOT
+  PATHS GRAPHBLAS_ROOT ENV GRAPHBLAS_ROOT
   PATH_SUFFIXES include Include
   )
 
