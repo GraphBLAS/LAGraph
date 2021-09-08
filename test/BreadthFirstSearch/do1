@@ -1,4 +1,0 @@
-#!/bin/sh
-
-/home/davis/master/LAGraph/Test2/BreadthFirstSearch/build/test_bfs ~/GAP/GAP-road/GAP-road.grb ~/GAP/GAP-road/GAP-road_sources.mtx
-

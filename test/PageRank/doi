@@ -1,6 +1,0 @@
-#!/bin/bash
-./build/test_gappagerank ~/roadNet-CA.mtx
-./build/test_gappagerank ~/soc-Pokec.grb
-./build/test_gappagerank ~/com-Orkut.grb
-./build/test_gappagerank ~/indochina-2004.grb
-

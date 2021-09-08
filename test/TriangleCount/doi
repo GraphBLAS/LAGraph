@@ -1,6 +1,0 @@
-#!/bin/sh
-./build/test_tc ~/roadNet-CA.mtx
-./build/test_tc ~/soc-Pokec.grb
-./build/test_tc ~/com-Orkut.grb
-./build/test_tc ~/indochina-2004.grb
-

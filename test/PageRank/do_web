@@ -1,3 +1,0 @@
-#!/bin/bash
-./build/test_gappagerank ~/GAP/GAP-web/GAP-web.grb
-

@@ -1,6 +1,0 @@
-#!/bin/sh
-./build/test_cc ~/roadNet-CA.mtx
-./build/test_cc ~/soc-Pokec.grb
-./build/test_cc ~/com-Orkut.grb
-
-
