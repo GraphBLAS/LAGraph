@@ -110,9 +110,9 @@ int main (int argc, char **argv)
     // export the A matrix as CSC
     //--------------------------------------------------------------------------
 
-    char type_name [GxB_MAX_NAME_LEN] ;
-    GrB_TRY (GxB_Matrix_type_name (type_name, A)) ;
-    printf ("type: %s\n", type_name) ;
+//  char type_name [GxB_MAX_NAME_LEN] ;
+//  GrB_TRY (GxB_Matrix_type_name (type_name, A)) ;
+//  printf ("type: %s\n", type_name) ;
     GrB_TRY (GxB_Matrix_unpack_CSC (A, &Ap, &Ai, (void *) &Ax,
         &Ap_size, &Ai_size, &Ax_size, NULL, NULL, NULL)) ;
     GrB_free (&A) ;
