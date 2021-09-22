@@ -797,6 +797,9 @@ static int readproblem          // returns 0 if successful, -1 if failure
                 exit (1) ;
             }
             if (binread (&A, f) < 0) ERROR ;
+            #if SUITESPARSE
+            GrB_TRY (GxB_Matrix_type (&A_type, A)) ;
+            #endif
             fclose (f) ;
             f = NULL ;
         }

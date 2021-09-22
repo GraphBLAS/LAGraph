@@ -71,7 +71,10 @@ typedef unsigned char LG_void ;
 
 #define LG_ERROR_MSG(...)                                           \
 {                                                                   \
-    if (msg != NULL) snprintf (msg, LAGRAPH_MSG_LEN, __VA_ARGS__) ; \
+    if (msg != NULL && msg [0] == '\0')                             \
+    {                                                               \
+        snprintf (msg, LAGRAPH_MSG_LEN, __VA_ARGS__) ;              \
+    }                                                               \
 }
 
 //------------------------------------------------------------------------------

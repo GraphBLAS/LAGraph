@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+# SPDX-License-Identifier: BSD-2-Clause
+
+# do_idx:
+
+# Usage:
+#
+#   To run using *.mtx format, with the files in ../../../GAP:
+#
+#       ./do_idx > myoutput.txt
+#
+#   To run using binary *.grb format, with the files in ../../../GAP:
+#
+#       ./do_idx grb > myoutput.txt
+#
+#   To run using binary *.mtx format, with the files in /my/stuff/GAP
+#
+#       ./do_idx mtx /my/stuff/GAP > myoutput.txt
+#
+#   To run using binary *.mtx format, with the files in /my/stuff/GAP
+#
+#       ./do_idx grb /my/stuff/GAP > myoutput.txt
+
+echo " "
+echo "======================================================================"
+echo "benchmarks for idx unary type"
+echo "======================================================================"
+
+if [ -z "$1" ]; then KIND="grb" ; else KIND=$1 ; fi
+echo "Matrix input file format: " $KIND
+
+if [ -z "$2" ]; then GAP="../../../GAP" ; else GAP=$2 ; fi
+echo "GAP matrices located in:  " $GAP
+
+../../build/experimental/benchmark/idx_demo /raid/matrices/com-Youtube/com-Youtube.$KIND
+../../build/experimental/benchmark/idx_demo $GAP/GAP-kron/GAP-kron.$KIND
+../../build/experimental/benchmark/idx_demo $GAP/GAP-urand/GAP-urand.$KIND
+../../build/experimental/benchmark/idx_demo $GAP/GAP-twitter/GAP-twitter.$KIND
+../../build/experimental/benchmark/idx_demo $GAP/GAP-web/GAP-web.$KIND
+../../build/experimental/benchmark/idx_demo $GAP/GAP-road/GAP-road.$KIND
+
