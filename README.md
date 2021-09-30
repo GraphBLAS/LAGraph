@@ -6,9 +6,7 @@ LAGraph is a draft library plus a test harness for collecting algorithms that
 use the GraphBLAS.
 
 The library can be built and tested with any GraphBLAS library.
-Currently, SuiteSparse:GraphBLAS v5.0.4 or is required to run the GAP
-benchmarks in src/demo, but support for an arbitrary GraphBLAS library is
-being added shortly.
+Currently, if SuiteSparse:GraphBLAS is used, v5.0.5 or later is required.
 
 Since it's a draft, it contains are many draft/experimental codes with known
 sub-par performance.  Performance of the best methods is highly sensitive on
