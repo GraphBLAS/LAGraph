@@ -108,10 +108,10 @@ const matrix_info files [ ] =
         2.2, 2.0,
         1.8, 2.0,
         5, 123456 },
-     { "ldbc-directed-example-bool.mtx",
-        2.5, 3.0,
-        3.8, 3.0,
-        10, 123456 },
+//   { "ldbc-directed-example-bool.mtx",
+//      2.5, 3.0,
+//      3.8, 3.0,
+//      10, 123456 },
     { "", 0.0, 0.0, 0.0, 0.0, 1, 0 }
 } ;
 

@@ -420,7 +420,8 @@ int LAGraph_ConnectedComponents
         // read by the parallel loops below.
 
         GrB_Type type ;
-        GrB_Index nrows, ncols, nvals, typesize ;
+        GrB_Index nrows, ncols, nvals ;
+        size_t typesize ;
         int64_t nonempty ;
         GrB_Index *Sp, *Sj ;
         void *Sx ;

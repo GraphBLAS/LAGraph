@@ -73,7 +73,7 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
         LG_CHECK (AT == NULL, -1, "G->AT is required") ;
     }
     GrB_Vector d_out = G->rowdegree ;
-    if (d_out == NULL, -1, "G->rowdegree is required") ;
+    LG_CHECK (d_out == NULL, -1, "G->rowdegree is required") ;
 
     //--------------------------------------------------------------------------
     // initializations

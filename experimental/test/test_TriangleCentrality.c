@@ -76,7 +76,7 @@ void test_TriangleCentrality (void)
         OK (fclose (f)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
-        // construct an undirected graph G with adjacency matrix A
+        // construct an undirected graph G with adjacency matrix C
         OK (LAGraph_New (&G, &C, atype, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
         TEST_CHECK (C == NULL) ;
 

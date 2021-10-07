@@ -395,7 +395,8 @@ int LG_TriangleCount_vanilla   // returns 0 if successful, < 0 if failure
 
         // T = A (P,P) and typecast to boolean
         GrB_TRY (GrB_Matrix_new (&T, GrB_BOOL, n, n)) ;
-        GrB_TRY (GrB_extract (T, NULL, NULL, A, P, n, P, n, NULL)) ;
+        GrB_TRY (GrB_extract (T, NULL, NULL, A, (GrB_Index *) P, n,
+            (GrB_Index *) P, n, NULL)) ;
         A = T ;
 
         // free workspace

@@ -12,11 +12,69 @@
 
 include_directories ( ${CMAKE_SOURCE_DIR}/src/test/include )
 
+
+#-------------------------------------------------------------------------------
+# build the lagraphxtest library
+#-------------------------------------------------------------------------------
+
+file ( GLOB LAGRAPHXTEST_LIB_SOURCES "LG_*.c" )
+
+# Uncomment this line for for development only, not for end-users:
+# set ( CMAKE_BUILD_TYPE Debug )
+if ( ${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG}" )
+else ( )
+    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE}")
+endif ( )
+
+#-------------------------------------------------------------------------------
+# dynamic lagraphxtest library properties
+#-------------------------------------------------------------------------------
+
+add_library ( lagraphxtest SHARED ${LAGRAPHXTEST_LIB_SOURCES} )
+SET_TARGET_PROPERTIES ( lagraphxtest PROPERTIES
+    VERSION ${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}
+    SOVERSION ${LAGraph_VERSION_MAJOR}
+    C_STANDARD_REQUIRED 11
+    PUBLIC_HEADER "include/LG_Xtest.h" )
+set_property ( TARGET lagraphxtest PROPERTY C_STANDARD 11 )
+target_link_libraries(lagraphxtest PUBLIC lagraph ${GRAPHBLAS_LIBRARIES})
+
+#-------------------------------------------------------------------------------
+# static lagraphxtest library properties
+#-------------------------------------------------------------------------------
+
+add_library ( lagraphxtest_static STATIC ${LAGRAPHXTEST_LIB_SOURCES} )
+SET_TARGET_PROPERTIES ( lagraphxtest_static PROPERTIES
+    VERSION ${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}
+    OUTPUT_NAME lagraphxtest
+    POSITION_INDEPENDENT_CODE OFF
+    SOVERSION ${LAGraph_VERSION_MAJOR}
+    C_STANDARD_REQUIRED 11
+    PUBLIC_HEADER "include/LG_Xtest.h" )
+set_property ( TARGET lagraphxtest_static PROPERTY C_STANDARD 11 )
+target_link_libraries(lagraphxtest_static PUBLIC lagraph ${GRAPHBLAS_LIBRARIES})
+
+#-------------------------------------------------------------------------------
+# add OpenMP
+#-------------------------------------------------------------------------------
+
+if ( OPENMP_FOUND )
+    target_link_libraries ( lagraphxtest PUBLIC ${OpenMP_C_LIBRARIES} )
+    target_link_libraries ( lagraphxtest_static PUBLIC ${OpenMP_C_LIBRARIES} )
+endif ( )
+
+
+#-------------------------------------------------------------------------------
+# This will only build tests from files with the name "test_*.c"
+#-------------------------------------------------------------------------------
+
 file( GLOB DEMO_SOURCES LIST_DIRECTORIES false *_test.c test*.c )
 foreach( demosourcefile ${DEMO_SOURCES} )
     get_filename_component(justname ${demosourcefile} NAME)
     string( REPLACE ".c" "" demoname ${justname} )
     message("Adding: ${demoname}")
     add_executable( ${demoname} ${demosourcefile} )
-    target_link_libraries( ${demoname} lagraphx lagraph ${GRAPHBLAS_LIBRARIES} )
+    target_link_libraries( ${demoname} lagraphx lagraph lagraphxtest ${GRAPHBLAS_LIBRARIES} )
 endforeach( demosourcefile ${DEMO_SOURCES} )
+

@@ -212,9 +212,42 @@ GrB_Info LAGraph_Vector_to_dense
     void *id                // pointer to value to fill vdense with
 );
 
+//****************************************************************************
+// Random number generator
+//****************************************************************************
+
 uint64_t LAGraph_rand64 (uint64_t *seed);
 double LAGraph_rand_double (uint64_t *seed);
 
+int LAGraph_Random_Init (char *msg) ;
+int LAGraph_Random_Finalize (char *msg) ;
+
+int LAGraph_Random_Seed     // construct a random seed vector
+(
+    // input/output
+    GrB_Vector Seed,    // vector of random number seeds
+    // input
+    int64_t seed,       // scalar input seed
+    char *msg
+) ;
+
+int LAGraph_Random_INT64    // random int64 vector
+(
+    // output
+    GrB_Vector X,       // already allocated on input
+    // input/output
+    GrB_Vector Seed,
+    char *msg
+) ;
+
+GrB_Info LAGraph_Random_FP64    // random double vector
+(
+    // output
+    GrB_Vector X,       // already allocated on input
+    // input/output
+    GrB_Vector Seed,
+    char *msg
+) ;
 
 //****************************************************************************
 // Algorithms
@@ -427,6 +460,16 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
     // inputs:
     int method,                 // 0, 1, 2, or 3
     LAGraph_Graph G,            // input graph
+    char *msg
+) ;
+
+int LAGraph_MaximalIndependentSet       // maximal independent set
+(
+    // outputs:
+    GrB_Vector *mis,            // mis(i) = true if i is in the set
+    // inputs:
+    LAGraph_Graph G,            // input graph
+    int64_t seed,               // random number seed
     char *msg
 ) ;
 

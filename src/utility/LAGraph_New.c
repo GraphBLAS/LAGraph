@@ -18,7 +18,7 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
     LAGraph_Graph *G,      // the graph to create, NULL if failure
     GrB_Matrix    *A,      // the adjacency matrix of the graph, may be NULL
     GrB_Type       A_type, // type of scalars stored in A
-    LAGraph_Kind   kind,   // the kind of graph, may be LAGRAPH_UNKNOWN
+    LAGraph_Kind   kind,   // the kind of graph, may be LAGRAPH_KIND_UNKNOWN
     char          *msg
 )
 {
@@ -42,7 +42,7 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
 
     (*G)->A      = NULL ;
     (*G)->A_type = NULL ;
-    (*G)->kind = LAGRAPH_KIND_UNKNOWN;
+    (*G)->kind = LAGRAPH_KIND_UNKNOWN ;
     (*G)->AT = NULL ;
     (*G)->AT_type = NULL;
     (*G)->rowdegree = NULL ;
@@ -72,7 +72,7 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
         (*G)->A_pattern_is_symmetric =
             (kind == LAGRAPH_ADJACENCY_UNDIRECTED)
             ? LAGRAPH_TRUE
-            : LAGRAPH_UNKNOWN;
+            : LAGRAPH_UNKNOWN ;
     }
 
     return (0) ;
