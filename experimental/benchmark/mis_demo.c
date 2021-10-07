@@ -15,6 +15,7 @@
 
 #include "../../src/benchmark/LAGraph_demo.h"
 #include "LAGraphX.h"
+#include "LG_Xtest.h"
 
 // #define NTHREAD_LIST 2
 
@@ -50,6 +51,7 @@ int main (int argc, char **argv)
     // start GraphBLAS and LAGraph
     bool burble = false ;
     demo_init (burble) ;
+    LAGraph_TRY (LAGraph_Random_Init (msg)) ;
 
     int ntrials = 3 ;
     ntrials = 3 ;
@@ -91,11 +93,11 @@ int main (int argc, char **argv)
     GrB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
     // LAGraph_TRY (LAGraph_DisplayGraph (G, 2, stdout, msg)) ;
     // ensure G->A is BOOL and all 1
-    LAGraph_TRY (LAGraph_Pattern (&A, G->A, msg)) ;
-    GrB_free (&(G->A)) ;
-    G->A = A ;
+    // LAGraph_TRY (LAGraph_Pattern (&A, G->A, msg)) ;
+    // GrB_free (&(G->A)) ;
+    // G->A = A ;
     // GrB_TRY (GxB_Matrix_fprint (G->A, "G->A", 2, stdout)) ;
-    // fprintf (stderr, "Matrix: %s\n", matrix_name) ;
+    LAGraph_TRY (LAGraph_Property_RowDegree (G, msg)) ;
 
     //--------------------------------------------------------------------------
     // maximal independent set
@@ -103,14 +105,13 @@ int main (int argc, char **argv)
 
     // warmup for more accurate timing
     double tic [2], tt ;
-    uint64_t ntri ;
     LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
     LAGraph_TRY (LAGraph_MaximalIndependentSet (&mis, G, 1, msg)) ;
     LAGraph_TRY (LAGraph_Toc (&tt, tic, NULL)) ;
     GrB_TRY (GrB_free (&mis)) ;
-    printf ("warmup time %g sec, # triangles: %lu\n", tt, ntri) ;
+    printf ("warmup time %g sec\n", tt) ;
 
-    for (int method = 1 ; method <= 3 ; method += 2)
+    // for (int method = 1 ; method <= 3 ; method += 2)
     {
         for (int t = 1 ; t <= nt ; t++)
         {
@@ -120,31 +121,34 @@ int main (int argc, char **argv)
             double ttot = 0, ttrial [100] ;
             for (int trial = 0 ; trial < ntrials ; trial++)
             {
+                int64_t seed = trial * n + 1 ;
                 LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-                LAGraph_TRY (LAGraph_MaximalIndependentSet (&mis, G, 1, msg)) ;
-
-
+                LAGraph_TRY (LAGraph_MaximalIndependentSet (&mis, G, seed,
+                    msg)) ;
+                LAGraph_TRY (LG_check_mis (G->A, mis, msg)) ;
                 GrB_TRY (GrB_free (&mis)) ;
                 LAGraph_TRY (LAGraph_Toc (&ttrial [trial], tic, NULL)) ;
                 ttot += ttrial [trial] ;
-                printf ("threads %2d trial %2d: %12.6f sec\n",
-                    nthreads, trial, ttrial [trial]) ;
-                fprintf (stderr, "threads %2d trial %2d: %12.6f sec\n", 
-                    nthreads, trial, ttrial [trial]) ;
+                printf ("seed %10ld threads %2d trial %2d: %12.6f sec\n",
+                    seed, nthreads, trial, ttrial [trial]) ;
+                fprintf (stderr,
+                    "seed %10ld threads %2d trial %2d: %12.6f sec\n", 
+                    seed, nthreads, trial, ttrial [trial]) ;
             }
             ttot = ttot / ntrials ;
 
-            printf ("Avg: TCentrality(%d) "
-                "nthreads: %3d time: %12.6f matrix: %s\n",
-                method, nthreads, ttot, matrix_name) ;
+            printf ("Avg: MIS nthreads: %3d time: %12.6f matrix: %s\n",
+                nthreads, ttot, matrix_name) ;
 
-            fprintf (stderr, "Avg: TCentrality(%d) "
-                "nthreads: %3d time: %12.6f matrix: %s\n",
-                method, nthreads, ttot, matrix_name) ;
+//          fprintf (stderr, "Avg: MIS "
+//              "nthreads: %3d time: %12.6f matrix: %s\n",
+//              nthreads, ttot, matrix_name) ;
         }
     }
 
+    fflush (stdout) ;
     LAGraph_FREE_ALL ;
+    LAGraph_TRY (LAGraph_Random_Finalize (msg)) ;
     LAGraph_TRY (LAGraph_Finalize (msg)) ;
     return (0) ;
 }

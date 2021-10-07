@@ -161,13 +161,10 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     GrB_TRY (GrB_Vector_nvals (&ncandidates, candidates)) ;
     int64_t last_ncandidates = ncandidates ;
 
-    // printf ("initial iset:\n") ;
-    // GxB_print (iset, 3) ;
-
     while (ncandidates > 0)
     {
         // printf ("\n ========================================\n") ;
-        // GxB_print (candidates, 3) ;
+        // GxB_print (candidates, 2) ;
 
         // sparsify the random number seeds (just keep it for each candidate) 
         // Seed{candidates,replace} = Seed
@@ -211,15 +208,15 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
         // GxB_print (new_members, 3) ;
 
         // add new members to independent set
-        // iset<new_members> = true
+        // iset{new_members} = true
         GrB_TRY (GrB_assign (iset, new_members, NULL, (bool) true,
-            GrB_ALL, n, NULL)) ;
+            GrB_ALL, n, GrB_DESC_S)) ;
         // GxB_print (iset, 3) ;
 
         // remove new members from set of candidates
-        // candidates<new_members> = empty
+        // candidates{new_members} = empty
         GrB_TRY (GrB_assign (candidates, new_members, NULL, empty,
-            GrB_ALL, n, NULL)) ;
+            GrB_ALL, n, GrB_DESC_S)) ;
         // GxB_print (candidates, 3) ;
 
         // early exit if candidates is empty
@@ -227,9 +224,9 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
         if (ncandidates == 0) { break ; }
 
         // Neighbors of new members can also be removed from candidates
-        // new_neighbors<candidates> = new_members * A
+        // new_neighbors{candidates} = new_members * A
         GrB_TRY (GrB_vxm (new_neighbors, candidates, NULL, symbolic, 
-            new_members, A, NULL)) ;
+            new_members, A, GrB_DESC_S)) ;
         // GxB_print (new_neighbors, 3) ;
 
         // remove new neighbors of new members from set of candidates
