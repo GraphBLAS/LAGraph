@@ -130,9 +130,11 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     if (nonsingletons == n)
     { 
         // all nodes have degree 1 or more; all nodes are candidates
+        // candidates (0:n-1) = true
         GrB_TRY (GrB_assign (candidates, NULL, NULL, (bool) true, GrB_ALL, n,
             NULL)) ;
         // Seed vector starts out dense
+        // Seed (0:n-1) = 0
         GrB_TRY (GrB_assign (Seed, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
     }
     else
@@ -143,11 +145,12 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
         GrB_TRY (GrB_assign (candidates, degree, NULL, (bool) true, GrB_ALL, n,
             GrB_DESC_S)) ; 
         // add all singletons to iset
-        // iset{!degree,replace} = 1
+        // iset{!degree} = 1
         GrB_TRY (GrB_assign (iset, degree, NULL, (bool) true, GrB_ALL, n,
-            GrB_DESC_RSC)) ;
+            GrB_DESC_SC)) ;
         // Seed vector starts out sparse
-        GrB_TRY (GrB_assign (Seed, candidates, NULL, 0, GrB_ALL, n,
+        // Seed{candidates} = 0
+        GrB_TRY (GrB_assign (Seed, candidates, NULL, (int64_t) 0, GrB_ALL, n,
             GrB_DESC_S)) ;
     }
 
@@ -177,12 +180,14 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
         if (ncandidates < n1)
         {
             // push
+            // neighbor_max'{candidates,replace} = score' * A
             GrB_TRY (GrB_vxm (neighbor_max, candidates, NULL,
                 GrB_MAX_FIRST_SEMIRING_INT64, score, A, GrB_DESC_RS)) ;
         }
         else
         {
             // pull
+            // neighbor_max{candidates,replace} = A * score
             GrB_TRY (GrB_mxv (neighbor_max, candidates, NULL,
                 GrB_MAX_SECOND_SEMIRING_INT64, A, score, GrB_DESC_RS)) ;
         }
@@ -190,6 +195,7 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
         // select node if its score is > than all its active neighbors
         // new_members = (score > neighbor_max) using set union so that nodes
         // with no neighbors fall through to the output, as true.
+        // FIXME: what if score is zero?
         GrB_TRY (GrB_eWiseAdd (new_members, NULL, NULL, GrB_GT_INT64,
             score, neighbor_max, NULL)) ;
 
@@ -229,12 +235,14 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
         if (n_new_members < n2)
         {
             // push
+            // new_neighbors{candidates,replace} = new_members' * A
             GrB_TRY (GrB_vxm (new_neighbors, candidates, NULL, symbolic, 
                 new_members, A, GrB_DESC_RS)) ;
         }
         else
         {
             // pull
+            // new_neighbors{candidates,replace} = A * new_members
             GrB_TRY (GrB_mxv (new_neighbors, candidates, NULL, symbolic, 
                 A, new_members, GrB_DESC_RS)) ;
         }
