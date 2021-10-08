@@ -140,9 +140,8 @@ int main (int argc, char **argv)
             printf ("Avg: MIS nthreads: %3d time: %12.6f matrix: %s\n",
                 nthreads, ttot, matrix_name) ;
 
-//          fprintf (stderr, "Avg: MIS "
-//              "nthreads: %3d time: %12.6f matrix: %s\n",
-//              nthreads, ttot, matrix_name) ;
+            fprintf (stderr, "Avg: MIS nthreads: %3d time: %12.6f matrix: %s\n",
+                nthreads, ttot, matrix_name) ;
         }
     }
 

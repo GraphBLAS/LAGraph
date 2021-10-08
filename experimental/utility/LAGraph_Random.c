@@ -34,7 +34,8 @@
 
 GrB_UnaryOp LG_rand_next_op = NULL ;
 GrB_UnaryOp LG_rand_iget_op = NULL ;
-GrB_UnaryOp LG_rand_xget_op = NULL ;
+GrB_UnaryOp LG_rand_xget32_op = NULL ;
+GrB_UnaryOp LG_rand_xget64_op = NULL ;
 
 //------------------------------------------------------------------------------
 // LG_rand_next_op:  unary operator to construct the next seed
@@ -72,13 +73,13 @@ void LG_rand_iget_f (void *z, const void *x)
 }
 
 //------------------------------------------------------------------------------
-// LG_rand_xget_f:  unary op to construct get a random double from the seed
+// LG_rand_xget64_f:  unary op to construct get a random double from the seed
 //------------------------------------------------------------------------------
 
 // z = f(x), where x is a random seed, and z is a double precision
 // pseudo-random number constructed from the seed, in the range 0 to 1.
 
-void LG_rand_xget_f (void *z, const void *x)
+void LG_rand_xget64_f (void *z, const void *x)
 {
     uint64_t seed = (uint64_t) (*((int64_t *) x)) ;
     uint64_t r =             LG_RAND_15 (seed) ; seed = LG_RAND_NEXT (seed) ;
@@ -90,6 +91,24 @@ void LG_rand_xget_f (void *z, const void *x)
 }
 
 //------------------------------------------------------------------------------
+// LG_rand_xget32_f:  unary op to construct get a random float from the seed
+//------------------------------------------------------------------------------
+
+// z = f(x), where x is a random seed, and z is a double precision
+// pseudo-random number constructed from the seed, in the range 0 to 1.
+
+void LG_rand_xget32_f (void *z, const void *x)
+{
+    uint64_t seed = (uint64_t) (*((int64_t *) x)) ;
+    uint64_t r =             LG_RAND_15 (seed) ; seed = LG_RAND_NEXT (seed) ;
+    r = LG_RAND_15_MAX * r + LG_RAND_15 (seed) ; seed = LG_RAND_NEXT (seed) ;
+    r = LG_RAND_15_MAX * r + LG_RAND_15 (seed) ; seed = LG_RAND_NEXT (seed) ;
+    r = LG_RAND_15_MAX * r + LG_RAND_15 (seed) ; seed = LG_RAND_NEXT (seed) ;
+    r = LG_RAND_15_MAX * r + LG_RAND_15 (seed) ; seed = LG_RAND_NEXT (seed) ;
+    (*((float *) z)) = ((float) r) / ((float) UINT64_MAX) ; 
+}
+
+//------------------------------------------------------------------------------
 // LAGraph_Random_Init:  create the random seed operators
 //------------------------------------------------------------------------------
 
@@ -98,7 +117,8 @@ void LG_rand_xget_f (void *z, const void *x)
 {                                                           \
     GrB_UnaryOp_free (&LG_rand_next_op) ;                   \
     GrB_UnaryOp_free (&LG_rand_iget_op) ;                   \
-    GrB_UnaryOp_free (&LG_rand_xget_op) ;                   \
+    GrB_UnaryOp_free (&LG_rand_xget32_op) ;                 \
+    GrB_UnaryOp_free (&LG_rand_xget64_op) ;                 \
 }
 
 int LAGraph_Random_Init (char *msg)
@@ -106,12 +126,15 @@ int LAGraph_Random_Init (char *msg)
     LG_CLEAR_MSG ;
     LG_rand_next_op = NULL ;
     LG_rand_iget_op = NULL ;
-    LG_rand_xget_op = NULL ;
+    LG_rand_xget32_op = NULL ;
+    LG_rand_xget64_op = NULL ;
     GrB_TRY (GrB_UnaryOp_new (&LG_rand_next_op, LG_rand_next_f,
         GrB_INT64, GrB_INT64)) ;
     GrB_TRY (GrB_UnaryOp_new (&LG_rand_iget_op, LG_rand_iget_f,
         GrB_INT64, GrB_INT64)) ;
-    GrB_TRY (GrB_UnaryOp_new (&LG_rand_xget_op, LG_rand_xget_f,
+    GrB_TRY (GrB_UnaryOp_new (&LG_rand_xget32_op, LG_rand_xget32_f,
+        GrB_FP32, GrB_INT64)) ;
+    GrB_TRY (GrB_UnaryOp_new (&LG_rand_xget64_op, LG_rand_xget64_f,
         GrB_FP64, GrB_INT64)) ;
     return (0) ;
 }
@@ -230,7 +253,35 @@ GrB_Info LAGraph_Random_FP64    // random double vector
     LG_CLEAR_MSG ;
     if (Seed == NULL || X == NULL) return (-1) ;
     // X = xget (Seed)
-    GrB_TRY (GrB_Vector_apply (X,    NULL, NULL, LG_rand_xget_op, Seed, NULL)) ;
+    GrB_TRY (GrB_Vector_apply (X,    NULL, NULL, LG_rand_xget64_op, Seed,
+        NULL)) ;
+    // Seed = next (Seed)
+    GrB_TRY (GrB_Vector_apply (Seed, NULL, NULL, LG_rand_next_op, Seed, NULL)) ;
+    return (0) ;
+}
+
+
+//------------------------------------------------------------------------------
+// LAGraph_Random_FP32: return a vector of random floats, 0 to 1 inclusive
+//------------------------------------------------------------------------------
+
+// The sparsity pattern of the result X is the same as the Seed vector.
+
+GrB_Info LAGraph_Random_FP32    // random float vector
+(
+    // output
+    GrB_Vector X,       // already allocated on input
+    // input/output
+    GrB_Vector Seed,
+    char *msg
+)
+{
+    // check inputs
+    LG_CLEAR_MSG ;
+    if (Seed == NULL || X == NULL) return (-1) ;
+    // X = xget (Seed)
+    GrB_TRY (GrB_Vector_apply (X,    NULL, NULL, LG_rand_xget32_op, Seed,
+        NULL)) ;
     // Seed = next (Seed)
     GrB_TRY (GrB_Vector_apply (Seed, NULL, NULL, LG_rand_next_op, Seed, NULL)) ;
     return (0) ;

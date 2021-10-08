@@ -249,6 +249,15 @@ GrB_Info LAGraph_Random_FP64    // random double vector
     char *msg
 ) ;
 
+GrB_Info LAGraph_Random_FP32    // random float vector
+(
+    // output
+    GrB_Vector X,       // already allocated on input
+    // input/output
+    GrB_Vector Seed,
+    char *msg
+) ;
+
 //****************************************************************************
 // Algorithms
 //****************************************************************************
