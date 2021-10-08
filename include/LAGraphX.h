@@ -231,6 +231,13 @@ int LAGraph_Random_Seed     // construct a random seed vector
     char *msg
 ) ;
 
+int LAGraph_Random_Next     // random int64 vector of seeds
+(
+    // input/output
+    GrB_Vector Seed,
+    char *msg
+) ;
+
 int LAGraph_Random_INT64    // random int64 vector
 (
     // output

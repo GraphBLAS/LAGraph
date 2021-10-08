@@ -210,10 +210,30 @@ int LAGraph_Random_Seed     // construct a random seed vector
 }
 
 //------------------------------------------------------------------------------
+// LAGraph_Random_Next: return next vector of random seeds
+//------------------------------------------------------------------------------
+
+int LAGraph_Random_Next     // random int64 vector of seeds
+(
+    // input/output
+    GrB_Vector Seed,
+    char *msg
+)
+{
+    // check inputs
+    LG_CLEAR_MSG ;
+    if (Seed == NULL) return (-1) ;
+    // Seed = next (Seed)
+    GrB_TRY (GrB_Vector_apply (Seed, NULL, NULL, LG_rand_next_op, Seed, NULL)) ;
+    return (0) ;
+}
+
+//------------------------------------------------------------------------------
 // LAGraph_Random_INT64: return a vector of random int64 integers
 //------------------------------------------------------------------------------
 
 // The sparsity pattern of the result X is the same as the Seed vector.
+// The Seed vector is updated to advance to the next set of seeds.
 
 int LAGraph_Random_INT64    // random int64 vector
 (
@@ -239,6 +259,7 @@ int LAGraph_Random_INT64    // random int64 vector
 //------------------------------------------------------------------------------
 
 // The sparsity pattern of the result X is the same as the Seed vector.
+// The Seed vector is updated to advance to the next set of seeds.
 
 GrB_Info LAGraph_Random_FP64    // random double vector
 (
@@ -266,6 +287,7 @@ GrB_Info LAGraph_Random_FP64    // random double vector
 //------------------------------------------------------------------------------
 
 // The sparsity pattern of the result X is the same as the Seed vector.
+// The Seed vector is updated to advance to the next set of seeds.
 
 GrB_Info LAGraph_Random_FP32    // random float vector
 (

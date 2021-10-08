@@ -14,12 +14,11 @@
 
 #define LAGraph_FREE_WORK           \
 {                                   \
-    GrB_free (&prob) ;              \
+/*  GrB_free (&prob) ; */           \
     GrB_free (&neighbor_max) ;      \
     GrB_free (&new_members) ;       \
     GrB_free (&new_neighbors) ;     \
     GrB_free (&candidates) ;        \
-    GrB_free (&degree) ;            \
     GrB_free (&Seed) ;              \
 }
 
@@ -95,7 +94,8 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
         LG_CHECK (false, -105, "G->A must be symmetric") ;
     }
 
-    LG_CHECK (G->rowdegree == NULL, -106, "G->rowdegree must be defined") ;
+    degree = G->rowdegree ;
+    LG_CHECK (degree == NULL, -106, "G->rowdegree must be defined") ;
     LG_CHECK (G->ndiag != 0, -107, "G->ndiag must be zero") ;
 
     //--------------------------------------------------------------------------
@@ -103,8 +103,9 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     //--------------------------------------------------------------------------
 
     GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
-    GrB_TRY (GrB_Vector_new (&prob, GrB_FP64, n)) ;
-    GrB_TRY (GrB_Vector_new (&neighbor_max, GrB_FP64, n)) ;
+//  do not allocate prob; just use the Seed vector directly
+//  GrB_TRY (GrB_Vector_new (&prob, GrB_INT64, n)) ;
+    GrB_TRY (GrB_Vector_new (&neighbor_max, GrB_INT64, n)) ;
     GrB_TRY (GrB_Vector_new (&new_members, GrB_BOOL, n)) ;
     GrB_TRY (GrB_Vector_new (&new_neighbors, GrB_BOOL, n)) ;
     GrB_TRY (GrB_Vector_new (&candidates, GrB_BOOL, n)) ;
@@ -121,10 +122,6 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     // create the random number seeds
     GrB_TRY (GrB_assign (Seed, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
     LAGraph_TRY (LAGraph_Random_Seed (Seed, seed, msg)) ;
-
-    // compute the degree of each nodes in double
-    GrB_TRY (GrB_Vector_new (&degree, GrB_FP64, n)) ;
-    GrB_TRY (GrB_assign (degree, NULL, NULL, G->rowdegree, GrB_ALL, n, NULL)) ;
 
     //--------------------------------------------------------------------------
     // remove singletons (nodes of degree zero)
@@ -175,10 +172,15 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
         // GxB_print (Seed, 3) ;
 
         // prob = random vector with sparsity pattern the same as candidates
-        LAGraph_TRY (LAGraph_Random_FP64 (prob, Seed, msg)) ;
+        prob = Seed ;
+//      LAGraph_TRY (LAGraph_Random_INT64 (prob, Seed, msg)) ;
+        LAGraph_TRY (LAGraph_Random_Next (Seed, msg)) ;
 
         // prob = prob / degree
-        GrB_TRY (GrB_eWiseMult (prob, NULL, NULL, GrB_DIV_FP64, prob, degree,
+        // This modifies the Seed vector itself since prob == Seed, so the
+        // random numbers generated are different, but it's slightly faster
+        // and still gives good results.
+        GrB_TRY (GrB_eWiseMult (prob, NULL, NULL, GrB_DIV_INT64, prob, degree,
             NULL)) ;
         // GxB_print (prob, 3) ;
 
@@ -189,20 +191,20 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
         {
             // push
             GrB_TRY (GrB_vxm (neighbor_max, candidates, NULL,
-                GrB_MAX_FIRST_SEMIRING_FP64, prob, A, GrB_DESC_RS)) ;
+                GrB_MAX_FIRST_SEMIRING_INT64, prob, A, GrB_DESC_RS)) ;
         }
         else
         {
             // pull
             GrB_TRY (GrB_mxv (neighbor_max, candidates, NULL,
-                GrB_MAX_SECOND_SEMIRING_FP64, A, prob, GrB_DESC_RS)) ;
+                GrB_MAX_SECOND_SEMIRING_INT64, A, prob, GrB_DESC_RS)) ;
         }
         // GxB_print (neighbor_max, 3) ;
 
         // select node if its probability is > than all its active neighbors
         // new_members = (prob > neighbor_max) using set union so that nodes
         // with no neighbors fall through to the output, as true.
-        GrB_TRY (GrB_eWiseAdd (new_members, NULL, NULL, GrB_GT_FP64,
+        GrB_TRY (GrB_eWiseAdd (new_members, NULL, NULL, GrB_GT_INT64,
             prob, neighbor_max, NULL)) ;
 
         // drop explicit zeros from new_members
