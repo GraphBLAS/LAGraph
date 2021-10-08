@@ -51,6 +51,7 @@ void LG_rand_next_f (void *z, const void *x)
     seed = LG_RAND_NEXT (seed) ;
     seed = LG_RAND_NEXT (seed) ;
     seed = LG_RAND_NEXT (seed) ;
+    if (seed == 0) seed = INT64_MAX ;
     (*((int64_t *) z)) = (int64_t) seed ;
 }
 

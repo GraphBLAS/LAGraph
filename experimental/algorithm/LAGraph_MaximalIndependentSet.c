@@ -21,6 +21,7 @@
     GrB_free (&empty) ;             \
     GrB_free (&Seed) ;              \
     GrB_free (&score) ;             \
+    GrB_free (&score_zero) ;        \
 }
 
 #define LAGraph_FREE_ALL            \
@@ -71,6 +72,7 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     LG_CLEAR_MSG ;
     GrB_Vector iset = NULL ;            // independent set (output vector)
     GrB_Vector score = NULL ;           // random score for each node
+    GrB_Vector score_zero = NULL ;      // where score is zero
     GrB_Vector neighbor_max = NULL ;    // value of max neighbor score
     GrB_Vector new_members = NULL ;     // set of new members to add to iset
     GrB_Vector new_neighbors = NULL ;   // new neighbors to new iset members
@@ -113,6 +115,7 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     GrB_TRY (GrB_Vector_new (&empty, GrB_BOOL, n)) ;
     GrB_TRY (GrB_Vector_new (&Seed, GrB_INT64, n)) ;
     GrB_TRY (GrB_Vector_new (&score, GrB_INT64, n)) ;
+    GrB_TRY (GrB_Vector_new (&score_zero, GrB_INT64, n)) ;
     GrB_TRY (GrB_Vector_new (&iset, GrB_BOOL, n)) ;
 
     #if LG_SUITESPARSE
@@ -161,6 +164,7 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     // iterate while there are candidates to check
     //--------------------------------------------------------------------------
 
+    int nstall = 0 ;
     GrB_Index ncandidates ;
     GrB_TRY (GrB_Vector_nvals (&ncandidates, candidates)) ;
     GrB_Index last_ncandidates = ncandidates ;
@@ -174,7 +178,31 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
         GrB_TRY (GrB_eWiseMult (score, NULL, NULL, GrB_DIV_INT64, Seed, degree,
             NULL)) ;
 
-        // compute the max score of all neighbors
+        // find any score equal to zero, and set it back to the Seed value
+        #if LG_SUITESPARSE
+        #if GxB_IMPLEMENTATION >= GxB_VERSION (5,2,0)
+        GrB_TRY (GrB_select (score_zero, NULL, NULL, GrB_VALUEEQ_INT64, score,
+            (int64_t) 0, NULL)) ;
+        #else
+        GrB_TRY (GxB_select (score_zero, NULL, NULL, GxB_EQ_ZERO, score,
+            NULL, NULL)) ;
+        #endif
+        #else
+        // TODO
+        #endif
+        GrB_Index nzero ;
+        GrB_TRY (GrB_Vector_nvals (&nzero, score_zero)) ;
+        if (nzero > 0)
+        {
+            // Reset any score equal to zero back to its unscaled seed value.
+            // This case is very rare and hard to test.
+            // score{score == 0} = Seed
+            GrB_TRY (GrB_assign (score, score_zero, NULL, Seed, GrB_ALL, n,
+                GrB_DESC_S)) ;
+        }
+
+        // compute the max score of all candidate neighbors (only candidates
+        // have a score, so non-candidate neighbors are excluded)
         // neighbor_max{candidates,replace} = score * A
         GrB_TRY (GrB_Vector_nvals (&ncandidates, candidates)) ;
         if (ncandidates < n1)
@@ -194,15 +222,15 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
 
         // select node if its score is > than all its active neighbors
         // new_members = (score > neighbor_max) using set union so that nodes
-        // with no neighbors fall through to the output, as true.
-        // FIXME: what if score is zero?
+        // with no neighbors fall through to the output, as true (since no
+        // score is equal to zero).
         GrB_TRY (GrB_eWiseAdd (new_members, NULL, NULL, GrB_GT_INT64,
             score, neighbor_max, NULL)) ;
 
         // drop explicit zeros from new_members
         // TODO: make this an LAGraph utility.
         #if LG_SUITESPARSE
-        #if GxB_IMPLEMENATION >= GxB_VERSION (5,2,0)
+        #if GxB_IMPLEMENTATION >= GxB_VERSION (5,2,0)
         GrB_TRY (GrB_select (new_members, NULL, NULL, GrB_VALUEEQ_BOOL,
             new_members, (bool) true, NULL)) ;
         #else
@@ -257,14 +285,24 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
         GrB_TRY (GrB_assign (Seed, candidates, NULL, Seed, GrB_ALL, n,
             GrB_DESC_RS)) ;
 
+        // Check for stall (can only occur if the matrix has self-edges, or in
+        // the exceedingly rare case that 2 nodes have the exact same score).
+        // If the method happens to stall, with no nodes selected because
+        // the scores happen to tie, try again with another random score.
+        GrB_TRY (GrB_Vector_nvals (&ncandidates, candidates)) ;
+        if (last_ncandidates == ncandidates)
+        {
+            // This case is nearly untestable since it can almost never occur.
+            nstall++ ;
+            // terminate if the method has stalled too many times
+            LG_CHECK (nstall > 32, -111, "stall") ;
+            // recreate the random number seeds with a new starting seed
+            LAGraph_TRY (LAGraph_Random_Seed (Seed, seed + nstall, msg)) ;
+        }
+        last_ncandidates = ncandidates ;
+
         // get the next random Seed vector
         LAGraph_TRY (LAGraph_Random_Next (Seed, msg)) ;
-
-        // check for stall (can only occur if the matrix has self-edges, or in
-        // the exceedingly rare case that 2 nodes have the exact same score).
-        GrB_TRY (GrB_Vector_nvals (&ncandidates, candidates)) ;
-        LG_CHECK (last_ncandidates == ncandidates, -111, "stall") ;
-        last_ncandidates = ncandidates ;
     }
 
     //--------------------------------------------------------------------------
@@ -273,7 +311,7 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
 
     // TODO: make this an LAGraph utility
     #if LG_SUITESPARSE
-    #if GxB_IMPLEMENATION < GxB_VERSION (6,0,0)
+    #if GxB_IMPLEMENTATION < GxB_VERSION (6,0,0)
     GrB_TRY (GrB_wait (&iset)) ;
     #else
     GrB_TRY (GrB_wait (iset, GrB_MATERIALIZE)) ;
