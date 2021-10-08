@@ -1,0 +1,1805 @@
+ 
+======================================================================
+Benchmarks using LAGraph+GraphBLAS: MIS
+======================================================================
+GAP matrices located in:   ../../../GAP
+SuiteSparse:GraphBLAS v5.2.0 [Oct 7, 2021 (alpha12)]
+# of trials: 3
+threads to test:  40
+matrix: /raid/matrices/com-Youtube/com-Youtube.grb
+[.grb]
+Reading binary file: /raid/matrices/com-Youtube/com-Youtube.grb
+read time: 0.12441
+
+============================================================
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   2.13e-05 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00133 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.000636 sec ]
+ [ GrB_Vector_nvals 
+   3.84e-07 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   2.14e-05 sec ]
+ [ GrB_Vector_nvals 
+   2.76e-07 sec ]
+ [ GrB_assign (C alias: duplicate) (full to bitmap) Method:bit2:whole C<M,full,struct,replace> = A 
+   0.00128 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.000511 sec ]
+ [ GrB_eWiseMult add:(F<.>=Bf+Bf) 
+   0.001 sec ]
+ [ GrB_Vector_nvals 
+   2.15e-07 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   0.00636 sec ]
+ [ GrB_eWiseAdd add:(F<.>=F+Bf) 
+   0.000254 sec ]
+ [ GxB_select (C full) (A full) (iso select) (bitmap select) 
+   0.000172 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 05e: (C empty)<M,struct> = scalar 
+   0.00021 sec ]
+ [ GrB_assign (full to bitmap) Method:bit2:whole C<M,bitmap,struct> = A 
+   0.00157 sec ]
+ [ GrB_Vector_nvals 
+   2.56e-07 sec ]
+ [ GrB_Vector_nvals 
+   6.1e-08 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (iso dot2) (B{B}=S'*B) 
+   0.00509 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.000679 sec ]
+ [ GrB_Vector_nvals 
+   3.24e-07 sec ]
+ [ GrB_assign (C alias: duplicate) (full to bitmap) Method:bit2:whole C<M,bitmap,struct,replace> = A 
+   0.00168 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.000597 sec ]
+ [ GrB_eWiseMult emult_bitmap:(B<.>=B.*Bf) 
+   0.00141 sec ]
+ [ GrB_Vector_nvals 
+   1.87e-07 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (dot2) (B{B}=S'*B) 
+   0.00336 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) 
+   0.00147 sec ]
+ [ GxB_select (C bitmap) (A bitmap) (iso select) (bitmap select) 
+   0.000112 sec ]
+ [ GrB_assign (C iso assign) Method:bit2:whole C<M,bitmap,struct> = scalar 
+   0.00038 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.000388 sec ]
+ [ GrB_Vector_nvals 
+   5.51e-07 sec ]
+ [ GrB_Vector_nvals 
+   6.1e-08 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (iso dot2) (B{B}=S'*B) 
+   0.00327 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A (bitmap to sparse) 
+   0.000512 sec ]
+ [ GrB_Vector_nvals 
+   2.28e-07 sec ]
+ [ GrB_assign (C alias: duplicate) Method:bit4:whole C<M,struct,replace> = A (bitmap to sparse) 
+   0.0018 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   8.12e-05 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*Bf)
+   0.000585 sec ]
+ [ GrB_Vector_nvals 
+   3.2e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 33937 mwork 6895 (use mask) (intensity: 0.00683 workspace/(nnz(A)+nnz(B)): 0.19) (nthreads 1 fine: 1) (sparse saxpy) 
+   0.00289 sec ]
+ [ GrB_eWiseAdd add:(S<.>=S+S) 
+   0.000167 sec ]
+ [ GxB_select (iso select) 
+   4.72e-05 sec ]
+ [ GrB_assign (C iso assign) Method:bit4:whole C<M,struct> = scalar 
+   5.47e-05 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.000637 sec ]
+ [ GrB_Vector_nvals 
+   1.73e-07 sec ]
+ [ GrB_Vector_nvals 
+   6.8e-08 sec ]
+ [ GrB_vxm (wait:M 6081 zombies, 0 pending) C<M>=A*B, saxpy (S{S}=S*S) axbwork 27611 mwork 814 (use mask) (intensity: 0.00475 workspace/(nnz(A)+nnz(B)): 0.19) (nthreads 1 fine hash: 1) (iso sparse saxpy) 
+   0.000663 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S (iso wait:M 0 zombies, 0 pending, jumbled) 
+   0.000167 sec ]
+ [ GrB_Vector_nvals 
+   1.49e-07 sec ]
+ [ GrB_assign (wait:M 714 zombies, 0 pending) (C alias cleared; C_replace early) (pending: 0) Method 06n: C(:,:)<M> = Z ; no S 
+   5.49e-05 sec ]
+ [ GrB_apply (wait:A 0 zombies, 100 pending) (build) (hyper to sparse) (in-place-op) (generic apply: LG_rand_next_f) 
+   2.46e-05 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*Bf)
+   1.47e-05 sec ]
+ [ GrB_Vector_nvals 
+   1.23e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 878 mwork 100 (use mask) (intensity: 0.000164 workspace/(nnz(A)+nnz(B)): 0.19) (nthreads 1 fine hash: 1) (sparse saxpy) 
+   5.6e-05 sec ]
+ [ GrB_eWiseAdd (wait:B 0 zombies, 0 pending, jumbled) add:(S<.>=S+S) 
+   5.2e-05 sec ]
+ [ GxB_select (iso select) 
+   8.45e-06 sec ]
+ [ GrB_assign (C iso assign) Method:bit4:whole C<M,struct> = scalar 
+   1.38e-05 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   8.04e-05 sec ]
+ [ GrB_Vector_nvals 
+   1.64e-07 sec ]
+ [ GrB_Vector_nvals 
+   4.8e-08 sec ]
+ [ GrB_vxm (wait:M 94 zombies, 0 pending) C<M>=A*B, saxpy (S{S}=S*S) axbwork 812 mwork 6 (use mask) (intensity: 0.000137 workspace/(nnz(A)+nnz(B)): 0.19) (nthreads 1 fine hash: 1) (iso sparse saxpy) 
+   5.71e-05 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S (iso wait:M 0 zombies, 0 pending, jumbled) 
+   8.1e-05 sec ]
+ [ GrB_Vector_nvals 
+   1.53e-07 sec ]
+
+............................................................
+warmup time 0.0405999 sec
+SuiteSparse:GraphBLAS v5.2.0 [Oct 7, 2021 (alpha12)]
+# of trials: 3
+threads to test:  40
+matrix: /raid/matrices/as-Skitter/as-Skitter.grb
+[.grb]
+Reading binary file: /raid/matrices/as-Skitter/as-Skitter.grb
+read time: 0.325816
+
+============================================================
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   1.78e-05 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00135 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.000649 sec ]
+ [ GrB_Vector_nvals 
+   1.55e-07 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   1.31e-05 sec ]
+ [ GrB_Vector_nvals 
+   8.1e-08 sec ]
+ [ GrB_assign (C alias: duplicate) (full to bitmap) Method:bit2:whole C<M,full,struct,replace> = A 
+   0.00282 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.000724 sec ]
+ [ GrB_eWiseMult add:(F<.>=Bf+Bf) 
+   0.00166 sec ]
+ [ GrB_Vector_nvals 
+   1.7e-07 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   0.00673 sec ]
+ [ GrB_eWiseAdd add:(F<.>=F+Bf) 
+   0.000495 sec ]
+ [ GxB_select (C full) (A full) (iso select) (bitmap select) 
+   0.000126 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 05e: (C empty)<M,struct> = scalar 
+   0.000186 sec ]
+ [ GrB_assign (full to bitmap) Method:bit2:whole C<M,bitmap,struct> = A 
+   0.00219 sec ]
+ [ GrB_Vector_nvals 
+   2.76e-07 sec ]
+ [ GrB_Vector_nvals 
+   6.19e-08 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (iso dot2) (B{B}=S'*B) 
+   0.00489 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.00059 sec ]
+ [ GrB_Vector_nvals 
+   3.53e-07 sec ]
+ [ GrB_assign (C alias: duplicate) (full to bitmap) Method:bit2:whole C<M,bitmap,struct,replace> = A 
+   0.00197 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.000593 sec ]
+ [ GrB_eWiseMult emult_bitmap:(B<.>=B.*Bf) 
+   0.00177 sec ]
+ [ GrB_Vector_nvals 
+   8.71e-08 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (dot2) (B{B}=S'*B) 
+   0.00488 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) 
+   0.0017 sec ]
+ [ GxB_select (C bitmap) (A bitmap) (iso select) (bitmap select) 
+   0.000178 sec ]
+ [ GrB_assign (C iso assign) Method:bit2:whole C<M,bitmap,struct> = scalar 
+   0.000516 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.00046 sec ]
+ [ GrB_Vector_nvals 
+   1.06e-07 sec ]
+ [ GrB_Vector_nvals 
+   4.89e-08 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (iso dot2) (B{B}=S'*B) 
+   0.00535 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A (bitmap to sparse) 
+   0.000494 sec ]
+ [ GrB_Vector_nvals 
+   2.51e-07 sec ]
+ [ GrB_assign (C alias: duplicate) Method:bit4:whole C<M,struct,replace> = A (bitmap to sparse) 
+   0.00214 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   9.66e-05 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*Bf)
+   0.000878 sec ]
+ [ GrB_Vector_nvals 
+   1.91e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 150808 mwork 14767 (use mask) (intensity: 0.00746 workspace/(nnz(A)+nnz(B)): 0.306) (nthreads 2 fine: 3) (sparse saxpy) 
+   0.00244 sec ]
+ [ GrB_eWiseAdd add:(S<.>=S+S) 
+   0.000174 sec ]
+ [ GxB_select (iso select) 
+   6.04e-05 sec ]
+ [ GrB_assign (C iso assign) Method:bit4:whole C<M,struct> = scalar 
+   0.000117 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.00103 sec ]
+ [ GrB_Vector_nvals 
+   1.36e-07 sec ]
+ [ GrB_Vector_nvals 
+   6.47e-08 sec ]
+ [ GrB_vxm (wait:M 12864 zombies, 0 pending) C<M>=A*B, saxpy (S{S}=S*S) axbwork 119073 mwork 1903 (use mask) (intensity: 0.00545 workspace/(nnz(A)+nnz(B)): 0.0764) (nthreads 1 fine: 1) (iso sparse saxpy) 
+   0.00312 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.000208 sec ]
+ [ GrB_Vector_nvals 
+   9.92e-08 sec ]
+ [ GrB_assign (wait:M 1566 zombies, 0 pending) (C alias cleared; C_replace early) (pending: 0) Method 06n: C(:,:)<M> = Z ; no S 
+   8.98e-05 sec ]
+ [ GrB_apply (wait:A 0 zombies, 337 pending) (build) (hyper to sparse) (in-place-op) (generic apply: LG_rand_next_f) 
+   2.64e-05 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*Bf)
+   2.68e-05 sec ]
+ [ GrB_Vector_nvals 
+   7.17e-08 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 8422 mwork 337 (use mask) (intensity: 0.000395 workspace/(nnz(A)+nnz(B)): 0.0764) (nthreads 1 fine hash: 1) (sparse saxpy) 
+   0.000196 sec ]
+ [ GrB_eWiseAdd (wait:B 0 zombies, 0 pending, jumbled) add:(S<.>=S+S) 
+   6.54e-05 sec ]
+ [ GxB_select (iso select) 
+   1.02e-05 sec ]
+ [ GrB_assign (C iso assign) Method:bit4:whole C<M,struct> = scalar 
+   1.74e-05 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.000103 sec ]
+ [ GrB_Vector_nvals 
+   1.48e-07 sec ]
+ [ GrB_Vector_nvals 
+   5.82e-08 sec ]
+ [ GrB_vxm (wait:M 268 zombies, 0 pending) C<M>=A*B, saxpy (S{S}=S*S) axbwork 4552 mwork 69 (use mask) (intensity: 0.000208 workspace/(nnz(A)+nnz(B)): 0.0764) (nthreads 1 fine hash: 1) (iso sparse saxpy) 
+   0.000125 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S (iso wait:M 0 zombies, 0 pending, jumbled) 
+   0.000103 sec ]
+ [ GrB_Vector_nvals 
+   1.19e-07 sec ]
+ [ GrB_assign (wait:M 47 zombies, 0 pending) (C alias cleared; C_replace early) (pending: 0) Method 06n: C(:,:)<M> = Z ; no S 
+   2.48e-05 sec ]
+ [ GrB_apply (wait:A 0 zombies, 22 pending) (build) (hyper to sparse) (in-place-op) (generic apply: LG_rand_next_f) 
+   2.1e-05 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*Bf)
+   1.11e-05 sec ]
+ [ GrB_Vector_nvals 
+   6.1e-08 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 1674 mwork 22 (use mask) (intensity: 7.64e-05 workspace/(nnz(A)+nnz(B)): 0.0764) (nthreads 1 fine hash: 1) (sparse saxpy) 
+   6.16e-05 sec ]
+ [ GrB_eWiseAdd (wait:B 0 zombies, 0 pending, jumbled) add:(S<.>=S+S) 
+   5.06e-05 sec ]
+ [ GxB_select (iso select) 
+   8.41e-06 sec ]
+ [ GrB_assign (C iso assign) Method:bit4:whole C<M,struct> = scalar 
+   1.32e-05 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   8.15e-05 sec ]
+ [ GrB_Vector_nvals 
+   1.24e-07 sec ]
+ [ GrB_Vector_nvals 
+   5.59e-08 sec ]
+ [ GrB_vxm (wait:M 8 zombies, 0 pending) C<M>=A*B, saxpy (S{S}=S*S) axbwork 396 mwork 14 (use mask) (intensity: 1.85e-05 workspace/(nnz(A)+nnz(B)): 0.0764) (nthreads 1 fine hash: 1) (iso sparse saxpy) 
+   5.48e-05 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S (iso wait:M 0 zombies, 0 pending, jumbled) 
+   8.78e-05 sec ]
+ [ GrB_Vector_nvals 
+   1.16e-07 sec ]
+ [ GrB_assign (wait:M 13 zombies, 0 pending) (C alias cleared; C_replace early) (pending: 0) Method 06n: C(:,:)<M> = Z ; no S 
+   1.99e-05 sec ]
+ [ GrB_apply (wait:A 0 zombies, 1 pending) (hyper to sparse) (in-place-op) 
+   1.5e-05 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*Bf)
+   9.25e-06 sec ]
+ [ GrB_Vector_nvals 
+   5.68e-08 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 47 mwork 1 (use mask) (intensity: 2.16e-06 workspace/(nnz(A)+nnz(B)): 0.0764) (nthreads 1 fine hash: 1) (iso sparse saxpy) 
+   4.83e-05 sec ]
+ [ GrB_eWiseAdd (iso wait:B 0 zombies, 0 pending, jumbled) add:(S<.>=S+S) 
+   4.84e-05 sec ]
+ [ GxB_select (iso select) 
+   7.86e-06 sec ]
+ [ GrB_assign (C iso assign) Method:bit4:whole C<M,struct> = scalar 
+   1.24e-05 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   7.96e-05 sec ]
+ [ GrB_Vector_nvals 
+   9.83e-08 sec ]
+
+............................................................
+warmup time 0.0528422 sec
+SuiteSparse:GraphBLAS v5.2.0 [Oct 7, 2021 (alpha12)]
+# of trials: 3
+threads to test:  40
+matrix: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+[.grb]
+Reading binary file: /raid/matrices/com-LiveJournal/com-LiveJournal.grb
+read time: 0.96096
+
+============================================================
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   5.88e-05 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00168 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.00095 sec ]
+ [ GrB_Vector_nvals 
+   5.82e-07 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   1.95e-05 sec ]
+ [ GrB_Vector_nvals 
+   1.54e-07 sec ]
+ [ GrB_assign (C alias: duplicate) (full to bitmap) Method:bit2:whole C<M,full,struct,replace> = A 
+   0.0043 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.000867 sec ]
+ [ GrB_eWiseMult add:(F<.>=Bf+Bf) 
+   0.00212 sec ]
+ [ GrB_Vector_nvals 
+   8.53e-07 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   0.017 sec ]
+ [ GrB_eWiseAdd add:(F<.>=F+Bf) 
+   0.000835 sec ]
+ [ GxB_select (C full) (A full) (iso select) (bitmap select) 
+   0.000166 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 05e: (C empty)<M,struct> = scalar 
+   0.0003 sec ]
+ [ GrB_assign (full to bitmap) Method:bit2:whole C<M,bitmap,struct> = A 
+   0.00964 sec ]
+ [ GrB_Vector_nvals 
+   3.32e-07 sec ]
+ [ GrB_Vector_nvals 
+   6.71e-08 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (iso dot2) (B{B}=S'*B) 
+   0.0103 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.000847 sec ]
+ [ GrB_Vector_nvals 
+   1.64e-07 sec ]
+ [ GrB_assign (C alias: duplicate) (full to bitmap) Method:bit2:whole C<M,bitmap,struct,replace> = A 
+   0.00761 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.000785 sec ]
+ [ GrB_eWiseMult emult_bitmap:(B<.>=B.*Bf) 
+   0.00686 sec ]
+ [ GrB_Vector_nvals 
+   4.23e-07 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (dot2) (B{B}=S'*B) 
+   0.00599 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) 
+   0.00372 sec ]
+ [ GxB_select (C bitmap) (A bitmap) (iso select) (bitmap select) 
+   0.000223 sec ]
+ [ GrB_assign (C iso assign) Method:bit2:whole C<M,bitmap,struct> = scalar 
+   0.000672 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.000612 sec ]
+ [ GrB_Vector_nvals 
+   3.11e-07 sec ]
+ [ GrB_Vector_nvals 
+   8.71e-08 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (iso dot2) (B{B}=S'*B) 
+   0.00282 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.000529 sec ]
+ [ GrB_Vector_nvals 
+   3.82e-07 sec ]
+ [ GrB_assign (C alias: duplicate) Method:bit2:whole C<M,bitmap,struct,replace> = A 
+   0.00525 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.000424 sec ]
+ [ GrB_eWiseMult emult_bitmap:(B<.>=B.*Bf) 
+   0.00437 sec ]
+ [ GrB_Vector_nvals 
+   3.38e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (B{B}=S*B) (bitmap saxpy) (fine, threads: 40, relwspace: 2.07, intensity: 17.3: atomic) (bitmap to sparse) 
+   0.00843 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+S) 
+   0.00594 sec ]
+ [ GxB_select (C bitmap) (A bitmap) (iso select) (bitmap select) (bitmap to sparse) 
+   0.00218 sec ]
+ [ GrB_assign (C iso assign) Method:bit4:whole C<M,struct> = scalar 
+   0.00048 sec ]
+ [ GrB_assign Method:bit4:whole C<M,struct> = A (A empty) (bitmap to sparse) 
+   0.000704 sec ]
+ [ GrB_Vector_nvals 
+   3.38e-07 sec ]
+ [ GrB_Vector_nvals 
+   1.05e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 766279 mwork 24914 (use mask) (nthreads 12 fine: 13) (iso sparse saxpy) 
+   0.00491 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.00192 sec ]
+ [ GrB_Vector_nvals 
+   2.51e-07 sec ]
+ [ GrB_assign (wait:M 19836 zombies, 0 pending) (C alias: duplicate) Method:bit4:whole C<M,struct,replace> = A (bitmap to sparse) 
+   0.0054 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   5.57e-05 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*Bf)
+   0.000494 sec ]
+ [ GrB_Vector_nvals 
+   3.58e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 83557 mwork 5078 (use mask) (intensity: 0.00128 workspace/(nnz(A)+nnz(B)): 0.0576) (nthreads 1 fine hash: 1) (sparse saxpy) 
+   0.00219 sec ]
+ [ GrB_eWiseAdd (wait:B 0 zombies, 0 pending, jumbled) add:(S<.>=S+S) 
+   0.000187 sec ]
+ [ GxB_select (iso select) 
+   3.26e-05 sec ]
+ [ GrB_assign (C iso assign) Method:bit4:whole C<M,struct> = scalar 
+   7.2e-05 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.000388 sec ]
+ [ GrB_Vector_nvals 
+   1.71e-07 sec ]
+ [ GrB_Vector_nvals 
+   6.52e-08 sec ]
+ [ GrB_vxm (wait:M 4291 zombies, 0 pending) C<M>=A*B, saxpy (S{S}=S*S) axbwork 60900 mwork 787 (use mask) (intensity: 0.000889 workspace/(nnz(A)+nnz(B)): 0.0576) (nthreads 1 fine hash: 1) (iso sparse saxpy) 
+   0.000884 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S (iso wait:M 0 zombies, 0 pending, jumbled) 
+   0.000165 sec ]
+ [ GrB_Vector_nvals 
+   9.59e-08 sec ]
+ [ GrB_assign (wait:M 688 zombies, 0 pending) (C alias cleared; C_replace early) (pending: 0) Method 06n: C(:,:)<M> = Z ; no S 
+   4.29e-05 sec ]
+ [ GrB_apply (wait:A 0 zombies, 99 pending) (build) (hyper to sparse) (in-place-op) (generic apply: LG_rand_next_f) 
+   2.26e-05 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*Bf)
+   1.49e-05 sec ]
+ [ GrB_Vector_nvals 
+   6.19e-08 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 3043 mwork 99 (use mask) (intensity: 4.53e-05 workspace/(nnz(A)+nnz(B)): 0.0576) (nthreads 1 fine hash: 1) (sparse saxpy) 
+   7.58e-05 sec ]
+ [ GrB_eWiseAdd (wait:B 0 zombies, 0 pending, jumbled) add:(S<.>=S+S) 
+   4.71e-05 sec ]
+ [ GxB_select (iso select) 
+   7.74e-06 sec ]
+ [ GrB_assign (C iso assign) Method:bit4:whole C<M,struct> = scalar 
+   1.32e-05 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   8.01e-05 sec ]
+ [ GrB_Vector_nvals 
+   1.23e-07 sec ]
+ [ GrB_Vector_nvals 
+   3.73e-08 sec ]
+ [ GrB_vxm (wait:M 88 zombies, 0 pending) C<M>=A*B, saxpy (S{S}=S*S) axbwork 2286 mwork 11 (use mask) (intensity: 3.31e-05 workspace/(nnz(A)+nnz(B)): 0.0576) (nthreads 1 fine hash: 1) (iso sparse saxpy) 
+   7.38e-05 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S (iso wait:M 0 zombies, 0 pending, jumbled) 
+   7.99e-05 sec ]
+ [ GrB_Vector_nvals 
+   1.05e-07 sec ]
+
+............................................................
+warmup time 0.125235 sec
+SuiteSparse:GraphBLAS v5.2.0 [Oct 7, 2021 (alpha12)]
+# of trials: 3
+threads to test:  40
+matrix: /raid/matrices/com-Orkut/com-Orkut.grb
+[.grb]
+Reading binary file: /raid/matrices/com-Orkut/com-Orkut.grb
+read time: 3.23809
+
+============================================================
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   2.11e-05 sec ]
+ [ GrB_apply (in-place-op) 
+   0.00122 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.000725 sec ]
+ [ GrB_Vector_nvals 
+   6.81e-07 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   1.76e-05 sec ]
+ [ GrB_Vector_nvals 
+   1.27e-07 sec ]
+ [ GrB_assign (C alias: duplicate) (full to bitmap) Method:bit2:whole C<M,full,struct,replace> = A 
+   0.00445 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.00193 sec ]
+ [ GrB_eWiseMult add:(F<.>=Bf+Bf) 
+   0.00249 sec ]
+ [ GrB_Vector_nvals 
+   4.99e-07 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   0.0565 sec ]
+ [ GrB_eWiseAdd add:(F<.>=F+Bf) 
+   0.000496 sec ]
+ [ GxB_select (C full) (A full) (iso select) (bitmap select) 
+   0.000175 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 05e: (C empty)<M,struct> = scalar 
+   0.000312 sec ]
+ [ GrB_assign (full to bitmap) Method:bit2:whole C<M,bitmap,struct> = A 
+   0.00902 sec ]
+ [ GrB_Vector_nvals 
+   3.14e-07 sec ]
+ [ GrB_Vector_nvals 
+   6.61e-08 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (iso dot2) (B{B}=S'*B) 
+   0.0278 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.000678 sec ]
+ [ GrB_Vector_nvals 
+   1.23e-07 sec ]
+ [ GrB_assign (C alias: duplicate) (full to bitmap) Method:bit2:whole C<M,bitmap,struct,replace> = A 
+   0.00451 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.000718 sec ]
+ [ GrB_eWiseMult emult_bitmap:(B<.>=B.*Bf) 
+   0.00458 sec ]
+ [ GrB_Vector_nvals 
+   3.04e-07 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (dot2) (B{B}=S'*B) 
+   0.0115 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) 
+   0.0062 sec ]
+ [ GxB_select (C bitmap) (A bitmap) (iso select) (bitmap select) 
+   0.000177 sec ]
+ [ GrB_assign (C iso assign) Method:bit2:whole C<M,bitmap,struct> = scalar 
+   0.000398 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.000343 sec ]
+ [ GrB_Vector_nvals 
+   3.35e-07 sec ]
+ [ GrB_Vector_nvals 
+   1.1e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (B{B}=S*B) (iso bitmap saxpy) (fine, threads: 40, relwspace: 0.511, intensity: 76.3: atomic) 
+   0.00829 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.000368 sec ]
+ [ GrB_Vector_nvals 
+   3.23e-07 sec ]
+ [ GrB_assign (C alias: duplicate) Method:bit2:whole C<M,bitmap,struct,replace> = A 
+   0.00716 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.000297 sec ]
+ [ GrB_eWiseMult emult_bitmap:(B<.>=B.*Bf) 
+   0.00397 sec ]
+ [ GrB_Vector_nvals 
+   3.24e-07 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (dot2) (B{B}=S'*B) 
+   0.00329 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) 
+   0.0045 sec ]
+ [ GxB_select (C bitmap) (A bitmap) (iso select) (bitmap select) 
+   0.000176 sec ]
+ [ GrB_assign (C iso assign) Method:bit2:whole C<M,bitmap,struct> = scalar 
+   0.000266 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.000239 sec ]
+ [ GrB_Vector_nvals 
+   5.53e-07 sec ]
+ [ GrB_Vector_nvals 
+   1.16e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (B{B}=S*B) (iso bitmap saxpy) (fine, threads: 40, relwspace: 0.511, intensity: 76.3: atomic) (bitmap to sparse) 
+   0.00504 sec ]
+ [ GrB_assign Method:bit4:whole C<M,struct> = A (A empty) (bitmap to sparse) 
+   0.00176 sec ]
+ [ GrB_Vector_nvals 
+   4.23e-07 sec ]
+ [ GrB_assign (C alias: duplicate) Method:bit4:whole C<M,struct,replace> = A (bitmap to sparse) 
+   0.0057 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.000212 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*Bf)
+   0.00176 sec ]
+ [ GrB_Vector_nvals 
+   2.64e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 1.19762e+06 mwork 24451 (use mask) (nthreads 18 fine: 19) (sparse saxpy) 
+   0.00277 sec ]
+ [ GrB_eWiseAdd add:(S<.>=S+S) 
+   0.000352 sec ]
+ [ GxB_select (iso select) 
+   0.000131 sec ]
+ [ GrB_assign (C iso assign) Method:bit4:whole C<M,struct> = scalar 
+   0.000185 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.00167 sec ]
+ [ GrB_Vector_nvals 
+   1.49e-07 sec ]
+ [ GrB_Vector_nvals 
+   6.24e-08 sec ]
+ [ GrB_vxm (wait:M 17498 zombies, 0 pending) C<M>=A*B, saxpy (S{S}=S*S) axbwork 757876 mwork 6953 (use mask) (nthreads 11 fine: 12) (iso sparse saxpy) 
+   0.00187 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.000509 sec ]
+ [ GrB_Vector_nvals 
+   1.52e-07 sec ]
+ [ GrB_assign (wait:M 5641 zombies, 0 pending) (C alias cleared; C_replace early) (pending: 0) Method 06n: C(:,:)<M> = Z ; no S 
+   0.000215 sec ]
+ [ GrB_apply (wait:A 0 zombies, 1312 pending) (build) (hyper to sparse) (in-place-op) (generic apply: LG_rand_next_f) 
+   3.43e-05 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*Bf)
+   9.47e-05 sec ]
+ [ GrB_Vector_nvals 
+   1.46e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 77661 mwork 1312 (use mask) (intensity: 0.000337 workspace/(nnz(A)+nnz(B)): 0.0131) (nthreads 1 fine: 1) (sparse saxpy) 
+   0.00337 sec ]
+ [ GrB_eWiseAdd add:(S<.>=S+S) 
+   6.57e-05 sec ]
+ [ GxB_select (iso select) 
+   2.22e-05 sec ]
+ [ GrB_assign (C iso assign) Method:bit4:whole C<M,struct> = scalar 
+   2.31e-05 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.000172 sec ]
+ [ GrB_Vector_nvals 
+   1.31e-07 sec ]
+ [ GrB_Vector_nvals 
+   6.29e-08 sec ]
+ [ GrB_vxm (wait:M 1074 zombies, 0 pending) C<M>=A*B, saxpy (S{S}=S*S) axbwork 59510 mwork 238 (use mask) (intensity: 0.000255 workspace/(nnz(A)+nnz(B)): 0.0131) (nthreads 1 fine hash: 1) (iso sparse saxpy) 
+   0.000731 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S (iso wait:M 0 zombies, 0 pending, jumbled) 
+   0.000108 sec ]
+ [ GrB_Vector_nvals 
+   1.6e-07 sec ]
+ [ GrB_assign (wait:M 207 zombies, 0 pending) (C alias cleared; C_replace early) (pending: 0) Method 06n: C(:,:)<M> = Z ; no S 
+   2.63e-05 sec ]
+ [ GrB_apply (wait:A 0 zombies, 31 pending) (build) (hyper to sparse) (in-place-op) (generic apply: LG_rand_next_f) 
+   2.05e-05 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*Bf)
+   1.22e-05 sec ]
+ [ GrB_Vector_nvals 
+   1.04e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 2127 mwork 31 (use mask) (intensity: 9.21e-06 workspace/(nnz(A)+nnz(B)): 0.0131) (nthreads 1 fine hash: 1) (sparse saxpy) 
+   6.87e-05 sec ]
+ [ GrB_eWiseAdd (wait:B 0 zombies, 0 pending, jumbled) add:(S<.>=S+S) 
+   4.97e-05 sec ]
+ [ GxB_select (iso select) 
+   7.86e-06 sec ]
+ [ GrB_assign (C iso assign) Method:bit4:whole C<M,struct> = scalar 
+   1.31e-05 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   7.66e-05 sec ]
+ [ GrB_Vector_nvals 
+   1.26e-07 sec ]
+ [ GrB_Vector_nvals 
+   4.98e-08 sec ]
+ [ GrB_vxm (wait:M 28 zombies, 0 pending) C<M>=A*B, saxpy (S{S}=S*S) axbwork 1808 mwork 3 (use mask) (intensity: 7.73e-06 workspace/(nnz(A)+nnz(B)): 0.0131) (nthreads 1 fine hash: 1) (iso sparse saxpy) 
+   6.03e-05 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S (iso wait:M 0 zombies, 0 pending, jumbled) 
+   7.9e-05 sec ]
+ [ GrB_Vector_nvals 
+   8.2e-08 sec ]
+
+............................................................
+warmup time 0.191168 sec
+SuiteSparse:GraphBLAS v5.2.0 [Oct 7, 2021 (alpha12)]
+# of trials: 3
+threads to test:  40
+matrix: /raid/matrices/com-Friendster/com-Friendster.grb
+[.grb]
+Reading binary file: /raid/matrices/com-Friendster/com-Friendster.grb
+read time: 78.3063
+
+============================================================
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   2.85e-05 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0375 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.0271 sec ]
+ [ GrB_Vector_nvals 
+   8.92e-07 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   2.61e-05 sec ]
+ [ GrB_Vector_nvals 
+   1.43e-07 sec ]
+ [ GrB_assign (C alias: duplicate) (full to bitmap) Method:bit2:whole C<M,full,struct,replace> = A 
+   0.0632 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.0274 sec ]
+ [ GrB_eWiseMult add:(F<.>=Bf+Bf) 
+   0.0433 sec ]
+ [ GrB_Vector_nvals 
+   4.37e-07 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   3.31 sec ]
+ [ GrB_eWiseAdd add:(F<.>=F+Bf) 
+   0.0174 sec ]
+ [ GxB_select (C full) (A full) (iso select) (bitmap select) 
+   0.00285 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 05e: (C empty)<M,struct> = scalar 
+   0.00293 sec ]
+ [ GrB_assign (full to bitmap) Method:bit2:whole C<M,bitmap,struct> = A 
+   0.013 sec ]
+ [ GrB_Vector_nvals 
+   4.49e-07 sec ]
+ [ GrB_Vector_nvals 
+   1.22e-07 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (iso dot2) (B{B}=S'*B) 
+   0.717 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.0169 sec ]
+ [ GrB_Vector_nvals 
+   4.56e-07 sec ]
+ [ GrB_assign (C alias: duplicate) (full to bitmap) Method:bit2:whole C<M,bitmap,struct,replace> = A 
+   0.0508 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.0191 sec ]
+ [ GrB_eWiseMult emult_bitmap:(B<.>=B.*Bf) 
+   0.0377 sec ]
+ [ GrB_Vector_nvals 
+   3.68e-07 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (dot2) (B{B}=S'*B) 
+   0.216 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) 
+   0.0241 sec ]
+ [ GxB_select (C bitmap) (A bitmap) (iso select) (bitmap select) 
+   0.0042 sec ]
+ [ GrB_assign (C iso assign) Method:bit2:whole C<M,bitmap,struct> = scalar 
+   0.0111 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.0118 sec ]
+ [ GrB_Vector_nvals 
+   4.89e-07 sec ]
+ [ GrB_Vector_nvals 
+   1.2e-07 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (iso dot2) (B{B}=S'*B) 
+   0.0894 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.00519 sec ]
+ [ GrB_Vector_nvals 
+   4.65e-07 sec ]
+ [ GrB_assign (C alias: duplicate) Method:bit2:whole C<M,bitmap,struct,replace> = A 
+   0.0384 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.00836 sec ]
+ [ GrB_eWiseMult emult_bitmap:(B<.>=B.*Bf) 
+   0.0182 sec ]
+ [ GrB_Vector_nvals 
+   3.1e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (B{B}=S*B) (bitmap saxpy) (fine, threads: 40, relwspace: 0.701, intensity: 55.1: atomic) (bitmap to sparse) 
+   0.0824 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+S) 
+   0.0143 sec ]
+ [ GxB_select (C bitmap) (A bitmap) (iso select) (bitmap select) 
+   0.00456 sec ]
+ [ GrB_assign (C iso assign) Method:bit2:whole C<M,bitmap,struct> = scalar 
+   0.00544 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A (bitmap to sparse) 
+   0.00834 sec ]
+ [ GrB_Vector_nvals 
+   1.51e-06 sec ]
+ [ GrB_Vector_nvals 
+   2.22e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*B) axbwork 9.19752e+07 mwork 442017 (use mask) (nthreads 40 fine: 160) (iso sparse saxpy) 
+   0.11 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.00585 sec ]
+ [ GrB_Vector_nvals 
+   2.77e-07 sec ]
+ [ GrB_assign (wait:M 340752 zombies, 0 pending) (C alias: duplicate) Method:bit4:whole C<M,struct,replace> = A (bitmap to sparse) 
+   0.0345 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.000797 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*Bf)
+   0.00727 sec ]
+ [ GrB_Vector_nvals 
+   4.63e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 3.39968e+06 mwork 101265 (use mask) (nthreads 40 fine: 54) (sparse saxpy) 
+   0.0138 sec ]
+ [ GrB_eWiseAdd add:(S<.>=S+S) 
+   0.0013 sec ]
+ [ GxB_select (iso select) 
+   0.000431 sec ]
+ [ GrB_assign (C iso assign) Method:bit4:whole C<M,struct> = scalar 
+   0.00116 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.00721 sec ]
+ [ GrB_Vector_nvals 
+   3.12e-07 sec ]
+ [ GrB_Vector_nvals 
+   7.03e-08 sec ]
+ [ GrB_vxm (wait:M 86302 zombies, 0 pending) C<M>=A*B, saxpy (S{S}=S*S) axbwork 2.64046e+06 mwork 14963 (use mask) (nthreads 40 fine: 41) (iso sparse saxpy) 
+   0.0132 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.00121 sec ]
+ [ GrB_Vector_nvals 
+   3.2e-07 sec ]
+ [ GrB_assign (wait:M 12915 zombies, 0 pending) (C alias cleared; C_replace early) (pending: 0) Method 06n: C(:,:)<M> = Z ; no S 
+   0.000668 sec ]
+ [ GrB_apply (wait:A 0 zombies, 2048 pending) (build) (hyper to sparse) (in-place-op) (generic apply: LG_rand_next_f) 
+   5.48e-05 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*Bf)
+   0.000284 sec ]
+ [ GrB_Vector_nvals 
+   1.74e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 86557 mwork 2048 (use mask) (intensity: 2.45e-05 workspace/(nnz(A)+nnz(B)): 0.0182) (nthreads 1 fine hash: 1) (sparse saxpy) 
+   0.00188 sec ]
+ [ GrB_eWiseAdd (wait:B 0 zombies, 0 pending, jumbled) add:(S<.>=S+S) 
+   9.23e-05 sec ]
+ [ GxB_select (iso select) 
+   1.61e-05 sec ]
+ [ GrB_assign (C iso assign) Method:bit4:whole C<M,struct> = scalar 
+   6.46e-05 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.000201 sec ]
+ [ GrB_Vector_nvals 
+   1.65e-07 sec ]
+ [ GrB_Vector_nvals 
+   6.52e-08 sec ]
+ [ GrB_vxm (wait:M 1881 zombies, 0 pending) C<M>=A*B, saxpy (S{S}=S*S) axbwork 75853 mwork 167 (use mask) (intensity: 2.1e-05 workspace/(nnz(A)+nnz(B)): 0.0182) (nthreads 1 fine hash: 1) (iso sparse saxpy) 
+   0.00115 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S (iso wait:M 0 zombies, 0 pending, jumbled) 
+   0.0001 sec ]
+ [ GrB_Vector_nvals 
+   1.11e-07 sec ]
+ [ GrB_assign (wait:M 160 zombies, 0 pending) (C alias cleared; C_replace early) (pending: 0) Method 06n: C(:,:)<M> = Z ; no S 
+   3.24e-05 sec ]
+ [ GrB_apply (wait:A 0 zombies, 7 pending) (build) (hyper to sparse) (in-place-op) (generic apply: LG_rand_next_f) 
+   2.05e-05 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*Bf)
+   1.12e-05 sec ]
+ [ GrB_Vector_nvals 
+   1.13e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 111 mwork 7 (use mask) (intensity: 3.27e-08 workspace/(nnz(A)+nnz(B)): 0.0182) (nthreads 1 fine hash: 1) (sparse saxpy) 
+   4.31e-05 sec ]
+ [ GrB_eWiseAdd (wait:B 0 zombies, 0 pending, jumbled) add:(S<.>=S+S) 
+   4.8e-05 sec ]
+ [ GxB_select (iso select) 
+   7.51e-06 sec ]
+ [ GrB_assign (C iso assign) Method:bit4:whole C<M,struct> = scalar 
+   1.22e-05 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   7.76e-05 sec ]
+ [ GrB_Vector_nvals 
+   1.34e-07 sec ]
+
+............................................................
+warmup time 5.13046 sec
+SuiteSparse:GraphBLAS v5.2.0 [Oct 7, 2021 (alpha12)]
+# of trials: 3
+threads to test:  40
+matrix: ../../../GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-kron/GAP-kron.grb
+read time: 58.8357
+
+============================================================
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   3.53e-05 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0718 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.0488 sec ]
+ [ GrB_Vector_nvals 
+   7.47e-07 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 05e: (C empty)<M,struct> = scalar 
+   0.0096 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C iso assign) (pending: 0) Method 13: C(:,:)<!M> = scalar ; using S 
+   0.171 sec ]
+ [ GrB_Vector_nvals 
+   5.14e-07 sec ]
+ [ GrB_assign (C alias: duplicate) (full to bitmap) Method:bit2:whole C<M,bitmap,struct,replace> = A 
+   0.116 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.064 sec ]
+ [ GrB_eWiseMult emult_bitmap:(B<.>=B.*B) 
+   0.1 sec ]
+ [ GrB_Vector_nvals 
+   4.02e-07 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (dot2) (B{B}=S'*B) 
+   6.16 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) 
+   0.0654 sec ]
+ [ GxB_select (C bitmap) (A bitmap) (iso select) (bitmap select) 
+   0.0137 sec ]
+ [ GrB_assign (C iso assign) (pending: 71143742) Method 05: C(:,:)<M> = scalar ; no S 
+   0.122 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.0314 sec ]
+ [ GrB_Vector_nvals 
+   7.81e-07 sec ]
+ [ GrB_Vector_nvals 
+   1.2e-07 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (iso dot2) (B{B}=S'*B) 
+   0.374 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.0227 sec ]
+ [ GrB_Vector_nvals 
+   3.88e-07 sec ]
+ [ GrB_assign (C alias: duplicate) Method:bit2:whole C<M,bitmap,struct,replace> = A 
+   0.126 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.0442 sec ]
+ [ GrB_eWiseMult emult_bitmap:(B<.>=B.*B) 
+   0.0867 sec ]
+ [ GrB_Vector_nvals 
+   4.97e-07 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (dot2) (B{B}=S'*B) 
+   0.221 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) 
+   0.0573 sec ]
+ [ GxB_select (C bitmap) (A bitmap) (iso select) (bitmap select) 
+   0.0116 sec ]
+ [ GrB_assign (C iso assign) (pending: 95406773) Method 05: C(:,:)<M> = scalar ; no S 
+   0.0491 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A (bitmap to sparse) 
+   0.0383 sec ]
+ [ GrB_Vector_nvals 
+   9.41e-07 sec ]
+ [ GrB_Vector_nvals 
+   1.59e-07 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (iso dot3) (S{S}=S'*B) nthreads 40 ntasks 1006 
+   0.0505 sec ]
+ [ GrB_assign (iso wait:M 680013 zombies, 0 pending) (iso select) (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.0132 sec ]
+ [ GrB_Vector_nvals 
+   2.83e-07 sec ]
+ [ GrB_assign (wait:M 1940774 zombies, 0 pending) (C alias: duplicate) Method:bit4:whole C<M,struct,replace> = A (bitmap to sparse) 
+   0.0987 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.000976 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*B)
+   0.00618 sec ]
+ [ GrB_Vector_nvals 
+   3.89e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 1.19453e+07 mwork 680013 (use mask) (nthreads 40 fine: 160) (sparse saxpy) 
+   0.0399 sec ]
+ [ GrB_eWiseAdd add:(S<.>=S+S) 
+   0.00128 sec ]
+ [ GxB_select (iso select) 
+   0.000328 sec ]
+ [ GrB_assign (C iso assign) (pending: 117279315) Method 05: C(:,:)<M> = scalar ; no S 
+   0.000704 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.00552 sec ]
+ [ GrB_Vector_nvals 
+   3.08e-07 sec ]
+ [ GrB_Vector_nvals 
+   1.22e-07 sec ]
+ [ GrB_vxm (wait:M 578068 zombies, 0 pending) C<M>=A*B, saxpy (S{S}=S*S) axbwork 8.96526e+06 mwork 101945 (use mask) (nthreads 40 fine: 139) (iso sparse saxpy) 
+   0.0284 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.00747 sec ]
+ [ GrB_Vector_nvals 
+   2.92e-07 sec ]
+ [ GrB_assign (wait:M 85415 zombies, 0 pending) (C alias cleared; C_replace early) (pending: 0) Method 06n: C(:,:)<M> = Z ; no S 
+   0.00359 sec ]
+ [ GrB_apply (wait:A 0 zombies, 16530 pending) (build) (hyper to sparse) (in-place-op) (generic apply: LG_rand_next_f) 
+   0.000128 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*B)
+   0.00172 sec ]
+ [ GrB_Vector_nvals 
+   1.99e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 315263 mwork 16530 (use mask) (intensity: 7.86e-05 workspace/(nnz(A)+nnz(B)): 0.318) (nthreads 5 fine hash: 6) (sparse saxpy) 
+   0.00328 sec ]
+ [ GrB_eWiseAdd (wait:B 0 zombies, 0 pending, jumbled) add:(S<.>=S+S) 
+   0.000295 sec ]
+ [ GxB_select (iso select) 
+   5.61e-05 sec ]
+ [ GrB_assign (C iso assign) (pending: 117857383) Method 05: C(:,:)<M> = scalar ; no S 
+   0.000152 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.00114 sec ]
+ [ GrB_Vector_nvals 
+   1.36e-07 sec ]
+ [ GrB_Vector_nvals 
+   5.59e-08 sec ]
+ [ GrB_vxm (wait:M 15268 zombies, 0 pending) C<M>=A*B, saxpy (S{S}=S*S) axbwork 273311 mwork 1262 (use mask) (intensity: 6.5e-05 workspace/(nnz(A)+nnz(B)): 0.254) (nthreads 4 fine hash: 5) (iso sparse saxpy) 
+   0.00238 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S (iso wait:M 0 zombies, 0 pending, jumbled) 
+   0.000222 sec ]
+ [ GrB_Vector_nvals 
+   1.15e-07 sec ]
+ [ GrB_assign (wait:M 1160 zombies, 0 pending) (C alias cleared; C_replace early) (pending: 0) Method 06n: C(:,:)<M> = Z ; no S 
+   4.88e-05 sec ]
+ [ GrB_apply (wait:A 0 zombies, 102 pending) (build) (hyper to sparse) (in-place-op) (generic apply: LG_rand_next_f) 
+   2.33e-05 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*B)
+   2.26e-05 sec ]
+ [ GrB_Vector_nvals 
+   8.89e-08 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 2004 mwork 102 (use mask) (intensity: 4.99e-07 workspace/(nnz(A)+nnz(B)): 0.0318) (nthreads 1 fine hash: 1) (sparse saxpy) 
+   9.59e-05 sec ]
+ [ GrB_eWiseAdd (wait:B 0 zombies, 0 pending, jumbled) add:(S<.>=S+S) 
+   5.5e-05 sec ]
+ [ GxB_select (iso select) 
+   7.98e-06 sec ]
+ [ GrB_assign (C iso assign) (pending: 117872651) Method 05: C(:,:)<M> = scalar ; no S 
+   1.4e-05 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   7.91e-05 sec ]
+ [ GrB_Vector_nvals 
+   9.17e-08 sec ]
+ [ GrB_Vector_nvals 
+   7.22e-08 sec ]
+ [ GrB_vxm (wait:M 99 zombies, 0 pending) C<M>=A*B, saxpy (S{S}=S*S) axbwork 1987 mwork 3 (use mask) (intensity: 4.71e-07 workspace/(nnz(A)+nnz(B)): 0.0318) (nthreads 1 fine hash: 1) (iso sparse saxpy) 
+   6.45e-05 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S (iso wait:M 0 zombies, 0 pending, jumbled) 
+   7.83e-05 sec ]
+ [ GrB_Vector_nvals 
+   1.19e-07 sec ]
+ [ GrB_Vector_wait (iso wait:vector 0 zombies, 117872750 pending) (iso build) (sparse to bitmap) 
+   0.47 sec ]
+
+............................................................
+warmup time 8.74715 sec
+SuiteSparse:GraphBLAS v5.2.0 [Oct 7, 2021 (alpha12)]
+# of trials: 3
+threads to test:  40
+matrix: ../../../GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-urand/GAP-urand.grb
+read time: 56.0057
+
+============================================================
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   2.94e-05 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0723 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.052 sec ]
+ [ GrB_Vector_nvals 
+   1.1e-06 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   2.71e-05 sec ]
+ [ GrB_Vector_nvals 
+   2.5e-07 sec ]
+ [ GrB_assign (C alias: duplicate) (full to bitmap) Method:bit2:whole C<M,full,struct,replace> = A 
+   0.114 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.0554 sec ]
+ [ GrB_eWiseMult add:(F<.>=Bf+Bf) 
+   0.102 sec ]
+ [ GrB_Vector_nvals 
+   3.94e-07 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   4.84 sec ]
+ [ GrB_eWiseAdd add:(F<.>=F+Bf) 
+   0.0385 sec ]
+ [ GxB_select (C full) (A full) (iso select) (bitmap select) 
+   0.0107 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 05e: (C empty)<M,struct> = scalar 
+   0.00754 sec ]
+ [ GrB_assign (full to bitmap) Method:bit2:whole C<M,bitmap,struct> = A 
+   0.0271 sec ]
+ [ GrB_Vector_nvals 
+   6.9e-07 sec ]
+ [ GrB_Vector_nvals 
+   1.18e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (B{B}=S*B) (iso bitmap saxpy) (fine, threads: 40, relwspace: 1.18, intensity: 32: atomic) 
+   0.507 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.0414 sec ]
+ [ GrB_Vector_nvals 
+   4.12e-07 sec ]
+ [ GrB_assign (C alias: duplicate) (full to bitmap) Method:bit2:whole C<M,bitmap,struct,replace> = A 
+   0.118 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.0511 sec ]
+ [ GrB_eWiseMult emult_bitmap:(B<.>=B.*Bf) 
+   0.104 sec ]
+ [ GrB_Vector_nvals 
+   5.91e-07 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (dot2) (B{B}=S'*B) 
+   1.98 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) 
+   0.0631 sec ]
+ [ GxB_select (C bitmap) (A bitmap) (iso select) (bitmap select) 
+   0.00999 sec ]
+ [ GrB_assign (C iso assign) Method:bit2:whole C<M,bitmap,struct> = scalar 
+   0.019 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.0129 sec ]
+ [ GrB_Vector_nvals 
+   4.03e-07 sec ]
+ [ GrB_Vector_nvals 
+   1.22e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (B{B}=S*B) (iso bitmap saxpy) (fine, threads: 40, relwspace: 1.18, intensity: 32: atomic) 
+   0.291 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.0271 sec ]
+ [ GrB_Vector_nvals 
+   4.25e-07 sec ]
+ [ GrB_assign (C alias: duplicate) Method:bit2:whole C<M,bitmap,struct,replace> = A 
+   0.108 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.0349 sec ]
+ [ GrB_eWiseMult emult_bitmap:(B<.>=B.*Bf) 
+   0.0788 sec ]
+ [ GrB_Vector_nvals 
+   5.85e-07 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (dot2) (B{B}=S'*B) 
+   0.502 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) 
+   0.0552 sec ]
+ [ GxB_select (C bitmap) (A bitmap) (iso select) (bitmap select) 
+   0.012 sec ]
+ [ GrB_assign (C iso assign) Method:bit2:whole C<M,bitmap,struct> = scalar 
+   0.014 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.0144 sec ]
+ [ GrB_Vector_nvals 
+   3.68e-07 sec ]
+ [ GrB_Vector_nvals 
+   1.18e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (B{B}=S*B) (iso bitmap saxpy) (fine, threads: 40, relwspace: 1.18, intensity: 32: atomic) 
+   0.19 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.0231 sec ]
+ [ GrB_Vector_nvals 
+   4.02e-07 sec ]
+ [ GrB_assign (C alias: duplicate) Method:bit2:whole C<M,bitmap,struct,replace> = A 
+   0.0887 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.0229 sec ]
+ [ GrB_eWiseMult emult_bitmap:(B<.>=B.*Bf) 
+   0.0395 sec ]
+ [ GrB_Vector_nvals 
+   5.27e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (B{B}=S*B) (bitmap saxpy) (fine, threads: 40, relwspace: 1.18, intensity: 32: atomic) (bitmap to sparse) 
+   0.204 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+S) 
+   0.0396 sec ]
+ [ GxB_select (C bitmap) (A bitmap) (iso select) (bitmap select) (bitmap to sparse) 
+   0.0284 sec ]
+ [ GrB_assign (C iso assign) Method:bit4:whole C<M,struct> = scalar 
+   0.00307 sec ]
+ [ GrB_assign Method:bit4:whole C<M,struct> = A (A empty) (bitmap to sparse) 
+   0.0213 sec ]
+ [ GrB_Vector_nvals 
+   1.42e-06 sec ]
+ [ GrB_Vector_nvals 
+   1.84e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 5.57497e+07 mwork 1.10122e+06 (use mask) (nthreads 40 fine: 160) (iso sparse saxpy) 
+   0.0895 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.00985 sec ]
+ [ GrB_Vector_nvals 
+   5.03e-07 sec ]
+ [ GrB_assign (wait:M 882755 zombies, 0 pending) (C alias: duplicate) Method:bit4:whole C<M,struct,replace> = A (bitmap to sparse) 
+   0.0977 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.00249 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*Bf)
+   0.00533 sec ]
+ [ GrB_Vector_nvals 
+   5.46e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 6.72298e+06 mwork 218467 (use mask) (nthreads 40 fine: 106) (sparse saxpy) 
+   0.0379 sec ]
+ [ GrB_eWiseAdd add:(S<.>=S+S) 
+   0.00289 sec ]
+ [ GxB_select (iso select) 
+   0.000318 sec ]
+ [ GrB_assign (C iso assign) Method:bit4:whole C<M,struct> = scalar 
+   0.00123 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.00546 sec ]
+ [ GrB_Vector_nvals 
+   2.99e-07 sec ]
+ [ GrB_Vector_nvals 
+   7.59e-08 sec ]
+ [ GrB_vxm (wait:M 184779 zombies, 0 pending) C<M>=A*B, saxpy (S{S}=S*S) axbwork 5.65903e+06 mwork 33688 (use mask) (nthreads 40 fine: 87) (iso sparse saxpy) 
+   0.0369 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.00279 sec ]
+ [ GrB_Vector_nvals 
+   2.94e-07 sec ]
+ [ GrB_assign (wait:M 30757 zombies, 0 pending) (C alias cleared; C_replace early) (pending: 0) Method 06n: C(:,:)<M> = Z ; no S 
+   0.000775 sec ]
+ [ GrB_apply (wait:A 0 zombies, 2931 pending) (build) (hyper to sparse) (in-place-op) (generic apply: LG_rand_next_f) 
+   4.58e-05 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*Bf)
+   0.00037 sec ]
+ [ GrB_Vector_nvals 
+   2.04e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 89785 mwork 2931 (use mask) (intensity: 2.16e-05 workspace/(nnz(A)+nnz(B)): 0.0312) (nthreads 1 fine hash: 1) (sparse saxpy) 
+   0.00221 sec ]
+ [ GrB_eWiseAdd (wait:B 0 zombies, 0 pending, jumbled) add:(S<.>=S+S) 
+   8.85e-05 sec ]
+ [ GxB_select (iso select) 
+   1.77e-05 sec ]
+ [ GrB_assign (C iso assign) Method:bit4:whole C<M,struct> = scalar 
+   0.000103 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.000251 sec ]
+ [ GrB_Vector_nvals 
+   1.6e-07 sec ]
+ [ GrB_Vector_nvals 
+   9.5e-08 sec ]
+ [ GrB_vxm (wait:M 2770 zombies, 0 pending) C<M>=A*B, saxpy (S{S}=S*S) axbwork 84613 mwork 161 (use mask) (intensity: 1.97e-05 workspace/(nnz(A)+nnz(B)): 0.0312) (nthreads 1 fine hash: 1) (iso sparse saxpy) 
+   0.00125 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S (iso wait:M 0 zombies, 0 pending, jumbled) 
+   0.000103 sec ]
+ [ GrB_Vector_nvals 
+   1.06e-07 sec ]
+ [ GrB_assign (wait:M 159 zombies, 0 pending) (C alias cleared; C_replace early) (pending: 0) Method 06n: C(:,:)<M> = Z ; no S 
+   2.1e-05 sec ]
+ [ GrB_apply (wait:A 0 zombies, 2 pending) (build) (hyper to sparse) (in-place-op) (generic apply: LG_rand_next_f) 
+   2.07e-05 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*Bf)
+   1.05e-05 sec ]
+ [ GrB_Vector_nvals 
+   5.59e-08 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 46 mwork 2 (use mask) (intensity: 1.12e-08 workspace/(nnz(A)+nnz(B)): 0.0313) (nthreads 1 fine hash: 1) (sparse saxpy) 
+   4.14e-05 sec ]
+ [ GrB_eWiseAdd (wait:B 0 zombies, 0 pending, jumbled) add:(S<.>=S+S) 
+   4.71e-05 sec ]
+ [ GxB_select (iso select) 
+   7.98e-06 sec ]
+ [ GrB_assign (C iso assign) Method:bit4:whole C<M,struct> = scalar 
+   1.26e-05 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   7.44e-05 sec ]
+ [ GrB_Vector_nvals 
+   9.17e-08 sec ]
+
+............................................................
+warmup time 10.3201 sec
+SuiteSparse:GraphBLAS v5.2.0 [Oct 7, 2021 (alpha12)]
+# of trials: 3
+threads to test:  40
+matrix: ../../../GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-twitter/GAP-twitter.grb
+read time: 39.1375
+
+============================================================
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   2.87e-05 sec ]
+ [ GrB_apply (in-place-op) 
+   0.029 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.0253 sec ]
+ [ GrB_Vector_nvals 
+   8.96e-07 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 05e: (C empty)<M,struct> = scalar 
+   0.00613 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C iso assign) (pending: 0) Method 13: C(:,:)<!M> = scalar ; using S 
+   0.0688 sec ]
+ [ GrB_Vector_nvals 
+   4.75e-07 sec ]
+ [ GrB_assign (C alias: duplicate) (full to bitmap) Method:bit2:whole C<M,bitmap,struct,replace> = A 
+   0.0529 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.021 sec ]
+ [ GrB_eWiseMult emult_bitmap:(B<.>=B.*B) 
+   0.0456 sec ]
+ [ GrB_Vector_nvals 
+   4.57e-07 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (dot2) (B{B}=S'*B) 
+   2.63 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) 
+   0.0274 sec ]
+ [ GxB_select (C bitmap) (A bitmap) (iso select) (bitmap select) 
+   0.00927 sec ]
+ [ GrB_assign (C iso assign) (pending: 19926185) Method 05: C(:,:)<M> = scalar ; no S 
+   0.052 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.017 sec ]
+ [ GrB_Vector_nvals 
+   3.89e-07 sec ]
+ [ GrB_Vector_nvals 
+   4.58e-07 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (iso dot2) (B{B}=S'*B) 
+   0.293 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.0144 sec ]
+ [ GrB_Vector_nvals 
+   5.35e-07 sec ]
+ [ GrB_assign (C alias: duplicate) Method:bit2:whole C<M,bitmap,struct,replace> = A 
+   0.0588 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.0211 sec ]
+ [ GrB_eWiseMult emult_bitmap:(B<.>=B.*B) 
+   0.04 sec ]
+ [ GrB_Vector_nvals 
+   5.98e-07 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (dot2) (B{B}=S'*B) 
+   0.161 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) 
+   0.0272 sec ]
+ [ GxB_select (C bitmap) (A bitmap) (iso select) (bitmap select) 
+   0.00945 sec ]
+ [ GrB_assign (C iso assign) (pending: 33701774) Method 05: C(:,:)<M> = scalar ; no S 
+   0.0731 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.014 sec ]
+ [ GrB_Vector_nvals 
+   3.92e-07 sec ]
+ [ GrB_Vector_nvals 
+   1.23e-07 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (iso dot2) (B{B}=S'*B) 
+   0.0501 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A (bitmap to sparse) 
+   0.0111 sec ]
+ [ GrB_Vector_nvals 
+   5.58e-07 sec ]
+ [ GrB_assign (C alias: duplicate) Method:bit4:whole C<M,struct,replace> = A (bitmap to sparse) 
+   0.0611 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.00258 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*B)
+   0.00508 sec ]
+ [ GrB_Vector_nvals 
+   3.13e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 2.66967e+07 mwork 730406 (use mask) (nthreads 40 fine: 160) (sparse saxpy) 
+   0.0413 sec ]
+ [ GrB_eWiseAdd add:(S<.>=S+S) 
+   0.000971 sec ]
+ [ GxB_select (iso select) 
+   0.00037 sec ]
+ [ GrB_assign (C iso assign) (pending: 47043162) Method 05: C(:,:)<M> = scalar ; no S 
+   0.000698 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.00544 sec ]
+ [ GrB_Vector_nvals 
+   2.65e-07 sec ]
+ [ GrB_Vector_nvals 
+   5.68e-08 sec ]
+ [ GrB_vxm (wait:M 576750 zombies, 0 pending) C<M>=A*B, saxpy (S{S}=S*S) axbwork 1.80553e+07 mwork 153656 (use mask) (nthreads 40 fine: 160) (iso sparse saxpy) 
+   0.0364 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.00788 sec ]
+ [ GrB_Vector_nvals 
+   2.87e-07 sec ]
+ [ GrB_assign (wait:M 125331 zombies, 0 pending) (C alias cleared; C_replace early) (pending: 0) Method 06n: C(:,:)<M> = Z ; no S 
+   0.00514 sec ]
+ [ GrB_apply (wait:A 0 zombies, 28325 pending) (build) (hyper to sparse) (in-place-op) (generic apply: LG_rand_next_f) 
+   0.000201 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*B)
+   0.00251 sec ]
+ [ GrB_Vector_nvals 
+   1.7e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 1.59936e+06 mwork 28325 (use mask) (nthreads 24 fine hash: 25) (sparse saxpy) 
+   0.00675 sec ]
+ [ GrB_eWiseAdd (wait:B 0 zombies, 0 pending, jumbled) add:(S<.>=S+S) 
+   0.00103 sec ]
+ [ GxB_select (iso select) 
+   0.000145 sec ]
+ [ GrB_assign (C iso assign) (pending: 47619912) Method 05: C(:,:)<M> = scalar ; no S 
+   0.000472 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.00233 sec ]
+ [ GrB_Vector_nvals 
+   3.18e-07 sec ]
+ [ GrB_Vector_nvals 
+   8.8e-08 sec ]
+ [ GrB_vxm (wait:M 24384 zombies, 0 pending) C<M>=A*B, saxpy (S{S}=S*S) axbwork 1.206e+06 mwork 3941 (use mask) (nthreads 18 fine hash: 19) (iso sparse saxpy) 
+   0.00572 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S (iso wait:M 0 zombies, 0 pending, jumbled) 
+   0.000668 sec ]
+ [ GrB_Vector_nvals 
+   2.19e-07 sec ]
+ [ GrB_assign (wait:M 3476 zombies, 0 pending) (C alias cleared; C_replace early) (pending: 0) Method 06n: C(:,:)<M> = Z ; no S 
+   0.000211 sec ]
+ [ GrB_apply (wait:A 0 zombies, 465 pending) (build) (hyper to sparse) (in-place-op) (generic apply: LG_rand_next_f) 
+   4.26e-05 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*B)
+   0.000117 sec ]
+ [ GrB_Vector_nvals 
+   2.57e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 53845 mwork 465 (use mask) (intensity: 2.26e-05 workspace/(nnz(A)+nnz(B)): 0.0256) (nthreads 1 fine hash: 1) (sparse saxpy) 
+   0.0012 sec ]
+ [ GrB_eWiseAdd (wait:B 0 zombies, 0 pending, jumbled) add:(S<.>=S+S) 
+   9.07e-05 sec ]
+ [ GxB_select (iso select) 
+   1.63e-05 sec ]
+ [ GrB_assign (C iso assign) (pending: 47644296) Method 05: C(:,:)<M> = scalar ; no S 
+   3.21e-05 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.000149 sec ]
+ [ GrB_Vector_nvals 
+   1.5e-07 sec ]
+ [ GrB_Vector_nvals 
+   7.96e-08 sec ]
+ [ GrB_vxm (wait:M 415 zombies, 0 pending) C<M>=A*B, saxpy (S{S}=S*S) axbwork 37988 mwork 50 (use mask) (intensity: 1.58e-05 workspace/(nnz(A)+nnz(B)): 0.0256) (nthreads 1 fine hash: 1) (iso sparse saxpy) 
+   0.00101 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S (iso wait:M 0 zombies, 0 pending, jumbled) 
+   0.000226 sec ]
+ [ GrB_Vector_nvals 
+   1.99e-07 sec ]
+ [ GrB_assign (wait:M 43 zombies, 0 pending) (C alias cleared; C_replace early) (pending: 0) Method 06n: C(:,:)<M> = Z ; no S 
+   5.42e-05 sec ]
+ [ GrB_apply (wait:A 0 zombies, 7 pending) (build) (hyper to sparse) (in-place-op) (generic apply: LG_rand_next_f) 
+   2.9e-05 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*B)
+   1.45e-05 sec ]
+ [ GrB_Vector_nvals 
+   1.01e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 847 mwork 7 (use mask) (intensity: 3.55e-07 workspace/(nnz(A)+nnz(B)): 0.0256) (nthreads 1 fine hash: 1) (sparse saxpy) 
+   6.85e-05 sec ]
+ [ GrB_eWiseAdd (wait:B 0 zombies, 0 pending, jumbled) add:(S<.>=S+S) 
+   5.5e-05 sec ]
+ [ GxB_select (iso select) 
+   1.21e-05 sec ]
+ [ GrB_assign (C iso assign) (pending: 47644711) Method 05: C(:,:)<M> = scalar ; no S 
+   1.85e-05 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   8.73e-05 sec ]
+ [ GrB_Vector_nvals 
+   1.5e-07 sec ]
+ [ GrB_Vector_wait (iso wait:vector 0 zombies, 47644718 pending) (iso build) (sparse to bitmap) 
+   0.218 sec ]
+
+............................................................
+warmup time 4.17148 sec
+SuiteSparse:GraphBLAS v5.2.0 [Oct 7, 2021 (alpha12)]
+# of trials: 3
+threads to test:  40
+matrix: ../../../GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-web/GAP-web.grb
+read time: 22.8923
+
+============================================================
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   2.39e-05 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0362 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.0246 sec ]
+ [ GrB_Vector_nvals 
+   1.02e-06 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 05e: (C empty)<M,struct> = scalar 
+   0.00613 sec ]
+ [ GrB_assign (C(:,:)<any mask>: C_replace early) (C iso assign) (pending: 0) Method 13: C(:,:)<!M> = scalar ; using S 
+   0.0324 sec ]
+ [ GrB_Vector_nvals 
+   3.48e-07 sec ]
+ [ GrB_assign (C alias: duplicate) (full to bitmap) Method:bit2:whole C<M,bitmap,struct,replace> = A 
+   0.0536 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.0226 sec ]
+ [ GrB_eWiseMult emult_bitmap:(B<.>=B.*B) 
+   0.0444 sec ]
+ [ GrB_Vector_nvals 
+   4.06e-07 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (dot2) (B{B}=S'*B) 
+   0.515 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) 
+   0.0253 sec ]
+ [ GxB_select (C bitmap) (A bitmap) (iso select) (bitmap select) 
+   0.00651 sec ]
+ [ GrB_assign (C iso assign) (pending: 92) Method 05: C(:,:)<M> = scalar ; no S 
+   0.0288 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.0178 sec ]
+ [ GrB_Vector_nvals 
+   4.13e-07 sec ]
+ [ GrB_Vector_nvals 
+   1.33e-07 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (iso dot2) (B{B}=S'*B) 
+   0.237 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.0132 sec ]
+ [ GrB_Vector_nvals 
+   1.82e-07 sec ]
+ [ GrB_assign (C alias: duplicate) Method:bit2:whole C<M,bitmap,struct,replace> = A 
+   0.0556 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.0208 sec ]
+ [ GrB_eWiseMult emult_bitmap:(B<.>=B.*B) 
+   0.0371 sec ]
+ [ GrB_Vector_nvals 
+   5.11e-07 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (dot2) (B{B}=S'*B) 
+   0.144 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) 
+   0.0255 sec ]
+ [ GxB_select (C bitmap) (A bitmap) (iso select) (bitmap select) 
+   0.00779 sec ]
+ [ GrB_assign (C iso assign) (pending: 13994386) Method 05: C(:,:)<M> = scalar ; no S 
+   0.0411 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.0139 sec ]
+ [ GrB_Vector_nvals 
+   3.83e-07 sec ]
+ [ GrB_Vector_nvals 
+   1.3e-07 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (iso dot2) (B{B}=S'*B) 
+   0.0317 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A (bitmap to sparse) 
+   0.0262 sec ]
+ [ GrB_Vector_nvals 
+   3.56e-07 sec ]
+ [ GrB_assign (C alias: duplicate) Method:bit4:whole C<M,struct,replace> = A (bitmap to sparse) 
+   0.0573 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.00257 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*B)
+   0.00364 sec ]
+ [ GrB_Vector_nvals 
+   4.2e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 3.24503e+07 mwork 525330 (use mask) (nthreads 40 fine: 160) (sparse saxpy) 
+   0.0339 sec ]
+ [ GrB_eWiseAdd add:(S<.>=S+S) 
+   0.00273 sec ]
+ [ GxB_select (iso select) 
+   0.000349 sec ]
+ [ GrB_assign (C iso assign) (pending: 28208502) Method 05: C(:,:)<M> = scalar ; no S 
+   0.00157 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.0068 sec ]
+ [ GrB_Vector_nvals 
+   3.1e-07 sec ]
+ [ GrB_Vector_nvals 
+   6.52e-08 sec ]
+ [ GrB_vxm (wait:M 379298 zombies, 0 pending) C<M>=A*B, saxpy (S{S}=S*S) axbwork 2.18203e+07 mwork 146032 (use mask) (nthreads 40 fine: 160) (iso sparse saxpy) 
+   0.0331 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.00724 sec ]
+ [ GrB_Vector_nvals 
+   3.02e-07 sec ]
+ [ GrB_assign (wait:M 116672 zombies, 0 pending) (C alias cleared; C_replace early) (pending: 0) Method 06n: C(:,:)<M> = Z ; no S 
+   0.00425 sec ]
+ [ GrB_apply (wait:A 0 zombies, 29360 pending) (build) (hyper to sparse) (in-place-op) (generic apply: LG_rand_next_f) 
+   0.000208 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*B)
+   0.00175 sec ]
+ [ GrB_Vector_nvals 
+   1.72e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 2.05358e+06 mwork 29360 (use mask) (nthreads 31 fine hash: 32) (sparse saxpy) 
+   0.0062 sec ]
+ [ GrB_eWiseAdd (wait:B 0 zombies, 0 pending, jumbled) add:(S<.>=S+S) 
+   0.00165 sec ]
+ [ GxB_select (iso select) 
+   0.000208 sec ]
+ [ GrB_assign (C iso assign) (pending: 28587800) Method 05: C(:,:)<M> = scalar ; no S 
+   0.000285 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.00274 sec ]
+ [ GrB_Vector_nvals 
+   3.92e-07 sec ]
+ [ GrB_Vector_nvals 
+   1.37e-07 sec ]
+ [ GrB_vxm (wait:M 21214 zombies, 0 pending) C<M>=A*B, saxpy (S{S}=S*S) axbwork 1.40083e+06 mwork 8146 (use mask) (nthreads 21 fine hash: 22) (iso sparse saxpy) 
+   0.00394 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S (iso wait:M 0 zombies, 0 pending, jumbled) 
+   0.000992 sec ]
+ [ GrB_Vector_nvals 
+   2.96e-07 sec ]
+ [ GrB_assign (wait:M 6682 zombies, 0 pending) (C alias cleared; C_replace early) (pending: 0) Method 06n: C(:,:)<M> = Z ; no S 
+   0.000264 sec ]
+ [ GrB_apply (wait:A 0 zombies, 1464 pending) (build) (hyper to sparse) (in-place-op) (generic apply: LG_rand_next_f) 
+   3.35e-05 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*B)
+   0.000143 sec ]
+ [ GrB_Vector_nvals 
+   1e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 102264 mwork 1464 (use mask) (intensity: 2.87e-05 workspace/(nnz(A)+nnz(B)): 0.014) (nthreads 1 fine hash: 1) (sparse saxpy) 
+   0.00145 sec ]
+ [ GrB_eWiseAdd (wait:B 0 zombies, 0 pending, jumbled) add:(S<.>=S+S) 
+   8.74e-05 sec ]
+ [ GxB_select (iso select) 
+   1.54e-05 sec ]
+ [ GrB_assign (C iso assign) (pending: 28609014) Method 05: C(:,:)<M> = scalar ; no S 
+   2.51e-05 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.000166 sec ]
+ [ GrB_Vector_nvals 
+   1.48e-07 sec ]
+ [ GrB_Vector_nvals 
+   5.22e-08 sec ]
+ [ GrB_vxm (wait:M 1192 zombies, 0 pending) C<M>=A*B, saxpy (S{S}=S*S) axbwork 76318 mwork 272 (use mask) (intensity: 2.12e-05 workspace/(nnz(A)+nnz(B)): 0.014) (nthreads 1 fine hash: 1) (iso sparse saxpy) 
+   0.000934 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S (iso wait:M 0 zombies, 0 pending, jumbled) 
+   0.000108 sec ]
+ [ GrB_Vector_nvals 
+   1.38e-07 sec ]
+ [ GrB_assign (wait:M 232 zombies, 0 pending) (C alias cleared; C_replace early) (pending: 0) Method 06n: C(:,:)<M> = Z ; no S 
+   2.56e-05 sec ]
+ [ GrB_apply (wait:A 0 zombies, 40 pending) (build) (hyper to sparse) (in-place-op) (generic apply: LG_rand_next_f) 
+   2.04e-05 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*B)
+   1.2e-05 sec ]
+ [ GrB_Vector_nvals 
+   9.27e-08 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 2405 mwork 40 (use mask) (intensity: 6.75e-07 workspace/(nnz(A)+nnz(B)): 0.014) (nthreads 1 fine hash: 1) (sparse saxpy) 
+   6.79e-05 sec ]
+ [ GrB_eWiseAdd (wait:B 0 zombies, 0 pending, jumbled) add:(S<.>=S+S) 
+   4.76e-05 sec ]
+ [ GxB_select (iso select) 
+   7.84e-06 sec ]
+ [ GrB_assign (C iso assign) (pending: 28610206) Method 05: C(:,:)<M> = scalar ; no S 
+   1.3e-05 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   7.55e-05 sec ]
+ [ GrB_Vector_nvals 
+   8.43e-08 sec ]
+ [ GrB_Vector_nvals 
+   4.52e-08 sec ]
+ [ GrB_vxm (wait:M 30 zombies, 0 pending) C<M>=A*B, saxpy (S{S}=S*S) axbwork 1612 mwork 10 (use mask) (intensity: 4.48e-07 workspace/(nnz(A)+nnz(B)): 0.014) (nthreads 1 fine hash: 1) (iso sparse saxpy) 
+   6.2e-05 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S (iso wait:M 0 zombies, 0 pending, jumbled) 
+   8.03e-05 sec ]
+ [ GrB_Vector_nvals 
+   8.2e-08 sec ]
+ [ GrB_assign (wait:M 7 zombies, 0 pending) (C alias cleared; C_replace early) (pending: 0) Method 06n: C(:,:)<M> = Z ; no S 
+   1.84e-05 sec ]
+ [ GrB_apply (wait:A 0 zombies, 3 pending) (build) (hyper to sparse) (in-place-op) (generic apply: LG_rand_next_f) 
+   1.87e-05 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*B)
+   9.32e-06 sec ]
+ [ GrB_Vector_nvals 
+   4.38e-08 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 13 mwork 3 (use mask) (intensity: 4.42e-09 workspace/(nnz(A)+nnz(B)): 0.014) (nthreads 1 fine hash: 1) (sparse saxpy) 
+   3.79e-05 sec ]
+ [ GrB_eWiseAdd (wait:B 0 zombies, 0 pending, jumbled) add:(S<.>=S+S) 
+   4.43e-05 sec ]
+ [ GxB_select (iso select) 
+   7.11e-06 sec ]
+ [ GrB_assign (C iso assign) (pending: 28610236) Method 05: C(:,:)<M> = scalar ; no S 
+   1.22e-05 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   8.15e-05 sec ]
+ [ GrB_Vector_nvals 
+   7.59e-08 sec ]
+ [ GrB_Vector_wait (iso wait:vector 0 zombies, 28610239 pending) (iso build) (sparse to bitmap) 
+   0.144 sec ]
+
+............................................................
+warmup time 1.7881 sec
+SuiteSparse:GraphBLAS v5.2.0 [Oct 7, 2021 (alpha12)]
+# of trials: 3
+threads to test:  40
+matrix: ../../../GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-road/GAP-road.grb
+read time: 0.927174
+
+============================================================
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   2.8e-05 sec ]
+ [ GrB_apply (in-place-op) 
+   0.0104 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.00715 sec ]
+ [ GrB_Vector_nvals 
+   7.21e-07 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 21: (C full) = scalar (sparse to full) 
+   4.61e-05 sec ]
+ [ GrB_Vector_nvals 
+   1.53e-07 sec ]
+ [ GrB_assign (C alias: duplicate) (full to bitmap) Method:bit2:whole C<M,full,struct,replace> = A 
+   0.0201 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.00672 sec ]
+ [ GrB_eWiseMult add:(F<.>=Bf+Bf) 
+   0.014 sec ]
+ [ GrB_Vector_nvals 
+   5.2e-07 sec ]
+ [ GrB_mxv C=A'*B, dot_product (dot2) (B=S'*F) 
+   0.0224 sec ]
+ [ GrB_eWiseAdd add:(F<.>=F+Bf) 
+   0.00646 sec ]
+ [ GxB_select (C full) (A full) (iso select) (bitmap select) 
+   0.000834 sec ]
+ [ GrB_assign (C iso assign) (pending: 0) Method 05e: (C empty)<M,struct> = scalar 
+   0.000383 sec ]
+ [ GrB_assign (full to bitmap) Method:bit2:whole C<M,bitmap,struct> = A 
+   0.0083 sec ]
+ [ GrB_Vector_nvals 
+   3.2e-07 sec ]
+ [ GrB_Vector_nvals 
+   9.5e-08 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (iso dot2) (B{B}=S'*B) 
+   0.0129 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.00504 sec ]
+ [ GrB_Vector_nvals 
+   1.55e-07 sec ]
+ [ GrB_assign (C alias: duplicate) (full to bitmap) Method:bit2:whole C<M,bitmap,struct,replace> = A 
+   0.0198 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.00598 sec ]
+ [ GrB_eWiseMult emult_bitmap:(B<.>=B.*Bf) 
+   0.0153 sec ]
+ [ GrB_Vector_nvals 
+   3.04e-07 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (dot2) (B{B}=S'*B) 
+   0.0182 sec ]
+ [ GrB_eWiseAdd add:(B<.>=B+B) 
+   0.0103 sec ]
+ [ GxB_select (C bitmap) (A bitmap) (iso select) (bitmap select) 
+   0.00123 sec ]
+ [ GrB_assign (C iso assign) Method:bit2:whole C<M,bitmap,struct> = scalar 
+   0.00287 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A 
+   0.00362 sec ]
+ [ GrB_Vector_nvals 
+   3.89e-07 sec ]
+ [ GrB_Vector_nvals 
+   6.47e-08 sec ]
+ [ GrB_mxv C<M>=A'*B, masked_dot_product (iso dot2) (B{B}=S'*B) 
+   0.00942 sec ]
+ [ GrB_assign Method:bit2:whole C<M,bitmap,struct> = A (bitmap to sparse) 
+   0.00335 sec ]
+ [ GrB_Vector_nvals 
+   3.96e-07 sec ]
+ [ GrB_assign (C alias: duplicate) Method:bit4:whole C<M,struct,replace> = A (bitmap to sparse) 
+   0.0212 sec ]
+ [ GrB_apply (in-place-op) (generic apply: LG_rand_next_f) 
+   0.000475 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*Bf)
+   0.00428 sec ]
+ [ GrB_Vector_nvals 
+   5.6e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 502633 mwork 210290 (use mask) (nthreads 10 fine: 11) (sparse saxpy) 
+   0.00907 sec ]
+ [ GrB_eWiseAdd add:(S<.>=S+S) 
+   0.000722 sec ]
+ [ GxB_select (iso select) 
+   0.000255 sec ]
+ [ GrB_assign (C iso assign) Method:bit4:whole C<M,struct> = scalar 
+   0.000853 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.00673 sec ]
+ [ GrB_Vector_nvals 
+   2.81e-07 sec ]
+ [ GrB_Vector_nvals 
+   5.54e-08 sec ]
+ [ GrB_vxm (wait:M 183005 zombies, 0 pending) C<M>=A*B, saxpy (S{S}=S*S) axbwork 428670 mwork 27285 (use mask) (intensity: 0.00788 workspace/(nnz(A)+nnz(B)): 4.96) (nthreads 6 fine hash: 7) (iso sparse saxpy) 
+   0.00688 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S (iso wait:M 0 zombies, 0 pending, jumbled) 
+   0.00367 sec ]
+ [ GrB_Vector_nvals 
+   2.58e-07 sec ]
+ [ GrB_assign (wait:M 25415 zombies, 0 pending) (C alias cleared; C_replace early) (pending: 0) Method 06n: C(:,:)<M> = Z ; no S 
+   0.000575 sec ]
+ [ GrB_apply (wait:A 0 zombies, 1870 pending) (build) (hyper to sparse) (in-place-op) (generic apply: LG_rand_next_f) 
+   4e-05 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*Bf)
+   0.000216 sec ]
+ [ GrB_Vector_nvals 
+   1.44e-07 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 4899 mwork 1870 (use mask) (intensity: 0.000117 workspace/(nnz(A)+nnz(B)): 0.415) (nthreads 1 fine hash: 1) (sparse saxpy) 
+   0.000343 sec ]
+ [ GrB_eWiseAdd (wait:B 0 zombies, 0 pending, jumbled) add:(S<.>=S+S) 
+   7.39e-05 sec ]
+ [ GxB_select (iso select) 
+   1.47e-05 sec ]
+ [ GrB_assign (C iso assign) Method:bit4:whole C<M,struct> = scalar 
+   5.5e-05 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   0.000187 sec ]
+ [ GrB_Vector_nvals 
+   1.41e-07 sec ]
+ [ GrB_Vector_nvals 
+   5.17e-08 sec ]
+ [ GrB_vxm (wait:M 1769 zombies, 0 pending) C<M>=A*B, saxpy (S{S}=S*S) axbwork 4605 mwork 101 (use mask) (intensity: 8.15e-05 workspace/(nnz(A)+nnz(B)): 0.415) (nthreads 1 fine hash: 1) (iso sparse saxpy) 
+   0.000208 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S (iso wait:M 0 zombies, 0 pending, jumbled) 
+   9.35e-05 sec ]
+ [ GrB_Vector_nvals 
+   9.78e-08 sec ]
+ [ GrB_assign (wait:M 100 zombies, 0 pending) (C alias cleared; C_replace early) (pending: 0) Method 06n: C(:,:)<M> = Z ; no S 
+   2.11e-05 sec ]
+ [ GrB_apply (wait:A 0 zombies, 1 pending) (hyper to sparse) (in-place-op) 
+   1.62e-05 sec ]
+ [ GrB_eWiseMult emult_02:(S=S.*Bf)
+   9.97e-06 sec ]
+ [ GrB_Vector_nvals 
+   4.89e-08 sec ]
+ [ GrB_vxm C<M>=A*B, saxpy (S{S}=S*S) axbwork 2 mwork 1 (use mask) (intensity: 5.2e-08 workspace/(nnz(A)+nnz(B)): 0.415) (nthreads 1 fine hash: 1) (iso sparse saxpy) 
+   3.86e-05 sec ]
+ [ GrB_eWiseAdd (iso wait:B 0 zombies, 0 pending, jumbled) add:(S<.>=S+S) 
+   4.81e-05 sec ]
+ [ GxB_select (iso select) 
+   7.89e-06 sec ]
+ [ GrB_assign (C iso assign) Method:bit4:whole C<M,struct> = scalar 
+   1.24e-05 sec ]
+ [ GrB_assign (pending: 0) Method 06s: C(:,:)<M> = Z ; using S 
+   7.47e-05 sec ]
+ [ GrB_Vector_nvals 
+   1.71e-07 sec ]
+
+............................................................
+warmup time 0.262227 sec

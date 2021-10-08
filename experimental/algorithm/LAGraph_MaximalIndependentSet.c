@@ -14,12 +14,13 @@
 
 #define LAGraph_FREE_WORK           \
 {                                   \
-/*  GrB_free (&prob) ; */           \
     GrB_free (&neighbor_max) ;      \
     GrB_free (&new_members) ;       \
     GrB_free (&new_neighbors) ;     \
     GrB_free (&candidates) ;        \
+    GrB_free (&empty) ;             \
     GrB_free (&Seed) ;              \
+    GrB_free (&score) ;             \
 }
 
 #define LAGraph_FREE_ALL            \
@@ -39,10 +40,12 @@
 // mis[i] == true implies node i is a member of the set.
 
 // The graph cannot have any self edges, and it must be symmetric.  Self-edges
-// (diagonal entries) will cause the method to stall.
+// (diagonal entries) will cause the method to stall, and thus G->ndiag must be
+// zero on input.  G->rowdegree must be present on input.  It must not contain
+// any explicit zeros (this is handled by LAGraph_Property_RowDegree).
 
 // Singletons require special treatment.  Since they have no neighbors, their
-// prob is never greater than the max of their neighbors, so they never get
+// score is never greater than the max of their neighbors, so they never get
 // selected and cause the method to stall.  To avoid this case they are removed
 // from the candidate set at the begining, and added to the independent set.
 
@@ -66,17 +69,17 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    GrB_Vector iset = NULL ;
-    GrB_Vector prob = NULL ;            // random probability for each node
-    GrB_Vector neighbor_max = NULL ;    // value of max neighbor probability
-    GrB_Vector new_members = NULL ;     // set of new members to iset
+    GrB_Vector iset = NULL ;            // independent set (output vector)
+    GrB_Vector score = NULL ;           // random score for each node
+    GrB_Vector neighbor_max = NULL ;    // value of max neighbor score
+    GrB_Vector new_members = NULL ;     // set of new members to add to iset
     GrB_Vector new_neighbors = NULL ;   // new neighbors to new iset members
-    GrB_Vector candidates = NULL ;      // candidate members to iset
-    GrB_Vector empty = NULL ;
-    GrB_Vector Seed = NULL ;
-    GrB_Vector degree = NULL ;
-    GrB_Matrix A ;
-    GrB_Index n ;
+    GrB_Vector candidates = NULL ;      // candidate nodes
+    GrB_Vector empty = NULL ;           // an empty vector
+    GrB_Vector Seed = NULL ;            // random number seed vector
+    GrB_Vector degree = NULL ;          // G->rowdegree
+    GrB_Matrix A ;                      // G->A, the adjacency matrix
+    GrB_Index n ;                       // # of nodes
 
     LG_CHECK (LAGraph_CheckGraph (G, msg), -102, "graph is invalid") ;
     LG_CHECK (mis == NULL, -103, "mis is null") ;
@@ -103,25 +106,20 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     //--------------------------------------------------------------------------
 
     GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
-//  do not allocate prob; just use the Seed vector directly
-//  GrB_TRY (GrB_Vector_new (&prob, GrB_INT64, n)) ;
     GrB_TRY (GrB_Vector_new (&neighbor_max, GrB_INT64, n)) ;
     GrB_TRY (GrB_Vector_new (&new_members, GrB_BOOL, n)) ;
     GrB_TRY (GrB_Vector_new (&new_neighbors, GrB_BOOL, n)) ;
     GrB_TRY (GrB_Vector_new (&candidates, GrB_BOOL, n)) ;
     GrB_TRY (GrB_Vector_new (&empty, GrB_BOOL, n)) ;
-    GrB_TRY (GrB_Vector_new (&iset, GrB_BOOL, n)) ;
     GrB_TRY (GrB_Vector_new (&Seed, GrB_INT64, n)) ;
+    GrB_TRY (GrB_Vector_new (&score, GrB_INT64, n)) ;
+    GrB_TRY (GrB_Vector_new (&iset, GrB_BOOL, n)) ;
 
     #if LG_SUITESPARSE
     GrB_Semiring symbolic = GxB_ANY_PAIR_BOOL ;
     #else
     GrB_Semiring symbolic = GrB_LOR_LAND_SEMIRING_BOOL ; 
     #endif
-
-    // create the random number seeds
-    GrB_TRY (GrB_assign (Seed, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
-    LAGraph_TRY (LAGraph_Random_Seed (Seed, seed, msg)) ;
 
     //--------------------------------------------------------------------------
     // remove singletons (nodes of degree zero)
@@ -131,14 +129,14 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     GrB_TRY (GrB_Vector_nvals (&nonsingletons, degree)) ;
     if (nonsingletons == n)
     { 
-        // printf ("no singletons present\n") ;
         // all nodes have degree 1 or more; all nodes are candidates
         GrB_TRY (GrB_assign (candidates, NULL, NULL, (bool) true, GrB_ALL, n,
             NULL)) ;
+        // Seed vector starts out dense
+        GrB_TRY (GrB_assign (Seed, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
     }
     else
     {
-        // printf ("singletons present: %ld\n", n - nonsingletons) ;
         // one or more singletons are present.  singletons are not candidates;
         // they are added to iset first instead.
         // candidates{degree} = 1
@@ -148,7 +146,13 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
         // iset{!degree,replace} = 1
         GrB_TRY (GrB_assign (iset, degree, NULL, (bool) true, GrB_ALL, n,
             GrB_DESC_RSC)) ;
+        // Seed vector starts out sparse
+        GrB_TRY (GrB_assign (Seed, candidates, NULL, 0, GrB_ALL, n,
+            GrB_DESC_S)) ;
     }
+
+    // create the random number seeds
+    LAGraph_TRY (LAGraph_Random_Seed (Seed, seed, msg)) ;
 
     //--------------------------------------------------------------------------
     // iterate while there are candidates to check
@@ -156,58 +160,41 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
 
     GrB_Index ncandidates ;
     GrB_TRY (GrB_Vector_nvals (&ncandidates, candidates)) ;
-    int64_t last_ncandidates = ncandidates ;
+    GrB_Index last_ncandidates = ncandidates ;
     GrB_Index n1 = (GrB_Index) (0.04 * (double) n) ;
     GrB_Index n2 = (GrB_Index) (0.10 * (double) n) ;
 
     while (ncandidates > 0)
     {
-        // printf ("\n ========================================\n") ;
-        // GxB_print (candidates, 2) ;
-
-        // sparsify the random number seeds (just keep it for each candidate) 
-        // Seed{candidates,replace} = Seed
-        GrB_TRY (GrB_assign (Seed, candidates, NULL, Seed, GrB_ALL, n,
-            GrB_DESC_RS)) ;
-        // GxB_print (Seed, 3) ;
-
-        // prob = random vector with sparsity pattern the same as candidates
-        prob = Seed ;
-//      LAGraph_TRY (LAGraph_Random_INT64 (prob, Seed, msg)) ;
-        LAGraph_TRY (LAGraph_Random_Next (Seed, msg)) ;
-
-        // prob = prob / degree
-        // This modifies the Seed vector itself since prob == Seed, so the
-        // random numbers generated are different, but it's slightly faster
-        // and still gives good results.
-        GrB_TRY (GrB_eWiseMult (prob, NULL, NULL, GrB_DIV_INT64, prob, degree,
+        // compute the score for each node; scale the Seed by the degree
+        // score = Seed / degree
+        GrB_TRY (GrB_eWiseMult (score, NULL, NULL, GrB_DIV_INT64, Seed, degree,
             NULL)) ;
-        // GxB_print (prob, 3) ;
 
-        // compute the max probability of all neighbors
-        // neighbor_max{candidates,replace} = prob * A
+        // compute the max score of all neighbors
+        // neighbor_max{candidates,replace} = score * A
         GrB_TRY (GrB_Vector_nvals (&ncandidates, candidates)) ;
         if (ncandidates < n1)
         {
             // push
             GrB_TRY (GrB_vxm (neighbor_max, candidates, NULL,
-                GrB_MAX_FIRST_SEMIRING_INT64, prob, A, GrB_DESC_RS)) ;
+                GrB_MAX_FIRST_SEMIRING_INT64, score, A, GrB_DESC_RS)) ;
         }
         else
         {
             // pull
             GrB_TRY (GrB_mxv (neighbor_max, candidates, NULL,
-                GrB_MAX_SECOND_SEMIRING_INT64, A, prob, GrB_DESC_RS)) ;
+                GrB_MAX_SECOND_SEMIRING_INT64, A, score, GrB_DESC_RS)) ;
         }
-        // GxB_print (neighbor_max, 3) ;
 
-        // select node if its probability is > than all its active neighbors
-        // new_members = (prob > neighbor_max) using set union so that nodes
+        // select node if its score is > than all its active neighbors
+        // new_members = (score > neighbor_max) using set union so that nodes
         // with no neighbors fall through to the output, as true.
         GrB_TRY (GrB_eWiseAdd (new_members, NULL, NULL, GrB_GT_INT64,
-            prob, neighbor_max, NULL)) ;
+            score, neighbor_max, NULL)) ;
 
         // drop explicit zeros from new_members
+        // TODO: make this an LAGraph utility.
         #if LG_SUITESPARSE
         #if GxB_IMPLEMENATION >= GxB_VERSION (5,2,0)
         GrB_TRY (GrB_select (new_members, NULL, NULL, GrB_VALUEEQ_BOOL,
@@ -220,19 +207,16 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
         GrB_TRY (GrB_assign (new_members, new_members, NULL, new_members,
             GrB_ALL, n, GrB_DESC_R)) ;
         #endif
-        // GxB_print (new_members, 3) ;
 
         // add new members to independent set
         // iset{new_members} = true
         GrB_TRY (GrB_assign (iset, new_members, NULL, (bool) true,
             GrB_ALL, n, GrB_DESC_S)) ;
-        // GxB_print (iset, 3) ;
 
         // remove new members from set of candidates
         // candidates{new_members} = empty
         GrB_TRY (GrB_assign (candidates, new_members, NULL, empty,
             GrB_ALL, n, GrB_DESC_S)) ;
-        // GxB_print (candidates, 3) ;
 
         // early exit if candidates is empty
         GrB_TRY (GrB_Vector_nvals (&ncandidates, candidates)) ;
@@ -254,14 +238,22 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
             GrB_TRY (GrB_mxv (new_neighbors, candidates, NULL, symbolic, 
                 A, new_members, GrB_DESC_RS)) ;
         }
-        // GxB_print (new_neighbors, 3) ;
 
         // remove new neighbors of new members from set of candidates
         // candidates{new_neighbors} = empty
         GrB_TRY (GrB_assign (candidates, new_neighbors, NULL, empty,
             GrB_ALL, n, GrB_DESC_S)) ;
-        // GxB_print (candidates, 3) ;
 
+        // sparsify the random number seeds (just keep it for each candidate) 
+        // Seed{candidates,replace} = Seed
+        GrB_TRY (GrB_assign (Seed, candidates, NULL, Seed, GrB_ALL, n,
+            GrB_DESC_RS)) ;
+
+        // get the next random Seed vector
+        LAGraph_TRY (LAGraph_Random_Next (Seed, msg)) ;
+
+        // check for stall (can only occur if the matrix has self-edges, or in
+        // the exceedingly rare case that 2 nodes have the exact same score).
         GrB_TRY (GrB_Vector_nvals (&ncandidates, candidates)) ;
         LG_CHECK (last_ncandidates == ncandidates, -111, "stall") ;
         last_ncandidates = ncandidates ;
@@ -271,6 +263,7 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     // free workspace and return result
     //--------------------------------------------------------------------------
 
+    // TODO: make this an LAGraph utility
     #if LG_SUITESPARSE
     #if GxB_IMPLEMENATION < GxB_VERSION (6,0,0)
     GrB_TRY (GrB_wait (&iset)) ;
