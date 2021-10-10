@@ -53,7 +53,7 @@ GrB_Info LAGraph_init ( )
 
     #ifdef MATLAB_MEX_FILE
     // use MATLAB memory allocation functions
-    info = LAGraph_xinit (mxMalloc, mxCalloc, mxRealloc, mxFree, false) ;
+    info = LAGraph_xinit (mxMalloc, mxCalloc, mxRealloc, mxFree) ;
     #else
     // use ANSI C memory allocation functions
     #ifdef __linux__
@@ -65,7 +65,7 @@ GrB_Info LAGraph_init ( )
     mallopt (M_TRIM_THRESHOLD, -1) ;    // disable sbrk trimming
     mallopt (M_TOP_PAD, 16*1024*1024) ; // increase padding to speedup malloc
     #endif
-    info = LAGraph_xinit (malloc, calloc, realloc, free, true) ;
+    info = LAGraph_xinit (malloc, calloc, realloc, free) ;
     #endif
 
     #if LG_SUITESPARSE && !defined(NDEBUG)

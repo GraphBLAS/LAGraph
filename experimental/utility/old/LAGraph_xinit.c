@@ -44,31 +44,13 @@
     LAGraph_free_global ( ) ;               \
 }
 
-/*
-GrB_Info GxB_init           // start up GraphBLAS and also define malloc, etc
-(
-    GrB_Mode mode,          // blocking or non-blocking mode
-
-    // pointers to memory management functions
-    void * (* user_malloc_function  ) (size_t),
-    void * (* user_calloc_function  ) (size_t, size_t),
-    void * (* user_realloc_function ) (void *, size_t),
-    void   (* user_free_function    ) (void *),
-
-    // This argument appears in SuiteSparse:GraphBLAS 3.0.0 but not 2.x:
-    bool user_malloc_is_thread_safe
-) ;
-*/
-
 GrB_Info LAGraph_xinit
 (
     // pointers to memory management functions
     void * (* user_malloc_function  ) (size_t),
     void * (* user_calloc_function  ) (size_t, size_t),
     void * (* user_realloc_function ) (void *, size_t),
-    void   (* user_free_function    ) (void *),
-
-    bool user_malloc_is_thread_safe
+    void   (* user_free_function    ) (void *)
 )
 {
 
@@ -81,8 +63,11 @@ GrB_Info LAGraph_xinit
         user_malloc_function,
         user_calloc_function,
         user_realloc_function,
-        user_free_function,
-        user_malloc_is_thread_safe)) ;
+        user_free_function
+        #if (GxB_IMPLEMENTATION_MAJOR <= 5)
+        , true
+        #endif
+        )) ;
 
 #else
 
@@ -96,7 +81,6 @@ GrB_Info LAGraph_xinit
     LAGraph_calloc_function  = user_calloc_function ;
     LAGraph_realloc_function = user_realloc_function ;
     LAGraph_free_function    = user_free_function ;
-    LAGraph_malloc_is_thread_safe = user_malloc_is_thread_safe ;
 
     // allocate all global objects
     LAGRAPH_OK (LAGraph_Complex_init ( )) ;

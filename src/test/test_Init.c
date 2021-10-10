@@ -39,7 +39,7 @@ void test_Init (void)
     #endif
 
     // LAGraph_Init cannot be called twice
-    TEST_CHECK (LAGraph_Init (msg) == -GrB_INVALID_VALUE) ;
+    TEST_CHECK (LAGraph_Init (msg) != GrB_SUCCESS) ;
 
     // TODO: this error message is not informative
     printf ("\nmsg: %s\n", msg) ;

@@ -777,8 +777,7 @@ GrB_Info LAGraph_xinit              // start LAGraph (alternative method)
     void * (* user_malloc_function  ) (size_t),
     void * (* user_calloc_function  ) (size_t, size_t),
     void * (* user_realloc_function ) (void *, size_t),
-    void   (* user_free_function    ) (void *),
-    bool user_malloc_is_thread_safe
+    void   (* user_free_function    ) (void *)
 ) ;
 
 GrB_Info LAGraph_finalize ( ) ;     // end LAGraph

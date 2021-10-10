@@ -87,7 +87,16 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
     void *Ax = NULL ;
     int8_t *Ab = NULL ;
     if (A == NULL || *A == NULL || f == NULL) ERROR ;
+
+#if SUITESPARSE
+    #if ( GxB_IMPLEMENTATION_MAJOR <= 5 )
+    // v1.3 C API with SuiteSparse:GraphBLAS v5.2.0 or earlier
     GrB_TRY (GrB_wait (A)) ;
+    #else
+    // v2.0 C API with SuiteSparse:GraphBLAS v6.0.0 or later
+    GrB_TRY (GrB_wait (*A, GrB_MATERIALIZE)) ;
+    #endif
+#endif
 
     //--------------------------------------------------------------------------
     // determine the basic matrix properties
@@ -899,7 +908,15 @@ static int readproblem          // returns 0 if successful, -1 if failure
         GrB_free (&A) ;
         A = A2 ;
         A2 = NULL ;
+        #if SUITESPARSE
+        #if ( GxB_IMPLEMENTATION_MAJOR <= 5 )
+        // v1.3 C API with SuiteSparse:GraphBLAS v5.2.0 or earlier
         GrB_TRY (GrB_wait (&A)) ;
+        #else
+        // v2.0 C API with SuiteSparse:GraphBLAS v6.0.0 or later
+        GrB_TRY (GrB_wait (A, GrB_MATERIALIZE)) ;
+        #endif
+        #endif
     }
 
     //--------------------------------------------------------------------------
@@ -1035,7 +1052,15 @@ static int readproblem          // returns 0 if successful, -1 if failure
 
     if (src_nodes != NULL)
     {
+        #if SUITESPARSE
+        #if ( GxB_IMPLEMENTATION_MAJOR <= 5 )
+        // v1.3 C API with SuiteSparse:GraphBLAS v5.2.0 or earlier
         GrB_TRY (GrB_wait (src_nodes)) ;
+        #else
+        // v2.0 C API with SuiteSparse:GraphBLAS v6.0.0 or later
+        GrB_TRY (GrB_wait (*src_nodes, GrB_MATERIALIZE)) ;
+        #endif
+        #endif
     }
 
     //--------------------------------------------------------------------------

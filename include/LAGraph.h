@@ -379,7 +379,6 @@ int LAGraph_Xinit           // returns 0 if successful, -1 if failure
     void * (* user_calloc_function  ) (size_t, size_t),
     void * (* user_realloc_function ) (void *, size_t),
     void   (* user_free_function    ) (void *),
-    bool user_malloc_is_thread_safe,
     char *msg
 ) ;
 
@@ -792,6 +791,18 @@ int LAGraph_Vector_print_type
                         //      5: as 3 but with %0.15g for float/double
     FILE *f,            // file to write it to, must be already open; use
                         // stdout or stderr to print to those locations.
+    char *msg
+) ;
+
+int LAGraph_Matrix_wait     // wait on a matrix
+(
+    GrB_Matrix A,
+    char *msg
+) ;
+
+int LAGraph_Vector_wait     // wait on a vector
+(
+    GrB_Vector v,
     char *msg
 ) ;
 

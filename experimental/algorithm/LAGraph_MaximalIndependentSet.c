@@ -309,15 +309,7 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     // free workspace and return result
     //--------------------------------------------------------------------------
 
-    // TODO: make this an LAGraph utility
-    #if LG_SUITESPARSE
-    #if GxB_IMPLEMENTATION < GxB_VERSION (6,0,0)
-    GrB_TRY (GrB_wait (&iset)) ;
-    #else
-    GrB_TRY (GrB_wait (iset, GrB_MATERIALIZE)) ;
-    #endif
-    #endif
-
+    LAGraph_TRY (LAGraph_Vector_wait (iset, msg)) ;
     (*mis) = iset ;
     LAGraph_FREE_WORK ;
     return (0) ;

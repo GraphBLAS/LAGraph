@@ -13,6 +13,7 @@
 int LAGraph_Finalize (char *msg)    // returns 0 if successful, -1 if failure
 {
     // finalize GraphBLAS
+    LG_CLEAR_MSG ;
     GrB_TRY (GrB_finalize ( )) ;
 }
 

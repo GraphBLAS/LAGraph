@@ -17,7 +17,6 @@ int LAGraph_Xinit           // returns 0 if successful, -1 if failure
     void * (* user_calloc_function  ) (size_t, size_t),
     void * (* user_realloc_function ) (void *, size_t),
     void   (* user_free_function    ) (void *),
-    bool user_malloc_is_thread_safe,
     char *msg
 )
 {
@@ -48,8 +47,11 @@ int LAGraph_Xinit           // returns 0 if successful, -1 if failure
             user_malloc_function,
             user_calloc_function,
             user_realloc_function,
-            user_free_function,
-            user_malloc_is_thread_safe)) ;
+            user_free_function
+            #if (GxB_IMPLEMENTATION_MAJOR <= 5)
+            , true
+            #endif
+            )) ;
 
     #else
 
@@ -66,7 +68,6 @@ int LAGraph_Xinit           // returns 0 if successful, -1 if failure
     LAGraph_Calloc_function  = user_calloc_function ;
     LAGraph_Realloc_function = user_realloc_function ;
     LAGraph_Free_function    = user_free_function ;
-    LAGraph_Malloc_is_thread_safe = user_malloc_is_thread_safe ;
 
     return (0) ;
 }

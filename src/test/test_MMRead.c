@@ -343,8 +343,8 @@ void test_MMRead_failures (void)
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
         int status = LAGraph_MMRead (&A, &atype, f, msg) ;
-        TEST_CHECK (status == error) ;
-        if (status == error)
+        TEST_CHECK (status == error || status == -error) ;
+        if (status == error || status == -error)
         {
             printf ("    got the error we expected: %d [%s]\n", status, msg) ;
         }

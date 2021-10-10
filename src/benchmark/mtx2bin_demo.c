@@ -56,7 +56,7 @@ int main (int argc, char **argv)
     LAGraph_TRY (LAGraph_MMRead (&A, &atype, f, msg)) ;
     fclose (f) ;
 
-    GrB_TRY (GrB_wait (&A)) ;
+    LAGraph_TRY (LAGraph_Matrix_wait (A, msg)) ;
 
     double t_read ;
     LAGraph_TRY (LAGraph_Toc (&t_read, tic, msg)) ;

@@ -15,12 +15,6 @@ int LAGraph_Init (char *msg)        // return 0 if success, -1 if failure
 
     LG_CLEAR_MSG ;
 
-#ifdef MATLAB_MEX_FILE
-    // use MATLAB memory allocation functions
-    LAGraph_TRY (LAGraph_Xinit (mxMalloc, mxCalloc, mxRealloc, mxFree, false,
-        msg)) ;
-#else
-    // use ANSI C memory allocation functions
     #ifdef __linux__
     // Use mallopt to speedup malloc and free on Linux.  Otherwise, it can take
     // several seconds to free a large block of memory.  For this to be
@@ -30,8 +24,9 @@ int LAGraph_Init (char *msg)        // return 0 if success, -1 if failure
     mallopt (M_TRIM_THRESHOLD, -1) ;    // disable sbrk trimming
     mallopt (M_TOP_PAD, 16*1024*1024) ; // increase padding to speedup malloc
     #endif
-    LAGraph_TRY (LAGraph_Xinit (malloc, calloc, realloc, free, true, msg)) ;
-#endif
+
+    // use ANSI C memory allocation functions
+    LAGraph_TRY (LAGraph_Xinit (malloc, calloc, realloc, free, msg)) ;
 
     return (0) ;
 }

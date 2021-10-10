@@ -136,7 +136,7 @@ int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
     // optimized, tmasked can be directly set the same as t since there is only
     // one entry that satisfies the condition.
     GrB_TRY (GrB_Vector_setElement (tmasked, 0, source)) ;
-    GrB_TRY (GrB_wait (&tmasked)) ;
+    LAGraph_TRY (LAGraph_Vector_wait (tmasked, msg)) ;
 
     // s (src) = true
     GrB_TRY (GrB_Vector_setElement (s, true, source)) ;
@@ -144,12 +144,12 @@ int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
     // AL = A .* (A <= delta)
     GrB_TRY (GrB_Matrix_new (&AL, GrB_INT32, n, n)) ;   // TODO: any type
     GrB_TRY (GxB_select (AL, NULL, NULL, GxB_LE_THUNK, A, lBound, NULL)) ;
-    GrB_TRY (GrB_wait (&AL)) ;
+    LAGraph_TRY (LAGraph_Matrix_wait (AL, msg)) ;
 
     // AH = A .* (A > delta)
     GrB_TRY (GrB_Matrix_new (&AH, GrB_INT32, n, n)) ;   // TODO: any type
     GrB_TRY (GxB_select (AH, NULL, NULL, GxB_GT_THUNK, A, lBound, NULL)) ;
-    GrB_TRY (GrB_wait (&AH)) ;
+    LAGraph_TRY (LAGraph_Matrix_wait (AH, msg)) ;
 
     //--------------------------------------------------------------------------
     // while (t >= i*delta) not empty

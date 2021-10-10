@@ -53,14 +53,6 @@ void * (* LAGraph_calloc_function  ) (size_t, size_t) = calloc ;
 void * (* LAGraph_realloc_function ) (void *, size_t) = realloc ;
 void   (* LAGraph_free_function    ) (void *)         = free ;
 
-bool LAGraph_malloc_is_thread_safe =
-    #ifdef MATLAB_MEX_FILE
-        false       // mxMalloc is not thread-safe
-    #else
-        true        // ANSI C malloc, TBB scalable_malloc, etc are thread safe
-    #endif
-        ;
-
 //------------------------------------------------------------------------------
 // LAGraph_malloc
 //------------------------------------------------------------------------------

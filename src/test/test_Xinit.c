@@ -27,21 +27,21 @@ void test_Xinit (void)
 
     printf ("\nTesting LAGraph_Xinit:\n") ;
 
-    TEST_CHECK (LAGraph_Xinit (NULL, NULL, NULL, NULL, true, msg) == -1) ;
+    TEST_CHECK (LAGraph_Xinit (NULL, NULL, NULL, NULL, msg) == -1) ;
     printf ("msg: %s\n", msg) ;
 
-    TEST_CHECK (LAGraph_Xinit (malloc, NULL, NULL, NULL, true, msg) == -1) ;
+    TEST_CHECK (LAGraph_Xinit (malloc, NULL, NULL, NULL, msg) == -1) ;
     printf ("msg: %s\n", msg) ;
 
-    TEST_CHECK (LAGraph_Xinit (NULL, NULL, NULL, free, true, msg) == -1) ;
+    TEST_CHECK (LAGraph_Xinit (NULL, NULL, NULL, free, msg) == -1) ;
     printf ("msg: %s\n", msg) ;
 
-    OK (LAGraph_Xinit (malloc, calloc, realloc, free, true, msg)) ;
+    OK (LAGraph_Xinit (malloc, calloc, realloc, free, msg)) ;
     printf ("msg: [%s]\n", msg) ;
 
     // LAGraph_Xinit cannot be called twice
-    int status = LAGraph_Xinit (malloc, calloc, realloc, free, true, msg) ;
-    TEST_CHECK (status == -GrB_INVALID_VALUE) ;
+    int status = LAGraph_Xinit (malloc, calloc, realloc, free, msg) ;
+    TEST_CHECK (status != GrB_SUCCESS) ;
 
     // TODO: this error message is not informative
     printf ("msg: %s\n", msg) ;
