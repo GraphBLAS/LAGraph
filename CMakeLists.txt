@@ -216,3 +216,13 @@ enable_testing()
 
 add_subdirectory(src)
 add_subdirectory(experimental)
+
+#-------------------------------------------------------------------------------
+# to install use "sudo make install"
+#-------------------------------------------------------------------------------
+
+# only install the dynamic  library
+install ( TARGETS lagraph lagraphx
+         LIBRARY       DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+         ARCHIVE       DESTINATION ${CMAKE_INSTALL_LIBDIR} )

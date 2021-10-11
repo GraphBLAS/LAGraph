@@ -23,7 +23,7 @@ SET_TARGET_PROPERTIES ( lagraphx PROPERTIES
     VERSION ${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}
     SOVERSION ${LAGraph_VERSION_MAJOR}
     C_STANDARD_REQUIRED 11
-    PUBLIC_HEADER "include/LagraphX.h" )
+    PUBLIC_HEADER "include/LAGraphX.h" )
 set_property ( TARGET lagraphx PROPERTY C_STANDARD 11 )
 target_link_libraries(lagraphx PUBLIC lagraph ${GRAPHBLAS_LIBRARIES})
 

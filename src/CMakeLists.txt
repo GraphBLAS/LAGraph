@@ -13,19 +13,23 @@
 include_directories ( ${CMAKE_SOURCE_DIR}/include utility )
 
 file ( GLOB LAGRAPH_LIB_SOURCES "utility/*.c" "algorithm/*.c" )
+file ( GLOB LAGRAPH_INCLUDES "../include/*.h" )
+message (STATUS "includes:" ${LAGRAPH_INCLUDES} )
 
 #-------------------------------------------------------------------------------
 # dynamic lagraph library properties
 #-------------------------------------------------------------------------------
 
-add_library ( lagraph SHARED ${LAGRAPH_LIB_SOURCES} )
+add_library ( lagraph SHARED ${LAGRAPH_LIB_SOURCES} ${LAGRAPH_INCLUDES} )
 SET_TARGET_PROPERTIES ( lagraph PROPERTIES
     VERSION ${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}
     SOVERSION ${LAGraph_VERSION_MAJOR}
     C_STANDARD_REQUIRED 11
-    PUBLIC_HEADER "include/LAGraph.h" )
+    PUBLIC_HEADER "${LAGRAPH_INCLUDES}" )
 set_property ( TARGET lagraph PROPERTY C_STANDARD 11 )
 target_link_libraries(lagraph PUBLIC ${GRAPHBLAS_LIBRARIES})
+target_include_directories ( lagraph PUBLIC include/ )
+install ( FILES ${LAGRAPH_INCLUDE} DESTINATION include)
 
 #-------------------------------------------------------------------------------
 # static lagraph library properties
@@ -38,7 +42,7 @@ SET_TARGET_PROPERTIES ( lagraph_static PROPERTIES
     POSITION_INDEPENDENT_CODE OFF
     SOVERSION ${LAGraph_VERSION_MAJOR}
     C_STANDARD_REQUIRED 11
-    PUBLIC_HEADER "include/LAGraph.h" )
+    PUBLIC_HEADER "${LAGRAPH_INCLUDES}" )
 set_property ( TARGET lagraph_static PROPERTY C_STANDARD 11 )
 target_link_libraries(lagraph_static PUBLIC ${GRAPHBLAS_LIBRARIES})
 
