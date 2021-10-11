@@ -486,6 +486,10 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     // inputs:
     LAGraph_Graph G,            // input graph
     int64_t seed,               // random number seed
+    GrB_Vector ignore_node,     // if NULL, no nodes are ignored.  Otherwise
+                                // ignore_node(i) = true if node i is to be
+                                // ignored, and not treated as a candidate
+                                // added to maximal independent set.
     char *msg
 ) ;
 

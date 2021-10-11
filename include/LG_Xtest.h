@@ -19,6 +19,9 @@ int LG_check_mis        // check if iset is a valid MIS of A
 (
     GrB_Matrix A,
     GrB_Vector iset,
+    GrB_Vector ignore_node,     // if NULL, no nodes are ignored.  otherwise,
+                        // ignore_node(i)=true if node i is to be ignored, and
+                        // not added to the independent set.
     char *msg
 ) ;
 

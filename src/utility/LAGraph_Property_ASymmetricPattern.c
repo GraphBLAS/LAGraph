@@ -33,12 +33,17 @@ int LAGraph_Property_ASymmetricPattern  // 0 if successful, -1 if failure
     GrB_Matrix C = NULL, S1 = NULL, S2 = NULL ;
     LG_CHECK_INIT (G, msg) ;
 
-    G->A_pattern_is_symmetric = LAGRAPH_UNKNOWN ;
     LAGraph_Kind kind = G->kind ;
     if (kind == LAGRAPH_ADJACENCY_UNDIRECTED)
     {
         // assume A is symmetric for an undirected graph
         G->A_pattern_is_symmetric = true ;
+        return (0) ;
+    }
+
+    if (G->A_pattern_is_symmetric != LAGRAPH_UNKNOWN)
+    {
+        // symmetric property is already known
         return (0) ;
     }
 

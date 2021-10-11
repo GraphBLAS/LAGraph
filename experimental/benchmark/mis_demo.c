@@ -101,9 +101,9 @@ int main (int argc, char **argv)
     // warmup for more accurate timing
     double tic [2], tt ;
     LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-    LAGraph_TRY (LAGraph_MaximalIndependentSet (&mis, G, 1, msg)) ;
+    LAGraph_TRY (LAGraph_MaximalIndependentSet (&mis, G, 1, NULL, msg)) ;
     LAGraph_TRY (LAGraph_Toc (&tt, tic, NULL)) ;
-    LAGraph_TRY (LG_check_mis (G->A, mis, msg)) ;
+    LAGraph_TRY (LG_check_mis (G->A, mis, NULL, msg)) ;
     GrB_TRY (GrB_free (&mis)) ;
     printf ("warmup time %g sec\n", tt) ;
 
@@ -117,8 +117,9 @@ int main (int argc, char **argv)
         {
             int64_t seed = trial * n + 1 ;
             LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-            LAGraph_TRY (LAGraph_MaximalIndependentSet (&mis, G, seed, msg)) ;
-            LAGraph_TRY (LG_check_mis (G->A, mis, msg)) ;
+            LAGraph_TRY (LAGraph_MaximalIndependentSet (&mis, G, seed, NULL,
+                msg)) ;
+            LAGraph_TRY (LG_check_mis (G->A, mis, NULL, msg)) ;
             GrB_TRY (GrB_free (&mis)) ;
             LAGraph_TRY (LAGraph_Toc (&ttrial [trial], tic, NULL)) ;
             ttot += ttrial [trial] ;

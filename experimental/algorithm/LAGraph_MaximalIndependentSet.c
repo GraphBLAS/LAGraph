@@ -50,10 +50,6 @@
 // selected and cause the method to stall.  To avoid this case they are removed
 // from the candidate set at the begining, and added to the independent set.
 
-// TODO: add an input vector non_candidates, where non_candidates(i) = true
-// if node i is not to be considered as a candidate, and is also not added to
-// the independent set.
-
 int LAGraph_MaximalIndependentSet       // maximal independent set
 (
     // outputs:
@@ -61,6 +57,10 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     // inputs:
     LAGraph_Graph G,            // input graph
     int64_t seed,               // random number seed
+    GrB_Vector ignore_node,     // if NULL, no nodes are ignored.  Otherwise
+                                // ignore_node(i) = true if node i is to be
+                                // ignored, and not treated as a candidate
+                                // added to maximal independent set.
     char *msg
 )
 {
@@ -121,36 +121,65 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     #if LG_SUITESPARSE
     GrB_Semiring symbolic = GxB_ANY_PAIR_BOOL ;
     #else
-    GrB_Semiring symbolic = GrB_LOR_LAND_SEMIRING_BOOL ; 
+    GrB_Semiring symbolic = GrB_LOR_LAND_SEMIRING_BOOL ;
     #endif
 
     //--------------------------------------------------------------------------
-    // remove singletons (nodes of degree zero)
+    // remove singletons (nodes of degree zero) and handle ignore_node
     //--------------------------------------------------------------------------
 
     GrB_Index nonsingletons = 0 ;
     GrB_TRY (GrB_Vector_nvals (&nonsingletons, degree)) ;
     if (nonsingletons == n)
     { 
-        // all nodes have degree 1 or more; all nodes are candidates
-        // candidates (0:n-1) = true
-        GrB_TRY (GrB_assign (candidates, NULL, NULL, (bool) true, GrB_ALL, n,
-            NULL)) ;
-        // Seed vector starts out dense
-        // Seed (0:n-1) = 0
-        GrB_TRY (GrB_assign (Seed, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
+        if (ignore_node == NULL)
+        {
+            // all nodes have degree 1 or more; all nodes are candidates
+            // candidates (0:n-1) = true
+            GrB_TRY (GrB_assign (candidates, NULL, NULL, (bool) true, GrB_ALL,
+                n, NULL)) ;
+            // Seed vector starts out dense
+            // Seed (0:n-1) = 0
+            GrB_TRY (GrB_assign (Seed, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
+        }
+        else
+        {
+            // all nodes have degree 1 or more, but some nodes are to be
+            // ignored.  Use ignore_node as a valued mask.
+            // candidates<!ignore_node> = true
+            GrB_TRY (GrB_assign (candidates, ignore_node, NULL, (bool) true,
+                GrB_ALL, n, GrB_DESC_C)) ;
+            // Seed vector starts out sparse
+            // Seed{candidates} = 0
+            GrB_TRY (GrB_assign (Seed, candidates, NULL, (int64_t) 0, GrB_ALL,
+                n, GrB_DESC_S)) ;
+        }
     }
     else
     {
-        // one or more singletons are present.  singletons are not candidates;
-        // they are added to iset first instead.
+        // one or more singleton is present.
         // candidates{degree} = 1
-        GrB_TRY (GrB_assign (candidates, degree, NULL, (bool) true, GrB_ALL, n,
-            GrB_DESC_S)) ; 
+        GrB_TRY (GrB_assign (candidates, degree, NULL, (bool) true,
+            GrB_ALL, n, GrB_DESC_S)) ;
         // add all singletons to iset
         // iset{!degree} = 1
         GrB_TRY (GrB_assign (iset, degree, NULL, (bool) true, GrB_ALL, n,
             GrB_DESC_SC)) ;
+        if (ignore_node != NULL)
+        {
+            // one or more singletons are present, and some nodes are to be
+            // ignored.  The candidates are all those nodes with degree > 0
+            // for which ignore_node(i) is false (or not present).  Delete
+            // any candidate i for which ignore_node(i) is true.  Use
+            // ignore_node as a valued mask.
+            // candidates<ignore_node> = empty
+            GrB_TRY (GrB_assign (candidates, ignore_node, NULL, empty,
+                GrB_ALL, n, NULL)) ;
+            // Delete any ignored nodes from iset
+            // iset<ignore_node> = empty
+            GrB_TRY (GrB_assign (iset, ignore_node, NULL, empty,
+                GrB_ALL, n, NULL)) ;
+        }
         // Seed vector starts out sparse
         // Seed{candidates} = 0
         GrB_TRY (GrB_assign (Seed, candidates, NULL, (int64_t) 0, GrB_ALL, n,

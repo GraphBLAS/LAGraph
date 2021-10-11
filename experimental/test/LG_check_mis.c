@@ -32,6 +32,9 @@ int LG_check_mis        // check if iset is a valid MIS of A
 (
     GrB_Matrix A,
     GrB_Vector iset,
+    GrB_Vector ignore_node,     // if NULL, no nodes are ignored.  otherwise,
+                        // ignore_node(i)=true if node i is to be ignored, and
+                        // not added to the independent set.
     char *msg
 )
 {
@@ -122,8 +125,28 @@ int LG_check_mis        // check if iset is a valid MIS of A
     // e = iset
     GrB_Vector e = NULL ;
     GrB_TRY (GrB_Vector_dup (&e, iset)) ;
-    // e = (e || A*iset), using the Boolean semiring
-    GrB_TRY (GrB_vxm (e, NULL, GrB_LOR, GxB_LOR_LAND_BOOL, iset, A, NULL)) ;
+
+    // e = e || ignore_node
+    int64_t ignored = 0 ;
+    if (ignore_node != NULL)
+    {
+        GrB_TRY (GrB_eWiseAdd (e, NULL, NULL, GrB_LOR, e, ignore_node, NULL)) ;
+        GrB_TRY (GrB_reduce (&ignored, NULL, GrB_PLUS_MONOID_INT64,
+            ignore_node, NULL)) ;
+    }
+
+    // e = (e || A*iset), using the symbolic semiring
+    #if LG_SUITESPARSE
+    GrB_Semiring symbolic = GxB_ANY_PAIR_BOOL ;
+    #else
+    GrB_Semiring symbolic = GrB_LOR_LAND_SEMIRING_BOOL ;
+    #endif
+    GrB_TRY (GrB_vxm (e, NULL, GrB_LOR, symbolic, iset, A, NULL)) ;
+
+    // drop explicit zeros from e
+    // e<e.replace> = e
+    GrB_TRY (GrB_assign (e, e, NULL, e, GrB_ALL, n, GrB_DESC_R)) ;
+
     GrB_TRY (GrB_Vector_nvals (&nvals, e)) ;
     GrB_Vector_free (&e) ;
     if (nvals != n)
@@ -135,8 +158,10 @@ int LG_check_mis        // check if iset is a valid MIS of A
 
     LAGraph_Free ((void **) &I) ;
 
-    printf ("maximal independent set OK %.16g of %.16g nodes\n",
+    printf ("maximal independent set OK %.16g of %.16g nodes",
         (double) isize, (double) n) ;
+    if (ignored > 0) printf (" (%ld nodes ignored)\n", ignored) ;
+    printf ("\n") ;
     return (0) ;
 }
 

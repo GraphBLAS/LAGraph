@@ -45,11 +45,10 @@ const char *files [ ] =
 char filename [LEN+1] ;
 
 char msg [LAGRAPH_MSG_LEN] ;
-GrB_Vector mis = NULL ;
+GrB_Vector mis = NULL, ignore = NULL ;
 GrB_Matrix A = NULL, C = NULL, empty_row = NULL, empty_col = NULL ;
 LAGraph_Graph G = NULL ;
 GrB_Type atype = NULL ;
-
 
 //------------------------------------------------------------------------------
 // setup: start a test
@@ -131,12 +130,25 @@ void test_MIS (void)
         GrB_Index n ;
         GrB_Matrix_nrows (&n, G->A) ;
 
+        // create ignore
+        OK (GrB_Vector_new (&ignore, GrB_BOOL, n)) ;
+        for (int i = 0 ; i < n ; i += 8)
+        {
+            OK (GrB_Vector_setElement (ignore, (bool) true, i)) ;
+        }
+
         for (int64_t seed = 0 ; seed <= 4*n ; seed += n)
         { 
-            // compute the MIS
-            OK (LAGraph_MaximalIndependentSet (&mis, G, seed, msg)) ;
+            // compute the MIS with no ignored nodes
+            OK (LAGraph_MaximalIndependentSet (&mis, G, seed, NULL, msg)) ;
             // check the result
-            OK (LG_check_mis (G->A, mis, msg)) ;
+            OK (LG_check_mis (G->A, mis, NULL, msg)) ;
+
+            // compute the MIS with ignored nodes
+            OK (LAGraph_MaximalIndependentSet (&mis, G, seed, ignore, msg)) ;
+            // check the result
+            OK (LG_check_mis (G->A, mis, ignore, msg)) ;
+
             OK (GrB_free (&mis)) ;
         }
 
@@ -175,13 +187,20 @@ void test_MIS (void)
 
         for (int64_t seed = 0 ; seed <= 4*n ; seed += n)
         { 
-            // compute the MIS
-            OK (LAGraph_MaximalIndependentSet (&mis, G, seed, msg)) ;
+            // compute the MIS with no ignored nodes
+            OK (LAGraph_MaximalIndependentSet (&mis, G, seed, NULL, msg)) ;
             // check the result
-            OK (LG_check_mis (G->A, mis, msg)) ;
+            OK (LG_check_mis (G->A, mis, NULL, msg)) ;
+
+            // compute the MIS with ignored nodes
+            OK (LAGraph_MaximalIndependentSet (&mis, G, seed, ignore, msg)) ;
+            // check the result
+            OK (LG_check_mis (G->A, mis, ignore, msg)) ;
+
             OK (GrB_free (&mis)) ;
         }
 
+        OK (GrB_free (&ignore)) ;
         OK (GrB_free (&empty_col)) ;
         OK (GrB_free (&empty_row)) ;
         OK (LAGraph_Delete (&G, msg)) ;
