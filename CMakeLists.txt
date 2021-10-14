@@ -74,8 +74,9 @@ endif ( )
 # or
 #     GRAPHBLAS_ROOT=<path> cmake ..
 # or uncomment the next line:
-set ( GRAPHBLAS_ROOT ${CMAKE_SOURCE_DIR}/../GraphBLAS )
+set ( ENV{GRAPHBLAS_ROOT} ${CMAKE_SOURCE_DIR}/../GraphBLAS )
 message ( STATUS "GraphBLAS root:              " ${GRAPHBLAS_ROOT} )
+message ( STATUS "GraphBLAS libraries:         " ${GRAPHBLAS_LIBRARIES} )
 
 find_package (GraphBLAS REQUIRED MODULE)
 include_directories (${GRAPHBLAS_INCLUDE_DIR})
