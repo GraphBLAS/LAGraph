@@ -108,7 +108,7 @@
         /* free any internal workspace and return the status */     \
         GrB_free (*parent) ;                                        \
         GrB_free (workvector) ;                                     \
-        LAGraph_Free ((void **) &W) ;                       \
+        LAGraph_Free ((void **) &W) ;                               \
         return (status) ;                                           \
     }
 

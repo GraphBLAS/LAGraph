@@ -185,7 +185,7 @@ int LAGraph_Random_Seed     // construct a random seed vector
 
         #else
 
-            // Seed <Seed> = seed
+            // Seed {Seed} = seed
             GrB_Index n ;
             GrB_TRY (GrB_Vector_size (&n, Seed)) ;
             GrB_TRY (GrB_Vector_assign_INT64 (Seed, Seed, NULL, seed,
