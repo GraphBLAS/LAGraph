@@ -55,7 +55,12 @@ static GrB_Info Reduce_assign (GrB_Vector w,
 //****************************************************************************
 static GrB_Index *I, *V;
 
-bool select_func(const GrB_Index i, const GrB_Index j,
+bool select_func(
+                 #if (GxB_IMPLEMENTATION_MAJOR <= 5)
+                 const GrB_Index i, const GrB_Index j,
+                 #else
+                 const int64_t i, const int64_t j,
+                 #endif
                  const void *x, const void *thunk)
 {
     return V[i] != V[j];

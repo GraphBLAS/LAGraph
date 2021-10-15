@@ -55,9 +55,14 @@
 
 //****************************************************************************
 
-#define F_SELECT(f) ((bool (*)(const GrB_Index, const GrB_Index, const void *, const void *)) f)
-
-static bool LAGraph_support_function (const GrB_Index i, const GrB_Index j, const uint32_t *x, const uint32_t *support)
+static bool LAGraph_support_function 
+(
+#if (GxB_IMPLEMENTATION_MAJOR <= 5)
+const GrB_Index i, const GrB_Index j,
+#else
+const int64_t i, const int64_t j,
+#endif
+const uint32_t *x, const uint32_t *support)
 {
     return ((*x) >= (*support)) ;
 }
@@ -118,7 +123,8 @@ GrB_Info LAGraph_ktruss         // compute the k-truss of a graph
 
     // allocate the select function for ktruss and allktruss
     LAGRAPH_OK (GxB_SelectOp_new (&LAGraph_support,
-        F_SELECT (LAGraph_support_function), GrB_UINT32, GrB_UINT32)) ;
+        (GxB_select_function) LAGraph_support_function,
+        GrB_UINT32, GrB_UINT32)) ;
 
     //--------------------------------------------------------------------------
     // find the k-truss of A

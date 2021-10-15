@@ -43,8 +43,13 @@ GrB_Index *I = NULL, *V = NULL, *F = NULL, *B = NULL, *M = NULL;
 // hold. The converse is not true unless F[u]==B[u]. However, we can safely remove
 // an edge (u, v) if either F[u]!=F[v] or B[u]!=B[v] holds, which can accelerate
 // the SCC computation in the future rounds.
+#if (GxB_IMPLEMENTATION_MAJOR <= 5)
 bool edge_removal (GrB_Index i, GrB_Index j, const void *x, const void *thunk) ;
 bool edge_removal (GrB_Index i, GrB_Index j, const void *x, const void *thunk)
+#else
+bool edge_removal (int64_t i, int64_t j, const void *x, const void *thunk) ;
+bool edge_removal (int64_t i, int64_t j, const void *x, const void *thunk)
+#endif
 {
     return !M[i] && !M[j] && F[i] == F[j] && B[i] == B[j];
 }
@@ -54,8 +59,13 @@ bool edge_removal (GrB_Index i, GrB_Index j, const void *x, const void *thunk)
 //  - A vertex is a trivial SCC if it has no incoming or outgoing edges.
 //  - M[i] = i   | if vertex i is a trivial SCC
 //    M[i] = n   | otherwise
+#if (GxB_IMPLEMENTATION_MAJOR <= 5)
 bool trim_one (GrB_Index i, GrB_Index j, const void *x, const void *thunk) ;
 bool trim_one (GrB_Index i, GrB_Index j, const void *x, const void *thunk)
+#else
+bool trim_one (int64_t i, int64_t j, const void *x, const void *thunk) ;
+bool trim_one (int64_t i, int64_t j, const void *x, const void *thunk)
+#endif
 {
     return M[i] == M[j];
 }
