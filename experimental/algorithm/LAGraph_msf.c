@@ -87,11 +87,7 @@ static GrB_Index *weight = NULL, *parent = NULL, *partner = NULL;
 //   1. weight[i] == A(i, j)    -- where weight[i] stores i's minimum edge weight
 //   2. parent[j] == partner[i] -- j belongs to the specified connected component
 bool f1 (
-    #if (GxB_IMPLEMENTATION_MAJOR <= 5)
     GrB_Index i, GrB_Index j,
-    #else
-    int64_t i, int64_t j,
-    #endif
     const void *x, const void *thunk)
 {
     uint64_t *aij = (uint64_t*) x;
@@ -101,11 +97,7 @@ bool f1 (
 // edge removal:
 // A(i, j) is removed when parent[i] == parent[j]
 bool f2 (
-    #if (GxB_IMPLEMENTATION_MAJOR <= 5)
     GrB_Index i, GrB_Index j,
-    #else
-    int64_t i, int64_t j,
-    #endif
     const void *x, const void *thunk)
 {
     uint64_t *aij = (uint64_t*) x;

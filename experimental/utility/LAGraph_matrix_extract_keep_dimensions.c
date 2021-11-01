@@ -35,11 +35,7 @@ typedef struct
 
 
 bool select_submatrix_elements_fun(
-#if (GxB_IMPLEMENTATION_MAJOR <= 5)
 const GrB_Index i, const GrB_Index j,
-#else
-const int64_t i, const int64_t j,
-#endif
 const void *x, const void *thunk)
 {
     Vdense_struct_type* indices = (Vdense_struct_type*) (thunk);

@@ -57,11 +57,7 @@
 
 static bool LAGraph_support_function 
 (
-#if (GxB_IMPLEMENTATION_MAJOR <= 5)
 const GrB_Index i, const GrB_Index j,
-#else
-const int64_t i, const int64_t j,
-#endif
 const uint32_t *x, const uint32_t *support)
 {
     return ((*x) >= (*support)) ;
