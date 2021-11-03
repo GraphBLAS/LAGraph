@@ -28,18 +28,7 @@ int LAGraph_Matrix_wait     // wait on a matrix
     // wait on the matrix
     //--------------------------------------------------------------------------
 
-    #if LG_SUITESPARSE
-    #if (GxB_IMPLEMENTATION_MAJOR <= 5)
-    // v1.3 C API with SuiteSparse:GraphBLAS v5.2.0 or earlier
-    GrB_TRY (GrB_Matrix_wait (&A)) ;
-    #else
-    // v2.0 C API with SuiteSparse:GraphBLAS v6.0.0 or later
     GrB_TRY (GrB_Matrix_wait (A, GrB_MATERIALIZE)) ;
-    #endif
-    #else
-    // vanilla GraphBLAS with v1.3 C API
-    GrB_TRY (GrB_Matrix_wait (&A)) ;
-    #endif
-
     return (0) ;
 }
+

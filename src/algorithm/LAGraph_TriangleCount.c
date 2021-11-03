@@ -31,13 +31,8 @@ int LAGraph_TriangleCount
     LAGraph_TRY( LAGraph_Property_RowDegree(G, msg) );
     LAGraph_TRY( LAGraph_Property_NDiag(G, msg) );
 
-#if LG_SUITESPARSE
     int method = 5;
     int presort = 2;
-    return LG_TriangleCount_SSGrB(ntriangles, G, method, &presort, msg);
-#else
-    int method = 3;
-    int presort = 2;
-    return LG_TriangleCount_vanilla(ntriangles, G, method, &presort, msg);
-#endif
+    return LAGraph_TriangleCount_Methods (ntriangles, G, method, &presort, msg);
+
 }

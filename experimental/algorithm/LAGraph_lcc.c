@@ -117,9 +117,10 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
                                 // in seconds
 )
 {
-#if !defined(LG_SUITESPARSE)
+#if !(LG_SUITESPARSE)
+    // FIXME: use GrB_select and make this pure GrB*
     return GrB_PANIC;
-#endif
+#else
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -140,12 +141,14 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     // n = size of A (# of nodes in the graph)
     GrB_Index n ;
     LAGRAPH_OK (GrB_Matrix_nrows (&n, A)) ;
+#if LG_SUITESPARSE
     GxB_Format_Value fmt ;
     LAGRAPH_OK (GxB_get (A, GxB_FORMAT, &fmt)) ;
     if (fmt != GxB_BY_ROW)
     {
         LAGRAPH_ERROR ("A must be stored by row", GrB_INVALID_VALUE) ;
     }
+#endif
 
     //--------------------------------------------------------------------------
     // ensure input is binary and has no self-edges
@@ -290,4 +293,5 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     LAGraph_FREE_ALL ;
     LAGraph_Toc (&t[1], tic, NULL) ;
     return (GrB_SUCCESS) ;
+#endif
 }

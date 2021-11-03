@@ -35,6 +35,10 @@
 
 #include "LG_internal.h"
 
+#if (! LG_SUITESPARSE ) || (GxB_IMPLEMENTATION < GxB_VERSION (6,0,0))
+#error "SuiteSparse:GraphBLAS v6.0.0 or later required"
+#endif
+
 //------------------------------------------------------------------------------
 // hash functions: todo describe me
 //------------------------------------------------------------------------------
@@ -172,17 +176,9 @@ static inline int Reduce_assign32
     // their contents.  Note that this would fail if w or s are not full, with
     // all entries present.
     GrB_TRY (GxB_Vector_export_Full (w_handle, &w_type, &w_n, (void **) &w_x,
-        &w_size,
-        #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
-        NULL,
-        #endif
-        NULL)) ;
+        &w_size, NULL, NULL)) ;
     GrB_TRY (GxB_Vector_export_Full (s_handle, &s_type, &s_n, (void **) &s_x,
-        &s_size,
-        #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
-        &s_iso,
-        #endif
-        NULL)) ;
+        &s_size, &s_iso, NULL)) ;
 
     if (nthreads >= 4)
     {
@@ -272,17 +268,9 @@ static inline int Reduce_assign32
     // s is unchanged.  It was exported only to compute w (index) += s
 
     GrB_TRY (GxB_Vector_import_Full (w_handle, w_type, w_n, (void **) &w_x,
-        w_size,
-        #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
-        false,
-        #endif
-        NULL)) ;
+        w_size, false, NULL)) ;
     GrB_TRY (GxB_Vector_import_Full (s_handle, s_type, s_n, (void **) &s_x,
-        s_size,
-        #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
-        s_iso,
-        #endif
-        NULL)) ;
+        s_size, s_iso, NULL)) ;
 
     return (0) ;
 }
@@ -432,12 +420,7 @@ int LAGraph_ConnectedComponents
         GrB_TRY (GrB_Matrix_nvals (&nvals, S)) ;
         GrB_TRY (GxB_Matrix_export_CSR (&S, &type, &nrows, &ncols, &Sp, &Sj,
             &Sx, &Sp_size, &Sj_size, &Sx_size,
-            #if GxB_IMPLEMENTATION >= GxB_VERSION (5,1,0)
-            &S_iso,
-            #elif GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
-            NULL,
-            #endif
-            &S_jumbled, NULL)) ;
+            &S_iso, &S_jumbled, NULL)) ;
         GrB_TRY (GxB_Type_size (&typesize, type)) ;
         G->A = NULL ;
 
@@ -450,13 +433,9 @@ int LAGraph_ConnectedComponents
         GrB_Index Tx_len = nvals ;
         GrB_Index *Tp = LAGraph_Malloc (Tp_len, sizeof (GrB_Index)) ;
         GrB_Index *Tj = LAGraph_Malloc (Tj_len, sizeof (GrB_Index)) ;
-        #if GxB_IMPLEMENTATION >= GxB_VERSION (5,1,0)
         GrB_Index Tx_size = typesize ;
         void *Tx = LAGraph_Calloc (1, typesize) ;   // T is iso
-        #else
-        GrB_Index Tx_size = Tx_len*typesize ;
-        void *Tx = LAGraph_Malloc (Tx_len, typesize) ;
-        #endif
+
         // todo check out-of-memory conditions
 
         //----------------------------------------------------------------------
@@ -536,26 +515,15 @@ int LAGraph_ConnectedComponents
 
         // Note that Tx is unmodified.
 
-        #if GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
         // in SuiteSparse:GraphBLAS v5, sizes are in bytes, not entries
         GrB_Index Tp_siz = Tp_size ;
         GrB_Index Tj_siz = Tj_size ;
         GrB_Index Tx_siz = Tx_size ;
-        #else
-        // in SuiteSparse:GraphBLAS v4, sizes are in # of entries, not bytes
-        GrB_Index Tp_siz = Tp_len ;
-        GrB_Index Tj_siz = Tj_len ;
-        GrB_Index Tx_siz = Tx_len ;
-        #endif
 
         GrB_Index t_nvals = Tp [nrows] ;
         GrB_TRY (GxB_Matrix_import_CSR (&T, type, nrows, ncols,
                 &Tp, &Tj, &Tx, Tp_siz, Tj_siz, Tx_siz,
-                #if GxB_IMPLEMENTATION >= GxB_VERSION (5,1,0)
                 true,   // T is iso
-                #elif GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
-                false,
-                #endif
                 S_jumbled, NULL)) ;
 
         //----------------------------------------------------------------------
@@ -569,8 +537,8 @@ int LAGraph_ConnectedComponents
         while (change)
         {
             // hooking & shortcutting
-            GrB_TRY (GrB_mxv (mngp, NULL, GrB_MIN_UINT32, GxB_MIN_SECOND_UINT32,
-                T, gp, NULL)) ;
+            GrB_TRY (GrB_mxv (mngp, NULL, GrB_MIN_UINT32,
+                GrB_MIN_SECOND_SEMIRING_UINT32, T, gp, NULL)) ;
             if (!is_first)
             {
                 LAGraph_TRY (Reduce_assign32 (&f, &mngp, V32, n, nthreads,
@@ -598,7 +566,7 @@ int LAGraph_ConnectedComponents
             // check termination
             GrB_TRY (GrB_eWiseMult (mod, NULL, NULL, GrB_NE_UINT32, gp_new,
                 gp, NULL)) ;
-            GrB_TRY (GrB_reduce (&change, NULL, GxB_LOR_BOOL_MONOID, mod,
+            GrB_TRY (GrB_reduce (&change, NULL, GrB_LOR_MONOID_BOOL, mod,
                 NULL)) ;
 
             // swap gp and gp_new
@@ -621,12 +589,7 @@ int LAGraph_ConnectedComponents
         // export T
         GrB_TRY (GxB_Matrix_export_CSR (&T, &type, &nrows, &ncols, &Tp, &Tj,
             &Tx, &Tp_siz, &Tj_siz, &Tx_siz,
-            #if GxB_IMPLEMENTATION >= GxB_VERSION (5,1,0)
-            &T_iso,
-            #elif GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
-            NULL,
-            #endif
-            &T_jumbled, NULL)) ;
+            &T_iso, &T_jumbled, NULL)) ;
 
         // todo what is this phase doing?  It is constructing a matrix T that
         // depends only on S, key, and V32.  T contains a subset of the entries
@@ -709,22 +672,12 @@ int LAGraph_ConnectedComponents
         // import S (unchanged since last export)
         GrB_TRY (GxB_Matrix_import_CSR (&S, type, nrows, ncols,
                 &Sp, &Sj, &Sx, Sp_size, Sj_size, Sx_size,
-                #if GxB_IMPLEMENTATION >= GxB_VERSION (5,1,0)
-                S_iso,
-                #elif GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
-                false,
-                #endif
-                S_jumbled, NULL)) ;
+                S_iso, S_jumbled, NULL)) ;
 
         // import T for the final phase
         GrB_TRY (GxB_Matrix_import_CSR (&T, type, nrows, ncols,
                 &Tp, &Tj, &Tx, Tp_siz, Tj_siz, Tx_siz,
-                #if GxB_IMPLEMENTATION >= GxB_VERSION (5,1,0)
-                T_iso,
-                #elif GxB_IMPLEMENTATION >= GxB_VERSION (5,0,0)
-                false,
-                #endif
-                T_jumbled, NULL)) ;
+                T_iso, T_jumbled, NULL)) ;
 
         // restore G->A
         G->A = S ;
@@ -748,8 +701,8 @@ int LAGraph_ConnectedComponents
     while (change && nnz > 0)
     {
         // hooking & shortcutting
-        GrB_TRY (GrB_mxv (mngp, NULL, GrB_MIN_UINT32, GxB_MIN_SECOND_UINT32,
-                          T, gp, NULL)) ;
+        GrB_TRY (GrB_mxv (mngp, NULL, GrB_MIN_UINT32,
+                          GrB_MIN_SECOND_SEMIRING_UINT32, T, gp, NULL)) ;
         GrB_TRY (Reduce_assign32 (&f, &mngp, V32, n, nthreads, ht_key,
                                   ht_val, &seed, msg)) ;
         GrB_TRY (GrB_eWiseAdd (f, NULL, GrB_MIN_UINT32, GrB_MIN_UINT32,
@@ -768,7 +721,7 @@ int LAGraph_ConnectedComponents
         // check termination
         GrB_TRY (GrB_eWiseMult (mod, NULL, NULL, GrB_NE_UINT32, gp_new, gp,
             NULL)) ;
-        GrB_TRY (GrB_reduce (&change, NULL, GxB_LOR_BOOL_MONOID, mod, NULL)) ;
+        GrB_TRY (GrB_reduce (&change, NULL, GrB_LOR_MONOID_BOOL, mod, NULL)) ;
 
         // swap gp and gp_new
         GrB_Vector t = gp ; gp = gp_new ; gp_new = t ;

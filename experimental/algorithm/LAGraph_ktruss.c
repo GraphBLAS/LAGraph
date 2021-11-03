@@ -17,8 +17,9 @@
 
 // TODO add sanitize step to remove diagonal
 
-// TODO:  currently relies on a GxB* function in SuiteSparse/GraphBLAS v3.0.1,
-// including the new GxB_Scalar.  Write a version using pure GraphBLAS.
+// FIXME:  currently relies on a GxB* function in SuiteSparse/GraphBLAS v3.0.1,
+// including the new GxB_Scalar.  Write a version using pure GraphBLAS,
+// using GrB_select
 
 // The edge weights of A are treated as binary.  Explicit zero entries in A are
 // treated as non-edges.  Any type will work, but uint32 is recommended for

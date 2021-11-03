@@ -18,27 +18,6 @@
 #include <LAGraph.h>
 
 //***************************************************************************
-int LG_TriangleCount_SSGrB
-(
-    uint64_t      *ntriangles,
-    LAGraph_Graph  G,
-    int            method,
-    int           *presort,
-    char          *msg
-) ;
-
-//****************************************************************************
-int LG_TriangleCount_vanilla
-(
-    uint64_t      *ntriangles,
-    LAGraph_Graph  G,
-    int            method,
-    int           *presort,
-    char          *msg
-) ;
-
-
-//***************************************************************************
 int LG_BreadthFirstSearch_SSGrB
 (
     GrB_Vector    *level,

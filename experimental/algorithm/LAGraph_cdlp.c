@@ -127,7 +127,6 @@
     GrB_free (&L_prev) ;                                                \
     if (sanitize) GrB_free (&S) ;                                       \
     GrB_free (&AT) ;                                                    \
-    GrB_free (&desc) ;                                                  \
 }
 
 //****************************************************************************
@@ -154,8 +153,6 @@ GrB_Info LAGraph_cdlp
     GrB_Matrix AT = NULL;
     // Result CDLP vector
     GrB_Vector CDLP = NULL;
-
-    GrB_Descriptor desc = NULL;
 
     // Arrays holding extracted tuples if the matrix needs to be copied
     GrB_Index *AI = NULL;
@@ -234,11 +231,6 @@ GrB_Info LAGraph_cdlp
     }
 #endif
 
-    // TODO: heap is no longer in SuiteSparse, as of 3.2.0draftx.
-    // the new saxpy method is used instead (Gustavson + Hash) --> TODO: use saxpy?
-    LAGRAPH_OK (GrB_Descriptor_new(&desc))
-    //LAGRAPH_OK (GrB_Descriptor_set(desc, GxB_AxB_METHOD, GxB_AxB_SAXPY))
-
     // Initialize L with diagonal elements 1..n
     I = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
     X = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
@@ -277,7 +269,7 @@ GrB_Info LAGraph_cdlp
         // A = A min.2nd L
         // (using the "push" (saxpy) method)
         LAGRAPH_OK(GrB_mxm(S, GrB_NULL, GrB_NULL,
-                           GrB_MIN_SECOND_SEMIRING_UINT64, S, L, desc));
+                           GrB_MIN_SECOND_SEMIRING_UINT64, S, L, NULL));
         LAGRAPH_OK(GrB_Matrix_extractTuples_UINT64(I, GrB_NULL, X, &nz, S));
 
         if (!symmetric)
@@ -285,7 +277,7 @@ GrB_Info LAGraph_cdlp
             // A' = A' min.2nd L
             // (using the "push" (saxpy) method)
             LAGRAPH_OK(GrB_mxm(AT, GrB_NULL, GrB_NULL,
-                               GrB_MIN_SECOND_SEMIRING_UINT64, AT, L, desc));
+                               GrB_MIN_SECOND_SEMIRING_UINT64, AT, L, NULL));
             LAGRAPH_OK(GrB_Matrix_extractTuples_UINT64(&I[nz],
                                                        GrB_NULL, &X[nz], &nz, AT));
         }

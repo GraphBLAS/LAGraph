@@ -18,8 +18,10 @@
 // P. Burkhardt, "Triangle centrality," https://arxiv.org/pdf/2105.00110.pdf,
 // April 2021.
 
-// Methods 2 and 3 require SuiteSparse:GraphBLAS.  Method 3 is by far the
-// fastest.
+// Method 3 is by far the fastest.
+
+// This method uses pure GrB* methods from the v2.0 C API only.
+// It does not rely on any SuiteSparse:GraphBLAS extensions.
 
 // TC0: in python (called TC1 in the first draft of the paper)
 //
@@ -64,7 +66,6 @@
     GrB_free (&w) ;                 \
     GrB_free (&y) ;                 \
     GrB_free (&L) ;                 \
-    GrB_free (&thunk) ;             \
 }
 
 #define LAGraph_FREE_ALL            \
@@ -98,20 +99,6 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
     LG_CLEAR_MSG ;
     GrB_Matrix T = NULL, L = NULL, A = NULL ;
     GrB_Vector y = NULL, u = NULL, w = NULL ;
-    #if LG_SUITESPARSE
-    GxB_Scalar thunk = NULL ;
-    #else
-    // not used, just to allow GrB_free to be done, in LAGraph_FREE_WORK
-    GrB_Vector thunk = NULL ;
-    #endif
-
-    #if ( !LG_SUITESPARSE )
-    // methods 2 and 3 require SuiteSparse
-    if (method >= 2)
-    {
-        method = 1 ;
-    }
-    #endif
 
     LG_CHECK (centrality == NULL, -1, "centrality is NULL") ;
     LG_CHECK (ntriangles == NULL, -1, "ntriangles is NULL") ;
@@ -159,7 +146,7 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
 
         if (method == 0)
         {
-            printf ("TC0: ")  ; // FIXME: remove printf
+            // printf ("TC0: ")  ;
             // T<A> = A*A : method 0 (was TC1 in the first paper submission)
             GrB_TRY (GrB_mxm (T, A, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, A, A,
                 NULL)) ;
@@ -167,7 +154,7 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
         else
         {
             // this is faster than method 0
-            printf ("TC1: ") ;   // FIXME: remove printf
+            // printf ("TC1: ") ;
             // T<A> = A*A' : method TC1 (was method TC1.5)
             GrB_TRY (GrB_mxm (T, A, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, A, A,
                 GrB_DESC_T1)) ;
@@ -202,21 +189,20 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
             NULL)) ;
 
     }
-
-#if ( LG_SUITESPARSE )
     else if (method == 2)
     {
 
         //----------------------------------------------------------------------
-        // TC2: using PLUS_PAIR semiring
+        // TC2: using LAGraph_plus_one_fp64 semiring
         //----------------------------------------------------------------------
 
         // only uses the pattern of A
 
-        printf ("TC2: ")  ;     // FIXME: remove printf
+        // printf ("TC2: ")  ;
 
         // T{A} = A*A' (each triangle is seen 6 times)
-        GrB_TRY (GrB_mxm (T, A, NULL, GxB_PLUS_PAIR_FP64, A, A, GrB_DESC_ST1)) ;
+        GrB_TRY (GrB_mxm (T, A, NULL, LAGraph_plus_one_fp64, A, A,
+            GrB_DESC_ST1)) ;
 
         // y = sum (T), where y(i) = sum (T (i,:)) and y(i)=0 of T(i,:) is empty
         GrB_TRY (GrB_Vector_new (&y, GrB_FP64, n)) ;
@@ -231,7 +217,8 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
 
         // w = T*y
         GrB_TRY (GrB_Vector_new (&w, GrB_FP64, n)) ;
-        GrB_TRY (GrB_mxv (w, NULL, NULL, GxB_PLUS_SECOND_FP64, T, y, NULL)) ;
+        GrB_TRY (GrB_mxv (w, NULL, NULL, LAGraph_plus_second_fp64, T, y,
+            NULL)) ;
 
         // w = (-2)*w
         double minus_two = -2 ;
@@ -240,7 +227,8 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
 
         // u = A*y
         GrB_TRY (GrB_Vector_new (&u, GrB_FP64, n)) ;
-        GrB_TRY (GrB_mxv (u, NULL, NULL, GxB_PLUS_SECOND_FP64, A, y, NULL)) ;
+        GrB_TRY (GrB_mxv (u, NULL, NULL, LAGraph_plus_second_fp64, A, y,
+            NULL)) ;
 
     }
     else if (method == 3)
@@ -250,20 +238,16 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
         // TC3: using tril.  This is the fastest method.
         //----------------------------------------------------------------------
 
-        // only uses the pattern of A
-
-        printf ("TC3: ")  ;     // FIXME: remove printf
-
-        GrB_TRY (GrB_Matrix_new (&L, GrB_FP64, n, n)) ;
+        // printf ("TC3: ") ;
 
         // L = tril (A,-1)
-        GrB_TRY (GxB_Scalar_new (&thunk, GrB_INT64)) ;
-        GrB_TRY (GxB_Scalar_setElement (thunk, (int64_t) (-1))) ;
-        GrB_TRY (GxB_select (L, NULL, NULL, GxB_TRIL, A, thunk, NULL)) ;
-        GrB_TRY (GrB_free (&thunk)) ;
+        GrB_TRY (GrB_Matrix_new (&L, GrB_FP64, n, n)) ;
+        GrB_TRY (GrB_select (L, NULL, NULL, GrB_TRIL, A, (int64_t) (-1),
+            NULL)) ;
 
         // T{L}= A*A' (each triangle is seen 3 times; T is lower triangular)
-        GrB_TRY (GrB_mxm (T, L, NULL, GxB_PLUS_PAIR_FP64, A, A, GrB_DESC_ST1)) ;
+        GrB_TRY (GrB_mxm (T, L, NULL, LAGraph_plus_one_fp64, A, A,
+            GrB_DESC_ST1)) ;
         GrB_TRY (GrB_free (&L)) ;
 
         // y = sum (T'), where y(j) = sum (T (:,j)) and y(j)=0 if T(:,j) empty
@@ -284,10 +268,11 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
 
         // w = T*y
         GrB_TRY (GrB_Vector_new (&w, GrB_FP64, n)) ;
-        GrB_TRY (GrB_mxv (w, NULL, NULL, GxB_PLUS_SECOND_FP64, T, y, NULL)) ;
+        GrB_TRY (GrB_mxv (w, NULL, NULL, LAGraph_plus_second_fp64, T, y,
+            NULL)) ;
         // w += T'*y
-        GrB_TRY (GrB_mxv (w, NULL, GrB_PLUS_FP64, GxB_PLUS_SECOND_FP64, T, y,
-            GrB_DESC_T0)) ;
+        GrB_TRY (GrB_mxv (w, NULL, GrB_PLUS_FP64, LAGraph_plus_second_fp64,
+            T, y, GrB_DESC_T0)) ;
 
         // w = (-2)*w
         double minus_two = -2 ;
@@ -296,10 +281,10 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
 
         // u = A*y
         GrB_TRY (GrB_Vector_new (&u, GrB_FP64, n)) ;
-        GrB_TRY (GrB_mxv (u, NULL, NULL, GxB_PLUS_SECOND_FP64, A, y, NULL)) ;
+        GrB_TRY (GrB_mxv (u, NULL, NULL, LAGraph_plus_second_fp64, A, y,
+            NULL)) ;
 
     }
-#endif
 
     //--------------------------------------------------------------------------
     // centrality = (3*u + w + y) / k for all 4 methods

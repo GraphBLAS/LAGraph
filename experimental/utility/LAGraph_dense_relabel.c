@@ -25,8 +25,8 @@
 // id_dimension gives back the height of Id2index matrix and id2index vector.
 // (Same as width of Index2id_handle matrix.)
 //   id_dimension is the size that can store the largest ID in the array.
-//   Currently it is the largest valid dimension in SuiteSparse:GraphBLAS
-//  (LAGRAPH_INDEX_MAX)
+//   Currently it is the largest valid dimension in GraphBLAS
+//  (GrB_INDEX_MAX+1)
 //
 // Find usage example in /Test/DenseRelabel/dense_relabel_test.c
 
@@ -54,7 +54,7 @@ GrB_Info LAGraph_dense_relabel   // relabel sparse IDs to dense row/column indic
     GrB_Matrix *Id2index_handle, // output matrix: A(id, index)=1 (unfilled if NULL)
     GrB_Matrix *Index2id_handle, // output matrix: B(index, id)=1 (unfilled if NULL)
     GrB_Vector *id2index_handle, // output vector: v(id)=index (unfilled if NULL)
-    const GrB_Index *ids,        // array of unique identifiers (under LAGRAPH_INDEX_MAX)
+    const GrB_Index *ids,        // array of unique identifiers (<= GrB_INDEX_MAX)
     GrB_Index nids,              // number of identifiers
     GrB_Index *id_dimension      // number of rows in Id2index matrix, id2index vector (unfilled if NULL)
 )
@@ -80,8 +80,8 @@ GrB_Info LAGraph_dense_relabel   // relabel sparse IDs to dense row/column indic
         LAGRAPH_ERROR ("ids is NULL", GrB_NULL_POINTER);
     }
 
-    // the largest valid dimension in SuiteSparse:GraphBLAS
-    GrB_Index id_max_dimension = LAGRAPH_INDEX_MAX;
+    // the largest valid dimension in GraphBLAS
+    GrB_Index id_max_dimension = GrB_INDEX_MAX+1;
     if (id_dimension)
         *id_dimension = id_max_dimension;
 

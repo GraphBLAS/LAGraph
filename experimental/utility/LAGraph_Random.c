@@ -174,36 +174,9 @@ int LAGraph_Random_Seed     // construct a random seed vector
     LG_CLEAR_MSG ;
     if (Seed == NULL) return (-1) ;
 
-    #if LG_SUITESPARSE
-
-        #if (GxB_IMPLEMENTATION >= GxB_VERSION (5,2,0))
-
-            // Seed = (0:n-1) + seed
-            // requires v2.0 C API
-            GrB_TRY (GrB_Vector_apply_IndexOp_INT64 (Seed, NULL, NULL,
-                GrB_ROWINDEX_INT64, Seed, seed, NULL)) ;
-
-        #else
-
-            // Seed {Seed} = seed
-            GrB_Index n ;
-            GrB_TRY (GrB_Vector_size (&n, Seed)) ;
-            GrB_TRY (GrB_Vector_assign_INT64 (Seed, Seed, NULL, seed,
-                GrB_ALL, n, GrB_DESC_S)) ;
-            // Seed += 0:n-1
-            GrB_TRY (GrB_Vector_apply (Seed, NULL, GrB_PLUS_INT64,
-                GxB_POSITIONI_INT64, Seed, NULL)) ;
-
-        #endif
-
-    #else
-
-            // Seed = (0:n-1) + seed
-            // requires v2.0 C API
-            GrB_TRY (GrB_Vector_apply_IndexOp_INT64 (Seed, NULL, NULL,
-                GrB_ROWINDEX_INT64, Seed, seed, NULL)) ;
-
-    #endif
+    // Seed = (0:n-1) + seed
+    GrB_TRY (GrB_Vector_apply_IndexOp_INT64 (Seed, NULL, NULL,
+        GrB_ROWINDEX_INT64, Seed, seed, NULL)) ;
 
     // Seed = next (Seed)
     GrB_TRY (GrB_Vector_apply (Seed, NULL, NULL, LG_rand_next_op, Seed, NULL)) ;

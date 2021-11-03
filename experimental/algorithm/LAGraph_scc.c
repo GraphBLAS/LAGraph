@@ -111,7 +111,8 @@ GrB_Info LAGraph_scc
     GrB_Matrix A            // input matrix
 )
 {
-#if !defined(LG_SUITESPARSE)
+#if !(LG_SUITESPARSE)
+    // FIXME: can be GrB*
     return GrB_PANIC;
 #else
     GrB_Info info;

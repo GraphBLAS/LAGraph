@@ -8,8 +8,78 @@
 
 //------------------------------------------------------------------------------
 
+#define LAGraph_FREE_ALL        \
+{                               \
+    LAGraph_Finalize (msg) ;    \
+}
+
 #include "LG_internal.h"
 
+//------------------------------------------------------------------------------
+// LAGraph global objects
+//------------------------------------------------------------------------------
+
+// LAGraph_plus_first_T: using the GrB_PLUS_MONOID_T monoid and the
+// corresponding GrB_FIRST_T multiplicative operator.
+GrB_Semiring LAGraph_plus_first_int8   = NULL ;
+GrB_Semiring LAGraph_plus_first_int16  = NULL ;
+GrB_Semiring LAGraph_plus_first_int32  = NULL ;
+GrB_Semiring LAGraph_plus_first_int64  = NULL ;
+GrB_Semiring LAGraph_plus_first_uint8  = NULL ;
+GrB_Semiring LAGraph_plus_first_uint16 = NULL ;
+GrB_Semiring LAGraph_plus_first_uint32 = NULL ;
+GrB_Semiring LAGraph_plus_first_uint64 = NULL ;
+GrB_Semiring LAGraph_plus_first_fp32   = NULL ;
+GrB_Semiring LAGraph_plus_first_fp64   = NULL ;
+
+// LAGraph_plus_second_T: using the GrB_PLUS_MONOID_T monoid and the
+// corresponding GrB_SECOND_T multiplicative operator.
+GrB_Semiring LAGraph_plus_second_int8   = NULL ;
+GrB_Semiring LAGraph_plus_second_int16  = NULL ;
+GrB_Semiring LAGraph_plus_second_int32  = NULL ;
+GrB_Semiring LAGraph_plus_second_int64  = NULL ;
+GrB_Semiring LAGraph_plus_second_uint8  = NULL ;
+GrB_Semiring LAGraph_plus_second_uint16 = NULL ;
+GrB_Semiring LAGraph_plus_second_uint32 = NULL ;
+GrB_Semiring LAGraph_plus_second_uint64 = NULL ;
+GrB_Semiring LAGraph_plus_second_fp32   = NULL ;
+GrB_Semiring LAGraph_plus_second_fp64   = NULL ;
+
+// LAGraph_plus_one_T: using the GrB_PLUS_MONOID_T monoid and the
+// corresponding GrB_ONEB_T multiplicative operator.
+GrB_Semiring LAGraph_plus_one_int8   = NULL ;
+GrB_Semiring LAGraph_plus_one_int16  = NULL ;
+GrB_Semiring LAGraph_plus_one_int32  = NULL ;
+GrB_Semiring LAGraph_plus_one_int64  = NULL ;
+GrB_Semiring LAGraph_plus_one_uint8  = NULL ;
+GrB_Semiring LAGraph_plus_one_uint16 = NULL ;
+GrB_Semiring LAGraph_plus_one_uint32 = NULL ;
+GrB_Semiring LAGraph_plus_one_uint64 = NULL ;
+GrB_Semiring LAGraph_plus_one_fp32   = NULL ;
+GrB_Semiring LAGraph_plus_one_fp64   = NULL ;
+
+
+// use LAGraph_structural_bool, etc
+
+// LAGraph_symbolic_T: using the GrB_MIN_MONOID_T for non-boolean types
+// or GrB_LOR_MONOID_BOOL for boolean, and the GrB_ONEB_T multiplicative op.
+GrB_Semiring LAGraph_symbolic_bool   = NULL ;
+GrB_Semiring LAGraph_symbolic_int8   = NULL ;
+GrB_Semiring LAGraph_symbolic_int16  = NULL ;
+GrB_Semiring LAGraph_symbolic_int32  = NULL ;
+GrB_Semiring LAGraph_symbolic_int64  = NULL ;
+GrB_Semiring LAGraph_symbolic_uint8  = NULL ;
+GrB_Semiring LAGraph_symbolic_uint16 = NULL ;
+GrB_Semiring LAGraph_symbolic_uint32 = NULL ;
+GrB_Semiring LAGraph_symbolic_uint64 = NULL ;
+GrB_Semiring LAGraph_symbolic_fp32   = NULL ;
+GrB_Semiring LAGraph_symbolic_fp64   = NULL ;
+
+//------------------------------------------------------------------------------
+// LAGraph_Xinit
+//------------------------------------------------------------------------------
+
+LAGRAPH_PUBLIC
 int LAGraph_Xinit           // returns 0 if successful, -1 if failure
 (
     // pointers to memory management functions
@@ -36,22 +106,11 @@ int LAGraph_Xinit           // returns 0 if successful, -1 if failure
 
     #if LG_SUITESPARSE
 
-        #if ( GxB_IMPLEMENTATION >= GxB_VERSION (5,0,2) )
-        // calloc may be NULL
-        #else
-        // calloc is required
-        LG_CHECK (user_calloc_function == NULL, -1, "calloc is NULL") ;
-        #endif
-
         GrB_TRY (GxB_init (GrB_NONBLOCKING,
             user_malloc_function,
             user_calloc_function,
             user_realloc_function,
-            user_free_function
-            #if (GxB_IMPLEMENTATION_MAJOR <= 5)
-            , true
-            #endif
-            )) ;
+            user_free_function)) ;
 
     #else
 
@@ -68,6 +127,135 @@ int LAGraph_Xinit           // returns 0 if successful, -1 if failure
     LAGraph_Calloc_function  = user_calloc_function ;
     LAGraph_Realloc_function = user_realloc_function ;
     LAGraph_Free_function    = user_free_function ;
+
+    //--------------------------------------------------------------------------
+    // create global objects
+    //--------------------------------------------------------------------------
+
+    // LAGraph_plus_first_T: using the GrB_PLUS_MONOID_T monoid and the
+    // GrB_FIRST_T multiplicative operator.  These semirings compute C=A*B
+    // where only the pattern of B is accessed.  In MATLAB, this can be
+    // written as:
+    //
+    //      C = A * spones (B)
+
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_first_int8,
+        GrB_PLUS_MONOID_INT8  , GrB_FIRST_INT8  )) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_first_int16,
+        GrB_PLUS_MONOID_INT16 , GrB_FIRST_INT16 )) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_first_int32,
+        GrB_PLUS_MONOID_INT32 , GrB_FIRST_INT32 )) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_first_int64,
+        GrB_PLUS_MONOID_INT64 , GrB_FIRST_INT64 )) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_first_uint8,
+        GrB_PLUS_MONOID_UINT8 , GrB_FIRST_UINT8 )) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_first_uint16,
+        GrB_PLUS_MONOID_UINT16, GrB_FIRST_UINT16)) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_first_uint32,
+        GrB_PLUS_MONOID_UINT32, GrB_FIRST_UINT32)) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_first_uint64,
+        GrB_PLUS_MONOID_UINT64, GrB_FIRST_UINT64)) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_first_fp32,
+        GrB_PLUS_MONOID_FP32  , GrB_FIRST_FP32  )) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_first_fp64,
+        GrB_PLUS_MONOID_FP64  , GrB_FIRST_FP64  )) ;
+
+    // LAGraph_plus_second_T: using the GrB_PLUS_MONOID_T monoid and the
+    // GrB_SECOND_T multiplicative operator.  These semirings compute C=A*B
+    // where only the pattern of A is accessed.  In MATLAB, this can be
+    // written as:
+    //
+    //      C = spones (A) * B
+
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_second_int8,
+        GrB_PLUS_MONOID_INT8  , GrB_SECOND_INT8  )) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_second_int16,
+        GrB_PLUS_MONOID_INT16 , GrB_SECOND_INT16 )) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_second_int32,
+        GrB_PLUS_MONOID_INT32 , GrB_SECOND_INT32 )) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_second_int64,
+        GrB_PLUS_MONOID_INT64 , GrB_SECOND_INT64 )) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_second_uint8,
+        GrB_PLUS_MONOID_UINT8 , GrB_SECOND_UINT8 )) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_second_uint16,
+        GrB_PLUS_MONOID_UINT16, GrB_SECOND_UINT16)) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_second_uint32,
+        GrB_PLUS_MONOID_UINT32, GrB_SECOND_UINT32)) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_second_uint64,
+        GrB_PLUS_MONOID_UINT64, GrB_SECOND_UINT64)) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_second_fp32,
+        GrB_PLUS_MONOID_FP32  , GrB_SECOND_FP32  )) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_second_fp64,
+        GrB_PLUS_MONOID_FP64  , GrB_SECOND_FP64  )) ;
+
+    // LAGraph_plus_one_T: using the GrB_PLUS_MONOID_T monoid and the
+    // corresponding GrB_ONEB_T multiplicative operator.  These semirings
+    // compute a matrix C=A*B that does not depend on the type or values of
+    // the matrices A and B.  C(i,j) is the size of the intersection of the
+    // patterns of A(i,:) and B(:,j).  In MATLAB, for the FP64 data type,
+    // this can be written as:
+    // 
+    //      C = spones (A) * spones (B)
+
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_one_int8,
+        GrB_PLUS_MONOID_INT8  , GrB_ONEB_INT8  )) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_one_int16,
+        GrB_PLUS_MONOID_INT16 , GrB_ONEB_INT16 )) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_one_int32,
+        GrB_PLUS_MONOID_INT32 , GrB_ONEB_INT32 )) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_one_int64,
+        GrB_PLUS_MONOID_INT64 , GrB_ONEB_INT64 )) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_one_uint8,
+        GrB_PLUS_MONOID_UINT8 , GrB_ONEB_UINT8 )) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_one_uint16,
+        GrB_PLUS_MONOID_UINT16, GrB_ONEB_UINT16)) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_one_uint32,
+        GrB_PLUS_MONOID_UINT32, GrB_ONEB_UINT32)) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_one_uint64,
+        GrB_PLUS_MONOID_UINT64, GrB_ONEB_UINT64)) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_one_fp32,
+        GrB_PLUS_MONOID_FP32  , GrB_ONEB_FP32  )) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_one_fp64,
+        GrB_PLUS_MONOID_FP64  , GrB_ONEB_FP64  )) ;
+
+    // LAGraph_symbolic_T: using the GrB_MIN_MONOID_T for non-boolean types, or
+    // GrB_LOR_MONOID_BOOL for boolean, and the GrB_ONEB_T multiplicative
+    // operator.  Given any matrices A and B, C = A*B when using this semiring
+    // computes a matrix C whose values (for entries present) are all equal to
+    // 1.  The result is dependent only on the structure of A and B, not their
+    // data types or values.  In MATLAB, this could be written for FP64 as:
+    //
+    //      C = spones (spones (A) * spones (B))
+    //
+    // The MIN monoid could also be MAX, TIMES, or GxB_ANY (for SuiteSparse
+    // GraphBLAS), or it could be BOR or BAND for the unsigned integer types.
+    // The LOR monoid could also be LAND or EQ.  All of these monoids reduce
+    // a set of values { 1, 1, 1, ... 1, 1 } down to the single scalar value
+    // of 1, or true, and thus any of these monoids will compute the same
+    // thing.
+
+    GrB_TRY (GrB_Semiring_new (&LAGraph_symbolic_bool,
+        GrB_LOR_MONOID_BOOL   , GrB_ONEB_BOOL  )) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_symbolic_int8,
+        GrB_MIN_MONOID_INT8   , GrB_ONEB_INT8  )) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_symbolic_int16,
+        GrB_MIN_MONOID_INT16  , GrB_ONEB_INT16 )) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_symbolic_int32,
+        GrB_MIN_MONOID_INT32  , GrB_ONEB_INT32 )) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_symbolic_int64,
+        GrB_MIN_MONOID_INT64  , GrB_ONEB_INT64 )) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_symbolic_uint8,
+        GrB_MIN_MONOID_UINT8  , GrB_ONEB_UINT8 )) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_symbolic_uint16,
+        GrB_MIN_MONOID_UINT16 , GrB_ONEB_UINT16)) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_symbolic_uint32,
+        GrB_MIN_MONOID_UINT32 , GrB_ONEB_UINT32)) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_symbolic_uint64,
+        GrB_MIN_MONOID_UINT64 , GrB_ONEB_UINT64)) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_symbolic_fp32,
+        GrB_MIN_MONOID_FP32   , GrB_ONEB_FP32  )) ;
+    GrB_TRY (GrB_Semiring_new (&LAGraph_symbolic_fp64,
+        GrB_MIN_MONOID_FP64   , GrB_ONEB_FP64  )) ;
 
     return (0) ;
 }

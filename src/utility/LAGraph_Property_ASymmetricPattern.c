@@ -77,21 +77,8 @@ int LAGraph_Property_ASymmetricPattern  // 0 if successful, -1 if failure
 
     GrB_TRY (GrB_Matrix_new (&C, GrB_BOOL, n, n)) ;
 
-    #if LG_SUITESPARSE
-
-        // C(i,j) = 1 if both A(i,j) and AT(i,j) exist
-        GrB_TRY (GrB_eWiseMult (C, NULL, NULL, GxB_PAIR_BOOL, A, G->AT, NULL)) ;
-
-    #else
-
-        // S1 = pattern of A, with S1(i,j)=1 if A(i,j) exists
-        LAGraph_TRY (LAGraph_Pattern (&S1, A, msg)) ;
-        // S2 = pattern of AT, with S2(i,j)=1 if AT(i,j) exists
-        LAGraph_TRY (LAGraph_Pattern (&S2, G->AT, msg)) ;
-        // C(i,j) = 1 if both S1(i,j) == 1 and S2(i,j) == 1
-        GrB_TRY (GrB_eWiseMult (C, NULL, NULL, GrB_LAND, S1, S2, NULL)) ;
-
-    #endif
+    // C(i,j) = 1 if both A(i,j) and AT(i,j) exist
+    GrB_TRY (GrB_eWiseMult (C, NULL, NULL, GrB_ONEB_BOOL, A, G->AT, NULL)) ;
 
     GrB_Index nvals1, nvals2 ;
     GrB_TRY (GrB_Matrix_nvals (&nvals1, C)) ;

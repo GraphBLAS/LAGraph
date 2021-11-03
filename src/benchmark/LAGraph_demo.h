@@ -738,7 +738,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
     // inputs
     bool make_symmetric,        // if true, always return G as undirected
     bool remove_self_edges,     // if true, remove self edges
-    bool pattern,               // if true, return G->A as bool (all true)
+    bool structural,            // if true, return G->A as bool (all true)
     GrB_Type pref,              // if non-NULL, typecast G->A to this type
     bool ensure_positive,       // if true, ensure all entries are > 0
     int argc,                   // input to main test program
@@ -870,11 +870,11 @@ static int readproblem          // returns 0 if successful, -1 if failure
     // typecast, if requested
     //--------------------------------------------------------------------------
 
-    if (pattern)
+    if (structural)
     {
-        // convert to boolean, pattern-only, with all entries true
+        // convert to boolean, with all entries true
         A_type = GrB_BOOL ;
-        LAGraph_TRY (LAGraph_Pattern (&A2, A, msg)) ;
+        LAGraph_TRY (LAGraph_Structure (&A2, A, msg)) ;
     }
     else if (pref != NULL && A_type != pref)
     {
@@ -946,7 +946,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
     // ensure all entries are > 0, if requested
     //--------------------------------------------------------------------------
 
-    if (!pattern && ensure_positive)
+    if (!structural && ensure_positive)
     {
         // TODO: make this a utility function, to drop explicit zeros
         #if SUITESPARSE
@@ -984,13 +984,13 @@ static int readproblem          // returns 0 if successful, -1 if failure
 
     if (!A_is_symmetric)
     {
-        // compute G->AT and determine if A has a symmetric pattern
+        // compute G->AT and determine if A has a symmetric structure
         char *name;
         LAGraph_TypeName(&name, (*G)->A_type, msg);
         LAGraph_TRY (LAGraph_Property_ASymmetricPattern (*G, msg)) ;
-        if ((*G)->A_pattern_is_symmetric && pattern)
+        if ((*G)->A_pattern_is_symmetric && structural)
         {
-            // if G->A has a symmetric pattern, declare the graph undirected
+            // if G->A has a symmetric structure, declare the graph undirected
             // and free G->AT since it isn't needed.
             (*G)->kind = LAGRAPH_ADJACENCY_UNDIRECTED ;
             GrB_TRY (GrB_Matrix_free (&((*G)->AT))) ;

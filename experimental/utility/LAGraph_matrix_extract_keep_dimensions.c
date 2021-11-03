@@ -55,7 +55,7 @@ GrB_Info LAGraph_Matrix_extract_keep_dimensions // extract submatrix but keep
     GrB_Index nv                 // number of vertex indices
 )
 {
-#if !defined(LG_SUITESPARSE)
+#if !(LG_SUITESPARSE)
     return GrB_PANIC;
 #else
     //--------------------------------------------------------------------------

@@ -94,17 +94,9 @@ int LG_check_sssp
     bool iso = false ;
     #if LG_SUITESPARSE
     bool jumbled ;
-    #if (GxB_IMPLEMENTATION >= GxB_VERSION(5,1,0))
     GrB_TRY (GxB_Matrix_unpack_CSR (G->A,
         &Ap, &Aj, (void **) &Ax, &Ap_size, &Aj_size, &Ax_size, &iso, &jumbled,
         NULL)) ;
-    #else
-    GrB_Type atype ;
-    GrB_Index nrows ;
-    GrB_TRY (GxB_Matrix_export_CSR (&(G->A), &atype, &nrows, &ncols,
-        &Ap, &Aj, (void **) &Ax, &Ap_size, &Aj_size, &Ax_size, &iso, &jumbled,
-        NULL)) ;
-    #endif
     #endif
 
     //--------------------------------------------------------------------------
@@ -262,15 +254,12 @@ int LG_check_sssp
     //--------------------------------------------------------------------------
 
     #if LG_SUITESPARSE
-    #if (GxB_IMPLEMENTATION >= GxB_VERSION(5,1,0))
+    #if (GxB_IMPLEMENTATION < GxB_VERSION(5,1,0))
+    #error "SuiteSparse:GraphBLAS v5.1.0 or later required"
+    #endif
     GrB_TRY (GxB_Matrix_pack_CSR (G->A,
         &Ap, &Aj, (void **) &Ax, Ap_size, Aj_size, Ax_size, iso, jumbled,
         NULL)) ;
-    #else
-    GrB_TRY (GxB_Matrix_import_CSR (&(G->A), atype, nrows, ncols,
-        &Ap, &Aj, (void **) &Ax, Ap_size, Aj_size, Ax_size, iso, jumbled,
-        NULL)) ;
-    #endif
     #endif
 
     //--------------------------------------------------------------------------

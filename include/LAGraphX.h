@@ -114,7 +114,7 @@ GrB_Info LAGraph_dense_relabel   // relabel sparse IDs to dense row/column indic
     GrB_Matrix *Id2index_handle, // output matrix: A(id, index)=1 (unfilled if NULL)
     GrB_Matrix *Index2id_handle, // output matrix: B(index, id)=1 (unfilled if NULL)
     GrB_Vector *id2index_handle, // output vector: v(id)=index (unfilled if NULL)
-    const GrB_Index *ids,        // array of unique identifiers (under LAGRAPH_INDEX_MAX)
+    const GrB_Index *ids,        // array of unique identifiers (<= GrB_INDEX_MAX+1)
     GrB_Index nids,              // number of identifiers
     GrB_Index *id_dimension      // number of rows in Id2index matrix, id2index vector (unfilled if NULL)
 ) ;

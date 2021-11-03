@@ -94,8 +94,8 @@ void test_MIS (void)
         TEST_MSG ("Loading of valued matrix failed") ;
         printf ("\nMatrix: %s\n", aname) ;
 
-        // C = pattern of A
-        OK (LAGraph_Pattern (&C, A, msg)) ;
+        // C = structure of A
+        OK (LAGraph_Structure (&C, A, msg)) ;
 
         // construct a directed graph G with adjacency matrix C
         OK (LAGraph_New (&G, &C, atype, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;

@@ -74,6 +74,7 @@ GrB_Info LAGraph_cc_boruvka
 
     // TODO remove once GrB_select is available and GxB_select is ported
 #if !LG_SUITESPARSE
+    // FIXME this can be pure GrB with GrB_select
     return GrB_PANIC;
 #else
     GrB_Index n;

@@ -22,6 +22,8 @@
 #include <LAGraph.h>
 #include <LAGraphX.h>
 
+// FIXME: this is not needed; GrB_assign with a structural mask can do it all
+
 //****************************************************************************
 /// @todo Pass GrB_Type to avoid GxB_Vector_type
 GrB_Info LAGraph_Vector_to_dense
@@ -31,7 +33,7 @@ GrB_Info LAGraph_Vector_to_dense
     void *id                // pointer to value to fill vdense with
 )
 {
-#if !defined(LG_SUITESPARSE)
+#if !(LG_SUITESPARSE)
     return GrB_PANIC;
 #else
     //--------------------------------------------------------------------------

@@ -28,11 +28,7 @@ int LAGraph_DeleteDiag      // returns 0 if successful, < 0 if failure
     //--------------------------------------------------------------------------
 
     GrB_Matrix M = NULL ;
-    #if LG_SUITESPARSE
-    GxB_Scalar thunk = NULL ;
-    #else
-    GrB_Vector thunk = NULL ;       // unused
-    #endif
+    GrB_Scalar thunk = NULL ;
     LG_CHECK_INIT (G, msg) ;
     if (G->ndiag == 0)
     {
@@ -54,21 +50,9 @@ int LAGraph_DeleteDiag      // returns 0 if successful, < 0 if failure
 
     GrB_Matrix A = G->A ;
 
-    #if LG_SUITESPARSE
-    GrB_TRY (GxB_Scalar_new (&thunk, GrB_INT64)) ;
-    GrB_TRY (GxB_Scalar_setElement (thunk, 0)) ;
-    GrB_TRY (GxB_select (A, NULL, NULL, GxB_OFFDIAG, A, thunk, NULL)) ;
-    #else
-    GrB_Index n ;
-    GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
-    GrB_TRY (GrB_Matrix_new (&M, GrB_BOOL, n, n)) ;
-    for (int64_t i = 0 ; i < n ; i++)
-    {
-        GrB_TRY (GrB_Matrix_setElement_BOOL (M, 1, i, i)) ;
-    }
-    // A<!M,struct,replace> = A
-    GrB_TRY (GrB_assign (A, M, NULL, A, GrB_ALL, n, GrB_ALL, n, GrB_DESC_RSC)) ;
-    #endif
+    GrB_TRY (GrB_Scalar_new (&thunk, GrB_INT64)) ;
+    GrB_TRY (GrB_Scalar_setElement (thunk, 0)) ;
+    GrB_TRY (GrB_select (A, NULL, NULL, GrB_OFFDIAG, A, thunk, NULL)) ;
 
     //--------------------------------------------------------------------------
     // free workspace, G->ndiag now known to be zero

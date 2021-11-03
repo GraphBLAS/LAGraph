@@ -28,18 +28,6 @@ int LAGraph_Vector_wait     // wait on a vector
     // wait on the vector
     //--------------------------------------------------------------------------
 
-    #if LG_SUITESPARSE
-    #if (GxB_IMPLEMENTATION_MAJOR <= 5)
-    // v1.3 C API with SuiteSparse:GraphBLAS v5.2.0 or earlier
-    GrB_TRY (GrB_Vector_wait (&v)) ;
-    #else
-    // v2.0 C API with SuiteSparse:GraphBLAS v6.0.0 or later
     GrB_TRY (GrB_Vector_wait (v, GrB_MATERIALIZE)) ;
-    #endif
-    #else
-    // vanilla GraphBLAS with v1.3 C API
-    GrB_TRY (GrB_Vector_wait (&v)) ;
-    #endif
-
     return (0) ;
 }

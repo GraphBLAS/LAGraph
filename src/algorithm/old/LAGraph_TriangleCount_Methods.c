@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LG_TriangleCount_SSGrB: Triangle counting using SuiteSparse extensions
+// LAGraph_Triangle_Methods: Triangle counting using various methods
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -12,6 +12,9 @@
 
 // Count the number of triangles in a graph,
 // Contributed by Tim Davis, Texas A&M.
+
+// Advanced API: compute G->ndiag, G->A_pattern_is_symmetric, and
+// G->rowdegree (if needed) befor calling.
 
 // Given a symmetric graph A with no-self edges, LAGraph_TriangleCount_methods
 // counts the number of triangles in the graph.  A triangle is a clique of size
@@ -50,7 +53,6 @@
 
 #define LAGraph_FREE_ALL        \
 {                               \
-    GrB_free (&thunk) ;         \
     GrB_free (L) ;              \
     GrB_free (U) ;              \
 }
@@ -70,27 +72,22 @@ static int tricount_prep        // return 0 if successful, < 0 on error
 )
 {
     GrB_Index n ;
-    GxB_Scalar thunk ;
     GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
-    GrB_TRY (GxB_Scalar_new (&thunk, GrB_INT64)) ;
 
     if (L != NULL)
     {
         // L = tril (A,-1)
         GrB_TRY (GrB_Matrix_new (L, GrB_BOOL, n, n)) ;
-        GrB_TRY (GxB_Scalar_setElement (thunk, -1)) ;
-        GrB_TRY (GxB_select (*L, NULL, NULL, GxB_TRIL, A, thunk, NULL)) ;
+        GrB_TRY (GrB_select (*L, NULL, NULL, GrB_TRIL, A, (int64_t) (-1),
+            NULL)) ;
     }
 
     if (U != NULL)
     {
         // U = triu (A,1)
         GrB_TRY (GrB_Matrix_new (U, GrB_BOOL, n, n)) ;
-        GrB_TRY (GxB_Scalar_setElement (thunk, 1)) ;
-        GrB_TRY (GxB_select (*U, NULL, NULL, GxB_TRIU, A, thunk, NULL)) ;
+        GrB_TRY (GrB_select (*U, NULL, NULL, GrB_TRIU, A, (int64_t) 1, NULL)) ;
     }
-
-    GrB_free (&thunk) ;
     return (0) ;
 }
 
@@ -108,7 +105,7 @@ static int tricount_prep        // return 0 if successful, < 0 on error
     LAGraph_Free ((void **) &P) ;           \
 }
 
-int LG_TriangleCount_SSGrB  // returns 0 if successful, < 0 if failure
+int LAGraph_Triangle_Methods  // returns 0 if successful, < 0 if failure
 (
     uint64_t *ntriangles,   // # of triangles
     // input:
@@ -167,7 +164,7 @@ int LG_TriangleCount_SSGrB  // returns 0 if successful, < 0 if failure
     GrB_Index n ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_new (&C, GrB_INT64, n, n)) ;
-    GrB_Semiring semiring = GxB_PLUS_PAIR_INT64 ;
+    GrB_Semiring semiring = LAGraph_plus_one_int64 ;
     GrB_Monoid monoid = GrB_PLUS_MONOID_INT64 ;
 
     //--------------------------------------------------------------------------

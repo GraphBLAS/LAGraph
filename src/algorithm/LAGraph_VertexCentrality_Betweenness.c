@@ -55,7 +55,6 @@
     GrB_free (&paths) ;                         \
     GrB_free (&bc_update) ;                     \
     GrB_free (&W) ;                             \
-    GrB_free (&plus_first_fp64) ;               \
     if (S != NULL)                              \
     {                                           \
         for (int64_t i = 0 ; i < n ; i++)       \
@@ -120,7 +119,6 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
     GrB_Matrix W = NULL ;
 
     GrB_Index n = 0 ;                   // # nodes in the graph
-    GrB_Semiring plus_first_fp64 = NULL ;
 
     LG_CHECK (centrality == NULL, -1, "centrality is NULL") ;
     (*centrality) = NULL ;
@@ -146,11 +144,6 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
     // === initializations =====================================================
     // =========================================================================
 
-    // SuiteSparse:GraphBLAS has GxB_PLUS_FIRST_FP64, which is the same speed
-    // as using the created semiring below.  Create it so this runs in vanilla.
-    GrB_TRY (GrB_Semiring_new (&plus_first_fp64, GrB_PLUS_MONOID_FP64,
-                               GrB_FIRST_FP64)) ;
-
     // Initialize paths and frontier with source notes
     GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
     GrB_TRY (GrB_Matrix_new (&paths,    GrB_FP64, ns, n)) ;
@@ -168,8 +161,8 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
     }
 
     // Initial frontier: frontier<!paths>= frontier*A
-    GrB_TRY (GrB_mxm (frontier, paths, NULL, plus_first_fp64, frontier, A,
-        GrB_DESC_RSC)) ;
+    GrB_TRY (GrB_mxm (frontier, paths, NULL, LAGraph_plus_first_fp64,
+        frontier, A, GrB_DESC_RSC)) ;
 
     // Allocate memory for the array of S matrices
     S = (GrB_Matrix *) LAGraph_Malloc (n+1, sizeof (GrB_Matrix)) ;
@@ -189,11 +182,11 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
     {
 
         //----------------------------------------------------------------------
-        // S [depth] = pattern of frontier
+        // S [depth] = structure of frontier
         //----------------------------------------------------------------------
 
         S [depth+1] = NULL ;
-        LAGraph_TRY (LAGraph_Pattern (&(S [depth]), frontier, msg)) ;
+        LAGraph_TRY (LAGraph_Structure (&(S [depth]), frontier, msg)) ;
 
         //----------------------------------------------------------------------
         // Accumulate path counts: paths += frontier
@@ -219,7 +212,7 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
 #if LG_SUITESPARSE
             GrB_TRY (GxB_set (frontier, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
 #endif
-            GrB_TRY (GrB_mxm (frontier, paths, NULL, plus_first_fp64,
+            GrB_TRY (GrB_mxm (frontier, paths, NULL, LAGraph_plus_first_fp64,
                 frontier, AT, GrB_DESC_RSCT1)) ;
         }
         else // push
@@ -228,7 +221,7 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
 #if LG_SUITESPARSE
             GrB_TRY (GxB_set (frontier, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
 #endif
-            GrB_TRY (GrB_mxm (frontier, paths, NULL, plus_first_fp64,
+            GrB_TRY (GrB_mxm (frontier, paths, NULL, LAGraph_plus_first_fp64,
                 frontier, A, GrB_DESC_RSC)) ;
         }
 
@@ -285,7 +278,7 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
 #if LG_SUITESPARSE
             GrB_TRY (GxB_set (W, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
 #endif
-            GrB_TRY (GrB_mxm (W, S [i-1], NULL, plus_first_fp64, W, A,
+            GrB_TRY (GrB_mxm (W, S [i-1], NULL, LAGraph_plus_first_fp64, W, A,
                 GrB_DESC_RST1)) ;
         }
         else // push
@@ -294,7 +287,7 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
 #if LG_SUITESPARSE
             GrB_TRY (GxB_set (W, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
 #endif
-            GrB_TRY (GrB_mxm (W, S [i-1], NULL, plus_first_fp64, W, AT,
+            GrB_TRY (GrB_mxm (W, S [i-1], NULL, LAGraph_plus_first_fp64, W, AT,
                 GrB_DESC_RS)) ;
         }
 

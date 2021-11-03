@@ -24,7 +24,6 @@
     GrB_free (&d) ;                 \
     GrB_free (&t) ;                 \
     GrB_free (&w) ;                 \
-    GrB_free (&plus_second_fp32) ;  \
 }
 
 #define LAGraph_FREE_ALL            \
@@ -55,7 +54,6 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
 
     LG_CLEAR_MSG ;
     GrB_Vector r = NULL, d = NULL, t = NULL, w = NULL, d1 = NULL ;
-    GrB_Semiring plus_second_fp32 = NULL ;
     LG_CHECK (centrality == NULL, -1, "centrality is NULL") ;
     LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
     LAGraph_Kind kind = G->kind ; 
@@ -78,11 +76,6 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
     //--------------------------------------------------------------------------
     // initializations
     //--------------------------------------------------------------------------
-
-    // SuiteSparse:GraphBLAS has GxB_PLUS_SECOND_FP32, which is the same speed
-    // as using the created semiring below.  Create it so this runs in vanilla.
-    GrB_TRY (GrB_Semiring_new (&plus_second_fp32, GrB_PLUS_MONOID_FP32,
-        GrB_SECOND_FP32)) ;
 
     GrB_Index n ;
     (*centrality) = NULL ;
@@ -127,8 +120,8 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
         GrB_TRY (GrB_assign (r, NULL, NULL, teleport, GrB_ALL, n, NULL)) ;
 
         // r += A'*w
-        GrB_TRY (GrB_mxv (r, NULL, GrB_PLUS_FP32, plus_second_fp32, AT, w,
-            NULL)) ;
+        GrB_TRY (GrB_mxv (r, NULL, GrB_PLUS_FP32, LAGraph_plus_second_fp32,
+            AT, w, NULL)) ;
 
         // t -= r
         GrB_TRY (GrB_assign (t, NULL, GrB_MINUS_FP32, r, GrB_ALL, n, NULL)) ;

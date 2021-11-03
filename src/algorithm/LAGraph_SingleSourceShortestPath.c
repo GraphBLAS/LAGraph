@@ -58,7 +58,7 @@ int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
     LAGraph_Graph G,
     GrB_Index source,           // source vertex
     int32_t delta,              // delta value for delta stepping
-                                // TODO: use GxB_Scalar for delta
+                                // TODO: use GrB_Scalar for delta
     // TODO: make this an enum, and add to LAGraph_Graph properties, and then
     // remove it from the inputs to this function
     //      case 0: A can have negative, zero, or positive entries
@@ -76,8 +76,8 @@ int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
 
     LG_CLEAR_MSG ;
 
-    GxB_Scalar lBound = NULL ;  // the threshold for GxB_select
-    GxB_Scalar uBound = NULL ;  // the threshold for GxB_select
+    GrB_Scalar lBound = NULL ;  // the threshold for GrB_select
+    GrB_Scalar uBound = NULL ;  // the threshold for GrB_select
     GrB_Matrix AL = NULL ;      // graph containing the light weight edges
     GrB_Matrix AH = NULL ;      // graph containing the heavy weight edges
     GrB_Vector t = NULL ;       // tentative shortest path length
@@ -102,9 +102,9 @@ int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
     // initializations
     //--------------------------------------------------------------------------
 
-    GrB_TRY (GxB_Scalar_new (&lBound, GrB_INT32)) ;     // TODO: any type
-    GrB_TRY (GxB_Scalar_new (&uBound, GrB_INT32)) ;     // TODO: any type
-    GrB_TRY (GxB_Scalar_setElement (lBound, delta)) ;
+    GrB_TRY (GrB_Scalar_new (&lBound, GrB_INT32)) ;     // TODO: any type
+    GrB_TRY (GrB_Scalar_new (&uBound, GrB_INT32)) ;     // TODO: any type
+    GrB_TRY (GrB_Scalar_setElement (lBound, delta)) ;
 
     GrB_TRY (GrB_Vector_new (&t, GrB_INT32, n)) ;       // TODO: any type
     GrB_TRY (GrB_Vector_new (&tmasked, GrB_INT32, n)) ; // TODO: any type
@@ -115,12 +115,15 @@ int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
     GrB_TRY (GrB_Vector_new (&s, GrB_BOOL, n)) ;
     GrB_TRY (GrB_Vector_new (&reach, GrB_BOOL, n)) ;
 
+#if LG_SUITESPARSE
+    // optional hints for SuiteSparse:GraphBLAS
     GrB_TRY (GxB_set (t, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
     GrB_TRY (GxB_set (tmasked, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
     GrB_TRY (GxB_set (tReq, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
     GrB_TRY (GxB_set (tless, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
     GrB_TRY (GxB_set (s, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
     GrB_TRY (GxB_set (reach, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
+#endif
 
     // t (:) = infinity
     GrB_TRY (GrB_assign (t, NULL, NULL,
@@ -143,12 +146,12 @@ int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
 
     // AL = A .* (A <= delta)
     GrB_TRY (GrB_Matrix_new (&AL, GrB_INT32, n, n)) ;   // TODO: any type
-    GrB_TRY (GxB_select (AL, NULL, NULL, GxB_LE_THUNK, A, lBound, NULL)) ;
+    GrB_TRY (GrB_select (AL, NULL, NULL, GrB_VALUELE_INT32, A, lBound, NULL)) ;
     LAGraph_TRY (LAGraph_Matrix_wait (AL, msg)) ;
 
     // AH = A .* (A > delta)
     GrB_TRY (GrB_Matrix_new (&AH, GrB_INT32, n, n)) ;   // TODO: any type
-    GrB_TRY (GxB_select (AH, NULL, NULL, GxB_GT_THUNK, A, lBound, NULL)) ;
+    GrB_TRY (GrB_select (AH, NULL, NULL, GrB_VALUEGT_INT32, A, lBound, NULL)) ;
     LAGraph_TRY (LAGraph_Matrix_wait (AH, msg)) ;
 
     //--------------------------------------------------------------------------
@@ -167,8 +170,8 @@ int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
         GrB_TRY (GrB_assign (tmasked, reach, NULL, t, GrB_ALL, n, NULL)) ;
 
         // tmasked = select (tmasked < (i+1)*delta)
-        GrB_TRY (GxB_Scalar_setElement (uBound, (i+1) * delta)) ;
-        GrB_TRY (GxB_select (tmasked, NULL, NULL, GxB_LT_THUNK, tmasked,
+        GrB_TRY (GrB_Scalar_setElement (uBound, (i+1) * delta)) ;
+        GrB_TRY (GrB_select (tmasked, NULL, NULL, GrB_VALUELT_INT32, tmasked,
             uBound, NULL)) ;
         GrB_Index tmasked_nvals ;
         GrB_TRY (GrB_Vector_nvals (&tmasked_nvals, tmasked)) ;
@@ -205,8 +208,8 @@ int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
             // remove explicit zeros from tless so it can be used as a
             // structural mask
             GrB_Index tless_nvals ;
-            GrB_TRY (GxB_select (tless, NULL, NULL, GxB_NONZERO, tless,
-                NULL, NULL)) ;
+            GrB_TRY (GrB_select (tless, NULL, NULL, GrB_VALUENE_INT32, tless,
+                (int32_t) 0, NULL)) ;
             GrB_TRY (GrB_Vector_nvals (&tless_nvals, tless)) ;
             if (tless_nvals == 0) break ;
 
@@ -218,18 +221,18 @@ int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
             // since all entries of the 5 GAP graphs are known to be
             // positive, and the entries of tmasked are at least i*delta,
             // tReq = tmasked min.+ AL must be >= i*delta.
-            // Therefore, there is no need to perform GxB_select with
-            // GxB_GE_THUNK to find tmasked >= i*delta from tReq 
+            // Therefore, there is no need to perform GrB_select with
+            // GrB_VALUEGE_INT32 to find tmasked >= i*delta from tReq 
             GrB_TRY (GrB_Vector_clear (tmasked)) ;
-            GrB_TRY (GxB_select (tmasked, tless, NULL, GxB_LT_THUNK,
+            GrB_TRY (GrB_select (tmasked, tless, NULL, GrB_VALUELT_INT32,
                 tReq, uBound, GrB_DESC_S /* GrB_DESC_RS */)) ;
 
             // For general graph with some negative weights:
             if (!AIsAllPositive)
             {
-                GrB_TRY (GxB_Scalar_setElement (lBound, i * delta)) ;
+                GrB_TRY (GrB_Scalar_setElement (lBound, i * delta)) ;
                 // tmasked = select entries in tmasked that are >= lBound
-                GrB_TRY (GxB_select (tmasked, NULL, NULL, GxB_GE_THUNK, 
+                GrB_TRY (GrB_select (tmasked, NULL, NULL, GrB_VALUEGE_INT32, 
                     tmasked, lBound, NULL)) ;
             }
 

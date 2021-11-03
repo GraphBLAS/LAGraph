@@ -187,7 +187,7 @@ GrB_Info LAGraph_ispattern  // return GrB_SUCCESS if successful
                             // LAGraph_ComplexFP64.
 )
 {
-#if !defined(LG_SUITESPARSE)
+#if !(LG_SUITESPARSE)
     return GrB_PANIC
 #else
     GrB_Info info ;

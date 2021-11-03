@@ -44,27 +44,13 @@ int LG_ndiag                // returns 0 if successful, < 0 if failure
 
     #if LG_SUITESPARSE
 
-        #if ( GxB_IMPLEMENTATION >= GxB_VERSION (5,0,2) )
+        //----------------------------------------------------------------------
+        // SuiteSparse:GraphBLAS v5.0.2: use GxB_Vector_diag
+        //----------------------------------------------------------------------
 
-            //------------------------------------------------------------------
-            // SuiteSparse:GraphBLAS v5.0.2: use GxB_Vector_diag
-            //------------------------------------------------------------------
-
-            GrB_TRY (GrB_Vector_new (&d, atype, n)) ;
-            GrB_TRY (GxB_Vector_diag (d, A, 0, NULL)) ;
-            GrB_TRY (GrB_Vector_nvals ((GrB_Index *) ndiag, d)) ;
-
-        #else
-
-            //------------------------------------------------------------------
-            // SuiteSparse:GraphBLAS v4.x: use GxB_Select
-            //------------------------------------------------------------------
-
-            GrB_TRY (GrB_Matrix_new (&D, atype, nrows, ncols)) ;
-            GrB_TRY (GxB_select (D, NULL, NULL, GxB_DIAG, A, NULL, NULL)) ;
-            GrB_TRY (GrB_Matrix_nvals ((GrB_Index *) ndiag, D)) ;
-
-        #endif
+        GrB_TRY (GrB_Vector_new (&d, atype, n)) ;
+        GrB_TRY (GxB_Vector_diag (d, A, 0, NULL)) ;
+        GrB_TRY (GrB_Vector_nvals ((GrB_Index *) ndiag, d)) ;
 
     #else
 

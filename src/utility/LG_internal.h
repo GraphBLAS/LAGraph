@@ -106,29 +106,13 @@ typedef unsigned char LG_void ;
 
 #ifndef GrB_CATCH
 
-    #if LG_SUITESPARSE && (GxB_IMPLEMENTATION_MAJOR >= 6)
-
-        // v2.0 C API with SuiteSparse:GraphBLAS v6.0.0 or later
-        #define GrB_CATCH(info)                                 \
-        {                                                       \
-            LG_ERROR_MSG ("%s, line %d: GrB failure: %d",       \
-                __FILE__, __LINE__, info) ;                     \
-            LAGraph_FREE_ALL ;                                  \
-            return (info) ;                                     \
-        }
-
-    #else
-
-        // v1.3 C API
-        #define GrB_CATCH(info)                                 \
-        {                                                       \
-            LG_ERROR_MSG ("%s, line %d: GrB failure: %d",       \
-                __FILE__, __LINE__, info) ;                     \
-            LAGraph_FREE_ALL ;                                  \
-            return (-(info)) ;                                  \
-        }
-
-    #endif
+    #define GrB_CATCH(info)                                 \
+    {                                                       \
+        LG_ERROR_MSG ("%s, line %d: GrB failure: %d",       \
+            __FILE__, __LINE__, info) ;                     \
+        LAGraph_FREE_ALL ;                                  \
+        return (info) ;                                     \
+    }
 
 #endif
 

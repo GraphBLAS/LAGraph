@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_Pattern: return the pattern of a matrix (spones(A) in MATLAB)
+// LAGraph_Structure: return the structure of a matrix (spones(A) in MATLAB)
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -8,15 +8,16 @@
 
 //------------------------------------------------------------------------------
 
-// LAGraph_pattern: return the pattern of a matrix as a boolean matrix.
+// LAGraph_Structure: return the structure of a matrix as a boolean matrix,
+// where C(i,j)=true if the entry A(i,j) is present in the matrix A.
 
 #define LAGraph_FREE_ALL GrB_free (C) ;
 
 #include "LG_internal.h"
 
-int LAGraph_Pattern     // return 0 if successful, -1 if failure
+int LAGraph_Structure   // return 0 if successful, -1 if failure
 (
-    GrB_Matrix *C,      // a boolean matrix with the pattern of A
+    GrB_Matrix *C,      // a boolean matrix with same structure of A
     GrB_Matrix A,
     char *msg
 )
@@ -40,7 +41,8 @@ int LAGraph_Pattern     // return 0 if successful, -1 if failure
     GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
 
     //--------------------------------------------------------------------------
-    // C<A,s> = true
+    // C<s(A)> = true
+    // C{A} = true
     //--------------------------------------------------------------------------
 
     GrB_TRY (GrB_Matrix_new (C, GrB_BOOL, nrows, ncols)) ;

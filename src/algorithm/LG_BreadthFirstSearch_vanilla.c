@@ -92,7 +92,6 @@ int LG_BreadthFirstSearch_vanilla
 
     // determine the semiring type
     GrB_Type     int_type  = (n > INT32_MAX) ? GrB_INT64 : GrB_INT32 ;
-    //GrB_BinaryOp plus_op   = (n > INT32_MAX) ? GrB_PLUS_INT64 : GrB_PLUS_INT32;
     GrB_BinaryOp second_op = (n > INT32_MAX) ? GrB_SECOND_INT64 : GrB_SECOND_INT32;
     GrB_Semiring semiring  = NULL;
 
@@ -108,7 +107,7 @@ int LG_BreadthFirstSearch_vanilla
         GrB_TRY (GrB_Vector_new(&frontier, int_type, n)) ;
         GrB_TRY (GrB_Vector_setElement(frontier, src, src)) ;
 
-        // create an index ramp (TODO: replace with apply(i) in GraphBLAS 2.0
+        // create an index ramp (FIXME: replace with apply(i) in GraphBLAS 2.0
         GrB_Index *idx = (GrB_Index *)LAGraph_Malloc(n, sizeof(GrB_Index));
         for (GrB_Index ix = 0; ix < n; ++ix) idx[ix] = ix;
         GrB_TRY( GrB_Vector_new(&index_ramp, int_type, n) );
@@ -118,7 +117,7 @@ int LG_BreadthFirstSearch_vanilla
     else
     {
         // only the level is needed
-        semiring = GrB_LOR_LAND_SEMIRING_BOOL;
+        semiring = LAGraph_symbolic_bool ;
 
         // create a sparse boolean vector frontier, and set frontier(src) = true
         GrB_TRY (GrB_Vector_new(&frontier, GrB_BOOL, n)) ;

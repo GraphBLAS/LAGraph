@@ -100,6 +100,7 @@ GrB_Info LAGraph_dnn    // returns GrB_SUCCESS if successful
 
 #if !defined(LG_SUITESPARSE)
     // GxB_type, semirings and select required
+    // FIXME: this can be pure GrB
     return GrB_PANIC;
 #else
     //--------------------------------------------------------------------------

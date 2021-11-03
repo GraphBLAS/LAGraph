@@ -113,7 +113,8 @@ GrB_Info LAGraph_msf
     bool sanitize       // if true, ensure A is symmetric
 )
 {
-#if !defined(LG_SUITESPARSE)  // currently requires GxB_select
+#if !LG_SUITESPARSE
+    // currently requires GxB_select; FIXME: make pure GrB with GrB_select
     return GrB_PANIC;
 #else
     GrB_Info info;

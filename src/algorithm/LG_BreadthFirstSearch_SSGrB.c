@@ -46,9 +46,15 @@ int LG_BreadthFirstSearch_SSGrB
     char          *msg
 )
 {
+
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------
+
+#if !LG_SUITESPARSE
+    // SuiteSparse is required
+    return (GrB_PANIC) ;
+#else
 
     LG_CLEAR_MSG ;
     GrB_Vector q = NULL ;           // the current frontier
@@ -123,8 +129,8 @@ int LG_BreadthFirstSearch_SSGrB
     }
     else
     {
-        // only the level is needed, use the ANY_PAIR_BOOL semiring
-        semiring = GxB_ANY_PAIR_BOOL ;
+        // only the level is needed, use the LAGraph_symbolic_bool semiring
+        semiring = LAGraph_symbolic_bool ;
 
         // create a sparse boolean vector q, and set q(src) = true
         GrB_TRY (GrB_Vector_new (&q, GrB_BOOL, n)) ;
@@ -284,4 +290,5 @@ int LG_BreadthFirstSearch_SSGrB
     if (compute_level ) (*level ) = v ;
     LAGraph_FREE_WORK ;
     return (0) ;
+#endif
 }

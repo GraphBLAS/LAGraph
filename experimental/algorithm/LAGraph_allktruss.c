@@ -123,6 +123,8 @@ GrB_Info LAGraph_allktruss      // compute all k-trusses of a graph
 
 #if LG_SUITESPARSE
 
+    // FIXME: this can be pure GrB*
+
     GrB_Info info ;
 
     // the current k-truss

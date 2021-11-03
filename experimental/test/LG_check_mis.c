@@ -136,12 +136,7 @@ int LG_check_mis        // check if iset is a valid MIS of A
     }
 
     // e = (e || A*iset), using the symbolic semiring
-    #if LG_SUITESPARSE
-    GrB_Semiring symbolic = GxB_ANY_PAIR_BOOL ;
-    #else
-    GrB_Semiring symbolic = GrB_LOR_LAND_SEMIRING_BOOL ;
-    #endif
-    GrB_TRY (GrB_vxm (e, NULL, GrB_LOR, symbolic, iset, A, NULL)) ;
+    GrB_TRY (GrB_vxm (e, NULL, GrB_LOR, LAGraph_symbolic_bool, iset, A, NULL)) ;
 
     // drop explicit zeros from e
     // e<e.replace> = e

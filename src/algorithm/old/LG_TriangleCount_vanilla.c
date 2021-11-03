@@ -56,6 +56,7 @@
 
 #include <LG_internal.h>
 
+// FIXME set NO_GRB_SELECT according to GRB_VERSION
 #define NO_GRB_SELECT 1
 
 //------------------------------------------------------------------------------
@@ -330,6 +331,7 @@ int LG_TriangleCount_vanilla   // returns 0 if successful, < 0 if failure
     GrB_Index n ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_new (&C, GrB_INT64, n, n)) ;
+    // FIXME create the PLUS_ONEB_INT64 for v2.0 C API
     GrB_Semiring semiring = GrB_PLUS_TIMES_SEMIRING_INT64 ;
     GrB_Monoid monoid = GrB_PLUS_MONOID_INT64 ;
 

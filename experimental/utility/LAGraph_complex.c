@@ -111,7 +111,7 @@ void complexfp64_skew (C Z, const C X, const C Y)
     Z = X == -Y ;
 }
 
-void complexfp64_pair (C Z, const C X, const C Y)
+void complexfp64_oneb (C Z, const C X, const C Y)
 {
     Z = ONE ;
 }
@@ -138,7 +138,7 @@ GrB_BinaryOp
     LAGraph_RMINUS_ComplexFP64 = NULL         ,
     LAGraph_RDIV_ComplexFP64 = NULL           ,
     LAGraph_SKEW_ComplexFP64 = NULL           ,
-    LAGraph_PAIR_ComplexFP64 = NULL           ,
+    LAGraph_ONEB_ComplexFP64 = NULL           ,
     LAGraph_ANY_ComplexFP64 = NULL            ,
     LAGraph_HERMITIAN_ComplexFP64 = NULL      ;
 
@@ -331,7 +331,7 @@ GrB_Info LAGraph_Complex_init ( )
     OK (GrB_BinaryOp_new (&LAGraph_TIMES_ComplexFP64       , complexfp64_times       , C, C, C)) ;
     OK (GrB_BinaryOp_new (&LAGraph_DIV_ComplexFP64         , complexfp64_div         , C, C, C)) ;
     OK (GrB_BinaryOp_new (&LAGraph_RDIV_ComplexFP64        , complexfp64_rdiv        , C, C, C)) ;
-    OK (GrB_BinaryOp_new (&LAGraph_PAIR_ComplexFP64        , complexfp64_pair        , C, C, C)) ;
+    OK (GrB_BinaryOp_new (&LAGraph_ONEB_ComplexFP64        , complexfp64_oneb        , C, C, C)) ;
     OK (GrB_BinaryOp_new (&LAGraph_ANY_ComplexFP64         , complexfp64_any         , C, C, C)) ;
     OK (GrB_BinaryOp_new (&LAGraph_SKEW_ComplexFP64        , complexfp64_skew        , GrB_BOOL, C, C)) ;
     OK (GrB_BinaryOp_new (&LAGraph_HERMITIAN_ComplexFP64   , complexfp64_hermitian   , GrB_BOOL, C, C)) ;
@@ -455,8 +455,8 @@ GrB_Info LAGraph_Complex_finalize ( )
     GrB_BinaryOp_free (&LAGraph_TIMES_ComplexFP64 ) ;
     GrB_BinaryOp_free (&LAGraph_DIV_ComplexFP64   ) ;
     GrB_BinaryOp_free (&LAGraph_RDIV_ComplexFP64  ) ;
-    GrB_BinaryOp_free (&LAGraph_PAIR_ComplexFP64  ) ;
-    GrB_BinaryOp_free (&LAGraph_ANY_ComplexFP64  ) ;
+    GrB_BinaryOp_free (&LAGraph_ONEB_ComplexFP64  ) ;
+    GrB_BinaryOp_free (&LAGraph_ANY_ComplexFP64   ) ;
     GrB_BinaryOp_free (&LAGraph_SKEW_ComplexFP64  ) ;
     GrB_BinaryOp_free (&LAGraph_HERMITIAN_ComplexFP64  ) ;
 

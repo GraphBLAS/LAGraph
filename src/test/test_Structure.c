@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/test/test_Pattern.c:  test LAGraph_Pattern
+// LAGraph/src/test/test_Structure.c:  test LAGraph_Structure
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -41,7 +41,7 @@ void teardown (void)
 }
 
 //------------------------------------------------------------------------------
-// test_Pattern:  test LAGraph_Pattern
+// test_Structure:  test LAGraph_Structure
 //------------------------------------------------------------------------------
 
 const char *files [ ] =
@@ -52,7 +52,7 @@ const char *files [ ] =
     ""
 } ;
 
-void test_Pattern (void)
+void test_Structure (void)
 {
     setup ( ) ;
 
@@ -80,7 +80,7 @@ void test_Pattern (void)
         TEST_MSG ("Loading of pattern matrix failed") ;
 
         // C = pattern (A)
-        OK (LAGraph_Pattern (&C, A, msg)) ;
+        OK (LAGraph_Structure (&C, A, msg)) ;
 
         // ensure B and C are the same
         bool C_and_B_are_identical ;
@@ -98,17 +98,17 @@ void test_Pattern (void)
 }
 
 //------------------------------------------------------------------------------
-// test_Pattern_failures:  test error handling of LAGraph_Pattern
+// test_Structure_failures:  test error handling of LAGraph_Structure
 //------------------------------------------------------------------------------
 
-void test_Pattern_failures (void)
+void test_Structure_failures (void)
 {
     setup ( ) ;
 
     C = NULL ;
-    TEST_CHECK (LAGraph_Pattern (NULL, NULL, msg) == -1) ;
+    TEST_CHECK (LAGraph_Structure (NULL, NULL, msg) == -1) ;
     printf ("\nmsg: [%s]\n", msg) ;
-    TEST_CHECK (LAGraph_Pattern (&C, NULL, msg) == -1) ;
+    TEST_CHECK (LAGraph_Structure (&C, NULL, msg) == -1) ;
     printf ("msg: [%s]\n", msg) ;
     TEST_CHECK (C == NULL) ;
 
@@ -121,8 +121,8 @@ void test_Pattern_failures (void)
 
 TEST_LIST =
 {
-    { "Pattern", test_Pattern },
-    { "Pattern_failures", test_Pattern_failures },
+    { "Structure", test_Structure },
+    { "Structure_failures", test_Structure_failures },
     { NULL, NULL }
 } ;
 

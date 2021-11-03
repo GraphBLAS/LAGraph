@@ -118,12 +118,6 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     GrB_TRY (GrB_Vector_new (&score_zero, GrB_INT64, n)) ;
     GrB_TRY (GrB_Vector_new (&iset, GrB_BOOL, n)) ;
 
-    #if LG_SUITESPARSE
-    GrB_Semiring symbolic = GxB_ANY_PAIR_BOOL ;
-    #else
-    GrB_Semiring symbolic = GrB_LOR_LAND_SEMIRING_BOOL ;
-    #endif
-
     //--------------------------------------------------------------------------
     // remove singletons (nodes of degree zero) and handle ignore_node
     //--------------------------------------------------------------------------
@@ -208,17 +202,9 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
             NULL)) ;
 
         // find any score equal to zero, and set it back to the Seed value
-        #if LG_SUITESPARSE
-        #if GxB_IMPLEMENTATION >= GxB_VERSION (5,2,0)
         GrB_TRY (GrB_select (score_zero, NULL, NULL, GrB_VALUEEQ_INT64, score,
             (int64_t) 0, NULL)) ;
-        #else
-        GrB_TRY (GxB_select (score_zero, NULL, NULL, GxB_EQ_ZERO, score,
-            NULL, NULL)) ;
-        #endif
-        #else
-        // TODO
-        #endif
+
         GrB_Index nzero ;
         GrB_TRY (GrB_Vector_nvals (&nzero, score_zero)) ;
         if (nzero > 0)
@@ -257,19 +243,8 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
             score, neighbor_max, NULL)) ;
 
         // drop explicit zeros from new_members
-        // TODO: make this an LAGraph utility.
-        #if LG_SUITESPARSE
-        #if GxB_IMPLEMENTATION >= GxB_VERSION (5,2,0)
         GrB_TRY (GrB_select (new_members, NULL, NULL, GrB_VALUEEQ_BOOL,
             new_members, (bool) true, NULL)) ;
-        #else
-        GrB_TRY (GxB_select (new_members, NULL, NULL, GxB_NONZERO,
-            new_members, NULL, NULL)) ;
-        #endif
-        #else
-        GrB_TRY (GrB_assign (new_members, new_members, NULL, new_members,
-            GrB_ALL, n, GrB_DESC_R)) ;
-        #endif
 
         // add new members to independent set
         // iset{new_members} = true
@@ -293,15 +268,15 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
         {
             // push
             // new_neighbors{candidates,replace} = new_members' * A
-            GrB_TRY (GrB_vxm (new_neighbors, candidates, NULL, symbolic, 
-                new_members, A, GrB_DESC_RS)) ;
+            GrB_TRY (GrB_vxm (new_neighbors, candidates, NULL,
+                LAGraph_symbolic_bool, new_members, A, GrB_DESC_RS)) ;
         }
         else
         {
             // pull
             // new_neighbors{candidates,replace} = A * new_members
-            GrB_TRY (GrB_mxv (new_neighbors, candidates, NULL, symbolic, 
-                A, new_members, GrB_DESC_RS)) ;
+            GrB_TRY (GrB_mxv (new_neighbors, candidates, NULL,
+                LAGraph_symbolic_bool, A, new_members, GrB_DESC_RS)) ;
         }
 
         // remove new neighbors of new members from set of candidates

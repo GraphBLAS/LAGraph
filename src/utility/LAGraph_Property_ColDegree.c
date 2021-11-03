@@ -58,64 +58,22 @@ int LAGraph_Property_ColDegree  // 0 if successful, -1 if failure
     //--------------------------------------------------------------------------
 
     GrB_TRY (GrB_Vector_new (&coldegree, GrB_INT64, ncols)) ;
+    // x = zeros (nrows,1)
+    GrB_TRY (GrB_Vector_new (&x, GrB_INT64, nrows)) ;
+    GrB_TRY (GrB_assign (x, NULL, NULL, 0, GrB_ALL, nrows, NULL)) ;
 
     if (AT != NULL)
     {
-
-        //----------------------------------------------------------------------
-        // G->coldegree = row degree of AT
-        //----------------------------------------------------------------------
-
-        #if LG_SUITESPARSE
-
-            // x = zeros (nrows,1)
-            GrB_TRY (GrB_Vector_new (&x, GrB_INT64, nrows)) ;
-            GrB_TRY (GrB_assign (x, NULL, NULL, 0, GrB_ALL, nrows, NULL)) ;
-            // coldegree = AT*x using the PLUS_PAIR semiring
-            GrB_TRY (GrB_mxv (coldegree, NULL, NULL, GxB_PLUS_PAIR_INT64,
-                AT, x, NULL)) ;
-
-        #else
-
-            // S<AT,struct> = 1
-            GrB_TRY (GrB_Matrix_new (&S, GrB_INT64, ncols, nrows)) ;
-            GrB_TRY (GrB_Matrix_assign_INT64 (S, AT, NULL, (int64_t) 1,
-                GrB_ALL, ncols, GrB_ALL, nrows, GrB_DESC_S)) ;
-            // coldegree = reduce (S) to vector, using the PLUS_MONOID
-            GrB_TRY (GrB_Matrix_reduce_Monoid (coldegree, NULL, NULL,
-                GrB_PLUS_MONOID_INT64, S, NULL)) ;
-
-        #endif
-
+        // G->coldegree = row degree of AT; this will be faster assuming
+        // AT is held in a row-oriented format. 
+        GrB_TRY (GrB_mxv (coldegree, NULL, NULL, LAGraph_plus_one_int64,
+            AT, x, NULL)) ;
     }
     else
     {
-
-        //----------------------------------------------------------------------
         // G->coldegree = column degree of A
-        //----------------------------------------------------------------------
-
-        #if LG_SUITESPARSE
-
-            // x = zeros (nrows,1)
-            GrB_TRY (GrB_Vector_new (&x, GrB_INT64, nrows)) ;
-            GrB_TRY (GrB_assign (x, NULL, NULL, 0, GrB_ALL, nrows, NULL)) ;
-            // coldegree = A'*x using the PLUS_PAIR semiring
-            GrB_TRY (GrB_mxv (coldegree, NULL, NULL, GxB_PLUS_PAIR_INT64,
-                A, x, GrB_DESC_T0)) ;
-
-        #else
-
-            // S<A,struct> = 1
-            GrB_TRY (GrB_Matrix_new (&S, GrB_INT64, nrows, ncols)) ;
-            GrB_TRY (GrB_Matrix_assign_INT64 (S, A, NULL, (int64_t) 1,
-                GrB_ALL, nrows, GrB_ALL, ncols, GrB_DESC_S)) ;
-            // coldegree = reduce (S') to vector, using the PLUS_MONOID
-            GrB_TRY (GrB_Matrix_reduce_Monoid (coldegree, NULL, NULL,
-                GrB_PLUS_MONOID_INT64, S, GrB_DESC_T0)) ;
-
-        #endif
-
+        GrB_TRY (GrB_mxv (coldegree, NULL, NULL, LAGraph_plus_one_int64,
+            A, x, GrB_DESC_T0)) ;
     }
 
     G->coldegree = coldegree ;
