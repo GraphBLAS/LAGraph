@@ -88,11 +88,11 @@ void test_New (void)
         TEST_CHECK (G->kind == kind) ;
         if (kind == LAGRAPH_ADJACENCY_DIRECTED)
         {
-            TEST_CHECK (G->A_pattern_is_symmetric == LAGRAPH_UNKNOWN) ;
+            TEST_CHECK (G->A_structure_is_symmetric == LAGRAPH_UNKNOWN) ;
         }
         else
         {
-            TEST_CHECK (G->A_pattern_is_symmetric == LAGRAPH_TRUE) ;
+            TEST_CHECK (G->A_structure_is_symmetric == LAGRAPH_TRUE) ;
         }
 
         // free the graph

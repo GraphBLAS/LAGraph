@@ -57,7 +57,7 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
     LG_CHECK (centrality == NULL, -1, "centrality is NULL") ;
     LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
     LAGraph_Kind kind = G->kind ; 
-    int A_sym_pattern = G->A_pattern_is_symmetric ;
+    int A_sym_pattern = G->A_structure_is_symmetric ;
     GrB_Matrix AT ;
     if (kind == LAGRAPH_ADJACENCY_UNDIRECTED || A_sym_pattern == LAGRAPH_TRUE)
     {

@@ -298,7 +298,7 @@ LAGraph_BooleanProperty ;
 //      AT          AT = A'
 //      rowdegree   rowdegree(i) = # of entries in A(i,:)
 //      coldegree   coldegree(j) = # of entries in A(:,j)
-//      A_pattern_is_symmetric: true if the pattern of A is symmetric
+//      A_structure_is_symmetric: true if the pattern of A is symmetric
 
 struct LAGraph_Graph_struct
 {
@@ -359,7 +359,7 @@ struct LAGraph_Graph_struct
     GrB_Type   coldegree_type;   // the type of scalar stored in coldegree
 
 // FIXME rename this to A_structure_is_symmetric
-    LAGraph_BooleanProperty A_pattern_is_symmetric ;    // For an undirected
+    LAGraph_BooleanProperty A_structure_is_symmetric ;    // For an undirected
             // graph, this property will always be implicitly true and can be
             // ignored.  The matrix A for a directed weighted graph will
             // typically by unsymmetric, but might have a symmetric pattern.
@@ -497,9 +497,9 @@ int LAGraph_Property_AT     // returns 0 if successful, -1 if failure
     char *msg
 ) ;
 
-// LAGraph_Property_ASymmetricPattern: determine G->A_pattern_is_symmetric
+// LAGraph_Property_ASymmetricStructure: determine G->A_structure_is_symmetric
 LAGRAPH_PUBLIC
-int LAGraph_Property_ASymmetricPattern  // 0 if successful, -1 if failure
+int LAGraph_Property_ASymmetricStructure  // 0 if successful, -1 if failure
 (
     LAGraph_Graph G,        // graph to determine the symmetry of pattern of A
     char *msg

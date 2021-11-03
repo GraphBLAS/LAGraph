@@ -13,7 +13,7 @@
 // Count the number of triangles in a graph,
 // Contributed by Tim Davis, Texas A&M.
 
-// Advanced API: compute G->ndiag, G->A_pattern_is_symmetric, and
+// Advanced API: compute G->ndiag, G->A_structure_is_symmetric, and
 // G->rowdegree (if needed) befor calling.
 
 // Given a symmetric graph A with no-self edges, LAGraph_TriangleCount_methods
@@ -139,7 +139,7 @@ int LAGraph_Triangle_Methods  // returns 0 if successful, < 0 if failure
 
     if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
-        G->A_pattern_is_symmetric == LAGRAPH_TRUE))
+        G->A_structure_is_symmetric == LAGRAPH_TRUE))
     {
         // the pattern of A is known to be symmetric
         A = G->A ;

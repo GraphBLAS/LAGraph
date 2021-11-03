@@ -41,7 +41,7 @@ int LAGraph_DeleteProperties    // returns 0 if successful, -1 if failure
     // clear the scalar properties of the graph
     //--------------------------------------------------------------------------
 
-    G->A_pattern_is_symmetric = LAGRAPH_UNKNOWN ;
+    G->A_structure_is_symmetric = LAGRAPH_UNKNOWN ;
     G->ndiag = LAGRAPH_UNKNOWN ;
 
     // success

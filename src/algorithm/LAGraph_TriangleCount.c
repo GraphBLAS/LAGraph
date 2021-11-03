@@ -27,7 +27,7 @@ int LAGraph_TriangleCount
 )
 {
     // find out if graph is symmetric
-    LAGraph_TRY( LAGraph_Property_ASymmetricPattern(G, msg) );
+    LAGraph_TRY( LAGraph_Property_ASymmetricStructure(G, msg) );
     LAGraph_TRY( LAGraph_Property_RowDegree(G, msg) );
     LAGraph_TRY( LAGraph_Property_NDiag(G, msg) );
 

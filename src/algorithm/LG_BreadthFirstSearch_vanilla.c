@@ -79,7 +79,7 @@ int LG_BreadthFirstSearch_vanilla
 
     if (kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (kind == LAGRAPH_ADJACENCY_DIRECTED &&
-        G->A_pattern_is_symmetric == LAGRAPH_TRUE))
+        G->A_structure_is_symmetric == LAGRAPH_TRUE))
     {
         // AT and A have the same pattern and can be used in both directions
         AT = G->A ;

@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_Property_ASymmetricPattern: determine G->A_pattern_is_symmetric
+// LAGraph_Property_ASymmetricStructure: determine G->A_structure_is_symmetric
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -20,7 +20,7 @@
 
 #include "LG_internal.h"
 
-int LAGraph_Property_ASymmetricPattern  // 0 if successful, -1 if failure
+int LAGraph_Property_ASymmetricStructure  // 0 if successful, -1 if failure
 (
     LAGraph_Graph G,        // graph to determine the symmetry of pattern of A
     char *msg
@@ -37,11 +37,11 @@ int LAGraph_Property_ASymmetricPattern  // 0 if successful, -1 if failure
     if (kind == LAGRAPH_ADJACENCY_UNDIRECTED)
     {
         // assume A is symmetric for an undirected graph
-        G->A_pattern_is_symmetric = true ;
+        G->A_structure_is_symmetric = true ;
         return (0) ;
     }
 
-    if (G->A_pattern_is_symmetric != LAGRAPH_UNKNOWN)
+    if (G->A_structure_is_symmetric != LAGRAPH_UNKNOWN)
     {
         // symmetric property is already known
         return (0) ;
@@ -58,7 +58,7 @@ int LAGraph_Property_ASymmetricPattern  // 0 if successful, -1 if failure
     if (n != ncols)
     {
         // A is rectangular and thus cannot be symmetric
-        G->A_pattern_is_symmetric = false ;
+        G->A_structure_is_symmetric = false ;
         return (0) ;
     }
 
@@ -83,7 +83,7 @@ int LAGraph_Property_ASymmetricPattern  // 0 if successful, -1 if failure
     GrB_Index nvals1, nvals2 ;
     GrB_TRY (GrB_Matrix_nvals (&nvals1, C)) ;
     GrB_TRY (GrB_Matrix_nvals (&nvals2, A)) ;
-    G->A_pattern_is_symmetric = (nvals1 == nvals2) ;
+    G->A_structure_is_symmetric = (nvals1 == nvals2) ;
 
     //--------------------------------------------------------------------------
     // free workspace and return result

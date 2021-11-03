@@ -120,7 +120,7 @@ void test_DisplayGraph (void)
                 OK (LAGraph_DisplayGraph (G, pr, stdout, msg)) ;
             }
             OK (LAGraph_Property_AT (G, msg)) ;
-            OK (LAGraph_Property_ASymmetricPattern (G, msg)) ;
+            OK (LAGraph_Property_ASymmetricStructure (G, msg)) ;
             OK (LAGraph_Property_NDiag (G, msg)) ;
             TEST_CHECK (G->ndiag == files [k].ndiag) ;
         }

@@ -107,7 +107,7 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
 
     if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
-        G->A_pattern_is_symmetric == LAGRAPH_TRUE))
+        G->A_structure_is_symmetric == LAGRAPH_TRUE))
     {
         // the pattern of A is known to be symmetric
         A = G->A ;

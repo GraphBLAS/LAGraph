@@ -987,8 +987,8 @@ static int readproblem          // returns 0 if successful, -1 if failure
         // compute G->AT and determine if A has a symmetric structure
         char *name;
         LAGraph_TypeName(&name, (*G)->A_type, msg);
-        LAGraph_TRY (LAGraph_Property_ASymmetricPattern (*G, msg)) ;
-        if ((*G)->A_pattern_is_symmetric && structural)
+        LAGraph_TRY (LAGraph_Property_ASymmetricStructure (*G, msg)) ;
+        if ((*G)->A_structure_is_symmetric && structural)
         {
             // if G->A has a symmetric structure, declare the graph undirected
             // and free G->AT since it isn't needed.
@@ -1026,7 +1026,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
                 GrB_TRY (GrB_Matrix_free (&((*G)->AT))) ;
             }
             (*G)->kind = LAGRAPH_ADJACENCY_UNDIRECTED ;
-            (*G)->A_pattern_is_symmetric = true ;
+            (*G)->A_structure_is_symmetric = true ;
         }
     }
     // LAGraph_TRY (LAGraph_DisplayGraph (*G, 2, stdout, msg)) ;

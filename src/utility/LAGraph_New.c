@@ -49,7 +49,7 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
     (*G)->rowdegree_type = NULL;
     (*G)->coldegree = NULL ;
     (*G)->coldegree_type = NULL ;
-    (*G)->A_pattern_is_symmetric = LAGRAPH_UNKNOWN;
+    (*G)->A_structure_is_symmetric = LAGRAPH_UNKNOWN;
     (*G)->ndiag = LAGRAPH_UNKNOWN ;
 
     //--------------------------------------------------------------------------
@@ -69,7 +69,7 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
         (*A) = NULL ;
 
         (*G)->kind = kind ;
-        (*G)->A_pattern_is_symmetric =
+        (*G)->A_structure_is_symmetric =
             (kind == LAGRAPH_ADJACENCY_UNDIRECTED)
             ? LAGRAPH_TRUE
             : LAGRAPH_UNKNOWN ;

@@ -137,17 +137,17 @@ void test_Property_ASymmetric_Pattern (void)
         OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
         TEST_CHECK (A == NULL) ;
 
-        // compute the A_pattern_is_symmetric property
-        OK (LAGraph_Property_ASymmetricPattern (G, msg)) ;
+        // compute the A_structure_is_symmetric property
+        OK (LAGraph_Property_ASymmetricStructure (G, msg)) ;
 
         // check the result
         if (sym_pattern)
         {
-            TEST_CHECK (G->A_pattern_is_symmetric == LAGRAPH_TRUE) ;
+            TEST_CHECK (G->A_structure_is_symmetric == LAGRAPH_TRUE) ;
         }
         else
         {
-            TEST_CHECK (G->A_pattern_is_symmetric == LAGRAPH_FALSE) ;
+            TEST_CHECK (G->A_structure_is_symmetric == LAGRAPH_FALSE) ;
         }
 
         // delete all properties
@@ -155,16 +155,16 @@ void test_Property_ASymmetric_Pattern (void)
 
         // try again, but precompute G->AT
         OK (LAGraph_Property_AT (G, msg)) ;
-        OK (LAGraph_Property_ASymmetricPattern (G, msg)) ;
+        OK (LAGraph_Property_ASymmetricStructure (G, msg)) ;
 
         // check the result
         if (sym_pattern)
         {
-            TEST_CHECK (G->A_pattern_is_symmetric == LAGRAPH_TRUE) ;
+            TEST_CHECK (G->A_structure_is_symmetric == LAGRAPH_TRUE) ;
         }
         else
         {
-            TEST_CHECK (G->A_pattern_is_symmetric == LAGRAPH_FALSE) ;
+            TEST_CHECK (G->A_structure_is_symmetric == LAGRAPH_FALSE) ;
         }
 
         // delete all properties
@@ -175,8 +175,8 @@ void test_Property_ASymmetric_Pattern (void)
         {
             G->kind = LAGRAPH_ADJACENCY_UNDIRECTED ;
             // recompute the symmetry property
-            OK (LAGraph_Property_ASymmetricPattern (G, msg)) ;
-            TEST_CHECK (G->A_pattern_is_symmetric == LAGRAPH_TRUE) ;
+            OK (LAGraph_Property_ASymmetricStructure (G, msg)) ;
+            TEST_CHECK (G->A_structure_is_symmetric == LAGRAPH_TRUE) ;
         }
 
         OK (LAGraph_Delete (&G, msg)) ;
@@ -184,7 +184,7 @@ void test_Property_ASymmetric_Pattern (void)
     }
 
     // check error handling
-    int status = LAGraph_Property_ASymmetricPattern (NULL, msg) ;
+    int status = LAGraph_Property_ASymmetricStructure (NULL, msg) ;
     TEST_CHECK (status == -1) ;
     printf ("\nstatus: %d, msg: %s\n", status, msg) ;
 

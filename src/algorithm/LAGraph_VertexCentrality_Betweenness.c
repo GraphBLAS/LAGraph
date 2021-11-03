@@ -124,7 +124,7 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
     (*centrality) = NULL ;
     LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
     LAGraph_Kind kind = G->kind ;
-    int A_sym_pattern = G->A_pattern_is_symmetric ;
+    int A_sym_pattern = G->A_structure_is_symmetric ;
 
     GrB_Matrix A = G->A ;
     GrB_Matrix AT ;

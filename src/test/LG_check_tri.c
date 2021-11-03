@@ -76,7 +76,7 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
     LG_CHECK (G->ndiag != 0, -104, "G->ndiag must be zero") ;
     if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
-        G->A_pattern_is_symmetric == LAGRAPH_TRUE))
+        G->A_structure_is_symmetric == LAGRAPH_TRUE))
     {
         // the pattern of A is known to be symmetric
         ;
