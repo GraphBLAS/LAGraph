@@ -469,13 +469,14 @@ void test_BreadthFirstSearch_brutal(void)
                 OK (LAGraph_BreadthFirstSearch (&level, &parent,
                     G, src, (bool) pushpull, msg)) ;
                 OK (LG_check_bfs (level, parent, G, src, msg)) ;
-                int64_t maxlevel, nvisited ;
+                int64_t maxlevel ;
+                GrB_Index nvisited ;
                 OK (GrB_reduce (&maxlevel, NULL, GrB_MAX_MONOID_INT64,
                     level, NULL)) ;
                 OK (GrB_Vector_nvals (&nvisited, level)) ;
                 if (pushpull == 0)
                 {
-                    printf ("src %ld n: %ld max level: %ld nvisited: %ld\n",
+                    printf ("src %ld n: %ld max level: %ld nvisited: %lu\n",
                         src, n, maxlevel, nvisited) ;
                 }
                 OK (GrB_free(&parent));

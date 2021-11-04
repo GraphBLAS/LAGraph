@@ -287,7 +287,7 @@ GrB_Info LAGraph_cdlp
         //GB_msort_2(I, X, workspace1, workspace2, nnz, nthreads);
         //LAGraph_Free ((void **)&workspace1) ;  workspace1 = NULL;
         //LAGraph_Free ((void **)&workspace2) ;  workspace2 = NULL;
-        LAGraph_Sort2(I, X, nnz, nthreads, NULL);
+        LAGraph_Sort2((int64_t *) I, (int64_t *) X, nnz, nthreads, NULL);
 
         // save current labels for comparison by swapping L and L_prev
         GrB_Matrix L_swap = L;

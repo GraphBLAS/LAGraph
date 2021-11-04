@@ -134,7 +134,7 @@ int main (int argc, char **argv)
     // triangle counting
     //--------------------------------------------------------------------------
 
-    int64_t ntriangles, ntsimple = 0 ;
+    GrB_Index ntriangles, ntsimple = 0 ;
     double tic [2] ;
 
     #if LG_CHECK_RESULT
@@ -154,7 +154,7 @@ int main (int argc, char **argv)
     print_method (stdout, 6, presort) ;
 
     LAGraph_TRY (LAGraph_TriangleCount_Methods(&ntriangles, G, 6, &presort, msg) );
-    printf ("# of triangles: %" PRId64 "\n", ntriangles) ;
+    printf ("# of triangles: %" PRIu64 "\n", ntriangles) ;
     print_method (stdout, 6, presort) ;
     double ttot ;
     LAGraph_TRY (LAGraph_Toc (&ttot, tic, NULL)) ;
@@ -164,7 +164,7 @@ int main (int argc, char **argv)
     #if LG_CHECK_RESULT
     if (ntriangles != ntsimple)
     {
-        printf ("wrong # triangles: %ld %ld\n", ntriangles, ntsimple) ;
+        printf ("wrong # triangles: %lu %ld\n", ntriangles, ntsimple) ;
         abort ( ) ;
     }
     #endif
@@ -207,7 +207,7 @@ int main (int argc, char **argv)
                 int nthreads = Nthreads [t] ;
                 if (nthreads > nthreads_max) continue ;
                 LAGraph_TRY (LAGraph_SetNumThreads (nthreads, msg)) ;
-                int64_t nt2 ;
+                GrB_Index nt2 ;
                 double ttot = 0, ttrial [100] ;
                 for (int trial = 0 ; trial < ntrials ; trial++)
                 {
@@ -221,7 +221,7 @@ int main (int argc, char **argv)
                     LAGraph_TRY (LAGraph_Toc (&ttrial [trial], tic, NULL)) ;
                     ttot += ttrial [trial] ;
                     printf ("trial %2d: %12.6f sec rate %6.2f  # triangles: "
-                        "%ld\n", trial, ttrial [trial],
+                        "%lu\n", trial, ttrial [trial],
                         1e-6 * nvals / ttrial [trial], nt2) ;
                 }
                 ttot = ttot / ntrials ;

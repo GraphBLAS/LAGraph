@@ -58,6 +58,7 @@ const char *prwhat (int pr)
         case  5: return ("all (doubles in full precision)") ;
         default: TEST_CHECK (false) ;
     }
+    return ("") ;
 }
 
 //------------------------------------------------------------------------------

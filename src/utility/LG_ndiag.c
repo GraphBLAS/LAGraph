@@ -69,7 +69,7 @@ int LG_ndiag                // returns 0 if successful, < 0 if failure
         // D<M,struct> = A
         GrB_TRY (GrB_assign (D, M, NULL, A, GrB_ALL, nrows, GrB_ALL, ncols,
             GrB_DESC_S)) ;
-        GrB_TRY (GrB_Matrix_nvals (ndiag, D)) ;
+        GrB_TRY (GrB_Matrix_nvals ((GrB_Index *) ndiag, D)) ;
 
     #endif
 

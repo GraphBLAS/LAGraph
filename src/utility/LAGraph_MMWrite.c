@@ -416,7 +416,7 @@ int LAGraph_MMWrite_type
     if (!is_general)
     {
         // count the entries on the diagonal
-        GrB_Index ndiag = 0 ;
+        int64_t ndiag = 0 ;
         LAGraph_TRY (LG_ndiag (&ndiag, A, type, msg)) ;
         // nvals_to_print = # of entries in tril(A), including diagonal
         nvals_to_print = ndiag + (nvals - ndiag) / 2 ;

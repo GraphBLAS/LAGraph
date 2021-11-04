@@ -161,7 +161,8 @@ void test_SortByDegree (void)
                 // check the result by constructing a new graph with adjacency
                 // matrix B = A (P,P)
                 OK (GrB_Matrix_new (&B, GrB_BOOL, n, n)) ;
-                OK (GrB_extract (B, NULL, NULL, G->A, P, n, P, n, NULL)) ;
+                OK (GrB_extract (B, NULL, NULL, G->A,
+                    (GrB_Index *) P, n, (GrB_Index *) P, n, NULL)) ;
                 OK (LAGraph_New (&H, &B, GrB_BOOL, kind, msg)) ;
                 TEST_CHECK (B == NULL) ;
                 TEST_CHECK (H != NULL) ;

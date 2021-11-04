@@ -36,8 +36,7 @@
 
 // currently, SuiteSparse:GraphBLAS v5.0.4 or later is required
 #define SUITESPARSE (!LG_VANILLA &&                 \
-    ( defined ( GxB_SUITESPARSE_GRAPHBLAS ) &&      \
-    GxB_IMPLEMENTATION >= GxB_VERSION (5,0,4) ) )
+    ( LG_SUITESPARSE && GxB_IMPLEMENTATION >= GxB_VERSION (5,0,4)))
 
 #define LAGraph_FREE_ALL                \
 {                                       \
