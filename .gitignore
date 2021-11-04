@@ -40,6 +40,7 @@ my_*.out
 *.dylib
 cmake-build-debug*
 CMakeFiles*
+build
 *~
 
 

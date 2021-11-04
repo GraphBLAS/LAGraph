@@ -26,6 +26,11 @@ To build do the following from the top level directory:
   $ make test
 ```
 
+To compile with a non-default compiler:
+```
+  $ CC=gcc-11 cmake ..
+```
+
 To run the GAP benchmarks, see the instructions in these files:
 ```
     ./BENCHMARK_INSTRUCTIONS__README1st.txt
