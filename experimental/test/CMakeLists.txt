@@ -69,12 +69,14 @@ endif ( )
 # This will only build tests from files with the name "test_*.c"
 #-------------------------------------------------------------------------------
 
-file( GLOB DEMO_SOURCES LIST_DIRECTORIES false *_test.c test*.c )
-foreach( demosourcefile ${DEMO_SOURCES} )
-    get_filename_component(justname ${demosourcefile} NAME)
-    string( REPLACE ".c" "" demoname ${justname} )
-    message("Adding: ${demoname}")
-    add_executable( ${demoname} ${demosourcefile} )
-    target_link_libraries( ${demoname} lagraphx lagraph lagraphxtest ${GRAPHBLAS_LIBRARIES} )
-endforeach( demosourcefile ${DEMO_SOURCES} )
+file( GLOB TEST_SOURCES LIST_DIRECTORIES false *_test.c test*.c )
+foreach( testsourcefile ${TEST_SOURCES} )
+    get_filename_component(justname ${testsourcefile} NAME)
+    string( REPLACE ".c" "" testname ${justname} )
+    message("Adding: ${testname}")
+    add_executable( ${testname} ${testsourcefile} )
+    target_link_libraries( ${testname} lagraphx lagraph lagraphxtest ${GRAPHBLAS_LIBRARIES} )
+    string( REPLACE "test_" "ctest_" ctestname ${testname})
+    add_test( ${ctestname} ${testname})
+endforeach( testsourcefile ${TEST_SOURCES} )
 
