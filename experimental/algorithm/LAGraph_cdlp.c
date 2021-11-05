@@ -166,7 +166,7 @@ GrB_Info LAGraph_cdlp
     // check inputs
     //--------------------------------------------------------------------------
 
-    if (CDLP_handle == NULL)
+    if (CDLP_handle == NULL || CDLP_type == NULL || t == NULL)
     {
         return GrB_NULL_POINTER;
     }

@@ -45,11 +45,17 @@ GrB_Info LAGraph_FW
     GrB_Type   *D_type      // output type
 )
 {
+#if !defined(LG_SUITESPARSE)
+    // GxB_type, semirings and select required
+    // FIXME: this can be pure GrB
+    return GrB_PANIC;
+#else
+
     GrB_Info info;
     GrB_Matrix A = NULL, B = NULL ;
 
     // make sure D is valid
-    if (D == NULL)
+    if (D == NULL || D_type == NULL)
     {
         return (GrB_NULL_POINTER) ;
     }
@@ -110,4 +116,5 @@ GrB_Info LAGraph_FW
 
     FW_FREE_WORK ;
     return GrB_SUCCESS;
+#endif
 }

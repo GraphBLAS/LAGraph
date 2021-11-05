@@ -12,7 +12,8 @@
 
 /**
  * Code is based on the algorithm described in the following paper
- * Azad, Buluç. LACC: a linear-algebraic algorithm for finding connected components in distributed memory (IPDPS 2019)
+ * Azad, Buluç LACC: a linear-algebraic algorithm for finding connected components
+ * in distributed memory (IPDPS 2019)
  **/
 
 #include <LAGraph.h>
@@ -66,6 +67,14 @@ GrB_Info LAGraph_cc_lacc
     bool sanitize           // if true, ensure A is symmetric
 )
 {
+    //--------------------------------------------------------------------------
+    // check inputs
+    //--------------------------------------------------------------------------
+    if (result == NULL)
+    {
+        return (GrB_NULL_POINTER) ;
+    }
+
     GrB_Info info;
 
     GrB_Vector stars = NULL, mask = NULL;
