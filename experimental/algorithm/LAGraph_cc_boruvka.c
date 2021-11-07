@@ -77,6 +77,14 @@ GrB_Info LAGraph_cc_boruvka
     // FIXME this can be pure GrB with GrB_select
     return GrB_PANIC;
 #else
+    //--------------------------------------------------------------------------
+    // check inputs
+    //--------------------------------------------------------------------------
+    if (result == NULL)
+    {
+        return (GrB_NULL_POINTER) ;
+    }
+
     GrB_Index n;
     GrB_Vector f = NULL, gp = NULL, mnp = NULL, ccmn = NULL, i = NULL, inf = NULL, mask = NULL;
     GxB_SelectOp select_op = NULL;
@@ -93,7 +101,7 @@ GrB_Info LAGraph_cc_boruvka
     else
     {
         // Use the input as-is, and assume it is binary and symmetric
-        LAGRAPH_OK (GrB_Matrix_dup (&S, A));
+        LAGRAPH_OK (GrB_Matrix_dup (&S, A));  // TODO just alias S to A?
     }
 
     LAGRAPH_OK (GrB_Vector_new (&f, GrB_UINT64, n));
