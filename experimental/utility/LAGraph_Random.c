@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_Random: generate a random vector (of any sparsity pattern)
+// LAGraph_Random: generate a random vector (of any sparsity structure)
 //------------------------------------------------------------------------------
 
 // SuiteSparse:GraphBLAS, Timothy A. Davis, (c) 2017-2021, All Rights Reserved.
@@ -156,7 +156,7 @@ int LAGraph_Random_Finalize (char *msg)
 //------------------------------------------------------------------------------
 
 // Initializes a vector with random seed values.  The Seed vector must be
-// allocated on input.  Its sparsity pattern is unchanged.
+// allocated on input.  Its sparsity structure is unchanged.
 
 #undef  LAGraph_FREE_WORK
 #define LAGraph_FREE_WORK ;
@@ -206,7 +206,7 @@ int LAGraph_Random_Next     // random int64 vector of seeds
 // LAGraph_Random_INT64: return a vector of random int64 integers
 //------------------------------------------------------------------------------
 
-// The sparsity pattern of the result X is the same as the Seed vector.
+// The sparsity structure of the result X is the same as the Seed vector.
 // The Seed vector is updated to advance to the next set of seeds.
 
 int LAGraph_Random_INT64    // random int64 vector
@@ -232,7 +232,7 @@ int LAGraph_Random_INT64    // random int64 vector
 // LAGraph_Random_FP64: return a vector of random doubles, 0 to 1 inclusive
 //------------------------------------------------------------------------------
 
-// The sparsity pattern of the result X is the same as the Seed vector.
+// The sparsity structure of the result X is the same as the Seed vector.
 // The Seed vector is updated to advance to the next set of seeds.
 
 GrB_Info LAGraph_Random_FP64    // random double vector
@@ -260,7 +260,7 @@ GrB_Info LAGraph_Random_FP64    // random double vector
 // LAGraph_Random_FP32: return a vector of random floats, 0 to 1 inclusive
 //------------------------------------------------------------------------------
 
-// The sparsity pattern of the result X is the same as the Seed vector.
+// The sparsity structure of the result X is the same as the Seed vector.
 // The Seed vector is updated to advance to the next set of seeds.
 
 GrB_Info LAGraph_Random_FP32    // random float vector

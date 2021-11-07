@@ -44,7 +44,7 @@ int LAGraph_SampleDegree        // returns 0 if successful, -1 if failure
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
         G->A_structure_is_symmetric == LAGRAPH_TRUE))
     {
-        // the pattern of A is known to be symmetric
+        // the structure of A is known to be symmetric
         Degree = G->rowdegree ;
     }
     else

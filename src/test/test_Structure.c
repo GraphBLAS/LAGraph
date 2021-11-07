@@ -70,16 +70,16 @@ void test_Structure (void)
         OK (fclose (f)) ;
         TEST_MSG ("Loading of valued matrix failed") ;
 
-        // load the pattern as B
-        snprintf (filename, LEN, LG_DATA_DIR "%s_pattern.mtx", aname) ;
+        // load the structure as B
+        snprintf (filename, LEN, LG_DATA_DIR "%s_structure.mtx", aname) ;
         f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&B, &btype, f, msg)) ;
         TEST_CHECK (btype == GrB_BOOL) ;
         OK (fclose (f)) ;
-        TEST_MSG ("Loading of pattern matrix failed") ;
+        TEST_MSG ("Loading of structure matrix failed") ;
 
-        // C = pattern (A)
+        // C = structure (A)
         OK (LAGraph_Structure (&C, A, msg)) ;
 
         // ensure B and C are the same

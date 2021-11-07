@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 
 // LAGraph_IsEqual: check if two matrices are identically equal (same size,
-// type, pattern, size, and values).
+// type, structure, size, and values).
 
 // If the two matrices are GrB_FP32, GrB_FP64, GxB_FC32, or GxB_FC64 and have
 // NaNs, then these functions will return false, since NaN == NaN is false.
@@ -117,7 +117,7 @@ int LAGraph_IsEqual_type    // returns 0 if successful, < 0 if failure
     }
 
     //--------------------------------------------------------------------------
-    // C = A .* B, where the pattern of C is the intersection of A and B
+    // C = A .* B, where the structure of C is the intersection of A and B
     //--------------------------------------------------------------------------
 
     GrB_TRY (GrB_Matrix_new (&C, GrB_BOOL, nrows1, ncols1)) ;
@@ -131,7 +131,7 @@ int LAGraph_IsEqual_type    // returns 0 if successful, < 0 if failure
     GrB_TRY (GrB_Matrix_nvals (&nvals, C)) ;
     if (nvals != nvals1)
     {
-        // pattern of A and B are different
+        // structure of A and B are different
         LAGraph_FREE_WORK ;
         (*result) = false ;
         return (0) ;

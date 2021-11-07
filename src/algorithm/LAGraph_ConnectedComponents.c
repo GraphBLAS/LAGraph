@@ -22,7 +22,7 @@
 
 // The input matrix A must be symmetric.  Self-edges (diagonal entries) are
 // OK, and are ignored.  The values and type of A are ignored; just its
-// pattern is accessed.
+// structure is accessed.
 
 // The matrix A must have dimension 2^32 or less.
 // todo: Need a 64-bit version of this method.

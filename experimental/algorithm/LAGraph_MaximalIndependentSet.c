@@ -90,7 +90,7 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
         G->A_structure_is_symmetric == LAGRAPH_TRUE))
     {
-        // the pattern of A is known to be symmetric
+        // the structure of A is known to be symmetric
         A = G->A ;
     }
     else
@@ -269,14 +269,14 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
             // push
             // new_neighbors{candidates,replace} = new_members' * A
             GrB_TRY (GrB_vxm (new_neighbors, candidates, NULL,
-                LAGraph_symbolic_bool, new_members, A, GrB_DESC_RS)) ;
+                LAGraph_structural_bool, new_members, A, GrB_DESC_RS)) ;
         }
         else
         {
             // pull
             // new_neighbors{candidates,replace} = A * new_members
             GrB_TRY (GrB_mxv (new_neighbors, candidates, NULL,
-                LAGraph_symbolic_bool, A, new_members, GrB_DESC_RS)) ;
+                LAGraph_structural_bool, A, new_members, GrB_DESC_RS)) ;
         }
 
         // remove new neighbors of new members from set of candidates

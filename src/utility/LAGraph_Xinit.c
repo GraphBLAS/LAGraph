@@ -61,19 +61,19 @@ GrB_Semiring LAGraph_plus_one_fp64   = NULL ;
 
 // use LAGraph_structural_bool, etc
 
-// LAGraph_symbolic_T: using the GrB_MIN_MONOID_T for non-boolean types
+// LAGraph_structural_T: using the GrB_MIN_MONOID_T for non-boolean types
 // or GrB_LOR_MONOID_BOOL for boolean, and the GrB_ONEB_T multiplicative op.
-GrB_Semiring LAGraph_symbolic_bool   = NULL ;
-GrB_Semiring LAGraph_symbolic_int8   = NULL ;
-GrB_Semiring LAGraph_symbolic_int16  = NULL ;
-GrB_Semiring LAGraph_symbolic_int32  = NULL ;
-GrB_Semiring LAGraph_symbolic_int64  = NULL ;
-GrB_Semiring LAGraph_symbolic_uint8  = NULL ;
-GrB_Semiring LAGraph_symbolic_uint16 = NULL ;
-GrB_Semiring LAGraph_symbolic_uint32 = NULL ;
-GrB_Semiring LAGraph_symbolic_uint64 = NULL ;
-GrB_Semiring LAGraph_symbolic_fp32   = NULL ;
-GrB_Semiring LAGraph_symbolic_fp64   = NULL ;
+GrB_Semiring LAGraph_structural_bool   = NULL ;
+GrB_Semiring LAGraph_structural_int8   = NULL ;
+GrB_Semiring LAGraph_structural_int16  = NULL ;
+GrB_Semiring LAGraph_structural_int32  = NULL ;
+GrB_Semiring LAGraph_structural_int64  = NULL ;
+GrB_Semiring LAGraph_structural_uint8  = NULL ;
+GrB_Semiring LAGraph_structural_uint16 = NULL ;
+GrB_Semiring LAGraph_structural_uint32 = NULL ;
+GrB_Semiring LAGraph_structural_uint64 = NULL ;
+GrB_Semiring LAGraph_structural_fp32   = NULL ;
+GrB_Semiring LAGraph_structural_fp64   = NULL ;
 
 //------------------------------------------------------------------------------
 // LAGraph_Xinit
@@ -134,7 +134,7 @@ int LAGraph_Xinit           // returns 0 if successful, -1 if failure
 
     // LAGraph_plus_first_T: using the GrB_PLUS_MONOID_T monoid and the
     // GrB_FIRST_T multiplicative operator.  These semirings compute C=A*B
-    // where only the pattern of B is accessed.  In MATLAB, this can be
+    // where only the structure of B is accessed.  In MATLAB, this can be
     // written as:
     //
     //      C = A * spones (B)
@@ -162,7 +162,7 @@ int LAGraph_Xinit           // returns 0 if successful, -1 if failure
 
     // LAGraph_plus_second_T: using the GrB_PLUS_MONOID_T monoid and the
     // GrB_SECOND_T multiplicative operator.  These semirings compute C=A*B
-    // where only the pattern of A is accessed.  In MATLAB, this can be
+    // where only the structure of A is accessed.  In MATLAB, this can be
     // written as:
     //
     //      C = spones (A) * B
@@ -192,7 +192,7 @@ int LAGraph_Xinit           // returns 0 if successful, -1 if failure
     // corresponding GrB_ONEB_T multiplicative operator.  These semirings
     // compute a matrix C=A*B that does not depend on the type or values of
     // the matrices A and B.  C(i,j) is the size of the intersection of the
-    // patterns of A(i,:) and B(:,j).  In MATLAB, for the FP64 data type,
+    // structures of A(i,:) and B(:,j).  In MATLAB, for the FP64 data type,
     // this can be written as:
     // 
     //      C = spones (A) * spones (B)
@@ -218,8 +218,8 @@ int LAGraph_Xinit           // returns 0 if successful, -1 if failure
     GrB_TRY (GrB_Semiring_new (&LAGraph_plus_one_fp64,
         GrB_PLUS_MONOID_FP64  , GrB_ONEB_FP64  )) ;
 
-    // LAGraph_symbolic_T: using the GrB_MIN_MONOID_T for non-boolean types, or
-    // GrB_LOR_MONOID_BOOL for boolean, and the GrB_ONEB_T multiplicative
+    // LAGraph_structural_T: using the GrB_MIN_MONOID_T for non-boolean types,
+    // or GrB_LOR_MONOID_BOOL for boolean, and the GrB_ONEB_T multiplicative
     // operator.  Given any matrices A and B, C = A*B when using this semiring
     // computes a matrix C whose values (for entries present) are all equal to
     // 1.  The result is dependent only on the structure of A and B, not their
@@ -234,27 +234,27 @@ int LAGraph_Xinit           // returns 0 if successful, -1 if failure
     // of 1, or true, and thus any of these monoids will compute the same
     // thing.
 
-    GrB_TRY (GrB_Semiring_new (&LAGraph_symbolic_bool,
+    GrB_TRY (GrB_Semiring_new (&LAGraph_structural_bool,
         GrB_LOR_MONOID_BOOL   , GrB_ONEB_BOOL  )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_symbolic_int8,
+    GrB_TRY (GrB_Semiring_new (&LAGraph_structural_int8,
         GrB_MIN_MONOID_INT8   , GrB_ONEB_INT8  )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_symbolic_int16,
+    GrB_TRY (GrB_Semiring_new (&LAGraph_structural_int16,
         GrB_MIN_MONOID_INT16  , GrB_ONEB_INT16 )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_symbolic_int32,
+    GrB_TRY (GrB_Semiring_new (&LAGraph_structural_int32,
         GrB_MIN_MONOID_INT32  , GrB_ONEB_INT32 )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_symbolic_int64,
+    GrB_TRY (GrB_Semiring_new (&LAGraph_structural_int64,
         GrB_MIN_MONOID_INT64  , GrB_ONEB_INT64 )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_symbolic_uint8,
+    GrB_TRY (GrB_Semiring_new (&LAGraph_structural_uint8,
         GrB_MIN_MONOID_UINT8  , GrB_ONEB_UINT8 )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_symbolic_uint16,
+    GrB_TRY (GrB_Semiring_new (&LAGraph_structural_uint16,
         GrB_MIN_MONOID_UINT16 , GrB_ONEB_UINT16)) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_symbolic_uint32,
+    GrB_TRY (GrB_Semiring_new (&LAGraph_structural_uint32,
         GrB_MIN_MONOID_UINT32 , GrB_ONEB_UINT32)) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_symbolic_uint64,
+    GrB_TRY (GrB_Semiring_new (&LAGraph_structural_uint64,
         GrB_MIN_MONOID_UINT64 , GrB_ONEB_UINT64)) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_symbolic_fp32,
+    GrB_TRY (GrB_Semiring_new (&LAGraph_structural_fp32,
         GrB_MIN_MONOID_FP32   , GrB_ONEB_FP32  )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_symbolic_fp64,
+    GrB_TRY (GrB_Semiring_new (&LAGraph_structural_fp64,
         GrB_MIN_MONOID_FP64   , GrB_ONEB_FP64  )) ;
 
     return (0) ;

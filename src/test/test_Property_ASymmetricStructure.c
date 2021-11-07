@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/test/test_Property_ASymmetric_Pattern.c
+// LAGraph/src/test/test_Property_ASymmetric_Structure.c
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -42,12 +42,12 @@ void teardown (void)
 }
 
 //------------------------------------------------------------------------------
-// test_Property_ASymmetric_Pattern:
+// test_Property_ASymmetric_Structure:
 //------------------------------------------------------------------------------
 
 typedef struct
 {
-    bool symmetric_pattern ;
+    bool symmetric_structure ;
     bool symmetric_values ;
     const char *name ;
 }
@@ -62,7 +62,7 @@ const matrix_info files [ ] =
     0, 0, "comments_west0067.mtx",
 //  1, 0, "complex.mtx",
     0, 0, "cover.mtx",
-    0, 0, "cover_pattern.mtx",
+    0, 0, "cover_structure.mtx",
     0, 0, "cryg2500.mtx",
     0, 0, "empty.mtx",
     1, 0, "full.mtx",
@@ -79,10 +79,10 @@ const matrix_info files [ ] =
     1, 1, "ldbc-undirected-example.mtx",
     1, 1, "ldbc-wcc-example.mtx",
     0, 0, "lp_afiro.mtx",
-    0, 0, "lp_afiro_pattern.mtx",
+    0, 0, "lp_afiro_structure.mtx",
     0, 0, "matrix_bool.mtx",
     0, 0, "matrix_fp32.mtx",
-    0, 0, "matrix_fp32_pattern.mtx",
+    0, 0, "matrix_fp32_structure.mtx",
     0, 0, "matrix_fp64.mtx",
     0, 0, "matrix_int16.mtx",
     0, 0, "matrix_int32.mtx",
@@ -96,7 +96,7 @@ const matrix_info files [ ] =
     0, 0, "msf2.mtx",
     0, 0, "msf3.mtx",
     0, 0, "olm1000.mtx",
-    0, 0, "pattern.mtx",
+    0, 0, "structure.mtx",
     0, 0, "sample.mtx",
     1, 1, "sample2.mtx",
     1, 0, "skew_fp32.mtx",
@@ -112,7 +112,7 @@ const matrix_info files [ ] =
     0, 0, ""
 } ;
 
-void test_Property_ASymmetric_Pattern (void)
+void test_Property_ASymmetric_Structure (void)
 {
     setup ( ) ;
 
@@ -121,7 +121,7 @@ void test_Property_ASymmetric_Pattern (void)
 
         // load the matrix as A
         const char *aname = files [k].name ;
-        bool sym_pattern = files [k].symmetric_pattern ;
+        bool sym_structure = files [k].symmetric_structure ;
         bool sym_values  = files [k].symmetric_values ;
         if (strlen (aname) == 0) break;
         // printf ("%s:\n", aname) ;
@@ -141,7 +141,7 @@ void test_Property_ASymmetric_Pattern (void)
         OK (LAGraph_Property_ASymmetricStructure (G, msg)) ;
 
         // check the result
-        if (sym_pattern)
+        if (sym_structure)
         {
             TEST_CHECK (G->A_structure_is_symmetric == LAGRAPH_TRUE) ;
         }
@@ -158,7 +158,7 @@ void test_Property_ASymmetric_Pattern (void)
         OK (LAGraph_Property_ASymmetricStructure (G, msg)) ;
 
         // check the result
-        if (sym_pattern)
+        if (sym_structure)
         {
             TEST_CHECK (G->A_structure_is_symmetric == LAGRAPH_TRUE) ;
         }
@@ -197,7 +197,7 @@ void test_Property_ASymmetric_Pattern (void)
 
 TEST_LIST =
 {
-    { "Property_ASymmetric_Pattern", test_Property_ASymmetric_Pattern },
+    { "Property_ASymmetric_Structure", test_Property_ASymmetric_Structure },
     { NULL, NULL }
 } ;
 

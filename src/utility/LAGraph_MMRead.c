@@ -149,7 +149,7 @@ static inline bool read_entry   // returns true if successful, false if failure
 (
     char *p,        // string containing the value
     GrB_Type type,  // type of value to read
-    bool pattern,   // if true, then the value is 1
+    bool structural,   // if true, then the value is 1
     char *x         // value read in, a pointer to space of size of the type
 )
 {
@@ -161,7 +161,7 @@ static inline bool read_entry   // returns true if successful, false if failure
 
     if (type == GrB_BOOL)
     {
-        if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
+        if (!structural && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
         if (ival < 0 || ival > 1)
         {
             // entry out of range
@@ -172,7 +172,7 @@ static inline bool read_entry   // returns true if successful, false if failure
     }
     else if (type == GrB_INT8)
     {
-        if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
+        if (!structural && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
         if (ival < INT8_MIN || ival > INT8_MAX)
         {
             // entry out of range
@@ -183,7 +183,7 @@ static inline bool read_entry   // returns true if successful, false if failure
     }
     else if (type == GrB_INT16)
     {
-        if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
+        if (!structural && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
         if (ival < INT16_MIN || ival > INT16_MAX)
         {
             // entry out of range
@@ -194,7 +194,7 @@ static inline bool read_entry   // returns true if successful, false if failure
     }
     else if (type == GrB_INT32)
     {
-        if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
+        if (!structural && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
         if (ival < INT32_MIN || ival > INT32_MAX)
         {
             // entry out of range
@@ -205,13 +205,13 @@ static inline bool read_entry   // returns true if successful, false if failure
     }
     else if (type == GrB_INT64)
     {
-        if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
+        if (!structural && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
         int64_t *result = (int64_t *) x ;
         result [0] = (int64_t) ival ;
     }
     else if (type == GrB_UINT8)
     {
-        if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
+        if (!structural && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
         if (ival < 0 || ival > UINT8_MAX)
         {
             // entry out of range
@@ -222,7 +222,7 @@ static inline bool read_entry   // returns true if successful, false if failure
     }
     else if (type == GrB_UINT16)
     {
-        if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
+        if (!structural && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
         if (ival < 0 || ival > UINT16_MAX)
         {
             // entry out of range
@@ -233,7 +233,7 @@ static inline bool read_entry   // returns true if successful, false if failure
     }
     else if (type == GrB_UINT32)
     {
-        if (!pattern && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
+        if (!structural && sscanf (p, "%" SCNd64, &ival) != 1) return (false) ;
         if (ival < 0 || ival > UINT32_MAX)
         {
             // entry out of range
@@ -245,37 +245,37 @@ static inline bool read_entry   // returns true if successful, false if failure
     else if (type == GrB_UINT64)
     {
         uint64_t uval = 1 ;
-        if (!pattern && sscanf (p, "%" SCNu64, &uval) != 1) return (false) ;
+        if (!structural && sscanf (p, "%" SCNu64, &uval) != 1) return (false) ;
         uint64_t *result = (uint64_t *) x ;
         result [0] = (uint64_t) uval ;
     }
     else if (type == GrB_FP32)
     {
-        if (!pattern && !read_double (p, &rval)) return (false) ;
+        if (!structural && !read_double (p, &rval)) return (false) ;
         float *result = (float *) x ;
         result [0] = (float) rval ;
     }
     else if (type == GrB_FP64)
     {
-        if (!pattern && !read_double (p, &rval)) return (false) ;
+        if (!structural && !read_double (p, &rval)) return (false) ;
         double *result = (double *) x ;
         result [0] = rval ;
     }
 #if 0
     else if (type == GxB_FC32)
     {
-        if (!pattern && !read_double (p, &rval)) return (false) ;
+        if (!structural && !read_double (p, &rval)) return (false) ;
         while (*p && !isspace (*p)) p++ ;   // skip real part
-        if (!pattern && !read_double (p, &zval)) return (false) ;
+        if (!structural && !read_double (p, &zval)) return (false) ;
         float *result = (float *) x ;
         result [0] = (float) rval ;     // real part
         result [1] = (float) zval ;     // imaginary part
     }
     else if (type == GxB_FC64)
     {
-        if (!pattern && !read_double (p, &rval)) return (false) ;
+        if (!structural && !read_double (p, &rval)) return (false) ;
         while (*p && !isspace (*p)) p++ ;   // skip real part
-        if (!pattern && !read_double (p, &zval)) return (false) ;
+        if (!structural && !read_double (p, &zval)) return (false) ;
         double *result = (double *) x ;
         result [0] = rval ;     // real part
         result [1] = zval ;     // imaginary part

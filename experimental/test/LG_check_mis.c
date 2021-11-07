@@ -135,8 +135,9 @@ int LG_check_mis        // check if iset is a valid MIS of A
             ignore_node, NULL)) ;
     }
 
-    // e = (e || A*iset), using the symbolic semiring
-    GrB_TRY (GrB_vxm (e, NULL, GrB_LOR, LAGraph_symbolic_bool, iset, A, NULL)) ;
+    // e = (e || A*iset), using the structural semiring
+    GrB_TRY (GrB_vxm (e, NULL, GrB_LOR, LAGraph_structural_bool, iset, A,
+        NULL)) ;
 
     // drop explicit zeros from e
     // e<e.replace> = e

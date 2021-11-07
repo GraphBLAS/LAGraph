@@ -147,7 +147,7 @@ int LAGraph_Vector_IsEqual         // returns 0 if successful, < 0 if failure
 
 GrB_Info LAGraph_pattern    // return GrB_SUCCESS if successful
 (
-    GrB_Matrix *C,          // a boolean matrix with the pattern of A
+    GrB_Matrix *C,          // a boolean matrix with the structure of A
     GrB_Matrix A,
     GrB_Type C_type         // return type for C
 ) ;

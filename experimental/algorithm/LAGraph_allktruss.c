@@ -23,7 +23,7 @@
 
 // The optional output matrices Cset [3..kmax-1] are the k-trusses of A.  Their
 // edges are a subset of A.  Each edge in C = Cset [k] is part of at least k-2
-// triangles in C.  The pattern of C is the adjacency matrix of the k-truss
+// triangles in C.  The structure of C is the adjacency matrix of the k-truss
 // subgraph of A.  The edge weights of C are the support of each edge.  That
 // is, C(i,j)=nt if the edge (i,j) is part of nt triangles in C.  All edges in
 // C have support of at least k-2.  The total number of triangles in C is
@@ -236,8 +236,7 @@ GrB_Info LAGraph_allktruss      // compute all k-trusses of a graph
     LAGraph_FREE_ALL ;
 
 #else
-    // TODO: implement a vanilla version of this algorithm (or wait for
-    // GraphBLAS 2.0 spec release and support.
+    // TODO: implement a vanilla version of this algorithm using the v2 spec
     return (GrB_NO_VALUE) ;
 #endif
 }

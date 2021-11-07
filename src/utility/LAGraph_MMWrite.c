@@ -308,15 +308,15 @@ int LAGraph_MMWrite_type
     }
 
     //--------------------------------------------------------------------------
-    // determine if the matrix is pattern-only
+    // determine if the matrix is structural-only
     //--------------------------------------------------------------------------
 
-    bool is_pattern = false ;
+    bool is_structural = false ;
     if (! (MM_storage == MM_skew_symmetric || MM_storage == MM_hermitian))
     {
         if (type == GrB_BOOL)
         {
-            LAGraph_TRY (GrB_reduce (&is_pattern, NULL, GrB_LAND_MONOID_BOOL,
+            LAGraph_TRY (GrB_reduce (&is_structural, NULL, GrB_LAND_MONOID_BOOL,
                 A, NULL)) ;
         }
         else
@@ -338,11 +338,11 @@ int LAGraph_MMWrite_type
             else if (type == GxB_FC64  ) op = GrB_EQ_FC64 ;
             #endif
             GrB_TRY (GrB_apply (C, NULL, NULL, op, A, 1, NULL)) ;
-            GrB_TRY (GrB_reduce (&is_pattern, NULL, GrB_LAND_MONOID_BOOL,
+            GrB_TRY (GrB_reduce (&is_structural, NULL, GrB_LAND_MONOID_BOOL,
                 C, NULL)) ;
             GrB_free (&C) ;
         }
-        if (is_pattern)
+        if (is_structural)
         {
             MM_type = MM_pattern ;
         }
@@ -469,7 +469,7 @@ int LAGraph_MMWrite_type
                 /* print the row and column index of the tuple */           \
                 if (coord) FPRINTF (f, "%" PRIu64 " %" PRIu64 " ", i, j) ;  \
                 /* print the value of the tuple */                          \
-                if (is_pattern)                                             \
+                if (is_structural)                                          \
                 {                                                           \
                     /* print nothing */ ;                                   \
                 }                                                           \

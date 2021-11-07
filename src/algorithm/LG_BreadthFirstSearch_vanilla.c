@@ -81,7 +81,7 @@ int LG_BreadthFirstSearch_vanilla
        (kind == LAGRAPH_ADJACENCY_DIRECTED &&
         G->A_structure_is_symmetric == LAGRAPH_TRUE))
     {
-        // AT and A have the same pattern and can be used in both directions
+        // AT and A have the same structure and can be used in both directions
         AT = G->A ;
     }
     else
@@ -117,7 +117,7 @@ int LG_BreadthFirstSearch_vanilla
     else
     {
         // only the level is needed
-        semiring = LAGraph_symbolic_bool ;
+        semiring = LAGraph_structural_bool ;
 
         // create a sparse boolean vector frontier, and set frontier(src) = true
         GrB_TRY (GrB_Vector_new(&frontier, GrB_BOOL, n)) ;

@@ -22,7 +22,7 @@
 
 int LAGraph_Property_ASymmetricStructure  // 0 if successful, -1 if failure
 (
-    LAGraph_Graph G,        // graph to determine the symmetry of pattern of A
+    LAGraph_Graph G,        // graph to determine the symmetry of structure of A
     char *msg
 )
 {
@@ -72,7 +72,7 @@ int LAGraph_Property_ASymmetricStructure  // 0 if successful, -1 if failure
     }
 
     //--------------------------------------------------------------------------
-    // check if the pattern of A and AT are the same
+    // check if the structure of A and AT are the same
     //--------------------------------------------------------------------------
 
     GrB_TRY (GrB_Matrix_new (&C, GrB_BOOL, n, n)) ;

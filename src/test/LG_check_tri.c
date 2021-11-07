@@ -12,7 +12,7 @@
 
 // A very slow, bare-bones triangle count using a sequential saxpy-based
 // method.  Computes the sum(sum((A*A).*A)), in MATLAB notation, where A is
-// symmetric and treated as binary (only the pattern is used).  Diagonal
+// symmetric and treated as binary (only the structure is used).  Diagonal
 // entries are ignored.  In GraphBLAS notation, C{A} = A*A followed by
 // reduce(C) to scalar.  This method is for testing only, to check the result
 // of other, faster methods.  Do not benchmark this method; it is slow and
@@ -39,7 +39,7 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
     // output
     uint64_t *ntri,     // # of triangles in A
     // input
-    LAGraph_Graph G,    // the pattern of G->A must be symmetric
+    LAGraph_Graph G,    // the structure of G->A must be symmetric
     char *msg
 )
 {
@@ -78,7 +78,7 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
         G->A_structure_is_symmetric == LAGRAPH_TRUE))
     {
-        // the pattern of A is known to be symmetric
+        // the structure of A is known to be symmetric
         ;
     }
     else

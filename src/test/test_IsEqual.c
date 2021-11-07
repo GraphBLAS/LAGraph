@@ -43,8 +43,8 @@ const matrix_info files [ ] =
     //   iseq  type          matrix1             matrix2
     {    0, 0, "GrB_BOOL"  , "A.mtx"           , "cover.mtx" },
     {    0, 0, "GrB_BOOL"  , "A.mtx"           , "A2.mtx" },
-    {    1, 0, "GrB_BOOL"  , "cover.mtx"       , "cover_pattern.mtx" },
-    {    0, 0, "GrB_INT32" , "cover.mtx"       , "cover_pattern.mtx" },
+    {    1, 0, "GrB_BOOL"  , "cover.mtx"       , "cover_structure.mtx" },
+    {    0, 0, "GrB_INT32" , "cover.mtx"       , "cover_structure.mtx" },
     {    1, 1, "GrB_FP64"  , "LFAT5.mtx"       , "LFAT5.mtx" },
     {    0, 0, "GrB_BOOL"  , "sample2.mtx"     , "sample.mtx" },
     {    1, 1, "GrB_BOOL"  , "sample.mtx"      , "sample.mtx" },

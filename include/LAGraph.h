@@ -298,7 +298,7 @@ LAGraph_BooleanProperty ;
 //      AT          AT = A'
 //      rowdegree   rowdegree(i) = # of entries in A(i,:)
 //      coldegree   coldegree(j) = # of entries in A(:,j)
-//      A_structure_is_symmetric: true if the pattern of A is symmetric
+//      A_structure_is_symmetric: true if the structure of A is symmetric
 
 struct LAGraph_Graph_struct
 {
@@ -354,7 +354,7 @@ struct LAGraph_Graph_struct
             // where coldegree(j) is the number of entries in A(:,j).  If
             // coldegree is sparse and the entry coldegree(j) is not present,
             // then it is assumed to be zero.  If A is known to have a
-            // symmetric pattern, the convention is that the degree is held in
+            // symmetric structure, the convention is that the degree is held in
             // rowdegree, and coldegree is left as NULL.
     GrB_Type   coldegree_type;   // the type of scalar stored in coldegree
 
@@ -362,7 +362,7 @@ struct LAGraph_Graph_struct
     LAGraph_BooleanProperty A_structure_is_symmetric ;    // For an undirected
             // graph, this property will always be implicitly true and can be
             // ignored.  The matrix A for a directed weighted graph will
-            // typically by unsymmetric, but might have a symmetric pattern.
+            // typically by unsymmetric, but might have a symmetric structure.
             // In that case, this scalar property can be set to true.
 
     int64_t ndiag ; // # of entries on the diagonal of A, or -1 if unknown.
@@ -440,19 +440,19 @@ LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_one_uint64 ;
 LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_one_fp32   ;
 LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_one_fp64   ;
 
-// LAGraph_symbolic_T: using the GrB_MIN_MONOID_T for non-boolean types
+// LAGraph_structural_T: using the GrB_MIN_MONOID_T for non-boolean types
 // or GrB_LOR_MONOID_BOOL for boolean, and the GrB_ONEB_T multiplicative op.
-LAGRAPH_PUBLIC GrB_Semiring LAGraph_symbolic_bool   ;
-LAGRAPH_PUBLIC GrB_Semiring LAGraph_symbolic_int8   ;
-LAGRAPH_PUBLIC GrB_Semiring LAGraph_symbolic_int16  ;
-LAGRAPH_PUBLIC GrB_Semiring LAGraph_symbolic_int32  ;
-LAGRAPH_PUBLIC GrB_Semiring LAGraph_symbolic_int64  ;
-LAGRAPH_PUBLIC GrB_Semiring LAGraph_symbolic_uint8  ;
-LAGRAPH_PUBLIC GrB_Semiring LAGraph_symbolic_uint16 ;
-LAGRAPH_PUBLIC GrB_Semiring LAGraph_symbolic_uint32 ;
-LAGRAPH_PUBLIC GrB_Semiring LAGraph_symbolic_uint64 ;
-LAGRAPH_PUBLIC GrB_Semiring LAGraph_symbolic_fp32   ;
-LAGRAPH_PUBLIC GrB_Semiring LAGraph_symbolic_fp64   ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_structural_bool   ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_structural_int8   ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_structural_int16  ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_structural_int32  ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_structural_int64  ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_structural_uint8  ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_structural_uint16 ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_structural_uint32 ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_structural_uint64 ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_structural_fp32   ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_structural_fp64   ;
 
 // LAGraph_Finalize: finish LAGraph
 LAGRAPH_PUBLIC
@@ -501,7 +501,7 @@ int LAGraph_Property_AT     // returns 0 if successful, -1 if failure
 LAGRAPH_PUBLIC
 int LAGraph_Property_ASymmetricStructure  // 0 if successful, -1 if failure
 (
-    LAGraph_Graph G,        // graph to determine the symmetry of pattern of A
+    LAGraph_Graph G,        // graph to determine the symmetry of structure of A
     char *msg
 ) ;
 

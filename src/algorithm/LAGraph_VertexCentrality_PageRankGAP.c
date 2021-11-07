@@ -15,7 +15,7 @@
 // already available, as are the row and column degrees.
 
 // The G->AT and G->rowdegree properties must be defined for this method.  If G
-// is undirected or G->A is known to have a symmetric pattern, then G->A is
+// is undirected or G->A is known to have a symmetric structure, then G->A is
 // used instead of G->AT, however.
 
 #define LAGraph_FREE_WORK           \
@@ -57,11 +57,11 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
     LG_CHECK (centrality == NULL, -1, "centrality is NULL") ;
     LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
     LAGraph_Kind kind = G->kind ; 
-    int A_sym_pattern = G->A_structure_is_symmetric ;
+    int A_sym_structure = G->A_structure_is_symmetric ;
     GrB_Matrix AT ;
-    if (kind == LAGRAPH_ADJACENCY_UNDIRECTED || A_sym_pattern == LAGRAPH_TRUE)
+    if (kind == LAGRAPH_ADJACENCY_UNDIRECTED || A_sym_structure == LAGRAPH_TRUE)
     {
-        // A and A' have the same pattern
+        // A and A' have the same structure
         AT = G->A ;
     }
     else

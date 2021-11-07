@@ -27,11 +27,11 @@
 // GraphBLAS will do typecasting internally, but that takes extra time.
 
 // The output matrix C is the k-truss subgraph of A.  Its edges are a subset of
-// A.  Each edge in C is part of at least k-2 triangles in C.  The pattern of C
-// is the adjacency matrix of the k-truss subgraph of A.  The edge weights of C
-// are the support of each edge.  That is, C(i,j)=nt if the edge (i,j) is part
-// of nt triangles in C.  All edges in C have support of at least k-2.  The
-// total number of triangles in C is sum(C)/6.  The number of edges in C is
+// A.  Each edge in C is part of at least k-2 triangles in C.  The structure of
+// C is the adjacency matrix of the k-truss subgraph of A.  The edge weights of
+// C are the support of each edge.  That is, C(i,j)=nt if the edge (i,j) is
+// part of nt triangles in C.  All edges in C have support of at least k-2.
+// The total number of triangles in C is sum(C)/6.  The number of edges in C is
 // nnz(C)/2.  C is returned as symmetric with a zero-free diagonal.
 
 // Usage: constructs C as the k-truss of A
@@ -171,7 +171,7 @@ GrB_Info LAGraph_ktruss         // compute the k-truss of a graph
     }
 
 #else
-    // requires SuiteSparse:GraphBLAS v3.0.1
+    // FIXME: create a pure GrB version with the v2 spec
     return (GrB_NO_VALUE) ;
 #endif
 }

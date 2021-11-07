@@ -38,14 +38,14 @@
 
 // G->A represents the graph, and G->AT must be present.  G->A must be square,
 // and can be unsymmetric.  Self-edges are OK.  The values of G->A and G->AT
-// are ignored; just the pattern of two matrices are used.
+// are ignored; just the structure of two matrices are used.
 
 // Each phase uses push-pull direction optimization.
 
 // This is an LAGraph "expert" method, since it requires the source nodes to be
 // specified, and G->AT must be present (unless G is undirected or G->A is
-// known to have a symmetric pattern, in which case G->A is used for both A and
-// AT).
+// known to have a symmetric structure, in which case G->A is used for both A
+// and AT).
 
 //------------------------------------------------------------------------------
 
@@ -124,13 +124,13 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
     (*centrality) = NULL ;
     LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
     LAGraph_Kind kind = G->kind ;
-    int A_sym_pattern = G->A_structure_is_symmetric ;
+    int A_sym_structure = G->A_structure_is_symmetric ;
 
     GrB_Matrix A = G->A ;
     GrB_Matrix AT ;
-    if (kind == LAGRAPH_ADJACENCY_UNDIRECTED || A_sym_pattern == LAGRAPH_TRUE)
+    if (kind == LAGRAPH_ADJACENCY_UNDIRECTED || A_sym_structure == LAGRAPH_TRUE)
     {
-        // A and A' have the same pattern
+        // A and A' have the same structure
         AT = A ;
     }
     else

@@ -51,7 +51,7 @@
 // case for the LDBC benchmark.
 
 // Otherwise, if sanitize is true, edge weights of A are ignored and only the
-// pattern of A is used.  This step takes extra time and memory to sanitize the
+// structure of A is used.  This step takes extra time and memory to sanitize the
 // input matrix A.  For a fair comparison in the LDBC benchmark, sanitize
 // should be false.
 
@@ -162,7 +162,8 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     {
         LAGraph_Tic (tic, NULL) ;
 
-        // S = binary pattern of A
+        // S = binary structure of A
+        // FIXME: use operators that ignore the values of A
         LAGRAPH_OK (LAGraph_pattern (&S, A, GrB_FP64)) ;
 
         // remove all self edges

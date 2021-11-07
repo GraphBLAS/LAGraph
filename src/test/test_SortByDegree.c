@@ -72,7 +72,7 @@ const char *files [ ] =
     "msf1.mtx", 
     "msf2.mtx", 
     "msf3.mtx", 
-    "pattern.mtx", 
+    "structure.mtx", 
     "sample.mtx", 
     "sample2.mtx", 
     "skew_fp32.mtx", 

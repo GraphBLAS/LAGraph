@@ -92,7 +92,7 @@ void test_DeleteProperties (void)
         OK (LAGraph_Property_ASymmetricStructure (G, msg)) ;
 
         // print them
-        printf ("\nGraph: ndiag %ld, symmetric pattern: %d\n", G->ndiag,
+        printf ("\nGraph: ndiag %ld, symmetric structure: %d\n", G->ndiag,
             G->A_structure_is_symmetric) ;
         printf ("  adj matrix: ") ;
         OK (LAGraph_Matrix_print_type (G->A, atype, 2, stdout, msg)) ;

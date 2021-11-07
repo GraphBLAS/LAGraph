@@ -11,7 +11,7 @@
 // LAGraph_VertexCentrality_Triangle: computes the TriangleCentrality of
 // an undirected graph.  No self edges are allowed on the input graph.
 // Methods 2 and 3 can tolerate any edge weights (they are ignored; only the
-// pattern of G->A is used).  Methods 1 and 1.5 require unit edge weights
+// structure of G->A is used).  Methods 1 and 1.5 require unit edge weights
 // (this could be modified); results are undefined if this condition doesn't
 // hold.
 
@@ -109,7 +109,7 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
         G->A_structure_is_symmetric == LAGRAPH_TRUE))
     {
-        // the pattern of A is known to be symmetric
+        // the structure of A is known to be symmetric
         A = G->A ;
     }
     else
@@ -144,9 +144,11 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
         // TC0, TC1: simplest method, requires that A has all entries equal to 1
         //----------------------------------------------------------------------
 
+        // TODO: remove this method when moving this code from experimental/
+        // to src/
+
         if (method == 0)
         {
-            // printf ("TC0: ")  ;
             // T<A> = A*A : method 0 (was TC1 in the first paper submission)
             GrB_TRY (GrB_mxm (T, A, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, A, A,
                 NULL)) ;
@@ -154,7 +156,6 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
         else
         {
             // this is faster than method 0
-            // printf ("TC1: ") ;
             // T<A> = A*A' : method TC1 (was method TC1.5)
             GrB_TRY (GrB_mxm (T, A, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, A, A,
                 GrB_DESC_T1)) ;
@@ -196,9 +197,8 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
         // TC2: using LAGraph_plus_one_fp64 semiring
         //----------------------------------------------------------------------
 
-        // only uses the pattern of A
-
-        // printf ("TC2: ")  ;
+        // TODO: remove this method when moving this code from experimental/
+        // to src/
 
         // T{A} = A*A' (each triangle is seen 6 times)
         GrB_TRY (GrB_mxm (T, A, NULL, LAGraph_plus_one_fp64, A, A,
@@ -238,7 +238,8 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
         // TC3: using tril.  This is the fastest method.
         //----------------------------------------------------------------------
 
-        // printf ("TC3: ") ;
+        // When this method is moved from experimental/ to src/, keep this
+        // method only.
 
         // L = tril (A,-1)
         GrB_TRY (GrB_Matrix_new (&L, GrB_FP64, n, n)) ;
