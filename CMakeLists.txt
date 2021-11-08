@@ -55,8 +55,31 @@ project ( lagraph
           VERSION "${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}" )
 
 #-------------------------------------------------------------------------------
-# determine build type
+# code coverage and build type
 #-------------------------------------------------------------------------------
+
+if ( "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
+	if ( COVERAGE )
+                message ( STATUS "============== Code coverage enabled ===============" )
+		set ( CMAKE_BUILD_TYPE Debug )
+		include ( CodeCoverage )
+
+
+		append_coverage_compiler_flags ( )
+
+		# turn off optimization for non-skewed coverage reports
+		set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0" )
+		set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0" )
+
+		setup_target_for_coverage_lcov (
+			NAME test_coverage
+			EXECUTABLE ctest
+			DEPENDENCIES ${PROJECT_NAME}
+			BASE_DIRECTORY "."
+			NO_DEMANGLE TRUE
+		)
+	endif ( )
+endif ( )
 
 # For development only, not for end-users:
 # set ( CMAKE_BUILD_TYPE Debug )
