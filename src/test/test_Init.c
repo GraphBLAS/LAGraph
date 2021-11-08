@@ -33,7 +33,11 @@ void test_Init (void)
     OK (GxB_get (GxB_LIBRARY_NAME, &name)) ;
     OK (GxB_get (GxB_LIBRARY_DATE, &date)) ;
     OK (GxB_get (GxB_LIBRARY_VERSION, ver)) ;
-    printf ("\n%s %d.%d.%d (%s)\n", name, ver [0], ver [1], ver [2], date) ;
+    printf ("\nlibrary: %s %d.%d.%d (%s)\n", name, ver [0], ver [1], ver [2],
+        date) ;
+    printf (  "include: %s %d.%d.%d (%s)\n", GxB_IMPLEMENTATION_NAME,
+        GxB_IMPLEMENTATION_MAJOR, GxB_IMPLEMENTATION_MINOR,
+        GxB_IMPLEMENTATION_SUB, GxB_IMPLEMENTATION_DATE) ;
     #else
     printf ("\nVanilla GraphBLAS: no GxB* extensions\n") ;
     #endif
