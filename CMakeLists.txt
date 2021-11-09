@@ -58,6 +58,12 @@ project ( lagraph
 # code coverage and build type
 #-------------------------------------------------------------------------------
 
+# To compile with test coverage:
+#   cd build
+#   cmake -DCOVERAGE=1 ..
+#   make -j8
+#   make test_coverage
+
 if ( "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
 	if ( COVERAGE )
                 message ( STATUS "============== Code coverage enabled ===============" )
