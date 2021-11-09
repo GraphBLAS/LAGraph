@@ -26,13 +26,13 @@ GrB_Type LAGraph_ComplexFP64 = NULL ;
 #pragma GCC diagnostic ignored "-Wincompatible-pointer-types"
 #endif
 
-#define C double complex
+#define C LAGraph_FC64_t
 #define X *x
 #define Y *y
 #define Z *z
 
-#define ONE  (CMPLX(1.0,0.0))
-#define ZERO (CMPLX(0.0,0.0))
+#define ONE  (LAGraph_CMPLX(1.0,0.0))
+#define ZERO (LAGraph_CMPLX(0.0,0.0))
 #define T ONE
 #define F ZERO
 #define BOOL(X) (X != ZERO)
@@ -214,7 +214,7 @@ GrB_BinaryOp
 // binary functions, z=f(x,y), where double x double -> complex
 //------------------------------------------------------------------------------
 
-void complexfp64_complex (C Z, const double X, const double Y) { Z = CMPLX (X,Y) ; }
+void complexfp64_complex (C Z, const double X, const double Y) { Z = LAGraph_CMPLX (X,Y) ; }
 
 GrB_BinaryOp LAGraph_COMPLEX_ComplexFP64 = NULL ;
 
@@ -225,7 +225,7 @@ GrB_BinaryOp LAGraph_COMPLEX_ComplexFP64 = NULL ;
 void complexfp64_one      (C Z, const C X) { Z =       1. ; }
 void complexfp64_identity (C Z, const C X) { Z =       X  ; }
 void complexfp64_ainv     (C Z, const C X) { Z =      -X  ; }
-void complexfp64_abs      (C Z, const C X) { Z = CMPLX (cabs (X), 0) ; }
+void complexfp64_abs      (C Z, const C X) { Z = LAGraph_CMPLX (cabs (X), 0) ; }
 void complexfp64_minv     (C Z, const C X) { Z =  1. / X  ; }
 void complexfp64_not      (C Z, const C X) { Z = BOOL (X) ? F : T ; }
 void complexfp64_conj     (C Z, const C X) { Z = conj (X) ; }
@@ -270,8 +270,8 @@ GrB_UnaryOp
 // unary functions, z=f(x) where double -> C
 //------------------------------------------------------------------------------
 
-void complexfp64_complex_real (C Z, const double X) { Z = CMPLX (X, 0) ; }
-void complexfp64_complex_imag (C Z, const double X) { Z = CMPLX (0, X) ; }
+void complexfp64_complex_real (C Z, const double X) { Z = LAGraph_CMPLX (X, 0) ; }
+void complexfp64_complex_imag (C Z, const double X) { Z = LAGraph_CMPLX (0, X) ; }
 
 GrB_UnaryOp
     LAGraph_COMPLEX_REAL_ComplexFP64 = NULL    ,
@@ -286,8 +286,8 @@ GrB_Monoid
     LAGraph_TIMES_ComplexFP64_MONOID = NULL    ;
 
 GrB_Semiring LAGraph_PLUS_TIMES_ComplexFP64 = NULL ;
-C LAGraph_ComplexFP64_1  = ONE ;
-C LAGraph_ComplexFP64_0 = ZERO ;
+C LAGraph_ComplexFP64_1 ;
+C LAGraph_ComplexFP64_0 ;
 
 #define OK(method)                      \
     info = method ;                     \
@@ -316,6 +316,9 @@ GrB_Info LAGraph_Complex_init ( )
     #undef D
     #define C LAGraph_ComplexFP64
     #define D GrB_FP64
+
+    LAGraph_ComplexFP64_1 = ONE ;
+    LAGraph_ComplexFP64_0 = ZERO ;
 
     //--------------------------------------------------------------------------
     // create the Complex binary operators, CxC->C

@@ -162,7 +162,7 @@ GrB_Info LAGraph_random_matrix  // create a random matrix
             {                                                                  \
                 double xreal = LAGraph_rand_double (seed) ;                    \
                 double ximag = LAGraph_rand_double (seed) ;                    \
-                x = CMPLX (xreal, ximag) ;                                     \
+                x = LAGraph_CMPLX (xreal, ximag) ;                             \
             }                                                                  \
             /* A (i,j) = x */                                                  \
             LAGRAPH_OK (GrB_Matrix_setElement_ ## gt (*A, ARG(x), i, j)) ;     \
