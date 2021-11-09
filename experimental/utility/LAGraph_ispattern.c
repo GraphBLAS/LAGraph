@@ -13,11 +13,14 @@
 // LAGraph_ispattern: check if a matrix values are all equal to 1.
 // Contributed by Tim Davis, Texas A&M.
 
+// FIXME: use GrB_mxv with GrB_EQ_* and bind1st
+
 #include <LAGraph.h>
 #include <LAGraphX.h>
 
 #define LAGraph_FREE_ALL    \
-    GrB_free (&C) ;
+    GrB_free (&C) ;         \
+    GrB_free (&op) ;
 
 //****************************************************************************
 // "is one" operators
@@ -183,8 +186,7 @@ GrB_Info LAGraph_ispattern  // return GrB_SUCCESS if successful
     bool *result,           // true if A is all one, false otherwise
     GrB_Matrix A,
     GrB_UnaryOp userop      // for A with arbitrary user-defined type.
-                            // Ignored if A and B are of built-in types or
-                            // LAGraph_ComplexFP64.
+                            // Ignored if A and B are of built-in types
 )
 {
 #if !(LG_SUITESPARSE)
@@ -192,6 +194,7 @@ GrB_Info LAGraph_ispattern  // return GrB_SUCCESS if successful
 #else
     GrB_Info info ;
     GrB_Matrix C = NULL ;
+    GrB_UnaryOp op = NULL ;
     GrB_Type type ;
     GrB_Index nrows, ncols ;
 
@@ -216,7 +219,6 @@ GrB_Info LAGraph_ispattern  // return GrB_SUCCESS if successful
     else
     {
         // select the unary operator
-        GrB_UnaryOp op = NULL ;
         create_isone_op(&op, type);
 
         if (op == NULL) op = userop ;

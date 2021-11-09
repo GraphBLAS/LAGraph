@@ -24,8 +24,8 @@
 // The parameters are considered in the following order:
 
 // type: A is always returned with this type.  If the type is not
-//                  LAGraph_ComplexFP64, then make_hermitian is ignored and treated
-//                  as if false.  If the type is unsigned, then
+//                  LAGraph_ComplexFP64, then make_hermitian is ignored and
+//                  treated as if false.  If the type is unsigned, then
 //                  make_skew_symmetric is ignored and treated as if false.
 
 // if (nrows != ncols) then make_symmetric, make_skew_symmetric, and
@@ -46,8 +46,8 @@
 
 // make_hermitian:  if true, then A is Hermitian (A == -A', where A' denotes
 //                  the complex conjugate transpose).  If type is not
-//                  LAGraph_ComplexFP64, then make_hermitian is ignored and treated
-//                  as if false.
+//                  LAGraph_ComplexFP64, then make_hermitian is ignored and
+//                  treated as if false.
 
 // no_diagonal:  if true, then A is returned with no entries on the diagonal.
 
@@ -120,10 +120,12 @@ GrB_Info LAGraph_random_matrix  // create a random matrix
         no_diagonal = true ;
     }
 
+    #if 0
     if (type != LAGraph_ComplexFP64)
     {
         make_hermitian = false ;
     }
+    #endif
 
     //--------------------------------------------------------------------------
     // construct the matrix
@@ -158,12 +160,12 @@ GrB_Info LAGraph_random_matrix  // create a random matrix
             {                                                                  \
                 x = (ctype) LAGraph_rand_double (seed) ;                       \
             }                                                                  \
-            else if (is_complex)                                               \
-            {                                                                  \
-                double xreal = LAGraph_rand_double (seed) ;                    \
-                double ximag = LAGraph_rand_double (seed) ;                    \
-                x = LAGraph_CMPLX (xreal, ximag) ;                             \
-            }                                                                  \
+/*          else if (is_complex)                                           */  \
+/*          {                                                              */  \
+/*              double xreal = LAGraph_rand_double (seed) ;                */  \
+/*              double ximag = LAGraph_rand_double (seed) ;                */  \
+/*              x = LAGraph_CMPLX (xreal, ximag) ;                         */  \
+/*          }                                                              */  \
             /* A (i,j) = x */                                                  \
             LAGRAPH_OK (GrB_Matrix_setElement_ ## gt (*A, ARG(x), i, j)) ;     \
             if (make_symmetric)                                                \
@@ -201,6 +203,7 @@ GrB_Info LAGraph_random_matrix  // create a random matrix
     else if (type == GrB_UINT64      ) RX (uint64_t, UINT64, 0, 1, 0, 0, 0)
     else if (type == GrB_FP32        ) RX (float   , FP32  , 0, 0, 1, 1, 0)
     else if (type == GrB_FP64        ) RX (double  , FP64  , 0, 0, 1, 1, 0)
+    #if 0
     else if (type == LAGraph_ComplexFP64 )
     {
         #undef ARG
@@ -209,6 +212,7 @@ GrB_Info LAGraph_random_matrix  // create a random matrix
         #define CONJ(x) conj(x)
         RX (double complex, UDT, 0, 0, 1, 0, 1) ;
     }
+    #endif
     else
     {
         // type not supported

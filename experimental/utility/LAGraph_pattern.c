@@ -15,14 +15,14 @@
 
 // SPEC: to do this in general for any user-defined types requires either (a)
 // the user to create an operator z=f(x)=1, where z is boolean and x is the
-// user type (LAGraph_TRUE_BOOL_ComplexFP64, for example), or (b)
-// extractTuples(&I,&J,&X,A).  The latter requires X to be allocated of the
-// right size, and then freed.  SuiteSparse allows X to be NULL but this is an
-// extension to the spec. Determining the right size of X is difficult since
-// there is no GrB_Type_size (see GxB_Type_size in SuiteSparse:GraphBLAS).
+// user type, or (b) extractTuples(&I,&J,&X,A).  The latter requires X to be
+// allocated of the right size, and then freed.  SuiteSparse allows X to be
+// NULL but this is an extension to the spec. Determining the right size of X
+// is difficult since there is no GrB_Type_size (see GxB_Type_size in
+// SuiteSparse:GraphBLAS).
 
 // As a result of these limitations, this method does not handle user-defined
-// types, other than LAGraph_ComplexFP64 (this function uses option (a) above).
+// types.
 
 #include <LAGraph.h>
 #include <LAGraphX.h>
