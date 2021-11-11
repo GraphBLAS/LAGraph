@@ -35,9 +35,9 @@
 #define LAGRAPH_BIN_HEADER 512
 #define LEN LAGRAPH_BIN_HEADER
 
-// currently, SuiteSparse:GraphBLAS v5.0.4 or later is required
-#define SUITESPARSE (!LG_VANILLA &&                 \
-    ( LG_SUITESPARSE && GxB_IMPLEMENTATION >= GxB_VERSION (5,0,4) ) )
+#if !LG_SUITESPARSE
+#error "SuiteSparse:GraphBLAS v6.0.0 or later is required"
+#endif
 
 //------------------------------------------------------------------------------
 // binwrite: write a matrix to a binary file
@@ -76,7 +76,7 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
     // check inputs
     //--------------------------------------------------------------------------
 
-#if !SUITESPARSE
+#if !LG_SUITESPARSE
     printf ("SuiteSparse:GraphBLAS v5 or later is required to write"
             " binary *.grb files\n") ;
     return (-1) ;
@@ -87,15 +87,7 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
     int8_t *Ab = NULL ;
     if (A == NULL || *A == NULL || f == NULL) ERROR ;
 
-#if SUITESPARSE
-    #if ( GxB_IMPLEMENTATION_MAJOR <= 5 )
-    // v1.3 C API with SuiteSparse:GraphBLAS v5.2.0 or earlier
-    GrB_TRY (GrB_wait (A)) ;
-    #else
-    // v2.0 C API with SuiteSparse:GraphBLAS v6.0.0 or later
     GrB_TRY (GrB_wait (*A, GrB_MATERIALIZE)) ;
-    #endif
-#endif
 
     //--------------------------------------------------------------------------
     // determine the basic matrix properties
@@ -708,7 +700,6 @@ static inline int binread   // returns 0 if successful, -1 if failure
 #undef  LAGraph_FREE_WORK
 #define LAGraph_FREE_WORK           \
 {                                   \
-    GrB_free (&thunk) ;             \
     GrB_free (&A) ;                 \
     GrB_free (&A2) ;                \
     GrB_free (&M) ;                 \
@@ -751,11 +742,6 @@ static int readproblem          // returns 0 if successful, -1 if failure
 
     GrB_Matrix A = NULL, A2 = NULL, M = NULL ;
     GrB_Type A_type = NULL;
-    #if SUITESPARSE
-    GxB_Scalar thunk = NULL ;
-    #else
-    GrB_Vector thunk = NULL ;
-    #endif
     FILE *f = NULL ;
     if (G == NULL) ERROR ;
     (*G) = NULL ;
@@ -805,9 +791,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
                 exit (1) ;
             }
             if (binread (&A, f) < 0) ERROR ;
-            #if SUITESPARSE
             GrB_TRY (GxB_Matrix_type (&A_type, A)) ;
-            #endif
             fclose (f) ;
             f = NULL ;
         }
@@ -907,15 +891,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
         GrB_free (&A) ;
         A = A2 ;
         A2 = NULL ;
-        #if SUITESPARSE
-        #if ( GxB_IMPLEMENTATION_MAJOR <= 5 )
-        // v1.3 C API with SuiteSparse:GraphBLAS v5.2.0 or earlier
-        GrB_TRY (GrB_wait (&A)) ;
-        #else
-        // v2.0 C API with SuiteSparse:GraphBLAS v6.0.0 or later
         GrB_TRY (GrB_wait (A, GrB_MATERIALIZE)) ;
-        #endif
-        #endif
     }
 
     //--------------------------------------------------------------------------
@@ -948,7 +924,9 @@ static int readproblem          // returns 0 if successful, -1 if failure
     if (!structural && ensure_positive)
     {
         // TODO: make this a utility function, to drop explicit zeros
-        #if SUITESPARSE
+        // FIXME: use GrB_select with a type-specific operator,
+        // which will work in SS:GrB and vanilla both.
+        #if LG_SUITESPARSE
         GrB_TRY (GxB_select ((*G)->A, NULL, NULL, GxB_NONZERO, (*G)->A,
             NULL, NULL)) ;
         #else
@@ -1051,15 +1029,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
 
     if (src_nodes != NULL)
     {
-        #if SUITESPARSE
-        #if ( GxB_IMPLEMENTATION_MAJOR <= 5 )
-        // v1.3 C API with SuiteSparse:GraphBLAS v5.2.0 or earlier
-        GrB_TRY (GrB_wait (src_nodes)) ;
-        #else
-        // v2.0 C API with SuiteSparse:GraphBLAS v6.0.0 or later
         GrB_TRY (GrB_wait (*src_nodes, GrB_MATERIALIZE)) ;
-        #endif
-        #endif
     }
 
     //--------------------------------------------------------------------------
@@ -1086,7 +1056,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
 static inline int demo_init (bool burble)
 {
     LAGraph_TRY (LAGraph_Init (NULL)) ;
-    #if SUITESPARSE
+    #if LG_SUITESPARSE
     printf ("%s v%d.%d.%d [%s]\n",
         GxB_IMPLEMENTATION_NAME,
         GxB_IMPLEMENTATION_MAJOR,

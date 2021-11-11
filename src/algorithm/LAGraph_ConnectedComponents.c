@@ -35,7 +35,7 @@
 
 #include "LG_internal.h"
 
-#if (! LG_SUITESPARSE ) || (GxB_IMPLEMENTATION < GxB_VERSION (6,0,0))
+#if (! LG_SUITESPARSE )
 #error "SuiteSparse:GraphBLAS v6.0.0 or later required"
 #endif
 
