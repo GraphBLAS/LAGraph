@@ -15,6 +15,13 @@ include_directories ( ${CMAKE_SOURCE_DIR}/include utility )
 file ( GLOB LAGRAPH_LIB_SOURCES "utility/*.c" "algorithm/*.c" )
 file ( GLOB LAGRAPH_INCLUDES "../include/*.h" )
 message (STATUS "includes:" ${LAGRAPH_INCLUDES} )
+message (STATUS "libraries:" ${GRAPHBLAS_LIBRARIES})
+
+if ( "${CMAKE_C_COMPILER_ID}" STREQUAL "MSVC" )
+    set ( M_LIB "" )
+else ( )
+    set ( M_LIB "m" )
+endif ( )
 
 #-------------------------------------------------------------------------------
 # dynamic lagraph library properties
@@ -27,7 +34,7 @@ SET_TARGET_PROPERTIES ( lagraph PROPERTIES
     C_STANDARD_REQUIRED 11
     PUBLIC_HEADER "${LAGRAPH_INCLUDES}" )
 set_property ( TARGET lagraph PROPERTY C_STANDARD 11 )
-target_link_libraries(lagraph PUBLIC ${GRAPHBLAS_LIBRARIES})
+target_link_libraries(lagraph PUBLIC ${GRAPHBLAS_LIBRARIES} ${M_LIB} )
 target_include_directories ( lagraph PUBLIC include/ )
 install ( FILES ${LAGRAPH_INCLUDE} DESTINATION include)
 
@@ -44,7 +51,7 @@ SET_TARGET_PROPERTIES ( lagraph_static PROPERTIES
     C_STANDARD_REQUIRED 11
     PUBLIC_HEADER "${LAGRAPH_INCLUDES}" )
 set_property ( TARGET lagraph_static PROPERTY C_STANDARD 11 )
-target_link_libraries(lagraph_static PUBLIC ${GRAPHBLAS_LIBRARIES})
+target_link_libraries(lagraph_static PUBLIC ${GRAPHBLAS_LIBRARIES} ${M_LIB} )
 
 #-------------------------------------------------------------------------------
 # add OpenMP

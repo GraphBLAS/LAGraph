@@ -95,17 +95,6 @@ if ( NOT CMAKE_BUILD_TYPE )
 endif ( )
 
 #-------------------------------------------------------------------------------
-# select the math library (not required for Microsoft Visual Studio)
-#-------------------------------------------------------------------------------
-
-if ( "${CMAKE_C_COMPILER_ID}" STREQUAL "MSVC" )
-    set ( M_LIB "" )
-else ( )
-    set ( M_LIB "m" )
-endif ( )
-set ( GRAPHBLAS_LIBRARIES  "${GRAPHBLAS_LIBRARIES} ${M_LIB} " )
-
-#-------------------------------------------------------------------------------
 # Find the GraphBLAS installation
 #-------------------------------------------------------------------------------
 
