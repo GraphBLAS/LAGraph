@@ -104,6 +104,20 @@ int main (int argc, char **argv)
     // ntrials = 4 ;
 
     //--------------------------------------------------------------------------
+    // warmup
+    //--------------------------------------------------------------------------
+
+    int64_t src ;
+    double twarmup, tw [2] ;
+    GrB_TRY (GrB_Matrix_extractElement (&src, SourceNodes, 0, 0)) ;
+    LAGraph_TRY (LAGraph_Tic (tw, msg)) ;
+    LAGraph_TRY (LAGraph_BreadthFirstSearch (NULL, &parent,
+        G, src, false, msg)) ;
+    GrB_free (&parent) ;
+    LAGraph_TRY (LAGraph_Toc (&twarmup, tw, msg)) ;
+    printf ("warmup: parent only, pushonly: %g sec\n", twarmup) ;
+
+    //--------------------------------------------------------------------------
     // run the BFS on all source nodes
     //--------------------------------------------------------------------------
 
