@@ -1058,12 +1058,18 @@ static inline int demo_init (bool burble)
 {
     LAGraph_TRY (LAGraph_Init (NULL)) ;
     #if LG_SUITESPARSE
-    printf ("%s v%d.%d.%d [%s]\n",
+    printf ("include: %s v%d.%d.%d [%s]\n",
         GxB_IMPLEMENTATION_NAME,
         GxB_IMPLEMENTATION_MAJOR,
         GxB_IMPLEMENTATION_MINOR,
         GxB_IMPLEMENTATION_SUB,
         GxB_IMPLEMENTATION_DATE) ;
+    char *s ;
+    GxB_get (GxB_LIBRARY_NAME, &s) ; printf ("library: %s ", s) ;
+    int version [3] ;
+    GxB_get (GxB_LIBRARY_VERSION, version) ;
+    printf ("v%d.%d.%d ", version [0], version [1], version [2]) ;
+    GxB_get(GxB_LIBRARY_DATE, &s) ; printf ("[%s]\n", s) ;
     GrB_TRY (GxB_set (GxB_BURBLE, burble)) ;
     #else
     printf ("Vanilla GraphBLAS ... do not publish these results!\n") ;
