@@ -76,6 +76,7 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
     // check inputs
     //--------------------------------------------------------------------------
 
+    printf ("LG_SUITESPARSE: %d\n", LG_SUITESPARSE) ;
 #if !LG_SUITESPARSE
     printf ("SuiteSparse:GraphBLAS v5 or later is required to write"
             " binary *.grb files\n") ;
@@ -461,7 +462,7 @@ static inline int binread   // returns 0 if successful, -1 if failure
     // check inputs
     //--------------------------------------------------------------------------
 
-#if !SUITESPARSE
+#if !LG_SUITESPARSE
     printf ("SuiteSparse:GraphBLAS v5 or later is required to read"
             " binary *.grb files\n") ;
     return (-1) ;

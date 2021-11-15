@@ -34,9 +34,10 @@
 #define LAGRAPH_BIN_HEADER 512
 #define LEN LAGRAPH_BIN_HEADER
 
-// currently, SuiteSparse:GraphBLAS v5.0.4 or later is required
-#define SUITESPARSE (!LG_VANILLA &&                 \
-    ( LG_SUITESPARSE && GxB_IMPLEMENTATION >= GxB_VERSION (5,0,4)))
+// currently, SuiteSparse:GraphBLAS v6 or later is required
+#if !defined ( GxB_SUITESPARSE_GRAPHBLAS )
+#error "SuiteSparse v6 or later is required"
+#endif
 
 #define LAGraph_FREE_ALL                \
 {                                       \
@@ -71,12 +72,6 @@ int LAGraph_binread   // returns 0 if successful, -1 if failure
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------
-
-#if !SUITESPARSE
-    printf ("SuiteSparse:GraphBLAS v5 or later is required to read"
-            " binary *.grb files\n") ;
-    return (-1) ;
-#else
 
     GrB_Index *Ap = NULL, *Ai = NULL, *Ah = NULL ;
     int8_t *Ab = NULL ;
@@ -298,7 +293,6 @@ int LAGraph_binread   // returns 0 if successful, -1 if failure
     (*A_type) = type;
     type = NULL;
     return (0) ;
-#endif
 }
 
 
