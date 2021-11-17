@@ -352,6 +352,10 @@ void test_MMRead_failures (void)
         TEST_CHECK (A == NULL) ;
     }
 
+    // typename is invalid
+    const char *tname = typename (NULL) ;
+    TEST_CHECK (tname == NULL) ;
+
     teardown ( ) ;
 }
 
@@ -416,6 +420,7 @@ const char* files_for_MMWrite [ ] =
 {
     "west0067.mtx",
     "full.mtx",
+    "cover.mtx",
     ""
 } ;
 

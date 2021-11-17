@@ -107,7 +107,7 @@ void test_IsEqual (void)
         printf ("test %2d: %s %s (%s)\n", k, aname, bname, typename) ;
 
         // get the type
-        GrB_Type type ;
+        GrB_Type type = NULL ;
         if      (strcmp (typename, "GrB_BOOL"  ) == 0) type = GrB_BOOL   ;
         else if (strcmp (typename, "GrB_INT8"  ) == 0) type = GrB_INT8   ;
         else if (strcmp (typename, "GrB_INT16" ) == 0) type = GrB_INT16  ;
@@ -119,7 +119,8 @@ void test_IsEqual (void)
         else if (strcmp (typename, "GrB_UINT64") == 0) type = GrB_UINT64 ;
         else if (strcmp (typename, "GrB_FP32"  ) == 0) type = GrB_FP32   ;
         else if (strcmp (typename, "GrB_FP64"  ) == 0) type = GrB_FP64   ;
-        else TEST_CHECK (false) ;
+
+        TEST_CHECK (type != NULL) ;
 
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;

@@ -1,2 +1,2 @@
- comments for full.mtx
+ comments for cover.mtx
  this file was created by test_MMRead.c

@@ -138,6 +138,7 @@ bool check_karate_parents30(GrB_Vector parents)
     TEST_CHECK(0 == GrB_Vector_nvals(&n, parents));
     TEST_CHECK(ZACHARY_NUM_NODES == n);
 
+    bool ok = false ;
     int64_t parent_id;
     for (GrB_Index ix = 0; ix < ZACHARY_NUM_NODES; ++ix)
     {
@@ -147,7 +148,7 @@ bool check_karate_parents30(GrB_Vector parents)
 //      TEST_MSG("Parent check failed for node %ld: ans,comp = %ld,%ld\n",
 //          ix, PARENT30[ix][0], parent_id);
         // more general test:
-        bool ok = false ;
+        ok = false ;
         for (int k = 0 ; k <= 2 ; k++)
         {
             int valid_parent_id = PARENT30 [ix][k] ;
@@ -164,12 +165,10 @@ bool check_karate_parents30(GrB_Vector parents)
                 break ;
             }
         }
-
-        TEST_CHECK (ok) ;
-        TEST_MSG("Parent check failed for node %ld\n", ix) ;
+        if (!ok) break ;
     }
 
-    return true;
+    return ok;
 }
 
 //****************************************************************************
@@ -308,6 +307,10 @@ void test_BreadthFirstSearch_parent(void)
     TEST_CHECK(check_karate_parents30(parent));
     retval = LG_check_bfs (NULL, parent, G, 30, msg) ;
     TEST_CHECK (retval == 0) ;
+
+    // mangle the parent vector, just to check check_karate_parents30
+    OK (GrB_Vector_setElement (parent, 0, 0)) ;
+    TEST_CHECK(!check_karate_parents30(parent));
     TEST_CHECK(0 == GrB_free(&parent));
 
     retval = LG_BreadthFirstSearch_vanilla(NULL, &parent, G, 30, false, msg);

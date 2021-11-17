@@ -62,7 +62,7 @@ int LG_check_bfs
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
     LG_CHECK (n != ncols, -1001, "G->A must be square") ;
-    bool print_timings = (n >= 3000) ;
+    bool print_timings = (n >= 2000) ;
 
     //--------------------------------------------------------------------------
     // allocate workspace

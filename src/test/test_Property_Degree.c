@@ -59,17 +59,14 @@ void check_degree
     {
         int64_t degk ;
         GrB_Info info = GrB_Vector_extractElement (&degk, Degree, k) ;
+        TEST_CHECK (info == GrB_NO_VALUE || info == GrB_SUCCESS) ;
         if (info == GrB_NO_VALUE)
         {
             TEST_CHECK (degree [k] == 0) ;
         }
-        else if (info == GrB_SUCCESS)
-        {
-            TEST_CHECK (degree [k] == degk) ;
-        }
         else
         {
-            TEST_CHECK (false) ;
+            TEST_CHECK (degree [k] == degk) ;
         }
     }
 }

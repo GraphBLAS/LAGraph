@@ -1,6 +1,5 @@
 //----------------------------------------------------------------------------
-// LAGraph/src/test/test_SingleSourceShortestPath.cpp: test cases for triangle
-// counting algorithms
+// LAGraph/src/test/test_SingleSourceShortestPath.cpp: test cases for SSSP
 // ----------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -128,12 +127,7 @@ void test_SingleSourceShortestPath(void)
                 printf ("src %ld delta %d n %ld\n", src, delta, n) ;
                 OK (LAGraph_SingleSourceShortestPath (&path_length,
                     G, src, delta, true, msg)) ;
-                int result = LG_check_sssp (path_length, G, src, msg) ;
-                if (result != 0)
-                {
-                    printf ("failure %d %s\n", result, msg) ;
-                }
-                OK (result) ;
+                OK (LG_check_sssp (path_length, G, src, msg)) ;
                 OK (GrB_free(&path_length)) ;
             }
         }
