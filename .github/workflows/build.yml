@@ -8,8 +8,7 @@ jobs:
     strategy:
       matrix:
         config:
-        #- {grb_version: 4.0.3, conda_grb_package_hash: h9c3ff4c}
-         - {grb_version: 5.1.5, conda_grb_package_hash: h9c3ff4c}
+         - {grb_version: 6.0.0, conda_grb_package_hash: h9c3ff4c}
     steps:
     - name: Checkout
       uses: actions/checkout@v2.0.0
@@ -34,8 +33,7 @@ jobs:
     strategy:
       matrix:
         config:
-        #- {grb_version: 4.0.3, conda_grb_package_hash: h046ec9c}
-         - {grb_version: 5.1.5, conda_grb_package_hash: h4a89273}
+         - {grb_version: 6.0.0, conda_grb_package_hash: h4a89273}
     steps:
     - name: Checkout
       uses: actions/checkout@v2.0.0
