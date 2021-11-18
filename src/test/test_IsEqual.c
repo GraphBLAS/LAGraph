@@ -53,8 +53,10 @@ const matrix_info files [ ] =
     {    0, 0, "GrB_INT32" , "matrix_int32.mtx", "matrix_int64.mtx" },
     {    1, 0, "GrB_BOOL"  , "matrix_int32.mtx", "matrix_int64.mtx" },
     {    1, 1, "GrB_FP64"  , "west0067.mtx"    , "west0067_jumbled.mtx" },
+    {    1, 1, "GrB_FP64"  , "west0067.mtx"    , "west0067_noheader.mtx" },
     {    0, 0, "GrB_FP64"  , "LFAT5.mtx"       , "west0067.mtx" },
     {    0, 0, "GrB_FP64"  , "empty.mtx"       , "full.mtx" },
+    {    1, 1, "GrB_FP64"  , "full.mtx"        , "full_noheader.mtx" },
     {    0, 0, NULL        , ""                , "" }
 } ;
 

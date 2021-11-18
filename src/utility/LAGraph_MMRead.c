@@ -281,11 +281,6 @@ static inline bool read_entry   // returns true if successful, false if failure
         result [1] = zval ;     // imaginary part
     }
 #endif
-    else
-    {
-        // type not supported
-        return (false) ;
-    }
 
     return (true) ;
 }
@@ -413,7 +408,7 @@ static inline GrB_Info set_value
         float *value = (float *) x ;
         return (GrB_Matrix_setElement_FP32 (A, *value, i, j)) ;
     }
-    else if (type == GrB_FP64)
+    else // if (type == GrB_FP64)
     {
         double *value = (double *) x ;
         return (GrB_Matrix_setElement_FP64 (A, *value, i, j)) ;
@@ -430,11 +425,6 @@ static inline GrB_Info set_value
         return (GxB_Matrix_setElement_FC64 (A, *value, i, j)) ;
     }
 #endif
-    else
-    {
-        // type not supported
-        return (GrB_PANIC) ;
-    }
 }
 
 //------------------------------------------------------------------------------
@@ -852,7 +842,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
 
         char x [MAXLINE] ;
 
-        for ( ; ; )
+        while (true)
         {
 
             //------------------------------------------------------------------
