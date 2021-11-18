@@ -70,8 +70,7 @@ if ( "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
 		set ( CMAKE_BUILD_TYPE Debug )
                 # On the Mac, you need gcov-11 from homebrew (part of gcc-11):
                 # and uncomment this line:
-                # FIXME
-                  set ( GCOV_PATH /usr/local/bin/gcov-11)
+                # set ( GCOV_PATH /usr/local/bin/gcov-11)
 		include ( CodeCoverage )
 
 
