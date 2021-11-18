@@ -175,12 +175,20 @@ void test_MMRead (void)
         OK (GxB_Matrix_type (&btype, A)) ;
         TEST_CHECK (atype == btype) ;
         #endif
-        OK (LAGraph_Matrix_print_type (A, atype, 2, stdout, msg)) ;
-
         const char *tname = typename (atype) ;
         TEST_CHECK (tname != NULL) ;
         OK (strcmp (tname, files [k].type)) ;
         TEST_MSG ("Stats are wrong for %s\n", aname) ;
+
+        //----------------------------------------------------------------------
+        // pretty-print the matrix
+        //----------------------------------------------------------------------
+
+        for (int pr = 0 ; pr <= 2 ; pr++)
+        {
+            printf ("\nPretty-print %s: pr=%d:\n", aname, pr) ;
+            OK (LAGraph_Matrix_print (A, pr, stdout, msg)) ;
+        }
 
         //----------------------------------------------------------------------
         // write it to a temporary file
@@ -504,6 +512,32 @@ void test_MMWrite (void)
         OK (LAGraph_IsEqual_type (&A_and_B_are_identical, A, B, atype, msg)) ;
         TEST_CHECK (A_and_B_are_identical) ;
         TEST_MSG ("Test for A and B equal failed: %s", filename) ;
+
+        //----------------------------------------------------------------------
+        // write a nan
+        //----------------------------------------------------------------------
+
+        if (k == 0)
+        {
+            OK (GrB_Matrix_setElement (A, NAN, 0, 0)) ;
+            double a ;
+            OK (GrB_Matrix_extractElement (&a, A, 0, 0)) ;
+            TEST_CHECK (isnan (a)) ;
+            foutput = fopen (filename, "w") ;
+            fcomments = fopen (LG_DATA_DIR "comments.txt", "r") ;
+            TEST_CHECK (foutput != NULL) ;
+            OK (LAGraph_MMWrite_type (A, GrB_FP64, foutput, fcomments, msg)) ;
+            fclose (fcomments) ;
+            fclose (foutput) ;
+            OK (GrB_free (&A)) ;
+            f = fopen (filename, "r") ;
+            TEST_CHECK (f != NULL) ;
+            OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+            fclose (f) ;
+            a = 0 ;
+            OK (GrB_Matrix_extractElement (&a, A, 0, 0)) ;
+            TEST_CHECK (isnan (a)) ;
+        }
 
         //----------------------------------------------------------------------
         // free workspace

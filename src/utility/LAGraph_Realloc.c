@@ -15,14 +15,9 @@
 // is returned, and ok is returned as true.  If the allocation fails, ok is set
 // to false and a pointer to the old (unmodified) object is returned.
 
-// The actual size_allocated on input can differ from nitems_old*size_of_item,
-// and the size_allocated on output can be larger than nitems_new*size_of_item,
-// as determined by the underlying memory manager.
-
 // Usage:
 
-//      p = LAGraph_Realloc (nitems_new, nitems_old, size_of_item, p,
-//          &size_allocated, &ok)
+//      p = LAGraph_Realloc (nitems_new, nitems_old, size_of_item, p, &ok)
 //      if (ok)
 //      {
 //          p points to a block of at least nitems_new*size_of_item bytes and
@@ -31,11 +26,9 @@
 //      }
 //      else
 //      {
-//          p points to the old block, and size_allocated is left
-//          unchanged.  This case never occurs if nitems_new < nitems_old.
+//          p points to the old block, unchanged.  This case never occurs if
+//          nitems_new < nitems_old.
 //      }
-//      on output, size_allocated is set to the actual size of the block of
-//      memory
 
 #include "LG_internal.h"
 
@@ -139,29 +132,10 @@ void *LAGraph_Realloc       // returns pointer to reallocated block of memory,
     // check if successful and return result
     //--------------------------------------------------------------------------
 
-    if (pnew == NULL)
-    {
-        // realloc failed
-        if (newsize < oldsize)
-        {
-            // the attempt to reduce the size of the block failed, but the old
-            // block is unchanged.  So pretend to succeed, but do not change
-            // size_allocated since it must reflect the actual size of the
-            // block.
-            (*ok) = true ;
-        }
-        else
-        {
-            // out of memory.  the old block is unchanged
-            (*ok) = false ;
-        }
-    }
-    else
-    {
-        // realloc succeeded
-        p = pnew ;
-        (*ok) = true ;
-    }
+    // If the attempt to reduce the size of the block failed, the old block is
+    // unchanged.  So pretend to succeed.
 
+    (*ok) = (newsize < oldsize) || (pnew != NULL) ;
+    p = (pnew != NULL) ? pnew : p ;
     return (p) ;
 }

@@ -42,7 +42,7 @@ void *LAGraph_Calloc
     else
     {
         // calloc function not available; use malloc and memset
-        void *p = LAGraph_Malloc (nitems, size_of_item) ;
+        p = LAGraph_Malloc (nitems, size_of_item) ;
         if (p != NULL)
         {
             memset (p, 0, size) ;

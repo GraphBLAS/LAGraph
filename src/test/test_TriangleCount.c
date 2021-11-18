@@ -320,6 +320,9 @@ void test_TriangleCount_brutal (void)
 
         // delete any diagonal entries
         OK (LAGraph_DeleteDiag (G, msg)) ;
+        TEST_CHECK (G->ndiag == 0) ;
+        OK (LAGraph_DeleteDiag (G, msg)) ;
+        TEST_CHECK (G->ndiag == 0) ;
 
         // get the # of triangles
         uint64_t nt0, nt1 ;
