@@ -117,10 +117,10 @@ void test_SingleSourceShortestPath(void)
         int32_t Deltas [ ] = { 30, 100, 50000 } ;
 
         // run the SSSP
+        GrB_Vector path_length = NULL ;
         int64_t step = (n > 100) ? (3*n/4) : ((n/4) + 1) ;
         for (int64_t src = 0 ; src < n ; src += step)
         {
-            GrB_Vector path_length = NULL ;
             for (int32_t kk = 0 ; kk < 3 ; kk++)
             {
                 int32_t delta = Deltas [kk] ;
@@ -131,6 +131,17 @@ void test_SingleSourceShortestPath(void)
                 OK (GrB_free(&path_length)) ;
             }
         }
+
+        // add a single negative edge and try again
+        OK (GrB_Matrix_setElement_INT32 (G->A, -1, 0, 1)) ;
+        OK (LAGraph_SingleSourceShortestPath (&path_length,
+            G, 0, 30, false, msg)) ;
+        OK (LAGraph_Vector_print (path_length, 2, stdout, msg)) ;
+        int32_t len = 0 ;
+        OK (GrB_Vector_extractElement (&len, path_length, 1)) ;
+        TEST_CHECK (len == -1) ;
+        OK (GrB_free(&path_length)) ;
+
         OK (LAGraph_Delete (&G, msg)) ;
     }
 
