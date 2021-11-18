@@ -84,6 +84,10 @@ void test_malloc (void)
     pnew = LAGraph_Realloc (80, 80, sizeof (char), p, &ok) ;
     TEST_CHECK (pnew == p) ;
     TEST_CHECK (ok) ;
+    for (int k = 0 ; k < 80 ; k++)
+    {
+        TEST_CHECK (pnew [k] == (char) k) ;
+    }
 
     LAGraph_Realloc_function = NULL ;
 
@@ -91,7 +95,7 @@ void test_malloc (void)
     TEST_CHECK (ok) ;
     for (int k = 0 ; k < 80 ; k++)
     {
-        TEST_CHECK (p [k] == (char) k) ;
+        TEST_CHECK (pnew [k] == (char) k) ;
     }
 
     LAGraph_Free ((void **) &pnew) ;
