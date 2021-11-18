@@ -56,9 +56,9 @@ const char *prwhat (int pr)
         case  3: return ("all") ;
         case  4: return ("summary (doubles in full precision)") ;
         case  5: return ("all (doubles in full precision)") ;
-        default: TEST_CHECK (false) ;
+        default: ;
     }
-    return ("") ;
+    return (NULL) ;
 }
 
 //------------------------------------------------------------------------------
@@ -130,6 +130,8 @@ void test_DisplayGraph (void)
         OK (LAGraph_Delete (&G, msg)) ;
         TEST_CHECK (G == NULL) ;
     }
+
+    TEST_CHECK (prwhat (999) == NULL) ;
     teardown ( ) ;
 }
 

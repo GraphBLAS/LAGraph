@@ -18,17 +18,17 @@ void test_dummy(void)
     TEST_CHECK(42 == 42);
     // this test message will not appear in the log, because the test passes:
     TEST_MSG ("Testing equality %d", 42) ;
-    //BOOST_CHECK_EQUAL(42, 42);
 }
 
 //****************************************************************************
+#if 0
 void test_dummy_fails(void)
 {
     TEST_CHECK(42 == 0);
     // this test message will appear in the log, because the test fails:
     TEST_MSG ("this test is supposed to fail, because %d != %d\n", 42, 0) ;
-    //BOOST_CHECK_EQUAL(42, 0);
 }
+#endif
 
 //****************************************************************************
 //****************************************************************************
@@ -37,6 +37,6 @@ void test_dummy_fails(void)
 
 TEST_LIST = {
     {"dummy", test_dummy},
-//  {"dummy_fails", test_dummy_fails},
+ // {"dummy_fails", test_dummy_fails},
     {NULL, NULL}
 };

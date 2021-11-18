@@ -8,8 +8,7 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
-#include "LG_internal.h"
-#include "LG_test.h"
+#include "LAGraph_test.h"
 
 bool LG_get_vector
 (
@@ -24,17 +23,14 @@ bool LG_get_vector
     {
         int64_t t ;
         int info = GrB_Vector_extractElement_INT64 (&t, X, i) ;
+        TEST_CHECK (info == GrB_SUCCESS || info == GrB_NO_VALUE) ;
         if (info == GrB_SUCCESS)
         {
             x [i] = t ;
         }
-        else if (info == GrB_NO_VALUE)
-        {
-            x [i] = missing ;
-        }
         else
         {
-            return (false) ;    // method failed
+            x [i] = missing ;
         }
     }
     return (true) ;             // success

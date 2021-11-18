@@ -76,7 +76,7 @@ int LG_check_sssp
     GrB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
     LG_CHECK (n != ncols, -1001, "G->A must be square") ;
     LG_CHECK (G->A_type != GrB_INT32, -1001, "G->A must be int32") ;
-    bool print_timings = (n >= 3000) ;
+    bool print_timings = (n >= 2000) ;
 
     //--------------------------------------------------------------------------
     // get the contents of the Path_Length vector
