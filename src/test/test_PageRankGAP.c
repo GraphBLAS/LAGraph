@@ -42,7 +42,7 @@ float difference (GrB_Vector centrality, double *matlab_result)
         NULL)) ;
     OK (GrB_apply (diff, NULL, NULL, GrB_ABS_FP32, diff, NULL)) ;
     float err = 0 ;
-    OK (GrB_reduce (&err, NULL, GrB_PLUS_MONOID_FP32, diff, NULL)) ;
+    OK (GrB_reduce (&err, NULL, GrB_MAX_MONOID_FP32, diff, NULL)) ;
     OK (GrB_free (&diff)) ;
     OK (GrB_free (&cmatlab)) ;
     return (err) ;
@@ -191,7 +191,7 @@ void test_ranker(void)
     // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
     float err = difference (centrality, karate_rank) ;
     printf ("\nkarate:   err: %e\n", err) ;
-    TEST_CHECK (err < 1e-3) ;
+    TEST_CHECK (err < 1e-4) ;
     OK (GrB_free (&centrality)) ;
 
     // create the west0067 graph
@@ -214,7 +214,7 @@ void test_ranker(void)
     // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
     err = difference (centrality, west0067_rank) ;
     printf ("west0067: err: %e\n", err) ;
-    TEST_CHECK (err < 1e-3) ;
+    TEST_CHECK (err < 1e-4) ;
     OK (GrB_free (&centrality)) ;
 
     LAGraph_Finalize (msg) ;
