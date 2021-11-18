@@ -279,10 +279,8 @@ void test_TriangleCount(void)
     TEST_CHECK( ntriangles == 45 );
     TEST_MSG("numtri = %ld", ntriangles);
 
-    #if LG_SUITESPARSE
     OK (LG_check_tri (&ntriangles, G, msg)) ;
     TEST_CHECK( ntriangles == 45 );
-    #endif
 
     teardown();
 }
@@ -293,11 +291,6 @@ void test_TriangleCount_brutal (void)
     LAGraph_Init(msg);
     GrB_Matrix A = NULL ;
     GrB_Type atype = NULL ;
-    #if LG_SUITESPARSE
-    printf ("\nResults compared with LG_check_tri:\n") ;
-    #else
-    printf ("\n") ;
-    #endif
 
     for (int k = 0 ; ; k++)
     {
@@ -329,16 +322,17 @@ void test_TriangleCount_brutal (void)
         OK (LAGraph_TriangleCount (&nt1, G, msg)) ;
         printf ("# triangles: %6lu Matrix: %s\n", nt1, aname) ;
         TEST_CHECK (nt1 == ntriangles) ;
-        #if LG_SUITESPARSE
         OK (LG_check_tri (&nt0, G, msg)) ;
         TEST_CHECK (nt0 == nt1) ;
-        #endif
 
         // convert to directed but with symmetric pattern
         G->kind = LAGRAPH_ADJACENCY_DIRECTED ;
         G->A_structure_is_symmetric = LAGRAPH_TRUE ;
         OK (LAGraph_TriangleCount (&nt1, G, msg)) ;
         TEST_CHECK (nt1 == ntriangles) ;
+
+        OK (LG_check_tri (&nt0, G, msg)) ;
+        TEST_CHECK (nt0 == nt1) ;
 
         // try each method
         for (int method = 1 ; method <= 6 ; method++)

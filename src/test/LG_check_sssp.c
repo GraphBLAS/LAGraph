@@ -8,26 +8,6 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
-#define LAGraph_FREE_WORK                           \
-{                                                   \
-    LAGraph_Free ((void **) &Heap) ;                \
-    LAGraph_Free ((void **) &Iheap) ;               \
-    LAGraph_Free ((void **) &distance) ;            \
-    LAGraph_Free ((void **) &parent) ;              \
-    LAGraph_Free ((void **) &path_length_in) ;      \
-    LAGraph_Free ((void **) &neighbor_weights) ;    \
-    LAGraph_Free ((void **) &neighbors) ;           \
-    GrB_free (&Row) ;                               \
-}
-
-#define LAGraph_FREE_ALL                    \
-{                                           \
-    LAGraph_FREE_WORK ;                     \
-    LAGraph_Free ((void **) &Ap) ;          \
-    LAGraph_Free ((void **) &Aj) ;          \
-    LAGraph_Free ((void **) &Ax) ;          \
-}
-
 #include "LG_internal.h"
 #include "LG_test.h"
 
@@ -41,6 +21,28 @@ typedef struct
 }
 LG_Element ;
 #include "LG_heap.h"
+
+#undef  LAGraph_FREE_WORK
+#define LAGraph_FREE_WORK                           \
+{                                                   \
+    LAGraph_Free ((void **) &Heap) ;                \
+    LAGraph_Free ((void **) &Iheap) ;               \
+    LAGraph_Free ((void **) &distance) ;            \
+    LAGraph_Free ((void **) &parent) ;              \
+    LAGraph_Free ((void **) &path_length_in) ;      \
+    LAGraph_Free ((void **) &neighbor_weights) ;    \
+    LAGraph_Free ((void **) &neighbors) ;           \
+    GrB_free (&Row) ;                               \
+}
+
+#undef  LAGraph_FREE_ALL
+#define LAGraph_FREE_ALL                    \
+{                                           \
+    LAGraph_FREE_WORK ;                     \
+    LAGraph_Free ((void **) &Ap) ;          \
+    LAGraph_Free ((void **) &Aj) ;          \
+    LAGraph_Free ((void **) &Ax) ;          \
+}
 
 //------------------------------------------------------------------------------
 // test the results from SSSP

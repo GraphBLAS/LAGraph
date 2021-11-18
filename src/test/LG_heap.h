@@ -28,6 +28,9 @@
 #ifndef LG_HEAP_H
 #define LG_HEAP_H
 
+#undef  LAGraph_FREE_ALL
+#define LAGraph_FREE_ALL ;
+
 //------------------------------------------------------------------------------
 // LG_iheap_check: make sure Iheap is correct
 //------------------------------------------------------------------------------
@@ -45,25 +48,17 @@ static inline int LG_iheap_check
 )
 {
 
-    if (Heap == NULL || Iheap == NULL || nheap < 0 || n < 0)
-    {
-        // Heap is invalid
-        return (-2000 - __LINE__) ;
-    }
+    char *msg = NULL ;
+    LG_CHECK (Heap == NULL || Iheap == NULL || nheap < 0 || n < 0,
+        -2000 - __LINE__, "Heap is invalid") ;
 
     // check all entries in the heap
     for (int64_t p = 1 ; p <= nheap ; p++)
     {
         LG_Element e = Heap [p] ;
         int64_t name = e.name ;
-//      printf ("p %ld\n", p) ;
-//      printf ("name %ld\n", name) ;
-//      printf ("Iheap [name] %ld\n", Iheap [name]) ;
-        if (name < 0 || name >= n || p != Iheap [name])
-        {
-//          printf ("fail %d\n", __LINE__) ;
-            return (-2000 - __LINE__) ;
-        }
+        LG_CHECK (name < 0 || name >= n || p != Iheap [name],
+            -2000 - __LINE__, "Heap is invalid") ;
     }
 
     // check all objects
@@ -74,21 +69,14 @@ static inline int LG_iheap_check
         {
             // object with this name is not in the heap
         }
-        else if (p > nheap)
-        {
-            // position of this object is invalid
-//          printf ("fail %d\n", __LINE__) ;
-            return (-2000 - __LINE__) ;
-        }
         else
         {
+            LG_CHECK (p > nheap,
+                -2000 - __LINE__, "position of this object is invalid") ;
             // object with this name is in the heap at position p
             LG_Element e = Heap [p] ;
-            if (e.name != name)
-            {
-//              printf ("fail %d\n", __LINE__) ;
-                return (-2000 - __LINE__) ;
-            }
+            LG_CHECK (e.name != name,
+                -2000 - __LINE__, "Heap is invalid") ;
         }
     }
 
@@ -116,12 +104,9 @@ static inline int LG_heap_check
 )
 {
 
-    if (Heap == NULL || Iheap == NULL || nheap < 0 || n < 0)
-    {
-        // Heap is invalid
-//      printf ("fail %d\n", __LINE__) ;
-        return (-2000 - __LINE__) ;
-    }
+    char *msg = NULL ;
+    LG_CHECK (Heap == NULL || Iheap == NULL || nheap < 0 || n < 0,
+        -2000 - __LINE__, "Heap is invalid") ;
 
 #if 0
     // dump the heap
@@ -154,21 +139,11 @@ static inline int LG_heap_check
         int64_t pleft  = 2*p ;          // left child of node p
         int64_t pright = pleft + 1 ;    // right child of node p
 
-        if (pleft <= nheap && Heap [p].key > Heap [pleft].key)
-        {
-            // left child of p is in the Heap, but p has a bigger key;
-            // the min-heap property is not satisfied
-//          printf ("fail %d\n", __LINE__) ;
-            return (-2000 - __LINE__) ;
-        }
+        LG_CHECK (pleft <= nheap && Heap [p].key > Heap [pleft].key,
+            -2000 - __LINE__, "the min-heap property is not satisfied") ;
 
-        if (pright <= nheap && Heap [p].key > Heap [pright].key)
-        {
-            // left child of p is in the Heap, but p has a bigger key;
-            // the min-heap property is not satisfied
-//          printf ("fail %d\n", __LINE__) ;
-            return (-2000 - __LINE__) ;
-        }
+        LG_CHECK (pright <= nheap && Heap [p].key > Heap [pright].key,
+            -2000 - __LINE__, "the min-heap property is not satisfied") ;
     }
 
     // Heap satisfies the min-heap property; also check Iheap

@@ -15,9 +15,6 @@
     GrB_free (&C) ;                     \
     LAGraph_Free ((void **) &I) ;       \
     LAGraph_Free ((void **) &X) ;       \
-    LAGraph_Free ((void **) &I2) ;      \
-    LAGraph_Free ((void **) &J2) ;      \
-    LAGraph_Free ((void **) &X2) ;      \
 }
 
 #define LAGraph_FREE_ALL                \
@@ -45,8 +42,8 @@ int LG_check_mis        // check if iset is a valid MIS of A
 
     LG_CLEAR_MSG ;
     GrB_Matrix C = NULL ;
-    GrB_Index *I = NULL, *I2 = NULL, *J2 = NULL ;
-    bool *X = NULL, *X2 = NULL ;
+    GrB_Index *I = NULL ;
+    bool *X = NULL ;
 
     GrB_Index n ;
     GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
@@ -59,13 +56,7 @@ int LG_check_mis        // check if iset is a valid MIS of A
     GrB_TRY (GrB_Vector_nvals (&nvals, iset)) ;
     I = (GrB_Index *) LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;
     X = (bool *) LAGraph_Malloc (nvals, sizeof (bool)) ;
-
-    if (I == NULL || X == NULL)
-    { 
-        // out of memory
-        LAGraph_FREE_ALL ;
-        return (-1) ;
-    }
+    LG_CHECK (I == NULL || X == NULL, -1, "out of memory") ;
 
     GrB_TRY (GrB_Vector_extractTuples_BOOL (I, X, &nvals, iset)) ;
 
@@ -88,37 +79,13 @@ int LG_check_mis        // check if iset is a valid MIS of A
     // verify the result
     //--------------------------------------------------------------------------
 
+    // C = A(I,I) must be empty, except for diagonal entries
     GrB_TRY (GrB_Matrix_new (&C, GrB_BOOL, isize, isize)) ;
     GrB_TRY (GrB_Matrix_extract (C, NULL, NULL, A, I, isize, I, isize, NULL)) ;
+    GrB_TRY (GrB_select (C, NULL, NULL, GrB_OFFDIAG, C, 0, NULL)) ;
     GrB_TRY (GrB_Matrix_nvals (&nvals, C)) ;
-
-    I2 = (GrB_Index *) LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;
-    J2 = (GrB_Index *) LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;
-    X2 = (bool *) LAGraph_Malloc (nvals, sizeof (bool)) ;
-    if (I2 == NULL || J2 == NULL || X2 == NULL)
-    { 
-        // out of memory
-        LAGraph_FREE_ALL ;
-        return (-1) ;
-    }
-
-    // could do this with a mask instead of extractTuples.
-    GrB_TRY (GrB_Matrix_extractTuples_BOOL (I2, J2, X2, &nvals, C)) ;
+    LG_CHECK (nvals != 0, -1, "error!  A(I,I) has an edge!\n") ;
     GrB_Matrix_free (&C) ;
-
-    for (int64_t k = 0 ; k < nvals ; k++)
-    {
-        if (X2 [k] && I2 [k] != J2 [k])
-        {
-            printf ("error!  A(I,I) has an edge!\n") ;
-            LAGraph_FREE_ALL ;
-            return (-1) ;
-        }
-    }
-
-    LAGraph_Free ((void **) &I2) ;
-    LAGraph_Free ((void **) &J2) ;
-    LAGraph_Free ((void **) &X2) ;
 
     // now check if all other nodes are adjacent to the iset
 
@@ -145,12 +112,7 @@ int LG_check_mis        // check if iset is a valid MIS of A
 
     GrB_TRY (GrB_Vector_nvals (&nvals, e)) ;
     GrB_Vector_free (&e) ;
-    if (nvals != n)
-    {
-        printf ("error! A (I,I is not maximal!\n") ;
-        LAGraph_FREE_ALL ;
-        return (-1) ;
-    }
+    LG_CHECK (nvals != n, -1, "error! A (I,I is not maximal!\n") ;
 
     LAGraph_Free ((void **) &I) ;
 

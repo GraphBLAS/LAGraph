@@ -50,27 +50,10 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
 
     LG_CLEAR_MSG ;
 
-//  printf ("LG_SuiteSparse: %d\n", LG_SUITESPARSE) ;
-//  #if defined ( LG_VANILLA )
-//  printf ("vanilla\n") ;
-//  #else
-//  printf ("not vanilla\n") ;
-//  #endif
-//  #if defined ( GxB_SUITESPARSE_GRAPHBLAS )
-//  printf ("SS:GrB\n") ;
-//  #else
-//  printf ("not SS:GrB\n") ;
-//  #endif
-
-    #if !(LG_SUITESPARSE)
-    printf ("LG_check_tri requires SuiteSparse:GraphBLAS\n") ;
-    LG_CHECK (true, -1006, "SuiteSparse:GraphBLAS required") ;
-    #endif
-
     bool *restrict Mark = NULL ;
     GrB_Index *Ap = NULL, *Aj = NULL, *Ai = NULL ;
     void *Ax = NULL ;
-    GrB_Index Ap_size, Aj_size, Ax_size, n, ncols ;
+    GrB_Index Ap_size, Aj_size, Ax_size, n, ncols, Ap_len, Aj_len, Ax_len ;
     LG_CHECK (ntri == NULL, -1003, "ntri is NULL") ;
     LG_CHECK (LAGraph_CheckGraph (G, msg), -1002, "graph is invalid") ;
     LG_CHECK (G->ndiag != 0, -104, "G->ndiag must be zero") ;
@@ -91,16 +74,48 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
     LG_CHECK (n != ncols, -1001, "A must be square") ;
 
     //--------------------------------------------------------------------------
-    // unpack the matrix in CSR form (SuiteSparse:GraphBLAS required)
+    // unpack/export the matrix in CSR form
     //--------------------------------------------------------------------------
 
     #if LG_SUITESPARSE
-    #if (GxB_IMPLEMENTATION < GxB_VERSION(5,1,0))
-    #error "SuiteSparse v5.1.0 or later required"
-    #endif
     bool iso, jumbled ;
     GrB_TRY (GxB_Matrix_unpack_CSR (G->A,
         &Ap, &Aj, &Ax, &Ap_size, &Aj_size, &Ax_size, &iso, &jumbled, NULL)) ;
+    #else
+
+    size_t s = 0 ;
+    if      (G->A_type == GrB_BOOL  ) s = sizeof (bool    ) ;
+    else if (G->A_type == GrB_INT8  ) s = sizeof (int8_t  ) ;
+    else if (G->A_type == GrB_INT16 ) s = sizeof (int16_t ) ;
+    else if (G->A_type == GrB_INT32 ) s = sizeof (int32_t ) ;
+    else if (G->A_type == GrB_INT64 ) s = sizeof (int64_t ) ;
+    else if (G->A_type == GrB_UINT8 ) s = sizeof (uint8_t ) ;
+    else if (G->A_type == GrB_UINT16) s = sizeof (uint16_t) ;
+    else if (G->A_type == GrB_UINT32) s = sizeof (uint32_t) ;
+    else if (G->A_type == GrB_UINT64) s = sizeof (uint64_t) ;
+    else if (G->A_type == GrB_FP32  ) s = sizeof (float   ) ;
+    else if (G->A_type == GrB_FP64  ) s = sizeof (double  ) ;
+    LG_CHECK (s == 0, -1, "unsupported type") ;
+
+    GrB_TRY (GrB_Matrix_exportSize (&Ap_len, &Aj_len, &Ax_len,
+        GrB_CSR_FORMAT, G->A)) ;
+    Ap = (GrB_Index *) LAGraph_Malloc (Ap_len, sizeof (GrB_Index)) ;
+    Aj = (GrB_Index *) LAGraph_Malloc (Aj_len, sizeof (GrB_Index)) ;
+    Ax = (void      *) LAGraph_Malloc (Ax_len, s) ;
+    LG_CHECK (Ap == NULL || Aj == NULL || Ax == NULL, -1, "out of memory") ;
+
+    if      (G->A_type == GrB_BOOL  ) { GrB_TRY (GrB_Matrix_export (Ap, Aj, (bool     *) Ax, &Ap_len, &Aj_len, &Ax_len, GrB_CSR_FORMAT, G->A)) ; }
+    else if (G->A_type == GrB_INT8  ) { GrB_TRY (GrB_Matrix_export (Ap, Aj, (int8_t   *) Ax, &Ap_len, &Aj_len, &Ax_len, GrB_CSR_FORMAT, G->A)) ; }
+    else if (G->A_type == GrB_INT16 ) { GrB_TRY (GrB_Matrix_export (Ap, Aj, (int16_t  *) Ax, &Ap_len, &Aj_len, &Ax_len, GrB_CSR_FORMAT, G->A)) ; }
+    else if (G->A_type == GrB_INT32 ) { GrB_TRY (GrB_Matrix_export (Ap, Aj, (int32_t  *) Ax, &Ap_len, &Aj_len, &Ax_len, GrB_CSR_FORMAT, G->A)) ; }
+    else if (G->A_type == GrB_INT64 ) { GrB_TRY (GrB_Matrix_export (Ap, Aj, (int64_t  *) Ax, &Ap_len, &Aj_len, &Ax_len, GrB_CSR_FORMAT, G->A)) ; }
+    else if (G->A_type == GrB_UINT8 ) { GrB_TRY (GrB_Matrix_export (Ap, Aj, (uint8_t  *) Ax, &Ap_len, &Aj_len, &Ax_len, GrB_CSR_FORMAT, G->A)) ; }
+    else if (G->A_type == GrB_UINT16) { GrB_TRY (GrB_Matrix_export (Ap, Aj, (uint16_t *) Ax, &Ap_len, &Aj_len, &Ax_len, GrB_CSR_FORMAT, G->A)) ; }
+    else if (G->A_type == GrB_UINT32) { GrB_TRY (GrB_Matrix_export (Ap, Aj, (uint32_t *) Ax, &Ap_len, &Aj_len, &Ax_len, GrB_CSR_FORMAT, G->A)) ; }
+    else if (G->A_type == GrB_UINT64) { GrB_TRY (GrB_Matrix_export (Ap, Aj, (uint64_t *) Ax, &Ap_len, &Aj_len, &Ax_len, GrB_CSR_FORMAT, G->A)) ; }
+    else if (G->A_type == GrB_FP32  ) { GrB_TRY (GrB_Matrix_export (Ap, Aj, (float    *) Ax, &Ap_len, &Aj_len, &Ax_len, GrB_CSR_FORMAT, G->A)) ; }
+    else if (G->A_type == GrB_FP64  ) { GrB_TRY (GrB_Matrix_export (Ap, Aj, (double   *) Ax, &Ap_len, &Aj_len, &Ax_len, GrB_CSR_FORMAT, G->A)) ; }
+
     #endif
 
     //--------------------------------------------------------------------------
@@ -108,7 +123,7 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
     //--------------------------------------------------------------------------
 
     int64_t ntriangles = 0 ;
-    Ai = Aj ;       // assume A is symmetric and in CSC format instead
+    Ai = Aj ;       // pretend A is symmetric and in CSC format instead
 
     // masked dot-product method
     #pragma omp parallel for reduction(+:ntriangles) schedule(dynamic,64)
@@ -194,13 +209,14 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
     #if LG_SUITESPARSE
     GrB_TRY (GxB_Matrix_pack_CSR (G->A,
         &Ap, &Aj, &Ax, Ap_size, Aj_size, Ax_size, iso, jumbled, NULL)) ;
+    LG_CHECK (Ap != NULL || Aj != NULL || Ax != NULL, -1, "internal error") ;
     #endif
 
     //--------------------------------------------------------------------------
     // free workspace and return result
     //--------------------------------------------------------------------------
 
-    LAGraph_FREE_WORK ;
+    LAGraph_FREE_ALL ;
     (*ntri) = ntriangles ;
     return (0) ;
 }
