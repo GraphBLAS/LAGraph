@@ -18,8 +18,7 @@
 
 char msg [LAGRAPH_MSG_LEN] ;
 GrB_Vector Seed = NULL ;
-GrB_Vector X = NULL ;
-GrB_Vector I = NULL ;
+GrB_Vector X = NULL, I = NULL, Z = NULL ;
 
 //------------------------------------------------------------------------------
 // test_Random
@@ -42,23 +41,30 @@ void test_Random (void)
         OK (GrB_Vector_new (&Seed, GrB_INT64, n)) ;
         OK (GrB_Vector_assign_INT64 (Seed, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
         OK (LAGraph_Random_Seed (Seed, seed, msg)) ;
-        OK (GxB_Vector_fprint (Seed, "Seed (dense)", GxB_COMPLETE, NULL)) ;
+        OK (LAGraph_Vector_print (Seed, 5, stdout, NULL)) ;
 
         // generate a random int64 vector
         printf ("\nDense random int64:\n") ;
         OK (GrB_Vector_new (&I, GrB_INT64, n)) ;
         OK (LAGraph_Random_INT64 (I, Seed, msg)) ;
-        OK (GxB_Vector_fprint (I, "I (dense)", GxB_COMPLETE, NULL)) ;
+        OK (LAGraph_Vector_print (I, 5, stdout, NULL)) ;
 
         // generate a random double vector
         printf ("\nDense random double:\n") ;
         OK (GrB_Vector_new (&X, GrB_FP64, n)) ;
         OK (LAGraph_Random_FP64 (X, Seed, msg)) ;
-        OK (GxB_Vector_fprint (X, "X (dense)", GxB_COMPLETE, NULL)) ;
+        OK (LAGraph_Vector_print (X, 5, stdout, NULL)) ;
+
+        // generate a random float vector
+        printf ("\nDense random float:\n") ;
+        OK (GrB_Vector_new (&Z, GrB_FP32, n)) ;
+        OK (LAGraph_Random_FP32 (Z, Seed, msg)) ;
+        OK (LAGraph_Vector_print (Z, 5, stdout, NULL)) ;
 
         // free all workspace
         OK (GrB_Vector_free (&Seed)) ;
         OK (GrB_Vector_free (&X)) ;
+        OK (GrB_Vector_free (&Z)) ;
         OK (GrB_Vector_free (&I)) ;
 
         // generate a sparse seed vector
@@ -69,23 +75,30 @@ void test_Random (void)
             OK (GrB_Vector_setElement_INT64 (Seed, 0, i)) ;
         }
         OK (LAGraph_Random_Seed (Seed, seed, msg)) ;
-        OK (GxB_Vector_fprint (Seed, "Seed (sparse)", GxB_COMPLETE, NULL)) ;
+        OK (LAGraph_Vector_print (Seed, 5, stdout, NULL)) ;
 
         // generate a random int64 vector
         printf ("\nSparse random int64:\n") ;
         OK (GrB_Vector_new (&I, GrB_INT64, n)) ;
         OK (LAGraph_Random_INT64 (I, Seed, msg)) ;
-        OK (GxB_Vector_fprint (I, "I (sparse)", GxB_COMPLETE, NULL)) ;
+        OK (LAGraph_Vector_print (I, 5, stdout, NULL)) ;
 
         // generate a random double vector
         printf ("\nSparse random double: n %lu\n", n) ;
         OK (GrB_Vector_new (&X, GrB_FP64, n)) ;
         OK (LAGraph_Random_FP64 (X, Seed, msg)) ;
-        OK (GxB_Vector_fprint (X, "X (sparse)", GxB_COMPLETE, NULL)) ;
+        OK (LAGraph_Vector_print (X, 5, stdout, NULL)) ;
+
+        // generate a random float vector
+        printf ("\nSparse random float: n %lu\n", n) ;
+        OK (GrB_Vector_new (&Z, GrB_FP32, n)) ;
+        OK (LAGraph_Random_FP32 (Z, Seed, msg)) ;
+        OK (LAGraph_Vector_print (Z, 5, stdout, NULL)) ;
 
         // free all workspace
         OK (GrB_Vector_free (&Seed)) ;
         OK (GrB_Vector_free (&X)) ;
+        OK (GrB_Vector_free (&Z)) ;
         OK (GrB_Vector_free (&I)) ;
 
         seed = 987 ;

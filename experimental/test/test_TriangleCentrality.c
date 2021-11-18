@@ -91,16 +91,14 @@ void test_TriangleCentrality (void)
             TEST_CHECK (G->ndiag == 0) ;
         }
 
+        uint64_t ntri ;
+        GrB_Vector c = NULL ;
         for (int method = 0 ; method <= 3 ; method++)
         {
             printf ("\nMethod: %d\n", method) ;
 
             // compute the triangle centrality
-            GrB_Vector c = NULL ;
-            uint64_t ntri ;
-            int retval = LAGraph_VertexCentrality_Triangle (&c, &ntri, method,
-                G, msg) ;
-            TEST_CHECK (retval == 0) ;
+            OK (LAGraph_VertexCentrality_Triangle (&c, &ntri, method, G, msg)) ;
             printf ("# of triangles: %lu\n", ntri) ;
             TEST_CHECK (ntri == ntriangles) ;
 
@@ -110,6 +108,11 @@ void test_TriangleCentrality (void)
             #endif
             OK (GrB_free (&c)) ;
         }
+
+        // convert to directed with symmetric structure and recompute
+        G->kind = LAGRAPH_ADJACENCY_DIRECTED ;
+        OK (LAGraph_VertexCentrality_Triangle (&c, &ntri, 0, G, msg)) ;
+        TEST_CHECK (ntri == ntriangles) ;
 
         OK (LAGraph_Delete (&G, msg)) ;
     }

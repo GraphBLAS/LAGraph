@@ -30,6 +30,17 @@ To compile with a non-default compiler:
   $ CC=gcc-11 cmake ..
 ```
 
+To compile with test coverage:
+```
+    cd build
+    cmake -DCOVERAGE=1 .. ; make -j8 ; make test_coverage
+```
+
+Then open this file in your browser:
+```
+    build/test_coverage/index.html
+```
+
 To run the GAP benchmarks, see the instructions in these files:
 ```
     ./BENCHMARK_INSTRUCTIONS__README1st.txt

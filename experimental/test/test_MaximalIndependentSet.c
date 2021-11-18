@@ -176,8 +176,6 @@ void test_MIS (void)
 
         // recompute the row degree
         OK (LAGraph_Property_RowDegree (G, msg)) ;
-        // GxB_print (G->rowdegree, 3) ;
-        // GxB_print (G->A, 3) ;
 
         GrB_Index nonsingletons, nsingletons_actual ;
         OK (GrB_Vector_nvals (&nonsingletons, G->rowdegree)) ;
@@ -199,6 +197,12 @@ void test_MIS (void)
 
             OK (GrB_free (&mis)) ;
         }
+
+        // convert to directed with symmetric structure and recompute the MIS
+        G->kind = LAGRAPH_ADJACENCY_DIRECTED ;
+        OK (LAGraph_MaximalIndependentSet (&mis, G, 0, NULL, msg)) ;
+        // check the result
+        OK (LG_check_mis (G->A, mis, NULL, msg)) ;
 
         OK (GrB_free (&ignore)) ;
         OK (GrB_free (&empty_col)) ;
