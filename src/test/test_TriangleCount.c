@@ -25,8 +25,8 @@ char filename [LEN+1] ;
 
 typedef struct
 {
-    uint64_t ntriangles ;
-    const char *name ;
+    uint64_t ntriangles ;           // # triangles in original matrix
+    const char *name ;              // matrix filename
 }
 matrix_info ;
 
@@ -334,10 +334,88 @@ void test_TriangleCount_brutal (void)
         TEST_CHECK (nt0 == nt1) ;
         #endif
 
+        // convert to directed but with symmetric pattern
+        G->kind = LAGRAPH_ADJACENCY_DIRECTED ;
+        G->A_structure_is_symmetric = LAGRAPH_TRUE ;
+        OK (LAGraph_TriangleCount (&nt1, G, msg)) ;
+        TEST_CHECK (nt1 == ntriangles) ;
+
+        // try each method
+        for (int method = 1 ; method <= 6 ; method++)
+        {
+            for (int presort = 0 ; presort <= 2 ; presort++)
+            {
+                int s = presort ;
+                OK (LAGraph_TriangleCount_Methods (&nt1, G, method, &s, msg)) ;
+                TEST_CHECK (nt1 == ntriangles) ;
+            }
+        }
+
+        // invalid method
+        int result = LAGraph_TriangleCount_Methods (&nt1, G, 99, NULL, msg) ;
+        TEST_CHECK (result == -101) ;
+
         OK (LAGraph_Delete (&G, msg)) ;
     }
 
     LAGraph_Finalize(msg);
+}
+
+//****************************************************************************
+void test_TriangleCount_autosort (void)
+{
+    OK (LAGraph_Init(msg)) ;
+
+    // create a banded matrix with a some dense rows/columns
+    GrB_Index n = 50000 ;
+    GrB_Matrix A = NULL ;
+    OK (GrB_Matrix_new (&A, GrB_BOOL, n, n)) ;
+    /*
+    for (int k = 0 ; k < n ; k++)
+    {
+        for (int i = k-3 ; i <= k+3 ; i++)
+        {
+            if (i >= 0 && i < n)
+            {
+                OK (GrB_Matrix_setElement_BOOL (A, true, i, k)) ;
+            }
+        }
+    }
+    */
+
+    for (int k = 0 ; k <= 10 ; k++)
+    {
+        for (int i = 0 ; i < n ; i++)
+        {
+            OK (GrB_Matrix_setElement_BOOL (A, true, i, k)) ;
+            OK (GrB_Matrix_setElement_BOOL (A, true, k, i)) ;
+        }
+    }
+
+    // create the graph
+    OK (LAGraph_New (&G, &A, GrB_BOOL, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+    TEST_CHECK (A == NULL) ;    // A has been moved into G->A
+
+    OK (LAGraph_DeleteDiag (G, msg)) ;
+    TEST_CHECK (G->ndiag == 0) ;
+
+    OK (LAGraph_Property_RowDegree (G, msg)) ;
+
+    // try each method
+    GrB_Index nt1 = 0 ;
+    for (int method = 1 ; method <= 6 ; method++)
+    {
+        int presort = 2 ;
+        nt1 = 0 ;
+        OK (LAGraph_TriangleCount_Methods (&nt1, G, method, &presort, msg)) ;
+        TEST_CHECK (nt1 == 2749560) ;
+    }
+
+    nt1 = 0 ;
+    OK (LAGraph_TriangleCount (&nt1, G, msg)) ;
+    TEST_CHECK (nt1 == 2749560) ;
+
+    OK (LAGraph_Finalize(msg)) ;
 }
 
 //****************************************************************************
@@ -349,7 +427,9 @@ TEST_LIST = {
     {"TriangleCount_Methods4", test_TriangleCount_Methods4},
     {"TriangleCount_Methods5", test_TriangleCount_Methods5},
     {"TriangleCount_Methods6", test_TriangleCount_Methods6},
-    {"TriangleCount", test_TriangleCount},
-    {"TriangleCount_brutal", test_TriangleCount_brutal},
+    {"TriangleCount"         , test_TriangleCount},
+    {"TriangleCount_brutal"  , test_TriangleCount_brutal},
+    {"TriangleCount_autosort", test_TriangleCount_autosort},
     {NULL, NULL}
 };
+

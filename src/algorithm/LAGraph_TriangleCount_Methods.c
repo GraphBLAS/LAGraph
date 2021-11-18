@@ -170,6 +170,7 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
     //--------------------------------------------------------------------------
     // heuristic sort rule
     //--------------------------------------------------------------------------
+
     if (auto_sort)
     {
         // auto selection of sorting method
@@ -209,8 +210,7 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
                         case 3:  (*presort) =  1 ; break ;  // sort ascending
                         case 4:  (*presort) = -1 ; break ;  // sort descending
                         case 5:  (*presort) =  1 ; break ;  // sort ascending
-                        case 6:  (*presort) = -1 ; break ;  // sort descending
-                        default: (*presort) =  0 ; break ;  // no sort
+                        default: (*presort) = -1 ; break ;  // 6: sort desc.
                     }
                 }
             }
@@ -302,17 +302,12 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
             GrB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             break ;
 
-        case 6:  // SandiaDot2: ntri = sum (sum ((U * L') .* U))
+        default: // case 6:  // SandiaDot2: ntri = sum (sum ((U * L') .* U))
 
             // using the masked dot product
             LAGraph_TRY (tricount_prep (&L, &U, A, msg)) ;
             GrB_TRY (GrB_mxm (C, U, NULL, semiring, U, L, GrB_DESC_ST1)) ;
             GrB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
-            break ;
-
-        default:    // invalid method
-
-            LG_CHECK (false, -101, "invalid method") ;
             break ;
     }
 

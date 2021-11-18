@@ -73,26 +73,32 @@ void test_cc_matrices (void)
         OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
         TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
-        // find the connected components
-        OK (LAGraph_ConnectedComponents (&C, G, msg)) ;
-        GxB_print (C, 2) ;
-
-        // count the # of connected components
-        int ncomponents = 0 ;
-        GrB_Index n ;
-        OK (GrB_Matrix_nrows (&n, G->A)) ;
-        for (int i = 0 ; i < n ; i++)
+        for (int trial = 0 ; trial <= 1 ; trial++)
         {
-            int comp = -1 ;
-            OK (GrB_Vector_extractElement (&comp, C, i)) ;
-            if (comp == i) ncomponents++ ;
-        }
-        printf ("# components: %6u Matrix: %s\n", ncomponents, aname) ;
+            // find the connected components
+            OK (LAGraph_ConnectedComponents (&C, G, msg)) ;
+            GxB_print (C, 2) ;
 
-        TEST_CHECK (ncomponents == ncomp) ;
-        int result = (LG_check_cc (C, G, msg)) ;
-        printf ("msg: %s\n", msg) ;
-        OK (result) ;
+            // count the # of connected components
+            int ncomponents = 0 ;
+            GrB_Index n ;
+            OK (GrB_Matrix_nrows (&n, G->A)) ;
+            for (int i = 0 ; i < n ; i++)
+            {
+                int comp = -1 ;
+                OK (GrB_Vector_extractElement (&comp, C, i)) ;
+                if (comp == i) ncomponents++ ;
+            }
+            printf ("# components: %6u Matrix: %s\n", ncomponents, aname) ;
+            TEST_CHECK (ncomponents == ncomp) ;
+
+            // check the result
+            OK (LG_check_cc (C, G, msg)) ;
+
+            // convert to directed with symmetric pattern for next trial
+            G->kind = LAGRAPH_ADJACENCY_DIRECTED ;
+            G->A_structure_is_symmetric = LAGRAPH_TRUE ;
+        }
 
         OK (LAGraph_Delete (&G, msg)) ;
         OK (GrB_free (&C)) ;
