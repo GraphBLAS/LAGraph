@@ -196,9 +196,8 @@ int LG_check_sssp
         int32_t *weights = neighbor_weights ;
         #endif
 
-        // printf ("Ap %ld %ld\n", Ap [u], Ap [u+1]) ;
-
         #if 0
+        printf ("Ap %ld %ld\n", Ap [u], Ap [u+1]) ;
         // check all entries in A(u,:)
         for (int64_t k = 0 ; k < degree ; k++)
         {
@@ -256,9 +255,6 @@ int LG_check_sssp
     //--------------------------------------------------------------------------
 
     #if LG_SUITESPARSE
-    #if (GxB_IMPLEMENTATION < GxB_VERSION(5,1,0))
-    #error "SuiteSparse:GraphBLAS v5.1.0 or later required"
-    #endif
     GrB_TRY (GxB_Matrix_pack_CSR (G->A,
         &Ap, &Aj, (void **) &Ax, Ap_size, Aj_size, Ax_size, iso, jumbled,
         NULL)) ;
@@ -270,8 +266,6 @@ int LG_check_sssp
 
     for (int64_t i = 0 ; i < n ; i++)
     {
-//      printf ("path : %ld distance: in: %ld check: %ld\n", i,
-//          path_length_in [i], distance [i]) ;
         bool ok = (path_length_in [i] == distance [i]) ;
         LG_CHECK (!ok, -1004, "invalid path length") ;
     }

@@ -18,7 +18,6 @@
 #define LAGraph_FREE_WORK   \
 {                           \
     GrB_free (&frontier);   \
-    GrB_free (&index_ramp); \
 }
 
 #define LAGraph_FREE_ALL    \
@@ -47,7 +46,6 @@ int LG_BreadthFirstSearch_vanilla
 
     LG_CLEAR_MSG ;
     GrB_Vector frontier = NULL;     // the current frontier
-    GrB_Vector index_ramp = NULL;   // used in assigning parent ids
     GrB_Vector l_parent = NULL;     // parent vector
     GrB_Vector l_level = NULL;      // level vector
 
@@ -94,6 +92,7 @@ int LG_BreadthFirstSearch_vanilla
     GrB_Type     int_type  = (n > INT32_MAX) ? GrB_INT64 : GrB_INT32 ;
     GrB_BinaryOp second_op = (n > INT32_MAX) ? GrB_SECOND_INT64 : GrB_SECOND_INT32;
     GrB_Semiring semiring  = NULL;
+    GrB_IndexUnaryOp ramp = NULL ;
 
     if (compute_parent)
     {
@@ -107,12 +106,8 @@ int LG_BreadthFirstSearch_vanilla
         GrB_TRY (GrB_Vector_new(&frontier, int_type, n)) ;
         GrB_TRY (GrB_Vector_setElement(frontier, src, src)) ;
 
-        // create an index ramp (FIXME: replace with apply(i) in GraphBLAS 2.0
-        GrB_Index *idx = (GrB_Index *)LAGraph_Malloc(n, sizeof(GrB_Index));
-        for (GrB_Index ix = 0; ix < n; ++ix) idx[ix] = ix;
-        GrB_TRY( GrB_Vector_new(&index_ramp, int_type, n) );
-        GrB_TRY( GrB_Vector_build(index_ramp, idx, idx, n, GrB_FIRST_UINT64) );
-        LAGraph_Free((void **) &idx);
+        // pick the ramp operator
+        ramp = (n > INT32_MAX) ? GrB_ROWINDEX_INT64 : GrB_ROWINDEX_INT32 ;
     }
     else
     {
@@ -162,9 +157,8 @@ int LG_BreadthFirstSearch_vanilla
                                 frontier, GrB_ALL, n, GrB_DESC_S) );
 
             // convert all stored values in frontier to their indices
-            // TODO: replace with apply(i) in GraphBLAS 2.0
-            GrB_TRY( GrB_eWiseMult(frontier, GrB_NULL, GrB_NULL, GrB_FIRST_UINT64,
-                                   index_ramp, frontier, GrB_NULL) );
+            GrB_TRY (GrB_apply (frontier, GrB_NULL, GrB_NULL, ramp,
+                frontier, 0, GrB_NULL)) ;
         }
 
         // frontier = kth level of the BFS

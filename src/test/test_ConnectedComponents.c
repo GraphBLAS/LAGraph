@@ -77,7 +77,7 @@ void test_cc_matrices (void)
         {
             // find the connected components
             OK (LAGraph_ConnectedComponents (&C, G, msg)) ;
-            GxB_print (C, 2) ;
+            OK (LAGraph_Vector_print (C, 2, stdout, msg)) ;
 
             // count the # of connected components
             int ncomponents = 0 ;

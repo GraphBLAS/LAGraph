@@ -358,7 +358,6 @@ struct LAGraph_Graph_struct
             // rowdegree, and coldegree is left as NULL.
     GrB_Type   coldegree_type;   // the type of scalar stored in coldegree
 
-// FIXME rename this to A_structure_is_symmetric
     LAGraph_BooleanProperty A_structure_is_symmetric ;    // For an undirected
             // graph, this property will always be implicitly true and can be
             // ignored.  The matrix A for a directed weighted graph will
@@ -368,7 +367,6 @@ struct LAGraph_Graph_struct
     int64_t ndiag ; // # of entries on the diagonal of A, or -1 if unknown.
             // For the adjacency matrix of a directed or undirected graph,
             // this is the # of self-edges in the graph.
-            // TODO: discuss this.
 
     // possible future cached properties:
     // GrB_Vector rowsum, colsum ;

@@ -106,7 +106,6 @@ void test_SingleSourceShortestPath(void)
             OK (GrB_Matrix_apply_BinaryOp2nd_INT32 (A, NULL, NULL,
                 GrB_MAX_INT32, A, 1, NULL)) ;
         }
-        // GxB_print (A, 3) ;
 
         // create the graph
         OK (LAGraph_New (&G, &A, atype, kind, msg)) ;

@@ -98,9 +98,6 @@ int LG_check_bfs
 
     #if LG_SUITESPARSE
     bool iso, jumbled ;
-    #if (GxB_IMPLEMENTATION < GxB_VERSION(5,1,0))
-    #error "SuiteSparse:GraphBLAS v5.1.0 or later required"
-    #endif
     GrB_TRY (GxB_Matrix_unpack_CSR (G->A,
         &Ap, &Aj, &Ax, &Ap_size, &Aj_size, &Ax_size, &iso, &jumbled, NULL)) ;
     #endif
