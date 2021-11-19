@@ -32,8 +32,7 @@ add_library ( lagraphtest SHARED ${LAGRAPHTEST_LIB_SOURCES} )
 SET_TARGET_PROPERTIES ( lagraphtest PROPERTIES
     VERSION ${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}
     SOVERSION ${LAGraph_VERSION_MAJOR}
-    C_STANDARD_REQUIRED 11
-    PUBLIC_HEADER "include/LG_test.h" )
+    C_STANDARD_REQUIRED 11 )
 set_property ( TARGET lagraphtest PROPERTY C_STANDARD 11 )
 target_link_libraries(lagraphtest PUBLIC lagraph ${GRAPHBLAS_LIBRARIES})
 
@@ -47,8 +46,7 @@ SET_TARGET_PROPERTIES ( lagraphtest_static PROPERTIES
     OUTPUT_NAME lagraphtest
     POSITION_INDEPENDENT_CODE OFF
     SOVERSION ${LAGraph_VERSION_MAJOR}
-    C_STANDARD_REQUIRED 11
-    PUBLIC_HEADER "include/LG_test.h" )
+    C_STANDARD_REQUIRED 11 )
 set_property ( TARGET lagraphtest_static PROPERTY C_STANDARD 11 )
 target_link_libraries(lagraphtest_static PUBLIC lagraph ${GRAPHBLAS_LIBRARIES})
 

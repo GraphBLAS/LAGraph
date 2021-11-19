@@ -14,7 +14,8 @@
 # build the lagraphxtest library
 #-------------------------------------------------------------------------------
 
-include_directories ( ${CMAKE_SOURCE_DIR}/src/test/include )
+include_directories ( ${CMAKE_SOURCE_DIR}/src/test/include
+    ${CMAKE_SOURCE_DIR}/experimental/test/include )
 
 file ( GLOB LAGRAPHXTEST_LIB_SOURCES "LG_*.c" )
 
@@ -34,8 +35,7 @@ add_library ( lagraphxtest SHARED ${LAGRAPHXTEST_LIB_SOURCES} )
 SET_TARGET_PROPERTIES ( lagraphxtest PROPERTIES
     VERSION ${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}
     SOVERSION ${LAGraph_VERSION_MAJOR}
-    C_STANDARD_REQUIRED 11
-    PUBLIC_HEADER "include/LG_Xtest.h" )
+    C_STANDARD_REQUIRED 11 )
 set_property ( TARGET lagraphxtest PROPERTY C_STANDARD 11 )
 target_link_libraries(lagraphxtest PUBLIC lagraph ${GRAPHBLAS_LIBRARIES})
 
@@ -49,8 +49,7 @@ SET_TARGET_PROPERTIES ( lagraphxtest_static PROPERTIES
     OUTPUT_NAME lagraphxtest
     POSITION_INDEPENDENT_CODE OFF
     SOVERSION ${LAGraph_VERSION_MAJOR}
-    C_STANDARD_REQUIRED 11
-    PUBLIC_HEADER "include/LG_Xtest.h" )
+    C_STANDARD_REQUIRED 11 )
 set_property ( TARGET lagraphxtest_static PROPERTY C_STANDARD 11 )
 target_link_libraries(lagraphxtest_static PUBLIC lagraph ${GRAPHBLAS_LIBRARIES})
 

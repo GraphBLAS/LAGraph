@@ -159,16 +159,17 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     t [0] = 0 ;         // sanitize time
     t [1] = 0 ;         // LCC time
 
+    // FIXME: use operators that ignore the values of A
     if (sanitize)
     {
         LAGraph_Tic (tic, NULL) ;
 
         // S = binary structure of A
-        // FIXME: use operators that ignore the values of A
-        LAGRAPH_OK (LAGraph_pattern (&S, A, GrB_FP64)) ;
+        GrB_Matrix_new (&S, GrB_FP64, n, n) ;
+        GrB_apply (S, NULL, NULL, GrB_ONEB_FP64, A, 0, NULL) ;
 
         // remove all self edges
-        LAGRAPH_OK (LAGraph_prune_diag (S)) ;
+        GrB_select (S, NULL, NULL, GrB_OFFDIAG, S, 0, NULL) ;
         LAGraph_Toc (&t[0], tic, NULL) ;
     }
     else

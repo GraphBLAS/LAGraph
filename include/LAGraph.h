@@ -35,7 +35,6 @@
 #include <ctype.h>
 #include <limits.h>
 #include <GraphBLAS.h>
-// #include "GxB_hiding.h"
 #if defined ( _OPENMP )
     #include <omp.h>
 #endif
