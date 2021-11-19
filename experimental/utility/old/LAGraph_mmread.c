@@ -169,7 +169,7 @@
 // Parts of this code are from SuiteSparse/CHOLMOD/Check/cholmod_read.c, and
 // are used here by permission of the author of CHOLMOD/Check (T. A. Davis).
 
-#include "LAGraph_internal.h"
+#include "LG_internal.h"
 
 //------------------------------------------------------------------------------
 // get_line

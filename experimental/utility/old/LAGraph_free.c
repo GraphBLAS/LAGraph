@@ -36,7 +36,7 @@
 
 // LAGraph_free:  wrapper for free.  Contributed by Tim Davis, Texas A&M.
 
-#include "LAGraph_internal.h"
+#include "LG_internal.h"
 
 void LAGraph_free
 (

@@ -51,7 +51,7 @@
 // isequalwithequalnans in MATLAB), use LAGraph_isall with a user-defined
 // operator f(x,y) that returns true if x and y are both NaN.
 
-#include "LAGraph_internal.h"
+#include "LG_internal.h"
 
 #define LAGraph_FREE_ALL ;
 

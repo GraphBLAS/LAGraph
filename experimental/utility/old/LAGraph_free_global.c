@@ -40,7 +40,7 @@
 // This function is not meant to be user-callable.
 // TODO move to LAGraph_finalize?  Or rename?
 
-#include "LAGraph_internal.h"
+#include "LG_internal.h"
 
 GrB_Info LAGraph_free_global ( )
 {

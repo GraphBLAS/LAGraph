@@ -46,7 +46,7 @@
 // Parts of this code are from SuiteSparse/CHOLMOD/Check/cholmod_write.c, and
 // are used here by permission of the author of CHOLMOD/Check (T. A. Davis).
 
-#include "LAGraph_internal.h"
+#include "LG_internal.h"
 
 //------------------------------------------------------------------------------
 // TODO: include_comments

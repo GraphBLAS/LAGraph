@@ -39,7 +39,7 @@
 
 // Reads a matrix from a file in a binary format.
 
-#include "LAGraph_internal.h"
+#include "LG_internal.h"
 
 #define LAGraph_FREE_ALL    \
 {                           \

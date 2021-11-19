@@ -39,7 +39,7 @@
 
 // See LAGraph_get_nthreads for details on what this function does.
 
-#include "LAGraph_internal.h"
+#include "LG_internal.h"
 
 int LAGraph_set_nthreads        // returns # threads set, 0 if nothing done
 (

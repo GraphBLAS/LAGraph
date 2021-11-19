@@ -4,7 +4,6 @@
 // working notes only
 //==============================================================================
 
-// LAGraph_internal.h
 #include "LAGraph.h"
 #define TRY(method) LAGraph_TRY(method)
 

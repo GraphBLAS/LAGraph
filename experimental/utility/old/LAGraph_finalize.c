@@ -38,7 +38,7 @@
 
 // Finalize both LAGraph and GraphBLAS.
 
-#include "LAGraph_internal.h"
+#include "LG_internal.h"
 
 GrB_Info LAGraph_finalize ( )
 {

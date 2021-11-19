@@ -40,7 +40,7 @@
 
 // TODO also need a wrapper for realloc.
 
-#include "LAGraph_internal.h"
+#include "LG_internal.h"
 
 //------------------------------------------------------------------------------
 // global space

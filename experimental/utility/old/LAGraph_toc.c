@@ -37,7 +37,7 @@
 // LAGraph_toc: return the time since the last LAGraph_tic
 // Contributed by Tim Davis, Texas A&M
 
-#include "LAGraph_internal.h"
+#include "LG_internal.h"
 
 double LAGraph_toc          // returns time since last LAGraph_tic
 (

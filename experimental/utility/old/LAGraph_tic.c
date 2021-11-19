@@ -60,7 +60,7 @@
     printf ("time to 'do stuff' and 'more stuff': %g (seconds)\n', t) ;
 */
 
-#include "LAGraph_internal.h"
+#include "LG_internal.h"
 
 //------------------------------------------------------------------------------
 // LAGrapph_tic: return the current wallclock time in high resolution

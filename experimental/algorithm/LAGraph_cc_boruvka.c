@@ -17,7 +17,6 @@
 
 #include <LAGraph.h>
 #include <LAGraphX.h>
-#include "LAGraph_internal.h"
 
 #define LAGraph_FREE_ALL      \
     free(I);                  \

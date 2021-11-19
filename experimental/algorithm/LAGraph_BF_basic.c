@@ -35,7 +35,6 @@
     GrB_free(&dtmp) ;      \
 }
 
-//#include "LAGraph_internal.h"
 #include <LAGraph.h>
 #include <LAGraphX.h>
 #include <LG_internal.h>  // from src/utility

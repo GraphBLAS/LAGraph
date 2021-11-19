@@ -16,7 +16,7 @@
 // Contributed by Tim Davis, Texas A&M.
 
 #include <stdint.h>
-#include <LAGraph_internal.h>
+#include "LG_internal.h"
 
 #define LAGRAPH_RAND_MAX 32767
 

@@ -119,7 +119,7 @@
 
 // See also LAGraph_set_nthreads
 
-#include "LAGraph_internal.h"
+#include "LG_internal.h"
 
 int LAGraph_get_nthreads    // returns # threads to use, 1 if unknown
 (

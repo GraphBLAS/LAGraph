@@ -43,7 +43,7 @@
 // create random test matrices, which must be identical on any operating
 // system.
 
-#include "LAGraph_internal.h"
+#include "LG_internal.h"
 
 uint64_t LAGraph_rand (uint64_t *seed)
 {

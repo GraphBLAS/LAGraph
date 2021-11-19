@@ -37,7 +37,7 @@
 // LAGraph_xinit:  start GraphBLAS and LAGraph
 // Contributed by Tim Davis, Texas A&M
 
-#include "LAGraph_internal.h"
+#include "LG_internal.h"
 
 #define LAGraph_FREE_ALL                    \
 {                                           \

@@ -40,7 +40,7 @@
 // Define and allocate global types and operators for LAGraph.  This function
 // is not meant to be user-callable.  TODO: move to LAGraph_init?
 
-#include "LAGraph_internal.h"
+#include "LG_internal.h"
 
 #define LAGraph_FREE_ALL                    \
 {                                           \

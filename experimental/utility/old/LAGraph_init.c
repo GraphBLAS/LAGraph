@@ -39,7 +39,7 @@
 // Initialize GraphBLAS and LAGraph, using default memory allocation functions.
 // See also LAGraph_xinit.
 
-#include "LAGraph_internal.h"
+#include "LG_internal.h"
 #ifdef __linux__
 #include <malloc.h>
 #else

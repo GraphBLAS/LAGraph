@@ -6,7 +6,6 @@ As of Nov 18, 2021:
     * need vanilla connected components
     * unify error return values as much as possible, now that v2.0 C API
         has assigned enum values to GrB_Info
-    * index ramp in vanilla BFS
     * many TODOs and FIXMEs throughout
     * reduce the number of #include files and fix CMakeLists.txt so internal
         ones are not copied to /usr/local/include on "sudo make install"
