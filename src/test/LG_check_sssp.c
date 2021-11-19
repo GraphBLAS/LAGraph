@@ -64,7 +64,6 @@ int LG_check_sssp
     //--------------------------------------------------------------------------
 
     double tic [2], tt ;
-    LAGraph_Tic (tic, msg) ;
     GrB_Vector Row = NULL ;
     GrB_Index *Ap = NULL, *Aj = NULL, *neighbors = NULL ;
     int32_t *Ax = NULL, *neighbor_weights = NULL ;
@@ -73,6 +72,7 @@ int LG_check_sssp
         *distance = NULL, *parent = NULL ;
     LG_Element *Heap = NULL ;
 
+    LAGraph_Tic (tic, msg) ;
     LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
@@ -128,9 +128,9 @@ int LG_check_sssp
     #if !LG_SUITESPARSE
     GrB_TRY (GrB_Vector_new (&Row, GrB_INT32, n)) ;
     neighbors = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
-    neighbors_weights = LAGraph_Malloc (n, sizeof (int32_t)) ;
+    neighbor_weights = LAGraph_Malloc (n, sizeof (int32_t)) ;
     LG_CHECK (neighbors == NULL, -1003, "out of memory") ;
-    LG_CHECK (neighbors_weights == NULL, -1003, "out of memory") ;
+    LG_CHECK (neighbor_weights == NULL, -1003, "out of memory") ;
     #endif
 
     // place all nodes in the heap (already in heap order)

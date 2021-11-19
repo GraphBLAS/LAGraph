@@ -35,8 +35,10 @@
 #define LAGRAPH_BIN_HEADER 512
 #define LEN LAGRAPH_BIN_HEADER
 
+#if !LG_VANILLA
 #if !LG_SUITESPARSE
 #error "SuiteSparse:GraphBLAS v6.0.0 or later is required"
+#endif
 #endif
 
 //------------------------------------------------------------------------------
@@ -76,10 +78,8 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
     // check inputs
     //--------------------------------------------------------------------------
 
-    printf ("LG_SUITESPARSE: %d\n", LG_SUITESPARSE) ;
 #if !LG_SUITESPARSE
-    printf ("SuiteSparse:GraphBLAS v5 or later is required to write"
-            " binary *.grb files\n") ;
+    printf ("SuiteSparse:GraphBLAS required to write binary *.grb files\n") ;
     return (-1) ;
 #else
 
@@ -463,8 +463,7 @@ static inline int binread   // returns 0 if successful, -1 if failure
     //--------------------------------------------------------------------------
 
 #if !LG_SUITESPARSE
-    printf ("SuiteSparse:GraphBLAS v5 or later is required to read"
-            " binary *.grb files\n") ;
+    printf ("SuiteSparse:GraphBLAS required to read binary *.grb files\n") ;
     return (-1) ;
 #else
 
@@ -792,7 +791,9 @@ static int readproblem          // returns 0 if successful, -1 if failure
                 exit (1) ;
             }
             if (binread (&A, f) < 0) ERROR ;
+            #if LG_SUITESPARSE
             GrB_TRY (GxB_Matrix_type (&A_type, A)) ;
+            #endif
             fclose (f) ;
             f = NULL ;
         }
@@ -1072,7 +1073,10 @@ static inline int demo_init (bool burble)
     GxB_get(GxB_LIBRARY_DATE, &s) ; printf ("[%s]\n", s) ;
     GrB_TRY (GxB_set (GxB_BURBLE, burble)) ;
     #else
-    printf ("Vanilla GraphBLAS ... do not publish these results!\n") ;
+    printf ("\n") ;
+    printf ("###########################################################\n") ;
+    printf ("### Vanilla GraphBLAS ... do not publish these results! ###\n") ;
+    printf ("###########################################################\n") ;
     #endif
     return (0) ;
 }

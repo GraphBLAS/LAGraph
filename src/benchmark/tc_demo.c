@@ -22,12 +22,6 @@
 
 #include "LAGraph_demo.h"
 
-#if !LG_SUITESPARSE
-// LG_check_tri requires SuiteSparse
-#undef  LG_CHECK_RESULT
-#define LG_CHECK_RESULT 0
-#endif
-
 #define NTHREAD_LIST 1
 // #define NTHREAD_LIST 2
 #define THREAD_LIST 0
@@ -137,7 +131,6 @@ int main (int argc, char **argv)
     GrB_Index ntriangles, ntsimple = 0 ;
     double tic [2] ;
 
-    #if LG_CHECK_RESULT
     // check # of triangles
     LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
     LAGraph_TRY (LG_check_tri (&ntsimple, G, NULL)) ;
@@ -145,7 +138,6 @@ int main (int argc, char **argv)
     LAGraph_TRY (LAGraph_Toc (&tsimple, tic, NULL)) ;
     printf ("# of triangles: %" PRId64 " slow time: %g sec\n",
         ntsimple, tsimple) ;
-    #endif
 
     // warmup for more accurate timing, and also print # of triangles
     LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
@@ -153,7 +145,8 @@ int main (int argc, char **argv)
     int presort = 2 ;
     print_method (stdout, 6, presort) ;
 
-    LAGraph_TRY (LAGraph_TriangleCount_Methods(&ntriangles, G, 6, &presort, msg) );
+    LAGraph_TRY (LAGraph_TriangleCount_Methods(&ntriangles, G, 6, &presort,
+        msg) );
     printf ("# of triangles: %" PRIu64 "\n", ntriangles) ;
     print_method (stdout, 6, presort) ;
     double ttot ;
@@ -161,13 +154,11 @@ int main (int argc, char **argv)
     printf ("nthreads: %3d time: %12.6f rate: %6.2f (SandiaDot2, one trial)\n",
             nthreads_max, ttot, 1e-6 * nvals / ttot) ;
 
-    #if LG_CHECK_RESULT
     if (ntriangles != ntsimple)
     {
         printf ("wrong # triangles: %lu %ld\n", ntriangles, ntsimple) ;
         abort ( ) ;
     }
-    #endif
 
     double t_best = INFINITY ;
     int method_best = -1 ;

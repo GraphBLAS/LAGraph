@@ -53,7 +53,12 @@ int LG_Vector_print_ ## suffix                                              \
     I = LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;                        \
     X = LAGraph_Malloc (nvals, sizeof (ctype)) ;                            \
     LG_CHECK (I == NULL || X == NULL, -1004, "out of memory") ;             \
-    GrB_TRY (GrB_Vector_extractTuples (I, X, &nvals, v)) ;                  \
+    GrB_Info info = GrB_Vector_extractTuples (I, X, &nvals, v) ;            \
+    if (info == GrB_DOMAIN_MISMATCH)                                        \
+    {                                                                       \
+        LG_CHECK (true, -1002, "user-defined types not supported") ;        \
+    }                                                                       \
+    GrB_TRY (info) ;                                                        \
     /* determine the format */                                              \
     char *format = (pr <= 3) ? fmt1 : fmt2 ;                                \
     bool summary = (pr == 2 || pr == 4) && (nvals > 30) ;                   \

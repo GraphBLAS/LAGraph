@@ -35,6 +35,8 @@
 
 #include "LG_internal.h"
 
+#if !LG_VANILLA
+
 #if (! LG_SUITESPARSE )
 #error "SuiteSparse:GraphBLAS v6.0.0 or later required"
 #endif
@@ -300,6 +302,8 @@ static inline int Reduce_assign32
     GrB_free (&mod) ;                               \
 }
 
+#endif
+
 int LAGraph_ConnectedComponents
 (
     // output
@@ -309,6 +313,10 @@ int LAGraph_ConnectedComponents
     char *msg
 )
 {
+
+#if LG_VANILLA
+    LG_CHECK (0, -1, "SuiteSparse required for this method") ;
+#else
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -739,4 +747,5 @@ int LAGraph_ConnectedComponents
     }
     LAGraph_FREE_ALL ;
     return (0) ;
+#endif
 }

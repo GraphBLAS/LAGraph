@@ -51,7 +51,12 @@
 // GraphBLAS platform specifics
 
 // vanilla vs SuiteSparse:
-#if !defined ( LG_VANILLA ) && defined ( GxB_SUITESPARSE_GRAPHBLAS )
+#if !defined ( LG_VANILLA )
+// by default, set LG_VANILLA to false
+#define LG_VANILLA 0
+#endif
+
+#if ( !LG_VANILLA ) && defined ( GxB_SUITESPARSE_GRAPHBLAS )
     // use SuiteSparse, and its GxB* extensions
     #define LG_SUITESPARSE 1
 #else

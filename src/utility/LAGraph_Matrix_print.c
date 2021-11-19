@@ -56,7 +56,12 @@ int LG_Matrix_print_ ## suffix                                              \
     J = LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;                        \
     X = LAGraph_Malloc (nvals, sizeof (ctype)) ;                            \
     LG_CHECK (I == NULL || J == NULL || X == NULL, -1004, "out of memory") ;\
-    GrB_TRY (GrB_Matrix_extractTuples (I, J, X, &nvals, A)) ;               \
+    GrB_Info info = GrB_Matrix_extractTuples (I, J, X, &nvals, A) ;         \
+    if (info == GrB_DOMAIN_MISMATCH)                                        \
+    {                                                                       \
+        LG_CHECK (true, -1002, "user-defined types not supported") ;        \
+    }                                                                       \
+    GrB_TRY (info) ;                                                        \
     /* determine the format */                                              \
     char *format = (pr <= 3) ? fmt1 : fmt2 ;                                \
     bool summary = (pr == 2 || pr == 4) && (nvals > 30) ;                   \

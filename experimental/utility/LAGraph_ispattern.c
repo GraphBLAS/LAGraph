@@ -191,7 +191,7 @@ GrB_Info LAGraph_ispattern  // return GrB_SUCCESS if successful
 )
 {
 #if !(LG_SUITESPARSE)
-    return GrB_PANIC
+    return (GrB_PANIC) ;
 #else
     GrB_Info info ;
     GrB_Matrix C = NULL ;

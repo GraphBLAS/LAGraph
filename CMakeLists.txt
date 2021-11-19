@@ -230,6 +230,9 @@ endif ( )
 
 if ( LG_VANILLA )
     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DLG_VANILLA=1 " )
+    message ( STATUS "Vanilla build: not relying on any GxB extensions" )
+else ( )
+    message ( STATUS "GxB build: relying on SuiteSparse GxB extensions" )
 endif ( )
 
 #-------------------------------------------------------------------------------

@@ -48,6 +48,12 @@ const matrix_info files [ ] =
 
 void test_cc_matrices (void)
 {
+
+#if !LG_SUITESPARSE
+    printf ("SuiteSparse required for CC test\n") ;
+    return ;
+#endif
+
     LAGraph_Init (msg) ;
     GrB_Matrix A = NULL ;
     GrB_Vector C = NULL ;
