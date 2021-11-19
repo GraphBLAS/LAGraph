@@ -1,4 +1,4 @@
-As of Nov 18, 2021:
+As of Nov 19, 2021:
 
     * consider testing, documenting, polishing all experimental algorithms &
       utilities
@@ -15,18 +15,12 @@ TODO: for v1.0 release
     lots of TODOs in CC method (connected components): Ariful working on it
     vanilla CC
 
-    update to v2.0 spec?
-        GrB_select, GrB_Scalar, etc: fewer GxB-specific methods.
-        Makes SSGrB and Vanilla methods more similar
-
 --------------------------------------------------------------------------------
 
 FUTURE:
-TODO: the following methods require GxB_Matrix_type:
-./Source/Utility/LAGraph_ispattern.c
-./Source/Utility/LAGraph_mmwrite.c
-./Source/Utility/LAGraph_isequal.c
-(this needs to be added to the GraphBLAS API Specification)
+TODO: need GrB_Matrix_type or type_name.  use GxB_Matrix_type_name instead
+    of GxB_Matrix_type.
+    (type query needs to be added to the GraphBLAS API Specification)
 
 TODO: add interfaces to external packages.
 
@@ -41,12 +35,6 @@ TODO: interfaces to:
     Python interface, etc.
 
 TODO: need more algorithms and utilities
-
-    from SuiteSparse/GraphBLAS/Demo and convert to LAGraph_*:
-        mis
-
-TODO: simplify the CMake scripts in the Test/* folders (use a common
-    included file)
 
 TODO: move LICENSE, etc to Doc/
 
