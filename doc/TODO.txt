@@ -1,3 +1,12 @@
+As of Nov 18, 2021:
+
+    * consider testing, documenting, polishing all experimental algorithms &
+      utilities
+    * need vanilla connected components
+    * unify error return values as much as possible, now that v2.0 C API
+        has assigned enum values to GrB_Info
+    * many TODOs and FIXMEs throughout
+
 TODO: for v1.0 release
 
     documentation
