@@ -21,6 +21,7 @@
 // include files
 //------------------------------------------------------------------------------
 
+#define LG_LIBRARY
 #include <LAGraph.h>
 
 #if defined ( __linux__ )

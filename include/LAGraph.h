@@ -33,28 +33,61 @@
 
 #include <time.h>
 #include <ctype.h>
-
-#if ( _MSC_VER && !__INTEL_COMPILER )
-#ifdef GB_LIBRARY
-// compiling LAGraph itself, exporting symbols to user apps
-#define LAGRAPH_PUBLIC extern __declspec ( dllexport )
-#else
-// compiling the user application, importing symbols from LAGraph
-#define LAGRAPH_PUBLIC extern __declspec ( dllimport )
-#endif
-#else
-// for other compilers
-#define LAGRAPH_PUBLIC extern
-#endif
-
+#include <limits.h>
 #include <GraphBLAS.h>
 // #include "GxB_hiding.h"
-
-#if ( GRB_VERSION < 2 )
-#error "The GraphBLAS library must support the v2.0 C API Specification"
+#if defined ( _OPENMP )
+    #include <omp.h>
 #endif
 
-#include <LAGraph_platform.h>
+//==============================================================================
+// GraphBLAS platform specifics
+//==============================================================================
+
+// GraphBLAS C API specification, OpenMP, and vanilla vs
+// SuiteSparse:GraphBLAS GxB extensions.
+
+#if ( GRB_VERSION < 2 )
+    #error "The GraphBLAS library must support the v2.0 C API Specification"
+#endif
+
+#if ( _MSC_VER && !__INTEL_COMPILER )
+    #ifdef LG_LIBRARY
+        // compiling LAGraph itself, exporting symbols to user apps
+        #define LAGRAPH_PUBLIC extern __declspec ( dllexport )
+    #else
+        // compiling the user application, importing symbols from LAGraph
+        #define LAGRAPH_PUBLIC extern __declspec ( dllimport )
+    #endif
+#else
+    // for other compilers
+    #define LAGRAPH_PUBLIC extern
+#endif
+
+#if defined ( __cplusplus )
+    // C++ does not have the restrict keyword
+    #define LAGRAPH_RESTRICT
+#elif ( _MSC_VER && !__INTEL_COMPILER )
+    // Microsoft Visual Studio uses __restrict instead of restrict for C
+    #define LAGRAPH_RESTRICT __restrict
+#else
+    // use the restrict keyword for ANSI C99 compilers
+    #define LAGRAPH_RESTRICT restrict
+#endif
+
+// vanilla vs SuiteSparse:
+#if !defined ( LG_VANILLA )
+    // by default, set LG_VANILLA to false
+    #define LG_VANILLA 0
+#endif
+
+#if ( !LG_VANILLA ) && defined ( GxB_SUITESPARSE_GRAPHBLAS )
+    // use SuiteSparse, and its GxB* extensions
+    #define LG_SUITESPARSE 1
+#else
+    // use any GraphBLAS library (possibly SuiteSparse) but with no GxB*
+    #define LG_SUITESPARSE 0
+#endif
 
 //==============================================================================
 // LAGraph error handling
