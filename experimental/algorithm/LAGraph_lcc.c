@@ -9,6 +9,7 @@
 // or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
+// FIXME: this is not yet included in the test coverage suite
 
 // LAGraph_lcc: Contributed by Gabor Szarnyas and Balint Hegyi,
 // Budapest University of Technology and Economics

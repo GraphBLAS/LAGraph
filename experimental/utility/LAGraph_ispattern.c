@@ -9,6 +9,7 @@
 // or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
+// FIXME: this is not yet included in the test coverage suite
 
 // LAGraph_ispattern: check if a matrix values are all equal to 1.
 // Contributed by Tim Davis, Texas A&M.

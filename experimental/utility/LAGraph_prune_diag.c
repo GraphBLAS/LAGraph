@@ -9,6 +9,8 @@
 // or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
+// FIXME: this is not yet included in the test coverage suite
+// FIXME: remove this and use LAGraph_DeleteDiag.
 
 // LAGraph_prune_diag: contributed by Tim Davis.  Removes all diagonal entries
 // from a matrix.

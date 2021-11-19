@@ -9,6 +9,7 @@
 // or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
+// FIXME: this is not yet included in the test coverage suite
 
 // LAGraph_isall: check two matrices.  Contributed by Tim Davis, Texas A&M
 

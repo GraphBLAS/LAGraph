@@ -9,6 +9,7 @@
 // or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
+// FIXME: this is not yet included in the test coverage suite
 
 // The input is a square unsymmetric matrix G, for a directed graph.  G can be
 // of any type.  If it is real (float or double), a 64-bit integer, or an

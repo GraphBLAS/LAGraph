@@ -9,6 +9,7 @@
 // or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
+// FIXME: this is not yet included in the test coverage suite
 
 // LAGraph_Vector_to_dense: convert a vector to dense, contributed by Tim
 // Davis, Texas A&M

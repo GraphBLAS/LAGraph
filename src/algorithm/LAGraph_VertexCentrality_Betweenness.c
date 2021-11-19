@@ -148,9 +148,9 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
     GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
     GrB_TRY (GrB_Matrix_new (&paths,    GrB_FP64, ns, n)) ;
     GrB_TRY (GrB_Matrix_new (&frontier, GrB_FP64, ns, n)) ;
-#if LG_SUITESPARSE
+    #if LG_SUITESPARSE
     GrB_TRY (GxB_set (paths, GxB_SPARSITY_CONTROL, GxB_BITMAP + GxB_FULL)) ;
-#endif
+    #endif
     for (GrB_Index i = 0 ; i < ns ; i++)
     {
         // paths (i,s(i)) = 1
@@ -203,24 +203,23 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
         bool growing = frontier_size > last_frontier_size ;
         // pull if frontier is more than 10% dense,
         // or > 6% dense and last step was pull
-        bool do_pull = (frontier_density > 0.10) ||
-                      ((frontier_density > 0.06) && last_was_pull) ;
+        bool do_pull = frontier_density > (last_was_pull ? 0.06 : 0.10 ) ;
 
         if (do_pull)
         {
             // frontier<!paths> = frontier*AT'
-#if LG_SUITESPARSE
+            #if LG_SUITESPARSE
             GrB_TRY (GxB_set (frontier, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
-#endif
+            #endif
             GrB_TRY (GrB_mxm (frontier, paths, NULL, LAGraph_plus_first_fp64,
                 frontier, AT, GrB_DESC_RSCT1)) ;
         }
         else // push
         {
             // frontier<!paths> = frontier*A
-#if LG_SUITESPARSE
+            #if LG_SUITESPARSE
             GrB_TRY (GxB_set (frontier, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
-#endif
+            #endif
             GrB_TRY (GrB_mxm (frontier, paths, NULL, LAGraph_plus_first_fp64,
                 frontier, A, GrB_DESC_RSC)) ;
         }
@@ -275,18 +274,18 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
         if (do_pull)
         {
             // W<S[i−1]> = W * A'
-#if LG_SUITESPARSE
+            #if LG_SUITESPARSE
             GrB_TRY (GxB_set (W, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
-#endif
+            #endif
             GrB_TRY (GrB_mxm (W, S [i-1], NULL, LAGraph_plus_first_fp64, W, A,
                 GrB_DESC_RST1)) ;
         }
         else // push
         {
             // W<S[i−1]> = W * AT
-#if LG_SUITESPARSE
+            #if LG_SUITESPARSE
             GrB_TRY (GxB_set (W, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
-#endif
+            #endif
             GrB_TRY (GrB_mxm (W, S [i-1], NULL, LAGraph_plus_first_fp64, W, AT,
                 GrB_DESC_RS)) ;
         }

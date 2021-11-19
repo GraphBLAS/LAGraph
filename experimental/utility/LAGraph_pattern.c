@@ -9,6 +9,8 @@
 // or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
+// FIXME: this is not yet included in the test coverage suite
+// FIXME: remove this anduse LAGraph_Structure.
 
 // LAGraph_pattern: return the pattern of a matrix (spones(A) in MATLAB)
 // as a boolean matrix. Contributed by Tim Davis and Scott Kolodziej, Texas A&M.

@@ -9,6 +9,7 @@
 // or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
+// FIXME: this is not yet included in the test coverage suite
 
 // LAGraph_BF_basic: Bellman-Ford single source shortest paths, returning just
 // the shortest path lengths.  Contributed by Jinhao Chen and Tim Davis, Texas

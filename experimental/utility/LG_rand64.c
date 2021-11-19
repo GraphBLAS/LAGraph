@@ -9,6 +9,8 @@
 // or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
+// FIXME: this is not yet included in the test coverage suite
+// FIXME: remove this and use LAGraph_Random.
 
 // LAGraph_rand64: return a random 64-bit unsigned integer.
 // Contributed by Tim Davis, Texas A&M.

@@ -9,6 +9,7 @@
 // or contact permission@sei.cmu.edu for the full terms.
 
 //****************************************************************************
+// FIXME: this is not yet included in the test coverage suite
 
 // Create either a GrB_INT64 or GrB_INT32 "ramp" vector 1:n
 

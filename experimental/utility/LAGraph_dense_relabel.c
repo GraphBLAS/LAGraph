@@ -9,6 +9,7 @@
 // or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
+// FIXME: this is not yet included in the test coverage suite
 
 // LAGraph_dense_relabel: relabel sparse IDs to dense row/column indices
 // Contributed by Marton Elekes and Gabor Szarnyas,

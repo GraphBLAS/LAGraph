@@ -9,6 +9,7 @@
 // or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
+// FIXME: this is not yet included in the test coverage suite
 
 // LAGraph_dnn: sparse deep neural network.  Contributed by Tim Davis,
 // Texas A&M University.  Based on inferenceReLUvec.m by Jeremy Kepner, MIT.

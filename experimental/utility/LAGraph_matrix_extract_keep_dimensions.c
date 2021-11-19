@@ -10,6 +10,7 @@
 // or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
+// FIXME: this is not yet included in the test coverage suite
 
 // LAGraph_Matrix_extract_keep_dimensions: Contributed by Gabor Szarnyas.
 // Budapest University of Technology and Economics
