@@ -87,24 +87,6 @@ if ( "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
 			NO_DEMANGLE TRUE
                         EXCLUDE "*/benchmark/*"
                             "src/test/include/acutest.h"
-                            "experimental/*/LAGraph_1*.*"
-                            "experimental/*/LAGraph_a*.*"
-                            "experimental/*/LAGraph_b*.*"
-                            "experimental/*/LAGraph_c*.*"
-                            "experimental/*/LAGraph_d*.*"
-                            "experimental/*/LAGraph_g*.*"
-                            "experimental/*/LAGraph_i*.*"
-                            "experimental/*/LAGraph_k*.*"
-                            "experimental/*/LAGraph_l*.*"
-                            "experimental/*/LAGraph_m*.*"
-                            "experimental/*/LAGraph_p*.*"
-                            "experimental/*/LAGraph_t*.*"
-                            "experimental/*/LAGraph_r*.*"
-                            "experimental/*/LAGraph_s*.*"
-                            "experimental/*/LG_rand*.*"
-                            "experimental/*/LAGraph_BF_*.*"
-                            "experimental/*/LAGraph_FW*.*"
-                            "experimental/*/LAGraph_Vector*.*"
 		)
 	endif ( )
 endif ( )
