@@ -9,7 +9,6 @@
 // or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
-// FIXME: this is not yet included in the test coverage suite
 
 // LAGraph_BF_pure_c: Bellman-Ford single source shortest paths, returning
 // both the path lengths and the shortest-path tree.  Contributed by Jinhao
@@ -23,8 +22,6 @@
 // implemented based on LAGraph.  Therefore, it require the graph represented
 // as triplet format (I, J, W), which is an edge from vertex I(k) to vertex
 // J(k) with weight W(k), and also the number of vertices and number of edges.
-
-// TODO: think about the return values
 
 // LAGraph_BF_pure_c returns GrB_SUCCESS regardless of existence of negative-
 // weight cycle. However, the vector d(k) and pi(k) (i.e., *pd, and *ppi

@@ -11,7 +11,6 @@
 // or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
-// FIXME: this is not yet included in the test coverage suite
 
 // LAGraph_BF_full2: Bellman-Ford single source shortest paths, returning both
 // the path lengths and the shortest-path tree.  contributed by Jinhao Chen and
@@ -22,8 +21,6 @@
 // source vertex s in the range of [0, n) on graph given as matrix A with size
 // n*n. The sparse matrix A has entry A(i, j) if there is an edge from vertex i
 // to vertex j with weight w, then A(i, j) = w.
-
-// TODO: think about the return values
 
 // LAGraph_BF_full2 returns GrB_SUCCESS if it succeeds.  In this case, there
 // are no negative-weight cycles in the graph, and d, pi, and h are returned.

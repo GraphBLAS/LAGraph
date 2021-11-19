@@ -9,7 +9,6 @@
 // or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
-// FIXME: this is not yet included in the test coverage suite
 
 // LAGraph_BF_pure_c_double: Bellman-Ford single source shortest paths,
 // returning both the path lengths and the shortest-path tree.  contributed by
@@ -24,7 +23,6 @@
 // from vertex I(k) to vertex J(k) with weight W(k), and also the number of
 // vertices and number of edges.
 
-// TODO: think about the retrun values
 // LAGraph_BF_pure_c_double returns GrB_SUCCESS if it succeeds. In this case,
 // there are no negative-weight cycle in the graph, and d and pi are returned.
 // The vector d has d(k) as the distance from source noce to k-th node. pi(k) =

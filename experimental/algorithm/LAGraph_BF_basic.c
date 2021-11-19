@@ -9,7 +9,6 @@
 // or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
-// FIXME: this is not yet included in the test coverage suite
 
 // LAGraph_BF_basic: Bellman-Ford single source shortest paths, returning just
 // the shortest path lengths.  Contributed by Jinhao Chen and Tim Davis, Texas
@@ -21,7 +20,6 @@
 // vertex i to vertex j with weight w, then A(i, j) = w. Furthermore,
 // LAGraph_BF_basic requires A(i, i) = 0 for all 0 <= i < n.
 
-// TODO: think about the retrun values
 // LAGraph_BF_basic returns GrB_SUCCESS regardless of existence of
 // negative-weight cycle. However, the GrB_Vector d(k) (i.e., *pd_output) will
 // be NULL when negative-weight cycle detected. Otherwise, the vector d has
@@ -118,7 +116,7 @@ GrB_Info LAGraph_BF_basic
         {
             // printf("A negative-weight cycle found. \n");
             LAGraph_FREE_ALL;
-            return (GrB_SUCCESS) ;  // TODO: should be an error code
+            return (GrB_NO_VALUE) ;
         }
     }
 

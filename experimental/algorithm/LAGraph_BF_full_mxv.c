@@ -9,7 +9,6 @@
 // or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
-// FIXME: this is not yet included in the test coverage suite
 
 // LAGraph_BF_full_mxv: Bellman-Ford single source shortest paths, returning
 // both the path lengths and the shortest-path tree.  contributed by Jinhao Chen
@@ -24,8 +23,6 @@
 // sparse matrix has entry AT(i, j) if there is edge from vertex j to vertex i
 // with weight w, then AT(i, j) = w. While same as LAGraph_BF_full, it requires
 // AT(i, i) = 0 for all 0 <= i < n.
-
-// TODO: think about the retrun values
 
 // LAGraph_BF_full_mxv returns GrB_SUCCESS if it succeeds.  In this case, there
 // are no negative-weight cycles in the graph, and d, pi, and h are returned.

@@ -238,8 +238,7 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
         // TC3: using tril.  This is the fastest method.
         //----------------------------------------------------------------------
 
-        // When this method is moved from experimental/ to src/, keep this
-        // method only.
+        // TODO: When this method is moved to src/, keep this method only.
 
         // L = tril (A,-1)
         GrB_TRY (GrB_Matrix_new (&L, GrB_FP64, n, n)) ;
