@@ -35,10 +35,8 @@
     GrB_free(&dtmp) ;      \
 }
 
-#include <LAGraph.h>
+#include "LG_internal.h"
 #include <LAGraphX.h>
-#include <LG_internal.h>  // from src/utility
-
 
 // Given a n-by-n adjacency matrix A and a source vertex s.
 // If there is no negative-weight cycle reachable from s, return the distances
@@ -56,37 +54,26 @@ GrB_Info LAGraph_BF_basic
 )
 {
     GrB_Info info;
+    char *msg = NULL ;
     GrB_Index nrows, ncols;
     // tmp vector to store distance vector after n (i.e., V) loops
     GrB_Vector d = NULL, dtmp = NULL;
 
-    if (A == NULL || pd_output == NULL)
-    {
-        // required argument is missing
-        LAGRAPH_ERROR ("required arguments are NULL", GrB_NULL_POINTER) ;
-    }
+    LG_CHECK (A == NULL || pd_output == NULL, -1001, "inputs are NULL") ;
 
     *pd_output = NULL;
-    LAGRAPH_OK (GrB_Matrix_nrows (&nrows, A)) ;
-    LAGRAPH_OK (GrB_Matrix_ncols (&ncols, A)) ;
-    if (nrows != ncols)
-    {
-        // A must be square
-        LAGRAPH_ERROR ("A must be square", GrB_INVALID_VALUE) ;
-    }
+    GrB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
+    GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
+    LG_CHECK (nrows != ncols, -1002, "A must be square") ;
     GrB_Index n = nrows;           // n = # of vertices in graph
-
-    if (s >= n || s < 0)
-    {
-        LAGRAPH_ERROR ("invalid value for source vertex s", GrB_INVALID_VALUE) ;
-    }
+    LG_CHECK (s >= n || s < 0, -1003, "invalid source node") ;
 
     // Initialize distance vector, change the d[s] to 0
-    LAGRAPH_OK (GrB_Vector_new(&d, GrB_FP64, n));
-    LAGRAPH_OK (GrB_Vector_setElement_FP64(d, 0, s));
+    GrB_TRY (GrB_Vector_new(&d, GrB_FP64, n));
+    GrB_TRY (GrB_Vector_setElement_FP64(d, 0, s));
 
     // copy d to dtmp in order to create a same size of vector
-    LAGRAPH_OK (GrB_Vector_dup(&dtmp, d));
+    GrB_TRY (GrB_Vector_dup(&dtmp, d));
 
     int64_t iter = 0;      //number of iterations
     bool same = false;     //variable indicating if d=dtmp
@@ -99,7 +86,7 @@ GrB_Info LAGraph_BF_basic
         LAGraph_Tic(tic, NULL);
 
         // execute semiring on d and A, and save the result to d
-        LAGRAPH_OK (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, GrB_MIN_PLUS_SEMIRING_FP64, d, A,
+        GrB_TRY (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, GrB_MIN_PLUS_SEMIRING_FP64, d, A,
             GrB_NULL));
         LAGRAPH_OK (LAGraph_Vector_IsEqual_type(&same, dtmp, d, GrB_FP64, NULL));
         if (!same)
@@ -112,7 +99,7 @@ GrB_Info LAGraph_BF_basic
         double t;
         LAGraph_Toc (&t, tic, NULL );
         GrB_Index dnz ;
-        LAGRAPH_OK (GrB_Vector_nvals (&dnz, d)) ;
+        GrB_TRY (GrB_Vector_nvals (&dnz, d)) ;
 //      printf ("step %3d time %16.4f sec, nvals %.16g\n", iter, t, (double) dnz);
         fflush (stdout) ;
     }
@@ -122,7 +109,7 @@ GrB_Info LAGraph_BF_basic
     if (!same)
     {
         // execute semiring again to check for negative-weight cycle
-        LAGRAPH_OK (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, GrB_MIN_PLUS_SEMIRING_FP64, d, A,
+        GrB_TRY (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, GrB_MIN_PLUS_SEMIRING_FP64, d, A,
             GrB_NULL));
         LAGRAPH_OK (LAGraph_Vector_IsEqual_type(&same, dtmp, d, GrB_FP64, NULL));
 

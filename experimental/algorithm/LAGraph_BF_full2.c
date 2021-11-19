@@ -172,6 +172,7 @@ GrB_Info LAGraph_BF_full2
 )
 {
     GrB_Info info;
+    char *msg = NULL ;
     // tmp vector to store distance vector after n (i.e., V) loops
     GrB_Vector d = NULL, dtmp = NULL, dfrontier = NULL;
     GrB_Matrix Atmp = NULL;
@@ -190,43 +191,33 @@ GrB_Info LAGraph_BF_full2
     double *w = NULL;
     BF2_Tuple3_struct *W = NULL;
 
-    if (A == NULL || pd_output == NULL ||
-        ppi_output == NULL || ph_output == NULL)
-    {
-        // required argument is missing
-        LAGRAPH_ERROR ("required arguments are NULL", GrB_NULL_POINTER) ;
-    }
+    LG_CHECK (A == NULL || pd_output == NULL ||
+        ppi_output == NULL || ph_output == NULL, -1001, "inputs are NULL") ;
 
     *pd_output  = NULL;
     *ppi_output = NULL;
     *ph_output  = NULL;
-    LAGRAPH_OK (GrB_Matrix_nrows (&nrows, A)) ;
-    LAGRAPH_OK (GrB_Matrix_ncols (&ncols, A)) ;
-    LAGRAPH_OK (GrB_Matrix_nvals (&nz, A));
-    if (nrows != ncols)
-    {
-        // A must be square
-        LAGRAPH_ERROR ("A must be square", GrB_INVALID_VALUE) ;
-    }
+    GrB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
+    GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
+    GrB_TRY (GrB_Matrix_nvals (&nz, A));
+    LG_CHECK (nrows != ncols, -1002, "A must be square") ;
     n = nrows;
 
-    if (s >= n || s < 0)
-    {
-        LAGRAPH_ERROR ("invalid value for source vertex s", GrB_INVALID_VALUE);
-    }
+    LG_CHECK (s >= n || s < 0, -1003, "invalid source node") ;
+
     //--------------------------------------------------------------------------
     // create all GrB_Type GrB_BinaryOp GrB_Monoid and GrB_Semiring
     //--------------------------------------------------------------------------
     // GrB_Type
-    LAGRAPH_OK (GrB_Type_new(&BF_Tuple3, sizeof(BF2_Tuple3_struct)));
+    GrB_TRY (GrB_Type_new(&BF_Tuple3, sizeof(BF2_Tuple3_struct)));
 
     // GrB_BinaryOp
-    LAGRAPH_OK (GrB_BinaryOp_new(&BF_EQ_Tuple3,
+    GrB_TRY (GrB_BinaryOp_new(&BF_EQ_Tuple3,
         (LAGraph_binary_function) (&BF2_EQ), GrB_BOOL, BF_Tuple3, BF_Tuple3));
-    LAGRAPH_OK (GrB_BinaryOp_new(&BF_lMIN_Tuple3,
+    GrB_TRY (GrB_BinaryOp_new(&BF_lMIN_Tuple3,
         (LAGraph_binary_function) (&BF2_lMIN2),
         BF_Tuple3, BF_Tuple3, BF_Tuple3));
-    LAGRAPH_OK (GrB_BinaryOp_new(&BF_PLUSrhs_Tuple3,
+    GrB_TRY (GrB_BinaryOp_new(&BF_PLUSrhs_Tuple3,
         (LAGraph_binary_function)(&BF2_PLUSrhs2),
         BF_Tuple3, BF_Tuple3, BF_Tuple3));
 
@@ -237,7 +228,7 @@ GrB_Info LAGraph_BF_full2
         &BF_identity));
 
     //GrB_Semiring
-    LAGRAPH_OK (GrB_Semiring_new(&BF_lMIN_PLUSrhs_Tuple3,
+    GrB_TRY (GrB_Semiring_new(&BF_lMIN_PLUSrhs_Tuple3,
         BF_lMIN_Tuple3_Monoid, BF_PLUSrhs_Tuple3));
 
     //--------------------------------------------------------------------------
@@ -247,10 +238,8 @@ GrB_Info LAGraph_BF_full2
     J = LAGraph_Malloc (nz, sizeof(GrB_Index)) ;
     w = LAGraph_Malloc (nz, sizeof(double)) ;
     W = LAGraph_Malloc (nz, sizeof(BF2_Tuple3_struct)) ;
-    if (I == NULL || J == NULL || w == NULL || W == NULL)
-    {
-        LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
-    }
+    LG_CHECK (I == NULL || J == NULL || w == NULL || W == NULL, -1004,
+        "out of memory") ;
 
     //--------------------------------------------------------------------------
     // create matrix Atmp based on A, while its entries become BF_Tuple3 type
@@ -271,7 +260,7 @@ GrB_Info LAGraph_BF_full2
             W[k] = (BF2_Tuple3_struct) { .w = w[k], .h = 1, .pi = I[k] + 1 };
         }
     }
-    LAGRAPH_OK (GrB_Matrix_new(&Atmp, BF_Tuple3, n, n));
+    GrB_TRY (GrB_Matrix_new(&Atmp, BF_Tuple3, n, n));
     LAGRAPH_OK(GrB_Matrix_build_UDT(Atmp, I, J, W, nz, BF_lMIN_Tuple3));
     LAGraph_Free ((void**)&I);
     LAGraph_Free ((void**)&J);
@@ -281,7 +270,7 @@ GrB_Info LAGraph_BF_full2
     //--------------------------------------------------------------------------
     // create and initialize "distance" vector d
     //--------------------------------------------------------------------------
-    LAGRAPH_OK (GrB_Vector_new(&d, BF_Tuple3, n));
+    GrB_TRY (GrB_Vector_new(&d, BF_Tuple3, n));
     // initial distance from s to itself
     BF2_Tuple3_struct d0 = (BF2_Tuple3_struct) { .w = 0, .h = 0, .pi = 0 };
     LAGRAPH_OK(GrB_Vector_setElement_UDT(d, &d0, s));
@@ -290,8 +279,8 @@ GrB_Info LAGraph_BF_full2
     // start the Bellman Ford process
     //--------------------------------------------------------------------------
     // copy d to dtmp in order to create a same size of vector
-    LAGRAPH_OK (GrB_Vector_dup(&dtmp, d));
-    LAGRAPH_OK (GrB_Vector_dup(&dfrontier, d));
+    GrB_TRY (GrB_Vector_dup(&dtmp, d));
+    GrB_TRY (GrB_Vector_dup(&dfrontier, d));
     bool same= false;          // variable indicating if d == dtmp
     int64_t iter = 0;          // number of iterations
 
@@ -299,7 +288,7 @@ GrB_Info LAGraph_BF_full2
     while (!same && iter < n - 1)
     {
         // execute semiring on d and A, and save the result to dtmp
-        LAGRAPH_OK (GrB_vxm(dfrontier, GrB_NULL, GrB_NULL,
+        GrB_TRY (GrB_vxm(dfrontier, GrB_NULL, GrB_NULL,
             BF_lMIN_PLUSrhs_Tuple3, dfrontier, Atmp, GrB_NULL));
 
         // dtmp[i] = min(d[i], dfrontier[i]).
@@ -321,7 +310,7 @@ GrB_Info LAGraph_BF_full2
     if (!same)
     {
         // execute semiring again to check for negative-weight cycle
-        LAGRAPH_OK (GrB_vxm(dfrontier, GrB_NULL, GrB_NULL,
+        GrB_TRY (GrB_vxm(dfrontier, GrB_NULL, GrB_NULL,
             BF_lMIN_PLUSrhs_Tuple3, dfrontier, Atmp, GrB_NULL));
 
         // dtmp[i] = min(d[i], dfrontier[i]).
@@ -346,11 +335,10 @@ GrB_Info LAGraph_BF_full2
     w = LAGraph_Malloc (n, sizeof(double)) ;
     h  = LAGraph_Malloc (n, sizeof(GrB_Index)) ;
     pi = LAGraph_Malloc (n, sizeof(GrB_Index)) ;
-    if (I == NULL || W == NULL || w == NULL || h == NULL || pi == NULL)
-    {
-        LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
-    }
+    LG_CHECK (I == NULL || W == NULL || w == NULL || h == NULL || pi == NULL,
+        -1004, "out of memory") ;
 
+    nz = n ;
     LAGRAPH_OK(GrB_Vector_extractTuples_UDT (I, (void *) W, &nz, d));
 
     for (GrB_Index k = 0; k < nz; k++)
@@ -359,12 +347,12 @@ GrB_Info LAGraph_BF_full2
         h [k] = W[k].h ;
         pi[k] = W[k].pi;
     }
-    LAGRAPH_OK (GrB_Vector_new(pd_output,  GrB_FP64,   n));
-    LAGRAPH_OK (GrB_Vector_new(ppi_output, GrB_UINT64, n));
-    LAGRAPH_OK (GrB_Vector_new(ph_output,  GrB_UINT64, n));
-    LAGRAPH_OK (GrB_Vector_build (*pd_output , I, w , nz,GrB_MIN_FP64  ));
-    LAGRAPH_OK (GrB_Vector_build (*ppi_output, I, pi, nz,GrB_MIN_UINT64));
-    LAGRAPH_OK (GrB_Vector_build (*ph_output , I, h , nz,GrB_MIN_UINT64));
+    GrB_TRY (GrB_Vector_new(pd_output,  GrB_FP64,   n));
+    GrB_TRY (GrB_Vector_new(ppi_output, GrB_UINT64, n));
+    GrB_TRY (GrB_Vector_new(ph_output,  GrB_UINT64, n));
+    GrB_TRY (GrB_Vector_build (*pd_output , I, w , nz, GrB_MIN_FP64  ));
+    GrB_TRY (GrB_Vector_build (*ppi_output, I, pi, nz, GrB_MIN_UINT64));
+    GrB_TRY (GrB_Vector_build (*ph_output , I, h , nz, GrB_MIN_UINT64));
     LAGraph_FREE_WORK;
     return (GrB_SUCCESS) ;
 }

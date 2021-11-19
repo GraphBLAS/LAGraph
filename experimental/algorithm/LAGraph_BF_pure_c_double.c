@@ -65,32 +65,22 @@ GrB_Info LAGraph_BF_pure_c_double
     const double  *W // weight vector, W(i) = weight of edge (I(i),J(i))
 )
 {
+    char *msg = NULL ;
     int64_t i, j, k;
     double *d = NULL;
     int64_t *pi = NULL;
-    if (I == NULL || J == NULL || W == NULL || pd == NULL || ppi == NULL)
-    {
-        // required argument is missing
-        LAGRAPH_ERROR ("required arguments are NULL", GrB_NULL_POINTER) ;
-    }
+    LG_CHECK (I == NULL || J == NULL || W == NULL || pd == NULL ||
+        ppi == NULL, -1001, "inputs are NULL") ;
 
-    if (*pd != NULL) {free(*pd);}
-    if (*ppi != NULL) {free(*ppi);}
-    *pd = NULL; *ppi = NULL;
+    LAGraph_Free ((void**)&*pd) ;
+    LAGraph_Free ((void**)&*ppi) ;
 
-    if (s >= n || s < 0)
-    {
-        LAGRAPH_ERROR ("invalid value for source vertex s", GrB_INVALID_VALUE) ;
-    }
+    LG_CHECK (s >= n || s < 0, -1002, "invalid source node") ;
 
     // allocate d and pi
     d = LAGraph_Malloc(n, sizeof(double));
     pi = LAGraph_Malloc(n, sizeof(int64_t));
-    if (d == NULL || pi == NULL)
-    {
-        // out of memory
-         LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
-    }
+    LG_CHECK (d == NULL || pi == NULL, -1004, "out of memory") ;
 
     // initialize d to a vector of INF while set d(s) = 0
     // and pi to a vector of -1

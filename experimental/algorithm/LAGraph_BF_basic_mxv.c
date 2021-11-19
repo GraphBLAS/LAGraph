@@ -63,37 +63,27 @@ GrB_Info LAGraph_BF_basic_mxv
 )
 {
     GrB_Info info;
+    char *msg = NULL ;
     GrB_Index nrows, ncols;
     // tmp vector to store distance vector after n loops
     GrB_Vector d = NULL, dtmp = NULL;
 
-    if (AT == NULL || pd_output == NULL)
-    {
-        // required argument is missing
-        LAGRAPH_ERROR ("required arguments are NULL", GrB_NULL_POINTER) ;
-    }
+    LG_CHECK (AT == NULL || pd_output == NULL, -1001, "inputs NULL") ;
 
     *pd_output = NULL;
-    LAGRAPH_OK (GrB_Matrix_nrows (&nrows, AT)) ;
-    LAGRAPH_OK (GrB_Matrix_ncols (&ncols, AT)) ;
-    if (nrows != ncols)
-    {
-        // AT must be square
-        LAGRAPH_ERROR ("AT must be square", GrB_INVALID_VALUE) ;
-    }
+    GrB_TRY (GrB_Matrix_nrows (&nrows, AT)) ;
+    GrB_TRY (GrB_Matrix_ncols (&ncols, AT)) ;
+    LG_CHECK (nrows != ncols, -1002, "AT must be square") ;
     GrB_Index n = nrows;           // n = # of vertices in graph
 
-    if (s >= n || s < 0)
-    {
-        LAGRAPH_ERROR ("invalid value for source vertex s", GrB_INVALID_VALUE) ;
-    }
+    LG_CHECK (s >= n || s < 0, -1003, "invalid source node") ;
 
     // Initialize distance vector, change the d[s] to 0
-    LAGRAPH_OK (GrB_Vector_new(&d, GrB_FP64, n));
+    GrB_TRY (GrB_Vector_new(&d, GrB_FP64, n));
     LAGRAPH_OK(GrB_Vector_setElement_FP64(d, 0, s));
 
     // copy d to dtmp in order to create a same size of vector
-    LAGRAPH_OK (GrB_Vector_dup(&dtmp, d));
+    GrB_TRY (GrB_Vector_dup(&dtmp, d));
 
     int64_t iter = 0;      //number of iterations
     bool same = false;     //variable indicating if d == dtmp
@@ -104,7 +94,7 @@ GrB_Info LAGraph_BF_basic_mxv
     while (!same && iter < n - 1)
     {
         // excute semiring on d and AT, and save the result to d
-        LAGRAPH_OK (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, GxB_MIN_PLUS_FP64, AT,
+        GrB_TRY (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, GxB_MIN_PLUS_FP64, AT,
             d, GrB_NULL));
 
         LAGRAPH_OK (LAGraph_Vector_IsEqual_type(&same, dtmp, d, GrB_FP64, NULL));
@@ -122,7 +112,7 @@ GrB_Info LAGraph_BF_basic_mxv
     if (!same)
     {
         // excute semiring again to check for negative-weight cycle
-        LAGRAPH_OK (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, GxB_MIN_PLUS_FP64, AT,
+        GrB_TRY (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, GxB_MIN_PLUS_FP64, AT,
                             d, GrB_NULL));
 
         // if d != dtmp, then there is a negative-weight cycle in the graph
