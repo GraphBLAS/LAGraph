@@ -420,14 +420,9 @@ void test_BF (void)
                     // compare d and d10
                     for (int64_t i = 0 ; i < n ; i++)
                     {
-                        if (d [i] == INFINITY)
-                        {
-                            TEST_CHECK (d10 [i] == INT32_MAX) ;
-                        }
-                        else
-                        {
-                            TEST_CHECK ((double) (d10 [i]) == d [i]) ;
-                        }
+                        double d10i = (double) d10 [i] ;
+                        double di = (d [i] == INFINITY) ? INT32_MAX : d [i] ;
+                        TEST_CHECK (d10i == di) ;
                     }
                 }
 
