@@ -77,6 +77,7 @@ typedef void (*LAGraph_binary_function) (void *, const void *, const void *) ;
 // <INFINITY,INFINITY,INFINITY> corresponds to nonexistence of a path, and
 // the value  <0, 0, NULL> corresponds to a path from a vertex to itself
 //------------------------------------------------------------------------------
+
 typedef struct
 {
     double w;    // w  corresponds to a path weight.
@@ -88,8 +89,9 @@ typedef struct
 BF_Tuple3_struct;
 
 //------------------------------------------------------------------------------
-// 2 binary functions, z=f(x,y), where Tuple3xTuple3 -> Tuple3
+// binary functions, z=f(x,y), where Tuple3xTuple3 -> Tuple3
 //------------------------------------------------------------------------------
+
 void BF_lMIN3
 (
     BF_Tuple3_struct *z,
@@ -116,16 +118,9 @@ void BF_PLUSrhs3
     const BF_Tuple3_struct *y
 )
 {
-    z->w = x->w + y->w;
-    z->h = x->h + y->h;
-    if (x->pi != UINT64_MAX && y->pi != 0)
-    {
-        z->pi = y->pi;
-    }
-    else
-    {
-        z->pi = x->pi;
-    }
+    z->w = x->w + y->w ;
+    z->h = x->h + y->h ;
+    z->pi = (x->pi != UINT64_MAX && y->pi != 0) ?  y->pi : x->pi ;
 }
 
 void BF_LT3
@@ -135,17 +130,11 @@ void BF_LT3
     const BF_Tuple3_struct *y
 )
 {
-    if (x->w < y->w
+    (*z) = (x->w < y->w
         || (x->w == y->w && x->h < y->h)
-        || (x->w == y->w && x->h == y->h && x->pi < y->pi))
-    {
-        *z = true;
-    }
-    else
-    {
-        *z = false;
-    }
+        || (x->w == y->w && x->h == y->h && x->pi < y->pi)) ;
 }
+
 // Given a n-by-n adjacency matrix A and a source vertex s.
 // If there is no negative-weight cycle reachable from s, return the distances
 // of shortest paths from s and parents along the paths as vector d. Otherwise,

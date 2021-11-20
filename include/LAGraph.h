@@ -867,6 +867,100 @@ int LAGraph_IsEqual_type    // returns 0 if successful, < 0 if failure
     char *msg
 ) ;
 
+//****************************************************************************
+/**
+ * Checks if two vectors are identically equal (same size, pattern,
+ * and values) according to a user specified comparator op.
+ *
+ * @note For the standard API, there is no way to determine the type of a
+ *       vector.  Checking for the same type requires the GxB_Vector_type
+ *       function, which is an extension in SuiteSparse:GraphBLAS.
+ * @note If either or both contain NaN's, result will be false
+ * @todo Add GrB_Type input parameters to check for type with the standard API
+ *
+ * @param[out]   result   Set to true on return is vectors are "equal"
+ * @param[in]    A        First vector to compare
+ * @param[in]    B        Second vector to compare
+ * @param[in]    userop   Binary operator to use for the comparisons
+ * @param[out]   msg      If an error code is returned, this may hold an error msg.
+ *
+ * @retval 0     if completed successfully (equal or not)
+ * @retval -1001 result or userop is NULL
+ * @return Any GraphBLAS errors that may have been encountered
+ */
+GrB_Info LAGraph_Vector_IsEqual_op    // return GrB_SUCCESS if successful
+(
+    bool *result,           // true if A == B, false if A != B or error
+    GrB_Vector A,
+    GrB_Vector B,
+    GrB_BinaryOp userop,    // comparator to use (required)
+    char *msg
+);
+
+
+//****************************************************************************
+/**
+ * Checks if two vectors are identically equal (same size, pattern,
+ * and values) according to an equal operator of a type specified by
+ * the user.
+ *
+ * @note For the standard API, there is no way to determine the type of a
+ *       vector. Checking for the same type requires the GxB_Vector_type
+ *       function, which is an extension in SuiteSparse:GraphBLAS.
+ * @note If either or both contain NaN's, result will be false
+ * @todo Add GrB_Type input parameters to check for type with the standard API
+ *
+ * @param[out]   result   Set to true on return is vectors are "equal"
+ * @param[in]    A        First vector to compare
+ * @param[in]    B        Second vector to compare
+ * @param[in]    type     The type of the GrB_EQ_<type> operator to compare with
+ * @param[out]   msg      If an error code is returned, this may hold an error msg.
+ *
+ * @retval 0     if completed successfully (equal or not)
+ * @retval -1001 result or type is NULL
+ * @retval -1002 type is not supported
+ * @return Any GraphBLAS errors that may have been encountered
+ */
+GrB_Info LAGraph_Vector_IsEqual_type // return GrB_SUCCESS if successful
+(
+    bool         *result,          // true if A == B, false if A != B or error
+    GrB_Vector    A,
+    GrB_Vector    B,
+    GrB_Type      type,            // use GrB_EQ_type operator to compare A and B
+    char         *msg
+) ;
+
+
+//****************************************************************************
+/**
+ * Checks if two vectors are identically equal (same size, type (if accessible),
+ * pattern, and values) according to an equal operator of a type determined
+ * internally.
+ *
+ * @note For the standard API, there is no way to determine the type of a
+ *       vector and GrB_EQ_FP64 is used. Checking for the same type requires the
+ *       GxB_Vector_type function, which is an extension in SuiteSparse:GraphBLAS.
+ * @note If either or both contain NaN's, result will be false
+ * @todo Add GrB_Type input parameters to check for type with the standard API
+ *
+ * @param[out]   result   Set to true on return is vectors are "equal"
+ * @param[in]    A        First vector to compare
+ * @param[in]    B        Second vector to compare
+ * @param[out]   msg      If an error code is returned, this may hold an error msg.
+ *
+ * @retval 0     if completed successfully (equal or not)
+ * @retval -1001 A, result or type is NULL
+ * @retval -1002 type is not supported
+ * @return Any GraphBLAS errors that may have been encountered
+ */
+int LAGraph_Vector_IsEqual         // returns 0 if successful, < 0 if failure
+(
+    bool *result,           // true if A == B, false if A != B or error
+    GrB_Vector A,
+    GrB_Vector B,
+    char *msg
+);
+
 // LAGraph_Matrix_print: pretty-print a matrix, determining type automatically
 LAGRAPH_PUBLIC
 int LAGraph_Matrix_print

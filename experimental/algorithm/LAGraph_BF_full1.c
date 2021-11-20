@@ -119,14 +119,7 @@ void BF1_PLUSrhs
 {
     z->w = x->w + y->w;
     z->h = x->h + y->h;
-    if (x->pi != UINT64_MAX && y->pi != 0)
-    {
-        z->pi = y->pi;
-    }
-    else
-    {
-        z->pi = x->pi;
-    }
+    z->pi = (x->pi != UINT64_MAX && y->pi != 0) ?  y->pi : x->pi ;
 }
 
 void BF1_Identity
@@ -145,17 +138,11 @@ void BF1_LT
     const BF1_Tuple3_struct *y
 )
 {
-    if (x->w < y->w
+    (*z) = (x->w < y->w
         || (x->w == y->w && x->h < y->h)
-        || (x->w == y->w && x->h == y->h && x->pi < y->pi))
-    {
-        *z = true;
-    }
-    else
-    {
-        *z = false;
-    }
+        || (x->w == y->w && x->h == y->h && x->pi < y->pi)) ;
 }
+
 // Given a n-by-n adjacency matrix A and a source vertex s.
 // If there is no negative-weight cycle reachable from s, return the distances
 // of shortest paths from s and parents along the paths as vector d. Otherwise,

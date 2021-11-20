@@ -90,8 +90,9 @@ typedef struct
 BF2_Tuple3_struct;
 
 //------------------------------------------------------------------------------
-// 2 binary functions, z=f(x,y), where Tuple3xTuple3 -> Tuple3
+// binary functions, z=f(x,y), where Tuple3xTuple3 -> Tuple3
 //------------------------------------------------------------------------------
+
 void BF2_lMIN2
 (
     BF2_Tuple3_struct *z,
@@ -118,16 +119,9 @@ void BF2_PLUSrhs2
     const BF2_Tuple3_struct *y
 )
 {
-    z->w = x->w + y->w;
-    z->h = x->h + y->h;
-    if (x->pi != UINT64_MAX && y->pi != 0)
-    {
-        z->pi = y->pi;
-    }
-    else
-    {
-        z->pi = x->pi;
-    }
+    z->w = x->w + y->w ;
+    z->h = x->h + y->h ;
+    z->pi = (x->pi != UINT64_MAX && y->pi != 0) ?  y->pi : x->pi ;
 }
 
 void BF2_EQ
@@ -137,14 +131,7 @@ void BF2_EQ
     const BF2_Tuple3_struct *y
 )
 {
-    if (x->w == y->w && x->h == y->h && x->pi == y->pi)
-    {
-        *z = true;
-    }
-    else
-    {
-        *z = false;
-    }
+    (*z) = (x->w == y->w && x->h == y->h && x->pi == y->pi) ;
 }
 
 // Given a n-by-n adjacency matrix A and a source vertex s.
@@ -159,6 +146,7 @@ void BF2_EQ
 //   number of edges from s to i in the shortest path
 // A has weights on corresponding entries of edges
 // s is given index for source vertex
+
 GrB_Info LAGraph_BF_full2
 (
     GrB_Vector *pd_output,      //the pointer to the vector of distance

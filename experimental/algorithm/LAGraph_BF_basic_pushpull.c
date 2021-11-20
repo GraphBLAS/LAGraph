@@ -21,10 +21,10 @@
 // edge from vertex i to vertex j with weight w, then A(i, j) = w. Furthermore,
 // LAGraph_BF_basic requires A(i, i) = 0 for all 0 <= i < n.
 
-// LAGraph_BF_basic returns GrB_SUCCESS regardless of existence of
-// negative-weight cycle. However, the GrB_Vector d(k) (i.e., *pd_output) will
-// be NULL when negative-weight cycle detected. Otherwise, the vector d has
-// d(k) as the shortest distance from s to k.
+// LAGraph_BF_basic returns GrB_SUCCESS if successful, or GrB_NO_VALUE if it
+// detects a negative-weight cycle.  The GrB_Vector d(k) (i.e., *pd_output)
+// will be NULL when negative-weight cycle detected. Otherwise, the vector d
+// has d(k) as the shortest distance from s to k.
 
 //------------------------------------------------------------------------------
 
@@ -64,7 +64,7 @@ GrB_Info LAGraph_BF_basic_pushpull
     LG_CHECK ((A == NULL && AT == NULL) || pd_output == NULL, -1001,
         "inputs are NULL") ;
 
-    *pd_output = NULL;
+    (*pd_output) = NULL;
     bool use_vxm_with_A;
     if (A == NULL)
     {
@@ -131,22 +131,21 @@ GrB_Info LAGraph_BF_basic_pushpull
         // excute semiring on d and A, and save the result to d
         if (!use_vxm_with_A)
         {
-            GrB_TRY (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, GrB_MIN_PLUS_SEMIRING_FP64,
-                AT, d, GrB_NULL));
+            GrB_TRY (GrB_mxv (dtmp, NULL, NULL, GrB_MIN_PLUS_SEMIRING_FP64,
+                AT, d, NULL));
         }
         else
         {
-            GrB_TRY (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, GrB_MIN_PLUS_SEMIRING_FP64,
-                d, A, GrB_NULL));
+            GrB_TRY (GrB_vxm (dtmp, NULL, NULL, GrB_MIN_PLUS_SEMIRING_FP64,
+                d, A, NULL));
         }
-//        double t1; LAGraph_Toc (&t1, tic, NULL) ;
-        LAGRAPH_OK (LAGraph_Vector_IsEqual_type(&same, dtmp, d, GrB_FP64, NULL));
+        LAGRAPH_OK (LAGraph_Vector_IsEqual_type (&same, dtmp, d, GrB_FP64,
+            NULL));
         if (!same)
         {
             GrB_Vector ttmp = dtmp;
             dtmp = d;
             d = ttmp;
-//            GxB_Vector_fprint(d, "---- d ------", GxB_SHORT, stderr);
         }
         iter++;
 
@@ -154,10 +153,6 @@ GrB_Info LAGraph_BF_basic_pushpull
         LAGraph_Toc (&t2, tic, NULL) ;
         GrB_Index dnz ;
         GrB_TRY (GrB_Vector_nvals (&dnz, d)) ;
-
-//      printf ("step %3d time1 %16.4f sec time2 %16.4f sec, nvals %.16g\n", iter, t1, t2-t1, (double) dnz) ;
-//      printf ("step %3d time %16.4f sec, nvals %.16g\n", iter, t2, (double) dnz) ;
-        fflush (stdout) ;
 
         if (dsparse)
         {
@@ -188,7 +183,6 @@ GrB_Info LAGraph_BF_basic_pushpull
                 GrB_TRY (GrB_assign (d, d, NULL, INFINITY, GrB_ALL, n,
                     GrB_DESC_C)) ;
                 GrB_TRY (GrB_Vector_setElement_FP64(d, 0, s));
-//                GxB_Vector_fprint(d, "---- d ------", GxB_SHORT, stderr);
             }
         }
     }
@@ -200,23 +194,23 @@ GrB_Info LAGraph_BF_basic_pushpull
         // excute semiring again to check for negative-weight cycle
         if (!use_vxm_with_A)
         {
-            GrB_TRY (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, GrB_MIN_PLUS_SEMIRING_FP64,
-                AT, d, GrB_NULL));
+            GrB_TRY (GrB_mxv(dtmp, NULL, NULL,
+                GrB_MIN_PLUS_SEMIRING_FP64, AT, d, NULL));
         }
         else
         {
-            GrB_TRY (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, GrB_MIN_PLUS_SEMIRING_FP64,
-                d, A, GrB_NULL));
+            GrB_TRY (GrB_vxm(dtmp, NULL, NULL,
+                GrB_MIN_PLUS_SEMIRING_FP64, d, A, NULL));
         }
-        LAGRAPH_OK (LAGraph_Vector_IsEqual_type(&same, dtmp, d, GrB_FP64, NULL));
+        LAGRAPH_OK (LAGraph_Vector_IsEqual_type (&same, dtmp, d, GrB_FP64,
+            NULL));
 
         // if d != dtmp, then there is a negative-weight cycle in the graph
         if (!same)
         {
-//            GxB_Vector_fprint(d, "---- d ------", GxB_SHORT, stderr);
             // printf("A negative-weight cycle found. \n");
             LAGraph_FREE_ALL;
-            return (GrB_SUCCESS) ;
+            return (GrB_NO_VALUE) ;
         }
     }
 

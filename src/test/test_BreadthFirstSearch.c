@@ -125,12 +125,9 @@ const matrix_info files [ ] =
 //****************************************************************************
 bool check_karate_parents30(GrB_Vector parents)
 {
-    // TODO: this may not work in multithreaded code (w/ benign races)
-
-    // Tim D: fixed. An update to SS:GrB has resulted in different, yet valid,
-    // parent vectors (even single-threaded).  The LG_check_bfs works fine and
-    // those tests pass.  I rewrote the parent test to look for any valid
-    // parent vector.
+    // An update to SS:GrB can result in different, yet valid, parent vectors
+    // (even single-threaded).  The LG_check_bfs works fine and those tests
+    // pass.  This parent test looks for any valid parent vector.
 
     GrB_Index n = 0;
     TEST_CHECK(0 == GrB_Vector_size(&n, parents));

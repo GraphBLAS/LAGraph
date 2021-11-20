@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_Vector_isequal: check two vectors for exact equality
+// LAGraph_Vector_IsEqual: check two vectors for exact equality
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -9,16 +9,15 @@
 // or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
-// FIXME: this is not yet included in the test coverage suite
 
-// LAGraph_Vector_isequal, contributed by Tim Davis, Texas A&M
+// LAGraph_Vector_IsEqual, contributed by Tim Davis, Texas A&M
 
 // Checks if two vectors are identically equal (same size,
 // type, pattern, size, and values).  Checking for the same type requires the
 // GxB_Vector_type function, which is an extension in SuiteSparse:GraphBLAS.
 // For the standard API, there is no way to determine the type of a vector.
 
-// See also LAGraph_isequal.
+// See also LAGraph_IsEqual.
 
 // TODO: add GrB_Vector_Type to the GraphBLAS spec.
 
@@ -30,9 +29,8 @@
 
 #define LAGraph_FREE_WORK GrB_free (&C) ;
 
-#include <LAGraph.h>
+#include "LG_internal.h"
 #include <LAGraphX.h>
-#include <LG_internal.h>  // from src/utility
 
 //****************************************************************************
 //****************************************************************************
@@ -52,9 +50,10 @@ GrB_Info LAGraph_Vector_IsEqual_op    // return GrB_SUCCESS if successful
 
     LG_CLEAR_MSG ;
     GrB_Vector C = NULL ;
-    LG_CHECK (userop == NULL || result == NULL, -1001, "required input is NULL") ;
+    LG_CHECK (userop == NULL || result == NULL, -1001,
+        "required input is NULL") ;
 
-    int info ;
+    GrB_Info info ;
 
     //--------------------------------------------------------------------------
     // check for NULL and aliased vectors
@@ -151,7 +150,7 @@ GrB_Info LAGraph_Vector_IsEqual_type    // return GrB_SUCCESS if successful
     GrB_Vector C = NULL ;
     LG_CHECK (type == NULL || result == NULL, -1001, "required input is NULL") ;
 
-    int info ;
+    GrB_Info info ;
 
     //--------------------------------------------------------------------------
     // check for NULL and aliased vectors

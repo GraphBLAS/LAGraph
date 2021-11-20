@@ -23,24 +23,23 @@
 // as triplet format (I, J, W), which is an edge from vertex I(k) to vertex
 // J(k) with weight W(k), and also the number of vertices and number of edges.
 
-// LAGraph_BF_pure_c returns GrB_SUCCESS regardless of existence of negative-
-// weight cycle. However, the vector d(k) and pi(k) (i.e., *pd, and *ppi
+// LAGraph_BF_pure_c returns GrB_SUCCESS, or GrB_NO_VALUE if it detects of
+// negative- weight cycle. The vector d(k) and pi(k) (i.e., *pd, and *ppi
 // respectively) will be NULL when negative-weight cycle detected. Otherwise,
 // the vector d has d(k) as the shortest distance from s to k. pi(k) = p, where
-// p is the parent node of k-th node in the shortest path. In particular,
-// pi(s) = -1.
+// p is the parent node of k-th node in the shortest path. In particular, pi(s)
+// = -1.
 
 //------------------------------------------------------------------------------
 
-#define LAGraph_FREE_ALL      \
-{                             \
-    LAGraph_Free ((void**)&d);         \
-    LAGraph_Free ((void**)&pi);        \
+#define LAGraph_FREE_ALL            \
+{                                   \
+    LAGraph_Free ((void**) &d) ;    \
+    LAGraph_Free ((void**) &pi) ;   \
 }
 
-#include <LAGraph.h>
-#include <LAGraphX.h>
 #include "LG_internal.h"
+#include <LAGraphX.h>
 
 // Given the edges and corresponding weights of a graph in tuple
 // form {I, J, W} and a source vertex s. If there is no negative-weight
@@ -69,8 +68,8 @@ GrB_Info LAGraph_BF_pure_c
     LG_CHECK (I == NULL || J == NULL || W == NULL || pd == NULL ||
         ppi == NULL, -1001, "inputs are NULL") ;
 
-    LAGraph_Free ((void**)&*pd) ;
-    LAGraph_Free ((void**)&*ppi) ;
+    LAGraph_Free ((void **) pd) ;
+    LAGraph_Free ((void **) ppi) ;
 
     LG_CHECK (s >= n || s < 0, -1002, "invalid source node") ;
 
@@ -122,9 +121,8 @@ GrB_Info LAGraph_BF_pure_c
             j = J[k];
             if (d[i] != INT32_MAX && (d[j] == INT32_MAX || d[j] > d[i] + W[k]))
             {
-                // printf("A negative-weight cycle exists. \n");
-                LAGraph_FREE_ALL;
-                return (GrB_SUCCESS) ;
+                LAGraph_FREE_ALL ;
+                return (GrB_NO_VALUE) ;
             }
         }
     }

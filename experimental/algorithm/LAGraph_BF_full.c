@@ -21,13 +21,13 @@
 // to vertex j with weight w, then A(i, j) = w. Furthermore, LAGraph_BF_full
 // requires A(i, i) = 0 for all 0 <= i < n.
 
-// LAGraph_BF_full returns GrB_SUCCESS regardless of existence of negative-
-// weight cycle. However, the GrB_Vector d(k), pi(k) and h(k)  (i.e.,
-// *pd_output, *ppi_output and *ph_output respectively) will be NULL when
-// negative-weight cycle detected. Otherwise, the vector d has d(k) as the
-// shortest distance from s to k. pi(k) = p+1, where p is the parent node of
-// k-th node in the shortest path. In particular, pi(s) = 0. h(k) = hop(s, k),
-// the number of edges from s to k in the shortest path.
+// LAGraph_BF_full returns GrB_SUCCESS if successful, and GrB_NO_VALUE if it
+// detects the existence of negative- weight cycle. The GrB_Vector d(k), pi(k)
+// and h(k)  (i.e., *pd_output, *ppi_output and *ph_output respectively) will
+// be NULL when negative-weight cycle detected. Otherwise, the vector d has
+// d(k) as the shortest distance from s to k. pi(k) = p+1, where p is the
+// parent node of k-th node in the shortest path. In particular, pi(s) = 0.
+// h(k) = hop(s, k), the number of edges from s to k in the shortest path.
 
 //------------------------------------------------------------------------------
 
@@ -74,6 +74,7 @@ BF_Tuple3_struct;
 //------------------------------------------------------------------------------
 // 2 binary functions, z=f(x,y), where Tuple3xTuple3 -> Tuple3
 //------------------------------------------------------------------------------
+
 void BF_lMIN
 (
     BF_Tuple3_struct *z,
@@ -100,16 +101,9 @@ void BF_PLUSrhs
     const BF_Tuple3_struct *y
 )
 {
-    z->w = x->w + y->w;
-    z->h = x->h + y->h;
-    if (x->pi != UINT64_MAX && y->pi != 0)
-    {
-        z->pi = y->pi;
-    }
-    else
-    {
-        z->pi = x->pi;
-    }
+    z->w = x->w + y->w ;
+    z->h = x->h + y->h ;
+    z->pi = (x->pi != UINT64_MAX && y->pi != 0) ?  y->pi : x->pi ;
 }
 
 void BF_EQ
@@ -119,14 +113,7 @@ void BF_EQ
     const BF_Tuple3_struct *y
 )
 {
-    if (x->w == y->w && x->h == y->h && x->pi == y->pi)
-    {
-        *z = true;
-    }
-    else
-    {
-        *z = false;
-    }
+    (*z) = (x->w == y->w && x->h == y->h && x->pi == y->pi) ;
 }
 
 // Given a n-by-n adjacency matrix A and a source vertex s.
@@ -288,7 +275,7 @@ GrB_Info LAGraph_BF_full
         {
             // printf("A negative-weight cycle found. \n");
             LAGraph_FREE_ALL;
-            return (GrB_SUCCESS) ;
+            return (GrB_NO_VALUE) ;
         }
     }
 

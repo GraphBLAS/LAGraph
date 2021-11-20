@@ -55,99 +55,6 @@
 // Utilities
 //****************************************************************************
 
-//****************************************************************************
-/**
- * Checks if two vectors are identically equal (same size, pattern,
- * and values) according to a user specified comparator op.
- *
- * @note For the standard API, there is no way to determine the type of a
- *       vector.  Checking for the same type requires the GxB_Vector_type
- *       function, which is an extension in SuiteSparse:GraphBLAS.
- * @note If either or both contain NaN's, result will be false
- * @todo Add GrB_Type input parameters to check for type with the standard API
- *
- * @param[out]   result   Set to true on return is vectors are "equal"
- * @param[in]    A        First vector to compare
- * @param[in]    B        Second vector to compare
- * @param[in]    userop   Binary operator to use for the comparisons
- * @param[out]   msg      If an error code is returned, this may hold an error msg.
- *
- * @retval 0     if completed successfully (equal or not)
- * @retval -1001 result or userop is NULL
- * @return Any GraphBLAS errors that may have been encountered
- */
-GrB_Info LAGraph_Vector_IsEqual_op    // return GrB_SUCCESS if successful
-(
-    bool *result,           // true if A == B, false if A != B or error
-    GrB_Vector A,
-    GrB_Vector B,
-    GrB_BinaryOp userop,    // comparator to use (required)
-    char *msg
-);
-
-
-//****************************************************************************
-/**
- * Checks if two vectors are identically equal (same size, pattern,
- * and values) according to an equal operator of a type specified by
- * the user.
- *
- * @note For the standard API, there is no way to determine the type of a
- *       vector. Checking for the same type requires the GxB_Vector_type
- *       function, which is an extension in SuiteSparse:GraphBLAS.
- * @note If either or both contain NaN's, result will be false
- * @todo Add GrB_Type input parameters to check for type with the standard API
- *
- * @param[out]   result   Set to true on return is vectors are "equal"
- * @param[in]    A        First vector to compare
- * @param[in]    B        Second vector to compare
- * @param[in]    type     The type of the GrB_EQ_<type> operator to compare with
- * @param[out]   msg      If an error code is returned, this may hold an error msg.
- *
- * @retval 0     if completed successfully (equal or not)
- * @retval -1001 result or type is NULL
- * @retval -1002 type is not supported
- * @return Any GraphBLAS errors that may have been encountered
- */
-GrB_Info LAGraph_Vector_IsEqual_type // return GrB_SUCCESS if successful
-(
-    bool         *result,          // true if A == B, false if A != B or error
-    GrB_Vector    A,
-    GrB_Vector    B,
-    GrB_Type      type,            // use GrB_EQ_type operator to compare A and B
-    char         *msg
-) ;
-
-
-//****************************************************************************
-/**
- * Checks if two vectors are identically equal (same size, type (if accessible),
- * pattern, and values) according to an equal operator of a type determined
- * internally.
- *
- * @note For the standard API, there is no way to determine the type of a
- *       vector and GrB_EQ_FP64 is used. Checking for the same type requires the
- *       GxB_Vector_type function, which is an extension in SuiteSparse:GraphBLAS.
- * @note If either or both contain NaN's, result will be false
- * @todo Add GrB_Type input parameters to check for type with the standard API
- *
- * @param[out]   result   Set to true on return is vectors are "equal"
- * @param[in]    A        First vector to compare
- * @param[in]    B        Second vector to compare
- * @param[out]   msg      If an error code is returned, this may hold an error msg.
- *
- * @retval 0     if completed successfully (equal or not)
- * @retval -1001 A, result or type is NULL
- * @retval -1002 type is not supported
- * @return Any GraphBLAS errors that may have been encountered
- */
-int LAGraph_Vector_IsEqual         // returns 0 if successful, < 0 if failure
-(
-    bool *result,           // true if A == B, false if A != B or error
-    GrB_Vector A,
-    GrB_Vector B,
-    char *msg
-);
 
 //****************************************************************************
 // Random number generator
@@ -198,60 +105,6 @@ GrB_Info LAGraph_Random_FP32    // random float vector
     GrB_Vector Seed,
     char *msg
 ) ;
-
-//****************************************************************************
-// Unused and/or deprecated methods
-//****************************************************************************
-
-GrB_Info LAGraph_log
-(
-    char *caller,           // calling function
-    char *message1,         // message to include (may be NULL)
-    char *message2,         // message to include (may be NULL)
-    int nthreads,           // # of threads used
-    double t                // time taken by the test
-) ;
-
-GrB_Info LAGraph_1_to_n     // create an integer vector v = 1:n
-(
-    GrB_Vector *v_handle,   // vector to create
-    GrB_Index n             // size of vector to create
-);
-
-GrB_Info LAGraph_ispattern  // return GrB_SUCCESS if successful
-(
-    bool *result,           // true if A is all one, false otherwise
-    GrB_Matrix A,
-    GrB_UnaryOp userop      // for A with arbitrary user-defined type.
-                            // Ignored if A and B are of built-in types
-);
-
-GrB_Info LAGraph_isall      // return GrB_SUCCESS if successful
-(
-    bool *result,           // true if A == B, false if A != B or error
-    GrB_Matrix A,
-    GrB_Matrix B,
-    GrB_BinaryOp op         // GrB_EQ_<type>, for the type of A and B,
-                            // to check for equality.  Or use any desired
-                            // operator.  The operator should return GrB_BOOL.
-);
-
-GrB_Info LAGraph_Vector_isall      // return GrB_SUCCESS if successful
-(
-    bool *result,           // true if A == B, false if A != B or error
-    GrB_Vector A,
-    GrB_Vector B,
-    GrB_BinaryOp op         // GrB_EQ_<type>, for the type of A and B,
-                            // to check for equality.  Or use any desired
-                            // operator.  The operator should return GrB_BOOL.
-);
-
-GrB_Info LAGraph_Vector_to_dense
-(
-    GrB_Vector *vdense,     // output vector
-    GrB_Vector v,           // input vector
-    void *id                // pointer to value to fill vdense with
-);
 
 //****************************************************************************
 // Algorithms
@@ -370,6 +223,7 @@ GrB_Info LAGraph_cc_boruvka (
  * @retval GrB_SUCCESS        if completed successfully
  * @retval GrB_NULL_POINTER   If pd_output or A is NULL
  * @retval GrB_INVALID_VALUE  if A is not square, s is not a valid vertex index
+ * @retval GrB_NO_VALUE       if A has a negative weight cycle
  * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
  */
 GrB_Info LAGraph_BF_basic
@@ -391,6 +245,7 @@ GrB_Info LAGraph_BF_basic
  * @retval GrB_SUCCESS        if completed successfully
  * @retval GrB_NULL_POINTER   If pd_output is NULL or both A and AT are NULL
  * @retval GrB_INVALID_VALUE  if A is not square, s is not a valid vertex index
+ * @retval GrB_NO_VALUE       if A has a negative weight cycle
  * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
  *
  */
@@ -413,6 +268,7 @@ GrB_Info LAGraph_BF_basic_pushpull
  * @retval GrB_SUCCESS        if completed successfully
  * @retval GrB_NULL_POINTER   If pd_output or AT is NULL
  * @retval GrB_INVALID_VALUE  if A is not square, s is not a valid vertex index
+ * @retval GrB_NO_VALUE       if A has a negative weight cycle
  * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
  *
  */
@@ -437,6 +293,7 @@ GrB_Info LAGraph_BF_basic_mxv
  * @retval GrB_NULL_POINTER   If pd_output, ppi_output, ph_output, or A is NULL
  * @retval GrB_INVALID_VALUE  if A is not square, s is not a valid vertex index
  * @retval GrB_OUT_OF_MEMORY  if allocation fails
+ * @retval GrB_NO_VALUE       if A has a negative weight cycle
  * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
  *
  */
@@ -463,6 +320,7 @@ GrB_Info LAGraph_BF_full
  * @retval GrB_NULL_POINTER   If pd_output, ppi_output, ph_output, or A is NULL
  * @retval GrB_INVALID_VALUE  if A is not square, s is not a valid vertex index
  * @retval GrB_OUT_OF_MEMORY  if allocation fails
+ * @retval GrB_NO_VALUE       if A has a negative weight cycle
  * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
  *
  */
@@ -489,6 +347,7 @@ GrB_Info LAGraph_BF_full1
  * @retval GrB_NULL_POINTER   If pd_output, ppi_output, ph_output, or A is NULL
  * @retval GrB_INVALID_VALUE  if A is not square, s is not a valid vertex index
  * @retval GrB_OUT_OF_MEMORY  if allocation fails
+ * @retval GrB_NO_VALUE       if A has a negative weight cycle
  * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
  *
  */
@@ -515,6 +374,7 @@ GrB_Info LAGraph_BF_full1a
  * @retval GrB_NULL_POINTER   If pd_output, ppi_output, ph_output, or A is NULL
  * @retval GrB_INVALID_VALUE  if A is not square, s is not a valid vertex index
  * @retval GrB_OUT_OF_MEMORY  if allocation fails
+ * @retval GrB_NO_VALUE       if A has a negative weight cycle
  * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
  *
  */
@@ -541,6 +401,7 @@ GrB_Info LAGraph_BF_full2
  * @retval GrB_NULL_POINTER   If pd_output, ppi_output, ph_output, or AT is NULL
  * @retval GrB_INVALID_VALUE  if A is not square, s is not a valid vertex index
  * @retval GrB_OUT_OF_MEMORY  if allocation fails
+ * @retval GrB_NO_VALUE       if A has a negative weight cycle
  * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
  *
  */
@@ -572,6 +433,7 @@ GrB_Info LAGraph_BF_full_mxv
  * @retval GrB_NULL_POINTER   If pd, ppi, I, J, or W is NULL
  * @retval GrB_INVALID_VALUE  if s is not a valid vertex index
  * @retval GrB_OUT_OF_MEMORY  if allocation fails.
+ * @retval GrB_NO_VALUE       if A has a negative weight cycle
  *
  */
 GrB_Info LAGraph_BF_pure_c
@@ -607,6 +469,7 @@ GrB_Info LAGraph_BF_pure_c
  * @retval GrB_NULL_POINTER   If pd, ppi, I, J, or W is NULL
  * @retval GrB_INVALID_VALUE  if s is not a valid vertex index
  * @retval GrB_OUT_OF_MEMORY  if allocation fails.
+ * @retval GrB_NO_VALUE       if A has a negative weight cycle
  *
  */
 GrB_Info LAGraph_BF_pure_c_double
@@ -640,6 +503,7 @@ GrB_Info LAGraph_BF_pure_c_double
  * @retval GrB_NULL_POINTER   If t, CDLP_handle or CDLP_type is NULL
  * @retval GrB_INVALID_OBJECT If A is not stored in CSR format (FIXME)
  * @retval GrB_OUT_OF_MEMORY  if allocation fails.
+ * @retval GrB_NO_VALUE       if A has a negative weight cycle
  * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
  */
 GrB_Info LAGraph_cdlp
