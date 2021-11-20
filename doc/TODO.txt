@@ -1,23 +1,17 @@
 As of Nov 19, 2021:
 
-    * consider testing, documenting, polishing all experimental algorithms &
-      utilities
+    * test, document, polish all experimental algorithms & utilities
     * need vanilla connected components
     * unify error return values as much as possible, now that v2.0 C API
         has assigned enum values to GrB_Info
     * many TODOs and FIXMEs throughout
-
-TODO: for v1.0 release
-
-    documentation
-    testing
-    error return values
-    lots of TODOs in CC method (connected components): Ariful working on it
-    vanilla CC
+    * lots of TODOs in CC method (connected components): Ariful working on it
+    * brutal memory testing
 
 --------------------------------------------------------------------------------
 
 FUTURE:
+
 TODO: need GrB_Matrix_type or type_name.  use GxB_Matrix_type_name instead
     of GxB_Matrix_type.
     (type query needs to be added to the GraphBLAS API Specification)
