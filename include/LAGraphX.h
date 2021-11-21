@@ -63,6 +63,11 @@
 int LAGraph_Random_Init (char *msg) ;
 int LAGraph_Random_Finalize (char *msg) ;
 
+#if defined ( COVERAGE )
+// for testing only
+LAGRAPH_PUBLIC bool random_hack ;
+#endif
+
 int LAGraph_Random_Seed     // construct a random seed vector
 (
     // input/output

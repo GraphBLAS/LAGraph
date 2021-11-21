@@ -204,6 +204,18 @@ void test_MIS (void)
         // check the result
         OK (LG_check_mis (G->A, mis, NULL, msg)) ;
 
+        // hack the random number generator to induce an error condition
+        printf ("Hack the random number generator to induce a stall:\n") ;
+        random_hack = true ;
+        int result = LAGraph_MaximalIndependentSet (&mis, G, 0, NULL, msg) ;
+        random_hack = false ;
+        printf ("hack msg: %d %s\n", result, msg) ;
+        TEST_CHECK (result == -111 || result == 0) ;
+        if (result == 0)
+        {
+            OK (LG_check_mis (G->A, mis, NULL, msg)) ;
+        }
+
         OK (GrB_free (&ignore)) ;
         OK (GrB_free (&empty_col)) ;
         OK (GrB_free (&empty_row)) ;

@@ -161,6 +161,11 @@ int LAGraph_Random_Finalize (char *msg)
 #undef  LAGraph_FREE_WORK
 #define LAGraph_FREE_WORK ;
 
+#if defined ( COVERAGE )
+// for testing only
+bool random_hack = false ;
+#endif
+
 int LAGraph_Random_Seed     // construct a random seed vector
 (
     // input/output
@@ -180,6 +185,18 @@ int LAGraph_Random_Seed     // construct a random seed vector
 
     // Seed = next (Seed)
     GrB_TRY (GrB_Vector_apply (Seed, NULL, NULL, LG_rand_next_op, Seed, NULL)) ;
+
+    #if defined ( COVERAGE )
+    if (random_hack)
+    {
+        // Set all Seed values to 1, to break the random seed vector.
+        // This is just for testing, to test algorithms that need to handle
+        // extreme cases when the random number generator is non-random. 
+        GrB_TRY (GrB_Vector_apply_BinaryOp2nd_INT64 (Seed, NULL, NULL,
+            GrB_ONEB_INT64, Seed, 0, NULL)) ;
+    }
+    #endif
+
     return (0) ;
 }
 
