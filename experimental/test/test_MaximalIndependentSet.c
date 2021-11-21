@@ -205,6 +205,7 @@ void test_MIS (void)
         OK (LG_check_mis (G->A, mis, NULL, msg)) ;
 
         // hack the random number generator to induce an error condition
+        #if defined ( COVERAGE )
         printf ("Hack the random number generator to induce a stall:\n") ;
         random_hack = true ;
         int result = LAGraph_MaximalIndependentSet (&mis, G, 0, NULL, msg) ;
@@ -215,6 +216,7 @@ void test_MIS (void)
         {
             OK (LG_check_mis (G->A, mis, NULL, msg)) ;
         }
+        #endif
 
         OK (GrB_free (&ignore)) ;
         OK (GrB_free (&empty_col)) ;
