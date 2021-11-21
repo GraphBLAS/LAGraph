@@ -51,14 +51,14 @@ int count_connected_components (GrB_Vector C) ;
 
 int count_connected_components (GrB_Vector C)
 {
-    GrB_Index n ;
+    GrB_Index n = 0 ;
     OK (GrB_Vector_size (&n, C)) ;
     int ncomponents = 0 ;
     for (int i = 0 ; i < n ; i++)
     {
-        int comp = -1 ;
+        int64_t comp = -1 ;
         int result = GrB_Vector_extractElement (&comp, C, i) ;
-        if (comp == i) ncomponents++ ;
+        if (result == GrB_SUCCESS && comp == i) ncomponents++ ;
     }
     return (ncomponents) ;
 }
@@ -119,26 +119,23 @@ void test_cc_matrices (void)
             if (trial == 0)
             {
                 // find the connected components with cc_boruvka
-                printf ("BORUVKA:\n") ;
+                printf ("\n------ BORUVKA:\n") ;
                 OK (LAGraph_cc_boruvka (&C2, G->A, false)) ;
-                OK (LAGraph_Vector_print (C2, 3, stdout, msg)) ;
+                OK (LAGraph_Vector_print (C2, 2, stdout, msg)) ;
                 ncomponents = count_connected_components (C2) ;
                 TEST_CHECK (ncomponents == ncomp) ;
                 OK (LG_check_cc (C2, G, msg)) ;
                 OK (GrB_free (&C2)) ;
 
                 // find the connected components with cc_lacc
-                #if 0
-                printf ("LACC:\n") ;
+                printf ("\n------ LACC:\n") ;
                 OK (LAGraph_cc_lacc (&C2, G->A, false)) ;
-                // OK (LAGraph_Vector_print (C2, 3, stdout, msg)) ;
-                GxB_print (C2, 3) ;
+                OK (LAGraph_Vector_print (C2, 2, stdout, msg)) ;
+                // GxB_print (C2, 3) ;
                 ncomponents = count_connected_components (C2) ;
                 TEST_CHECK (ncomponents == ncomp) ;
                 OK (LG_check_cc (C2, G, msg)) ;
                 OK (GrB_free (&C2)) ;
-                printf ("did LACC\n") ;
-                #endif
             }
 
             // convert to directed with symmetric pattern for next trial

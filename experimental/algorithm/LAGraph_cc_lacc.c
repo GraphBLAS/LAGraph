@@ -212,6 +212,7 @@ GrB_Info LAGraph_cc_lacc
         LAGRAPH_OK (GrB_assign (stars, 0, GrB_LAND, mask, GrB_ALL, 0, 0));
     }
     *result = parents;
+    parents = NULL ;        // return parents (set to NULL so it isn't freed)
 
     LAGraph_FREE_ALL;
     return GrB_SUCCESS;
