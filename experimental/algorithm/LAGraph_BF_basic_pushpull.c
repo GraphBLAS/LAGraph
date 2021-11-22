@@ -115,8 +115,6 @@ GrB_Info LAGraph_BF_basic_pushpull
     GrB_TRY (GrB_Vector_setElement_FP64(d, 0, s));
     // copy d to dtmp in order to create a same size of vector
     GrB_TRY (GrB_Vector_dup(&dtmp, d));
-//    GxB_Vector_fprint(A, "---- A ------", GxB_SHORT, stderr);
-//    GxB_Vector_fprint(d, "---- d ------", GxB_SHORT, stderr);
 
     int64_t iter = 0;      //number of iterations
     bool same = false;     //variable indicating if d=dtmp

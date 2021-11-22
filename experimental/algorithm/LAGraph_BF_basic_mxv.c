@@ -87,16 +87,15 @@ GrB_Info LAGraph_BF_basic_mxv
     int64_t iter = 0;      //number of iterations
     bool same = false;     //variable indicating if d == dtmp
 
-    // TODO add MIN_PLUS_FP64 to the LAGraph preallocated objects
-
     // terminate when no new path is found or more than n-1 loops
     while (!same && iter < n - 1)
     {
         // excute semiring on d and AT, and save the result to d
-        GrB_TRY (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, GxB_MIN_PLUS_FP64, AT,
-            d, GrB_NULL));
+        GrB_TRY (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, GrB_MIN_PLUS_SEMIRING_FP64,
+            AT, d, GrB_NULL));
 
-        LAGRAPH_OK (LAGraph_Vector_IsEqual_type(&same, dtmp, d, GrB_FP64, NULL));
+        LAGRAPH_OK (LAGraph_Vector_IsEqual_type(&same, dtmp, d, GrB_FP64,
+            NULL));
         if (!same)
         {
             GrB_Vector ttmp = dtmp;
@@ -111,11 +110,12 @@ GrB_Info LAGraph_BF_basic_mxv
     if (!same)
     {
         // excute semiring again to check for negative-weight cycle
-        GrB_TRY (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, GxB_MIN_PLUS_FP64, AT,
-                            d, GrB_NULL));
+        GrB_TRY (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, GrB_MIN_PLUS_SEMIRING_FP64,
+            AT, d, GrB_NULL));
 
         // if d != dtmp, then there is a negative-weight cycle in the graph
-        LAGRAPH_OK (LAGraph_Vector_IsEqual_type(&same, dtmp, d, GrB_FP64, NULL));
+        LAGRAPH_OK (LAGraph_Vector_IsEqual_type(&same, dtmp, d, GrB_FP64,
+            NULL));
         if (!same)
         {
             // printf("AT negative-weight cycle found. \n");

@@ -293,7 +293,7 @@ GrB_Info LAGraph_BF_full1
 
         // if there is no entry with smaller distance then all shortest paths
         // are found
-        GrB_TRY (GrB_reduce (&any_dless, NULL, GxB_LOR_BOOL_MONOID, dless,
+        GrB_TRY (GrB_reduce (&any_dless, NULL, GrB_LOR_MONOID_BOOL, dless,
             NULL)) ;
         if(any_dless)
         {
@@ -323,7 +323,7 @@ GrB_Info LAGraph_BF_full1
 
         // if there is no entry with smaller distance then all shortest paths
         // are found
-        GrB_TRY (GrB_reduce (&any_dless, NULL, GxB_LOR_BOOL_MONOID, dless, NULL)) ;
+        GrB_TRY (GrB_reduce (&any_dless, NULL, GrB_LOR_MONOID_BOOL, dless, NULL)) ;
         if(any_dless)
         {
             // printf("A negative-weight cycle found. \n");
