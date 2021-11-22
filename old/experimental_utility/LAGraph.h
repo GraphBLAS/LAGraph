@@ -814,15 +814,6 @@ GrB_Info LAGraph_binread
     char *filename          // file to read it from
 ) ;
 
-GrB_Info LAGraph_tsvread        // returns GrB_SUCCESS if successful
-(
-    GrB_Matrix *Chandle,        // C, created on output
-    FILE *f,                    // file to read from (already open)
-    GrB_Type type,              // the type of C to create
-    GrB_Index nrows,            // C is nrows-by-ncols
-    GrB_Index ncols
-) ;
-
 GrB_Info LAGraph_ispattern  // return GrB_SUCCESS if successful
 (
     bool *result,           // true if A is all one, false otherwise
