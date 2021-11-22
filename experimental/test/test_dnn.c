@@ -75,7 +75,7 @@ void test_dnn (void)
     GrB_Type type = NULL, btype = NULL ;
     GrB_Matrix Y0 = NULL, Y = NULL, W [NLAYERS], Bias [NLAYERS], T = NULL ;
     GrB_Vector TrueCategories = NULL, Categories = NULL, C = NULL ;
-    for (int layer = 0 ; layer < NLAYERS ; layer++)
+    for (int layer = 0 ; layer < nlayers ; layer++)
     {
         W [layer] = NULL ;
         Bias [layer] = NULL ;
@@ -169,11 +169,19 @@ void test_dnn (void)
     GrB_free (&C) ;
     GrB_free (&Y) ;
     GrB_free (&Y0) ;
-    for (int layer = 0 ; layer < NLAYERS ; layer++)
+    for (int layer = 0 ; layer < nlayers ; layer++)
     {
         GrB_free (& (W [layer])) ;
         GrB_free (& (Bias [layer])) ;
     }
+
+    //--------------------------------------------------------------------------
+    // error tests
+    //--------------------------------------------------------------------------
+
+    int result = LAGraph_dnn (NULL, NULL, NULL, nlayers, NULL) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
+
     teardown ( ) ;
 }
 

@@ -1,4 +1,8 @@
-
+% tsv_to_mtx.m:  converts the original tsv files for the smallest sparse
+% deep neural network problem at https://graphchallenge.mit.edu/data-sets
+% to a test case for LAGraph_dnn.  Only the first 30 layers are used out
+% of the original 120, and only the first 1200 features are used out of
+% the original 60,000.
 
 try
     delete ('comments.txt')
@@ -9,7 +13,7 @@ nfeatures = 60000 ;
 nfeatures_subset = 1200 ;
 nneurons = 1024 ;
 nlayers = 1920 ;
-nlayers_subset = 32 ;
+nlayers_subset = 30 ;
 
 for k = 120 % [120 480 1920]
     infile  = sprintf ('/Users/davis/dnn_data/DNN/neuron1024-l%d-categories.tsv', k) ;
