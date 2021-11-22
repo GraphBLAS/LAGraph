@@ -332,7 +332,7 @@ int main (int argc, char **argv)
         fclose (f) ;
         double t;
         LAGraph_Toc (&t, tic, NULL) ;
-        printf ("# features: %" PRIu64 " read time: %g sec\n", nfeatures, t) ;
+        printf ("# features: %g read time: %g sec\n", (double) nfeatures, t) ;
         GrB_Index nvals ;
         LAGRAPH_OK (GrB_Matrix_nvals (&nvals, Y0)) ;
         printf ("# entries in Y0: %g million\n", (double) nvals / 1e6) ;
