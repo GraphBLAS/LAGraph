@@ -96,8 +96,6 @@ int main (int argc, char **argv)
         GrB_ALL, n, GrB_ALL, n, GrB_DESC_S)) ;
     GrB_free (&(G->A)) ;
     G->A = A ;
-    // GrB_TRY (GxB_Matrix_fprint (G->A, "G->A", 2, stdout)) ;
-    // fprintf (stderr, "Matrix: %s\n", matrix_name) ;
 
     //--------------------------------------------------------------------------
     // triangle centrality

@@ -34,37 +34,6 @@ int LAGraph_binread
 
 //****************************************************************************
 /**
- * LAGraph_tsvread: read a matrix from a tsv file
- *
- * Each line in the file specifies a single entry: i, j, x.
- * The indices i and j are assumed to be one-based.  The dimensions of the
- * matrix must be provided by the caller.  This format is used for matrices at
- * http://graphchallenge.org.  The Matrix Market format is recommended instead;
- * it is more flexible and easier to use, since that format includes the matrix
- * type and size in the file itself.  See LAGraph_mmread and LAGraph_mmwrite.
- *
- * @param[out]  A       Matrix read from the file. It is allocated by this
- *                      method
- * @param[in]   f       A handle to an open file containing the tsv data
- * @param[in]   type    The type of the matrix to create (casting may occur?)
- * @param[in]   nrows   Number of rows to set in the matrix
- * @param[in]   ncols   Number of cols to set in the matrix
- *
- * @retval  0   If operation finishes successfully (GrB_SUCCESS)
- * @return  Various GrB error codes from different issues: null pointer, out
- *          of memory, etc.
- */
-GrB_Info LAGraph_tsvread
-(
-    GrB_Matrix *A,
-    FILE       *f,
-    GrB_Type    type,
-    GrB_Index   nrows,
-    GrB_Index   ncols
-) ;
-
-//****************************************************************************
-/**
  * LAGraph_grread: read a matrix from a binary format based on the Galois graph
  *                 reader format
  *

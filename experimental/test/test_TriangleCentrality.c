@@ -102,10 +102,9 @@ void test_TriangleCentrality (void)
             printf ("# of triangles: %lu\n", ntri) ;
             TEST_CHECK (ntri == ntriangles) ;
 
-            #if LG_SUITESPARSE
-            int pr = (n <= 100) ? GxB_COMPLETE : GxB_SHORT ;
-            OK (GxB_Vector_fprint (c, "centrality", pr, stdout)) ;
-            #endif
+            int pr = (n <= 100) ? 3 : 2 ;
+            printf ("\ncentrality:\n") ;
+            OK (LAGraph_Vector_print (c, pr, stdout, msg)) ;
             OK (GrB_free (&c)) ;
         }
 
