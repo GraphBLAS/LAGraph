@@ -36,6 +36,8 @@ To compile with test coverage:
     cmake -DCOVERAGE=1 .. ; make -j8 ; make test_coverage
 ```
 
+The test coverage of the latest [CI build](https://github.com/GraphBLAS/LAGraph/actions) is deployed to <https://graphblas.github.io/LAGraph/>.
+
 Then open this file in your browser:
 ```
     build/test_coverage/index.html
