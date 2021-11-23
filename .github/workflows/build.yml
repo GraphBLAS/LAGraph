@@ -12,23 +12,30 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2.0.0
-    - name: Build project
+    - name: Install tools for build
       run: |
-        pushd .
-        # grab GraphBLAS binaries
+        sudo apt install -y lcov
+    - name: Get GraphBLAS binaries
+      run: |
         mkdir graphblas-binaries
         cd graphblas-binaries
         wget --quiet https://anaconda.org/conda-forge/graphblas/${{ matrix.config.grb_version }}/download/linux-64/graphblas-${{ matrix.config.grb_version }}-${{ matrix.config.conda_grb_package_hash }}_0.tar.bz2
         tar xf graphblas-${{ matrix.config.grb_version }}-${{ matrix.config.conda_grb_package_hash }}_0.tar.bz2
-        export GRAPHBLAS_INCLUDE_DIR=`pwd`/include
-        export GRAPHBLAS_LIBRARY=`pwd`/lib/libgraphblas.so
-        popd
-        # build and test LAGraph
+        cd ..
+    - name: Build project
+      run: |
+        export GRAPHBLAS_INCLUDE_DIR=`pwd`/graphblas-binaries/include
+        export GRAPHBLAS_LIBRARY=`pwd`/graphblas-binaries/lib/libgraphblas.so
         mkdir build
         cd build
-        cmake .. -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY}
+        cmake .. -DCOVERAGE=1 -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY}
         JOBS=2 make
-        make test
+        make test_coverage
+    - name: Deploy
+      uses: JamesIves/github-pages-deploy-action@4.1.1
+      with:
+        branch: gh-pages
+        folder: build/test_coverage/
   macos:
     runs-on: macos-10.15
     strategy:
@@ -38,18 +45,17 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2.0.0
-    - name: Build project
+    - name: Get GraphBLAS binaries
       run: |
-        pushd .
-        # grab GraphBLAS binaries
         mkdir graphblas-binaries
         cd graphblas-binaries
         wget --quiet https://anaconda.org/conda-forge/graphblas/${{ matrix.config.grb_version }}/download/osx-64/graphblas-${{ matrix.config.grb_version }}-${{ matrix.config.conda_grb_package_hash }}_0.tar.bz2
         tar xf graphblas-${{ matrix.config.grb_version }}-${{ matrix.config.conda_grb_package_hash }}_0.tar.bz2
-        export GRAPHBLAS_INCLUDE_DIR=`pwd`/include
-        export GRAPHBLAS_LIBRARY=`pwd`/lib/libgraphblas.dylib
-        popd
-        # build and test LAGraph
+        cd ..
+    - name: Build project
+      run: |
+        export GRAPHBLAS_INCLUDE_DIR=`pwd`/graphblas-binaries/include
+        export GRAPHBLAS_LIBRARY=`pwd`/graphblas-binaries/lib/libgraphblas.dylib
         mkdir build
         cd build
         CC=gcc-11 CXX=g++-11 cmake .. -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY}
