@@ -28,6 +28,7 @@ jobs:
         cd build
         cmake .. -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY}
         JOBS=2 make
+        make test
   macos:
     runs-on: macos-10.15
     strategy:
@@ -53,3 +54,4 @@ jobs:
         cd build
         CC=gcc cmake .. -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY}
         JOBS=2 make
+        make test
