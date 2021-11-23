@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_cc_boruvka.c
+// LG_CC_Boruvka.c
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -14,12 +14,73 @@
 // Contributed by Yongzhe Zhang (zyz915@gmail.com).
 // revised by Tim Davis (davis@tamu.edu)
 
+#include "LG_internal.h"
+
+//------------------------------------------------------------------------------
+// Reduce_assign
+//------------------------------------------------------------------------------
+
+// w[index[i]] = min(w[index[i]], s[i]) for i in [0..n-1]
+
+#undef  LAGraph_FREE_ALL
+#define LAGraph_FREE_ALL            \
+{                                   \
+    LAGraph_Free ((void **) &mem) ; \
+}
+
+static GrB_Info Reduce_assign
+(
+    GrB_Vector w,       // input/output vector of size n
+    GrB_Vector s,       // input vector of size n
+    GrB_Index *index,   // index array of size n
+    GrB_Index n
+)
+{
+    char *msg = NULL ;
+    GrB_Index *mem = (GrB_Index *) LAGraph_Malloc (3*n, sizeof (GrB_Index)) ;
+    LG_CHECK (mem == NULL, GrB_OUT_OF_MEMORY, "out of memory") ;
+    GrB_Index *ind = mem, *sval = mem + n, *wval = sval + n ;
+    GrB_TRY (GrB_Vector_extractTuples (ind, wval, &n, w)) ;
+    GrB_TRY (GrB_Vector_extractTuples (ind, sval, &n, s)) ;
+    for (GrB_Index i = 0 ; i < n ; i++)
+    {
+        if (sval [i] < wval [index [i]])
+        {
+            wval [index [i]] = sval [i] ;
+        }
+    }
+    GrB_TRY (GrB_Vector_clear (w)) ;
+    GrB_TRY (GrB_Vector_build (w, ind, wval, n, GrB_PLUS_UINT64)) ;
+    LAGraph_FREE_ALL ;
+    return (GrB_SUCCESS) ;
+}
+
+//------------------------------------------------------------------------------
+// select_func: IndexUnaryOp for pruning entries from S
+//------------------------------------------------------------------------------
+
+// TODO: this uses global variables; fix this.  Use y to pass in 2 pointers.
+
+static GrB_Index *V ;
+
+void select_func (void *z, const void *x, 
+                 const GrB_Index i, const GrB_Index j, const void *y)
+{
+    (*((bool *) z)) = (V [i] != V [j]) ;
+}
+
+//------------------------------------------------------------------------------
+// LG_CC_Boruvka
+//------------------------------------------------------------------------------
+
+#undef  LAGraph_FREE_ALL
 #define LAGraph_FREE_ALL            \
 {                                   \
     LAGraph_FREE_WORK ;             \
     GrB_free (&f) ;                 \
 }
 
+#undef  LAGraph_FREE_WORK
 #define LAGraph_FREE_WORK           \
 {                                   \
     LAGraph_Free ((void **) &I) ;   \
@@ -32,64 +93,13 @@
     GrB_free (&select_op) ;         \
 }
 
-#include "LAGraphX.h"
-#include "LG_internal.h"
-
-//****************************************************************************
-// w[index[i]] = min(w[index[i]], s[i]) for i in [0..n-1]
-static GrB_Info Reduce_assign (GrB_Vector w,
-                               GrB_Vector s,
-                               GrB_Index *index,
-                               GrB_Index n)
-{
-    GrB_Index *mem = (GrB_Index *) LAGraph_Malloc (3*n, sizeof (GrB_Index)) ;
-    // FIXME: check for malloc failure
-    GrB_Index *ind = mem, *sval = mem + n, *wval = sval + n;
-    GrB_Vector_extractTuples(ind, wval, &n, w) ;
-    GrB_Vector_extractTuples(ind, sval, &n, s) ;
-    for (GrB_Index i = 0; i < n; i++)
-    {
-        if (sval[i] < wval[index[i]])
-        {
-            wval[index[i]] = sval[i];
-        }
-    }
-    GrB_Vector_clear(w) ;
-    GrB_Vector_build(w, ind, wval, n, GrB_PLUS_UINT64) ;
-    LAGraph_Free ((void **) &mem) ;
-    return GrB_SUCCESS;
-}
-
-//------------------------------------------------------------------------------
-// select_func: IndexUnaryOp for pruning entries from S
-//------------------------------------------------------------------------------
-
-// FIXME: this uses global variables; fix this 
-
-static GrB_Index *I, *V ;
-
-#if 1
-void select_func (void *z, const void *x, 
-                 const GrB_Index i, const GrB_Index j,
-                 const void *y)
-{
-    (*(bool *) z) = (V [i] != V [j]) ;
-}
-#else
-bool select_func (const GrB_Index i, const GrB_Index j,
-                 const void *x, const void *thunk)
-{
-    return (V [i] != V [j]) ;
-}
-#endif
-
-//****************************************************************************
-
-GrB_Info LAGraph_cc_boruvka
+int LG_CC_Boruvka
 (
-    GrB_Vector *result,     // output: array of component identifiers
-    GrB_Matrix A,           // input matrix
-    bool sanitize           // if true, ensure A is symmetric
+    // output
+    GrB_Vector *component,  // output: array of component identifiers
+    // inputs
+    LAGraph_Graph G,        // input graph, not modified
+    char *msg
 )
 {
 
@@ -97,79 +107,70 @@ GrB_Info LAGraph_cc_boruvka
     // check inputs
     //--------------------------------------------------------------------------
 
-    printf ("------------------------ Boruvka\n") ;
     GrB_Info info ;
-    char *msg = NULL ;
-    if (result == NULL)
+    GrB_Index n, *I = NULL ;
+    GrB_Vector f = NULL, gp = NULL, mnp = NULL, ccmn = NULL, ramp = NULL,
+        mask = NULL ;
+    GrB_IndexUnaryOp select_op = NULL ;
+    GrB_Matrix S = NULL ;
+    V = NULL ;
+
+    LG_CLEAR_MSG ;
+    LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
+    LG_CHECK (component == NULL, GrB_NULL_POINTER, "input is NULL") ;
+
+    if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
+       (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
+        G->A_structure_is_symmetric == LAGRAPH_TRUE))
     {
-        return (GrB_NULL_POINTER) ;
+        // A must be symmetric
+        ;
+    }
+    else
+    {
+        // A must not be unsymmetric
+        LG_CHECK (false, -1, "input must be symmetric") ;
     }
 
     //--------------------------------------------------------------------------
     // initializations
     //--------------------------------------------------------------------------
 
-    GrB_Index n;
-    GrB_Vector f = NULL, gp = NULL, mnp = NULL, ccmn = NULL, ramp = NULL,
-        mask = NULL ;
-    #if 1
-    GrB_IndexUnaryOp select_op = NULL ;
-    #else
-    GxB_SelectOp select_op = NULL ;
+    // S = structure of G->A
+    LAGraph_TRY (LAGraph_Structure (&S, G->A, msg)) ;
+
+    GrB_TRY (GrB_Matrix_nrows (&n, S)) ;
+    GrB_TRY (GrB_Vector_new (&f, GrB_UINT64, n)) ;      // final result
+    GrB_TRY (GrB_Vector_new (&gp, GrB_UINT64, n)) ;     // grandparents
+    GrB_TRY (GrB_Vector_new (&mnp, GrB_UINT64, n)) ;    // min neighbor parent
+    GrB_TRY (GrB_Vector_new (&ccmn, GrB_UINT64, n)) ;   // cc's min neighbor
+    GrB_TRY (GrB_Vector_new (&mask, GrB_BOOL, n)) ;     // various uses
+
+    V = (GrB_Index*) LAGraph_Malloc (n, sizeof (GrB_Index)) ;
+    LG_CHECK (V == NULL, GrB_OUT_OF_MEMORY, "out of memory") ;
+    #if !LG_SUITESPARSE
+    // I is not needed for SuiteSparse and remains NULL
+    I = (GrB_Index*) LAGraph_Malloc (n, sizeof (GrB_Index)) ;
+    LG_CHECK (I == NULL, GrB_OUT_OF_MEMORY, "out of memory") ;
     #endif
 
-    GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
+    // f = 0:n-1, and copy to ramp
+    GrB_TRY (GrB_assign (f, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
+    GrB_TRY (GrB_apply  (f, NULL, NULL, GrB_ROWINDEX_INT64, f, 0, NULL)) ;
+    GrB_TRY (GrB_Vector_dup (&ramp, f)) ;
+    GrB_TRY (GrB_Vector_extractTuples (I, V, &n, f)) ;
 
-    // FIXME: make S boolean and iso-valued
-    GrB_Matrix S ;
-    if (sanitize)
-    {
-        GrB_Descriptor desc;
-        GrB_TRY (GrB_Matrix_new (&S, GrB_BOOL, n, n)) ;
-        GrB_TRY (GrB_eWiseAdd (S, NULL, NULL, GrB_LOR, A, A, GrB_DESC_T1)) ;
-    }
-    else
-    {
-        // Use the input as-is, and assume it is binary and symmetric
-        GrB_TRY (GrB_Matrix_dup (&S, A)) ;
-    }
-
-    GrB_TRY (GrB_Vector_new (&f, GrB_UINT64, n)) ;      //
-    GrB_TRY (GrB_Vector_new (&gp, GrB_UINT64, n)) ;     // grandparents
-    GrB_TRY (GrB_Vector_new (&mnp, GrB_UINT64, n)) ;
-    GrB_TRY (GrB_Vector_new (&ccmn, GrB_UINT64, n)) ;
-    GrB_TRY (GrB_Vector_new (&ramp, GrB_UINT64, n)) ;
-    GrB_TRY (GrB_Vector_new (&mask, GrB_BOOL, n)) ;
-
-    // prepare
-    I = (GrB_Index*) LAGraph_Malloc (n, sizeof (GrB_Index)) ;
-    V = (GrB_Index*) LAGraph_Malloc (n, sizeof (GrB_Index)) ;
-    // FIXME: use ROWINDEX operator
-    for (GrB_Index i = 0; i < n; i++)
-    {
-        I[i] = V[i] = i;
-    }
-    GrB_TRY (GrB_Vector_build (f, I, V, n, GrB_PLUS_UINT64)) ;
-    GrB_TRY (GrB_assign (ramp, NULL, NULL, f, GrB_ALL, n, NULL)) ;
-
-    #if 1
     GrB_TRY (GrB_IndexUnaryOp_new (&select_op, select_func,
         GrB_BOOL, /* aij: ignored */ GrB_BOOL, /* y: ignored */ GrB_BOOL)) ;
-    #else
-    GrB_TRY (GxB_SelectOp_new (&select_op, select_func, NULL, NULL)) ;
-    #endif
 
     GrB_Index nvals ;
     GrB_TRY (GrB_Matrix_nvals (&nvals, S)) ;
-    double tselect = 0 ;
-    printf ("S nvals %ld\n", nvals) ;
 
     //--------------------------------------------------------------------------
     // find the connected components
     //--------------------------------------------------------------------------
 
-    int64_t niters ;
-    for (niters = 0 ; nvals > 0 ; niters++)
+    while (nvals > 0)
     {
 
         //----------------------------------------------------------------------
@@ -236,31 +237,23 @@ GrB_Info LAGraph_cc_boruvka
             GrB_Vector t = f ; f = gp ; gp = t ;
 
             // diff = or (mask)
-            GrB_TRY (GrB_reduce (&diff, NULL, GrB_LOR_MONOID_BOOL, mask, NULL)) ;
+            GrB_TRY (GrB_reduce (&diff, NULL, GrB_LOR_MONOID_BOOL, mask,
+                NULL)) ;
         }
 
         //----------------------------------------------------------------------
         // remove the edges inside each connected component
         //----------------------------------------------------------------------
 
-        double ttt = omp_get_wtime ( ) ;
-        #if 1
         GrB_TRY (GrB_select (S, NULL, NULL, select_op, S, (bool) false, NULL)) ;
-        #else
-        GrB_TRY (GxB_select (S, NULL, NULL, select_op, S, 0, NULL)) ;
-        #endif
         GrB_TRY (GrB_Matrix_nvals (&nvals, S)) ;
-        ttt = omp_get_wtime ( ) - ttt ;
-        printf ("S nvals %ld select: %g\n", nvals, ttt) ;
-        tselect += ttt ;
     }
 
     //--------------------------------------------------------------------------
     // free workspace and return result
     //--------------------------------------------------------------------------
 
-    printf ("Boruvka iters %ld select time %g\n", niters, tselect) ;
-    (*result) = f ;
+    (*component) = f ;
     LAGraph_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }

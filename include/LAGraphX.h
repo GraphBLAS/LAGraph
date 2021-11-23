@@ -194,25 +194,6 @@ GrB_Info LAGraph_cc_lacc (
     bool sanitize
 ) ;
 
-/**
- * Determine connected components in an undirected graph.
- *
- * @param[out] result    array of component identifiers for each vertex (allocated
- *                       by the algorithm, ownership returned to caller).
- * @param[in]  A         the graph (symmetric)
- * @param[in]  sanitize  If true, test to ensure A is symmetric
- *
- * @retval GrB_SUCCESS      if completed successfully
- * @retval GrB_NULL_POINTER if result is NULL
- * @retval GrB_PANIC        vanilla version has not been implemented yet (NOT_IMPLEMENTED?)
- * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
- */
-GrB_Info LAGraph_cc_boruvka (
-    GrB_Vector *result,
-    GrB_Matrix A,
-    bool sanitize
-) ;
-
 //****************************************************************************
 // Bellman Ford variants
 //****************************************************************************

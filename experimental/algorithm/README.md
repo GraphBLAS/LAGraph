@@ -11,7 +11,6 @@
 * LAGraph_BF_full_mxv
 * LAGraph_BF_pure_c:        An implementation in C not using GraphBLAS
 * LAGraph_BF_pure_c_double: An implementation in C not using GraphBLAS (uses double type)
-* LAGraph_cc_boruvka: connected components based on the Boruvka algorithm
 * LAGraph_cc_lacc: connected components using the [LACC algorithm](https://people.eecs.berkeley.edu/~aydin/LACC.pdf)
 * LAGraph_cdlp: community detection using label propagation
 * LAGraph_dnn: sparse deep neural network

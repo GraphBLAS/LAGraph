@@ -15,7 +15,7 @@
 #ifndef LG_ALG_INTERNAL_H
 #define LG_ALG_INTERNAL_H
 
-#include <LAGraph.h>
+#include "LG_internal.h"
 
 //***************************************************************************
 int LG_BreadthFirstSearch_SSGrB
@@ -39,6 +39,22 @@ int LG_BreadthFirstSearch_vanilla
     char          *msg
 );
 
+int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
+(
+    // output
+    GrB_Vector *component,  // output: array of component identifiers
+    // inputs
+    LAGraph_Graph G,        // input graph, modified then restored
+    char *msg
+) ;
 
+int LG_CC_Boruvka           // vanilla method, no GxB extensions
+(
+    // output
+    GrB_Vector *component,  // output: array of component identifiers
+    // inputs
+    LAGraph_Graph G,        // input graph, not modified
+    char *msg
+) ;
 
 #endif

@@ -22,7 +22,7 @@
 //------------------------------------------------------------------------------
 
 #define LG_LIBRARY
-#include <LAGraph.h>
+#include "LAGraph.h"
 
 #if defined ( __linux__ )
 #include <malloc.h>

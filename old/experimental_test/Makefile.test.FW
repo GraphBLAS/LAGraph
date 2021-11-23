@@ -1,9 +1,0 @@
-all:
-	echo "Running FW algorithm on test graphs..."; 	    \
-	for number in 1000 2003 2500; do 		    \
-		./FW2_test "test_FW_$$number.mtx" $$number;    \
-	done
-
-run:
-	./FW1_test $(iFile) $(oFile) $(size)
-

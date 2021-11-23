@@ -10,8 +10,10 @@
 
 //------------------------------------------------------------------------------
 
-#include <LAGraph.h>
-#include "LG_internal.h"
+// Breadth-first-search via push/pull method if using SuiteSparse:GraphBLAS
+// and its GxB extensions, or a push-only method otherwise.  The former is
+// much faster.
+
 #include "LG_alg_internal.h"
 
 //****************************************************************************
@@ -26,10 +28,8 @@ int LAGraph_BreadthFirstSearch
 )
 {
 #if LG_SUITESPARSE
-    return LG_BreadthFirstSearch_SSGrB(level, parent,
-                                       G, src, pushpull, msg);
+    return LG_BreadthFirstSearch_SSGrB  (level, parent, G, src, pushpull, msg);
 #else
-    return LG_BreadthFirstSearch_vanilla(level, parent,
-                                         G, src, pushpull, msg);
+    return LG_BreadthFirstSearch_vanilla(level, parent, G, src, pushpull, msg);
 #endif
 }

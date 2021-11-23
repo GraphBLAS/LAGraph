@@ -13,8 +13,9 @@
 #include <stdio.h>
 #include <acutest.h>
 
-#include <LAGraph_test.h>
-#include <LAGraphX.h>
+#include "LAGraph_test.h"
+#include "LAGraphX.h"
+#include "LG_alg_internal.h"
 
 char msg [LAGRAPH_MSG_LEN] ;
 LAGraph_Graph G = NULL ;
@@ -70,11 +71,6 @@ int count_connected_components (GrB_Vector C)
 void test_cc_matrices (void)
 {
 
-#if !LG_SUITESPARSE
-    printf ("SuiteSparse required for CC test\n") ;
-    return ;
-#endif
-
     LAGraph_Init (msg) ;
     GrB_Matrix A = NULL ;
     GrB_Vector C = NULL, C2 = NULL ;
@@ -105,7 +101,7 @@ void test_cc_matrices (void)
         for (int trial = 0 ; trial <= 1 ; trial++)
         {
             // find the connected components
-            printf ("\n------ CC_FASTSV5:\n") ;
+            printf ("\n--- CC: FastSV5 if SuiteSparse, Boruvka if vanilla:\n") ;
             OK (LAGraph_ConnectedComponents (&C, G, msg)) ;
             OK (LAGraph_Vector_print (C, 3, stdout, msg)) ;
 
@@ -121,9 +117,9 @@ void test_cc_matrices (void)
             {
                 for (int sanitize = 0 ; sanitize <= 1 ; sanitize++)
                 {
-                    // find the connected components with cc_boruvka
+                    // find the connected components with LG_CC_Boruvka
                     printf ("\n------ CC_BORUVKA:\n") ;
-                    OK (LAGraph_cc_boruvka (&C2, G->A, sanitize)) ;
+                    OK (LG_CC_Boruvka (&C2, G, msg)) ;
                     // OK (LAGraph_Vector_print (C2, 2, stdout, msg)) ;
                     ncomponents = count_connected_components (C2) ;
                     TEST_CHECK (ncomponents == ncomp) ;
@@ -140,7 +136,7 @@ void test_cc_matrices (void)
                     OK (GrB_free (&C2)) ;
                 }
 
-                int result = LAGraph_cc_boruvka (NULL, G->A, false) ;
+                int result = LG_CC_Boruvka (NULL, G, msg) ;
                 TEST_CHECK (result == GrB_NULL_POINTER) ;
                 result = LAGraph_cc_lacc (NULL, G->A, false) ;
                 TEST_CHECK (result == GrB_NULL_POINTER) ;

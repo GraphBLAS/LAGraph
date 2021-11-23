@@ -9,9 +9,13 @@
 // Usage: test_cc can be used with both stdin or a file as its input,
 // in either grb or mtx format.
 
+//------------------------------------------------------------------------------
+
 #include "LAGraph_demo.h"
 #include "LAGraphX.h"
+#include "LG_alg_internal.h"
 
+#undef  LAGraph_FREE_ALL
 #define LAGraph_FREE_ALL            \
 {                                   \
     LAGraph_Delete (&G, NULL) ;     \
@@ -129,7 +133,7 @@ int main (int argc, char **argv)
             //------------------------------------------------------------------
 
             LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-            status = (LAGraph_ConnectedComponents (&components, G, msg)) ;
+            status = LAGraph_ConnectedComponents (&components, G, msg) ;
             LAGraph_TRY (status) ;
             LAGraph_TRY (LAGraph_Toc (&ttrial, tic, NULL)) ;
             t1 += ttrial ;
@@ -137,11 +141,11 @@ int main (int argc, char **argv)
             nCC = countCC (components, n) ;
 
             //------------------------------------------------------------------
-            // LAGraph_cc_boruvka
+            // LG_CC_Boruvka
             //------------------------------------------------------------------
 
             LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-            status = (LAGraph_cc_boruvka (&components2, G->A, false)) ;
+            status = LG_CC_Boruvka (&components2, G, msg) ;
             LAGraph_TRY (status) ;
             LAGraph_TRY (LAGraph_Toc (&ttrial, tic, NULL)) ;
             t2 += ttrial ;
