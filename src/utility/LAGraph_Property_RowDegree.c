@@ -10,7 +10,6 @@
 
 #define LAGraph_FREE_WORK       \
 {                               \
-    GrB_free (&S) ;             \
     GrB_free (&x) ;             \
 }
 
@@ -33,7 +32,6 @@ int LAGraph_Property_RowDegree  // 0 if successful, -1 if failure
     // clear msg and check G
     //--------------------------------------------------------------------------
 
-    GrB_Matrix S = NULL ;
     GrB_Vector rowdegree = NULL, x = NULL ;
     LG_CHECK_INIT (G, msg) ;
 
