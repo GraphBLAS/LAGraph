@@ -58,6 +58,6 @@ jobs:
         export GRAPHBLAS_LIBRARY=`pwd`/graphblas-binaries/lib/libgraphblas.dylib
         mkdir build
         cd build
-        CC=gcc-11 CXX=g++-11 cmake .. -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY}
+        CC=gcc cmake .. -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY}
         JOBS=2 make
         make test
