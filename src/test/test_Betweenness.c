@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/test/test_Betweenness.cpp: test cases for pagerank (GAP method)
+// LAGraph/src/test/test_Betweenness.cpp: test cases for BC (GAP method)
 // -----------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.

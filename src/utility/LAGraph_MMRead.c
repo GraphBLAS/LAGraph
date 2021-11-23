@@ -821,7 +821,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
     // quick return for empty matrix
     //--------------------------------------------------------------------------
 
-    if (nrows == 0 || nrows == 0 || nvals == 0)
+    if (nrows == 0 || ncols == 0 || nvals == 0)
     {
         // success: return an empty matrix.  This is not an error.
         return (0) ;

@@ -199,10 +199,9 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
         // Update frontier: frontier<!paths> = frontier*A
         //----------------------------------------------------------------------
 
-        double frontier_density = ((double) frontier_size) / (double) (ns*n) ;
-        bool growing = frontier_size > last_frontier_size ;
         // pull if frontier is more than 10% dense,
         // or > 6% dense and last step was pull
+        double frontier_density = ((double) frontier_size) / (double) (ns*n) ;
         bool do_pull = frontier_density > (last_was_pull ? 0.06 : 0.10 ) ;
 
         if (do_pull)
@@ -227,6 +226,7 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
         //----------------------------------------------------------------------
         // Get size of current frontier: frontier_size = nvals(frontier)
         //----------------------------------------------------------------------
+
         last_frontier_size = frontier_size ;
         last_was_pull = do_pull ;
         GrB_TRY (GrB_Matrix_nvals (&frontier_size, frontier)) ;
