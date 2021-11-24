@@ -53,7 +53,8 @@ int main (int argc, char **argv)
     char msg [LAGRAPH_MSG_LEN] ;
 
     LAGraph_Graph G = NULL ;
-    GrB_Vector components = NULL, components2 = NULL, components3 = NULL ;
+    GrB_Vector components = NULL, components2 = NULL, components3 = NULL,
+        components4 = NULL ;
 
     // start GraphBLAS and LAGraph
     bool burble = false ;
@@ -105,13 +106,13 @@ int main (int argc, char **argv)
     // begin tests
     //--------------------------------------------------------------------------
 
-    double tic [2], t1, t2, t3 ;
+    double tic [2], t1, t2, t3, t4 ;
 
     //#define NTRIALS 16
     #define NTRIALS 1
     printf ("# of trials: %d\n\n", NTRIALS) ;
 
-    GrB_Index nCC, nCC_first = -1, nCC2, nCC3 ;
+    GrB_Index nCC, nCC_first = -1, nCC2, nCC3, nCC4 ;
     for (int trial = 1 ; trial <= nt ; trial++)
     {
         int nthreads = Nthreads [trial] ;
@@ -139,6 +140,18 @@ int main (int argc, char **argv)
             t1 += ttrial ;
             printf ("SV5b: trial: %2d time: %10.4f sec\n", k, ttrial) ;
             nCC = countCC (components, n) ;
+
+            //------------------------------------------------------------------
+            // LG_CC_FastSV5_64
+            //------------------------------------------------------------------
+
+            LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
+            status = LG_CC_FastSV5_64 (&components4, G, msg) ;
+            LAGraph_TRY (status) ;
+            LAGraph_TRY (LAGraph_Toc (&ttrial, tic, NULL)) ;
+            t4 += ttrial ;
+            printf ("SV64: trial: %2d time: %10.4f sec\n", k, ttrial) ;
+            nCC4 = countCC (components4, n) ;
 
             //------------------------------------------------------------------
             // LG_CC_Boruvka
@@ -195,18 +208,24 @@ int main (int argc, char **argv)
                 if (nCC2 != nCC_first)
                 {
                     printf ("test failure2: # components differs %g %g\n",
-                        (double) nCC, (double) nCC_first) ;
+                        (double) nCC2, (double) nCC_first) ;
                 }
                 if (nCC3 != nCC_first)
                 {
                     printf ("test failure3: # components differs %g %g\n",
-                        (double) nCC, (double) nCC_first) ;
+                        (double) nCC3, (double) nCC_first) ;
+                }
+                if (nCC4 != nCC_first)
+                {
+                    printf ("test failure4: # components differs %g %g\n",
+                        (double) nCC4, (double) nCC_first) ;
                 }
 
             }
             GrB_free (&components) ;
             GrB_free (&components2) ;
             GrB_free (&components3) ;
+            GrB_free (&components4) ;
         }
         double ttt = t1 / NTRIALS ;
         printf("LG2:SV5b: threads: %2d time: %10.4f  # of CC: %g\n\n",
