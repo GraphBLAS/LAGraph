@@ -153,6 +153,8 @@ static inline int64_t ht_most_frequent
 //
 //      w = min (w, C*s)
 
+#if 1
+
 static inline int Reduce_assign
 (
     GrB_Vector w,           // vector of size n, all entries present
@@ -187,6 +189,136 @@ static inline int Reduce_assign
 
     return (GrB_SUCCESS) ;  // yay! It works!
 }
+
+#else
+
+static inline int Reduce_assign
+(
+    GrB_Vector *w_handle,   // vector of size n, all entries present
+    GrB_Vector *s_handle,   // vector of size n, all entries present
+    GrB_Index *index,       // index array of size n, can have duplicates
+    GrB_Index n,
+    int nthreads,
+    int64_t *ht_key,        // hash table
+    int64_t *ht_val,        // hash table (count of # of entries)
+    uint64_t *seed,         // random
+    char *msg
+)
+{
+
+    GrB_Type w_type, s_type ;
+    GrB_Index w_n, s_n, w_nvals, s_nvals, *w_i, *s_i, w_size, s_size ;
+    uint64_t *w_x, *s_x ;
+    bool s_iso = false ;
+
+    //--------------------------------------------------------------------------
+    // export w and s
+    //--------------------------------------------------------------------------
+
+    // export the GrB_Vectors w and s as full arrays, to get direct access to
+    // their contents.  Note that this would fail if w or s are not full, with
+    // all entries present.
+    GrB_TRY (GxB_Vector_export_Full (w_handle, &w_type, &w_n, (void **) &w_x,
+        &w_size, NULL, NULL)) ;
+    GrB_TRY (GxB_Vector_export_Full (s_handle, &s_type, &s_n, (void **) &s_x,
+        &s_size, &s_iso, NULL)) ;
+
+    if (nthreads >= 4)
+    {
+
+        // allocate a buf array for each thread, of size HASH_SIZE
+        uint64_t *mem = LAGraph_Malloc (nthreads*HASH_SIZE, sizeof (uint64_t)) ;
+        // todo: check out-of-memory condition here
+
+        // todo why is hashing needed here?  hashing is slow for what needs
+        // to be computed here.  GraphBLAS has fast MIN atomic monoids that
+        // do not require hashing.
+        ht_init (ht_key, ht_val) ;
+        ht_sample (index, n, HASH_SAMPLES, ht_key, ht_val, seed) ;
+
+        #pragma omp parallel for num_threads(nthreads) schedule(static)
+        for (int tid = 0 ; tid < nthreads ; tid++)
+        {
+            // get the thread-specific buf array of size HASH_SIZE
+            // todo: buf is a bad variable name; it's not a "buffer",
+            // but a local workspace to compute the local version of w_x.
+            uint64_t *buf = mem + tid * HASH_SIZE ;
+
+            // copy the values from the global hash table into buf
+            for (int64_t h = 0 ; h < HASH_SIZE ; h++)
+            {
+                if (ht_key [h] != -1)
+                {
+                    buf [h] = w_x [ht_key [h]] ;
+                }
+            }
+
+            // this thread works on index [kstart:kend]
+            int64_t kstart = (n * tid + nthreads - 1) / nthreads ;
+            int64_t kend = (n * tid + n + nthreads - 1) / nthreads ;
+            for (int64_t k = kstart ; k < kend ; k++)
+            {
+                uint64_t i = index [k] ;
+
+                // todo: make this loop a static inline function
+                int64_t h = HASH (i) ;
+                while (ht_key [h] != -1 && ht_key [h] != i)
+                {
+                    h = NEXT (h) ;
+                }
+
+                if (ht_key [h] == -1)
+                {
+                    // todo is this a race condition?
+                    w_x [i] = LAGraph_MIN (w_x [i], s_x [s_iso?0:k]) ;
+                }
+                else
+                {
+                    buf [h] = LAGraph_MIN (buf [h], s_x [s_iso?0:k]) ;
+                }
+            }
+        }
+
+        // combine intermediate results from each thread
+        for (int64_t h = 0 ; h < HASH_SIZE ; h++)
+        {
+            int64_t i = ht_key [h] ;
+            if (i != -1)
+            {
+                for (int64_t tid = 0 ; tid < nthreads ; tid++)
+                {
+                    w_x [i] = LAGraph_MIN (w_x [i], mem [tid * HASH_SIZE + h]) ;
+                }
+            }
+        }
+
+        LAGraph_Free ((void **) &mem) ;
+    }
+    else
+    {
+        // sequential version
+        for (GrB_Index k = 0 ; k < n ; k++)
+        {
+            uint64_t i = index [k] ;
+            w_x [i] = LAGraph_MIN (w_x [i], s_x [s_iso?0:k]) ;
+        }
+    }
+
+    //--------------------------------------------------------------------------
+    // reimport w and s back into GrB_Vectors, and return result
+    //--------------------------------------------------------------------------
+
+    // s is unchanged.  It was exported only to compute w (index) += s
+
+    GrB_TRY (GxB_Vector_import_Full (w_handle, w_type, w_n, (void **) &w_x,
+        w_size, false, NULL)) ;
+    GrB_TRY (GxB_Vector_import_Full (s_handle, s_type, s_n, (void **) &s_x,
+        s_size, s_iso, NULL)) ;
+
+    return (0) ;
+}
+
+#endif
 
 //------------------------------------------------------------------------------
 // LG_CC_FastSV5_64
@@ -290,8 +422,6 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
     GrB_TRY (GrB_Vector_new (&mod,    GrB_BOOL,   n)) ;
 
     V = LAGraph_Malloc (n, sizeof (uint64_t)) ;
-    LG_CHECK (V == NULL, -1, "out of memory") ;
-
     GrB_TRY (GrB_assign (f, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
     GrB_TRY (GrB_apply (f, NULL, NULL, GrB_ROWINDEX_INT64, f, 0, NULL)) ;
     GrB_TRY (GrB_Vector_extractTuples (NULL, V, &n, f)) ;
@@ -463,8 +593,12 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
                 GrB_MIN_SECOND_SEMIRING_UINT64, T, gp, NULL)) ;
             if (!is_first)
             {
-                // f = min (f, C*mngp) where C is C(i,j) = true if i=V(j)
+                #if 1
                 LAGraph_TRY (Reduce_assign (f, mngp, C, &Cp, &V, &Cx, msg)) ;
+                #else
+                LAGraph_TRY (Reduce_assign (&f, &mngp, V, n,
+                    nthreads, ht_key, ht_val, &seed, msg)) ;
+                #endif
             }
 
             // f = min (f, mngp, gp)
@@ -475,7 +609,7 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
             GrB_TRY (GrB_Vector_extractTuples (NULL, V, &n, f)) ;
             GrB_TRY (GrB_extract (gp_new, NULL, NULL, f, V, n, NULL)) ;
 
-            // terminate if gp and gp_new are the same
+            // terminate if gp and gb_new are the same
             GrB_TRY (GrB_eWiseMult (mod, NULL, NULL, GrB_NE_UINT64, gp_new,
                 gp, NULL)) ;
             GrB_TRY (GrB_reduce (&change, NULL, GrB_LOR_MONOID_BOOL, mod,
@@ -616,9 +750,12 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
         // mngp = min (mngp, T*gp) using the MIN_SECOND semiring
         GrB_TRY (GrB_mxv (mngp, NULL, GrB_MIN_UINT64,
                           GrB_MIN_SECOND_SEMIRING_UINT64, T, gp, NULL)) ;
-
-        // f = min (f, C*mngp) where C is C(i,j) = true if i=V(j)
+        #if 1
         GrB_TRY (Reduce_assign (f, mngp, C, &Cp, &V, &Cx, msg)) ;
+        #else
+        GrB_TRY (Reduce_assign (&f, &mngp, V, n,
+            nthreads, ht_key, ht_val, &seed, msg)) ;
+        #endif
 
         // f = min (f, mngp, gp)
         GrB_TRY (GrB_eWiseAdd (f, NULL, GrB_MIN_UINT64, GrB_MIN_UINT64,
@@ -628,7 +765,7 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
         GrB_TRY (GrB_Vector_extractTuples (NULL, V, &n, f)) ;
         GrB_TRY (GrB_extract (gp_new, NULL, NULL, f, V, n, NULL)) ;
 
-        // terminate if gp and gp_new are the same
+        // terminate if gp and gb_new are the same
         GrB_TRY (GrB_eWiseMult (mod, NULL, NULL, GrB_NE_UINT64, gp_new, gp,
             NULL)) ;
         GrB_TRY (GrB_reduce (&change, NULL, GrB_LOR_MONOID_BOOL, mod, NULL)) ;

@@ -208,7 +208,7 @@ int LG_CC_Boruvka
         // and then select the minimum of u, v as the new root;
         // if (f[f[i]] == i) f[i] = min(f[i], i)
 
-        // gb = f (f)
+        // compute grandparents: gp = f (f)
         GrB_TRY (GrB_Vector_extractTuples (I, V, &n, f)) ;
         GrB_TRY (GrB_extract (gp, NULL, NULL, f, V, n, NULL)) ;
 
@@ -225,7 +225,7 @@ int LG_CC_Boruvka
         bool diff = true ;
         while (diff)
         {
-            // gb = f (f)
+            // compute grandparents: gp = f (f)
             GrB_TRY (GrB_Vector_extractTuples (I, V, &n, f)) ;
             GrB_TRY (GrB_extract (gp, NULL, NULL, f, V, n, NULL)) ;
 

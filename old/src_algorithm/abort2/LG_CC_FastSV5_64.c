@@ -290,8 +290,6 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
     GrB_TRY (GrB_Vector_new (&mod,    GrB_BOOL,   n)) ;
 
     V = LAGraph_Malloc (n, sizeof (uint64_t)) ;
-    LG_CHECK (V == NULL, -1, "out of memory") ;
-
     GrB_TRY (GrB_assign (f, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
     GrB_TRY (GrB_apply (f, NULL, NULL, GrB_ROWINDEX_INT64, f, 0, NULL)) ;
     GrB_TRY (GrB_Vector_extractTuples (NULL, V, &n, f)) ;
@@ -475,7 +473,7 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
             GrB_TRY (GrB_Vector_extractTuples (NULL, V, &n, f)) ;
             GrB_TRY (GrB_extract (gp_new, NULL, NULL, f, V, n, NULL)) ;
 
-            // terminate if gp and gp_new are the same
+            // terminate if gp and gb_new are the same
             GrB_TRY (GrB_eWiseMult (mod, NULL, NULL, GrB_NE_UINT64, gp_new,
                 gp, NULL)) ;
             GrB_TRY (GrB_reduce (&change, NULL, GrB_LOR_MONOID_BOOL, mod,
@@ -628,7 +626,7 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
         GrB_TRY (GrB_Vector_extractTuples (NULL, V, &n, f)) ;
         GrB_TRY (GrB_extract (gp_new, NULL, NULL, f, V, n, NULL)) ;
 
-        // terminate if gp and gp_new are the same
+        // terminate if gp and gb_new are the same
         GrB_TRY (GrB_eWiseMult (mod, NULL, NULL, GrB_NE_UINT64, gp_new, gp,
             NULL)) ;
         GrB_TRY (GrB_reduce (&change, NULL, GrB_LOR_MONOID_BOOL, mod, NULL)) ;

@@ -20,13 +20,14 @@
 
 // Modified by Tim Davis, Texas A&M University
 
-// The input matrix A must be symmetric.  Self-edges (diagonal entries) are
-// OK, and are ignored.  The values and type of A are ignored; just its
-// structure is accessed.
+// The input graph G must be undirected, or directed but with an adjacency
+// matrix with symmetric structure. Self-edges (diagonal entries) are OK, and
+// are ignored.  The values and type of G->A are ignored; just its structure is
+// accessed.
 
-// todo: this function is not thread-safe, since it exports G->A and then
-// reimports it back.  G->A is unchanged when the function returns, but during
-// execution G->A is invalid.
+// This function cannot be called by multiple user threads, since it unpacks
+// G->A and then packs it back.  G->A is unchanged when the function returns,
+// but during execution G->A is empty.
 
 #define LAGraph_FREE_ALL ;
 
@@ -98,7 +99,6 @@ static inline void ht_sample
         int64_t x = V [LAGraph_Random60 (seed) % n] ;
 
         // find x in the hash table
-        // todo: make this loop a static inline function (see also below)
         int64_t h = HASH (x) ;
         while (ht_key [h] != -1 && ht_key [h] != x)
         {
@@ -290,11 +290,10 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
     GrB_TRY (GrB_Vector_new (&mod,    GrB_BOOL,   n)) ;
 
     V = LAGraph_Malloc (n, sizeof (uint64_t)) ;
-    LG_CHECK (V == NULL, -1, "out of memory") ;
-
     GrB_TRY (GrB_assign (f, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
     GrB_TRY (GrB_apply (f, NULL, NULL, GrB_ROWINDEX_INT64, f, 0, NULL)) ;
     GrB_TRY (GrB_Vector_extractTuples (NULL, V, &n, f)) ;
+    bool V_is_identity = true ; // true if V is 0:n-1
 
     GrB_TRY (GrB_Vector_dup (&gp,   f)) ;
     GrB_TRY (GrB_Vector_dup (&mngp, f)) ;
@@ -451,17 +450,16 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
         // find the connected components of T
         //----------------------------------------------------------------------
 
-        // todo: this is nearly identical to the final phase below.
-        // Make this a function
+        // TODO: this is identical to the final phase below. Make it a function
 
-        bool change = true, is_first = true ;
-        while (change)
+        bool diff = true ;
+        while (diff)
         {
             // hooking & shortcutting
             // mngp = min (mngp, T*gp) using the MIN_SECOND semiring
             GrB_TRY (GrB_mxv (mngp, NULL, GrB_MIN_UINT64,
                 GrB_MIN_SECOND_SEMIRING_UINT64, T, gp, NULL)) ;
-            if (!is_first)
+            if (!V_is_identity)
             {
                 // f = min (f, C*mngp) where C is C(i,j) = true if i=V(j)
                 LAGraph_TRY (Reduce_assign (f, mngp, C, &Cp, &V, &Cx, msg)) ;
@@ -474,26 +472,38 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
             // calculate grandparent: gp_new = f (f)
             GrB_TRY (GrB_Vector_extractTuples (NULL, V, &n, f)) ;
             GrB_TRY (GrB_extract (gp_new, NULL, NULL, f, V, n, NULL)) ;
+            V_is_identity = false ;
 
-            // terminate if gp and gp_new are the same
+            // terminate if gp and gb_new are the same
             GrB_TRY (GrB_eWiseMult (mod, NULL, NULL, GrB_NE_UINT64, gp_new,
                 gp, NULL)) ;
-            GrB_TRY (GrB_reduce (&change, NULL, GrB_LOR_MONOID_BOOL, mod,
+            GrB_TRY (GrB_reduce (&diff, NULL, GrB_LOR_MONOID_BOOL, mod,
                 NULL)) ;
 
             // swap gp and gp_new
             GrB_Vector t = gp ; gp = gp_new ; gp_new = t ;
-            is_first = false ;
         }
 
         //----------------------------------------------------------------------
-        // todo: describe me
+        // estimate the largest connected component
         //----------------------------------------------------------------------
+
+        // key is set to the representative node of the largest connected
+        // component.  Since sampling is used, this is an estimate
 
         ht_init (ht_key, ht_val) ;
         ht_sample (V, n, HASH_SAMPLES, ht_key, ht_val, &seed) ;
         int64_t key = ht_most_frequent (ht_key, ht_val) ;
         // todo: what if key is returned as -1?  Then T below is invalid.
+
+        //----------------------------------------------------------------------
+        // collapse the largest connected component
+        //----------------------------------------------------------------------
+
+        // All edges in, or to, the largest connected component is removed from
+        // T.  Next, if the row T(i,:) has enough space, and node i is not in
+        // the largest connected component, a single edge T(i,key) = true is
+        // added.
 
         int64_t t_nonempty = -1 ;
         bool T_jumbled = false, T_iso = true ;
@@ -503,25 +513,19 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
             &Tx, &Tp_siz, &Tj_siz, &Tx_siz,
             &T_iso, &T_jumbled, NULL)) ;
 
-        // todo what is this phase doing?  It is constructing a matrix T that
-        // depends only on S, key, and V.  T contains a subset of the entries
-        // in S, except that T (i,:) is empty if
+        // FIXME: This parallel loop is badly load balanced.  Each thread
+        // operates on the same number of rows of S, regardless of how many
+        // entries appear in each set of rows.  It uses one thread per task,
+        // statically scheduled.
 
-        // The prior content of T is ignored; it is exported from the earlier
-        // phase, only to reuse the allocated space for T.  However, T_jumbled
-        // is preserved from the prior matrix T, which doesn't make sense.
-
-        // This parallel loop is badly load balanced.  Each thread operates on
-        // the same number of rows of S, regardless of how many entries appear
-        // in each set of rows.  It uses one thread per task, statically
-        // scheduled.
-
-        #pragma omp parallel for num_threads(nthreads) schedule(static)
+        #pragma omp parallel for num_threads(nthreads) schedule(static) \
+            reduction(||:T_jumbled)
         for (int tid = 0 ; tid < nthreads ; tid++)
         {
             GrB_Index ptr = Sp [range [tid]] ;
             // thread tid scans S (range [tid]:range [tid+1]-1,:),
             // and constructs T(i,:) for all rows in this range.
+            bool my_T_jumbled = false ;
             for (int64_t i = range [tid] ; i < range [tid+1] ; i++)
             {
                 int64_t pv = V [i] ;  // what is pv?
@@ -545,10 +549,13 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
                     if (ptr - Tp [i] < Sp [i+1] - Sp [i])
                     {
                         Tj [ptr++] = key ;
+                        // this step can cause T to become jumbled
+                        my_T_jumbled = true ;
                     }
                 }
             }
-            // count the number of entries inserted into T by this thread?
+            T_jumbled = T_jumbled || my_T_jumbled ;
+            // count the number of entries inserted into T by this thread
             count [tid] = ptr - Tp [range [tid]] ;
         }
 
@@ -609,16 +616,20 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
 
     GrB_TRY (GrB_Matrix_nvals (&nnz, T)) ;
 
-    bool change = true ;
-    while (change && nnz > 0)
+    bool diff = true ;
+    while (diff && nnz > 0)
     {
         // hooking & shortcutting
         // mngp = min (mngp, T*gp) using the MIN_SECOND semiring
         GrB_TRY (GrB_mxv (mngp, NULL, GrB_MIN_UINT64,
                           GrB_MIN_SECOND_SEMIRING_UINT64, T, gp, NULL)) ;
 
-        // f = min (f, C*mngp) where C is C(i,j) = true if i=V(j)
-        GrB_TRY (Reduce_assign (f, mngp, C, &Cp, &V, &Cx, msg)) ;
+        if (!V_is_identity)
+        {
+            // f = min (f, C*mngp) where C is C(i,j) = true if i=V(j)
+            GrB_TRY (Reduce_assign (f, mngp, C, &Cp, &V, &Cx, msg)) ;
+            V_is_identity = false ;
+        }
 
         // f = min (f, mngp, gp)
         GrB_TRY (GrB_eWiseAdd (f, NULL, GrB_MIN_UINT64, GrB_MIN_UINT64,
@@ -628,10 +639,10 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
         GrB_TRY (GrB_Vector_extractTuples (NULL, V, &n, f)) ;
         GrB_TRY (GrB_extract (gp_new, NULL, NULL, f, V, n, NULL)) ;
 
-        // terminate if gp and gp_new are the same
+        // terminate if gp and gb_new are the same
         GrB_TRY (GrB_eWiseMult (mod, NULL, NULL, GrB_NE_UINT64, gp_new, gp,
             NULL)) ;
-        GrB_TRY (GrB_reduce (&change, NULL, GrB_LOR_MONOID_BOOL, mod, NULL)) ;
+        GrB_TRY (GrB_reduce (&diff, NULL, GrB_LOR_MONOID_BOOL, mod, NULL)) ;
 
         // swap gp and gp_new
         GrB_Vector t = gp ; gp = gp_new ; gp_new = t ;
