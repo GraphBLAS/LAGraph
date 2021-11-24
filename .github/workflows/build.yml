@@ -45,6 +45,9 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2.0.0
+    - name: Install dependencies
+      run: |
+        brew install libomp
     - name: Get GraphBLAS binaries
       run: |
         mkdir graphblas-binaries
@@ -56,6 +59,10 @@ jobs:
       run: |
         export GRAPHBLAS_INCLUDE_DIR=`pwd`/graphblas-binaries/include
         export GRAPHBLAS_LIBRARY=`pwd`/graphblas-binaries/lib/libgraphblas.dylib
+        # adding an extra line to the CMakeLists.txt file to locate the libomp instance installed by brew
+        mv CMakeLists.txt CMakeLists2.txt
+        echo 'include_directories("/usr/local/opt/libomp/include")' > CMakeLists1.txt
+        cat CMakeLists1.txt CMakeLists2.txt > CMakeLists.txt
         mkdir build
         cd build
         CC=gcc cmake .. -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY}
