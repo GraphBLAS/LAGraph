@@ -137,6 +137,18 @@ find_program( GENHTML_PATH NAMES genhtml genhtml.perl genhtml.bat )
 find_program( GCOVR_PATH gcovr PATHS ${CMAKE_SOURCE_DIR}/scripts/test)
 find_program( CPPFILT_PATH NAMES c++filt )
 
+execute_process(
+    COMMAND git rev-parse --short HEAD
+    OUTPUT_VARIABLE GIT_HEAD_SHORT_HASH
+)
+string(STRIP "${GIT_HEAD_SHORT_HASH}" GIT_HEAD_SHORT_HASH)
+
+execute_process(
+    COMMAND date -u +"%Y-%m-%dT%H:%M:%SZ"
+    OUTPUT_VARIABLE CURRENT_DATE
+)
+string(STRIP "${CURRENT_DATE}" CURRENT_DATE)
+
 if(NOT GCOV_PATH)
     message(FATAL_ERROR "gcov not found! Aborting...")
 endif() # NOT GCOV_PATH
@@ -295,6 +307,7 @@ function(setup_target_for_coverage_lcov)
     set(LCOV_GEN_HTML_CMD
         ${GENHTML_PATH} ${Coverage_GENHTML_ARGS} -o 
         ${Coverage_NAME} ${Coverage_NAME}.info
+        --title "LAGraph code coverage report. Commit id: ${GIT_HEAD_SHORT_HASH}. Current time (UTC): ${CURRENT_DATE}"
     )
     
 
