@@ -1,3 +1,5 @@
+include_directories("/usr/local/opt/libomp/include")
+
 #-------------------------------------------------------------------------------
 # LAGraph/CMakeLists.txt:  cmake script for LAGraph
 #-------------------------------------------------------------------------------
