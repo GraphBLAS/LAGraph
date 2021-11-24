@@ -18,35 +18,35 @@ Thus, do not benchmark LAGraph on your own without asking the authors first.
 
 To build do the following from the top level directory:
 ```
-  $ mkdir build
-  $ cd build
-  $ cmake ..
-  $ make [-j#]
-  $ make test
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make [-j#]
+$ make test
 ```
 
 To compile with a non-default compiler:
 ```
-  $ CC=gcc-11 cmake ..
+$ CC=gcc-11 cmake ..
 ```
 
 To compile with test coverage:
 ```
-    cd build
-    cmake -DCOVERAGE=1 .. ; make -j8 ; make test_coverage
+cd build
+cmake -DCOVERAGE=1 .. ; make -j8 ; make test_coverage
 ```
 
 The test coverage of the latest [CI build](https://github.com/GraphBLAS/LAGraph/actions) is deployed to <https://graphblas.github.io/LAGraph/>.
 
 Then open this file in your browser:
 ```
-    build/test_coverage/index.html
+build/test_coverage/index.html
 ```
 
 To run the GAP benchmarks, see the instructions in these files:
 ```
-    ./BENCHMARK_INSTRUCTIONS__README1st.txt
-    ./src/demo/README.md
+./BENCHMARK_INSTRUCTIONS__README1st.txt
+./src/demo/README.md
 ```
 
 # The rest of this README is outdated and needs to be updated.
