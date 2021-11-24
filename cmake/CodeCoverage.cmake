@@ -144,7 +144,7 @@ execute_process(
 string(STRIP "${GIT_HEAD_SHORT_HASH}" GIT_HEAD_SHORT_HASH)
 
 execute_process(
-    COMMAND date -u +"%Y-%m-%dT%H:%M:%SZ"
+    COMMAND date -u +%Y-%m-%dT%H:%M:%SZ
     OUTPUT_VARIABLE CURRENT_DATE
 )
 string(STRIP "${CURRENT_DATE}" CURRENT_DATE)
