@@ -48,6 +48,15 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
     char *msg
 ) ;
 
+int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
+(                           // all 64-bit integers
+    // output
+    GrB_Vector *component,  // output: array of component identifiers
+    // inputs
+    LAGraph_Graph G,        // input graph, modified then restored
+    char *msg
+) ;
+
 int LG_CC_Boruvka           // vanilla method, no GxB extensions
 (
     // output

@@ -103,7 +103,7 @@ void test_cc_matrices (void)
             // find the connected components
             printf ("\n--- CC: FastSV5 if SuiteSparse, Boruvka if vanilla:\n") ;
             OK (LAGraph_ConnectedComponents (&C, G, msg)) ;
-            OK (LAGraph_Vector_print (C, 3, stdout, msg)) ;
+            OK (LAGraph_Vector_print (C, 2, stdout, msg)) ;
 
             // count the # of connected components
             int ncomponents = count_connected_components (C) ;
@@ -112,6 +112,17 @@ void test_cc_matrices (void)
 
             // check the result
             OK (LG_check_cc (C, G, msg)) ;
+
+            // find the connected components with LG_CC_FastSV_64
+            #if LG_SUITESPARSE
+            printf ("\n------ CC_FastSV5_64:\n") ;
+            OK (LG_CC_FastSV5_64 (&C2, G, msg)) ;
+            // OK (LAGraph_Vector_print (C2, 2, stdout, msg)) ;
+            ncomponents = count_connected_components (C2) ;
+            TEST_CHECK (ncomponents == ncomp) ;
+            OK (LG_check_cc (C2, G, msg)) ;
+            OK (GrB_free (&C2)) ;
+            #endif
 
             // find the connected components with LG_CC_Boruvka
             printf ("\n------ CC_BORUVKA:\n") ;
