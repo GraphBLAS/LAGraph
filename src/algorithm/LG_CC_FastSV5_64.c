@@ -335,7 +335,6 @@ static inline int Reduce_assign
 {                                                   \
     LAGraph_Free ((void **) &Cp) ;          \
     LAGraph_Free ((void **) &Cx) ;          \
-    LAGraph_Free ((void **) &I) ;           \
     LAGraph_Free ((void **) &V) ;           \
     LAGraph_Free ((void **) &ht_key) ;      \
     LAGraph_Free ((void **) &ht_val) ;      \
@@ -372,7 +371,7 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
 
     uint64_t *V = NULL ;
     int64_t *ht_key = NULL, *ht_val = NULL ;
-    GrB_Index n, nnz, *I = NULL ;
+    GrB_Index n, nnz ;
     GrB_Vector f = NULL, gp_new = NULL, mngp = NULL, mod = NULL, gp = NULL,
         t = NULL ;
     GrB_Matrix T = NULL, C = NULL ;
@@ -417,30 +416,16 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
     nthreads = LAGraph_MIN (nthreads, n / 16) ;
     nthreads = LAGraph_MAX (nthreads, 1) ;
 
-    // # of threads to use for typecast
-    int nthreads2 = n / (64*1024) ;
-    nthreads2 = LAGraph_MIN (nthreads2, nthreads) ;
-    nthreads2 = LAGraph_MAX (nthreads2, 1) ;
-
     // vectors
     GrB_TRY (GrB_Vector_new (&f,      GrB_UINT64, n)) ;
     GrB_TRY (GrB_Vector_new (&gp_new, GrB_UINT64, n)) ;
     GrB_TRY (GrB_Vector_new (&mod,    GrB_BOOL,   n)) ;
 
-    // temporary arrays
-    I   = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
     V = LAGraph_Malloc (n, sizeof (uint64_t)) ;
-    // todo: check out-of-memory condition
+    GrB_TRY (GrB_assign (f, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
+    GrB_TRY (GrB_apply (f, NULL, NULL, GrB_ROWINDEX_INT64, f, 0, NULL)) ;
+    GrB_TRY (GrB_Vector_extractTuples (NULL, V, &n, f)) ;
 
-    // prepare vectors
-    #pragma omp parallel for num_threads(nthreads2) schedule(static)
-    for (GrB_Index i = 0 ; i < n ; i++)
-    {
-        I [i] = i ;
-        V [i] = (uint64_t) i ;
-    }
-
-    GrB_TRY (GrB_Vector_build (f, I, V, n, GrB_PLUS_UINT64)) ;
     GrB_TRY (GrB_Vector_dup (&gp,   f)) ;
     GrB_TRY (GrB_Vector_dup (&mngp, f)) ;
 
@@ -603,6 +588,7 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
         while (change)
         {
             // hooking & shortcutting
+            // mngp = min (mngp, T*gp) using the MIN_SECOND semiring
             GrB_TRY (GrB_mxv (mngp, NULL, GrB_MIN_UINT64,
                 GrB_MIN_SECOND_SEMIRING_UINT64, T, gp, NULL)) ;
             if (!is_first)
@@ -614,26 +600,16 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
                     nthreads, ht_key, ht_val, &seed, msg)) ;
                 #endif
             }
+
+            // f = min (f, mngp, gp)
             GrB_TRY (GrB_eWiseAdd (f, NULL, GrB_MIN_UINT64, GrB_MIN_UINT64,
                 mngp, gp, NULL)) ;
 
-            // calculate grandparent
-            // fixme: NULL parameter is SS:GrB extension
-            GrB_TRY (GrB_Vector_extractTuples (NULL, V, &n, f)) ; // fixme
-            #pragma omp parallel for num_threads(nthreads2) schedule(static)
-            for (uint64_t i = 0 ; i < n ; i++)
-            {
-                I [i] = (GrB_Index) V [i] ;
-            }
-            GrB_TRY (GrB_extract (gp_new, NULL, NULL, f, I, n, NULL)) ;
+            // calculate grandparent: gp_new = f (f)
+            GrB_TRY (GrB_Vector_extractTuples (NULL, V, &n, f)) ;
+            GrB_TRY (GrB_extract (gp_new, NULL, NULL, f, V, n, NULL)) ;
 
-            // todo: GrB_Vector_extract should have a variant where the index
-            // list is not given by an array I, but as a GrB_Vector of type
-            // GrB_UINT64 (or which can be typecast to GrB_UINT64).  This is a
-            // common issue that arises in other algorithms as well.
-            // Likewise GrB_Matrix_extract, and all forms of GrB_assign.
-
-            // check termination
+            // terminate if gp and gb_new are the same
             GrB_TRY (GrB_eWiseMult (mod, NULL, NULL, GrB_NE_UINT64, gp_new,
                 gp, NULL)) ;
             GrB_TRY (GrB_reduce (&change, NULL, GrB_LOR_MONOID_BOOL, mod,
@@ -771,6 +747,7 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
     while (change && nnz > 0)
     {
         // hooking & shortcutting
+        // mngp = min (mngp, T*gp) using the MIN_SECOND semiring
         GrB_TRY (GrB_mxv (mngp, NULL, GrB_MIN_UINT64,
                           GrB_MIN_SECOND_SEMIRING_UINT64, T, gp, NULL)) ;
         #if 1
@@ -780,20 +757,15 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
             nthreads, ht_key, ht_val, &seed, msg)) ;
         #endif
 
+        // f = min (f, mngp, gp)
         GrB_TRY (GrB_eWiseAdd (f, NULL, GrB_MIN_UINT64, GrB_MIN_UINT64,
                                mngp, gp, NULL)) ;
 
-        // calculate grandparent
-        // fixme: NULL parameter is SS:GrB extension
-        GrB_TRY (GrB_Vector_extractTuples (NULL, V, &n, f)) ; // fixme
-        #pragma omp parallel for num_threads(nthreads2) schedule(static)
-        for (uint64_t k = 0 ; k < n ; k++)
-        {
-            I [k] = (GrB_Index) V [k] ;
-        }
-        GrB_TRY (GrB_extract (gp_new, NULL, NULL, f, I, n, NULL)) ;
+        // calculate grandparent: gp_new = f (f)
+        GrB_TRY (GrB_Vector_extractTuples (NULL, V, &n, f)) ;
+        GrB_TRY (GrB_extract (gp_new, NULL, NULL, f, V, n, NULL)) ;
 
-        // check termination
+        // terminate if gp and gb_new are the same
         GrB_TRY (GrB_eWiseMult (mod, NULL, NULL, GrB_NE_UINT64, gp_new, gp,
             NULL)) ;
         GrB_TRY (GrB_reduce (&change, NULL, GrB_LOR_MONOID_BOOL, mod, NULL)) ;

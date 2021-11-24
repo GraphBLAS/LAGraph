@@ -108,11 +108,10 @@ int main (int argc, char **argv)
 
     double tic [2], t1, t2, t3, t4 ;
 
-    //#define NTRIALS 16
-    #define NTRIALS 1
+    #define NTRIALS 16
     printf ("# of trials: %d\n\n", NTRIALS) ;
 
-    GrB_Index nCC, nCC_first = -1, nCC2, nCC3, nCC4 ;
+    GrB_Index nCC, nCC_first = -1, nCC2, nCC3, nCC4 = 0 ;
     for (int trial = 1 ; trial <= nt ; trial++)
     {
         int nthreads = Nthreads [trial] ;
@@ -145,6 +144,7 @@ int main (int argc, char **argv)
             // LG_CC_FastSV5_64
             //------------------------------------------------------------------
 
+            #if LG_SUITESPARSE
             LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
             status = LG_CC_FastSV5_64 (&components4, G, msg) ;
             LAGraph_TRY (status) ;
@@ -152,30 +152,37 @@ int main (int argc, char **argv)
             t4 += ttrial ;
             printf ("SV64: trial: %2d time: %10.4f sec\n", k, ttrial) ;
             nCC4 = countCC (components4, n) ;
+            #endif
 
             //------------------------------------------------------------------
             // LG_CC_Boruvka
             //------------------------------------------------------------------
 
-            LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-            status = LG_CC_Boruvka (&components2, G, msg) ;
-            LAGraph_TRY (status) ;
-            LAGraph_TRY (LAGraph_Toc (&ttrial, tic, NULL)) ;
-            t2 += ttrial ;
-            printf ("Boru: trial: %2d time: %10.4f sec\n", k, ttrial) ;
-            nCC2 = countCC (components2, n) ;
+            if (0) // (k == 0)
+            {
+                LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
+                status = LG_CC_Boruvka (&components2, G, msg) ;
+                LAGraph_TRY (status) ;
+                LAGraph_TRY (LAGraph_Toc (&ttrial, tic, NULL)) ;
+                t2 += ttrial ;
+                printf ("Boru: trial: %2d time: %10.4f sec\n", k, ttrial) ;
+                nCC2 = countCC (components2, n) ;
+            }
 
             //------------------------------------------------------------------
             // LAGraph_cc_lacc
             //------------------------------------------------------------------
 
-            LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-            status = (LAGraph_cc_lacc (&components3, G->A, false)) ;
-            LAGraph_TRY (status) ;
-            LAGraph_TRY (LAGraph_Toc (&ttrial, tic, NULL)) ;
-            t3 += ttrial ;
-            printf ("LACC: trial: %2d time: %10.4f sec\n", k, ttrial) ;
-            nCC3 = countCC (components3, n) ;
+            if (0) // (k == 0)
+            {
+                LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
+                status = (LAGraph_cc_lacc (&components3, G->A, false)) ;
+                LAGraph_TRY (status) ;
+                LAGraph_TRY (LAGraph_Toc (&ttrial, tic, NULL)) ;
+                t3 += ttrial ;
+                printf ("LACC: trial: %2d time: %10.4f sec\n", k, ttrial) ;
+                nCC3 = countCC (components3, n) ;
+            }
 
             //------------------------------------------------------------------
             // check results
@@ -186,9 +193,12 @@ int main (int argc, char **argv)
                 // check the result
                 printf ("nCC: %g\n", (double) nCC) ;
                 nCC_first = nCC ;
-#if LG_CHECK_RESULT
+//              if (nCC2 != nCC) printf ("failure: nCC2 %g\n", (double) nCC2) ;
+//              if (nCC3 != nCC) printf ("failure: nCC3 %g\n", (double) nCC3) ;
+                if (nCC4 != nCC) printf ("failure: nCC4 %g\n", (double) nCC4) ;
+#if 0 && LG_CHECK_RESULT
                 LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-                int result = LG_check_cc (components, G, msg) ;
+                int result = LG_check_cc (components4, G, msg) ;
                 if (result != 0)
                 {
                     printf ("test failure: (%d) %s\n", result, msg) ;
@@ -205,34 +215,45 @@ int main (int argc, char **argv)
                     printf ("test failure: # components differs %g %g\n",
                         (double) nCC, (double) nCC_first) ;
                 }
-                if (nCC2 != nCC_first)
-                {
-                    printf ("test failure2: # components differs %g %g\n",
-                        (double) nCC2, (double) nCC_first) ;
-                }
-                if (nCC3 != nCC_first)
-                {
-                    printf ("test failure3: # components differs %g %g\n",
-                        (double) nCC3, (double) nCC_first) ;
-                }
-                if (nCC4 != nCC_first)
-                {
-                    printf ("test failure4: # components differs %g %g\n",
-                        (double) nCC4, (double) nCC_first) ;
-                }
-
             }
             GrB_free (&components) ;
             GrB_free (&components2) ;
             GrB_free (&components3) ;
             GrB_free (&components4) ;
         }
+
         double ttt = t1 / NTRIALS ;
         printf("LG2:SV5b: threads: %2d time: %10.4f  # of CC: %g\n\n",
             nthreads, ttt, (double) nCC) ;
         fprintf (stderr,
             "Avg: CC (sv5b.2)  %3d: %10.3f sec: %s\n",
             nthreads, ttt, matrix_name) ;
+
+        ttt = t4 / NTRIALS ;
+        printf("LG2:SV64: threads: %2d time: %10.4f  # of CC: %g\n\n",
+            nthreads, ttt, (double) nCC4) ;
+        fprintf (stderr,
+            "Avg: CC (sv5_64)  %3d: %10.3f sec: %s\n",
+            nthreads, ttt, matrix_name) ;
+
+        ttt = t2 ;
+        if (ttt > 0)
+        {
+            printf("LG2:Boru: threads: %2d time: %10.4f  # of CC: %g\n\n",
+                nthreads, ttt, (double) nCC2) ;
+            fprintf (stderr,
+                "Avg: CC (Boruvka) %3d: %10.3f sec: %s\n",
+                nthreads, ttt, matrix_name) ;
+        }
+        ttt = t3 ;
+        if (ttt > 0)
+        {
+            printf("LG2:LACC: threads: %2d time: %10.4f  # of CC: %g\n\n",
+                nthreads, ttt, (double) nCC3) ;
+            fprintf (stderr,
+                "Avg: CC (LACC)    %3d: %10.3f sec: %s\n",
+                nthreads, ttt, matrix_name) ;
+        }
         printf("\n");
     }
 
