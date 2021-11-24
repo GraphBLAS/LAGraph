@@ -36,6 +36,12 @@ jobs:
       with:
         branch: gh-pages
         folder: build/test_coverage/
+        if: github.event_name == 'push' && github.ref == 'refs/heads/reorg'
+    - name: Save output
+      uses: actions/upload-artifact@v2.2.3
+      with:
+        name: test_coverage
+        path: build/test_coverage/
   macos:
     runs-on: macos-10.15
     strategy:
