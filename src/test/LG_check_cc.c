@@ -112,7 +112,7 @@ int LG_check_cc
             ncomp_in++ ;
         }
     }
-    printf ("# of components: %ld\n", ncomp_in) ;
+    printf ("# of components: %g\n", (double) ncomp_in) ;
 
     if (n < 1000)
     {
@@ -120,7 +120,8 @@ int LG_check_cc
         {
             if (component_in [i] == i)
             {
-                printf ("Component %ld, size %ld\n", i, count [i]) ;
+                printf ("Component %g, size %g\n", (double) i,
+                    (double) count [i]) ;
             }
         }
     }

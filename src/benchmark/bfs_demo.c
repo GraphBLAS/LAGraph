@@ -97,7 +97,7 @@ int main (int argc, char **argv)
     // get the source nodes
     //--------------------------------------------------------------------------
 
-    int64_t ntrials ;
+    GrB_Index ntrials ;
     GrB_TRY (GrB_Matrix_nrows (&ntrials, SourceNodes)) ;
 
     // HACK
@@ -160,13 +160,13 @@ int main (int argc, char **argv)
                 LAGraph_TRY (LAGraph_Toc (&ttrial, tic, msg)) ;
                 tp [nthreads][pp] += ttrial ;
                 printf ("parent only  %s trial: %2d threads: %2d "
-                    "src: %9ld %10.4f sec\n",
+                    "src: %g %10.4f sec\n",
                     (pp == 0) ? "pushonly" : "pushpull",
-                    trial, nthreads, src, ttrial) ;
+                    trial, nthreads, (double) src, ttrial) ;
                 fflush (stdout) ;
 
                 int32_t maxlevel ;
-                int64_t nvisited ;
+                GrB_Index nvisited ;
 
 #if LG_CHECK_RESULT
                 // check the result (this is very slow so only do it for one trial)
@@ -175,7 +175,7 @@ int main (int argc, char **argv)
                     LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
                     LAGraph_TRY (LG_check_bfs (NULL, parent, G, src, msg)) ;
                     LAGraph_TRY (LAGraph_Toc (&tcheck, tic, msg)) ;
-                    printf ("    n: %ld check: %g sec\n", n, tcheck) ;
+                    printf ("    n: %g check: %g sec\n", (double) n, tcheck) ;
                 }
 #endif
 
@@ -196,9 +196,9 @@ int main (int argc, char **argv)
                 GrB_TRY (GrB_reduce (&maxlevel, NULL, GrB_MAX_MONOID_INT32,
                     level, NULL)) ;
                 printf ("level only   %s trial: %2d threads: %2d "
-                    "src: %9ld %10.4f sec maxlevel: %d\n",
+                    "src: %g %10.4f sec maxlevel: %d\n",
                     (pp == 0) ? "pushonly" : "pushpull",
-                    trial, nthreads, src, ttrial, maxlevel) ;
+                    trial, nthreads, (double) src, ttrial, maxlevel) ;
                 fflush (stdout) ;
 
 #if LG_CHECK_RESULT
@@ -209,8 +209,9 @@ int main (int argc, char **argv)
                     LAGraph_TRY (LG_check_bfs (level, NULL, G, src, msg)) ;
                     GrB_TRY (GrB_Vector_nvals (&nvisited, level)) ;
                     LAGraph_TRY (LAGraph_Toc (&tcheck, tic, msg)) ;
-                    printf ("    n: %ld max level: %d nvisited: %ld check: %g sec\n",
-                        n, maxlevel, nvisited, tcheck) ;
+                    printf ("    n: %g max level: %d nvisited: %g "
+                        "check: %g sec\n", (double) n, maxlevel,
+                        (double) nvisited, tcheck) ;
                 }
 #endif
 
@@ -231,9 +232,9 @@ int main (int argc, char **argv)
                 GrB_TRY (GrB_reduce (&maxlevel, NULL, GrB_MAX_MONOID_INT32,
                     level, NULL)) ;
                 printf ("parent+level %s trial: %2d threads: %2d "
-                    "src: %9ld %10.4f sec\n",
+                    "src: %g %10.4f sec\n",
                     (pp == 0) ? "pushonly" : "pushpull",
-                    trial, nthreads, src, ttrial) ;
+                    trial, nthreads, (double) src, ttrial) ;
                 fflush (stdout) ;
 
 #if LG_CHECK_RESULT
@@ -244,8 +245,9 @@ int main (int argc, char **argv)
                     LAGraph_TRY (LG_check_bfs (level, parent, G, src, msg)) ;
                     GrB_TRY (GrB_Vector_nvals (&nvisited, level)) ;
                     LAGraph_TRY (LAGraph_Toc (&tcheck, tic, msg)) ;
-                    printf ("    n: %ld max level: %d nvisited: %ld check: %g sec\n",
-                        n, maxlevel, nvisited, tcheck) ;
+                    printf ("    n: %g max level: %d nvisited: %g "
+                        "check: %g sec\n",
+                        (double) n, maxlevel, (double) nvisited, tcheck) ;
                 }
 #endif
 

@@ -85,9 +85,9 @@ void test_TriangleCentrality (void)
         if (G->ndiag != 0)
         {
             // remove self-edges
-            printf ("graph has %ld self edges\n", G->ndiag) ;
+            printf ("graph has %g self edges\n", (double) G->ndiag) ;
             OK (LAGraph_DeleteDiag (G, msg)) ;
-            printf ("now has %ld self edges\n", G->ndiag) ;
+            printf ("now has %g self edges\n", (double) G->ndiag) ;
             TEST_CHECK (G->ndiag == 0) ;
         }
 
@@ -99,7 +99,7 @@ void test_TriangleCentrality (void)
 
             // compute the triangle centrality
             OK (LAGraph_VertexCentrality_Triangle (&c, &ntri, method, G, msg)) ;
-            printf ("# of triangles: %lu\n", ntri) ;
+            printf ("# of triangles: %g\n", (double) ntri) ;
             TEST_CHECK (ntri == ntriangles) ;
 
             int pr = (n <= 100) ? 3 : 2 ;

@@ -50,8 +50,8 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
     if (pr >= 0)
     {
         // print the basic scalar properties
-        FPRINTF (f, "Graph: kind: %s, nodes: %ld entries: %ld type: %s\n",
-            kindname, n, nvals, typename) ;
+        FPRINTF (f, "Graph: kind: %s, nodes: %g entries: %g type: %s\n",
+            kindname, (double)n, (double)nvals, typename) ;
     }
 
     if (pr <= 0) return (0) ;
@@ -64,7 +64,7 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
         case LAGRAPH_TRUE  : FPRINTF (f, "symmetric")   ; break ;
         default            : FPRINTF (f, "unknown")     ; break ;
     }
-    if (G->ndiag >= 0) FPRINTF (f, "  self-edges: %ld", G->ndiag) ;
+    if (G->ndiag >= 0) FPRINTF (f, "  self-edges: %g", (double) G->ndiag) ;
     FPRINTF (f, "\n") ;
 
     // pr = LAGraph_MAX (pr, 0) ;

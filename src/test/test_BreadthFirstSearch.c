@@ -183,8 +183,8 @@ bool check_karate_levels30(GrB_Vector levels)
     {
         TEST_CHECK(0 == GrB_Vector_extractElement(&lvl, levels, ix) );
         TEST_CHECK(lvl == LEVELS30[ix] );
-        TEST_MSG("Level check failed for node %ld: ans,comp = %ld,%ld\n",
-                 ix, LEVELS30[ix], lvl);
+        TEST_MSG("Level check failed for node %g: ans,comp = %g,%g\n",
+                 (double) ix, (double) LEVELS30[ix], (double) lvl);
     }
 
     return true;
@@ -533,8 +533,9 @@ void test_BreadthFirstSearch_brutal(void)
                 OK (GrB_Vector_nvals (&nvisited, level)) ;
                 if (pushpull == 0)
                 {
-                    printf ("src %ld n: %ld max level: %ld nvisited: %lu\n",
-                        src, n, maxlevel, nvisited) ;
+                    printf ("src %g n: %g max level: %g nvisited: %g\n",
+                        (double) src, (double) n, (double) maxlevel,
+                        (double) nvisited) ;
                 }
                 OK (GrB_free(&parent));
                 OK (GrB_free(&level));
@@ -547,8 +548,9 @@ void test_BreadthFirstSearch_brutal(void)
                 OK (GrB_Vector_nvals (&nvisited, level)) ;
                 if (pushpull == 0)
                 {
-                    printf ("src %ld n: %ld max level: %ld nvisited: %lu\n",
-                        src, n, maxlevel, nvisited) ;
+                    printf ("src %g n: %g max level: %g nvisited: %g\n",
+                        (double) src, (double) n, (double) maxlevel,
+                        (double) nvisited) ;
                 }
                 OK (GrB_free(&parent));
                 OK (GrB_free(&level));

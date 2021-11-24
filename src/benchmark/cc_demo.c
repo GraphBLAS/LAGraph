@@ -171,7 +171,7 @@ int main (int argc, char **argv)
             if (k == 0)
             {
                 // check the result
-                printf ("nCC: %ld\n", nCC) ;
+                printf ("nCC: %g\n", (double) nCC) ;
                 nCC_first = nCC ;
 #if LG_CHECK_RESULT
                 LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
@@ -189,18 +189,18 @@ int main (int argc, char **argv)
             {
                 if (nCC != nCC_first)
                 {
-                    printf ("test failure: # components differs %ld %ld\n",
-                        nCC, nCC_first) ;
+                    printf ("test failure: # components differs %g %g\n",
+                        (double) nCC, (double) nCC_first) ;
                 }
                 if (nCC2 != nCC_first)
                 {
-                    printf ("test failure2: # components differs %ld %ld\n",
-                        nCC2, nCC_first) ;
+                    printf ("test failure2: # components differs %g %g\n",
+                        (double) nCC, (double) nCC_first) ;
                 }
                 if (nCC3 != nCC_first)
                 {
-                    printf ("test failure3: # components differs %ld %ld\n",
-                        nCC3, nCC_first) ;
+                    printf ("test failure3: # components differs %g %g\n",
+                        (double) nCC, (double) nCC_first) ;
                 }
 
             }
@@ -209,8 +209,8 @@ int main (int argc, char **argv)
             GrB_free (&components3) ;
         }
         double ttt = t1 / NTRIALS ;
-        printf("LG2:SV5b: threads: %2d time: %10.4f  # of CC: %lu\n\n",
-            nthreads, ttt, nCC) ;
+        printf("LG2:SV5b: threads: %2d time: %10.4f  # of CC: %g\n\n",
+            nthreads, ttt, (double) nCC) ;
         fprintf (stderr,
             "Avg: CC (sv5b.2)  %3d: %10.3f sec: %s\n",
             nthreads, ttt, matrix_name) ;

@@ -356,28 +356,27 @@ int LAGraph_MMWrite_type
 
     switch (MM_fmt)
     {
+        default :
         case MM_coordinate      : FPRINTF (f, " coordinate")        ; break ;
         case MM_array           : FPRINTF (f, " array")             ; break ;
     }
 
     switch (MM_type)
     {
+        default :
         case MM_real            : FPRINTF (f, " real")              ; break ;
         case MM_integer         : FPRINTF (f, " integer")           ; break ;
-        #if 0
         case MM_complex         : FPRINTF (f, " complex")           ; break ;
-        #endif
         case MM_pattern         : FPRINTF (f, " pattern")           ; break ;
     }
 
     switch (MM_storage)
     {
+        default :
         case MM_general         : FPRINTF (f, " general\n")         ; break ;
         case MM_symmetric       : FPRINTF (f, " symmetric\n")       ; break ;
         case MM_skew_symmetric  : FPRINTF (f, " skew-symmetric\n")  ; break ;
-        #if 0
         case MM_hermitian       : FPRINTF (f, " Hermitian\n")       ; break ;
-        #endif
     }
 
     FPRINTF (f, "%%%%GraphBLAS ") ;

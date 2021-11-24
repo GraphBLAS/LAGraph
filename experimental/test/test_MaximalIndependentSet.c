@@ -118,9 +118,9 @@ void test_MIS (void)
         if (G->ndiag != 0)
         {
             // remove self-edges
-            printf ("graph has %ld self edges\n", G->ndiag) ;
+            printf ("graph has %g self edges\n", (double) G->ndiag) ;
             OK (LAGraph_DeleteDiag (G, msg)) ;
-            printf ("now has %ld self edges\n", G->ndiag) ;
+            printf ("now has %g self edges\n", (double) G->ndiag) ;
             TEST_CHECK (G->ndiag == 0) ;
         }
 
@@ -167,7 +167,7 @@ void test_MIS (void)
                 NULL)) ;
             nsingletons++ ;
         }
-        printf ("creating at least %lu singletons\n", nsingletons) ;
+        printf ("creating at least %g singletons\n", (double) nsingletons) ;
 
         OK (LAGraph_DeleteProperties (G, msg)) ;
         G->kind = LAGRAPH_ADJACENCY_UNDIRECTED ;
@@ -180,7 +180,7 @@ void test_MIS (void)
         GrB_Index nonsingletons, nsingletons_actual ;
         OK (GrB_Vector_nvals (&nonsingletons, G->rowdegree)) ;
         nsingletons_actual = n - nonsingletons ;
-        printf ("actual # of singletons: %lu\n", nsingletons_actual) ;
+        printf ("actual # of singletons: %g\n", (double) nsingletons_actual) ;
         TEST_CHECK (nsingletons <= nsingletons_actual) ;
 
         for (int64_t seed = 0 ; seed <= 4*n ; seed += n)

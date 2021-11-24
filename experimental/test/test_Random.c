@@ -33,7 +33,7 @@ void test_Random (void)
 
     for (int trial = 0 ; trial <= 1 ; trial++)
     {
-        printf ("\n================================ seed: %ld\n", seed) ;
+        printf ("\n=============================== seed: %g\n", (double) seed) ;
 
         // generate a seed vector (all entries present)
         printf ("\nDense random seed:\n") ;
@@ -84,13 +84,13 @@ void test_Random (void)
         OK (LAGraph_Vector_print (I, 5, stdout, NULL)) ;
 
         // generate a random double vector
-        printf ("\nSparse random double: n %lu\n", n) ;
+        printf ("\nSparse random double: n %g\n", (double) n) ;
         OK (GrB_Vector_new (&X, GrB_FP64, n)) ;
         OK (LAGraph_Random_FP64 (X, Seed, msg)) ;
         OK (LAGraph_Vector_print (X, 5, stdout, NULL)) ;
 
         // generate a random float vector
-        printf ("\nSparse random float: n %lu\n", n) ;
+        printf ("\nSparse random float: n %g\n", (double) n) ;
         OK (GrB_Vector_new (&Z, GrB_FP32, n)) ;
         OK (LAGraph_Random_FP32 (Z, Seed, msg)) ;
         OK (LAGraph_Vector_print (Z, 5, stdout, NULL)) ;

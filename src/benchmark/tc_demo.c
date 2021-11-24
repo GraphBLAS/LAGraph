@@ -156,7 +156,8 @@ int main (int argc, char **argv)
 
     if (ntriangles != ntsimple)
     {
-        printf ("wrong # triangles: %lu %ld\n", ntriangles, ntsimple) ;
+        printf ("wrong # triangles: %g %g\n", (double) ntriangles,
+            (double) ntsimple) ;
         abort ( ) ;
     }
 
@@ -212,8 +213,8 @@ int main (int argc, char **argv)
                     LAGraph_TRY (LAGraph_Toc (&ttrial [trial], tic, NULL)) ;
                     ttot += ttrial [trial] ;
                     printf ("trial %2d: %12.6f sec rate %6.2f  # triangles: "
-                        "%lu\n", trial, ttrial [trial],
-                        1e-6 * nvals / ttrial [trial], nt2) ;
+                        "%g\n", trial, ttrial [trial],
+                        1e-6 * nvals / ttrial [trial], (double) nt2) ;
                 }
                 ttot = ttot / ntrials ;
                 printf ("nthreads: %3d time: %12.6f rate: %6.2f", nthreads,

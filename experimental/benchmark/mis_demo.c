@@ -123,11 +123,11 @@ int main (int argc, char **argv)
             GrB_TRY (GrB_free (&mis)) ;
             LAGraph_TRY (LAGraph_Toc (&ttrial [trial], tic, NULL)) ;
             ttot += ttrial [trial] ;
-            printf ("seed %10ld threads %2d trial %2d: %12.6f sec\n",
-                seed, nthreads, trial, ttrial [trial]) ;
+            printf ("seed %g threads %2d trial %2d: %12.6f sec\n",
+                (double) seed, nthreads, trial, ttrial [trial]) ;
             fprintf (stderr,
-                "seed %10ld threads %2d trial %2d: %12.6f sec\n", 
-                seed, nthreads, trial, ttrial [trial]) ;
+                "seed %g threads %2d trial %2d: %12.6f sec\n",
+                (double) seed, nthreads, trial, ttrial [trial]) ;
         }
         ttot = ttot / ntrials ;
 

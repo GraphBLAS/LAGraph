@@ -41,7 +41,7 @@ void test_sort1 (void)
 
         for (int k = 1 ; k < n ; k++)
         {
-            A0 [k-1] <= A0 [k] ;
+            TEST_CHECK (A0 [k-1] <= A0 [k]) ;
         }
 
         for (int k = 0 ; k < n ; k++)
@@ -53,7 +53,7 @@ void test_sort1 (void)
 
         for (int k = 1 ; k < n ; k++)
         {
-            A0 [k-1] <= A0 [k] ;
+            TEST_CHECK (A0 [k-1] <= A0 [k]) ;
         }
 
         LAGraph_Free ((void **) &A0) ;

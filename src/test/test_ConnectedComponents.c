@@ -113,19 +113,22 @@ void test_cc_matrices (void)
             // check the result
             OK (LG_check_cc (C, G, msg)) ;
 
+            // find the connected components with LG_CC_Boruvka
+            printf ("\n------ CC_BORUVKA:\n") ;
+            OK (LG_CC_Boruvka (&C2, G, msg)) ;
+            // OK (LAGraph_Vector_print (C2, 2, stdout, msg)) ;
+            ncomponents = count_connected_components (C2) ;
+            TEST_CHECK (ncomponents == ncomp) ;
+            OK (LG_check_cc (C2, G, msg)) ;
+            OK (GrB_free (&C2)) ;
+
+            int result = LG_CC_Boruvka (NULL, G, msg) ;
+            TEST_CHECK (result == GrB_NULL_POINTER) ;
+
             if (trial == 0)
             {
                 for (int sanitize = 0 ; sanitize <= 1 ; sanitize++)
                 {
-                    // find the connected components with LG_CC_Boruvka
-                    printf ("\n------ CC_BORUVKA:\n") ;
-                    OK (LG_CC_Boruvka (&C2, G, msg)) ;
-                    // OK (LAGraph_Vector_print (C2, 2, stdout, msg)) ;
-                    ncomponents = count_connected_components (C2) ;
-                    TEST_CHECK (ncomponents == ncomp) ;
-                    OK (LG_check_cc (C2, G, msg)) ;
-                    OK (GrB_free (&C2)) ;
-
                     // find the connected components with cc_lacc
                     printf ("\n------ CC_LACC:\n") ;
                     OK (LAGraph_cc_lacc (&C2, G->A, sanitize)) ;
@@ -136,8 +139,6 @@ void test_cc_matrices (void)
                     OK (GrB_free (&C2)) ;
                 }
 
-                int result = LG_CC_Boruvka (NULL, G, msg) ;
-                TEST_CHECK (result == GrB_NULL_POINTER) ;
                 result = LAGraph_cc_lacc (NULL, G->A, false) ;
                 TEST_CHECK (result == GrB_NULL_POINTER) ;
             }

@@ -118,7 +118,7 @@ int LG_check_mis        // check if iset is a valid MIS of A
 
     printf ("maximal independent set OK %.16g of %.16g nodes",
         (double) isize, (double) n) ;
-    if (ignored > 0) printf (" (%ld nodes ignored)\n", ignored) ;
+    if (ignored > 0) printf (" (%g nodes ignored)\n", (double) ignored) ;
     printf ("\n") ;
     return (0) ;
 }

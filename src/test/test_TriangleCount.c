@@ -103,7 +103,7 @@ void test_TriangleCount_Methods1(void)
     TEST_MSG("retval = %d (%s)", retval, msg);
 
     TEST_CHECK( ntriangles == 45 );
-    TEST_MSG("numtri = %ld", ntriangles);
+    TEST_MSG("numtri = %g", (double) ntriangles);
 
     teardown();
 }
@@ -128,7 +128,7 @@ void test_TriangleCount_Methods2(void)
     TEST_MSG("retval = %d (%s)", retval, msg);
 
     TEST_CHECK( ntriangles == 45 );
-    TEST_MSG("numtri = %ld", ntriangles);
+    TEST_MSG("numtri = %g", (double) ntriangles);
 
     teardown();
 }
@@ -161,7 +161,7 @@ void test_TriangleCount_Methods3(void)
     TEST_MSG("retval = %d (%s)", retval, msg);
 
     TEST_CHECK( ntriangles == 45 );
-    TEST_MSG("numtri = %ld", ntriangles);
+    TEST_MSG("numtri = %g", (double) ntriangles);
 
     teardown();
 }
@@ -194,7 +194,7 @@ void test_TriangleCount_Methods4(void)
     TEST_MSG("retval = %d (%s)", retval, msg);
 
     TEST_CHECK( ntriangles == 45 );
-    TEST_MSG("numtri = %ld", ntriangles);
+    TEST_MSG("numtri = %g", (double) ntriangles) ;
 
     teardown();
 }
@@ -228,7 +228,7 @@ void test_TriangleCount_Methods5(void)
     TEST_MSG("retval = %d (%s)", retval, msg);
 
     TEST_CHECK( ntriangles == 45 );
-    TEST_MSG("numtri = %ld", ntriangles);
+    TEST_MSG("numtri = %g", (double) ntriangles) ;
 
     teardown();
 }
@@ -261,7 +261,7 @@ void test_TriangleCount_Methods6(void)
     TEST_MSG("retval = %d (%s)", retval, msg);
 
     TEST_CHECK( ntriangles == 45 );
-    TEST_MSG("numtri = %ld", ntriangles);
+    TEST_MSG("numtri = %g", (double) ntriangles) ;
 
     teardown();
 }
@@ -277,7 +277,7 @@ void test_TriangleCount(void)
     TEST_MSG("retval = %d (%s)", retval, msg);
 
     TEST_CHECK( ntriangles == 45 );
-    TEST_MSG("numtri = %ld", ntriangles);
+    TEST_MSG("numtri = %g", (double) ntriangles) ;
 
     OK (LG_check_tri (&ntriangles, G, msg)) ;
     TEST_CHECK( ntriangles == 45 );
@@ -320,7 +320,7 @@ void test_TriangleCount_brutal (void)
         // get the # of triangles
         uint64_t nt0, nt1 ;
         OK (LAGraph_TriangleCount (&nt1, G, msg)) ;
-        printf ("# triangles: %6lu Matrix: %s\n", nt1, aname) ;
+        printf ("# triangles: %g Matrix: %s\n", (double) nt1, aname) ;
         TEST_CHECK (nt1 == ntriangles) ;
         OK (LG_check_tri (&nt0, G, msg)) ;
         TEST_CHECK (nt0 == nt1) ;

@@ -156,8 +156,8 @@ void test_BF (void)
         //----------------------------------------------------------------------
 
         GrB_Index s = 0 ;
-        fprintf (stderr, "\n==========input graph: nodes: %lu edges: %lu "
-            "source node: %lu\n", n, nvals, s) ;
+        fprintf (stderr, "\n==========input graph: nodes: %g edges: %g "
+            "source node: %g\n", (double) n, (double) nvals, (double) s) ;
 
         //----------------------------------------------------------------------
         // run 1 or 2 trials (2 negative weight cycles)
@@ -298,8 +298,8 @@ void test_BF (void)
             {
                 LAGraph_Free ((void **) &d) ;
                 LAGraph_Free ((void **) &pi) ;
-                result = LAGraph_BF_pure_c_double (&d, &pi, s, n, nvals, I, J,
-                    W) ;
+                result = LAGraph_BF_pure_c_double (&d, &pi, s, n, nvals,
+                    (const int64_t *) I, (const int64_t *) J, W) ;
                 TEST_CHECK (result == valid) ;
             }
 
@@ -316,8 +316,8 @@ void test_BF (void)
                 printf ("pure_c integer:\n") ;
                 LAGraph_Free ((void **) &d10) ;
                 LAGraph_Free ((void **) &pi10) ;
-                result = LAGraph_BF_pure_c (&d10, &pi10, s, n, nvals, I, J,
-                    W_int32) ;
+                result = LAGraph_BF_pure_c (&d10, &pi10, s, n, nvals,
+                    (const int64_t *) I, (const int64_t *) J, W_int32) ;
                 TEST_CHECK (result == valid) ;
             }
 

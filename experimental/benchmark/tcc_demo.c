@@ -108,7 +108,7 @@ int main (int argc, char **argv)
     LAGraph_TRY (LAGraph_VertexCentrality_Triangle (&c, &ntri, 3, G, msg)) ;
     LAGraph_TRY (LAGraph_Toc (&tt, tic, NULL)) ;
     GrB_TRY (GrB_free (&c)) ;
-    printf ("warmup time %g sec, # triangles: %lu\n", tt, ntri) ;
+    printf ("warmup time %g sec, # triangles: %g\n", tt, (double) ntri) ;
 
     for (int method = 1 ; method <= 3 ; method += 2)
     {
