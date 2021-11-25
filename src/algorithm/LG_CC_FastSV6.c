@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LG_CC_FastSV5_64: connected components (64-bit version)
+// LG_CC_FastSV6: connected components (64-bit version)
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -13,20 +13,20 @@
 
 // A subsequent update to the algorithm is here (which might not be reflected
 // in this code):
-//
 // Yongzhe Zhang, Ariful Azad, Aydin Buluc: Parallel algorithms for finding
 // connected components using linear algebra. J. Parallel Distributed Comput.
 // 144: 14-27 (2020).
 
 // Modified by Tim Davis, Texas A&M University
 
-// The input matrix A must be symmetric.  Self-edges (diagonal entries) are
+// The input graph G must be undirected, or directed and with an adjacency
+// matrix that has a symmetric structure.  Self-edges (diagonal entries) are
 // OK, and are ignored.  The values and type of A are ignored; just its
 // structure is accessed.
 
-// todo: this function is not thread-safe, since it exports G->A and then
-// reimports it back.  G->A is unchanged when the function returns, but during
-// execution G->A is invalid.
+// This function should not be called by multiple user threads on the same
+// graph G, since it unpacks G->A and then packs it back when done.  G->A is
+// unchanged when the function returns, but during execution G->A is empty.
 
 #define LAGraph_FREE_ALL ;
 
@@ -39,107 +39,10 @@
 #endif
 
 //------------------------------------------------------------------------------
-// hash functions: todo describe me
-//------------------------------------------------------------------------------
-
-// hash table size must be a power of 2
-#define HASH_SIZE 1024
-
-// number of samples to insert into the hash table
-// todo: this seems to be a lot of entries for a HASH_SIZE of 1024.
-// There could be lots of collisions.
-#define HASH_SAMPLES 864
-
-#define HASH(x) (((x << 4) + x) & (HASH_SIZE-1))
-#define NEXT(x) ((x + 23) & (HASH_SIZE-1))
-
-//------------------------------------------------------------------------------
-// ht_init: todo describe me
-//------------------------------------------------------------------------------
-
-// Clear the hash table counts (ht_val [0:HASH_SIZE-1] = 0), and set all hash
-// table entries as empty (ht_key [0:HASH_SIZE-1] =-1).
-
-// todo: the memset of ht_key is confusing
-
-// todo: the name "ht_val" is confusing.  It is not a value, but a count of
-// the number of times the value x = ht_key [h] has been inserted into the
-// hth position in the hash table.  It should be renamed ht_cnt.
-
-static inline void ht_init
-(
-    int64_t *ht_key,
-    int64_t *ht_val
-)
-{
-    memset (ht_key, -1, sizeof (int64_t) * HASH_SIZE) ;
-    memset (ht_val,  0, sizeof (int64_t) * HASH_SIZE) ;
-}
-
-//------------------------------------------------------------------------------
-// ht_sample: todo describe me
-//------------------------------------------------------------------------------
-
-//
-
-static inline void ht_sample
-(
-    uint64_t *V,      // array of size n (todo: this is a bad variable name)
-    int64_t n,
-    int64_t samples,    // number of samples to take from V
-    int64_t *ht_key,
-    int64_t *ht_val,
-    uint64_t *seed
-)
-{
-    for (int64_t k = 0 ; k < samples ; k++)
-    {
-        // select an entry from V at random
-        int64_t x = V [LAGraph_Random60 (seed) % n] ;
-
-        // find x in the hash table
-        // todo: make this loop a static inline function (see also below)
-        int64_t h = HASH (x) ;
-        while (ht_key [h] != -1 && ht_key [h] != x)
-        {
-            h = NEXT (h) ;
-        }
-
-        ht_key [h] = x ;
-        ht_val [h]++ ;
-    }
-}
-
-//------------------------------------------------------------------------------
-// ht_most_frequent: todo describe me
-//------------------------------------------------------------------------------
-
-// todo what if key is returned as -1?  Code breaks.  todo: handle this case
-
-static inline int64_t ht_most_frequent
-(
-    int64_t *ht_key,
-    int64_t *ht_val
-)
-{
-    int64_t key = -1 ;
-    int64_t val = 0 ;                       // max (ht_val [0:HASH_SIZE-1])
-    for (int64_t h = 0 ; h < HASH_SIZE ; h++)
-    {
-        if (ht_val [h] > val)
-        {
-            key = ht_key [h] ;
-            val = ht_val [h] ;
-        }
-    }
-    return (key) ;      // return most frequent key
-}
-
-//------------------------------------------------------------------------------
 // Reduce_assign:  w (index) += s, using MIN as the "+=" accum operator
 //------------------------------------------------------------------------------
 
-// The index array, of size n can have duplicates.  The vectors w and s are
+// The index array of size n can have duplicates.  The vectors w and s are
 // full (all entries present).  This function computes:
 //
 //      for (j = 0 ; j < n ; j++)
@@ -153,7 +56,7 @@ static inline int64_t ht_most_frequent
 //
 //      w = min (w, C*s)
 
-static inline int Reduce_assign
+static inline GrB_Info Reduce_assign
 (
     GrB_Vector w,           // vector of size n, all entries present
     GrB_Vector s,           // vector of size n, all entries present
@@ -189,7 +92,7 @@ static inline int Reduce_assign
 }
 
 //------------------------------------------------------------------------------
-// LG_CC_FastSV5_64
+// LG_CC_FastSV6
 //------------------------------------------------------------------------------
 
 // The output of LG_CC_FastSV5 is a vector component, where
@@ -198,31 +101,42 @@ static inline int Reduce_assign
 // component(s)=s.  The number of connected components in the graph G is the
 // number of representatives.
 
-#undef  LAGraph_FREE_ALL
-#define LAGraph_FREE_ALL                            \
-{                                                   \
+#undef  LAGraph_FREE_WORK
+#define LAGraph_FREE_WORK                   \
+{                                           \
+    LAGraph_Free ((void **) &Tp) ;          \
+    LAGraph_Free ((void **) &Tj) ;          \
+    LAGraph_Free ((void **) &Tx) ;          \
     LAGraph_Free ((void **) &Cp) ;          \
     LAGraph_Free ((void **) &Cx) ;          \
     LAGraph_Free ((void **) &V) ;           \
     LAGraph_Free ((void **) &ht_key) ;      \
-    LAGraph_Free ((void **) &ht_val) ;      \
-    /* todo why is T not freed?? */                 \
-    GrB_free (&t) ;                                 \
-    GrB_free (&f) ;                                 \
-    GrB_free (&gp) ;                                \
-    GrB_free (&mngp) ;                              \
-    GrB_free (&gp_new) ;                            \
-    GrB_free (&mod) ;                               \
+    LAGraph_Free ((void **) &ht_count) ;    \
+    LAGraph_Free ((void **) &count) ;       \
+    LAGraph_Free ((void **) &range) ;       \
+    GrB_free (&T) ;                         \
+    GrB_free (&t) ;                         \
+    GrB_free (&gp) ;                        \
+    GrB_free (&mngp) ;                      \
+    GrB_free (&gp_new) ;                    \
+    GrB_free (&mod) ;                       \
+}
+
+#undef  LAGraph_FREE_ALL
+#define LAGraph_FREE_ALL                    \
+{                                           \
+    LAGraph_FREE_WORK ;                     \
+    GrB_free (&f) ;                         \
 }
 
 #endif
 
-int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
+int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
 (
     // output
     GrB_Vector *component,  // component(i)=s if node is in the component s
     // inputs
-    LAGraph_Graph G,        // input graph, G->A can change
+    LAGraph_Graph G,        // input graph
     char *msg
 )
 {
@@ -237,15 +151,14 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
 
     LG_CLEAR_MSG ;
 
-    uint64_t *V = NULL ;
-    int64_t *ht_key = NULL, *ht_val = NULL ;
-    GrB_Index n, nnz ;
+    int64_t *ht_key = NULL, *ht_count = NULL, *range = NULL ;
+    GrB_Index n, nnz, Cp_size = 0,
+        *V = NULL, *Cp = NULL, *count = NULL, *Tp = NULL, *Tj = NULL ;
     GrB_Vector f = NULL, gp_new = NULL, mngp = NULL, mod = NULL, gp = NULL,
         t = NULL ;
     GrB_Matrix T = NULL, C = NULL ;
-    GrB_Index *Cp = NULL ;
-    GrB_Index Cp_size = 0 ;
-    bool *Cx = NULL ;
+    bool *Cx = NULL, sampling = false ;
+    void *Tx = NULL ;
 
     LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
     LG_CHECK (component == NULL, -1, "component parameter is NULL") ;
@@ -263,16 +176,13 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
         LG_CHECK (false, -1, "input must be symmetric") ;
     }
 
-    GrB_Matrix S = G->A ;
-    GrB_TRY (GrB_Matrix_nrows (&n, S)) ;
-    GrB_TRY (GrB_Matrix_nvals (&nnz, S)) ;
+    GrB_Matrix A = G->A ;
+    GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
+    GrB_TRY (GrB_Matrix_nvals (&nnz, A)) ;
 
     #define FASTSV_SAMPLES 4
 
-    bool sampling = (n * FASTSV_SAMPLES * 2 < nnz) ;
-
-    // random number seed
-    uint64_t seed = n ;
+    sampling = (n * FASTSV_SAMPLES * 2 < nnz && n > 1024) ;
 
     //--------------------------------------------------------------------------
     // initializations
@@ -284,35 +194,31 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
     nthreads = LAGraph_MIN (nthreads, n / 16) ;
     nthreads = LAGraph_MAX (nthreads, 1) ;
 
-    // vectors
     GrB_TRY (GrB_Vector_new (&f,      GrB_UINT64, n)) ;
     GrB_TRY (GrB_Vector_new (&gp_new, GrB_UINT64, n)) ;
     GrB_TRY (GrB_Vector_new (&mod,    GrB_BOOL,   n)) ;
 
+    Cx = (bool *) LAGraph_Malloc (1, sizeof (bool)) ;
     V = LAGraph_Malloc (n, sizeof (uint64_t)) ;
-    LG_CHECK (V == NULL, -1, "out of memory") ;
+    LG_CHECK (V == NULL || Cx == NULL, -1, "out of memory") ;
+    Cx [0] = true ;
 
+    // f = 0:n-1
     GrB_TRY (GrB_assign (f, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
     GrB_TRY (GrB_apply (f, NULL, NULL, GrB_ROWINDEX_INT64, f, 0, NULL)) ;
-    GrB_TRY (GrB_Vector_extractTuples (NULL, V, &n, f)) ;
 
+    // copy f into gp, mngp, and V
+    GrB_TRY (GrB_Vector_extractTuples (NULL, V, &n, f)) ;
     GrB_TRY (GrB_Vector_dup (&gp,   f)) ;
     GrB_TRY (GrB_Vector_dup (&mngp, f)) ;
 
-    // allocate the hash table
-    ht_key = LAGraph_Malloc (HASH_SIZE, sizeof (int64_t)) ;
-    ht_val = LAGraph_Malloc (HASH_SIZE, sizeof (int64_t)) ;
-    LG_CHECK (ht_key == NULL || ht_val == NULL, -1, "out of memory") ;
-
-    // create Cp = 0:n, and Cx = true, and the empty C matrix
+    // create Cp = 0:n and the empty C matrix
+    GrB_TRY (GrB_Matrix_new (&C, GrB_BOOL, n, n)) ;
     GrB_TRY (GrB_Vector_new (&t, GrB_INT64, n+1)) ;
     GrB_TRY (GrB_assign (t, NULL, NULL, 0, GrB_ALL, n+1, NULL)) ;
     GrB_TRY (GrB_apply (t, NULL, NULL, GrB_ROWINDEX_INT64, t, 0, NULL)) ;
     GrB_TRY (GxB_Vector_unpack_Full (t, (void **) &Cp, &Cp_size, NULL, NULL)) ;
-    Cx = (bool *) LAGraph_Malloc (1, sizeof (bool)) ;
-    Cx [0] = true ;
     GrB_TRY (GrB_free (&t)) ;
-    GrB_TRY (GrB_Matrix_new (&C, GrB_BOOL, n, n)) ;
 
     //--------------------------------------------------------------------------
     // sample phase
@@ -322,58 +228,36 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
     {
 
         //----------------------------------------------------------------------
-        // export S = G->A in CSR format
+        // unpack A in CSR format
         //----------------------------------------------------------------------
 
-        // S is not modified.  It is only exported so that its contents can be
-        // read by the parallel loops below.
-
-        GrB_Type type ;
-        GrB_Index nrows, ncols, nvals ;
-        size_t typesize ;
-        int64_t nonempty ;
-        GrB_Index *Sp, *Sj ;
         void *Sx ;
-        bool S_jumbled = false ;
-        GrB_Index Sp_size, Sj_size, Sx_size ;
-        bool S_iso = false ;
-
-        GrB_TRY (GrB_Matrix_nvals (&nvals, S)) ;
-        GrB_TRY (GxB_Matrix_export_CSR (&S, &type, &nrows, &ncols, &Sp, &Sj,
-            &Sx, &Sp_size, &Sj_size, &Sx_size,
-            &S_iso, &S_jumbled, NULL)) ;
-        GrB_TRY (GxB_Type_size (&typesize, type)) ;
-        G->A = NULL ;
+        GrB_Index *Sp, *Sj, Sp_size, Sj_size, Sx_size, nvals ;
+        bool S_jumbled = false, S_iso = false ;
+        GrB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
+        GrB_TRY (GxB_Matrix_unpack_CSR (A, &Sp, &Sj, &Sx,
+            &Sp_size, &Sj_size, &Sx_size, &S_iso, &S_jumbled, NULL)) ;
 
         //----------------------------------------------------------------------
-        // allocate space to construct T
+        // allocate workspace, including space to construct T
         //----------------------------------------------------------------------
 
-        GrB_Index Tp_len = nrows+1, Tp_size = Tp_len*sizeof(GrB_Index);
-        GrB_Index Tj_len = nvals,   Tj_size = Tj_len*sizeof(GrB_Index);
-        GrB_Index Tx_len = nvals ;
-        GrB_Index *Tp = LAGraph_Malloc (Tp_len, sizeof (GrB_Index)) ;
-        GrB_Index *Tj = LAGraph_Malloc (Tj_len, sizeof (GrB_Index)) ;
-        GrB_Index Tx_size = typesize ;
-        void *Tx = LAGraph_Calloc (1, typesize) ;   // T is iso
-
-        // todo check out-of-memory conditions
-
-        //----------------------------------------------------------------------
-        // allocate workspace
-        //----------------------------------------------------------------------
-
-        int64_t *range = LAGraph_Malloc (nthreads + 1, sizeof (int64_t)) ;
-        GrB_Index *count = LAGraph_Malloc (nthreads + 1, sizeof (GrB_Index)) ;
-        // todo check out-of-memory conditions
-
-        memset (count, 0, sizeof (GrB_Index) * (nthreads + 1)) ;
+        GrB_Index Tp_size = (n+1) * sizeof (GrB_Index) ;
+        GrB_Index Tj_size = nvals * sizeof (GrB_Index) ;
+        GrB_Index Tx_size = sizeof (bool) ;
+        Tp = LAGraph_Malloc (n+1, sizeof (GrB_Index)) ;
+        Tj = LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;
+        Tx = LAGraph_Calloc (1, sizeof (bool)) ;
+        range = LAGraph_Malloc (nthreads + 1, sizeof (int64_t)) ;
+        count = LAGraph_Calloc (nthreads + 1, sizeof (GrB_Index)) ;
+        LG_CHECK (Tp == NULL || Tj == NULL || Tx == NULL || range == NULL
+            || count == NULL, GrB_OUT_OF_MEMORY, "out of memory") ;
 
         //----------------------------------------------------------------------
         // define parallel tasks to construct T
         //----------------------------------------------------------------------
 
-        // thread tid works on rows range[tid]:range[tid+1]-1 of S and T
+        // thread tid works on rows range[tid]:range[tid+1]-1 of A and T
         for (int tid = 0 ; tid <= nthreads ; tid++)
         {
             range [tid] = (n * tid + nthreads - 1) / nthreads ;
@@ -406,12 +290,8 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
         // construct T
         //----------------------------------------------------------------------
 
-        // T (i,:) consists of the first FASTSV_SAMPLES of S (i,:).
-
-        // todo: this could be done by GxB_Select, using a new operator.  Need
-        // to define a set of GxB_SelectOp operators that would allow for this.
-
-        // Note that Tx is not modified.  Only Tp and Tj are constructed.
+        // T (i,:) consists of the first FASTSV_SAMPLES of A (i,:).
+        // TODO: this could be done by GxB_Select, using a new operator.
 
         #pragma omp parallel for num_threads(nthreads) schedule(static)
         for (int tid = 0 ; tid < nthreads ; tid++)
@@ -420,7 +300,7 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
             Tp [range [tid]] = p ;
             for (int64_t i = range [tid] ; i < range [tid+1] ; i++)
             {
-                // construct T (i,:) from the first entries in S (i,:)
+                // construct T (i,:) from the first entries in A (i,:)
                 for (int64_t j = 0 ;
                     j < FASTSV_SAMPLES && Sp [i] + j < Sp [i + 1] ; j++)
                 {
@@ -434,37 +314,26 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
         // import the result into the GrB_Matrix T
         //----------------------------------------------------------------------
 
-        // Note that Tx is unmodified.
-
-        // in SuiteSparse:GraphBLAS v5, sizes are in bytes, not entries
-        GrB_Index Tp_siz = Tp_size ;
-        GrB_Index Tj_siz = Tj_size ;
-        GrB_Index Tx_siz = Tx_size ;
-
-        GrB_Index t_nvals = Tp [nrows] ;
-        GrB_TRY (GxB_Matrix_import_CSR (&T, type, nrows, ncols,
-                &Tp, &Tj, &Tx, Tp_siz, Tj_siz, Tx_siz,
-                true,   // T is iso
-                S_jumbled, NULL)) ;
+        GrB_TRY (GrB_Matrix_new (&T, GrB_BOOL, n, n)) ;
+        GrB_TRY (GxB_Matrix_pack_CSR (T, &Tp, &Tj, &Tx, Tp_size, Tj_size,
+            Tx_size, /* T is iso: */ true, S_jumbled, NULL)) ;
 
         //----------------------------------------------------------------------
         // find the connected components of T
         //----------------------------------------------------------------------
 
-        // todo: this is nearly identical to the final phase below.
-        // Make this a function
-
-        bool change = true, is_first = true ;
-        while (change)
+        bool changing = true ;
+        for (int64_t iter = 0 ; changing ; iter++)
         {
             // hooking & shortcutting
-            // mngp = min (mngp, T*gp) using the MIN_SECOND semiring
+            // mngp = min (mngp, A*gp) using the MIN_SECOND semiring
             GrB_TRY (GrB_mxv (mngp, NULL, GrB_MIN_UINT64,
                 GrB_MIN_SECOND_SEMIRING_UINT64, T, gp, NULL)) ;
-            if (!is_first)
+
+            if (iter > 0)
             {
                 // f = min (f, C*mngp) where C is C(i,j) = true if i=V(j)
-                LAGraph_TRY (Reduce_assign (f, mngp, C, &Cp, &V, &Cx, msg)) ;
+                GrB_TRY (Reduce_assign (f, mngp, C, &Cp, &V, &Cx, msg)) ;
             }
 
             // f = min (f, mngp, gp)
@@ -478,49 +347,78 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
             // terminate if gp and gp_new are the same
             GrB_TRY (GrB_eWiseMult (mod, NULL, NULL, GrB_NE_UINT64, gp_new,
                 gp, NULL)) ;
-            GrB_TRY (GrB_reduce (&change, NULL, GrB_LOR_MONOID_BOOL, mod,
+            GrB_TRY (GrB_reduce (&changing, NULL, GrB_LOR_MONOID_BOOL, mod,
                 NULL)) ;
 
             // swap gp and gp_new
             GrB_Vector t = gp ; gp = gp_new ; gp_new = t ;
-            is_first = false ;
         }
 
         //----------------------------------------------------------------------
-        // todo: describe me
+        // use samping to estimate the largest connected component in T
         //----------------------------------------------------------------------
 
-        ht_init (ht_key, ht_val) ;
-        ht_sample (V, n, HASH_SAMPLES, ht_key, ht_val, &seed) ;
-        int64_t key = ht_most_frequent (ht_key, ht_val) ;
-        // todo: what if key is returned as -1?  Then T below is invalid.
+        // hash table size must be a power of 2
+        #define HASH_SIZE 1024
+        // number of samples to insert into the hash table
+        #define HASH_SAMPLES 864
+        #define HASH(x) (((x << 4) + x) & (HASH_SIZE-1))
+        #define NEXT(x) ((x + 23) & (HASH_SIZE-1))
+
+        // allocate and initialize the hash table
+        ht_key = LAGraph_Malloc (HASH_SIZE, sizeof (int64_t)) ;
+        ht_count = LAGraph_Calloc (HASH_SIZE, sizeof (int64_t)) ;
+        LG_CHECK (ht_key == NULL || ht_count == NULL, -1, "out of memory") ;
+        for (int k = 0 ; k < HASH_SIZE ; k++)
+        {
+            ht_key [k] = -1 ;
+        }
+
+        // hash the samples and find the most frequent entry
+        uint64_t seed = n ;         // random number seed
+        int64_t key = -1 ;          // most frequent entry
+        int64_t max_count = 0 ;     // frequency of most frequent entry
+        for (int64_t k = 0 ; k < HASH_SAMPLES ; k++)
+        {
+            // select an entry from V at random
+            int64_t x = V [LAGraph_Random60 (&seed) % n] ;
+            // find x in the hash table
+            int64_t h = HASH (x) ;
+            while (ht_key [h] != -1 && ht_key [h] != x)
+            {
+                h = NEXT (h) ;
+            }
+            // add x to the hash table
+            ht_key [h] = x ;
+            ht_count [h]++ ;
+            // keep track of the most frequent value
+            if (ht_count [h] > max_count)
+            {
+                key = ht_key [h] ;
+                max_count = ht_count [h] ;
+            }
+        }
+
+        //----------------------------------------------------------------------
+        // compact the largest connected component in T
+        //----------------------------------------------------------------------
 
         int64_t t_nonempty = -1 ;
         bool T_jumbled = false, T_iso = true ;
 
-        // export T
-        GrB_TRY (GxB_Matrix_export_CSR (&T, &type, &nrows, &ncols, &Tp, &Tj,
-            &Tx, &Tp_siz, &Tj_siz, &Tx_siz,
-            &T_iso, &T_jumbled, NULL)) ;
+        // unpack T
+        GrB_Index nrows, ncols ;
+        GrB_Type type ;
+        GrB_TRY (GxB_Matrix_unpack_CSR (T, &Tp, &Tj, &Tx, &Tp_size, &Tj_size,
+            &Tx_size, &T_iso, &T_jumbled, NULL)) ;
 
-        // todo what is this phase doing?  It is constructing a matrix T that
-        // depends only on S, key, and V.  T contains a subset of the entries
-        // in S, except that T (i,:) is empty if
-
-        // The prior content of T is ignored; it is exported from the earlier
-        // phase, only to reuse the allocated space for T.  However, T_jumbled
-        // is preserved from the prior matrix T, which doesn't make sense.
-
-        // This parallel loop is badly load balanced.  Each thread operates on
-        // the same number of rows of S, regardless of how many entries appear
-        // in each set of rows.  It uses one thread per task, statically
-        // scheduled.
+        // TODO This parallel loop is badly load balanced.
 
         #pragma omp parallel for num_threads(nthreads) schedule(static)
         for (int tid = 0 ; tid < nthreads ; tid++)
         {
             GrB_Index ptr = Sp [range [tid]] ;
-            // thread tid scans S (range [tid]:range [tid+1]-1,:),
+            // thread tid scans A (range [tid]:range [tid+1]-1,:),
             // and constructs T(i,:) for all rows in this range.
             for (int64_t i = range [tid] ; i < range [tid+1] ; i++)
             {
@@ -529,10 +427,10 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
                 // T(i,:) is empty if pv == key
                 if (pv != key)
                 {
-                    // scan S(i,:)
+                    // scan A(i,:)
                     for (GrB_Index p = Sp [i] ; p < Sp [i+1] ; p++)
                     {
-                        // get S(i,j)
+                        // get A(i,j)
                         int64_t j = Sj [p] ;
                         if (V [j] != key)
                         {
@@ -541,7 +439,15 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
                             Tj [ptr++] = j ;
                         }
                     }
-                    // add the entry T(i,key) if there is room for it in T(i,:)
+                    // Add the entry T(i,key) if there is room for it in T(i,:);
+                    // if and only if node i is adjacent to a node j in the
+                    // largest component.  The only way there can be space if
+                    // at least one T(i,j) appears with V [j] equal to the key
+                    // (that is, node j is in the largest connected component,
+                    // key == V [j].  One of these j's can then be replaced
+                    // with the key.  If node i is not adjacent to any node in
+                    // the largest component, then there is no space in T(i,:)
+                    // and no new edge to the largest compenent is added.
                     if (ptr - Tp [i] < Sp [i+1] - Sp [i])
                     {
                         Tj [ptr++] = key ;
@@ -553,14 +459,15 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
         }
 
         // Compact empty space out of Tj not filled in from the above phase.
-        // This is a lot of work and should be done in parallel.
-        GrB_Index offset = 0 ;
+        // TODO: This is a lot of work and should be done in parallel.  Better
+        // yet, do this entire construction of T inside GraphBLAS instead.
+        nnz = 0 ;
         for (int tid = 0 ; tid < nthreads ; tid++)
         {
-            memcpy (Tj + offset, Tj + Tp [range [tid]],
+            memcpy (Tj + nnz, Tj + Tp [range [tid]],
                 sizeof (GrB_Index) * count [tid]) ;
-            offset += count [tid] ;
-            count [tid] = offset - count [tid] ;
+            nnz += count [tid] ;
+            count [tid] = nnz - count [tid] ;
         }
 
         // Compact empty space out of Tp
@@ -575,47 +482,42 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
         }
 
         // finalize T
-        Tp [n] = offset ;
+        Tp [n] = nnz ;
 
-        // free workspace
-        LAGraph_Free ((void **) &count) ;
-        LAGraph_Free ((void **) &range) ;
+        // pack A (unchanged since last unpack)
+        GrB_TRY (GxB_Matrix_pack_CSR (A, &Sp, &Sj, &Sx, Sp_size, Sj_size,
+            Sx_size, S_iso, S_jumbled, NULL)) ;
 
-        // import S (unchanged since last export)
-        GrB_TRY (GxB_Matrix_import_CSR (&S, type, nrows, ncols,
-                &Sp, &Sj, &Sx, Sp_size, Sj_size, Sx_size,
-                S_iso, S_jumbled, NULL)) ;
+        // pack T for the final phase
+        GrB_TRY (GxB_Matrix_pack_CSR (T, &Tp, &Tj, &Tx, Tp_size, Tj_size,
+            Tx_size, T_iso, T_jumbled, NULL)) ;
 
-        // import T for the final phase
-        GrB_TRY (GxB_Matrix_import_CSR (&T, type, nrows, ncols,
-                &Tp, &Tj, &Tx, Tp_siz, Tj_siz, Tx_siz,
-                T_iso, T_jumbled, NULL)) ;
-
-        // restore G->A
-        G->A = S ;
-
+        // final phase uses the pruned matrix T
+        A = T ;
     }
-    else
+
+    //--------------------------------------------------------------------------
+    // check for quick return
+    //--------------------------------------------------------------------------
+
+    if (nnz == 0)
     {
-
-        // no sampling; the final phase operates on the whole graph
-        T = S ;
-
+        (*component) = f ;
+        LAGraph_FREE_WORK ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
     // final phase
     //--------------------------------------------------------------------------
 
-    GrB_TRY (GrB_Matrix_nvals (&nnz, T)) ;
-
-    bool change = true ;
-    while (change && nnz > 0)
+    bool changing = true ;
+    while (changing)
     {
         // hooking & shortcutting
-        // mngp = min (mngp, T*gp) using the MIN_SECOND semiring
+        // mngp = min (mngp, A*gp) using the MIN_SECOND semiring
         GrB_TRY (GrB_mxv (mngp, NULL, GrB_MIN_UINT64,
-                          GrB_MIN_SECOND_SEMIRING_UINT64, T, gp, NULL)) ;
+                          GrB_MIN_SECOND_SEMIRING_UINT64, A, gp, NULL)) ;
 
         // f = min (f, C*mngp) where C is C(i,j) = true if i=V(j)
         GrB_TRY (Reduce_assign (f, mngp, C, &Cp, &V, &Cx, msg)) ;
@@ -631,7 +533,7 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
         // terminate if gp and gp_new are the same
         GrB_TRY (GrB_eWiseMult (mod, NULL, NULL, GrB_NE_UINT64, gp_new, gp,
             NULL)) ;
-        GrB_TRY (GrB_reduce (&change, NULL, GrB_LOR_MONOID_BOOL, mod, NULL)) ;
+        GrB_TRY (GrB_reduce (&changing, NULL, GrB_LOR_MONOID_BOOL, mod, NULL)) ;
 
         // swap gp and gp_new
         GrB_Vector t = gp ; gp = gp_new ; gp_new = t ;
@@ -642,12 +544,7 @@ int LG_CC_FastSV5_64        // SuiteSparse:GraphBLAS method, with GxB extensions
     //--------------------------------------------------------------------------
 
     (*component) = f ;
-    f = NULL ;
-    if (sampling)
-    {
-        GrB_free (&T) ;
-    }
-    LAGraph_FREE_ALL ;
-    return (0) ;
+    LAGraph_FREE_WORK ;
+    return (GrB_SUCCESS) ;
 #endif
 }

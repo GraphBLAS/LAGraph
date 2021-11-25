@@ -14,6 +14,10 @@
 // Contributed by Yongzhe Zhang (zyz915@gmail.com).
 // revised by Tim Davis (davis@tamu.edu)
 
+// This method relies solely on GrB* methods in the V2.0 C API, but it much
+// slower in general than LG_CC_FastSV6, which uses GxB pack/unpack methods
+// for faster access to the contents of the matrices and vectors.
+
 #include "LG_internal.h"
 
 //------------------------------------------------------------------------------
@@ -22,24 +26,19 @@
 
 // w[index[i]] = min(w[index[i]], s[i]) for i in [0..n-1]
 
-#undef  LAGraph_FREE_ALL
-#define LAGraph_FREE_ALL            \
-{                                   \
-    LAGraph_Free ((void **) &mem) ; \
-}
-
 static GrB_Info Reduce_assign
 (
     GrB_Vector w,       // input/output vector of size n
     GrB_Vector s,       // input vector of size n
     GrB_Index *index,   // index array of size n
+    GrB_Index *mem,     // workspace of size 3*n
     GrB_Index n
 )
 {
     char *msg = NULL ;
-    GrB_Index *mem = (GrB_Index *) LAGraph_Malloc (3*n, sizeof (GrB_Index)) ;
-    LG_CHECK (mem == NULL, GrB_OUT_OF_MEMORY, "out of memory") ;
-    GrB_Index *ind = mem, *sval = mem + n, *wval = sval + n ;
+    GrB_Index *ind  = mem ;
+    GrB_Index *sval = ind + n ;
+    GrB_Index *wval = sval + n ;
     GrB_TRY (GrB_Vector_extractTuples (ind, wval, &n, w)) ;
     GrB_TRY (GrB_Vector_extractTuples (ind, sval, &n, s)) ;
     for (GrB_Index i = 0 ; i < n ; i++)
@@ -59,13 +58,14 @@ static GrB_Info Reduce_assign
 // select_func: IndexUnaryOp for pruning entries from S
 //------------------------------------------------------------------------------
 
-// TODO: this uses global variables; fix this.  Use y to pass in 2 pointers.
+// Rather than using a global variable to access the V array, it is passed to
+// the select function as a uint64_t value that contains a pointer to V.  It
+// might be better to create a user-defined type for y, but this works fine.
 
-static GrB_Index *V ;
-
-void select_func (void *z, const void *x, 
+void my_select_func (void *z, const void *x,
                  const GrB_Index i, const GrB_Index j, const void *y)
 {
+    GrB_Index *V = (*(GrB_Index **) y) ;
     (*((bool *) z)) = (V [i] != V [j]) ;
 }
 
@@ -77,7 +77,7 @@ void select_func (void *z, const void *x,
 #define LAGraph_FREE_ALL            \
 {                                   \
     LAGraph_FREE_WORK ;             \
-    GrB_free (&f) ;                 \
+    GrB_free (&parent) ;            \
 }
 
 #undef  LAGraph_FREE_WORK
@@ -85,6 +85,7 @@ void select_func (void *z, const void *x,
 {                                   \
     LAGraph_Free ((void **) &I) ;   \
     LAGraph_Free ((void **) &V) ;   \
+    LAGraph_Free ((void **) &mem) ; \
     GrB_free (&gp) ;                \
     GrB_free (&mnp) ;               \
     GrB_free (&ccmn) ;              \
@@ -108,12 +109,11 @@ int LG_CC_Boruvka
     //--------------------------------------------------------------------------
 
     GrB_Info info ;
-    GrB_Index n, *I = NULL ;
-    GrB_Vector f = NULL, gp = NULL, mnp = NULL, ccmn = NULL, ramp = NULL,
+    GrB_Index n, *I = NULL, *V = NULL, *mem = NULL ;
+    GrB_Vector parent = NULL, gp = NULL, mnp = NULL, ccmn = NULL, ramp = NULL,
         mask = NULL ;
     GrB_IndexUnaryOp select_op = NULL ;
     GrB_Matrix S = NULL ;
-    V = NULL ;
 
     LG_CLEAR_MSG ;
     LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
@@ -140,28 +140,31 @@ int LG_CC_Boruvka
     LAGraph_TRY (LAGraph_Structure (&S, G->A, msg)) ;
 
     GrB_TRY (GrB_Matrix_nrows (&n, S)) ;
-    GrB_TRY (GrB_Vector_new (&f, GrB_UINT64, n)) ;      // final result
+    GrB_TRY (GrB_Vector_new (&parent, GrB_UINT64, n)) ; // final result
     GrB_TRY (GrB_Vector_new (&gp, GrB_UINT64, n)) ;     // grandparents
     GrB_TRY (GrB_Vector_new (&mnp, GrB_UINT64, n)) ;    // min neighbor parent
     GrB_TRY (GrB_Vector_new (&ccmn, GrB_UINT64, n)) ;   // cc's min neighbor
     GrB_TRY (GrB_Vector_new (&mask, GrB_BOOL, n)) ;     // various uses
 
-    V = (GrB_Index*) LAGraph_Malloc (n, sizeof (GrB_Index)) ;
-    LG_CHECK (V == NULL, GrB_OUT_OF_MEMORY, "out of memory") ;
+    mem = (GrB_Index *) LAGraph_Malloc (3*n, sizeof (GrB_Index)) ;
+    V = (GrB_Index *) LAGraph_Malloc (n, sizeof (GrB_Index)) ;
+    LG_CHECK (V == NULL || mem == NULL, GrB_OUT_OF_MEMORY, "out of memory") ;
+
     #if !LG_SUITESPARSE
     // I is not needed for SuiteSparse and remains NULL
-    I = (GrB_Index*) LAGraph_Malloc (n, sizeof (GrB_Index)) ;
+    I = (GrB_Index *) LAGraph_Malloc (n, sizeof (GrB_Index)) ;
     LG_CHECK (I == NULL, GrB_OUT_OF_MEMORY, "out of memory") ;
     #endif
 
-    // f = 0:n-1, and copy to ramp
-    GrB_TRY (GrB_assign (f, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
-    GrB_TRY (GrB_apply  (f, NULL, NULL, GrB_ROWINDEX_INT64, f, 0, NULL)) ;
-    GrB_TRY (GrB_Vector_dup (&ramp, f)) ;
-    GrB_TRY (GrB_Vector_extractTuples (I, V, &n, f)) ;
+    // parent = 0:n-1, and copy to ramp
+    GrB_TRY (GrB_assign (parent, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
+    GrB_TRY (GrB_apply  (parent, NULL, NULL, GrB_ROWINDEX_INT64, parent, 0,
+        NULL)) ;
+    GrB_TRY (GrB_Vector_dup (&ramp, parent)) ;
+    GrB_TRY (GrB_Vector_extractTuples (I, V, &n, parent)) ;
 
-    GrB_TRY (GrB_IndexUnaryOp_new (&select_op, select_func,
-        GrB_BOOL, /* aij: ignored */ GrB_BOOL, /* y: ignored */ GrB_BOOL)) ;
+    GrB_TRY (GrB_IndexUnaryOp_new (&select_op, my_select_func, GrB_BOOL,
+        /* aij: ignored */ GrB_BOOL, /* y: pointer to V */ GrB_UINT64)) ;
 
     GrB_Index nvals ;
     GrB_TRY (GrB_Matrix_nvals (&nvals, S)) ;
@@ -180,7 +183,7 @@ int LG_CC_Boruvka
         // every vertex points to a root vertex at the begining
         GrB_TRY (GrB_assign (mnp, NULL, NULL, n, GrB_ALL, n, NULL)) ;
         GrB_TRY (GrB_mxv (mnp, NULL, GrB_MIN_UINT64,
-                    GrB_MIN_SECOND_SEMIRING_UINT64, S, f, NULL)) ;
+                    GrB_MIN_SECOND_SEMIRING_UINT64, S, parent, NULL)) ;
 
         //----------------------------------------------------------------------
         // find the minimum neighbor
@@ -189,63 +192,63 @@ int LG_CC_Boruvka
         // ccmn[u] = connect component's minimum neighbor | if u is a root
         //         = n                                    | otherwise
         GrB_TRY (GrB_assign (ccmn, NULL, NULL, n, GrB_ALL, n, NULL)) ;
-        GrB_TRY (Reduce_assign (ccmn, mnp, V, n)) ;
+        GrB_TRY (Reduce_assign (ccmn, mnp, V, mem, n)) ;
 
         //----------------------------------------------------------------------
-        // f[u] = ccmn[u] if ccmn[u] != n
+        // parent[u] = ccmn[u] if ccmn[u] != n
         //----------------------------------------------------------------------
 
         // mask = (ccnm != n)
         GrB_TRY (GrB_apply (mask, NULL, NULL, GrB_NE_UINT64, ccmn, n, NULL)) ;
-        // f<mask> = ccmn
-        GrB_TRY (GrB_assign (f, mask, NULL, ccmn, GrB_ALL, n, NULL)) ;
+        // parent<mask> = ccmn
+        GrB_TRY (GrB_assign (parent, mask, NULL, ccmn, GrB_ALL, n, NULL)) ;
 
         //----------------------------------------------------------------------
         // select new roots
         //----------------------------------------------------------------------
 
-        // identify all the vertex pairs (u, v) where f[u] == v and f[v] == u
+        // identify all pairs (u,v) where parent [u] == v and parent [v] == u
         // and then select the minimum of u, v as the new root;
-        // if (f[f[i]] == i) f[i] = min(f[i], i)
+        // if (parent [parent [i]] == i) parent [i] = min (parent [i], i)
 
-        // compute grandparents: gp = f (f)
-        GrB_TRY (GrB_Vector_extractTuples (I, V, &n, f)) ;
-        GrB_TRY (GrB_extract (gp, NULL, NULL, f, V, n, NULL)) ;
+        // compute grandparents: gp = parent (parent)
+        GrB_TRY (GrB_Vector_extractTuples (I, V, &n, parent)) ;
+        GrB_TRY (GrB_extract (gp, NULL, NULL, parent, V, n, NULL)) ;
 
         // mask = (gp == 0:n-1)
         GrB_TRY (GrB_eWiseMult (mask, NULL, NULL, GrB_EQ_UINT64, gp, ramp,
             NULL)) ;
-        // f<mask> = min (f, ramp)
-        GrB_TRY (GrB_assign (f, mask, GrB_MIN_UINT64, ramp, GrB_ALL, n, NULL)) ;
+        // parent<mask> = min (parent, ramp)
+        GrB_TRY (GrB_assign (parent, mask, GrB_MIN_UINT64, ramp, GrB_ALL, n,
+            NULL)) ;
 
         //----------------------------------------------------------------------
-        // shortcutting f[i] = f[f[i]] until f does not change
+        // shortcutting: parent [i] = parent [parent [i]] until convergence
         //----------------------------------------------------------------------
 
-        bool diff = true ;
-        while (diff)
+        bool changing = true ;
+        while (true)
         {
-            // compute grandparents: gp = f (f)
-            GrB_TRY (GrB_Vector_extractTuples (I, V, &n, f)) ;
-            GrB_TRY (GrB_extract (gp, NULL, NULL, f, V, n, NULL)) ;
+            // compute grandparents: gp = parent (parent)
+            GrB_TRY (GrB_Vector_extractTuples (I, V, &n, parent)) ;
+            GrB_TRY (GrB_extract (gp, NULL, NULL, parent, V, n, NULL)) ;
 
-            // mask = (f != gp)
-            GrB_TRY (GrB_eWiseMult (mask, NULL, NULL, GrB_NE_UINT64, f, gp,
+            // changing = or (parent != gp)
+            GrB_TRY (GrB_eWiseMult (mask, NULL, NULL, GrB_NE_UINT64, parent, gp,
                 NULL)) ;
-
-            // swap f and gp
-            GrB_Vector t = f ; f = gp ; gp = t ;
-
-            // diff = or (mask)
-            GrB_TRY (GrB_reduce (&diff, NULL, GrB_LOR_MONOID_BOOL, mask,
+            GrB_TRY (GrB_reduce (&changing, NULL, GrB_LOR_MONOID_BOOL, mask,
                 NULL)) ;
+            if (!changing) break ;
+
+            // parent = gp
+            GrB_TRY (GrB_assign (parent, NULL, NULL, gp, GrB_ALL, n, NULL)) ;
         }
 
         //----------------------------------------------------------------------
         // remove the edges inside each connected component
         //----------------------------------------------------------------------
 
-        GrB_TRY (GrB_select (S, NULL, NULL, select_op, S, (bool) false, NULL)) ;
+        GrB_TRY (GrB_select (S, NULL, NULL, select_op, S, (uint64_t) V, NULL)) ;
         GrB_TRY (GrB_Matrix_nvals (&nvals, S)) ;
     }
 
@@ -253,7 +256,7 @@ int LG_CC_Boruvka
     // free workspace and return result
     //--------------------------------------------------------------------------
 
-    (*component) = f ;
+    (*component) = parent ;
     LAGraph_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }

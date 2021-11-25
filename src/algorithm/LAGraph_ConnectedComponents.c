@@ -10,7 +10,7 @@
 
 //------------------------------------------------------------------------------
 
-// Connected Components via LG_CC_FastSV5 if using SuiteSparse:GraphBLAS and
+// Connected Components via LG_CC_FastSV6 if using SuiteSparse:GraphBLAS and
 // its GxB extensions, or LG_CC_Boruvka otherwise.  The former is much faster.
 
 #include "LG_alg_internal.h"
@@ -25,7 +25,7 @@ int LAGraph_ConnectedComponents
 )
 {
     #if LG_SUITESPARSE
-    return (LG_CC_FastSV5 (component, G, msg)) ;
+    return (LG_CC_FastSV6 (component, G, msg)) ;
     #else
     return (LG_CC_Boruvka (component, G, msg)) ;
     #endif

@@ -621,4 +621,13 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     char *msg
 ) ;
 
+int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
+(
+    // output
+    GrB_Vector *component,  // output: array of component identifiers
+    // inputs
+    LAGraph_Graph G,        // input graph, modified then restored
+    char *msg
+) ;
+
 #endif

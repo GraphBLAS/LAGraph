@@ -101,7 +101,7 @@ void test_cc_matrices (void)
         for (int trial = 0 ; trial <= 1 ; trial++)
         {
             // find the connected components
-            printf ("\n--- CC: FastSV5 if SuiteSparse, Boruvka if vanilla:\n") ;
+            printf ("\n--- CC: FastSV6 if SuiteSparse, Boruvka if vanilla:\n") ;
             OK (LAGraph_ConnectedComponents (&C, G, msg)) ;
             OK (LAGraph_Vector_print (C, 2, stdout, msg)) ;
 
@@ -113,11 +113,10 @@ void test_cc_matrices (void)
             // check the result
             OK (LG_check_cc (C, G, msg)) ;
 
-            // find the connected components with LG_CC_FastSV_64
+            // find the connected components with LG_CC_FastSV5
             #if LG_SUITESPARSE
-            printf ("\n------ CC_FastSV5_64:\n") ;
-            OK (LG_CC_FastSV5_64 (&C2, G, msg)) ;
-            // OK (LAGraph_Vector_print (C2, 2, stdout, msg)) ;
+            printf ("\n------ CC_FastSV5:\n") ;
+            OK (LG_CC_FastSV5 (&C2, G, msg)) ;
             ncomponents = count_connected_components (C2) ;
             TEST_CHECK (ncomponents == ncomp) ;
             OK (LG_check_cc (C2, G, msg)) ;
@@ -127,7 +126,6 @@ void test_cc_matrices (void)
             // find the connected components with LG_CC_Boruvka
             printf ("\n------ CC_BORUVKA:\n") ;
             OK (LG_CC_Boruvka (&C2, G, msg)) ;
-            // OK (LAGraph_Vector_print (C2, 2, stdout, msg)) ;
             ncomponents = count_connected_components (C2) ;
             TEST_CHECK (ncomponents == ncomp) ;
             OK (LG_check_cc (C2, G, msg)) ;
@@ -143,7 +141,6 @@ void test_cc_matrices (void)
                     // find the connected components with cc_lacc
                     printf ("\n------ CC_LACC:\n") ;
                     OK (LAGraph_cc_lacc (&C2, G->A, sanitize)) ;
-                    // OK (LAGraph_Vector_print (C2, 2, stdout, msg)) ;
                     ncomponents = count_connected_components (C2) ;
                     TEST_CHECK (ncomponents == ncomp) ;
                     OK (LG_check_cc (C2, G, msg)) ;
