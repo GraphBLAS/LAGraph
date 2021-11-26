@@ -368,10 +368,6 @@ struct LAGraph_Graph_struct
     // graph is declared as a read-only object in the parameter list of the
     // method.
 
-    // TODO: discuss this: "However, scalar properties can be set even if the
-    // graph is a read-only parameter, but only if they are accessed with
-    // OpenMP atomic read/write operations."  OK?
-
     GrB_Matrix AT;          // AT = A', the transpose of A
     GrB_Type   AT_type;     // The type of scalar stored in AT
 
@@ -1195,9 +1191,10 @@ LAGRAPH_PUBLIC
 int LAGraph_ConnectedComponents
 (
     // output
-    GrB_Vector *component,  // component(i)=k if node i is in the kth component
+    GrB_Vector *component,  // component(i)=s if node i is in the component
+                            // whose representative node is s
     // inputs
-    LAGraph_Graph G,        // input graph, G->A can change (ptr, not contents)
+    LAGraph_Graph G,        // input graph
     char *msg
 ) ;
 

@@ -167,5 +167,6 @@ void test_cc_matrices (void)
 //****************************************************************************
 TEST_LIST = {
     {"cc", test_cc_matrices},
+    // TODO: add checks for all error conditions
     {NULL, NULL}
 };

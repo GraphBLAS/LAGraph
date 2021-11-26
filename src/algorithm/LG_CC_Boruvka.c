@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LG_CC_Boruvka.c
+// LG_CC_Boruvka.c:  connected components using GrB* methods only
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -24,13 +24,13 @@
 // Reduce_assign
 //------------------------------------------------------------------------------
 
-// w[index[i]] = min(w[index[i]], s[i]) for i in [0..n-1]
+// w[Px[i]] = min(w[Px[i]], s[i]) for i in [0..n-1].
 
 static GrB_Info Reduce_assign
 (
     GrB_Vector w,       // input/output vector of size n
     GrB_Vector s,       // input vector of size n
-    GrB_Index *index,   // index array of size n
+    GrB_Index *Px,      // Px: array of size n
     GrB_Index *mem,     // workspace of size 3*n
     GrB_Index n
 )
@@ -41,11 +41,11 @@ static GrB_Info Reduce_assign
     GrB_Index *wval = sval + n ;
     GrB_TRY (GrB_Vector_extractTuples (ind, wval, &n, w)) ;
     GrB_TRY (GrB_Vector_extractTuples (ind, sval, &n, s)) ;
-    for (GrB_Index i = 0 ; i < n ; i++)
+    for (GrB_Index j = 0 ; j < n ; j++)
     {
-        if (sval [i] < wval [index [i]])
+        if (sval [j] < wval [Px [j]])
         {
-            wval [index [i]] = sval [i] ;
+            wval [Px [j]] = sval [j] ;
         }
     }
     GrB_TRY (GrB_Vector_clear (w)) ;
@@ -58,15 +58,15 @@ static GrB_Info Reduce_assign
 // select_func: IndexUnaryOp for pruning entries from S
 //------------------------------------------------------------------------------
 
-// Rather than using a global variable to access the V array, it is passed to
-// the select function as a uint64_t value that contains a pointer to V.  It
+// Rather than using a global variable to access the Px array, it is passed to
+// the select function as a uint64_t value that contains a pointer to Px.  It
 // might be better to create a user-defined type for y, but this works fine.
 
 void my_select_func (void *z, const void *x,
                  const GrB_Index i, const GrB_Index j, const void *y)
 {
-    GrB_Index *V = (*(GrB_Index **) y) ;
-    (*((bool *) z)) = (V [i] != V [j]) ;
+    GrB_Index *Px = (*(GrB_Index **) y) ;
+    (*((bool *) z)) = (Px [i] != Px [j]) ;
 }
 
 //------------------------------------------------------------------------------
@@ -84,7 +84,7 @@ void my_select_func (void *z, const void *x,
 #define LAGraph_FREE_WORK           \
 {                                   \
     LAGraph_Free ((void **) &I) ;   \
-    LAGraph_Free ((void **) &V) ;   \
+    LAGraph_Free ((void **) &Px) ;  \
     LAGraph_Free ((void **) &mem) ; \
     GrB_free (&gp) ;                \
     GrB_free (&mnp) ;               \
@@ -109,14 +109,15 @@ int LG_CC_Boruvka
     //--------------------------------------------------------------------------
 
     GrB_Info info ;
-    GrB_Index n, *I = NULL, *V = NULL, *mem = NULL ;
+    GrB_Index n, *I = NULL, *Px = NULL, *mem = NULL ;
     GrB_Vector parent = NULL, gp = NULL, mnp = NULL, ccmn = NULL, ramp = NULL,
         mask = NULL ;
     GrB_IndexUnaryOp select_op = NULL ;
     GrB_Matrix S = NULL ;
 
     LG_CLEAR_MSG ;
-    LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
+    LG_CHECK (LAGraph_CheckGraph (G, msg), GrB_INVALID_OBJECT,
+        "graph is invalid") ;
     LG_CHECK (component == NULL, GrB_NULL_POINTER, "input is NULL") ;
 
     if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
@@ -129,7 +130,7 @@ int LG_CC_Boruvka
     else
     {
         // A must not be unsymmetric
-        LG_CHECK (false, -1, "input must be symmetric") ;
+        LG_CHECK (false, GrB_INVALID_VALUE, "input must be symmetric") ;
     }
 
     //--------------------------------------------------------------------------
@@ -147,8 +148,8 @@ int LG_CC_Boruvka
     GrB_TRY (GrB_Vector_new (&mask, GrB_BOOL, n)) ;     // various uses
 
     mem = (GrB_Index *) LAGraph_Malloc (3*n, sizeof (GrB_Index)) ;
-    V = (GrB_Index *) LAGraph_Malloc (n, sizeof (GrB_Index)) ;
-    LG_CHECK (V == NULL || mem == NULL, GrB_OUT_OF_MEMORY, "out of memory") ;
+    Px = (GrB_Index *) LAGraph_Malloc (n, sizeof (GrB_Index)) ;
+    LG_CHECK (Px == NULL || mem == NULL, GrB_OUT_OF_MEMORY, "out of memory") ;
 
     #if !LG_SUITESPARSE
     // I is not needed for SuiteSparse and remains NULL
@@ -161,10 +162,12 @@ int LG_CC_Boruvka
     GrB_TRY (GrB_apply  (parent, NULL, NULL, GrB_ROWINDEX_INT64, parent, 0,
         NULL)) ;
     GrB_TRY (GrB_Vector_dup (&ramp, parent)) ;
-    GrB_TRY (GrB_Vector_extractTuples (I, V, &n, parent)) ;
+
+    // Px is a non-opaque copy of the parent GrB_Vector
+    GrB_TRY (GrB_Vector_extractTuples (I, Px, &n, parent)) ;
 
     GrB_TRY (GrB_IndexUnaryOp_new (&select_op, my_select_func, GrB_BOOL,
-        /* aij: ignored */ GrB_BOOL, /* y: pointer to V */ GrB_UINT64)) ;
+        /* aij: ignored */ GrB_BOOL, /* y: pointer to Px */ GrB_UINT64)) ;
 
     GrB_Index nvals ;
     GrB_TRY (GrB_Matrix_nvals (&nvals, S)) ;
@@ -192,7 +195,7 @@ int LG_CC_Boruvka
         // ccmn[u] = connect component's minimum neighbor | if u is a root
         //         = n                                    | otherwise
         GrB_TRY (GrB_assign (ccmn, NULL, NULL, n, GrB_ALL, n, NULL)) ;
-        GrB_TRY (Reduce_assign (ccmn, mnp, V, mem, n)) ;
+        GrB_TRY (Reduce_assign (ccmn, mnp, Px, mem, n)) ;
 
         //----------------------------------------------------------------------
         // parent[u] = ccmn[u] if ccmn[u] != n
@@ -212,8 +215,8 @@ int LG_CC_Boruvka
         // if (parent [parent [i]] == i) parent [i] = min (parent [i], i)
 
         // compute grandparents: gp = parent (parent)
-        GrB_TRY (GrB_Vector_extractTuples (I, V, &n, parent)) ;
-        GrB_TRY (GrB_extract (gp, NULL, NULL, parent, V, n, NULL)) ;
+        GrB_TRY (GrB_Vector_extractTuples (I, Px, &n, parent)) ;
+        GrB_TRY (GrB_extract (gp, NULL, NULL, parent, Px, n, NULL)) ;
 
         // mask = (gp == 0:n-1)
         GrB_TRY (GrB_eWiseMult (mask, NULL, NULL, GrB_EQ_UINT64, gp, ramp,
@@ -230,8 +233,8 @@ int LG_CC_Boruvka
         while (true)
         {
             // compute grandparents: gp = parent (parent)
-            GrB_TRY (GrB_Vector_extractTuples (I, V, &n, parent)) ;
-            GrB_TRY (GrB_extract (gp, NULL, NULL, parent, V, n, NULL)) ;
+            GrB_TRY (GrB_Vector_extractTuples (I, Px, &n, parent)) ;
+            GrB_TRY (GrB_extract (gp, NULL, NULL, parent, Px, n, NULL)) ;
 
             // changing = or (parent != gp)
             GrB_TRY (GrB_eWiseMult (mask, NULL, NULL, GrB_NE_UINT64, parent, gp,
@@ -248,7 +251,9 @@ int LG_CC_Boruvka
         // remove the edges inside each connected component
         //----------------------------------------------------------------------
 
-        GrB_TRY (GrB_select (S, NULL, NULL, select_op, S, (uint64_t) V, NULL)) ;
+        // This step is the costliest part of this algorithm when dealing with
+        // large matrices.
+        GrB_TRY (GrB_select (S, NULL, NULL, select_op, S, (uint64_t) Px, NULL));
         GrB_TRY (GrB_Matrix_nvals (&nvals, S)) ;
     }
 

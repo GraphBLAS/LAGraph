@@ -29,32 +29,37 @@
 // unchanged when the function returns, but during execution G->A is empty.
 
 #define LAGraph_FREE_ALL ;
-
 #include "LG_internal.h"
 
 #if !LG_VANILLA
-
 #if (! LG_SUITESPARSE )
 #error "SuiteSparse:GraphBLAS v6.0.0 or later required"
 #endif
 
 //------------------------------------------------------------------------------
-// Reduce_assign:  w (index) += s, using MIN as the "+=" accum operator
+// Reduce_assign:  w (Px) += s, using MIN as the "+=" accum operator
 //------------------------------------------------------------------------------
 
-// The index array of size n can have duplicates.  The vectors w and s are
-// full (all entries present).  This function computes:
+// The Px array of size n is the non-opaque version of the parent vector, where
+// i = Px [j] if the parent of node j is node i.  It can thus have duplicates.
+// The vectors w and s are full (all entries present).  This function computes
+// the following, which is done explicitly in the Reduce_assign function in
+// LG_CC_Boruvka:
 //
 //      for (j = 0 ; j < n ; j++)
 //      {
-//          uint64_t i = index [j] ;
+//          uint64_t i = Px [j] ;
 //          w [i] = min (w [i], s [j]) ;
 //      }
 //
-//  If C(i,j) = true where i == index [j], then this can be written with the
-//  min_second semiring:
+// If C(i,j) = true where i == Px [j], then this can be written as:
 //
 //      w = min (w, C*s)
+//
+// when using the min_second semiring.  This can be done efficiently where
+// because C can be constructed in O(1) time and O(1) additional space (not
+// counting the prior Cp, Ci, and Cx arrays), when using the SuiteSparse
+// pack/unpack move constructors.
 
 static inline GrB_Info Reduce_assign
 (
@@ -62,7 +67,7 @@ static inline GrB_Info Reduce_assign
     GrB_Vector s,           // vector of size n, all entries present
     GrB_Matrix C,           // boolean matrix of size n-by-n
     GrB_Index **Cp_handle,  // array of size n+1, equal to 0:n
-    GrB_Index **Ci_handle,  // index array of size n, can have duplicates
+    GrB_Index **Ci_handle,  // Px array of size n, can have duplicates
     bool **Cx_handle,       // array of size 1, equal to true
     char *msg
 )
@@ -109,7 +114,7 @@ static inline GrB_Info Reduce_assign
     LAGraph_Free ((void **) &Tx) ;          \
     LAGraph_Free ((void **) &Cp) ;          \
     LAGraph_Free ((void **) &Cx) ;          \
-    LAGraph_Free ((void **) &Px) ;           \
+    LAGraph_Free ((void **) &Px) ;          \
     LAGraph_Free ((void **) &ht_key) ;      \
     LAGraph_Free ((void **) &ht_count) ;    \
     LAGraph_Free ((void **) &count) ;       \
@@ -143,7 +148,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
 {
 
 #if LG_VANILLA
-    LG_CHECK (0, -1, "SuiteSparse required for this method") ;
+    LG_CHECK (0, GrB_NOT_IMPLEMENTED, "SuiteSparse required for this method") ;
 #else
 
     //--------------------------------------------------------------------------
@@ -158,11 +163,12 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     GrB_Vector parent = NULL, gp_new = NULL, mngp = NULL, mod = NULL, gp = NULL,
         t = NULL, y = NULL ;
     GrB_Matrix T = NULL, C = NULL ;
-    bool *Cx = NULL, sampling = false ;
+    bool *Cx = NULL ;
     void *Tx = NULL ;
 
-    LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
-    LG_CHECK (component == NULL, -1, "component parameter is NULL") ;
+    LG_CHECK (LAGraph_CheckGraph (G, msg), GrB_INVALID_OBJECT,
+        "graph is invalid") ;
+    LG_CHECK (component == NULL, GrB_NULL_POINTER, "component is NULL") ;
 
     if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
@@ -174,20 +180,20 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     else
     {
         // A must not be unsymmetric
-        LG_CHECK (false, -1, "input must be symmetric") ;
+        LG_CHECK (false, GrB_INVALID_VALUE, "input must be symmetric") ;
     }
+
+    //--------------------------------------------------------------------------
+    // initializations
+    //--------------------------------------------------------------------------
 
     GrB_Matrix A = G->A ;
     GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
     GrB_TRY (GrB_Matrix_nvals (&nnz, A)) ;
 
+    // FASTSV_SAMPLES: number of samples to take from each row A(i,:)
     #define FASTSV_SAMPLES 4
-
-    sampling = (n * FASTSV_SAMPLES * 2 < nnz && n > 1024) ;
-
-    //--------------------------------------------------------------------------
-    // initializations
-    //--------------------------------------------------------------------------
+    bool sampling = (n * FASTSV_SAMPLES * 2 < nnz && n > 1024) ;
 
     // determine # of threads to use
     int nthreads ;
@@ -200,7 +206,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
 
     Cx = (bool *) LAGraph_Malloc (1, sizeof (bool)) ;
     Px = LAGraph_Malloc (n, sizeof (uint64_t)) ;
-    LG_CHECK (Px == NULL || Cx == NULL, -1, "out of memory") ;
+    LG_CHECK (Px == NULL || Cx == NULL, GrB_OUT_OF_MEMORY, "out of memory") ;
     Cx [0] = true ;
 
     // create Cp = 0:n and the empty C matrix
@@ -388,7 +394,8 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         // allocate and initialize the hash table
         ht_key = LAGraph_Malloc (HASH_SIZE, sizeof (int64_t)) ;
         ht_count = LAGraph_Calloc (HASH_SIZE, sizeof (int64_t)) ;
-        LG_CHECK (ht_key == NULL || ht_count == NULL, -1, "out of memory") ;
+        LG_CHECK (ht_key == NULL || ht_count == NULL, GrB_OUT_OF_MEMORY,
+            "out of memory") ;
         for (int k = 0 ; k < HASH_SIZE ; k++)
         {
             ht_key [k] = -1 ;
