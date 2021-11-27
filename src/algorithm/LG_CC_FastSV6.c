@@ -198,7 +198,15 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     GrB_IndexUnaryOp ramp ;
     GrB_Semiring min_2nd, min_2ndi ;
     GrB_BinaryOp min, ne, imin ;
-    if (n > INT32_MAX)
+    #ifdef COVERAGE
+    // Just for test coverage, use 64-bit ints for n > 100.  Do not use this
+    // rule in production!
+    #define NBIG 100
+    #else
+    // For production use: 64-bit integers if n > 2^31
+    #define NBIG INT32_MAX
+    #endif
+    if (n > NBIG)
     {
         // use 64-bit integers throughout
         Uint = GrB_UINT64 ;
@@ -223,9 +231,10 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         min_2ndi = GxB_MIN_SECONDI_INT32 ;
     }
 
-    // FASTSV_SAMPLES: number of samples to take from each row A(i,:)
+    // FASTSV_SAMPLES: number of samples to take from each row A(i,:).
+    // Sampling is used if the average degree is > 8 and if n > 1024.
     #define FASTSV_SAMPLES 4
-    bool sampling = (n * FASTSV_SAMPLES * 2 < nnz && n > 1024) ;
+    bool sampling = (nnz > n * FASTSV_SAMPLES * 2 && n > 1024) ;
 
     // determine # of threads to use
     int nthreads ;
@@ -273,7 +282,9 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     GrB_TRY (GrB_free (&y)) ;
 
     // copy parent into gp, mngp, and Px.  Px is a non-opaque 64-bit copy of the
-    // parent GrB_Vector.  If parent is uint32, GraphBLAS typecasts to uint64.
+    // parent GrB_Vector.  The Px array is always of type GrB_Index since it
+    // must be used as the input array for extractTuples and as Ci for pack_CSR.
+    // If parent is uint32, GraphBLAS typecasts it to the uint64 Px array.
     GrB_TRY (GrB_Vector_extractTuples (NULL, Px, &n, parent)) ;
     GrB_TRY (GrB_Vector_dup (&gp,   parent)) ;
     GrB_TRY (GrB_Vector_dup (&mngp, parent)) ;
