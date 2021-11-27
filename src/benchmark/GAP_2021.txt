@@ -117,6 +117,20 @@ Timing jitter for Jan 3b; timing should be identical to Jan 19.
 CC   GAP          .534       1.659        .234        .222        .045
               ------------------------------------------------------------------
 
+CC   SS:SV6      2.923       3.822       1.394       2.091        .775 (Nov 26)
+
+---- Nov 26: now using 32-bit integers as much as possible (when n < 2^31).
+     a typecast to 64-bit integers is required in extractTuples, but the
+     opaque GrB_Vectors are all uint32 if n < 2^31.
+
+CC   SS:SV6      3.679       4.645       1.786       2.880       1.460 (Nov 25)
+
+---- change to SV6 with 64-bit integers instead of 32-bit integers.  SV6 can
+     solve larger problems.  The GAP cc.cc and SV5b (below) are limited to
+     32-bit integers and can thus only solve smaller problems.  SV6 also has
+     a faster warmup and Reduce_assign phase; it would be about 30% slower than
+     SV5b otherwise.
+
 CC   SS          3.405       4.482       1.495       2.037        .985 (Nov 14)
 CC   SS          3.885 ???   4.537       1.507       2.024        .979 (Nov 6)
 CC   SS          3.391       4.435       1.489       2.047        .988 (Oct 18)
