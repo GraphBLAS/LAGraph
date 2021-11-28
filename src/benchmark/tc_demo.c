@@ -131,6 +131,7 @@ int main (int argc, char **argv)
     GrB_Index ntriangles, ntsimple = 0 ;
     double tic [2] ;
 
+#if 0
     // check # of triangles
     LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
     LAGraph_TRY (LG_check_tri (&ntsimple, G, NULL)) ;
@@ -138,6 +139,7 @@ int main (int argc, char **argv)
     LAGraph_TRY (LAGraph_Toc (&tsimple, tic, NULL)) ;
     printf ("# of triangles: %" PRId64 " slow time: %g sec\n",
         ntsimple, tsimple) ;
+#endif
 
     // warmup for more accurate timing, and also print # of triangles
     LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
@@ -154,12 +156,14 @@ int main (int argc, char **argv)
     printf ("nthreads: %3d time: %12.6f rate: %6.2f (SandiaDot2, one trial)\n",
             nthreads_max, ttot, 1e-6 * nvals / ttot) ;
 
+#if 0
     if (ntriangles != ntsimple)
     {
         printf ("wrong # triangles: %g %g\n", (double) ntriangles,
             (double) ntsimple) ;
         abort ( ) ;
     }
+#endif
 
     double t_best = INFINITY ;
     int method_best = -1 ;
