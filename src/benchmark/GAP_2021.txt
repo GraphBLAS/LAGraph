@@ -1,5 +1,6 @@
 hypersparse: 20-core Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz,
-with 40 threads (all default settings), with gcc 5.4.0 -O3
+with 40 threads (all default settings), with gcc 5.4.0 -O3 (Ubuntu 16.04),
+and then gcc 9.3.0 -O3 for Nov 2021 to date (upgrade to Ubuntu 20.04),
 unless otherwise indicated.
 Single socket system (no NUMA effects).
 
@@ -8,9 +9,12 @@ SuiteSparse:GraphBLAS vs GAP.  Results for Jan 26 and following are for
 algorithms in the Experimental2 folder.  May 14 and following are for
 algorithms in LAGraph/src/algorithm, using LAGraph/src/benchmark.
 
+Nov 25-27: significant improvment in CC, in both LAGraph (Nov 27, 2021 version)
+    and v6.0.1 of GraphBLAS
 Nov 6: v6.0.0.alpha19 with gcc 9.3.0 and Ubuntu 20.04: 9.3.0 is the default
     compiler for Ubuntu 20.04.  Need to try 10.2.0, which can sometimes generate
     faster code.
+
 Oct 18: v6.0.0.alpha14 with gcc 10.2.0, Ubuntu 16.04
 Aug 16: v5.1.6
 Jun 25c: v5.1.0beta1 (June 25 version)
@@ -32,6 +36,7 @@ Jan  3: SS:GrB v4.0.1 with LAGraph/Experimental
 BC   GAP        31.521      46.361      10.821       3.008       1.503
               ------------------------------------------------------------------
 
+BC   SS         23.122 *    33.018 *     8.911 *     6.280      33.600 (Nov 27)
 BC   SS         23.392 *    32.141 *     8.584 *     6.229      33.539 (Nov 14)
 BC   SS         23.005 *    32.263 *     8.748 *     6.210      33.564 (Nov 6)
 BC   SS         22.897 *    31.746 *     8.639 *     6.328      33.726 (Oct 18)
@@ -62,6 +67,7 @@ BC   SS:Feb2020 41.687      59.171      14.521       8.790      50.896 (Feb 21)
 BFS  GAP          .313        .575        .219        .338        .245
               ------------------------------------------------------------------
 
+BFS  SS           .500       1.198        .332        .675       3.074 (Nov 27)
 BFS  SS           .495       1.168        .332        .669       3.053 (Nov 14)
 BFS  SS           .500       1.166        .333        .680       3.073 (Nov 6)
 BFS  SS           .496       1.198        .337        .680       3.088 (Oct 18)
@@ -92,6 +98,7 @@ BFS  SS:Feb2020  3.612       2.818       1.100       1.072       7.170 (2/21/20)
 PR   GAP        19.813      25.285      15.159       5.128       1.007
               ------------------------------------------------------------------
 
+PR   SS         21.547      27.610      17.136       9.165       1.296 (Nov 27)
 PR   SS         21.496      27.590      17.338       9.226       1.232 (Nov 14)
 PR   SS         21.864      27.567      17.066       9.154       1.225 (Nov 6)
 PR   SS         21.630      27.491      17.042       9.380       1.665 (Oct 18)
@@ -117,6 +124,7 @@ Timing jitter for Jan 3b; timing should be identical to Jan 19.
 CC   GAP          .534       1.659        .234        .222        .045
               ------------------------------------------------------------------
 
+CC   SS:SV6      2.926       3.810       1.388       2.085        .774 (Nov 27)
 CC   SS:SV6      2.923       3.822       1.394       2.091        .775 (Nov 26)
 
 ---- Nov 26: now using 32-bit integers as much as possible (when n < 2^31).
@@ -157,6 +165,7 @@ CC   SS:Feb2020  4.042       4.906       1.811       2.342       1.474 (Feb 21)
 SSSP GAP         4.908       7.227       2.017        .805        .206
               ------------------------------------------------------------------
 
+SSSP SS         16.615      25.105       7.646       8.057      43.798 (Nov 27)
 SSSP SS         16.667      25.162       7.715       8.541      45.749 (Nov 14)
 SSSP SS         16.613      25.031       7.666       8.103      44.264 (Nov 6)
 SSSP SS         16.437      24.511       7.590       8.376      44.175 (Oct 18)
@@ -181,6 +190,10 @@ Note change from Jan 3b (v4.0.1) to Jan 19 (v4.0.3), due to faster max monoid.
               ------------------------------------------------------------------
 TC GAP         374.082      21.825      79.576      22.184        .026
               ------------------------------------------------------------------
+
+TC SS:LL.L        .         28.287        .           .           .    (Nov 27)
+TC SS:UU.U        .         27.200        .           .           .    (Nov 27)
+TC SS:dot      866.670      33.091     223.641      32.138        .200 (Nov 27)
 
 TC SS:LL.L        .         28.638        .           .           .    (Nov 14)
 TC SS:UU.U        .         27.437        .           .           .    (Nov 14)
