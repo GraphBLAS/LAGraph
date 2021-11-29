@@ -109,26 +109,19 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
 
     for ((*iters) = 0 ; (*iters) < itermax && rdiff > tol ; (*iters)++)
     {
-
         // swap t and r ; now t is the old score
         GrB_Vector temp = t ; t = r ; r = temp ;
-
         // w = t ./ d
         GrB_TRY (GrB_eWiseMult (w, NULL, NULL, GrB_DIV_FP32, t, d, NULL)) ;
-
         // r = teleport
         GrB_TRY (GrB_assign (r, NULL, NULL, teleport, GrB_ALL, n, NULL)) ;
-
         // r += A'*w
         GrB_TRY (GrB_mxv (r, NULL, GrB_PLUS_FP32, LAGraph_plus_second_fp32,
             AT, w, NULL)) ;
-
         // t -= r
         GrB_TRY (GrB_assign (t, NULL, GrB_MINUS_FP32, r, GrB_ALL, n, NULL)) ;
-
         // t = abs (t)
         GrB_TRY (GrB_apply (t, NULL, NULL, GrB_ABS_FP32, t, NULL)) ;
-
         // rdiff = sum (t)
         GrB_TRY (GrB_reduce (&rdiff, NULL, GrB_PLUS_MONOID_FP32, t, NULL)) ;
     }

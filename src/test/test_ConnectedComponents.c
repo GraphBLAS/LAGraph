@@ -123,6 +123,7 @@ void test_cc_matrices (void)
             OK (GrB_free (&C2)) ;
             #endif
 
+            #if 0
             // find the connected components with LG_CC_7
             #if LG_SUITESPARSE
             printf ("\n------ CC_7:\n") ;
@@ -131,6 +132,7 @@ void test_cc_matrices (void)
             TEST_CHECK (ncomponents == ncomp) ;
             OK (LG_check_cc (C2, G, msg)) ;
             OK (GrB_free (&C2)) ;
+            #endif
             #endif
 
             // find the connected components with LG_CC_Boruvka

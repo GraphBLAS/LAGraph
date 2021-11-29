@@ -167,7 +167,7 @@ int main (int argc, char **argv)
     // 7: draft version
     //--------------------------------------------------------------------------
 
-#if 1
+#if 0
     for (int trial = 1 ; trial <= nt ; trial++)
     {
         int nthreads = Nthreads [trial] ;

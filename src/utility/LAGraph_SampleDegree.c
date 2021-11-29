@@ -66,6 +66,12 @@ int LAGraph_SampleDegree        // returns 0 if successful, -1 if failure
     // pick nsamples nodes at random and determine their degree
     //--------------------------------------------------------------------------
 
+    // See also the hashed sampling method in LG_CC_FastSV6, which computes a
+    // fast estimate of the mode of an integer vector.  This method does not
+    // require a hash table.  However, the mode estimator in LG_CC_FastSV6
+    // would be a good candidate to add as an LAGraph_SampleMode utility
+    // function.
+
     GrB_Index n ;
     GrB_TRY (GrB_Vector_size (&n, Degree)) ;
 
