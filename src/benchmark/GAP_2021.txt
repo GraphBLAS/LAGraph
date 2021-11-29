@@ -4,6 +4,7 @@ and then gcc 9.3.0 -O3 for Nov 2021 to date (upgrade to Ubuntu 20.04),
 unless otherwise indicated.
 Single socket system (no NUMA effects).
 
+GAP:2021: with gcc 9.3.0, Ubuntu 20.04 (gap code version June 2020)
 Jan 2021 to date: in-progress comparisons of LAGraph +
 SuiteSparse:GraphBLAS vs GAP.  Results for Jan 26 and following are for
 algorithms in the Experimental2 folder.  May 14 and following are for
@@ -33,6 +34,7 @@ Jan  3: SS:GrB v4.0.1 with LAGraph/Experimental
 
                 kron        urand       twitter     web         road
               ------------------------------------------------------------------
+BC   GAP:2021   31.140      46.484      11.035       2.974       1.612 (Nov 27)
 BC   GAP        31.521      46.361      10.821       3.008       1.503
               ------------------------------------------------------------------
 
@@ -64,6 +66,7 @@ BC   SS:Feb2020 41.687      59.171      14.521       8.790      50.896 (Feb 21)
 
                 kron        urand       twitter     web         road
               ------------------------------------------------------------------
+BFS  GAP:2021     .309        .542        .209        .341        .316 (Nov 27)
 BFS  GAP          .313        .575        .219        .338        .245
               ------------------------------------------------------------------
 
@@ -95,6 +98,7 @@ BFS  SS:Feb2020  3.612       2.818       1.100       1.072       7.170 (2/21/20)
 
                 kron        urand       twitter     web         road
               ------------------------------------------------------------------
+PR   GAP:2021   20.256      25.438      15.024       5.148       1.043 (Nov 27)
 PR   GAP        19.813      25.285      15.159       5.128       1.007
               ------------------------------------------------------------------
 
@@ -121,10 +125,12 @@ Timing jitter for Jan 3b; timing should be identical to Jan 19.
 
                 kron        urand       twitter     web         road
               ------------------------------------------------------------------
+CC   GAP:2021     .531       1.653        .229        .237        .046 (Nov 27)
 CC   GAP          .534       1.659        .234        .222        .045
               ------------------------------------------------------------------
 
-CC   SS:SV6      2.926       3.810       1.388       2.085        .774 (Nov 27)
+CC   SS:SV6/7    2.923       3.793       1.386       2.083        .773 (Nov 28)
+CC   SS:SV6      2.922       3.810       1.388       2.085        .774 (Nov 27)
 CC   SS:SV6      2.923       3.822       1.394       2.091        .775 (Nov 26)
 
 ---- Nov 26: now using 32-bit integers as much as possible (when n < 2^31).
@@ -162,6 +168,7 @@ CC   SS:Feb2020  4.042       4.906       1.811       2.342       1.474 (Feb 21)
 
                 kron        urand       twitter     web         road
               ------------------------------------------------------------------
+SSSP GAP:2021    4.977       7.283       1.962        .781        .265 (Nov 27)
 SSSP GAP         4.908       7.227       2.017        .805        .206
               ------------------------------------------------------------------
 
@@ -170,7 +177,7 @@ SSSP SS         16.667      25.162       7.715       8.541      45.749 (Nov 14)
 SSSP SS         16.613      25.031       7.666       8.103      44.264 (Nov 6)
 SSSP SS         16.437      24.511       7.590       8.376      44.175 (Oct 18)
 SSSP SS         16.674      24.417       8.106       8.468      42.191 (Aug 16)
-SSSP SS         17.128      25.200       8.625       9.096      49.905 (Jun 25a) 
+SSSP SS         17.128      25.200       8.625       9.096      49.905 (Jun 25a)
 SSSP SS         17.154      25.141       7.920       8.647      48.860 (Jun 24) 
 SSSP SS         17.109      25.106       7.970       8.682      48.524 (May 12) 
 --- reorg
@@ -188,6 +195,7 @@ Note change from Jan 3b (v4.0.1) to Jan 19 (v4.0.3), due to faster max monoid.
 
                 kron        urand       twitter     web         road
               ------------------------------------------------------------------
+TC   GAP:2021  361.216      21.831      77.734      21.834        .031 (Nov 27)
 TC GAP         374.082      21.825      79.576      22.184        .026
               ------------------------------------------------------------------
 
