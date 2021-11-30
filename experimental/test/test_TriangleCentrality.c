@@ -119,9 +119,65 @@ void test_TriangleCentrality (void)
     LAGraph_Finalize (msg) ;
 }
 
+//------------------------------------------------------------------------------
+// test_errors
+//------------------------------------------------------------------------------
+
+void test_errors (void)
+{
+    LAGraph_Init (msg) ;
+
+    snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
+    FILE *f = fopen (filename, "r") ;
+    TEST_CHECK (f != NULL) ;
+    OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+    TEST_MSG ("Loading of adjacency matrix failed") ;
+
+    // construct an undirected graph G with adjacency matrix A
+    OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+    TEST_CHECK (A == NULL) ;
+
+    OK (LAGraph_Property_NDiag (G, msg)) ;
+
+    uint64_t ntri ;
+    GrB_Vector c = NULL ;
+
+    // c is NULL
+    int result = LAGraph_VertexCentrality_Triangle (NULL, &ntri, 3, G, msg) ;
+    printf ("\nresult: %d %s\n", result, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
+
+    // G is invalid
+    result = LAGraph_VertexCentrality_Triangle (&c, &ntri, 3, NULL, msg) ;
+    printf ("\nresult: %d %s\n", result, msg) ;
+    TEST_CHECK (result == GrB_INVALID_OBJECT) ;
+    TEST_CHECK (c == NULL) ;
+
+    // G may have self edges
+    G->ndiag = LAGRAPH_UNKNOWN ;
+    result = LAGraph_VertexCentrality_Triangle (&c, &ntri, 3, G, msg) ;
+    printf ("\nresult: %d %s\n", result, msg) ;
+    TEST_CHECK (result == -1004) ;
+    TEST_CHECK (c == NULL) ;
+
+    // G is undirected
+    G->ndiag = 0 ;
+    G->kind = LAGRAPH_ADJACENCY_DIRECTED ;
+    G->A_structure_is_symmetric = LAGRAPH_FALSE ;
+    result = LAGraph_VertexCentrality_Triangle (&c, &ntri, 3, G, msg) ;
+    printf ("\nresult: %d %s\n", result, msg) ;
+    TEST_CHECK (result == -1005) ;
+    TEST_CHECK (c == NULL) ;
+
+    OK (LAGraph_Delete (&G, msg)) ;
+    LAGraph_Finalize (msg) ;
+}
+
+
 //****************************************************************************
 
 TEST_LIST = {
     {"TriangleCentrality", test_TriangleCentrality},
+    {"TriangleCentrality_errors", test_errors},
     {NULL, NULL}
 };

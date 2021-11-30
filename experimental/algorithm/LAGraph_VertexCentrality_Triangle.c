@@ -100,10 +100,11 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
     GrB_Matrix T = NULL, L = NULL, A = NULL ;
     GrB_Vector y = NULL, u = NULL, w = NULL ;
 
-    LG_CHECK (centrality == NULL, -1, "centrality is NULL") ;
-    LG_CHECK (ntriangles == NULL, -1, "ntriangles is NULL") ;
+    LG_CHECK (centrality == NULL, GrB_NULL_POINTER, "centrality is NULL") ;
+    LG_CHECK (ntriangles == NULL, GrB_NULL_POINTER, "ntriangles is NULL") ;
     (*centrality) = NULL ;
-    LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
+    LG_CHECK (LAGraph_CheckGraph (G, msg), GrB_INVALID_OBJECT,
+        "graph is invalid") ;
 
     if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
@@ -115,14 +116,11 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
     else
     {
         // A is not known to be symmetric
-        LG_CHECK (true, -105, "G->A must be symmetric") ;
+        LG_CHECK (true, -1005, "G->A must be symmetric") ;
     }
 
-    // TODO: could remove any self-edges, if present; do this in the
-    // non-expert version.
-
     // no self edges can be present
-    LG_CHECK (G->ndiag != 0, -104, "G->ndiag must be zero") ;
+    LG_CHECK (G->ndiag != 0, -1004, "G->ndiag must be zero") ;
 
     //--------------------------------------------------------------------------
     // create the T matrix
