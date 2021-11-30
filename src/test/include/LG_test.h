@@ -80,6 +80,9 @@ int LG_check_export
 // LG_check_malloc.c:  brutal memory tests
 //------------------------------------------------------------------------------
 
+LAGRAPH_PUBLIC int LG_setup (bool brutal_test, char *msg) ;
+LAGRAPH_PUBLIC int LG_teardown (bool brutal_test, char *msg) ;
+
 LAGRAPH_PUBLIC int64_t LG_brutal ;
 LAGRAPH_PUBLIC int64_t LG_nmalloc ;
 

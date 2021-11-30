@@ -19,6 +19,7 @@
 char msg [LAGRAPH_MSG_LEN] ;
 char filename [LEN+1] ;
 LAGraph_Graph G = NULL ;
+bool test_brutal = false ;
 
 //------------------------------------------------------------------------------
 // difference: compare the LAGraph and GAP results
@@ -276,11 +277,23 @@ void test_bc(void)
 }
 
 //------------------------------------------------------------------------------
+// test_bc_brutal
+//------------------------------------------------------------------------------
+
+void test_bc_brutal (void)
+{
+
+}
+
+//------------------------------------------------------------------------------
 // list of tests
 //------------------------------------------------------------------------------
 
 TEST_LIST = {
     {"test_bc", test_bc},
+    #if LG_SUITESPARSE
+    {"test_bc_brutal", test_bc_brutal },
+    #endif
     {NULL, NULL}
 };
 
