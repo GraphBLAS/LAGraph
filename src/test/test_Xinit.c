@@ -11,9 +11,6 @@
 //------------------------------------------------------------------------------
 
 #include "LAGraph_test.h"
-#if LG_SUITESPARSE
-void GB_Global_GrB_init_called_set (bool GrB_init_called) ;
-#endif
 
 //------------------------------------------------------------------------------
 // global variables
@@ -59,9 +56,9 @@ void test_Xinit (void)
 #if LG_SUITESPARSE
 void test_Xinit_brutal (void)
 {
-
     // no brutal memory failures, but test LG_check_malloc/calloc/realloc/free
     LG_brutal = -1 ;
+    LG_nmalloc = 0 ;
     OK (LAGraph_Xinit (LG_check_malloc, LG_check_calloc, LG_check_realloc,
         LG_check_free, msg)) ;
 
@@ -90,7 +87,37 @@ void test_Xinit_brutal (void)
     TEST_CHECK (LG_nmalloc == 0) ;
 
     // brutal tests: keep giving the method more malloc's until it succeeds
-    for (int brutal = 0 ; brutal < 100 ; brutal++)
+
+    for (int brutal = 0 ; brutal < 1000 ; brutal++)
+    {
+        LG_brutal = brutal ;
+        GB_Global_GrB_init_called_set (false) ;
+        GrB_Info info = GxB_init (GrB_NONBLOCKING, LG_check_malloc,
+            LG_check_calloc, LG_check_realloc, LG_check_free) ;
+        void *p = NULL, *pnew = NULL ;
+        bool ok = false ;
+        if (info == GrB_SUCCESS)
+        {
+            p = LG_check_realloc (NULL, 42) ;
+            pnew = NULL ;
+            ok = (p != NULL) ;
+            if (ok)
+            {
+                pnew = LG_check_realloc (p, 107) ;
+                ok = (pnew != NULL) ;
+                LG_check_free (ok ? pnew : p) ;
+            }
+        }
+        if (ok)
+        {
+            OK (GrB_finalize ( )) ;
+            printf ("\nGxB_init, finally: %d %ld\n", brutal, LG_nmalloc) ;
+            TEST_CHECK (LG_nmalloc == 0) ;
+            break ;
+        }
+    }
+
+    for (int brutal = 0 ; brutal < 1000 ; brutal++)
     {
         LG_brutal = brutal ;
         GB_Global_GrB_init_called_set (false) ;
@@ -99,7 +126,7 @@ void test_Xinit_brutal (void)
         if (result == 0)
         {
             OK (LAGraph_Finalize (msg)) ;
-            printf ("\nfinally: %d %ld\n", brutal, LG_nmalloc) ;
+            printf ("LAGraph_Xinit: finally: %d %ld\n", brutal, LG_nmalloc) ;
             TEST_CHECK (LG_nmalloc == 0) ;
             break ;
         }
