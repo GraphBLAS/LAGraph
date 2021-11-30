@@ -187,7 +187,7 @@ void test_ktruss_errors (void)
 //****************************************************************************
 
 TEST_LIST = {
-//  {"ktruss", test_ktruss},
+    {"ktruss", test_ktruss},
     {"ktruss_errors", test_ktruss_errors},
     {NULL, NULL}
 };
