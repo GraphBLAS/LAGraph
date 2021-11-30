@@ -265,10 +265,7 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     // Calculate triangles
     //--------------------------------------------------------------------------
 
-    // CL<C> = C*L = C*U' using a masked dot product.  No explicit transpose
-    // is now required.  The old method did a transpose of L internally in
-    // SuiteSparse:GraphBLAS, both v3.1 and v3.2, followed by the masked dot
-    // product.  Using U' instead of L avoids the tranpose of L.
+    // CL<C> = C*L = C*U' using a masked dot product
     LAGRAPH_OK (GrB_Matrix_new (&CL, GrB_FP64, n, n)) ;
     LAGRAPH_OK (GrB_mxm (CL, C, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, C, U,
                          GrB_DESC_T1));

@@ -1,11 +1,10 @@
-As of Nov 19, 2021:
+As of Nov 30, 2021:
 
     * test, document, polish all experimental algorithms & utilities
-    * need vanilla connected components
     * unify error return values as much as possible, now that v2.0 C API
         has assigned enum values to GrB_Info
     * many TODOs and FIXMEs throughout
-    * lots of TODOs in CC method (connected components): Ariful working on it
+    * CC: needs new GxB_select with rank operator, and GxB_extract
     * brutal memory testing
 
 --------------------------------------------------------------------------------

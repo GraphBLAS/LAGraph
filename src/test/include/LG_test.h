@@ -76,4 +76,37 @@ int LG_check_export
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
+// LG_check_malloc.c:  brutal memory tests
+//------------------------------------------------------------------------------
+
+LAGRAPH_PUBLIC int64_t LG_brutal ;
+LAGRAPH_PUBLIC int64_t LG_nmalloc ;
+
+LAGRAPH_PUBLIC
+void *LG_check_malloc       // return pointer to allocated block of memory
+(
+    size_t size             // # of bytes to allocate
+) ;
+
+LAGRAPH_PUBLIC
+void *LG_check_calloc       // return pointer to allocated block of memory
+(
+    size_t nitems,          // # of items to allocate
+    size_t itemsize         // # of bytes per item
+) ;
+
+LAGRAPH_PUBLIC
+void LG_check_free
+(
+    void *p                 // block to free
+) ;
+
+LAGRAPH_PUBLIC
+void *LG_check_realloc      // return pointer to reallocated memory
+(
+    void *p,                // block to realloc
+    size_t size             // new size of the block
+) ;
+
 #endif

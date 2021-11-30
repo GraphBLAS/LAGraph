@@ -43,7 +43,7 @@
 //      int result = LAGraph_AllKTruss (&Cset, &kmax, ntris, nedges,
 //          nstepss, G, msg) ;
 
-// FIXME: add experimental/benchmark/ktruss_demo.c to benchmark k-truss
+// TODO: add experimental/benchmark/ktruss_demo.c to benchmark k-truss
 // and all-k-truss
 
 // TODO: consider LAGraph_KTrussNext to compute the (k+1)-truss from the

@@ -11,6 +11,9 @@
 //------------------------------------------------------------------------------
 
 #include "LAGraph_test.h"
+#if LG_SUITESPARSE
+void GB_Global_GrB_init_called_set (bool GrB_init_called) ;
+#endif
 
 //------------------------------------------------------------------------------
 // global variables
@@ -49,6 +52,61 @@ void test_Xinit (void)
     OK (LAGraph_Finalize (msg)) ;
 }
 
+//------------------------------------------------------------------------------
+// test_Xinit_brutal:  test LAGraph_Xinit with brutal memory debug
+//------------------------------------------------------------------------------
+
+#if LG_SUITESPARSE
+void test_Xinit_brutal (void)
+{
+
+    // no brutal memory failures, but test LG_check_malloc/calloc/realloc/free
+    LG_brutal = -1 ;
+    OK (LAGraph_Xinit (LG_check_malloc, LG_check_calloc, LG_check_realloc,
+        LG_check_free, msg)) ;
+
+    int32_t *p = LG_check_malloc (42 * sizeof (int32_t)) ;
+    TEST_CHECK (p != NULL) ;
+    LG_check_free (p) ;
+    p = LG_check_calloc (42, sizeof (int32_t)) ;
+    for (int k = 0 ; k < 42 ; k++)
+    {
+        TEST_CHECK (p [k] == 0) ;
+    }
+    p = LG_check_realloc (p, 99 * sizeof (int32_t)) ;
+    for (int k = 0 ; k < 42 ; k++)
+    {
+        TEST_CHECK (p [k] == 0) ;
+    }
+    LG_check_free (p) ;
+    p = LG_check_realloc (NULL, 4 * sizeof (int32_t)) ;
+    for (int k = 0 ; k < 4 ; k++)
+    {
+        p [k] = k ;
+    }
+    LG_check_free (p) ;
+
+    OK (LAGraph_Finalize (msg)) ;
+    TEST_CHECK (LG_nmalloc == 0) ;
+
+    // brutal tests: keep giving the method more malloc's until it succeeds
+    for (int brutal = 0 ; brutal < 100 ; brutal++)
+    {
+        LG_brutal = brutal ;
+        GB_Global_GrB_init_called_set (false) ;
+        int result = LAGraph_Xinit (LG_check_malloc, LG_check_calloc,
+            LG_check_realloc, LG_check_free, msg) ;
+        if (result == 0)
+        {
+            OK (LAGraph_Finalize (msg)) ;
+            printf ("\nfinally: %d %ld\n", brutal, LG_nmalloc) ;
+            TEST_CHECK (LG_nmalloc == 0) ;
+            break ;
+        }
+    }
+}
+#endif
+
 //-----------------------------------------------------------------------------
 // TEST_LIST: the list of tasks for this entire test
 //-----------------------------------------------------------------------------
@@ -56,6 +114,9 @@ void test_Xinit (void)
 TEST_LIST =
 {
     { "Xinit", test_Xinit },
+    #if LG_SUITESPARSE
+    { "Xinit_brutal", test_Xinit_brutal },
+    #endif
     { NULL, NULL }
 } ;
 
