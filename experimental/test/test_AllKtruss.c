@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-// LAGraph/experimental/test/test_Ktruss.c: test cases for k-truss
+// LAGraph/experimental/test/test_AllKtest.c: test cases for all-k-truss
 // ----------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -47,7 +47,7 @@ const matrix_info files [ ] =
 } ;
 
 //****************************************************************************
-void test_ktruss (void)
+void test_allktruss (void)
 {
     LAGraph_Init (msg) ;
 
@@ -81,45 +81,94 @@ void test_ktruss (void)
             TEST_CHECK (G->ndiag == 0) ;
         }
 
-        // compute each k-truss until the result is empty
+        // compute each k-truss
         bool ok ;
         GrB_Index n ;
+        int64_t kmax ;
         OK (GrB_Matrix_nrows (&n, G->A)) ;
+        GrB_Matrix *Cset = (GrB_Matrix *) LAGraph_Calloc (n,
+            sizeof (GrB_Matrix)) ;
+        int64_t *ntris  = LAGraph_Malloc (n, sizeof (int64_t)) ;
+        int64_t *nedges = LAGraph_Malloc (n, sizeof (int64_t)) ;
+        int64_t *nsteps = LAGraph_Malloc (n, sizeof (int64_t)) ;
+        OK (LAGraph_allktruss (Cset, G->A, &kmax, ntris, nedges, nsteps, msg)) ;
+        printf ("\nall k-truss: kmax %ld\n", kmax) ;
+
+        // compute each k-truss using LAGraph_Ktruss, and compare
         for (int k = 3 ; k < n ; k++)
         {
-            // compute the k-truss
             printf ("\n%d-truss:\n", k) ;
+            // GxB_print (Cset [k], 3) ;
+            // compute the k-truss
             OK (LAGraph_Ktruss (&C1, G, k, msg)) ;
+            // GxB_print (C1, 3) ;
 
-            // compute it again to check the result
-            OK (LG_check_ktruss (&C2, G, k, msg)) ;
-            OK (LAGraph_IsEqual (&ok, C1, C2, msg)) ;
-            TEST_CHECK (ok) ;
-
-            // count the triangles in the 3-truss
-            if (k == 3)
-            {
-                uint32_t nt = 0 ;
-                OK (GrB_reduce (&nt, NULL, GrB_PLUS_MONOID_UINT32, C1, NULL)) ;
-                nt = nt / 6 ;
-                TEST_CHECK (nt == ntriangles) ;
-            }
-
-            // free C1 and C2, and break if C1 is empty
+            // check the result
             GrB_Index nvals ;
             OK (GrB_Matrix_nvals (&nvals, C1)) ;
+            if (nvals == 0)
+            {
+                TEST_CHECK (Cset [k] == NULL) ;
+            }
+            else
+            {
+                OK (LAGraph_IsEqual (&ok, C1, Cset [k], msg)) ;
+                TEST_CHECK (ok) ;
+            }
+
+            // count the triangles in the 3-truss
+            uint32_t nt = 0 ;
+            OK (GrB_reduce (&nt, NULL, GrB_PLUS_MONOID_UINT32, C1, NULL)) ;
+            nt = nt / 6 ;
+            if (k == 3)
+            {
+                TEST_CHECK (nt == ntriangles) ;
+            }
+            TEST_CHECK (nt == ntris [k]) ;
+            TEST_CHECK (nvals == 2 * nedges [k]) ;
+            TEST_CHECK (nsteps [k] >= 0) ;
+
+            // free C1, and break if C1 is empty
             OK (GrB_free (&C1)) ;
             OK (GrB_free (&C2)) ;
-            if (nvals == 0) break ;
+            if (nvals == 0)
+            {
+                TEST_CHECK (k == kmax) ;
+                break ;
+            }
         }
 
+        // only compute the statistics
+        int64_t kmax2 ;
+        int64_t *ntris2  = LAGraph_Malloc (n, sizeof (int64_t)) ;
+        int64_t *nedges2 = LAGraph_Malloc (n, sizeof (int64_t)) ;
+        int64_t *nsteps2 = LAGraph_Malloc (n, sizeof (int64_t)) ;
+        OK (LAGraph_allktruss (NULL, G->A, &kmax2, ntris2, nedges2, nsteps2,
+            msg)) ;
+        TEST_CHECK (kmax2 == kmax) ;
+        for (int k = 0 ; k <= kmax ; k++)
+        {
+            TEST_CHECK (ntris2  [k] == ntris  [k]) ;
+            TEST_CHECK (nedges2 [k] == nedges [k]) ;
+            TEST_CHECK (nsteps2 [k] == nsteps [k]) ;
+        }
+
+#if 0
         // convert to directed with symmetric structure and recompute
         G->kind = LAGRAPH_ADJACENCY_DIRECTED ;
         G->A_structure_is_symmetric = true ;
         OK (LAGraph_Ktruss (&C1, G, 3, msg)) ;
-        OK (LG_check_ktruss (&C2, G, 3, msg)) ;
         OK (LAGraph_IsEqual (&ok, C1, C2, msg)) ;
         TEST_CHECK (ok) ;
+#endif
+
+        LAGraph_Free ((void **) Cset) ;
+        LAGraph_Free ((void **) ntris) ;
+        LAGraph_Free ((void **) nedges) ;
+        LAGraph_Free ((void **) nsteps) ;
+        LAGraph_Free ((void **) ntris2) ;
+        LAGraph_Free ((void **) nedges2) ;
+        LAGraph_Free ((void **) nsteps2) ;
 
         OK (LAGraph_Delete (&G, msg)) ;
     }
@@ -128,9 +177,10 @@ void test_ktruss (void)
 }
 
 //------------------------------------------------------------------------------
-// test_ktruss_error
+// test_allktruss_errors
 //------------------------------------------------------------------------------
 
+#if 0
 void test_ktruss_errors (void)
 {
     LAGraph_Init (msg) ;
@@ -183,11 +233,12 @@ void test_ktruss_errors (void)
     OK (LAGraph_Delete (&G, msg)) ;
     LAGraph_Finalize (msg) ;
 }
+#endif
 
 //****************************************************************************
 
 TEST_LIST = {
-    {"ktruss", test_ktruss},
-    {"ktruss_errors", test_ktruss_errors},
+    {"all-ktruss", test_allktruss},
+//  {"ktruss_errors", test_ktruss_errors},
     {NULL, NULL}
 };

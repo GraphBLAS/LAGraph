@@ -133,7 +133,6 @@ GrB_Info LAGraph_Random_FP32    // random float vector
  *
  * @retval GrB_SUCCESS      if completed successfully (equal or not)
  * @retval GrB_NULL_POINTER if kmax, ntris, nedges, nsteps is NULL
- * @retval GrB_NO_VALUE     vanilla version has not been implemented yet (NOT_IMPLEMENTED?)
  * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
  */
 GrB_Info LAGraph_allktruss
@@ -144,7 +143,8 @@ GrB_Info LAGraph_allktruss
     int64_t *kmax,
     int64_t *ntris,
     int64_t *nedges,
-    int64_t *nstepss
+    int64_t *nstepss,
+    char *msg
 ) ;
 
 //****************************************************************************
