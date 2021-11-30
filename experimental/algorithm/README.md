@@ -1,6 +1,6 @@
 # Algorithms: 
 
-* LAGraph_allktruss: all k-trusses of a graph
+* LAGraph_AllKTruss: all k-trusses of a graph
 * LAGraph_BF_basic: conventional Bellman-Ford single source shortest paths
 * LAGraph_BF_basic_pushpull: direction optimizing Bellman-Ford single source shortest paths
 * LAGraph_BF_full: Bellman-Ford single source shortest paths, with tree

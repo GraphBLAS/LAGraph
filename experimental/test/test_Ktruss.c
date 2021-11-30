@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-// LAGraph/experimental/test/test_Ktruss.c: test cases for k-truss
+// LAGraph/experimental/test/test_KTruss.c: test cases for k-truss
 // ----------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -89,7 +89,7 @@ void test_ktruss (void)
         {
             // compute the k-truss
             printf ("\n%d-truss:\n", k) ;
-            OK (LAGraph_Ktruss (&C1, G, k, msg)) ;
+            OK (LAGraph_KTruss (&C1, G, k, msg)) ;
 
             // compute it again to check the result
             OK (LG_check_ktruss (&C2, G, k, msg)) ;
@@ -116,7 +116,7 @@ void test_ktruss (void)
         // convert to directed with symmetric structure and recompute
         G->kind = LAGRAPH_ADJACENCY_DIRECTED ;
         G->A_structure_is_symmetric = true ;
-        OK (LAGraph_Ktruss (&C1, G, 3, msg)) ;
+        OK (LAGraph_KTruss (&C1, G, 3, msg)) ;
         OK (LG_check_ktruss (&C2, G, 3, msg)) ;
         OK (LAGraph_IsEqual (&ok, C1, C2, msg)) ;
         TEST_CHECK (ok) ;
@@ -148,25 +148,25 @@ void test_ktruss_errors (void)
     OK (LAGraph_Property_NDiag (G, msg)) ;
 
     // C is NULL
-    int result = LAGraph_Ktruss (NULL, G, 3, msg) ;
+    int result = LAGraph_KTruss (NULL, G, 3, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
 
     // k is invalid
-    result = LAGraph_Ktruss (&C1, G, 2, msg) ;
+    result = LAGraph_KTruss (&C1, G, 2, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == GrB_INVALID_VALUE) ;
     TEST_CHECK (C1 == NULL) ;
 
     // G is invalid
-    result = LAGraph_Ktruss (&C1, NULL, 3, msg) ;
+    result = LAGraph_KTruss (&C1, NULL, 3, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == GrB_INVALID_OBJECT) ;
     TEST_CHECK (C1 == NULL) ;
 
     // G may have self edges
     G->ndiag = LAGRAPH_UNKNOWN ;
-    result = LAGraph_Ktruss (&C1, G, 3, msg) ;
+    result = LAGraph_KTruss (&C1, G, 3, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == -1004) ;
     TEST_CHECK (C1 == NULL) ;
@@ -175,7 +175,7 @@ void test_ktruss_errors (void)
     G->ndiag = 0 ;
     G->kind = LAGRAPH_ADJACENCY_DIRECTED ;
     G->A_structure_is_symmetric = LAGRAPH_FALSE ;
-    result = LAGraph_Ktruss (&C1, G, 3, msg) ;
+    result = LAGraph_KTruss (&C1, G, 3, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == -1005) ;
     TEST_CHECK (C1 == NULL) ;

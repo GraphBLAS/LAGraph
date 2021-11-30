@@ -13,7 +13,7 @@
 #ifndef LG_XTEST_H
 #define LG_XTEST_H
 
-#include <LAGraphX.h>
+#include "LAGraphX.h"
 
 int LG_check_mis        // check if iset is a valid MIS of A
 (

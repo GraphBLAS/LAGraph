@@ -364,7 +364,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
 //      GxB_GREATESTRELRANK (...): select aij rank k > y*d where y is double
 //
 // By default, the rank of aij is its relative position as the kth entry in its
-// row (from "left" to "right"0.  If a new GxB setting in the descriptor is
+// row (from "left" to "right").  If a new GxB setting in the descriptor is
 // set, then k is the relative position of aij as the kth entry in its column.
 // The default would be that the rank is the position of aij in its row A(i,:).
 

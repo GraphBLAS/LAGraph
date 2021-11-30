@@ -119,37 +119,36 @@ GrB_Info LAGraph_Random_FP32    // random float vector
 /**
  * Given a symmetric graph A with no-self edges, compute all k-trusses of A.
  *
- * @param[out]  Cset    size n, output k-truss subgraphs (optional, if NULL).
- *                      If not NULL, must contain an array of n GrB_Matrix
- *                      handles.
- * @param[in]   A       input adjacency matrix, A, not modified
+ * @param[out]  Cset    size n, output k-truss subgraphs.
  * @param[out]  kmax    smallest k where k-truss is empty
  * @param[out]  ntris   Array of size n (on input), ntris [k] is num triangles in k-truss
  * @param[out]  nedges  Array of size n (on input), nedges [k] is num edges in k-truss
  * @param[out]  nstepss Array of size n (on input), nstepss [k] is num steps for k-truss
+ * @param[in]   G       input graph, A, not modified.  Must be undirected
+ *                      or directed with symmetric structure, no self edges.
  *
- * @todo Need a vanilla version based on GraphBLAS 2.0 spec.
  * @todo Need change return value to int (not GrB_Info)
  *
  * @retval GrB_SUCCESS      if completed successfully (equal or not)
  * @retval GrB_NULL_POINTER if kmax, ntris, nedges, nsteps is NULL
  * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
  */
-GrB_Info LAGraph_allktruss
+int LAGraph_AllKTruss   // compute all k-trusses of a graph
 (
-    GrB_Matrix *Cset,
-    GrB_Matrix A,
-    // output statistics
-    int64_t *kmax,
-    int64_t *ntris,
-    int64_t *nedges,
-    int64_t *nstepss,
+    // outputs
+    GrB_Matrix *Cset,   // size n, output k-truss subgraphs
+    int64_t *kmax,      // smallest k where k-truss is empty
+    int64_t *ntris,     // size max(n,4), ntris [k] is #triangles in k-truss
+    int64_t *nedges,    // size max(n,4), nedges [k] is #edges in k-truss
+    int64_t *nstepss,   // size max(n,4), nstepss [k] is #steps for k-truss
+    // input
+    LAGraph_Graph G,    // input graph
     char *msg
 ) ;
 
 //****************************************************************************
 /**
- * Given an undirected graph G with no-self edges, LAGraph_Ktruss finds the
+ * Given an undirected graph G with no-self edges, LAGraph_KTruss finds the
  * k-truss subgraph of G.
  *
  * @param[out]  C       k-truss subgraph, of type GrB_UINT32
@@ -160,13 +159,13 @@ GrB_Info LAGraph_allktruss
  * @retval GrB_NULL_POINTER if C or C_type is NULL
  * @return Any GraphBLAS errors that may have been encountered
  */
-int LAGraph_Ktruss              // compute the k-truss of a graph
+int LAGraph_KTruss      // compute the k-truss of a graph
 (
     // outputs:
-    GrB_Matrix *C_handle,       // output k-truss subgraph, C
+    GrB_Matrix *C,      // output k-truss subgraph, C
     // inputs:
-    LAGraph_Graph G,            // input graph
-    uint32_t k,                 // find the k-truss, where k >= 3
+    LAGraph_Graph G,    // input graph
+    uint32_t k,         // find the k-truss, where k >= 3
     char *msg
 ) ;
 

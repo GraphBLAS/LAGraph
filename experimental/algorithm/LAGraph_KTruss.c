@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_Ktruss: k-truss subgraph
+// LAGraph_KTruss: k-truss subgraph
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -10,9 +10,9 @@
 
 //------------------------------------------------------------------------------
 
-// LAGraph_Ktruss: k-truss subgraph, contributed by Tim Davis, Texas A&M.
+// LAGraph_KTruss: k-truss subgraph, contributed by Tim Davis, Texas A&M.
 
-// Given a symmetric graph A with no-self edges, LAGraph_Ktruss finds the
+// Given a symmetric graph A with no-self edges, LAGraph_KTruss finds the
 // k-truss subgraph of A.
 
 // The graph G must be undirected, or have an adjacency matrix with symmetric
@@ -27,17 +27,15 @@
 // The total number of triangles in C is sum(C)/6.  C is returned as symmetric
 // with a zero-free diagonal.
 
-// TODO add cite
-
 #define LAGraph_FREE_ALL GrB_free (&C) ;
 #include "LG_internal.h"
 #include "LAGraphX.h"
 
 //------------------------------------------------------------------------------
-// LAGraph_Ktruss: find the k-truss subgraph of a graph
+// LAGraph_KTruss: find the k-truss subgraph of a graph
 //------------------------------------------------------------------------------
 
-int LAGraph_Ktruss              // compute the k-truss of a graph
+int LAGraph_KTruss              // compute the k-truss of a graph
 (
     // outputs:
     GrB_Matrix *C_handle,       // output k-truss subgraph, C
@@ -93,10 +91,10 @@ int LAGraph_Ktruss              // compute the k-truss of a graph
 
     while (true)
     {
-        // C{C} = C*C'
+        // C{S} = S*S'
         GrB_TRY (GrB_mxm (C, S, NULL, LAGraph_plus_one_uint32, S, S,
             GrB_DESC_RST1)) ;
-        // keep entries >= k-2
+        // keep entries in C that are >= k-2
         GrB_TRY (GrB_select (C, NULL, NULL, GrB_VALUEGE_UINT32, C, k-2, NULL)) ;
         // return if the k-truss has been found
         GrB_TRY (GrB_Matrix_nvals (&nvals, C)) ;
