@@ -15,6 +15,7 @@
 #-------------------------------------------------------------------------------
 
 include_directories ( ${CMAKE_SOURCE_DIR}/src/test/include
+    ${CMAKE_SOURCE_DIR}/src/test/include
     ${CMAKE_SOURCE_DIR}/experimental/test/include )
 
 file ( GLOB LAGRAPHXTEST_LIB_SOURCES "LG_*.c" )
@@ -37,7 +38,7 @@ SET_TARGET_PROPERTIES ( lagraphxtest PROPERTIES
     SOVERSION ${LAGraph_VERSION_MAJOR}
     C_STANDARD_REQUIRED 11 )
 set_property ( TARGET lagraphxtest PROPERTY C_STANDARD 11 )
-target_link_libraries(lagraphxtest PUBLIC lagraph ${GRAPHBLAS_LIBRARIES})
+target_link_libraries(lagraphxtest PUBLIC lagraph lagraphtest ${GRAPHBLAS_LIBRARIES})
 
 #-------------------------------------------------------------------------------
 # static lagraphxtest library properties
@@ -51,7 +52,7 @@ SET_TARGET_PROPERTIES ( lagraphxtest_static PROPERTIES
     SOVERSION ${LAGraph_VERSION_MAJOR}
     C_STANDARD_REQUIRED 11 )
 set_property ( TARGET lagraphxtest_static PROPERTY C_STANDARD 11 )
-target_link_libraries(lagraphxtest_static PUBLIC lagraph ${GRAPHBLAS_LIBRARIES})
+target_link_libraries(lagraphxtest_static PUBLIC lagraph lagraphtest ${GRAPHBLAS_LIBRARIES})
 
 #-------------------------------------------------------------------------------
 # add OpenMP
@@ -73,7 +74,7 @@ foreach( testsourcefile ${TEST_SOURCES} )
     string( REPLACE ".c" "" testname ${justname} )
     message("Adding: ${testname}")
     add_executable( ${testname} ${testsourcefile} )
-    target_link_libraries( ${testname} lagraphx lagraph lagraphxtest ${GRAPHBLAS_LIBRARIES} )
+    target_link_libraries( ${testname} lagraphx lagraph lagraphxtest lagraphtest ${GRAPHBLAS_LIBRARIES} )
     string( REPLACE "test_" "ctest_" ctestname ${testname})
     add_test( ${ctestname} ${testname})
 endforeach( testsourcefile ${TEST_SOURCES} )

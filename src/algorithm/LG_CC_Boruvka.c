@@ -108,7 +108,6 @@ int LG_CC_Boruvka
     // check inputs
     //--------------------------------------------------------------------------
 
-    GrB_Info info ;
     GrB_Index n, *I = NULL, *Px = NULL, *mem = NULL ;
     GrB_Vector parent = NULL, gp = NULL, mnp = NULL, ccmn = NULL, ramp = NULL,
         mask = NULL ;

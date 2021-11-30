@@ -25,4 +25,14 @@ int LG_check_mis        // check if iset is a valid MIS of A
     char *msg
 ) ;
 
+int LG_check_ktruss
+(
+    // output
+    GrB_Matrix *C_handle,   // the ktruss of G->A, of type GrB_UINT32
+    // input
+    LAGraph_Graph G,        // the structure of G->A must be symmetric
+    uint32_t k,
+    char *msg
+) ;
+
 #endif

@@ -20,9 +20,9 @@
 // Experimental methods: in experimental/algorithm and experimental/utility
 //==============================================================================
 
-// Do not rely on these in production.  These methods are still under development,
-// and is intended only for illustration not benchmarking.  Do not use for
-// benchmarking, without asking the authors.
+// Do not rely on these in production.  These methods are still under
+// development, and is intended only for illustration not benchmarking.  Do not
+// use for benchmarking, without asking the authors.
 
 //------------------------------------------------------------------------------
 // LAGRAPH_OK: call LAGraph or GraphBLAS and check the result
@@ -149,27 +149,25 @@ GrB_Info LAGraph_allktruss
 
 //****************************************************************************
 /**
- * Given a symmetric graph A with no-self edges, ktruss_graphblas finds the
- * k-truss subgraph of A.
+ * Given an undirected graph G with no-self edges, LAGraph_Ktruss finds the
+ * k-truss subgraph of G.
  *
- * @param[out]  C       k-truss subgraph.
- * @param[ou]   C_type  type of elements stored in C.
- * @param[in]   A       input adjacency matrix, A, not modified
+ * @param[out]  C       k-truss subgraph, of type GrB_UINT32
+ * @param[in]   G       input graph, not modified
  * @param[in]   k       the truss to find
- * @param[out]  nsteps  The number of steps taken (ignored if NULL)
  *
  * @retval GrB_SUCCESS      if completed successfully (equal or not)
  * @retval GrB_NULL_POINTER if C or C_type is NULL
- * @retval GrB_NO_VALUE     vanilla version has not been implemented yet (NOT_IMPLEMENTED?)
- * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
+ * @return Any GraphBLAS errors that may have been encountered
  */
-GrB_Info LAGraph_ktruss
+int LAGraph_Ktruss              // compute the k-truss of a graph
 (
-    GrB_Matrix *C,
-    GrB_Type   *C_type,
-    const GrB_Matrix A,
-    const uint32_t k,
-    int32_t *nsteps
+    // outputs:
+    GrB_Matrix *C_handle,       // output k-truss subgraph, C
+    // inputs:
+    LAGraph_Graph G,            // input graph
+    uint32_t k,                 // find the k-truss, where k >= 3
+    char *msg
 ) ;
 
 //****************************************************************************

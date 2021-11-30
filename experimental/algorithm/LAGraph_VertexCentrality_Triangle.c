@@ -115,7 +115,7 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
     else
     {
         // A is not known to be symmetric
-        LG_CHECK (false, -105, "G->A must be symmetric") ;
+        LG_CHECK (true, -105, "G->A must be symmetric") ;
     }
 
     // TODO: could remove any self-edges, if present; do this in the

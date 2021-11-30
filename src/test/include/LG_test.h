@@ -61,4 +61,19 @@ int LG_check_sssp
     char *msg
 ) ;
 
+int LG_check_export
+(
+    // input
+    LAGraph_Graph G,        // export G->A in CSR format
+    // output
+    GrB_Index **Ap_handle,  // size Ap_len on output
+    GrB_Index **Aj_handle,  // size Aj_len on output
+    void **Ax_handle,       // size Ax_len * typesize on output
+    GrB_Index *Ap_len,
+    GrB_Index *Aj_len,
+    GrB_Index *Ax_len,
+    size_t *typesize,       // size of the type of A
+    char *msg
+) ;
+
 #endif

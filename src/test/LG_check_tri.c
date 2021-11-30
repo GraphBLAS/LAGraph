@@ -10,13 +10,12 @@
 
 //------------------------------------------------------------------------------
 
-// A very slow, bare-bones triangle count using a sequential saxpy-based
-// method.  Computes the sum(sum((A*A).*A)), in MATLAB notation, where A is
-// symmetric and treated as binary (only the structure is used).  Diagonal
-// entries are ignored.  In GraphBLAS notation, C{A} = A*A followed by
-// reduce(C) to scalar.  This method is for testing only, to check the result
-// of other, faster methods.  Do not benchmark this method; it is slow and
-// simple by design.
+// A very slow, bare-bones triangle count using a parallel dot-product method.
+// Computes the sum(sum((A'*A).*A)), in MATLAB notation, where A is symmetric
+// and treated as binary (only the structure is used).  Diagonal entries are
+// ignored.  In GraphBLAS notation, C{A} = A'*A followed by reduce(C) to scalar.
+// This method is for testing only, to check the result of other, faster
+// methods.  Do not benchmark this method; it is slow and simple by design.
 
 #define LAGraph_FREE_WORK                       \
 {                                               \
@@ -82,40 +81,9 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
     GrB_TRY (GxB_Matrix_unpack_CSR (G->A,
         &Ap, &Aj, &Ax, &Ap_size, &Aj_size, &Ax_size, &iso, &jumbled, NULL)) ;
     #else
-
-    size_t s = 0 ;
-    if      (G->A_type == GrB_BOOL  ) s = sizeof (bool    ) ;
-    else if (G->A_type == GrB_INT8  ) s = sizeof (int8_t  ) ;
-    else if (G->A_type == GrB_INT16 ) s = sizeof (int16_t ) ;
-    else if (G->A_type == GrB_INT32 ) s = sizeof (int32_t ) ;
-    else if (G->A_type == GrB_INT64 ) s = sizeof (int64_t ) ;
-    else if (G->A_type == GrB_UINT8 ) s = sizeof (uint8_t ) ;
-    else if (G->A_type == GrB_UINT16) s = sizeof (uint16_t) ;
-    else if (G->A_type == GrB_UINT32) s = sizeof (uint32_t) ;
-    else if (G->A_type == GrB_UINT64) s = sizeof (uint64_t) ;
-    else if (G->A_type == GrB_FP32  ) s = sizeof (float   ) ;
-    else if (G->A_type == GrB_FP64  ) s = sizeof (double  ) ;
-    LG_CHECK (s == 0, -1, "unsupported type") ;
-
-    GrB_TRY (GrB_Matrix_exportSize (&Ap_len, &Aj_len, &Ax_len,
-        GrB_CSR_FORMAT, G->A)) ;
-    Ap = (GrB_Index *) LAGraph_Malloc (Ap_len, sizeof (GrB_Index)) ;
-    Aj = (GrB_Index *) LAGraph_Malloc (Aj_len, sizeof (GrB_Index)) ;
-    Ax = (void      *) LAGraph_Malloc (Ax_len, s) ;
-    LG_CHECK (Ap == NULL || Aj == NULL || Ax == NULL, -1, "out of memory") ;
-
-    if      (G->A_type == GrB_BOOL  ) { GrB_TRY (GrB_Matrix_export (Ap, Aj, (bool     *) Ax, &Ap_len, &Aj_len, &Ax_len, GrB_CSR_FORMAT, G->A)) ; }
-    else if (G->A_type == GrB_INT8  ) { GrB_TRY (GrB_Matrix_export (Ap, Aj, (int8_t   *) Ax, &Ap_len, &Aj_len, &Ax_len, GrB_CSR_FORMAT, G->A)) ; }
-    else if (G->A_type == GrB_INT16 ) { GrB_TRY (GrB_Matrix_export (Ap, Aj, (int16_t  *) Ax, &Ap_len, &Aj_len, &Ax_len, GrB_CSR_FORMAT, G->A)) ; }
-    else if (G->A_type == GrB_INT32 ) { GrB_TRY (GrB_Matrix_export (Ap, Aj, (int32_t  *) Ax, &Ap_len, &Aj_len, &Ax_len, GrB_CSR_FORMAT, G->A)) ; }
-    else if (G->A_type == GrB_INT64 ) { GrB_TRY (GrB_Matrix_export (Ap, Aj, (int64_t  *) Ax, &Ap_len, &Aj_len, &Ax_len, GrB_CSR_FORMAT, G->A)) ; }
-    else if (G->A_type == GrB_UINT8 ) { GrB_TRY (GrB_Matrix_export (Ap, Aj, (uint8_t  *) Ax, &Ap_len, &Aj_len, &Ax_len, GrB_CSR_FORMAT, G->A)) ; }
-    else if (G->A_type == GrB_UINT16) { GrB_TRY (GrB_Matrix_export (Ap, Aj, (uint16_t *) Ax, &Ap_len, &Aj_len, &Ax_len, GrB_CSR_FORMAT, G->A)) ; }
-    else if (G->A_type == GrB_UINT32) { GrB_TRY (GrB_Matrix_export (Ap, Aj, (uint32_t *) Ax, &Ap_len, &Aj_len, &Ax_len, GrB_CSR_FORMAT, G->A)) ; }
-    else if (G->A_type == GrB_UINT64) { GrB_TRY (GrB_Matrix_export (Ap, Aj, (uint64_t *) Ax, &Ap_len, &Aj_len, &Ax_len, GrB_CSR_FORMAT, G->A)) ; }
-    else if (G->A_type == GrB_FP32  ) { GrB_TRY (GrB_Matrix_export (Ap, Aj, (float    *) Ax, &Ap_len, &Aj_len, &Ax_len, GrB_CSR_FORMAT, G->A)) ; }
-    else if (G->A_type == GrB_FP64  ) { GrB_TRY (GrB_Matrix_export (Ap, Aj, (double   *) Ax, &Ap_len, &Aj_len, &Ax_len, GrB_CSR_FORMAT, G->A)) ; }
-
+    size_t typesize ;
+    LAGraph_TRY (LG_check_export G, &Ap, &Aj, &Ax, &Ap_len, &Aj_len, &Ax_len,
+        &typesize, msg) ;
     #endif
 
     //--------------------------------------------------------------------------
