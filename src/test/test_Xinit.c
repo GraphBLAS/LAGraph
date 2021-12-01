@@ -111,7 +111,8 @@ void test_Xinit_brutal (void)
         if (ok)
         {
             OK (GrB_finalize ( )) ;
-            printf ("\nGxB_init, finally: %d %ld\n", brutal, LG_nmalloc) ;
+            printf ("\nGxB_init, finally: %d %g\n", brutal,
+                (double) LG_nmalloc) ;
             TEST_CHECK (LG_nmalloc == 0) ;
             break ;
         }
@@ -126,7 +127,8 @@ void test_Xinit_brutal (void)
         if (result == 0)
         {
             OK (LAGraph_Finalize (msg)) ;
-            printf ("LAGraph_Xinit: finally: %d %ld\n", brutal, LG_nmalloc) ;
+            printf ("LAGraph_Xinit: finally: %d %g\n", brutal,
+                (double) LG_nmalloc) ;
             TEST_CHECK (LG_nmalloc == 0) ;
             break ;
         }

@@ -93,7 +93,7 @@ void test_AllKTruss (void)
         int64_t *nedges = LAGraph_Malloc (n, sizeof (int64_t)) ;
         int64_t *nsteps = LAGraph_Malloc (n, sizeof (int64_t)) ;
         OK (LAGraph_AllKTruss (Cset, &kmax, ntris, nedges, nsteps, G, msg)) ;
-        printf ("all k-truss: kmax %ld\n", kmax) ;
+        printf ("all k-truss: kmax %g\n", (double) kmax) ;
 
         // compute each k-truss using LAGraph_KTruss, and compare
         for (int k = 3 ; k < n ; k++)

@@ -112,7 +112,7 @@ int main (int argc, char **argv)
     // warmup
     LAGraph_TRY (LAGraph_ConnectedComponents (&components, G, msg)) ;
     GrB_Index nCC = countCC (components, n) ;
-    printf ("nCC: %lu\n", nCC) ;
+    printf ("nCC: %20.0g\n", (double) nCC) ;
 
 #if 0 & LG_CHECK_RESULT
     LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;

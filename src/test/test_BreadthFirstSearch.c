@@ -643,7 +643,8 @@ void test_bfs_brutal (void)
                         G, src, (bool) pushpull, msg) ;
                     if (result == 0)
                     {
-                        printf ("SS:GrB: %d %ld\n", brutal, LG_nmalloc) ;
+                        printf ("SS:GrB: %d %g\n", brutal,
+                            (double) LG_nmalloc) ;
                         break ;
                     }
                 }
@@ -660,7 +661,8 @@ void test_bfs_brutal (void)
                         G, src, (bool) pushpull, msg) ;
                     if (result == 0)
                     {
-                        printf ("SS:GrB: %d %ld\n", brutal, LG_nmalloc) ;
+                        printf ("SS:GrB: %d %g\n", brutal,
+                            (double) LG_nmalloc) ;
                         break ;
                     }
                 }
@@ -676,7 +678,8 @@ void test_bfs_brutal (void)
                         G, src, (bool) pushpull, msg) ;
                     if (result == 0)
                     {
-                        printf ("Vanilla: %d %ld\n", brutal, LG_nmalloc) ;
+                        printf ("Vanilla: %d %g\n", brutal,
+                            (double) LG_nmalloc) ;
                         break ;
                     }
                 }
@@ -693,7 +696,8 @@ void test_bfs_brutal (void)
                         G, src, (bool) pushpull, msg) ;
                     if (result == 0)
                     {
-                        printf ("Vanilla: %d %ld\n", brutal, LG_nmalloc) ;
+                        printf ("Vanilla: %d %g\n", brutal,
+                            (double) LG_nmalloc) ;
                         break ;
                     }
                 }

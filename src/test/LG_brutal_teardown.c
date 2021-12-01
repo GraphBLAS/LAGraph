@@ -17,7 +17,7 @@ int LG_brutal_teardown (char *msg)
 {
     LG_CHECK (LAGraph_Finalize (msg), -1, "finalize failed") ;
     // nothing must be left allocated
-    if (LG_nmalloc != 0) printf ("Leak! %ld\n", LG_nmalloc) ;
-    LG_CHECK (LG_nmalloc != 0, -1, "memory leak") ;
+    if (LG_nmalloc != 0) printf ("Leak! %g\n", (double) LG_nmalloc) ;
+    return ((LG_nmalloc == 0) ? 0 : -911) ;
 }
 
