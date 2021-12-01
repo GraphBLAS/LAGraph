@@ -182,7 +182,11 @@ static inline int Reduce_assign32
     GrB_TRY (GxB_Vector_export_Full (s_handle, &s_type, &s_n, (void **) &s_x,
         &s_size, &s_iso, NULL)) ;
 
+    #if defined ( COVERAGE )
+    if (n >= 200)   // for test coverage only; do not use in production!!
+    #else
     if (nthreads >= 4)
+    #endif
     {
 
         // allocate a buf array for each thread, of size HASH_SIZE
