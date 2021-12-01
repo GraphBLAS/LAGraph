@@ -45,7 +45,7 @@ int main (int argc, char **argv)
     double tic [2] ;
 
     //--------------------------------------------------------------------------
-    // determine # of threads to use (TODO: make this a Test utility
+    // determine # of threads to use
     //--------------------------------------------------------------------------
 
     int nt = NTHREAD_LIST ;

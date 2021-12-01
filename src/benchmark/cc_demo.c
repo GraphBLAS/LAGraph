@@ -35,8 +35,14 @@ GrB_Index countCC (GrB_Vector f, GrB_Index n)
     GrB_Index nCC = 0;
     GrB_Index *w_val = (GrB_Index *) LAGraph_Malloc (n, sizeof (GrB_Index)) ;
     if (w_val == NULL) { printf ("out of memory\n") ; abort ( ) ; }
-    // FIXME: NULL parameter to GrB_Vector_extractTuples is SS extension.
-    GrB_Vector_extractTuples (NULL, w_val, &n, f) ; // FIXME
+    #if LG_SUITESPARSE
+    // SuiteSparse:GraphBLAS allows NULL inputs to GrB_Vector_extractTuples
+    GrB_Index *i_val = NULL ;
+    #else
+    GrB_Index *i_val = (GrB_Index *) LAGraph_Malloc (n, sizeof (GrB_Index)) ;
+    if (i_val == NULL) { printf ("out of memory\n") ; abort ( ) ; }
+    #endif
+    GrB_Vector_extractTuples (i_val, w_val, &n, f) ;
     for (GrB_Index i = 0; i < n; i++)
     {
         if (w_val[i] == i)
@@ -44,6 +50,7 @@ GrB_Index countCC (GrB_Vector f, GrB_Index n)
             nCC++ ;
         }
     }
+    LAGraph_Free ((void **) &i_val) ;
     LAGraph_Free ((void **) &w_val) ;
     return nCC;
 }

@@ -129,7 +129,7 @@ int main (int argc, char **argv)
     // check result
     //--------------------------------------------------------------------------
 
-    // TODO
+    // TODO: check result from PageRank
 
     //--------------------------------------------------------------------------
     // free all workspace and finish

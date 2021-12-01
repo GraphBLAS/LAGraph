@@ -22,7 +22,7 @@
 // specified source vertex to all other vertices in the graph.
 
 // TODO: this method gets stuck in an infinite loop when there are negative-
-// weight cycles in the graph
+// weight cycles in the graph.
 
 #define LAGraph_FREE_WORK   \
 {                           \
@@ -196,9 +196,9 @@ int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
             GrB_TRY (GrB_Vector_nvals (&tReq_nvals, tReq)) ;
             if (tReq_nvals == 0) break ;
 
-            // TODO currently assuming all edges weights > 0 (FIXME), so 
-            // we're using a structural mask.  Explicit zeros in A would
-            // require a valued mask.
+            // TODO currently assuming all edges weights are nonzero, so we're
+            // using a structural mask.  Explicit zeros in A would require a
+            // valued mask.
             // tless<tReq> = tReq .< t
             GrB_TRY (GrB_Vector_clear (tless)) ;
             GrB_TRY (GrB_eWiseAdd (tless, tReq, NULL,

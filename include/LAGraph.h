@@ -1046,10 +1046,11 @@ static inline GrB_Index LAGraph_Random15 (uint64_t *seed)
 // return a random uint64_t, in range 0 to LAGRAPH_RANDOM60_MAX
 static inline GrB_Index LAGraph_Random60 (uint64_t *seed)
 {
-    GrB_Index i = LAGraph_Random15 (seed) ;
-    i = LAGRAPH_RANDOM15_MAX * i + LAGraph_Random15 (seed) ;
-    i = LAGRAPH_RANDOM15_MAX * i + LAGraph_Random15 (seed) ;
-    i = LAGRAPH_RANDOM15_MAX * i + LAGraph_Random15 (seed) ;
+    GrB_Index i ;
+    i = LAGraph_Random15 (seed) ;
+    i = LAGraph_Random15 (seed) + LAGRAPH_RANDOM15_MAX * i ;
+    i = LAGraph_Random15 (seed) + LAGRAPH_RANDOM15_MAX * i ;
+    i = LAGraph_Random15 (seed) + LAGRAPH_RANDOM15_MAX * i ;
     i = i % (LAGRAPH_RANDOM60_MAX + 1) ;
     return (i) ;
 }

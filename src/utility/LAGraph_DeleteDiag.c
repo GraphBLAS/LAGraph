@@ -8,12 +8,6 @@
 
 //------------------------------------------------------------------------------
 
-#define LAGraph_FREE_WORK   \
-{                           \
-    GrB_free (&thunk) ;     \
-    GrB_free (&M) ;         \
-}
-
 #include "LG_internal.h"
 
 int LAGraph_DeleteDiag      // returns 0 if successful, < 0 if failure
@@ -27,8 +21,6 @@ int LAGraph_DeleteDiag      // returns 0 if successful, < 0 if failure
     // clear msg and check G
     //--------------------------------------------------------------------------
 
-    GrB_Matrix M = NULL ;
-    GrB_Scalar thunk = NULL ;
     LG_CHECK_INIT (G, msg) ;
     if (G->ndiag == 0)
     {
@@ -48,17 +40,12 @@ int LAGraph_DeleteDiag      // returns 0 if successful, < 0 if failure
     // remove diagonal entries
     //--------------------------------------------------------------------------
 
-    GrB_Matrix A = G->A ;
-
-    GrB_TRY (GrB_Scalar_new (&thunk, GrB_INT64)) ;
-    GrB_TRY (GrB_Scalar_setElement (thunk, 0)) ;
-    GrB_TRY (GrB_select (A, NULL, NULL, GrB_OFFDIAG, A, thunk, NULL)) ;
+    GrB_TRY (GrB_select (G->A, NULL, NULL, GrB_OFFDIAG, G->A, 0, NULL)) ;
 
     //--------------------------------------------------------------------------
     // free workspace, G->ndiag now known to be zero
     //--------------------------------------------------------------------------
 
-    LAGraph_FREE_WORK ;
     G->ndiag = 0 ;
     return (0) ;
 }

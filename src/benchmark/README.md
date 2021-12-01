@@ -4,9 +4,11 @@
 LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 SPDX-License-Identifier: BSD-2-Clause
 
-FIXME: get latest SuiteSparse:GraphBLAS !!!
-
-FIXME: Please contact the authors of the library ...
+BE SURE TO GET THE LATEST SuiteSparse:GraphBLAS.  LAGraph and SuiteSparse:
+GraphBLAS are under intense development and even minor changes can have a big
+impact on performances.  Also, please contact the authors of the library if you
+have any questions about benchmarking.  (Tim Davis: davis@tamu.edu, in
+particular).
 
 To download the GAP benchmark matrices, optionally convert them to binary .grb
 files (SuiteSparse-only), and to run the GAP benchmarks, do the following:

@@ -63,7 +63,7 @@ int main (int argc, char **argv)
     int batch_size = 4 ;
 
     //--------------------------------------------------------------------------
-    // determine # of threads to use (TODO: make this a utility
+    // determine # of threads to use
     //--------------------------------------------------------------------------
 
     int nt = NTHREAD_LIST ;

@@ -19,8 +19,6 @@
 
 // See also LAGraph_IsEqual.
 
-// TODO: add GrB_Vector_Type to the GraphBLAS spec.
-
 // For both methods, if the two vectors are GrB_FP32, GrB_FP64, or related,
 // and have NaNs, then these functions will return false,
 // since NaN == NaN is false.  To check for NaN equality (like

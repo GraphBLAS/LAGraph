@@ -397,7 +397,7 @@ int LAGraph_Sort1    // sort array A of size n
         // merge level k into level k-1, from A into W
         //----------------------------------------------------------------------
 
-        // TODO: skip k and k-1 for each group of 4 sublists of A if they are
+        // FUTURE: skip k and k-1 for each group of 4 sublists of A if they are
         // already sorted with respect to each other.
 
         // this could be done in parallel if ntasks was large

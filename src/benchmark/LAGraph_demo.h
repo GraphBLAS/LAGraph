@@ -272,8 +272,7 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
     }
     else
     {
-        // unsupported type
-        // TODO: add GxB_FC32 and GxB_FC64
+        // unsupported type (GxB_FC32 and GxB_FC64 not yet supported)
         ERROR ;
     }
     typename [72] = '\0' ;
@@ -925,17 +924,27 @@ static int readproblem          // returns 0 if successful, -1 if failure
 
     if (!structural && ensure_positive)
     {
-        // TODO: make this a utility function, to drop explicit zeros
-        // FIXME: use GrB_select with a type-specific operator,
-        // which will work in SS:GrB and vanilla both.
-        #if LG_SUITESPARSE
-        GrB_TRY (GxB_select ((*G)->A, NULL, NULL, GxB_NONZERO, (*G)->A,
-            NULL, NULL)) ;
-        #else
-        // A<A,replace> = A
-        GrB_TRY (GrB_assign ((*G)->A, (*G)->A, NULL, (*G)->A,
-            GrB_ALL, n, GrB_ALL, n, GrB_DESC_R)) ;
+        // drop explicit zeros (FUTURE: make this a utility function)
+        GrB_IndexUnaryOp idxop = NULL ;
+        if      (A_type == GrB_BOOL  ) idxop = GrB_VALUENE_BOOL ;
+        else if (A_type == GrB_INT8  ) idxop = GrB_VALUENE_INT8 ;
+        else if (A_type == GrB_INT16 ) idxop = GrB_VALUENE_INT16 ;
+        else if (A_type == GrB_INT32 ) idxop = GrB_VALUENE_INT32 ;
+        else if (A_type == GrB_INT64 ) idxop = GrB_VALUENE_INT64 ;
+        else if (A_type == GrB_UINT8 ) idxop = GrB_VALUENE_UINT8 ;
+        else if (A_type == GrB_UINT16) idxop = GrB_VALUENE_UINT16 ;
+        else if (A_type == GrB_UINT32) idxop = GrB_VALUENE_UINT32 ;
+        else if (A_type == GrB_UINT64) idxop = GrB_VALUENE_UINT64 ;
+        else if (A_type == GrB_FP32  ) idxop = GrB_VALUENE_FP32 ;
+        else if (A_type == GrB_FP64  ) idxop = GrB_VALUENE_FP64 ;
+        #if 0
+        else if (A_type == GxB_FC32  ) idxop = GxB_VALUENE_FC32 ;
+        else if (A_type == GxB_FC64  ) idxop = GxB_VALUENE_FC64 ;
         #endif
+        if (idxop != NULL)
+        {
+            GrB_TRY (GrB_select ((*G)->A, NULL, NULL, idxop, (*G)->A, 0, NULL));
+        }
 
         // A = abs (A)
         GrB_UnaryOp op = NULL ;
