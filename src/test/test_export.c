@@ -95,20 +95,33 @@ void test_export (void)
         GrB_Index *Ap = NULL ;
         GrB_Index *Aj = NULL ;
         void *Ax = NULL ;
-        GrB_Index Ap_len, Aj_len, Ax_len ;
+        GrB_Index Ap_len, Aj_len, Ax_len, nrows, ncols ;
         size_t typesize ;
+        OK (GrB_Matrix_nrows (&nrows, G->A)) ;
+        OK (GrB_Matrix_ncols (&ncols, G->A)) ;
 
         OK (LG_check_export (G, &Ap, &Aj, &Ax, &Ap_len, &Aj_len,
             &Ax_len, &typesize, msg)) ;
 
-        //#if LG_SUITESPARSE
-        //OK (GxB_Matrix_import_CSR (&C
-        //#else
+        #if LG_SUITESPARSE
+        #if GxB_IMPLEMENTATION >= GxB_VERSION (6,0,2)
+        printf ("reimport and check result\n") ;
+        OK (GxB_Matrix_import_CSR (&C, atype, nrows, ncols, &Ap, &Aj, &Ax,
+            Ap_len * sizeof (GrB_Index),
+            Aj_len * sizeof (GrB_Index),
+            Ax_len * typesize,
+            false, true, NULL)) ;
+        OK (GrB_wait (C, GrB_MATERIALIZE)) ;
+        bool ok = false ;
+        OK (LAGraph_IsEqual (&ok, G->A, C, msg)) ;
+        TEST_CHECK (ok) ;
+        OK (GrB_free (&C)) ;
+        #endif
+        #endif
+
         LAGraph_Free ((void **) &Ap) ;
         LAGraph_Free ((void **) &Aj) ;
         LAGraph_Free ((void **) &Ax) ;
-        //#endif
-
         OK (LAGraph_Delete (&G, msg)) ;
     }
 
