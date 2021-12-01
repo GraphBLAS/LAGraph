@@ -101,13 +101,13 @@ void test_export (void)
         OK (LG_check_export (G, &Ap, &Aj, &Ax, &Ap_len, &Aj_len,
             &Ax_len, &typesize, msg)) ;
 
-        #if LG_SUITESPARSE
-        OK (GxB_Matrix_import_CSR (&C
-        #else
+        //#if LG_SUITESPARSE
+        //OK (GxB_Matrix_import_CSR (&C
+        //#else
         LAGraph_Free ((void **) &Ap) ;
         LAGraph_Free ((void **) &Aj) ;
         LAGraph_Free ((void **) &Ax) ;
-        #endif
+        //#endif
 
         OK (LAGraph_Delete (&G, msg)) ;
     }
