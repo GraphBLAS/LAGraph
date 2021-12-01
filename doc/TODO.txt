@@ -1,15 +1,46 @@
 As of Nov 30, 2021:
 
-    * test, document, polish all experimental algorithms & utilities
+    * test, document, polish all src & experimental: algorithms, utilities,
+        and tests.
+        as of Nov 30: testing is at 94.7%.  Only untested functions are
+        4 experimental/algoritms: lcc, cdlp, scc, and msf.
+
     * unify error return values as much as possible, now that v2.0 C API
-        has assigned enum values to GrB_Info
+        has assigned enum values to GrB_Info.  Suggest we use GrB_Info
+        values, as ints, as much as possible
+
     * many TODOs and FIXMEs throughout
-    * CC: needs new GxB_select with rank operator, and GxB_extract
-    * brutal memory testing
+
+    * brutal memory testing: in progress.  grep for brutal in the latest
+        Nov 30 version.
+
+    * check function names and API (LAGraph_IsEqual for GrB_Matrix, and
+        LAGraph_Vector_IsEqual for GrB_Vectors for example,o
+        but LAGraph_Matrix_print and LAGraph_Vector_print)
+
+    * missing features:
+
+        (1) file I/O with GrB serialize/deserialize.  Add a JSON header to the
+            binary file so we know what library (and version) the file is
+            written with.
+            Pros: very fast, very compact, easy to do in LAGraph.
+            Cons: only works to save then load in the same library.
+
+        (2) random matrix generation.  Would be easy to do based on
+            LAGraph_Random (generates random vectors, in
+            experimental/utility).
+
+    * need new GxB methods in GraphBLAS for CC, ideally for v1.0 of LAGraph:
+        GxB_select with GxB_RankUnaryOp, and GxB_extract with GrB_Vectors as
+        inputs instead of (GrB_Index *) arrays.
 
 --------------------------------------------------------------------------------
 
 FUTURE:
+
+    * can we exploit asynch algorithms? C += A*C for example?
+        Gauss-Seidel, Afforest, etc?  I can do it in GraphBLAS; can LAGraph
+        use it?
 
 TODO: need GrB_Matrix_type or type_name.  use GxB_Matrix_type_name instead
     of GxB_Matrix_type.
