@@ -77,36 +77,36 @@ int LG_check_export
 ) ;
 
 //------------------------------------------------------------------------------
-// LG_check_malloc.c:  brutal memory tests
+// LG_brutal_*:  brutal memory tests
 //------------------------------------------------------------------------------
 
-LAGRAPH_PUBLIC int LG_setup (bool brutal_test, char *msg) ;
-LAGRAPH_PUBLIC int LG_teardown (bool brutal_test, char *msg) ;
+LAGRAPH_PUBLIC int LG_brutal_setup (char *msg) ;
+LAGRAPH_PUBLIC int LG_brutal_teardown (char *msg) ;
 
 LAGRAPH_PUBLIC int64_t LG_brutal ;
 LAGRAPH_PUBLIC int64_t LG_nmalloc ;
 
 LAGRAPH_PUBLIC
-void *LG_check_malloc       // return pointer to allocated block of memory
+void *LG_brutal_malloc      // return pointer to allocated block of memory
 (
     size_t size             // # of bytes to allocate
 ) ;
 
 LAGRAPH_PUBLIC
-void *LG_check_calloc       // return pointer to allocated block of memory
+void *LG_brutal_calloc      // return pointer to allocated block of memory
 (
     size_t nitems,          // # of items to allocate
     size_t itemsize         // # of bytes per item
 ) ;
 
 LAGRAPH_PUBLIC
-void LG_check_free
+void LG_brutal_free
 (
     void *p                 // block to free
 ) ;
 
 LAGRAPH_PUBLIC
-void *LG_check_realloc      // return pointer to reallocated memory
+void *LG_brutal_realloc     // return pointer to reallocated memory
 (
     void *p,                // block to realloc
     size_t size             // new size of the block

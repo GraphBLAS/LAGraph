@@ -286,7 +286,7 @@ void test_TriangleCount(void)
 }
 
 //****************************************************************************
-void test_TriangleCount_brutal (void)
+void test_TriangleCount_many (void)
 {
     LAGraph_Init(msg);
     GrB_Matrix A = NULL ;
@@ -422,7 +422,7 @@ TEST_LIST = {
     {"TriangleCount_Methods5", test_TriangleCount_Methods5},
     {"TriangleCount_Methods6", test_TriangleCount_Methods6},
     {"TriangleCount"         , test_TriangleCount},
-    {"TriangleCount_brutal"  , test_TriangleCount_brutal},
+    {"TriangleCount_many"    , test_TriangleCount_many},
     {"TriangleCount_autosort", test_TriangleCount_autosort},
     {NULL, NULL}
 };

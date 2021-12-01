@@ -474,7 +474,7 @@ void test_BreadthFirstSearch_both(void)
 }
 
 //****************************************************************************
-void test_BreadthFirstSearch_brutal(void)
+void test_BreadthFirstSearch_many(void)
 {
     LAGraph_Init(msg);
     GrB_Matrix A = NULL ;
@@ -583,6 +583,134 @@ void test_BreadthFirstSearch_brutal(void)
     LAGraph_Finalize(msg);
 }
 
+//------------------------------------------------------------------------------
+// test_bfs_brutal
+//------------------------------------------------------------------------------
+
+#if LG_SUITESPARSE
+void test_bfs_brutal (void)
+{
+    OK (LG_brutal_setup (msg)) ;
+    GrB_Matrix A = NULL ;
+    GrB_Type atype = NULL ;
+
+    for (int k = 0 ; ; k++)
+    {
+        // load the adjacency matrix as A
+        const char *aname = files [k].name ;
+        LAGraph_Kind kind = files [k].kind ;
+        if (strlen (aname) == 0) break;
+        TEST_CASE (aname) ;
+        printf ("\nMatrix: %s\n", aname) ;
+        snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
+        FILE *f = fopen (filename, "r") ;
+        TEST_CHECK (f != NULL) ;
+        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (fclose (f)) ;
+        TEST_MSG ("Loading of adjacency matrix failed") ;
+        // create the graph
+        OK (LAGraph_New (&G, &A, atype, kind, msg)) ;
+        TEST_CHECK (A == NULL) ;    // A has been moved into G->A
+        GrB_Index n = 0 ;
+        OK (GrB_Matrix_nrows (&n, G->A)) ;
+        if (n >= 1000)
+        {
+            // only do the small graphs
+            printf ("skipped\n") ;
+            OK (LAGraph_Delete (&G, msg)) ;
+            continue ;
+        }
+
+        // create its properties
+        OK (LAGraph_Property_AT (G, msg)) ;
+        OK (LAGraph_Property_RowDegree (G, msg)) ;
+        OK (LAGraph_Property_ColDegree (G, msg)) ;
+
+        // run the BFS
+        int64_t step = (n > 100) ? (3*n/4) : ((n/4) + 1) ;
+        for (int64_t src = 0 ; src < n ; src += step)
+        {
+            GrB_Vector parent = NULL ;
+            GrB_Vector level = NULL ;
+            for (int pushpull = 0 ; pushpull <= 1 ; pushpull++)
+            {
+
+                // parent and level with SS:GrB
+                for (int brutal = 0 ; ; brutal++)
+                {
+                    LG_brutal = brutal ;
+                    int result = LAGraph_BreadthFirstSearch (&level, &parent,
+                        G, src, (bool) pushpull, msg) ;
+                    if (result == 0)
+                    {
+                        printf ("SS:GrB: %d %ld\n", brutal, LG_nmalloc) ;
+                        break ;
+                    }
+                }
+                LG_brutal = -1 ;    // turn off brutal testing
+                OK (LG_check_bfs (level, parent, G, src, msg)) ;
+                OK (GrB_free (&parent)) ;
+                OK (GrB_free (&level)) ;
+
+                // level only with SS:GrB
+                for (int brutal = 0 ; ; brutal++)
+                {
+                    LG_brutal = brutal ;
+                    int result = LAGraph_BreadthFirstSearch (&level, NULL,
+                        G, src, (bool) pushpull, msg) ;
+                    if (result == 0)
+                    {
+                        printf ("SS:GrB: %d %ld\n", brutal, LG_nmalloc) ;
+                        break ;
+                    }
+                }
+                LG_brutal = -1 ;    // turn off brutal testing
+                OK (LG_check_bfs (level, NULL, G, src, msg)) ;
+                OK (GrB_free (&level)) ;
+
+                // parent and level with vanilla
+                for (int brutal = 0 ; ; brutal++)
+                {
+                    LG_brutal = brutal ;
+                    int result = LG_BreadthFirstSearch_vanilla (&level, &parent,
+                        G, src, (bool) pushpull, msg) ;
+                    if (result == 0)
+                    {
+                        printf ("Vanilla: %d %ld\n", brutal, LG_nmalloc) ;
+                        break ;
+                    }
+                }
+                LG_brutal = -1 ;    // turn off brutal testing
+                OK (LG_check_bfs (level, parent, G, src, msg)) ;
+                OK (GrB_free (&parent)) ;
+                OK (GrB_free (&level)) ;
+
+                // level-only with vanilla
+                for (int brutal = 0 ; ; brutal++)
+                {
+                    LG_brutal = brutal ;
+                    int result = LG_BreadthFirstSearch_vanilla (&level, NULL,
+                        G, src, (bool) pushpull, msg) ;
+                    if (result == 0)
+                    {
+                        printf ("Vanilla: %d %ld\n", brutal, LG_nmalloc) ;
+                        break ;
+                    }
+                }
+                LG_brutal = -1 ;    // turn off brutal testing
+                OK (LG_check_bfs (level, NULL, G, src, msg)) ;
+                OK (GrB_free (&level)) ;
+
+            }
+        }
+
+        OK (LAGraph_Delete (&G, msg)) ;
+    }
+
+    OK (LG_brutal_teardown (msg)) ;
+}
+#endif
+
 //****************************************************************************
 //****************************************************************************
 TEST_LIST = {
@@ -592,7 +720,8 @@ TEST_LIST = {
     {"BreadthFirstSearch_parent", test_BreadthFirstSearch_parent},
     {"BreadthFirstSearch_level", test_BreadthFirstSearch_level},
     {"BreadthFirstSearch_both", test_BreadthFirstSearch_both},
-    {"BreadthFirstSearch_brutal", test_BreadthFirstSearch_brutal},
+    {"BreadthFirstSearch_many", test_BreadthFirstSearch_many},
+    {"BreadthFirstSearch_brutal", test_bfs_brutal },
     {NULL, NULL}
 };
 

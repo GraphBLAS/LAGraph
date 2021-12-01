@@ -56,32 +56,32 @@ void test_Xinit (void)
 #if LG_SUITESPARSE
 void test_Xinit_brutal (void)
 {
-    // no brutal memory failures, but test LG_check_malloc/calloc/realloc/free
+    // no brutal memory failures, but test LG_brutal_malloc/calloc/realloc/free
     LG_brutal = -1 ;
     LG_nmalloc = 0 ;
-    OK (LAGraph_Xinit (LG_check_malloc, LG_check_calloc, LG_check_realloc,
-        LG_check_free, msg)) ;
+    OK (LAGraph_Xinit (LG_brutal_malloc, LG_brutal_calloc, LG_brutal_realloc,
+        LG_brutal_free, msg)) ;
 
-    int32_t *p = LG_check_malloc (42 * sizeof (int32_t)) ;
+    int32_t *p = LG_brutal_malloc (42 * sizeof (int32_t)) ;
     TEST_CHECK (p != NULL) ;
-    LG_check_free (p) ;
-    p = LG_check_calloc (42, sizeof (int32_t)) ;
+    LG_brutal_free (p) ;
+    p = LG_brutal_calloc (42, sizeof (int32_t)) ;
     for (int k = 0 ; k < 42 ; k++)
     {
         TEST_CHECK (p [k] == 0) ;
     }
-    p = LG_check_realloc (p, 99 * sizeof (int32_t)) ;
+    p = LG_brutal_realloc (p, 99 * sizeof (int32_t)) ;
     for (int k = 0 ; k < 42 ; k++)
     {
         TEST_CHECK (p [k] == 0) ;
     }
-    LG_check_free (p) ;
-    p = LG_check_realloc (NULL, 4 * sizeof (int32_t)) ;
+    LG_brutal_free (p) ;
+    p = LG_brutal_realloc (NULL, 4 * sizeof (int32_t)) ;
     for (int k = 0 ; k < 4 ; k++)
     {
         p [k] = k ;
     }
-    LG_check_free (p) ;
+    LG_brutal_free (p) ;
 
     OK (LAGraph_Finalize (msg)) ;
     TEST_CHECK (LG_nmalloc == 0) ;
@@ -92,20 +92,20 @@ void test_Xinit_brutal (void)
     {
         LG_brutal = brutal ;
         GB_Global_GrB_init_called_set (false) ;
-        GrB_Info info = GxB_init (GrB_NONBLOCKING, LG_check_malloc,
-            LG_check_calloc, LG_check_realloc, LG_check_free) ;
+        GrB_Info info = GxB_init (GrB_NONBLOCKING, LG_brutal_malloc,
+            LG_brutal_calloc, LG_brutal_realloc, LG_brutal_free) ;
         void *p = NULL, *pnew = NULL ;
         bool ok = false ;
         if (info == GrB_SUCCESS)
         {
-            p = LG_check_realloc (NULL, 42) ;
+            p = LG_brutal_realloc (NULL, 42) ;
             pnew = NULL ;
             ok = (p != NULL) ;
             if (ok)
             {
-                pnew = LG_check_realloc (p, 107) ;
+                pnew = LG_brutal_realloc (p, 107) ;
                 ok = (pnew != NULL) ;
-                LG_check_free (ok ? pnew : p) ;
+                LG_brutal_free (ok ? pnew : p) ;
             }
         }
         if (ok)
@@ -121,8 +121,8 @@ void test_Xinit_brutal (void)
     {
         LG_brutal = brutal ;
         GB_Global_GrB_init_called_set (false) ;
-        int result = LAGraph_Xinit (LG_check_malloc, LG_check_calloc,
-            LG_check_realloc, LG_check_free, msg) ;
+        int result = LAGraph_Xinit (LG_brutal_malloc, LG_brutal_calloc,
+            LG_brutal_realloc, LG_brutal_free, msg) ;
         if (result == 0)
         {
             OK (LAGraph_Finalize (msg)) ;

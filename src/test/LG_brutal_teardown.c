@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LG_setup.c: setup an LAGraph test
+// LG_brutal_teardown.c: teardown an LAGraph test with brutal memory testing
 // -----------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -13,18 +13,11 @@
 #include "LG_internal.h"
 #include "LG_test.h"
 
-int LG_setup (bool brutal_test, char *msg)
+int LG_brutal_teardown (char *msg)
 {
-    LG_brutal = -1 ;        // disable brutal testing for now
-    LG_nmalloc = 0 ;        // assuming nothing is malloc'd
-    if (brutal_test)
-    {
-        return (LAGraph_Xinit (LG_check_malloc, LG_check_calloc,
-            LG_check_realloc, LG_check_free, msg)) ;
-    }
-    else
-    {
-        return (LAGraph_Init (msg)) ;
-    }
+    LG_CHECK (LAGraph_Finalize (msg), -1, "finalize failed") ;
+    // nothing must be left allocated
+    if (LG_nmalloc != 0) printf ("Leak! %ld\n", LG_nmalloc) ;
+    LG_CHECK (LG_nmalloc != 0, -1, "memory leak") ;
 }
 
