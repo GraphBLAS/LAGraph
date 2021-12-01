@@ -501,10 +501,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
             GrB_Index x = Px [LAGraph_Random60 (&seed) % n] ;
             // find x in the hash table
             GrB_Index h = HASH (x) ;
-            while (ht_key [h] != UINT64_MAX && ht_key [h] != x)
-            {
-                h = NEXT (h) ;
-            }
+            while (ht_key [h] != UINT64_MAX && ht_key [h] != x) h = NEXT (h) ;
             // add x to the hash table
             ht_key [h] = x ;
             ht_count [h]++ ;

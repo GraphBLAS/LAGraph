@@ -73,18 +73,12 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
     LG_CHECK (n != ncols, -1001, "A must be square") ;
 
     //--------------------------------------------------------------------------
-    // unpack/export the matrix in CSR form
+    // export the matrix in CSR form
     //--------------------------------------------------------------------------
 
-    #if LG_SUITESPARSE
-    bool iso, jumbled ;
-    GrB_TRY (GxB_Matrix_unpack_CSR (G->A,
-        &Ap, &Aj, &Ax, &Ap_size, &Aj_size, &Ax_size, &iso, &jumbled, NULL)) ;
-    #else
     size_t typesize ;
-    LAGraph_TRY (LG_check_export G, &Ap, &Aj, &Ax, &Ap_len, &Aj_len, &Ax_len,
-        &typesize, msg) ;
-    #endif
+    LAGraph_TRY (LG_check_export (G, &Ap, &Aj, &Ax, &Ap_len, &Aj_len, &Ax_len,
+        &typesize, msg)) ;
 
     //--------------------------------------------------------------------------
     // compute the # of triangles (each triangle counted 6 times)
@@ -94,7 +88,7 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
     Ai = Aj ;       // pretend A is symmetric and in CSC format instead
 
     // masked dot-product method
-    #pragma omp parallel for reduction(+:ntriangles) schedule(dynamic,64)
+    #pragma omp parallel for reduction(+:ntriangles) schedule(dynamic,1024)
     for (int64_t j = 0 ; j < n ; j++)
     {
         // for each entry in the lower triangular part of A
@@ -134,51 +128,6 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
         }
     }
     ntriangles = ntriangles / 3 ;
-
-#if 0
-    // saxpy-based method
-    // The comments below are written as if A were in CSC format, but it's
-    // symmetric, so the CSR and CSC formats are the same.
-
-    Mark = (bool *) LAGraph_Calloc (n, sizeof (bool)) ;
-    LG_CHECK (Mark == NULL, -1005, "out of memory") ;
-
-    for (int64_t j = 0 ; j < n ; j++)
-    {
-        // scatter A(:,j) into Mark
-        for (int64_t p = Ap [j] ; p < Ap [j+1] ; p++)
-        {
-            Mark [Ai [p]] = 1 ;
-        }
-        // compute sum(C(:,j)) where C(:,j) = (A * A(:,j)) .* Mark
-        for (int64_t p = Ap [j] ; p < Ap [j+1] ; p++)
-        {
-            const int64_t k = Ai [p] ;
-            // C(:,j) += (A(:,k) * A(k,j)) .* Mark
-            for (int64_t pa = Ap [k] ; pa < Ap [k+1] ; pa++)
-            {
-                // C(i,j) += (A(i,k) * A(k,j)) .* Mark
-                ntriangles += Mark [Ai [pa]] ;
-            }
-        }
-        // clear A(:,j) from Mark
-        for (int64_t p = Ap [j] ; p < Ap [j+1] ; p++)
-        {
-            Mark [Ai [p]] = 0 ;
-        }
-    }
-    ntriangles = ntriangles / 6 ;
-#endif
-
-    //--------------------------------------------------------------------------
-    // repack the matrix in CSR form for SuiteSparse:GraphBLAS
-    //--------------------------------------------------------------------------
-
-    #if LG_SUITESPARSE
-    GrB_TRY (GxB_Matrix_pack_CSR (G->A,
-        &Ap, &Aj, &Ax, Ap_size, Aj_size, Ax_size, iso, jumbled, NULL)) ;
-    LG_CHECK (Ap != NULL || Aj != NULL || Ax != NULL, -1, "internal error") ;
-    #endif
 
     //--------------------------------------------------------------------------
     // free workspace and return result
