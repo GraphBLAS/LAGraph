@@ -43,5 +43,6 @@ void test_multiply (void)
 
 TEST_LIST = {
     {"test_multiply", test_multiply},
+    // no brutal test needed
     {NULL, NULL}
 };

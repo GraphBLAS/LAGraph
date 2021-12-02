@@ -1,11 +1,11 @@
-As of Nov 30, 2021:
+As of Dec 2, 2021:
 
     * entire user guide
         experimental -> src, how to do it.
 
     * test, document, polish all src & experimental: algorithms, utilities,
         and tests.
-        as of Nov 30: testing is at 94.7%.  Only untested functions are
+        as of Dec 2: testing is at 95%.  Only untested functions are
         4 experimental/algoritms: lcc, cdlp, scc, and msf.
 
     * unify error return values as much as possible, now that v2.0 C API
@@ -14,8 +14,18 @@ As of Nov 30, 2021:
 
     * many TODOs and FIXMEs throughout
 
-    * brutal memory testing: in progress.  grep for brutal in the latest
-        Nov 30 version.
+    * brutal memory testing: in progress.  TODO:
+            test_Property_ASymmetricStructure.c
+            test_Property_AT.c
+            test_Property_Degree.c
+            test_Property_NDiag.c
+            test_SampleDegree.c
+            test_SingleSourceShortestPath.c
+            test_Sort.c
+            test_SortByDegree.c
+            test_Structure.c
+            test_TriangleCount.c
+            test_Vector_print.c
 
     * check function names and API (LAGraph_IsEqual for GrB_Matrix, and
         LAGraph_Vector_IsEqual for GrB_Vectors for example,o
@@ -37,31 +47,28 @@ As of Nov 30, 2021:
         GxB_select with GxB_RankUnaryOp, and GxB_extract with GrB_Vectors as
         inputs instead of (GrB_Index *) arrays.
 
+    * move LICENSE, etc to doc/ ?
+
 --------------------------------------------------------------------------------
 
-FUTURE:
-
-    * can we exploit asynch algorithms? C += A*C for example?
+FUTURE: can we exploit asynch algorithms? C += A*C for example?
         Gauss-Seidel, Afforest, etc?  I can do it in GraphBLAS; can LAGraph
         use it?
 
-TODO: need GrB_Matrix_type or type_name.  use GxB_Matrix_type_name instead
+FUTURE: need GrB_Matrix_type or type_name.  use GxB_Matrix_type_name instead
     of GxB_Matrix_type.
     (type query needs to be added to the GraphBLAS API Specification)
 
-TODO: add interfaces to external packages.
+FUTURE: add interfaces to external packages.
 
     GTgraph: (Madduri and Bader) for generating synthetic graphs
     CSparse or CXSparse (for depth-first search, scc, dmperm, amd,
         in the sequential case)
     graph partitioning: METIS, Mongoose, etc
+    SuiteSparse solvers (UMFPACK, CHOLMOD, KLU, ...)
     others?
 
-TODO: interfaces to:
-    MATLAB interface
-    Python interface, etc.
+FUTURE: interfaces to MATLAB, Python, Julia, etc.
 
-TODO: need more algorithms and utilities
-
-TODO: move LICENSE, etc to Doc/
+FUTURE: need more algorithms and utilities
 

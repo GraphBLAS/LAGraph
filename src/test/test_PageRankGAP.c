@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/test/test_PageRankGAP.cpp: test cases for pagerank (GAP method)
+// LAGraph/src/test/test_PageRankGAP.c: test cases for pagerank (GAP method)
 // -----------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -9,6 +9,8 @@
 // or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
+
+// brutal HERE TODO FIXME
 
 #include <stdio.h>
 #include <acutest.h>

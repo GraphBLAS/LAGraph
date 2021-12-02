@@ -108,10 +108,10 @@ int LG_check_export
 // macro will not work.  It will reach a failure state from which it cannot
 // recover.  For example:
 //
-//  (1) LG_BRUTAL (LAGraph_MMRead (...)) will fail, because it will read the
+//  (1) LG_BRUTAL (LAGraph_MMRead (...)) would fail, because it would read the
 //      file and then fail because LG_brutal_malloc returns a NULL.  To handle
-//      this, each iteration of the brutal loop must also close the file and
-//      reopen for the next brutal trial.
+//      this, each iteration of the brutal loop must rewind the file for the
+//      next brutal trial.  See src/test/test_MMRead for details.
 //
 //  (2) If any GrB_Matrix or GrB_Vector component of G has pending work (G->A
 //      for example), and GraphBLAS attempts to finish it, the method will fail
@@ -119,12 +119,14 @@ int LG_check_export
 //      the GrB_Matrix or GrB_Vector as an invalid object, and then LG_BRUTAL
 //      will never succeed.  If this occurs, simply use GrB_wait to finalize
 //      all components of G first, before trying a brutal test on a method that
-//      uses G.
+//      uses G.  See src/test/test_DisplayGraph.c for an example.
 //
 //  (3) LG_BRUTAL will fail for methods that unpack/pack their input matrix
 //      G->A (such as several of the LG_check_* methods, and the current draft
 //      of LG_CC_FastSV6).  Those methods will return an empty G->A with no
-//      entries, if they fail in the middle.
+//      entries, if they fail in the middle.  For these methods, the brutal
+//      tests must keep a copy of G->A outside of G, and reconstruct G->A for
+//      each trial.
 
 LAGRAPH_PUBLIC int LG_brutal_setup (char *msg) ;
 LAGRAPH_PUBLIC int LG_brutal_teardown (char *msg) ;

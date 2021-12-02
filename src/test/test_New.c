@@ -103,6 +103,47 @@ void test_New (void)
 }
 
 //------------------------------------------------------------------------------
+// test_New_brutal
+//------------------------------------------------------------------------------
+
+#if LG_SUITESPARSE
+void test_New_brutal (void)
+{
+    OK (LG_brutal_setup (msg)) ;
+    printf ("\n") ;
+
+    for (int k = 0 ; ; k++)
+    {
+
+        // load the adjacency matrix as A
+        const char *aname = files [k].name ;
+        LAGraph_Kind kind = files [k].kind ;
+        if (strlen (aname) == 0) break;
+        TEST_CASE (aname) ;
+        snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
+        FILE *f = fopen (filename, "r") ;
+        TEST_CHECK (f != NULL) ;
+        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (fclose (f)) ;
+        TEST_MSG ("Loading of adjacency matrix failed") ;
+
+        // create the graph
+        LG_BRUTAL_BURBLE (LAGraph_New (&G, &A, atype, kind, msg)) ;
+        TEST_CHECK (A == NULL) ;    // A has been moved into G->A
+
+        // check the graph
+        LG_BRUTAL_BURBLE (LAGraph_CheckGraph (G, msg)) ;
+
+        // free the graph
+        LG_BRUTAL_BURBLE (LAGraph_Delete (&G, msg)) ;
+        TEST_CHECK (G == NULL) ;
+    }
+
+    OK (LG_brutal_teardown (msg)) ;
+}
+#endif
+
+//------------------------------------------------------------------------------
 // test_New_failures:  test error handling of LAGraph_New
 //------------------------------------------------------------------------------
 
@@ -137,6 +178,7 @@ TEST_LIST =
 {
     { "New", test_New },
     { "New_failures", test_New_failures },
+    { "New_brutal", test_New_brutal },
     { NULL, NULL }
 } ;
 

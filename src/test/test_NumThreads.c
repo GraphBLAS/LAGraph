@@ -45,7 +45,7 @@ void test_NumThreads (void)
     OK (LAGraph_GetNumThreads (&nthreads, NULL)) ;
     TEST_CHECK (nthreads > 0) ;
 
-    TEST_CHECK (LAGraph_GetNumThreads (NULL, msg) == -1) ;
+    TEST_CHECK (LAGraph_GetNumThreads (NULL, msg) == GrB_NULL_POINTER) ;
     printf ("\nmsg: %s\n", msg) ;
 
     OK (LAGraph_Finalize (msg)) ;
@@ -58,6 +58,7 @@ void test_NumThreads (void)
 TEST_LIST =
 {
     { "NumThreads", test_NumThreads },
+    // no brutal test needed
     { NULL, NULL }
 } ;
 

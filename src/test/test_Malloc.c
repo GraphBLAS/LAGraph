@@ -110,5 +110,6 @@ void test_malloc (void)
 
 TEST_LIST = {
     {"test_malloc", test_malloc},
+    // no brutal test needed
     {NULL, NULL}
 };

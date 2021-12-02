@@ -27,13 +27,16 @@ void test_Xinit (void)
 
     printf ("\nTesting LAGraph_Xinit:\n") ;
 
-    TEST_CHECK (LAGraph_Xinit (NULL, NULL, NULL, NULL, msg) == -1) ;
+    TEST_CHECK (LAGraph_Xinit (NULL, NULL, NULL, NULL, msg)
+        == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
-    TEST_CHECK (LAGraph_Xinit (malloc, NULL, NULL, NULL, msg) == -1) ;
+    TEST_CHECK (LAGraph_Xinit (malloc, NULL, NULL, NULL, msg)
+        == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
-    TEST_CHECK (LAGraph_Xinit (NULL, NULL, NULL, free, msg) == -1) ;
+    TEST_CHECK (LAGraph_Xinit (NULL, NULL, NULL, free, msg)
+        == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
     OK (LAGraph_Xinit (malloc, calloc, realloc, free, msg)) ;

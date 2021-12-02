@@ -63,6 +63,7 @@ void test_TicToc (void)
 TEST_LIST =
 {
     { "TicToc", test_TicToc },
+    // no brutal test needed
     { NULL, NULL }
 } ;
 

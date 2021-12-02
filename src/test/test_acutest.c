@@ -37,6 +37,7 @@ void test_dummy_fails(void)
 
 TEST_LIST = {
     {"dummy", test_dummy},
- // {"dummy_fails", test_dummy_fails},
+//  {"dummy_fails", test_dummy_fails},
+    // no brutal test needed
     {NULL, NULL}
 };

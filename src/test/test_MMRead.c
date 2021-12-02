@@ -212,9 +212,9 @@ void test_MMRead (void)
         //----------------------------------------------------------------------
 
         TEST_CHECK (atype == btype) ;
-        bool A_and_B_are_identical ;
-        OK (LAGraph_IsEqual_type (&A_and_B_are_identical, A, B, atype, msg)) ;
-        TEST_CHECK (A_and_B_are_identical) ;
+        bool ok ;
+        OK (LAGraph_IsEqual_type (&ok, A, B, atype, msg)) ;
+        TEST_CHECK (ok) ;
         TEST_MSG ("Failed test for equality, file: %s\n", aname) ;
 
         //----------------------------------------------------------------------
@@ -271,9 +271,9 @@ void test_karate (void)
     // ensure A and B are the same
     //--------------------------------------------------------------------------
 
-    bool A_and_B_are_identical ;
-    OK (LAGraph_IsEqual_type (&A_and_B_are_identical, A, B, GrB_BOOL, msg)) ;
-    TEST_CHECK (A_and_B_are_identical) ;
+    bool ok ;
+    OK (LAGraph_IsEqual_type (&ok, A, B, GrB_BOOL, msg)) ;
+    TEST_CHECK (ok) ;
     TEST_MSG ("Test for A and B equal failed: karate matrix") ;
 
     //--------------------------------------------------------------------------
@@ -406,9 +406,9 @@ void test_jumbled (void)
     // ensure A and B are the same
     //--------------------------------------------------------------------------
 
-    bool A_and_B_are_identical ;
-    OK (LAGraph_IsEqual_type (&A_and_B_are_identical, A, B, atype, msg)) ;
-    TEST_CHECK (A_and_B_are_identical) ;
+    bool ok ;
+    OK (LAGraph_IsEqual_type (&ok, A, B, atype, msg)) ;
+    TEST_CHECK (ok) ;
     TEST_MSG ("Test for A and B equal failed: west0067_jumbled.mtx matrix") ;
 
     //--------------------------------------------------------------------------
@@ -508,9 +508,9 @@ void test_MMWrite (void)
         // ensure A and B are the same
         //----------------------------------------------------------------------
 
-        bool A_and_B_are_identical ;
-        OK (LAGraph_IsEqual_type (&A_and_B_are_identical, A, B, atype, msg)) ;
-        TEST_CHECK (A_and_B_are_identical) ;
+        bool ok ;
+        OK (LAGraph_IsEqual_type (&ok, A, B, atype, msg)) ;
+        TEST_CHECK (ok) ;
         TEST_MSG ("Test for A and B equal failed: %s", filename) ;
 
         //----------------------------------------------------------------------
@@ -588,6 +588,112 @@ void test_MMWrite_failures (void)
     teardown ( ) ;
 }
 
+//------------------------------------------------------------------------------
+// test_MMReadWrite_brutal
+//------------------------------------------------------------------------------
+
+#if LG_SUITESPARSE
+void test_MMReadWrite_brutal (void)
+{
+
+    //--------------------------------------------------------------------------
+    // start up the test
+    //--------------------------------------------------------------------------
+
+    OK (LG_brutal_setup (msg)) ;
+
+    for (int k = 0 ; ; k++)
+    {
+
+        //----------------------------------------------------------------------
+        // load in the kth file
+        //----------------------------------------------------------------------
+
+        const char *aname = files [k].name ;
+        if (strlen (aname) == 0) break;
+        TEST_CASE (aname) ;
+        printf ("\n============= %2d: %s\n", k, aname) ;
+        snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
+        FILE *f = fopen (filename, "r") ;
+        TEST_CHECK (f != NULL) ;
+        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (fclose (f)) ;
+        TEST_MSG ("Failed to load %s\n", aname) ;
+        printf ("\n") ;
+
+        //----------------------------------------------------------------------
+        // write it to a temporary file
+        //----------------------------------------------------------------------
+
+        for (int nbrutal = 0 ; ; nbrutal++)
+        {
+            /* allow for only nbrutal mallocs before 'failing' */
+            printf (".") ;
+            LG_brutal = nbrutal ;
+            /* try the method with brutal malloc */
+            f = tmpfile ( ) ;   // create a new temp file for each trial
+            int brutal_result = LAGraph_MMWrite_type (A, atype, f, NULL, msg) ;
+            if (brutal_result >= 0)
+            {
+                /* the method finally succeeded */
+                // leave the file open for the next phase
+                printf (" MMWrite ok: %d mallocs\n", nbrutal) ;
+                break ;
+            }
+            OK (fclose (f)) ;   // close and delete the file and try again
+            if (nbrutal > 10000) { printf ("Infinite!\n") ; abort ( ) ; }
+        }
+        LG_brutal = -1 ;  /* turn off brutal mallocs */
+
+        //----------------------------------------------------------------------
+        // load it back in again
+        //----------------------------------------------------------------------
+
+        for (int nbrutal = 0 ; ; nbrutal++)
+        {
+            /* allow for only nbrutal mallocs before 'failing' */
+            printf (".") ;
+            LG_brutal = nbrutal ;
+            /* try the method with brutal malloc */
+            rewind (f) ;        // rewind the temp file for each trial
+            int brutal_result = LAGraph_MMRead (&B, &btype, f, msg) ;
+            if (brutal_result >= 0)
+            {
+                /* the method finally succeeded */
+                printf (" MMRead ok: %d mallocs\n", nbrutal) ;
+                OK (fclose (f)) ;   // finally close and delete the temp file
+                break ;
+            }
+            if (nbrutal > 10000) { printf ("Infinite!\n") ; abort ( ) ; }
+        }
+        LG_brutal = -1 ;  /* turn off brutal mallocs */
+
+        //----------------------------------------------------------------------
+        // ensure A and B are the same
+        //----------------------------------------------------------------------
+
+        TEST_CHECK (atype == btype) ;
+        bool ok ;
+        LG_BRUTAL (LAGraph_IsEqual_type (&ok, A, B, atype, msg)) ;
+        TEST_CHECK (ok) ;
+        TEST_MSG ("Failed test for equality, file: %s\n", aname) ;
+
+        //----------------------------------------------------------------------
+        // free workspace
+        //----------------------------------------------------------------------
+
+        OK (GrB_free (&A)) ;
+        OK (GrB_free (&B)) ;
+    }
+
+    //--------------------------------------------------------------------------
+    // finish the test
+    //--------------------------------------------------------------------------
+
+    OK (LG_brutal_teardown (msg)) ;
+}
+#endif
+
 //-----------------------------------------------------------------------------
 // TEST_LIST: the list of tasks for this entire test
 //-----------------------------------------------------------------------------
@@ -600,6 +706,9 @@ TEST_LIST =
     { "jumbled", test_jumbled },
     { "MMWrite", test_MMWrite },
     { "MMWrite_failures", test_MMWrite_failures },
+    #if LG_SUITESPARSE
+    { "MMReadWrite_brutal", test_MMReadWrite_brutal },
+    #endif
     { NULL, NULL }
 } ;
 

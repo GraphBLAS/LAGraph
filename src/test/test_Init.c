@@ -43,16 +43,15 @@ void test_Init (void)
     #endif
 
     // LAGraph_Init cannot be called twice
-    TEST_CHECK (LAGraph_Init (msg) != GrB_SUCCESS) ;
-
-    // TODO: this error message is not informative
-    printf ("\nmsg: %s\n", msg) ;
+    int status = LAGraph_Init (msg) ;
+    printf ("\nstatus: %d msg: %s\n", status, msg) ;
+    TEST_CHECK (status != GrB_SUCCESS) ;
 
     OK (LAGraph_Finalize (msg)) ;
 
     // calling LAGraph_Finalize twice leads to undefined behavior;
     // for SuiteSparse, it returns GrB_SUCCESS
-    int status = LAGraph_Finalize (msg) ;
+    status = LAGraph_Finalize (msg) ;
     printf ("status %d\n", status) ;
     #if LG_SUITESPARSE
     TEST_CHECK (status == GrB_SUCCESS) ;
@@ -66,6 +65,7 @@ void test_Init (void)
 TEST_LIST =
 {
     { "Init", test_Init },
+    // no brutal test: see test_Xinit
     { NULL, NULL }
 } ;
 

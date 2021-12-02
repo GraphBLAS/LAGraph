@@ -10,7 +10,7 @@
 
 #include "LG_internal.h"
 
-int LAGraph_TypeName        // returns 0 if successful, -1 if failure
+int LAGraph_TypeName        // returns 0 if successful, < 0 if failure
 (
     char **name,            // name of the type
     GrB_Type type,          // GraphBLAS type
@@ -23,8 +23,8 @@ int LAGraph_TypeName        // returns 0 if successful, -1 if failure
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    LG_CHECK (type == NULL, -1, "type is NULL") ;
-    LG_CHECK (name == NULL, -1, "name is NULL") ;
+    LG_CHECK (type == NULL, GrB_NULL_POINTER, "type is NULL") ;
+    LG_CHECK (name == NULL, GrB_NULL_POINTER, "name is NULL") ;
 
     //--------------------------------------------------------------------------
     // determine the name of the type

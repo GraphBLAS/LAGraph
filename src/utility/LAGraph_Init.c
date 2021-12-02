@@ -26,7 +26,7 @@ int LAGraph_Init (char *msg)        // return 0 if success, -1 if failure
     #endif
 
     // use ANSI C memory allocation functions
-    LAGraph_TRY (LAGraph_Xinit (malloc, calloc, realloc, free, msg)) ;
-
-    return (0) ;
+    int result = LAGraph_Xinit (malloc, calloc, realloc, free, msg) ;
+    LG_CHECK (result != GrB_SUCCESS, result, "failed to initialize LAGraph") ;
+    return (result) ;
 }

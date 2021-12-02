@@ -60,6 +60,24 @@ void test_KindName (void)
     teardown ( ) ;
 }
 
+//------------------------------------------------------------------------------
+// test_KindName_brutal
+//------------------------------------------------------------------------------
+
+// LAGraph_KindName currently doesn't do any mallocs so this test is not
+// strictly necessary, but it's simple to include here.  It serves as a very
+// simple use-case of the brutal testing mechanism.
+
+#if LG_SUITESPARSE
+void test_KindName_brutal (void)
+{
+    OK (LG_brutal_setup (msg)) ;
+    LG_BRUTAL (LAGraph_KindName (&name, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+    OK (strcmp (name, "undirected")) ;
+    OK (LG_brutal_teardown (msg)) ;
+}
+#endif
+
 //-----------------------------------------------------------------------------
 // TEST_LIST: the list of tasks for this entire test
 //-----------------------------------------------------------------------------
@@ -67,6 +85,7 @@ void test_KindName (void)
 TEST_LIST =
 {
     { "KindName", test_KindName },
+    { "KindName_brutal", test_KindName_brutal },
     { NULL, NULL }
 } ;
 

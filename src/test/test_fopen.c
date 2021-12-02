@@ -42,5 +42,6 @@ TEST_LIST =
 {
     { "fopen", test_fopen },
     { "fopen_failure", test_fopen_failure },
+    // no brutal test needed
     { NULL, NULL }
 } ;

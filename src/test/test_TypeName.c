@@ -67,13 +67,13 @@ void test_TypeName (void)
     OK (LAGraph_TypeName (&name, type, msg)) ;
     OK (strcmp (name, "user-defined")) ;
 
-    TEST_CHECK (LAGraph_TypeName (NULL, NULL, msg) == -1) ;
+    TEST_CHECK (LAGraph_TypeName (NULL, NULL, msg) == GrB_NULL_POINTER) ;
     printf ("\nmsg: %s\n", msg) ;
 
-    TEST_CHECK (LAGraph_TypeName (&name, NULL, msg) == -1) ;
+    TEST_CHECK (LAGraph_TypeName (&name, NULL, msg) == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
-    TEST_CHECK (LAGraph_TypeName (NULL, GrB_BOOL, msg) == -1) ;
+    TEST_CHECK (LAGraph_TypeName (NULL, GrB_BOOL, msg) == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
     OK (LAGraph_Finalize (msg)) ;
@@ -86,6 +86,7 @@ void test_TypeName (void)
 TEST_LIST =
 {
     { "TypeName", test_TypeName },
+    // no brutal test needed
     { NULL, NULL }
 } ;
 
