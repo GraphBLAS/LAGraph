@@ -10,13 +10,14 @@
 
 //------------------------------------------------------------------------------
 
-// Export G->A in CSR format, for testing
+// Export G->A in CSR format, for testing only.
+// See test_export for a brutal memory test of this method.
 
-#define LAGraph_FREE_ALL                \
-{                                       \
-    LAGraph_Free ((void **) &Ap) ;      \
-    LAGraph_Free ((void **) &Aj) ;      \
-    LAGraph_Free ((void **) &Ax) ;      \
+#define LAGraph_FREE_ALL                    \
+{                                           \
+    LAGraph_Free ((void **) Ap_handle) ;    \
+    LAGraph_Free ((void **) Aj_handle) ;    \
+    LAGraph_Free ((void **) Ax_handle) ;    \
 }
 
 #include "LG_internal.h"
@@ -66,11 +67,11 @@ int LG_check_export
     Ap = (GrB_Index *) LAGraph_Malloc (*Ap_len, sizeof (GrB_Index)) ;
     Aj = (GrB_Index *) LAGraph_Malloc (*Aj_len, sizeof (GrB_Index)) ;
     Ax = (void      *) LAGraph_Malloc (*Ax_len, s) ;
-    LG_CHECK (Ap == NULL || Aj == NULL || Ax == NULL, GrB_OUT_OF_MEMORY,
-        "out of memory") ;
     (*Ap_handle) = Ap ;
     (*Aj_handle) = Aj ;
     (*Ax_handle) = Ax ;
+    LG_CHECK (Ap == NULL || Aj == NULL || Ax == NULL, GrB_OUT_OF_MEMORY,
+        "out of memory") ;
 
     if      (G->A_type == GrB_BOOL  )
     {

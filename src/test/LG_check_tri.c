@@ -17,14 +17,8 @@
 // This method is for testing only, to check the result of other, faster
 // methods.  Do not benchmark this method; it is slow and simple by design.
 
-#define LAGraph_FREE_WORK                       \
-{                                               \
-    LAGraph_Free ((void **) &Mark) ;            \
-}
-
 #define LAGraph_FREE_ALL                        \
 {                                               \
-    LAGraph_FREE_WORK ;                         \
     LAGraph_Free ((void **) &Ap) ;              \
     LAGraph_Free ((void **) &Aj) ;              \
     LAGraph_Free ((void **) &Ax) ;              \
@@ -32,6 +26,13 @@
 
 #include "LG_internal.h"
 #include "LG_test.h"
+
+//------------------------------------------------------------------------------
+// LG_check_tri
+//------------------------------------------------------------------------------
+
+// Since this method does not modify G->A, it can be tested with LG_BRUTAL.
+// See test_TriangleCount for a brutal memory test of this method.
 
 int LG_check_tri        // -1 if out of memory, 0 if successful
 (
@@ -49,7 +50,6 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
 
     LG_CLEAR_MSG ;
 
-    bool *restrict Mark = NULL ;
     GrB_Index *Ap = NULL, *Aj = NULL, *Ai = NULL ;
     void *Ax = NULL ;
     GrB_Index Ap_size, Aj_size, Ax_size, n, ncols, Ap_len, Aj_len, Ax_len ;

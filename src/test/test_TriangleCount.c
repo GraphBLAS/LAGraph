@@ -291,6 +291,7 @@ void test_TriangleCount_many (void)
     LAGraph_Init(msg);
     GrB_Matrix A = NULL ;
     GrB_Type atype = NULL ;
+    printf ("\n") ;
 
     for (int k = 0 ; ; k++)
     {
@@ -412,6 +413,76 @@ void test_TriangleCount_autosort (void)
     OK (LAGraph_Finalize(msg)) ;
 }
 
+
+#if LG_SUITESPARSE
+void test_TriangleCount_brutal (void)
+{
+    OK (LG_brutal_setup (msg)) ;
+
+    GrB_Matrix A = NULL ;
+    GrB_Type atype = NULL ;
+    printf ("\n") ;
+
+    for (int k = 0 ; ; k++)
+    {
+
+        // load the adjacency matrix as A
+        const char *aname = files [k].name ;
+        uint64_t ntriangles = files [k].ntriangles ;
+        if (strlen (aname) == 0) break;
+        printf ("\n================== Matrix: %s\n", aname) ;
+        TEST_CASE (aname) ;
+        snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
+        FILE *f = fopen (filename, "r") ;
+        TEST_CHECK (f != NULL) ;
+        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (fclose (f)) ;
+        TEST_MSG ("Loading of adjacency matrix failed") ;
+
+        // create the graph
+        OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+
+        // delete any diagonal entries
+        OK (LAGraph_DeleteDiag (G, msg)) ;
+
+        // get the # of triangles
+        uint64_t nt0, nt1 ;
+        LG_BRUTAL_BURBLE (LAGraph_TriangleCount (&nt1, G, msg)) ;
+        printf ("# triangles: %g Matrix: %s\n", (double) nt1, aname) ;
+        TEST_CHECK (nt1 == ntriangles) ;
+
+        LG_BRUTAL_BURBLE (LG_check_tri (&nt0, G, msg)) ;
+        TEST_CHECK (nt0 == nt1) ;
+
+        // convert to directed but with symmetric pattern
+        G->kind = LAGRAPH_ADJACENCY_DIRECTED ;
+        G->A_structure_is_symmetric = LAGRAPH_TRUE ;
+        LG_BRUTAL (LAGraph_TriangleCount (&nt1, G, msg)) ;
+        TEST_CHECK (nt1 == ntriangles) ;
+
+        LG_BRUTAL_BURBLE (LG_check_tri (&nt0, G, msg)) ;
+        TEST_CHECK (nt0 == nt1) ;
+
+        // try each method
+        for (int method = 1 ; method <= 6 ; method++)
+        {
+            for (int presort = 0 ; presort <= 2 ; presort++)
+            {
+                int s = presort ;
+                LG_BRUTAL_BURBLE (LAGraph_TriangleCount_Methods (&nt1, G,
+                    method, &s, msg)) ;
+                TEST_CHECK (nt1 == ntriangles) ;
+            }
+        }
+
+        OK (LAGraph_Delete (&G, msg)) ;
+    }
+
+    OK (LG_brutal_teardown (msg)) ;
+}
+#endif
+
+
 //****************************************************************************
 //****************************************************************************
 TEST_LIST = {
@@ -424,6 +495,7 @@ TEST_LIST = {
     {"TriangleCount"         , test_TriangleCount},
     {"TriangleCount_many"    , test_TriangleCount_many},
     {"TriangleCount_autosort", test_TriangleCount_autosort},
+    {"TriangleCount_brutal"  , test_TriangleCount_brutal},
     {NULL, NULL}
 };
 

@@ -8,6 +8,8 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
+//------------------------------------------------------------------------------
+
 #include "LG_internal.h"
 #include "LG_test.h"
 
@@ -48,6 +50,10 @@ LG_Element ;
 // test the results from SSSP
 //------------------------------------------------------------------------------
 
+// Because this method does on GxB_unpack on G->A, it should not be used in a
+// brutal memory test, unless the caller is prepared to reconstruct G->A
+// when the brutal test causes this method to return early.
+
 int LG_check_sssp
 (
     // input
@@ -86,7 +92,7 @@ int LG_check_sssp
 
     path_length_in = LAGraph_Malloc (n, sizeof (int64_t)) ;
     LG_CHECK (path_length_in == NULL, -1003, "out of memory") ;
-    LG_CHECK (!LG_get_vector (path_length_in, Path_Length, n, INT32_MAX),
+    LG_CHECK (LG_check_vector (path_length_in, Path_Length, n, INT32_MAX),
         -1004, "invalid Path_Length") ;
 
     //--------------------------------------------------------------------------

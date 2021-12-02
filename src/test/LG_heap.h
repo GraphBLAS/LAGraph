@@ -31,6 +31,9 @@
 #undef  LAGraph_FREE_ALL
 #define LAGraph_FREE_ALL ;
 
+// These methods assume the caller allocates all memory, so no brutal memory
+// test is needed.
+
 //------------------------------------------------------------------------------
 // LG_iheap_check: make sure Iheap is correct
 //------------------------------------------------------------------------------

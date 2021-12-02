@@ -8,6 +8,8 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
+//------------------------------------------------------------------------------
+
 #define LAGraph_FREE_WORK                       \
 {                                               \
     LAGraph_Free ((void **) &queue) ;           \
@@ -37,6 +39,10 @@
 //------------------------------------------------------------------------------
 // test the results from LAGraph_ConnectedComponents 
 //------------------------------------------------------------------------------
+
+// Because this method does on GxB_unpack on G->A, it should not be used in a
+// brutal memory test, unless the caller is prepared to reconstruct G->A
+// when the brutal test causes this method to return early.
 
 int LG_check_cc
 (
@@ -91,7 +97,7 @@ int LG_check_cc
 
     component_in = LAGraph_Malloc (n, sizeof (int64_t)) ;
     LG_CHECK (component_in == NULL, GrB_OUT_OF_MEMORY, "out of memory") ;
-    LG_CHECK (!LG_get_vector (component_in, Component, n, -1), -1004,
+    LG_CHECK (LG_check_vector (component_in, Component, n, -1), -1004,
         "invalid Component") ;
 
     //--------------------------------------------------------------------------

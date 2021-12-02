@@ -43,12 +43,12 @@ int LG_check_cc
     char *msg
 ) ;
 
-bool LG_get_vector
+int LG_check_vector
 (
-    int64_t *x,
-    GrB_Vector X,
+    int64_t *x,         // x (0:n-1) = X (0:n-1), of type int64_t
+    GrB_Vector X,       // vector of size n
     int64_t n,
-    int64_t missing
+    int64_t missing     // value to assign to x(i) if X(i) is not present
 ) ;
 
 int LG_check_sssp
@@ -127,6 +127,10 @@ int LG_check_export
 //      entries, if they fail in the middle.  For these methods, the brutal
 //      tests must keep a copy of G->A outside of G, and reconstruct G->A for
 //      each trial.
+//
+//  (4) Some GrB* methods leave their output matrix in an invalid state, with
+//      all entries cleared, if an out-of-memory failure occurs (GrB_assign
+//      in particular).  See src/test/test_vector for an example.
 
 LAGRAPH_PUBLIC int LG_brutal_setup (char *msg) ;
 LAGRAPH_PUBLIC int LG_brutal_teardown (char *msg) ;
@@ -174,7 +178,11 @@ void *LG_brutal_realloc     // return pointer to reallocated memory
             /* the method finally succeeded */                  \
             break ;                                             \
         }                                                       \
-        if (nbrutal > 10000) { printf ("Infinite!\n") ; abort ( ) ; } \
+        if (nbrutal > 10000)                                    \
+        {                                                       \
+            printf ("Line %d Infinite!\n", __LINE__) ;          \
+            abort ( ) ;                                         \
+        }                                                       \
     }                                                           \
     LG_brutal = -1 ;  /* turn off brutal mallocs */             \
 }
@@ -199,7 +207,11 @@ void *LG_brutal_realloc     // return pointer to reallocated memory
                 (double) LG_nmalloc, nbrutal) ;                 \
             break ;                                             \
         }                                                       \
-        if (nbrutal > 10000) { printf ("Infinite!\n") ; abort ( ) ; } \
+        if (nbrutal > 10000)                                    \
+        {                                                       \
+            printf ("Line %d Infinite!\n", __LINE__) ;          \
+            abort ( ) ;                                         \
+        }                                                       \
     }                                                           \
     LG_brutal = -1 ;  /* turn off brutal mallocs */             \
 }
