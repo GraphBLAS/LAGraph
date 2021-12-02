@@ -83,14 +83,14 @@ int LG_check_cc
     //--------------------------------------------------------------------------
 
     queue = LAGraph_Calloc (n, sizeof (int64_t)) ;
-    LG_CHECK (queue == NULL, -1003, "out of memory") ;
+    LG_CHECK (queue == NULL, GrB_OUT_OF_MEMORY, "out of memory") ;
 
     //--------------------------------------------------------------------------
     // get the contents of the Component vector
     //--------------------------------------------------------------------------
 
     component_in = LAGraph_Malloc (n, sizeof (int64_t)) ;
-    LG_CHECK (component_in == NULL, -1003, "out of memory") ;
+    LG_CHECK (component_in == NULL, GrB_OUT_OF_MEMORY, "out of memory") ;
     LG_CHECK (!LG_get_vector (component_in, Component, n, -1), -1004,
         "invalid Component") ;
 
@@ -163,7 +163,7 @@ int LG_check_cc
         // src node is part of a new connected component, comp
         int64_t comp = component_in [src] ;
         ncomp++ ;
-        LG_CHECK (ncomp > ncomp_in, -1007,
+        LG_CHECK (ncomp > ncomp_in, -1008,
             "test failure: wrong # of components") ;
 
         queue [0] = src ;
@@ -199,7 +199,7 @@ int LG_check_cc
                 // consider edge (u,v)
                 int64_t v = node_u_adjacency_list [k] ;
                 // ensure v is in the same connected component as the src node
-                LG_CHECK (comp != component_in [u], -1007,
+                LG_CHECK (comp != component_in [u], -1009,
                     "test failure: incorrect component") ;
                 // printf ("    seen: %ld\n", v) ;
                 if (!visited [v])
@@ -213,7 +213,7 @@ int LG_check_cc
         }
     }
 
-    LG_CHECK (ncomp != ncomp_in, -1007, "test failure: wrong # of components") ;
+    LG_CHECK (ncomp != ncomp_in, -1010, "test failure: wrong # of components") ;
 
     LAGraph_Toc (&tt, tic, msg) ;
     printf ("LG_check_cc component time: %g sec\n", tt) ;

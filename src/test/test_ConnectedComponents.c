@@ -21,6 +21,9 @@ char msg [LAGRAPH_MSG_LEN] ;
 LAGraph_Graph G = NULL ;
 #define LEN 512
 char filename [LEN+1] ;
+GrB_Vector C = NULL, C2 = NULL ;
+GrB_Matrix A = NULL ;
+GrB_Type atype = NULL ;
 
 typedef struct
 {
@@ -71,10 +74,7 @@ int count_connected_components (GrB_Vector C)
 void test_cc_matrices (void)
 {
 
-    LAGraph_Init (msg) ;
-    GrB_Matrix A = NULL ;
-    GrB_Vector C = NULL, C2 = NULL ;
-    GrB_Type atype = NULL ;
+    OK (LAGraph_Init (msg)) ;
 
     for (int k = 0 ; ; k++)
     {
@@ -172,13 +172,57 @@ void test_cc_matrices (void)
         OK (GrB_free (&C)) ;
     }
 
-    LAGraph_Finalize(msg);
+    OK (LAGraph_Finalize (msg)) ;
 }
+
+//------------------------------------------------------------------------------
+// test_CC_brutal:
+//------------------------------------------------------------------------------
+
+#if LG_SUITESPARSE
+void test_cc_brutal (void)
+{
+    OK (LG_brutal_setup (msg)) ;
+
+    // load a valid adjacency matrix
+    TEST_CASE ("LFAT5_two") ;
+    uint32_t ncomp = 6 ;
+    FILE *f = fopen (LG_DATA_DIR "LFAT5_two.mtx", "r") ;
+    TEST_CHECK (f != NULL) ;
+    OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+    OK (fclose (f)) ;
+    TEST_MSG ("Loading of LFAT5_two.mtx failed") ;
+    printf ("\n") ;
+
+    // create an valid graph
+    OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+    TEST_CHECK (A == NULL) ;    // A has been moved into G->A
+    LG_BRUTAL_BURBLE (LAGraph_CheckGraph (G, msg)) ;
+
+    // find the connected components
+    printf ("\n--- CC: FastSV6 if SuiteSparse, Boruvka if vanilla:\n") ;
+    LG_BRUTAL_BURBLE (LAGraph_ConnectedComponents (&C, G, msg)) ;
+    LG_BRUTAL_BURBLE (LAGraph_Vector_print (C, 2, stdout, msg)) ;
+
+    // count the # of connected components
+    int ncomponents = count_connected_components (C) ;
+    printf ("# components: %6u Matrix: %s\n", ncomponents, "LFAT_two") ;
+    TEST_CHECK (ncomponents == ncomp) ;
+    OK (LG_check_cc (C, G, msg)) ;
+
+    OK (LAGraph_Delete (&G, msg)) ;
+    OK (GrB_free (&C)) ;
+    OK (LG_brutal_teardown (msg)) ;
+}
+#endif
 
 //****************************************************************************
 //****************************************************************************
 TEST_LIST = {
-    {"cc", test_cc_matrices},
+//    {"cc", test_cc_matrices},
     // TODO: add checks for all error conditions
+    #if LG_SUITESPARSE
+    {"cc_brutal", test_cc_brutal},
+    #endif
     {NULL, NULL}
 };

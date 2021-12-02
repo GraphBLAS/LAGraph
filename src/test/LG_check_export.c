@@ -66,7 +66,8 @@ int LG_check_export
     Ap = (GrB_Index *) LAGraph_Malloc (*Ap_len, sizeof (GrB_Index)) ;
     Aj = (GrB_Index *) LAGraph_Malloc (*Aj_len, sizeof (GrB_Index)) ;
     Ax = (void      *) LAGraph_Malloc (*Ax_len, s) ;
-    LG_CHECK (Ap == NULL || Aj == NULL || Ax == NULL, -1, "out of memory") ;
+    LG_CHECK (Ap == NULL || Aj == NULL || Ax == NULL, GrB_OUT_OF_MEMORY,
+        "out of memory") ;
     (*Ap_handle) = Ap ;
     (*Aj_handle) = Aj ;
     (*Ax_handle) = Ax ;

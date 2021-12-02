@@ -128,10 +128,81 @@ void test_export (void)
     LAGraph_Finalize(msg);
 }
 
+//------------------------------------------------------------------------------
+// test_export_brutal
+//------------------------------------------------------------------------------
+
+#if LG_SUITESPARSE
+void test_export_brutal (void)
+{
+    OK (LG_brutal_setup (msg)) ;
+
+    GrB_Matrix A = NULL, C = NULL ;
+    GrB_Type atype = NULL ;
+
+    for (int k = 0 ; ; k++)
+    {
+
+        // load the adjacency matrix as A
+        const char *aname = files [k].name ;
+        LAGraph_Kind kind = files [k].kind ;
+        if (strlen (aname) == 0) break;
+        TEST_CASE (aname) ;
+        printf ("\nMatrix: %s\n", aname) ;
+        snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
+        FILE *f = fopen (filename, "r") ;
+        TEST_CHECK (f != NULL) ;
+        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (fclose (f)) ;
+        TEST_MSG ("Loading of adjacency matrix failed") ;
+
+        // create the graph
+        OK (LAGraph_New (&G, &A, atype, kind, msg)) ;
+        TEST_CHECK (A == NULL) ;    // A has been moved into G->A
+
+        // export the graph
+        GrB_Index *Ap = NULL ;
+        GrB_Index *Aj = NULL ;
+        void *Ax = NULL ;
+        GrB_Index Ap_len, Aj_len, Ax_len, nrows, ncols ;
+        size_t typesize ;
+        OK (GrB_Matrix_nrows (&nrows, G->A)) ;
+        OK (GrB_Matrix_ncols (&ncols, G->A)) ;
+
+        LG_BRUTAL_BURBLE (LG_check_export (G, &Ap, &Aj, &Ax, &Ap_len, &Aj_len,
+            &Ax_len, &typesize, msg)) ;
+
+        #if GxB_IMPLEMENTATION >= GxB_VERSION (6,0,2)
+        printf ("reimport and check result\n") ;
+        OK (GxB_Matrix_import_CSR (&C, atype, nrows, ncols, &Ap, &Aj, &Ax,
+            Ap_len * sizeof (GrB_Index),
+            Aj_len * sizeof (GrB_Index),
+            Ax_len * typesize,
+            false, true, NULL)) ;
+        OK (GrB_wait (C, GrB_MATERIALIZE)) ;
+        bool ok = false ;
+        OK (LAGraph_IsEqual (&ok, G->A, C, msg)) ;
+        TEST_CHECK (ok) ;
+        LG_BRUTAL_BURBLE (LAGraph_IsEqual (&ok, G->A, C, msg)) ;
+        TEST_CHECK (ok) ;
+        OK (GrB_free (&C)) ;
+        #endif
+
+        LAGraph_Free ((void **) &Ap) ;
+        LAGraph_Free ((void **) &Aj) ;
+        LAGraph_Free ((void **) &Ax) ;
+        OK (LAGraph_Delete (&G, msg)) ;
+    }
+
+    OK (LG_brutal_teardown (msg)) ;
+}
+#endif
+
 //****************************************************************************
 //****************************************************************************
 TEST_LIST = {
     {"test_export", test_export },
+    {"test_export_brutal", test_export_brutal },
     {NULL, NULL}
 };
 

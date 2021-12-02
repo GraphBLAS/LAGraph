@@ -151,7 +151,7 @@ void test_Property_NDiag (void)
         OK (LAGraph_Delete (&G, msg)) ;
     }
 
-    TEST_CHECK (LAGraph_Property_NDiag (NULL, msg) == -1) ;
+    TEST_CHECK (LAGraph_Property_NDiag (NULL, msg) == GrB_NULL_POINTER) ;
 
     //--------------------------------------------------------------------------
     // finish the test

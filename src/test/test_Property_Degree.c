@@ -281,11 +281,11 @@ void test_Property_Degree (void)
 
     // check error handling
     int status = LAGraph_Property_RowDegree (NULL, msg) ;
-    TEST_CHECK (status == -1) ;
     printf ("\nstatus: %d, msg: %s\n", status, msg) ;
+    TEST_CHECK (status == GrB_NULL_POINTER) ;
     status = LAGraph_Property_ColDegree (NULL, msg) ;
-    TEST_CHECK (status == -1) ;
     printf ("status: %d, msg: %s\n", status, msg) ;
+    TEST_CHECK (status == GrB_NULL_POINTER) ;
 
     teardown ( ) ;
 }

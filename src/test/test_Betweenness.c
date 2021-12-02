@@ -276,7 +276,7 @@ void test_bc (void)
 }
 
 //------------------------------------------------------------------------------
-// test_bc_brutal
+// test_bc_brutal: test BetweenessCentraliy with brutal malloc debugging
 //------------------------------------------------------------------------------
 
 #if LG_SUITESPARSE
@@ -297,22 +297,13 @@ void test_bc_brutal (void)
     OK (fclose (f)) ;
     OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
+    printf ("\n") ;
 
-    for (int brutal = 0 ; ; brutal++)
-    {
-        // compute its betweenness centrality
-        LG_brutal = brutal ;
-        int result = LAGraph_VertexCentrality_Betweenness (&centrality, G,
-            karate_sources, 4, msg) ;
-        if (result == 0)
-        {
-            printf ("\nFinally: %d\n", brutal) ;
-            break ;
-        }
-    }
+    // compute its betweenness centrality
+    LG_BRUTAL_BURBLE (LAGraph_VertexCentrality_Betweenness (&centrality, G,
+            karate_sources, 4, msg)) ;
 
     // compare with GAP:
-    LG_brutal = -1 ;
     float err = difference (centrality, karate_bc) ;
     printf ("karate:   err: %e\n", err) ;
     TEST_CHECK (err < 1e-4) ;

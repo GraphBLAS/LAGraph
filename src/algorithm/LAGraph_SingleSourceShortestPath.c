@@ -21,6 +21,8 @@
 // LAGraph_SingleSourceShortestPath computes the shortest path lengths from the
 // specified source vertex to all other vertices in the graph.
 
+// The parent vector is not computed; see LAGraph_BF_* instead.
+
 // TODO: this method gets stuck in an infinite loop when there are negative-
 // weight cycles in the graph.
 

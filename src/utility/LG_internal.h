@@ -156,10 +156,10 @@ typedef unsigned char LG_void ;
 #define LG_CHECK_INIT(G,msg)                                                \
 {                                                                           \
     LG_CLEAR_MSG ;                                                          \
-    LG_CHECK (G == NULL, -1, "graph is NULL") ;                             \
-    LG_CHECK (G->A == NULL, -2, "graph adjacency matrix is NULL") ;         \
+    LG_CHECK (G == NULL, GrB_NULL_POINTER, "graph is NULL") ;               \
+    LG_CHECK (G->A == NULL, -1102, "graph adjacency matrix is NULL") ;      \
     LG_CHECK (G->kind <= LAGRAPH_UNKNOWN ||                                 \
-        G->kind > LAGRAPH_ADJACENCY_DIRECTED, -3, "graph kind invalid") ;   \
+        G->kind > LAGRAPH_ADJACENCY_DIRECTED, -1103, "graph kind invalid") ;\
 }
 
 //------------------------------------------------------------------------------

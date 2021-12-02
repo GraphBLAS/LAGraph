@@ -88,9 +88,9 @@ void test_Xinit_brutal (void)
 
     // brutal tests: keep giving the method more malloc's until it succeeds
 
-    for (int brutal = 0 ; brutal < 1000 ; brutal++)
+    for (int nbrutal = 0 ; nbrutal < 1000 ; nbrutal++)
     {
-        LG_brutal = brutal ;
+        LG_brutal = nbrutal ;
         GB_Global_GrB_init_called_set (false) ;
         GrB_Info info = GxB_init (GrB_NONBLOCKING, LG_brutal_malloc,
             LG_brutal_calloc, LG_brutal_realloc, LG_brutal_free) ;
@@ -111,23 +111,23 @@ void test_Xinit_brutal (void)
         if (ok)
         {
             OK (GrB_finalize ( )) ;
-            printf ("\nGxB_init, finally: %d %g\n", brutal,
+            printf ("\nGxB_init, finally: %d %g\n", nbrutal,
                 (double) LG_nmalloc) ;
             TEST_CHECK (LG_nmalloc == 0) ;
             break ;
         }
     }
 
-    for (int brutal = 0 ; brutal < 1000 ; brutal++)
+    for (int nbrutal = 0 ; nbrutal < 1000 ; nbrutal++)
     {
-        LG_brutal = brutal ;
+        LG_brutal = nbrutal ;
         GB_Global_GrB_init_called_set (false) ;
         int result = LAGraph_Xinit (LG_brutal_malloc, LG_brutal_calloc,
             LG_brutal_realloc, LG_brutal_free, msg) ;
         if (result == 0)
         {
             OK (LAGraph_Finalize (msg)) ;
-            printf ("LAGraph_Xinit: finally: %d %g\n", brutal,
+            printf ("LAGraph_Xinit: finally: %d %g\n", nbrutal,
                 (double) LG_nmalloc) ;
             TEST_CHECK (LG_nmalloc == 0) ;
             break ;

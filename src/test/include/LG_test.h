@@ -80,6 +80,38 @@ int LG_check_export
 // LG_brutal_*:  brutal memory tests
 //------------------------------------------------------------------------------
 
+// Brutal memory tests use a global variable (LG_brutal) to tell them how many
+// times malloc may be successfully called.  Once this counter reaches zero,
+// LG_brutal_malloc, LG_brutal_calloc, and LG_brutal_realloc all return NULL.
+// These tests must be used with care on methods that unpack/pack their input
+// matrix G->A (such as several of the LG_check_* methods).  Those methods will
+// return an empty G->A with no entries, if they fail in the middle.
+
+// SuiteSparse:GraphBLAS is required for brutal memory testing.  The
+// LG_brutal_malloc/calloc/realloc/free methods are passed to SuiteSparse
+// GraphBLAS via GxB_init.  This way, out-of-memory conditions returned by
+// GraphBLAS can be checked and handled by LAGraph.
+
+// Use LG_brutal_setup to start LAGraph for brutal memory tests, and
+// LG_brutal_teardown to finish.  To test a method with brutal memory tests,
+// use LG_BRUTAL (LAGraph_method (...)).  The LAGraph_method(...) will be
+// called with LG_brutal set to 0 (no mallocs allowed), 1 (one malloc), 2, ...
+// until the method succeeds by returning a result >= 0.  If a method never
+// returns a non-negative result, LG_BRUTAL will get stuck in an infinite loop.
+
+// If LG_brutal starts as negative, then the brutal memory tests are not
+// performed, and LG_brutal_malloc/calloc/etc never pretend to fail.
+
+// A count (LG_nmalloc) is kept of the number of allocated blocks that have not
+// yet been freed.  If this count is not zero after finalizing GraphBLAS
+// and LAGraph, an error is reported.  No report is provided as to what blocks
+// of memory are still allocated; use valgrind if that occurs.
+
+// For methods that access files, or have other side effects, the LG_BRUTAL
+// macro will not work, as LG_BRUTAL (LAGraph_MMRead (...)) for example.  Each
+// iteration of the brutal loop must also close the file and reopen for the
+// next brutal trial.
+
 LAGRAPH_PUBLIC int LG_brutal_setup (char *msg) ;
 LAGRAPH_PUBLIC int LG_brutal_teardown (char *msg) ;
 
@@ -111,5 +143,47 @@ void *LG_brutal_realloc     // return pointer to reallocated memory
     void *p,                // block to realloc
     size_t size             // new size of the block
 ) ;
+
+// brutal memory testing of a GraphBLAS or LAGraph method, no burble
+#define LG_BRUTAL(Method)                                       \
+{                                                               \
+    for (int nbrutal = 0 ; ; nbrutal++)                         \
+    {                                                           \
+        /* allow for only nbrutal mallocs before 'failing' */   \
+        LG_brutal = nbrutal ;                                   \
+        /* try the method with brutal malloc */                 \
+        int brutal_result = Method ;                            \
+        if (brutal_result >= 0)                                 \
+        {                                                       \
+            /* the method finally succeeded */                  \
+            break ;                                             \
+        }                                                       \
+    }                                                           \
+    LG_brutal = -1 ;  /* turn off brutal mallocs */             \
+}
+
+// brutal memory testing of a GraphBLAS or LAGraph method, and print results
+#define LG_BRUTAL_BURBLE(Method)                                \
+{                                                               \
+    printf ("brutal test at line %4d: LG_nmalloc: %g\n",        \
+        __LINE__, (double) LG_nmalloc) ;                        \
+    printf ("method: " LG_XSTR(Method) "\n") ;                  \
+    for (int nbrutal = 0 ; ; nbrutal++)                         \
+    {                                                           \
+        /* allow for only nbrutal mallocs before 'failing' */   \
+        LG_brutal = nbrutal ;                                   \
+        /* try the method with brutal malloc */                 \
+        int brutal_result = Method ;                            \
+        if (brutal_result >= 0)                                 \
+        {                                                       \
+            /* the method finally succeeded */                  \
+            printf ("brutal test at line %4d: LG_nmalloc: %g,"  \
+                " succeeded with %d mallocs\n", __LINE__,       \
+                (double) LG_nmalloc, nbrutal) ;                 \
+            break ;                                             \
+        }                                                       \
+    }                                                           \
+    LG_brutal = -1 ;  /* turn off brutal mallocs */             \
+}
 
 #endif

@@ -201,6 +201,127 @@ void test_IsEqual (void)
 }
 
 //------------------------------------------------------------------------------
+// test_IsEqual_brutal:
+//------------------------------------------------------------------------------
+
+#if LG_SUITESPARSE
+void test_IsEqual_brutal (void)
+{
+
+    //--------------------------------------------------------------------------
+    // start up the test
+    //--------------------------------------------------------------------------
+
+    OK (LG_brutal_setup (msg)) ;
+    printf ("\nTesting IsEqual:\n") ;
+
+    for (int k = 0 ; ; k++)
+    {
+
+        //----------------------------------------------------------------------
+        // load in the kth pair of files
+        //----------------------------------------------------------------------
+
+        const char *aname = files [k].matrix1 ;
+        const char *bname = files [k].matrix2 ;
+        const char *typename = files [k].typename ;
+        const bool isequal = files [k].isequal ;
+        const bool isequal_auto = files [k].isequal_auto ;
+        const bool isequal0 = files [k].isequal0 ;
+        const bool isequal0_auto = files [k].isequal0_auto ;
+        if (strlen (aname) == 0) break;
+        TEST_CASE (aname) ;
+        printf ("test %2d: %s %s (%s)\n", k, aname, bname, typename) ;
+
+        // get the type
+        GrB_Type type = NULL ;
+        if      (strcmp (typename, "GrB_BOOL"  ) == 0) type = GrB_BOOL   ;
+        else if (strcmp (typename, "GrB_INT8"  ) == 0) type = GrB_INT8   ;
+        else if (strcmp (typename, "GrB_INT16" ) == 0) type = GrB_INT16  ;
+        else if (strcmp (typename, "GrB_INT32" ) == 0) type = GrB_INT32  ;
+        else if (strcmp (typename, "GrB_INT64" ) == 0) type = GrB_INT64  ;
+        else if (strcmp (typename, "GrB_UINT8" ) == 0) type = GrB_UINT8  ;
+        else if (strcmp (typename, "GrB_UINT16") == 0) type = GrB_UINT16 ;
+        else if (strcmp (typename, "GrB_UINT32") == 0) type = GrB_UINT32 ;
+        else if (strcmp (typename, "GrB_UINT64") == 0) type = GrB_UINT64 ;
+        else if (strcmp (typename, "GrB_FP32"  ) == 0) type = GrB_FP32   ;
+        else if (strcmp (typename, "GrB_FP64"  ) == 0) type = GrB_FP64   ;
+
+        TEST_CHECK (type != NULL) ;
+
+        snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
+        FILE *f = fopen (filename, "r") ;
+        TEST_CHECK (f != NULL) ;
+        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (fclose (f)) ;
+        TEST_MSG ("Failed to load %s\n", aname) ;
+        GrB_Index ancols ;
+        OK (GrB_Matrix_ncols (&ancols, A)) ;
+
+        snprintf (filename, LEN, LG_DATA_DIR "%s", bname) ;
+        f = fopen (filename, "r") ;
+        TEST_CHECK (f != NULL) ;
+        OK (LAGraph_MMRead (&B, &btype, f, msg)) ;
+        OK (fclose (f)) ;
+        TEST_MSG ("Failed to load %s\n", bname) ;
+        GrB_Index bncols ;
+        OK (GrB_Matrix_ncols (&bncols, B)) ;
+
+        //----------------------------------------------------------------------
+        // compare the two matrices
+        //----------------------------------------------------------------------
+
+        bool result = false ;
+        LG_BRUTAL (LAGraph_IsEqual_type (&result, A, B, type, msg)) ;
+        TEST_CHECK (result == isequal) ;
+
+        LG_BRUTAL (LAGraph_IsEqual (&result, A, B, msg)) ;
+        TEST_CHECK (result == isequal_auto) ;
+
+        LG_BRUTAL (LAGraph_IsEqual (&result, A, A, msg)) ;
+        TEST_CHECK (result == true) ;
+
+        LG_BRUTAL (LAGraph_IsEqual_type (&result, A, A, type, msg)) ;
+        TEST_CHECK (result == true) ;
+
+        //----------------------------------------------------------------------
+        // compare two vectors
+        //----------------------------------------------------------------------
+
+        LG_BRUTAL (GrB_Vector_new (&u, atype, ancols)) ;
+        LG_BRUTAL (GrB_Vector_new (&v, atype, bncols)) ;
+        LG_BRUTAL (GrB_Col_extract (u, NULL, NULL, A, GrB_ALL, ancols, 0,
+            GrB_DESC_T0)) ;
+        LG_BRUTAL (GrB_Col_extract (v, NULL, NULL, B, GrB_ALL, bncols, 0,
+            GrB_DESC_T0)) ;
+
+        LG_BRUTAL (LAGraph_Vector_IsEqual_type (&result, u, v, type, msg)) ;
+        TEST_CHECK (result == isequal0) ;
+
+        LG_BRUTAL (LAGraph_Vector_IsEqual (&result, u, v, msg)) ;
+        TEST_CHECK (result == isequal0_auto) ;
+
+        LG_BRUTAL (LAGraph_Vector_IsEqual (&result, u, u, msg)) ;
+        TEST_CHECK (result == true) ;
+
+        LG_BRUTAL (LAGraph_Vector_IsEqual_type (&result, u, u, type, msg)) ;
+        TEST_CHECK (result == true) ;
+
+        LG_BRUTAL (GrB_free (&u)) ;
+        OK (GrB_free (&v)) ;
+        OK (GrB_free (&A)) ;
+        OK (GrB_free (&B)) ;
+    }
+
+    //--------------------------------------------------------------------------
+    // finish the test
+    //--------------------------------------------------------------------------
+
+    OK (LG_brutal_teardown (msg)) ;
+}
+#endif
+
+//------------------------------------------------------------------------------
 // test_IsEqual_failures: test error handling of LAGraph_IsEqual*
 //------------------------------------------------------------------------------
 
@@ -309,6 +430,7 @@ TEST_LIST =
     { "IsEqual", test_IsEqual },
     { "Vector_IsEqual", test_Vector_IsEqual },
     { "IsEqual_failures", test_IsEqual_failures },
+    { "IsEqual_brutal", test_IsEqual_brutal },
     { NULL, NULL }
 } ;
 

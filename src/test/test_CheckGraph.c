@@ -138,7 +138,7 @@ void test_CheckGraph_failures (void)
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
     // adjacency matrix invalid
-    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -1) ;
+    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -1101) ;
     printf ("msg: %s\n", msg) ;
 
     // free the graph
@@ -165,18 +165,18 @@ void test_CheckGraph_failures (void)
 
     // G->AT has the right type, but wrong size
     G->AT = B_int32 ;
-    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -3) ;
+    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -1103) ;
     printf ("msg: %s\n", msg) ;
 
     // G->AT has the right size, but wrong type
     G->AT = B_bool ;
-    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -5) ;
+    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -1105) ;
     printf ("msg: %s\n", msg) ;
 
     #if LG_SUITESPARSE
     // G->AT must be by-row
     OK (GxB_set (G->AT, GxB_FORMAT, GxB_BY_COL)) ;
-    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -4) ;
+    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -1104) ;
     printf ("msg: %s\n", msg) ;
     #endif
 
@@ -184,24 +184,24 @@ void test_CheckGraph_failures (void)
 
     // G->rowdegree has the right type, but wrong size
     G->rowdegree = d_int64 ;
-    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -6) ;
+    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -1106) ;
     printf ("msg: %s\n", msg) ;
 
     // G->rowdegree has the right size, but wrong type
     G->rowdegree = d_bool ;
-    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -7) ;
+    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -1107) ;
     printf ("msg: %s\n", msg) ;
 
     G->rowdegree = NULL ;
 
     // G->coldegree has the right type, but wrong size
     G->coldegree = d_int64 ;
-    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -8) ;
+    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -1108) ;
     printf ("msg: %s\n", msg) ;
 
     // G->coldegree has the right size, but wrong type
     G->coldegree = d_bool ;
-    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -9) ;
+    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -1109) ;
     printf ("msg: %s\n", msg) ;
 
     G->coldegree = NULL ;
@@ -209,7 +209,7 @@ void test_CheckGraph_failures (void)
     #if LG_SUITESPARSE
     // G->A must be by-row
     OK (GxB_set (G->A, GxB_FORMAT, GxB_BY_COL)) ;
-    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -2) ;
+    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -1102) ;
     printf ("msg: %s\n", msg) ;
     #endif
 
@@ -220,7 +220,7 @@ void test_CheckGraph_failures (void)
 
     // mangle G->kind
     G->kind = LAGRAPH_UNKNOWN ;
-    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -3) ;
+    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -1103) ;
     printf ("msg: %s\n", msg) ;
     G->kind = LAGRAPH_ADJACENCY_DIRECTED ;
 
@@ -228,18 +228,54 @@ void test_CheckGraph_failures (void)
     GrB_free (&(G->A)) ;
     TEST_CHECK (G->A == NULL) ;
 
-    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -2) ;
+    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -1102) ;
     printf ("msg: %s\n", msg) ;
 
     // free the graph
     OK (LAGraph_Delete (&G, msg)) ;
     TEST_CHECK (G == NULL) ;
 
-    TEST_CHECK (LAGraph_CheckGraph (NULL, msg) == -1) ;
+    TEST_CHECK (LAGraph_CheckGraph (NULL, msg) == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
     teardown ( ) ;
 }
+
+//------------------------------------------------------------------------------
+// test_CheckGraph_brutal:
+//------------------------------------------------------------------------------
+
+#if LG_SUITESPARSE
+void test_CheckGraph_brutal (void)
+{
+    OK (LG_brutal_setup (msg)) ;
+
+    // load a valid adjacency matrix
+    TEST_CASE ("karate") ;
+    FILE *f = fopen (LG_DATA_DIR "karate.mtx", "r") ;
+    TEST_CHECK (f != NULL) ;
+    OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+    OK (fclose (f)) ;
+    TEST_MSG ("Loading of karate.mtx failed") ;
+    printf ("\n") ;
+
+    // create an valid graph
+    OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+    TEST_CHECK (A == NULL) ;    // A has been moved into G->A
+    LG_BRUTAL_BURBLE (LAGraph_CheckGraph (G, msg)) ;
+
+    // create its properties
+    LG_BRUTAL_BURBLE (LAGraph_Property_AT (G, msg)) ;
+    LG_BRUTAL_BURBLE (LAGraph_CheckGraph (G, msg)) ;
+    LG_BRUTAL_BURBLE (LAGraph_Property_RowDegree (G, msg)) ;
+    LG_BRUTAL_BURBLE (LAGraph_CheckGraph (G, msg)) ;
+    LG_BRUTAL_BURBLE (LAGraph_Property_ColDegree (G, msg)) ;
+    LG_BRUTAL_BURBLE (LAGraph_CheckGraph (G, msg)) ;
+    LG_BRUTAL_BURBLE (LAGraph_Delete (&G, msg)) ;
+
+    OK (LG_brutal_teardown (msg)) ;
+}
+#endif
 
 //-----------------------------------------------------------------------------
 // TEST_LIST: the list of tasks for this entire test
@@ -249,6 +285,9 @@ TEST_LIST =
 {
     { "CheckGraph", test_CheckGraph },
     { "CheckGraph_failures", test_CheckGraph_failures },
+    #if LG_SUITESPARSE
+    { "CheckGraph_brutal", test_CheckGraph_brutal },
+    #endif
     { NULL, NULL }
 } ;
 

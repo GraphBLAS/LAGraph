@@ -1,5 +1,8 @@
 As of Nov 30, 2021:
 
+    * entire user guide
+        experimental -> src, how to do it.
+
     * test, document, polish all src & experimental: algorithms, utilities,
         and tests.
         as of Nov 30: testing is at 94.7%.  Only untested functions are

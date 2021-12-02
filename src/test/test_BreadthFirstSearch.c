@@ -636,72 +636,28 @@ void test_bfs_brutal (void)
             {
 
                 // parent and level with SS:GrB
-                for (int brutal = 0 ; ; brutal++)
-                {
-                    LG_brutal = brutal ;
-                    int result = LAGraph_BreadthFirstSearch (&level, &parent,
-                        G, src, (bool) pushpull, msg) ;
-                    if (result == 0)
-                    {
-                        printf ("SS:GrB: %d %g\n", brutal,
-                            (double) LG_nmalloc) ;
-                        break ;
-                    }
-                }
-                LG_brutal = -1 ;    // turn off brutal testing
+                LG_BRUTAL_BURBLE (LAGraph_BreadthFirstSearch (&level, &parent,
+                        G, src, (bool) pushpull, msg)) ;
                 OK (LG_check_bfs (level, parent, G, src, msg)) ;
                 OK (GrB_free (&parent)) ;
                 OK (GrB_free (&level)) ;
 
                 // level only with SS:GrB
-                for (int brutal = 0 ; ; brutal++)
-                {
-                    LG_brutal = brutal ;
-                    int result = LAGraph_BreadthFirstSearch (&level, NULL,
-                        G, src, (bool) pushpull, msg) ;
-                    if (result == 0)
-                    {
-                        printf ("SS:GrB: %d %g\n", brutal,
-                            (double) LG_nmalloc) ;
-                        break ;
-                    }
-                }
-                LG_brutal = -1 ;    // turn off brutal testing
+                LG_BRUTAL (LAGraph_BreadthFirstSearch (&level, NULL,
+                        G, src, (bool) pushpull, msg)) ;
                 OK (LG_check_bfs (level, NULL, G, src, msg)) ;
                 OK (GrB_free (&level)) ;
 
                 // parent and level with vanilla
-                for (int brutal = 0 ; ; brutal++)
-                {
-                    LG_brutal = brutal ;
-                    int result = LG_BreadthFirstSearch_vanilla (&level, &parent,
-                        G, src, (bool) pushpull, msg) ;
-                    if (result == 0)
-                    {
-                        printf ("Vanilla: %d %g\n", brutal,
-                            (double) LG_nmalloc) ;
-                        break ;
-                    }
-                }
-                LG_brutal = -1 ;    // turn off brutal testing
+                LG_BRUTAL (LG_BreadthFirstSearch_vanilla (&level,
+                    &parent, G, src, (bool) pushpull, msg)) ;
                 OK (LG_check_bfs (level, parent, G, src, msg)) ;
                 OK (GrB_free (&parent)) ;
                 OK (GrB_free (&level)) ;
 
                 // level-only with vanilla
-                for (int brutal = 0 ; ; brutal++)
-                {
-                    LG_brutal = brutal ;
-                    int result = LG_BreadthFirstSearch_vanilla (&level, NULL,
-                        G, src, (bool) pushpull, msg) ;
-                    if (result == 0)
-                    {
-                        printf ("Vanilla: %d %g\n", brutal,
-                            (double) LG_nmalloc) ;
-                        break ;
-                    }
-                }
-                LG_brutal = -1 ;    // turn off brutal testing
+                LG_BRUTAL (LG_BreadthFirstSearch_vanilla (&level, NULL,
+                        G, src, (bool) pushpull, msg)) ;
                 OK (LG_check_bfs (level, NULL, G, src, msg)) ;
                 OK (GrB_free (&level)) ;
 

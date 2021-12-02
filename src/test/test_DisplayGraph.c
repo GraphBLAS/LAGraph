@@ -165,6 +165,61 @@ void test_DisplayGraph_failures (void)      // TODO
 #endif
 
 //-----------------------------------------------------------------------------
+// test_display_brutal
+//-----------------------------------------------------------------------------
+
+#if LG_SUITESPARSE
+void test_display_brutal (void)
+{
+    OK (LG_brutal_setup (msg)) ;
+
+    for (int k = 0 ; ; k++)
+    {
+
+        // load the adjacency matrix as A
+        const char *aname = files [k].name ;
+        LAGraph_Kind kind = files [k].kind ;
+        if (strlen (aname) == 0) break;
+        TEST_CASE (aname) ;
+        snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
+        FILE *f = fopen (filename, "r") ;
+        TEST_CHECK (f != NULL) ;
+        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (fclose (f)) ;
+        TEST_MSG ("Loading of adjacency matrix failed") ;
+
+        if (atype == GrB_FP64)
+        {
+            OK (GrB_Matrix_setElement (A, 3.14159265358979323, 0, 1)) ;
+        }
+
+        // create the graph
+        OK (LAGraph_New (&G, &A, atype, kind, msg)) ;
+
+        // display the graph
+        for (int trial = 0 ; trial <= 1 ; trial++)
+        {
+            printf ("\n############################# TRIAL: %d\n", trial) ;
+            for (int pr = -1 ; pr <= 5 ; pr++)
+            {
+                printf ("\n########### %s: pr: %d (%s)\n",
+                    aname, pr, prwhat (pr)) ;
+                LG_BRUTAL (LAGraph_DisplayGraph (G, pr, stdout, msg)) ;
+            }
+            OK (LAGraph_Property_AT (G, msg)) ;
+            OK (LAGraph_Property_ASymmetricStructure (G, msg)) ;
+            OK (LAGraph_Property_NDiag (G, msg)) ;
+        }
+
+        // free the graph
+        OK (LAGraph_Delete (&G, msg)) ;
+    }
+
+    OK (LG_brutal_teardown (msg)) ;
+}
+#endif
+
+//-----------------------------------------------------------------------------
 // TEST_LIST: the list of tasks for this entire test
 //-----------------------------------------------------------------------------
 

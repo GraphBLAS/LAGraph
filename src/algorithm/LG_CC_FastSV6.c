@@ -172,6 +172,7 @@ static inline GrB_Info fastsv
     LAGraph_Free ((void **) &ht_count) ;    \
     LAGraph_Free ((void **) &count) ;       \
     LAGraph_Free ((void **) &range) ;       \
+    GrB_free (&C) ;                         \
     GrB_free (&T) ;                         \
     GrB_free (&t) ;                         \
     GrB_free (&y) ;                         \
@@ -368,6 +369,13 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
 // set, then k is the relative position of aij as the kth entry in its column.
 // The default would be that the rank is the position of aij in its row A(i,:).
 
+// Other:
+//      give me 3 random items from the row (y = 3)
+//      give me the 4 biggest *values* in each row (y = 4)
+
+// mxv:
+//      C = A*diag(D)
+
         //----------------------------------------------------------------------
         // unpack A in CSR format
         //----------------------------------------------------------------------
@@ -473,6 +481,8 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         // The sampling below computes an estimate of the mode of the parent
         // vector, the contents of which are currently in the non-opaque Px
         // array.
+
+        // FIXME: brittle:  864, 1024
 
         // hash table size must be a power of 2
         #define HASH_SIZE 1024

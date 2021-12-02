@@ -11,6 +11,8 @@
 
 //------------------------------------------------------------------------------
 
+// This is the fastest variant that computes both the parent & the path length.
+
 // LAGraph_BF_full1a: Bellman-Ford single source shortest paths, returning both
 // the path lengths and the shortest-path tree.  contributed by Jinhao Chen and
 // Tim Davis, Texas A&M.

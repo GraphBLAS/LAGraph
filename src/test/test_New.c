@@ -119,7 +119,7 @@ void test_New_failures (void)
     // via assigning it to G->A.  However, the graph will be declared invalid
     // by LAGraph_CheckGraph since G->A is NULL.
     OK (LAGraph_New (&G, NULL, NULL, 0, msg)) ;
-    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -2) ;
+    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -1102) ;
     printf ("msg: %s\n", msg) ;
     OK (LAGraph_Delete (&G, msg)) ;
     TEST_CHECK (G == NULL) ;

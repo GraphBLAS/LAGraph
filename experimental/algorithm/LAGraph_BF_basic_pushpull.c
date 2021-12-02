@@ -11,6 +11,9 @@
 
 //------------------------------------------------------------------------------
 
+// This is the fastest variant that computes just the path lengths,
+// and not the parent vector.
+
 // LAGraph_BF_basic_pushpull: Bellman-Ford single source shortest paths,
 // returning just the shortest path lengths.  Contributed by Jinhao Chen and
 // Tim Davis, Texas A&M.
@@ -45,8 +48,10 @@
 // negative-weight cycle.
 // pd_output = &d, where d is a GrB_Vector with d(k) as the shortest distance
 // from s to k when no negative-weight cycle detected, otherwise, d = NULL.
-// A has zeros on diagonal and weights on corresponding entries of edges
-// s is given index for source vertex
+
+// A must have explicit zeros on the diagonal and weights on corresponding
+// entries of edges.  s is given index for source vertex.
+
 GrB_Info LAGraph_BF_basic_pushpull
 (
     GrB_Vector *pd_output,      //the pointer to the vector of distance
