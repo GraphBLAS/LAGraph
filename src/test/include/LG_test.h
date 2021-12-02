@@ -83,9 +83,6 @@ int LG_check_export
 // Brutal memory tests use a global variable (LG_brutal) to tell them how many
 // times malloc may be successfully called.  Once this counter reaches zero,
 // LG_brutal_malloc, LG_brutal_calloc, and LG_brutal_realloc all return NULL.
-// These tests must be used with care on methods that unpack/pack their input
-// matrix G->A (such as several of the LG_check_* methods).  Those methods will
-// return an empty G->A with no entries, if they fail in the middle.
 
 // SuiteSparse:GraphBLAS is required for brutal memory testing.  The
 // LG_brutal_malloc/calloc/realloc/free methods are passed to SuiteSparse
@@ -108,9 +105,26 @@ int LG_check_export
 // of memory are still allocated; use valgrind if that occurs.
 
 // For methods that access files, or have other side effects, the LG_BRUTAL
-// macro will not work, as LG_BRUTAL (LAGraph_MMRead (...)) for example.  Each
-// iteration of the brutal loop must also close the file and reopen for the
-// next brutal trial.
+// macro will not work.  It will reach a failure state from which it cannot
+// recover.  For example:
+//
+//  (1) LG_BRUTAL (LAGraph_MMRead (...)) will fail, because it will read the
+//      file and then fail because LG_brutal_malloc returns a NULL.  To handle
+//      this, each iteration of the brutal loop must also close the file and
+//      reopen for the next brutal trial.
+//
+//  (2) If any GrB_Matrix or GrB_Vector component of G has pending work (G->A
+//      for example), and GraphBLAS attempts to finish it, the method will fail
+//      if LG_brutal_malloc returns NULL.  In this case, GraphBLAS will return
+//      the GrB_Matrix or GrB_Vector as an invalid object, and then LG_BRUTAL
+//      will never succeed.  If this occurs, simply use GrB_wait to finalize
+//      all components of G first, before trying a brutal test on a method that
+//      uses G.
+//
+//  (3) LG_BRUTAL will fail for methods that unpack/pack their input matrix
+//      G->A (such as several of the LG_check_* methods, and the current draft
+//      of LG_CC_FastSV6).  Those methods will return an empty G->A with no
+//      entries, if they fail in the middle.
 
 LAGRAPH_PUBLIC int LG_brutal_setup (char *msg) ;
 LAGRAPH_PUBLIC int LG_brutal_teardown (char *msg) ;
@@ -158,6 +172,7 @@ void *LG_brutal_realloc     // return pointer to reallocated memory
             /* the method finally succeeded */                  \
             break ;                                             \
         }                                                       \
+        if (nbrutal > 10000) { printf ("Infinite!\n") ; abort ( ) ; } \
     }                                                           \
     LG_brutal = -1 ;  /* turn off brutal mallocs */             \
 }
@@ -182,6 +197,7 @@ void *LG_brutal_realloc     // return pointer to reallocated memory
                 (double) LG_nmalloc, nbrutal) ;                 \
             break ;                                             \
         }                                                       \
+        if (nbrutal > 10000) { printf ("Infinite!\n") ; abort ( ) ; } \
     }                                                           \
     LG_brutal = -1 ;  /* turn off brutal mallocs */             \
 }

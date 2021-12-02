@@ -1,6 +1,6 @@
-//----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // LAGraph/src/test/test_ConnectedComponents.c: test cases for CC
-// ----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
@@ -8,7 +8,7 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 #include <stdio.h>
 #include <acutest.h>
@@ -219,7 +219,7 @@ void test_cc_brutal (void)
 //****************************************************************************
 //****************************************************************************
 TEST_LIST = {
-//    {"cc", test_cc_matrices},
+    {"cc", test_cc_matrices},
     // TODO: add checks for all error conditions
     #if LG_SUITESPARSE
     {"cc_brutal", test_cc_brutal},

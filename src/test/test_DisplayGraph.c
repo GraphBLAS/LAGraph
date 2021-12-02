@@ -165,11 +165,11 @@ void test_DisplayGraph_failures (void)      // TODO
 #endif
 
 //-----------------------------------------------------------------------------
-// test_display_brutal
+// test_DisplayGraph_brutal
 //-----------------------------------------------------------------------------
 
 #if LG_SUITESPARSE
-void test_display_brutal (void)
+void test_DisplayGraph_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
 
@@ -192,9 +192,11 @@ void test_display_brutal (void)
         {
             OK (GrB_Matrix_setElement (A, 3.14159265358979323, 0, 1)) ;
         }
+        OK (GrB_wait (A, GrB_MATERIALIZE)) ;
 
         // create the graph
         OK (LAGraph_New (&G, &A, atype, kind, msg)) ;
+        OK (LAGraph_CheckGraph (G, msg)) ;
 
         // display the graph
         for (int trial = 0 ; trial <= 1 ; trial++)
@@ -204,7 +206,14 @@ void test_display_brutal (void)
             {
                 printf ("\n########### %s: pr: %d (%s)\n",
                     aname, pr, prwhat (pr)) ;
-                LG_BRUTAL (LAGraph_DisplayGraph (G, pr, stdout, msg)) ;
+                if (pr == 3 || pr == 5)
+                {
+                    printf ("skipped for brutal tests\n") ;
+                }
+                else
+                {
+                    LG_BRUTAL (LAGraph_DisplayGraph (G, pr, stdout, msg)) ;
+                }
             }
             OK (LAGraph_Property_AT (G, msg)) ;
             OK (LAGraph_Property_ASymmetricStructure (G, msg)) ;
@@ -227,6 +236,7 @@ TEST_LIST =
 {
     { "DisplayGraph", test_DisplayGraph },
 //  { "DisplayGraph_failures", test_DisplayGraph_failures },
+    { "DisplayGraph_brutal", test_DisplayGraph_brutal },
     { NULL, NULL }
 } ;
 
