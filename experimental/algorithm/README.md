@@ -14,7 +14,7 @@
 * LAGraph_cc_lacc: connected components using the [LACC algorithm](https://people.eecs.berkeley.edu/~aydin/LACC.pdf)
 * LAGraph_cdlp: community detection using label propagation
 * LAGraph_dnn: sparse deep neural network
-* LAGraph_Ktruss: k-truss of a graph
+* LAGraph_KTruss: k-truss of a graph
 * LAGraph_lcc: Local clustering coefficient
 * LAGraph_msf: Minimum spanning forest
 * LAGraph_scc: Strongly connected components

@@ -231,6 +231,10 @@ const matrix_info files [ ] =
     { "", { 0 }, { 0 }}
 } ;
 
+//-----------------------------------------------------------------------------
+// test_Property_Degree
+//-----------------------------------------------------------------------------
+
 void test_Property_Degree (void)
 {
     setup ( ) ;
@@ -291,12 +295,72 @@ void test_Property_Degree (void)
 }
 
 //-----------------------------------------------------------------------------
+// test_Property_Degree_brutal
+//-----------------------------------------------------------------------------
+
+#if LG_SUITESPARSE
+void test_Property_Degree_brutal (void)
+{
+    OK (LG_brutal_setup (msg)) ;
+
+    for (int k = 0 ; ; k++)
+    {
+
+        // load the matrix as A
+        const char *aname = files [k].name ;
+        if (strlen (aname) == 0) break;
+        const int *rowdeg = files [k].rowdeg ;
+        const int *coldeg = files [k].coldeg ;
+        TEST_CASE (aname) ;
+        snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
+        FILE *f = fopen (filename, "r") ;
+        TEST_CHECK (f != NULL) ;
+        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (fclose (f)) ;
+        TEST_MSG ("Loading of adjacency matrix failed") ;
+
+        // construct the graph G with adjacency matrix A
+        OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+        TEST_CHECK (A == NULL) ;
+
+        for (int trial = 0 ; trial <= 2 ; trial++)
+        {
+            // create the G->rowdegree property and check it
+            LG_BRUTAL (LAGraph_Property_RowDegree (G, msg)) ;
+            GrB_Index n ;
+            OK (GrB_Matrix_nrows (&n, G->A)) ;
+            check_degree (G->rowdegree, n, rowdeg) ;
+
+            if (trial == 2)
+            {
+                // use G->AT to compute G->coldegree 
+                OK (LAGraph_DeleteProperties (G, msg)) ;
+                OK (LAGraph_Property_AT (G, msg)) ;
+            }
+
+            // create the G->ColDegree property and check it
+            LG_BRUTAL (LAGraph_Property_ColDegree (G, msg)) ;
+            OK (GrB_Matrix_ncols (&n, G->A)) ;
+            check_degree (G->coldegree, n, coldeg) ;
+        }
+
+        OK (LAGraph_Delete (&G, msg)) ;
+    }
+
+    OK (LG_brutal_teardown (msg)) ;
+}
+#endif
+
+//-----------------------------------------------------------------------------
 // TEST_LIST: the list of tasks for this entire test
 //-----------------------------------------------------------------------------
 
 TEST_LIST =
 {
     { "Property_Degree", test_Property_Degree },
+    #if LG_SUITESPARSE
+    { "Property_Degree_brutal", test_Property_Degree_brutal },
+    #endif
     { NULL, NULL }
 } ;
 

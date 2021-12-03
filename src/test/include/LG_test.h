@@ -180,7 +180,8 @@ void *LG_brutal_realloc     // return pointer to reallocated memory
         }                                                       \
         if (nbrutal > 10000)                                    \
         {                                                       \
-            printf ("Line %d Infinite!\n", __LINE__) ;          \
+            printf ("Line %d Infinite! result: %d\n",           \
+                __LINE__, brutal_result) ;                      \
             abort ( ) ;                                         \
         }                                                       \
     }                                                           \
@@ -209,7 +210,8 @@ void *LG_brutal_realloc     // return pointer to reallocated memory
         }                                                       \
         if (nbrutal > 10000)                                    \
         {                                                       \
-            printf ("Line %d Infinite!\n", __LINE__) ;          \
+            printf ("Line %d Infinite! result: %d %s\n",        \
+                __LINE__, brutal_result, msg) ;                 \
             abort ( ) ;                                         \
         }                                                       \
     }                                                           \

@@ -58,8 +58,7 @@ void test_Structure (void)
 
     for (int k = 0 ; ; k++)
     {
-
-        // load the valued as A
+        // load the valued matrix as A
         const char *aname = files [k] ;
         if (strlen (aname) == 0) break;
         TEST_CASE (aname) ;
@@ -83,19 +82,65 @@ void test_Structure (void)
         OK (LAGraph_Structure (&C, A, msg)) ;
 
         // ensure B and C are the same
-        bool C_and_B_are_identical ;
-        OK (LAGraph_IsEqual_type (&C_and_B_are_identical, C, B, GrB_BOOL,
-            msg)) ;
-        TEST_CHECK (C_and_B_are_identical) ;
+        bool ok ;
+        OK (LAGraph_IsEqual_type (&ok, C, B, GrB_BOOL, msg)) ;
+        TEST_CHECK (ok) ;
         TEST_MSG ("Test for C and B equal failed") ;
 
         OK (GrB_free (&A)) ;
         OK (GrB_free (&B)) ;
         OK (GrB_free (&C)) ;
-
     }
     teardown ( ) ;
 }
+
+//------------------------------------------------------------------------------
+// test_Structure_brutal
+//------------------------------------------------------------------------------
+
+#if LG_SUITESPARSE
+void test_Structure_brutal (void)
+{
+    OK (LG_brutal_setup (msg)) ;
+
+    for (int k = 0 ; ; k++)
+    {
+        // load the valued matrix as A
+        const char *aname = files [k] ;
+        if (strlen (aname) == 0) break;
+        TEST_CASE (aname) ;
+        snprintf (filename, LEN, LG_DATA_DIR "%s.mtx", aname) ;
+        FILE *f = fopen (filename, "r") ;
+        TEST_CHECK (f != NULL) ;
+        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (fclose (f)) ;
+        TEST_MSG ("Loading of valued matrix failed") ;
+
+        // load the structure as B
+        snprintf (filename, LEN, LG_DATA_DIR "%s_structure.mtx", aname) ;
+        f = fopen (filename, "r") ;
+        TEST_CHECK (f != NULL) ;
+        OK (LAGraph_MMRead (&B, &btype, f, msg)) ;
+        TEST_CHECK (btype == GrB_BOOL) ;
+        OK (fclose (f)) ;
+        TEST_MSG ("Loading of structure matrix failed") ;
+
+        // C = structure (A)
+        LG_BRUTAL (LAGraph_Structure (&C, A, msg)) ;
+
+        // ensure B and C are the same
+        bool ok ;
+        OK (LAGraph_IsEqual_type (&ok, C, B, GrB_BOOL, msg)) ;
+        TEST_CHECK (ok) ;
+        TEST_MSG ("Test for C and B equal failed") ;
+
+        OK (GrB_free (&A)) ;
+        OK (GrB_free (&B)) ;
+        OK (GrB_free (&C)) ;
+    }
+    OK (LG_brutal_teardown (msg)) ;
+}
+#endif
 
 //------------------------------------------------------------------------------
 // test_Structure_failures:  test error handling of LAGraph_Structure
@@ -123,6 +168,9 @@ TEST_LIST =
 {
     { "Structure", test_Structure },
     { "Structure_failures", test_Structure_failures },
+    #if LG_SUITESPARSE
+    { "Structure_brutal", test_Structure_brutal },
+    #endif
     { NULL, NULL }
 } ;
 

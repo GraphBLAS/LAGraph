@@ -160,6 +160,51 @@ void test_Property_NDiag (void)
     teardown ( ) ;
 }
 
+//------------------------------------------------------------------------------
+// test_Property_NDiag_brutal
+//------------------------------------------------------------------------------
+
+#if LG_SUITESPARSE
+void test_Property_NDiag_brutal (void)
+{
+    OK (LG_brutal_setup (msg)) ;
+
+    for (int k = 0 ; ; k++)
+    {
+
+        //----------------------------------------------------------------------
+        // load in the kth file
+        //----------------------------------------------------------------------
+
+        const char *aname = files [k].name ;
+        if (strlen (aname) == 0) break;
+        TEST_CASE (aname) ;
+        snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
+        FILE *f = fopen (filename, "r") ;
+        TEST_CHECK (f != NULL) ;
+        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (fclose (f)) ;
+        TEST_MSG ("Failed to load %s\n", aname) ;
+
+        //----------------------------------------------------------------------
+        // construct a directed graph and count self-edges
+        //----------------------------------------------------------------------
+
+        OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+        LG_BRUTAL (LAGraph_Property_NDiag (G, msg)) ;
+        TEST_CHECK (G->ndiag == files [k].ndiag) ;
+
+        //----------------------------------------------------------------------
+        // free the graph
+        //----------------------------------------------------------------------
+
+        OK (LAGraph_Delete (&G, msg)) ;
+    }
+
+    OK (LG_brutal_teardown (msg)) ;
+}
+#endif
+
 //-----------------------------------------------------------------------------
 // TEST_LIST: the list of tasks for this entire test
 //-----------------------------------------------------------------------------
@@ -167,6 +212,9 @@ void test_Property_NDiag (void)
 TEST_LIST =
 {
     { "NDiag", test_Property_NDiag },
+    #if LG_SUITESPARSE
+    { "NDiag_brutal", test_Property_NDiag_brutal },
+    #endif
     { NULL, NULL }
 } ;
 

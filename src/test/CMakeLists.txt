@@ -8,6 +8,9 @@
 # See additional acknowledgments in the LICENSE file,
 # or contact permission@sei.cmu.edu for the full terms.
 
+# Most tests can be done with any GraphBLAS library, but extensive ("brutal")
+# memory test can only be done with SuiteSparse:GraphBLAS.
+
 #-------------------------------------------------------------------------------
 # build the lagraphtest library
 #-------------------------------------------------------------------------------
@@ -59,7 +62,6 @@ if ( OPENMP_FOUND )
     target_link_libraries ( lagraphtest PUBLIC ${OpenMP_C_LIBRARIES} )
     target_link_libraries ( lagraphtest_static PUBLIC ${OpenMP_C_LIBRARIES} )
 endif ( )
-
 
 #-------------------------------------------------------------------------------
 # This will only build tests from files with the name "test_*.c"

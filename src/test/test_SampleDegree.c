@@ -115,6 +115,10 @@ const matrix_info files [ ] =
     { "", 0.0, 0.0, 0.0, 0.0, 1, 0 }
 } ;
 
+//-----------------------------------------------------------------------------
+// test_SampleDegree
+//-----------------------------------------------------------------------------
+
 void test_SampleDegree (void)
 {
     setup ( ) ;
@@ -139,17 +143,20 @@ void test_SampleDegree (void)
         TEST_CHECK (A == NULL) ;
 
         // SampleDegree requires degrees to be precomputed
-        ret_code = LAGraph_SampleDegree (&mean, &median, G, 1, files [k].nsamples, files [k].seed, msg) ;
+        ret_code = LAGraph_SampleDegree (&mean, &median, G, 1,
+            files [k].nsamples, files [k].seed, msg) ;
         TEST_CHECK (ret_code == -1) ;
         TEST_MSG ("SampleDegree without row degrees precomputed succeeded") ;
 
-        ret_code = LAGraph_SampleDegree (&mean, &median, G, 0, files [k].nsamples, files [k].seed, msg) ;
+        ret_code = LAGraph_SampleDegree (&mean, &median, G, 0,
+            files [k].nsamples, files [k].seed, msg) ;
         TEST_CHECK (ret_code == -1) ;
         TEST_MSG ("SampleDegree without column degrees precomputed succeeded") ;
 
         // Compute and check the row samples
         OK (LAGraph_Property_RowDegree (G, msg)) ;
-        OK (LAGraph_SampleDegree (&mean, &median, G, 1, files [k].nsamples, files [k].seed, msg)) ;
+        OK (LAGraph_SampleDegree (&mean, &median, G, 1,
+            files [k].nsamples, files [k].seed, msg)) ;
 
         TEST_CHECK (is_close(mean, files [k].row_mean)) ;
         TEST_MSG ("Row Mean Expected: %f", files [k].row_mean) ;
@@ -163,7 +170,8 @@ void test_SampleDegree (void)
         OK (LAGraph_DeleteProperties (G, msg)) ;
 
         OK (LAGraph_Property_ColDegree (G, msg)) ;
-        OK (LAGraph_SampleDegree (&mean, &median, G, 0, files [k].nsamples, files [k].seed, msg)) ;
+        OK (LAGraph_SampleDegree (&mean, &median, G, 0,
+            files [k].nsamples, files [k].seed, msg)) ;
 
         TEST_CHECK (is_close(mean, files [k].col_mean)) ;
         TEST_MSG ("Column Mean Expected: %f", files [k].col_mean) ;
@@ -180,12 +188,68 @@ void test_SampleDegree (void)
 }
 
 //-----------------------------------------------------------------------------
+// test_SampleDegree_brutal
+//-----------------------------------------------------------------------------
+
+#if LG_SUITESPARSE
+void test_SampleDegree_brutal (void)
+{
+    OK (LG_brutal_setup (msg)) ;
+
+    for (int k = 0 ; ; k++)
+    {
+
+        // load the matrix as A
+        const char *aname = files [k].name ;
+        if (strlen (aname) == 0) break;
+        TEST_CASE (aname) ;
+        printf ("\n==================== Test case: %s\n", aname) ;
+        snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
+        FILE *f = fopen (filename, "r") ;
+        TEST_CHECK (f != NULL) ;
+        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (fclose (f)) ;
+        TEST_MSG ("Loading of adjacency matrix failed") ;
+
+        // construct the graph G with adjacency matrix A
+        OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+        TEST_CHECK (A == NULL) ;
+
+        // Compute and check the row samples
+        LG_BRUTAL (LAGraph_Property_RowDegree (G, msg)) ;
+        LG_BRUTAL (LAGraph_SampleDegree (&mean, &median, G, 1,
+            files [k].nsamples, files [k].seed, msg)) ;
+
+        TEST_CHECK (is_close(mean, files [k].row_mean)) ;
+        TEST_CHECK (is_close(median, files [k].row_median)) ;
+
+        // Compute the column samples
+        LG_BRUTAL (LAGraph_DeleteProperties (G, msg)) ;
+
+        LG_BRUTAL (LAGraph_Property_ColDegree (G, msg)) ;
+        LG_BRUTAL (LAGraph_SampleDegree (&mean, &median, G, 0,
+            files [k].nsamples, files [k].seed, msg)) ;
+
+        TEST_CHECK (is_close(mean, files [k].col_mean)) ;
+        TEST_CHECK (is_close(median, files [k].col_median)) ;
+
+        OK (LAGraph_Delete (&G, msg)) ;
+    }
+
+    OK (LG_brutal_teardown (msg)) ;
+}
+#endif
+
+//-----------------------------------------------------------------------------
 // TEST_LIST: the list of tasks for this entire test
 //-----------------------------------------------------------------------------
 
 TEST_LIST =
 {
     { "SampleDegree", test_SampleDegree },
+    #if LG_SUITESPARSE
+    { "SampleDegree_brutal", test_SampleDegree_brutal },
+    #endif
     { NULL, NULL }
 } ;
 

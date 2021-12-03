@@ -192,12 +192,95 @@ void test_Property_ASymmetric_Structure (void)
 }
 
 //-----------------------------------------------------------------------------
+// test_Property_ASymmetric_Structure_brutal
+//-----------------------------------------------------------------------------
+
+#if LG_SUITESPARSE
+void test_Property_ASymmetric_Structure_brutal (void)
+{
+    OK (LG_brutal_setup (msg)) ;
+
+    for (int k = 0 ; ; k++)
+    {
+
+        // load the matrix as A
+        const char *aname = files [k].name ;
+        bool sym_structure = files [k].symmetric_structure ;
+        bool sym_values  = files [k].symmetric_values ;
+        if (strlen (aname) == 0) break;
+        // printf ("%s:\n", aname) ;
+        TEST_CASE (aname) ;
+        snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
+        FILE *f = fopen (filename, "r") ;
+        TEST_CHECK (f != NULL) ;
+        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (fclose (f)) ;
+        TEST_MSG ("Loading of adjacency matrix failed") ;
+
+        // construct a directed graph G with adjacency matrix A
+        OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+        TEST_CHECK (A == NULL) ;
+
+        // compute the A_structure_is_symmetric property
+        LG_BRUTAL (LAGraph_Property_ASymmetricStructure (G, msg)) ;
+
+        // check the result
+        if (sym_structure)
+        {
+            TEST_CHECK (G->A_structure_is_symmetric == LAGRAPH_TRUE) ;
+        }
+        else
+        {
+            TEST_CHECK (G->A_structure_is_symmetric == LAGRAPH_FALSE) ;
+        }
+
+        // delete all properties
+        OK (LAGraph_DeleteProperties (G, msg)) ;
+
+        // try again, but precompute G->AT
+        LG_BRUTAL (LAGraph_Property_AT (G, msg)) ;
+        LG_BRUTAL (LAGraph_Property_ASymmetricStructure (G, msg)) ;
+
+        // check the result
+        if (sym_structure)
+        {
+            TEST_CHECK (G->A_structure_is_symmetric == LAGRAPH_TRUE) ;
+        }
+        else
+        {
+            TEST_CHECK (G->A_structure_is_symmetric == LAGRAPH_FALSE) ;
+        }
+
+        // delete all properties
+        OK (LAGraph_DeleteProperties (G, msg)) ;
+
+        // change the graph to directed, if matrix is symmetric 
+        if (sym_values)
+        {
+            G->kind = LAGRAPH_ADJACENCY_UNDIRECTED ;
+            // recompute the symmetry property
+            LG_BRUTAL (LAGraph_Property_ASymmetricStructure (G, msg)) ;
+            TEST_CHECK (G->A_structure_is_symmetric == LAGRAPH_TRUE) ;
+        }
+
+        OK (LAGraph_Delete (&G, msg)) ;
+    }
+
+    OK (LG_brutal_teardown (msg)) ;
+}
+#endif
+
+//-----------------------------------------------------------------------------
 // TEST_LIST: the list of tasks for this entire test
 //-----------------------------------------------------------------------------
 
 TEST_LIST =
 {
     { "Property_ASymmetric_Structure", test_Property_ASymmetric_Structure },
+    #if LG_SUITESPARSE
+    { "Property_ASymmetric_Structure_brutal",
+        test_Property_ASymmetric_Structure_brutal },
+    #endif
     { NULL, NULL }
 } ;
 

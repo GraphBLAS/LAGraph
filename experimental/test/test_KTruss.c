@@ -36,7 +36,7 @@ const matrix_info files [ ] =
 {
     {     11, "A.mtx" },
     {   2016, "jagmesh7.mtx" },
-    { 342300, "bcsstk13.mtx" },
+//  { 342300, "bcsstk13.mtx" },
     {     45, "karate.mtx" },
     {      6, "ldbc-cdlp-undirected-example.mtx" },
     {      4, "ldbc-undirected-example-bool.mtx" },
