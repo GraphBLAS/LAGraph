@@ -10,7 +10,9 @@
 
 #-------------------------------------------------------------------------------
 
-include_directories ( ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/src/utility utility )
+include_directories ( ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/src/utility
+    ${CMAKE_SOURCE_DIR}/deps/json.h )
 
 file ( GLOB LAGRAPHX_LIB_SOURCES "utility/*.c" "algorithm/*.c" )
 

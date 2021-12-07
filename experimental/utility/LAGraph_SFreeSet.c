@@ -1,0 +1,37 @@
+//------------------------------------------------------------------------------
+// LAGraph_SFreeSet: free a set of matrices
+//------------------------------------------------------------------------------
+
+// SuiteSparse:GraphBLAS, Timothy A. Davis, (c) 2017-2021, All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+// Contributed by Tim Davis, Texas A&M University
+
+//------------------------------------------------------------------------------
+
+#include "LG_internal.h"
+#include "LAGraphX.h"
+
+int LAGraph_SFreeSet            // free a set of matrices
+(
+    // input/output
+    GrB_Matrix **Set_handle,    // array of GrB_Matrix of size nmatrices
+    GrB_Index nmatrices,        // # of matrices in the set
+    char *msg
+)
+{
+    LG_CLEAR_MSG ;
+    if (Set_handle != NULL)
+    {
+        GrB_Matrix *Set = (*Set_handle) ;
+        if (Set != NULL)
+        {
+            for (GrB_Index i = 0 ; i < nmatrices ; i++)
+            {
+                GrB_free (&(Set [i])) ;
+            }
+        }
+        LAGraph_Free ((void **) Set_handle) ;
+    }
+    return (0) ;
+}
+

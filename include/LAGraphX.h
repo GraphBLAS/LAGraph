@@ -112,6 +112,183 @@ GrB_Info LAGraph_Random_FP32    // random float vector
 ) ;
 
 //****************************************************************************
+// binary file I/O
+//****************************************************************************
+
+// The LAGraph *.lagraph file consists of an ASCII JSON header, followed by
+// one or more serialized "blobs" created by GrB_Matrix_serialize (or
+// GxB_Matrix_serialize if using SuiteSparse:GraphBLAS).  The file can only be
+// read back into LAGraph when using the same GraphBLAS library used to create
+// it.
+
+// To create a binary file containing one or more GrB_Matrix objects, the user
+// application must first open the file f, create the ascii JSON header with
+// LAGraph_SWrite_Header*, and then write one or more binary serialized
+// GrB_Matrix blobs from  using LAGraph_SWrite_Matrix.
+
+// Example:
+
+/*
+    // serialize the matrices A (of type GrB_FP64) and B (of type GrB_BOOL)
+    void *Ablob, *Bblob ;
+    GrB_Index Ablob_size, Bblob_size ;
+    GxB_Matrix_serialize (&Ablob, &Ablob_size, A, NULL) ;
+    GxB_Matrix_serialize (&Bblob, &Bblob_size, B, NULL) ;
+
+    // open the file and write the JSON header
+    FILE *f = fopen ("mymatrices.lagraph", "w") ;
+    LAGraph_SWrite_HeaderStart (f, "mystuff", msg) ;
+    LAGraph_SWrite_HeaderItem (f, LAGraph_matrix_kind, "A", "double", 0,
+        Ablob_size, msg) ;
+    LAGraph_SWrite_HeaderItem (f, LAGraph_matrix_kind, "B", "bool", 0,
+        Bblob_size, msg) ;
+    LAGraph_SWrite_HeaderEnd (f, msg) ;
+
+    // write the matrices in binary
+    LAGraph_SWrite_Item (f, Ablob, Ablob_size, msg) ;
+    LAGraph_SWrite_Item (f, Bblob, Bblob_size, msg) ;
+
+    fclose (f) ;
+*/
+
+#if LG_SUITESPARSE
+#define LAGRAPH_MAX_NAME_LEN GxB_MAX_NAME_LEN
+#else
+#define LAGRAPH_MAX_NAME_LEN 128
+#endif
+
+typedef enum
+{
+    LAGraph_unknown_kind = -1,  // unknown kind
+    LAGraph_matrix_kind = 0,    // a serialized GrB_Matrix
+    LAGraph_vector_kind = 1,    // a serialized GrB_Vector (SS:GrB only)
+    LAGraph_text_kind = 2,      // text (char *), possibly compressed
+}
+LAGraph_Contents_kind ;
+
+typedef struct
+{
+    // serialized matrix/vector, or pointer to text, and its size
+    void *blob ;
+    size_t blob_size ;
+
+    // kind of item: matrix, vector, text, or unknown
+    LAGraph_Contents_kind kind ;
+
+    // if kind is text: compression used
+    // -1: none, 0: default for library, 1000: LZ4, 200x: LZ4HC:x
+    int compression ;
+
+    // name of the object
+    char name [LAGRAPH_MAX_NAME_LEN+4] ;
+
+    // if kind is matrix or vector: type name
+    char type_name [LAGRAPH_MAX_NAME_LEN+4] ;
+}
+LAGraph_Contents ;
+
+int LAGraph_SWrite_HeaderStart  // write the first part of the JSON header
+(
+    FILE *f,                    // file to write to
+    const char *name,           // name of this collection of matrices
+    char *msg
+) ;
+
+int LAGraph_SWrite_HeaderItem   // write a single item to the JSON header
+(
+    // inputs:
+    FILE *f,                    // file to write to
+    LAGraph_Contents_kind kind, // matrix, vector, or text
+    const char *name,           // name of the matrix/vector/text; matrices from
+                                // sparse.tamu.edu use the form "Group/Name"
+    const char *type,           // type of the matrix/vector (LAGraph_TypeName)
+    int compression,            // text compression method
+    GrB_Index blob_size,        // exact size of serialized blob for this item
+    char *msg
+) ;
+
+int LAGraph_SWrite_HeaderItem   // write a single item to the JSON header
+(
+    // inputs:
+    FILE *f,                    // file to write to
+    LAGraph_Contents_kind kind, // matrix, vector, or text
+    const char *name,           // name of the matrix/vector/text; matrices from
+                                // sparse.tamu.edu use the form "Group/Name"
+    const char *type,           // type of the matrix/vector (LAGraph_TypeName)
+    // TODO: text not yet supported
+    int compression,            // text compression method
+    GrB_Index blob_size,        // exact size of serialized blob for this item
+    char *msg
+) ;
+
+int LAGraph_SWrite_HeaderEnd    // write the end of the JSON header
+(
+    FILE *f,                    // file to write to
+    char *msg
+) ;
+
+int LAGraph_SWrite_Item  // write the serialized blob of a matrix/vector/text
+(
+    // input:
+    FILE *f,                // file to write to
+    const void *blob,       // serialized blob from G*B_Matrix_serialize
+    GrB_Index blob_size,    // exact size of the serialized blob
+    char *msg
+) ;
+
+int LAGraph_SRead   // read a set of matrices from a *.lagraph file
+(
+    FILE *f,                        // file to read from
+    // output
+    char **collection,              // name of collection (allocated string)
+    LAGraph_Contents **Contents,    // array contents of contents
+    GrB_Index *ncontents,           // # of items in the Contents array
+    char *msg
+) ;
+
+int LAGraph_SFreeContents       // free the Contents returned by LAGraph_SRead
+(
+    // input/output
+    LAGraph_Contents **Contents,    // array of size ncontents
+    GrB_Index ncontents,
+    char *msg
+) ;
+
+int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
+(
+    // inputs:
+    char *filename,             // name of file to write to
+    GrB_Matrix *Set,            // array of GrB_Matrix of size nmatrices
+    GrB_Index nmatrices,        // # of matrices to write to *.lagraph file
+    char *collection,           // name of this collection of matrices
+    char *msg
+) ;
+
+int LAGraph_SLoadSet            // load a set of matrices from a *.lagraph file
+(
+    // input:
+    char *filename,             // name of file to read from
+    // outputs:
+    GrB_Matrix **Set_handle,        // array of GrB_Matrix of size nmatrices
+    GrB_Index *nmatrices_handle,    // # of matrices loaded from *.lagraph file
+//  TODO:
+//  GrB_Vector **Set_handle,        // array of GrB_Vector of size nvector
+//  GrB_Index **nvectors_handle,    // # of vectors loaded from *.lagraph file
+//  char **Text_handle,             // array of pointers to (char *) strings
+//  GrB_Index **ntext_handle,       // # of texts loaded from *.lagraph file
+    char **collection_handle,   // name of this collection of matrices
+    char *msg
+) ;
+
+int LAGraph_SFreeSet            // free a set of matrices
+(
+    // input/output
+    GrB_Matrix **Set_handle,    // array of GrB_Matrix of size nmatrices
+    GrB_Index nmatrices,        // # of matrices in the set
+    char *msg
+) ;
+
+//****************************************************************************
 // Algorithms
 //****************************************************************************
 

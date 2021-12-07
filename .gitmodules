@@ -1,0 +1,3 @@
+[submodule "deps/json.h"]
+	path = deps/json.h
+	url = https://github.com/sheredom/json.h
