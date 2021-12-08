@@ -130,26 +130,19 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    GrB_Matrix C = NULL, L = NULL, U = NULL, T = NULL, A ;
+    GrB_Matrix C = NULL, L = NULL, U = NULL, T = NULL ;
     int64_t *P = NULL ;
     LG_ASSERT_MSG ((method >= 1) && (method <= 6), -101, "method is invalid");
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     LG_ASSERT (ntriangles != NULL, GrB_NULL_POINTER) ;
     LG_ASSERT (G->ndiag == 0, -104) ;
 
-    if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
+    LG_ASSERT_MSG ((G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
-        G->A_structure_is_symmetric == LAGRAPH_TRUE))
-    {
-        // the structure of A is known to be symmetric
-        A = G->A ;
-    }
-    else
-    {
-        // A is not known to be symmetric
-        LG_ASSERT_MSG (false, -105, "G->A must be symmetric") ;
-    }
+        G->A_structure_is_symmetric == LAGRAPH_TRUE)),
+        -1001, "G->A must be known to be symmetric") ;
 
+    GrB_Matrix A = G->A ;
     GrB_Vector Degree = G->rowdegree ;
     bool auto_sort = (presort != NULL && (*presort) == 2) ;
     if (auto_sort && method >= 3 && method <= 6)
