@@ -86,7 +86,7 @@ int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
         #if LG_SUITESPARSE
         {
             GrB_TRY (GxB_Matrix_serialize (&(Contents [i].blob),
-                &(Contents [i].blob_size), Set [i], desc)) ;
+                (GrB_Index *)&(Contents [i].blob_size), Set [i], desc)) ;
         }
         #else
         {
@@ -97,7 +97,7 @@ int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
             LG_CHECK (Contents [i].blob == NULL, GrB_OUT_OF_MEMORY,
                 "out of memory") ;
             GrB_TRY (GrB_Matrix_serialize (Contents [i].blob,
-                &(Contents [i].blob_size), Set [i])) ;
+                (GrB_Index *) &(Contents [i].blob_size), Set [i])) ;
             bool ok ;
             Contents [i].blob = LAGraph_Realloc (&(Contents [i].blob_size),
                 estimate, sizeof (uint8_t), Contents [i].blob, &ok) ;

@@ -87,7 +87,7 @@ if ( "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
 			DEPENDENCIES ${PROJECT_NAME}
 			BASE_DIRECTORY "."
 			NO_DEMANGLE TRUE
-                        EXCLUDE "*/benchmark/*" "deps/json.h/*"
+                        EXCLUDE "*/benchmark/*" "deps/json*/*"
                             "src/test/include/acutest.h"
 		)
 	endif ( )

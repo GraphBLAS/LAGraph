@@ -117,8 +117,10 @@ void test_SSaveSet (void)
     GrB_Matrix *Set2 = NULL ;
     GrB_Index nmatrices = 0 ;
     char *collection = NULL ;
-    OK (LAGraph_SLoadSet ("matrices.lagraph", &Set2, &nmatrices, &collection,
-        msg)) ;
+    int r = 
+        LAGraph_SLoadSet ("matrices.lagraph", &Set2, &nmatrices, &collection,
+        msg) ;
+    printf ("r %d msg %s\n", r, msg) ;
     TEST_CHECK (nmatrices == NFILES) ;
     TEST_CHECK (Set2 != NULL) ;
     TEST_CHECK (strcmp (collection, "many test matrices") == 0) ;
