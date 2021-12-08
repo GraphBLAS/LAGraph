@@ -333,9 +333,6 @@ void test_SWrite_errors (void)
     GrB_Index nmatrices = 0 ;
     char *collection = NULL ;
 
-    result = LAGraph_SLoadSet (NULL, &Set, &nmatrices, &collection, msg) ;
-    TEST_CHECK (result == GrB_NULL_POINTER) ;
-
     result = LAGraph_SLoadSet ("error.lagraph", NULL, &nmatrices,
         &collection, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;

@@ -17,7 +17,7 @@
 //------------------------------------------------------------------------------
 
 GrB_Vector X = NULL ;
-GrB_Index *x = NULL ;
+int64_t *x = NULL ;
 GrB_Index n = 10000 ;
 int64_t missing = 42 ;
 char msg [LAGRAPH_MSG_LEN] ;

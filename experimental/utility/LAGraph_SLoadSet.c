@@ -47,7 +47,7 @@
 int LAGraph_SLoadSet            // load a set of matrices from a *.lagraph file
 (
     // input:
-    char *filename,                 // name of file to read from
+    char *filename,                 // name of file to read; NULL for stdin
     // outputs:
     GrB_Matrix **Set_handle,        // array of GrB_Matrix of size nmatrices
     GrB_Index *nmatrices_handle,    // # of matrices loaded from *.lagraph file
@@ -75,18 +75,27 @@ int LAGraph_SLoadSet            // load a set of matrices from a *.lagraph file
 //  GrB_Index nvectors = 0 ;
 //  GrB_Index ntexts = 0 ;
 
-    LG_CHECK (filename == NULL || Set_handle == NULL || nmatrices_handle == NULL
+    LG_CHECK (Set_handle == NULL || nmatrices_handle == NULL
         || collection_handle == NULL, GrB_NULL_POINTER, "inputs are NULL") ;
 
     //--------------------------------------------------------------------------
     // read the file
     //--------------------------------------------------------------------------
 
-    f = fopen (filename, "r") ;
-    LG_CHECK (f == NULL, -1002, "unable to open input file") ;
-    LAGraph_TRY (LAGraph_SRead (f, &collection, &Contents, &ncontents, msg)) ;
-    fclose (f) ;
-    f = NULL ;
+    if (filename == NULL)
+    {
+        LAGraph_TRY (LAGraph_SRead (stdin, &collection, &Contents, &ncontents,
+            msg)) ;
+    }
+    else
+    {
+        f = fopen (filename, "r") ;
+        LG_CHECK (f == NULL, -1002, "unable to open input file") ;
+        LAGraph_TRY (LAGraph_SRead (f, &collection, &Contents, &ncontents,
+            msg)) ;
+        fclose (f) ;
+        f = NULL ;
+    }
 
     //--------------------------------------------------------------------------
     // count the matrices/vectors/texts in the Contents
