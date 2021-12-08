@@ -11,15 +11,13 @@
 #include "LG_internal.h"
 #include "LAGraphX.h"
 
-int LAGraph_SFreeSet            // free a set of matrices
+void LAGraph_SFreeSet           // free a set of matrices
 (
     // input/output
     GrB_Matrix **Set_handle,    // array of GrB_Matrix of size nmatrices
-    GrB_Index nmatrices,        // # of matrices in the set
-    char *msg
+    GrB_Index nmatrices         // # of matrices in the set
 )
 {
-    LG_CLEAR_MSG ;
     if (Set_handle != NULL)
     {
         GrB_Matrix *Set = (*Set_handle) ;
@@ -32,6 +30,5 @@ int LAGraph_SFreeSet            // free a set of matrices
         }
         LAGraph_Free ((void **) Set_handle) ;
     }
-    return (0) ;
 }
 

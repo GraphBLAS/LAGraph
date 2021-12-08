@@ -163,6 +163,7 @@ int LAGraph_SWrite_Item  // write the serialized blob of a matrix/vector/text
 {
     // check inputs
     LG_CLEAR_MSG ;
+    LG_CHECK (f == NULL || blob == NULL, GrB_NULL_POINTER, "inputs are NULL") ;
 
     // write the blob
     size_t blob_written = fwrite (blob, sizeof (uint8_t), blob_size, f) ;

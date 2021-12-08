@@ -21,17 +21,17 @@
 
 //------------------------------------------------------------------------------
 
-#define LAGraph_FREE_WORK                                           \
-{                                                                   \
-    fclose (f) ;                                                    \
-    f = NULL ;                                                      \
-    GrB_free (&desc) ;                                              \
-    LAGraph_SFreeContents (&Contents, nmatrices, msg) ;             \
+#define LAGraph_FREE_WORK                           \
+{                                                   \
+    fclose (f) ;                                    \
+    f = NULL ;                                      \
+    GrB_free (&desc) ;                              \
+    LAGraph_SFreeContents (&Contents, nmatrices) ;  \
 }
 
-#define LAGraph_FREE_ALL                                            \
-{                                                                   \
-    LAGraph_FREE_WORK ;                                             \
+#define LAGraph_FREE_ALL                            \
+{                                                   \
+    LAGraph_FREE_WORK ;                             \
 }
 
 #include "LG_internal.h"

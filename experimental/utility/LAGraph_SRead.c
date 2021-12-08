@@ -14,7 +14,7 @@
 // method, via:
 
 //      LAGraph_Free ((void **) &collection) ;
-//      LAGraph_SFreeContents (&Contents, ncontents, msg) ;
+//      LAGraph_SFreeContents (&Contents, ncontents) ;
 
 // See also LAGraph_SLoadSet, which calls this function and then converts all
 // serialized objects into their GrB_Matrix, GrB_Vector, or text components.
@@ -87,7 +87,7 @@ static int get_int_array_3 (json_arr arr, int *x, char *msg)
 {                                                       \
     LAGraph_FREE_WORK ;                                 \
     LAGraph_Free ((void **) &collection) ;              \
-    LAGraph_SFreeContents (&Contents, ncontents, msg) ; \
+    LAGraph_SFreeContents (&Contents, ncontents) ;      \
 }
 
 int LAGraph_SRead   // read a set of matrices from a *.lagraph file

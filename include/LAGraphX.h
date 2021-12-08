@@ -246,12 +246,11 @@ int LAGraph_SRead   // read a set of matrices from a *.lagraph file
     char *msg
 ) ;
 
-int LAGraph_SFreeContents       // free the Contents returned by LAGraph_SRead
+void LAGraph_SFreeContents      // free the Contents returned by LAGraph_SRead
 (
     // input/output
     LAGraph_Contents **Contents,    // array of size ncontents
-    GrB_Index ncontents,
-    char *msg
+    GrB_Index ncontents
 ) ;
 
 int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
@@ -280,12 +279,11 @@ int LAGraph_SLoadSet            // load a set of matrices from a *.lagraph file
     char *msg
 ) ;
 
-int LAGraph_SFreeSet            // free a set of matrices
+void LAGraph_SFreeSet           // free a set of matrices
 (
     // input/output
     GrB_Matrix **Set_handle,    // array of GrB_Matrix of size nmatrices
-    GrB_Index nmatrices,        // # of matrices in the set
-    char *msg
+    GrB_Index nmatrices         // # of matrices in the set
 ) ;
 
 //****************************************************************************

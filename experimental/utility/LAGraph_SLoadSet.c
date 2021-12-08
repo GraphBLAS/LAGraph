@@ -15,7 +15,7 @@
 // via:
 
 //      LAGraph_Free ((void **) &collection) ;
-//      LAGraph_SFreeSet (&Set, nmatrices, msg) ;
+//      LAGraph_SFreeSet (&Set, nmatrices) ;
 
 // See also LAGraph_SRead, which just reads in the serialized objects and
 // does not convert them to their corresponding GrB_Matrix, GrB_Vector, or
@@ -27,13 +27,13 @@
 {                                                                   \
     if (f != NULL) fclose (f) ;                                     \
     f = NULL ;                                                      \
-    LAGraph_SFreeContents (&Contents, ncontents, msg) ;             \
+    LAGraph_SFreeContents (&Contents, ncontents) ;                  \
 }
 
 #define LAGraph_FREE_ALL                                            \
 {                                                                   \
     LAGraph_FREE_WORK ;                                             \
-    LAGraph_SFreeSet (&Set, nmatrices, msg) ;                       \
+    LAGraph_SFreeSet (&Set, nmatrices) ;                            \
     LAGraph_Free ((void **) &collection) ;                          \
 }
 
@@ -83,7 +83,7 @@ int LAGraph_SLoadSet            // load a set of matrices from a *.lagraph file
     //--------------------------------------------------------------------------
 
     f = fopen (filename, "r") ;
-    LG_CHECK (f == NULL, -1001, "unable to read input file") ;
+    LG_CHECK (f == NULL, -1002, "unable to open input file") ;
     LAGraph_TRY (LAGraph_SRead (f, &collection, &Contents, &ncontents, msg)) ;
     fclose (f) ;
     f = NULL ;

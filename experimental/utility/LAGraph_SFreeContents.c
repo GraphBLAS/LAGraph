@@ -11,15 +11,13 @@
 #include "LG_internal.h"
 #include "LAGraphX.h"
 
-int LAGraph_SFreeContents       // free the Contents returned by LAGraph_SRead
+void LAGraph_SFreeContents  // free the Contents returned by LAGraph_SRead
 (
     // input/output
     LAGraph_Contents **Contents_handle,     // array of size ncontents
-    GrB_Index ncontents,
-    char *msg
+    GrB_Index ncontents
 )
 {
-    LG_CLEAR_MSG ;
     if (Contents_handle != NULL)
     {
         LAGraph_Contents *Contents = (*Contents_handle) ;
@@ -32,6 +30,5 @@ int LAGraph_SFreeContents       // free the Contents returned by LAGraph_SRead
         }
         LAGraph_Free ((void **) Contents_handle) ;
     }
-    return (0) ;
 }
 

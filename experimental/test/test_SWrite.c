@@ -83,6 +83,7 @@ const char *files [ ] =
 } ;
 
 //****************************************************************************
+
 void test_SWrite (void)
 {
     LAGraph_Init (msg) ;
@@ -235,9 +236,144 @@ void test_SWrite (void)
     LAGraph_Finalize (msg) ;
 }
 
+//------------------------------------------------------------------------------
+
+void test_SWrite_errors (void)
+{
+    LAGraph_Init (msg) ;
+
+    // create a simple test matrix
+    GrB_Index n = 5 ;
+    OK (GrB_Matrix_new (&A, GrB_FP32, n, n)) ;
+    OK (GrB_assign (A, NULL, NULL, 0, GrB_ALL, n, GrB_ALL, n, NULL)) ;
+    OK (GrB_apply (A, NULL, NULL, GrB_ROWINDEX_INT64, A, 0, NULL)) ;
+    printf ("\nTest matrix:\n") ;
+    OK (LAGraph_Matrix_print (A, 3, stdout, msg)) ;
+
+    // get the name of the C typedef for the matrix
+    char *typename ;
+    OK (LAGraph_TypeName (&typename, GrB_FP32, msg)) ;
+
+    // serialize the matrix
+    bool ok ;
+    void *blob = NULL ;
+    GrB_Index blob_size = 0 ;
+    #if LG_SUITESPARSE
+    {
+        // for SuiteSparse
+        OK (GxB_Matrix_serialize (&blob, &blob_size, A, NULL)) ;
+    }
+    #else
+    {
+        // use GrB version
+        OK (GrB_Matrix_serializeSize (&blob_size, A)) ;
+        GrB_Index blob_size_old = blob_size ;
+        blob = LAGraph_Malloc (blob_size, sizeof (uint8_t)) ;
+        TEST_CHECK (blob != NULL) ;
+        OK (GrB_Matrix_serialize (blob, &blob_size, A)) ;
+        blob = LAGraph_Realloc (blob_size, blob_size_old,
+            sizeof (uint8_t), blob, &ok) ;
+        TEST_CHECK (ok) ;
+    }
+    #endif
+
+    FILE *f = tmpfile ( )  ;
+    TEST_CHECK (f != NULL) ;
+
+    int result = LAGraph_SWrite_HeaderItem (f, -2, "A",
+        typename, 0, blob_size, msg) ;
+    printf ("result: %d [%s]\n", result, msg) ;
+    TEST_CHECK (result == GrB_INVALID_VALUE) ;
+    fclose (f) ;
+
+    f = fopen ("error.lagraph", "w") ;
+    TEST_CHECK (f != NULL) ;
+
+    result = LAGraph_SWrite_HeaderStart (f, NULL, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
+
+    result = LAGraph_SWrite_HeaderStart (NULL, "stuff", msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
+
+    OK (LAGraph_SWrite_HeaderStart (f, "lagraph_test", msg)) ;
+
+    result = LAGraph_SWrite_HeaderItem (NULL, LAGraph_matrix_kind, "A",
+        typename, 0, blob_size, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
+
+    result = LAGraph_SWrite_HeaderItem (NULL, -2, "A",
+        typename, 0, blob_size, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
+
+    OK (LAGraph_SWrite_HeaderItem (f, LAGraph_matrix_kind, "A",
+        typename, 0, blob_size, msg)) ;
+
+    result = LAGraph_SWrite_HeaderEnd (NULL, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
+
+    OK (LAGraph_SWrite_HeaderEnd (f, msg)) ;
+
+    // write the binary blob to the file then free the blob
+    OK (LAGraph_SWrite_Item (f, blob, blob_size, msg)) ;
+    LAGraph_Free (&blob) ;
+
+    result = LAGraph_SWrite_Item (NULL, blob, blob_size, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
+
+    result = LAGraph_SWrite_Item (f, NULL, blob_size, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
+
+    // close the file and reopen it
+    fclose (f) ;
+    f = fopen ("error.lagraph", "r") ;
+    TEST_CHECK (f != NULL) ;
+
+    // load in the matrix
+    GrB_Matrix *Set = NULL ;
+    GrB_Index nmatrices = 0 ;
+    char *collection = NULL ;
+
+    result = LAGraph_SLoadSet (NULL, &Set, &nmatrices, &collection, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
+
+    result = LAGraph_SLoadSet ("error.lagraph", NULL, &nmatrices,
+        &collection, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
+
+    result = LAGraph_SLoadSet ("unknown.lagraph", &Set, &nmatrices,
+        &collection, msg) ;
+    printf ("\nresult %d, [%s]\n", result, msg) ;
+    TEST_CHECK (result == -1002) ;
+
+    // mangled file
+    result = LAGraph_SLoadSet (LG_DATA_DIR "garbage.lagraph",
+        &Set, &nmatrices, &collection, msg) ;
+    printf ("\nresult %d, [%s]\n", result, msg) ;
+    TEST_CHECK (result == -1001) ;
+
+    // finally works
+    OK (LAGraph_SLoadSet ("error.lagraph", &Set, &nmatrices, &collection,
+        msg)) ;
+    TEST_CHECK (Set != NULL) ;
+    TEST_CHECK (collection != NULL) ;
+    TEST_CHECK (nmatrices == 1) ;
+
+    ok = false ;
+    OK (LAGraph_IsEqual_type (&ok, A, Set [0], GrB_FP32, msg)) ;
+    TEST_CHECK (ok) ;
+
+    // free everything
+    LAGraph_SFreeSet (&Set, nmatrices) ;
+    LAGraph_Free ((void **) &collection) ;
+    fclose (f) ;
+    OK (GrB_free (&A)) ;
+    LAGraph_Finalize (msg) ;
+}
+
 //****************************************************************************
 
 TEST_LIST = {
     {"SWrite", test_SWrite},
+    {"SWrite_errors", test_SWrite_errors},
     {NULL, NULL}
 };

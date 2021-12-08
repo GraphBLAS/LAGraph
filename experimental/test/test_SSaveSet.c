@@ -133,8 +133,8 @@ void test_SSaveSet (void)
     }
 
     // free all matrices
-    OK (LAGraph_SFreeSet (&Set, NFILES, msg)) ;
-    OK (LAGraph_SFreeSet (&Set2, NFILES, msg)) ;
+    LAGraph_SFreeSet (&Set, NFILES) ;
+    LAGraph_SFreeSet (&Set2, NFILES) ;
     LAGraph_Free ((void **) &collection) ;
 
     OK (GrB_free (&desc)) ;
