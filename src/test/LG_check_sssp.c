@@ -79,11 +79,11 @@ int LG_check_sssp
     LG_Element *Heap = NULL ;
 
     LAGraph_Tic (tic, msg) ;
-    LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
+    LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
-    LG_CHECK (n != ncols, -1001, "G->A must be square") ;
-    LG_CHECK (G->A_type != GrB_INT32, -1001, "G->A must be int32") ;
+    LG_ASSERT_MSG (n == ncols, -1001, "G->A must be square") ;
+    LG_ASSERT_MSG (G->A_type == GrB_INT32, -1001, "G->A must be int32") ;
     bool print_timings = (n >= 2000) ;
 
     //--------------------------------------------------------------------------
@@ -91,9 +91,9 @@ int LG_check_sssp
     //--------------------------------------------------------------------------
 
     path_length_in = LAGraph_Malloc (n, sizeof (int64_t)) ;
-    LG_CHECK (path_length_in == NULL, -1003, "out of memory") ;
-    LG_CHECK (LG_check_vector (path_length_in, Path_Length, n, INT32_MAX),
-        -1004, "invalid Path_Length") ;
+    LG_ASSERT (path_length_in != NULL, GrB_OUT_OF_MEMORY) ;
+    LG_ASSERT_MSG (LG_check_vector (path_length_in, Path_Length, n, INT32_MAX)
+        == 0, -1004, "invalid Path_Length") ;
 
     //--------------------------------------------------------------------------
     // unpack the matrix in CSR form for SuiteSparse:GraphBLAS
@@ -121,8 +121,7 @@ int LG_check_sssp
     // initializations
     distance = LAGraph_Malloc (n, sizeof (int64_t)) ;
     // parent = LAGraph_Malloc (n, sizeof (int64_t)) ;
-    LG_CHECK (distance == NULL, -1003, "out of memory") ;
-    // LG_CHECK (parent == NULL, -1003, "out of memory") ;
+    LG_ASSERT (distance != NULL, GrB_OUT_OF_MEMORY) ;
     for (int64_t i = 0 ; i < n ; i++)
     {
         distance [i] = INT32_MAX ;
@@ -135,14 +134,14 @@ int LG_check_sssp
     GrB_TRY (GrB_Vector_new (&Row, GrB_INT32, n)) ;
     neighbors = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
     neighbor_weights = LAGraph_Malloc (n, sizeof (int32_t)) ;
-    LG_CHECK (neighbors == NULL, -1003, "out of memory") ;
-    LG_CHECK (neighbor_weights == NULL, -1003, "out of memory") ;
+    LG_ASSERT (neighbors != NULL, GrB_OUT_OF_MEMORY) ;
+    LG_ASSERT (neighbor_weights != NULL, GrB_OUT_OF_MEMORY) ;
     #endif
 
     // place all nodes in the heap (already in heap order)
     Heap = LAGraph_Malloc ((n+1), sizeof (LG_Element)) ;
     Iheap = LAGraph_Malloc (n, sizeof (int64_t)) ;
-    LG_CHECK (Heap == NULL || Iheap == NULL, -1003, "out of memory") ;
+    LG_ASSERT (Heap != NULL && Iheap != NULL, GrB_OUT_OF_MEMORY) ;
     Heap [1].key = 0 ;
     Heap [1].name = src ;
     Iheap [src] = 1 ;
@@ -158,7 +157,8 @@ int LG_check_sssp
         }
     }
     int64_t nheap = n ;
-    LG_CHECK (LG_heap_check (Heap, Iheap, n, nheap), -1011, "invalid heap") ;
+    LG_ASSERT_MSG (LG_heap_check (Heap, Iheap, n, nheap) == 0, -1011,
+        "invalid heap") ;
 
     while (nheap > 0)
     {
@@ -175,7 +175,7 @@ int LG_check_sssp
         // printf ("\nafter delete\n") ;
         if (n < 200)
         {
-            LG_CHECK (LG_heap_check (Heap, Iheap, n, nheap), -1013,
+            LG_ASSERT_MSG (LG_heap_check (Heap, Iheap, n, nheap) == 0, -1013,
                 "invalid heap") ;
         }
 
@@ -226,7 +226,7 @@ int LG_check_sssp
             int64_t w = (int64_t) (weights [iso ? 0 : k]) ;
             // printf ("consider edge (%ld,%ld) weight %ld\n", u, v, w) ;
 
-            LG_CHECK (w <= 0, -1008, "invalid graph (weights must be > 0)") ;
+            LG_ASSERT_MSG (w > 0, -1008, "invalid graph (weights must be > 0)") ;
             int64_t new_distance = u_distance + w ;
             if (distance [v] > new_distance)
             {
@@ -236,14 +236,14 @@ int LG_check_sssp
                 distance [v] = new_distance ;
                 // parent [v] = u ;
                 int64_t p = Iheap [v] ;
-                LG_CHECK (Heap [p].name != v, -2000, "huh?") ;
+                LG_ASSERT (Heap [p].name == v, -2000) ;
                 LG_heap_decrease_key (p, new_distance, Heap, Iheap, n, nheap) ;
             }
         }
 
         if (n < 200)
         {
-            LG_CHECK (LG_heap_check (Heap, Iheap, n, nheap), -1014,
+            LG_ASSERT_MSG (LG_heap_check (Heap, Iheap, n, nheap) == 0, -1014,
                 "invalid heap") ;
         }
 
@@ -273,7 +273,7 @@ int LG_check_sssp
     for (int64_t i = 0 ; i < n ; i++)
     {
         bool ok = (path_length_in [i] == distance [i]) ;
-        LG_CHECK (!ok, -1004, "invalid path length") ;
+        LG_ASSERT_MSG (ok, -1004, "invalid path length") ;
     }
 
     //--------------------------------------------------------------------------

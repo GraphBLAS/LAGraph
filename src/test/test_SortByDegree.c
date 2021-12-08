@@ -386,10 +386,12 @@ void test_SortByDegree_failures (void)
 {
     setup ( ) ;
 
-    TEST_CHECK (LAGraph_SortByDegree (NULL, NULL, true, true, msg) == -1) ;
-    printf ("\nmsg: %s\n", msg) ;
+    int result = LAGraph_SortByDegree (NULL, NULL, true, true, msg) ;
+    printf ("\nresult %d: msg: %s\n", result, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
 
-    TEST_CHECK (LAGraph_SortByDegree (&P, NULL, true, true, msg) == -1) ;
+    result = LAGraph_SortByDegree (&P, NULL, true, true, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
     // create the karate graph

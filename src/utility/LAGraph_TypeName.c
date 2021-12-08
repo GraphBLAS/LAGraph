@@ -23,8 +23,8 @@ int LAGraph_TypeName        // returns 0 if successful, < 0 if failure
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    LG_CHECK (type == NULL, GrB_NULL_POINTER, "type is NULL") ;
-    LG_CHECK (name == NULL, GrB_NULL_POINTER, "name is NULL") ;
+    LG_ASSERT (type != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (name != NULL, GrB_NULL_POINTER) ;
 
     //--------------------------------------------------------------------------
     // determine the name of the type

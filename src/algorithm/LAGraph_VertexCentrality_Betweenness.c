@@ -120,9 +120,9 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
 
     GrB_Index n = 0 ;                   // # nodes in the graph
 
-    LG_CHECK (centrality == NULL, -1, "centrality is NULL") ;
+    LG_ASSERT (centrality != NULL, GrB_NULL_POINTER) ;
     (*centrality) = NULL ;
-    LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
+    LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     LAGraph_Kind kind = G->kind ;
     int A_sym_structure = G->A_structure_is_symmetric ;
 
@@ -137,7 +137,7 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
     {
         // A and A' differ
         AT = G->AT ;
-        LG_CHECK (AT == NULL, -1, "G->AT is required") ;
+        LG_ASSERT_MSG (AT != NULL, -1, "G->AT is required") ;
     }
 
     // =========================================================================
@@ -166,7 +166,7 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
 
     // Allocate memory for the array of S matrices
     S = (GrB_Matrix *) LAGraph_Malloc (n+1, sizeof (GrB_Matrix)) ;
-    LG_CHECK (S == NULL, -1, "out of memory") ;
+    LG_ASSERT (S != NULL, GrB_OUT_OF_MEMORY) ;
     S [0] = NULL ;
 
     // =========================================================================

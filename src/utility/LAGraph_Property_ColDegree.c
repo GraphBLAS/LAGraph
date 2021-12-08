@@ -35,7 +35,7 @@ int LAGraph_Property_ColDegree  // 0 if successful, -1 if failure
 
     GrB_Matrix S = NULL ;
     GrB_Vector coldegree = NULL, x = NULL ;
-    LG_CHECK_INIT (G, msg) ;
+    LG_CLEAR_MSG_AND_BASIC_ASSERT (G, msg) ;
 
     if (G->coldegree != NULL || G->kind == LAGRAPH_ADJACENCY_UNDIRECTED)
     {

@@ -332,11 +332,11 @@ void test_MMRead_failures (void)
         "mangled matrices:\n") ;
 
     // input arguments are NULL
-    TEST_CHECK (LAGraph_MMRead (NULL, NULL, NULL, msg) == -1001) ;
+    TEST_CHECK (LAGraph_MMRead (NULL, NULL, NULL, msg) == GrB_NULL_POINTER) ;
     printf ("msg: [%s]\n", msg) ;
-    TEST_CHECK (LAGraph_MMRead (&A, NULL, NULL, msg) == -1001) ;
+    TEST_CHECK (LAGraph_MMRead (&A, NULL, NULL, msg) == GrB_NULL_POINTER) ;
     printf ("msg: [%s]\n", msg) ;
-    TEST_CHECK (LAGraph_MMRead (&A, &atype, NULL, msg) == -1001) ;
+    TEST_CHECK (LAGraph_MMRead (&A, &atype, NULL, msg) == GrB_NULL_POINTER) ;
     printf ("msg: [%s]\n", msg) ;
 
     // matrix files are mangled in some way, or unsupported
@@ -566,9 +566,10 @@ void test_MMWrite_failures (void)
     printf ("\nTesting error handling of LAGraph_MMWrite\n") ;
 
     // input arguments are NULL
-    TEST_CHECK (LAGraph_MMWrite (NULL, NULL, NULL, msg) == -1001) ;
+    TEST_CHECK (LAGraph_MMWrite (NULL, NULL, NULL, msg) == GrB_NULL_POINTER) ;
     printf ("msg: [%s]\n", msg) ;
-    TEST_CHECK (LAGraph_MMWrite_type (NULL, NULL, NULL, NULL, msg) == -1001) ;
+    TEST_CHECK (LAGraph_MMWrite_type (NULL, NULL, NULL, NULL, msg)
+        == GrB_NULL_POINTER) ;
 
     // attempt to print a matrix with a user-defined type, which should fail
     FILE *f = tmpfile ( ) ;

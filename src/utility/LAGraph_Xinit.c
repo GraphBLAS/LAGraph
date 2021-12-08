@@ -97,8 +97,8 @@ int LAGraph_Xinit           // returns 0 if successful, < 0 if failure
 
     // malloc and free are required; realloc is optional
     LG_CLEAR_MSG ;
-    LG_CHECK (user_malloc_function == NULL, GrB_NULL_POINTER, "malloc is NULL");
-    LG_CHECK (user_free_function   == NULL, GrB_NULL_POINTER, "free is NULL") ;
+    LG_ASSERT (user_malloc_function != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (user_free_function   != NULL, GrB_NULL_POINTER) ;
     GrB_Info info ;
 
     //--------------------------------------------------------------------------
@@ -120,7 +120,8 @@ int LAGraph_Xinit           // returns 0 if successful, < 0 if failure
 
     #endif
 
-    LG_CHECK (info != GrB_SUCCESS, info, "failed to initialize GraphBLAS") ;
+    LG_ASSERT_MSG (info == GrB_SUCCESS, info,
+        "failed to initialize GraphBLAS") ;
 
     //--------------------------------------------------------------------------
     // save the memory management pointers in global LAGraph space

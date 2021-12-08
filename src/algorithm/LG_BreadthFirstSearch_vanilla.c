@@ -54,7 +54,7 @@ int LG_BreadthFirstSearch_vanilla
     if (compute_level ) (*level ) = NULL;
     if (compute_parent) (*parent) = NULL;
 
-    LG_CHECK (LAGraph_CheckGraph (G, msg), -101, "graph is invalid") ;
+    LG_TRY (LAGraph_CheckGraph (G, msg)) ;
 
     if (!(compute_level || compute_parent))
     {
@@ -69,7 +69,7 @@ int LG_BreadthFirstSearch_vanilla
 
     GrB_Index n;
     GrB_TRY( GrB_Matrix_nrows (&n, A) );
-    LG_CHECK( src >= n, -102, "src is out of range") ;
+    LG_ASSERT_MSG (src < n, -102, "invalid source node") ;
 
     GrB_Matrix AT ;
     GrB_Vector Degree = G->rowdegree ;

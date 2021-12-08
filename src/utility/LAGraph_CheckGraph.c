@@ -21,7 +21,7 @@ int LAGraph_CheckGraph      // returns 0 if successful, -1 if failure
     // clear the msg and check basic components
     //--------------------------------------------------------------------------
 
-    LG_CHECK_INIT (G, msg) ;
+    LG_CLEAR_MSG_AND_BASIC_ASSERT (G, msg) ;
     GrB_Matrix A = G->A ;
     LAGraph_Kind kind = G->kind ;
 
@@ -35,14 +35,16 @@ int LAGraph_CheckGraph      // returns 0 if successful, -1 if failure
     {
         GrB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
         GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
-        LG_CHECK (nrows != ncols, -1101, "adjacency matrix invalid") ;
+        LG_ASSERT_MSG (nrows == ncols, -1101,
+            "adjacency matrix must be square") ;
     }
 
     #if LG_SUITESPARSE
         // only by-row format is supported when using SuiteSparse
         GxB_Format_Value fmt ;
         GrB_TRY (GxB_get (A, GxB_FORMAT, &fmt)) ;
-        LG_CHECK (fmt != GxB_BY_ROW, -1102, "only by-row format supported") ;
+        LG_ASSERT_MSG (fmt == GxB_BY_ROW, -1102,
+            "only by-row format supported") ;
     #endif
 
     //--------------------------------------------------------------------------
@@ -55,20 +57,20 @@ int LAGraph_CheckGraph      // returns 0 if successful, -1 if failure
         GrB_Index nrows2, ncols2;
         GrB_TRY (GrB_Matrix_nrows (&nrows2, AT)) ;
         GrB_TRY (GrB_Matrix_ncols (&ncols2, AT)) ;
-        LG_CHECK (nrows != ncols2 || ncols != nrows2, -1103,
-            "G->AT matrix invalid") ;
+        LG_ASSERT_MSG (nrows == ncols2 && ncols == nrows2, -1103,
+            "G->AT matrix has the wrong dimensions") ;
 
         #if LG_SUITESPARSE
             // only by-row format is supported when using SuiteSparse
             GxB_Format_Value fmt ;
             GrB_TRY (GxB_get (AT, GxB_FORMAT, &fmt)) ;
-            LG_CHECK (fmt != GxB_BY_ROW, -1104,
+            LG_ASSERT_MSG (fmt == GxB_BY_ROW, -1104,
                 "only by-row format supported") ;
         #endif
 
         // ensure the types of A and AT are the same
-        LG_CHECK (G->A_type != G->AT_type, -1105,
-            "A and AT types are different") ;
+        LG_ASSERT_MSG (G->A_type == G->AT_type, -1105,
+            "A and AT must have the same type") ;
     }
 
     GrB_Vector rowdegree = G->rowdegree ;
@@ -76,9 +78,9 @@ int LAGraph_CheckGraph      // returns 0 if successful, -1 if failure
     {
         GrB_Index m ;
         GrB_TRY (GrB_Vector_size (&m, rowdegree)) ;
-        LG_CHECK (m != nrows, -1106, "rowdegree invalid size") ;
-        LG_CHECK (G->rowdegree_type != GrB_INT64, -1107,
-                  "rowdegree has wrong type") ;
+        LG_ASSERT_MSG (m == nrows, -1106, "rowdegree invalid size") ;
+        LG_ASSERT_MSG (G->rowdegree_type == GrB_INT64, -1107,
+                  "rowdegree has wrong type; must be GrB_INT64") ;
     }
 
     GrB_Vector coldegree = G->coldegree ;
@@ -86,9 +88,9 @@ int LAGraph_CheckGraph      // returns 0 if successful, -1 if failure
     {
         GrB_Index n ;
         GrB_TRY (GrB_Vector_size (&n, coldegree)) ;
-        LG_CHECK (n != ncols, -1108, "coldegree invalid size") ;
-        LG_CHECK (G->coldegree_type != GrB_INT64, -1109,
-                  "coldegree has wrong type") ;
+        LG_ASSERT_MSG (n == ncols, -1108, "coldegree invalid size") ;
+        LG_ASSERT_MSG (G->coldegree_type == GrB_INT64, -1109,
+                  "coldegree has wrong type; must be GrB_INT64") ;
     }
 
     return (0) ;

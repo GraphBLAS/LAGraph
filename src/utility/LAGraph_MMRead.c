@@ -445,8 +445,9 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    LG_CHECK (A == NULL || A_type == NULL || f == NULL, -1001,
-        "inputs are NULL") ;
+    LG_ASSERT (A != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (A_type != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (f != NULL, GrB_NULL_POINTER) ;
     (*A) = NULL ;
     (*A_type) = NULL;
 
@@ -525,7 +526,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             if (strncmp (p, "matrix", 6) != 0)
             {
                 // invalid Matrix Market object
-                LG_CHECK (true, -1002, "invalid object") ;
+                LG_ASSERT_MSG (false, -1002, "invalid object") ;
             }
             p += 6 ;                                // skip past token "matrix"
 
@@ -548,7 +549,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             else
             {
                 // invalid Matrix Market format
-                LG_CHECK (true, -1002, "invalid format") ;
+                LG_ASSERT_MSG (false, -1002, "invalid format") ;
             }
 
             //------------------------------------------------------------------
@@ -576,7 +577,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
                 type = GxB_FC64 ;
                 p += 7 ;
 #endif
-                LG_CHECK (true, -1, "complex types not yet supported") ;
+                LG_ASSERT_MSG (false, -1, "complex types not yet supported") ;
             }
             else if (strncmp (p, "pattern", 7) == 0)
             {
@@ -587,7 +588,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             else
             {
                 // invalid Matrix Market type
-                LG_CHECK (true, -1002, "invalid type") ;
+                LG_ASSERT_MSG (false, -1002, "invalid type") ;
             }
 
             //------------------------------------------------------------------
@@ -615,7 +616,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             else
             {
                 // invalid Matrix Market storage
-                LG_CHECK (true, -1002, "invalid storage") ;
+                LG_ASSERT_MSG (false, -1002, "invalid storage") ;
             }
 
             //------------------------------------------------------------------
@@ -625,7 +626,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             if (MM_type == MM_pattern)
             {
                 // (coodinate) x (pattern) x (general or symmetric)
-                LG_CHECK (!
+                LG_ASSERT_MSG (
                     (MM_fmt == MM_coordinate &&
                     (MM_storage == MM_general || MM_storage == MM_symmetric)),
                     -1002, "invalid pattern combination") ;
@@ -634,7 +635,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             if (MM_storage == MM_hermitian)
             {
                 // (coordinate or array) x (complex) x (Hermitian)
-                LG_CHECK (! (MM_type == MM_complex), -1002,
+                LG_ASSERT_MSG (MM_type == MM_complex, -1002,
                     "invalid complex combination") ;
             }
 
@@ -718,7 +719,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             else
             {
                 // type not supported
-                LG_CHECK (true, -1002, "type not supported") ;
+                LG_ASSERT_MSG (false, -1002, "type not supported") ;
             }
 
             if (MM_storage == MM_skew_symmetric && (type == GrB_BOOL ||
@@ -726,7 +727,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
                 type == GrB_UINT32 || type == GrB_UINT64))
             {
                 // matrices with unsigned types cannot be skew-symmetric
-                LG_CHECK (true, -1002, "skew-symmetric matrices cannot have an"
+                LG_ASSERT_MSG (false, -1002, "skew-symmetric matrices cannot have an"
                     " unsigned type") ;
             }
 
@@ -792,13 +793,13 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             else
             {
                 // wrong number of items in first data line
-                LG_CHECK (true, -1002, "invalid 1st line") ;
+                LG_ASSERT_MSG (false, -1002, "invalid 1st line") ;
             }
 
             if (nrows != ncols)
             {
                 // a rectangular matrix must be in the general storage
-                LG_CHECK (! (MM_storage == MM_general), -1002,
+                LG_ASSERT_MSG (MM_storage == MM_general, -1002,
                     "invalid rectangular") ;
             }
 
@@ -850,7 +851,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             //------------------------------------------------------------------
 
             bool ok = get_line (f, buf) ;
-            LG_CHECK (!ok, -1002, "premature EOF") ;
+            LG_ASSERT_MSG (ok, -1002, "premature EOF") ;
             if (is_blank_line (buf))
             {
                 // blank line or comment
@@ -885,7 +886,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             else
             {
                 // coordinate format; read the row and column index
-                LG_CHECK (sscanf (p, "%" SCNu64 " %" SCNu64, &i, &j) != 2,
+                LG_ASSERT_MSG (sscanf (p, "%" SCNu64 " %" SCNu64, &i, &j) == 2,
                     -1002, "indices invalid") ;
                 // convert from 1-based to 0-based.
                 i-- ;
@@ -904,7 +905,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             while (*p && isspace (*p)) p++ ;        // skip any spaces
 
             ok = read_entry (p, type, MM_type == MM_pattern, x) ;
-            LG_CHECK (!ok, -1002, "entry invalid") ;
+            LG_ASSERT_MSG (ok, -1002, "entry invalid") ;
 
             //------------------------------------------------------------------
             // set the value in the matrix
@@ -952,7 +953,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
 
     GrB_Index nvals3 = 0 ;
     GrB_TRY (GrB_Matrix_nvals (&nvals3, *A)) ;
-    LG_CHECK (nvals2 != nvals3, -1002, "duplicate entries present") ;
+    LG_ASSERT_MSG (nvals2 == nvals3, -1002, "duplicate entries present") ;
     return (0) ;
 }
 

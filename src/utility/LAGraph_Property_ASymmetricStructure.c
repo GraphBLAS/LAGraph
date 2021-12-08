@@ -31,7 +31,7 @@ int LAGraph_Property_ASymmetricStructure  // 0 if successful, -1 if failure
     //--------------------------------------------------------------------------
 
     GrB_Matrix C = NULL, S1 = NULL, S2 = NULL ;
-    LG_CHECK_INIT (G, msg) ;
+    LG_CLEAR_MSG_AND_BASIC_ASSERT (G, msg) ;
 
     LAGraph_Kind kind = G->kind ;
     if (kind == LAGRAPH_ADJACENCY_UNDIRECTED)

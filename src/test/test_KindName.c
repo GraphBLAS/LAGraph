@@ -54,7 +54,7 @@ void test_KindName (void)
     OK (LAGraph_KindName (&name, LAGRAPH_UNKNOWN, msg)) ;
     OK (strcmp (name, "unknown")) ;
 
-    TEST_CHECK (LAGraph_KindName (&name, 42, msg) == -1) ;
+    TEST_CHECK (LAGraph_KindName (&name, 42, msg) == GrB_INVALID_VALUE) ;
     printf ("\nmsg: %s\n", msg) ;
 
     teardown ( ) ;

@@ -38,7 +38,8 @@ int LAGraph_IsEqual_type    // returns 0 if successful, < 0 if failure
 
     LG_CLEAR_MSG ;
     GrB_Matrix C = NULL ;
-    LG_CHECK (type == NULL || result == NULL, -1001, "required input is NULL") ;
+    LG_ASSERT (type != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (result != NULL, GrB_NULL_POINTER) ;
 
     //--------------------------------------------------------------------------
     // check for NULL and aliased matrices
@@ -113,7 +114,7 @@ int LAGraph_IsEqual_type    // returns 0 if successful, < 0 if failure
     #endif
     else
     {
-        LG_CHECK (true, -1002, "unsupported type") ;
+        LG_ASSERT_MSG (false, -1002, "unsupported type") ;
     }
 
     //--------------------------------------------------------------------------
@@ -172,7 +173,7 @@ int LAGraph_IsEqual         // returns 0 if successful, < 0 if failure
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    LG_CHECK (A == NULL, -1001, "required input is NULL") ;
+    LG_ASSERT (A != NULL, GrB_NULL_POINTER) ;
 
     //--------------------------------------------------------------------------
     // determine the type

@@ -20,7 +20,7 @@ int LAGraph_GetNumThreads   // returns 0 if successful, or -1 if failure
 {
 
     LG_CLEAR_MSG ;
-    LG_CHECK (nthreads == NULL, GrB_NULL_POINTER, "nthreads is NULL") ;
+    LG_ASSERT (nthreads != NULL, GrB_NULL_POINTER) ;
 
     #if LG_SUITESPARSE
     {

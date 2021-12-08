@@ -226,11 +226,11 @@ void test_BreadthFirstSearch_invalid_graph(void)
     LAGraph_Graph graph = NULL;
 
     retval = LAGraph_BreadthFirstSearch(NULL, NULL, graph, 0, false, msg);
-    TEST_CHECK(retval == -101);
+    TEST_CHECK(retval == GrB_NULL_POINTER);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
     retval = LG_BreadthFirstSearch_vanilla(NULL, NULL, graph, 0, false, msg);
-    TEST_CHECK(retval == -101);
+    TEST_CHECK(retval == GrB_NULL_POINTER);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
     teardown();

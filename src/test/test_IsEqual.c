@@ -340,10 +340,11 @@ void test_IsEqual_failures (void)
     OK (LAGraph_Vector_IsEqual_type (&result, NULL, NULL, GrB_BOOL, msg)) ;
     TEST_CHECK (result == true) ;
 
-    TEST_CHECK (LAGraph_IsEqual_type (NULL, NULL, NULL, NULL, msg) == -1001) ;
+    TEST_CHECK (LAGraph_IsEqual_type (NULL, NULL, NULL, NULL, msg)
+        == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
-    TEST_CHECK (LAGraph_IsEqual (NULL, NULL, NULL, msg) == -1001) ;
+    TEST_CHECK (LAGraph_IsEqual (NULL, NULL, NULL, msg) == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
     OK (GrB_Matrix_new (&A, GrB_BOOL, 2, 2)) ;
@@ -352,16 +353,19 @@ void test_IsEqual_failures (void)
     OK (GrB_Vector_new (&u, GrB_BOOL, 2)) ;
     OK (GrB_Vector_new (&v, GrB_BOOL, 2)) ;
 
-    TEST_CHECK (LAGraph_IsEqual_type (NULL, A, B, NULL, msg) == -1001) ;
+    TEST_CHECK (LAGraph_IsEqual_type (NULL, A, B, NULL, msg)
+        == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
-    TEST_CHECK (LAGraph_Vector_IsEqual_type (NULL, u, v, NULL, msg) == -1001) ;
+    TEST_CHECK (LAGraph_Vector_IsEqual_type (NULL, u, v, NULL, msg)
+        == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
-    TEST_CHECK (LAGraph_IsEqual_type (NULL, A, B, GrB_BOOL, msg) == -1001) ;
+    TEST_CHECK (LAGraph_IsEqual_type (NULL, A, B, GrB_BOOL, msg)
+        == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
-    TEST_CHECK (LAGraph_IsEqual (NULL, A, B, msg) == -1001) ;
+    TEST_CHECK (LAGraph_IsEqual (NULL, A, B, msg) == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
     OK (LAGraph_IsEqual (&result, A, B, msg)) ;

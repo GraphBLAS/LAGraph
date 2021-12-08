@@ -29,8 +29,8 @@ int LAGraph_Structure   // return 0 if successful, -1 if failure
 
     LG_CLEAR_MSG ;
     GrB_Index nrows, ncols ;
-    LG_CHECK (C == NULL, -1, "&C is NULL") ;
-    LG_CHECK (A == NULL, -1, "A is NULL") ;
+    LG_ASSERT_MSG (C != NULL, GrB_NULL_POINTER, "&C != NULL") ;
+    LG_ASSERT (A != NULL, GrB_NULL_POINTER) ;
     (*C) = NULL ;
 
     //--------------------------------------------------------------------------

@@ -27,7 +27,7 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    LG_CHECK (f == NULL, -1001, "f is NULL") ;
+    LG_ASSERT (f != NULL, GrB_NULL_POINTER) ;
     LAGraph_TRY (LAGraph_CheckGraph (G, msg)) ;
     pr = LAGraph_MAX (pr, -1) ;
     pr = LAGraph_MIN (pr, 5) ;

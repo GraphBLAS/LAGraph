@@ -181,8 +181,9 @@ int LAGraph_MMWrite_type
     void *X = NULL ;
     GrB_Index *I = NULL, *J = NULL, *K = NULL ;
     GrB_Matrix M = NULL, AT = NULL, C = NULL ;
-    LG_CHECK (A == NULL || f == NULL || type == NULL, -1001,
-        "inputs are NULL") ;
+    LG_ASSERT (A != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (f != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (type != NULL, GrB_NULL_POINTER) ;
 
     //--------------------------------------------------------------------------
     // determine the basic matrix properties
@@ -232,7 +233,7 @@ int LAGraph_MMWrite_type
     else
     {
         // type not supported
-        LG_CHECK (true, -1006, "unsupported matrix type") ;
+        LG_ASSERT_MSG (false, -1006, "unsupported matrix type") ;
     }
 
     //--------------------------------------------------------------------------
@@ -442,7 +443,7 @@ int LAGraph_MMWrite_type
     I = LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;
     J = LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;
     K = LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;
-    LG_CHECK (I == NULL || J == NULL || K == NULL, -1004, "out of memory") ;
+    LG_ASSERT (I != NULL && J != NULL && K != NULL, GrB_OUT_OF_MEMORY) ;
     for (int64_t k = 0 ; k < nvals ; k++)
     {
         K [k] = k ;
@@ -457,7 +458,7 @@ int LAGraph_MMWrite_type
     {                                                                       \
         ctype *X = NULL ;                                                   \
         X = LAGraph_Malloc (nvals, sizeof (ctype)) ;                        \
-        LG_CHECK (X == NULL, -1010, "out of memory") ;                      \
+        LG_ASSERT (X != NULL, GrB_OUT_OF_MEMORY) ;                          \
         GrB_TRY (GrB_Matrix_extractTuples (I, J, X, &nvals, A)) ;           \
         LAGraph_TRY (LAGraph_Sort3 ((int64_t *) J, (int64_t *) I,           \
             (int64_t *) K, nvals, nthreads, msg)) ;                         \
@@ -486,15 +487,15 @@ int LAGraph_MMWrite_type
                 }                                                           \
                 else if (is_real)                                           \
                 {                                                           \
-                    LG_CHECK (!print_double (f, (double) x), -1002,         \
+                    LG_ASSERT_MSG (print_double (f, (double) x), -1002,     \
                         "Unable to write to file") ;                        \
                 }                                                           \
             /*  else if (is_complex)                                 */     \
             /*  {                                                    */     \
-            /*      LG_CHECK (!print_double (f, creal (x)), -1002,   */     \
+            /*      LG_ASSERT_MSG (print_double (f, creal (x)), -1002,   */ \
             /*          "Unable to write to file") ;                 */     \
             /*      FPRINTF (f, " ") ;                               */     \
-            /*      LG_CHECK (!print_double (f, cimag (x)), -1002,   */     \
+            /*      LG_ASSERT_MSG (print_double (f, cimag (x)), -1002,   */ \
             /*          "Unable to write to file") ;                 */     \
             /*  }                                                    */     \
                 FPRINTF (f, "\n") ;                                         \
@@ -551,7 +552,8 @@ int LAGraph_MMWrite
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    LG_CHECK (A == NULL || f == NULL, -1001, "inputs are NULL") ;
+    LG_ASSERT (A != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (f != NULL, GrB_NULL_POINTER) ;
 
     //--------------------------------------------------------------------------
     // determine the type

@@ -83,7 +83,7 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     GrB_Matrix A ;                      // G->A, the adjacency matrix
     GrB_Index n ;                       // # of nodes
 
-    LG_CHECK (LAGraph_CheckGraph (G, msg), -102, "graph is invalid") ;
+    LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     LG_CHECK (mis == NULL, -103, "mis is null") ;
 
     if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||

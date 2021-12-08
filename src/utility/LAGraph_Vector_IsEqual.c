@@ -48,8 +48,7 @@ GrB_Info LAGraph_Vector_IsEqual_op    // return GrB_SUCCESS if successful
 
     LG_CLEAR_MSG ;
     GrB_Vector C = NULL ;
-    LG_CHECK (userop == NULL || result == NULL, -1001,
-        "required input is NULL") ;
+    LG_ASSERT (userop != NULL && result != NULL, GrB_NULL_POINTER) ;
 
     GrB_Info info ;
 
@@ -146,7 +145,7 @@ GrB_Info LAGraph_Vector_IsEqual_type    // return GrB_SUCCESS if successful
 
     LG_CLEAR_MSG ;
     GrB_Vector C = NULL ;
-    LG_CHECK (type == NULL || result == NULL, -1001, "required input is NULL") ;
+    LG_ASSERT (type != NULL && result != NULL, GrB_NULL_POINTER) ;
 
     GrB_Info info ;
 
@@ -212,7 +211,7 @@ GrB_Info LAGraph_Vector_IsEqual_type    // return GrB_SUCCESS if successful
     #endif
     else
     {
-        LG_CHECK (true, -1002, "unsupported type") ;
+        LG_ASSERT_MSG (false, -1002, "unsupported type") ;
     }
 
     //--------------------------------------------------------------------------
@@ -271,7 +270,7 @@ int LAGraph_Vector_IsEqual         // returns 0 if successful, < 0 if failure
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    LG_CHECK (A == NULL, -1001, "required input is NULL") ;
+    LG_ASSERT (A != NULL, GrB_NULL_POINTER) ;
 
     //--------------------------------------------------------------------------
     // determine the type

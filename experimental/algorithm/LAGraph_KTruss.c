@@ -55,8 +55,7 @@ int LAGraph_KTruss              // compute the k-truss of a graph
     LG_CHECK (C_handle == NULL, GrB_NULL_POINTER, "input(s) are NULL") ;
     (*C_handle) = NULL ;
     LG_CHECK (k < 3, GrB_INVALID_VALUE, "k invalid") ;
-    LG_CHECK (LAGraph_CheckGraph (G, msg), GrB_INVALID_OBJECT,
-        "graph is invalid") ;
+    LG_TRY (LAGraph_CheckGraph (G, msg)) ;
 
     if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&

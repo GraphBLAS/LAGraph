@@ -34,7 +34,7 @@ int LG_ndiag                // returns 0 if successful, < 0 if failure
 
     GrB_Matrix D = NULL, M = NULL ;
     GrB_Vector d = NULL ;
-    LG_CHECK (ndiag == NULL, -1, "ndiag is NULL") ;
+    LG_ASSERT (ndiag != NULL, GrB_NULL_POINTER) ;
     (*ndiag) = LAGRAPH_UNKNOWN ;
 
     GrB_Index nrows, ncols ;

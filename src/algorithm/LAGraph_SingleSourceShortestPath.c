@@ -90,15 +90,15 @@ int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
     GrB_Vector reach = NULL ;
     GrB_Vector Empty = NULL ;
 
-    LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
-    LG_CHECK (path_length == NULL, -1, "path_length parameter is NULL") ;
+    LG_TRY (LAGraph_CheckGraph (G, msg)) ;
+    LG_ASSERT (path_length != NULL, GrB_NULL_POINTER) ;
     (*path_length) = NULL ;
 
     GrB_Matrix A = G->A ;
     GrB_Index n ;
     GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
 
-    LG_CHECK (source >= n || source < 0, -1, "invalid source node") ;
+    LG_ASSERT_MSG (source < n, -1, "invalid source node") ;
 
     //--------------------------------------------------------------------------
     // initializations

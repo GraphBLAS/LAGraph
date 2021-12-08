@@ -339,8 +339,8 @@ int LAGraph_Sort2    // sort array A of size 2-by-n, using 2 keys (A [0:1][])
 
     LG_CLEAR_MSG ;
     int64_t *LG_RESTRICT W = NULL ;
-    LG_CHECK (A_0 == NULL, -1, "A_0 is NULL") ;
-    LG_CHECK (A_1 == NULL, -1, "A_1 is NULL") ;
+    LG_ASSERT (A_0 != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (A_1 != NULL, GrB_NULL_POINTER) ;
 
     //--------------------------------------------------------------------------
     // handle small problems with a single thread
@@ -376,7 +376,7 @@ int LAGraph_Sort2    // sort array A of size 2-by-n, using 2 keys (A [0:1][])
     //--------------------------------------------------------------------------
 
     W = LAGraph_Malloc (2*n + 6*ntasks + 1, sizeof (int64_t)) ;
-    LG_CHECK (W == NULL, -1, "out of memory") ;
+    LG_ASSERT (W != NULL, GrB_OUT_OF_MEMORY) ;
 
     int64_t *T = W ;
     int64_t *LG_RESTRICT W_0    = T ; T += n ;

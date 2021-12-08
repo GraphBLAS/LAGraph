@@ -23,8 +23,8 @@ int LAGraph_Toc             // 0 if successful, -1 on failure
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    LG_CHECK (t == NULL, -1, "&t is NULL") ;
-    LG_CHECK (tic == NULL, -1, "tic is NULL") ;
+    LG_ASSERT_MSG (t != NULL, GrB_NULL_POINTER, "&t != NULL") ;
+    LG_ASSERT (tic != NULL, GrB_NULL_POINTER) ;
 
     //--------------------------------------------------------------------------
     // get the time since the last call to LAGraph_Toc

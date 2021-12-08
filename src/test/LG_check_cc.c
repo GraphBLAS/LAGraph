@@ -65,39 +65,31 @@ int LG_check_cc
     GrB_Index Ap_size, Aj_size, Ax_size, n, ncols ;
     int64_t *queue = NULL, *component_in = NULL ;
     bool *visited = NULL ;
-    LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
+    LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
-    LG_CHECK (n != ncols, -1001, "G->A must be square") ;
-    LG_CHECK (Component == NULL, -1001, "Component is NULL") ;
+    LG_ASSERT_MSG (n == ncols, -1001, "G->A must be square") ;
+    LG_ASSERT (Component != NULL, GrB_NULL_POINTER) ;
 
-    if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
+    LG_ASSERT_MSG ((G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
-        G->A_structure_is_symmetric == LAGRAPH_TRUE))
-    {
-        // A must be symmetric
-        ;
-    }
-    else
-    {
-        // A must not be unsymmetric
-        LG_CHECK (false, -1, "input must be symmetric") ;
-    }
+        G->A_structure_is_symmetric == LAGRAPH_TRUE)),
+        -1, "G->A must be known to be symmetric") ;
 
     //--------------------------------------------------------------------------
     // allocate workspace
     //--------------------------------------------------------------------------
 
     queue = LAGraph_Calloc (n, sizeof (int64_t)) ;
-    LG_CHECK (queue == NULL, GrB_OUT_OF_MEMORY, "out of memory") ;
+    LG_ASSERT (queue != NULL, GrB_OUT_OF_MEMORY) ;
 
     //--------------------------------------------------------------------------
     // get the contents of the Component vector
     //--------------------------------------------------------------------------
 
     component_in = LAGraph_Malloc (n, sizeof (int64_t)) ;
-    LG_CHECK (component_in == NULL, GrB_OUT_OF_MEMORY, "out of memory") ;
-    LG_CHECK (LG_check_vector (component_in, Component, n, -1), -1004,
+    LG_ASSERT (component_in != NULL, GrB_OUT_OF_MEMORY) ;
+    LG_ASSERT_MSG (LG_check_vector (component_in, Component, n, -1) == 0, -1004,
         "invalid Component") ;
 
     //--------------------------------------------------------------------------
@@ -109,8 +101,7 @@ int LG_check_cc
     for (int64_t i = 0 ; i < n ; i++)
     {
         int64_t comp = component_in [i] ; 
-        LG_CHECK (comp < 0 || comp >= n, -1007,
-            "test failure: component out of range") ;
+        LG_ASSERT (comp >= 0 && comp < n, -1007) ;
         count [comp]++ ;
         if (comp == i)
         {
@@ -151,12 +142,12 @@ int LG_check_cc
     LAGraph_Tic (tic, msg) ;
 
     visited = LAGraph_Calloc (n, sizeof (bool)) ;
-    LG_CHECK (visited == NULL, -1003, "out of memory") ;
+    LG_ASSERT (visited != NULL, GrB_OUT_OF_MEMORY) ;
 
     #if !LG_SUITESPARSE
     GrB_TRY (GrB_Vector_new (&Row, GrB_BOOL, n)) ;
     neighbors = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
-    LG_CHECK (neighbors == NULL, -1003, "out of memory") ;
+    LG_ASSERT (neighbors != NULL, GrB_OUT_OF_MEMORY) ;
     #endif
 
     int64_t ncomp = 0 ;
@@ -169,8 +160,7 @@ int LG_check_cc
         // src node is part of a new connected component, comp
         int64_t comp = component_in [src] ;
         ncomp++ ;
-        LG_CHECK (ncomp > ncomp_in, -1008,
-            "test failure: wrong # of components") ;
+        LG_ASSERT_MSG (ncomp <= ncomp_in, -1008, "wrong # of components") ;
 
         queue [0] = src ;
         int64_t head = 0 ;
@@ -205,8 +195,7 @@ int LG_check_cc
                 // consider edge (u,v)
                 int64_t v = node_u_adjacency_list [k] ;
                 // ensure v is in the same connected component as the src node
-                LG_CHECK (comp != component_in [u], -1009,
-                    "test failure: incorrect component") ;
+                LG_ASSERT (comp == component_in [u], -1009) ;
                 // printf ("    seen: %ld\n", v) ;
                 if (!visited [v])
                 {
@@ -219,7 +208,7 @@ int LG_check_cc
         }
     }
 
-    LG_CHECK (ncomp != ncomp_in, -1010, "test failure: wrong # of components") ;
+    LG_ASSERT_MSG (ncomp == ncomp_in, -1010, "wrong # of components") ;
 
     LAGraph_Toc (&tt, tic, msg) ;
     printf ("LG_check_cc component time: %g sec\n", tt) ;

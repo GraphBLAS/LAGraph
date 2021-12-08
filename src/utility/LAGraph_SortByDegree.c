@@ -64,9 +64,9 @@ int LAGraph_SortByDegree    // returns 0 if successful, -1 if failure
     int64_t *P = NULL ;
     int64_t *W = NULL ;
     int64_t *D = NULL ;
-    LG_CHECK (P_handle == NULL, -1, "P is null") ;
+    LG_ASSERT_MSG (P_handle != NULL, GrB_NULL_POINTER, "&P != NULL") ;
     (*P_handle) = NULL ;
-    LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
+    LG_TRY (LAGraph_CheckGraph (G, msg)) ;
 
     GrB_Vector Degree ;
 
@@ -83,7 +83,7 @@ int LAGraph_SortByDegree    // returns 0 if successful, -1 if failure
         Degree = (byrow) ? G->rowdegree : G->coldegree ;
     }
 
-    LG_CHECK (Degree == NULL, -1, "degree property unknown") ;
+    LG_ASSERT_MSG (Degree != NULL, -1, "degree property unknown") ;
 
     //--------------------------------------------------------------------------
     // decide how many threads to use
@@ -105,7 +105,7 @@ int LAGraph_SortByDegree    // returns 0 if successful, -1 if failure
     P = LAGraph_Malloc (n, sizeof (int64_t)) ;
     D = LAGraph_Malloc (n, sizeof (int64_t)) ;
     W = LAGraph_Malloc (2*n, sizeof (int64_t)) ;
-    LG_CHECK (D == NULL || P == NULL || W == NULL, -1, "out of memory") ;
+    LG_ASSERT (D != NULL && P != NULL && W != NULL, GrB_OUT_OF_MEMORY) ;
     int64_t *W0 = W ;
     int64_t *W1 = W + n ;
 

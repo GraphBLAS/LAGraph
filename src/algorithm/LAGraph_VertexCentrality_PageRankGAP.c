@@ -54,8 +54,8 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
 
     LG_CLEAR_MSG ;
     GrB_Vector r = NULL, d = NULL, t = NULL, w = NULL, d1 = NULL ;
-    LG_CHECK (centrality == NULL, -1, "centrality is NULL") ;
-    LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
+    LG_ASSERT (centrality != NULL, GrB_NULL_POINTER) ;
+    LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     LAGraph_Kind kind = G->kind ; 
     int A_sym_structure = G->A_structure_is_symmetric ;
     GrB_Matrix AT ;
@@ -68,10 +68,10 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
     {
         // A and A' differ
         AT = G->AT ;
-        LG_CHECK (AT == NULL, -1, "G->AT is required") ;
+        LG_ASSERT_MSG (AT != NULL, -1, "G->AT is required") ;
     }
     GrB_Vector d_out = G->rowdegree ;
-    LG_CHECK (d_out == NULL, -1, "G->rowdegree is required") ;
+    LG_ASSERT_MSG (d_out != NULL, -1, "G->rowdegree is required") ;
 
     //--------------------------------------------------------------------------
     // initializations

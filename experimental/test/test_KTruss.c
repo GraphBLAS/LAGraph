@@ -161,7 +161,7 @@ void test_ktruss_errors (void)
     // G is invalid
     result = LAGraph_KTruss (&C1, NULL, 3, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
-    TEST_CHECK (result == GrB_INVALID_OBJECT) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
     TEST_CHECK (C1 == NULL) ;
 
     // G may have self edges

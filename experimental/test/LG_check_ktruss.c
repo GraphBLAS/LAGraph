@@ -55,7 +55,7 @@ int LG_check_ktruss
     void *Ax = NULL ;
     GrB_Index n, ncols, Cp_len, Cj_len, Cx_len, nvals1, nvals2 ;
     LG_CHECK (C_handle == NULL, -1003, "C_handle is NULL") ;
-    LG_CHECK (LAGraph_CheckGraph (G, msg), -1002, "graph is invalid") ;
+    LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     LG_CHECK (G->ndiag != 0, -104, "G->ndiag must be zero") ;
     if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&

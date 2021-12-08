@@ -39,6 +39,6 @@ int LG_check_vector
             return (info) ;
         }
     }
-    return (GrB_SUCCESS) ;
+    return (0) ;
 }
 

@@ -150,7 +150,7 @@ void test_errors (void)
     // G is invalid
     result = LAGraph_VertexCentrality_Triangle (&c, &ntri, 3, NULL, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
-    TEST_CHECK (result == GrB_INVALID_OBJECT) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
     TEST_CHECK (c == NULL) ;
 
     // G may have self edges

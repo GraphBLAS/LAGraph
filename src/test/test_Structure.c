@@ -151,9 +151,9 @@ void test_Structure_failures (void)
     setup ( ) ;
 
     C = NULL ;
-    TEST_CHECK (LAGraph_Structure (NULL, NULL, msg) == -1) ;
+    TEST_CHECK (LAGraph_Structure (NULL, NULL, msg) == GrB_NULL_POINTER) ;
     printf ("\nmsg: [%s]\n", msg) ;
-    TEST_CHECK (LAGraph_Structure (&C, NULL, msg) == -1) ;
+    TEST_CHECK (LAGraph_Structure (&C, NULL, msg) == GrB_NULL_POINTER) ;
     printf ("msg: [%s]\n", msg) ;
     TEST_CHECK (C == NULL) ;
 

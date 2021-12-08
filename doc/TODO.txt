@@ -1,16 +1,19 @@
-As of Dec 2, 2021:
+As of Dec 8, 2021:
 
     * entire user guide
         experimental -> src, how to do it.
 
     * test, document, polish all src & experimental: algorithms, utilities,
         and tests.
-        as of Dec 2: testing is at 95%.  Only untested functions are
+        as of Dec 8: testing is at 95%.  Only untested functions are
         4 experimental/algoritms: lcc, cdlp, scc, and msf.
 
     * unify error return values as much as possible, now that v2.0 C API
         has assigned enum values to GrB_Info.  Suggest we use GrB_Info
         values, as ints, as much as possible
+        TODO: use LG_ASSERT as much as possible, instead of LG_CHECK
+        TODO: use LG_TRY (LAGraph_...(...,msg)) not LG_CHECK,
+            when calling LAGraph method from LAGraph methods.
 
     * many TODOs and FIXMEs throughout
 

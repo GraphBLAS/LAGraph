@@ -334,7 +334,7 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
     GrB_Vector f = NULL, gp_new = NULL, mngp = NULL, mod = NULL, gp = NULL ;
     GrB_Matrix T = NULL ;
 
-    LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
+    LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     LG_CHECK (component == NULL, -1, "component parameter is NULL") ;
 
     if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||

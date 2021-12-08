@@ -33,10 +33,10 @@ int LAGraph_SampleDegree        // returns 0 if successful, -1 if failure
 
     LG_CLEAR_MSG ;
     int64_t *samples = NULL ;
-    LG_CHECK (sample_mean == NULL, -1, "sample_mean is null") ;
-    LG_CHECK (sample_median == NULL, -1, "sample_median is null") ;
+    LG_ASSERT (sample_mean != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (sample_median != NULL, GrB_NULL_POINTER) ;
     nsamples = LAGraph_MAX (nsamples, 1) ;
-    LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
+    LG_TRY (LAGraph_CheckGraph (G, msg)) ;
 
     GrB_Vector Degree ;
 
@@ -53,14 +53,14 @@ int LAGraph_SampleDegree        // returns 0 if successful, -1 if failure
         Degree = (byrow) ? G->rowdegree : G->coldegree ;
     }
 
-    LG_CHECK (Degree == NULL, -1, "degree property unknown") ;
+    LG_ASSERT_MSG (Degree != NULL, -1, "degree property unknown") ;
 
     //--------------------------------------------------------------------------
     // allocate workspace
     //--------------------------------------------------------------------------
 
     samples = LAGraph_Malloc (nsamples, sizeof (int64_t)) ;
-    LG_CHECK (samples == NULL, -1, "out of memory") ;
+    LG_ASSERT (samples != NULL, GrB_OUT_OF_MEMORY) ;
 
     //--------------------------------------------------------------------------
     // pick nsamples nodes at random and determine their degree

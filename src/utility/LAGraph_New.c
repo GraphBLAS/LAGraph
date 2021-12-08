@@ -27,14 +27,14 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    LG_CHECK (G == NULL, -1, "&G cannot be NULL on input") ;
+    LG_ASSERT_MSG (G != NULL, GrB_NULL_POINTER, "&G != NULL") ;
 
     //--------------------------------------------------------------------------
     // allocate the graph
     //--------------------------------------------------------------------------
 
     (*G) = LAGraph_Malloc (1, sizeof (struct LAGraph_Graph_struct)) ;
-    LG_CHECK (*G == NULL, -1, "out of memory") ;
+    LG_ASSERT (*G != NULL, GrB_OUT_OF_MEMORY) ;
 
     //--------------------------------------------------------------------------
     // initialize its members

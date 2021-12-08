@@ -152,7 +152,7 @@ void test_New_failures (void)
     setup ( ) ;
 
     // G cannot be NULL
-    TEST_CHECK (LAGraph_New (NULL, NULL, NULL, 0, msg) == -1) ;
+    TEST_CHECK (LAGraph_New (NULL, NULL, NULL, 0, msg) == GrB_NULL_POINTER) ;
     printf ("\nmsg: %s\n", msg) ;
 
     // create a graph with no adjacency matrix; this is OK, since the intent is

@@ -112,14 +112,14 @@ void test_SSaveSet (void)
     // workaround for bug in v6.0.0 to v6.0.2:
     // ensure the matrix is not iso
     #if LG_SUITESPARSE
-    // #if GxB_IMPLEMENTATION < GxB_VERSION (6,0,3)
+    #if GxB_IMPLEMENTATION < GxB_VERSION (6,0,3)
     printf ("\nworkaround for bug in SS:GrB v6.0.2 (fixed in v6.0.3)\n") ;
     for (int k = 0 ; k < NFILES ; k++)
     {
         OK (GrB_Matrix_setElement (Set [k], 0, 0, 0)) ;
         OK (GrB_wait (Set [k], GrB_MATERIALIZE)) ;
     }
-    // #endif
+    #endif
     #endif
 
     // save the set of matrices in a single file

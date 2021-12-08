@@ -92,7 +92,7 @@ void test_print (void)
 
     // attempt to print to a NULL file, which should fail
     int result = LAGraph_Vector_print (v, 2, NULL, msg) ;
-    TEST_CHECK (result == -1001) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
     OK (GrB_Vector_free (&v)) ;
 
     // attempt to print a vector with a user-defined type, which should fail

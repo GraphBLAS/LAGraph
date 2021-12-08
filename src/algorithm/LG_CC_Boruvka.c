@@ -115,9 +115,8 @@ int LG_CC_Boruvka
     GrB_Matrix S = NULL ;
 
     LG_CLEAR_MSG ;
-    LG_CHECK (LAGraph_CheckGraph (G, msg), GrB_INVALID_OBJECT,
-        "graph is invalid") ;
-    LG_CHECK (component == NULL, GrB_NULL_POINTER, "input is NULL") ;
+    LG_TRY (LAGraph_CheckGraph (G, msg)) ;
+    LG_ASSERT (component != NULL, GrB_NULL_POINTER) ;
 
     if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
@@ -129,7 +128,7 @@ int LG_CC_Boruvka
     else
     {
         // A must not be unsymmetric
-        LG_CHECK (false, GrB_INVALID_VALUE, "input must be symmetric") ;
+        LG_ASSERT_MSG (false, GrB_INVALID_VALUE, "input must be symmetric") ;
     }
 
     //--------------------------------------------------------------------------
@@ -137,7 +136,7 @@ int LG_CC_Boruvka
     //--------------------------------------------------------------------------
 
     // S = structure of G->A
-    LAGraph_TRY (LAGraph_Structure (&S, G->A, msg)) ;
+    LG_TRY (LAGraph_Structure (&S, G->A, msg)) ;
 
     GrB_TRY (GrB_Matrix_nrows (&n, S)) ;
     GrB_TRY (GrB_Vector_new (&parent, GrB_UINT64, n)) ; // final result
@@ -148,12 +147,12 @@ int LG_CC_Boruvka
 
     mem = (GrB_Index *) LAGraph_Malloc (3*n, sizeof (GrB_Index)) ;
     Px = (GrB_Index *) LAGraph_Malloc (n, sizeof (GrB_Index)) ;
-    LG_CHECK (Px == NULL || mem == NULL, GrB_OUT_OF_MEMORY, "out of memory") ;
+    LG_ASSERT (Px != NULL && mem != NULL, GrB_OUT_OF_MEMORY) ;
 
     #if !LG_SUITESPARSE
     // I is not needed for SuiteSparse and remains NULL
     I = (GrB_Index *) LAGraph_Malloc (n, sizeof (GrB_Index)) ;
-    LG_CHECK (I == NULL, GrB_OUT_OF_MEMORY, "out of memory") ;
+    LG_ASSERT (I != NULL, GrB_OUT_OF_MEMORY) ;
     #endif
 
     // parent = 0:n-1, and copy to ramp

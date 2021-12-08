@@ -103,8 +103,7 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
     LG_CHECK (centrality == NULL, GrB_NULL_POINTER, "centrality is NULL") ;
     LG_CHECK (ntriangles == NULL, GrB_NULL_POINTER, "ntriangles is NULL") ;
     (*centrality) = NULL ;
-    LG_CHECK (LAGraph_CheckGraph (G, msg), GrB_INVALID_OBJECT,
-        "graph is invalid") ;
+    LG_TRY (LAGraph_CheckGraph (G, msg)) ;
 
     if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&

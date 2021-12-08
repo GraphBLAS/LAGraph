@@ -21,7 +21,7 @@ int LAGraph_DeleteDiag      // returns 0 if successful, < 0 if failure
     // clear msg and check G
     //--------------------------------------------------------------------------
 
-    LG_CHECK_INIT (G, msg) ;
+    LG_CLEAR_MSG_AND_BASIC_ASSERT (G, msg) ;
     if (G->ndiag == 0)
     {
         // nothing to do

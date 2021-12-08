@@ -23,7 +23,7 @@ int LAGraph_KindName        // returns 0 if successful, -1 if failure
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    LG_CHECK (name == NULL, -1, "name is NULL") ;
+    LG_ASSERT (name != NULL, GrB_NULL_POINTER) ;
 
     //--------------------------------------------------------------------------
     // determine the name of the kind
@@ -34,7 +34,7 @@ int LAGraph_KindName        // returns 0 if successful, -1 if failure
         case LAGRAPH_ADJACENCY_UNDIRECTED : (*name) = "undirected" ; break ;
         case LAGRAPH_ADJACENCY_DIRECTED :   (*name) = "directed"   ; break ;
         case LAGRAPH_KIND_UNKNOWN :         (*name) = "unknown"    ; break ;
-        default : LG_CHECK (true, -1, "invalid kind") ;
+        default : LG_ASSERT_MSG (false, GrB_INVALID_VALUE, "invalid kind") ;
     }
 
     return (0) ;

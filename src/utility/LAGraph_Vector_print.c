@@ -38,7 +38,8 @@ int LG_Vector_print_ ## suffix                                              \
     LG_CLEAR_MSG ;                                                          \
     ctype *X = NULL ;                                                       \
     GrB_Index *I = NULL ;                                                   \
-    LG_CHECK (v == NULL || f == NULL, -1001, "inputs are NULL") ;           \
+    LG_ASSERT (v != NULL, GrB_NULL_POINTER) ;                               \
+    LG_ASSERT (f != NULL, GrB_NULL_POINTER) ;                               \
     if (pr < 0) return (0) ;                                                \
     /* get basic properties */                                              \
     GrB_Index n, nvals ;                                                    \
@@ -52,12 +53,10 @@ int LG_Vector_print_ ## suffix                                              \
     /* extract tuples */                                                    \
     I = LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;                        \
     X = LAGraph_Malloc (nvals, sizeof (ctype)) ;                            \
-    LG_CHECK (I == NULL || X == NULL, -1004, "out of memory") ;             \
+    LG_ASSERT (I != NULL && X != NULL, GrB_OUT_OF_MEMORY) ;                 \
     GrB_Info info = GrB_Vector_extractTuples (I, X, &nvals, v) ;            \
-    if (info == GrB_DOMAIN_MISMATCH)                                        \
-    {                                                                       \
-        LG_CHECK (true, -1002, "user-defined types not supported") ;        \
-    }                                                                       \
+    LG_ASSERT_MSG (info != GrB_DOMAIN_MISMATCH, -1002,                      \
+        "user-defined types not supported") ;                               \
     GrB_TRY (info) ;                                                        \
     /* determine the format */                                              \
     char *format = (pr <= 3) ? fmt1 : fmt2 ;                                \
@@ -178,7 +177,7 @@ int LAGraph_Vector_print_type
     #endif
     else
     {
-        LG_CHECK (true, -1002, "user-defined types not supported") ;
+        LG_ASSERT_MSG (false, -1002, "user-defined types not supported") ;
         return (0) ;
     }
 }
@@ -205,7 +204,8 @@ int LAGraph_Vector_print
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    LG_CHECK (v == NULL || f == NULL, -1001, "inputs are NULL") ;
+    LG_ASSERT (v != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (f != NULL, GrB_NULL_POINTER) ;
 
     //--------------------------------------------------------------------------
     // determine the type

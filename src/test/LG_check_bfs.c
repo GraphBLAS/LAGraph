@@ -64,10 +64,10 @@ int LG_check_bfs
     int64_t *queue = NULL, *level_in = NULL, *parent_in = NULL,
         *level_check = NULL ;
     bool *visited = NULL ;
-    LG_CHECK (LAGraph_CheckGraph (G, msg), -1, "graph is invalid") ;
+    LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
-    LG_CHECK (n != ncols, -1001, "G->A must be square") ;
+    LG_ASSERT_MSG (n == ncols, -1001, "G->A must be square") ;
     bool print_timings = (n >= 2000) ;
 
     //--------------------------------------------------------------------------
@@ -76,7 +76,7 @@ int LG_check_bfs
 
     queue = LAGraph_Malloc (n, sizeof (int64_t)) ;
     level_check = LAGraph_Malloc (n, sizeof (int64_t)) ; 
-    LG_CHECK (queue == NULL || level_check == NULL , -1003, "out of memory") ;
+    LG_ASSERT (queue != NULL && level_check != NULL , GrB_OUT_OF_MEMORY) ;
 
     //--------------------------------------------------------------------------
     // get the contents of the Level and Parent vectors
@@ -85,16 +85,16 @@ int LG_check_bfs
     if (Level != NULL)
     {
         level_in = LAGraph_Malloc (n, sizeof (int64_t)) ;
-        LG_CHECK (level_in == NULL, -1003, "out of memory") ;
-        LG_CHECK (LG_check_vector (level_in, Level, n, -1), -1004,
+        LG_ASSERT (level_in != NULL, GrB_OUT_OF_MEMORY) ;
+        LG_ASSERT_MSG (LG_check_vector (level_in, Level, n, -1) == 0, -1004,
             "invalid level") ;
     }
 
     if (Parent != NULL)
     {
         parent_in = LAGraph_Malloc (n, sizeof (int64_t)) ;
-        LG_CHECK (parent_in == NULL, -1003, "out of memory") ;
-        LG_CHECK (LG_check_vector (parent_in, Parent, n, -1), -1005,
+        LG_ASSERT (parent_in != NULL, GrB_OUT_OF_MEMORY) ;
+        LG_ASSERT_MSG (LG_check_vector (parent_in, Parent, n, -1) == 0, -1005,
             "invalid parent") ;
     }
 
@@ -123,7 +123,7 @@ int LG_check_bfs
     int64_t head = 0 ;
     int64_t tail = 1 ;
     visited = LAGraph_Calloc (n, sizeof (bool)) ;
-    LG_CHECK (visited == NULL, -1003, "out of memory") ;
+    LG_ASSERT (visited != NULL, GrB_OUT_OF_MEMORY) ;
     visited [src] = true ;      // src is visited, and is level 0
 
     for (int64_t i = 0 ; i < n ; i++)
@@ -135,7 +135,7 @@ int LG_check_bfs
     #if !LG_SUITESPARSE
     GrB_TRY (GrB_Vector_new (&Row, GrB_BOOL, n)) ;
     neighbors = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
-    LG_CHECK (neighbors == NULL, -1003, "out of memory") ;
+    LG_ASSERT (neighbors != NULL, GrB_OUT_OF_MEMORY) ;
     #endif
 
     while (head < tail)
@@ -197,7 +197,7 @@ int LG_check_bfs
         for (int64_t i = 0 ; i < n ; i++)
         {
             bool ok = (level_in [i] == level_check [i]) ;
-            LG_CHECK (!ok, -1004, "invalid level") ;
+            LG_ASSERT_MSG (ok, -1004, "invalid level") ;
         }
     }
 
@@ -213,22 +213,22 @@ int LG_check_bfs
             {
                 // src node is its own parent
                 bool ok = (parent_in [src] == src) && (visited [src]) ;
-                LG_CHECK (!ok, -1005, "invalid parent") ;
+                LG_ASSERT_MSG (ok, -1005, "invalid parent") ;
             }
             else if (visited [i])
             {
                 int64_t pi = parent_in [i] ;
                 // ensure the parent pi is valid and has been visited
                 bool ok = (pi >= 0 && pi < n) && visited [pi] ;
-                LG_CHECK (!ok, -1005, "invalid parent") ;
+                LG_ASSERT_MSG (ok, -1005, "invalid parent") ;
                 // ensure the edge (pi,i) exists
                 bool x ;
                 int info = GrB_Matrix_extractElement_BOOL (&x, G->A, pi, i) ;
                 ok = (info == GrB_SUCCESS) ;
-                LG_CHECK (!ok, -1005, "invalid parent") ;
+                LG_ASSERT_MSG (ok, -1005, "invalid parent") ;
                 // ensure the parent's level is ok
                 ok = (level_check [i] == level_check [pi] + 1) ;
-                LG_CHECK (!ok, -1005, "invalid parent") ;
+                LG_ASSERT_MSG (ok, -1005, "invalid parent") ;
             }
         }
     }

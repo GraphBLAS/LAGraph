@@ -136,8 +136,11 @@ typedef unsigned char LG_void ;
 #endif
 
 //------------------------------------------------------------------------------
-// LG_CHECK: check an error condition
+// LG_CHECK: deprecated.  Use LG_ASSERT_MSG instead
 //------------------------------------------------------------------------------
+
+// If an error condition is true, the msg string is written to with a
+// message controlled by the 3rd and following parameters.
 
 #define LG_CHECK(error_condition,error_status,...)      \
 {                                                       \
@@ -150,16 +153,77 @@ typedef unsigned char LG_void ;
 }
 
 //------------------------------------------------------------------------------
-// LG_CHECK_INIT: clear msg and do basic tests of a graph
+// LG_ASSERT_MSG: assert an expression is true, and return if it is false
 //------------------------------------------------------------------------------
 
-#define LG_CHECK_INIT(G,msg)                                                \
+// Identical to LG_ASSERT, except this allows a different string to be
+// included in the message.
+
+#define LG_ASSERT_MSG(expression,error_status,expression_message)       \
+{                                                                       \
+    if (!(expression))                                                  \
+    {                                                                   \
+        LG_ERROR_MSG ("LAGraph assertion \"" expression_message         \
+            "\" failed:\nfile \"%s\", line %d\n", __FILE__, __LINE__) ; \
+        LAGraph_FREE_ALL ;                                              \
+        return (error_status) ;                                         \
+    }                                                                   \
+}
+
+//------------------------------------------------------------------------------
+// LG_ASSERT: assert an expression is true, and return if it is false
+//------------------------------------------------------------------------------
+
+// LAGraph methods can use this assertion macro for simple errors, such as
+// when running of memory:
+//
+//      void P = LAGraph_Malloc ( ... ) ;
+//      LG_ASSERT (P != NULL, GrB_OUT_OF_MEMORY) ;
+//
+// If LAGraph_Malloc fails and returns P as NULL, the msg is set to:
+//
+//      LAGraph assertion "P != NULL" failed:
+//      file: LAGraph_something, line: 42
+
+#define LG_ASSERT(expression, error_status)                             \
+{                                                                       \
+    if (!(expression))                                                  \
+    {                                                                   \
+        LG_ERROR_MSG ("LAGraph assertion \"" LG_XSTR(expression)        \
+            "\" failed:\nfile \"%s\", line %d\n", __FILE__, __LINE__) ; \
+        LAGraph_FREE_ALL ;                                              \
+        return (error_status) ;                                         \
+    }                                                                   \
+}
+
+//------------------------------------------------------------------------------
+// LG_TRY: check a condition and return on error
+//------------------------------------------------------------------------------
+
+// The msg is not modified.  This should be used when an LAGraph method calls
+// another one.
+
+#define LG_TRY(LAGraph_method)                  \
+{                                               \
+    int LAGraph_status = LAGraph_method ;       \
+    if (LAGraph_status < 0)                     \
+    {                                           \
+        LAGraph_FREE_ALL ;                      \
+        return (LAGraph_status) ;               \
+    }                                           \
+}
+
+//------------------------------------------------------------------------------
+// LG_CLEAR_MSG_AND_BASIC_ASSERT: clear msg and do basic tests of a graph
+//------------------------------------------------------------------------------
+
+#define LG_CLEAR_MSG_AND_BASIC_ASSERT(G,msg)                                \
 {                                                                           \
     LG_CLEAR_MSG ;                                                          \
-    LG_CHECK (G == NULL, GrB_NULL_POINTER, "graph is NULL") ;               \
-    LG_CHECK (G->A == NULL, -1102, "graph adjacency matrix is NULL") ;      \
-    LG_CHECK (G->kind <= LAGRAPH_UNKNOWN ||                                 \
-        G->kind > LAGRAPH_ADJACENCY_DIRECTED, -1103, "graph kind invalid") ;\
+    LG_ASSERT (G != NULL, GrB_NULL_POINTER) ;                               \
+    LG_ASSERT_MSG (G->A != NULL, -1102, "graph adjacency matrix is NULL") ; \
+    LG_ASSERT_MSG (G->kind >= LAGRAPH_ADJACENCY_UNDIRECTED &&               \
+        G->kind <= LAGRAPH_ADJACENCY_DIRECTED, -1103, "graph kind invalid") ;\
 }
 
 //------------------------------------------------------------------------------
@@ -168,7 +232,8 @@ typedef unsigned char LG_void ;
 
 #define FPRINTF(f,...)                  \
 {                                       \
-    LG_CHECK (fprintf (f, __VA_ARGS__) < 0, -2, "Unable to write to file") ; \
+    LG_ASSERT_MSG (fprintf (f, __VA_ARGS__) >= 0, -2,  \
+        "Unable to write to file") ; \
 }
 
 //------------------------------------------------------------------------------

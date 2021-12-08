@@ -201,7 +201,8 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
 {
 
 #if LG_VANILLA
-    LG_CHECK (0, GrB_NOT_IMPLEMENTED, "SuiteSparse required for this method") ;
+    LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED,
+        "SuiteSparse required for this method") ;
 #else
 
     //--------------------------------------------------------------------------
@@ -219,9 +220,8 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     void *Tx = NULL, *Cx = NULL ;
     int *ht_count = NULL ;
 
-    LG_CHECK (LAGraph_CheckGraph (G, msg), GrB_INVALID_OBJECT,
-        "graph is invalid") ;
-    LG_CHECK (component == NULL, GrB_NULL_POINTER, "component is NULL") ;
+    LG_TRY (LAGraph_CheckGraph (G, msg)) ;
+    LG_ASSERT (component != NULL, GrB_NULL_POINTER) ;
 
     if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
@@ -233,7 +233,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     else
     {
         // A must not be unsymmetric
-        LG_CHECK (false, GrB_INVALID_VALUE, "input must be symmetric") ;
+        LG_ASSERT_MSG (false, GrB_INVALID_VALUE, "input must be symmetric") ;
     }
 
     //--------------------------------------------------------------------------
@@ -298,7 +298,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
 
     Cx = (void *) LAGraph_Calloc (1, sizeof (bool)) ;
     Px = (GrB_Index *) LAGraph_Malloc (n, sizeof (GrB_Index)) ;
-    LG_CHECK (Px == NULL || Cx == NULL, GrB_OUT_OF_MEMORY, "out of memory") ;
+    LG_ASSERT (Px != NULL && Cx != NULL, GrB_OUT_OF_MEMORY) ;
 
     // create Cp = 0:n (always 64-bit) and the empty C matrix
     GrB_TRY (GrB_Matrix_new (&C, GrB_BOOL, n, n)) ;
@@ -398,8 +398,8 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         Tx = (bool *) LAGraph_Calloc (1, sizeof (bool)) ;
         range = (int64_t *) LAGraph_Malloc (nthreads + 1, sizeof (int64_t)) ;
         count = (GrB_Index *) LAGraph_Calloc (nthreads + 1, sizeof (GrB_Index));
-        LG_CHECK (Tp == NULL || Tj == NULL || Tx == NULL || range == NULL
-            || count == NULL, GrB_OUT_OF_MEMORY, "out of memory") ;
+        LG_ASSERT (Tp != NULL && Tj != NULL && Tx != NULL && range != NULL
+            && count != NULL, GrB_OUT_OF_MEMORY) ;
 
         //----------------------------------------------------------------------
         // define parallel tasks to construct T
@@ -494,8 +494,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         // allocate and initialize the hash table
         ht_key = (GrB_Index *) LAGraph_Malloc (HASH_SIZE, sizeof (GrB_Index)) ;
         ht_count = (int *) LAGraph_Calloc (HASH_SIZE, sizeof (int)) ;
-        LG_CHECK (ht_key == NULL || ht_count == NULL, GrB_OUT_OF_MEMORY,
-            "out of memory") ;
+        LG_ASSERT (ht_key != NULL && ht_count != NULL, GrB_OUT_OF_MEMORY) ;
         for (int k = 0 ; k < HASH_SIZE ; k++)
         {
             ht_key [k] = UINT64_MAX ;

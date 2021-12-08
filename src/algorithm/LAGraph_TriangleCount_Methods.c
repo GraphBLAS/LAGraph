@@ -132,10 +132,10 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
     LG_CLEAR_MSG ;
     GrB_Matrix C = NULL, L = NULL, U = NULL, T = NULL, A ;
     int64_t *P = NULL ;
-    LG_CHECK ((method < 1) || (method > 6), -101, "method is invalid");
-    LG_CHECK (LAGraph_CheckGraph (G, msg), -102, "graph is invalid") ;
-    LG_CHECK (ntriangles == NULL, -103, "ntriangles is null") ;
-    LG_CHECK (G->ndiag != 0, -104, "G->ndiag must be zero") ;
+    LG_ASSERT_MSG ((method >= 1) && (method <= 6), -101, "method is invalid");
+    LG_TRY (LAGraph_CheckGraph (G, msg)) ;
+    LG_ASSERT (ntriangles != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (G->ndiag == 0, -104) ;
 
     if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
@@ -147,14 +147,14 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
     else
     {
         // A is not known to be symmetric
-        LG_CHECK (false, -105, "G->A must be symmetric") ;
+        LG_ASSERT_MSG (false, -105, "G->A must be symmetric") ;
     }
 
     GrB_Vector Degree = G->rowdegree ;
     bool auto_sort = (presort != NULL && (*presort) == 2) ;
     if (auto_sort && method >= 3 && method <= 6)
     {
-        LG_CHECK (Degree == NULL, -106, "G->rowdegree must be defined") ;
+        LG_ASSERT_MSG (Degree != NULL, -106, "G->rowdegree must be defined") ;
     }
 
     //--------------------------------------------------------------------------

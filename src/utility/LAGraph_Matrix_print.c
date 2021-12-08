@@ -39,7 +39,7 @@ int LG_Matrix_print_ ## suffix                                              \
     LG_CLEAR_MSG ;                                                          \
     ctype *X = NULL ;                                                       \
     GrB_Index *I = NULL, *J = NULL ;                                        \
-    LG_CHECK (A == NULL || f == NULL, -1001, "inputs are NULL") ;           \
+    LG_ASSERT (A != NULL && f != NULL, GrB_NULL_POINTER) ;                  \
     if (pr < 0) return (0) ;                                                \
     /* get basic properties */                                              \
     GrB_Index nrows, ncols, nvals ;                                         \
@@ -55,12 +55,10 @@ int LG_Matrix_print_ ## suffix                                              \
     I = LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;                        \
     J = LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;                        \
     X = LAGraph_Malloc (nvals, sizeof (ctype)) ;                            \
-    LG_CHECK (I == NULL || J == NULL || X == NULL, -1004, "out of memory") ;\
+    LG_ASSERT (I != NULL && J != NULL && X != NULL, GrB_OUT_OF_MEMORY) ;    \
     GrB_Info info = GrB_Matrix_extractTuples (I, J, X, &nvals, A) ;         \
-    if (info == GrB_DOMAIN_MISMATCH)                                        \
-    {                                                                       \
-        LG_CHECK (true, -1002, "user-defined types not supported") ;        \
-    }                                                                       \
+    LG_ASSERT_MSG (info != GrB_DOMAIN_MISMATCH, -1002,                      \
+        "user-defined types not supported") ;                               \
     GrB_TRY (info) ;                                                        \
     /* determine the format */                                              \
     char *format = (pr <= 3) ? fmt1 : fmt2 ;                                \
@@ -182,7 +180,7 @@ int LAGraph_Matrix_print_type
     #endif
     else
     {
-        LG_CHECK (true, -1002, "user-defined types not supported") ;
+        LG_ASSERT_MSG (false, -1002, "user-defined types not supported") ;
         return (0) ;
     }
 }
@@ -209,7 +207,7 @@ int LAGraph_Matrix_print
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    LG_CHECK (A == NULL || f == NULL, -1001, "inputs are NULL") ;
+    LG_ASSERT (A != NULL && f != NULL, GrB_NULL_POINTER) ;
 
     //--------------------------------------------------------------------------
     // determine the type

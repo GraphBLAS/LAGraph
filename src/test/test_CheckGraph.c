@@ -228,8 +228,9 @@ void test_CheckGraph_failures (void)
     GrB_free (&(G->A)) ;
     TEST_CHECK (G->A == NULL) ;
 
-    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -1102) ;
-    printf ("msg: %s\n", msg) ;
+    int result = LAGraph_CheckGraph (G, msg) ;
+    printf ("result : %d msg: %s\n", msg) ;
+    TEST_CHECK (result == -1102) ;
 
     // free the graph
     OK (LAGraph_Delete (&G, msg)) ;

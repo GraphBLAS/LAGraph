@@ -22,7 +22,7 @@ int LAGraph_Vector_wait     // wait on a vector
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    LG_CHECK (v == NULL, -1001, "A is NULL") ;
+    LG_ASSERT (v != NULL, GrB_NULL_POINTER) ;
 
     //--------------------------------------------------------------------------
     // wait on the vector

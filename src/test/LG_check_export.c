@@ -42,10 +42,15 @@ int LG_check_export
 
     GrB_Index *Ap = NULL, *Aj = NULL ;
     void *Ax = NULL ;
-    LG_CHECK (LAGraph_CheckGraph (G, msg), -1002, "graph is invalid") ;
-    LG_CHECK (Ap_handle == NULL || Aj_handle == NULL || Ax_handle == NULL
-        || Ap_len == NULL || Aj_len == NULL || Ax_len == NULL
-        || typesize == NULL, GrB_NULL_POINTER, "inputs are NULL") ;
+    LG_TRY (LAGraph_CheckGraph (G, msg)) ;
+
+    LG_ASSERT_MSG (Ap_handle != NULL, GrB_NULL_POINTER, "&Ap != NULL") ;
+    LG_ASSERT_MSG (Aj_handle != NULL, GrB_NULL_POINTER, "&Aj != NULL") ;
+    LG_ASSERT_MSG (Ax_handle != NULL, GrB_NULL_POINTER, "&Ax != NULL") ;
+    LG_ASSERT_MSG (Ap_len != NULL, GrB_NULL_POINTER, "&Ap_len != NULL") ;
+    LG_ASSERT_MSG (Aj_len != NULL, GrB_NULL_POINTER, "&Aj_len != NULL") ;
+    LG_ASSERT_MSG (Ax_len != NULL, GrB_NULL_POINTER, "&Ax_len != NULL") ;
+    LG_ASSERT (typesize != NULL, GrB_NULL_POINTER) ;
 
     size_t s = 0 ;
     if      (G->A_type == GrB_BOOL  ) s = sizeof (bool    ) ;
@@ -59,7 +64,7 @@ int LG_check_export
     else if (G->A_type == GrB_UINT64) s = sizeof (uint64_t) ;
     else if (G->A_type == GrB_FP32  ) s = sizeof (float   ) ;
     else if (G->A_type == GrB_FP64  ) s = sizeof (double  ) ;
-    LG_CHECK (s == 0, -1, "unsupported type") ;
+    LG_ASSERT_MSG (s != 0, -1, "unsupported type") ;
     (*typesize) = s ;
 
     GrB_TRY (GrB_Matrix_exportSize (Ap_len, Aj_len, Ax_len, GrB_CSR_FORMAT,
@@ -70,8 +75,7 @@ int LG_check_export
     (*Ap_handle) = Ap ;
     (*Aj_handle) = Aj ;
     (*Ax_handle) = Ax ;
-    LG_CHECK (Ap == NULL || Aj == NULL || Ax == NULL, GrB_OUT_OF_MEMORY,
-        "out of memory") ;
+    LG_ASSERT (Ap != NULL && Aj != NULL && Ax != NULL, GrB_OUT_OF_MEMORY) ;
 
     if      (G->A_type == GrB_BOOL  )
     {

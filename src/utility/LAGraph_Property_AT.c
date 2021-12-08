@@ -24,7 +24,7 @@ int LAGraph_Property_AT     // returns 0 if successful, -1 if failure
     //--------------------------------------------------------------------------
 
     GrB_Matrix AT = NULL ;
-    LG_CHECK_INIT (G, msg) ;
+    LG_CLEAR_MSG_AND_BASIC_ASSERT (G, msg) ;
     GrB_Matrix A = G->A ;
     LAGraph_Kind kind = G->kind ;
 

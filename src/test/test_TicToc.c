@@ -49,9 +49,9 @@ void test_TicToc (void)
     printf ("\nresult: %g, time: %g sec\n", x, t) ;
 
     // check error conditions
-    TEST_CHECK (LAGraph_Toc (NULL, NULL, msg) == -1) ;
-    TEST_CHECK (LAGraph_Toc (&t,   NULL, msg) == -1) ;
-    TEST_CHECK (LAGraph_Toc (NULL, tic,  msg) == -1) ;
+    TEST_CHECK (LAGraph_Toc (NULL, NULL, msg) == GrB_NULL_POINTER) ;
+    TEST_CHECK (LAGraph_Toc (&t,   NULL, msg) == GrB_NULL_POINTER) ;
+    TEST_CHECK (LAGraph_Toc (NULL, tic,  msg) == GrB_NULL_POINTER) ;
 
     OK (LAGraph_Finalize (msg)) ;
 }

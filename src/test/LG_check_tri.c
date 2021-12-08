@@ -53,24 +53,16 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
     GrB_Index *Ap = NULL, *Aj = NULL, *Ai = NULL ;
     void *Ax = NULL ;
     GrB_Index Ap_size, Aj_size, Ax_size, n, ncols, Ap_len, Aj_len, Ax_len ;
-    LG_CHECK (ntri == NULL, -1003, "ntri is NULL") ;
-    LG_CHECK (LAGraph_CheckGraph (G, msg), -1002, "graph is invalid") ;
-    LG_CHECK (G->ndiag != 0, -104, "G->ndiag must be zero") ;
-    if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
+    LG_ASSERT (ntri != NULL, GrB_NULL_POINTER) ;
+    LG_TRY (LAGraph_CheckGraph (G, msg)) ;
+    LG_ASSERT (G->ndiag == 0, -104) ;
+    LG_ASSERT_MSG ((G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
-        G->A_structure_is_symmetric == LAGRAPH_TRUE))
-    {
-        // the structure of A is known to be symmetric
-        ;
-    }
-    else
-    {
-        // A is not known to be symmetric
-        LG_CHECK (false, -1005, "G->A must be symmetric") ;
-    }
+        G->A_structure_is_symmetric == LAGRAPH_TRUE)),
+        -1005, "G->A must be known to be symmetric") ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
-    LG_CHECK (n != ncols, -1001, "A must be square") ;
+    LG_ASSERT_MSG (n == ncols, -1001, "A must be square") ;
 
     //--------------------------------------------------------------------------
     // export the matrix in CSR form

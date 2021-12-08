@@ -22,7 +22,7 @@ int LAGraph_Matrix_wait     // wait on a matrix
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    LG_CHECK (A == NULL, -1001, "A is NULL") ;
+    LG_ASSERT (A != NULL, GrB_NULL_POINTER) ;
 
     //--------------------------------------------------------------------------
     // wait on the matrix

@@ -33,7 +33,7 @@ int LAGraph_Property_RowDegree  // 0 if successful, -1 if failure
     //--------------------------------------------------------------------------
 
     GrB_Vector rowdegree = NULL, x = NULL ;
-    LG_CHECK_INIT (G, msg) ;
+    LG_CLEAR_MSG_AND_BASIC_ASSERT (G, msg) ;
 
     if (G->rowdegree != NULL)
     {

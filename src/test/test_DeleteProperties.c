@@ -95,7 +95,8 @@ void test_DeleteProperties (void)
         printf ("\nGraph: ndiag %g, symmetric structure: %d\n",
             (double) G->ndiag, G->A_structure_is_symmetric) ;
         printf ("  adj matrix: ") ;
-        OK (LAGraph_Matrix_print_type (G->A, atype, 2, stdout, msg)) ;
+        int rr = (LAGraph_Matrix_print_type (G->A, atype, 2, stdout, msg)) ;
+        printf ("result: %d msg: %s\n", rr, msg) ;
         printf ("  row degree: ") ;
         OK (LAGraph_Vector_print_type (G->rowdegree, G->rowdegree_type, 2,
             stdout, msg)) ;
