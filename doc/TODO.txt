@@ -1,25 +1,33 @@
-As of Dec 8, 2021:
+As of Dec 15, 2021:
 
     * entire user guide
         experimental -> src, how to do it.
+        HTML vs PDF vs ... link into PDF ...
 
     * test, document, polish all src & experimental: algorithms, utilities,
         and tests.
         as of Dec 8: testing is at 95%.  Only untested functions are
-        4 experimental/algoritms: lcc, cdlp, scc, and msf.
+        4 experimental/algorithms: lcc, cdlp, scc, and msf.
 
     * unify error return values as much as possible, now that v2.0 C API
         has assigned enum values to GrB_Info.  Suggest we use GrB_Info
         values, as ints, as much as possible
         TODO: use LG_ASSERT as much as possible, instead of LG_CHECK
+            (almost done)
         TODO: use LG_TRY (LAGraph_...(...,msg)) not LG_CHECK,
             when calling LAGraph method from LAGraph methods.
+            (done?)
+
+        GrB_OUT_OF_MEMORY
+        GrB_NULL_POINTER
+        ...
 
     * many TODOs and FIXMEs throughout
 
     * check function names and API (LAGraph_IsEqual for GrB_Matrix, and
-        LAGraph_Vector_IsEqual for GrB_Vectors for example,o
+        LAGraph_Vector_IsEqual for GrB_Vectors for example,
         but LAGraph_Matrix_print and LAGraph_Vector_print)
+        FIX THIS
 
     * missing features:
 
@@ -28,6 +36,7 @@ As of Dec 8, 2021:
             written with.
             Pros: very fast, very compact, easy to do in LAGraph.
             Cons: only works to save then load in the same library.
+            DONE!
 
         (2) file I/O with a common, binary, non-opaque format that all
             GraphBLAS libraries can read.  Ideally using compression
