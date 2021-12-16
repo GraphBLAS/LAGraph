@@ -229,7 +229,7 @@ void test_CheckGraph_failures (void)
     TEST_CHECK (G->A == NULL) ;
 
     int result = LAGraph_CheckGraph (G, msg) ;
-    printf ("result : %d msg: %s\n", msg) ;
+    printf ("result : %d msg: %s\n", result, msg) ;
     TEST_CHECK (result == -1102) ;
 
     // free the graph
