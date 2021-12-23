@@ -200,7 +200,6 @@ elseif ( "${CMAKE_C_COMPILER_ID}" STREQUAL "Intel" )
     # to compile without -g.
     # set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -g " )
     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -std=c11 " )
-    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -qopt-malloc-options=3" )
     # check all warnings:
 #   set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -w3 " )
     #if ( CMAKE_C_COMPILER_VERSION VERSION_LESS 18.0 )

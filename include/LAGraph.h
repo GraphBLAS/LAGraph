@@ -1070,7 +1070,7 @@ static inline GrB_Index LAGraph_Random60 (uint64_t *seed)
 
 int LAGraph_Sort1    // sort array A of size n
 (
-    int64_t *LAGRAPH_RESTRICT A_0,   // size n array
+    int64_t *A_0,   // size n array
     const int64_t n,
     int nthreads,               // # of threads to use
     char *msg
@@ -1078,8 +1078,8 @@ int LAGraph_Sort1    // sort array A of size n
 
 int LAGraph_Sort2    // sort array A of size 2-by-n, using 2 keys (A [0:1][])
 (
-    int64_t *LAGRAPH_RESTRICT A_0,   // size n array
-    int64_t *LAGRAPH_RESTRICT A_1,   // size n array
+    int64_t *A_0,   // size n array
+    int64_t *A_1,   // size n array
     const int64_t n,
     int nthreads,               // # of threads to use
     char *msg
@@ -1087,9 +1087,9 @@ int LAGraph_Sort2    // sort array A of size 2-by-n, using 2 keys (A [0:1][])
 
 int LAGraph_Sort3    // sort array A of size 3-by-n, using 3 keys (A [0:2][])
 (
-    int64_t *LAGRAPH_RESTRICT A_0,   // size n array
-    int64_t *LAGRAPH_RESTRICT A_1,   // size n array
-    int64_t *LAGRAPH_RESTRICT A_2,   // size n array
+    int64_t *A_0,   // size n array
+    int64_t *A_1,   // size n array
+    int64_t *A_2,   // size n array
     const int64_t n,
     int nthreads,               // # of threads to use
     char *msg
