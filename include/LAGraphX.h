@@ -71,43 +71,31 @@ LAGRAPH_PUBLIC bool random_hack ;
 int LAGraph_Random_Seed     // construct a random seed vector
 (
     // input/output
-    GrB_Vector Seed,    // vector of random number seeds
+    GrB_Vector Seed,    // vector of random number seeds, normally GrB_UINT64
     // input
-    int64_t seed,       // scalar input seed
+    uint64_t seed,      // scalar input seed
     char *msg
 ) ;
 
-int LAGraph_Random_Next     // random int64 vector of seeds
+int LAGraph_Random_Next     // advance to next random vector
 (
     // input/output
     GrB_Vector Seed,
     char *msg
 ) ;
 
-int LAGraph_Random_INT64    // random int64 vector
-(
-    // output
-    GrB_Vector X,       // already allocated on input
-    // input/output
-    GrB_Vector Seed,
-    char *msg
-) ;
-
-GrB_Info LAGraph_Random_FP64    // random double vector
+GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
 (
     // output
-    GrB_Vector X,       // already allocated on input
-    // input/output
-    GrB_Vector Seed,
-    char *msg
-) ;
-
-GrB_Info LAGraph_Random_FP32    // random float vector
-(
-    // output
-    GrB_Vector X,       // already allocated on input
-    // input/output
-    GrB_Vector Seed,
+    GrB_Matrix *A,      // A is constructed on output
+    // input
+    GrB_Type type,      // type of matrix to construct
+    GrB_Index nrows,    // # of rows of A
+    GrB_Index ncols,    // # of columns of A
+    double density,     // density: build a sparse matrix with
+                        // density*nrows*cols values if not INFINITY;
+                        // build a dense matrix if INFINITY.
+    uint64_t seed,      // random number seed
     char *msg
 ) ;
 
@@ -785,7 +773,7 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     GrB_Vector *mis,            // mis(i) = true if i is in the set
     // inputs:
     LAGraph_Graph G,            // input graph
-    int64_t seed,               // random number seed
+    uint64_t seed,              // random number seed
     GrB_Vector ignore_node,     // if NULL, no nodes are ignored.  Otherwise
                                 // ignore_node(i) = true if node i is to be
                                 // ignored, and not treated as a candidate

@@ -14,6 +14,7 @@
 #include <acutest.h>
 
 #include "LAGraph_test.h"
+// also test LG_CC_FastSV5 and LAGraph_cc_lacc
 #include "LAGraphX.h"
 #include "LG_alg_internal.h"
 

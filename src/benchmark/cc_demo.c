@@ -209,6 +209,7 @@ int main (int argc, char **argv)
     // LG_CC_FastSV5: using 32-bit integers
     //--------------------------------------------------------------------------
 
+#if 0
     for (int trial = 1 ; trial <= nt ; trial++)
     {
         int nthreads = Nthreads [trial] ;
@@ -237,11 +238,13 @@ int main (int argc, char **argv)
                 "SV5b:     nthreads: %2d Avg: time: %10.4f sec ntrials %d\n",
                 nthreads, ttt, ntrials) ;
     }
+#endif
 
     //--------------------------------------------------------------------------
     // LG_CC_Boruvka
     //--------------------------------------------------------------------------
 
+#if 0
     for (int trial = 1 ; trial <= nt ; trial++)
     {
         int nthreads = Nthreads [trial] ;
@@ -270,11 +273,13 @@ int main (int argc, char **argv)
                 "Boruvka:  nthreads: %2d Avg: time: %10.4f sec ntrials %d\n",
                 nthreads, ttt, ntrials) ;
     }
+#endif
 
     //--------------------------------------------------------------------------
     // LAGraph_cc_lacc
     //--------------------------------------------------------------------------
 
+#if 0
     for (int trial = 1 ; trial <= nt ; trial++)
     {
         int nthreads = Nthreads [trial] ;
@@ -303,6 +308,7 @@ int main (int argc, char **argv)
                 "LACC:     nthreads: %2d Avg: time: %10.4f sec ntrials %d\n",
                 nthreads, ttt, ntrials) ;
     }
+#endif
 
     //--------------------------------------------------------------------------
     // free all workspace and finish

@@ -144,7 +144,8 @@ int main (int argc, char **argv)
             src-- ; // convert from 1-based to 0-based
             double tcheck, ttrial, tic [2] ;
 
-            for (int pp = 0 ; pp <= 1 ; pp++)
+            // for (int pp = 0 ; pp <= 1 ; pp++)
+            for (int pp = 1 ; pp <= 1 ; pp++)
             {
 
                 bool pushpull = (pp == 1) ;
@@ -185,6 +186,7 @@ int main (int argc, char **argv)
                 // BFS to compute just level
                 //--------------------------------------------------------------
 
+#if 0
                 GrB_free (&level) ;
 
                 LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
@@ -250,13 +252,15 @@ int main (int argc, char **argv)
                         (double) n, maxlevel, (double) nvisited, tcheck) ;
                 }
 #endif
+#endif
 
                 GrB_free (&parent) ;
                 GrB_free (&level) ;
             }
         }
 
-        for (int pp = 0 ; pp <= 1 ; pp++)
+        // for (int pp = 0 ; pp <= 1 ; pp++)
+        for (int pp = 1 ; pp <= 1 ; pp++)
         {
             tp  [nthreads][pp] = tp  [nthreads][pp] / ntrials ;
             tl  [nthreads][pp] = tl  [nthreads][pp] / ntrials ;
@@ -266,7 +270,7 @@ int main (int argc, char **argv)
                 "%10.3f sec: %s\n",
                  (pp == 0) ? "pushonly" : "pushpull",
                  nthreads, tp [nthreads][pp], matrix_name) ;
-#if 1
+#if 0
             fprintf (stderr, "Avg: BFS %s level only   threads %3d: "
                 "%10.3f sec: %s\n",
                  (pp == 0) ? "pushonly" : "pushpull",
@@ -283,7 +287,7 @@ int main (int argc, char **argv)
                  (pp == 0) ? "pushonly" : "pushpull",
                  nthreads, tp [nthreads][pp], matrix_name) ;
 
-#if 1
+#if 0
             printf ("Avg: BFS %s level only   threads %3d: "
                 "%10.3f sec: %s\n",
                  (pp == 0) ? "pushonly" : "pushpull",

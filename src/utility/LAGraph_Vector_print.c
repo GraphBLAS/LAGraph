@@ -88,7 +88,7 @@ LG_VECTOR_PRINT (INT64 , int64_t , GrB_INT64 , "%" PRId64, "%" PRId64  ) ;
 LG_VECTOR_PRINT (UINT8 , uint8_t , GrB_UINT8 , "%d"  , "%d"    ) ;
 LG_VECTOR_PRINT (UINT16, uint16_t, GrB_UINT16, "%d"  , "%d"    ) ;
 LG_VECTOR_PRINT (UINT32, uint32_t, GrB_UINT32, "%" PRIu32, "%" PRIu32  ) ;
-LG_VECTOR_PRINT (UINT64, uint64_t, GrB_UINT64, "%" PRIu32, "%" PRIu32  ) ;
+LG_VECTOR_PRINT (UINT64, uint64_t, GrB_UINT64, "%" PRIu64, "%" PRIu64  ) ;
 LG_VECTOR_PRINT (FP32  , float   , GrB_FP32  , "%g"  , "%0.7g" ) ;
 LG_VECTOR_PRINT (FP64  , double  , GrB_FP64  , "%g"  , "%0.15g") ;
 #if 0
