@@ -133,7 +133,7 @@ void test_SSaveSet (void)
     int r = 
         LAGraph_SLoadSet ("matrices.lagraph", &Set2, &nmatrices, &collection,
         msg) ;
-    printf ("r %d msg %s\n", r, msg) ;
+    printf ("nmatrices %ld r %d msg %s\n", nmatrices, r, msg) ;
     TEST_CHECK (nmatrices == NFILES) ;
     TEST_CHECK (Set2 != NULL) ;
     TEST_CHECK (strcmp (collection, "many test matrices") == 0) ;
