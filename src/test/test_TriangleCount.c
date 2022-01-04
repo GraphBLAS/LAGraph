@@ -189,7 +189,7 @@ void test_TriangleCount_Methods4(void)
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LAGraph_TriangleCount_Methods(&ntriangles, G, 3, &presort, msg);
+    retval = LAGraph_TriangleCount_Methods(&ntriangles, G, 4, &presort, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
@@ -223,7 +223,7 @@ void test_TriangleCount_Methods5(void)
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LAGraph_TriangleCount_Methods(&ntriangles, G, 3, &presort, msg);
+    retval = LAGraph_TriangleCount_Methods(&ntriangles, G, 5, &presort, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
@@ -256,7 +256,7 @@ void test_TriangleCount_Methods6(void)
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LAGraph_TriangleCount_Methods(&ntriangles, G, 3, &presort, msg);
+    retval = LAGraph_TriangleCount_Methods(&ntriangles, G, 6, &presort, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
