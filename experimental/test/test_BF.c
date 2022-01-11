@@ -421,7 +421,7 @@ void test_BF (void)
                     for (int64_t i = 0 ; i < n ; i++)
                     {
                         double d10i = (double) d10 [i] ;
-                        double di = (d [i] == INFINITY) ? INT32_MAX : d [i] ;
+                        double di = (isinf (d [i])) ? INT32_MAX : d [i] ;
                         TEST_CHECK (d10i == di) ;
                     }
                 }

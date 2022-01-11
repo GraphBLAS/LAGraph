@@ -114,7 +114,8 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
     {
         // determine number of tuples for building a random dense matrix
         double nx = (double) nrows * (double) ncols ;
-        LG_ASSERT_MSG (nx < GrB_INDEX_MAX, -1010, "Problem too large") ;
+        LG_ASSERT_MSG (nx < (double) GrB_INDEX_MAX, -1010,
+            "Problem too large") ;
         nvals = nrows * ncols ;
     }
     else
