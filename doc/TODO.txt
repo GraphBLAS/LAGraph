@@ -1,12 +1,13 @@
-As of Dec 15, 2021:
+As of Jan 12, 2022:
 
     * entire user guide
         experimental -> src, how to do it.
         HTML vs PDF vs ... link into PDF ...
+        write it in LaTeX
 
     * test, document, polish all src & experimental: algorithms, utilities,
         and tests.
-        as of Dec 8: testing is at 95%.  Only untested functions are
+        as of Jan 12: testing is at 95%.  Only untested functions are
         4 experimental/algorithms: lcc, cdlp, scc, and msf.
 
     * unify error return values as much as possible, now that v2.0 C API
@@ -36,7 +37,7 @@ As of Dec 15, 2021:
             written with.
             Pros: very fast, very compact, easy to do in LAGraph.
             Cons: only works to save then load in the same library.
-            DONE!
+            DONE! in experimental
 
         (2) file I/O with a common, binary, non-opaque format that all
             GraphBLAS libraries can read.  Ideally using compression
@@ -46,10 +47,7 @@ As of Dec 15, 2021:
         (3) random matrix generation.  Would be easy to do based on
             LAGraph_Random (generates random vectors, in
             experimental/utility).
-
-    * need new GxB methods in GraphBLAS for CC, ideally for v1.0 of LAGraph:
-        GxB_select with GxB_RankUnaryOp, and GxB_extract with GrB_Vectors as
-        inputs instead of (GrB_Index *) arrays.
+            DONE! in experimental
 
     * move LICENSE, etc to doc/ ?
 
@@ -58,6 +56,15 @@ As of Dec 15, 2021:
 FUTURE: can we exploit asynch algorithms? C += A*C for example?
         Gauss-Seidel, Afforest, etc?  I can do it in GraphBLAS; can LAGraph
         use it?
+
+FUTURE:
+
+    * need new GxB methods in GraphBLAS for CC, ideally for v1.0 of LAGraph:
+        GxB_select with GxB_RankUnaryOp, and GxB_extract with GrB_Vectors as
+        inputs instead of (GrB_Index *) arrays.
+
+FUTURE:
+    * GxB iterators ... future (not needed urgently for LAGraph)
 
 FUTURE: need GrB_Matrix_type or type_name.  use GxB_Matrix_type_name instead
     of GxB_Matrix_type.
