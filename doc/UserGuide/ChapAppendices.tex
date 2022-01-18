@@ -1,0 +1,42 @@
+\chapter{Revision history}
+\label{Chp:RevHistory}
+%--------------------------------------------------------------
+
+This document defines the LAGraph 1.0 release and hence one could argue that there should not be a
+revision history just yet.    Early pre-release versions of LAGraph, however, have been heavily used.  
+We therefore need to summarize the key changes from the pre-release version of LAGraph and 
+the official, 1.0 release.  
+Changes in 1.0 (Released: 12 September 2022):
+\begin{itemize}
+\item We did a global redefinition of return codes to be more consistent and to mesh better with the GraphBLAS
+return codes.
+\item In the pre-release LAGraph library, we included type information on the LAGraph graph object.  We have
+deprecated this feature since it is safer to use the type introspection from GraphBLAS than to carry distinct type
+information inside the LAGraph  object.
+\end{itemize}
+
+
+%--------------------------------------------------------------
+
+\chapter{Examples}
+\label{Chp:Examples}
+
+Text to introduce the examples.
+
+\pagebreak
+\nolinenumbers
+\section{Example: Compute the page rank of a graph using LAGraph.}
+{\scriptsize
+\lstinputlisting[language=C,numbers=left]{ExPageRank.c}
+}
+\vfill
+
+\pagebreak
+\nolinenumbers
+\section{Example: Apply betweenness centrality algorithm to a Graph using LAGraph}
+{\scriptsize
+\lstinputlisting[language=C,numbers=left]{ExBetween.c}
+}
+\vfill
+
+\linenumbers
