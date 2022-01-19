@@ -1,27 +1,31 @@
 \chapter{Basic concepts}
 \label{Chp:Concepts}
 
-The GraphBLAS C API is used to construct  
+The LAGraph library is a collection of high level graph algorithms
+based on the GraphBLAS C API.  These algorithms construct  
 graph algorithms expressed ``in the language of linear algebra.''
 Graphs are expressed as matrices, and the operations over 
 these matrices are generalized through the use of a
 semiring algebraic structure.
 
 In this chapter, we will define the basic concepts used to
-define the GraphBLAS C API.  We provide the following elements:
+define the LAGraph Library  We provide the following elements:
 
 \begin{itemize}
 \item Glossary of terms and notation used in this document.  
-\item The GraphBLAS opaque objects. 
-\item The execution and error models implied by the LAGraph Library.
-\item Enumerations used by the API and their values.
+\item The LAGraph objects. 
+\item Return codes and other constants used in LAGraph.
 \end{itemize}
+
+Currently, I've kept the text from the GraphBLAS concepts chapter in 
+this document.  We may want to borrow some of the GraphBLAS glossary items
+and perhaps use some of the table formatting in LAGraph.
 
 \section{Glossary}
 
 %=============================================================================
 
-\subsection{GraphBLAS API basic definitions}
+\subsection{LAGraph basic definitions}
 
 \glossBegin
 
@@ -49,7 +53,7 @@ on matrices and vectors with elements defined in terms of an algebraic semiring.
 
 %=============================================================================
 
-\subsection{GraphBLAS objects and their structure}
+\subsection{LAGraph objects and their structure}
 
 \glossBegin
 \glossItem{non-opaque datatype} Any datatype that exposes its internal structure and

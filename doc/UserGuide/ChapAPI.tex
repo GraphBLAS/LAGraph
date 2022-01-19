@@ -2,86 +2,34 @@
 \chapter{LAGraph API}
 \label{Chp:API}
 
-This chapter defines the behavior of all the methods in the GraphBLAS C API.
-All methods can be declared for use in programs by including the {\tt GraphBLAS.h} header file.
-
-We would like to emphasize that no GraphBLAS method will imply a predefined order over any associative operators. Implementations of the GraphBLAS are encouraged to exploit associativity to optimize performance of any GraphBLAS method. This holds even if the definition of the GraphBLAS method implies a fixed order for the associative operations.
+This chapter defines the behavior of all the functions in the LAGraph library.
+All methods can be declared for use in programs by including the {\tt LAGraph.h} header file.
 
 
-\section{{\sf mxm}: Matrix-matrix multiply}
+\section{{\sf LAGraph\_ConnectedComponents}}
 
-Multiplies a matrix with another matrix on a semiring. The result is a matrix.
+Finds the connected components of an undirected graph.
 
 \paragraph{\syntax}
 
 \begin{verbatim}
-        GrB_Info GrB_mxm(GrB_Matrix             C,
-                         const GrB_Matrix       Mask,
-                         const GrB_BinaryOp     accum,
-                         const GrB_Semiring     op,
-                         const GrB_Matrix       A,
-                         const GrB_Matrix       B,
-                         const GrB_Descriptor   desc);
+
+        int LAGraph_ConnectedComponents
+        (
+              GrB_Vector *component,  
+              LAGraph_Graph G,    
+              char *msg
+         )
 \end{verbatim}
 
 \paragraph{Parameters}
 
 \begin{itemize}[leftmargin=1.1in]
-    \item[{\sf C}]    ({\sf INOUT}) An existing GraphBLAS matrix. On input,
-    the matrix provides values that may be accumulated with the result of the
-    matrix product.  On output, the matrix holds the results of the
-    operation.
+    \item[{\sf *component}]    ({\sf OUT}) An array holding identifiers to the components.
+    \item[{\sf G}] ({\sf IN}) the input Graph (not modified by this function).
+    \item{\sf msg} A message meaning something.
 
-    \item[{\sf Mask}] ({\sf IN}) An optional ``write'' mask that controls which
-    results from this operation are stored into the output matrix {\sf C}. The 
-    mask dimensions must match those of the matrix {\sf C}. If the 
-    {\sf GrB\_STRUCTURE} descriptor is {\em not} set for the mask, the domain 
-    of the {\sf Mask} matrix must be of type {\sf bool} or any of the predefined 
-    ``built-in'' types in Table~\ref{Tab:PredefinedTypes}.  If the default
-    mask is desired (\ie, a mask that is all {\sf true} with the dimensions of {\sf C}), 
-    {\sf GrB\_NULL} should be specified.
-
-    \item[{\sf accum}] ({\sf IN}) An optional binary operator used for accumulating
-    entries into existing {\sf C} entries.
-    %: ${\sf accum} = \langle \bDout({\sf accum}),\bDin1({\sf accum}),
-    %\bDin2({\sf accum}), \odot \rangle$. 
-    If assignment rather than accumulation is
-    desired, {\sf GrB\_NULL} should be specified.
-
-    \item[{\sf op}]   ({\sf IN}) The semiring used in the matrix-matrix
-    multiply.
-    %: ${\sf op}=\langle \bDout({\sf op}),\bDin1({\sf op}),\bDin2({\sf op}),\oplus,\otimes,0 \rangle$.
-
-    \item[{\sf A}]    ({\sf IN}) The GraphBLAS matrix holding the values
-    for the left-hand matrix in the multiplication.
-
-    \item[{\sf B}]    ({\sf IN}) The GraphBLAS matrix holding the values for
-    the right-hand matrix in the multiplication.
-
-    \item[{\sf desc}] ({\sf IN}) An optional operation descriptor. If
-    a \emph{default} descriptor is desired, {\sf GrB\_NULL} should be
-    specified. Non-default field/value pairs are listed as follows:  \\
-    
-    \hspace*{-2em}\begin{tabular}{lllp{2.7in}}
-        Param & Field  & Value & Description \\
-        \hline
-        {\sf C}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output matrix {\sf C}
-        is cleared (all elements removed) before the result is stored in it.\\
-
-        {\sf Mask} & {\sf GrB\_MASK} & {\sf GrB\_STRUCTURE}   & The write mask is
-        constructed from the structure (pattern of stored values) of the input
-        {\sf Mask} matrix. The stored values are not examined.\\
-
-        {\sf Mask} & {\sf GrB\_MASK} & {\sf GrB\_COMP}   & Use the
-        complement of {\sf Mask}. \\
-
-        {\sf A}    & {\sf GrB\_INP0} & {\sf GrB\_TRAN}   & Use transpose of {\sf A}
-        for the operation. \\
-
-        {\sf B}    & {\sf GrB\_INP1} & {\sf GrB\_TRAN}   & Use transpose of {\sf B}
-        for the operation. \\
-    \end{tabular}
-\end{itemize}
+    \end{itemize}
 
 \paragraph{Return Values}
 
@@ -137,80 +85,6 @@ Up to four argument matrices are used in the {\sf GrB\_mxm} operation:
 	\item ${\sf B} = \langle \bold{D}({\sf B}),\bold{nrows}({\sf B}), \bold{ncols}({\sf B}),\bold{L}({\sf B}) = \{(i,j,B_{ij}) \} \rangle$
 \end{enumerate}
 
-The argument matrices, the semiring, and the accumulation operator (if provided) 
-are tested for domain compatibility as follows:
-\begin{enumerate}
-	\item If {\sf Mask} is not {\sf GrB\_NULL}, and ${\sf desc[GrB\_MASK].GrB\_STRUCTURE}$
-    is not set, then $\bold{D}({\sf Mask})$ must be from one of the pre-defined types of 
-    Table~\ref{Tab:PredefinedTypes}.
-
-	\item $\bold{D}({\sf A})$ must be compatible with $\bDin1({\sf op})$ of the semiring.
-
-	\item $\bold{D}({\sf B})$ must be compatible with $\bDin2({\sf op})$ of the semiring.
-
-	\item $\bold{D}({\sf C})$ must be compatible with $\bDout({\sf op})$ of the semiring.
-
-	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf C})$ must be
-    compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the 
-    accumulation operator and $\bDout({\sf op})$ of the semiring must be compatible with 
-    $\bDin2({\sf accum})$ of the accumulation operator.
-\end{enumerate}
-Two domains are compatible with each other if values from one domain can be cast 
-to values in the other domain as per the rules of the C language.
-In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
-with each other. A domain from a user-defined type is only compatible with itself.
-If any compatibility rule above is violated, execution of {\sf GrB\_mxm} ends and 
-the domain mismatch error listed above is returned.
-
-From the argument matrices, the internal matrices and mask used in 
-the computation are formed ($\leftarrow$ denotes copy):
-\begin{enumerate}
-	\item Matrix $\matrix{\widetilde{C}} \leftarrow {\sf C}$.
-
-	\item Two-dimensional mask, $\matrix{\widetilde{M}}$, is computed from
-    argument {\sf Mask} as follows:
-	\begin{enumerate}
-		\item If ${\sf Mask} = {\sf GrB\_NULL}$, then $\matrix{\widetilde{M}} = 
-        \langle \bold{nrows}({\sf C}), \bold{ncols}({\sf C}), \{(i,j), 
-        \forall i,j : 0 \leq i <  \bold{nrows}({\sf C}), 0 \leq j < 
-        \bold{ncols}({\sf C}) \} \rangle$.
-
-		\item If {\sf Mask} $\ne$ {\sf GrB\_NULL},
-        \begin{enumerate}
-            \item If ${\sf desc[GrB\_MASK].GrB\_STRUCTURE}$ is set, then 
-            $\matrix{\widetilde{M}} = \langle \bold{nrows}({\sf Mask}), 
-            \bold{ncols}({\sf Mask}), \{(i,j) : (i,j) \in \bold{ind}({\sf Mask}) \} \rangle$,
-            \item Otherwise, $\matrix{\widetilde{M}} = \langle \bold{nrows}({\sf Mask}), 
-            \bold{ncols}({\sf Mask}), \\ \{(i,j) : (i,j) \in \bold{ind}({\sf Mask}) \wedge 
-            ({\sf bool}){\sf Mask}(i,j) = \true\} \rangle$.
-        \end{enumerate}
-
-		\item	If ${\sf desc[GrB\_MASK].GrB\_COMP}$ is set, then 
-        $\matrix{\widetilde{M}} \leftarrow \neg \matrix{\widetilde{M}}$.
-	\end{enumerate}
-
-	\item Matrix $\matrix{\widetilde{A}} \leftarrow
-    {\sf desc[GrB\_INP0].GrB\_TRAN} \ ? \ {\sf A}^T : {\sf A}$.
-
-	\item Matrix $\matrix{\widetilde{B}} \leftarrow
-    {\sf desc[GrB\_INP1].GrB\_TRAN} \ ? \ {\sf B}^T : {\sf B}$.
-\end{enumerate}
-
-The internal matrices and masks are checked for dimension compatibility. The following
-conditions must hold:
-\begin{enumerate}
-	\item $\bold{nrows}(\matrix{\widetilde{C}}) = \bold{nrows}(\matrix{\widetilde{M}})$.
-
-	\item $\bold{ncols}(\matrix{\widetilde{C}}) = \bold{ncols}(\matrix{\widetilde{M}})$.
-
-	\item $\bold{nrows}(\matrix{\widetilde{C}}) = \bold{nrows}(\matrix{\widetilde{A}})$.
-
-	\item $\bold{ncols}(\matrix{\widetilde{C}}) = \bold{ncols}(\matrix{\widetilde{B}})$.
-
-	\item $\bold{ncols}(\matrix{\widetilde{A}}) = \bold{nrows}(\matrix{\widetilde{B}})$.
-\end{enumerate}
-If any compatibility rule above is violated, execution of {\sf GrB\_mxm} ends and
-the dimension mismatch error listed above is returned.
 
 From this point forward, in {\sf GrB\_NONBLOCKING} mode, the method can 
 optionally exit with {\sf GrB\_SUCCESS} return code and defer any computation 
