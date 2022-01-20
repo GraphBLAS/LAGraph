@@ -110,7 +110,7 @@ int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
     // write the header
     //--------------------------------------------------------------------------
 
-    LAGraph_TRY (LAGraph_SWrite_HeaderStart (f, collection, msg)) ;
+    LG_TRY (LAGraph_SWrite_HeaderStart (f, collection, msg)) ;
     for (GrB_Index i = 0 ; i < nmatrices ; i++)
     {
         #if LG_SUITESPARSE
@@ -124,10 +124,10 @@ int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
         #endif
         char matrix_name [256] ;
         snprintf (matrix_name, 256, "A_%" PRIu64, i) ;
-        LAGraph_TRY (LAGraph_SWrite_HeaderItem (f, LAGraph_matrix_kind,
+        LG_TRY (LAGraph_SWrite_HeaderItem (f, LAGraph_matrix_kind,
             matrix_name, typename, 0, Contents [i].blob_size, msg)) ;
     }
-    LAGraph_TRY (LAGraph_SWrite_HeaderEnd (f, msg)) ;
+    LG_TRY (LAGraph_SWrite_HeaderEnd (f, msg)) ;
 
     //--------------------------------------------------------------------------
     // write all the blobs
@@ -135,7 +135,7 @@ int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
 
     for (GrB_Index i = 0 ; i < nmatrices ; i++)
     {
-        LAGraph_TRY (LAGraph_SWrite_Item (f, Contents [i].blob,
+        LG_TRY (LAGraph_SWrite_Item (f, Contents [i].blob,
             Contents [i].blob_size, msg)) ;
     }
 

@@ -64,9 +64,8 @@ void test_NameOfType  (void)
     OK (strcmp (name, "double")) ;
 
     OK (GrB_Type_new (&type, sizeof (myint))) ;
-    OK (LAGraph_NameOfType  (name, type, msg)) ;
-    printf ("name: [%s]\n", name) ;
-    OK (strcmp (name, "user_defined_type")) ;
+    TEST_CHECK (LAGraph_NameOfType (name, type, msg) == GrB_NOT_IMPLEMENTED) ;
+    printf ("\nmsg: %s\n", msg) ;
 
     TEST_CHECK (LAGraph_NameOfType (NULL, NULL, msg) == GrB_NULL_POINTER) ;
     printf ("\nmsg: %s\n", msg) ;

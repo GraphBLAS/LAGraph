@@ -48,8 +48,7 @@
 
 #include "LG_internal.h"
 
-// TODO assert the input matrix has type GrB_INT32, or select different
-// operators / semirings based on the matrix type.
+// TODO select different operators / semirings based on the matrix type.
 
 int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
 (
@@ -62,10 +61,10 @@ int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
     int32_t delta,              // delta value for delta stepping
                                 // TODO: use GrB_Scalar for delta
     // TODO: make this an enum, and add to LAGraph_Graph properties, and then
-    // remove it from the inputs to this function
+    // remove it from the inputs to this function:
     //      case 0: A can have negative, zero, or positive entries
     //      case 1: A can have zero or positive entries
-    //      case 2: A only has positive entries (see FIXME below)
+    //      case 2: A only has positive entries
     bool AIsAllPositive,       // A boolean indicating whether the entries of
                                // matrix A are all positive
     char *msg
@@ -141,7 +140,7 @@ int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
     // optimized, tmasked can be directly set the same as t since there is only
     // one entry that satisfies the condition.
     GrB_TRY (GrB_Vector_setElement (tmasked, 0, source)) ;
-    LAGraph_TRY (LAGraph_Vector_wait (tmasked, msg)) ;
+    GrB_TRY (GrB_wait (tmasked, GrB_MATERIALIZE)) ;
 
     // s (src) = true
     GrB_TRY (GrB_Vector_setElement (s, true, source)) ;
@@ -149,12 +148,12 @@ int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
     // AL = A .* (A <= delta)
     GrB_TRY (GrB_Matrix_new (&AL, GrB_INT32, n, n)) ;   // TODO: any type
     GrB_TRY (GrB_select (AL, NULL, NULL, GrB_VALUELE_INT32, A, lBound, NULL)) ;
-    LAGraph_TRY (LAGraph_Matrix_wait (AL, msg)) ;
+    GrB_TRY (GrB_wait (AL, GrB_MATERIALIZE)) ;
 
     // AH = A .* (A > delta)
     GrB_TRY (GrB_Matrix_new (&AH, GrB_INT32, n, n)) ;   // TODO: any type
     GrB_TRY (GrB_select (AH, NULL, NULL, GrB_VALUEGT_INT32, A, lBound, NULL)) ;
-    LAGraph_TRY (LAGraph_Matrix_wait (AH, msg)) ;
+    GrB_TRY (GrB_wait (AH, GrB_MATERIALIZE)) ;
 
     //--------------------------------------------------------------------------
     // while (t >= i*delta) not empty

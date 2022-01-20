@@ -31,9 +31,9 @@ int LAGraph_Toc             // 0 if successful, -1 on failure
     //--------------------------------------------------------------------------
 
     double toc [2] ;
-    LAGraph_TRY (LAGraph_Tic (toc, msg)) ;
+    LG_TRY (LAGraph_Tic (toc, msg)) ;
     (*t) = (toc [0] - tic [0]) + 1e-9 * (toc [1] - tic [1]) ;
 
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 

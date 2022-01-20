@@ -10,8 +10,6 @@
 
 //------------------------------------------------------------------------------
 
-// brutal HERE TODO FIXME
-
 #include <stdio.h>
 #include <acutest.h>
 

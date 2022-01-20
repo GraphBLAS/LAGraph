@@ -78,7 +78,7 @@ int LG_check_ktruss
     //--------------------------------------------------------------------------
 
     size_t typesize ;
-    LAGraph_TRY (LG_check_export (G, &Cp, &Cj, &Ax, &Cp_len, &Cj_len, &Cx_len,
+    LG_TRY (LG_check_export (G, &Cp, &Cj, &Ax, &Cp_len, &Cj_len, &Cx_len,
         &typesize, msg)) ;
     LAGraph_Free ((void **) &Ax) ;
 

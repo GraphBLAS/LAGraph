@@ -181,7 +181,7 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     }
 
     // create the random number seeds
-    LAGraph_TRY (LAGraph_Random_Seed (Seed, seed, msg)) ;
+    LG_TRY (LAGraph_Random_Seed (Seed, seed, msg)) ;
 
     //--------------------------------------------------------------------------
     // iterate while there are candidates to check
@@ -288,21 +288,21 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
             // terminate if the method has stalled too many times
             LG_CHECK (nstall > 32, -111, "stall") ;
             // recreate the random number seeds with a new starting seed
-            LAGraph_TRY (LAGraph_Random_Seed (Seed, seed + nstall, msg)) ;
+            LG_TRY (LAGraph_Random_Seed (Seed, seed + nstall, msg)) ;
         }
         last_ncandidates = ncandidates ;
 
         // get the next random Seed vector
-        LAGraph_TRY (LAGraph_Random_Next (Seed, msg)) ;
+        LG_TRY (LAGraph_Random_Next (Seed, msg)) ;
     }
 
     //--------------------------------------------------------------------------
     // free workspace and return result
     //--------------------------------------------------------------------------
 
-    LAGraph_TRY (LAGraph_Vector_wait (iset, msg)) ;
+    GrB_TRY (GrB_wait (iset, GrB_MATERIALIZE)) ;
     (*mis) = iset ;
     LAGraph_FREE_WORK ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 

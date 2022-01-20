@@ -278,7 +278,7 @@ static inline int Reduce_assign32
     GrB_TRY (GxB_Vector_import_Full (s_handle, s_type, s_n, (void **) &s_x,
         s_size, s_iso, NULL)) ;
 
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 
 //------------------------------------------------------------------------------
@@ -369,7 +369,7 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
 
     // determine # of threads to use for Reduce_assign
     int nthreads ;
-    LAGraph_TRY (LAGraph_GetNumThreads (&nthreads, NULL)) ;
+    LG_TRY (LAGraph_GetNumThreads (&nthreads, NULL)) ;
     nthreads = LAGraph_MIN (nthreads, n / 16) ;
     nthreads = LAGraph_MAX (nthreads, 1) ;
 
@@ -553,7 +553,7 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
                 GrB_MIN_SECOND_SEMIRING_UINT32, T, gp, NULL)) ;
             if (!is_first)
             {
-                LAGraph_TRY (Reduce_assign32 (&f, &mngp, V32, n, nthreads,
+                LG_TRY (Reduce_assign32 (&f, &mngp, V32, n, nthreads,
                     ht_key, ht_val, &seed, msg)) ;
             }
             GrB_TRY (GrB_eWiseAdd (f, NULL, GrB_MIN_UINT32, GrB_MIN_UINT32,
@@ -750,6 +750,6 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
         GrB_free (&T) ;
     }
     LAGraph_FREE_ALL ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 #endif
 }

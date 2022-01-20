@@ -33,7 +33,7 @@ int LAGraph_DeleteDiag      // returns 0 if successful, < 0 if failure
     //--------------------------------------------------------------------------
 
     LAGraph_BooleanProperty A_structure_is_symmetric = G->A_structure_is_symmetric ;
-    LAGraph_TRY (LAGraph_DeleteProperties (G, msg)) ;
+    LG_TRY (LAGraph_DeleteProperties (G, msg)) ;
     G->A_structure_is_symmetric = A_structure_is_symmetric ;
 
     //--------------------------------------------------------------------------
@@ -47,6 +47,6 @@ int LAGraph_DeleteDiag      // returns 0 if successful, < 0 if failure
     //--------------------------------------------------------------------------
 
     G->ndiag = 0 ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 

@@ -962,20 +962,6 @@ int LAGraph_Vector_print
     char *msg
 ) ;
 
-LAGRAPH_PUBLIC
-int LAGraph_Matrix_wait     // wait on a matrix
-(
-    GrB_Matrix A,
-    char *msg
-) ;
-
-LAGRAPH_PUBLIC
-int LAGraph_Vector_wait     // wait on a vector
-(
-    GrB_Vector v,
-    char *msg
-) ;
-
 //------------------------------------------------------------------------------
 // simple and portable random number generator
 //------------------------------------------------------------------------------
@@ -1163,7 +1149,7 @@ int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
     // remove it from the inputs to this function
     //      case 0: A can have negative, zero, or positive entries
     //      case 1: A can have zero or positive entries
-    //      case 2: A only has positive entries (see FIXME below)
+    //      case 2: A only has positive entries
     // TODO: add AIsAllPositive to G->A_is_something...
     bool AIsAllPositive,       // A boolean indicating whether the entries of
                                // matrix A are all positive

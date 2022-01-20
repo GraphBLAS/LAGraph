@@ -47,10 +47,11 @@ int LAGraph_NameOfType      // returns 0 if successful, < 0 if failure
     #endif
     else
     {
-        // FIXME: return GrB_NOT_IMPLEMENTED instead
-        strcpy (name, "user_defined_type") ;
+        name [0] = '\0' ;
+        LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED,
+            "user-defined types not supported") ;
     }
 
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 

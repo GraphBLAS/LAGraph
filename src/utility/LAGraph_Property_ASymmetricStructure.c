@@ -68,7 +68,7 @@ int LAGraph_Property_ASymmetricStructure  // 0 if successful, -1 if failure
 
     if (G->AT == NULL)
     {
-        LAGraph_TRY (LAGraph_Property_AT (G, msg)) ;
+        LG_TRY (LAGraph_Property_AT (G, msg)) ;
     }
 
     //--------------------------------------------------------------------------

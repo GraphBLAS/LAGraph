@@ -193,7 +193,7 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
             {
                 // estimate the mean and median degrees
                 double mean, median ;
-                LAGraph_TRY (LAGraph_SampleDegree (&mean, &median,
+                LG_TRY (LAGraph_SampleDegree (&mean, &median,
                     G, true, NSAMPLES, n, msg)) ;
                 // sort if the average degree is very high vs the median
                 if (mean > 4 * median)
@@ -216,7 +216,7 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
     if (presort != NULL && (*presort) != 0)
     {
         // P = permutation that sorts the rows by their degree
-        LAGraph_TRY (LAGraph_SortByDegree (&P, G, true, (*presort) > 0, msg)) ;
+        LG_TRY (LAGraph_SortByDegree (&P, G, true, (*presort) > 0, msg)) ;
 
         // T = A (P,P) and typecast to boolean
         GrB_TRY (GrB_Matrix_new (&T, GrB_BOOL, n, n)) ;
@@ -262,7 +262,7 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
 
         case 2:  // Cohen:      ntri = sum (sum ((L * U) .* A)) / 2
 
-            LAGraph_TRY (tricount_prep (&L, &U, A, msg)) ;
+            LG_TRY (tricount_prep (&L, &U, A, msg)) ;
             GrB_TRY (GrB_mxm (C, A, NULL, semiring, L, U, GrB_DESC_S)) ;
             GrB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             ntri /= 2 ;
@@ -271,7 +271,7 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
         case 3:  // Sandia:     ntri = sum (sum ((L * L) .* L))
 
             // using the masked saxpy3 method
-            LAGraph_TRY (tricount_prep (&L, NULL, A, msg)) ;
+            LG_TRY (tricount_prep (&L, NULL, A, msg)) ;
             GrB_TRY (GrB_mxm (C, L, NULL, semiring, L, L, GrB_DESC_S)) ;
             GrB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             break ;
@@ -279,7 +279,7 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
         case 4:  // Sandia2:    ntri = sum (sum ((U * U) .* U))
 
             // using the masked saxpy3 method
-            LAGraph_TRY (tricount_prep (NULL, &U, A, msg)) ;
+            LG_TRY (tricount_prep (NULL, &U, A, msg)) ;
             GrB_TRY (GrB_mxm (C, U, NULL, semiring, U, U, GrB_DESC_S)) ;
             GrB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             break ;
@@ -290,7 +290,7 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
             // the SandiaDot2 method is also very fast.
 
             // using the masked dot product
-            LAGraph_TRY (tricount_prep (&L, &U, A, msg)) ;
+            LG_TRY (tricount_prep (&L, &U, A, msg)) ;
             GrB_TRY (GrB_mxm (C, L, NULL, semiring, L, U, GrB_DESC_ST1)) ;
             GrB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             break ;
@@ -298,7 +298,7 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
         default: // case 6:  // SandiaDot2: ntri = sum (sum ((U * L') .* U))
 
             // using the masked dot product
-            LAGraph_TRY (tricount_prep (&L, &U, A, msg)) ;
+            LG_TRY (tricount_prep (&L, &U, A, msg)) ;
             GrB_TRY (GrB_mxm (C, U, NULL, semiring, U, L, GrB_DESC_ST1)) ;
             GrB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             break ;

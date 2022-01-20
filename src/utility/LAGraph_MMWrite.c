@@ -256,7 +256,7 @@ int LAGraph_MMWrite
         //----------------------------------------------------------------------
 
         bool isequal = false ;
-        LAGraph_TRY (LAGraph_IsEqual (&isequal, A, AT, msg)) ;
+        LG_TRY (LAGraph_IsEqual (&isequal, A, AT, msg)) ;
         if (isequal)
         {
             MM_storage = MM_symmetric ;
@@ -284,7 +284,7 @@ int LAGraph_MMWrite
             if (op != NULL)
             {
                 GrB_TRY (GrB_apply (AT, NULL, NULL, op, AT, NULL)) ;
-                LAGraph_TRY (LAGraph_IsEqual (&isequal, A, AT, msg)) ;
+                LG_TRY (LAGraph_IsEqual (&isequal, A, AT, msg)) ;
                 if (isequal)
                 {
                     MM_storage = MM_skew_symmetric ;
@@ -299,7 +299,7 @@ int LAGraph_MMWrite
         #if 0
         if (MM_type == MM_complex && MM_storage == MM_general)
         {
-            LAGraph_TRY (LAGraph_isall (&isequal, A, AT,
+            LG_TRY (LAGraph_isall (&isequal, A, AT,
                 LAGraph_HERMITIAN_ComplexFP64)) ;
             if (isequal)
             {
@@ -320,7 +320,7 @@ int LAGraph_MMWrite
     {
         if (type == GrB_BOOL)
         {
-            LAGraph_TRY (GrB_reduce (&is_structural, NULL, GrB_LAND_MONOID_BOOL,
+            GrB_TRY (GrB_reduce (&is_structural, NULL, GrB_LAND_MONOID_BOOL,
                 A, NULL)) ;
         }
         else
@@ -442,7 +442,7 @@ int LAGraph_MMWrite
     {
         // count the entries on the diagonal
         int64_t ndiag = 0 ;
-        LAGraph_TRY (LG_ndiag (&ndiag, A, msg)) ;
+        LG_TRY (LG_ndiag (&ndiag, A, msg)) ;
         // nvals_to_print = # of entries in tril(A), including diagonal
         nvals_to_print = ndiag + (nvals - ndiag) / 2 ;
     }
@@ -470,7 +470,7 @@ int LAGraph_MMWrite
         K [k] = k ;
     }
     int nthreads ;
-    LAGraph_TRY (LAGraph_GetNumThreads (&nthreads, msg)) ;
+    LG_TRY (LAGraph_GetNumThreads (&nthreads, msg)) ;
 
     GrB_Index nvals_printed = 0 ;
     bool coord = (MM_fmt == MM_coordinate) ;
@@ -481,7 +481,7 @@ int LAGraph_MMWrite
         X = LAGraph_Malloc (nvals, sizeof (ctype)) ;                        \
         LG_ASSERT (X != NULL, GrB_OUT_OF_MEMORY) ;                          \
         GrB_TRY (GrB_Matrix_extractTuples (I, J, X, &nvals, A)) ;           \
-        LAGraph_TRY (LAGraph_Sort3 ((int64_t *) J, (int64_t *) I,           \
+        LG_TRY (LAGraph_Sort3 ((int64_t *) J, (int64_t *) I,                \
             (int64_t *) K, nvals, nthreads, msg)) ;                         \
         for (int64_t k = 0 ; k < nvals ; k++)                               \
         {                                                                   \

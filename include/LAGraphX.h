@@ -647,7 +647,7 @@ GrB_Info LAGraph_BF_pure_c_double
  *
  * @retval GrB_SUCCESS        if completed successfully
  * @retval GrB_NULL_POINTER   If t, CDLP_handle or CDLP_type is NULL
- * @retval GrB_INVALID_OBJECT If A is not stored in CSR format (FIXME)
+ * @retval GrB_INVALID_OBJECT If A is not stored in CSR format
  * @retval GrB_OUT_OF_MEMORY  if allocation fails.
  * @retval GrB_NO_VALUE       if A has a negative weight cycle
  * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
@@ -728,7 +728,7 @@ GrB_Info LAGraph_FW
  * @retval GrB_SUCCESS        if completed successfully
  * @retval GrB_PANIC           vanilla version has not been implemented yet (NOT_IMPLEMENTED?)
  * @retval GrB_NULL_POINTER   If LCC_handle or LCC_type is NULL
- * @retval GrB_INVALID_VALUE  If A is not stored in CSR format (FIXME, OBJECT elsewhere)
+ * @retval GrB_INVALID_VALUE  If A is not stored in CSR format
  * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
  */
 GrB_Info LAGraph_lcc

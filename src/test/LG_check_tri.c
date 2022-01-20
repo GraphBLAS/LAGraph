@@ -69,7 +69,7 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
     //--------------------------------------------------------------------------
 
     size_t typesize ;
-    LAGraph_TRY (LG_check_export (G, &Ap, &Aj, &Ax, &Ap_len, &Aj_len, &Ax_len,
+    LG_TRY (LG_check_export (G, &Ap, &Aj, &Ax, &Ap_len, &Aj_len, &Ax_len,
         &typesize, msg)) ;
 
     //--------------------------------------------------------------------------

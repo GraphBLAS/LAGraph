@@ -32,7 +32,7 @@ int LAGraph_Delete      // returns 0 if successful, -1 if failure
     // free the cached contents of the graph
     //--------------------------------------------------------------------------
 
-    LAGraph_TRY (LAGraph_DeleteProperties (*G, msg)) ;
+    LG_TRY (LAGraph_DeleteProperties (*G, msg)) ;
 
     //--------------------------------------------------------------------------
     // delete the primary contents of the graph, and the graph itself

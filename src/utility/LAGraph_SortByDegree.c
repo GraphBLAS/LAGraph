@@ -94,7 +94,7 @@ int LAGraph_SortByDegree    // returns 0 if successful, -1 if failure
 
     #define CHUNK (64*1024)
     int nthreads ;
-    LAGraph_TRY (LAGraph_GetNumThreads (&nthreads, msg)) ;
+    LG_TRY (LAGraph_GetNumThreads (&nthreads, msg)) ;
     nthreads = LAGraph_MIN (nthreads, n/CHUNK) ;
     nthreads = LAGraph_MAX (nthreads, 1) ;
 
@@ -149,7 +149,7 @@ int LAGraph_SortByDegree    // returns 0 if successful, -1 if failure
     // sort by degrees, with ties by node id
     //--------------------------------------------------------------------------
 
-    LAGraph_TRY (LAGraph_Sort2 (D, P, n, nthreads, msg)) ;
+    LG_TRY (LAGraph_Sort2 (D, P, n, nthreads, msg)) ;
 
     //--------------------------------------------------------------------------
     // free workspace and return result

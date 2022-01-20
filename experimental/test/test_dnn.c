@@ -97,7 +97,7 @@ void test_dnn (void)
     char type_name [LAGRAPH_MAX_NAME_LEN] ;
     OK (LAGraph_MatrixTypeName (type_name, Y0, msg)) ;
     TEST_CHECK (MATCHNAME (type_name, "float")) ;
-    OK (GrB_Matrix_wait (Y0, GrB_MATERIALIZE)) ;
+    OK (GrB_wait (Y0, GrB_MATERIALIZE)) ;
 
     for (int layer = 0 ; layer < nlayers ; layer++)
     {
@@ -119,7 +119,7 @@ void test_dnn (void)
         {
             OK (GrB_Matrix_setElement (Bias [layer], bias, i, i)) ;
         }
-        OK (GrB_Matrix_wait (Bias [layer], GrB_MATERIALIZE)) ;
+        OK (GrB_wait (Bias [layer], GrB_MATERIALIZE)) ;
     }
 
     // read T as a boolean nfeatures_subset-by-1 matrix

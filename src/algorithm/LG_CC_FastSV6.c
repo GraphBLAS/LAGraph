@@ -283,7 +283,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
 // and a new GxB_extract are added to SuiteSparse:GraphBLAS.
     // determine # of threads to use
     int nthreads ;
-    LAGraph_TRY (LAGraph_GetNumThreads (&nthreads, NULL)) ;
+    LG_TRY (LAGraph_GetNumThreads (&nthreads, NULL)) ;
     nthreads = LAGraph_MIN (nthreads, n / 16) ;
     nthreads = LAGraph_MAX (nthreads, 1) ;
 // ]
@@ -473,8 +473,6 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         // The sampling below computes an estimate of the mode of the parent
         // vector, the contents of which are currently in the non-opaque Px
         // array.
-
-        // FIXME: brittle:  864, 1024
 
         // hash table size must be a power of 2
         #define HASH_SIZE 1024
