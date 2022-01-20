@@ -19,7 +19,6 @@
 LAGraph_Graph G = NULL ;
 char msg [LAGRAPH_MSG_LEN] ;
 GrB_Matrix A = NULL ;
-GrB_Type atype = NULL ;
 #define LEN 512
 char filename [LEN+1] ;
 
@@ -251,12 +250,12 @@ void test_Property_Degree (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
         // construct the graph G with adjacency matrix A
-        OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+        OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
         TEST_CHECK (A == NULL) ;
 
         for (int trial = 0 ; trial <= 2 ; trial++)
@@ -315,12 +314,12 @@ void test_Property_Degree_brutal (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
         // construct the graph G with adjacency matrix A
-        OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+        OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
         TEST_CHECK (A == NULL) ;
 
         for (int trial = 0 ; trial <= 2 ; trial++)

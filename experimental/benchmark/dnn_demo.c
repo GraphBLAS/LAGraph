@@ -531,9 +531,8 @@ int main (int argc, char **argv)
                 {
                     // check if Categories and TrueCategories are the same
                     bool isequal ;
-                    LAGRAPH_OK (LAGraph_Vector_IsEqual_type (
-                                    &isequal, TrueCategories, Categories,
-                                    GrB_BOOL, NULL)) ;
+                    LAGRAPH_OK (LAGraph_Vector_IsEqual (&isequal,
+                        TrueCategories, Categories, NULL)) ;
                     if (!isequal)
                     {
                         printf ("test failure!\n") ;

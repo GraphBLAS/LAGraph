@@ -14,6 +14,8 @@
 
 char msg[LAGRAPH_MSG_LEN];
 LAGraph_Graph G = NULL;
+GrB_Type atype = NULL ;
+char atype_name [LAGRAPH_MAX_NAME_LEN] ;
 
 #define LEN 512
 char filename [LEN+1] ;
@@ -69,7 +71,6 @@ void test_export (void)
 {
     LAGraph_Init (msg);
     GrB_Matrix A = NULL, C = NULL ;
-    GrB_Type atype = NULL ;
 
     for (int k = 0 ; ; k++)
     {
@@ -83,12 +84,14 @@ void test_export (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
+        OK (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
+        OK (LAGraph_TypeFromName (&atype, atype_name, msg)) ;
 
         // create the graph
-        OK (LAGraph_New (&G, &A, atype, kind, msg)) ;
+        OK (LAGraph_New (&G, &A, kind, msg)) ;
         TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
         // export the graph
@@ -138,7 +141,6 @@ void test_export_brutal (void)
     OK (LG_brutal_setup (msg)) ;
 
     GrB_Matrix A = NULL, C = NULL ;
-    GrB_Type atype = NULL ;
 
     for (int k = 0 ; ; k++)
     {
@@ -152,12 +154,15 @@ void test_export_brutal (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
+        OK (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
+        OK (LAGraph_TypeFromName (&atype, atype_name, msg)) ;
+
         // create the graph
-        OK (LAGraph_New (&G, &A, atype, kind, msg)) ;
+        OK (LAGraph_New (&G, &A, kind, msg)) ;
         TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
         // export the graph

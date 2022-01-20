@@ -22,6 +22,7 @@ GrB_Matrix A = NULL, B = NULL ;
 GrB_Type atype = NULL ;
 #define LEN 512
 char filename [LEN+1] ;
+char atype_name [LAGRAPH_MAX_NAME_LEN] ;
 
 //------------------------------------------------------------------------------
 // setup: start a test
@@ -79,12 +80,12 @@ void test_Property_AT (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
         // construct the graph G with adjacency matrix A
-        OK (LAGraph_New (&G, &A, atype, kind, msg)) ;
+        OK (LAGraph_New (&G, &A, kind, msg)) ;
         TEST_CHECK (A == NULL) ;
 
         // create the G->AT property
@@ -105,12 +106,14 @@ void test_Property_AT (void)
             GrB_Index nrows, ncols ;
             OK (GrB_Matrix_nrows (&nrows, G->A)) ;
             OK (GrB_Matrix_nrows (&ncols, G->A)) ;
+            OK (LAGraph_MatrixTypeName (atype_name, G->A, msg)) ;
+            OK (LAGraph_TypeFromName (&atype, atype_name, msg)) ;
             OK (GrB_Matrix_new (&B, atype, nrows, ncols)) ;
             OK (GrB_transpose (B, NULL, NULL, G->AT, NULL)) ;
 
             // ensure B and G->A are the same
             bool ok ;
-            OK (LAGraph_IsEqual_type (&ok, G->A, B, atype, msg)) ;
+            OK (LAGraph_IsEqual (&ok, G->A, B, msg)) ;
             TEST_CHECK (ok) ;
             TEST_MSG ("Test for G->A and B equal failed") ;
             OK (GrB_free (&B)) ;
@@ -142,12 +145,12 @@ void test_Property_AT_brutal (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
         // construct the graph G with adjacency matrix A
-        OK (LAGraph_New (&G, &A, atype, kind, msg)) ;
+        OK (LAGraph_New (&G, &A, kind, msg)) ;
         TEST_CHECK (A == NULL) ;
 
         // create the G->AT property
@@ -168,12 +171,14 @@ void test_Property_AT_brutal (void)
             GrB_Index nrows, ncols ;
             OK (GrB_Matrix_nrows (&nrows, G->A)) ;
             OK (GrB_Matrix_nrows (&ncols, G->A)) ;
+            OK (LAGraph_MatrixTypeName (atype_name, G->A, msg)) ;
+            OK (LAGraph_TypeFromName (&atype, atype_name, msg)) ;
             OK (GrB_Matrix_new (&B, atype, nrows, ncols)) ;
             OK (GrB_transpose (B, NULL, NULL, G->AT, NULL)) ;
 
             // ensure B and G->A are the same
             bool ok ;
-            LG_BRUTAL (LAGraph_IsEqual_type (&ok, G->A, B, atype, msg)) ;
+            LG_BRUTAL (LAGraph_IsEqual (&ok, G->A, B, msg)) ;
             TEST_CHECK (ok) ;
             TEST_MSG ("Test for G->A and B equal failed") ;
             OK (GrB_free (&B)) ;

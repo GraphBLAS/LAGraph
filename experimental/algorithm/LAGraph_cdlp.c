@@ -331,7 +331,7 @@ GrB_Info LAGraph_cdlp
 
 
         bool isequal;
-        LAGraph_IsEqual_type(&isequal, L_prev, L, GrB_UINT64, NULL);
+        LAGraph_IsEqual (&isequal, L_prev, L, NULL);
         if (isequal) {
             break;
         }

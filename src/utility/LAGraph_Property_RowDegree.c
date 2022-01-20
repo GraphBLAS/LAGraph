@@ -63,7 +63,6 @@ int LAGraph_Property_RowDegree  // 0 if successful, -1 if failure
         A, x, NULL)) ;
 
     G->rowdegree = rowdegree ;
-    G->rowdegree_type = GrB_INT64;
 
     LAGraph_FREE_WORK ;
     return (0) ;

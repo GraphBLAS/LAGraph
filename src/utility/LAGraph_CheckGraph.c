@@ -69,8 +69,12 @@ int LAGraph_CheckGraph      // returns 0 if successful, -1 if failure
         #endif
 
         // ensure the types of A and AT are the same
-        LG_ASSERT_MSG (G->A_type == G->AT_type, -1105,
-            "A and AT must have the same type") ;
+        char atype [LAGRAPH_MAX_NAME_LEN] ;
+        char ttype [LAGRAPH_MAX_NAME_LEN] ;
+        LG_TRY (LAGraph_MatrixTypeName (atype, A, msg)) ;
+        LG_TRY (LAGraph_MatrixTypeName (ttype, AT, msg)) ;
+        LG_ASSERT_MSG (MATCHNAME (atype, ttype),
+            -1105, "A and AT must have the same type") ;
     }
 
     GrB_Vector rowdegree = G->rowdegree ;
@@ -79,8 +83,10 @@ int LAGraph_CheckGraph      // returns 0 if successful, -1 if failure
         GrB_Index m ;
         GrB_TRY (GrB_Vector_size (&m, rowdegree)) ;
         LG_ASSERT_MSG (m == nrows, -1106, "rowdegree invalid size") ;
-        LG_ASSERT_MSG (G->rowdegree_type == GrB_INT64, -1107,
-                  "rowdegree has wrong type; must be GrB_INT64") ;
+        char rtype [LAGRAPH_MAX_NAME_LEN] ;
+        LG_TRY (LAGraph_VectorTypeName (rtype, rowdegree, msg)) ;
+        LG_ASSERT_MSG (MATCHNAME (rtype, "int64_t"),
+            -1107, "rowdegree has wrong type; must be GrB_INT64") ;
     }
 
     GrB_Vector coldegree = G->coldegree ;
@@ -89,8 +95,10 @@ int LAGraph_CheckGraph      // returns 0 if successful, -1 if failure
         GrB_Index n ;
         GrB_TRY (GrB_Vector_size (&n, coldegree)) ;
         LG_ASSERT_MSG (n == ncols, -1108, "coldegree invalid size") ;
-        LG_ASSERT_MSG (G->coldegree_type == GrB_INT64, -1109,
-                  "coldegree has wrong type; must be GrB_INT64") ;
+        char ctype [LAGRAPH_MAX_NAME_LEN] ;
+        LG_TRY (LAGraph_VectorTypeName (ctype, coldegree, msg)) ;
+        LG_ASSERT_MSG (MATCHNAME (ctype, "int64_t"),
+            -1109, "coldegree has wrong type; must be GrB_INT64") ;
     }
 
     return (0) ;

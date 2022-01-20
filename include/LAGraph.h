@@ -97,6 +97,13 @@
     #define LG_SUITESPARSE 0
 #endif
 
+// maximum length of the name of a GrB type, including the null-terminator
+#if LG_SUITESPARSE
+#define LAGRAPH_MAX_NAME_LEN GxB_MAX_NAME_LEN
+#else
+#define LAGRAPH_MAX_NAME_LEN 128
+#endif
+
 //==============================================================================
 // LAGraph error handling
 //==============================================================================
@@ -348,7 +355,6 @@ struct LAGraph_Graph_struct
     //--------------------------------------------------------------------------
 
     GrB_Matrix   A;          // the adjacency matrix of the graph
-    GrB_Type     A_type;     // the type of scalar stored in A
     LAGraph_Kind kind;       // the kind of graph
 
     // possible future components:
@@ -378,13 +384,11 @@ struct LAGraph_Graph_struct
     // method.
 
     GrB_Matrix AT;          // AT = A', the transpose of A
-    GrB_Type   AT_type;     // The type of scalar stored in AT
 
     GrB_Vector rowdegree;   // a GrB_INT64 vector of length m, if A is m-by-n.
            // where rowdegree(i) is the number of entries in A(i,:).  If
            // rowdegree is sparse and the entry rowdegree(i) is not present,
            // then it is assumed to be zero.
-    GrB_Type   rowdegree_type;   // the type of scalar stored in rowdegree
 
     GrB_Vector coldegree ;  // a GrB_INT64 vector of length n, if A is m-by-n.
             // where coldegree(j) is the number of entries in A(:,j).  If
@@ -392,7 +396,6 @@ struct LAGraph_Graph_struct
             // then it is assumed to be zero.  If A is known to have a
             // symmetric structure, the convention is that the degree is held in
             // rowdegree, and coldegree is left as NULL.
-    GrB_Type   coldegree_type;   // the type of scalar stored in coldegree
 
     LAGraph_BooleanProperty A_structure_is_symmetric ;    // For an undirected
             // graph, this property will always be implicitly true and can be
@@ -502,7 +505,6 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
 (
     LAGraph_Graph *G,       // the graph to create, NULL if failure
     GrB_Matrix    *A,       // the adjacency matrix of the graph, may be NULL
-    GrB_Type       A_type,  // the type of scalar stored in A
     LAGraph_Kind   kind,    // the kind of graph, may be LAGRAPH_UNKNOWN
     char *msg
 ) ;
@@ -745,7 +747,6 @@ int LAGraph_Toc             // returns 0 if successful, -1 if failure
  * LAGraph_MMRead can read the entries in any order.
  *
  * @param[out]    A       handle of the matrix to create
- * @param[out]    A_type  type of the scalar stored in A
  * @param[in]     f       handle to an open file to read from
  * @param[in,out] msg     any error messages
  *
@@ -759,21 +760,9 @@ LAGRAPH_PUBLIC
 int LAGraph_MMRead
 (
     GrB_Matrix *A,          // handle of matrix to create
-    GrB_Type   *A_type,     // type of the scalar stored in A
     FILE *f,                // file to read from, already open
     char *msg
 );
-
-// LAGraph_MMWrite: write a matrix in MatrixMarket format with given type
-LAGRAPH_PUBLIC
-int LAGraph_MMWrite_type
-(
-    GrB_Matrix A,       // matrix to write to the file
-    GrB_Type type,      // type to write to the file
-    FILE *f,            // file to write it to, must be already open
-    FILE *fcomments,    // optional file with extra comments, may be NULL
-    char *msg
-) ;
 
 // LAGraph_MMWrite: write a matrix in MatrixMarket format, auto select type
 LAGRAPH_PUBLIC
@@ -794,12 +783,44 @@ int LAGraph_Structure   // return 0 if successful, -1 if failure
     char *msg
 ) ;
 
-// LAGraph_TypeName: return the name of a type
+// LAGraph_NameOfType: return the name of a type
 LAGRAPH_PUBLIC
-int LAGraph_TypeName        // returns 0 if successful, -1 if failure
+int LAGraph_NameOfType      // returns 0 if successful, -1 if failure
 (
-    char **name,            // name of the type
+    char *name,             // name of the type
     GrB_Type type,          // GraphBLAS type
+    char *msg
+) ;
+
+// LAGraph_TypeFromName: return a GrB_Type from its name
+int LAGraph_TypeFromName    // returns 0 if successful, < 0 if failure
+(
+    GrB_Type *type,         // GraphBLAS type
+    char *name,             // name of the type
+    char *msg
+) ;
+
+// LAGraph_MatrixTypeName: return the name of the GrB_Type of a GrB_Matrix
+int LAGraph_MatrixTypeName // returns 0 if successful, < 0 if failure
+(
+    char *name,             // name of the type of the matrix A
+    GrB_Matrix A,           // matrix to query
+    char *msg
+) ;
+
+// LAGraph_VectorTypeName: return the name of the GrB_Type of a GrB_Vector
+int LAGraph_VectorTypeName // returns 0 if successful, < 0 if failure
+(
+    char *name,             // name of the type of the vector v
+    GrB_Vector v,           // vector to query
+    char *msg
+) ;
+
+// LAGraph_ScalarTypeName: return the name of the GrB_Type of a GrB_Scalar
+int LAGraph_ScalarTypeName // returns 0 if successful, < 0 if failure
+(
+    char *name,             // name of the type of the scalar v
+    GrB_Scalar s,           // scalar to query
     char *msg
 ) ;
 
@@ -807,7 +828,7 @@ int LAGraph_TypeName        // returns 0 if successful, -1 if failure
 LAGRAPH_PUBLIC
 int LAGraph_KindName        // returns 0 if successful, -1 if failure
 (
-    char **name,            // name of the kind
+    char *name,             // name of the kind
     LAGraph_Kind kind,      // graph kind
     char *msg
 ) ;
@@ -861,27 +882,12 @@ int LAGraph_IsEqual         // returns 0 if successful, -1 if failure
     char *msg
 ) ;
 
-// LAGraph_IsEqual_type: compare two matrices for exact equality
-LAGRAPH_PUBLIC
-int LAGraph_IsEqual_type    // returns 0 if successful, < 0 if failure
-(
-    bool *result,           // true if A == B, false if A != B or error
-    GrB_Matrix A,
-    GrB_Matrix B,
-    GrB_Type type,          // use GrB_EQ_type operator to compare A and B
-    char *msg
-) ;
-
 //****************************************************************************
 /**
  * Checks if two vectors are identically equal (same size, pattern,
  * and values) according to a user specified comparator op.
  *
- * @note For the standard API, there is no way to determine the type of a
- *       vector.  Checking for the same type requires the GxB_Vector_type
- *       function, which is an extension in SuiteSparse:GraphBLAS.
  * @note If either or both contain NaN's, result will be false
- * @todo Add GrB_Type input parameters to check for type with the standard API
  *
  * @param[out]   result   Set to true on return is vectors are "equal"
  * @param[in]    A        First vector to compare
@@ -902,51 +908,13 @@ GrB_Info LAGraph_Vector_IsEqual_op    // return GrB_SUCCESS if successful
     char *msg
 );
 
-
-//****************************************************************************
-/**
- * Checks if two vectors are identically equal (same size, pattern,
- * and values) according to an equal operator of a type specified by
- * the user.
- *
- * @note For the standard API, there is no way to determine the type of a
- *       vector. Checking for the same type requires the GxB_Vector_type
- *       function, which is an extension in SuiteSparse:GraphBLAS.
- * @note If either or both contain NaN's, result will be false
- * @todo Add GrB_Type input parameters to check for type with the standard API
- *
- * @param[out]   result   Set to true on return is vectors are "equal"
- * @param[in]    A        First vector to compare
- * @param[in]    B        Second vector to compare
- * @param[in]    type     The type of the GrB_EQ_<type> operator to compare with
- * @param[out]   msg      If an error code is returned, this may hold an error msg.
- *
- * @retval 0     if completed successfully (equal or not)
- * @retval -1001 result or type is NULL
- * @retval -1002 type is not supported
- * @return Any GraphBLAS errors that may have been encountered
- */
-GrB_Info LAGraph_Vector_IsEqual_type // return GrB_SUCCESS if successful
-(
-    bool         *result,          // true if A == B, false if A != B or error
-    GrB_Vector    A,
-    GrB_Vector    B,
-    GrB_Type      type,            // use GrB_EQ_type operator to compare A and B
-    char         *msg
-) ;
-
-
 //****************************************************************************
 /**
  * Checks if two vectors are identically equal (same size, type (if accessible),
  * pattern, and values) according to an equal operator of a type determined
  * internally.
  *
- * @note For the standard API, there is no way to determine the type of a
- *       vector and GrB_EQ_FP64 is used. Checking for the same type requires the
- *       GxB_Vector_type function, which is an extension in SuiteSparse:GraphBLAS.
  * @note If either or both contain NaN's, result will be false
- * @todo Add GrB_Type input parameters to check for type with the standard API
  *
  * @param[out]   result   Set to true on return is vectors are "equal"
  * @param[in]    A        First vector to compare
@@ -966,7 +934,7 @@ int LAGraph_Vector_IsEqual         // returns 0 if successful, < 0 if failure
     char *msg
 );
 
-// LAGraph_Matrix_print: pretty-print a matrix, determining type automatically
+// LAGraph_Matrix_print: pretty-print a matrix
 LAGRAPH_PUBLIC
 int LAGraph_Matrix_print
 (
@@ -980,41 +948,11 @@ int LAGraph_Matrix_print
     char *msg
 ) ;
 
-// LAGraph_Matrix_print_type: pretty-print a matrix with a given type
-LAGRAPH_PUBLIC
-int LAGraph_Matrix_print_type
-(
-    GrB_Matrix A,       // matrix to pretty-print to the file
-    GrB_Type type,      // type to print
-    int pr,             // print level: -1 nothing, 0: one line, 1: terse,
-                        //      2: summary, 3: all,
-                        //      4: as 2 but with %0.15g for float/double
-                        //      5: as 3 but with %0.15g for float/double
-    FILE *f,            // file to write it to, must be already open; use
-                        // stdout or stderr to print to those locations.
-    char *msg
-) ;
-
-// LAGraph_Vector_print: pretty-print a matrix, determining type automatically
+// LAGraph_Vector_print: pretty-print a matrix
 LAGRAPH_PUBLIC
 int LAGraph_Vector_print
 (
     GrB_Vector v,       // vector to pretty-print to the file
-    int pr,             // print level: -1 nothing, 0: one line, 1: terse,
-                        //      2: summary, 3: all,
-                        //      4: as 2 but with %0.15g for float/double
-                        //      5: as 3 but with %0.15g for float/double
-    FILE *f,            // file to write it to, must be already open; use
-                        // stdout or stderr to print to those locations.
-    char *msg
-) ;
-
-// LAGraph_Vector_print_type: pretty-print a matrix with a given type
-LAGRAPH_PUBLIC
-int LAGraph_Vector_print_type
-(
-    GrB_Vector v,       // vector to pretty-print to the file
-    GrB_Type type,      // type to print
     int pr,             // print level: -1 nothing, 0: one line, 1: terse,
                         //      2: summary, 3: all,
                         //      4: as 2 but with %0.15g for float/double

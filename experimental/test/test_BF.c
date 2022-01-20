@@ -75,7 +75,6 @@ void test_BF (void)
     for (int k = 0 ; ; k++)
     {
         double tic [2] ;
-        GrB_Type A_type = NULL ;
         GrB_Matrix A = NULL, AT = NULL, A_orig = NULL ;
         GrB_Index *I = NULL, *J = NULL ; // for col/row indices of entries in A
         double *W = NULL, *d = NULL ;
@@ -97,7 +96,7 @@ void test_BF (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A_orig, &A_type, f, msg)) ;
+        OK (LAGraph_MMRead (&A_orig, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of valued matrix failed") ;
         printf ("\nMatrix: %s\n", aname) ;

@@ -86,7 +86,7 @@ GrB_Info LAGraph_BF_basic
         // execute semiring on d and A, and save the result to d
         GrB_TRY (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, GrB_MIN_PLUS_SEMIRING_FP64, d, A,
             GrB_NULL));
-        LAGRAPH_OK (LAGraph_Vector_IsEqual_type(&same, dtmp, d, GrB_FP64, NULL));
+        LAGRAPH_OK (LAGraph_Vector_IsEqual (&same, dtmp, d, NULL));
         if (!same)
         {
             GrB_Vector ttmp = dtmp;
@@ -109,7 +109,7 @@ GrB_Info LAGraph_BF_basic
         // execute semiring again to check for negative-weight cycle
         GrB_TRY (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, GrB_MIN_PLUS_SEMIRING_FP64, d, A,
             GrB_NULL));
-        LAGRAPH_OK (LAGraph_Vector_IsEqual_type(&same, dtmp, d, GrB_FP64, NULL));
+        LAGRAPH_OK (LAGraph_Vector_IsEqual (&same, dtmp, d, NULL));
 
         // if d != dtmp, then there is a negative-weight cycle in the graph
         if (!same)

@@ -13,9 +13,7 @@
 // LAGraph_Vector_IsEqual, contributed by Tim Davis, Texas A&M
 
 // Checks if two vectors are identically equal (same size,
-// type, pattern, size, and values).  Checking for the same type requires the
-// GxB_Vector_type function, which is an extension in SuiteSparse:GraphBLAS.
-// For the standard API, there is no way to determine the type of a vector.
+// type, pattern, size, and values).
 
 // See also LAGraph_IsEqual.
 
@@ -29,8 +27,9 @@
 
 #include "LG_internal.h"
 
-//****************************************************************************
-//****************************************************************************
+//------------------------------------------------------------------------------
+// LAGraph_Vector_IsEqual_op:  compare two vectors using a given operator
+//------------------------------------------------------------------------------
 
 GrB_Info LAGraph_Vector_IsEqual_op    // return GrB_SUCCESS if successful
 (
@@ -127,24 +126,26 @@ GrB_Info LAGraph_Vector_IsEqual_op    // return GrB_SUCCESS if successful
 }
 
 
-//****************************************************************************
-//****************************************************************************
-GrB_Info LAGraph_Vector_IsEqual_type    // return GrB_SUCCESS if successful
+//------------------------------------------------------------------------------
+// LAGraph_Vector_IsEqual:  compare two vectors
+//------------------------------------------------------------------------------
+
+int LAGraph_Vector_IsEqual         // returns 0 if successful, < 0 if failure
 (
     bool *result,           // true if A == B, false if A != B or error
     GrB_Vector A,
     GrB_Vector B,
-    GrB_Type   type,         // use GrB_EQ_type operator to compare A and B
     char *msg
 )
 {
+
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
     GrB_Vector C = NULL ;
-    LG_ASSERT (type != NULL && result != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (result != NULL, GrB_NULL_POINTER) ;
 
     GrB_Info info ;
 
@@ -157,6 +158,21 @@ GrB_Info LAGraph_Vector_IsEqual_type    // return GrB_SUCCESS if successful
         // two NULL vectors are identical, as are two aliased matrices
         (*result) = (A == B) ;
         return (0) ;
+    }
+
+    //--------------------------------------------------------------------------
+    // compare the type of A and B
+    //--------------------------------------------------------------------------
+
+    char atype_name [LAGRAPH_MAX_NAME_LEN] ;
+    char btype_name [LAGRAPH_MAX_NAME_LEN] ;
+    LG_TRY (LAGraph_VectorTypeName (atype_name, A, msg)) ;
+    LG_TRY (LAGraph_VectorTypeName (btype_name, B, msg)) ;
+    if (!MATCHNAME (atype_name, btype_name))
+    {
+        // types differ
+        (*result) = false ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
@@ -191,6 +207,8 @@ GrB_Info LAGraph_Vector_IsEqual_type    // return GrB_SUCCESS if successful
     // get the GrB_EQ_type operator
     //--------------------------------------------------------------------------
 
+    GrB_Type type ;
+    LG_TRY (LAGraph_TypeFromName (&type, atype_name, msg)) ;
     GrB_BinaryOp op ;
     // select the comparator operator
     if      (type == GrB_BOOL  ) op = GrB_EQ_BOOL   ;
@@ -249,44 +267,3 @@ GrB_Info LAGraph_Vector_IsEqual_type    // return GrB_SUCCESS if successful
     return 0;
 }
 
-//------------------------------------------------------------------------------
-// LAGraph_IsEqual: compare using GrB_EQ_type operator; auto type selection
-//------------------------------------------------------------------------------
-
-#undef  LAGraph_FREE_WORK
-#define LAGraph_FREE_WORK ;
-
-int LAGraph_Vector_IsEqual         // returns 0 if successful, < 0 if failure
-(
-    bool *result,           // true if A == B, false if A != B or error
-    GrB_Vector A,
-    GrB_Vector B,
-    char *msg
-)
-{
-    //--------------------------------------------------------------------------
-    // check inputs
-    //--------------------------------------------------------------------------
-
-    LG_CLEAR_MSG ;
-    LG_ASSERT (A != NULL, GrB_NULL_POINTER) ;
-
-    //--------------------------------------------------------------------------
-    // determine the type
-    //--------------------------------------------------------------------------
-
-    GrB_Type type ;
-    #if LG_SUITESPARSE
-        // SuiteSparse:GraphBLAS: query the type and compare accordingly
-        GrB_TRY (GxB_Vector_type (&type, A)) ;
-    #else
-        // no way to determine the type with pure GrB*; compare as if FP64
-        type = GrB_FP64 ;
-    #endif
-
-    //--------------------------------------------------------------------------
-    // compare A and B
-    //--------------------------------------------------------------------------
-
-    return (LAGraph_Vector_IsEqual_type (result, A, B, type, msg)) ;
-}

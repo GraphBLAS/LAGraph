@@ -11,6 +11,7 @@
 //------------------------------------------------------------------------------
 
 #include "LAGraph_test.h"
+#include "LG_internal.h"
 
 //------------------------------------------------------------------------------
 // global variables
@@ -20,12 +21,13 @@ int status ;
 GrB_Info info ;
 char msg [LAGRAPH_MSG_LEN] ;
 GrB_Matrix A = NULL, B = NULL ;
-GrB_Type atype = NULL, btype = NULL ;
 const char *name, *date ;
 int ver [3] ;
 GrB_Index nrows, ncols, nvals ;
 #define LEN 512
 char filename [LEN+1] ;
+char atype_name [LAGRAPH_MAX_NAME_LEN] ;
+char btype_name [LAGRAPH_MAX_NAME_LEN] ;
 
 //------------------------------------------------------------------------------
 // test matrices
@@ -44,57 +46,57 @@ matrix_info ;
 const matrix_info files [ ] = 
 {
     // nrows ncols nvals type         name
-    {    7,    7,    30, "GrB_BOOL",  "A.mtx" },
-    {    7,    7,    12, "GrB_INT32", "cover.mtx" },
-    {    7,    7,    12, "GrB_BOOL",  "cover_structure.mtx" },
-    { 1138, 1138,  7450, "GrB_BOOL",  "jagmesh7.mtx" },
-    {    8,    8,    18, "GrB_BOOL",  "ldbc-cdlp-directed-example.mtx" },
-    {    8,    8,    24, "GrB_BOOL",  "ldbc-cdlp-undirected-example.mtx" },
-    {   10,   10,    17, "GrB_BOOL",  "ldbc-directed-example-bool.mtx" },
-    {   10,   10,    17, "GrB_FP64",  "ldbc-directed-example.mtx" },
-    {   10,   10,    17, "GrB_BOOL",  "ldbc-directed-example-unweighted.mtx" },
-    {    9,    9,    24, "GrB_BOOL",  "ldbc-undirected-example-bool.mtx" },
-    {    9,    9,    24, "GrB_FP64",  "ldbc-undirected-example.mtx" },
-    {    9,    9,    24, "GrB_BOOL",  "ldbc-undirected-example-unweighted.mtx"},
-    {   10,   10,    30, "GrB_INT64", "ldbc-wcc-example.mtx" },
-    {   14,   14,    46, "GrB_FP64",  "LFAT5.mtx" },
-    {    6,    6,     8, "GrB_INT64", "msf1.mtx" },
-    {    8,    8,    12, "GrB_INT64", "msf2.mtx" },
-    {    5,    5,     7, "GrB_INT64", "msf3.mtx" },
-    {    8,    8,    28, "GrB_BOOL",  "sample2.mtx" },
-    {    8,    8,    12, "GrB_BOOL",  "sample.mtx" },
-    {   64,    1,    64, "GrB_INT64", "sources_7.mtx" },
-    { 1000, 1000,  3996, "GrB_FP64",  "olm1000.mtx" },
-    { 2003, 2003, 83883, "GrB_FP64",  "bcsstk13.mtx" },
-    { 2500, 2500, 12349, "GrB_FP64",  "cryg2500.mtx" },
-    {    6,    6,    10, "GrB_INT64", "tree-example.mtx" },
-    {   67,   67,   294, "GrB_FP64",  "west0067.mtx" },
-    {   27,   51,   102, "GrB_FP64",  "lp_afiro.mtx" },
-    {   27,   51,   102, "GrB_BOOL",  "lp_afiro_structure.mtx" },
-    {   34,   34,   156, "GrB_BOOL",  "karate.mtx" },
-    {    7,    7,    12, "GrB_BOOL",  "matrix_bool.mtx" },
-    {    7,    7,    12, "GrB_INT8",  "matrix_int8.mtx" },
-    {    7,    7,    12, "GrB_INT16", "matrix_int16.mtx" },
-    {    7,    7,    12, "GrB_INT32", "matrix_int32.mtx" },
-    {    7,    7,    12, "GrB_INT64", "matrix_int64.mtx" },
-    {    7,    7,    12, "GrB_UINT8", "matrix_uint8.mtx" },
-    {    7,    7,    12, "GrB_UINT16","matrix_uint16.mtx" },
-    {    7,    7,    12, "GrB_UINT32","matrix_uint32.mtx" },
-    {    7,    7,    12, "GrB_UINT64","matrix_uint64.mtx" },
-    {    7,    7,    12, "GrB_FP32",  "matrix_fp32.mtx" },
-    {    7,    7,    12, "GrB_BOOL",  "matrix_fp32_structure.mtx" },
-    {    7,    7,    12, "GrB_FP64",  "matrix_fp64.mtx" },
-    {   67,   67,   294, "GrB_FP64",  "west0067_jumbled.mtx" },
-    {    6,    6,    20, "GrB_FP32",  "skew_fp32.mtx" },
-    {    6,    6,    20, "GrB_FP64",  "skew_fp64.mtx" },
-    {    6,    6,    20, "GrB_INT8",  "skew_int8.mtx" },
-    {    6,    6,    20, "GrB_INT16", "skew_int16.mtx" },
-    {    6,    6,    20, "GrB_INT32", "skew_int32.mtx" },
-    {    6,    6,    20, "GrB_INT64", "skew_int64.mtx" },
-    {    7,    7,    12, "GrB_INT32", "structure.mtx" },
-    {    3,    3,     9, "GrB_FP64",  "full.mtx" },
-    {    4,    4,    16, "GrB_FP64",  "full_symmetric.mtx" },
-    {    3,    4,     0, "GrB_INT32", "empty.mtx" },
+    {    7,    7,    30, "bool",    "A.mtx" },
+    {    7,    7,    12, "int32_t", "cover.mtx" },
+    {    7,    7,    12, "bool",    "cover_structure.mtx" },
+    { 1138, 1138,  7450, "bool",    "jagmesh7.mtx" },
+    {    8,    8,    18, "bool",    "ldbc-cdlp-directed-example.mtx" },
+    {    8,    8,    24, "bool",    "ldbc-cdlp-undirected-example.mtx" },
+    {   10,   10,    17, "bool",    "ldbc-directed-example-bool.mtx" },
+    {   10,   10,    17, "double",  "ldbc-directed-example.mtx" },
+    {   10,   10,    17, "bool",    "ldbc-directed-example-unweighted.mtx" },
+    {    9,    9,    24, "bool",    "ldbc-undirected-example-bool.mtx" },
+    {    9,    9,    24, "double",  "ldbc-undirected-example.mtx" },
+    {    9,    9,    24, "bool",    "ldbc-undirected-example-unweighted.mtx"},
+    {   10,   10,    30, "int64_t", "ldbc-wcc-example.mtx" },
+    {   14,   14,    46, "double",  "LFAT5.mtx" },
+    {    6,    6,     8, "int64_t", "msf1.mtx" },
+    {    8,    8,    12, "int64_t", "msf2.mtx" },
+    {    5,    5,     7, "int64_t", "msf3.mtx" },
+    {    8,    8,    28, "bool",    "sample2.mtx" },
+    {    8,    8,    12, "bool",    "sample.mtx" },
+    {   64,    1,    64, "int64_t", "sources_7.mtx" },
+    { 1000, 1000,  3996, "double",  "olm1000.mtx" },
+    { 2003, 2003, 83883, "double",  "bcsstk13.mtx" },
+    { 2500, 2500, 12349, "double",  "cryg2500.mtx" },
+    {    6,    6,    10, "int64_t", "tree-example.mtx" },
+    {   67,   67,   294, "double",  "west0067.mtx" },
+    {   27,   51,   102, "double",  "lp_afiro.mtx" },
+    {   27,   51,   102, "bool",    "lp_afiro_structure.mtx" },
+    {   34,   34,   156, "bool",    "karate.mtx" },
+    {    7,    7,    12, "bool",    "matrix_bool.mtx" },
+    {    7,    7,    12, "int8_t",  "matrix_int8.mtx" },
+    {    7,    7,    12, "int16_t", "matrix_int16.mtx" },
+    {    7,    7,    12, "int32_t", "matrix_int32.mtx" },
+    {    7,    7,    12, "int64_t", "matrix_int64.mtx" },
+    {    7,    7,    12, "uint8_t", "matrix_uint8.mtx" },
+    {    7,    7,    12, "uint16_t","matrix_uint16.mtx" },
+    {    7,    7,    12, "uint32_t","matrix_uint32.mtx" },
+    {    7,    7,    12, "uint64_t","matrix_uint64.mtx" },
+    {    7,    7,    12, "float",   "matrix_fp32.mtx" },
+    {    7,    7,    12, "bool",    "matrix_fp32_structure.mtx" },
+    {    7,    7,    12, "double",  "matrix_fp64.mtx" },
+    {   67,   67,   294, "double",  "west0067_jumbled.mtx" },
+    {    6,    6,    20, "float",    "skew_fp32.mtx" },
+    {    6,    6,    20, "double",  "skew_fp64.mtx" },
+    {    6,    6,    20, "int8_t",  "skew_int8.mtx" },
+    {    6,    6,    20, "int16_t", "skew_int16.mtx" },
+    {    6,    6,    20, "int32_t", "skew_int32.mtx" },
+    {    6,    6,    20, "int64_t", "skew_int64.mtx" },
+    {    7,    7,    12, "int32_t", "structure.mtx" },
+    {    3,    3,     9, "double",  "full.mtx" },
+    {    4,    4,    16, "double",  "full_symmetric.mtx" },
+    {    3,    4,     0, "int32_t", "empty.mtx" },
     { 0, 0, 0, "", "" },
 } ;
 
@@ -157,7 +159,7 @@ void test_MMRead (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Failed to load %s\n", aname) ;
 
@@ -171,13 +173,10 @@ void test_MMRead (void)
         TEST_CHECK (nrows == files [k].nrows) ;
         TEST_CHECK (ncols == files [k].ncols) ;
         TEST_CHECK (nvals == files [k].nvals) ;
-        #if LG_SUITESPARSE
-        OK (GxB_Matrix_type (&btype, A)) ;
-        TEST_CHECK (atype == btype) ;
-        #endif
-        const char *tname = typename (atype) ;
-        TEST_CHECK (tname != NULL) ;
-        OK (strcmp (tname, files [k].type)) ;
+
+        OK (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
+        printf ("types: [%s] [%s]\n", atype_name, files [k].type) ;
+        TEST_CHECK (MATCHNAME (atype_name, files [k].type)) ;
         TEST_MSG ("Stats are wrong for %s\n", aname) ;
 
         //----------------------------------------------------------------------
@@ -195,7 +194,7 @@ void test_MMRead (void)
         //----------------------------------------------------------------------
 
         f = tmpfile ( ) ;
-        OK (LAGraph_MMWrite_type (A, atype, f, NULL, msg)) ;
+        OK (LAGraph_MMWrite (A, f, NULL, msg)) ;
         TEST_MSG ("Failed to write %s to a temp file\n", aname) ;
 
         //----------------------------------------------------------------------
@@ -203,7 +202,7 @@ void test_MMRead (void)
         //----------------------------------------------------------------------
 
         rewind (f) ;
-        OK (LAGraph_MMRead (&B, &btype, f, msg)) ;
+        OK (LAGraph_MMRead (&B, f, msg)) ;
         TEST_MSG ("Failed to load %s from a temp file\n", aname) ;
         OK (fclose (f)) ;       // close and delete the temporary file
 
@@ -211,9 +210,10 @@ void test_MMRead (void)
         // ensure A and B are the same
         //----------------------------------------------------------------------
 
-        TEST_CHECK (atype == btype) ;
+        OK (LAGraph_MatrixTypeName (btype_name, B, msg)) ;
+        TEST_CHECK (MATCHNAME (atype_name, btype_name)) ;
         bool ok ;
-        OK (LAGraph_IsEqual_type (&ok, A, B, atype, msg)) ;
+        OK (LAGraph_IsEqual (&ok, A, B, msg)) ;
         TEST_CHECK (ok) ;
         TEST_MSG ("Failed test for equality, file: %s\n", aname) ;
 
@@ -251,10 +251,11 @@ void test_karate (void)
 
     FILE *f = fopen (LG_DATA_DIR "karate.mtx", "r") ;
     TEST_CHECK (f != NULL) ;
-    OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
-    TEST_CHECK (atype == GrB_BOOL) ;
+    OK (LAGraph_MMRead (&A, f, msg)) ;
+    OK (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
+    TEST_CHECK (MATCHNAME (atype_name, "bool")) ;
     OK (fclose (f)) ;
-    OK (LAGraph_Matrix_print_type (A, atype, 2, stdout, msg)) ;
+    OK (LAGraph_Matrix_print (A, 2, stdout, msg)) ;
     TEST_MSG ("Loading of A matrix failed: karate matrix") ;
 
     //--------------------------------------------------------------------------
@@ -264,7 +265,7 @@ void test_karate (void)
     OK (GrB_Matrix_new (&B, GrB_BOOL, ZACHARY_NUM_NODES, ZACHARY_NUM_NODES)) ;
     OK (GrB_Matrix_build (B, ZACHARY_I, ZACHARY_J, ZACHARY_V,
         ZACHARY_NUM_EDGES, GrB_LOR)) ;
-    OK (LAGraph_Matrix_print_type (B, GrB_BOOL, 2, stdout, msg)) ;
+    OK (LAGraph_Matrix_print (B, 2, stdout, msg)) ;
     TEST_MSG ("Loading of B matrix failed: karate matrix") ;
 
     //--------------------------------------------------------------------------
@@ -272,7 +273,7 @@ void test_karate (void)
     //--------------------------------------------------------------------------
 
     bool ok ;
-    OK (LAGraph_IsEqual_type (&ok, A, B, GrB_BOOL, msg)) ;
+    OK (LAGraph_IsEqual (&ok, A, B, msg)) ;
     TEST_CHECK (ok) ;
     TEST_MSG ("Test for A and B equal failed: karate matrix") ;
 
@@ -332,11 +333,9 @@ void test_MMRead_failures (void)
         "mangled matrices:\n") ;
 
     // input arguments are NULL
-    TEST_CHECK (LAGraph_MMRead (NULL, NULL, NULL, msg) == GrB_NULL_POINTER) ;
+    TEST_CHECK (LAGraph_MMRead (NULL, NULL, msg) == GrB_NULL_POINTER) ;
     printf ("msg: [%s]\n", msg) ;
-    TEST_CHECK (LAGraph_MMRead (&A, NULL, NULL, msg) == GrB_NULL_POINTER) ;
-    printf ("msg: [%s]\n", msg) ;
-    TEST_CHECK (LAGraph_MMRead (&A, &atype, NULL, msg) == GrB_NULL_POINTER) ;
+    TEST_CHECK (LAGraph_MMRead (&A, NULL, msg) == GrB_NULL_POINTER) ;
     printf ("msg: [%s]\n", msg) ;
 
     // matrix files are mangled in some way, or unsupported
@@ -350,7 +349,7 @@ void test_MMRead_failures (void)
         printf ("file: [%s]\n", filename) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        int status = LAGraph_MMRead (&A, &atype, f, msg) ;
+        int status = LAGraph_MMRead (&A, f, msg) ;
         TEST_CHECK (status == error || status == -error) ;
         if (status == error || status == -error)
         {
@@ -359,10 +358,6 @@ void test_MMRead_failures (void)
         OK (fclose (f)) ;
         TEST_CHECK (A == NULL) ;
     }
-
-    // typename is invalid
-    const char *tname = typename (NULL) ;
-    TEST_CHECK (tname == NULL) ;
 
     teardown ( ) ;
 }
@@ -386,8 +381,9 @@ void test_jumbled (void)
 
     FILE *f = fopen (LG_DATA_DIR "west0067.mtx", "r") ;
     TEST_CHECK (f != NULL) ;
-    OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
-    TEST_CHECK (atype == GrB_FP64) ;
+    OK (LAGraph_MMRead (&A, f, msg)) ;
+    OK (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
+    TEST_CHECK (MATCHNAME (atype_name, "double")) ;
     OK (fclose (f)) ;
     TEST_MSG ("Loading of west0067.mtx failed") ;
 
@@ -397,8 +393,9 @@ void test_jumbled (void)
 
     f = fopen (LG_DATA_DIR "west0067_jumbled.mtx", "r") ;
     TEST_CHECK (f != NULL) ;
-    OK (LAGraph_MMRead (&B, &btype, f, msg)) ;
-    TEST_CHECK (btype == GrB_FP64) ;
+    OK (LAGraph_MMRead (&B, f, msg)) ;
+    OK (LAGraph_MatrixTypeName (btype_name, B, msg)) ;
+    TEST_CHECK (MATCHNAME (btype_name, "double")) ;
     OK (fclose (f)) ;
     TEST_MSG ("Loading of west0067_jumbled.mtx failed") ;
 
@@ -407,7 +404,7 @@ void test_jumbled (void)
     //--------------------------------------------------------------------------
 
     bool ok ;
-    OK (LAGraph_IsEqual_type (&ok, A, B, atype, msg)) ;
+    OK (LAGraph_IsEqual (&ok, A, B, msg)) ;
     TEST_CHECK (ok) ;
     TEST_MSG ("Test for A and B equal failed: west0067_jumbled.mtx matrix") ;
 
@@ -455,9 +452,10 @@ void test_MMWrite (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Failed to load %s\n", aname) ;
+        OK (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
 
         //----------------------------------------------------------------------
         // create a file for comments
@@ -479,16 +477,7 @@ void test_MMWrite (void)
         FILE *foutput = fopen (filename, "w") ;
         TEST_CHECK (foutput != NULL) ;
         TEST_CHECK (fcomments != NULL) ;
-        if (atype == GrB_FP64)
-        {
-            // select the type automatically
-            OK (LAGraph_MMWrite (A, foutput, fcomments, msg)) ;
-        }
-        else
-        {
-            // pass in the type
-            OK (LAGraph_MMWrite_type (A, atype, foutput, fcomments, msg)) ;
-        }
+        OK (LAGraph_MMWrite (A, foutput, fcomments, msg)) ;
         fclose (fcomments) ;
         fclose (foutput) ;
         TEST_MSG ("Failed to create %s", filename) ;
@@ -499,8 +488,10 @@ void test_MMWrite (void)
 
         f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&B, &btype, f, msg)) ;
-        TEST_CHECK (btype == atype) ;
+        OK (LAGraph_MMRead (&B, f, msg)) ;
+
+        OK (LAGraph_MatrixTypeName (btype_name, B, msg)) ;
+        TEST_CHECK (MATCHNAME (atype_name, btype_name)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of %s failed", filename) ;
 
@@ -509,7 +500,7 @@ void test_MMWrite (void)
         //----------------------------------------------------------------------
 
         bool ok ;
-        OK (LAGraph_IsEqual_type (&ok, A, B, atype, msg)) ;
+        OK (LAGraph_IsEqual (&ok, A, B, msg)) ;
         TEST_CHECK (ok) ;
         TEST_MSG ("Test for A and B equal failed: %s", filename) ;
 
@@ -526,13 +517,13 @@ void test_MMWrite (void)
             foutput = fopen (filename, "w") ;
             fcomments = fopen (LG_DATA_DIR "comments.txt", "r") ;
             TEST_CHECK (foutput != NULL) ;
-            OK (LAGraph_MMWrite_type (A, GrB_FP64, foutput, fcomments, msg)) ;
+            OK (LAGraph_MMWrite (A, foutput, fcomments, msg)) ;
             fclose (fcomments) ;
             fclose (foutput) ;
             OK (GrB_free (&A)) ;
             f = fopen (filename, "r") ;
             TEST_CHECK (f != NULL) ;
-            OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+            OK (LAGraph_MMRead (&A, f, msg)) ;
             fclose (f) ;
             a = 0 ;
             OK (GrB_Matrix_extractElement (&a, A, 0, 0)) ;
@@ -563,25 +554,24 @@ typedef int mytype ;
 void test_MMWrite_failures (void)
 {
     setup ( ) ;
+    GrB_Type atype = NULL ;
     printf ("\nTesting error handling of LAGraph_MMWrite\n") ;
 
     // input arguments are NULL
     TEST_CHECK (LAGraph_MMWrite (NULL, NULL, NULL, msg) == GrB_NULL_POINTER) ;
     printf ("msg: [%s]\n", msg) ;
-    TEST_CHECK (LAGraph_MMWrite_type (NULL, NULL, NULL, NULL, msg)
-        == GrB_NULL_POINTER) ;
 
     // attempt to print a matrix with a user-defined type, which should fail
     FILE *f = tmpfile ( ) ;
     TEST_CHECK (f != NULL) ;
     OK (GrB_Type_new (&atype, sizeof (mytype))) ;
     OK (GrB_Matrix_new (&A, atype, 4, 4)) ;
-    int status = LAGraph_Matrix_print_type (A, atype, 3, stdout, msg) ;
+    int status = LAGraph_Matrix_print (A, 3, stdout, msg) ;
     printf ("msg: [%s]\n", msg) ;
     TEST_CHECK (status == -1002) ;
-    status = LAGraph_MMWrite_type (A, atype, f, NULL, msg) ;
-    printf ("msg: [%s]\n", msg) ;
-    TEST_CHECK (status == -1006) ;
+    status = LAGraph_MMWrite (A, f, NULL, msg) ;
+    printf ("msg: %d [%s]\n", status, msg) ;
+    TEST_CHECK (status == -5) ;
     OK (GrB_free (&atype)) ;
     OK (GrB_free (&A)) ;
     OK (fclose (f)) ;       // close and delete the temporary file
@@ -617,7 +607,7 @@ void test_MMReadWrite_brutal (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Failed to load %s\n", aname) ;
         printf ("\n") ;
@@ -633,7 +623,7 @@ void test_MMReadWrite_brutal (void)
             LG_brutal = nbrutal ;
             /* try the method with brutal malloc */
             f = tmpfile ( ) ;   // create a new temp file for each trial
-            int brutal_result = LAGraph_MMWrite_type (A, atype, f, NULL, msg) ;
+            int brutal_result = LAGraph_MMWrite (A, f, NULL, msg) ;
             if (brutal_result >= 0)
             {
                 /* the method finally succeeded */
@@ -657,7 +647,7 @@ void test_MMReadWrite_brutal (void)
             LG_brutal = nbrutal ;
             /* try the method with brutal malloc */
             rewind (f) ;        // rewind the temp file for each trial
-            int brutal_result = LAGraph_MMRead (&B, &btype, f, msg) ;
+            int brutal_result = LAGraph_MMRead (&B, f, msg) ;
             if (brutal_result >= 0)
             {
                 /* the method finally succeeded */
@@ -673,9 +663,12 @@ void test_MMReadWrite_brutal (void)
         // ensure A and B are the same
         //----------------------------------------------------------------------
 
-        TEST_CHECK (atype == btype) ;
+        OK (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
+        OK (LAGraph_MatrixTypeName (btype_name, B, msg)) ;
+        TEST_CHECK (MATCHNAME (atype_name, btype_name)) ;
+
         bool ok ;
-        LG_BRUTAL (LAGraph_IsEqual_type (&ok, A, B, atype, msg)) ;
+        LG_BRUTAL (LAGraph_IsEqual (&ok, A, B, msg)) ;
         TEST_CHECK (ok) ;
         TEST_MSG ("Failed test for equality, file: %s\n", aname) ;
 

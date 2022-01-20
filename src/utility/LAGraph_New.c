@@ -17,7 +17,6 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
 (
     LAGraph_Graph *G,      // the graph to create, NULL if failure
     GrB_Matrix    *A,      // the adjacency matrix of the graph, may be NULL
-    GrB_Type       A_type, // type of scalars stored in A
     LAGraph_Kind   kind,   // the kind of graph, may be LAGRAPH_KIND_UNKNOWN
     char          *msg
 )
@@ -40,23 +39,19 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
     // initialize its members
     //--------------------------------------------------------------------------
 
-    (*G)->A      = NULL ;
-    (*G)->A_type = NULL ;
+    (*G)->A = NULL ;
     (*G)->kind = LAGRAPH_KIND_UNKNOWN ;
     (*G)->AT = NULL ;
-    (*G)->AT_type = NULL;
     (*G)->rowdegree = NULL ;
-    (*G)->rowdegree_type = NULL;
     (*G)->coldegree = NULL ;
-    (*G)->coldegree_type = NULL ;
-    (*G)->A_structure_is_symmetric = LAGRAPH_UNKNOWN;
+    (*G)->A_structure_is_symmetric = LAGRAPH_UNKNOWN ;
     (*G)->ndiag = LAGRAPH_UNKNOWN ;
 
     //--------------------------------------------------------------------------
     // assign its primary components
     //--------------------------------------------------------------------------
 
-    if ((A != NULL) && (*A != NULL) && (A_type != NULL))
+    if ((A != NULL) && (*A != NULL))
     {
         // move &A into the graph and set &A to NULL to denote to the caller
         // that it is now a component of G.  The graph G is not opaque, so the
@@ -65,7 +60,6 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
         // caller also does GrB_free (&A), a double-free would occur if this
         // move does not set A to NULL.
         (*G)->A = (*A) ;
-        (*G)->A_type = A_type;
         (*A) = NULL ;
 
         (*G)->kind = kind ;

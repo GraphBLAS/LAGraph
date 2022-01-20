@@ -189,7 +189,7 @@ int LAGraph_SWrite_HeaderItem   // write a single item to the JSON header
     LAGraph_Contents_kind kind, // matrix, vector, or text
     const char *name,           // name of the matrix/vector/text; matrices from
                                 // sparse.tamu.edu use the form "Group/Name"
-    const char *type,           // type of the matrix/vector (LAGraph_TypeName)
+    const char *type,           // name of type of the matrix/vector
     int compression,            // text compression method
     GrB_Index blob_size,        // exact size of serialized blob for this item
     char *msg
@@ -202,7 +202,7 @@ int LAGraph_SWrite_HeaderItem   // write a single item to the JSON header
     LAGraph_Contents_kind kind, // matrix, vector, or text
     const char *name,           // name of the matrix/vector/text; matrices from
                                 // sparse.tamu.edu use the form "Group/Name"
-    const char *type,           // type of the matrix/vector (LAGraph_TypeName)
+    const char *type,           // name of type of the matrix/vector
     // TODO: text not yet supported
     int compression,            // text compression method
     GrB_Index blob_size,        // exact size of serialized blob for this item

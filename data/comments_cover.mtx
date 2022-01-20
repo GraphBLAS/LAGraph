@@ -1,5 +1,5 @@
 %%MatrixMarket matrix coordinate integer general
-%%GraphBLAS GrB_INT32
+%%GraphBLAS int32_t
 % comments for cover.mtx
 % this file was created by test_MMRead.c
 7 7 12

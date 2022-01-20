@@ -12,7 +12,7 @@
 
 int LAGraph_KindName        // returns 0 if successful, -1 if failure
 (
-    char **name,            // name of the kind
+    char *name,             // name of the kind
     LAGraph_Kind kind,      // graph kind
     char *msg
 )
@@ -31,9 +31,9 @@ int LAGraph_KindName        // returns 0 if successful, -1 if failure
 
     switch (kind)
     {
-        case LAGRAPH_ADJACENCY_UNDIRECTED : (*name) = "undirected" ; break ;
-        case LAGRAPH_ADJACENCY_DIRECTED :   (*name) = "directed"   ; break ;
-        case LAGRAPH_KIND_UNKNOWN :         (*name) = "unknown"    ; break ;
+        case LAGRAPH_ADJACENCY_UNDIRECTED : strcpy (name, "undirected"); break ;
+        case LAGRAPH_ADJACENCY_DIRECTED :   strcpy (name, "directed")  ; break ;
+        case LAGRAPH_KIND_UNKNOWN :         strcpy (name, "unknown")   ; break ;
         default : LG_ASSERT_MSG (false, GrB_INVALID_VALUE, "invalid kind") ;
     }
 

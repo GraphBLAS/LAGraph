@@ -1,5 +1,5 @@
 %%MatrixMarket matrix coordinate real general
-%%GraphBLAS GrB_FP64
+%%GraphBLAS double
 % comments for west0067.mtx
 % this file was created by test_MMRead.c
 67 67 295

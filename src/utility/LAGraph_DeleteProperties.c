@@ -33,9 +33,7 @@ int LAGraph_DeleteProperties    // returns 0 if successful, -1 if failure
 
     GrB_TRY (GrB_free (&(G->AT))) ;
     GrB_TRY (GrB_free (&(G->rowdegree))) ;
-    G->rowdegree_type = NULL;
     GrB_TRY (GrB_free (&(G->coldegree))) ;
-    G->coldegree_type = NULL;
 
     //--------------------------------------------------------------------------
     // clear the scalar properties of the graph

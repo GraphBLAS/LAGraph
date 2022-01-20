@@ -740,7 +740,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
     //--------------------------------------------------------------------------
 
     GrB_Matrix A = NULL, A2 = NULL, M = NULL ;
-    GrB_Type A_type = NULL;
+    GrB_Type atype = NULL ;
     FILE *f = NULL ;
     if (G == NULL) ERROR ;
     (*G) = NULL ;
@@ -790,9 +790,6 @@ static int readproblem          // returns 0 if successful, -1 if failure
                 exit (1) ;
             }
             if (binread (&A, f) < 0) ERROR ;
-            #if LG_SUITESPARSE
-            GrB_TRY (GxB_Matrix_type (&A_type, A)) ;
-            #endif
             fclose (f) ;
             f = NULL ;
         }
@@ -805,7 +802,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
                 printf ("Matrix market file not found: [%s]\n", filename) ;
                 exit (1) ;
             }
-            LAGraph_TRY (LAGraph_MMRead (&A, &A_type, f, msg)) ;
+            LAGraph_TRY (LAGraph_MMRead (&A, f, msg)) ;
             fclose (f) ;
             f = NULL ;
         }
@@ -824,7 +821,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
                     printf ("Source node file not found: [%s]\n", filename) ;
                     exit (1) ;
                 }
-                LAGraph_TRY (LAGraph_MMRead (src_nodes, &src_type, f, msg)) ;
+                LAGraph_TRY (LAGraph_MMRead (src_nodes, f, msg)) ;
                 fclose (f) ;
                 f = NULL ;
             }
@@ -837,7 +834,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
         printf ("matrix: from stdin\n") ;
 
         // read in the file in Matrix Market format from stdin
-        LAGraph_TRY (LAGraph_MMRead (&A, &A_type, stdin, msg)) ;
+        LAGraph_TRY (LAGraph_MMRead (&A, stdin, msg)) ;
     }
 
     //--------------------------------------------------------------------------
@@ -854,17 +851,19 @@ static int readproblem          // returns 0 if successful, -1 if failure
     // typecast, if requested
     //--------------------------------------------------------------------------
 
+    GrB_TRY (GxB_Matrix_type (&atype, A)) ;
+
     if (structural)
     {
         // convert to boolean, with all entries true
-        A_type = GrB_BOOL ;
+        atype = GrB_BOOL ;
         LAGraph_TRY (LAGraph_Structure (&A2, A, msg)) ;
     }
-    else if (pref != NULL && A_type != pref)
+    else if (pref != NULL && atype != pref)
     {
         // convert to the requested type
         GrB_TRY (GrB_Matrix_new (&A2, pref, n, n)) ;
-        A_type = pref ;
+        atype = pref ;
 
         GrB_UnaryOp op = NULL ;
         if      (pref == GrB_BOOL  ) op = GrB_IDENTITY_BOOL ;
@@ -905,7 +904,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
 
     LAGraph_Kind G_kind = A_is_symmetric ?  LAGRAPH_ADJACENCY_UNDIRECTED :
         LAGRAPH_ADJACENCY_DIRECTED ;
-    LAGraph_TRY (LAGraph_New (G, &A, A_type, G_kind, msg)) ;
+    LAGraph_TRY (LAGraph_New (G, &A, G_kind, msg)) ;
     // LAGraph_TRY (LAGraph_DisplayGraph (*G, 2, stdout, msg)) ;
 
     //--------------------------------------------------------------------------
@@ -926,20 +925,20 @@ static int readproblem          // returns 0 if successful, -1 if failure
     {
         // drop explicit zeros (FUTURE: make this a utility function)
         GrB_IndexUnaryOp idxop = NULL ;
-        if      (A_type == GrB_BOOL  ) idxop = GrB_VALUENE_BOOL ;
-        else if (A_type == GrB_INT8  ) idxop = GrB_VALUENE_INT8 ;
-        else if (A_type == GrB_INT16 ) idxop = GrB_VALUENE_INT16 ;
-        else if (A_type == GrB_INT32 ) idxop = GrB_VALUENE_INT32 ;
-        else if (A_type == GrB_INT64 ) idxop = GrB_VALUENE_INT64 ;
-        else if (A_type == GrB_UINT8 ) idxop = GrB_VALUENE_UINT8 ;
-        else if (A_type == GrB_UINT16) idxop = GrB_VALUENE_UINT16 ;
-        else if (A_type == GrB_UINT32) idxop = GrB_VALUENE_UINT32 ;
-        else if (A_type == GrB_UINT64) idxop = GrB_VALUENE_UINT64 ;
-        else if (A_type == GrB_FP32  ) idxop = GrB_VALUENE_FP32 ;
-        else if (A_type == GrB_FP64  ) idxop = GrB_VALUENE_FP64 ;
+        if      (atype == GrB_BOOL  ) idxop = GrB_VALUENE_BOOL ;
+        else if (atype == GrB_INT8  ) idxop = GrB_VALUENE_INT8 ;
+        else if (atype == GrB_INT16 ) idxop = GrB_VALUENE_INT16 ;
+        else if (atype == GrB_INT32 ) idxop = GrB_VALUENE_INT32 ;
+        else if (atype == GrB_INT64 ) idxop = GrB_VALUENE_INT64 ;
+        else if (atype == GrB_UINT8 ) idxop = GrB_VALUENE_UINT8 ;
+        else if (atype == GrB_UINT16) idxop = GrB_VALUENE_UINT16 ;
+        else if (atype == GrB_UINT32) idxop = GrB_VALUENE_UINT32 ;
+        else if (atype == GrB_UINT64) idxop = GrB_VALUENE_UINT64 ;
+        else if (atype == GrB_FP32  ) idxop = GrB_VALUENE_FP32 ;
+        else if (atype == GrB_FP64  ) idxop = GrB_VALUENE_FP64 ;
         #if 0
-        else if (A_type == GxB_FC32  ) idxop = GxB_VALUENE_FC32 ;
-        else if (A_type == GxB_FC64  ) idxop = GxB_VALUENE_FC64 ;
+        else if (atype == GxB_FC32  ) idxop = GxB_VALUENE_FC32 ;
+        else if (atype == GxB_FC64  ) idxop = GxB_VALUENE_FC64 ;
         #endif
         if (idxop != NULL)
         {
@@ -948,15 +947,15 @@ static int readproblem          // returns 0 if successful, -1 if failure
 
         // A = abs (A)
         GrB_UnaryOp op = NULL ;
-        if      (A_type == GrB_INT8  ) op = GrB_ABS_INT8 ;
-        else if (A_type == GrB_INT16 ) op = GrB_ABS_INT16 ;
-        else if (A_type == GrB_INT32 ) op = GrB_ABS_INT32 ;
-        else if (A_type == GrB_INT64 ) op = GrB_ABS_INT64 ;
-        else if (A_type == GrB_FP32  ) op = GrB_ABS_FP32 ;
-        else if (A_type == GrB_FP64  ) op = GrB_ABS_FP64 ;
+        if      (atype == GrB_INT8  ) op = GrB_ABS_INT8 ;
+        else if (atype == GrB_INT16 ) op = GrB_ABS_INT16 ;
+        else if (atype == GrB_INT32 ) op = GrB_ABS_INT32 ;
+        else if (atype == GrB_INT64 ) op = GrB_ABS_INT64 ;
+        else if (atype == GrB_FP32  ) op = GrB_ABS_FP32 ;
+        else if (atype == GrB_FP64  ) op = GrB_ABS_FP64 ;
         #if 0
-        else if (A_type == GxB_FC32  ) op = GxB_ABS_FC32 ;
-        else if (A_type == GxB_FC64  ) op = GxB_ABS_FC64 ;
+        else if (atype == GxB_FC32  ) op = GxB_ABS_FC32 ;
+        else if (atype == GxB_FC64  ) op = GxB_ABS_FC64 ;
         #endif
         if (op != NULL)
         {
@@ -973,8 +972,6 @@ static int readproblem          // returns 0 if successful, -1 if failure
     if (!A_is_symmetric)
     {
         // compute G->AT and determine if A has a symmetric structure
-        char *name;
-        LAGraph_TypeName(&name, (*G)->A_type, msg);
         LAGraph_TRY (LAGraph_Property_ASymmetricStructure (*G, msg)) ;
         if ((*G)->A_structure_is_symmetric && structural)
         {
@@ -987,23 +984,22 @@ static int readproblem          // returns 0 if successful, -1 if failure
         {
             // make sure G->A is symmetric
             bool sym ;
-            LAGraph_TRY (LAGraph_IsEqual_type (&sym, (*G)->A, (*G)->AT, 
-                (*G)->A_type, msg)) ;
+            LAGraph_TRY (LAGraph_IsEqual (&sym, (*G)->A, (*G)->AT, msg)) ;
             if (!sym)
             {
                 GrB_BinaryOp op = NULL ;
                 GrB_Type type ;
-                if      ((*G)->A_type == GrB_BOOL  ) op = GrB_LOR ;
-                else if ((*G)->A_type == GrB_INT8  ) op = GrB_PLUS_INT8 ;
-                else if ((*G)->A_type == GrB_INT16 ) op = GrB_PLUS_INT16 ;
-                else if ((*G)->A_type == GrB_INT32 ) op = GrB_PLUS_INT32 ;
-                else if ((*G)->A_type == GrB_INT64 ) op = GrB_PLUS_INT64 ;
-                else if ((*G)->A_type == GrB_UINT8 ) op = GrB_PLUS_UINT8 ;
-                else if ((*G)->A_type == GrB_UINT16) op = GrB_PLUS_UINT16 ;
-                else if ((*G)->A_type == GrB_UINT32) op = GrB_PLUS_UINT32 ;
-                else if ((*G)->A_type == GrB_UINT64) op = GrB_PLUS_UINT64 ;
-                else if ((*G)->A_type == GrB_FP32  ) op = GrB_PLUS_FP32 ;
-                else if ((*G)->A_type == GrB_FP64  ) op = GrB_PLUS_FP64 ;
+                if      (atype == GrB_BOOL  ) op = GrB_LOR ;
+                else if (atype == GrB_INT8  ) op = GrB_PLUS_INT8 ;
+                else if (atype == GrB_INT16 ) op = GrB_PLUS_INT16 ;
+                else if (atype == GrB_INT32 ) op = GrB_PLUS_INT32 ;
+                else if (atype == GrB_INT64 ) op = GrB_PLUS_INT64 ;
+                else if (atype == GrB_UINT8 ) op = GrB_PLUS_UINT8 ;
+                else if (atype == GrB_UINT16) op = GrB_PLUS_UINT16 ;
+                else if (atype == GrB_UINT32) op = GrB_PLUS_UINT32 ;
+                else if (atype == GrB_UINT64) op = GrB_PLUS_UINT64 ;
+                else if (atype == GrB_FP32  ) op = GrB_PLUS_FP32 ;
+                else if (atype == GrB_FP64  ) op = GrB_PLUS_FP64 ;
                 #if 0
                 else if (type == GxB_FC32  ) op = GxB_PLUS_FC32 ;
                 else if (type == GxB_FC64  ) op = GxB_PLUS_FC64 ;

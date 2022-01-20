@@ -23,7 +23,6 @@ int LG_ndiag                // returns 0 if successful, < 0 if failure
     int64_t *ndiag,         // # of entries 
     // input
     GrB_Matrix A,           // matrix to count
-    GrB_Type atype,         // type of A
     char *msg               // error message
 )
 {
@@ -41,6 +40,11 @@ int LG_ndiag                // returns 0 if successful, < 0 if failure
     GrB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
     GrB_Index n = LAGraph_MIN (nrows, ncols) ;
+
+    GrB_Type atype ;
+    char atype_name [LAGRAPH_MAX_NAME_LEN] ;
+    LG_TRY (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
+    LG_TRY (LAGraph_TypeFromName (&atype, atype_name, msg)) ;
 
     #if LG_SUITESPARSE
 

@@ -94,8 +94,7 @@ GrB_Info LAGraph_BF_basic_mxv
         GrB_TRY (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, GrB_MIN_PLUS_SEMIRING_FP64,
             AT, d, GrB_NULL));
 
-        LAGRAPH_OK (LAGraph_Vector_IsEqual_type(&same, dtmp, d, GrB_FP64,
-            NULL));
+        LAGRAPH_OK (LAGraph_Vector_IsEqual (&same, dtmp, d, NULL));
         if (!same)
         {
             GrB_Vector ttmp = dtmp;
@@ -114,8 +113,7 @@ GrB_Info LAGraph_BF_basic_mxv
             AT, d, GrB_NULL));
 
         // if d != dtmp, then there is a negative-weight cycle in the graph
-        LAGRAPH_OK (LAGraph_Vector_IsEqual_type(&same, dtmp, d, GrB_FP64,
-            NULL));
+        LAGRAPH_OK (LAGraph_Vector_IsEqual (&same, dtmp, d, NULL));
         if (!same)
         {
             // printf("AT negative-weight cycle found. \n");

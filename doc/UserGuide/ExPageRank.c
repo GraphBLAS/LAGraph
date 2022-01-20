@@ -8,7 +8,6 @@ void test_PageRank(void)
 {
     LAGraph_Init (msg) ;
     GrB_Matrix A = NULL ;
-    GrB_Type atype = NULL ;
     GrB_Vector centrality = NULL, cmatlab = NULL, diff = NULL ;
     int niters = 0 ;
 
@@ -16,9 +15,9 @@ void test_PageRank(void)
     snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
     FILE *f = fopen (filename, "r") ;
     TEST_CHECK (f != NULL) ;
-    OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+    OK (LAGraph_MMRead (&A, f, msg)) ;
     OK (fclose (f)) ;
-    OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
     OK (LAGraph_Property_RowDegree (G, msg)) ;
 

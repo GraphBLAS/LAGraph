@@ -52,18 +52,24 @@ int LG_check_export
     LG_ASSERT_MSG (Ax_len != NULL, GrB_NULL_POINTER, "&Ax_len != NULL") ;
     LG_ASSERT (typesize != NULL, GrB_NULL_POINTER) ;
 
+    // get the type of G->A
+    GrB_Type atype = NULL ;
+    char atype_name [LAGRAPH_MAX_NAME_LEN] ;
+    LG_TRY (LAGraph_MatrixTypeName (atype_name, G->A, msg)) ;
+    LG_TRY (LAGraph_TypeFromName (&atype, atype_name, msg)) ;
+
     size_t s = 0 ;
-    if      (G->A_type == GrB_BOOL  ) s = sizeof (bool    ) ;
-    else if (G->A_type == GrB_INT8  ) s = sizeof (int8_t  ) ;
-    else if (G->A_type == GrB_INT16 ) s = sizeof (int16_t ) ;
-    else if (G->A_type == GrB_INT32 ) s = sizeof (int32_t ) ;
-    else if (G->A_type == GrB_INT64 ) s = sizeof (int64_t ) ;
-    else if (G->A_type == GrB_UINT8 ) s = sizeof (uint8_t ) ;
-    else if (G->A_type == GrB_UINT16) s = sizeof (uint16_t) ;
-    else if (G->A_type == GrB_UINT32) s = sizeof (uint32_t) ;
-    else if (G->A_type == GrB_UINT64) s = sizeof (uint64_t) ;
-    else if (G->A_type == GrB_FP32  ) s = sizeof (float   ) ;
-    else if (G->A_type == GrB_FP64  ) s = sizeof (double  ) ;
+    if      (atype == GrB_BOOL  ) s = sizeof (bool    ) ;
+    else if (atype == GrB_INT8  ) s = sizeof (int8_t  ) ;
+    else if (atype == GrB_INT16 ) s = sizeof (int16_t ) ;
+    else if (atype == GrB_INT32 ) s = sizeof (int32_t ) ;
+    else if (atype == GrB_INT64 ) s = sizeof (int64_t ) ;
+    else if (atype == GrB_UINT8 ) s = sizeof (uint8_t ) ;
+    else if (atype == GrB_UINT16) s = sizeof (uint16_t) ;
+    else if (atype == GrB_UINT32) s = sizeof (uint32_t) ;
+    else if (atype == GrB_UINT64) s = sizeof (uint64_t) ;
+    else if (atype == GrB_FP32  ) s = sizeof (float   ) ;
+    else if (atype == GrB_FP64  ) s = sizeof (double  ) ;
     LG_ASSERT_MSG (s != 0, -1, "unsupported type") ;
     (*typesize) = s ;
 
@@ -77,57 +83,57 @@ int LG_check_export
     (*Ax_handle) = Ax ;
     LG_ASSERT (Ap != NULL && Aj != NULL && Ax != NULL, GrB_OUT_OF_MEMORY) ;
 
-    if      (G->A_type == GrB_BOOL  )
+    if      (atype == GrB_BOOL  )
     {
         GrB_TRY (GrB_Matrix_export (Ap, Aj, (bool     *) Ax,
             Ap_len, Aj_len, Ax_len, GrB_CSR_FORMAT, G->A)) ;
     }
-    else if (G->A_type == GrB_INT8  )
+    else if (atype == GrB_INT8  )
     {
         GrB_TRY (GrB_Matrix_export (Ap, Aj, (int8_t   *) Ax,
             Ap_len, Aj_len, Ax_len, GrB_CSR_FORMAT, G->A)) ;
     }
-    else if (G->A_type == GrB_INT16 )
+    else if (atype == GrB_INT16 )
     {
         GrB_TRY (GrB_Matrix_export (Ap, Aj, (int16_t  *) Ax, 
             Ap_len, Aj_len, Ax_len, GrB_CSR_FORMAT, G->A)) ;
     }
-    else if (G->A_type == GrB_INT32 )
+    else if (atype == GrB_INT32 )
     {
         GrB_TRY (GrB_Matrix_export (Ap, Aj, (int32_t  *) Ax, 
             Ap_len, Aj_len, Ax_len, GrB_CSR_FORMAT, G->A)) ;
     }
-    else if (G->A_type == GrB_INT64 )
+    else if (atype == GrB_INT64 )
     {
         GrB_TRY (GrB_Matrix_export (Ap, Aj, (int64_t  *) Ax,
             Ap_len, Aj_len, Ax_len, GrB_CSR_FORMAT, G->A)) ;
     }
-    else if (G->A_type == GrB_UINT8 )
+    else if (atype == GrB_UINT8 )
     {
         GrB_TRY (GrB_Matrix_export (Ap, Aj, (uint8_t  *) Ax,
             Ap_len, Aj_len, Ax_len, GrB_CSR_FORMAT, G->A)) ;
     }
-    else if (G->A_type == GrB_UINT16)
+    else if (atype == GrB_UINT16)
     {
         GrB_TRY (GrB_Matrix_export (Ap, Aj, (uint16_t *) Ax,
             Ap_len, Aj_len, Ax_len, GrB_CSR_FORMAT, G->A)) ;
     }
-    else if (G->A_type == GrB_UINT32)
+    else if (atype == GrB_UINT32)
     {
         GrB_TRY (GrB_Matrix_export (Ap, Aj, (uint32_t *) Ax,
             Ap_len, Aj_len, Ax_len, GrB_CSR_FORMAT, G->A)) ;
     }
-    else if (G->A_type == GrB_UINT64)
+    else if (atype == GrB_UINT64)
     {
         GrB_TRY (GrB_Matrix_export (Ap, Aj, (uint64_t *) Ax,
             Ap_len, Aj_len, Ax_len, GrB_CSR_FORMAT, G->A)) ;
     }
-    else if (G->A_type == GrB_FP32  )
+    else if (atype == GrB_FP32  )
     {
         GrB_TRY (GrB_Matrix_export (Ap, Aj, (float    *) Ax,
             Ap_len, Aj_len, Ax_len, GrB_CSR_FORMAT, G->A)) ;
     }
-    else if (G->A_type == GrB_FP64  )
+    else if (atype == GrB_FP64  )
     {
         GrB_TRY (GrB_Matrix_export (Ap, Aj, (double   *) Ax,
             Ap_len, Aj_len, Ax_len, GrB_CSR_FORMAT, G->A)) ;

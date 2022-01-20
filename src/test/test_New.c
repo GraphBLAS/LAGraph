@@ -19,7 +19,6 @@
 LAGraph_Graph G = NULL ;
 char msg [LAGRAPH_MSG_LEN] ;
 GrB_Matrix A = NULL ;
-GrB_Type atype = NULL ;
 #define LEN 512
 char filename [LEN+1] ;
 
@@ -75,12 +74,12 @@ void test_New (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
         // create the graph
-        OK (LAGraph_New (&G, &A, atype, kind, msg)) ;
+        OK (LAGraph_New (&G, &A, kind, msg)) ;
         TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
         // check the graph
@@ -123,12 +122,12 @@ void test_New_brutal (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
         // create the graph
-        LG_BRUTAL_BURBLE (LAGraph_New (&G, &A, atype, kind, msg)) ;
+        LG_BRUTAL_BURBLE (LAGraph_New (&G, &A, kind, msg)) ;
         TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
         // check the graph
@@ -152,14 +151,14 @@ void test_New_failures (void)
     setup ( ) ;
 
     // G cannot be NULL
-    TEST_CHECK (LAGraph_New (NULL, NULL, NULL, 0, msg) == GrB_NULL_POINTER) ;
+    TEST_CHECK (LAGraph_New (NULL, NULL, 0, msg) == GrB_NULL_POINTER) ;
     printf ("\nmsg: %s\n", msg) ;
 
     // create a graph with no adjacency matrix; this is OK, since the intent is
     // to create a graph for which the adjacency matrix can be defined later,
     // via assigning it to G->A.  However, the graph will be declared invalid
     // by LAGraph_CheckGraph since G->A is NULL.
-    OK (LAGraph_New (&G, NULL, NULL, 0, msg)) ;
+    OK (LAGraph_New (&G, NULL, 0, msg)) ;
     TEST_CHECK (LAGraph_CheckGraph (G, msg) == -1102) ;
     printf ("msg: %s\n", msg) ;
     OK (LAGraph_Delete (&G, msg)) ;

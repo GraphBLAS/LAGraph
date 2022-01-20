@@ -21,7 +21,6 @@ GrB_Matrix A = NULL ;
 GrB_Matrix B = NULL ;
 GrB_Matrix *S = NULL ;
 
-GrB_Type atype = NULL ;
 #define LEN 512
 char filename [LEN+1] ;
 
@@ -105,7 +104,7 @@ void test_SSaveSet (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&(Set [k]), &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&(Set [k]), f, msg)) ;
         fclose (f) ;
     }
 
@@ -133,7 +132,7 @@ void test_SSaveSet (void)
     int r = 
         LAGraph_SLoadSet ("matrices.lagraph", &Set2, &nmatrices, &collection,
         msg) ;
-    printf ("nmatrices %ld r %d msg %s\n", nmatrices, r, msg) ;
+    printf ("nmatrices %g r %d msg %s\n", (double) nmatrices, r, msg) ;
     TEST_CHECK (nmatrices == NFILES) ;
     TEST_CHECK (Set2 != NULL) ;
     TEST_CHECK (strcmp (collection, "many test matrices") == 0) ;
@@ -143,7 +142,7 @@ void test_SSaveSet (void)
     {
         // ensure the matrices Set [k] and Set2 [k] are the same
         bool ok ;
-        OK (LAGraph_IsEqual_type (&ok, Set [k], Set2 [k], atype, msg)) ;
+        OK (LAGraph_IsEqual (&ok, Set [k], Set2 [k], msg)) ;
         TEST_CHECK (ok) ;
     }
 

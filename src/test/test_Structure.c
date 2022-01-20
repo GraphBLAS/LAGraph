@@ -11,6 +11,7 @@
 //------------------------------------------------------------------------------
 
 #include "LAGraph_test.h"
+#include "LG_internal.h"
 
 //------------------------------------------------------------------------------
 // global variables
@@ -18,9 +19,9 @@
 
 char msg [LAGRAPH_MSG_LEN] ;
 GrB_Matrix A = NULL, B = NULL, C = NULL ;
-GrB_Type atype = NULL, btype = NULL ;
 #define LEN 512
 char filename [LEN+1] ;
+char btype_name [LAGRAPH_MAX_NAME_LEN] ;
 
 //------------------------------------------------------------------------------
 // setup: start a test
@@ -65,7 +66,7 @@ void test_Structure (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s.mtx", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of valued matrix failed") ;
 
@@ -73,8 +74,9 @@ void test_Structure (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s_structure.mtx", aname) ;
         f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&B, &btype, f, msg)) ;
-        TEST_CHECK (btype == GrB_BOOL) ;
+        OK (LAGraph_MMRead (&B, f, msg)) ;
+        OK (LAGraph_MatrixTypeName (btype_name, B, msg)) ;
+        TEST_CHECK (MATCHNAME (btype_name, "bool")) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of structure matrix failed") ;
 
@@ -83,7 +85,7 @@ void test_Structure (void)
 
         // ensure B and C are the same
         bool ok ;
-        OK (LAGraph_IsEqual_type (&ok, C, B, GrB_BOOL, msg)) ;
+        OK (LAGraph_IsEqual (&ok, C, B, msg)) ;
         TEST_CHECK (ok) ;
         TEST_MSG ("Test for C and B equal failed") ;
 
@@ -112,7 +114,7 @@ void test_Structure_brutal (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s.mtx", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of valued matrix failed") ;
 
@@ -120,8 +122,9 @@ void test_Structure_brutal (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s_structure.mtx", aname) ;
         f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&B, &btype, f, msg)) ;
-        TEST_CHECK (btype == GrB_BOOL) ;
+        OK (LAGraph_MMRead (&B, f, msg)) ;
+        OK (LAGraph_MatrixTypeName (btype_name, B, msg)) ;
+        TEST_CHECK (MATCHNAME (btype_name, "bool")) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of structure matrix failed") ;
 
@@ -130,7 +133,7 @@ void test_Structure_brutal (void)
 
         // ensure B and C are the same
         bool ok ;
-        OK (LAGraph_IsEqual_type (&ok, C, B, GrB_BOOL, msg)) ;
+        OK (LAGraph_IsEqual (&ok, C, B, msg)) ;
         TEST_CHECK (ok) ;
         TEST_MSG ("Test for C and B equal failed") ;
 

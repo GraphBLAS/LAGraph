@@ -20,7 +20,6 @@ LAGraph_Graph G = NULL ;
 char msg [LAGRAPH_MSG_LEN] ;
 GrB_Matrix A = NULL, B_bool = NULL, B_int32 = NULL ;
 GrB_Vector d_int64 = NULL, d_bool = NULL ;
-GrB_Type atype = NULL ;
 #define LEN 512
 char filename [LEN+1] ;
 
@@ -76,12 +75,12 @@ void test_CheckGraph (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
         // create the graph
-        OK (LAGraph_New (&G, &A, atype, kind, msg)) ;
+        OK (LAGraph_New (&G, &A, kind, msg)) ;
         TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
         // check the graph
@@ -129,12 +128,12 @@ void test_CheckGraph_failures (void)
     TEST_CASE ("lp_afiro") ;
     FILE *f = fopen (LG_DATA_DIR "lp_afiro.mtx", "r") ;
     TEST_CHECK (f != NULL) ;
-    OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+    OK (LAGraph_MMRead (&A, f, msg)) ;
     OK (fclose (f)) ;
     TEST_MSG ("Loading of lp_afiro.mtx failed") ;
 
     // create an invalid graph
-    OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
     // adjacency matrix invalid
@@ -149,12 +148,12 @@ void test_CheckGraph_failures (void)
     TEST_CASE ("cover") ;
     f = fopen (LG_DATA_DIR "cover.mtx", "r") ;
     TEST_CHECK (f != NULL) ;
-    OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+    OK (LAGraph_MMRead (&A, f, msg)) ;
     OK (fclose (f)) ;
     TEST_MSG ("Loading of cover.mtx failed") ;
 
     // create an valid graph
-    OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
     OK (LAGraph_CheckGraph (G, msg)) ;
 
@@ -255,13 +254,13 @@ void test_CheckGraph_brutal (void)
     TEST_CASE ("karate") ;
     FILE *f = fopen (LG_DATA_DIR "karate.mtx", "r") ;
     TEST_CHECK (f != NULL) ;
-    OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+    OK (LAGraph_MMRead (&A, f, msg)) ;
     OK (fclose (f)) ;
     TEST_MSG ("Loading of karate.mtx failed") ;
     printf ("\n") ;
 
     // create an valid graph
-    OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
     LG_BRUTAL_BURBLE (LAGraph_CheckGraph (G, msg)) ;
 

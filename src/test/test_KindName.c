@@ -17,7 +17,7 @@
 //------------------------------------------------------------------------------
 
 char msg [LAGRAPH_MSG_LEN] ;
-char *name = NULL ;
+char name [LAGRAPH_MAX_NAME_LEN] ;
 
 //------------------------------------------------------------------------------
 // setup: start a test
@@ -45,16 +45,16 @@ void test_KindName (void)
 {
     setup ( ) ;
 
-    OK (LAGraph_KindName (&name, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+    OK (LAGraph_KindName (name, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
     OK (strcmp (name, "undirected")) ;
 
-    OK (LAGraph_KindName (&name, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+    OK (LAGraph_KindName (name, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
     OK (strcmp (name, "directed")) ;
 
-    OK (LAGraph_KindName (&name, LAGRAPH_UNKNOWN, msg)) ;
+    OK (LAGraph_KindName (name, LAGRAPH_UNKNOWN, msg)) ;
     OK (strcmp (name, "unknown")) ;
 
-    TEST_CHECK (LAGraph_KindName (&name, 42, msg) == GrB_INVALID_VALUE) ;
+    TEST_CHECK (LAGraph_KindName (name, 42, msg) == GrB_INVALID_VALUE) ;
     printf ("\nmsg: %s\n", msg) ;
 
     teardown ( ) ;
@@ -72,7 +72,7 @@ void test_KindName (void)
 void test_KindName_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
-    LG_BRUTAL (LAGraph_KindName (&name, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+    LG_BRUTAL (LAGraph_KindName (name, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
     OK (strcmp (name, "undirected")) ;
     OK (LG_brutal_teardown (msg)) ;
 }

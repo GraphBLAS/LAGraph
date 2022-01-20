@@ -1,5 +1,5 @@
 %%MatrixMarket matrix array real general
-%%GraphBLAS GrB_FP64
+%%GraphBLAS double
 % comments for full.mtx
 % this file was created by test_MMRead.c
 3 3 9

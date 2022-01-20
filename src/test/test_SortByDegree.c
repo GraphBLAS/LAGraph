@@ -20,7 +20,6 @@ LAGraph_Graph G = NULL, H = NULL ;
 char msg [LAGRAPH_MSG_LEN] ;
 GrB_Matrix A = NULL, B = NULL ;
 GrB_Vector d = NULL ;
-GrB_Type atype = NULL ;
 #define LEN 512
 char filename [LEN+1] ;
 int64_t *P = NULL ;
@@ -101,7 +100,7 @@ void test_SortByDegree (void)
             // load the matrix as A
             FILE *f = fopen (filename, "r") ;
             TEST_CHECK (f != NULL) ;
-            OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+            OK (LAGraph_MMRead (&A, f, msg)) ;
             OK (fclose (f)) ;
             TEST_MSG ("Loading of adjacency matrix failed") ;
 
@@ -125,7 +124,7 @@ void test_SortByDegree (void)
 
             // construct a graph G with adjacency matrix A
             TEST_CHECK (A != NULL) ;
-            OK (LAGraph_New (&G, &A, atype, kind, msg)) ;
+            OK (LAGraph_New (&G, &A, kind, msg)) ;
             TEST_CHECK (A == NULL) ;
             TEST_CHECK (G != NULL) ;
 
@@ -163,7 +162,7 @@ void test_SortByDegree (void)
                 OK (GrB_Matrix_new (&B, GrB_BOOL, n, n)) ;
                 OK (GrB_extract (B, NULL, NULL, G->A,
                     (GrB_Index *) P, n, (GrB_Index *) P, n, NULL)) ;
-                OK (LAGraph_New (&H, &B, GrB_BOOL, kind, msg)) ;
+                OK (LAGraph_New (&H, &B, kind, msg)) ;
                 TEST_CHECK (B == NULL) ;
                 TEST_CHECK (H != NULL) ;
 
@@ -212,8 +211,7 @@ void test_SortByDegree (void)
                 // if G->A is symmetric, then continue the outer iteration to
                 // create an undirected graph.  Otherwise just do the directed
                 // graph
-                OK (LAGraph_IsEqual_type (&is_symmetric, G->A, G->AT,
-                    atype, msg)) ;
+                OK (LAGraph_IsEqual (&is_symmetric, G->A, G->AT, msg)) ;
                 if (!is_symmetric)
                 {
                     printf ("matrix is unsymmetric; skip undirected case\n") ;
@@ -255,7 +253,7 @@ void test_SortByDegree_brutal (void)
             // load the matrix as A
             FILE *f = fopen (filename, "r") ;
             TEST_CHECK (f != NULL) ;
-            OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+            OK (LAGraph_MMRead (&A, f, msg)) ;
             OK (fclose (f)) ;
             TEST_MSG ("Loading of adjacency matrix failed") ;
 
@@ -277,7 +275,7 @@ void test_SortByDegree_brutal (void)
 
             // construct a graph G with adjacency matrix A
             TEST_CHECK (A != NULL) ;
-            OK (LAGraph_New (&G, &A, atype, kind, msg)) ;
+            OK (LAGraph_New (&G, &A, kind, msg)) ;
             TEST_CHECK (A == NULL) ;
             TEST_CHECK (G != NULL) ;
 
@@ -316,7 +314,7 @@ void test_SortByDegree_brutal (void)
                 OK (GrB_Matrix_new (&B, GrB_BOOL, n, n)) ;
                 OK (GrB_extract (B, NULL, NULL, G->A,
                     (GrB_Index *) P, n, (GrB_Index *) P, n, NULL)) ;
-                OK (LAGraph_New (&H, &B, GrB_BOOL, kind, msg)) ;
+                OK (LAGraph_New (&H, &B, kind, msg)) ;
                 TEST_CHECK (B == NULL) ;
                 TEST_CHECK (H != NULL) ;
 
@@ -361,8 +359,7 @@ void test_SortByDegree_brutal (void)
                 // if G->A is symmetric, then continue the outer iteration to
                 // create an undirected graph.  Otherwise just do the directed
                 // graph
-                OK (LAGraph_IsEqual_type (&is_symmetric, G->A, G->AT,
-                    atype, msg)) ;
+                OK (LAGraph_IsEqual (&is_symmetric, G->A, G->AT, msg)) ;
                 if (!is_symmetric)
                 {
                     OK (LAGraph_Delete (&G, msg)) ;
@@ -397,10 +394,10 @@ void test_SortByDegree_failures (void)
     // create the karate graph
     FILE *f = fopen (LG_DATA_DIR "karate.mtx", "r") ;
     TEST_CHECK (f != NULL) ;
-    OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+    OK (LAGraph_MMRead (&A, f, msg)) ;
     OK (fclose (f)) ;
     TEST_MSG ("Loading of adjacency matrix failed") ;
-    OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
 
     // degree property must first be computed
     TEST_CHECK (LAGraph_SortByDegree (&P, G, true, true, msg) == -1) ;

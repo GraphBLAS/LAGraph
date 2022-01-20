@@ -42,7 +42,7 @@ typedef struct json_object_element_s *json_o ;
 // array element:  {             json_val value ; json_a next }
 typedef struct json_array_element_s  *json_a ;
 
-#define MATCH(s,t) (strcmp (s,t) == 0)
+#define STRMATCH(s,t) (strcmp (s,t) == 0)
 #define OK(ok) LG_CHECK (!(ok), -1001, "invalid file (" LG_STR(__LINE__) ")" )
 #define VER(major,minor,sub) (((major)*1000ULL + (minor))*1000ULL + (sub))
 
@@ -181,15 +181,15 @@ int LAGraph_SRead   // read a set of matrices from a *.lagraph file
     //--------------------------------------------------------------------------
 
     o = o->next ;
-    OK (MATCH (o->name->string, "GraphBLAS")) ;
+    OK (STRMATCH (o->name->string, "GraphBLAS")) ;
     arr = json_value_as_array (o->value) ;
     OK (arr->length == 2) ;
     a = arr->start ;
     str = json_value_as_string (a->value) ;
     #if LG_SUITESPARSE
-    OK (MATCH (str->string, "SuiteSparse:GraphBLAS")) ;
+    OK (STRMATCH (str->string, "SuiteSparse:GraphBLAS")) ;
     #else
-    OK (MATCH (str->string, "vanilla")) ;
+    OK (STRMATCH (str->string, "vanilla")) ;
     #endif
     a = a->next ;
     arr = json_value_as_array (a->value) ;
@@ -254,17 +254,17 @@ int LAGraph_SRead   // read a set of matrices from a *.lagraph file
         // parse the item kind: matrix, vector, or ascii text
         //----------------------------------------------------------------------
 
-        if (MATCH (o->name->string, "GrB_Matrix"))
+        if (STRMATCH (o->name->string, "GrB_Matrix"))
         {
             Item->kind = LAGraph_matrix_kind ;
         }
 #if 0
         // TODO: handle vectors and text
-        else if (MATCH (o->name->string, "GrB_Vector"))
+        else if (STRMATCH (o->name->string, "GrB_Vector"))
         {
             Item->kind = LAGraph_vector_kind ;
         }
-        else if (MATCH (o->name->string, "text"))
+        else if (STRMATCH (o->name->string, "text"))
         {
             Item->kind = LAGraph_text_kind ;
         }
@@ -297,19 +297,19 @@ int LAGraph_SRead   // read a set of matrices from a *.lagraph file
         {
             // text, uncompressed or compressed
             int c ;
-            if      (MATCH (str->string, "none"   )) c = -1 ;
-            else if (MATCH (str->string, "default")) c = 0 ;
-            else if (MATCH (str->string, "lz4"    )) c = 1000 ;
-            else if (MATCH (str->string, "lz4hc:0")) c = 2000 ;
-            else if (MATCH (str->string, "lz4hc:1")) c = 2001 ;
-            else if (MATCH (str->string, "lz4hc:2")) c = 2002 ;
-            else if (MATCH (str->string, "lz4hc:3")) c = 2003 ;
-            else if (MATCH (str->string, "lz4hc:4")) c = 2004 ;
-            else if (MATCH (str->string, "lz4hc:5")) c = 2005 ;
-            else if (MATCH (str->string, "lz4hc:6")) c = 2006 ;
-            else if (MATCH (str->string, "lz4hc:7")) c = 2007 ;
-            else if (MATCH (str->string, "lz4hc:8")) c = 2008 ;
-            else if (MATCH (str->string, "lz4hc:9")) c = 2009 ;
+            if      (STRMATCH (str->string, "none"   )) c = -1 ;
+            else if (STRMATCH (str->string, "default")) c = 0 ;
+            else if (STRMATCH (str->string, "lz4"    )) c = 1000 ;
+            else if (STRMATCH (str->string, "lz4hc:0")) c = 2000 ;
+            else if (STRMATCH (str->string, "lz4hc:1")) c = 2001 ;
+            else if (STRMATCH (str->string, "lz4hc:2")) c = 2002 ;
+            else if (STRMATCH (str->string, "lz4hc:3")) c = 2003 ;
+            else if (STRMATCH (str->string, "lz4hc:4")) c = 2004 ;
+            else if (STRMATCH (str->string, "lz4hc:5")) c = 2005 ;
+            else if (STRMATCH (str->string, "lz4hc:6")) c = 2006 ;
+            else if (STRMATCH (str->string, "lz4hc:7")) c = 2007 ;
+            else if (STRMATCH (str->string, "lz4hc:8")) c = 2008 ;
+            else if (STRMATCH (str->string, "lz4hc:9")) c = 2009 ;
             else OK (false) ;
             Item->type_name [0] = '\0' ;    // or set to "char"?
             Item->compression = c ;

@@ -11,6 +11,7 @@
 //------------------------------------------------------------------------------
 
 #include "LAGraph_test.h"
+#include "LG_internal.h"
 
 //------------------------------------------------------------------------------
 // global variables
@@ -19,9 +20,9 @@
 LAGraph_Graph G = NULL ;
 char msg [LAGRAPH_MSG_LEN] ;
 GrB_Matrix A = NULL ;
-GrB_Type atype = NULL ;
 #define LEN 512
 char filename [LEN+1] ;
+char atype_name [LAGRAPH_MAX_NAME_LEN] ;
 
 //------------------------------------------------------------------------------
 // setup: start a test
@@ -97,17 +98,18 @@ void test_DisplayGraph (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
-        if (atype == GrB_FP64)
+        OK (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
+        if (MATCHNAME (atype_name, "double"))
         {
             OK (GrB_Matrix_setElement (A, 3.14159265358979323, 0, 1)) ;
         }
 
         // create the graph
-        OK (LAGraph_New (&G, &A, atype, kind, msg)) ;
+        OK (LAGraph_New (&G, &A, kind, msg)) ;
         TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
         // display the graph
@@ -184,18 +186,19 @@ void test_DisplayGraph_brutal (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
-        if (atype == GrB_FP64)
+        OK (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
+        if (MATCHNAME (atype_name, "double"))
         {
             OK (GrB_Matrix_setElement (A, 3.14159265358979323, 0, 1)) ;
         }
         OK (GrB_wait (A, GrB_MATERIALIZE)) ;
 
         // create the graph
-        OK (LAGraph_New (&G, &A, atype, kind, msg)) ;
+        OK (LAGraph_New (&G, &A, kind, msg)) ;
         OK (LAGraph_CheckGraph (G, msg)) ;
 
         // display the graph

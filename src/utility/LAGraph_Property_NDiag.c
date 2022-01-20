@@ -35,5 +35,5 @@ int LAGraph_Property_NDiag  // returns 0 if successful, -1 if failure
     //--------------------------------------------------------------------------
     // compute G->ndiag
     //--------------------------------------------------------------------------
-    return (LG_ndiag (&G->ndiag, G->A, G->A_type, msg)) ;
+    return (LG_ndiag (&G->ndiag, G->A, msg)) ;
 }

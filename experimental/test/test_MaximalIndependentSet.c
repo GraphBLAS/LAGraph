@@ -48,7 +48,6 @@ char msg [LAGRAPH_MSG_LEN] ;
 GrB_Vector mis = NULL, ignore = NULL ;
 GrB_Matrix A = NULL, C = NULL, empty_row = NULL, empty_col = NULL ;
 LAGraph_Graph G = NULL ;
-GrB_Type atype = NULL ;
 
 //------------------------------------------------------------------------------
 // setup: start a test
@@ -89,7 +88,7 @@ void test_MIS (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of valued matrix failed") ;
         printf ("\nMatrix: %s\n", aname) ;
@@ -98,7 +97,7 @@ void test_MIS (void)
         OK (LAGraph_Structure (&C, A, msg)) ;
 
         // construct a directed graph G with adjacency matrix C
-        OK (LAGraph_New (&G, &C, atype, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+        OK (LAGraph_New (&G, &C, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
         TEST_CHECK (C == NULL) ;
 
         // check if the pattern is symmetric

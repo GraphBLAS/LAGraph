@@ -31,21 +31,23 @@ int LAGraph_Property_AT     // returns 0 if successful, -1 if failure
     if (G->AT != NULL || kind == LAGRAPH_ADJACENCY_UNDIRECTED)
     {
         // G->AT already computed, or not needed since A is symmetric
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
     // G->AT = (G->A)'
     //--------------------------------------------------------------------------
 
-    GrB_Type type ;
     GrB_Index nrows, ncols ;
     GrB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
-    GrB_TRY (GrB_Matrix_new (&AT, G->A_type, ncols, nrows)) ;
+    GrB_Type atype ;
+    char atype_name [LAGRAPH_MAX_NAME_LEN] ;
+    LG_TRY (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
+    LG_TRY (LAGraph_TypeFromName (&atype, atype_name, msg)) ;
+    GrB_TRY (GrB_Matrix_new (&AT, atype, ncols, nrows)) ;
     GrB_TRY (GrB_transpose (AT, NULL, NULL, A, NULL)) ;
     G->AT = AT ;
-    G->AT_type = G->A_type;
 
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }

@@ -28,7 +28,7 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
 
     LG_CLEAR_MSG ;
     LG_ASSERT (f != NULL, GrB_NULL_POINTER) ;
-    LAGraph_TRY (LAGraph_CheckGraph (G, msg)) ;
+    LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     pr = LAGraph_MAX (pr, -1) ;
     pr = LAGraph_MIN (pr, 5) ;
 
@@ -38,14 +38,14 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
 
     GrB_Matrix A = G->A ;
     LAGraph_Kind kind = G->kind ;
-    GrB_Type atype = G->A_type ;
 
     GrB_Index n, nvals ;
     GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
     GrB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
-    char *typename, *kindname ;
-    LAGraph_TRY (LAGraph_TypeName (&typename, atype, msg)) ;
-    LAGraph_TRY (LAGraph_KindName (&kindname, kind, msg)) ;
+    char typename [LAGRAPH_MAX_NAME_LEN] ;
+    char kindname [LAGRAPH_MAX_NAME_LEN] ;
+    LG_TRY (LAGraph_MatrixTypeName (typename, A, msg)) ;
+    LG_TRY (LAGraph_KindName (kindname, kind, msg)) ;
 
     if (pr >= 0)
     {
@@ -70,7 +70,7 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
     // pr = LAGraph_MAX (pr, 0) ;
     FPRINTF (f, "  adjacency matrix: ") ;
 
-    LAGraph_TRY (LAGraph_Matrix_print_type (A, atype, pr, stdout, msg)) ;
+    LG_TRY (LAGraph_Matrix_print (A, pr, stdout, msg)) ;
 
     //--------------------------------------------------------------------------
     // display the cached properties
@@ -80,23 +80,21 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
     if (AT != NULL)
     {
         FPRINTF (f, "  adjacency matrix transposed: ") ;
-        LAGraph_TRY (LAGraph_Matrix_print_type (AT, atype, pr, stdout, msg)) ;
+        LG_TRY (LAGraph_Matrix_print (AT, pr, stdout, msg)) ;
     }
 
     GrB_Vector rowdegree = G->rowdegree ;
     if (rowdegree != NULL)
     {
         FPRINTF (f, "  row degree: ") ;
-        LAGraph_TRY (LAGraph_Vector_print_type (rowdegree,
-            G->rowdegree_type, pr, stdout, msg)) ;
+        LG_TRY (LAGraph_Vector_print (rowdegree, pr, stdout, msg)) ;
     }
 
     GrB_Vector coldegree = G->coldegree ;
     if (coldegree != NULL)
     {
         FPRINTF (f, "  column degree: ") ;
-        LAGraph_TRY (LAGraph_Vector_print_type (coldegree,
-            G->coldegree_type, pr, stdout, msg)) ;
+        LG_TRY (LAGraph_Vector_print (coldegree, pr, stdout, msg)) ;
     }
 
     return (0) ;

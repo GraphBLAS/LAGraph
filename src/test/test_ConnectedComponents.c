@@ -24,7 +24,6 @@ LAGraph_Graph G = NULL ;
 char filename [LEN+1] ;
 GrB_Vector C = NULL, C2 = NULL ;
 GrB_Matrix A = NULL ;
-GrB_Type atype = NULL ;
 
 typedef struct
 {
@@ -89,14 +88,14 @@ void test_cc_matrices (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
         GrB_Index n ;
         OK (GrB_Matrix_nrows (&n, A)) ;
 
         // create the graph
-        OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+        OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
         TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
         for (int trial = 0 ; trial <= 1 ; trial++)
@@ -190,13 +189,13 @@ void test_cc_brutal (void)
     uint32_t ncomp = 6 ;
     FILE *f = fopen (LG_DATA_DIR "LFAT5_two.mtx", "r") ;
     TEST_CHECK (f != NULL) ;
-    OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+    OK (LAGraph_MMRead (&A, f, msg)) ;
     OK (fclose (f)) ;
     TEST_MSG ("Loading of LFAT5_two.mtx failed") ;
     printf ("\n") ;
 
     // create an valid graph
-    OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
     LG_BRUTAL_BURBLE (LAGraph_CheckGraph (G, msg)) ;
 

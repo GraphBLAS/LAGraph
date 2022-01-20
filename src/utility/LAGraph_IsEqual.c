@@ -19,15 +19,14 @@
 #include "LG_internal.h"
 
 //------------------------------------------------------------------------------
-// LAGraph_IsEqual_type: compare using GrB_EQ_type operator
+// LAGraph_IsEqual: compare using GrB_EQ_type operator
 //------------------------------------------------------------------------------
 
-int LAGraph_IsEqual_type    // returns 0 if successful, < 0 if failure
+int LAGraph_IsEqual         // returns 0 if successful, < 0 if failure
 (
     bool *result,           // true if A == B, false if A != B or error
     GrB_Matrix A,
     GrB_Matrix B,
-    GrB_Type type,          // use GrB_EQ_type operator to compare A and B
     char *msg
 )
 {
@@ -38,7 +37,6 @@ int LAGraph_IsEqual_type    // returns 0 if successful, < 0 if failure
 
     LG_CLEAR_MSG ;
     GrB_Matrix C = NULL ;
-    LG_ASSERT (type != NULL, GrB_NULL_POINTER) ;
     LG_ASSERT (result != NULL, GrB_NULL_POINTER) ;
 
     //--------------------------------------------------------------------------
@@ -50,6 +48,21 @@ int LAGraph_IsEqual_type    // returns 0 if successful, < 0 if failure
         // two NULL matrices are identical, as are two aliased matrices
         (*result) = (A == B) ;
         return (0) ;
+    }
+
+    //--------------------------------------------------------------------------
+    // compare the type of A and B
+    //--------------------------------------------------------------------------
+
+    char atype_name [LAGRAPH_MAX_NAME_LEN] ;
+    char btype_name [LAGRAPH_MAX_NAME_LEN] ;
+    LG_TRY (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
+    LG_TRY (LAGraph_MatrixTypeName (btype_name, B, msg)) ;
+    if (!MATCHNAME (atype_name, btype_name))
+    {
+        // types differ
+        (*result) = false ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
@@ -93,6 +106,8 @@ int LAGraph_IsEqual_type    // returns 0 if successful, < 0 if failure
     // get the GrB_EQ_type operator
     //--------------------------------------------------------------------------
 
+    GrB_Type type ;
+    LG_TRY (LAGraph_TypeFromName (&type, atype_name, msg)) ;
     GrB_BinaryOp op ;
     // LAGraph_BinaryOp_Picker (&op, "==", type) ;
     // LAGraph_BinaryOp_Picker (&op, "+", type) ;
@@ -150,48 +165,5 @@ int LAGraph_IsEqual_type    // returns 0 if successful, < 0 if failure
 
     LAGraph_FREE_WORK ;
     return (0) ;
-}
-
-//------------------------------------------------------------------------------
-// LAGraph_IsEqual: compare using GrB_EQ_type operator; auto type selection
-//------------------------------------------------------------------------------
-
-#undef  LAGraph_FREE_WORK
-#define LAGraph_FREE_WORK ;
-
-int LAGraph_IsEqual         // returns 0 if successful, < 0 if failure
-(
-    bool *result,           // true if A == B, false if A != B or error
-    GrB_Matrix A,
-    GrB_Matrix B,
-    char *msg
-)
-{
-
-    //--------------------------------------------------------------------------
-    // check inputs
-    //--------------------------------------------------------------------------
-
-    LG_CLEAR_MSG ;
-    LG_ASSERT (A != NULL, GrB_NULL_POINTER) ;
-
-    //--------------------------------------------------------------------------
-    // determine the type
-    //--------------------------------------------------------------------------
-
-    GrB_Type type ;
-    #if LG_SUITESPARSE
-        // SuiteSparse:GraphBLAS: query the type and compare accordingly
-        GrB_TRY (GxB_Matrix_type (&type, A)) ;
-    #else
-        // no way to determine the type with pure GrB*; compare as if FP64
-        type = GrB_FP64 ;
-    #endif
-
-    //--------------------------------------------------------------------------
-    // compare A and B
-    //--------------------------------------------------------------------------
-
-    return (LAGraph_IsEqual_type (result, A, B, type, msg)) ;
 }
 

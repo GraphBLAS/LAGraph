@@ -223,7 +223,6 @@ void test_bc (void)
 {
     LAGraph_Init (msg) ;
     GrB_Matrix A = NULL ;
-    GrB_Type atype = NULL ;
     GrB_Vector centrality = NULL ;
     int niters = 0 ;
 
@@ -231,9 +230,9 @@ void test_bc (void)
     snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
     FILE *f = fopen (filename, "r") ;
     TEST_CHECK (f != NULL) ;
-    OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+    OK (LAGraph_MMRead (&A, f, msg)) ;
     OK (fclose (f)) ;
-    OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
     // compute its betweenness centrality
@@ -253,9 +252,9 @@ void test_bc (void)
     snprintf (filename, LEN, LG_DATA_DIR "%s", "west0067.mtx") ;
     f = fopen (filename, "r") ;
     TEST_CHECK (f != NULL) ;
-    OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+    OK (LAGraph_MMRead (&A, f, msg)) ;
     OK (fclose (f)) ;
-    OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
     OK (LAGraph_Property_AT (G, msg)) ;
 
@@ -285,7 +284,6 @@ void test_bc_brutal (void)
     OK (LG_brutal_setup (msg)) ;
 
     GrB_Matrix A = NULL ;
-    GrB_Type atype = NULL ;
     GrB_Vector centrality = NULL ;
     int niters = 0 ;
 
@@ -293,9 +291,9 @@ void test_bc_brutal (void)
     snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
     FILE *f = fopen (filename, "r") ;
     TEST_CHECK (f != NULL) ;
-    OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+    OK (LAGraph_MMRead (&A, f, msg)) ;
     OK (fclose (f)) ;
-    OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
     printf ("\n") ;
 

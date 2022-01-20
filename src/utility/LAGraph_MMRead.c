@@ -118,15 +118,15 @@ static inline bool read_double      // true if successful, false if failure
 {
     while (*p && isspace (*p)) p++ ;   // skip any spaces
 
-    if ((strncmp (p, "inf", 3) == 0) || (strncmp (p, "+inf", 4) == 0))
+    if (MATCH (p, "inf", 3) || MATCH (p, "+inf", 4))
     {
         (*rval) = INFINITY ;
     }
-    else if (strncmp (p, "-inf", 4) == 0)
+    else if (MATCH (p, "-inf", 4))
     {
         (*rval) = -INFINITY ;
     }
-    else if (strncmp (p, "nan", 3) == 0)
+    else if (MATCH (p, "nan", 3))
     {
         (*rval) = NAN ;
     }
@@ -434,7 +434,6 @@ static inline GrB_Info set_value
 int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
 (
     GrB_Matrix *A,          // handle of matrix to create
-    GrB_Type   *A_type,     // type of the scalar stored in A
     FILE *f,                // file to read from, already open
     char *msg
 )
@@ -446,10 +445,8 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
 
     LG_CLEAR_MSG ;
     LG_ASSERT (A != NULL, GrB_NULL_POINTER) ;
-    LG_ASSERT (A_type != NULL, GrB_NULL_POINTER) ;
     LG_ASSERT (f != NULL, GrB_NULL_POINTER) ;
     (*A) = NULL ;
-    (*A_type) = NULL;
 
     //--------------------------------------------------------------------------
     // set the default properties
@@ -504,7 +501,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
         // parse the line
         //----------------------------------------------------------------------
 
-        if ((line == 1) && (strncmp (buf, "%%matrixmarket", 14) == 0))
+        if ((line == 1) && MATCH (buf, "%%matrixmarket", 14))
         {
 
             //------------------------------------------------------------------
@@ -523,7 +520,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
 
             while (*p && isspace (*p)) p++ ;        // skip any leading spaces
 
-            if (strncmp (p, "matrix", 6) != 0)
+            if (!MATCH (p, "matrix", 6))
             {
                 // invalid Matrix Market object
                 LG_ASSERT_MSG (false, -1002, "invalid object") ;
@@ -536,12 +533,12 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
 
             while (*p && isspace (*p)) p++ ;        // skip any leading spaces
 
-            if (strncmp (p, "coordinate", 10) == 0)
+            if (MATCH (p, "coordinate", 10))
             {
                 MM_fmt = MM_coordinate ;
                 p += 10 ;
             }
-            else if (strncmp (p, "array", 5) == 0)
+            else if (MATCH (p, "array", 5))
             {
                 MM_fmt = MM_array ;
                 p += 5 ;
@@ -558,19 +555,19 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
 
             while (*p && isspace (*p)) p++ ;        // skip any leading spaces
 
-            if (strncmp (p, "real", 4) == 0)
+            if (MATCH (p, "real", 4))
             {
                 MM_type = MM_real ;
                 type = GrB_FP64 ;
                 p += 4 ;
             }
-            else if (strncmp (p, "integer", 7) == 0)
+            else if (MATCH (p, "integer", 7))
             {
                 MM_type = MM_integer ;
                 type = GrB_INT64 ;
                 p += 7 ;
             }
-            else if (strncmp (p, "complex", 7) == 0)
+            else if (MATCH (p, "complex", 7))
             {
                 MM_type = MM_complex ;
 #if 0
@@ -579,7 +576,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
 #endif
                 LG_ASSERT_MSG (false, -1, "complex types not yet supported") ;
             }
-            else if (strncmp (p, "pattern", 7) == 0)
+            else if (MATCH (p, "pattern", 7))
             {
                 MM_type = MM_pattern ;
                 type = GrB_BOOL ;
@@ -597,19 +594,19 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
 
             while (*p && isspace (*p)) p++ ;        // skip any leading spaces
 
-            if (strncmp (p, "general", 7) == 0)
+            if (MATCH (p, "general", 7))
             {
                 MM_storage = MM_general ;
             }
-            else if (strncmp (p, "symmetric", 9) == 0)
+            else if (MATCH (p, "symmetric", 9))
             {
                 MM_storage = MM_symmetric ;
             }
-            else if (strncmp (p, "skew-symmetric", 14) == 0)
+            else if (MATCH (p, "skew-symmetric", 14))
             {
                 MM_storage = MM_skew_symmetric ;
             }
-            else if (strncmp (p, "hermitian", 9) == 0)
+            else if (MATCH (p, "hermitian", 9))
             {
                 MM_storage = MM_hermitian ;
             }
@@ -641,7 +638,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
 
         }
         else if (got_mm_header && (line == 2)
-                 && (strncmp (buf, "%%graphblas", 11) == 0))
+                 && MATCH (buf, "%%graphblas", 11))
         {
 
             // -----------------------------------------------------------------
@@ -662,56 +659,56 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             // GrB_UINT16, GrB_UINT32, GrB_UINT64, GrB_FP32, GrB_FP64).  The
             // complex types GxB_FC32, GxB_FC64 are not yet supported.
 
-            if (strncmp (p, "grb_bool", 8) == 0)
+            if (MATCH (p, "grb_bool", 8) || MATCH (p, "bool", 4))
             {
                 type = GrB_BOOL ;
             }
-            else if (strncmp (p, "grb_int8", 8) == 0)
+            else if (MATCH (p, "grb_int8", 8) || MATCH (p, "int8_t", 6))
             {
                 type = GrB_INT8 ;
             }
-            else if (strncmp (p, "grb_int16", 9) == 0)
+            else if (MATCH (p, "grb_int16", 9) || MATCH (p, "int16_t", 7))
             {
                 type = GrB_INT16 ;
             }
-            else if (strncmp (p, "grb_int32", 9) == 0)
+            else if (MATCH (p, "grb_int32", 9) || MATCH (p, "int32_t", 7))
             {
                 type = GrB_INT32 ;
             }
-            else if (strncmp (p, "grb_int64", 9) == 0)
+            else if (MATCH (p, "grb_int64", 9) || MATCH (p, "int64_t", 7))
             {
                 type = GrB_INT64 ;
             }
-            else if (strncmp (p, "grb_uint8", 9) == 0)
+            else if (MATCH (p, "grb_uint8", 9) || MATCH (p, "uint8_t", 7))
             {
                 type = GrB_UINT8 ;
             }
-            else if (strncmp (p, "grb_uint16", 10) == 0)
+            else if (MATCH (p, "grb_uint16", 10) || MATCH (p, "uint16_t", 8))
             {
                 type = GrB_UINT16 ;
             }
-            else if (strncmp (p, "grb_uint32", 10) == 0)
+            else if (MATCH (p, "grb_uint32", 10) || MATCH (p, "uint32_t", 8))
             {
                 type = GrB_UINT32 ;
             }
-            else if (strncmp (p, "grb_uint64", 10) == 0)
+            else if (MATCH (p, "grb_uint64", 10) || MATCH (p, "uint64_t", 8))
             {
                 type = GrB_UINT64 ;
             }
-            else if (strncmp (p, "grb_fp32", 8) == 0)
+            else if (MATCH (p, "grb_fp32", 8) || MATCH (p, "float", 5))
             {
                 type = GrB_FP32 ;
             }
-            else if (strncmp (p, "grb_fp64", 8) == 0)
+            else if (MATCH (p, "grb_fp64", 8) || MATCH (p, "double", 6))
             {
                 type = GrB_FP64 ;
             }
 #if 0
-            else if (strncmp (p, "grb_fc32", 8) == 0)
+            else if (MATCH (p, "grb_fc32", 8) || MATCH (p, "float complex", 13))
             {
                 type = GxB_FC32 ;
             }
-            else if (strncmp (p, "grb_fc64", 8) == 0)
+            else if (MATCH (p, "grb_fc64", 8) || MATCH (p, "double complex", 14))
             {
                 type = GxB_FC64 ;
             }
@@ -816,7 +813,6 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
     //--------------------------------------------------------------------------
 
     GrB_TRY (GrB_Matrix_new (A, type, nrows, ncols)) ;
-    *A_type = type;
 
     //--------------------------------------------------------------------------
     // quick return for empty matrix
@@ -954,6 +950,6 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
     GrB_Index nvals3 = 0 ;
     GrB_TRY (GrB_Matrix_nvals (&nvals3, *A)) ;
     LG_ASSERT_MSG (nvals2 == nvals3, -1002, "duplicate entries present") ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 

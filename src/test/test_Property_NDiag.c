@@ -20,7 +20,6 @@ LAGraph_Graph G = NULL ;
 GrB_Info info ;
 char msg [LAGRAPH_MSG_LEN] ;
 GrB_Matrix A = NULL ;
-GrB_Type atype = NULL ;
 #define LEN 512
 char filename [LEN+1] ;
 
@@ -132,7 +131,7 @@ void test_Property_NDiag (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Failed to load %s\n", aname) ;
 
@@ -140,7 +139,7 @@ void test_Property_NDiag (void)
         // construct a directed graph and count self-edges
         //----------------------------------------------------------------------
 
-        OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+        OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
         OK (LAGraph_Property_NDiag (G, msg)) ;
         TEST_CHECK (G->ndiag == files [k].ndiag) ;
 
@@ -182,7 +181,7 @@ void test_Property_NDiag_brutal (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Failed to load %s\n", aname) ;
 
@@ -190,7 +189,7 @@ void test_Property_NDiag_brutal (void)
         // construct a directed graph and count self-edges
         //----------------------------------------------------------------------
 
-        OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+        OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
         LG_BRUTAL (LAGraph_Property_NDiag (G, msg)) ;
         TEST_CHECK (G->ndiag == files [k].ndiag) ;
 

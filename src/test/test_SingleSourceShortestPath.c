@@ -13,12 +13,14 @@
 #include <stdio.h>
 #include <acutest.h>
 #include <LAGraph_test.h>
+#include "LG_internal.h"
 
 char msg [LAGRAPH_MSG_LEN] ;
 LAGraph_Graph G = NULL ;
 
 #define LEN 512
 char filename [LEN+1] ;
+char atype_name [LAGRAPH_MAX_NAME_LEN] ;
 
 typedef struct
 {
@@ -62,7 +64,6 @@ void test_SingleSourceShortestPath(void)
 {
     LAGraph_Init(msg);
     GrB_Matrix A = NULL, T = NULL ;
-    GrB_Type atype = NULL ;
 
     for (int k = 0 ; ; k++)
     {
@@ -77,7 +78,7 @@ void test_SingleSourceShortestPath(void)
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
@@ -87,11 +88,11 @@ void test_SingleSourceShortestPath(void)
         TEST_CHECK (n == ncols) ;
 
         // convert A to int32
-        if (atype != GrB_INT32)
+        OK (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
+        if (!MATCHNAME (atype_name, "int32_t"))
         {
             OK (GrB_Matrix_new (&T, GrB_INT32, n, n)) ;
             OK (GrB_assign (T, NULL, NULL, A, GrB_ALL, n, GrB_ALL, n, NULL)) ;
-            atype = GrB_INT32 ;
             OK (GrB_free (&A)) ;
             A = T ;
         }
@@ -108,7 +109,7 @@ void test_SingleSourceShortestPath(void)
         }
 
         // create the graph
-        OK (LAGraph_New (&G, &A, atype, kind, msg)) ;
+        OK (LAGraph_New (&G, &A, kind, msg)) ;
         OK (LAGraph_CheckGraph (G, msg)) ;
         TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
@@ -157,7 +158,6 @@ void test_SingleSourceShortestPath_brutal (void)
     OK (LG_brutal_setup (msg)) ;
 
     GrB_Matrix A = NULL, T = NULL ;
-    GrB_Type atype = NULL ;
 
     // just test with the first 8 matrices
     for (int k = 0 ; k < 8 ; k++)
@@ -173,7 +173,7 @@ void test_SingleSourceShortestPath_brutal (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
@@ -187,11 +187,11 @@ void test_SingleSourceShortestPath_brutal (void)
         }
 
         // convert A to int32
-        if (atype != GrB_INT32)
+        OK (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
+        if (!MATCHNAME (atype_name, "int32_t"))
         {
             OK (GrB_Matrix_new (&T, GrB_INT32, n, n)) ;
             OK (GrB_assign (T, NULL, NULL, A, GrB_ALL, n, GrB_ALL, n, NULL)) ;
-            atype = GrB_INT32 ;
             OK (GrB_free (&A)) ;
             A = T ;
         }
@@ -208,7 +208,7 @@ void test_SingleSourceShortestPath_brutal (void)
         }
 
         // create the graph
-        OK (LAGraph_New (&G, &A, atype, kind, msg)) ;
+        OK (LAGraph_New (&G, &A, kind, msg)) ;
         OK (LAGraph_CheckGraph (G, msg)) ;
 
         // run the SSSP on a single source node with one delta

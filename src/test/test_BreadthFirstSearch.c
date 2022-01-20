@@ -202,7 +202,7 @@ void setup(void)
     TEST_CHECK(0 == GrB_Matrix_build(A, ZACHARY_I, ZACHARY_J, ZACHARY_V,
                                      ZACHARY_NUM_EDGES, GrB_LOR) );
 
-    retval = LAGraph_New(&G, &A, GrB_UINT32, LAGRAPH_ADJACENCY_UNDIRECTED, msg);
+    retval = LAGraph_New(&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 }
@@ -478,7 +478,6 @@ void test_BreadthFirstSearch_many(void)
 {
     LAGraph_Init(msg);
     GrB_Matrix A = NULL ;
-    GrB_Type atype = NULL ;
 
     for (int k = 0 ; ; k++)
     {
@@ -492,12 +491,12 @@ void test_BreadthFirstSearch_many(void)
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
         // create the graph
-        OK (LAGraph_New (&G, &A, atype, kind, msg)) ;
+        OK (LAGraph_New (&G, &A, kind, msg)) ;
         TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
         // create its properties
@@ -592,7 +591,6 @@ void test_bfs_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
     GrB_Matrix A = NULL ;
-    GrB_Type atype = NULL ;
 
     for (int k = 0 ; ; k++)
     {
@@ -605,11 +603,11 @@ void test_bfs_brutal (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
         // create the graph
-        OK (LAGraph_New (&G, &A, atype, kind, msg)) ;
+        OK (LAGraph_New (&G, &A, kind, msg)) ;
         TEST_CHECK (A == NULL) ;    // A has been moved into G->A
         GrB_Index n = 0 ;
         OK (GrB_Matrix_nrows (&n, G->A)) ;

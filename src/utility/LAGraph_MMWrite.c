@@ -160,13 +160,12 @@ static bool print_double
 }
 
 //------------------------------------------------------------------------------
-// LAGraph_MMWrite_type: write a matrix to a MatrixMarket file with given type
+// LAGraph_MMWrite: write a matrix to a MatrixMarket file
 //------------------------------------------------------------------------------
 
-int LAGraph_MMWrite_type
+int LAGraph_MMWrite
 (
     GrB_Matrix A,       // matrix to write to the file
-    GrB_Type type,      // type to write to the file
     FILE *f,            // file to write it to, must be already open
     FILE *fcomments,    // optional file with extra comments, may be NULL
     char *msg
@@ -183,7 +182,6 @@ int LAGraph_MMWrite_type
     GrB_Matrix M = NULL, AT = NULL, C = NULL ;
     LG_ASSERT (A != NULL, GrB_NULL_POINTER) ;
     LG_ASSERT (f != NULL, GrB_NULL_POINTER) ;
-    LG_ASSERT (type != NULL, GrB_NULL_POINTER) ;
 
     //--------------------------------------------------------------------------
     // determine the basic matrix properties
@@ -211,6 +209,11 @@ int LAGraph_MMWrite_type
     //--------------------------------------------------------------------------
     // determine the entry type
     //--------------------------------------------------------------------------
+
+    GrB_Type type ;
+    char atype_name [LAGRAPH_MAX_NAME_LEN] ;
+    LG_TRY (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
+    LG_TRY (LAGraph_TypeFromName (&type, atype_name, msg)) ;
 
     MM_type_enum MM_type = MM_integer ;
 
@@ -381,6 +384,23 @@ int LAGraph_MMWrite_type
     }
 
     FPRINTF (f, "%%%%GraphBLAS ") ;
+    if      (type == GrB_BOOL  ) { FPRINTF (f, "bool\n")   ; }
+    else if (type == GrB_INT8  ) { FPRINTF (f, "int8_t\n")   ; }
+    else if (type == GrB_INT16 ) { FPRINTF (f, "int16_t\n")  ; }
+    else if (type == GrB_INT32 ) { FPRINTF (f, "int32_t\n")  ; }
+    else if (type == GrB_INT64 ) { FPRINTF (f, "int64_t\n")  ; }
+    else if (type == GrB_UINT8 ) { FPRINTF (f, "uint8_t\n")  ; }
+    else if (type == GrB_UINT16) { FPRINTF (f, "uint16_t\n") ; }
+    else if (type == GrB_UINT32) { FPRINTF (f, "uint32_t\n") ; }
+    else if (type == GrB_UINT64) { FPRINTF (f, "uint64_t\n") ; }
+    else if (type == GrB_FP32  ) { FPRINTF (f, "float\n")   ; }
+    else if (type == GrB_FP64  ) { FPRINTF (f, "double\n")   ; }
+    #if 0
+    else if (type == GxB_FC32  ) { FPRINTF (f, "float complex\n")  ; }
+    else if (type == GxB_FC64  ) { FPRINTF (f, "double complex\n") ; }
+    #endif
+
+#if 0
     if      (type == GrB_BOOL  ) { FPRINTF (f, "GrB_BOOL\n")   ; }
     else if (type == GrB_INT8  ) { FPRINTF (f, "GrB_INT8\n")   ; }
     else if (type == GrB_INT16 ) { FPRINTF (f, "GrB_INT16\n")  ; }
@@ -396,6 +416,7 @@ int LAGraph_MMWrite_type
     else if (type == GxB_FC32  ) { FPRINTF (f, "GxB_FC32\n")   ; }
     else if (type == GxB_FC64  ) { FPRINTF (f, "GxB_FC64\n")   ; }
     #endif
+#endif
 
     //--------------------------------------------------------------------------
     // include any additional comments
@@ -421,7 +442,7 @@ int LAGraph_MMWrite_type
     {
         // count the entries on the diagonal
         int64_t ndiag = 0 ;
-        LAGraph_TRY (LG_ndiag (&ndiag, A, type, msg)) ;
+        LAGraph_TRY (LG_ndiag (&ndiag, A, msg)) ;
         // nvals_to_print = # of entries in tril(A), including diagonal
         nvals_to_print = ndiag + (nvals - ndiag) / 2 ;
     }
@@ -529,49 +550,5 @@ int LAGraph_MMWrite_type
 
     LAGraph_FREE_ALL ;
     return (0) ;
-}
-
-//------------------------------------------------------------------------------
-// LAGraph_MMWrite: write a matrix to a MatrixMarket file, auto select type
-//------------------------------------------------------------------------------
-
-#undef  LAGraph_FREE_WORK
-#define LAGraph_FREE_WORK ;
-
-int LAGraph_MMWrite
-(
-    GrB_Matrix A,       // matrix to write to the file
-    FILE *f,            // file to write it to, must be already open
-    FILE *fcomments,    // optional file with extra comments, may be NULL
-    char *msg
-)
-{
-
-    //--------------------------------------------------------------------------
-    // check inputs
-    //--------------------------------------------------------------------------
-
-    LG_CLEAR_MSG ;
-    LG_ASSERT (A != NULL, GrB_NULL_POINTER) ;
-    LG_ASSERT (f != NULL, GrB_NULL_POINTER) ;
-
-    //--------------------------------------------------------------------------
-    // determine the type
-    //--------------------------------------------------------------------------
-
-    GrB_Type type ;
-    #if LG_SUITESPARSE
-        // SuiteSparse:GraphBLAS: query the type and print accordingly
-        GrB_TRY (GxB_Matrix_type (&type, A)) ;
-    #else
-        // no way to determine the type with pure GrB*; print as if FP64
-        type = GrB_FP64 ;
-    #endif
-
-    //--------------------------------------------------------------------------
-    // write the matrix
-    //--------------------------------------------------------------------------
-
-    return (LAGraph_MMWrite_type (A, type, f, fcomments, msg)) ;
 }
 

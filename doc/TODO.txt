@@ -1,4 +1,6 @@
-As of Jan 12, 2022:
+As of Jan 19, 2022:
+
+    * add GxB_*_type_name (for matrix, vector, scalar)
 
     * entire user guide
         experimental -> src, how to do it.

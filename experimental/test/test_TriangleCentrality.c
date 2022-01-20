@@ -21,7 +21,6 @@ char msg [LAGRAPH_MSG_LEN] ;
 LAGraph_Graph G = NULL ;
 GrB_Matrix A = NULL ;
 GrB_Matrix C = NULL ;
-GrB_Type atype = NULL ;
 #define LEN 512
 char filename [LEN+1] ;
 
@@ -63,7 +62,7 @@ void test_TriangleCentrality (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
 
         // C = spones (A), in FP64, required for methods 1 and 1.5
         GrB_Index n ;
@@ -77,7 +76,7 @@ void test_TriangleCentrality (void)
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
         // construct an undirected graph G with adjacency matrix C
-        OK (LAGraph_New (&G, &C, atype, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+        OK (LAGraph_New (&G, &C, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
         TEST_CHECK (C == NULL) ;
 
         // check for self-edges
@@ -130,11 +129,11 @@ void test_errors (void)
     snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
     FILE *f = fopen (filename, "r") ;
     TEST_CHECK (f != NULL) ;
-    OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+    OK (LAGraph_MMRead (&A, f, msg)) ;
     TEST_MSG ("Loading of adjacency matrix failed") ;
 
     // construct an undirected graph G with adjacency matrix A
-    OK (LAGraph_New (&G, &A, atype, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;
 
     OK (LAGraph_Property_NDiag (G, msg)) ;

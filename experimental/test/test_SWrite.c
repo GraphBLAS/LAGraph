@@ -21,9 +21,11 @@ GrB_Matrix A = NULL ;
 GrB_Matrix B = NULL ;
 GrB_Matrix *S = NULL ;
 
-GrB_Type atype = NULL ;
 #define LEN 512
 char filename [LEN+1] ;
+
+GrB_Type atype = NULL ;
+char atypename [LAGRAPH_MAX_NAME_LEN] ;
 
 #define NFILES 51
 const char *files [ ] =
@@ -104,9 +106,13 @@ void test_SWrite (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
         fclose (f) ;
         // GxB_print (A, 3) ;
+
+        // get the name of the C typedef for the matrix
+        OK (LAGraph_MatrixTypeName (atypename, A, msg)) ;
+        OK (LAGraph_TypeFromName (&atype, atypename, msg)) ;
 
         #if LG_SUITESPARSE
         for (int scon = 1 ; scon <= 8 ; scon = 2*scon)
@@ -169,18 +175,14 @@ void test_SWrite (void)
             // ensure the matrices A and B are the same
             // GxB_print (A,3) ;
             // GxB_print (B,3) ;
-            OK (LAGraph_IsEqual_type (&ok, A, B, atype, msg)) ;
+            OK (LAGraph_IsEqual (&ok, A, B, msg)) ;
             TEST_CHECK (ok) ;
             OK (GrB_free (&B)) ;
-
-            // get the name of the C typedef for the matrix
-            char *typename ;
-            OK (LAGraph_TypeName (&typename, atype, msg)) ;
 
             // write the header for a single matrix
             OK (LAGraph_SWrite_HeaderStart (f, "lagraph_test", msg)) ;
             OK (LAGraph_SWrite_HeaderItem (f, LAGraph_matrix_kind, "A",
-                typename, 0, blob_size, msg)) ;
+                atypename, 0, blob_size, msg)) ;
             OK (LAGraph_SWrite_HeaderEnd (f, msg)) ;
 
             // write the binary blob to the file then free the blob
@@ -215,7 +217,7 @@ void test_SWrite (void)
             // ensure the matrices A and B are the same
             // GxB_print (A,3) ;
             // GxB_print (B,3) ;
-            OK (LAGraph_IsEqual_type (&ok, A, B, atype, msg)) ;
+            OK (LAGraph_IsEqual (&ok, A, B, msg)) ;
             TEST_CHECK (ok) ;
             OK (GrB_free (&B)) ;
 
@@ -250,10 +252,6 @@ void test_SWrite_errors (void)
     printf ("\nTest matrix:\n") ;
     OK (LAGraph_Matrix_print (A, 3, stdout, msg)) ;
 
-    // get the name of the C typedef for the matrix
-    char *typename ;
-    OK (LAGraph_TypeName (&typename, GrB_FP32, msg)) ;
-
     // serialize the matrix
     bool ok ;
     void *blob = NULL ;
@@ -281,7 +279,7 @@ void test_SWrite_errors (void)
     TEST_CHECK (f != NULL) ;
 
     int result = LAGraph_SWrite_HeaderItem (f, -2, "A",
-        typename, 0, blob_size, msg) ;
+        "float", 0, blob_size, msg) ;
     printf ("result: %d [%s]\n", result, msg) ;
     TEST_CHECK (result == GrB_INVALID_VALUE) ;
     fclose (f) ;
@@ -298,15 +296,15 @@ void test_SWrite_errors (void)
     OK (LAGraph_SWrite_HeaderStart (f, "lagraph_test", msg)) ;
 
     result = LAGraph_SWrite_HeaderItem (NULL, LAGraph_matrix_kind, "A",
-        typename, 0, blob_size, msg) ;
+        "float", 0, blob_size, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
 
     result = LAGraph_SWrite_HeaderItem (NULL, -2, "A",
-        typename, 0, blob_size, msg) ;
+        "float", 0, blob_size, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
 
     OK (LAGraph_SWrite_HeaderItem (f, LAGraph_matrix_kind, "A",
-        typename, 0, blob_size, msg)) ;
+        "float", 0, blob_size, msg)) ;
 
     result = LAGraph_SWrite_HeaderEnd (NULL, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
@@ -356,7 +354,7 @@ void test_SWrite_errors (void)
     TEST_CHECK (nmatrices == 1) ;
 
     ok = false ;
-    OK (LAGraph_IsEqual_type (&ok, A, Set [0], GrB_FP32, msg)) ;
+    OK (LAGraph_IsEqual (&ok, A, Set [0], msg)) ;
     TEST_CHECK (ok) ;
 
     // free everything

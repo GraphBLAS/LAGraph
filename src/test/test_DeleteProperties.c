@@ -19,7 +19,6 @@
 LAGraph_Graph G = NULL ;
 char msg [LAGRAPH_MSG_LEN] ;
 GrB_Matrix A = NULL ;
-GrB_Type atype = NULL ;
 #define LEN 512
 char filename [LEN+1] ;
 
@@ -77,12 +76,12 @@ void test_DeleteProperties (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
         // construct the graph G with adjacency matrix A
-        OK (LAGraph_New (&G, &A, atype, kind, msg)) ;
+        OK (LAGraph_New (&G, &A, kind, msg)) ;
         TEST_CHECK (A == NULL) ;
 
         // create all properties (see test_Property_* for tests of content)
@@ -95,18 +94,16 @@ void test_DeleteProperties (void)
         printf ("\nGraph: ndiag %g, symmetric structure: %d\n",
             (double) G->ndiag, G->A_structure_is_symmetric) ;
         printf ("  adj matrix: ") ;
-        int rr = (LAGraph_Matrix_print_type (G->A, atype, 2, stdout, msg)) ;
+        int rr = (LAGraph_Matrix_print (G->A, 2, stdout, msg)) ;
         printf ("result: %d msg: %s\n", rr, msg) ;
         printf ("  row degree: ") ;
-        OK (LAGraph_Vector_print_type (G->rowdegree, G->rowdegree_type, 2,
-            stdout, msg)) ;
+        OK (LAGraph_Vector_print (G->rowdegree, 2, stdout, msg)) ;
         if (kind == LAGRAPH_ADJACENCY_DIRECTED)
         {
             printf ("  adj transposed: ") ;
-            OK (LAGraph_Matrix_print_type (G->AT, atype, 2, stdout, msg)) ;
+            OK (LAGraph_Matrix_print (G->AT, 2, stdout, msg)) ;
             printf ("  col degree: ") ;
-            OK (LAGraph_Vector_print_type (G->coldegree, G->coldegree_type, 2,
-                stdout, msg)) ;
+            OK (LAGraph_Vector_print (G->coldegree, 2, stdout, msg)) ;
         }
         else
         {
@@ -120,9 +117,7 @@ void test_DeleteProperties (void)
             OK (LAGraph_DeleteProperties (G, msg)) ;
             TEST_CHECK (G->AT == NULL) ;
             TEST_CHECK (G->rowdegree == NULL) ;
-            TEST_CHECK (G->rowdegree_type == NULL) ;
             TEST_CHECK (G->coldegree == NULL) ;
-            TEST_CHECK (G->coldegree_type == NULL) ;
         }
 
         OK (LAGraph_Delete (&G, msg)) ;
@@ -151,12 +146,12 @@ void test_del_brutal (void)
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, &atype, f, msg)) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
         // construct the graph G with adjacency matrix A
-        LG_BRUTAL (LAGraph_New (&G, &A, atype, kind, msg)) ;
+        LG_BRUTAL (LAGraph_New (&G, &A, kind, msg)) ;
         TEST_CHECK (A == NULL) ;
 
         // create all properties (see test_Property_* for tests of content)
@@ -171,9 +166,7 @@ void test_del_brutal (void)
             LG_BRUTAL (LAGraph_DeleteProperties (G, msg)) ;
             TEST_CHECK (G->AT == NULL) ;
             TEST_CHECK (G->rowdegree == NULL) ;
-            TEST_CHECK (G->rowdegree_type == NULL) ;
             TEST_CHECK (G->coldegree == NULL) ;
-            TEST_CHECK (G->coldegree_type == NULL) ;
         }
     
         LG_BRUTAL (LAGraph_Delete (&G, msg)) ;

@@ -23,7 +23,6 @@ int main (int argc, char **argv)
 {
     GrB_Info info ;
     GrB_Matrix A = NULL ;
-    GrB_Type atype = NULL ;
     char msg [LAGRAPH_MSG_LEN] ;
 
     if (argc < 3)
@@ -53,7 +52,7 @@ int main (int argc, char **argv)
         printf ("Matrix file not found: [%s]\n", argv [1]) ;
         exit (1) ;
     }
-    LAGraph_TRY (LAGraph_MMRead (&A, &atype, f, msg)) ;
+    LAGraph_TRY (LAGraph_MMRead (&A, f, msg)) ;
     fclose (f) ;
 
     LAGraph_TRY (LAGraph_Matrix_wait (A, msg)) ;

@@ -142,8 +142,7 @@ GrB_Info LAGraph_BF_basic_pushpull
             GrB_TRY (GrB_vxm (dtmp, NULL, NULL, GrB_MIN_PLUS_SEMIRING_FP64,
                 d, A, NULL));
         }
-        LAGRAPH_OK (LAGraph_Vector_IsEqual_type (&same, dtmp, d, GrB_FP64,
-            NULL));
+        LAGRAPH_OK (LAGraph_Vector_IsEqual (&same, dtmp, d, NULL));
         if (!same)
         {
             GrB_Vector ttmp = dtmp;
@@ -205,8 +204,7 @@ GrB_Info LAGraph_BF_basic_pushpull
             GrB_TRY (GrB_vxm(dtmp, NULL, NULL,
                 GrB_MIN_PLUS_SEMIRING_FP64, d, A, NULL));
         }
-        LAGRAPH_OK (LAGraph_Vector_IsEqual_type (&same, dtmp, d, GrB_FP64,
-            NULL));
+        LAGRAPH_OK (LAGraph_Vector_IsEqual (&same, dtmp, d, NULL));
 
         // if d != dtmp, then there is a negative-weight cycle in the graph
         if (!same)

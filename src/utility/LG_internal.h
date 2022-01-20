@@ -38,6 +38,13 @@
 #define LG_STR(x) #x
 
 //------------------------------------------------------------------------------
+// string matching
+//------------------------------------------------------------------------------
+
+#define MATCH(s1,s2,n) (strncmp (s1, s2, n) == 0)
+#define MATCHNAME(s1,s2) MATCH (s1, s2, LAGRAPH_MAX_NAME_LEN)
+
+//------------------------------------------------------------------------------
 // typedefs
 //------------------------------------------------------------------------------
 
@@ -517,7 +524,6 @@ int LG_ndiag                // returns 0 if successful, < 0 if failure
     int64_t *ndiag,         // # of entries
     // input
     GrB_Matrix A,           // matrix to count
-    GrB_Type atype,         // type of A
     char *msg               // error message
 ) ;
 
