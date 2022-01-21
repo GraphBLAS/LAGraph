@@ -300,29 +300,29 @@ mangled_matrix_info ;
 const mangled_matrix_info mangled_files [ ] =
 {
 //  error  filename              how the matrix is mangled
-    -1002, "mangled1.mtx",       // bad header
-    -1002, "mangled2.mtx",       // bad header
-    -1002, "mangled3.mtx",       // bad type
-    -1,    "complex.mtx",        // valid complex matrix, not supported
-    -1002, "mangled4.mtx",       // bad format
-    -1002, "mangled5.mtx",       // invalid combination of format options
-    -1002, "mangled6.mtx",       // invalid combination of format options
-    -1002, "mangled7.mtx",       // invalid GraphBLAS type
-    -1002, "mangled8.mtx",       // invalid first line
-    -1002, "mangled9.mtx",       // invalid matrix: symmetric and rectangular
-    -1002, "mangled10.mtx",      // invalid matrix: truncated
-    -1002, "mangled11.mtx",      // invalid matrix: entries mangled
-    -1002, "mangled12.mtx",      // invalid matrix: entries mangled
-    -GrB_INVALID_INDEX, "mangled13.mtx", // invalid matrix: indices out of range
-    -1002, "mangled14.mtx",      // invalid matrix: duplicate entries
-    -1002, "mangled_bool.mtx",   // invalid matrix: entry value out of range
-    -1002, "mangled_int8.mtx",   // invalid matrix: entry value out of range
-    -1002, "mangled_int16.mtx",  // invalid matrix: entry value out of range
-    -1002, "mangled_int32.mtx",  // invalid matrix: entry value out of range
-    -1002, "mangled_uint8.mtx",  // invalid matrix: entry value out of range
-    -1002, "mangled_uint16.mtx", // invalid matrix: entry value out of range
-    -1002, "mangled_uint32.mtx", // invalid matrix: entry value out of range
-    -1002, "mangled_skew.mtx",   // invalid matrix: unsigned skew invalid
+    -3, "mangled1.mtx",       // bad header
+    -3, "mangled2.mtx",       // bad header
+    -3, "mangled3.mtx",       // bad type
+    -8, "complex.mtx",        // valid complex matrix, not supported
+    -3, "mangled4.mtx",       // bad format
+    -3, "mangled5.mtx",       // invalid combination of format options
+    -3, "mangled6.mtx",       // invalid combination of format options
+    -3, "mangled7.mtx",       // invalid GraphBLAS type
+    -3, "mangled8.mtx",       // invalid first line
+    -3, "mangled9.mtx",       // invalid matrix: symmetric and rectangular
+    -3, "mangled10.mtx",      // invalid matrix: truncated
+    -3, "mangled11.mtx",      // invalid matrix: entries mangled
+    -3, "mangled12.mtx",      // invalid matrix: entries mangled
+    -105, "mangled13.mtx",    // invalid matrix: indices out of range
+    -3, "mangled14.mtx",      // invalid matrix: duplicate entries
+    -3, "mangled_bool.mtx",   // invalid matrix: entry value out of range
+    -3, "mangled_int8.mtx",   // invalid matrix: entry value out of range
+    -3, "mangled_int16.mtx",  // invalid matrix: entry value out of range
+    -3, "mangled_int32.mtx",  // invalid matrix: entry value out of range
+    -3, "mangled_uint8.mtx",  // invalid matrix: entry value out of range
+    -3, "mangled_uint16.mtx", // invalid matrix: entry value out of range
+    -3, "mangled_uint32.mtx", // invalid matrix: entry value out of range
+    -3, "mangled_skew.mtx",   // invalid matrix: unsigned skew invalid
     0, "",
 } ;
 
@@ -350,11 +350,8 @@ void test_MMRead_failures (void)
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
         int status = LAGraph_MMRead (&A, f, msg) ;
-        TEST_CHECK (status == error || status == -error) ;
-        if (status == error || status == -error)
-        {
-            printf ("    got the error we expected: %d [%s]\n", status, msg) ;
-        }
+        printf ("error expected: %d %d [%s]\n", error, status, msg) ;
+        TEST_CHECK (status == error) ;
         OK (fclose (f)) ;
         TEST_CHECK (A == NULL) ;
     }
