@@ -1,5 +1,5 @@
 %%MatrixMarket matrix coordinate pattern general
-%%GraphBLAS GrB_BOOL
+%%GraphBLAS bool
 % Matrix from the cover of "Graph Algorithms in the Language of Linear
 % Algebra", Kepner and Gilbert.  Note that cover shows A'.  This is A,
 % as the pattern of matrix_fp32.mtx.  The matrix_fp32.mtx has explicit

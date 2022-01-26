@@ -1,5 +1,5 @@
 %%MatrixMarket matrix coordinate real symmetric
-%%GraphBLAS GrB_FP64
+%%GraphBLAS double
 9 9 12
 2 1 0.9
 3 1 0.69

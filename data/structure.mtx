@@ -1,8 +1,8 @@
 %%MatrixMarket matrix coordinate pattern general
-%%GraphBLAS GrB_INT32
+%%GraphBLAS int32_t
 % Matrix from the cover of "Graph Algorithms in the Language of Linear
 % Algebra", Kepner and Gilbert.  Note that cover shows A'.  This is A,
-% but only the pattern.  Also note the type is GrB_INT32, not GrB_BOOL.
+% but only the pattern.  Also note the type is int32_t, not bool.
 7 7 12
 4 1
 1 2

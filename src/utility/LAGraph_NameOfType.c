@@ -30,6 +30,8 @@ int LAGraph_NameOfType      // returns 0 if successful, < 0 if failure
     // determine the name of the type
     //--------------------------------------------------------------------------
 
+    // FIXME: ifdef LG_SUITESPARSE and use GxB_Type_name, etc.
+
     if      (type == GrB_BOOL  ) strcpy (name, "bool")     ;
     else if (type == GrB_INT8  ) strcpy (name, "int8_t")   ;
     else if (type == GrB_INT16 ) strcpy (name, "int16_t")  ;

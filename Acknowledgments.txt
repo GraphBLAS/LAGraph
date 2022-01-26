@@ -21,7 +21,7 @@ THIS WORK BUILDS UPON THE FOLLOWING PRIOR WORKS:
     and Authors. DM20-0442
 2.  SuiteSparse:GraphBLAS, 
     (http://faculty.cse.tamu.edu/davis/GraphBLAS.html) 
-    Copyright (c) 2017-2021 Timothy A. Davis (Author), AldenMath.com and 
+    Copyright (c) 2017-2022 Timothy A. Davis (Author), AldenMath.com and 
     Texas A&M University. (Portions of LAGraph are derived from 
     SuiteSparse/GraphBLAS/Demos).  Note that while SuiteSparse:GraphBLAS is
     itself under the Apache 2 license, any contributions derived from 

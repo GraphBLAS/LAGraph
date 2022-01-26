@@ -1,5 +1,5 @@
 %%MatrixMarket matrix coordinate pattern general
-%%GraphBLAS GrB_BOOL
+%%GraphBLAS bool
 % Adjacency matrix for sample graph 
 8 8 28
 1 2

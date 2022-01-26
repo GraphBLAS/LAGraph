@@ -1,5 +1,5 @@
 %%MatrixMarket matrix coordinate integer skew-symmetric
-%%GraphBLAS GrB_INT16
+%%GraphBLAS int16_t
 6 6 10
 4 1 -12
 5 1 30000

@@ -1,9 +1,12 @@
-As of Jan 19, 2022:
+As of Jan 26, 2022:
+
+    * LAGraph_MMRead: add "type" to %%GraphBLAS
 
     * entire user guide
         experimental -> src, how to do it.
         HTML vs PDF vs ... link into PDF ...
         write it in LaTeX
+        also update top-level README.txt
 
     * test, document, polish all src & experimental: algorithms, utilities,
         and tests.
@@ -42,6 +45,14 @@ As of Jan 19, 2022:
 
     * move LICENSE, etc to doc/ ?
 
+    * delete BENCHMARK_INSTRUCTIONS__README1st.txt for v1.0
+
+    * add names to Contributors.txt
+
+    * delete old/ folder
+
+    * clean up src/benchmark (old output files)
+
 --------------------------------------------------------------------------------
 
 FUTURE: can we exploit asynch algorithms? C += A*C for example?
@@ -54,16 +65,13 @@ FUTURE:
         GxB_select with GxB_RankUnaryOp, and GxB_extract with GrB_Vectors as
         inputs instead of (GrB_Index *) arrays.
 
-FUTURE:
-    * GxB iterators ... future (not needed urgently for LAGraph)
-
 FUTURE: add interfaces to external packages.
 
     GTgraph: (Madduri and Bader) for generating synthetic graphs
     CSparse or CXSparse (for depth-first search, scc, dmperm, amd,
         in the sequential case)
     graph partitioning: METIS, Mongoose, etc
-    SuiteSparse solvers (UMFPACK, CHOLMOD, KLU, ...)
+    SuiteSparse solvers (UMFPACK, CHOLMOD, KLU, SPQR, ...)
     others?
 
 FUTURE: interfaces to MATLAB, Python, Julia, etc.

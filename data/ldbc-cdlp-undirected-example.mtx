@@ -1,5 +1,5 @@
 %%MatrixMarket matrix coordinate integer symmetric
-%%GraphBLAS GrB_BOOL
+%%GraphBLAS bool
 % Note: duplicate entry (8,6) has been removed
 8 8 12
 2 1 1

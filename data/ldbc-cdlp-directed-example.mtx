@@ -1,5 +1,5 @@
 %%MatrixMarket matrix coordinate integer general
-%%GraphBLAS GrB_BOOL
+%%GraphBLAS bool
 8 8 18
 1 2 1
 1 3 1

@@ -1,5 +1,5 @@
 %%MatrixMarket matrix coordinate real skew-symmetric
-%%GraphBLAS GrB_FP32
+%%GraphBLAS float
 6 6 10
 4 1 -.12565
 5 1 inf
