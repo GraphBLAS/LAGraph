@@ -38,7 +38,7 @@ int LAGraph_Property_RowDegree  // 0 if successful, -1 if failure
     if (G->rowdegree != NULL)
     {
         // G->rowdegree already computed
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
@@ -65,5 +65,5 @@ int LAGraph_Property_RowDegree  // 0 if successful, -1 if failure
     G->rowdegree = rowdegree ;
 
     LAGraph_FREE_WORK ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }

@@ -24,7 +24,7 @@ int LAGraph_DeleteProperties    // returns 0 if successful, -1 if failure
     if (G == NULL)
     {
         // success: nothing to do
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
@@ -41,7 +41,5 @@ int LAGraph_DeleteProperties    // returns 0 if successful, -1 if failure
 
     G->A_structure_is_symmetric = LAGRAPH_UNKNOWN ;
     G->ndiag = LAGRAPH_UNKNOWN ;
-
-    // success
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }

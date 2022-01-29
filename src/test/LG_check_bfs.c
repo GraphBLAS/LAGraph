@@ -244,6 +244,6 @@ int LG_check_bfs
         LAGraph_Toc (&tt, tic, msg) ;
         printf ("LG_check_bfs check time: %g sec\n", tt) ;
     }
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 

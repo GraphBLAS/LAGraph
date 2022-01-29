@@ -83,7 +83,7 @@ static inline int LG_iheap_check
     }
 
     // Heap and Iheap are consistent
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 
 //------------------------------------------------------------------------------

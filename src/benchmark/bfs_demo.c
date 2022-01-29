@@ -81,8 +81,8 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
-    if (readproblem (&G, &SourceNodes,
-        false, false, true, NULL, false, argc, argv) != 0) ERROR ;
+    LAGraph_TRY (readproblem (&G, &SourceNodes,
+        false, false, true, NULL, false, argc, argv)) ;
 
     // compute G->rowdegree
     LAGraph_TRY (LAGraph_Property_RowDegree (G, msg)) ;
@@ -310,5 +310,5 @@ int main (int argc, char **argv)
 
     LAGraph_FREE_ALL ;
     LAGraph_TRY (LAGraph_Finalize (msg)) ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }

@@ -334,7 +334,7 @@ int LAGraph_Sort1    // sort array A of size n
     {
         // sequential quicksort
         LG_qsort_1a (A_0, n) ;
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
@@ -459,5 +459,5 @@ int LAGraph_Sort1    // sort array A of size n
     //--------------------------------------------------------------------------
 
     LAGraph_FREE_ALL ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }

@@ -144,6 +144,6 @@ int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
     //--------------------------------------------------------------------------
 
     LAGraph_FREE_WORK ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 

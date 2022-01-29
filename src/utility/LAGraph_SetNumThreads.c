@@ -35,6 +35,6 @@ int LAGraph_SetNumThreads       // returns 0 if successful, -1 if failure
     }
     #endif
 
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 

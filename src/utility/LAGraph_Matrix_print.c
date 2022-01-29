@@ -40,7 +40,7 @@ int LG_Matrix_print_ ## suffix                                              \
     ctype *X = NULL ;                                                       \
     GrB_Index *I = NULL, *J = NULL ;                                        \
     LG_ASSERT (A != NULL && f != NULL, GrB_NULL_POINTER) ;                  \
-    if (pr < 0) return (0) ;                                                \
+    if (pr < 0) return (GrB_SUCCESS) ;                                      \
     /* get basic properties */                                              \
     GrB_Index nrows, ncols, nvals ;                                         \
     GrB_TRY (GrB_Matrix_nrows (&nrows, A)) ;                                \
@@ -49,8 +49,7 @@ int LG_Matrix_print_ ## suffix                                              \
     /* print header line */                                                 \
     FPRINTF (f, "%s matrix: %" PRIu64 "-by-%" PRIu64 " entries: %" PRIu64   \
         "\n", LG_XSTR (gtype), nrows, ncols, nvals) ;                       \
-    /* quick return if pr is zero */                                        \
-    if (pr <= 1) return (0) ;                                               \
+    if (pr <= 1) return (GrB_SUCCESS) ;                                     \
     /* extract tuples */                                                    \
     I = LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;                        \
     J = LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;                        \
@@ -80,7 +79,7 @@ int LG_Matrix_print_ ## suffix                                              \
         }                                                                   \
     }                                                                       \
     LAGraph_FREE_WORK ;                                                     \
-    return (0) ;                                                            \
+    return (GrB_SUCCESS) ;                                                  \
 }
 
 LG_MATRIX_PRINT (BOOL  , bool    , GrB_BOOL  , "%d"  , "%d"    ) ;
@@ -95,7 +94,6 @@ LG_MATRIX_PRINT (UINT64, uint64_t, GrB_UINT64, "%" PRIu64, "%" PRIu64  ) ;
 LG_MATRIX_PRINT (FP32  , float   , GrB_FP32  , "%g"  , "%0.7g" ) ;
 LG_MATRIX_PRINT (FP64  , double  , GrB_FP64  , "%g"  , "%0.15g") ;
 #if 0
-// would need to pass in an iscomplex flag to print creal(x) and cimag(x)
 LG_MATRIX_PRINT (FC32  , GxB_FC32_t, GxB_FC32, ...) ;
 LG_MATRIX_PRINT (FC64  , GxB_FC64_t, GxB_FC64, ...) ;
 #endif
@@ -181,7 +179,7 @@ int LAGraph_Matrix_print_type
     else
     {
         LG_ASSERT_MSG (false, -1002, "user-defined types not supported") ;
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 }
 

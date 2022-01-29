@@ -228,6 +228,6 @@ int LG_check_cc
     LAGraph_Toc (&tt, tic, msg) ;
     printf ("LG_check_cc check time: %g sec\n", tt) ;
 
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 

@@ -132,6 +132,6 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
 
     (*centrality) = r ;
     LAGraph_FREE_WORK ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 

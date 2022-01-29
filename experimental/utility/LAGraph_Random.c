@@ -69,7 +69,7 @@ int LAGraph_Random_Init (char *msg)
     LG_rand_next_op = NULL ;
     GrB_TRY (GrB_UnaryOp_new (&LG_rand_next_op, LG_rand_next_f,
         GrB_UINT64, GrB_UINT64)) ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 
 //------------------------------------------------------------------------------
@@ -80,7 +80,7 @@ int LAGraph_Random_Finalize (char *msg)
 {
     LG_CLEAR_MSG ;
     LAGraph_FREE_WORK ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 
 //------------------------------------------------------------------------------
@@ -111,7 +111,7 @@ int LAGraph_Random_Seed     // construct a random seed vector
     // check inputs
     LG_CLEAR_MSG ;
     GrB_Vector T = NULL ;
-    if (Seed == NULL) return (-1) ;
+    LG_ASSERT (Seed != NULL, GrB_NULL_POINTER) ;
 
     // T = 1:n but only for entries present in the Seed vector.  This
     // requires a typecast from int64 to uint64.
@@ -143,7 +143,7 @@ int LAGraph_Random_Seed     // construct a random seed vector
     #endif
 
     LAGraph_FREE_WORK ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 
 //------------------------------------------------------------------------------
@@ -162,9 +162,9 @@ int LAGraph_Random_Next     // advance to next random vector
 {
     // check inputs
     LG_CLEAR_MSG ;
-    if (Seed == NULL) return (-1) ;
+    LG_ASSERT (Seed != NULL, GrB_NULL_POINTER) ;
     // Seed = next (Seed)
     GrB_TRY (GrB_Vector_apply (Seed, NULL, NULL, LG_rand_next_op, Seed, NULL)) ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 

@@ -40,7 +40,7 @@ int LG_Vector_print_ ## suffix                                              \
     GrB_Index *I = NULL ;                                                   \
     LG_ASSERT (v != NULL, GrB_NULL_POINTER) ;                               \
     LG_ASSERT (f != NULL, GrB_NULL_POINTER) ;                               \
-    if (pr < 0) return (0) ;                                                \
+    if (pr < 0) return (GrB_SUCCESS) ;                                      \
     /* get basic properties */                                              \
     GrB_Index n, nvals ;                                                    \
     GrB_TRY (GrB_Vector_size  (&n, v)) ;                                    \
@@ -48,8 +48,7 @@ int LG_Vector_print_ ## suffix                                              \
     /* print header line */                                                 \
     FPRINTF (f, "%s vector: n: %" PRIu64 " entries: %" PRIu64               \
         "\n", LG_XSTR (gtype), n, nvals) ;                                  \
-    /* quick return if pr is zero */                                        \
-    if (pr <= 1) return (0) ;                                               \
+    if (pr <= 1) return (GrB_SUCCESS) ;                                     \
     /* extract tuples */                                                    \
     I = LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;                        \
     X = LAGraph_Malloc (nvals, sizeof (ctype)) ;                            \
@@ -77,7 +76,7 @@ int LG_Vector_print_ ## suffix                                              \
         }                                                                   \
     }                                                                       \
     LAGraph_FREE_WORK ;                                                     \
-    return (0) ;                                                            \
+    return (GrB_SUCCESS) ;                                                  \
 }
 
 LG_VECTOR_PRINT (BOOL  , bool    , GrB_BOOL  , "%d"  , "%d"    ) ;
@@ -178,7 +177,7 @@ int LAGraph_Vector_print_type
     else
     {
         LG_ASSERT_MSG (false, -1002, "user-defined types not supported") ;
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 }
 

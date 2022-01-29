@@ -59,7 +59,7 @@ int LG_BreadthFirstSearch_vanilla
     if (!(compute_level || compute_parent))
     {
         // nothing to do
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
@@ -177,5 +177,5 @@ int LG_BreadthFirstSearch_vanilla
     if (compute_parent) (*parent) = l_parent ;
     if (compute_level ) (*level ) = l_level ;
     LAGraph_FREE_WORK ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }

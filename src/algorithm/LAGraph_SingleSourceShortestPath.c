@@ -290,6 +290,6 @@ int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
 
     (*path_length) = t ;
     LAGraph_FREE_WORK ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 

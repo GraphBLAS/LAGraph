@@ -38,13 +38,13 @@ int LAGraph_Property_ASymmetricStructure  // 0 if successful, -1 if failure
     {
         // assume A is symmetric for an undirected graph
         G->A_structure_is_symmetric = true ;
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
     if (G->A_structure_is_symmetric != LAGRAPH_UNKNOWN)
     {
         // symmetric property is already known
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
@@ -59,7 +59,7 @@ int LAGraph_Property_ASymmetricStructure  // 0 if successful, -1 if failure
     {
         // A is rectangular and thus cannot be symmetric
         G->A_structure_is_symmetric = false ;
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
@@ -90,5 +90,5 @@ int LAGraph_Property_ASymmetricStructure  // 0 if successful, -1 if failure
     //--------------------------------------------------------------------------
 
     LAGraph_FREE_WORK ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }

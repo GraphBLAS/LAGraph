@@ -88,7 +88,7 @@ static int tricount_prep        // return 0 if successful, < 0 on error
         GrB_TRY (GrB_Matrix_new (U, GrB_BOOL, n, n)) ;
         GrB_TRY (GrB_select (*U, NULL, NULL, GrB_TRIU, A, (int64_t) 1, NULL)) ;
     }
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 
 //------------------------------------------------------------------------------
@@ -310,5 +310,5 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
 
     LAGraph_FREE_ALL ;
     (*ntriangles) = (uint64_t) ntri ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }

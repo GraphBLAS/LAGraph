@@ -350,7 +350,7 @@ int LAGraph_Sort2    // sort array A of size 2-by-n, using 2 keys (A [0:1][])
     {
         // sequential quicksort
         LG_qsort_2 (A_0, A_1, n) ;
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
@@ -476,5 +476,5 @@ int LAGraph_Sort2    // sort array A of size 2-by-n, using 2 keys (A [0:1][])
     //--------------------------------------------------------------------------
 
     LAGraph_FREE_ALL ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }

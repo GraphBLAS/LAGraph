@@ -365,7 +365,7 @@ int LAGraph_Sort3    // sort array A of size 3-by-n, using 3 keys (A [0:2][])
     {
         // sequential quicksort
         LG_qsort_3 (A_0, A_1, A_2, n) ;
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
@@ -489,5 +489,5 @@ int LAGraph_Sort3    // sort array A of size 3-by-n, using 3 keys (A [0:2][])
     //--------------------------------------------------------------------------
 
     LAGraph_FREE_ALL ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }

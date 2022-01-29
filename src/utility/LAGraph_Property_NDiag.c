@@ -29,7 +29,7 @@ int LAGraph_Property_NDiag  // returns 0 if successful, -1 if failure
     // already computed
     if (G->ndiag != LAGRAPH_UNKNOWN)
     {
-        return 0;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------

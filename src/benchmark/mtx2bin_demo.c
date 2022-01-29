@@ -82,6 +82,6 @@ int main (int argc, char **argv)
     printf ("binary write time: %g sec\n", t_binwrite) ;
 
     LAGraph_FREE_ALL ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 

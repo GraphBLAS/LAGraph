@@ -73,7 +73,7 @@ typedef unsigned char LG_void ;
     {
         LG_ERROR_MSG ("Source node %ld must be in range 0 to n-1, "
             "where n = %ld is the number of nodes in the graph.", src, n) ;
-        return (-1) ;
+        return (GrB_INVALID_INDEX) ;
     }
 */
 

@@ -113,8 +113,8 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
-    if (readproblem (&G, NULL,
-        true, true, true, NULL, false, argc, argv) != 0) ERROR ;
+    LAGraph_TRY (readproblem (&G, NULL,
+        true, true, true, NULL, false, argc, argv)) ;
     LAGraph_TRY (LAGraph_DisplayGraph (G, 2, stdout, msg)) ;
 
     // determine the row degree property
@@ -250,6 +250,6 @@ int main (int argc, char **argv)
         nthreads_best, t_best, 1e-6 * nvals / t_best) ;
     LAGraph_FREE_ALL ;
     LAGraph_TRY (LAGraph_Finalize (msg)) ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 

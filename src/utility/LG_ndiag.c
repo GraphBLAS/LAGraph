@@ -78,6 +78,6 @@ int LG_ndiag                // returns 0 if successful, < 0 if failure
     #endif
 
     LAGraph_FREE_ALL ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 

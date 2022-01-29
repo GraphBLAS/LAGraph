@@ -98,14 +98,14 @@ int main (int argc, char **argv)
 
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
     fprintf (stderr, "\n%s:\n", matrix_name) ;
-    if (readproblem (&G,
+    LAGraph_TRY (readproblem (&G,
         NULL,   // no source nodes
         true,   // make the graph undirected, and symmetrize the matrix
         false,  // do not remove self-edges
         true,   // structural only, no values needed
         NULL,   // no type preference
         false,  // do not ensure all entries positive
-        argc, argv) != 0) ERROR ;
+        argc, argv)) ;
     GrB_Index n, nvals ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
@@ -316,5 +316,5 @@ int main (int argc, char **argv)
 
     LAGraph_FREE_ALL ;
     LAGraph_TRY (LAGraph_Finalize (msg)) ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }

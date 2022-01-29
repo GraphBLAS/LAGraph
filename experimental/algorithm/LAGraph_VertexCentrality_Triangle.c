@@ -308,6 +308,6 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
     //--------------------------------------------------------------------------
 
     LAGraph_FREE_WORK ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 

@@ -42,13 +42,12 @@ int LAGraph_Structure   // return 0 if successful, -1 if failure
 
     //--------------------------------------------------------------------------
     // C<s(A)> = true
-    // C{A} = true
     //--------------------------------------------------------------------------
 
     GrB_TRY (GrB_Matrix_new (C, GrB_BOOL, nrows, ncols)) ;
     GrB_TRY (GrB_assign (*C, A, NULL, (bool) true,
         GrB_ALL, nrows, GrB_ALL, nrows, GrB_DESC_S)) ;
 
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 

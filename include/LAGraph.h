@@ -179,7 +179,7 @@
         (*parent) = NULL ;
         LAGraph_TRY (LAGraph_BreadthFirstSearch (NULL, parent, G, src, msg)) ;
         // ...
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
 #endif

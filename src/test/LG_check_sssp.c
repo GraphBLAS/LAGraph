@@ -289,6 +289,6 @@ int LG_check_sssp
         LAGraph_Toc (&tt, tic, msg) ;
         printf ("LG_check_sssp check time: %g sec\n", tt) ;
     }
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 

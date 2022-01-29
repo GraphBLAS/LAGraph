@@ -129,6 +129,6 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
 
     LAGraph_FREE_ALL ;
     (*ntri) = ntriangles ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 

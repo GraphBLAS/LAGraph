@@ -157,5 +157,5 @@ int LAGraph_SortByDegree    // returns 0 if successful, -1 if failure
 
     LAGraph_FREE_WORK ;
     (*P_handle) = P ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }

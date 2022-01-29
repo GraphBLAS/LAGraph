@@ -69,5 +69,5 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
             : LAGRAPH_UNKNOWN ;
     }
 
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }

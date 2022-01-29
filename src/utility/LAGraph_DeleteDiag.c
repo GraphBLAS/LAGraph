@@ -25,7 +25,7 @@ int LAGraph_DeleteDiag      // returns 0 if successful, < 0 if failure
     if (G->ndiag == 0)
     {
         // nothing to do
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------

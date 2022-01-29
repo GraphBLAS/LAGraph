@@ -55,7 +55,7 @@ int LAGraph_SWrite_HeaderStart  // write the first part of the JSON header
 
     // write name of this collection and start the list of items
     FPRINT ((f, "    \"%s\":\n    [\n", name)) ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 
 //------------------------------------------------------------------------------
@@ -123,7 +123,7 @@ int LAGraph_SWrite_HeaderItem   // write a single item to the JSON header
     }
 
     FPRINT ((f, "\", \"bytes\": %" PRIu64 " },\n", blob_size)) ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 
 //------------------------------------------------------------------------------
@@ -145,7 +145,7 @@ int LAGraph_SWrite_HeaderEnd    // write the end of the JSON header
 
     // write a final zero byte to terminate the JSON string
     fputc (0, f) ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 
 //------------------------------------------------------------------------------
@@ -168,6 +168,6 @@ int LAGraph_SWrite_Item  // write the serialized blob of a matrix/vector/text
     // write the blob
     size_t blob_written = fwrite (blob, sizeof (uint8_t), blob_size, f) ;
     LG_CHECK (blob_written != blob_size, -1001, "file not written properly") ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 

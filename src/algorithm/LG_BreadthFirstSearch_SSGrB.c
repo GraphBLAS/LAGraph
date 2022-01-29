@@ -52,8 +52,7 @@ int LG_BreadthFirstSearch_SSGrB
     //--------------------------------------------------------------------------
 
 #if !LG_SUITESPARSE
-    // SuiteSparse is required
-    return (GrB_PANIC) ;
+    return (GrB_PANIC) ;            // SuiteSparse is required
 #else
 
     LG_CLEAR_MSG ;
@@ -72,7 +71,7 @@ int LG_BreadthFirstSearch_SSGrB
     if (!(compute_level || compute_parent))
     {
         // nothing to do
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
@@ -289,6 +288,6 @@ int LG_BreadthFirstSearch_SSGrB
     if (compute_parent) (*parent) = pi ;
     if (compute_level ) (*level ) = v ;
     LAGraph_FREE_WORK ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 #endif
 }

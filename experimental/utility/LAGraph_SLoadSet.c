@@ -168,6 +168,6 @@ int LAGraph_SLoadSet            // load a set of matrices from a *.lagraph file
     (*Set_handle) = Set ;
     (*collection_handle) = collection ;
     (*nmatrices_handle) = nmatrices ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 

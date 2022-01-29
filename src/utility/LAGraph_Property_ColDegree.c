@@ -40,7 +40,7 @@ int LAGraph_Property_ColDegree  // 0 if successful, -1 if failure
     if (G->coldegree != NULL || G->kind == LAGRAPH_ADJACENCY_UNDIRECTED)
     {
         // G->coldegree already computed, or not needed
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
@@ -79,5 +79,5 @@ int LAGraph_Property_ColDegree  // 0 if successful, -1 if failure
     G->coldegree = coldegree ;
 
     LAGraph_FREE_WORK ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }

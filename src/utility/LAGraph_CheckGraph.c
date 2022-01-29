@@ -101,5 +101,5 @@ int LAGraph_CheckGraph      // returns 0 if successful, -1 if failure
             -1109, "coldegree has wrong type; must be GrB_INT64") ;
     }
 
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }

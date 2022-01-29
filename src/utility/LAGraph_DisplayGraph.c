@@ -54,7 +54,11 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
             kindname, (double)n, (double)nvals, typename) ;
     }
 
-    if (pr <= 0) return (0) ;
+    if (pr <= 0)
+    {
+        // nothing more to do
+        return (GrB_SUCCESS) ;
+    }
 
     // print the scalar cached properties
     FPRINTF (f, "  structural symmetry: ") ;
@@ -97,5 +101,5 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
         LG_TRY (LAGraph_Vector_print (coldegree, pr, stdout, msg)) ;
     }
 
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }

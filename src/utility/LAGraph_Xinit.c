@@ -261,6 +261,6 @@ int LAGraph_Xinit           // returns 0 if successful, < 0 if failure
     GrB_TRY (GrB_Semiring_new (&LAGraph_structural_fp64,
         GrB_MIN_MONOID_FP64   , GrB_ONEB_FP64  )) ;
 
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 

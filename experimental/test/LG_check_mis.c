@@ -120,6 +120,6 @@ int LG_check_mis        // check if iset is a valid MIS of A
         (double) isize, (double) n) ;
     if (ignored > 0) printf (" (%g nodes ignored)\n", (double) ignored) ;
     printf ("\n") ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 

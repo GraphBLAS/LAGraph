@@ -26,6 +26,9 @@ As of Jan 26, 2022:
         GrB_NULL_POINTER
         ...
 
+        common error conditions not in GrB_Info:
+        file I/O error (file not found, fread failure, etc)
+
     * many TODOs and FIXMEs throughout
 
     * SSSP: allow it to work on any matrix type (currently just INT32)

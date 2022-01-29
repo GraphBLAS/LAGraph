@@ -73,6 +73,6 @@ int LAGraph_Finalize (char *msg)    // returns 0 if successful, -1 if failure
     //--------------------------------------------------------------------------
 
     GrB_TRY (GrB_finalize ( )) ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 

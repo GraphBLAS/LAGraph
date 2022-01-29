@@ -38,6 +38,6 @@ int LAGraph_GetNumThreads   // returns 0 if successful, or -1 if failure
         (*nthreads) = 1 ;
     }
     #endif
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 

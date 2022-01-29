@@ -99,5 +99,5 @@ int LAGraph_SampleDegree        // returns 0 if successful, -1 if failure
     //--------------------------------------------------------------------------
 
     LAGraph_FREE_ALL ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }

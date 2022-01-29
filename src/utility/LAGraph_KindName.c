@@ -37,6 +37,6 @@ int LAGraph_KindName        // returns 0 if successful, -1 if failure
         default : LG_ASSERT_MSG (false, GrB_INVALID_VALUE, "invalid kind") ;
     }
 
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 

@@ -58,7 +58,7 @@ GrB_Info LAGraph_Vector_IsEqual_op    // return GrB_SUCCESS if successful
     {
         // two NULL vectors are identical, as are two aliased matrices
         (*result) = (A == B) ;
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
@@ -72,7 +72,7 @@ GrB_Info LAGraph_Vector_IsEqual_op    // return GrB_SUCCESS if successful
     {
         // # of rows differ
         (*result) = false ;
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
@@ -86,7 +86,7 @@ GrB_Info LAGraph_Vector_IsEqual_op    // return GrB_SUCCESS if successful
     {
         // # of entries differ
         (*result) = false ;
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
@@ -107,7 +107,7 @@ GrB_Info LAGraph_Vector_IsEqual_op    // return GrB_SUCCESS if successful
         // pattern of A and B are different
         LAGraph_FREE_WORK ;
         (*result) = false ;
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
@@ -121,8 +121,8 @@ GrB_Info LAGraph_Vector_IsEqual_op    // return GrB_SUCCESS if successful
     //--------------------------------------------------------------------------
 
     // return result
-    LAGraph_FREE_WORK;
-    return 0;
+    LAGraph_FREE_WORK ;
+    return (GrB_SUCCESS) ;
 }
 
 
@@ -157,7 +157,7 @@ int LAGraph_Vector_IsEqual         // returns 0 if successful, < 0 if failure
     {
         // two NULL vectors are identical, as are two aliased matrices
         (*result) = (A == B) ;
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
@@ -186,7 +186,7 @@ int LAGraph_Vector_IsEqual         // returns 0 if successful, < 0 if failure
     {
         // # of rows differ
         (*result) = false ;
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
@@ -200,7 +200,7 @@ int LAGraph_Vector_IsEqual         // returns 0 if successful, < 0 if failure
     {
         // # of entries differ
         (*result) = false ;
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
@@ -249,7 +249,7 @@ int LAGraph_Vector_IsEqual         // returns 0 if successful, < 0 if failure
         // pattern of A and B are different
         LAGraph_FREE_WORK ;
         (*result) = false ;
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
@@ -263,7 +263,7 @@ int LAGraph_Vector_IsEqual         // returns 0 if successful, < 0 if failure
     //--------------------------------------------------------------------------
 
     // return result
-    LAGraph_FREE_WORK;
-    return 0;
+    LAGraph_FREE_WORK ;
+    return (GrB_SUCCESS) ;
 }
 

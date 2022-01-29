@@ -22,7 +22,7 @@
 {                                                                             \
     printf ("error: %s line: %d, status: %d\n", __FILE__, __LINE__, status) ; \
     LAGraph_FREE_ALL ;                                                        \
-    return (-1) ;                                                             \
+    return (status) ;                                                         \
 }
 
 #undef  LAGraph_CATCH
@@ -31,7 +31,6 @@
 #undef  GrB_CATCH
 #define GrB_CATCH(info) CATCH (info)
 
-#define ERROR CATCH(-1)
 #define LAGRAPH_BIN_HEADER 512
 #define LEN LAGRAPH_BIN_HEADER
 
@@ -59,7 +58,7 @@
 {                                       \
     if (fwrite (p, s, n, f) != n)       \
     {                                   \
-        ERROR ;                         \
+        CATCH (-1001) ; /* file I/O error */ \
     }                                   \
 }
 
@@ -80,13 +79,13 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
 
 #if !LG_SUITESPARSE
     printf ("SuiteSparse:GraphBLAS required to write binary *.grb files\n") ;
-    return (-1) ;
+    return (GrB_PANIC) ;        // SuiteSparse required
 #else
 
     GrB_Index *Ap = NULL, *Ai = NULL, *Ah = NULL ;
     void *Ax = NULL ;
     int8_t *Ab = NULL ;
-    if (A == NULL || *A == NULL || f == NULL) ERROR ;
+    if (A == NULL || *A == NULL || f == NULL) CATCH (GrB_NULL_POINTER) ;
 
     GrB_TRY (GrB_wait (*A, GrB_MATERIALIZE)) ;
 
@@ -203,8 +202,7 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
     }
     else
     {
-        // unknown format
-        ERROR ;
+        CATCH (GrB_PANIC) ;    // this "cannot" happen
     }
 
     //--------------------------------------------------------------------------
@@ -273,7 +271,7 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
     else
     {
         // unsupported type (GxB_FC32 and GxB_FC64 not yet supported)
-        ERROR ;
+        CATCH (GrB_NOT_IMPLEMENTED) ;
     }
     typename [72] = '\0' ;
 
@@ -430,11 +428,11 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
     }
     else
     {
-        ERROR ;
+        CATCH (GrB_PANIC) ;    // this "cannot" happen
     }
 
     GrB_TRY (GxB_set (*A, GxB_HYPER_SWITCH, hyper)) ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 #endif
 }
 
@@ -446,7 +444,7 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
 {                                       \
     if (fread (p, s, n, f) != n)        \
     {                                   \
-        ERROR ;                         \
+        CATCH (-1001) ; /* file I/O error */ \
     }                                   \
 }
 
@@ -463,13 +461,13 @@ static inline int binread   // returns 0 if successful, -1 if failure
 
 #if !LG_SUITESPARSE
     printf ("SuiteSparse:GraphBLAS required to read binary *.grb files\n") ;
-    return (-1) ;
+    return (GrB_PANIC) ;        // SuiteSparse required
 #else
 
     GrB_Index *Ap = NULL, *Ai = NULL, *Ah = NULL ;
     int8_t *Ab = NULL ;
     void *Ax = NULL ;
-    if (A == NULL || f == NULL) ERROR ;
+    if (A == NULL || f == NULL) CATCH (GrB_NULL_POINTER) ;
     (*A) = NULL ;
 
     //--------------------------------------------------------------------------
@@ -540,7 +538,7 @@ static inline int binread   // returns 0 if successful, -1 if failure
         case 11: type = GxB_FC32        ; break ;
         case 12: type = GxB_FC64        ; break ;
         #endif
-        default: ERROR ;    // unknown or unsupported type
+        default: CATCH (GrB_NOT_IMPLEMENTED) ;    // unknown or unsupported type
     }
 
     //--------------------------------------------------------------------------
@@ -593,12 +591,12 @@ static inline int binread   // returns 0 if successful, -1 if failure
     }
     else
     {
-        ERROR ;     // unknown matrix format
+        CATCH (GrB_PANIC) ;    // this "cannot" happen
     }
     Ax = LAGraph_Malloc (iso ? 1 : Ax_len, typesize) ;
     Ax_size = (iso ? 1 : Ax_len) * typesize ;
     ok = ok && (Ax != NULL) ;
-    if (!ok) ERROR ;        // out of memory
+    if (!ok) CATCH (GrB_OUT_OF_MEMORY) ;        // out of memory
 
     //--------------------------------------------------------------------------
     // read the array content
@@ -684,11 +682,11 @@ static inline int binread   // returns 0 if successful, -1 if failure
     }
     else
     {
-        ERROR ;     // unknown format
+        CATCH (GrB_PANIC) ;    // this "cannot" happen
     }
 
     GrB_TRY (GxB_set (*A, GxB_HYPER_SWITCH, hyper)) ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 #endif
 }
 
@@ -742,7 +740,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
     GrB_Matrix A = NULL, A2 = NULL, M = NULL ;
     GrB_Type atype = NULL ;
     FILE *f = NULL ;
-    if (G == NULL) ERROR ;
+    if (G == NULL) CATCH (GrB_NULL_POINTER) ;
     (*G) = NULL ;
     if (src_nodes != NULL) (*src_nodes) = NULL ;
     GrB_Type src_type = NULL;
@@ -789,7 +787,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
                 printf ("Binary file not found: [%s]\n", filename) ;
                 exit (1) ;
             }
-            if (binread (&A, f) < 0) ERROR ;
+            if (binread (&A, f) < 0) CATCH (-1001) ;    // file I/O error
             fclose (f) ;
             f = NULL ;
         }
@@ -845,7 +843,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
     GrB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
     GrB_Index n = nrows ;
-    if (nrows != ncols) ERROR ;     // A must be square
+    if (nrows != ncols) CATCH (GrB_DIMENSION_MISMATCH) ;    // A must be square
 
     //--------------------------------------------------------------------------
     // typecast, if requested
@@ -881,7 +879,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
         else if (pref == GxB_FC32  ) op = GxB_IDENTITY_FC32 ;
         else if (pref == GxB_FC64  ) op = GxB_IDENTITY_FC64 ;
         #endif
-        else ERROR ;    // unsupported type
+        else CATCH (GrB_NOT_IMPLEMENTED) ;    // unsupported type
 
         GrB_TRY (GrB_apply (A2, NULL, NULL, op, A, NULL)) ;
     }
@@ -1004,7 +1002,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
                 else if (type == GxB_FC32  ) op = GxB_PLUS_FC32 ;
                 else if (type == GxB_FC64  ) op = GxB_PLUS_FC64 ;
                 #endif
-                else ERROR ;    // unknown type
+                else CATCH (GrB_NOT_IMPLEMENTED) ;    // unknown type
                 GrB_TRY (GrB_eWiseAdd ((*G)->A, NULL, NULL, op,
                                        (*G)->A, (*G)->AT, NULL)) ;
                 GrB_TRY (GrB_Matrix_free (&((*G)->AT))) ;
@@ -1049,7 +1047,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
 
     LAGraph_FREE_WORK ;
     // LAGraph_TRY (LAGraph_DisplayGraph (*G, 2, stdout, msg)) ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 
 //------------------------------------------------------------------------------
@@ -1083,7 +1081,7 @@ static inline int demo_init (bool burble)
     printf ("### Vanilla GraphBLAS ... do not publish these results! ###\n") ;
     printf ("###########################################################\n") ;
     #endif
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 
 #undef  LAGraph_FREE_ALL

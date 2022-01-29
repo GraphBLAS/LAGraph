@@ -47,7 +47,7 @@ int LAGraph_IsEqual         // returns 0 if successful, < 0 if failure
     {
         // two NULL matrices are identical, as are two aliased matrices
         (*result) = (A == B) ;
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
@@ -76,7 +76,7 @@ int LAGraph_IsEqual         // returns 0 if successful, < 0 if failure
     {
         // # of rows differ
         (*result) = false ;
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
     GrB_TRY (GrB_Matrix_ncols (&ncols1, A)) ;
@@ -85,7 +85,7 @@ int LAGraph_IsEqual         // returns 0 if successful, < 0 if failure
     {
         // # of cols differ
         (*result) = false ;
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
@@ -99,7 +99,7 @@ int LAGraph_IsEqual         // returns 0 if successful, < 0 if failure
     {
         // # of entries differ
         (*result) = false ;
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
@@ -150,7 +150,7 @@ int LAGraph_IsEqual         // returns 0 if successful, < 0 if failure
         // structure of A and B are different
         LAGraph_FREE_WORK ;
         (*result) = false ;
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
@@ -164,6 +164,6 @@ int LAGraph_IsEqual         // returns 0 if successful, < 0 if failure
     //--------------------------------------------------------------------------
 
     LAGraph_FREE_WORK ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 

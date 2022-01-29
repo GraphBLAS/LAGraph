@@ -94,7 +94,7 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
     if (nrows == 0 || ncols == 0)
     {
         // nothing to do: return A as the requested empty matrix
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
@@ -427,6 +427,6 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
     //--------------------------------------------------------------------------
 
     LAGraph_FREE_WORK ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 

@@ -454,7 +454,7 @@ int LAGraph_MMWrite
     {
         // quick return if nothing more to do
         LAGraph_FREE_ALL ;
-        return (0) ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
@@ -549,6 +549,6 @@ int LAGraph_MMWrite
     //--------------------------------------------------------------------------
 
     LAGraph_FREE_ALL ;
-    return (0) ;
+    return (GrB_SUCCESS) ;
 }
 
