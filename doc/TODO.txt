@@ -47,8 +47,6 @@ As of Jan 30, 2022:
 
     * SSSP: allow it to work on any matrix type (currently just INT32)
 
-    * Triangle count: use an enum for selecting the method, and for presort
-
     * check function names and API (LAGraph_IsEqual for GrB_Matrix, and
         LAGraph_Vector_IsEqual for GrB_Vectors for example,
         but LAGraph_Matrix_print and LAGraph_Vector_print)

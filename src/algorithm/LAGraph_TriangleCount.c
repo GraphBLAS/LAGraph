@@ -16,7 +16,7 @@
 #include "LG_alg_internal.h"
 
 //****************************************************************************
-// Pick a default method (say 3 or 5, with presort = 2 (auto)).
+// Pick the default method with auto presort
 // Compute G->ndiag, and G->rowdegree if needed.  Determine if G->A is
 // symmetric, if not known.
 int LAGraph_TriangleCount
@@ -31,8 +31,9 @@ int LAGraph_TriangleCount
     LG_TRY ( LAGraph_Property_RowDegree(G, msg) );
     LG_TRY ( LAGraph_Property_NDiag(G, msg) );
 
-    int method = 5;
-    int presort = 2;
+    // default method and auto selection of sort
+    int method  = LAGraph_TriangleCount_Default ;
+    int presort = LAGraph_TriangleCount_AutoSort ;
     return LAGraph_TriangleCount_Methods (ntriangles, G, method, &presort, msg);
-
 }
+

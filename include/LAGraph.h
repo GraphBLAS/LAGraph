@@ -34,7 +34,7 @@
 #define LAGRAPH_VERSION_MAJOR 0
 #define LAGRAPH_VERSION_MINOR 9
 #define LAGRAPH_VERSION_UPDATE 9
-#define LAGRAPH_DATE "Dec 7, 2021"
+#define LAGRAPH_DATE "Jan 30, 2022"
 
 //==============================================================================
 // include files
@@ -1199,15 +1199,15 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
  * @param[out]    ntriangles On successful return, contains the number of tris.
  * @param[in]     G          The graph, symmetric, no self loops, and for some methods
  *                           (3-6), must have the row degree property calculated
- * @param[in]     method     specifies which algorithm to use (todo: use enum)
- *                             0: DISABLED
+ * @param[in]     method     specifies which algorithm to use
+ *                             0:  use the default method
  *                             1:  Burkhardt:  ntri = sum (sum ((A^2) .* A)) / 6
  *                             2:  Cohen:      ntri = sum (sum ((L * U) .* A)) / 2
  *                             3:  Sandia:     ntri = sum (sum ((L * L) .* L))
  *                             4:  Sandia2:    ntri = sum (sum ((U * U) .* U))
  *                             5:  SandiaDot:  ntri = sum (sum ((L * U') .* L)).
  *                             6:  SandiaDot2: ntri = sum (sum ((U * L') .* U)).
- * @param[in,out] presort    controls the presort of the graph (TODO: enum). If set
+ * @param[in,out] presort    controls the presort of the graph. If set
  *                           to 2 on input, presort will be set to sort type used
  *                           on output:
  *                             0: no sort
@@ -1231,13 +1231,38 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
  * @retval      -105         graph is not "known" to be symmetric
  * @retval      -106         G->rowdegree was not precalculated (for modes 3-6)
  */
+
+typedef enum
+{
+    LAGraph_TriangleCount_Default = 0,      // use default method
+    LAGraph_TriangleCount_Burkhardt = 1,    // sum (sum ((A^2) .* A)) / 6
+    LAGraph_TriangleCount_Cohen = 2,        // sum (sum ((L * U) .* A)) / 2
+    LAGraph_TriangleCount_Sandia = 3,       // sum (sum ((L * L) .* L))
+    LAGraph_TriangleCount_Sandia2 = 4,      // sum (sum ((U * U) .* U))
+    LAGraph_TriangleCount_SandiaDot = 5,    // sum (sum ((L * U') .* L))
+    LAGraph_TriangleCount_SandiaDot2 = 6,   // sum (sum ((U * L') .* U))
+}
+LAGraph_TriangleCount_Method ;
+
+typedef enum
+{
+    LAGraph_TriangleCount_NoSort = 0,       // no sort
+    LAGraph_TriangleCount_Ascending = 1,    // sort by degree, ascending order
+    LAGraph_TriangleCount_Descending = -1,  // sort by degree, descending order
+    LAGraph_TriangleCount_AutoSort = 2,     // auto selection: no sort if rule
+    // is not triggered.  Otherwise: sort in ascending order for methods 3 and
+    // 5, descending ordering for methods 4 and 6.  On output, presort is
+    // modified to reflect the sorting method used (0, -1, or 1).  If presort
+    // is NULL on input, no sort is performed.
+} LAGraph_TriangleCount_Presort ;
+
 LAGRAPH_PUBLIC
 int LAGraph_TriangleCount_Methods
 (
     uint64_t       *ntriangles,
     LAGraph_Graph   G,
-    int             method,
-    int            *presort,
+    LAGraph_TriangleCount_Method    method,
+    LAGraph_TriangleCount_Presort *presort,
     char           *msg
 ) ;
 

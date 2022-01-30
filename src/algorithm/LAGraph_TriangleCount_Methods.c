@@ -14,9 +14,9 @@
 // Contributed by Tim Davis, Texas A&M.
 
 // Advanced API: compute G->ndiag, G->A_structure_is_symmetric, and
-// G->rowdegree (if needed) befor calling.
+// G->rowdegree (if needed) before calling.
 
-// Given a symmetric graph A with no-self edges, LAGraph_TriangleCount_methods
+// Given a symmetric graph A with no-self edges, LAGraph_TriangleCount_Methods
 // counts the number of triangles in the graph.  A triangle is a clique of size
 // three, that is, 3 nodes that are all pairwise connected.
 
@@ -24,7 +24,7 @@
 // lower and strictly upper triangular parts of the symmetrix matrix A,
 // respectively.  Each method computes the same result, ntri:
 
-//  0:  minitri:    ntri = nnz (A*E == 2) / 3 ; this method is disabled.
+//  0:  default:    use the default method (currently methood 5)
 //  1:  Burkhardt:  ntri = sum (sum ((A^2) .* A)) / 6
 //  2:  Cohen:      ntri = sum (sum ((L * U) .* A)) / 2
 //  3:  Sandia:     ntri = sum (sum ((L * L) .* L))
@@ -34,18 +34,13 @@
 
 // A is a square symmetric matrix, of any type.  Its values are ignored.
 // Results are undefined for methods 1 and 2 if self-edges exist in A.  Results
-// are undefined for all methods if A is unsymmetric.  Method 0 (minitri) is
-// not yet available, since it requires G to include both an adjacency matrix
-// and an incidence matrix (in any case, minitri is the slowest method and
-// is included only for reference).
+// are undefined for all methods if A is unsymmetric.
 
-// The Sandia* methods all tend to be faster than the Burkhard or Cohen
+// The Sandia* methods all tend to be faster than the Burkhardt or Cohen
 // methods.  For the largest graphs, SandiaDot tends to be fastest, except for
 // the GAP-urand matrix, where the saxpy-based Sandia method (L*L.*L) is
 // fastest.  For many small graphs, the saxpy-based Sandia and Sandia2 methods
-// are often faster that the dot-product-base methods.
-
-// TODO use an enum for the above methods.
+// are often faster that the dot-product-based methods.
 
 // Reference (for the "Sandia*" methods): Wolf, Deveci, Berry, Hammond,
 // Rajamanickam, 'Fast linear algebra- based triangle counting with
@@ -110,17 +105,8 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
     uint64_t *ntriangles,   // # of triangles
     // input:
     LAGraph_Graph G,
-    int method,             // selects the method to use (TODO: enum)
-    // input/output:
-    int *presort,           // controls the presort of the graph (TODO: enum)
-        //  0: no sort
-        //  1: sort by degree, ascending order
-        // -1: sort by degree, descending order
-        //  2: auto selection: no sort if rule is not triggered.  Otherwise:
-        //  sort in ascending order for methods 3 and 5, descending ordering
-        //  for methods 4 and 6.  On output, presort is modified to reflect the
-        //  sorting method used (0, -1, or 1).  If presort is NULL on input, no
-        //  sort is performed.
+    LAGraph_TriangleCount_Method    method,     // method to use
+    LAGraph_TriangleCount_Presort *presort,     // presort of the graph
     char *msg
 )
 {
@@ -132,21 +118,42 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
     LG_CLEAR_MSG ;
     GrB_Matrix C = NULL, L = NULL, U = NULL, T = NULL ;
     int64_t *P = NULL ;
-    LG_ASSERT_MSG ((method >= 1) && (method <= 6), GrB_INVALID_VALUE,
-        "method is invalid") ;
+    LG_ASSERT_MSG (
+    method == LAGraph_TriangleCount_Default ||   // 0: use default method
+    method == LAGraph_TriangleCount_Burkhardt || // 1: sum (sum ((A^2) .* A))/6
+    method == LAGraph_TriangleCount_Cohen ||     // 2: sum (sum ((L * U) .*A))/2
+    method == LAGraph_TriangleCount_Sandia ||    // 3: sum (sum ((L * L) .* L))
+    method == LAGraph_TriangleCount_Sandia2 ||   // 4: sum (sum ((U * U) .* U))
+    method == LAGraph_TriangleCount_SandiaDot || // 5: sum (sum ((L * U') .* L))
+    method == LAGraph_TriangleCount_SandiaDot2,  // 6: sum (sum ((U * L') .* U))
+        GrB_INVALID_VALUE, "method is invalid") ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     LG_ASSERT (ntriangles != NULL, GrB_NULL_POINTER) ;
     LG_ASSERT (G->ndiag == 0, -104) ;   // FIXME:RETVAL
+
+    if (method == LAGraph_TriangleCount_Default)
+    {
+        // 0: use default method (5): SandiaDot: sum (sum ((L * U') .* L))
+        method = LAGraph_TriangleCount_SandiaDot ;
+    }
 
     LG_ASSERT_MSG ((G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
         G->A_structure_is_symmetric == LAGRAPH_TRUE)),
         -1001, "G->A must be known to be symmetric") ;
 
+    // the Sandia* methods can benefit from the presort
+    bool method_can_use_presort =
+    method == LAGraph_TriangleCount_Sandia ||    // 3: sum (sum ((L * L) .* L))
+    method == LAGraph_TriangleCount_Sandia2 ||   // 4: sum (sum ((U * U) .* U))
+    method == LAGraph_TriangleCount_SandiaDot || // 5: sum (sum ((L * U') .* L))
+    method == LAGraph_TriangleCount_SandiaDot2 ; // 6: sum (sum ((U * L') .* U))
+
     GrB_Matrix A = G->A ;
     GrB_Vector Degree = G->rowdegree ;
-    bool auto_sort = (presort != NULL && (*presort) == 2) ;
-    if (auto_sort && method >= 3 && method <= 6)
+    bool auto_sort = (presort != NULL)
+        && ((*presort) == LAGraph_TriangleCount_AutoSort) ;
+    if (auto_sort && method_can_use_presort)
     {
         LG_ASSERT_MSG (Degree != NULL, -106, "G->rowdegree must be defined") ;  // FIXME:RETVAL
     }
@@ -168,9 +175,9 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
     if (auto_sort)
     {
         // auto selection of sorting method
-        (*presort) = 0 ;       // default is not to sort
+        (*presort) = LAGraph_TriangleCount_NoSort ; // default is not to sort
 
-        if (method >= 3 && method <= 6)
+        if (method_can_use_presort)
         {
             // This rule is very similar to Scott Beamer's rule in the GAP TC
             // benchmark, except that it is extended to handle the ascending
@@ -201,10 +208,23 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
                 {
                     switch (method)
                     {
-                        case 3:  (*presort) =  1 ; break ;  // sort ascending
-                        case 4:  (*presort) = -1 ; break ;  // sort descending
-                        case 5:  (*presort) =  1 ; break ;  // sort ascending
-                        default: (*presort) = -1 ; break ;  // 6: sort desc.
+                        case LAGraph_TriangleCount_Sandia:
+                            // 3:sum (sum ((L * L) .* L))
+                            (*presort) = LAGraph_TriangleCount_Ascending  ;
+                            break ;
+                        case LAGraph_TriangleCount_Sandia2:
+                            // 4: sum (sum ((U * U) .* U))
+                            (*presort) = LAGraph_TriangleCount_Descending ;
+                            break ;
+                        default:
+                        case LAGraph_TriangleCount_SandiaDot:
+                            // 5: sum (sum ((L * U') .* L))
+                            (*presort) = LAGraph_TriangleCount_Ascending  ;
+                            break ;
+                        case LAGraph_TriangleCount_SandiaDot2:
+                            // 6: sum (sum ((U * L') .* U))
+                            (*presort) = LAGraph_TriangleCount_Descending ;
+                            break ;
                     }
                 }
             }
@@ -214,10 +234,12 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
     //--------------------------------------------------------------------------
     // sort the input matrix, if requested
     //--------------------------------------------------------------------------
-    if (presort != NULL && (*presort) != 0)
+
+    if (presort != NULL && (*presort) != LAGraph_TriangleCount_NoSort)
     {
         // P = permutation that sorts the rows by their degree
-        LG_TRY (LAGraph_SortByDegree (&P, G, true, (*presort) > 0, msg)) ;
+        LG_TRY (LAGraph_SortByDegree (&P, G, true,
+            (*presort) == LAGraph_TriangleCount_Ascending, msg)) ;
 
         // T = A (P,P) and typecast to boolean
         GrB_TRY (GrB_Matrix_new (&T, GrB_BOOL, n, n)) ;
@@ -232,36 +254,20 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
     //--------------------------------------------------------------------------
     // count triangles
     //--------------------------------------------------------------------------
+
     int64_t ntri ;
 
     switch (method)
     {
-        #if 0
-        // case 0:  // minitri:    ntri = nnz (A*E == 2) / 3
 
-            // This method requires the incidence matrix E.  It is very slow
-            // compared to the other methods.  The LAGraph_Graph does not yet
-            // include an incidence matrix, so this method is here only for
-            // reference and possible future use.
-            GrB_TRY (GrB_Matrix_ncols (&ne, E)) ;
-            GrB_TRY (GrB_free (&C)) ;
-            GrB_TRY (GrB_Matrix_new (&C, GrB_INT64, n, ne)) ;
-            GrB_TRY (GrB_mxm (C, NULL, NULL, semiring, A, E, NULL)) ;
-            GrB_TRY (GrB_Matrix_new (&S, GrB_BOOL, n, ne)) ;
-            GrB_TRY (GrB_apply (S, NULL, NULL, LAGraph_ISTWO_INT64, C, NULL)) ;
-            GrB_TRY (GrB_reduce (&ntri, NULL, monoid, S, NULL)) ;
-            ntri /= 3 ;
-            break ;
-        #endif
-
-        case 1:  // Burkhardt:  ntri = sum (sum ((A^2) .* A)) / 6
+        case LAGraph_TriangleCount_Burkhardt:  // 1: sum (sum ((A^2) .* A)) / 6
 
             GrB_TRY (GrB_mxm (C, A, NULL, semiring, A, A, GrB_DESC_S)) ;
             GrB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             ntri /= 6 ;
             break ;
 
-        case 2:  // Cohen:      ntri = sum (sum ((L * U) .* A)) / 2
+        case LAGraph_TriangleCount_Cohen: // 2: sum (sum ((L * U) .* A)) / 2
 
             LG_TRY (tricount_prep (&L, &U, A, msg)) ;
             GrB_TRY (GrB_mxm (C, A, NULL, semiring, L, U, GrB_DESC_S)) ;
@@ -269,7 +275,7 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
             ntri /= 2 ;
             break ;
 
-        case 3:  // Sandia:     ntri = sum (sum ((L * L) .* L))
+        case LAGraph_TriangleCount_Sandia: // 3: sum (sum ((L * L) .* L))
 
             // using the masked saxpy3 method
             LG_TRY (tricount_prep (&L, NULL, A, msg)) ;
@@ -277,7 +283,7 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
             GrB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             break ;
 
-        case 4:  // Sandia2:    ntri = sum (sum ((U * U) .* U))
+        case LAGraph_TriangleCount_Sandia2: // 4: sum (sum ((U * U) .* U))
 
             // using the masked saxpy3 method
             LG_TRY (tricount_prep (NULL, &U, A, msg)) ;
@@ -285,7 +291,8 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
             GrB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             break ;
 
-        case 5:  // SandiaDot:  ntri = sum (sum ((L * U') .* L))
+        default:
+        case LAGraph_TriangleCount_SandiaDot: // 5: sum (sum ((L * U') .* L))
 
             // This tends to be the fastest method for most large matrices, but
             // the SandiaDot2 method is also very fast.
@@ -296,7 +303,7 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
             GrB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             break ;
 
-        default: // case 6:  // SandiaDot2: ntri = sum (sum ((U * L') .* U))
+        case LAGraph_TriangleCount_SandiaDot2: // 6: sum (sum ((U * L') .* U))
 
             // using the masked dot product
             LG_TRY (tricount_prep (&L, &U, A, msg)) ;

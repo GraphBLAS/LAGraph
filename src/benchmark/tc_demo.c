@@ -42,19 +42,19 @@ char *method_name (int method, int sorting)
     char *s ;
     switch (method)
     {
-        case 0:  s = "minitri:    nnz (A*E == 2) / 3  " ; break ;
-        case 1:  s = "Burkhardt:  sum ((A^2) .* A) / 6" ; break ;
-        case 2:  s = "Cohen:      sum ((L*U) .* A) / 2" ; break ;
-        case 3:  s = "Sandia:     sum ((L*L) .* L)    " ; break ;
-        case 4:  s = "Sandia2:    sum ((U*U) .* U)    " ; break ;
-        case 5:  s = "SandiaDot:  sum ((L*U') .* L)   " ; break ;
-        case 6:  s = "SandiaDot2: sum ((U*L') .* U)   " ; break ;
+        case LAGraph_TriangleCount_Default:    s = "default (SandiaDot)             " ; break ;
+        case LAGraph_TriangleCount_Burkhardt:  s = "Burkhardt:  sum ((A^2) .* A) / 6" ; break ;
+        case LAGraph_TriangleCount_Cohen:      s = "Cohen:      sum ((L*U) .* A) / 2" ; break ;
+        case LAGraph_TriangleCount_Sandia:     s = "Sandia:     sum ((L*L) .* L)    " ; break ;
+        case LAGraph_TriangleCount_Sandia2:    s = "Sandia2:    sum ((U*U) .* U)    " ; break ;
+        case LAGraph_TriangleCount_SandiaDot:  s = "SandiaDot:  sum ((L*U') .* L)   " ; break ;
+        case LAGraph_TriangleCount_SandiaDot2: s = "SandiaDot2: sum ((U*L') .* U)   " ; break ;
         default: abort ( ) ;
     }
 
-    if (sorting == -1) sprintf (t, "%s sort: descending degree", s) ;
-    else if (sorting == 1) sprintf (t, "%s ascending degree", s) ;
-    else if (sorting == 2) sprintf (t, "%s auto-sort", s) ;
+    if (sorting == LAGraph_TriangleCount_Descending) sprintf (t, "%s sort: descending degree", s) ;
+    else if (sorting == LAGraph_TriangleCount_Ascending) sprintf (t, "%s ascending degree", s) ;
+    else if (sorting == LAGraph_TriangleCount_AutoSort) sprintf (t, "%s auto-sort", s) ;
     else sprintf (t, "%s sort: none", s) ;
     return (t) ;
 }
@@ -144,11 +144,13 @@ int main (int argc, char **argv)
     // warmup for more accurate timing, and also print # of triangles
     LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
     printf ("\nwarmup method: ") ;
-    int presort = 2 ;
+    int presort = LAGraph_TriangleCount_AutoSort ; // = 2 (auto selection)
     print_method (stdout, 6, presort) ;
 
-    LAGraph_TRY (LAGraph_TriangleCount_Methods(&ntriangles, G, 6, &presort,
-        msg) );
+    // warmup method:
+    // LAGraph_TriangleCount_SandiaDot2 = 6,   // sum (sum ((U * L') .* U))
+    LAGraph_TRY (LAGraph_TriangleCount_Methods(&ntriangles, G,
+        LAGraph_TriangleCount_SandiaDot2, &presort, msg) );
     printf ("# of triangles: %" PRIu64 "\n", ntriangles) ;
     print_method (stdout, 6, presort) ;
     double ttot ;
@@ -181,7 +183,7 @@ int main (int argc, char **argv)
     {
         // for (int sorting = -1 ; sorting <= 2 ; sorting++)
 
-        int sorting = 2 ;       // just use auto-sort
+        int sorting = LAGraph_TriangleCount_AutoSort ; // just use auto-sort
         {
             printf ("\nMethod: ") ;
             int presort ;
