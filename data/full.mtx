@@ -1,4 +1,5 @@
 %%MatrixMarket matrix array real general
+%%GraphBLAS comment
 % a dense matrix
 3 3
 .646

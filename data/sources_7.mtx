@@ -1,5 +1,5 @@
 %%MatrixMarket matrix coordinate integer general
-%%GraphBLAS int64_t
+%%GraphBLAS type int64_t
 64 1 64
 1 1 2
 2 1 5

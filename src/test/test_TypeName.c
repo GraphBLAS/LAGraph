@@ -19,6 +19,7 @@
 GrB_Type type = NULL ;
 char name [LAGRAPH_MAX_NAME_LEN] ;
 char msg [LAGRAPH_MSG_LEN] ;
+GrB_Scalar s = NULL ;
 
 typedef int myint ;
 
@@ -63,6 +64,13 @@ void test_NameOfType  (void)
     OK (LAGraph_NameOfType  (name, GrB_FP64, msg)) ;
     OK (strcmp (name, "double")) ;
 
+    char typename [LAGRAPH_MAX_NAME_LEN] ;
+    OK (GrB_Scalar_new (&s, GrB_INT32)) ;
+    OK (LAGraph_ScalarTypeName (name, s, msg)) ;
+    OK (strcmp (name, "int32_t")) ;
+    TEST_CHECK (LAGraph_ScalarTypeName (NULL, s, msg) == GrB_NULL_POINTER) ;
+    TEST_CHECK (LAGraph_ScalarTypeName (name, NULL, msg) == GrB_NULL_POINTER) ;
+
     OK (GrB_Type_new (&type, sizeof (myint))) ;
     TEST_CHECK (LAGraph_NameOfType (name, type, msg) == GrB_NOT_IMPLEMENTED) ;
     printf ("\nmsg: %s\n", msg) ;
@@ -76,6 +84,8 @@ void test_NameOfType  (void)
     TEST_CHECK (LAGraph_NameOfType (NULL, GrB_BOOL, msg) == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
+    GrB_free (&s) ;
+    GrB_free (&type) ;
     OK (LAGraph_Finalize (msg)) ;
 }
 

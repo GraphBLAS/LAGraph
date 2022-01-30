@@ -359,6 +359,14 @@ void test_Vector_IsEqual (void)
     OK (GrB_free (&u)) ;
     OK (GrB_free (&v)) ;
 
+    OK (GrB_Vector_new (&u, GrB_BOOL, 3)) ;
+    OK (GrB_Vector_new (&v, GrB_FP32, 3)) ;
+    OK (LAGraph_Vector_IsEqual (&result, u, v, msg)) ;
+    TEST_CHECK (result == false) ;
+
+    OK (GrB_free (&u)) ;
+    OK (GrB_free (&v)) ;
+
     teardown ( ) ;
 }
 

@@ -1,5 +1,5 @@
 %%MatrixMarket matrix coordinate pattern general
-%%GraphBLAS GrB_BOOL
+%%GraphBLAS type bool
 % Synthetic Sparse Deep Neural Network, output categories
 % nneurons: 1024, nlayers: 1920, nfeatures: 60000 subset: 1200
 % Source: https://graphchallenge.mit.edu/data-sets

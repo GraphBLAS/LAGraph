@@ -209,7 +209,7 @@ int LAGraph_Vector_IsEqual         // returns 0 if successful, < 0 if failure
 
     GrB_Type type ;
     LG_TRY (LAGraph_TypeFromName (&type, atype_name, msg)) ;
-    GrB_BinaryOp op ;
+    GrB_BinaryOp op = NULL ;
     // select the comparator operator
     if      (type == GrB_BOOL  ) op = GrB_EQ_BOOL   ;
     else if (type == GrB_INT8  ) op = GrB_EQ_INT8   ;
@@ -226,10 +226,6 @@ int LAGraph_Vector_IsEqual         // returns 0 if successful, < 0 if failure
     else if (type == GxB_FC32  ) op = GxB_EQ_FC32   ;
     else if (type == GxB_FC64  ) op = GxB_EQ_FC64   ;
     #endif
-    else
-    {
-        LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED, "unsupported type") ;    // FIXME:RETVAL
-    }
 
     //--------------------------------------------------------------------------
     // C = A .* B, where the pattern of C is the intersection of A and B

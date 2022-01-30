@@ -233,11 +233,6 @@ int LAGraph_MMWrite
         MM_type = MM_complex ;
     }
     #endif
-    else
-    {
-        // type not supported
-        LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED, "unsupported matrix type") ; // FIXME:RETVAL
-    }
 
     //--------------------------------------------------------------------------
     // determine symmetry
@@ -383,7 +378,7 @@ int LAGraph_MMWrite
 //      case MM_hermitian       : FPRINTF (f, " Hermitian\n")       ; break ;
     }
 
-    FPRINTF (f, "%%%%GraphBLAS ") ;
+    FPRINTF (f, "%%%%GraphBLAS type ") ;
     if      (type == GrB_BOOL  ) { FPRINTF (f, "bool\n")   ; }
     else if (type == GrB_INT8  ) { FPRINTF (f, "int8_t\n")   ; }
     else if (type == GrB_INT16 ) { FPRINTF (f, "int16_t\n")  ; }

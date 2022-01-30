@@ -1,5 +1,5 @@
 %%MatrixMarket matrix coordinate integer skew-symmetric
-%%GraphBLAS uint8_t
+%%GraphBLAS type uint8_t
 6 6 10
 4 1 12
 5 1 30

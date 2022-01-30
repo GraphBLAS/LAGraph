@@ -1,5 +1,5 @@
 %%MatrixMarket matrix coordinate integer general
-%%GraphBLAS bool
+%%GraphBLAS type bool
 % Matrix from the cover of "Graph Algorithms in the Language of Linear
 % Algebra", Kepner and Gilbert.  Note that cover shows A'.  This is A,
 % but with different values for some entries.

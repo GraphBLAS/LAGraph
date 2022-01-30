@@ -72,18 +72,11 @@ int LAGraph_IsEqual         // returns 0 if successful, < 0 if failure
     GrB_Index nrows1, ncols1, nrows2, ncols2 ;
     GrB_TRY (GrB_Matrix_nrows (&nrows1, A)) ;
     GrB_TRY (GrB_Matrix_nrows (&nrows2, B)) ;
-    if (nrows1 != nrows2)
-    {
-        // # of rows differ
-        (*result) = false ;
-        return (GrB_SUCCESS) ;
-    }
-
     GrB_TRY (GrB_Matrix_ncols (&ncols1, A)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols2, B)) ;
-    if (ncols1 != ncols2)
+    if (nrows1 != nrows2 || ncols1 != ncols2)
     {
-        // # of cols differ
+        // dimensions differ
         (*result) = false ;
         return (GrB_SUCCESS) ;
     }
@@ -108,7 +101,7 @@ int LAGraph_IsEqual         // returns 0 if successful, < 0 if failure
 
     GrB_Type type ;
     LG_TRY (LAGraph_TypeFromName (&type, atype_name, msg)) ;
-    GrB_BinaryOp op ;
+    GrB_BinaryOp op = NULL ;
     // LAGraph_BinaryOp_Picker (&op, "==", type) ;
     // LAGraph_BinaryOp_Picker (&op, "+", type) ;
     // LAGraph_BinaryOp_Picker (&op, "plus", type) ;
@@ -127,10 +120,6 @@ int LAGraph_IsEqual         // returns 0 if successful, < 0 if failure
     else if (type == GxB_FC32  ) op = GxB_EQ_FC32   ;
     else if (type == GxB_FC64  ) op = GxB_EQ_FC64   ;
     #endif
-    else
-    {
-        LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED, "unsupported type") ;    // FIXME:RETVAL
-    }
 
     //--------------------------------------------------------------------------
     // C = A .* B, where the structure of C is the intersection of A and B

@@ -428,26 +428,30 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
     // but this is optional.  The 2nd line is also optional (the %%MatrixMarket
     // line is required for this 2nd line to be recognized):
     //
-    //          %%GraphBLAS <graphblastype>
+    //          %%GraphBLAS type <Ctype>
+    //
+    // where the Ctype is one of: bool, int8_t, int16_t, int32_t, int64_t,
+    // uint8_t, uint16_t, uint32_t, uint64_t, float, or double.
     //
     // If the %%MatrixMarket line is not present, then the <fmt> <type> and
     // <storage> are implicit.  If the first data line contains 3 items,
     // then the implicit header is:
     //
     //          %%MatrixMarket matrix coordinate real general
-    //          %%GraphBLAS GrB_FP64
+    //          %%GraphBLAS type double
     //
     // If the first data line contains 2 items (nrows ncols), then the implicit
     // header is:
     //
     //          %%MatrixMarket matrix array real general
-    //          %%GraphBLAS GrB_FP64
+    //          %%GraphBLAS type double
     //
     // The implicit header is an extension of the Matrix Market format.
 
     char buf [MAXLINE+1] ;
 
     bool got_mm_header = false ;
+    bool got_first_data_line = false ;
 
     for (int64_t line = 1 ; get_line (f, buf) ; line++)
     {
@@ -597,114 +601,127 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             }
 
         }
-        else if (got_mm_header && (line == 2)
-                 && MATCH (buf, "%%graphblas", 11))
+        else if (got_mm_header && MATCH (buf, "%%graphblas", 11))
         {
 
-            // -----------------------------------------------------------------
-            // %%GraphBLAS <entrytype>
-            // -----------------------------------------------------------------
-
-            // This must appear as the 2nd line in the file, after the
-            // %%MatrixMarket header (which is required in this case; otherwise
-            // the %%GraphBLAS line is treated as a pure comment and the
-            // <entrytype> is ignored).
+            //------------------------------------------------------------------
+            // %%GraphBLAS structured comment
+            //------------------------------------------------------------------
 
             char *p = buf + 11 ;
-
             while (*p && isspace (*p)) p++ ;        // skip any leading spaces
 
-            // <entrytype> is one of the 11 real built-in types (GrB_BOOL,
-            // GrB_INT8, GrB_INT16, GrB_INT32, GrB_INT64, GrB_UINT8,
-            // GrB_UINT16, GrB_UINT32, GrB_UINT64, GrB_FP32, GrB_FP64).  The
-            // complex types GxB_FC32, GxB_FC64 are not yet supported.
+            if (MATCH (p, "type", 4) && !got_first_data_line)
+            {
 
-            if (MATCH (p, "grb_bool", 8) || MATCH (p, "bool", 4))
-            {
-                type = GrB_BOOL ;
-                typesize = sizeof (bool) ;
-            }
-            else if (MATCH (p, "grb_int8", 8) || MATCH (p, "int8_t", 6))
-            {
-                type = GrB_INT8 ;
-                typesize = sizeof (int8_t) ;
-            }
-            else if (MATCH (p, "grb_int16", 9) || MATCH (p, "int16_t", 7))
-            {
-                type = GrB_INT16 ;
-                typesize = sizeof (int16_t) ;
-            }
-            else if (MATCH (p, "grb_int32", 9) || MATCH (p, "int32_t", 7))
-            {
-                type = GrB_INT32 ;
-                typesize = sizeof (int32_t) ;
-            }
-            else if (MATCH (p, "grb_int64", 9) || MATCH (p, "int64_t", 7))
-            {
-                type = GrB_INT64 ;
-                typesize = sizeof (int64_t) ;
-            }
-            else if (MATCH (p, "grb_uint8", 9) || MATCH (p, "uint8_t", 7))
-            {
-                type = GrB_UINT8 ;
-                typesize = sizeof (uint8_t) ;
-            }
-            else if (MATCH (p, "grb_uint16", 10) || MATCH (p, "uint16_t", 8))
-            {
-                type = GrB_UINT16 ;
-                typesize = sizeof (uint16_t) ;
-            }
-            else if (MATCH (p, "grb_uint32", 10) || MATCH (p, "uint32_t", 8))
-            {
-                type = GrB_UINT32 ;
-                typesize = sizeof (uint32_t) ;
-            }
-            else if (MATCH (p, "grb_uint64", 10) || MATCH (p, "uint64_t", 8))
-            {
-                type = GrB_UINT64 ;
-                typesize = sizeof (uint64_t) ;
-            }
-            else if (MATCH (p, "grb_fp32", 8) || MATCH (p, "float", 5))
-            {
-                type = GrB_FP32 ;
-                typesize = sizeof (float) ;
-            }
-            else if (MATCH (p, "grb_fp64", 8) || MATCH (p, "double", 6))
-            {
-                type = GrB_FP64 ;
-                typesize = sizeof (double) ;
-            }
-            else if (MATCH (p, "gxb_fc32", 8) || MATCH (p, "float complex", 13))
-            {
+                //--------------------------------------------------------------
+                // %%GraphBLAS type <Ctype>
+                //--------------------------------------------------------------
+
+                // This must appear after the %%MatrixMarket header and before
+                // the first data line.  Otherwise the %%GraphBLAS line is
+                // treated as a pure comment.
+
+                p += 4 ;
+                while (*p && isspace (*p)) p++ ;    // skip any leading spaces
+
+                // Ctype is one of: bool, int8_t, int16_t, int32_t, int64_t,
+                // uint8_t, uint16_t, uint32_t, uint64_t, float, or double.
+                // The complex types "float complex", or "double complex" are
+                // not yet supported.
+
+                if (MATCH (p, "bool", 4))
+                {
+                    type = GrB_BOOL ;
+                    typesize = sizeof (bool) ;
+                }
+                else if (MATCH (p, "int8_t", 6))
+                {
+                    type = GrB_INT8 ;
+                    typesize = sizeof (int8_t) ;
+                }
+                else if (MATCH (p, "int16_t", 7))
+                {
+                    type = GrB_INT16 ;
+                    typesize = sizeof (int16_t) ;
+                }
+                else if (MATCH (p, "int32_t", 7))
+                {
+                    type = GrB_INT32 ;
+                    typesize = sizeof (int32_t) ;
+                }
+                else if (MATCH (p, "int64_t", 7))
+                {
+                    type = GrB_INT64 ;
+                    typesize = sizeof (int64_t) ;
+                }
+                else if (MATCH (p, "uint8_t", 7))
+                {
+                    type = GrB_UINT8 ;
+                    typesize = sizeof (uint8_t) ;
+                }
+                else if (MATCH (p, "uint16_t", 8))
+                {
+                    type = GrB_UINT16 ;
+                    typesize = sizeof (uint16_t) ;
+                }
+                else if (MATCH (p, "uint32_t", 8))
+                {
+                    type = GrB_UINT32 ;
+                    typesize = sizeof (uint32_t) ;
+                }
+                else if (MATCH (p, "uint64_t", 8))
+                {
+                    type = GrB_UINT64 ;
+                    typesize = sizeof (uint64_t) ;
+                }
+                else if (MATCH (p, "float complex", 13))
+                {
 #if 0
-                type = GxB_FC32 ;
-                typesize = sizeof (GxB_FC32_t) ;
+                    type = GxB_FC32 ;
+                    typesize = sizeof (GxB_FC32_t) ;
 #endif
-                LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED,  // FIXME:RETVAL
-                    "complex types not yet supported") ;
-            }
-            else if (MATCH (p, "gxb_fc64", 8) || MATCH (p, "double complex", 14))
-            {
+                    LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED,  // FIXME:RETVAL
+                        "float complex type not yet supported") ;
+                }
+                else if (MATCH (p, "double complex", 14))
+                {
 #if 0
-                type = GxB_FC64 ;
-                typesize = sizeof (GxB_FC64_t) ;
+                    type = GxB_FC64 ;
+                    typesize = sizeof (GxB_FC64_t) ;
 #endif
-                LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED,  // FIXME:RETVAL
-                    "complex types not yet supported") ;
+                    LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED,  // FIXME:RETVAL
+                        "double complex type not yet supported") ;
+                }
+                else if (MATCH (p, "float", 5))
+                {
+                    type = GrB_FP32 ;
+                    typesize = sizeof (float) ;
+                }
+                else if (MATCH (p, "double", 6))
+                {
+                    type = GrB_FP64 ;
+                    typesize = sizeof (double) ;
+                }
+                else
+                {
+                    // unknown type
+                    LG_ASSERT_MSG (false, GrB_INVALID_VALUE, "unknown type") ;  // FIXME:RETVAL
+                }
+
+                if (MM_storage == MM_skew_symmetric && (type == GrB_BOOL ||
+                    type == GrB_UINT8  || type == GrB_UINT16 ||
+                    type == GrB_UINT32 || type == GrB_UINT64))
+                {
+                    // matrices with unsigned types cannot be skew-symmetric
+                    LG_ASSERT_MSG (false, GrB_INVALID_VALUE,    // FIXME:RETVAL
+                        "skew-symmetric matrices cannot have an unsigned type") ;
+                }
             }
             else
             {
-                // unknown type
-                LG_ASSERT_MSG (false, GrB_INVALID_VALUE, "unknown type") ;  // FIXME:RETVAL
-            }
-
-            if (MM_storage == MM_skew_symmetric && (type == GrB_BOOL ||
-                type == GrB_UINT8  || type == GrB_UINT16 ||
-                type == GrB_UINT32 || type == GrB_UINT64))
-            {
-                // matrices with unsigned types cannot be skew-symmetric
-                LG_ASSERT_MSG (false, GrB_INVALID_VALUE,    // FIXME:RETVAL
-                    "skew-symmetric matrices cannot have an unsigned type") ;
+                // %%GraphBLAS line but no "type" as the 2nd token; ignore it
+                continue ;
             }
 
         }
@@ -727,6 +744,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
 
             // format: [nrows ncols nvals] or just [nrows ncols]
 
+            got_first_data_line = true ;
             int nitems = sscanf (buf, "%" SCNu64 " %" SCNu64 " %" SCNu64,
                 &nrows, &ncols, &nvals) ;
 
@@ -860,7 +878,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
                     j++ ;
                     if (MM_storage == MM_general)
                     {
-                        // dense matrix in column major order 
+                        // dense matrix in column major order
                         i = 0 ;
                     }
                     else

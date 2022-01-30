@@ -323,6 +323,8 @@ const mangled_matrix_info mangled_files [ ] =
     -3, "mangled_uint16.mtx", // invalid matrix: entry value out of range
     -3, "mangled_uint32.mtx", // invalid matrix: entry value out of range
     -3, "mangled_skew.mtx",   // invalid matrix: unsigned skew invalid
+    -8, "mangled15.mtx",      // invalid matrix: complex not supported
+    -8, "mangled16.mtx",      // invalid matrix: complex not supported
     0, "",
 } ;
 

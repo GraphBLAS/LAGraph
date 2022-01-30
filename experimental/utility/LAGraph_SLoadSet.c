@@ -25,7 +25,7 @@
 
 #define LAGraph_FREE_WORK                                           \
 {                                                                   \
-    if (f != NULL) fclose (f) ;                                     \
+    if (f != NULL && f != stdin) fclose (f) ;                       \
     f = NULL ;                                                      \
     LAGraph_SFreeContents (&Contents, ncontents) ;                  \
 }
@@ -66,7 +66,7 @@ int LAGraph_SLoadSet            // load a set of matrices from a *.lagraph file
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    FILE *f = NULL ;
+    FILE *f = stdin ;
     char *collection = NULL ;
     GrB_Matrix *Set = NULL ;
     LAGraph_Contents *Contents = NULL ;
@@ -75,27 +75,24 @@ int LAGraph_SLoadSet            // load a set of matrices from a *.lagraph file
 //  GrB_Index nvectors = 0 ;
 //  GrB_Index ntexts = 0 ;
 
-    LG_CHECK (Set_handle == NULL || nmatrices_handle == NULL
-        || collection_handle == NULL, GrB_NULL_POINTER, "inputs are NULL") ;
+    LG_ASSERT (Set_handle != NULL && nmatrices_handle != NULL
+        && collection_handle != NULL, GrB_NULL_POINTER) ;
 
     //--------------------------------------------------------------------------
     // read the file
     //--------------------------------------------------------------------------
 
-    if (filename == NULL)
-    {
-        LG_TRY (LAGraph_SRead (stdin, &collection, &Contents, &ncontents,
-            msg)) ;
-    }
-    else
+    if (filename != NULL)
     {
         f = fopen (filename, "r") ;
-        LG_CHECK (f == NULL, -1002, "unable to open input file") ;
-        LG_TRY (LAGraph_SRead (f, &collection, &Contents, &ncontents,
-            msg)) ;
-        fclose (f) ;
-        f = NULL ;
+        LG_ASSERT_MSG (f != NULL, -1002, "unable to open input file") ;// FIXME:RETVAL
     }
+    LG_TRY (LAGraph_SRead (f, &collection, &Contents, &ncontents, msg)) ;
+    if (filename != NULL)
+    {
+        fclose (f) ;
+    }
+    f = NULL ;
 
     //--------------------------------------------------------------------------
     // count the matrices/vectors/texts in the Contents
@@ -112,7 +109,7 @@ int LAGraph_SLoadSet            // load a set of matrices from a *.lagraph file
             case LAGraph_matrix_kind : nmatrices++ ; break ;
             case LAGraph_vector_kind : nvectors++  ; break ;
             case LAGraph_text_kind   : ntexts++    ; break ;
-            default : LG_CHECK (true, GrB_INVALID_VALUE, "unknown kind") ;
+            default : LG_ASSERT_MSG (false, GrB_INVALID_VALUE, "unknown kind") ;
         }
     }
     if (nvectors > 0 || ntexts > 0)
@@ -128,7 +125,7 @@ int LAGraph_SLoadSet            // load a set of matrices from a *.lagraph file
     //--------------------------------------------------------------------------
 
     Set = LAGraph_Calloc (nmatrices, sizeof (GrB_Matrix)) ;
-    LG_CHECK (Set == NULL, GrB_OUT_OF_MEMORY, "out of memory") ;
+    LG_ASSERT (Set != NULL, GrB_OUT_OF_MEMORY) ;
 
     GrB_Index kmatrices = 0 ;
     for (GrB_Index i = 0 ; i < ncontents ; i++)

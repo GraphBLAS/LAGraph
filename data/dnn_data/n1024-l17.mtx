@@ -1,5 +1,5 @@
 %%MatrixMarket matrix coordinate real general
-%%GraphBLAS GrB_FP32
+%%GraphBLAS type float
 % Synthetic Sparse Deep Neural Network, layer 17 of 1920.
 % Source: https://graphchallenge.mit.edu/data-sets
 % Converted to Matrix Matrix Format by Tim Davis.

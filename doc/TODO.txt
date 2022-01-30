@@ -1,6 +1,4 @@
-As of Jan 29, 2022:
-
-    * LAGraph_MMRead: add "type" to %%GraphBLAS
+As of Jan 30, 2022:
 
     * entire user guide
         experimental -> src, how to do it.
@@ -10,8 +8,9 @@ As of Jan 29, 2022:
 
     * test, document, polish all src & experimental: algorithms, utilities,
         and tests.
-        as of Jan 12: testing is at 95%.  Only untested functions are
-        4 experimental/algorithms: lcc, cdlp, scc, and msf.
+        as of Jan 30: testing is at 95%.  Only untested functions are
+        4 experimental/algorithms: lcc, cdlp, scc, msf, and part of cc_fastsv5
+        1 src/algorithm: part of cc_fastsv6 
 
     * unify error return values as much as possible, now that v2.0 C API
         has assigned enum values to GrB_Info.  Suggest we use GrB_Info
@@ -34,7 +33,7 @@ As of Jan 29, 2022:
         GrB_NOT_IMPLEMENTED:
             type not supported (user-defined, complex, ...)
             SuiteSparse required
-            
+
         error conditions not in GrB_Info:
             * file I/O error (file not found, fread failure, etc)
             * self-edges present but not tolerated by the algorithm
@@ -43,7 +42,6 @@ As of Jan 29, 2022:
             * G->A must be square (or other invalid status of an
                 LAGraph_Graph); see LAgraph_CheckGraph
             * LG_check_* methods when results are not valid
-
 
     * many TODOs and FIXMEs throughout
 

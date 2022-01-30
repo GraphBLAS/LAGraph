@@ -25,7 +25,7 @@ for k = 120 % [120 480 1920]
     A = logical (sparse (T (:,1), T (:,2), true, nfeatures, 1)) ;
     A = A (1:nfeatures_subset, 1) ;
     fc = fopen ('comments.txt', 'w+') ;
-    fprintf (fc, '%%GraphBLAS GrB_BOOL\n') ;
+    fprintf (fc, '%%GraphBLAS type bool\n') ;
     fprintf (fc, ' Synthetic Sparse Deep Neural Network, output categories\n') ;
     fprintf (fc, ' nneurons: %d, nlayers: %d, nfeatures: %d subset: %d\n', ...
         nneurons, nlayers, nfeatures, nfeatures_subset) ;
@@ -49,7 +49,7 @@ for k = 1:nlayers_subset % 1:nlayers
         error ('duplicates!\n') ;
     end
     fc = fopen ('comments.txt', 'w+') ;
-    fprintf (fc, '%%GraphBLAS GrB_FP32\n') ;
+    fprintf (fc, '%%GraphBLAS type float\n') ;
     fprintf (fc, ' Synthetic Sparse Deep Neural Network, layer %d of %d.\n', k, nlayers) ;
     fprintf (fc, ' Source: https://graphchallenge.mit.edu/data-sets\n') ;
     fprintf (fc, ' Converted to Matrix Matrix Format by Tim Davis.\n') ;
@@ -62,7 +62,7 @@ infile = sprintf ('/Users/davis/dnn_data/MNIST/sparse-images-1024.tsv') ;
 outfile = sprintf ('sparse-images-1024_subset.mtx') ;
 T = load (infile) ;
 fc = fopen ('comments.txt', 'w+') ;
-fprintf (fc, '%%GraphBLAS GrB_FP32\n') ;
+fprintf (fc, '%%GraphBLAS type float\n') ;
 fprintf (fc, ' Synthetic Sparse Deep Neural Network, Input images.\n') ;
 fprintf (fc, ' Source: https://graphchallenge.mit.edu/data-sets\n') ;
 fprintf (fc, ' The original problem has %d features but this\n', nfeatures) ;

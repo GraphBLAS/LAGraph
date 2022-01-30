@@ -1,5 +1,5 @@
 %%MatrixMarket matrix coordinate real general
-%%GraphBLAS double
+%%GraphBLAS type double
 10 10 17
 1 3 0.5
 1 5 0.3

@@ -1,4 +1,4 @@
 %%MatrixMarket matrix coordinate real general
-%%GraphBLAS int32_t
+%%GraphBLAS type int32_t
 % an empty 3-by-4 matrix
 3 4 0

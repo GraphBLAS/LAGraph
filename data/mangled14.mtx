@@ -1,5 +1,5 @@
 %%MatrixMarket matrix coordinate real general
-%%GraphBLAS double
+%%GraphBLAS type double
 % This matrix is mangled and causes LAGraph_MMRead to return an error code.
 % It has duplicate entries, which should not appear in a Matrix Market file.
 3 4 3

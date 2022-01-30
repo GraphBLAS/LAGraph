@@ -1,5 +1,5 @@
 %%MatrixMarket matrix coordinate pattern symmetric
-%%GraphBLAS bool
+%%GraphBLAS type bool
 % almost the same as A.mtx, just one entry in a different position
 7 7 15
 2 1 
