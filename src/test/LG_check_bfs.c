@@ -86,7 +86,7 @@ int LG_check_bfs
     {
         level_in = LAGraph_Malloc (n, sizeof (int64_t)) ;
         LG_ASSERT (level_in != NULL, GrB_OUT_OF_MEMORY) ;
-        LG_ASSERT_MSG (LG_check_vector (level_in, Level, n, -1) == 0, -1004,
+        LG_ASSERT_MSG (LG_check_vector (level_in, Level, n, -1) == 0, 1004,
             "invalid level") ;
     }
 

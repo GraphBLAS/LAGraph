@@ -255,11 +255,11 @@ void test_BreadthFirstSearch_invalid_src(void)
     TEST_MSG("retval = %d (%s)", retval, msg);
 
     retval = LAGraph_BreadthFirstSearch(NULL, &parent, G, n, false, msg);
-    TEST_CHECK(retval == -102);
+    TEST_CHECK(retval == GrB_INVALID_INDEX);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
     retval = LG_BreadthFirstSearch_vanilla(NULL, &parent, G, n, false, msg);
-    TEST_CHECK(retval == -102);
+    TEST_CHECK(retval == GrB_INVALID_INDEX);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
     teardown();

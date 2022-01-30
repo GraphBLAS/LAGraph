@@ -132,7 +132,8 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
     LG_CLEAR_MSG ;
     GrB_Matrix C = NULL, L = NULL, U = NULL, T = NULL ;
     int64_t *P = NULL ;
-    LG_ASSERT_MSG ((method >= 1) && (method <= 6), -101, "method is invalid");
+    LG_ASSERT_MSG ((method >= 1) && (method <= 6), GrB_INVALID_VALUE,
+        "method is invalid") ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     LG_ASSERT (ntriangles != NULL, GrB_NULL_POINTER) ;
     LG_ASSERT (G->ndiag == 0, -104) ;

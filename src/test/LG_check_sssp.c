@@ -85,7 +85,8 @@ int LG_check_sssp
     LG_ASSERT_MSG (n == ncols, -1001, "G->A must be square") ;
     char atype_name [LAGRAPH_MAX_NAME_LEN] ;
     LG_TRY (LAGraph_MatrixTypeName (atype_name, G->A, msg)) ;
-    LG_ASSERT_MSG (MATCHNAME (atype_name, "int32_t"), -1001, "G->A must be int32") ;
+    LG_ASSERT_MSG (MATCHNAME (atype_name, "int32_t"), -1001,
+        "G->A must be int32") ;
     bool print_timings = (n >= 2000) ;
 
     //--------------------------------------------------------------------------

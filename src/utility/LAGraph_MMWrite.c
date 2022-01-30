@@ -236,7 +236,7 @@ int LAGraph_MMWrite
     else
     {
         // type not supported
-        LG_ASSERT_MSG (false, -1006, "unsupported matrix type") ;
+        LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED, "unsupported matrix type") ;
     }
 
     //--------------------------------------------------------------------------

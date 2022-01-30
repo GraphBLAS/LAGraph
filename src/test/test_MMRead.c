@@ -565,10 +565,10 @@ void test_MMWrite_failures (void)
     OK (GrB_Matrix_new (&A, atype, 4, 4)) ;
     int status = LAGraph_Matrix_print (A, 3, stdout, msg) ;
     printf ("msg: [%s]\n", msg) ;
-    TEST_CHECK (status == -1002) ;
+    TEST_CHECK (status == GrB_NOT_IMPLEMENTED) ;
     status = LAGraph_MMWrite (A, f, NULL, msg) ;
     printf ("msg: %d [%s]\n", status, msg) ;
-    TEST_CHECK (status == -5) ;
+    TEST_CHECK (status == GrB_NOT_IMPLEMENTED) ;
     OK (GrB_free (&atype)) ;
     OK (GrB_free (&A)) ;
     OK (fclose (f)) ;       // close and delete the temporary file

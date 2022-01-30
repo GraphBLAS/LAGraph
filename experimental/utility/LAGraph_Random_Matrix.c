@@ -88,7 +88,7 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
     GrB_Index I_size = 0, J_size = 0, X_size = 0 ;
     void *X = NULL ;
     LG_ASSERT (A != NULL && type != NULL, GrB_NULL_POINTER) ;
-    LG_ASSERT_MSG (density >= 0, -1002, "invalid density") ;
+    LG_ASSERT_MSG (density >= 0, GrB_INVALID_VALUE, "invalid density") ;
 
     GrB_TRY (GrB_Matrix_new (A, type, nrows, ncols)) ;
     if (nrows == 0 || ncols == 0)
@@ -114,7 +114,7 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
     {
         // determine number of tuples for building a random dense matrix
         double nx = (double) nrows * (double) ncols ;
-        LG_ASSERT_MSG (nx < (double) GrB_INDEX_MAX, -1010,
+        LG_ASSERT_MSG (nx < (double) GrB_INDEX_MAX, GrB_OUT_OF_MEMORY,
             "Problem too large") ;
         nvals = nrows * ncols ;
     }
@@ -353,7 +353,7 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
         }
         else
         {
-            LG_ASSERT_MSG (false, -1001, "unsupported type") ;
+            LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED, "unsupported type") ;
         }
         LAGraph_Free ((void **) &ignore) ;
     }

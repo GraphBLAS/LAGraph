@@ -347,7 +347,7 @@ void test_TriangleCount_many (void)
 
         // invalid method
         int result = LAGraph_TriangleCount_Methods (&nt1, G, 99, NULL, msg) ;
-        TEST_CHECK (result == -101) ;
+        TEST_CHECK (result == GrB_INVALID_VALUE) ;
 
         OK (LAGraph_Delete (&G, msg)) ;
     }

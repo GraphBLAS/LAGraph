@@ -26,8 +26,13 @@ As of Jan 26, 2022:
         GrB_NULL_POINTER
         ...
 
-        common error conditions not in GrB_Info:
-        file I/O error (file not found, fread failure, etc)
+        error conditions not in GrB_Info:
+            * file I/O error (file not found, fread failure, etc)
+            * self-edges present but not tolerated by the algorithm
+            * properties are missing in the LAGraph_Graph
+            * G->A must be square (or other invalid status of an
+                LAGraph_Graph); see LAgraph_CheckGraph
+
 
     * many TODOs and FIXMEs throughout
 

@@ -100,7 +100,7 @@ void test_print (void)
     OK (GrB_Type_new (&type, sizeof (int))) ;
     OK (GrB_Vector_new (&v, type, n)) ;
     result = LAGraph_Vector_print (v, 2, stdout, msg) ;
-    TEST_CHECK (result == -1002) ;
+    TEST_CHECK (result == GrB_NOT_IMPLEMENTED) ;
     OK (GrB_Vector_free (&v)) ;
 
     OK (GrB_Type_free (&type)) ;
