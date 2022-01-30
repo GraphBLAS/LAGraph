@@ -12,26 +12,32 @@ THIS WORK IS FUNDED IN PART BY:
 5.  The United States Department of Energy, Office of Science, ASCR Contract No. DE-AC02-05CH11231.
 
 
-
 THIS WORK BUILDS UPON THE FOLLOWING PRIOR WORKS:
 
 1.  GraphBLAS Template Library (GBTL), Version 3.0 (and prior versions)
     (https://github.com/cmu-sei/gbtl/blob/3.0.0) 
-    Copyright 2015-2020 Carnegie Mellon University, Battelle Memorial Institute,
-    and Authors. DM20-0442
+    Copyright 2015-2020 Carnegie Mellon University, Battelle Memorial
+    Institute, and Authors. DM20-0442
 2.  SuiteSparse:GraphBLAS, 
     (http://faculty.cse.tamu.edu/davis/GraphBLAS.html) 
-    Copyright (c) 2017-2022 Timothy A. Davis (Author), AldenMath.com and 
-    Texas A&M University. (Portions of LAGraph are derived from 
-    SuiteSparse/GraphBLAS/Demos).  Note that while SuiteSparse:GraphBLAS is
-    itself under the Apache 2 license, any contributions derived from 
+    Copyright (c) 2017-2022 Timothy A. Davis (Author), AldenMath.com.
+    By Tim Davis, Texas A&M University. Note that while SuiteSparse:GraphBLAS
+    is itself under the Apache 2 license, any contributions derived from
     SuiteSparse:GraphBLAS and incorporated by the Author into LAGraph are
     contributed under the LAGraph license.
 3.  Combinatorial BLAS, 
     (https://people.eecs.berkeley.edu/~aydin/CombBLAS/) 
-    Copyright (c) 2011-2018, The Regents of the University of California, through Lawrence 
-    Berkeley National Laboratory (subject to receipt of any required approvals from the 
-    U.S. Dept. of Energy) and University of California, Santa Barbara. 
+    Copyright (c) 2011-2018, The Regents of the University of California,
+    through Lawrence Berkeley National Laboratory (subject to receipt of any
+    required approvals from the U.S. Dept. of Energy) and University of
+    California, Santa Barbara. 
 4.  GraphBLAST,
     (https://github.com/gunrock/graphblast)
     Copyright (c) 2015-2019, The Regents of the University of California.
+
+LAGraph depends upon the following 3rd party libraries:
+
+    * json.h:  a simple JSON parser by Neil Henning,
+        ( https://github.com/sheredom/json.h ). Includes its own test suite.
+        required by experimental/utilities/LAGraph_SRead.c
+
