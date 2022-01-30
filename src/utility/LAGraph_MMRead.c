@@ -478,7 +478,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             if (!MATCH (p, "matrix", 6))
             {
                 // invalid Matrix Market object
-                LG_ASSERT_MSG (false, GrB_INVALID_VALUE, "invalid object") ;
+                LG_ASSERT_MSG (false, GrB_INVALID_VALUE, "invalid object") ;    // FIXME:RETVAL
             }
             p += 6 ;                                // skip past token "matrix"
 
@@ -501,7 +501,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             else
             {
                 // invalid Matrix Market format
-                LG_ASSERT_MSG (false, GrB_INVALID_VALUE, "invalid format") ;
+                LG_ASSERT_MSG (false, GrB_INVALID_VALUE, "invalid format") ;    // FIXME:RETVAL
             }
 
             //------------------------------------------------------------------
@@ -532,7 +532,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
                 typesize = sizeof (GxB_FC64_t) ;
                 p += 7 ;
 #endif
-                LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED,
+                LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED,  // FIXME:RETVAL
                     "complex types not yet supported") ;
             }
             else if (MATCH (p, "pattern", 7))
@@ -545,7 +545,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             else
             {
                 // invalid Matrix Market type
-                LG_ASSERT_MSG (false, GrB_INVALID_VALUE, "invalid type") ;
+                LG_ASSERT_MSG (false, GrB_INVALID_VALUE, "invalid type") ;  // FIXME:RETVAL
             }
 
             //------------------------------------------------------------------
@@ -573,7 +573,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             else
             {
                 // invalid Matrix Market storage
-                LG_ASSERT_MSG (false, GrB_INVALID_VALUE, "invalid storage") ;
+                LG_ASSERT_MSG (false, GrB_INVALID_VALUE, "invalid storage") ;   // FIXME:RETVAL
             }
 
             //------------------------------------------------------------------
@@ -583,7 +583,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             if (MM_type == MM_pattern)
             {
                 // (coodinate) x (pattern) x (general or symmetric)
-                LG_ASSERT_MSG (
+                LG_ASSERT_MSG ( // FIXME:RETVAL
                     (MM_fmt == MM_coordinate &&
                     (MM_storage == MM_general || MM_storage == MM_symmetric)),
                     GrB_INVALID_VALUE, "invalid pattern combination") ;
@@ -592,7 +592,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             if (MM_storage == MM_hermitian)
             {
                 // (coordinate or array) x (complex) x (Hermitian)
-                LG_ASSERT_MSG (MM_type == MM_complex, GrB_INVALID_VALUE,
+                LG_ASSERT_MSG (MM_type == MM_complex, GrB_INVALID_VALUE,    // FIXME:RETVAL
                     "invalid complex combination") ;
             }
 
@@ -680,7 +680,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
                 type = GxB_FC32 ;
                 typesize = sizeof (GxB_FC32_t) ;
 #endif
-                LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED,
+                LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED,  // FIXME:RETVAL
                     "complex types not yet supported") ;
             }
             else if (MATCH (p, "gxb_fc64", 8) || MATCH (p, "double complex", 14))
@@ -689,13 +689,13 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
                 type = GxB_FC64 ;
                 typesize = sizeof (GxB_FC64_t) ;
 #endif
-                LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED,
+                LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED,  // FIXME:RETVAL
                     "complex types not yet supported") ;
             }
             else
             {
                 // unknown type
-                LG_ASSERT_MSG (false, GrB_INVALID_VALUE, "unknown type") ;
+                LG_ASSERT_MSG (false, GrB_INVALID_VALUE, "unknown type") ;  // FIXME:RETVAL
             }
 
             if (MM_storage == MM_skew_symmetric && (type == GrB_BOOL ||
@@ -703,7 +703,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
                 type == GrB_UINT32 || type == GrB_UINT64))
             {
                 // matrices with unsigned types cannot be skew-symmetric
-                LG_ASSERT_MSG (false, GrB_INVALID_VALUE,
+                LG_ASSERT_MSG (false, GrB_INVALID_VALUE,    // FIXME:RETVAL
                     "skew-symmetric matrices cannot have an unsigned type") ;
             }
 
@@ -771,13 +771,13 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             else
             {
                 // wrong number of items in first data line
-                LG_ASSERT_MSG (false, GrB_INVALID_VALUE, "invalid 1st line") ;
+                LG_ASSERT_MSG (false, GrB_INVALID_VALUE, "invalid 1st line") ;  // FIXME:RETVAL
             }
 
             if (nrows != ncols)
             {
                 // a rectangular matrix must be in the general storage
-                LG_ASSERT_MSG (MM_storage == MM_general, GrB_INVALID_VALUE,
+                LG_ASSERT_MSG (MM_storage == MM_general, GrB_INVALID_VALUE, // FIXME:RETVAL
                     "invalid rectangular") ;
             }
 
@@ -839,7 +839,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             //------------------------------------------------------------------
 
             bool ok = get_line (f, buf) ;
-            LG_ASSERT_MSG (ok, GrB_INVALID_VALUE, "premature EOF") ;
+            LG_ASSERT_MSG (ok, GrB_INVALID_VALUE, "premature EOF") ;    // FIXME:RETVAL
             if (is_blank_line (buf))
             {
                 // blank line or comment
@@ -874,7 +874,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             else
             {
                 // coordinate format; read the row and column index
-                LG_ASSERT_MSG (sscanf (p, "%" SCNu64 " %" SCNu64, &i, &j) == 2,
+                LG_ASSERT_MSG (sscanf (p, "%" SCNu64 " %" SCNu64, &i, &j) == 2, // FIXME:RETVAL
                     GrB_INVALID_VALUE, "indices invalid") ;
                 // convert from 1-based to 0-based.
                 i-- ;
@@ -893,7 +893,7 @@ int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
             while (*p && isspace (*p)) p++ ;        // skip any spaces
 
             ok = read_entry (p, type, MM_type == MM_pattern, x) ;
-            LG_ASSERT_MSG (ok, GrB_INVALID_VALUE, "entry invalid") ;
+            LG_ASSERT_MSG (ok, GrB_INVALID_VALUE, "entry invalid") ;    // FIXME:RETVAL
 
             //------------------------------------------------------------------
             // set the value in the matrix

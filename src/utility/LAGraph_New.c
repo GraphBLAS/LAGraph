@@ -26,7 +26,7 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    LG_ASSERT_MSG (G != NULL, GrB_NULL_POINTER, "&G != NULL") ;
+    LG_ASSERT_MSG (G != NULL, GrB_NULL_POINTER, "&G != NULL") ; // FIXME:is msg needed?
 
     //--------------------------------------------------------------------------
     // allocate the graph

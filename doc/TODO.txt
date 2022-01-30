@@ -1,4 +1,4 @@
-As of Jan 26, 2022:
+As of Jan 29, 2022:
 
     * LAGraph_MMRead: add "type" to %%GraphBLAS
 
@@ -22,16 +22,27 @@ As of Jan 26, 2022:
             when calling LAGraph method from LAGraph methods.
             (done?)
 
+        obvious:
         GrB_OUT_OF_MEMORY
         GrB_NULL_POINTER
-        ...
 
+        See the code tag "FIXME:RETVAL"
+
+        OK?
+        GrB_INVALID_INDEX: for invalid source node
+        GrB_INVALID_VALUE: for invalid method in TC
+        GrB_NOT_IMPLEMENTED:
+            type not supported (user-defined, complex, ...)
+            SuiteSparse required
+            
         error conditions not in GrB_Info:
             * file I/O error (file not found, fread failure, etc)
             * self-edges present but not tolerated by the algorithm
+            * negative edge weight encountered, but not tolerated
             * properties are missing in the LAGraph_Graph
             * G->A must be square (or other invalid status of an
                 LAGraph_Graph); see LAgraph_CheckGraph
+            * LG_check_* methods when results are not valid
 
 
     * many TODOs and FIXMEs throughout

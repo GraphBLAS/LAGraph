@@ -129,7 +129,7 @@ int LAGraph_IsEqual         // returns 0 if successful, < 0 if failure
     #endif
     else
     {
-        LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED, "unsupported type") ;
+        LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED, "unsupported type") ;    // FIXME:RETVAL
     }
 
     //--------------------------------------------------------------------------

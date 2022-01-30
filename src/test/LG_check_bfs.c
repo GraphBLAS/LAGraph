@@ -67,7 +67,7 @@ int LG_check_bfs
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
-    LG_ASSERT_MSG (n == ncols, -1001, "G->A must be square") ;
+    LG_ASSERT_MSG (n == ncols, -1001, "G->A must be square") ;      // FIXME:RETVAL
     bool print_timings = (n >= 2000) ;
 
     //--------------------------------------------------------------------------
@@ -86,7 +86,7 @@ int LG_check_bfs
     {
         level_in = LAGraph_Malloc (n, sizeof (int64_t)) ;
         LG_ASSERT (level_in != NULL, GrB_OUT_OF_MEMORY) ;
-        LG_ASSERT_MSG (LG_check_vector (level_in, Level, n, -1) == 0, 1004,
+        LG_ASSERT_MSG (LG_check_vector (level_in, Level, n, -1) == 0, 1004,     // FIXME:RETVAL
             "invalid level") ;
     }
 
@@ -94,7 +94,7 @@ int LG_check_bfs
     {
         parent_in = LAGraph_Malloc (n, sizeof (int64_t)) ;
         LG_ASSERT (parent_in != NULL, GrB_OUT_OF_MEMORY) ;
-        LG_ASSERT_MSG (LG_check_vector (parent_in, Parent, n, -1) == 0, -1005,
+        LG_ASSERT_MSG (LG_check_vector (parent_in, Parent, n, -1) == 0, -1005,      // FIXME:RETVAL
             "invalid parent") ;
     }
 
@@ -197,7 +197,7 @@ int LG_check_bfs
         for (int64_t i = 0 ; i < n ; i++)
         {
             bool ok = (level_in [i] == level_check [i]) ;
-            LG_ASSERT_MSG (ok, -1004, "invalid level") ;
+            LG_ASSERT_MSG (ok, -1004, "invalid level") ;        // FIXME:RETVAL
         }
     }
 
@@ -213,22 +213,22 @@ int LG_check_bfs
             {
                 // src node is its own parent
                 bool ok = (parent_in [src] == src) && (visited [src]) ;
-                LG_ASSERT_MSG (ok, -1005, "invalid parent") ;
+                LG_ASSERT_MSG (ok, -1005, "invalid parent") ;       // FIXME:RETVAL
             }
             else if (visited [i])
             {
                 int64_t pi = parent_in [i] ;
                 // ensure the parent pi is valid and has been visited
                 bool ok = (pi >= 0 && pi < n) && visited [pi] ;
-                LG_ASSERT_MSG (ok, -1005, "invalid parent") ;
+                LG_ASSERT_MSG (ok, -1005, "invalid parent") ;       // FIXME:RETVAL
                 // ensure the edge (pi,i) exists
                 bool x ;
                 int info = GrB_Matrix_extractElement_BOOL (&x, G->A, pi, i) ;
                 ok = (info == GrB_SUCCESS) ;
-                LG_ASSERT_MSG (ok, -1005, "invalid parent") ;
+                LG_ASSERT_MSG (ok, -1005, "invalid parent") ;       // FIXME:RETVAL
                 // ensure the parent's level is ok
                 ok = (level_check [i] == level_check [pi] + 1) ;
-                LG_ASSERT_MSG (ok, -1005, "invalid parent") ;
+                LG_ASSERT_MSG (ok, -1005, "invalid parent") ;       // FIXME:RETVAL
             }
         }
     }

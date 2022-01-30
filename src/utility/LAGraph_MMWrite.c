@@ -236,7 +236,7 @@ int LAGraph_MMWrite
     else
     {
         // type not supported
-        LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED, "unsupported matrix type") ;
+        LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED, "unsupported matrix type") ; // FIXME:RETVAL
     }
 
     //--------------------------------------------------------------------------
@@ -508,7 +508,7 @@ int LAGraph_MMWrite
                 }                                                           \
                 else if (is_real)                                           \
                 {                                                           \
-                    LG_ASSERT_MSG (print_double (f, (double) x), -1002,     \
+                    LG_ASSERT_MSG (print_double (f, (double) x), -1002,     /* FIXME:RETVAL */ \
                         "Unable to write to file") ;                        \
                 }                                                           \
             /*  else if (is_complex)                                 */     \

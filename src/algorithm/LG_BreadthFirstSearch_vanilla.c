@@ -69,7 +69,7 @@ int LG_BreadthFirstSearch_vanilla
 
     GrB_Index n;
     GrB_TRY( GrB_Matrix_nrows (&n, A) );
-    LG_ASSERT_MSG (src < n, GrB_INVALID_INDEX, "invalid source node") ;
+    LG_ASSERT_MSG (src < n, GrB_INVALID_INDEX, "invalid source node") ; // FIXME:RETVAL
 
     GrB_Matrix AT ;
     GrB_Vector Degree = G->rowdegree ;

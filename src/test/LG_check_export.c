@@ -44,6 +44,7 @@ int LG_check_export
     void *Ax = NULL ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
 
+    // FIXME: do need need the msg?  or is LG_ASSERT (...) OK?
     LG_ASSERT_MSG (Ap_handle != NULL, GrB_NULL_POINTER, "&Ap != NULL") ;
     LG_ASSERT_MSG (Aj_handle != NULL, GrB_NULL_POINTER, "&Aj != NULL") ;
     LG_ASSERT_MSG (Ax_handle != NULL, GrB_NULL_POINTER, "&Ax != NULL") ;
@@ -70,7 +71,7 @@ int LG_check_export
     else if (atype == GrB_UINT64) s = sizeof (uint64_t) ;
     else if (atype == GrB_FP32  ) s = sizeof (float   ) ;
     else if (atype == GrB_FP64  ) s = sizeof (double  ) ;
-    LG_ASSERT_MSG (s != 0, GrB_NOT_IMPLEMENTED, "unsupported type") ;
+    LG_ASSERT_MSG (s != 0, GrB_NOT_IMPLEMENTED, "unsupported type") ;   // FIXME:RETVAL
     (*typesize) = s ;
 
     GrB_TRY (GrB_Matrix_exportSize (Ap_len, Aj_len, Ax_len, GrB_CSR_FORMAT,

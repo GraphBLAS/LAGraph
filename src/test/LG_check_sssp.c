@@ -82,10 +82,10 @@ int LG_check_sssp
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
-    LG_ASSERT_MSG (n == ncols, -1001, "G->A must be square") ;
+    LG_ASSERT_MSG (n == ncols, -1001, "G->A must be square") ;  // FIXME:RETVAL
     char atype_name [LAGRAPH_MAX_NAME_LEN] ;
     LG_TRY (LAGraph_MatrixTypeName (atype_name, G->A, msg)) ;
-    LG_ASSERT_MSG (MATCHNAME (atype_name, "int32_t"), -1001,
+    LG_ASSERT_MSG (MATCHNAME (atype_name, "int32_t"), -1001,    // FIXME:RETVAL
         "G->A must be int32") ;
     bool print_timings = (n >= 2000) ;
 
@@ -95,7 +95,7 @@ int LG_check_sssp
 
     path_length_in = LAGraph_Malloc (n, sizeof (int64_t)) ;
     LG_ASSERT (path_length_in != NULL, GrB_OUT_OF_MEMORY) ;
-    LG_ASSERT_MSG (LG_check_vector (path_length_in, Path_Length, n, INT32_MAX)
+    LG_ASSERT_MSG (LG_check_vector (path_length_in, Path_Length, n, INT32_MAX)  // FIXME:RETVAL
         == 0, -1004, "invalid Path_Length") ;
 
     //--------------------------------------------------------------------------
@@ -160,7 +160,7 @@ int LG_check_sssp
         }
     }
     int64_t nheap = n ;
-    LG_ASSERT_MSG (LG_heap_check (Heap, Iheap, n, nheap) == 0, -1011,
+    LG_ASSERT_MSG (LG_heap_check (Heap, Iheap, n, nheap) == 0, -1011,   // FIXME:RETVAL
         "invalid heap") ;
 
     while (nheap > 0)
@@ -178,7 +178,7 @@ int LG_check_sssp
         // printf ("\nafter delete\n") ;
         if (n < 200)
         {
-            LG_ASSERT_MSG (LG_heap_check (Heap, Iheap, n, nheap) == 0, -1013,
+            LG_ASSERT_MSG (LG_heap_check (Heap, Iheap, n, nheap) == 0, -1013,   // FIXME:RETVAL
                 "invalid heap") ;
         }
 
@@ -229,7 +229,7 @@ int LG_check_sssp
             int64_t w = (int64_t) (weights [iso ? 0 : k]) ;
             // printf ("consider edge (%ld,%ld) weight %ld\n", u, v, w) ;
 
-            LG_ASSERT_MSG (w > 0, -1008, "invalid graph (weights must be > 0)") ;
+            LG_ASSERT_MSG (w > 0, -1008, "invalid graph (weights must be > 0)") ;   // FIXME:RETVAL
             int64_t new_distance = u_distance + w ;
             if (distance [v] > new_distance)
             {
@@ -239,14 +239,14 @@ int LG_check_sssp
                 distance [v] = new_distance ;
                 // parent [v] = u ;
                 int64_t p = Iheap [v] ;
-                LG_ASSERT (Heap [p].name == v, -2000) ;
+                LG_ASSERT (Heap [p].name == v, -2000) ; // FIXME:RETVAL
                 LG_heap_decrease_key (p, new_distance, Heap, Iheap, n, nheap) ;
             }
         }
 
         if (n < 200)
         {
-            LG_ASSERT_MSG (LG_heap_check (Heap, Iheap, n, nheap) == 0, -1014,
+            LG_ASSERT_MSG (LG_heap_check (Heap, Iheap, n, nheap) == 0, -1014,   // FIXME:RETVAL
                 "invalid heap") ;
         }
 
@@ -276,7 +276,7 @@ int LG_check_sssp
     for (int64_t i = 0 ; i < n ; i++)
     {
         bool ok = (path_length_in [i] == distance [i]) ;
-        LG_ASSERT_MSG (ok, -1004, "invalid path length") ;
+        LG_ASSERT_MSG (ok, -1004, "invalid path length") ;  // FIXME:RETVAL
     }
 
     //--------------------------------------------------------------------------

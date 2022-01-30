@@ -137,7 +137,7 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
     {
         // A and A' differ
         AT = G->AT ;
-        LG_ASSERT_MSG (AT != NULL, -1, "G->AT is required") ;
+        LG_ASSERT_MSG (AT != NULL, -1, "G->AT is required") ;   // FIXME:RETVAL
     }
 
     // =========================================================================

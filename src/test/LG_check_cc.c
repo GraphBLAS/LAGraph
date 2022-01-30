@@ -68,10 +68,10 @@ int LG_check_cc
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
-    LG_ASSERT_MSG (n == ncols, -1001, "G->A must be square") ;
+    LG_ASSERT_MSG (n == ncols, -1001, "G->A must be square") ;      // FIXME:RETVAL
     LG_ASSERT (Component != NULL, GrB_NULL_POINTER) ;
 
-    LG_ASSERT_MSG ((G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
+    LG_ASSERT_MSG ((G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||      // FIXME:RETVAL
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
         G->A_structure_is_symmetric == LAGRAPH_TRUE)),
         -1001, "G->A must be known to be symmetric") ;
@@ -89,7 +89,7 @@ int LG_check_cc
 
     component_in = LAGraph_Malloc (n, sizeof (int64_t)) ;
     LG_ASSERT (component_in != NULL, GrB_OUT_OF_MEMORY) ;
-    LG_ASSERT_MSG (LG_check_vector (component_in, Component, n, -1) == 0, -1004,
+    LG_ASSERT_MSG (LG_check_vector (component_in, Component, n, -1) == 0, -1004,        // FIXME:RETVAL
         "invalid Component") ;
 
     //--------------------------------------------------------------------------
@@ -101,7 +101,7 @@ int LG_check_cc
     for (int64_t i = 0 ; i < n ; i++)
     {
         int64_t comp = component_in [i] ; 
-        LG_ASSERT (comp >= 0 && comp < n, -1007) ;
+        LG_ASSERT (comp >= 0 && comp < n, -1007) ;      // FIXME:RETVAL
         count [comp]++ ;
         if (comp == i)
         {
@@ -160,7 +160,7 @@ int LG_check_cc
         // src node is part of a new connected component, comp
         int64_t comp = component_in [src] ;
         ncomp++ ;
-        LG_ASSERT_MSG (ncomp <= ncomp_in, -1008, "wrong # of components") ;
+        LG_ASSERT_MSG (ncomp <= ncomp_in, -1008, "wrong # of components") ;     // FIXME:RETVAL
 
         queue [0] = src ;
         int64_t head = 0 ;
@@ -195,7 +195,7 @@ int LG_check_cc
                 // consider edge (u,v)
                 int64_t v = node_u_adjacency_list [k] ;
                 // ensure v is in the same connected component as the src node
-                LG_ASSERT (comp == component_in [u], -1009) ;
+                LG_ASSERT (comp == component_in [u], -1009) ;       // FIXME:RETVAL
                 // printf ("    seen: %ld\n", v) ;
                 if (!visited [v])
                 {
@@ -208,7 +208,7 @@ int LG_check_cc
         }
     }
 
-    LG_ASSERT_MSG (ncomp == ncomp_in, -1010, "wrong # of components") ;
+    LG_ASSERT_MSG (ncomp == ncomp_in, -1010, "wrong # of components") ;     // FIXME:RETVAL
 
     LAGraph_Toc (&tt, tic, msg) ;
     printf ("LG_check_cc component time: %g sec\n", tt) ;

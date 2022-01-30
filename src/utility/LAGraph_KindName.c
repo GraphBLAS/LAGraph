@@ -34,7 +34,7 @@ int LAGraph_KindName        // returns 0 if successful, -1 if failure
         case LAGRAPH_ADJACENCY_UNDIRECTED : strcpy (name, "undirected"); break ;
         case LAGRAPH_ADJACENCY_DIRECTED :   strcpy (name, "directed")  ; break ;
         case LAGRAPH_KIND_UNKNOWN :         strcpy (name, "unknown")   ; break ;
-        default : LG_ASSERT_MSG (false, GrB_INVALID_VALUE, "invalid kind") ;
+        default : LG_ASSERT_MSG (false, GrB_INVALID_VALUE, "invalid kind") ;    // FIXME:RETVAL
     }
 
     return (GrB_SUCCESS) ;

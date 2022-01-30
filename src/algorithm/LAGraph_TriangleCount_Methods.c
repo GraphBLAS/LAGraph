@@ -136,7 +136,7 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
         "method is invalid") ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     LG_ASSERT (ntriangles != NULL, GrB_NULL_POINTER) ;
-    LG_ASSERT (G->ndiag == 0, -104) ;
+    LG_ASSERT (G->ndiag == 0, -104) ;   // FIXME:RETVAL
 
     LG_ASSERT_MSG ((G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
@@ -148,7 +148,7 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
     bool auto_sort = (presort != NULL && (*presort) == 2) ;
     if (auto_sort && method >= 3 && method <= 6)
     {
-        LG_ASSERT_MSG (Degree != NULL, -106, "G->rowdegree must be defined") ;
+        LG_ASSERT_MSG (Degree != NULL, -106, "G->rowdegree must be defined") ;  // FIXME:RETVAL
     }
 
     //--------------------------------------------------------------------------
