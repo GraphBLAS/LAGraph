@@ -44,14 +44,13 @@ int LG_check_export
     void *Ax = NULL ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
 
-    // FIXME: do need need the msg?  or is LG_ASSERT (...) OK?
-    LG_ASSERT_MSG (Ap_handle != NULL, GrB_NULL_POINTER, "&Ap != NULL") ;
-    LG_ASSERT_MSG (Aj_handle != NULL, GrB_NULL_POINTER, "&Aj != NULL") ;
-    LG_ASSERT_MSG (Ax_handle != NULL, GrB_NULL_POINTER, "&Ax != NULL") ;
-    LG_ASSERT_MSG (Ap_len != NULL, GrB_NULL_POINTER, "&Ap_len != NULL") ;
-    LG_ASSERT_MSG (Aj_len != NULL, GrB_NULL_POINTER, "&Aj_len != NULL") ;
-    LG_ASSERT_MSG (Ax_len != NULL, GrB_NULL_POINTER, "&Ax_len != NULL") ;
-    LG_ASSERT (typesize != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT_MSG (Ap_handle != NULL, GrB_NULL_POINTER, "&Ap is NULL") ;
+    LG_ASSERT_MSG (Aj_handle != NULL, GrB_NULL_POINTER, "&Aj is NULL") ;
+    LG_ASSERT_MSG (Ax_handle != NULL, GrB_NULL_POINTER, "&Ax is NULL") ;
+    LG_ASSERT_MSG (Ap_len != NULL, GrB_NULL_POINTER, "&Ap_len is NULL") ;
+    LG_ASSERT_MSG (Aj_len != NULL, GrB_NULL_POINTER, "&Aj_len is NULL") ;
+    LG_ASSERT_MSG (Ax_len != NULL, GrB_NULL_POINTER, "&Ax_len is NULL") ;
+    LG_ASSERT_MSG (typesize != NULL, GrB_NULL_POINTER, "&typesize is NULL") ;
 
     // get the type of G->A
     GrB_Type atype = NULL ;

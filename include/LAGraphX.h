@@ -290,8 +290,6 @@ void LAGraph_SFreeSet           // free a set of matrices
  * @param[in]   G       input graph, A, not modified.  Must be undirected
  *                      or directed with symmetric structure, no self edges.
  *
- * @todo Need change return value to int (not GrB_Info)
- *
  * @retval GrB_SUCCESS      if completed successfully (equal or not)
  * @retval GrB_NULL_POINTER if kmax, ntris, nedges, nsteps is NULL
  * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.

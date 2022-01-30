@@ -228,11 +228,18 @@ int LAGraph_MMWrite
         MM_type = MM_real ;
     }
     #if 0
+    #if LG_SUITESPARSE
     else if (type == GxB_FC32 || type == GxB_FC64)
     {
         MM_type = MM_complex ;
     }
     #endif
+    #endif
+    else
+    {
+        LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED,  // FIXME:RETVAL
+                "type not supported") ;
+    }
 
     //--------------------------------------------------------------------------
     // determine symmetry

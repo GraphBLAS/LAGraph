@@ -1054,7 +1054,7 @@ int LAGraph_Sort3    // sort array A of size 3-by-n, using 3 keys (A [0:2][])
  *                           TODO: consider removing this option or reverse logic
  * @param[out]    msg        Error message if a failure code is returned.
  *
- * @todo pick return values that do not conflict with GraphBLAS errors.
+ * @TODO pick return values that do not conflict with GraphBLAS errors.
  *
  * @retval         0         successful
  * @retval      -102         Graph is invalid (LAGraph_CheckGraph failed)
@@ -1102,7 +1102,7 @@ int LAGraph_VertexCentrality    // returns -1 on failure, 0 if successful
  * @param[in,out] G          The graph, symmetric, no self loops.
  * @param[out]    msg        Error message if a failure code is returned.
  *
- * @todo pick return values that do not conflict with GraphBLAS errors.
+ * @TODO pick return values that do not conflict with GraphBLAS errors.
  *
  * @retval         0         successful
  * @retval      -102         Graph is invalid (LAGraph_CheckGraph failed)

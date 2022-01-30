@@ -35,27 +35,36 @@ int LAGraph_TypeFromName    // returns 0 if successful, < 0 if failure
     // determine the GrB_Type from its name
     //--------------------------------------------------------------------------
 
-    if      (MATCHNAME (name, "bool"          )) (*type) = GrB_BOOL   ;
-    else if (MATCHNAME (name, "int8_t"        )) (*type) = GrB_INT8   ;
-    else if (MATCHNAME (name, "int16_t"       )) (*type) = GrB_INT16  ;
-    else if (MATCHNAME (name, "int32_t"       )) (*type) = GrB_INT32  ;
-    else if (MATCHNAME (name, "int64_t"       )) (*type) = GrB_INT64  ;
-    else if (MATCHNAME (name, "uint8_t"       )) (*type) = GrB_UINT8  ;
-    else if (MATCHNAME (name, "uint16_t"      )) (*type) = GrB_UINT16 ;
-    else if (MATCHNAME (name, "uint32_t"      )) (*type) = GrB_UINT32 ;
-    else if (MATCHNAME (name, "uint64_t"      )) (*type) = GrB_UINT64 ;
-    else if (MATCHNAME (name, "float"         )) (*type) = GrB_FP32   ;
-    else if (MATCHNAME (name, "double"        )) (*type) = GrB_FP64   ;
-//  if complex types from SuiteSparse:GraphBLAS are added to LAGraph:
-//  else if (MATCHNAME (name, "float complex" )) (*type) = GxB_FC32   ;
-//  else if (MATCHNAME (name, "double complex")) (*type) = GxB_FC64   ;
-    else
-    {
-        (*type) = NULL ;
-        LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED,  // FIXME:RETVAL
-            "user-defined types not supported") ;
-    }
+    #if LG_SUITESPARSE
 
-    return (GrB_SUCCESS) ;
+        return (GxB_Type_from_name (type, name)) ;
+
+    #else
+
+        if      (MATCHNAME (name, "bool"          )) (*type) = GrB_BOOL   ;
+        else if (MATCHNAME (name, "int8_t"        )) (*type) = GrB_INT8   ;
+        else if (MATCHNAME (name, "int16_t"       )) (*type) = GrB_INT16  ;
+        else if (MATCHNAME (name, "int32_t"       )) (*type) = GrB_INT32  ;
+        else if (MATCHNAME (name, "int64_t"       )) (*type) = GrB_INT64  ;
+        else if (MATCHNAME (name, "uint8_t"       )) (*type) = GrB_UINT8  ;
+        else if (MATCHNAME (name, "uint16_t"      )) (*type) = GrB_UINT16 ;
+        else if (MATCHNAME (name, "uint32_t"      )) (*type) = GrB_UINT32 ;
+        else if (MATCHNAME (name, "uint64_t"      )) (*type) = GrB_UINT64 ;
+        else if (MATCHNAME (name, "float"         )) (*type) = GrB_FP32   ;
+        else if (MATCHNAME (name, "double"        )) (*type) = GrB_FP64   ;
+        #if 0
+        // if complex types from SuiteSparse:GraphBLAS are added to LAGraph:
+        else if (MATCHNAME (name, "float complex" )) (*type) = GxB_FC32   ;
+        else if (MATCHNAME (name, "double complex")) (*type) = GxB_FC64   ;
+        #endif
+        else
+        {
+            (*type) = NULL ;
+            LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED,  // FIXME:RETVAL
+                "user-defined types not supported") ;
+        }
+        return (GrB_SUCCESS) ;
+
+    #endif
 }
 

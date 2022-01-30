@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_NameOfType: return the C name of a type
+// LAGraph_NameOfType: return the C name of a GraphBLAS GrB_Type
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -30,30 +30,37 @@ int LAGraph_NameOfType      // returns 0 if successful, < 0 if failure
     // determine the name of the type
     //--------------------------------------------------------------------------
 
-    // FIXME: ifdef LG_SUITESPARSE and use GxB_Type_name, etc.
+    #if LG_SUITESPARSE
 
-    if      (type == GrB_BOOL  ) strcpy (name, "bool")     ;
-    else if (type == GrB_INT8  ) strcpy (name, "int8_t")   ;
-    else if (type == GrB_INT16 ) strcpy (name, "int16_t")  ;
-    else if (type == GrB_INT32 ) strcpy (name, "int32_t")  ;
-    else if (type == GrB_INT64 ) strcpy (name, "int64_t")  ;
-    else if (type == GrB_UINT8 ) strcpy (name, "uint8_t")  ;
-    else if (type == GrB_UINT16) strcpy (name, "uint16_t") ;
-    else if (type == GrB_UINT32) strcpy (name, "uint32_t") ;
-    else if (type == GrB_UINT64) strcpy (name, "uint64_t") ;
-    else if (type == GrB_FP32  ) strcpy (name, "float")    ;
-    else if (type == GrB_FP64  ) strcpy (name, "double")   ;
-    #if 0
-    else if (type == GxB_FC32  ) strcpy (name, "float complex") ;
-    else if (type == GxB_FC64  ) strcpy (name, "double complex") ;
+        // always succeeds, even for user-defined types, unless the
+        // type is an invalid object
+        return (GxB_Type_name (name, type)) ;
+
+    #else
+
+        if      (type == GrB_BOOL  ) strcpy (name, "bool")     ;
+        else if (type == GrB_INT8  ) strcpy (name, "int8_t")   ;
+        else if (type == GrB_INT16 ) strcpy (name, "int16_t")  ;
+        else if (type == GrB_INT32 ) strcpy (name, "int32_t")  ;
+        else if (type == GrB_INT64 ) strcpy (name, "int64_t")  ;
+        else if (type == GrB_UINT8 ) strcpy (name, "uint8_t")  ;
+        else if (type == GrB_UINT16) strcpy (name, "uint16_t") ;
+        else if (type == GrB_UINT32) strcpy (name, "uint32_t") ;
+        else if (type == GrB_UINT64) strcpy (name, "uint64_t") ;
+        else if (type == GrB_FP32  ) strcpy (name, "float")    ;
+        else if (type == GrB_FP64  ) strcpy (name, "double")   ;
+        #if 0
+        else if (type == GxB_FC32  ) strcpy (name, "float complex") ;
+        else if (type == GxB_FC64  ) strcpy (name, "double complex") ;
+        #endif
+        else
+        {
+            name [0] = '\0' ;
+            LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED,  // FIXME:RETVAL
+                "user-defined types not supported") ;
+        }
+        return (GrB_SUCCESS) ;
+
     #endif
-    else
-    {
-        name [0] = '\0' ;
-        LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED,  // FIXME:RETVAL
-            "user-defined types not supported") ;
-    }
-
-    return (GrB_SUCCESS) ;
 }
 

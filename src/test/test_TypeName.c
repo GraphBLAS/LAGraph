@@ -71,9 +71,17 @@ void test_NameOfType  (void)
     TEST_CHECK (LAGraph_ScalarTypeName (NULL, s, msg) == GrB_NULL_POINTER) ;
     TEST_CHECK (LAGraph_ScalarTypeName (name, NULL, msg) == GrB_NULL_POINTER) ;
 
+    name [0] = '\0' ;
     OK (GrB_Type_new (&type, sizeof (myint))) ;
-    TEST_CHECK (LAGraph_NameOfType (name, type, msg) == GrB_NOT_IMPLEMENTED) ;
+    int result = LAGraph_NameOfType (name, type, msg) ;
+    #if LG_SUITESPARSE
+    printf ("\nSuiteSparse knows the type name: [%s]\n", name) ;
+    TEST_CHECK (result == GrB_SUCCESS) ;
+    OK (strcmp (name, "myint")) ;
+    #else
+    TEST_CHECK (result == GrB_NOT_IMPLEMENTED) ;
     printf ("\nmsg: %s\n", msg) ;
+    #endif
 
     TEST_CHECK (LAGraph_NameOfType (NULL, NULL, msg) == GrB_NULL_POINTER) ;
     printf ("\nmsg: %s\n", msg) ;

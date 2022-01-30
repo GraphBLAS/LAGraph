@@ -31,6 +31,11 @@
 // reimports it back.  G->A is unchanged when the function returns, but during
 // execution G->A is invalid.
 
+// A note about "todo" and "fixme" in this file:  these do not need to be fixed
+// or changed for this method, since the revised version appears as
+// src/algorithm/LG_CC_FastSV6.c.  They have thus been changed here to lower
+// case.
+
 #define LAGraph_FREE_ALL ;
 
 #include "LG_internal.h"
