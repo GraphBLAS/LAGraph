@@ -1,4 +1,0 @@
-#!/bin/bash
-
-    ./build/ktest < /tmp/road_usa.mtx
-

@@ -66,8 +66,6 @@ As of Jan 30, 2022:
 
     * add names to Contributors.txt
 
-    * delete old/ folder
-
     * clean up src/benchmark (old output files)
 
 --------------------------------------------------------------------------------
