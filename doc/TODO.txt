@@ -58,15 +58,12 @@ As of Jan 30, 2022:
             (see SuiteSparse:GraphBLAS uses LZ4 for its GrB_Matrix_serialize/
             deserialize and it would not be hard to add LZ4 to LAGraph).
 
-    * move LICENSE, etc to doc/ ?
-
-    * delete BENCHMARK_INSTRUCTIONS__README1st.txt for v1.0
-
     * add names to Contributors.txt
 
-    * clean up src/benchmark (old output files)
+    * add FUTURE to User Guide (see below)
 
 --------------------------------------------------------------------------------
+TODO: add this as a section in the User Guide
 
 FUTURE: can we exploit asynch algorithms? C += A*C for example?
         Gauss-Seidel, Afforest, etc?  I can do it in GraphBLAS; can LAGraph

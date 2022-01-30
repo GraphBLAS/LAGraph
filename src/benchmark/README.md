@@ -1,14 +1,36 @@
-# LAGraph/src/demo:  Demo programs that use LAGraph and GraphBLAS
+# LAGraph/src/benchmark:  Demo programs that use LAGraph and GraphBLAS
 # to run all of the GAP Benchmark problems.
 
-LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+LAGraph, (c) 2021-2022 by The LAGraph Contributors, All Rights Reserved.
 SPDX-License-Identifier: BSD-2-Clause
+
+# NOTE: Please read this carefully first
 
 BE SURE TO GET THE LATEST SuiteSparse:GraphBLAS.  LAGraph and SuiteSparse:
 GraphBLAS are under intense development and even minor changes can have a big
-impact on performances.  Also, please contact the authors of the library if you
+impact on performance.  Also, please contact the authors of the library if you
 have any questions about benchmarking.  (Tim Davis: davis@tamu.edu, in
 particular).
+
+LAGraph is a draft package (not yet v1.0), and its performance is not yet
+stable.  It includes many draft algorithms that are sometimes posted on github
+in debug mode, or with known suboptimal performance.  We ask that you not
+benchmark LAGraph on your own without contacting the authors to make sure you
+have the right version, and the right version of SuiteSparse:GraphBLAS to go
+with it.
+
+If you run in vanilla mode, by compiling LAGraph with
+
+    cmake -DLG_VANILLA=1 ..
+
+Then performance can be quite low since in this case LAGraph does not use
+any SuiteSparse:GraphBLAS GxB extensions.  We are still developing the
+pure GrB implementations of these algorithms.
+
+However, assuming things are stable, follow the instructions in the
+next section.
+
+# How to run the GAP benchmarks with LAGraph and SuiteSparse:GraphBLAS
 
 To download the GAP benchmark matrices, optionally convert them to binary .grb
 files (SuiteSparse-only), and to run the GAP benchmarks, do the following:
@@ -60,9 +82,9 @@ files (SuiteSparse-only), and to run the GAP benchmarks, do the following:
         GAP-web/GAP-web_sources.mtx
 
 (6) If you wish to use the vanilla LAGraph + GraphBLAS to run the GAP
-    benchmarks, or if you wish to use LAGraph + SuiteSparse:GraphBLAS and don't
-    mind the time it takes to load in a MatrixMarket file, then you can skip
-    this Step (6).
+    benchmarks (it will be slow!), or if you wish to use LAGraph +
+    SuiteSparse:GraphBLAS and don't mind the time it takes to load in a
+    MatrixMarket file, then you can skip this Step (6).
 
     However, if you are using SuiteSparse:GraphBLAS, and wish to run the GAP
     benchmark multiple times, it is faster to create binary .grb files from the

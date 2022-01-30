@@ -1,6 +1,0 @@
- 
-======================================================================
-GAP benchmarks using LAGraph+GraphBLAS: Triangle Counting
-======================================================================
-Matrix input file format:  grb
-GAP matrices located in:   ../../../GAP
