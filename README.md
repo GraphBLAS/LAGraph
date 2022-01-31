@@ -3,14 +3,14 @@
 # LAGraph
 
 LAGraph is a draft library plus a test harness for collecting algorithms that
-use the GraphBLAS.
+use GraphBLAS.
 
-The library can be built and tested with any GraphBLAS library.
-Currently, if SuiteSparse:GraphBLAS is used, v6.0.0 or later is required.
+Currently, SuiteSparse:GraphBLAS v6.0.2 or later is required.  However, use the
+latest stable release of SuiteSparse:GraphBLAS for best results.
 
-Since it's a draft, it contains are many draft/experimental codes with known
-sub-par performance.  Performance of the best methods is highly sensitive on
-which version of SuiteSparse:GraphBLAS is being used, as well.  No one other
+Since LAGraph is a draft, it contains are many draft/experimental codes with
+known sub-par performance.  Performance of the best methods is highly sensitive
+on which version of SuiteSparse:GraphBLAS is being used, as well.  No one other
 than the authors of this code are aware of which methods are the best, and how
 to achieve that performance.
 
@@ -59,9 +59,16 @@ LAGraph contains the following files and folders:
 
 	( cd build ; cmake .. ; make )
 
-    Doc: documentation
+    cmake:  helper scripts for CMake to find GraphBLAS and to provide
+        test coverage
 
-    Include: contains the LAGraph.h file
+    data: small test matrices for the continuous integration tests
+
+    deps: 3rd party dependencies
+
+    doc: documentation
+
+    include: contains the LAGraph.h and LAGraphX.h files
 
     LICENSE: BSD 2-clause license
 
@@ -69,24 +76,19 @@ LAGraph contains the following files and folders:
 
     README.md: this file
 
-    Source: stable source code for the LAGraph library:  this is currently
-        empty.
+    src: stable source code for the LAGraph library
 
-        * Algorithms: graph algorithms such as BFS, connected components,
-            centrality, etc, will go here
-
-        * Utilities: read/write a graph from a file, etc, will go here...
-
-    Experimental*: draft code under development: do not benchmark without
-        asking the LAGraph authors first
-
-        * Algorithms: draft graph algorithms such as BFS, connected components,
+        * algorithms: graph algorithms such as BFS, connected components,
             centrality, etc
 
-        * Utilities: draft utilities go here
+        * utilities: read/write a graph from a file, etc
 
-    Test*: main programs that test LAGraph.  To run the tests, first compile
-        GraphBLAS and LAGraph, and then do "make tests" in this directory.
+    experimental*: draft code under development: do not benchmark without
+        asking the LAGraph authors first
+
+        * Algorithms: draft graph algorithms such as Maximal Independent Set
+
+        * Utilities: draft utilities
 
     build: initially empty
 
@@ -99,9 +101,10 @@ a relative directory:
 
 So that LAGraph and GraphBLAS reside in the same parent folder.  The include
 file for GraphBLAS will be assumed to appear in ../GraphBLAS/Include, and the
-compiled GraphBLAS library is assumed to appear in ../GraphBLAS/build.  If you
-use a GraphBLAS library that uses a different structure, then edit the
-CMakeLists.txt file to point to right location.
+compiled GraphBLAS library is assumed to appear in ../GraphBLAS/build.  The
+CMake should find GraphBLAS, but if you use a GraphBLAS library that uses a
+different structure, then edit the CMakeLists.txt file to point to right
+location.
 
 Authors: (... list them here)
 
