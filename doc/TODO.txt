@@ -12,11 +12,6 @@ As of Jan 30, 2022:
         4 experimental/algorithms: lcc, cdlp, scc, msf, and part of cc_fastsv5
         1 src/algorithm: part of cc_fastsv6 
 
-    * error handling
-        use LG_ASSERT as much as possible, instead of LG_CHECK (almost done)
-        use LG_TRY (LAGraph_...(...,msg)) not LG_CHECK,
-            when calling LAGraph methods from LAGraph methods (done?).
-
     * unify error return values
         use GrB_Info when possible
 

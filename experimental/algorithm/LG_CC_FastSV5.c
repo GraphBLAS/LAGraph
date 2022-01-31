@@ -324,7 +324,7 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
 {
 
 #if LG_VANILLA
-    LG_CHECK (0, -1, "SuiteSparse required for this method") ;
+    LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED, "SuiteSparse required") ;
 #else
 
     //--------------------------------------------------------------------------
@@ -340,7 +340,7 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
     GrB_Matrix T = NULL ;
 
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
-    LG_CHECK (component == NULL, -1, "component parameter is NULL") ;
+    LG_ASSERT (component != NULL, GrB_NULL_POINTER) ;
 
     if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
@@ -352,14 +352,14 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
     else
     {
         // A must not be unsymmetric
-        LG_CHECK (false, -1, "input must be symmetric") ;
+        LG_ASSERT_MSG (false, -1, "input must be symmetric") ;
     }
 
     GrB_Matrix S = G->A ;
     GrB_TRY (GrB_Matrix_nrows (&n, S)) ;
     GrB_TRY (GrB_Matrix_nvals (&nnz, S)) ;
 
-    LG_CHECK (n > UINT32_MAX, -1, "problem too large (fixme)") ;
+    LG_ASSERT_MSG (n <= UINT32_MAX, -1, "problem too large (fixme)") ;
 
     #define FASTSV_SAMPLES 4
 
@@ -408,7 +408,7 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
     // allocate the hash table
     ht_key = LAGraph_Malloc (HASH_SIZE, sizeof (int32_t)) ;
     ht_val = LAGraph_Malloc (HASH_SIZE, sizeof (int32_t)) ;
-    LG_CHECK (ht_key == NULL || ht_val == NULL, -1, "out of memory") ;
+    LG_ASSERT (ht_key != NULL && ht_val != NULL, GrB_OUT_OF_MEMORY) ;
 
     //--------------------------------------------------------------------------
     // sample phase

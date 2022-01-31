@@ -100,8 +100,7 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
     GrB_Matrix T = NULL, L = NULL, A = NULL ;
     GrB_Vector y = NULL, u = NULL, w = NULL ;
 
-    LG_CHECK (centrality == NULL, GrB_NULL_POINTER, "centrality is NULL") ;
-    LG_CHECK (ntriangles == NULL, GrB_NULL_POINTER, "ntriangles is NULL") ;
+    LG_ASSERT (centrality != NULL && ntriangles != NULL, GrB_NULL_POINTER) ;
     (*centrality) = NULL ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
 
@@ -115,11 +114,11 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
     else
     {
         // A is not known to be symmetric
-        LG_CHECK (true, -1005, "G->A must be symmetric") ;
+        LG_ASSERT_MSG (false, -1005, "G->A must be symmetric") ;
     }
 
     // no self edges can be present
-    LG_CHECK (G->ndiag != 0, -1004, "G->ndiag must be zero") ;
+    LG_ASSERT_MSG (G->ndiag == 0, -1004, "G->ndiag must be zero") ;
 
     //--------------------------------------------------------------------------
     // create the T matrix

@@ -179,6 +179,11 @@ void test_ktruss_errors (void)
     TEST_CHECK (result == -1005) ;
     TEST_CHECK (C1 == NULL) ;
 
+    result = LG_check_ktruss (&C1, G, 3, msg) ;
+    printf ("\nresult: %d %s\n", result, msg) ;
+    TEST_CHECK (result == -1005) ;
+    TEST_CHECK (C1 == NULL) ;
+
     OK (LAGraph_Delete (&G, msg)) ;
     LAGraph_Finalize (msg) ;
 }

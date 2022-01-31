@@ -100,6 +100,11 @@ void test_MIS (void)
         OK (LAGraph_New (&G, &C, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
         TEST_CHECK (C == NULL) ;
 
+        // error handling test
+        int result = LAGraph_MaximalIndependentSet (&mis, G, 0, NULL, msg) ;
+        TEST_CHECK (result == -105) ;
+        TEST_CHECK (mis == NULL) ;
+
         // check if the pattern is symmetric
         OK (LAGraph_Property_ASymmetricStructure (G, msg)) ;
 
@@ -142,6 +147,7 @@ void test_MIS (void)
             OK (LAGraph_MaximalIndependentSet (&mis, G, seed, NULL, msg)) ;
             // check the result
             OK (LG_check_mis (G->A, mis, NULL, msg)) ;
+            OK (GrB_free (&mis)) ;
 
             // compute the MIS with ignored nodes
             OK (LAGraph_MaximalIndependentSet (&mis, G, seed, ignore, msg)) ;
@@ -188,6 +194,7 @@ void test_MIS (void)
             OK (LAGraph_MaximalIndependentSet (&mis, G, seed, NULL, msg)) ;
             // check the result
             OK (LG_check_mis (G->A, mis, NULL, msg)) ;
+            OK (GrB_free (&mis)) ;
 
             // compute the MIS with ignored nodes
             OK (LAGraph_MaximalIndependentSet (&mis, G, seed, ignore, msg)) ;
@@ -202,12 +209,13 @@ void test_MIS (void)
         OK (LAGraph_MaximalIndependentSet (&mis, G, 0, NULL, msg)) ;
         // check the result
         OK (LG_check_mis (G->A, mis, NULL, msg)) ;
+        OK (GrB_free (&mis)) ;
 
         // hack the random number generator to induce an error condition
         #if defined ( COVERAGE )
         printf ("Hack the random number generator to induce a stall:\n") ;
         random_hack = true ;
-        int result = LAGraph_MaximalIndependentSet (&mis, G, 0, NULL, msg) ;
+        result = LAGraph_MaximalIndependentSet (&mis, G, 0, NULL, msg) ;
         random_hack = false ;
         printf ("hack msg: %d %s\n", result, msg) ;
         TEST_CHECK (result == -111 || result == 0) ;
@@ -217,6 +225,7 @@ void test_MIS (void)
         }
         #endif
 
+        OK (GrB_free (&mis)) ;
         OK (GrB_free (&ignore)) ;
         OK (GrB_free (&empty_col)) ;
         OK (GrB_free (&empty_row)) ;

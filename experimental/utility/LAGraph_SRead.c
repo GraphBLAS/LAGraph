@@ -43,7 +43,7 @@ typedef struct json_object_element_s *json_o ;
 typedef struct json_array_element_s  *json_a ;
 
 #define STRMATCH(s,t) (strcmp (s,t) == 0)
-#define OK(ok) LG_CHECK (!(ok), -1001, "invalid file (" LG_STR(__LINE__) ")" )
+#define OK(ok) LG_ASSERT_MSG (ok, -1001, "invalid file (" LG_STR(__LINE__) ")" )
 #define VER(major,minor,sub) (((major)*1000ULL + (minor))*1000ULL + (sub))
 
 //------------------------------------------------------------------------------
@@ -112,8 +112,8 @@ int LAGraph_SRead   // read a set of matrices from a *.lagraph file
     LAGraph_Contents *Contents = NULL ;
     GrB_Index ncontents = 0 ;
 
-    LG_CHECK (collection_handle == NULL || Contents_handle == NULL || f == NULL
-        || ncontents_handle == NULL, GrB_NULL_POINTER, "inputs are NULL") ;
+    LG_ASSERT (collection_handle != NULL && Contents_handle != NULL && f != NULL
+        && ncontents_handle != NULL, GrB_NULL_POINTER) ;
     (*collection_handle) = NULL ;
     (*Contents_handle) = NULL ;
     (*ncontents_handle) = 0 ;
@@ -132,7 +132,7 @@ int LAGraph_SRead   // read a set of matrices from a *.lagraph file
             bool ok = true ;
             json_string = LAGraph_Realloc (2*s, s, sizeof (char), json_string,
                 &ok) ;
-            LG_CHECK (!ok, GrB_OUT_OF_MEMORY, "out of memory") ;
+            LG_ASSERT (ok, GrB_OUT_OF_MEMORY) ;
             s = 2*s ;
         }
         // get the next character from the file
@@ -151,7 +151,7 @@ int LAGraph_SRead   // read a set of matrices from a *.lagraph file
     //--------------------------------------------------------------------------
 
     root = json_parse (json_string, k) ;
-    LG_CHECK (root == NULL, GrB_OUT_OF_MEMORY, "out of memory") ;
+    LG_ASSERT (root != NULL, GrB_OUT_OF_MEMORY) ;
     LAGraph_Free ((void **) &json_string) ;
 
     //--------------------------------------------------------------------------
@@ -228,7 +228,7 @@ int LAGraph_SRead   // read a set of matrices from a *.lagraph file
     len = arr->length ;
     // allocate an Contents array of size len to hold the contents
     Contents = LAGraph_Calloc (len, sizeof (LAGraph_Contents)) ;
-    LG_CHECK (Contents == NULL, GrB_OUT_OF_MEMORY, "out of memory") ;
+    LG_ASSERT (Contents != NULL, GrB_OUT_OF_MEMORY) ;
 
     for (int i = 0 ; i < len && a != NULL ; i++, a = a->next)
     {

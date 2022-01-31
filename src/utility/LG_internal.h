@@ -143,23 +143,6 @@ typedef unsigned char LG_void ;
 #endif
 
 //------------------------------------------------------------------------------
-// LG_CHECK: deprecated.  Use LG_ASSERT_MSG instead
-//------------------------------------------------------------------------------
-
-// If an error condition is true, the msg string is written to with a
-// message controlled by the 3rd and following parameters.
-
-#define LG_CHECK(error_condition,error_status,...)      \
-{                                                       \
-    if (error_condition)                                \
-    {                                                   \
-        LG_ERROR_MSG (__VA_ARGS__) ;                    \
-        LAGraph_FREE_ALL ;                              \
-        return (error_status) ;                         \
-    }                                                   \
-}
-
-//------------------------------------------------------------------------------
 // LG_ASSERT_MSG: assert an expression is true, and return if it is false
 //------------------------------------------------------------------------------
 

@@ -66,8 +66,8 @@ GrB_Info LAGraph_BF_basic_pushpull
     // tmp vector to store distance vector after n (i.e., V) loops
     GrB_Vector d = NULL, dtmp = NULL;
 
-    LG_CHECK ((A == NULL && AT == NULL) || pd_output == NULL, -1001,
-        "inputs are NULL") ;
+    LG_ASSERT ((A != NULL || AT != NULL) && pd_output != NULL,
+        GrB_NULL_POINTER);
 
     (*pd_output) = NULL;
     bool use_vxm_with_A;
@@ -89,13 +89,13 @@ GrB_Info LAGraph_BF_basic_pushpull
     // push/pull requires both A and AT
     bool push_pull = (A != NULL && AT != NULL) ;
 
-    LG_CHECK (nrows != ncols, -1002, "A must be square") ;
+    LG_ASSERT_MSG (nrows == ncols, -1002, "A must be square") ;
 
     GrB_Index n = nrows;           // n = # of vertices in graph
     // average node degree
     double dA = (n == 0) ? 0 : (((double) nvalA) / (double) n) ;
 
-    LG_CHECK (s >= n || s < 0, -1003, "invalid source node") ;
+    LG_ASSERT_MSG (s < n, GrB_INVALID_INDEX, "invalid source node") ;
 
     // values used to determine if d should be converted to dense
     // dthreshold is used when only A or AT is available

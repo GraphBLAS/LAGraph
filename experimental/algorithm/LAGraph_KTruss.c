@@ -52,9 +52,9 @@ int LAGraph_KTruss              // compute the k-truss of a graph
 
     LG_CLEAR_MSG ;
     GrB_Matrix C = NULL ;
-    LG_CHECK (C_handle == NULL, GrB_NULL_POINTER, "input(s) are NULL") ;
+    LG_ASSERT (C_handle != NULL, GrB_NULL_POINTER) ;
     (*C_handle) = NULL ;
-    LG_CHECK (k < 3, GrB_INVALID_VALUE, "k invalid") ;
+    LG_ASSERT_MSG (k >= 3, GrB_INVALID_VALUE, "k invalid") ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
 
     if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
@@ -67,11 +67,11 @@ int LAGraph_KTruss              // compute the k-truss of a graph
     else
     {
         // A is not known to be symmetric
-        LG_CHECK (true, -1005, "G->A must be symmetric") ;
+        LG_ASSERT_MSG (false, -1005, "G->A must be symmetric") ;
     }
 
     // no self edges can be present
-    LG_CHECK (G->ndiag != 0, -1004, "G->ndiag must be zero") ;
+    LG_ASSERT_MSG (G->ndiag == 0, -1004, "G->ndiag must be zero") ;
 
     //--------------------------------------------------------------------------
     // initializations

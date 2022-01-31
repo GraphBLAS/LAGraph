@@ -14,7 +14,7 @@
 #define FPRINT(params)                                  \
 {                                                       \
     int result = fprintf params ;                       \
-    LG_CHECK (result < 0, -1002, "file not written") ;  \
+    LG_ASSERT_MSG (result >= 0, -1002, "file not written") ;  \
 }
 
 //------------------------------------------------------------------------------
@@ -30,7 +30,7 @@ int LAGraph_SWrite_HeaderStart  // write the first part of the JSON header
 {
     // check inputs
     LG_CLEAR_MSG ;
-    LG_CHECK (f == NULL || name == NULL, GrB_NULL_POINTER, "inputs are NULL") ;
+    LG_ASSERT (f != NULL && name != NULL, GrB_NULL_POINTER) ;
 
     // write the first part of the JSON header to the file
     FPRINT ((f, "{\n    \"LAGraph\": [%d,%d,%d],\n    \"GraphBLAS\": [ ",
@@ -78,7 +78,7 @@ int LAGraph_SWrite_HeaderItem   // write a single item to the JSON header
 {
     // check inputs
     LG_CLEAR_MSG ;
-    LG_CHECK (f == NULL, GrB_NULL_POINTER, "file pointer is NULL") ;
+    LG_ASSERT (f != NULL, GrB_NULL_POINTER) ;
 
     // write the JSON information for this item
     FPRINT ((f, "        { \"")) ;
@@ -111,14 +111,14 @@ int LAGraph_SWrite_HeaderItem   // write a single item to the JSON header
                 case 2007 : FPRINT ((f, "lz4hc:7")) ; break ;
                 case 2008 : FPRINT ((f, "lz4hc:8")) ; break ;
                 case 2009 : FPRINT ((f, "lz4hc:9")) ; break ;
-                default   : LG_CHECK (true, GrB_INVALID_VALUE,
+                default   : LG_ASSERT_MSG (false, GrB_INVALID_VALUE,
                     "invalid compression") ; break ;
             }
             break ;
 #endif
 
         default :
-            LG_CHECK (true, GrB_INVALID_VALUE, "invalid kind") ;
+            LG_ASSERT_MSG (false, GrB_INVALID_VALUE, "invalid kind") ;
             break ;
     }
 
@@ -138,7 +138,7 @@ int LAGraph_SWrite_HeaderEnd    // write the end of the JSON header
 {
     // check inputs
     LG_CLEAR_MSG ;
-    LG_CHECK (f == NULL, GrB_NULL_POINTER, "file pointer is NULL") ;
+    LG_ASSERT (f != NULL, GrB_NULL_POINTER) ;
 
     // finalize the JSON header string
     FPRINT ((f, "        null\n    ]\n}\n")) ;
@@ -163,11 +163,12 @@ int LAGraph_SWrite_Item  // write the serialized blob of a matrix/vector/text
 {
     // check inputs
     LG_CLEAR_MSG ;
-    LG_CHECK (f == NULL || blob == NULL, GrB_NULL_POINTER, "inputs are NULL") ;
+    LG_ASSERT (f != NULL && blob != NULL, GrB_NULL_POINTER) ;
 
     // write the blob
     size_t blob_written = fwrite (blob, sizeof (uint8_t), blob_size, f) ;
-    LG_CHECK (blob_written != blob_size, -1001, "file not written properly") ;
+    LG_ASSERT_MSG (blob_written == blob_size, -1001,
+        "file not written properly") ;
     return (GrB_SUCCESS) ;
 }
 

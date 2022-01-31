@@ -65,18 +65,18 @@ GrB_Info LAGraph_BF_pure_c
     int64_t i, j, k;
     int32_t *d = NULL;
     int64_t *pi = NULL;
-    LG_CHECK (I == NULL || J == NULL || W == NULL || pd == NULL ||
-        ppi == NULL, -1001, "inputs are NULL") ;
+    LG_ASSERT (I != NULL && J != NULL && W != NULL && pd != NULL &&
+        ppi != NULL, GrB_NULL_POINTER) ;
 
     LAGraph_Free ((void **) pd) ;
     LAGraph_Free ((void **) ppi) ;
 
-    LG_CHECK (s >= n || s < 0, -1002, "invalid source node") ;
+    LG_ASSERT_MSG (s < n, GrB_INVALID_INDEX, "invalid source node") ;
 
     // allocate d and pi
     d = LAGraph_Malloc(n, sizeof(int32_t));
     pi = LAGraph_Malloc(n, sizeof(int64_t));
-    LG_CHECK (d == NULL || pi == NULL, -1004, "out of memory") ;
+    LG_ASSERT (d != NULL && pi != NULL, GrB_OUT_OF_MEMORY) ;
 
     // initialize d to a vector of INF while set d(s) = 0
     // and pi to a vector of -1

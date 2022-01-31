@@ -176,8 +176,8 @@ GrB_Info LAGraph_BF_full2
     double *w = NULL;
     BF2_Tuple3_struct *W = NULL;
 
-    LG_CHECK (A == NULL || pd_output == NULL ||
-        ppi_output == NULL || ph_output == NULL, -1001, "inputs are NULL") ;
+    LG_ASSERT (A != NULL && pd_output != NULL &&
+        ppi_output != NULL && ph_output != NULL, GrB_NULL_POINTER) ;
 
     *pd_output  = NULL;
     *ppi_output = NULL;
@@ -185,10 +185,9 @@ GrB_Info LAGraph_BF_full2
     GrB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
     GrB_TRY (GrB_Matrix_nvals (&nz, A));
-    LG_CHECK (nrows != ncols, -1002, "A must be square") ;
+    LG_ASSERT_MSG (nrows == ncols, -1002, "A must be square") ;
     n = nrows;
-
-    LG_CHECK (s >= n || s < 0, -1003, "invalid source node") ;
+    LG_ASSERT_MSG (s < n, GrB_INVALID_INDEX, "invalid source node") ;
 
     //--------------------------------------------------------------------------
     // create all GrB_Type GrB_BinaryOp GrB_Monoid and GrB_Semiring
@@ -223,8 +222,8 @@ GrB_Info LAGraph_BF_full2
     J = LAGraph_Malloc (nz, sizeof(GrB_Index)) ;
     w = LAGraph_Malloc (nz, sizeof(double)) ;
     W = LAGraph_Malloc (nz, sizeof(BF2_Tuple3_struct)) ;
-    LG_CHECK (I == NULL || J == NULL || w == NULL || W == NULL, -1004,
-        "out of memory") ;
+    LG_ASSERT (I != NULL && J != NULL && w != NULL && W != NULL,
+        GrB_OUT_OF_MEMORY) ;
 
     //--------------------------------------------------------------------------
     // create matrix Atmp based on A, while its entries become BF_Tuple3 type
@@ -320,8 +319,8 @@ GrB_Info LAGraph_BF_full2
     w = LAGraph_Malloc (n, sizeof(double)) ;
     h  = LAGraph_Malloc (n, sizeof(GrB_Index)) ;
     pi = LAGraph_Malloc (n, sizeof(GrB_Index)) ;
-    LG_CHECK (I == NULL || W == NULL || w == NULL || h == NULL || pi == NULL,
-        -1004, "out of memory") ;
+    LG_ASSERT (I != NULL && W != NULL && w != NULL && h != NULL && pi != NULL,
+        GrB_OUT_OF_MEMORY) ;
 
     nz = n ;
     LAGRAPH_OK(GrB_Vector_extractTuples_UDT (I, (void *) W, &nz, d));

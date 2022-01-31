@@ -67,15 +67,14 @@ GrB_Info LAGraph_BF_basic_mxv
     // tmp vector to store distance vector after n loops
     GrB_Vector d = NULL, dtmp = NULL;
 
-    LG_CHECK (AT == NULL || pd_output == NULL, -1001, "inputs NULL") ;
+    LG_ASSERT (AT != NULL && pd_output != NULL, GrB_NULL_POINTER) ;
 
     *pd_output = NULL;
     GrB_TRY (GrB_Matrix_nrows (&nrows, AT)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols, AT)) ;
-    LG_CHECK (nrows != ncols, -1002, "AT must be square") ;
+    LG_ASSERT_MSG (nrows == ncols, -1002, "AT must be square") ;
     GrB_Index n = nrows;           // n = # of vertices in graph
-
-    LG_CHECK (s >= n || s < 0, -1003, "invalid source node") ;
+    LG_ASSERT_MSG (s < n, GrB_INVALID_INDEX, "invalid source node") ;
 
     // Initialize distance vector, change the d[s] to 0
     GrB_TRY (GrB_Vector_new(&d, GrB_FP64, n));

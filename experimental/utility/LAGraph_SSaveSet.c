@@ -62,8 +62,8 @@ int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
     LAGraph_Contents *Contents = NULL ;
     GrB_Descriptor desc = NULL ;
 
-    LG_CHECK (filename == NULL || Set == NULL || collection == NULL,
-        GrB_NULL_POINTER, "inputs are NULL") ;
+    LG_ASSERT (filename != NULL && Set != NULL && collection != NULL,
+        GrB_NULL_POINTER) ;
 
     #if LG_SUITESPARSE
     GrB_TRY (GrB_Descriptor_new (&desc)) ;
@@ -71,7 +71,7 @@ int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
     #endif
 
     f = fopen (filename, "w") ;
-    LG_CHECK (f == NULL, -1001, "unable to create output file") ;
+    LG_ASSERT_MSG (f != NULL, -1001, "unable to create output file") ;
 
     //--------------------------------------------------------------------------
     // serialize all the matrices
@@ -79,7 +79,7 @@ int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
 
     // allocate an Contents array of size nmatrices to hold the contents
     Contents = LAGraph_Calloc (nmatrices, sizeof (LAGraph_Contents)) ;
-    LG_CHECK (Contents == NULL, GrB_OUT_OF_MEMORY, "out of memory") ;
+    LG_ASSERT (Contents != NULL, GrB_OUT_OF_MEMORY) ;
 
     for (GrB_Index i = 0 ; i < nmatrices ; i++)
     {
@@ -94,14 +94,13 @@ int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
             GrB_TRY (GrB_Matrix_serializeSize (&estimate, Set [i])) ;
             Contents [i].blob_size = estimate ;
             Contents [i].blob = LAGraph_Malloc (estimate, sizeof (uint8_t)) ;
-            LG_CHECK (Contents [i].blob == NULL, GrB_OUT_OF_MEMORY,
-                "out of memory") ;
+            LG_ASSERT (Contents [i].blob != NULL, GrB_OUT_OF_MEMORY) ;
             GrB_TRY (GrB_Matrix_serialize (Contents [i].blob,
                 (GrB_Index *) &(Contents [i].blob_size), Set [i])) ;
             bool ok ;
             Contents [i].blob = LAGraph_Realloc (&(Contents [i].blob_size),
                 estimate, sizeof (uint8_t), Contents [i].blob, &ok) ;
-            LG_CHECK (!ok, GrB_OUT_OF_MEMORY, "out of memory") ;
+            LG_ASSERT (ok, GrB_OUT_OF_MEMORY) ;
         }
         #endif
     }

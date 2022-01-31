@@ -56,7 +56,7 @@ int LG_check_mis        // check if iset is a valid MIS of A
     GrB_TRY (GrB_Vector_nvals (&nvals, iset)) ;
     I = (GrB_Index *) LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;
     X = (bool *) LAGraph_Malloc (nvals, sizeof (bool)) ;
-    LG_CHECK (I == NULL || X == NULL, -1, "out of memory") ;
+    LG_ASSERT (I != NULL && X != NULL, GrB_OUT_OF_MEMORY) ;
 
     GrB_TRY (GrB_Vector_extractTuples_BOOL (I, X, &nvals, iset)) ;
 
@@ -84,7 +84,7 @@ int LG_check_mis        // check if iset is a valid MIS of A
     GrB_TRY (GrB_Matrix_extract (C, NULL, NULL, A, I, isize, I, isize, NULL)) ;
     GrB_TRY (GrB_select (C, NULL, NULL, GrB_OFFDIAG, C, 0, NULL)) ;
     GrB_TRY (GrB_Matrix_nvals (&nvals, C)) ;
-    LG_CHECK (nvals != 0, -1, "error!  A(I,I) has an edge!\n") ;
+    LG_ASSERT_MSG (nvals == 0, -1, "error!  A(I,I) has an edge!\n") ;
     GrB_Matrix_free (&C) ;
 
     // now check if all other nodes are adjacent to the iset
@@ -112,7 +112,7 @@ int LG_check_mis        // check if iset is a valid MIS of A
 
     GrB_TRY (GrB_Vector_nvals (&nvals, e)) ;
     GrB_Vector_free (&e) ;
-    LG_CHECK (nvals != n, -1, "error! A (I,I is not maximal!\n") ;
+    LG_ASSERT_MSG (nvals == n, -1, "error! A (I,I is not maximal!\n") ;
 
     LAGraph_Free ((void **) &I) ;
 

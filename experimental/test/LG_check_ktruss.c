@@ -54,9 +54,9 @@ int LG_check_ktruss
     uint32_t *Cx = NULL ;
     void *Ax = NULL ;
     GrB_Index n, ncols, Cp_len, Cj_len, Cx_len, nvals1, nvals2 ;
-    LG_CHECK (C_handle == NULL, -1003, "C_handle is NULL") ;
+    LG_ASSERT (C_handle != NULL, GrB_NULL_POINTER) ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
-    LG_CHECK (G->ndiag != 0, -104, "G->ndiag must be zero") ;
+    LG_ASSERT_MSG (G->ndiag == 0, -104, "G->ndiag must be zero") ;
     if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
         G->A_structure_is_symmetric == LAGRAPH_TRUE))
@@ -67,11 +67,11 @@ int LG_check_ktruss
     else
     {
         // A is not known to be symmetric
-        LG_CHECK (false, -1005, "G->A must be symmetric") ;
+        LG_ASSERT_MSG (false, -1005, "G->A must be symmetric") ;
     }
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
-    LG_CHECK (n != ncols, -1001, "A must be square") ;
+    LG_ASSERT_MSG (n == ncols, -1001, "A must be square") ;
 
     //--------------------------------------------------------------------------
     // export G->A in CSR form and discard its values
@@ -87,7 +87,7 @@ int LG_check_ktruss
     //--------------------------------------------------------------------------
 
     Cx = (uint32_t *) LAGraph_Malloc (Cx_len, sizeof (uint32_t)) ;
-    LG_CHECK (Cx == NULL, GrB_OUT_OF_MEMORY, "out of memory") ;
+    LG_ASSERT (Cx != NULL, GrB_OUT_OF_MEMORY) ;
 
     //--------------------------------------------------------------------------
     // construct the k-truss of G->A

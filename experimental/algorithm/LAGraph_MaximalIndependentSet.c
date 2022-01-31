@@ -82,7 +82,7 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     GrB_Index n ;                       // # of nodes
 
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
-    LG_CHECK (mis == NULL, -103, "mis is null") ;
+    LG_ASSERT (mis != NULL, GrB_NULL_POINTER) ;
 
     if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
@@ -94,11 +94,11 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     else
     {
         // A is not known to be symmetric
-        LG_CHECK (false, -105, "G->A must be symmetric") ;
+        LG_ASSERT_MSG (false, -105, "G->A must be symmetric") ;
     }
 
-    LG_CHECK (G->rowdegree == NULL, -106, "G->rowdegree must be defined") ;
-    LG_CHECK (G->ndiag != 0, -107, "G->ndiag must be zero") ;
+    LG_ASSERT_MSG (G->rowdegree != NULL, -106, "G->rowdegree must be defined") ;
+    LG_ASSERT_MSG (G->ndiag == 0, -107, "G->ndiag must be zero") ;
 
     //--------------------------------------------------------------------------
     // initializations
@@ -286,7 +286,7 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
             // This case is nearly untestable since it can almost never occur.
             nstall++ ;
             // terminate if the method has stalled too many times
-            LG_CHECK (nstall > 32, -111, "stall") ;
+            LG_ASSERT_MSG (nstall <= 32, -111, "stall") ;
             // recreate the random number seeds with a new starting seed
             LG_TRY (LAGraph_Random_Seed (Seed, seed + nstall, msg)) ;
         }
