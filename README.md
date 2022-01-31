@@ -43,19 +43,16 @@ Then open this file in your browser:
 build/test_coverage/index.html
 ```
 
-To run the GAP benchmarks, see the instructions in these files:
+To run the GAP benchmarks, see the instructions in this file:
 ```
-./BENCHMARK_INSTRUCTIONS__README1st.txt
-./src/demo/README.md
+./src/benchmark/README.md
 ```
 
-# The rest of this README is outdated and needs to be updated.
+# LAGraph contents
 
 LAGraph contains the following files and folders:
 
-    CMakeLists.txt: a CMake script for compiling.  Do not run cmake in this
-        top-level directory.  Do "make" here, which does the build in the
-        ./build directory:
+    CMakeLists.txt: a CMake script for compiling:
 
 	( cd build ; cmake .. ; make )
 
@@ -92,6 +89,8 @@ LAGraph contains the following files and folders:
 
     build: initially empty
 
+# LAGraph and GraphBLAS
+
 To link against GraphBLAS, first install whatever GraphBLAS library you wish to
 use.  LAGraph will use -lgraphblas and will include the GraphBLAS.h file
 from its installed location.  Alternatively, the CMakeLists.txt script can use
@@ -106,5 +105,7 @@ CMake should find GraphBLAS, but if you use a GraphBLAS library that uses a
 different structure, then edit the CMakeLists.txt file to point to right
 location.
 
-Authors: (... list them here)
+# Authors
+
+TODO ... list them here
 
