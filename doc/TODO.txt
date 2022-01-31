@@ -12,14 +12,13 @@ As of Jan 30, 2022:
         4 experimental/algorithms: lcc, cdlp, scc, msf, and part of cc_fastsv5
         1 src/algorithm: part of cc_fastsv6 
 
-    * unify error return values as much as possible, now that v2.0 C API
-        has assigned enum values to GrB_Info.  Suggest we use GrB_Info
-        values, as ints, as much as possible
-        TODO: use LG_ASSERT as much as possible, instead of LG_CHECK
-            (almost done)
-        TODO: use LG_TRY (LAGraph_...(...,msg)) not LG_CHECK,
-            when calling LAGraph method from LAGraph methods.
-            (done?)
+    * error handling
+        use LG_ASSERT as much as possible, instead of LG_CHECK (almost done)
+        use LG_TRY (LAGraph_...(...,msg)) not LG_CHECK,
+            when calling LAGraph methods from LAGraph methods (done?).
+
+    * unify error return values
+        use GrB_Info when possible
 
         obvious:
         GrB_OUT_OF_MEMORY
@@ -27,14 +26,14 @@ As of Jan 30, 2022:
 
         See the code tag "FIXME:RETVAL"
 
-        OK?
+        are these OK?
         GrB_INVALID_INDEX: for invalid source node
         GrB_INVALID_VALUE: for invalid method in TC
         GrB_NOT_IMPLEMENTED:
-            type not supported (user-defined, complex, ...)
-            SuiteSparse required
+            * type not supported (user-defined, complex, ...)
+            * when SuiteSparse required
 
-        error conditions not in GrB_Info:
+        error conditions not in GrB_Info:  need to define these
             * file I/O error (file not found, fread failure, etc)
             * self-edges present but not tolerated by the algorithm
             * negative edge weight encountered, but not tolerated
@@ -57,6 +56,11 @@ As of Jan 30, 2022:
             GraphBLAS libraries can read.  Ideally using compression
             (see SuiteSparse:GraphBLAS uses LZ4 for its GrB_Matrix_serialize/
             deserialize and it would not be hard to add LZ4 to LAGraph).
+            We could add the format to the *.lagraph file format now used
+            by the experimental/utility/LAGraph_S*.c methods.  That is, the
+            same file format *.lagraph could include matrices in either
+            the universal format, or a library-specific format.  The format
+            would be specified by the json header in the *.lagraph file.
 
     * add names to Contributors.txt
 

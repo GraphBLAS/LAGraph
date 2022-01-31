@@ -170,11 +170,6 @@ int main (int argc, char **argv)
 
         }
 
-        //----------------------------------------------------------------------
-        // check result
-        //----------------------------------------------------------------------
-
-        // TODO: check results
         GrB_free (&centrality) ;
 
         // if burble is on, just do the first batch
