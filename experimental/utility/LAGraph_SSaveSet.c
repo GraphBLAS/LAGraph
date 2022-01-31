@@ -112,15 +112,8 @@ int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
     LG_TRY (LAGraph_SWrite_HeaderStart (f, collection, msg)) ;
     for (GrB_Index i = 0 ; i < nmatrices ; i++)
     {
-        #if LG_SUITESPARSE
         char typename [GxB_MAX_NAME_LEN] ;
-        GrB_TRY (GxB_Matrix_type_name (typename, Set [i])) ;
-        #else
-        // This will fail:  the C API has no method for querying the type of a
-        // matrix, so SuiteSparse is required for this LAGraph_SSaveSet to
-        // work. The C API urgently needs GrB_Matrix_type_name added to it.
-        char *typename = NULL ;
-        #endif
+        LG_TRY (LAGraph_MatrixTypeName (typename, Set [i], msg)) ;
         char matrix_name [256] ;
         snprintf (matrix_name, 256, "A_%" PRIu64, i) ;
         LG_TRY (LAGraph_SWrite_HeaderItem (f, LAGraph_matrix_kind,

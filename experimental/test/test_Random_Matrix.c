@@ -18,6 +18,8 @@
 char msg [LAGRAPH_MSG_LEN] ;
 GrB_Vector Seed = NULL ;
 GrB_Matrix A = NULL ;
+GrB_Type MyInt = NULL ;
+typedef int myint ;
 
 //------------------------------------------------------------------------------
 // test_Random_Matrix
@@ -99,6 +101,13 @@ void test_Random_Matrix (void)
     OK (LAGraph_Random_Matrix (&A, GrB_BOOL, 0, 5, 0.5, seed, msg)) ;
     OK (LAGraph_Matrix_print (A, 5, stdout, NULL)) ;
     OK (GrB_free (&A)) ;
+
+    printf ("\n----------------invalid type:\n") ;
+    OK (GrB_Type_new (&MyInt, sizeof (myint))) ;
+    int result = LAGraph_Random_Matrix (&A, MyInt, 0, 5, 0.5, seed, msg) ;
+    printf ("result %d msg [%s]\n", result, msg) ;
+    TEST_CHECK (result == GrB_NOT_IMPLEMENTED) ;
+    OK (GrB_free (&MyInt)) ;
 
     OK (LAGraph_Random_Finalize (msg)) ;
     LAGraph_Finalize (msg) ;

@@ -41,7 +41,7 @@
 #include "LG_internal.h"
 #include "LAGraphX.h"
 
-// hack
+// uncomment these to test vanilla case for just this file:
 // #undef LG_SUITESPARSE
 // #define LG_SUITESPARSE 0
 
@@ -89,6 +89,13 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
     void *X = NULL ;
     LG_ASSERT (A != NULL && type != NULL, GrB_NULL_POINTER) ;
     LG_ASSERT_MSG (density >= 0, GrB_INVALID_VALUE, "invalid density") ;    // FIXME:RETVAL
+
+    LG_ASSERT_MSG (type == GrB_BOOL
+        || type == GrB_INT8   || type == GrB_INT16 || type == GrB_INT32
+        || type == GrB_INT64  || type == GrB_UINT8 || type == GrB_UINT16
+        || type == GrB_UINT32 || type == GrB_UINT64
+        || type == GrB_FP32   || type == GrB_FP64,
+        GrB_NOT_IMPLEMENTED, "unsupported type") ;    // FIXME:RETVAL
 
     GrB_TRY (GrB_Matrix_new (A, type, nrows, ncols)) ;
     if (nrows == 0 || ncols == 0)
@@ -344,16 +351,12 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
             GrB_TRY (GrB_Vector_extractTuples_FP32 (ignore, X, &nvals,
                 Values)) ;
         }
-        else if (type == GrB_FP64)
+        else // if (type == GrB_FP64)
         {
             X = LAGraph_Malloc (nvals, sizeof (double)) ;
             LG_ASSERT (X != NULL, GrB_OUT_OF_MEMORY) ;
             GrB_TRY (GrB_Vector_extractTuples_FP64 (ignore, X, &nvals,
                 Values)) ;
-        }
-        else
-        {
-            LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED, "unsupported type") ;    // FIXME:RETVAL
         }
         LAGraph_Free ((void **) &ignore) ;
     }

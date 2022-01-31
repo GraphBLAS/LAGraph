@@ -139,12 +139,7 @@ int LAGraph_SLoadSet            // load a set of matrices from a *.lagraph file
             // convert Contents [i].typename to a GrB_Type ctype.
             // SuiteSparse:GraphBLAS allows this to be NULL for built-in types.
             GrB_Type ctype = NULL ;
-            #if LG_SUITESPARSE
-            // TODO For user-defined types, LAGraph would need to pass in an
-            // array of registered user-defined types.  If GxB_Type_from_name
-            // returns NULL, it would then look through that list of types.
-            GrB_TRY (GxB_Type_from_name (&ctype, Contents [i].type_name)) ;
-            #endif
+            LG_TRY (LAGraph_TypeFromName (&ctype, Contents [i].type_name, msg));
             GrB_TRY (GrB_Matrix_deserialize (&(Set [kmatrices]), ctype, blob,
                 blob_size)) ;
             kmatrices++ ;
