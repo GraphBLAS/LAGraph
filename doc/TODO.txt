@@ -1,4 +1,4 @@
-As of Jan 30, 2022:
+As of Feb 1, 2022:
 
     * entire user guide
         experimental -> src, how to do it.
@@ -13,13 +13,16 @@ As of Jan 30, 2022:
         1 src/algorithm: part of cc_fastsv6 
 
     * unify error return values
+        See the code tag "FIXME:RETVAL", summarized in:
+            doc/retval.txt
+            doc/retval_experimental.txt
+            doc/retval_test.txt
+
         use GrB_Info when possible
 
         obvious:
         GrB_OUT_OF_MEMORY
         GrB_NULL_POINTER
-
-        See the code tag "FIXME:RETVAL"
 
         are these OK?
         GrB_INVALID_INDEX: for invalid source node

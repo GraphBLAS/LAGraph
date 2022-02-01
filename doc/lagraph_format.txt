@@ -46,14 +46,19 @@ The inner section:
 could extend this to LAGraph_Matrix_serialize
 
 The inner section: could add:
-    "LAGraph_CSR"   CSR matrix, from GrB_Matrix_export, then
-                    serialized by LAGraph_Matrix_serialize
-    "LAGraph_CSC"
-    "LAGraph_COO"
-    etc
+    "LAGraph_CSR_Matrix"    CSR matrix, from GrB_Matrix_export, then
+                            serialized by LAGraph_Matrix_serialize
+    "LAGraph_CSC_Matrix"    CSC matrix from GrB_Matrix_export, serialized
+    "LAGraph_COO_Matrix"    COO matrix  "      " ditto
+    "LAGraph_CSC_Vector"    CSC vector, etc
+    ...
+
+Then each binary blob could be an opaque GrB_Matrix, GrB_Vector, from a
+particular GrB library, or a non-opaque text (ASCII or Unicode), or a
+non-opaque LAGraph CSR/CSC/COO matrix/vector.
 
 Pitfalls:
     no GrB method for exporting a vector
     no GrB method for asking the size of a type (see LAGraph_SizeOfType)
     no GrB method for asking the name of a type (see LAGraph_NameOfType)
-    
+
