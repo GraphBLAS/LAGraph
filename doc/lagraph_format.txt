@@ -1,0 +1,59 @@
+
+example:
+{
+    "LAGraph": [0,9,9],
+    "GraphBLAS": [ "SuiteSparse:GraphBLAS", [6,2,0] ],
+    "many test matrices":
+    [
+        { "GrB_Matrix": "A_0", "type": "bool", "bytes": 226 },
+        { "GrB_Matrix": "A_1", "type": "int32_t", "bytes": 421 },
+        { "GrB_Matrix": "A_7", "type": "double", "bytes": 421 },
+        null
+    ]
+}
+null character
+[the binary here, for 3 matrices (226 bytes, then 421 bytes, then 10,386 bytes]
+
+
+General form (currently):
+{
+    first line: name of library (LAGraph) and its version:
+    "LAGraph": [0,9,9],
+
+    2nd line: name of GraphBLAS library and its version:
+    "GraphBLAS": [ "SuiteSparse:GraphBLAS", [6,2,0] ],
+
+    3rd line: name of the collection
+    "many test matrices":
+    [
+        each line: "GrB_Matrix", or "GrB_Vector", or "text", ...
+            followed by matrix name (say "A_0"), its type ("bool"),
+            and size in bytes (226).  This collection has 3 matrices
+        { "GrB_Matrix": "A_0", "type": "bool", "bytes": 226 },
+        { "GrB_Matrix": "A_1", "type": "int32_t", "bytes": 421 },
+        { "GrB_Matrix": "C", "type": "double", "bytes": 10386 },
+        null
+    ]
+}
+[binary here]
+
+The inner section:
+    "GrB_Matrix"    serialized blob from GrB_Matrix_serialize
+    "GrB_Vector"    serialized blob from GxB_Vector_serialize
+    "text"          compressed ASCII or Unicode
+    { "text": "name", "compression:", "(compression method)", "bytes": n }
+
+could extend this to LAGraph_Matrix_serialize
+
+The inner section: could add:
+    "LAGraph_CSR"   CSR matrix, from GrB_Matrix_export, then
+                    serialized by LAGraph_Matrix_serialize
+    "LAGraph_CSC"
+    "LAGraph_COO"
+    etc
+
+Pitfalls:
+    no GrB method for exporting a vector
+    no GrB method for asking the size of a type (see LAGraph_SizeOfType)
+    no GrB method for asking the name of a type (see LAGraph_NameOfType)
+    

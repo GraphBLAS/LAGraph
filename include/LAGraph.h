@@ -800,6 +800,14 @@ int LAGraph_TypeFromName    // returns 0 if successful, < 0 if failure
     char *msg
 ) ;
 
+// LAGraph_SizeOfType: return sizeof(...) of a GraphBLAS GrB_Type
+int LAGraph_SizeOfType      // returns 0 if successful, < 0 if failure
+(
+    size_t *size,           // size of the type
+    GrB_Type type,          // GraphBLAS type
+    char *msg
+) ;
+
 // LAGraph_MatrixTypeName: return the name of the GrB_Type of a GrB_Matrix
 int LAGraph_MatrixTypeName // returns 0 if successful, < 0 if failure
 (

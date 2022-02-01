@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_Type: return the type or name of type of a matrix, vector, or scalar
+// LAGraph_*TypeName: return the name of type of a matrix, vector, or scalar
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.

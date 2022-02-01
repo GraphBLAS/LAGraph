@@ -47,7 +47,7 @@ endif ( )
 set ( CMAKE_MACOSX_RPATH TRUE )
 
 # version of LAGraph
-set ( LAGraph_DATE "May 14, 2021" )
+set ( LAGraph_DATE "Jan 31, 2022" )
 set ( LAGraph_VERSION_MAJOR 0 )
 set ( LAGraph_VERSION_MINOR 9 )
 set ( LAGraph_VERSION_SUB   9 )

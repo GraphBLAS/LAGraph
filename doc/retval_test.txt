@@ -1,0 +1,38 @@
+Return value questions (other than GrB_NULL_POINTER and GrB_OUT_OF_MEMORY):
+
+--------------------------------------------------------------------------------
+For testing only: return LG_TEST_FAILURE?
+
+src/test/LG_check_bfs.c
+
+    level is wrong
+    parent is wrong
+
+src/test/LG_check_cc.c
+
+    G->A must be known symmetric
+    invalid component
+    wrong # of components
+    node in wrong component
+
+src/test/LG_check_export.c
+
+    GrB_NOT_IMPLEMENTED: type not supported
+
+src/test/LG_check_sssp.c
+
+    G->A is not int32
+    path length is wrong
+    heap corrupted
+    negative edge encountered
+
+src/test/LG_check_tri.c
+
+    diagonal must have no entries
+    G->A must be known symmetric
+
+src/test/LG_heap.h
+
+    heap corrupted
+
+
