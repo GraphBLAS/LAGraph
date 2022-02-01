@@ -132,11 +132,14 @@ include ( GNUInstallDirs )
 # determine what user threading model to use
 #-------------------------------------------------------------------------------
 
-include ( FindOpenMP  )
-include ( FindThreads )
-
-if ( OPENMP_FOUND )
-    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS} " )
+if ( COVERAGE )
+    message ( STATUS "OpenMP disabled for test coverage" )
+else ( )
+    include ( FindOpenMP  )
+    include ( FindThreads )
+    if ( OPENMP_FOUND )
+        set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS} " )
+    endif ( )
 endif ( )
 
 #-------------------------------------------------------------------------------
