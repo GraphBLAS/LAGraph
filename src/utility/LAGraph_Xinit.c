@@ -8,10 +8,7 @@
 
 //------------------------------------------------------------------------------
 
-#define LAGraph_FREE_ALL        \
-{                               \
-    LAGraph_Finalize (msg) ;    \
-}
+#define LAGraph_FREE_ALL ;
 
 #include "LG_internal.h"
 
@@ -122,6 +119,12 @@ int LAGraph_Xinit           // returns 0 if successful, < 0 if failure
 
     LG_ASSERT_MSG (info == GrB_SUCCESS, info,
         "failed to initialize GraphBLAS") ;
+
+    #undef  LAGraph_FREE_ALL
+    #define LAGraph_FREE_ALL        \
+    {                               \
+        LAGraph_Finalize (msg) ;    \
+    }
 
     //--------------------------------------------------------------------------
     // save the memory management pointers in global LAGraph space

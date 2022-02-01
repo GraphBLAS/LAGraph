@@ -45,8 +45,6 @@ void test_Xinit (void)
     // LAGraph_Xinit cannot be called twice
     int status = LAGraph_Xinit (malloc, calloc, realloc, free, msg) ;
     TEST_CHECK (status != GrB_SUCCESS) ;
-
-    // TODO: this error message is not informative
     printf ("msg: %s\n", msg) ;
 
     OK (LAGraph_Finalize (msg)) ;
