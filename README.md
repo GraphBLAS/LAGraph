@@ -69,8 +69,6 @@ LAGraph contains the following files and folders:
 
     LICENSE: BSD 2-clause license
 
-    Makefile: a simple Makefile that relies on CMake to build LAGraph.
-
     README.md: this file
 
     src: stable source code for the LAGraph library

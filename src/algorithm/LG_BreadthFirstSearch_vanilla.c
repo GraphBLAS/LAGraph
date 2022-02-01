@@ -65,11 +65,11 @@ int LG_BreadthFirstSearch_vanilla
     //--------------------------------------------------------------------------
     // get the problem size and properties
     //--------------------------------------------------------------------------
+
     GrB_Matrix A = G->A ;
 
     GrB_Index n;
     GrB_TRY( GrB_Matrix_nrows (&n, A) );
-    LG_ASSERT_MSG (src < n, GrB_INVALID_INDEX, "invalid source node") ; // FIXME:RETVAL
 
     GrB_Matrix AT ;
     GrB_Vector Degree = G->rowdegree ;

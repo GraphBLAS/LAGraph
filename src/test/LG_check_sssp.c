@@ -82,7 +82,6 @@ int LG_check_sssp
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
-    LG_ASSERT_MSG (n == ncols, -1001, "G->A must be square") ;  // FIXME:RETVAL
     char atype_name [LAGRAPH_MAX_NAME_LEN] ;
     LG_TRY (LAGraph_MatrixTypeName (atype_name, G->A, msg)) ;
     LG_ASSERT_MSG (MATCHNAME (atype_name, "int32_t"), -1001,    // FIXME:RETVAL
@@ -95,8 +94,7 @@ int LG_check_sssp
 
     path_length_in = LAGraph_Malloc (n, sizeof (int64_t)) ;
     LG_ASSERT (path_length_in != NULL, GrB_OUT_OF_MEMORY) ;
-    LG_ASSERT_MSG (LG_check_vector (path_length_in, Path_Length, n, INT32_MAX)  // FIXME:RETVAL
-        == 0, -1004, "invalid Path_Length") ;
+    LG_TRY (LG_check_vector (path_length_in, Path_Length, n, INT32_MAX)) ;
 
     //--------------------------------------------------------------------------
     // unpack the matrix in CSR form for SuiteSparse:GraphBLAS

@@ -342,18 +342,10 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     LG_ASSERT (component != NULL, GrB_NULL_POINTER) ;
 
-    if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
+    LG_ASSERT_MSG ((G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
-        G->A_structure_is_symmetric == LAGRAPH_TRUE))
-    {
-        // A must be symmetric
-        ;
-    }
-    else
-    {
-        // A must not be unsymmetric
-        LG_ASSERT_MSG (false, -1, "input must be symmetric") ;
-    }
+        G->A_structure_is_symmetric == LAGRAPH_TRUE)),
+        -1001, "G->A must be known to be symmetric") ;
 
     GrB_Matrix S = G->A ;
     GrB_TRY (GrB_Matrix_nrows (&n, S)) ;

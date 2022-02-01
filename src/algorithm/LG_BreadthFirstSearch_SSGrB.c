@@ -77,11 +77,11 @@ int LG_BreadthFirstSearch_SSGrB
     //--------------------------------------------------------------------------
     // get the problem size and properties
     //--------------------------------------------------------------------------
+
     GrB_Matrix A = G->A ;
 
     GrB_Index n, nvals ;
     GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
-    LG_ASSERT_MSG (src < n, GrB_INVALID_INDEX, "invalid source node") ; // FIXME:RETVAL
 
     GrB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
 

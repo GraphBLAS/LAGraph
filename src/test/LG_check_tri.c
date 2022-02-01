@@ -56,13 +56,12 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
     LG_ASSERT (ntri != NULL, GrB_NULL_POINTER) ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     LG_ASSERT (G->ndiag == 0, -104) ;   // FIXME:RETVAL
-    LG_ASSERT_MSG ((G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||  // FIXME:RETVAL
+    LG_ASSERT_MSG ((G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
         G->A_structure_is_symmetric == LAGRAPH_TRUE)),
-        -1001, "G->A must be known to be symmetric") ;
+        -1001, "G->A must be known to be symmetric") ;  // FIXME:RETVAL
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
-    LG_ASSERT_MSG (n == ncols, -1001, "A must be square") ; // FIXME:RETVAL
 
     //--------------------------------------------------------------------------
     // export the matrix in CSR form

@@ -68,13 +68,12 @@ int LG_check_cc
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
-    LG_ASSERT_MSG (n == ncols, -1001, "G->A must be square") ;      // FIXME:RETVAL
     LG_ASSERT (Component != NULL, GrB_NULL_POINTER) ;
 
-    LG_ASSERT_MSG ((G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||      // FIXME:RETVAL
+    LG_ASSERT_MSG ((G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
         G->A_structure_is_symmetric == LAGRAPH_TRUE)),
-        -1001, "G->A must be known to be symmetric") ;
+        -1001, "G->A must be known to be symmetric") ; // FIXME:RETVAL
 
     //--------------------------------------------------------------------------
     // allocate workspace
@@ -89,8 +88,7 @@ int LG_check_cc
 
     component_in = LAGraph_Malloc (n, sizeof (int64_t)) ;
     LG_ASSERT (component_in != NULL, GrB_OUT_OF_MEMORY) ;
-    LG_ASSERT_MSG (LG_check_vector (component_in, Component, n, -1) == 0, -1004,        // FIXME:RETVAL
-        "invalid Component") ;
+    LG_TRY (LG_check_vector (component_in, Component, n, -1)) ;
 
     //--------------------------------------------------------------------------
     // find the # of connected components, according to Component vector
@@ -166,9 +164,6 @@ int LG_check_cc
         int64_t head = 0 ;
         int64_t tail = 1 ;
         visited [src] = true ;      // src is visited
-
-        // printf ("component %ld (%ld), first node : %ld\n",
-        //     comp, ncomp-1, src) ;
 
         while (head < tail)
         {

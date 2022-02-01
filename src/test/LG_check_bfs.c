@@ -67,7 +67,6 @@ int LG_check_bfs
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
-    LG_ASSERT_MSG (n == ncols, -1001, "G->A must be square") ;      // FIXME:RETVAL
     bool print_timings = (n >= 2000) ;
 
     //--------------------------------------------------------------------------
@@ -86,16 +85,14 @@ int LG_check_bfs
     {
         level_in = LAGraph_Malloc (n, sizeof (int64_t)) ;
         LG_ASSERT (level_in != NULL, GrB_OUT_OF_MEMORY) ;
-        LG_ASSERT_MSG (LG_check_vector (level_in, Level, n, -1) == 0, 1004,     // FIXME:RETVAL
-            "invalid level") ;
+        LG_TRY (LG_check_vector (level_in, Level, n, -1)) ;
     }
 
     if (Parent != NULL)
     {
         parent_in = LAGraph_Malloc (n, sizeof (int64_t)) ;
         LG_ASSERT (parent_in != NULL, GrB_OUT_OF_MEMORY) ;
-        LG_ASSERT_MSG (LG_check_vector (parent_in, Parent, n, -1) == 0, -1005,      // FIXME:RETVAL
-            "invalid parent") ;
+        LG_TRY (LG_check_vector (parent_in, Parent, n, -1)) ;
     }
 
     //--------------------------------------------------------------------------
