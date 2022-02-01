@@ -64,6 +64,11 @@ As of Feb 1, 2022:
 
     * add FUTURE to User Guide (see below)
 
+    * test coverage online: does not report inside a #pragma.  For test
+        coverage, can we turn off OpenMP for LAGraph?
+
+    * test coverage on the Mac OSX 12.1, gcc-11: "cannot find *.gcda"
+
 --------------------------------------------------------------------------------
 TODO: add this as a section in the User Guide
 
