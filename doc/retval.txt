@@ -1,14 +1,5 @@
 Return value questions (other than GrB_NULL_POINTER and GrB_OUT_OF_MEMORY):
 
-experimental/utility/LAGraph_Random_Matrix.c
-
-    GrB_INVALID_VALUE: density < 0
-    GrB_NOT_IMPLEMENTED: type not supported
-
-experimental/utility/LAGraph_SLoadSet.c
-
-    file I/O error: can't open file
-
 src/algorithm/LAGraph_TriangleCount_Methods.c
 
     GrB_INVALID_VALUE: method or presort enum out of range
@@ -28,6 +19,7 @@ src/algorithm/LAGraph_VertexCentrality_PageRankGAP.c
 
 src/algorithm/LG_BreadthFirstSearch_SSGrB.c
 
+    GrB_NOT_IMPLEMENTED: SuiteSparse required
     GrB_INVALID_INDEX: invalid source node (error from GrB_*_setElement)
 
 src/algorithm/LG_BreadthFirstSearch_vanilla.c
@@ -106,7 +98,19 @@ src/utility/LG_internal.h (FPRINTF macro used by LAGraph_DisplayGraph,
     file I/O error
 
 --------------------------------------------------------------------------------
-For testing only: return GrB_PANIC?  LG_TEST_FAILURE?
+experimental methods:
+
+experimental/utility/LAGraph_Random_Matrix.c
+
+    GrB_INVALID_VALUE: density < 0
+    GrB_NOT_IMPLEMENTED: type not supported
+
+experimental/utility/LAGraph_SLoadSet.c
+
+    file I/O error: can't open file
+
+--------------------------------------------------------------------------------
+For testing only: return LG_TEST_FAILURE?
 
 src/test/LG_check_bfs.c
 

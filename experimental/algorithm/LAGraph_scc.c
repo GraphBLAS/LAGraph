@@ -114,7 +114,7 @@ GrB_Info LAGraph_scc
 {
 #if !(LG_SUITESPARSE)
     // FIXME: can be GrB*
-    return GrB_PANIC;
+    return (GrB_NOT_IMPLEMENTED) ;      // FIXME:RETVAL
 #else
     GrB_Info info;
     GrB_Vector scc;

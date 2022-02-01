@@ -120,7 +120,7 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
 {
 #if !(LG_SUITESPARSE)
     // FIXME: use GrB_select and make this pure GrB*
-    return GrB_PANIC;
+    return (GrB_NOT_IMPLEMENTED) ;      // FIXME:RETVAL
 #else
 
     //--------------------------------------------------------------------------

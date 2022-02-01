@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_demo.h: include file for LAGraph/src/demo programs
+// LAGraph_demo.h: include file for LAGraph/src/benchmark programs
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -18,6 +18,7 @@
 // set this to 1 to check the results using a slow method
 #define LG_CHECK_RESULT 0
 
+#define DEAD_CODE -911
 #define CATCH(status)                                                         \
 {                                                                             \
     printf ("error: %s line: %d, status: %d\n", __FILE__, __LINE__, status) ; \
@@ -79,7 +80,7 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
 
 #if !LG_SUITESPARSE
     printf ("SuiteSparse:GraphBLAS required to write binary *.grb files\n") ;
-    return (GrB_PANIC) ;        // SuiteSparse required
+    return (GrB_NOT_IMPLEMENTED) ;
 #else
 
     GrB_Index *Ap = NULL, *Ai = NULL, *Ah = NULL ;
@@ -202,7 +203,7 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
     }
     else
     {
-        CATCH (GrB_PANIC) ;    // this "cannot" happen
+        CATCH (DEAD_CODE) ;    // this "cannot" happen
     }
 
     //--------------------------------------------------------------------------
@@ -428,7 +429,7 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
     }
     else
     {
-        CATCH (GrB_PANIC) ;    // this "cannot" happen
+        CATCH (DEAD_CODE) ;    // this "cannot" happen
     }
 
     GrB_TRY (GxB_set (*A, GxB_HYPER_SWITCH, hyper)) ;
@@ -461,7 +462,7 @@ static inline int binread   // returns 0 if successful, -1 if failure
 
 #if !LG_SUITESPARSE
     printf ("SuiteSparse:GraphBLAS required to read binary *.grb files\n") ;
-    return (GrB_PANIC) ;        // SuiteSparse required
+    return (GrB_NOT_IMPLEMENTED) ;
 #else
 
     GrB_Index *Ap = NULL, *Ai = NULL, *Ah = NULL ;
@@ -591,7 +592,7 @@ static inline int binread   // returns 0 if successful, -1 if failure
     }
     else
     {
-        CATCH (GrB_PANIC) ;    // this "cannot" happen
+        CATCH (DEAD_CODE) ;    // this "cannot" happen
     }
     Ax = LAGraph_Malloc (iso ? 1 : Ax_len, typesize) ;
     Ax_size = (iso ? 1 : Ax_len) * typesize ;
@@ -682,7 +683,7 @@ static inline int binread   // returns 0 if successful, -1 if failure
     }
     else
     {
-        CATCH (GrB_PANIC) ;    // this "cannot" happen
+        CATCH (DEAD_CODE) ;    // this "cannot" happen
     }
 
     GrB_TRY (GxB_set (*A, GxB_HYPER_SWITCH, hyper)) ;

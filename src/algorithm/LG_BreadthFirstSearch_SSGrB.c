@@ -52,7 +52,7 @@ int LG_BreadthFirstSearch_SSGrB
     //--------------------------------------------------------------------------
 
 #if !LG_SUITESPARSE
-    return (GrB_PANIC) ;            // SuiteSparse is required
+    return (GrB_NOT_IMPLEMENTED) ;      // FIXME:RETVAL
 #else
 
     LG_CLEAR_MSG ;

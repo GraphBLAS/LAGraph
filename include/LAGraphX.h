@@ -673,7 +673,7 @@ GrB_Info LAGraph_cdlp
  * @param[in]   Y0           input features: nfeatures-by-nneurons
  *
  * @retval GrB_SUCCESS         if completed successfully
- * @retval GrB_PANIC           vanilla version has not been implemented yet (NOT_IMPLEMENTED?)
+ * @retval GrB_NOT_IMPLEMENTED vanilla version has not been implemented yet
  * @retval GrB_NULL_POINTER    If Yhandle, W, Bias, or Y0 is NULL
  * @retval GrB_DOMAIN_MISMATCH if type of Y0 is not FP32 or FP64, or the types of
  *                             W or Bias arent the same as Y0
@@ -699,7 +699,7 @@ GrB_Info LAGraph_dnn
  * @param[out]  D_type  type of scalar stored in D (see source for explanation)
  *
  * @retval GrB_SUCCESS         if completed successfully
- * @retval GrB_PANIC           vanilla version has not been implemented yet (NOT_IMPLEMENTED?)
+ * @retval GrB_NOT_IMPLEMENTED vanilla version has not been implemented yet
  * @retval GrB_NULL_POINTER    If D or D_type is NULL
  * @retval GrB_INVALID_VALUE   If G is not square
  * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
@@ -724,7 +724,7 @@ GrB_Info LAGraph_FW
  *                           [0]=sanitize time, [1]=lcc time in seconds
  *
  * @retval GrB_SUCCESS        if completed successfully
- * @retval GrB_PANIC           vanilla version has not been implemented yet (NOT_IMPLEMENTED?)
+ * @retval GrB_NOT_IMPLEMENTED vanilla version has not been implemented yet
  * @retval GrB_NULL_POINTER   If LCC_handle or LCC_type is NULL
  * @retval GrB_INVALID_VALUE  If A is not stored in CSR format
  * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
