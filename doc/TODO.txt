@@ -8,9 +8,8 @@ As of Feb 1, 2022:
 
     * test, document, polish all src & experimental: algorithms, utilities,
         and tests.
-        as of Jan 30: testing is at 95%.  Only untested functions are
-        4 experimental/algorithms: lcc, cdlp, scc, msf, and part of cc_fastsv5
-        1 src/algorithm: part of cc_fastsv6 
+        as of Feb 1: testing is at 95.5%.  Only untested functions are
+        4 experimental/algorithms: lcc, cdlp, scc, msf
 
     * unify error return values
         See the code tag "FIXME:RETVAL", summarized in:
@@ -68,6 +67,7 @@ As of Feb 1, 2022:
         coverage, can we turn off OpenMP for LAGraph?
 
     * test coverage on the Mac OSX 12.1, gcc-11: "cannot find *.gcda"
+        (it used to work)
 
 --------------------------------------------------------------------------------
 TODO: add this as a section in the User Guide
