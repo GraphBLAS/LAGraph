@@ -11,6 +11,10 @@ As of Feb 1, 2022:
         as of Feb 1: testing is at 95.5%.  Only untested functions are
         4 experimental/algorithms: lcc, cdlp, scc, msf
 
+    * remove LAGraph_Random15 and LAGraph_Random60 from LAGraph.h, and
+        change them to LG_Random15 and LG_Random60 methods for internal
+        use only?  I think we don't need them to be given to the user.
+
     * unify error return values
         See the code tag "FIXME:RETVAL", summarized in:
             doc/retval.txt
@@ -41,7 +45,12 @@ As of Feb 1, 2022:
 
     * many TODOs and FIXMEs throughout
 
-    * SSSP: allow it to work on any matrix type (currently just INT32)
+    * SSSP: allow it to work on any matrix type (currently just INT32).
+        How about these types: int32, int64, uint32, uint64, float, double.
+        Smaller integers would require computations to be done in a mix
+        of integer sizes (edge weights could be int8, but path lengths
+        would need to be int32, perhaps).  That is complicated.
+        How does delta stepping work for float and double?
 
     * check function names and API (LAGraph_IsEqual for GrB_Matrix, and
         LAGraph_Vector_IsEqual for GrB_Vectors for example,
@@ -59,12 +68,17 @@ As of Feb 1, 2022:
             the universal format, or a library-specific format.  The format
             would be specified by the json header in the *.lagraph file.
 
+            See the doc/lagraph_format.txt file for details.
+
     * add names to Contributors.txt
 
     * add FUTURE to User Guide (see below)
 
     * test coverage online: does not report inside a #pragma.  For test
-        coverage, can we turn off OpenMP for LAGraph?
+        coverage, I've turned off OpenMP for LAGraph.  Is that OK?
+        The "make test" will use the regular library and will exercise
+        the parallel methods, perhaps, as will the GAP benchmarks in
+        src/benchmark and other benchmarks in experimental/benchmark.
 
     * test coverage on the Mac OSX 12.1, gcc-11: "cannot find *.gcda"
         (it used to work)

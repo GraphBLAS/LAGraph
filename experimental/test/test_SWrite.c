@@ -361,6 +361,19 @@ void test_SWrite_errors (void)
     LAGraph_SFreeSet (&Set, nmatrices) ;
     LAGraph_Free ((void **) &collection) ;
     fclose (f) ;
+
+    // read garbage with LAGraph_SRead
+    f = fopen (LG_DATA_DIR "garbage.lagraph", "r") ;
+    TEST_CHECK (f != NULL) ;
+    LAGraph_Contents *Contents = NULL ;
+    GrB_Index ncontents = 0 ;
+    result = LAGraph_SRead (f, &collection, &Contents, &ncontents, msg) ;
+    TEST_CHECK (result = -1001) ;
+    TEST_CHECK (collection == NULL) ;
+    TEST_CHECK (Contents == NULL) ;
+    TEST_CHECK (ncontents == 0) ;
+    fclose (f) ;
+
     OK (GrB_free (&A)) ;
     LAGraph_Finalize (msg) ;
 }
