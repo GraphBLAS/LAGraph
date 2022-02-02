@@ -15,7 +15,8 @@ src/algorithm/LAGraph_VertexCentrality_Betweenness.c
 
 src/algorithm/LAGraph_VertexCentrality_PageRankGAP.c
 
-    G->AT required
+    LAGraph_PROPERTY_MISSING: G->AT required
+    -10042: magic error
 
 src/algorithm/LG_BreadthFirstSearch_SSGrB.c
 
@@ -37,11 +38,11 @@ src/algorithm/LG_CC_FastSV6.c
 
 src/utility/LAGraph_CheckGraph.c
 
-    G->A must be square for directed and undirected graphs
-    G->A and G->AT must be held by row (SuiteSparse-specific)
-    G->AT dimensions are wrong
-    G->AT and G->A have different types
-    G->rowdegree wrong size
+    GrB_DIMENSION_MISMATCH?: G->A must be square for directed and undirected graphs
+    GrB_NOT_IMPLEMENTED: G->A and G->AT must be held by row (SuiteSparse-specific)
+    GrB_DIMENSION_MISMATCH?: G->AT dimensions are wrong
+    GrB_DOMAIN_MISMATCH?: G->AT and G->A have different types
+    GrB_DIMENSION_MISMATCH?: G->rowdegree wrong size
     G->rowdegree wrong type (must be int64)
     G->coldegree wrong size
     G->coldegree wrong type (must be int64)

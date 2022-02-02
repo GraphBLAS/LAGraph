@@ -13,7 +13,7 @@ As of Feb 1, 2022:
 
     * remove LAGraph_Random15 and LAGraph_Random60 from LAGraph.h, and
         change them to LG_Random15 and LG_Random60 methods for internal
-        use only?  I think we don't need them to be given to the user.
+        use only.
 
     * unify error return values
         See the code tag "FIXME:RETVAL", summarized in:
@@ -26,6 +26,7 @@ As of Feb 1, 2022:
         obvious:
         GrB_OUT_OF_MEMORY
         GrB_NULL_POINTER
+        GrB_PANIC
 
         are these OK?
         GrB_INVALID_INDEX: for invalid source node
