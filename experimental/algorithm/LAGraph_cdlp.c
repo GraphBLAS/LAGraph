@@ -9,7 +9,6 @@
 // or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
-// FIXME: this is not yet included in the test coverage suite
 
 // LAGraph_cdlp: Contributed by Gabor Szarnyas and Balint Hegyi,
 // Budapest University of Technology and Economics
@@ -118,23 +117,29 @@
 //   label of its neighbors (connected through either an incoming or through
 //   an outgoing edge).
 
-#include <LAGraph.h>
-#include <LAGraphX.h>
-//#include "GB_msort_2.h"
-
 #define LAGraph_FREE_ALL                                                \
 {                                                                       \
+    LAGraph_Free ((void *) &I) ;                                        \
+    LAGraph_Free ((void *) &X) ;                                        \
+    LAGraph_Free ((void *) &AI) ;                                       \
+    LAGraph_Free ((void *) &AJ) ;                                       \
+    LAGraph_Free ((void *) &AX) ;                                       \
+    LAGraph_Free ((void *) &X) ;                                        \
+    LAGraph_Free ((void *) &X) ;                                        \
     GrB_free (&L) ;                                                     \
     GrB_free (&L_prev) ;                                                \
     if (sanitize) GrB_free (&S) ;                                       \
     GrB_free (&AT) ;                                                    \
 }
 
+#include <LAGraph.h>
+#include <LAGraphX.h>
+#include "LG_internal.h"
+
 //****************************************************************************
 GrB_Info LAGraph_cdlp
 (
     GrB_Vector *CDLP_handle, // output vector
-    GrB_Type *CDLP_type,     // scalar type of output vector
     const GrB_Matrix A,      // input matrix
     bool symmetric,          // denote whether the matrix is symmetric
     bool sanitize,           // if true, ensure A is binary
@@ -167,7 +172,7 @@ GrB_Info LAGraph_cdlp
     // check inputs
     //--------------------------------------------------------------------------
 
-    if (CDLP_handle == NULL || CDLP_type == NULL || t == NULL)
+    if (CDLP_handle == NULL || t == NULL)
     {
         return GrB_NULL_POINTER;
     }
@@ -225,20 +230,14 @@ GrB_Info LAGraph_cdlp
     LAGRAPH_OK (GxB_get(GxB_FORMAT, &global_format))
     if (A_format != GxB_BY_ROW || global_format != GxB_BY_ROW)
     {
-        LAGRAPH_ERROR(
-            "CDLP algorithm only works on matrices stored by row (CSR)",
-            GrB_INVALID_OBJECT
-        )
+        return (GrB_INVALID_VALUE) ;
     }
 #endif
 
     // Initialize L with diagonal elements 1..n
     I = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
     X = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
-    if (I == NULL || X == NULL)
-    {
-        LAGRAPH_ERROR ("out of memory", GrB_OUT_OF_MEMORY) ;
-    }
+    if (I == NULL || X == NULL) { LAGraph_FREE_ALL ; return (GrB_OUT_OF_MEMORY) ; }
     for (GrB_Index i = 0; i < n; i++) {
         I[i] = i;
         X[i] = i;
@@ -342,7 +341,6 @@ GrB_Info LAGraph_cdlp
     //--------------------------------------------------------------------------
 
     LAGRAPH_OK (GrB_Vector_new(&CDLP, GrB_UINT64, n))
-    *CDLP_type = GrB_UINT64;
     for (GrB_Index i = 0; i < n; i++)
     {
         uint64_t x;

@@ -635,7 +635,6 @@ GrB_Info LAGraph_BF_pure_c_double
  * Community detection using label propagation algorithm
  *
  * @param[out]  CDLP_handle  community vector
- * @param[out]  CDLP_type    type of element stored in the community vector
  * @param[in]   A            adjacency matrix for the graph
  * @param[in]   symmetric    denote whether the matrix is symmetric
  * @param[in]   sanitize     if true, verify that A is binary
@@ -644,7 +643,7 @@ GrB_Info LAGraph_BF_pure_c_double
  *                           [0]=sanitize time, [1]=cdlp time in seconds
  *
  * @retval GrB_SUCCESS        if completed successfully
- * @retval GrB_NULL_POINTER   If t, CDLP_handle or CDLP_type is NULL
+ * @retval GrB_NULL_POINTER   If t or CDLP_handle is NULL
  * @retval GrB_INVALID_OBJECT If A is not stored in CSR format
  * @retval GrB_OUT_OF_MEMORY  if allocation fails.
  * @retval GrB_NO_VALUE       if A has a negative weight cycle
@@ -653,7 +652,6 @@ GrB_Info LAGraph_BF_pure_c_double
 GrB_Info LAGraph_cdlp
 (
     GrB_Vector *CDLP_handle,
-    GrB_Type *CDLP_type,
     const GrB_Matrix A,
     bool symmetric,
     bool sanitize,
