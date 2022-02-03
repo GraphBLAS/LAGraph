@@ -9,7 +9,6 @@
 // or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
-// FIXME: this is not yet included in the test coverage suite
 
 /**
  * Code is based on Boruvka's minimum spanning forest algorithm
@@ -25,7 +24,6 @@
     free(I); free(V);                                \
     free(SI); free(SJ); free(SX);                    \
     free(parent); free(partner); free(weight);       \
-    GrB_free (&S);                      \
     GrB_free (&f);                      \
     GrB_free (&i);                      \
     GrB_free (&t);                      \
@@ -130,13 +128,18 @@ GrB_Info LAGraph_msf
     GrB_UnaryOp fst = NULL, snd = NULL;
 
     GxB_SelectOp s1 = NULL, s2 = NULL;
+    if (result == NULL || A == NULL) return (GrB_NULL_POINTER) ;
 
+    GrB_Index ncols ;
     LAGRAPH_OK (GrB_Matrix_nrows (&n, A));
+    LAGRAPH_OK (GrB_Matrix_ncols (&ncols, A));
+    if (n != ncols) return (GrB_DIMENSION_MISMATCH) ;
 
     if (sanitize)
     {
+        // S = A+A'
         LAGRAPH_OK (GrB_Matrix_new (&S, GrB_UINT64, n, n));
-        LAGRAPH_OK (GrB_eWiseAdd (S, 0, 0, GrB_MIN_UINT64, A, A, GrB_DESC_T1));
+        LAGRAPH_OK (GrB_eWiseAdd (S, 0, 0, GrB_PLUS_UINT64, A, A, GrB_DESC_T1));
     }
     else
     {
@@ -265,6 +268,7 @@ GrB_Info LAGraph_msf
     LAGRAPH_OK (GrB_Matrix_clear (T));
     LAGRAPH_OK (GrB_Matrix_build (T, SI, SJ, SX, ntuples, GrB_SECOND_UINT64));
     *result = T;
+    T = NULL ;
 
     LAGraph_FREE_ALL;
     return GrB_SUCCESS;

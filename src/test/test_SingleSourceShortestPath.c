@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-// LAGraph/src/test/test_SingleSourceShortestPath.cpp: test cases for SSSP
+// LAGraph/src/test/test_SingleSourceShortestPath.c: test cases for SSSP
 // ----------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.

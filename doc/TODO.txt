@@ -8,8 +8,6 @@ As of Feb 3, 2022:
 
     * test, document, polish all src & experimental: algorithms, utilities,
         and tests.
-        as of Feb 3: testing is at 96.4%.  Only untested functions are
-        3 experimental/algorithms: cdlp, scc, msf
 
     * unify error return values
         See the code tag "FIXME:RETVAL", summarized in:

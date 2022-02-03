@@ -9,7 +9,6 @@
 // or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
-// FIXME: this is not yet included in the test coverage suite
 
 /**
  * Code is based on the Min-Label algorithm described in the following paper:
@@ -68,9 +67,9 @@ bool trim_one (GrB_Index i, GrB_Index j, const void *x, const void *thunk)
 //  - A      : (input) original matrix
 //  - AT     : (input) transposed matrix
 //  - n      : (input) number of vertices
-//  - is_csr : (input) format
+
 static GrB_Info propagate (GrB_Vector label, GrB_Vector mask,
-        GrB_Matrix A, GrB_Matrix AT, GrB_Index n, bool is_csr)
+        GrB_Matrix A, GrB_Matrix AT, GrB_Index n)
 {
     GrB_Info info;
     // semirings
@@ -84,13 +83,8 @@ static GrB_Info propagate (GrB_Vector label, GrB_Vector mask,
     GrB_Index active;
     while (true)
     {
-        if (is_csr) {
-            LAGRAPH_OK (GrB_vxm (t, 0, GrB_MIN_UINT64,
+        LAGRAPH_OK (GrB_vxm (t, 0, GrB_MIN_UINT64,
                                  GrB_MIN_FIRST_SEMIRING_UINT64, s, A, 0));
-        } else {
-            LAGRAPH_OK (GrB_mxv (t, 0, GrB_MIN_UINT64,
-                                 GrB_MIN_SECOND_SEMIRING_UINT64, AT, s, 0));
-        }
         LAGRAPH_OK (GrB_eWiseMult (mask, 0, 0, GxB_ISNE_UINT64, t, label, 0));
         LAGRAPH_OK (GrB_assign (label, mask, 0, t, GrB_ALL, 0, 0));
         LAGRAPH_OK (GrB_reduce (&active, 0, GrB_PLUS_MONOID_UINT64, mask, 0));
@@ -124,8 +118,12 @@ GrB_Info LAGraph_scc
     GxB_SelectOp sel1, sel2;
     GrB_Monoid Add;
 
-    GrB_Index n, nvals;
+    if (result == NULL || A == NULL) return (GrB_NULL_POINTER) ;
+
+    GrB_Index n, ncols, nvals;
     LAGRAPH_OK (GrB_Matrix_nrows (&n, A));
+    LAGRAPH_OK (GrB_Matrix_ncols (&ncols, A));
+    if (n != ncols) return (GrB_DIMENSION_MISMATCH) ;
 
     // store the graph in both directions (forward / backward)
     GrB_Matrix FW, BW;
@@ -140,12 +138,7 @@ GrB_Info LAGraph_scc
     LAGRAPH_OK (GxB_get (BW, GxB_FORMAT, &AT_format));
 
     bool is_csr = (A_format == GxB_BY_ROW && AT_format == GxB_BY_ROW);
-    bool is_csc = (A_format == GxB_BY_COL && AT_format == GxB_BY_COL);
-    if (!is_csr && !is_csc) {
-        LAGRAPH_ERROR ("A and AT must in the same format:\n"
-            "both GxB_BY_ROW, or both GxB_BY_COL",
-            GrB_INVALID_VALUE) ;
-    }
+    if (!is_csr) return (GrB_INVALID_VALUE) ;
 
     I = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
     V = (GrB_Index*) malloc(sizeof(GrB_Index) * n);
@@ -194,12 +187,12 @@ GrB_Info LAGraph_scc
     {
         LAGRAPH_OK (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, scc, inf, 0));
         LAGRAPH_OK (GrB_assign (f, 0, 0, ind, GrB_ALL, 0, 0));
-        LAGRAPH_OK (propagate (f, mask, FW, BW, n, is_csr));
+        LAGRAPH_OK (propagate (f, mask, FW, BW, n));
 
         LAGRAPH_OK (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, f, ind, 0));
         LAGRAPH_OK (GrB_assign (b, 0, 0, inf, GrB_ALL, 0, 0));
         LAGRAPH_OK (GrB_assign (b, mask, 0, ind, GrB_ALL, 0, 0));
-        LAGRAPH_OK (propagate (b, mask, BW, FW, n, is_csr));
+        LAGRAPH_OK (propagate (b, mask, BW, FW, n));
 
         LAGRAPH_OK (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, f, b, 0));
         LAGRAPH_OK (GrB_assign (scc, mask, GrB_MIN_UINT64, f, GrB_ALL, 0, 0));

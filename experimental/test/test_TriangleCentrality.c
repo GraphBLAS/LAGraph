@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-// LAGraph/src/test/test_TriangleCentrality.cpp: test cases for triangle
+// LAGraph/src/test/test_TriangleCentrality.c: test cases for triangle
 // centrality
 // ----------------------------------------------------------------------------
 

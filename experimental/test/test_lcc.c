@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-// LAGraph/src/test/test_lcc.cpp: test cases for Local Clustering Coefficient
+// LAGraph/src/test/test_lcc.c: test cases for Local Clustering Coefficient
 // ----------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -22,7 +22,6 @@
 char msg [LAGRAPH_MSG_LEN] ;
 LAGraph_Graph G = NULL ;
 GrB_Matrix A = NULL ;
-GrB_Matrix C = NULL ;
 #define LEN 512
 char filename [LEN+1] ;
 
@@ -138,7 +137,7 @@ void test_lcc (void)
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, f, msg)) ;
 
-        // construct a directed graph G with adjacency matrix C
+        // construct a directed graph G with adjacency matrix A
         OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
         TEST_CHECK (A == NULL) ;
 
@@ -146,7 +145,6 @@ void test_lcc (void)
         OK (LAGraph_Property_NDiag (G, msg)) ;
         bool sanitize = (G->ndiag != 0) ;
 
-        uint64_t ntri ;
         GrB_Vector c = NULL ;
         double t [2] ;
 

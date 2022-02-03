@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-// LAGraph/src/test/test_BreadthFirstSearch.cpp: test cases for triangle
+// LAGraph/src/test/test_BreadthFirstSearch.c: test cases for triangle
 // counting algorithms
 // ----------------------------------------------------------------------------
 

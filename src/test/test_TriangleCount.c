@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-// LAGraph/src/test/test_TriangleCount.cpp: test cases for triangle
+// LAGraph/src/test/test_TriangleCount.c: test cases for triangle
 // counting algorithms
 // ----------------------------------------------------------------------------
 
