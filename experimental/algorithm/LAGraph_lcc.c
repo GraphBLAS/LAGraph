@@ -110,7 +110,6 @@ void LAGraph_comb_undir_fp64
 GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
 (
     GrB_Vector *LCC_handle,     // output vector
-    GrB_Type   *LCC_type,
     const GrB_Matrix A,         // input matrix
     bool symmetric,             // if true, the matrix is symmetric
     bool sanitize,              // if true, ensure A is binary
@@ -127,14 +126,13 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     // check inputs
     //--------------------------------------------------------------------------
 
-    if (LCC_handle == NULL || LCC_type == NULL)
+    if (LCC_handle == NULL)
     {
         return (GrB_NULL_POINTER) ;
     }
 
     GrB_Matrix C = NULL, CL = NULL, S = NULL, U = NULL ;
     GrB_Vector W = NULL, LCC = NULL ;
-    (*LCC_type) = NULL;
     GrB_UnaryOp LAGraph_COMB_DIR_FP64 = NULL ;
     GrB_UnaryOp LAGraph_COMB_UNDIR_FP64 = NULL ;
     GrB_Info info ;
@@ -147,7 +145,7 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     LAGRAPH_OK (GxB_get (A, GxB_FORMAT, &fmt)) ;
     if (fmt != GxB_BY_ROW)
     {
-        LAGRAPH_ERROR ("A must be stored by row", GrB_INVALID_VALUE) ;
+        return (GrB_INVALID_VALUE) ;
     }
 #endif
 
@@ -288,7 +286,6 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     //--------------------------------------------------------------------------
 
     (*LCC_handle) = LCC ; LCC = NULL ;
-    (*LCC_type) = GrB_FP64;
 
     LAGraph_FREE_ALL ;
     LAGraph_Toc (&t[1], tic, NULL) ;

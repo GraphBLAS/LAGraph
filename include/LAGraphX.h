@@ -716,7 +716,6 @@ GrB_Info LAGraph_FW
  * Compute the local clustering coefficient for all nodes in a graph.
  *
  * @param[out]  LCC_handle   output vector holding coefficients
- * @param[out]  LCC_type     type scalars stored in LCC
  * @param[in]   A            adjacency matrix for the graph
  * @param[in]   symmetric    denote whether the matrix is symmetric
  * @param[in]   sanitize     if true, verify that A is binary
@@ -732,7 +731,6 @@ GrB_Info LAGraph_FW
 GrB_Info LAGraph_lcc
 (
     GrB_Vector *LCC_handle,
-    GrB_Type   *LCC_type,
     const GrB_Matrix A,
     bool symmetric,
     bool sanitize,
