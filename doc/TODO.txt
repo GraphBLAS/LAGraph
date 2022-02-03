@@ -1,4 +1,4 @@
-As of Feb 1, 2022:
+As of Feb 3, 2022:
 
     * entire user guide
         experimental -> src, how to do it.
@@ -8,12 +8,8 @@ As of Feb 1, 2022:
 
     * test, document, polish all src & experimental: algorithms, utilities,
         and tests.
-        as of Feb 1: testing is at 95.5%.  Only untested functions are
-        4 experimental/algorithms: lcc, cdlp, scc, msf
-
-    * remove LAGraph_Random15 and LAGraph_Random60 from LAGraph.h, and
-        change them to LG_Random15 and LG_Random60 methods for internal
-        use only.
+        as of Feb 3: testing is at 96.4%.  Only untested functions are
+        3 experimental/algorithms: cdlp, scc, msf
 
     * unify error return values
         See the code tag "FIXME:RETVAL", summarized in:

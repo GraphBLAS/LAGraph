@@ -34,7 +34,7 @@ void test_sort1 (void)
         uint64_t seed = 1 ;
         for (int k = 0 ; k < n ; k++)
         {
-            A0 [k] = (int64_t) LAGraph_Random15 (&seed) ;
+            A0 [k] = (int64_t) LG_Random15 (&seed) ;
         }
 
         OK (LAGraph_Sort1 (A0, n, 4, msg)) ;
@@ -46,7 +46,7 @@ void test_sort1 (void)
 
         for (int k = 0 ; k < n ; k++)
         {
-            A0 [k] = (int64_t) (LAGraph_Random15 (&seed) % 4) ;
+            A0 [k] = (int64_t) (LG_Random15 (&seed) % 4) ;
         }
 
         OK (LAGraph_Sort1 (A0, n, 4, msg)) ;
@@ -81,8 +81,8 @@ void test_sort2 (void)
     uint64_t seed = 1 ;
     for (int k = 0 ; k < n ; k++)
     {
-        A0 [k] = (int64_t) LAGraph_Random15 (&seed) ;
-        A1 [k] = (int64_t) LAGraph_Random60 (&seed) ;
+        A0 [k] = (int64_t) LG_Random15 (&seed) ;
+        A1 [k] = (int64_t) LG_Random60 (&seed) ;
     }
 
     OK (LAGraph_Sort2 (A0, A1, n, 4, msg)) ;
@@ -96,7 +96,7 @@ void test_sort2 (void)
     for (int k = 0 ; k < n ; k++)
     {
         A0 [k] = 0 ;
-        A1 [k] = (int64_t) (LAGraph_Random15 (&seed) % 4) ;
+        A1 [k] = (int64_t) (LG_Random15 (&seed) % 4) ;
     }
 
     OK (LAGraph_Sort2 (A0, A1, n, 4, msg)) ;
@@ -133,7 +133,7 @@ void test_sort1_brutal (void)
         uint64_t seed = 1 ;
         for (int k = 0 ; k < n ; k++)
         {
-            A0 [k] = (int64_t) LAGraph_Random15 (&seed) ;
+            A0 [k] = (int64_t) LG_Random15 (&seed) ;
         }
 
         LG_BRUTAL (LAGraph_Sort1 (A0, n, 4, msg)) ;
@@ -145,7 +145,7 @@ void test_sort1_brutal (void)
 
         for (int k = 0 ; k < n ; k++)
         {
-            A0 [k] = (int64_t) (LAGraph_Random15 (&seed) % 4) ;
+            A0 [k] = (int64_t) (LG_Random15 (&seed) % 4) ;
         }
 
         LG_BRUTAL (LAGraph_Sort1 (A0, n, 4, msg)) ;
@@ -182,8 +182,8 @@ void test_sort2_brutal (void)
     uint64_t seed = 1 ;
     for (int k = 0 ; k < n ; k++)
     {
-        A0 [k] = (int64_t) LAGraph_Random15 (&seed) ;
-        A1 [k] = (int64_t) LAGraph_Random60 (&seed) ;
+        A0 [k] = (int64_t) LG_Random15 (&seed) ;
+        A1 [k] = (int64_t) LG_Random60 (&seed) ;
     }
 
     LG_BRUTAL (LAGraph_Sort2 (A0, A1, n, 4, msg)) ;
@@ -197,7 +197,7 @@ void test_sort2_brutal (void)
     for (int k = 0 ; k < n ; k++)
     {
         A0 [k] = 0 ;
-        A1 [k] = (int64_t) (LAGraph_Random15 (&seed) % 4) ;
+        A1 [k] = (int64_t) (LG_Random15 (&seed) % 4) ;
     }
 
     LG_BRUTAL (LAGraph_Sort2 (A0, A1, n, 4, msg)) ;

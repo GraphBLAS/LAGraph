@@ -971,19 +971,6 @@ int LAGraph_Vector_print
 ) ;
 
 //------------------------------------------------------------------------------
-// simple and portable random number generator
-//------------------------------------------------------------------------------
-
-#define LAGRAPH_RANDOM15_MAX 32767
-#define LAGRAPH_RANDOM60_MAX ((1ULL << 60) -1)
-
-// return a random number between 0 and LAGRAPH_RANDOM15_MAX
-GrB_Index LAGraph_Random15 (uint64_t *seed) ;
-
-// return a random uint64_t, in range 0 to LAGRAPH_RANDOM60_MAX
-GrB_Index LAGraph_Random60 (uint64_t *seed) ;
-
-//------------------------------------------------------------------------------
 // parallel sorting methods
 //------------------------------------------------------------------------------
 

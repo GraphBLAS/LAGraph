@@ -497,7 +497,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         for (int64_t k = 0 ; k < HASH_SAMPLES ; k++)
         {
             // select an entry from Px at random
-            GrB_Index x = Px [LAGraph_Random60 (&seed) % n] ;
+            GrB_Index x = Px [LG_Random60 (&seed) % n] ;
             // find x in the hash table
             GrB_Index h = HASH (x) ;
             while (ht_key [h] != UINT64_MAX && ht_key [h] != x) h = NEXT (h) ;
