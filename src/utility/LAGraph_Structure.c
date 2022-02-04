@@ -11,6 +11,8 @@
 // LAGraph_Structure: return the structure of a matrix as a boolean matrix,
 // where C(i,j)=true if the entry A(i,j) is present in the matrix A.
 
+// TODO: need a version for vectors.  See issue #80.
+
 #define LAGraph_FREE_ALL GrB_free (C) ;
 
 #include "LG_internal.h"
