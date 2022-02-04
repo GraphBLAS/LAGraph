@@ -156,8 +156,10 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
         // paths (i,s(i)) = 1
         // frontier (i,s(i)) = 1
         double one = 1 ;
-        GrB_TRY (GrB_Matrix_setElement (paths,    one, i, sources [i])) ;
-        GrB_TRY (GrB_Matrix_setElement (frontier, one, i, sources [i])) ;
+        GrB_Index src = sources [i] ;
+        LG_ASSERT_MSG (src < n, GrB_INVALID_INDEX, "invalid source node") ;
+        GrB_TRY (GrB_Matrix_setElement (paths,    one, i, src)) ;
+        GrB_TRY (GrB_Matrix_setElement (frontier, one, i, src)) ;
     }
 
     // Initial frontier: frontier<!paths>= frontier*A

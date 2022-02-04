@@ -82,6 +82,7 @@ int LG_BreadthFirstSearch_SSGrB
 
     GrB_Index n, nvals ;
     GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
+    LG_ASSERT_MSG (src < n, GrB_INVALID_INDEX, "invalid source node") ;
 
     GrB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
 

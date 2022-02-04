@@ -70,8 +70,6 @@ int LG_BreadthFirstSearch_vanilla
 
     GrB_Index n;
     GrB_TRY( GrB_Matrix_nrows (&n, A) );
-
-    // FIXME: do this in all of LAGraph:
     LG_ASSERT_MSG (src < n, GrB_INVALID_INDEX, "invalid source node") ;
 
     GrB_Matrix AT ;

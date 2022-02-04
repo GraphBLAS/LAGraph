@@ -177,6 +177,45 @@ void test_cc_matrices (void)
 }
 
 //------------------------------------------------------------------------------
+// test_CC_errors:
+//------------------------------------------------------------------------------
+
+void test_cc_errors (void)
+{
+    OK (LAGraph_Init (msg)) ;
+    printf ("\n") ;
+
+    // check for null pointers
+    int result = LG_CC_Boruvka (NULL, NULL, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
+    #if LG_SUITESPARSE
+    result = LG_CC_FastSV6 (NULL, NULL, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
+    #endif
+
+    // load a valid matrix
+    FILE *f = fopen (LG_DATA_DIR "LFAT5_two.mtx", "r") ;
+    TEST_CHECK (f != NULL) ;
+    OK (LAGraph_MMRead (&A, f, msg)) ;
+    OK (fclose (f)) ;
+
+    // create an valid directed graph (not known to be symmetric)
+    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+    TEST_CHECK (A == NULL) ;    // A has been moved into G->A
+
+    result = LG_CC_Boruvka (&C, G, msg) ;
+    TEST_CHECK (result == -1001) ;
+    printf ("result expected: %d msg:\n%s\n", result, msg) ;
+    #if LG_SUITESPARSE
+    result = LG_CC_FastSV6 (&C, G, msg) ;
+    TEST_CHECK (result == -1001) ;
+    printf ("result expected: %d msg:\n%s\n", result, msg) ;
+    #endif
+
+    OK (LAGraph_Finalize (msg)) ;
+}
+
+//------------------------------------------------------------------------------
 // test_CC_brutal:
 //------------------------------------------------------------------------------
 
@@ -221,9 +260,9 @@ void test_cc_brutal (void)
 //****************************************************************************
 TEST_LIST = {
     {"cc", test_cc_matrices},
-    // TODO: add checks for all error conditions
     #if LG_SUITESPARSE
     {"cc_brutal", test_cc_brutal},
     #endif
+    {"cc_errors", test_cc_errors},
     {NULL, NULL}
 };

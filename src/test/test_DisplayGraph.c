@@ -19,7 +19,7 @@
 
 LAGraph_Graph G = NULL ;
 char msg [LAGRAPH_MSG_LEN] ;
-GrB_Matrix A = NULL ;
+GrB_Matrix A = NULL, AT = NULL ;
 #define LEN 512
 char filename [LEN+1] ;
 char atype_name [LAGRAPH_MAX_NAME_LEN] ;
@@ -141,30 +141,73 @@ void test_DisplayGraph (void)
 // test_DisplayGraph_failures:  test error handling of LAGraph_DisplayGraph
 //------------------------------------------------------------------------------
 
-#if 0
-void test_DisplayGraph_failures (void)      // TODO
+void test_DisplayGraph_failures (void)
 {
     setup ( ) ;
 
     // G cannot be NULL
-    TEST_CHECK (LAGraph_New (NULL, NULL, NULL, 0, msg) == -1) ;
-    printf ("\nmsg: %s\n", msg) ;
+    int result = LAGraph_New (NULL, NULL, 0, msg) ;
+    printf ("\nresult: %d, msg: %s\n", result, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
 
     // create a graph with no adjacency matrix; this is OK, since the intent is
     // to create a graph for which the adjacency matrix can be defined later,
     // via assigning it to G->A.  However, the graph will be declared invalid
     // by LAGraph_CheckGraph since G->A is NULL.
-    OK (LAGraph_New (&G, NULL, NULL, 0, msg)) ;
-    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -2) ;
-    printf ("msg: %s\n", msg) ;
+    OK (LAGraph_New (&G, NULL, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+
+    // G->A is NULL
+    result = LAGraph_DisplayGraph (G, 5, stdout, msg) ;
+    printf ("result: %d, msg: %s\n", result, msg) ;
+    TEST_CHECK (result == -1102) ;
+
     OK (LAGraph_Delete (&G, msg)) ;
     TEST_CHECK (G == NULL) ;
+
+    // valid graph
+    OK (GrB_Matrix_new (&A, GrB_FP32, 5, 5)) ;
+    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+    result = LAGraph_DisplayGraph (G, 5, stdout, msg) ;
+    printf ("result: %d, msg: %s\n", result, msg) ;
+    TEST_CHECK (result == GrB_SUCCESS) ;
+
+    // mangled G->kind
+    G->kind = -1 ;
+    result = LAGraph_DisplayGraph (G, 5, stdout, msg) ;
+    printf ("result: %d, msg: %s\n", result, msg) ;
+    TEST_CHECK (result == -1103) ;
+    G->kind = LAGRAPH_ADJACENCY_UNDIRECTED ;
+
+    // G->AT has the wrong size
+    OK (GrB_Matrix_new (&(G->AT), GrB_FP32, 6, 5)) ;
+    result = LAGraph_DisplayGraph (G, 5, stdout, msg) ;
+    printf ("result: %d, msg: %s\n", result, msg) ;
+    TEST_CHECK (result == -1103) ;
+
+    OK (GrB_free (&G->AT)) ;
+    OK (GrB_Matrix_new (&(G->AT), GrB_FP32, 5, 5)) ;
+
+    #if LG_SUITESPARSE
+    // G->AT must be held by row, not by column
+    OK (GxB_set (G->AT, GxB_FORMAT, GxB_BY_COL)) ;
+    result = LAGraph_DisplayGraph (G, 5, stdout, msg) ;
+    printf ("result: %d, msg: %s\n", result, msg) ;
+    TEST_CHECK (result == -1104) ;
+    #endif
+
+    // G->A and G->AT must have the same types
+    OK (GrB_free (&G->AT)) ;
+    OK (GrB_Matrix_new (&(G->AT), GrB_FP64, 5, 5)) ;
+    result = LAGraph_DisplayGraph (G, 5, stdout, msg) ;
+    printf ("result: %d, msg: %s\n", result, msg) ;
+    TEST_CHECK (result == -1105) ;
+
     OK (LAGraph_Delete (&G, msg)) ;
     TEST_CHECK (G == NULL) ;
+
     OK (LAGraph_Delete (NULL, msg)) ;
     teardown ( ) ;
 }
-#endif
 
 //-----------------------------------------------------------------------------
 // test_DisplayGraph_brutal
@@ -238,8 +281,8 @@ void test_DisplayGraph_brutal (void)
 TEST_LIST =
 {
     { "DisplayGraph", test_DisplayGraph },
-//  { "DisplayGraph_failures", test_DisplayGraph_failures },
     { "DisplayGraph_brutal", test_DisplayGraph_brutal },
+    { "DisplayGraph_failures", test_DisplayGraph_failures },
     { NULL, NULL }
 } ;
 

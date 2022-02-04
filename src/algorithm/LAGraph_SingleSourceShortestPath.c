@@ -96,7 +96,6 @@ int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
     GrB_Matrix A = G->A ;
     GrB_Index n ;
     GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
-
     LG_ASSERT_MSG (source < n, GrB_INVALID_INDEX, "invalid source node") ;
 
     //--------------------------------------------------------------------------
