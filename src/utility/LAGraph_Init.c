@@ -10,7 +10,7 @@
 
 #include "LG_internal.h"
 
-int LAGraph_Init (char *msg)        // return 0 if success, -1 if failure
+int LAGraph_Init (char *msg)
 {
 
     LG_CLEAR_MSG ;

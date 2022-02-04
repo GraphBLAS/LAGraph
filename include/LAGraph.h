@@ -34,7 +34,7 @@
 #define LAGRAPH_VERSION_MAJOR 0
 #define LAGRAPH_VERSION_MINOR 9
 #define LAGRAPH_VERSION_UPDATE 9
-#define LAGRAPH_DATE "Jan 30, 2022"
+#define LAGRAPH_DATE "Feb 3, 2022"
 
 //==============================================================================
 // include files
@@ -187,7 +187,7 @@
 #define LAGraph_TRY(LAGraph_method)             \
 {                                               \
     int LAGraph_status = LAGraph_method ;       \
-    if (LAGraph_status < 0)                     \
+    if (LAGraph_status < GrB_SUCCESS)           \
     {                                           \
         LAGraph_CATCH (LAGraph_status) ;        \
     }                                           \
@@ -199,7 +199,7 @@
 
 // LAGraph provides a similar functionality for calling GraphBLAS methods.
 // GraphBLAS returns info = 0 (GrB_SUCCESS) or 1 (GrB_NO_VALUE) on success, and
-// a value > 1 on failure.  The user application must #define GrB_CATCH to use
+// a value < 0 on failure.  The user application must #define GrB_CATCH to use
 // GrB_TRY.  Note that GraphBLAS_info is internal to this macro.  If the
 // user application or LAGraph method wants a copy, a statement such as
 // info = GraphBLAS_info ; where info is defined outside of this macro.
@@ -207,7 +207,7 @@
 #define GrB_TRY(GrB_method)                                                  \
 {                                                                            \
     GrB_Info GraphBLAS_info = GrB_method ;                                   \
-    if (! (GraphBLAS_info == GrB_SUCCESS || GraphBLAS_info == GrB_NO_VALUE)) \
+    if (GraphBLAS_info < GrB_SUCCESS)                                        \
     {                                                                        \
         GrB_CATCH (GraphBLAS_info) ;                                         \
     }                                                                        \
@@ -239,7 +239,7 @@ LAGRAPH_PUBLIC void   (* LAGraph_Free_function    ) (void *)         ;
 
 // LAGraph_Malloc:  allocate a block of memory (wrapper for malloc)
 LAGRAPH_PUBLIC
-void *LAGraph_Malloc
+void *LAGraph_Malloc        // returns pointer to allocated block of memory
 (
     size_t nitems,          // number of items
     size_t size_of_item     // size of each item
@@ -247,7 +247,7 @@ void *LAGraph_Malloc
 
 // LAGraph_Calloc:  allocate a block of memory (wrapper for calloc)
 LAGRAPH_PUBLIC
-void *LAGraph_Calloc
+void *LAGraph_Calloc        // returns pointer to allocated block of memory
 (
     size_t nitems,          // number of items
     size_t size_of_item     // size of each item
@@ -373,10 +373,9 @@ struct LAGraph_Graph_struct
     // set to LAGRAPH_UNKNOWN to denote that its value is unknown.
 
     // If present, the properties must be valid and accurate.  If the graph
-    // changes, these properties can either be recomputed or deleted to denoted
+    // changes, these properties can either be recomputed or deleted to denote
     // the fact that they are unknown.  This choice is up to individual LAGraph
-    // methods and utilities (TODO: define a default rule, and give user
-    // control over this decision).
+    // methods and utilities.
 
     // LAGraph methods can set non-scalar properties only if they are
     // constructing the graph.  They cannot modify them or create them if the
@@ -417,16 +416,39 @@ struct LAGraph_Graph_struct
 typedef struct LAGraph_Graph_struct *LAGraph_Graph ;
 
 //==============================================================================
+// the LAGraph return value
+//==============================================================================
+
+// All LAGraph methods that return an int return 0 if successful (which is the
+// same value as the GraphBLAS GrB_SUCCESS).  If the return value is negative,
+// then the method failed.  Return values in the range -1 to -999 match the
+// GraphBLAS GrB_Info enum (see GraphBLAS.h for a description).  Return values
+// greater than zero denote success, but with an informational note, such as
+// GrB_NO_VALUE (which is 1).
+
+// FIXME:RETVAL  GrB_Info values are -1 to -8, and -101 to -106.  Do we assume
+// the GrB_Info could be at most -1 to -199?  Then LAGraph could start at -200.
+
+// Negative values of -1000 or below denote an LAGraph error that does not
+// match any GrB_Info value.  For example, common return values are:
+
+#define LAGraph_FILE_IO_ERROR           pick me
+#define LAGraph_NO_SELF_EDGES_ALLOWED   pick me
+#define LAGraph_PROPERTIES_MISSING      pick me
+#define LAGraph_INVALID_GRAPH           pick me
+// etc ...
+
+//==============================================================================
 // LAGraph utilities
 //==============================================================================
 
 // LAGraph_Init: start GraphBLAS and LAGraph
 LAGRAPH_PUBLIC
-int LAGraph_Init (char *msg) ;      // return 0 if success, -1 if failure
+int LAGraph_Init (char *msg) ;
 
 // LAGraph_Xinit: start GraphBLAS and LAGraph, and set malloc/etc functions
 LAGRAPH_PUBLIC
-int LAGraph_Xinit           // returns 0 if successful, -1 if failure
+int LAGraph_Xinit
 (
     // pointers to memory management functions
     void * (* user_malloc_function  ) (size_t),
@@ -493,7 +515,7 @@ LAGRAPH_PUBLIC GrB_Semiring LAGraph_structural_fp64   ;
 
 // LAGraph_Finalize: finish LAGraph
 LAGRAPH_PUBLIC
-int LAGraph_Finalize (char *msg) ;  // returns 0 if successful, -1 if failure
+int LAGraph_Finalize (char *msg) ;
 
 // LAGraph_MIN/MAX: suitable for integers, and non-NaN floating point
 #define LAGraph_MIN(x,y) (((x) < (y)) ? (x) : (y))
@@ -501,7 +523,7 @@ int LAGraph_Finalize (char *msg) ;  // returns 0 if successful, -1 if failure
 
 // LAGraph_New: create a new graph
 LAGRAPH_PUBLIC
-int LAGraph_New         // returns 0 if successful, -1 if failure
+int LAGraph_New
 (
     LAGraph_Graph *G,       // the graph to create, NULL if failure
     GrB_Matrix    *A,       // the adjacency matrix of the graph, may be NULL
@@ -511,7 +533,7 @@ int LAGraph_New         // returns 0 if successful, -1 if failure
 
 // LAGraph_Delete: free a graph and all its contents
 LAGRAPH_PUBLIC
-int LAGraph_Delete      // returns 0 if successful, -1 if failure
+int LAGraph_Delete
 (
     LAGraph_Graph *G,   // the graph to delete; G set to NULL on output
     char *msg
@@ -519,7 +541,7 @@ int LAGraph_Delete      // returns 0 if successful, -1 if failure
 
 // LAGraph_DeleteProperties: free any internal cached properties of a graph
 LAGRAPH_PUBLIC
-int LAGraph_DeleteProperties    // returns 0 if successful, -1 if failure
+int LAGraph_DeleteProperties
 (
     LAGraph_Graph G,        // G stays valid, only cached properties are freed
     char *msg
@@ -527,7 +549,7 @@ int LAGraph_DeleteProperties    // returns 0 if successful, -1 if failure
 
 // LAGraph_Property_AT: construct G->AT for a graph
 LAGRAPH_PUBLIC
-int LAGraph_Property_AT     // returns 0 if successful, -1 if failure
+int LAGraph_Property_AT
 (
     LAGraph_Graph G,        // graph to compute G->AT for
     char *msg
@@ -535,7 +557,7 @@ int LAGraph_Property_AT     // returns 0 if successful, -1 if failure
 
 // LAGraph_Property_ASymmetricStructure: determine G->A_structure_is_symmetric
 LAGRAPH_PUBLIC
-int LAGraph_Property_ASymmetricStructure  // 0 if successful, -1 if failure
+int LAGraph_Property_ASymmetricStructure
 (
     LAGraph_Graph G,        // graph to determine the symmetry of structure of A
     char *msg
@@ -543,7 +565,7 @@ int LAGraph_Property_ASymmetricStructure  // 0 if successful, -1 if failure
 
 // LAGraph_Property_RowDegree: determine G->rowdegree
 LAGRAPH_PUBLIC
-int LAGraph_Property_RowDegree  // 0 if successful, -1 if failure
+int LAGraph_Property_RowDegree
 (
     LAGraph_Graph G,        // graph to determine G->rowdegree
     char *msg
@@ -551,7 +573,7 @@ int LAGraph_Property_RowDegree  // 0 if successful, -1 if failure
 
 // LAGraph_Property_ColDegree: determine G->coldegree
 LAGRAPH_PUBLIC
-int LAGraph_Property_ColDegree  // 0 if successful, -1 if failure
+int LAGraph_Property_ColDegree
 (
     LAGraph_Graph G,        // graph to determine G->coldegree
     char *msg
@@ -559,7 +581,7 @@ int LAGraph_Property_ColDegree  // 0 if successful, -1 if failure
 
 // LAGraph_Property_NDiag: determine G->ndiag
 LAGRAPH_PUBLIC
-int LAGraph_Property_NDiag  // returns 0 if successful, -1 if failure
+int LAGraph_Property_NDiag
 (
     LAGraph_Graph G,        // graph to compute G->ndiag for
     char *msg
@@ -567,7 +589,7 @@ int LAGraph_Property_NDiag  // returns 0 if successful, -1 if failure
 
 //  LAGraph_DeleteDiag: remove all diagonal entries fromG->A
 LAGRAPH_PUBLIC
-int LAGraph_DeleteDiag      // returns 0 if successful, < 0 if failure
+int LAGraph_DeleteDiag
 (
     LAGraph_Graph G,        // diagonal entries removed, most properties cleared
     char *msg
@@ -575,7 +597,7 @@ int LAGraph_DeleteDiag      // returns 0 if successful, < 0 if failure
 
 // LAGraph_CheckGraph: determine if a graph is valid
 LAGRAPH_PUBLIC
-int LAGraph_CheckGraph      // returns 0 if successful, -1 if failure
+int LAGraph_CheckGraph
 (
     LAGraph_Graph G,        // graph to check
     // TODO: int level,     // 0:quick, O(1), 1:a bit more, 2: still more, 3: exhaustive!
@@ -584,7 +606,7 @@ int LAGraph_CheckGraph      // returns 0 if successful, -1 if failure
 
 // LAGraph_GetNumThreads: determine # of OpenMP threads to use
 LAGRAPH_PUBLIC
-int LAGraph_GetNumThreads   // returns 0 if successful, or -1 if failure
+int LAGraph_GetNumThreads
 (
     int *nthreads,          // # of threads to use
     char *msg
@@ -592,7 +614,7 @@ int LAGraph_GetNumThreads   // returns 0 if successful, or -1 if failure
 
 // LAGraph_SetNumThreads: set # of OpenMP threads to use
 LAGRAPH_PUBLIC
-int LAGraph_SetNumThreads   // returns 0 if successful, or -1 if failure
+int LAGraph_SetNumThreads
 (
     int nthreads,           // # of threads to use
     char *msg
@@ -600,7 +622,7 @@ int LAGraph_SetNumThreads   // returns 0 if successful, or -1 if failure
 
 // LAGraph_Tic: start the timer
 LAGRAPH_PUBLIC
-int LAGraph_Tic             // returns 0 if successful, -1 if failure
+int LAGraph_Tic
 (
     double tic [2],         // tic [0]: seconds, tic [1]: nanoseconds
     char *msg
@@ -608,7 +630,7 @@ int LAGraph_Tic             // returns 0 if successful, -1 if failure
 
 // LAGraph_Toc: return time since last call to LAGraph_Tic
 LAGRAPH_PUBLIC
-int LAGraph_Toc             // returns 0 if successful, -1 if failure
+int LAGraph_Toc
 (
     double *t,              // time since last call to LAGraph_Tic
     const double tic [2],   // tic from last call to LAGraph_Tic
@@ -751,7 +773,7 @@ int LAGraph_Toc             // returns 0 if successful, -1 if failure
  * @param[in,out] msg     any error messages
  *
  * @retval 0 successful
- * @retval -1 if failure
+ * @retval FIXME:RETVAL if failure
  *
  */
 
@@ -776,7 +798,7 @@ int LAGraph_MMWrite
 
 // LAGraph_Structure: return the structure of a matrix (spones(A) in MATLAB)
 LAGRAPH_PUBLIC
-int LAGraph_Structure   // return 0 if successful, -1 if failure
+int LAGraph_Structure
 (
     GrB_Matrix *C,      // a boolean matrix with same structure of A
     GrB_Matrix A,
@@ -785,7 +807,7 @@ int LAGraph_Structure   // return 0 if successful, -1 if failure
 
 // LAGraph_NameOfType: return the name of a type
 LAGRAPH_PUBLIC
-int LAGraph_NameOfType      // returns 0 if successful, -1 if failure
+int LAGraph_NameOfType
 (
     char *name,             // name of the type
     GrB_Type type,          // GraphBLAS type
@@ -793,7 +815,8 @@ int LAGraph_NameOfType      // returns 0 if successful, -1 if failure
 ) ;
 
 // LAGraph_TypeFromName: return a GrB_Type from its name
-int LAGraph_TypeFromName    // returns 0 if successful, < 0 if failure
+LAGRAPH_PUBLIC
+int LAGraph_TypeFromName
 (
     GrB_Type *type,         // GraphBLAS type
     char *name,             // name of the type
@@ -801,7 +824,8 @@ int LAGraph_TypeFromName    // returns 0 if successful, < 0 if failure
 ) ;
 
 // LAGraph_SizeOfType: return sizeof(...) of a GraphBLAS GrB_Type
-int LAGraph_SizeOfType      // returns 0 if successful, < 0 if failure
+LAGRAPH_PUBLIC
+int LAGraph_SizeOfType
 (
     size_t *size,           // size of the type
     GrB_Type type,          // GraphBLAS type
@@ -809,7 +833,8 @@ int LAGraph_SizeOfType      // returns 0 if successful, < 0 if failure
 ) ;
 
 // LAGraph_MatrixTypeName: return the name of the GrB_Type of a GrB_Matrix
-int LAGraph_MatrixTypeName // returns 0 if successful, < 0 if failure
+LAGRAPH_PUBLIC
+int LAGraph_MatrixTypeName
 (
     char *name,             // name of the type of the matrix A
     GrB_Matrix A,           // matrix to query
@@ -817,7 +842,8 @@ int LAGraph_MatrixTypeName // returns 0 if successful, < 0 if failure
 ) ;
 
 // LAGraph_VectorTypeName: return the name of the GrB_Type of a GrB_Vector
-int LAGraph_VectorTypeName // returns 0 if successful, < 0 if failure
+LAGRAPH_PUBLIC
+int LAGraph_VectorTypeName
 (
     char *name,             // name of the type of the vector v
     GrB_Vector v,           // vector to query
@@ -825,7 +851,8 @@ int LAGraph_VectorTypeName // returns 0 if successful, < 0 if failure
 ) ;
 
 // LAGraph_ScalarTypeName: return the name of the GrB_Type of a GrB_Scalar
-int LAGraph_ScalarTypeName // returns 0 if successful, < 0 if failure
+LAGRAPH_PUBLIC
+int LAGraph_ScalarTypeName
 (
     char *name,             // name of the type of the scalar v
     GrB_Scalar s,           // scalar to query
@@ -834,7 +861,7 @@ int LAGraph_ScalarTypeName // returns 0 if successful, < 0 if failure
 
 // LAGraph_KindName: return the name of a kind
 LAGRAPH_PUBLIC
-int LAGraph_KindName        // returns 0 if successful, -1 if failure
+int LAGraph_KindName
 (
     char *name,             // name of the kind
     LAGraph_Kind kind,      // graph kind
@@ -843,7 +870,7 @@ int LAGraph_KindName        // returns 0 if successful, -1 if failure
 
 // LAGraph_SortByDegree: sort a graph by its row or column degree
 LAGRAPH_PUBLIC
-int LAGraph_SortByDegree    // returns 0 if successful, -1 if failure
+int LAGraph_SortByDegree
 (
     // output
     int64_t **P_handle,     // P is returned as a permutation vector of size n
@@ -856,7 +883,7 @@ int LAGraph_SortByDegree    // returns 0 if successful, -1 if failure
 
 // LAGraph_SampleDegree: sample the degree median and mean
 LAGRAPH_PUBLIC
-int LAGraph_SampleDegree        // returns 0 if successful, -1 if failure
+int LAGraph_SampleDegree
 (
     double *sample_mean,        // sampled mean degree
     double *sample_median,      // sampled median degree
@@ -870,7 +897,7 @@ int LAGraph_SampleDegree        // returns 0 if successful, -1 if failure
 
 // LAGraph_DisplayGraph: print the contents of a graph
 LAGRAPH_PUBLIC
-int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
+int LAGraph_DisplayGraph
 (
     LAGraph_Graph G,        // graph to display
     int pr,                 // 0: nothing, 1: terse, 2: summary, 3: all,
@@ -882,7 +909,7 @@ int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
 
 // LAGraph_IsEqual: compare for exact equality, auto selection of type
 LAGRAPH_PUBLIC
-int LAGraph_IsEqual         // returns 0 if successful, -1 if failure
+int LAGraph_IsEqual
 (
     bool *result,           // true if A == B, false if A != B or error
     GrB_Matrix A,
@@ -903,11 +930,12 @@ int LAGraph_IsEqual         // returns 0 if successful, -1 if failure
  * @param[in]    userop   Binary operator to use for the comparisons
  * @param[out]   msg      If an error code is returned, this may hold an error msg.
  *
- * @retval 0     if completed successfully (equal or not)
- * @retval -1001 result or userop is NULL
+ * @retval GrB_SUCCESS          if completed successfully (equal or not)
+ * @retval GrB_NULL_POINTER     result or userop is NULL
  * @return Any GraphBLAS errors that may have been encountered
  */
-GrB_Info LAGraph_Vector_IsEqual_op    // return GrB_SUCCESS if successful
+LAGRAPH_PUBLIC
+GrB_Info LAGraph_Vector_IsEqual_op
 (
     bool *result,           // true if A == B, false if A != B or error
     GrB_Vector A,
@@ -929,12 +957,13 @@ GrB_Info LAGraph_Vector_IsEqual_op    // return GrB_SUCCESS if successful
  * @param[in]    B        Second vector to compare
  * @param[out]   msg      If an error code is returned, this may hold an error msg.
  *
- * @retval 0     if completed successfully (equal or not)
- * @retval -1001 A, result or type is NULL
- * @retval -1002 type is not supported
+ * @retval GrB_SUCCESS          if completed successfully (equal or not)
+ * @retval GrB_NULL_POINTER     A, result or type is NULL
+ * @retval GrB_NOT_IMPLEMENTED  type is not supported
  * @return Any GraphBLAS errors that may have been encountered
  */
-int LAGraph_Vector_IsEqual         // returns 0 if successful, < 0 if failure
+LAGRAPH_PUBLIC
+int LAGraph_Vector_IsEqual
 (
     bool *result,           // true if A == B, false if A != B or error
     GrB_Vector A,
@@ -974,6 +1003,7 @@ int LAGraph_Vector_print
 // parallel sorting methods
 //------------------------------------------------------------------------------
 
+LAGRAPH_PUBLIC
 int LAGraph_Sort1    // sort array A of size n
 (
     int64_t *A_0,   // size n array
@@ -982,6 +1012,7 @@ int LAGraph_Sort1    // sort array A of size n
     char *msg
 ) ;
 
+LAGRAPH_PUBLIC
 int LAGraph_Sort2    // sort array A of size 2-by-n, using 2 keys (A [0:1][])
 (
     int64_t *A_0,   // size n array
@@ -991,6 +1022,7 @@ int LAGraph_Sort2    // sort array A of size 2-by-n, using 2 keys (A [0:1][])
     char *msg
 ) ;
 
+LAGRAPH_PUBLIC
 int LAGraph_Sort3    // sort array A of size 3-by-n, using 3 keys (A [0:2][])
 (
     int64_t *A_0,   // size n array
@@ -1000,7 +1032,6 @@ int LAGraph_Sort3    // sort array A of size 3-by-n, using 3 keys (A [0:2][])
     int nthreads,               // # of threads to use
     char *msg
 ) ;
-
 
 //==============================================================================
 // LAGraph Basic algorithms
@@ -1038,8 +1069,8 @@ int LAGraph_Sort3    // sort array A of size 3-by-n, using 3 keys (A [0:2][])
  *
  * @TODO pick return values that do not conflict with GraphBLAS errors.
  *
- * @retval         0         successful
- * @retval      -102         Graph is invalid (LAGraph_CheckGraph failed)
+ * @retval GrB_SUCCESS      successful
+ * @retval FIXME:RETVAL     Graph is invalid (LAGraph_CheckGraph failed)
  */
 
 LAGRAPH_PUBLIC
@@ -1065,7 +1096,7 @@ typedef enum
 LAGraph_Centrality_Kind ;
 
 LAGRAPH_PUBLIC
-int LAGraph_VertexCentrality    // returns -1 on failure, 0 if successful
+int LAGraph_VertexCentrality
 (
     // output:
     GrB_Vector *centrality,     // centrality(i): centrality metric of node i
@@ -1086,12 +1117,12 @@ int LAGraph_VertexCentrality    // returns -1 on failure, 0 if successful
  *
  * @TODO pick return values that do not conflict with GraphBLAS errors.
  *
- * @retval         0         successful
- * @retval      -102         Graph is invalid (LAGraph_CheckGraph failed)
- * @retval      -103         ntriangles is NULL
- * @retval      -104         G->ndiag (self loops) is nonzero
- * @retval      -105         graph is not symmetric
- * @retval      -106         G->rowdegree was not precalculated (for modes 3-6)
+ * @retval GrB_SUCCESS          successful
+ * @retval FIXME:RETVAL         Graph is invalid (LAGraph_CheckGraph failed)
+ * @retval GrB_NULL_POINTER     ntriangles is NULL
+ * @retval FIXME:RETVAL         G->ndiag (self loops) is nonzero
+ * @retval FIXME:RETVAL         graph is not symmetric
+ * @retval FIXME:RETVAL         G->rowdegree was not precalculated (for modes 3-6)
  */
 LAGRAPH_PUBLIC
 int LAGraph_TriangleCount   // returns 0 if successful, < 0 if failure
@@ -1117,7 +1148,7 @@ int LAGraph_ConnectedComponents
 // TODO: add AIsAllPositive or related as a G->property.
 // TODO: Should a Basic method pick delta automatically?
 LAGRAPH_PUBLIC
-int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
+int LAGraph_SingleSourceShortestPath
 (
     // output:
     GrB_Vector *path_length,    // path_length (i) is the length of the shortest
@@ -1149,7 +1180,7 @@ int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
 // method.
 
 LAGRAPH_PUBLIC
-int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
+int LAGraph_VertexCentrality_Betweenness
 (
     // output:
     GrB_Vector *centrality,     // centrality(i): betweeness centrality of i
@@ -1161,7 +1192,7 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
 ) ;
 
 LAGRAPH_PUBLIC
-int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
+int LAGraph_VertexCentrality_PageRankGAP
 (
     // outputs:
     GrB_Vector *centrality, // centrality(i): GAP-style pagerank of node i
@@ -1205,13 +1236,13 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
  *                                6       -1
  * @param[out]    msg        Error message if a failure code is returned.
  *
- * @retval         0         successful
- * @retval      -101         invalid method value
- * @retval      -102         Graph is invalid (LAGraph_CheckGraph failed)
- * @retval      -103         ntriangles is NULL
- * @retval      -104         G->ndiag (self loops) is nonzero
- * @retval      -105         graph is not "known" to be symmetric
- * @retval      -106         G->rowdegree was not precalculated (for modes 3-6)
+ * @retval GrB_SUCCESS          successful
+ * @retval FIXME:RETVAL         invalid method value
+ * @retval FIXME:RETVAL         Graph is invalid (LAGraph_CheckGraph failed)
+ * @retval GrB_NULL_POINTER     ntriangles is NULL
+ * @retval FIXME:RETVAL         G->ndiag (self loops) is nonzero
+ * @retval FIXME:RETVAL         graph is not "known" to be symmetric
+ * @retval FIXME:RETVAL         G->rowdegree was not precalculated (for modes 3-6)
  */
 
 typedef enum
