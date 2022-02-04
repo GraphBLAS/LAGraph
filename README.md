@@ -7,6 +7,7 @@ use GraphBLAS.
 
 Currently, SuiteSparse:GraphBLAS v6.0.2 or later is required.  However, use the
 latest stable release of SuiteSparse:GraphBLAS for best results.
+See <https://github.com/DrTimothyAldenDavis/GraphBLAS>
 
 Since LAGraph is a draft, it contains are many draft/experimental codes with
 known sub-par performance.  Performance of the best methods is highly sensitive
