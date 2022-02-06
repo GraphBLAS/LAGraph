@@ -7,7 +7,7 @@ example:
     [
         { "GrB_Matrix": "A_0", "type": "bool", "bytes": 226 },
         { "GrB_Matrix": "A_1", "type": "int32_t", "bytes": 421 },
-        { "GrB_Matrix": "A_7", "type": "double", "bytes": 421 },
+        { "GrB_Matrix": "C", "type": "double", "bytes": 10386 },
         null
     ]
 }
@@ -38,9 +38,9 @@ General form (currently):
 [binary here]
 
 The inner section:
-    "GrB_Matrix"    serialized blob from GrB_Matrix_serialize
-    "GrB_Vector"    serialized blob from GxB_Vector_serialize
-    "text"          compressed ASCII or Unicode
+    "GrB_Matrix":    serialized blob from GrB_Matrix_serialize
+    "GrB_Vector":    serialized blob from GxB_Vector_serialize
+    "text""          compressed ASCII or Unicode (not yet implemented)
     { "text": "name", "compression:", "(compression method)", "bytes": n }
 
 could extend this to LAGraph_Matrix_serialize
@@ -58,7 +58,9 @@ particular GrB library, or a non-opaque text (ASCII or Unicode), or a
 non-opaque LAGraph CSR/CSC/COO matrix/vector.
 
 Pitfalls:
-    no GrB method for exporting a vector
+    no GrB method for exporting a vector (see GxB_Vector_serialize)
     no GrB method for asking the size of a type (see LAGraph_SizeOfType)
     no GrB method for asking the name of a type (see LAGraph_NameOfType)
+    no GrB method for import/export of a dense matrix or vector
+        (see GxB_pack/unpack)
 

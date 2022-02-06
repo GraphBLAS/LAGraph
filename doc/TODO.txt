@@ -1,4 +1,4 @@
-As of Feb 3, 2022:
+As of Feb 5, 2022:
 
     * entire user guide
         experimental -> src, how to do it.
@@ -54,6 +54,8 @@ As of Feb 3, 2022:
     * missing features:
 
         * LAGraph_Structure for vectors.  See issue #80.
+            Rename this LAGraph_Matrix_Structure,
+            add LAGraph_Vector_Structure.
 
         * file I/O with a common, binary, non-opaque format that all
             GraphBLAS libraries can read.  Ideally using compression
