@@ -15,7 +15,7 @@
 
 // Return values:
 //  GrB_SUCCESS: input file and output matrix are valid
-//  GrB_INVALID_VALUE: the input matrix has invalid content
+//  LAGRAPH_IO_ERROR: the input file cannot be read or has invalid content
 //  GrB_NULL_POINTER:  A or f are NULL on input
 //  GrB_NOT_IMPLEMENTED: complex types not yet supported
 //  other: return values directly from GrB_* methods
@@ -383,10 +383,10 @@ static inline void set_value
 // LAGraph_mmread
 //------------------------------------------------------------------------------
 
-int LAGraph_MMRead          // returns 0 if successful, -1 if faillure
+int LAGraph_MMRead
 (
-    GrB_Matrix *A,          // handle of matrix to create
-    FILE *f,                // file to read from, already open
+    GrB_Matrix *A,  // handle of matrix to create
+    FILE *f,        // file to read from, already open
     char *msg
 )
 {

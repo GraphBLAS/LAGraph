@@ -336,13 +336,13 @@ static void LG_msort_3b_merge
 // LAGraph_Sort3: parallel mergesort
 //------------------------------------------------------------------------------
 
-int LAGraph_Sort3    // sort array A of size 3-by-n, using 3 keys (A [0:2][])
+int LAGraph_Sort3
 (
-    int64_t *LG_RESTRICT A_0,   // size n array
-    int64_t *LG_RESTRICT A_1,   // size n array
-    int64_t *LG_RESTRICT A_2,   // size n array
+    int64_t *A_0,       // size n array
+    int64_t *A_1,       // size n array
+    int64_t *A_2,       // size n array
     const int64_t n,
-    int nthreads,               // # of threads to use
+    int nthreads,       // # of threads to use
     char *msg
 )
 {

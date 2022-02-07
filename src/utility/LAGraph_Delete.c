@@ -10,9 +10,13 @@
 
 #include "LG_internal.h"
 
-int LAGraph_Delete      // returns 0 if successful, -1 if failure
+int LAGraph_Delete
 (
-    LAGraph_Graph *G,   // the graph to delete; G set to NULL on output
+    LAGraph_Graph *G,   // the graph to delete; G set to NULL on output.
+                        // All internal GrB_Matrix and GrB_Vector objects are
+                        // freed, including G->A.  To keep G->A while deleting
+                        // the graph G, use:
+                        // { A = G->A ; G->A = NULL ; LAGraph_Delete (&G, msg);}
     char *msg
 )
 {

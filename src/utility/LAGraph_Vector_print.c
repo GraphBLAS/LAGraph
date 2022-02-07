@@ -102,13 +102,13 @@ LG_VECTOR_PRINT (FC64  , GxB_FC64_t, GxB_FC64, ...) ;
 #define LAGraph_FREE_ALL ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Vector_print_type: print with a specified type
+// LAGraph_Vector_print: automatically determine the type
 //------------------------------------------------------------------------------
 
-int LAGraph_Vector_print_type
+int LAGraph_Vector_print
 (
     GrB_Vector v,       // vector to pretty-print to the file
-    GrB_Type type,      // type to print
+    // TODO: use an enum for pr
     int pr,             // print level: -1 nothing, 0: one line, 1: terse,
                         //      2: summary, 3: all,
                         //      4: as 2 but with %0.15g for float/double
@@ -119,7 +119,31 @@ int LAGraph_Vector_print_type
 )
 {
 
+    //--------------------------------------------------------------------------
+    // check inputs
+    //--------------------------------------------------------------------------
+
     LG_CLEAR_MSG ;
+    LG_ASSERT (v != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (f != NULL, GrB_NULL_POINTER) ;
+
+    //--------------------------------------------------------------------------
+    // determine the type
+    //--------------------------------------------------------------------------
+
+    GrB_Type type ;
+    #if LG_SUITESPARSE
+        // SuiteSparse:GraphBLAS: query the type and print accordingly
+        GrB_TRY (GxB_Vector_type (&type, v)) ;
+    #else
+        // no way to determine the type with pure GrB*; print as if FP64
+        type = GrB_FP64 ;
+    #endif
+
+    //--------------------------------------------------------------------------
+    // print the vector
+    //--------------------------------------------------------------------------
+
     if (type == GrB_BOOL)
     {
         return (LG_Vector_print_BOOL (v, pr, f, msg)) ;
@@ -180,50 +204,5 @@ int LAGraph_Vector_print_type
             GrB_NOT_IMPLEMENTED, "user-defined types not supported") ; // RETVAL
         return (GrB_SUCCESS) ;
     }
-}
-
-//------------------------------------------------------------------------------
-// LAGraph_Vector_print: automatically determine the type
-//------------------------------------------------------------------------------
-
-int LAGraph_Vector_print
-(
-    GrB_Vector v,       // vector to pretty-print to the file
-    int pr,             // print level: -1 nothing, 0: one line, 1: terse,
-                        //      2: summary, 3: all,
-                        //      4: as 2 but with %0.15g for float/double
-                        //      5: as 3 but with %0.15g for float/double
-    FILE *f,            // file to write it to, must be already open; use
-                        // stdout or stderr to print to those locations.
-    char *msg
-)
-{
-
-    //--------------------------------------------------------------------------
-    // check inputs
-    //--------------------------------------------------------------------------
-
-    LG_CLEAR_MSG ;
-    LG_ASSERT (v != NULL, GrB_NULL_POINTER) ;
-    LG_ASSERT (f != NULL, GrB_NULL_POINTER) ;
-
-    //--------------------------------------------------------------------------
-    // determine the type
-    //--------------------------------------------------------------------------
-
-    GrB_Type type ;
-    #if LG_SUITESPARSE
-        // SuiteSparse:GraphBLAS: query the type and print accordingly
-        GrB_TRY (GxB_Vector_type (&type, v)) ;
-    #else
-        // no way to determine the type with pure GrB*; print as if FP64
-        type = GrB_FP64 ;
-    #endif
-
-    //--------------------------------------------------------------------------
-    // print the matrix
-    //--------------------------------------------------------------------------
-
-    return (LAGraph_Vector_print_type (v, type, pr, f, msg)) ;
 }
 

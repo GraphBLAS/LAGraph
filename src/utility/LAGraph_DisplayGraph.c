@@ -10,11 +10,11 @@
 
 #include "LG_internal.h"
 
-int LAGraph_DisplayGraph    // returns 0 if successful, -1 if failure
+int LAGraph_DisplayGraph
 (
     LAGraph_Graph G,        // graph to display
-    int pr,                 // -1: nothing, 0: single line, 1: terse,
-                            // 2: summary, 3: all,
+    // TODO: use an enum for pr
+    int pr,                 // 0: nothing, 1: terse, 2: summary, 3: all,
                             // 4: same as 2 but with %0.15g for doubles
                             // 5: same as 3 but with %0.15g for doubles
     FILE *f,                // file to write to, must already be open

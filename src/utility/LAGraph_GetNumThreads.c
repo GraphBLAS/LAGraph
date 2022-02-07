@@ -12,15 +12,23 @@
 
 #include "LG_internal.h"
 
-int LAGraph_GetNumThreads   // returns 0 if successful, or -1 if failure
+int LAGraph_GetNumThreads
 (
-    int *nthreads,          // # of threads to use
+    int *nthreads,      // # of threads to use
     char *msg
 )
 {
 
+   //---------------------------------------------------------------------------
+   // check inputs
+   //---------------------------------------------------------------------------
+
     LG_CLEAR_MSG ;
     LG_ASSERT (nthreads != NULL, GrB_NULL_POINTER) ;
+
+   //---------------------------------------------------------------------------
+   // get number of threads
+   //---------------------------------------------------------------------------
 
     #if LG_SUITESPARSE
     {

@@ -10,10 +10,10 @@
 
 #include "LG_internal.h"
 
-int LAGraph_SizeOfType      // returns 0 if successful, < 0 if failure
+int LAGraph_SizeOfType
 (
-    size_t *size,           // size of the type
-    GrB_Type type,          // GraphBLAS type
+    size_t *size,   // size of the type
+    GrB_Type type,  // GraphBLAS type
     char *msg
 )
 {

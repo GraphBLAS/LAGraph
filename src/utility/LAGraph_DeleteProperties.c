@@ -10,12 +10,13 @@
 
 #include "LG_internal.h"
 
-int LAGraph_DeleteProperties    // returns 0 if successful, -1 if failure
+int LAGraph_DeleteProperties
 (
-    LAGraph_Graph G,        // G stays valid, only cached properties are freed
+    LAGraph_Graph G,    // G stays valid, only cached properties are freed
     char *msg
 )
 {
+
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------

@@ -10,9 +10,9 @@
 
 #include "LG_internal.h"
 
-int LAGraph_DeleteDiag      // returns 0 if successful, < 0 if failure
+int LAGraph_DeleteDiag
 (
-    LAGraph_Graph G,        // diagonal entries removed, most properties cleared
+    LAGraph_Graph G,    // diagonal entries removed, most properties cleared
     char *msg
 )
 {

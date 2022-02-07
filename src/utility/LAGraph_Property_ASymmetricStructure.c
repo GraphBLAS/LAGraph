@@ -20,12 +20,13 @@
 
 #include "LG_internal.h"
 
-int LAGraph_Property_ASymmetricStructure  // 0 if successful, -1 if failure
+int LAGraph_Property_ASymmetricStructure
 (
-    LAGraph_Graph G,        // graph to determine the symmetry of structure of A
+    LAGraph_Graph G,    // graph to determine the symmetry of structure of A
     char *msg
 )
 {
+
     //--------------------------------------------------------------------------
     // clear msg and check G
     //--------------------------------------------------------------------------

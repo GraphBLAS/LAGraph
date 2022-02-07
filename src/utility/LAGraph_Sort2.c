@@ -323,12 +323,12 @@ static void LG_msort_2b_merge
 // LAGraph_Sort2: parallel mergesort
 //------------------------------------------------------------------------------
 
-int LAGraph_Sort2    // sort array A of size 2-by-n, using 2 keys (A [0:1][])
+int LAGraph_Sort2
 (
-    int64_t *LG_RESTRICT A_0,   // size n array
-    int64_t *LG_RESTRICT A_1,   // size n array
+    int64_t *A_0,       // size n array
+    int64_t *A_1,       // size n array
     const int64_t n,
-    int nthreads,               // # of threads to use
+    int nthreads,       // # of threads to use
     char *msg
 )
 {

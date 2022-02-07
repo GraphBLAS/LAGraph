@@ -10,10 +10,10 @@
 
 #include "LG_internal.h"
 
-int LAGraph_NameOfType      // returns 0 if successful, < 0 if failure
+int LAGraph_NameOfType
 (
-    char *name,             // name of the type
-    GrB_Type type,          // GraphBLAS type
+    char *name,     // name of the type
+    GrB_Type type,  // GraphBLAS type
     char *msg
 )
 {

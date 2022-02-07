@@ -309,11 +309,11 @@ static void LG_msort_1b_merge
 // LAGraph_Sort1: parallel mergesort
 //------------------------------------------------------------------------------
 
-int LAGraph_Sort1    // sort array A of size n
+int LAGraph_Sort1
 (
-    int64_t *LG_RESTRICT A_0,   // size n array
+    int64_t *A_0,       // size n array
     const int64_t n,
-    int nthreads,               // # of threads to use
+    int nthreads,       // # of threads to use
     char *msg
 )
 {

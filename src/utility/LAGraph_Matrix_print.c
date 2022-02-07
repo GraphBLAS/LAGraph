@@ -104,13 +104,12 @@ LG_MATRIX_PRINT (FC64  , GxB_FC64_t, GxB_FC64, ...) ;
 #define LAGraph_FREE_ALL ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Matrix_print_type: print with a specified type
+// LAGraph_Matrix_print: automatically determine the type
 //------------------------------------------------------------------------------
 
-int LAGraph_Matrix_print_type
+int LAGraph_Matrix_print
 (
     GrB_Matrix A,       // matrix to pretty-print to the file
-    GrB_Type type,      // type to print
     int pr,             // print level: -1 nothing, 0: one line, 1: terse,
                         //      2: summary, 3: all,
                         //      4: as 2 but with %0.15g for float/double
@@ -121,7 +120,30 @@ int LAGraph_Matrix_print_type
 )
 {
 
+    //--------------------------------------------------------------------------
+    // check inputs
+    //--------------------------------------------------------------------------
+
     LG_CLEAR_MSG ;
+    LG_ASSERT (A != NULL && f != NULL, GrB_NULL_POINTER) ;
+
+    //--------------------------------------------------------------------------
+    // determine the type
+    //--------------------------------------------------------------------------
+
+    GrB_Type type ;
+    #if LG_SUITESPARSE
+        // SuiteSparse:GraphBLAS: query the type and print accordingly
+        GrB_TRY (GxB_Matrix_type (&type, A)) ;
+    #else
+        // no way to determine the type with pure GrB*; print as if FP64
+        type = GrB_FP64 ;
+    #endif
+
+    //--------------------------------------------------------------------------
+    // print the matrix
+    //--------------------------------------------------------------------------
+
     if (type == GrB_BOOL)
     {
         return (LG_Matrix_print_BOOL (A, pr, f, msg)) ;
@@ -182,49 +204,5 @@ int LAGraph_Matrix_print_type
             GrB_NOT_IMPLEMENTED, "user-defined types not supported") ; // RETVAL
         return (GrB_SUCCESS) ;
     }
-}
-
-//------------------------------------------------------------------------------
-// LAGraph_Matrix_print: automatically determine the type
-//------------------------------------------------------------------------------
-
-int LAGraph_Matrix_print
-(
-    GrB_Matrix A,       // matrix to pretty-print to the file
-    int pr,             // print level: -1 nothing, 0: one line, 1: terse,
-                        //      2: summary, 3: all,
-                        //      4: as 2 but with %0.15g for float/double
-                        //      5: as 3 but with %0.15g for float/double
-    FILE *f,            // file to write it to, must be already open; use
-                        // stdout or stderr to print to those locations.
-    char *msg
-)
-{
-
-    //--------------------------------------------------------------------------
-    // check inputs
-    //--------------------------------------------------------------------------
-
-    LG_CLEAR_MSG ;
-    LG_ASSERT (A != NULL && f != NULL, GrB_NULL_POINTER) ;
-
-    //--------------------------------------------------------------------------
-    // determine the type
-    //--------------------------------------------------------------------------
-
-    GrB_Type type ;
-    #if LG_SUITESPARSE
-        // SuiteSparse:GraphBLAS: query the type and print accordingly
-        GrB_TRY (GxB_Matrix_type (&type, A)) ;
-    #else
-        // no way to determine the type with pure GrB*; print as if FP64
-        type = GrB_FP64 ;
-    #endif
-
-    //--------------------------------------------------------------------------
-    // print the vector
-    //--------------------------------------------------------------------------
-
-    return (LAGraph_Matrix_print_type (A, type, pr, f, msg)) ;
 }
 

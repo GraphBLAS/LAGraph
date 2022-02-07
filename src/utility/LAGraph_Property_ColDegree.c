@@ -22,9 +22,9 @@
 
 #include "LG_internal.h"
 
-int LAGraph_Property_ColDegree  // 0 if successful, -1 if failure
+int LAGraph_Property_ColDegree
 (
-    LAGraph_Graph G,        // graph to determine G->coldegree
+    LAGraph_Graph G,    // graph to determine G->coldegree
     char *msg
 )
 {

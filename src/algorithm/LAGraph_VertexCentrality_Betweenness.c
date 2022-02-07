@@ -42,7 +42,7 @@
 
 // Each phase uses push-pull direction optimization.
 
-// This is an LAGraph "expert" method, since it requires the source nodes to be
+// This is an LAGraph Advanced method, since it requires the source nodes to be
 // specified, and G->AT must be present (unless G is undirected or G->A is
 // known to have a symmetric structure, in which case G->A is used for both A
 // and AT).

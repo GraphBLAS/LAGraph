@@ -8,7 +8,8 @@
 
 //------------------------------------------------------------------------------
 
-// PageRank for the GAP benchmark.  This is an "expert" method.
+// PageRank for the GAP benchmark.  This is an LAGraph Advanced method, since
+// it requires the G->AT and G->rowdegree properties to appear in G on input.
 
 // This algorithm follows the specification given in the GAP Benchmark Suite:
 // https://arxiv.org/abs/1508.03619 which assumes that both A and A' are

@@ -50,10 +50,11 @@
 // LAGraph_MatrixTypeName: return the name of the GrB_Type of a GrB_Matrix
 //------------------------------------------------------------------------------
 
-int LAGraph_MatrixTypeName // returns 0 if successful, < 0 if failure
+int LAGraph_MatrixTypeName
 (
-    char *name,             // name of the type of the matrix A
-    GrB_Matrix A,           // matrix to query
+    char *name,     // name of the type of the matrix A (user-provided array
+                    // of size at least LAGRAPH_MAX_NAME_LEN).
+    GrB_Matrix A,   // matrix to query
     char *msg
 )
 {
@@ -81,10 +82,11 @@ int LAGraph_MatrixTypeName // returns 0 if successful, < 0 if failure
 // LAGraph_VectorTypeName: return the name of the GrB_Type of a GrB_Vector
 //------------------------------------------------------------------------------
 
-int LAGraph_VectorTypeName // returns 0 if successful, < 0 if failure
+int LAGraph_VectorTypeName
 (
-    char *name,             // name of the type of the vector v
-    GrB_Vector v,           // vector to query
+    char *name,     // name of the type of the vector v (user-provided array
+                    // of size at least LAGRAPH_MAX_NAME_LEN).
+    GrB_Vector v,   // vector to query
     char *msg
 )
 {
@@ -112,10 +114,11 @@ int LAGraph_VectorTypeName // returns 0 if successful, < 0 if failure
 // LAGraph_ScalarTypeName: return the name of the GrB_Type of a GrB_Scalar
 //------------------------------------------------------------------------------
 
-int LAGraph_ScalarTypeName // returns 0 if successful, < 0 if failure
+int LAGraph_ScalarTypeName
 (
-    char *name,             // name of the type of the scalar v
-    GrB_Scalar s,           // scalar to query
+    char *name,     // name of the type of the scalar s (user-provided array
+                    // of size at least LAGRAPH_MAX_NAME_LEN).
+    GrB_Scalar s,   // scalar to query
     char *msg
 )
 {

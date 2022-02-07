@@ -17,9 +17,11 @@
 
 #include "LG_internal.h"
 
-int LAGraph_Structure   // return 0 if successful, -1 if failure
+int LAGraph_Structure
 (
-    GrB_Matrix *C,      // a boolean matrix with same structure of A
+    GrB_Matrix *C,  // a boolean matrix with same structure of A, with C(i,j)
+                    // set to true if A(i,j) appears in the sparsity structure
+                    // of A.
     GrB_Matrix A,
     char *msg
 )

@@ -10,10 +10,11 @@
 
 #include "LG_internal.h"
 
-int LAGraph_KindName        // returns 0 if successful, -1 if failure
+int LAGraph_KindName
 (
-    char *name,             // name of the kind
-    LAGraph_Kind kind,      // graph kind
+    char *name,     // name of the kind (user provided array of size at least
+                    // LAGRAPH_MAX_NAME_LEN)
+    LAGraph_Kind kind,  // graph kind
     char *msg
 )
 {

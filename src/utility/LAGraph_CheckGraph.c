@@ -10,9 +10,11 @@
 
 #include "LG_internal.h"
 
-int LAGraph_CheckGraph      // returns 0 if successful, -1 if failure
+int LAGraph_CheckGraph
 (
-    LAGraph_Graph G,        // graph to check
+    LAGraph_Graph G,    // graph to check
+    // TODO: int level, // 0:quick, O(1), 1:a bit more, 2: still more, 3:
+                        // exhaustive!
     char *msg
 )
 {

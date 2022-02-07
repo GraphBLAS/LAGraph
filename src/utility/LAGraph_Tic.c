@@ -23,17 +23,19 @@
 
 #include "LG_internal.h"
 
-#if defined ( __linux__ ) || defined ( __GNU__ )
-    #include <sys/time.h>
-#endif
-#if defined ( __MACH__ ) && defined ( __APPLE__ )
-    #include <mach/clock.h>
-    #include <mach/mach.h>
+#if !defined ( _OPENMP )
+    #if defined ( __linux__ ) || defined ( __GNU__ )
+        #include <sys/time.h>
+    #endif
+    #if defined ( __MACH__ ) && defined ( __APPLE__ )
+        #include <mach/clock.h>
+        #include <mach/mach.h>
+    #endif
 #endif
 
-int LAGraph_Tic             // returns 0 if successful, -1 if failure
+int LAGraph_Tic
 (
-    double tic [2],         // tic [0]: seconds, tic [1]: nanoseconds
+    double tic [2],     // tic [0]: seconds, tic [1]: nanoseconds
     char *msg
 )
 {

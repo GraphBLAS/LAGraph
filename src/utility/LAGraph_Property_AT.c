@@ -12,9 +12,9 @@
 
 #include "LG_internal.h"
 
-int LAGraph_Property_AT     // returns 0 if successful, -1 if failure
+int LAGraph_Property_AT
 (
-    LAGraph_Graph G,        // graph to compute G->AT for
+    LAGraph_Graph G,    // graph for which to compute G->AT
     char *msg
 )
 {

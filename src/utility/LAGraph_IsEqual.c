@@ -22,9 +22,9 @@
 // LAGraph_IsEqual: compare using GrB_EQ_type operator
 //------------------------------------------------------------------------------
 
-int LAGraph_IsEqual         // returns 0 if successful, < 0 if failure
+int LAGraph_IsEqual     // TODO rename LAGraph_Matrix_IsEqual
 (
-    bool *result,           // true if A == B, false if A != B or error
+    bool *result,       // true if A == B, false if A != B or error
     GrB_Matrix A,
     GrB_Matrix B,
     char *msg

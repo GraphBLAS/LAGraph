@@ -15,10 +15,10 @@
 
 #include "LG_internal.h"
 
-int LAGraph_SampleDegree        // returns 0 if successful, -1 if failure
+int LAGraph_SampleDegree
 (
-    double *sample_mean,        // sampled mean degree
-    double *sample_median,      // sampled median degree
+    double *sample_mean,    // sampled mean degree
+    double *sample_median,  // sampled median degree
     // input
     LAGraph_Graph G,        // graph of n nodes
     bool byrow,             // if true, sample G->rowdegree, else G->coldegree
@@ -27,6 +27,7 @@ int LAGraph_SampleDegree        // returns 0 if successful, -1 if failure
     char *msg
 )
 {
+
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------

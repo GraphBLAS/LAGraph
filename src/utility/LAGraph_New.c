@@ -8,19 +8,27 @@
 
 //------------------------------------------------------------------------------
 
-// If succesful, the matrix A is "moved" into G->A, and the caller's A is set
+// If succesful, the matrix A is moved into G->A, and the caller's A is set
 // to NULL.
 
 #include "LG_internal.h"
 
-int LAGraph_New         // returns 0 if successful, -1 if failure
+int LAGraph_New
 (
-    LAGraph_Graph *G,      // the graph to create, NULL if failure
-    GrB_Matrix    *A,      // the adjacency matrix of the graph, may be NULL
-    LAGraph_Kind   kind,   // the kind of graph, may be LAGRAPH_KIND_UNKNOWN
-    char          *msg
+    LAGraph_Graph *G,   // the graph to create, NULL if failure
+    GrB_Matrix    *A,   // the adjacency matrix of the graph, may be NULL.
+                        // A is moved into G as G->A, and A itself is set
+                        // to NULL to denote that is now a part of G.
+                        // That is, { G->A = A ; A = NULL ; } is performed.
+                        // When G is deleted, G->A is freed.  If A is NULL,
+                        // the graph is invalid until G->A is set.
+    LAGraph_Kind kind,  // the kind of graph. This may be LAGRAPH_UNKNOWN,
+                        // which must then be revised later before the
+                        // graph is used.
+    char *msg
 )
 {
+
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------

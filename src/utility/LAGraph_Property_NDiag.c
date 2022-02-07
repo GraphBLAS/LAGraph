@@ -14,12 +14,13 @@
 
 #include "LG_internal.h"
 
-int LAGraph_Property_NDiag  // returns 0 if successful, -1 if failure
+int LAGraph_Property_NDiag
 (
-    LAGraph_Graph G,        // graph to compute G->ndiag for
+    LAGraph_Graph G,    // graph to compute G->ndiag
     char *msg
 )
 {
+
     //--------------------------------------------------------------------------
     // clear msg and check G
     //--------------------------------------------------------------------------

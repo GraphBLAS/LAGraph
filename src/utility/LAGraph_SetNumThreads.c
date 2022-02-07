@@ -10,14 +10,22 @@
 
 #include "LG_internal.h"
 
-int LAGraph_SetNumThreads       // returns 0 if successful, -1 if failure
+int LAGraph_SetNumThreads
 (
-    int nthreads,
+    int nthreads,       // # of threads to use
     char *msg
 )
 {
 
+    //--------------------------------------------------------------------------
+    // check inputs
+    //--------------------------------------------------------------------------
+
     LG_CLEAR_MSG ;
+
+    //--------------------------------------------------------------------------
+    // set number of threads to use
+    //--------------------------------------------------------------------------
 
     #if LG_SUITESPARSE
     {

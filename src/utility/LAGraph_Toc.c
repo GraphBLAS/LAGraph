@@ -10,7 +10,7 @@
 
 #include "LG_internal.h"
 
-int LAGraph_Toc             // 0 if successful, -1 on failure
+int LAGraph_Toc
 (
     double *t,              // time since last call to LAGraph_Tic
     const double tic [2],   // tic from last call to LAGraph_Tic

@@ -21,9 +21,9 @@
 
 #include "LG_internal.h"
 
-int LAGraph_Property_RowDegree  // 0 if successful, -1 if failure
+int LAGraph_Property_RowDegree
 (
-    LAGraph_Graph G,        // graph to determine G->rowdegree
+    LAGraph_Graph G,    // graph to determine G->rowdegree
     char *msg
 )
 {

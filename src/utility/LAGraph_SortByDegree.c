@@ -44,7 +44,7 @@
 
 #include "LG_internal.h"
 
-int LAGraph_SortByDegree    // returns 0 if successful, -1 if failure
+int LAGraph_SortByDegree
 (
     // output
     int64_t **P_handle,     // P is returned as a permutation vector of size n
