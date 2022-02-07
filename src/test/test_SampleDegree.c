@@ -144,12 +144,12 @@ void test_SampleDegree (void)
         // SampleDegree requires degrees to be precomputed
         ret_code = LAGraph_SampleDegree (&mean, &median, G, 1,
             files [k].nsamples, files [k].seed, msg) ;
-        TEST_CHECK (ret_code == -1) ;
+        TEST_CHECK (ret_code == LAGRAPH_PROPERTY_MISSING) ;
         TEST_MSG ("SampleDegree without row degrees precomputed succeeded") ;
 
         ret_code = LAGraph_SampleDegree (&mean, &median, G, 0,
             files [k].nsamples, files [k].seed, msg) ;
-        TEST_CHECK (ret_code == -1) ;
+        TEST_CHECK (ret_code == LAGRAPH_PROPERTY_MISSING) ;
         TEST_MSG ("SampleDegree without column degrees precomputed succeeded") ;
 
         // Compute and check the row samples

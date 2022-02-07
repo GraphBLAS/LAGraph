@@ -106,9 +106,8 @@ GrB_Info LAGraph_scc
     GrB_Matrix A            // input matrix
 )
 {
-#if !(LG_SUITESPARSE)
-    // FIXME: can be GrB*
-    return (GrB_NOT_IMPLEMENTED) ;      // FIXME:RETVAL
+#if !LG_SUITESPARSE
+    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;      // RETVAL
 #else
     GrB_Info info;
     GrB_Vector scc;

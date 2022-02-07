@@ -55,11 +55,12 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
     GrB_Index Ap_size, Aj_size, Ax_size, n, ncols, Ap_len, Aj_len, Ax_len ;
     LG_ASSERT (ntri != NULL, GrB_NULL_POINTER) ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
-    LG_ASSERT (G->ndiag == 0, -104) ;   // FIXME:RETVAL
+    LG_ASSERT (G->ndiag == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED) ;  // RETVAL
     LG_ASSERT_MSG ((G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
         G->A_structure_is_symmetric == LAGRAPH_TRUE)),
-        -1001, "G->A must be known to be symmetric") ;  // FIXME:RETVAL
+        LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED, // RETVAL
+        "G->A must be known to be symmetric") ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
 

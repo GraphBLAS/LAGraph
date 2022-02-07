@@ -73,7 +73,8 @@ int LG_check_cc
     LG_ASSERT_MSG ((G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
         G->A_structure_is_symmetric == LAGRAPH_TRUE)),
-        -1001, "G->A must be known to be symmetric") ; // FIXME:RETVAL
+        LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED,   // RETVAL
+        "G->A must be known to be symmetric") ;
 
     //--------------------------------------------------------------------------
     // allocate workspace
@@ -99,7 +100,7 @@ int LG_check_cc
     for (int64_t i = 0 ; i < n ; i++)
     {
         int64_t comp = component_in [i] ; 
-        LG_ASSERT (comp >= 0 && comp < n, -1007) ;      // FIXME:RETVAL
+        LG_ASSERT (comp >= 0 && comp < n, -2000) ;      // RETVAL
         count [comp]++ ;
         if (comp == i)
         {
@@ -158,7 +159,8 @@ int LG_check_cc
         // src node is part of a new connected component, comp
         int64_t comp = component_in [src] ;
         ncomp++ ;
-        LG_ASSERT_MSG (ncomp <= ncomp_in, -1008, "wrong # of components") ;     // FIXME:RETVAL
+        LG_ASSERT_MSG (ncomp <= ncomp_in,
+            -2001, "wrong # of components") ;     // RETVAL
 
         queue [0] = src ;
         int64_t head = 0 ;
@@ -190,7 +192,7 @@ int LG_check_cc
                 // consider edge (u,v)
                 int64_t v = node_u_adjacency_list [k] ;
                 // ensure v is in the same connected component as the src node
-                LG_ASSERT (comp == component_in [u], -1009) ;       // FIXME:RETVAL
+                LG_ASSERT (comp == component_in [u], -2002) ;       // RETVAL
                 // printf ("    seen: %ld\n", v) ;
                 if (!visited [v])
                 {
@@ -203,7 +205,8 @@ int LG_check_cc
         }
     }
 
-    LG_ASSERT_MSG (ncomp == ncomp_in, -1010, "wrong # of components") ;     // FIXME:RETVAL
+    LG_ASSERT_MSG (ncomp == ncomp_in,
+        -2001, "wrong # of components") ;     // RETVAL
 
     LAGraph_Toc (&tt, tic, msg) ;
     printf ("LG_check_cc component time: %g sec\n", tt) ;

@@ -344,7 +344,7 @@ void test_SWrite_errors (void)
     result = LAGraph_SLoadSet (LG_DATA_DIR "garbage.lagraph",
         &Set, &nmatrices, &collection, msg) ;
     printf ("\nresult %d, [%s]\n", result, msg) ;
-    TEST_CHECK (result == -1001) ;
+    TEST_CHECK (result == LAGRAPH_IO_ERROR) ;
 
     // finally works
     OK (LAGraph_SLoadSet ("error.lagraph", &Set, &nmatrices, &collection,

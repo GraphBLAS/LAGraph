@@ -113,8 +113,7 @@ GrB_Info LAGraph_msf
 )
 {
 #if !LG_SUITESPARSE
-    // currently requires GxB_select; FIXME: make pure GrB with GrB_select
-    return (GrB_NOT_IMPLEMENTED) ;      // FIXME:RETVAL
+    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;      // RETVAL
 #else
     GrB_Info info;
     GrB_Index n;

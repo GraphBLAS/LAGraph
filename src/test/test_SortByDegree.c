@@ -400,8 +400,9 @@ void test_SortByDegree_failures (void)
     OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
 
     // degree property must first be computed
-    TEST_CHECK (LAGraph_SortByDegree (&P, G, true, true, msg) == -1) ;
-    printf ("msg: %s\n", msg) ;
+    result = LAGraph_SortByDegree (&P, G, true, true, msg) ;
+    printf ("\nresult %d: msg: %s\n", result, msg) ;
+    TEST_CHECK (result == LAGRAPH_PROPERTY_MISSING) ;
 
     teardown ( ) ;
 }

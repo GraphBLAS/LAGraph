@@ -70,7 +70,7 @@ int LG_check_export
     else if (atype == GrB_UINT64) s = sizeof (uint64_t) ;
     else if (atype == GrB_FP32  ) s = sizeof (float   ) ;
     else if (atype == GrB_FP64  ) s = sizeof (double  ) ;
-    LG_ASSERT_MSG (s != 0, GrB_NOT_IMPLEMENTED, "unsupported type") ;   // FIXME:RETVAL
+    LG_ASSERT_MSG (s != 0, GrB_NOT_IMPLEMENTED, "unsupported type") ;   // RETVAL
     (*typesize) = s ;
 
     GrB_TRY (GrB_Matrix_exportSize (Ap_len, Aj_len, Ax_len, GrB_CSR_FORMAT,

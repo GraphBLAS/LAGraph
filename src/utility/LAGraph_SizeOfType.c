@@ -56,8 +56,8 @@ int LAGraph_SizeOfType      // returns 0 if successful, < 0 if failure
         #endif
         else
         {
-            LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED,  // FIXME:RETVAL
-                "user-defined types not supported") ;
+            LG_ASSERT_MSG (false,
+            GrB_NOT_IMPLEMENTED, "user-defined types not supported") ; // RETVAL
         }
         return (GrB_SUCCESS) ;
 

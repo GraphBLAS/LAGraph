@@ -52,7 +52,7 @@ int LG_BreadthFirstSearch_SSGrB
     //--------------------------------------------------------------------------
 
 #if !LG_SUITESPARSE
-    return (GrB_NOT_IMPLEMENTED) ;      // FIXME:RETVAL
+    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;      // RETVAL
 #else
 
     LG_CLEAR_MSG ;

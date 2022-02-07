@@ -126,7 +126,7 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
     method == LAGraph_TriangleCount_Sandia2 ||   // 4: sum (sum ((U * U) .* U))
     method == LAGraph_TriangleCount_SandiaDot || // 5: sum (sum ((L * U') .* L))
     method == LAGraph_TriangleCount_SandiaDot2,  // 6: sum (sum ((U * L') .* U))
-    GrB_INVALID_VALUE, "method is invalid") ;   // FIXME:RETVAL
+    GrB_INVALID_VALUE, "method is invalid") ;   // RETVAL
     if (presort != NULL)
     {
         LG_ASSERT_MSG (
@@ -134,11 +134,11 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
         (*presort) == LAGraph_TriangleCount_Ascending ||
         (*presort) == LAGraph_TriangleCount_Descending ||
         (*presort) == LAGraph_TriangleCount_AutoSort,
-        GrB_INVALID_VALUE, "presort is invalid") ;   // FIXME:RETVAL
+        GrB_INVALID_VALUE, "presort is invalid") ;   // RETVAL
     }
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     LG_ASSERT (ntriangles != NULL, GrB_NULL_POINTER) ;
-    LG_ASSERT (G->ndiag == 0, -104) ;   // FIXME:RETVAL
+    LG_ASSERT (G->ndiag == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED) ;   // RETVAL
 
     if (method == LAGraph_TriangleCount_Default)
     {
@@ -149,7 +149,8 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
     LG_ASSERT_MSG ((G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
         G->A_structure_is_symmetric == LAGRAPH_TRUE)),
-        -1001, "G->A must be known to be symmetric") ;
+        LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED,       // RETVAL
+        "G->A must be known to be symmetric") ;
 
     // the Sandia* methods can benefit from the presort
     bool method_can_use_presort =
@@ -164,7 +165,8 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
         && ((*presort) == LAGraph_TriangleCount_AutoSort) ;
     if (auto_sort && method_can_use_presort)
     {
-        LG_ASSERT_MSG (Degree != NULL, -106, "G->rowdegree must be defined") ;  // FIXME:RETVAL
+        LG_ASSERT_MSG (Degree != NULL,
+            LAGRAPH_PROPERTY_MISSING, "G->rowdegree must be defined") ;// RETVAL
     }
 
     //--------------------------------------------------------------------------

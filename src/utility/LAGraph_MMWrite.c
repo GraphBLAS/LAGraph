@@ -237,8 +237,8 @@ int LAGraph_MMWrite
     #endif
     else
     {
-        LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED,  // FIXME:RETVAL
-                "type not supported") ;
+        LG_ASSERT_MSG (false,
+            GrB_NOT_IMPLEMENTED, "type not supported") ; // RETVAL
     }
 
     //--------------------------------------------------------------------------
@@ -510,15 +510,18 @@ int LAGraph_MMWrite
                 }                                                           \
                 else if (is_real)                                           \
                 {                                                           \
-                    LG_ASSERT_MSG (print_double (f, (double) x), -1002,     /* FIXME:RETVAL */ \
+                    LG_ASSERT_MSG (print_double (f, (double) x),            \
+                        LAGRAPH_IO_ERROR,     /* RETVAL */                  \
                         "Unable to write to file") ;                        \
                 }                                                           \
             /*  else if (is_complex)                                 */     \
             /*  {                                                    */     \
-            /*      LG_ASSERT_MSG (print_double (f, creal (x)), -1002,   */ \
+            /*      LG_ASSERT_MSG (print_double (f, creal (x)),      */     \
+            /*          LAGRAPH_IO_ERROR,                            */     \
             /*          "Unable to write to file") ;                 */     \
             /*      FPRINTF (f, " ") ;                               */     \
-            /*      LG_ASSERT_MSG (print_double (f, cimag (x)), -1002,   */ \
+            /*      LG_ASSERT_MSG (print_double (f, cimag (x)),      */     \
+            /*          LAGRAPH_IO_ERROR,                            */     \
             /*          "Unable to write to file") ;                 */     \
             /*  }                                                    */     \
                 FPRINTF (f, "\n") ;                                         \

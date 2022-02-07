@@ -53,7 +53,8 @@ int LAGraph_SampleDegree        // returns 0 if successful, -1 if failure
         Degree = (byrow) ? G->rowdegree : G->coldegree ;
     }
 
-    LG_ASSERT_MSG (Degree != NULL, -1, "degree property unknown") ; // FIXME:RETVAL
+    LG_ASSERT_MSG (Degree != NULL,
+        LAGRAPH_PROPERTY_MISSING, "degree property unknown") ; // RETVAL
 
     //--------------------------------------------------------------------------
     // allocate workspace

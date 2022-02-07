@@ -68,10 +68,12 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
     {
         // A and A' differ
         AT = G->AT ;
-        LG_ASSERT_MSG (AT != NULL, -1, "G->AT is required") ;   // FIXME:RETVAL
+        LG_ASSERT_MSG (AT != NULL,
+            LAGRAPH_PROPERTY_MISSING, "G->AT is required") ;   // RETVAL
     }
     GrB_Vector d_out = G->rowdegree ;
-    LG_ASSERT_MSG (d_out != NULL, -1, "G->rowdegree is required") ; // FIXME:RETVAL
+    LG_ASSERT_MSG (d_out != NULL,
+        LAGRAPH_PROPERTY_MISSING, "G->rowdegree is required") ; // RETVAL
 
     //--------------------------------------------------------------------------
     // initializations

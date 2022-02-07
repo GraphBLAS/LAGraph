@@ -121,7 +121,8 @@ int LG_CC_Boruvka
     LG_ASSERT_MSG ((G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
         G->A_structure_is_symmetric == LAGRAPH_TRUE)),
-        -1001, "G->A must be known to be symmetric") ;      // FIXME:RETVAL
+        LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED,   // RETVAL
+        "G->A must be known to be symmetric") ;
 
     //--------------------------------------------------------------------------
     // initializations

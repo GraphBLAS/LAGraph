@@ -2,7 +2,7 @@
 // LAGraph.h: user-visible include file for LAGraph
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 //
 // See additional acknowledgments in the LICENSE file,
@@ -34,7 +34,7 @@
 #define LAGRAPH_VERSION_MAJOR 0
 #define LAGRAPH_VERSION_MINOR 9
 #define LAGRAPH_VERSION_UPDATE 9
-#define LAGRAPH_DATE "Feb 3, 2022"
+#define LAGRAPH_DATE "Feb 6, 2022"
 
 //==============================================================================
 // include files
@@ -134,6 +134,53 @@
         // take corrective action ...
     }
 */
+
+//------------------------------------------------------------------------------
+// LAGraph error codes:
+//------------------------------------------------------------------------------
+
+// LAGraph methods return an integer to denote their status:  zero if they are
+// successful (which is the value of GrB_SUCCESS), negative on error, or
+// positive for an informational value (such as GrB_NO_VALUE).  Integers in the
+// range -999 to 999 are reserved for GraphBLAS GrB_Info return values.
+
+//  successful results:
+//  GrB_SUCCESS = 0             // all is well
+//  GrB_NO_VALUE = 1            // A(i,j) requested but not there
+//  GxB_EXHAUSTED = 2           // iterator is exhausted (SuiteSparse only)
+
+//  errors:
+//  GrB_UNINITIALIZED_OBJECT = -1   // object has not been initialized
+//  GrB_NULL_POINTER = -2           // input pointer is NULL
+//  GrB_INVALID_VALUE = -3          // generic error; some value is bad
+//  GrB_INVALID_INDEX = -4          // row or column index is out of bounds
+//  GrB_DOMAIN_MISMATCH = -5        // object domains are not compatible
+//  GrB_DIMENSION_MISMATCH = -6     // matrix dimensions do not match
+//  GrB_OUTPUT_NOT_EMPTY = -7       // output matrix already has values
+//  GrB_NOT_IMPLEMENTED = -8        // method not implemented
+//  GrB_PANIC = -101                // unknown error
+//  GrB_OUT_OF_MEMORY = -102        // out of memory
+//  GrB_INSUFFICIENT_SPACE = -103,  // output array not large enough
+//  GrB_INVALID_OBJECT = -104       // object is corrupted
+//  GrB_INDEX_OUT_OF_BOUNDS = -105  // row or col index out of bounds
+//  GrB_EMPTY_OBJECT = -106         // an object does not contain a value
+
+// LAGraph uses the GrB_* error codes in these cases:
+//  GrB_INVALID_INDEX: if a source node id is out of range
+//  GrB_INVALID_VALUE: if an enum to select a method or option is out of range
+//  GrB_NOT_IMPLEMENTED: if a type is not supported, or when SuiteSparse
+//      GraphBLAS is required.
+
+// Many LAGraph methods share common error cases, described below.  These
+// return values are in the range -1000 to -1999.  Return values of -2000 or
+// greater may be used by specific LAGraph methods, which denote errors not in
+// this list.
+
+#define LAGRAPH_INVALID_GRAPH                   (-1000)
+#define LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED    (-1001)
+#define LAGRAPH_IO_ERROR                        (-1002)
+#define LAGRAPH_PROPERTY_MISSING                (-1003)
+#define LAGRAPH_NO_SELF_EDGES_ALLOWED           (-1004)
 
 //------------------------------------------------------------------------------
 // LAGraph_TRY: try an LAGraph method and check for errors
@@ -414,29 +461,6 @@ struct LAGraph_Graph_struct
 } ;
 
 typedef struct LAGraph_Graph_struct *LAGraph_Graph ;
-
-//==============================================================================
-// the LAGraph return value
-//==============================================================================
-
-// All LAGraph methods that return an int return 0 if successful (which is the
-// same value as the GraphBLAS GrB_SUCCESS).  If the return value is negative,
-// then the method failed.  Return values in the range -1 to -999 match the
-// GraphBLAS GrB_Info enum (see GraphBLAS.h for a description).  Return values
-// greater than zero denote success, but with an informational note, such as
-// GrB_NO_VALUE (which is 1).
-
-// FIXME:RETVAL  GrB_Info values are -1 to -8, and -101 to -106.  Do we assume
-// the GrB_Info could be at most -1 to -199?  Then LAGraph could start at -200.
-
-// Negative values of -1000 or below denote an LAGraph error that does not
-// match any GrB_Info value.  For example, common return values are:
-
-#define LAGraph_FILE_IO_ERROR           pick me
-#define LAGraph_NO_SELF_EDGES_ALLOWED   pick me
-#define LAGraph_PROPERTIES_MISSING      pick me
-#define LAGraph_INVALID_GRAPH           pick me
-// etc ...
 
 //==============================================================================
 // LAGraph utilities
@@ -1070,7 +1094,7 @@ int LAGraph_Sort3    // sort array A of size 3-by-n, using 3 keys (A [0:2][])
  * @TODO pick return values that do not conflict with GraphBLAS errors.
  *
  * @retval GrB_SUCCESS      successful
- * @retval FIXME:RETVAL     Graph is invalid (LAGraph_CheckGraph failed)
+ * @retval LAGRAPH_INVALID_GRAPH Graph is invalid (LAGraph_CheckGraph failed)
  */
 
 LAGRAPH_PUBLIC
@@ -1118,7 +1142,7 @@ int LAGraph_VertexCentrality
  * @TODO pick return values that do not conflict with GraphBLAS errors.
  *
  * @retval GrB_SUCCESS          successful
- * @retval FIXME:RETVAL         Graph is invalid (LAGraph_CheckGraph failed)
+ * @retval LAGRAPH_INVALID_GRAPH Graph is invalid (LAGraph_CheckGraph failed)
  * @retval GrB_NULL_POINTER     ntriangles is NULL
  * @retval FIXME:RETVAL         G->ndiag (self loops) is nonzero
  * @retval FIXME:RETVAL         graph is not symmetric
@@ -1238,7 +1262,7 @@ int LAGraph_VertexCentrality_PageRankGAP
  *
  * @retval GrB_SUCCESS          successful
  * @retval FIXME:RETVAL         invalid method value
- * @retval FIXME:RETVAL         Graph is invalid (LAGraph_CheckGraph failed)
+ * @retval LAGRAPH_INVALID_GRAPH Graph is invalid (LAGraph_CheckGraph failed)
  * @retval GrB_NULL_POINTER     ntriangles is NULL
  * @retval FIXME:RETVAL         G->ndiag (self loops) is nonzero
  * @retval FIXME:RETVAL         graph is not "known" to be symmetric

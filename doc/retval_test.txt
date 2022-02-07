@@ -5,15 +5,15 @@ For testing only: return LG_TEST_FAILURE?
 
 src/test/LG_check_bfs.c
 
-    level is wrong
-    parent is wrong
+    -2000   level is wrong
+    -2001   parent is wrong
 
 src/test/LG_check_cc.c
 
-    G->A must be known symmetric
-    invalid component
-    wrong # of components
-    node in wrong component
+    LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED    G->A must be known symmetric
+    -2000   invalid component
+    -2001   wrong # of components
+    -2002   node in wrong component
 
 src/test/LG_check_export.c
 
@@ -21,18 +21,17 @@ src/test/LG_check_export.c
 
 src/test/LG_check_sssp.c
 
-    G->A is not int32
-    path length is wrong
-    heap corrupted
-    negative edge encountered
+    GrB_NOT_IMPLEMENTED:    G->A is not int32
+    -2000 heap corrupted
+    -2001 path length is wrong
+    -2002 negative edge encountered
 
 src/test/LG_check_tri.c
 
-    diagonal must have no entries
-    G->A must be known symmetric
+    LAGRAPH_NO_SELF_EDGES_ALLOWED           diagonal must have no entries
+    LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED    G->A must be known symmetric
 
 src/test/LG_heap.h
 
-    heap corrupted
-
+    -2000 heap corrupted
 

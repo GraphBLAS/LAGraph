@@ -137,7 +137,7 @@ void test_CheckGraph_failures (void)
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
     // adjacency matrix invalid
-    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -1101) ;
+    TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
     printf ("msg: %s\n", msg) ;
 
     // free the graph
@@ -164,18 +164,18 @@ void test_CheckGraph_failures (void)
 
     // G->AT has the right type, but wrong size
     G->AT = B_int32 ;
-    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -1103) ;
+    TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
     printf ("msg: %s\n", msg) ;
 
     // G->AT has the right size, but wrong type
     G->AT = B_bool ;
-    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -1105) ;
+    TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
     printf ("msg: %s\n", msg) ;
 
     #if LG_SUITESPARSE
     // G->AT must be by-row
     OK (GxB_set (G->AT, GxB_FORMAT, GxB_BY_COL)) ;
-    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -1104) ;
+    TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
     printf ("msg: %s\n", msg) ;
     #endif
 
@@ -183,24 +183,24 @@ void test_CheckGraph_failures (void)
 
     // G->rowdegree has the right type, but wrong size
     G->rowdegree = d_int64 ;
-    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -1106) ;
+    TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
     printf ("msg: %s\n", msg) ;
 
     // G->rowdegree has the right size, but wrong type
     G->rowdegree = d_bool ;
-    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -1107) ;
+    TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
     printf ("msg: %s\n", msg) ;
 
     G->rowdegree = NULL ;
 
     // G->coldegree has the right type, but wrong size
     G->coldegree = d_int64 ;
-    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -1108) ;
+    TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
     printf ("msg: %s\n", msg) ;
 
     // G->coldegree has the right size, but wrong type
     G->coldegree = d_bool ;
-    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -1109) ;
+    TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
     printf ("msg: %s\n", msg) ;
 
     G->coldegree = NULL ;
@@ -208,7 +208,7 @@ void test_CheckGraph_failures (void)
     #if LG_SUITESPARSE
     // G->A must be by-row
     OK (GxB_set (G->A, GxB_FORMAT, GxB_BY_COL)) ;
-    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -1102) ;
+    TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
     printf ("msg: %s\n", msg) ;
     #endif
 
@@ -219,7 +219,7 @@ void test_CheckGraph_failures (void)
 
     // mangle G->kind
     G->kind = LAGRAPH_UNKNOWN ;
-    TEST_CHECK (LAGraph_CheckGraph (G, msg) == -1103) ;
+    TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
     printf ("msg: %s\n", msg) ;
     G->kind = LAGRAPH_ADJACENCY_DIRECTED ;
 
@@ -229,7 +229,7 @@ void test_CheckGraph_failures (void)
 
     int result = LAGraph_CheckGraph (G, msg) ;
     printf ("result : %d msg: %s\n", result, msg) ;
-    TEST_CHECK (result == -1102) ;
+    TEST_CHECK (result == LAGRAPH_INVALID_GRAPH) ;
 
     // free the graph
     OK (LAGraph_Delete (&G, msg)) ;

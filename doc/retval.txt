@@ -11,21 +11,20 @@ src/algorithm/LAGraph_VertexCentrality_Betweenness.c
 
     G->AT required
     G->rowdegree required
-    GrB_INVALID_INDEX: invalid source node (error from GrB_*_setElement)
+    GrB_INVALID_INDEX: invalid source node
 
 src/algorithm/LAGraph_VertexCentrality_PageRankGAP.c
 
-    LAGraph_PROPERTY_MISSING: G->AT required
-    -10042: magic error
+    LAGRAPH_PROPERTY_MISSING: G->AT required
 
 src/algorithm/LG_BreadthFirstSearch_SSGrB.c
 
     GrB_NOT_IMPLEMENTED: SuiteSparse required
-    GrB_INVALID_INDEX: invalid source node (error from GrB_*_setElement)
+    GrB_INVALID_INDEX: invalid source node
 
 src/algorithm/LG_BreadthFirstSearch_vanilla.c
 
-    GrB_INVALID_INDEX: invalid source node (error from GrB_*_setElement)
+    GrB_INVALID_INDEX: invalid source node
 
 src/algorithm/LG_CC_Boruvka.c
 
@@ -38,11 +37,12 @@ src/algorithm/LG_CC_FastSV6.c
 
 src/utility/LAGraph_CheckGraph.c
 
-    GrB_DIMENSION_MISMATCH?: G->A must be square for directed and undirected graphs
-    GrB_NOT_IMPLEMENTED: G->A and G->AT must be held by row (SuiteSparse-specific)
-    GrB_DIMENSION_MISMATCH?: G->AT dimensions are wrong
-    GrB_DOMAIN_MISMATCH?: G->AT and G->A have different types
-    GrB_DIMENSION_MISMATCH?: G->rowdegree wrong size
+    all are LAGRAPH_INVALID_GRAPH
+    G->A must be square for directed and undirected graphs
+    G->A and G->AT must be held by row (SuiteSparse-specific)
+    G->AT dimensions are wrong
+    G->AT and G->A have different types
+    G->rowdegree wrong size
     G->rowdegree wrong type (must be int64)
     G->coldegree wrong size
     G->coldegree wrong type (must be int64)
@@ -53,8 +53,9 @@ src/utility/LAGraph_KindName.c
 
 src/utility/LAGraph_MMRead.c
 
-    MatrixMarket header invalid or cannot be read in
     GrB_NOT_IMPLEMENTED: complex types not supported
+    all others are LAGRAPH_IO_ERROR:
+    MatrixMarket header invalid or cannot be read in
     first data line (nrows, nvals, # entries) invalid
     file I/O error: premature EOF or other error
     file I/O error: indices or value cannot be read in

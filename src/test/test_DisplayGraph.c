@@ -159,7 +159,7 @@ void test_DisplayGraph_failures (void)
     // G->A is NULL
     result = LAGraph_DisplayGraph (G, 5, stdout, msg) ;
     printf ("result: %d, msg: %s\n", result, msg) ;
-    TEST_CHECK (result == -1102) ;
+    TEST_CHECK (result == LAGRAPH_INVALID_GRAPH) ;
 
     OK (LAGraph_Delete (&G, msg)) ;
     TEST_CHECK (G == NULL) ;
@@ -175,14 +175,14 @@ void test_DisplayGraph_failures (void)
     G->kind = -1 ;
     result = LAGraph_DisplayGraph (G, 5, stdout, msg) ;
     printf ("result: %d, msg: %s\n", result, msg) ;
-    TEST_CHECK (result == -1103) ;
+    TEST_CHECK (result == LAGRAPH_INVALID_GRAPH) ;
     G->kind = LAGRAPH_ADJACENCY_UNDIRECTED ;
 
     // G->AT has the wrong size
     OK (GrB_Matrix_new (&(G->AT), GrB_FP32, 6, 5)) ;
     result = LAGraph_DisplayGraph (G, 5, stdout, msg) ;
     printf ("result: %d, msg: %s\n", result, msg) ;
-    TEST_CHECK (result == -1103) ;
+    TEST_CHECK (result == LAGRAPH_INVALID_GRAPH) ;
 
     OK (GrB_free (&G->AT)) ;
     OK (GrB_Matrix_new (&(G->AT), GrB_FP32, 5, 5)) ;
@@ -192,7 +192,7 @@ void test_DisplayGraph_failures (void)
     OK (GxB_set (G->AT, GxB_FORMAT, GxB_BY_COL)) ;
     result = LAGraph_DisplayGraph (G, 5, stdout, msg) ;
     printf ("result: %d, msg: %s\n", result, msg) ;
-    TEST_CHECK (result == -1104) ;
+    TEST_CHECK (result == LAGRAPH_INVALID_GRAPH) ;
     #endif
 
     // G->A and G->AT must have the same types
@@ -200,7 +200,7 @@ void test_DisplayGraph_failures (void)
     OK (GrB_Matrix_new (&(G->AT), GrB_FP64, 5, 5)) ;
     result = LAGraph_DisplayGraph (G, 5, stdout, msg) ;
     printf ("result: %d, msg: %s\n", result, msg) ;
-    TEST_CHECK (result == -1105) ;
+    TEST_CHECK (result == LAGRAPH_INVALID_GRAPH) ;
 
     OK (LAGraph_Delete (&G, msg)) ;
     TEST_CHECK (G == NULL) ;

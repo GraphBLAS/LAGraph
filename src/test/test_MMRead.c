@@ -299,32 +299,32 @@ mangled_matrix_info ;
 
 const mangled_matrix_info mangled_files [ ] =
 {
-//  error  filename              how the matrix is mangled
-    -3, "mangled1.mtx",       // bad header
-    -3, "mangled2.mtx",       // bad header
-    -3, "mangled3.mtx",       // bad type
-    -8, "complex.mtx",        // valid complex matrix, not supported
-    -3, "mangled4.mtx",       // bad format
-    -3, "mangled5.mtx",       // invalid combination of format options
-    -3, "mangled6.mtx",       // invalid combination of format options
-    -3, "mangled7.mtx",       // invalid GraphBLAS type
-    -3, "mangled8.mtx",       // invalid first line
-    -3, "mangled9.mtx",       // invalid matrix: symmetric and rectangular
-    -3, "mangled10.mtx",      // invalid matrix: truncated
-    -3, "mangled11.mtx",      // invalid matrix: entries mangled
-    -3, "mangled12.mtx",      // invalid matrix: entries mangled
-    -105, "mangled13.mtx",    // invalid matrix: indices out of range
-    -3, "mangled14.mtx",      // invalid matrix: duplicate entries
-    -3, "mangled_bool.mtx",   // invalid matrix: entry value out of range
-    -3, "mangled_int8.mtx",   // invalid matrix: entry value out of range
-    -3, "mangled_int16.mtx",  // invalid matrix: entry value out of range
-    -3, "mangled_int32.mtx",  // invalid matrix: entry value out of range
-    -3, "mangled_uint8.mtx",  // invalid matrix: entry value out of range
-    -3, "mangled_uint16.mtx", // invalid matrix: entry value out of range
-    -3, "mangled_uint32.mtx", // invalid matrix: entry value out of range
-    -3, "mangled_skew.mtx",   // invalid matrix: unsigned skew invalid
-    -8, "mangled15.mtx",      // invalid matrix: complex not supported
-    -8, "mangled16.mtx",      // invalid matrix: complex not supported
+//  error             filename              how the matrix is mangled
+    LAGRAPH_IO_ERROR, "mangled1.mtx",       // bad header
+    LAGRAPH_IO_ERROR, "mangled2.mtx",       // bad header
+    LAGRAPH_IO_ERROR, "mangled3.mtx",       // bad type
+    GrB_NOT_IMPLEMENTED, "complex.mtx",     // valid complex, but not supported
+    LAGRAPH_IO_ERROR, "mangled4.mtx",       // bad format
+    LAGRAPH_IO_ERROR, "mangled5.mtx",       // invalid format options
+    LAGRAPH_IO_ERROR, "mangled6.mtx",       // invalid format options
+    LAGRAPH_IO_ERROR, "mangled7.mtx",       // invalid GraphBLAS type
+    LAGRAPH_IO_ERROR, "mangled8.mtx",       // invalid first line
+    LAGRAPH_IO_ERROR, "mangled9.mtx",       // symmetric and rectangular
+    LAGRAPH_IO_ERROR, "mangled10.mtx",      // truncated
+    LAGRAPH_IO_ERROR, "mangled11.mtx",      // entries mangled
+    LAGRAPH_IO_ERROR, "mangled12.mtx",      // entries mangled
+    GrB_INDEX_OUT_OF_BOUNDS, "mangled13.mtx",// indices out of range
+    GrB_INVALID_VALUE, "mangled14.mtx",     // duplicate entries
+    LAGRAPH_IO_ERROR, "mangled_bool.mtx",   // entry value out of range
+    LAGRAPH_IO_ERROR, "mangled_int8.mtx",   // entry value out of range
+    LAGRAPH_IO_ERROR, "mangled_int16.mtx",  // entry value out of range
+    LAGRAPH_IO_ERROR, "mangled_int32.mtx",  // entry value out of range
+    LAGRAPH_IO_ERROR, "mangled_uint8.mtx",  // entry value out of range
+    LAGRAPH_IO_ERROR, "mangled_uint16.mtx", // entry value out of range
+    LAGRAPH_IO_ERROR, "mangled_uint32.mtx", // entry value out of range
+    LAGRAPH_IO_ERROR, "mangled_skew.mtx",   // unsigned skew invalid
+    GrB_NOT_IMPLEMENTED, "mangled15.mtx",   // complex not supported
+    GrB_NOT_IMPLEMENTED, "mangled16.mtx",   // complex not supported
     0, "",
 } ;
 

@@ -116,9 +116,8 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
                                 // in seconds
 )
 {
-#if !(LG_SUITESPARSE)
-    // FIXME: use GrB_select and make this pure GrB*
-    return (GrB_NOT_IMPLEMENTED) ;      // FIXME:RETVAL
+#if !LG_SUITESPARSE
+    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;      // RETVAL
 #else
 
     //--------------------------------------------------------------------------
@@ -156,7 +155,7 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
     t [0] = 0 ;         // sanitize time
     t [1] = 0 ;         // LCC time
 
-    // FIXME: use operators that ignore the values of A
+    // fixme: use operators that ignore the values of A
     if (sanitize)
     {
         LAGraph_Tic (tic, NULL) ;

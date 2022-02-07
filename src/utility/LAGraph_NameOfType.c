@@ -56,8 +56,8 @@ int LAGraph_NameOfType      // returns 0 if successful, < 0 if failure
         else
         {
             name [0] = '\0' ;
-            LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED,  // FIXME:RETVAL
-                "user-defined types not supported") ;
+            LG_ASSERT_MSG (false,
+            GrB_NOT_IMPLEMENTED, "user-defined types not supported") ; // RETVAL
         }
         return (GrB_SUCCESS) ;
 

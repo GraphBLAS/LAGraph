@@ -211,19 +211,21 @@ typedef unsigned char LG_void ;
 {                                                                           \
     LG_CLEAR_MSG ;                                                          \
     LG_ASSERT (G != NULL, GrB_NULL_POINTER) ;                               \
-    LG_ASSERT_MSG (G->A != NULL, -1102, "graph adjacency matrix is NULL") ; /* FIXME:RETVAL */ \
-    LG_ASSERT_MSG (G->kind >= LAGRAPH_ADJACENCY_UNDIRECTED && /* FIXME:RETVAL */               \
-        G->kind <= LAGRAPH_ADJACENCY_DIRECTED, -1103, "graph kind invalid") ;\
+    LG_ASSERT_MSG (G->A != NULL, LAGRAPH_INVALID_GRAPH, /* RETVAL */        \
+        "graph adjacency matrix is NULL") ;                                 \
+    LG_ASSERT_MSG (G->kind >= LAGRAPH_ADJACENCY_UNDIRECTED &&               \
+        G->kind <= LAGRAPH_ADJACENCY_DIRECTED,                              \
+        LAGRAPH_INVALID_GRAPH, "graph kind invalid") ; /* RETVAL */         \
 }
 
 //------------------------------------------------------------------------------
 // FPRINTF: fprintf and check result
 //------------------------------------------------------------------------------
 
-#define FPRINTF(f,...)                  \
-{                                       \
-    LG_ASSERT_MSG (fprintf (f, __VA_ARGS__) >= 0, -2,  /* FIXME:RETVAL */ \
-        "Unable to write to file") ; \
+#define FPRINTF(f,...)                                                      \
+{                                                                           \
+    LG_ASSERT_MSG (fprintf (f, __VA_ARGS__) >= 0,                           \
+        LAGRAPH_IO_ERROR, "Unable to write to file") ; /* RETVAL */         \
 }
 
 //------------------------------------------------------------------------------

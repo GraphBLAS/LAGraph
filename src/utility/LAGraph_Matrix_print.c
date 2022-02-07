@@ -56,8 +56,8 @@ int LG_Matrix_print_ ## suffix                                              \
     X = LAGraph_Malloc (nvals, sizeof (ctype)) ;                            \
     LG_ASSERT (I != NULL && J != NULL && X != NULL, GrB_OUT_OF_MEMORY) ;    \
     GrB_Info info = GrB_Matrix_extractTuples (I, J, X, &nvals, A) ;         \
-    LG_ASSERT_MSG (info != GrB_DOMAIN_MISMATCH, GrB_NOT_IMPLEMENTED,  /* FIXME:RETVAL */       \
-        "user-defined types not supported") ;                               \
+    LG_ASSERT_MSG (info != GrB_DOMAIN_MISMATCH,                             \
+        GrB_NOT_IMPLEMENTED, "user-defined types not supported") ; /* RETVAL */\
     GrB_TRY (info) ;                                                        \
     /* determine the format */                                              \
     char *format = (pr <= 3) ? fmt1 : fmt2 ;                                \
@@ -178,8 +178,8 @@ int LAGraph_Matrix_print_type
     #endif
     else
     {
-        LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED,  // FIXME:RETVAL
-            "user-defined types not supported") ;
+        LG_ASSERT_MSG (false,
+            GrB_NOT_IMPLEMENTED, "user-defined types not supported") ; // RETVAL
         return (GrB_SUCCESS) ;
     }
 }
