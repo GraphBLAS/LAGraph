@@ -19,16 +19,21 @@ Thus, do not benchmark LAGraph on your own without asking the authors first.
 
 To build do the following from the top level directory:
 ```
-$ mkdir build
-$ cd build
-$ cmake ..
-$ make [-j#]
-$ make test
+mkdir build
+cd build
+cmake ..
+make
+make test
+```
+
+To install, first build LAGraph and then do (in the build directory):
+```
+sudo make install
 ```
 
 To compile with a non-default compiler:
 ```
-$ CC=gcc-11 cmake ..
+CC=gcc-11 cmake ..
 ```
 
 To compile with test coverage:
