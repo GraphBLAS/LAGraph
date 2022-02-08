@@ -38,10 +38,7 @@
 #define LAGraph_FREE_ALL ;
 #include "LG_internal.h"
 
-#if !LG_VANILLA
-#if (! LG_SUITESPARSE )
-#error "SuiteSparse:GraphBLAS v6.0.1 or later required"
-#endif
+#if LG_SUITESPARSE
 
 //==============================================================================
 // fastsv: find the components of a graph

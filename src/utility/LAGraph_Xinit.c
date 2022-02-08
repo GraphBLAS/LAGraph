@@ -92,7 +92,7 @@ int LAGraph_Xinit           // returns 0 if successful, < 0 if failure
     // check inputs
     //--------------------------------------------------------------------------
 
-    // malloc and free are required; realloc is optional
+    // malloc and free are required; calloc and realloc are optional
     LG_CLEAR_MSG ;
     LG_ASSERT (user_malloc_function != NULL, GrB_NULL_POINTER) ;
     LG_ASSERT (user_free_function   != NULL, GrB_NULL_POINTER) ;

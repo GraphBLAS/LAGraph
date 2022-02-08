@@ -31,7 +31,7 @@
 // LAGraph_Vector_IsEqual_op:  compare two vectors using a given operator
 //------------------------------------------------------------------------------
 
-GrB_Info LAGraph_Vector_IsEqual_op    // return GrB_SUCCESS if successful
+int LAGraph_Vector_IsEqual_op
 (
     bool *result,           // true if A == B, false if A != B or error
     GrB_Vector A,

@@ -40,11 +40,7 @@
 
 #include "LG_internal.h"
 
-#if !LG_VANILLA
-
-#if (! LG_SUITESPARSE )
-#error "SuiteSparse:GraphBLAS v6.0.0 or later required"
-#endif
+#if LG_SUITESPARSE
 
 //------------------------------------------------------------------------------
 // hash functions: todo describe me
@@ -323,7 +319,7 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
 )
 {
 
-#if LG_VANILLA
+#if !LG_SUITESPARSE
     LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED, "SuiteSparse required") ;
 #else
 

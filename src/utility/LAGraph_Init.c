@@ -16,6 +16,7 @@ int LAGraph_Init (char *msg)
     LG_CLEAR_MSG ;
 
     #ifdef __linux__
+    // FIXME: test the GAP benchmarks with and without these settings
     // Use mallopt to speedup malloc and free on Linux.  Otherwise, it can take
     // several seconds to free a large block of memory.  For this to be
     // effective, LAGraph_Init must be called before the user program does any

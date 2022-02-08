@@ -37,7 +37,7 @@
 #define LAGRAPH_DATE "Feb 6, 2022"
 
 //==============================================================================
-// include files
+// include files and helper macros
 //==============================================================================
 
 #include <time.h>
@@ -47,6 +47,10 @@
 #if defined ( _OPENMP )
     #include <omp.h>
 #endif
+
+// LAGraph_MIN/MAX: suitable for integers, and non-NaN floating point
+#define LAGraph_MIN(x,y) (((x) < (y)) ? (x) : (y))
+#define LAGraph_MAX(x,y) (((x) > (y)) ? (x) : (y))
 
 //==============================================================================
 // GraphBLAS platform specifics
@@ -108,14 +112,17 @@
 // LAGraph error handling
 //==============================================================================
 
-// Each LAGraph function returns an int.  Negative values indicate an error,
-// zero denotes success, and positive values denote success but with some kind
-// of algorithm-specific note or warning.  In addition, all LAGraph functions
-// have a final parameter that is a pointer to a user-allocated string in which
-// an algorithm-specific error message can be returned.  If NULL, no error
-// message is returned.  This is not itself an error condition, it just
-// indicates that the caller does not need the message returned.  If the
-// message string is provided but no error occurs, an empty string is returned.
+// All LAGraph functions that return an int use it to return an error status
+// (described below), where zero (GrB_SUCCESS) denotes success, negative values
+// indicate an error, and positive values denote success but with some kind of
+// algorithm-specific note or warning.
+
+// In addition, all LAGraph functions that return an int also have a final
+// parameter that is a pointer to a user-allocated string in which an
+// algorithm-specific error message can be returned.  If NULL, no error message
+// is returned.  This is not itself an error condition, it just indicates that
+// the caller does not need the message returned.  If the message string is
+// provided but no error occurs, an empty string is returned.
 
 // LAGRAPH_MSG_LEN: The maximum required length of a message string
 #define LAGRAPH_MSG_LEN 256
@@ -127,7 +134,7 @@
 /*
     GrB_Vector level, parent ;
     char msg [LAGRAPH_MSG_LEN] ;
-    int status = LAGraph_BreadthFirstSearch (&level, &parent, G, src, msg) ;
+    int status = LAGraph_BreadthFirstSearch (&level, &parent, G, src, true, msg) ;
     if (status < 0)
     {
         printf ("error: %s\n", msg) ;
@@ -136,13 +143,14 @@
 */
 
 //------------------------------------------------------------------------------
-// LAGraph error codes:
+// LAGraph error status:
 //------------------------------------------------------------------------------
 
-// LAGraph methods return an integer to denote their status:  zero if they are
-// successful (which is the value of GrB_SUCCESS), negative on error, or
-// positive for an informational value (such as GrB_NO_VALUE).  Integers in the
-// range -999 to 999 are reserved for GraphBLAS GrB_Info return values.
+// All LAGraph methods that return an int use this return value to denote their
+// status:  zero if they are successful (which is the value of GrB_SUCCESS),
+// negative on error, or positive for an informational value (such as
+// GrB_NO_VALUE).  Integers in the range -999 to 999 are reserved for GraphBLAS
+// GrB_Info return values.
 
 //  successful results:
 //  GrB_SUCCESS = 0             // all is well
@@ -205,6 +213,18 @@
 #define LAGRAPH_PROPERTY_MISSING                (-1003)
 #define LAGRAPH_NO_SELF_EDGES_ALLOWED           (-1004)
 
+// The following definitions apply to all LAGraph functions that return an int:
+
+// @retval GrB_SUCCESS if successful
+// @retval a negative GrB_Info value on error (in range -999 to -1)
+// @retval a positive GrB_Info value if successful but with extra information
+//         (in range 1 to 999)
+// @retval <= -1000 a common LAGraph-specific error, given in the list above
+// @retval > 1000 if successful, with extra LAGraph-specific information
+// @retval <= -2000 an LAGraph error specific to a particular LAGraph method
+
+// @param[in,out] msg   any error messages
+
 //------------------------------------------------------------------------------
 // LAGraph_TRY: try an LAGraph method and check for errors
 //------------------------------------------------------------------------------
@@ -247,7 +267,7 @@
         double *W = NULL ;
         char msg [LAGRAPH_MSG_LEN] ;
         (*parent) = NULL ;
-        LAGraph_TRY (LAGraph_BreadthFirstSearch (NULL, parent, G, src, msg)) ;
+        LAGraph_TRY (LAGraph_BreadthFirstSearch (NULL, parent, G, src, true, msg)) ;
         // ...
         return (GrB_SUCCESS) ;
     }
@@ -296,11 +316,6 @@
 // LAGraph_free have the same syntax as calloc and free.  LAGraph_Malloc has
 // the syntax of calloc instead of malloc.  LAGraph_Realloc is very different
 // from realloc, since the ANSI C11 realloc syntax is difficult to use safely.
-
-// Only LAGraph_Malloc_function and LAGraph_Free_function are required.
-// LAGraph_Calloc_function may be NULL, in which case LAGraph_Malloc and memset
-// are used.  Likewise, LAGraph_Realloc_function may be NULL, in which case
-// LAGraph_Malloc, memcpy, and LAGraph_Free are used.
 
 LAGRAPH_PUBLIC void * (* LAGraph_Malloc_function  ) (size_t)         ;
 LAGRAPH_PUBLIC void * (* LAGraph_Calloc_function  ) (size_t, size_t) ;
@@ -495,23 +510,19 @@ typedef struct LAGraph_Graph_struct *LAGraph_Graph ;
 // LAGraph utilities
 //==============================================================================
 
+//------------------------------------------------------------------------------
 // LAGraph_Init: start GraphBLAS and LAGraph
+//------------------------------------------------------------------------------
+
+// This method must be called before calling any other GrB* or LAGraph* method.
+// It initializes GraphBLAS with GrB_init and then performs LAGraph-specific
+// initializations.  In particular, the LAGraph semirings listed below are
+// created.
+
 LAGRAPH_PUBLIC
 int LAGraph_Init (char *msg) ;
 
-// LAGraph_Xinit: start GraphBLAS and LAGraph, and set malloc/etc functions
-LAGRAPH_PUBLIC
-int LAGraph_Xinit
-(
-    // pointers to memory management functions
-    void * (* user_malloc_function  ) (size_t),
-    void * (* user_calloc_function  ) (size_t, size_t),
-    void * (* user_realloc_function ) (void *, size_t),
-    void   (* user_free_function    ) (void *),
-    char *msg
-) ;
-
-// LAGraph user-defined semirings, created by LAGraph_Init or LAGraph_Xinit:
+// LAGraph semirings, created by LAGraph_Init or LAGraph_Xinit:
 LAGRAPH_PUBLIC GrB_Semiring
 
     // LAGraph_plus_first_T: using the GrB_PLUS_MONOID_T monoid and the
@@ -570,15 +581,46 @@ LAGRAPH_PUBLIC GrB_Semiring
     LAGraph_structural_fp32   ,
     LAGraph_structural_fp64   ;
 
+//------------------------------------------------------------------------------
+// LAGraph_Xinit: start GraphBLAS and LAGraph, and set malloc/etc functions
+//------------------------------------------------------------------------------
+//
+// LAGraph_Xinit is identical to LAGraph_Init, except that it allows the user
+// application to provide four memory management functions, replacing the
+// standard malloc, calloc, realloc, and free.
+//
+// Only user_malloc_function and user_free_function are required.
+// user_calloc_function may be NULL, in which case LAGraph_Calloc uses
+// LAGraph_Malloc and memset.  Likewise, user_realloc_function may be NULL, in
+// which case LAGraph_Realloc uses LAGraph_Malloc, memcpy, and LAGraph_Free.
+
+LAGRAPH_PUBLIC
+int LAGraph_Xinit
+(
+    // pointers to memory management functions
+    void * (* user_malloc_function  ) (size_t),
+    void * (* user_calloc_function  ) (size_t, size_t),
+    void * (* user_realloc_function ) (void *, size_t),
+    void   (* user_free_function    ) (void *),
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
 // LAGraph_Finalize: finish LAGraph
+//------------------------------------------------------------------------------
+
+// LAGraph_Finalize must be called as the last LAGraph method.  It calls
+// GrB_finalize and frees any LAGraph objects created by LAGraph_Init or
+// LAGraph_Xinit.  After calling this method, no LAGraph or GraphBLAS methods
+// may be used.
+
 LAGRAPH_PUBLIC
 int LAGraph_Finalize (char *msg) ;
 
-// LAGraph_MIN/MAX: suitable for integers, and non-NaN floating point
-#define LAGraph_MIN(x,y) (((x) < (y)) ? (x) : (y))
-#define LAGraph_MAX(x,y) (((x) > (y)) ? (x) : (y))
-
+//------------------------------------------------------------------------------
 // LAGraph_New: create a new graph
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
 int LAGraph_New
 (
@@ -595,7 +637,10 @@ int LAGraph_New
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 // LAGraph_Delete: free a graph and all its contents
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
 int LAGraph_Delete
 (
@@ -607,7 +652,10 @@ int LAGraph_Delete
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 // LAGraph_DeleteProperties: free any internal cached properties of a graph
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
 int LAGraph_DeleteProperties
 (
@@ -615,7 +663,10 @@ int LAGraph_DeleteProperties
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 // LAGraph_Property_AT: construct G->AT for a graph
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
 int LAGraph_Property_AT
 (
@@ -623,7 +674,10 @@ int LAGraph_Property_AT
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 // LAGraph_Property_ASymmetricStructure: determine G->A_structure_is_symmetric
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
 int LAGraph_Property_ASymmetricStructure
 (
@@ -631,7 +685,10 @@ int LAGraph_Property_ASymmetricStructure
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 // LAGraph_Property_RowDegree: determine G->rowdegree
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
 int LAGraph_Property_RowDegree
 (
@@ -639,7 +696,10 @@ int LAGraph_Property_RowDegree
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 // LAGraph_Property_ColDegree: determine G->coldegree
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
 int LAGraph_Property_ColDegree
 (
@@ -647,7 +707,10 @@ int LAGraph_Property_ColDegree
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 // LAGraph_Property_NDiag: determine G->ndiag
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
 int LAGraph_Property_NDiag
 (
@@ -655,7 +718,10 @@ int LAGraph_Property_NDiag
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 //  LAGraph_DeleteDiag: remove all diagonal entries fromG->A
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
 int LAGraph_DeleteDiag
 (
@@ -663,7 +729,10 @@ int LAGraph_DeleteDiag
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 // LAGraph_CheckGraph: determine if a graph is valid
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
 int LAGraph_CheckGraph
 (
@@ -673,7 +742,10 @@ int LAGraph_CheckGraph
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 // LAGraph_GetNumThreads: determine # of OpenMP threads to use
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
 int LAGraph_GetNumThreads
 (
@@ -681,7 +753,10 @@ int LAGraph_GetNumThreads
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 // LAGraph_SetNumThreads: set # of OpenMP threads to use
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
 int LAGraph_SetNumThreads
 (
@@ -689,7 +764,10 @@ int LAGraph_SetNumThreads
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 // LAGraph_Tic: start the timer
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
 int LAGraph_Tic
 (
@@ -697,7 +775,10 @@ int LAGraph_Tic
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 // LAGraph_Toc: return time since last call to LAGraph_Tic
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
 int LAGraph_Toc
 (
@@ -706,6 +787,10 @@ int LAGraph_Toc
     char *msg
 ) ;
 
+
+//------------------------------------------------------------------------------
+// LAGraph_MMRead: read a matrix in MatrixMarket format
+//------------------------------------------------------------------------------
 
 /****************************************************************************
  *
@@ -848,7 +933,6 @@ int LAGraph_Toc
  * @retval GrB_NOT_IMPLEMENTED if the type is not supported
  */
 
-// LAGraph_MMRead: read a matrix in MatrixMarket format
 LAGRAPH_PUBLIC
 int LAGraph_MMRead
 (
@@ -857,7 +941,10 @@ int LAGraph_MMRead
     char *msg
 );
 
+//------------------------------------------------------------------------------
 // LAGraph_MMWrite: write a matrix in MatrixMarket format, auto select type
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
 int LAGraph_MMWrite
 (
@@ -867,9 +954,12 @@ int LAGraph_MMWrite
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 // LAGraph_Structure: return the structure of a matrix
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
-int LAGraph_Structure
+int LAGraph_Structure   // TODO: rename LAGraph_Matrix_Structure
 (
     GrB_Matrix *C,  // a boolean matrix with same structure of A, with C(i,j)
                     // set to true if A(i,j) appears in the sparsity structure
@@ -878,7 +968,10 @@ int LAGraph_Structure
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 // LAGraph_Vector_Structure: return the structure of a vector (TODO)
+//------------------------------------------------------------------------------
+
 int LAGraph_Vector_Structure
 (
     GrB_Vector *w,  // a boolean vector with same structure of u, with w(i)
@@ -888,7 +981,10 @@ int LAGraph_Vector_Structure
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 // LAGraph_NameOfType: return the name of a type
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
 int LAGraph_NameOfType
 (
@@ -898,7 +994,10 @@ int LAGraph_NameOfType
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 // LAGraph_TypeFromName: return a GrB_Type from its name
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
 int LAGraph_TypeFromName
 (
@@ -907,7 +1006,10 @@ int LAGraph_TypeFromName
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 // LAGraph_SizeOfType: return sizeof(...) of a GraphBLAS GrB_Type
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
 int LAGraph_SizeOfType
 (
@@ -916,9 +1018,12 @@ int LAGraph_SizeOfType
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 // LAGraph_MatrixTypeName: return the name of the GrB_Type of a GrB_Matrix
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
-int LAGraph_MatrixTypeName
+int LAGraph_MatrixTypeName  // TODO rename LAGraph_Matrix_TypeName
 (
     char *name,     // name of the type of the matrix A (user-provided array
                     // of size at least LAGRAPH_MAX_NAME_LEN).
@@ -926,9 +1031,12 @@ int LAGraph_MatrixTypeName
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 // LAGraph_VectorTypeName: return the name of the GrB_Type of a GrB_Vector
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
-int LAGraph_VectorTypeName
+int LAGraph_VectorTypeName  // TODO rename LAGraph_Vector_TypeName
 (
     char *name,     // name of the type of the vector v (user-provided array
                     // of size at least LAGRAPH_MAX_NAME_LEN).
@@ -936,9 +1044,12 @@ int LAGraph_VectorTypeName
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 // LAGraph_ScalarTypeName: return the name of the GrB_Type of a GrB_Scalar
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
-int LAGraph_ScalarTypeName
+int LAGraph_ScalarTypeName  // TODO rename LAGraph_Scalar_TypeName
 (
     char *name,     // name of the type of the scalar s (user-provided array
                     // of size at least LAGRAPH_MAX_NAME_LEN).
@@ -946,7 +1057,10 @@ int LAGraph_ScalarTypeName
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 // LAGraph_KindName: return the name of a kind
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
 int LAGraph_KindName
 (
@@ -956,7 +1070,10 @@ int LAGraph_KindName
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 // LAGraph_SortByDegree: sort a graph by its row or column degree
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
 int LAGraph_SortByDegree
 (
@@ -969,7 +1086,10 @@ int LAGraph_SortByDegree
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 // LAGraph_SampleDegree: sample the degree median and mean
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
 int LAGraph_SampleDegree
 (
@@ -983,7 +1103,10 @@ int LAGraph_SampleDegree
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 // LAGraph_DisplayGraph: print the contents of a graph
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
 int LAGraph_DisplayGraph
 (
@@ -996,7 +1119,10 @@ int LAGraph_DisplayGraph
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 // LAGraph_IsEqual: compare for exact equality, auto selection of type
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
 int LAGraph_IsEqual     // TODO rename LAGraph_Matrix_IsEqual
 (
@@ -1006,14 +1132,29 @@ int LAGraph_IsEqual     // TODO rename LAGraph_Matrix_IsEqual
     char *msg
 ) ;
 
-// TODO add LAGraph_Matrix_IsEqual_op
+//------------------------------------------------------------------------------
+// LAGraph_Matrix_IsEqual_op: check if two matrices are equal with given op
+//------------------------------------------------------------------------------
+
+LAGRAPH_PUBLIC
+int LAGraph_Matrix_IsEqual_op // TODO write it
+(
+    bool *result,           // true if A == B, false if A != B or error
+    GrB_Matrix A,
+    GrB_Matrix B,
+    GrB_BinaryOp userop,    // comparator to use (required)
+    char *msg
+);
+
+//------------------------------------------------------------------------------
+// LAGraph_Vector_IsEqual_op: check if two vectors are equal with given op
+//------------------------------------------------------------------------------
 
 //****************************************************************************
 /**
  * Checks if two vectors are identically equal (same size, pattern,
  * and values) according to a user specified comparator op.
  *
- * @note If either or both contain NaN's, result will be false
  *
  * @param[out]   result   Set to true on return is vectors are "equal"
  * @param[in]    A        First vector to compare
@@ -1026,7 +1167,7 @@ int LAGraph_IsEqual     // TODO rename LAGraph_Matrix_IsEqual
  * @return Any GraphBLAS errors that may have been encountered
  */
 LAGRAPH_PUBLIC
-GrB_Info LAGraph_Vector_IsEqual_op
+int LAGraph_Vector_IsEqual_op
 (
     bool *result,           // true if A == B, false if A != B or error
     GrB_Vector A,
@@ -1034,6 +1175,10 @@ GrB_Info LAGraph_Vector_IsEqual_op
     GrB_BinaryOp userop,    // comparator to use (required)
     char *msg
 );
+
+//------------------------------------------------------------------------------
+// LAGraph_Vector_IsEqual: check if two vectors are equal
+//------------------------------------------------------------------------------
 
 //****************************************************************************
 /**
@@ -1062,9 +1207,12 @@ int LAGraph_Vector_IsEqual
     char *msg
 );
 
+//------------------------------------------------------------------------------
 // LAGraph_Matrix_print: pretty-print a matrix
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
-int LAGraph_Matrix_print
+int LAGraph_Matrix_print    // TODO rename LAGraph_Matrix_Print
 (
     GrB_Matrix A,       // matrix to pretty-print to the file
     // TODO: use an enum for pr
@@ -1077,9 +1225,12 @@ int LAGraph_Matrix_print
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 // LAGraph_Vector_print: pretty-print a matrix
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
-int LAGraph_Vector_print
+int LAGraph_Vector_print    // TODO rename LAGraph_Vector_Print
 (
     GrB_Vector v,       // vector to pretty-print to the file
     // TODO: use an enum for pr
@@ -1093,10 +1244,9 @@ int LAGraph_Vector_print
 ) ;
 
 //------------------------------------------------------------------------------
-// parallel sorting methods
+// LAGraph_Sort1: sort array A of size n
 //------------------------------------------------------------------------------
 
-// LAGraph_Sort1: sort array A of size n
 LAGRAPH_PUBLIC
 int LAGraph_Sort1
 (
@@ -1106,7 +1256,10 @@ int LAGraph_Sort1
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 // LAGraph_Sort2: sort array A of size 2-by-n, using 2 keys (A [0:1][])
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
 int LAGraph_Sort2
 (
@@ -1117,7 +1270,10 @@ int LAGraph_Sort2
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
 // LAGraph_Sort3: sort array A of size 3-by-n, using 3 keys (A [0:2][])
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
 int LAGraph_Sort3
 (
@@ -1140,6 +1296,10 @@ int LAGraph_Sort3
 // graph G is both an input and an output of these methods, since they may be
 // modified.
 
+//------------------------------------------------------------------------------
+// LAGraph_BreadthFirstSearch: breadth-first search
+//------------------------------------------------------------------------------
+
 /****************************************************************************
  *
  * Perform breadth-first traversal, computing parent vertex ID's
@@ -1158,8 +1318,8 @@ int LAGraph_Sort3
  * @param[in]     G          The graph, directed or undirected.
  * @param[in]     src        The index of the src vertex (0-based)
  * @param[in]     pushpull   if true, use push/pull; otherwise, use pushonly.
- *                           Push/pull requires G->AT, G->rowdegree,
- *                           and library support.
+ *                           Push/pull is faster but requires G->AT,
+ *                           G->rowdegree, and SuiteSparse:GraphBLAS.
  *                           TODO: consider removing this option or reverse logic
  * @param[out]    msg        Error message if a failure code is returned.
  *
@@ -1179,6 +1339,10 @@ int LAGraph_BreadthFirstSearch
     bool           pushpull,
     char          *msg
 );
+
+//------------------------------------------------------------------------------
+// LAGraph_VertexCentrality: various vertex centrality metrics
+//------------------------------------------------------------------------------
 
 //****************************************************************************
 // TODO the following is a draft:
@@ -1203,6 +1367,10 @@ int LAGraph_VertexCentrality    // TODO: write this
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
+// LAGraph_TriangleCount
+//------------------------------------------------------------------------------
+
 /****************************************************************************
  *
  * Count the triangles in a graph.
@@ -1221,13 +1389,17 @@ int LAGraph_VertexCentrality    // TODO: write this
  * @retval FIXME:RETVAL         G->rowdegree was not precalculated (for modes 3-6)
  */
 LAGRAPH_PUBLIC
-int LAGraph_TriangleCount   // returns 0 if successful, < 0 if failure
+int LAGraph_TriangleCount
 (
     uint64_t      *ntriangles,   // # of triangles
     // input:
     LAGraph_Graph  G,
     char          *msg
 ) ;
+
+//------------------------------------------------------------------------------
+// LAGraph_ConnectedComponents: connected components of an undirected graph
+//------------------------------------------------------------------------------
 
 // TODO: this is a Basic method, since G is input/output.
 LAGRAPH_PUBLIC
@@ -1240,6 +1412,10 @@ int LAGraph_ConnectedComponents
     LAGraph_Graph G,        // input graph
     char *msg
 ) ;
+
+//------------------------------------------------------------------------------
+// LAGraph_SingleSourceShortestPath: single-source shortest path
+//------------------------------------------------------------------------------
 
 // TODO: add AIsAllPositive or related as a G->property.
 // TODO: Should a Basic method pick delta automatically?
@@ -1275,6 +1451,10 @@ int LAGraph_SingleSourceShortestPath
 // property to be computed, it must be computed prior to calling the Advanced
 // method.
 
+//------------------------------------------------------------------------------
+// LAGraph_VertexCentrality_Betweenness: betweeness centrality metric
+//------------------------------------------------------------------------------
+
 LAGRAPH_PUBLIC
 int LAGraph_VertexCentrality_Betweenness
 (
@@ -1286,6 +1466,10 @@ int LAGraph_VertexCentrality_Betweenness
     int32_t ns,                 // number of source vertices
     char *msg
 ) ;
+
+//------------------------------------------------------------------------------
+// LAGraph_VertexCentrality_PageRankGAP: GAP-style pagerank
+//------------------------------------------------------------------------------
 
 LAGRAPH_PUBLIC
 int LAGraph_VertexCentrality_PageRankGAP
@@ -1300,6 +1484,10 @@ int LAGraph_VertexCentrality_PageRankGAP
     int *iters,             // output: number of iterations taken
     char *msg
 ) ;
+
+//------------------------------------------------------------------------------
+// LAGraph_TriangleCount_Methods: triangle counting
+//------------------------------------------------------------------------------
 
 /****************************************************************************
  *

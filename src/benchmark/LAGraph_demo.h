@@ -35,10 +35,8 @@
 #define LAGRAPH_BIN_HEADER 512
 #define LEN LAGRAPH_BIN_HEADER
 
-#if !LG_VANILLA
 #if !LG_SUITESPARSE
 #error "SuiteSparse:GraphBLAS v6.0.0 or later is required"
-#endif
 #endif
 
 //------------------------------------------------------------------------------
