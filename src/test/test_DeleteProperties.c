@@ -94,16 +94,17 @@ void test_DeleteProperties (void)
         printf ("\nGraph: ndiag %g, symmetric structure: %d\n",
             (double) G->ndiag, G->A_structure_is_symmetric) ;
         printf ("  adj matrix: ") ;
-        int rr = (LAGraph_Matrix_Print (G->A, 2, stdout, msg)) ;
+        int rr = (LAGraph_Matrix_Print (G->A, LAGraph_SHORT, stdout, msg)) ;
         printf ("result: %d msg: %s\n", rr, msg) ;
         printf ("  row degree: ") ;
-        OK (LAGraph_Vector_Print (G->rowdegree, 2, stdout, msg)) ;
+        OK (LAGraph_Vector_Print (G->rowdegree, LAGraph_SHORT, stdout, msg)) ;
         if (kind == LAGRAPH_ADJACENCY_DIRECTED)
         {
             printf ("  adj transposed: ") ;
-            OK (LAGraph_Matrix_Print (G->AT, 2, stdout, msg)) ;
+            OK (LAGraph_Matrix_Print (G->AT, LAGraph_SHORT, stdout, msg)) ;
             printf ("  col degree: ") ;
-            OK (LAGraph_Vector_Print (G->coldegree, 2, stdout, msg)) ;
+            OK (LAGraph_Vector_Print (G->coldegree, LAGraph_SHORT, stdout,
+                msg)) ;
         }
         else
         {

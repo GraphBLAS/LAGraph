@@ -1289,15 +1289,23 @@ int LAGraph_SampleDegree
 // readable form.  This method is not meant for saving a graph to a file;
 // see LAGraph_MMWrite for that method.
 
+typedef enum
+{
+    LAGraph_SILENT = 0,     // nothing is printed
+    LAGraph_SUMMARY = 1,    // print a terse summary
+    LAGraph_SHORT = 2,      // short description, about 30 entries of a matrix
+    LAGraph_COMPLETE = 3,   // print the entire contents of the object
+    LAGraph_SHORT_VERBOSE = 4,    // LAGraph_SHORT but with "%.15g" for doubles
+    LAGraph_COMPLETE_VERBOSE = 5  // LAGraph_COMPLETE, but "%.15g" for doubles
+}
+LAGraph_Print_Level ;
+
 LAGRAPH_PUBLIC
 int LAGraph_DisplayGraph
 (
     // input:
     LAGraph_Graph G,        // graph to display
-    // TODO: use an enum for pr
-    int pr,                 // 0: nothing, 1: terse, 2: summary, 3: all,
-                            // 4: same as 2 but with %0.15g for doubles
-                            // 5: same as 3 but with %0.15g for doubles
+    LAGraph_Print_Level pr, // print level (0 to 5)
     FILE *f,                // file to write to, must already be open
     char *msg
 ) ;
@@ -1416,11 +1424,7 @@ int LAGraph_Matrix_Print
 (
     // input:
     GrB_Matrix A,       // matrix to pretty-print to the file
-    // TODO: use an enum for pr
-    int pr,             // print level: -1 nothing, 0: one line, 1: terse,
-                        //      2: summary, 3: all,
-                        //      4: as 2 but with %0.15g for float/double
-                        //      5: as 3 but with %0.15g for float/double
+    LAGraph_Print_Level pr, // print level (0 to 5)
     FILE *f,            // file to write it to, must be already open; use
                         // stdout or stderr to print to those locations.
     char *msg
@@ -1440,11 +1444,7 @@ int LAGraph_Vector_Print
 (
     // input:
     GrB_Vector v,       // vector to pretty-print to the file
-    // TODO: use an enum for pr
-    int pr,             // print level: -1 nothing, 0: one line, 1: terse,
-                        //      2: summary, 3: all,
-                        //      4: as 2 but with %0.15g for float/double
-                        //      5: as 3 but with %0.15g for float/double
+    LAGraph_Print_Level pr, // print level (0 to 5)
     FILE *f,            // file to write it to, must be already open; use
                         // stdout or stderr to print to those locations.
     char *msg

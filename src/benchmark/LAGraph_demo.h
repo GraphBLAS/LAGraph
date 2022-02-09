@@ -1045,7 +1045,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
     printf ("read time: %g\n", t_read) ;
 
     LG_FREE_WORK ;
-    // LAGraph_TRY (LAGraph_DisplayGraph (*G, 2, stdout, msg)) ;
+    // LAGraph_TRY (LAGraph_DisplayGraph (*G, LAGraph_SHORT, stdout, msg)) ;
     return (GrB_SUCCESS) ;
 }
 

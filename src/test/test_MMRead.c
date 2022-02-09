@@ -186,7 +186,8 @@ void test_MMRead (void)
         for (int pr = 0 ; pr <= 2 ; pr++)
         {
             printf ("\nPretty-print %s: pr=%d:\n", aname, pr) ;
-            OK (LAGraph_Matrix_Print (A, pr, stdout, msg)) ;
+            LAGraph_Print_Level prl = pr ;
+            OK (LAGraph_Matrix_Print (A, prl, stdout, msg)) ;
         }
 
         //----------------------------------------------------------------------
@@ -255,7 +256,7 @@ void test_karate (void)
     OK (LAGraph_Matrix_TypeName (atype_name, A, msg)) ;
     TEST_CHECK (MATCHNAME (atype_name, "bool")) ;
     OK (fclose (f)) ;
-    OK (LAGraph_Matrix_Print (A, 2, stdout, msg)) ;
+    OK (LAGraph_Matrix_Print (A, LAGraph_SHORT, stdout, msg)) ;
     TEST_MSG ("Loading of A matrix failed: karate matrix") ;
 
     //--------------------------------------------------------------------------
@@ -265,7 +266,7 @@ void test_karate (void)
     OK (GrB_Matrix_new (&B, GrB_BOOL, ZACHARY_NUM_NODES, ZACHARY_NUM_NODES)) ;
     OK (GrB_Matrix_build (B, ZACHARY_I, ZACHARY_J, ZACHARY_V,
         ZACHARY_NUM_EDGES, GrB_LOR)) ;
-    OK (LAGraph_Matrix_Print (B, 2, stdout, msg)) ;
+    OK (LAGraph_Matrix_Print (B, LAGraph_SHORT, stdout, msg)) ;
     TEST_MSG ("Loading of B matrix failed: karate matrix") ;
 
     //--------------------------------------------------------------------------
@@ -565,7 +566,7 @@ void test_MMWrite_failures (void)
     TEST_CHECK (f != NULL) ;
     OK (GrB_Type_new (&atype, sizeof (mytype))) ;
     OK (GrB_Matrix_new (&A, atype, 4, 4)) ;
-    int status = LAGraph_Matrix_Print (A, 3, stdout, msg) ;
+    int status = LAGraph_Matrix_Print (A, LAGraph_COMPLETE, stdout, msg) ;
     printf ("msg: [%s]\n", msg) ;
     TEST_CHECK (status == GrB_NOT_IMPLEMENTED) ;
     status = LAGraph_MMWrite (A, f, NULL, msg) ;

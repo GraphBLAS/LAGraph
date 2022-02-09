@@ -50,8 +50,7 @@ const char *prwhat (int pr)
 {
     switch (pr)
     {
-        case -1: return ("nothing") ;
-        case  0: return ("single line") ;
+        case  0: return ("nothing") ;
         case  1: return ("terse") ;
         case  2: return ("summary") ;
         case  3: return ("all") ;
@@ -116,11 +115,12 @@ void test_DisplayGraph (void)
         for (int trial = 0 ; trial <= 1 ; trial++)
         {
             printf ("\n############################# TRIAL: %d\n", trial) ;
-            for (int pr = -1 ; pr <= 5 ; pr++)
+            for (int pr = 0 ; pr <= 5 ; pr++)
             {
                 printf ("\n########### %s: pr: %d (%s)\n",
                     aname, pr, prwhat (pr)) ;
-                OK (LAGraph_DisplayGraph (G, pr, stdout, msg)) ;
+                LAGraph_Print_Level prl = pr ;
+                OK (LAGraph_DisplayGraph (G, prl, stdout, msg)) ;
             }
             OK (LAGraph_Property_AT (G, msg)) ;
             OK (LAGraph_Property_ASymmetricStructure (G, msg)) ;
@@ -157,7 +157,8 @@ void test_DisplayGraph_failures (void)
     OK (LAGraph_New (&G, NULL, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
 
     // G->A is NULL
-    result = LAGraph_DisplayGraph (G, 5, stdout, msg) ;
+    LAGraph_Print_Level pr = LAGraph_COMPLETE_VERBOSE ;
+    result = LAGraph_DisplayGraph (G, pr, stdout, msg) ;
     printf ("result: %d, msg: %s\n", result, msg) ;
     TEST_CHECK (result == LAGRAPH_INVALID_GRAPH) ;
 
@@ -167,20 +168,20 @@ void test_DisplayGraph_failures (void)
     // valid graph
     OK (GrB_Matrix_new (&A, GrB_FP32, 5, 5)) ;
     OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
-    result = LAGraph_DisplayGraph (G, 5, stdout, msg) ;
+    result = LAGraph_DisplayGraph (G, pr, stdout, msg) ;
     printf ("result: %d, msg: %s\n", result, msg) ;
     TEST_CHECK (result == GrB_SUCCESS) ;
 
     // mangled G->kind
     G->kind = -1 ;
-    result = LAGraph_DisplayGraph (G, 5, stdout, msg) ;
+    result = LAGraph_DisplayGraph (G, pr, stdout, msg) ;
     printf ("result: %d, msg: %s\n", result, msg) ;
     TEST_CHECK (result == LAGRAPH_INVALID_GRAPH) ;
     G->kind = LAGRAPH_ADJACENCY_UNDIRECTED ;
 
     // G->AT has the wrong size
     OK (GrB_Matrix_new (&(G->AT), GrB_FP32, 6, 5)) ;
-    result = LAGraph_DisplayGraph (G, 5, stdout, msg) ;
+    result = LAGraph_DisplayGraph (G, pr, stdout, msg) ;
     printf ("result: %d, msg: %s\n", result, msg) ;
     TEST_CHECK (result == LAGRAPH_INVALID_GRAPH) ;
 
@@ -190,7 +191,7 @@ void test_DisplayGraph_failures (void)
     #if LG_SUITESPARSE
     // G->AT must be held by row, not by column
     OK (GxB_set (G->AT, GxB_FORMAT, GxB_BY_COL)) ;
-    result = LAGraph_DisplayGraph (G, 5, stdout, msg) ;
+    result = LAGraph_DisplayGraph (G, pr, stdout, msg) ;
     printf ("result: %d, msg: %s\n", result, msg) ;
     TEST_CHECK (result == LAGRAPH_INVALID_GRAPH) ;
     #endif
@@ -198,7 +199,7 @@ void test_DisplayGraph_failures (void)
     // G->A and G->AT must have the same types
     OK (GrB_free (&G->AT)) ;
     OK (GrB_Matrix_new (&(G->AT), GrB_FP64, 5, 5)) ;
-    result = LAGraph_DisplayGraph (G, 5, stdout, msg) ;
+    result = LAGraph_DisplayGraph (G, pr, stdout, msg) ;
     printf ("result: %d, msg: %s\n", result, msg) ;
     TEST_CHECK (result == LAGRAPH_INVALID_GRAPH) ;
 
@@ -248,17 +249,18 @@ void test_DisplayGraph_brutal (void)
         for (int trial = 0 ; trial <= 1 ; trial++)
         {
             printf ("\n############################# TRIAL: %d\n", trial) ;
-            for (int pr = -1 ; pr <= 5 ; pr++)
+            for (int pr = 0 ; pr <= 5 ; pr++)
             {
                 printf ("\n########### %s: pr: %d (%s)\n",
                     aname, pr, prwhat (pr)) ;
+                LAGraph_Print_Level prl = pr ;
                 if (pr == 3 || pr == 5)
                 {
                     printf ("skipped for brutal tests\n") ;
                 }
                 else
                 {
-                    LG_BRUTAL (LAGraph_DisplayGraph (G, pr, stdout, msg)) ;
+                    LG_BRUTAL (LAGraph_DisplayGraph (G, prl, stdout, msg)) ;
                 }
             }
             OK (LAGraph_Property_AT (G, msg)) ;

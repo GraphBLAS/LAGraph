@@ -91,7 +91,7 @@ int main (int argc, char **argv)
     GrB_Index n, nvals ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
-    // LAGraph_TRY (LAGraph_DisplayGraph (G, 2, stdout, msg)) ;
+    // LAGraph_TRY (LAGraph_DisplayGraph (G, LAGraph_SHORT, stdout, msg)) ;
     LAGraph_TRY (LAGraph_Property_RowDegree (G, msg)) ;
 
     //--------------------------------------------------------------------------

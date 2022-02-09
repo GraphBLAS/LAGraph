@@ -24,7 +24,6 @@ void test_bc (void)
     OK (LAGraph_VertexCentrality_Betweenness (&centrality, G, karate_sources,
         4, msg)) ;
     printf ("\nkarate bc:\n") ;
-    // OK (LAGraph_Vector_Print (centrality, 5, stdout, msg)) ;
     OK (LAGraph_Delete (&G, msg)) ;
 
     // compare with GAP:

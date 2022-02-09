@@ -32,7 +32,7 @@
 #define LG_VECTOR_PRINT(suffix,ctype,gtype,fmt1,fmt2)                       \
 int LG_Vector_Print_ ## suffix                                              \
 (                                                                           \
-    GrB_Vector v, int pr, FILE *f, char *msg                                \
+    GrB_Vector v, LAGraph_Print_Level pr, FILE *f, char *msg                \
 )                                                                           \
 {                                                                           \
     LG_CLEAR_MSG ;                                                          \
@@ -40,7 +40,8 @@ int LG_Vector_Print_ ## suffix                                              \
     GrB_Index *I = NULL ;                                                   \
     LG_ASSERT (v != NULL, GrB_NULL_POINTER) ;                               \
     LG_ASSERT (f != NULL, GrB_NULL_POINTER) ;                               \
-    if (pr < 0) return (GrB_SUCCESS) ;                                      \
+    int prl = (int) pr ;                                                    \
+    if (prl <= 0) return (GrB_SUCCESS) ;                                    \
     /* get basic properties */                                              \
     GrB_Index n, nvals ;                                                    \
     GrB_TRY (GrB_Vector_size  (&n, v)) ;                                    \
@@ -48,18 +49,18 @@ int LG_Vector_Print_ ## suffix                                              \
     /* print header line */                                                 \
     FPRINTF (f, "%s vector: n: %" PRIu64 " entries: %" PRIu64               \
         "\n", LG_XSTR (gtype), n, nvals) ;                                  \
-    if (pr <= 1) return (GrB_SUCCESS) ;                                     \
+    if (prl <= 1) return (GrB_SUCCESS) ;                                    \
     /* extract tuples */                                                    \
     I = LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;                        \
     X = LAGraph_Malloc (nvals, sizeof (ctype)) ;                            \
     LG_ASSERT (I != NULL && X != NULL, GrB_OUT_OF_MEMORY) ;                 \
     GrB_Info info = GrB_Vector_extractTuples (I, X, &nvals, v) ;            \
     LG_ASSERT_MSG (info != GrB_DOMAIN_MISMATCH,                             \
-        GrB_NOT_IMPLEMENTED, "user-defined types not supported") ;/*RETVAL*/\
+        GrB_NOT_IMPLEMENTED, "type not supported") ;/*RETVAL*/              \
     GrB_TRY (info) ;                                                        \
     /* determine the format */                                              \
-    char *format = (pr <= 3) ? fmt1 : fmt2 ;                                \
-    bool summary = (pr == 2 || pr == 4) && (nvals > 30) ;                   \
+    char *format = (prl <= 3) ? fmt1 : fmt2 ;                               \
+    bool summary = (prl == 2 || prl == 4) && (nvals > 30) ;                 \
     for (int64_t k = 0 ; k < nvals ; k++)                                   \
     {                                                                       \
         /* print the kth tuple */                                           \
@@ -109,11 +110,7 @@ int LAGraph_Vector_Print
 (
     // input:
     GrB_Vector v,       // vector to pretty-print to the file
-    // TODO: use an enum for pr
-    int pr,             // print level: -1 nothing, 0: one line, 1: terse,
-                        //      2: summary, 3: all,
-                        //      4: as 2 but with %0.15g for float/double
-                        //      5: as 3 but with %0.15g for float/double
+    LAGraph_Print_Level pr, // print level (0 to 5)
     FILE *f,            // file to write it to, must be already open; use
                         // stdout or stderr to print to those locations.
     char *msg

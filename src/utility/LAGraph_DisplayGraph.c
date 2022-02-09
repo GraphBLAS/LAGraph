@@ -14,10 +14,7 @@ int LAGraph_DisplayGraph
 (
     // input:
     LAGraph_Graph G,        // graph to display
-    // TODO: use an enum for pr
-    int pr,                 // 0: nothing, 1: terse, 2: summary, 3: all,
-                            // 4: same as 2 but with %0.15g for doubles
-                            // 5: same as 3 but with %0.15g for doubles
+    LAGraph_Print_Level pr, // print level (0 to 5)
     FILE *f,                // file to write to, must already be open
     char *msg
 )
@@ -30,8 +27,10 @@ int LAGraph_DisplayGraph
     LG_CLEAR_MSG ;
     LG_ASSERT (f != NULL, GrB_NULL_POINTER) ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
-    pr = LAGraph_MAX (pr, -1) ;
-    pr = LAGraph_MIN (pr, 5) ;
+    int prl = (int) pr ;
+    prl = LAGraph_MAX (prl, 0) ;
+    prl = LAGraph_MIN (prl, 5) ;
+    if (prl == 0) return (GrB_SUCCESS) ;
 
     //--------------------------------------------------------------------------
     // display the primary graph components
@@ -48,18 +47,9 @@ int LAGraph_DisplayGraph
     LG_TRY (LAGraph_Matrix_TypeName (typename, A, msg)) ;
     LG_TRY (LAGraph_KindName (kindname, kind, msg)) ;
 
-    if (pr >= 0)
-    {
-        // print the basic scalar properties
-        FPRINTF (f, "Graph: kind: %s, nodes: %g entries: %g type: %s\n",
-            kindname, (double)n, (double)nvals, typename) ;
-    }
-
-    if (pr <= 0)
-    {
-        // nothing more to do
-        return (GrB_SUCCESS) ;
-    }
+    // print the basic scalar properties
+    FPRINTF (f, "Graph: kind: %s, nodes: %g entries: %g type: %s\n",
+        kindname, (double)n, (double)nvals, typename) ;
 
     // print the scalar cached properties
     FPRINTF (f, "  structural symmetry: ") ;
@@ -72,10 +62,10 @@ int LAGraph_DisplayGraph
     if (G->ndiag >= 0) FPRINTF (f, "  self-edges: %g", (double) G->ndiag) ;
     FPRINTF (f, "\n") ;
 
-    // pr = LAGraph_MAX (pr, 0) ;
     FPRINTF (f, "  adjacency matrix: ") ;
 
-    LG_TRY (LAGraph_Matrix_Print (A, pr, stdout, msg)) ;
+    LAGraph_Print_Level pr2 = (LAGraph_Print_Level) prl ;
+    LG_TRY (LAGraph_Matrix_Print (A, pr2, stdout, msg)) ;
 
     //--------------------------------------------------------------------------
     // display the cached properties
@@ -85,21 +75,21 @@ int LAGraph_DisplayGraph
     if (AT != NULL)
     {
         FPRINTF (f, "  adjacency matrix transposed: ") ;
-        LG_TRY (LAGraph_Matrix_Print (AT, pr, stdout, msg)) ;
+        LG_TRY (LAGraph_Matrix_Print (AT, pr2, stdout, msg)) ;
     }
 
     GrB_Vector rowdegree = G->rowdegree ;
     if (rowdegree != NULL)
     {
         FPRINTF (f, "  row degree: ") ;
-        LG_TRY (LAGraph_Vector_Print (rowdegree, pr, stdout, msg)) ;
+        LG_TRY (LAGraph_Vector_Print (rowdegree, pr2, stdout, msg)) ;
     }
 
     GrB_Vector coldegree = G->coldegree ;
     if (coldegree != NULL)
     {
         FPRINTF (f, "  column degree: ") ;
-        LG_TRY (LAGraph_Vector_Print (coldegree, pr, stdout, msg)) ;
+        LG_TRY (LAGraph_Vector_Print (coldegree, pr2, stdout, msg)) ;
     }
 
     return (GrB_SUCCESS) ;

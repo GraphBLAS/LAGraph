@@ -89,7 +89,7 @@ int main (int argc, char **argv)
     GrB_Index n, nvals ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
-    // LAGraph_TRY (LAGraph_DisplayGraph (G, 2, stdout, msg)) ;
+    // LAGraph_TRY (LAGraph_DisplayGraph (G, LAGraph_SHORT, stdout, msg)) ;
     // ensure G->A is FP64 and all 1
     GrB_TRY (GrB_Matrix_new (&A, GrB_FP64, n, n)) ;
     GrB_TRY (GrB_assign (A, G->A, NULL, (double) 1,

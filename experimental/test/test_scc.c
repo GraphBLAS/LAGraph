@@ -118,7 +118,7 @@ void test_scc (void)
 
         GrB_Index n ;
         OK (GrB_Vector_size (&n, c)) ;
-        int pr = (n <= 100) ? 3 : 2 ;
+        LAGraph_Print_Level pr = (n <= 100) ? LAGraph_COMPLETE : LAGraph_SHORT ;
 
         // check result c for cover
         if (strcmp (aname, "cover.mtx") == 0)

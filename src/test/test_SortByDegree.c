@@ -133,7 +133,7 @@ void test_SortByDegree (void)
             OK (LAGraph_Property_RowDegree (G, msg)) ;
             OK (LAGraph_Property_ColDegree (G, msg)) ;
             OK (LAGraph_Property_ASymmetricStructure (G, msg)) ;
-            OK (LAGraph_DisplayGraph (G, 2, stdout, msg)) ;
+            OK (LAGraph_DisplayGraph (G, LAGraph_SHORT, stdout, msg)) ;
 
             // sort 4 different ways
             for (int trial = 0 ; trial <= 3 ; trial++)
@@ -175,7 +175,7 @@ void test_SortByDegree (void)
                 printf ("\nTrial %d, graph H, sorted (%s) by (%s) degrees:\n",
                     trial, ascending ? "ascending" : "descending",
                     byrow ? "row" : "column") ;
-                OK (LAGraph_DisplayGraph (H, 2, stdout, msg)) ;
+                OK (LAGraph_DisplayGraph (H, LAGraph_SHORT, stdout, msg)) ;
 
                 d = (byrow || G->A_structure_is_symmetric) ?
                     H->rowdegree : H->coldegree ;
@@ -284,7 +284,7 @@ void test_SortByDegree_brutal (void)
             OK (LAGraph_Property_RowDegree (G, msg)) ;
             OK (LAGraph_Property_ColDegree (G, msg)) ;
             OK (LAGraph_Property_ASymmetricStructure (G, msg)) ;
-            // OK (LAGraph_DisplayGraph (G, 2, stdout, msg)) ;
+            // OK (LAGraph_DisplayGraph (G, LAGraph_SHORT, stdout, msg)) ;
 
             // sort 4 different ways
             for (int trial = 0 ; trial <= 3 ; trial++)

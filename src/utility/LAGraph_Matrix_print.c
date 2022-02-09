@@ -33,14 +33,15 @@
 #define LG_MATRIX_PRINT(suffix,ctype,gtype,fmt1,fmt2)                       \
 int LG_Matrix_Print_ ## suffix                                              \
 (                                                                           \
-    GrB_Matrix A, int pr, FILE *f, char *msg                                \
+    GrB_Matrix A, LAGraph_Print_Level pr, FILE *f, char *msg                \
 )                                                                           \
 {                                                                           \
     LG_CLEAR_MSG ;                                                          \
     ctype *X = NULL ;                                                       \
     GrB_Index *I = NULL, *J = NULL ;                                        \
     LG_ASSERT (A != NULL && f != NULL, GrB_NULL_POINTER) ;                  \
-    if (pr < 0) return (GrB_SUCCESS) ;                                      \
+    int prl = (int) pr ;                                                    \
+    if (prl <= 0) return (GrB_SUCCESS) ;                                    \
     /* get basic properties */                                              \
     GrB_Index nrows, ncols, nvals ;                                         \
     GrB_TRY (GrB_Matrix_nrows (&nrows, A)) ;                                \
@@ -49,7 +50,7 @@ int LG_Matrix_Print_ ## suffix                                              \
     /* print header line */                                                 \
     FPRINTF (f, "%s matrix: %" PRIu64 "-by-%" PRIu64 " entries: %" PRIu64   \
         "\n", LG_XSTR (gtype), nrows, ncols, nvals) ;                       \
-    if (pr <= 1) return (GrB_SUCCESS) ;                                     \
+    if (prl <= 1) return (GrB_SUCCESS) ;                                    \
     /* extract tuples */                                                    \
     I = LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;                        \
     J = LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;                        \
@@ -57,11 +58,11 @@ int LG_Matrix_Print_ ## suffix                                              \
     LG_ASSERT (I != NULL && J != NULL && X != NULL, GrB_OUT_OF_MEMORY) ;    \
     GrB_Info info = GrB_Matrix_extractTuples (I, J, X, &nvals, A) ;         \
     LG_ASSERT_MSG (info != GrB_DOMAIN_MISMATCH,                             \
-        GrB_NOT_IMPLEMENTED, "user-defined types not supported") ; /* RETVAL */\
+        GrB_NOT_IMPLEMENTED, "type not supported") ; /* RETVAL */           \
     GrB_TRY (info) ;                                                        \
     /* determine the format */                                              \
-    char *format = (pr <= 3) ? fmt1 : fmt2 ;                                \
-    bool summary = (pr == 2 || pr == 4) && (nvals > 30) ;                   \
+    char *format = (prl <= 3) ? fmt1 : fmt2 ;                               \
+    bool summary = (prl == 2 || prl == 4) && (nvals > 30) ;                 \
     for (int64_t k = 0 ; k < nvals ; k++)                                   \
     {                                                                       \
         /* print the kth tuple */                                           \
@@ -111,11 +112,7 @@ int LAGraph_Matrix_Print
 (
     // input:
     GrB_Matrix A,       // matrix to pretty-print to the file
-    // TODO: use an enum for pr
-    int pr,             // print level: -1 nothing, 0: one line, 1: terse,
-                        //      2: summary, 3: all,
-                        //      4: as 2 but with %0.15g for float/double
-                        //      5: as 3 but with %0.15g for float/double
+    LAGraph_Print_Level pr, // print level (0 to 5)
     FILE *f,            // file to write it to, must be already open; use
                         // stdout or stderr to print to those locations.
     char *msg

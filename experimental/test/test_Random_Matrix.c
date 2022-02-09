@@ -31,6 +31,7 @@ void test_Random_Matrix (void)
     OK (LAGraph_Random_Init (msg)) ;
 
     uint64_t seed = 42 ;
+    LAGraph_Print_Level pr = LAGraph_COMPLETE_VERBOSE ;
 
     for (int trial = 0 ; trial <= 4 ; trial++)
     {
@@ -42,64 +43,64 @@ void test_Random_Matrix (void)
 
         printf ("\n----------------bool:\n") ;
         OK (LAGraph_Random_Matrix (&A, GrB_BOOL, 4, 5, d, seed, msg)) ;
-        OK (LAGraph_Matrix_Print (A, 5, stdout, NULL)) ;
+        OK (LAGraph_Matrix_Print (A, pr, stdout, NULL)) ;
         OK (GrB_free (&A)) ;
 
         printf ("\n----------------int8:\n") ;
         OK (LAGraph_Random_Matrix (&A, GrB_INT8, 4, 5, d, seed, msg)) ;
-        OK (LAGraph_Matrix_Print (A, 5, stdout, NULL)) ;
+        OK (LAGraph_Matrix_Print (A, pr, stdout, NULL)) ;
         OK (GrB_free (&A)) ;
 
         printf ("\n----------------int16:\n") ;
         OK (LAGraph_Random_Matrix (&A, GrB_INT16, 4, 5, d, seed, msg)) ;
-        OK (LAGraph_Matrix_Print (A, 5, stdout, NULL)) ;
+        OK (LAGraph_Matrix_Print (A, pr, stdout, NULL)) ;
         OK (GrB_free (&A)) ;
 
         printf ("\n----------------int32:\n") ;
         OK (LAGraph_Random_Matrix (&A, GrB_INT32, 4, 5, d, seed, msg)) ;
-        OK (LAGraph_Matrix_Print (A, 5, stdout, NULL)) ;
+        OK (LAGraph_Matrix_Print (A, pr, stdout, NULL)) ;
         OK (GrB_free (&A)) ;
 
         printf ("\n----------------int64:\n") ;
         OK (LAGraph_Random_Matrix (&A, GrB_INT64, 4, 5, d, seed, msg)) ;
-        OK (LAGraph_Matrix_Print (A, 5, stdout, NULL)) ;
+        OK (LAGraph_Matrix_Print (A, pr, stdout, NULL)) ;
         OK (GrB_free (&A)) ;
 
         printf ("\n----------------uint8:\n") ;
         OK (LAGraph_Random_Matrix (&A, GrB_UINT8, 4, 5, d, seed, msg)) ;
-        OK (LAGraph_Matrix_Print (A, 5, stdout, NULL)) ;
+        OK (LAGraph_Matrix_Print (A, pr, stdout, NULL)) ;
         OK (GrB_free (&A)) ;
 
         printf ("\n----------------uint16:\n") ;
         OK (LAGraph_Random_Matrix (&A, GrB_UINT16, 4, 5, d, seed, msg)) ;
-        OK (LAGraph_Matrix_Print (A, 5, stdout, NULL)) ;
+        OK (LAGraph_Matrix_Print (A, pr, stdout, NULL)) ;
         OK (GrB_free (&A)) ;
 
         printf ("\n----------------uint32:\n") ;
         OK (LAGraph_Random_Matrix (&A, GrB_UINT32, 4, 5, d, seed, msg)) ;
-        OK (LAGraph_Matrix_Print (A, 5, stdout, NULL)) ;
+        OK (LAGraph_Matrix_Print (A, pr, stdout, NULL)) ;
         OK (GrB_free (&A)) ;
 
         printf ("\n----------------uint64:\n") ;
         OK (LAGraph_Random_Matrix (&A, GrB_UINT64, 4, 5, d, seed, msg)) ;
-        OK (LAGraph_Matrix_Print (A, 5, stdout, NULL)) ;
+        OK (LAGraph_Matrix_Print (A, pr, stdout, NULL)) ;
         OK (GrB_free (&A)) ;
 
         printf ("\n----------------fp32:\n") ;
         OK (LAGraph_Random_Matrix (&A, GrB_FP32, 4, 5, d, seed, msg)) ;
-        OK (LAGraph_Matrix_Print (A, 5, stdout, NULL)) ;
+        OK (LAGraph_Matrix_Print (A, pr, stdout, NULL)) ;
         OK (GrB_free (&A)) ;
 
         printf ("\n----------------fp64:\n") ;
         OK (LAGraph_Random_Matrix (&A, GrB_FP64, 4, 5, d, seed, msg)) ;
-        OK (LAGraph_Matrix_Print (A, 5, stdout, NULL)) ;
+        OK (LAGraph_Matrix_Print (A, pr, stdout, NULL)) ;
         OK (GrB_free (&A)) ;
 
     }
 
     printf ("\n----------------empty bool:\n") ;
     OK (LAGraph_Random_Matrix (&A, GrB_BOOL, 0, 5, 0.5, seed, msg)) ;
-    OK (LAGraph_Matrix_Print (A, 5, stdout, NULL)) ;
+    OK (LAGraph_Matrix_Print (A, pr, stdout, NULL)) ;
     OK (GrB_free (&A)) ;
 
     printf ("\n----------------invalid type:\n") ;

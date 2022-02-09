@@ -55,12 +55,12 @@ void test_Vector_Structure (void)
     OK (GrB_Vector_setElement_FP64 (u, 3.5, 0)) ;
     OK (GrB_Vector_setElement_FP64 (u, 4.7, 3)) ;
     OK (GrB_Vector_setElement_FP64 (u, 9.8, 7)) ;
-    OK (LAGraph_Vector_Print (u, 5, stdout, msg)) ;
+    OK (LAGraph_Vector_Print (u, LAGraph_COMPLETE_VERBOSE, stdout, msg)) ;
 
     // get its structure
     int result = LAGraph_Vector_Structure (&w, u, msg) ;
     TEST_CHECK (result == GrB_SUCCESS) ;
-    OK (LAGraph_Vector_Print (w, 5, stdout, msg)) ;
+    OK (LAGraph_Vector_Print (w, LAGraph_COMPLETE_VERBOSE, stdout, msg)) ;
 
     // check it
     GrB_Index nvals ;
@@ -112,7 +112,7 @@ void test_Vector_Structure_brutal (void)
     // get its structure
     int result = LAGraph_Vector_Structure (&w, u, msg) ;
     TEST_CHECK (result == GrB_SUCCESS) ;
-    OK (LAGraph_Vector_Print (w, 5, stdout, msg)) ;
+    OK (LAGraph_Vector_Print (w, LAGraph_COMPLETE_VERBOSE, stdout, msg)) ;
 
     // check it
     GrB_Index nvals ;

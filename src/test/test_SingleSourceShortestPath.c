@@ -136,7 +136,7 @@ void test_SingleSourceShortestPath(void)
         OK (GrB_Matrix_setElement_INT32 (G->A, -1, 0, 1)) ;
         OK (LAGraph_SingleSourceShortestPath (&path_length,
             G, 0, 30, false, msg)) ;
-        OK (LAGraph_Vector_Print (path_length, 2, stdout, msg)) ;
+        OK (LAGraph_Vector_Print (path_length, LAGraph_SHORT, stdout, msg)) ;
         int32_t len = 0 ;
         OK (GrB_Vector_extractElement (&len, path_length, 1)) ;
         TEST_CHECK (len == -1) ;

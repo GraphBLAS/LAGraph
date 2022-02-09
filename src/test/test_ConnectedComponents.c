@@ -242,7 +242,7 @@ void test_cc_brutal (void)
     // find the connected components
     printf ("\n--- CC: FastSV6 if SuiteSparse, Boruvka if vanilla:\n") ;
     LG_BRUTAL_BURBLE (LAGraph_ConnectedComponents (&C, G, msg)) ;
-    LG_BRUTAL_BURBLE (LAGraph_Vector_Print (C, 2, stdout, msg)) ;
+    LG_BRUTAL_BURBLE (LAGraph_Vector_Print (C, LAGraph_SHORT, stdout, msg)) ;
 
     // count the # of connected components
     int ncomponents = count_connected_components (C) ;
