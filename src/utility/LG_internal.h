@@ -120,7 +120,7 @@ typedef unsigned char LG_void ;
     {                                                       \
         LG_ERROR_MSG ("%s, line %d: GrB failure: %d",       \
             __FILE__, __LINE__, info) ;                     \
-        LG_FREE_ALL ;                                  \
+        LG_FREE_ALL ;                                       \
         return (info) ;                                     \
     }
 
@@ -139,7 +139,7 @@ typedef unsigned char LG_void ;
 {                                                       \
     LG_ERROR_MSG ("%s, line %d: LAGraph failure: %d",   \
         __FILE__, __LINE__, status) ;                   \
-    LG_FREE_ALL ;                                  \
+    LG_FREE_ALL ;                                       \
     return (status) ;                                   \
 }
 #endif
