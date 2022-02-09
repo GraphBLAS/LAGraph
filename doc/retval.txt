@@ -65,7 +65,7 @@ src/utility/LAGraph_MMWrite.c
     GrB_NOT_IMPLEMENTED: type not supported
     file I/O error
 
-src/utility/LAGraph_Matrix_print.c
+src/utility/LAGraph_Matrix_Print.c
 
     GrB_NOT_IMPLEMENTED: type not supported
 
@@ -85,7 +85,7 @@ src/utility/LAGraph_TypeFromName.c
 
     GrB_NOT_IMPLEMENTED: type not supported
 
-src/utility/LAGraph_Vector_print.c
+src/utility/LAGraph_Vector_Print.c
 
     GrB_NOT_IMPLEMENTED: type not supported
 
@@ -95,6 +95,6 @@ src/utility/LG_internal.h (macro for basic checks of G for many methods):
     G->kind invalid
 
 src/utility/LG_internal.h (FPRINTF macro used by LAGraph_DisplayGraph,
-    LAGraph_MMWrite, LAGraph_Matrix_print, LAGraph_Vector_print):
+    LAGraph_MMWrite, LAGraph_Matrix_Print, LAGraph_Vector_Print):
 
     file I/O error

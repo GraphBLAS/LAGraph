@@ -46,9 +46,7 @@ As of Feb 9, 2022:
         would need to be int32, perhaps).  That is complicated.
         How does delta stepping work for float and double?
 
-    * check function names and API (LAGraph_IsEqual for GrB_Matrix, and
-        LAGraph_Vector_IsEqual for GrB_Vectors for example,
-        but LAGraph_Matrix_print and LAGraph_Vector_print)
+    * check function names and API
 
     * add names to Contributors.txt
 

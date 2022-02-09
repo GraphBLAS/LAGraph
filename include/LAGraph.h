@@ -1404,15 +1404,15 @@ int LAGraph_Vector_IsEqual
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Matrix_print: pretty-print a matrix
+// LAGraph_Matrix_Print: pretty-print a matrix
 //------------------------------------------------------------------------------
 
-// LAGraph_Matrix_print displays a matrix in a human-readable form.  This
+// LAGraph_Matrix_Print displays a matrix in a human-readable form.  This
 // method is not meant for saving a GrB_Matrix to a file; see LAGraph_MMWrite
 // for that method.
 
 LAGRAPH_PUBLIC
-int LAGraph_Matrix_print    // TODO rename LAGraph_Matrix_Print
+int LAGraph_Matrix_Print
 (
     // input:
     GrB_Matrix A,       // matrix to pretty-print to the file
@@ -1427,16 +1427,16 @@ int LAGraph_Matrix_print    // TODO rename LAGraph_Matrix_Print
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Vector_print: pretty-print a matrix
+// LAGraph_Vector_Print: pretty-print a matrix
 //------------------------------------------------------------------------------
 
-// LAGraph_Vector_print displays a vector in a human-readable form.  This
+// LAGraph_Vector_Print displays a vector in a human-readable form.  This
 // method is not meant for saving a GrB_Vector to a file.  To perform that
 // operation, copy the GrB_Vector into an n-by-1 GrB_Matrix and use
 // LAGraph_MMWrite.
 
 LAGRAPH_PUBLIC
-int LAGraph_Vector_print    // TODO rename LAGraph_Vector_Print
+int LAGraph_Vector_Print
 (
     // input:
     GrB_Vector v,       // vector to pretty-print to the file

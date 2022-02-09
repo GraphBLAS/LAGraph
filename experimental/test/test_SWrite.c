@@ -250,7 +250,7 @@ void test_SWrite_errors (void)
     OK (GrB_assign (A, NULL, NULL, 0, GrB_ALL, n, GrB_ALL, n, NULL)) ;
     OK (GrB_apply (A, NULL, NULL, GrB_ROWINDEX_INT64, A, 0, NULL)) ;
     printf ("\nTest matrix:\n") ;
-    OK (LAGraph_Matrix_print (A, 3, stdout, msg)) ;
+    OK (LAGraph_Matrix_Print (A, 3, stdout, msg)) ;
 
     // serialize the matrix
     bool ok ;

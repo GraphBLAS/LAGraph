@@ -100,7 +100,7 @@ void test_BF (void)
         OK (fclose (f)) ;
         TEST_MSG ("Loading of valued matrix failed") ;
         printf ("\nMatrix: %s\n", aname) ;
-        OK (LAGraph_Matrix_print (A_orig, 2, stdout, NULL)) ;
+        OK (LAGraph_Matrix_Print (A_orig, 2, stdout, NULL)) ;
 
         bool has_negative_cycle  = files [k].has_negative_cycle ;
         bool has_integer_weights = files [k].has_integer_weights ;

@@ -102,14 +102,14 @@ void test_msf (void)
             OK (GrB_Matrix_setElement (Cgood, 1, 6, 0)) ;
             OK (GrB_wait (Cgood, GrB_MATERIALIZE)) ;
             printf ("\nmsf (known result):\n") ;
-            OK (LAGraph_Matrix_print (Cgood, pr, stdout, msg)) ;
+            OK (LAGraph_Matrix_Print (Cgood, pr, stdout, msg)) ;
             bool ok = false ;
             OK (LAGraph_IsEqual (&ok, C, Cgood, msg)) ;
             TEST_CHECK (ok) ;
         }
 
         printf ("\nmsf:\n") ;
-        OK (LAGraph_Matrix_print (C, pr, stdout, msg)) ;
+        OK (LAGraph_Matrix_Print (C, pr, stdout, msg)) ;
         OK (GrB_free (&C)) ;
         OK (LAGraph_Delete (&G, msg)) ;
     }

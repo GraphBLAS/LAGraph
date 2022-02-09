@@ -136,7 +136,7 @@ void test_dnn (void)
     OK (GrB_Vector_new (&TrueCategories, GrB_BOOL, nfeatures_subset)) ;
     OK (GrB_Col_extract (TrueCategories, NULL, NULL, T, GrB_ALL,
         nfeatures_subset, 0, NULL)) ;
-    OK (LAGraph_Vector_print (TrueCategories, 3, stdout, msg)) ;
+    OK (LAGraph_Vector_Print (TrueCategories, 3, stdout, msg)) ;
 
     //--------------------------------------------------------------------------
     // solve the problem
@@ -159,7 +159,7 @@ void test_dnn (void)
     // check if Categories and TrueCategories are the same
     bool isequal ;
     printf ("\nComputed categories:\n") ;
-    OK (LAGraph_Vector_print (Categories, 3, stdout, msg)) ;
+    OK (LAGraph_Vector_Print (Categories, 3, stdout, msg)) ;
     OK (LAGraph_Vector_IsEqual (&isequal, TrueCategories, Categories, NULL)) ;
     TEST_CHECK (isequal) ;
 

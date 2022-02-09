@@ -166,7 +166,7 @@ void test_lcc (void)
             }
             OK (GrB_wait (cgood, GrB_MATERIALIZE)) ;
             printf ("\nlcc (known result, but with float precision):\n") ;
-            OK (LAGraph_Vector_print (cgood, pr, stdout, msg)) ;
+            OK (LAGraph_Vector_Print (cgood, pr, stdout, msg)) ;
             // cgood = abs (cgood - c)
             OK (GrB_eWiseAdd (cgood, NULL, NULL, GrB_MINUS_FP64, cgood, c,
                 NULL)) ;
@@ -179,7 +179,7 @@ void test_lcc (void)
         }
 
         printf ("\nlcc:\n") ;
-        OK (LAGraph_Vector_print (c, pr, stdout, msg)) ;
+        OK (LAGraph_Vector_Print (c, pr, stdout, msg)) ;
         OK (GrB_free (&c)) ;
 
         OK (LAGraph_Delete (&G, msg)) ;

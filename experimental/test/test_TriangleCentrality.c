@@ -103,7 +103,7 @@ void test_TriangleCentrality (void)
 
             int pr = (n <= 100) ? 3 : 2 ;
             printf ("\ncentrality:\n") ;
-            OK (LAGraph_Vector_print (c, pr, stdout, msg)) ;
+            OK (LAGraph_Vector_Print (c, pr, stdout, msg)) ;
             OK (GrB_free (&c)) ;
         }
 

@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_Vector_print:  pretty-print a vector
+// LAGraph_Vector_Print:  pretty-print a vector
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -8,7 +8,7 @@
 
 //------------------------------------------------------------------------------
 
-// LAGraph_Vector_print:  pretty-print a vector.  The type is either derived
+// LAGraph_Vector_Print:  pretty-print a vector.  The type is either derived
 // from GxB_Vector_type (if available) or assumed to be GrB_FP64 otherwise,
 // or passed in as a parameter.
 // Contributed by Tim Davis, Texas A&M.
@@ -26,11 +26,11 @@
 #define LG_FREE_ALL LG_FREE_WORK
 
 //------------------------------------------------------------------------------
-// LG_Vector_print_TYPE: print with the specified type
+// LG_Vector_Print_TYPE: print with the specified type
 //------------------------------------------------------------------------------
 
 #define LG_VECTOR_PRINT(suffix,ctype,gtype,fmt1,fmt2)                       \
-int LG_Vector_print_ ## suffix                                              \
+int LG_Vector_Print_ ## suffix                                              \
 (                                                                           \
     GrB_Vector v, int pr, FILE *f, char *msg                                \
 )                                                                           \
@@ -102,10 +102,10 @@ LG_VECTOR_PRINT (FC64  , GxB_FC64_t, GxB_FC64, ...) ;
 #define LG_FREE_ALL ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Vector_print: automatically determine the type
+// LAGraph_Vector_Print: automatically determine the type
 //------------------------------------------------------------------------------
 
-int LAGraph_Vector_print    // TODO rename LAGraph_Vector_Print
+int LAGraph_Vector_Print
 (
     // input:
     GrB_Vector v,       // vector to pretty-print to the file
@@ -147,56 +147,56 @@ int LAGraph_Vector_print    // TODO rename LAGraph_Vector_Print
 
     if (type == GrB_BOOL)
     {
-        return (LG_Vector_print_BOOL (v, pr, f, msg)) ;
+        return (LG_Vector_Print_BOOL (v, pr, f, msg)) ;
     }
     else if (type == GrB_INT8) 
     {
-        return (LG_Vector_print_INT8 (v, pr, f, msg)) ;
+        return (LG_Vector_Print_INT8 (v, pr, f, msg)) ;
     }
     else if (type == GrB_INT16) 
     {
-        return (LG_Vector_print_INT16 (v, pr, f, msg)) ;
+        return (LG_Vector_Print_INT16 (v, pr, f, msg)) ;
     }
     else if (type == GrB_INT32) 
     {
-        return (LG_Vector_print_INT32 (v, pr, f, msg)) ;
+        return (LG_Vector_Print_INT32 (v, pr, f, msg)) ;
     }
     else if (type == GrB_INT64) 
     {
-        return (LG_Vector_print_INT64 (v, pr, f, msg)) ;
+        return (LG_Vector_Print_INT64 (v, pr, f, msg)) ;
     }
     else if (type == GrB_UINT8) 
     {
-        return (LG_Vector_print_UINT8 (v, pr, f, msg)) ;
+        return (LG_Vector_Print_UINT8 (v, pr, f, msg)) ;
     }
     else if (type == GrB_UINT16) 
     {
-        return (LG_Vector_print_UINT16 (v, pr, f, msg)) ;
+        return (LG_Vector_Print_UINT16 (v, pr, f, msg)) ;
     }
     else if (type == GrB_UINT32) 
     {
-        return (LG_Vector_print_UINT32 (v, pr, f, msg)) ;
+        return (LG_Vector_Print_UINT32 (v, pr, f, msg)) ;
     }
     else if (type == GrB_UINT64) 
     {
-        return (LG_Vector_print_UINT64 (v, pr, f, msg)) ;
+        return (LG_Vector_Print_UINT64 (v, pr, f, msg)) ;
     }
     else if (type == GrB_FP32) 
     {
-        return (LG_Vector_print_FP32 (v, pr, f, msg)) ;
+        return (LG_Vector_Print_FP32 (v, pr, f, msg)) ;
     }
     else if (type == GrB_FP64) 
     {
-        return (LG_Vector_print_FP64 (v, pr, f, msg)) ;
+        return (LG_Vector_Print_FP64 (v, pr, f, msg)) ;
     }
     #if 0
     else if (type == GxB_FC32)
     {
-        return (LG_Vector_print_FC32 (v, pr, f, msg)) ;
+        return (LG_Vector_Print_FC32 (v, pr, f, msg)) ;
     }
     else if (type == GxB_FC32)
     {
-        return (LG_Vector_print_FC64 (v, pr, f, msg)) ;
+        return (LG_Vector_Print_FC64 (v, pr, f, msg)) ;
     }
     #endif
     else

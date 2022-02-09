@@ -41,10 +41,10 @@ void test_Random (void)
         OK (GrB_Vector_new (&Seed, GrB_UINT64, n)) ;
         OK (GrB_Vector_assign_UINT64 (Seed, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
         OK (LAGraph_Random_Seed (Seed, seed, msg)) ;
-        OK (LAGraph_Vector_print (Seed, 5, stdout, NULL)) ;
+        OK (LAGraph_Vector_Print (Seed, 5, stdout, NULL)) ;
         printf ("\nnext dense random vector:\n") ;
         OK (LAGraph_Random_Next (Seed, msg)) ;
-        OK (LAGraph_Vector_print (Seed, 5, stdout, NULL)) ;
+        OK (LAGraph_Vector_Print (Seed, 5, stdout, NULL)) ;
 
         // free all workspace
         OK (GrB_Vector_free (&Seed)) ;
@@ -57,10 +57,10 @@ void test_Random (void)
             OK (GrB_Vector_setElement_UINT64 (Seed, 0, i)) ;
         }
         OK (LAGraph_Random_Seed (Seed, seed, msg)) ;
-        OK (LAGraph_Vector_print (Seed, 5, stdout, NULL)) ;
+        OK (LAGraph_Vector_Print (Seed, 5, stdout, NULL)) ;
         printf ("\nnext sparse random vector:\n") ;
         OK (LAGraph_Random_Next (Seed, msg)) ;
-        OK (LAGraph_Vector_print (Seed, 5, stdout, NULL)) ;
+        OK (LAGraph_Vector_Print (Seed, 5, stdout, NULL)) ;
 
         // free all workspace
         OK (GrB_Vector_free (&Seed)) ;

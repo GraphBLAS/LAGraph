@@ -40,7 +40,7 @@ float difference (GrB_Vector bc, double *gap_result)
     OK (GrB_Vector_new (&diff, GrB_FP32, n)) ;
     OK (GrB_eWiseAdd (diff, NULL, NULL, GrB_MINUS_FP32, gap_bc, bc,
         NULL)) ;
-    // OK (LAGraph_Vector_print (diff, 3, stdout, msg)) ;
+    // OK (LAGraph_Vector_Print (diff, 3, stdout, msg)) ;
     OK (GrB_apply (diff, NULL, NULL, GrB_ABS_FP32, diff, NULL)) ;
     float err = 0 ;
     OK (GrB_reduce (&err, NULL, GrB_MAX_MONOID_FP32, diff, NULL)) ;
@@ -239,7 +239,7 @@ void test_bc (void)
     OK (LAGraph_VertexCentrality_Betweenness (&centrality, G, karate_sources,
         4, msg)) ;
     printf ("\nkarate bc:\n") ;
-    // OK (LAGraph_Vector_print (centrality, 5, stdout, msg)) ;
+    // OK (LAGraph_Vector_Print (centrality, 5, stdout, msg)) ;
     OK (LAGraph_Delete (&G, msg)) ;
 
     // compare with GAP:
@@ -262,7 +262,7 @@ void test_bc (void)
     OK (LAGraph_VertexCentrality_Betweenness (&centrality, G, west0067_sources,
         4, msg)) ;
     printf ("\nwest0067 bc:\n") ;
-    // OK (LAGraph_Vector_print (centrality, 5, stdout, msg)) ;
+    // OK (LAGraph_Vector_Print (centrality, 5, stdout, msg)) ;
     OK (LAGraph_Delete (&G, msg)) ;
 
     // compare with GAP:

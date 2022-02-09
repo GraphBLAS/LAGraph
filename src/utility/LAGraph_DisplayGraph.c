@@ -75,7 +75,7 @@ int LAGraph_DisplayGraph
     // pr = LAGraph_MAX (pr, 0) ;
     FPRINTF (f, "  adjacency matrix: ") ;
 
-    LG_TRY (LAGraph_Matrix_print (A, pr, stdout, msg)) ;
+    LG_TRY (LAGraph_Matrix_Print (A, pr, stdout, msg)) ;
 
     //--------------------------------------------------------------------------
     // display the cached properties
@@ -85,21 +85,21 @@ int LAGraph_DisplayGraph
     if (AT != NULL)
     {
         FPRINTF (f, "  adjacency matrix transposed: ") ;
-        LG_TRY (LAGraph_Matrix_print (AT, pr, stdout, msg)) ;
+        LG_TRY (LAGraph_Matrix_Print (AT, pr, stdout, msg)) ;
     }
 
     GrB_Vector rowdegree = G->rowdegree ;
     if (rowdegree != NULL)
     {
         FPRINTF (f, "  row degree: ") ;
-        LG_TRY (LAGraph_Vector_print (rowdegree, pr, stdout, msg)) ;
+        LG_TRY (LAGraph_Vector_Print (rowdegree, pr, stdout, msg)) ;
     }
 
     GrB_Vector coldegree = G->coldegree ;
     if (coldegree != NULL)
     {
         FPRINTF (f, "  column degree: ") ;
-        LG_TRY (LAGraph_Vector_print (coldegree, pr, stdout, msg)) ;
+        LG_TRY (LAGraph_Vector_Print (coldegree, pr, stdout, msg)) ;
     }
 
     return (GrB_SUCCESS) ;

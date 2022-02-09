@@ -173,14 +173,14 @@ void test_cdlp (void)
             }
             OK (GrB_wait (cgood, GrB_MATERIALIZE)) ;
             printf ("\ncdlp (known result):\n") ;
-            OK (LAGraph_Vector_print (cgood, pr, stdout, msg)) ;
+            OK (LAGraph_Vector_Print (cgood, pr, stdout, msg)) ;
             bool ok = false ;
             OK (LAGraph_Vector_IsEqual (&ok, c, cgood, msg)) ;
             TEST_CHECK (ok) ;
         }
 
         printf ("\ncdlp:\n") ;
-        OK (LAGraph_Vector_print (c, pr, stdout, msg)) ;
+        OK (LAGraph_Vector_Print (c, pr, stdout, msg)) ;
         OK (GrB_free (&c)) ;
 
         OK (LAGraph_Delete (&G, msg)) ;

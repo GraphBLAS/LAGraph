@@ -184,7 +184,7 @@ void test_ranker(void)
     // compute its pagerank
     OK (LAGraph_VertexCentrality_PageRankGAP (&centrality, G, 0.85,
         1e-4, 100, &niters, msg)) ;
-    // OK (LAGraph_Vector_print (centrality, 5, stdout, msg)) ;
+    // OK (LAGraph_Vector_Print (centrality, 5, stdout, msg)) ;
     OK (LAGraph_Delete (&G, msg)) ;
 
     // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
@@ -207,7 +207,7 @@ void test_ranker(void)
     // compute its pagerank
     OK (LAGraph_VertexCentrality_PageRankGAP (&centrality, G, 0.85,
         1e-4, 100, &niters, msg)) ;
-    // OK (LAGraph_Vector_print (centrality, 5, stdout, msg)) ;
+    // OK (LAGraph_Vector_Print (centrality, 5, stdout, msg)) ;
     OK (LAGraph_Delete (&G, msg)) ;
 
     // compare with MATLAB: cmatlab = centrality (G, 'pagerank')

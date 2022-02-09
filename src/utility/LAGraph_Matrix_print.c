@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_Matrix_print:  pretty-print a matrix
+// LAGraph_Matrix_Print:  pretty-print a matrix
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -8,7 +8,7 @@
 
 //------------------------------------------------------------------------------
 
-// LAGraph_Matrix_print:  pretty-print a matrix.  The type is either derived
+// LAGraph_Matrix_Print:  pretty-print a matrix.  The type is either derived
 // from GxB_Matrix_type (if available) or assumed to be GrB_FP64 otherwise,
 // or passed in as a parameter.
 // Contributed by Tim Davis, Texas A&M.
@@ -27,11 +27,11 @@
 #define LG_FREE_ALL LG_FREE_WORK
 
 //------------------------------------------------------------------------------
-// LG_Matrix_print_TYPE: print with the specified type
+// LG_Matrix_Print_TYPE: print with the specified type
 //------------------------------------------------------------------------------
 
 #define LG_MATRIX_PRINT(suffix,ctype,gtype,fmt1,fmt2)                       \
-int LG_Matrix_print_ ## suffix                                              \
+int LG_Matrix_Print_ ## suffix                                              \
 (                                                                           \
     GrB_Matrix A, int pr, FILE *f, char *msg                                \
 )                                                                           \
@@ -104,10 +104,10 @@ LG_MATRIX_PRINT (FC64  , GxB_FC64_t, GxB_FC64, ...) ;
 #define LG_FREE_ALL ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Matrix_print: automatically determine the type
+// LAGraph_Matrix_Print: automatically determine the type
 //------------------------------------------------------------------------------
 
-int LAGraph_Matrix_print    // TODO rename LAGraph_Matrix_Print
+int LAGraph_Matrix_Print
 (
     // input:
     GrB_Matrix A,       // matrix to pretty-print to the file
@@ -148,56 +148,56 @@ int LAGraph_Matrix_print    // TODO rename LAGraph_Matrix_Print
 
     if (type == GrB_BOOL)
     {
-        return (LG_Matrix_print_BOOL (A, pr, f, msg)) ;
+        return (LG_Matrix_Print_BOOL (A, pr, f, msg)) ;
     }
     else if (type == GrB_INT8) 
     {
-        return (LG_Matrix_print_INT8 (A, pr, f, msg)) ;
+        return (LG_Matrix_Print_INT8 (A, pr, f, msg)) ;
     }
     else if (type == GrB_INT16) 
     {
-        return (LG_Matrix_print_INT16 (A, pr, f, msg)) ;
+        return (LG_Matrix_Print_INT16 (A, pr, f, msg)) ;
     }
     else if (type == GrB_INT32) 
     {
-        return (LG_Matrix_print_INT32 (A, pr, f, msg)) ;
+        return (LG_Matrix_Print_INT32 (A, pr, f, msg)) ;
     }
     else if (type == GrB_INT64) 
     {
-        return (LG_Matrix_print_INT64 (A, pr, f, msg)) ;
+        return (LG_Matrix_Print_INT64 (A, pr, f, msg)) ;
     }
     else if (type == GrB_UINT8) 
     {
-        return (LG_Matrix_print_UINT8 (A, pr, f, msg)) ;
+        return (LG_Matrix_Print_UINT8 (A, pr, f, msg)) ;
     }
     else if (type == GrB_UINT16) 
     {
-        return (LG_Matrix_print_UINT16 (A, pr, f, msg)) ;
+        return (LG_Matrix_Print_UINT16 (A, pr, f, msg)) ;
     }
     else if (type == GrB_UINT32) 
     {
-        return (LG_Matrix_print_UINT32 (A, pr, f, msg)) ;
+        return (LG_Matrix_Print_UINT32 (A, pr, f, msg)) ;
     }
     else if (type == GrB_UINT64) 
     {
-        return (LG_Matrix_print_UINT64 (A, pr, f, msg)) ;
+        return (LG_Matrix_Print_UINT64 (A, pr, f, msg)) ;
     }
     else if (type == GrB_FP32) 
     {
-        return (LG_Matrix_print_FP32 (A, pr, f, msg)) ;
+        return (LG_Matrix_Print_FP32 (A, pr, f, msg)) ;
     }
     else if (type == GrB_FP64) 
     {
-        return (LG_Matrix_print_FP64 (A, pr, f, msg)) ;
+        return (LG_Matrix_Print_FP64 (A, pr, f, msg)) ;
     }
     #if 0
     else if (type == GxB_FC32)
     {
-        return (LG_Matrix_print_FC32 (A, pr, f, msg)) ;
+        return (LG_Matrix_Print_FC32 (A, pr, f, msg)) ;
     }
     else if (type == GxB_FC32)
     {
-        return (LG_Matrix_print_FC64 (A, pr, f, msg)) ;
+        return (LG_Matrix_Print_FC64 (A, pr, f, msg)) ;
     }
     #endif
     else
