@@ -113,7 +113,7 @@ void test_Property_AT (void)
 
             // ensure B and G->A are the same
             bool ok ;
-            OK (LAGraph_IsEqual (&ok, G->A, B, msg)) ;
+            OK (LAGraph_Matrix_IsEqual (&ok, G->A, B, msg)) ;
             TEST_CHECK (ok) ;
             TEST_MSG ("Test for G->A and B equal failed") ;
             OK (GrB_free (&B)) ;
@@ -178,7 +178,7 @@ void test_Property_AT_brutal (void)
 
             // ensure B and G->A are the same
             bool ok ;
-            LG_BRUTAL (LAGraph_IsEqual (&ok, G->A, B, msg)) ;
+            LG_BRUTAL (LAGraph_Matrix_IsEqual (&ok, G->A, B, msg)) ;
             TEST_CHECK (ok) ;
             TEST_MSG ("Test for G->A and B equal failed") ;
             OK (GrB_free (&B)) ;

@@ -15,7 +15,7 @@
 // Checks if two vectors are identically equal (same size,
 // type, pattern, size, and values).
 
-// See also LAGraph_IsEqual.
+// See also LAGraph_Matrix_IsEqual.
 
 // If the two vectors are GrB_FP32, GrB_FP64, or related, and have NaNs, then
 // this function will return false, since NaN == NaN is false.  To check for

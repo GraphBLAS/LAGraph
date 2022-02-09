@@ -116,7 +116,7 @@ void test_export (void)
             false, true, NULL)) ;
         OK (GrB_wait (C, GrB_MATERIALIZE)) ;
         bool ok = false ;
-        OK (LAGraph_IsEqual (&ok, G->A, C, msg)) ;
+        OK (LAGraph_Matrix_IsEqual (&ok, G->A, C, msg)) ;
         TEST_CHECK (ok) ;
         OK (GrB_free (&C)) ;
         #endif
@@ -186,9 +186,9 @@ void test_export_brutal (void)
             false, true, NULL)) ;
         OK (GrB_wait (C, GrB_MATERIALIZE)) ;
         bool ok = false ;
-        OK (LAGraph_IsEqual (&ok, G->A, C, msg)) ;
+        OK (LAGraph_Matrix_IsEqual (&ok, G->A, C, msg)) ;
         TEST_CHECK (ok) ;
-        LG_BRUTAL_BURBLE (LAGraph_IsEqual (&ok, G->A, C, msg)) ;
+        LG_BRUTAL_BURBLE (LAGraph_Matrix_IsEqual (&ok, G->A, C, msg)) ;
         TEST_CHECK (ok) ;
         OK (GrB_free (&C)) ;
         #endif

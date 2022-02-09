@@ -175,7 +175,7 @@ void test_SWrite (void)
             // ensure the matrices A and B are the same
             // GxB_print (A,3) ;
             // GxB_print (B,3) ;
-            OK (LAGraph_IsEqual (&ok, A, B, msg)) ;
+            OK (LAGraph_Matrix_IsEqual (&ok, A, B, msg)) ;
             TEST_CHECK (ok) ;
             OK (GrB_free (&B)) ;
 
@@ -217,7 +217,7 @@ void test_SWrite (void)
             // ensure the matrices A and B are the same
             // GxB_print (A,3) ;
             // GxB_print (B,3) ;
-            OK (LAGraph_IsEqual (&ok, A, B, msg)) ;
+            OK (LAGraph_Matrix_IsEqual (&ok, A, B, msg)) ;
             TEST_CHECK (ok) ;
             OK (GrB_free (&B)) ;
 
@@ -354,7 +354,7 @@ void test_SWrite_errors (void)
     TEST_CHECK (nmatrices == 1) ;
 
     ok = false ;
-    OK (LAGraph_IsEqual (&ok, A, Set [0], msg)) ;
+    OK (LAGraph_Matrix_IsEqual (&ok, A, Set [0], msg)) ;
     TEST_CHECK (ok) ;
 
     // free everything

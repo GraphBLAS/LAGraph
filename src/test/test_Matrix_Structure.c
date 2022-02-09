@@ -86,7 +86,7 @@ void test_Matrix_Structure (void)
 
         // ensure B and C are the same
         bool ok ;
-        OK (LAGraph_IsEqual (&ok, C, B, msg)) ;
+        OK (LAGraph_Matrix_IsEqual (&ok, C, B, msg)) ;
         TEST_CHECK (ok) ;
         TEST_MSG ("Test for C and B equal failed") ;
 
@@ -134,7 +134,7 @@ void test_Matrix_Structure_brutal (void)
 
         // ensure B and C are the same
         bool ok ;
-        OK (LAGraph_IsEqual (&ok, C, B, msg)) ;
+        OK (LAGraph_Matrix_IsEqual (&ok, C, B, msg)) ;
         TEST_CHECK (ok) ;
         TEST_MSG ("Test for C and B equal failed") ;
 

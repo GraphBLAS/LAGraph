@@ -259,7 +259,7 @@ int LAGraph_MMWrite
         //----------------------------------------------------------------------
 
         bool isequal = false ;
-        LG_TRY (LAGraph_IsEqual (&isequal, A, AT, msg)) ;
+        LG_TRY (LAGraph_Matrix_IsEqual (&isequal, A, AT, msg)) ;
         if (isequal)
         {
             MM_storage = MM_symmetric ;
@@ -287,7 +287,7 @@ int LAGraph_MMWrite
             if (op != NULL)
             {
                 GrB_TRY (GrB_apply (AT, NULL, NULL, op, AT, NULL)) ;
-                LG_TRY (LAGraph_IsEqual (&isequal, A, AT, msg)) ;
+                LG_TRY (LAGraph_Matrix_IsEqual (&isequal, A, AT, msg)) ;
                 if (isequal)
                 {
                     MM_storage = MM_skew_symmetric ;

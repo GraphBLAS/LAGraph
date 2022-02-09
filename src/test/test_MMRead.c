@@ -213,7 +213,7 @@ void test_MMRead (void)
         OK (LAGraph_Matrix_TypeName (btype_name, B, msg)) ;
         TEST_CHECK (MATCHNAME (atype_name, btype_name)) ;
         bool ok ;
-        OK (LAGraph_IsEqual (&ok, A, B, msg)) ;
+        OK (LAGraph_Matrix_IsEqual (&ok, A, B, msg)) ;
         TEST_CHECK (ok) ;
         TEST_MSG ("Failed test for equality, file: %s\n", aname) ;
 
@@ -273,7 +273,7 @@ void test_karate (void)
     //--------------------------------------------------------------------------
 
     bool ok ;
-    OK (LAGraph_IsEqual (&ok, A, B, msg)) ;
+    OK (LAGraph_Matrix_IsEqual (&ok, A, B, msg)) ;
     TEST_CHECK (ok) ;
     TEST_MSG ("Test for A and B equal failed: karate matrix") ;
 
@@ -403,7 +403,7 @@ void test_jumbled (void)
     //--------------------------------------------------------------------------
 
     bool ok ;
-    OK (LAGraph_IsEqual (&ok, A, B, msg)) ;
+    OK (LAGraph_Matrix_IsEqual (&ok, A, B, msg)) ;
     TEST_CHECK (ok) ;
     TEST_MSG ("Test for A and B equal failed: west0067_jumbled.mtx matrix") ;
 
@@ -499,7 +499,7 @@ void test_MMWrite (void)
         //----------------------------------------------------------------------
 
         bool ok ;
-        OK (LAGraph_IsEqual (&ok, A, B, msg)) ;
+        OK (LAGraph_Matrix_IsEqual (&ok, A, B, msg)) ;
         TEST_CHECK (ok) ;
         TEST_MSG ("Test for A and B equal failed: %s", filename) ;
 
@@ -667,7 +667,7 @@ void test_MMReadWrite_brutal (void)
         TEST_CHECK (MATCHNAME (atype_name, btype_name)) ;
 
         bool ok ;
-        LG_BRUTAL (LAGraph_IsEqual (&ok, A, B, msg)) ;
+        LG_BRUTAL (LAGraph_Matrix_IsEqual (&ok, A, B, msg)) ;
         TEST_CHECK (ok) ;
         TEST_MSG ("Failed test for equality, file: %s\n", aname) ;
 

@@ -330,7 +330,7 @@ GrB_Info LAGraph_cdlp
 
 
         bool isequal;
-        LAGraph_IsEqual (&isequal, L_prev, L, NULL);
+        LAGraph_Matrix_IsEqual (&isequal, L_prev, L, NULL);
         if (isequal) {
             break;
         }

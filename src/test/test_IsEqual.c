@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/test/test_IsEqual.c:  test LAGraph_IsEqual
+// LAGraph/src/test/test_IsEqual.c:  test LAGraph_*_IsEqual
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -80,7 +80,7 @@ void teardown (void)
 }
 
 //------------------------------------------------------------------------------
-// test_IsEqual: test LAGraph_IsEqual
+// test_IsEqual: test LAGraph_Matrix_IsEqual
 //------------------------------------------------------------------------------
 
 void test_IsEqual (void)
@@ -132,10 +132,10 @@ void test_IsEqual (void)
 
         bool result = false ;
 
-        OK (LAGraph_IsEqual (&result, A, B, msg)) ;
+        OK (LAGraph_Matrix_IsEqual (&result, A, B, msg)) ;
         TEST_CHECK (result == isequal) ;
 
-        OK (LAGraph_IsEqual (&result, A, A, msg)) ;
+        OK (LAGraph_Matrix_IsEqual (&result, A, A, msg)) ;
         TEST_CHECK (result == true) ;
 
         //----------------------------------------------------------------------
@@ -227,10 +227,10 @@ void test_IsEqual_brutal (void)
 
         bool result = false ;
 
-        LG_BRUTAL (LAGraph_IsEqual (&result, A, B, msg)) ;
+        LG_BRUTAL (LAGraph_Matrix_IsEqual (&result, A, B, msg)) ;
         TEST_CHECK (result == isequal) ;
 
-        LG_BRUTAL (LAGraph_IsEqual (&result, A, A, msg)) ;
+        LG_BRUTAL (LAGraph_Matrix_IsEqual (&result, A, A, msg)) ;
         TEST_CHECK (result == true) ;
 
         //----------------------------------------------------------------------
@@ -270,7 +270,7 @@ void test_IsEqual_brutal (void)
 #endif
 
 //------------------------------------------------------------------------------
-// test_IsEqual_failures: test error handling of LAGraph_IsEqual*
+// test_IsEqual_failures: test error handling of LAGraph_Matrix_IsEqual*
 //------------------------------------------------------------------------------
 
 typedef int myint ;
@@ -282,17 +282,17 @@ void test_IsEqual_failures (void)
 
     bool result = false ;
     // not a failure, but a special case:
-    OK (LAGraph_IsEqual (&result, NULL, NULL, msg)) ;
+    OK (LAGraph_Matrix_IsEqual (&result, NULL, NULL, msg)) ;
     TEST_CHECK (result == true) ;
 
     OK (LAGraph_Vector_IsEqual (&result, NULL, NULL, msg)) ;
     TEST_CHECK (result == true) ;
 
-    TEST_CHECK (LAGraph_IsEqual (NULL, NULL, NULL, msg)
+    TEST_CHECK (LAGraph_Matrix_IsEqual (NULL, NULL, NULL, msg)
         == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
-    TEST_CHECK (LAGraph_IsEqual (NULL, NULL, NULL, msg) == GrB_NULL_POINTER) ;
+    TEST_CHECK (LAGraph_Matrix_IsEqual (NULL, NULL, NULL, msg) == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
     OK (GrB_Matrix_new (&A, GrB_BOOL, 2, 2)) ;
@@ -301,20 +301,20 @@ void test_IsEqual_failures (void)
     OK (GrB_Vector_new (&u, GrB_BOOL, 2)) ;
     OK (GrB_Vector_new (&v, GrB_BOOL, 2)) ;
 
-    TEST_CHECK (LAGraph_IsEqual (NULL, A, B, msg) == GrB_NULL_POINTER) ;
+    TEST_CHECK (LAGraph_Matrix_IsEqual (NULL, A, B, msg) == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
     TEST_CHECK (LAGraph_Vector_IsEqual (NULL, u, v, msg) == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
-    TEST_CHECK (LAGraph_IsEqual (NULL, A, B, msg)
+    TEST_CHECK (LAGraph_Matrix_IsEqual (NULL, A, B, msg)
         == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
-    TEST_CHECK (LAGraph_IsEqual (NULL, A, B, msg) == GrB_NULL_POINTER) ;
+    TEST_CHECK (LAGraph_Matrix_IsEqual (NULL, A, B, msg) == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
-    OK (LAGraph_IsEqual (&result, A, B, msg)) ;
+    OK (LAGraph_Matrix_IsEqual (&result, A, B, msg)) ;
     TEST_CHECK (result == true) ;
 
     OK (GrB_free (&u)) ;

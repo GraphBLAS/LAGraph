@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_IsEqual: check two matrices for exact equality
+// LAGraph_Matrix_IsEqual: check two matrices for exact equality
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -8,8 +8,8 @@
 
 //------------------------------------------------------------------------------
 
-// LAGraph_IsEqual: check if two matrices are identically equal (same size,
-// type, structure, size, and values).
+// LAGraph_Matrix_IsEqual: check if two matrices are identically equal (same
+// size, type, structure, size, and values).
 
 // If the two matrices are GrB_FP32, GrB_FP64, GxB_FC32, or GxB_FC64 and have
 // NaNs, then these functions will return false, since NaN == NaN is false.
@@ -19,10 +19,10 @@
 #include "LG_internal.h"
 
 //------------------------------------------------------------------------------
-// LAGraph_IsEqual: compare using GrB_EQ_type operator
+// LAGraph_Matrix_IsEqual: compare using GrB_EQ_type operator
 //------------------------------------------------------------------------------
 
-int LAGraph_IsEqual     // TODO rename LAGraph_Matrix_IsEqual
+int LAGraph_Matrix_IsEqual
 (
     // output:
     bool *result,       // true if A == B, false if A != B or error

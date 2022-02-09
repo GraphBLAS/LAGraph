@@ -104,7 +104,7 @@ void test_msf (void)
             printf ("\nmsf (known result):\n") ;
             OK (LAGraph_Matrix_Print (Cgood, pr, stdout, msg)) ;
             bool ok = false ;
-            OK (LAGraph_IsEqual (&ok, C, Cgood, msg)) ;
+            OK (LAGraph_Matrix_IsEqual (&ok, C, Cgood, msg)) ;
             TEST_CHECK (ok) ;
         }
 

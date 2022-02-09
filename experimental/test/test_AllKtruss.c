@@ -105,7 +105,7 @@ void test_AllKTruss (void)
             // check the result
             GrB_Index nvals ;
             OK (GrB_Matrix_nvals (&nvals, C1)) ;
-            OK (LAGraph_IsEqual (&ok, C1, Cset [k], msg)) ;
+            OK (LAGraph_Matrix_IsEqual (&ok, C1, Cset [k], msg)) ;
             TEST_CHECK (ok) ;
 
             // count the triangles in the 3-truss
@@ -152,7 +152,7 @@ void test_AllKTruss (void)
             }
             else
             {
-                OK (LAGraph_IsEqual (&ok, Cset [k], Cset2 [k], msg)) ;
+                OK (LAGraph_Matrix_IsEqual (&ok, Cset [k], Cset2 [k], msg)) ;
             }
 //          if (!ok)
 //          {

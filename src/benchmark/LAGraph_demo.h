@@ -981,7 +981,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
         {
             // make sure G->A is symmetric
             bool sym ;
-            LAGraph_TRY (LAGraph_IsEqual (&sym, (*G)->A, (*G)->AT, msg)) ;
+            LAGraph_TRY (LAGraph_Matrix_IsEqual (&sym, (*G)->A, (*G)->AT, msg));
             if (!sym)
             {
                 GrB_BinaryOp op = NULL ;

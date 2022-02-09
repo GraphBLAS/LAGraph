@@ -92,7 +92,7 @@ void test_ktruss (void)
 
             // compute it again to check the result
             OK (LG_check_ktruss (&C2, G, k, msg)) ;
-            OK (LAGraph_IsEqual (&ok, C1, C2, msg)) ;
+            OK (LAGraph_Matrix_IsEqual (&ok, C1, C2, msg)) ;
             TEST_CHECK (ok) ;
 
             // count the triangles in the 3-truss
@@ -117,7 +117,7 @@ void test_ktruss (void)
         G->A_structure_is_symmetric = true ;
         OK (LAGraph_KTruss (&C1, G, 3, msg)) ;
         OK (LG_check_ktruss (&C2, G, 3, msg)) ;
-        OK (LAGraph_IsEqual (&ok, C1, C2, msg)) ;
+        OK (LAGraph_Matrix_IsEqual (&ok, C1, C2, msg)) ;
         TEST_CHECK (ok) ;
 
         OK (LAGraph_Delete (&G, msg)) ;

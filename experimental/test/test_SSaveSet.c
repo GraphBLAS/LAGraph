@@ -142,7 +142,7 @@ void test_SSaveSet (void)
     {
         // ensure the matrices Set [k] and Set2 [k] are the same
         bool ok ;
-        OK (LAGraph_IsEqual (&ok, Set [k], Set2 [k], msg)) ;
+        OK (LAGraph_Matrix_IsEqual (&ok, Set [k], Set2 [k], msg)) ;
         TEST_CHECK (ok) ;
     }
 

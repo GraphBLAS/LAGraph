@@ -1303,15 +1303,15 @@ int LAGraph_DisplayGraph
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_IsEqual: compare for exact equality
+// LAGraph_Matrix_IsEqual: compare for exact equality
 //------------------------------------------------------------------------------
 
-// LAGraph_IsEqual compares two matrices for exact equality.  If the two
+// LAGraph_Matrix_IsEqual compares two matrices for exact equality.  If the two
 // matrices must have different data types, the result is always false (no
 // typecasting is performed).  Only the 11 built-in GrB* types are supported.
 
 LAGRAPH_PUBLIC
-int LAGraph_IsEqual     // TODO rename LAGraph_Matrix_IsEqual
+int LAGraph_Matrix_IsEqual
 (
     // output:
     bool *result,       // true if A == B, false if A != B or error
