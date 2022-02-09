@@ -509,7 +509,8 @@ int LAGraph_MMRead
             {
                 // invalid Matrix Market format
                 LG_ASSERT_MSG (false,
-                    LAGRAPH_IO_ERROR, "invalid format") ;    // RETVAL
+                    LAGRAPH_IO_ERROR, // RETVAL
+                    "invalid format in MatrixMarket header") ;
             }
 
             //------------------------------------------------------------------
@@ -554,7 +555,7 @@ int LAGraph_MMRead
             {
                 // invalid Matrix Market type
                 LG_ASSERT_MSG (false,
-                    LAGRAPH_IO_ERROR, "invalid type") ;  // RETVAL
+                    LAGRAPH_IO_ERROR, "invalid MatrixMarket type") ;  // RETVAL
             }
 
             //------------------------------------------------------------------
@@ -583,7 +584,8 @@ int LAGraph_MMRead
             {
                 // invalid Matrix Market storage
                 LG_ASSERT_MSG (false,
-                    LAGRAPH_IO_ERROR, "invalid storage") ;   // RETVAL
+                    LAGRAPH_IO_ERROR, // RETVAL
+                    "invalid MatrixMarket storage") ;
             }
 
             //------------------------------------------------------------------
@@ -596,14 +598,16 @@ int LAGraph_MMRead
                 LG_ASSERT_MSG (
                     (MM_fmt == MM_coordinate &&
                     (MM_storage == MM_general || MM_storage == MM_symmetric)),
-                    LAGRAPH_IO_ERROR, "invalid pattern combination") ; // RETVAL
+                    LAGRAPH_IO_ERROR, // RETVAL
+                    "invalid MatrixMarket pattern combination") ;
             }
 
             if (MM_storage == MM_hermitian)
             {
                 // (coordinate or array) x (complex) x (Hermitian)
                 LG_ASSERT_MSG (MM_type == MM_complex,
-                    LAGRAPH_IO_ERROR, "invalid complex combination") ; // RETVAL
+                    LAGRAPH_IO_ERROR, // RETVAL
+                    "invalid MatrixMarket complex combination") ;
             }
 
         }
@@ -799,14 +803,14 @@ int LAGraph_MMRead
             {
                 // wrong number of items in first data line
                 LG_ASSERT_MSG (false,
-                    LAGRAPH_IO_ERROR, "invalid 1st line") ;  // RETVAL
+                    LAGRAPH_IO_ERROR, "invalid 1st data line") ;  // RETVAL
             }
 
             if (nrows != ncols)
             {
                 // a rectangular matrix must be in the general storage
                 LG_ASSERT_MSG (MM_storage == MM_general,
-                    LAGRAPH_IO_ERROR, "invalid rectangular") ; // RETVAL
+                    LAGRAPH_IO_ERROR, "invalid rectangular storage") ; // RETVAL
             }
 
             //------------------------------------------------------------------
