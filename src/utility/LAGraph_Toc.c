@@ -12,7 +12,9 @@
 
 int LAGraph_Toc
 (
+    // output:
     double *t,              // time since last call to LAGraph_Tic
+    // input:
     const double tic [2],   // tic from last call to LAGraph_Tic
     char *msg
 )

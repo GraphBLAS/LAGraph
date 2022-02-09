@@ -16,6 +16,7 @@
 
 int LAGraph_Property_NDiag
 (
+    // input/output:
     LAGraph_Graph G,    // graph to compute G->ndiag
     char *msg
 )
@@ -36,5 +37,7 @@ int LAGraph_Property_NDiag
     //--------------------------------------------------------------------------
     // compute G->ndiag
     //--------------------------------------------------------------------------
+
     return (LG_ndiag (&G->ndiag, G->A, msg)) ;
 }
+

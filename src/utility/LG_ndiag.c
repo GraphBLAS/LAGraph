@@ -8,7 +8,7 @@
 
 //------------------------------------------------------------------------------
 
-#define LAGraph_FREE_ALL    \
+#define LG_FREE_ALL         \
 {                           \
     GrB_free (&M) ;         \
     GrB_free (&D) ;         \
@@ -17,11 +17,11 @@
 
 #include "LG_internal.h"
 
-int LG_ndiag                // returns 0 if successful, < 0 if failure
+int LG_ndiag
 (
-    // output
+    // output:
     int64_t *ndiag,         // # of entries 
-    // input
+    // input:
     GrB_Matrix A,           // matrix to count
     char *msg               // error message
 )
@@ -77,7 +77,7 @@ int LG_ndiag                // returns 0 if successful, < 0 if failure
 
     #endif
 
-    LAGraph_FREE_ALL ;
+    LG_FREE_ALL ;
     return (GrB_SUCCESS) ;
 }
 

@@ -18,7 +18,7 @@
 // #define NTHREAD_LIST 6
 // #define THREAD_LIST 64, 32, 24, 12, 8, 4
 
-#define LAGraph_FREE_ALL                        \
+#define LG_FREE_ALL                             \
 {                                               \
     GrB_free (&A) ;                             \
     GrB_free (&Abool) ;                         \
@@ -129,7 +129,7 @@ int main (int argc, char **argv)
     // free all workspace and finish
     //--------------------------------------------------------------------------
 
-    LAGraph_FREE_ALL ;
+    LG_FREE_ALL ;
     LAGraph_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
 }

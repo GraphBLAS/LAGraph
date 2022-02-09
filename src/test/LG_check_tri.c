@@ -17,7 +17,7 @@
 // This method is for testing only, to check the result of other, faster
 // methods.  Do not benchmark this method; it is slow and simple by design.
 
-#define LAGraph_FREE_ALL                        \
+#define LG_FREE_ALL                             \
 {                                               \
     LAGraph_Free ((void **) &Ap) ;              \
     LAGraph_Free ((void **) &Aj) ;              \
@@ -127,7 +127,7 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
     // free workspace and return result
     //--------------------------------------------------------------------------
 
-    LAGraph_FREE_ALL ;
+    LG_FREE_ALL ;
     (*ntri) = ntriangles ;
     return (GrB_SUCCESS) ;
 }

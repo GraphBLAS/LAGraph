@@ -27,7 +27,7 @@
 
 //------------------------------------------------------------------------------
 
-#define LAGraph_FREE_ALL   \
+#define LG_FREE_ALL        \
 {                          \
     GrB_free(&d) ;         \
     GrB_free(&dtmp) ;      \
@@ -115,13 +115,13 @@ GrB_Info LAGraph_BF_basic
         if (!same)
         {
             // printf("A negative-weight cycle found. \n");
-            LAGraph_FREE_ALL;
+            LG_FREE_ALL;
             return (GrB_NO_VALUE) ;
         }
     }
 
     (*pd_output) = d;
     d = NULL;
-    LAGraph_FREE_ALL;
+    LG_FREE_ALL;
     return (GrB_SUCCESS) ;
 }

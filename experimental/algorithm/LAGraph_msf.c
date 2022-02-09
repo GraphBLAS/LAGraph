@@ -17,7 +17,7 @@
 
 #define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
 
-#define LAGraph_FREE_ALL                             \
+#define LG_FREE_ALL                                  \
 {                                                    \
     GrB_free (&S);                                   \
     GrB_free (&T);                                   \
@@ -269,7 +269,7 @@ GrB_Info LAGraph_msf
     *result = T;
     T = NULL ;
 
-    LAGraph_FREE_ALL;
+    LG_FREE_ALL;
     return GrB_SUCCESS;
 #endif
 }

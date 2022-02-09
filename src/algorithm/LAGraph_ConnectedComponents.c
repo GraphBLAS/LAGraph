@@ -17,13 +17,15 @@
 
 int LAGraph_ConnectedComponents
 (
-    // output
-    GrB_Vector *component,  // output: array of component identifiers
-    // inputs
-    LAGraph_Graph G,        // input graph, not modified
+    // output:
+    GrB_Vector *component,  // component(i)=s if node i is in the component
+                            // whose representative node is s
+    // input:
+    LAGraph_Graph G,        // input graph
     char *msg
 )
 {
+
     #if LG_SUITESPARSE
     return (LG_CC_FastSV6 (component, G, msg)) ;
     #else

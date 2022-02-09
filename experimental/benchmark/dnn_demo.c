@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/Test/DNN/dnn: run all neural networks from http://graphchallenge.org
+// dnn_demo: run all neural networks from http://graphchallenge.org
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -10,10 +10,10 @@
 
 //------------------------------------------------------------------------------
 
-// LAGraph/Test/DNN/dnn: test for LAGraph_dnn.  Contributed by Tim Davis,
+// dnn_demo: test for LAGraph_dnn.  Contributed by Tim Davis,
 // Texas A&M University.
 
-// Usage: ./dnn_test nproblems
+// Usage: ./dnn_demo nproblems
 
 // nproblems is the # of test problems to solve.  If not present, it defaults
 // to 12 (run all 12 DNN's).  The problems are solved in order from small to
@@ -74,7 +74,7 @@ GrB_Info LAGraph_tsvread
 
 // Only needed by the dnn_demo so it is only included here.
 
-#define LAGraph_FREE_ALL GrB_free (Chandle) ;
+#define LG_FREE_ALL GrB_free (Chandle) ;
 
 GrB_Info LAGraph_tsvread        // returns GrB_SUCCESS if successful
 (
@@ -166,8 +166,8 @@ GrB_Info LAGraph_tsvread        // returns GrB_SUCCESS if successful
 // dnn_demo main program
 //------------------------------------------------------------------------------
 
-#undef  LAGraph_FREE_ALL
-#define LAGraph_FREE_ALL ;
+#undef  LG_FREE_ALL
+#define LG_FREE_ALL ;
 
 int main (int argc, char **argv)
 {
@@ -253,8 +253,8 @@ int main (int argc, char **argv)
         Bias [layer] = NULL ;
     }
 
-    #undef  LAGraph_FREE_ALL
-    #define LAGraph_FREE_ALL                            \
+    #undef  LG_FREE_ALL
+    #define LG_FREE_ALL                                 \
     {                                                   \
         GrB_free (&TrueCategories) ;                    \
         GrB_free (&Categories) ;                        \
@@ -556,7 +556,7 @@ int main (int argc, char **argv)
         // free the problem
         //----------------------------------------------------------------------
 
-        LAGraph_FREE_ALL ;
+        LG_FREE_ALL ;
     }
 
     //--------------------------------------------------------------------------

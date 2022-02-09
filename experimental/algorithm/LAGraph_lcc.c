@@ -59,7 +59,7 @@
 // not equal to 1 (even zero-weight edges are not allowed), or if it has self
 // edges.
 
-#define LAGraph_FREE_ALL            \
+#define LG_FREE_ALL                 \
 {                                   \
     GrB_free (&C) ;                 \
     GrB_free (&CL) ;                \
@@ -285,7 +285,7 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
 
     (*LCC_handle) = LCC ; LCC = NULL ;
 
-    LAGraph_FREE_ALL ;
+    LG_FREE_ALL ;
     LAGraph_Toc (&t[1], tic, NULL) ;
     return (GrB_SUCCESS) ;
 #endif

@@ -29,7 +29,7 @@
 //------------------------------------------------------------------------------
 
 // To use LAGRAPH_OK, the #include'ing file must declare a scalar GrB_Info
-// info, and must define LAGraph_FREE_ALL as a macro that frees all workspace
+// info, and must define LG_FREE_ALL as a macro that frees all workspace
 // if an error occurs.  The method can be a GrB_Info scalar as well, so that
 // LAGRAPH_OK(info) works.  The function that uses this macro must return
 // GrB_Info, or int.
@@ -38,7 +38,7 @@
 {                                                                           \
     fprintf (stderr, "LAGraph error: %s\n[%d]\nFile: %s Line: %d\n",        \
         message, info, __FILE__, __LINE__) ;                                \
-    LAGraph_FREE_ALL ;                                                      \
+    LG_FREE_ALL ;                                                           \
     return (info) ;                                                         \
 }
 

@@ -12,7 +12,7 @@
 // Mattson, Scott McMillan, Jose' Moreira, Carl Yang.  Based on "GraphBLAS
 // Mathematics" by Jeremy Kepner.
 
-#define LAGraph_FREE_WORK           \
+#define LG_FREE_WORK                \
 {                                   \
     GrB_free (&neighbor_max) ;      \
     GrB_free (&new_members) ;       \
@@ -23,9 +23,9 @@
     GrB_free (&score) ;             \
 }
 
-#define LAGraph_FREE_ALL            \
+#define LG_FREE_ALL                 \
 {                                   \
-    LAGraph_FREE_WORK ;             \
+    LG_FREE_WORK ;                  \
     GrB_free (&iset) ;              \
 }
 
@@ -302,7 +302,7 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
 
     GrB_TRY (GrB_wait (iset, GrB_MATERIALIZE)) ;
     (*mis) = iset ;
-    LAGraph_FREE_WORK ;
+    LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }
 

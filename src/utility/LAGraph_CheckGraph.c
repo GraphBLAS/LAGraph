@@ -12,9 +12,8 @@
 
 int LAGraph_CheckGraph
 (
+    // input/output:
     LAGraph_Graph G,    // graph to check
-    // TODO: int level, // 0:quick, O(1), 1:a bit more, 2: still more, 3:
-                        // exhaustive!
     char *msg
 )
 {

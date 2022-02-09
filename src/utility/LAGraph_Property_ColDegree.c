@@ -8,15 +8,15 @@
 
 //------------------------------------------------------------------------------
 
-#define LAGraph_FREE_WORK       \
+#define LG_FREE_WORK            \
 {                               \
     GrB_free (&S) ;             \
     GrB_free (&x) ;             \
 }
 
-#define LAGraph_FREE_ALL        \
+#define LG_FREE_ALL             \
 {                               \
-    LAGraph_FREE_WORK ;         \
+    LG_FREE_WORK ;              \
     GrB_free (&coldegree) ;     \
 }
 
@@ -24,6 +24,7 @@
 
 int LAGraph_Property_ColDegree
 (
+    // input/output:
     LAGraph_Graph G,    // graph to determine G->coldegree
     char *msg
 )
@@ -78,6 +79,6 @@ int LAGraph_Property_ColDegree
 
     G->coldegree = coldegree ;
 
-    LAGraph_FREE_WORK ;
+    LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }

@@ -15,16 +15,16 @@
 
 #include "LG_internal.h"
 
-#undef  LAGraph_FREE_WORK
-#define LAGraph_FREE_WORK           \
+#undef  LG_FREE_WORK
+#define LG_FREE_WORK                \
 {                                   \
     LAGraph_Free ((void **) &I) ;   \
     LAGraph_Free ((void **) &J) ;   \
     LAGraph_Free ((void **) &X) ;   \
 }
 
-#undef  LAGraph_FREE_ALL
-#define LAGraph_FREE_ALL LAGraph_FREE_WORK
+#undef  LG_FREE_ALL
+#define LG_FREE_ALL LG_FREE_WORK
 
 //------------------------------------------------------------------------------
 // LG_Matrix_print_TYPE: print with the specified type
@@ -78,7 +78,7 @@ int LG_Matrix_print_ ## suffix                                              \
             break ;                                                         \
         }                                                                   \
     }                                                                       \
-    LAGraph_FREE_WORK ;                                                     \
+    LG_FREE_WORK ;                                                          \
     return (GrB_SUCCESS) ;                                                  \
 }
 
@@ -98,18 +98,20 @@ LG_MATRIX_PRINT (FC32  , GxB_FC32_t, GxB_FC32, ...) ;
 LG_MATRIX_PRINT (FC64  , GxB_FC64_t, GxB_FC64, ...) ;
 #endif
 
-#undef  LAGraph_FREE_WORK
-#define LAGraph_FREE_WORK ;
-#undef  LAGraph_FREE_ALL
-#define LAGraph_FREE_ALL ;
+#undef  LG_FREE_WORK
+#define LG_FREE_WORK ;
+#undef  LG_FREE_ALL
+#define LG_FREE_ALL ;
 
 //------------------------------------------------------------------------------
 // LAGraph_Matrix_print: automatically determine the type
 //------------------------------------------------------------------------------
 
-int LAGraph_Matrix_print
+int LAGraph_Matrix_print    // TODO rename LAGraph_Matrix_Print
 (
+    // input:
     GrB_Matrix A,       // matrix to pretty-print to the file
+    // TODO: use an enum for pr
     int pr,             // print level: -1 nothing, 0: one line, 1: terse,
                         //      2: summary, 3: all,
                         //      4: as 2 but with %0.15g for float/double

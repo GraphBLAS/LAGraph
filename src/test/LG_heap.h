@@ -28,8 +28,8 @@
 #ifndef LG_HEAP_H
 #define LG_HEAP_H
 
-#undef  LAGraph_FREE_ALL
-#define LAGraph_FREE_ALL ;
+#undef  LG_FREE_ALL
+#define LG_FREE_ALL ;
 
 // These methods assume the caller allocates all memory, so no brutal memory
 // test is needed.

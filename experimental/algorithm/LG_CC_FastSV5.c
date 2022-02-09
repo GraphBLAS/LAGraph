@@ -36,7 +36,7 @@
 // src/algorithm/LG_CC_FastSV6.c.  They have thus been changed here to lower
 // case.
 
-#define LAGraph_FREE_ALL ;
+#define LG_FREE_ALL ;
 
 #include "LG_internal.h"
 
@@ -292,8 +292,8 @@ static inline int Reduce_assign32
 // component(s)=s.  The number of connected components in the graph G is the
 // number of representatives.
 
-#undef  LAGraph_FREE_ALL
-#define LAGraph_FREE_ALL                            \
+#undef  LG_FREE_ALL
+#define LG_FREE_ALL                                 \
 {                                                   \
     LAGraph_Free ((void **) &I) ;           \
     LAGraph_Free ((void **) &V32) ;         \
@@ -742,7 +742,7 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
     {
         GrB_free (&T) ;
     }
-    LAGraph_FREE_ALL ;
+    LG_FREE_ALL ;
     return (GrB_SUCCESS) ;
 #endif
 }

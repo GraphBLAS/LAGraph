@@ -12,6 +12,7 @@
 
 int LAGraph_DeleteProperties
 (
+    // input/output:
     LAGraph_Graph G,    // G stays valid, only cached properties are freed
     char *msg
 )

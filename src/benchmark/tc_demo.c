@@ -29,7 +29,7 @@
 // #define NTHREAD_LIST 6
 // #define THREAD_LIST 64, 32, 24, 12, 8, 4
 
-#define LAGraph_FREE_ALL            \
+#define LG_FREE_ALL                 \
 {                                   \
     LAGraph_Delete (&G, NULL) ;     \
     GrB_free (&A) ;                 \
@@ -250,7 +250,7 @@ int main (int argc, char **argv)
     print_method (stdout, method_best, sorting_best) ;
     printf ("nthreads: %3d time: %12.6f rate: %6.2f\n",
         nthreads_best, t_best, 1e-6 * nvals / t_best) ;
-    LAGraph_FREE_ALL ;
+    LG_FREE_ALL ;
     LAGraph_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
 }

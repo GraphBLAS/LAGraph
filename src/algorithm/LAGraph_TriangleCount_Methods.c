@@ -46,7 +46,7 @@
 // Rajamanickam, 'Fast linear algebra- based triangle counting with
 // KokkosKernels', IEEE HPEC'17, https://dx.doi.org/10.1109/HPEC.2017.8091043,
 
-#define LAGraph_FREE_ALL        \
+#define LG_FREE_ALL             \
 {                               \
     GrB_free (L) ;              \
     GrB_free (U) ;              \
@@ -58,7 +58,7 @@
 // tricount_prep: construct L and U for LAGraph_TriangleCount_Methods
 //------------------------------------------------------------------------------
 
-static int tricount_prep        // return 0 if successful, < 0 on error
+static int tricount_prep
 (
     GrB_Matrix *L,      // if present, compute L = tril (A,-1)
     GrB_Matrix *U,      // if present, compute U = triu (A, 1)
@@ -90,8 +90,8 @@ static int tricount_prep        // return 0 if successful, < 0 on error
 // LAGraph_tricount: count the number of triangles in a graph
 //------------------------------------------------------------------------------
 
-#undef  LAGraph_FREE_ALL
-#define LAGraph_FREE_ALL                    \
+#undef  LG_FREE_ALL
+#define LG_FREE_ALL                         \
 {                                           \
     GrB_free (&C) ;                         \
     GrB_free (&L) ;                         \
@@ -100,14 +100,15 @@ static int tricount_prep        // return 0 if successful, < 0 on error
     LAGraph_Free ((void **) &P) ;           \
 }
 
-int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
+int LAGraph_TriangleCount_Methods
 (
-    uint64_t *ntriangles,   // # of triangles
+    // output:
+    uint64_t       *ntriangles,
     // input:
-    LAGraph_Graph G,
-    LAGraph_TriangleCount_Method    method,     // method to use
-    LAGraph_TriangleCount_Presort *presort,     // presort of the graph
-    char *msg
+    LAGraph_Graph   G,
+    LAGraph_TriangleCount_Method    method,
+    LAGraph_TriangleCount_Presort *presort,
+    char           *msg
 )
 {
 
@@ -327,7 +328,7 @@ int LAGraph_TriangleCount_Methods  // returns 0 if successful, < 0 if failure
     // return result
     //--------------------------------------------------------------------------
 
-    LAGraph_FREE_ALL ;
+    LG_FREE_ALL ;
     (*ntriangles) = (uint64_t) ntri ;
     return (GrB_SUCCESS) ;
 }

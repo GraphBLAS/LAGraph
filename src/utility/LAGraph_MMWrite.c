@@ -19,8 +19,8 @@
 
 #include "LG_internal.h"
 
-#undef  LAGraph_FREE_WORK
-#define LAGraph_FREE_WORK           \
+#undef  LG_FREE_WORK
+#define LG_FREE_WORK                \
 {                                   \
     LAGraph_Free ((void **) &I) ;   \
     LAGraph_Free ((void **) &J) ;   \
@@ -31,8 +31,8 @@
     GrB_free (&C) ;                 \
 }
 
-#undef  LAGraph_FREE_ALL
-#define LAGraph_FREE_ALL LAGraph_FREE_WORK
+#undef  LG_FREE_ALL
+#define LG_FREE_ALL LG_FREE_WORK
 
 //------------------------------------------------------------------------------
 // print_double
@@ -165,6 +165,7 @@ static bool print_double
 
 int LAGraph_MMWrite
 (
+    // input:
     GrB_Matrix A,       // matrix to write to the file
     FILE *f,            // file to write it to, must be already open
     FILE *fcomments,    // optional file with extra comments, may be NULL
@@ -455,7 +456,7 @@ int LAGraph_MMWrite
     if (nvals_to_print == 0)
     {
         // quick return if nothing more to do
-        LAGraph_FREE_ALL ;
+        LG_FREE_ALL ;
         return (GrB_SUCCESS) ;
     }
 
@@ -553,7 +554,7 @@ int LAGraph_MMWrite
     // free workspace and return
     //--------------------------------------------------------------------------
 
-    LAGraph_FREE_ALL ;
+    LG_FREE_ALL ;
     return (GrB_SUCCESS) ;
 }
 

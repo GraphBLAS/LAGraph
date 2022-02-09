@@ -24,8 +24,8 @@ typedef struct
 LG_Element ;
 #include "LG_heap.h"
 
-#undef  LAGraph_FREE_WORK
-#define LAGraph_FREE_WORK                           \
+#undef  LG_FREE_WORK
+#define LG_FREE_WORK                                \
 {                                                   \
     LAGraph_Free ((void **) &Heap) ;                \
     LAGraph_Free ((void **) &Iheap) ;               \
@@ -37,10 +37,10 @@ LG_Element ;
     GrB_free (&Row) ;                               \
 }
 
-#undef  LAGraph_FREE_ALL
-#define LAGraph_FREE_ALL                    \
+#undef  LG_FREE_ALL
+#define LG_FREE_ALL                         \
 {                                           \
-    LAGraph_FREE_WORK ;                     \
+    LG_FREE_WORK ;                          \
     LAGraph_Free ((void **) &Ap) ;          \
     LAGraph_Free ((void **) &Aj) ;          \
     LAGraph_Free ((void **) &Ax) ;          \
@@ -283,7 +283,7 @@ int LG_check_sssp
     // free workspace and return result
     //--------------------------------------------------------------------------
 
-    LAGraph_FREE_WORK ;
+    LG_FREE_WORK ;
 
     if (print_timings)
     {

@@ -8,12 +8,13 @@
 
 //------------------------------------------------------------------------------
 
-#define LAGraph_FREE_ALL GrB_free (&AT) ;
+#define LG_FREE_ALL GrB_free (&AT) ;
 
 #include "LG_internal.h"
 
 int LAGraph_Property_AT
 (
+    // input/output:
     LAGraph_Graph G,    // graph for which to compute G->AT
     char *msg
 )

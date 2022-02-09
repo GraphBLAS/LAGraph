@@ -16,20 +16,23 @@
 
 #include "LG_alg_internal.h"
 
-//****************************************************************************
 int LAGraph_BreadthFirstSearch
 (
+    // output:
     GrB_Vector    *level,
     GrB_Vector    *parent,
+    // input:
     LAGraph_Graph  G,
     GrB_Index      src,
     bool           pushpull,
     char          *msg
 )
 {
+
 #if LG_SUITESPARSE
     return LG_BreadthFirstSearch_SSGrB  (level, parent, G, src, pushpull, msg);
 #else
     return LG_BreadthFirstSearch_vanilla(level, parent, G, src, pushpull, msg);
 #endif
 }
+

@@ -17,42 +17,35 @@
 
 #include "LG_internal.h"
 
-//***************************************************************************
 int LG_BreadthFirstSearch_SSGrB
 (
+    // output:
     GrB_Vector    *level,
     GrB_Vector    *parent,
+    // input:
     LAGraph_Graph  G,
     GrB_Index      src,
     bool           pushpull,
     char          *msg
-);
+) ;
 
-//***************************************************************************
 int LG_BreadthFirstSearch_vanilla
 (
+    // output:
     GrB_Vector    *level,
     GrB_Vector    *parent,
+    // input:
     LAGraph_Graph  G,
     GrB_Index      src,
     bool           pushpull,
     char          *msg
-);
+) ;
 
 int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
 (
-    // output
+    // output:
     GrB_Vector *component,  // output: array of component identifiers
-    // inputs
-    LAGraph_Graph G,        // input graph, modified then restored
-    char *msg
-) ;
-
-int LG_CC_7                 // SuiteSparse:GraphBLAS method, with GxB extensions
-(
-    // output
-    GrB_Vector *component,  // output: array of component identifiers
-    // inputs
+    // input:
     LAGraph_Graph G,        // input graph, modified then restored
     char *msg
 ) ;

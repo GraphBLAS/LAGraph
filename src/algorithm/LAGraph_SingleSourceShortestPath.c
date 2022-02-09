@@ -26,7 +26,7 @@
 // TODO: this method gets stuck in an infinite loop when there are negative-
 // weight cycles in the graph.
 
-#define LAGraph_FREE_WORK   \
+#define LG_FREE_WORK        \
 {                           \
     GrB_free (&AL) ;        \
     GrB_free (&AH) ;        \
@@ -40,9 +40,9 @@
     GrB_free (&Empty) ;     \
 }
 
-#define LAGraph_FREE_ALL    \
+#define LG_FREE_ALL         \
 {                           \
-    LAGraph_FREE_WORK ;     \
+    LG_FREE_WORK ;          \
     GrB_free (&t) ;         \
 }
 
@@ -50,21 +50,22 @@
 
 // TODO select different operators / semirings based on the matrix type.
 
-int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
+int LAGraph_SingleSourceShortestPath
 (
     // output:
     GrB_Vector *path_length,    // path_length (i) is the length of the shortest
                                 // path from the source vertex to vertex i
-    // inputs:
+    // input:
     LAGraph_Graph G,
     GrB_Index source,           // source vertex
     int32_t delta,              // delta value for delta stepping
-                                // TODO: use GrB_Scalar for delta
+                                // TODO: use GxB_Scalar for delta?
     // TODO: make this an enum, and add to LAGraph_Graph properties, and then
-    // remove it from the inputs to this function:
+    // remove it from the inputs to this function
     //      case 0: A can have negative, zero, or positive entries
     //      case 1: A can have zero or positive entries
     //      case 2: A only has positive entries
+    // TODO: add AIsAllPositive to G->A_is_something...
     bool AIsAllPositive,       // A boolean indicating whether the entries of
                                // matrix A are all positive
     char *msg
@@ -288,7 +289,7 @@ int LAGraph_SingleSourceShortestPath    // returns 0 if successful, -1 if fail
     //--------------------------------------------------------------------------
 
     (*path_length) = t ;
-    LAGraph_FREE_WORK ;
+    LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }
 

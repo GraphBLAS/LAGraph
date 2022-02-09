@@ -10,16 +10,16 @@
 
 //------------------------------------------------------------------------------
 
-#define LAGraph_FREE_WORK               \
+#define LG_FREE_WORK                    \
 {                                       \
     GrB_free (&C) ;                     \
     LAGraph_Free ((void **) &I) ;       \
     LAGraph_Free ((void **) &X) ;       \
 }
 
-#define LAGraph_FREE_ALL                \
+#define LG_FREE_ALL                     \
 {                                       \
-    LAGraph_FREE_WORK ;                 \
+    LG_FREE_WORK ;                      \
 }
 
 #include "LG_internal.h"

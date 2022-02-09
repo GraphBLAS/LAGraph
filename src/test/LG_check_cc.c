@@ -10,7 +10,7 @@
 
 //------------------------------------------------------------------------------
 
-#define LAGraph_FREE_WORK                       \
+#define LG_FREE_WORK                            \
 {                                               \
     LAGraph_Free ((void **) &queue) ;           \
     LAGraph_Free ((void **) &component_in) ;    \
@@ -19,9 +19,9 @@
     GrB_free (&Row) ;                           \
 }
 
-#define LAGraph_FREE_ALL                        \
+#define LG_FREE_ALL                             \
 {                                               \
-    LAGraph_FREE_WORK ;                         \
+    LG_FREE_WORK ;                              \
     LAGraph_Free ((void **) &Ap) ;              \
     LAGraph_Free ((void **) &Aj) ;              \
     LAGraph_Free ((void **) &Ax) ;              \
@@ -221,7 +221,7 @@ int LG_check_cc
         &Ap, &Aj, &Ax, Ap_size, Aj_size, Ax_size, iso, jumbled, NULL)) ;
     #endif
 
-    LAGraph_FREE_WORK ;
+    LG_FREE_WORK ;
 
     LAGraph_Toc (&tt, tic, msg) ;
     printf ("LG_check_cc check time: %g sec\n", tt) ;

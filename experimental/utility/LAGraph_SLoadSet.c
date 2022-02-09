@@ -23,16 +23,16 @@
 
 //------------------------------------------------------------------------------
 
-#define LAGraph_FREE_WORK                                           \
+#define LG_FREE_WORK                                                \
 {                                                                   \
     if (f != NULL && f != stdin) fclose (f) ;                       \
     f = NULL ;                                                      \
     LAGraph_SFreeContents (&Contents, ncontents) ;                  \
 }
 
-#define LAGraph_FREE_ALL                                            \
+#define LG_FREE_ALL                                                 \
 {                                                                   \
-    LAGraph_FREE_WORK ;                                             \
+    LG_FREE_WORK ;                                                  \
     LAGraph_SFreeSet (&Set, nmatrices) ;                            \
     LAGraph_Free ((void **) &collection) ;                          \
 }
@@ -157,7 +157,7 @@ int LAGraph_SLoadSet            // load a set of matrices from a *.lagraph file
     // free workspace and return result
     //--------------------------------------------------------------------------
 
-    LAGraph_FREE_WORK ;
+    LG_FREE_WORK ;
     (*Set_handle) = Set ;
     (*collection_handle) = collection ;
     (*nmatrices_handle) = nmatrices ;

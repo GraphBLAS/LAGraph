@@ -13,7 +13,7 @@
 // Export G->A in CSR format, for testing only.
 // See test_export for a brutal memory test of this method.
 
-#define LAGraph_FREE_ALL                    \
+#define LG_FREE_ALL                         \
 {                                           \
     LAGraph_Free ((void **) Ap_handle) ;    \
     LAGraph_Free ((void **) Aj_handle) ;    \

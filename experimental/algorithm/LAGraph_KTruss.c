@@ -27,7 +27,7 @@
 // The total number of triangles in C is sum(C)/6.  C is returned as symmetric
 // with a zero-free diagonal.
 
-#define LAGraph_FREE_ALL GrB_free (&C) ;
+#define LG_FREE_ALL GrB_free (&C) ;
 #include "LG_internal.h"
 #include "LAGraphX.h"
 

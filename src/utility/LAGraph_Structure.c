@@ -13,15 +13,17 @@
 
 // TODO: need a version for vectors.  See issue #80.
 
-#define LAGraph_FREE_ALL GrB_free (C) ;
+#define LG_FREE_ALL GrB_free (C) ;
 
 #include "LG_internal.h"
 
-int LAGraph_Structure
+int LAGraph_Structure   // TODO: rename LAGraph_Matrix_Structure
 (
+    // output:
     GrB_Matrix *C,  // a boolean matrix with same structure of A, with C(i,j)
                     // set to true if A(i,j) appears in the sparsity structure
                     // of A.
+    // input:
     GrB_Matrix A,
     char *msg
 )

@@ -12,6 +12,7 @@
 
 int LAGraph_SetNumThreads
 (
+    // input:
     int nthreads,       // # of threads to use
     char *msg
 )

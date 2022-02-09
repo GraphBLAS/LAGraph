@@ -20,15 +20,15 @@
 // Scott Beamer, Krste Asanovic and David A. Patterson, The GAP Benchmark
 // Suite, http://arxiv.org/abs/1508.03619, 2015.  http://gap.cs.berkeley.edu/
 
-#define LAGraph_FREE_WORK   \
+#define LG_FREE_WORK        \
 {                           \
     GrB_free (&w) ;         \
     GrB_free (&q) ;         \
 }
 
-#define LAGraph_FREE_ALL    \
+#define LG_FREE_ALL         \
 {                           \
-    LAGraph_FREE_WORK ;     \
+    LG_FREE_WORK ;          \
     GrB_free (&pi) ;        \
     GrB_free (&v) ;         \
 }
@@ -288,7 +288,7 @@ int LG_BreadthFirstSearch_SSGrB
 
     if (compute_parent) (*parent) = pi ;
     if (compute_level ) (*level ) = v ;
-    LAGraph_FREE_WORK ;
+    LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 #endif
 }

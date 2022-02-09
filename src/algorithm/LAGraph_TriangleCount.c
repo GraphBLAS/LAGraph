@@ -9,7 +9,8 @@
 // or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
-#define LAGraph_FREE_ALL ;
+
+#define LG_FREE_ALL ;
 
 #include <LAGraph.h>
 #include "LG_internal.h"
@@ -19,14 +20,17 @@
 // Pick the default method with auto presort
 // Compute G->ndiag, and G->rowdegree if needed.  Determine if G->A is
 // symmetric, if not known.
+
 int LAGraph_TriangleCount
 (
-    uint64_t *ntriangles,
-    LAGraph_Graph G,
-    char *msg
+    // output:
+    uint64_t      *ntriangles,   // # of triangles
+    // input/output:
+    LAGraph_Graph  G,
+    char          *msg
 )
 {
-    // find out if graph is symmetric
+    // find out if graph is symmetric, compute G->rowdegree, and G->ndiag
     LG_TRY ( LAGraph_Property_ASymmetricStructure(G, msg) );
     LG_TRY ( LAGraph_Property_RowDegree(G, msg) );
     LG_TRY ( LAGraph_Property_NDiag(G, msg) );

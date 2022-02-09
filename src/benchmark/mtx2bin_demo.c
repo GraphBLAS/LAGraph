@@ -14,7 +14,7 @@
 
 #include "LAGraph_demo.h"
 
-#define LAGraph_FREE_ALL            \
+#define LG_FREE_ALL                 \
 {                                   \
     GrB_free (&A) ;                 \
 }
@@ -81,7 +81,7 @@ int main (int argc, char **argv)
     LAGraph_TRY (LAGraph_Toc (&t_binwrite, tic, msg)) ;
     printf ("binary write time: %g sec\n", t_binwrite) ;
 
-    LAGraph_FREE_ALL ;
+    LG_FREE_ALL ;
     return (GrB_SUCCESS) ;
 }
 

@@ -66,7 +66,7 @@ typedef unsigned char LG_void ;
 //------------------------------------------------------------------------------
 
 // When an LAGraph method encounters an error, it can report details in the
-// msg.  For example:
+// msg.  This is normally done via LG_ASSERT_MSG.  For example:
 
 /*
     if (src < 0 || src >= n)
@@ -75,6 +75,8 @@ typedef unsigned char LG_void ;
             "where n = %ld is the number of nodes in the graph.", src, n) ;
         return (GrB_INVALID_INDEX) ;
     }
+    // or, with a simpler message:
+    LG_ASSERT_MSG (src >= 0 && src < n, GrB_INVALID_INDEX, "invalid src node") ;
 */
 
 #define LG_ERROR_MSG(...)                                           \
@@ -86,21 +88,21 @@ typedef unsigned char LG_void ;
 }
 
 //------------------------------------------------------------------------------
-// LAGraph_FREE_WORK: free all workspace
+// LG_FREE_WORK: free all workspace
 //------------------------------------------------------------------------------
 
-#ifndef LAGraph_FREE_WORK
-#define LAGraph_FREE_WORK ;
+#ifndef LG_FREE_WORK
+#define LG_FREE_WORK ;
 #endif
 
 //------------------------------------------------------------------------------
-// LAGraph_FREE_ALL: free all workspace and all output arguments, on error
+// LG_FREE_ALL: free all workspace and all output arguments, on error
 //------------------------------------------------------------------------------
 
-#ifndef LAGraph_FREE_ALL
-#define LAGraph_FREE_ALL        \
+#ifndef LG_FREE_ALL
+#define LG_FREE_ALL             \
 {                               \
-    LAGraph_FREE_WORK ;         \
+    LG_FREE_WORK ;              \
 }
 #endif
 
@@ -118,7 +120,7 @@ typedef unsigned char LG_void ;
     {                                                       \
         LG_ERROR_MSG ("%s, line %d: GrB failure: %d",       \
             __FILE__, __LINE__, info) ;                     \
-        LAGraph_FREE_ALL ;                                  \
+        LG_FREE_ALL ;                                  \
         return (info) ;                                     \
     }
 
@@ -137,7 +139,7 @@ typedef unsigned char LG_void ;
 {                                                       \
     LG_ERROR_MSG ("%s, line %d: LAGraph failure: %d",   \
         __FILE__, __LINE__, status) ;                   \
-    LAGraph_FREE_ALL ;                                  \
+    LG_FREE_ALL ;                                  \
     return (status) ;                                   \
 }
 #endif
@@ -155,7 +157,7 @@ typedef unsigned char LG_void ;
     {                                                                   \
         LG_ERROR_MSG ("LAGraph assertion \"" expression_message         \
             "\" failed:\nfile \"%s\", line %d\n", __FILE__, __LINE__) ; \
-        LAGraph_FREE_ALL ;                                              \
+        LG_FREE_ALL ;                                              \
         return (error_status) ;                                         \
     }                                                                   \
 }
@@ -181,7 +183,7 @@ typedef unsigned char LG_void ;
     {                                                                   \
         LG_ERROR_MSG ("LAGraph assertion \"" LG_XSTR(expression)        \
             "\" failed:\nfile \"%s\", line %d\n", __FILE__, __LINE__) ; \
-        LAGraph_FREE_ALL ;                                              \
+        LG_FREE_ALL ;                                              \
         return (error_status) ;                                         \
     }                                                                   \
 }
@@ -198,7 +200,7 @@ typedef unsigned char LG_void ;
     int LAGraph_status = LAGraph_method ;       \
     if (LAGraph_status < 0)                     \
     {                                           \
-        LAGraph_FREE_ALL ;                      \
+        LG_FREE_ALL ;                      \
         return (LAGraph_status) ;               \
     }                                           \
 }
@@ -503,7 +505,7 @@ void LG_qsort_3     // sort array A of size 3-by-n, using 3 keys (A [0:2][])
 // count entries on the diagonal of a matrix
 //------------------------------------------------------------------------------
 
-int LG_ndiag                // returns 0 if successful, < 0 if failure
+int LG_ndiag
 (
     // output
     int64_t *ndiag,         // # of entries

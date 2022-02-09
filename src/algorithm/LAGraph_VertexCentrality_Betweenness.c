@@ -49,7 +49,7 @@
 
 //------------------------------------------------------------------------------
 
-#define LAGraph_FREE_WORK                       \
+#define LG_FREE_WORK                            \
 {                                               \
     GrB_free (&frontier) ;                      \
     GrB_free (&paths) ;                         \
@@ -66,9 +66,9 @@
     }                                           \
 }
 
-#define LAGraph_FREE_ALL            \
+#define LG_FREE_ALL                 \
 {                                   \
-    LAGraph_FREE_WORK ;             \
+    LG_FREE_WORK ;                  \
     GrB_free (centrality) ;         \
 }
 
@@ -78,11 +78,11 @@
 // LAGraph_VertexCentrality_Betweenness: vertex betweenness-centrality
 //------------------------------------------------------------------------------
 
-int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
+int LAGraph_VertexCentrality_Betweenness
 (
-    // outputs:
+    // output:
     GrB_Vector *centrality,     // centrality(i): betweeness centrality of i
-    // inputs:
+    // input:
     LAGraph_Graph G,            // input graph
     const GrB_Index *sources,   // source vertices to compute shortest paths
     int32_t ns,                 // number of source vertices
@@ -314,6 +314,6 @@ int LAGraph_VertexCentrality_Betweenness    // vertex betweenness-centrality
     GrB_TRY (GrB_reduce (*centrality, NULL, GrB_PLUS_FP64, GrB_PLUS_MONOID_FP64,
         bc_update, GrB_DESC_T0)) ;
 
-    LAGraph_FREE_WORK ;
+    LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }

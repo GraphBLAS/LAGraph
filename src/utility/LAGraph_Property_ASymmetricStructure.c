@@ -11,7 +11,7 @@
 // Also computes G->AT if not already computed, if G is not an undirected
 // graph and G->A is square.
 
-#define LAGraph_FREE_WORK   \
+#define LG_FREE_WORK        \
 {                           \
     GrB_free (&S1) ;        \
     GrB_free (&S2) ;        \
@@ -22,6 +22,7 @@
 
 int LAGraph_Property_ASymmetricStructure
 (
+    // input/output:
     LAGraph_Graph G,    // graph to determine the symmetry of structure of A
     char *msg
 )
@@ -90,6 +91,6 @@ int LAGraph_Property_ASymmetricStructure
     // free workspace and return result
     //--------------------------------------------------------------------------
 
-    LAGraph_FREE_WORK ;
+    LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }

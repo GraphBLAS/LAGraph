@@ -19,7 +19,7 @@
 // is undirected or G->A is known to have a symmetric structure, then G->A is
 // used instead of G->AT, however.
 
-#define LAGraph_FREE_WORK           \
+#define LG_FREE_WORK                \
 {                                   \
     GrB_free (&d1) ;                \
     GrB_free (&d) ;                 \
@@ -27,15 +27,15 @@
     GrB_free (&w) ;                 \
 }
 
-#define LAGraph_FREE_ALL            \
+#define LG_FREE_ALL                 \
 {                                   \
-    LAGraph_FREE_WORK ;             \
+    LG_FREE_WORK ;                  \
     GrB_free (&r) ;                 \
 }
 
 #include "LG_internal.h"
 
-int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
+int LAGraph_VertexCentrality_PageRankGAP
 (
     // outputs:
     GrB_Vector *centrality, // centrality(i): GAP-style pagerank of node i
@@ -134,7 +134,7 @@ int LAGraph_VertexCentrality_PageRankGAP // returns -1 on failure, 0 on success
     //--------------------------------------------------------------------------
 
     (*centrality) = r ;
-    LAGraph_FREE_WORK ;
+    LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }
 

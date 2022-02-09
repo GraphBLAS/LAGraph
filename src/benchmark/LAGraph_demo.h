@@ -22,7 +22,7 @@
 #define CATCH(status)                                                         \
 {                                                                             \
     printf ("error: %s line: %d, status: %d\n", __FILE__, __LINE__, status) ; \
-    LAGraph_FREE_ALL ;                                                        \
+    LG_FREE_ALL ;                                                        \
     return (status) ;                                                         \
 }
 
@@ -43,7 +43,7 @@
 // binwrite: write a matrix to a binary file
 //------------------------------------------------------------------------------
 
-#define LAGraph_FREE_ALL                \
+#define LG_FREE_ALL                     \
 {                                       \
     GrB_free (A) ;                      \
     LAGraph_Free ((void **) &Ap) ;      \
@@ -693,8 +693,8 @@ static inline int binread   // returns 0 if successful, -1 if failure
 // readproblem: read a GAP problem from a file
 //------------------------------------------------------------------------------
 
-#undef  LAGraph_FREE_WORK
-#define LAGraph_FREE_WORK           \
+#undef  LG_FREE_WORK
+#define LG_FREE_WORK                \
 {                                   \
     GrB_free (&A) ;                 \
     GrB_free (&A2) ;                \
@@ -703,10 +703,10 @@ static inline int binread   // returns 0 if successful, -1 if failure
     f = NULL ;                      \
 }
 
-#undef  LAGraph_FREE_ALL
-#define LAGraph_FREE_ALL            \
+#undef  LG_FREE_ALL
+#define LG_FREE_ALL                 \
 {                                   \
-    LAGraph_FREE_WORK ;             \
+    LG_FREE_WORK ;                  \
     LAGraph_Delete (G, NULL) ;      \
     GrB_free (src_nodes) ;          \
 }
@@ -1044,7 +1044,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
     LAGraph_TRY (LAGraph_Toc (&t_read, tic, msg)) ;
     printf ("read time: %g\n", t_read) ;
 
-    LAGraph_FREE_WORK ;
+    LG_FREE_WORK ;
     // LAGraph_TRY (LAGraph_DisplayGraph (*G, 2, stdout, msg)) ;
     return (GrB_SUCCESS) ;
 }
@@ -1053,9 +1053,9 @@ static int readproblem          // returns 0 if successful, -1 if failure
 // demo_init: initialize LAGraph for a demo
 //------------------------------------------------------------------------------
 
-#undef  LAGraph_FREE_WORK
-#undef  LAGraph_FREE_ALL
-#define LAGraph_FREE_ALL ;
+#undef  LG_FREE_WORK
+#undef  LG_FREE_ALL
+#define LG_FREE_ALL ;
 
 static inline int demo_init (bool burble)
 {
@@ -1083,6 +1083,6 @@ static inline int demo_init (bool burble)
     return (GrB_SUCCESS) ;
 }
 
-#undef  LAGraph_FREE_ALL
+#undef  LG_FREE_ALL
 #endif
 

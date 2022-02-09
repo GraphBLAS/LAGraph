@@ -20,16 +20,16 @@
 //  GrB_NOT_IMPLEMENTED: complex types not yet supported
 //  other: return values directly from GrB_* methods
 
-#define LAGraph_FREE_WORK           \
+#define LG_FREE_WORK                \
 {                                   \
     LAGraph_Free ((void **) &I) ;   \
     LAGraph_Free ((void **) &J) ;   \
     LAGraph_Free ((void **) &X) ;   \
 }
 
-#define LAGraph_FREE_ALL            \
+#define LG_FREE_ALL                 \
 {                                   \
-    LAGraph_FREE_WORK ;             \
+    LG_FREE_WORK ;                  \
     GrB_free (A) ;                  \
 }
 
@@ -385,7 +385,9 @@ static inline void set_value
 
 int LAGraph_MMRead
 (
+    // output:
     GrB_Matrix *A,  // handle of matrix to create
+    // input:
     FILE *f,        // file to read from, already open
     char *msg
 )
@@ -1022,7 +1024,7 @@ int LAGraph_MMRead
     // free workspace and return result
     //--------------------------------------------------------------------------
 
-    LAGraph_FREE_WORK ;
+    LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }
 

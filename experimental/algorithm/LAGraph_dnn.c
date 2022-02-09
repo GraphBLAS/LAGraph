@@ -32,7 +32,7 @@
 
 // On output, Y is the computed result, of the same size as Y0.
 
-#define LAGraph_FREE_ALL    \
+#define LG_FREE_ALL         \
 {                           \
     GrB_free (&Y) ;         \
 }

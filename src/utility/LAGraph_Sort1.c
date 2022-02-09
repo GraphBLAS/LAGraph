@@ -10,7 +10,7 @@
 
 // A parallel mergesort of an array of n integers.
 
-#define LAGraph_FREE_ALL LAGraph_Free ((void **) &W) ;
+#define LG_FREE_ALL LAGraph_Free ((void **) &W) ;
 
 #include "LG_internal.h"
 
@@ -311,7 +311,9 @@ static void LG_msort_1b_merge
 
 int LAGraph_Sort1
 (
+    // input/output:
     int64_t *A_0,       // size n array
+    // input:
     const int64_t n,
     int nthreads,       // # of threads to use
     char *msg
@@ -458,6 +460,6 @@ int LAGraph_Sort1
     // free workspace and return result
     //--------------------------------------------------------------------------
 
-    LAGraph_FREE_ALL ;
+    LG_FREE_ALL ;
     return (GrB_SUCCESS) ;
 }

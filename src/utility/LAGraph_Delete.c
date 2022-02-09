@@ -12,6 +12,7 @@
 
 int LAGraph_Delete
 (
+    // input/output:
     LAGraph_Graph *G,   // the graph to delete; G set to NULL on output.
                         // All internal GrB_Matrix and GrB_Vector objects are
                         // freed, including G->A.  To keep G->A while deleting

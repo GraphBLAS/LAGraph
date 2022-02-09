@@ -21,7 +21,7 @@
 
 //------------------------------------------------------------------------------
 
-#define LAGraph_FREE_WORK                           \
+#define LG_FREE_WORK                                \
 {                                                   \
     fclose (f) ;                                    \
     f = NULL ;                                      \
@@ -29,9 +29,9 @@
     LAGraph_SFreeContents (&Contents, nmatrices) ;  \
 }
 
-#define LAGraph_FREE_ALL                            \
+#define LG_FREE_ALL                                 \
 {                                                   \
-    LAGraph_FREE_WORK ;                             \
+    LG_FREE_WORK ;                                  \
 }
 
 #include "LG_internal.h"
@@ -135,7 +135,7 @@ int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
     // free workspace and return result
     //--------------------------------------------------------------------------
 
-    LAGraph_FREE_WORK ;
+    LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }
 

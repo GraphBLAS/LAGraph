@@ -39,7 +39,7 @@
 // #define NTHREAD_LIST 6
 // #define THREAD_LIST 64, 32, 24, 12, 8, 4
 
-#define LAGraph_FREE_ALL            \
+#define LG_FREE_ALL                 \
 {                                   \
     LAGraph_Delete (&G, NULL) ;     \
     GrB_free (&c2) ;                \
@@ -193,7 +193,7 @@ int main (int argc, char **argv)
             Nthreads [t], t2, matrix_name) ;
     }
 
-    LAGraph_FREE_ALL;
+    LG_FREE_ALL;
     LAGraph_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
 }

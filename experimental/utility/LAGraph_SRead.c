@@ -74,18 +74,18 @@ static int get_int_array_3 (json_arr arr, int *x, char *msg)
 // LAGraph_SRead
 //------------------------------------------------------------------------------
 
-#undef  LAGraph_FREE_WORK
-#define LAGraph_FREE_WORK                               \
+#undef  LG_FREE_WORK
+#define LG_FREE_WORK                                    \
 {                                                       \
     if (root != NULL) { free (root) ; }                 \
     root = NULL ;                                       \
     LAGraph_Free ((void **) &json_string) ;             \
 }
 
-#undef  LAGraph_FREE_ALL
-#define LAGraph_FREE_ALL                                \
+#undef  LG_FREE_ALL
+#define LG_FREE_ALL                                     \
 {                                                       \
-    LAGraph_FREE_WORK ;                                 \
+    LG_FREE_WORK ;                                      \
     LAGraph_Free ((void **) &collection) ;              \
     LAGraph_SFreeContents (&Contents, ncontents) ;      \
 }
@@ -359,7 +359,7 @@ int LAGraph_SRead   // read a set of matrices from a *.lagraph file
     // free workspace and return result
     //--------------------------------------------------------------------------
 
-    LAGraph_FREE_WORK  ;
+    LG_FREE_WORK  ;
     (*collection_handle) = collection ;
     (*Contents_handle) = Contents ;
     (*ncontents_handle) = ncontents ;

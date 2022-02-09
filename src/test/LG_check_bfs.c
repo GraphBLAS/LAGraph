@@ -10,7 +10,7 @@
 
 //------------------------------------------------------------------------------
 
-#define LAGraph_FREE_WORK                   \
+#define LG_FREE_WORK                        \
 {                                           \
     LAGraph_Free ((void **) &queue) ;       \
     LAGraph_Free ((void **) &level_check) ; \
@@ -21,9 +21,9 @@
     GrB_free (&Row) ;                       \
 }
 
-#define LAGraph_FREE_ALL                    \
+#define LG_FREE_ALL                         \
 {                                           \
-    LAGraph_FREE_WORK ;                     \
+    LG_FREE_WORK ;                          \
     LAGraph_Free ((void **) &Ap) ;          \
     LAGraph_Free ((void **) &Aj) ;          \
     LAGraph_Free ((void **) &Ax) ;          \
@@ -234,7 +234,7 @@ int LG_check_bfs
     // free workspace and return result
     //--------------------------------------------------------------------------
 
-    LAGraph_FREE_WORK ;
+    LG_FREE_WORK ;
 
     if (print_timings)
     {

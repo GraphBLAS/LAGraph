@@ -17,8 +17,10 @@
 
 int LAGraph_TypeFromName
 (
+    // output:
     GrB_Type *type, // GraphBLAS type
-    char *name,     // name of the type
+    // input:
+    char *name,     // name of the type: a null-terminated string
     char *msg
 )
 {

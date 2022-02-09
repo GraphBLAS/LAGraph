@@ -12,7 +12,9 @@
 
 int LAGraph_SizeOfType
 (
+    // output:
     size_t *size,   // size of the type
+    // input:
     GrB_Type type,  // GraphBLAS type
     char *msg
 )

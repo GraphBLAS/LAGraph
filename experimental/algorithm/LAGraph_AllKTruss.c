@@ -49,7 +49,7 @@
 // TODO: consider LAGraph_KTrussNext to compute the (k+1)-truss from the
 // k-truss
 
-#define LAGraph_FREE_ALL                    \
+#define LG_FREE_ALL                         \
 {                                           \
     for (int64_t kk = 3 ; kk <= k ; kk++)   \
     {                                       \

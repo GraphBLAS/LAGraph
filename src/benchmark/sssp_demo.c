@@ -23,7 +23,7 @@
 #define NTHREAD_LIST 1
 #define THREAD_LIST 0
 
-#define LAGraph_FREE_ALL            \
+#define LG_FREE_ALL                 \
 {                                   \
     LAGraph_Delete (&G, NULL) ;     \
     GrB_free (&SourceNodes) ;       \
@@ -176,7 +176,7 @@ int main (int argc, char **argv)
     // free all workspace and finish
     //--------------------------------------------------------------------------
 
-    LAGraph_FREE_ALL ;
+    LG_FREE_ALL ;
     LAGraph_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
 }

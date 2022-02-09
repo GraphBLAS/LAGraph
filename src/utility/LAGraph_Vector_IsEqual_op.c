@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_Vector_IsEqual: check two vectors for exact equality
+// LAGraph_Vector_IsEqual_op: compare two vectors with a given op
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -10,34 +10,29 @@
 
 //------------------------------------------------------------------------------
 
-// LAGraph_Vector_IsEqual, contributed by Tim Davis, Texas A&M
+// LAGraph_Vector_IsEqual_op, contributed by Tim Davis, Texas A&M
 
-// Checks if two vectors are identically equal (same size,
-// type, pattern, size, and values).
+// Checks if two vectors are equal (same size, pattern, size, and values),
+// using a provided binary operator.
 
-// See also LAGraph_IsEqual.
-
-// If the two vectors are GrB_FP32, GrB_FP64, or related, and have NaNs, then
-// this function will return false, since NaN == NaN is false.  To check for
-// NaN equality (like isequalwithequalnans in MATLAB), use
-// LAGraph_Vector_IsEqual_op with a user-defined operator f(x,y) that returns
-// true if x and y are both NaN.
+// See also LAGraph_Matrix_IsEqual_op.
 
 #define LG_FREE_WORK GrB_free (&C) ;
 
 #include "LG_internal.h"
 
 //------------------------------------------------------------------------------
-// LAGraph_Vector_IsEqual:  compare two vectors
+// LAGraph_Vector_IsEqual_op:  compare two vectors using a given operator
 //------------------------------------------------------------------------------
 
-int LAGraph_Vector_IsEqual
+int LAGraph_Vector_IsEqual_op
 (
     // output:
     bool *result,           // true if A == B, false if A != B or error
     // input:
     GrB_Vector A,
     GrB_Vector B,
+    GrB_BinaryOp op,        // comparator to use
     char *msg
 )
 {
@@ -48,7 +43,7 @@ int LAGraph_Vector_IsEqual
 
     LG_CLEAR_MSG ;
     GrB_Vector C = NULL ;
-    LG_ASSERT (result != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (op != NULL && result != NULL, GrB_NULL_POINTER) ;
 
     GrB_Info info ;
 
@@ -60,21 +55,6 @@ int LAGraph_Vector_IsEqual
     {
         // two NULL vectors are identical, as are two aliased matrices
         (*result) = (A == B) ;
-        return (GrB_SUCCESS) ;
-    }
-
-    //--------------------------------------------------------------------------
-    // compare the type of A and B
-    //--------------------------------------------------------------------------
-
-    char atype_name [LAGRAPH_MAX_NAME_LEN] ;
-    char btype_name [LAGRAPH_MAX_NAME_LEN] ;
-    LG_TRY (LAGraph_VectorTypeName (atype_name, A, msg)) ;
-    LG_TRY (LAGraph_VectorTypeName (btype_name, B, msg)) ;
-    if (!MATCHNAME (atype_name, btype_name))
-    {
-        // types differ
-        (*result) = false ;
         return (GrB_SUCCESS) ;
     }
 
@@ -105,30 +85,6 @@ int LAGraph_Vector_IsEqual
         (*result) = false ;
         return (GrB_SUCCESS) ;
     }
-
-    //--------------------------------------------------------------------------
-    // get the GrB_EQ_type operator
-    //--------------------------------------------------------------------------
-
-    GrB_Type type ;
-    LG_TRY (LAGraph_TypeFromName (&type, atype_name, msg)) ;
-    GrB_BinaryOp op = NULL ;
-    // select the comparator operator
-    if      (type == GrB_BOOL  ) op = GrB_EQ_BOOL   ;
-    else if (type == GrB_INT8  ) op = GrB_EQ_INT8   ;
-    else if (type == GrB_INT16 ) op = GrB_EQ_INT16  ;
-    else if (type == GrB_INT32 ) op = GrB_EQ_INT32  ;
-    else if (type == GrB_INT64 ) op = GrB_EQ_INT64  ;
-    else if (type == GrB_UINT8 ) op = GrB_EQ_UINT8  ;
-    else if (type == GrB_UINT16) op = GrB_EQ_UINT16 ;
-    else if (type == GrB_UINT32) op = GrB_EQ_UINT32 ;
-    else if (type == GrB_UINT64) op = GrB_EQ_UINT64 ;
-    else if (type == GrB_FP32  ) op = GrB_EQ_FP32   ;
-    else if (type == GrB_FP64  ) op = GrB_EQ_FP64   ;
-    #if 0
-    else if (type == GxB_FC32  ) op = GxB_EQ_FC32   ;
-    else if (type == GxB_FC64  ) op = GxB_EQ_FC64   ;
-    #endif
 
     //--------------------------------------------------------------------------
     // C = A .* B, where the pattern of C is the intersection of A and B

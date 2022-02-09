@@ -8,7 +8,7 @@
 
 //------------------------------------------------------------------------------
 
-#define LAGraph_FREE_ALL ;
+#define LG_FREE_ALL ;
 
 #include "LG_internal.h"
 
@@ -77,9 +77,9 @@ GrB_Semiring LAGraph_structural_fp64   = NULL ;
 //------------------------------------------------------------------------------
 
 LAGRAPH_PUBLIC
-int LAGraph_Xinit           // returns 0 if successful, < 0 if failure
+int LAGraph_Xinit
 (
-    // pointers to memory management functions
+    // input:
     void * (* user_malloc_function  ) (size_t),
     void * (* user_calloc_function  ) (size_t, size_t),
     void * (* user_realloc_function ) (void *, size_t),
@@ -120,8 +120,8 @@ int LAGraph_Xinit           // returns 0 if successful, < 0 if failure
     LG_ASSERT_MSG (info == GrB_SUCCESS, info,
         "failed to initialize GraphBLAS") ;
 
-    #undef  LAGraph_FREE_ALL
-    #define LAGraph_FREE_ALL        \
+    #undef  LG_FREE_ALL
+    #define LG_FREE_ALL             \
     {                               \
         LAGraph_Finalize (msg) ;    \
     }

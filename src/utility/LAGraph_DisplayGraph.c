@@ -12,6 +12,7 @@
 
 int LAGraph_DisplayGraph
 (
+    // input:
     LAGraph_Graph G,        // graph to display
     // TODO: use an enum for pr
     int pr,                 // 0: nothing, 1: terse, 2: summary, 3: all,

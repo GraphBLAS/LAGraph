@@ -38,7 +38,7 @@
 
 //------------------------------------------------------------------------------
 
-#define LAGraph_FREE_WORK              \
+#define LG_FREE_WORK                   \
 {                                      \
     GrB_free(&d);                      \
     GrB_free(&dmasked);                \
@@ -58,9 +58,9 @@
     LAGraph_Free ((void**)&pi);                 \
 }
 
-#define LAGraph_FREE_ALL               \
+#define LG_FREE_ALL                    \
 {                                      \
-    LAGraph_FREE_WORK                  \
+    LG_FREE_WORK ;                     \
     GrB_free (pd_output);              \
     GrB_free (ppi_output);             \
     GrB_free (ph_output);              \
@@ -326,7 +326,7 @@ GrB_Info LAGraph_BF_full1
         if(any_dless)
         {
             // printf("A negative-weight cycle found. \n");
-            LAGraph_FREE_ALL;
+            LG_FREE_ALL;
             return (GrB_NO_VALUE) ;
         }
     }
@@ -356,6 +356,6 @@ GrB_Info LAGraph_BF_full1
     GrB_TRY (GrB_Vector_build (*pd_output , I, w , n, GrB_MIN_FP64  ));
     GrB_TRY (GrB_Vector_build (*ppi_output, I, pi, n, GrB_MIN_UINT64));
     GrB_TRY (GrB_Vector_build (*ph_output , I, h , n, GrB_MIN_UINT64));
-    LAGraph_FREE_WORK;
+    LG_FREE_WORK;
     return (GrB_SUCCESS) ;
 }

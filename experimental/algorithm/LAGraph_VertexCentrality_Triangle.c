@@ -59,7 +59,7 @@
 
 //------------------------------------------------------------------------------
 
-#define LAGraph_FREE_WORK           \
+#define LG_FREE_WORK                \
 {                                   \
     GrB_free (&T) ;                 \
     GrB_free (&u) ;                 \
@@ -68,9 +68,9 @@
     GrB_free (&L) ;                 \
 }
 
-#define LAGraph_FREE_ALL            \
+#define LG_FREE_ALL                 \
 {                                   \
-    LAGraph_FREE_WORK ;             \
+    LG_FREE_WORK ;                  \
     GrB_free (centrality) ;         \
 }
 
@@ -306,7 +306,7 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
     // free workspace and return result
     //--------------------------------------------------------------------------
 
-    LAGraph_FREE_WORK ;
+    LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }
 

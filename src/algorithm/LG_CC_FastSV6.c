@@ -35,7 +35,7 @@
 // G->A will then become a truly read-only object (assuming GrB_wait (G->A)
 // has been done first).
 
-#define LAGraph_FREE_ALL ;
+#define LG_FREE_ALL ;
 #include "LG_internal.h"
 
 #if LG_SUITESPARSE
@@ -156,8 +156,8 @@ static inline GrB_Info fastsv
 // is a representative, then component(r)=r.  The number of connected
 // components in the graph G is the number of representatives.
 
-#undef  LAGraph_FREE_WORK
-#define LAGraph_FREE_WORK                   \
+#undef  LG_FREE_WORK
+#define LG_FREE_WORK                        \
 {                                           \
     LAGraph_Free ((void **) &Tp) ;          \
     LAGraph_Free ((void **) &Tj) ;          \
@@ -178,10 +178,10 @@ static inline GrB_Info fastsv
     GrB_free (&gp_new) ;                    \
 }
 
-#undef  LAGraph_FREE_ALL
-#define LAGraph_FREE_ALL                    \
+#undef  LG_FREE_ALL
+#define LG_FREE_ALL                         \
 {                                           \
-    LAGraph_FREE_WORK ;                     \
+    LG_FREE_WORK ;                          \
     GrB_free (&parent) ;                    \
 }
 
@@ -631,7 +631,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     if (nvals == 0)
     {
         (*component) = parent ;
-        LAGraph_FREE_WORK ;
+        LG_FREE_WORK ;
         return (GrB_SUCCESS) ;
     }
 
@@ -647,7 +647,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     //--------------------------------------------------------------------------
 
     (*component) = parent ;
-    LAGraph_FREE_WORK ;
+    LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 #endif
 }

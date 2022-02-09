@@ -30,15 +30,15 @@
 // the permutation (or P [k] = j if column j is the kth column in the
 // permutation, with byrow false).
 
-#define LAGraph_FREE_WORK           \
+#define LG_FREE_WORK                \
 {                                   \
     LAGraph_Free ((void **) &W) ;   \
     LAGraph_Free ((void **) &D) ;   \
 }
 
-#define LAGraph_FREE_ALL            \
+#define LG_FREE_ALL                 \
 {                                   \
-    LAGraph_FREE_WORK ;             \
+    LG_FREE_WORK ;                  \
     LAGraph_Free ((void **) &P) ;   \
 }
 
@@ -46,9 +46,9 @@
 
 int LAGraph_SortByDegree
 (
-    // output
+    // output:
     int64_t **P_handle,     // P is returned as a permutation vector of size n
-    // input
+    // input:
     LAGraph_Graph G,        // graph of n nodes
     bool byrow,             // if true, sort G->rowdegree, else G->coldegree
     bool ascending,         // sort in ascending or descending order
@@ -156,7 +156,7 @@ int LAGraph_SortByDegree
     // free workspace and return result
     //--------------------------------------------------------------------------
 
-    LAGraph_FREE_WORK ;
+    LG_FREE_WORK ;
     (*P_handle) = P ;
     return (GrB_SUCCESS) ;
 }

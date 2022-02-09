@@ -28,7 +28,7 @@
 // #define NTHREAD_LIST 7
 // #define THREAD_LIST 40, 20, 16, 8, 4, 2, 1
 
-#define LAGraph_FREE_ALL            \
+#define LG_FREE_ALL                 \
 {                                   \
     LAGraph_Delete (&G, NULL) ;     \
     GrB_free (&A) ;                 \
@@ -139,7 +139,7 @@ int main (int argc, char **argv)
     }
 
     fflush (stdout) ;
-    LAGraph_FREE_ALL ;
+    LG_FREE_ALL ;
     LAGraph_TRY (LAGraph_Random_Finalize (msg)) ;
     LAGraph_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;

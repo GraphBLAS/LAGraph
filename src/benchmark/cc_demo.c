@@ -15,8 +15,8 @@
 #include "LAGraphX.h"
 #include "LG_alg_internal.h"
 
-#undef  LAGraph_FREE_ALL
-#define LAGraph_FREE_ALL            \
+#undef  LG_FREE_ALL
+#define LG_FREE_ALL                 \
 {                                   \
     LAGraph_Delete (&G, NULL) ;     \
     GrB_free (&components) ;        \
@@ -314,7 +314,7 @@ int main (int argc, char **argv)
     // free all workspace and finish
     //--------------------------------------------------------------------------
 
-    LAGraph_FREE_ALL ;
+    LG_FREE_ALL ;
     LAGraph_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
 }

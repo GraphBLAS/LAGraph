@@ -34,7 +34,7 @@
 
 //------------------------------------------------------------------------------
 
-#define LAGraph_FREE_ALL            \
+#define LG_FREE_ALL                 \
 {                                   \
     LAGraph_Free ((void**) &d) ;    \
     LAGraph_Free ((void**) &pi) ;   \
@@ -121,7 +121,7 @@ GrB_Info LAGraph_BF_pure_c_double
             j = J[k];
             if (d[j] > d[i] + W[k])
             {
-                LAGraph_FREE_ALL ;
+                LG_FREE_ALL ;
                 return (GrB_NO_VALUE) ;
             }
         }

@@ -19,7 +19,7 @@
 #include <LAGraph.h>
 #include <LAGraphX.h>
 
-#define LAGraph_FREE_ALL                \
+#define LG_FREE_ALL                     \
     free(I);                            \
     free(V);                            \
     GrB_free (&stars);     \
@@ -214,6 +214,6 @@ GrB_Info LAGraph_cc_lacc
     *result = parents;
     parents = NULL ;        // return parents (set to NULL so it isn't freed)
 
-    LAGraph_FREE_ALL;
+    LG_FREE_ALL;
     return GrB_SUCCESS;
 }

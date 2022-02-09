@@ -12,6 +12,7 @@
 
 int LAGraph_DeleteDiag
 (
+    // input/output:
     LAGraph_Graph G,    // diagonal entries removed, most properties cleared
     char *msg
 )
@@ -32,7 +33,8 @@ int LAGraph_DeleteDiag
     // delete all properties not affected by the removal of the diagonal
     //--------------------------------------------------------------------------
 
-    LAGraph_BooleanProperty A_structure_is_symmetric = G->A_structure_is_symmetric ;
+    LAGraph_BooleanProperty
+        A_structure_is_symmetric = G->A_structure_is_symmetric ;
     LG_TRY (LAGraph_DeleteProperties (G, msg)) ;
     G->A_structure_is_symmetric = A_structure_is_symmetric ;
 

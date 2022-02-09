@@ -57,8 +57,8 @@ void LG_rand_next_f (void *z, const void *x)
 // LAGraph_Random_Init:  create the random seed operator
 //------------------------------------------------------------------------------
 
-#undef  LAGraph_FREE_WORK
-#define LAGraph_FREE_WORK                                   \
+#undef  LG_FREE_WORK
+#define LG_FREE_WORK                                        \
 {                                                           \
     GrB_UnaryOp_free (&LG_rand_next_op) ;                   \
 }
@@ -79,7 +79,7 @@ int LAGraph_Random_Init (char *msg)
 int LAGraph_Random_Finalize (char *msg)
 {
     LG_CLEAR_MSG ;
-    LAGraph_FREE_WORK ;
+    LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }
 
@@ -91,8 +91,8 @@ int LAGraph_Random_Finalize (char *msg)
 // allocated on input, and should be of type GrB_UINT64.  Its sparsity
 // structure is unchanged.
 
-#undef  LAGraph_FREE_WORK
-#define LAGraph_FREE_WORK GrB_free (&T) ;
+#undef  LG_FREE_WORK
+#define LG_FREE_WORK GrB_free (&T) ;
 
 #if defined ( COVERAGE )
 // for testing only
@@ -142,7 +142,7 @@ int LAGraph_Random_Seed     // construct a random seed vector
     }
     #endif
 
-    LAGraph_FREE_WORK ;
+    LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }
 
@@ -150,8 +150,8 @@ int LAGraph_Random_Seed     // construct a random seed vector
 // LAGraph_Random_Next: return next vector of random seeds
 //------------------------------------------------------------------------------
 
-#undef  LAGraph_FREE_WORK
-#define LAGraph_FREE_WORK ;
+#undef  LG_FREE_WORK
+#define LG_FREE_WORK ;
 
 int LAGraph_Random_Next     // advance to next random vector
 (

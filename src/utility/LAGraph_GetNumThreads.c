@@ -14,6 +14,7 @@
 
 int LAGraph_GetNumThreads
 (
+    // output:
     int *nthreads,      // # of threads to use
     char *msg
 )

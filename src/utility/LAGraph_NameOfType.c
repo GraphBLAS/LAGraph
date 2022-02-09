@@ -12,7 +12,10 @@
 
 int LAGraph_NameOfType
 (
-    char *name,     // name of the type
+    // output:
+    char *name,     // name of the type: user provided array of size at
+                    // least LAGRAPH_MAX_NAME_LEN.
+    // input:
     GrB_Type type,  // GraphBLAS type
     char *msg
 )

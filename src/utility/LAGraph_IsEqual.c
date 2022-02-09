@@ -14,7 +14,7 @@
 // If the two matrices are GrB_FP32, GrB_FP64, GxB_FC32, or GxB_FC64 and have
 // NaNs, then these functions will return false, since NaN == NaN is false.
 
-#define LAGraph_FREE_WORK GrB_free (&C) ;
+#define LG_FREE_WORK GrB_free (&C) ;
 
 #include "LG_internal.h"
 
@@ -24,7 +24,9 @@
 
 int LAGraph_IsEqual     // TODO rename LAGraph_Matrix_IsEqual
 (
+    // output:
     bool *result,       // true if A == B, false if A != B or error
+    // input:
     GrB_Matrix A,
     GrB_Matrix B,
     char *msg
@@ -121,6 +123,8 @@ int LAGraph_IsEqual     // TODO rename LAGraph_Matrix_IsEqual
     else if (type == GxB_FC64  ) op = GxB_EQ_FC64   ;
     #endif
 
+    LG_ASSERT_MSG (op != NULL, GrB_NOT_IMPLEMENTED, "type not supported") ;
+
     //--------------------------------------------------------------------------
     // C = A .* B, where the structure of C is the intersection of A and B
     //--------------------------------------------------------------------------
@@ -137,7 +141,7 @@ int LAGraph_IsEqual     // TODO rename LAGraph_Matrix_IsEqual
     if (nvals != nvals1)
     {
         // structure of A and B are different
-        LAGraph_FREE_WORK ;
+        LG_FREE_WORK ;
         (*result) = false ;
         return (GrB_SUCCESS) ;
     }
@@ -152,7 +156,7 @@ int LAGraph_IsEqual     // TODO rename LAGraph_Matrix_IsEqual
     // free workspace and return result
     //--------------------------------------------------------------------------
 
-    LAGraph_FREE_WORK ;
+    LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }
 

@@ -15,7 +15,7 @@
 // is slow and simple by design.  G->A must be symmetric, with no entries on
 // its diagonal.
 
-#define LAGraph_FREE_WORK                       \
+#define LG_FREE_WORK                            \
 {                                               \
     LAGraph_Free ((void **) &Cp) ;              \
     LAGraph_Free ((void **) &Cj) ;              \
@@ -23,9 +23,9 @@
     LAGraph_Free ((void **) &Ax) ;              \
 }
 
-#define LAGraph_FREE_ALL                        \
+#define LG_FREE_ALL                             \
 {                                               \
-    LAGraph_FREE_WORK ;                         \
+    LG_FREE_WORK ;                              \
     GrB_free (&C) ;                             \
 }
 
@@ -159,7 +159,7 @@ int LG_check_ktruss
         if (nvals1 == nvals2)
         {
             // C is now the k-truss of G->A
-            LAGraph_FREE_WORK ;
+            LG_FREE_WORK ;
             (*C_handle) = C ;
             return (GrB_SUCCESS) ;
         }

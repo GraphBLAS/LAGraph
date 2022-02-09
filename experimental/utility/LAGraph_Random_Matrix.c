@@ -18,7 +18,7 @@
 // This could be fixed by using the GxB_IGNORE_DUP operator, but this would
 // require SuiteSparse:GraphBLAS.
 
-#define LAGraph_FREE_WORK               \
+#define LG_FREE_WORK                    \
 {                                       \
     LAGraph_Free ((void **) &I) ;       \
     LAGraph_Free ((void **) &J) ;       \
@@ -32,9 +32,9 @@
     GrB_free (&T) ;                     \
 }
 
-#define LAGraph_FREE_ALL                \
+#define LG_FREE_ALL                     \
 {                                       \
-    LAGraph_FREE_WORK ;                 \
+    LG_FREE_WORK ;                      \
     GrB_free (A) ;                      \
 }
 
@@ -430,7 +430,7 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
     // free workspace and return result
     //--------------------------------------------------------------------------
 
-    LAGraph_FREE_WORK ;
+    LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }
 

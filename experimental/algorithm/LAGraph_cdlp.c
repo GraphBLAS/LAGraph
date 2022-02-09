@@ -117,7 +117,7 @@
 //   label of its neighbors (connected through either an incoming or through
 //   an outgoing edge).
 
-#define LAGraph_FREE_ALL                                                \
+#define LG_FREE_ALL                                                     \
 {                                                                       \
     LAGraph_Free ((void *) &I) ;                                        \
     LAGraph_Free ((void *) &X) ;                                        \
@@ -237,7 +237,7 @@ GrB_Info LAGraph_cdlp
     // Initialize L with diagonal elements 1..n
     I = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
     X = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
-    if (I == NULL || X == NULL) { LAGraph_FREE_ALL ; return (GrB_OUT_OF_MEMORY) ; }
+    if (I == NULL || X == NULL) { LG_FREE_ALL ; return (GrB_OUT_OF_MEMORY) ; }
     for (GrB_Index i = 0; i < n; i++) {
         I[i] = i;
         X[i] = i;
@@ -353,8 +353,8 @@ GrB_Info LAGraph_cdlp
     //--------------------------------------------------------------------------
 
     (*CDLP_handle) = CDLP;
-    CDLP = NULL;            // set to NULL so LAGraph_FREE_ALL doesn't free it
-    LAGraph_FREE_ALL;
+    CDLP = NULL;            // set to NULL so LG_FREE_ALL doesn't free it
+    LG_FREE_ALL;
 
     t[1] = LAGraph_Toc (&t[1], tic, NULL) ;
 

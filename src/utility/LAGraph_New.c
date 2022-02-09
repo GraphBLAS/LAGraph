@@ -15,16 +15,19 @@
 
 int LAGraph_New
 (
+    // output:
     LAGraph_Graph *G,   // the graph to create, NULL if failure
+    // input/output:
     GrB_Matrix    *A,   // the adjacency matrix of the graph, may be NULL.
                         // A is moved into G as G->A, and A itself is set
                         // to NULL to denote that is now a part of G.
                         // That is, { G->A = A ; A = NULL ; } is performed.
                         // When G is deleted, G->A is freed.  If A is NULL,
                         // the graph is invalid until G->A is set.
+    // input:
     LAGraph_Kind kind,  // the kind of graph. This may be LAGRAPH_UNKNOWN,
                         // which must then be revised later before the
-                        // graph is used.
+                        // graph can be used.
     char *msg
 )
 {

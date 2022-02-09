@@ -8,14 +8,14 @@
 
 //------------------------------------------------------------------------------
 
-#define LAGraph_FREE_WORK       \
+#define LG_FREE_WORK            \
 {                               \
     GrB_free (&x) ;             \
 }
 
-#define LAGraph_FREE_ALL        \
+#define LG_FREE_ALL             \
 {                               \
-    LAGraph_FREE_WORK ;         \
+    LG_FREE_WORK ;              \
     GrB_free (&rowdegree) ;     \
 }
 
@@ -23,6 +23,7 @@
 
 int LAGraph_Property_RowDegree
 (
+    // input/output:
     LAGraph_Graph G,    // graph to determine G->rowdegree
     char *msg
 )
@@ -64,6 +65,6 @@ int LAGraph_Property_RowDegree
 
     G->rowdegree = rowdegree ;
 
-    LAGraph_FREE_WORK ;
+    LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }

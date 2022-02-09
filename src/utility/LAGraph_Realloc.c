@@ -112,7 +112,7 @@ void *LAGraph_Realloc       // returns pointer to reallocated block of memory,
         // copy over the data from the old block to the new block
         if (pnew != NULL)
         {
-            // use a parallel memcpy
+            // copy from the old to the new space
             memcpy (pnew, p, LAGraph_MIN (oldsize, newsize)) ;
             // free the old space
             LAGraph_Free (&p) ;

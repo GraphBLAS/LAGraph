@@ -11,15 +11,16 @@
 // LAGraph_SampleDegree computes estimates of the mean and median of the
 // row or column degree of a graph.
 
-#define LAGraph_FREE_ALL LAGraph_Free ((void **) &samples) ;
+#define LG_FREE_ALL LAGraph_Free ((void **) &samples) ;
 
 #include "LG_internal.h"
 
 int LAGraph_SampleDegree
 (
+    // output:
     double *sample_mean,    // sampled mean degree
     double *sample_median,  // sampled median degree
-    // input
+    // input:
     LAGraph_Graph G,        // graph of n nodes
     bool byrow,             // if true, sample G->rowdegree, else G->coldegree
     int64_t nsamples,       // number of samples
@@ -100,6 +101,6 @@ int LAGraph_SampleDegree
     // free workspace and return result
     //--------------------------------------------------------------------------
 
-    LAGraph_FREE_ALL ;
+    LG_FREE_ALL ;
     return (GrB_SUCCESS) ;
 }

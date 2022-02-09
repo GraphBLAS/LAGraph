@@ -50,7 +50,7 @@ static GrB_Info Reduce_assign
     }
     GrB_TRY (GrB_Vector_clear (w)) ;
     GrB_TRY (GrB_Vector_build (w, ind, wval, n, GrB_PLUS_UINT64)) ;
-    LAGraph_FREE_ALL ;
+    LG_FREE_ALL ;
     return (GrB_SUCCESS) ;
 }
 
@@ -73,15 +73,15 @@ void my_select_func (void *z, const void *x,
 // LG_CC_Boruvka
 //------------------------------------------------------------------------------
 
-#undef  LAGraph_FREE_ALL
-#define LAGraph_FREE_ALL            \
+#undef  LG_FREE_ALL
+#define LG_FREE_ALL                 \
 {                                   \
-    LAGraph_FREE_WORK ;             \
+    LG_FREE_WORK ;                  \
     GrB_free (&parent) ;            \
 }
 
-#undef  LAGraph_FREE_WORK
-#define LAGraph_FREE_WORK           \
+#undef  LG_FREE_WORK
+#define LG_FREE_WORK                \
 {                                   \
     LAGraph_Free ((void **) &I) ;   \
     LAGraph_Free ((void **) &Px) ;  \
@@ -253,6 +253,6 @@ int LG_CC_Boruvka
     //--------------------------------------------------------------------------
 
     (*component) = parent ;
-    LAGraph_FREE_WORK ;
+    LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }
