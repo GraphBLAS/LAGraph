@@ -83,7 +83,7 @@ int LG_check_sssp
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
     char atype_name [LAGRAPH_MAX_NAME_LEN] ;
-    LG_TRY (LAGraph_MatrixTypeName (atype_name, G->A, msg)) ;
+    LG_TRY (LAGraph_Matrix_TypeName (atype_name, G->A, msg)) ;
     LG_ASSERT_MSG (MATCHNAME (atype_name, "int32_t"),
         GrB_NOT_IMPLEMENTED, "G->A must be int32") ; // RETVAL
     bool print_timings = (n >= 2000) ;

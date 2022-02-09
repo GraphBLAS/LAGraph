@@ -66,10 +66,10 @@ void test_TypeName  (void)
 
     char typename [LAGRAPH_MAX_NAME_LEN] ;
     OK (GrB_Scalar_new (&s, GrB_INT32)) ;
-    OK (LAGraph_ScalarTypeName (name, s, msg)) ;
+    OK (LAGraph_Scalar_TypeName (name, s, msg)) ;
     OK (strcmp (name, "int32_t")) ;
-    TEST_CHECK (LAGraph_ScalarTypeName (NULL, s, msg) == GrB_NULL_POINTER) ;
-    TEST_CHECK (LAGraph_ScalarTypeName (name, NULL, msg) == GrB_NULL_POINTER) ;
+    TEST_CHECK (LAGraph_Scalar_TypeName (NULL, s, msg) == GrB_NULL_POINTER) ;
+    TEST_CHECK (LAGraph_Scalar_TypeName (name, NULL, msg) == GrB_NULL_POINTER) ;
 
     name [0] = '\0' ;
     OK (GrB_Type_new (&type, sizeof (myint))) ;

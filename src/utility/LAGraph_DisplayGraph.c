@@ -45,7 +45,7 @@ int LAGraph_DisplayGraph
     GrB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
     char typename [LAGRAPH_MAX_NAME_LEN] ;
     char kindname [LAGRAPH_MAX_NAME_LEN] ;
-    LG_TRY (LAGraph_MatrixTypeName (typename, A, msg)) ;
+    LG_TRY (LAGraph_Matrix_TypeName (typename, A, msg)) ;
     LG_TRY (LAGraph_KindName (kindname, kind, msg)) ;
 
     if (pr >= 0)

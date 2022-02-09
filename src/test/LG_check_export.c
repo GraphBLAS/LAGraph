@@ -55,7 +55,7 @@ int LG_check_export
     // get the type of G->A
     GrB_Type atype = NULL ;
     char atype_name [LAGRAPH_MAX_NAME_LEN] ;
-    LG_TRY (LAGraph_MatrixTypeName (atype_name, G->A, msg)) ;
+    LG_TRY (LAGraph_Matrix_TypeName (atype_name, G->A, msg)) ;
     LG_TRY (LAGraph_TypeFromName (&atype, atype_name, msg)) ;
 
     size_t s = 0 ;

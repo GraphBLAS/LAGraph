@@ -43,7 +43,7 @@ int LG_ndiag
 
     GrB_Type atype ;
     char atype_name [LAGRAPH_MAX_NAME_LEN] ;
-    LG_TRY (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
+    LG_TRY (LAGraph_Matrix_TypeName (atype_name, A, msg)) ;
     LG_TRY (LAGraph_TypeFromName (&atype, atype_name, msg)) ;
 
     #if LG_SUITESPARSE

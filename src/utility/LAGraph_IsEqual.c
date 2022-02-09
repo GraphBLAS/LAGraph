@@ -58,8 +58,8 @@ int LAGraph_IsEqual     // TODO rename LAGraph_Matrix_IsEqual
 
     char atype_name [LAGRAPH_MAX_NAME_LEN] ;
     char btype_name [LAGRAPH_MAX_NAME_LEN] ;
-    LG_TRY (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
-    LG_TRY (LAGraph_MatrixTypeName (btype_name, B, msg)) ;
+    LG_TRY (LAGraph_Matrix_TypeName (atype_name, A, msg)) ;
+    LG_TRY (LAGraph_Matrix_TypeName (btype_name, B, msg)) ;
     if (!MATCHNAME (atype_name, btype_name))
     {
         // types differ

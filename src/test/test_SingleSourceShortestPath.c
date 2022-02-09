@@ -88,7 +88,7 @@ void test_SingleSourceShortestPath(void)
         TEST_CHECK (n == ncols) ;
 
         // convert A to int32
-        OK (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
+        OK (LAGraph_Matrix_TypeName (atype_name, A, msg)) ;
         if (!MATCHNAME (atype_name, "int32_t"))
         {
             OK (GrB_Matrix_new (&T, GrB_INT32, n, n)) ;
@@ -187,7 +187,7 @@ void test_SingleSourceShortestPath_brutal (void)
         }
 
         // convert A to int32
-        OK (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
+        OK (LAGraph_Matrix_TypeName (atype_name, A, msg)) ;
         if (!MATCHNAME (atype_name, "int32_t"))
         {
             OK (GrB_Matrix_new (&T, GrB_INT32, n, n)) ;

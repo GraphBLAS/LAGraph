@@ -47,10 +47,10 @@
 #include "LG_internal.h"
 
 //------------------------------------------------------------------------------
-// LAGraph_MatrixTypeName: return the name of the GrB_Type of a GrB_Matrix
+// LAGraph_Matrix_TypeName: return the name of the GrB_Type of a GrB_Matrix
 //------------------------------------------------------------------------------
 
-int LAGraph_MatrixTypeName  // TODO rename LAGraph_Matrix_TypeName
+int LAGraph_Matrix_TypeName
 (
     // output:
     char *name,     // name of the type of the matrix A (user-provided array
@@ -81,10 +81,10 @@ int LAGraph_MatrixTypeName  // TODO rename LAGraph_Matrix_TypeName
 }
 
 //------------------------------------------------------------------------------
-// LAGraph_VectorTypeName: return the name of the GrB_Type of a GrB_Vector
+// LAGraph_Vector_TypeName: return the name of the GrB_Type of a GrB_Vector
 //------------------------------------------------------------------------------
 
-int LAGraph_VectorTypeName  // TODO rename LAGraph_Vector_TypeName
+int LAGraph_Vector_TypeName
 (
     // output:
     char *name,     // name of the type of the vector v (user-provided array
@@ -115,10 +115,10 @@ int LAGraph_VectorTypeName  // TODO rename LAGraph_Vector_TypeName
 }
 
 //------------------------------------------------------------------------------
-// LAGraph_ScalarTypeName: return the name of the GrB_Type of a GrB_Scalar
+// LAGraph_Scalar_TypeName: return the name of the GrB_Type of a GrB_Scalar
 //------------------------------------------------------------------------------
 
-int LAGraph_ScalarTypeName  // TODO rename LAGraph_Scalar_TypeName
+int LAGraph_Scalar_TypeName
 (
     // output:
     char *name,     // name of the type of the scalar s (user-provided array

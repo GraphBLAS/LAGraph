@@ -68,7 +68,7 @@ void test_Vector_Structure (void)
     TEST_CHECK (n == 10) ;
     OK (GrB_Vector_nvals (&nvals, u)) ;
     TEST_CHECK (nvals == 3) ;
-    OK (LAGraph_VectorTypeName (wtype_name, w, msg)) ;
+    OK (LAGraph_Vector_TypeName (wtype_name, w, msg)) ;
     TEST_CHECK (MATCHNAME (wtype_name, "bool")) ;
 
     bool x = false ;
@@ -85,7 +85,6 @@ void test_Vector_Structure (void)
     result = GrB_Vector_extractElement_BOOL (&x, w, 7) ;
     TEST_CHECK (result == GrB_SUCCESS) ;
     TEST_CHECK (x) ;
-
 
     OK (GrB_free (&w)) ;
     OK (GrB_free (&u)) ;
@@ -121,7 +120,7 @@ void test_Vector_Structure_brutal (void)
     TEST_CHECK (n == 10) ;
     OK (GrB_Vector_nvals (&nvals, u)) ;
     TEST_CHECK (nvals == 3) ;
-    OK (LAGraph_VectorTypeName (wtype_name, w, msg)) ;
+    OK (LAGraph_Vector_TypeName (wtype_name, w, msg)) ;
     TEST_CHECK (MATCHNAME (wtype_name, "bool")) ;
 
     bool x = false ;

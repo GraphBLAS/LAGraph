@@ -87,7 +87,7 @@ void test_export (void)
         OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
-        OK (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
+        OK (LAGraph_Matrix_TypeName (atype_name, A, msg)) ;
         OK (LAGraph_TypeFromName (&atype, atype_name, msg)) ;
 
         // create the graph
@@ -158,7 +158,7 @@ void test_export_brutal (void)
         OK (fclose (f)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
-        OK (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
+        OK (LAGraph_Matrix_TypeName (atype_name, A, msg)) ;
         OK (LAGraph_TypeFromName (&atype, atype_name, msg)) ;
 
         // create the graph

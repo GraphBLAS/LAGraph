@@ -106,7 +106,7 @@ void test_Property_AT (void)
             GrB_Index nrows, ncols ;
             OK (GrB_Matrix_nrows (&nrows, G->A)) ;
             OK (GrB_Matrix_nrows (&ncols, G->A)) ;
-            OK (LAGraph_MatrixTypeName (atype_name, G->A, msg)) ;
+            OK (LAGraph_Matrix_TypeName (atype_name, G->A, msg)) ;
             OK (LAGraph_TypeFromName (&atype, atype_name, msg)) ;
             OK (GrB_Matrix_new (&B, atype, nrows, ncols)) ;
             OK (GrB_transpose (B, NULL, NULL, G->AT, NULL)) ;
@@ -171,7 +171,7 @@ void test_Property_AT_brutal (void)
             GrB_Index nrows, ncols ;
             OK (GrB_Matrix_nrows (&nrows, G->A)) ;
             OK (GrB_Matrix_nrows (&ncols, G->A)) ;
-            OK (LAGraph_MatrixTypeName (atype_name, G->A, msg)) ;
+            OK (LAGraph_Matrix_TypeName (atype_name, G->A, msg)) ;
             OK (LAGraph_TypeFromName (&atype, atype_name, msg)) ;
             OK (GrB_Matrix_new (&B, atype, nrows, ncols)) ;
             OK (GrB_transpose (B, NULL, NULL, G->AT, NULL)) ;

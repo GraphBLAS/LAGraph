@@ -142,7 +142,7 @@ void test_IsEqual (void)
         // compare two vectors
         //----------------------------------------------------------------------
 
-        OK (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
+        OK (LAGraph_Matrix_TypeName (atype_name, A, msg)) ;
         OK (LAGraph_TypeFromName (&atype, atype_name, msg)) ;
         OK (GrB_Vector_new (&u, atype, ancols)) ;
         OK (GrB_Vector_new (&v, atype, bncols)) ;
@@ -237,7 +237,7 @@ void test_IsEqual_brutal (void)
         // compare two vectors
         //----------------------------------------------------------------------
 
-        LG_BRUTAL (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
+        LG_BRUTAL (LAGraph_Matrix_TypeName (atype_name, A, msg)) ;
         LG_BRUTAL (LAGraph_TypeFromName (&atype, atype_name, msg)) ;
         LG_BRUTAL (GrB_Vector_new (&u, atype, ancols)) ;
         LG_BRUTAL (GrB_Vector_new (&v, atype, bncols)) ;

@@ -102,7 +102,7 @@ void test_DisplayGraph (void)
         OK (fclose (f)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
-        OK (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
+        OK (LAGraph_Matrix_TypeName (atype_name, A, msg)) ;
         if (MATCHNAME (atype_name, "double"))
         {
             OK (GrB_Matrix_setElement (A, 3.14159265358979323, 0, 1)) ;
@@ -233,7 +233,7 @@ void test_DisplayGraph_brutal (void)
         OK (fclose (f)) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
-        OK (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
+        OK (LAGraph_Matrix_TypeName (atype_name, A, msg)) ;
         if (MATCHNAME (atype_name, "double"))
         {
             OK (GrB_Matrix_setElement (A, 3.14159265358979323, 0, 1)) ;

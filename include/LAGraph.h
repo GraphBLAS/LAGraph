@@ -1167,14 +1167,14 @@ int LAGraph_SizeOfType
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_MatrixTypeName: return the name of the GrB_Type of a GrB_Matrix
+// LAGraph_Matrix_TypeName: return the name of the GrB_Type of a GrB_Matrix
 //------------------------------------------------------------------------------
 
-// LAGraph_MatrixTypeName returns the name of the GrB_Type of a GrB_Matrix.
+// LAGraph_Matrix_TypeName returns the name of the GrB_Type of a GrB_Matrix.
 // Currently, this method requires SuiteSparse:GraphBLAS.
 
 LAGRAPH_PUBLIC
-int LAGraph_MatrixTypeName  // TODO rename LAGraph_Matrix_TypeName
+int LAGraph_Matrix_TypeName
 (
     // output:
     char *name,     // name of the type of the matrix A (user-provided array
@@ -1185,14 +1185,14 @@ int LAGraph_MatrixTypeName  // TODO rename LAGraph_Matrix_TypeName
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_VectorTypeName: return the name of the GrB_Type of a GrB_Vector
+// LAGraph_Vector_TypeName: return the name of the GrB_Type of a GrB_Vector
 //------------------------------------------------------------------------------
 
-// LAGraph_VectorTypeName returns the name of the GrB_Type of a GrB_Vector.
+// LAGraph_Vector_TypeName returns the name of the GrB_Type of a GrB_Vector.
 // Currently, this method requires SuiteSparse:GraphBLAS.
 
 LAGRAPH_PUBLIC
-int LAGraph_VectorTypeName  // TODO rename LAGraph_Vector_TypeName
+int LAGraph_Vector_TypeName
 (
     // output:
     char *name,     // name of the type of the vector v (user-provided array
@@ -1203,14 +1203,14 @@ int LAGraph_VectorTypeName  // TODO rename LAGraph_Vector_TypeName
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_ScalarTypeName: return the name of the GrB_Type of a GrB_Scalar
+// LAGraph_Scalar_TypeName: return the name of the GrB_Type of a GrB_Scalar
 //------------------------------------------------------------------------------
 
-// LAGraph_ScalarTypeName returns the name of the GrB_Type of a GrB_Scalar.
+// LAGraph_Scalar_TypeName returns the name of the GrB_Type of a GrB_Scalar.
 // Currently, this method requires SuiteSparse:GraphBLAS.
 
 LAGRAPH_PUBLIC
-int LAGraph_ScalarTypeName  // TODO rename LAGraph_Scalar_TypeName
+int LAGraph_Scalar_TypeName
 (
     // output:
     char *name,     // name of the type of the scalar s (user-provided array

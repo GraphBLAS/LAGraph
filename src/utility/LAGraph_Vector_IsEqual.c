@@ -69,8 +69,8 @@ int LAGraph_Vector_IsEqual
 
     char atype_name [LAGRAPH_MAX_NAME_LEN] ;
     char btype_name [LAGRAPH_MAX_NAME_LEN] ;
-    LG_TRY (LAGraph_VectorTypeName (atype_name, A, msg)) ;
-    LG_TRY (LAGraph_VectorTypeName (btype_name, B, msg)) ;
+    LG_TRY (LAGraph_Vector_TypeName (atype_name, A, msg)) ;
+    LG_TRY (LAGraph_Vector_TypeName (btype_name, B, msg)) ;
     if (!MATCHNAME (atype_name, btype_name))
     {
         // types differ

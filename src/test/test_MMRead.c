@@ -174,7 +174,7 @@ void test_MMRead (void)
         TEST_CHECK (ncols == files [k].ncols) ;
         TEST_CHECK (nvals == files [k].nvals) ;
 
-        OK (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
+        OK (LAGraph_Matrix_TypeName (atype_name, A, msg)) ;
         printf ("types: [%s] [%s]\n", atype_name, files [k].type) ;
         TEST_CHECK (MATCHNAME (atype_name, files [k].type)) ;
         TEST_MSG ("Stats are wrong for %s\n", aname) ;
@@ -210,7 +210,7 @@ void test_MMRead (void)
         // ensure A and B are the same
         //----------------------------------------------------------------------
 
-        OK (LAGraph_MatrixTypeName (btype_name, B, msg)) ;
+        OK (LAGraph_Matrix_TypeName (btype_name, B, msg)) ;
         TEST_CHECK (MATCHNAME (atype_name, btype_name)) ;
         bool ok ;
         OK (LAGraph_IsEqual (&ok, A, B, msg)) ;
@@ -252,7 +252,7 @@ void test_karate (void)
     FILE *f = fopen (LG_DATA_DIR "karate.mtx", "r") ;
     TEST_CHECK (f != NULL) ;
     OK (LAGraph_MMRead (&A, f, msg)) ;
-    OK (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
+    OK (LAGraph_Matrix_TypeName (atype_name, A, msg)) ;
     TEST_CHECK (MATCHNAME (atype_name, "bool")) ;
     OK (fclose (f)) ;
     OK (LAGraph_Matrix_print (A, 2, stdout, msg)) ;
@@ -381,7 +381,7 @@ void test_jumbled (void)
     FILE *f = fopen (LG_DATA_DIR "west0067.mtx", "r") ;
     TEST_CHECK (f != NULL) ;
     OK (LAGraph_MMRead (&A, f, msg)) ;
-    OK (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
+    OK (LAGraph_Matrix_TypeName (atype_name, A, msg)) ;
     TEST_CHECK (MATCHNAME (atype_name, "double")) ;
     OK (fclose (f)) ;
     TEST_MSG ("Loading of west0067.mtx failed") ;
@@ -393,7 +393,7 @@ void test_jumbled (void)
     f = fopen (LG_DATA_DIR "west0067_jumbled.mtx", "r") ;
     TEST_CHECK (f != NULL) ;
     OK (LAGraph_MMRead (&B, f, msg)) ;
-    OK (LAGraph_MatrixTypeName (btype_name, B, msg)) ;
+    OK (LAGraph_Matrix_TypeName (btype_name, B, msg)) ;
     TEST_CHECK (MATCHNAME (btype_name, "double")) ;
     OK (fclose (f)) ;
     TEST_MSG ("Loading of west0067_jumbled.mtx failed") ;
@@ -454,7 +454,7 @@ void test_MMWrite (void)
         OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Failed to load %s\n", aname) ;
-        OK (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
+        OK (LAGraph_Matrix_TypeName (atype_name, A, msg)) ;
 
         //----------------------------------------------------------------------
         // create a file for comments
@@ -489,7 +489,7 @@ void test_MMWrite (void)
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&B, f, msg)) ;
 
-        OK (LAGraph_MatrixTypeName (btype_name, B, msg)) ;
+        OK (LAGraph_Matrix_TypeName (btype_name, B, msg)) ;
         TEST_CHECK (MATCHNAME (atype_name, btype_name)) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of %s failed", filename) ;
@@ -662,8 +662,8 @@ void test_MMReadWrite_brutal (void)
         // ensure A and B are the same
         //----------------------------------------------------------------------
 
-        OK (LAGraph_MatrixTypeName (atype_name, A, msg)) ;
-        OK (LAGraph_MatrixTypeName (btype_name, B, msg)) ;
+        OK (LAGraph_Matrix_TypeName (atype_name, A, msg)) ;
+        OK (LAGraph_Matrix_TypeName (btype_name, B, msg)) ;
         TEST_CHECK (MATCHNAME (atype_name, btype_name)) ;
 
         bool ok ;

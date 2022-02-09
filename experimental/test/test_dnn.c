@@ -95,7 +95,7 @@ void test_dnn (void)
     OK (LAGraph_MMRead (&Y0, f, msg)) ;
     fclose (f) ;
     char type_name [LAGRAPH_MAX_NAME_LEN] ;
-    OK (LAGraph_MatrixTypeName (type_name, Y0, msg)) ;
+    OK (LAGraph_Matrix_TypeName (type_name, Y0, msg)) ;
     TEST_CHECK (MATCHNAME (type_name, "float")) ;
     OK (GrB_wait (Y0, GrB_MATERIALIZE)) ;
 
@@ -108,7 +108,7 @@ void test_dnn (void)
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&(W [layer]), f, msg)) ;
         fclose (f) ;
-        OK (LAGraph_MatrixTypeName (type_name, W [layer], msg)) ;
+        OK (LAGraph_Matrix_TypeName (type_name, W [layer], msg)) ;
         TEST_CHECK (MATCHNAME (type_name, "float")) ;
 
         // construct the bias matrix: Bias [layer].  Note that all Bias
@@ -129,7 +129,7 @@ void test_dnn (void)
     f = fopen (filename, "r") ;
     TEST_CHECK (f != NULL) ;
     OK (LAGraph_MMRead (&T, f, msg)) ;
-    OK (LAGraph_MatrixTypeName (type_name, T, msg)) ;
+    OK (LAGraph_Matrix_TypeName (type_name, T, msg)) ;
     TEST_CHECK (MATCHNAME (type_name, "bool")) ;
     // TrueCategories = T, as a boolean nfeatures-by-1 vector
     printf ("\nTrue categories:\n") ;

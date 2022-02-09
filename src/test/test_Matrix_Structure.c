@@ -76,7 +76,7 @@ void test_Matrix_Structure (void)
         f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&B, f, msg)) ;
-        OK (LAGraph_MatrixTypeName (btype_name, B, msg)) ;
+        OK (LAGraph_Matrix_TypeName (btype_name, B, msg)) ;
         TEST_CHECK (MATCHNAME (btype_name, "bool")) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of structure matrix failed") ;
@@ -124,7 +124,7 @@ void test_Matrix_Structure_brutal (void)
         f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&B, f, msg)) ;
-        OK (LAGraph_MatrixTypeName (btype_name, B, msg)) ;
+        OK (LAGraph_Matrix_TypeName (btype_name, B, msg)) ;
         TEST_CHECK (MATCHNAME (btype_name, "bool")) ;
         OK (fclose (f)) ;
         TEST_MSG ("Loading of structure matrix failed") ;

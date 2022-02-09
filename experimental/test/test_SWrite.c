@@ -111,7 +111,7 @@ void test_SWrite (void)
         // GxB_print (A, 3) ;
 
         // get the name of the C typedef for the matrix
-        OK (LAGraph_MatrixTypeName (atypename, A, msg)) ;
+        OK (LAGraph_Matrix_TypeName (atypename, A, msg)) ;
         OK (LAGraph_TypeFromName (&atype, atypename, msg)) ;
 
         #if LG_SUITESPARSE
