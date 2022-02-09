@@ -130,20 +130,44 @@ void test_IsEqual (void)
         // compare the two matrices
         //----------------------------------------------------------------------
 
-        bool result = false ;
+        bool same = false ;
 
-        OK (LAGraph_Matrix_IsEqual (&result, A, B, msg)) ;
-        TEST_CHECK (result == isequal) ;
+        OK (LAGraph_Matrix_IsEqual (&same, A, B, msg)) ;
+        TEST_CHECK (same == isequal) ;
 
-        OK (LAGraph_Matrix_IsEqual (&result, A, A, msg)) ;
-        TEST_CHECK (result == true) ;
+        OK (LAGraph_Matrix_IsEqual (&same, A, A, msg)) ;
+        TEST_CHECK (same == true) ;
+
+        //----------------------------------------------------------------------
+        // compare the two matrices with a given op
+        //----------------------------------------------------------------------
+
+        OK (LAGraph_Matrix_TypeName (atype_name, A, msg)) ;
+        OK (LAGraph_TypeFromName (&atype, atype_name, msg)) ;
+
+        GrB_BinaryOp op = NULL ;
+        if      (atype == GrB_BOOL  ) op = GrB_EQ_BOOL   ;
+        else if (atype == GrB_INT8  ) op = GrB_EQ_INT8   ;
+        else if (atype == GrB_INT16 ) op = GrB_EQ_INT16  ;
+        else if (atype == GrB_INT32 ) op = GrB_EQ_INT32  ;
+        else if (atype == GrB_INT64 ) op = GrB_EQ_INT64  ;
+        else if (atype == GrB_UINT8 ) op = GrB_EQ_UINT8  ;
+        else if (atype == GrB_UINT16) op = GrB_EQ_UINT16 ;
+        else if (atype == GrB_UINT32) op = GrB_EQ_UINT32 ;
+        else if (atype == GrB_UINT64) op = GrB_EQ_UINT64 ;
+        else if (atype == GrB_FP32  ) op = GrB_EQ_FP32   ;
+        else if (atype == GrB_FP64  ) op = GrB_EQ_FP64   ;
+
+        OK (LAGraph_Matrix_IsEqual_op (&same, A, B, op, msg)) ;
+        TEST_CHECK (same == isequal) ;
+
+        OK (LAGraph_Matrix_IsEqual_op (&same, A, A, op, msg)) ;
+        TEST_CHECK (same == true) ;
 
         //----------------------------------------------------------------------
         // compare two vectors
         //----------------------------------------------------------------------
 
-        OK (LAGraph_Matrix_TypeName (atype_name, A, msg)) ;
-        OK (LAGraph_TypeFromName (&atype, atype_name, msg)) ;
         OK (GrB_Vector_new (&u, atype, ancols)) ;
         OK (GrB_Vector_new (&v, atype, bncols)) ;
         OK (GrB_Col_extract (u, NULL, NULL, A, GrB_ALL, ancols, 0,
@@ -151,14 +175,14 @@ void test_IsEqual (void)
         OK (GrB_Col_extract (v, NULL, NULL, B, GrB_ALL, bncols, 0,
             GrB_DESC_T0)) ;
 
-        OK (LAGraph_Vector_IsEqual (&result, u, v, msg)) ;
-        TEST_CHECK (result == isequal0) ;
+        OK (LAGraph_Vector_IsEqual (&same, u, v, msg)) ;
+        TEST_CHECK (same == isequal0) ;
 
-        OK (LAGraph_Vector_IsEqual (&result, u, u, msg)) ;
-        TEST_CHECK (result == true) ;
+        OK (LAGraph_Vector_IsEqual (&same, u, u, msg)) ;
+        TEST_CHECK (same == true) ;
 
-        OK (LAGraph_Vector_IsEqual (&result, u, u, msg)) ;
-        TEST_CHECK (result == true) ;
+        OK (LAGraph_Vector_IsEqual (&same, u, u, msg)) ;
+        TEST_CHECK (same == true) ;
 
         OK (GrB_free (&u)) ;
         OK (GrB_free (&v)) ;
@@ -225,20 +249,44 @@ void test_IsEqual_brutal (void)
         // compare the two matrices
         //----------------------------------------------------------------------
 
-        bool result = false ;
+        bool same = false ;
 
-        LG_BRUTAL (LAGraph_Matrix_IsEqual (&result, A, B, msg)) ;
-        TEST_CHECK (result == isequal) ;
+        LG_BRUTAL (LAGraph_Matrix_IsEqual (&same, A, B, msg)) ;
+        TEST_CHECK (same == isequal) ;
 
-        LG_BRUTAL (LAGraph_Matrix_IsEqual (&result, A, A, msg)) ;
-        TEST_CHECK (result == true) ;
+        LG_BRUTAL (LAGraph_Matrix_IsEqual (&same, A, A, msg)) ;
+        TEST_CHECK (same == true) ;
+
+        //----------------------------------------------------------------------
+        // compare the two matrices with a given op
+        //----------------------------------------------------------------------
+
+        LG_BRUTAL (LAGraph_Matrix_TypeName (atype_name, A, msg)) ;
+        LG_BRUTAL (LAGraph_TypeFromName (&atype, atype_name, msg)) ;
+
+        GrB_BinaryOp op = NULL ;
+        if      (atype == GrB_BOOL  ) op = GrB_EQ_BOOL   ;
+        else if (atype == GrB_INT8  ) op = GrB_EQ_INT8   ;
+        else if (atype == GrB_INT16 ) op = GrB_EQ_INT16  ;
+        else if (atype == GrB_INT32 ) op = GrB_EQ_INT32  ;
+        else if (atype == GrB_INT64 ) op = GrB_EQ_INT64  ;
+        else if (atype == GrB_UINT8 ) op = GrB_EQ_UINT8  ;
+        else if (atype == GrB_UINT16) op = GrB_EQ_UINT16 ;
+        else if (atype == GrB_UINT32) op = GrB_EQ_UINT32 ;
+        else if (atype == GrB_UINT64) op = GrB_EQ_UINT64 ;
+        else if (atype == GrB_FP32  ) op = GrB_EQ_FP32   ;
+        else if (atype == GrB_FP64  ) op = GrB_EQ_FP64   ;
+
+        LG_BRUTAL (LAGraph_Matrix_IsEqual_op (&same, A, B, op, msg)) ;
+        TEST_CHECK (same == isequal) ;
+
+        LG_BRUTAL (LAGraph_Matrix_IsEqual_op (&same, A, A, op, msg)) ;
+        TEST_CHECK (same == true) ;
 
         //----------------------------------------------------------------------
         // compare two vectors
         //----------------------------------------------------------------------
 
-        LG_BRUTAL (LAGraph_Matrix_TypeName (atype_name, A, msg)) ;
-        LG_BRUTAL (LAGraph_TypeFromName (&atype, atype_name, msg)) ;
         LG_BRUTAL (GrB_Vector_new (&u, atype, ancols)) ;
         LG_BRUTAL (GrB_Vector_new (&v, atype, bncols)) ;
         LG_BRUTAL (GrB_Col_extract (u, NULL, NULL, A, GrB_ALL, ancols, 0,
@@ -246,14 +294,14 @@ void test_IsEqual_brutal (void)
         LG_BRUTAL (GrB_Col_extract (v, NULL, NULL, B, GrB_ALL, bncols, 0,
             GrB_DESC_T0)) ;
 
-        LG_BRUTAL (LAGraph_Vector_IsEqual (&result, u, v, msg)) ;
-        TEST_CHECK (result == isequal0) ;
+        LG_BRUTAL (LAGraph_Vector_IsEqual (&same, u, v, msg)) ;
+        TEST_CHECK (same == isequal0) ;
 
-        LG_BRUTAL (LAGraph_Vector_IsEqual (&result, u, u, msg)) ;
-        TEST_CHECK (result == true) ;
+        LG_BRUTAL (LAGraph_Vector_IsEqual (&same, u, u, msg)) ;
+        TEST_CHECK (same == true) ;
 
-        LG_BRUTAL (LAGraph_Vector_IsEqual (&result, u, u, msg)) ;
-        TEST_CHECK (result == true) ;
+        LG_BRUTAL (LAGraph_Vector_IsEqual (&same, u, u, msg)) ;
+        TEST_CHECK (same == true) ;
 
         LG_BRUTAL (GrB_free (&u)) ;
         OK (GrB_free (&v)) ;
@@ -280,19 +328,20 @@ void test_IsEqual_failures (void)
     setup ( ) ;
     printf ("\nTest IsEqual: error handling and special cases\n") ;
 
-    bool result = false ;
+    bool same = false ;
     // not a failure, but a special case:
-    OK (LAGraph_Matrix_IsEqual (&result, NULL, NULL, msg)) ;
-    TEST_CHECK (result == true) ;
+    OK (LAGraph_Matrix_IsEqual (&same, NULL, NULL, msg)) ;
+    TEST_CHECK (same == true) ;
 
-    OK (LAGraph_Vector_IsEqual (&result, NULL, NULL, msg)) ;
-    TEST_CHECK (result == true) ;
+    OK (LAGraph_Vector_IsEqual (&same, NULL, NULL, msg)) ;
+    TEST_CHECK (same == true) ;
 
-    TEST_CHECK (LAGraph_Matrix_IsEqual (NULL, NULL, NULL, msg)
-        == GrB_NULL_POINTER) ;
+    int result = LAGraph_Matrix_IsEqual (NULL, NULL, NULL, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
-    TEST_CHECK (LAGraph_Matrix_IsEqual (NULL, NULL, NULL, msg) == GrB_NULL_POINTER) ;
+    result = LAGraph_Matrix_IsEqual (NULL, NULL, NULL, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
     OK (GrB_Matrix_new (&A, GrB_BOOL, 2, 2)) ;
@@ -301,21 +350,32 @@ void test_IsEqual_failures (void)
     OK (GrB_Vector_new (&u, GrB_BOOL, 2)) ;
     OK (GrB_Vector_new (&v, GrB_BOOL, 2)) ;
 
-    TEST_CHECK (LAGraph_Matrix_IsEqual (NULL, A, B, msg) == GrB_NULL_POINTER) ;
+    result = LAGraph_Matrix_IsEqual (NULL, A, B, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
-    TEST_CHECK (LAGraph_Vector_IsEqual (NULL, u, v, msg) == GrB_NULL_POINTER) ;
+    result = LAGraph_Matrix_IsEqual_op (&same, A, B, NULL, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
-    TEST_CHECK (LAGraph_Matrix_IsEqual (NULL, A, B, msg)
-        == GrB_NULL_POINTER) ;
+    result = LAGraph_Vector_IsEqual (NULL, u, v, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
-    TEST_CHECK (LAGraph_Matrix_IsEqual (NULL, A, B, msg) == GrB_NULL_POINTER) ;
+    result = LAGraph_Vector_IsEqual_op (&same, u, v, NULL, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
-    OK (LAGraph_Matrix_IsEqual (&result, A, B, msg)) ;
-    TEST_CHECK (result == true) ;
+    result = LAGraph_Matrix_IsEqual (NULL, A, B, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
+    printf ("msg: %s\n", msg) ;
+
+    result = LAGraph_Matrix_IsEqual (NULL, A, B, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
+    printf ("msg: %s\n", msg) ;
+
+    OK (LAGraph_Matrix_IsEqual (&same, A, B, msg)) ;
+    TEST_CHECK (same == true) ;
 
     OK (GrB_free (&u)) ;
     OK (GrB_free (&v)) ;
@@ -332,37 +392,37 @@ void test_Vector_IsEqual (void)
 {
     setup ( ) ;
 
-    bool result = false ;
-    OK (LAGraph_Vector_IsEqual_op (&result, NULL, NULL, GrB_EQ_BOOL, msg)) ;
-    TEST_CHECK (result == true) ;
+    bool same = false ;
+    OK (LAGraph_Vector_IsEqual_op (&same, NULL, NULL, GrB_EQ_BOOL, msg)) ;
+    TEST_CHECK (same == true) ;
 
     OK (GrB_Vector_new (&u, GrB_BOOL, 3)) ;
     OK (GrB_Vector_new (&v, GrB_BOOL, 2)) ;
 
-    OK (LAGraph_Vector_IsEqual_op (&result, u, v, GrB_EQ_BOOL, msg)) ;
-    TEST_CHECK (result == false) ;
+    OK (LAGraph_Vector_IsEqual_op (&same, u, v, GrB_EQ_BOOL, msg)) ;
+    TEST_CHECK (same == false) ;
 
     OK (GrB_free (&u)) ;
     OK (GrB_Vector_new (&u, GrB_BOOL, 2)) ;
 
-    OK (LAGraph_Vector_IsEqual_op (&result, u, v, GrB_EQ_BOOL, msg)) ;
-    TEST_CHECK (result == true) ;
+    OK (LAGraph_Vector_IsEqual_op (&same, u, v, GrB_EQ_BOOL, msg)) ;
+    TEST_CHECK (same == true) ;
 
     OK (GrB_Vector_setElement (u, true, 0)) ;
     OK (GrB_Vector_setElement (v, true, 1)) ;
-    OK (LAGraph_Vector_IsEqual_op (&result, u, v, GrB_EQ_BOOL, msg)) ;
-    TEST_CHECK (result == false) ;
+    OK (LAGraph_Vector_IsEqual_op (&same, u, v, GrB_EQ_BOOL, msg)) ;
+    TEST_CHECK (same == false) ;
 
-    OK (LAGraph_Vector_IsEqual (&result, u, v, msg)) ;
-    TEST_CHECK (result == false) ;
+    OK (LAGraph_Vector_IsEqual (&same, u, v, msg)) ;
+    TEST_CHECK (same == false) ;
 
     OK (GrB_free (&u)) ;
     OK (GrB_free (&v)) ;
 
     OK (GrB_Vector_new (&u, GrB_BOOL, 3)) ;
     OK (GrB_Vector_new (&v, GrB_FP32, 3)) ;
-    OK (LAGraph_Vector_IsEqual (&result, u, v, msg)) ;
-    TEST_CHECK (result == false) ;
+    OK (LAGraph_Vector_IsEqual (&same, u, v, msg)) ;
+    TEST_CHECK (same == false) ;
 
     OK (GrB_free (&u)) ;
     OK (GrB_free (&v)) ;

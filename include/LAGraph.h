@@ -1342,44 +1342,13 @@ int LAGraph_Matrix_IsEqual
 // operator.  The op may be built-in or user-defined.
 
 LAGRAPH_PUBLIC
-int LAGraph_Matrix_IsEqual_op // TODO write it
+int LAGraph_Matrix_IsEqual_op
 (
     // output:
     bool *result,           // true if A == B, false if A != B or error
     // input:
     GrB_Matrix A,
     GrB_Matrix B,
-    GrB_BinaryOp op,        // comparator to use
-    char *msg
-) ;
-
-//------------------------------------------------------------------------------
-// LAGraph_Vector_IsEqual_op: check if two vectors are equal with given op
-//------------------------------------------------------------------------------
-
-/**
- * Checks if two vectors are identically equal (same size, pattern,
- * and values) according to a user specified comparator op.
- *
- *
- * @param[out]   result   Set to true on return is vectors are "equal"
- * @param[in]    A        First vector to compare
- * @param[in]    B        Second vector to compare
- * @param[in]    op       Binary operator to use for the comparisons
- * @param[out]   msg      If an error code is returned, this may hold an error msg.
- *
- * @retval GrB_SUCCESS          if completed successfully (equal or not)
- * @retval GrB_NULL_POINTER     result or op is NULL
- * @return Any GraphBLAS errors that may have been encountered
- */
-LAGRAPH_PUBLIC
-int LAGraph_Vector_IsEqual_op
-(
-    // output:
-    bool *result,           // true if A == B, false if A != B or error
-    // input:
-    GrB_Vector A,
-    GrB_Vector B,
     GrB_BinaryOp op,        // comparator to use
     char *msg
 ) ;
@@ -1413,6 +1382,37 @@ int LAGraph_Vector_IsEqual
     // input:
     GrB_Vector A,
     GrB_Vector B,
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
+// LAGraph_Vector_IsEqual_op: check if two vectors are equal with given op
+//------------------------------------------------------------------------------
+
+/**
+ * Checks if two vectors are identically equal (same size, pattern,
+ * and values) according to a user specified comparator op.
+ *
+ *
+ * @param[out]   result   Set to true on return is vectors are "equal"
+ * @param[in]    A        First vector to compare
+ * @param[in]    B        Second vector to compare
+ * @param[in]    op       Binary operator to use for the comparisons
+ * @param[out]   msg      If an error code is returned, this may hold an error msg.
+ *
+ * @retval GrB_SUCCESS          if completed successfully (equal or not)
+ * @retval GrB_NULL_POINTER     result or op is NULL
+ * @return Any GraphBLAS errors that may have been encountered
+ */
+LAGRAPH_PUBLIC
+int LAGraph_Vector_IsEqual_op
+(
+    // output:
+    bool *result,           // true if A == B, false if A != B or error
+    // input:
+    GrB_Vector A,
+    GrB_Vector B,
+    GrB_BinaryOp op,        // comparator to use
     char *msg
 ) ;
 
@@ -1550,7 +1550,7 @@ int LAGraph_Sort3
  * @param[in]     pushpull   if true, use push/pull; otherwise, use pushonly.
  *                           Push/pull is faster but requires G->AT,
  *                           G->rowdegree, and SuiteSparse:GraphBLAS.
- *                           TODO: consider removing this option or reverse logic
+ *                           TODO: consider removing option or reverse logic
  * @param[out]    msg        Error message if a failure code is returned.
  *
  * @retval GrB_SUCCESS      successful
@@ -1624,7 +1624,7 @@ int LAGraph_TriangleCount
 
 // TODO: this is an Advanced method, since G is input (not input/output). OK?
 // A Basic method should compute G->A_structure_is_symmetric for a directed
-// graph.
+// graph.  Do we need a Basic method too?
 
 LAGRAPH_PUBLIC
 int LAGraph_ConnectedComponents
