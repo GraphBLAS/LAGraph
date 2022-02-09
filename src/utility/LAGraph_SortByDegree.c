@@ -84,7 +84,7 @@ int LAGraph_SortByDegree
     }
 
     LG_ASSERT_MSG (Degree != NULL,
-        LAGRAPH_PROPERTY_MISSING, "degree property unknown") ; // RETVAL
+        LAGRAPH_PROPERTY_MISSING, "degree property unknown") ;
 
     //--------------------------------------------------------------------------
     // decide how many threads to use

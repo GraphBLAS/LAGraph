@@ -52,7 +52,7 @@ int LG_BreadthFirstSearch_SSGrB
     //--------------------------------------------------------------------------
 
 #if !LG_SUITESPARSE
-    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;      // RETVAL
+    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
 #else
 
     LG_CLEAR_MSG ;

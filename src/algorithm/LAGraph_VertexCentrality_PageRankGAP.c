@@ -70,11 +70,11 @@ int LAGraph_VertexCentrality_PageRankGAP
         // A and A' differ
         AT = G->AT ;
         LG_ASSERT_MSG (AT != NULL,
-            LAGRAPH_PROPERTY_MISSING, "G->AT is required") ;   // RETVAL
+            LAGRAPH_PROPERTY_MISSING, "G->AT is required") ;
     }
     GrB_Vector d_out = G->rowdegree ;
     LG_ASSERT_MSG (d_out != NULL,
-        LAGRAPH_PROPERTY_MISSING, "G->rowdegree is required") ; // RETVAL
+        LAGRAPH_PROPERTY_MISSING, "G->rowdegree is required") ;
 
     //--------------------------------------------------------------------------
     // initializations

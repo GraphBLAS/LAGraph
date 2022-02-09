@@ -56,7 +56,7 @@ int LAGraph_SampleDegree
     }
 
     LG_ASSERT_MSG (Degree != NULL,
-        LAGRAPH_PROPERTY_MISSING, "degree property unknown") ; // RETVAL
+        LAGRAPH_PROPERTY_MISSING, "degree property unknown") ;
 
     //--------------------------------------------------------------------------
     // allocate workspace

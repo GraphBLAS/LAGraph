@@ -52,16 +52,16 @@ static inline int LG_iheap_check
 {
 
     char *msg = NULL ;
-    LG_ASSERT_MSG (Heap != NULL && Iheap != NULL && nheap >= 0 && n >= 0,
-        -2000, "Heap is invalid") ; // RETVAL
+    LG_ASSERT_MSG (Heap != NULL && Iheap != NULL && nheap >= 0 && n >= 0, -2000,
+        "Heap is invalid") ;
 
     // check all entries in the heap
     for (int64_t p = 1 ; p <= nheap ; p++)
     {
         LG_Element e = Heap [p] ;
         int64_t name = e.name ;
-        LG_ASSERT_MSG (name >= 0 && name < n && p == Iheap [name], 
-            -2000, "Heap is invalid") ; // RETVAL
+        LG_ASSERT_MSG (name >= 0 && name < n && p == Iheap [name], -2000,
+            "Heap is invalid") ;
     }
 
     // check all objects
@@ -74,12 +74,10 @@ static inline int LG_iheap_check
         }
         else
         {
-            LG_ASSERT_MSG (p <= nheap,
-                -2000, "position of this object is invalid") ; // RETVAL
+            LG_ASSERT_MSG (p <= nheap, -2000, "position of object is invalid") ;
             // object with this name is in the heap at position p
             LG_Element e = Heap [p] ;
-            LG_ASSERT_MSG (e.name == name,
-                -2000, "Heap is invalid") ;  // RETVAL
+            LG_ASSERT_MSG (e.name == name, -2000, "Heap is invalid") ;
         }
     }
 
@@ -108,8 +106,8 @@ static inline int LG_heap_check
 {
 
     char *msg = NULL ;
-    LG_ASSERT_MSG (Heap != NULL && Iheap != NULL && nheap >= 0 && n >= 0,
-        -2000, "Heap is invalid") ; // RETVAL
+    LG_ASSERT_MSG (Heap != NULL && Iheap != NULL && nheap >= 0 && n >= 0, -2000,
+        "Heap is invalid") ;
 
 #if 0
     // dump the heap
@@ -143,10 +141,10 @@ static inline int LG_heap_check
         int64_t pright = pleft + 1 ;    // right child of node p
 
         LG_ASSERT_MSG (! (pleft <= nheap && Heap [p].key > Heap [pleft].key),
-            -2000, "the min-heap property is not satisfied") ; // RETVAL
+            -2000, "the min-heap property is not satisfied") ;
 
         LG_ASSERT_MSG (! (pright <= nheap && Heap [p].key > Heap [pright].key),
-            -2000, "the min-heap property is not satisfied") ; // RETVAL
+            -2000, "the min-heap property is not satisfied") ;
     }
 
     // Heap satisfies the min-heap property; also check Iheap

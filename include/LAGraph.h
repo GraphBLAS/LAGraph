@@ -223,9 +223,14 @@
 // @retval a negative GrB_Info value on error (in range -999 to -1)
 // @retval a positive GrB_Info value if successful but with extra information
 //         (in range 1 to 999)
-// @retval <= -1000 a common LAGraph-specific error, given in the list above
-// @retval > 1000 if successful, with extra LAGraph-specific information
+
+// @retval -1999 to -1000: a common LAGraph-specific error, given in the list
+//          above
+// @retval 1000 to 1999: if successful, with extra LAGraph-specific information
+
 // @retval <= -2000 an LAGraph error specific to a particular LAGraph method
+//         >= 2000
+
 
 // @param[in,out] msg   any error messages
 
@@ -1548,8 +1553,6 @@ int LAGraph_Sort3
  *                           TODO: consider removing this option or reverse logic
  * @param[out]    msg        Error message if a failure code is returned.
  *
- * @TODO pick return values that do not conflict with GraphBLAS errors.
- *
  * @retval GrB_SUCCESS      successful
  * @retval LAGRAPH_INVALID_GRAPH Graph is invalid (LAGraph_CheckGraph failed)
  */
@@ -1604,15 +1607,6 @@ int LAGraph_VertexCentrality    // TODO: write this
  * @param[out]    ntriangles On successful return, contains the number of tris.
  * @param[in,out] G          The graph, symmetric, no self loops.
  * @param[out]    msg        Error message if a failure code is returned.
- *
- * @TODO pick return values that do not conflict with GraphBLAS errors.
- *
- * @retval GrB_SUCCESS          successful
- * @retval LAGRAPH_INVALID_GRAPH Graph is invalid (LAGraph_CheckGraph failed)
- * @retval GrB_NULL_POINTER     ntriangles is NULL
- * @retval FIXME:RETVAL         G->ndiag (self loops) is nonzero
- * @retval FIXME:RETVAL         graph is not symmetric
- * @retval FIXME:RETVAL         G->rowdegree was not precalculated (for modes 3-6)
  */
 LAGRAPH_PUBLIC
 int LAGraph_TriangleCount
@@ -1730,13 +1724,13 @@ int LAGraph_VertexCentrality_PageRankGAP
  * @param[in]     G          The graph, symmetric, no self loops, and for some methods
  *                           (3-6), must have the row degree property calculated
  * @param[in]     method     specifies which algorithm to use
- *                             0:  use the default method
- *                             1:  Burkhardt:  ntri = sum (sum ((A^2) .* A)) / 6
- *                             2:  Cohen:      ntri = sum (sum ((L * U) .* A)) / 2
- *                             3:  Sandia:     ntri = sum (sum ((L * L) .* L))
- *                             4:  Sandia2:    ntri = sum (sum ((U * U) .* U))
- *                             5:  SandiaDot:  ntri = sum (sum ((L * U') .* L)).
- *                             6:  SandiaDot2: ntri = sum (sum ((U * L') .* U)).
+ *                           0:  use the default method
+ *                           1:  Burkhardt:  ntri = sum (sum ((A^2) .* A)) / 6
+ *                           2:  Cohen:      ntri = sum (sum ((L * U) .* A)) / 2
+ *                           3:  Sandia:     ntri = sum (sum ((L * L) .* L))
+ *                           4:  Sandia2:    ntri = sum (sum ((U * U) .* U))
+ *                           5:  SandiaDot:  ntri = sum (sum ((L * U') .* L)).
+ *                           6:  SandiaDot2: ntri = sum (sum ((U * L') .* U)).
  * @param[in,out] presort    controls the presort of the graph. If set
  *                           to 2 on input, presort will be set to sort type used
  *                           on output:
@@ -1754,12 +1748,7 @@ int LAGraph_VertexCentrality_PageRankGAP
  * @param[out]    msg        Error message if a failure code is returned.
  *
  * @retval GrB_SUCCESS          successful
- * @retval FIXME:RETVAL         invalid method value
- * @retval LAGRAPH_INVALID_GRAPH Graph is invalid (LAGraph_CheckGraph failed)
- * @retval GrB_NULL_POINTER     ntriangles is NULL
- * @retval FIXME:RETVAL         G->ndiag (self loops) is nonzero
- * @retval FIXME:RETVAL         graph is not "known" to be symmetric
- * @retval FIXME:RETVAL         G->rowdegree was not precalculated (for modes 3-6)
+ * @retval GrB_INVALID_VALUE    invalid method value
  */
 
 typedef enum

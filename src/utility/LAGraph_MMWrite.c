@@ -238,8 +238,7 @@ int LAGraph_MMWrite
     #endif
     else
     {
-        LG_ASSERT_MSG (false,
-            GrB_NOT_IMPLEMENTED, "type not supported") ; // RETVAL
+        LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED, "type not supported") ;
     }
 
     //--------------------------------------------------------------------------
@@ -512,8 +511,7 @@ int LAGraph_MMWrite
                 else if (is_real)                                           \
                 {                                                           \
                     LG_ASSERT_MSG (print_double (f, (double) x),            \
-                        LAGRAPH_IO_ERROR,     /* RETVAL */                  \
-                        "Unable to write to file") ;                        \
+                        LAGRAPH_IO_ERROR, "Unable to write to file") ;      \
                 }                                                           \
             /*  else if (is_complex)                                 */     \
             /*  {                                                    */     \

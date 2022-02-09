@@ -60,7 +60,7 @@ int LAGraph_NameOfType
         {
             name [0] = '\0' ;
             LG_ASSERT_MSG (false,
-            GrB_NOT_IMPLEMENTED, "user-defined types not supported") ; // RETVAL
+                GrB_NOT_IMPLEMENTED, "user-defined types not supported") ;
         }
         return (GrB_SUCCESS) ;
 

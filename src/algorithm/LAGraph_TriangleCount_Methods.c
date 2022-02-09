@@ -127,7 +127,7 @@ int LAGraph_TriangleCount_Methods
     method == LAGraph_TriangleCount_Sandia2 ||   // 4: sum (sum ((U * U) .* U))
     method == LAGraph_TriangleCount_SandiaDot || // 5: sum (sum ((L * U') .* L))
     method == LAGraph_TriangleCount_SandiaDot2,  // 6: sum (sum ((U * L') .* U))
-    GrB_INVALID_VALUE, "method is invalid") ;   // RETVAL
+    GrB_INVALID_VALUE, "method is invalid") ;
     if (presort != NULL)
     {
         LG_ASSERT_MSG (
@@ -135,11 +135,11 @@ int LAGraph_TriangleCount_Methods
         (*presort) == LAGraph_TriangleCount_Ascending ||
         (*presort) == LAGraph_TriangleCount_Descending ||
         (*presort) == LAGraph_TriangleCount_AutoSort,
-        GrB_INVALID_VALUE, "presort is invalid") ;   // RETVAL
+        GrB_INVALID_VALUE, "presort is invalid") ;
     }
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     LG_ASSERT (ntriangles != NULL, GrB_NULL_POINTER) ;
-    LG_ASSERT (G->ndiag == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED) ;   // RETVAL
+    LG_ASSERT (G->ndiag == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED) ;
 
     if (method == LAGraph_TriangleCount_Default)
     {
@@ -150,7 +150,7 @@ int LAGraph_TriangleCount_Methods
     LG_ASSERT_MSG ((G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
         G->A_structure_is_symmetric == LAGRAPH_TRUE)),
-        LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED,       // RETVAL
+        LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED,
         "G->A must be known to be symmetric") ;
 
     // the Sandia* methods can benefit from the presort
@@ -167,7 +167,7 @@ int LAGraph_TriangleCount_Methods
     if (auto_sort && method_can_use_presort)
     {
         LG_ASSERT_MSG (Degree != NULL,
-            LAGRAPH_PROPERTY_MISSING, "G->rowdegree must be defined") ;// RETVAL
+            LAGRAPH_PROPERTY_MISSING, "G->rowdegree is required") ;
     }
 
     //--------------------------------------------------------------------------

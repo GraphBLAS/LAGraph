@@ -56,7 +56,7 @@ int LG_Vector_Print_ ## suffix                                              \
     LG_ASSERT (I != NULL && X != NULL, GrB_OUT_OF_MEMORY) ;                 \
     GrB_Info info = GrB_Vector_extractTuples (I, X, &nvals, v) ;            \
     LG_ASSERT_MSG (info != GrB_DOMAIN_MISMATCH,                             \
-        GrB_NOT_IMPLEMENTED, "type not supported") ;/*RETVAL*/              \
+        GrB_NOT_IMPLEMENTED, "type not supported") ;                        \
     GrB_TRY (info) ;                                                        \
     /* determine the format */                                              \
     char *format = (prl <= 3) ? fmt1 : fmt2 ;                               \
@@ -199,7 +199,7 @@ int LAGraph_Vector_Print
     else
     {
         LG_ASSERT_MSG (false,
-            GrB_NOT_IMPLEMENTED, "user-defined types not supported") ; // RETVAL
+            GrB_NOT_IMPLEMENTED, "user-defined types not supported") ;
         return (GrB_SUCCESS) ;
     }
 }

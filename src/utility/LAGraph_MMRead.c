@@ -485,7 +485,7 @@ int LAGraph_MMRead
             {
                 // invalid Matrix Market object
                 LG_ASSERT_MSG (false,
-                    LAGRAPH_IO_ERROR, "invalid MatrixMarket header") ; // RETVAL
+                    LAGRAPH_IO_ERROR, "invalid MatrixMarket header") ;
             }
             p += 6 ;                                // skip past token "matrix"
 
@@ -509,8 +509,7 @@ int LAGraph_MMRead
             {
                 // invalid Matrix Market format
                 LG_ASSERT_MSG (false,
-                    LAGRAPH_IO_ERROR, // RETVAL
-                    "invalid format in MatrixMarket header") ;
+                    LAGRAPH_IO_ERROR, "invalid format in MatrixMarket header") ;
             }
 
             //------------------------------------------------------------------
@@ -542,7 +541,7 @@ int LAGraph_MMRead
                 p += 7 ;
 #endif
                 LG_ASSERT_MSG (false,
-                GrB_NOT_IMPLEMENTED, "complex types not supported") ; // RETVAL
+                GrB_NOT_IMPLEMENTED, "complex types not supported") ;
             }
             else if (MATCH (p, "pattern", 7))
             {
@@ -555,7 +554,7 @@ int LAGraph_MMRead
             {
                 // invalid Matrix Market type
                 LG_ASSERT_MSG (false,
-                    LAGRAPH_IO_ERROR, "invalid MatrixMarket type") ;  // RETVAL
+                    LAGRAPH_IO_ERROR, "invalid MatrixMarket type") ;
             }
 
             //------------------------------------------------------------------
@@ -584,8 +583,7 @@ int LAGraph_MMRead
             {
                 // invalid Matrix Market storage
                 LG_ASSERT_MSG (false,
-                    LAGRAPH_IO_ERROR, // RETVAL
-                    "invalid MatrixMarket storage") ;
+                    LAGRAPH_IO_ERROR, "invalid MatrixMarket storage") ;
             }
 
             //------------------------------------------------------------------
@@ -598,7 +596,7 @@ int LAGraph_MMRead
                 LG_ASSERT_MSG (
                     (MM_fmt == MM_coordinate &&
                     (MM_storage == MM_general || MM_storage == MM_symmetric)),
-                    LAGRAPH_IO_ERROR, // RETVAL
+                    LAGRAPH_IO_ERROR,
                     "invalid MatrixMarket pattern combination") ;
             }
 
@@ -606,7 +604,7 @@ int LAGraph_MMRead
             {
                 // (coordinate or array) x (complex) x (Hermitian)
                 LG_ASSERT_MSG (MM_type == MM_complex,
-                    LAGRAPH_IO_ERROR, // RETVAL
+                    LAGRAPH_IO_ERROR,
                     "invalid MatrixMarket complex combination") ;
             }
 
@@ -692,8 +690,7 @@ int LAGraph_MMRead
                     typesize = sizeof (GxB_FC32_t) ;
 #endif
                     LG_ASSERT_MSG (false,
-                        GrB_NOT_IMPLEMENTED,    // RETVAL
-                        "complex types not supported") ;
+                        GrB_NOT_IMPLEMENTED, "complex types not supported") ;
                 }
                 else if (MATCH (p, "double complex", 14))
                 {
@@ -702,8 +699,7 @@ int LAGraph_MMRead
                     typesize = sizeof (GxB_FC64_t) ;
 #endif
                     LG_ASSERT_MSG (false,
-                        GrB_NOT_IMPLEMENTED,    // RETVAL
-                        "complex types not supported") ;
+                        GrB_NOT_IMPLEMENTED, "complex types not supported") ;
                 }
                 else if (MATCH (p, "float", 5))
                 {
@@ -719,7 +715,7 @@ int LAGraph_MMRead
                 {
                     // unknown type
                     LG_ASSERT_MSG (false,
-                        LAGRAPH_IO_ERROR, "unknown type") ;  // RETVAL
+                        LAGRAPH_IO_ERROR, "unknown type") ;
                 }
 
                 if (MM_storage == MM_skew_symmetric && (type == GrB_BOOL ||
@@ -727,7 +723,7 @@ int LAGraph_MMRead
                     type == GrB_UINT32 || type == GrB_UINT64))
                 {
                     // matrices with unsigned types cannot be skew-symmetric
-                    LG_ASSERT_MSG (false, LAGRAPH_IO_ERROR, // RETVAL
+                    LG_ASSERT_MSG (false, LAGRAPH_IO_ERROR,
                         "skew-symmetric matrices cannot have an unsigned type");
                 }
             }
@@ -803,14 +799,14 @@ int LAGraph_MMRead
             {
                 // wrong number of items in first data line
                 LG_ASSERT_MSG (false,
-                    LAGRAPH_IO_ERROR, "invalid 1st data line") ;  // RETVAL
+                    LAGRAPH_IO_ERROR, "invalid 1st data line") ;
             }
 
             if (nrows != ncols)
             {
                 // a rectangular matrix must be in the general storage
                 LG_ASSERT_MSG (MM_storage == MM_general,
-                    LAGRAPH_IO_ERROR, "invalid rectangular storage") ; // RETVAL
+                    LAGRAPH_IO_ERROR, "invalid rectangular storage") ;
             }
 
             //------------------------------------------------------------------
@@ -871,8 +867,7 @@ int LAGraph_MMRead
             //------------------------------------------------------------------
 
             bool ok = get_line (f, buf) ;
-            LG_ASSERT_MSG (ok,
-                LAGRAPH_IO_ERROR, "premature EOF") ;    // RETVAL
+            LG_ASSERT_MSG (ok, LAGRAPH_IO_ERROR, "premature EOF") ;
             if (is_blank_line (buf))
             {
                 // blank line or comment
@@ -908,7 +903,7 @@ int LAGraph_MMRead
             {
                 // coordinate format; read the row and column index
                 LG_ASSERT_MSG (sscanf (p, "%" SCNu64 " %" SCNu64, &i, &j) == 2,
-                    LAGRAPH_IO_ERROR, "indices invalid") ;  // RETVAL
+                    LAGRAPH_IO_ERROR, "indices invalid") ;
                 // convert from 1-based to 0-based.
                 i-- ;
                 j-- ;
@@ -926,8 +921,7 @@ int LAGraph_MMRead
             while (*p && isspace (*p)) p++ ;        // skip any spaces
 
             ok = read_entry (p, type, MM_type == MM_pattern, x) ;
-            LG_ASSERT_MSG (ok,
-                LAGRAPH_IO_ERROR, "entry invalid") ;    // RETVAL
+            LG_ASSERT_MSG (ok, LAGRAPH_IO_ERROR, "entry invalid") ;
 
             //------------------------------------------------------------------
             // set the value in the matrix

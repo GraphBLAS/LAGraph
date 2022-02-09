@@ -43,7 +43,7 @@ typedef struct json_object_element_s *json_o ;
 typedef struct json_array_element_s  *json_a ;
 
 #define STRMATCH(s,t) (strcmp (s,t) == 0)
-#define OK(ok) LG_ASSERT_MSG (ok, LAGRAPH_IO_ERROR, "invalid file") /* RETVAL */
+#define OK(ok) LG_ASSERT_MSG (ok, LAGRAPH_IO_ERROR, "invalid file")
 #define VER(major,minor,sub) (((major)*1000ULL + (minor))*1000ULL + (sub))
 
 //------------------------------------------------------------------------------

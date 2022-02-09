@@ -138,7 +138,7 @@ int LAGraph_VertexCentrality_Betweenness
         // A and A' differ
         AT = G->AT ;
         LG_ASSERT_MSG (AT != NULL,
-            LAGRAPH_PROPERTY_MISSING, "G->AT is required") ;   // RETVAL
+            LAGRAPH_PROPERTY_MISSING, "G->AT is required") ;
     }
 
     // =========================================================================

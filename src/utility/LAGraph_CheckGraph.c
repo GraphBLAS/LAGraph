@@ -36,7 +36,7 @@ int LAGraph_CheckGraph
     {
         GrB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
         GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
-        LG_ASSERT_MSG (nrows == ncols, LAGRAPH_INVALID_GRAPH,  // RETVAL
+        LG_ASSERT_MSG (nrows == ncols, LAGRAPH_INVALID_GRAPH,
             "adjacency matrix must be square") ;
     }
 
@@ -44,7 +44,7 @@ int LAGraph_CheckGraph
         // only by-row format is supported when using SuiteSparse
         GxB_Format_Value fmt ;
         GrB_TRY (GxB_get (A, GxB_FORMAT, &fmt)) ;
-        LG_ASSERT_MSG (fmt == GxB_BY_ROW, LAGRAPH_INVALID_GRAPH,    // RETVAL
+        LG_ASSERT_MSG (fmt == GxB_BY_ROW, LAGRAPH_INVALID_GRAPH,
             "only by-row format supported") ;
     #endif
 
@@ -59,16 +59,14 @@ int LAGraph_CheckGraph
         GrB_TRY (GrB_Matrix_nrows (&nrows2, AT)) ;
         GrB_TRY (GrB_Matrix_ncols (&ncols2, AT)) ;
         LG_ASSERT_MSG (nrows == ncols2 && ncols == nrows2,
-            LAGRAPH_INVALID_GRAPH,  // RETVAL
-            "G->AT matrix has the wrong dimensions") ;
+            LAGRAPH_INVALID_GRAPH, "G->AT matrix has the wrong dimensions") ;
 
         #if LG_SUITESPARSE
             // only by-row format is supported when using SuiteSparse
             GxB_Format_Value fmt ;
             GrB_TRY (GxB_get (AT, GxB_FORMAT, &fmt)) ;
             LG_ASSERT_MSG (fmt == GxB_BY_ROW,
-                LAGRAPH_INVALID_GRAPH,    // RETVAL
-                "only by-row format supported") ;
+                LAGRAPH_INVALID_GRAPH, "only by-row format supported") ;
         #endif
 
         // ensure the types of A and AT are the same
@@ -77,8 +75,7 @@ int LAGraph_CheckGraph
         LG_TRY (LAGraph_Matrix_TypeName (atype, A, msg)) ;
         LG_TRY (LAGraph_Matrix_TypeName (ttype, AT, msg)) ;
         LG_ASSERT_MSG (MATCHNAME (atype, ttype),
-            LAGRAPH_INVALID_GRAPH, // RETVAL
-            "A and AT must have the same type") ;
+            LAGRAPH_INVALID_GRAPH, "A and AT must have the same type") ;
     }
 
     GrB_Vector rowdegree = G->rowdegree ;
@@ -86,12 +83,12 @@ int LAGraph_CheckGraph
     {
         GrB_Index m ;
         GrB_TRY (GrB_Vector_size (&m, rowdegree)) ;
-        LG_ASSERT_MSG (m == nrows, LAGRAPH_INVALID_GRAPH, // RETVAL
+        LG_ASSERT_MSG (m == nrows, LAGRAPH_INVALID_GRAPH,
             "rowdegree invalid size") ;
         char rtype [LAGRAPH_MAX_NAME_LEN] ;
         LG_TRY (LAGraph_Vector_TypeName (rtype, rowdegree, msg)) ;
         LG_ASSERT_MSG (MATCHNAME (rtype, "int64_t"),
-            LAGRAPH_INVALID_GRAPH, // RETVAL
+            LAGRAPH_INVALID_GRAPH,
             "rowdegree has wrong type; must be GrB_INT64") ;
     }
 
@@ -100,12 +97,12 @@ int LAGraph_CheckGraph
     {
         GrB_Index n ;
         GrB_TRY (GrB_Vector_size (&n, coldegree)) ;
-        LG_ASSERT_MSG (n == ncols, LAGRAPH_INVALID_GRAPH, // RETVAL
+        LG_ASSERT_MSG (n == ncols, LAGRAPH_INVALID_GRAPH,
             "coldegree invalid size") ;
         char ctype [LAGRAPH_MAX_NAME_LEN] ;
         LG_TRY (LAGraph_Vector_TypeName (ctype, coldegree, msg)) ;
         LG_ASSERT_MSG (MATCHNAME (ctype, "int64_t"),
-            LAGRAPH_INVALID_GRAPH, // RETVAL
+            LAGRAPH_INVALID_GRAPH,
             "coldegree has wrong type; must be GrB_INT64") ;
     }
 

@@ -107,7 +107,7 @@ GrB_Info LAGraph_scc
 )
 {
 #if !LG_SUITESPARSE
-    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;      // RETVAL
+    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
 #else
     GrB_Info info;
     GrB_Vector scc;

@@ -88,15 +88,14 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
     GrB_Index I_size = 0, J_size = 0, X_size = 0 ;
     void *X = NULL ;
     LG_ASSERT (A != NULL && type != NULL, GrB_NULL_POINTER) ;
-    LG_ASSERT_MSG (density >= 0,
-        GrB_INVALID_VALUE, "invalid density") ;    // RETVAL
+    LG_ASSERT_MSG (density >= 0, GrB_INVALID_VALUE, "invalid density") ;
 
     LG_ASSERT_MSG (type == GrB_BOOL
         || type == GrB_INT8   || type == GrB_INT16 || type == GrB_INT32
         || type == GrB_INT64  || type == GrB_UINT8 || type == GrB_UINT16
         || type == GrB_UINT32 || type == GrB_UINT64
         || type == GrB_FP32   || type == GrB_FP64,
-        GrB_NOT_IMPLEMENTED, "unsupported type") ;    // RETVAL
+        GrB_NOT_IMPLEMENTED, "unsupported type") ;
 
     GrB_TRY (GrB_Matrix_new (A, type, nrows, ncols)) ;
     if (nrows == 0 || ncols == 0)

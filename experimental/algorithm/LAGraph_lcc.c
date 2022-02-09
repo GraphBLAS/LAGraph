@@ -117,7 +117,7 @@ GrB_Info LAGraph_lcc            // compute lcc for all nodes in A
 )
 {
 #if !LG_SUITESPARSE
-    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;      // RETVAL
+    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
 #else
 
     //--------------------------------------------------------------------------
