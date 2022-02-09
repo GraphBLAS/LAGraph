@@ -94,7 +94,7 @@ void test_MIS (void)
         printf ("\nMatrix: %s\n", aname) ;
 
         // C = structure of A
-        OK (LAGraph_Structure (&C, A, msg)) ;
+        OK (LAGraph_Matrix_Structure (&C, A, msg)) ;
 
         // construct a directed graph G with adjacency matrix C
         OK (LAGraph_New (&G, &C, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;

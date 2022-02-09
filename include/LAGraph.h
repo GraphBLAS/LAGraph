@@ -1072,15 +1072,16 @@ int LAGraph_MMWrite
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Structure: return the structure of a matrix
+// LAGraph_Matrix_Structure: return the structure of a matrix
 //------------------------------------------------------------------------------
 
-// LAGraph_Structures return the sparsity structure of a matrix A as a boolean
-// (GrB_BOOL) matrix C.  If A(i,j) appears in the sparsity structure of A, then
-// C(i,j) is set to true.  The sparsity structure of A and C are identical.
+// LAGraph_Matrix_Structure returns the sparsity structure of a matrix A as a
+// boolean (GrB_BOOL) matrix C.  If A(i,j) appears in the sparsity structure of
+// A, then C(i,j) is set to true.  The sparsity structure of A and C are
+// identical.
 
 LAGRAPH_PUBLIC
-int LAGraph_Structure   // TODO: rename LAGraph_Matrix_Structure
+int LAGraph_Matrix_Structure
 (
     // output:
     GrB_Matrix *C,  // a boolean matrix with same structure of A, with C(i,j)
@@ -1092,7 +1093,7 @@ int LAGraph_Structure   // TODO: rename LAGraph_Matrix_Structure
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Vector_Structure: return the structure of a vector (TODO)
+// LAGraph_Vector_Structure: return the structure of a vector
 //------------------------------------------------------------------------------
 
 // LAGraph_Vector_Structure return the sparsity structure of a vector u as a
@@ -1100,7 +1101,7 @@ int LAGraph_Structure   // TODO: rename LAGraph_Matrix_Structure
 // u, then w(i) is set to true.  The sparsity structure of u and w are
 // identical.
 
-int LAGraph_Vector_Structure    // TODO write this
+int LAGraph_Vector_Structure
 (
     // output:
     GrB_Vector *w,  // a boolean vector with same structure of u, with w(i)

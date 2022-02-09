@@ -854,7 +854,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
     {
         // convert to boolean, with all entries true
         atype = GrB_BOOL ;
-        LAGraph_TRY (LAGraph_Structure (&A2, A, msg)) ;
+        LAGraph_TRY (LAGraph_Matrix_Structure (&A2, A, msg)) ;
     }
     else if (pref != NULL && atype != pref)
     {

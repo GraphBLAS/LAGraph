@@ -189,7 +189,7 @@ int LAGraph_VertexCentrality_Betweenness
         //----------------------------------------------------------------------
 
         S [depth+1] = NULL ;
-        LG_TRY (LAGraph_Structure (&(S [depth]), frontier, msg)) ;
+        LG_TRY (LAGraph_Matrix_Structure (&(S [depth]), frontier, msg)) ;
 
         //----------------------------------------------------------------------
         // Accumulate path counts: paths += frontier

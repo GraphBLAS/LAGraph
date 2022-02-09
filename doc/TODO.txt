@@ -50,12 +50,6 @@ As of Feb 9, 2022:
         LAGraph_Vector_IsEqual for GrB_Vectors for example,
         but LAGraph_Matrix_print and LAGraph_Vector_print)
 
-    * missing features:
-
-        * LAGraph_Structure for vectors.  See issue #80.
-            Rename this LAGraph_Matrix_Structure,
-            add LAGraph_Vector_Structure.
-
     * add names to Contributors.txt
 
     * add FUTURE to User Guide (see below)

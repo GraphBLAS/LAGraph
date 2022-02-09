@@ -129,7 +129,7 @@ int LG_CC_Boruvka
     //--------------------------------------------------------------------------
 
     // S = structure of G->A
-    LG_TRY (LAGraph_Structure (&S, G->A, msg)) ;
+    LG_TRY (LAGraph_Matrix_Structure (&S, G->A, msg)) ;
 
     GrB_TRY (GrB_Matrix_nrows (&n, S)) ;
     GrB_TRY (GrB_Vector_new (&parent, GrB_UINT64, n)) ; // final result

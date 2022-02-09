@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/test/test_Structure.c:  test LAGraph_Structure
+// LAGraph/src/test/test_Matrix_Structure.c:  test LAGraph_Matrix_Structure
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -19,6 +19,7 @@
 
 char msg [LAGRAPH_MSG_LEN] ;
 GrB_Matrix A = NULL, B = NULL, C = NULL ;
+GrB_Vector w = NULL, u = NULL, z = NULL ;
 #define LEN 512
 char filename [LEN+1] ;
 char btype_name [LAGRAPH_MAX_NAME_LEN] ;
@@ -42,7 +43,7 @@ void teardown (void)
 }
 
 //------------------------------------------------------------------------------
-// test_Structure:  test LAGraph_Structure
+// test_Matrix_Structure:  test LAGraph_Matrix_Structure
 //------------------------------------------------------------------------------
 
 const char *files [ ] =
@@ -53,7 +54,7 @@ const char *files [ ] =
     ""
 } ;
 
-void test_Structure (void)
+void test_Matrix_Structure (void)
 {
     setup ( ) ;
 
@@ -81,7 +82,7 @@ void test_Structure (void)
         TEST_MSG ("Loading of structure matrix failed") ;
 
         // C = structure (A)
-        OK (LAGraph_Structure (&C, A, msg)) ;
+        OK (LAGraph_Matrix_Structure (&C, A, msg)) ;
 
         // ensure B and C are the same
         bool ok ;
@@ -97,11 +98,11 @@ void test_Structure (void)
 }
 
 //------------------------------------------------------------------------------
-// test_Structure_brutal
+// test_Matrix_Structure_brutal
 //------------------------------------------------------------------------------
 
 #if LG_SUITESPARSE
-void test_Structure_brutal (void)
+void test_Matrix_Structure_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
 
@@ -129,7 +130,7 @@ void test_Structure_brutal (void)
         TEST_MSG ("Loading of structure matrix failed") ;
 
         // C = structure (A)
-        LG_BRUTAL (LAGraph_Structure (&C, A, msg)) ;
+        LG_BRUTAL (LAGraph_Matrix_Structure (&C, A, msg)) ;
 
         // ensure B and C are the same
         bool ok ;
@@ -146,17 +147,19 @@ void test_Structure_brutal (void)
 #endif
 
 //------------------------------------------------------------------------------
-// test_Structure_failures:  test error handling of LAGraph_Structure
+// test_Matrix_Structure_failures: test LAGraph_Matrix_Structure error handling
 //------------------------------------------------------------------------------
 
-void test_Structure_failures (void)
+void test_Matrix_Structure_failures (void)
 {
     setup ( ) ;
 
     C = NULL ;
-    TEST_CHECK (LAGraph_Structure (NULL, NULL, msg) == GrB_NULL_POINTER) ;
+    int result = LAGraph_Matrix_Structure (NULL, NULL, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
     printf ("\nmsg: [%s]\n", msg) ;
-    TEST_CHECK (LAGraph_Structure (&C, NULL, msg) == GrB_NULL_POINTER) ;
+    result = LAGraph_Matrix_Structure (&C, NULL, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
     printf ("msg: [%s]\n", msg) ;
     TEST_CHECK (C == NULL) ;
 
@@ -169,10 +172,10 @@ void test_Structure_failures (void)
 
 TEST_LIST =
 {
-    { "Structure", test_Structure },
-    { "Structure_failures", test_Structure_failures },
+    { "Matrix_Structure", test_Matrix_Structure },
+    { "Matrix_Structure_failures", test_Matrix_Structure_failures },
     #if LG_SUITESPARSE
-    { "Structure_brutal", test_Structure_brutal },
+    { "Matrix_Structure_brutal", test_Matrix_Structure_brutal },
     #endif
     { NULL, NULL }
 } ;
