@@ -78,7 +78,7 @@ GrB_Info LAGraph_BF_basic_mxv
 
     // Initialize distance vector, change the d[s] to 0
     GrB_TRY (GrB_Vector_new(&d, GrB_FP64, n));
-    LAGRAPH_OK(GrB_Vector_setElement_FP64(d, 0, s));
+    GrB_TRY (GrB_Vector_setElement_FP64(d, 0, s));
 
     // copy d to dtmp in order to create a same size of vector
     GrB_TRY (GrB_Vector_dup(&dtmp, d));
@@ -93,7 +93,7 @@ GrB_Info LAGraph_BF_basic_mxv
         GrB_TRY (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, GrB_MIN_PLUS_SEMIRING_FP64,
             AT, d, GrB_NULL));
 
-        LAGRAPH_OK (LAGraph_Vector_IsEqual (&same, dtmp, d, NULL));
+        LG_TRY (LAGraph_Vector_IsEqual (&same, dtmp, d, NULL));
         if (!same)
         {
             GrB_Vector ttmp = dtmp;
@@ -112,7 +112,7 @@ GrB_Info LAGraph_BF_basic_mxv
             AT, d, GrB_NULL));
 
         // if d != dtmp, then there is a negative-weight cycle in the graph
-        LAGRAPH_OK (LAGraph_Vector_IsEqual (&same, dtmp, d, NULL));
+        LG_TRY (LAGraph_Vector_IsEqual (&same, dtmp, d, NULL));
         if (!same)
         {
             // printf("AT negative-weight cycle found. \n");

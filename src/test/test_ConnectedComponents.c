@@ -153,14 +153,14 @@ void test_cc_matrices (void)
                 {
                     // find the connected components with cc_lacc
                     printf ("\n------ CC_LACC:\n") ;
-                    OK (LAGraph_cc_lacc (&C2, G->A, sanitize)) ;
+                    OK (LAGraph_cc_lacc (&C2, G->A, sanitize, msg)) ;
                     ncomponents = count_connected_components (C2) ;
                     TEST_CHECK (ncomponents == ncomp) ;
                     OK (LG_check_cc (C2, G, msg)) ;
                     OK (GrB_free (&C2)) ;
                 }
 
-                result = LAGraph_cc_lacc (NULL, G->A, false) ;
+                result = LAGraph_cc_lacc (NULL, G->A, false, msg) ;
                 TEST_CHECK (result == GrB_NULL_POINTER) ;
             }
 

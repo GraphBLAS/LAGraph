@@ -292,7 +292,7 @@ int main (int argc, char **argv)
             double ttrial ;
             GrB_free (&components2) ;
             LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-            LAGraph_TRY (LAGraph_cc_lacc (&components2, G->A, false)) ;
+            LAGraph_TRY (LAGraph_cc_lacc (&components2, G->A, false, msg)) ;
             LAGraph_TRY (LAGraph_Toc (&ttrial, tic, NULL)) ;
             ttt += ttrial ;
             printf ("LACC:     nthreads: %2d trial: %2d time: %10.4f sec\n",

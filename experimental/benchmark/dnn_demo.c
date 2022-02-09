@@ -19,7 +19,7 @@
 // to 12 (run all 12 DNN's).  The problems are solved in order from small to
 // big.  The Makefile just runs the first and smallest problem.
 
-#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
+#include "LG_internal.h"
 #include <LAGraph.h>
 #include <LAGraphX.h>
 
@@ -49,13 +49,14 @@
  * @return  Various GrB error codes from different issues: null pointer, out
  *          of memory, etc.
  */
-GrB_Info LAGraph_tsvread
+int LAGraph_tsvread
 (
     GrB_Matrix *A,
     FILE       *f,
     GrB_Type    type,
     GrB_Index   nrows,
-    GrB_Index   ncols
+    GrB_Index   ncols,
+    char *msg
 ) ;
 
 //------------------------------------------------------------------------------
@@ -74,15 +75,17 @@ GrB_Info LAGraph_tsvread
 
 // Only needed by the dnn_demo so it is only included here.
 
+#undef  LG_FREE_ALL
 #define LG_FREE_ALL GrB_free (Chandle) ;
 
-GrB_Info LAGraph_tsvread        // returns GrB_SUCCESS if successful
+int LAGraph_tsvread
 (
     GrB_Matrix *Chandle,        // C, created on output
     FILE *f,                    // file to read from (already open)
     GrB_Type type,              // the type of C to create
     GrB_Index nrows,            // C is nrows-by-ncols
-    GrB_Index ncols
+    GrB_Index ncols,
+    char *msg
 )
 {
 
@@ -102,7 +105,7 @@ GrB_Info LAGraph_tsvread        // returns GrB_SUCCESS if successful
     GrB_Info info ;
     GrB_Matrix C = NULL ;
     (*Chandle) = NULL ;
-    LAGRAPH_OK (GrB_Matrix_new (&C, type, nrows, ncols)) ;
+    GrB_TRY (GrB_Matrix_new (&C, type, nrows, ncols)) ;
 
     //--------------------------------------------------------------------------
     // read the entries
@@ -120,7 +123,7 @@ GrB_Info LAGraph_tsvread        // returns GrB_SUCCESS if successful
         int64_t x ;
         while (fscanf (f, "%"PRIu64"%"PRIu64"%"PRId64"\n", &i, &j, &x) != EOF)
         {
-            LAGRAPH_OK (GrB_Matrix_setElement (C, x, i-1, j-1)) ;
+            GrB_TRY (GrB_Matrix_setElement (C, x, i-1, j-1)) ;
         }
 
     }
@@ -134,7 +137,7 @@ GrB_Info LAGraph_tsvread        // returns GrB_SUCCESS if successful
         uint64_t x ;
         while (fscanf (f, "%"PRIu64"%"PRIu64"%"PRIu64"\n", &i, &j, &x) != EOF)
         {
-            LAGRAPH_OK (GrB_Matrix_setElement (C, x, i-1, j-1)) ;
+            GrB_TRY (GrB_Matrix_setElement (C, x, i-1, j-1)) ;
         }
 
     }
@@ -148,7 +151,7 @@ GrB_Info LAGraph_tsvread        // returns GrB_SUCCESS if successful
         double x ;
         while (fscanf (f, "%"PRIu64"%"PRIu64"%lg\n", &i, &j, &x) != EOF)
         {
-            LAGRAPH_OK (GrB_Matrix_setElement (C, x, i-1, j-1)) ;
+            GrB_TRY (GrB_Matrix_setElement (C, x, i-1, j-1)) ;
         }
     }
 
@@ -157,7 +160,7 @@ GrB_Info LAGraph_tsvread        // returns GrB_SUCCESS if successful
     //--------------------------------------------------------------------------
 
     GrB_Index ignore ;
-    LAGRAPH_OK (GrB_Matrix_nvals (&ignore, C)) ;
+    GrB_TRY (GrB_Matrix_nvals (&ignore, C)) ;
     (*Chandle) = C ;
     return (GrB_SUCCESS) ;
 }
@@ -177,7 +180,8 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     GrB_Info info ;
-    LAGRAPH_OK (LAGraph_Init (NULL)) ;
+    char msg [LAGRAPH_MSG_LEN] ;
+    LG_TRY (LAGraph_Init (NULL)) ;
 
     //--------------------------------------------------------------------------
     // problem size definitions
@@ -277,7 +281,7 @@ int main (int argc, char **argv)
 
     // get the max # of threads that can be used
     int nthreads_max;
-    LAGRAPH_OK( LAGraph_GetNumThreads (&nthreads_max, NULL)) ;
+    LG_TRY (LAGraph_GetNumThreads (&nthreads_max, NULL)) ;
     printf ("max # of nthreads: %d\n", nthreads_max) ;
 
     #define NNTHREADS 12
@@ -328,13 +332,13 @@ int main (int argc, char **argv)
         sprintf (filename, "%s/MNIST/sparse-images-%d.tsv", DNN_DATA, nneurons);
         FILE *f = fopen (filename, "r") ;
         if (!f) { printf ("cannot open %s\n", filename) ; abort ( ) ; }
-        LAGRAPH_OK (LAGraph_tsvread (&Y0, f, type, nfeatures, nneurons)) ;
+        LG_TRY (LAGraph_tsvread (&Y0, f, type, nfeatures, nneurons, msg)) ;
         fclose (f) ;
         double t;
         LAGraph_Toc (&t, tic, NULL) ;
         printf ("# features: %g read time: %g sec\n", (double) nfeatures, t) ;
         GrB_Index nvals ;
-        LAGRAPH_OK (GrB_Matrix_nvals (&nvals, Y0)) ;
+        GrB_TRY (GrB_Matrix_nvals (&nvals, Y0)) ;
         printf ("# entries in Y0: %g million\n", (double) nvals / 1e6) ;
         fflush (stdout) ;
 
@@ -388,7 +392,7 @@ int main (int argc, char **argv)
                 }
 
                 GrB_Info my_info = LAGraph_tsvread (&(W [layer]), my_file,
-                    type, nneurons, nneurons) ;
+                    type, nneurons, nneurons, msg) ;
                 fclose (my_file) ;
                 my_ok = my_ok && (my_info == GrB_SUCCESS) ;
 
@@ -423,7 +427,7 @@ int main (int argc, char **argv)
             for (int layer = 0 ; layer < nlayers ; layer++)
             {
                 GrB_Index nvals ;
-                LAGRAPH_OK (GrB_Matrix_nvals (&nvals, W [layer])) ;
+                GrB_TRY (GrB_Matrix_nvals (&nvals, W [layer])) ;
                 nedges += nvals ;
             }
             printf ("# edges in all layers: %g million\n\n",
@@ -431,7 +435,7 @@ int main (int argc, char **argv)
             fflush (stdout) ;
 
             // read TrueCategories as a boolean nfeatures-by-1 vector
-            LAGRAPH_OK (GrB_Vector_new (&TrueCategories, GrB_BOOL,
+            GrB_TRY (GrB_Vector_new (&TrueCategories, GrB_BOOL,
                 nfeatures)) ;
             sprintf (filename, "%s/DNN/neuron%d-l%d-categories.tsv", DNN_DATA,
                 nneurons, nlayers) ;
@@ -443,7 +447,7 @@ int main (int argc, char **argv)
                 {
                     int category ;
                     if (fscanf (f, "%d\n", &category) == EOF) break ;
-                    LAGRAPH_OK (GrB_Vector_setElement (TrueCategories,
+                    GrB_TRY (GrB_Vector_setElement (TrueCategories,
                         (bool) true, category-1)) ;
                 }
                 fclose (f) ;
@@ -479,7 +483,7 @@ int main (int argc, char **argv)
                 //--------------------------------------------------------------
 
                 LAGraph_Tic (tic, NULL) ;
-                LAGRAPH_OK (LAGraph_dnn (&Y, W, Bias, nlayers, Y0)) ;
+                LG_TRY (LAGraph_dnn (&Y, W, Bias, nlayers, Y0)) ;
                 LAGraph_Toc (&t, tic, NULL) ;
 
                 printf ("soln time %12.2f sec", t) ;
@@ -503,14 +507,14 @@ int main (int argc, char **argv)
 
                 // this is so fast, it's hardly worth timing ...
                 LAGraph_Tic (tic, NULL) ;
-                LAGRAPH_OK (GrB_Matrix_nvals (&final_ynvals, Y)) ;
+                GrB_TRY (GrB_Matrix_nvals (&final_ynvals, Y)) ;
 
                 // C = sum (Y)
-                LAGRAPH_OK (GrB_Vector_new (&C, type, nfeatures)) ;
-                LAGRAPH_OK (GrB_reduce (C, NULL, NULL, GrB_PLUS_FP64, Y, NULL));
+                GrB_TRY (GrB_Vector_new (&C, type, nfeatures)) ;
+                GrB_TRY (GrB_reduce (C, NULL, NULL, GrB_PLUS_FP64, Y, NULL));
                 // Categories = pattern of C
-                LAGRAPH_OK (GrB_Vector_new (&Categories, GrB_BOOL, nfeatures)) ;
-                LAGRAPH_OK (GrB_apply (Categories, NULL, NULL, GrB_ONEB_BOOL,
+                GrB_TRY (GrB_Vector_new (&Categories, GrB_BOOL, nfeatures)) ;
+                GrB_TRY (GrB_apply (Categories, NULL, NULL, GrB_ONEB_BOOL,
                     C, (bool) true, NULL)) ;
 
                 // write out Categories, as a 1-based file
@@ -521,7 +525,7 @@ int main (int argc, char **argv)
                 for (int i = 0 ; i < nfeatures ; i++)
                 {
                     bool c = false ;
-                    LAGRAPH_OK (GrB_Vector_extractElement (&c, Categories, i)) ;
+                    GrB_TRY (GrB_Vector_extractElement (&c, Categories, i)) ;
                     if (c) fprintf (ff, "%d\n", i + 1) ;
                 }
                 fclose (ff) ;
@@ -531,7 +535,7 @@ int main (int argc, char **argv)
                 {
                     // check if Categories and TrueCategories are the same
                     bool isequal ;
-                    LAGRAPH_OK (LAGraph_Vector_IsEqual (&isequal,
+                    LG_TRY (LAGraph_Vector_IsEqual (&isequal,
                         TrueCategories, Categories, NULL)) ;
                     if (!isequal)
                     {
@@ -563,7 +567,7 @@ int main (int argc, char **argv)
     // finalize LAGraph and GraphBLAS
     //--------------------------------------------------------------------------
 
-    LAGRAPH_OK (LAGraph_Finalize (NULL)) ;
+    LG_TRY (LAGraph_Finalize (NULL)) ;
     printf ("all tests passed\n") ;
     return (GrB_SUCCESS) ;
 }

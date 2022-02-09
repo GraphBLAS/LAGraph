@@ -24,37 +24,6 @@
 // development, and is intended only for illustration not benchmarking.  Do not
 // use for benchmarking, without asking the authors.
 
-//------------------------------------------------------------------------------
-// LAGRAPH_OK: call LAGraph or GraphBLAS and check the result
-//------------------------------------------------------------------------------
-
-// To use LAGRAPH_OK, the #include'ing file must declare a scalar GrB_Info
-// info, and must define LG_FREE_ALL as a macro that frees all workspace
-// if an error occurs.  The method can be a GrB_Info scalar as well, so that
-// LAGRAPH_OK(info) works.  The function that uses this macro must return
-// GrB_Info, or int.
-
-#define LAGRAPH_ERROR(message,info)                                         \
-{                                                                           \
-    fprintf (stderr, "LAGraph error: %s\n[%d]\nFile: %s Line: %d\n",        \
-        message, info, __FILE__, __LINE__) ;                                \
-    LG_FREE_ALL ;                                                           \
-    return (info) ;                                                         \
-}
-
-#define LAGRAPH_OK(method)                                                  \
-{                                                                           \
-    info = method ;                                                         \
-    if (! (info == GrB_SUCCESS || info == GrB_NO_VALUE))                    \
-    {                                                                       \
-        LAGRAPH_ERROR ("", info) ;                                          \
-    }                                                                       \
-}
-
-//****************************************************************************
-// Utilities
-//****************************************************************************
-
 
 //****************************************************************************
 // Random number generator
@@ -138,12 +107,6 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
 
     fclose (f) ;
 */
-
-#if LG_SUITESPARSE
-#define LAGRAPH_MAX_NAME_LEN GxB_MAX_NAME_LEN
-#else
-#define LAGRAPH_MAX_NAME_LEN 128
-#endif
 
 typedef enum
 {
@@ -292,7 +255,6 @@ void LAGraph_SFreeSet           // free a set of matrices
  *
  * @retval GrB_SUCCESS      if completed successfully (equal or not)
  * @retval GrB_NULL_POINTER if kmax, ntris, nedges, nsteps is NULL
- * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
  */
 int LAGraph_AllKTruss   // compute all k-trusses of a graph
 (
@@ -344,12 +306,12 @@ int LAGraph_KTruss      // compute the k-truss of a graph
  *
  * @retval GrB_SUCCESS      if completed successfully
  * @retval GrB_NULL_POINTER if result is NULL
- * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
  */
-GrB_Info LAGraph_cc_lacc (
+int LAGraph_cc_lacc (
     GrB_Vector *result,
     GrB_Matrix A,
-    bool sanitize
+    bool sanitize,
+    char *msg
 ) ;
 
 //****************************************************************************
@@ -368,7 +330,6 @@ GrB_Info LAGraph_cc_lacc (
  * @retval GrB_NULL_POINTER   If pd_output or A is NULL
  * @retval GrB_INVALID_VALUE  if A is not square, s is not a valid vertex index
  * @retval GrB_NO_VALUE       if A has a negative weight cycle
- * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
  */
 GrB_Info LAGraph_BF_basic
 (
@@ -390,7 +351,6 @@ GrB_Info LAGraph_BF_basic
  * @retval GrB_NULL_POINTER   If pd_output is NULL or both A and AT are NULL
  * @retval GrB_INVALID_VALUE  if A is not square, s is not a valid vertex index
  * @retval GrB_NO_VALUE       if A has a negative weight cycle
- * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
  *
  */
 GrB_Info LAGraph_BF_basic_pushpull
@@ -413,7 +373,6 @@ GrB_Info LAGraph_BF_basic_pushpull
  * @retval GrB_NULL_POINTER   If pd_output or AT is NULL
  * @retval GrB_INVALID_VALUE  if A is not square, s is not a valid vertex index
  * @retval GrB_NO_VALUE       if A has a negative weight cycle
- * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
  *
  */
 GrB_Info LAGraph_BF_basic_mxv
@@ -438,7 +397,6 @@ GrB_Info LAGraph_BF_basic_mxv
  * @retval GrB_INVALID_VALUE  if A is not square, s is not a valid vertex index
  * @retval GrB_OUT_OF_MEMORY  if allocation fails
  * @retval GrB_NO_VALUE       if A has a negative weight cycle
- * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
  *
  */
 GrB_Info LAGraph_BF_full
@@ -465,7 +423,6 @@ GrB_Info LAGraph_BF_full
  * @retval GrB_INVALID_VALUE  if A is not square, s is not a valid vertex index
  * @retval GrB_OUT_OF_MEMORY  if allocation fails
  * @retval GrB_NO_VALUE       if A has a negative weight cycle
- * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
  *
  */
 GrB_Info LAGraph_BF_full1
@@ -492,7 +449,6 @@ GrB_Info LAGraph_BF_full1
  * @retval GrB_INVALID_VALUE  if A is not square, s is not a valid vertex index
  * @retval GrB_OUT_OF_MEMORY  if allocation fails
  * @retval GrB_NO_VALUE       if A has a negative weight cycle
- * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
  *
  */
 GrB_Info LAGraph_BF_full1a
@@ -519,7 +475,6 @@ GrB_Info LAGraph_BF_full1a
  * @retval GrB_INVALID_VALUE  if A is not square, s is not a valid vertex index
  * @retval GrB_OUT_OF_MEMORY  if allocation fails
  * @retval GrB_NO_VALUE       if A has a negative weight cycle
- * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
  *
  */
 GrB_Info LAGraph_BF_full2
@@ -546,7 +501,6 @@ GrB_Info LAGraph_BF_full2
  * @retval GrB_INVALID_VALUE  if A is not square, s is not a valid vertex index
  * @retval GrB_OUT_OF_MEMORY  if allocation fails
  * @retval GrB_NO_VALUE       if A has a negative weight cycle
- * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
  *
  */
 GrB_Info LAGraph_BF_full_mxv
@@ -647,16 +601,16 @@ GrB_Info LAGraph_BF_pure_c_double
  * @retval GrB_INVALID_OBJECT If A is not stored in CSR format
  * @retval GrB_OUT_OF_MEMORY  if allocation fails.
  * @retval GrB_NO_VALUE       if A has a negative weight cycle
- * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
  */
-GrB_Info LAGraph_cdlp
+int LAGraph_cdlp
 (
     GrB_Vector *CDLP_handle,
     const GrB_Matrix A,
     bool symmetric,
     bool sanitize,
     int itermax,
-    double *t
+    double *t,
+    char *msg
 );
 
 //****************************************************************************
@@ -675,7 +629,6 @@ GrB_Info LAGraph_cdlp
  * @retval GrB_NULL_POINTER    If Yhandle, W, Bias, or Y0 is NULL
  * @retval GrB_DOMAIN_MISMATCH if type of Y0 is not FP32 or FP64, or the types of
  *                             W or Bias arent the same as Y0
- * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
  */
 GrB_Info LAGraph_dnn
 (
@@ -700,7 +653,6 @@ GrB_Info LAGraph_dnn
  * @retval GrB_NOT_IMPLEMENTED vanilla version has not been implemented yet
  * @retval GrB_NULL_POINTER    If D or D_type is NULL
  * @retval GrB_INVALID_VALUE   If G is not square
- * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
  */
 GrB_Info LAGraph_FW
 (
@@ -724,28 +676,34 @@ GrB_Info LAGraph_FW
  * @retval GrB_NOT_IMPLEMENTED vanilla version has not been implemented yet
  * @retval GrB_NULL_POINTER   If LCC_handle or LCC_type is NULL
  * @retval GrB_INVALID_VALUE  If A is not stored in CSR format
- * @return Any GraphBLAS errors that may have been encountered through LAGRAPH_OK.
  */
-GrB_Info LAGraph_lcc
+int LAGraph_lcc            // compute lcc for all nodes in A
 (
-    GrB_Vector *LCC_handle,
-    const GrB_Matrix A,
-    bool symmetric,
-    bool sanitize,
-    double t [2]
-);
-
-//****************************************************************************
-GrB_Info LAGraph_msf (
-    GrB_Matrix *result,     // output: an unsymmetrical matrix, the spanning forest
-    GrB_Matrix A,           // input matrix
-    bool sanitize           // if true, ensure A is symmetric
+    GrB_Vector *LCC_handle,     // output vector
+    const GrB_Matrix A,         // input matrix
+    bool symmetric,             // if true, the matrix is symmetric
+    bool sanitize,              // if true, ensure A is binary
+    double t [2],               // t [0] = sanitize time, t [1] = lcc time,
+                                // in seconds
+    char *msg
 ) ;
 
 //****************************************************************************
-GrB_Info LAGraph_scc (
+
+int LAGraph_msf
+(
+    GrB_Matrix *result, // output: an unsymmetrical matrix, the spanning forest
+    GrB_Matrix A,       // input matrix
+    bool sanitize,      // if true, ensure A is symmetric
+    char *msg
+) ;
+
+//****************************************************************************
+
+int LAGraph_scc (
     GrB_Vector *result,     // output: array of component identifiers
-    GrB_Matrix A            // input matrix
+    GrB_Matrix A,           // input matrix
+    char *msg
 ) ;
 
 //****************************************************************************

@@ -211,7 +211,7 @@ GrB_Info LAGraph_BF_full_mxv
     // GrB_Monoid
     BF_Tuple3_struct BF_identity = (BF_Tuple3_struct) { .w = INFINITY,
         .h = UINT64_MAX, .pi = UINT64_MAX };
-    LAGRAPH_OK(GrB_Monoid_new_UDT(&BF_lMIN_Tuple3_Monoid, BF_lMIN_Tuple3,
+    GrB_TRY (GrB_Monoid_new_UDT(&BF_lMIN_Tuple3_Monoid, BF_lMIN_Tuple3,
         &BF_identity));
 
     //GrB_Semiring
@@ -231,7 +231,7 @@ GrB_Info LAGraph_BF_full_mxv
     //--------------------------------------------------------------------------
     // create matrix Atmp based on AT, while its entries become BF_Tuple3 type
     //--------------------------------------------------------------------------
-    LAGRAPH_OK(GrB_Matrix_extractTuples_FP64(I, J, w, &nz, AT));
+    GrB_TRY (GrB_Matrix_extractTuples_FP64(I, J, w, &nz, AT));
     for (GrB_Index k = 0; k < nz; k++)
     {
         if (w[k] == 0)             //diagonal entries
@@ -246,7 +246,7 @@ GrB_Info LAGraph_BF_full_mxv
         }
     }
     GrB_TRY (GrB_Matrix_new(&Atmp, BF_Tuple3, n, n));
-    LAGRAPH_OK(GrB_Matrix_build_UDT(Atmp, I, J, W, nz, BF_lMIN_Tuple3));
+    GrB_TRY (GrB_Matrix_build_UDT(Atmp, I, J, W, nz, BF_lMIN_Tuple3));
     LAGraph_Free ((void**)&I);
     LAGraph_Free ((void**)&J);
     LAGraph_Free ((void**)&W);
@@ -258,7 +258,7 @@ GrB_Info LAGraph_BF_full_mxv
     GrB_TRY (GrB_Vector_new(&d, BF_Tuple3, n));
     // initial distance from s to itself
     BF_Tuple3_struct d0 = (BF_Tuple3_struct) { .w = 0, .h = 0, .pi = 0 };
-    LAGRAPH_OK(GrB_Vector_setElement_UDT(d, &d0, s));
+    GrB_TRY (GrB_Vector_setElement_UDT(d, &d0, s));
 
     //--------------------------------------------------------------------------
     // start the Bellman Ford process
@@ -274,7 +274,7 @@ GrB_Info LAGraph_BF_full_mxv
         // execute semiring on d and AT, and save the result to dtmp
         GrB_TRY (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, BF_lMIN_PLUSrhs_Tuple3,
             Atmp, d, GrB_NULL));
-        LAGRAPH_OK (LAGraph_Vector_IsEqual_op(&same, dtmp, d, BF_EQ_Tuple3, NULL));
+        LG_TRY (LAGraph_Vector_IsEqual_op(&same, dtmp, d, BF_EQ_Tuple3, NULL));
         if (!same)
         {
             GrB_Vector ttmp = dtmp;
@@ -291,7 +291,7 @@ GrB_Info LAGraph_BF_full_mxv
         // execute semiring again to check for negative-weight cycle
         GrB_TRY (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, BF_lMIN_PLUSrhs_Tuple3,
             Atmp, d, GrB_NULL));
-        LAGRAPH_OK (LAGraph_Vector_IsEqual_op(&same, dtmp, d, BF_EQ_Tuple3, NULL));
+        LG_TRY (LAGraph_Vector_IsEqual_op(&same, dtmp, d, BF_EQ_Tuple3, NULL));
 
         // if d != dtmp, then there is a negative-weight cycle in the graph
         if (!same)
@@ -314,7 +314,7 @@ GrB_Info LAGraph_BF_full_mxv
         GrB_OUT_OF_MEMORY) ;
 
     nz = n ;
-    LAGRAPH_OK(GrB_Vector_extractTuples_UDT (I, (void *) W, &nz, d));
+    GrB_TRY (GrB_Vector_extractTuples_UDT (I, (void *) W, &nz, d));
 
     for (GrB_Index k = 0; k < n; k++)
     {

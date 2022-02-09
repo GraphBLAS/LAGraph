@@ -149,7 +149,7 @@ void test_lcc (void)
         double t [2] ;
 
         // compute the local clustering coefficient
-        OK (LAGraph_lcc (&c, G->A, symmetric, sanitize, t)) ;
+        OK (LAGraph_lcc (&c, G->A, symmetric, sanitize, t, msg)) ;
 
         GrB_Index n ;
         OK (GrB_Vector_size (&n, c)) ;
@@ -212,14 +212,14 @@ void test_errors (void)
     double t [2] ;
 
     // c is NULL
-    int result = LAGraph_lcc (NULL, G->A, true, false, t) ;
+    int result = LAGraph_lcc (NULL, G->A, true, false, t, msg) ;
     printf ("\nresult: %d\n", result) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
 
     #if LG_SUITESPARSE
     // G->A is held by column
     OK (GxB_set (G->A, GxB_FORMAT, GxB_BY_COL)) ;
-    result = LAGraph_lcc (&c, G->A, true, true, t) ;
+    result = LAGraph_lcc (&c, G->A, true, true, t, msg) ;
     printf ("\nresult: %d\n", result) ;
     TEST_CHECK (result == GrB_INVALID_VALUE) ;
     TEST_CHECK (c == NULL) ;

@@ -20,10 +20,9 @@
  * Contributed by Yongzhe Zhang (zyz915@gmail.com)
  **/
 
-#define LAGRAPH_EXPERIMENTAL_ASK_BEFORE_BENCHMARKING
-
 #define LG_FREE_ALL ;
 
+#include "LG_internal.h"
 #include <LAGraph.h>
 #include <LAGraphX.h>
 
@@ -69,43 +68,46 @@ bool trim_one (GrB_Index i, GrB_Index j, const void *x, const void *thunk)
 //  - n      : (input) number of vertices
 
 static GrB_Info propagate (GrB_Vector label, GrB_Vector mask,
-        GrB_Matrix A, GrB_Matrix AT, GrB_Index n)
+        GrB_Matrix A, GrB_Matrix AT, GrB_Index n, char *msg)
 {
     GrB_Info info;
     // semirings
 
     GrB_Vector s, t;
-    LAGRAPH_OK (GrB_Vector_new (&s, GrB_UINT64, n));
-    LAGRAPH_OK (GrB_Vector_new (&t, GrB_UINT64, n));
-    LAGRAPH_OK (GrB_assign (s, mask, 0, label, GrB_ALL, 0, 0));
-    LAGRAPH_OK (GrB_assign (t, 0, 0, label, GrB_ALL, 0, 0));
+    GrB_TRY (GrB_Vector_new (&s, GrB_UINT64, n));
+    GrB_TRY (GrB_Vector_new (&t, GrB_UINT64, n));
+    GrB_TRY (GrB_assign (s, mask, 0, label, GrB_ALL, 0, 0));
+    GrB_TRY (GrB_assign (t, 0, 0, label, GrB_ALL, 0, 0));
 
     GrB_Index active;
     while (true)
     {
-        LAGRAPH_OK (GrB_vxm (t, 0, GrB_MIN_UINT64,
+        GrB_TRY (GrB_vxm (t, 0, GrB_MIN_UINT64,
                                  GrB_MIN_FIRST_SEMIRING_UINT64, s, A, 0));
-        LAGRAPH_OK (GrB_eWiseMult (mask, 0, 0, GxB_ISNE_UINT64, t, label, 0));
-        LAGRAPH_OK (GrB_assign (label, mask, 0, t, GrB_ALL, 0, 0));
-        LAGRAPH_OK (GrB_reduce (&active, 0, GrB_PLUS_MONOID_UINT64, mask, 0));
+        GrB_TRY (GrB_eWiseMult (mask, 0, 0, GxB_ISNE_UINT64, t, label, 0));
+        GrB_TRY (GrB_assign (label, mask, 0, t, GrB_ALL, 0, 0));
+        GrB_TRY (GrB_reduce (&active, 0, GrB_PLUS_MONOID_UINT64, mask, 0));
         if (active == 0) break;
-        LAGRAPH_OK (GrB_Vector_clear (s));
-        LAGRAPH_OK (GrB_assign (s, mask, 0, label, GrB_ALL, 0, 0));
+        GrB_TRY (GrB_Vector_clear (s));
+        GrB_TRY (GrB_assign (s, mask, 0, label, GrB_ALL, 0, 0));
     }
 
-    LAGRAPH_OK (GrB_free (&s));
-    LAGRAPH_OK (GrB_free (&t));
+    GrB_TRY (GrB_free (&s));
+    GrB_TRY (GrB_free (&t));
     return GrB_SUCCESS;
 }
 
 //****************************************************************************
 //****************************************************************************
-GrB_Info LAGraph_scc
+int LAGraph_scc
 (
     GrB_Vector *result,     // output: array of component identifiers
-    GrB_Matrix A            // input matrix
+    GrB_Matrix A,           // input matrix
+    char *msg
 )
 {
+
+    LG_CLEAR_MSG ;
 #if !LG_SUITESPARSE
     LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
 #else
@@ -120,21 +122,21 @@ GrB_Info LAGraph_scc
     if (result == NULL || A == NULL) return (GrB_NULL_POINTER) ;
 
     GrB_Index n, ncols, nvals;
-    LAGRAPH_OK (GrB_Matrix_nrows (&n, A));
-    LAGRAPH_OK (GrB_Matrix_ncols (&ncols, A));
+    GrB_TRY (GrB_Matrix_nrows (&n, A));
+    GrB_TRY (GrB_Matrix_ncols (&ncols, A));
     if (n != ncols) return (GrB_DIMENSION_MISMATCH) ;
 
     // store the graph in both directions (forward / backward)
     GrB_Matrix FW, BW;
-    LAGRAPH_OK (GrB_Matrix_new (&FW, GrB_BOOL, n, n));
-    LAGRAPH_OK (GrB_Matrix_new (&BW, GrB_BOOL, n, n));
-    LAGRAPH_OK (GrB_transpose (FW, 0, 0, A, GrB_DESC_T0)); // FW = A
-    LAGRAPH_OK (GrB_transpose (BW, 0, 0, A, 0));     // BW = A'
+    GrB_TRY (GrB_Matrix_new (&FW, GrB_BOOL, n, n));
+    GrB_TRY (GrB_Matrix_new (&BW, GrB_BOOL, n, n));
+    GrB_TRY (GrB_transpose (FW, 0, 0, A, GrB_DESC_T0)); // FW = A
+    GrB_TRY (GrB_transpose (BW, 0, 0, A, 0));     // BW = A'
 
     // check format
     GxB_Format_Value A_format, AT_format;
-    LAGRAPH_OK (GxB_get (FW, GxB_FORMAT, &A_format));
-    LAGRAPH_OK (GxB_get (BW, GxB_FORMAT, &AT_format));
+    GrB_TRY (GxB_get (FW, GxB_FORMAT, &A_format));
+    GrB_TRY (GxB_get (BW, GxB_FORMAT, &AT_format));
 
     bool is_csr = (A_format == GxB_BY_ROW && AT_format == GxB_BY_ROW);
     if (!is_csr) return (GrB_INVALID_VALUE) ;
@@ -149,67 +151,67 @@ GrB_Info LAGraph_scc
 
     // scc: the SCC identifier for each vertex
     // scc[u] == n: not assigned yet
-    LAGRAPH_OK (GrB_Vector_new (&scc, GrB_UINT64, n));
+    GrB_TRY (GrB_Vector_new (&scc, GrB_UINT64, n));
     // vector of indices: ind[i] == i
-    LAGRAPH_OK (GrB_Vector_new (&ind, GrB_UINT64, n));
-    LAGRAPH_OK (GrB_Vector_build (ind, I, V, n, GrB_PLUS_UINT64));
+    GrB_TRY (GrB_Vector_new (&ind, GrB_UINT64, n));
+    GrB_TRY (GrB_Vector_build (ind, I, V, n, GrB_PLUS_UINT64));
     // vector of infinite value: inf[i] == n
-    LAGRAPH_OK (GrB_Vector_new (&inf, GrB_UINT64, n));
-    LAGRAPH_OK (GrB_assign (inf, 0, 0, n, GrB_ALL, 0, 0));
+    GrB_TRY (GrB_Vector_new (&inf, GrB_UINT64, n));
+    GrB_TRY (GrB_assign (inf, 0, 0, n, GrB_ALL, 0, 0));
     // other vectors
-    LAGRAPH_OK (GrB_Vector_new (&f, GrB_UINT64, n));
-    LAGRAPH_OK (GrB_Vector_new (&b, GrB_UINT64, n));
-    LAGRAPH_OK (GrB_Vector_new (&mask, GrB_UINT64, n));
+    GrB_TRY (GrB_Vector_new (&f, GrB_UINT64, n));
+    GrB_TRY (GrB_Vector_new (&b, GrB_UINT64, n));
+    GrB_TRY (GrB_Vector_new (&mask, GrB_UINT64, n));
     // GxB_SelectOp
-    LAGRAPH_OK (GxB_SelectOp_new (&sel1, trim_one, GrB_BOOL, GrB_NULL));
-    LAGRAPH_OK (GxB_SelectOp_new (&sel2, edge_removal, GrB_BOOL, GrB_NULL));
+    GrB_TRY (GxB_SelectOp_new (&sel1, trim_one, GrB_BOOL, GrB_NULL));
+    GrB_TRY (GxB_SelectOp_new (&sel2, edge_removal, GrB_BOOL, GrB_NULL));
 
     // remove trivial SCCs
-    LAGRAPH_OK (GrB_reduce (f, 0, GrB_PLUS_UINT64, GrB_PLUS_UINT64, FW, 0));
-    LAGRAPH_OK (GrB_reduce (b, 0, GrB_PLUS_UINT64, GrB_PLUS_UINT64, BW, 0));
-    LAGRAPH_OK (GrB_eWiseMult (mask, 0, GxB_LAND_UINT64, GxB_LAND_UINT64, f, b, 0));
-    LAGRAPH_OK (GrB_Vector_nvals (&nvals, mask));
+    GrB_TRY (GrB_reduce (f, 0, GrB_PLUS_UINT64, GrB_PLUS_UINT64, FW, 0));
+    GrB_TRY (GrB_reduce (b, 0, GrB_PLUS_UINT64, GrB_PLUS_UINT64, BW, 0));
+    GrB_TRY (GrB_eWiseMult (mask, 0, GxB_LAND_UINT64, GxB_LAND_UINT64, f, b, 0));
+    GrB_TRY (GrB_Vector_nvals (&nvals, mask));
 
-    LAGRAPH_OK (GrB_assign (scc, 0, 0, ind, GrB_ALL, 0, 0));
-    LAGRAPH_OK (GrB_assign (scc, mask, 0, n, GrB_ALL, 0, 0));
-    LAGRAPH_OK (GrB_Vector_clear (mask));
+    GrB_TRY (GrB_assign (scc, 0, 0, ind, GrB_ALL, 0, 0));
+    GrB_TRY (GrB_assign (scc, mask, 0, n, GrB_ALL, 0, 0));
+    GrB_TRY (GrB_Vector_clear (mask));
 
     if (nvals < n)
     {
-        LAGRAPH_OK (GrB_Vector_extractTuples (I, M, &n, scc));
-        LAGRAPH_OK (GxB_select (FW, 0, 0, sel1, FW, GrB_NULL, 0));
-        LAGRAPH_OK (GxB_select (BW, 0, 0, sel1, BW, GrB_NULL, 0));
+        GrB_TRY (GrB_Vector_extractTuples (I, M, &n, scc));
+        GrB_TRY (GxB_select (FW, 0, 0, sel1, FW, GrB_NULL, 0));
+        GrB_TRY (GxB_select (BW, 0, 0, sel1, BW, GrB_NULL, 0));
     }
 
-    LAGRAPH_OK (GrB_Matrix_nvals (&nvals, FW));
+    GrB_TRY (GrB_Matrix_nvals (&nvals, FW));
     while (nvals > 0)
     {
-        LAGRAPH_OK (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, scc, inf, 0));
-        LAGRAPH_OK (GrB_assign (f, 0, 0, ind, GrB_ALL, 0, 0));
-        LAGRAPH_OK (propagate (f, mask, FW, BW, n));
+        GrB_TRY (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, scc, inf, 0));
+        GrB_TRY (GrB_assign (f, 0, 0, ind, GrB_ALL, 0, 0));
+        LG_TRY (propagate (f, mask, FW, BW, n, msg));
 
-        LAGRAPH_OK (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, f, ind, 0));
-        LAGRAPH_OK (GrB_assign (b, 0, 0, inf, GrB_ALL, 0, 0));
-        LAGRAPH_OK (GrB_assign (b, mask, 0, ind, GrB_ALL, 0, 0));
-        LAGRAPH_OK (propagate (b, mask, BW, FW, n));
+        GrB_TRY (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, f, ind, 0));
+        GrB_TRY (GrB_assign (b, 0, 0, inf, GrB_ALL, 0, 0));
+        GrB_TRY (GrB_assign (b, mask, 0, ind, GrB_ALL, 0, 0));
+        LG_TRY (propagate (b, mask, BW, FW, n, msg));
 
-        LAGRAPH_OK (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, f, b, 0));
-        LAGRAPH_OK (GrB_assign (scc, mask, GrB_MIN_UINT64, f, GrB_ALL, 0, 0));
+        GrB_TRY (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, f, b, 0));
+        GrB_TRY (GrB_assign (scc, mask, GrB_MIN_UINT64, f, GrB_ALL, 0, 0));
 
-        LAGRAPH_OK (GrB_Vector_extractTuples (I, F, &n, f));
-        LAGRAPH_OK (GrB_Vector_extractTuples (I, B, &n, b));
-        LAGRAPH_OK (GrB_Vector_extractTuples (I, M, &n, mask));
+        GrB_TRY (GrB_Vector_extractTuples (I, F, &n, f));
+        GrB_TRY (GrB_Vector_extractTuples (I, B, &n, b));
+        GrB_TRY (GrB_Vector_extractTuples (I, M, &n, mask));
 
-        LAGRAPH_OK (GxB_select (FW, 0, 0, sel2, FW, GrB_NULL, 0));
-        LAGRAPH_OK (GxB_select (BW, 0, 0, sel2, BW, GrB_NULL, 0));
+        GrB_TRY (GxB_select (FW, 0, 0, sel2, FW, GrB_NULL, 0));
+        GrB_TRY (GxB_select (BW, 0, 0, sel2, BW, GrB_NULL, 0));
 
-        LAGRAPH_OK (GrB_Matrix_nvals (&nvals, FW));
+        GrB_TRY (GrB_Matrix_nvals (&nvals, FW));
     }
-    LAGRAPH_OK (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, scc, inf, 0));
-    LAGRAPH_OK (GrB_assign (scc, mask, 0, ind, GrB_ALL, 0, 0));
+    GrB_TRY (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, scc, inf, 0));
+    GrB_TRY (GrB_assign (scc, mask, 0, ind, GrB_ALL, 0, 0));
 
-    LAGRAPH_OK (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, scc, ind, 0));
-    LAGRAPH_OK (GrB_reduce (&nvals, 0, GrB_PLUS_MONOID_UINT64, mask, 0));
+    GrB_TRY (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, scc, ind, 0));
+    GrB_TRY (GrB_reduce (&nvals, 0, GrB_PLUS_MONOID_UINT64, mask, 0));
 
     *result = scc;
     scc = NULL;

@@ -210,7 +210,7 @@ GrB_Info LAGraph_BF_full1a
     // GrB_Monoid
     BF_Tuple3_struct BF_identity = (BF_Tuple3_struct) { .w = INFINITY,
         .h = UINT64_MAX, .pi = UINT64_MAX };
-    LAGRAPH_OK(GrB_Monoid_new_UDT(&BF_lMIN_Tuple3_Monoid, BF_lMIN_Tuple3,
+    GrB_TRY (GrB_Monoid_new_UDT(&BF_lMIN_Tuple3_Monoid, BF_lMIN_Tuple3,
         &BF_identity));
 
     //GrB_Semiring
@@ -231,9 +231,9 @@ GrB_Info LAGraph_BF_full1a
     //--------------------------------------------------------------------------
     // create matrix Atmp based on A, while its entries become BF_Tuple3 type
     //--------------------------------------------------------------------------
-    LAGRAPH_OK(GrB_Matrix_extractTuples_FP64(I, J, w, &nz, A));
+    GrB_TRY (GrB_Matrix_extractTuples_FP64(I, J, w, &nz, A));
     int nthreads;
-    LAGRAPH_OK (LAGraph_GetNumThreads (&nthreads, NULL)) ;
+    LG_TRY (LAGraph_GetNumThreads (&nthreads, NULL)) ;
     printf ("nthreads %d\n", nthreads) ;
     #pragma omp parallel for num_threads(nthreads) schedule(static)
     for (GrB_Index k = 0; k < nz; k++)
@@ -241,7 +241,7 @@ GrB_Info LAGraph_BF_full1a
         W[k] = (BF_Tuple3_struct) { .w = w[k], .h = 1, .pi = I[k] + 1 };
     }
     GrB_TRY (GrB_Matrix_new(&Atmp, BF_Tuple3, n, n));
-    LAGRAPH_OK(GrB_Matrix_build_UDT(Atmp, I, J, W, nz, BF_lMIN_Tuple3));
+    GrB_TRY (GrB_Matrix_build_UDT(Atmp, I, J, W, nz, BF_lMIN_Tuple3));
     LAGraph_Free ((void**)&I);
     LAGraph_Free ((void**)&J);
     LAGraph_Free ((void**)&W);
@@ -278,15 +278,15 @@ GrB_Info LAGraph_BF_full1a
     //--------------------------------------------------------------------------
     GrB_TRY (GrB_Vector_new(&d, BF_Tuple3, n));
     // make d dense
-    LAGRAPH_OK(GrB_Vector_assign_UDT(d, NULL, NULL, (void*)&BF_identity,
+    GrB_TRY (GrB_Vector_assign_UDT(d, NULL, NULL, (void*)&BF_identity,
         GrB_ALL, n, NULL));
     // initial distance from s to itself
     BF_Tuple3_struct d0 = (BF_Tuple3_struct) { .w = 0, .h = 0, .pi = 0 };
-    LAGRAPH_OK(GrB_Vector_setElement_UDT(d, &d0, s));
+    GrB_TRY (GrB_Vector_setElement_UDT(d, &d0, s));
 
     // creat dmasked as a sparse vector with only one entry at s
     GrB_TRY (GrB_Vector_new(&dmasked, BF_Tuple3, n));
-    LAGRAPH_OK(GrB_Vector_setElement_UDT(dmasked, &d0, s));
+    GrB_TRY (GrB_Vector_setElement_UDT(dmasked, &d0, s));
 
     // create dless
     GrB_TRY (GrB_Vector_new(&dless, GrB_BOOL, n));
@@ -367,7 +367,7 @@ GrB_Info LAGraph_BF_full1a
 
     // TODO: create 3 unary ops, and use GrB_apply?
 
-    LAGRAPH_OK(GrB_Vector_extractTuples_UDT (I, (void *) W, &n, d));
+    GrB_TRY (GrB_Vector_extractTuples_UDT (I, (void *) W, &n, d));
 
     for (GrB_Index k = 0; k < n; k++)
     {

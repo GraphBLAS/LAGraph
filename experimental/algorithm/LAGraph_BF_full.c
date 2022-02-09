@@ -210,7 +210,7 @@ GrB_Info LAGraph_BF_full
     //--------------------------------------------------------------------------
     GrB_TRY (GrB_Matrix_extractTuples_FP64(I, J, w, &nz, A));
     int nthreads;
-    LAGRAPH_OK (LAGraph_GetNumThreads (&nthreads, NULL)) ;
+    LG_TRY (LAGraph_GetNumThreads (&nthreads, NULL)) ;
     printf ("nthreads %d\n", nthreads) ;
     #pragma omp parallel for num_threads(nthreads) schedule(static)
     for (GrB_Index k = 0; k < nz; k++)
@@ -250,7 +250,7 @@ GrB_Info LAGraph_BF_full
         GrB_TRY (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, BF_lMIN_PLUSrhs_Tuple3,
             d, Atmp, GrB_NULL));
 
-        LAGRAPH_OK (LAGraph_Vector_IsEqual_op(&same, dtmp, d, BF_EQ_Tuple3, NULL));
+        LG_TRY (LAGraph_Vector_IsEqual_op(&same, dtmp, d, BF_EQ_Tuple3, NULL));
         if (!same)
         {
             GrB_Vector ttmp = dtmp;
@@ -269,7 +269,7 @@ GrB_Info LAGraph_BF_full
             d, Atmp, GrB_NULL));
 
         // if d != dtmp, then there is a negative-weight cycle in the graph
-        LAGRAPH_OK (LAGraph_Vector_IsEqual_op(&same, dtmp, d, BF_EQ_Tuple3, NULL));
+        LG_TRY (LAGraph_Vector_IsEqual_op(&same, dtmp, d, BF_EQ_Tuple3, NULL));
         if (!same)
         {
             // printf("A negative-weight cycle found. \n");

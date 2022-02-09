@@ -156,7 +156,7 @@ void test_cdlp (void)
         double t [2] ;
 
         // compute the communities with LAGraph_cdlp
-        OK (LAGraph_cdlp (&c, G->A, symmetric, sanitize, 100, t)) ;
+        OK (LAGraph_cdlp (&c, G->A, symmetric, sanitize, 100, t, msg)) ;
 
         GrB_Index n ;
         OK (GrB_Vector_size (&n, c)) ;
@@ -213,14 +213,14 @@ void test_errors (void)
     double t [2] ;
 
     // c is NULL
-    int result = LAGraph_cdlp (NULL, G->A, true, false, 100, t) ;
+    int result = LAGraph_cdlp (NULL, G->A, true, false, 100, t, msg) ;
     printf ("\nresult: %d\n", result) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
 
     #if LG_SUITESPARSE
     // G->A is held by column
     OK (GxB_set (G->A, GxB_FORMAT, GxB_BY_COL)) ;
-    result = LAGraph_cdlp (&c, G->A, true, true, 100, t) ;
+    result = LAGraph_cdlp (&c, G->A, true, true, 100, t, msg) ;
     printf ("\nresult: %d\n", result) ;
     TEST_CHECK (result == GrB_INVALID_VALUE) ;
     TEST_CHECK (c == NULL) ;

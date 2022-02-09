@@ -114,7 +114,7 @@ void test_scc (void)
         GrB_Vector c = NULL ;
 
         // find the strongly connected components with LAGraph_scc
-        OK (LAGraph_scc (&c, G->A)) ;
+        OK (LAGraph_scc (&c, G->A, msg)) ;
 
         GrB_Index n ;
         OK (GrB_Vector_size (&n, c)) ;
@@ -158,13 +158,13 @@ void test_errors (void)
     GrB_Matrix A = NULL ;
 
     // c and A are NULL
-    int result = LAGraph_scc (NULL, A) ;
+    int result = LAGraph_scc (NULL, A, msg) ;
     printf ("\nresult: %d\n", result) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
 
     // A is rectangular
     OK (GrB_Matrix_new (&A, GrB_BOOL, 3, 4)) ;
-    result = LAGraph_scc (&c, A) ;
+    result = LAGraph_scc (&c, A, msg) ;
     TEST_CHECK (result == GrB_DIMENSION_MISMATCH) ;
 
     OK (GrB_free (&c)) ;

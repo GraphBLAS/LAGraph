@@ -85,7 +85,7 @@ void test_msf (void)
 
         // compute the min spanning forest
         C = NULL ;
-        int result = LAGraph_msf (&C, G->A, sanitize) ;
+        int result = LAGraph_msf (&C, G->A, sanitize, msg) ;
         printf ("result: %d\n", result) ;
         LAGraph_Print_Level pr = (n <= 100) ? LAGraph_COMPLETE : LAGraph_SHORT ;
 
@@ -126,12 +126,12 @@ void test_errors (void)
     LAGraph_Init (msg) ;
 
     // C and A are NULL
-    int result = LAGraph_msf (NULL, NULL, true) ;
+    int result = LAGraph_msf (NULL, NULL, true, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
 
     // A must be square
     OK (GrB_Matrix_new (&A, GrB_UINT64, 3, 4)) ;
-    result = LAGraph_msf (&C, A, true) ;
+    result = LAGraph_msf (&C, A, true, msg) ;
     TEST_CHECK (result == GrB_DIMENSION_MISMATCH) ;
 
     OK (GrB_free (&A)) ;
