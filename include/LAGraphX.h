@@ -210,6 +210,7 @@ int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
     char *filename,             // name of file to write to
     GrB_Matrix *Set,            // array of GrB_Matrix of size nmatrices
     GrB_Index nmatrices,        // # of matrices to write to *.lagraph file
+//  TODO: handle vectors and text in LAGraph_SSaveSet
     char *collection,           // name of this collection of matrices
     char *msg
 ) ;
@@ -221,7 +222,7 @@ int LAGraph_SLoadSet            // load a set of matrices from a *.lagraph file
     // outputs:
     GrB_Matrix **Set_handle,        // array of GrB_Matrix of size nmatrices
     GrB_Index *nmatrices_handle,    // # of matrices loaded from *.lagraph file
-//  TODO:
+//  TODO: handle vectors and text in LAGraph_SLoadSet
 //  GrB_Vector **Set_handle,        // array of GrB_Vector of size nvector
 //  GrB_Index **nvectors_handle,    // # of vectors loaded from *.lagraph file
 //  char **Text_handle,             // array of pointers to (char *) strings

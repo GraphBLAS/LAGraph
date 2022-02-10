@@ -22,9 +22,6 @@ As of Feb 9, 2022:
 
     * add FUTURE to User Guide (see below)
 
-    * test coverage on the Mac OSX 12.1, gcc-11: "cannot find *.gcda"
-        (it used to work)
-
 --------------------------------------------------------------------------------
 TODO: add this as a section in the User Guide
 

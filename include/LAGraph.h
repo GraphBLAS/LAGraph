@@ -304,10 +304,9 @@
 // user application or LAGraph method wants a copy, a statement such as
 // info = GraphBLAS_info ; where info is defined outside of this macro.
 
-// GraphBLAS and LAGraph both use the convention that negative values that
-// negative values are errors, and the LAGraph_status is a superset of the
-// GrB_Info enum.  As a result, the user can define LAGraph_CATCH and GrB_TRY
-// as the same operation.
+// GraphBLAS and LAGraph both use the convention that negative values are
+// errors, and the LAGraph_status is a superset of the GrB_Info enum.  As a
+// result, the user can define LAGraph_CATCH and GrB_TRY as the same operation.
 
 #define GrB_TRY(GrB_method)                                                  \
 {                                                                            \
@@ -1699,6 +1698,7 @@ int LAGraph_VertexCentrality_Betweenness
 //------------------------------------------------------------------------------
 
 // TODO: describe me, and explain that dangling nodes are ignored.
+// TODO: add LAGraph_VertexCentrality_PageRank, which handles dangling nodes
 
 LAGRAPH_PUBLIC
 int LAGraph_VertexCentrality_PageRankGAP
