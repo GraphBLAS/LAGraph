@@ -23,7 +23,7 @@
 
 // The parent vector is not computed; see LAGraph_BF_* instead.
 
-// TODO: this method gets stuck in an infinite loop when there are negative-
+// NOTE: this method gets stuck in an infinite loop when there are negative-
 // weight cycles in the graph.
 
 #define LG_FREE_WORK        \
@@ -59,7 +59,7 @@ int LAGraph_SingleSourceShortestPath
     LAGraph_Graph G,
     GrB_Index source,           // source vertex
     int32_t delta,              // delta value for delta stepping
-                                // TODO: use GxB_Scalar for delta?
+                                // TODO: use GxB_Scalar for delta
     // TODO: make this an enum, and add to LAGraph_Graph properties, and then
     // remove it from the inputs to this function
     //      case 0: A can have negative, zero, or positive entries
@@ -197,14 +197,11 @@ int LAGraph_SingleSourceShortestPath
             GrB_TRY (GrB_Vector_nvals (&tReq_nvals, tReq)) ;
             if (tReq_nvals == 0) break ;
 
-            // TODO currently assuming all edges weights are nonzero, so we're
-            // using a structural mask.  Explicit zeros in A would require a
-            // valued mask.
             // tless<tReq> = tReq .< t
             GrB_TRY (GrB_Vector_clear (tless)) ;
             GrB_TRY (GrB_eWiseAdd (tless, tReq, NULL,
                 GrB_LT_INT32,        // TODO: any type
-                tReq, t, GrB_DESC_S  /* assumes all entries in A are > 0 */)) ;
+                tReq, t, GrB_DESC_S)) ;
 
             // remove explicit zeros from tless so it can be used as a
             // structural mask
