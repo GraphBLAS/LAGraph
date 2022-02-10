@@ -64,6 +64,8 @@ void test_SingleSourceShortestPath(void)
 {
     LAGraph_Init(msg);
     GrB_Matrix A = NULL, T = NULL ;
+    GrB_Scalar Delta = NULL ;
+    OK (GrB_Scalar_new (&Delta, GrB_INT32)) ;
 
     for (int k = 0 ; ; k++)
     {
@@ -125,17 +127,21 @@ void test_SingleSourceShortestPath(void)
             {
                 int32_t delta = Deltas [kk] ;
                 printf ("src %d delta %d n %d\n", (int) src, delta, (int) n) ;
+                OK (GrB_Scalar_setElement (Delta, delta)) ;
                 OK (LAGraph_SingleSourceShortestPath (&path_length,
-                    G, src, delta, true, msg)) ;
-                OK (LG_check_sssp (path_length, G, src, msg)) ;
+                    G, src, Delta, true, msg)) ;
+                int res = LG_check_sssp (path_length, G, src, msg) ;
+                if (res != GrB_SUCCESS) printf ("res: %d msg: %s\n", res, msg) ;
+                OK (res) ;
                 OK (GrB_free(&path_length)) ;
             }
         }
 
         // add a single negative edge and try again
         OK (GrB_Matrix_setElement_INT32 (G->A, -1, 0, 1)) ;
+        OK (GrB_Scalar_setElement (Delta, 30)) ;
         OK (LAGraph_SingleSourceShortestPath (&path_length,
-            G, 0, 30, false, msg)) ;
+            G, 0, Delta, false, msg)) ;
         OK (LAGraph_Vector_Print (path_length, LAGraph_SHORT, stdout, msg)) ;
         int32_t len = 0 ;
         OK (GrB_Vector_extractElement (&len, path_length, 1)) ;
@@ -145,6 +151,7 @@ void test_SingleSourceShortestPath(void)
         OK (LAGraph_Delete (&G, msg)) ;
     }
 
+    GrB_free (&Delta) ;
     LAGraph_Finalize(msg);
 }
 
@@ -156,6 +163,8 @@ void test_SingleSourceShortestPath(void)
 void test_SingleSourceShortestPath_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
+    GrB_Scalar Delta = NULL ;
+    OK (GrB_Scalar_new (&Delta, GrB_INT32)) ;
 
     GrB_Matrix A = NULL, T = NULL ;
 
@@ -216,8 +225,9 @@ void test_SingleSourceShortestPath_brutal (void)
         int64_t src = 0 ;
         int32_t delta = 30 ;
         printf ("src %d delta %d n %d\n", (int) src, delta, (int) n) ;
+        OK (GrB_Scalar_setElement (Delta, delta)) ;
         LG_BRUTAL (LAGraph_SingleSourceShortestPath (&path_length,
-            G, src, delta, true, msg)) ;
+            G, src, Delta, true, msg)) ;
         OK (LG_check_sssp (path_length, G, src, msg)) ;
         OK (GrB_free(&path_length)) ;
 
@@ -225,7 +235,7 @@ void test_SingleSourceShortestPath_brutal (void)
         OK (GrB_Matrix_setElement_INT32 (G->A, -1, 0, 1)) ;
         OK (GrB_wait (G->A, GrB_MATERIALIZE)) ;
         LG_BRUTAL (LAGraph_SingleSourceShortestPath (&path_length,
-            G, 0, 30, false, msg)) ;
+            G, 0, Delta, false, msg)) ;
         int32_t len = 0 ;
         OK (GrB_Vector_extractElement (&len, path_length, 1)) ;
         TEST_CHECK (len == -1) ;
@@ -234,6 +244,7 @@ void test_SingleSourceShortestPath_brutal (void)
         OK (LAGraph_Delete (&G, msg)) ;
     }
 
+    GrB_free (&Delta) ;
     OK (LG_brutal_teardown (msg)) ;
 }
 #endif

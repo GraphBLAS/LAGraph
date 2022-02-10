@@ -99,6 +99,9 @@ int main (int argc, char **argv)
         delta = 2 ;
     }
     printf ("delta: %d\n", delta) ;
+    GrB_Scalar Delta = NULL ;
+    GrB_TRY (GrB_Scalar_new (&Delta, GrB_INT32)) ;
+    GrB_TRY (GrB_Scalar_setElement (Delta, delta)) ;
 
     //--------------------------------------------------------------------------
     // begin tests
@@ -137,7 +140,7 @@ int main (int argc, char **argv)
             GrB_free (&pathlen) ;
             LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
             LAGraph_TRY (LAGraph_SingleSourceShortestPath (&pathlen,
-                G, src, delta, true, msg)) ;
+                G, src, Delta, true, msg)) ;
             LAGraph_TRY (LAGraph_Toc (&ttrial, tic, msg)) ;
 
             printf ("sssp15:  threads: %2d trial: %2d source %g "

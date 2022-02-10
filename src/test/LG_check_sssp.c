@@ -271,6 +271,15 @@ int LG_check_sssp
     // check the distance of each node
     //--------------------------------------------------------------------------
 
+#if 0
+    for (int64_t i = 0 ; i < n ; i++)
+    {
+        bool ok = (path_length_in [i] == distance [i]) ;
+        printf ("%ld: %d %d  ok: %d\n", i,
+            path_length_in [i], distance [i], ok) ;
+    }
+#endif
+
     for (int64_t i = 0 ; i < n ; i++)
     {
         bool ok = (path_length_in [i] == distance [i]) ;

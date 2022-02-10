@@ -1654,8 +1654,7 @@ int LAGraph_SingleSourceShortestPath
     // input:
     LAGraph_Graph G,
     GrB_Index source,           // source vertex
-    int32_t delta,              // delta value for delta stepping
-                                // TODO: use GxB_Scalar for delta?
+    GrB_Scalar Delta,           // delta value for delta stepping
     // TODO: make this an enum, and add to LAGraph_Graph properties, and then
     // remove it from the inputs to this function
     //      case 0: A can have negative, zero, or positive entries
