@@ -43,10 +43,10 @@
 //      int result = LAGraph_AllKTruss (&Cset, &kmax, ntris, nedges,
 //          nstepss, G, msg) ;
 
-// TODO: add experimental/benchmark/ktruss_demo.c to benchmark k-truss
+// todo: add experimental/benchmark/ktruss_demo.c to benchmark k-truss
 // and all-k-truss
 
-// TODO: consider LAGraph_KTrussNext to compute the (k+1)-truss from the
+// todo: consider LAGraph_KTrussNext to compute the (k+1)-truss from the
 // k-truss
 
 #define LG_FREE_ALL                         \

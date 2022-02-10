@@ -10,7 +10,7 @@
 
 //-----------------------------------------------------------------------------
 
-// TODO: write a simple cdlp method, as LG_check_cdlp, and compare its results
+// todo: write a simple cdlp method, as LG_check_cdlp, and compare its results
 // with LAGraph_cdlp
 
 #include <stdio.h>

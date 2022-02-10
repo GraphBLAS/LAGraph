@@ -140,7 +140,7 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
         // TC0, TC1: simplest method, requires that A has all entries equal to 1
         //----------------------------------------------------------------------
 
-        // TODO: remove this method when moving this code from experimental/
+        // todo: remove this method when moving this code from experimental/
         // to src/
 
         if (method == 0)
@@ -193,7 +193,7 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
         // TC2: using LAGraph_plus_one_fp64 semiring
         //----------------------------------------------------------------------
 
-        // TODO: remove this method when moving this code from experimental/
+        // todo: remove this method when moving this code from experimental/
         // to src/
 
         // T{A} = A*A' (each triangle is seen 6 times)
@@ -234,7 +234,7 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
         // TC3: using tril.  This is the fastest method.
         //----------------------------------------------------------------------
 
-        // TODO: When this method is moved to src/, keep this method only.
+        // todo: When this method is moved to src/, keep this method only.
 
         // L = tril (A,-1)
         GrB_TRY (GrB_Matrix_new (&L, GrB_FP64, n, n)) ;

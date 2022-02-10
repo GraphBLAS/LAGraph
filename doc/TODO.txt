@@ -9,7 +9,7 @@ As of Feb 9, 2022:
     * test, document, polish all src & experimental: algorithms, utilities,
         and tests.
 
-    * many TODOs and FIXMEs throughout
+    * TODOs and FIXMEs throughout
 
     * SSSP: allow it to work on any matrix type (currently just INT32).
         DO types: int32, int64, uint32, uint64, float, double.

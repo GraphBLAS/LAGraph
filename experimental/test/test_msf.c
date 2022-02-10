@@ -10,7 +10,7 @@
 
 //------------------------------------------------------------------------------
 
-// TODO: write a simple msf method, as LG_check_msf, and compare its results
+// todo: write a simple msf method, as LG_check_msf, and compare its results
 // with LAGraph_msf
 
 #include <stdio.h>

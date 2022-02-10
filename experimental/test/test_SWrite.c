@@ -221,7 +221,7 @@ void test_SWrite (void)
             TEST_CHECK (ok) ;
             OK (GrB_free (&B)) ;
 
-            // free the contents: TODO make this a utility function
+            // free the contents: todo make this a utility function
             LAGraph_Free ((void **) &collection) ;
             for (int i = 0 ; i < ncontents ; i++)
             {

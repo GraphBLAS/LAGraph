@@ -259,7 +259,7 @@ int LAGraph_SRead   // read a set of matrices from a *.lagraph file
             Item->kind = LAGraph_matrix_kind ;
         }
 #if 0
-        // TODO: handle vectors and text
+        // todo: handle vectors and text
         else if (STRMATCH (o->name->string, "GrB_Vector"))
         {
             Item->kind = LAGraph_vector_kind ;
@@ -292,7 +292,7 @@ int LAGraph_SRead   // read a set of matrices from a *.lagraph file
         //----------------------------------------------------------------------
 
 #if 0
-        // TODO: handle text, with optional compression
+        // todo: handle text, with optional compression
         if (Item->kind == LAGraph_text_kind)
         {
             // text, uncompressed or compressed
@@ -343,7 +343,7 @@ int LAGraph_SRead   // read a set of matrices from a *.lagraph file
         OK (bytes_read == Item->blob_size) ;
     }
 
-    // TODO: optional components will be needed for matrices from
+    // todo: optional components will be needed for matrices from
     // sparse.tamu.edu (matrix id, author, editor, title, etc)
 #if 0
     // optional components

@@ -10,7 +10,7 @@
 
 //------------------------------------------------------------------------------
 
-// TODO: write a simple scc method, as LG_check_scc, and compare its results
+// todo: write a simple scc method, as LG_check_scc, and compare its results
 // with LAGraph_scc
 
 #include <stdio.h>

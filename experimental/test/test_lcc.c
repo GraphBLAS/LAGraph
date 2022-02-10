@@ -10,7 +10,7 @@
 
 //-----------------------------------------------------------------------------
 
-// TODO: write a simple lcc method, as LG_check_lcc, and compare its results
+// todo: write a simple lcc method, as LG_check_lcc, and compare its results
 // with LAGraph_lcc
 
 #include <stdio.h>

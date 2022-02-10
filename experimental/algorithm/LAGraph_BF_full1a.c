@@ -249,7 +249,7 @@ GrB_Info LAGraph_BF_full1a
 
 #else
 
-    TODO: GraphBLAS could use a new kind of unary operator, not z=f(x), but
+    todo: GraphBLAS could use a new kind of unary operator, not z=f(x), but
 
     [z,flag] = f (aij, i, j, k, nrows, ncols, nvals, etc, ...)
     flag: keep or discard.  Combines GrB_apply and GxB_select.
@@ -365,7 +365,7 @@ GrB_Info LAGraph_BF_full1a
     LG_ASSERT (I != NULL && W != NULL && w != NULL && h != NULL && pi != NULL,
         GrB_OUT_OF_MEMORY) ;
 
-    // TODO: create 3 unary ops, and use GrB_apply?
+    // todo: create 3 unary ops, and use GrB_apply?
 
     GrB_TRY (GrB_Vector_extractTuples_UDT (I, (void *) W, &n, d));
 

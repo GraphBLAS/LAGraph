@@ -70,7 +70,7 @@ int LAGraph_SWrite_HeaderItem   // write a single item to the JSON header
     const char *name,           // name of the matrix/vector/text; matrices from
                                 // sparse.tamu.edu use the form "Group/Name"
     const char *type,           // name of type of the matrix/vector
-    // TODO: text not yet supported
+    // todo: vectors and text not yet supported by LAGraph_SWrite_HeaderItem
     int compression,            // text compression method
     GrB_Index blob_size,        // exact size of serialized blob for this item
     char *msg
@@ -88,7 +88,7 @@ int LAGraph_SWrite_HeaderItem   // write a single item to the JSON header
             FPRINT ((f, "GrB_Matrix\": \"%s\", \"type\": \"%s", name, type)) ;
             break ;
 
-        // TODO: handle vectors and text
+        // todo: handle vectors and text
 #if 0
         case LAGraph_vector_kind :
             FPRINT((f, "GrB_Vector\": \"%s\", \"type\": \"%s", name, type)) ;

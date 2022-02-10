@@ -51,7 +51,7 @@ int LAGraph_SLoadSet            // load a set of matrices from a *.lagraph file
     // outputs:
     GrB_Matrix **Set_handle,        // array of GrB_Matrix of size nmatrices
     GrB_Index *nmatrices_handle,    // # of matrices loaded from *.lagraph file
-//  TODO:
+//  todo: handle vectors and text in LAGraph_SLoadSet
 //  GrB_Vector **Set_handle,        // array of GrB_Vector of size nvector
 //  GrB_Index **nvectors_handle,    // # of vectors loaded from *.lagraph file
 //  char **Text_handle,             // array of pointers to (char *) strings
@@ -99,7 +99,7 @@ int LAGraph_SLoadSet            // load a set of matrices from a *.lagraph file
     // count the matrices/vectors/texts in the Contents
     //--------------------------------------------------------------------------
 
-    // TODO: for now, all Contents are matrices
+    // todo: for now, all Contents are matrices
     nmatrices = ncontents ;
 
 #if 0
@@ -115,7 +115,7 @@ int LAGraph_SLoadSet            // load a set of matrices from a *.lagraph file
     }
     if (nvectors > 0 || ntexts > 0)
     {
-        // TODO
+        // todo: handle vectors and texts
         printf ("Warning: %lu vectors and %lu texts ignored\n",
             nvectors, ntexts) ;
     }
@@ -145,7 +145,7 @@ int LAGraph_SLoadSet            // load a set of matrices from a *.lagraph file
                 blob_size)) ;
             kmatrices++ ;
         }
-        // TODO: handle vectors and texts
+        // todo: handle vectors and texts
         // else if (Content [i].kind == LAGraph_vector_kind) ...
         // else if (Content [i].kind == LAGraph_text_kind) ...
 
