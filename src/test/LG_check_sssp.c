@@ -87,9 +87,9 @@ int LG_check_sssp
     char atype_name [LAGRAPH_MAX_NAME_LEN] ;
     LG_TRY (LAGraph_Matrix_TypeName (atype_name, G->A, msg)) ;
     LG_TRY (LAGraph_TypeFromName (&etype, atype_name, msg)) ;
-    int etypecode ;
-    size_t etypesize ;
-    double etypeinf ;
+    int etypecode = 0 ;
+    size_t etypesize = 0 ;
+    double etypeinf = INFINITY ;
 
     if (etype == GrB_INT32)
     {
@@ -127,10 +127,8 @@ int LG_check_sssp
         etypesize = sizeof (double) ;
         etypeinf  = INFINITY ;
     }
-    else
-    {
-        LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED, "type not supported") ;
-    }
+
+    LG_ASSERT_MSG (etypesize > 0, GrB_NOT_IMPLEMENTED, "type not supported") ;
 
     bool print_timings = (n >= 2000) ;
 
