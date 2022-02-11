@@ -335,10 +335,7 @@ int LG_check_sssp
         else
         {
             err = fabs (path_length_in [i] - distance [i]) ;
-            if (err > 0)
-            {
-                err = err / LAGraph_MAX (path_length_in [i], distance [i]) ;
-            }
+            if (err > 0) err = err / LAGraph_MAX (path_length_in [i], distance [i]) ;
             ok = (err < 1e-12) ;
         }
 //      printf ("%d: %g %g err %g ok: %d\n", (int) i,

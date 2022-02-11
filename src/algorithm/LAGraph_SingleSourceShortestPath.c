@@ -104,7 +104,10 @@ int LAGraph_SingleSourceShortestPath
     GrB_Vector Empty = NULL ;
 
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
-    LG_ASSERT (path_length != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (path_length != NULL && Delta != NULL, GrB_NULL_POINTER) ;
+    GrB_Index nvals ;
+    LG_TRY (GrB_Scalar_nvals (&nvals, Delta)) ;
+    LG_ASSERT_MSG (nvals == 1, GrB_EMPTY_OBJECT, "delta is missing") ;
     (*path_length) = NULL ;
 
     GrB_Matrix A = G->A ;

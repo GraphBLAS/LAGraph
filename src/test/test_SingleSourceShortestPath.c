@@ -159,7 +159,6 @@ void test_SingleSourceShortestPath(void)
     LAGraph_Finalize(msg);
 }
 
-
 //------------------------------------------------------------------------------
 // test_SingleSourceShortestPath_types
 //------------------------------------------------------------------------------
@@ -293,6 +292,49 @@ void test_SingleSourceShortestPath_types (void)
 }
 
 //------------------------------------------------------------------------------
+// test_SingleSourceShortestPath_failure
+//------------------------------------------------------------------------------
+
+void test_SingleSourceShortestPath_failure (void)
+{
+    LAGraph_Init (msg) ;
+    GrB_Scalar Delta = NULL ;
+    OK (GrB_Scalar_new (&Delta, GrB_INT32)) ;
+    OK (GrB_Scalar_setElement (Delta, 1)) ;
+
+    // load the karate adjacency matrix as A
+    GrB_Matrix A = NULL ;
+    FILE *f = fopen (LG_DATA_DIR "karate.mtx", "r") ;
+    TEST_CHECK (f != NULL) ;
+    OK (LAGraph_MMRead (&A, f, msg)) ;
+    OK (fclose (f)) ;
+    TEST_MSG ("Loading of adjacency matrix failed") ;
+
+    // create the graph
+    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+    OK (LAGraph_CheckGraph (G, msg)) ;
+    TEST_CHECK (A == NULL) ;    // A has been moved into G->A
+
+    GrB_Vector path_length = NULL ;
+    int result = LAGraph_SingleSourceShortestPath (&path_length,
+                    G, 0, Delta, true, msg) ;
+    printf ("\nres: %d msg: %s\n", result, msg) ;
+    TEST_CHECK (path_length == NULL) ;
+    TEST_CHECK (result == GrB_NOT_IMPLEMENTED) ;
+
+    OK (GrB_Scalar_clear (Delta)) ;
+    result = LAGraph_SingleSourceShortestPath (&path_length,
+                    G, 0, Delta, true, msg) ;
+    printf ("\nres: %d msg: %s\n", result, msg) ;
+    TEST_CHECK (path_length == NULL) ;
+    TEST_CHECK (result == GrB_EMPTY_OBJECT) ;
+
+    OK (GrB_free (&Delta)) ;
+    OK (LAGraph_Delete (&G, msg)) ;
+    LAGraph_Finalize (msg) ;
+}
+
+//------------------------------------------------------------------------------
 // test_SingleSourceShortestPath_brutal
 //------------------------------------------------------------------------------
 
@@ -392,6 +434,7 @@ void test_SingleSourceShortestPath_brutal (void)
 TEST_LIST = {
     {"SSSP", test_SingleSourceShortestPath},
     {"SSSP_types", test_SingleSourceShortestPath_types},
+    {"SSSP_failure", test_SingleSourceShortestPath_failure},
     #if LG_SUITESPARSE
     {"SSSP_brutal", test_SingleSourceShortestPath_brutal },
     #endif
