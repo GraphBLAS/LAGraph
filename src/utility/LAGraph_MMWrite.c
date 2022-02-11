@@ -14,6 +14,9 @@
 // Writes a matrix to a file in the Matrix Market format.  See LAGraph_MMRead
 // for a description of the format.
 
+// The Matrix Market format is described at:
+// https://math.nist.gov/MatrixMarket/formats.html
+
 // Parts of this code are from SuiteSparse/CHOLMOD/Check/cholmod_write.c, and
 // are used here by permission of the author of CHOLMOD/Check (T. A. Davis).
 

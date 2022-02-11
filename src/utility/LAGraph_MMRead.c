@@ -13,6 +13,9 @@
 // Parts of this code are from SuiteSparse/CHOLMOD/Check/cholmod_read.c, and
 // are used here by permission of the author of CHOLMOD/Check (T. A. Davis).
 
+// The Matrix Market format is described at:
+// https://math.nist.gov/MatrixMarket/formats.html
+
 // Return values:
 //  GrB_SUCCESS: input file and output matrix are valid
 //  LAGRAPH_IO_ERROR: the input file cannot be read or has invalid content
@@ -901,17 +904,24 @@ int LAGraph_MMRead
             }
             else
             {
-                // coordinate format; read the row and column index
+                // coordinate format; read the row index and column index
                 LG_ASSERT_MSG (sscanf (p, "%" SCNu64 " %" SCNu64, &i, &j) == 2,
                     LAGRAPH_IO_ERROR, "indices invalid") ;
+                // check the indices (they are 1-based in the MM file format)
+                LG_ASSERT_MSG (i >= 1 && i <= nrows, GrB_INDEX_OUT_OF_RANGE,
+                    "row index out of range "
+                    "(must be in range 1 to # of rows)") ;
+                LG_ASSERT_MSG (j >= 1 && j <= ncols, GrB_INDEX_OUT_OF_RANGE,
+                    "column index out of range "
+                    "(must be in range 1 to # of columns") ;
                 // convert from 1-based to 0-based.
                 i-- ;
                 j-- ;
                 // advance p to the 3rd token to get the value of the entry
                 while (*p &&  isspace (*p)) p++ ;   // skip any leading spaces
-                while (*p && !isspace (*p)) p++ ;   // skip nrows
+                while (*p && !isspace (*p)) p++ ;   // skip the row index
                 while (*p &&  isspace (*p)) p++ ;   // skip any spaces
-                while (*p && !isspace (*p)) p++ ;   // skip nrows
+                while (*p && !isspace (*p)) p++ ;   // skip the column index
             }
 
             //------------------------------------------------------------------
