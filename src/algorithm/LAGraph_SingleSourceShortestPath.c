@@ -26,6 +26,16 @@
 // NOTE: this method gets stuck in an infinite loop when there are negative-
 // weight cycles in the graph.
 
+// TODO: add AIsAllPositive or related as a G->property.  But then this would
+// not be a Basic method.  The Advanced method would require the AIsAllPostive
+// cached property, and it would require Delta to be provided.
+
+// TODO: Should a Basic method pick delta automatically?  The Basic method
+// would compute the cached property AIsAllPositive (or related), and then
+// it would also try to set Delta.  What should Delta be for an arbitrary
+// graph, of type int32, int64, uint32, uint64, float, or double?  Perhaps
+// equal some multiple (30?) of the max edge weight?  Unsure.
+
 #define LG_FREE_WORK        \
 {                           \
     GrB_free (&AL) ;        \

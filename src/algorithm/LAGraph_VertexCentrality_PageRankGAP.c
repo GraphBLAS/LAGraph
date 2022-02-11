@@ -19,6 +19,12 @@
 // is undirected or G->A is known to have a symmetric structure, then G->A is
 // used instead of G->AT, however.
 
+// TODO: describe me, and explain that dangling nodes are ignored, leading to
+// a centrality vector that does not sum to one at the end.
+
+// TODO: add LAGraph_VertexCentrality_PageRank, which handles dangling nodes
+// properly.
+
 #define LG_FREE_WORK                \
 {                                   \
     GrB_free (&d1) ;                \

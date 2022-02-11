@@ -13,6 +13,10 @@
 // Connected Components via LG_CC_FastSV6 if using SuiteSparse:GraphBLAS and
 // its GxB extensions, or LG_CC_Boruvka otherwise.  The former is much faster.
 
+// TODO: this is an Advanced method, since G is input (not input/output). OK?
+// A Basic method should compute G->A_structure_is_symmetric for a directed
+// graph.  Do we need a Basic method too?
+
 #include "LG_alg_internal.h"
 
 int LAGraph_ConnectedComponents

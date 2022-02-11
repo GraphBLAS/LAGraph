@@ -34,7 +34,7 @@
 #define LAGRAPH_VERSION_MAJOR 0
 #define LAGRAPH_VERSION_MINOR 9
 #define LAGRAPH_VERSION_UPDATE 9
-#define LAGRAPH_DATE "Feb 9, 2022"
+#define LAGRAPH_DATE "Feb 10, 2022"
 
 //==============================================================================
 // include files and helper macros
@@ -1707,7 +1707,9 @@ int LAGraph_VertexCentrality_Betweenness
 
 // TODO: describe me, and explain that dangling nodes are ignored, leading to
 // a centrality vector that does not sum to one at the end.
+
 // TODO: add LAGraph_VertexCentrality_PageRank, which handles dangling nodes
+// properly.
 
 LAGRAPH_PUBLIC
 int LAGraph_VertexCentrality_PageRankGAP
