@@ -908,10 +908,10 @@ int LAGraph_MMRead
                 LG_ASSERT_MSG (sscanf (p, "%" SCNu64 " %" SCNu64, &i, &j) == 2,
                     LAGRAPH_IO_ERROR, "indices invalid") ;
                 // check the indices (they are 1-based in the MM file format)
-                LG_ASSERT_MSG (i >= 1 && i <= nrows, GrB_INDEX_OUT_OF_RANGE,
+                LG_ASSERT_MSG (i >= 1 && i <= nrows, GrB_INDEX_OUT_OF_BOUNDS,
                     "row index out of range "
                     "(must be in range 1 to # of rows)") ;
-                LG_ASSERT_MSG (j >= 1 && j <= ncols, GrB_INDEX_OUT_OF_RANGE,
+                LG_ASSERT_MSG (j >= 1 && j <= ncols, GrB_INDEX_OUT_OF_BOUNDS,
                     "column index out of range "
                     "(must be in range 1 to # of columns") ;
                 // convert from 1-based to 0-based.
