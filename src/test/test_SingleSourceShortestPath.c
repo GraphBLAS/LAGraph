@@ -56,6 +56,8 @@ const matrix_info files [ ] =
     { "test_FW_2003.mtx" },
     { "test_FW_2500.mtx" },
     { "skew_fp32.mtx" }, 
+    { "matrix_uint32.mtx" }, 
+    { "matrix_uint64.mtx" }, 
     { "" }, 
 } ;
 
@@ -121,8 +123,10 @@ void test_SingleSourceShortestPath(void)
         // run the SSSP
         GrB_Vector path_length = NULL ;
         int64_t step = (n > 100) ? (3*n/4) : ((n/4) + 1) ;
+        // int64_t src = 0 ;
         for (int64_t src = 0 ; src < n ; src += step)
         {
+            // int32_t kk = 0 ;
             for (int32_t kk = 0 ; kk < ((n > 100) ? 1 : 3) ; kk++)
             {
                 int32_t delta = Deltas [kk] ;
@@ -153,6 +157,139 @@ void test_SingleSourceShortestPath(void)
 
     GrB_free (&Delta) ;
     LAGraph_Finalize(msg);
+}
+
+
+//------------------------------------------------------------------------------
+// test_SingleSourceShortestPath_types
+//------------------------------------------------------------------------------
+
+void test_SingleSourceShortestPath_types (void)
+{
+    LAGraph_Init (msg) ;
+    GrB_Matrix A = NULL, T = NULL ;
+    GrB_Scalar Delta = NULL ;
+    OK (GrB_Scalar_new (&Delta, GrB_INT32)) ;
+
+    for (int k = 0 ; ; k++)
+    {
+
+        // load the adjacency matrix as A
+        const char *aname = files [k].name ;
+        LAGraph_Kind kind = LAGRAPH_ADJACENCY_DIRECTED ;
+        // LAGraph_Kind kind = files [k].kind ;
+        if (strlen (aname) == 0) break;
+        TEST_CASE (aname) ;
+        printf ("\nMatrix: %s\n", aname) ;
+        snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
+        FILE *f = fopen (filename, "r") ;
+        TEST_CHECK (f != NULL) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
+        OK (fclose (f)) ;
+        TEST_MSG ("Loading of adjacency matrix failed") ;
+
+        GrB_Index n = 0, ncols = 1 ;
+        OK (GrB_Matrix_nrows (&n, A)) ;
+        OK (GrB_Matrix_ncols (&ncols, A)) ;
+        TEST_CHECK (n == ncols) ;
+
+        // ensure A has the right type
+        OK (LAGraph_Matrix_TypeName (atype_name, A, msg)) ;
+//      fprintf (stderr, "matrix %s type: %s\n", aname, atype_name) ;
+        if (MATCHNAME (atype_name, "int32_t"))
+        {
+            // use A as-is, but ensure it's positive and nonzero,
+            // and in range 1 to 255
+            OK (GrB_apply (A, NULL, NULL, GrB_ABS_INT32, A, NULL)) ;
+            OK (GrB_apply (A, NULL, NULL, GrB_MAX_INT32, A, 1, NULL)) ;
+            OK (GrB_apply (A, NULL, NULL, GrB_MIN_INT32, A, 255, NULL)) ;
+        }
+        else if (MATCHNAME (atype_name, "int64_t"))
+        {
+            // use A as-is, but ensure it's positive and nonzero,
+            // and in range 1 to 255
+            OK (GrB_apply (A, NULL, NULL, GrB_ABS_INT64, A, NULL)) ;
+            OK (GrB_apply (A, NULL, NULL, GrB_MAX_INT64, A, 1, NULL)) ;
+            OK (GrB_apply (A, NULL, NULL, GrB_MIN_INT64, A, 255, NULL)) ;
+        }
+        else if (MATCHNAME (atype_name, "uint32_t"))
+        {
+            // use A as-is, but ensure it's nonzero
+            // and in range 1 to 255
+            OK (GrB_apply (A, NULL, NULL, GrB_MAX_UINT32, A, 1, NULL)) ;
+            OK (GrB_apply (A, NULL, NULL, GrB_MIN_UINT32, A, 255, NULL)) ;
+        }
+        else if (MATCHNAME (atype_name, "uint64_t"))
+        {
+            // use A as-is, but ensure it's nonzero
+            // and in range 1 to 255
+            OK (GrB_apply (A, NULL, NULL, GrB_MAX_UINT64, A, 1, NULL)) ;
+            OK (GrB_apply (A, NULL, NULL, GrB_MIN_UINT64, A, 255, NULL)) ;
+        }
+        else if (MATCHNAME (atype_name, "float"))
+        {
+            // use A as-is, but ensure it's positive, with values in range
+            // 1 to 255
+            OK (GrB_apply (A, NULL, NULL, GrB_ABS_FP32, A, NULL)) ;
+            float emax = 0 ;
+            OK (GrB_reduce (&emax, NULL, GrB_MAX_MONOID_FP32, A, NULL)) ;
+            emax = 255. / emax ;
+            OK (GrB_apply (A, NULL, NULL, GrB_TIMES_FP32, A, emax, NULL)) ;
+            OK (GrB_apply (A, NULL, NULL, GrB_MAX_FP32, A, 1, NULL)) ;
+        }
+        else if (MATCHNAME (atype_name, "double"))
+        {
+            // use A as-is, but ensure it's positive, with values in range
+            // 1 to 255
+            OK (GrB_apply (A, NULL, NULL, GrB_ABS_FP64, A, NULL)) ;
+            double emax = 0 ;
+            OK (GrB_reduce (&emax, NULL, GrB_MAX_MONOID_FP64, A, NULL)) ;
+            emax = 255. / emax ;
+            OK (GrB_apply (A, NULL, NULL, GrB_TIMES_FP64, A, emax, NULL)) ;
+            OK (GrB_apply (A, NULL, NULL, GrB_MAX_FP64, A, 1, NULL)) ;
+        }
+        else
+        {
+            // T = max (abs (double (A)), 0.1)
+            OK (GrB_Matrix_new (&T, GrB_FP64, n, n)) ;
+            OK (GrB_apply (T, NULL, NULL, GrB_ABS_FP64, A, NULL)) ;
+            OK (GrB_apply (T, NULL, NULL, GrB_MAX_FP64, A, 0.1, NULL)) ;
+            OK (GrB_free (&A)) ;
+            A = T ;
+        }
+
+        // create the graph
+        OK (LAGraph_New (&G, &A, kind, msg)) ;
+        OK (LAGraph_CheckGraph (G, msg)) ;
+        TEST_CHECK (A == NULL) ;    // A has been moved into G->A
+
+        // delta values to try
+        int32_t Deltas [ ] = { 30, 100, 50000 } ;
+
+        // run the SSSP
+        GrB_Vector path_length = NULL ;
+        int64_t step = (n > 100) ? (3*n/4) : ((n/4) + 1) ;
+        for (int64_t src = 0 ; src < n ; src += step)
+        {
+            for (int32_t kk = 0 ; kk < ((n > 100) ? 1 : 3) ; kk++)
+            {
+                int32_t delta = Deltas [kk] ;
+                printf ("src %d delta %d n %d\n", (int) src, delta, (int) n) ;
+                OK (GrB_Scalar_setElement (Delta, delta)) ;
+                OK (LAGraph_SingleSourceShortestPath (&path_length,
+                    G, src, Delta, true, msg)) ;
+                int res = LG_check_sssp (path_length, G, src, msg) ;
+                if (res != GrB_SUCCESS) printf ("res: %d msg: %s\n", res, msg) ;
+                OK (res) ;
+                OK (GrB_free(&path_length)) ;
+            }
+        }
+
+        OK (LAGraph_Delete (&G, msg)) ;
+    }
+
+    GrB_free (&Delta) ;
+    LAGraph_Finalize (msg) ;
 }
 
 //------------------------------------------------------------------------------
@@ -254,6 +391,7 @@ void test_SingleSourceShortestPath_brutal (void)
 
 TEST_LIST = {
     {"SSSP", test_SingleSourceShortestPath},
+    {"SSSP_types", test_SingleSourceShortestPath_types},
     #if LG_SUITESPARSE
     {"SSSP_brutal", test_SingleSourceShortestPath_brutal },
     #endif

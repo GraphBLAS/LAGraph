@@ -13,9 +13,9 @@
 #include "LG_internal.h"
 #include "LG_test.h"
 
-// TODO: handle all data types, not just int32
+// All computations are done in double precision
 
-typedef int64_t LG_key_t ;
+typedef double LG_key_t ;
 typedef struct
 {
     int64_t name ;
@@ -72,29 +72,84 @@ int LG_check_sssp
     double tic [2], tt ;
     GrB_Vector Row = NULL ;
     GrB_Index *Ap = NULL, *Aj = NULL, *neighbors = NULL ;
-    int32_t *Ax = NULL, *neighbor_weights = NULL ;
     GrB_Index Ap_size, Aj_size, Ax_size, n, ncols ;
-    int64_t *queue = NULL, *path_length_in = NULL, *Iheap = NULL,
-        *distance = NULL, *parent = NULL ;
+    int64_t *queue = NULL, *Iheap = NULL, *parent = NULL ;
     LG_Element *Heap = NULL ;
+
+    double *path_length_in = NULL, *distance = NULL, *neighbor_weights = NULL ;
+    void *Ax = NULL ;
 
     LAGraph_Tic (tic, msg) ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
+    GrB_Type etype ;
     char atype_name [LAGRAPH_MAX_NAME_LEN] ;
     LG_TRY (LAGraph_Matrix_TypeName (atype_name, G->A, msg)) ;
-    LG_ASSERT_MSG (MATCHNAME (atype_name, "int32_t"),
-        GrB_NOT_IMPLEMENTED, "G->A must be int32") ;
+    LG_TRY (LAGraph_TypeFromName (&etype, atype_name, msg)) ;
+    int etypecode ;
+    size_t etypesize ;
+    double etypeinf ;
+
+    if (etype == GrB_INT32)
+    {
+        etypecode = 0 ;
+        etypesize = sizeof (int32_t) ;
+        etypeinf  = INT32_MAX ;
+    }
+    else if (etype == GrB_INT64)
+    {
+        etypecode = 1 ;
+        etypesize = sizeof (int64_t) ;
+        etypeinf  = INT64_MAX ;
+    }
+    else if (etype == GrB_UINT32)
+    {
+        etypecode = 2 ;
+        etypesize = sizeof (uint32_t) ;
+        etypeinf  = UINT32_MAX ;
+    }
+    else if (etype == GrB_UINT64)
+    {
+        etypecode = 3 ;
+        etypesize = sizeof (uint64_t) ;
+        etypeinf  = UINT64_MAX ;
+    }
+    else if (etype == GrB_FP32)
+    {
+        etypecode = 4 ;
+        etypesize = sizeof (float) ;
+        etypeinf  = INFINITY ;
+    }
+    else if (etype == GrB_FP64)
+    {
+        etypecode = 5 ;
+        etypesize = sizeof (double) ;
+        etypeinf  = INFINITY ;
+    }
+    else
+    {
+        LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED, "type not supported") ;
+    }
+
     bool print_timings = (n >= 2000) ;
 
     //--------------------------------------------------------------------------
     // get the contents of the Path_Length vector
     //--------------------------------------------------------------------------
 
-    path_length_in = LAGraph_Malloc (n, sizeof (int64_t)) ;
+    path_length_in = LAGraph_Malloc (n, sizeof (double)) ;
     LG_ASSERT (path_length_in != NULL, GrB_OUT_OF_MEMORY) ;
-    LG_TRY (LG_check_vector (path_length_in, Path_Length, n, INT32_MAX)) ;
+    for (int64_t i = 0 ; i < n ; i++)
+    {
+        double t ;
+        path_length_in [i] = INFINITY ;
+        int info = GrB_Vector_extractElement_FP64 (&t, Path_Length, i) ;
+        if (info == GrB_SUCCESS)
+        {
+            path_length_in [i] = t ;
+        }
+    }
 
     //--------------------------------------------------------------------------
     // unpack the matrix in CSR form for SuiteSparse:GraphBLAS
@@ -120,21 +175,21 @@ int LG_check_sssp
     }
 
     // initializations
-    distance = LAGraph_Malloc (n, sizeof (int64_t)) ;
+    distance = LAGraph_Malloc (n, sizeof (double)) ;
     // parent = LAGraph_Malloc (n, sizeof (int64_t)) ;
     LG_ASSERT (distance != NULL, GrB_OUT_OF_MEMORY) ;
     for (int64_t i = 0 ; i < n ; i++)
     {
-        distance [i] = INT32_MAX ;
+        distance [i] = INFINITY ;
         // parent [i] = -1 ;
     }
     distance [src] = 0 ;
     // parent [src] = src ;
 
     #if !LG_SUITESPARSE
-    GrB_TRY (GrB_Vector_new (&Row, GrB_INT32, n)) ;
+    GrB_TRY (GrB_Vector_new (&Row, GrB_FP64, n)) ;
     neighbors = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
-    neighbor_weights = LAGraph_Malloc (n, sizeof (int32_t)) ;
+    neighbor_weights = LAGraph_Malloc (n, sizeof (double)) ;
     LG_ASSERT (neighbors != NULL, GrB_OUT_OF_MEMORY) ;
     LG_ASSERT (neighbor_weights != NULL, GrB_OUT_OF_MEMORY) ;
     #endif
@@ -151,7 +206,7 @@ int LG_check_sssp
     {
         if (i != src)
         {
-            Heap [p].key = INT32_MAX ;
+            Heap [p].key = INFINITY ;
             Heap [p].name = i ;
             Iheap [i] = p ;
             p++ ;
@@ -168,7 +223,7 @@ int LG_check_sssp
         int64_t u = e.name ;
         // printf ("\nGot node %ld\n", u) ;
 
-        int64_t u_distance = e.key ;
+        double u_distance = e.key ;
         ASSERT (distance [u] == u_distance) ;
         LG_heap_delete (1, Heap, Iheap, n, &nheap) ;
         ASSERT (Iheap [u] == 0) ;
@@ -180,7 +235,7 @@ int LG_check_sssp
                 "invalid heap") ;
         }
 
-        if (u_distance == INT32_MAX)
+        if (u_distance == INFINITY)
         {
             // node u is not reachable, so no other nodes in the queue
             // are reachable either.  All work is done.
@@ -191,31 +246,16 @@ int LG_check_sssp
         // directly access the indices of entries in A(u,:)
         GrB_Index degree = Ap [u+1] - Ap [u] ;
         GrB_Index *node_u_adjacency_list = Aj + Ap [u] ;
-        int32_t *weights = Ax + (iso ? 0 : Ap [u]) ;
+        void *weights = Ax + ((iso ? 0 : Ap [u]) * etypesize) ;
         #else
         // extract the indices of entries in A(u,:)
         GrB_Index degree = n ;
         GrB_TRY (GrB_Col_extract (Row, NULL, NULL, G->A, GrB_ALL, n, u,
             GrB_DESC_T0)) ;
-        GrB_TRY (GrB_Vector_extractTuples_INT32 (neighbors, neighbor_weights,
+        GrB_TRY (GrB_Vector_extractTuples_FP64 (neighbors, neighbor_weights,
             &degree, Row)) ;
         GrB_Index *node_u_adjacency_list = neighbors ;
-        int32_t *weights = neighbor_weights ;
-        #endif
-
-        #if 0
-        printf ("Ap %ld %ld\n", Ap [u], Ap [u+1]) ;
-        // check all entries in A(u,:)
-        for (int64_t k = 0 ; k < degree ; k++)
-        {
-            // consider edge (u,v) and its weight w
-            int64_t v = node_u_adjacency_list [k] ;
-            int64_t w = (int64_t) (weights [iso ? 0 : k]) ;
-            printf ("consider edge u %ld (in heap: %ld)\n", u, Iheap [u]) ;
-            printf ("consider node v %ld (in heap: %ld)\n", v, Iheap [v]) ;
-            printf ("weight w %ld\n", w) ;
-        }
-        printf ("\n") ;
+        double *weights = neighbor_weights ;
         #endif
 
         // traverse all entries in A(u,:)
@@ -224,16 +264,30 @@ int LG_check_sssp
             // consider edge (u,v) and its weight w
             int64_t v = node_u_adjacency_list [k] ;
             if (Iheap [v] == 0) continue ;  // node v already in SSSP tree
-            int64_t w = (int64_t) (weights [iso ? 0 : k]) ;
-            // printf ("consider edge (%ld,%ld) weight %ld\n", u, v, w) ;
+            double w ;
+            #if LG_SUITESPARSE
+            switch (etypecode)
+            {
+                default:
+                case 0: w = (( int32_t *) weights) [iso ? 0 : k] ; break ;
+                case 1: w = (( int64_t *) weights) [iso ? 0 : k] ; break ;
+                case 2: w = ((uint32_t *) weights) [iso ? 0 : k] ; break ;
+                case 3: w = ((uint64_t *) weights) [iso ? 0 : k] ; break ;
+                case 4: w = (( float   *) weights) [iso ? 0 : k] ; break ;
+                case 5: w = (( double  *) weights) [iso ? 0 : k] ; break ;
+            }
+            #else
+            w = weights [iso ? 0 : k] ;
+            #endif
+//          printf ("consider edge (%d,%d) weight %g\n", (int) u, (int) v, w) ;
 
             LG_ASSERT_MSG (w > 0, -2002, "invalid graph (weights must be > 0)");
-            int64_t new_distance = u_distance + w ;
+            double new_distance = u_distance + w ;
             if (distance [v] > new_distance)
             {
                 // reduce the key of node v
-                // printf ("decreased key of node %ld from %ld to %ld\n",
-                //     v, distance [v], new_distance) ;
+//              printf ("decreased key of node %d from %g to %g\n",
+//                  (int) v, distance [v], new_distance) ;
                 distance [v] = new_distance ;
                 // parent [v] = u ;
                 int64_t p = Iheap [v] ;
@@ -247,7 +301,6 @@ int LG_check_sssp
             LG_ASSERT_MSG (LG_heap_check (Heap, Iheap, n, nheap) == 0, -2000,
                 "invalid heap") ;
         }
-
     }
 
     if (print_timings)
@@ -271,18 +324,25 @@ int LG_check_sssp
     // check the distance of each node
     //--------------------------------------------------------------------------
 
-#if 0
     for (int64_t i = 0 ; i < n ; i++)
     {
-        bool ok = (path_length_in [i] == distance [i]) ;
-        printf ("%ld: %d %d  ok: %d\n", i,
-            path_length_in [i], distance [i], ok) ;
-    }
-#endif
-
-    for (int64_t i = 0 ; i < n ; i++)
-    {
-        bool ok = (path_length_in [i] == distance [i]) ;
+        bool ok = true ;
+        double err = 0 ;
+        if (isinf (distance [i]))
+        {
+            ok = (path_length_in [i] == etypeinf || isinf (path_length_in [i]));
+        }
+        else
+        {
+            err = fabs (path_length_in [i] - distance [i]) ;
+            if (err > 0)
+            {
+                err = err / LAGraph_MAX (path_length_in [i], distance [i]) ;
+            }
+            ok = (err < 1e-12) ;
+        }
+//      printf ("%d: %g %g err %g ok: %d\n", (int) i,
+//          path_length_in [i], distance [i], err, ok) ;
         LG_ASSERT_MSG (ok, -2001, "invalid path length") ;
     }
 
