@@ -1,4 +1,4 @@
-As of Feb 9, 2022:
+As of Feb 10, 2022:
 
     * entire user guide
         experimental -> src, how to do it.
@@ -10,9 +10,6 @@ As of Feb 9, 2022:
         and tests.
 
     * TODOs and FIXMEs throughout
-
-    * SSSP: allow it to work on any matrix type (currently just INT32).
-        DO types: int32, int64, uint32, uint64, float, double.
 
     * pagerank: discuss GAP shortfall, add proper pagerank
 

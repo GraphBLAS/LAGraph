@@ -1640,10 +1640,19 @@ int LAGraph_ConnectedComponents
 // LAGraph_SingleSourceShortestPath: single-source shortest path
 //------------------------------------------------------------------------------
 
-// TODO: currently GrB_INT32 is required; select different ops/semirings based
-// on the matrix type. 
-// TODO: add AIsAllPositive or related as a G->property.
-// TODO: Should a Basic method pick delta automatically?
+// The graph G must have an adjacency matrix of type GrB_INT32, GrB_INT64,
+// GrB_UINT32, GrB_UINT64, GrB_FP32, or GrB_FP64.  If G->A has any other type,
+// GrB_NOT_IMPLEMENTED is returned.
+
+// TODO: add AIsAllPositive or related as a G->property.  But then this would
+// not be a Basic method.  The Advanced method would require the AIsAllPostive
+// cached property, and it would require Delta to be provided.
+
+// TODO: Should a Basic method pick delta automatically?  The Basic method
+// would compute the cached property AIsAllPositive (or related), and then
+// it would also try to set Delta.  What should Delta be for an arbitrary
+// graph, of type int32, int64, uint32, uint64, float, or double?  Perhaps
+// equal some multiple (30?) of the max edge weight?  Unsure.
 
 LAGRAPH_PUBLIC
 int LAGraph_SingleSourceShortestPath
@@ -1696,7 +1705,8 @@ int LAGraph_VertexCentrality_Betweenness
 // LAGraph_VertexCentrality_PageRankGAP: GAP-style pagerank
 //------------------------------------------------------------------------------
 
-// TODO: describe me, and explain that dangling nodes are ignored.
+// TODO: describe me, and explain that dangling nodes are ignored, leading to
+// a centrality vector that does not sum to one at the end.
 // TODO: add LAGraph_VertexCentrality_PageRank, which handles dangling nodes
 
 LAGRAPH_PUBLIC
