@@ -70,6 +70,8 @@
         case 4 : GrB_Scalar_setElement_FP32   (s, k * delta_fp32  ) ; break ; \
         case 5 : GrB_Scalar_setElement_FP64   (s, k * delta_fp64  ) ; break ; \
     }                                                                         \
+    /* printf ("setelement: k %ld\n", k) */ ; \
+    /* GxB_print (s, 3) */ ; \
 }
 
 int LAGraph_SingleSourceShortestPath
@@ -96,10 +98,6 @@ int LAGraph_SingleSourceShortestPath
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------
-
-// double t1a = 0, t1b = 0, t2 = 0, t3 = 0, t1_tot = 0, t2_tot = 0, t3_tot = 0 ;
-// double t1a_tot = 0, t1b_tot = 0 ;
-// double t0 = omp_get_wtime ( ) ;
 
     LG_CLEAR_MSG ;
 
@@ -285,74 +283,36 @@ int LAGraph_SingleSourceShortestPath
     GrB_TRY (GrB_select (AL, NULL, NULL, le, A, Delta, NULL)) ;
     GrB_TRY (GrB_wait (AL, GrB_MATERIALIZE)) ;
 
-    // TODO: this is costly for some problems, taking up to 50% of the
-    // total time
     // AH = A .* (A > delta)
     GrB_TRY (GrB_Matrix_new (&AH, etype, n, n)) ;
     GrB_TRY (GrB_select (AH, NULL, NULL, gt, A, Delta, NULL)) ;
     GrB_TRY (GrB_wait (AH, GrB_MATERIALIZE)) ;
 
-// t0 = omp_get_wtime ( ) - t0 ;
-// printf ("Time: init   %10.6f\n", t0) ;
-
     //--------------------------------------------------------------------------
     // while (t >= i*delta) not empty
     //--------------------------------------------------------------------------
 
-    int64_t i ;
-    for (i = 0 ; ; i++)
+    for (int64_t i = 0 ; ; i++)
     {
 
         //----------------------------------------------------------------------
         // tmasked = all entries in t<reach> that are less than (i+1)*delta
         //----------------------------------------------------------------------
 
-#if 1
-// t1a = omp_get_wtime ( ) ;
         // tmasked<reach> = t
-        GrB_TRY (GrB_Vector_clear (tmasked)) ;
-        // TODO: this is costly, typically using Method 06s in SuiteSparse,
-        // which is a very general-purpose one.  Write a specialized kernel to
-        // exploit the given properties (reach and t are bitmap, tmasked starts
-        // empty), or fuse this assignment with the GrB_select below.
-        GrB_TRY (GrB_assign (tmasked, reach, NULL, t, GrB_ALL, n, NULL)) ;
-// t1a = omp_get_wtime ( ) - t1a ;
-// t1a_tot += t1a ;
-// printf ("Time: prepa  %10.6f\n", t1a) ;
-// t1b = omp_get_wtime ( ) ;
+        GrB_TRY (GrB_Vector_clear (tmasked)) ;  // TODO: delete this
+        GrB_TRY (GrB_assign (tmasked, reach, NULL, t, GrB_ALL, n,
+            NULL)) ;    // TODO: use GrB_DESC_RS
 
         // tmasked = select (tmasked < (i+1)*delta)
         setelement (uBound, (i+1)) ;        // uBound = (i+1) * Delta
         GrB_TRY (GrB_select (tmasked, NULL, NULL, lt, tmasked, uBound, NULL)) ;
-
-#else
-t1b = omp_get_wtime ( ) ;
-
-        // TODO this is slower but should be much faster.  GrB_select is
-        // computing a bitmap result then converting it to sparse. 
-        // t and reach are both bitmap and tmasked is sparse in the end.
-
-        // tmasked<reach> = select (t < (i+1)*delta)
-        setelement (uBound, (i+1)) ;        // uBound = (i+1) * Delta
-        GrB_TRY (GrB_Vector_clear (tmasked)) ;
-GxB_set (GxB_BURBLE, true) ;
-        GrB_TRY (GrB_select (tmasked, reach, NULL, lt, t, uBound, NULL)) ;
-GxB_set (GxB_BURBLE, false) ;
-
-#endif
-
         GrB_Index tmasked_nvals ;
         GrB_TRY (GrB_Vector_nvals (&tmasked_nvals, tmasked)) ;
-
-// t1b = omp_get_wtime ( ) - t1b ;
-// t1b_tot += t1b ;
-// printf ("Time: prepb  %10.6f\n", t1b) ;
 
         //----------------------------------------------------------------------
         // continue while the current bucket (tmasked) is not empty
         //----------------------------------------------------------------------
-
-// t2 = omp_get_wtime ( ) ;
 
         while (tmasked_nvals > 0)
         {
@@ -368,15 +328,17 @@ GxB_set (GxB_BURBLE, false) ;
             GrB_TRY (GrB_Vector_nvals (&tReq_nvals, tReq)) ;
             if (tReq_nvals == 0) break ;
 
-            // tless = (tReq .< t) using set intersection
-            // new:
-            GrB_TRY (GrB_eWiseMult (tless, NULL, NULL, less_than, tReq, t,
-                NULL)) ;
+            // tless<tReq> = tReq .< t
+            // TODO: try eWiseMult with no mask
+            GrB_TRY (GrB_Vector_clear (tless)) ;    // TODO: delete this
+            GrB_TRY (GrB_eWiseAdd (tless, tReq, NULL, less_than, tReq, t,
+                GrB_DESC_S)) ;  // TODO: use GrB_DESC_RS
 
             // remove explicit zeros from tless so it can be used as a
             // structural mask
             GrB_Index tless_nvals ;
-            GrB_TRY (GrB_select (tless, NULL, NULL, ne, tless, 0, NULL)) ;
+            GrB_TRY (GrB_select (tless, NULL, NULL, ne, tless, (int32_t) 0,
+                NULL)) ;
             GrB_TRY (GrB_Vector_nvals (&tless_nvals, tless)) ;
             if (tless_nvals == 0) break ;
 
@@ -385,27 +347,18 @@ GxB_set (GxB_BURBLE, false) ;
             GrB_TRY (GrB_assign (reach, tless, NULL, (bool) true, GrB_ALL, n,
                 GrB_DESC_S)) ;
 
-            // tmasked<struct(tless)> = select (i*delta <= tReq < (i+1)*delta),
-            #if 1
-            // old:
-            GrB_TRY (GrB_Vector_clear (tmasked)) ;
+            // tmasked<tless> = select (i*delta <= tReq < (i+1)*delta).
+            // If all entries of the graph is known to be positive, and the
+            // entries of tmasked are at least i*delta, tReq = tmasked min.+ AL
+            // must be >= i*delta.  Therefore, there is no need to perform
+            // GrB_select with ge to find tmasked >= i*delta from tReq
+            GrB_TRY (GrB_Vector_clear (tmasked)) ;  // TODO: delete this
             GrB_TRY (GrB_select (tmasked, tless, NULL, lt, tReq, uBound,
-                GrB_DESC_S)) ;
-            #else
-            // new:
-            // clearing tmasked first using the REPLACE descriptor.
-            GrB_TRY (GrB_select (tmasked, tless, NULL, lt, tReq, uBound,
-                GrB_DESC_RS)) ;
-            #endif
+                GrB_DESC_S)) ;  // TODO: use GrB_DESC_RS
 
             // For general graph with some negative weights:
             if (!AIsAllPositive)
             {
-                // If all entries of the graph is known to be positive, and the
-                // entries of tmasked are at least i*delta, tReq = tmasked
-                // min.+ AL must be >= i*delta.  Therefore, there is no need to
-                // perform this GrB_select with ge to find tmasked >= i*delta
-                // from tReq.
                 setelement (lBound, (i)) ;  // lBound = i * Delta
                 // tmasked = select entries in tmasked that are >= lBound
                 GrB_TRY (GrB_select (tmasked, NULL, NULL, ge, tmasked, lBound,
@@ -417,22 +370,19 @@ GxB_set (GxB_BURBLE, false) ;
             GrB_TRY (GrB_Vector_nvals (&tmasked_nvals, tmasked)) ;
         }
 
-// t2 = omp_get_wtime ( ) - t2 ;
-// t2_tot += t2 ;
-// printf ("Time: inner  %10.6f\n", t2) ;
-// t3 = omp_get_wtime ( ) ;
-
         // tmasked<s> = t
         GrB_TRY (GrB_assign (tmasked, s, NULL, t, GrB_ALL, n, GrB_DESC_RS)) ;
 
         // tReq = AH'*tmasked using the min_plus semiring
         GrB_TRY (GrB_vxm (tReq, NULL, NULL, min_plus, tmasked, AH, NULL)) ;
 
-        // tless = (tReq .< t) using set intersection
-        // new:
-        GrB_TRY (GrB_eWiseMult (tless, NULL, NULL, less_than, tReq, t, NULL)) ;
-
-        // t<tless> = tReq, which computes t = min (t, tReq)
+        // t = min (t, tReq)
+        // When t is dense, it is best to get tless<tReq> = tReq .< t,
+        // and use tless as mask to update t.
+        GrB_TRY (GrB_Vector_clear (tless)) ;    // TODO: delete this
+        GrB_TRY (GrB_eWiseAdd (tless, tReq, NULL, less_than, tReq, t,
+            GrB_DESC_S)) ;  // GrB_DESC_RS, or try eWiseMult with no mask
+        // t<tless> = tReq
         GrB_TRY (GrB_assign (t, tless, NULL, tReq, GrB_ALL, n, NULL)) ;
 
         //----------------------------------------------------------------------
@@ -452,17 +402,7 @@ GxB_set (GxB_BURBLE, false) ;
         if (nreach == 0) break ;
 
         GrB_TRY (GrB_Vector_clear (s)) ; // clear s for the next iteration
-// t3 = omp_get_wtime ( ) - t3 ;
-// t3_tot += t3 ;
-// printf ("Time: wrapup %10.6f\n", t3) ;
     }
-
-// printf (        "TIME: %8d init:  %10.6f prep: %10.6f %10.6f inner: %10.6f wrap %10.6f\n",
-//    i, t0, t1a_tot, t1b_tot, t2_tot, t3_tot) ;
-
-//fprintf (stderr, "TIME: %8d init:  %10.6f prep: %10.6f %10.6f inner: %10.6f wrap %10.6f\n",
-//    i, t0, t1a_tot, t1b_tot, t2_tot, t3_tot) ;
-
 
     //--------------------------------------------------------------------------
     // free workspace and return result
