@@ -432,8 +432,13 @@ GxB_set (GxB_BURBLE, false) ;
         // new:
         GrB_TRY (GrB_eWiseMult (tless, NULL, NULL, less_than, tReq, t, NULL)) ;
 
+        // NEW: try dropping zeros from tless so it can be used as a
+        // structural mask
+        GrB_TRY (GrB_select (tless, NULL, NULL, ne, tless, 0, NULL)) ;
+
         // t<tless> = tReq, which computes t = min (t, tReq)
-        GrB_TRY (GrB_assign (t, tless, NULL, tReq, GrB_ALL, n, NULL)) ;
+        GrB_TRY (GrB_assign (t, tless, NULL, tReq, GrB_ALL, n,
+            /* OLD: NULL */ /* NEW: */ GrB_DESC_S)) ;
 
         //----------------------------------------------------------------------
         // find out how many left to be computed
@@ -442,7 +447,7 @@ GxB_set (GxB_BURBLE, false) ;
         // update reachable node list/mask
         // reach<tless> = true
         GrB_TRY (GrB_assign (reach, tless, NULL, (bool) true, GrB_ALL, n,
-            NULL)) ;
+            /* OLD: NULL */ /* NEW: */ GrB_DESC_S)) ;
 
         // remove previous buckets
         // reach<struct(s)> = Empty
