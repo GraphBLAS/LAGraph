@@ -30,7 +30,7 @@
 // not be a Basic method.  The Advanced method would require the AIsAllPostive
 // cached property, and it would require Delta to be provided.
 
-// TODO: Should a Basic method pick delta automatically?  The Basic method
+// TODO: Should a Basic method pick Delta automatically?  The Basic method
 // would compute the cached property AIsAllPositive (or related), and then
 // it would also try to set Delta.  What should Delta be for an arbitrary
 // graph, of type int32, int64, uint32, uint64, float, or double?  Perhaps
@@ -97,12 +97,7 @@ int LAGraph_SingleSourceShortestPath
     // check inputs
     //--------------------------------------------------------------------------
 
-// double t1a = 0, t1b = 0, t2 = 0, t3 = 0, t1_tot = 0, t2_tot = 0, t3_tot = 0 ;
-// double t1a_tot = 0, t1b_tot = 0 ;
-// double t0 = omp_get_wtime ( ) ;
-
     LG_CLEAR_MSG ;
-
     GrB_Scalar lBound = NULL ;  // the threshold for GrB_select
     GrB_Scalar uBound = NULL ;  // the threshold for GrB_select
     GrB_Matrix AL = NULL ;      // graph containing the light weight edges
@@ -119,16 +114,13 @@ int LAGraph_SingleSourceShortestPath
     LG_ASSERT (path_length != NULL && Delta != NULL, GrB_NULL_POINTER) ;
     GrB_Index nvals ;
     LG_TRY (GrB_Scalar_nvals (&nvals, Delta)) ;
-    LG_ASSERT_MSG (nvals == 1, GrB_EMPTY_OBJECT, "delta is missing") ;
+    LG_ASSERT_MSG (nvals == 1, GrB_EMPTY_OBJECT, "Delta is missing") ;
     (*path_length) = NULL ;
 
     GrB_Matrix A = G->A ;
     GrB_Index n ;
     GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
     LG_ASSERT_MSG (source < n, GrB_INVALID_INDEX, "invalid source node") ;
-
-    // GxB_print (Delta, 3) ;
-    // GxB_print (A, 3) ;
 
     //--------------------------------------------------------------------------
     // initializations
@@ -171,8 +163,6 @@ int LAGraph_SingleSourceShortestPath
     uint64_t delta_uint64 ;
     float    delta_fp32   ;
     double   delta_fp64   ;
-
-    // GxB_print (etype, 3) ;
 
     if (etype == GrB_INT32)
     {
@@ -271,44 +261,34 @@ int LAGraph_SingleSourceShortestPath
     // reach (src) = true
     GrB_TRY (GrB_Vector_setElement (reach, true, source)) ;
 
-    // Instead of using tmasked >= i*delta = 0 to find out how many left to be
-    // optimized, tmasked can be directly set the same as t since there is only
-    // one entry that satisfies the condition.
-    GrB_TRY (GrB_Vector_setElement (tmasked, 0, source)) ;
-    GrB_TRY (GrB_wait (tmasked, GrB_MATERIALIZE)) ;
-
     // s (src) = true
     GrB_TRY (GrB_Vector_setElement (s, true, source)) ;
 
-    // AL = A .* (A <= delta)
+    // AL = A .* (A <= Delta)
     GrB_TRY (GrB_Matrix_new (&AL, etype, n, n)) ;
     GrB_TRY (GrB_select (AL, NULL, NULL, le, A, Delta, NULL)) ;
     GrB_TRY (GrB_wait (AL, GrB_MATERIALIZE)) ;
 
-    // TODO: this is costly for some problems, taking up to 50% of the
-    // total time
-    // AH = A .* (A > delta)
+    // TODO: costly for some problems, taking up to 50% of the total time:
+    // AH = A .* (A > Delta)
     GrB_TRY (GrB_Matrix_new (&AH, etype, n, n)) ;
     GrB_TRY (GrB_select (AH, NULL, NULL, gt, A, Delta, NULL)) ;
     GrB_TRY (GrB_wait (AH, GrB_MATERIALIZE)) ;
 
-// t0 = omp_get_wtime ( ) - t0 ;
-// printf ("Time: init   %10.6f\n", t0) ;
-
     //--------------------------------------------------------------------------
-    // while (t >= i*delta) not empty
+    // while (t >= step*Delta) not empty
     //--------------------------------------------------------------------------
 
-    int64_t i ;
-    for (i = 0 ; ; i++)
+    for (int64_t step = 0 ; ; step++)
     {
 
         //----------------------------------------------------------------------
-        // tmasked = all entries in t<reach> that are less than (i+1)*delta
+        // tmasked = all entries in t<reach> that are less than (step+1)*Delta
         //----------------------------------------------------------------------
 
+        setelement (uBound, (step+1)) ;        // uBound = (step+1) * Delta
+
 #if 1
-// t1a = omp_get_wtime ( ) ;
         // tmasked<reach> = t
         GrB_TRY (GrB_Vector_clear (tmasked)) ;
         // TODO: this is costly, typically using Method 06s in SuiteSparse,
@@ -316,43 +296,23 @@ int LAGraph_SingleSourceShortestPath
         // exploit the given properties (reach and t are bitmap, tmasked starts
         // empty), or fuse this assignment with the GrB_select below.
         GrB_TRY (GrB_assign (tmasked, reach, NULL, t, GrB_ALL, n, NULL)) ;
-// t1a = omp_get_wtime ( ) - t1a ;
-// t1a_tot += t1a ;
-// printf ("Time: prepa  %10.6f\n", t1a) ;
-// t1b = omp_get_wtime ( ) ;
-
-        // tmasked = select (tmasked < (i+1)*delta)
-        setelement (uBound, (i+1)) ;        // uBound = (i+1) * Delta
+        // tmasked = select (tmasked < (step+1)*Delta)
         GrB_TRY (GrB_select (tmasked, NULL, NULL, lt, tmasked, uBound, NULL)) ;
-
 #else
-t1b = omp_get_wtime ( ) ;
-
         // TODO this is slower but should be much faster.  GrB_select is
         // computing a bitmap result then converting it to sparse. 
         // t and reach are both bitmap and tmasked is sparse in the end.
-
-        // tmasked<reach> = select (t < (i+1)*delta)
-        setelement (uBound, (i+1)) ;        // uBound = (i+1) * Delta
+        // tmasked<reach> = select (t < (step+1)*Delta)
         GrB_TRY (GrB_Vector_clear (tmasked)) ;
-GxB_set (GxB_BURBLE, true) ;
         GrB_TRY (GrB_select (tmasked, reach, NULL, lt, t, uBound, NULL)) ;
-GxB_set (GxB_BURBLE, false) ;
-
 #endif
 
         GrB_Index tmasked_nvals ;
         GrB_TRY (GrB_Vector_nvals (&tmasked_nvals, tmasked)) ;
 
-// t1b = omp_get_wtime ( ) - t1b ;
-// t1b_tot += t1b ;
-// printf ("Time: prepb  %10.6f\n", t1b) ;
-
         //----------------------------------------------------------------------
         // continue while the current bucket (tmasked) is not empty
         //----------------------------------------------------------------------
-
-// t2 = omp_get_wtime ( ) ;
 
         while (tmasked_nvals > 0)
         {
@@ -363,13 +323,12 @@ GxB_set (GxB_BURBLE, false) ;
             GrB_TRY (GrB_assign (s, tmasked, NULL, (bool) true, GrB_ALL, n,
                 GrB_DESC_S)) ;
 
-            // if nnz (tReq) == 0, no need to continue the rest of this loop
+            // if nvals (tReq) is 0, no need to continue the rest of this loop
             GrB_Index tReq_nvals ;
             GrB_TRY (GrB_Vector_nvals (&tReq_nvals, tReq)) ;
             if (tReq_nvals == 0) break ;
 
             // tless = (tReq .< t) using set intersection
-            // new:
             GrB_TRY (GrB_eWiseMult (tless, NULL, NULL, less_than, tReq, t,
                 NULL)) ;
 
@@ -385,29 +344,21 @@ GxB_set (GxB_BURBLE, false) ;
             GrB_TRY (GrB_assign (reach, tless, NULL, (bool) true, GrB_ALL, n,
                 GrB_DESC_S)) ;
 
-            // tmasked<struct(tless)> = select (i*delta <= tReq < (i+1)*delta),
-            #if 1
-            // old:
+            // tmasked<struct(tless)> = select (tReq < (step+1)*Delta)
             GrB_TRY (GrB_Vector_clear (tmasked)) ;
             GrB_TRY (GrB_select (tmasked, tless, NULL, lt, tReq, uBound,
                 GrB_DESC_S)) ;
-            #else
-            // new:
-            // clearing tmasked first using the REPLACE descriptor.
-            GrB_TRY (GrB_select (tmasked, tless, NULL, lt, tReq, uBound,
-                GrB_DESC_RS)) ;
-            #endif
 
             // For general graph with some negative weights:
             if (!AIsAllPositive)
             {
-                // If all entries of the graph is known to be positive, and the
-                // entries of tmasked are at least i*delta, tReq = tmasked
-                // min.+ AL must be >= i*delta.  Therefore, there is no need to
-                // perform this GrB_select with ge to find tmasked >= i*delta
-                // from tReq.
-                setelement (lBound, (i)) ;  // lBound = i * Delta
-                // tmasked = select entries in tmasked that are >= lBound
+                // If all entries of the graph are known to be positive, and
+                // the entries of tmasked are at least step*Delta, tReq =
+                // tmasked min.+ AL must be >= step*Delta.  Therefore, there is
+                // no need to perform this GrB_select with ge to find tmasked
+                // >= step*Delta from tReq.
+                setelement (lBound, (step)) ;  // lBound = step*Delta
+                // tmasked = select entries in tmasked that are >= step*Delta
                 GrB_TRY (GrB_select (tmasked, NULL, NULL, ge, tmasked, lBound,
                     NULL)) ;
             }
@@ -417,37 +368,27 @@ GxB_set (GxB_BURBLE, false) ;
             GrB_TRY (GrB_Vector_nvals (&tmasked_nvals, tmasked)) ;
         }
 
-// t2 = omp_get_wtime ( ) - t2 ;
-// t2_tot += t2 ;
-// printf ("Time: inner  %10.6f\n", t2) ;
-// t3 = omp_get_wtime ( ) ;
-
         // tmasked<s> = t
-        GrB_TRY (GrB_assign (tmasked, s, NULL, t, GrB_ALL, n, GrB_DESC_RS)) ;
+        GrB_TRY (GrB_Vector_clear (tmasked)) ;
+        GrB_TRY (GrB_assign (tmasked, s, NULL, t, GrB_ALL, n, GrB_DESC_S)) ;
 
         // tReq = AH'*tmasked using the min_plus semiring
         GrB_TRY (GrB_vxm (tReq, NULL, NULL, min_plus, tmasked, AH, NULL)) ;
 
         // tless = (tReq .< t) using set intersection
-        // new:
         GrB_TRY (GrB_eWiseMult (tless, NULL, NULL, less_than, tReq, t, NULL)) ;
 
-        // NEW: try dropping zeros from tless so it can be used as a
-        // structural mask
-        GrB_TRY (GrB_select (tless, NULL, NULL, ne, tless, 0, NULL)) ;
-
         // t<tless> = tReq, which computes t = min (t, tReq)
-        GrB_TRY (GrB_assign (t, tless, NULL, tReq, GrB_ALL, n,
-            /* OLD: NULL */ /* NEW: */ GrB_DESC_S)) ;
+        GrB_TRY (GrB_assign (t, tless, NULL, tReq, GrB_ALL, n, NULL)) ;
 
         //----------------------------------------------------------------------
         // find out how many left to be computed
         //----------------------------------------------------------------------
 
-        // update reachable node list/mask
+        // update reachable node list
         // reach<tless> = true
         GrB_TRY (GrB_assign (reach, tless, NULL, (bool) true, GrB_ALL, n,
-            /* OLD: NULL */ /* NEW: */ GrB_DESC_S)) ;
+            NULL)) ;
 
         // remove previous buckets
         // reach<struct(s)> = Empty
@@ -457,17 +398,7 @@ GxB_set (GxB_BURBLE, false) ;
         if (nreach == 0) break ;
 
         GrB_TRY (GrB_Vector_clear (s)) ; // clear s for the next iteration
-// t3 = omp_get_wtime ( ) - t3 ;
-// t3_tot += t3 ;
-// printf ("Time: wrapup %10.6f\n", t3) ;
     }
-
-// printf (        "TIME: %8d init:  %10.6f prep: %10.6f %10.6f inner: %10.6f wrap %10.6f\n",
-//    i, t0, t1a_tot, t1b_tot, t2_tot, t3_tot) ;
-
-//fprintf (stderr, "TIME: %8d init:  %10.6f prep: %10.6f %10.6f inner: %10.6f wrap %10.6f\n",
-//    i, t0, t1a_tot, t1b_tot, t2_tot, t3_tot) ;
-
 
     //--------------------------------------------------------------------------
     // free workspace and return result
@@ -475,7 +406,6 @@ GxB_set (GxB_BURBLE, false) ;
 
     (*path_length) = t ;
     LG_FREE_WORK ;
-    // GxB_print (t, 3) ;
     return (GrB_SUCCESS) ;
 }
 
