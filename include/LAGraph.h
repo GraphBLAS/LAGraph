@@ -34,7 +34,7 @@
 #define LAGRAPH_VERSION_MAJOR 0
 #define LAGRAPH_VERSION_MINOR 9
 #define LAGRAPH_VERSION_UPDATE 9
-#define LAGRAPH_DATE "Feb 10, 2022"
+#define LAGRAPH_DATE "Feb 14, 2022"
 
 //==============================================================================
 // include files and helper macros
@@ -454,6 +454,35 @@ typedef enum
 LAGraph_BooleanProperty ;
 
 //------------------------------------------------------------------------------
+// LAGraph_BoundKind: exact, bound, approximate, or unknown
+//------------------------------------------------------------------------------
+
+// LAGraph_BoundKind describes the status of a graph property or other metric.
+// If the metric is computed in floating-point arithmetic, it may have been
+// computed with roundoff error, but it may still be declared as "exact" if the
+// roundoff error is expected to be small, or if the metric was computed as
+// carefully as possible (to within reasonable roundoff error).  The
+// "approximate" state is used when the metric is a rough estimate, not because
+// of roundoff error but because of other algorithmic approximations.  The
+// decision of when to tag a metric as "exact" or "approximate" is up to the
+// particular algorithm, which each algorithm must document.
+
+// The "bound" state indicates that the metric is an upper or lower bound,
+// depending on the particular metric.  If computed in floating-point
+// arithmetic, an "upper bound" metric may be actually slightly lower than the
+// actual upper bound, because of floating-point roundoff.
+
+typedef enum
+{
+    LAGRAPH_EXACT = 0,      // the metric is exact (possibly ignoring roundoff)
+    LAGRAPH_BOUND = 1,      // the metric is a bound (upper or lower, depending
+                            // on the particular metric)
+    LAGRAPH_APPROX = 2,     // the metric is a rough approximation
+    LAGRAPH_BOUND_UNKNOWN = LAGRAPH_UNKNOWN,
+}
+LAGraph_BoundKind ;
+
+//------------------------------------------------------------------------------
 // LAGraph_Graph: the primary graph data structure of LAGraph
 //------------------------------------------------------------------------------
 
@@ -510,7 +539,7 @@ struct LAGraph_Graph_struct
     // graph is declared as a read-only object in the parameter list of the
     // method.
 
-    GrB_Matrix AT ;         // AT = A', the transpose of A
+    GrB_Matrix AT ;         // AT = A', the transpose of A, with the same type.
 
     GrB_Vector rowdegree ;  // a GrB_INT64 vector of length m, if A is m-by-n.
            // where rowdegree(i) is the number of entries in A(i,:).  If
@@ -524,6 +553,9 @@ struct LAGraph_Graph_struct
             // symmetric structure, the convention is that the degree is held in
             // rowdegree, and coldegree is left as NULL.
 
+    // TODO: rename to G->symmetric_structure or G->structure_is_symmetric.
+    // If G is held as an incidence matrix, then G->A might be rectangular,
+    // in the future, but the graph G may have a symmetric structure anyway.
     LAGraph_BooleanProperty A_structure_is_symmetric ;    // For an undirected
             // graph, this property will always be implicitly true and can be
             // ignored.  The matrix A for a directed weighted graph will
@@ -535,10 +567,39 @@ struct LAGraph_Graph_struct
             // unknown.  For the adjacency matrix of a directed or undirected
             // graph, this is the number of self-edges in the graph.
 
+    // TODO: discuss these cached properties.  emin is required for SSSP, which
+    // needs to know if emin > 0 or not.  emax might be useful for computing
+    // Delta for Delta-stepping.  Knowing these bounds might also be useful
+    // for future algorithms that use edge weights.
+
+    GrB_Scalar emin ;   // minimum edge weight: exact, lower bound, or estimate
+    LAGraph_BoundKind emin_kind ;
+            // EXACT: emin is exactly equal to the smallest entry, min(G->A)
+            // BOUND: emin <= min(G->A)
+            // APPROX: emin is a rough estimate of min(G->A)
+            // UNKNOWN: emin is unknown
+
+    GrB_Scalar emax ;   // maximum edge weight: exact, upper bound, or estimate
+    LAGraph_BoundKind emax_kind ;
+            // EXACT: emax is exactly equal to the largest entry, max(G->A)
+            // BOUND: emax >= max(G->A)
+            // APPROX: emax is a rough estimate of max(G->A)
+            // UNKNOWN: emax is unknown
+
+    // Some algorithms may want to know if the graph has any edge weights
+    // exactly equal to zero.  In some cases, this can be inferred from the
+    // emin/emax bounds, or it can be indicated via the following property:
+    LAGraph_BooleanProperty nonzero ;  // If true, then all entries in
+            // G->A are known to be nonzero.  If false, G->A may contain
+            // entries in its structure that are identically equal to zero.  If
+            // unknown, then G->A may or may not have entries equal to zero.
+
     // possible future cached properties:
+    // other edge weight metrics: median, standard deviation....  Might be
+    // useful for computing Delta for a Basic SSSP.
     // GrB_Vector rowsum, colsum ;
-    // rowsum (i) = sum (A (i,:)), regardless of kind
-    // colsum (j) = sum (A (:,j)), regardless of kind
+    // rowsum(i) = sum(A(i,:)), regardless of kind
+    // colsum(j) = sum(A(:,j)), regardless of kind
     // LAGraph_BooleanProperty connected ;   // true if G is a connected graph
 } ;
 
@@ -804,6 +865,32 @@ int LAGraph_Property_NDiag
 (
     // input/output:
     LAGraph_Graph G,    // graph to compute G->ndiag
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
+// LAGraph_Property_Emin: determine G->emin
+//------------------------------------------------------------------------------
+
+// LAGraph_Property_Emin computes G->emin = min (G->A).
+
+int LAGraph_Property_Emin
+(
+    // input/output:
+    LAGraph_Graph G,    // graph to determine G->emin
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
+// LAGraph_Property_Emax: determine G->emax
+//------------------------------------------------------------------------------
+
+// LAGraph_Property_Emax computes G->emax = max (G->A).
+
+int LAGraph_Property_Emax
+(
+    // input/output:
+    LAGraph_Graph G,    // graph to determine G->emax
     char *msg
 ) ;
 

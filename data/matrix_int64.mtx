@@ -4,7 +4,7 @@
 % Algebra", Kepner and Gilbert.  Note that cover shows A'.  This is A,
 % but with different values for some entries.
 7 7 12
-4 1 -9223372036854775808
+4 1 -9223372036854775800
 1 2 9223372036854775807
 4 3 0
 6 3 5

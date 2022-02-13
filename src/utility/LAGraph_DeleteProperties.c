@@ -36,12 +36,17 @@ int LAGraph_DeleteProperties
     GrB_TRY (GrB_free (&(G->AT))) ;
     GrB_TRY (GrB_free (&(G->rowdegree))) ;
     GrB_TRY (GrB_free (&(G->coldegree))) ;
+    GrB_TRY (GrB_free (&(G->emin))) ;
+    GrB_TRY (GrB_free (&(G->emax))) ;
 
     //--------------------------------------------------------------------------
     // clear the scalar properties of the graph
     //--------------------------------------------------------------------------
 
     G->A_structure_is_symmetric = LAGRAPH_UNKNOWN ;
+    G->emin_kind = LAGRAPH_UNKNOWN ;
+    G->emax_kind = LAGRAPH_UNKNOWN ;
+    G->nonzero = LAGRAPH_UNKNOWN ;
     G->ndiag = LAGRAPH_UNKNOWN ;
     return (GrB_SUCCESS) ;
 }

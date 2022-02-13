@@ -57,6 +57,11 @@ int LAGraph_New
     (*G)->coldegree = NULL ;
     (*G)->A_structure_is_symmetric = LAGRAPH_UNKNOWN ;
     (*G)->ndiag = LAGRAPH_UNKNOWN ;
+    (*G)->emin = NULL ;
+    (*G)->emin_kind = LAGRAPH_UNKNOWN ;
+    (*G)->emax = NULL ;
+    (*G)->emax_kind = LAGRAPH_UNKNOWN ;
+    (*G)->nonzero = LAGRAPH_UNKNOWN ;
 
     //--------------------------------------------------------------------------
     // assign its primary components
