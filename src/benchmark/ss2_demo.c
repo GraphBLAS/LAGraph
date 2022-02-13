@@ -109,6 +109,7 @@ int main (int argc, char **argv)
 
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
+    LAGraph_TRY (LAGraph_Property_Emin (G, msg)) ;
 
     //--------------------------------------------------------------------------
     // get delta
@@ -137,7 +138,7 @@ int main (int argc, char **argv)
     src = src % n ;
 //  GxB_set (GxB_BURBLE, true) ;
     LAGraph_TRY (LAGraph_SingleSourceShortestPath (&pathlen,
-        G, src, Delta, true, msg)) ;
+        G, src, Delta, msg)) ;
     GxB_set (GxB_BURBLE, false) ;
     GrB_free (&pathlen) ;
 
@@ -173,7 +174,7 @@ int main (int argc, char **argv)
             GrB_free (&pathlen) ;
             LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
             LAGraph_TRY (LAGraph_SingleSourceShortestPath (&pathlen,
-                G, src, Delta, true, msg)) ;
+                G, src, Delta, msg)) ;
             LAGraph_TRY (LAGraph_Toc (&ttrial, tic, msg)) ;
 
             printf ("sssp15:  threads: %2d trial: %2d source %8ld "

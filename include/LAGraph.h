@@ -1731,12 +1731,8 @@ int LAGraph_ConnectedComponents
 // GrB_UINT32, GrB_UINT64, GrB_FP32, or GrB_FP64.  If G->A has any other type,
 // GrB_NOT_IMPLEMENTED is returned.
 
-// TODO: add AIsAllPositive or related as a G->property.  But then this would
-// not be a Basic method.  The Advanced method would require the AIsAllPostive
-// cached property, and it would require Delta to be provided.
-
 // TODO: Should a Basic method pick delta automatically?  The Basic method
-// would compute the cached property AIsAllPositive (or related), and then
+// would compute the G->emin cached property and perhaps G->emax, and then
 // it would also try to set Delta.  What should Delta be for an arbitrary
 // graph, of type int32, int64, uint32, uint64, float, or double?  Perhaps
 // equal some multiple (30?) of the max edge weight?  Unsure.
@@ -1751,14 +1747,6 @@ int LAGraph_SingleSourceShortestPath
     LAGraph_Graph G,
     GrB_Index source,           // source vertex
     GrB_Scalar Delta,           // delta value for delta stepping
-    // TODO: make this an enum, and add to LAGraph_Graph properties, and then
-    // remove it from the inputs to this function
-    //      case 0: A can have negative, zero, or positive entries
-    //      case 1: A can have zero or positive entries
-    //      case 2: A only has positive entries
-    // TODO: add AIsAllPositive to G->A_is_something...
-    bool AIsAllPositive,       // A boolean indicating whether the entries of
-                               // matrix A are all positive
     char *msg
 ) ;
 

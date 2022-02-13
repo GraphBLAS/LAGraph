@@ -117,6 +117,10 @@ void test_SingleSourceShortestPath(void)
         OK (LAGraph_CheckGraph (G, msg)) ;
         TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
+        // no need to compute emin; just use a bound
+        OK (GrB_Scalar_new (&(G->emin), GrB_INT32)) ;
+        OK (GrB_Scalar_setElement (G->emin, 1)) ;
+
         // delta values to try
         int32_t Deltas [ ] = { 30, 100, 50000 } ;
 
@@ -132,8 +136,7 @@ void test_SingleSourceShortestPath(void)
                 int32_t delta = Deltas [kk] ;
                 printf ("src %d delta %d n %d\n", (int) src, delta, (int) n) ;
                 OK (GrB_Scalar_setElement (Delta, delta)) ;
-                OK (LAGraph_SingleSourceShortestPath (&path_length,
-                    G, src, Delta, true, msg)) ;
+                OK (LAGraph_SingleSourceShortestPath (&path_length, G, src, Delta, msg)) ;
                 int res = LG_check_sssp (path_length, G, src, msg) ;
                 if (res != GrB_SUCCESS) printf ("res: %d msg: %s\n", res, msg) ;
                 OK (res) ;
@@ -142,10 +145,11 @@ void test_SingleSourceShortestPath(void)
         }
 
         // add a single negative edge and try again
+        OK (GrB_free (&(G->emin))) ;
+        G->emin_kind = LAGRAPH_UNKNOWN ;
         OK (GrB_Matrix_setElement_INT32 (G->A, -1, 0, 1)) ;
         OK (GrB_Scalar_setElement (Delta, 30)) ;
-        OK (LAGraph_SingleSourceShortestPath (&path_length,
-            G, 0, Delta, false, msg)) ;
+        OK (LAGraph_SingleSourceShortestPath (&path_length, G, 0, Delta, msg)) ;
         OK (LAGraph_Vector_Print (path_length, LAGraph_SHORT, stdout, msg)) ;
         int32_t len = 0 ;
         OK (GrB_Vector_extractElement (&len, path_length, 1)) ;
@@ -262,6 +266,9 @@ void test_SingleSourceShortestPath_types (void)
         OK (LAGraph_CheckGraph (G, msg)) ;
         TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
+        // find the smallest entry
+        OK (LAGraph_Property_Emin (G, msg)) ;
+
         // delta values to try
         int32_t Deltas [ ] = { 30, 100, 50000 } ;
 
@@ -275,8 +282,7 @@ void test_SingleSourceShortestPath_types (void)
                 int32_t delta = Deltas [kk] ;
                 printf ("src %d delta %d n %d\n", (int) src, delta, (int) n) ;
                 OK (GrB_Scalar_setElement (Delta, delta)) ;
-                OK (LAGraph_SingleSourceShortestPath (&path_length,
-                    G, src, Delta, true, msg)) ;
+                OK (LAGraph_SingleSourceShortestPath (&path_length, G, src, Delta, msg)) ;
                 int res = LG_check_sssp (path_length, G, src, msg) ;
                 if (res != GrB_SUCCESS) printf ("res: %d msg: %s\n", res, msg) ;
                 OK (res) ;
@@ -316,15 +322,13 @@ void test_SingleSourceShortestPath_failure (void)
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
     GrB_Vector path_length = NULL ;
-    int result = LAGraph_SingleSourceShortestPath (&path_length,
-                    G, 0, Delta, true, msg) ;
+    int result = LAGraph_SingleSourceShortestPath (&path_length, G, 0, Delta, msg) ;
     printf ("\nres: %d msg: %s\n", result, msg) ;
     TEST_CHECK (path_length == NULL) ;
     TEST_CHECK (result == GrB_NOT_IMPLEMENTED) ;
 
     OK (GrB_Scalar_clear (Delta)) ;
-    result = LAGraph_SingleSourceShortestPath (&path_length,
-                    G, 0, Delta, true, msg) ;
+    result = LAGraph_SingleSourceShortestPath (&path_length, G, 0, Delta, msg) ;
     printf ("\nres: %d msg: %s\n", result, msg) ;
     TEST_CHECK (path_length == NULL) ;
     TEST_CHECK (result == GrB_EMPTY_OBJECT) ;
@@ -405,16 +409,14 @@ void test_SingleSourceShortestPath_brutal (void)
         int32_t delta = 30 ;
         printf ("src %d delta %d n %d\n", (int) src, delta, (int) n) ;
         OK (GrB_Scalar_setElement (Delta, delta)) ;
-        LG_BRUTAL (LAGraph_SingleSourceShortestPath (&path_length,
-            G, src, Delta, true, msg)) ;
+        LG_BRUTAL (LAGraph_SingleSourceShortestPath (&path_length, G, src, Delta, msg)) ;
         OK (LG_check_sssp (path_length, G, src, msg)) ;
         OK (GrB_free(&path_length)) ;
 
         // add a single negative edge and try again
         OK (GrB_Matrix_setElement_INT32 (G->A, -1, 0, 1)) ;
         OK (GrB_wait (G->A, GrB_MATERIALIZE)) ;
-        LG_BRUTAL (LAGraph_SingleSourceShortestPath (&path_length,
-            G, 0, Delta, false, msg)) ;
+        LG_BRUTAL (LAGraph_SingleSourceShortestPath (&path_length, G, 0, Delta, msg)) ;
         int32_t len = 0 ;
         OK (GrB_Vector_extractElement (&len, path_length, 1)) ;
         TEST_CHECK (len == -1) ;

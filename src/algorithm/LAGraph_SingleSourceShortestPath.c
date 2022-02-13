@@ -26,12 +26,8 @@
 // NOTE: this method gets stuck in an infinite loop when there are negative-
 // weight cycles in the graph.
 
-// TODO: add AIsAllPositive or related as a G->property.  But then this would
-// not be a Basic method.  The Advanced method would require the AIsAllPostive
-// cached property, and it would require Delta to be provided.
-
-// TODO: Should a Basic method pick Delta automatically?  The Basic method
-// would compute the cached property AIsAllPositive (or related), and then
+// TODO: Should a Basic method pick delta automatically?  The Basic method
+// would compute the G->emin cached property and perhaps G->emax, and then
 // it would also try to set Delta.  What should Delta be for an arbitrary
 // graph, of type int32, int64, uint32, uint64, float, or double?  Perhaps
 // equal some multiple (30?) of the max edge weight?  Unsure.
@@ -81,14 +77,6 @@ int LAGraph_SingleSourceShortestPath
     LAGraph_Graph G,
     GrB_Index source,           // source vertex
     GrB_Scalar Delta,           // delta value for delta stepping
-    // TODO: make this an enum, and add to LAGraph_Graph properties, and then
-    // remove it from the inputs to this function
-    //      case 0: A can have negative, zero, or positive entries
-    //      case 1: A can have zero or positive entries
-    //      case 2: A only has positive entries
-    // TODO: add AIsAllPositive to G->A_is_something...
-    bool AIsAllPositive,       // A boolean indicating whether the entries of
-                               // matrix A are all positive
     char *msg
 )
 {
@@ -112,10 +100,11 @@ int LAGraph_SingleSourceShortestPath
 
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     LG_ASSERT (path_length != NULL && Delta != NULL, GrB_NULL_POINTER) ;
+    (*path_length) = NULL ;
+
     GrB_Index nvals ;
     LG_TRY (GrB_Scalar_nvals (&nvals, Delta)) ;
     LG_ASSERT_MSG (nvals == 1, GrB_EMPTY_OBJECT, "Delta is missing") ;
-    (*path_length) = NULL ;
 
     GrB_Matrix A = G->A ;
     GrB_Index n ;
@@ -164,6 +153,8 @@ int LAGraph_SingleSourceShortestPath
     float    delta_fp32   ;
     double   delta_fp64   ;
 
+    bool negative_edge_weights = true ;
+
     if (etype == GrB_INT32)
     {
         GrB_TRY (GrB_Scalar_extractElement (&delta_int32, Delta)) ;
@@ -204,8 +195,8 @@ int LAGraph_SingleSourceShortestPath
         gt = GrB_VALUEGT_UINT32 ;
         less_than = GrB_LT_UINT32 ;
         min_plus = GrB_MIN_PLUS_SEMIRING_UINT32 ;
-        AIsAllPositive = true ;
         tcode = 2 ;
+        negative_edge_weights = false ;
     }
     else if (etype == GrB_UINT64)
     {
@@ -219,8 +210,8 @@ int LAGraph_SingleSourceShortestPath
         gt = GrB_VALUEGT_UINT64 ;
         less_than = GrB_LT_UINT64 ;
         min_plus = GrB_MIN_PLUS_SEMIRING_UINT64 ;
-        AIsAllPositive = true ;
         tcode = 3 ;
+        negative_edge_weights = false ;
     }
     else if (etype == GrB_FP32)
     {
@@ -253,6 +244,19 @@ int LAGraph_SingleSourceShortestPath
     else
     {
         LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED, "type not supported") ;
+    }
+
+    // check if the graph might have negative edge weights
+    if (negative_edge_weights)
+    {
+        double emin = -1 ;
+        if (G->emin != NULL &&
+            (G->emin_kind == LAGRAPH_EXACT ||
+             G->emin_kind == LAGRAPH_BOUND))
+        {
+            GrB_TRY (GrB_Scalar_extractElement_FP64 (&emin, G->emin)) ;
+        }
+        negative_edge_weights = (emin < 0) ;
     }
 
     // t (src) = 0
@@ -347,7 +351,7 @@ int LAGraph_SingleSourceShortestPath
                 GrB_DESC_S)) ;
 
             // For general graph with some negative weights:
-            if (!AIsAllPositive)
+            if (negative_edge_weights)
             {
                 // If all entries of the graph are known to be positive, and
                 // the entries of tmasked are at least step*Delta, tReq =
