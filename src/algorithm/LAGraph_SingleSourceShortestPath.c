@@ -269,7 +269,7 @@ int LAGraph_SingleSourceShortestPath
     GrB_TRY (GrB_select (AL, NULL, NULL, le, A, Delta, NULL)) ;
     GrB_TRY (GrB_wait (AL, GrB_MATERIALIZE)) ;
 
-    // TODO: costly for some problems, taking up to 50% of the total time:
+    // FUTURE: costly for some problems, taking up to 50% of the total time:
     // AH = A .* (A > Delta)
     GrB_TRY (GrB_Matrix_new (&AH, etype, n, n)) ;
     GrB_TRY (GrB_select (AH, NULL, NULL, gt, A, Delta, NULL)) ;
@@ -287,25 +287,22 @@ int LAGraph_SingleSourceShortestPath
         //----------------------------------------------------------------------
 
         setelement (uBound, (step+1)) ;        // uBound = (step+1) * Delta
-
-#if 1
-        // tmasked<reach> = t
         GrB_TRY (GrB_Vector_clear (tmasked)) ;
-        // TODO: this is costly, typically using Method 06s in SuiteSparse,
+
+        // tmasked<reach> = t
+        // FUTURE: this is costly, typically using Method 06s in SuiteSparse,
         // which is a very general-purpose one.  Write a specialized kernel to
         // exploit the given properties (reach and t are bitmap, tmasked starts
         // empty), or fuse this assignment with the GrB_select below.
         GrB_TRY (GrB_assign (tmasked, reach, NULL, t, GrB_ALL, n, NULL)) ;
         // tmasked = select (tmasked < (step+1)*Delta)
         GrB_TRY (GrB_select (tmasked, NULL, NULL, lt, tmasked, uBound, NULL)) ;
-#else
-        // TODO this is slower but should be much faster.  GrB_select is
-        // computing a bitmap result then converting it to sparse. 
-        // t and reach are both bitmap and tmasked is sparse in the end.
+        // --- alternative:
+        // FUTURE this is slower than the above but should be much faster.
+        // GrB_select is computing a bitmap result then converting it to
+        // sparse.  t and reach are both bitmap and tmasked finally sparse.
         // tmasked<reach> = select (t < (step+1)*Delta)
-        GrB_TRY (GrB_Vector_clear (tmasked)) ;
-        GrB_TRY (GrB_select (tmasked, reach, NULL, lt, t, uBound, NULL)) ;
-#endif
+        // GrB_TRY (GrB_select (tmasked, reach, NULL, lt, t, uBound, NULL)) ;
 
         GrB_Index tmasked_nvals ;
         GrB_TRY (GrB_Vector_nvals (&tmasked_nvals, tmasked)) ;
