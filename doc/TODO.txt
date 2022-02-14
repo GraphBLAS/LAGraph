@@ -13,8 +13,11 @@ As of Feb 14, 2022:
 
         * LAGraph_BreadthFirstSearch: pushpull option
 
-        * LAGraph_VertexCentrality: wrapper for 3 methods (BC, PageRank),
+        * LAGraph_VertexCentrality: wrapper for 2 methods (BC, PageRank),
             and future methods.
+            How do we ask for an exact BC computation?  Do it in batches
+            and sum up the result?
+            Do we normalize the metrics so that sum(centrality) = 1?
 
         * LAGraph_ConnectedComponents: this is Advanced (G is input and
             G->A_structure_is_symmetric is required for a directed graph).
@@ -23,9 +26,11 @@ As of Feb 14, 2022:
 
         * LG_CC_SV6: many TODOs in this SuiteSparse:GxB_* based method,
             suggesting the need for new GxB methods.
+            The TODOs there are too many to do in time for LAGraph v1.0,
+            most likely.  (Or maybe not?)
 
         * LAGraph_SingleSourceShortestPath:  Write a Basic method that
-            computes G->emin (and G->emax? and decides on Delta on its own?)
+            computes G->emin. And G->emax? And decides on Delta on its own?
 
         * LAGraph_Init:  remove calls to mallopt.  Move those to the
             src/benchmark, if needed, and rerun GAP benchmarks to double-check.
