@@ -1777,14 +1777,33 @@ int LAGraph_VertexCentrality_Betweenness
 ) ;
 
 //------------------------------------------------------------------------------
+// LAGraph_VertexCentrality_PageRank: pagerank
+//------------------------------------------------------------------------------
+
+// LAGraph_VertexCentrality_PageRank computes the standard pagerank of a
+// directed graph G.  Sinks (nodes with no out-going edges) are handled.
+
+LAGRAPH_PUBLIC
+int LAGraph_VertexCentrality_PageRank
+(
+    // outputs:
+    GrB_Vector *centrality, // centrality(i): pagerank of node i
+    // inputs:
+    LAGraph_Graph G,        // input graph
+    float damping,          // damping factor (typically 0.85)
+    float tol,              // stopping tolerance (typically 1e-4) ;
+    int itermax,            // maximum number of iterations (typically 100)
+    int *iters,             // output: number of iterations taken
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
 // LAGraph_VertexCentrality_PageRankGAP: GAP-style pagerank
 //------------------------------------------------------------------------------
 
-// TODO: describe me, and explain that dangling nodes are ignored, leading to
-// a centrality vector that does not sum to one at the end.
-
-// TODO: add LAGraph_VertexCentrality_PageRank, which handles dangling nodes
-// properly.
+// LAGraph_VertexCentrality_PageRankGAP computes the GAP-style pagerank of a
+// directed graph G.  Sinks (nodes with no out-going edges) are not handled.
+// This method should be used for the GAP benchmark only, not for production.
 
 LAGRAPH_PUBLIC
 int LAGraph_VertexCentrality_PageRankGAP

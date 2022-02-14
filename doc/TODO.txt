@@ -1,4 +1,4 @@
-As of Feb 10, 2022:
+As of Feb 14, 2022:
 
     * entire user guide
         experimental -> src, how to do it.
@@ -11,13 +11,10 @@ As of Feb 10, 2022:
 
     * TODOs and FIXMEs:
 
-        * LAGraph_PageRankGAP: discuss GAP shortfall, add proper pagerank as
-            LAGraph_PageRank, which handles dangling nodes properly.
-
         * LAGraph_BreadthFirstSearch: pushpull option
 
-        * LAGraph_VertexCentrality: wrapper for 3 methods (BC, PageRankGAP,
-            and PageRank).
+        * LAGraph_VertexCentrality: wrapper for 3 methods (BC, PageRank),
+            and future methods.
 
         * LAGraph_ConnectedComponents: this is Advanced (G is input and
             G->A_structure_is_symmetric is required for a directed graph).
@@ -27,12 +24,8 @@ As of Feb 10, 2022:
         * LG_CC_SV6: many TODOs in this SuiteSparse:GxB_* based method,
             suggesting the need for new GxB methods.
 
-        * LAGraph_SingleSourceShortestPath:  add AIsAllPositive to cached
-            properties (or an extension of it).  Write a Basic method that
-            checks this (and also decides on Delta on its own?)
-
-            See also the algorithmic updates to try.  Need to try them and
-            rerun the GAP benchmark.
+        * LAGraph_SingleSourceShortestPath:  Write a Basic method that
+            computes G->emin (and G->emax? and decides on Delta on its own?)
 
         * LAGraph_Init:  remove calls to mallopt.  Move those to the
             src/benchmark, if needed, and rerun GAP benchmarks to double-check.

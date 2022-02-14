@@ -30,8 +30,8 @@ for k = 1:length(s)
     d = sum (A, 2) ;
     nsnks = length (find (d == 0)) ;
     if (nsnks > 0)
-        % fprintf ('%s has %d sinks\n', filename, nsnks) ;
-        continue ;
+        fprintf ('%s has %d sinks\n', filename, nsnks) ;
+        % continue ;
     end
 
     % make the graph
@@ -42,7 +42,7 @@ for k = 1:length(s)
 
 end
 
-files = { 'karate.mtx', 'west0067.mtx' } ;
+files = { 'karate.mtx', 'west0067.mtx', 'ldbc-directed-example.mtx' } ;
 
 for k = 1:length (files)
     [A Z] = mread (['../../data/' files{k}]) ;

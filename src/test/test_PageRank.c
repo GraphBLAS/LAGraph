@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/test/test_PageRankGAP.c: test cases for pagerank (GAP method)
+// LAGraph/src/test/test_PageRank.c: test cases for pagerank
 // -----------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -52,8 +52,12 @@ float difference (GrB_Vector centrality, double *matlab_result)
 // valid results for karate graph and west0067 graphs
 //------------------------------------------------------------------------------
 
-// These two matrices have no sinks (nodes with zero outdegree) so the MATLAB
-// centrality (G, 'pagerank') and LAGraph PageRankGAP results will be the same.
+// The first two matrices have no sinks (nodes with zero outdegree) so the
+// MATLAB centrality (G, 'pagerank'), LAGraph_VertextCentrality_PageRankGAP,
+// and LAGraph_VertexCentrality_PageRank results will be essentially the same.
+
+// MATLAB computes in double precision, while LAGraph_*PageRank* computes in
+// single precision, so the difference will be about 1e-5 or so.
 
 double karate_rank [34] = {
     0.0970011147,
@@ -160,6 +164,20 @@ double west0067_rank [67] = {
     0.0114528518,
     0.0223213267 } ;
 
+// ldbc-directed-example.mtx has two sinks: nodes 3 and 9
+// its pagerank must be computed with LAGraph_VertexCentrality_PageRank.
+double ldbc_directed_example_rank [10] = {
+    0.1697481823,
+    0.0361514465,
+    0.1673241104,
+    0.1669092572,
+    0.1540948145,
+    0.0361514465,
+    0.0361514465,
+    0.1153655134,
+    0.0361514465,
+    0.0819523364 } ;
+
 //------------------------------------------------------------------------------
 // tesk_ranker
 //------------------------------------------------------------------------------
@@ -171,6 +189,10 @@ void test_ranker(void)
     GrB_Vector centrality = NULL, cmatlab = NULL, diff = NULL ;
     int niters = 0 ;
 
+    //--------------------------------------------------------------------------
+    // karate: no sinks
+    //--------------------------------------------------------------------------
+
     // create the karate graph
     snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
     FILE *f = fopen (filename, "r") ;
@@ -181,16 +203,34 @@ void test_ranker(void)
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
     OK (LAGraph_Property_RowDegree (G, msg)) ;
 
-    // compute its pagerank
+    // compute its pagerank using the GAP method
     OK (LAGraph_VertexCentrality_PageRankGAP (&centrality, G, 0.85,
         1e-4, 100, &niters, msg)) ;
-    OK (LAGraph_Delete (&G, msg)) ;
 
     // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
     float err = difference (centrality, karate_rank) ;
-    printf ("\nkarate:   err: %e\n", err) ;
+    float rsum = 0 ;
+    OK (GrB_reduce (&rsum, NULL, GrB_PLUS_MONOID_FP32, centrality, NULL)) ;
+    printf ("\nkarate:   err: %e (GAP),      sum(r): %e\n", err, rsum) ;
     TEST_CHECK (err < 1e-4) ;
     OK (GrB_free (&centrality)) ;
+
+    // compute its pagerank using the standard method
+    OK (LAGraph_VertexCentrality_PageRank (&centrality, G, 0.85,
+        1e-4, 100, &niters, msg)) ;
+
+    // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
+    err = difference (centrality, karate_rank) ;
+    OK (GrB_reduce (&rsum, NULL, GrB_PLUS_MONOID_FP32, centrality, NULL)) ;
+    printf ("karate:   err: %e (standard), sum(r): %e\n", err, rsum) ;
+    TEST_CHECK (err < 1e-4) ;
+    OK (GrB_free (&centrality)) ;
+
+    OK (LAGraph_Delete (&G, msg)) ;
+
+    //--------------------------------------------------------------------------
+    // west0067: no sinks
+    //--------------------------------------------------------------------------
 
     // create the west0067 graph
     snprintf (filename, LEN, LG_DATA_DIR "%s", "west0067.mtx") ;
@@ -203,16 +243,77 @@ void test_ranker(void)
     OK (LAGraph_Property_AT (G, msg)) ;
     OK (LAGraph_Property_RowDegree (G, msg)) ;
 
-    // compute its pagerank
+    // compute its pagerank using the GAP method
     OK (LAGraph_VertexCentrality_PageRankGAP (&centrality, G, 0.85,
         1e-4, 100, &niters, msg)) ;
-    OK (LAGraph_Delete (&G, msg)) ;
 
     // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
     err = difference (centrality, west0067_rank) ;
-    printf ("west0067: err: %e\n", err) ;
+    OK (GrB_reduce (&rsum, NULL, GrB_PLUS_MONOID_FP32, centrality, NULL)) ;
+    printf ("west0067: err: %e (GAP),      sum(r): %e\n", err, rsum) ;
     TEST_CHECK (err < 1e-4) ;
     OK (GrB_free (&centrality)) ;
+
+    // compute its pagerank using the standard method
+    OK (LAGraph_VertexCentrality_PageRank (&centrality, G, 0.85,
+        1e-4, 100, &niters, msg)) ;
+
+    // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
+    err = difference (centrality, west0067_rank) ;
+    printf ("west0067: err: %e (standard), sum(r): %e\n", err, rsum) ;
+    TEST_CHECK (err < 1e-4) ;
+    OK (GrB_free (&centrality)) ;
+
+    OK (LAGraph_Delete (&G, msg)) ;
+
+    //--------------------------------------------------------------------------
+    // ldbc-directed-example: has 2 sinks
+    //--------------------------------------------------------------------------
+
+    // create the ldbc-directed-example graph
+    snprintf (filename, LEN, LG_DATA_DIR "%s", "ldbc-directed-example.mtx") ;
+    f = fopen (filename, "r") ;
+    TEST_CHECK (f != NULL) ;
+    OK (LAGraph_MMRead (&A, f, msg)) ;
+    OK (fclose (f)) ;
+    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+    TEST_CHECK (A == NULL) ;    // A has been moved into G->A
+    OK (LAGraph_Property_AT (G, msg)) ;
+    OK (LAGraph_Property_RowDegree (G, msg)) ;
+
+    printf ("\n=========== ldbc-directed-example, with sink nodes 3 and 9:\n") ;
+    OK (LAGraph_DisplayGraph (G, LAGraph_COMPLETE, stdout, msg)) ;
+
+    // compute its pagerank using the GAP method ("bleeds" rank)
+    OK (LAGraph_VertexCentrality_PageRankGAP (&centrality, G, 0.85,
+        1e-4, 100, &niters, msg)) ;
+    err = difference (centrality, ldbc_directed_example_rank) ;
+    OK (GrB_reduce (&rsum, NULL, GrB_PLUS_MONOID_FP32, centrality, NULL)) ;
+    printf ("\nGAP-style page rank is expected to be wrong:\n") ;
+    printf ("ldbc-directed: err: %e (GAP), sum(r): %e, niters %d\n",
+        err, rsum, niters) ;
+    printf ("The GAP pagerank is incorrect for this method:\n") ;
+    OK (LAGraph_Vector_Print (centrality, LAGraph_COMPLETE, stdout, msg)) ;
+    OK (GrB_free (&centrality)) ;
+
+    // compute its pagerank using the standard method
+    OK (LAGraph_VertexCentrality_PageRank (&centrality, G, 0.85,
+        1e-4, 100, &niters, msg)) ;
+
+    // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
+    err = difference (centrality, ldbc_directed_example_rank) ;
+    OK (GrB_reduce (&rsum, NULL, GrB_PLUS_MONOID_FP32, centrality, NULL)) ;
+    printf ("\nwith sinks handled properly:\n") ;
+    printf ("ldbc-directed: err: %e (standard), sum(r): %e, niters %d\n",
+        err, rsum, niters) ;
+    TEST_CHECK (err < 1e-4) ;
+    printf ("This is the correct pagerank, with sinks handled properly:\n") ;
+    OK (LAGraph_Vector_Print (centrality, LAGraph_COMPLETE, stdout, msg)) ;
+    OK (GrB_free (&centrality)) ;
+
+    OK (LAGraph_Delete (&G, msg)) ;
+
+    //--------------------------------------------------------------------------
 
     LAGraph_Finalize (msg) ;
 }

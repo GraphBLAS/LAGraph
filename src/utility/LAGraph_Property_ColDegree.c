@@ -8,6 +8,14 @@
 
 //------------------------------------------------------------------------------
 
+// LAGraph_Property_ColDegree computes G->coldegree, where G->coldegree(j) is
+// the number of entries in G->A (:,j).  If there are no entries in G->A (:,j),
+// G->coldgree(j) is not present in the structure of G->coldegree.  That is,
+// G->coldegree contains no explicit zero entries.
+
+// G->coldegree is not computed if the graph is undirected.  Use G->rowdegree
+// instead, and LAGraph_Property_RowDegree.
+
 #define LG_FREE_WORK            \
 {                               \
     GrB_free (&S) ;             \

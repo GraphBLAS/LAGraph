@@ -8,6 +8,11 @@
 
 //------------------------------------------------------------------------------
 
+// LAGraph_Property_RowDegree computes G->rowdegree, where G->rowdegree(i) is
+// the number of entries in G->A (i,:).  If there are no entries in G->A (i,:),
+// G->rowdgree(i) is not present in the structure of G->rowdegree.  That is,
+// G->rowdegree contains no explicit zero entries.
+
 #define LG_FREE_WORK            \
 {                               \
     GrB_free (&x) ;             \
