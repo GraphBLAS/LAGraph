@@ -16,19 +16,10 @@
 
 #include <LAGraph_test.h>
 #include <graph_zachary_karate.h>
+#include "LG_alg_internal.h"
 
 char msg[LAGRAPH_MSG_LEN];
 LAGraph_Graph G = NULL;
-
-int LG_BreadthFirstSearch_vanilla
-(
-    GrB_Vector    *level,
-    GrB_Vector    *parent,
-    LAGraph_Graph  G,
-    GrB_Index      src,
-    bool           pushpull,
-    char          *msg
-);
 
 //-----------------------------------------------------------------------------
 // Valid results for Karate graph:
@@ -229,7 +220,7 @@ void test_BreadthFirstSearch_invalid_graph(void)
     TEST_CHECK(retval == GrB_NULL_POINTER);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LG_BreadthFirstSearch_vanilla(NULL, NULL, graph, 0, false, msg);
+    retval = LG_BreadthFirstSearch_vanilla(NULL, NULL, graph, 0, msg);
     TEST_CHECK(retval == GrB_NULL_POINTER);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
@@ -250,7 +241,7 @@ void test_BreadthFirstSearch_invalid_src(void)
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LG_BreadthFirstSearch_vanilla(NULL, NULL, G, n, false, msg);
+    retval = LG_BreadthFirstSearch_vanilla(NULL, NULL, G, n, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
@@ -258,7 +249,7 @@ void test_BreadthFirstSearch_invalid_src(void)
     TEST_CHECK(retval == GrB_INVALID_INDEX);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LG_BreadthFirstSearch_vanilla(NULL, &parent, G, n, false, msg);
+    retval = LG_BreadthFirstSearch_vanilla(NULL, &parent, G, n, msg);
     TEST_CHECK(retval == GrB_INVALID_INDEX);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
@@ -275,7 +266,7 @@ void test_BreadthFirstSearch_neither(void)
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LG_BreadthFirstSearch_vanilla(NULL, NULL, G, 0, false, msg);
+    retval = LG_BreadthFirstSearch_vanilla(NULL, NULL, G, 0, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
@@ -283,7 +274,7 @@ void test_BreadthFirstSearch_neither(void)
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LG_BreadthFirstSearch_vanilla(NULL, NULL, G, 0, true, msg);
+    retval = LG_BreadthFirstSearch_vanilla(NULL, NULL, G, 0, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
@@ -311,7 +302,7 @@ void test_BreadthFirstSearch_parent(void)
     TEST_CHECK(!check_karate_parents30(parent));
     TEST_CHECK(0 == GrB_free(&parent));
 
-    retval = LG_BreadthFirstSearch_vanilla(NULL, &parent, G, 30, false, msg);
+    retval = LG_BreadthFirstSearch_vanilla(NULL, &parent, G, 30, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
     TEST_CHECK(check_karate_parents30(parent));
@@ -327,7 +318,7 @@ void test_BreadthFirstSearch_parent(void)
     TEST_CHECK (retval == 0) ;
     TEST_CHECK(0 == GrB_free(&parent_do));
 
-    retval = LG_BreadthFirstSearch_vanilla(NULL, &parent_do, G, 30, true, msg);
+    retval = LG_BreadthFirstSearch_vanilla(NULL, &parent_do, G, 30, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
     TEST_CHECK(check_karate_parents30(parent_do));
@@ -348,8 +339,7 @@ void test_BreadthFirstSearch_parent(void)
             TEST_CHECK (retval == 0) ;
             TEST_CHECK(0 == GrB_free(&parent));
 
-            retval = LG_BreadthFirstSearch_vanilla(NULL, &parent,
-                                                G, src, (bool) pushpull, msg);
+            retval = LG_BreadthFirstSearch_vanilla(NULL, &parent, G, src, msg);
             TEST_CHECK(retval == 0);
             retval = LG_check_bfs (NULL, parent, G, src, msg) ;
             TEST_CHECK (retval == 0) ;
@@ -377,7 +367,7 @@ void test_BreadthFirstSearch_level(void)
     TEST_CHECK (retval == 0) ;
     TEST_CHECK(0 == GrB_free(&level));
 
-    retval = LG_BreadthFirstSearch_vanilla(&level, NULL, G, 30, false, msg);
+    retval = LG_BreadthFirstSearch_vanilla(&level, NULL, G, 30, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
     TEST_CHECK(check_karate_levels30(level));
@@ -407,8 +397,7 @@ void test_BreadthFirstSearch_level(void)
             TEST_CHECK (retval == 0) ;
             TEST_CHECK(0 == GrB_free(&level));
 
-            retval = LG_BreadthFirstSearch_vanilla(&level, NULL,
-                                                G, src, (bool) pushpull, msg);
+            retval = LG_BreadthFirstSearch_vanilla(&level, NULL, G, src, msg);
             TEST_CHECK(retval == 0);
             retval = LG_check_bfs (level, NULL, G, src, msg) ;
             TEST_CHECK (retval == 0) ;
@@ -540,7 +529,7 @@ void test_BreadthFirstSearch_many(void)
                 OK (GrB_free(&level));
 
                 OK (LG_BreadthFirstSearch_vanilla (&level, &parent,
-                    G, src, (bool) pushpull, msg)) ;
+                    G, src, msg)) ;
                 OK (LG_check_bfs (level, parent, G, src, msg)) ;
                 OK (GrB_reduce (&maxlevel, NULL, GrB_MAX_MONOID_INT64,
                     level, NULL)) ;
@@ -560,7 +549,7 @@ void test_BreadthFirstSearch_many(void)
                 OK (GrB_free(&parent));
 
                 OK (LG_BreadthFirstSearch_vanilla (NULL, &parent,
-                    G, src, (bool) pushpull, msg)) ;
+                    G, src, msg)) ;
                 OK (LG_check_bfs (NULL, parent, G, src, msg)) ;
                 OK (GrB_free(&parent));
 
@@ -569,8 +558,7 @@ void test_BreadthFirstSearch_many(void)
                 OK (LG_check_bfs (level, NULL, G, src, msg)) ;
                 OK (GrB_free(&level));
 
-                OK (LG_BreadthFirstSearch_vanilla (&level, NULL,
-                    G, src, (bool) pushpull, msg)) ;
+                OK (LG_BreadthFirstSearch_vanilla (&level, NULL, G, src, msg)) ;
                 OK (LG_check_bfs (level, NULL, G, src, msg)) ;
                 OK (GrB_free(&level));
 
@@ -648,14 +636,14 @@ void test_bfs_brutal (void)
 
                 // parent and level with vanilla
                 LG_BRUTAL (LG_BreadthFirstSearch_vanilla (&level,
-                    &parent, G, src, (bool) pushpull, msg)) ;
+                    &parent, G, src, msg)) ;
                 OK (LG_check_bfs (level, parent, G, src, msg)) ;
                 OK (GrB_free (&parent)) ;
                 OK (GrB_free (&level)) ;
 
                 // level-only with vanilla
                 LG_BRUTAL (LG_BreadthFirstSearch_vanilla (&level, NULL,
-                        G, src, (bool) pushpull, msg)) ;
+                        G, src, msg)) ;
                 OK (LG_check_bfs (level, NULL, G, src, msg)) ;
                 OK (GrB_free (&level)) ;
 

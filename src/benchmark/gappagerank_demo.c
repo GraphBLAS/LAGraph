@@ -86,7 +86,7 @@ int main (int argc, char **argv)
     GrB_Index nsinks ;
     GrB_TRY (GrB_Vector_nvals (&nvals, G->rowdegree)) ;
     nsinks = n - nvals ;
-    printf ("nsinks: %lu\n", nsinks) ;
+    printf ("nsinks: %" PRIu64 "\n", nsinks) ;
 
     //--------------------------------------------------------------------------
     // compute the GAP pagerank

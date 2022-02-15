@@ -177,7 +177,7 @@ int main (int argc, char **argv)
                 G, src, Delta, msg)) ;
             LAGraph_TRY (LAGraph_Toc (&ttrial, tic, msg)) ;
 
-            printf ("sssp15:  threads: %2d trial: %2d source %8ld "
+            printf ("sssp15:  threads: %2d trial: %2d source %8" PRIu64
                 "time: %10.4f sec\n", nthreads, trial, src, ttrial) ;
             total_time += ttrial ;
 

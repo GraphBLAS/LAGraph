@@ -36,7 +36,6 @@ int LG_BreadthFirstSearch_vanilla
     GrB_Vector    *parent,
     LAGraph_Graph  G,
     GrB_Index      src,
-    bool           pushpull,
     char          *msg
 )
 {
@@ -71,23 +70,6 @@ int LG_BreadthFirstSearch_vanilla
     GrB_Index n;
     GrB_TRY( GrB_Matrix_nrows (&n, A) );
     LG_ASSERT_MSG (src < n, GrB_INVALID_INDEX, "invalid source node") ;
-
-    GrB_Matrix AT ;
-    GrB_Vector Degree = G->rowdegree ;
-    LAGraph_Kind kind = G->kind ;
-
-    if (kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
-       (kind == LAGRAPH_ADJACENCY_DIRECTED &&
-        G->structure_is_symmetric == LAGRAPH_TRUE))
-    {
-        // AT and A have the same structure and can be used in both directions
-        AT = G->A ;
-    }
-    else
-    {
-        // AT = A' is different from A
-        AT = G->AT ;
-    }
 
     // determine the semiring type
     GrB_Type     int_type  = (n > INT32_MAX) ? GrB_INT64 : GrB_INT32 ;

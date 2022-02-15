@@ -1612,6 +1612,9 @@ int LAGraph_Sort3
 // graph G is both an input and an output of these methods, since they may be
 // modified.
 
+// TODO: hard to know if a method is Basic or Advanced just by its name.
+// Should we adopt a clearer naming method?
+
 //------------------------------------------------------------------------------
 // LAGraph_BreadthFirstSearch: breadth-first search
 //------------------------------------------------------------------------------
@@ -1642,6 +1645,14 @@ int LAGraph_Sort3
  * @retval LAGRAPH_INVALID_GRAPH Graph is invalid (LAGraph_CheckGraph failed)
  */
 
+// TODO: direction-optimization (pushpull) requires G->AT and G->rowdgree.  If
+// not present, a Basic method could compute them and then use pushpull.  Or it
+// could just use push-only.  The current method, below, doesn't modify G so
+// it's a Basic method, but it requires the pushpull input parameter.  Perhaps
+// a Basic method should just use pushpull as true.  An Advanced method would
+// not need G->AT or G->rowdegree if pushpull is false; if pushpull is true,
+// it could return an error if G->AT or G->rowdegree are not present.
+
 LAGRAPH_PUBLIC
 int LAGraph_BreadthFirstSearch
 (
@@ -1659,7 +1670,14 @@ int LAGraph_BreadthFirstSearch
 // LAGraph_VertexCentrality: various vertex centrality metrics
 //------------------------------------------------------------------------------
 
-// TODO the following is a draft:
+// TODO the following is a draft:  this may be hard to do in general, since
+// different metrics may require different input parameters (PageRank needs
+// tol, itermax, damping; BC needs # sources or a list of sources, etc).  It
+// might be hard for a Basic method to pick these parameters by itself, and a
+// unified Basic method would need to fit will with all future Centrality
+// metrics.  Perhaps we don't write this as a Basic method yet, and add it only
+// when more Centrality metrics are added?
+
 typedef enum
 {
     LAGRAPH_CENTRALITY_BETWEENNESS = 0,     // node or edge centrality
@@ -1686,6 +1704,8 @@ int LAGraph_VertexCentrality    // TODO: write this
 // LAGraph_TriangleCount
 //------------------------------------------------------------------------------
 
+// This is a Basic method.
+
 /*
  * Count the triangles in a graph.
  *
@@ -1707,9 +1727,10 @@ int LAGraph_TriangleCount
 // LAGraph_ConnectedComponents: connected components of an undirected graph
 //------------------------------------------------------------------------------
 
-// TODO: this is an Advanced method, since G is input (not input/output). OK?
-// A Basic method should compute G->structure_is_symmetric for a directed
-// graph.  Do we need a Basic method too?
+// TODO: this is NOT a Basic method, but an Advanced method, since G is input
+// (not input/output). It requires G to have a known symmetric structure.  A
+// Basic method should compute G->structure_is_symmetric for a directed graph.
+// Do we need a Basic method too that computes that first?
 
 LAGRAPH_PUBLIC
 int LAGraph_ConnectedComponents

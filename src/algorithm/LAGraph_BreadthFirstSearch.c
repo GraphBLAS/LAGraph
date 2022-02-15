@@ -36,7 +36,7 @@ int LAGraph_BreadthFirstSearch
 #if LG_SUITESPARSE
     return LG_BreadthFirstSearch_SSGrB  (level, parent, G, src, pushpull, msg);
 #else
-    return LG_BreadthFirstSearch_vanilla(level, parent, G, src, pushpull, msg);
+    return LG_BreadthFirstSearch_vanilla(level, parent, G, src, msg);
 #endif
 }
 
