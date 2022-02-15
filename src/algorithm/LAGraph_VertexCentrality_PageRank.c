@@ -67,7 +67,7 @@ int LAGraph_VertexCentrality_PageRank
     LG_ASSERT (centrality != NULL, GrB_NULL_POINTER) ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     LAGraph_Kind kind = G->kind ; 
-    int A_sym_structure = G->A_structure_is_symmetric ;
+    int A_sym_structure = G->structure_is_symmetric ;
     GrB_Matrix AT ;
     if (kind == LAGRAPH_ADJACENCY_UNDIRECTED || A_sym_structure == LAGRAPH_TRUE)
     {

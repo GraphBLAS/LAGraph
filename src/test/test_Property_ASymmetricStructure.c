@@ -136,17 +136,17 @@ void test_Property_ASymmetric_Structure (void)
         OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
         TEST_CHECK (A == NULL) ;
 
-        // compute the A_structure_is_symmetric property
+        // compute the structure_is_symmetric property
         OK (LAGraph_Property_ASymmetricStructure (G, msg)) ;
 
         // check the result
         if (sym_structure)
         {
-            TEST_CHECK (G->A_structure_is_symmetric == LAGRAPH_TRUE) ;
+            TEST_CHECK (G->structure_is_symmetric == LAGRAPH_TRUE) ;
         }
         else
         {
-            TEST_CHECK (G->A_structure_is_symmetric == LAGRAPH_FALSE) ;
+            TEST_CHECK (G->structure_is_symmetric == LAGRAPH_FALSE) ;
         }
 
         // delete all properties
@@ -159,11 +159,11 @@ void test_Property_ASymmetric_Structure (void)
         // check the result
         if (sym_structure)
         {
-            TEST_CHECK (G->A_structure_is_symmetric == LAGRAPH_TRUE) ;
+            TEST_CHECK (G->structure_is_symmetric == LAGRAPH_TRUE) ;
         }
         else
         {
-            TEST_CHECK (G->A_structure_is_symmetric == LAGRAPH_FALSE) ;
+            TEST_CHECK (G->structure_is_symmetric == LAGRAPH_FALSE) ;
         }
 
         // delete all properties
@@ -175,7 +175,7 @@ void test_Property_ASymmetric_Structure (void)
             G->kind = LAGRAPH_ADJACENCY_UNDIRECTED ;
             // recompute the symmetry property
             OK (LAGraph_Property_ASymmetricStructure (G, msg)) ;
-            TEST_CHECK (G->A_structure_is_symmetric == LAGRAPH_TRUE) ;
+            TEST_CHECK (G->structure_is_symmetric == LAGRAPH_TRUE) ;
         }
 
         OK (LAGraph_Delete (&G, msg)) ;
@@ -220,17 +220,17 @@ void test_Property_ASymmetric_Structure_brutal (void)
         OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
         TEST_CHECK (A == NULL) ;
 
-        // compute the A_structure_is_symmetric property
+        // compute the structure_is_symmetric property
         LG_BRUTAL (LAGraph_Property_ASymmetricStructure (G, msg)) ;
 
         // check the result
         if (sym_structure)
         {
-            TEST_CHECK (G->A_structure_is_symmetric == LAGRAPH_TRUE) ;
+            TEST_CHECK (G->structure_is_symmetric == LAGRAPH_TRUE) ;
         }
         else
         {
-            TEST_CHECK (G->A_structure_is_symmetric == LAGRAPH_FALSE) ;
+            TEST_CHECK (G->structure_is_symmetric == LAGRAPH_FALSE) ;
         }
 
         // delete all properties
@@ -243,11 +243,11 @@ void test_Property_ASymmetric_Structure_brutal (void)
         // check the result
         if (sym_structure)
         {
-            TEST_CHECK (G->A_structure_is_symmetric == LAGRAPH_TRUE) ;
+            TEST_CHECK (G->structure_is_symmetric == LAGRAPH_TRUE) ;
         }
         else
         {
-            TEST_CHECK (G->A_structure_is_symmetric == LAGRAPH_FALSE) ;
+            TEST_CHECK (G->structure_is_symmetric == LAGRAPH_FALSE) ;
         }
 
         // delete all properties
@@ -259,7 +259,7 @@ void test_Property_ASymmetric_Structure_brutal (void)
             G->kind = LAGRAPH_ADJACENCY_UNDIRECTED ;
             // recompute the symmetry property
             LG_BRUTAL (LAGraph_Property_ASymmetricStructure (G, msg)) ;
-            TEST_CHECK (G->A_structure_is_symmetric == LAGRAPH_TRUE) ;
+            TEST_CHECK (G->structure_is_symmetric == LAGRAPH_TRUE) ;
         }
 
         OK (LAGraph_Delete (&G, msg)) ;

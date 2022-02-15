@@ -163,7 +163,7 @@ void test_errors (void)
     // G is undirected
     G->ndiag = 0 ;
     G->kind = LAGRAPH_ADJACENCY_DIRECTED ;
-    G->A_structure_is_symmetric = LAGRAPH_FALSE ;
+    G->structure_is_symmetric = LAGRAPH_FALSE ;
     result = LAGraph_VertexCentrality_Triangle (&c, &ntri, 3, G, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == -1005) ;

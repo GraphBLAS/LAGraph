@@ -370,12 +370,12 @@ void test_minmax_uint64 (void)
         uint64_t emax2 = 0 ;
 
         int result ;
-        result = GrB_Scalar_extractElement_INT64 (&emin2, G->emin) ;
+        result = GrB_Scalar_extractElement_UINT64 (&emin2, G->emin) ;
         printf ("min (uint64): %" PRIu64" %" PRIu64 "\n", emin1, emin2) ;
         TEST_CHECK (result == GrB_SUCCESS) ;
         TEST_CHECK (emin1 == emin2) ;
 
-        result = GrB_Scalar_extractElement_INT64 (&emax2, G->emax) ;
+        result = GrB_Scalar_extractElement_UINT64 (&emax2, G->emax) ;
         printf ("max (uint64): %" PRIu64" %" PRIu64 "\n", emax1, emax2) ;
         TEST_CHECK (result == GrB_SUCCESS) ;
         TEST_CHECK (emax1 == emax2) ;

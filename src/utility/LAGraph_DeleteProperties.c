@@ -43,7 +43,7 @@ int LAGraph_DeleteProperties
     // clear the scalar properties of the graph
     //--------------------------------------------------------------------------
 
-    G->A_structure_is_symmetric = LAGRAPH_UNKNOWN ;
+    G->structure_is_symmetric = LAGRAPH_UNKNOWN ;
     G->emin_kind = LAGRAPH_UNKNOWN ;
     G->emax_kind = LAGRAPH_UNKNOWN ;
     G->nonzero = LAGRAPH_UNKNOWN ;

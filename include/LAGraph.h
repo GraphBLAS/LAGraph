@@ -501,7 +501,7 @@ LAGraph_BoundKind ;
 //      AT          AT = A'
 //      rowdegree   rowdegree(i) = # of entries in A(i,:)
 //      coldegree   coldegree(j) = # of entries in A(:,j)
-//      A_structure_is_symmetric: true if the structure of A is symmetric
+//      structure_is_symmetric: true if the structure of A is symmetric
 //      ndiag       the number of entries on the diagonal of A
 
 struct LAGraph_Graph_struct
@@ -553,10 +553,9 @@ struct LAGraph_Graph_struct
             // symmetric structure, the convention is that the degree is held in
             // rowdegree, and coldegree is left as NULL.
 
-    // TODO: rename to G->symmetric_structure or G->structure_is_symmetric.
     // If G is held as an incidence matrix, then G->A might be rectangular,
     // in the future, but the graph G may have a symmetric structure anyway.
-    LAGraph_BooleanProperty A_structure_is_symmetric ;    // For an undirected
+    LAGraph_BooleanProperty structure_is_symmetric ;    // For an undirected
             // graph, this property will always be implicitly true and can be
             // ignored.  The matrix A for a directed weighted graph will
             // typically be unsymmetric, but might have a symmetric structure.
@@ -801,7 +800,7 @@ int LAGraph_Property_AT
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Property_ASymmetricStructure: determine G->A_structure_is_symmetric
+// LAGraph_Property_ASymmetricStructure: determine G->structure_is_symmetric
 //------------------------------------------------------------------------------
 
 // LAGraph_Property_ASymmetricStructure determines if the sparsity structure
@@ -900,7 +899,7 @@ int LAGraph_Property_Emax
 
 // LAGraph_DeleteDiag removes any diagonal entries from G->A.  Most properties
 // are cleared or set to LAGRAPH_UNKNOWN.  G->ndiag is set to zero, and
-// G->A_structure_is_symmetric is left unchanged.
+// G->structure_is_symmetric is left unchanged.
 
 LAGRAPH_PUBLIC
 int LAGraph_DeleteDiag
@@ -1709,7 +1708,7 @@ int LAGraph_TriangleCount
 //------------------------------------------------------------------------------
 
 // TODO: this is an Advanced method, since G is input (not input/output). OK?
-// A Basic method should compute G->A_structure_is_symmetric for a directed
+// A Basic method should compute G->structure_is_symmetric for a directed
 // graph.  Do we need a Basic method too?
 
 LAGRAPH_PUBLIC

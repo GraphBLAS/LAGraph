@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_Property_ASymmetricStructure: determine G->A_structure_is_symmetric
+// LAGraph_Property_ASymmetricStructure: determine G->structure_is_symmetric
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -39,11 +39,11 @@ int LAGraph_Property_ASymmetricStructure
     if (kind == LAGRAPH_ADJACENCY_UNDIRECTED)
     {
         // assume A is symmetric for an undirected graph
-        G->A_structure_is_symmetric = true ;
+        G->structure_is_symmetric = true ;
         return (GrB_SUCCESS) ;
     }
 
-    if (G->A_structure_is_symmetric != LAGRAPH_UNKNOWN)
+    if (G->structure_is_symmetric != LAGRAPH_UNKNOWN)
     {
         // symmetric property is already known
         return (GrB_SUCCESS) ;
@@ -60,7 +60,7 @@ int LAGraph_Property_ASymmetricStructure
     if (n != ncols)
     {
         // A is rectangular and thus cannot be symmetric
-        G->A_structure_is_symmetric = false ;
+        G->structure_is_symmetric = false ;
         return (GrB_SUCCESS) ;
     }
 
@@ -85,7 +85,7 @@ int LAGraph_Property_ASymmetricStructure
     GrB_Index nvals1, nvals2 ;
     GrB_TRY (GrB_Matrix_nvals (&nvals1, C)) ;
     GrB_TRY (GrB_Matrix_nvals (&nvals2, A)) ;
-    G->A_structure_is_symmetric = (nvals1 == nvals2) ;
+    G->structure_is_symmetric = (nvals1 == nvals2) ;
 
     //--------------------------------------------------------------------------
     // free workspace and return result

@@ -170,14 +170,14 @@ void test_SortByDegree (void)
                 OK (LAGraph_Property_RowDegree (H, msg)) ;
                 OK (LAGraph_Property_ColDegree (H, msg)) ;
                 OK (LAGraph_Property_ASymmetricStructure (H, msg)) ;
-                TEST_CHECK (G->A_structure_is_symmetric ==
-                            H->A_structure_is_symmetric) ;
+                TEST_CHECK (G->structure_is_symmetric ==
+                            H->structure_is_symmetric) ;
                 printf ("\nTrial %d, graph H, sorted (%s) by (%s) degrees:\n",
                     trial, ascending ? "ascending" : "descending",
                     byrow ? "row" : "column") ;
                 OK (LAGraph_DisplayGraph (H, LAGraph_SHORT, stdout, msg)) ;
 
-                d = (byrow || G->A_structure_is_symmetric) ?
+                d = (byrow || G->structure_is_symmetric) ?
                     H->rowdegree : H->coldegree ;
 
                 // ensure d is sorted in ascending or descending order
@@ -322,10 +322,10 @@ void test_SortByDegree_brutal (void)
                 OK (LAGraph_Property_RowDegree (H, msg)) ;
                 OK (LAGraph_Property_ColDegree (H, msg)) ;
                 OK (LAGraph_Property_ASymmetricStructure (H, msg)) ;
-                TEST_CHECK (G->A_structure_is_symmetric ==
-                            H->A_structure_is_symmetric) ;
+                TEST_CHECK (G->structure_is_symmetric ==
+                            H->structure_is_symmetric) ;
 
-                d = (byrow || G->A_structure_is_symmetric) ?
+                d = (byrow || G->structure_is_symmetric) ?
                     H->rowdegree : H->coldegree ;
 
                 // ensure d is sorted in ascending or descending order

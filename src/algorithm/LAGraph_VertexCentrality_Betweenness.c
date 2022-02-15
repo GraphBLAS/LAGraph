@@ -124,7 +124,7 @@ int LAGraph_VertexCentrality_Betweenness
     (*centrality) = NULL ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     LAGraph_Kind kind = G->kind ;
-    int A_sym_structure = G->A_structure_is_symmetric ;
+    int A_sym_structure = G->structure_is_symmetric ;
 
     GrB_Matrix A = G->A ;
     GrB_Matrix AT ;

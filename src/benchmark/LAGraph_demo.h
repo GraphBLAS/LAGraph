@@ -970,7 +970,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
     {
         // compute G->AT and determine if A has a symmetric structure
         LAGraph_TRY (LAGraph_Property_ASymmetricStructure (*G, msg)) ;
-        if ((*G)->A_structure_is_symmetric && structural)
+        if ((*G)->structure_is_symmetric && structural)
         {
             // if G->A has a symmetric structure, declare the graph undirected
             // and free G->AT since it isn't needed.
@@ -1007,7 +1007,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
                 GrB_TRY (GrB_Matrix_free (&((*G)->AT))) ;
             }
             (*G)->kind = LAGRAPH_ADJACENCY_UNDIRECTED ;
-            (*G)->A_structure_is_symmetric = true ;
+            (*G)->structure_is_symmetric = true ;
         }
     }
     // LAGraph_TRY (LAGraph_DisplayGraph (*G, 2, stdout, msg)) ;
@@ -1059,6 +1059,17 @@ static int readproblem          // returns 0 if successful, -1 if failure
 
 static inline int demo_init (bool burble)
 {
+
+    #ifdef __linux__
+    // Use mallopt to speedup malloc and free on Linux.  Otherwise, it can take
+    // several seconds to free a large block of memory.  For this to be
+    // effective, demo_init must be called before calling malloc/free, and
+    // before calling LAGraph_Init.
+    mallopt (M_MMAP_MAX, 0) ;           // disable mmap; it's too slow
+    mallopt (M_TRIM_THRESHOLD, -1) ;    // disable sbrk trimming
+    mallopt (M_TOP_PAD, 16*1024*1024) ; // increase padding to speedup malloc
+    #endif
+
     LAGraph_TRY (LAGraph_Init (NULL)) ;
     #if LG_SUITESPARSE
     printf ("include: %s v%d.%d.%d [%s]\n",

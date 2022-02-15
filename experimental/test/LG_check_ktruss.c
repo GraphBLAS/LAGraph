@@ -59,7 +59,7 @@ int LG_check_ktruss
     LG_ASSERT_MSG (G->ndiag == 0, -104, "G->ndiag must be zero") ;
     if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
-        G->A_structure_is_symmetric == LAGRAPH_TRUE))
+        G->structure_is_symmetric == LAGRAPH_TRUE))
     {
         // the structure of A is known to be symmetric
         ;

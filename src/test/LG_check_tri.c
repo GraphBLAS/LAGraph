@@ -58,7 +58,7 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
     LG_ASSERT (G->ndiag == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED) ;
     LG_ASSERT_MSG ((G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
-        G->A_structure_is_symmetric == LAGRAPH_TRUE)),
+        G->structure_is_symmetric == LAGRAPH_TRUE)),
         LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED,
         "G->A must be known to be symmetric") ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;

@@ -55,7 +55,7 @@ int LAGraph_New
     (*G)->AT = NULL ;
     (*G)->rowdegree = NULL ;
     (*G)->coldegree = NULL ;
-    (*G)->A_structure_is_symmetric = LAGRAPH_UNKNOWN ;
+    (*G)->structure_is_symmetric = LAGRAPH_UNKNOWN ;
     (*G)->ndiag = LAGRAPH_UNKNOWN ;
     (*G)->emin = NULL ;
     (*G)->emin_kind = LAGRAPH_UNKNOWN ;
@@ -79,7 +79,7 @@ int LAGraph_New
         (*A) = NULL ;
 
         (*G)->kind = kind ;
-        (*G)->A_structure_is_symmetric =
+        (*G)->structure_is_symmetric =
             (kind == LAGRAPH_ADJACENCY_UNDIRECTED)
             ? LAGRAPH_TRUE
             : LAGRAPH_UNKNOWN ;
