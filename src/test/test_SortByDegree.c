@@ -132,7 +132,7 @@ void test_SortByDegree (void)
             OK (LAGraph_Property_AT (G, msg)) ;
             OK (LAGraph_Property_RowDegree (G, msg)) ;
             OK (LAGraph_Property_ColDegree (G, msg)) ;
-            OK (LAGraph_Property_ASymmetricStructure (G, msg)) ;
+            OK (LAGraph_Property_SymmetricStructure (G, msg)) ;
             OK (LAGraph_DisplayGraph (G, LAGraph_SHORT, stdout, msg)) ;
 
             // sort 4 different ways
@@ -169,7 +169,7 @@ void test_SortByDegree (void)
                 // get the properties of H
                 OK (LAGraph_Property_RowDegree (H, msg)) ;
                 OK (LAGraph_Property_ColDegree (H, msg)) ;
-                OK (LAGraph_Property_ASymmetricStructure (H, msg)) ;
+                OK (LAGraph_Property_SymmetricStructure (H, msg)) ;
                 TEST_CHECK (G->structure_is_symmetric ==
                             H->structure_is_symmetric) ;
                 printf ("\nTrial %d, graph H, sorted (%s) by (%s) degrees:\n",
@@ -283,7 +283,7 @@ void test_SortByDegree_brutal (void)
             OK (LAGraph_Property_AT (G, msg)) ;
             OK (LAGraph_Property_RowDegree (G, msg)) ;
             OK (LAGraph_Property_ColDegree (G, msg)) ;
-            OK (LAGraph_Property_ASymmetricStructure (G, msg)) ;
+            OK (LAGraph_Property_SymmetricStructure (G, msg)) ;
             // OK (LAGraph_DisplayGraph (G, LAGraph_SHORT, stdout, msg)) ;
 
             // sort 4 different ways
@@ -321,7 +321,7 @@ void test_SortByDegree_brutal (void)
                 // get the properties of H
                 OK (LAGraph_Property_RowDegree (H, msg)) ;
                 OK (LAGraph_Property_ColDegree (H, msg)) ;
-                OK (LAGraph_Property_ASymmetricStructure (H, msg)) ;
+                OK (LAGraph_Property_SymmetricStructure (H, msg)) ;
                 TEST_CHECK (G->structure_is_symmetric ==
                             H->structure_is_symmetric) ;
 

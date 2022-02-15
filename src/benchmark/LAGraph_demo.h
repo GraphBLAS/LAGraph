@@ -969,7 +969,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
     if (!A_is_symmetric)
     {
         // compute G->AT and determine if A has a symmetric structure
-        LAGraph_TRY (LAGraph_Property_ASymmetricStructure (*G, msg)) ;
+        LAGraph_TRY (LAGraph_Property_SymmetricStructure (*G, msg)) ;
         if ((*G)->structure_is_symmetric && structural)
         {
             // if G->A has a symmetric structure, declare the graph undirected

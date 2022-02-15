@@ -31,7 +31,7 @@ int LAGraph_TriangleCount
 )
 {
     // find out if graph is symmetric, compute G->rowdegree, and G->ndiag
-    LG_TRY ( LAGraph_Property_ASymmetricStructure(G, msg) );
+    LG_TRY ( LAGraph_Property_SymmetricStructure(G, msg) );
     LG_TRY ( LAGraph_Property_RowDegree(G, msg) );
     LG_TRY ( LAGraph_Property_NDiag(G, msg) );
 

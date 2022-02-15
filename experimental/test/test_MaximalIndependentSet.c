@@ -106,7 +106,7 @@ void test_MIS (void)
         TEST_CHECK (mis == NULL) ;
 
         // check if the pattern is symmetric
-        OK (LAGraph_Property_ASymmetricStructure (G, msg)) ;
+        OK (LAGraph_Property_SymmetricStructure (G, msg)) ;
 
         if (G->structure_is_symmetric == LAGRAPH_FALSE)
         {

@@ -192,7 +192,7 @@
 
 //  LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED: the method requires an undirected
 //      graph, or a directed graph with an adjancency matrix that is known to
-//      have a symmetric structure.  LAGraph_Property_ASymmetricStructure can
+//      have a symmetric structure.  LAGraph_Property_SymmetricStructure can
 //      be used to determine this property.
 
 //  LAGRAPH_IO_ERROR:  a file input or output method failed, or an input file
@@ -800,10 +800,10 @@ int LAGraph_Property_AT
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Property_ASymmetricStructure: determine G->structure_is_symmetric
+// LAGraph_Property_SymmetricStructure: determine G->structure_is_symmetric
 //------------------------------------------------------------------------------
 
-// LAGraph_Property_ASymmetricStructure determines if the sparsity structure
+// LAGraph_Property_SymmetricStructure determines if the sparsity structure
 // of G->A is symmetric (ignoring its values).  If G->kind denotes that the
 // graph is undirected, this property is implicitly true (and not checked).
 // Otherwise, this method determines if the structure of G->A for a directed
@@ -811,7 +811,7 @@ int LAGraph_Property_AT
 // property is already known.
 
 LAGRAPH_PUBLIC
-int LAGraph_Property_ASymmetricStructure
+int LAGraph_Property_SymmetricStructure
 (
     // input/output:
     LAGraph_Graph G,    // graph to determine the symmetry of structure of A

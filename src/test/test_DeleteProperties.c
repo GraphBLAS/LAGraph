@@ -88,7 +88,7 @@ void test_DeleteProperties (void)
         OK (LAGraph_Property_RowDegree (G, msg)) ;
         OK (LAGraph_Property_ColDegree (G, msg)) ;
         OK (LAGraph_Property_AT (G, msg)) ;
-        OK (LAGraph_Property_ASymmetricStructure (G, msg)) ;
+        OK (LAGraph_Property_SymmetricStructure (G, msg)) ;
 
         // print them
         printf ("\nGraph: ndiag %g, symmetric structure: %d\n",
@@ -159,7 +159,7 @@ void test_del_brutal (void)
         LG_BRUTAL (LAGraph_Property_RowDegree (G, msg)) ;
         LG_BRUTAL (LAGraph_Property_ColDegree (G, msg)) ;
         LG_BRUTAL (LAGraph_Property_AT (G, msg)) ;
-        LG_BRUTAL (LAGraph_Property_ASymmetricStructure (G, msg)) ;
+        LG_BRUTAL (LAGraph_Property_SymmetricStructure (G, msg)) ;
 
         for (int trial = 0 ; trial <= 1 ; trial++)
         {

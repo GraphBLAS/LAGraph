@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_Property_ASymmetricStructure: determine G->structure_is_symmetric
+// LAGraph_Property_SymmetricStructure: determine G->structure_is_symmetric
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -20,7 +20,7 @@
 
 #include "LG_internal.h"
 
-int LAGraph_Property_ASymmetricStructure
+int LAGraph_Property_SymmetricStructure
 (
     // input/output:
     LAGraph_Graph G,    // graph to determine the symmetry of structure of A

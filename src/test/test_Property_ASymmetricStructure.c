@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/test/test_Property_ASymmetric_Structure.c
+// LAGraph/src/test/test_Property_Symmetric_Structure.c
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -41,7 +41,7 @@ void teardown (void)
 }
 
 //------------------------------------------------------------------------------
-// test_Property_ASymmetric_Structure:
+// test_Property_Symmetric_Structure:
 //------------------------------------------------------------------------------
 
 typedef struct
@@ -111,7 +111,7 @@ const matrix_info files [ ] =
     0, 0, ""
 } ;
 
-void test_Property_ASymmetric_Structure (void)
+void test_Property_Symmetric_Structure (void)
 {
     setup ( ) ;
 
@@ -137,7 +137,7 @@ void test_Property_ASymmetric_Structure (void)
         TEST_CHECK (A == NULL) ;
 
         // compute the structure_is_symmetric property
-        OK (LAGraph_Property_ASymmetricStructure (G, msg)) ;
+        OK (LAGraph_Property_SymmetricStructure (G, msg)) ;
 
         // check the result
         if (sym_structure)
@@ -154,7 +154,7 @@ void test_Property_ASymmetric_Structure (void)
 
         // try again, but precompute G->AT
         OK (LAGraph_Property_AT (G, msg)) ;
-        OK (LAGraph_Property_ASymmetricStructure (G, msg)) ;
+        OK (LAGraph_Property_SymmetricStructure (G, msg)) ;
 
         // check the result
         if (sym_structure)
@@ -174,7 +174,7 @@ void test_Property_ASymmetric_Structure (void)
         {
             G->kind = LAGRAPH_ADJACENCY_UNDIRECTED ;
             // recompute the symmetry property
-            OK (LAGraph_Property_ASymmetricStructure (G, msg)) ;
+            OK (LAGraph_Property_SymmetricStructure (G, msg)) ;
             TEST_CHECK (G->structure_is_symmetric == LAGRAPH_TRUE) ;
         }
 
@@ -183,7 +183,7 @@ void test_Property_ASymmetric_Structure (void)
     }
 
     // check error handling
-    int status = LAGraph_Property_ASymmetricStructure (NULL, msg) ;
+    int status = LAGraph_Property_SymmetricStructure (NULL, msg) ;
     printf ("\nstatus: %d, msg: %s\n", status, msg) ;
     TEST_CHECK (status == GrB_NULL_POINTER) ;
 
@@ -191,11 +191,11 @@ void test_Property_ASymmetric_Structure (void)
 }
 
 //-----------------------------------------------------------------------------
-// test_Property_ASymmetric_Structure_brutal
+// test_Property_Symmetric_Structure_brutal
 //-----------------------------------------------------------------------------
 
 #if LG_SUITESPARSE
-void test_Property_ASymmetric_Structure_brutal (void)
+void test_Property_Symmetric_Structure_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
 
@@ -221,7 +221,7 @@ void test_Property_ASymmetric_Structure_brutal (void)
         TEST_CHECK (A == NULL) ;
 
         // compute the structure_is_symmetric property
-        LG_BRUTAL (LAGraph_Property_ASymmetricStructure (G, msg)) ;
+        LG_BRUTAL (LAGraph_Property_SymmetricStructure (G, msg)) ;
 
         // check the result
         if (sym_structure)
@@ -238,7 +238,7 @@ void test_Property_ASymmetric_Structure_brutal (void)
 
         // try again, but precompute G->AT
         LG_BRUTAL (LAGraph_Property_AT (G, msg)) ;
-        LG_BRUTAL (LAGraph_Property_ASymmetricStructure (G, msg)) ;
+        LG_BRUTAL (LAGraph_Property_SymmetricStructure (G, msg)) ;
 
         // check the result
         if (sym_structure)
@@ -258,7 +258,7 @@ void test_Property_ASymmetric_Structure_brutal (void)
         {
             G->kind = LAGRAPH_ADJACENCY_UNDIRECTED ;
             // recompute the symmetry property
-            LG_BRUTAL (LAGraph_Property_ASymmetricStructure (G, msg)) ;
+            LG_BRUTAL (LAGraph_Property_SymmetricStructure (G, msg)) ;
             TEST_CHECK (G->structure_is_symmetric == LAGRAPH_TRUE) ;
         }
 
@@ -275,10 +275,10 @@ void test_Property_ASymmetric_Structure_brutal (void)
 
 TEST_LIST =
 {
-    { "Property_ASymmetric_Structure", test_Property_ASymmetric_Structure },
+    { "Property_Symmetric_Structure", test_Property_Symmetric_Structure },
     #if LG_SUITESPARSE
-    { "Property_ASymmetric_Structure_brutal",
-        test_Property_ASymmetric_Structure_brutal },
+    { "Property_Symmetric_Structure_brutal",
+        test_Property_Symmetric_Structure_brutal },
     #endif
     { NULL, NULL }
 } ;
