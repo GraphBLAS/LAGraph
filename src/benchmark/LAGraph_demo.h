@@ -15,6 +15,11 @@
 #include <LAGraph.h>
 #include <LG_test.h>
 
+#if defined ( __linux__ )
+// for mallopt
+#include <malloc.h>
+#endif
+
 // set this to 1 to check the results using a slow method
 #define LG_CHECK_RESULT 0
 
