@@ -14,10 +14,6 @@
 // and its GxB extensions, or a push-only method otherwise.  The former is
 // much faster.
 
-// TODO: consider removing the pushpull option or reverse logic.
-// If we remove it, the option should be true here.  It could still be
-// included in the LG* methods.
-
 #include "LG_alg_internal.h"
 
 int LAGraph_BreadthFirstSearch
@@ -28,15 +24,14 @@ int LAGraph_BreadthFirstSearch
     // input:
     LAGraph_Graph  G,
     GrB_Index      src,
-    bool           pushpull,
     char          *msg
 )
 {
 
 #if LG_SUITESPARSE
-    return LG_BreadthFirstSearch_SSGrB  (level, parent, G, src, pushpull, msg);
+    return LG_BreadthFirstSearch_SSGrB   (level, parent, G, src, msg) ;
 #else
-    return LG_BreadthFirstSearch_vanilla(level, parent, G, src, msg);
+    return LG_BreadthFirstSearch_vanilla (level, parent, G, src, msg) ;
 #endif
 }
 

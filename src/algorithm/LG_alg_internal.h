@@ -23,7 +23,6 @@ int LG_BreadthFirstSearch_SSGrB
     // input:
     LAGraph_Graph  G,
     GrB_Index      src,
-    bool           pushpull,
     char          *msg
 ) ;
 

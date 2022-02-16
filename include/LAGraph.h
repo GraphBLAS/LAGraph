@@ -1619,6 +1619,8 @@ int LAGraph_Sort3
 // LAGraph_BreadthFirstSearch: breadth-first search
 //------------------------------------------------------------------------------
 
+// This is an Advanced algorithm (G->AT and G->rowdegree required).
+
 /*
  * Perform breadth-first traversal, computing parent vertex ID's
  * and/or level encountered.
@@ -1635,23 +1637,11 @@ int LAGraph_Sort3
  *                           The parent vector is not computed if NULL.
  * @param[in]     G          The graph, directed or undirected.
  * @param[in]     src        The index of the src vertex (0-based)
- * @param[in]     pushpull   if true, use push/pull; otherwise, use pushonly.
- *                           Push/pull is faster but requires G->AT,
- *                           G->rowdegree, and SuiteSparse:GraphBLAS.
- *                TODO: consider removing pushpull option or reverse logic
  * @param[out]    msg        Error message if a failure code is returned.
  *
  * @retval GrB_SUCCESS      successful
  * @retval LAGRAPH_INVALID_GRAPH Graph is invalid (LAGraph_CheckGraph failed)
  */
-
-// TODO: direction-optimization (pushpull) requires G->AT and G->rowdgree.
-// If not present, a Basic method could compute them and then use pushpull.  Or
-// it could just use push-only.  The current method, below, doesn't modify G so
-// it's a Basic method, but it requires the pushpull input parameter.  Perhaps
-// a Basic method should just use pushpull as true.  An Advanced method would
-// not need G->AT or G->rowdegree if pushpull is false; if pushpull is true, it
-// could return an error if G->AT or G->rowdegree are not present.
 
 LAGRAPH_PUBLIC
 int LAGraph_BreadthFirstSearch
@@ -1662,7 +1652,6 @@ int LAGraph_BreadthFirstSearch
     // input:
     LAGraph_Graph  G,
     GrB_Index      src,
-    bool           pushpull,
     char          *msg
 ) ;
 

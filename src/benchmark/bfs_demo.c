@@ -72,9 +72,9 @@ int main (int argc, char **argv)
     }
     printf ("\n") ;
 
-    double tpl [nthreads_max+1][2] ;
-    double tp [nthreads_max+1][2] ;
-    double tl [nthreads_max+1][2] ;
+    double tpl [nthreads_max+1] ;
+    double tp [nthreads_max+1] ;
+    double tl [nthreads_max+1] ;
 
     //--------------------------------------------------------------------------
     // read in the graph
@@ -111,8 +111,7 @@ int main (int argc, char **argv)
     double twarmup, tw [2] ;
     GrB_TRY (GrB_Matrix_extractElement (&src, SourceNodes, 0, 0)) ;
     LAGraph_TRY (LAGraph_Tic (tw, msg)) ;
-    LAGraph_TRY (LAGraph_BreadthFirstSearch (NULL, &parent,
-        G, src, false, msg)) ;
+    LAGraph_TRY (LAGraph_BreadthFirstSearch (NULL, &parent, G, src, msg)) ;
     GrB_free (&parent) ;
     LAGraph_TRY (LAGraph_Toc (&twarmup, tw, msg)) ;
     printf ("warmup: parent only, pushonly: %g sec\n", twarmup) ;
@@ -127,13 +126,9 @@ int main (int argc, char **argv)
         if (nthreads > nthreads_max) continue ;
         LAGraph_TRY (LAGraph_SetNumThreads (nthreads, msg)) ;
 
-        tp [nthreads][0] = 0 ;
-        tl [nthreads][0] = 0 ;
-        tpl [nthreads][0] = 0 ;
-
-        tp [nthreads][1] = 0 ;
-        tl [nthreads][1] = 0 ;
-        tpl [nthreads][1] = 0 ;
+        tp [nthreads] = 0 ;
+        tl [nthreads] = 0 ;
+        tpl [nthreads] = 0 ;
 
         printf ("\n------------------------------- threads: %2d\n", nthreads) ;
         for (int trial = 0 ; trial < ntrials ; trial++)
@@ -144,11 +139,7 @@ int main (int argc, char **argv)
             src-- ; // convert from 1-based to 0-based
             double tcheck, ttrial, tic [2] ;
 
-            // for (int pp = 0 ; pp <= 1 ; pp++)
-            for (int pp = 1 ; pp <= 1 ; pp++)
             {
-
-                bool pushpull = (pp == 1) ;
 
                 //--------------------------------------------------------------
                 // BFS to compute just parent
@@ -157,12 +148,11 @@ int main (int argc, char **argv)
                 GrB_free (&parent) ;
                 LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
                 LAGraph_TRY (LAGraph_BreadthFirstSearch (NULL, &parent,
-                    G, src, pushpull, msg)) ;
+                    G, src, msg)) ;
                 LAGraph_TRY (LAGraph_Toc (&ttrial, tic, msg)) ;
-                tp [nthreads][pp] += ttrial ;
-                printf ("parent only  %s trial: %2d threads: %2d "
+                tp [nthreads] += ttrial ;
+                printf ("parent only  pushpull trial: %2d threads: %2d "
                     "src: %g %10.4f sec\n",
-                    (pp == 0) ? "pushonly" : "pushpull",
                     trial, nthreads, (double) src, ttrial) ;
                 fflush (stdout) ;
 
@@ -191,15 +181,14 @@ int main (int argc, char **argv)
 
                 LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
                 LAGraph_TRY (LAGraph_BreadthFirstSearch (&level, NULL,
-                    G, src, pushpull, msg)) ;
+                    G, src, msg)) ;
                 LAGraph_TRY (LAGraph_Toc (&ttrial, tic, msg)) ;
-                tl [nthreads][pp] += ttrial ;
+                tl [nthreads] += ttrial ;
 
                 GrB_TRY (GrB_reduce (&maxlevel, NULL, GrB_MAX_MONOID_INT32,
                     level, NULL)) ;
-                printf ("level only   %s trial: %2d threads: %2d "
+                printf ("level only   pushpull trial: %2d threads: %2d "
                     "src: %g %10.4f sec maxlevel: %d\n",
-                    (pp == 0) ? "pushonly" : "pushpull",
                     trial, nthreads, (double) src, ttrial, maxlevel) ;
                 fflush (stdout) ;
 
@@ -227,15 +216,14 @@ int main (int argc, char **argv)
                 GrB_free (&level) ;
                 LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
                 LAGraph_TRY (LAGraph_BreadthFirstSearch (&level, &parent,
-                    G, src, pushpull, msg)) ;
+                    G, src, msg)) ;
                 LAGraph_TRY (LAGraph_Toc (&ttrial, tic, msg)) ;
-                tpl [nthreads][pp] += ttrial ;
+                tpl [nthreads] += ttrial ;
 
                 GrB_TRY (GrB_reduce (&maxlevel, NULL, GrB_MAX_MONOID_INT32,
                     level, NULL)) ;
-                printf ("parent+level %s trial: %2d threads: %2d "
+                printf ("parent+level pushpull trial: %2d threads: %2d "
                     "src: %g %10.4f sec\n",
-                    (pp == 0) ? "pushonly" : "pushpull",
                     trial, nthreads, (double) src, ttrial) ;
                 fflush (stdout) ;
 
@@ -259,44 +247,36 @@ int main (int argc, char **argv)
             }
         }
 
-        // for (int pp = 0 ; pp <= 1 ; pp++)
-        for (int pp = 1 ; pp <= 1 ; pp++)
         {
-            tp  [nthreads][pp] = tp  [nthreads][pp] / ntrials ;
-            tl  [nthreads][pp] = tl  [nthreads][pp] / ntrials ;
-            tpl [nthreads][pp] = tpl [nthreads][pp] / ntrials ;
+            tp  [nthreads] = tp  [nthreads] / ntrials ;
+            tl  [nthreads] = tl  [nthreads] / ntrials ;
+            tpl [nthreads] = tpl [nthreads] / ntrials ;
 
-            fprintf (stderr, "Avg: BFS %s parent only  threads %3d: "
+            fprintf (stderr, "Avg: BFS pushpull parent only  threads %3d: "
                 "%10.3f sec: %s\n",
-                 (pp == 0) ? "pushonly" : "pushpull",
-                 nthreads, tp [nthreads][pp], matrix_name) ;
+                 nthreads, tp [nthreads], matrix_name) ;
 #if 0
-            fprintf (stderr, "Avg: BFS %s level only   threads %3d: "
+            fprintf (stderr, "Avg: BFS pushpull level only   threads %3d: "
                 "%10.3f sec: %s\n",
-                 (pp == 0) ? "pushonly" : "pushpull",
-                 nthreads, tl [nthreads][pp], matrix_name) ;
+                 nthreads, tl [nthreads], matrix_name) ;
 
-            fprintf (stderr, "Avg: BFS %s level+parent threads %3d: "
+            fprintf (stderr, "Avg: BFS pushpull level+parent threads %3d: "
                 "%10.3f sec: %s\n",
-                 (pp == 0) ? "pushonly" : "pushpull",
-                 nthreads, tpl [nthreads][pp], matrix_name) ;
+                 nthreads, tpl [nthreads], matrix_name) ;
 #endif
 
-            printf ("Avg: BFS %s parent only  threads %3d: "
+            printf ("Avg: BFS pushpull parent only  threads %3d: "
                 "%10.3f sec: %s\n",
-                 (pp == 0) ? "pushonly" : "pushpull",
-                 nthreads, tp [nthreads][pp], matrix_name) ;
+                 nthreads, tp [nthreads], matrix_name) ;
 
 #if 0
-            printf ("Avg: BFS %s level only   threads %3d: "
+            printf ("Avg: BFS pushpull level only   threads %3d: "
                 "%10.3f sec: %s\n",
-                 (pp == 0) ? "pushonly" : "pushpull",
-                 nthreads, tl [nthreads][pp], matrix_name) ;
+                 nthreads, tl [nthreads], matrix_name) ;
 
-            printf ("Avg: BFS %s level+parent threads %3d: "
+            printf ("Avg: BFS pushpull level+parent threads %3d: "
                 "%10.3f sec: %s\n",
-                 (pp == 0) ? "pushonly" : "pushpull",
-                 nthreads, tpl [nthreads][pp], matrix_name) ;
+                 nthreads, tpl [nthreads], matrix_name) ;
 #endif
         }
     }

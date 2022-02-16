@@ -218,7 +218,7 @@ void test_BreadthFirstSearch_invalid_graph(void)
     int retval;
     LAGraph_Graph graph = NULL;
 
-    retval = LAGraph_BreadthFirstSearch(NULL, NULL, graph, 0, false, msg);
+    retval = LAGraph_BreadthFirstSearch(NULL, NULL, graph, 0, msg);
     TEST_CHECK(retval == GrB_NULL_POINTER);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
@@ -239,7 +239,7 @@ void test_BreadthFirstSearch_invalid_src(void)
 
     GrB_Vector parent    = NULL;
 
-    retval = LAGraph_BreadthFirstSearch(NULL, NULL, G, n, false, msg);
+    retval = LAGraph_BreadthFirstSearch(NULL, NULL, G, n, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
@@ -247,7 +247,7 @@ void test_BreadthFirstSearch_invalid_src(void)
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LAGraph_BreadthFirstSearch(NULL, &parent, G, n, false, msg);
+    retval = LAGraph_BreadthFirstSearch(NULL, &parent, G, n, msg);
     TEST_CHECK(retval == GrB_INVALID_INDEX);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
@@ -264,7 +264,7 @@ void test_BreadthFirstSearch_neither(void)
     setup();
     int retval;
 
-    retval = LAGraph_BreadthFirstSearch(NULL, NULL, G, 0, false, msg);
+    retval = LAGraph_BreadthFirstSearch(NULL, NULL, G, 0, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
@@ -272,7 +272,7 @@ void test_BreadthFirstSearch_neither(void)
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LAGraph_BreadthFirstSearch(NULL, NULL, G, 0, true, msg);
+    retval = LAGraph_BreadthFirstSearch(NULL, NULL, G, 0, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
@@ -292,7 +292,9 @@ void test_BreadthFirstSearch_parent(void)
     GrB_Vector parent    = NULL;
     GrB_Vector parent_do = NULL;
 
-    retval = LAGraph_BreadthFirstSearch(NULL, &parent, G, 30, false, msg);
+    OK (LAGraph_Property_RowDegree (G, msg)) ;
+
+    retval = LAGraph_BreadthFirstSearch(NULL, &parent, G, 30, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
     TEST_CHECK(check_karate_parents30(parent));
@@ -312,7 +314,7 @@ void test_BreadthFirstSearch_parent(void)
     TEST_CHECK (retval == 0) ;
     TEST_CHECK(0 == GrB_free(&parent));
 
-    retval = LAGraph_BreadthFirstSearch(NULL, &parent_do, G, 30, true, msg);
+    retval = LAGraph_BreadthFirstSearch(NULL, &parent_do, G, 30, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
     TEST_CHECK(check_karate_parents30(parent_do));
@@ -330,23 +332,19 @@ void test_BreadthFirstSearch_parent(void)
 
     GrB_Index n = 0 ;
     TEST_CHECK (0 == GrB_Matrix_nrows (&n, G->A)) ;
-    for (int pushpull = 0 ; pushpull <= 1 ; pushpull++)
+    for (GrB_Index src = 0 ; src < n ; src++)
     {
-        for (GrB_Index src = 0 ; src < n ; src++)
-        {
-            retval = LAGraph_BreadthFirstSearch(NULL, &parent,
-                                                G, src, (bool) pushpull, msg);
-            TEST_CHECK(retval == 0);
-            retval = LG_check_bfs (NULL, parent, G, src, msg) ;
-            TEST_CHECK (retval == 0) ;
-            TEST_CHECK(0 == GrB_free(&parent));
+        retval = LAGraph_BreadthFirstSearch(NULL, &parent, G, src, msg);
+        TEST_CHECK(retval == 0);
+        retval = LG_check_bfs (NULL, parent, G, src, msg) ;
+        TEST_CHECK (retval == 0) ;
+        TEST_CHECK(0 == GrB_free(&parent));
 
-            retval = LG_BreadthFirstSearch_vanilla(NULL, &parent, G, src, msg);
-            TEST_CHECK(retval == 0);
-            retval = LG_check_bfs (NULL, parent, G, src, msg) ;
-            TEST_CHECK (retval == 0) ;
-            TEST_CHECK(0 == GrB_free(&parent));
-        }
+        retval = LG_BreadthFirstSearch_vanilla(NULL, &parent, G, src, msg);
+        TEST_CHECK(retval == 0);
+        retval = LG_check_bfs (NULL, parent, G, src, msg) ;
+        TEST_CHECK (retval == 0) ;
+        TEST_CHECK(0 == GrB_free(&parent));
     }
 
     teardown();
@@ -360,8 +358,9 @@ void test_BreadthFirstSearch_level(void)
 
     GrB_Vector level    = NULL;
     GrB_Vector level_do = NULL;
+    OK (LAGraph_Property_RowDegree (G, msg)) ;
 
-    retval = LAGraph_BreadthFirstSearch(&level, NULL, G, 30, false, msg);
+    retval = LAGraph_BreadthFirstSearch(&level, NULL, G, 30, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
     TEST_CHECK(check_karate_levels30(level));
@@ -377,7 +376,7 @@ void test_BreadthFirstSearch_level(void)
     TEST_CHECK (retval == 0) ;
     TEST_CHECK(0 == GrB_free(&level));
 
-    retval = LAGraph_BreadthFirstSearch(&level_do, NULL, G, 30, true, msg);
+    retval = LAGraph_BreadthFirstSearch(&level_do, NULL, G, 30, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
     TEST_CHECK(check_karate_levels30(level_do));
@@ -387,25 +386,21 @@ void test_BreadthFirstSearch_level(void)
 
     GrB_Index n = 0 ;
     TEST_CHECK (0 == GrB_Matrix_nrows (&n, G->A)) ;
-    for (int pushpull = 0 ; pushpull <= 1 ; pushpull++)
+    for (GrB_Index src = 0 ; src < n ; src++)
     {
-        for (GrB_Index src = 0 ; src < n ; src++)
-        {
 
-            retval = LAGraph_BreadthFirstSearch(&level, NULL,
-                                                G, src, (bool) pushpull, msg);
-            TEST_CHECK(retval == 0);
-            retval = LG_check_bfs (level, NULL, G, src, msg) ;
-            TEST_CHECK (retval == 0) ;
-            TEST_CHECK(0 == GrB_free(&level));
+        retval = LAGraph_BreadthFirstSearch(&level, NULL, G, src, msg);
+        TEST_CHECK(retval == 0);
+        retval = LG_check_bfs (level, NULL, G, src, msg) ;
+        TEST_CHECK (retval == 0) ;
+        TEST_CHECK(0 == GrB_free(&level));
 
-            retval = LG_BreadthFirstSearch_vanilla(&level, NULL, G, src, msg);
-            TEST_CHECK(retval == 0);
-            retval = LG_check_bfs (level, NULL, G, src, msg) ;
-            TEST_CHECK (retval == 0) ;
-            TEST_CHECK(0 == GrB_free(&level));
+        retval = LG_BreadthFirstSearch_vanilla(&level, NULL, G, src, msg);
+        TEST_CHECK(retval == 0);
+        retval = LG_check_bfs (level, NULL, G, src, msg) ;
+        TEST_CHECK (retval == 0) ;
+        TEST_CHECK(0 == GrB_free(&level));
 
-        }
     }
 
     teardown();
@@ -417,10 +412,10 @@ void test_BreadthFirstSearch_both(void)
     setup();
     int retval;
 
+    OK (LAGraph_Property_RowDegree (G, msg)) ;
     GrB_Vector parent    = NULL;
     GrB_Vector level    = NULL;
-    retval = LAGraph_BreadthFirstSearch(&level, &parent,
-                                        G, 30, false, msg);
+    retval = LAGraph_BreadthFirstSearch(&level, &parent, G, 30, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
     TEST_CHECK(check_karate_levels30(level));
@@ -434,8 +429,7 @@ void test_BreadthFirstSearch_both(void)
 
     GrB_Vector parent_do = NULL;
     GrB_Vector level_do = NULL;
-    retval = LAGraph_BreadthFirstSearch(&level_do, &parent_do,
-                                        G, 30, true, msg);
+    retval = LAGraph_BreadthFirstSearch(&level_do, &parent_do, G, 30, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
     TEST_CHECK(check_karate_levels30(level_do));
@@ -447,18 +441,15 @@ void test_BreadthFirstSearch_both(void)
 
     GrB_Index n = 0 ;
     TEST_CHECK (0 == GrB_Matrix_nrows (&n, G->A)) ;
-    for (int pushpull = 0 ; pushpull <= 1 ; pushpull++)
+
+    for (GrB_Index src = 0 ; src < n ; src++)
     {
-        for (GrB_Index src = 0 ; src < n ; src++)
-        {
-            retval = LAGraph_BreadthFirstSearch(&level, &parent,
-                                                G, src, (bool) pushpull, msg);
-            TEST_CHECK(retval == 0);
-            retval = LG_check_bfs (level, parent, G, src, msg) ;
-            TEST_CHECK (retval == 0) ;
-            TEST_CHECK(0 == GrB_free(&parent));
-            TEST_CHECK(0 == GrB_free(&level));
-        }
+        retval = LAGraph_BreadthFirstSearch(&level, &parent, G, src, msg);
+        TEST_CHECK(retval == 0);
+        retval = LG_check_bfs (level, parent, G, src, msg) ;
+        TEST_CHECK (retval == 0) ;
+        TEST_CHECK(0 == GrB_free(&parent));
+        TEST_CHECK(0 == GrB_free(&level));
     }
 
     teardown();
@@ -509,62 +500,54 @@ void test_BreadthFirstSearch_many(void)
         {
             GrB_Vector parent = NULL ;
             GrB_Vector level = NULL ;
-            for (int pushpull = 0 ; pushpull <= 1 ; pushpull++)
+
+            int64_t maxlevel ;
+            GrB_Index nvisited ;
+
+            OK (LAGraph_BreadthFirstSearch (&level, &parent, G, src, msg)) ;
+            OK (LG_check_bfs (level, parent, G, src, msg)) ;
+            OK (GrB_reduce (&maxlevel, NULL, GrB_MAX_MONOID_INT64,
+                level, NULL)) ;
+            OK (GrB_Vector_nvals (&nvisited, level)) ;
             {
-
-                int64_t maxlevel ;
-                GrB_Index nvisited ;
-
-                OK (LAGraph_BreadthFirstSearch (&level, &parent,
-                    G, src, (bool) pushpull, msg)) ;
-                OK (LG_check_bfs (level, parent, G, src, msg)) ;
-                OK (GrB_reduce (&maxlevel, NULL, GrB_MAX_MONOID_INT64,
-                    level, NULL)) ;
-                OK (GrB_Vector_nvals (&nvisited, level)) ;
-                if (pushpull == 0)
-                {
-                    printf ("src %g n: %g max level: %g nvisited: %g\n",
-                        (double) src, (double) n, (double) maxlevel,
-                        (double) nvisited) ;
-                }
-                OK (GrB_free(&parent));
-                OK (GrB_free(&level));
-
-                OK (LG_BreadthFirstSearch_vanilla (&level, &parent,
-                    G, src, msg)) ;
-                OK (LG_check_bfs (level, parent, G, src, msg)) ;
-                OK (GrB_reduce (&maxlevel, NULL, GrB_MAX_MONOID_INT64,
-                    level, NULL)) ;
-                OK (GrB_Vector_nvals (&nvisited, level)) ;
-                if (pushpull == 0)
-                {
-                    printf ("src %g n: %g max level: %g nvisited: %g\n",
-                        (double) src, (double) n, (double) maxlevel,
-                        (double) nvisited) ;
-                }
-                OK (GrB_free(&parent));
-                OK (GrB_free(&level));
-
-                OK (LAGraph_BreadthFirstSearch (NULL, &parent,
-                    G, src, (bool) pushpull, msg)) ;
-                OK (LG_check_bfs (NULL, parent, G, src, msg)) ;
-                OK (GrB_free(&parent));
-
-                OK (LG_BreadthFirstSearch_vanilla (NULL, &parent,
-                    G, src, msg)) ;
-                OK (LG_check_bfs (NULL, parent, G, src, msg)) ;
-                OK (GrB_free(&parent));
-
-                OK (LAGraph_BreadthFirstSearch (&level, NULL,
-                    G, src, (bool) pushpull, msg)) ;
-                OK (LG_check_bfs (level, NULL, G, src, msg)) ;
-                OK (GrB_free(&level));
-
-                OK (LG_BreadthFirstSearch_vanilla (&level, NULL, G, src, msg)) ;
-                OK (LG_check_bfs (level, NULL, G, src, msg)) ;
-                OK (GrB_free(&level));
-
+                printf ("src %g n: %g max level: %g nvisited: %g\n",
+                    (double) src, (double) n, (double) maxlevel,
+                    (double) nvisited) ;
             }
+            OK (GrB_free(&parent));
+            OK (GrB_free(&level));
+
+            OK (LG_BreadthFirstSearch_vanilla (&level, &parent,
+                G, src, msg)) ;
+            OK (LG_check_bfs (level, parent, G, src, msg)) ;
+            OK (GrB_reduce (&maxlevel, NULL, GrB_MAX_MONOID_INT64,
+                level, NULL)) ;
+            OK (GrB_Vector_nvals (&nvisited, level)) ;
+            {
+                printf ("src %g n: %g max level: %g nvisited: %g\n",
+                    (double) src, (double) n, (double) maxlevel,
+                    (double) nvisited) ;
+            }
+            OK (GrB_free(&parent));
+            OK (GrB_free(&level));
+
+            OK (LAGraph_BreadthFirstSearch (NULL, &parent, G, src, msg)) ;
+            OK (LG_check_bfs (NULL, parent, G, src, msg)) ;
+            OK (GrB_free(&parent));
+
+            OK (LG_BreadthFirstSearch_vanilla (NULL, &parent,
+                G, src, msg)) ;
+            OK (LG_check_bfs (NULL, parent, G, src, msg)) ;
+            OK (GrB_free(&parent));
+
+            OK (LAGraph_BreadthFirstSearch (&level, NULL, G, src, msg)) ;
+            OK (LG_check_bfs (level, NULL, G, src, msg)) ;
+            OK (GrB_free(&level));
+
+            OK (LG_BreadthFirstSearch_vanilla (&level, NULL, G, src, msg)) ;
+            OK (LG_check_bfs (level, NULL, G, src, msg)) ;
+            OK (GrB_free(&level));
+
         }
         OK (LAGraph_Delete (&G, msg)) ;
     }
@@ -620,36 +603,30 @@ void test_bfs_brutal (void)
         {
             GrB_Vector parent = NULL ;
             GrB_Vector level = NULL ;
-            for (int pushpull = 0 ; pushpull <= 1 ; pushpull++)
-            {
 
-                // parent and level with SS:GrB
-                LG_BRUTAL_BURBLE (LAGraph_BreadthFirstSearch (&level, &parent,
-                        G, src, (bool) pushpull, msg)) ;
-                OK (LG_check_bfs (level, parent, G, src, msg)) ;
-                OK (GrB_free (&parent)) ;
-                OK (GrB_free (&level)) ;
+            // parent and level with SS:GrB
+            LG_BRUTAL_BURBLE (LAGraph_BreadthFirstSearch (&level, &parent, G, src, msg)) ;
+            OK (LG_check_bfs (level, parent, G, src, msg)) ;
+            OK (GrB_free (&parent)) ;
+            OK (GrB_free (&level)) ;
 
-                // level only with SS:GrB
-                LG_BRUTAL (LAGraph_BreadthFirstSearch (&level, NULL,
-                        G, src, (bool) pushpull, msg)) ;
-                OK (LG_check_bfs (level, NULL, G, src, msg)) ;
-                OK (GrB_free (&level)) ;
+            // level only with SS:GrB
+            LG_BRUTAL (LAGraph_BreadthFirstSearch (&level, NULL, G, src, msg)) ;
+            OK (LG_check_bfs (level, NULL, G, src, msg)) ;
+            OK (GrB_free (&level)) ;
 
-                // parent and level with vanilla
-                LG_BRUTAL (LG_BreadthFirstSearch_vanilla (&level,
-                    &parent, G, src, msg)) ;
-                OK (LG_check_bfs (level, parent, G, src, msg)) ;
-                OK (GrB_free (&parent)) ;
-                OK (GrB_free (&level)) ;
+            // parent and level with vanilla
+            LG_BRUTAL (LG_BreadthFirstSearch_vanilla (&level,
+                &parent, G, src, msg)) ;
+            OK (LG_check_bfs (level, parent, G, src, msg)) ;
+            OK (GrB_free (&parent)) ;
+            OK (GrB_free (&level)) ;
 
-                // level-only with vanilla
-                LG_BRUTAL (LG_BreadthFirstSearch_vanilla (&level, NULL,
-                        G, src, msg)) ;
-                OK (LG_check_bfs (level, NULL, G, src, msg)) ;
-                OK (GrB_free (&level)) ;
-
-            }
+            // level-only with vanilla
+            LG_BRUTAL (LG_BreadthFirstSearch_vanilla (&level, NULL,
+                    G, src, msg)) ;
+            OK (LG_check_bfs (level, NULL, G, src, msg)) ;
+            OK (GrB_free (&level)) ;
         }
 
         OK (LAGraph_Delete (&G, msg)) ;

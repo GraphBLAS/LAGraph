@@ -14,8 +14,6 @@ As of Feb 14, 2022:
 
     * TODOs: in algorithms
 
-        * LAGraph_BreadthFirstSearch: pushpull option
-
         * LAGraph_VertexCentrality: wrapper for 2 methods (BC, PageRank),
             and future methods.
             How do we ask for an exact BC computation?  Do it in batches

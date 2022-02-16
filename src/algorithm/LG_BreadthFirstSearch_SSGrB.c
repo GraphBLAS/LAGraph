@@ -44,7 +44,6 @@ int LG_BreadthFirstSearch_SSGrB
     GrB_Vector    *parent,
     LAGraph_Graph  G,
     GrB_Index      src,
-    bool           pushpull,
     char          *msg
 )
 {
@@ -103,10 +102,15 @@ int LG_BreadthFirstSearch_SSGrB
     {
         // AT = A' is different from A
         AT = G->AT ;
+        LG_ASSERT_MSG (AT != NULL,
+            LAGRAPH_PROPERTY_MISSING, "G->AT is required") ;
     }
 
-    // direction-optimization requires AT and Degree
-    bool push_pull = pushpull && (AT != NULL) && (Degree != NULL) ;
+    // direction-optimization requires G->AT and G->rowdegree
+    LG_ASSERT_MSG (Degree != NULL,
+        LAGRAPH_PROPERTY_MISSING, "G->rowdegree is required") ;
+
+    bool push_pull = true ;
 
     // determine the semiring type
     GrB_Type int_type = (n > INT32_MAX) ? GrB_INT64 : GrB_INT32 ;
@@ -148,11 +152,8 @@ int LG_BreadthFirstSearch_SSGrB
         GrB_TRY (GrB_Vector_setElement (v, 0, src)) ;
     }
 
-    if (push_pull)
-    {
-        // workspace for computing work remaining
-        GrB_TRY (GrB_Vector_new (&w, GrB_INT64, n)) ;
-    }
+    // workspace for computing work remaining
+    GrB_TRY (GrB_Vector_new (&w, GrB_INT64, n)) ;
 
     GrB_Index nq = 1 ;          // number of nodes in the current level
     double alpha = 8.0 ;

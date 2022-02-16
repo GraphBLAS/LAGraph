@@ -134,7 +134,7 @@ files (SuiteSparse-only), and to run the GAP benchmarks, do the following:
     you will see 6 runs per matrix on stderr.  The default "black box" GAP
     benchmark results are the "parent only pushpull" results; the other results
     are for different problems (such as level-only, or parent+level), or with a
-    different algorithm that is typically non-optimal (pushonly).  However, the
+    different algorithm that is typically non-optimal (pushonly).  However, a
     pushonly BFS for the GAP-road graph is typically faster than the pushpull
     method, since the heuristic for push vs pull always selects the pull phase.
 

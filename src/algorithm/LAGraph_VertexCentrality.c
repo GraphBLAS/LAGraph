@@ -5,6 +5,8 @@
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 
+// Contributed by Tim Davis, Texas A&M University
+
 //------------------------------------------------------------------------------
 
 // LAGraph_VertexCentrality is a Basic method for computing many types of
@@ -24,15 +26,13 @@
 // and thus the methods can be used to compute approximate metrics instead,
 // which is much faster.
 
-// TODO: only methods 1 and 2 are currently implemented.  Method (2) currently
-// uses the GAP algorithm, which ignores dangling nodes (we need a normal
-// pagerank).  No method considers edge weights.
+// TODO: only methods 1 and 2 are currently implemented.
+// Neither method considers edge weights, but edge-weights could be handled.
 
 // TODO: do we ensure that sum(centrality) == 1 for all methods?
 
 #include "LG_alg_internal.h"
 
-// TODO the following is a draft:
 int LAGraph_VertexCentrality    // TODO: write this
 (
     // output:
@@ -48,3 +48,4 @@ int LAGraph_VertexCentrality    // TODO: write this
     LG_CLEAR_MSG ;
     return (GrB_NOT_IMPLEMENTED) ;        // TODO
 }
+
