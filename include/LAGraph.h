@@ -566,7 +566,7 @@ struct LAGraph_Graph_struct
             // unknown.  For the adjacency matrix of a directed or undirected
             // graph, this is the number of self-edges in the graph.
 
-    // TODO: discuss new cached properties: emin, emax, nonzero.
+    // TODO: discuss new cached properties: emin, emax
     // emin is required for SSSP, which needs to know if emin > 0 or not.  emax
     // might be useful for computing Delta for Delta-stepping.  Knowing these
     // bounds might also be useful for future algorithms that use edge weights.

@@ -153,7 +153,7 @@ typedef unsigned char LG_void ;
     {                                                                   \
         LG_ERROR_MSG ("LAGraph assertion \"" expression_message         \
             "\" failed:\nfile \"%s\", line %d\n", __FILE__, __LINE__) ; \
-        LG_FREE_ALL ;                                              \
+        LG_FREE_ALL ;                                                   \
         return (error_status) ;                                         \
     }                                                                   \
 }
@@ -179,7 +179,7 @@ typedef unsigned char LG_void ;
     {                                                                   \
         LG_ERROR_MSG ("LAGraph assertion \"" LG_XSTR(expression)        \
             "\" failed:\nfile \"%s\", line %d\n", __FILE__, __LINE__) ; \
-        LG_FREE_ALL ;                                              \
+        LG_FREE_ALL ;                                                   \
         return (error_status) ;                                         \
     }                                                                   \
 }
@@ -196,7 +196,7 @@ typedef unsigned char LG_void ;
     int LAGraph_status = LAGraph_method ;       \
     if (LAGraph_status < 0)                     \
     {                                           \
-        LG_FREE_ALL ;                      \
+        LG_FREE_ALL ;                           \
         return (LAGraph_status) ;               \
     }                                           \
 }

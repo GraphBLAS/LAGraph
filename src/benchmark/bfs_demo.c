@@ -114,7 +114,7 @@ int main (int argc, char **argv)
     LAGraph_TRY (LAGraph_BreadthFirstSearch (NULL, &parent, G, src, msg)) ;
     GrB_free (&parent) ;
     LAGraph_TRY (LAGraph_Toc (&twarmup, tw, msg)) ;
-    printf ("warmup: parent only, pushonly: %g sec\n", twarmup) ;
+    printf ("warmup: parent only, pushpull: %g sec\n", twarmup) ;
 
     //--------------------------------------------------------------------------
     // run the BFS on all source nodes
