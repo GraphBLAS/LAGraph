@@ -566,11 +566,6 @@ struct LAGraph_Graph_struct
             // unknown.  For the adjacency matrix of a directed or undirected
             // graph, this is the number of self-edges in the graph.
 
-    // TODO: discuss new cached properties: emin, emax
-    // emin is required for SSSP, which needs to know if emin > 0 or not.  emax
-    // might be useful for computing Delta for Delta-stepping.  Knowing these
-    // bounds might also be useful for future algorithms that use edge weights.
-
     GrB_Scalar emin ;   // minimum edge weight: exact, lower bound, or estimate
     LAGraph_BoundKind emin_kind ;
             // EXACT: emin is exactly equal to the smallest entry, min(G->A)
@@ -868,12 +863,13 @@ int LAGraph_Property_NDiag
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Property_Emin: determine G->emin
+// LAGraph_Property_EMin: determine G->emin
 //------------------------------------------------------------------------------
 
-// LAGraph_Property_Emin computes G->emin = min (G->A).
+// LAGraph_Property_EMin computes G->emin = min (G->A).
 
-int LAGraph_Property_Emin
+LAGRAPH_PUBLIC
+int LAGraph_Property_EMin
 (
     // input/output:
     LAGraph_Graph G,    // graph to determine G->emin
@@ -881,12 +877,13 @@ int LAGraph_Property_Emin
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Property_Emax: determine G->emax
+// LAGraph_Property_EMax: determine G->emax
 //------------------------------------------------------------------------------
 
-// LAGraph_Property_Emax computes G->emax = max (G->A).
+// LAGraph_Property_EMax computes G->emax = max (G->A).
 
-int LAGraph_Property_Emax
+LAGRAPH_PUBLIC
+int LAGraph_Property_EMax
 (
     // input/output:
     LAGraph_Graph G,    // graph to determine G->emax
@@ -1191,6 +1188,7 @@ int LAGraph_Matrix_Structure
 // u, then w(i) is set to true.  The sparsity structure of u and w are
 // identical.
 
+LAGRAPH_PUBLIC
 int LAGraph_Vector_Structure
 (
     // output:
@@ -1343,7 +1341,7 @@ int LAGraph_SortByDegree
     // output:
     int64_t **P_handle,     // P is returned as a permutation vector of size n
     // input:
-    LAGraph_Graph G,        // graph of n nodes
+    const LAGraph_Graph G,  // graph of n nodes
     bool byrow,             // if true, sort G->rowdegree, else G->coldegree
     bool ascending,         // sort in ascending or descending order
     char *msg
@@ -1364,7 +1362,7 @@ int LAGraph_SampleDegree
     double *sample_mean,    // sampled mean degree
     double *sample_median,  // sampled median degree
     // input:
-    LAGraph_Graph G,        // graph of n nodes
+    const LAGraph_Graph G,  // graph of n nodes
     bool byrow,             // if true, sample G->rowdegree, else G->coldegree
     int64_t nsamples,       // number of samples
     uint64_t seed,          // random number seed
@@ -1394,7 +1392,7 @@ LAGRAPH_PUBLIC
 int LAGraph_DisplayGraph
 (
     // input:
-    LAGraph_Graph G,        // graph to display
+    const LAGraph_Graph G,  // graph to display
     LAGraph_Print_Level pr, // print level (0 to 5)
     FILE *f,                // file to write to, must already be open
     char *msg
@@ -1414,8 +1412,8 @@ int LAGraph_Matrix_IsEqual
     // output:
     bool *result,       // true if A == B, false if A != B or error
     // input:
-    GrB_Matrix A,
-    GrB_Matrix B,
+    const GrB_Matrix A,
+    const GrB_Matrix B,
     char *msg
 ) ;
 
@@ -1432,9 +1430,9 @@ int LAGraph_Matrix_IsEqual_op
     // output:
     bool *result,           // true if A == B, false if A != B or error
     // input:
-    GrB_Matrix A,
-    GrB_Matrix B,
-    GrB_BinaryOp op,        // comparator to use
+    const GrB_Matrix A,
+    const GrB_Matrix B,
+    const GrB_BinaryOp op,        // comparator to use
     char *msg
 ) ;
 
@@ -1465,8 +1463,8 @@ int LAGraph_Vector_IsEqual
     // output:
     bool *result,           // true if A == B, false if A != B or error
     // input:
-    GrB_Vector A,
-    GrB_Vector B,
+    const GrB_Vector A,
+    const GrB_Vector B,
     char *msg
 ) ;
 
@@ -1495,9 +1493,9 @@ int LAGraph_Vector_IsEqual_op
     // output:
     bool *result,           // true if A == B, false if A != B or error
     // input:
-    GrB_Vector A,
-    GrB_Vector B,
-    GrB_BinaryOp op,        // comparator to use
+    const GrB_Vector A,
+    const GrB_Vector B,
+    const GrB_BinaryOp op,        // comparator to use
     char *msg
 ) ;
 
@@ -1513,7 +1511,7 @@ LAGRAPH_PUBLIC
 int LAGraph_Matrix_Print
 (
     // input:
-    GrB_Matrix A,       // matrix to pretty-print to the file
+    const GrB_Matrix A,     // matrix to pretty-print to the file
     LAGraph_Print_Level pr, // print level (0 to 5)
     FILE *f,            // file to write it to, must be already open; use
                         // stdout or stderr to print to those locations.
@@ -1533,7 +1531,7 @@ LAGRAPH_PUBLIC
 int LAGraph_Vector_Print
 (
     // input:
-    GrB_Vector v,       // vector to pretty-print to the file
+    const GrB_Vector v,     // vector to pretty-print to the file
     LAGraph_Print_Level pr, // print level (0 to 5)
     FILE *f,            // file to write it to, must be already open; use
                         // stdout or stderr to print to those locations.
@@ -1612,8 +1610,7 @@ int LAGraph_Sort3
 // graph G is both an input and an output of these methods, since they may be
 // modified.
 
-// TODO: hard to know if a method is Basic or Advanced just by its name.
-// Should we adopt a clearer naming method?
+// TODO: need naming convention to know if a method is Basic or Advanced
 
 //------------------------------------------------------------------------------
 // LAGraph_BreadthFirstSearch: breadth-first search
@@ -1650,7 +1647,7 @@ int LAGraph_BreadthFirstSearch
     GrB_Vector    *level,
     GrB_Vector    *parent,
     // input:
-    LAGraph_Graph  G,
+    const LAGraph_Graph G,
     GrB_Index      src,
     char          *msg
 ) ;
@@ -1677,7 +1674,7 @@ typedef enum
 LAGraph_Centrality_Kind ;
 
 LAGRAPH_PUBLIC
-int LAGraph_VertexCentrality    // TODO: write this
+int LAGraph_VertexCentrality
 (
     // output:
     GrB_Vector *centrality,     // centrality(i): centrality metric of node i
@@ -1685,7 +1682,7 @@ int LAGraph_VertexCentrality    // TODO: write this
     LAGraph_Graph G,            // input graph
     // input:
     LAGraph_Centrality_Kind kind,    // kind of centrality to compute
-//  int accuracy,               // TODO?: 0:quick, 1:better, ... max:exact
+//  int accuracy,               // 0:quick, 1:better, ... max:exact?
     char *msg
 ) ;
 
@@ -1719,8 +1716,6 @@ int LAGraph_TriangleCount
 // This is an Advanced method, since G is input (not input/output), and
 // G->structure_is_symmetric is required for a directed graph.
 
-// TODO: add a Basic method for CC that computes G->structure_is_symmetric?
-
 LAGRAPH_PUBLIC
 int LAGraph_ConnectedComponents
 (
@@ -1728,7 +1723,7 @@ int LAGraph_ConnectedComponents
     GrB_Vector *component,  // component(i)=s if node i is in the component
                             // whose representative node is s
     // input:
-    LAGraph_Graph G,        // input graph
+    const LAGraph_Graph G,  // input graph
     char *msg
 ) ;
 
@@ -1740,11 +1735,7 @@ int LAGraph_ConnectedComponents
 // GrB_UINT32, GrB_UINT64, GrB_FP32, or GrB_FP64.  If G->A has any other type,
 // GrB_NOT_IMPLEMENTED is returned.
 
-// TODO: a Basic SSSP method that picks delta automatically?
-// The Basic method would compute the G->emin cached property and perhaps
-// G->emax, and then it would also try to set Delta.  What should Delta be for
-// an arbitrary graph, of type int32, int64, uint32, uint64, float, or double?
-// Perhaps equal some multiple (30?) of the max edge weight?  Unsure.
+// FUTURE: add a method to compute an appropriate (estimated) Delta
 
 LAGRAPH_PUBLIC
 int LAGraph_SingleSourceShortestPath
@@ -1753,7 +1744,7 @@ int LAGraph_SingleSourceShortestPath
     GrB_Vector *path_length,    // path_length (i) is the length of the shortest
                                 // path from the source vertex to vertex i
     // input:
-    LAGraph_Graph G,
+    const LAGraph_Graph G,
     GrB_Index source,           // source vertex
     GrB_Scalar Delta,           // delta value for delta stepping
     char *msg
@@ -1779,7 +1770,7 @@ int LAGraph_VertexCentrality_Betweenness
     // output:
     GrB_Vector *centrality,     // centrality(i): betweeness centrality of i
     // input:
-    LAGraph_Graph G,            // input graph
+    const LAGraph_Graph G,      // input graph
     const GrB_Index *sources,   // source vertices to compute shortest paths
     int32_t ns,                 // number of source vertices
     char *msg
@@ -1798,7 +1789,7 @@ int LAGraph_VertexCentrality_PageRank
     // outputs:
     GrB_Vector *centrality, // centrality(i): pagerank of node i
     // inputs:
-    LAGraph_Graph G,        // input graph
+    const LAGraph_Graph G,  // input graph
     float damping,          // damping factor (typically 0.85)
     float tol,              // stopping tolerance (typically 1e-4) ;
     int itermax,            // maximum number of iterations (typically 100)
@@ -1820,7 +1811,7 @@ int LAGraph_VertexCentrality_PageRankGAP
     // outputs:
     GrB_Vector *centrality, // centrality(i): GAP-style pagerank of node i
     // inputs:
-    LAGraph_Graph G,        // input graph
+    const LAGraph_Graph G,  // input graph
     float damping,          // damping factor (typically 0.85)
     float tol,              // stopping tolerance (typically 1e-4) ;
     int itermax,            // maximum number of iterations (typically 100)
@@ -1896,7 +1887,7 @@ int LAGraph_TriangleCount_Methods
     // output:
     uint64_t       *ntriangles,
     // input:
-    LAGraph_Graph   G,
+    const LAGraph_Graph G,
     LAGraph_TriangleCount_Method    method,
     LAGraph_TriangleCount_Presort *presort,
     char           *msg

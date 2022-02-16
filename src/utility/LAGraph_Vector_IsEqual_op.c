@@ -28,9 +28,9 @@ int LAGraph_Vector_IsEqual_op
     // output:
     bool *result,           // true if A == B, false if A != B or error
     // input:
-    GrB_Vector A,
-    GrB_Vector B,
-    GrB_BinaryOp op,        // comparator to use
+    const GrB_Vector A,
+    const GrB_Vector B,
+    const GrB_BinaryOp op,        // comparator to use
     char *msg
 )
 {

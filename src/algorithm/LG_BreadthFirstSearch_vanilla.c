@@ -34,7 +34,7 @@ int LG_BreadthFirstSearch_vanilla
 (
     GrB_Vector    *level,
     GrB_Vector    *parent,
-    LAGraph_Graph  G,
+    const LAGraph_Graph G,
     GrB_Index      src,
     char          *msg
 )

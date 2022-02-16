@@ -96,10 +96,10 @@ void my_select_func (void *z, const void *x,
 
 int LG_CC_Boruvka
 (
-    // output
+    // output:
     GrB_Vector *component,  // output: array of component identifiers
-    // inputs
-    LAGraph_Graph G,        // input graph, not modified
+    // input:
+    const LAGraph_Graph G,  // input graph, not modified
     char *msg
 )
 {

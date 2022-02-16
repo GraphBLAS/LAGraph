@@ -24,7 +24,7 @@ int LAGraph_ConnectedComponents
     GrB_Vector *component,  // component(i)=s if node i is in the component
                             // whose representative node is s
     // input:
-    LAGraph_Graph G,        // input graph
+    const LAGraph_Graph G,  // input graph
     char *msg
 )
 {

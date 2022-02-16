@@ -23,23 +23,23 @@ As of Feb 16, 2022:
             How do we provide parameters to the various methods if we don't
             have all methods written yet?  Move this to Future, below?
 
-        * LAGraph_ConnectedComponents: this is Advanced (G is input and
-            G->structure_is_symmetric is required for a directed graph).
-            A Basic method would compute that first, and then G would be
-            input/output.  Or move this to Future, below?
-
         * LG_CC_SV6: need new GxB methods.  Implement for LAGraph v1.0?
             Current method is not thread-safe.
             Or move to Future, below?
-
-        * LAGraph_SingleSourceShortestPath:  Write a Basic method that
-            computes G->emin (that's easy).  And G->emax so it can decide on
-            Delta on its own (hard to do)?  Or move to Future, below?
 
     * add FUTURE to User Guide (see below)
 
 --------------------------------------------------------------------------------
 TODO: add FUTURE items as a section in the User Guide
+
+FUTURE: LAGraph_SingleSourceShortestPath:  Write a Basic method that
+            computes G->emin (that's easy).  And G->emax so it can decide on
+            Delta on its own (hard to do).
+
+FUTURE: LAGraph_BreadthFirstSearch basic method that computes G->AT
+        and G->rowdegree first.
+
+FUTURE: all algorithms can use Basic and Advanced variants.
 
 FUTURE: file I/O with a common, binary, non-opaque format that all
             GraphBLAS libraries can read.  Ideally using compression

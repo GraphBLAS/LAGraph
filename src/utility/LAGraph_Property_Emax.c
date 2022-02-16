@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_Property_Emax: determine G->emax
+// LAGraph_Property_EMax: determine G->emax
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -15,7 +15,7 @@
 
 #include "LG_internal.h"
 
-int LAGraph_Property_Emax
+int LAGraph_Property_EMax
 (
     // input/output:
     LAGraph_Graph G,    // graph to determine G->emax

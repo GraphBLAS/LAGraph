@@ -24,9 +24,9 @@ int LAGraph_Matrix_IsEqual_op
     // output:
     bool *result,           // true if A == B, false if A != B or error
     // input:
-    GrB_Matrix A,
-    GrB_Matrix B,
-    GrB_BinaryOp op,        // comparator to use
+    const GrB_Matrix A,
+    const GrB_Matrix B,
+    const GrB_BinaryOp op,        // comparator to use
     char *msg
 )
 {

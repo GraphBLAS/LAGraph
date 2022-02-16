@@ -189,10 +189,10 @@ static inline GrB_Info fastsv
 
 int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
 (
-    // output
+    // output:
     GrB_Vector *component,  // component(i)=r if node is in the component r
-    // inputs
-    LAGraph_Graph G,        // input graph
+    // input:
+    LAGraph_Graph G,        // input graph (modified then restored)
     char *msg
 )
 {

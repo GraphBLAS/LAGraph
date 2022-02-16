@@ -45,7 +45,7 @@ int LAGraph_VertexCentrality_PageRankGAP
     // outputs:
     GrB_Vector *centrality, // centrality(i): GAP-style pagerank of node i
     // inputs:
-    LAGraph_Graph G,        // input graph
+    const LAGraph_Graph G,  // input graph
     float damping,          // damping factor (typically 0.85)
     float tol,              // stopping tolerance (typically 1e-4) ;
     int itermax,            // maximum number of iterations (typically 100)

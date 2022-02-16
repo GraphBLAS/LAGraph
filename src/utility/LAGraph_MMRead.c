@@ -844,8 +844,7 @@ int LAGraph_MMRead
     I = (GrB_Index *) LAGraph_Malloc (nvals3, sizeof (GrB_Index)) ;
     J = (GrB_Index *) LAGraph_Malloc (nvals3, sizeof (GrB_Index)) ;
     X = LAGraph_Malloc (nvals3, typesize) ;
-    LG_ASSERT_MSG (I != NULL && J != NULL && X != NULL, GrB_OUT_OF_MEMORY,
-        "out of memory") ;
+    LG_ASSERT (I != NULL && J != NULL && X != NULL, GrB_OUT_OF_MEMORY) ;
 
     //--------------------------------------------------------------------------
     // read in the triplets

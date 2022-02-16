@@ -29,14 +29,15 @@
 // Random number generator
 //****************************************************************************
 
-int LAGraph_Random_Init (char *msg) ;
-int LAGraph_Random_Finalize (char *msg) ;
+LAGRAPH_PUBLIC int LAGraph_Random_Init (char *msg) ;
+LAGRAPH_PUBLIC int LAGraph_Random_Finalize (char *msg) ;
 
 #if defined ( COVERAGE )
 // for testing only
 LAGRAPH_PUBLIC bool random_hack ;
 #endif
 
+LAGRAPH_PUBLIC
 int LAGraph_Random_Seed     // construct a random seed vector
 (
     // input/output
@@ -46,6 +47,7 @@ int LAGraph_Random_Seed     // construct a random seed vector
     char *msg
 ) ;
 
+LAGRAPH_PUBLIC
 int LAGraph_Random_Next     // advance to next random vector
 (
     // input/output
@@ -53,6 +55,7 @@ int LAGraph_Random_Next     // advance to next random vector
     char *msg
 ) ;
 
+LAGRAPH_PUBLIC
 GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
 (
     // output
@@ -138,6 +141,7 @@ typedef struct
 }
 LAGraph_Contents ;
 
+LAGRAPH_PUBLIC
 int LAGraph_SWrite_HeaderStart  // write the first part of the JSON header
 (
     FILE *f,                    // file to write to
@@ -145,6 +149,7 @@ int LAGraph_SWrite_HeaderStart  // write the first part of the JSON header
     char *msg
 ) ;
 
+LAGRAPH_PUBLIC
 int LAGraph_SWrite_HeaderItem   // write a single item to the JSON header
 (
     // inputs:
@@ -158,6 +163,7 @@ int LAGraph_SWrite_HeaderItem   // write a single item to the JSON header
     char *msg
 ) ;
 
+LAGRAPH_PUBLIC
 int LAGraph_SWrite_HeaderItem   // write a single item to the JSON header
 (
     // inputs:
@@ -172,12 +178,14 @@ int LAGraph_SWrite_HeaderItem   // write a single item to the JSON header
     char *msg
 ) ;
 
+LAGRAPH_PUBLIC
 int LAGraph_SWrite_HeaderEnd    // write the end of the JSON header
 (
     FILE *f,                    // file to write to
     char *msg
 ) ;
 
+LAGRAPH_PUBLIC
 int LAGraph_SWrite_Item  // write the serialized blob of a matrix/vector/text
 (
     // input:
@@ -187,6 +195,7 @@ int LAGraph_SWrite_Item  // write the serialized blob of a matrix/vector/text
     char *msg
 ) ;
 
+LAGRAPH_PUBLIC
 int LAGraph_SRead   // read a set of matrices from a *.lagraph file
 (
     FILE *f,                        // file to read from
@@ -197,6 +206,7 @@ int LAGraph_SRead   // read a set of matrices from a *.lagraph file
     char *msg
 ) ;
 
+LAGRAPH_PUBLIC
 void LAGraph_SFreeContents      // free the Contents returned by LAGraph_SRead
 (
     // input/output
@@ -204,6 +214,7 @@ void LAGraph_SFreeContents      // free the Contents returned by LAGraph_SRead
     GrB_Index ncontents
 ) ;
 
+LAGRAPH_PUBLIC
 int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
 (
     // inputs:
@@ -231,6 +242,7 @@ int LAGraph_SLoadSet            // load a set of matrices from a *.lagraph file
     char *msg
 ) ;
 
+LAGRAPH_PUBLIC
 void LAGraph_SFreeSet           // free a set of matrices
 (
     // input/output
@@ -257,6 +269,7 @@ void LAGraph_SFreeSet           // free a set of matrices
  * @retval GrB_SUCCESS      if completed successfully (equal or not)
  * @retval GrB_NULL_POINTER if kmax, ntris, nedges, nsteps is NULL
  */
+LAGRAPH_PUBLIC
 int LAGraph_AllKTruss   // compute all k-trusses of a graph
 (
     // outputs
@@ -283,6 +296,7 @@ int LAGraph_AllKTruss   // compute all k-trusses of a graph
  * @retval GrB_NULL_POINTER if C or C_type is NULL
  * @return Any GraphBLAS errors that may have been encountered
  */
+LAGRAPH_PUBLIC
 int LAGraph_KTruss      // compute the k-truss of a graph
 (
     // outputs:
@@ -308,6 +322,7 @@ int LAGraph_KTruss      // compute the k-truss of a graph
  * @retval GrB_SUCCESS      if completed successfully
  * @retval GrB_NULL_POINTER if result is NULL
  */
+LAGRAPH_PUBLIC
 int LAGraph_cc_lacc (
     GrB_Vector *result,
     GrB_Matrix A,
@@ -332,6 +347,7 @@ int LAGraph_cc_lacc (
  * @retval GrB_INVALID_VALUE  if A is not square, s is not a valid vertex index
  * @retval GrB_NO_VALUE       if A has a negative weight cycle
  */
+LAGRAPH_PUBLIC
 GrB_Info LAGraph_BF_basic
 (
     GrB_Vector *pd_output,
@@ -354,6 +370,7 @@ GrB_Info LAGraph_BF_basic
  * @retval GrB_NO_VALUE       if A has a negative weight cycle
  *
  */
+LAGRAPH_PUBLIC
 GrB_Info LAGraph_BF_basic_pushpull
 (
     GrB_Vector *pd_output,
@@ -376,6 +393,7 @@ GrB_Info LAGraph_BF_basic_pushpull
  * @retval GrB_NO_VALUE       if A has a negative weight cycle
  *
  */
+LAGRAPH_PUBLIC
 GrB_Info LAGraph_BF_basic_mxv
 (
     GrB_Vector *pd_output,      //the pointer to the vector of distance
@@ -400,6 +418,7 @@ GrB_Info LAGraph_BF_basic_mxv
  * @retval GrB_NO_VALUE       if A has a negative weight cycle
  *
  */
+LAGRAPH_PUBLIC
 GrB_Info LAGraph_BF_full
 (
     GrB_Vector *pd_output,
@@ -426,6 +445,7 @@ GrB_Info LAGraph_BF_full
  * @retval GrB_NO_VALUE       if A has a negative weight cycle
  *
  */
+LAGRAPH_PUBLIC
 GrB_Info LAGraph_BF_full1
 (
     GrB_Vector *pd_output,
@@ -452,6 +472,7 @@ GrB_Info LAGraph_BF_full1
  * @retval GrB_NO_VALUE       if A has a negative weight cycle
  *
  */
+LAGRAPH_PUBLIC
 GrB_Info LAGraph_BF_full1a
 (
     GrB_Vector *pd_output,
@@ -478,6 +499,7 @@ GrB_Info LAGraph_BF_full1a
  * @retval GrB_NO_VALUE       if A has a negative weight cycle
  *
  */
+LAGRAPH_PUBLIC
 GrB_Info LAGraph_BF_full2
 (
     GrB_Vector *pd_output,      //the pointer to the vector of distance
@@ -504,6 +526,7 @@ GrB_Info LAGraph_BF_full2
  * @retval GrB_NO_VALUE       if A has a negative weight cycle
  *
  */
+LAGRAPH_PUBLIC
 GrB_Info LAGraph_BF_full_mxv
 (
     GrB_Vector *pd_output,
@@ -535,6 +558,7 @@ GrB_Info LAGraph_BF_full_mxv
  * @retval GrB_NO_VALUE       if A has a negative weight cycle
  *
  */
+LAGRAPH_PUBLIC
 GrB_Info LAGraph_BF_pure_c
 (
     int32_t **pd,
@@ -571,6 +595,7 @@ GrB_Info LAGraph_BF_pure_c
  * @retval GrB_NO_VALUE       if A has a negative weight cycle
  *
  */
+LAGRAPH_PUBLIC
 GrB_Info LAGraph_BF_pure_c_double
 (
     double **pd,
@@ -603,6 +628,7 @@ GrB_Info LAGraph_BF_pure_c_double
  * @retval GrB_OUT_OF_MEMORY  if allocation fails.
  * @retval GrB_NO_VALUE       if A has a negative weight cycle
  */
+LAGRAPH_PUBLIC
 int LAGraph_cdlp
 (
     GrB_Vector *CDLP_handle,
@@ -631,6 +657,7 @@ int LAGraph_cdlp
  * @retval GrB_DOMAIN_MISMATCH if type of Y0 is not FP32 or FP64, or the types of
  *                             W or Bias arent the same as Y0
  */
+LAGRAPH_PUBLIC
 GrB_Info LAGraph_dnn
 (
     // output
@@ -655,6 +682,7 @@ GrB_Info LAGraph_dnn
  * @retval GrB_NULL_POINTER    If D or D_type is NULL
  * @retval GrB_INVALID_VALUE   If G is not square
  */
+LAGRAPH_PUBLIC
 GrB_Info LAGraph_FW
 (
     const GrB_Matrix G,
@@ -678,6 +706,7 @@ GrB_Info LAGraph_FW
  * @retval GrB_NULL_POINTER   If LCC_handle or LCC_type is NULL
  * @retval GrB_INVALID_VALUE  If A is not stored in CSR format
  */
+LAGRAPH_PUBLIC
 int LAGraph_lcc            // compute lcc for all nodes in A
 (
     GrB_Vector *LCC_handle,     // output vector
@@ -691,6 +720,7 @@ int LAGraph_lcc            // compute lcc for all nodes in A
 
 //****************************************************************************
 
+LAGRAPH_PUBLIC
 int LAGraph_msf
 (
     GrB_Matrix *result, // output: an unsymmetrical matrix, the spanning forest
@@ -701,6 +731,7 @@ int LAGraph_msf
 
 //****************************************************************************
 
+LAGRAPH_PUBLIC
 int LAGraph_scc (
     GrB_Vector *result,     // output: array of component identifiers
     GrB_Matrix A,           // input matrix
@@ -708,6 +739,7 @@ int LAGraph_scc (
 ) ;
 
 //****************************************************************************
+LAGRAPH_PUBLIC
 int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
 (
     // outputs:
@@ -720,6 +752,7 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
 ) ;
 
 //****************************************************************************
+LAGRAPH_PUBLIC
 int LAGraph_MaximalIndependentSet       // maximal independent set
 (
     // outputs:
@@ -734,6 +767,7 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     char *msg
 ) ;
 
+LAGRAPH_PUBLIC
 int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
 (
     // output

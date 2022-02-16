@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_Property_Emin: determine G->emin
+// LAGraph_Property_EMin: determine G->emin
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -15,7 +15,7 @@
 
 #include "LG_internal.h"
 
-int LAGraph_Property_Emin
+int LAGraph_Property_EMin
 (
     // input/output:
     LAGraph_Graph G,    // graph to determine G->emin

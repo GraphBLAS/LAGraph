@@ -49,7 +49,7 @@ int LAGraph_SortByDegree
     // output:
     int64_t **P_handle,     // P is returned as a permutation vector of size n
     // input:
-    LAGraph_Graph G,        // graph of n nodes
+    const LAGraph_Graph G,  // graph of n nodes
     bool byrow,             // if true, sort G->rowdegree, else G->coldegree
     bool ascending,         // sort in ascending or descending order
     char *msg

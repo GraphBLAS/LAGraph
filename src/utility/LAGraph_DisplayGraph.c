@@ -13,7 +13,7 @@
 int LAGraph_DisplayGraph
 (
     // input:
-    LAGraph_Graph G,        // graph to display
+    const LAGraph_Graph G,  // graph to display
     LAGraph_Print_Level pr, // print level (0 to 5)
     FILE *f,                // file to write to, must already be open
     char *msg

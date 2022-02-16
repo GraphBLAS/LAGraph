@@ -804,7 +804,14 @@ static int readproblem          // returns 0 if successful, -1 if failure
                 printf ("Matrix market file not found: [%s]\n", filename) ;
                 exit (1) ;
             }
-            LAGraph_TRY (LAGraph_MMRead (&A, f, msg)) ;
+            int result = LAGraph_MMRead (&A, f, msg) ;
+            if (result != GrB_SUCCESS)
+            {
+                printf ("LAGraph_MMRead failed to read matrix: %s\n",
+                    filename) ;
+                printf ("result: %d msg: %s\n", result, msg) ;
+            }
+            LAGraph_TRY (result) ;
             fclose (f) ;
             f = NULL ;
         }
@@ -823,7 +830,14 @@ static int readproblem          // returns 0 if successful, -1 if failure
                     printf ("Source node file not found: [%s]\n", filename) ;
                     exit (1) ;
                 }
-                LAGraph_TRY (LAGraph_MMRead (src_nodes, f, msg)) ;
+                int result = LAGraph_MMRead (src_nodes, f, msg) ;
+                if (result != GrB_SUCCESS)
+                {
+                    printf ("LAGraph_MMRead failed to read source nodes"
+                        " from: %s\n", filename) ;
+                    printf ("result: %d msg: %s\n", result, msg) ;
+                }
+                LAGraph_TRY (result) ;
                 fclose (f) ;
                 f = NULL ;
             }
@@ -836,7 +850,13 @@ static int readproblem          // returns 0 if successful, -1 if failure
         printf ("matrix: from stdin\n") ;
 
         // read in the file in Matrix Market format from stdin
-        LAGraph_TRY (LAGraph_MMRead (&A, stdin, msg)) ;
+        int result = LAGraph_MMRead (&A, stdin, msg) ;
+        if (result != GrB_SUCCESS)
+        {
+            printf ("LAGraph_MMRead failed to read: stdin\n") ;
+            printf ("result: %d msg: %s\n", result, msg) ;
+        }
+        LAGraph_TRY (result) ;
     }
 
     //--------------------------------------------------------------------------

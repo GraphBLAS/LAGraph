@@ -111,7 +111,7 @@ LG_MATRIX_PRINT (FC64  , GxB_FC64_t, GxB_FC64, ...) ;
 int LAGraph_Matrix_Print
 (
     // input:
-    GrB_Matrix A,       // matrix to pretty-print to the file
+    const GrB_Matrix A,     // matrix to pretty-print to the file
     LAGraph_Print_Level pr, // print level (0 to 5)
     FILE *f,            // file to write it to, must be already open; use
                         // stdout or stderr to print to those locations.

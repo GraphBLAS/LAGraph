@@ -270,7 +270,7 @@ void test_SingleSourceShortestPath_types (void)
         TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
         // find the smallest entry
-        OK (LAGraph_Property_Emin (G, msg)) ;
+        OK (LAGraph_Property_EMin (G, msg)) ;
 
         // delta values to try
         int32_t Deltas [ ] = { 30, 100, 50000 } ;
@@ -285,7 +285,8 @@ void test_SingleSourceShortestPath_types (void)
                 int32_t delta = Deltas [kk] ;
                 printf ("src %d delta %d n %d\n", (int) src, delta, (int) n) ;
                 OK (GrB_Scalar_setElement (Delta, delta)) ;
-                OK (LAGraph_SingleSourceShortestPath (&path_length, G, src, Delta, msg)) ;
+                OK (LAGraph_SingleSourceShortestPath (&path_length, G, src,
+                    Delta, msg)) ;
                 int res = LG_check_sssp (path_length, G, src, msg) ;
                 if (res != GrB_SUCCESS) printf ("res: %d msg: %s\n", res, msg) ;
                 OK (res) ;

@@ -22,7 +22,7 @@ int LAGraph_BreadthFirstSearch
     GrB_Vector    *level,
     GrB_Vector    *parent,
     // input:
-    LAGraph_Graph  G,
+    const LAGraph_Graph G,
     GrB_Index      src,
     char          *msg
 )

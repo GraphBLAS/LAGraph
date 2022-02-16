@@ -81,7 +81,7 @@ int main (int argc, char **argv)
     GrB_Index n, nvals ;
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
-    LAGraph_TRY (LAGraph_Property_Emin (G, msg)) ;
+    LAGraph_TRY (LAGraph_Property_EMin (G, msg)) ;
 
     //--------------------------------------------------------------------------
     // get delta

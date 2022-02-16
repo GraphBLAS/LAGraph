@@ -26,11 +26,7 @@
 // NOTE: this method gets stuck in an infinite loop when there are negative-
 // weight cycles in the graph.
 
-// TODO: Should a Basic method pick delta automatically?  The Basic method
-// would compute the G->emin cached property and perhaps G->emax, and then
-// it would also try to set Delta.  What should Delta be for an arbitrary
-// graph, of type int32, int64, uint32, uint64, float, or double?  Perhaps
-// equal some multiple (30?) of the max edge weight?  Unsure.
+// FUTURE: a Basic method that picks Delta automatically
 
 #define LG_FREE_WORK        \
 {                           \
@@ -74,7 +70,7 @@ int LAGraph_SingleSourceShortestPath
     GrB_Vector *path_length,    // path_length (i) is the length of the shortest
                                 // path from the source vertex to vertex i
     // input:
-    LAGraph_Graph G,
+    const LAGraph_Graph G,
     GrB_Index source,           // source vertex
     GrB_Scalar Delta,           // delta value for delta stepping
     char *msg

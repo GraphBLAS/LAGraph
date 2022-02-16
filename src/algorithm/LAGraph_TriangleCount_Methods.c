@@ -102,7 +102,7 @@ int LAGraph_TriangleCount_Methods
     // output:
     uint64_t       *ntriangles,
     // input:
-    LAGraph_Graph   G,
+    const LAGraph_Graph G,
     LAGraph_TriangleCount_Method    method,
     LAGraph_TriangleCount_Presort *presort,
     char           *msg

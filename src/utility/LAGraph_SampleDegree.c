@@ -21,7 +21,7 @@ int LAGraph_SampleDegree
     double *sample_mean,    // sampled mean degree
     double *sample_median,  // sampled median degree
     // input:
-    LAGraph_Graph G,        // graph of n nodes
+    const LAGraph_Graph G,  // graph of n nodes
     bool byrow,             // if true, sample G->rowdegree, else G->coldegree
     int64_t nsamples,       // number of samples
     uint64_t seed,          // random number seed

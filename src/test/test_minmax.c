@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/test/test_minmax.c:  test LAGraph_Property_Emin/Emax
+// LAGraph/src/test/test_minmax.c:  test LAGraph_Property_EMin/EMax
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -192,9 +192,9 @@ void test_minmax (void)
         // compute emin and emax
         //----------------------------------------------------------------------
 
-        OK (LAGraph_Property_Emin (G, msg)) ;
+        OK (LAGraph_Property_EMin (G, msg)) ;
         TEST_CHECK (G->emin_kind == LAGRAPH_EXACT) ;
-        OK (LAGraph_Property_Emax (G, msg)) ;
+        OK (LAGraph_Property_EMax (G, msg)) ;
         TEST_CHECK (G->emax_kind == LAGRAPH_EXACT) ;
 
         //----------------------------------------------------------------------
@@ -283,9 +283,9 @@ void test_minmax_int64 (void)
             // compute emin and emax
             //------------------------------------------------------------------
 
-            OK (LAGraph_Property_Emin (G, msg)) ;
+            OK (LAGraph_Property_EMin (G, msg)) ;
             TEST_CHECK (G->emin_kind == LAGRAPH_EXACT) ;
-            OK (LAGraph_Property_Emax (G, msg)) ;
+            OK (LAGraph_Property_EMax (G, msg)) ;
             TEST_CHECK (G->emax_kind == LAGRAPH_EXACT) ;
 
             //------------------------------------------------------------------
@@ -357,9 +357,9 @@ void test_minmax_uint64 (void)
         // compute emin and emax
         //----------------------------------------------------------------------
 
-        OK (LAGraph_Property_Emin (G, msg)) ;
+        OK (LAGraph_Property_EMin (G, msg)) ;
         TEST_CHECK (G->emin_kind == LAGRAPH_EXACT) ;
-        OK (LAGraph_Property_Emax (G, msg)) ;
+        OK (LAGraph_Property_EMax (G, msg)) ;
         TEST_CHECK (G->emax_kind == LAGRAPH_EXACT) ;
 
         //----------------------------------------------------------------------
@@ -405,10 +405,10 @@ void test_minmax_failures (void)
     OK (GrB_Type_new (&MyInt, sizeof (myint))) ;
     OK (GrB_Matrix_new (&A, MyInt, 4, 4)) ;
     OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
-    int result = LAGraph_Property_Emax (G, msg) ;
+    int result = LAGraph_Property_EMax (G, msg) ;
     printf ("\nresult: %d msg: %s\n", result, msg) ;
     TEST_CHECK (result == GrB_NOT_IMPLEMENTED) ;
-    result = LAGraph_Property_Emin (G, msg) ;
+    result = LAGraph_Property_EMin (G, msg) ;
     printf ("result: %d msg: %s\n", result, msg) ;
     TEST_CHECK (result == GrB_NOT_IMPLEMENTED) ;
     OK (GrB_free (&MyInt)) ;

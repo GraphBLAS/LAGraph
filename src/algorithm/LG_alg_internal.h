@@ -21,7 +21,7 @@ int LG_BreadthFirstSearch_SSGrB
     GrB_Vector    *level,
     GrB_Vector    *parent,
     // input:
-    LAGraph_Graph  G,
+    const LAGraph_Graph G,
     GrB_Index      src,
     char          *msg
 ) ;
@@ -32,7 +32,7 @@ int LG_BreadthFirstSearch_vanilla
     GrB_Vector    *level,
     GrB_Vector    *parent,
     // input:
-    LAGraph_Graph  G,
+    const LAGraph_Graph G,
     GrB_Index      src,
     char          *msg
 ) ;
@@ -42,16 +42,16 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     // output:
     GrB_Vector *component,  // output: array of component identifiers
     // input:
-    LAGraph_Graph G,        // input graph, modified then restored
+    LAGraph_Graph G,        // input graph (modified then restored)
     char *msg
 ) ;
 
-int LG_CC_Boruvka           // vanilla method, no GxB extensions
+int LG_CC_Boruvka
 (
-    // output
+    // output:
     GrB_Vector *component,  // output: array of component identifiers
-    // inputs
-    LAGraph_Graph G,        // input graph, not modified
+    // input:
+    const LAGraph_Graph G,  // input graph, not modified
     char *msg
 ) ;
 
