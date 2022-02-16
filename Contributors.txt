@@ -2,7 +2,22 @@ File: Contributors.txt
 
 Contributors:
 
-Texas A&M University
-University of California
-Carnegie Mellon University
-
+    Tim Davis, Texas A&M University
+    Scott McMillan, SEI, Carnegie Mellon University
+    Gabor Szarnyas
+    Jinhao Chen, Texas A&M University
+    Michel Pelletier, Graphegon
+    Scott Kolodziej, Texas A&M University
+    Yongzhe Zhang, SOKENDAI, Japan
+    Marton Elekes
+    Balint Hegyi
+    Tim Mattson, Intel
+    Mohsen Aznaveh, Texas A&M University
+    James Kitchen, Anaconda
+    Aydin Buluc, Lawrence Berkeley National Lab
+    Janos B. Antal
+    Roi Lipman, Redis
+    Erik Welch, Anaconda
+    Carl Yang
+    Tze Meng Low,
+    Florentin Dorre

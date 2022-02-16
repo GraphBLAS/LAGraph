@@ -1,4 +1,4 @@
-As of Feb 14, 2022:
+As of Feb 16, 2022:
 
     * entire user guide
         experimental -> src, how to do it.
@@ -12,27 +12,29 @@ As of Feb 14, 2022:
     * how does the user know that one method is Basic and another Advanced?
         Name of function?  We have no mechanism or naming scheme.
 
+    * check function names and API
+
     * TODOs: in algorithms
 
         * LAGraph_VertexCentrality: wrapper for 2 methods (BC, PageRank),
-            and future methods.
-            How do we ask for an exact BC computation?  Do it in batches
-            and sum up the result?
-            Do we normalize the metrics so that sum(centrality) = 1?
+            and future methods.  Can we skip this for LAGraph v1.0?  How do we
+            ask for an exact BC computation?  Do it in batches and sum up the
+            result?  Do we normalize the metrics so that sum(centrality) = 1?
+            How do we provide parameters to the various methods if we don't
+            have all methods written yet?  Move this to Future, below?
 
         * LAGraph_ConnectedComponents: this is Advanced (G is input and
             G->structure_is_symmetric is required for a directed graph).
             A Basic method would compute that first, and then G would be
-            input/output.
+            input/output.  Or move this to Future, below?
 
-        * LG_CC_SV6: need new GxB methods
+        * LG_CC_SV6: need new GxB methods.  Implement for LAGraph v1.0?
+            Current method is not thread-safe.
+            Or move to Future, below?
 
         * LAGraph_SingleSourceShortestPath:  Write a Basic method that
-            computes G->emin. And G->emax? And decides on Delta on its own?
-
-    * check function names and API
-
-    * add names to Contributors.txt
+            computes G->emin (that's easy).  And G->emax so it can decide on
+            Delta on its own (hard to do)?  Or move to Future, below?
 
     * add FUTURE to User Guide (see below)
 

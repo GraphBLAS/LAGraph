@@ -34,7 +34,7 @@
 #define LAGRAPH_VERSION_MAJOR 0
 #define LAGRAPH_VERSION_MINOR 9
 #define LAGRAPH_VERSION_UPDATE 9
-#define LAGRAPH_DATE "Feb 14, 2022"
+#define LAGRAPH_DATE "Feb 16, 2022"
 
 //==============================================================================
 // include files and helper macros
@@ -585,15 +585,15 @@ struct LAGraph_Graph_struct
             // APPROX: emax is a rough estimate of max(G->A)
             // UNKNOWN: emax is unknown
 
+    // possible future cached properties:
+
     // Some algorithms may want to know if the graph has any edge weights
     // exactly equal to zero.  In some cases, this can be inferred from the
     // emin/emax bounds, or it can be indicated via the following property:
-    LAGraph_BooleanProperty nonzero ;  // If true, then all entries in
+    // LAGraph_BooleanProperty nonzero ;  // If true, then all entries in
             // G->A are known to be nonzero.  If false, G->A may contain
             // entries in its structure that are identically equal to zero.  If
             // unknown, then G->A may or may not have entries equal to zero.
-
-    // possible future cached properties:
     // other edge weight metrics: median, standard deviation....  Might be
     // useful for computing Delta for a Basic SSSP.
     // GrB_Vector rowsum, colsum ;

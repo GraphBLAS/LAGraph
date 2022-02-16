@@ -46,7 +46,7 @@ int LAGraph_DeleteProperties
     G->structure_is_symmetric = LAGRAPH_UNKNOWN ;
     G->emin_kind = LAGRAPH_UNKNOWN ;
     G->emax_kind = LAGRAPH_UNKNOWN ;
-    G->nonzero = LAGRAPH_UNKNOWN ;
+//  G->nonzero = LAGRAPH_UNKNOWN ;
     G->ndiag = LAGRAPH_UNKNOWN ;
     return (GrB_SUCCESS) ;
 }
