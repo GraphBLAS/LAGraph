@@ -8,6 +8,8 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
+// Contributed by Tim Davis, Texas A&M University
+
 //------------------------------------------------------------------------------
 
 // The Heap is an array of LG_Elements: Heap [1..nheap].  Each entry in the

@@ -8,6 +8,8 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
+// Contributed by Scott McMillan, SEI Carnegie Mellon University
+
 //------------------------------------------------------------------------------
 
 #define LG_FREE_ALL ;

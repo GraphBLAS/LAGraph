@@ -8,6 +8,8 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
+// Contributed by Tim Davis, Texas A&M University
+
 //-----------------------------------------------------------------------------
 
 #include <stdio.h>
@@ -136,7 +138,8 @@ void test_SingleSourceShortestPath(void)
                 int32_t delta = Deltas [kk] ;
                 printf ("src %d delta %d n %d\n", (int) src, delta, (int) n) ;
                 OK (GrB_Scalar_setElement (Delta, delta)) ;
-                OK (LAGraph_SingleSourceShortestPath (&path_length, G, src, Delta, msg)) ;
+                OK (LAGraph_SingleSourceShortestPath (&path_length, G,
+                    src, Delta, msg)) ;
                 int res = LG_check_sssp (path_length, G, src, msg) ;
                 if (res != GrB_SUCCESS) printf ("res: %d msg: %s\n", res, msg) ;
                 OK (res) ;
@@ -409,14 +412,16 @@ void test_SingleSourceShortestPath_brutal (void)
         int32_t delta = 30 ;
         printf ("src %d delta %d n %d\n", (int) src, delta, (int) n) ;
         OK (GrB_Scalar_setElement (Delta, delta)) ;
-        LG_BRUTAL (LAGraph_SingleSourceShortestPath (&path_length, G, src, Delta, msg)) ;
+        LG_BRUTAL (LAGraph_SingleSourceShortestPath (&path_length, G, src,
+            Delta, msg)) ;
         OK (LG_check_sssp (path_length, G, src, msg)) ;
         OK (GrB_free(&path_length)) ;
 
         // add a single negative edge and try again
         OK (GrB_Matrix_setElement_INT32 (G->A, -1, 0, 1)) ;
         OK (GrB_wait (G->A, GrB_MATERIALIZE)) ;
-        LG_BRUTAL (LAGraph_SingleSourceShortestPath (&path_length, G, 0, Delta, msg)) ;
+        LG_BRUTAL (LAGraph_SingleSourceShortestPath (&path_length, G, 0,
+            Delta, msg)) ;
         int32_t len = 0 ;
         OK (GrB_Vector_extractElement (&len, path_length, 1)) ;
         TEST_CHECK (len == -1) ;

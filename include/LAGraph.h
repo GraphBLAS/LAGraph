@@ -566,10 +566,10 @@ struct LAGraph_Graph_struct
             // unknown.  For the adjacency matrix of a directed or undirected
             // graph, this is the number of self-edges in the graph.
 
-    // TODO: discuss these cached properties.  emin is required for SSSP, which
-    // needs to know if emin > 0 or not.  emax might be useful for computing
-    // Delta for Delta-stepping.  Knowing these bounds might also be useful
-    // for future algorithms that use edge weights.
+    // TODO: discuss new cached properties: emin, emax, nonzero.
+    // emin is required for SSSP, which needs to know if emin > 0 or not.  emax
+    // might be useful for computing Delta for Delta-stepping.  Knowing these
+    // bounds might also be useful for future algorithms that use edge weights.
 
     GrB_Scalar emin ;   // minimum edge weight: exact, lower bound, or estimate
     LAGraph_BoundKind emin_kind ;
@@ -1638,20 +1638,20 @@ int LAGraph_Sort3
  * @param[in]     pushpull   if true, use push/pull; otherwise, use pushonly.
  *                           Push/pull is faster but requires G->AT,
  *                           G->rowdegree, and SuiteSparse:GraphBLAS.
- *                           TODO: consider removing option or reverse logic
+ *                TODO: consider removing pushpull option or reverse logic
  * @param[out]    msg        Error message if a failure code is returned.
  *
  * @retval GrB_SUCCESS      successful
  * @retval LAGRAPH_INVALID_GRAPH Graph is invalid (LAGraph_CheckGraph failed)
  */
 
-// TODO: direction-optimization (pushpull) requires G->AT and G->rowdgree.  If
-// not present, a Basic method could compute them and then use pushpull.  Or it
-// could just use push-only.  The current method, below, doesn't modify G so
+// TODO: direction-optimization (pushpull) requires G->AT and G->rowdgree.
+// If not present, a Basic method could compute them and then use pushpull.  Or
+// it could just use push-only.  The current method, below, doesn't modify G so
 // it's a Basic method, but it requires the pushpull input parameter.  Perhaps
 // a Basic method should just use pushpull as true.  An Advanced method would
-// not need G->AT or G->rowdegree if pushpull is false; if pushpull is true,
-// it could return an error if G->AT or G->rowdegree are not present.
+// not need G->AT or G->rowdegree if pushpull is false; if pushpull is true, it
+// could return an error if G->AT or G->rowdegree are not present.
 
 LAGRAPH_PUBLIC
 int LAGraph_BreadthFirstSearch
@@ -1670,8 +1670,8 @@ int LAGraph_BreadthFirstSearch
 // LAGraph_VertexCentrality: various vertex centrality metrics
 //------------------------------------------------------------------------------
 
-// TODO the following is a draft:  this may be hard to do in general, since
-// different metrics may require different input parameters (PageRank needs
+// TODO LAGraph_VertexCentrality is a draft:  may be hard to do in general.
+// Different metrics may require different input parameters (PageRank needs
 // tol, itermax, damping; BC needs # sources or a list of sources, etc).  It
 // might be hard for a Basic method to pick these parameters by itself, and a
 // unified Basic method would need to fit will with all future Centrality
@@ -1727,10 +1727,10 @@ int LAGraph_TriangleCount
 // LAGraph_ConnectedComponents: connected components of an undirected graph
 //------------------------------------------------------------------------------
 
-// TODO: this is NOT a Basic method, but an Advanced method, since G is input
-// (not input/output). It requires G to have a known symmetric structure.  A
-// Basic method should compute G->structure_is_symmetric for a directed graph.
-// Do we need a Basic method too that computes that first?
+// This is an Advanced method, since G is input (not input/output), and
+// G->structure_is_symmetric is required for a directed graph.
+
+// TODO: add a Basic method for CC that computes G->structure_is_symmetric?
 
 LAGRAPH_PUBLIC
 int LAGraph_ConnectedComponents
@@ -1751,11 +1751,11 @@ int LAGraph_ConnectedComponents
 // GrB_UINT32, GrB_UINT64, GrB_FP32, or GrB_FP64.  If G->A has any other type,
 // GrB_NOT_IMPLEMENTED is returned.
 
-// TODO: Should a Basic method pick delta automatically?  The Basic method
-// would compute the G->emin cached property and perhaps G->emax, and then
-// it would also try to set Delta.  What should Delta be for an arbitrary
-// graph, of type int32, int64, uint32, uint64, float, or double?  Perhaps
-// equal some multiple (30?) of the max edge weight?  Unsure.
+// TODO: a Basic SSSP method that picks delta automatically?
+// The Basic method would compute the G->emin cached property and perhaps
+// G->emax, and then it would also try to set Delta.  What should Delta be for
+// an arbitrary graph, of type int32, int64, uint32, uint64, float, or double?
+// Perhaps equal some multiple (30?) of the max edge weight?  Unsure.
 
 LAGRAPH_PUBLIC
 int LAGraph_SingleSourceShortestPath

@@ -4,14 +4,11 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-//
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+// Contributed by Tim Davis, Texas A&M University
 
 //------------------------------------------------------------------------------
 
 // Count the number of triangles in a graph,
-// Contributed by Tim Davis, Texas A&M.
 
 // Advanced API: compute G->ndiag, G->structure_is_symmetric, and
 // G->rowdegree (if needed) before calling.

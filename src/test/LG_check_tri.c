@@ -8,6 +8,8 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
+// Contributed by Tim Davis, Texas A&M University
+
 //------------------------------------------------------------------------------
 
 // A very slow, bare-bones triangle count using a parallel dot-product method.

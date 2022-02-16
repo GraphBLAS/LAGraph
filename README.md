@@ -77,19 +77,19 @@ LAGraph contains the following files and folders:
 
     README.md: this file
 
-    src: stable source code for the LAGraph library
+    src: stable source code for the LAGraph library (LAGraph.h)
 
         * algorithms: graph algorithms such as BFS, connected components,
             centrality, etc
 
         * utilities: read/write a graph from a file, etc
 
-    experimental*: draft code under development: do not benchmark without
-        asking the LAGraph authors first
+    experimental*: draft code under development: (LAGraphX.h)
+        do not benchmark without asking the LAGraph authors first
 
-        * Algorithms: draft graph algorithms such as Maximal Independent Set
+        * algorithms: draft graph algorithms such as Maximal Independent Set
 
-        * Utilities: draft utilities
+        * utilities: draft utilities
 
     build: initially empty
 
@@ -111,5 +111,23 @@ location.
 
 # Authors
 
-TODO ... list them here
+    Tim Davis, Texas A&M University
+    Scott McMillan, SEI, Carnegie Mellon University
+    Gabor Szarnyas
+    Jinhao Chen, Texas A&M University
+    Michel Pelletier, Graphegon
+    Scott Kolodziej, Texas A&M University
+    Yongzhe Zhang, SOKENDAI, Japan
+    Marton Elekes
+    Balint Hegyi
+    Tim Mattson, Intel
+    Mohsen Aznaveh, Texas A&M University
+    James Kitchen, Anaconda
+    Aydin Buluc, Lawrence Berkeley National Lab
+    Janos B. Antal
+    Roi Lipman, Redis
+    Erik Welch, Anaconda
+    Carl Yang
+    Tze Meng Low,
+    Florentin Dorre
 

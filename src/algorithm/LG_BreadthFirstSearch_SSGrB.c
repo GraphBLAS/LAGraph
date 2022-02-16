@@ -20,6 +20,8 @@
 // Scott Beamer, Krste Asanovic and David A. Patterson, The GAP Benchmark
 // Suite, http://arxiv.org/abs/1508.03619, 2015.  http://gap.cs.berkeley.edu/
 
+// revised by Tim Davis (davis@tamu.edu), Texas A&M University
+
 #define LG_FREE_WORK        \
 {                           \
     GrB_free (&w) ;         \

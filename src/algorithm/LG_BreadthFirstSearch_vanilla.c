@@ -12,7 +12,7 @@
 
 // References:
 //
-// Contribute by Scott McMillan, derived from examples in the appendix of
+// Contributed by Scott McMillan, derived from examples in the appendix of
 // The GraphBLAS C API Specification, v1.3.0
 
 #define LG_FREE_WORK        \

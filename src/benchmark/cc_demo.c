@@ -2,6 +2,9 @@
 // LAGraph/Test2/ConnectedComponents/test_cc: test LAGraph_ConnectedComponents
 //------------------------------------------------------------------------------
 
+// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+
 //------------------------------------------------------------------------------
 
 // Contributed by Tim Davis, Texas A&M

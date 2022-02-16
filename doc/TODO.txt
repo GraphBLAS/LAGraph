@@ -10,9 +10,9 @@ As of Feb 14, 2022:
         and tests.
 
     * how does the user know that one method is Basic and another Advanced?
-        Name of function?
+        Name of function?  We have no mechanism or naming scheme.
 
-    * TODOs and FIXMEs:
+    * TODOs: in algorithms
 
         * LAGraph_BreadthFirstSearch: pushpull option
 
@@ -27,10 +27,7 @@ As of Feb 14, 2022:
             A Basic method would compute that first, and then G would be
             input/output.
 
-        * LG_CC_SV6: many TODOs in this SuiteSparse:GxB_* based method,
-            suggesting the need for new GxB methods.
-            The TODOs there are too many to do in time for LAGraph v1.0,
-            most likely.  (Or maybe not?)
+        * LG_CC_SV6: need new GxB methods
 
         * LAGraph_SingleSourceShortestPath:  Write a Basic method that
             computes G->emin. And G->emax? And decides on Delta on its own?
@@ -42,7 +39,7 @@ As of Feb 14, 2022:
     * add FUTURE to User Guide (see below)
 
 --------------------------------------------------------------------------------
-TODO: add this as a section in the User Guide
+TODO: add FUTURE items as a section in the User Guide
 
 FUTURE: file I/O with a common, binary, non-opaque format that all
             GraphBLAS libraries can read.  Ideally using compression
@@ -55,7 +52,7 @@ FUTURE: file I/O with a common, binary, non-opaque format that all
             would be specified by the json header in the *.lagraph file.
             See the doc/lagraph_format.txt file for details.
 
-            Tim D. moved this to FUTURE from "TODO for v1.0".  It would require
+            Tim D. moved this to FUTURE.  It would require
             the LAGraph_SLoad, *SSave, etc to move from experimental to src,
             and those functions need work (API design, text compression).
             Adding this feature also requires an LAGraph_serialize/deserialize,

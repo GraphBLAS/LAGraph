@@ -36,14 +36,14 @@
 #ifdef _MSC_VER
 /*
    Disable warning about not inlining 'inline' functions.
-   TODO: We'll fix this later by not using fprintf within our macros, and
+   todo: We'll fix this later by not using fprintf within our macros, and
    instead use snprintf to a realloc'ed buffer.
 */
 #pragma warning(disable : 4710)
 
 /*
    Disable warning about inlining functions that are not marked 'inline'.
-   TODO: add a UTEST_NOINLINE onto the macro generated functions to fix this.
+   todo: add a UTEST_NOINLINE onto the macro generated functions to fix this.
 */
 #pragma warning(disable : 4711)
 #pragma warning(push, 1)
