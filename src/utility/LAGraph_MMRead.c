@@ -457,8 +457,9 @@ int LAGraph_MMRead
 
     bool got_mm_header = false ;
     bool got_first_data_line = false ;
+    int64_t line ;
 
-    for (int64_t line = 1 ; get_line (f, buf) ; line++)
+    for (line = 1 ; get_line (f, buf) ; line++)
     {
 
         //----------------------------------------------------------------------
@@ -488,7 +489,8 @@ int LAGraph_MMRead
             {
                 // invalid Matrix Market object
                 LG_ASSERT_MSG (false,
-                    LAGRAPH_IO_ERROR, "invalid MatrixMarket header") ;
+                    LAGRAPH_IO_ERROR, "invalid MatrixMarket header"
+                    " ('matrix' token missing)") ;
             }
             p += 6 ;                                // skip past token "matrix"
 
@@ -512,7 +514,8 @@ int LAGraph_MMRead
             {
                 // invalid Matrix Market format
                 LG_ASSERT_MSG (false,
-                    LAGRAPH_IO_ERROR, "invalid format in MatrixMarket header") ;
+                    LAGRAPH_IO_ERROR, "invalid format in MatrixMarket header"
+                    " (format must be 'coordinate' or 'array')") ;
             }
 
             //------------------------------------------------------------------
@@ -801,8 +804,9 @@ int LAGraph_MMRead
             else
             {
                 // wrong number of items in first data line
-                LG_ASSERT_MSG (false,
-                    LAGRAPH_IO_ERROR, "invalid 1st data line") ;
+                LG_ASSERT_MSGF (false,
+                    LAGRAPH_IO_ERROR, "invalid 1st data line"
+                    " (line %" PRId64 " of input file)", line) ;
             }
 
             if (nrows != ncols)
@@ -869,6 +873,7 @@ int LAGraph_MMRead
             //------------------------------------------------------------------
 
             bool ok = get_line (f, buf) ;
+            line++ ;
             LG_ASSERT_MSG (ok, LAGRAPH_IO_ERROR, "premature EOF") ;
             if (is_blank_line (buf))
             {
@@ -904,15 +909,18 @@ int LAGraph_MMRead
             else
             {
                 // coordinate format; read the row index and column index
-                LG_ASSERT_MSG (sscanf (p, "%" SCNu64 " %" SCNu64, &i, &j) == 2,
-                    LAGRAPH_IO_ERROR, "indices invalid") ;
+                int inputs = sscanf (p, "%" SCNu64 " %" SCNu64, &i, &j) ;
+                LG_ASSERT_MSGF (inputs == 2, LAGRAPH_IO_ERROR,
+                    "line %" PRId64 " of input file: indices invalid", line) ;
                 // check the indices (they are 1-based in the MM file format)
-                LG_ASSERT_MSG (i >= 1 && i <= nrows, GrB_INDEX_OUT_OF_BOUNDS,
-                    "row index out of range "
-                    "(must be in range 1 to # of rows)") ;
-                LG_ASSERT_MSG (j >= 1 && j <= ncols, GrB_INDEX_OUT_OF_BOUNDS,
-                    "column index out of range "
-                    "(must be in range 1 to # of columns") ;
+                LG_ASSERT_MSGF (i >= 1 && i <= nrows, GrB_INDEX_OUT_OF_BOUNDS,
+                    "line %" PRId64 " of input file: row index %" PRIu64
+                    " out of range (must be in range 1 to %" PRIu64")",
+                    line, i, nrows) ;
+                LG_ASSERT_MSGF (j >= 1 && j <= ncols, GrB_INDEX_OUT_OF_BOUNDS,
+                    "line %" PRId64 " of input file: column index %" PRIu64
+                    " out of range (must be in range 1 to %" PRIu64")",
+                    line, j, ncols) ;
                 // convert from 1-based to 0-based.
                 i-- ;
                 j-- ;
@@ -930,7 +938,8 @@ int LAGraph_MMRead
             while (*p && isspace (*p)) p++ ;        // skip any spaces
 
             ok = read_entry (p, type, MM_type == MM_pattern, x) ;
-            LG_ASSERT_MSG (ok, LAGRAPH_IO_ERROR, "entry invalid") ;
+            LG_ASSERT_MSGF (ok, LAGRAPH_IO_ERROR, "entry value invalid on line"
+                " %" PRId64 " of input file", line) ;
 
             //------------------------------------------------------------------
             // set the value in the matrix

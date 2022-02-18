@@ -62,8 +62,8 @@ int LAGraph_TypeFromName
         else
         {
             (*type) = NULL ;
-            LG_ASSERT_MSG (false,
-                GrB_NOT_IMPLEMENTED, "user-defined types not supported") ;
+            LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED,
+                "type \"%s\" not supported", name) ;
         }
         return (GrB_SUCCESS) ;
 

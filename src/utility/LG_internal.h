@@ -111,15 +111,13 @@ typedef unsigned char LG_void ;
 // "LG_internal.h" statement.
 
 #ifndef GrB_CATCH
-
-    #define GrB_CATCH(info)                                 \
-    {                                                       \
-        LG_ERROR_MSG ("%s, line %d: GrB failure: %d",       \
-            __FILE__, __LINE__, info) ;                     \
-        LG_FREE_ALL ;                                       \
-        return (info) ;                                     \
-    }
-
+#define GrB_CATCH(info)                                                 \
+{                                                                       \
+    LG_ERROR_MSG ("GraphBLAS failure (file %s, line %d): info: %d",     \
+        __FILE__, __LINE__, info) ;                                     \
+    LG_FREE_ALL ;                                                       \
+    return (info) ;                                                     \
+}
 #endif
 
 //------------------------------------------------------------------------------
@@ -131,14 +129,32 @@ typedef unsigned char LG_void ;
 // #include "LG_internal.h" statement.
 
 #ifndef LAGraph_CATCH
-#define LAGraph_CATCH(status)                           \
-{                                                       \
-    LG_ERROR_MSG ("%s, line %d: LAGraph failure: %d",   \
-        __FILE__, __LINE__, status) ;                   \
-    LG_FREE_ALL ;                                       \
-    return (status) ;                                   \
+#define LAGraph_CATCH(status)                                           \
+{                                                                       \
+    LG_ERROR_MSG ("LAGraph failure (file %s, line %d): status: %d",     \
+        __FILE__, __LINE__, status) ;                                   \
+    LG_FREE_ALL ;                                                       \
+    return (status) ;                                                   \
 }
 #endif
+
+//------------------------------------------------------------------------------
+// LG_ASSERT_MSGF: assert an expression is true, and return if it is false
+//------------------------------------------------------------------------------
+
+// Identical to LG_ASSERT_MSG, except this allows a printf-style formatted
+// message.
+
+#define LG_ASSERT_MSGF(expression,error_status,expression_format,...)   \
+{                                                                       \
+    if (!(expression))                                                  \
+    {                                                                   \
+        LG_ERROR_MSG ("LAGraph failure (file %s, line %d): "            \
+            expression_format, __FILE__, __LINE__, __VA_ARGS__) ;       \
+        LG_FREE_ALL ;                                                   \
+        return (error_status) ;                                         \
+    }                                                                   \
+}
 
 //------------------------------------------------------------------------------
 // LG_ASSERT_MSG: assert an expression is true, and return if it is false
@@ -148,15 +164,7 @@ typedef unsigned char LG_void ;
 // included in the message.
 
 #define LG_ASSERT_MSG(expression,error_status,expression_message)       \
-{                                                                       \
-    if (!(expression))                                                  \
-    {                                                                   \
-        LG_ERROR_MSG ("LAGraph assertion \"" expression_message         \
-            "\" failed:\nfile \"%s\", line %d\n", __FILE__, __LINE__) ; \
-        LG_FREE_ALL ;                                                   \
-        return (error_status) ;                                         \
-    }                                                                   \
-}
+    LG_ASSERT_MSGF (expression,error_status,"%s",expression_message)
 
 //------------------------------------------------------------------------------
 // LG_ASSERT: assert an expression is true, and return if it is false
@@ -178,7 +186,7 @@ typedef unsigned char LG_void ;
     if (!(expression))                                                  \
     {                                                                   \
         LG_ERROR_MSG ("LAGraph assertion \"" LG_XSTR(expression)        \
-            "\" failed:\nfile \"%s\", line %d\n", __FILE__, __LINE__) ; \
+            "\" failed:\nfile \"%s\", line %d", __FILE__, __LINE__) ;   \
         LG_FREE_ALL ;                                                   \
         return (error_status) ;                                         \
     }                                                                   \
