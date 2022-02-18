@@ -4,11 +4,11 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-//
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
+
+// This is a Basic algorithm (no extra G-> properties are required),
+// but it is not user-callable (see LAGraph_BreadthFirstSearch instead).
 
 // References:
 //
@@ -73,7 +73,8 @@ int LG_BreadthFirstSearch_vanilla
 
     // determine the semiring type
     GrB_Type     int_type  = (n > INT32_MAX) ? GrB_INT64 : GrB_INT32 ;
-    GrB_BinaryOp second_op = (n > INT32_MAX) ? GrB_SECOND_INT64 : GrB_SECOND_INT32;
+    GrB_BinaryOp
+        second_op = (n > INT32_MAX) ? GrB_SECOND_INT64 : GrB_SECOND_INT32 ;
     GrB_Semiring semiring  = NULL;
     GrB_IndexUnaryOp ramp = NULL ;
 

@@ -10,8 +10,8 @@
 
 // Count the number of triangles in a graph,
 
-// Advanced API: compute G->ndiag, G->structure_is_symmetric, and
-// G->rowdegree (if needed) before calling.
+// This is an Advanced algorithm (G->ndiag, G->rowdegree,
+// G->structure_is_symmetric are required).
 
 // Given a symmetric graph A with no-self edges, LAGraph_TriangleCount_Methods
 // counts the number of triangles in the graph.  A triangle is a clique of size
@@ -172,7 +172,7 @@ int LAGraph_TriangleCount_Methods
     //--------------------------------------------------------------------------
 
     GrB_Index n ;
-    GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
+    GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
     GrB_TRY (GrB_Matrix_new (&C, GrB_INT64, n, n)) ;
     GrB_Semiring semiring = LAGraph_plus_one_int64 ;
     GrB_Monoid monoid = GrB_PLUS_MONOID_INT64 ;

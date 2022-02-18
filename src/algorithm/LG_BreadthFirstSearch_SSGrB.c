@@ -4,11 +4,11 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-//
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
+
+// This is an Advanced algorithm (G->AT and G->rowdegree are required),
+// but it is not user-callable (see LAGraph_BreadthFirstSearch instead).
 
 // References:
 //
@@ -89,10 +89,8 @@ int LG_BreadthFirstSearch_SSGrB
 
     GrB_Matrix AT ;
     GrB_Vector Degree = G->rowdegree ;
-    LAGraph_Kind kind = G->kind ;
-
-    if (kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
-       (kind == LAGRAPH_ADJACENCY_DIRECTED &&
+    if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
+       (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
         G->structure_is_symmetric == LAGRAPH_TRUE))
     {
         // AT and A have the same structure and can be used in both directions

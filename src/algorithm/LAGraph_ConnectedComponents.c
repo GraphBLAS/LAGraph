@@ -4,17 +4,13 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-//
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
 
+// This is an Advanced algorithm (G->structure_is_symmetric must be known).
+
 // Connected Components via LG_CC_FastSV6 if using SuiteSparse:GraphBLAS and
 // its GxB extensions, or LG_CC_Boruvka otherwise.  The former is much faster.
-
-// This is an Advanced method, since G is input (not input/output), and
-// G->structure_is_symmetric is required for a directed graph.
 
 #include "LG_alg_internal.h"
 

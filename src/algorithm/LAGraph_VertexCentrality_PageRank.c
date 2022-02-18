@@ -8,12 +8,11 @@
 
 //------------------------------------------------------------------------------
 
-// PageRank (not for the GAP benchmark, but for production use).  This is an
-// LAGraph Advanced method, since it requires the G->AT and G->rowdegree
-// properties to appear in G on input.
+// This is an Advanced algorithm (G->AT and G->rowdegree are required).
 
-// Do not use this method for the GAP benchmark.  Use
-// LAGraph_VertexCentrality_PageRankGAP instead.
+// PageRank (not for the GAP benchmark, but for production use).  Do not use
+// this method for the GAP benchmark.  Use LAGraph_VertexCentrality_PageRankGAP
+// instead.
 
 // Unlike LAGraph_VertexCentrality_PageRankGAP, this algorithm handles sinks
 // correctly (nodes with no outgoing edges).  The GAP method ignores sinks, and
@@ -66,10 +65,9 @@ int LAGraph_VertexCentrality_PageRank
     GrB_Vector sink = NULL, rsink = NULL ;
     LG_ASSERT (centrality != NULL, GrB_NULL_POINTER) ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
-    LAGraph_Kind kind = G->kind ; 
-    int A_sym_structure = G->structure_is_symmetric ;
     GrB_Matrix AT ;
-    if (kind == LAGRAPH_ADJACENCY_UNDIRECTED || A_sym_structure == LAGRAPH_TRUE)
+    if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
+        G->structure_is_symmetric == LAGRAPH_TRUE)
     {
         // A and A' have the same structure
         AT = G->A ;

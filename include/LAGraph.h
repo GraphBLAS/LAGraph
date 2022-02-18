@@ -34,7 +34,7 @@
 #define LAGRAPH_VERSION_MAJOR 0
 #define LAGRAPH_VERSION_MINOR 9
 #define LAGRAPH_VERSION_UPDATE 9
-#define LAGRAPH_DATE "Feb 16, 2022"
+#define LAGRAPH_DATE "Feb 18, 2022"
 
 //==============================================================================
 // include files and helper macros
@@ -136,7 +136,7 @@
 /*
     GrB_Vector level, parent ;
     char msg [LAGRAPH_MSG_LEN] ;
-    int status = LAGraph_BreadthFirstSearch (&level, &parent, G, src, true, msg) ;
+    int status = LAGraph_BreadthFirstSearch (&level, &parent, G, src, msg) ;
     if (status < 0)
     {
         printf ("error: %s\n", msg) ;
@@ -780,7 +780,7 @@ int LAGraph_DeleteProperties
 //------------------------------------------------------------------------------
 
 // LAGraph_Property_AT constructs G->AT, the transpose of G->A.  This matrix is
-// required by some of the algorithms.  Basic methods may construct G->AT if
+// required by some of the algorithms.  Basic algorithms may construct G->AT if
 // they require it.  The matrix G->AT is then available for subsequent use.
 // If G->A changes, G->AT should be freed and recomputed.  If G->AT already
 // exists, it is left unchanged.  As a result, if G->A changes, G->AT should
@@ -1613,10 +1613,80 @@ int LAGraph_Sort3
 // TODO: need naming convention to know if a method is Basic or Advanced
 
 //------------------------------------------------------------------------------
+// LAGraph_VertexCentrality: various vertex centrality metrics
+//------------------------------------------------------------------------------
+
+// This is a Basic algorithm (properties are computed as needed)
+
+// TODO LAGraph_VertexCentrality is a draft:  may be hard to do in general.
+// Different metrics may require different input parameters (PageRank needs
+// tol, itermax, damping; BC needs # sources or a list of sources, etc).  It
+// might be hard for a Basic algorithm to pick these parameters by itself, and a
+// unified Basic algorithm would need to fit will with all future Centrality
+// metrics.  Perhaps we don't write this as a Basic algorithm yet, and add it only
+// when more Centrality metrics are added?
+
+typedef enum
+{
+    LAGRAPH_CENTRALITY_BETWEENNESS = 0,     // node or edge centrality
+    LAGRAPH_CENTRALITY_PAGERANKGAP = 1,     // GAP-style PageRank
+    LAGRAPH_CENTRALITY_PAGERANK = 2,        // PageRank (handle dangling nodes)
+    // ...
+}
+LAGraph_Centrality_Kind ;
+
+LAGRAPH_PUBLIC
+int LAGraph_VertexCentrality
+(
+    // output:
+    GrB_Vector *centrality,     // centrality(i): centrality metric of node i
+    // input/output:
+    LAGraph_Graph G,            // input/output graph
+    // input:
+    LAGraph_Centrality_Kind kind,    // kind of centrality to compute
+//  int accuracy,               // 0:quick, 1:better, ... max:exact?
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
+// LAGraph_TriangleCount
+//------------------------------------------------------------------------------
+
+// This is a Basic algorithm (G->ndiag, G->rowdegree, G->structure_is_symmetric
+// are computed, if not present).
+
+/*
+ * Count the triangles in a graph.
+ *
+ * @param[out]    ntriangles On successful return, contains the number of tris.
+ * @param[in,out] G          The graph, symmetric, no self loops.
+ * @param[out]    msg        Error message if a failure code is returned.
+ */
+LAGRAPH_PUBLIC
+int LAGraph_TriangleCount
+(
+    // output:
+    uint64_t      *ntriangles,   // # of triangles
+    // input/output:
+    LAGraph_Graph  G,
+    char          *msg
+) ;
+
+//==============================================================================
+// LAGraph Advanced algorithms
+//==============================================================================
+
+// The Advanced algorithms require the caller to select the algorithm and choose
+// any parameter settings.  G is not modified, and so it is an input-only
+// parameter to these methods.  If an Advanced algorithm requires a graph
+// property to be computed, it must be computed prior to calling the Advanced
+// method.
+
+//------------------------------------------------------------------------------
 // LAGraph_BreadthFirstSearch: breadth-first search
 //------------------------------------------------------------------------------
 
-// This is an Advanced algorithm (G->AT and G->rowdegree required).
+// This is an Advanced algorithm (G->AT and G->rowdgree are required).
 
 /*
  * Perform breadth-first traversal, computing parent vertex ID's
@@ -1653,68 +1723,10 @@ int LAGraph_BreadthFirstSearch
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_VertexCentrality: various vertex centrality metrics
-//------------------------------------------------------------------------------
-
-// TODO LAGraph_VertexCentrality is a draft:  may be hard to do in general.
-// Different metrics may require different input parameters (PageRank needs
-// tol, itermax, damping; BC needs # sources or a list of sources, etc).  It
-// might be hard for a Basic method to pick these parameters by itself, and a
-// unified Basic method would need to fit will with all future Centrality
-// metrics.  Perhaps we don't write this as a Basic method yet, and add it only
-// when more Centrality metrics are added?
-
-typedef enum
-{
-    LAGRAPH_CENTRALITY_BETWEENNESS = 0,     // node or edge centrality
-    LAGRAPH_CENTRALITY_PAGERANKGAP = 1,     // GAP-style PageRank
-    LAGRAPH_CENTRALITY_PAGERANK = 2,        // PageRank (handle dangling nodes)
-    // ...
-}
-LAGraph_Centrality_Kind ;
-
-LAGRAPH_PUBLIC
-int LAGraph_VertexCentrality
-(
-    // output:
-    GrB_Vector *centrality,     // centrality(i): centrality metric of node i
-    // input/output:
-    LAGraph_Graph G,            // input graph
-    // input:
-    LAGraph_Centrality_Kind kind,    // kind of centrality to compute
-//  int accuracy,               // 0:quick, 1:better, ... max:exact?
-    char *msg
-) ;
-
-//------------------------------------------------------------------------------
-// LAGraph_TriangleCount
-//------------------------------------------------------------------------------
-
-// This is a Basic method.
-
-/*
- * Count the triangles in a graph.
- *
- * @param[out]    ntriangles On successful return, contains the number of tris.
- * @param[in,out] G          The graph, symmetric, no self loops.
- * @param[out]    msg        Error message if a failure code is returned.
- */
-LAGRAPH_PUBLIC
-int LAGraph_TriangleCount
-(
-    // output:
-    uint64_t      *ntriangles,   // # of triangles
-    // input/output:
-    LAGraph_Graph  G,
-    char          *msg
-) ;
-
-//------------------------------------------------------------------------------
 // LAGraph_ConnectedComponents: connected components of an undirected graph
 //------------------------------------------------------------------------------
 
-// This is an Advanced method, since G is input (not input/output), and
-// G->structure_is_symmetric is required for a directed graph.
+// This is an Advanced algorithm (G->structure_is_symmetric must be known),
 
 LAGRAPH_PUBLIC
 int LAGraph_ConnectedComponents
@@ -1731,11 +1743,14 @@ int LAGraph_ConnectedComponents
 // LAGraph_SingleSourceShortestPath: single-source shortest path
 //------------------------------------------------------------------------------
 
+// This is an Advanced algorithm (G->emin is required).
+
 // The graph G must have an adjacency matrix of type GrB_INT32, GrB_INT64,
 // GrB_UINT32, GrB_UINT64, GrB_FP32, or GrB_FP64.  If G->A has any other type,
 // GrB_NOT_IMPLEMENTED is returned.
 
-// FUTURE: add a method to compute an appropriate (estimated) Delta
+// FUTURE: add a Basic algorithm that computes G->emin, G->emax, and then uses
+// that information to compute an appropriate (estimated) Delta,
 
 LAGRAPH_PUBLIC
 int LAGraph_SingleSourceShortestPath
@@ -1750,19 +1765,11 @@ int LAGraph_SingleSourceShortestPath
     char *msg
 ) ;
 
-//==============================================================================
-// LAGraph Advanced algorithms
-//==============================================================================
-
-// The Advanced methods require the caller to select the algorithm and choose
-// any parameter settings.  G is not modified, and so it is an input-only
-// parameter to these methods.  If an Advanced algorithm requires a graph
-// property to be computed, it must be computed prior to calling the Advanced
-// method.
-
 //------------------------------------------------------------------------------
 // LAGraph_VertexCentrality_Betweenness: betweeness centrality metric
 //------------------------------------------------------------------------------
+
+// This is an Advanced algorithm (G->AT is required).
 
 LAGRAPH_PUBLIC
 int LAGraph_VertexCentrality_Betweenness
@@ -1779,6 +1786,8 @@ int LAGraph_VertexCentrality_Betweenness
 //------------------------------------------------------------------------------
 // LAGraph_VertexCentrality_PageRank: pagerank
 //------------------------------------------------------------------------------
+
+// This is an Advanced algorithm (G->AT and G->rowdegree are required).
 
 // LAGraph_VertexCentrality_PageRank computes the standard pagerank of a
 // directed graph G.  Sinks (nodes with no out-going edges) are handled.
@@ -1800,6 +1809,8 @@ int LAGraph_VertexCentrality_PageRank
 //------------------------------------------------------------------------------
 // LAGraph_VertexCentrality_PageRankGAP: GAP-style pagerank
 //------------------------------------------------------------------------------
+
+// This is an Advanced algorithm (G->AT and G->rowdegree are required).
 
 // LAGraph_VertexCentrality_PageRankGAP computes the GAP-style pagerank of a
 // directed graph G.  Sinks (nodes with no out-going edges) are not handled.
@@ -1823,6 +1834,9 @@ int LAGraph_VertexCentrality_PageRankGAP
 // LAGraph_TriangleCount_Methods: triangle counting
 //------------------------------------------------------------------------------
 
+// This is an Advanced algorithm (G->ndiag, G->rowdegree,
+// G->structure_is_symmetric are required).
+
 /* Count the triangles in a graph. Advanced API
  *
  * @param[out]    ntriangles On successful return, contains the number of tris.
@@ -1836,8 +1850,8 @@ int LAGraph_VertexCentrality_PageRankGAP
  *                           4:  Sandia2:    ntri = sum (sum ((U * U) .* U))
  *                           5:  SandiaDot:  ntri = sum (sum ((L * U') .* L)).
  *                           6:  SandiaDot2: ntri = sum (sum ((U * L') .* U)).
- * @param[in,out] presort    controls the presort of the graph. If set
- *                           to 2 on input, presort will be set to sort type used
+ * @param[in,out] presort    controls the presort of the graph. If set to 2 on
+ *                           input, presort will be set to sort type used
  *                           on output:
  *                             0: no sort
  *                             1: sort by degree, ascending order

@@ -7,6 +7,9 @@
 
 //------------------------------------------------------------------------------
 
+// This is an Advanced algorithm (G->structure_is_symmetric must be known),
+// but it is not user-callable (see LAGraph_ConnectedComponents instead).
+
 // Code is based on the algorithm described in the following paper:
 // Zhang, Azad, Hu. FastSV: A Distributed-Memory Connected Component
 // Algorithm with Fast Convergence (SIAM PP20)

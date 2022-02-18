@@ -8,8 +8,9 @@
 
 //------------------------------------------------------------------------------
 
-// PageRank for the GAP benchmark.  This is an LAGraph Advanced method, since
-// it requires the G->AT and G->rowdegree properties to appear in G on input.
+// This is an Advanced algorithm (G->AT and G->rowdegree are required).
+
+// PageRank for the GAP benchmark (only).  Do not use in production.
 
 // This algorithm follows the specification given in the GAP Benchmark Suite:
 // https://arxiv.org/abs/1508.03619 which assumes that both A and A' are
@@ -62,10 +63,9 @@ int LAGraph_VertexCentrality_PageRankGAP
     GrB_Vector r = NULL, d = NULL, t = NULL, w = NULL, d1 = NULL ;
     LG_ASSERT (centrality != NULL, GrB_NULL_POINTER) ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
-    LAGraph_Kind kind = G->kind ; 
-    int A_sym_structure = G->structure_is_symmetric ;
     GrB_Matrix AT ;
-    if (kind == LAGRAPH_ADJACENCY_UNDIRECTED || A_sym_structure == LAGRAPH_TRUE)
+    if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
+        G->structure_is_symmetric == LAGRAPH_TRUE)
     {
         // A and A' have the same structure
         AT = G->A ;

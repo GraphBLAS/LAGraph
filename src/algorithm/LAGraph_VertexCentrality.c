@@ -4,13 +4,13 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-
 // Contributed by Tim Davis, Texas A&M University
 
 //------------------------------------------------------------------------------
 
-// LAGraph_VertexCentrality is a Basic method for computing many types of
-// centrality metrics:
+// This is a Basic algorithm (properties are computed as needed)
+
+// LAGraph_VertexCentrality computes many types of centrality metrics:
 //
 //  (1) betweenness centrality
 //  (2) pagerank
@@ -37,8 +37,8 @@ int LAGraph_VertexCentrality    // TODO: write this
 (
     // output:
     GrB_Vector *centrality,     // centrality(i): centrality metric of node i
-    // input:
-    LAGraph_Graph G,            // input graph
+    // input/output:
+    LAGraph_Graph G,            // input/output graph
     // input:
     LAGraph_Centrality_Kind kind,    // kind of centrality to compute
 //  int accuracy,               // TODO?: 0:quick, 1:better, ... max:exact

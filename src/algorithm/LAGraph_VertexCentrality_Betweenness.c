@@ -12,6 +12,8 @@
 // LAGraph_VertexCentrality_Betweenness: Batch algorithm for computing
 // betweeness centrality, using push-pull optimization.
 
+// This is an Advanced algorithm (G->AT is required).
+
 // This method computes an approximation of the betweenness algorithm.
 //                               ____
 //                               \      sigma(s,t | i)
@@ -41,11 +43,6 @@
 // are ignored; just the structure of two matrices are used.
 
 // Each phase uses push-pull direction optimization.
-
-// This is an LAGraph Advanced method, since it requires the source nodes to be
-// specified, and G->AT must be present (unless G is undirected or G->A is
-// known to have a symmetric structure, in which case G->A is used for both A
-// and AT).
 
 //------------------------------------------------------------------------------
 
@@ -123,12 +120,11 @@ int LAGraph_VertexCentrality_Betweenness
     LG_ASSERT (centrality != NULL, GrB_NULL_POINTER) ;
     (*centrality) = NULL ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
-    LAGraph_Kind kind = G->kind ;
-    int A_sym_structure = G->structure_is_symmetric ;
 
     GrB_Matrix A = G->A ;
     GrB_Matrix AT ;
-    if (kind == LAGRAPH_ADJACENCY_UNDIRECTED || A_sym_structure == LAGRAPH_TRUE)
+    if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
+        G->structure_is_symmetric == LAGRAPH_TRUE)
     {
         // A and A' have the same structure
         AT = A ;

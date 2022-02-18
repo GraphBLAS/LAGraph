@@ -4,11 +4,11 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-//
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
 
 //------------------------------------------------------------------------------
+
+// This is an Advanced algorithm (G->structure_is_symmetric must be known),
+// but it is not user-callable (see LAGraph_ConnectedComponents instead).
 
 // Code is based on Boruvka's minimum spanning forest algorithm.
 // Contributed by Yongzhe Zhang (zyz915@gmail.com).

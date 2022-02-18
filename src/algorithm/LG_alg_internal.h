@@ -8,7 +8,8 @@
 
 //------------------------------------------------------------------------------
 
-// These definitions are not meant for the end-user of LAGraph or GraphBLAS
+// These definitions are not meant for the end-user of LAGraph or GraphBLAS.
+// None of these methods are user-callable.
 
 #ifndef LG_ALG_INTERNAL_H
 #define LG_ALG_INTERNAL_H

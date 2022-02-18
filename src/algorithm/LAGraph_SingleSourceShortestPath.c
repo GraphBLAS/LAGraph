@@ -7,6 +7,8 @@
 
 //------------------------------------------------------------------------------
 
+// This is an Advanced algorithm (G->emin is required).
+
 // Single source shortest path with delta stepping.  Contributed by Jinhao
 // Chen, Scott Kolodziej and Tim Davis, Texas A&M University.  Adapted from
 // GraphBLAS Template Library (GBTL) by Scott McMillian and Tze Meng Low.
@@ -26,7 +28,7 @@
 // NOTE: this method gets stuck in an infinite loop when there are negative-
 // weight cycles in the graph.
 
-// FUTURE: a Basic method that picks Delta automatically
+// FUTURE: a Basic algorithm that picks Delta automatically
 
 #define LG_FREE_WORK        \
 {                           \
@@ -70,7 +72,7 @@ int LAGraph_SingleSourceShortestPath
     GrB_Vector *path_length,    // path_length (i) is the length of the shortest
                                 // path from the source vertex to vertex i
     // input:
-    const LAGraph_Graph G,
+    const LAGraph_Graph G,      // input graph, not modified
     GrB_Index source,           // source vertex
     GrB_Scalar Delta,           // delta value for delta stepping
     char *msg
@@ -252,6 +254,11 @@ int LAGraph_SingleSourceShortestPath
         {
             GrB_TRY (GrB_Scalar_extractElement_FP64 (&emin, G->emin)) ;
         }
+//      else
+//      {
+//          // a future Basic algorithm should compute G->emin and perhaps
+//          // G->emax, then compute Delta automatically.
+//      }
         negative_edge_weights = (emin < 0) ;
     }
 
