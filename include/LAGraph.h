@@ -307,6 +307,9 @@
 // GraphBLAS and LAGraph both use the convention that negative values are
 // errors, and the LAGraph_status is a superset of the GrB_Info enum.  As a
 // result, the user can define LAGraph_CATCH and GrB_TRY as the same operation.
+// The main difference between the two would be the error message string.  For
+// LAGraph, the string is the last parameter, and LAGraph_CATCH can optionally
+// print it out.  For GraphBLAS, the GrB_error mechanism can return a string.
 
 #define GrB_TRY(GrB_method)                                                  \
 {                                                                            \
@@ -1619,12 +1622,6 @@ int LAGraph_Sort3
 // This is a Basic algorithm (properties are computed as needed)
 
 // TODO LAGraph_VertexCentrality is a draft:  may be hard to do in general.
-// Different metrics may require different input parameters (PageRank needs
-// tol, itermax, damping; BC needs # sources or a list of sources, etc).  It
-// might be hard for a Basic algorithm to pick these parameters by itself, and a
-// unified Basic algorithm would need to fit will with all future Centrality
-// metrics.  Perhaps we don't write this as a Basic algorithm yet, and add it only
-// when more Centrality metrics are added?
 
 typedef enum
 {

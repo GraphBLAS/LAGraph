@@ -31,6 +31,13 @@
 
 // TODO: do we ensure that sum(centrality) == 1 for all methods?
 
+// TODO: Different metrics may require different input parameters (PageRank
+// needs tol, itermax, damping; BC needs # sources or a list of sources, etc).
+// It might be hard for a Basic algorithm to pick these parameters by itself,
+// and a unified Basic algorithm would need to fit will with all future
+// Centrality metrics.  Perhaps we don't write this Basic algorithm yet, and
+// add it only when more Centrality metrics are added.
+
 #include "LG_alg_internal.h"
 
 int LAGraph_VertexCentrality    // TODO: write this
