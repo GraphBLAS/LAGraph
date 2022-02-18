@@ -176,20 +176,22 @@ typedef unsigned char LG_void ;
 //      void P = LAGraph_Malloc ( ... ) ;
 //      LG_ASSERT (P != NULL, GrB_OUT_OF_MEMORY) ;
 //
-// If LAGraph_Malloc fails and returns P as NULL, the msg is set to:
+// If LAGraph_Malloc fails and returns P as NULL, the msg is set to a single
+// line with:
 //
-//      LAGraph assertion "P != NULL" failed:
-//      file: LAGraph_something, line: 42
+//      LAGraph assertion "P != NULL" failed
+//      (file: LAGraph_something.c, line: 42): status: -102
 
-#define LG_ASSERT(expression, error_status)                             \
-{                                                                       \
-    if (!(expression))                                                  \
-    {                                                                   \
-        LG_ERROR_MSG ("LAGraph assertion \"" LG_XSTR(expression)        \
-            "\" failed:\nfile \"%s\", line %d", __FILE__, __LINE__) ;   \
-        LG_FREE_ALL ;                                                   \
-        return (error_status) ;                                         \
-    }                                                                   \
+#define LG_ASSERT(expression, error_status)                                 \
+{                                                                           \
+    if (!(expression))                                                      \
+    {                                                                       \
+        LG_ERROR_MSG ("LAGraph assertion \"%s\" failed (file %s, line %d):" \
+            " status: %d", LG_XSTR(expression), __FILE__, __LINE__,         \
+            error_status) ;                                                 \
+        LG_FREE_ALL ;                                                       \
+        return (error_status) ;                                             \
+    }                                                                       \
 }
 
 //------------------------------------------------------------------------------
