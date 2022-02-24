@@ -10,6 +10,7 @@ jobs:
         config:
          - {grb_version: 6.0.2, conda_grb_package_hash: h9c3ff4c}
          - {grb_version: 6.1.4, conda_grb_package_hash: h9c3ff4c}
+         - {grb_version: 6.2.1, conda_grb_package_hash: h9c3ff4c}
     steps:
     - name: Checkout
       uses: actions/checkout@v2.0.0
@@ -50,6 +51,7 @@ jobs:
         config:
          - {grb_version: 6.0.2, conda_grb_package_hash: h4a89273}
          - {grb_version: 6.1.4, conda_grb_package_hash: h4a89273}
+         - {grb_version: 6.2.1, conda_grb_package_hash: h4a89273}
     steps:
     - name: Checkout
       uses: actions/checkout@v2.0.0
