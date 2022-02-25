@@ -22,7 +22,7 @@ void test_PageRank(void)
     OK (LAGraph_Property_RowDegree (G, msg)) ;
 
     // compute its pagerank
-    OK (LAGr_PageRank (&centrality, G, 0.85, 1e-4, 100, &niters, msg)) ;
+    OK (LAGr_PageRank (&centrality, &niters, G, 0.85, 1e-4, 100, msg)) ;
     OK (LAGraph_Delete (&G, msg)) ;
 
     // compare with MATLAB: cmatlab = centrality (G, 'pagerank')

@@ -1797,14 +1797,14 @@ int LAGr_Betweenness
 LAGRAPH_PUBLIC
 int LAGr_PageRank
 (
-    // outputs:
+    // output:
     GrB_Vector *centrality, // centrality(i): pagerank of node i
-    // inputs:
+    int *iters,             // number of iterations taken
+    // input:
     const LAGraph_Graph G,  // input graph
     float damping,          // damping factor (typically 0.85)
     float tol,              // stopping tolerance (typically 1e-4) ;
     int itermax,            // maximum number of iterations (typically 100)
-    int *iters,             // output: number of iterations taken
     char *msg
 ) ;
 
@@ -1821,14 +1821,14 @@ int LAGr_PageRank
 LAGRAPH_PUBLIC
 int LAGr_PageRankGAP
 (
-    // outputs:
+    // output:
     GrB_Vector *centrality, // centrality(i): GAP-style pagerank of node i
-    // inputs:
+    int *iters,             // number of iterations taken
+    // input:
     const LAGraph_Graph G,  // input graph
     float damping,          // damping factor (typically 0.85)
     float tol,              // stopping tolerance (typically 1e-4) ;
     int itermax,            // maximum number of iterations (typically 100)
-    int *iters,             // output: number of iterations taken
     char *msg
 ) ;
 

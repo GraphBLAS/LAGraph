@@ -206,8 +206,8 @@ void test_ranker(void)
     OK (LAGraph_Property_RowDegree (G, msg)) ;
 
     // compute its pagerank using the GAP method
-    OK (LAGr_PageRankGAP (&centrality, G, 0.85,
-        1e-4, 100, &niters, msg)) ;
+    OK (LAGr_PageRankGAP (&centrality, &niters, G, 0.85,
+        1e-4, 100, msg)) ;
 
     // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
     float err = difference (centrality, karate_rank) ;
@@ -219,7 +219,7 @@ void test_ranker(void)
     OK (GrB_free (&centrality)) ;
 
     // compute its pagerank using the standard method
-    OK (LAGr_PageRank (&centrality, G, 0.85, 1e-4, 100, &niters, msg)) ;
+    OK (LAGr_PageRank (&centrality, &niters, G, 0.85, 1e-4, 100, msg)) ;
 
     // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
     err = difference (centrality, karate_rank) ;
@@ -230,7 +230,7 @@ void test_ranker(void)
     OK (GrB_free (&centrality)) ;
 
     // test for failure to converge
-    int status = LAGr_PageRank (&centrality, G, 0.85, 1e-4, 2, &niters, msg) ;
+    int status = LAGr_PageRank (&centrality, &niters, G, 0.85, 1e-4, 2, msg) ;
     printf ("status: %d msg: %s\n", status, msg) ;
     TEST_CHECK (status == LAGRAPH_CONVERGENCE_FAILURE) ;
 
@@ -252,8 +252,8 @@ void test_ranker(void)
     OK (LAGraph_Property_RowDegree (G, msg)) ;
 
     // compute its pagerank using the GAP method
-    OK (LAGr_PageRankGAP (&centrality, G, 0.85,
-        1e-4, 100, &niters, msg)) ;
+    OK (LAGr_PageRankGAP (&centrality, &niters, G, 0.85,
+        1e-4, 100, msg)) ;
 
     // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
     err = difference (centrality, west0067_rank) ;
@@ -264,7 +264,7 @@ void test_ranker(void)
     OK (GrB_free (&centrality)) ;
 
     // compute its pagerank using the standard method
-    OK (LAGr_PageRank (&centrality, G, 0.85, 1e-4, 100, &niters, msg)) ;
+    OK (LAGr_PageRank (&centrality, &niters, G, 0.85, 1e-4, 100, msg)) ;
 
     // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
     err = difference (centrality, west0067_rank) ;
@@ -294,8 +294,8 @@ void test_ranker(void)
     OK (LAGraph_DisplayGraph (G, LAGraph_COMPLETE, stdout, msg)) ;
 
     // compute its pagerank using the GAP method ("bleeds" rank)
-    OK (LAGr_PageRankGAP (&centrality, G, 0.85,
-        1e-4, 100, &niters, msg)) ;
+    OK (LAGr_PageRankGAP (&centrality, &niters, G, 0.85,
+        1e-4, 100, msg)) ;
     err = difference (centrality, ldbc_directed_example_rank) ;
     OK (GrB_reduce (&rsum, NULL, GrB_PLUS_MONOID_FP32, centrality, NULL)) ;
     printf ("\nGAP-style page rank is expected to be wrong:\n") ;
@@ -306,7 +306,7 @@ void test_ranker(void)
     OK (GrB_free (&centrality)) ;
 
     // compute its pagerank using the standard method
-    OK (LAGr_PageRank (&centrality, G, 0.85, 1e-4, 100, &niters, msg)) ;
+    OK (LAGr_PageRank (&centrality, &niters, G, 0.85, 1e-4, 100, msg)) ;
 
     // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
     err = difference (centrality, ldbc_directed_example_rank) ;

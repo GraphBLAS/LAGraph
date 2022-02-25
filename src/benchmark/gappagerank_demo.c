@@ -114,8 +114,8 @@ int main (int argc, char **argv)
         {
             GrB_free (&PR) ;
             LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-            LAGraph_TRY (LAGr_PageRankGAP (&PR, G,
-                damping, tol, itermax, &iters, msg)) ;
+            LAGraph_TRY (LAGr_PageRankGAP (&PR, &iters, G,
+                damping, tol, itermax, msg)) ;
             double t1 ;
             LAGraph_TRY (LAGraph_Toc (&t1, tic, NULL)) ;
             printf ("trial: %2d time: %10.4f sec\n", trial, t1) ;
@@ -154,8 +154,8 @@ int main (int argc, char **argv)
         {
             GrB_free (&PR) ;
             LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-            LAGraph_TRY (LAGr_PageRank (&PR, G,
-                damping, tol, itermax, &iters, msg)) ;
+            LAGraph_TRY (LAGr_PageRank (&PR, &iters, G,
+                damping, tol, itermax, msg)) ;
             double t1 ;
             LAGraph_TRY (LAGraph_Toc (&t1, tic, NULL)) ;
             printf ("trial: %2d time: %10.4f sec\n", trial, t1) ;
