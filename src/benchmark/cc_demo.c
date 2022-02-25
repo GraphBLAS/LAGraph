@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/Test2/ConnectedComponents/test_cc: test LAGraph_ConnectedComponents
+// LAGraph/src/benchmark/cc_demo.c: benchmark LAGr_ConnectedComponents
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -120,7 +120,7 @@ int main (int argc, char **argv)
     double tic [2], tcheck ;
 
     // warmup
-    LAGraph_TRY (LAGraph_ConnectedComponents (&components, G, msg)) ;
+    LAGraph_TRY (LAGr_ConnectedComponents (&components, G, msg)) ;
     GrB_Index nCC = countCC (components, n) ;
     printf ("nCC: %20.0g\n", (double) nCC) ;
 
@@ -141,7 +141,7 @@ int main (int argc, char **argv)
     printf ("# of trials: %d\n\n", NTRIALS) ;
 
     //--------------------------------------------------------------------------
-    // LAGraph_ConnectedComponents
+    // LAGr_ConnectedComponents
     //--------------------------------------------------------------------------
 
     for (int trial = 1 ; trial <= nt ; trial++)
@@ -156,7 +156,7 @@ int main (int argc, char **argv)
             double ttrial ;
             GrB_free (&components2) ;
             LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-            LAGraph_TRY (LAGraph_ConnectedComponents (&components2, G, msg)) ;
+            LAGraph_TRY (LAGr_ConnectedComponents (&components2, G, msg)) ;
             LAGraph_TRY (LAGraph_Toc (&ttrial, tic, NULL)) ;
             ttt += ttrial ;
             printf ("SV6:      nthreads: %2d trial: %2d time: %10.4f sec\n",

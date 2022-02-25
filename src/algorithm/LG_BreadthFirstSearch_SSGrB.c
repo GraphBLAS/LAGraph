@@ -8,7 +8,7 @@
 //------------------------------------------------------------------------------
 
 // This is an Advanced algorithm (G->AT and G->rowdegree are required),
-// but it is not user-callable (see LAGraph_BreadthFirstSearch instead).
+// but it is not user-callable (see LAGr_BreadthFirstSearch instead).
 
 // References:
 //

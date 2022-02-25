@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// test_gappagerank: read in (or create) a matrix and test the GAP PageRank
+// LAGraph/src/benchmark/gappagerank_demo.c: benchmark GAP PageRank
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -114,7 +114,7 @@ int main (int argc, char **argv)
         {
             GrB_free (&PR) ;
             LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-            LAGraph_TRY (LAGraph_VertexCentrality_PageRankGAP (&PR, G,
+            LAGraph_TRY (LAGr_PageRankGAP (&PR, G,
                 damping, tol, itermax, &iters, msg)) ;
             double t1 ;
             LAGraph_TRY (LAGraph_Toc (&t1, tic, NULL)) ;
@@ -154,7 +154,7 @@ int main (int argc, char **argv)
         {
             GrB_free (&PR) ;
             LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-            LAGraph_TRY (LAGraph_VertexCentrality_PageRank (&PR, G,
+            LAGraph_TRY (LAGr_PageRank (&PR, G,
                 damping, tol, itermax, &iters, msg)) ;
             double t1 ;
             LAGraph_TRY (LAGraph_Toc (&t1, tic, NULL)) ;

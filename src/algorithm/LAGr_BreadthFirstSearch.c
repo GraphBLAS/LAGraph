@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_BreadthFirstSearch:  breadth-first search dispatch
+// LAGr_BreadthFirstSearch:  breadth-first search dispatch
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -15,7 +15,7 @@
 
 #include "LG_alg_internal.h"
 
-int LAGraph_BreadthFirstSearch
+int LAGr_BreadthFirstSearch
 (
     // output:
     GrB_Vector    *level,

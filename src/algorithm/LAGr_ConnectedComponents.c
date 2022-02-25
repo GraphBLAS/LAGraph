@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_ConnectedComponents:  connected components of an undirected graph
+// LAGr_ConnectedComponents:  connected components of an undirected graph
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -14,7 +14,7 @@
 
 #include "LG_alg_internal.h"
 
-int LAGraph_ConnectedComponents
+int LAGr_ConnectedComponents
 (
     // output:
     GrB_Vector *component,  // component(i)=s if node i is in the component

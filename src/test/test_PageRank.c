@@ -56,7 +56,7 @@ float difference (GrB_Vector centrality, double *matlab_result)
 
 // The first two matrices have no sinks (nodes with zero outdegree) so the
 // MATLAB centrality (G, 'pagerank'), LAGraph_VertextCentrality_PageRankGAP,
-// and LAGraph_VertexCentrality_PageRank results will be essentially the same.
+// and LAGr_PageRank results will be essentially the same.
 
 // MATLAB computes in double precision, while LAGraph_*PageRank* computes in
 // single precision, so the difference will be about 1e-5 or so.
@@ -167,7 +167,7 @@ double west0067_rank [67] = {
     0.0223213267 } ;
 
 // ldbc-directed-example.mtx has two sinks: nodes 3 and 9
-// its pagerank must be computed with LAGraph_VertexCentrality_PageRank.
+// its pagerank must be computed with LAGr_PageRank.
 double ldbc_directed_example_rank [10] = {
     0.1697481823,
     0.0361514465,
@@ -206,7 +206,7 @@ void test_ranker(void)
     OK (LAGraph_Property_RowDegree (G, msg)) ;
 
     // compute its pagerank using the GAP method
-    OK (LAGraph_VertexCentrality_PageRankGAP (&centrality, G, 0.85,
+    OK (LAGr_PageRankGAP (&centrality, G, 0.85,
         1e-4, 100, &niters, msg)) ;
 
     // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
@@ -218,8 +218,7 @@ void test_ranker(void)
     OK (GrB_free (&centrality)) ;
 
     // compute its pagerank using the standard method
-    OK (LAGraph_VertexCentrality_PageRank (&centrality, G, 0.85,
-        1e-4, 100, &niters, msg)) ;
+    OK (LAGr_PageRank (&centrality, G, 0.85, 1e-4, 100, &niters, msg)) ;
 
     // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
     err = difference (centrality, karate_rank) ;
@@ -246,7 +245,7 @@ void test_ranker(void)
     OK (LAGraph_Property_RowDegree (G, msg)) ;
 
     // compute its pagerank using the GAP method
-    OK (LAGraph_VertexCentrality_PageRankGAP (&centrality, G, 0.85,
+    OK (LAGr_PageRankGAP (&centrality, G, 0.85,
         1e-4, 100, &niters, msg)) ;
 
     // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
@@ -257,8 +256,7 @@ void test_ranker(void)
     OK (GrB_free (&centrality)) ;
 
     // compute its pagerank using the standard method
-    OK (LAGraph_VertexCentrality_PageRank (&centrality, G, 0.85,
-        1e-4, 100, &niters, msg)) ;
+    OK (LAGr_PageRank (&centrality, G, 0.85, 1e-4, 100, &niters, msg)) ;
 
     // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
     err = difference (centrality, west0067_rank) ;
@@ -287,7 +285,7 @@ void test_ranker(void)
     OK (LAGraph_DisplayGraph (G, LAGraph_COMPLETE, stdout, msg)) ;
 
     // compute its pagerank using the GAP method ("bleeds" rank)
-    OK (LAGraph_VertexCentrality_PageRankGAP (&centrality, G, 0.85,
+    OK (LAGr_PageRankGAP (&centrality, G, 0.85,
         1e-4, 100, &niters, msg)) ;
     err = difference (centrality, ldbc_directed_example_rank) ;
     OK (GrB_reduce (&rsum, NULL, GrB_PLUS_MONOID_FP32, centrality, NULL)) ;
@@ -299,8 +297,7 @@ void test_ranker(void)
     OK (GrB_free (&centrality)) ;
 
     // compute its pagerank using the standard method
-    OK (LAGraph_VertexCentrality_PageRank (&centrality, G, 0.85,
-        1e-4, 100, &niters, msg)) ;
+    OK (LAGr_PageRank (&centrality, G, 0.85, 1e-4, 100, &niters, msg)) ;
 
     // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
     err = difference (centrality, ldbc_directed_example_rank) ;

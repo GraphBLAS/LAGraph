@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/Test2/BreadthFirstSearch/test_bfs.c: test LAGraph_BreadthFirstSearch
+// LAGraph/src/benchmark/bfs_demo.c: benchmark for LAGr_BreadthFirstSearch
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -111,7 +111,7 @@ int main (int argc, char **argv)
     double twarmup, tw [2] ;
     GrB_TRY (GrB_Matrix_extractElement (&src, SourceNodes, 0, 0)) ;
     LAGraph_TRY (LAGraph_Tic (tw, msg)) ;
-    LAGraph_TRY (LAGraph_BreadthFirstSearch (NULL, &parent, G, src, msg)) ;
+    LAGraph_TRY (LAGr_BreadthFirstSearch (NULL, &parent, G, src, msg)) ;
     GrB_free (&parent) ;
     LAGraph_TRY (LAGraph_Toc (&twarmup, tw, msg)) ;
     printf ("warmup: parent only, pushpull: %g sec\n", twarmup) ;
@@ -147,7 +147,7 @@ int main (int argc, char **argv)
 
                 GrB_free (&parent) ;
                 LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
-                LAGraph_TRY (LAGraph_BreadthFirstSearch (NULL, &parent,
+                LAGraph_TRY (LAGr_BreadthFirstSearch (NULL, &parent,
                     G, src, msg)) ;
                 LAGraph_TRY (LAGraph_Toc (&ttrial, tic, msg)) ;
                 tp [nthreads] += ttrial ;
@@ -180,7 +180,7 @@ int main (int argc, char **argv)
                 GrB_free (&level) ;
 
                 LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
-                LAGraph_TRY (LAGraph_BreadthFirstSearch (&level, NULL,
+                LAGraph_TRY (LAGr_BreadthFirstSearch (&level, NULL,
                     G, src, msg)) ;
                 LAGraph_TRY (LAGraph_Toc (&ttrial, tic, msg)) ;
                 tl [nthreads] += ttrial ;
@@ -215,7 +215,7 @@ int main (int argc, char **argv)
                 GrB_free (&parent) ;
                 GrB_free (&level) ;
                 LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
-                LAGraph_TRY (LAGraph_BreadthFirstSearch (&level, &parent,
+                LAGraph_TRY (LAGr_BreadthFirstSearch (&level, &parent,
                     G, src, msg)) ;
                 LAGraph_TRY (LAGraph_Toc (&ttrial, tic, msg)) ;
                 tpl [nthreads] += ttrial ;

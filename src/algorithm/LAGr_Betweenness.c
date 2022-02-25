@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_VertexCentrality_Betweenness: vertex betweenness-centrality
+// LAGr_Betweenness: vertex betweenness-centrality
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -9,7 +9,7 @@
 
 //------------------------------------------------------------------------------
 
-// LAGraph_VertexCentrality_Betweenness: Batch algorithm for computing
+// LAGr_Betweenness: Batch algorithm for computing
 // betweeness centrality, using push-pull optimization.
 
 // This is an Advanced algorithm (G->AT is required).
@@ -72,10 +72,10 @@
 #include "LG_internal.h"
 
 //------------------------------------------------------------------------------
-// LAGraph_VertexCentrality_Betweenness: vertex betweenness-centrality
+// LAGr_Betweenness: vertex betweenness-centrality
 //------------------------------------------------------------------------------
 
-int LAGraph_VertexCentrality_Betweenness
+int LAGr_Betweenness
 (
     // output:
     GrB_Vector *centrality,     // centrality(i): betweeness centrality of i

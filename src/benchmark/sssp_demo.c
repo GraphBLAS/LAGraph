@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// test_sssp: test for LAGraph
+// LAGraph/src/benchmark/sssp_demo: test for LAGraph SSSP
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -140,8 +140,8 @@ int main (int argc, char **argv)
 
             GrB_free (&pathlen) ;
             LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
-            LAGraph_TRY (LAGraph_SingleSourceShortestPath (&pathlen,
-                G, src, Delta, msg)) ;
+            LAGraph_TRY (LAGr_SingleSourceShortestPath (&pathlen, G, src,
+                Delta, msg)) ;
             LAGraph_TRY (LAGraph_Toc (&ttrial, tic, msg)) ;
 
             printf ("sssp15:  threads: %2d trial: %2d source %g "

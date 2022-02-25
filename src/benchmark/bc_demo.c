@@ -160,8 +160,8 @@ int main (int argc, char **argv)
             GrB_free (&centrality) ;
             double tic [2] ;
             LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-            LAGraph_TRY (LAGraph_VertexCentrality_Betweenness
-                (&centrality, G, vertex_list, batch_size, msg)) ;
+            LAGraph_TRY (LAGr_Betweenness (&centrality, G, vertex_list,
+                batch_size, msg)) ;
             double t2 ;
             LAGraph_TRY (LAGraph_Toc (&t2, tic, msg)) ;
             printf ("BC time %2d: %12.4f (sec)\n", Nthreads [t], t2) ;

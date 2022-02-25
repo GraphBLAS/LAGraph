@@ -34,7 +34,7 @@
 #define LAGRAPH_VERSION_MAJOR 0
 #define LAGRAPH_VERSION_MINOR 9
 #define LAGRAPH_VERSION_UPDATE 9
-#define LAGRAPH_DATE "Feb 18, 2022"
+#define LAGRAPH_DATE "Feb 24, 2022"
 
 //==============================================================================
 // include files and helper macros
@@ -136,7 +136,7 @@
 /*
     GrB_Vector level, parent ;
     char msg [LAGRAPH_MSG_LEN] ;
-    int status = LAGraph_BreadthFirstSearch (&level, &parent, G, src, msg) ;
+    int status = LAGr_BreadthFirstSearch (&level, &parent, G, src, msg) ;
     if (status < 0)
     {
         printf ("error: %s\n", msg) ;
@@ -276,7 +276,7 @@
         double *W = NULL ;
         char msg [LAGRAPH_MSG_LEN] ;
         (*parent) = NULL ;
-        LAGraph_TRY (LAGraph_BreadthFirstSearch (NULL, parent, G, src, true,
+        LAGraph_TRY (LAGr_BreadthFirstSearch (NULL, parent, G, src, true,
             msg)) ;
         // ...
         return (GrB_SUCCESS) ;
@@ -1335,7 +1335,7 @@ int LAGraph_KindName
 
 // LAGraph_SortByDegree sorts the nodes of a graph by their row or column
 // degrees.  The graph G->A itself is not changed.  Refer to
-// LAGraph_TriangleCount_Methods for an example of how to permute G->A after
+// LAGr_TriangleCount for an example of how to permute G->A after
 // calling this function.
 
 LAGRAPH_PUBLIC
@@ -1613,37 +1613,7 @@ int LAGraph_Sort3
 // graph G is both an input and an output of these methods, since they may be
 // modified.
 
-// TODO: need naming convention to know if a method is Basic or Advanced
-
-//------------------------------------------------------------------------------
-// LAGraph_VertexCentrality: various vertex centrality metrics
-//------------------------------------------------------------------------------
-
-// This is a Basic algorithm (properties are computed as needed)
-
-// TODO LAGraph_VertexCentrality is a draft:  may be hard to do in general.
-
-typedef enum
-{
-    LAGRAPH_CENTRALITY_BETWEENNESS = 0,     // node or edge centrality
-    LAGRAPH_CENTRALITY_PAGERANKGAP = 1,     // GAP-style PageRank
-    LAGRAPH_CENTRALITY_PAGERANK = 2,        // PageRank (handle dangling nodes)
-    // ...
-}
-LAGraph_Centrality_Kind ;
-
-LAGRAPH_PUBLIC
-int LAGraph_VertexCentrality
-(
-    // output:
-    GrB_Vector *centrality,     // centrality(i): centrality metric of node i
-    // input/output:
-    LAGraph_Graph G,            // input/output graph
-    // input:
-    LAGraph_Centrality_Kind kind,    // kind of centrality to compute
-//  int accuracy,               // 0:quick, 1:better, ... max:exact?
-    char *msg
-) ;
+// LAGraph Basic algorithms are named with the LAGraph_* prefix.
 
 //------------------------------------------------------------------------------
 // LAGraph_TriangleCount
@@ -1679,8 +1649,11 @@ int LAGraph_TriangleCount
 // property to be computed, it must be computed prior to calling the Advanced
 // method.
 
+// Advanced algorithms are named with the LAGr_* prefix, to distinguish them
+// from Basic algorithms.
+
 //------------------------------------------------------------------------------
-// LAGraph_BreadthFirstSearch: breadth-first search
+// LAGr_BreadthFirstSearch: breadth-first search
 //------------------------------------------------------------------------------
 
 // This is an Advanced algorithm (G->AT and G->rowdgree are required).
@@ -1708,7 +1681,7 @@ int LAGraph_TriangleCount
  */
 
 LAGRAPH_PUBLIC
-int LAGraph_BreadthFirstSearch
+int LAGr_BreadthFirstSearch
 (
     // output:
     GrB_Vector    *level,
@@ -1720,13 +1693,13 @@ int LAGraph_BreadthFirstSearch
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_ConnectedComponents: connected components of an undirected graph
+// LAGr_ConnectedComponents: connected components of an undirected graph
 //------------------------------------------------------------------------------
 
 // This is an Advanced algorithm (G->structure_is_symmetric must be known),
 
 LAGRAPH_PUBLIC
-int LAGraph_ConnectedComponents
+int LAGr_ConnectedComponents
 (
     // output:
     GrB_Vector *component,  // component(i)=s if node i is in the component
@@ -1737,7 +1710,7 @@ int LAGraph_ConnectedComponents
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_SingleSourceShortestPath: single-source shortest path
+// LAGr_SingleSourceShortestPath: single-source shortest path
 //------------------------------------------------------------------------------
 
 // This is an Advanced algorithm (G->emin is required).
@@ -1750,7 +1723,7 @@ int LAGraph_ConnectedComponents
 // that information to compute an appropriate (estimated) Delta,
 
 LAGRAPH_PUBLIC
-int LAGraph_SingleSourceShortestPath
+int LAGr_SingleSourceShortestPath
 (
     // output:
     GrB_Vector *path_length,    // path_length (i) is the length of the shortest
@@ -1763,13 +1736,13 @@ int LAGraph_SingleSourceShortestPath
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_VertexCentrality_Betweenness: betweeness centrality metric
+// LAGr_Betweenness: betweeness centrality metric
 //------------------------------------------------------------------------------
 
 // This is an Advanced algorithm (G->AT is required).
 
 LAGRAPH_PUBLIC
-int LAGraph_VertexCentrality_Betweenness
+int LAGr_Betweenness
 (
     // output:
     GrB_Vector *centrality,     // centrality(i): betweeness centrality of i
@@ -1781,16 +1754,16 @@ int LAGraph_VertexCentrality_Betweenness
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_VertexCentrality_PageRank: pagerank
+// LAGr_PageRank: pagerank
 //------------------------------------------------------------------------------
 
 // This is an Advanced algorithm (G->AT and G->rowdegree are required).
 
-// LAGraph_VertexCentrality_PageRank computes the standard pagerank of a
+// LAGr_PageRank computes the standard pagerank of a
 // directed graph G.  Sinks (nodes with no out-going edges) are handled.
 
 LAGRAPH_PUBLIC
-int LAGraph_VertexCentrality_PageRank
+int LAGr_PageRank
 (
     // outputs:
     GrB_Vector *centrality, // centrality(i): pagerank of node i
@@ -1804,17 +1777,17 @@ int LAGraph_VertexCentrality_PageRank
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_VertexCentrality_PageRankGAP: GAP-style pagerank
+// LAGr_PageRankGAP: GAP-style pagerank
 //------------------------------------------------------------------------------
 
 // This is an Advanced algorithm (G->AT and G->rowdegree are required).
 
-// LAGraph_VertexCentrality_PageRankGAP computes the GAP-style pagerank of a
+// LAGr_PageRankGAP computes the GAP-style pagerank of a
 // directed graph G.  Sinks (nodes with no out-going edges) are not handled.
 // This method should be used for the GAP benchmark only, not for production.
 
 LAGRAPH_PUBLIC
-int LAGraph_VertexCentrality_PageRankGAP
+int LAGr_PageRankGAP
 (
     // outputs:
     GrB_Vector *centrality, // centrality(i): GAP-style pagerank of node i
@@ -1828,7 +1801,7 @@ int LAGraph_VertexCentrality_PageRankGAP
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_TriangleCount_Methods: triangle counting
+// LAGr_TriangleCount: triangle counting
 //------------------------------------------------------------------------------
 
 // This is an Advanced algorithm (G->ndiag, G->rowdegree,
@@ -1893,7 +1866,7 @@ typedef enum
 LAGraph_TriangleCount_Presort ;
 
 LAGRAPH_PUBLIC
-int LAGraph_TriangleCount_Methods
+int LAGr_TriangleCount
 (
     // output:
     uint64_t       *ntriangles,

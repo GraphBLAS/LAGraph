@@ -32,14 +32,14 @@
 #include "LG_internal.h"
 #include "LG_test.h"
 
-// The output of LAGraph_ConnectedComponents is a vector Component, where
+// The output of LAGr_ConnectedComponents is a vector Component, where
 // Component(i)=s if node i is in the connected compononent whose
 // representative node is node s.  If s is a representative, then
 // Component(s)=s.  The number of connected components in the graph G is the
 // number of representatives.
 
 //------------------------------------------------------------------------------
-// test the results from LAGraph_ConnectedComponents 
+// test the results from LAGr_ConnectedComponents 
 //------------------------------------------------------------------------------
 
 // Because this method does on GxB_unpack on G->A, it should not be used in a

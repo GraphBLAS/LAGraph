@@ -8,7 +8,7 @@
 //------------------------------------------------------------------------------
 
 // This is an Advanced algorithm (G->structure_is_symmetric must be known),
-// but it is not user-callable (see LAGraph_ConnectedComponents instead).
+// but it is not user-callable (see LAGr_ConnectedComponents instead).
 
 // Code is based on Boruvka's minimum spanning forest algorithm.
 // Contributed by Yongzhe Zhang (zyz915@gmail.com).

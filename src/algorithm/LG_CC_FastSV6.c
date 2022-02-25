@@ -8,7 +8,7 @@
 //------------------------------------------------------------------------------
 
 // This is an Advanced algorithm (G->structure_is_symmetric must be known),
-// but it is not user-callable (see LAGraph_ConnectedComponents instead).
+// but it is not user-callable (see LAGr_ConnectedComponents instead).
 
 // Code is based on the algorithm described in the following paper:
 // Zhang, Azad, Hu. FastSV: A Distributed-Memory Connected Component
@@ -31,10 +31,10 @@
 // OK, and are ignored.  The values and type of A are ignored; just its
 // structure is accessed.
 
-// TODO: This function must not be called by multiple user threads at the same
+// NOTE: This function must not be called by multiple user threads at the same
 // time on the same graph G, since it unpacks G->A and then packs it back when
 // done.  G->A is unchanged when the function returns, but during execution
-// G->A is empty.  This will be fixed once the TODOs are finished below, and
+// G->A is empty.  This will be fixed once the todos are finished below, and
 // G->A will then become a truly read-only object (assuming GrB_wait (G->A)
 // has been done first).
 
@@ -279,7 +279,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     #define FASTSV_SAMPLES 4
     bool sampling = (nvals > n * FASTSV_SAMPLES * 2 && n > 1024) ;
 
-// [ TODO: nthreads will not be needed once GxB_select with a GxB_RankUnaryOp
+// [ todo: nthreads will not be needed once GxB_select with a GxB_RankUnaryOp
 // and a new GxB_extract are added to SuiteSparse:GraphBLAS.
     // determine # of threads to use
     int nthreads ;
@@ -342,7 +342,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     if (sampling)
     {
 
-// [ TODO: GxB_select, using a new operator: GxB_RankUnaryOp, will do all this,
+// [ todo: GxB_select, using a new operator: GxB_RankUnaryOp, will do all this,
 // with GxB_Matrix_select_RankOp_Scalar with operator GxB_LEASTRANK and a
 // GrB_Scalar input equal to FASTSV_SAMPLES.  Built-in operators will be,
 // (where y is INT64):
@@ -457,7 +457,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         GrB_TRY (GxB_Matrix_pack_CSR (T, &Tp, &Tj, &Tx, Tp_size, Tj_size,
             Tx_size, /* T is iso: */ true, A_jumbled, NULL)) ;
 
-// ] TODO: the above will all be done as a single call to GxB_select.
+// ] todo: the above will all be done as a single call to GxB_select.
 
         //----------------------------------------------------------------------
         // find the connected components of T
@@ -524,7 +524,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         //     j is in the key component.
         // (3) If A(i,:) has any deletions from (2), T(i,key) is added to T.
 
-// [ TODO: replace this with GxB_extract with GrB_Vector index arrays.
+// [ todo: replace this with GxB_extract with GrB_Vector index arrays.
 // See https://github.com/GraphBLAS/graphblas-api-c/issues/67 .
 // This method will not insert the new entries T(i,key) for rows i that have
 // had entries deleted.  That can be done with GrB_assign, with an n-by-1 mask

@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_TriangleCount_Methods: Triangle counting using various methods
+// LAGr_TriangleCount: Triangle counting using various methods
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -13,9 +13,9 @@
 // This is an Advanced algorithm (G->ndiag, G->rowdegree,
 // G->structure_is_symmetric are required).
 
-// Given a symmetric graph A with no-self edges, LAGraph_TriangleCount_Methods
-// counts the number of triangles in the graph.  A triangle is a clique of size
-// three, that is, 3 nodes that are all pairwise connected.
+// Given a symmetric graph A with no-self edges, LAGr_TriangleCount counts the
+// number of triangles in the graph.  A triangle is a clique of size three,
+// that is, 3 nodes that are all pairwise connected.
 
 // One of 6 methods are used, defined below where L and U are the strictly
 // lower and strictly upper triangular parts of the symmetrix matrix A,
@@ -52,7 +52,7 @@
 #include "LG_internal.h"
 
 //------------------------------------------------------------------------------
-// tricount_prep: construct L and U for LAGraph_TriangleCount_Methods
+// tricount_prep: construct L and U for LAGr_TriangleCount
 //------------------------------------------------------------------------------
 
 static int tricount_prep
@@ -97,7 +97,7 @@ static int tricount_prep
     LAGraph_Free ((void **) &P) ;           \
 }
 
-int LAGraph_TriangleCount_Methods
+int LAGr_TriangleCount
 (
     // output:
     uint64_t       *ntriangles,

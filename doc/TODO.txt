@@ -1,4 +1,4 @@
-As of Feb 18, 2022:
+As of Feb 24, 2022:
 
     * entire user guide
         experimental -> src, how to do it.
@@ -10,28 +10,14 @@ As of Feb 18, 2022:
     * test, document, polish all src & experimental: algorithms, utilities,
         and tests.
 
-    * how does the user know that one method is Basic and another Advanced?
-        Name of function?  We have no mechanism or naming scheme.
+    * draft name scheme:  LAGraph_* are Basic algorithms, LAGr_* are Advanced
 
     * check function names and API
-
-    * TODOs: in algorithms
-
-        * LAGraph_VertexCentrality: wrapper for 2 methods (BC, PageRank),
-            and future methods.  Can we skip this for LAGraph v1.0?  How do we
-            ask for an exact BC computation?  Do it in batches and sum up the
-            result?  Do we normalize the metrics so that sum(centrality) = 1?
-            How do we provide parameters to the various methods if we don't
-            have all methods written yet?  Move this to Future, below?
-
-        * LG_CC_SV6: need new GxB methods.  Implement for LAGraph v1.0?
-            Current method is not thread-safe.
-            Or move to Future, below?
 
     * add FUTURE to User Guide (see below)
 
 --------------------------------------------------------------------------------
-TODO: add FUTURE items as a section in the User Guide
+add FUTURE items as a section in the User Guide:
 
 FUTURE: LAGraph_SingleSourceShortestPath:  Write a Basic method that
             computes G->emin (that's easy).  And G->emax so it can decide on
@@ -63,9 +49,9 @@ FUTURE: can we exploit asynch algorithms? C += A*C for example?
         Gauss-Seidel, Afforest, etc?  I can do it in GraphBLAS; can LAGraph
         use it?
 
-FUTURE:
+FUTURE: for LG_CC_FastSV6.c:
 
-    * need new GxB methods in GraphBLAS for CC, ideally for v1.0 of LAGraph:
+    * need new GxB methods in GraphBLAS for CC,
         GxB_select with GxB_RankUnaryOp, and GxB_extract with GrB_Vectors as
         inputs instead of (GrB_Index *) arrays.
 

@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_VertexCentrality_PageRank: pagerank
+// LAGr_PageRankGAP: pagerank for the GAP benchmark
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -10,19 +10,20 @@
 
 // This is an Advanced algorithm (G->AT and G->rowdegree are required).
 
-// PageRank (not for the GAP benchmark, but for production use).  Do not use
-// this method for the GAP benchmark.  Use LAGraph_VertexCentrality_PageRankGAP
-// instead.
+// PageRank for the GAP benchmark (only).  Do not use in production.
 
-// Unlike LAGraph_VertexCentrality_PageRankGAP, this algorithm handles sinks
-// correctly (nodes with no outgoing edges).  The GAP method ignores sinks, and
-// thus sum(centrality) is not maintained as 1.  This method handles sinks
-// properly, and thus keeps sum(centrality) equal to 1.
+// This algorithm follows the specification given in the GAP Benchmark Suite:
+// https://arxiv.org/abs/1508.03619 which assumes that both A and A' are
+// already available, as are the row and column degrees.  The GAP specification
+// ignores dangling nodes (nodes with no outgoing edges, also called sinks),
+// and thus shouldn't be used in production.  This method is for the GAP
+// benchmark only.  See LAGr_PageRank for a method that
+// handles sinks correctly.  This method does not return a centrality metric
+// such that sum(centrality) is 1, if sinks are present.
 
 // The G->AT and G->rowdegree properties must be defined for this method.  If G
 // is undirected or G->A is known to have a symmetric structure, then G->A is
-// used instead of G->AT, however.  G->rowdegree must be computed so that it
-// contains no explicit zeros; as done by LAGraph_Property_RowDegree.
+// used instead of G->AT, however.
 
 #define LG_FREE_WORK                \
 {                                   \
@@ -30,8 +31,6 @@
     GrB_free (&d) ;                 \
     GrB_free (&t) ;                 \
     GrB_free (&w) ;                 \
-    GrB_free (&sink) ;              \
-    GrB_free (&rsink) ;             \
 }
 
 #define LG_FREE_ALL                 \
@@ -42,10 +41,10 @@
 
 #include "LG_internal.h"
 
-int LAGraph_VertexCentrality_PageRank
+int LAGr_PageRankGAP
 (
     // outputs:
-    GrB_Vector *centrality, // centrality(i): pagerank of node i
+    GrB_Vector *centrality, // centrality(i): GAP-style pagerank of node i
     // inputs:
     const LAGraph_Graph G,  // input graph
     float damping,          // damping factor (typically 0.85)
@@ -62,7 +61,6 @@ int LAGraph_VertexCentrality_PageRank
 
     LG_CLEAR_MSG ;
     GrB_Vector r = NULL, d = NULL, t = NULL, w = NULL, d1 = NULL ;
-    GrB_Vector sink = NULL, rsink = NULL ;
     LG_ASSERT (centrality != NULL, GrB_NULL_POINTER) ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     GrB_Matrix AT ;
@@ -91,8 +89,8 @@ int LAGraph_VertexCentrality_PageRank
     (*centrality) = NULL ;
     GrB_TRY (GrB_Matrix_nrows (&n, AT)) ;
 
-    const float damping_over_n = damping / n ;
     const float scaled_damping = (1 - damping) / n ;
+    const float teleport = scaled_damping ; // teleport = (1 - damping) / n
     float rdiff = 1 ;       // first iteration is always done
 
     // r = 1 / n
@@ -100,22 +98,6 @@ int LAGraph_VertexCentrality_PageRank
     GrB_TRY (GrB_Vector_new (&r, GrB_FP32, n)) ;
     GrB_TRY (GrB_Vector_new (&w, GrB_FP32, n)) ;
     GrB_TRY (GrB_assign (r, NULL, NULL, (float) (1.0 / n), GrB_ALL, n, NULL)) ;
-
-    // find all sinks, where sink(i) = true if node i has d_out(i)=0, or with
-    // d_out(i) not present.  LAGraph_Property_RowDegree computes d_out =
-    // G->rowdegree so that it has no explicit zeros, so a structural mask can
-    // be used here.
-    GrB_Index nsinks, nvals ;
-    GrB_TRY (GrB_Vector_nvals (&nvals, d_out)) ;
-    nsinks = n - nvals ;
-    if (nsinks > 0)
-    {
-        // sink<!struct(d_out)> = true
-        GrB_TRY (GrB_Vector_new (&sink, GrB_BOOL, n)) ;
-        GrB_TRY (GrB_assign (sink, d_out, NULL, (bool) true, GrB_ALL, n,
-            GrB_DESC_SC)) ;
-        GrB_TRY (GrB_Vector_new (&rsink, GrB_FP32, n)) ;
-    }
 
     // prescale with damping factor, so it isn't done each iteration
     // d = d_out / damping ;
@@ -136,18 +118,6 @@ int LAGraph_VertexCentrality_PageRank
 
     for ((*iters) = 0 ; (*iters) < itermax && rdiff > tol ; (*iters)++)
     {
-        float teleport = scaled_damping ; // teleport = (1 - damping) / n
-        if (nsinks > 0)
-        {
-            // handle the sinks: teleport += (damping/n) * sum (r (sink))
-            // rsink<struct(sink)> = r
-            GrB_TRY (GrB_Vector_clear (rsink)) ;
-            GrB_TRY (GrB_assign (rsink, sink, NULL, r, GrB_ALL, n, GrB_DESC_S));
-            float sum_rsink = 0 ;
-            GrB_TRY (GrB_reduce (&sum_rsink, NULL, GrB_PLUS_MONOID_FP32,
-                rsink, NULL)) ;
-            teleport += damping_over_n * sum_rsink ;
-        }
         // swap t and r ; now t is the old score
         GrB_Vector temp = t ; t = r ; r = temp ;
         // w = t ./ d

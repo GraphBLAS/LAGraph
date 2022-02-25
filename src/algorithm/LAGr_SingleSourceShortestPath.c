@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_SingleSourceShortestPath: single-source shortest path
+// LAGr_SingleSourceShortestPath: single-source shortest path
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -20,7 +20,7 @@
 // https://ieeexplore.ieee.org/document/8778222/references
 // https://arxiv.org/abs/1911.06895
 
-// LAGraph_SingleSourceShortestPath computes the shortest path lengths from the
+// LAGr_SingleSourceShortestPath computes the shortest path lengths from the
 // specified source vertex to all other vertices in the graph.
 
 // The parent vector is not computed; see LAGraph_BF_* instead.
@@ -66,7 +66,7 @@
     }                                                                         \
 }
 
-int LAGraph_SingleSourceShortestPath
+int LAGr_SingleSourceShortestPath
 (
     // output:
     GrB_Vector *path_length,    // path_length (i) is the length of the shortest

@@ -137,8 +137,7 @@ int main (int argc, char **argv)
     GrB_TRY (GrB_Vector_extractElement (&src, SourceNodes, 0)) ;
     src = src % n ;
 //  GxB_set (GxB_BURBLE, true) ;
-    LAGraph_TRY (LAGraph_SingleSourceShortestPath (&pathlen,
-        G, src, Delta, msg)) ;
+    LAGraph_TRY (LAGr_SingleSourceShortestPath (&pathlen, G, src, Delta, msg)) ;
     GxB_set (GxB_BURBLE, false) ;
     GrB_free (&pathlen) ;
 
@@ -173,8 +172,8 @@ int main (int argc, char **argv)
 
             GrB_free (&pathlen) ;
             LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
-            LAGraph_TRY (LAGraph_SingleSourceShortestPath (&pathlen,
-                G, src, Delta, msg)) ;
+            LAGraph_TRY (LAGr_SingleSourceShortestPath (&pathlen, G, src,
+                Delta, msg)) ;
             LAGraph_TRY (LAGraph_Toc (&ttrial, tic, msg)) ;
 
             printf ("sssp15:  threads: %2d trial: %2d source %8" PRIu64

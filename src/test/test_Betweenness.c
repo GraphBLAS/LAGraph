@@ -237,8 +237,7 @@ void test_bc (void)
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
     // compute its betweenness centrality
-    OK (LAGraph_VertexCentrality_Betweenness (&centrality, G, karate_sources,
-        4, msg)) ;
+    OK (LAGr_Betweenness (&centrality, G, karate_sources, 4, msg)) ;
     printf ("\nkarate bc:\n") ;
     OK (LAGraph_Delete (&G, msg)) ;
 
@@ -259,8 +258,7 @@ void test_bc (void)
     OK (LAGraph_Property_AT (G, msg)) ;
 
     // compute its betweenness centrality
-    OK (LAGraph_VertexCentrality_Betweenness (&centrality, G, west0067_sources,
-        4, msg)) ;
+    OK (LAGr_Betweenness (&centrality, G, west0067_sources, 4, msg)) ;
     printf ("\nwest0067 bc:\n") ;
     OK (LAGraph_Delete (&G, msg)) ;
 
@@ -297,7 +295,7 @@ void test_bc_brutal (void)
     printf ("\n") ;
 
     // compute its betweenness centrality
-    LG_BRUTAL_BURBLE (LAGraph_VertexCentrality_Betweenness (&centrality, G,
+    LG_BRUTAL_BURBLE (LAGr_Betweenness (&centrality, G,
             karate_sources, 4, msg)) ;
 
     // compare with GAP:

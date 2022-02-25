@@ -8,7 +8,7 @@
 //------------------------------------------------------------------------------
 
 // This is a Basic algorithm (no extra G-> properties are required),
-// but it is not user-callable (see LAGraph_BreadthFirstSearch instead).
+// but it is not user-callable (see LAGr_BreadthFirstSearch instead).
 
 // References:
 //

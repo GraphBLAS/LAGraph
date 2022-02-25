@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/Test2/TriangeCount/test_ct.c: test for LAGraph_TriangleCount_Methods
+// LAGraph/src/benchmark/tc_demo.c: benchmark for LAGr_TriangleCount 
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -149,7 +149,7 @@ int main (int argc, char **argv)
 
     // warmup method:
     // LAGraph_TriangleCount_SandiaDot2 = 6,   // sum (sum ((U * L') .* U))
-    LAGraph_TRY (LAGraph_TriangleCount_Methods(&ntriangles, G,
+    LAGraph_TRY (LAGr_TriangleCount (&ntriangles, G,
         LAGraph_TriangleCount_SandiaDot2, &presort, msg) );
     printf ("# of triangles: %" PRIu64 "\n", ntriangles) ;
     print_method (stdout, 6, presort) ;
@@ -213,7 +213,7 @@ int main (int argc, char **argv)
                     presort = sorting ;
 
                     LAGraph_TRY(
-                        LAGraph_TriangleCount_Methods(&nt2, G, method,
+                        LAGr_TriangleCount (&nt2, G, method,
                                                       &presort, msg) );
 
                     LAGraph_TRY (LAGraph_Toc (&ttrial [trial], tic, NULL)) ;

@@ -27,19 +27,19 @@ int LAGraph_TriangleCount
     // output:
     uint64_t      *ntriangles,   // # of triangles
     // input/output:
-    LAGraph_Graph  G,       // G->ndiag, G->rowdgree, G->structure_is_symmetric
+    LAGraph_Graph  G,       // G->ndiag, G->rowdegree, G->structure_is_symmetric
                             // are computed, if not already present
     char          *msg
 )
 {
     // find out if graph is symmetric, compute G->rowdegree, and G->ndiag
-    LG_TRY ( LAGraph_Property_SymmetricStructure(G, msg) );
-    LG_TRY ( LAGraph_Property_RowDegree(G, msg) );
-    LG_TRY ( LAGraph_Property_NDiag(G, msg) );
+    LG_TRY (LAGraph_Property_SymmetricStructure (G, msg)) ;
+    LG_TRY (LAGraph_Property_RowDegree (G, msg)) ;
+    LG_TRY (LAGraph_Property_NDiag (G, msg)) ;
 
     // default method and auto selection of sort
     int method  = LAGraph_TriangleCount_Default ;
     int presort = LAGraph_TriangleCount_AutoSort ;
-    return LAGraph_TriangleCount_Methods (ntriangles, G, method, &presort, msg);
+    return (LAGr_TriangleCount (ntriangles, G, method, &presort, msg)) ;
 }
 

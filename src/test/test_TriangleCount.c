@@ -92,7 +92,7 @@ void test_TriangleCount_Methods1(void)
     LAGraph_TriangleCount_Presort presort = LAGraph_TriangleCount_AutoSort ;
     ntriangles = 0UL;
     // LAGraph_TriangleCount_Burkhardt = 1,    // sum (sum ((A^2) .* A)) / 6
-    retval = LAGraph_TriangleCount_Methods(&ntriangles, G,
+    retval = LAGr_TriangleCount(&ntriangles, G,
         LAGraph_TriangleCount_Burkhardt, &presort, msg);
 
     TEST_CHECK(retval == 0);
@@ -114,7 +114,7 @@ void test_TriangleCount_Methods2(void)
     LAGraph_TriangleCount_Presort presort = LAGraph_TriangleCount_AutoSort ;
     ntriangles = 0UL;
     // LAGraph_TriangleCount_Cohen = 2,        // sum (sum ((L * U) .* A)) / 2
-    retval = LAGraph_TriangleCount_Methods(&ntriangles, G,
+    retval = LAGr_TriangleCount(&ntriangles, G,
         LAGraph_TriangleCount_Cohen, &presort, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
@@ -135,7 +135,7 @@ void test_TriangleCount_Methods3(void)
     LAGraph_TriangleCount_Presort presort = LAGraph_TriangleCount_AutoSort ;
     ntriangles = 0UL;
     // LAGraph_TriangleCount_Sandia = 3,       // sum (sum ((L * L) .* L))
-    retval = LAGraph_TriangleCount_Methods(&ntriangles, G,
+    retval = LAGr_TriangleCount(&ntriangles, G,
         LAGraph_TriangleCount_Sandia, &presort, msg);
     TEST_CHECK(retval == LAGRAPH_PROPERTY_MISSING);  // should fail (rowdegrees needs to be defined)
     TEST_MSG("retval = %d (%s)", retval, msg);
@@ -144,7 +144,7 @@ void test_TriangleCount_Methods3(void)
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LAGraph_TriangleCount_Methods(&ntriangles, G,
+    retval = LAGr_TriangleCount(&ntriangles, G,
         LAGraph_TriangleCount_Sandia, &presort, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
@@ -165,7 +165,7 @@ void test_TriangleCount_Methods4(void)
     LAGraph_TriangleCount_Presort presort = LAGraph_TriangleCount_AutoSort ;
     ntriangles = 0UL;
     // LAGraph_TriangleCount_Sandia2 = 4,      // sum (sum ((U * U) .* U))
-    retval = LAGraph_TriangleCount_Methods(&ntriangles, G,
+    retval = LAGr_TriangleCount(&ntriangles, G,
         LAGraph_TriangleCount_Sandia2, &presort, msg);
     TEST_CHECK(retval == LAGRAPH_PROPERTY_MISSING);  // should fail (rowdegrees needs to be defined)
     TEST_MSG("retval = %d (%s)", retval, msg);
@@ -174,7 +174,7 @@ void test_TriangleCount_Methods4(void)
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LAGraph_TriangleCount_Methods(&ntriangles, G,
+    retval = LAGr_TriangleCount(&ntriangles, G,
         LAGraph_TriangleCount_Sandia2, &presort, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
@@ -196,7 +196,7 @@ void test_TriangleCount_Methods5(void)
     ntriangles = 0UL;
     ntriangles = 0UL;
     // LAGraph_TriangleCount_SandiaDot = 5,    // sum (sum ((L * U') .* L))
-    retval = LAGraph_TriangleCount_Methods(&ntriangles, G,
+    retval = LAGr_TriangleCount(&ntriangles, G,
         LAGraph_TriangleCount_SandiaDot, &presort, msg);
     TEST_CHECK(retval == LAGRAPH_PROPERTY_MISSING);  // should fail (rowdegrees needs to be defined)
     TEST_MSG("retval = %d (%s)", retval, msg);
@@ -205,7 +205,7 @@ void test_TriangleCount_Methods5(void)
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LAGraph_TriangleCount_Methods(&ntriangles, G,
+    retval = LAGr_TriangleCount(&ntriangles, G,
         LAGraph_TriangleCount_SandiaDot, &presort, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
@@ -226,7 +226,7 @@ void test_TriangleCount_Methods6(void)
     LAGraph_TriangleCount_Presort presort = LAGraph_TriangleCount_AutoSort ;
     ntriangles = 0UL;
     // LAGraph_TriangleCount_SandiaDot2 = 6,   // sum (sum ((U * L') .* U))
-    retval = LAGraph_TriangleCount_Methods(&ntriangles, G,
+    retval = LAGr_TriangleCount(&ntriangles, G,
         LAGraph_TriangleCount_SandiaDot2 , &presort, msg);
     TEST_CHECK(retval == LAGRAPH_PROPERTY_MISSING);  // should fail (rowdegrees needs to be defined)
     TEST_MSG("retval = %d (%s)", retval, msg);
@@ -235,7 +235,7 @@ void test_TriangleCount_Methods6(void)
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LAGraph_TriangleCount_Methods(&ntriangles, G,
+    retval = LAGr_TriangleCount(&ntriangles, G,
         LAGraph_TriangleCount_SandiaDot2 , &presort, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
@@ -320,13 +320,13 @@ void test_TriangleCount_many (void)
             for (int presort = 0 ; presort <= 2 ; presort++)
             {
                 LAGraph_TriangleCount_Presort s = presort ;
-                OK (LAGraph_TriangleCount_Methods (&nt1, G, method, &s, msg)) ;
+                OK (LAGr_TriangleCount (&nt1, G, method, &s, msg)) ;
                 TEST_CHECK (nt1 == ntriangles) ;
             }
         }
 
         // invalid method
-        int result = LAGraph_TriangleCount_Methods (&nt1, G, 99, NULL, msg) ;
+        int result = LAGr_TriangleCount (&nt1, G, 99, NULL, msg) ;
         TEST_CHECK (result == GrB_INVALID_VALUE) ;
 
         OK (LAGraph_Delete (&G, msg)) ;
@@ -369,7 +369,7 @@ void test_TriangleCount_autosort (void)
     {
         LAGraph_TriangleCount_Presort presort = LAGraph_TriangleCount_AutoSort ;
         nt1 = 0 ;
-        OK (LAGraph_TriangleCount_Methods (&nt1, G, method, &presort, msg)) ;
+        OK (LAGr_TriangleCount (&nt1, G, method, &presort, msg)) ;
         TEST_CHECK (nt1 == 2749560) ;
     }
 
@@ -435,7 +435,7 @@ void test_TriangleCount_brutal (void)
             for (int presort = 0 ; presort <= 2 ; presort++)
             {
                 LAGraph_TriangleCount_Presort s = presort ;
-                LG_BRUTAL_BURBLE (LAGraph_TriangleCount_Methods (&nt1, G,
+                LG_BRUTAL_BURBLE (LAGr_TriangleCount (&nt1, G,
                     method, &s, msg)) ;
                 TEST_CHECK (nt1 == ntriangles) ;
             }
