@@ -1,5 +1,3 @@
-include_directories("/usr/local/opt/libomp/include")
-
 #-------------------------------------------------------------------------------
 # LAGraph/CMakeLists.txt:  cmake script for LAGraph
 #-------------------------------------------------------------------------------
@@ -113,7 +111,6 @@ message ( STATUS "GraphBLAS root:              " ${GRAPHBLAS_ROOT} )
 message ( STATUS "GraphBLAS libraries:         " ${GRAPHBLAS_LIBRARIES} )
 
 find_package (GraphBLAS REQUIRED MODULE)
-include_directories (${GRAPHBLAS_INCLUDE_DIR})
 message ( STATUS "GraphBLAS library:           " ${GRAPHBLAS_LIBRARY} )
 message ( STATUS "GraphBLAS version:           " ${GRAPHBLAS_VERSION} )
 message ( STATUS "GraphBLAS include directory: " ${GRAPHBLAS_INCLUDE_DIR} )
@@ -166,14 +163,18 @@ message ( STATUS "CMAKE have OpenMP:         " ${OPENMP_FOUND} )
 # include directories for lagraph library
 #-------------------------------------------------------------------------------
 
-#set ( CMAKE_INCLUDE_CURRENT_DIR ON )
+# The GraphBLAS include directory is placed last.  If it is /usr/local/include
+# and there is already a /usr/local/include/LAGraph.h present there, then that
+# LAGraph.h may be an older version of LAGraph.
 
 include_directories ( ${CMAKE_SOURCE_DIR}/include
                       ${CMAKE_SOURCE_DIR}/src/utility
-                      ${CMAKE_SOURCE_DIR}/test/include )
+                      ${CMAKE_SOURCE_DIR}/test/include
+                      ${GRAPHBLAS_INCLUDE_DIR} )
 #                      ${CMAKE_SOURCE_DIR}/experimental/include
 #                      ${CMAKE_SOURCE_DIR}/experimental/utility
 #                      ${CMAKE_SOURCE_DIR}/experimental/utility/Template )
+# include_directories("/usr/local/opt/libomp/include")
 
 set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLGDIR=${CMAKE_SOURCE_DIR}")
 

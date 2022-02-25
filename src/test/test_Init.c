@@ -27,11 +27,12 @@ char msg [LAGRAPH_MSG_LEN] ;
 void test_Init (void)
 {
 
-    OK (LAGraph_Init (msg)) ;
+    int status = LAGraph_Init (msg) ;
+    OK (status) ;
+    int ver [3] ;
 
     #if LG_SUITESPARSE
     const char *name, *date ;
-    int ver [3] ;
     OK (GxB_get (GxB_LIBRARY_NAME, &name)) ;
     OK (GxB_get (GxB_LIBRARY_DATE, &date)) ;
     OK (GxB_get (GxB_LIBRARY_VERSION, ver)) ;
@@ -40,12 +41,35 @@ void test_Init (void)
     printf (  "include: %s %d.%d.%d (%s)\n", GxB_IMPLEMENTATION_NAME,
         GxB_IMPLEMENTATION_MAJOR, GxB_IMPLEMENTATION_MINOR,
         GxB_IMPLEMENTATION_SUB, GxB_IMPLEMENTATION_DATE) ;
+    // make sure the SuiteSparse:GraphBLAS version and date match
+    TEST_CHECK (ver [0] == GxB_IMPLEMENTATION_MAJOR) ;
+    TEST_CHECK (ver [1] == GxB_IMPLEMENTATION_MINOR) ;
+    TEST_CHECK (ver [2] == GxB_IMPLEMENTATION_SUB) ;
+    OK (strcmp (date, GxB_IMPLEMENTATION_DATE)) ;
     #else
     printf ("\nVanilla GraphBLAS: no GxB* extensions\n") ;
     #endif
 
+    // check the LAGraph version using both LAGraph.h and LAGraph_Version
+    printf ("LAGraph version %d.%d.%d (%s) from LAGraph.h\n",
+        LAGRAPH_VERSION_MAJOR, LAGRAPH_VERSION_MINOR, LAGRAPH_VERSION_UPDATE,
+        LAGRAPH_DATE) ;
+
+    char version_date [LAGRAPH_MSG_LEN] ;
+    status = LAGraph_Version (ver, version_date, msg) ;
+    OK (status) ;
+
+    printf ("LAGraph version %d.%d.%d (%s) from LAGraph_Version\n",
+        ver [0], ver [1], ver [2], version_date) ;
+
+    // make sure the LAGraph version and date match
+    TEST_CHECK (ver [0] == LAGRAPH_VERSION_MAJOR) ;
+    TEST_CHECK (ver [1] == LAGRAPH_VERSION_MINOR) ;
+    TEST_CHECK (ver [2] == LAGRAPH_VERSION_UPDATE) ;
+    OK (strcmp (version_date, LAGRAPH_DATE)) ;
+
     // LAGraph_Init cannot be called twice
-    int status = LAGraph_Init (msg) ;
+    status = LAGraph_Init (msg) ;
     printf ("\nstatus: %d msg: %s\n", status, msg) ;
     TEST_CHECK (status != GrB_SUCCESS) ;
 

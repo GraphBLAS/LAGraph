@@ -213,7 +213,8 @@ void test_ranker(void)
     float err = difference (centrality, karate_rank) ;
     float rsum = 0 ;
     OK (GrB_reduce (&rsum, NULL, GrB_PLUS_MONOID_FP32, centrality, NULL)) ;
-    printf ("\nkarate:   err: %e (GAP),      sum(r): %e\n", err, rsum) ;
+    printf ("\nkarate:   err: %e (GAP),      sum(r): %e iters: %d\n",
+        err, rsum, niters) ;
     TEST_CHECK (err < 1e-4) ;
     OK (GrB_free (&centrality)) ;
 
@@ -223,9 +224,15 @@ void test_ranker(void)
     // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
     err = difference (centrality, karate_rank) ;
     OK (GrB_reduce (&rsum, NULL, GrB_PLUS_MONOID_FP32, centrality, NULL)) ;
-    printf ("karate:   err: %e (standard), sum(r): %e\n", err, rsum) ;
+    printf ("karate:   err: %e (standard), sum(r): %e iters: %d\n",
+        err, rsum, niters) ;
     TEST_CHECK (err < 1e-4) ;
     OK (GrB_free (&centrality)) ;
+
+    // test for failure to converge
+    int status = LAGr_PageRank (&centrality, G, 0.85, 1e-4, 2, &niters, msg) ;
+    printf ("status: %d msg: %s\n", status, msg) ;
+    TEST_CHECK (status == LAGRAPH_CONVERGENCE_FAILURE) ;
 
     OK (LAGraph_Delete (&G, msg)) ;
 
@@ -251,7 +258,8 @@ void test_ranker(void)
     // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
     err = difference (centrality, west0067_rank) ;
     OK (GrB_reduce (&rsum, NULL, GrB_PLUS_MONOID_FP32, centrality, NULL)) ;
-    printf ("west0067: err: %e (GAP),      sum(r): %e\n", err, rsum) ;
+    printf ("west0067: err: %e (GAP),      sum(r): %e iters: %d\n",
+        err, rsum, niters) ;
     TEST_CHECK (err < 1e-4) ;
     OK (GrB_free (&centrality)) ;
 
@@ -260,7 +268,8 @@ void test_ranker(void)
 
     // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
     err = difference (centrality, west0067_rank) ;
-    printf ("west0067: err: %e (standard), sum(r): %e\n", err, rsum) ;
+    printf ("west0067: err: %e (standard), sum(r): %e iters: %d\n",
+        err, rsum, niters) ;
     TEST_CHECK (err < 1e-4) ;
     OK (GrB_free (&centrality)) ;
 

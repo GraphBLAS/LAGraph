@@ -31,10 +31,11 @@
 // LAGraph version
 //==============================================================================
 
+// See also the LAGraph_Version utility method, which returns these values.
 #define LAGRAPH_VERSION_MAJOR 0
 #define LAGRAPH_VERSION_MINOR 9
 #define LAGRAPH_VERSION_UPDATE 9
-#define LAGRAPH_DATE "Feb 24, 2022"
+#define LAGRAPH_DATE "Feb 25, 2022"
 
 //==============================================================================
 // include files and helper macros
@@ -210,11 +211,15 @@
 //      G->ndiag, or LAGraph_DeleteDiag to remove all diagonal entries from
 //      G->A.
 
+//  LAGRAPH_CONVERGENCE_FAILURE:  an iterative process failed to converge to
+//      a good solution.
+
 #define LAGRAPH_INVALID_GRAPH                   (-1000)
 #define LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED    (-1001)
 #define LAGRAPH_IO_ERROR                        (-1002)
 #define LAGRAPH_PROPERTY_MISSING                (-1003)
 #define LAGRAPH_NO_SELF_EDGES_ALLOWED           (-1004)
+#define LAGRAPH_CONVERGENCE_FAILURE             (-1005)
 
 // The following return values and defintion of msg apply to all LAGraph
 // functions that return an int:
@@ -230,7 +235,6 @@
 
 // @retval <= -2000 an LAGraph error specific to a particular LAGraph method
 //         >= 2000
-
 
 // @param[in,out] msg   any error messages
 
@@ -329,10 +333,11 @@
 // default, they are pointers to the ANSI C11 malloc/calloc/realloc/free
 // functions.  Unlike all other LAGraph utility functions, these methods do not
 // return an int, and do not have a final char *msg parameter.  Instead, they
-// closely match the sytax of malloc/calloc/realloc/free.  LAGraph_Calloc and
-// LAGraph_free have the same syntax as calloc and free.  LAGraph_Malloc has
-// the syntax of calloc instead of malloc.  LAGraph_Realloc is very different
-// from realloc, since the ANSI C11 realloc syntax is difficult to use safely.
+// closely (but not exactly) follow the sytax of malloc/calloc/realloc/free.
+// LAGraph_Calloc and LAGraph_free have the same syntax as calloc and free.
+// LAGraph_Malloc has the syntax of calloc instead of malloc.  LAGraph_Realloc
+// is very different from realloc, since the ANSI C11 realloc syntax is
+// difficult to use safely.
 
 LAGRAPH_PUBLIC void * (* LAGraph_Malloc_function  ) (size_t)         ;
 LAGRAPH_PUBLIC void * (* LAGraph_Calloc_function  ) (size_t, size_t) ;
@@ -701,6 +706,33 @@ int LAGraph_Xinit
     void * (* user_calloc_function  ) (size_t, size_t),
     void * (* user_realloc_function ) (void *, size_t),
     void   (* user_free_function    ) (void *),
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
+// LAGraph_Version: determine the version of LAGraph
+//------------------------------------------------------------------------------
+
+// The version number and date can also be obtained via compile-time constants
+// from LAGraph.h.  However, it is possible to compile a user application that
+// #includes one version of LAGraph.h and then links with another version of
+// the LAGraph library later on, so the version number and date may differ from
+// the compile-time constants.
+
+// The LAGraph_Version method allows the library itself to be
+// queried, after it is linked in with the user application.
+
+// The version_number array is set to LAGRAPH_VERSION_MAJOR,
+// LAGRAPH_VERSION_MINOR, and LAGRAPH_VERSION_UPDATE, in that order.
+// The LAGRAPH_DATE string is copied into the user-provided version_date
+// string, and is null-terminated.
+
+LAGRAPH_PUBLIC
+int LAGraph_Version
+(
+    // output:
+    int version_number [3],     // user-provided array of size 3
+    char version_date [LAGRAPH_MSG_LEN],    // user-provided array
     char *msg
 ) ;
 

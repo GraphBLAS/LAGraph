@@ -133,8 +133,12 @@ int LAGr_PageRank
     // pagerank iterations
     //--------------------------------------------------------------------------
 
-    for ((*iters) = 0 ; (*iters) < itermax && rdiff > tol ; (*iters)++)
+    for ((*iters) = 0 ; rdiff > tol ; (*iters)++)
     {
+        // check for convergence
+        LG_ASSERT_MSGF ((*iters) < itermax, LAGRAPH_CONVERGENCE_FAILURE,
+            "pagerank failed to converge in %d iterations", itermax) ;
+        // determine the teleport property and handle any sinks
         float teleport = scaled_damping ; // teleport = (1 - damping) / n
         if (nsinks > 0)
         {
@@ -142,6 +146,7 @@ int LAGr_PageRank
             // rsink<struct(sink)> = r
             GrB_TRY (GrB_Vector_clear (rsink)) ;
             GrB_TRY (GrB_assign (rsink, sink, NULL, r, GrB_ALL, n, GrB_DESC_S));
+            // sum_rsink = sum (rsink)
             float sum_rsink = 0 ;
             GrB_TRY (GrB_reduce (&sum_rsink, NULL, GrB_PLUS_MONOID_FP32,
                 rsink, NULL)) ;
