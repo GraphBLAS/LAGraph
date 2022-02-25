@@ -1,4 +1,4 @@
-As of Feb 24, 2022:
+As of Feb 25, 2022:
 
     * entire user guide
         experimental -> src, how to do it.
@@ -7,8 +7,7 @@ As of Feb 24, 2022:
         also update top-level README.txt
         see also https://github.com/GraphBLAS/LAGraph-Docs .
 
-    * test, document, polish all src & experimental: algorithms, utilities,
-        and tests.
+    * document all src & experimental: algorithms, utilities, and tests.
 
     * draft name scheme:  LAGraph_* are Basic algorithms, LAGr_* are Advanced
 
