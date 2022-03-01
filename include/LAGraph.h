@@ -4,7 +4,6 @@
 
 // LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-//
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
@@ -34,8 +33,8 @@
 // See also the LAGraph_Version utility method, which returns these values.
 #define LAGRAPH_VERSION_MAJOR 0
 #define LAGRAPH_VERSION_MINOR 9
-#define LAGRAPH_VERSION_UPDATE 9
-#define LAGRAPH_DATE "Feb 25, 2022"
+#define LAGRAPH_VERSION_UPDATE 10
+#define LAGRAPH_DATE "Mar 1, 2022"
 
 //==============================================================================
 // include files and helper macros

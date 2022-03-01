@@ -1,10 +1,9 @@
 //----------------------------------------------------------------------------
-// LAGraph/src/test/test_lcc.c: test cases for Local Clustering Coefficient
+// LAGraph/experimental/test/test_lcc.c: tests for Local Clustering Coefficient
 // ----------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-//
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 

@@ -28,6 +28,7 @@ SET_TARGET_PROPERTIES ( lagraphx PROPERTIES
     PUBLIC_HEADER "include/LAGraphX.h" )
 set_property ( TARGET lagraphx PROPERTY C_STANDARD 11 )
 target_link_libraries(lagraphx PUBLIC lagraph ${GRAPHBLAS_LIBRARIES})
+target_link_directories( lagraphx BEFORE PUBLIC ${CMAKE_SOURCE_DIR}/build )
 
 #-------------------------------------------------------------------------------
 # static lagraphx library properties
@@ -43,6 +44,7 @@ SET_TARGET_PROPERTIES ( lagraphx_static PROPERTIES
     PUBLIC_HEADER "include/LAGraphX.h" )
 set_property ( TARGET lagraphx_static PROPERTY C_STANDARD 11 )
 target_link_libraries(lagraphx_static PUBLIC lagraph_static ${GRAPHBLAS_LIBRARIES})
+target_link_directories( lagraphx_static BEFORE PUBLIC ${CMAKE_SOURCE_DIR}/build )
 
 #-------------------------------------------------------------------------------
 # add OpenMP
@@ -59,14 +61,4 @@ endif ( )
 
 add_subdirectory(test)
 add_subdirectory(benchmark)
-#add_subdirectory(utility/test)
-#add_subdirectory(algorithm/test)
 
-#-------------------------------------------------------------------------------
-# lagraph installation location
-#-------------------------------------------------------------------------------
-
-# install ( TARGETS lagraph lagraph_static
-#     LIBRARY       DESTINATION ${CMAKE_INSTALL_LIBDIR}
-#     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-#     ARCHIVE       DESTINATION ${CMAKE_INSTALL_LIBDIR} )

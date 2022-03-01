@@ -38,7 +38,8 @@ SET_TARGET_PROPERTIES ( lagraphtest PROPERTIES
     SOVERSION ${LAGraph_VERSION_MAJOR}
     C_STANDARD_REQUIRED 11 )
 set_property ( TARGET lagraphtest PROPERTY C_STANDARD 11 )
-target_link_libraries(lagraphtest PUBLIC lagraph ${GRAPHBLAS_LIBRARIES})
+target_link_libraries( lagraphtest PUBLIC lagraph ${GRAPHBLAS_LIBRARIES})
+target_link_directories( lagraphtest BEFORE PUBLIC ${CMAKE_SOURCE_DIR}/build )
 
 #-------------------------------------------------------------------------------
 # static lagraphtest library properties
@@ -53,6 +54,7 @@ SET_TARGET_PROPERTIES ( lagraphtest_static PROPERTIES
     C_STANDARD_REQUIRED 11 )
 set_property ( TARGET lagraphtest_static PROPERTY C_STANDARD 11 )
 target_link_libraries(lagraphtest_static PUBLIC lagraph ${GRAPHBLAS_LIBRARIES})
+target_link_directories( lagraphtest_static BEFORE PUBLIC ${CMAKE_SOURCE_DIR}/build )
 
 #-------------------------------------------------------------------------------
 # add OpenMP
@@ -74,6 +76,7 @@ foreach( testsourcefile ${TEST_SOURCES} )
     message("Adding: ${testname}")
     add_executable( ${testname} ${testsourcefile})
     target_link_libraries( ${testname} lagraph lagraphx lagraphtest ${GRAPHBLAS_LIBRARIES} )
+    target_link_directories( ${testname} BEFORE PUBLIC ${CMAKE_SOURCE_DIR}/build )
     string( REPLACE "test_" "ctest_" ctestname ${testname})
     add_test( ${ctestname} ${testname})
 endforeach( testsourcefile ${TEST_SOURCES} )

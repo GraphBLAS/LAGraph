@@ -45,10 +45,10 @@ endif ( )
 set ( CMAKE_MACOSX_RPATH TRUE )
 
 # version of LAGraph
-set ( LAGraph_DATE "Jan 31, 2022" )
+set ( LAGraph_DATE "Mar 1, 2022" )
 set ( LAGraph_VERSION_MAJOR 0 )
 set ( LAGraph_VERSION_MINOR 9 )
-set ( LAGraph_VERSION_SUB   9 )
+set ( LAGraph_VERSION_SUB   10 )
 
 project ( lagraph
           VERSION "${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}" )
@@ -108,12 +108,7 @@ endif ( )
 # or uncomment the next line:
 set ( ENV{GRAPHBLAS_ROOT} ${CMAKE_SOURCE_DIR}/../GraphBLAS )
 message ( STATUS "GraphBLAS root:              " ${GRAPHBLAS_ROOT} )
-message ( STATUS "GraphBLAS libraries:         " ${GRAPHBLAS_LIBRARIES} )
-
 find_package (GraphBLAS REQUIRED MODULE)
-message ( STATUS "GraphBLAS library:           " ${GRAPHBLAS_LIBRARY} )
-message ( STATUS "GraphBLAS version:           " ${GRAPHBLAS_VERSION} )
-message ( STATUS "GraphBLAS include directory: " ${GRAPHBLAS_INCLUDE_DIR} )
 
 #-------------------------------------------------------------------------------
 # Is this really necessary?
