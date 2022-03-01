@@ -1,4 +1,4 @@
-As of Feb 28, 2022:
+As of Mar 1, 2022:
 
     * entire user guide
         experimental -> src, how to do it.
@@ -14,13 +14,6 @@ As of Feb 28, 2022:
     * check function names and API
 
     * add FUTURE to User Guide (see below)
-
-    * build system:  linking against the right version of liblagraph.so for
-        "make test":  if "sudo make install" has been done on a prior version,
-        it must be done for the latest version, or otherwise "make test" will
-        link against the prior version in (say) /usr/local/lib.  How do we
-        ensure that the "make test" will find the right version, in
-        LAGraph/build, not /usr/local/lib?
 
 --------------------------------------------------------------------------------
 add FUTURE items as a section in the User Guide:
