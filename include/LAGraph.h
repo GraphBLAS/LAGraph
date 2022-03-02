@@ -7,6 +7,8 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
+// Contributed by So and So FIXME
+
 //------------------------------------------------------------------------------
 
 // LAGraph is a package of graph algorithms based on GraphBLAS.  GraphBLAS
@@ -36,19 +38,24 @@
 #define LAGRAPH_VERSION_UPDATE 10
 #define LAGRAPH_DATE "Mar 1, 2022"
 
+// FIXME: macros should be all LAGRAPH_SOMETHING_HERE
+
 //==============================================================================
 // include files and helper macros
 //==============================================================================
 
+// FIXME: remove any #include's not required
 #include <time.h>
 #include <ctype.h>
 #include <limits.h>
 #include <GraphBLAS.h>
 #if defined ( _OPENMP )
+    // FIXME: move this to the functions that need it?
     #include <omp.h>
 #endif
 
 // LAGraph_MIN/MAX: suitable for integers, and non-NaN floating point
+// FIXME: upper case
 #define LAGraph_MIN(x,y) (((x) < (y)) ? (x) : (y))
 #define LAGraph_MAX(x,y) (((x) > (y)) ? (x) : (y))
 
@@ -88,6 +95,7 @@
 #endif
 
 // vanilla vs SuiteSparse:
+// use  LAGRAPH_VANILLA LAGRAPH_SUITESPARSE
 #if !defined ( LG_VANILLA )
     // by default, set LG_VANILLA to false
     #define LG_VANILLA 0
@@ -157,7 +165,6 @@
 //  successful results:
 //  GrB_SUCCESS = 0             // all is well
 //  GrB_NO_VALUE = 1            // A(i,j) requested but not there
-//  GxB_EXHAUSTED = 2           // iterator is exhausted (SuiteSparse only)
 
 //  errors:
 //  GrB_UNINITIALIZED_OBJECT = -1   // object has not been initialized
@@ -191,7 +198,7 @@
 //      in the error msg string returned by the method.
 
 //  LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED: the method requires an undirected
-//      graph, or a directed graph with an adjancency matrix that is known to
+//      graph, or a directed graph with an adjacency matrix that is known to
 //      have a symmetric structure.  LAGraph_Property_SymmetricStructure can
 //      be used to determine this property.
 
@@ -322,6 +329,8 @@
         GrB_CATCH (GraphBLAS_info) ;                                         \
     }                                                                        \
 }
+
+// FIXME: start here on Mar 1, 2022
 
 //==============================================================================
 // LAGraph memory management

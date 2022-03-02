@@ -15,6 +15,8 @@ As of Mar 1, 2022:
 
     * add FUTURE to User Guide (see below)
 
+    * error messages in src/benchmark
+
 --------------------------------------------------------------------------------
 add FUTURE items as a section in the User Guide:
 

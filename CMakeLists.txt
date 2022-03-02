@@ -30,6 +30,18 @@
 #   CC=gcc cmake ..
 
 #-------------------------------------------------------------------------------
+# link directories for lagraph library
+#-------------------------------------------------------------------------------
+
+# ensure the tests look for liblagraph.so and liblagraphx.so in the build
+# folder, before looking elsewhere
+# link_directories ( BEFORE ${CMAKE_BINARY_DIR} )
+# link_directories ( ${CMAKE_BINARY_DIR} )
+# message ( STATUS "binary dir:     : " ${CMAKE_BINARY_DIR} )
+# message ( STATUS "link directories: " ${CMAKE_LINK_DIRECTORIES} )
+# message ( STATUS "library path:   : " ${CMAKE_LIBRARY_PATH} )
+
+#-------------------------------------------------------------------------------
 # get the version
 #-------------------------------------------------------------------------------
 
