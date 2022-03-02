@@ -28,6 +28,8 @@
 // will be NULL when negative-weight cycle detected. Otherwise, the vector d
 // has d(k) as the shortest distance from s to k.
 
+// todo: this is a candidate for inclusion as a src/algorithm
+
 //------------------------------------------------------------------------------
 
 #define LG_FREE_ALL        \
