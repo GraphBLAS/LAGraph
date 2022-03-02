@@ -248,10 +248,10 @@ message ( STATUS "CMAKE C flags: " ${CMAKE_C_FLAGS} )
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
+enable_testing()
+
 add_subdirectory(src)
 add_subdirectory(experimental)
-
-enable_testing()
 
 #-------------------------------------------------------------------------------
 # to install use "sudo make install"
