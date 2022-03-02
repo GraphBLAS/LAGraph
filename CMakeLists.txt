@@ -17,7 +17,6 @@
 # To compile the LAGraph library and its tests and benchmarks, and run the
 # tests:
 #
-#   mkdir build
 #   cd build
 #   cmake ..
 #   make

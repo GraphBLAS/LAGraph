@@ -19,7 +19,6 @@ Thus, do not benchmark LAGraph on your own without asking the authors first.
 
 To build do the following from the top level directory:
 ```
-mkdir build
 cd build
 cmake ..
 make
