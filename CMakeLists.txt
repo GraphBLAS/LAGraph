@@ -166,10 +166,7 @@ include_directories ( ${CMAKE_SOURCE_DIR}/include
                       ${CMAKE_SOURCE_DIR}/src/utility
                       ${CMAKE_SOURCE_DIR}/test/include
                       ${GRAPHBLAS_INCLUDE_DIR} )
-#                      ${CMAKE_SOURCE_DIR}/experimental/include
-#                      ${CMAKE_SOURCE_DIR}/experimental/utility
-#                      ${CMAKE_SOURCE_DIR}/experimental/utility/Template )
-# include_directories("/usr/local/opt/libomp/include")
+include_directories("/usr/local/include")
 
 set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLGDIR=${CMAKE_SOURCE_DIR}")
 

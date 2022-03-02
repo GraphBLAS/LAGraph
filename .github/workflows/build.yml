@@ -28,7 +28,6 @@ jobs:
       run: |
         export GRAPHBLAS_INCLUDE_DIR=`pwd`/graphblas-binaries/include
         export GRAPHBLAS_LIBRARY=`pwd`/graphblas-binaries/lib/libgraphblas.so
-        mkdir build
         cd build
         cmake .. -DCOVERAGE=1 -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY}
         JOBS=2 make
@@ -73,7 +72,6 @@ jobs:
         mv CMakeLists.txt CMakeLists2.txt
         echo 'include_directories("/usr/local/opt/libomp/include")' > CMakeLists1.txt
         cat CMakeLists1.txt CMakeLists2.txt > CMakeLists.txt
-        mkdir build
         cd build
         CC=gcc cmake .. -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY}
         JOBS=2 make
