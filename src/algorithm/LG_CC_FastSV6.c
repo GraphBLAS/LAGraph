@@ -46,7 +46,7 @@
 #define LG_FREE_ALL ;
 #include "LG_internal.h"
 
-#if LG_SUITESPARSE
+#if LAGRAPH_SUITESPARSE
 
 //==============================================================================
 // fastsv: find the components of a graph
@@ -205,7 +205,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
 )
 {
 
-#if !LG_SUITESPARSE
+#if !LAGRAPH_SUITESPARSE
     LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
 #else
 

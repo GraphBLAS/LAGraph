@@ -110,7 +110,7 @@ void setup (void)
     printf ("\nsetup: %s\n", __FILE__) ;
     printf ("data is in [%s]\n", LG_DATA_DIR) ;
     OK (LAGraph_Init (msg)) ;
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     OK (GxB_get (GxB_LIBRARY_NAME, &name)) ;
     OK (GxB_get (GxB_LIBRARY_DATE, &date)) ;
     OK (GxB_get (GxB_LIBRARY_VERSION, ver)) ;
@@ -123,7 +123,7 @@ void setup (void)
 
 void teardown (void)
 {
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     printf ("\n%s %d.%d.%d (%s)\n", name, ver [0], ver [1], ver [2], date) ;
     #endif
     OK (GrB_free (&A)) ;
@@ -584,7 +584,7 @@ void test_MMWrite_failures (void)
 // test_MMReadWrite_brutal
 //------------------------------------------------------------------------------
 
-#if LG_SUITESPARSE
+#if LAGRAPH_SUITESPARSE
 void test_MMReadWrite_brutal (void)
 {
 
@@ -701,7 +701,7 @@ TEST_LIST =
     { "jumbled", test_jumbled },
     { "MMWrite", test_MMWrite },
     { "MMWrite_failures", test_MMWrite_failures },
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     { "MMReadWrite_brutal", test_MMReadWrite_brutal },
     #endif
     { NULL, NULL }

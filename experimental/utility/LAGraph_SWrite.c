@@ -39,7 +39,7 @@ int LAGraph_SWrite_HeaderStart  // write the first part of the JSON header
     FPRINT ((f, "{\n    \"LAGraph\": [%d,%d,%d],\n    \"GraphBLAS\": [ ",
         LAGRAPH_VERSION_MAJOR, LAGRAPH_VERSION_MINOR, LAGRAPH_VERSION_UPDATE)) ;
 
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
 
         // SuiteSparse:GraphBLAS v6.0.0 or later
         char *library ;

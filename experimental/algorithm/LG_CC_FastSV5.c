@@ -44,7 +44,7 @@
 
 #include "LG_internal.h"
 
-#if LG_SUITESPARSE
+#if LAGRAPH_SUITESPARSE
 
 //------------------------------------------------------------------------------
 // hash functions: todo describe me
@@ -323,7 +323,7 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
 )
 {
 
-#if !LG_SUITESPARSE
+#if !LAGRAPH_SUITESPARSE
     LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED, "SuiteSparse required") ;
 #else
 

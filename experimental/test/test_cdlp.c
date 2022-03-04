@@ -218,7 +218,7 @@ void test_errors (void)
     printf ("\nresult: %d\n", result) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
 
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     // G->A is held by column
     OK (GxB_set (G->A, GxB_FORMAT, GxB_BY_COL)) ;
     result = LAGraph_cdlp (&c, G->A, true, true, 100, t, msg) ;

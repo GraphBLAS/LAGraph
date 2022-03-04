@@ -173,7 +173,7 @@ void test_CheckGraph_failures (void)
     TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
     printf ("msg: %s\n", msg) ;
 
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     // G->AT must be by-row
     OK (GxB_set (G->AT, GxB_FORMAT, GxB_BY_COL)) ;
     TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
@@ -206,7 +206,7 @@ void test_CheckGraph_failures (void)
 
     G->coldegree = NULL ;
 
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     // G->A must be by-row
     OK (GxB_set (G->A, GxB_FORMAT, GxB_BY_COL)) ;
     TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
@@ -246,7 +246,7 @@ void test_CheckGraph_failures (void)
 // test_CheckGraph_brutal:
 //------------------------------------------------------------------------------
 
-#if LG_SUITESPARSE
+#if LAGRAPH_SUITESPARSE
 void test_CheckGraph_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -286,7 +286,7 @@ TEST_LIST =
 {
     { "CheckGraph", test_CheckGraph },
     { "CheckGraph_failures", test_CheckGraph_failures },
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     { "CheckGraph_brutal", test_CheckGraph_brutal },
     #endif
     { NULL, NULL }

@@ -164,7 +164,7 @@ void test_Property_NDiag (void)
 // test_Property_NDiag_brutal
 //------------------------------------------------------------------------------
 
-#if LG_SUITESPARSE
+#if LAGRAPH_SUITESPARSE
 void test_Property_NDiag_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -212,7 +212,7 @@ void test_Property_NDiag_brutal (void)
 TEST_LIST =
 {
     { "NDiag", test_Property_NDiag },
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     { "NDiag_brutal", test_Property_NDiag_brutal },
     #endif
     { NULL, NULL }

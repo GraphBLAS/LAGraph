@@ -36,7 +36,7 @@ int LAGraph_SizeOfType
     // determine the size of the type
     //--------------------------------------------------------------------------
 
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
 
         // always succeeds, even for user-defined types, unless the
         // type is an invalid object

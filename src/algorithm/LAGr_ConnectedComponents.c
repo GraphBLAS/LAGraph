@@ -29,7 +29,7 @@ int LAGr_ConnectedComponents
 )
 {
 
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     return (LG_CC_FastSV6 (component, G, msg)) ;
     #else
     return (LG_CC_Boruvka (component, G, msg)) ;

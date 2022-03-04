@@ -31,7 +31,7 @@ int LAGr_BreadthFirstSearch
 )
 {
 
-#if LG_SUITESPARSE
+#if LAGRAPH_SUITESPARSE
     // requires G->AT and G->rowdegree
     return LG_BreadthFirstSearch_SSGrB   (level, parent, G, src, msg) ;
 #else

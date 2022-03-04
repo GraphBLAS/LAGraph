@@ -102,7 +102,7 @@ void test_Matrix_Structure (void)
 // test_Matrix_Structure_brutal
 //------------------------------------------------------------------------------
 
-#if LG_SUITESPARSE
+#if LAGRAPH_SUITESPARSE
 void test_Matrix_Structure_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -175,7 +175,7 @@ TEST_LIST =
 {
     { "Matrix_Structure", test_Matrix_Structure },
     { "Matrix_Structure_failures", test_Matrix_Structure_failures },
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     { "Matrix_Structure_brutal", test_Matrix_Structure_brutal },
     #endif
     { NULL, NULL }

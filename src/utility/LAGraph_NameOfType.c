@@ -36,7 +36,7 @@ int LAGraph_NameOfType
     // determine the name of the type
     //--------------------------------------------------------------------------
 
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
 
         // always succeeds, even for user-defined types, unless the
         // type is an invalid object

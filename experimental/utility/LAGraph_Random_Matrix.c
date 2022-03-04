@@ -45,8 +45,8 @@
 #include "LAGraphX.h"
 
 // uncomment these to test vanilla case for just this file:
-// #undef LG_SUITESPARSE
-// #define LG_SUITESPARSE 0
+// #undef LAGRAPH_SUITESPARSE
+// #define LAGRAPH_SUITESPARSE 0
 
 //------------------------------------------------------------------------------
 // mod function for uint64: z = x % y
@@ -142,7 +142,7 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
     // allocate workspace
     //--------------------------------------------------------------------------
 
-    #if !LG_SUITESPARSE
+    #if !LAGRAPH_SUITESPARSE
     {
         ignore = LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;
         I = LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;
@@ -189,7 +189,7 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
         // extract the indices
         //----------------------------------------------------------------------
 
-        #if LG_SUITESPARSE
+        #if LAGRAPH_SUITESPARSE
         {
             // this takes O(1) time and space
             GrB_TRY (GxB_Vector_unpack_Full (Rows, (void **) &I, &I_size,
@@ -218,7 +218,7 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
         // construct indices for a full matrix
         //----------------------------------------------------------------------
 
-        #if !LG_SUITESPARSE
+        #if !LAGRAPH_SUITESPARSE
         {
             // T = true (nrows, ncols) ;
             GrB_TRY (GrB_Matrix_new (&T, GrB_BOOL, nrows, ncols)) ;
@@ -276,7 +276,7 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
     // extract the values
     //--------------------------------------------------------------------------
 
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     {
         // this takes O(1) time and space and works for any data type
         GrB_TRY (GxB_Vector_unpack_Full (Values, &X, &X_size, NULL, NULL)) ;
@@ -375,7 +375,7 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
     // SuiteSparse, but it would result in a different matrix as compared to
     // the pure GrB case.
 
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     if (A_is_full)
     {
         // this takes O(1) time and space

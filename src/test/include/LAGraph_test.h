@@ -23,7 +23,7 @@
 #include <acutest.h>
 #include <graph_zachary_karate.h>
 
-#if LG_SUITESPARSE
+#if LAGRAPH_SUITESPARSE
 // to allow tests to call GrB_init twice
 void GB_Global_GrB_init_called_set (bool GrB_init_called) ;
 #endif

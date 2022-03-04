@@ -232,7 +232,7 @@ void test_SortByDegree (void)
 // test_SortByDegree_brutal
 //------------------------------------------------------------------------------
 
-#if LG_SUITESPARSE
+#if LAGRAPH_SUITESPARSE
 void test_SortByDegree_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -416,7 +416,7 @@ TEST_LIST =
 {
     { "SortByDegree", test_SortByDegree },
     { "SortByDegree_failures", test_SortByDegree_failures },
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     { "SortByDegree_brutal", test_SortByDegree_brutal },
     #endif
     { NULL, NULL }

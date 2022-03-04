@@ -116,7 +116,7 @@ void test_cc_matrices (void)
             OK (LG_check_cc (C, G, msg)) ;
 
             // find the connected components with LG_CC_FastSV5
-            #if LG_SUITESPARSE
+            #if LAGRAPH_SUITESPARSE
             printf ("\n------ CC_FastSV5:\n") ;
             OK (LG_CC_FastSV5 (&C2, G, msg)) ;
             ncomponents = count_connected_components (C2) ;
@@ -127,7 +127,7 @@ void test_cc_matrices (void)
 
             #if 0
             // find the connected components with LG_CC_7
-            #if LG_SUITESPARSE
+            #if LAGRAPH_SUITESPARSE
             printf ("\n------ CC_7:\n") ;
             OK (LG_CC_7 (&C2, G, msg)) ;
             ncomponents = count_connected_components (C2) ;
@@ -189,7 +189,7 @@ void test_cc_errors (void)
     // check for null pointers
     int result = LG_CC_Boruvka (NULL, NULL, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     result = LG_CC_FastSV6 (NULL, NULL, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
     #endif
@@ -207,7 +207,7 @@ void test_cc_errors (void)
     result = LG_CC_Boruvka (&C, G, msg) ;
     TEST_CHECK (result == -1001) ;
     printf ("result expected: %d msg:\n%s\n", result, msg) ;
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     result = LG_CC_FastSV6 (&C, G, msg) ;
     TEST_CHECK (result == -1001) ;
     printf ("result expected: %d msg:\n%s\n", result, msg) ;
@@ -220,7 +220,7 @@ void test_cc_errors (void)
 // test_CC_brutal:
 //------------------------------------------------------------------------------
 
-#if LG_SUITESPARSE
+#if LAGRAPH_SUITESPARSE
 void test_cc_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -261,7 +261,7 @@ void test_cc_brutal (void)
 //****************************************************************************
 TEST_LIST = {
     {"cc", test_cc_matrices},
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     {"cc_brutal", test_cc_brutal},
     #endif
     {"cc_errors", test_cc_errors},

@@ -132,13 +132,9 @@ int LAGraph_Vector_Print
     //--------------------------------------------------------------------------
 
     GrB_Type type ;
-    #if LG_SUITESPARSE
-        // SuiteSparse:GraphBLAS: query the type and print accordingly
-        GrB_TRY (GxB_Vector_type (&type, v)) ;
-    #else
-        // no way to determine the type with pure GrB*; print as if FP64
-        type = GrB_FP64 ;
-    #endif
+    char typename [LAGRAPH_MAX_NAME_LEN] ;
+    LG_TRY (LAGraph_Vector_TypeName (typename, v, msg)) ;
+    LG_TRY (LAGraph_TypeFromName (&type, typename, msg)) ;
 
     //--------------------------------------------------------------------------
     // print the vector

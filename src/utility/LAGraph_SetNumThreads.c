@@ -31,7 +31,7 @@ int LAGraph_SetNumThreads
     // set number of threads to use
     //--------------------------------------------------------------------------
 
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     {
         // SuiteSparse:GraphBLAS: set # of threads with global setting
         GrB_TRY (GxB_set (GxB_NTHREADS, nthreads)) ;

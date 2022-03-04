@@ -202,7 +202,7 @@ void test_IsEqual (void)
 // test_IsEqual_brutal:
 //------------------------------------------------------------------------------
 
-#if LG_SUITESPARSE
+#if LAGRAPH_SUITESPARSE
 void test_IsEqual_brutal (void)
 {
 

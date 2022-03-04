@@ -69,7 +69,7 @@ void test_KindName (void)
 // strictly necessary, but it's simple to include here.  It serves as a very
 // simple use-case of the brutal testing mechanism.
 
-#if LG_SUITESPARSE
+#if LAGRAPH_SUITESPARSE
 void test_KindName_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;

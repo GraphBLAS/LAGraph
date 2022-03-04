@@ -559,7 +559,7 @@ void test_BreadthFirstSearch_many(void)
 // test_bfs_brutal
 //------------------------------------------------------------------------------
 
-#if LG_SUITESPARSE
+#if LAGRAPH_SUITESPARSE
 void test_bfs_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;

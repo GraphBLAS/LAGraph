@@ -40,7 +40,7 @@ GrB_Index countCC (GrB_Vector f, GrB_Index n)
     GrB_Index nCC = 0;
     GrB_Index *w_val = (GrB_Index *) LAGraph_Malloc (n, sizeof (GrB_Index)) ;
     if (w_val == NULL) { printf ("out of memory\n") ; abort ( ) ; }
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     // SuiteSparse:GraphBLAS allows NULL inputs to GrB_Vector_extractTuples
     GrB_Index *i_val = NULL ;
     #else

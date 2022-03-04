@@ -132,7 +132,7 @@ void test_DeleteProperties (void)
 
 //-----------------------------------------------------------------------------
 
-#if LG_SUITESPARSE
+#if LAGRAPH_SUITESPARSE
 void test_del_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;

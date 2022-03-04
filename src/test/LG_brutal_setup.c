@@ -21,7 +21,7 @@ int LG_brutal_setup (char *msg)
     int result = LAGraph_Xinit (LG_brutal_malloc, LG_brutal_calloc,
         LG_brutal_realloc, LG_brutal_free, msg) ;
     if (result != 0) return (result) ;
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     // disable the SuiteSparse:GraphBLAS memory pool
     int64_t free_pool_limit [64] ;
     memset (free_pool_limit, 0, 64 * sizeof (int64_t)) ;

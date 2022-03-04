@@ -133,7 +133,7 @@ int LAGr_SingleSourceShortestPath
     GrB_TRY (GrB_Vector_new (&s, GrB_BOOL, n)) ;
     GrB_TRY (GrB_Vector_new (&reach, GrB_BOOL, n)) ;
 
-#if LG_SUITESPARSE
+#if LAGRAPH_SUITESPARSE
     // optional hints for SuiteSparse:GraphBLAS
     GrB_TRY (GxB_set (t, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
     GrB_TRY (GxB_set (tmasked, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;

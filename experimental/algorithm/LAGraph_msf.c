@@ -114,7 +114,7 @@ int LAGraph_msf
 {
 
     LG_CLEAR_MSG ;
-#if !LG_SUITESPARSE
+#if !LAGRAPH_SUITESPARSE
     LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
 #else
     GrB_Info info;

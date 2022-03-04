@@ -23,7 +23,7 @@ with it.
 
 If you run in vanilla mode, by compiling LAGraph with
 
-    cmake -DLG_VANILLA=1 ..
+    cmake -DLAGRAPH_VANILLA=1 ..
 
 Then performance can be quite low since in this case LAGraph does not use
 any SuiteSparse:GraphBLAS GxB extensions.  We are still developing the

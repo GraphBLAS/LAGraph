@@ -50,7 +50,7 @@ void test_vector (void)
 // test_vector_brutal
 //------------------------------------------------------------------------------
 
-#if LG_SUITESPARSE
+#if LAGRAPH_SUITESPARSE
 void test_vector_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;

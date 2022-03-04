@@ -298,7 +298,7 @@ void test_Property_Degree (void)
 // test_Property_Degree_brutal
 //-----------------------------------------------------------------------------
 
-#if LG_SUITESPARSE
+#if LAGRAPH_SUITESPARSE
 void test_Property_Degree_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -358,7 +358,7 @@ void test_Property_Degree_brutal (void)
 TEST_LIST =
 {
     { "Property_Degree", test_Property_Degree },
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     { "Property_Degree_brutal", test_Property_Degree_brutal },
     #endif
     { NULL, NULL }

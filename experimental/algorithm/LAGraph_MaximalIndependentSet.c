@@ -7,13 +7,12 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
-// Contributed by TODO; revised by Timothy A. Davis, Texas A&M University.
-
-//------------------------------------------------------------------------------
-
 // Modified from the GraphBLAS C API Specification, by Aydin Buluc, Timothy
 // Mattson, Scott McMillan, Jose' Moreira, Carl Yang.  Based on "GraphBLAS
-// Mathematics" by Jeremy Kepner.
+// Mathematics" by Jeremy Kepner.  Revised by Timothy A. Davis, Texas A&M
+// University.
+
+//------------------------------------------------------------------------------
 
 #define LG_FREE_WORK                \
 {                                   \

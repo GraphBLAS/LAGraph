@@ -75,7 +75,7 @@ void test_TypeName  (void)
     name [0] = '\0' ;
     OK (GrB_Type_new (&type, sizeof (myint))) ;
     int result = LAGraph_NameOfType (name, type, msg) ;
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     printf ("\nSuiteSparse knows the type name: [%s]\n", name) ;
     TEST_CHECK (result == GrB_SUCCESS) ;
     OK (strcmp (name, "myint")) ;
@@ -154,7 +154,7 @@ void test_TypeSize (void)
     size = 0 ;
     OK (GrB_Type_new (&type, sizeof (myint))) ;
     int result = LAGraph_SizeOfType (&size, type, msg) ;
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     printf ("\nSuiteSparse knows the type size: [%g]\n", (double) size) ;
     TEST_CHECK (result == GrB_SUCCESS) ;
     TEST_CHECK (size == sizeof (myint)) ;

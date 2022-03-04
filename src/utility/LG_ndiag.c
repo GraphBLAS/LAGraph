@@ -49,7 +49,7 @@ int LG_ndiag
     LG_TRY (LAGraph_Matrix_TypeName (atype_name, A, msg)) ;
     LG_TRY (LAGraph_TypeFromName (&atype, atype_name, msg)) ;
 
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
 
         //----------------------------------------------------------------------
         // SuiteSparse:GraphBLAS v5.0.2: use GxB_Vector_diag

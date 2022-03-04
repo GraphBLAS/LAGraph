@@ -145,7 +145,7 @@ int LG_CC_Boruvka
     Px = (GrB_Index *) LAGraph_Malloc (n, sizeof (GrB_Index)) ;
     LG_ASSERT (Px != NULL && mem != NULL, GrB_OUT_OF_MEMORY) ;
 
-    #if !LG_SUITESPARSE
+    #if !LAGRAPH_SUITESPARSE
     // I is not needed for SuiteSparse and remains NULL
     I = (GrB_Index *) LAGraph_Malloc (n, sizeof (GrB_Index)) ;
     LG_ASSERT (I != NULL, GrB_OUT_OF_MEMORY) ;

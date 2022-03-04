@@ -42,7 +42,7 @@
 #define LAGRAPH_BIN_HEADER 512
 #define LEN LAGRAPH_BIN_HEADER
 
-#if !LG_SUITESPARSE
+#if !LAGRAPH_SUITESPARSE
 #error "SuiteSparse:GraphBLAS v6.0.0 or later is required"
 #endif
 
@@ -83,7 +83,7 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
     // check inputs
     //--------------------------------------------------------------------------
 
-#if !LG_SUITESPARSE
+#if !LAGRAPH_SUITESPARSE
     printf ("SuiteSparse:GraphBLAS required to write binary *.grb files\n") ;
     return (GrB_NOT_IMPLEMENTED) ;
 #else
@@ -465,7 +465,7 @@ static inline int binread   // returns 0 if successful, -1 if failure
     // check inputs
     //--------------------------------------------------------------------------
 
-#if !LG_SUITESPARSE
+#if !LAGRAPH_SUITESPARSE
     printf ("SuiteSparse:GraphBLAS required to read binary *.grb files\n") ;
     return (GrB_NOT_IMPLEMENTED) ;
 #else
@@ -1098,7 +1098,7 @@ static inline int demo_init (bool burble)
     #endif
 
     LAGraph_TRY (LAGraph_Init (NULL)) ;
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     printf ("include: %s v%d.%d.%d [%s]\n",
         GxB_IMPLEMENTATION_NAME,
         GxB_IMPLEMENTATION_MAJOR,

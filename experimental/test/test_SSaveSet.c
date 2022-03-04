@@ -87,7 +87,7 @@ void test_SSaveSet (void)
 {
     LAGraph_Init (msg) ;
     GrB_Descriptor desc = NULL ;
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     OK (GrB_Descriptor_new (&desc)) ;
     OK (GxB_set (desc, GxB_COMPRESSION, GxB_COMPRESSION_LZ4HC + 9)) ;
     #endif
@@ -111,7 +111,7 @@ void test_SSaveSet (void)
 
     // workaround for bug in v6.0.0 to v6.0.2:
     // ensure the matrix is not iso
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     #if GxB_IMPLEMENTATION < GxB_VERSION (6,0,3)
     printf ("\nworkaround for bug in SS:GrB v6.0.2 (fixed in v6.0.3)\n") ;
     for (int k = 0 ; k < NFILES ; k++)

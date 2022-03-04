@@ -40,7 +40,7 @@ int LAGraph_TypeFromName
     // determine the GrB_Type from its name
     //--------------------------------------------------------------------------
 
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
 
         return (GxB_Type_from_name (type, name)) ;
 

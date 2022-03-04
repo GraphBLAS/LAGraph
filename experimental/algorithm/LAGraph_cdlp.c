@@ -225,7 +225,7 @@ int LAGraph_cdlp
 
     LAGraph_Tic (tic, NULL) ;
 
-#ifdef LG_SUITESPARSE
+#ifdef LAGRAPH_SUITESPARSE
     GxB_Format_Value A_format = -1, global_format = -1 ;
     GrB_TRY (GxB_get(A, GxB_FORMAT, &A_format))
     GrB_TRY (GxB_get(GxB_FORMAT, &global_format))

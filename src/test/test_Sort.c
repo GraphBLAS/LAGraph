@@ -118,7 +118,7 @@ void test_sort2 (void)
 // test_sort1_brutal
 //-----------------------------------------------------------------------------
 
-#if LG_SUITESPARSE
+#if LAGRAPH_SUITESPARSE
 void test_sort1_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -167,7 +167,7 @@ void test_sort1_brutal (void)
 // test_sort2_brutal
 //-----------------------------------------------------------------------------
 
-#if LG_SUITESPARSE
+#if LAGRAPH_SUITESPARSE
 void test_sort2_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -223,7 +223,7 @@ void test_sort2_brutal (void)
 TEST_LIST = {
     {"test_sort1", test_sort1},
     {"test_sort2", test_sort2},
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     {"test_sort1_brutal", test_sort1_brutal},
     {"test_sort2_brutal", test_sort2_brutal},
     #endif

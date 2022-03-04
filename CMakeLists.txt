@@ -55,10 +55,11 @@ endif ( )
 set ( CMAKE_MACOSX_RPATH TRUE )
 
 # version of LAGraph
-set ( LAGraph_DATE "Mar 3, 2022" )
+# FIXME: use config to create include/LAGraph.h from these definitions
+set ( LAGraph_DATE "Mar 4, 2022" )
 set ( LAGraph_VERSION_MAJOR 0 )
 set ( LAGraph_VERSION_MINOR 9 )
-set ( LAGraph_VERSION_SUB   11 )
+set ( LAGraph_VERSION_SUB   12 )
 
 project ( lagraph
           VERSION "${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}" )
@@ -234,8 +235,8 @@ endif ( )
 # force use of vanilla code
 #-------------------------------------------------------------------------------
 
-if ( LG_VANILLA )
-    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DLG_VANILLA=1 " )
+if ( LAGRAPH_VANILLA )
+    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DLAGRAPH_VANILLA=1 " )
     message ( STATUS "Vanilla build: not relying on any GxB extensions" )
 else ( )
     message ( STATUS "GxB build: relying on SuiteSparse GxB extensions" )

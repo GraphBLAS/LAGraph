@@ -105,7 +105,7 @@ int LAGraph_Xinit
     // start GraphBLAS
     //--------------------------------------------------------------------------
 
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
 
         info = GxB_init (GrB_NONBLOCKING,
             user_malloc_function,

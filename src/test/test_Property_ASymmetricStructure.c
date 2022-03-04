@@ -195,7 +195,7 @@ void test_Property_Symmetric_Structure (void)
 // test_Property_Symmetric_Structure_brutal
 //-----------------------------------------------------------------------------
 
-#if LG_SUITESPARSE
+#if LAGRAPH_SUITESPARSE
 void test_Property_Symmetric_Structure_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -277,7 +277,7 @@ void test_Property_Symmetric_Structure_brutal (void)
 TEST_LIST =
 {
     { "Property_Symmetric_Structure", test_Property_Symmetric_Structure },
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     { "Property_Symmetric_Structure_brutal",
         test_Property_Symmetric_Structure_brutal },
     #endif

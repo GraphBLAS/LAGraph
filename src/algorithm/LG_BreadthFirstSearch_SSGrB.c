@@ -56,7 +56,7 @@ int LG_BreadthFirstSearch_SSGrB
     // check inputs
     //--------------------------------------------------------------------------
 
-#if !LG_SUITESPARSE
+#if !LAGRAPH_SUITESPARSE
     LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
 #else
 

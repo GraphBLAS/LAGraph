@@ -30,7 +30,7 @@ void test_Init (void)
     OK (status) ;
     int ver [3] ;
 
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     const char *name, *date ;
     OK (GxB_get (GxB_LIBRARY_NAME, &name)) ;
     OK (GxB_get (GxB_LIBRARY_DATE, &date)) ;
@@ -78,7 +78,7 @@ void test_Init (void)
     // for SuiteSparse, it returns GrB_SUCCESS
     status = LAGraph_Finalize (msg) ;
     printf ("status %d\n", status) ;
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     TEST_CHECK (status == GrB_SUCCESS) ;
     #endif
 }

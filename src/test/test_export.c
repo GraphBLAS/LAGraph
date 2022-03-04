@@ -107,7 +107,7 @@ void test_export (void)
         OK (LG_check_export (G, &Ap, &Aj, &Ax, &Ap_len, &Aj_len,
             &Ax_len, &typesize, msg)) ;
 
-        #if LG_SUITESPARSE
+        #if LAGRAPH_SUITESPARSE
         #if GxB_IMPLEMENTATION >= GxB_VERSION (6,0,2)
         printf ("reimport and check result\n") ;
         OK (GxB_Matrix_import_CSR (&C, atype, nrows, ncols, &Ap, &Aj, &Ax,
@@ -136,7 +136,7 @@ void test_export (void)
 // test_export_brutal
 //------------------------------------------------------------------------------
 
-#if LG_SUITESPARSE
+#if LAGRAPH_SUITESPARSE
 void test_export_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;

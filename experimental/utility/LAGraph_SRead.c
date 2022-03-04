@@ -189,7 +189,7 @@ int LAGraph_SRead   // read a set of matrices from a *.lagraph file
     OK (arr->length == 2) ;
     a = arr->start ;
     str = json_value_as_string (a->value) ;
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     OK (STRMATCH (str->string, "SuiteSparse:GraphBLAS")) ;
     #else
     OK (STRMATCH (str->string, "vanilla")) ;
@@ -204,7 +204,7 @@ int LAGraph_SRead   // read a set of matrices from a *.lagraph file
         VER (graphblas_version [0],
              graphblas_version [1],
              graphblas_version [2]) ;
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     OK (library_version <= GxB_IMPLEMENTATION) ;
     #else
     OK (library_version <= VER (1,0,0)) ;

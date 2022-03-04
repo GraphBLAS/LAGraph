@@ -34,8 +34,8 @@
 // These definitions must match the same definitions in LAGraph/CMakeLists.txt.
 #define LAGRAPH_VERSION_MAJOR 0
 #define LAGRAPH_VERSION_MINOR 9
-#define LAGRAPH_VERSION_UPDATE 11
-#define LAGRAPH_DATE "Mar 3, 2022"
+#define LAGRAPH_VERSION_UPDATE 12
+#define LAGRAPH_DATE "Mar 4, 2022"
 
 //==============================================================================
 // include files and helper macros
@@ -86,22 +86,21 @@
 #endif
 
 // vanilla vs SuiteSparse:
-// FIXME: use the names LAGRAPH_VANILLA and LAGRAPH_SUITESPARSE instead
-#if !defined ( LG_VANILLA )
-    // by default, set LG_VANILLA to false
-    #define LG_VANILLA 0
+#if !defined ( LAGRAPH_VANILLA )
+    // by default, set LAGRAPH_VANILLA to false
+    #define LAGRAPH_VANILLA 0
 #endif
 
-#if ( !LG_VANILLA ) && defined ( GxB_SUITESPARSE_GRAPHBLAS )
+#if ( !LAGRAPH_VANILLA ) && defined ( GxB_SUITESPARSE_GRAPHBLAS )
     // use SuiteSparse, and its GxB* extensions
-    #define LG_SUITESPARSE 1
+    #define LAGRAPH_SUITESPARSE 1
 #else
     // use any GraphBLAS library (possibly SuiteSparse) but with no GxB*
-    #define LG_SUITESPARSE 0
+    #define LAGRAPH_SUITESPARSE 0
 #endif
 
 // maximum length of the name of a GrB type, including the null-terminator
-#if LG_SUITESPARSE
+#if LAGRAPH_SUITESPARSE
 #define LAGRAPH_MAX_NAME_LEN GxB_MAX_NAME_LEN
 #else
 #define LAGRAPH_MAX_NAME_LEN 128

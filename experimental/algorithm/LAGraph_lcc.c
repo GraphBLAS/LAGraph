@@ -117,7 +117,7 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     char *msg
 )
 {
-#if !LG_SUITESPARSE
+#if !LAGRAPH_SUITESPARSE
     LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
 #else
 
@@ -140,7 +140,7 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     // n = size of A (# of nodes in the graph)
     GrB_Index n ;
     GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
-#if LG_SUITESPARSE
+#if LAGRAPH_SUITESPARSE
     GxB_Format_Value fmt ;
     GrB_TRY (GxB_get (A, GxB_FORMAT, &fmt)) ;
     if (fmt != GxB_BY_ROW)

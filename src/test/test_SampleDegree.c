@@ -191,7 +191,7 @@ void test_SampleDegree (void)
 // test_SampleDegree_brutal
 //-----------------------------------------------------------------------------
 
-#if LG_SUITESPARSE
+#if LAGRAPH_SUITESPARSE
 void test_SampleDegree_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -247,7 +247,7 @@ void test_SampleDegree_brutal (void)
 TEST_LIST =
 {
     { "SampleDegree", test_SampleDegree },
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     { "SampleDegree_brutal", test_SampleDegree_brutal },
     #endif
     { NULL, NULL }

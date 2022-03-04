@@ -148,7 +148,7 @@ int LAGr_Betweenness
     GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
     GrB_TRY (GrB_Matrix_new (&paths,    GrB_FP64, ns, n)) ;
     GrB_TRY (GrB_Matrix_new (&frontier, GrB_FP64, ns, n)) ;
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     GrB_TRY (GxB_set (paths, GxB_SPARSITY_CONTROL, GxB_BITMAP + GxB_FULL)) ;
     #endif
     for (GrB_Index i = 0 ; i < ns ; i++)
@@ -209,7 +209,7 @@ int LAGr_Betweenness
         if (do_pull)
         {
             // frontier<!paths> = frontier*AT'
-            #if LG_SUITESPARSE
+            #if LAGRAPH_SUITESPARSE
             GrB_TRY (GxB_set (frontier, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
             #endif
             GrB_TRY (GrB_mxm (frontier, paths, NULL, LAGraph_plus_first_fp64,
@@ -218,7 +218,7 @@ int LAGr_Betweenness
         else // push
         {
             // frontier<!paths> = frontier*A
-            #if LG_SUITESPARSE
+            #if LAGRAPH_SUITESPARSE
             GrB_TRY (GxB_set (frontier, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
             #endif
             GrB_TRY (GrB_mxm (frontier, paths, NULL, LAGraph_plus_first_fp64,
@@ -276,7 +276,7 @@ int LAGr_Betweenness
         if (do_pull)
         {
             // W<S[i−1]> = W * A'
-            #if LG_SUITESPARSE
+            #if LAGRAPH_SUITESPARSE
             GrB_TRY (GxB_set (W, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
             #endif
             GrB_TRY (GrB_mxm (W, S [i-1], NULL, LAGraph_plus_first_fp64, W, A,
@@ -285,7 +285,7 @@ int LAGr_Betweenness
         else // push
         {
             // W<S[i−1]> = W * AT
-            #if LG_SUITESPARSE
+            #if LAGRAPH_SUITESPARSE
             GrB_TRY (GxB_set (W, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
             #endif
             GrB_TRY (GrB_mxm (W, S [i-1], NULL, LAGraph_plus_first_fp64, W, AT,

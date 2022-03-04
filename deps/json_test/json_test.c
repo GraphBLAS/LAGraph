@@ -27,7 +27,7 @@ bool json_dump_number (json_val v, int depth) ;
 #define GxB_MAX_NAME_LEN 128
 
 // in LAGraphX.h
-#if LG_SUITESPARSE
+#if LAGRAPH_SUITESPARSE
 #define LAGRAPH_MAX_NAME_LEN GxB_MAX_NAME_LEN
 #else
 #define LAGRAPH_MAX_NAME_LEN 128

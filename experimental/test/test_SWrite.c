@@ -91,7 +91,7 @@ void test_SWrite (void)
 {
     LAGraph_Init (msg) ;
     GrB_Descriptor desc = NULL ;
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     OK (GrB_Descriptor_new (&desc)) ;
     OK (GxB_set (desc, GxB_COMPRESSION, GxB_COMPRESSION_LZ4HC + 9)) ;
     #endif
@@ -115,18 +115,18 @@ void test_SWrite (void)
         OK (LAGraph_Matrix_TypeName (atypename, A, msg)) ;
         OK (LAGraph_TypeFromName (&atype, atypename, msg)) ;
 
-        #if LG_SUITESPARSE
+        #if LAGRAPH_SUITESPARSE
         for (int scon = 1 ; scon <= 8 ; scon = 2*scon)
         #endif
         {
-            #if LG_SUITESPARSE
+            #if LAGRAPH_SUITESPARSE
             // for SuiteSparse only: test all sparsity formats
             OK (GxB_set (A, GxB_SPARSITY_CONTROL, scon)) ;
             #endif
 
             // workaround for bug in v6.0.0 to v6.0.2:
             // ensure the matrix is not iso
-            #if LG_SUITESPARSE
+            #if LAGRAPH_SUITESPARSE
             #if GxB_IMPLEMENTATION < GxB_VERSION (6,0,3)
             printf ("workaround for bug in SS:GrB v6.0.2 (fixed in v6.0.3)\n") ;
             OK (GrB_Matrix_setElement (A, 0, 0, 0)) ;
@@ -145,7 +145,7 @@ void test_SWrite (void)
             bool ok ;
             void *blob = NULL ;
             GrB_Index blob_size = 0 ;
-            #if LG_SUITESPARSE
+            #if LAGRAPH_SUITESPARSE
             if (k % 2 == 0)
             {
                 // for SuiteSparse: try GxB for every other matrix
@@ -257,7 +257,7 @@ void test_SWrite_errors (void)
     bool ok ;
     void *blob = NULL ;
     GrB_Index blob_size = 0 ;
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     {
         // for SuiteSparse
         OK (GxB_Matrix_serialize (&blob, &blob_size, A, NULL)) ;

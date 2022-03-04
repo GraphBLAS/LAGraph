@@ -130,7 +130,7 @@ void test_Property_AT (void)
 // test_Property_AT_brutal
 //-----------------------------------------------------------------------------
 
-#if LG_SUITESPARSE
+#if LAGRAPH_SUITESPARSE
 void test_Property_AT_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -199,7 +199,7 @@ void test_Property_AT_brutal (void)
 TEST_LIST =
 {
     { "Property_AT", test_Property_AT },
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     { "Property_AT_brutal", test_Property_AT_brutal },
     #endif
     { NULL, NULL }

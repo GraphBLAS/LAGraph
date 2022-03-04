@@ -155,7 +155,7 @@ int LG_check_sssp
     //--------------------------------------------------------------------------
 
     bool iso = false ;
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     bool jumbled ;
     GrB_TRY (GxB_Matrix_unpack_CSR (G->A,
         &Ap, &Aj, (void **) &Ax, &Ap_size, &Aj_size, &Ax_size, &iso, &jumbled,
@@ -185,7 +185,7 @@ int LG_check_sssp
     distance [src] = 0 ;
     // parent [src] = src ;
 
-    #if !LG_SUITESPARSE
+    #if !LAGRAPH_SUITESPARSE
     GrB_TRY (GrB_Vector_new (&Row, GrB_FP64, n)) ;
     neighbors = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
     neighbor_weights = LAGraph_Malloc (n, sizeof (double)) ;
@@ -241,7 +241,7 @@ int LG_check_sssp
             break ;
         }
 
-        #if LG_SUITESPARSE
+        #if LAGRAPH_SUITESPARSE
         // directly access the indices of entries in A(u,:)
         GrB_Index degree = Ap [u+1] - Ap [u] ;
         GrB_Index *node_u_adjacency_list = Aj + Ap [u] ;
@@ -264,7 +264,7 @@ int LG_check_sssp
             int64_t v = node_u_adjacency_list [k] ;
             if (Iheap [v] == 0) continue ;  // node v already in SSSP tree
             double w ;
-            #if LG_SUITESPARSE
+            #if LAGRAPH_SUITESPARSE
             switch (etypecode)
             {
                 default:
@@ -313,7 +313,7 @@ int LG_check_sssp
     // repack the matrix in CSR form for SuiteSparse:GraphBLAS
     //--------------------------------------------------------------------------
 
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     GrB_TRY (GxB_Matrix_pack_CSR (G->A,
         &Ap, &Aj, (void **) &Ax, Ap_size, Aj_size, Ax_size, iso, jumbled,
         NULL)) ;

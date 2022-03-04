@@ -68,7 +68,7 @@ int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
     LG_ASSERT (filename != NULL && Set != NULL && collection != NULL,
         GrB_NULL_POINTER) ;
 
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     GrB_TRY (GrB_Descriptor_new (&desc)) ;
     GrB_TRY (GxB_set (desc, GxB_COMPRESSION, GxB_COMPRESSION_LZ4HC + 9)) ;
     #endif
@@ -86,7 +86,7 @@ int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
 
     for (GrB_Index i = 0 ; i < nmatrices ; i++)
     {
-        #if LG_SUITESPARSE
+        #if LAGRAPH_SUITESPARSE
         {
             GrB_TRY (GxB_Matrix_serialize (&(Contents [i].blob),
                 (GrB_Index *)&(Contents [i].blob_size), Set [i], desc)) ;

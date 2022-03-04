@@ -133,13 +133,9 @@ int LAGraph_Matrix_Print
     //--------------------------------------------------------------------------
 
     GrB_Type type ;
-    #if LG_SUITESPARSE
-        // SuiteSparse:GraphBLAS: query the type and print accordingly
-        GrB_TRY (GxB_Matrix_type (&type, A)) ;
-    #else
-        // no way to determine the type with pure GrB*; print as if FP64
-        type = GrB_FP64 ;
-    #endif
+    char typename [LAGRAPH_MAX_NAME_LEN] ;
+    LG_TRY (LAGraph_Matrix_TypeName (typename, A, msg)) ;
+    LG_TRY (LAGraph_TypeFromName (&type, typename, msg)) ;
 
     //--------------------------------------------------------------------------
     // print the matrix

@@ -127,7 +127,7 @@ int LG_check_cc
     // unpack the matrix in CSR form for SuiteSparse:GraphBLAS
     //--------------------------------------------------------------------------
 
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     bool iso, jumbled ;
     GrB_TRY (GxB_Matrix_unpack_CSR (G->A,
         &Ap, &Aj, &Ax, &Ap_size, &Aj_size, &Ax_size, &iso, &jumbled, NULL)) ;
@@ -144,7 +144,7 @@ int LG_check_cc
     visited = LAGraph_Calloc (n, sizeof (bool)) ;
     LG_ASSERT (visited != NULL, GrB_OUT_OF_MEMORY) ;
 
-    #if !LG_SUITESPARSE
+    #if !LAGRAPH_SUITESPARSE
     GrB_TRY (GrB_Vector_new (&Row, GrB_BOOL, n)) ;
     neighbors = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
     LG_ASSERT (neighbors != NULL, GrB_OUT_OF_MEMORY) ;
@@ -172,7 +172,7 @@ int LG_check_cc
             // dequeue the node at the head of the queue
             int64_t u = queue [head++] ;
 
-            #if LG_SUITESPARSE
+            #if LAGRAPH_SUITESPARSE
             // directly access the indices of entries in A(u,:)
             GrB_Index degree = Ap [u+1] - Ap [u] ;
             GrB_Index *node_u_adjacency_list = Aj + Ap [u] ;
@@ -215,7 +215,7 @@ int LG_check_cc
     // repack the matrix in CSR form for SuiteSparse:GraphBLAS
     //--------------------------------------------------------------------------
 
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     GrB_TRY (GxB_Matrix_pack_CSR (G->A,
         &Ap, &Aj, &Ax, Ap_size, Aj_size, Ax_size, iso, jumbled, NULL)) ;
     #endif

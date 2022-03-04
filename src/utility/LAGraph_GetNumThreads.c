@@ -34,7 +34,7 @@ int LAGraph_GetNumThreads
    // get number of threads
    //---------------------------------------------------------------------------
 
-    #if LG_SUITESPARSE
+    #if LAGRAPH_SUITESPARSE
     {
         // SuiteSparse:GraphBLAS: get # of threads from global setting
         GrB_TRY (GxB_get (GxB_NTHREADS, nthreads)) ;

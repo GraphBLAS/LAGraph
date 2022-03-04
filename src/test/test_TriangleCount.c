@@ -381,7 +381,7 @@ void test_TriangleCount_autosort (void)
 }
 
 
-#if LG_SUITESPARSE
+#if LAGRAPH_SUITESPARSE
 void test_TriangleCount_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
