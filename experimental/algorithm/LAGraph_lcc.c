@@ -7,13 +7,13 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
-//------------------------------------------------------------------------------
+// Contributed by Gabor Szarnyas and Balint Hegyi, Budapest University of
+// Technology and Economics (with accented characters: G\'{a}bor Sz\'{a}rnyas
+// and B\'{a}lint Hegyi, using LaTeX syntax).
+// https://inf.mit.bme.hu/en/members/szarnyasg .
+// Modified by Timothy A. Davis, Texas A&M University
 
-// LAGraph_lcc: Contributed by Gabor Szarnyas and Balint Hegyi,
-// Budapest University of Technology and Economics
-// (with accented characters: G\'{a}bor Sz\'{a}rnyas and B\'{a}lint Hegyi,
-// using LaTeX syntax). https://inf.mit.bme.hu/en/members/szarnyasg .
-// Modified by Tim Davis.
+//------------------------------------------------------------------------------
 
 // This function was originally written for the LDBC Graphalytics benchmark,
 // at https://graphalytics.org/ .

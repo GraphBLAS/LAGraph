@@ -4,10 +4,11 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-// Contributed by Scott Kolodziej and Tim Davis, Texas A&M University;
-// Adapted and revised from GraphBLAS C API Spec, Appendix B.4.
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
+
+// Contributed by Scott Kolodziej and Tim Davis, Texas A&M University;
+// Adapted and revised from GraphBLAS C API Spec, Appendix B.4.
 
 //------------------------------------------------------------------------------
 

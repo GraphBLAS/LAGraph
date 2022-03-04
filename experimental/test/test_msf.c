@@ -7,6 +7,8 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
+// Contributed by Timothy A. Davis, Texas A&M University
+
 //------------------------------------------------------------------------------
 
 // todo: write a simple msf method, as LG_check_msf, and compare its results

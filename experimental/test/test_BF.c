@@ -7,9 +7,9 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
-//------------------------------------------------------------------------------
+// Contributed by Jinhao Chen and Tim Davis, Texas A&M University
 
-// Contributed by Jinhao Chen and Tim Davis, Texas A&M
+//------------------------------------------------------------------------------
 
 #include <stdio.h>
 #include <acutest.h>

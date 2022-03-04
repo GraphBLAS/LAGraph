@@ -7,10 +7,11 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
+// Contributed by Tim Davis, Texas A&M University.
+
 //------------------------------------------------------------------------------
 
-// dnn_demo: test for LAGraph_dnn.  Contributed by Tim Davis,
-// Texas A&M University.
+// dnn_demo: test for LAGraph_dnn. 
 
 // Usage: ./dnn_demo nproblems
 

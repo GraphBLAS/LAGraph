@@ -4,16 +4,15 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-// Contributed by Tim Davis, Texas A&M University
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
+// Contributed by Timothy A. Davis, Texas A&M University
+
 //------------------------------------------------------------------------------
 
-// LAGraph_Vector_IsEqual_op, contributed by Tim Davis, Texas A&M
-
-// Checks if two vectors are equal (same size, structure, size, and values),
-// using a provided binary operator.
+// LAGraph_Vector_IsEqual_op: checks if two vectors are equal (same size,
+// structure, size, and values), using a provided binary operator.
 
 // See also LAGraph_Matrix_IsEqual_op.
 

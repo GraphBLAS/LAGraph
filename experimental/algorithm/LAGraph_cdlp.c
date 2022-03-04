@@ -7,12 +7,12 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
-//------------------------------------------------------------------------------
+// Contributed by Gabor Szarnyas and Balint Hegyi, Budapest University of
+// Technology and Economics (with accented characters: G\'{a}bor Sz\'{a}rnyas
+// and B\'{a}lint Hegyi, using LaTeX syntax).
+// https://inf.mit.bme.hu/en/members/szarnyasg .
 
-// LAGraph_cdlp: Contributed by Gabor Szarnyas and Balint Hegyi,
-// Budapest University of Technology and Economics
-// (with accented characters: G\'{a}bor Sz\'{a}rnyas and B\'{a}lint Hegyi,
-// using LaTeX syntax). https://inf.mit.bme.hu/en/members/szarnyasg .
+//------------------------------------------------------------------------------
 
 // ## Background
 //

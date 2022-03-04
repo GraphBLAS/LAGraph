@@ -7,11 +7,12 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
+// Contributed by Jinhao Chen and Timothy A. Davis, Texas A&M University
+
 //------------------------------------------------------------------------------
 
 // LAGraph_BF_full_mxv: Bellman-Ford single source shortest paths, returning
-// both the path lengths and the shortest-path tree.  contributed by Jinhao Chen
-// and Tim Davis, Texas A&M.
+// both the path lengths and the shortest-path tree.
 
 // LAGraph_BF_full_mxv performs a Bellman-Ford to find out shortest path
 // length, parent nodes along the path and the hops (number of edges) in the

@@ -7,15 +7,13 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
+// Contributed by Scott McMillan, derived from examples in the appendix of
+// The GraphBLAS C API Specification, v1.3.0
+
 //------------------------------------------------------------------------------
 
 // This is a Basic algorithm (no extra G-> properties are required),
 // but it is not user-callable (see LAGr_BreadthFirstSearch instead).
-
-// References:
-//
-// Contributed by Scott McMillan, derived from examples in the appendix of
-// The GraphBLAS C API Specification, v1.3.0
 
 #define LG_FREE_WORK        \
 {                           \

@@ -7,12 +7,14 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
+// Contributed by TODO
+
 //------------------------------------------------------------------------------
 
 /**
- * Code is based on the algorithm described in the following paper
- * Azad, Buluç LACC: a linear-algebraic algorithm for finding connected components
- * in distributed memory (IPDPS 2019)
+ * Code is based on the algorithm described in the following paper Azad, Buluc;
+ * LACC: a linear-algebraic algorithm for finding connected components in
+ * distributed memory (IPDPS 2019)
  **/
 
 #define LG_FREE_ALL         \

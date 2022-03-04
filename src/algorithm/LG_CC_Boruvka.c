@@ -7,14 +7,15 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
+// Contributed by Yongzhe Zhang (zyz915@gmail.com).
+// Modified by Timothy A. Davis, Texas A&M University
+
 //------------------------------------------------------------------------------
 
 // This is an Advanced algorithm (G->structure_is_symmetric must be known),
 // but it is not user-callable (see LAGr_ConnectedComponents instead).
 
 // Code is based on Boruvka's minimum spanning forest algorithm.
-// Contributed by Yongzhe Zhang (zyz915@gmail.com).
-// revised by Tim Davis (davis@tamu.edu)
 
 // This method relies solely on GrB* methods in the V2.0 C API, but it much
 // slower in general than LG_CC_FastSV6, which uses GxB pack/unpack methods

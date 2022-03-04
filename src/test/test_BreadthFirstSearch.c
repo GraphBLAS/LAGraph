@@ -8,7 +8,8 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
-// Contributed by Scott McMillan and Tim Davis, Texas A&M University
+// Contributed by Scott McMillan, SEI/CMU, and Timothy A. Davis, Texas A&M
+// University
 
 //-----------------------------------------------------------------------------
 

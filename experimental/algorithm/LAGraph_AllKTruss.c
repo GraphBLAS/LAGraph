@@ -7,10 +7,11 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
+// Contributed by Timothy A. Davis, Texas A&M University
+
 //------------------------------------------------------------------------------
 
 // LAGraph_AllKTruss: find all k-trusses of a graph via GraphBLAS.
-// Contributed by Tim Davis, Texas A&M.
 
 // Given a symmetric graph A with no-self edges, LAGraph_AllKTruss finds all
 // k-trusses of A.

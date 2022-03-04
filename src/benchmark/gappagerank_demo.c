@@ -7,9 +7,10 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
-//------------------------------------------------------------------------------
+// Contributed by Timothy A. Davis, Texas A&M University, and Gabor Szarnyas,
+// BME
 
-// Contributed by Tim Davis, Texas A&M and Gabor Szarnyas, BME
+//------------------------------------------------------------------------------
 
 #include "LAGraph_demo.h"
 

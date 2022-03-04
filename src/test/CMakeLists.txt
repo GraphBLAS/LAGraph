@@ -4,9 +4,10 @@
 
 # LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 # SPDX-License-Identifier: BSD-2-Clause
-#
 # See additional acknowledgments in the LICENSE file,
 # or contact permission@sei.cmu.edu for the full terms.
+
+#-------------------------------------------------------------------------------
 
 # Most tests can be done with any GraphBLAS library, but extensive ("brutal")
 # memory test can only be done with SuiteSparse:GraphBLAS.

@@ -7,6 +7,8 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
+// Contributed by Scott McMillan, SEI Carnegie Mellon University
+
 //-----------------------------------------------------------------------------
 
 #include "LAGraph_test.h"

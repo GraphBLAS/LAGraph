@@ -7,11 +7,12 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
+// Contributed by Jinhao Chen and Timothy A. Davis, Texas A&M University
+
 //------------------------------------------------------------------------------
 
 // LAGraph_BF_basic: Bellman-Ford single source shortest paths, returning just
-// the shortest path lengths.  Contributed by Jinhao Chen and Tim Davis, Texas
-// A&M.
+// the shortest path lengths.
 
 // LAGraph_BF_basic performs a Bellman-Ford to find out shortest path length
 // from given source vertex s in the range of [0, n) on graph given as matrix A

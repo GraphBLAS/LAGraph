@@ -7,10 +7,12 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
+// Contributed by Timothy A. Davis, Texas A&M University
+
 //------------------------------------------------------------------------------
 
-// LAGraph_dnn: sparse deep neural network.  Contributed by Tim Davis,
-// Texas A&M University.  Based on inferenceReLUvec.m by Jeremy Kepner, MIT.
+// LAGraph_dnn: sparse deep neural network.
+// Based on inferenceReLUvec.m by Jeremy Kepner, MIT.
 
 // Performs ReLU inference using input feature vectors Y0.
 

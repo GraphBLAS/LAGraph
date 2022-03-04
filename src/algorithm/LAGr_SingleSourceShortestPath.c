@@ -7,13 +7,15 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
+// Contributed by Jinhao Chen, Scott Kolodziej and Tim Davis, Texas A&M
+// University.  Adapted from GraphBLAS Template Library (GBTL) by Scott
+// McMillan and Tze Meng Low.
+
 //------------------------------------------------------------------------------
 
 // This is an Advanced algorithm (G->emin is required).
 
-// Single source shortest path with delta stepping.  Contributed by Jinhao
-// Chen, Scott Kolodziej and Tim Davis, Texas A&M University.  Adapted from
-// GraphBLAS Template Library (GBTL) by Scott McMillian and Tze Meng Low.
+// Single source shortest path with delta stepping.
 
 // U. Sridhar, M. Blanco, R. Mayuranath, D. G. Spampinato, T. M. Low, and
 // S. McMillan, "Delta-Stepping SSSP: From Vertices and Edges to GraphBLAS

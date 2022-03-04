@@ -7,11 +7,12 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
+// Contributed by Yongzhe Zhang (zyz915@gmail.com)
+
 //------------------------------------------------------------------------------
 
 /**
  * Code is based on Boruvka's minimum spanning forest algorithm
- * Contributed by Yongzhe Zhang (zyz915@gmail.com)
  */
 
 #define LG_FREE_ALL                                  \

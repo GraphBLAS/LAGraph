@@ -7,8 +7,6 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
-// Contributed by So and So FIXME
-
 //------------------------------------------------------------------------------
 
 // LAGraph is a package of graph algorithms based on GraphBLAS.  GraphBLAS

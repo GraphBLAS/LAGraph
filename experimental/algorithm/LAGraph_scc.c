@@ -7,6 +7,8 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
+// Contributed by Yongzhe Zhang (zyz915@gmail.com)
+
 //------------------------------------------------------------------------------
 
 /**
@@ -15,8 +17,6 @@
  * Connectivity Problems with Performance Guarantees"
  * Proc. VLDB Endow. 7, 14 (October 2014), 1821–1832.
  * DOI: https://doi.org/10.14778/2733085.2733089
- *
- * Contributed by Yongzhe Zhang (zyz915@gmail.com)
  **/
 
 #define LG_FREE_ALL ;

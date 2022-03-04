@@ -7,9 +7,9 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
-//------------------------------------------------------------------------------
+// Contributed by Timothy A. Davis, Texas A&M University
 
-// Contributed by Tim Davis, Texas A&M
+//------------------------------------------------------------------------------
 
 // Usage: test_cc can be used with both stdin or a file as its input,
 // in either grb or mtx format.

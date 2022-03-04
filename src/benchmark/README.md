@@ -3,6 +3,8 @@
 
 LAGraph, (c) 2021-2022 by The LAGraph Contributors, All Rights Reserved.
 SPDX-License-Identifier: BSD-2-Clause
+See additional acknowledgments in the LICENSE file,
+or contact permission@sei.cmu.edu for the full terms.
 
 # NOTE: Please read this carefully first
 

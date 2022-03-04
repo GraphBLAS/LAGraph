@@ -7,7 +7,7 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
-// Contributed by Tim Davis, Texas A&M University
+// Contributed by Timothy A. Davis, Texas A&M University
 
 //-----------------------------------------------------------------------------
 

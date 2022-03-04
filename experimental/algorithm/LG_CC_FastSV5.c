@@ -7,6 +7,8 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
+// Contributed by Yongzhe Zhang; modified by Tim Davis, Texas A&M University
+
 //------------------------------------------------------------------------------
 
 // Code is based on the algorithm described in the following paper

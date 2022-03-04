@@ -7,10 +7,10 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
-//------------------------------------------------------------------------------
-
-// Contributed by Jinhao Chen, Scott Kolodziej and Tim Davis, Texas A&M
+// Contributed by Jinhao Chen, Scott Kolodziej and Timothy A. Davis, Texas A&M
 // University
+
+//------------------------------------------------------------------------------
 
 // Usage:
 // test_sssp matrix.mtx sourcenodes.mtx delta

@@ -7,9 +7,9 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
-//------------------------------------------------------------------------------
+// Contributed by Scott Kolodziej and Timothy A. Davis, Texas A&M University
 
-// Contributed by Scott Kolodziej and Tim Davis, Texas A&M University
+//------------------------------------------------------------------------------
 
 // usage:
 // bc_demo < matrixfile.mtx

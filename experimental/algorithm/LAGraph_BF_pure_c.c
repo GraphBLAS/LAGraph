@@ -7,11 +7,12 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
+// Contributed by Jinhao Chen and Timothy A. Davis, Texas A&M University
+
 //------------------------------------------------------------------------------
 
 // LAGraph_BF_pure_c: Bellman-Ford single source shortest paths, returning
-// both the path lengths and the shortest-path tree.  Contributed by Jinhao
-// Chen and Tim Davis, Texas A&M.
+// both the path lengths and the shortest-path tree.
 
 // LAGraph_BF_pure_c performs the Bellman-Ford algorithm to find out shortest
 // path length, parent nodes along the path from given source vertex s in the

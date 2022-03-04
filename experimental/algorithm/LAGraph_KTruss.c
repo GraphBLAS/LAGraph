@@ -7,9 +7,11 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
+// Contributed by Timothy A. Davis, Texas A&M University
+
 //------------------------------------------------------------------------------
 
-// LAGraph_KTruss: k-truss subgraph, contributed by Tim Davis, Texas A&M.
+// LAGraph_KTruss: k-truss subgraph.
 
 // Given a symmetric graph A with no-self edges, LAGraph_KTruss finds the
 // k-truss subgraph of A.

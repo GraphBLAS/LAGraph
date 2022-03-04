@@ -4,14 +4,14 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-// Contributed by Tim Davis, Texas A&M University.
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
+
+// Contributed by Timothy A. Davis, Texas A&M University
 
 //------------------------------------------------------------------------------
 
 // LAGraph_MMWrite:  write a matrix to a Matrix Market file.
-// Contributed by Tim Davis, Texas A&M.
 
 // Writes a matrix to a file in the Matrix Market format.  See LAGraph_MMRead
 // for a description of the format.
