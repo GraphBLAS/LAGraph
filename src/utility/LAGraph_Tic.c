@@ -27,6 +27,7 @@
 #include "LG_internal.h"
 
 #if !defined ( _OPENMP )
+    #include <time.h>
     #if defined ( __linux__ ) || defined ( __GNU__ )
         #include <sys/time.h>
     #endif
