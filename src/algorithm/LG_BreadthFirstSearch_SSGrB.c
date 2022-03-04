@@ -93,9 +93,9 @@ int LG_BreadthFirstSearch_SSGrB
 
     GrB_Matrix AT ;
     GrB_Vector Degree = G->rowdegree ;
-    if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
-       (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
-        G->structure_is_symmetric == LAGRAPH_TRUE))
+    if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
+       (G->kind == LAGraph_ADJACENCY_DIRECTED &&
+        G->structure_is_symmetric == LAGraph_TRUE))
     {
         // AT and A have the same structure and can be used in both directions
         AT = G->A ;

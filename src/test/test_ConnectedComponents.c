@@ -97,7 +97,7 @@ void test_cc_matrices (void)
         OK (GrB_Matrix_nrows (&n, A)) ;
 
         // create the graph
-        OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+        OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
         TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
         for (int trial = 0 ; trial <= 1 ; trial++)
@@ -166,8 +166,8 @@ void test_cc_matrices (void)
             }
 
             // convert to directed with symmetric pattern for next trial
-            G->kind = LAGRAPH_ADJACENCY_DIRECTED ;
-            G->structure_is_symmetric = LAGRAPH_TRUE ;
+            G->kind = LAGraph_ADJACENCY_DIRECTED ;
+            G->structure_is_symmetric = LAGraph_TRUE ;
         }
 
         OK (LAGraph_Delete (&G, msg)) ;
@@ -201,7 +201,7 @@ void test_cc_errors (void)
     OK (fclose (f)) ;
 
     // create an valid directed graph (not known to be symmetric)
-    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
     result = LG_CC_Boruvka (&C, G, msg) ;
@@ -236,7 +236,7 @@ void test_cc_brutal (void)
     printf ("\n") ;
 
     // create an valid graph
-    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
     LG_BRUTAL_BURBLE (LAGraph_CheckGraph (G, msg)) ;
 

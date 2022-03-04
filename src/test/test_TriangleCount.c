@@ -58,7 +58,7 @@ void setup(void)
     GrB_Matrix_build(A, ZACHARY_I, ZACHARY_J, ZACHARY_V, ZACHARY_NUM_EDGES,
                      GrB_LOR);
 
-    retval = LAGraph_New(&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, msg);
+    retval = LAGraph_New(&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
@@ -288,7 +288,7 @@ void test_TriangleCount_many (void)
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
         // create the graph
-        OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+        OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
         TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
         // delete any diagonal entries
@@ -306,8 +306,8 @@ void test_TriangleCount_many (void)
         TEST_CHECK (nt0 == nt1) ;
 
         // convert to directed but with symmetric pattern
-        G->kind = LAGRAPH_ADJACENCY_DIRECTED ;
-        G->structure_is_symmetric = LAGRAPH_TRUE ;
+        G->kind = LAGraph_ADJACENCY_DIRECTED ;
+        G->structure_is_symmetric = LAGraph_TRUE ;
         OK (LAGraph_TriangleCount (&nt1, G, msg)) ;
         TEST_CHECK (nt1 == ntriangles) ;
 
@@ -355,7 +355,7 @@ void test_TriangleCount_autosort (void)
     }
 
     // create the graph
-    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
     OK (LAGraph_DeleteDiag (G, msg)) ;
@@ -406,7 +406,7 @@ void test_TriangleCount_brutal (void)
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
         // create the graph
-        OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+        OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
 
         // delete any diagonal entries
         OK (LAGraph_DeleteDiag (G, msg)) ;
@@ -421,8 +421,8 @@ void test_TriangleCount_brutal (void)
         TEST_CHECK (nt0 == nt1) ;
 
         // convert to directed but with symmetric pattern
-        G->kind = LAGRAPH_ADJACENCY_DIRECTED ;
-        G->structure_is_symmetric = LAGRAPH_TRUE ;
+        G->kind = LAGraph_ADJACENCY_DIRECTED ;
+        G->structure_is_symmetric = LAGraph_TRUE ;
         LG_BRUTAL (LAGraph_TriangleCount (&nt1, G, msg)) ;
         TEST_CHECK (nt1 == ntriangles) ;
 

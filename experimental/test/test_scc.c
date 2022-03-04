@@ -109,7 +109,7 @@ void test_scc (void)
         OK (LAGraph_MMRead (&A, f, msg)) ;
 
         // construct a directed graph G with adjacency matrix A
-        OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+        OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
         TEST_CHECK (A == NULL) ;
 
         GrB_Vector c = NULL ;

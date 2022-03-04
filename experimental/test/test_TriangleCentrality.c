@@ -77,7 +77,7 @@ void test_TriangleCentrality (void)
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
         // construct an undirected graph G with adjacency matrix C
-        OK (LAGraph_New (&G, &C, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+        OK (LAGraph_New (&G, &C, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
         TEST_CHECK (C == NULL) ;
 
         // check for self-edges
@@ -110,7 +110,7 @@ void test_TriangleCentrality (void)
         }
 
         // convert to directed with symmetric structure and recompute
-        G->kind = LAGRAPH_ADJACENCY_DIRECTED ;
+        G->kind = LAGraph_ADJACENCY_DIRECTED ;
         OK (LAGraph_VertexCentrality_Triangle (&c, &ntri, 0, G, msg)) ;
         TEST_CHECK (ntri == ntriangles) ;
 
@@ -135,7 +135,7 @@ void test_errors (void)
     TEST_MSG ("Loading of adjacency matrix failed") ;
 
     // construct an undirected graph G with adjacency matrix A
-    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;
 
     OK (LAGraph_Property_NDiag (G, msg)) ;
@@ -163,8 +163,8 @@ void test_errors (void)
 
     // G is undirected
     G->ndiag = 0 ;
-    G->kind = LAGRAPH_ADJACENCY_DIRECTED ;
-    G->structure_is_symmetric = LAGRAPH_FALSE ;
+    G->kind = LAGraph_ADJACENCY_DIRECTED ;
+    G->structure_is_symmetric = LAGraph_FALSE ;
     result = LAGraph_VertexCentrality_Triangle (&c, &ntri, 3, G, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == -1005) ;

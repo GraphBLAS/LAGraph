@@ -238,11 +238,11 @@ static inline int Reduce_assign32
                 if (ht_key [h] == -1)
                 {
                     // todo is this a race condition?
-                    w_x [i] = LAGraph_MIN (w_x [i], s_x [s_iso?0:k]) ;
+                    w_x [i] = LAGRAPH_MIN (w_x [i], s_x [s_iso?0:k]) ;
                 }
                 else
                 {
-                    buf [h] = LAGraph_MIN (buf [h], s_x [s_iso?0:k]) ;
+                    buf [h] = LAGRAPH_MIN (buf [h], s_x [s_iso?0:k]) ;
                 }
             }
         }
@@ -255,7 +255,7 @@ static inline int Reduce_assign32
             {
                 for (int32_t tid = 0 ; tid < nthreads ; tid++)
                 {
-                    w_x [i] = LAGraph_MIN (w_x [i], mem [tid * HASH_SIZE + h]) ;
+                    w_x [i] = LAGRAPH_MIN (w_x [i], mem [tid * HASH_SIZE + h]) ;
                 }
             }
         }
@@ -268,7 +268,7 @@ static inline int Reduce_assign32
         for (GrB_Index k = 0 ; k < n ; k++)
         {
             uint32_t i = index [k] ;
-            w_x [i] = LAGraph_MIN (w_x [i], s_x [s_iso?0:k]) ;
+            w_x [i] = LAGRAPH_MIN (w_x [i], s_x [s_iso?0:k]) ;
         }
     }
 
@@ -342,9 +342,9 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     LG_ASSERT (component != NULL, GrB_NULL_POINTER) ;
 
-    LG_ASSERT_MSG ((G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
-       (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
-        G->structure_is_symmetric == LAGRAPH_TRUE)),
+    LG_ASSERT_MSG ((G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
+       (G->kind == LAGraph_ADJACENCY_DIRECTED &&
+        G->structure_is_symmetric == LAGraph_TRUE)),
         -1001, "G->A must be known to be symmetric") ;
 
     GrB_Matrix S = G->A ;
@@ -367,13 +367,13 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
     // determine # of threads to use for Reduce_assign
     int nthreads ;
     LG_TRY (LAGraph_GetNumThreads (&nthreads, NULL)) ;
-    nthreads = LAGraph_MIN (nthreads, n / 16) ;
-    nthreads = LAGraph_MAX (nthreads, 1) ;
+    nthreads = LAGRAPH_MIN (nthreads, n / 16) ;
+    nthreads = LAGRAPH_MAX (nthreads, 1) ;
 
     // # of threads to use for typecast
     int nthreads2 = n / (64*1024) ;
-    nthreads2 = LAGraph_MIN (nthreads2, nthreads) ;
-    nthreads2 = LAGraph_MAX (nthreads2, 1) ;
+    nthreads2 = LAGRAPH_MIN (nthreads2, nthreads) ;
+    nthreads2 = LAGRAPH_MAX (nthreads2, 1) ;
 
     // vectors
     GrB_TRY (GrB_Vector_new (&f,      GrB_UINT32, n)) ;
@@ -477,7 +477,7 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
             for (int32_t i = range [tid] ; i < range [tid+1] ; i++)
             {
                 int32_t deg = Sp [i + 1] - Sp [i] ;
-                count [tid + 1] += LAGraph_MIN (FASTSV_SAMPLES, deg) ;
+                count [tid + 1] += LAGRAPH_MIN (FASTSV_SAMPLES, deg) ;
             }
         }
 

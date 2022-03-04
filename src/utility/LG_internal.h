@@ -21,6 +21,7 @@
 //------------------------------------------------------------------------------
 
 #define LG_LIBRARY
+#include <ctype.h>
 #include "LAGraph.h"
 
 #if defined ( __linux__ )
@@ -224,8 +225,8 @@ typedef unsigned char LG_void ;
     LG_ASSERT (G != NULL, GrB_NULL_POINTER) ;                               \
     LG_ASSERT_MSG (G->A != NULL, LAGRAPH_INVALID_GRAPH,                     \
         "graph adjacency matrix is NULL") ;                                 \
-    LG_ASSERT_MSG (G->kind >= LAGRAPH_ADJACENCY_UNDIRECTED &&               \
-        G->kind <= LAGRAPH_ADJACENCY_DIRECTED,                              \
+    LG_ASSERT_MSG (G->kind >= LAGraph_ADJACENCY_UNDIRECTED &&               \
+        G->kind <= LAGraph_ADJACENCY_DIRECTED,                              \
         LAGRAPH_INVALID_GRAPH, "graph kind invalid") ;                      \
 }
 
@@ -303,7 +304,7 @@ static bool LG_Multiply_size_t  // true if ok, false if overflow
     }
 
     // a + b is now safe to compute
-    if ((a + b) > (SIZE_MAX / LAGraph_MIN (a,b)))
+    if ((a + b) > (SIZE_MAX / LAGRAPH_MIN (a,b)))
     {
         // a * b may overflow
         return (false) ;

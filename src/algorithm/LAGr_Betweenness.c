@@ -126,8 +126,8 @@ int LAGr_Betweenness
 
     GrB_Matrix A = G->A ;
     GrB_Matrix AT ;
-    if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
-        G->structure_is_symmetric == LAGRAPH_TRUE)
+    if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
+        G->structure_is_symmetric == LAGraph_TRUE)
     {
         // A and A' have the same structure
         AT = A ;

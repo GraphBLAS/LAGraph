@@ -68,8 +68,8 @@ int LAGr_PageRank
     LG_ASSERT (centrality != NULL, GrB_NULL_POINTER) ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     GrB_Matrix AT ;
-    if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
-        G->structure_is_symmetric == LAGRAPH_TRUE)
+    if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
+        G->structure_is_symmetric == LAGraph_TRUE)
     {
         // A and A' have the same structure
         AT = G->A ;

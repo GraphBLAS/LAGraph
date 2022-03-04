@@ -55,10 +55,10 @@ endif ( )
 set ( CMAKE_MACOSX_RPATH TRUE )
 
 # version of LAGraph
-set ( LAGraph_DATE "Mar 1, 2022" )
+set ( LAGraph_DATE "Mar 3, 2022" )
 set ( LAGraph_VERSION_MAJOR 0 )
 set ( LAGraph_VERSION_MINOR 9 )
-set ( LAGraph_VERSION_SUB   10 )
+set ( LAGraph_VERSION_SUB   11 )
 
 project ( lagraph
           VERSION "${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}" )

@@ -227,9 +227,9 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     LG_ASSERT (component != NULL, GrB_NULL_POINTER) ;
 
-    LG_ASSERT_MSG ((G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
-       (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
-        G->structure_is_symmetric == LAGRAPH_TRUE)),
+    LG_ASSERT_MSG ((G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
+       (G->kind == LAGraph_ADJACENCY_DIRECTED &&
+        G->structure_is_symmetric == LAGraph_TRUE)),
         LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED,
         "G->A must be known to be symmetric") ;
 
@@ -289,8 +289,8 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     // determine # of threads to use
     int nthreads ;
     LG_TRY (LAGraph_GetNumThreads (&nthreads, NULL)) ;
-    nthreads = LAGraph_MIN (nthreads, n / 16) ;
-    nthreads = LAGraph_MAX (nthreads, 1) ;
+    nthreads = LAGRAPH_MIN (nthreads, n / 16) ;
+    nthreads = LAGRAPH_MAX (nthreads, 1) ;
 // ]
 
     Cx = (void *) LAGraph_Calloc (1, sizeof (bool)) ;
@@ -418,7 +418,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
             for (int64_t i = range [tid] ; i < range [tid+1] ; i++)
             {
                 int64_t deg = Ap [i + 1] - Ap [i] ;
-                count [tid + 1] += LAGraph_MIN (FASTSV_SAMPLES, deg) ;
+                count [tid + 1] += LAGRAPH_MIN (FASTSV_SAMPLES, deg) ;
             }
         }
 

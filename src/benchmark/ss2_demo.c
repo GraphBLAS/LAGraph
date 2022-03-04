@@ -107,7 +107,7 @@ int main (int argc, char **argv)
     float scale = 255. / emax ;
     GrB_TRY (GrB_apply (T, NULL, NULL, GrB_TIMES_FP32, T, scale, NULL)) ;
 
-    LAGraph_TRY (LAGraph_New (&G, &T, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+    LAGraph_TRY (LAGraph_New (&G, &T, LAGraph_ADJACENCY_DIRECTED, msg)) ;
 
     GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;

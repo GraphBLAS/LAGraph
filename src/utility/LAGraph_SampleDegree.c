@@ -40,14 +40,14 @@ int LAGraph_SampleDegree
     int64_t *samples = NULL ;
     LG_ASSERT (sample_mean != NULL, GrB_NULL_POINTER) ;
     LG_ASSERT (sample_median != NULL, GrB_NULL_POINTER) ;
-    nsamples = LAGraph_MAX (nsamples, 1) ;
+    nsamples = LAGRAPH_MAX (nsamples, 1) ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
 
     GrB_Vector Degree ;
 
-    if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
-       (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
-        G->structure_is_symmetric == LAGRAPH_TRUE))
+    if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
+       (G->kind == LAGraph_ADJACENCY_DIRECTED &&
+        G->structure_is_symmetric == LAGraph_TRUE))
     {
         // the structure of A is known to be symmetric
         Degree = G->rowdegree ;

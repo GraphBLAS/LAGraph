@@ -59,7 +59,7 @@ void *LG_brutal_malloc      // return pointer to allocated block of memory
         #pragma omp critical (LG_brutal_malloc_critical)
         {
             // malloc the block of memory (of size at least 1 byte)
-            p = malloc (LAGraph_MAX (1, size)) ;
+            p = malloc (LAGRAPH_MAX (1, size)) ;
             if (LG_brutal > 0)
             {
                 // one step closer to pretending to fail
@@ -86,7 +86,7 @@ void *LG_brutal_calloc      // return pointer to allocated block of memory
     size_t itemsize         // # of bytes per item
 )
 {
-    size_t size = LAGraph_MAX (1, nitems * itemsize) ;
+    size_t size = LAGRAPH_MAX (1, nitems * itemsize) ;
     void *p = LG_brutal_malloc (size) ;
     if (p != NULL)
     {

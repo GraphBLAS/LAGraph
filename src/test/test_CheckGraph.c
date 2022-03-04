@@ -55,9 +55,9 @@ matrix_info ;
 
 const matrix_info files [ ] =
 {
-    LAGRAPH_ADJACENCY_DIRECTED,   "cover.mtx",
-    LAGRAPH_ADJACENCY_DIRECTED,   "ldbc-directed-example.mtx",
-    LAGRAPH_ADJACENCY_UNDIRECTED, "ldbc-undirected-example.mtx",
+    LAGraph_ADJACENCY_DIRECTED,   "cover.mtx",
+    LAGraph_ADJACENCY_DIRECTED,   "ldbc-directed-example.mtx",
+    LAGraph_ADJACENCY_UNDIRECTED, "ldbc-undirected-example.mtx",
     LAGRAPH_UNKNOWN,              ""
 } ;
 
@@ -87,13 +87,13 @@ void test_CheckGraph (void)
         // check the graph
         OK (LAGraph_CheckGraph (G, msg)) ;
         TEST_CHECK (G->kind == kind) ;
-        if (kind == LAGRAPH_ADJACENCY_DIRECTED)
+        if (kind == LAGraph_ADJACENCY_DIRECTED)
         {
             TEST_CHECK (G->structure_is_symmetric == LAGRAPH_UNKNOWN) ;
         }
         else
         {
-            TEST_CHECK (G->structure_is_symmetric == LAGRAPH_TRUE) ;
+            TEST_CHECK (G->structure_is_symmetric == LAGraph_TRUE) ;
         }
 
         // create its properties
@@ -134,7 +134,7 @@ void test_CheckGraph_failures (void)
     TEST_MSG ("Loading of lp_afiro.mtx failed") ;
 
     // create an invalid graph
-    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
     // adjacency matrix invalid
@@ -154,7 +154,7 @@ void test_CheckGraph_failures (void)
     TEST_MSG ("Loading of cover.mtx failed") ;
 
     // create an valid graph
-    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
     OK (LAGraph_CheckGraph (G, msg)) ;
 
@@ -222,7 +222,7 @@ void test_CheckGraph_failures (void)
     G->kind = LAGRAPH_UNKNOWN ;
     TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
     printf ("msg: %s\n", msg) ;
-    G->kind = LAGRAPH_ADJACENCY_DIRECTED ;
+    G->kind = LAGraph_ADJACENCY_DIRECTED ;
 
     // free the adjacency matrix
     GrB_free (&(G->A)) ;
@@ -261,7 +261,7 @@ void test_CheckGraph_brutal (void)
     printf ("\n") ;
 
     // create an valid graph
-    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
     LG_BRUTAL_BURBLE (LAGraph_CheckGraph (G, msg)) ;
 

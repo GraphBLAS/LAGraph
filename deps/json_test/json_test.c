@@ -28,9 +28,9 @@ bool json_dump_number (json_val v, int depth) ;
 
 // in LAGraphX.h
 #if LG_SUITESPARSE
-#define LAGraph_MAX_NAME_LEN GxB_MAX_NAME_LEN
+#define LAGRAPH_MAX_NAME_LEN GxB_MAX_NAME_LEN
 #else
-#define LAGraph_MAX_NAME_LEN 128
+#define LAGRAPH_MAX_NAME_LEN 128
 #endif
 
 typedef enum
@@ -56,10 +56,10 @@ typedef struct
     int compression ;
 
     // name of the object
-    char name [LAGraph_MAX_NAME_LEN+4] ;
+    char name [LAGRAPH_MAX_NAME_LEN+4] ;
 
     // if kind is matrix or vector: type name
-    char type [LAGraph_MAX_NAME_LEN+4] ;
+    char type [LAGRAPH_MAX_NAME_LEN+4] ;
 }
 LAGraph_Contents ;
 
@@ -103,8 +103,8 @@ bool get_contents (json_a a, LAGraph_Contents *Item)
     json_num num ;
 
     json_str str = json_value_as_string (o->value) ;
-    strncpy (Item->name, str->string, LAGraph_MAX_NAME_LEN) ;
-    Item->name [LAGraph_MAX_NAME_LEN+1] = '\0' ;
+    strncpy (Item->name, str->string, LAGRAPH_MAX_NAME_LEN) ;
+    Item->name [LAGRAPH_MAX_NAME_LEN+1] = '\0' ;
     OK (str != NULL) ;
     printf ("[%s]\n", Item->name) ;
     o = o->next ;
@@ -136,8 +136,8 @@ bool get_contents (json_a a, LAGraph_Contents *Item)
     else
     {
         // serialized matrix or vector
-        strncpy (Item->type, str->string, LAGraph_MAX_NAME_LEN) ;
-        Item->type [LAGraph_MAX_NAME_LEN+1] = '\0' ;
+        strncpy (Item->type, str->string, LAGRAPH_MAX_NAME_LEN) ;
+        Item->type [LAGRAPH_MAX_NAME_LEN+1] = '\0' ;
         Item->compression = 0 ;
         printf ("(%s)\n", Item->type) ;
     }

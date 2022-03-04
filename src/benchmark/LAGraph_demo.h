@@ -926,8 +926,8 @@ static int readproblem          // returns 0 if successful, -1 if failure
         (n == 134217726 ||  // HACK for kron
          n == 134217728) ;  // HACK for urand
 
-    LAGraph_Kind G_kind = A_is_symmetric ?  LAGRAPH_ADJACENCY_UNDIRECTED :
-        LAGRAPH_ADJACENCY_DIRECTED ;
+    LAGraph_Kind G_kind = A_is_symmetric ?  LAGraph_ADJACENCY_UNDIRECTED :
+        LAGraph_ADJACENCY_DIRECTED ;
     LAGraph_TRY (LAGraph_New (G, &A, G_kind, msg)) ;
     // LAGraph_TRY (LAGraph_DisplayGraph (*G, 2, stdout, msg)) ;
 
@@ -1001,7 +1001,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
         {
             // if G->A has a symmetric structure, declare the graph undirected
             // and free G->AT since it isn't needed.
-            (*G)->kind = LAGRAPH_ADJACENCY_UNDIRECTED ;
+            (*G)->kind = LAGraph_ADJACENCY_UNDIRECTED ;
             GrB_TRY (GrB_Matrix_free (&((*G)->AT))) ;
         }
         else if (make_symmetric)
@@ -1033,7 +1033,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
                                        (*G)->A, (*G)->AT, NULL)) ;
                 GrB_TRY (GrB_Matrix_free (&((*G)->AT))) ;
             }
-            (*G)->kind = LAGRAPH_ADJACENCY_UNDIRECTED ;
+            (*G)->kind = LAGraph_ADJACENCY_UNDIRECTED ;
             (*G)->structure_is_symmetric = true ;
         }
     }

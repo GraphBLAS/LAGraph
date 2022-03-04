@@ -104,7 +104,7 @@ GrB_Info LAGraph_BF_basic_pushpull
     int64_t dthreshold ;
     if (A == NULL)
     {
-        dthreshold =  LAGraph_MAX (256, sqrt ((double) n)) ;
+        dthreshold =  LAGRAPH_MAX (256, sqrt ((double) n)) ;
     }
     else
     {

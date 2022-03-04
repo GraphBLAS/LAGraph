@@ -87,9 +87,9 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     LG_ASSERT (mis != NULL, GrB_NULL_POINTER) ;
 
-    if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
-       (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
-        G->structure_is_symmetric == LAGRAPH_TRUE))
+    if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
+       (G->kind == LAGraph_ADJACENCY_DIRECTED &&
+        G->structure_is_symmetric == LAGraph_TRUE))
     {
         // the structure of A is known to be symmetric
         A = G->A ;

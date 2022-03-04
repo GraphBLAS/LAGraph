@@ -139,7 +139,7 @@ void test_SampleDegree (void)
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
         // construct the graph G with adjacency matrix A
-        OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+        OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
         TEST_CHECK (A == NULL) ;
 
         // SampleDegree requires degrees to be precomputed
@@ -212,7 +212,7 @@ void test_SampleDegree_brutal (void)
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
         // construct the graph G with adjacency matrix A
-        OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+        OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
         TEST_CHECK (A == NULL) ;
 
         // Compute and check the row samples

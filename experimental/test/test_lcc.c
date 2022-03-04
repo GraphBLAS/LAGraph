@@ -139,7 +139,7 @@ void test_lcc (void)
         OK (LAGraph_MMRead (&A, f, msg)) ;
 
         // construct a directed graph G with adjacency matrix A
-        OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+        OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
         TEST_CHECK (A == NULL) ;
 
         // check for self-edges
@@ -204,7 +204,7 @@ void test_errors (void)
     TEST_MSG ("Loading of adjacency matrix failed") ;
 
     // construct an undirected graph G with adjacency matrix A
-    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;
 
     OK (LAGraph_Property_NDiag (G, msg)) ;

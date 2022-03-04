@@ -31,8 +31,8 @@ int LAGraph_DisplayGraph
     LG_ASSERT (f != NULL, GrB_NULL_POINTER) ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     int prl = (int) pr ;
-    prl = LAGraph_MAX (prl, 0) ;
-    prl = LAGraph_MIN (prl, 5) ;
+    prl = LAGRAPH_MAX (prl, 0) ;
+    prl = LAGRAPH_MIN (prl, 5) ;
     if (prl == 0) return (GrB_SUCCESS) ;
 
     //--------------------------------------------------------------------------
@@ -58,8 +58,8 @@ int LAGraph_DisplayGraph
     FPRINTF (f, "  structural symmetry: ") ;
     switch (G->structure_is_symmetric)
     {
-        case LAGRAPH_FALSE : FPRINTF (f, "unsymmetric") ; break ;
-        case LAGRAPH_TRUE  : FPRINTF (f, "symmetric")   ; break ;
+        case LAGraph_FALSE : FPRINTF (f, "unsymmetric") ; break ;
+        case LAGraph_TRUE  : FPRINTF (f, "symmetric")   ; break ;
         default            : FPRINTF (f, "unknown")     ; break ;
     }
     if (G->ndiag >= 0) FPRINTF (f, "  self-edges: %g", (double) G->ndiag) ;

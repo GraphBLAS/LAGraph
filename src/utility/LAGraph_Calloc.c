@@ -21,10 +21,10 @@ void *LAGraph_Calloc
 {
 
     // make sure at least one item is allocated
-    nitems = LAGraph_MAX (1, nitems) ;
+    nitems = LAGRAPH_MAX (1, nitems) ;
 
     // make sure at least one byte is allocated
-    size_of_item = LAGraph_MAX (1, size_of_item) ;
+    size_of_item = LAGRAPH_MAX (1, size_of_item) ;
 
     // compute the size and check for integer overflow
     size_t size ;

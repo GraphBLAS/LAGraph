@@ -253,8 +253,8 @@ int LAGr_SingleSourceShortestPath
     {
         double emin = -1 ;
         if (G->emin != NULL &&
-            (G->emin_kind == LAGRAPH_EXACT ||
-             G->emin_kind == LAGRAPH_BOUND))
+            (G->emin_kind == LAGraph_EXACT ||
+             G->emin_kind == LAGraph_BOUND))
         {
             GrB_TRY (GrB_Scalar_extractElement_FP64 (&emin, G->emin)) ;
         }

@@ -34,8 +34,8 @@ int LAGraph_CheckGraph
     //--------------------------------------------------------------------------
 
     GrB_Index nrows, ncols ;
-    if (kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
-        kind == LAGRAPH_ADJACENCY_DIRECTED)
+    if (kind == LAGraph_ADJACENCY_UNDIRECTED ||
+        kind == LAGraph_ADJACENCY_DIRECTED)
     {
         GrB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
         GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;

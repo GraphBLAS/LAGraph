@@ -54,7 +54,7 @@ int LAGraph_New
     //--------------------------------------------------------------------------
 
     (*G)->A = NULL ;
-    (*G)->kind = LAGRAPH_KIND_UNKNOWN ;
+    (*G)->kind = LAGraph_KIND_UNKNOWN ;
     (*G)->AT = NULL ;
     (*G)->rowdegree = NULL ;
     (*G)->coldegree = NULL ;
@@ -83,8 +83,8 @@ int LAGraph_New
 
         (*G)->kind = kind ;
         (*G)->structure_is_symmetric =
-            (kind == LAGRAPH_ADJACENCY_UNDIRECTED)
-            ? LAGRAPH_TRUE
+            (kind == LAGraph_ADJACENCY_UNDIRECTED)
+            ? LAGraph_TRUE
             : LAGRAPH_UNKNOWN ;
     }
 

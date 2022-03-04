@@ -75,7 +75,7 @@ void test_SingleSourceShortestPath(void)
 
         // load the adjacency matrix as A
         const char *aname = files [k].name ;
-        LAGraph_Kind kind = LAGRAPH_ADJACENCY_DIRECTED ;
+        LAGraph_Kind kind = LAGraph_ADJACENCY_DIRECTED ;
         // LAGraph_Kind kind = files [k].kind ;
         if (strlen (aname) == 0) break;
         TEST_CASE (aname) ;
@@ -181,7 +181,7 @@ void test_SingleSourceShortestPath_types (void)
 
         // load the adjacency matrix as A
         const char *aname = files [k].name ;
-        LAGraph_Kind kind = LAGRAPH_ADJACENCY_DIRECTED ;
+        LAGraph_Kind kind = LAGraph_ADJACENCY_DIRECTED ;
         // LAGraph_Kind kind = files [k].kind ;
         if (strlen (aname) == 0) break;
         TEST_CASE (aname) ;
@@ -320,7 +320,7 @@ void test_SingleSourceShortestPath_failure (void)
     TEST_MSG ("Loading of adjacency matrix failed") ;
 
     // create the graph
-    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
     OK (LAGraph_CheckGraph (G, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
@@ -360,7 +360,7 @@ void test_SingleSourceShortestPath_brutal (void)
 
         // load the adjacency matrix as A
         const char *aname = files [k].name ;
-        LAGraph_Kind kind = LAGRAPH_ADJACENCY_DIRECTED ;
+        LAGraph_Kind kind = LAGraph_ADJACENCY_DIRECTED ;
         // LAGraph_Kind kind = files [k].kind ;
         if (strlen (aname) == 0) break;
         TEST_CASE (aname) ;

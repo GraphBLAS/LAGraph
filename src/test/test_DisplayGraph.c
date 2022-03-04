@@ -76,10 +76,10 @@ matrix_info ;
 
 const matrix_info files [ ] =
 {
-    LAGRAPH_ADJACENCY_DIRECTED,   0, "cover.mtx",
-    LAGRAPH_ADJACENCY_DIRECTED,   0, "ldbc-directed-example.mtx",
-    LAGRAPH_ADJACENCY_UNDIRECTED, 0, "ldbc-undirected-example.mtx",
-    LAGRAPH_ADJACENCY_DIRECTED,   2, "west0067.mtx",
+    LAGraph_ADJACENCY_DIRECTED,   0, "cover.mtx",
+    LAGraph_ADJACENCY_DIRECTED,   0, "ldbc-directed-example.mtx",
+    LAGraph_ADJACENCY_UNDIRECTED, 0, "ldbc-undirected-example.mtx",
+    LAGraph_ADJACENCY_DIRECTED,   2, "west0067.mtx",
     LAGRAPH_UNKNOWN,              0, ""
 } ;
 
@@ -155,7 +155,7 @@ void test_DisplayGraph_failures (void)
     // to create a graph for which the adjacency matrix can be defined later,
     // via assigning it to G->A.  However, the graph will be declared invalid
     // by LAGraph_CheckGraph since G->A is NULL.
-    OK (LAGraph_New (&G, NULL, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+    OK (LAGraph_New (&G, NULL, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
 
     // G->A is NULL
     LAGraph_Print_Level pr = LAGraph_COMPLETE_VERBOSE ;
@@ -168,7 +168,7 @@ void test_DisplayGraph_failures (void)
 
     // valid graph
     OK (GrB_Matrix_new (&A, GrB_FP32, 5, 5)) ;
-    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     result = LAGraph_DisplayGraph (G, pr, stdout, msg) ;
     printf ("result: %d, msg: %s\n", result, msg) ;
     TEST_CHECK (result == GrB_SUCCESS) ;
@@ -178,7 +178,7 @@ void test_DisplayGraph_failures (void)
     result = LAGraph_DisplayGraph (G, pr, stdout, msg) ;
     printf ("result: %d, msg: %s\n", result, msg) ;
     TEST_CHECK (result == LAGRAPH_INVALID_GRAPH) ;
-    G->kind = LAGRAPH_ADJACENCY_UNDIRECTED ;
+    G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
 
     // G->AT has the wrong size
     OK (GrB_Matrix_new (&(G->AT), GrB_FP32, 6, 5)) ;

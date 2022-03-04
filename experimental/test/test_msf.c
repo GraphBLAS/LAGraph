@@ -79,7 +79,7 @@ void test_msf (void)
         GrB_Index n = nrows ;
 
         // construct a directed graph G with adjacency matrix S
-        OK (LAGraph_New (&G, &S, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+        OK (LAGraph_New (&G, &S, LAGraph_ADJACENCY_DIRECTED, msg)) ;
         TEST_CHECK (S == NULL) ;
 
         bool sanitize = (!symmetric) ;

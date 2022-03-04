@@ -56,9 +56,9 @@ matrix_info ;
 
 const matrix_info files [ ] =
 {
-    LAGRAPH_ADJACENCY_DIRECTED,   "cover.mtx",
-    LAGRAPH_ADJACENCY_DIRECTED,   "ldbc-directed-example.mtx",
-    LAGRAPH_ADJACENCY_UNDIRECTED, "ldbc-undirected-example.mtx",
+    LAGraph_ADJACENCY_DIRECTED,   "cover.mtx",
+    LAGraph_ADJACENCY_DIRECTED,   "ldbc-directed-example.mtx",
+    LAGraph_ADJACENCY_UNDIRECTED, "ldbc-undirected-example.mtx",
     LAGRAPH_UNKNOWN,              ""
 } ;
 
@@ -96,7 +96,7 @@ void test_Property_AT (void)
         OK (LAGraph_Property_AT (G, msg)) ;
 
         // check the result
-        if (kind == LAGRAPH_ADJACENCY_UNDIRECTED)
+        if (kind == LAGraph_ADJACENCY_UNDIRECTED)
         {
             TEST_CHECK (G->AT == NULL) ;
         }
@@ -161,7 +161,7 @@ void test_Property_AT_brutal (void)
         LG_BRUTAL (LAGraph_Property_AT (G, msg)) ;
 
         // check the result
-        if (kind == LAGRAPH_ADJACENCY_UNDIRECTED)
+        if (kind == LAGraph_ADJACENCY_UNDIRECTED)
         {
             TEST_CHECK (G->AT == NULL) ;
         }

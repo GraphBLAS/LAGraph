@@ -140,7 +140,7 @@ void test_Property_NDiag (void)
         // construct a directed graph and count self-edges
         //----------------------------------------------------------------------
 
-        OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+        OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
         OK (LAGraph_Property_NDiag (G, msg)) ;
         TEST_CHECK (G->ndiag == files [k].ndiag) ;
 
@@ -190,7 +190,7 @@ void test_Property_NDiag_brutal (void)
         // construct a directed graph and count self-edges
         //----------------------------------------------------------------------
 
-        OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+        OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
         LG_BRUTAL (LAGraph_Property_NDiag (G, msg)) ;
         TEST_CHECK (G->ndiag == files [k].ndiag) ;
 

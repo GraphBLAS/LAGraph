@@ -63,11 +63,11 @@ void *LAGraph_Realloc       // returns pointer to reallocated block of memory,
     //--------------------------------------------------------------------------
 
     // make sure at least one item is allocated
-    nitems_old = LAGraph_MAX (1, nitems_old) ;
-    nitems_new = LAGraph_MAX (1, nitems_new) ;
+    nitems_old = LAGRAPH_MAX (1, nitems_old) ;
+    nitems_new = LAGRAPH_MAX (1, nitems_new) ;
 
     // make sure at least one byte is allocated
-    size_of_item = LAGraph_MAX (1, size_of_item) ;
+    size_of_item = LAGRAPH_MAX (1, size_of_item) ;
 
     size_t newsize, oldsize ;
     (*ok) = LG_Multiply_size_t (&newsize, nitems_new, size_of_item)
@@ -116,7 +116,7 @@ void *LAGraph_Realloc       // returns pointer to reallocated block of memory,
         if (pnew != NULL)
         {
             // copy from the old to the new space
-            memcpy (pnew, p, LAGraph_MIN (oldsize, newsize)) ;
+            memcpy (pnew, p, LAGRAPH_MIN (oldsize, newsize)) ;
             // free the old space
             LAGraph_Free (&p) ;
         }

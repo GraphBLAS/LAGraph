@@ -31,31 +31,24 @@
 //==============================================================================
 
 // See also the LAGraph_Version utility method, which returns these values.
+// These definitions must match the same definitions in LAGraph/CMakeLists.txt.
 #define LAGRAPH_VERSION_MAJOR 0
 #define LAGRAPH_VERSION_MINOR 9
-#define LAGRAPH_VERSION_UPDATE 10
-#define LAGRAPH_DATE "Mar 1, 2022"
-
-// FIXME: macros should be all LAGRAPH_SOMETHING_HERE
+#define LAGRAPH_VERSION_UPDATE 11
+#define LAGRAPH_DATE "Mar 3, 2022"
 
 //==============================================================================
 // include files and helper macros
 //==============================================================================
 
-// FIXME: remove any #include's not required
-#include <time.h>
-#include <ctype.h>
-#include <limits.h>
 #include <GraphBLAS.h>
 #if defined ( _OPENMP )
-    // FIXME: move this to the functions that need it?
     #include <omp.h>
 #endif
 
-// LAGraph_MIN/MAX: suitable for integers, and non-NaN floating point
-// FIXME: upper case
-#define LAGraph_MIN(x,y) (((x) < (y)) ? (x) : (y))
-#define LAGraph_MAX(x,y) (((x) > (y)) ? (x) : (y))
+// LAGRAPH_MIN/MAX: suitable for integers, and non-NaN floating point
+#define LAGRAPH_MIN(x,y) (((x) < (y)) ? (x) : (y))
+#define LAGRAPH_MAX(x,y) (((x) > (y)) ? (x) : (y))
 
 //==============================================================================
 // GraphBLAS platform specifics
@@ -93,7 +86,7 @@
 #endif
 
 // vanilla vs SuiteSparse:
-// use  LAGRAPH_VANILLA LAGRAPH_SUITESPARSE
+// FIXME: use the names LAGRAPH_VANILLA and LAGRAPH_SUITESPARSE instead
 #if !defined ( LG_VANILLA )
     // by default, set LG_VANILLA to false
     #define LG_VANILLA 0
@@ -328,7 +321,11 @@
     }                                                                        \
 }
 
-// FIXME: start here on Mar 1, 2022
+// FIXME: start here on Mar 8, 2022
+// FIXME: change to LAGRAPH_TRY and LAGRAPH_CATCH?
+// FIXME: change to GRB_TRY and GRB_CATCH?
+// FIXME: Tim D. changed all enums from LAGRAPH_* to LAGraph_*
+//        to match the capitialization of enums in GraphBLAS.  Discuss.
 
 //==============================================================================
 // LAGraph memory management
@@ -431,27 +428,27 @@ void LAGraph_Free           // free a block of memory and set p to NULL
 
 typedef enum
 {
-    LAGRAPH_ADJACENCY_UNDIRECTED = 0, // A is square and symmetric; both upper
+    LAGraph_ADJACENCY_UNDIRECTED = 0, // A is square and symmetric; both upper
                                       // and lower triangular parts are
                                       // present.  A(i,j) is the edge (i,j)
 
-    LAGRAPH_ADJACENCY_DIRECTED = 1,   // A is square; A(i,j) is the edge (i,j)
+    LAGraph_ADJACENCY_DIRECTED = 1,   // A is square; A(i,j) is the edge (i,j)
 
     // possible future kinds of graphs:
-    // LAGRAPH_ADJACENCY_UNDIRECTED_UNWEIGHTED
-    // LAGRAPH_ADJACENCY_DIRECTED_UNWEIGHTED
-    // LAGRAPH_ADJACENCY_UNDIRECTED_TRIL
-    // LAGRAPH_ADJACENCY_UNDIRECTED_TRIU
-    // LAGRAPH_BIPARTITE
-    // LAGRAPH_BIPARTITE_DIRECTED
-    // LAGRAPH_BIPARTITE_UNDIRECTED
-    // LAGRAPH_INCIDENCE_*
-    // LAGRAPH_MULTIGRAPH_*
-    // LAGRAPH_HYPERGRAPH
-    // LAGRAPH_HYPERGRAPH_DIRECTED
+    // LAGraph_ADJACENCY_UNDIRECTED_UNWEIGHTED
+    // LAGraph_ADJACENCY_DIRECTED_UNWEIGHTED
+    // LAGraph_ADJACENCY_UNDIRECTED_TRIL
+    // LAGraph_ADJACENCY_UNDIRECTED_TRIU
+    // LAGraph_BIPARTITE
+    // LAGraph_BIPARTITE_DIRECTED
+    // LAGraph_BIPARTITE_UNDIRECTED
+    // LAGraph_INCIDENCE_*
+    // LAGraph_MULTIGRAPH_*
+    // LAGraph_HYPERGRAPH
+    // LAGraph_HYPERGRAPH_DIRECTED
     // ...
 
-    LAGRAPH_KIND_UNKNOWN = LAGRAPH_UNKNOWN      // the graph kind is unknown
+    LAGraph_KIND_UNKNOWN = LAGRAPH_UNKNOWN      // the graph kind is unknown
 }
 LAGraph_Kind ;
 
@@ -461,9 +458,9 @@ LAGraph_Kind ;
 
 typedef enum
 {
-    LAGRAPH_FALSE = 0,
-    LAGRAPH_TRUE = 1,
-    LAGRAPH_BOOLEAN_UNKNOWN = LAGRAPH_UNKNOWN
+    LAGraph_FALSE = 0,
+    LAGraph_TRUE = 1,
+    LAGraph_BOOLEAN_UNKNOWN = LAGRAPH_UNKNOWN
 }
 LAGraph_BooleanProperty ;
 
@@ -488,11 +485,11 @@ LAGraph_BooleanProperty ;
 
 typedef enum
 {
-    LAGRAPH_EXACT = 0,      // the metric is exact (possibly ignoring roundoff)
-    LAGRAPH_BOUND = 1,      // the metric is a bound (upper or lower, depending
+    LAGraph_EXACT = 0,      // the metric is exact (possibly ignoring roundoff)
+    LAGraph_BOUND = 1,      // the metric is a bound (upper or lower, depending
                             // on the particular metric)
-    LAGRAPH_APPROX = 2,     // the metric is a rough approximation
-    LAGRAPH_BOUND_UNKNOWN = LAGRAPH_UNKNOWN,
+    LAGraph_APPROX = 2,     // the metric is a rough approximation
+    LAGraph_BOUND_UNKNOWN = LAGRAPH_UNKNOWN,
 }
 LAGraph_BoundKind ;
 
@@ -1354,7 +1351,7 @@ int LAGraph_Scalar_TypeName
 //------------------------------------------------------------------------------
 
 // LAGraph_KindName: return the name of a graph kind.  For example, if given
-// LAGRAPH_ADJACENCY_UNDIRECTED, the string "undirected" is returned.
+// LAGaphH_ADJACENCY_UNDIRECTED, the string "undirected" is returned.
 
 LAGRAPH_PUBLIC
 int LAGraph_KindName
@@ -1372,9 +1369,8 @@ int LAGraph_KindName
 //------------------------------------------------------------------------------
 
 // LAGraph_SortByDegree sorts the nodes of a graph by their row or column
-// degrees.  The graph G->A itself is not changed.  Refer to
-// LAGr_TriangleCount for an example of how to permute G->A after
-// calling this function.
+// degrees.  The graph G->A itself is not changed.  Refer to LAGr_TriangleCount
+// for an example of how to permute G->A after calling this function.
 
 LAGRAPH_PUBLIC
 int LAGraph_SortByDegree

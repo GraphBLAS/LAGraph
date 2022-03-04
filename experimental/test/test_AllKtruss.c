@@ -68,7 +68,7 @@ void test_AllKTruss (void)
         fclose (f) ;
 
         // construct an undirected graph G with adjacency matrix A
-        OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+        OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
         TEST_CHECK (A == NULL) ;
 
         // check for self-edges
@@ -131,7 +131,7 @@ void test_AllKTruss (void)
         }
 
         // convert to directed with symmetric structure and recompute
-        G->kind = LAGRAPH_ADJACENCY_DIRECTED ;
+        G->kind = LAGraph_ADJACENCY_DIRECTED ;
         G->structure_is_symmetric = true ;
         int64_t k2 ;
         GrB_Matrix *Cset2 = (GrB_Matrix *) LAGraph_Calloc (n,
@@ -197,7 +197,7 @@ void test_allktruss_errors (void)
     fclose (f) ;
 
     // construct an undirected graph G with adjacency matrix A
-    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;
 
     OK (LAGraph_Property_NDiag (G, msg)) ;
@@ -228,8 +228,8 @@ void test_allktruss_errors (void)
 
     // G is undirected
     G->ndiag = 0 ;
-    G->kind = LAGRAPH_ADJACENCY_DIRECTED ;
-    G->structure_is_symmetric = LAGRAPH_FALSE ;
+    G->kind = LAGraph_ADJACENCY_DIRECTED ;
+    G->structure_is_symmetric = LAGraph_FALSE ;
     result = LAGraph_AllKTruss (Cset, &kmax, ntris, nedges, nsteps, G, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == -1005) ;

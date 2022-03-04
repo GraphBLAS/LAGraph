@@ -71,7 +71,7 @@ int LAGraph_Property_EMin
 
     GrB_TRY (GrB_Scalar_new (&(G->emin), atype)) ;
     GrB_TRY (GrB_reduce (G->emin, NULL, monoid, G->A, NULL)) ;
-    G->emin_kind = LAGRAPH_EXACT ;
+    G->emin_kind = LAGraph_EXACT ;
     return (GrB_SUCCESS) ;
 }
 

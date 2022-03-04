@@ -228,8 +228,8 @@ void LG_msort_1b_create_merge_tasks
             (((double) work0) / ((double) total_work))) ;
 
         // ensure at least one task is assigned to each partition
-        ntasks0 = LAGraph_MAX (ntasks0, 1) ;
-        ntasks0 = LAGraph_MIN (ntasks0, ntasks-1) ;
+        ntasks0 = LAGRAPH_MAX (ntasks0, 1) ;
+        ntasks0 = LAGRAPH_MIN (ntasks0, ntasks-1) ;
         int ntasks1 = ntasks - ntasks0 ;
 
         //----------------------------------------------------------------------

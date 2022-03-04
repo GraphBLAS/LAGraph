@@ -98,7 +98,7 @@ void test_MIS (void)
         OK (LAGraph_Matrix_Structure (&C, A, msg)) ;
 
         // construct a directed graph G with adjacency matrix C
-        OK (LAGraph_New (&G, &C, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+        OK (LAGraph_New (&G, &C, LAGraph_ADJACENCY_DIRECTED, msg)) ;
         TEST_CHECK (C == NULL) ;
 
         // error handling test
@@ -109,14 +109,14 @@ void test_MIS (void)
         // check if the pattern is symmetric
         OK (LAGraph_Property_SymmetricStructure (G, msg)) ;
 
-        if (G->structure_is_symmetric == LAGRAPH_FALSE)
+        if (G->structure_is_symmetric == LAGraph_FALSE)
         {
             // make the adjacency matrix symmetric
             OK (LAGraph_Property_AT (G, msg)) ;
             OK (GrB_eWiseAdd (G->A, NULL, NULL, GrB_LOR, G->A, G->AT, NULL)) ;
             G->structure_is_symmetric = true ;
         }
-        G->kind = LAGRAPH_ADJACENCY_UNDIRECTED ;
+        G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
 
         // check for self-edges
         OK (LAGraph_Property_NDiag (G, msg)) ;
@@ -176,7 +176,7 @@ void test_MIS (void)
         printf ("creating at least %g singletons\n", (double) nsingletons) ;
 
         OK (LAGraph_DeleteProperties (G, msg)) ;
-        G->kind = LAGRAPH_ADJACENCY_UNDIRECTED ;
+        G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
         G->structure_is_symmetric = true ;
         G->ndiag = 0 ;
 
@@ -206,7 +206,7 @@ void test_MIS (void)
         }
 
         // convert to directed with symmetric structure and recompute the MIS
-        G->kind = LAGRAPH_ADJACENCY_DIRECTED ;
+        G->kind = LAGraph_ADJACENCY_DIRECTED ;
         OK (LAGraph_MaximalIndependentSet (&mis, G, 0, NULL, msg)) ;
         // check the result
         OK (LG_check_mis (G->A, mis, NULL, msg)) ;

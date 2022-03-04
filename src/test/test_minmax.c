@@ -188,16 +188,16 @@ void test_minmax (void)
         TEST_MSG ("Failed to load %s\n", aname) ;
         GrB_Index nvals ;
         OK (GrB_Matrix_nvals (&nvals, A)) ;
-        OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+        OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
 
         //----------------------------------------------------------------------
         // compute emin and emax
         //----------------------------------------------------------------------
 
         OK (LAGraph_Property_EMin (G, msg)) ;
-        TEST_CHECK (G->emin_kind == LAGRAPH_EXACT) ;
+        TEST_CHECK (G->emin_kind == LAGraph_EXACT) ;
         OK (LAGraph_Property_EMax (G, msg)) ;
-        TEST_CHECK (G->emax_kind == LAGRAPH_EXACT) ;
+        TEST_CHECK (G->emax_kind == LAGraph_EXACT) ;
 
         //----------------------------------------------------------------------
         // check the result
@@ -276,7 +276,7 @@ void test_minmax_int64 (void)
         TEST_MSG ("Failed to load %s\n", aname) ;
         GrB_Index nvals ;
         OK (GrB_Matrix_nvals (&nvals, A)) ;
-        OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+        OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
 
         for (int trial = 1 ; trial <= 2 ; trial++)
         {
@@ -286,9 +286,9 @@ void test_minmax_int64 (void)
             //------------------------------------------------------------------
 
             OK (LAGraph_Property_EMin (G, msg)) ;
-            TEST_CHECK (G->emin_kind == LAGRAPH_EXACT) ;
+            TEST_CHECK (G->emin_kind == LAGraph_EXACT) ;
             OK (LAGraph_Property_EMax (G, msg)) ;
-            TEST_CHECK (G->emax_kind == LAGRAPH_EXACT) ;
+            TEST_CHECK (G->emax_kind == LAGraph_EXACT) ;
 
             //------------------------------------------------------------------
             // check the result
@@ -353,16 +353,16 @@ void test_minmax_uint64 (void)
         TEST_MSG ("Failed to load %s\n", aname) ;
         GrB_Index nvals ;
         OK (GrB_Matrix_nvals (&nvals, A)) ;
-        OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+        OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
 
         //----------------------------------------------------------------------
         // compute emin and emax
         //----------------------------------------------------------------------
 
         OK (LAGraph_Property_EMin (G, msg)) ;
-        TEST_CHECK (G->emin_kind == LAGRAPH_EXACT) ;
+        TEST_CHECK (G->emin_kind == LAGraph_EXACT) ;
         OK (LAGraph_Property_EMax (G, msg)) ;
-        TEST_CHECK (G->emax_kind == LAGRAPH_EXACT) ;
+        TEST_CHECK (G->emax_kind == LAGraph_EXACT) ;
 
         //----------------------------------------------------------------------
         // check the result
@@ -406,7 +406,7 @@ void test_minmax_failures (void)
     GrB_Type MyInt ;
     OK (GrB_Type_new (&MyInt, sizeof (myint))) ;
     OK (GrB_Matrix_new (&A, MyInt, 4, 4)) ;
-    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
     int result = LAGraph_Property_EMax (G, msg) ;
     printf ("\nresult: %d msg: %s\n", result, msg) ;
     TEST_CHECK (result == GrB_NOT_IMPLEMENTED) ;

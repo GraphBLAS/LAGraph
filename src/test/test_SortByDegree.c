@@ -114,12 +114,12 @@ void test_SortByDegree (void)
             // decide if the graph G is directed or undirected
             if (outer == 0)
             {
-                kind = LAGRAPH_ADJACENCY_DIRECTED ;
+                kind = LAGraph_ADJACENCY_DIRECTED ;
                 printf ("\n#### case: directed graph\n\n") ;
             }
             else
             {
-                kind = LAGRAPH_ADJACENCY_UNDIRECTED ;
+                kind = LAGraph_ADJACENCY_UNDIRECTED ;
                 printf ("\n#### case: undirected graph\n\n") ;
             }
 
@@ -267,11 +267,11 @@ void test_SortByDegree_brutal (void)
             // decide if the graph G is directed or undirected
             if (outer == 0)
             {
-                kind = LAGRAPH_ADJACENCY_DIRECTED ;
+                kind = LAGraph_ADJACENCY_DIRECTED ;
             }
             else
             {
-                kind = LAGRAPH_ADJACENCY_UNDIRECTED ;
+                kind = LAGraph_ADJACENCY_UNDIRECTED ;
             }
 
             // construct a graph G with adjacency matrix A
@@ -398,7 +398,7 @@ void test_SortByDegree_failures (void)
     OK (LAGraph_MMRead (&A, f, msg)) ;
     OK (fclose (f)) ;
     TEST_MSG ("Loading of adjacency matrix failed") ;
-    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
 
     // degree property must first be computed
     result = LAGraph_SortByDegree (&P, G, true, true, msg) ;

@@ -200,7 +200,7 @@ void test_ranker(void)
     TEST_CHECK (f != NULL) ;
     OK (LAGraph_MMRead (&A, f, msg)) ;
     OK (fclose (f)) ;
-    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_UNDIRECTED, msg)) ;
+    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
     OK (LAGraph_Property_RowDegree (G, msg)) ;
 
@@ -245,7 +245,7 @@ void test_ranker(void)
     TEST_CHECK (f != NULL) ;
     OK (LAGraph_MMRead (&A, f, msg)) ;
     OK (fclose (f)) ;
-    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
     OK (LAGraph_Property_AT (G, msg)) ;
     OK (LAGraph_Property_RowDegree (G, msg)) ;
@@ -284,7 +284,7 @@ void test_ranker(void)
     TEST_CHECK (f != NULL) ;
     OK (LAGraph_MMRead (&A, f, msg)) ;
     OK (fclose (f)) ;
-    OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+    OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
     OK (LAGraph_Property_AT (G, msg)) ;
     OK (LAGraph_Property_RowDegree (G, msg)) ;

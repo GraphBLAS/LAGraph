@@ -32,7 +32,7 @@ int LAGraph_Property_AT
     GrB_Matrix A = G->A ;
     LAGraph_Kind kind = G->kind ;
 
-    if (G->AT != NULL || kind == LAGRAPH_ADJACENCY_UNDIRECTED)
+    if (G->AT != NULL || kind == LAGraph_ADJACENCY_UNDIRECTED)
     {
         // G->AT already computed, or not needed since A is symmetric
         return (GrB_SUCCESS) ;

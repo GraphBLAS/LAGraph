@@ -54,11 +54,11 @@ matrix_info ;
 
 const matrix_info files [ ] =
 {
-    LAGRAPH_ADJACENCY_DIRECTED,   "cover.mtx",
-    LAGRAPH_ADJACENCY_DIRECTED,   "ldbc-directed-example.mtx",
-    LAGRAPH_ADJACENCY_UNDIRECTED, "ldbc-undirected-example.mtx",
-    LAGRAPH_ADJACENCY_UNDIRECTED, "A.mtx",
-    LAGRAPH_ADJACENCY_UNDIRECTED, "bcsstk13.mtx",
+    LAGraph_ADJACENCY_DIRECTED,   "cover.mtx",
+    LAGraph_ADJACENCY_DIRECTED,   "ldbc-directed-example.mtx",
+    LAGraph_ADJACENCY_UNDIRECTED, "ldbc-undirected-example.mtx",
+    LAGraph_ADJACENCY_UNDIRECTED, "A.mtx",
+    LAGraph_ADJACENCY_UNDIRECTED, "bcsstk13.mtx",
     LAGRAPH_UNKNOWN,              ""
 } ;
 
@@ -99,7 +99,7 @@ void test_DeleteProperties (void)
         printf ("result: %d msg: %s\n", rr, msg) ;
         printf ("  row degree: ") ;
         OK (LAGraph_Vector_Print (G->rowdegree, LAGraph_SHORT, stdout, msg)) ;
-        if (kind == LAGRAPH_ADJACENCY_DIRECTED)
+        if (kind == LAGraph_ADJACENCY_DIRECTED)
         {
             printf ("  adj transposed: ") ;
             OK (LAGraph_Matrix_Print (G->AT, LAGraph_SHORT, stdout, msg)) ;

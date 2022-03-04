@@ -49,7 +49,7 @@ int LAGraph_Property_ColDegree
     GrB_Vector coldegree = NULL, x = NULL ;
     LG_CLEAR_MSG_AND_BASIC_ASSERT (G, msg) ;
 
-    if (G->coldegree != NULL || G->kind == LAGRAPH_ADJACENCY_UNDIRECTED)
+    if (G->coldegree != NULL || G->kind == LAGraph_ADJACENCY_UNDIRECTED)
     {
         // G->coldegree already computed, or not needed
         return (GrB_SUCCESS) ;

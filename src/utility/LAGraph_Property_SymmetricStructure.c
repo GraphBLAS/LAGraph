@@ -39,7 +39,7 @@ int LAGraph_Property_SymmetricStructure
     LG_CLEAR_MSG_AND_BASIC_ASSERT (G, msg) ;
 
     LAGraph_Kind kind = G->kind ;
-    if (kind == LAGRAPH_ADJACENCY_UNDIRECTED)
+    if (kind == LAGraph_ADJACENCY_UNDIRECTED)
     {
         // assume A is symmetric for an undirected graph
         G->structure_is_symmetric = true ;

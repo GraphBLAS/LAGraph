@@ -134,7 +134,7 @@ void test_Property_Symmetric_Structure (void)
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
         // construct a directed graph G with adjacency matrix A
-        OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+        OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
         TEST_CHECK (A == NULL) ;
 
         // compute the structure_is_symmetric property
@@ -143,11 +143,11 @@ void test_Property_Symmetric_Structure (void)
         // check the result
         if (sym_structure)
         {
-            TEST_CHECK (G->structure_is_symmetric == LAGRAPH_TRUE) ;
+            TEST_CHECK (G->structure_is_symmetric == LAGraph_TRUE) ;
         }
         else
         {
-            TEST_CHECK (G->structure_is_symmetric == LAGRAPH_FALSE) ;
+            TEST_CHECK (G->structure_is_symmetric == LAGraph_FALSE) ;
         }
 
         // delete all properties
@@ -160,11 +160,11 @@ void test_Property_Symmetric_Structure (void)
         // check the result
         if (sym_structure)
         {
-            TEST_CHECK (G->structure_is_symmetric == LAGRAPH_TRUE) ;
+            TEST_CHECK (G->structure_is_symmetric == LAGraph_TRUE) ;
         }
         else
         {
-            TEST_CHECK (G->structure_is_symmetric == LAGRAPH_FALSE) ;
+            TEST_CHECK (G->structure_is_symmetric == LAGraph_FALSE) ;
         }
 
         // delete all properties
@@ -173,10 +173,10 @@ void test_Property_Symmetric_Structure (void)
         // change the graph to directed, if matrix is symmetric 
         if (sym_values)
         {
-            G->kind = LAGRAPH_ADJACENCY_UNDIRECTED ;
+            G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
             // recompute the symmetry property
             OK (LAGraph_Property_SymmetricStructure (G, msg)) ;
-            TEST_CHECK (G->structure_is_symmetric == LAGRAPH_TRUE) ;
+            TEST_CHECK (G->structure_is_symmetric == LAGraph_TRUE) ;
         }
 
         OK (LAGraph_Delete (&G, msg)) ;
@@ -218,7 +218,7 @@ void test_Property_Symmetric_Structure_brutal (void)
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
         // construct a directed graph G with adjacency matrix A
-        OK (LAGraph_New (&G, &A, LAGRAPH_ADJACENCY_DIRECTED, msg)) ;
+        OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
         TEST_CHECK (A == NULL) ;
 
         // compute the structure_is_symmetric property
@@ -227,11 +227,11 @@ void test_Property_Symmetric_Structure_brutal (void)
         // check the result
         if (sym_structure)
         {
-            TEST_CHECK (G->structure_is_symmetric == LAGRAPH_TRUE) ;
+            TEST_CHECK (G->structure_is_symmetric == LAGraph_TRUE) ;
         }
         else
         {
-            TEST_CHECK (G->structure_is_symmetric == LAGRAPH_FALSE) ;
+            TEST_CHECK (G->structure_is_symmetric == LAGraph_FALSE) ;
         }
 
         // delete all properties
@@ -244,11 +244,11 @@ void test_Property_Symmetric_Structure_brutal (void)
         // check the result
         if (sym_structure)
         {
-            TEST_CHECK (G->structure_is_symmetric == LAGRAPH_TRUE) ;
+            TEST_CHECK (G->structure_is_symmetric == LAGraph_TRUE) ;
         }
         else
         {
-            TEST_CHECK (G->structure_is_symmetric == LAGRAPH_FALSE) ;
+            TEST_CHECK (G->structure_is_symmetric == LAGraph_FALSE) ;
         }
 
         // delete all properties
@@ -257,10 +257,10 @@ void test_Property_Symmetric_Structure_brutal (void)
         // change the graph to directed, if matrix is symmetric 
         if (sym_values)
         {
-            G->kind = LAGRAPH_ADJACENCY_UNDIRECTED ;
+            G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
             // recompute the symmetry property
             LG_BRUTAL (LAGraph_Property_SymmetricStructure (G, msg)) ;
-            TEST_CHECK (G->structure_is_symmetric == LAGRAPH_TRUE) ;
+            TEST_CHECK (G->structure_is_symmetric == LAGraph_TRUE) ;
         }
 
         OK (LAGraph_Delete (&G, msg)) ;

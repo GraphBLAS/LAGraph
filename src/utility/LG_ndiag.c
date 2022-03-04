@@ -42,7 +42,7 @@ int LG_ndiag
     GrB_Index nrows, ncols ;
     GrB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
     GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
-    GrB_Index n = LAGraph_MIN (nrows, ncols) ;
+    GrB_Index n = LAGRAPH_MIN (nrows, ncols) ;
 
     GrB_Type atype ;
     char atype_name [LAGRAPH_MAX_NAME_LEN] ;

@@ -73,9 +73,9 @@ int LAGraph_SortByDegree
 
     GrB_Vector Degree ;
 
-    if (G->kind == LAGRAPH_ADJACENCY_UNDIRECTED ||
-       (G->kind == LAGRAPH_ADJACENCY_DIRECTED &&
-        G->structure_is_symmetric == LAGRAPH_TRUE))
+    if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
+       (G->kind == LAGraph_ADJACENCY_DIRECTED &&
+        G->structure_is_symmetric == LAGraph_TRUE))
     {
         // the structure of A is known to be symmetric
         Degree = G->rowdegree ;
@@ -99,8 +99,8 @@ int LAGraph_SortByDegree
     #define CHUNK (64*1024)
     int nthreads ;
     LG_TRY (LAGraph_GetNumThreads (&nthreads, msg)) ;
-    nthreads = LAGraph_MIN (nthreads, n/CHUNK) ;
-    nthreads = LAGraph_MAX (nthreads, 1) ;
+    nthreads = LAGRAPH_MIN (nthreads, n/CHUNK) ;
+    nthreads = LAGRAPH_MAX (nthreads, 1) ;
 
     //--------------------------------------------------------------------------
     // allocate result and workspace

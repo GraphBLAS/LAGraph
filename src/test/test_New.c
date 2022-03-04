@@ -54,9 +54,9 @@ matrix_info ;
 
 const matrix_info files [ ] =
 {
-    LAGRAPH_ADJACENCY_DIRECTED,   "cover.mtx",
-    LAGRAPH_ADJACENCY_DIRECTED,   "ldbc-directed-example.mtx",
-    LAGRAPH_ADJACENCY_UNDIRECTED, "ldbc-undirected-example.mtx",
+    LAGraph_ADJACENCY_DIRECTED,   "cover.mtx",
+    LAGraph_ADJACENCY_DIRECTED,   "ldbc-directed-example.mtx",
+    LAGraph_ADJACENCY_UNDIRECTED, "ldbc-undirected-example.mtx",
     LAGRAPH_UNKNOWN,              ""
 } ;
 
@@ -86,13 +86,13 @@ void test_New (void)
         // check the graph
         OK (LAGraph_CheckGraph (G, msg)) ;
         TEST_CHECK (G->kind == kind) ;
-        if (kind == LAGRAPH_ADJACENCY_DIRECTED)
+        if (kind == LAGraph_ADJACENCY_DIRECTED)
         {
             TEST_CHECK (G->structure_is_symmetric == LAGRAPH_UNKNOWN) ;
         }
         else
         {
-            TEST_CHECK (G->structure_is_symmetric == LAGRAPH_TRUE) ;
+            TEST_CHECK (G->structure_is_symmetric == LAGraph_TRUE) ;
         }
 
         // free the graph
