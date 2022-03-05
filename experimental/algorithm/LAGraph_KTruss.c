@@ -80,10 +80,10 @@ int LAGraph_KTruss              // compute the k-truss of a graph
 
     GrB_Index n ;
     GrB_Matrix S = G->A ;
-    GrB_TRY (GrB_Matrix_nrows (&n, S)) ;
-    GrB_TRY (GrB_Matrix_new (&C, GrB_UINT32, n, n)) ;
+    GRB_TRY (GrB_Matrix_nrows (&n, S)) ;
+    GRB_TRY (GrB_Matrix_new (&C, GrB_UINT32, n, n)) ;
     GrB_Index nvals, nvals_last ;
-    GrB_TRY (GrB_Matrix_nvals (&nvals_last, S)) ;
+    GRB_TRY (GrB_Matrix_nvals (&nvals_last, S)) ;
 
     //--------------------------------------------------------------------------
     // find the k-truss of G->A
@@ -92,12 +92,12 @@ int LAGraph_KTruss              // compute the k-truss of a graph
     while (true)
     {
         // C{S} = S*S'
-        GrB_TRY (GrB_mxm (C, S, NULL, LAGraph_plus_one_uint32, S, S,
+        GRB_TRY (GrB_mxm (C, S, NULL, LAGraph_plus_one_uint32, S, S,
             GrB_DESC_RST1)) ;
         // keep entries in C that are >= k-2
-        GrB_TRY (GrB_select (C, NULL, NULL, GrB_VALUEGE_UINT32, C, k-2, NULL)) ;
+        GRB_TRY (GrB_select (C, NULL, NULL, GrB_VALUEGE_UINT32, C, k-2, NULL)) ;
         // return if the k-truss has been found
-        GrB_TRY (GrB_Matrix_nvals (&nvals, C)) ;
+        GRB_TRY (GrB_Matrix_nvals (&nvals, C)) ;
         if (nvals == nvals_last)
         {
             (*C_handle) = C ;

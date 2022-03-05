@@ -90,7 +90,7 @@ int main (int argc, char **argv)
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;
     int nthreads_max ;
-    LAGraph_TRY (LAGraph_GetNumThreads (&nthreads_max, NULL)) ;
+    LAGRAPH_TRY (LAGraph_GetNumThreads (&nthreads_max, NULL)) ;
     if (Nthreads [1] == 0)
     {
         // create thread list automatically
@@ -115,16 +115,16 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
-    LAGraph_TRY (readproblem (&G, NULL,
+    LAGRAPH_TRY (readproblem (&G, NULL,
         true, true, true, NULL, false, argc, argv)) ;
-    LAGraph_TRY (LAGraph_DisplayGraph (G, LAGraph_SHORT, stdout, msg)) ;
+    LAGRAPH_TRY (LAGraph_DisplayGraph (G, LAGraph_SHORT, stdout, msg)) ;
 
     // determine the row degree property
-    LAGraph_TRY (LAGraph_Property_RowDegree (G, msg)) ;
+    LAGRAPH_TRY (LAGraph_Property_RowDegree (G, msg)) ;
 
     GrB_Index n, nvals ;
-    GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
-    GrB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
+    GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
+    GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
 
     //--------------------------------------------------------------------------
     // triangle counting
@@ -135,28 +135,28 @@ int main (int argc, char **argv)
 
 #if 0
     // check # of triangles
-    LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-    LAGraph_TRY (LG_check_tri (&ntsimple, G, NULL)) ;
+    LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+    LAGRAPH_TRY (LG_check_tri (&ntsimple, G, NULL)) ;
     double tsimple ;
-    LAGraph_TRY (LAGraph_Toc (&tsimple, tic, NULL)) ;
+    LAGRAPH_TRY (LAGraph_Toc (&tsimple, tic, NULL)) ;
     printf ("# of triangles: %" PRId64 " slow time: %g sec\n",
         ntsimple, tsimple) ;
 #endif
 
     // warmup for more accurate timing, and also print # of triangles
-    LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
+    LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
     printf ("\nwarmup method: ") ;
     int presort = LAGraph_TriangleCount_AutoSort ; // = 2 (auto selection)
     print_method (stdout, 6, presort) ;
 
     // warmup method:
     // LAGraph_TriangleCount_SandiaDot2 = 6,   // sum (sum ((U * L') .* U))
-    LAGraph_TRY (LAGr_TriangleCount (&ntriangles, G,
+    LAGRAPH_TRY (LAGr_TriangleCount (&ntriangles, G,
         LAGraph_TriangleCount_SandiaDot2, &presort, msg) );
     printf ("# of triangles: %" PRIu64 "\n", ntriangles) ;
     print_method (stdout, 6, presort) ;
     double ttot ;
-    LAGraph_TRY (LAGraph_Toc (&ttot, tic, NULL)) ;
+    LAGRAPH_TRY (LAGraph_Toc (&ttot, tic, NULL)) ;
     printf ("nthreads: %3d time: %12.6f rate: %6.2f (SandiaDot2, one trial)\n",
             nthreads_max, ttot, 1e-6 * nvals / ttot) ;
 
@@ -206,19 +206,19 @@ int main (int argc, char **argv)
             {
                 int nthreads = Nthreads [t] ;
                 if (nthreads > nthreads_max) continue ;
-                LAGraph_TRY (LAGraph_SetNumThreads (nthreads, msg)) ;
+                LAGRAPH_TRY (LAGraph_SetNumThreads (nthreads, msg)) ;
                 GrB_Index nt2 ;
                 double ttot = 0, ttrial [100] ;
                 for (int trial = 0 ; trial < ntrials ; trial++)
                 {
-                    LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
+                    LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
                     presort = sorting ;
 
-                    LAGraph_TRY(
+                    LAGRAPH_TRY(
                         LAGr_TriangleCount (&nt2, G, method,
                                                       &presort, msg) );
 
-                    LAGraph_TRY (LAGraph_Toc (&ttrial [trial], tic, NULL)) ;
+                    LAGRAPH_TRY (LAGraph_Toc (&ttrial [trial], tic, NULL)) ;
                     ttot += ttrial [trial] ;
                     printf ("trial %2d: %12.6f sec rate %6.2f  # triangles: "
                         "%g\n", trial, ttrial [trial],
@@ -253,7 +253,7 @@ int main (int argc, char **argv)
     printf ("nthreads: %3d time: %12.6f rate: %6.2f\n",
         nthreads_best, t_best, 1e-6 * nvals / t_best) ;
     LG_FREE_ALL ;
-    LAGraph_TRY (LAGraph_Finalize (msg)) ;
+    LAGRAPH_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
 }
 

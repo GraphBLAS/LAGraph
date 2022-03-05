@@ -57,7 +57,7 @@ int main (int argc, char **argv)
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;
     int nthreads_max ;
-    LAGraph_TRY (LAGraph_GetNumThreads (&nthreads_max, NULL)) ;
+    LAGRAPH_TRY (LAGraph_GetNumThreads (&nthreads_max, NULL)) ;
     if (Nthreads [1] == 0)
     {
         // create thread list automatically
@@ -86,49 +86,49 @@ int main (int argc, char **argv)
     GrB_Index nmatrices = 0 ;
     GrB_Matrix *Set = NULL ;
     char *collection ;
-    LAGraph_TRY (LAGraph_SLoadSet (matrix_name, &Set, &nmatrices, &collection,
+    LAGRAPH_TRY (LAGraph_SLoadSet (matrix_name, &Set, &nmatrices, &collection,
         msg)) ;
 
     // convert to FP32 and scale the matrix
     GrB_Index n, nvals ;
-    GrB_TRY (GrB_Matrix_nrows (&n, Set [0])) ;
+    GRB_TRY (GrB_Matrix_nrows (&n, Set [0])) ;
     GrB_Matrix T = NULL ;
     // T = abs (float (Set [0])) ;
-    GrB_TRY (GrB_Matrix_new (&T, GrB_FP32, n, n)) ;
-    GrB_TRY (GrB_apply (T, NULL, NULL, GrB_ABS_FP32, Set [0], NULL)) ;
+    GRB_TRY (GrB_Matrix_new (&T, GrB_FP32, n, n)) ;
+    GRB_TRY (GrB_apply (T, NULL, NULL, GrB_ABS_FP32, Set [0], NULL)) ;
     float emin, emax ;
-    GrB_TRY (GrB_reduce (&emin, NULL, GrB_MIN_MONOID_FP32, T, NULL)) ;
-    GrB_TRY (GrB_reduce (&emax, NULL, GrB_MAX_MONOID_FP32, T, NULL)) ;
+    GRB_TRY (GrB_reduce (&emin, NULL, GrB_MIN_MONOID_FP32, T, NULL)) ;
+    GRB_TRY (GrB_reduce (&emax, NULL, GrB_MAX_MONOID_FP32, T, NULL)) ;
     if (emin < 1e-3)
     {
-        GrB_TRY (GrB_apply (T, NULL, NULL, GrB_PLUS_FP32, T, 1e-3, NULL)) ;
+        GRB_TRY (GrB_apply (T, NULL, NULL, GrB_PLUS_FP32, T, 1e-3, NULL)) ;
         emin = 1e-3 ;
     }
     float scale = 255. / emax ;
-    GrB_TRY (GrB_apply (T, NULL, NULL, GrB_TIMES_FP32, T, scale, NULL)) ;
+    GRB_TRY (GrB_apply (T, NULL, NULL, GrB_TIMES_FP32, T, scale, NULL)) ;
 
-    LAGraph_TRY (LAGraph_New (&G, &T, LAGraph_ADJACENCY_DIRECTED, msg)) ;
+    LAGRAPH_TRY (LAGraph_New (&G, &T, LAGraph_ADJACENCY_DIRECTED, msg)) ;
 
-    GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
-    GrB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
-    LAGraph_TRY (LAGraph_Property_EMin (G, msg)) ;
+    GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
+    GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
+    LAGRAPH_TRY (LAGraph_Property_EMin (G, msg)) ;
 
     //--------------------------------------------------------------------------
     // get delta
     //--------------------------------------------------------------------------
 
     float delta = 30 ;
-    GrB_TRY (GrB_Scalar_new (&Delta, GrB_FP32)) ;
-    GrB_TRY (GrB_Scalar_setElement (Delta, delta)) ;
+    GRB_TRY (GrB_Scalar_new (&Delta, GrB_FP32)) ;
+    GRB_TRY (GrB_Scalar_setElement (Delta, delta)) ;
 
     //--------------------------------------------------------------------------
     // get the source nodes
     //--------------------------------------------------------------------------
 
     GrB_Index nsource = 8 ;
-    GrB_TRY (GrB_Vector_new (&SourceNodes, GrB_UINT64, nsource)) ;
-    GrB_TRY (GrB_assign (SourceNodes, NULL, NULL, 1, GrB_ALL, nsource, NULL)) ;
-    LAGraph_TRY (LAGraph_Random_Seed (SourceNodes, 1, msg)) ;
+    GRB_TRY (GrB_Vector_new (&SourceNodes, GrB_UINT64, nsource)) ;
+    GRB_TRY (GrB_assign (SourceNodes, NULL, NULL, 1, GrB_ALL, nsource, NULL)) ;
+    LAGRAPH_TRY (LAGraph_Random_Seed (SourceNodes, 1, msg)) ;
     // GxB_print (SourceNodes, 3) ;
 
     //--------------------------------------------------------------------------
@@ -136,10 +136,10 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     GrB_Index src ;
-    GrB_TRY (GrB_Vector_extractElement (&src, SourceNodes, 0)) ;
+    GRB_TRY (GrB_Vector_extractElement (&src, SourceNodes, 0)) ;
     src = src % n ;
 //  GxB_set (GxB_BURBLE, true) ;
-    LAGraph_TRY (LAGr_SingleSourceShortestPath (&pathlen, G, src, Delta, msg)) ;
+    LAGRAPH_TRY (LAGr_SingleSourceShortestPath (&pathlen, G, src, Delta, msg)) ;
     GxB_set (GxB_BURBLE, false) ;
     GrB_free (&pathlen) ;
 
@@ -152,7 +152,7 @@ int main (int argc, char **argv)
     {
         int nthreads = Nthreads [tt] ;
         if (nthreads > nthreads_max) continue ;
-        LAGraph_TRY (LAGraph_SetNumThreads (nthreads, msg)) ;
+        LAGRAPH_TRY (LAGraph_SetNumThreads (nthreads, msg)) ;
         double total_time = 0 ;
 
         for (int trial = 0 ; trial < ntrials ; trial++)
@@ -164,7 +164,7 @@ int main (int argc, char **argv)
 
             // src = SourceNodes [trial] % n
             src = -1 ;
-            GrB_TRY (GrB_Vector_extractElement (&src, SourceNodes, trial)) ;
+            GRB_TRY (GrB_Vector_extractElement (&src, SourceNodes, trial)) ;
             src = src % n ;
             double ttrial ;
 
@@ -173,10 +173,10 @@ int main (int argc, char **argv)
             //------------------------------------------------------------------
 
             GrB_free (&pathlen) ;
-            LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
-            LAGraph_TRY (LAGr_SingleSourceShortestPath (&pathlen, G, src,
+            LAGRAPH_TRY (LAGraph_Tic (tic, msg)) ;
+            LAGRAPH_TRY (LAGr_SingleSourceShortestPath (&pathlen, G, src,
                 Delta, msg)) ;
-            LAGraph_TRY (LAGraph_Toc (&ttrial, tic, msg)) ;
+            LAGRAPH_TRY (LAGraph_Toc (&ttrial, tic, msg)) ;
 
             printf ("sssp15:  threads: %2d trial: %2d source %8" PRIu64
                 "time: %10.4f sec\n", nthreads, trial, src, ttrial) ;
@@ -224,6 +224,6 @@ int main (int argc, char **argv)
 
     LG_FREE_ALL ;
     LAGraph_Random_Finalize (msg) ;
-    LAGraph_TRY (LAGraph_Finalize (msg)) ;
+    LAGRAPH_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
 }

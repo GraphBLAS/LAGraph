@@ -53,7 +53,7 @@ int main (int argc, char **argv)
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;
     int nthreads_max ;
-    LAGraph_TRY (LAGraph_GetNumThreads (&nthreads_max, NULL)) ;
+    LAGRAPH_TRY (LAGraph_GetNumThreads (&nthreads_max, NULL)) ;
     if (Nthreads [1] == 0)
     {
         // create thread list automatically
@@ -78,12 +78,12 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
-    LAGraph_TRY (readproblem (&G, &SourceNodes,
+    LAGRAPH_TRY (readproblem (&G, &SourceNodes,
         false, false, false, GrB_INT32, false, argc, argv)) ;
     GrB_Index n, nvals ;
-    GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
-    GrB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
-    LAGraph_TRY (LAGraph_Property_EMin (G, msg)) ;
+    GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
+    GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
+    LAGRAPH_TRY (LAGraph_Property_EMin (G, msg)) ;
 
     //--------------------------------------------------------------------------
     // get delta
@@ -103,8 +103,8 @@ int main (int argc, char **argv)
     }
     printf ("delta: %d\n", delta) ;
     GrB_Scalar Delta = NULL ;
-    GrB_TRY (GrB_Scalar_new (&Delta, GrB_INT32)) ;
-    GrB_TRY (GrB_Scalar_setElement (Delta, delta)) ;
+    GRB_TRY (GrB_Scalar_new (&Delta, GrB_INT32)) ;
+    GRB_TRY (GrB_Scalar_setElement (Delta, delta)) ;
 
     //--------------------------------------------------------------------------
     // begin tests
@@ -112,7 +112,7 @@ int main (int argc, char **argv)
 
     // get the number of source nodes
     GrB_Index nsource ;
-    GrB_TRY (GrB_Matrix_nrows (&nsource, SourceNodes)) ;
+    GRB_TRY (GrB_Matrix_nrows (&nsource, SourceNodes)) ;
 
     int ntrials = (int) nsource ;
 
@@ -120,7 +120,7 @@ int main (int argc, char **argv)
     {
         int nthreads = Nthreads [tt] ;
         if (nthreads > nthreads_max) continue ;
-        LAGraph_TRY (LAGraph_SetNumThreads (nthreads, msg)) ;
+        LAGRAPH_TRY (LAGraph_SetNumThreads (nthreads, msg)) ;
         double total_time = 0 ;
 
         for (int trial = 0 ; trial < ntrials ; trial++)
@@ -132,7 +132,7 @@ int main (int argc, char **argv)
 
             // src = SourceNodes [trial]
             GrB_Index src = -1 ;
-            GrB_TRY (GrB_Matrix_extractElement (&src, SourceNodes, trial, 0)) ;
+            GRB_TRY (GrB_Matrix_extractElement (&src, SourceNodes, trial, 0)) ;
             src-- ;     // convert from 1-based to 0-based
             double ttrial ;
 
@@ -141,10 +141,10 @@ int main (int argc, char **argv)
             //------------------------------------------------------------------
 
             GrB_free (&pathlen) ;
-            LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
-            LAGraph_TRY (LAGr_SingleSourceShortestPath (&pathlen, G, src,
+            LAGRAPH_TRY (LAGraph_Tic (tic, msg)) ;
+            LAGRAPH_TRY (LAGr_SingleSourceShortestPath (&pathlen, G, src,
                 Delta, msg)) ;
-            LAGraph_TRY (LAGraph_Toc (&ttrial, tic, msg)) ;
+            LAGRAPH_TRY (LAGraph_Toc (&ttrial, tic, msg)) ;
 
             printf ("sssp15:  threads: %2d trial: %2d source %g "
                 "time: %10.4f sec\n", nthreads, trial, (double) src, ttrial) ;
@@ -157,9 +157,9 @@ int main (int argc, char **argv)
                 // all trials can be checked, but this is slow so do just
                 // for the first trial
                 double tcheck ;
-                LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
-                LAGraph_TRY (LG_check_sssp (pathlen, G, src, msg)) ;
-                LAGraph_TRY (LAGraph_Toc (&tcheck, tic, msg)) ;
+                LAGRAPH_TRY (LAGraph_Tic (tic, msg)) ;
+                LAGRAPH_TRY (LG_check_sssp (pathlen, G, src, msg)) ;
+                LAGRAPH_TRY (LAGraph_Toc (&tcheck, tic, msg)) ;
                 printf ("total check time: %g sec\n", tcheck) ;
             }
 #endif
@@ -183,6 +183,6 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     LG_FREE_ALL ;
-    LAGraph_TRY (LAGraph_Finalize (msg)) ;
+    LAGRAPH_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
 }

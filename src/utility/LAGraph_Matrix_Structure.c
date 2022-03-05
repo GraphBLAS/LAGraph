@@ -44,15 +44,15 @@ int LAGraph_Matrix_Structure
     // get the size of A
     //--------------------------------------------------------------------------
 
-    GrB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
-    GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
+    GRB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
+    GRB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
 
     //--------------------------------------------------------------------------
     // C<s(A)> = true
     //--------------------------------------------------------------------------
 
-    GrB_TRY (GrB_Matrix_new (C, GrB_BOOL, nrows, ncols)) ;
-    GrB_TRY (GrB_assign (*C, A, NULL, (bool) true,
+    GRB_TRY (GrB_Matrix_new (C, GrB_BOOL, nrows, ncols)) ;
+    GRB_TRY (GrB_assign (*C, A, NULL, (bool) true,
         GrB_ALL, nrows, GrB_ALL, nrows, GrB_DESC_S)) ;
 
     return (GrB_SUCCESS) ;

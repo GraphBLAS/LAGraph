@@ -191,8 +191,8 @@ int LAGraph_cdlp
     // nnz = # of non-zero elements used in the computations
     //   (twice as many for directed graphs)
     GrB_Index n, nz, nnz;
-    GrB_TRY (GrB_Matrix_nrows(&n, A))
-    GrB_TRY (GrB_Matrix_nvals(&nz, A))
+    GRB_TRY (GrB_Matrix_nrows(&n, A))
+    GRB_TRY (GrB_Matrix_nvals(&nz, A))
     if (!symmetric)
     {
         nnz = 2 * nz;
@@ -208,11 +208,11 @@ int LAGraph_cdlp
 
         AI = LAGraph_Malloc(nz, sizeof(GrB_Index));
         AJ = LAGraph_Malloc(nz, sizeof(GrB_Index));
-        GrB_TRY (GrB_Matrix_extractTuples_UINT64(AI, AJ, GrB_NULL, &nz, A))
+        GRB_TRY (GrB_Matrix_extractTuples_UINT64(AI, AJ, GrB_NULL, &nz, A))
 
         AX = LAGraph_Malloc(nz, sizeof(GrB_Index));
-        GrB_TRY (GrB_Matrix_new(&S, GrB_UINT64, n, n));
-        GrB_TRY (GrB_Matrix_build(S, AI, AJ, AX, nz, GrB_PLUS_UINT64));
+        GRB_TRY (GrB_Matrix_new(&S, GrB_UINT64, n, n));
+        GRB_TRY (GrB_Matrix_build(S, AI, AJ, AX, nz, GrB_PLUS_UINT64));
 
         LAGraph_Toc (&t[0], tic, NULL) ;
     }
@@ -227,8 +227,8 @@ int LAGraph_cdlp
 
 #ifdef LAGRAPH_SUITESPARSE
     GxB_Format_Value A_format = -1, global_format = -1 ;
-    GrB_TRY (GxB_get(A, GxB_FORMAT, &A_format))
-    GrB_TRY (GxB_get(GxB_FORMAT, &global_format))
+    GRB_TRY (GxB_get(A, GxB_FORMAT, &A_format))
+    GRB_TRY (GxB_get(GxB_FORMAT, &global_format))
     if (A_format != GxB_BY_ROW || global_format != GxB_BY_ROW)
     {
         return (GrB_INVALID_VALUE) ;
@@ -243,20 +243,20 @@ int LAGraph_cdlp
         I[i] = i;
         X[i] = i;
     }
-    GrB_TRY (GrB_Matrix_new (&L, GrB_UINT64, n, n)) ;
-    GrB_TRY (GrB_Matrix_build (L, I, I, X, n, GrB_PLUS_UINT64)) ;
+    GRB_TRY (GrB_Matrix_new (&L, GrB_UINT64, n, n)) ;
+    GRB_TRY (GrB_Matrix_build (L, I, I, X, n, GrB_PLUS_UINT64)) ;
     LAGraph_Free ((void **)&I) ; I = NULL;
     LAGraph_Free ((void **)&X) ; X = NULL;
 
     // Initialize matrix for storing previous labels
-    GrB_TRY (GrB_Matrix_new(&L_prev, GrB_UINT64, n, n))
+    GRB_TRY (GrB_Matrix_new(&L_prev, GrB_UINT64, n, n))
 
     if (!symmetric)
     {
         // compute AT for the unsymmetric case as it will be used
         // to compute A' = A' min.2nd L in each iteration
-        GrB_TRY (GrB_Matrix_new (&AT, GrB_UINT64, n, n)) ;
-        GrB_TRY (GrB_transpose (AT, NULL, NULL, A, NULL)) ;
+        GRB_TRY (GrB_Matrix_new (&AT, GrB_UINT64, n, n)) ;
+        GRB_TRY (GrB_transpose (AT, NULL, NULL, A, NULL)) ;
     }
 
     int nthreads;
@@ -269,17 +269,17 @@ int LAGraph_cdlp
 
         // A = A min.2nd L
         // (using the "push" (saxpy) method)
-        GrB_TRY (GrB_mxm(S, GrB_NULL, GrB_NULL,
+        GRB_TRY (GrB_mxm(S, GrB_NULL, GrB_NULL,
                            GrB_MIN_SECOND_SEMIRING_UINT64, S, L, NULL));
-        GrB_TRY (GrB_Matrix_extractTuples_UINT64(I, GrB_NULL, X, &nz, S));
+        GRB_TRY (GrB_Matrix_extractTuples_UINT64(I, GrB_NULL, X, &nz, S));
 
         if (!symmetric)
         {
             // A' = A' min.2nd L
             // (using the "push" (saxpy) method)
-            GrB_TRY (GrB_mxm(AT, GrB_NULL, GrB_NULL,
+            GRB_TRY (GrB_mxm(AT, GrB_NULL, GrB_NULL,
                                GrB_MIN_SECOND_SEMIRING_UINT64, AT, L, NULL));
-            GrB_TRY (GrB_Matrix_extractTuples_UINT64(&I[nz],
+            GRB_TRY (GrB_Matrix_extractTuples_UINT64(&I[nz],
                                                        GrB_NULL, &X[nz], &nz, AT));
         }
 
@@ -341,12 +341,12 @@ int LAGraph_cdlp
     // extract final labels to the result vector
     //--------------------------------------------------------------------------
 
-    GrB_TRY (GrB_Vector_new(&CDLP, GrB_UINT64, n))
+    GRB_TRY (GrB_Vector_new(&CDLP, GrB_UINT64, n))
     for (GrB_Index i = 0; i < n; i++)
     {
         uint64_t x;
-        GrB_TRY (GrB_Matrix_extractElement(&x, L, i, i))
-        GrB_TRY (GrB_Vector_setElement(CDLP, x, i))
+        GRB_TRY (GrB_Matrix_extractElement(&x, L, i, i))
+        GRB_TRY (GrB_Vector_setElement(CDLP, x, i))
     }
 
     //--------------------------------------------------------------------------

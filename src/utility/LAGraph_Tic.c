@@ -57,7 +57,7 @@ int LAGraph_Tic
         // Linux has a very low resolution clock() function, so use the high
         // resolution clock_gettime instead.  May require -lrt
         struct timespec t ;
-        LAGraph_TRY (clock_gettime (CLOCK_MONOTONIC, &t)) ;
+        LAGRAPH_TRY (clock_gettime (CLOCK_MONOTONIC, &t)) ;
         tic [0] = (double) t.tv_sec ;
         tic [1] = (double) t.tv_nsec ;
 

@@ -94,7 +94,7 @@ int LAGraph_SortByDegree
     //--------------------------------------------------------------------------
 
     GrB_Index n ;
-    GrB_TRY (GrB_Vector_size (&n, Degree)) ;
+    GRB_TRY (GrB_Vector_size (&n, Degree)) ;
 
     #define CHUNK (64*1024)
     int nthreads ;
@@ -126,7 +126,7 @@ int LAGraph_SortByDegree
 
     // extract the degrees
     GrB_Index nvals = n ;
-    GrB_TRY (GrB_Vector_extractTuples ((GrB_Index *) W0, W1, &nvals, Degree)) ;
+    GRB_TRY (GrB_Vector_extractTuples ((GrB_Index *) W0, W1, &nvals, Degree)) ;
 
     if (ascending)
     {

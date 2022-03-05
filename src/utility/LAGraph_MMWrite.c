@@ -194,9 +194,9 @@ int LAGraph_MMWrite
     //--------------------------------------------------------------------------
 
     GrB_Index nrows, ncols, nvals ;
-    GrB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
-    GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
-    GrB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
+    GRB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
+    GRB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
+    GRB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
     GrB_Index n = nrows ;
 
     //--------------------------------------------------------------------------
@@ -255,8 +255,8 @@ int LAGraph_MMWrite
     if (nrows == ncols)
     {
         // AT = A'
-        GrB_TRY (GrB_Matrix_new (&AT, type, n, n)) ;
-        GrB_TRY (GrB_transpose (AT, NULL, NULL, A, NULL)) ;
+        GRB_TRY (GrB_Matrix_new (&AT, type, n, n)) ;
+        GRB_TRY (GrB_transpose (AT, NULL, NULL, A, NULL)) ;
 
         //----------------------------------------------------------------------
         // check for symmetry
@@ -290,7 +290,7 @@ int LAGraph_MMWrite
             #endif
             if (op != NULL)
             {
-                GrB_TRY (GrB_apply (AT, NULL, NULL, op, AT, NULL)) ;
+                GRB_TRY (GrB_apply (AT, NULL, NULL, op, AT, NULL)) ;
                 LG_TRY (LAGraph_Matrix_IsEqual (&isequal, A, AT, msg)) ;
                 if (isequal)
                 {
@@ -327,12 +327,12 @@ int LAGraph_MMWrite
     {
         if (type == GrB_BOOL)
         {
-            GrB_TRY (GrB_reduce (&is_structural, NULL, GrB_LAND_MONOID_BOOL,
+            GRB_TRY (GrB_reduce (&is_structural, NULL, GrB_LAND_MONOID_BOOL,
                 A, NULL)) ;
         }
         else
         {
-            GrB_TRY (GrB_Matrix_new (&C, GrB_BOOL, nrows, ncols)) ;
+            GRB_TRY (GrB_Matrix_new (&C, GrB_BOOL, nrows, ncols)) ;
             GrB_BinaryOp op = NULL ;
             if      (type == GrB_INT8  ) op = GrB_EQ_INT8   ;
             else if (type == GrB_INT16 ) op = GrB_EQ_INT16  ;
@@ -348,8 +348,8 @@ int LAGraph_MMWrite
             else if (type == GxB_FC32  ) op = GrB_EQ_FC32 ;
             else if (type == GxB_FC64  ) op = GrB_EQ_FC64 ;
             #endif
-            GrB_TRY (GrB_apply (C, NULL, NULL, op, A, 1, NULL)) ;
-            GrB_TRY (GrB_reduce (&is_structural, NULL, GrB_LAND_MONOID_BOOL,
+            GRB_TRY (GrB_apply (C, NULL, NULL, op, A, 1, NULL)) ;
+            GRB_TRY (GrB_reduce (&is_structural, NULL, GrB_LAND_MONOID_BOOL,
                 C, NULL)) ;
             GrB_free (&C) ;
         }
@@ -487,7 +487,7 @@ int LAGraph_MMWrite
         ctype *X = NULL ;                                                   \
         X = LAGraph_Malloc (nvals, sizeof (ctype)) ;                        \
         LG_ASSERT (X != NULL, GrB_OUT_OF_MEMORY) ;                          \
-        GrB_TRY (GrB_Matrix_extractTuples (I, J, X, &nvals, A)) ;           \
+        GRB_TRY (GrB_Matrix_extractTuples (I, J, X, &nvals, A)) ;           \
         LG_TRY (LAGraph_Sort3 ((int64_t *) J, (int64_t *) I,                \
             (int64_t *) K, nvals, nthreads, msg)) ;                         \
         for (int64_t k = 0 ; k < nvals ; k++)                               \

@@ -185,9 +185,9 @@ GrB_Info LAGraph_BF_full1a
     LG_ASSERT (A != NULL && pd_output != NULL &&
         ppi_output != NULL && ph_output != NULL, GrB_NULL_POINTER) ;
 
-    GrB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
-    GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
-    GrB_TRY (GrB_Matrix_nvals (&nz, A));
+    GRB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
+    GRB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
+    GRB_TRY (GrB_Matrix_nvals (&nz, A));
     LG_ASSERT_MSG (nrows == ncols, -1002, "A must be square") ;
     n = nrows;
     LG_ASSERT_MSG (s < n, GrB_INVALID_INDEX, "invalid source node") ;
@@ -196,25 +196,25 @@ GrB_Info LAGraph_BF_full1a
     // create all GrB_Type GrB_BinaryOp GrB_Monoid and GrB_Semiring
     //--------------------------------------------------------------------------
     // GrB_Type
-    GrB_TRY (GrB_Type_new(&BF_Tuple3, sizeof(BF_Tuple3_struct)));
+    GRB_TRY (GrB_Type_new(&BF_Tuple3, sizeof(BF_Tuple3_struct)));
 
     // GrB_BinaryOp
-    GrB_TRY (GrB_BinaryOp_new(&BF_LT_Tuple3,
+    GRB_TRY (GrB_BinaryOp_new(&BF_LT_Tuple3,
         (LAGraph_binary_function) (&BF_LT3), GrB_BOOL, BF_Tuple3, BF_Tuple3));
-    GrB_TRY (GrB_BinaryOp_new(&BF_lMIN_Tuple3,
+    GRB_TRY (GrB_BinaryOp_new(&BF_lMIN_Tuple3,
         (LAGraph_binary_function) (&BF_lMIN3), BF_Tuple3, BF_Tuple3,BF_Tuple3));
-    GrB_TRY (GrB_BinaryOp_new(&BF_PLUSrhs_Tuple3,
+    GRB_TRY (GrB_BinaryOp_new(&BF_PLUSrhs_Tuple3,
         (LAGraph_binary_function)(&BF_PLUSrhs3),
         BF_Tuple3, BF_Tuple3, BF_Tuple3));
 
     // GrB_Monoid
     BF_Tuple3_struct BF_identity = (BF_Tuple3_struct) { .w = INFINITY,
         .h = UINT64_MAX, .pi = UINT64_MAX };
-    GrB_TRY (GrB_Monoid_new_UDT(&BF_lMIN_Tuple3_Monoid, BF_lMIN_Tuple3,
+    GRB_TRY (GrB_Monoid_new_UDT(&BF_lMIN_Tuple3_Monoid, BF_lMIN_Tuple3,
         &BF_identity));
 
     //GrB_Semiring
-    GrB_TRY (GrB_Semiring_new(&BF_lMIN_PLUSrhs_Tuple3,
+    GRB_TRY (GrB_Semiring_new(&BF_lMIN_PLUSrhs_Tuple3,
         BF_lMIN_Tuple3_Monoid, BF_PLUSrhs_Tuple3));
 
     //--------------------------------------------------------------------------
@@ -231,7 +231,7 @@ GrB_Info LAGraph_BF_full1a
     //--------------------------------------------------------------------------
     // create matrix Atmp based on A, while its entries become BF_Tuple3 type
     //--------------------------------------------------------------------------
-    GrB_TRY (GrB_Matrix_extractTuples_FP64(I, J, w, &nz, A));
+    GRB_TRY (GrB_Matrix_extractTuples_FP64(I, J, w, &nz, A));
     int nthreads;
     LG_TRY (LAGraph_GetNumThreads (&nthreads, NULL)) ;
     printf ("nthreads %d\n", nthreads) ;
@@ -240,8 +240,8 @@ GrB_Info LAGraph_BF_full1a
     {
         W[k] = (BF_Tuple3_struct) { .w = w[k], .h = 1, .pi = I[k] + 1 };
     }
-    GrB_TRY (GrB_Matrix_new(&Atmp, BF_Tuple3, n, n));
-    GrB_TRY (GrB_Matrix_build_UDT(Atmp, I, J, W, nz, BF_lMIN_Tuple3));
+    GRB_TRY (GrB_Matrix_new(&Atmp, BF_Tuple3, n, n));
+    GRB_TRY (GrB_Matrix_build_UDT(Atmp, I, J, W, nz, BF_lMIN_Tuple3));
     LAGraph_Free ((void**)&I);
     LAGraph_Free ((void**)&J);
     LAGraph_Free ((void**)&W);
@@ -276,20 +276,20 @@ GrB_Info LAGraph_BF_full1a
     //--------------------------------------------------------------------------
     // create and initialize "distance" vector d, dmasked and dless
     //--------------------------------------------------------------------------
-    GrB_TRY (GrB_Vector_new(&d, BF_Tuple3, n));
+    GRB_TRY (GrB_Vector_new(&d, BF_Tuple3, n));
     // make d dense
-    GrB_TRY (GrB_Vector_assign_UDT(d, NULL, NULL, (void*)&BF_identity,
+    GRB_TRY (GrB_Vector_assign_UDT(d, NULL, NULL, (void*)&BF_identity,
         GrB_ALL, n, NULL));
     // initial distance from s to itself
     BF_Tuple3_struct d0 = (BF_Tuple3_struct) { .w = 0, .h = 0, .pi = 0 };
-    GrB_TRY (GrB_Vector_setElement_UDT(d, &d0, s));
+    GRB_TRY (GrB_Vector_setElement_UDT(d, &d0, s));
 
     // creat dmasked as a sparse vector with only one entry at s
-    GrB_TRY (GrB_Vector_new(&dmasked, BF_Tuple3, n));
-    GrB_TRY (GrB_Vector_setElement_UDT(dmasked, &d0, s));
+    GRB_TRY (GrB_Vector_new(&dmasked, BF_Tuple3, n));
+    GRB_TRY (GrB_Vector_setElement_UDT(dmasked, &d0, s));
 
     // create dless
-    GrB_TRY (GrB_Vector_new(&dless, GrB_BOOL, n));
+    GRB_TRY (GrB_Vector_new(&dless, GrB_BOOL, n));
 
     //--------------------------------------------------------------------------
     // start the Bellman Ford process
@@ -301,30 +301,30 @@ GrB_Info LAGraph_BF_full1a
     while (any_dless && iter < n - 1)
     {
         // execute semiring on dmasked and A, and save the result to dmasked
-        GrB_TRY (GrB_vxm(dmasked, GrB_NULL, GrB_NULL,
+        GRB_TRY (GrB_vxm(dmasked, GrB_NULL, GrB_NULL,
             BF_lMIN_PLUSrhs_Tuple3, dmasked, Atmp, GrB_NULL));
 
         // dless = d .< dtmp
-        GrB_TRY (GrB_eWiseMult(dless, NULL, NULL, BF_LT_Tuple3, dmasked, d,
+        GRB_TRY (GrB_eWiseMult(dless, NULL, NULL, BF_LT_Tuple3, dmasked, d,
             NULL));
 
         // if there is no entry with smaller distance then all shortest paths
         // are found
-        GrB_TRY (GrB_reduce (&any_dless, NULL, GrB_LOR_MONOID_BOOL, dless,
+        GRB_TRY (GrB_reduce (&any_dless, NULL, GrB_LOR_MONOID_BOOL, dless,
             NULL)) ;
         if(any_dless)
         {
             // update all entries with smaller distances
-            //GrB_TRY (GrB_apply(d, dless, NULL, BF_Identity_Tuple3,
+            //GRB_TRY (GrB_apply(d, dless, NULL, BF_Identity_Tuple3,
             //    dmasked, NULL));
-            GrB_TRY (GrB_assign(d, dless, NULL, dmasked, GrB_ALL, n, NULL));
+            GRB_TRY (GrB_assign(d, dless, NULL, dmasked, GrB_ALL, n, NULL));
 
             // only use entries that were just updated
-            //GrB_TRY (GrB_Vector_clear(dmasked));
-            //GrB_TRY (GrB_apply(dmasked, dless, NULL, BF_Identity_Tuple3,
+            //GRB_TRY (GrB_Vector_clear(dmasked));
+            //GRB_TRY (GrB_apply(dmasked, dless, NULL, BF_Identity_Tuple3,
             //    d, NULL));
             //try:
-            GrB_TRY (GrB_assign(dmasked, dless, NULL, d, GrB_ALL, n, GrB_DESC_R));
+            GRB_TRY (GrB_assign(dmasked, dless, NULL, d, GrB_ALL, n, GrB_DESC_R));
         }
         iter ++;
     }
@@ -334,16 +334,16 @@ GrB_Info LAGraph_BF_full1a
     if (any_dless)
     {
         // execute semiring again to check for negative-weight cycle
-        GrB_TRY (GrB_vxm(dmasked, GrB_NULL, GrB_NULL,
+        GRB_TRY (GrB_vxm(dmasked, GrB_NULL, GrB_NULL,
             BF_lMIN_PLUSrhs_Tuple3, dmasked, Atmp, GrB_NULL));
 
         // dless = d .< dtmp
-        GrB_TRY (GrB_eWiseMult(dless, NULL, NULL, BF_LT_Tuple3, dmasked, d,
+        GRB_TRY (GrB_eWiseMult(dless, NULL, NULL, BF_LT_Tuple3, dmasked, d,
             NULL));
 
         // if there is no entry with smaller distance then all shortest paths
         // are found
-        GrB_TRY (GrB_reduce (&any_dless, NULL, GrB_LOR_MONOID_BOOL, dless,
+        GRB_TRY (GrB_reduce (&any_dless, NULL, GrB_LOR_MONOID_BOOL, dless,
             NULL)) ;
         if(any_dless)
         {
@@ -367,7 +367,7 @@ GrB_Info LAGraph_BF_full1a
 
     // todo: create 3 unary ops, and use GrB_apply?
 
-    GrB_TRY (GrB_Vector_extractTuples_UDT (I, (void *) W, &n, d));
+    GRB_TRY (GrB_Vector_extractTuples_UDT (I, (void *) W, &n, d));
 
     for (GrB_Index k = 0; k < n; k++)
     {
@@ -375,12 +375,12 @@ GrB_Info LAGraph_BF_full1a
         h [k] = W[k].h ;
         pi[k] = W[k].pi;
     }
-    GrB_TRY (GrB_Vector_new(pd_output,  GrB_FP64,   n));
-    GrB_TRY (GrB_Vector_new(ppi_output, GrB_UINT64, n));
-    GrB_TRY (GrB_Vector_new(ph_output,  GrB_UINT64, n));
-    GrB_TRY (GrB_Vector_build (*pd_output , I, w , n, GrB_MIN_FP64  ));
-    GrB_TRY (GrB_Vector_build (*ppi_output, I, pi, n, GrB_MIN_UINT64));
-    GrB_TRY (GrB_Vector_build (*ph_output , I, h , n, GrB_MIN_UINT64));
+    GRB_TRY (GrB_Vector_new(pd_output,  GrB_FP64,   n));
+    GRB_TRY (GrB_Vector_new(ppi_output, GrB_UINT64, n));
+    GRB_TRY (GrB_Vector_new(ph_output,  GrB_UINT64, n));
+    GRB_TRY (GrB_Vector_build (*pd_output , I, w , n, GrB_MIN_FP64  ));
+    GRB_TRY (GrB_Vector_build (*ppi_output, I, pi, n, GrB_MIN_UINT64));
+    GRB_TRY (GrB_Vector_build (*ph_output , I, h , n, GrB_MIN_UINT64));
     LG_FREE_WORK;
     return (GrB_SUCCESS) ;
 }

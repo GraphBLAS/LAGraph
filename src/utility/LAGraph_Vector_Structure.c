@@ -44,14 +44,14 @@ int LAGraph_Vector_Structure
     // get the size of u
     //--------------------------------------------------------------------------
 
-    GrB_TRY (GrB_Vector_size (&n, u)) ;
+    GRB_TRY (GrB_Vector_size (&n, u)) ;
 
     //--------------------------------------------------------------------------
     // w<s(u)> = true
     //--------------------------------------------------------------------------
 
-    GrB_TRY (GrB_Vector_new (w, GrB_BOOL, n)) ;
-    GrB_TRY (GrB_assign (*w, u, NULL, (bool) true, GrB_ALL, n, GrB_DESC_S)) ;
+    GRB_TRY (GrB_Vector_new (w, GrB_BOOL, n)) ;
+    GRB_TRY (GrB_assign (*w, u, NULL, (bool) true, GrB_ALL, n, GrB_DESC_S)) ;
 
     return (GrB_SUCCESS) ;
 }

@@ -75,7 +75,7 @@ int main (int argc, char **argv)
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;
     int nthreads_max ;
-    LAGraph_TRY (LAGraph_GetNumThreads (&nthreads_max, NULL)) ;
+    LAGRAPH_TRY (LAGraph_GetNumThreads (&nthreads_max, NULL)) ;
     if (Nthreads [1] == 0)
     {
         // create thread list automatically
@@ -103,7 +103,7 @@ int main (int argc, char **argv)
 
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
     fprintf (stderr, "\n%s:\n", matrix_name) ;
-    LAGraph_TRY (readproblem (&G,
+    LAGRAPH_TRY (readproblem (&G,
         NULL,   // no source nodes
         true,   // make the graph undirected, and symmetrize the matrix
         false,  // do not remove self-edges
@@ -112,8 +112,8 @@ int main (int argc, char **argv)
         false,  // do not ensure all entries positive
         argc, argv)) ;
     GrB_Index n, nvals ;
-    GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
-    GrB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
+    GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
+    GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
 
     //--------------------------------------------------------------------------
     // begin tests
@@ -122,19 +122,19 @@ int main (int argc, char **argv)
     double tic [2], tcheck ;
 
     // warmup
-    LAGraph_TRY (LAGr_ConnectedComponents (&components, G, msg)) ;
+    LAGRAPH_TRY (LAGr_ConnectedComponents (&components, G, msg)) ;
     GrB_Index nCC = countCC (components, n) ;
     printf ("nCC: %20.0g\n", (double) nCC) ;
 
 #if 0 & LG_CHECK_RESULT
-    LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
+    LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
     int result = LG_check_cc (components, G, msg) ;
     if (result != 0)
     {
         printf ("test failure: (%d) %s\n", result, msg) ;
     }
-    LAGraph_TRY (LAGraph_Toc (&tcheck, tic, NULL)) ;
-    LAGraph_TRY (result) ;
+    LAGRAPH_TRY (LAGraph_Toc (&tcheck, tic, NULL)) ;
+    LAGRAPH_TRY (result) ;
     printf ("LG_check_cc passed, time: %g\n", tcheck) ;
 #endif
 
@@ -150,16 +150,16 @@ int main (int argc, char **argv)
     {
         int nthreads = Nthreads [trial] ;
         if (nthreads > nthreads_max) continue ;
-        LAGraph_TRY (LAGraph_SetNumThreads (nthreads, NULL)) ;
+        LAGRAPH_TRY (LAGraph_SetNumThreads (nthreads, NULL)) ;
         double ttt = 0 ;
         int ntrials = NTRIALS ;
         for (int k = 0 ; k < ntrials ; k++)
         {
             double ttrial ;
             GrB_free (&components2) ;
-            LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-            LAGraph_TRY (LAGr_ConnectedComponents (&components2, G, msg)) ;
-            LAGraph_TRY (LAGraph_Toc (&ttrial, tic, NULL)) ;
+            LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+            LAGRAPH_TRY (LAGr_ConnectedComponents (&components2, G, msg)) ;
+            LAGRAPH_TRY (LAGraph_Toc (&ttrial, tic, NULL)) ;
             ttt += ttrial ;
             printf ("SV6:      nthreads: %2d trial: %2d time: %10.4f sec\n",
                 nthreads, k, ttrial) ;
@@ -184,16 +184,16 @@ int main (int argc, char **argv)
     {
         int nthreads = Nthreads [trial] ;
         if (nthreads > nthreads_max) continue ;
-        LAGraph_TRY (LAGraph_SetNumThreads (nthreads, NULL)) ;
+        LAGRAPH_TRY (LAGraph_SetNumThreads (nthreads, NULL)) ;
         double ttt = 0 ;
         int ntrials = NTRIALS ;
         for (int k = 0 ; k < ntrials ; k++)
         {
             double ttrial ;
             GrB_free (&components2) ;
-            LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-            LAGraph_TRY (LG_CC_7 (&components2, G, msg)) ;
-            LAGraph_TRY (LAGraph_Toc (&ttrial, tic, NULL)) ;
+            LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+            LAGRAPH_TRY (LG_CC_7 (&components2, G, msg)) ;
+            LAGRAPH_TRY (LAGraph_Toc (&ttrial, tic, NULL)) ;
             ttt += ttrial ;
             printf ("SV7:      nthreads: %2d trial: %2d time: %10.4f sec\n",
                 nthreads, k, ttrial) ;
@@ -219,16 +219,16 @@ int main (int argc, char **argv)
     {
         int nthreads = Nthreads [trial] ;
         if (nthreads > nthreads_max) continue ;
-        LAGraph_TRY (LAGraph_SetNumThreads (nthreads, NULL)) ;
+        LAGRAPH_TRY (LAGraph_SetNumThreads (nthreads, NULL)) ;
         double ttt = 0 ;
         int ntrials = NTRIALS ;
         for (int k = 0 ; k < ntrials ; k++)
         {
             double ttrial ;
             GrB_free (&components2) ;
-            LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-            LAGraph_TRY (LG_CC_FastSV5 (&components2, G, msg)) ;
-            LAGraph_TRY (LAGraph_Toc (&ttrial, tic, NULL)) ;
+            LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+            LAGRAPH_TRY (LG_CC_FastSV5 (&components2, G, msg)) ;
+            LAGRAPH_TRY (LAGraph_Toc (&ttrial, tic, NULL)) ;
             ttt += ttrial ;
             printf ("SV5b:     nthreads: %2d trial: %2d time: %10.4f sec\n",
                 nthreads, k, ttrial) ;
@@ -254,16 +254,16 @@ int main (int argc, char **argv)
     {
         int nthreads = Nthreads [trial] ;
         if (nthreads > nthreads_max) continue ;
-        LAGraph_TRY (LAGraph_SetNumThreads (nthreads, NULL)) ;
+        LAGRAPH_TRY (LAGraph_SetNumThreads (nthreads, NULL)) ;
         double ttt = 0 ;
         int ntrials = 1 /* NTRIALS */ ;
         for (int k = 0 ; k < ntrials ; k++)
         {
             double ttrial ;
             GrB_free (&components2) ;
-            LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-            LAGraph_TRY (LG_CC_Boruvka (&components2, G, msg)) ;
-            LAGraph_TRY (LAGraph_Toc (&ttrial, tic, NULL)) ;
+            LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+            LAGRAPH_TRY (LG_CC_Boruvka (&components2, G, msg)) ;
+            LAGRAPH_TRY (LAGraph_Toc (&ttrial, tic, NULL)) ;
             ttt += ttrial ;
             printf ("Boruvka:  nthreads: %2d trial: %2d time: %10.4f sec\n",
                 nthreads, k, ttrial) ;
@@ -289,16 +289,16 @@ int main (int argc, char **argv)
     {
         int nthreads = Nthreads [trial] ;
         if (nthreads > nthreads_max) continue ;
-        LAGraph_TRY (LAGraph_SetNumThreads (nthreads, NULL)) ;
+        LAGRAPH_TRY (LAGraph_SetNumThreads (nthreads, NULL)) ;
         double ttt = 0 ;
         int ntrials = 1 /* NTRIALS */ ;
         for (int k = 0 ; k < ntrials ; k++)
         {
             double ttrial ;
             GrB_free (&components2) ;
-            LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-            LAGraph_TRY (LAGraph_cc_lacc (&components2, G->A, false, msg)) ;
-            LAGraph_TRY (LAGraph_Toc (&ttrial, tic, NULL)) ;
+            LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+            LAGRAPH_TRY (LAGraph_cc_lacc (&components2, G->A, false, msg)) ;
+            LAGRAPH_TRY (LAGraph_Toc (&ttrial, tic, NULL)) ;
             ttt += ttrial ;
             printf ("LACC:     nthreads: %2d trial: %2d time: %10.4f sec\n",
                 nthreads, k, ttrial) ;
@@ -320,6 +320,6 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     LG_FREE_ALL ;
-    LAGraph_TRY (LAGraph_Finalize (msg)) ;
+    LAGRAPH_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
 }

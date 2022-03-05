@@ -71,7 +71,7 @@ int main (int argc, char **argv)
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;
     int nthreads_max ;
-    LAGraph_TRY (LAGraph_GetNumThreads (&nthreads_max, NULL)) ;
+    LAGRAPH_TRY (LAGraph_GetNumThreads (&nthreads_max, NULL)) ;
     if (Nthreads [1] == 0)
     {
         // create thread list automatically
@@ -99,18 +99,18 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
-    LAGraph_TRY (readproblem (&G, &SourceNodes,
+    LAGRAPH_TRY (readproblem (&G, &SourceNodes,
         false, false, true, NULL, false, argc, argv)) ;
     GrB_Index n, nvals ;
-    GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
-    GrB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
+    GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
+    GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
 
     //--------------------------------------------------------------------------
     // get the source nodes
     //--------------------------------------------------------------------------
 
     GrB_Index nsource ;
-    GrB_TRY (GrB_Matrix_nrows (&nsource, SourceNodes)) ;
+    GRB_TRY (GrB_Matrix_nrows (&nsource, SourceNodes)) ;
     if (nsource % batch_size != 0)
     {
         printf ("SourceNode size must be multiple of batch_size (%d)\n",
@@ -138,7 +138,7 @@ int main (int argc, char **argv)
         {
             // get the kth source node
             int64_t source = -1 ;
-            GrB_TRY (GrB_Matrix_extractElement (&source, SourceNodes,
+            GRB_TRY (GrB_Matrix_extractElement (&source, SourceNodes,
                 k + kstart, 0)) ;
             // subtract one to convert from 1-based to 0-based
             source-- ;
@@ -152,20 +152,20 @@ int main (int argc, char **argv)
         //----------------------------------------------------------------------
 
         // back to default
-        LAGraph_TRY (LAGraph_SetNumThreads (nthreads_max, msg)) ;
+        LAGRAPH_TRY (LAGraph_SetNumThreads (nthreads_max, msg)) ;
 
         for (int t = 1 ; t <= nt ; t++)
         {
             if (Nthreads [t] > nthreads_max) continue ;
-            LAGraph_TRY (LAGraph_SetNumThreads (Nthreads [t], msg)) ;
+            LAGRAPH_TRY (LAGraph_SetNumThreads (Nthreads [t], msg)) ;
 
             GrB_free (&centrality) ;
             double tic [2] ;
-            LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-            LAGraph_TRY (LAGr_Betweenness (&centrality, G, vertex_list,
+            LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+            LAGRAPH_TRY (LAGr_Betweenness (&centrality, G, vertex_list,
                 batch_size, msg)) ;
             double t2 ;
-            LAGraph_TRY (LAGraph_Toc (&t2, tic, msg)) ;
+            LAGRAPH_TRY (LAGraph_Toc (&t2, tic, msg)) ;
             printf ("BC time %2d: %12.4f (sec)\n", Nthreads [t], t2) ;
             fflush (stdout) ;
             tt [t] += t2 ;
@@ -196,6 +196,6 @@ int main (int argc, char **argv)
     }
 
     LG_FREE_ALL;
-    LAGraph_TRY (LAGraph_Finalize (msg)) ;
+    LAGRAPH_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
 }

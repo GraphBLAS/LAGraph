@@ -90,29 +90,29 @@ int LAGr_PageRankGAP
 
     GrB_Index n ;
     (*centrality) = NULL ;
-    GrB_TRY (GrB_Matrix_nrows (&n, AT)) ;
+    GRB_TRY (GrB_Matrix_nrows (&n, AT)) ;
 
     const float scaled_damping = (1 - damping) / n ;
     const float teleport = scaled_damping ; // teleport = (1 - damping) / n
     float rdiff = 1 ;       // first iteration is always done
 
     // r = 1 / n
-    GrB_TRY (GrB_Vector_new (&t, GrB_FP32, n)) ;
-    GrB_TRY (GrB_Vector_new (&r, GrB_FP32, n)) ;
-    GrB_TRY (GrB_Vector_new (&w, GrB_FP32, n)) ;
-    GrB_TRY (GrB_assign (r, NULL, NULL, (float) (1.0 / n), GrB_ALL, n, NULL)) ;
+    GRB_TRY (GrB_Vector_new (&t, GrB_FP32, n)) ;
+    GRB_TRY (GrB_Vector_new (&r, GrB_FP32, n)) ;
+    GRB_TRY (GrB_Vector_new (&w, GrB_FP32, n)) ;
+    GRB_TRY (GrB_assign (r, NULL, NULL, (float) (1.0 / n), GrB_ALL, n, NULL)) ;
 
     // prescale with damping factor, so it isn't done each iteration
     // d = d_out / damping ;
-    GrB_TRY (GrB_Vector_new (&d, GrB_FP32, n)) ;
-    GrB_TRY (GrB_apply (d, NULL, NULL, GrB_DIV_FP32, d_out, damping, NULL)) ;
+    GRB_TRY (GrB_Vector_new (&d, GrB_FP32, n)) ;
+    GRB_TRY (GrB_apply (d, NULL, NULL, GrB_DIV_FP32, d_out, damping, NULL)) ;
 
     // d1 = 1 / damping
     float dmin = 1.0 / damping ;
-    GrB_TRY (GrB_Vector_new (&d1, GrB_FP32, n)) ;
-    GrB_TRY (GrB_assign (d1, NULL, NULL, dmin, GrB_ALL, n, NULL)) ;
+    GRB_TRY (GrB_Vector_new (&d1, GrB_FP32, n)) ;
+    GRB_TRY (GrB_assign (d1, NULL, NULL, dmin, GrB_ALL, n, NULL)) ;
     // d = max (d1, d)
-    GrB_TRY (GrB_eWiseAdd (d, NULL, NULL, GrB_MAX_FP32, d1, d, NULL)) ;
+    GRB_TRY (GrB_eWiseAdd (d, NULL, NULL, GrB_MAX_FP32, d1, d, NULL)) ;
     GrB_free (&d1) ;
 
     //--------------------------------------------------------------------------
@@ -124,18 +124,18 @@ int LAGr_PageRankGAP
         // swap t and r ; now t is the old score
         GrB_Vector temp = t ; t = r ; r = temp ;
         // w = t ./ d
-        GrB_TRY (GrB_eWiseMult (w, NULL, NULL, GrB_DIV_FP32, t, d, NULL)) ;
+        GRB_TRY (GrB_eWiseMult (w, NULL, NULL, GrB_DIV_FP32, t, d, NULL)) ;
         // r = teleport
-        GrB_TRY (GrB_assign (r, NULL, NULL, teleport, GrB_ALL, n, NULL)) ;
+        GRB_TRY (GrB_assign (r, NULL, NULL, teleport, GrB_ALL, n, NULL)) ;
         // r += A'*w
-        GrB_TRY (GrB_mxv (r, NULL, GrB_PLUS_FP32, LAGraph_plus_second_fp32,
+        GRB_TRY (GrB_mxv (r, NULL, GrB_PLUS_FP32, LAGraph_plus_second_fp32,
             AT, w, NULL)) ;
         // t -= r
-        GrB_TRY (GrB_assign (t, NULL, GrB_MINUS_FP32, r, GrB_ALL, n, NULL)) ;
+        GRB_TRY (GrB_assign (t, NULL, GrB_MINUS_FP32, r, GrB_ALL, n, NULL)) ;
         // t = abs (t)
-        GrB_TRY (GrB_apply (t, NULL, NULL, GrB_ABS_FP32, t, NULL)) ;
+        GRB_TRY (GrB_apply (t, NULL, NULL, GrB_ABS_FP32, t, NULL)) ;
         // rdiff = sum (t)
-        GrB_TRY (GrB_reduce (&rdiff, NULL, GrB_PLUS_MONOID_FP32, t, NULL)) ;
+        GRB_TRY (GrB_reduce (&rdiff, NULL, GrB_PLUS_MONOID_FP32, t, NULL)) ;
     }
 
     //--------------------------------------------------------------------------

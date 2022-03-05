@@ -60,7 +60,7 @@ int main (int argc, char **argv)
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;
     int nthreads_max ;
-    LAGraph_TRY (LAGraph_GetNumThreads (&nthreads_max, NULL)) ;
+    LAGRAPH_TRY (LAGraph_GetNumThreads (&nthreads_max, NULL)) ;
     if (Nthreads [1] == 0)
     {
         // create thread list automatically
@@ -85,16 +85,16 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
-    LAGraph_TRY (readproblem (&G, NULL,
+    LAGRAPH_TRY (readproblem (&G, NULL,
         true, true, true, NULL, false, argc, argv)) ;
 
     GrB_Index n, nvals ;
-    GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
-    GrB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
-    // LAGraph_TRY (LAGraph_DisplayGraph (G, LAGraph_SHORT, stdout, msg)) ;
+    GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
+    GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
+    // LAGRAPH_TRY (LAGraph_DisplayGraph (G, LAGraph_SHORT, stdout, msg)) ;
     // ensure G->A is FP64 and all 1
-    GrB_TRY (GrB_Matrix_new (&A, GrB_FP64, n, n)) ;
-    GrB_TRY (GrB_assign (A, G->A, NULL, (double) 1,
+    GRB_TRY (GrB_Matrix_new (&A, GrB_FP64, n, n)) ;
+    GRB_TRY (GrB_assign (A, G->A, NULL, (double) 1,
         GrB_ALL, n, GrB_ALL, n, GrB_DESC_S)) ;
     GrB_free (&(G->A)) ;
     G->A = A ;
@@ -106,10 +106,10 @@ int main (int argc, char **argv)
     // warmup for more accurate timing
     double tic [2], tt ;
     uint64_t ntri ;
-    LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-    LAGraph_TRY (LAGraph_VertexCentrality_Triangle (&c, &ntri, 3, G, msg)) ;
-    LAGraph_TRY (LAGraph_Toc (&tt, tic, NULL)) ;
-    GrB_TRY (GrB_free (&c)) ;
+    LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+    LAGRAPH_TRY (LAGraph_VertexCentrality_Triangle (&c, &ntri, 3, G, msg)) ;
+    LAGRAPH_TRY (LAGraph_Toc (&tt, tic, NULL)) ;
+    GRB_TRY (GrB_free (&c)) ;
     printf ("warmup time %g sec, # triangles: %g\n", tt, (double) ntri) ;
 
     for (int method = 1 ; method <= 3 ; method += 2)
@@ -118,15 +118,15 @@ int main (int argc, char **argv)
         {
             int nthreads = Nthreads [t] ;
             if (nthreads > nthreads_max) continue ;
-            LAGraph_TRY (LAGraph_SetNumThreads (nthreads, msg)) ;
+            LAGRAPH_TRY (LAGraph_SetNumThreads (nthreads, msg)) ;
             double ttot = 0, ttrial [100] ;
             for (int trial = 0 ; trial < ntrials ; trial++)
             {
-                LAGraph_TRY (LAGraph_Tic (tic, NULL)) ;
-                LAGraph_TRY (LAGraph_VertexCentrality_Triangle (&c, &ntri,
+                LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+                LAGRAPH_TRY (LAGraph_VertexCentrality_Triangle (&c, &ntri,
                     method, G, msg)) ;
-                GrB_TRY (GrB_free (&c)) ;
-                LAGraph_TRY (LAGraph_Toc (&ttrial [trial], tic, NULL)) ;
+                GRB_TRY (GrB_free (&c)) ;
+                LAGRAPH_TRY (LAGraph_Toc (&ttrial [trial], tic, NULL)) ;
                 ttot += ttrial [trial] ;
                 printf ("threads %2d trial %2d: %12.6f sec\n",
                     nthreads, trial, ttrial [trial]) ;
@@ -146,7 +146,7 @@ int main (int argc, char **argv)
     }
 
     LG_FREE_ALL ;
-    LAGraph_TRY (LAGraph_Finalize (msg)) ;
+    LAGRAPH_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
 }
 

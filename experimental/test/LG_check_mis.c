@@ -47,19 +47,19 @@ int LG_check_mis        // check if iset is a valid MIS of A
     bool *X = NULL ;
 
     GrB_Index n ;
-    GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
+    GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
 
     int64_t isize ;
-    GrB_TRY (GrB_Vector_reduce_INT64 (&isize, NULL, GrB_PLUS_MONOID_INT64,
+    GRB_TRY (GrB_Vector_reduce_INT64 (&isize, NULL, GrB_PLUS_MONOID_INT64,
         iset, NULL)) ;
 
     GrB_Index nvals ;
-    GrB_TRY (GrB_Vector_nvals (&nvals, iset)) ;
+    GRB_TRY (GrB_Vector_nvals (&nvals, iset)) ;
     I = (GrB_Index *) LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;
     X = (bool *) LAGraph_Malloc (nvals, sizeof (bool)) ;
     LG_ASSERT (I != NULL && X != NULL, GrB_OUT_OF_MEMORY) ;
 
-    GrB_TRY (GrB_Vector_extractTuples_BOOL (I, X, &nvals, iset)) ;
+    GRB_TRY (GrB_Vector_extractTuples_BOOL (I, X, &nvals, iset)) ;
 
     // I [0..isize-1] is the independent set
     isize = 0 ;
@@ -81,10 +81,10 @@ int LG_check_mis        // check if iset is a valid MIS of A
     //--------------------------------------------------------------------------
 
     // C = A(I,I) must be empty, except for diagonal entries
-    GrB_TRY (GrB_Matrix_new (&C, GrB_BOOL, isize, isize)) ;
-    GrB_TRY (GrB_Matrix_extract (C, NULL, NULL, A, I, isize, I, isize, NULL)) ;
-    GrB_TRY (GrB_select (C, NULL, NULL, GrB_OFFDIAG, C, 0, NULL)) ;
-    GrB_TRY (GrB_Matrix_nvals (&nvals, C)) ;
+    GRB_TRY (GrB_Matrix_new (&C, GrB_BOOL, isize, isize)) ;
+    GRB_TRY (GrB_Matrix_extract (C, NULL, NULL, A, I, isize, I, isize, NULL)) ;
+    GRB_TRY (GrB_select (C, NULL, NULL, GrB_OFFDIAG, C, 0, NULL)) ;
+    GRB_TRY (GrB_Matrix_nvals (&nvals, C)) ;
     LG_ASSERT_MSG (nvals == 0, -1, "error!  A(I,I) has an edge!\n") ;
     GrB_Matrix_free (&C) ;
 
@@ -92,26 +92,26 @@ int LG_check_mis        // check if iset is a valid MIS of A
 
     // e = iset
     GrB_Vector e = NULL ;
-    GrB_TRY (GrB_Vector_dup (&e, iset)) ;
+    GRB_TRY (GrB_Vector_dup (&e, iset)) ;
 
     // e = e || ignore_node
     int64_t ignored = 0 ;
     if (ignore_node != NULL)
     {
-        GrB_TRY (GrB_eWiseAdd (e, NULL, NULL, GrB_LOR, e, ignore_node, NULL)) ;
-        GrB_TRY (GrB_reduce (&ignored, NULL, GrB_PLUS_MONOID_INT64,
+        GRB_TRY (GrB_eWiseAdd (e, NULL, NULL, GrB_LOR, e, ignore_node, NULL)) ;
+        GRB_TRY (GrB_reduce (&ignored, NULL, GrB_PLUS_MONOID_INT64,
             ignore_node, NULL)) ;
     }
 
     // e = (e || A*iset), using the structural semiring
-    GrB_TRY (GrB_vxm (e, NULL, GrB_LOR, LAGraph_structural_bool, iset, A,
+    GRB_TRY (GrB_vxm (e, NULL, GrB_LOR, LAGraph_structural_bool, iset, A,
         NULL)) ;
 
     // drop explicit zeros from e
     // e<e.replace> = e
-    GrB_TRY (GrB_assign (e, e, NULL, e, GrB_ALL, n, GrB_DESC_R)) ;
+    GRB_TRY (GrB_assign (e, e, NULL, e, GrB_ALL, n, GrB_DESC_R)) ;
 
-    GrB_TRY (GrB_Vector_nvals (&nvals, e)) ;
+    GRB_TRY (GrB_Vector_nvals (&nvals, e)) ;
     GrB_Vector_free (&e) ;
     LG_ASSERT_MSG (nvals == n, -1, "error! A (I,I is not maximal!\n") ;
 

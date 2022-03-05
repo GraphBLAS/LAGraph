@@ -70,7 +70,7 @@ int LAGraph_Random_Init (char *msg)
 {
     LG_CLEAR_MSG ;
     LG_rand_next_op = NULL ;
-    GrB_TRY (GrB_UnaryOp_new (&LG_rand_next_op, LG_rand_next_f,
+    GRB_TRY (GrB_UnaryOp_new (&LG_rand_next_op, LG_rand_next_f,
         GrB_UINT64, GrB_UINT64)) ;
     return (GrB_SUCCESS) ;
 }
@@ -119,20 +119,20 @@ int LAGraph_Random_Seed     // construct a random seed vector
     // T = 1:n but only for entries present in the Seed vector.  This
     // requires a typecast from int64 to uint64.
     GrB_Index n ;
-    GrB_TRY (GrB_Vector_size (&n, Seed)) ;
-    GrB_TRY (GrB_Vector_new (&T, GrB_UINT64, n)) ;
-    GrB_TRY (GrB_Vector_apply_IndexOp_INT64 (T, NULL, NULL,
+    GRB_TRY (GrB_Vector_size (&n, Seed)) ;
+    GRB_TRY (GrB_Vector_new (&T, GrB_UINT64, n)) ;
+    GRB_TRY (GrB_Vector_apply_IndexOp_INT64 (T, NULL, NULL,
         GrB_ROWINDEX_INT64, Seed, 1, NULL)) ;
 
     // Seed = T * INT32_MAX
-    GrB_TRY (GrB_apply (Seed, NULL, NULL, GrB_TIMES_UINT64, T,
+    GRB_TRY (GrB_apply (Seed, NULL, NULL, GrB_TIMES_UINT64, T,
         (uint64_t) INT32_MAX, NULL)) ;
 
     // Seed = Seed + seed
-    GrB_TRY (GrB_apply (Seed, NULL, NULL, GrB_PLUS_UINT64, Seed, seed, NULL)) ;
+    GRB_TRY (GrB_apply (Seed, NULL, NULL, GrB_PLUS_UINT64, Seed, seed, NULL)) ;
 
     // Seed = next (Seed)
-    GrB_TRY (GrB_Vector_apply (Seed, NULL, NULL, LG_rand_next_op, Seed, NULL)) ;
+    GRB_TRY (GrB_Vector_apply (Seed, NULL, NULL, LG_rand_next_op, Seed, NULL)) ;
 
     #if defined ( COVERAGE )
     if (random_hack)
@@ -140,7 +140,7 @@ int LAGraph_Random_Seed     // construct a random seed vector
         // Set all Seed values to 1, to break the random seed vector.
         // This is just for testing, to test algorithms that need to handle
         // extreme cases when the random number generator is non-random. 
-        GrB_TRY (GrB_Vector_apply_BinaryOp2nd_UINT64 (Seed, NULL, NULL,
+        GRB_TRY (GrB_Vector_apply_BinaryOp2nd_UINT64 (Seed, NULL, NULL,
             GrB_ONEB_UINT64, Seed, 0, NULL)) ;
     }
     #endif
@@ -167,7 +167,7 @@ int LAGraph_Random_Next     // advance to next random vector
     LG_CLEAR_MSG ;
     LG_ASSERT (Seed != NULL, GrB_NULL_POINTER) ;
     // Seed = next (Seed)
-    GrB_TRY (GrB_Vector_apply (Seed, NULL, NULL, LG_rand_next_op, Seed, NULL)) ;
+    GRB_TRY (GrB_Vector_apply (Seed, NULL, NULL, LG_rand_next_op, Seed, NULL)) ;
     return (GrB_SUCCESS) ;
 }
 

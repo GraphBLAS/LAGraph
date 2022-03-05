@@ -56,19 +56,19 @@ int LAGraph_Property_RowDegree
 
     GrB_Matrix A = G->A ;
     GrB_Index nrows, ncols ;
-    GrB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
-    GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
+    GRB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
+    GRB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
 
     //--------------------------------------------------------------------------
     // compute the rowdegree
     //--------------------------------------------------------------------------
 
-    GrB_TRY (GrB_Vector_new (&rowdegree, GrB_INT64, nrows)) ;
+    GRB_TRY (GrB_Vector_new (&rowdegree, GrB_INT64, nrows)) ;
     // x = zeros (ncols,1)
-    GrB_TRY (GrB_Vector_new (&x, GrB_INT64, ncols)) ;
-    GrB_TRY (GrB_assign (x, NULL, NULL, 0, GrB_ALL, ncols, NULL)) ;
+    GRB_TRY (GrB_Vector_new (&x, GrB_INT64, ncols)) ;
+    GRB_TRY (GrB_assign (x, NULL, NULL, 0, GrB_ALL, ncols, NULL)) ;
 
-    GrB_TRY (GrB_mxv (rowdegree, NULL, NULL, LAGraph_plus_one_int64,
+    GRB_TRY (GrB_mxv (rowdegree, NULL, NULL, LAGraph_plus_one_int64,
         A, x, NULL)) ;
 
     G->rowdegree = rowdegree ;

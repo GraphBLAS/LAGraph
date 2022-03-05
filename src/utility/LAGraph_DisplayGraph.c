@@ -43,8 +43,8 @@ int LAGraph_DisplayGraph
     LAGraph_Kind kind = G->kind ;
 
     GrB_Index n, nvals ;
-    GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
-    GrB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
+    GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
+    GRB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
     char typename [LAGRAPH_MAX_NAME_LEN] ;
     char kindname [LAGRAPH_MAX_NAME_LEN] ;
     LG_TRY (LAGraph_Matrix_TypeName (typename, A, msg)) ;

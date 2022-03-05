@@ -74,7 +74,7 @@ int LG_check_export
     LG_ASSERT_MSG (s != 0, GrB_NOT_IMPLEMENTED, "unsupported type") ;
     (*typesize) = s ;
 
-    GrB_TRY (GrB_Matrix_exportSize (Ap_len, Aj_len, Ax_len, GrB_CSR_FORMAT,
+    GRB_TRY (GrB_Matrix_exportSize (Ap_len, Aj_len, Ax_len, GrB_CSR_FORMAT,
         G->A)) ;
     Ap = (GrB_Index *) LAGraph_Malloc (*Ap_len, sizeof (GrB_Index)) ;
     Aj = (GrB_Index *) LAGraph_Malloc (*Aj_len, sizeof (GrB_Index)) ;
@@ -86,57 +86,57 @@ int LG_check_export
 
     if      (atype == GrB_BOOL  )
     {
-        GrB_TRY (GrB_Matrix_export (Ap, Aj, (bool     *) Ax,
+        GRB_TRY (GrB_Matrix_export (Ap, Aj, (bool     *) Ax,
             Ap_len, Aj_len, Ax_len, GrB_CSR_FORMAT, G->A)) ;
     }
     else if (atype == GrB_INT8  )
     {
-        GrB_TRY (GrB_Matrix_export (Ap, Aj, (int8_t   *) Ax,
+        GRB_TRY (GrB_Matrix_export (Ap, Aj, (int8_t   *) Ax,
             Ap_len, Aj_len, Ax_len, GrB_CSR_FORMAT, G->A)) ;
     }
     else if (atype == GrB_INT16 )
     {
-        GrB_TRY (GrB_Matrix_export (Ap, Aj, (int16_t  *) Ax, 
+        GRB_TRY (GrB_Matrix_export (Ap, Aj, (int16_t  *) Ax, 
             Ap_len, Aj_len, Ax_len, GrB_CSR_FORMAT, G->A)) ;
     }
     else if (atype == GrB_INT32 )
     {
-        GrB_TRY (GrB_Matrix_export (Ap, Aj, (int32_t  *) Ax, 
+        GRB_TRY (GrB_Matrix_export (Ap, Aj, (int32_t  *) Ax, 
             Ap_len, Aj_len, Ax_len, GrB_CSR_FORMAT, G->A)) ;
     }
     else if (atype == GrB_INT64 )
     {
-        GrB_TRY (GrB_Matrix_export (Ap, Aj, (int64_t  *) Ax,
+        GRB_TRY (GrB_Matrix_export (Ap, Aj, (int64_t  *) Ax,
             Ap_len, Aj_len, Ax_len, GrB_CSR_FORMAT, G->A)) ;
     }
     else if (atype == GrB_UINT8 )
     {
-        GrB_TRY (GrB_Matrix_export (Ap, Aj, (uint8_t  *) Ax,
+        GRB_TRY (GrB_Matrix_export (Ap, Aj, (uint8_t  *) Ax,
             Ap_len, Aj_len, Ax_len, GrB_CSR_FORMAT, G->A)) ;
     }
     else if (atype == GrB_UINT16)
     {
-        GrB_TRY (GrB_Matrix_export (Ap, Aj, (uint16_t *) Ax,
+        GRB_TRY (GrB_Matrix_export (Ap, Aj, (uint16_t *) Ax,
             Ap_len, Aj_len, Ax_len, GrB_CSR_FORMAT, G->A)) ;
     }
     else if (atype == GrB_UINT32)
     {
-        GrB_TRY (GrB_Matrix_export (Ap, Aj, (uint32_t *) Ax,
+        GRB_TRY (GrB_Matrix_export (Ap, Aj, (uint32_t *) Ax,
             Ap_len, Aj_len, Ax_len, GrB_CSR_FORMAT, G->A)) ;
     }
     else if (atype == GrB_UINT64)
     {
-        GrB_TRY (GrB_Matrix_export (Ap, Aj, (uint64_t *) Ax,
+        GRB_TRY (GrB_Matrix_export (Ap, Aj, (uint64_t *) Ax,
             Ap_len, Aj_len, Ax_len, GrB_CSR_FORMAT, G->A)) ;
     }
     else if (atype == GrB_FP32  )
     {
-        GrB_TRY (GrB_Matrix_export (Ap, Aj, (float    *) Ax,
+        GRB_TRY (GrB_Matrix_export (Ap, Aj, (float    *) Ax,
             Ap_len, Aj_len, Ax_len, GrB_CSR_FORMAT, G->A)) ;
     }
     else if (atype == GrB_FP64  )
     {
-        GrB_TRY (GrB_Matrix_export (Ap, Aj, (double   *) Ax,
+        GRB_TRY (GrB_Matrix_export (Ap, Aj, (double   *) Ax,
             Ap_len, Aj_len, Ax_len, GrB_CSR_FORMAT, G->A)) ;
     }
 

@@ -66,8 +66,8 @@ int LG_check_bfs
         *level_check = NULL ;
     bool *visited = NULL ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
-    GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
-    GrB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
+    GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
+    GRB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
     bool print_timings = (n >= 2000) ;
 
     //--------------------------------------------------------------------------
@@ -102,7 +102,7 @@ int LG_check_bfs
 
     #if LAGRAPH_SUITESPARSE
     bool iso, jumbled ;
-    GrB_TRY (GxB_Matrix_unpack_CSR (G->A,
+    GRB_TRY (GxB_Matrix_unpack_CSR (G->A,
         &Ap, &Aj, &Ax, &Ap_size, &Aj_size, &Ax_size, &iso, &jumbled, NULL)) ;
     #endif
 
@@ -131,7 +131,7 @@ int LG_check_bfs
     level_check [src] = 0 ;
 
     #if !LAGRAPH_SUITESPARSE
-    GrB_TRY (GrB_Vector_new (&Row, GrB_BOOL, n)) ;
+    GRB_TRY (GrB_Vector_new (&Row, GrB_BOOL, n)) ;
     neighbors = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
     LG_ASSERT (neighbors != NULL, GrB_OUT_OF_MEMORY) ;
     #endif
@@ -148,9 +148,9 @@ int LG_check_bfs
         #else
         // extract the indices of entries in A(u,:)
         GrB_Index degree = n ;
-        GrB_TRY (GrB_Col_extract (Row, NULL, NULL, G->A, GrB_ALL, n, u,
+        GRB_TRY (GrB_Col_extract (Row, NULL, NULL, G->A, GrB_ALL, n, u,
             GrB_DESC_T0)) ;
-        GrB_TRY (GrB_Vector_extractTuples_BOOL (neighbors, NULL, &degree, Row));
+        GRB_TRY (GrB_Vector_extractTuples_BOOL (neighbors, NULL, &degree, Row));
         GrB_Index *node_u_adjacency_list = neighbors ;
         #endif
 
@@ -182,7 +182,7 @@ int LG_check_bfs
     //--------------------------------------------------------------------------
 
     #if LAGRAPH_SUITESPARSE
-    GrB_TRY (GxB_Matrix_pack_CSR (G->A,
+    GRB_TRY (GxB_Matrix_pack_CSR (G->A,
         &Ap, &Aj, &Ax, Ap_size, Aj_size, Ax_size, iso, jumbled, NULL)) ;
     #endif
 

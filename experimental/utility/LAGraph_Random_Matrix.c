@@ -100,7 +100,7 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
         || type == GrB_FP32   || type == GrB_FP64,
         GrB_NOT_IMPLEMENTED, "unsupported type") ;
 
-    GrB_TRY (GrB_Matrix_new (A, type, nrows, ncols)) ;
+    GRB_TRY (GrB_Matrix_new (A, type, nrows, ncols)) ;
     if (nrows == 0 || ncols == 0)
     {
         // nothing to do: return A as the requested empty matrix
@@ -111,7 +111,7 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
     // create the Mod operator
     //--------------------------------------------------------------------------
 
-    GrB_TRY (GrB_BinaryOp_new (&Mod, mod_function,
+    GRB_TRY (GrB_BinaryOp_new (&Mod, mod_function,
         GrB_UINT64, GrB_UINT64, GrB_UINT64)) ;
 
     //--------------------------------------------------------------------------
@@ -156,8 +156,8 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
     // construct the random Seed vector
     //--------------------------------------------------------------------------
 
-    GrB_TRY (GrB_Vector_new (&Seed, GrB_UINT64, nvals)) ;
-    GrB_TRY (GrB_assign (Seed, NULL, NULL, 0, GrB_ALL, nvals, NULL)) ;
+    GRB_TRY (GrB_Vector_new (&Seed, GrB_UINT64, nvals)) ;
+    GRB_TRY (GrB_assign (Seed, NULL, NULL, 0, GrB_ALL, nvals, NULL)) ;
     LG_TRY (LAGraph_Random_Seed (Seed, seed, msg)) ;
 
     //--------------------------------------------------------------------------
@@ -172,15 +172,15 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
         //----------------------------------------------------------------------
 
         // Rows = mod (Seed, nrows) ;
-        GrB_TRY (GrB_Vector_new (&Rows, GrB_UINT64, nvals)) ;
-        GrB_TRY (GrB_apply (Rows, NULL, NULL, Mod, Seed, nrows, NULL)) ;
+        GRB_TRY (GrB_Vector_new (&Rows, GrB_UINT64, nvals)) ;
+        GRB_TRY (GrB_apply (Rows, NULL, NULL, Mod, Seed, nrows, NULL)) ;
 
         // Seed = next (Seed)
         LG_TRY (LAGraph_Random_Next (Seed, msg)) ;
 
         // Cols = mod (Seed, ncols) ;
-        GrB_TRY (GrB_Vector_new (&Cols, GrB_UINT64, nvals)) ;
-        GrB_TRY (GrB_apply (Cols, NULL, NULL, Mod, Seed, ncols, NULL)) ;
+        GRB_TRY (GrB_Vector_new (&Cols, GrB_UINT64, nvals)) ;
+        GRB_TRY (GrB_apply (Cols, NULL, NULL, Mod, Seed, ncols, NULL)) ;
 
         // Seed = next (Seed)
         LG_TRY (LAGraph_Random_Next (Seed, msg)) ;
@@ -192,17 +192,17 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
         #if LAGRAPH_SUITESPARSE
         {
             // this takes O(1) time and space
-            GrB_TRY (GxB_Vector_unpack_Full (Rows, (void **) &I, &I_size,
+            GRB_TRY (GxB_Vector_unpack_Full (Rows, (void **) &I, &I_size,
                 NULL, NULL)) ;
-            GrB_TRY (GxB_Vector_unpack_Full (Cols, (void **) &J, &J_size,
+            GRB_TRY (GxB_Vector_unpack_Full (Cols, (void **) &J, &J_size,
                 NULL, NULL)) ;
         }
         #else
         {
             // this takes O(nvals) time and space
-            GrB_TRY (GrB_Vector_extractTuples_UINT64 (ignore, I, &nvals,
+            GRB_TRY (GrB_Vector_extractTuples_UINT64 (ignore, I, &nvals,
                 Rows)) ;
-            GrB_TRY (GrB_Vector_extractTuples_UINT64 (ignore, J, &nvals,
+            GRB_TRY (GrB_Vector_extractTuples_UINT64 (ignore, J, &nvals,
                 Cols)) ;
         }
         #endif
@@ -221,11 +221,11 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
         #if !LAGRAPH_SUITESPARSE
         {
             // T = true (nrows, ncols) ;
-            GrB_TRY (GrB_Matrix_new (&T, GrB_BOOL, nrows, ncols)) ;
-            GrB_TRY (GrB_assign (T, NULL, NULL, true,
+            GRB_TRY (GrB_Matrix_new (&T, GrB_BOOL, nrows, ncols)) ;
+            GRB_TRY (GrB_assign (T, NULL, NULL, true,
                 GrB_ALL, nrows, GrB_ALL, ncols, NULL)) ;
             // extract the row and column indices from T
-            GrB_TRY (GrB_Matrix_extractTuples (I, J, (bool *) ignore, &nvals,
+            GRB_TRY (GrB_Matrix_extractTuples (I, J, (bool *) ignore, &nvals,
                 T)) ;
             GrB_free (&T) ;
         }
@@ -239,8 +239,8 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
     if (type == GrB_BOOL)
     {
         // Values = (Seed < UINT64_MAX / 2)
-        GrB_TRY (GrB_Vector_new (&Values, GrB_BOOL, nvals)) ;
-        GrB_TRY (GrB_apply (Values, NULL, NULL,
+        GRB_TRY (GrB_Vector_new (&Values, GrB_BOOL, nvals)) ;
+        GRB_TRY (GrB_apply (Values, NULL, NULL,
             GrB_LT_UINT64, Seed, UINT64_MAX / 2, NULL)) ;
     }
     else if (type == GrB_UINT64)
@@ -252,8 +252,8 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
     else
     {
         // Values = (type) Seed
-        GrB_TRY (GrB_Vector_new (&Values, type, nvals)) ;
-        GrB_TRY (GrB_assign (Values, NULL, NULL, Seed, GrB_ALL, nvals,
+        GRB_TRY (GrB_Vector_new (&Values, type, nvals)) ;
+        GRB_TRY (GrB_assign (Values, NULL, NULL, Seed, GrB_ALL, nvals,
             NULL)) ;
     }
     GrB_free (&Seed) ;
@@ -262,13 +262,13 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
     if (type == GrB_FP32)
     {
         // Values = Values / (float) UINT64_MAX
-        GrB_TRY (GrB_apply (Values, NULL, NULL, GrB_DIV_FP32,
+        GRB_TRY (GrB_apply (Values, NULL, NULL, GrB_DIV_FP32,
             Values, (float) UINT64_MAX, NULL)) ;
     }
     else if (type == GrB_FP64)
     {
         // Values = Values / (double) UINT64_MAX
-        GrB_TRY (GrB_apply (Values, NULL, NULL, GrB_DIV_FP64,
+        GRB_TRY (GrB_apply (Values, NULL, NULL, GrB_DIV_FP64,
             Values, (double) UINT64_MAX, NULL)) ;
     }
 
@@ -279,7 +279,7 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
     #if LAGRAPH_SUITESPARSE
     {
         // this takes O(1) time and space and works for any data type
-        GrB_TRY (GxB_Vector_unpack_Full (Values, &X, &X_size, NULL, NULL)) ;
+        GRB_TRY (GxB_Vector_unpack_Full (Values, &X, &X_size, NULL, NULL)) ;
     }
     #else
     {
@@ -288,77 +288,77 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
         {
             X = LAGraph_Malloc (nvals, sizeof (bool)) ;
             LG_ASSERT (X != NULL, GrB_OUT_OF_MEMORY) ;
-            GrB_TRY (GrB_Vector_extractTuples_BOOL (ignore, X, &nvals,
+            GRB_TRY (GrB_Vector_extractTuples_BOOL (ignore, X, &nvals,
                 Values)) ;
         }
         else if (type == GrB_INT8)
         {
             X = LAGraph_Malloc (nvals, sizeof (int8_t)) ;
             LG_ASSERT (X != NULL, GrB_OUT_OF_MEMORY) ;
-            GrB_TRY (GrB_Vector_extractTuples_INT8 (ignore, X, &nvals,
+            GRB_TRY (GrB_Vector_extractTuples_INT8 (ignore, X, &nvals,
                 Values)) ;
         }
         else if (type == GrB_INT16)
         {
             X = LAGraph_Malloc (nvals, sizeof (int16_t)) ;
             LG_ASSERT (X != NULL, GrB_OUT_OF_MEMORY) ;
-            GrB_TRY (GrB_Vector_extractTuples_INT16 (ignore, X, &nvals,
+            GRB_TRY (GrB_Vector_extractTuples_INT16 (ignore, X, &nvals,
                 Values)) ;
         }
         else if (type == GrB_INT32)
         {
             X = LAGraph_Malloc (nvals, sizeof (int32_t)) ;
             LG_ASSERT (X != NULL, GrB_OUT_OF_MEMORY) ;
-            GrB_TRY (GrB_Vector_extractTuples_INT32 (ignore, X, &nvals,
+            GRB_TRY (GrB_Vector_extractTuples_INT32 (ignore, X, &nvals,
                 Values)) ;
         }
         else if (type == GrB_INT64)
         {
             X = LAGraph_Malloc (nvals, sizeof (int64_t)) ;
             LG_ASSERT (X != NULL, GrB_OUT_OF_MEMORY) ;
-            GrB_TRY (GrB_Vector_extractTuples_INT64 (ignore, X, &nvals,
+            GRB_TRY (GrB_Vector_extractTuples_INT64 (ignore, X, &nvals,
                 Values)) ;
         }
         else if (type == GrB_UINT8)
         {
             X = LAGraph_Malloc (nvals, sizeof (uint8_t)) ;
             LG_ASSERT (X != NULL, GrB_OUT_OF_MEMORY) ;
-            GrB_TRY (GrB_Vector_extractTuples_UINT8 (ignore, X, &nvals,
+            GRB_TRY (GrB_Vector_extractTuples_UINT8 (ignore, X, &nvals,
                 Values)) ;
         }
         else if (type == GrB_UINT16)
         {
             X = LAGraph_Malloc (nvals, sizeof (uint16_t)) ;
             LG_ASSERT (X != NULL, GrB_OUT_OF_MEMORY) ;
-            GrB_TRY (GrB_Vector_extractTuples_UINT16 (ignore, X, &nvals,
+            GRB_TRY (GrB_Vector_extractTuples_UINT16 (ignore, X, &nvals,
                 Values)) ;
         }
         else if (type == GrB_UINT32)
         {
             X = LAGraph_Malloc (nvals, sizeof (uint32_t)) ;
             LG_ASSERT (X != NULL, GrB_OUT_OF_MEMORY) ;
-            GrB_TRY (GrB_Vector_extractTuples_UINT32 (ignore, X, &nvals,
+            GRB_TRY (GrB_Vector_extractTuples_UINT32 (ignore, X, &nvals,
                 Values)) ;
         }
         else if (type == GrB_UINT64)
         {
             X = LAGraph_Malloc (nvals, sizeof (uint64_t)) ;
             LG_ASSERT (X != NULL, GrB_OUT_OF_MEMORY) ;
-            GrB_TRY (GrB_Vector_extractTuples_UINT64 (ignore, X, &nvals,
+            GRB_TRY (GrB_Vector_extractTuples_UINT64 (ignore, X, &nvals,
                 Values)) ;
         }
         else if (type == GrB_FP32)
         {
             X = LAGraph_Malloc (nvals, sizeof (float)) ;
             LG_ASSERT (X != NULL, GrB_OUT_OF_MEMORY) ;
-            GrB_TRY (GrB_Vector_extractTuples_FP32 (ignore, X, &nvals,
+            GRB_TRY (GrB_Vector_extractTuples_FP32 (ignore, X, &nvals,
                 Values)) ;
         }
         else // if (type == GrB_FP64)
         {
             X = LAGraph_Malloc (nvals, sizeof (double)) ;
             LG_ASSERT (X != NULL, GrB_OUT_OF_MEMORY) ;
-            GrB_TRY (GrB_Vector_extractTuples_FP64 (ignore, X, &nvals,
+            GRB_TRY (GrB_Vector_extractTuples_FP64 (ignore, X, &nvals,
                 Values)) ;
         }
         LAGraph_Free ((void **) &ignore) ;
@@ -379,53 +379,53 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
     if (A_is_full)
     {
         // this takes O(1) time and space
-        GrB_TRY (GxB_Matrix_pack_FullR (*A, &X, X_size, false, NULL)) ;
+        GRB_TRY (GxB_Matrix_pack_FullR (*A, &X, X_size, false, NULL)) ;
     }
     else
     #endif
     if (type == GrB_BOOL)
     {
-        GrB_TRY (GrB_Matrix_build_BOOL   (*A, I, J, X, nvals, GrB_LXOR)) ;
+        GRB_TRY (GrB_Matrix_build_BOOL   (*A, I, J, X, nvals, GrB_LXOR)) ;
     }
     else if (type == GrB_INT8)
     {
-        GrB_TRY (GrB_Matrix_build_INT8   (*A, I, J, X, nvals, GrB_PLUS_INT8)) ;
+        GRB_TRY (GrB_Matrix_build_INT8   (*A, I, J, X, nvals, GrB_PLUS_INT8)) ;
     }
     else if (type == GrB_INT16)
     {
-        GrB_TRY (GrB_Matrix_build_INT16  (*A, I, J, X, nvals, GrB_PLUS_INT16)) ;
+        GRB_TRY (GrB_Matrix_build_INT16  (*A, I, J, X, nvals, GrB_PLUS_INT16)) ;
     }
     else if (type == GrB_INT32)
     {
-        GrB_TRY (GrB_Matrix_build_INT32  (*A, I, J, X, nvals, GrB_PLUS_INT32)) ;
+        GRB_TRY (GrB_Matrix_build_INT32  (*A, I, J, X, nvals, GrB_PLUS_INT32)) ;
     }
     else if (type == GrB_INT64)
     {
-        GrB_TRY (GrB_Matrix_build_INT64  (*A, I, J, X, nvals, GrB_PLUS_INT64)) ;
+        GRB_TRY (GrB_Matrix_build_INT64  (*A, I, J, X, nvals, GrB_PLUS_INT64)) ;
     }
     else if (type == GrB_UINT8)
     {
-        GrB_TRY (GrB_Matrix_build_UINT8  (*A, I, J, X, nvals, GrB_PLUS_UINT8)) ;
+        GRB_TRY (GrB_Matrix_build_UINT8  (*A, I, J, X, nvals, GrB_PLUS_UINT8)) ;
     }
     else if (type == GrB_UINT16)
     {
-        GrB_TRY (GrB_Matrix_build_UINT16 (*A, I, J, X, nvals, GrB_PLUS_UINT16));
+        GRB_TRY (GrB_Matrix_build_UINT16 (*A, I, J, X, nvals, GrB_PLUS_UINT16));
     }
     else if (type == GrB_UINT32)
     {
-        GrB_TRY (GrB_Matrix_build_UINT32 (*A, I, J, X, nvals, GrB_PLUS_UINT32));
+        GRB_TRY (GrB_Matrix_build_UINT32 (*A, I, J, X, nvals, GrB_PLUS_UINT32));
     }
     else if (type == GrB_UINT64)
     {
-        GrB_TRY (GrB_Matrix_build_UINT64 (*A, I, J, X, nvals, GrB_PLUS_UINT64));
+        GRB_TRY (GrB_Matrix_build_UINT64 (*A, I, J, X, nvals, GrB_PLUS_UINT64));
     }
     else if (type == GrB_FP32)
     {
-        GrB_TRY (GrB_Matrix_build_FP32   (*A, I, J, X, nvals, GrB_MAX_FP32)) ;
+        GRB_TRY (GrB_Matrix_build_FP32   (*A, I, J, X, nvals, GrB_MAX_FP32)) ;
     }
     else // if (type == GrB_FP64)
     {
-        GrB_TRY (GrB_Matrix_build_FP64   (*A, I, J, X, nvals, GrB_MAX_FP64)) ;
+        GRB_TRY (GrB_Matrix_build_FP64   (*A, I, J, X, nvals, GrB_MAX_FP64)) ;
     }
 
     //--------------------------------------------------------------------------

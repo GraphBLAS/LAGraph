@@ -34,7 +34,7 @@ int LAGraph_SetNumThreads
     #if LAGRAPH_SUITESPARSE
     {
         // SuiteSparse:GraphBLAS: set # of threads with global setting
-        GrB_TRY (GxB_set (GxB_NTHREADS, nthreads)) ;
+        GRB_TRY (GxB_set (GxB_NTHREADS, nthreads)) ;
     }
     #elif defined ( _OPENMP )
     {

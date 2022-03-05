@@ -182,9 +182,9 @@ static inline int Reduce_assign32
     // export the GrB_Vectors w and s as full arrays, to get direct access to
     // their contents.  Note that this would fail if w or s are not full, with
     // all entries present.
-    GrB_TRY (GxB_Vector_export_Full (w_handle, &w_type, &w_n, (void **) &w_x,
+    GRB_TRY (GxB_Vector_export_Full (w_handle, &w_type, &w_n, (void **) &w_x,
         &w_size, NULL, NULL)) ;
-    GrB_TRY (GxB_Vector_export_Full (s_handle, &s_type, &s_n, (void **) &s_x,
+    GRB_TRY (GxB_Vector_export_Full (s_handle, &s_type, &s_n, (void **) &s_x,
         &s_size, &s_iso, NULL)) ;
 
     #if defined ( COVERAGE )
@@ -278,9 +278,9 @@ static inline int Reduce_assign32
 
     // s is unchanged.  It was exported only to compute w (index) += s
 
-    GrB_TRY (GxB_Vector_import_Full (w_handle, w_type, w_n, (void **) &w_x,
+    GRB_TRY (GxB_Vector_import_Full (w_handle, w_type, w_n, (void **) &w_x,
         w_size, false, NULL)) ;
-    GrB_TRY (GxB_Vector_import_Full (s_handle, s_type, s_n, (void **) &s_x,
+    GRB_TRY (GxB_Vector_import_Full (s_handle, s_type, s_n, (void **) &s_x,
         s_size, s_iso, NULL)) ;
 
     return (GrB_SUCCESS) ;
@@ -348,8 +348,8 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
         -1001, "G->A must be known to be symmetric") ;
 
     GrB_Matrix S = G->A ;
-    GrB_TRY (GrB_Matrix_nrows (&n, S)) ;
-    GrB_TRY (GrB_Matrix_nvals (&nnz, S)) ;
+    GRB_TRY (GrB_Matrix_nrows (&n, S)) ;
+    GRB_TRY (GrB_Matrix_nvals (&nnz, S)) ;
 
     LG_ASSERT_MSG (n <= UINT32_MAX, -1, "problem too large (fixme)") ;
 
@@ -376,9 +376,9 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
     nthreads2 = LAGRAPH_MAX (nthreads2, 1) ;
 
     // vectors
-    GrB_TRY (GrB_Vector_new (&f,      GrB_UINT32, n)) ;
-    GrB_TRY (GrB_Vector_new (&gp_new, GrB_UINT32, n)) ;
-    GrB_TRY (GrB_Vector_new (&mod,    GrB_BOOL,   n)) ;
+    GRB_TRY (GrB_Vector_new (&f,      GrB_UINT32, n)) ;
+    GRB_TRY (GrB_Vector_new (&gp_new, GrB_UINT32, n)) ;
+    GRB_TRY (GrB_Vector_new (&mod,    GrB_BOOL,   n)) ;
 
     // temporary arrays
     I   = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
@@ -393,9 +393,9 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
         V32 [i] = (uint32_t) i ;
     }
 
-    GrB_TRY (GrB_Vector_build (f, I, V32, n, GrB_PLUS_UINT32)) ;
-    GrB_TRY (GrB_Vector_dup (&gp,   f)) ;
-    GrB_TRY (GrB_Vector_dup (&mngp, f)) ;
+    GRB_TRY (GrB_Vector_build (f, I, V32, n, GrB_PLUS_UINT32)) ;
+    GRB_TRY (GrB_Vector_dup (&gp,   f)) ;
+    GRB_TRY (GrB_Vector_dup (&mngp, f)) ;
 
     // allocate the hash table
     ht_key = LAGraph_Malloc (HASH_SIZE, sizeof (int32_t)) ;
@@ -426,11 +426,11 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
         GrB_Index Sp_size, Sj_size, Sx_size ;
         bool S_iso = false ;
 
-        GrB_TRY (GrB_Matrix_nvals (&nvals, S)) ;
-        GrB_TRY (GxB_Matrix_export_CSR (&S, &type, &nrows, &ncols, &Sp, &Sj,
+        GRB_TRY (GrB_Matrix_nvals (&nvals, S)) ;
+        GRB_TRY (GxB_Matrix_export_CSR (&S, &type, &nrows, &ncols, &Sp, &Sj,
             &Sx, &Sp_size, &Sj_size, &Sx_size,
             &S_iso, &S_jumbled, NULL)) ;
-        GrB_TRY (GxB_Type_size (&typesize, type)) ;
+        GRB_TRY (GxB_Type_size (&typesize, type)) ;
         G->A = NULL ;
 
         //----------------------------------------------------------------------
@@ -530,7 +530,7 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
         GrB_Index Tx_siz = Tx_size ;
 
         GrB_Index t_nvals = Tp [nrows] ;
-        GrB_TRY (GxB_Matrix_import_CSR (&T, type, nrows, ncols,
+        GRB_TRY (GxB_Matrix_import_CSR (&T, type, nrows, ncols,
                 &Tp, &Tj, &Tx, Tp_siz, Tj_siz, Tx_siz,
                 true,   // T is iso
                 S_jumbled, NULL)) ;
@@ -546,25 +546,25 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
         while (change)
         {
             // hooking & shortcutting
-            GrB_TRY (GrB_mxv (mngp, NULL, GrB_MIN_UINT32,
+            GRB_TRY (GrB_mxv (mngp, NULL, GrB_MIN_UINT32,
                 GrB_MIN_SECOND_SEMIRING_UINT32, T, gp, NULL)) ;
             if (!is_first)
             {
                 LG_TRY (Reduce_assign32 (&f, &mngp, V32, n, nthreads,
                     ht_key, ht_val, &seed, msg)) ;
             }
-            GrB_TRY (GrB_eWiseAdd (f, NULL, GrB_MIN_UINT32, GrB_MIN_UINT32,
+            GRB_TRY (GrB_eWiseAdd (f, NULL, GrB_MIN_UINT32, GrB_MIN_UINT32,
                 mngp, gp, NULL)) ;
 
             // calculate grandparent
             // fixme: NULL parameter is SS:GrB extension
-            GrB_TRY (GrB_Vector_extractTuples (NULL, V32, &n, f)) ; // fixme
+            GRB_TRY (GrB_Vector_extractTuples (NULL, V32, &n, f)) ; // fixme
             #pragma omp parallel for num_threads(nthreads2) schedule(static)
             for (uint32_t i = 0 ; i < n ; i++)
             {
                 I [i] = (GrB_Index) V32 [i] ;
             }
-            GrB_TRY (GrB_extract (gp_new, NULL, NULL, f, I, n, NULL)) ;
+            GRB_TRY (GrB_extract (gp_new, NULL, NULL, f, I, n, NULL)) ;
 
             // todo: GrB_Vector_extract should have a variant where the index
             // list is not given by an array I, but as a GrB_Vector of type
@@ -573,9 +573,9 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
             // Likewise GrB_Matrix_extract, and all forms of GrB_assign.
 
             // check termination
-            GrB_TRY (GrB_eWiseMult (mod, NULL, NULL, GrB_NE_UINT32, gp_new,
+            GRB_TRY (GrB_eWiseMult (mod, NULL, NULL, GrB_NE_UINT32, gp_new,
                 gp, NULL)) ;
-            GrB_TRY (GrB_reduce (&change, NULL, GrB_LOR_MONOID_BOOL, mod,
+            GRB_TRY (GrB_reduce (&change, NULL, GrB_LOR_MONOID_BOOL, mod,
                 NULL)) ;
 
             // swap gp and gp_new
@@ -596,7 +596,7 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
         bool T_jumbled = false, T_iso = true ;
 
         // export T
-        GrB_TRY (GxB_Matrix_export_CSR (&T, &type, &nrows, &ncols, &Tp, &Tj,
+        GRB_TRY (GxB_Matrix_export_CSR (&T, &type, &nrows, &ncols, &Tp, &Tj,
             &Tx, &Tp_siz, &Tj_siz, &Tx_siz,
             &T_iso, &T_jumbled, NULL)) ;
 
@@ -679,12 +679,12 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
         LAGraph_Free ((void **) &range) ;
 
         // import S (unchanged since last export)
-        GrB_TRY (GxB_Matrix_import_CSR (&S, type, nrows, ncols,
+        GRB_TRY (GxB_Matrix_import_CSR (&S, type, nrows, ncols,
                 &Sp, &Sj, &Sx, Sp_size, Sj_size, Sx_size,
                 S_iso, S_jumbled, NULL)) ;
 
         // import T for the final phase
-        GrB_TRY (GxB_Matrix_import_CSR (&T, type, nrows, ncols,
+        GRB_TRY (GxB_Matrix_import_CSR (&T, type, nrows, ncols,
                 &Tp, &Tj, &Tx, Tp_siz, Tj_siz, Tx_siz,
                 T_iso, T_jumbled, NULL)) ;
 
@@ -704,33 +704,33 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
     // final phase
     //--------------------------------------------------------------------------
 
-    GrB_TRY (GrB_Matrix_nvals (&nnz, T)) ;
+    GRB_TRY (GrB_Matrix_nvals (&nnz, T)) ;
 
     bool change = true ;
     while (change && nnz > 0)
     {
         // hooking & shortcutting
-        GrB_TRY (GrB_mxv (mngp, NULL, GrB_MIN_UINT32,
+        GRB_TRY (GrB_mxv (mngp, NULL, GrB_MIN_UINT32,
                           GrB_MIN_SECOND_SEMIRING_UINT32, T, gp, NULL)) ;
-        GrB_TRY (Reduce_assign32 (&f, &mngp, V32, n, nthreads, ht_key,
+        GRB_TRY (Reduce_assign32 (&f, &mngp, V32, n, nthreads, ht_key,
                                   ht_val, &seed, msg)) ;
-        GrB_TRY (GrB_eWiseAdd (f, NULL, GrB_MIN_UINT32, GrB_MIN_UINT32,
+        GRB_TRY (GrB_eWiseAdd (f, NULL, GrB_MIN_UINT32, GrB_MIN_UINT32,
                                mngp, gp, NULL)) ;
 
         // calculate grandparent
         // fixme: NULL parameter is SS:GrB extension
-        GrB_TRY (GrB_Vector_extractTuples (NULL, V32, &n, f)) ; // fixme
+        GRB_TRY (GrB_Vector_extractTuples (NULL, V32, &n, f)) ; // fixme
         #pragma omp parallel for num_threads(nthreads2) schedule(static)
         for (uint32_t k = 0 ; k < n ; k++)
         {
             I [k] = (GrB_Index) V32 [k] ;
         }
-        GrB_TRY (GrB_extract (gp_new, NULL, NULL, f, I, n, NULL)) ;
+        GRB_TRY (GrB_extract (gp_new, NULL, NULL, f, I, n, NULL)) ;
 
         // check termination
-        GrB_TRY (GrB_eWiseMult (mod, NULL, NULL, GrB_NE_UINT32, gp_new, gp,
+        GRB_TRY (GrB_eWiseMult (mod, NULL, NULL, GrB_NE_UINT32, gp_new, gp,
             NULL)) ;
-        GrB_TRY (GrB_reduce (&change, NULL, GrB_LOR_MONOID_BOOL, mod, NULL)) ;
+        GRB_TRY (GrB_reduce (&change, NULL, GrB_LOR_MONOID_BOOL, mod, NULL)) ;
 
         // swap gp and gp_new
         GrB_Vector t = gp ; gp = gp_new ; gp_new = t ;

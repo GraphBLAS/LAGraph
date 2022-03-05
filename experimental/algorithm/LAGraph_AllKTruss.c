@@ -124,11 +124,11 @@ int LAGraph_AllKTruss   // compute all k-trusses of a graph
 
     GrB_Index n ;
     GrB_Matrix S = G->A ;
-    GrB_TRY (GrB_Matrix_nrows (&n, S)) ;
-    GrB_TRY (GrB_Matrix_new (&(Cset [k]), GrB_UINT32, n, n)) ;
+    GRB_TRY (GrB_Matrix_nrows (&n, S)) ;
+    GRB_TRY (GrB_Matrix_new (&(Cset [k]), GrB_UINT32, n, n)) ;
     GrB_Matrix C = Cset [k] ;
     GrB_Index nvals, nvals_last ;
-    GrB_TRY (GrB_Matrix_nvals (&nvals_last, S)) ;
+    GRB_TRY (GrB_Matrix_nvals (&nvals_last, S)) ;
     int64_t nsteps = 0 ;
 
     //--------------------------------------------------------------------------
@@ -138,18 +138,18 @@ int LAGraph_AllKTruss   // compute all k-trusses of a graph
     while (true)
     {
         // C{S} = S*S'
-        GrB_TRY (GrB_mxm (C, S, NULL, LAGraph_plus_one_uint32, S, S,
+        GRB_TRY (GrB_mxm (C, S, NULL, LAGraph_plus_one_uint32, S, S,
             GrB_DESC_RST1)) ;
         // keep entries in C that are >= k-2
-        GrB_TRY (GrB_select (C, NULL, NULL, GrB_VALUEGE_UINT32, C, k-2, NULL)) ;
+        GRB_TRY (GrB_select (C, NULL, NULL, GrB_VALUEGE_UINT32, C, k-2, NULL)) ;
         nsteps++ ;
         // check if k-truss has been found
-        GrB_TRY (GrB_Matrix_nvals (&nvals, C)) ;
+        GRB_TRY (GrB_Matrix_nvals (&nvals, C)) ;
         if (nvals == nvals_last)
         {
             // k-truss has been found
             int64_t nt = 0 ;
-            GrB_TRY (GrB_reduce (&nt, NULL, GrB_PLUS_MONOID_INT64, C, NULL)) ;
+            GRB_TRY (GrB_reduce (&nt, NULL, GrB_PLUS_MONOID_INT64, C, NULL)) ;
             ntris   [k] = nt / 6 ;
             nedges  [k] = nvals / 2 ;
             nstepss [k] = nsteps ;
@@ -162,7 +162,7 @@ int LAGraph_AllKTruss   // compute all k-trusses of a graph
             }
             S = C ;             // S = current k-truss for k+1 iteration
             k++ ;               // advance to the next k-tryss
-            GrB_TRY (GrB_Matrix_new (&(Cset [k]), GrB_UINT32, n, n)) ;
+            GRB_TRY (GrB_Matrix_new (&(Cset [k]), GrB_UINT32, n, n)) ;
             C = Cset [k] ;      // C = new matrix for next k-truss
         }
         else

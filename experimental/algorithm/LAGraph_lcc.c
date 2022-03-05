@@ -139,10 +139,10 @@ int LAGraph_lcc            // compute lcc for all nodes in A
 
     // n = size of A (# of nodes in the graph)
     GrB_Index n ;
-    GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
+    GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
 #if LAGRAPH_SUITESPARSE
     GxB_Format_Value fmt ;
-    GrB_TRY (GxB_get (A, GxB_FORMAT, &fmt)) ;
+    GRB_TRY (GxB_get (A, GxB_FORMAT, &fmt)) ;
     if (fmt != GxB_BY_ROW)
     {
         return (GrB_INVALID_VALUE) ;
@@ -183,16 +183,16 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     // create the operators for LAGraph_lcc
     //--------------------------------------------------------------------------
 
-    GrB_TRY (GrB_UnaryOp_new (&LAGraph_COMB_DIR_FP64,
+    GRB_TRY (GrB_UnaryOp_new (&LAGraph_COMB_DIR_FP64,
                                  F_UNARY (LAGraph_comb_dir_fp64),
                                  GrB_FP64, GrB_FP64)) ;
 
-    GrB_TRY (GrB_UnaryOp_new (&LAGraph_COMB_UNDIR_FP64,
+    GRB_TRY (GrB_UnaryOp_new (&LAGraph_COMB_UNDIR_FP64,
                                  F_UNARY (LAGraph_comb_undir_fp64),
                                  GrB_FP64, GrB_FP64)) ;
 
-    GrB_TRY (GrB_Matrix_new (&C, GrB_FP64, n, n)) ;
-    GrB_TRY (GrB_Matrix_new (&U, GrB_UINT32, n, n)) ;
+    GRB_TRY (GrB_Matrix_new (&C, GrB_FP64, n, n)) ;
+    GRB_TRY (GrB_Matrix_new (&U, GrB_UINT32, n, n)) ;
 
     if (symmetric)
     {
@@ -203,29 +203,29 @@ int LAGraph_lcc            // compute lcc for all nodes in A
         // U = triu(C)
         //----------------------------------------------------------------------
 
-        GrB_TRY (GxB_select (U, NULL, NULL, GxB_TRIU, C, NULL, NULL)) ;
+        GRB_TRY (GxB_select (U, NULL, NULL, GxB_TRIU, C, NULL, NULL)) ;
 
     }
     else
     {
         GrB_Matrix AT = NULL, D = NULL ;
 
-        GrB_TRY (GrB_Matrix_new (&AT, GrB_FP64, n, n)) ;
-        GrB_TRY (GrB_transpose (AT, NULL, NULL, S, NULL)) ;
+        GRB_TRY (GrB_Matrix_new (&AT, GrB_FP64, n, n)) ;
+        GRB_TRY (GrB_transpose (AT, NULL, NULL, S, NULL)) ;
 
         //----------------------------------------------------------------------
         // C = A \/ A' to create an undirected graph C
         //----------------------------------------------------------------------
 
-        GrB_TRY (GrB_Matrix_new (&C, GrB_FP64, n, n)) ;
-        GrB_TRY (GrB_eWiseAdd (C, NULL, NULL, GrB_LOR, S, AT, NULL)) ;
+        GRB_TRY (GrB_Matrix_new (&C, GrB_FP64, n, n)) ;
+        GRB_TRY (GrB_eWiseAdd (C, NULL, NULL, GrB_LOR, S, AT, NULL)) ;
 
         //----------------------------------------------------------------------
         // D = A + A' to create an undirected multigraph D
         //----------------------------------------------------------------------
 
-        GrB_TRY (GrB_Matrix_new (&D, GrB_FP64, n, n)) ;
-        GrB_TRY (GrB_eWiseAdd (D, NULL, NULL, GrB_PLUS_FP64, S, AT, NULL)) ;
+        GRB_TRY (GrB_Matrix_new (&D, GrB_FP64, n, n)) ;
+        GRB_TRY (GrB_eWiseAdd (D, NULL, NULL, GrB_PLUS_FP64, S, AT, NULL)) ;
 
         GrB_free (&AT) ;
         if (sanitize) GrB_free (&S) ;
@@ -235,7 +235,7 @@ int LAGraph_lcc            // compute lcc for all nodes in A
         //----------------------------------------------------------------------
 
         // note that L=U' since D is symmetric
-        GrB_TRY (GxB_select (U, NULL, NULL, GxB_TRIU, D, NULL, NULL)) ;
+        GRB_TRY (GxB_select (U, NULL, NULL, GxB_TRIU, D, NULL, NULL)) ;
         GrB_free (&D) ;
     }
 
@@ -244,19 +244,19 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     //--------------------------------------------------------------------------
 
     // W(i) = sum (C (i,:))
-    GrB_TRY (GrB_Vector_new (&W, GrB_FP64, n)) ;
-    GrB_TRY (GrB_reduce (W, NULL, NULL, GrB_PLUS_FP64, C, NULL)) ;
+    GRB_TRY (GrB_Vector_new (&W, GrB_FP64, n)) ;
+    GRB_TRY (GrB_reduce (W, NULL, NULL, GrB_PLUS_FP64, C, NULL)) ;
 
     // Compute vector W defining the number of wedges per vertex
     if (symmetric)
     {
         // the graph is undirected
-        GrB_TRY (GrB_apply(W, NULL, NULL, LAGraph_COMB_UNDIR_FP64, W, NULL));
+        GRB_TRY (GrB_apply(W, NULL, NULL, LAGraph_COMB_UNDIR_FP64, W, NULL));
     }
     else
     {
         // the graph is directed
-        GrB_TRY (GrB_apply(W, NULL, NULL, LAGraph_COMB_DIR_FP64, W, NULL)) ;
+        GRB_TRY (GrB_apply(W, NULL, NULL, LAGraph_COMB_DIR_FP64, W, NULL)) ;
     }
 
     //--------------------------------------------------------------------------
@@ -264,8 +264,8 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     //--------------------------------------------------------------------------
 
     // CL<C> = C*L = C*U' using a masked dot product
-    GrB_TRY (GrB_Matrix_new (&CL, GrB_FP64, n, n)) ;
-    GrB_TRY (GrB_mxm (CL, C, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, C, U,
+    GRB_TRY (GrB_Matrix_new (&CL, GrB_FP64, n, n)) ;
+    GRB_TRY (GrB_mxm (CL, C, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, C, U,
                          GrB_DESC_T1));
     GrB_free (&U) ; U = NULL;
 
@@ -274,12 +274,12 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     //--------------------------------------------------------------------------
 
     // LCC(i) = sum (CL (i,:)) = # of triangles at each node
-    GrB_TRY (GrB_Vector_new (&LCC, GrB_FP64, n)) ;
-    GrB_TRY (GrB_reduce (LCC, NULL, NULL, GrB_PLUS_FP64, CL, NULL)) ;
+    GRB_TRY (GrB_Vector_new (&LCC, GrB_FP64, n)) ;
+    GRB_TRY (GrB_reduce (LCC, NULL, NULL, GrB_PLUS_FP64, CL, NULL)) ;
     GrB_free (&CL) ; CL = NULL;
 
     // LCC = LCC ./ W
-    GrB_TRY (GrB_eWiseMult (LCC, NULL, NULL, GrB_DIV_FP64, LCC, W, NULL)) ;
+    GRB_TRY (GrB_eWiseMult (LCC, NULL, NULL, GrB_DIV_FP64, LCC, W, NULL)) ;
 
     //--------------------------------------------------------------------------
     // free workspace and return result

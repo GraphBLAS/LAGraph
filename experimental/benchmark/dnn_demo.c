@@ -105,7 +105,7 @@ int LAGraph_tsvread
     GrB_Info info ;
     GrB_Matrix C = NULL ;
     (*Chandle) = NULL ;
-    GrB_TRY (GrB_Matrix_new (&C, type, nrows, ncols)) ;
+    GRB_TRY (GrB_Matrix_new (&C, type, nrows, ncols)) ;
 
     //--------------------------------------------------------------------------
     // read the entries
@@ -123,7 +123,7 @@ int LAGraph_tsvread
         int64_t x ;
         while (fscanf (f, "%"PRIu64"%"PRIu64"%"PRId64"\n", &i, &j, &x) != EOF)
         {
-            GrB_TRY (GrB_Matrix_setElement (C, x, i-1, j-1)) ;
+            GRB_TRY (GrB_Matrix_setElement (C, x, i-1, j-1)) ;
         }
 
     }
@@ -137,7 +137,7 @@ int LAGraph_tsvread
         uint64_t x ;
         while (fscanf (f, "%"PRIu64"%"PRIu64"%"PRIu64"\n", &i, &j, &x) != EOF)
         {
-            GrB_TRY (GrB_Matrix_setElement (C, x, i-1, j-1)) ;
+            GRB_TRY (GrB_Matrix_setElement (C, x, i-1, j-1)) ;
         }
 
     }
@@ -151,7 +151,7 @@ int LAGraph_tsvread
         double x ;
         while (fscanf (f, "%"PRIu64"%"PRIu64"%lg\n", &i, &j, &x) != EOF)
         {
-            GrB_TRY (GrB_Matrix_setElement (C, x, i-1, j-1)) ;
+            GRB_TRY (GrB_Matrix_setElement (C, x, i-1, j-1)) ;
         }
     }
 
@@ -160,7 +160,7 @@ int LAGraph_tsvread
     //--------------------------------------------------------------------------
 
     GrB_Index ignore ;
-    GrB_TRY (GrB_Matrix_nvals (&ignore, C)) ;
+    GRB_TRY (GrB_Matrix_nvals (&ignore, C)) ;
     (*Chandle) = C ;
     return (GrB_SUCCESS) ;
 }
@@ -338,7 +338,7 @@ int main (int argc, char **argv)
         LAGraph_Toc (&t, tic, NULL) ;
         printf ("# features: %g read time: %g sec\n", (double) nfeatures, t) ;
         GrB_Index nvals ;
-        GrB_TRY (GrB_Matrix_nvals (&nvals, Y0)) ;
+        GRB_TRY (GrB_Matrix_nvals (&nvals, Y0)) ;
         printf ("# entries in Y0: %g million\n", (double) nvals / 1e6) ;
         fflush (stdout) ;
 
@@ -427,7 +427,7 @@ int main (int argc, char **argv)
             for (int layer = 0 ; layer < nlayers ; layer++)
             {
                 GrB_Index nvals ;
-                GrB_TRY (GrB_Matrix_nvals (&nvals, W [layer])) ;
+                GRB_TRY (GrB_Matrix_nvals (&nvals, W [layer])) ;
                 nedges += nvals ;
             }
             printf ("# edges in all layers: %g million\n\n",
@@ -435,7 +435,7 @@ int main (int argc, char **argv)
             fflush (stdout) ;
 
             // read TrueCategories as a boolean nfeatures-by-1 vector
-            GrB_TRY (GrB_Vector_new (&TrueCategories, GrB_BOOL,
+            GRB_TRY (GrB_Vector_new (&TrueCategories, GrB_BOOL,
                 nfeatures)) ;
             sprintf (filename, "%s/DNN/neuron%d-l%d-categories.tsv", DNN_DATA,
                 nneurons, nlayers) ;
@@ -447,7 +447,7 @@ int main (int argc, char **argv)
                 {
                     int category ;
                     if (fscanf (f, "%d\n", &category) == EOF) break ;
-                    GrB_TRY (GrB_Vector_setElement (TrueCategories,
+                    GRB_TRY (GrB_Vector_setElement (TrueCategories,
                         (bool) true, category-1)) ;
                 }
                 fclose (f) ;
@@ -507,14 +507,14 @@ int main (int argc, char **argv)
 
                 // this is so fast, it's hardly worth timing ...
                 LAGraph_Tic (tic, NULL) ;
-                GrB_TRY (GrB_Matrix_nvals (&final_ynvals, Y)) ;
+                GRB_TRY (GrB_Matrix_nvals (&final_ynvals, Y)) ;
 
                 // C = sum (Y)
-                GrB_TRY (GrB_Vector_new (&C, type, nfeatures)) ;
-                GrB_TRY (GrB_reduce (C, NULL, NULL, GrB_PLUS_FP64, Y, NULL));
+                GRB_TRY (GrB_Vector_new (&C, type, nfeatures)) ;
+                GRB_TRY (GrB_reduce (C, NULL, NULL, GrB_PLUS_FP64, Y, NULL));
                 // Categories = pattern of C
-                GrB_TRY (GrB_Vector_new (&Categories, GrB_BOOL, nfeatures)) ;
-                GrB_TRY (GrB_apply (Categories, NULL, NULL, GrB_ONEB_BOOL,
+                GRB_TRY (GrB_Vector_new (&Categories, GrB_BOOL, nfeatures)) ;
+                GRB_TRY (GrB_apply (Categories, NULL, NULL, GrB_ONEB_BOOL,
                     C, (bool) true, NULL)) ;
 
                 // write out Categories, as a 1-based file
@@ -525,7 +525,7 @@ int main (int argc, char **argv)
                 for (int i = 0 ; i < nfeatures ; i++)
                 {
                     bool c = false ;
-                    GrB_TRY (GrB_Vector_extractElement (&c, Categories, i)) ;
+                    GRB_TRY (GrB_Vector_extractElement (&c, Categories, i)) ;
                     if (c) fprintf (ff, "%d\n", i + 1) ;
                 }
                 fclose (ff) ;

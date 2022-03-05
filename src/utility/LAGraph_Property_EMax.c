@@ -69,8 +69,8 @@ int LAGraph_Property_EMax
     // compute G->emax
     //--------------------------------------------------------------------------
 
-    GrB_TRY (GrB_Scalar_new (&(G->emax), atype)) ;
-    GrB_TRY (GrB_reduce (G->emax, NULL, monoid, G->A, NULL)) ;
+    GRB_TRY (GrB_Scalar_new (&(G->emax), atype)) ;
+    GRB_TRY (GrB_reduce (G->emax, NULL, monoid, G->A, NULL)) ;
     G->emax_kind = LAGraph_EXACT ;
     return (GrB_SUCCESS) ;
 }

@@ -82,8 +82,8 @@ int LAGraph_Vector_IsEqual
     //--------------------------------------------------------------------------
 
     GrB_Index nrows1, nrows2;
-    GrB_TRY (GrB_Vector_size (&nrows1, A)) ;
-    GrB_TRY (GrB_Vector_size (&nrows2, B)) ;
+    GRB_TRY (GrB_Vector_size (&nrows1, A)) ;
+    GRB_TRY (GrB_Vector_size (&nrows2, B)) ;
     if (nrows1 != nrows2)
     {
         // # of rows differ
@@ -96,8 +96,8 @@ int LAGraph_Vector_IsEqual
     //--------------------------------------------------------------------------
 
     GrB_Index nvals1, nvals2 ;
-    GrB_TRY (GrB_Vector_nvals (&nvals1, A)) ;
-    GrB_TRY (GrB_Vector_nvals (&nvals2, B)) ;
+    GRB_TRY (GrB_Vector_nvals (&nvals1, A)) ;
+    GRB_TRY (GrB_Vector_nvals (&nvals2, B)) ;
     if (nvals1 != nvals2)
     {
         // # of entries differ
@@ -133,15 +133,15 @@ int LAGraph_Vector_IsEqual
     // C = A .* B, where the pattern of C is the intersection of A and B
     //--------------------------------------------------------------------------
 
-    GrB_TRY (GrB_Vector_new (&C, GrB_BOOL, nrows1)) ;
-    GrB_TRY (GrB_eWiseMult (C, NULL, NULL, op, A, B, NULL)) ;
+    GRB_TRY (GrB_Vector_new (&C, GrB_BOOL, nrows1)) ;
+    GRB_TRY (GrB_eWiseMult (C, NULL, NULL, op, A, B, NULL)) ;
 
     //--------------------------------------------------------------------------
     // ensure C has the same number of entries as A and B
     //--------------------------------------------------------------------------
 
     GrB_Index nvals ;
-    GrB_TRY (GrB_Vector_nvals (&nvals, C)) ;
+    GRB_TRY (GrB_Vector_nvals (&nvals, C)) ;
     if (nvals != nvals1)
     {
         // pattern of A and B are different
@@ -154,7 +154,7 @@ int LAGraph_Vector_IsEqual
     // result = and (C)
     //--------------------------------------------------------------------------
 
-    GrB_TRY (GrB_reduce (result, NULL, GrB_LAND_MONOID_BOOL, C, NULL)) ;
+    GRB_TRY (GrB_reduce (result, NULL, GrB_LAND_MONOID_BOOL, C, NULL)) ;
 
     //--------------------------------------------------------------------------
     // free workspace and return result

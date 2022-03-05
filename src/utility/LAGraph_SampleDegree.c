@@ -79,7 +79,7 @@ int LAGraph_SampleDegree
     // function.
 
     GrB_Index n ;
-    GrB_TRY (GrB_Vector_size (&n, Degree)) ;
+    GRB_TRY (GrB_Vector_size (&n, Degree)) ;
 
     int64_t dsum = 0 ;
     for (int k = 0 ; k < nsamples ; k++)
@@ -88,7 +88,7 @@ int LAGraph_SampleDegree
         int64_t i = result % n ;
         // d = Degree (i)
         int64_t d ;
-        GrB_TRY (GrB_Vector_extractElement (&d, Degree, i)) ;
+        GRB_TRY (GrB_Vector_extractElement (&d, Degree, i)) ;
         samples [k] = d ;
         dsum += d ;
     }

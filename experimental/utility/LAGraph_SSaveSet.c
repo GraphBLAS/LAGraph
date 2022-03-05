@@ -69,8 +69,8 @@ int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
         GrB_NULL_POINTER) ;
 
     #if LAGRAPH_SUITESPARSE
-    GrB_TRY (GrB_Descriptor_new (&desc)) ;
-    GrB_TRY (GxB_set (desc, GxB_COMPRESSION, GxB_COMPRESSION_LZ4HC + 9)) ;
+    GRB_TRY (GrB_Descriptor_new (&desc)) ;
+    GRB_TRY (GxB_set (desc, GxB_COMPRESSION, GxB_COMPRESSION_LZ4HC + 9)) ;
     #endif
 
     f = fopen (filename, "w") ;
@@ -88,17 +88,17 @@ int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
     {
         #if LAGRAPH_SUITESPARSE
         {
-            GrB_TRY (GxB_Matrix_serialize (&(Contents [i].blob),
+            GRB_TRY (GxB_Matrix_serialize (&(Contents [i].blob),
                 (GrB_Index *)&(Contents [i].blob_size), Set [i], desc)) ;
         }
         #else
         {
             GrB_Index estimate ;
-            GrB_TRY (GrB_Matrix_serializeSize (&estimate, Set [i])) ;
+            GRB_TRY (GrB_Matrix_serializeSize (&estimate, Set [i])) ;
             Contents [i].blob_size = estimate ;
             Contents [i].blob = LAGraph_Malloc (estimate, sizeof (uint8_t)) ;
             LG_ASSERT (Contents [i].blob != NULL, GrB_OUT_OF_MEMORY) ;
-            GrB_TRY (GrB_Matrix_serialize (Contents [i].blob,
+            GRB_TRY (GrB_Matrix_serialize (Contents [i].blob,
                 (GrB_Index *) &(Contents [i].blob_size), Set [i])) ;
             bool ok ;
             Contents [i].blob = LAGraph_Realloc (&(Contents [i].blob_size),

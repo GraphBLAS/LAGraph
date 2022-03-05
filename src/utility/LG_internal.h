@@ -107,15 +107,15 @@ typedef unsigned char LG_void ;
 #endif
 
 //------------------------------------------------------------------------------
-// GrB_CATCH: catch an error from GraphBLAS
+// GRB_CATCH: catch an error from GraphBLAS
 //------------------------------------------------------------------------------
 
-// A simple GrB_CATCH macro to be used by GrB_TRY.  If an LAGraph function
-// wants something else, then #define a GrB_CATCH macro before the #include
+// A simple GRB_CATCH macro to be used by GRB_TRY.  If an LAGraph function
+// wants something else, then #define a GRB_CATCH macro before the #include
 // "LG_internal.h" statement.
 
-#ifndef GrB_CATCH
-#define GrB_CATCH(info)                                                 \
+#ifndef GRB_CATCH
+#define GRB_CATCH(info)                                                 \
 {                                                                       \
     LG_ERROR_MSG ("GraphBLAS failure (file %s, line %d): info: %d",     \
         __FILE__, __LINE__, info) ;                                     \
@@ -125,15 +125,15 @@ typedef unsigned char LG_void ;
 #endif
 
 //------------------------------------------------------------------------------
-// LAGraph_CATCH: catch an error from LAGraph
+// LAGRAPH_CATCH: catch an error from LAGraph
 //------------------------------------------------------------------------------
 
-// A simple LAGraph_CATCH macro to be used by LAGraph_TRY.  If an LAGraph
-// function wants something else, then #define a LAGraph_CATCH macro before the
+// A simple LAGRAPH_CATCH macro to be used by LAGRAPH_TRY.  If an LAGraph
+// function wants something else, then #define a LAGRAPH_CATCH macro before the
 // #include "LG_internal.h" statement.
 
-#ifndef LAGraph_CATCH
-#define LAGraph_CATCH(status)                                           \
+#ifndef LAGRAPH_CATCH
+#define LAGRAPH_CATCH(status)                                           \
 {                                                                       \
     LG_ERROR_MSG ("LAGraph failure (file %s, line %d): status: %d",     \
         __FILE__, __LINE__, status) ;                                   \

@@ -82,8 +82,8 @@ int LG_check_sssp
 
     LAGraph_Tic (tic, msg) ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
-    GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
-    GrB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
+    GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
+    GRB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
     GrB_Type etype ;
     char atype_name [LAGRAPH_MAX_NAME_LEN] ;
     LG_TRY (LAGraph_Matrix_TypeName (atype_name, G->A, msg)) ;
@@ -157,7 +157,7 @@ int LG_check_sssp
     bool iso = false ;
     #if LAGRAPH_SUITESPARSE
     bool jumbled ;
-    GrB_TRY (GxB_Matrix_unpack_CSR (G->A,
+    GRB_TRY (GxB_Matrix_unpack_CSR (G->A,
         &Ap, &Aj, (void **) &Ax, &Ap_size, &Aj_size, &Ax_size, &iso, &jumbled,
         NULL)) ;
     #endif
@@ -186,7 +186,7 @@ int LG_check_sssp
     // parent [src] = src ;
 
     #if !LAGRAPH_SUITESPARSE
-    GrB_TRY (GrB_Vector_new (&Row, GrB_FP64, n)) ;
+    GRB_TRY (GrB_Vector_new (&Row, GrB_FP64, n)) ;
     neighbors = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
     neighbor_weights = LAGraph_Malloc (n, sizeof (double)) ;
     LG_ASSERT (neighbors != NULL, GrB_OUT_OF_MEMORY) ;
@@ -249,9 +249,9 @@ int LG_check_sssp
         #else
         // extract the indices of entries in A(u,:)
         GrB_Index degree = n ;
-        GrB_TRY (GrB_Col_extract (Row, NULL, NULL, G->A, GrB_ALL, n, u,
+        GRB_TRY (GrB_Col_extract (Row, NULL, NULL, G->A, GrB_ALL, n, u,
             GrB_DESC_T0)) ;
-        GrB_TRY (GrB_Vector_extractTuples_FP64 (neighbors, neighbor_weights,
+        GRB_TRY (GrB_Vector_extractTuples_FP64 (neighbors, neighbor_weights,
             &degree, Row)) ;
         GrB_Index *node_u_adjacency_list = neighbors ;
         double *weights = neighbor_weights ;
@@ -314,7 +314,7 @@ int LG_check_sssp
     //--------------------------------------------------------------------------
 
     #if LAGRAPH_SUITESPARSE
-    GrB_TRY (GxB_Matrix_pack_CSR (G->A,
+    GRB_TRY (GxB_Matrix_pack_CSR (G->A,
         &Ap, &Aj, (void **) &Ax, Ap_size, Aj_size, Ax_size, iso, jumbled,
         NULL)) ;
     #endif

@@ -36,11 +36,11 @@ int LAGraph_DeleteProperties
     // free all cached properties of the graph
     //--------------------------------------------------------------------------
 
-    GrB_TRY (GrB_free (&(G->AT))) ;
-    GrB_TRY (GrB_free (&(G->rowdegree))) ;
-    GrB_TRY (GrB_free (&(G->coldegree))) ;
-    GrB_TRY (GrB_free (&(G->emin))) ;
-    GrB_TRY (GrB_free (&(G->emax))) ;
+    GRB_TRY (GrB_free (&(G->AT))) ;
+    GRB_TRY (GrB_free (&(G->rowdegree))) ;
+    GRB_TRY (GrB_free (&(G->coldegree))) ;
+    GRB_TRY (GrB_free (&(G->emin))) ;
+    GRB_TRY (GrB_free (&(G->emax))) ;
 
     //--------------------------------------------------------------------------
     // clear the scalar properties of the graph

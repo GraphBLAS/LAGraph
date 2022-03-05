@@ -144,7 +144,7 @@ int LAGraph_SLoadSet            // load a set of matrices from a *.lagraph file
             // SuiteSparse:GraphBLAS allows this to be NULL for built-in types.
             GrB_Type ctype = NULL ;
             LG_TRY (LAGraph_TypeFromName (&ctype, Contents [i].type_name, msg));
-            GrB_TRY (GrB_Matrix_deserialize (&(Set [kmatrices]), ctype, blob,
+            GRB_TRY (GrB_Matrix_deserialize (&(Set [kmatrices]), ctype, blob,
                 blob_size)) ;
             kmatrices++ ;
         }

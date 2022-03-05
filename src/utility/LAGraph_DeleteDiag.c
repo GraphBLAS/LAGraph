@@ -44,7 +44,7 @@ int LAGraph_DeleteDiag
     // remove diagonal entries
     //--------------------------------------------------------------------------
 
-    GrB_TRY (GrB_select (G->A, NULL, NULL, GrB_OFFDIAG, G->A, 0, NULL)) ;
+    GRB_TRY (GrB_select (G->A, NULL, NULL, GrB_OFFDIAG, G->A, 0, NULL)) ;
 
     //--------------------------------------------------------------------------
     // free workspace, G->ndiag now known to be zero

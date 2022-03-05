@@ -75,16 +75,16 @@ GrB_Info LAGraph_BF_basic_pushpull
     bool use_vxm_with_A;
     if (A == NULL)
     {
-        GrB_TRY (GrB_Matrix_nrows (&nrows, AT)) ;
-        GrB_TRY (GrB_Matrix_ncols (&ncols, AT)) ;
-        GrB_TRY (GrB_Matrix_nvals (&nvalA, AT)) ;
+        GRB_TRY (GrB_Matrix_nrows (&nrows, AT)) ;
+        GRB_TRY (GrB_Matrix_ncols (&ncols, AT)) ;
+        GRB_TRY (GrB_Matrix_nvals (&nvalA, AT)) ;
         use_vxm_with_A = false;
     }
     else
     {
-        GrB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
-        GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
-        GrB_TRY (GrB_Matrix_nvals (&nvalA, A)) ;
+        GRB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
+        GRB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
+        GRB_TRY (GrB_Matrix_nvals (&nvalA, A)) ;
         use_vxm_with_A = true;
     }
 
@@ -118,10 +118,10 @@ GrB_Info LAGraph_BF_basic_pushpull
     bool dsparse = true;
 
     // Initialize distance vector, change the d[s] to 0
-    GrB_TRY (GrB_Vector_new(&d, GrB_FP64, n));
-    GrB_TRY (GrB_Vector_setElement_FP64(d, 0, s));
+    GRB_TRY (GrB_Vector_new(&d, GrB_FP64, n));
+    GRB_TRY (GrB_Vector_setElement_FP64(d, 0, s));
     // copy d to dtmp in order to create a same size of vector
-    GrB_TRY (GrB_Vector_dup(&dtmp, d));
+    GRB_TRY (GrB_Vector_dup(&dtmp, d));
 
     int64_t iter = 0;      //number of iterations
     bool same = false;     //variable indicating if d=dtmp
@@ -136,12 +136,12 @@ GrB_Info LAGraph_BF_basic_pushpull
         // excute semiring on d and A, and save the result to d
         if (!use_vxm_with_A)
         {
-            GrB_TRY (GrB_mxv (dtmp, NULL, NULL, GrB_MIN_PLUS_SEMIRING_FP64,
+            GRB_TRY (GrB_mxv (dtmp, NULL, NULL, GrB_MIN_PLUS_SEMIRING_FP64,
                 AT, d, NULL));
         }
         else
         {
-            GrB_TRY (GrB_vxm (dtmp, NULL, NULL, GrB_MIN_PLUS_SEMIRING_FP64,
+            GRB_TRY (GrB_vxm (dtmp, NULL, NULL, GrB_MIN_PLUS_SEMIRING_FP64,
                 d, A, NULL));
         }
         LG_TRY (LAGraph_Vector_IsEqual (&same, dtmp, d, NULL));
@@ -156,7 +156,7 @@ GrB_Info LAGraph_BF_basic_pushpull
         double t2;
         LAGraph_Toc (&t2, tic, NULL) ;
         GrB_Index dnz ;
-        GrB_TRY (GrB_Vector_nvals (&dnz, d)) ;
+        GRB_TRY (GrB_Vector_nvals (&dnz, d)) ;
 
         if (dsparse)
         {
@@ -183,10 +183,10 @@ GrB_Info LAGraph_BF_basic_pushpull
 
             if (!dsparse)
             {
-                GrB_TRY (GrB_Vector_setElement_FP64(d, 1e-16, s));
-                GrB_TRY (GrB_assign (d, d, NULL, INFINITY, GrB_ALL, n,
+                GRB_TRY (GrB_Vector_setElement_FP64(d, 1e-16, s));
+                GRB_TRY (GrB_assign (d, d, NULL, INFINITY, GrB_ALL, n,
                     GrB_DESC_C)) ;
-                GrB_TRY (GrB_Vector_setElement_FP64(d, 0, s));
+                GRB_TRY (GrB_Vector_setElement_FP64(d, 0, s));
             }
         }
     }
@@ -198,12 +198,12 @@ GrB_Info LAGraph_BF_basic_pushpull
         // excute semiring again to check for negative-weight cycle
         if (!use_vxm_with_A)
         {
-            GrB_TRY (GrB_mxv(dtmp, NULL, NULL,
+            GRB_TRY (GrB_mxv(dtmp, NULL, NULL,
                 GrB_MIN_PLUS_SEMIRING_FP64, AT, d, NULL));
         }
         else
         {
-            GrB_TRY (GrB_vxm(dtmp, NULL, NULL,
+            GRB_TRY (GrB_vxm(dtmp, NULL, NULL,
                 GrB_MIN_PLUS_SEMIRING_FP64, d, A, NULL));
         }
         LG_TRY (LAGraph_Vector_IsEqual (&same, dtmp, d, NULL));
@@ -222,10 +222,10 @@ GrB_Info LAGraph_BF_basic_pushpull
     //--------------------------------------------------------------------------
     /*if (!dsparse)
     {
-        GrB_TRY (GrB_assign (d, d, NULL, d, GrB_ALL, n, GrB_DESC_R)) ;
-        GrB_TRY (GrB_Vector_setElement_FP64(d, 0, s));
+        GRB_TRY (GrB_assign (d, d, NULL, d, GrB_ALL, n, GrB_DESC_R)) ;
+        GRB_TRY (GrB_Vector_setElement_FP64(d, 0, s));
         GrB_Index dnz ;
-        GrB_TRY (GrB_Vector_nvals (&dnz, d)) ;
+        GRB_TRY (GrB_Vector_nvals (&dnz, d)) ;
         printf ("final nvals %.16g\n", (double) dnz) ;
     }*/
 

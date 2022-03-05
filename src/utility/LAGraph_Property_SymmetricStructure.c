@@ -58,8 +58,8 @@ int LAGraph_Property_SymmetricStructure
 
     GrB_Matrix A = G->A ;
     GrB_Index n, ncols ;
-    GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
-    GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
+    GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
+    GRB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
     if (n != ncols)
     {
         // A is rectangular and thus cannot be symmetric
@@ -80,14 +80,14 @@ int LAGraph_Property_SymmetricStructure
     // check if the structure of A and AT are the same
     //--------------------------------------------------------------------------
 
-    GrB_TRY (GrB_Matrix_new (&C, GrB_BOOL, n, n)) ;
+    GRB_TRY (GrB_Matrix_new (&C, GrB_BOOL, n, n)) ;
 
     // C(i,j) = 1 if both A(i,j) and AT(i,j) exist
-    GrB_TRY (GrB_eWiseMult (C, NULL, NULL, GrB_ONEB_BOOL, A, G->AT, NULL)) ;
+    GRB_TRY (GrB_eWiseMult (C, NULL, NULL, GrB_ONEB_BOOL, A, G->AT, NULL)) ;
 
     GrB_Index nvals1, nvals2 ;
-    GrB_TRY (GrB_Matrix_nvals (&nvals1, C)) ;
-    GrB_TRY (GrB_Matrix_nvals (&nvals2, A)) ;
+    GRB_TRY (GrB_Matrix_nvals (&nvals1, C)) ;
+    GRB_TRY (GrB_Matrix_nvals (&nvals2, A)) ;
     G->structure_is_symmetric = (nvals1 == nvals2) ;
 
     //--------------------------------------------------------------------------

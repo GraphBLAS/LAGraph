@@ -43,14 +43,14 @@ int LAGraph_Property_AT
     //--------------------------------------------------------------------------
 
     GrB_Index nrows, ncols ;
-    GrB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
-    GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
+    GRB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
+    GRB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
     GrB_Type atype ;
     char atype_name [LAGRAPH_MAX_NAME_LEN] ;
     LG_TRY (LAGraph_Matrix_TypeName (atype_name, A, msg)) ;
     LG_TRY (LAGraph_TypeFromName (&atype, atype_name, msg)) ;
-    GrB_TRY (GrB_Matrix_new (&AT, atype, ncols, nrows)) ;
-    GrB_TRY (GrB_transpose (AT, NULL, NULL, A, NULL)) ;
+    GRB_TRY (GrB_Matrix_new (&AT, atype, ncols, nrows)) ;
+    GRB_TRY (GrB_transpose (AT, NULL, NULL, A, NULL)) ;
     G->AT = AT ;
 
     return (GrB_SUCCESS) ;

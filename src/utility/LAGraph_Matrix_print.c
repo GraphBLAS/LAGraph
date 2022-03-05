@@ -46,9 +46,9 @@ int LG_Matrix_Print_ ## suffix                                              \
     if (prl <= 0) return (GrB_SUCCESS) ;                                    \
     /* get basic properties */                                              \
     GrB_Index nrows, ncols, nvals ;                                         \
-    GrB_TRY (GrB_Matrix_nrows (&nrows, A)) ;                                \
-    GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;                                \
-    GrB_TRY (GrB_Matrix_nvals (&nvals, A)) ;                                \
+    GRB_TRY (GrB_Matrix_nrows (&nrows, A)) ;                                \
+    GRB_TRY (GrB_Matrix_ncols (&ncols, A)) ;                                \
+    GRB_TRY (GrB_Matrix_nvals (&nvals, A)) ;                                \
     /* print header line */                                                 \
     FPRINTF (f, "%s matrix: %" PRIu64 "-by-%" PRIu64 " entries: %" PRIu64   \
         "\n", LG_XSTR (gtype), nrows, ncols, nvals) ;                       \
@@ -61,7 +61,7 @@ int LG_Matrix_Print_ ## suffix                                              \
     GrB_Info info = GrB_Matrix_extractTuples (I, J, X, &nvals, A) ;         \
     LG_ASSERT_MSG (info != GrB_DOMAIN_MISMATCH,                             \
         GrB_NOT_IMPLEMENTED, "type not supported") ;                        \
-    GrB_TRY (info) ;                                                        \
+    GRB_TRY (info) ;                                                        \
     /* determine the format */                                              \
     char *format = (prl <= 3) ? fmt1 : fmt2 ;                               \
     bool summary = (prl == 2 || prl == 4) && (nvals > 30) ;                 \

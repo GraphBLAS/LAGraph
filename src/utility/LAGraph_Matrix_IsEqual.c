@@ -75,10 +75,10 @@ int LAGraph_Matrix_IsEqual
     //--------------------------------------------------------------------------
 
     GrB_Index nrows1, ncols1, nrows2, ncols2 ;
-    GrB_TRY (GrB_Matrix_nrows (&nrows1, A)) ;
-    GrB_TRY (GrB_Matrix_nrows (&nrows2, B)) ;
-    GrB_TRY (GrB_Matrix_ncols (&ncols1, A)) ;
-    GrB_TRY (GrB_Matrix_ncols (&ncols2, B)) ;
+    GRB_TRY (GrB_Matrix_nrows (&nrows1, A)) ;
+    GRB_TRY (GrB_Matrix_nrows (&nrows2, B)) ;
+    GRB_TRY (GrB_Matrix_ncols (&ncols1, A)) ;
+    GRB_TRY (GrB_Matrix_ncols (&ncols2, B)) ;
     if (nrows1 != nrows2 || ncols1 != ncols2)
     {
         // dimensions differ
@@ -91,8 +91,8 @@ int LAGraph_Matrix_IsEqual
     //--------------------------------------------------------------------------
 
     GrB_Index nvals1, nvals2 ;
-    GrB_TRY (GrB_Matrix_nvals (&nvals1, A)) ;
-    GrB_TRY (GrB_Matrix_nvals (&nvals2, B)) ;
+    GRB_TRY (GrB_Matrix_nvals (&nvals1, A)) ;
+    GRB_TRY (GrB_Matrix_nvals (&nvals2, B)) ;
     if (nvals1 != nvals2)
     {
         // # of entries differ
@@ -132,15 +132,15 @@ int LAGraph_Matrix_IsEqual
     // C = A .* B, where the structure of C is the intersection of A and B
     //--------------------------------------------------------------------------
 
-    GrB_TRY (GrB_Matrix_new (&C, GrB_BOOL, nrows1, ncols1)) ;
-    GrB_TRY (GrB_eWiseMult (C, NULL, NULL, op, A, B, NULL)) ;
+    GRB_TRY (GrB_Matrix_new (&C, GrB_BOOL, nrows1, ncols1)) ;
+    GRB_TRY (GrB_eWiseMult (C, NULL, NULL, op, A, B, NULL)) ;
 
     //--------------------------------------------------------------------------
     // ensure C has the same number of entries as A and B
     //--------------------------------------------------------------------------
 
     GrB_Index nvals ;
-    GrB_TRY (GrB_Matrix_nvals (&nvals, C)) ;
+    GRB_TRY (GrB_Matrix_nvals (&nvals, C)) ;
     if (nvals != nvals1)
     {
         // structure of A and B are different
@@ -153,7 +153,7 @@ int LAGraph_Matrix_IsEqual
     // result = and (C)
     //--------------------------------------------------------------------------
 
-    GrB_TRY (GrB_reduce (result, NULL, GrB_LAND_MONOID_BOOL, C, NULL)) ;
+    GRB_TRY (GrB_reduce (result, NULL, GrB_LAND_MONOID_BOOL, C, NULL)) ;
 
     //--------------------------------------------------------------------------
     // free workspace and return result

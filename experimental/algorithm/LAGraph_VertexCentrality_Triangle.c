@@ -128,8 +128,8 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
     //--------------------------------------------------------------------------
 
     GrB_Index n ;
-    GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
-    GrB_TRY (GrB_Matrix_new (&T, GrB_FP64, n, n)) ;
+    GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
+    GRB_TRY (GrB_Matrix_new (&T, GrB_FP64, n, n)) ;
     double k = 0 ;
 
     //--------------------------------------------------------------------------
@@ -149,43 +149,43 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
         if (method == 0)
         {
             // T<A> = A*A : method 0 (was TC1 in the first paper submission)
-            GrB_TRY (GrB_mxm (T, A, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, A, A,
+            GRB_TRY (GrB_mxm (T, A, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, A, A,
                 NULL)) ;
         }
         else
         {
             // this is faster than method 0
             // T<A> = A*A' : method TC1 (was method TC1.5)
-            GrB_TRY (GrB_mxm (T, A, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, A, A,
+            GRB_TRY (GrB_mxm (T, A, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, A, A,
                 GrB_DESC_T1)) ;
         }
 
         // y = sum (T), where y(i) = sum (T (i,:)) and y(i)=0 of T(i,:) is empty
-        GrB_TRY (GrB_Vector_new (&y, GrB_FP64, n)) ;
-        GrB_TRY (GrB_reduce (y, NULL, NULL, GrB_PLUS_MONOID_FP64, T, NULL)) ;
+        GRB_TRY (GrB_Vector_new (&y, GrB_FP64, n)) ;
+        GRB_TRY (GrB_reduce (y, NULL, NULL, GrB_PLUS_MONOID_FP64, T, NULL)) ;
 
         // k = sum (y)
-        GrB_TRY (GrB_reduce (&k, NULL, GrB_PLUS_MONOID_FP64, y, NULL)) ;
+        GRB_TRY (GrB_reduce (&k, NULL, GrB_PLUS_MONOID_FP64, y, NULL)) ;
 
         // T = spones (T)
-        GrB_TRY (GrB_assign (T, T, NULL, (double) 1, GrB_ALL, n, GrB_ALL, n,
+        GRB_TRY (GrB_assign (T, T, NULL, (double) 1, GrB_ALL, n, GrB_ALL, n,
             GrB_DESC_S)) ;
 
         // centrality = (3*A*y - 2*T*y + y) / k
 
         // w = T*y
-        GrB_TRY (GrB_Vector_new (&w, GrB_FP64, n)) ;
-        GrB_TRY (GrB_mxv (w, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, T, y,
+        GRB_TRY (GrB_Vector_new (&w, GrB_FP64, n)) ;
+        GRB_TRY (GrB_mxv (w, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, T, y,
             NULL)) ;
 
         // w = (-2)*w
         double minus_two = -2 ;
-        GrB_TRY (GrB_apply (w, NULL, NULL, GrB_TIMES_FP64, minus_two, w,
+        GRB_TRY (GrB_apply (w, NULL, NULL, GrB_TIMES_FP64, minus_two, w,
             NULL)) ;
 
         // u = A*y
-        GrB_TRY (GrB_Vector_new (&u, GrB_FP64, n)) ;
-        GrB_TRY (GrB_mxv (u, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, A, y,
+        GRB_TRY (GrB_Vector_new (&u, GrB_FP64, n)) ;
+        GRB_TRY (GrB_mxv (u, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, A, y,
             NULL)) ;
 
     }
@@ -200,33 +200,33 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
         // to src/
 
         // T{A} = A*A' (each triangle is seen 6 times)
-        GrB_TRY (GrB_mxm (T, A, NULL, LAGraph_plus_one_fp64, A, A,
+        GRB_TRY (GrB_mxm (T, A, NULL, LAGraph_plus_one_fp64, A, A,
             GrB_DESC_ST1)) ;
 
         // y = sum (T), where y(i) = sum (T (i,:)) and y(i)=0 of T(i,:) is empty
-        GrB_TRY (GrB_Vector_new (&y, GrB_FP64, n)) ;
-        GrB_TRY (GrB_assign (y, NULL, NULL, ((double) 0), GrB_ALL, n, NULL)) ;
-        GrB_TRY (GrB_reduce (y, NULL, GrB_PLUS_FP64, GrB_PLUS_MONOID_FP64, T,
+        GRB_TRY (GrB_Vector_new (&y, GrB_FP64, n)) ;
+        GRB_TRY (GrB_assign (y, NULL, NULL, ((double) 0), GrB_ALL, n, NULL)) ;
+        GRB_TRY (GrB_reduce (y, NULL, GrB_PLUS_FP64, GrB_PLUS_MONOID_FP64, T,
             NULL)) ;
 
         // k = sum (y)
-        GrB_TRY (GrB_reduce (&k, NULL, GrB_PLUS_MONOID_FP64, y, NULL)) ;
+        GRB_TRY (GrB_reduce (&k, NULL, GrB_PLUS_MONOID_FP64, y, NULL)) ;
 
         // centrality = (3*A*y - 2*T*y + y) / k
 
         // w = T*y
-        GrB_TRY (GrB_Vector_new (&w, GrB_FP64, n)) ;
-        GrB_TRY (GrB_mxv (w, NULL, NULL, LAGraph_plus_second_fp64, T, y,
+        GRB_TRY (GrB_Vector_new (&w, GrB_FP64, n)) ;
+        GRB_TRY (GrB_mxv (w, NULL, NULL, LAGraph_plus_second_fp64, T, y,
             NULL)) ;
 
         // w = (-2)*w
         double minus_two = -2 ;
-        GrB_TRY (GrB_apply (w, NULL, NULL, GrB_TIMES_FP64, minus_two, w,
+        GRB_TRY (GrB_apply (w, NULL, NULL, GrB_TIMES_FP64, minus_two, w,
             NULL)) ;
 
         // u = A*y
-        GrB_TRY (GrB_Vector_new (&u, GrB_FP64, n)) ;
-        GrB_TRY (GrB_mxv (u, NULL, NULL, LAGraph_plus_second_fp64, A, y,
+        GRB_TRY (GrB_Vector_new (&u, GrB_FP64, n)) ;
+        GRB_TRY (GrB_mxv (u, NULL, NULL, LAGraph_plus_second_fp64, A, y,
             NULL)) ;
 
     }
@@ -240,47 +240,47 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
         // todo: When this method is moved to src/, keep this method only.
 
         // L = tril (A,-1)
-        GrB_TRY (GrB_Matrix_new (&L, GrB_FP64, n, n)) ;
-        GrB_TRY (GrB_select (L, NULL, NULL, GrB_TRIL, A, (int64_t) (-1),
+        GRB_TRY (GrB_Matrix_new (&L, GrB_FP64, n, n)) ;
+        GRB_TRY (GrB_select (L, NULL, NULL, GrB_TRIL, A, (int64_t) (-1),
             NULL)) ;
 
         // T{L}= A*A' (each triangle is seen 3 times; T is lower triangular)
-        GrB_TRY (GrB_mxm (T, L, NULL, LAGraph_plus_one_fp64, A, A,
+        GRB_TRY (GrB_mxm (T, L, NULL, LAGraph_plus_one_fp64, A, A,
             GrB_DESC_ST1)) ;
-        GrB_TRY (GrB_free (&L)) ;
+        GRB_TRY (GrB_free (&L)) ;
 
         // y = sum (T'), where y(j) = sum (T (:,j)) and y(j)=0 if T(:,j) empty
-        GrB_TRY (GrB_Vector_new (&y, GrB_FP64, n)) ;
-        GrB_TRY (GrB_assign (y, NULL, NULL, ((double) 0), GrB_ALL, n, NULL)) ;
-        GrB_TRY (GrB_reduce (y, NULL, GrB_PLUS_FP64, GrB_PLUS_MONOID_FP64, T,
+        GRB_TRY (GrB_Vector_new (&y, GrB_FP64, n)) ;
+        GRB_TRY (GrB_assign (y, NULL, NULL, ((double) 0), GrB_ALL, n, NULL)) ;
+        GRB_TRY (GrB_reduce (y, NULL, GrB_PLUS_FP64, GrB_PLUS_MONOID_FP64, T,
             GrB_DESC_T0)) ;
         // y += sum (T)
-        GrB_TRY (GrB_reduce (y, NULL, GrB_PLUS_FP64, GrB_PLUS_MONOID_FP64, T,
+        GRB_TRY (GrB_reduce (y, NULL, GrB_PLUS_FP64, GrB_PLUS_MONOID_FP64, T,
             NULL)) ;
 
         // k = sum (y).  y is the same as the other methods, above, just
         // computed using the lower triangular matrix T.  So k/6 is the total
         // number of triangles in the graph.
-        GrB_TRY (GrB_reduce (&k, NULL, GrB_PLUS_MONOID_FP64, y, NULL)) ;
+        GRB_TRY (GrB_reduce (&k, NULL, GrB_PLUS_MONOID_FP64, y, NULL)) ;
 
         // centrality = (3*A*y - 2* (T*y + T'*y) + y) / k
 
         // w = T*y
-        GrB_TRY (GrB_Vector_new (&w, GrB_FP64, n)) ;
-        GrB_TRY (GrB_mxv (w, NULL, NULL, LAGraph_plus_second_fp64, T, y,
+        GRB_TRY (GrB_Vector_new (&w, GrB_FP64, n)) ;
+        GRB_TRY (GrB_mxv (w, NULL, NULL, LAGraph_plus_second_fp64, T, y,
             NULL)) ;
         // w += T'*y
-        GrB_TRY (GrB_mxv (w, NULL, GrB_PLUS_FP64, LAGraph_plus_second_fp64,
+        GRB_TRY (GrB_mxv (w, NULL, GrB_PLUS_FP64, LAGraph_plus_second_fp64,
             T, y, GrB_DESC_T0)) ;
 
         // w = (-2)*w
         double minus_two = -2 ;
-        GrB_TRY (GrB_apply (w, NULL, NULL, GrB_TIMES_FP64, minus_two, w,
+        GRB_TRY (GrB_apply (w, NULL, NULL, GrB_TIMES_FP64, minus_two, w,
             NULL)) ;
 
         // u = A*y
-        GrB_TRY (GrB_Vector_new (&u, GrB_FP64, n)) ;
-        GrB_TRY (GrB_mxv (u, NULL, NULL, LAGraph_plus_second_fp64, A, y,
+        GRB_TRY (GrB_Vector_new (&u, GrB_FP64, n)) ;
+        GRB_TRY (GrB_mxv (u, NULL, NULL, LAGraph_plus_second_fp64, A, y,
             NULL)) ;
 
     }
@@ -290,17 +290,17 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
     //--------------------------------------------------------------------------
 
     // centrality = 3*u
-    GrB_TRY (GrB_Vector_new (centrality, GrB_FP64, n)) ;
+    GRB_TRY (GrB_Vector_new (centrality, GrB_FP64, n)) ;
     const double three = 3 ;
-    GrB_TRY (GrB_apply (*centrality, NULL, NULL, GrB_TIMES_FP64, three, u,
+    GRB_TRY (GrB_apply (*centrality, NULL, NULL, GrB_TIMES_FP64, three, u,
         NULL)) ;
 
     // centrality += (w + y)
-    GrB_TRY (GrB_eWiseAdd (*centrality, NULL, GrB_PLUS_FP64, GrB_PLUS_FP64,
+    GRB_TRY (GrB_eWiseAdd (*centrality, NULL, GrB_PLUS_FP64, GrB_PLUS_FP64,
         w, y, NULL)) ;
 
     // centrality = centrality / k
-    GrB_TRY (GrB_apply (*centrality, NULL, NULL, GrB_TIMES_FP64,
+    GRB_TRY (GrB_apply (*centrality, NULL, NULL, GrB_TIMES_FP64,
         ((k == 0) ? 1.0 : (1.0/k)), *centrality, NULL)) ;
 
     (*ntriangles) = (uint64_t) (k/6) ;     // # triangles is k/6 for all methods

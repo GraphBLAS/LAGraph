@@ -184,9 +184,9 @@ GrB_Info LAGraph_BF_full_mxv
     *pd_output  = NULL;
     *ppi_output = NULL;
     *ph_output  = NULL;
-    GrB_TRY (GrB_Matrix_nrows (&nrows, AT)) ;
-    GrB_TRY (GrB_Matrix_ncols (&ncols, AT)) ;
-    GrB_TRY (GrB_Matrix_nvals (&nz, AT));
+    GRB_TRY (GrB_Matrix_nrows (&nrows, AT)) ;
+    GRB_TRY (GrB_Matrix_ncols (&ncols, AT)) ;
+    GRB_TRY (GrB_Matrix_nvals (&nz, AT));
     LG_ASSERT_MSG (nrows == ncols, -1002, "A must be square") ;
     n = nrows;
     LG_ASSERT_MSG (s < n, GrB_INVALID_INDEX, "invalid source node") ;
@@ -195,27 +195,27 @@ GrB_Info LAGraph_BF_full_mxv
     // create all GrB_Type GrB_BinaryOp GrB_Monoid and GrB_Semiring
     //--------------------------------------------------------------------------
     // GrB_Type
-    GrB_TRY (GrB_Type_new(&BF_Tuple3, sizeof(BF_Tuple3_struct)));
+    GRB_TRY (GrB_Type_new(&BF_Tuple3, sizeof(BF_Tuple3_struct)));
 
     // GrB_BinaryOp
-    GrB_TRY (GrB_BinaryOp_new(&BF_EQ_Tuple3,
+    GRB_TRY (GrB_BinaryOp_new(&BF_EQ_Tuple3,
         (LAGraph_binary_function) (&BF_EQ_mxv),
         GrB_BOOL, BF_Tuple3, BF_Tuple3));
-    GrB_TRY (GrB_BinaryOp_new(&BF_lMIN_Tuple3,
+    GRB_TRY (GrB_BinaryOp_new(&BF_lMIN_Tuple3,
         (LAGraph_binary_function) (&BF_lMIN_mxv),
         BF_Tuple3, BF_Tuple3, BF_Tuple3));
-    GrB_TRY (GrB_BinaryOp_new(&BF_PLUSrhs_Tuple3,
+    GRB_TRY (GrB_BinaryOp_new(&BF_PLUSrhs_Tuple3,
         (LAGraph_binary_function)(&BF_PLUSrhs_mxv),
         BF_Tuple3, BF_Tuple3, BF_Tuple3));
 
     // GrB_Monoid
     BF_Tuple3_struct BF_identity = (BF_Tuple3_struct) { .w = INFINITY,
         .h = UINT64_MAX, .pi = UINT64_MAX };
-    GrB_TRY (GrB_Monoid_new_UDT(&BF_lMIN_Tuple3_Monoid, BF_lMIN_Tuple3,
+    GRB_TRY (GrB_Monoid_new_UDT(&BF_lMIN_Tuple3_Monoid, BF_lMIN_Tuple3,
         &BF_identity));
 
     //GrB_Semiring
-    GrB_TRY (GrB_Semiring_new(&BF_lMIN_PLUSrhs_Tuple3,
+    GRB_TRY (GrB_Semiring_new(&BF_lMIN_PLUSrhs_Tuple3,
         BF_lMIN_Tuple3_Monoid, BF_PLUSrhs_Tuple3));
 
     //--------------------------------------------------------------------------
@@ -231,7 +231,7 @@ GrB_Info LAGraph_BF_full_mxv
     //--------------------------------------------------------------------------
     // create matrix Atmp based on AT, while its entries become BF_Tuple3 type
     //--------------------------------------------------------------------------
-    GrB_TRY (GrB_Matrix_extractTuples_FP64(I, J, w, &nz, AT));
+    GRB_TRY (GrB_Matrix_extractTuples_FP64(I, J, w, &nz, AT));
     for (GrB_Index k = 0; k < nz; k++)
     {
         if (w[k] == 0)             //diagonal entries
@@ -245,8 +245,8 @@ GrB_Info LAGraph_BF_full_mxv
             W[k] = (BF_Tuple3_struct) { .w = w[k], .h = 1, .pi = J[k] + 1 };
         }
     }
-    GrB_TRY (GrB_Matrix_new(&Atmp, BF_Tuple3, n, n));
-    GrB_TRY (GrB_Matrix_build_UDT(Atmp, I, J, W, nz, BF_lMIN_Tuple3));
+    GRB_TRY (GrB_Matrix_new(&Atmp, BF_Tuple3, n, n));
+    GRB_TRY (GrB_Matrix_build_UDT(Atmp, I, J, W, nz, BF_lMIN_Tuple3));
     LAGraph_Free ((void**)&I);
     LAGraph_Free ((void**)&J);
     LAGraph_Free ((void**)&W);
@@ -255,16 +255,16 @@ GrB_Info LAGraph_BF_full_mxv
     //--------------------------------------------------------------------------
     // create and initialize "distance" vector d
     //--------------------------------------------------------------------------
-    GrB_TRY (GrB_Vector_new(&d, BF_Tuple3, n));
+    GRB_TRY (GrB_Vector_new(&d, BF_Tuple3, n));
     // initial distance from s to itself
     BF_Tuple3_struct d0 = (BF_Tuple3_struct) { .w = 0, .h = 0, .pi = 0 };
-    GrB_TRY (GrB_Vector_setElement_UDT(d, &d0, s));
+    GRB_TRY (GrB_Vector_setElement_UDT(d, &d0, s));
 
     //--------------------------------------------------------------------------
     // start the Bellman Ford process
     //--------------------------------------------------------------------------
     // copy d to dtmp in order to create a same size of vector
-    GrB_TRY (GrB_Vector_dup(&dtmp, d));
+    GRB_TRY (GrB_Vector_dup(&dtmp, d));
     bool same= false;          // variable indicating if d == dtmp
     int64_t iter = 0;          // number of iterations
 
@@ -272,7 +272,7 @@ GrB_Info LAGraph_BF_full_mxv
     while (!same && iter < n - 1)
     {
         // execute semiring on d and AT, and save the result to dtmp
-        GrB_TRY (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, BF_lMIN_PLUSrhs_Tuple3,
+        GRB_TRY (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, BF_lMIN_PLUSrhs_Tuple3,
             Atmp, d, GrB_NULL));
         LG_TRY (LAGraph_Vector_IsEqual_op(&same, dtmp, d, BF_EQ_Tuple3, NULL));
         if (!same)
@@ -289,7 +289,7 @@ GrB_Info LAGraph_BF_full_mxv
     if (!same)
     {
         // execute semiring again to check for negative-weight cycle
-        GrB_TRY (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, BF_lMIN_PLUSrhs_Tuple3,
+        GRB_TRY (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, BF_lMIN_PLUSrhs_Tuple3,
             Atmp, d, GrB_NULL));
         LG_TRY (LAGraph_Vector_IsEqual_op(&same, dtmp, d, BF_EQ_Tuple3, NULL));
 
@@ -314,7 +314,7 @@ GrB_Info LAGraph_BF_full_mxv
         GrB_OUT_OF_MEMORY) ;
 
     nz = n ;
-    GrB_TRY (GrB_Vector_extractTuples_UDT (I, (void *) W, &nz, d));
+    GRB_TRY (GrB_Vector_extractTuples_UDT (I, (void *) W, &nz, d));
 
     for (GrB_Index k = 0; k < n; k++)
     {
@@ -323,12 +323,12 @@ GrB_Info LAGraph_BF_full_mxv
         pi[k] = W[k].pi;
     }
 
-    GrB_TRY (GrB_Vector_new(pd_output,  GrB_FP64,   n));
-    GrB_TRY (GrB_Vector_new(ppi_output, GrB_UINT64, n));
-    GrB_TRY (GrB_Vector_new(ph_output,  GrB_UINT64, n));
-    GrB_TRY (GrB_Vector_build (*pd_output , I, w , nz, GrB_MIN_FP64  ));
-    GrB_TRY (GrB_Vector_build (*ppi_output, I, pi, nz, GrB_MIN_UINT64));
-    GrB_TRY (GrB_Vector_build (*ph_output , I, h , nz, GrB_MIN_UINT64));
+    GRB_TRY (GrB_Vector_new(pd_output,  GrB_FP64,   n));
+    GRB_TRY (GrB_Vector_new(ppi_output, GrB_UINT64, n));
+    GRB_TRY (GrB_Vector_new(ph_output,  GrB_UINT64, n));
+    GRB_TRY (GrB_Vector_build (*pd_output , I, w , nz, GrB_MIN_FP64  ));
+    GRB_TRY (GrB_Vector_build (*ppi_output, I, pi, nz, GrB_MIN_UINT64));
+    GRB_TRY (GrB_Vector_build (*ph_output , I, h , nz, GrB_MIN_UINT64));
     LG_FREE_WORK;
     return (GrB_SUCCESS) ;
 }

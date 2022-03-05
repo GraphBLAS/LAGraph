@@ -110,7 +110,7 @@ int LAGr_SingleSourceShortestPath
 
     GrB_Matrix A = G->A ;
     GrB_Index n ;
-    GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
+    GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
     LG_ASSERT_MSG (source < n, GrB_INVALID_INDEX, "invalid source node") ;
 
     //--------------------------------------------------------------------------
@@ -123,24 +123,24 @@ int LAGr_SingleSourceShortestPath
     LG_TRY (LAGraph_Matrix_TypeName (typename, A, msg)) ;
     LG_TRY (LAGraph_TypeFromName (&etype, typename, msg)) ;
 
-    GrB_TRY (GrB_Scalar_new (&lBound, etype)) ;
-    GrB_TRY (GrB_Scalar_new (&uBound, etype)) ;
-    GrB_TRY (GrB_Vector_new (&t, etype, n)) ;
-    GrB_TRY (GrB_Vector_new (&tmasked, etype, n)) ;
-    GrB_TRY (GrB_Vector_new (&tReq, etype, n)) ;
-    GrB_TRY (GrB_Vector_new (&Empty, GrB_BOOL, n)) ;
-    GrB_TRY (GrB_Vector_new (&tless, GrB_BOOL, n)) ;
-    GrB_TRY (GrB_Vector_new (&s, GrB_BOOL, n)) ;
-    GrB_TRY (GrB_Vector_new (&reach, GrB_BOOL, n)) ;
+    GRB_TRY (GrB_Scalar_new (&lBound, etype)) ;
+    GRB_TRY (GrB_Scalar_new (&uBound, etype)) ;
+    GRB_TRY (GrB_Vector_new (&t, etype, n)) ;
+    GRB_TRY (GrB_Vector_new (&tmasked, etype, n)) ;
+    GRB_TRY (GrB_Vector_new (&tReq, etype, n)) ;
+    GRB_TRY (GrB_Vector_new (&Empty, GrB_BOOL, n)) ;
+    GRB_TRY (GrB_Vector_new (&tless, GrB_BOOL, n)) ;
+    GRB_TRY (GrB_Vector_new (&s, GrB_BOOL, n)) ;
+    GRB_TRY (GrB_Vector_new (&reach, GrB_BOOL, n)) ;
 
 #if LAGRAPH_SUITESPARSE
     // optional hints for SuiteSparse:GraphBLAS
-    GrB_TRY (GxB_set (t, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
-    GrB_TRY (GxB_set (tmasked, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
-    GrB_TRY (GxB_set (tReq, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
-    GrB_TRY (GxB_set (tless, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
-    GrB_TRY (GxB_set (s, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
-    GrB_TRY (GxB_set (reach, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
+    GRB_TRY (GxB_set (t, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
+    GRB_TRY (GxB_set (tmasked, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
+    GRB_TRY (GxB_set (tReq, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
+    GRB_TRY (GxB_set (tless, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
+    GRB_TRY (GxB_set (s, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
+    GRB_TRY (GxB_set (reach, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
 #endif
 
     // select the operators, and set t (:) = infinity
@@ -159,8 +159,8 @@ int LAGr_SingleSourceShortestPath
 
     if (etype == GrB_INT32)
     {
-        GrB_TRY (GrB_Scalar_extractElement (&delta_int32, Delta)) ;
-        GrB_TRY (GrB_assign (t, NULL, NULL, (int32_t) INT32_MAX,
+        GRB_TRY (GrB_Scalar_extractElement (&delta_int32, Delta)) ;
+        GRB_TRY (GrB_assign (t, NULL, NULL, (int32_t) INT32_MAX,
             GrB_ALL, n, NULL)) ;
         ne = GrB_VALUENE_INT32 ;
         le = GrB_VALUELE_INT32 ;
@@ -173,8 +173,8 @@ int LAGr_SingleSourceShortestPath
     }
     else if (etype == GrB_INT64)
     {
-        GrB_TRY (GrB_Scalar_extractElement (&delta_int64, Delta)) ;
-        GrB_TRY (GrB_assign (t, NULL, NULL, (int64_t) INT64_MAX,
+        GRB_TRY (GrB_Scalar_extractElement (&delta_int64, Delta)) ;
+        GRB_TRY (GrB_assign (t, NULL, NULL, (int64_t) INT64_MAX,
             GrB_ALL, n, NULL)) ;
         ne = GrB_VALUENE_INT64 ;
         le = GrB_VALUELE_INT64 ;
@@ -187,8 +187,8 @@ int LAGr_SingleSourceShortestPath
     }
     else if (etype == GrB_UINT32)
     {
-        GrB_TRY (GrB_Scalar_extractElement (&delta_uint32, Delta)) ;
-        GrB_TRY (GrB_assign (t, NULL, NULL, (uint32_t) UINT32_MAX,
+        GRB_TRY (GrB_Scalar_extractElement (&delta_uint32, Delta)) ;
+        GRB_TRY (GrB_assign (t, NULL, NULL, (uint32_t) UINT32_MAX,
             GrB_ALL, n, NULL)) ;
         ne = GrB_VALUENE_UINT32 ;
         le = GrB_VALUELE_UINT32 ;
@@ -202,8 +202,8 @@ int LAGr_SingleSourceShortestPath
     }
     else if (etype == GrB_UINT64)
     {
-        GrB_TRY (GrB_Scalar_extractElement (&delta_uint64, Delta)) ;
-        GrB_TRY (GrB_assign (t, NULL, NULL, (uint64_t) UINT64_MAX,
+        GRB_TRY (GrB_Scalar_extractElement (&delta_uint64, Delta)) ;
+        GRB_TRY (GrB_assign (t, NULL, NULL, (uint64_t) UINT64_MAX,
             GrB_ALL, n, NULL)) ;
         ne = GrB_VALUENE_UINT64 ;
         le = GrB_VALUELE_UINT64 ;
@@ -217,8 +217,8 @@ int LAGr_SingleSourceShortestPath
     }
     else if (etype == GrB_FP32)
     {
-        GrB_TRY (GrB_Scalar_extractElement (&delta_fp32, Delta)) ;
-        GrB_TRY (GrB_assign (t, NULL, NULL, (float) INFINITY,
+        GRB_TRY (GrB_Scalar_extractElement (&delta_fp32, Delta)) ;
+        GRB_TRY (GrB_assign (t, NULL, NULL, (float) INFINITY,
             GrB_ALL, n, NULL)) ;
         ne = GrB_VALUENE_FP32 ;
         le = GrB_VALUELE_FP32 ;
@@ -231,8 +231,8 @@ int LAGr_SingleSourceShortestPath
     }
     else if (etype == GrB_FP64)
     {
-        GrB_TRY (GrB_Scalar_extractElement (&delta_fp64, Delta)) ;
-        GrB_TRY (GrB_assign (t, NULL, NULL, (double) INFINITY,
+        GRB_TRY (GrB_Scalar_extractElement (&delta_fp64, Delta)) ;
+        GRB_TRY (GrB_assign (t, NULL, NULL, (double) INFINITY,
             GrB_ALL, n, NULL)) ;
         ne = GrB_VALUENE_FP64 ;
         le = GrB_VALUELE_FP64 ;
@@ -256,7 +256,7 @@ int LAGr_SingleSourceShortestPath
             (G->emin_kind == LAGraph_EXACT ||
              G->emin_kind == LAGraph_BOUND))
         {
-            GrB_TRY (GrB_Scalar_extractElement_FP64 (&emin, G->emin)) ;
+            GRB_TRY (GrB_Scalar_extractElement_FP64 (&emin, G->emin)) ;
         }
 //      else
 //      {
@@ -267,24 +267,24 @@ int LAGr_SingleSourceShortestPath
     }
 
     // t (src) = 0
-    GrB_TRY (GrB_Vector_setElement (t, 0, source)) ;
+    GRB_TRY (GrB_Vector_setElement (t, 0, source)) ;
 
     // reach (src) = true
-    GrB_TRY (GrB_Vector_setElement (reach, true, source)) ;
+    GRB_TRY (GrB_Vector_setElement (reach, true, source)) ;
 
     // s (src) = true
-    GrB_TRY (GrB_Vector_setElement (s, true, source)) ;
+    GRB_TRY (GrB_Vector_setElement (s, true, source)) ;
 
     // AL = A .* (A <= Delta)
-    GrB_TRY (GrB_Matrix_new (&AL, etype, n, n)) ;
-    GrB_TRY (GrB_select (AL, NULL, NULL, le, A, Delta, NULL)) ;
-    GrB_TRY (GrB_wait (AL, GrB_MATERIALIZE)) ;
+    GRB_TRY (GrB_Matrix_new (&AL, etype, n, n)) ;
+    GRB_TRY (GrB_select (AL, NULL, NULL, le, A, Delta, NULL)) ;
+    GRB_TRY (GrB_wait (AL, GrB_MATERIALIZE)) ;
 
     // FUTURE: costly for some problems, taking up to 50% of the total time:
     // AH = A .* (A > Delta)
-    GrB_TRY (GrB_Matrix_new (&AH, etype, n, n)) ;
-    GrB_TRY (GrB_select (AH, NULL, NULL, gt, A, Delta, NULL)) ;
-    GrB_TRY (GrB_wait (AH, GrB_MATERIALIZE)) ;
+    GRB_TRY (GrB_Matrix_new (&AH, etype, n, n)) ;
+    GRB_TRY (GrB_select (AH, NULL, NULL, gt, A, Delta, NULL)) ;
+    GRB_TRY (GrB_wait (AH, GrB_MATERIALIZE)) ;
 
     //--------------------------------------------------------------------------
     // while (t >= step*Delta) not empty
@@ -298,25 +298,25 @@ int LAGr_SingleSourceShortestPath
         //----------------------------------------------------------------------
 
         setelement (uBound, (step+1)) ;        // uBound = (step+1) * Delta
-        GrB_TRY (GrB_Vector_clear (tmasked)) ;
+        GRB_TRY (GrB_Vector_clear (tmasked)) ;
 
         // tmasked<reach> = t
         // FUTURE: this is costly, typically using Method 06s in SuiteSparse,
         // which is a very general-purpose one.  Write a specialized kernel to
         // exploit the given properties (reach and t are bitmap, tmasked starts
         // empty), or fuse this assignment with the GrB_select below.
-        GrB_TRY (GrB_assign (tmasked, reach, NULL, t, GrB_ALL, n, NULL)) ;
+        GRB_TRY (GrB_assign (tmasked, reach, NULL, t, GrB_ALL, n, NULL)) ;
         // tmasked = select (tmasked < (step+1)*Delta)
-        GrB_TRY (GrB_select (tmasked, NULL, NULL, lt, tmasked, uBound, NULL)) ;
+        GRB_TRY (GrB_select (tmasked, NULL, NULL, lt, tmasked, uBound, NULL)) ;
         // --- alternative:
         // FUTURE this is slower than the above but should be much faster.
         // GrB_select is computing a bitmap result then converting it to
         // sparse.  t and reach are both bitmap and tmasked finally sparse.
         // tmasked<reach> = select (t < (step+1)*Delta)
-        // GrB_TRY (GrB_select (tmasked, reach, NULL, lt, t, uBound, NULL)) ;
+        // GRB_TRY (GrB_select (tmasked, reach, NULL, lt, t, uBound, NULL)) ;
 
         GrB_Index tmasked_nvals ;
-        GrB_TRY (GrB_Vector_nvals (&tmasked_nvals, tmasked)) ;
+        GRB_TRY (GrB_Vector_nvals (&tmasked_nvals, tmasked)) ;
 
         //----------------------------------------------------------------------
         // continue while the current bucket (tmasked) is not empty
@@ -325,36 +325,36 @@ int LAGr_SingleSourceShortestPath
         while (tmasked_nvals > 0)
         {
             // tReq = AL'*tmasked using the min_plus semiring
-            GrB_TRY (GrB_vxm (tReq, NULL, NULL, min_plus, tmasked, AL, NULL)) ;
+            GRB_TRY (GrB_vxm (tReq, NULL, NULL, min_plus, tmasked, AL, NULL)) ;
 
             // s<struct(tmasked)> = true
-            GrB_TRY (GrB_assign (s, tmasked, NULL, (bool) true, GrB_ALL, n,
+            GRB_TRY (GrB_assign (s, tmasked, NULL, (bool) true, GrB_ALL, n,
                 GrB_DESC_S)) ;
 
             // if nvals (tReq) is 0, no need to continue the rest of this loop
             GrB_Index tReq_nvals ;
-            GrB_TRY (GrB_Vector_nvals (&tReq_nvals, tReq)) ;
+            GRB_TRY (GrB_Vector_nvals (&tReq_nvals, tReq)) ;
             if (tReq_nvals == 0) break ;
 
             // tless = (tReq .< t) using set intersection
-            GrB_TRY (GrB_eWiseMult (tless, NULL, NULL, less_than, tReq, t,
+            GRB_TRY (GrB_eWiseMult (tless, NULL, NULL, less_than, tReq, t,
                 NULL)) ;
 
             // remove explicit zeros from tless so it can be used as a
             // structural mask
             GrB_Index tless_nvals ;
-            GrB_TRY (GrB_select (tless, NULL, NULL, ne, tless, 0, NULL)) ;
-            GrB_TRY (GrB_Vector_nvals (&tless_nvals, tless)) ;
+            GRB_TRY (GrB_select (tless, NULL, NULL, ne, tless, 0, NULL)) ;
+            GRB_TRY (GrB_Vector_nvals (&tless_nvals, tless)) ;
             if (tless_nvals == 0) break ;
 
             // update reachable node list/mask
             // reach<struct(tless)> = true
-            GrB_TRY (GrB_assign (reach, tless, NULL, (bool) true, GrB_ALL, n,
+            GRB_TRY (GrB_assign (reach, tless, NULL, (bool) true, GrB_ALL, n,
                 GrB_DESC_S)) ;
 
             // tmasked<struct(tless)> = select (tReq < (step+1)*Delta)
-            GrB_TRY (GrB_Vector_clear (tmasked)) ;
-            GrB_TRY (GrB_select (tmasked, tless, NULL, lt, tReq, uBound,
+            GRB_TRY (GrB_Vector_clear (tmasked)) ;
+            GRB_TRY (GrB_select (tmasked, tless, NULL, lt, tReq, uBound,
                 GrB_DESC_S)) ;
 
             // For general graph with some negative weights:
@@ -367,27 +367,27 @@ int LAGr_SingleSourceShortestPath
                 // >= step*Delta from tReq.
                 setelement (lBound, (step)) ;  // lBound = step*Delta
                 // tmasked = select entries in tmasked that are >= step*Delta
-                GrB_TRY (GrB_select (tmasked, NULL, NULL, ge, tmasked, lBound,
+                GRB_TRY (GrB_select (tmasked, NULL, NULL, ge, tmasked, lBound,
                     NULL)) ;
             }
 
             // t<struct(tless)> = tReq
-            GrB_TRY (GrB_assign (t, tless, NULL, tReq, GrB_ALL, n, GrB_DESC_S));
-            GrB_TRY (GrB_Vector_nvals (&tmasked_nvals, tmasked)) ;
+            GRB_TRY (GrB_assign (t, tless, NULL, tReq, GrB_ALL, n, GrB_DESC_S));
+            GRB_TRY (GrB_Vector_nvals (&tmasked_nvals, tmasked)) ;
         }
 
         // tmasked<s> = t
-        GrB_TRY (GrB_Vector_clear (tmasked)) ;
-        GrB_TRY (GrB_assign (tmasked, s, NULL, t, GrB_ALL, n, GrB_DESC_S)) ;
+        GRB_TRY (GrB_Vector_clear (tmasked)) ;
+        GRB_TRY (GrB_assign (tmasked, s, NULL, t, GrB_ALL, n, GrB_DESC_S)) ;
 
         // tReq = AH'*tmasked using the min_plus semiring
-        GrB_TRY (GrB_vxm (tReq, NULL, NULL, min_plus, tmasked, AH, NULL)) ;
+        GRB_TRY (GrB_vxm (tReq, NULL, NULL, min_plus, tmasked, AH, NULL)) ;
 
         // tless = (tReq .< t) using set intersection
-        GrB_TRY (GrB_eWiseMult (tless, NULL, NULL, less_than, tReq, t, NULL)) ;
+        GRB_TRY (GrB_eWiseMult (tless, NULL, NULL, less_than, tReq, t, NULL)) ;
 
         // t<tless> = tReq, which computes t = min (t, tReq)
-        GrB_TRY (GrB_assign (t, tless, NULL, tReq, GrB_ALL, n, NULL)) ;
+        GRB_TRY (GrB_assign (t, tless, NULL, tReq, GrB_ALL, n, NULL)) ;
 
         //----------------------------------------------------------------------
         // find out how many left to be computed
@@ -395,17 +395,17 @@ int LAGr_SingleSourceShortestPath
 
         // update reachable node list
         // reach<tless> = true
-        GrB_TRY (GrB_assign (reach, tless, NULL, (bool) true, GrB_ALL, n,
+        GRB_TRY (GrB_assign (reach, tless, NULL, (bool) true, GrB_ALL, n,
             NULL)) ;
 
         // remove previous buckets
         // reach<struct(s)> = Empty
-        GrB_TRY (GrB_assign (reach, s, NULL, Empty, GrB_ALL, n, GrB_DESC_S)) ;
+        GRB_TRY (GrB_assign (reach, s, NULL, Empty, GrB_ALL, n, GrB_DESC_S)) ;
         GrB_Index nreach ;
-        GrB_TRY (GrB_Vector_nvals (&nreach, reach)) ;
+        GRB_TRY (GrB_Vector_nvals (&nreach, reach)) ;
         if (nreach == 0) break ;
 
-        GrB_TRY (GrB_Vector_clear (s)) ; // clear s for the next iteration
+        GRB_TRY (GrB_Vector_clear (s)) ; // clear s for the next iteration
     }
 
     //--------------------------------------------------------------------------

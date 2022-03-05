@@ -91,45 +91,45 @@ int LAGr_PageRank
 
     GrB_Index n ;
     (*centrality) = NULL ;
-    GrB_TRY (GrB_Matrix_nrows (&n, AT)) ;
+    GRB_TRY (GrB_Matrix_nrows (&n, AT)) ;
 
     const float damping_over_n = damping / n ;
     const float scaled_damping = (1 - damping) / n ;
     float rdiff = 1 ;       // first iteration is always done
 
     // r = 1 / n
-    GrB_TRY (GrB_Vector_new (&t, GrB_FP32, n)) ;
-    GrB_TRY (GrB_Vector_new (&r, GrB_FP32, n)) ;
-    GrB_TRY (GrB_Vector_new (&w, GrB_FP32, n)) ;
-    GrB_TRY (GrB_assign (r, NULL, NULL, (float) (1.0 / n), GrB_ALL, n, NULL)) ;
+    GRB_TRY (GrB_Vector_new (&t, GrB_FP32, n)) ;
+    GRB_TRY (GrB_Vector_new (&r, GrB_FP32, n)) ;
+    GRB_TRY (GrB_Vector_new (&w, GrB_FP32, n)) ;
+    GRB_TRY (GrB_assign (r, NULL, NULL, (float) (1.0 / n), GrB_ALL, n, NULL)) ;
 
     // find all sinks, where sink(i) = true if node i has d_out(i)=0, or with
     // d_out(i) not present.  LAGraph_Property_RowDegree computes d_out =
     // G->rowdegree so that it has no explicit zeros, so a structural mask can
     // be used here.
     GrB_Index nsinks, nvals ;
-    GrB_TRY (GrB_Vector_nvals (&nvals, d_out)) ;
+    GRB_TRY (GrB_Vector_nvals (&nvals, d_out)) ;
     nsinks = n - nvals ;
     if (nsinks > 0)
     {
         // sink<!struct(d_out)> = true
-        GrB_TRY (GrB_Vector_new (&sink, GrB_BOOL, n)) ;
-        GrB_TRY (GrB_assign (sink, d_out, NULL, (bool) true, GrB_ALL, n,
+        GRB_TRY (GrB_Vector_new (&sink, GrB_BOOL, n)) ;
+        GRB_TRY (GrB_assign (sink, d_out, NULL, (bool) true, GrB_ALL, n,
             GrB_DESC_SC)) ;
-        GrB_TRY (GrB_Vector_new (&rsink, GrB_FP32, n)) ;
+        GRB_TRY (GrB_Vector_new (&rsink, GrB_FP32, n)) ;
     }
 
     // prescale with damping factor, so it isn't done each iteration
     // d = d_out / damping ;
-    GrB_TRY (GrB_Vector_new (&d, GrB_FP32, n)) ;
-    GrB_TRY (GrB_apply (d, NULL, NULL, GrB_DIV_FP32, d_out, damping, NULL)) ;
+    GRB_TRY (GrB_Vector_new (&d, GrB_FP32, n)) ;
+    GRB_TRY (GrB_apply (d, NULL, NULL, GrB_DIV_FP32, d_out, damping, NULL)) ;
 
     // d1 = 1 / damping
     float dmin = 1.0 / damping ;
-    GrB_TRY (GrB_Vector_new (&d1, GrB_FP32, n)) ;
-    GrB_TRY (GrB_assign (d1, NULL, NULL, dmin, GrB_ALL, n, NULL)) ;
+    GRB_TRY (GrB_Vector_new (&d1, GrB_FP32, n)) ;
+    GRB_TRY (GrB_assign (d1, NULL, NULL, dmin, GrB_ALL, n, NULL)) ;
     // d = max (d1, d)
-    GrB_TRY (GrB_eWiseAdd (d, NULL, NULL, GrB_MAX_FP32, d1, d, NULL)) ;
+    GRB_TRY (GrB_eWiseAdd (d, NULL, NULL, GrB_MAX_FP32, d1, d, NULL)) ;
     GrB_free (&d1) ;
 
     //--------------------------------------------------------------------------
@@ -147,29 +147,29 @@ int LAGr_PageRank
         {
             // handle the sinks: teleport += (damping/n) * sum (r (sink))
             // rsink<struct(sink)> = r
-            GrB_TRY (GrB_Vector_clear (rsink)) ;
-            GrB_TRY (GrB_assign (rsink, sink, NULL, r, GrB_ALL, n, GrB_DESC_S));
+            GRB_TRY (GrB_Vector_clear (rsink)) ;
+            GRB_TRY (GrB_assign (rsink, sink, NULL, r, GrB_ALL, n, GrB_DESC_S));
             // sum_rsink = sum (rsink)
             float sum_rsink = 0 ;
-            GrB_TRY (GrB_reduce (&sum_rsink, NULL, GrB_PLUS_MONOID_FP32,
+            GRB_TRY (GrB_reduce (&sum_rsink, NULL, GrB_PLUS_MONOID_FP32,
                 rsink, NULL)) ;
             teleport += damping_over_n * sum_rsink ;
         }
         // swap t and r ; now t is the old score
         GrB_Vector temp = t ; t = r ; r = temp ;
         // w = t ./ d
-        GrB_TRY (GrB_eWiseMult (w, NULL, NULL, GrB_DIV_FP32, t, d, NULL)) ;
+        GRB_TRY (GrB_eWiseMult (w, NULL, NULL, GrB_DIV_FP32, t, d, NULL)) ;
         // r = teleport
-        GrB_TRY (GrB_assign (r, NULL, NULL, teleport, GrB_ALL, n, NULL)) ;
+        GRB_TRY (GrB_assign (r, NULL, NULL, teleport, GrB_ALL, n, NULL)) ;
         // r += A'*w
-        GrB_TRY (GrB_mxv (r, NULL, GrB_PLUS_FP32, LAGraph_plus_second_fp32,
+        GRB_TRY (GrB_mxv (r, NULL, GrB_PLUS_FP32, LAGraph_plus_second_fp32,
             AT, w, NULL)) ;
         // t -= r
-        GrB_TRY (GrB_assign (t, NULL, GrB_MINUS_FP32, r, GrB_ALL, n, NULL)) ;
+        GRB_TRY (GrB_assign (t, NULL, GrB_MINUS_FP32, r, GrB_ALL, n, NULL)) ;
         // t = abs (t)
-        GrB_TRY (GrB_apply (t, NULL, NULL, GrB_ABS_FP32, t, NULL)) ;
+        GRB_TRY (GrB_apply (t, NULL, NULL, GrB_ABS_FP32, t, NULL)) ;
         // rdiff = sum (t)
-        GrB_TRY (GrB_reduce (&rdiff, NULL, GrB_PLUS_MONOID_FP32, t, NULL)) ;
+        GRB_TRY (GrB_reduce (&rdiff, NULL, GrB_PLUS_MONOID_FP32, t, NULL)) ;
     }
 
     //--------------------------------------------------------------------------

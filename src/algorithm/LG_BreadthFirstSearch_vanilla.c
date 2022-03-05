@@ -68,7 +68,7 @@ int LG_BreadthFirstSearch_vanilla
     GrB_Matrix A = G->A ;
 
     GrB_Index n;
-    GrB_TRY( GrB_Matrix_nrows (&n, A) );
+    GRB_TRY( GrB_Matrix_nrows (&n, A) );
     LG_ASSERT_MSG (src < n, GrB_INVALID_INDEX, "invalid source node") ;
 
     // determine the semiring type
@@ -81,14 +81,14 @@ int LG_BreadthFirstSearch_vanilla
     if (compute_parent)
     {
         // create the parent vector.  l_parent(i) is the parent id of node i
-        GrB_TRY (GrB_Vector_new(&l_parent, int_type, n)) ;
+        GRB_TRY (GrB_Vector_new(&l_parent, int_type, n)) ;
 
         semiring = (n > INT32_MAX) ?
             GrB_MIN_FIRST_SEMIRING_INT64 : GrB_MIN_FIRST_SEMIRING_INT32;
 
         // create a sparse integer vector frontier, and set frontier(src) = src
-        GrB_TRY (GrB_Vector_new(&frontier, int_type, n)) ;
-        GrB_TRY (GrB_Vector_setElement(frontier, src, src)) ;
+        GRB_TRY (GrB_Vector_new(&frontier, int_type, n)) ;
+        GRB_TRY (GrB_Vector_setElement(frontier, src, src)) ;
 
         // pick the ramp operator
         ramp = (n > INT32_MAX) ? GrB_ROWINDEX_INT64 : GrB_ROWINDEX_INT32 ;
@@ -99,16 +99,16 @@ int LG_BreadthFirstSearch_vanilla
         semiring = LAGraph_structural_bool ;
 
         // create a sparse boolean vector frontier, and set frontier(src) = true
-        GrB_TRY (GrB_Vector_new(&frontier, GrB_BOOL, n)) ;
-        GrB_TRY (GrB_Vector_setElement(frontier, true, src)) ;
+        GRB_TRY (GrB_Vector_new(&frontier, GrB_BOOL, n)) ;
+        GRB_TRY (GrB_Vector_setElement(frontier, true, src)) ;
     }
 
     if (compute_level)
     {
         // create the level vector. v(i) is the level of node i
         // v (src) = 0 denotes the source node
-        GrB_TRY (GrB_Vector_new(&l_level, int_type, n)) ;
-        //GrB_TRY (GrB_Vector_setElement(l_level, 0, src)) ;
+        GRB_TRY (GrB_Vector_new(&l_level, int_type, n)) ;
+        //GRB_TRY (GrB_Vector_setElement(l_level, 0, src)) ;
     }
 
     //--------------------------------------------------------------------------
@@ -128,7 +128,7 @@ int LG_BreadthFirstSearch_vanilla
         if (compute_level)
         {
             // assign levels: l_level<s(frontier)> = current_level
-            GrB_TRY( GrB_assign(l_level, frontier, GrB_NULL,
+            GRB_TRY( GrB_assign(l_level, frontier, GrB_NULL,
                                 current_level, GrB_ALL, n, GrB_DESC_S) );
             ++current_level;
         }
@@ -137,21 +137,21 @@ int LG_BreadthFirstSearch_vanilla
         {
             // frontier(i) currently contains the parent id of node i in tree.
             // l_parent<s(frontier)> = frontier
-            GrB_TRY( GrB_assign(l_parent, frontier, GrB_NULL,
+            GRB_TRY( GrB_assign(l_parent, frontier, GrB_NULL,
                                 frontier, GrB_ALL, n, GrB_DESC_S) );
 
             // convert all stored values in frontier to their indices
-            GrB_TRY (GrB_apply (frontier, GrB_NULL, GrB_NULL, ramp,
+            GRB_TRY (GrB_apply (frontier, GrB_NULL, GrB_NULL, ramp,
                 frontier, 0, GrB_NULL)) ;
         }
 
         // frontier = kth level of the BFS
         // mask is l_parent if computing parent, l_level if computing just level
-        GrB_TRY( GrB_vxm(frontier, mask, GrB_NULL, semiring,
+        GRB_TRY( GrB_vxm(frontier, mask, GrB_NULL, semiring,
                          frontier, A, GrB_DESC_RSC) );
 
         // done if frontier is empty
-        GrB_TRY( GrB_Vector_nvals(&nvals, frontier) );
+        GRB_TRY( GrB_Vector_nvals(&nvals, frontier) );
     } while (nvals > 0);
 
     //--------------------------------------------------------------------------

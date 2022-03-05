@@ -831,7 +831,7 @@ int LAGraph_MMRead
     // create the matrix
     //--------------------------------------------------------------------------
 
-    GrB_TRY (GrB_Matrix_new (A, type, nrows, ncols)) ;
+    GRB_TRY (GrB_Matrix_new (A, type, nrows, ncols)) ;
 
     //--------------------------------------------------------------------------
     // quick return for empty matrix
@@ -986,56 +986,56 @@ int LAGraph_MMRead
 
     if (type == GrB_BOOL)
     {
-        GrB_TRY (GrB_Matrix_build_BOOL (*A, I, J, (bool *) X, nvals2, NULL)) ;
+        GRB_TRY (GrB_Matrix_build_BOOL (*A, I, J, (bool *) X, nvals2, NULL)) ;
     }
     else if (type == GrB_INT8)
     {
-        GrB_TRY (GrB_Matrix_build_INT8 (*A, I, J, (int8_t *) X, nvals2, NULL)) ;
+        GRB_TRY (GrB_Matrix_build_INT8 (*A, I, J, (int8_t *) X, nvals2, NULL)) ;
     }
     else if (type == GrB_INT16)
     {
-        GrB_TRY (GrB_Matrix_build_INT16 (*A, I, J, (int16_t *) X, nvals2, NULL)) ;
+        GRB_TRY (GrB_Matrix_build_INT16 (*A, I, J, (int16_t *) X, nvals2, NULL)) ;
     }
     else if (type == GrB_INT32)
     {
-        GrB_TRY (GrB_Matrix_build_INT32 (*A, I, J, (int32_t *) X, nvals2, NULL)) ;
+        GRB_TRY (GrB_Matrix_build_INT32 (*A, I, J, (int32_t *) X, nvals2, NULL)) ;
     }
     else if (type == GrB_INT64)
     {
-        GrB_TRY (GrB_Matrix_build_INT64 (*A, I, J, (int64_t *) X, nvals2, NULL)) ;
+        GRB_TRY (GrB_Matrix_build_INT64 (*A, I, J, (int64_t *) X, nvals2, NULL)) ;
     }
     else if (type == GrB_UINT8)
     {
-        GrB_TRY (GrB_Matrix_build_UINT8 (*A, I, J, (uint8_t *) X, nvals2, NULL)) ;
+        GRB_TRY (GrB_Matrix_build_UINT8 (*A, I, J, (uint8_t *) X, nvals2, NULL)) ;
     }
     else if (type == GrB_UINT16)
     {
-        GrB_TRY (GrB_Matrix_build_UINT16 (*A, I, J, (uint16_t *) X, nvals2, NULL)) ;
+        GRB_TRY (GrB_Matrix_build_UINT16 (*A, I, J, (uint16_t *) X, nvals2, NULL)) ;
     }
     else if (type == GrB_UINT32)
     {
-        GrB_TRY (GrB_Matrix_build_UINT32 (*A, I, J, (uint32_t *) X, nvals2, NULL)) ;
+        GRB_TRY (GrB_Matrix_build_UINT32 (*A, I, J, (uint32_t *) X, nvals2, NULL)) ;
     }
     else if (type == GrB_UINT64)
     {
-        GrB_TRY (GrB_Matrix_build_UINT64 (*A, I, J, (uint64_t *) X, nvals2, NULL)) ;
+        GRB_TRY (GrB_Matrix_build_UINT64 (*A, I, J, (uint64_t *) X, nvals2, NULL)) ;
     }
     else if (type == GrB_FP32)
     {
-        GrB_TRY (GrB_Matrix_build_FP32 (*A, I, J, (float *) X, nvals2, NULL)) ;
+        GRB_TRY (GrB_Matrix_build_FP32 (*A, I, J, (float *) X, nvals2, NULL)) ;
     }
     else if (type == GrB_FP64)
     {
-        GrB_TRY (GrB_Matrix_build_FP64 (*A, I, J, (double *) X, nvals2, NULL)) ;
+        GRB_TRY (GrB_Matrix_build_FP64 (*A, I, J, (double *) X, nvals2, NULL)) ;
     }
 #if 0
     else if (type == GxB_FC32)
     {
-        GrB_TRY (GxB_Matrix_build_FC32 (*A, I, J, (GxB_FC32_t *) X, nvals2, NULL)) ;
+        GRB_TRY (GxB_Matrix_build_FC32 (*A, I, J, (GxB_FC32_t *) X, nvals2, NULL)) ;
     }
     else if (type == GxB_FC64)
     {
-        GrB_TRY (GxB_Matrix_build_FC64 (*A, I, J, (GxB_FC64_t *) X, nvals2, NULL)) ;
+        GRB_TRY (GxB_Matrix_build_FC64 (*A, I, J, (GxB_FC64_t *) X, nvals2, NULL)) ;
     }
 #endif
 

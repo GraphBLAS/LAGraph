@@ -73,26 +73,26 @@ static GrB_Info propagate (GrB_Vector label, GrB_Vector mask,
     // semirings
 
     GrB_Vector s, t;
-    GrB_TRY (GrB_Vector_new (&s, GrB_UINT64, n));
-    GrB_TRY (GrB_Vector_new (&t, GrB_UINT64, n));
-    GrB_TRY (GrB_assign (s, mask, 0, label, GrB_ALL, 0, 0));
-    GrB_TRY (GrB_assign (t, 0, 0, label, GrB_ALL, 0, 0));
+    GRB_TRY (GrB_Vector_new (&s, GrB_UINT64, n));
+    GRB_TRY (GrB_Vector_new (&t, GrB_UINT64, n));
+    GRB_TRY (GrB_assign (s, mask, 0, label, GrB_ALL, 0, 0));
+    GRB_TRY (GrB_assign (t, 0, 0, label, GrB_ALL, 0, 0));
 
     GrB_Index active;
     while (true)
     {
-        GrB_TRY (GrB_vxm (t, 0, GrB_MIN_UINT64,
+        GRB_TRY (GrB_vxm (t, 0, GrB_MIN_UINT64,
                                  GrB_MIN_FIRST_SEMIRING_UINT64, s, A, 0));
-        GrB_TRY (GrB_eWiseMult (mask, 0, 0, GxB_ISNE_UINT64, t, label, 0));
-        GrB_TRY (GrB_assign (label, mask, 0, t, GrB_ALL, 0, 0));
-        GrB_TRY (GrB_reduce (&active, 0, GrB_PLUS_MONOID_UINT64, mask, 0));
+        GRB_TRY (GrB_eWiseMult (mask, 0, 0, GxB_ISNE_UINT64, t, label, 0));
+        GRB_TRY (GrB_assign (label, mask, 0, t, GrB_ALL, 0, 0));
+        GRB_TRY (GrB_reduce (&active, 0, GrB_PLUS_MONOID_UINT64, mask, 0));
         if (active == 0) break;
-        GrB_TRY (GrB_Vector_clear (s));
-        GrB_TRY (GrB_assign (s, mask, 0, label, GrB_ALL, 0, 0));
+        GRB_TRY (GrB_Vector_clear (s));
+        GRB_TRY (GrB_assign (s, mask, 0, label, GrB_ALL, 0, 0));
     }
 
-    GrB_TRY (GrB_free (&s));
-    GrB_TRY (GrB_free (&t));
+    GRB_TRY (GrB_free (&s));
+    GRB_TRY (GrB_free (&t));
     return GrB_SUCCESS;
 }
 
@@ -121,21 +121,21 @@ int LAGraph_scc
     if (result == NULL || A == NULL) return (GrB_NULL_POINTER) ;
 
     GrB_Index n, ncols, nvals;
-    GrB_TRY (GrB_Matrix_nrows (&n, A));
-    GrB_TRY (GrB_Matrix_ncols (&ncols, A));
+    GRB_TRY (GrB_Matrix_nrows (&n, A));
+    GRB_TRY (GrB_Matrix_ncols (&ncols, A));
     if (n != ncols) return (GrB_DIMENSION_MISMATCH) ;
 
     // store the graph in both directions (forward / backward)
     GrB_Matrix FW, BW;
-    GrB_TRY (GrB_Matrix_new (&FW, GrB_BOOL, n, n));
-    GrB_TRY (GrB_Matrix_new (&BW, GrB_BOOL, n, n));
-    GrB_TRY (GrB_transpose (FW, 0, 0, A, GrB_DESC_T0)); // FW = A
-    GrB_TRY (GrB_transpose (BW, 0, 0, A, 0));     // BW = A'
+    GRB_TRY (GrB_Matrix_new (&FW, GrB_BOOL, n, n));
+    GRB_TRY (GrB_Matrix_new (&BW, GrB_BOOL, n, n));
+    GRB_TRY (GrB_transpose (FW, 0, 0, A, GrB_DESC_T0)); // FW = A
+    GRB_TRY (GrB_transpose (BW, 0, 0, A, 0));     // BW = A'
 
     // check format
     GxB_Format_Value A_format, AT_format;
-    GrB_TRY (GxB_get (FW, GxB_FORMAT, &A_format));
-    GrB_TRY (GxB_get (BW, GxB_FORMAT, &AT_format));
+    GRB_TRY (GxB_get (FW, GxB_FORMAT, &A_format));
+    GRB_TRY (GxB_get (BW, GxB_FORMAT, &AT_format));
 
     bool is_csr = (A_format == GxB_BY_ROW && AT_format == GxB_BY_ROW);
     if (!is_csr) return (GrB_INVALID_VALUE) ;
@@ -150,67 +150,67 @@ int LAGraph_scc
 
     // scc: the SCC identifier for each vertex
     // scc[u] == n: not assigned yet
-    GrB_TRY (GrB_Vector_new (&scc, GrB_UINT64, n));
+    GRB_TRY (GrB_Vector_new (&scc, GrB_UINT64, n));
     // vector of indices: ind[i] == i
-    GrB_TRY (GrB_Vector_new (&ind, GrB_UINT64, n));
-    GrB_TRY (GrB_Vector_build (ind, I, V, n, GrB_PLUS_UINT64));
+    GRB_TRY (GrB_Vector_new (&ind, GrB_UINT64, n));
+    GRB_TRY (GrB_Vector_build (ind, I, V, n, GrB_PLUS_UINT64));
     // vector of infinite value: inf[i] == n
-    GrB_TRY (GrB_Vector_new (&inf, GrB_UINT64, n));
-    GrB_TRY (GrB_assign (inf, 0, 0, n, GrB_ALL, 0, 0));
+    GRB_TRY (GrB_Vector_new (&inf, GrB_UINT64, n));
+    GRB_TRY (GrB_assign (inf, 0, 0, n, GrB_ALL, 0, 0));
     // other vectors
-    GrB_TRY (GrB_Vector_new (&f, GrB_UINT64, n));
-    GrB_TRY (GrB_Vector_new (&b, GrB_UINT64, n));
-    GrB_TRY (GrB_Vector_new (&mask, GrB_UINT64, n));
+    GRB_TRY (GrB_Vector_new (&f, GrB_UINT64, n));
+    GRB_TRY (GrB_Vector_new (&b, GrB_UINT64, n));
+    GRB_TRY (GrB_Vector_new (&mask, GrB_UINT64, n));
     // GxB_SelectOp
-    GrB_TRY (GxB_SelectOp_new (&sel1, trim_one, GrB_BOOL, GrB_NULL));
-    GrB_TRY (GxB_SelectOp_new (&sel2, edge_removal, GrB_BOOL, GrB_NULL));
+    GRB_TRY (GxB_SelectOp_new (&sel1, trim_one, GrB_BOOL, GrB_NULL));
+    GRB_TRY (GxB_SelectOp_new (&sel2, edge_removal, GrB_BOOL, GrB_NULL));
 
     // remove trivial SCCs
-    GrB_TRY (GrB_reduce (f, 0, GrB_PLUS_UINT64, GrB_PLUS_UINT64, FW, 0));
-    GrB_TRY (GrB_reduce (b, 0, GrB_PLUS_UINT64, GrB_PLUS_UINT64, BW, 0));
-    GrB_TRY (GrB_eWiseMult (mask, 0, GxB_LAND_UINT64, GxB_LAND_UINT64, f, b, 0));
-    GrB_TRY (GrB_Vector_nvals (&nvals, mask));
+    GRB_TRY (GrB_reduce (f, 0, GrB_PLUS_UINT64, GrB_PLUS_UINT64, FW, 0));
+    GRB_TRY (GrB_reduce (b, 0, GrB_PLUS_UINT64, GrB_PLUS_UINT64, BW, 0));
+    GRB_TRY (GrB_eWiseMult (mask, 0, GxB_LAND_UINT64, GxB_LAND_UINT64, f, b, 0));
+    GRB_TRY (GrB_Vector_nvals (&nvals, mask));
 
-    GrB_TRY (GrB_assign (scc, 0, 0, ind, GrB_ALL, 0, 0));
-    GrB_TRY (GrB_assign (scc, mask, 0, n, GrB_ALL, 0, 0));
-    GrB_TRY (GrB_Vector_clear (mask));
+    GRB_TRY (GrB_assign (scc, 0, 0, ind, GrB_ALL, 0, 0));
+    GRB_TRY (GrB_assign (scc, mask, 0, n, GrB_ALL, 0, 0));
+    GRB_TRY (GrB_Vector_clear (mask));
 
     if (nvals < n)
     {
-        GrB_TRY (GrB_Vector_extractTuples (I, M, &n, scc));
-        GrB_TRY (GxB_select (FW, 0, 0, sel1, FW, GrB_NULL, 0));
-        GrB_TRY (GxB_select (BW, 0, 0, sel1, BW, GrB_NULL, 0));
+        GRB_TRY (GrB_Vector_extractTuples (I, M, &n, scc));
+        GRB_TRY (GxB_select (FW, 0, 0, sel1, FW, GrB_NULL, 0));
+        GRB_TRY (GxB_select (BW, 0, 0, sel1, BW, GrB_NULL, 0));
     }
 
-    GrB_TRY (GrB_Matrix_nvals (&nvals, FW));
+    GRB_TRY (GrB_Matrix_nvals (&nvals, FW));
     while (nvals > 0)
     {
-        GrB_TRY (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, scc, inf, 0));
-        GrB_TRY (GrB_assign (f, 0, 0, ind, GrB_ALL, 0, 0));
+        GRB_TRY (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, scc, inf, 0));
+        GRB_TRY (GrB_assign (f, 0, 0, ind, GrB_ALL, 0, 0));
         LG_TRY (propagate (f, mask, FW, BW, n, msg));
 
-        GrB_TRY (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, f, ind, 0));
-        GrB_TRY (GrB_assign (b, 0, 0, inf, GrB_ALL, 0, 0));
-        GrB_TRY (GrB_assign (b, mask, 0, ind, GrB_ALL, 0, 0));
+        GRB_TRY (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, f, ind, 0));
+        GRB_TRY (GrB_assign (b, 0, 0, inf, GrB_ALL, 0, 0));
+        GRB_TRY (GrB_assign (b, mask, 0, ind, GrB_ALL, 0, 0));
         LG_TRY (propagate (b, mask, BW, FW, n, msg));
 
-        GrB_TRY (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, f, b, 0));
-        GrB_TRY (GrB_assign (scc, mask, GrB_MIN_UINT64, f, GrB_ALL, 0, 0));
+        GRB_TRY (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, f, b, 0));
+        GRB_TRY (GrB_assign (scc, mask, GrB_MIN_UINT64, f, GrB_ALL, 0, 0));
 
-        GrB_TRY (GrB_Vector_extractTuples (I, F, &n, f));
-        GrB_TRY (GrB_Vector_extractTuples (I, B, &n, b));
-        GrB_TRY (GrB_Vector_extractTuples (I, M, &n, mask));
+        GRB_TRY (GrB_Vector_extractTuples (I, F, &n, f));
+        GRB_TRY (GrB_Vector_extractTuples (I, B, &n, b));
+        GRB_TRY (GrB_Vector_extractTuples (I, M, &n, mask));
 
-        GrB_TRY (GxB_select (FW, 0, 0, sel2, FW, GrB_NULL, 0));
-        GrB_TRY (GxB_select (BW, 0, 0, sel2, BW, GrB_NULL, 0));
+        GRB_TRY (GxB_select (FW, 0, 0, sel2, FW, GrB_NULL, 0));
+        GRB_TRY (GxB_select (BW, 0, 0, sel2, BW, GrB_NULL, 0));
 
-        GrB_TRY (GrB_Matrix_nvals (&nvals, FW));
+        GRB_TRY (GrB_Matrix_nvals (&nvals, FW));
     }
-    GrB_TRY (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, scc, inf, 0));
-    GrB_TRY (GrB_assign (scc, mask, 0, ind, GrB_ALL, 0, 0));
+    GRB_TRY (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, scc, inf, 0));
+    GRB_TRY (GrB_assign (scc, mask, 0, ind, GrB_ALL, 0, 0));
 
-    GrB_TRY (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, scc, ind, 0));
-    GrB_TRY (GrB_reduce (&nvals, 0, GrB_PLUS_MONOID_UINT64, mask, 0));
+    GRB_TRY (GrB_eWiseMult (mask, 0, 0, GxB_ISEQ_UINT64, scc, ind, 0));
+    GRB_TRY (GrB_reduce (&nvals, 0, GrB_PLUS_MONOID_UINT64, mask, 0));
 
     *result = scc;
     scc = NULL;

@@ -70,8 +70,8 @@ int LG_check_ktruss
         // A is not known to be symmetric
         LG_ASSERT_MSG (false, -1005, "G->A must be symmetric") ;
     }
-    GrB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
-    GrB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
+    GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
+    GRB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
     LG_ASSERT_MSG (n == ncols, -1001, "A must be square") ;
 
     //--------------------------------------------------------------------------
@@ -147,16 +147,16 @@ int LG_check_ktruss
         // import C in CSR form
         //----------------------------------------------------------------------
 
-        GrB_TRY (GrB_Matrix_import_UINT32 (&C, GrB_UINT32, n, n,
+        GRB_TRY (GrB_Matrix_import_UINT32 (&C, GrB_UINT32, n, n,
             Cp, Cj, Cx, Cp_len, Cj_len, Cx_len, GrB_CSR_FORMAT)) ;
-        GrB_TRY (GrB_Matrix_nvals (&nvals1, C)) ;
+        GRB_TRY (GrB_Matrix_nvals (&nvals1, C)) ;
 
         //----------------------------------------------------------------------
         // keep entries >= k-2 and check for convergence
         //----------------------------------------------------------------------
 
-        GrB_TRY (GrB_select (C, NULL, NULL, GrB_VALUEGE_UINT32, C, k-2, NULL)) ;
-        GrB_TRY (GrB_Matrix_nvals (&nvals2, C)) ;
+        GRB_TRY (GrB_select (C, NULL, NULL, GrB_VALUEGE_UINT32, C, k-2, NULL)) ;
+        GRB_TRY (GrB_Matrix_nvals (&nvals2, C)) ;
         if (nvals1 == nvals2)
         {
             // C is now the k-truss of G->A
@@ -169,9 +169,9 @@ int LG_check_ktruss
         // export C in CSR form for the next iteration and free it
         //----------------------------------------------------------------------
 
-        GrB_TRY (GrB_Matrix_export_UINT32 (Cp, Cj, Cx,
+        GRB_TRY (GrB_Matrix_export_UINT32 (Cp, Cj, Cx,
             &Cp_len, &Cj_len, &Cx_len, GrB_CSR_FORMAT, C)) ;
-        GrB_TRY (GrB_free (&C)) ;
+        GRB_TRY (GrB_free (&C)) ;
     }
 }
 

@@ -44,8 +44,8 @@ int LAGraph_SWrite_HeaderStart  // write the first part of the JSON header
         // SuiteSparse:GraphBLAS v6.0.0 or later
         char *library ;
         int ver [3] ;
-        GrB_TRY (GxB_get (GxB_LIBRARY_NAME, &library)) ;
-        GrB_TRY (GxB_get (GxB_LIBRARY_VERSION, ver)) ;
+        GRB_TRY (GxB_get (GxB_LIBRARY_NAME, &library)) ;
+        GRB_TRY (GxB_get (GxB_LIBRARY_VERSION, ver)) ;
         FPRINT ((f, "\"%s\", [%d,%d,%d] ],\n", library,
             ver [0], ver [1], ver [2])) ;
 

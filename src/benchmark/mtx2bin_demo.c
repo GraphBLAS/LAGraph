@@ -45,7 +45,7 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     double tic [2] ;
-    LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
+    LAGRAPH_TRY (LAGraph_Tic (tic, msg)) ;
 
     // read in the file in Matrix Market format from the input file
     FILE *f = fopen (argv [1], "r") ;
@@ -54,20 +54,20 @@ int main (int argc, char **argv)
         printf ("Matrix file not found: [%s]\n", argv [1]) ;
         exit (1) ;
     }
-    LAGraph_TRY (LAGraph_MMRead (&A, f, msg)) ;
+    LAGRAPH_TRY (LAGraph_MMRead (&A, f, msg)) ;
     fclose (f) ;
 
-    GrB_TRY (GrB_wait (A, GrB_MATERIALIZE)) ;
+    GRB_TRY (GrB_wait (A, GrB_MATERIALIZE)) ;
 
     double t_read ;
-    LAGraph_TRY (LAGraph_Toc (&t_read, tic, msg)) ;
+    LAGRAPH_TRY (LAGraph_Toc (&t_read, tic, msg)) ;
     printf ("read time: %g sec\n", t_read) ;
 
     //--------------------------------------------------------------------------
     // write to output file
     //--------------------------------------------------------------------------
 
-    LAGraph_TRY (LAGraph_Tic (tic, msg)) ;
+    LAGRAPH_TRY (LAGraph_Tic (tic, msg)) ;
     f = fopen (argv [2], "w") ;
     if (f == NULL)
     {
@@ -80,7 +80,7 @@ int main (int argc, char **argv)
         exit (1) ;
     }
     double t_binwrite ;
-    LAGraph_TRY (LAGraph_Toc (&t_binwrite, tic, msg)) ;
+    LAGRAPH_TRY (LAGraph_Toc (&t_binwrite, tic, msg)) ;
     printf ("binary write time: %g sec\n", t_binwrite) ;
 
     LG_FREE_ALL ;

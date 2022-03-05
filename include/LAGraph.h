@@ -235,29 +235,29 @@
 // @param[in,out] msg   any error messages
 
 //------------------------------------------------------------------------------
-// LAGraph_TRY: try an LAGraph method and check for errors
+// LAGRAPH_TRY: try an LAGraph method and check for errors
 //------------------------------------------------------------------------------
 
 // In a robust application, the return values from each call to LAGraph and
 // GraphBLAS should be checked, and corrective action should be taken if an
-// error occurs.  The LAGraph_TRY and GrB_TRY macros assist in this effort.
+// error occurs.  The LAGRAPH_TRY and GRB_TRY macros assist in this effort.
 
 // LAGraph and GraphBLAS are written in C, and so they cannot rely on the
 // try/catch mechanism of C++.  To accomplish a similar goal, each LAGraph file
-// must #define its own file-specific macro called LAGraph_CATCH.  The typical
+// must #define its own file-specific macro called LAGRAPH_CATCH.  The typical
 // usage of macro is to free any temporary matrices/vectors or workspace when
 // an error occurs, and then "throw" the error by returning to the caller.  A
-// user application may also #define LAGraph_CATCH and use these macros.
+// user application may also #define LAGRAPH_CATCH and use these macros.
 
 // A typical example of a user function that calls LAGraph might #define
-// LAGraph_CATCH as follows.  Suppose workvector is a GrB_vector used for
+// LAGRAPH_CATCH as follows.  Suppose workvector is a GrB_vector used for
 // computations internal to the mybfs function, and W is a (double *) space
 // created by malloc.
 
 #if example_usage_only
 
-    // an example user-defined LAGraph_CATCH macro
-    #define LAGraph_CATCH(status)                                   \
+    // an example user-defined LAGRAPH_CATCH macro
+    #define LAGRAPH_CATCH(status)                                   \
     {                                                               \
         /* an LAGraph error has occurred */                         \
         printf ("LAGraph error: (%d): file: %s, line: %d\n%s\n",    \
@@ -269,14 +269,14 @@
         return (status) ;                                           \
     }
 
-    // an example user function that uses LAGraph_TRY / LAGraph_CATCH
+    // an example user function that uses LAGRAPH_TRY / LAGRAPH_CATCH
     int mybfs (LAGraph_Graph G, GrB_Vector *parent, int64_t src)
     {
         GrB_Vector workvector = NULL ;
         double *W = NULL ;
         char msg [LAGRAPH_MSG_LEN] ;
         (*parent) = NULL ;
-        LAGraph_TRY (LAGr_BreadthFirstSearch (NULL, parent, G, src, true,
+        LAGRAPH_TRY (LAGr_BreadthFirstSearch (NULL, parent, G, src, true,
             msg)) ;
         // ...
         return (GrB_SUCCESS) ;
@@ -284,47 +284,43 @@
 
 #endif
 
-#define LAGraph_TRY(LAGraph_method)             \
+#define LAGRAPH_TRY(LAGraph_method)             \
 {                                               \
-    int LAGraph_status = LAGraph_method ;       \
-    if (LAGraph_status < GrB_SUCCESS)           \
+    int LG_status = LAGraph_method ;            \
+    if (LG_status < GrB_SUCCESS)                \
     {                                           \
-        LAGraph_CATCH (LAGraph_status) ;        \
+        LAGRAPH_CATCH (LG_status) ;             \
     }                                           \
 }
 
 //------------------------------------------------------------------------------
-// GrB_TRY: try a GraphBLAS method and check for errors
+// GRB_TRY: try a GraphBLAS method and check for errors
 //------------------------------------------------------------------------------
 
 // LAGraph provides a similar functionality for calling GraphBLAS methods.
 // GraphBLAS returns info = 0 (GrB_SUCCESS) or 1 (GrB_NO_VALUE) on success, and
-// a value < 0 on failure.  The user application must #define GrB_CATCH to use
-// GrB_TRY.  Note that GraphBLAS_info is internal to this macro.  If the
+// a value < 0 on failure.  The user application must #define GRB_CATCH to use
+// GRB_TRY.  Note that GraphBLAS_info is internal to this macro.  If the
 // user application or LAGraph method wants a copy, a statement such as
 // info = GraphBLAS_info ; where info is defined outside of this macro.
 
 // GraphBLAS and LAGraph both use the convention that negative values are
 // errors, and the LAGraph_status is a superset of the GrB_Info enum.  As a
-// result, the user can define LAGraph_CATCH and GrB_TRY as the same operation.
+// result, the user can define LAGRAPH_CATCH and GRB_TRY as the same operation.
 // The main difference between the two would be the error message string.  For
-// LAGraph, the string is the last parameter, and LAGraph_CATCH can optionally
+// LAGraph, the string is the last parameter, and LAGRAPH_CATCH can optionally
 // print it out.  For GraphBLAS, the GrB_error mechanism can return a string.
 
-#define GrB_TRY(GrB_method)                                                  \
-{                                                                            \
-    GrB_Info GraphBLAS_info = GrB_method ;                                   \
-    if (GraphBLAS_info < GrB_SUCCESS)                                        \
-    {                                                                        \
-        GrB_CATCH (GraphBLAS_info) ;                                         \
-    }                                                                        \
+#define GRB_TRY(GrB_method)                     \
+{                                               \
+    GrB_Info LG_GrB_Info = GrB_method ;         \
+    if (LG_GrB_Info < GrB_SUCCESS)              \
+    {                                           \
+        GRB_CATCH (LG_GrB_Info) ;               \
+    }                                           \
 }
 
 // FIXME: start here on Mar 8, 2022
-// FIXME: change to LAGRAPH_TRY and LAGRAPH_CATCH?
-// FIXME: change to GRB_TRY and GRB_CATCH?
-// FIXME: Tim D. changed all enums from LAGRAPH_* to LAGraph_*
-//        to match the capitialization of enums in GraphBLAS.  Discuss.
 
 //==============================================================================
 // LAGraph memory management

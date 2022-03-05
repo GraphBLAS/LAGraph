@@ -46,8 +46,8 @@ int LG_Vector_Print_ ## suffix                                              \
     if (prl <= 0) return (GrB_SUCCESS) ;                                    \
     /* get basic properties */                                              \
     GrB_Index n, nvals ;                                                    \
-    GrB_TRY (GrB_Vector_size  (&n, v)) ;                                    \
-    GrB_TRY (GrB_Vector_nvals (&nvals, v)) ;                                \
+    GRB_TRY (GrB_Vector_size  (&n, v)) ;                                    \
+    GRB_TRY (GrB_Vector_nvals (&nvals, v)) ;                                \
     /* print header line */                                                 \
     FPRINTF (f, "%s vector: n: %" PRIu64 " entries: %" PRIu64               \
         "\n", LG_XSTR (gtype), n, nvals) ;                                  \
@@ -59,7 +59,7 @@ int LG_Vector_Print_ ## suffix                                              \
     GrB_Info info = GrB_Vector_extractTuples (I, X, &nvals, v) ;            \
     LG_ASSERT_MSG (info != GrB_DOMAIN_MISMATCH,                             \
         GrB_NOT_IMPLEMENTED, "type not supported") ;                        \
-    GrB_TRY (info) ;                                                        \
+    GRB_TRY (info) ;                                                        \
     /* determine the format */                                              \
     char *format = (prl <= 3) ? fmt1 : fmt2 ;                               \
     bool summary = (prl == 2 || prl == 4) && (nvals > 30) ;                 \

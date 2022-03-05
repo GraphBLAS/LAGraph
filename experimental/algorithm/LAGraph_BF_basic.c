@@ -60,18 +60,18 @@ GrB_Info LAGraph_BF_basic
     LG_ASSERT (A != NULL && pd_output != NULL, GrB_NULL_POINTER) ;
 
     *pd_output = NULL;
-    GrB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
-    GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
+    GRB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
+    GRB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
     LG_ASSERT_MSG (nrows == ncols, -1002, "A must be square") ;
     GrB_Index n = nrows;           // n = # of vertices in graph
     LG_ASSERT_MSG (s < n, GrB_INVALID_INDEX, "invalid source node") ;
 
     // Initialize distance vector, change the d[s] to 0
-    GrB_TRY (GrB_Vector_new(&d, GrB_FP64, n));
-    GrB_TRY (GrB_Vector_setElement_FP64(d, 0, s));
+    GRB_TRY (GrB_Vector_new(&d, GrB_FP64, n));
+    GRB_TRY (GrB_Vector_setElement_FP64(d, 0, s));
 
     // copy d to dtmp in order to create a same size of vector
-    GrB_TRY (GrB_Vector_dup(&dtmp, d));
+    GRB_TRY (GrB_Vector_dup(&dtmp, d));
 
     int64_t iter = 0;      //number of iterations
     bool same = false;     //variable indicating if d=dtmp
@@ -84,7 +84,7 @@ GrB_Info LAGraph_BF_basic
         LAGraph_Tic(tic, NULL);
 
         // execute semiring on d and A, and save the result to d
-        GrB_TRY (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, GrB_MIN_PLUS_SEMIRING_FP64, d, A,
+        GRB_TRY (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, GrB_MIN_PLUS_SEMIRING_FP64, d, A,
             GrB_NULL));
         LG_TRY (LAGraph_Vector_IsEqual (&same, dtmp, d, NULL));
         if (!same)
@@ -97,7 +97,7 @@ GrB_Info LAGraph_BF_basic
         double t;
         LAGraph_Toc (&t, tic, NULL );
         GrB_Index dnz ;
-        GrB_TRY (GrB_Vector_nvals (&dnz, d)) ;
+        GRB_TRY (GrB_Vector_nvals (&dnz, d)) ;
 //      printf ("step %3d time %16.4f sec, nvals %.16g\n", iter, t, (double) dnz);
         fflush (stdout) ;
     }
@@ -107,7 +107,7 @@ GrB_Info LAGraph_BF_basic
     if (!same)
     {
         // execute semiring again to check for negative-weight cycle
-        GrB_TRY (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, GrB_MIN_PLUS_SEMIRING_FP64, d, A,
+        GRB_TRY (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, GrB_MIN_PLUS_SEMIRING_FP64, d, A,
             GrB_NULL));
         LG_TRY (LAGraph_Vector_IsEqual (&same, dtmp, d, NULL));
 

@@ -42,8 +42,8 @@ static GrB_Info Reduce_assign
     GrB_Index *ind  = mem ;
     GrB_Index *sval = ind + n ;
     GrB_Index *wval = sval + n ;
-    GrB_TRY (GrB_Vector_extractTuples (ind, wval, &n, w)) ;
-    GrB_TRY (GrB_Vector_extractTuples (ind, sval, &n, s)) ;
+    GRB_TRY (GrB_Vector_extractTuples (ind, wval, &n, w)) ;
+    GRB_TRY (GrB_Vector_extractTuples (ind, sval, &n, s)) ;
     for (GrB_Index j = 0 ; j < n ; j++)
     {
         if (sval [j] < wval [Px [j]])
@@ -51,8 +51,8 @@ static GrB_Info Reduce_assign
             wval [Px [j]] = sval [j] ;
         }
     }
-    GrB_TRY (GrB_Vector_clear (w)) ;
-    GrB_TRY (GrB_Vector_build (w, ind, wval, n, GrB_PLUS_UINT64)) ;
+    GRB_TRY (GrB_Vector_clear (w)) ;
+    GRB_TRY (GrB_Vector_build (w, ind, wval, n, GrB_PLUS_UINT64)) ;
     LG_FREE_ALL ;
     return (GrB_SUCCESS) ;
 }
@@ -134,12 +134,12 @@ int LG_CC_Boruvka
     // S = structure of G->A
     LG_TRY (LAGraph_Matrix_Structure (&S, G->A, msg)) ;
 
-    GrB_TRY (GrB_Matrix_nrows (&n, S)) ;
-    GrB_TRY (GrB_Vector_new (&parent, GrB_UINT64, n)) ; // final result
-    GrB_TRY (GrB_Vector_new (&gp, GrB_UINT64, n)) ;     // grandparents
-    GrB_TRY (GrB_Vector_new (&mnp, GrB_UINT64, n)) ;    // min neighbor parent
-    GrB_TRY (GrB_Vector_new (&ccmn, GrB_UINT64, n)) ;   // cc's min neighbor
-    GrB_TRY (GrB_Vector_new (&mask, GrB_BOOL, n)) ;     // various uses
+    GRB_TRY (GrB_Matrix_nrows (&n, S)) ;
+    GRB_TRY (GrB_Vector_new (&parent, GrB_UINT64, n)) ; // final result
+    GRB_TRY (GrB_Vector_new (&gp, GrB_UINT64, n)) ;     // grandparents
+    GRB_TRY (GrB_Vector_new (&mnp, GrB_UINT64, n)) ;    // min neighbor parent
+    GRB_TRY (GrB_Vector_new (&ccmn, GrB_UINT64, n)) ;   // cc's min neighbor
+    GRB_TRY (GrB_Vector_new (&mask, GrB_BOOL, n)) ;     // various uses
 
     mem = (GrB_Index *) LAGraph_Malloc (3*n, sizeof (GrB_Index)) ;
     Px = (GrB_Index *) LAGraph_Malloc (n, sizeof (GrB_Index)) ;
@@ -152,19 +152,19 @@ int LG_CC_Boruvka
     #endif
 
     // parent = 0:n-1, and copy to ramp
-    GrB_TRY (GrB_assign (parent, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
-    GrB_TRY (GrB_apply  (parent, NULL, NULL, GrB_ROWINDEX_INT64, parent, 0,
+    GRB_TRY (GrB_assign (parent, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
+    GRB_TRY (GrB_apply  (parent, NULL, NULL, GrB_ROWINDEX_INT64, parent, 0,
         NULL)) ;
-    GrB_TRY (GrB_Vector_dup (&ramp, parent)) ;
+    GRB_TRY (GrB_Vector_dup (&ramp, parent)) ;
 
     // Px is a non-opaque copy of the parent GrB_Vector
-    GrB_TRY (GrB_Vector_extractTuples (I, Px, &n, parent)) ;
+    GRB_TRY (GrB_Vector_extractTuples (I, Px, &n, parent)) ;
 
-    GrB_TRY (GrB_IndexUnaryOp_new (&select_op, my_select_func, GrB_BOOL,
+    GRB_TRY (GrB_IndexUnaryOp_new (&select_op, my_select_func, GrB_BOOL,
         /* aij: ignored */ GrB_BOOL, /* y: pointer to Px */ GrB_UINT64)) ;
 
     GrB_Index nvals ;
-    GrB_TRY (GrB_Matrix_nvals (&nvals, S)) ;
+    GRB_TRY (GrB_Matrix_nvals (&nvals, S)) ;
 
     //--------------------------------------------------------------------------
     // find the connected components
@@ -178,8 +178,8 @@ int LG_CC_Boruvka
         //----------------------------------------------------------------------
 
         // every vertex points to a root vertex at the begining
-        GrB_TRY (GrB_assign (mnp, NULL, NULL, n, GrB_ALL, n, NULL)) ;
-        GrB_TRY (GrB_mxv (mnp, NULL, GrB_MIN_UINT64,
+        GRB_TRY (GrB_assign (mnp, NULL, NULL, n, GrB_ALL, n, NULL)) ;
+        GRB_TRY (GrB_mxv (mnp, NULL, GrB_MIN_UINT64,
                     GrB_MIN_SECOND_SEMIRING_UINT64, S, parent, NULL)) ;
 
         //----------------------------------------------------------------------
@@ -188,17 +188,17 @@ int LG_CC_Boruvka
 
         // ccmn[u] = connect component's minimum neighbor | if u is a root
         //         = n                                    | otherwise
-        GrB_TRY (GrB_assign (ccmn, NULL, NULL, n, GrB_ALL, n, NULL)) ;
-        GrB_TRY (Reduce_assign (ccmn, mnp, Px, mem, n)) ;
+        GRB_TRY (GrB_assign (ccmn, NULL, NULL, n, GrB_ALL, n, NULL)) ;
+        GRB_TRY (Reduce_assign (ccmn, mnp, Px, mem, n)) ;
 
         //----------------------------------------------------------------------
         // parent[u] = ccmn[u] if ccmn[u] != n
         //----------------------------------------------------------------------
 
         // mask = (ccnm != n)
-        GrB_TRY (GrB_apply (mask, NULL, NULL, GrB_NE_UINT64, ccmn, n, NULL)) ;
+        GRB_TRY (GrB_apply (mask, NULL, NULL, GrB_NE_UINT64, ccmn, n, NULL)) ;
         // parent<mask> = ccmn
-        GrB_TRY (GrB_assign (parent, mask, NULL, ccmn, GrB_ALL, n, NULL)) ;
+        GRB_TRY (GrB_assign (parent, mask, NULL, ccmn, GrB_ALL, n, NULL)) ;
 
         //----------------------------------------------------------------------
         // select new roots
@@ -209,14 +209,14 @@ int LG_CC_Boruvka
         // if (parent [parent [i]] == i) parent [i] = min (parent [i], i)
 
         // compute grandparents: gp = parent (parent)
-        GrB_TRY (GrB_Vector_extractTuples (I, Px, &n, parent)) ;
-        GrB_TRY (GrB_extract (gp, NULL, NULL, parent, Px, n, NULL)) ;
+        GRB_TRY (GrB_Vector_extractTuples (I, Px, &n, parent)) ;
+        GRB_TRY (GrB_extract (gp, NULL, NULL, parent, Px, n, NULL)) ;
 
         // mask = (gp == 0:n-1)
-        GrB_TRY (GrB_eWiseMult (mask, NULL, NULL, GrB_EQ_UINT64, gp, ramp,
+        GRB_TRY (GrB_eWiseMult (mask, NULL, NULL, GrB_EQ_UINT64, gp, ramp,
             NULL)) ;
         // parent<mask> = min (parent, ramp)
-        GrB_TRY (GrB_assign (parent, mask, GrB_MIN_UINT64, ramp, GrB_ALL, n,
+        GRB_TRY (GrB_assign (parent, mask, GrB_MIN_UINT64, ramp, GrB_ALL, n,
             NULL)) ;
 
         //----------------------------------------------------------------------
@@ -227,18 +227,18 @@ int LG_CC_Boruvka
         while (true)
         {
             // compute grandparents: gp = parent (parent)
-            GrB_TRY (GrB_Vector_extractTuples (I, Px, &n, parent)) ;
-            GrB_TRY (GrB_extract (gp, NULL, NULL, parent, Px, n, NULL)) ;
+            GRB_TRY (GrB_Vector_extractTuples (I, Px, &n, parent)) ;
+            GRB_TRY (GrB_extract (gp, NULL, NULL, parent, Px, n, NULL)) ;
 
             // changing = or (parent != gp)
-            GrB_TRY (GrB_eWiseMult (mask, NULL, NULL, GrB_NE_UINT64, parent, gp,
+            GRB_TRY (GrB_eWiseMult (mask, NULL, NULL, GrB_NE_UINT64, parent, gp,
                 NULL)) ;
-            GrB_TRY (GrB_reduce (&changing, NULL, GrB_LOR_MONOID_BOOL, mask,
+            GRB_TRY (GrB_reduce (&changing, NULL, GrB_LOR_MONOID_BOOL, mask,
                 NULL)) ;
             if (!changing) break ;
 
             // parent = gp
-            GrB_TRY (GrB_assign (parent, NULL, NULL, gp, GrB_ALL, n, NULL)) ;
+            GRB_TRY (GrB_assign (parent, NULL, NULL, gp, GrB_ALL, n, NULL)) ;
         }
 
         //----------------------------------------------------------------------
@@ -247,8 +247,8 @@ int LG_CC_Boruvka
 
         // This step is the costliest part of this algorithm when dealing with
         // large matrices.
-        GrB_TRY (GrB_select (S, NULL, NULL, select_op, S, (uint64_t) Px, NULL));
-        GrB_TRY (GrB_Matrix_nvals (&nvals, S)) ;
+        GRB_TRY (GrB_select (S, NULL, NULL, select_op, S, (uint64_t) Px, NULL));
+        GRB_TRY (GrB_Matrix_nvals (&nvals, S)) ;
     }
 
     //--------------------------------------------------------------------------

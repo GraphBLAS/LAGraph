@@ -46,7 +46,7 @@ int LAGraph_Delete
     // delete the primary contents of the graph, and the graph itself
     //--------------------------------------------------------------------------
 
-    GrB_TRY (GrB_free (&((*G)->A))) ;
+    GRB_TRY (GrB_free (&((*G)->A))) ;
     LAGraph_Free ((void **) G) ;
     return (GrB_SUCCESS) ;
 }

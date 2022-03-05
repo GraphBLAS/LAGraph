@@ -40,8 +40,8 @@ int LG_ndiag
     (*ndiag) = LAGRAPH_UNKNOWN ;
 
     GrB_Index nrows, ncols ;
-    GrB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
-    GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
+    GRB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
+    GRB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
     GrB_Index n = LAGRAPH_MIN (nrows, ncols) ;
 
     GrB_Type atype ;
@@ -55,9 +55,9 @@ int LG_ndiag
         // SuiteSparse:GraphBLAS v5.0.2: use GxB_Vector_diag
         //----------------------------------------------------------------------
 
-        GrB_TRY (GrB_Vector_new (&d, atype, n)) ;
-        GrB_TRY (GxB_Vector_diag (d, A, 0, NULL)) ;
-        GrB_TRY (GrB_Vector_nvals ((GrB_Index *) ndiag, d)) ;
+        GRB_TRY (GrB_Vector_new (&d, atype, n)) ;
+        GRB_TRY (GxB_Vector_diag (d, A, 0, NULL)) ;
+        GRB_TRY (GrB_Vector_nvals ((GrB_Index *) ndiag, d)) ;
 
     #else
 
@@ -65,18 +65,18 @@ int LG_ndiag
         // pure GrB version with no GxB extensions
         //----------------------------------------------------------------------
 
-        GrB_TRY (GrB_Matrix_new (&M, GrB_BOOL, nrows, ncols)) ;
-        GrB_TRY (GrB_Matrix_new (&D, atype, nrows, ncols)) ;
+        GRB_TRY (GrB_Matrix_new (&M, GrB_BOOL, nrows, ncols)) ;
+        GRB_TRY (GrB_Matrix_new (&D, atype, nrows, ncols)) ;
         for (int64_t i = 0 ; i < n ; i++)
         {
             // M (i,i) = true
-            GrB_TRY (GrB_Matrix_setElement (M, (bool) true, i, i)) ;
+            GRB_TRY (GrB_Matrix_setElement (M, (bool) true, i, i)) ;
         }
 
         // D<M,struct> = A
-        GrB_TRY (GrB_assign (D, M, NULL, A, GrB_ALL, nrows, GrB_ALL, ncols,
+        GRB_TRY (GrB_assign (D, M, NULL, A, GrB_ALL, nrows, GrB_ALL, ncols,
             GrB_DESC_S)) ;
-        GrB_TRY (GrB_Matrix_nvals ((GrB_Index *) ndiag, D)) ;
+        GRB_TRY (GrB_Matrix_nvals ((GrB_Index *) ndiag, D)) ;
 
     #endif
 

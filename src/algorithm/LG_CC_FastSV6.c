@@ -71,7 +71,7 @@ static inline GrB_Info fastsv
 )
 {
     GrB_Index n ;
-    GrB_TRY (GrB_Vector_size (&n, parent)) ;
+    GRB_TRY (GrB_Vector_size (&n, parent)) ;
     GrB_Index Cp_size = (n+1) * sizeof (GrB_Index) ;
     GrB_Index Ci_size = n * sizeof (GrB_Index) ;
     GrB_Index Cx_size = sizeof (bool) ;
@@ -85,7 +85,7 @@ static inline GrB_Info fastsv
         //----------------------------------------------------------------------
 
         // mngp = min (mngp, A*gp) using the MIN_SECOND semiring
-        GrB_TRY (GrB_mxv (mngp, NULL, min, min_2nd, A, *gp, NULL)) ;
+        GRB_TRY (GrB_mxv (mngp, NULL, min, min_2nd, A, *gp, NULL)) ;
 
         //----------------------------------------------------------------------
         // parent = min (parent, C*mngp) where C(i,j) is present if i=Px(j)
@@ -117,36 +117,36 @@ static inline GrB_Info fastsv
         // equal to false.
 
         // pack Cp, Px, and Cx into a matrix C with C(i,j) present if Px(j) == i
-        GrB_TRY (GxB_Matrix_pack_CSC (C, Cp, /* Px is Ci: */ Px, Cx,
+        GRB_TRY (GxB_Matrix_pack_CSC (C, Cp, /* Px is Ci: */ Px, Cx,
             Cp_size, Ci_size, Cx_size, iso, jumbled, NULL)) ;
 
         // parent = min (parent, C*mngp) using the MIN_SECOND semiring
-        GrB_TRY (GrB_mxv (parent, NULL, min, min_2nd, C, mngp, NULL)) ;
+        GRB_TRY (GrB_mxv (parent, NULL, min, min_2nd, C, mngp, NULL)) ;
 
         // unpack the contents of C, to make Px available to this method again.
-        GrB_TRY (GxB_Matrix_unpack_CSC (C, Cp, Px, Cx,
+        GRB_TRY (GxB_Matrix_unpack_CSC (C, Cp, Px, Cx,
             &Cp_size, &Ci_size, &Cx_size, &iso, &jumbled, NULL)) ;
 
         //----------------------------------------------------------------------
         // parent = min (parent, mngp, gp)
         //----------------------------------------------------------------------
 
-        GrB_TRY (GrB_eWiseAdd (parent, NULL, min, min, mngp, *gp, NULL)) ;
+        GRB_TRY (GrB_eWiseAdd (parent, NULL, min, min, mngp, *gp, NULL)) ;
 
         //----------------------------------------------------------------------
         // calculate grandparent: gp_new = parent (parent), and extract Px
         //----------------------------------------------------------------------
 
         // if parent is uint32, GraphBLAS typecasts to uint64 for Px.
-        GrB_TRY (GrB_Vector_extractTuples (NULL, *Px, &n, parent)) ;
-        GrB_TRY (GrB_extract (*gp_new, NULL, NULL, parent, *Px, n, NULL)) ;
+        GRB_TRY (GrB_Vector_extractTuples (NULL, *Px, &n, parent)) ;
+        GRB_TRY (GrB_extract (*gp_new, NULL, NULL, parent, *Px, n, NULL)) ;
 
         //----------------------------------------------------------------------
         // terminate if gp and gp_new are the same
         //----------------------------------------------------------------------
 
-        GrB_TRY (GrB_eWiseMult (t, NULL, NULL, eq, *gp_new, *gp, NULL)) ;
-        GrB_TRY (GrB_reduce (&done, NULL, GrB_LAND_MONOID_BOOL, t, NULL)) ;
+        GRB_TRY (GrB_eWiseMult (t, NULL, NULL, eq, *gp_new, *gp, NULL)) ;
+        GRB_TRY (GrB_reduce (&done, NULL, GrB_LAND_MONOID_BOOL, t, NULL)) ;
         if (done) break ;
 
         // swap gp and gp_new
@@ -238,8 +238,8 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     //--------------------------------------------------------------------------
 
     GrB_Matrix A = G->A ;
-    GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
-    GrB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
+    GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
+    GRB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
 
     // determine the integer type, operators, and semirings to use 
     GrB_Type Uint, Int ;
@@ -298,12 +298,12 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     LG_ASSERT (Px != NULL && Cx != NULL, GrB_OUT_OF_MEMORY) ;
 
     // create Cp = 0:n (always 64-bit) and the empty C matrix
-    GrB_TRY (GrB_Matrix_new (&C, GrB_BOOL, n, n)) ;
-    GrB_TRY (GrB_Vector_new (&t, GrB_INT64, n+1)) ;
-    GrB_TRY (GrB_assign (t, NULL, NULL, 0, GrB_ALL, n+1, NULL)) ;
-    GrB_TRY (GrB_apply (t, NULL, NULL, GrB_ROWINDEX_INT64, t, 0, NULL)) ;
-    GrB_TRY (GxB_Vector_unpack_Full (t, (void **) &Cp, &Cp_size, NULL, NULL)) ;
-    GrB_TRY (GrB_free (&t)) ;
+    GRB_TRY (GrB_Matrix_new (&C, GrB_BOOL, n, n)) ;
+    GRB_TRY (GrB_Vector_new (&t, GrB_INT64, n+1)) ;
+    GRB_TRY (GrB_assign (t, NULL, NULL, 0, GrB_ALL, n+1, NULL)) ;
+    GRB_TRY (GrB_apply (t, NULL, NULL, GrB_ROWINDEX_INT64, t, 0, NULL)) ;
+    GRB_TRY (GxB_Vector_unpack_Full (t, (void **) &Cp, &Cp_size, NULL, NULL)) ;
+    GRB_TRY (GrB_free (&t)) ;
 
     //--------------------------------------------------------------------------
     // warmup: parent = min (0:n-1, A*1) using the MIN_SECONDI semiring
@@ -315,30 +315,30 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     // is the minimum index j, so only the first entry in A(i,:) needs to be
     // considered for each row i.
 
-    GrB_TRY (GrB_Vector_new (&t, Int, n)) ;
-    GrB_TRY (GrB_Vector_new (&y, Int, n)) ;
-    GrB_TRY (GrB_assign (t, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
-    GrB_TRY (GrB_assign (y, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
-    GrB_TRY (GrB_apply (y, NULL, NULL, ramp, y, 0, NULL)) ;
-    GrB_TRY (GrB_mxv (y, NULL, imin, min_2ndi, A, t, NULL)) ;
-    GrB_TRY (GrB_free (&t)) ;
+    GRB_TRY (GrB_Vector_new (&t, Int, n)) ;
+    GRB_TRY (GrB_Vector_new (&y, Int, n)) ;
+    GRB_TRY (GrB_assign (t, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
+    GRB_TRY (GrB_assign (y, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
+    GRB_TRY (GrB_apply (y, NULL, NULL, ramp, y, 0, NULL)) ;
+    GRB_TRY (GrB_mxv (y, NULL, imin, min_2ndi, A, t, NULL)) ;
+    GRB_TRY (GrB_free (&t)) ;
 
     // The typecast from Int to Uint is required because the ROWINDEX operator
     // and MIN_SECONDI do not work in the UINT* domains, as built-in operators.
     // parent = (Uint) y
-    GrB_TRY (GrB_Vector_new (&parent, Uint, n)) ;
-    GrB_TRY (GrB_assign (parent, NULL, NULL, y, GrB_ALL, n, NULL)) ;
-    GrB_TRY (GrB_free (&y)) ;
+    GRB_TRY (GrB_Vector_new (&parent, Uint, n)) ;
+    GRB_TRY (GrB_assign (parent, NULL, NULL, y, GrB_ALL, n, NULL)) ;
+    GRB_TRY (GrB_free (&y)) ;
 
     // copy parent into gp, mngp, and Px.  Px is a non-opaque 64-bit copy of the
     // parent GrB_Vector.  The Px array is always of type GrB_Index since it
     // must be used as the input array for extractTuples and as Ci for pack_CSR.
     // If parent is uint32, GraphBLAS typecasts it to the uint64 Px array.
-    GrB_TRY (GrB_Vector_extractTuples (NULL, Px, &n, parent)) ;
-    GrB_TRY (GrB_Vector_dup (&gp, parent)) ;
-    GrB_TRY (GrB_Vector_dup (&mngp, parent)) ;
-    GrB_TRY (GrB_Vector_new (&gp_new, Uint, n)) ;
-    GrB_TRY (GrB_Vector_new (&t, GrB_BOOL, n)) ;
+    GRB_TRY (GrB_Vector_extractTuples (NULL, Px, &n, parent)) ;
+    GRB_TRY (GrB_Vector_dup (&gp, parent)) ;
+    GRB_TRY (GrB_Vector_dup (&mngp, parent)) ;
+    GRB_TRY (GrB_Vector_new (&gp_new, Uint, n)) ;
+    GRB_TRY (GrB_Vector_new (&t, GrB_BOOL, n)) ;
 
     //--------------------------------------------------------------------------
     // sample phase
@@ -380,7 +380,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         void *Ax ;
         GrB_Index *Ap, *Aj, Ap_size, Aj_size, Ax_size ;
         bool A_jumbled, A_iso ;
-        GrB_TRY (GxB_Matrix_unpack_CSR (A, &Ap, &Aj, &Ax,
+        GRB_TRY (GxB_Matrix_unpack_CSR (A, &Ap, &Aj, &Ax,
             &Ap_size, &Aj_size, &Ax_size, &A_iso, &A_jumbled, NULL)) ;
 
         //----------------------------------------------------------------------
@@ -458,8 +458,8 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         // import the result into the GrB_Matrix T
         //----------------------------------------------------------------------
 
-        GrB_TRY (GrB_Matrix_new (&T, GrB_BOOL, n, n)) ;
-        GrB_TRY (GxB_Matrix_pack_CSR (T, &Tp, &Tj, &Tx, Tp_size, Tj_size,
+        GRB_TRY (GrB_Matrix_new (&T, GrB_BOOL, n, n)) ;
+        GRB_TRY (GxB_Matrix_pack_CSR (T, &Tp, &Tj, &Tx, Tp_size, Tj_size,
             Tx_size, /* T is iso: */ true, A_jumbled, NULL)) ;
 
 // ] todo: the above will all be done as a single call to GxB_select.
@@ -468,7 +468,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         // find the connected components of T
         //----------------------------------------------------------------------
 
-        GrB_TRY (fastsv (T, parent, mngp, &gp, &gp_new, t, eq, min, min_2nd,
+        GRB_TRY (fastsv (T, parent, mngp, &gp, &gp_new, t, eq, min, min_2nd,
             C, &Cp, &Px, &Cx, msg)) ;
 
         //----------------------------------------------------------------------
@@ -543,7 +543,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
 
         // unpack T to reuse the space (all content is overwritten below)
         bool T_jumbled, T_iso ;
-        GrB_TRY (GxB_Matrix_unpack_CSR (T, &Tp, &Tj, &Tx, &Tp_size, &Tj_size,
+        GRB_TRY (GxB_Matrix_unpack_CSR (T, &Tp, &Tj, &Tx, &Tp_size, &Tj_size,
             &Tx_size, &T_iso, &T_jumbled, NULL)) ;
 
         #pragma omp parallel for num_threads(nthreads) schedule(static)
@@ -615,11 +615,11 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         Tp [n] = nvals ;
 
         // pack T for the final phase
-        GrB_TRY (GxB_Matrix_pack_CSR (T, &Tp, &Tj, &Tx, Tp_size, Tj_size,
+        GRB_TRY (GxB_Matrix_pack_CSR (T, &Tp, &Tj, &Tx, Tp_size, Tj_size,
             Tx_size, T_iso, /* T is now jumbled */ true, NULL)) ;
 
         // pack A (unchanged since last unpack); this is the original G->A.
-        GrB_TRY (GxB_Matrix_pack_CSR (A, &Ap, &Aj, &Ax, Ap_size, Aj_size,
+        GRB_TRY (GxB_Matrix_pack_CSR (A, &Ap, &Aj, &Ax, Ap_size, Aj_size,
             Ax_size, A_iso, A_jumbled, NULL)) ;
 
 // ].  The unpack/pack of A into Ap, Aj, Ax will not be needed, and G->A
@@ -647,7 +647,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     // final phase
     //--------------------------------------------------------------------------
 
-    GrB_TRY (fastsv (A, parent, mngp, &gp, &gp_new, t, eq, min, min_2nd,
+    GRB_TRY (fastsv (A, parent, mngp, &gp, &gp_new, t, eq, min, min_2nd,
         C, &Cp, &Px, &Cx, msg)) ;
 
     //--------------------------------------------------------------------------

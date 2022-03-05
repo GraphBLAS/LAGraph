@@ -67,21 +67,21 @@ static int tricount_prep
 )
 {
     GrB_Index n ;
-    GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
+    GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
 
     if (L != NULL)
     {
         // L = tril (A,-1)
-        GrB_TRY (GrB_Matrix_new (L, GrB_BOOL, n, n)) ;
-        GrB_TRY (GrB_select (*L, NULL, NULL, GrB_TRIL, A, (int64_t) (-1),
+        GRB_TRY (GrB_Matrix_new (L, GrB_BOOL, n, n)) ;
+        GRB_TRY (GrB_select (*L, NULL, NULL, GrB_TRIL, A, (int64_t) (-1),
             NULL)) ;
     }
 
     if (U != NULL)
     {
         // U = triu (A,1)
-        GrB_TRY (GrB_Matrix_new (U, GrB_BOOL, n, n)) ;
-        GrB_TRY (GrB_select (*U, NULL, NULL, GrB_TRIU, A, (int64_t) 1, NULL)) ;
+        GRB_TRY (GrB_Matrix_new (U, GrB_BOOL, n, n)) ;
+        GRB_TRY (GrB_select (*U, NULL, NULL, GrB_TRIU, A, (int64_t) 1, NULL)) ;
     }
     return (GrB_SUCCESS) ;
 }
@@ -175,8 +175,8 @@ int LAGr_TriangleCount
     //--------------------------------------------------------------------------
 
     GrB_Index n ;
-    GrB_TRY (GrB_Matrix_nrows (&n, A)) ;
-    GrB_TRY (GrB_Matrix_new (&C, GrB_INT64, n, n)) ;
+    GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
+    GRB_TRY (GrB_Matrix_new (&C, GrB_INT64, n, n)) ;
     GrB_Semiring semiring = LAGraph_plus_one_int64 ;
     GrB_Monoid monoid = GrB_PLUS_MONOID_INT64 ;
 
@@ -208,7 +208,7 @@ int LAGr_TriangleCount
 
             #define NSAMPLES 1000
             GrB_Index nvals ;
-            GrB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
+            GRB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
             if (n > NSAMPLES && ((double) nvals / ((double) n)) >= 10)
             {
                 // estimate the mean and median degrees
@@ -254,8 +254,8 @@ int LAGr_TriangleCount
             (*presort) == LAGraph_TriangleCount_Ascending, msg)) ;
 
         // T = A (P,P) and typecast to boolean
-        GrB_TRY (GrB_Matrix_new (&T, GrB_BOOL, n, n)) ;
-        GrB_TRY (GrB_extract (T, NULL, NULL, A, (GrB_Index *) P, n,
+        GRB_TRY (GrB_Matrix_new (&T, GrB_BOOL, n, n)) ;
+        GRB_TRY (GrB_extract (T, NULL, NULL, A, (GrB_Index *) P, n,
             (GrB_Index *) P, n, NULL)) ;
         A = T ;
 
@@ -274,16 +274,16 @@ int LAGr_TriangleCount
 
         case LAGraph_TriangleCount_Burkhardt:  // 1: sum (sum ((A^2) .* A)) / 6
 
-            GrB_TRY (GrB_mxm (C, A, NULL, semiring, A, A, GrB_DESC_S)) ;
-            GrB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
+            GRB_TRY (GrB_mxm (C, A, NULL, semiring, A, A, GrB_DESC_S)) ;
+            GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             ntri /= 6 ;
             break ;
 
         case LAGraph_TriangleCount_Cohen: // 2: sum (sum ((L * U) .* A)) / 2
 
             LG_TRY (tricount_prep (&L, &U, A, msg)) ;
-            GrB_TRY (GrB_mxm (C, A, NULL, semiring, L, U, GrB_DESC_S)) ;
-            GrB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
+            GRB_TRY (GrB_mxm (C, A, NULL, semiring, L, U, GrB_DESC_S)) ;
+            GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             ntri /= 2 ;
             break ;
 
@@ -291,16 +291,16 @@ int LAGr_TriangleCount
 
             // using the masked saxpy3 method
             LG_TRY (tricount_prep (&L, NULL, A, msg)) ;
-            GrB_TRY (GrB_mxm (C, L, NULL, semiring, L, L, GrB_DESC_S)) ;
-            GrB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
+            GRB_TRY (GrB_mxm (C, L, NULL, semiring, L, L, GrB_DESC_S)) ;
+            GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             break ;
 
         case LAGraph_TriangleCount_Sandia2: // 4: sum (sum ((U * U) .* U))
 
             // using the masked saxpy3 method
             LG_TRY (tricount_prep (NULL, &U, A, msg)) ;
-            GrB_TRY (GrB_mxm (C, U, NULL, semiring, U, U, GrB_DESC_S)) ;
-            GrB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
+            GRB_TRY (GrB_mxm (C, U, NULL, semiring, U, U, GrB_DESC_S)) ;
+            GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             break ;
 
         default:
@@ -311,16 +311,16 @@ int LAGr_TriangleCount
 
             // using the masked dot product
             LG_TRY (tricount_prep (&L, &U, A, msg)) ;
-            GrB_TRY (GrB_mxm (C, L, NULL, semiring, L, U, GrB_DESC_ST1)) ;
-            GrB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
+            GRB_TRY (GrB_mxm (C, L, NULL, semiring, L, U, GrB_DESC_ST1)) ;
+            GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             break ;
 
         case LAGraph_TriangleCount_SandiaDot2: // 6: sum (sum ((U * L') .* U))
 
             // using the masked dot product
             LG_TRY (tricount_prep (&L, &U, A, msg)) ;
-            GrB_TRY (GrB_mxm (C, U, NULL, semiring, U, L, GrB_DESC_ST1)) ;
-            GrB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
+            GRB_TRY (GrB_mxm (C, U, NULL, semiring, U, L, GrB_DESC_ST1)) ;
+            GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             break ;
     }
 

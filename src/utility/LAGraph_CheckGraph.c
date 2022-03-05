@@ -37,8 +37,8 @@ int LAGraph_CheckGraph
     if (kind == LAGraph_ADJACENCY_UNDIRECTED ||
         kind == LAGraph_ADJACENCY_DIRECTED)
     {
-        GrB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
-        GrB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
+        GRB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
+        GRB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
         LG_ASSERT_MSG (nrows == ncols, LAGRAPH_INVALID_GRAPH,
             "adjacency matrix must be square") ;
     }
@@ -46,7 +46,7 @@ int LAGraph_CheckGraph
     #if LAGRAPH_SUITESPARSE
         // only by-row format is supported when using SuiteSparse
         GxB_Format_Value fmt ;
-        GrB_TRY (GxB_get (A, GxB_FORMAT, &fmt)) ;
+        GRB_TRY (GxB_get (A, GxB_FORMAT, &fmt)) ;
         LG_ASSERT_MSG (fmt == GxB_BY_ROW, LAGRAPH_INVALID_GRAPH,
             "only by-row format supported") ;
     #endif
@@ -59,15 +59,15 @@ int LAGraph_CheckGraph
     if (AT != NULL)
     {
         GrB_Index nrows2, ncols2;
-        GrB_TRY (GrB_Matrix_nrows (&nrows2, AT)) ;
-        GrB_TRY (GrB_Matrix_ncols (&ncols2, AT)) ;
+        GRB_TRY (GrB_Matrix_nrows (&nrows2, AT)) ;
+        GRB_TRY (GrB_Matrix_ncols (&ncols2, AT)) ;
         LG_ASSERT_MSG (nrows == ncols2 && ncols == nrows2,
             LAGRAPH_INVALID_GRAPH, "G->AT matrix has the wrong dimensions") ;
 
         #if LAGRAPH_SUITESPARSE
             // only by-row format is supported when using SuiteSparse
             GxB_Format_Value fmt ;
-            GrB_TRY (GxB_get (AT, GxB_FORMAT, &fmt)) ;
+            GRB_TRY (GxB_get (AT, GxB_FORMAT, &fmt)) ;
             LG_ASSERT_MSG (fmt == GxB_BY_ROW,
                 LAGRAPH_INVALID_GRAPH, "only by-row format supported") ;
         #endif
@@ -85,7 +85,7 @@ int LAGraph_CheckGraph
     if (rowdegree != NULL)
     {
         GrB_Index m ;
-        GrB_TRY (GrB_Vector_size (&m, rowdegree)) ;
+        GRB_TRY (GrB_Vector_size (&m, rowdegree)) ;
         LG_ASSERT_MSG (m == nrows, LAGRAPH_INVALID_GRAPH,
             "rowdegree invalid size") ;
         char rtype [LAGRAPH_MAX_NAME_LEN] ;
@@ -99,7 +99,7 @@ int LAGraph_CheckGraph
     if (coldegree != NULL)
     {
         GrB_Index n ;
-        GrB_TRY (GrB_Vector_size (&n, coldegree)) ;
+        GRB_TRY (GrB_Vector_size (&n, coldegree)) ;
         LG_ASSERT_MSG (n == ncols, LAGRAPH_INVALID_GRAPH,
             "coldegree invalid size") ;
         char ctype [LAGRAPH_MAX_NAME_LEN] ;

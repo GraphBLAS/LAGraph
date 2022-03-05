@@ -149,25 +149,25 @@ int LAGraph_Xinit
     //
     //      C = A * spones (B)
 
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_first_int8,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_first_int8,
         GrB_PLUS_MONOID_INT8  , GrB_FIRST_INT8  )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_first_int16,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_first_int16,
         GrB_PLUS_MONOID_INT16 , GrB_FIRST_INT16 )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_first_int32,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_first_int32,
         GrB_PLUS_MONOID_INT32 , GrB_FIRST_INT32 )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_first_int64,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_first_int64,
         GrB_PLUS_MONOID_INT64 , GrB_FIRST_INT64 )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_first_uint8,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_first_uint8,
         GrB_PLUS_MONOID_UINT8 , GrB_FIRST_UINT8 )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_first_uint16,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_first_uint16,
         GrB_PLUS_MONOID_UINT16, GrB_FIRST_UINT16)) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_first_uint32,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_first_uint32,
         GrB_PLUS_MONOID_UINT32, GrB_FIRST_UINT32)) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_first_uint64,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_first_uint64,
         GrB_PLUS_MONOID_UINT64, GrB_FIRST_UINT64)) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_first_fp32,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_first_fp32,
         GrB_PLUS_MONOID_FP32  , GrB_FIRST_FP32  )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_first_fp64,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_first_fp64,
         GrB_PLUS_MONOID_FP64  , GrB_FIRST_FP64  )) ;
 
     // LAGraph_plus_second_T: using the GrB_PLUS_MONOID_T monoid and the
@@ -177,25 +177,25 @@ int LAGraph_Xinit
     //
     //      C = spones (A) * B
 
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_second_int8,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_second_int8,
         GrB_PLUS_MONOID_INT8  , GrB_SECOND_INT8  )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_second_int16,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_second_int16,
         GrB_PLUS_MONOID_INT16 , GrB_SECOND_INT16 )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_second_int32,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_second_int32,
         GrB_PLUS_MONOID_INT32 , GrB_SECOND_INT32 )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_second_int64,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_second_int64,
         GrB_PLUS_MONOID_INT64 , GrB_SECOND_INT64 )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_second_uint8,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_second_uint8,
         GrB_PLUS_MONOID_UINT8 , GrB_SECOND_UINT8 )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_second_uint16,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_second_uint16,
         GrB_PLUS_MONOID_UINT16, GrB_SECOND_UINT16)) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_second_uint32,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_second_uint32,
         GrB_PLUS_MONOID_UINT32, GrB_SECOND_UINT32)) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_second_uint64,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_second_uint64,
         GrB_PLUS_MONOID_UINT64, GrB_SECOND_UINT64)) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_second_fp32,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_second_fp32,
         GrB_PLUS_MONOID_FP32  , GrB_SECOND_FP32  )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_second_fp64,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_second_fp64,
         GrB_PLUS_MONOID_FP64  , GrB_SECOND_FP64  )) ;
 
     // LAGraph_plus_one_T: using the GrB_PLUS_MONOID_T monoid and the
@@ -207,25 +207,25 @@ int LAGraph_Xinit
     // 
     //      C = spones (A) * spones (B)
 
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_one_int8,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_one_int8,
         GrB_PLUS_MONOID_INT8  , GrB_ONEB_INT8  )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_one_int16,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_one_int16,
         GrB_PLUS_MONOID_INT16 , GrB_ONEB_INT16 )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_one_int32,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_one_int32,
         GrB_PLUS_MONOID_INT32 , GrB_ONEB_INT32 )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_one_int64,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_one_int64,
         GrB_PLUS_MONOID_INT64 , GrB_ONEB_INT64 )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_one_uint8,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_one_uint8,
         GrB_PLUS_MONOID_UINT8 , GrB_ONEB_UINT8 )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_one_uint16,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_one_uint16,
         GrB_PLUS_MONOID_UINT16, GrB_ONEB_UINT16)) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_one_uint32,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_one_uint32,
         GrB_PLUS_MONOID_UINT32, GrB_ONEB_UINT32)) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_one_uint64,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_one_uint64,
         GrB_PLUS_MONOID_UINT64, GrB_ONEB_UINT64)) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_one_fp32,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_one_fp32,
         GrB_PLUS_MONOID_FP32  , GrB_ONEB_FP32  )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_plus_one_fp64,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_plus_one_fp64,
         GrB_PLUS_MONOID_FP64  , GrB_ONEB_FP64  )) ;
 
     // LAGraph_structural_T: using the GrB_MIN_MONOID_T for non-boolean types,
@@ -244,27 +244,27 @@ int LAGraph_Xinit
     // of 1, or true, and thus any of these monoids will compute the same
     // thing.
 
-    GrB_TRY (GrB_Semiring_new (&LAGraph_structural_bool,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_bool,
         GrB_LOR_MONOID_BOOL   , GrB_ONEB_BOOL  )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_structural_int8,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_int8,
         GrB_MIN_MONOID_INT8   , GrB_ONEB_INT8  )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_structural_int16,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_int16,
         GrB_MIN_MONOID_INT16  , GrB_ONEB_INT16 )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_structural_int32,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_int32,
         GrB_MIN_MONOID_INT32  , GrB_ONEB_INT32 )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_structural_int64,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_int64,
         GrB_MIN_MONOID_INT64  , GrB_ONEB_INT64 )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_structural_uint8,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_uint8,
         GrB_MIN_MONOID_UINT8  , GrB_ONEB_UINT8 )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_structural_uint16,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_uint16,
         GrB_MIN_MONOID_UINT16 , GrB_ONEB_UINT16)) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_structural_uint32,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_uint32,
         GrB_MIN_MONOID_UINT32 , GrB_ONEB_UINT32)) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_structural_uint64,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_uint64,
         GrB_MIN_MONOID_UINT64 , GrB_ONEB_UINT64)) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_structural_fp32,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_fp32,
         GrB_MIN_MONOID_FP32   , GrB_ONEB_FP32  )) ;
-    GrB_TRY (GrB_Semiring_new (&LAGraph_structural_fp64,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_fp64,
         GrB_MIN_MONOID_FP64   , GrB_ONEB_FP64  )) ;
 
     return (GrB_SUCCESS) ;
