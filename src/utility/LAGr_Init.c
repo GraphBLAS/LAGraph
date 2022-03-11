@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_Xinit: start GraphBLAS and LAGraph, and set malloc/etc functions
+// LAGr_Init: start GraphBLAS and LAGraph, and set malloc/etc functions
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -76,11 +76,11 @@ GrB_Semiring LAGraph_structural_fp32   = NULL ;
 GrB_Semiring LAGraph_structural_fp64   = NULL ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Xinit
+// LAGr_Init
 //------------------------------------------------------------------------------
 
 LAGRAPH_PUBLIC
-int LAGraph_Xinit
+int LAGr_Init
 (
     // input:
     void * (* user_malloc_function  ) (size_t),

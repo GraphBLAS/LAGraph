@@ -32,10 +32,11 @@
 
 // See also the LAGraph_Version utility method, which returns these values.
 // These definitions must match the same definitions in LAGraph/CMakeLists.txt.
+// FIXME: use config to create include/LAGraph.h from LAGraph/CMakeLists.txt
+#define LAGRAPH_DATE "Mar 11, 2022"
 #define LAGRAPH_VERSION_MAJOR 0
 #define LAGRAPH_VERSION_MINOR 9
-#define LAGRAPH_VERSION_UPDATE 12
-#define LAGRAPH_DATE "Mar 4, 2022"
+#define LAGRAPH_VERSION_UPDATE 13
 
 //==============================================================================
 // include files and helper macros
@@ -320,14 +321,12 @@
     }                                           \
 }
 
-// FIXME: start here on Mar 8, 2022
-
 //==============================================================================
 // LAGraph memory management
 //==============================================================================
 
 // LAGraph provides wrappers for the malloc/calloc/realloc/free set of memory
-// management functions, initialized by LAGraph_Init or LAGraph_Xinit.  By
+// management functions, initialized by LAGraph_Init or LAGr_Init.  By
 // default, they are pointers to the ANSI C11 malloc/calloc/realloc/free
 // functions.  Unlike all other LAGraph utility functions, these methods do not
 // return an int, and do not have a final char *msg parameter.  Instead, they
@@ -410,6 +409,8 @@ void LAGraph_Free           // free a block of memory and set p to NULL
 
 // LAGRAPH_UNKNOWN is used for all scalars whose value is not known
 #define LAGRAPH_UNKNOWN (-1)
+
+// FIXME: start here on Mar 16, 2022
 
 //------------------------------------------------------------------------------
 // LAGraph_Kind: the kind of a graph
@@ -621,7 +622,7 @@ typedef struct LAGraph_Graph_struct *LAGraph_Graph ;
 LAGRAPH_PUBLIC
 int LAGraph_Init (char *msg) ;
 
-// LAGraph semirings, created by LAGraph_Init or LAGraph_Xinit:
+// LAGraph semirings, created by LAGraph_Init or LAGr_Init:
 LAGRAPH_PUBLIC GrB_Semiring
 
     // LAGraph_plus_first_T: using the GrB_PLUS_MONOID_T monoid and the
@@ -681,33 +682,6 @@ LAGRAPH_PUBLIC GrB_Semiring
     LAGraph_structural_fp64   ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Xinit: start GraphBLAS and LAGraph, and set malloc/etc functions
-//------------------------------------------------------------------------------
-
-// LAGraph_Xinit is identical to LAGraph_Init, except that it allows the user
-// application to provide four memory management functions, replacing the
-// standard malloc, calloc, realloc, and free.  The functions pointed to by
-// user_malloc_function, user_calloc_function, user_realloc_function, and
-// user_free_function have the same signature as the ANSI C malloc, calloc,
-// realloc, and free functions, respectively
-
-// Only user_malloc_function and user_free_function are required.
-// user_calloc_function may be NULL, in which case LAGraph_Calloc uses
-// LAGraph_Malloc and memset.  Likewise, user_realloc_function may be NULL, in
-// which case LAGraph_Realloc uses LAGraph_Malloc, memcpy, and LAGraph_Free.
-
-LAGRAPH_PUBLIC
-int LAGraph_Xinit
-(
-    // input:
-    void * (* user_malloc_function  ) (size_t),
-    void * (* user_calloc_function  ) (size_t, size_t),
-    void * (* user_realloc_function ) (void *, size_t),
-    void   (* user_free_function    ) (void *),
-    char *msg
-) ;
-
-//------------------------------------------------------------------------------
 // LAGraph_Version: determine the version of LAGraph
 //------------------------------------------------------------------------------
 
@@ -740,7 +714,7 @@ int LAGraph_Version
 
 // LAGraph_Finalize must be called as the last LAGraph method.  It calls
 // GrB_finalize and frees any LAGraph objects created by LAGraph_Init or
-// LAGraph_Xinit.  After calling this method, no LAGraph or GraphBLAS methods
+// LAGr_Init.  After calling this method, no LAGraph or GraphBLAS methods
 // may be used.
 
 LAGRAPH_PUBLIC
@@ -1669,7 +1643,7 @@ int LAGraph_TriangleCount
 ) ;
 
 //==============================================================================
-// LAGraph Advanced algorithms
+// LAGraph Advanced algorithms and utilities
 //==============================================================================
 
 // The Advanced algorithms require the caller to select the algorithm and choose
@@ -1680,6 +1654,33 @@ int LAGraph_TriangleCount
 
 // Advanced algorithms are named with the LAGr_* prefix, to distinguish them
 // from Basic algorithms.
+
+//------------------------------------------------------------------------------
+// LAGr_Init: start GraphBLAS and LAGraph, and set malloc/etc functions
+//------------------------------------------------------------------------------
+
+// LAGr_Init is identical to LAGraph_Init, except that it allows the user
+// application to provide four memory management functions, replacing the
+// standard malloc, calloc, realloc, and free.  The functions pointed to by
+// user_malloc_function, user_calloc_function, user_realloc_function, and
+// user_free_function have the same signature as the ANSI C malloc, calloc,
+// realloc, and free functions, respectively.
+
+// Only user_malloc_function and user_free_function are required.
+// user_calloc_function may be NULL, in which case LAGraph_Calloc uses
+// LAGraph_Malloc and memset.  Likewise, user_realloc_function may be NULL, in
+// which case LAGraph_Realloc uses LAGraph_Malloc, memcpy, and LAGraph_Free.
+
+LAGRAPH_PUBLIC
+int LAGr_Init
+(
+    // input:
+    void * (* user_malloc_function  ) (size_t),
+    void * (* user_calloc_function  ) (size_t, size_t),
+    void * (* user_realloc_function ) (void *, size_t),
+    void   (* user_free_function    ) (void *),
+    char *msg
+) ;
 
 //------------------------------------------------------------------------------
 // LAGr_BreadthFirstSearch: breadth-first search

@@ -19,5 +19,5 @@ int LAGraph_Init (char *msg)
     LG_CLEAR_MSG ;
 
     // use ANSI C memory allocation functions
-    return (LAGraph_Xinit (malloc, calloc, realloc, free, msg)) ;
+    return (LAGr_Init (malloc, calloc, realloc, free, msg)) ;
 }

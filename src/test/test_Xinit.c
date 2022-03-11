@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/test/test_Xinit.c:  test LAGraph_Xinit and LAGraph_Global
+// LAGraph/src/test/test_Xinit.c:  test LAGr_Init and LAGraph_Global
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -20,31 +20,31 @@
 char msg [LAGRAPH_MSG_LEN] ;
 
 //------------------------------------------------------------------------------
-// test_Xinit:  test LAGraph_Xinit
+// test_Xinit:  test LAGr_Init
 //------------------------------------------------------------------------------
 
 void test_Xinit (void)
 {
 
-    printf ("\nTesting LAGraph_Xinit:\n") ;
+    printf ("\nTesting LAGr_Init:\n") ;
 
-    TEST_CHECK (LAGraph_Xinit (NULL, NULL, NULL, NULL, msg)
+    TEST_CHECK (LAGr_Init (NULL, NULL, NULL, NULL, msg)
         == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
-    TEST_CHECK (LAGraph_Xinit (malloc, NULL, NULL, NULL, msg)
+    TEST_CHECK (LAGr_Init (malloc, NULL, NULL, NULL, msg)
         == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
-    TEST_CHECK (LAGraph_Xinit (NULL, NULL, NULL, free, msg)
+    TEST_CHECK (LAGr_Init (NULL, NULL, NULL, free, msg)
         == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
-    OK (LAGraph_Xinit (malloc, calloc, realloc, free, msg)) ;
+    OK (LAGr_Init (malloc, calloc, realloc, free, msg)) ;
     printf ("msg: [%s]\n", msg) ;
 
-    // LAGraph_Xinit cannot be called twice
-    int status = LAGraph_Xinit (malloc, calloc, realloc, free, msg) ;
+    // LAGr_Init cannot be called twice
+    int status = LAGr_Init (malloc, calloc, realloc, free, msg) ;
     TEST_CHECK (status != GrB_SUCCESS) ;
     printf ("msg: %s\n", msg) ;
 
@@ -52,7 +52,7 @@ void test_Xinit (void)
 }
 
 //------------------------------------------------------------------------------
-// test_Xinit_brutal:  test LAGraph_Xinit with brutal memory debug
+// test_Xinit_brutal:  test LAGr_Init with brutal memory debug
 //------------------------------------------------------------------------------
 
 #if LAGRAPH_SUITESPARSE
@@ -61,7 +61,7 @@ void test_Xinit_brutal (void)
     // no brutal memory failures, but test LG_brutal_malloc/calloc/realloc/free
     LG_brutal = -1 ;
     LG_nmalloc = 0 ;
-    OK (LAGraph_Xinit (LG_brutal_malloc, LG_brutal_calloc, LG_brutal_realloc,
+    OK (LAGr_Init (LG_brutal_malloc, LG_brutal_calloc, LG_brutal_realloc,
         LG_brutal_free, msg)) ;
 
     int32_t *p = LG_brutal_malloc (42 * sizeof (int32_t)) ;
@@ -124,12 +124,12 @@ void test_Xinit_brutal (void)
     {
         LG_brutal = nbrutal ;
         GB_Global_GrB_init_called_set (false) ;
-        int result = LAGraph_Xinit (LG_brutal_malloc, LG_brutal_calloc,
+        int result = LAGr_Init (LG_brutal_malloc, LG_brutal_calloc,
             LG_brutal_realloc, LG_brutal_free, msg) ;
         if (result == 0)
         {
             OK (LAGraph_Finalize (msg)) ;
-            printf ("LAGraph_Xinit: finally: %d %g\n", nbrutal,
+            printf ("LAGr_Init: finally: %d %g\n", nbrutal,
                 (double) LG_nmalloc) ;
             TEST_CHECK (LG_nmalloc == 0) ;
             break ;

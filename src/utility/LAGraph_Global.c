@@ -13,7 +13,7 @@
 
 #include "LG_internal.h"
 
-// These are modified by LAGraph_Init and LAGraph_Xinit.
+// These are modified by LAGraph_Init and LAGr_Init.
 
 void * (* LAGraph_Malloc_function  ) (size_t)         = malloc ;
 void * (* LAGraph_Calloc_function  ) (size_t, size_t) = calloc ;

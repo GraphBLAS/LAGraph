@@ -12,7 +12,7 @@
 //------------------------------------------------------------------------------
 
 // To enable brutal memory debugging, these four functions must be passed to
-// LAGraph_Xinit.
+// LAGr_Init.
 
 #include "LG_internal.h"
 
