@@ -37,7 +37,7 @@ jobs:
       with:
         branch: gh-pages
         folder: build/test_coverage/
-      if: ${{ matrix.config.grb_version }} == '6.2.1' && github.event_name == 'push' && github.ref == 'refs/heads/reorg'
+      if: ${{ matrix.config.grb_version }} == '6.2.4' && github.event_name == 'push' && github.ref == 'refs/heads/reorg'
     - name: Save output
       uses: actions/upload-artifact@v2.2.3
       with:
