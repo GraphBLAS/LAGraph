@@ -115,11 +115,11 @@ void test_BF (void)
         OK (GrB_Matrix_nrows (&nrows, A_orig)) ;
         OK (GrB_Matrix_ncols (&ncols, A_orig)) ;
         GrB_Index n = nrows ;
+        OK (LAGraph_Malloc ((void **) &I, nvals, sizeof (GrB_Index), msg)) ;
+        OK (LAGraph_Malloc ((void **) &J, nvals, sizeof (GrB_Index), msg)) ;
+        OK (LAGraph_Malloc ((void **) &W, nvals, sizeof (double), msg)) ;
+        OK (LAGraph_Malloc ((void **) &W_int32, nvals, sizeof (int32_t), msg)) ;
 
-        I = (GrB_Index *) LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;
-        J = (GrB_Index *) LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;
-        W = (double *) LAGraph_Malloc (nvals, sizeof (double)) ;
-        W_int32 = (int32_t *) LAGraph_Malloc (nvals, sizeof (int32_t)) ;
         OK (GrB_Matrix_extractTuples_FP64 (I, J, W, &nvals, A_orig)) ;
         if (has_integer_weights)
         {
@@ -294,8 +294,8 @@ void test_BF (void)
 
             for (int trial = 0 ; trial < ntrials ; trial++)
             {
-                LAGraph_Free ((void **) &d) ;
-                LAGraph_Free ((void **) &pi) ;
+                LAGraph_Free ((void **) &d, NULL) ;
+                LAGraph_Free ((void **) &pi, NULL) ;
                 result = LAGraph_BF_pure_c_double (&d, &pi, s, n, nvals,
                     (const int64_t *) I, (const int64_t *) J, W) ;
                 TEST_CHECK (result == valid) ;
@@ -312,8 +312,8 @@ void test_BF (void)
             if (has_integer_weights)
             {
                 printf ("pure_c integer:\n") ;
-                LAGraph_Free ((void **) &d10) ;
-                LAGraph_Free ((void **) &pi10) ;
+                LAGraph_Free ((void **) &d10, NULL) ;
+                LAGraph_Free ((void **) &pi10, NULL) ;
                 result = LAGraph_BF_pure_c (&d10, &pi10, s, n, nvals,
                     (const int64_t *) I, (const int64_t *) J, W_int32) ;
                 TEST_CHECK (result == valid) ;
@@ -478,12 +478,12 @@ void test_BF (void)
         GrB_free (&A) ;
         GrB_free (&A_orig) ;
         GrB_free (&AT) ;
-        LAGraph_Free ((void **) &I) ;
-        LAGraph_Free ((void **) &J) ;
-        LAGraph_Free ((void **) &W) ;
-        LAGraph_Free ((void **) &W_int32) ;
-        LAGraph_Free ((void **) &d) ;
-        LAGraph_Free ((void **) &pi) ;
+        LAGraph_Free ((void **) &I, NULL) ;
+        LAGraph_Free ((void **) &J, NULL) ;
+        LAGraph_Free ((void **) &W, NULL) ;
+        LAGraph_Free ((void **) &W_int32, NULL) ;
+        LAGraph_Free ((void **) &d, NULL) ;
+        LAGraph_Free ((void **) &pi, NULL) ;
         GrB_free (&d1) ;
         GrB_free (&pi1) ;
         GrB_free (&h1) ;

@@ -34,10 +34,10 @@
 
 //------------------------------------------------------------------------------
 
-#define LG_FREE_ALL                 \
-{                                   \
-    LAGraph_Free ((void**) &d) ;    \
-    LAGraph_Free ((void**) &pi) ;   \
+#define LG_FREE_ALL                         \
+{                                           \
+    LAGraph_Free ((void**) &d, NULL) ;      \
+    LAGraph_Free ((void**) &pi, NULL) ;     \
 }
 
 #include "LG_internal.h"
@@ -69,15 +69,14 @@ GrB_Info LAGraph_BF_pure_c_double
     LG_ASSERT (I != NULL && J != NULL && W != NULL && pd != NULL &&
         ppi != NULL, GrB_NULL_POINTER) ;
 
-    LAGraph_Free ((void **) pd) ;
-    LAGraph_Free ((void **) ppi) ;
+    LAGraph_Free ((void **) pd, NULL) ;
+    LAGraph_Free ((void **) ppi, NULL) ;
 
     LG_ASSERT_MSG (s < n, GrB_INVALID_INDEX, "invalid source node") ;
 
     // allocate d and pi
-    d = LAGraph_Malloc(n, sizeof(double));
-    pi = LAGraph_Malloc(n, sizeof(int64_t));
-    LG_ASSERT (d != NULL && pi != NULL, GrB_OUT_OF_MEMORY) ;
+    LAGRAPH_TRY (LAGraph_Malloc((void **) &d,  n, sizeof(double), msg));
+    LAGRAPH_TRY (LAGraph_Malloc((void **) &pi, n, sizeof(int64_t), msg));
 
     // initialize d to a vector of INF while set d(s) = 0
     // and pi to a vector of -1

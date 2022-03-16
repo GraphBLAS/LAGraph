@@ -16,7 +16,7 @@
 // objects.  The user application is responsible for freeing the output of this
 // method, via:
 
-//      LAGraph_Free ((void **) &collection) ;
+//      LAGraph_Free ((void **) &collection, NULL) ;
 //      LAGraph_SFreeContents (&Contents, ncontents) ;
 
 // See also LAGraph_SLoadSet, which calls this function and then converts all
@@ -82,14 +82,14 @@ static int get_int_array_3 (json_arr arr, int *x, char *msg)
 {                                                       \
     if (root != NULL) { free (root) ; }                 \
     root = NULL ;                                       \
-    LAGraph_Free ((void **) &json_string) ;             \
+    LAGraph_Free ((void **) &json_string, NULL) ;       \
 }
 
 #undef  LG_FREE_ALL
 #define LG_FREE_ALL                                     \
 {                                                       \
     LG_FREE_WORK ;                                      \
-    LAGraph_Free ((void **) &collection) ;              \
+    LAGraph_Free ((void **) &collection, NULL) ;        \
     LAGraph_SFreeContents (&Contents, ncontents) ;      \
 }
 
@@ -126,16 +126,15 @@ int LAGraph_SRead   // read a set of matrices from a *.lagraph file
     //--------------------------------------------------------------------------
 
     size_t s = 256, k = 0 ;
-    json_string = LAGraph_Malloc (s, sizeof (char)) ;
+    LAGRAPH_TRY (LAGraph_Malloc ((void **) &json_string, s, sizeof (char),
+        msg)) ;
     while (true)
     { 
         if (k == s)
         {
             // json_string is full; double its size
-            bool ok = true ;
-            json_string = LAGraph_Realloc (2*s, s, sizeof (char), json_string,
-                &ok) ;
-            LG_ASSERT (ok, GrB_OUT_OF_MEMORY) ;
+            LG_TRY (LAGraph_Realloc ((void **) &json_string, 2*s, s,
+                sizeof (char), msg)) ;
             s = 2*s ;
         }
         // get the next character from the file
@@ -155,7 +154,7 @@ int LAGraph_SRead   // read a set of matrices from a *.lagraph file
 
     root = json_parse (json_string, k) ;
     LG_ASSERT (root != NULL, GrB_OUT_OF_MEMORY) ;
-    LAGraph_Free ((void **) &json_string) ;
+    LAGraph_Free ((void **) &json_string, NULL) ;
 
     //--------------------------------------------------------------------------
     // process the JSON header
@@ -217,8 +216,7 @@ int LAGraph_SRead   // read a set of matrices from a *.lagraph file
     o = o->next ;
     OK (o->value->type == json_type_array) ;
     size_t len = o->name->string_size ;
-    collection = LAGraph_Calloc (len+1, sizeof (char)) ;
-    OK (collection != NULL) ;
+    LG_TRY (LAGraph_Calloc ((void **) &collection, len+1, sizeof (char), msg)) ;
     strncpy (collection, o->name->string, len) ;
 
     //--------------------------------------------------------------------------
@@ -230,8 +228,8 @@ int LAGraph_SRead   // read a set of matrices from a *.lagraph file
     a = arr->start ;
     len = arr->length ;
     // allocate an Contents array of size len to hold the contents
-    Contents = LAGraph_Calloc (len, sizeof (LAGraph_Contents)) ;
-    LG_ASSERT (Contents != NULL, GrB_OUT_OF_MEMORY) ;
+    LG_TRY (LAGraph_Calloc ((void **) &Contents, len, sizeof (LAGraph_Contents),
+        msg)) ;
 
     for (int i = 0 ; i < len && a != NULL ; i++, a = a->next)
     {
@@ -339,8 +337,8 @@ int LAGraph_SRead   // read a set of matrices from a *.lagraph file
         // allocate the blob and read it from the file
         //----------------------------------------------------------------------
 
-        Item->blob = LAGraph_Malloc (Item->blob_size, sizeof (uint8_t)) ;
-        OK (Item->blob != NULL) ;
+        LAGRAPH_TRY (LAGraph_Malloc ((void **) &(Item->blob), Item->blob_size,
+            sizeof (uint8_t), msg)) ;
         size_t bytes_read = fread (Item->blob, sizeof (uint8_t),
             Item->blob_size, f) ;
         OK (bytes_read == Item->blob_size) ;

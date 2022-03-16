@@ -93,8 +93,8 @@ void test_SSaveSet (void)
     #endif
 
     // load all matrices into a single set
-    GrB_Matrix *Set = LAGraph_Malloc (NFILES, sizeof (GrB_Matrix)) ;
-    TEST_CHECK (Set != NULL) ;
+    GrB_Matrix *Set = NULL ;
+    OK (LAGraph_Malloc ((void **) &Set, NFILES, sizeof (GrB_Matrix), msg)) ;
 
     for (int k = 0 ; k < NFILES ; k++)
     {
@@ -150,7 +150,7 @@ void test_SSaveSet (void)
     // free all matrices
     LAGraph_SFreeSet (&Set, NFILES) ;
     LAGraph_SFreeSet (&Set2, NFILES) ;
-    LAGraph_Free ((void **) &collection) ;
+    LAGraph_Free ((void **) &collection, NULL) ;
 
     OK (GrB_free (&desc)) ;
     LAGraph_Finalize (msg) ;

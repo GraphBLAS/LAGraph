@@ -18,10 +18,10 @@
 
 #define LG_FREE_WORK                            \
 {                                               \
-    LAGraph_Free ((void **) &Cp) ;              \
-    LAGraph_Free ((void **) &Cj) ;              \
-    LAGraph_Free ((void **) &Cx) ;              \
-    LAGraph_Free ((void **) &Ax) ;              \
+    LAGraph_Free ((void **) &Cp, NULL) ;        \
+    LAGraph_Free ((void **) &Cj, NULL) ;        \
+    LAGraph_Free ((void **) &Cx, NULL) ;        \
+    LAGraph_Free ((void **) &Ax, NULL) ;        \
 }
 
 #define LG_FREE_ALL                             \
@@ -81,14 +81,13 @@ int LG_check_ktruss
     size_t typesize ;
     LG_TRY (LG_check_export (G, &Cp, &Cj, &Ax, &Cp_len, &Cj_len, &Cx_len,
         &typesize, msg)) ;
-    LAGraph_Free ((void **) &Ax) ;
+    LAGraph_Free ((void **) &Ax, NULL) ;
 
     //--------------------------------------------------------------------------
     // allocate Cx
     //--------------------------------------------------------------------------
 
-    Cx = (uint32_t *) LAGraph_Malloc (Cx_len, sizeof (uint32_t)) ;
-    LG_ASSERT (Cx != NULL, GrB_OUT_OF_MEMORY) ;
+    LG_TRY (LAGraph_Malloc ((void **) &Cx, Cx_len, sizeof (uint32_t), msg)) ;
 
     //--------------------------------------------------------------------------
     // construct the k-truss of G->A

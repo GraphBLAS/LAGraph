@@ -28,10 +28,10 @@ void LAGraph_SFreeContents  // free the Contents returned by LAGraph_SRead
         {
             for (GrB_Index i = 0 ; i < ncontents ; i++)
             {
-                LAGraph_Free ((void **) &(Contents [i].blob)) ;
+                LAGraph_Free ((void **) &(Contents [i].blob), NULL) ;
             }
         }
-        LAGraph_Free ((void **) Contents_handle) ;
+        LAGraph_Free ((void **) Contents_handle, NULL) ;
     }
 }
 

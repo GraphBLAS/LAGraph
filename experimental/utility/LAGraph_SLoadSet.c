@@ -17,7 +17,7 @@
 // texts.  The caller is responsible for freeing the output of this method,
 // via:
 
-//      LAGraph_Free ((void **) &collection) ;
+//      LAGraph_Free ((void **) &collection, NULL) ;
 //      LAGraph_SFreeSet (&Set, nmatrices) ;
 
 // See also LAGraph_SRead, which just reads in the serialized objects and
@@ -37,7 +37,7 @@
 {                                                                   \
     LG_FREE_WORK ;                                                  \
     LAGraph_SFreeSet (&Set, nmatrices) ;                            \
-    LAGraph_Free ((void **) &collection) ;                          \
+    LAGraph_Free ((void **) &collection, NULL) ;                    \
 }
 
 #include "LG_internal.h"
@@ -128,8 +128,8 @@ int LAGraph_SLoadSet            // load a set of matrices from a *.lagraph file
     // convert all the matrices (skip vectors and text content for now)
     //--------------------------------------------------------------------------
 
-    Set = LAGraph_Calloc (nmatrices, sizeof (GrB_Matrix)) ;
-    LG_ASSERT (Set != NULL, GrB_OUT_OF_MEMORY) ;
+    LG_TRY (LAGraph_Calloc ((void **) &Set, nmatrices, sizeof (GrB_Matrix),
+        msg)) ;
 
     GrB_Index kmatrices = 0 ;
     for (GrB_Index i = 0 ; i < ncontents ; i++)
@@ -153,7 +153,7 @@ int LAGraph_SLoadSet            // load a set of matrices from a *.lagraph file
         // else if (Content [i].kind == LAGraph_text_kind) ...
 
         // free the ith blob
-        LAGraph_Free ((void **) &(Contents [i].blob)) ;
+        LAGraph_Free ((void **) &(Contents [i].blob), NULL) ;
     }
 
     //--------------------------------------------------------------------------

@@ -14,8 +14,8 @@
 #define LG_FREE_WORK                    \
 {                                       \
     GrB_free (&C) ;                     \
-    LAGraph_Free ((void **) &I) ;       \
-    LAGraph_Free ((void **) &X) ;       \
+    LAGraph_Free ((void **) &I, NULL) ; \
+    LAGraph_Free ((void **) &X, NULL) ; \
 }
 
 #define LG_FREE_ALL                     \
@@ -55,9 +55,8 @@ int LG_check_mis        // check if iset is a valid MIS of A
 
     GrB_Index nvals ;
     GRB_TRY (GrB_Vector_nvals (&nvals, iset)) ;
-    I = (GrB_Index *) LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;
-    X = (bool *) LAGraph_Malloc (nvals, sizeof (bool)) ;
-    LG_ASSERT (I != NULL && X != NULL, GrB_OUT_OF_MEMORY) ;
+    LAGRAPH_TRY (LAGraph_Malloc ((void **) &I, nvals, sizeof (GrB_Index), msg));
+    LAGRAPH_TRY (LAGraph_Malloc ((void **) &X, nvals, sizeof (bool), msg)) ;
 
     GRB_TRY (GrB_Vector_extractTuples_BOOL (I, X, &nvals, iset)) ;
 
@@ -71,7 +70,7 @@ int LG_check_mis        // check if iset is a valid MIS of A
         }
     }
 
-    LAGraph_Free ((void **) &X) ;
+    LAGraph_Free ((void **) &X, NULL) ;
 
     // printf ("independent set found: %.16g of %.16g nodes\n",
     // (double) isize, (double) n) ;
@@ -115,7 +114,7 @@ int LG_check_mis        // check if iset is a valid MIS of A
     GrB_Vector_free (&e) ;
     LG_ASSERT_MSG (nvals == n, -1, "error! A (I,I is not maximal!\n") ;
 
-    LAGraph_Free ((void **) &I) ;
+    LAGraph_Free ((void **) &I, NULL) ;
 
     printf ("maximal independent set OK %.16g of %.16g nodes",
         (double) isize, (double) n) ;

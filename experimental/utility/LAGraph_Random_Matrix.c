@@ -21,24 +21,24 @@
 // This could be fixed by using the GxB_IGNORE_DUP operator, but this would
 // require SuiteSparse:GraphBLAS.
 
-#define LG_FREE_WORK                    \
-{                                       \
-    LAGraph_Free ((void **) &I) ;       \
-    LAGraph_Free ((void **) &J) ;       \
-    LAGraph_Free ((void **) &ignore) ;  \
-    LAGraph_Free (&X) ;                 \
-    GrB_free (&Mod) ;                   \
-    GrB_free (&Rows) ;                  \
-    GrB_free (&Cols) ;                  \
-    GrB_free (&Values) ;                \
-    GrB_free (&Seed) ;                  \
-    GrB_free (&T) ;                     \
+#define LG_FREE_WORK                            \
+{                                               \
+    LAGraph_Free ((void **) &I, NULL) ;         \
+    LAGraph_Free ((void **) &J, NULL) ;         \
+    LAGraph_Free ((void **) &ignore, NULL) ;    \
+    LAGraph_Free (&X, NULL) ;                   \
+    GrB_free (&Mod) ;                           \
+    GrB_free (&Rows) ;                          \
+    GrB_free (&Cols) ;                          \
+    GrB_free (&Values) ;                        \
+    GrB_free (&Seed) ;                          \
+    GrB_free (&T) ;                             \
 }
 
-#define LG_FREE_ALL                     \
-{                                       \
-    LG_FREE_WORK ;                      \
-    GrB_free (A) ;                      \
+#define LG_FREE_ALL                             \
+{                                               \
+    LG_FREE_WORK ;                              \
+    GrB_free (A) ;                              \
 }
 
 #include "LG_internal.h"
@@ -144,11 +144,10 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
 
     #if !LAGRAPH_SUITESPARSE
     {
-        ignore = LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;
-        I = LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;
-        J = LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;
-        LG_ASSERT (I != NULL && J != NULL && ignore != NULL,
-            GrB_OUT_OF_MEMORY) ;
+        LG_TRY (LAGraph_Malloc ((void **) &ignore, nvals, sizeof (GrB_Index),
+            msg)) ;
+        LG_TRY (LAGraph_Malloc ((void **) &I, nvals, sizeof (GrB_Index), msg)) ;
+        LG_TRY (LAGraph_Malloc ((void **) &J, nvals, sizeof (GrB_Index), msg)) ;
     }
     #endif
 
@@ -286,82 +285,81 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
         // this takes O(nvals) time and space
         if (type == GrB_BOOL)
         {
-            X = LAGraph_Malloc (nvals, sizeof (bool)) ;
-            LG_ASSERT (X != NULL, GrB_OUT_OF_MEMORY) ;
+            LG_TRY (LAGraph_Malloc ((void **) &X, nvals, sizeof (bool), msg)) ;
             GRB_TRY (GrB_Vector_extractTuples_BOOL (ignore, X, &nvals,
                 Values)) ;
         }
         else if (type == GrB_INT8)
         {
-            X = LAGraph_Malloc (nvals, sizeof (int8_t)) ;
-            LG_ASSERT (X != NULL, GrB_OUT_OF_MEMORY) ;
+            LG_TRY (LAGraph_Malloc ((void **) &X, nvals, sizeof (int8_t),
+                msg)) ;
             GRB_TRY (GrB_Vector_extractTuples_INT8 (ignore, X, &nvals,
                 Values)) ;
         }
         else if (type == GrB_INT16)
         {
-            X = LAGraph_Malloc (nvals, sizeof (int16_t)) ;
-            LG_ASSERT (X != NULL, GrB_OUT_OF_MEMORY) ;
+            LG_TRY (LAGraph_Malloc ((void **) &X, nvals, sizeof (int16_t),
+                msg)) ;
             GRB_TRY (GrB_Vector_extractTuples_INT16 (ignore, X, &nvals,
                 Values)) ;
         }
         else if (type == GrB_INT32)
         {
-            X = LAGraph_Malloc (nvals, sizeof (int32_t)) ;
-            LG_ASSERT (X != NULL, GrB_OUT_OF_MEMORY) ;
+            LG_TRY (LAGraph_Malloc ((void **) &X, nvals, sizeof (int32_t),
+                msg)) ;
             GRB_TRY (GrB_Vector_extractTuples_INT32 (ignore, X, &nvals,
                 Values)) ;
         }
         else if (type == GrB_INT64)
         {
-            X = LAGraph_Malloc (nvals, sizeof (int64_t)) ;
-            LG_ASSERT (X != NULL, GrB_OUT_OF_MEMORY) ;
+            LG_TRY (LAGraph_Malloc ((void **) &X, nvals, sizeof (int64_t),
+                msg)) ;
             GRB_TRY (GrB_Vector_extractTuples_INT64 (ignore, X, &nvals,
                 Values)) ;
         }
         else if (type == GrB_UINT8)
         {
-            X = LAGraph_Malloc (nvals, sizeof (uint8_t)) ;
-            LG_ASSERT (X != NULL, GrB_OUT_OF_MEMORY) ;
+            LG_TRY (LAGraph_Malloc ((void **) &X, nvals, sizeof (uint8_t),
+                msg)) ;
             GRB_TRY (GrB_Vector_extractTuples_UINT8 (ignore, X, &nvals,
                 Values)) ;
         }
         else if (type == GrB_UINT16)
         {
-            X = LAGraph_Malloc (nvals, sizeof (uint16_t)) ;
-            LG_ASSERT (X != NULL, GrB_OUT_OF_MEMORY) ;
+            LG_TRY (LAGraph_Malloc ((void **) &X, nvals, sizeof (uint16_t),
+                msg)) ;
             GRB_TRY (GrB_Vector_extractTuples_UINT16 (ignore, X, &nvals,
                 Values)) ;
         }
         else if (type == GrB_UINT32)
         {
-            X = LAGraph_Malloc (nvals, sizeof (uint32_t)) ;
-            LG_ASSERT (X != NULL, GrB_OUT_OF_MEMORY) ;
+            LG_TRY (LAGraph_Malloc ((void **) &X, nvals, sizeof (uint32_t),
+                msg)) ;
             GRB_TRY (GrB_Vector_extractTuples_UINT32 (ignore, X, &nvals,
                 Values)) ;
         }
         else if (type == GrB_UINT64)
         {
-            X = LAGraph_Malloc (nvals, sizeof (uint64_t)) ;
-            LG_ASSERT (X != NULL, GrB_OUT_OF_MEMORY) ;
+            LG_TRY (LAGraph_Malloc ((void **) &X, nvals, sizeof (uint64_t),
+                msg)) ;
             GRB_TRY (GrB_Vector_extractTuples_UINT64 (ignore, X, &nvals,
                 Values)) ;
         }
         else if (type == GrB_FP32)
         {
-            X = LAGraph_Malloc (nvals, sizeof (float)) ;
-            LG_ASSERT (X != NULL, GrB_OUT_OF_MEMORY) ;
+            LG_TRY (LAGraph_Malloc ((void **) &X, nvals, sizeof (float),
+                msg)) ;
             GRB_TRY (GrB_Vector_extractTuples_FP32 (ignore, X, &nvals,
                 Values)) ;
         }
         else // if (type == GrB_FP64)
         {
-            X = LAGraph_Malloc (nvals, sizeof (double)) ;
-            LG_ASSERT (X != NULL, GrB_OUT_OF_MEMORY) ;
+            LG_TRY (LAGraph_Malloc ((void **) &X, nvals, sizeof (double),
+                msg)) ;
             GRB_TRY (GrB_Vector_extractTuples_FP64 (ignore, X, &nvals,
                 Values)) ;
         }
-        LAGraph_Free ((void **) &ignore) ;
+        LAGraph_Free ((void **) &ignore, NULL) ;
     }
     #endif
 

@@ -31,7 +31,7 @@ void LAGraph_SFreeSet           // free a set of matrices
                 GrB_free (&(Set [i])) ;
             }
         }
-        LAGraph_Free ((void **) Set_handle) ;
+        LAGraph_Free ((void **) Set_handle, NULL) ;
     }
 }
 

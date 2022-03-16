@@ -81,8 +81,8 @@ int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
     //--------------------------------------------------------------------------
 
     // allocate an Contents array of size nmatrices to hold the contents
-    Contents = LAGraph_Calloc (nmatrices, sizeof (LAGraph_Contents)) ;
-    LG_ASSERT (Contents != NULL, GrB_OUT_OF_MEMORY) ;
+    LG_TRY (LAGraph_Calloc ((void **) &Contents, nmatrices,
+        sizeof (LAGraph_Contents), msg)) ;
 
     for (GrB_Index i = 0 ; i < nmatrices ; i++)
     {
@@ -96,14 +96,12 @@ int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
             GrB_Index estimate ;
             GRB_TRY (GrB_Matrix_serializeSize (&estimate, Set [i])) ;
             Contents [i].blob_size = estimate ;
-            Contents [i].blob = LAGraph_Malloc (estimate, sizeof (uint8_t)) ;
-            LG_ASSERT (Contents [i].blob != NULL, GrB_OUT_OF_MEMORY) ;
+            LAGRAPH_TRY (LAGraph_Malloc ((void **) &(Contents [i].blob),
+                estimate, sizeof (uint8_t), msg)) ;
             GRB_TRY (GrB_Matrix_serialize (Contents [i].blob,
                 (GrB_Index *) &(Contents [i].blob_size), Set [i])) ;
-            bool ok ;
-            Contents [i].blob = LAGraph_Realloc (&(Contents [i].blob_size),
-                estimate, sizeof (uint8_t), Contents [i].blob, &ok) ;
-            LG_ASSERT (ok, GrB_OUT_OF_MEMORY) ;
+            LG_TRY (LAGraph_Realloc (&(Contents [i].blob_size),
+                estimate, sizeof (uint8_t), msg)) ;
         }
         #endif
     }

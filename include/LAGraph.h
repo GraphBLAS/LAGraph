@@ -33,10 +33,10 @@
 // See also the LAGraph_Version utility method, which returns these values.
 // These definitions must match the same definitions in LAGraph/CMakeLists.txt.
 // FIXME: use config to create include/LAGraph.h from LAGraph/CMakeLists.txt
-#define LAGRAPH_DATE "Mar 11, 2022"
+#define LAGRAPH_DATE "Mar 16, 2022"
 #define LAGRAPH_VERSION_MAJOR 0
 #define LAGRAPH_VERSION_MINOR 9
-#define LAGRAPH_VERSION_UPDATE 13
+#define LAGRAPH_VERSION_UPDATE 14
 
 //==============================================================================
 // include files and helper macros
@@ -111,19 +111,17 @@
 // LAGraph error handling
 //==============================================================================
 
-// All LAGraph functions that return an int use it to return an error status
-// (described below), where zero (GrB_SUCCESS) denotes success, negative values
-// indicate an error, and positive values denote success but with some kind of
-// algorithm-specific note or warning.  The only LAGraph functions that do not
-// return an int status are the memory management functions: LAGraph_Malloc,
-// LAGraph_Calloc, LAGraph_Realloc, and LAGraph_Free.
+// All LAGraph functions return an int to indicate an error status (described
+// below), where zero (GrB_SUCCESS) denotes success, negative values indicate
+// an error, and positive values denote success but with some kind of
+// algorithm-specific note or warning.
 
-// In addition, all LAGraph functions that return an int also have a final
-// parameter that is a pointer to a user-allocated string in which an
-// algorithm-specific error message can be returned.  If NULL, no error message
-// is returned.  This is not itself an error condition, it just indicates that
-// the caller does not need the message returned.  If the message string is
-// provided but no error occurs, an empty string is returned.
+// In addition, all LAGraph functions also have a final parameter that is a
+// pointer to a user-allocated string in which an algorithm-specific error
+// message can be returned.  If NULL, no error message is returned.  This is
+// not itself an error condition, it just indicates that the caller does not
+// need the message returned.  If the message string is provided but no error
+// occurs, an empty string is returned.
 
 // LAGRAPH_MSG_LEN: The maximum required length of a message string
 #define LAGRAPH_MSG_LEN 256
@@ -147,11 +145,10 @@
 // LAGraph error status:
 //------------------------------------------------------------------------------
 
-// All LAGraph methods that return an int use this return value to denote their
-// status:  zero if they are successful (which is the value of GrB_SUCCESS),
-// negative on error, or positive for an informational value (such as
-// GrB_NO_VALUE).  Integers in the range -999 to 999 are reserved for GraphBLAS
-// GrB_Info return values:
+// All LAGraph methods return an int to denote their status:  zero if they are
+// successful (which is the value of GrB_SUCCESS), negative on error, or
+// positive for an informational value (such as GrB_NO_VALUE).  Integers in the
+// range -999 to 999 are reserved for GraphBLAS GrB_Info return values:
 
 //  successful results:
 //  GrB_SUCCESS = 0             // all is well
@@ -218,9 +215,6 @@
 #define LAGRAPH_NO_SELF_EDGES_ALLOWED           (-1004)
 #define LAGRAPH_CONVERGENCE_FAILURE             (-1005)
 
-// The following return values and defintion of msg apply to all LAGraph
-// functions that return an int:
-
 // @retval GrB_SUCCESS if successful
 // @retval a negative GrB_Info value on error (in range -999 to -1)
 // @retval a positive GrB_Info value if successful but with extra information
@@ -266,7 +260,7 @@
         /* free any internal workspace and return the status */     \
         GrB_free (*parent) ;                                        \
         GrB_free (workvector) ;                                     \
-        LAGraph_Free ((void **) &W) ;                               \
+        LAGraph_Free ((void **) &W, NULL) ;                         \
         return (status) ;                                           \
     }
 
@@ -326,15 +320,9 @@
 //==============================================================================
 
 // LAGraph provides wrappers for the malloc/calloc/realloc/free set of memory
-// management functions, initialized by LAGraph_Init or LAGr_Init.  By
-// default, they are pointers to the ANSI C11 malloc/calloc/realloc/free
-// functions.  Unlike all other LAGraph utility functions, these methods do not
-// return an int, and do not have a final char *msg parameter.  Instead, they
-// closely (but not exactly) follow the sytax of malloc/calloc/realloc/free.
-// LAGraph_Calloc and LAGraph_free have the same syntax as calloc and free.
-// LAGraph_Malloc has the syntax of calloc instead of malloc.  LAGraph_Realloc
-// is very different from realloc, since the ANSI C11 realloc syntax is
-// difficult to use safely.
+// management functions, initialized by LAGraph_Init or LAGr_Init.  By default,
+// the following are pointers to the ANSI C11 malloc/calloc/realloc/free
+// functions.
 
 LAGRAPH_PUBLIC void * (* LAGraph_Malloc_function  ) (size_t)         ;
 LAGRAPH_PUBLIC void * (* LAGraph_Calloc_function  ) (size_t, size_t) ;
@@ -346,11 +334,14 @@ LAGRAPH_PUBLIC void   (* LAGraph_Free_function    ) (void *)         ;
 //------------------------------------------------------------------------------
 
 LAGRAPH_PUBLIC
-void *LAGraph_Malloc        // returns pointer to allocated block of memory
-(                           // or NULL if the allocation fails
+int LAGraph_Malloc
+(
+    // output:
+    void **p,               // pointer to allocated block of memory
     // input:
     size_t nitems,          // number of items
-    size_t size_of_item     // size of each item
+    size_t size_of_item,    // size of each item
+    char *msg
 ) ;
 
 //------------------------------------------------------------------------------
@@ -358,11 +349,14 @@ void *LAGraph_Malloc        // returns pointer to allocated block of memory
 //------------------------------------------------------------------------------
 
 LAGRAPH_PUBLIC
-void *LAGraph_Calloc        // returns pointer to allocated block of memory
-(                           // or NULL if the allocation fails
+int LAGraph_Calloc
+(
+    // output:
+    void **p,               // pointer to allocated block of memory
     // input:
     size_t nitems,          // number of items
-    size_t size_of_item     // size of each item
+    size_t size_of_item,    // size of each item
+    char *msg
 ) ;
 
 //------------------------------------------------------------------------------
@@ -370,32 +364,32 @@ void *LAGraph_Calloc        // returns pointer to allocated block of memory
 //------------------------------------------------------------------------------
 
 LAGRAPH_PUBLIC
-void *LAGraph_Realloc       // returns pointer to reallocated block of memory,
-(                           // or original block if reallocation fails.
+int LAGraph_Realloc
+(
+    // input/output:
+    void **p,               // old block to reallocate
     // input:
     size_t nitems_new,      // new number of items in the object
     size_t nitems_old,      // old number of items in the object
     size_t size_of_item,    // size of each item
-    // input/output:
-    void *p,                // old block to reallocate
-    // output:
-    bool *ok                // true if successful, false otherwise
+    char *msg
 ) ;
 
 //------------------------------------------------------------------------------
 // LAGraph_Free:  free a block of memory (wrapper for free)
 //------------------------------------------------------------------------------
 
-// If p = LAGraph_Malloc (...) is the pointer to the allocated block of memory,
-// LAGraph_Free (&p) is the method to free it.  The parameter is passed as &p
-// so that p can be set to NULL on return, to guard against double-free.
+// If LAGraph_Malloc (&p, ...) is the pointer to the allocated block of memory,
+// LAGraph_Free (&p, ...) is the method to free it.  The parameter is passed as
+// &p so that p can be set to NULL on return, to guard against double-free.
 // LAGraph_Free does nothing if &p or p are NULL on input.
 
 LAGRAPH_PUBLIC
-void LAGraph_Free           // free a block of memory and set p to NULL
+int LAGraph_Free            // free a block of memory and set p to NULL
 (
     // input/output:
-    void **p                // pointer to object to free, does nothing if NULL
+    void **p,               // pointer to object to free, does nothing if NULL
+    char *msg
 ) ;
 
 //==============================================================================

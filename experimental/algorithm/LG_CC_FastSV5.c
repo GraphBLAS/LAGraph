@@ -40,6 +40,7 @@
 // src/algorithm/LG_CC_FastSV6.c.  They have thus been changed here to lower
 // case.
 
+// todo: free all workspace in LG_FREE_ALL
 #define LG_FREE_ALL ;
 
 #include "LG_internal.h"
@@ -195,7 +196,9 @@ static inline int Reduce_assign32
     {
 
         // allocate a buf array for each thread, of size HASH_SIZE
-        uint32_t *mem = LAGraph_Malloc (nthreads*HASH_SIZE, sizeof (uint32_t)) ;
+        uint32_t *mem ;
+        LAGRAPH_TRY (LAGraph_Malloc ((void **) &mem, nthreads*HASH_SIZE,
+            sizeof (uint32_t), msg)) ;
         // todo: check out-of-memory condition here
 
         // todo why is hashing needed here?  hashing is slow for what needs
@@ -260,7 +263,7 @@ static inline int Reduce_assign32
             }
         }
 
-        LAGraph_Free ((void **) &mem) ;
+        LAGraph_Free ((void **) &mem, NULL) ;
     }
     else
     {
@@ -297,18 +300,18 @@ static inline int Reduce_assign32
 // number of representatives.
 
 #undef  LG_FREE_ALL
-#define LG_FREE_ALL                                 \
-{                                                   \
-    LAGraph_Free ((void **) &I) ;           \
-    LAGraph_Free ((void **) &V32) ;         \
-    LAGraph_Free ((void **) &ht_key) ;      \
-    LAGraph_Free ((void **) &ht_val) ;      \
-    /* todo why is T not freed?? */                 \
-    GrB_free (&f) ;                                 \
-    GrB_free (&gp) ;                                \
-    GrB_free (&mngp) ;                              \
-    GrB_free (&gp_new) ;                            \
-    GrB_free (&mod) ;                               \
+#define LG_FREE_ALL                             \
+{                                               \
+    LAGraph_Free ((void **) &I, NULL) ;         \
+    LAGraph_Free ((void **) &V32, NULL) ;       \
+    LAGraph_Free ((void **) &ht_key, NULL) ;    \
+    LAGraph_Free ((void **) &ht_val, NULL) ;    \
+    /* todo why is T not freed?? */             \
+    GrB_free (&f) ;                             \
+    GrB_free (&gp) ;                            \
+    GrB_free (&mngp) ;                          \
+    GrB_free (&gp_new) ;                        \
+    GrB_free (&mod) ;                           \
 }
 
 #endif
@@ -381,9 +384,8 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
     GRB_TRY (GrB_Vector_new (&mod,    GrB_BOOL,   n)) ;
 
     // temporary arrays
-    I   = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
-    V32 = LAGraph_Malloc (n, sizeof (uint32_t)) ;
-    // todo: check out-of-memory condition
+    LAGRAPH_TRY (LAGraph_Malloc ((void **) &I  , n, sizeof (GrB_Index), msg)) ;
+    LAGRAPH_TRY (LAGraph_Malloc ((void **) &V32, n, sizeof (uint32_t), msg)) ;
 
     // prepare vectors
     #pragma omp parallel for num_threads(nthreads2) schedule(static)
@@ -398,9 +400,10 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
     GRB_TRY (GrB_Vector_dup (&mngp, f)) ;
 
     // allocate the hash table
-    ht_key = LAGraph_Malloc (HASH_SIZE, sizeof (int32_t)) ;
-    ht_val = LAGraph_Malloc (HASH_SIZE, sizeof (int32_t)) ;
-    LG_ASSERT (ht_key != NULL && ht_val != NULL, GrB_OUT_OF_MEMORY) ;
+    LAGRAPH_TRY (LAGraph_Malloc ((void **) &ht_key, HASH_SIZE, sizeof (int32_t),
+        msg)) ;
+    LAGRAPH_TRY (LAGraph_Malloc ((void **) &ht_val, HASH_SIZE, sizeof (int32_t),
+        msg)) ;
 
     //--------------------------------------------------------------------------
     // sample phase
@@ -440,20 +443,27 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
         GrB_Index Tp_len = nrows+1, Tp_size = Tp_len*sizeof(GrB_Index);
         GrB_Index Tj_len = nvals,   Tj_size = Tj_len*sizeof(GrB_Index);
         GrB_Index Tx_len = nvals ;
-        GrB_Index *Tp = LAGraph_Malloc (Tp_len, sizeof (GrB_Index)) ;
-        GrB_Index *Tj = LAGraph_Malloc (Tj_len, sizeof (GrB_Index)) ;
-        GrB_Index Tx_size = typesize ;
-        void *Tx = LAGraph_Calloc (1, typesize) ;   // T is iso
 
-        // todo check out-of-memory conditions
+        GrB_Index *Tp = NULL, *Tj = NULL ;
+        GrB_Index Tx_size = typesize ;
+        void *Tx = NULL ;
+        int32_t *range = NULL ;
+        GrB_Index *count = NULL ;
+
+        LAGRAPH_TRY (LAGraph_Malloc ((void **) &Tp, Tp_len,
+            sizeof (GrB_Index), msg)) ;
+        LAGRAPH_TRY (LAGraph_Malloc ((void **) &Tj, Tj_len,
+            sizeof (GrB_Index), msg)) ;
+        LAGRAPH_TRY (LAGraph_Calloc (&Tx, 1, typesize, msg)) ;   // T is iso
 
         //----------------------------------------------------------------------
         // allocate workspace
         //----------------------------------------------------------------------
 
-        int32_t *range = LAGraph_Malloc (nthreads + 1, sizeof (int32_t)) ;
-        GrB_Index *count = LAGraph_Malloc (nthreads + 1, sizeof (GrB_Index)) ;
-        // todo check out-of-memory conditions
+        LAGRAPH_TRY (LAGraph_Malloc ((void **) &range, nthreads + 1,
+            sizeof (int32_t), msg)) ;
+        LAGRAPH_TRY (LAGraph_Malloc ((void **) &count, nthreads + 1,
+            sizeof (GrB_Index), msg)) ;
 
         memset (count, 0, sizeof (GrB_Index) * (nthreads + 1)) ;
 
@@ -675,8 +685,8 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
         Tp [n] = offset ;
 
         // free workspace
-        LAGraph_Free ((void **) &count) ;
-        LAGraph_Free ((void **) &range) ;
+        LAGraph_Free ((void **) &count, NULL) ;
+        LAGraph_Free ((void **) &range, NULL) ;
 
         // import S (unchanged since last export)
         GRB_TRY (GxB_Matrix_import_CSR (&S, type, nrows, ncols,

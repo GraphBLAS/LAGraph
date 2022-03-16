@@ -118,13 +118,13 @@
 
 #define LG_FREE_ALL                                                     \
 {                                                                       \
-    LAGraph_Free ((void *) &I) ;                                        \
-    LAGraph_Free ((void *) &X) ;                                        \
-    LAGraph_Free ((void *) &AI) ;                                       \
-    LAGraph_Free ((void *) &AJ) ;                                       \
-    LAGraph_Free ((void *) &AX) ;                                       \
-    LAGraph_Free ((void *) &X) ;                                        \
-    LAGraph_Free ((void *) &X) ;                                        \
+    LAGraph_Free ((void *) &I, NULL) ;                                  \
+    LAGraph_Free ((void *) &X, NULL) ;                                  \
+    LAGraph_Free ((void *) &AI, NULL) ;                                 \
+    LAGraph_Free ((void *) &AJ, NULL) ;                                 \
+    LAGraph_Free ((void *) &AX, NULL) ;                                 \
+    LAGraph_Free ((void *) &X, NULL) ;                                  \
+    LAGraph_Free ((void *) &X, NULL) ;                                  \
     GrB_free (&L) ;                                                     \
     GrB_free (&L_prev) ;                                                \
     if (sanitize) GrB_free (&S) ;                                       \
@@ -206,11 +206,11 @@ int LAGraph_cdlp
     {
         LAGraph_Tic (tic, NULL) ;
 
-        AI = LAGraph_Malloc(nz, sizeof(GrB_Index));
-        AJ = LAGraph_Malloc(nz, sizeof(GrB_Index));
+        LAGRAPH_TRY (LAGraph_Malloc ((void **) &AI, nz, sizeof(GrB_Index),msg));
+        LAGRAPH_TRY (LAGraph_Malloc ((void **) &AJ, nz, sizeof(GrB_Index),msg));
         GRB_TRY (GrB_Matrix_extractTuples_UINT64(AI, AJ, GrB_NULL, &nz, A))
 
-        AX = LAGraph_Malloc(nz, sizeof(GrB_Index));
+        LAGRAPH_TRY (LAGraph_Malloc ((void **) &AX, nz, sizeof(GrB_Index),msg));
         GRB_TRY (GrB_Matrix_new(&S, GrB_UINT64, n, n));
         GRB_TRY (GrB_Matrix_build(S, AI, AJ, AX, nz, GrB_PLUS_UINT64));
 
@@ -236,17 +236,16 @@ int LAGraph_cdlp
 #endif
 
     // Initialize L with diagonal elements 1..n
-    I = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
-    X = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
-    if (I == NULL || X == NULL) { LG_FREE_ALL ; return (GrB_OUT_OF_MEMORY) ; }
+    LAGRAPH_TRY (LAGraph_Malloc ((void **) &I, n, sizeof (GrB_Index), msg)) ;
+    LAGRAPH_TRY (LAGraph_Malloc ((void **) &X, n, sizeof (GrB_Index), msg)) ;
     for (GrB_Index i = 0; i < n; i++) {
         I[i] = i;
         X[i] = i;
     }
     GRB_TRY (GrB_Matrix_new (&L, GrB_UINT64, n, n)) ;
     GRB_TRY (GrB_Matrix_build (L, I, I, X, n, GrB_PLUS_UINT64)) ;
-    LAGraph_Free ((void **)&I) ; I = NULL;
-    LAGraph_Free ((void **)&X) ; X = NULL;
+    LAGraph_Free ((void **) &I, NULL) ;
+    LAGraph_Free ((void **) &X, NULL) ;
 
     // Initialize matrix for storing previous labels
     GRB_TRY (GrB_Matrix_new(&L_prev, GrB_UINT64, n, n))
@@ -264,8 +263,8 @@ int LAGraph_cdlp
     for (int iteration = 0; iteration < itermax; iteration++)
     {
         // Initialize data structures for extraction from 'AL_in' and (for directed graphs) 'AL_out'
-        I = LAGraph_Malloc(nnz, sizeof(GrB_Index));
-        X = LAGraph_Malloc(nnz, sizeof(GrB_Index));
+        LAGRAPH_TRY (LAGraph_Malloc((void **) &I, nnz, sizeof(GrB_Index), msg));
+        LAGRAPH_TRY (LAGraph_Malloc((void **) &X, nnz, sizeof(GrB_Index), msg));
 
         // A = A min.2nd L
         // (using the "push" (saxpy) method)
@@ -283,11 +282,6 @@ int LAGraph_cdlp
                                                        GrB_NULL, &X[nz], &nz, AT));
         }
 
-        //uint64_t *workspace1 = LAGraph_Malloc(nnz, sizeof(GrB_Index));
-        //uint64_t *workspace2 = LAGraph_Malloc(nnz, sizeof(GrB_Index));
-        //GB_msort_2(I, X, workspace1, workspace2, nnz, nthreads);
-        //LAGraph_Free ((void **)&workspace1) ;  workspace1 = NULL;
-        //LAGraph_Free ((void **)&workspace2) ;  workspace2 = NULL;
         LAGraph_Sort2((int64_t *) I, (int64_t *) X, nnz, nthreads, NULL);
 
         // save current labels for comparison by swapping L and L_prev
@@ -326,9 +320,9 @@ int LAGraph_cdlp
                 mode_length = 0;
             }
         }
-        LAGraph_Free ((void**)&I) ; I = NULL;
-        LAGraph_Free ((void**)&X) ; X = NULL;
 
+        LAGraph_Free ((void **) &I, NULL) ;
+        LAGraph_Free ((void **) &X, NULL) ;
 
         bool isequal;
         LAGraph_Matrix_IsEqual (&isequal, L_prev, L, NULL);

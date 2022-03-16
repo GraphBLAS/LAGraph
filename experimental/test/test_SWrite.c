@@ -142,7 +142,6 @@ void test_SWrite (void)
 
             // serialize the matrix
             // GxB_set (GxB_BURBLE, true) ;
-            bool ok ;
             void *blob = NULL ;
             GrB_Index blob_size = 0 ;
             #if LAGRAPH_SUITESPARSE
@@ -157,12 +156,12 @@ void test_SWrite (void)
                 // try GrB version
                 OK (GrB_Matrix_serializeSize (&blob_size, A)) ;
                 GrB_Index blob_size_old = blob_size ;
-                blob = LAGraph_Malloc (blob_size, sizeof (uint8_t)) ;
+                OK (LAGraph_Malloc ((void **) &blob, blob_size,
+                    sizeof (uint8_t), msg)) ;
                 TEST_CHECK (blob != NULL) ;
                 OK (GrB_Matrix_serialize (blob, &blob_size, A)) ;
-                blob = LAGraph_Realloc (blob_size, blob_size_old,
-                    sizeof (uint8_t), blob, &ok) ;
-                TEST_CHECK (ok) ;
+                OK (LAGraph_Realloc ((void **) &blob, blob_size,
+                    blob_size_old, sizeof (uint8_t), msg)) ;
             }
 
             // deserialize the matrix
@@ -176,6 +175,7 @@ void test_SWrite (void)
             // ensure the matrices A and B are the same
             // GxB_print (A,3) ;
             // GxB_print (B,3) ;
+            bool ok = false ;
             OK (LAGraph_Matrix_IsEqual (&ok, A, B, msg)) ;
             TEST_CHECK (ok) ;
             OK (GrB_free (&B)) ;
@@ -188,7 +188,7 @@ void test_SWrite (void)
 
             // write the binary blob to the file then free the blob
             OK (LAGraph_SWrite_Item (f, blob, blob_size, msg)) ;
-            LAGraph_Free (&blob) ;
+            LAGraph_Free (&blob, NULL) ;
 
             // open the file and load back the contents
             rewind (f) ;
@@ -223,13 +223,13 @@ void test_SWrite (void)
             OK (GrB_free (&B)) ;
 
             // free the contents: todo make this a utility function
-            LAGraph_Free ((void **) &collection) ;
+            LAGraph_Free ((void **) &collection, NULL) ;
             for (int i = 0 ; i < ncontents ; i++)
             {
                 LAGraph_Contents *Item = &(Contents [i]) ;
-                LAGraph_Free ((void **) &(Item->blob)) ;
+                LAGraph_Free ((void **) &(Item->blob), NULL) ;
             }
-            LAGraph_Free ((void **) &Contents) ;
+            LAGraph_Free ((void **) &Contents, NULL) ;
         }
 
         OK (GrB_free (&A)) ;
@@ -267,12 +267,11 @@ void test_SWrite_errors (void)
         // use GrB version
         OK (GrB_Matrix_serializeSize (&blob_size, A)) ;
         GrB_Index blob_size_old = blob_size ;
-        blob = LAGraph_Malloc (blob_size, sizeof (uint8_t)) ;
+        OK (LAGraph_Malloc ((void **) &blob, blob_size, sizeof (uint8_t), msg));
         TEST_CHECK (blob != NULL) ;
         OK (GrB_Matrix_serialize (blob, &blob_size, A)) ;
-        blob = LAGraph_Realloc (blob_size, blob_size_old,
-            sizeof (uint8_t), blob, &ok) ;
-        TEST_CHECK (ok) ;
+        OK (LAGraph_Realloc ((void **) &blob, blob_size,
+            blob_size_old, sizeof (uint8_t), msg)) ;
     }
     #endif
 
@@ -314,7 +313,7 @@ void test_SWrite_errors (void)
 
     // write the binary blob to the file then free the blob
     OK (LAGraph_SWrite_Item (f, blob, blob_size, msg)) ;
-    LAGraph_Free (&blob) ;
+    LAGraph_Free (&blob, NULL) ;
 
     result = LAGraph_SWrite_Item (NULL, blob, blob_size, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
@@ -360,7 +359,7 @@ void test_SWrite_errors (void)
 
     // free everything
     LAGraph_SFreeSet (&Set, nmatrices) ;
-    LAGraph_Free ((void **) &collection) ;
+    LAGraph_Free ((void **) &collection, NULL) ;
     fclose (f) ;
 
     // read garbage with LAGraph_SRead

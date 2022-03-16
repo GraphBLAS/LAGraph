@@ -42,12 +42,12 @@
     GrB_free(&BF_EQ_Tuple3);           \
     GrB_free(&BF_lMIN_Tuple3_Monoid);  \
     GrB_free(&BF_lMIN_PLUSrhs_Tuple3); \
-    LAGraph_Free ((void**)&I);                  \
-    LAGraph_Free ((void**)&J);                  \
-    LAGraph_Free ((void**)&w);                  \
-    LAGraph_Free ((void**)&W);                  \
-    LAGraph_Free ((void**)&h);                  \
-    LAGraph_Free ((void**)&pi);                 \
+    LAGraph_Free ((void**)&I, NULL);   \
+    LAGraph_Free ((void**)&J, NULL);   \
+    LAGraph_Free ((void**)&w, NULL);   \
+    LAGraph_Free ((void**)&W, NULL);   \
+    LAGraph_Free ((void**)&h, NULL);   \
+    LAGraph_Free ((void**)&pi, NULL);  \
 }
 
 #include <LAGraph.h>
@@ -198,12 +198,12 @@ GrB_Info LAGraph_BF_full
     //--------------------------------------------------------------------------
     // allocate arrays used for tuplets
     //--------------------------------------------------------------------------
-    I = LAGraph_Malloc (nz, sizeof(GrB_Index)) ;
-    J = LAGraph_Malloc (nz, sizeof(GrB_Index)) ;
-    w = LAGraph_Malloc (nz, sizeof(double)) ;
-    W = LAGraph_Malloc (nz, sizeof(BF_Tuple3_struct)) ;
-    LG_ASSERT (I != NULL && J != NULL && w != NULL && W != NULL, 
-        GrB_OUT_OF_MEMORY) ;
+
+    LAGRAPH_TRY (LAGraph_Malloc ((void **) &I, nz, sizeof(GrB_Index), msg)) ;
+    LAGRAPH_TRY (LAGraph_Malloc ((void **) &J, nz, sizeof(GrB_Index), msg)) ;
+    LAGRAPH_TRY (LAGraph_Malloc ((void **) &w, nz, sizeof(double), msg)) ;
+    LAGRAPH_TRY (LAGraph_Malloc ((void **) &W, nz, sizeof(BF_Tuple3_struct),
+        msg)) ;
 
     //--------------------------------------------------------------------------
     // create matrix Atmp based on A, while its entries become BF_Tuple3 type
@@ -281,10 +281,11 @@ GrB_Info LAGraph_BF_full
     //--------------------------------------------------------------------------
     // extract tuple from "distance" vector d and create GrB_Vectors for output
     //--------------------------------------------------------------------------
+
     GRB_TRY (GrB_Vector_extractTuples_UDT (I, (void *) W, &nz, d));
-    h  = LAGraph_Malloc (nz, sizeof(GrB_Index)) ;
-    pi = LAGraph_Malloc (nz, sizeof(GrB_Index)) ;
-    LG_ASSERT (w != NULL && h != NULL && pi != NULL, GrB_OUT_OF_MEMORY) ;
+    LAGRAPH_TRY (LAGraph_Malloc ((void **) &h , nz, sizeof(GrB_Index), msg)) ;
+    LAGRAPH_TRY (LAGraph_Malloc ((void **) &pi, nz, sizeof(GrB_Index), msg)) ;
+
     for (GrB_Index k = 0; k < nz; k++)
     {
         w [k] = W[k].w ;

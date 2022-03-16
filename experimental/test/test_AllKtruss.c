@@ -87,11 +87,13 @@ void test_AllKTruss (void)
         GrB_Index n ;
         int64_t kmax ;
         OK (GrB_Matrix_nrows (&n, G->A)) ;
-        GrB_Matrix *Cset = (GrB_Matrix *) LAGraph_Calloc (n,
-            sizeof (GrB_Matrix)) ;
-        int64_t *ntris  = LAGraph_Malloc (n, sizeof (int64_t)) ;
-        int64_t *nedges = LAGraph_Malloc (n, sizeof (int64_t)) ;
-        int64_t *nsteps = LAGraph_Malloc (n, sizeof (int64_t)) ;
+        GrB_Matrix *Cset ;
+        int64_t *ntris, *nedges, *nsteps ;
+        OK (LAGraph_Calloc ((void **) &Cset  , n, sizeof (GrB_Matrix), msg)) ;
+        OK (LAGraph_Malloc ((void **) &ntris , n, sizeof (int64_t), msg)) ;
+        OK (LAGraph_Malloc ((void **) &nedges, n, sizeof (int64_t), msg)) ;
+        OK (LAGraph_Malloc ((void **) &nsteps, n, sizeof (int64_t), msg)) ;
+
         OK (LAGraph_AllKTruss (Cset, &kmax, ntris, nedges, nsteps, G, msg)) ;
         printf ("all k-truss: kmax %g\n", (double) kmax) ;
 
@@ -134,11 +136,13 @@ void test_AllKTruss (void)
         G->kind = LAGraph_ADJACENCY_DIRECTED ;
         G->structure_is_symmetric = true ;
         int64_t k2 ;
-        GrB_Matrix *Cset2 = (GrB_Matrix *) LAGraph_Calloc (n,
-            sizeof (GrB_Matrix)) ;
-        int64_t *ntris2  = LAGraph_Malloc (n, sizeof (int64_t)) ;
-        int64_t *nedges2 = LAGraph_Malloc (n, sizeof (int64_t)) ;
-        int64_t *nsteps2 = LAGraph_Malloc (n, sizeof (int64_t)) ;
+        GrB_Matrix *Cset2 ;
+        int64_t *ntris2, *nedges2, *nsteps2 ;
+        OK (LAGraph_Calloc ((void **) &Cset2  , n, sizeof (GrB_Matrix), msg)) ;
+        OK (LAGraph_Malloc ((void **) &ntris2 , n, sizeof (int64_t), msg)) ;
+        OK (LAGraph_Malloc ((void **) &nedges2, n, sizeof (int64_t), msg)) ;
+        OK (LAGraph_Malloc ((void **) &nsteps2, n, sizeof (int64_t), msg)) ;
+
         OK (LAGraph_AllKTruss (Cset2, &k2, ntris2, nedges2, nsteps2, G, msg)) ;
         TEST_CHECK (k2 == kmax) ;
         for (int k = 0 ; k <= kmax ; k++)
@@ -165,15 +169,15 @@ void test_AllKTruss (void)
             OK (GrB_free (&(Cset2 [k]))) ;
         }
 
-        LAGraph_Free ((void **) &Cset) ;
-        LAGraph_Free ((void **) &ntris) ;
-        LAGraph_Free ((void **) &nedges) ;
-        LAGraph_Free ((void **) &nsteps) ;
+        LAGraph_Free ((void **) &Cset, NULL) ;
+        LAGraph_Free ((void **) &ntris, NULL) ;
+        LAGraph_Free ((void **) &nedges, NULL) ;
+        LAGraph_Free ((void **) &nsteps, NULL) ;
 
-        LAGraph_Free ((void **) &Cset2) ;
-        LAGraph_Free ((void **) &ntris2) ;
-        LAGraph_Free ((void **) &nedges2) ;
-        LAGraph_Free ((void **) &nsteps2) ;
+        LAGraph_Free ((void **) &Cset2, NULL) ;
+        LAGraph_Free ((void **) &ntris2, NULL) ;
+        LAGraph_Free ((void **) &nedges2, NULL) ;
+        LAGraph_Free ((void **) &nsteps2, NULL) ;
 
         OK (LAGraph_Delete (&G, msg)) ;
     }
@@ -205,10 +209,12 @@ void test_allktruss_errors (void)
     GrB_Index n ;
     int64_t kmax ;
     OK (GrB_Matrix_nrows (&n, G->A)) ;
-    GrB_Matrix *Cset = (GrB_Matrix *) LAGraph_Calloc (n, sizeof (GrB_Matrix)) ;
-    int64_t *ntris  = LAGraph_Malloc (n, sizeof (int64_t)) ;
-    int64_t *nedges = LAGraph_Malloc (n, sizeof (int64_t)) ;
-    int64_t *nsteps = LAGraph_Malloc (n, sizeof (int64_t)) ;
+    int64_t *ntris, *nedges, *nsteps ;
+    GrB_Matrix *Cset ;
+    OK (LAGraph_Calloc ((void **) &Cset  , n, sizeof (GrB_Matrix), msg)) ;
+    OK (LAGraph_Malloc ((void **) &ntris , n, sizeof (int64_t), msg)) ;
+    OK (LAGraph_Malloc ((void **) &nedges, n, sizeof (int64_t), msg)) ;
+    OK (LAGraph_Malloc ((void **) &nsteps, n, sizeof (int64_t), msg)) ;
 
     // kmax is NULL
     int result = LAGraph_AllKTruss (Cset, NULL, ntris, nedges, nsteps, G, msg) ;
@@ -234,10 +240,10 @@ void test_allktruss_errors (void)
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == -1005) ;
 
-    LAGraph_Free ((void **) &Cset) ;
-    LAGraph_Free ((void **) &ntris) ;
-    LAGraph_Free ((void **) &nedges) ;
-    LAGraph_Free ((void **) &nsteps) ;
+    LAGraph_Free ((void **) &Cset, NULL) ;
+    LAGraph_Free ((void **) &ntris, NULL) ;
+    LAGraph_Free ((void **) &nedges, NULL) ;
+    LAGraph_Free ((void **) &nsteps, NULL) ;
 
     OK (LAGraph_Delete (&G, msg)) ;
     LAGraph_Finalize (msg) ;
