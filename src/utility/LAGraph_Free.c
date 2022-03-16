@@ -16,15 +16,20 @@
 
 #include "LG_internal.h"
 
-void LAGraph_Free
+int LAGraph_Free            // free a block of memory and set p to NULL
 (
-    void **p                // pointer to object to free, does nothing if NULL
+    // input/output:
+    void **p,               // pointer to object to free, does nothing if NULL
+    char *msg
 )
 {
+    LG_CLEAR_MSG ;
 
     if (p != NULL && (*p) != NULL)
     {
         LAGraph_Free_function (*p) ;
         (*p) = NULL ;
     }
+
+    return (GrB_SUCCESS) ;
 }

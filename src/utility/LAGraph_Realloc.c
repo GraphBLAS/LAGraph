@@ -20,42 +20,48 @@
 
 // Usage:
 
-//      p = LAGraph_Realloc (nitems_new, nitems_old, size_of_item, p, &ok)
-//      if (ok)
-//      {
-//          p points to a block of at least nitems_new*size_of_item bytes and
-//          the first part, of size min(nitems_new,nitems_old)*size_of_item,
-//          has the same content as the old memory block if it was present.
-//      }
-//      else
-//      {
-//          p points to the old block, unchanged.  This case never occurs if
-//          nitems_new < nitems_old.
-//      }
+//  int status = LAGraph_Realloc (&p, nitems_new, nitems_old, size_of_item, msg)
+//  if (status == GrB_SUCCESS)
+//  {
+//      p points to a block of at least nitems_new*size_of_item bytes and
+//      the first part, of size min(nitems_new,nitems_old)*size_of_item,
+//      has the same content as the old memory block if it was present.
+//  }
+//  else
+//  {
+//      p points to the old block, unchanged.  This case never occurs if
+//      nitems_new < nitems_old.
+//  }
 
 #include "LG_internal.h"
 
-void *LAGraph_Realloc       // returns pointer to reallocated block of memory,
-(                           // or original block if reallocation fails.
+int LAGraph_Realloc
+(
+    // input/output:
+    void **p,               // old block to reallocate
+    // input:
     size_t nitems_new,      // new number of items in the object
     size_t nitems_old,      // old number of items in the object
     size_t size_of_item,    // size of each item
-    // input/output
-    void *p,                // old block to reallocate
-    // output
-    bool *ok                // true if successful, false otherwise
+    char *msg
 )
 {
+
+    //--------------------------------------------------------------------------
+    // check inputs
+    //--------------------------------------------------------------------------
+
+    LG_CLEAR_MSG ;
+    LG_ASSERT (p != NULL, GrB_NULL_POINTER) ;
 
     //--------------------------------------------------------------------------
     // malloc a new block if p is NULL on input
     //--------------------------------------------------------------------------
 
-    if (p == NULL)
+    if ((*p) == NULL)
     {
-        p = LAGraph_Malloc (nitems_new, size_of_item) ;
-        (*ok) = (p != NULL) ;
-        return (p) ;
+        LG_TRY (LAGraph_Malloc (p, nitems_new, size_of_item, msg)) ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
@@ -70,14 +76,13 @@ void *LAGraph_Realloc       // returns pointer to reallocated block of memory,
     size_of_item = LAGRAPH_MAX (1, size_of_item) ;
 
     size_t newsize, oldsize ;
-    (*ok) = LG_Multiply_size_t (&newsize, nitems_new, size_of_item)
-         && LG_Multiply_size_t (&oldsize, nitems_old, size_of_item) ;
+    bool ok = LG_Multiply_size_t (&newsize, nitems_new, size_of_item)
+           && LG_Multiply_size_t (&oldsize, nitems_old, size_of_item) ;
 
-    if (!(*ok) || nitems_new > GrB_INDEX_MAX || size_of_item > GrB_INDEX_MAX)
+    if (!ok || nitems_new > GrB_INDEX_MAX || size_of_item > GrB_INDEX_MAX)
     {
         // overflow
-        (*ok) = false ;
-        return (NULL) ;
+        return (GrB_OUT_OF_MEMORY) ;
     }
 
     //--------------------------------------------------------------------------
@@ -93,8 +98,7 @@ void *LAGraph_Realloc       // returns pointer to reallocated block of memory,
         // If the block does not change, or is shrinking but only by a small
         // amount, or is growing but still fits inside the existing block,
         // then leave the block as-is.
-        (*ok) = true ;
-        return (p) ;
+        return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
@@ -111,15 +115,14 @@ void *LAGraph_Realloc       // returns pointer to reallocated block of memory,
         //----------------------------------------------------------------------
 
         // allocate the new space
-        pnew = LAGraph_Malloc (nitems_new, size_of_item) ;
+        LG_TRY (LAGraph_Malloc (&pnew, nitems_new, size_of_item, msg)) ;
         // copy over the data from the old block to the new block
-        if (pnew != NULL)
-        {
-            // copy from the old to the new space
-            memcpy (pnew, p, LAGRAPH_MIN (oldsize, newsize)) ;
-            // free the old space
-            LAGraph_Free (&p) ;
-        }
+        // copy from the old to the new space
+        memcpy (pnew, *p, LAGRAPH_MIN (oldsize, newsize)) ;
+        // free the old space
+        LG_TRY (LAGraph_Free (p, msg)) ;
+        (*p) = pnew ;
+
     }
     else
     {
@@ -128,17 +131,13 @@ void *LAGraph_Realloc       // returns pointer to reallocated block of memory,
         // use realloc
         //----------------------------------------------------------------------
 
-        pnew = LAGraph_Realloc_function (p, newsize) ;
+        pnew = LAGraph_Realloc_function (*p, newsize) ;
+        if (pnew == NULL)
+        {
+            return (GrB_OUT_OF_MEMORY) ;
+        }
+        (*p) = pnew ;
     }
 
-    //--------------------------------------------------------------------------
-    // check if successful and return result
-    //--------------------------------------------------------------------------
-
-    // If the attempt to reduce the size of the block failed, the old block is
-    // unchanged.  So pretend to succeed.
-
-    (*ok) = (newsize < oldsize) || (pnew != NULL) ;
-    p = (pnew != NULL) ? pnew : p ;
-    return (p) ;
+    return (GrB_SUCCESS) ;
 }

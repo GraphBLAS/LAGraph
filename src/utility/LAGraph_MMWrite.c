@@ -25,15 +25,15 @@
 #include "LG_internal.h"
 
 #undef  LG_FREE_WORK
-#define LG_FREE_WORK                \
-{                                   \
-    LAGraph_Free ((void **) &I) ;   \
-    LAGraph_Free ((void **) &J) ;   \
-    LAGraph_Free ((void **) &K) ;   \
-    LAGraph_Free ((void **) &X) ;   \
-    GrB_free (&AT) ;                \
-    GrB_free (&M) ;                 \
-    GrB_free (&C) ;                 \
+#define LG_FREE_WORK                    \
+{                                       \
+    LAGraph_Free ((void **) &I, NULL) ; \
+    LAGraph_Free ((void **) &J, NULL) ; \
+    LAGraph_Free ((void **) &K, NULL) ; \
+    LAGraph_Free ((void **) &X, NULL) ; \
+    GrB_free (&AT) ;                    \
+    GrB_free (&M) ;                     \
+    GrB_free (&C) ;                     \
 }
 
 #undef  LG_FREE_ALL
@@ -468,10 +468,9 @@ int LAGraph_MMWrite
     // extract and print tuples
     //--------------------------------------------------------------------------
 
-    I = LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;
-    J = LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;
-    K = LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;
-    LG_ASSERT (I != NULL && J != NULL && K != NULL, GrB_OUT_OF_MEMORY) ;
+    LG_TRY (LAGraph_Malloc ((void **) &I, nvals, sizeof (GrB_Index), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &J, nvals, sizeof (GrB_Index), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &K, nvals, sizeof (GrB_Index), msg)) ;
     for (int64_t k = 0 ; k < nvals ; k++)
     {
         K [k] = k ;
@@ -485,8 +484,7 @@ int LAGraph_MMWrite
     #define WRITE_TUPLES(ctype,is_unsigned,is_signed,is_real,is_complex)    \
     {                                                                       \
         ctype *X = NULL ;                                                   \
-        X = LAGraph_Malloc (nvals, sizeof (ctype)) ;                        \
-        LG_ASSERT (X != NULL, GrB_OUT_OF_MEMORY) ;                          \
+        LG_TRY (LAGraph_Malloc ((void **) &X, nvals, sizeof (ctype), msg)) ;\
         GRB_TRY (GrB_Matrix_extractTuples (I, J, X, &nvals, A)) ;           \
         LG_TRY (LAGraph_Sort3 ((int64_t *) J, (int64_t *) I,                \
             (int64_t *) K, nvals, nthreads, msg)) ;                         \
@@ -532,7 +530,7 @@ int LAGraph_MMWrite
             }                                                               \
             nvals_printed++ ;                                               \
         }                                                                   \
-        LAGraph_Free ((void **) &X) ;                                       \
+        LG_TRY (LAGraph_Free ((void **) &X, NULL)) ;                        \
     }
 
     if      (type == GrB_BOOL   ) WRITE_TUPLES (bool    , 1, 0, 0, 0)

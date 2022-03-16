@@ -26,17 +26,17 @@
 //  GrB_NOT_IMPLEMENTED: complex types not yet supported
 //  other: return values directly from GrB_* methods
 
-#define LG_FREE_WORK                \
-{                                   \
-    LAGraph_Free ((void **) &I) ;   \
-    LAGraph_Free ((void **) &J) ;   \
-    LAGraph_Free ((void **) &X) ;   \
+#define LG_FREE_WORK                    \
+{                                       \
+    LAGraph_Free ((void **) &I, NULL) ; \
+    LAGraph_Free ((void **) &J, NULL) ; \
+    LAGraph_Free ((void **) &X, NULL) ; \
 }
 
-#define LG_FREE_ALL                 \
-{                                   \
-    LG_FREE_WORK ;                  \
-    GrB_free (A) ;                  \
+#define LG_FREE_ALL                     \
+{                                       \
+    LG_FREE_WORK ;                      \
+    GrB_free (A) ;                      \
 }
 
 #include "LG_internal.h"
@@ -386,7 +386,7 @@ static inline void set_value
 }
 
 //------------------------------------------------------------------------------
-// LAGraph_MMread
+// LAGraph_MMRead
 //------------------------------------------------------------------------------
 
 int LAGraph_MMRead
@@ -848,10 +848,9 @@ int LAGraph_MMRead
     //--------------------------------------------------------------------------
 
     GrB_Index nvals3 = ((MM_storage == MM_general) ? 1 : 2) * (nvals + 1) ;
-    I = (GrB_Index *) LAGraph_Malloc (nvals3, sizeof (GrB_Index)) ;
-    J = (GrB_Index *) LAGraph_Malloc (nvals3, sizeof (GrB_Index)) ;
-    X = LAGraph_Malloc (nvals3, typesize) ;
-    LG_ASSERT (I != NULL && J != NULL && X != NULL, GrB_OUT_OF_MEMORY) ;
+    LG_TRY (LAGraph_Malloc ((void **) &I, nvals3, sizeof (GrB_Index), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &J, nvals3, sizeof (GrB_Index), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &X, nvals3, typesize, msg)) ;
 
     //--------------------------------------------------------------------------
     // read in the triplets

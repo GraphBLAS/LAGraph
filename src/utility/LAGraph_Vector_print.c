@@ -18,10 +18,10 @@
 #include "LG_internal.h"
 
 #undef  LG_FREE_WORK
-#define LG_FREE_WORK                \
-{                                   \
-    LAGraph_Free ((void **) &I) ;   \
-    LAGraph_Free ((void **) &X) ;   \
+#define LG_FREE_WORK                    \
+{                                       \
+    LAGraph_Free ((void **) &I, NULL) ; \
+    LAGraph_Free ((void **) &X, NULL) ; \
 }
 
 #undef  LG_FREE_ALL
@@ -53,9 +53,8 @@ int LG_Vector_Print_ ## suffix                                              \
         "\n", LG_XSTR (gtype), n, nvals) ;                                  \
     if (prl <= 1) return (GrB_SUCCESS) ;                                    \
     /* extract tuples */                                                    \
-    I = LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;                        \
-    X = LAGraph_Malloc (nvals, sizeof (ctype)) ;                            \
-    LG_ASSERT (I != NULL && X != NULL, GrB_OUT_OF_MEMORY) ;                 \
+    LG_TRY (LAGraph_Malloc ((void **) &I, nvals, sizeof (GrB_Index), msg)) ;\
+    LG_TRY (LAGraph_Malloc ((void **) &X, nvals, sizeof (ctype), msg)) ;    \
     GrB_Info info = GrB_Vector_extractTuples (I, X, &nvals, v) ;            \
     LG_ASSERT_MSG (info != GrB_DOMAIN_MISMATCH,                             \
         GrB_NOT_IMPLEMENTED, "type not supported") ;                        \

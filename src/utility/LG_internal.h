@@ -174,17 +174,7 @@ typedef unsigned char LG_void ;
 // LG_ASSERT: assert an expression is true, and return if it is false
 //------------------------------------------------------------------------------
 
-// LAGraph methods can use this assertion macro for simple errors, such as
-// when running of memory:
-//
-//      void P = LAGraph_Malloc ( ... ) ;
-//      LG_ASSERT (P != NULL, GrB_OUT_OF_MEMORY) ;
-//
-// If LAGraph_Malloc fails and returns P as NULL, the msg is set to a single
-// line with:
-//
-//      LAGraph assertion "P != NULL" failed
-//      (file: LAGraph_something.c, line: 42): status: -102
+// LAGraph methods can use this assertion macro for simple errors.
 
 #define LG_ASSERT(expression, error_status)                                 \
 {                                                                           \

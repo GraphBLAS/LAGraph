@@ -33,16 +33,16 @@
 // the permutation (or P [k] = j if column j is the kth column in the
 // permutation, with byrow false).
 
-#define LG_FREE_WORK                \
-{                                   \
-    LAGraph_Free ((void **) &W) ;   \
-    LAGraph_Free ((void **) &D) ;   \
+#define LG_FREE_WORK                    \
+{                                       \
+    LAGraph_Free ((void **) &W, NULL) ; \
+    LAGraph_Free ((void **) &D, NULL) ; \
 }
 
-#define LG_FREE_ALL                 \
-{                                   \
-    LG_FREE_WORK ;                  \
-    LAGraph_Free ((void **) &P) ;   \
+#define LG_FREE_ALL                     \
+{                                       \
+    LG_FREE_WORK ;                      \
+    LAGraph_Free ((void **) &P, NULL) ; \
 }
 
 #include "LG_internal.h"
@@ -106,10 +106,9 @@ int LAGraph_SortByDegree
     // allocate result and workspace
     //--------------------------------------------------------------------------
 
-    P = LAGraph_Malloc (n, sizeof (int64_t)) ;
-    D = LAGraph_Malloc (n, sizeof (int64_t)) ;
-    W = LAGraph_Malloc (2*n, sizeof (int64_t)) ;
-    LG_ASSERT (D != NULL && P != NULL && W != NULL, GrB_OUT_OF_MEMORY) ;
+    LG_TRY (LAGraph_Malloc ((void **) &P, n, sizeof (int64_t), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &D, n, sizeof (int64_t), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &W, 2*n, sizeof (int64_t), msg)) ;
     int64_t *W0 = W ;
     int64_t *W1 = W + n ;
 
@@ -147,7 +146,7 @@ int LAGraph_SortByDegree
         }
     }
 
-    LAGraph_Free ((void **) &W) ;
+    LG_TRY (LAGraph_Free ((void **) &W, NULL)) ;
 
     //--------------------------------------------------------------------------
     // sort by degrees, with ties by node id

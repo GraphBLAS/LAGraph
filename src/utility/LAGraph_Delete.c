@@ -47,6 +47,6 @@ int LAGraph_Delete
     //--------------------------------------------------------------------------
 
     GRB_TRY (GrB_free (&((*G)->A))) ;
-    LAGraph_Free ((void **) G) ;
+    LAGraph_Free ((void **) G, NULL) ;
     return (GrB_SUCCESS) ;
 }

@@ -14,7 +14,7 @@
 // LAGraph_SampleDegree computes estimates of the mean and median of the
 // row or column degree of a graph.
 
-#define LG_FREE_ALL LAGraph_Free ((void **) &samples) ;
+#define LG_FREE_ALL LAGraph_Free ((void **) &samples, NULL) ;
 
 #include "LG_internal.h"
 
@@ -65,8 +65,7 @@ int LAGraph_SampleDegree
     // allocate workspace
     //--------------------------------------------------------------------------
 
-    samples = LAGraph_Malloc (nsamples, sizeof (int64_t)) ;
-    LG_ASSERT (samples != NULL, GrB_OUT_OF_MEMORY) ;
+    LG_TRY (LAGraph_Malloc ((void **) &samples, nsamples, sizeof (int64_t), msg)) ;
 
     //--------------------------------------------------------------------------
     // pick nsamples nodes at random and determine their degree

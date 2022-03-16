@@ -46,8 +46,7 @@ int LAGraph_New
     // allocate the graph
     //--------------------------------------------------------------------------
 
-    (*G) = LAGraph_Malloc (1, sizeof (struct LAGraph_Graph_struct)) ;
-    LG_ASSERT (*G != NULL, GrB_OUT_OF_MEMORY) ;
+    LG_TRY (LAGraph_Malloc ((void **) G, 1, sizeof (struct LAGraph_Graph_struct), msg)) ;
 
     //--------------------------------------------------------------------------
     // initialize its members

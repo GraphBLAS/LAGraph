@@ -13,7 +13,7 @@
 
 // A parallel mergesort of an array of n integers.
 
-#define LG_FREE_ALL LAGraph_Free ((void **) &W) ;
+#define LG_FREE_ALL LAGraph_Free ((void **) &W, NULL) ;
 
 #include "LG_internal.h"
 
@@ -364,8 +364,7 @@ int LAGraph_Sort1
     // allocate workspace
     //--------------------------------------------------------------------------
 
-    W = LAGraph_Malloc (n + 6*ntasks + 1, sizeof (int64_t)) ;
-    LG_ASSERT (W != NULL, GrB_OUT_OF_MEMORY) ;
+    LG_TRY (LAGraph_Malloc ((void **) &W, n + 6*ntasks + 1, sizeof (int64_t), msg)) ;
 
     int64_t *T = W ;
     int64_t *LG_RESTRICT W_0    = T ; T += n ;

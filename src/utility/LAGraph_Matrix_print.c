@@ -18,11 +18,11 @@
 #include "LG_internal.h"
 
 #undef  LG_FREE_WORK
-#define LG_FREE_WORK                \
-{                                   \
-    LAGraph_Free ((void **) &I) ;   \
-    LAGraph_Free ((void **) &J) ;   \
-    LAGraph_Free ((void **) &X) ;   \
+#define LG_FREE_WORK                    \
+{                                       \
+    LAGraph_Free ((void **) &I, NULL) ; \
+    LAGraph_Free ((void **) &J, NULL) ; \
+    LAGraph_Free ((void **) &X, NULL) ; \
 }
 
 #undef  LG_FREE_ALL
@@ -54,10 +54,9 @@ int LG_Matrix_Print_ ## suffix                                              \
         "\n", LG_XSTR (gtype), nrows, ncols, nvals) ;                       \
     if (prl <= 1) return (GrB_SUCCESS) ;                                    \
     /* extract tuples */                                                    \
-    I = LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;                        \
-    J = LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;                        \
-    X = LAGraph_Malloc (nvals, sizeof (ctype)) ;                            \
-    LG_ASSERT (I != NULL && J != NULL && X != NULL, GrB_OUT_OF_MEMORY) ;    \
+    LG_TRY (LAGraph_Malloc ((void **) &I, nvals, sizeof (GrB_Index), msg)) ;\
+    LG_TRY (LAGraph_Malloc ((void **) &J, nvals, sizeof (GrB_Index), msg)) ;\
+    LG_TRY (LAGraph_Malloc ((void **) &X, nvals, sizeof (ctype), msg)) ;    \
     GrB_Info info = GrB_Matrix_extractTuples (I, J, X, &nvals, A) ;         \
     LG_ASSERT_MSG (info != GrB_DOMAIN_MISMATCH,                             \
         GrB_NOT_IMPLEMENTED, "type not supported") ;                        \
