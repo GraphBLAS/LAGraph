@@ -11,23 +11,23 @@
 
 //------------------------------------------------------------------------------
 
-#define LG_FREE_WORK                        \
-{                                           \
-    LAGraph_Free ((void **) &queue) ;       \
-    LAGraph_Free ((void **) &level_check) ; \
-    LAGraph_Free ((void **) &level_in) ;    \
-    LAGraph_Free ((void **) &parent_in) ;   \
-    LAGraph_Free ((void **) &visited) ;     \
-    LAGraph_Free ((void **) &neighbors) ;   \
-    GrB_free (&Row) ;                       \
+#define LG_FREE_WORK                                \
+{                                                   \
+    LAGraph_Free ((void **) &queue, NULL) ;         \
+    LAGraph_Free ((void **) &level_check, NULL) ;   \
+    LAGraph_Free ((void **) &level_in, NULL) ;      \
+    LAGraph_Free ((void **) &parent_in, NULL) ;     \
+    LAGraph_Free ((void **) &visited, NULL) ;       \
+    LAGraph_Free ((void **) &neighbors, NULL) ;     \
+    GrB_free (&Row) ;                               \
 }
 
-#define LG_FREE_ALL                         \
-{                                           \
-    LG_FREE_WORK ;                          \
-    LAGraph_Free ((void **) &Ap) ;          \
-    LAGraph_Free ((void **) &Aj) ;          \
-    LAGraph_Free ((void **) &Ax) ;          \
+#define LG_FREE_ALL                                 \
+{                                                   \
+    LG_FREE_WORK ;                                  \
+    LAGraph_Free ((void **) &Ap, NULL) ;            \
+    LAGraph_Free ((void **) &Aj, NULL) ;            \
+    LAGraph_Free ((void **) &Ax, NULL) ;            \
 }
 
 #include "LG_internal.h"
@@ -74,9 +74,8 @@ int LG_check_bfs
     // allocate workspace
     //--------------------------------------------------------------------------
 
-    queue = LAGraph_Malloc (n, sizeof (int64_t)) ;
-    level_check = LAGraph_Malloc (n, sizeof (int64_t)) ; 
-    LG_ASSERT (queue != NULL && level_check != NULL , GrB_OUT_OF_MEMORY) ;
+    LG_TRY (LAGraph_Malloc ((void **) &queue, n, sizeof (int64_t), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &level_check, n, sizeof (int64_t), msg)) ; 
 
     //--------------------------------------------------------------------------
     // get the contents of the Level and Parent vectors
@@ -84,15 +83,13 @@ int LG_check_bfs
 
     if (Level != NULL)
     {
-        level_in = LAGraph_Malloc (n, sizeof (int64_t)) ;
-        LG_ASSERT (level_in != NULL, GrB_OUT_OF_MEMORY) ;
+        LG_TRY (LAGraph_Malloc ((void **) &level_in, n, sizeof (int64_t), msg)) ;
         LG_TRY (LG_check_vector (level_in, Level, n, -1)) ;
     }
 
     if (Parent != NULL)
     {
-        parent_in = LAGraph_Malloc (n, sizeof (int64_t)) ;
-        LG_ASSERT (parent_in != NULL, GrB_OUT_OF_MEMORY) ;
+        LG_TRY (LAGraph_Malloc ((void **) &parent_in, n, sizeof (int64_t), msg)) ;
         LG_TRY (LG_check_vector (parent_in, Parent, n, -1)) ;
     }
 
@@ -120,8 +117,7 @@ int LG_check_bfs
     queue [0] = src ;
     int64_t head = 0 ;
     int64_t tail = 1 ;
-    visited = LAGraph_Calloc (n, sizeof (bool)) ;
-    LG_ASSERT (visited != NULL, GrB_OUT_OF_MEMORY) ;
+    LG_TRY (LAGraph_Calloc ((void **) &visited, n, sizeof (bool), msg)) ;
     visited [src] = true ;      // src is visited, and is level 0
 
     for (int64_t i = 0 ; i < n ; i++)
@@ -132,8 +128,7 @@ int LG_check_bfs
 
     #if !LAGRAPH_SUITESPARSE
     GRB_TRY (GrB_Vector_new (&Row, GrB_BOOL, n)) ;
-    neighbors = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
-    LG_ASSERT (neighbors != NULL, GrB_OUT_OF_MEMORY) ;
+    LG_TRY (LAGraph_Malloc ((void **) &neighbors, n, sizeof (GrB_Index), msg)) ;
     #endif
 
     while (head < tail)

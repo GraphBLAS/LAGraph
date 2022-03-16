@@ -165,32 +165,32 @@ static inline GrB_Info fastsv
 // components in the graph G is the number of representatives.
 
 #undef  LG_FREE_WORK
-#define LG_FREE_WORK                        \
-{                                           \
-    LAGraph_Free ((void **) &Tp) ;          \
-    LAGraph_Free ((void **) &Tj) ;          \
-    LAGraph_Free ((void **) &Tx) ;          \
-    LAGraph_Free ((void **) &Cp) ;          \
-    LAGraph_Free ((void **) &Px) ;          \
-    LAGraph_Free ((void **) &Cx) ;          \
-    LAGraph_Free ((void **) &ht_key) ;      \
-    LAGraph_Free ((void **) &ht_count) ;    \
-    LAGraph_Free ((void **) &count) ;       \
-    LAGraph_Free ((void **) &range) ;       \
-    GrB_free (&C) ;                         \
-    GrB_free (&T) ;                         \
-    GrB_free (&t) ;                         \
-    GrB_free (&y) ;                         \
-    GrB_free (&gp) ;                        \
-    GrB_free (&mngp) ;                      \
-    GrB_free (&gp_new) ;                    \
+#define LG_FREE_WORK                            \
+{                                               \
+    LAGraph_Free ((void **) &Tp, NULL) ;        \
+    LAGraph_Free ((void **) &Tj, NULL) ;        \
+    LAGraph_Free ((void **) &Tx, NULL) ;        \
+    LAGraph_Free ((void **) &Cp, NULL) ;        \
+    LAGraph_Free ((void **) &Px, NULL) ;        \
+    LAGraph_Free ((void **) &Cx, NULL) ;        \
+    LAGraph_Free ((void **) &ht_key, NULL) ;    \
+    LAGraph_Free ((void **) &ht_count, NULL) ;  \
+    LAGraph_Free ((void **) &count, NULL) ;     \
+    LAGraph_Free ((void **) &range, NULL) ;     \
+    GrB_free (&C) ;                             \
+    GrB_free (&T) ;                             \
+    GrB_free (&t) ;                             \
+    GrB_free (&y) ;                             \
+    GrB_free (&gp) ;                            \
+    GrB_free (&mngp) ;                          \
+    GrB_free (&gp_new) ;                        \
 }
 
 #undef  LG_FREE_ALL
-#define LG_FREE_ALL                         \
-{                                           \
-    LG_FREE_WORK ;                          \
-    GrB_free (&parent) ;                    \
+#define LG_FREE_ALL                             \
+{                                               \
+    LG_FREE_WORK ;                              \
+    GrB_free (&parent) ;                        \
 }
 
 #endif
@@ -293,9 +293,8 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     nthreads = LAGRAPH_MAX (nthreads, 1) ;
 // ]
 
-    Cx = (void *) LAGraph_Calloc (1, sizeof (bool)) ;
-    Px = (GrB_Index *) LAGraph_Malloc (n, sizeof (GrB_Index)) ;
-    LG_ASSERT (Px != NULL && Cx != NULL, GrB_OUT_OF_MEMORY) ;
+    LG_TRY (LAGraph_Calloc ((void **) &Cx, 1, sizeof (bool), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &Px, n, sizeof (GrB_Index), msg)) ;
 
     // create Cp = 0:n (always 64-bit) and the empty C matrix
     GRB_TRY (GrB_Matrix_new (&C, GrB_BOOL, n, n)) ;
@@ -390,13 +389,11 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         GrB_Index Tp_size = (n+1) * sizeof (GrB_Index) ;
         GrB_Index Tj_size = nvals * sizeof (GrB_Index) ;
         GrB_Index Tx_size = sizeof (bool) ;
-        Tp = (GrB_Index *) LAGraph_Malloc (n+1, sizeof (GrB_Index)) ;
-        Tj = (GrB_Index *) LAGraph_Malloc (nvals, sizeof (GrB_Index)) ;
-        Tx = (bool *) LAGraph_Calloc (1, sizeof (bool)) ;
-        range = (int64_t *) LAGraph_Malloc (nthreads + 1, sizeof (int64_t)) ;
-        count = (GrB_Index *) LAGraph_Calloc (nthreads + 1, sizeof (GrB_Index));
-        LG_ASSERT (Tp != NULL && Tj != NULL && Tx != NULL && range != NULL
-            && count != NULL, GrB_OUT_OF_MEMORY) ;
+        LG_TRY (LAGraph_Malloc ((void **) &Tp, n+1, sizeof (GrB_Index), msg)) ;
+        LG_TRY (LAGraph_Malloc ((void **) &Tj, nvals, sizeof (GrB_Index), msg)) ;
+        LG_TRY (LAGraph_Calloc ((void **) &Tx, 1, sizeof (bool), msg)) ;
+        LG_TRY (LAGraph_Malloc ((void **) &range, nthreads + 1, sizeof (int64_t), msg)) ;
+        LG_TRY (LAGraph_Calloc ((void **) &count, nthreads + 1, sizeof (GrB_Index), msg));
 
         //----------------------------------------------------------------------
         // define parallel tasks to construct T
@@ -487,9 +484,8 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         #define NEXT(x) ((x + 23) & (HASH_SIZE-1))
 
         // allocate and initialize the hash table
-        ht_key = (GrB_Index *) LAGraph_Malloc (HASH_SIZE, sizeof (GrB_Index)) ;
-        ht_count = (int *) LAGraph_Calloc (HASH_SIZE, sizeof (int)) ;
-        LG_ASSERT (ht_key != NULL && ht_count != NULL, GrB_OUT_OF_MEMORY) ;
+        LG_TRY (LAGraph_Malloc ((void **) &ht_key, HASH_SIZE, sizeof (GrB_Index), msg)) ;
+        LG_TRY (LAGraph_Calloc ((void **) &ht_count, HASH_SIZE, sizeof (int), msg)) ;
         for (int k = 0 ; k < HASH_SIZE ; k++)
         {
             ht_key [k] = UINT64_MAX ;

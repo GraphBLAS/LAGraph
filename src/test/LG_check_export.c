@@ -14,11 +14,11 @@
 // Export G->A in CSR format, for testing only.
 // See test_export for a brutal memory test of this method.
 
-#define LG_FREE_ALL                         \
-{                                           \
-    LAGraph_Free ((void **) Ap_handle) ;    \
-    LAGraph_Free ((void **) Aj_handle) ;    \
-    LAGraph_Free ((void **) Ax_handle) ;    \
+#define LG_FREE_ALL                             \
+{                                               \
+    LAGraph_Free ((void **) Ap_handle, NULL) ;  \
+    LAGraph_Free ((void **) Aj_handle, NULL) ;  \
+    LAGraph_Free ((void **) Ax_handle, NULL) ;  \
 }
 
 #include "LG_internal.h"
@@ -76,13 +76,12 @@ int LG_check_export
 
     GRB_TRY (GrB_Matrix_exportSize (Ap_len, Aj_len, Ax_len, GrB_CSR_FORMAT,
         G->A)) ;
-    Ap = (GrB_Index *) LAGraph_Malloc (*Ap_len, sizeof (GrB_Index)) ;
-    Aj = (GrB_Index *) LAGraph_Malloc (*Aj_len, sizeof (GrB_Index)) ;
-    Ax = (void      *) LAGraph_Malloc (*Ax_len, s) ;
-    (*Ap_handle) = Ap ;
-    (*Aj_handle) = Aj ;
-    (*Ax_handle) = Ax ;
-    LG_ASSERT (Ap != NULL && Aj != NULL && Ax != NULL, GrB_OUT_OF_MEMORY) ;
+    LG_TRY (LAGraph_Malloc ((void **) Ap_handle, *Ap_len, sizeof (GrB_Index), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) Aj_handle, *Aj_len, sizeof (GrB_Index), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) Ax_handle, *Ax_len, s, msg)) ;
+    Ap = (*Ap_handle) ;
+    Aj = (*Aj_handle) ;
+    Ax = (*Ax_handle) ;
 
     if      (atype == GrB_BOOL  )
     {

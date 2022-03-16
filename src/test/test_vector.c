@@ -35,14 +35,14 @@ void test_vector (void)
     {
         OK (GrB_Vector_setElement (X, i, i)) ;
     }
-    x = LAGraph_Malloc (n, sizeof (int64_t)) ;
+    OK (LAGraph_Malloc ((void **) &x, n, sizeof (int64_t), msg)) ;
     OK (LG_check_vector (x, X, n, missing)) ;
     for (int i = 0 ; i < n ; i++)
     {
         TEST_CHECK (x [i] == ((i < 10) ? i : missing)) ;
     }
     OK (GrB_free (&X)) ;
-    LAGraph_Free ((void **) &x) ;
+    OK (LAGraph_Free ((void **) &x, NULL)) ;
     OK (LAGraph_Finalize (msg)) ;
 }
 
@@ -56,7 +56,7 @@ void test_vector_brutal (void)
     OK (LG_brutal_setup (msg)) ;
     printf ("\n") ;
 
-    x = LAGraph_Malloc (n, sizeof (int64_t)) ;
+    OK (LAGraph_Malloc ((void **) &x, n, sizeof (int64_t), msg)) ;
 
     for (int nbrutal = 0 ; ; nbrutal++)
     {
@@ -88,7 +88,7 @@ void test_vector_brutal (void)
         TEST_CHECK (x [i] == ((i < 10) ? i : missing)) ;
     }
     OK (GrB_free (&X)) ;
-    LAGraph_Free ((void **) &x) ;
+    OK (LAGraph_Free ((void **) &x, NULL)) ;
     OK (LG_brutal_teardown (msg)) ;
 }
 #endif

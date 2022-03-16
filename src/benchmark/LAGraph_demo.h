@@ -51,21 +51,21 @@
 // binwrite: write a matrix to a binary file
 //------------------------------------------------------------------------------
 
-#define LG_FREE_ALL                     \
-{                                       \
-    GrB_free (A) ;                      \
-    LAGraph_Free ((void **) &Ap) ;      \
-    LAGraph_Free ((void **) &Ab) ;      \
-    LAGraph_Free ((void **) &Ah) ;      \
-    LAGraph_Free ((void **) &Ai) ;      \
-    LAGraph_Free ((void **) &Ax) ;      \
+#define LG_FREE_ALL                         \
+{                                           \
+    GrB_free (A) ;                          \
+    LAGraph_Free ((void **) &Ap, NULL) ;    \
+    LAGraph_Free ((void **) &Ab, NULL) ;    \
+    LAGraph_Free ((void **) &Ah, NULL) ;    \
+    LAGraph_Free ((void **) &Ai, NULL) ;    \
+    LAGraph_Free ((void **) &Ax, NULL) ;    \
 }
 
 #define FWRITE(p,s,n)                   \
 {                                       \
     if (fwrite (p, s, n, f) != n)       \
     {                                   \
-        CATCH (-1001) ; /* file I/O error */ \
+        CATCH (LAGRAPH_IO_ERROR) ;      \
     }                                   \
 }
 
@@ -571,9 +571,9 @@ static inline int binread   // returns 0 if successful, -1 if failure
         Ah_len = nvec ;
         Ai_len = nvals ;
         Ax_len = nvals ;
-        Ap = LAGraph_Malloc (Ap_len, sizeof (GrB_Index)) ;
-        Ah = LAGraph_Malloc (Ah_len, sizeof (GrB_Index)) ;
-        Ai = LAGraph_Malloc (Ai_len, sizeof (GrB_Index)) ;
+        LAGraph_Malloc ((void **) &Ap, Ap_len, sizeof (GrB_Index), msg) ;
+        LAGraph_Malloc ((void **) &Ah, Ah_len, sizeof (GrB_Index), msg) ;
+        LAGraph_Malloc ((void **) &Ai, Ai_len, sizeof (GrB_Index), msg) ;
         Ap_size = Ap_len * sizeof (GrB_Index) ;
         Ah_size = Ah_len * sizeof (GrB_Index) ;
         Ai_size = Ai_len * sizeof (GrB_Index) ;
@@ -584,8 +584,8 @@ static inline int binread   // returns 0 if successful, -1 if failure
         Ap_len = nvec+1 ;
         Ai_len = nvals ;
         Ax_len = nvals ;
-        Ap = LAGraph_Malloc (Ap_len, sizeof (GrB_Index)) ;
-        Ai = LAGraph_Malloc (Ai_len, sizeof (GrB_Index)) ;
+        LAGraph_Malloc ((void **) &Ap, Ap_len, sizeof (GrB_Index), msg) ;
+        LAGraph_Malloc ((void **) &Ai, Ai_len, sizeof (GrB_Index), msg) ;
         Ap_size = Ap_len * sizeof (GrB_Index) ;
         Ai_size = Ai_len * sizeof (GrB_Index) ;
         ok = (Ap != NULL && Ai != NULL) ;
@@ -594,7 +594,7 @@ static inline int binread   // returns 0 if successful, -1 if failure
     {
         Ab_len = nrows*ncols ;
         Ax_len = nrows*ncols ;
-        Ab = LAGraph_Malloc (nrows*ncols, sizeof (int8_t)) ;
+        LAGraph_Malloc ((void **) &Ab, nrows*ncols, sizeof (int8_t), msg) ;
         Ab_size = Ab_len * sizeof (GrB_Index) ;
         ok = (Ab != NULL) ;
     }
@@ -606,7 +606,7 @@ static inline int binread   // returns 0 if successful, -1 if failure
     {
         CATCH (DEAD_CODE) ;    // this "cannot" happen
     }
-    Ax = LAGraph_Malloc (iso ? 1 : Ax_len, typesize) ;
+    LAGraph_Malloc ((void **) &Ax, iso ? 1 : Ax_len, typesize, msg) ;
     Ax_size = (iso ? 1 : Ax_len) * typesize ;
     ok = ok && (Ax != NULL) ;
     if (!ok) CATCH (GrB_OUT_OF_MEMORY) ;        // out of memory

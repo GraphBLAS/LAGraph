@@ -108,6 +108,8 @@ int LG_BreadthFirstSearch_SSGrB
             LAGRAPH_PROPERTY_MISSING, "G->AT is required") ;
     }
 
+    // FIXME: if AT is not present, do push-only?
+
     // direction-optimization requires G->AT and G->rowdegree
     LG_ASSERT_MSG (Degree != NULL,
         LAGRAPH_PROPERTY_MISSING, "G->rowdegree is required") ;

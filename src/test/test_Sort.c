@@ -28,9 +28,8 @@ void test_sort1 (void)
     {
         int64_t n = (trial == 0) ? 1024 : (256 * 1024) ;
 
-        int64_t *A0 = LAGraph_Malloc (n, sizeof (int64_t)) ;
-
-        TEST_CHECK (A0 != NULL) ;
+        int64_t *A0 ;
+        OK (LAGraph_Malloc ((void **) &A0, n, sizeof (int64_t), msg)) ;
 
         uint64_t seed = 1 ;
         for (int k = 0 ; k < n ; k++)
@@ -57,7 +56,7 @@ void test_sort1 (void)
             TEST_CHECK (A0 [k-1] <= A0 [k]) ;
         }
 
-        LAGraph_Free ((void **) &A0) ;
+        LAGraph_Free ((void **) &A0, NULL) ;
     }
 
     OK (LAGraph_Finalize (msg)) ;
@@ -73,11 +72,9 @@ void test_sort2 (void)
 
     int64_t n = 256 * 1024 ;
 
-    int64_t *A0 = LAGraph_Malloc (n, sizeof (int64_t)) ;
-    int64_t *A1 = LAGraph_Malloc (n, sizeof (int64_t)) ;
-
-    TEST_CHECK (A0 != NULL) ;
-    TEST_CHECK (A1 != NULL) ;
+    int64_t *A0, *A1 ;
+    OK (LAGraph_Malloc ((void **) &A0, n, sizeof (int64_t), msg)) ;
+    OK (LAGraph_Malloc ((void **) &A1, n, sizeof (int64_t), msg)) ;
 
     uint64_t seed = 1 ;
     for (int k = 0 ; k < n ; k++)
@@ -108,8 +105,8 @@ void test_sort2 (void)
             || (A0 [k-1] == A0 [k] && A1 [k-1] == A1 [k])) ;
     }
 
-    LAGraph_Free ((void **) &A0) ;
-    LAGraph_Free ((void **) &A1) ;
+    LAGraph_Free ((void **) &A0, NULL) ;
+    LAGraph_Free ((void **) &A1, NULL) ;
 
     OK (LAGraph_Finalize (msg)) ;
 }
@@ -127,9 +124,8 @@ void test_sort1_brutal (void)
     {
         int64_t n = (trial == 0) ? 1024 : (256 * 1024) ;
 
-        int64_t *A0 = LAGraph_Malloc (n, sizeof (int64_t)) ;
-
-        TEST_CHECK (A0 != NULL) ;
+        int64_t *A0 ;
+        OK (LAGraph_Malloc ((void **) &A0, n, sizeof (int64_t), msg)) ;
 
         uint64_t seed = 1 ;
         for (int k = 0 ; k < n ; k++)
@@ -156,7 +152,7 @@ void test_sort1_brutal (void)
             TEST_CHECK (A0 [k-1] <= A0 [k]) ;
         }
 
-        LAGraph_Free ((void **) &A0) ;
+        LAGraph_Free ((void **) &A0, NULL) ;
     }
 
     OK (LG_brutal_teardown (msg)) ;
@@ -174,11 +170,9 @@ void test_sort2_brutal (void)
 
     int64_t n = 256 * 1024 ;
 
-    int64_t *A0 = LAGraph_Malloc (n, sizeof (int64_t)) ;
-    int64_t *A1 = LAGraph_Malloc (n, sizeof (int64_t)) ;
-
-    TEST_CHECK (A0 != NULL) ;
-    TEST_CHECK (A1 != NULL) ;
+    int64_t *A0, *A1 ;
+    OK (LAGraph_Malloc ((void **) &A0, n, sizeof (int64_t), msg)) ;
+    OK (LAGraph_Malloc ((void **) &A1, n, sizeof (int64_t), msg)) ;
 
     uint64_t seed = 1 ;
     for (int k = 0 ; k < n ; k++)
@@ -209,8 +203,8 @@ void test_sort2_brutal (void)
             || (A0 [k-1] == A0 [k] && A1 [k-1] == A1 [k])) ;
     }
 
-    LAGraph_Free ((void **) &A0) ;
-    LAGraph_Free ((void **) &A1) ;
+    LAGraph_Free ((void **) &A0, NULL) ;
+    LAGraph_Free ((void **) &A1, NULL) ;
 
     OK (LG_brutal_teardown (msg)) ;
 }

@@ -26,25 +26,25 @@ LG_Element ;
 #include "LG_heap.h"
 
 #undef  LG_FREE_WORK
-#define LG_FREE_WORK                                \
-{                                                   \
-    LAGraph_Free ((void **) &Heap) ;                \
-    LAGraph_Free ((void **) &Iheap) ;               \
-    LAGraph_Free ((void **) &distance) ;            \
-    LAGraph_Free ((void **) &parent) ;              \
-    LAGraph_Free ((void **) &path_length_in) ;      \
-    LAGraph_Free ((void **) &neighbor_weights) ;    \
-    LAGraph_Free ((void **) &neighbors) ;           \
-    GrB_free (&Row) ;                               \
+#define LG_FREE_WORK                                    \
+{                                                       \
+    LAGraph_Free ((void **) &Heap, NULL) ;              \
+    LAGraph_Free ((void **) &Iheap, NULL) ;             \
+    LAGraph_Free ((void **) &distance, NULL) ;          \
+    LAGraph_Free ((void **) &parent, NULL) ;            \
+    LAGraph_Free ((void **) &path_length_in, NULL) ;    \
+    LAGraph_Free ((void **) &neighbor_weights, NULL) ;  \
+    LAGraph_Free ((void **) &neighbors, NULL) ;         \
+    GrB_free (&Row) ;                                   \
 }
 
 #undef  LG_FREE_ALL
-#define LG_FREE_ALL                         \
-{                                           \
-    LG_FREE_WORK ;                          \
-    LAGraph_Free ((void **) &Ap) ;          \
-    LAGraph_Free ((void **) &Aj) ;          \
-    LAGraph_Free ((void **) &Ax) ;          \
+#define LG_FREE_ALL                                     \
+{                                                       \
+    LG_FREE_WORK ;                                      \
+    LAGraph_Free ((void **) &Ap, NULL) ;                \
+    LAGraph_Free ((void **) &Aj, NULL) ;                \
+    LAGraph_Free ((void **) &Ax, NULL) ;                \
 }
 
 //------------------------------------------------------------------------------
@@ -137,8 +137,7 @@ int LG_check_sssp
     // get the contents of the Path_Length vector
     //--------------------------------------------------------------------------
 
-    path_length_in = LAGraph_Malloc (n, sizeof (double)) ;
-    LG_ASSERT (path_length_in != NULL, GrB_OUT_OF_MEMORY) ;
+    LG_TRY (LAGraph_Malloc ((void **) &path_length_in, n, sizeof (double), msg)) ;
     for (int64_t i = 0 ; i < n ; i++)
     {
         double t ;
@@ -174,28 +173,24 @@ int LG_check_sssp
     }
 
     // initializations
-    distance = LAGraph_Malloc (n, sizeof (double)) ;
-    // parent = LAGraph_Malloc (n, sizeof (int64_t)) ;
-    LG_ASSERT (distance != NULL, GrB_OUT_OF_MEMORY) ;
+    LG_TRY (LAGraph_Malloc ((void **) &distance, n, sizeof (double), msg)) ;
     for (int64_t i = 0 ; i < n ; i++)
     {
         distance [i] = INFINITY ;
-        // parent [i] = -1 ;
     }
     distance [src] = 0 ;
-    // parent [src] = src ;
 
     #if !LAGRAPH_SUITESPARSE
     GRB_TRY (GrB_Vector_new (&Row, GrB_FP64, n)) ;
-    neighbors = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
-    neighbor_weights = LAGraph_Malloc (n, sizeof (double)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &neighbors, n, sizeof (GrB_Index), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &neighbor_weights, n, sizeof (double), msg)) ;
     LG_ASSERT (neighbors != NULL, GrB_OUT_OF_MEMORY) ;
     LG_ASSERT (neighbor_weights != NULL, GrB_OUT_OF_MEMORY) ;
     #endif
 
     // place all nodes in the heap (already in heap order)
-    Heap = LAGraph_Malloc ((n+1), sizeof (LG_Element)) ;
-    Iheap = LAGraph_Malloc (n, sizeof (int64_t)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &Heap, (n+1), sizeof (LG_Element), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &Iheap, n, sizeof (int64_t), msg)) ;
     LG_ASSERT (Heap != NULL && Iheap != NULL, GrB_OUT_OF_MEMORY) ;
     Heap [1].key = 0 ;
     Heap [1].name = src ;

@@ -11,21 +11,21 @@
 
 //------------------------------------------------------------------------------
 
-#define LG_FREE_WORK                            \
-{                                               \
-    LAGraph_Free ((void **) &queue) ;           \
-    LAGraph_Free ((void **) &component_in) ;    \
-    LAGraph_Free ((void **) &visited) ;         \
-    LAGraph_Free ((void **) &neighbors) ;       \
-    GrB_free (&Row) ;                           \
+#define LG_FREE_WORK                                \
+{                                                   \
+    LAGraph_Free ((void **) &queue, NULL) ;         \
+    LAGraph_Free ((void **) &component_in, NULL) ;  \
+    LAGraph_Free ((void **) &visited, NULL) ;       \
+    LAGraph_Free ((void **) &neighbors, NULL) ;     \
+    GrB_free (&Row) ;                               \
 }
 
-#define LG_FREE_ALL                             \
-{                                               \
-    LG_FREE_WORK ;                              \
-    LAGraph_Free ((void **) &Ap) ;              \
-    LAGraph_Free ((void **) &Aj) ;              \
-    LAGraph_Free ((void **) &Ax) ;              \
+#define LG_FREE_ALL                                 \
+{                                                   \
+    LG_FREE_WORK ;                                  \
+    LAGraph_Free ((void **) &Ap, NULL) ;            \
+    LAGraph_Free ((void **) &Aj, NULL) ;            \
+    LAGraph_Free ((void **) &Ax, NULL) ;            \
 }
 
 #include "LG_internal.h"
@@ -81,15 +81,13 @@ int LG_check_cc
     // allocate workspace
     //--------------------------------------------------------------------------
 
-    queue = LAGraph_Calloc (n, sizeof (int64_t)) ;
-    LG_ASSERT (queue != NULL, GrB_OUT_OF_MEMORY) ;
+    LG_TRY (LAGraph_Calloc ((void **) &queue, n, sizeof (int64_t), msg)) ;
 
     //--------------------------------------------------------------------------
     // get the contents of the Component vector
     //--------------------------------------------------------------------------
 
-    component_in = LAGraph_Malloc (n, sizeof (int64_t)) ;
-    LG_ASSERT (component_in != NULL, GrB_OUT_OF_MEMORY) ;
+    LG_TRY (LAGraph_Malloc ((void **) &component_in, n, sizeof (int64_t), msg)) ;
     LG_TRY (LG_check_vector (component_in, Component, n, -1)) ;
 
     //--------------------------------------------------------------------------
@@ -141,13 +139,11 @@ int LG_check_cc
     printf ("LG_check_cc init  time: %g sec\n", tt) ;
     LAGraph_Tic (tic, msg) ;
 
-    visited = LAGraph_Calloc (n, sizeof (bool)) ;
-    LG_ASSERT (visited != NULL, GrB_OUT_OF_MEMORY) ;
+    LG_TRY (LAGraph_Calloc ((void **) &visited, n, sizeof (bool), msg)) ;
 
     #if !LAGRAPH_SUITESPARSE
     GRB_TRY (GrB_Vector_new (&Row, GrB_BOOL, n)) ;
-    neighbors = LAGraph_Malloc (n, sizeof (GrB_Index)) ;
-    LG_ASSERT (neighbors != NULL, GrB_OUT_OF_MEMORY) ;
+    LG_TRY (LAGraph_Malloc ((void **) &neighbors, n, sizeof (GrB_Index), msg)) ;
     #endif
 
     int64_t ncomp = 0 ;

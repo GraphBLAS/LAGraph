@@ -12,6 +12,7 @@
 //-----------------------------------------------------------------------------
 
 #include "LAGraph_test.h"
+char msg [LAGRAPH_MSG_LEN] ;
 
 //-----------------------------------------------------------------------------
 // test_malloc
@@ -22,85 +23,77 @@ void test_malloc (void)
     char msg [LAGRAPH_MSG_LEN] ;
     OK (LAGraph_Init (msg)) ;
 
-    char *p = LAGraph_Malloc (42, sizeof (char)) ;
-    TEST_CHECK (p != NULL) ;
+    char *p ; 
+    OK (LAGraph_Malloc ((void **) &p, 42, sizeof (char), msg)) ;
     for (int k = 0 ; k < 42 ; k++)
     {
         p [k] = (char) k ;
     }
-    LAGraph_Free ((void **) &p) ;
+    OK (LAGraph_Free ((void **) &p, msg)) ;
     TEST_CHECK (p == NULL) ;
 
-    p = LAGraph_Malloc (GrB_INDEX_MAX + 1, sizeof (char)) ;
+    LAGraph_Malloc ((void **) &p, GrB_INDEX_MAX + 1, sizeof (char), msg) ;
     TEST_CHECK (p == NULL) ;
 
-    p = LAGraph_Calloc (GrB_INDEX_MAX + 1, sizeof (char)) ;
+    LAGraph_Calloc ((void **) &p, GrB_INDEX_MAX + 1, sizeof (char), msg) ;
     TEST_CHECK (p == NULL) ;
 
-    p = LAGraph_Calloc (42, sizeof (char)) ;
+    OK (LAGraph_Calloc ((void **) &p, 42, sizeof (char), msg)) ;
     for (int k = 0 ; k < 42 ; k++)
     {
         TEST_CHECK (*p == '\0') ;
     }
-    LAGraph_Free ((void **) &p) ;
+    OK (LAGraph_Free ((void **) &p, msg)) ;
     TEST_CHECK (p == NULL) ;
+
+    OK (LAGraph_Free (NULL, NULL)) ;
 
     LAGraph_Calloc_function = NULL ;
 
-    p = LAGraph_Calloc (42, sizeof (char)) ;
+    OK (LAGraph_Calloc ((void **) &p, 42, sizeof (char), msg)) ;
     TEST_CHECK (p != NULL) ;
     for (int k = 0 ; k < 42 ; k++)
     {
         TEST_CHECK (*p == '\0') ;
     }
 
-    bool ok = false ;
-    char *pnew = LAGraph_Realloc (100, 42, sizeof (char), p, &ok) ;
-    p = NULL ;
-    TEST_CHECK (ok) ;
-    TEST_CHECK (pnew != NULL) ;
+    OK (LAGraph_Realloc ((void **) &p, 100, 42, sizeof (char), msg)) ;
     for (int k = 0 ; k < 42 ; k++)
     {
-        TEST_CHECK (*pnew == '\0') ;
+        TEST_CHECK (*p == '\0') ;
     }
     for (int k = 42 ; k < 100 ; k++)
     {
-        pnew [k] = (char) k ;
+        p [k] = (char) k ;
     }
-    LAGraph_Free ((void **) &pnew) ;
-    TEST_CHECK (pnew == NULL) ;
+    OK (LAGraph_Free ((void **) &p, NULL)) ;
+    TEST_CHECK (p == NULL) ;
 
-    p = LAGraph_Realloc (80, 0, sizeof (char), NULL, &ok) ;
-    TEST_CHECK (ok) ;
-    TEST_CHECK (p != NULL) ;
+    OK (LAGraph_Realloc ((void **) &p, 80, 0, sizeof (char), msg)) ;
     for (int k = 0 ; k < 80 ; k++)
     {
         p [k] = (char) k ;
     }
 
-    pnew = LAGraph_Realloc (GrB_INDEX_MAX+1, 80, sizeof (char), p, &ok) ;
-    TEST_CHECK (pnew == NULL) ;
-    TEST_CHECK (!ok) ;
+    int status = (LAGraph_Realloc ((void **) &p, GrB_INDEX_MAX+1, 80, sizeof (char), msg)) ;
+    TEST_CHECK (status == GrB_OUT_OF_MEMORY) ;
 
-    pnew = LAGraph_Realloc (80, 80, sizeof (char), p, &ok) ;
-    TEST_CHECK (pnew == p) ;
-    TEST_CHECK (ok) ;
+    OK (LAGraph_Realloc ((void **) &p, 80, 80, sizeof (char), msg)) ;
     for (int k = 0 ; k < 80 ; k++)
     {
-        TEST_CHECK (pnew [k] == (char) k) ;
+        TEST_CHECK (p [k] == (char) k) ;
     }
 
     LAGraph_Realloc_function = NULL ;
 
-    pnew = LAGraph_Realloc (100, 80, sizeof (char), p, &ok) ;
-    TEST_CHECK (ok) ;
+    OK (LAGraph_Realloc ((void **) &p, 100, 80, sizeof (char), msg)) ;
     for (int k = 0 ; k < 80 ; k++)
     {
-        TEST_CHECK (pnew [k] == (char) k) ;
+        TEST_CHECK (p [k] == (char) k) ;
     }
 
-    LAGraph_Free ((void **) &pnew) ;
-    TEST_CHECK (pnew == NULL) ;
+    OK (LAGraph_Free ((void **) &p, NULL)) ;
+    TEST_CHECK (p == NULL) ;
 
     OK (LAGraph_Finalize (msg)) ;
 }

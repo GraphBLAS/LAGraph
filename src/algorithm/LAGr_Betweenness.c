@@ -62,7 +62,7 @@
             if (S [i] == NULL) break ;          \
             GrB_free (&(S [i])) ;               \
         }                                       \
-        LAGraph_Free ((void **) &S) ;           \
+        LAGraph_Free ((void **) &S, NULL) ;     \
     }                                           \
 }
 
@@ -167,8 +167,7 @@ int LAGr_Betweenness
         frontier, A, GrB_DESC_RSC)) ;
 
     // Allocate memory for the array of S matrices
-    S = (GrB_Matrix *) LAGraph_Malloc (n+1, sizeof (GrB_Matrix)) ;
-    LG_ASSERT (S != NULL, GrB_OUT_OF_MEMORY) ;
+    LG_TRY (LAGraph_Malloc ((void **) &S, n+1, sizeof (GrB_Matrix), msg)) ;
     S [0] = NULL ;
 
     // =========================================================================

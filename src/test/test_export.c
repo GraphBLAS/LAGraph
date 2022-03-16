@@ -123,9 +123,9 @@ void test_export (void)
         #endif
         #endif
 
-        LAGraph_Free ((void **) &Ap) ;
-        LAGraph_Free ((void **) &Aj) ;
-        LAGraph_Free ((void **) &Ax) ;
+        LAGraph_Free ((void **) &Ap, NULL) ;
+        LAGraph_Free ((void **) &Aj, NULL) ;
+        LAGraph_Free ((void **) &Ax, NULL) ;
         OK (LAGraph_Delete (&G, msg)) ;
     }
 
@@ -194,9 +194,9 @@ void test_export_brutal (void)
         OK (GrB_free (&C)) ;
         #endif
 
-        LAGraph_Free ((void **) &Ap) ;
-        LAGraph_Free ((void **) &Aj) ;
-        LAGraph_Free ((void **) &Ax) ;
+        LAGraph_Free ((void **) &Ap, NULL) ;
+        LAGraph_Free ((void **) &Aj, NULL) ;
+        LAGraph_Free ((void **) &Ax, NULL) ;
         OK (LAGraph_Delete (&G, msg)) ;
     }
 

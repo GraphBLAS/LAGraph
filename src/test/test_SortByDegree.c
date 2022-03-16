@@ -148,8 +148,7 @@ void test_SortByDegree (void)
                 TEST_CHECK (P != NULL) ;
 
                 // ensure P is a permutation of 0..n-1
-                W = (bool *) LAGraph_Calloc (n, sizeof (bool)) ;
-                TEST_CHECK (W != NULL) ;
+                OK (LAGraph_Calloc ((void **) &W, n, sizeof (bool), msg)) ;
                 for (int k = 0 ; k < n ; k++)
                 {
                     int64_t j = P [k] ;
@@ -201,8 +200,8 @@ void test_SortByDegree (void)
                 }
 
                 // free workspace and the graph H
-                LAGraph_Free ((void **) &W) ;
-                LAGraph_Free ((void **) &P) ;
+                OK (LAGraph_Free ((void **) &W, NULL)) ;
+                OK (LAGraph_Free ((void **) &P, NULL)) ;
                 OK (LAGraph_Delete (&H, msg)) ;
             }
 
@@ -295,13 +294,11 @@ void test_SortByDegree_brutal (void)
 
                 // sort the graph by degree
                 TEST_CHECK (P == NULL) ;
-                OK (LAGraph_SortByDegree (&P, G, byrow, ascending,
-                    msg)) ;
+                OK (LAGraph_SortByDegree (&P, G, byrow, ascending, msg)) ;
                 TEST_CHECK (P != NULL) ;
 
                 // ensure P is a permutation of 0..n-1
-                W = (bool *) LAGraph_Calloc (n, sizeof (bool)) ;
-                TEST_CHECK (W != NULL) ;
+                OK (LAGraph_Calloc ((void **) &W, n, sizeof (bool), msg)) ;
                 for (int k = 0 ; k < n ; k++)
                 {
                     int64_t j = P [k] ;
@@ -349,8 +346,8 @@ void test_SortByDegree_brutal (void)
                 }
 
                 // free workspace and the graph H
-                LAGraph_Free ((void **) &W) ;
-                LAGraph_Free ((void **) &P) ;
+                OK (LAGraph_Free ((void **) &W, NULL)) ;
+                OK (LAGraph_Free ((void **) &P, NULL)) ;
                 OK (LAGraph_Delete (&H, msg)) ;
             }
 

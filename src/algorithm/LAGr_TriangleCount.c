@@ -97,7 +97,7 @@ static int tricount_prep
     GrB_free (&L) ;                         \
     GrB_free (&T) ;                         \
     GrB_free (&U) ;                         \
-    LAGraph_Free ((void **) &P) ;           \
+    LAGraph_Free ((void **) &P, NULL) ;     \
 }
 
 int LAGr_TriangleCount
@@ -260,7 +260,7 @@ int LAGr_TriangleCount
         A = T ;
 
         // free workspace
-        LAGraph_Free ((void **) &P) ;
+        LG_TRY (LAGraph_Free ((void **) &P, NULL)) ;
     }
 
     //--------------------------------------------------------------------------

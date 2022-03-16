@@ -38,13 +38,14 @@
 GrB_Index countCC (GrB_Vector f, GrB_Index n)
 {
     GrB_Index nCC = 0;
-    GrB_Index *w_val = (GrB_Index *) LAGraph_Malloc (n, sizeof (GrB_Index)) ;
+    GrB_Index *w_val = NULL ;
+    LAGraph_Malloc ((void **) &w_val, n, sizeof (GrB_Index), NULL) ;
     if (w_val == NULL) { printf ("out of memory\n") ; abort ( ) ; }
+    GrB_Index *i_val = NULL ;
     #if LAGRAPH_SUITESPARSE
     // SuiteSparse:GraphBLAS allows NULL inputs to GrB_Vector_extractTuples
-    GrB_Index *i_val = NULL ;
     #else
-    GrB_Index *i_val = (GrB_Index *) LAGraph_Malloc (n, sizeof (GrB_Index)) ;
+    LAGraph_Malloc ((void **) &i_val, n, sizeof (GrB_Index), NULL) ;
     if (i_val == NULL) { printf ("out of memory\n") ; abort ( ) ; }
     #endif
     GrB_Vector_extractTuples (i_val, w_val, &n, f) ;
@@ -55,8 +56,8 @@ GrB_Index countCC (GrB_Vector f, GrB_Index n)
             nCC++ ;
         }
     }
-    LAGraph_Free ((void **) &i_val) ;
-    LAGraph_Free ((void **) &w_val) ;
+    LAGraph_Free ((void **) &i_val, NULL) ;
+    LAGraph_Free ((void **) &w_val, NULL) ;
     return nCC;
 }
 

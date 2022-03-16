@@ -18,11 +18,11 @@
 // This method is for testing only, to check the result of other, faster
 // methods.  Do not benchmark this method; it is slow and simple by design.
 
-#define LG_FREE_ALL                             \
-{                                               \
-    LAGraph_Free ((void **) &Ap) ;              \
-    LAGraph_Free ((void **) &Aj) ;              \
-    LAGraph_Free ((void **) &Ax) ;              \
+#define LG_FREE_ALL                         \
+{                                           \
+    LAGraph_Free ((void **) &Ap, NULL) ;    \
+    LAGraph_Free ((void **) &Aj, NULL) ;    \
+    LAGraph_Free ((void **) &Ax, NULL) ;    \
 }
 
 #include "LG_internal.h"

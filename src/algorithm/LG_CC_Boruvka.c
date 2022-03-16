@@ -77,24 +77,24 @@ void my_select_func (void *z, const void *x,
 //------------------------------------------------------------------------------
 
 #undef  LG_FREE_ALL
-#define LG_FREE_ALL                 \
-{                                   \
-    LG_FREE_WORK ;                  \
-    GrB_free (&parent) ;            \
+#define LG_FREE_ALL                         \
+{                                           \
+    LG_FREE_WORK ;                          \
+    GrB_free (&parent) ;                    \
 }
 
 #undef  LG_FREE_WORK
-#define LG_FREE_WORK                \
-{                                   \
-    LAGraph_Free ((void **) &I) ;   \
-    LAGraph_Free ((void **) &Px) ;  \
-    LAGraph_Free ((void **) &mem) ; \
-    GrB_free (&gp) ;                \
-    GrB_free (&mnp) ;               \
-    GrB_free (&ccmn) ;              \
-    GrB_free (&ramp) ;              \
-    GrB_free (&mask) ;              \
-    GrB_free (&select_op) ;         \
+#define LG_FREE_WORK                        \
+{                                           \
+    LAGraph_Free ((void **) &I, NULL) ;     \
+    LAGraph_Free ((void **) &Px, NULL) ;    \
+    LAGraph_Free ((void **) &mem, NULL) ;   \
+    GrB_free (&gp) ;                        \
+    GrB_free (&mnp) ;                       \
+    GrB_free (&ccmn) ;                      \
+    GrB_free (&ramp) ;                      \
+    GrB_free (&mask) ;                      \
+    GrB_free (&select_op) ;                 \
 }
 
 int LG_CC_Boruvka
@@ -141,14 +141,12 @@ int LG_CC_Boruvka
     GRB_TRY (GrB_Vector_new (&ccmn, GrB_UINT64, n)) ;   // cc's min neighbor
     GRB_TRY (GrB_Vector_new (&mask, GrB_BOOL, n)) ;     // various uses
 
-    mem = (GrB_Index *) LAGraph_Malloc (3*n, sizeof (GrB_Index)) ;
-    Px = (GrB_Index *) LAGraph_Malloc (n, sizeof (GrB_Index)) ;
-    LG_ASSERT (Px != NULL && mem != NULL, GrB_OUT_OF_MEMORY) ;
+    LG_TRY (LAGraph_Malloc ((void **) &mem, 3*n, sizeof (GrB_Index), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &Px, n, sizeof (GrB_Index), msg)) ;
 
     #if !LAGRAPH_SUITESPARSE
     // I is not needed for SuiteSparse and remains NULL
-    I = (GrB_Index *) LAGraph_Malloc (n, sizeof (GrB_Index)) ;
-    LG_ASSERT (I != NULL, GrB_OUT_OF_MEMORY) ;
+    LG_TRY (LAGraph_Malloc ((void **) &I, n, sizeof (GrB_Index), msg)) ;
     #endif
 
     // parent = 0:n-1, and copy to ramp
