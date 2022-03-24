@@ -254,6 +254,8 @@ int main (int argc, char **argv)
         nthreads_best, t_best, 1e-6 * nvals / t_best) ;
     LG_FREE_ALL ;
     LAGRAPH_TRY (LAGraph_Finalize (msg)) ;
+    // FIXME:
+    rmm_wrap_finalize ( ) ;
     return (GrB_SUCCESS) ;
 }
 
