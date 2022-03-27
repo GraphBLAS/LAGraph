@@ -1,4 +1,4 @@
-As of Mar 11, 2022:
+As of Mar 23, 2022:
 
     * entire user guide
         experimental -> src, how to do it.
@@ -9,16 +9,13 @@ As of Mar 11, 2022:
 
     * document all src & experimental: algorithms, utilities, and tests.
 
-    * draft name scheme:  LAGraph_* are Basic algorithms, LAGr_* are Advanced
-        Basic: in/out, can set properties
-        Adv: in only, prop must be provided on input, can also have extra
-            parameters, ...
-
     * check function names and API
 
     * add FUTURE to User Guide (see below)
 
     * error messages in src/benchmark
+
+    * for BFS (with SS:GrB): if AT not present, use push-only method?
 
 --------------------------------------------------------------------------------
 add FUTURE items as a section in the User Guide:

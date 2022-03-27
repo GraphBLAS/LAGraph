@@ -404,8 +404,6 @@ int LAGraph_Free            // free a block of memory and set p to NULL
 // LAGRAPH_UNKNOWN is used for all scalars whose value is not known
 #define LAGRAPH_UNKNOWN (-1)
 
-// FIXME: start here on Mar 16, 2022
-
 //------------------------------------------------------------------------------
 // LAGraph_Kind: the kind of a graph
 //------------------------------------------------------------------------------
@@ -455,33 +453,36 @@ typedef enum
 LAGraph_BooleanProperty ;
 
 //------------------------------------------------------------------------------
-// LAGraph_BoundKind: exact, bound, approximate, or unknown
+// LAGraph_PropertyState: exact, bound, approximate, or unknown
 //------------------------------------------------------------------------------
 
-// LAGraph_BoundKind describes the status of a graph property or other metric.
-// If the metric is computed in floating-point arithmetic, it may have been
+// FIXME: start here on Mar 30, 2022
+// TODO: discuss more: LAGraph_PropertyState
+
+// LAGraph_PropertyState describes the status of a graph property.
+// If the property is computed in floating-point arithmetic, it may have been
 // computed with roundoff error, but it may still be declared as "exact" if the
-// roundoff error is expected to be small, or if the metric was computed as
+// roundoff error is expected to be small, or if the property was computed as
 // carefully as possible (to within reasonable roundoff error).  The
-// "approximate" state is used when the metric is a rough estimate, not because
+// "approximate" state is used when the property is a rough estimate, not because
 // of roundoff error but because of other algorithmic approximations.  The
-// decision of when to tag a metric as "exact" or "approximate" is up to the
+// decision of when to tag a property as "exact" or "approximate" is up to the
 // particular algorithm, which each algorithm must document.
 
-// The "bound" state indicates that the metric is an upper or lower bound,
-// depending on the particular metric.  If computed in floating-point
-// arithmetic, an "upper bound" metric may be actually slightly lower than the
+// The "bound" state indicates that the property is an upper or lower bound,
+// depending on the particular property.  If computed in floating-point
+// arithmetic, an "upper bound" property may be actually slightly lower than the
 // actual upper bound, because of floating-point roundoff.
 
 typedef enum
 {
-    LAGraph_EXACT = 0,      // the metric is exact (possibly ignoring roundoff)
-    LAGraph_BOUND = 1,      // the metric is a bound (upper or lower, depending
-                            // on the particular metric)
-    LAGraph_APPROX = 2,     // the metric is a rough approximation
+    LAGraph_EXACT = 0,      // the property is exact (possibly ignoring roundoff)
+    LAGraph_BOUND = 1,      // the property is a bound (upper or lower, depending
+                            // on the particular property)
+    LAGraph_APPROX = 2,     // the property is a rough approximation
     LAGraph_BOUND_UNKNOWN = LAGRAPH_UNKNOWN,
 }
-LAGraph_BoundKind ;
+LAGraph_PropertyState ;
 
 //------------------------------------------------------------------------------
 // LAGraph_Graph: the primary graph data structure of LAGraph
@@ -504,6 +505,8 @@ LAGraph_BoundKind ;
 //      coldegree   coldegree(j) = # of entries in A(:,j)
 //      structure_is_symmetric: true if the structure of A is symmetric
 //      ndiag       the number of entries on the diagonal of A
+//      emin        FIXME describe me
+//      emax        FIXME describe me
 
 struct LAGraph_Graph_struct
 {
@@ -568,14 +571,14 @@ struct LAGraph_Graph_struct
             // graph, this is the number of self-edges in the graph.
 
     GrB_Scalar emin ;   // minimum edge weight: exact, lower bound, or estimate
-    LAGraph_BoundKind emin_kind ;
+    LAGraph_PropertyState emin_kind ;
             // EXACT: emin is exactly equal to the smallest entry, min(G->A)
             // BOUND: emin <= min(G->A)
             // APPROX: emin is a rough estimate of min(G->A)
             // UNKNOWN: emin is unknown
 
     GrB_Scalar emax ;   // maximum edge weight: exact, upper bound, or estimate
-    LAGraph_BoundKind emax_kind ;
+    LAGraph_PropertyState emax_kind ;
             // EXACT: emax is exactly equal to the largest entry, max(G->A)
             // BOUND: emax >= max(G->A)
             // APPROX: emax is a rough estimate of max(G->A)
