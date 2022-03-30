@@ -1,4 +1,4 @@
-As of Mar 23, 2022:
+As of Mar 30, 2022:
 
     * entire user guide
         experimental -> src, how to do it.
@@ -25,7 +25,7 @@ FUTURE: LAGraph_SingleSourceShortestPath:  Write a Basic method that
             Delta on its own (hard to do).
 
 FUTURE: LAGraph_BreadthFirstSearch basic method that computes G->AT
-        and G->rowdegree first.
+        and G->row_degree first.
 
 FUTURE: all algorithms can use Basic and Advanced variants.
 

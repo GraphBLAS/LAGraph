@@ -98,19 +98,19 @@ void test_DeleteProperties (void)
         int rr = (LAGraph_Matrix_Print (G->A, LAGraph_SHORT, stdout, msg)) ;
         printf ("result: %d msg: %s\n", rr, msg) ;
         printf ("  row degree: ") ;
-        OK (LAGraph_Vector_Print (G->rowdegree, LAGraph_SHORT, stdout, msg)) ;
+        OK (LAGraph_Vector_Print (G->row_degree, LAGraph_SHORT, stdout, msg)) ;
         if (kind == LAGraph_ADJACENCY_DIRECTED)
         {
             printf ("  adj transposed: ") ;
             OK (LAGraph_Matrix_Print (G->AT, LAGraph_SHORT, stdout, msg)) ;
             printf ("  col degree: ") ;
-            OK (LAGraph_Vector_Print (G->coldegree, LAGraph_SHORT, stdout,
+            OK (LAGraph_Vector_Print (G->col_degree, LAGraph_SHORT, stdout,
                 msg)) ;
         }
         else
         {
             TEST_CHECK (G->AT == NULL) ;
-            TEST_CHECK (G->coldegree == NULL) ;
+            TEST_CHECK (G->col_degree == NULL) ;
         }
 
         for (int trial = 0 ; trial <= 1 ; trial++)
@@ -118,8 +118,8 @@ void test_DeleteProperties (void)
             // delete all the properties
             OK (LAGraph_DeleteProperties (G, msg)) ;
             TEST_CHECK (G->AT == NULL) ;
-            TEST_CHECK (G->rowdegree == NULL) ;
-            TEST_CHECK (G->coldegree == NULL) ;
+            TEST_CHECK (G->row_degree == NULL) ;
+            TEST_CHECK (G->col_degree == NULL) ;
         }
 
         OK (LAGraph_Delete (&G, msg)) ;
@@ -167,8 +167,8 @@ void test_del_brutal (void)
             // delete all the properties
             LG_BRUTAL (LAGraph_DeleteProperties (G, msg)) ;
             TEST_CHECK (G->AT == NULL) ;
-            TEST_CHECK (G->rowdegree == NULL) ;
-            TEST_CHECK (G->coldegree == NULL) ;
+            TEST_CHECK (G->row_degree == NULL) ;
+            TEST_CHECK (G->col_degree == NULL) ;
         }
     
         LG_BRUTAL (LAGraph_Delete (&G, msg)) ;

@@ -178,7 +178,7 @@ void test_SortByDegree (void)
                 OK (LAGraph_DisplayGraph (H, LAGraph_SHORT, stdout, msg)) ;
 
                 d = (byrow || G->structure_is_symmetric) ?
-                    H->rowdegree : H->coldegree ;
+                    H->row_degree : H->col_degree ;
 
                 // ensure d is sorted in ascending or descending order
                 int64_t last_deg = (ascending) ? (-1) : (n+1) ;
@@ -324,7 +324,7 @@ void test_SortByDegree_brutal (void)
                             H->structure_is_symmetric) ;
 
                 d = (byrow || G->structure_is_symmetric) ?
-                    H->rowdegree : H->coldegree ;
+                    H->row_degree : H->col_degree ;
 
                 // ensure d is sorted in ascending or descending order
                 int64_t last_deg = (ascending) ? (-1) : (n+1) ;

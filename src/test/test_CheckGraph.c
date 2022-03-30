@@ -182,29 +182,29 @@ void test_CheckGraph_failures (void)
 
     G->AT = NULL ;
 
-    // G->rowdegree has the right type, but wrong size
-    G->rowdegree = d_int64 ;
+    // G->row_degree has the right type, but wrong size
+    G->row_degree = d_int64 ;
     TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
     printf ("msg: %s\n", msg) ;
 
-    // G->rowdegree has the right size, but wrong type
-    G->rowdegree = d_bool ;
+    // G->row_degree has the right size, but wrong type
+    G->row_degree = d_bool ;
     TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
     printf ("msg: %s\n", msg) ;
 
-    G->rowdegree = NULL ;
+    G->row_degree = NULL ;
 
-    // G->coldegree has the right type, but wrong size
-    G->coldegree = d_int64 ;
+    // G->col_degree has the right type, but wrong size
+    G->col_degree = d_int64 ;
     TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
     printf ("msg: %s\n", msg) ;
 
-    // G->coldegree has the right size, but wrong type
-    G->coldegree = d_bool ;
+    // G->col_degree has the right size, but wrong type
+    G->col_degree = d_bool ;
     TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
     printf ("msg: %s\n", msg) ;
 
-    G->coldegree = NULL ;
+    G->col_degree = NULL ;
 
     #if LAGRAPH_SUITESPARSE
     // G->A must be by-row

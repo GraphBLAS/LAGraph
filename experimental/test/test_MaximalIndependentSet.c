@@ -184,7 +184,7 @@ void test_MIS (void)
         OK (LAGraph_Property_RowDegree (G, msg)) ;
 
         GrB_Index nonsingletons, nsingletons_actual ;
-        OK (GrB_Vector_nvals (&nonsingletons, G->rowdegree)) ;
+        OK (GrB_Vector_nvals (&nonsingletons, G->row_degree)) ;
         nsingletons_actual = n - nonsingletons ;
         printf ("actual # of singletons: %g\n", (double) nsingletons_actual) ;
         TEST_CHECK (nsingletons <= nsingletons_actual) ;

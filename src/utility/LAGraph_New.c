@@ -55,14 +55,14 @@ int LAGraph_New
     (*G)->A = NULL ;
     (*G)->kind = LAGraph_KIND_UNKNOWN ;
     (*G)->AT = NULL ;
-    (*G)->rowdegree = NULL ;
-    (*G)->coldegree = NULL ;
+    (*G)->row_degree = NULL ;
+    (*G)->col_degree = NULL ;
     (*G)->structure_is_symmetric = LAGRAPH_UNKNOWN ;
     (*G)->ndiag = LAGRAPH_UNKNOWN ;
     (*G)->emin = NULL ;
-    (*G)->emin_kind = LAGRAPH_UNKNOWN ;
+    (*G)->emin_state = LAGRAPH_UNKNOWN ;
     (*G)->emax = NULL ;
-    (*G)->emax_kind = LAGRAPH_UNKNOWN ;
+    (*G)->emax_state = LAGRAPH_UNKNOWN ;
 //  (*G)->nonzero = LAGRAPH_UNKNOWN ;       // future property
 
     //--------------------------------------------------------------------------

@@ -13,7 +13,7 @@
 
 // Count the number of triangles in a graph,
 
-// This is an Advanced algorithm (G->ndiag, G->rowdegree,
+// This is an Advanced algorithm (G->ndiag, G->row_degree,
 // G->structure_is_symmetric are required).
 
 // Given a symmetric graph A with no-self edges, LAGr_TriangleCount counts the
@@ -161,13 +161,13 @@ int LAGr_TriangleCount
     method == LAGraph_TriangleCount_SandiaDot2 ; // 6: sum (sum ((U * L') .* U))
 
     GrB_Matrix A = G->A ;
-    GrB_Vector Degree = G->rowdegree ;
+    GrB_Vector Degree = G->row_degree ;
     bool auto_sort = (presort != NULL)
         && ((*presort) == LAGraph_TriangleCount_AutoSort) ;
     if (auto_sort && method_can_use_presort)
     {
         LG_ASSERT_MSG (Degree != NULL,
-            LAGRAPH_PROPERTY_MISSING, "G->rowdegree is required") ;
+            LAGRAPH_PROPERTY_MISSING, "G->row_degree is required") ;
     }
 
     //--------------------------------------------------------------------------

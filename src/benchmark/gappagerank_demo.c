@@ -87,7 +87,7 @@ int main (int argc, char **argv)
 
     // check # of sinks:
     GrB_Index nsinks ;
-    GRB_TRY (GrB_Vector_nvals (&nvals, G->rowdegree)) ;
+    GRB_TRY (GrB_Vector_nvals (&nvals, G->row_degree)) ;
     nsinks = n - nvals ;
     printf ("nsinks: %" PRIu64 "\n", nsinks) ;
 

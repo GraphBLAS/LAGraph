@@ -88,10 +88,10 @@ int main (int argc, char **argv)
     LAGRAPH_TRY (readproblem (&G, &SourceNodes,
         false, false, true, NULL, false, argc, argv)) ;
 
-    // compute G->rowdegree
+    // compute G->row_degree
     LAGRAPH_TRY (LAGraph_Property_RowDegree (G, msg)) ;
 
-    // compute G->coldegree, just to test it (not needed for any tests)
+    // compute G->col_degree, just to test it (not needed for any tests)
     LAGRAPH_TRY (LAGraph_Property_ColDegree (G, msg)) ;
 
     GrB_Index n ;

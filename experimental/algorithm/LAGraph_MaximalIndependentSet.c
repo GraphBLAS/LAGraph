@@ -43,7 +43,7 @@
 
 // The graph cannot have any self edges, and it must be symmetric.  Self-edges
 // (diagonal entries) will cause the method to stall, and thus G->ndiag must be
-// zero on input.  G->rowdegree must be present on input.  It must not contain
+// zero on input.  G->row_degree must be present on input.  It must not contain
 // any explicit zeros (this is handled by LAGraph_Property_RowDegree).
 
 // Singletons require special treatment.  Since they have no neighbors, their
@@ -79,7 +79,7 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     GrB_Vector candidates = NULL ;      // candidate nodes
     GrB_Vector empty = NULL ;           // an empty vector
     GrB_Vector Seed = NULL ;            // random number seed vector
-    GrB_Vector degree = NULL ;          // (float) G->rowdegree
+    GrB_Vector degree = NULL ;          // (float) G->row_degree
     GrB_Matrix A ;                      // G->A, the adjacency matrix
     GrB_Index n ;                       // # of nodes
 
@@ -99,7 +99,7 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
         LG_ASSERT_MSG (false, -105, "G->A must be symmetric") ;
     }
 
-    LG_ASSERT_MSG (G->rowdegree != NULL, -106, "G->rowdegree must be defined") ;
+    LG_ASSERT_MSG (G->row_degree != NULL, -106, "G->row_degree must be defined") ;
     LG_ASSERT_MSG (G->ndiag == 0, -107, "G->ndiag must be zero") ;
 
     //--------------------------------------------------------------------------
@@ -117,8 +117,8 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     GRB_TRY (GrB_Vector_new (&score, GrB_FP32, n)) ;
     GRB_TRY (GrB_Vector_new (&iset, GrB_BOOL, n)) ;
 
-    // degree = (float) G->rowdegree
-    GRB_TRY (GrB_assign (degree, NULL, NULL, G->rowdegree, GrB_ALL, n, NULL)) ;
+    // degree = (float) G->row_degree
+    GRB_TRY (GrB_assign (degree, NULL, NULL, G->row_degree, GrB_ALL, n, NULL)) ;
 
     //--------------------------------------------------------------------------
     // remove singletons (nodes of degree zero) and handle ignore_node

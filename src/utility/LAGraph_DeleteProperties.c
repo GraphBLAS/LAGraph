@@ -37,8 +37,8 @@ int LAGraph_DeleteProperties
     //--------------------------------------------------------------------------
 
     GRB_TRY (GrB_free (&(G->AT))) ;
-    GRB_TRY (GrB_free (&(G->rowdegree))) ;
-    GRB_TRY (GrB_free (&(G->coldegree))) ;
+    GRB_TRY (GrB_free (&(G->row_degree))) ;
+    GRB_TRY (GrB_free (&(G->col_degree))) ;
     GRB_TRY (GrB_free (&(G->emin))) ;
     GRB_TRY (GrB_free (&(G->emax))) ;
 
@@ -47,8 +47,8 @@ int LAGraph_DeleteProperties
     //--------------------------------------------------------------------------
 
     G->structure_is_symmetric = LAGRAPH_UNKNOWN ;
-    G->emin_kind = LAGRAPH_UNKNOWN ;
-    G->emax_kind = LAGRAPH_UNKNOWN ;
+    G->emin_state = LAGRAPH_UNKNOWN ;
+    G->emax_state = LAGRAPH_UNKNOWN ;
 //  G->nonzero = LAGRAPH_UNKNOWN ;
     G->ndiag = LAGRAPH_UNKNOWN ;
     return (GrB_SUCCESS) ;

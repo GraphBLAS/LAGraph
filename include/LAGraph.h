@@ -33,10 +33,10 @@
 // See also the LAGraph_Version utility method, which returns these values.
 // These definitions must match the same definitions in LAGraph/CMakeLists.txt.
 // FIXME: use config to create include/LAGraph.h from LAGraph/CMakeLists.txt
-#define LAGRAPH_DATE "Mar 16, 2022"
+#define LAGRAPH_DATE "Mar 30, 2022"
 #define LAGRAPH_VERSION_MAJOR 0
 #define LAGRAPH_VERSION_MINOR 9
-#define LAGRAPH_VERSION_UPDATE 14
+#define LAGRAPH_VERSION_UPDATE 15
 
 //==============================================================================
 // include files and helper macros
@@ -194,8 +194,8 @@
 //      has an incorrect format that cannot be parsed.
 
 //  LAGRAPH_PROPERTY_MISSING:  some methods require one or more cached
-//      properties to be computed before calling them (AT, rowdegree, or
-//      coldegree.  Use LAGraph_Property_AT, LAGraph_Property_RowDegree,
+//      properties to be computed before calling them (AT, row_degree, or
+//      col_degree.  Use LAGraph_Property_AT, LAGraph_Property_RowDegree,
 //      and/or LAGraph_Property_ColDegree to compute them.
 
 //  LAGRAPH_NO_SELF_EDGES_ALLOWED:  some methods requires that the graph have
@@ -501,8 +501,8 @@ LAGraph_PropertyState ;
 
 // (2) cached properties of the graph, which can be recreated any time:
 //      AT          AT = A'
-//      rowdegree   rowdegree(i) = # of entries in A(i,:)
-//      coldegree   coldegree(j) = # of entries in A(:,j)
+//      row_degree   row_degree(i) = # of entries in A(i,:)
+//      col_degree   col_degree(j) = # of entries in A(:,j)
 //      structure_is_symmetric: true if the structure of A is symmetric
 //      ndiag       the number of entries on the diagonal of A
 //      emin        FIXME describe me
@@ -545,17 +545,17 @@ struct LAGraph_Graph_struct
 
     GrB_Matrix AT ;         // AT = A', the transpose of A, with the same type.
 
-    GrB_Vector rowdegree ;  // a GrB_INT64 vector of length m, if A is m-by-n.
-           // where rowdegree(i) is the number of entries in A(i,:).  If
-           // rowdegree is sparse and the entry rowdegree(i) is not present,
+    GrB_Vector row_degree ;  // a GrB_INT64 vector of length m, if A is m-by-n.
+           // where row_degree(i) is the number of entries in A(i,:).  If
+           // row_degree is sparse and the entry row_degree(i) is not present,
            // then it is assumed to be zero.
 
-    GrB_Vector coldegree ;  // a GrB_INT64 vector of length n, if A is m-by-n.
-            // where coldegree(j) is the number of entries in A(:,j).  If
-            // coldegree is sparse and the entry coldegree(j) is not present,
+    GrB_Vector col_degree ;  // a GrB_INT64 vector of length n, if A is m-by-n.
+            // where col_degree(j) is the number of entries in A(:,j).  If
+            // col_degree is sparse and the entry col_degree(j) is not present,
             // then it is assumed to be zero.  If A is known to have a
             // symmetric structure, the convention is that the degree is held in
-            // rowdegree, and coldegree is left as NULL.
+            // row_degree, and col_degree is left as NULL.
 
     // If G is held as an incidence matrix, then G->A might be rectangular,
     // in the future, but the graph G may have a symmetric structure anyway.
@@ -571,14 +571,14 @@ struct LAGraph_Graph_struct
             // graph, this is the number of self-edges in the graph.
 
     GrB_Scalar emin ;   // minimum edge weight: exact, lower bound, or estimate
-    LAGraph_PropertyState emin_kind ;
+    LAGraph_PropertyState emin_state ;
             // EXACT: emin is exactly equal to the smallest entry, min(G->A)
             // BOUND: emin <= min(G->A)
             // APPROX: emin is a rough estimate of min(G->A)
             // UNKNOWN: emin is unknown
 
     GrB_Scalar emax ;   // maximum edge weight: exact, upper bound, or estimate
-    LAGraph_PropertyState emax_kind ;
+    LAGraph_PropertyState emax_state ;
             // EXACT: emax is exactly equal to the largest entry, max(G->A)
             // BOUND: emax >= max(G->A)
             // APPROX: emax is a rough estimate of max(G->A)
@@ -595,9 +595,9 @@ struct LAGraph_Graph_struct
             // unknown, then G->A may or may not have entries equal to zero.
     // other edge weight metrics: median, standard deviation....  Might be
     // useful for computing Delta for a Basic SSSP.
-    // GrB_Vector rowsum, colsum ;
-    // rowsum(i) = sum(A(i,:)), regardless of kind
-    // colsum(j) = sum(A(:,j)), regardless of kind
+    // GrB_Vector row_sum, col_sum ;
+    // row_sum(i) = sum(A(i,:)), regardless of kind
+    // col_sum(j) = sum(A(:,j)), regardless of kind
     // LAGraph_BooleanProperty connected ;   // true if G is a connected graph
 } ;
 
@@ -618,6 +618,8 @@ typedef struct LAGraph_Graph_struct *LAGraph_Graph ;
 
 LAGRAPH_PUBLIC
 int LAGraph_Init (char *msg) ;
+
+// TODO: augment the v2.1 C API, Table 3.9 to include these
 
 // LAGraph semirings, created by LAGraph_Init or LAGr_Init:
 LAGRAPH_PUBLIC GrB_Semiring
@@ -666,8 +668,13 @@ LAGRAPH_PUBLIC GrB_Semiring
     // op.  These semirings are very useful for unweighted graphs, or for
     // algorithms that operate only on the sparsity structure of unweighted
     // graphs.
-    LAGraph_structural_bool   ,
-    LAGraph_structural_int8   ,
+
+    // FIXME: rename these
+    LAGraph_any_one_bool   ,
+    LAGraph_any_one_int8   ,
+
+    LAGraph_structural_bool   ,     // (or, true) semiring
+    LAGraph_structural_int8   ,     // (min, 1) semiring
     LAGraph_structural_int16  ,
     LAGraph_structural_int32  ,
     LAGraph_structural_int64  ,
@@ -700,8 +707,8 @@ LAGRAPH_PUBLIC
 int LAGraph_Version
 (
     // output:
-    int version_number [3],     // user-provided array of size 3
-    char version_date [LAGRAPH_MSG_LEN],    // user-provided array
+    int version_number [3], // user-provided array of size 3
+    char *version_date,     // user-provided array of size >= LAGRAPH_MSG_LEN
     char *msg
 ) ;
 
@@ -721,12 +728,13 @@ int LAGraph_Finalize (char *msg) ;
 // LAGraph_New: create a new graph
 //------------------------------------------------------------------------------
 
-// LAGraph_New creates a new graph G.  The properties G->AT, G->rowdegree, and
-// G->coldegree are set to NULL, and scalar properties are set to
+// LAGraph_New creates a new graph G.  The properties G->AT, G->row_degree, and
+// G->col_degree are set to NULL, and scalar properties are set to
 // LAGRAPH_UNKNOWN.
 
 LAGRAPH_PUBLIC
-int LAGraph_New
+int LAGraph_New         // or LAGraph_Graph_New?
+                        // FIXME: start here for Apr 6, 2022
 (
     // output:
     LAGraph_Graph *G,   // the graph to create, NULL if failure
@@ -749,7 +757,7 @@ int LAGraph_New
 //------------------------------------------------------------------------------
 
 // LAGraph_Delete frees a graph G, including its adjacency matrix G->A and the
-// cached properties G->AT, G->rowdegree, and G->coldegree.
+// cached properties G->AT, G->row_degree, and G->col_degree.
 
 LAGRAPH_PUBLIC
 int LAGraph_Delete
@@ -769,7 +777,7 @@ int LAGraph_Delete
 
 // LAGraph_DeleteProperties frees all cached properies of a graph G.  The graph
 // is still valid.  This method should be used if G->A changes, since such
-// changes will normally invalidate G->AT, G->rowdgree, and/or G->coldegree.
+// changes will normally invalidate G->AT, G->rowdgree, and/or G->col_degree.
 
 LAGRAPH_PUBLIC
 int LAGraph_DeleteProperties
@@ -818,34 +826,34 @@ int LAGraph_Property_SymmetricStructure
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Property_RowDegree: determine G->rowdegree
+// LAGraph_Property_RowDegree: determine G->row_degree
 //------------------------------------------------------------------------------
 
-// LAGraph_Property_RowDegree computes G->rowdegree.  No work is performed if
+// LAGraph_Property_RowDegree computes G->row_degree.  No work is performed if
 // it already exists in G.
 
 LAGRAPH_PUBLIC
 int LAGraph_Property_RowDegree
 (
     // input/output:
-    LAGraph_Graph G,    // graph to determine G->rowdegree
+    LAGraph_Graph G,    // graph to determine G->row_degree
     char *msg
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Property_ColDegree: determine G->coldegree
+// LAGraph_Property_ColDegree: determine G->col_degree
 //------------------------------------------------------------------------------
 
-// LAGraph_Property_ColDegree computes G->coldegree.  No work is performed if
-// it already exists in G.  If G is undirected, G->coldegree is never computed.
-// Instead, G->rowdegree is used instead.  No work is performed it is already
+// LAGraph_Property_ColDegree computes G->col_degree.  No work is performed if
+// it already exists in G.  If G is undirected, G->col_degree is never computed.
+// Instead, G->row_degree is used instead.  No work is performed it is already
 // exists in G.
 
 LAGRAPH_PUBLIC
 int LAGraph_Property_ColDegree
 (
     // input/output:
-    LAGraph_Graph G,    // graph to determine G->coldegree
+    LAGraph_Graph G,    // graph to determine G->col_degree
     char *msg
 ) ;
 
@@ -1345,7 +1353,7 @@ int LAGraph_SortByDegree
     int64_t **P_handle,     // P is returned as a permutation vector of size n
     // input:
     const LAGraph_Graph G,  // graph of n nodes
-    bool byrow,             // if true, sort G->rowdegree, else G->coldegree
+    bool byrow,             // if true, sort G->row_degree, else G->col_degree
     bool ascending,         // sort in ascending or descending order
     char *msg
 ) ;
@@ -1355,7 +1363,7 @@ int LAGraph_SortByDegree
 //------------------------------------------------------------------------------
 
 // LAGraph_SampleDegree computes an estimate of the median and mean of the row
-// or column degree, by randomly sampling the G->rowdegree or G->coldegree
+// or column degree, by randomly sampling the G->row_degree or G->col_degree
 // vector.
 
 LAGRAPH_PUBLIC
@@ -1366,7 +1374,7 @@ int LAGraph_SampleDegree
     double *sample_median,  // sampled median degree
     // input:
     const LAGraph_Graph G,  // graph of n nodes
-    bool byrow,             // if true, sample G->rowdegree, else G->coldegree
+    bool byrow,             // if true, sample G->row_degree, else G->col_degree
     int64_t nsamples,       // number of samples
     uint64_t seed,          // random number seed
     char *msg
@@ -1619,7 +1627,7 @@ int LAGraph_Sort3
 // LAGraph_TriangleCount
 //------------------------------------------------------------------------------
 
-// This is a Basic algorithm (G->ndiag, G->rowdegree, G->structure_is_symmetric
+// This is a Basic algorithm (G->ndiag, G->row_degree, G->structure_is_symmetric
 // are computed, if not present).
 
 /*
@@ -1784,7 +1792,7 @@ int LAGr_Betweenness
 // LAGr_PageRank: pagerank
 //------------------------------------------------------------------------------
 
-// This is an Advanced algorithm (G->AT and G->rowdegree are required).
+// This is an Advanced algorithm (G->AT and G->row_degree are required).
 
 // LAGr_PageRank computes the standard pagerank of a
 // directed graph G.  Sinks (nodes with no out-going edges) are handled.
@@ -1807,7 +1815,7 @@ int LAGr_PageRank
 // LAGr_PageRankGAP: GAP-style pagerank
 //------------------------------------------------------------------------------
 
-// This is an Advanced algorithm (G->AT and G->rowdegree are required).
+// This is an Advanced algorithm (G->AT and G->row_degree are required).
 
 // LAGr_PageRankGAP computes the GAP-style pagerank of a
 // directed graph G.  Sinks (nodes with no out-going edges) are not handled.
@@ -1831,7 +1839,7 @@ int LAGr_PageRankGAP
 // LAGr_TriangleCount: triangle counting
 //------------------------------------------------------------------------------
 
-// This is an Advanced algorithm (G->ndiag, G->rowdegree,
+// This is an Advanced algorithm (G->ndiag, G->row_degree,
 // G->structure_is_symmetric are required).
 
 /* Count the triangles in a graph. Advanced API

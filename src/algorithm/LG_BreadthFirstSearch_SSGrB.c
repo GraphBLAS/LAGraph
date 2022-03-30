@@ -11,7 +11,7 @@
 
 //------------------------------------------------------------------------------
 
-// This is an Advanced algorithm (G->AT and G->rowdegree are required),
+// This is an Advanced algorithm (G->AT and G->row_degree are required),
 // but it is not user-callable (see LAGr_BreadthFirstSearch instead).
 
 // References:
@@ -92,7 +92,7 @@ int LG_BreadthFirstSearch_SSGrB
     GRB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
 
     GrB_Matrix AT ;
-    GrB_Vector Degree = G->rowdegree ;
+    GrB_Vector Degree = G->row_degree ;
     if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGraph_ADJACENCY_DIRECTED &&
         G->structure_is_symmetric == LAGraph_TRUE))
@@ -110,9 +110,9 @@ int LG_BreadthFirstSearch_SSGrB
 
     // FIXME: if AT is not present, do push-only?
 
-    // direction-optimization requires G->AT and G->rowdegree
+    // direction-optimization requires G->AT and G->row_degree
     LG_ASSERT_MSG (Degree != NULL,
-        LAGRAPH_PROPERTY_MISSING, "G->rowdegree is required") ;
+        LAGRAPH_PROPERTY_MISSING, "G->row_degree is required") ;
 
     bool push_pull = true ;
 

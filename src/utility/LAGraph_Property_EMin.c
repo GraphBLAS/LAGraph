@@ -38,7 +38,7 @@ int LAGraph_Property_EMin
         return (GrB_SUCCESS) ;
     }
 
-    G->emin_kind = LAGRAPH_UNKNOWN ;
+    G->emin_state = LAGRAPH_UNKNOWN ;
 
     //--------------------------------------------------------------------------
     // determine the type of G->A and the corresponding min monoid
@@ -71,7 +71,7 @@ int LAGraph_Property_EMin
 
     GRB_TRY (GrB_Scalar_new (&(G->emin), atype)) ;
     GRB_TRY (GrB_reduce (G->emin, NULL, monoid, G->A, NULL)) ;
-    G->emin_kind = LAGraph_EXACT ;
+    G->emin_state = LAGraph_EXACT ;
     return (GrB_SUCCESS) ;
 }
 

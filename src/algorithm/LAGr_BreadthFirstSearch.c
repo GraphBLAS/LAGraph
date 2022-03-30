@@ -32,7 +32,7 @@ int LAGr_BreadthFirstSearch
 {
 
 #if LAGRAPH_SUITESPARSE
-    // requires G->AT and G->rowdegree
+    // requires G->AT and G->row_degree
     return LG_BreadthFirstSearch_SSGrB   (level, parent, G, src, msg) ;
 #else
     // requires no properties, but G is input-only anyway

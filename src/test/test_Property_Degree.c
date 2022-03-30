@@ -78,8 +78,8 @@ void check_degree
 typedef struct
 {
     const char *name ;
-    const int rowdeg [67] ;
-    const int coldeg [67] ;
+    const int row_deg [67] ;
+    const int col_deg [67] ;
 }
 matrix_info ;
 
@@ -245,8 +245,8 @@ void test_Property_Degree (void)
         // load the matrix as A
         const char *aname = files [k].name ;
         if (strlen (aname) == 0) break;
-        const int *rowdeg = files [k].rowdeg ;
-        const int *coldeg = files [k].coldeg ;
+        const int *row_deg = files [k].row_deg ;
+        const int *col_deg = files [k].col_deg ;
         TEST_CASE (aname) ;
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
@@ -261,15 +261,15 @@ void test_Property_Degree (void)
 
         for (int trial = 0 ; trial <= 2 ; trial++)
         {
-            // create the G->rowdegree property and check it
+            // create the G->row_degree property and check it
             OK (LAGraph_Property_RowDegree (G, msg)) ;
             GrB_Index n ;
             OK (GrB_Matrix_nrows (&n, G->A)) ;
-            check_degree (G->rowdegree, n, rowdeg) ;
+            check_degree (G->row_degree, n, row_deg) ;
 
             if (trial == 2)
             {
-                // use G->AT to compute G->coldegree 
+                // use G->AT to compute G->col_degree 
                 OK (LAGraph_DeleteProperties (G, msg)) ;
                 OK (LAGraph_Property_AT (G, msg)) ;
             }
@@ -277,7 +277,7 @@ void test_Property_Degree (void)
             // create the G->ColDegree property and check it
             OK (LAGraph_Property_ColDegree (G, msg)) ;
             OK (GrB_Matrix_ncols (&n, G->A)) ;
-            check_degree (G->coldegree, n, coldeg) ;
+            check_degree (G->col_degree, n, col_deg) ;
         }
 
         OK (LAGraph_Delete (&G, msg)) ;
@@ -309,8 +309,8 @@ void test_Property_Degree_brutal (void)
         // load the matrix as A
         const char *aname = files [k].name ;
         if (strlen (aname) == 0) break;
-        const int *rowdeg = files [k].rowdeg ;
-        const int *coldeg = files [k].coldeg ;
+        const int *row_deg = files [k].row_deg ;
+        const int *col_deg = files [k].col_deg ;
         TEST_CASE (aname) ;
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
@@ -325,15 +325,15 @@ void test_Property_Degree_brutal (void)
 
         for (int trial = 0 ; trial <= 2 ; trial++)
         {
-            // create the G->rowdegree property and check it
+            // create the G->row_degree property and check it
             LG_BRUTAL (LAGraph_Property_RowDegree (G, msg)) ;
             GrB_Index n ;
             OK (GrB_Matrix_nrows (&n, G->A)) ;
-            check_degree (G->rowdegree, n, rowdeg) ;
+            check_degree (G->row_degree, n, row_deg) ;
 
             if (trial == 2)
             {
-                // use G->AT to compute G->coldegree 
+                // use G->AT to compute G->col_degree 
                 OK (LAGraph_DeleteProperties (G, msg)) ;
                 OK (LAGraph_Property_AT (G, msg)) ;
             }
@@ -341,7 +341,7 @@ void test_Property_Degree_brutal (void)
             // create the G->ColDegree property and check it
             LG_BRUTAL (LAGraph_Property_ColDegree (G, msg)) ;
             OK (GrB_Matrix_ncols (&n, G->A)) ;
-            check_degree (G->coldegree, n, coldeg) ;
+            check_degree (G->col_degree, n, col_deg) ;
         }
 
         OK (LAGraph_Delete (&G, msg)) ;

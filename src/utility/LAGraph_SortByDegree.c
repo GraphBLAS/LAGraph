@@ -14,11 +14,11 @@
 // LAGraph_SortByDegree computes a permutation vector P that sorts a graph
 // by degree (either row or column degree of its adjacency matrix A).
 // If G is undirected, or if G is directed but is known to have a symmetric
-// adjacency matrix, then G->rowdegree is used (and byrow is ignored).
-// Otherwise, if G->rowdegree is used if byrow is true, and G->coldegree is
+// adjacency matrix, then G->row_degree is used (and byrow is ignored).
+// Otherwise, if G->row_degree is used if byrow is true, and G->col_degree is
 // used if byrow is false.
 
-// G->rowdegree or G->coldegree must first be computed.  An error is returned
+// G->row_degree or G->col_degree must first be computed.  An error is returned
 // if the required degree vector has not yet been computed.  See
 // LAGraph_Property_RowDegree and LAGraph_Property_ColDegree.
 
@@ -53,7 +53,7 @@ int LAGraph_SortByDegree
     int64_t **P_handle,     // P is returned as a permutation vector of size n
     // input:
     const LAGraph_Graph G,  // graph of n nodes
-    bool byrow,             // if true, sort G->rowdegree, else G->coldegree
+    bool byrow,             // if true, sort G->row_degree, else G->col_degree
     bool ascending,         // sort in ascending or descending order
     char *msg
 )
@@ -78,12 +78,12 @@ int LAGraph_SortByDegree
         G->structure_is_symmetric == LAGraph_TRUE))
     {
         // the structure of A is known to be symmetric
-        Degree = G->rowdegree ;
+        Degree = G->row_degree ;
     }
     else
     {
         // A is not known to be symmetric
-        Degree = (byrow) ? G->rowdegree : G->coldegree ;
+        Degree = (byrow) ? G->row_degree : G->col_degree ;
     }
 
     LG_ASSERT_MSG (Degree != NULL,

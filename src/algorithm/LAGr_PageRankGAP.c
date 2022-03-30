@@ -11,7 +11,7 @@
 
 //------------------------------------------------------------------------------
 
-// This is an Advanced algorithm (G->AT and G->rowdegree are required).
+// This is an Advanced algorithm (G->AT and G->row_degree are required).
 
 // PageRank for the GAP benchmark (only).  Do not use in production.
 
@@ -24,7 +24,7 @@
 // handles sinks correctly.  This method does not return a centrality metric
 // such that sum(centrality) is 1, if sinks are present.
 
-// The G->AT and G->rowdegree properties must be defined for this method.  If G
+// The G->AT and G->row_degree properties must be defined for this method.  If G
 // is undirected or G->A is known to have a symmetric structure, then G->A is
 // used instead of G->AT, however.
 
@@ -80,9 +80,9 @@ int LAGr_PageRankGAP
         LG_ASSERT_MSG (AT != NULL,
             LAGRAPH_PROPERTY_MISSING, "G->AT is required") ;
     }
-    GrB_Vector d_out = G->rowdegree ;
+    GrB_Vector d_out = G->row_degree ;
     LG_ASSERT_MSG (d_out != NULL,
-        LAGRAPH_PROPERTY_MISSING, "G->rowdegree is required") ;
+        LAGRAPH_PROPERTY_MISSING, "G->row_degree is required") ;
 
     //--------------------------------------------------------------------------
     // initializations
