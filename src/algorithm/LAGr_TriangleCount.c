@@ -75,6 +75,9 @@ static int tricount_prep
         GRB_TRY (GrB_Matrix_new (L, GrB_BOOL, n, n)) ;
         GRB_TRY (GrB_select (*L, NULL, NULL, GrB_TRIL, A, (int64_t) (-1),
             NULL)) ;
+        GRB_TRY(GrB_Matrix_setElement(*L, false, 0, 0));
+        GRB_TRY (GrB_Matrix_wait (*L, GrB_MATERIALIZE)) ;
+        GRB_TRY (GxB_Matrix_fprint (*L, "L", GxB_COMPLETE, stdout)) ;
     }
 
     if (U != NULL)
@@ -82,6 +85,9 @@ static int tricount_prep
         // U = triu (A,1)
         GRB_TRY (GrB_Matrix_new (U, GrB_BOOL, n, n)) ;
         GRB_TRY (GrB_select (*U, NULL, NULL, GrB_TRIU, A, (int64_t) 1, NULL)) ;
+        GRB_TRY(GrB_Matrix_setElement(*U, 0, 0, 0));
+        GRB_TRY (GrB_Matrix_wait (*U, GrB_MATERIALIZE)) ;
+        GRB_TRY (GxB_Matrix_fprint (*U, "U", GxB_COMPLETE, stdout)) ;
     }
     return (GrB_SUCCESS) ;
 }
@@ -177,7 +183,7 @@ int LAGr_TriangleCount
     GrB_Index n ;
     GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
     GRB_TRY (GrB_Matrix_new (&C, GrB_INT64, n, n)) ;
-    GrB_Semiring semiring = LAGraph_plus_one_int64 ;
+    GrB_Semiring semiring = GxB_PLUS_PAIR_INT64; //LAGraph_plus_one_int64 ;
     GrB_Monoid monoid = GrB_PLUS_MONOID_INT64 ;
 
     //--------------------------------------------------------------------------
@@ -292,6 +298,8 @@ int LAGr_TriangleCount
             // using the masked saxpy3 method
             LG_TRY (tricount_prep (&L, NULL, A, msg)) ;
             GRB_TRY (GrB_mxm (C, L, NULL, semiring, L, L, GrB_DESC_S)) ;
+            GRB_TRY (GxB_Matrix_fprint (C, "my mat", GxB_COMPLETE, stdout)) ;
+
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             break ;
 
@@ -300,6 +308,7 @@ int LAGr_TriangleCount
             // using the masked saxpy3 method
             LG_TRY (tricount_prep (NULL, &U, A, msg)) ;
             GRB_TRY (GrB_mxm (C, U, NULL, semiring, U, U, GrB_DESC_S)) ;
+            GRB_TRY (GxB_Matrix_fprint (C, "my mat", GxB_COMPLETE, stdout)) ;
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             break ;
 
@@ -312,6 +321,7 @@ int LAGr_TriangleCount
             // using the masked dot product
             LG_TRY (tricount_prep (&L, &U, A, msg)) ;
             GRB_TRY (GrB_mxm (C, L, NULL, semiring, L, U, GrB_DESC_ST1)) ;
+            GRB_TRY (GxB_Matrix_fprint (C, "my mat", GxB_COMPLETE, stdout)) ;
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             break ;
 
@@ -320,6 +330,7 @@ int LAGr_TriangleCount
             // using the masked dot product
             LG_TRY (tricount_prep (&L, &U, A, msg)) ;
             GRB_TRY (GrB_mxm (C, U, NULL, semiring, U, L, GrB_DESC_ST1)) ;
+            GRB_TRY (GxB_Matrix_fprint (C, "my mat", GxB_COMPLETE, stdout)) ;
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             break ;
     }
