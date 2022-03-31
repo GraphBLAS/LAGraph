@@ -1107,7 +1107,7 @@ static inline int demo_init (bool burble)
     mallopt (M_TOP_PAD, 16*1024*1024) ; // increase padding to speedup malloc
     #endif
 
-    // LAGRAPH_TRY (LAGraph_Init (NULL)) ;
+//  LAGRAPH_TRY (LAGraph_Init (NULL)) ;
     // rmm_wrap_initialize (rmm_wrap_managed, INT32_MAX, INT64_MAX) ;
     rmm_wrap_initialize (rmm_wrap_managed, 256 * 1000000L, 256 * 100000000L) ;
     LAGRAPH_TRY (LAGr_Init (rmm_wrap_malloc, rmm_wrap_calloc, rmm_wrap_realloc, rmm_wrap_free, NULL)) ;

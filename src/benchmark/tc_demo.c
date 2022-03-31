@@ -126,11 +126,35 @@ int main (int argc, char **argv)
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
 
-    GxB_print (G->A, 3) ;
-    GRB_TRY (GrB_Matrix_setElement (G->A, 0, 2, 2)) ;
-    GxB_print (G->A, 3) ;
+    // HACK: make sure G->A is non-iso
+
+    // create an iterator
+    GxB_Iterator iterator ;
+    GxB_Iterator_new (&iterator) ;
+    // attach it to the matrix A
+    GrB_Info info = GxB_Matrix_Iterator_attach (iterator, G->A, NULL) ;
+    if (info < 0) { abort ( ) ; }
+    // seek to the first entry
+    info = GxB_Matrix_Iterator_seek (iterator, 0) ;
+    printf ("info %d\n", info) ;
+    while (info != GxB_EXHAUSTED)
+    {
+        // get the entry A(i,j)
+        GrB_Index i, j ;
+        GxB_Matrix_Iterator_getIndex (iterator, &i, &j) ;
+        // set it to 0
+        printf ("setting A(%d,%d) = 0\n", (int) i, (int) j) ;
+        GRB_TRY (GrB_Matrix_setElement (G->A, 0, i, j)) ;
+        break ;
+    }
+    GrB_free (&iterator) ;
+
+    GxB_print (G->A, 2) ;
+//  GRB_TRY (GrB_Matrix_setElement (G->A, 0, 2, 2)) ;
+//  GxB_print (G->A, 3) ;
     GrB_wait (G->A, GrB_MATERIALIZE) ;
-    GxB_print (G->A, 3) ;
+//  GxB_print (G->A, 3) ;
+//  printf ("HERE ============================\n") ;
 
     //--------------------------------------------------------------------------
     // triangle counting
@@ -139,7 +163,7 @@ int main (int argc, char **argv)
     GrB_Index ntriangles, ntsimple = 0 ;
     double tic [2] ;
 
-#if 0
+#if 1
     // check # of triangles
     LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
     LAGRAPH_TRY (LG_check_tri (&ntsimple, G, NULL)) ;
