@@ -143,8 +143,8 @@ int main (int argc, char **argv)
         GrB_Index i, j ;
         GxB_Matrix_Iterator_getIndex (iterator, &i, &j) ;
         // set it to 0
-        printf ("setting A(%d,%d) = 0\n", (int) i, (int) j) ;
-        GRB_TRY (GrB_Matrix_setElement (G->A, 0, i, j)) ;
+        printf ("setting A(%d,%d) = 2\n", (int) i, (int) j) ;
+        GRB_TRY (GrB_Matrix_setElement (G->A, 2, i, j)) ;
         break ;
     }
     GrB_free (&iterator) ;
