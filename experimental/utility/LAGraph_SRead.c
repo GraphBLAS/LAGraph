@@ -115,8 +115,10 @@ int LAGraph_SRead   // read a set of matrices from a *.lagraph file
     LAGraph_Contents *Contents = NULL ;
     GrB_Index ncontents = 0 ;
 
-    LG_ASSERT (collection_handle != NULL && Contents_handle != NULL && f != NULL
-        && ncontents_handle != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (collection_handle != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (Contents_handle != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (f != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (ncontents_handle != NULL, GrB_NULL_POINTER) ;
     (*collection_handle) = NULL ;
     (*Contents_handle) = NULL ;
     (*ncontents_handle) = 0 ;

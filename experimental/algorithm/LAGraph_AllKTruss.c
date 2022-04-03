@@ -84,8 +84,9 @@ int LAGraph_AllKTruss   // compute all k-trusses of a graph
 
     LG_CLEAR_MSG ;
     int64_t k = 0 ;
-    LG_ASSERT (Cset != NULL && nstepss != NULL && kmax != NULL && ntris != NULL
-        && nedges != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (Cset != NULL && nstepss != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (kmax != NULL && ntris != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (nedges != NULL, GrB_NULL_POINTER) ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
 
     if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
