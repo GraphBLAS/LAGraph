@@ -67,20 +67,7 @@ void test_Init (void)
     TEST_CHECK (ver [2] == LAGRAPH_VERSION_UPDATE) ;
     OK (strcmp (version_date, LAGRAPH_DATE)) ;
 
-    // LAGraph_Init cannot be called twice
-    status = LAGraph_Init (msg) ;
-    printf ("\nstatus: %d msg: %s\n", status, msg) ;
-    TEST_CHECK (status != GrB_SUCCESS) ;
-
     OK (LAGraph_Finalize (msg)) ;
-
-    // calling LAGraph_Finalize twice leads to undefined behavior;
-    // for SuiteSparse, it returns GrB_SUCCESS
-    status = LAGraph_Finalize (msg) ;
-    printf ("status %d\n", status) ;
-    #if LAGRAPH_SUITESPARSE
-    TEST_CHECK (status == GrB_SUCCESS) ;
-    #endif
 }
 
 //-----------------------------------------------------------------------------
