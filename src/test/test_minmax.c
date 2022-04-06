@@ -195,9 +195,9 @@ void test_minmax (void)
         //----------------------------------------------------------------------
 
         OK (LAGraph_Property_EMin (G, msg)) ;
-        TEST_CHECK (G->emin_state == LAGraph_EXACT) ;
+        TEST_CHECK (G->emin_state == LAGraph_VALUE) ;
         OK (LAGraph_Property_EMax (G, msg)) ;
-        TEST_CHECK (G->emax_state == LAGraph_EXACT) ;
+        TEST_CHECK (G->emax_state == LAGraph_VALUE) ;
 
         //----------------------------------------------------------------------
         // check the result
@@ -286,9 +286,9 @@ void test_minmax_int64 (void)
             //------------------------------------------------------------------
 
             OK (LAGraph_Property_EMin (G, msg)) ;
-            TEST_CHECK (G->emin_state == LAGraph_EXACT) ;
+            TEST_CHECK (G->emin_state == LAGraph_VALUE) ;
             OK (LAGraph_Property_EMax (G, msg)) ;
-            TEST_CHECK (G->emax_state == LAGraph_EXACT) ;
+            TEST_CHECK (G->emax_state == LAGraph_VALUE) ;
 
             //------------------------------------------------------------------
             // check the result
@@ -360,9 +360,9 @@ void test_minmax_uint64 (void)
         //----------------------------------------------------------------------
 
         OK (LAGraph_Property_EMin (G, msg)) ;
-        TEST_CHECK (G->emin_state == LAGraph_EXACT) ;
+        TEST_CHECK (G->emin_state == LAGraph_VALUE) ;
         OK (LAGraph_Property_EMax (G, msg)) ;
-        TEST_CHECK (G->emax_state == LAGraph_EXACT) ;
+        TEST_CHECK (G->emax_state == LAGraph_VALUE) ;
 
         //----------------------------------------------------------------------
         // check the result

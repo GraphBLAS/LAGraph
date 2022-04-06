@@ -139,8 +139,8 @@ int LG_BreadthFirstSearch_SSGrB
     }
     else
     {
-        // only the level is needed, use the LAGraph_structural_bool semiring
-        semiring = LAGraph_structural_bool ;
+        // only the level is needed, use the LAGraph_any_one_bool semiring
+        semiring = LAGraph_any_one_bool ;
 
         // create a sparse boolean vector q, and set q(src) = true
         GRB_TRY (GrB_Vector_new (&q, GrB_BOOL, n)) ;

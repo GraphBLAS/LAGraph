@@ -33,10 +33,10 @@
 // See also the LAGraph_Version utility method, which returns these values.
 // These definitions must match the same definitions in LAGraph/CMakeLists.txt.
 // FIXME: use config to create include/LAGraph.h from LAGraph/CMakeLists.txt
-#define LAGRAPH_DATE "Apr 3, 2022"
+#define LAGRAPH_DATE "Apr 6, 2022"
 #define LAGRAPH_VERSION_MAJOR 0
 #define LAGRAPH_VERSION_MINOR 9
-#define LAGRAPH_VERSION_UPDATE 16
+#define LAGRAPH_VERSION_UPDATE 17
 
 //==============================================================================
 // include files and helper macros
@@ -453,33 +453,25 @@ typedef enum
 LAGraph_BooleanProperty ;
 
 //------------------------------------------------------------------------------
-// LAGraph_PropertyState: exact, bound, approximate, or unknown
+// LAGraph_PropertyState: value, bound, or unknown
 //------------------------------------------------------------------------------
-
-// FIXME: start here on Mar 30, 2022
-// TODO: discuss more: LAGraph_PropertyState
 
 // LAGraph_PropertyState describes the status of a graph property.
 // If the property is computed in floating-point arithmetic, it may have been
-// computed with roundoff error, but it may still be declared as "exact" if the
+// computed with roundoff error, but it may still be declared as "value" if the
 // roundoff error is expected to be small, or if the property was computed as
-// carefully as possible (to within reasonable roundoff error).  The
-// "approximate" state is used when the property is a rough estimate, not because
-// of roundoff error but because of other algorithmic approximations.  The
-// decision of when to tag a property as "exact" or "approximate" is up to the
-// particular algorithm, which each algorithm must document.
+// carefully as possible (to within reasonable roundoff error).
 
 // The "bound" state indicates that the property is an upper or lower bound,
 // depending on the particular property.  If computed in floating-point
-// arithmetic, an "upper bound" property may be actually slightly lower than the
-// actual upper bound, because of floating-point roundoff.
+// arithmetic, an "upper bound" property may be actually slightly lower than
+// the actual upper bound, because of floating-point roundoff.
 
 typedef enum
 {
-    LAGraph_EXACT = 0,      // the property is exact (possibly ignoring roundoff)
-    LAGraph_BOUND = 1,      // the property is a bound (upper or lower, depending
-                            // on the particular property)
-    LAGraph_APPROX = 2,     // the property is a rough approximation
+    LAGraph_VALUE = 0,  // property is a known value (ignoring roundoff)
+    LAGraph_BOUND = 1,  // property is a bound (upper or lower, depending
+                        // on the particular property)
     LAGraph_BOUND_UNKNOWN = LAGRAPH_UNKNOWN,
 }
 LAGraph_PropertyState ;
@@ -501,12 +493,12 @@ LAGraph_PropertyState ;
 
 // (2) cached properties of the graph, which can be recreated any time:
 //      AT          AT = A'
-//      row_degree   row_degree(i) = # of entries in A(i,:)
-//      col_degree   col_degree(j) = # of entries in A(:,j)
+//      row_degree  row_degree(i) = # of entries in A(i,:)
+//      col_degree  col_degree(j) = # of entries in A(:,j)
 //      structure_is_symmetric: true if the structure of A is symmetric
 //      ndiag       the number of entries on the diagonal of A
-//      emin        FIXME describe me
-//      emax        FIXME describe me
+//      emin        minimum edge weight
+//      emax        maximum edge weight
 
 struct LAGraph_Graph_struct
 {
@@ -570,18 +562,16 @@ struct LAGraph_Graph_struct
             // unknown.  For the adjacency matrix of a directed or undirected
             // graph, this is the number of self-edges in the graph.
 
-    GrB_Scalar emin ;   // minimum edge weight: exact, lower bound, or estimate
+    GrB_Scalar emin ;   // minimum edge weight: value, lower bound, or unknown
     LAGraph_PropertyState emin_state ;
-            // EXACT: emin is exactly equal to the smallest entry, min(G->A)
+            // VALUE: emin is equal to the smallest entry, min(G->A)
             // BOUND: emin <= min(G->A)
-            // APPROX: emin is a rough estimate of min(G->A)
             // UNKNOWN: emin is unknown
 
-    GrB_Scalar emax ;   // maximum edge weight: exact, upper bound, or estimate
+    GrB_Scalar emax ;   // maximum edge weight: value, upper bound, or unknown
     LAGraph_PropertyState emax_state ;
-            // EXACT: emax is exactly equal to the largest entry, max(G->A)
+            // VALUE: emax is equal to the largest entry, max(G->A)
             // BOUND: emax >= max(G->A)
-            // APPROX: emax is a rough estimate of max(G->A)
             // UNKNOWN: emax is unknown
 
     // possible future cached properties:
@@ -596,12 +586,14 @@ struct LAGraph_Graph_struct
     // other edge weight metrics: median, standard deviation....  Might be
     // useful for computing Delta for a Basic SSSP.
     // GrB_Vector row_sum, col_sum ;
-    // row_sum(i) = sum(A(i,:)), regardless of kind
-    // col_sum(j) = sum(A(:,j)), regardless of kind
+    // row_sum(i) = sum(abs(A(i,:))), regardless of kind
+    // col_sum(j) = sum(abs(A(:,j))), regardless of kind
     // LAGraph_BooleanProperty connected ;   // true if G is a connected graph
 } ;
 
 typedef struct LAGraph_Graph_struct *LAGraph_Graph ;
+
+// FIXME: start here, Apr 13, 2022
 
 //==============================================================================
 // LAGraph utilities
@@ -663,27 +655,21 @@ LAGRAPH_PUBLIC GrB_Semiring
     LAGraph_plus_one_fp32   ,
     LAGraph_plus_one_fp64   ,
 
-    // LAGraph_structural_T: using the GrB_MIN_MONOID_T for non-boolean types
-    // or GrB_LOR_MONOID_BOOL for boolean, and the GrB_ONEB_T multiplicative
-    // op.  These semirings are very useful for unweighted graphs, or for
-    // algorithms that operate only on the sparsity structure of unweighted
-    // graphs.
-
-    // FIXME: rename these
-    LAGraph_any_one_bool   ,
-    LAGraph_any_one_int8   ,
-
-    LAGraph_structural_bool   ,     // (or, true) semiring
-    LAGraph_structural_int8   ,     // (min, 1) semiring
-    LAGraph_structural_int16  ,
-    LAGraph_structural_int32  ,
-    LAGraph_structural_int64  ,
-    LAGraph_structural_uint8  ,
-    LAGraph_structural_uint16 ,
-    LAGraph_structural_uint32 ,
-    LAGraph_structural_uint64 ,
-    LAGraph_structural_fp32   ,
-    LAGraph_structural_fp64   ;
+    // LAGraph_any_one_T: using the GrB_MIN_MONOID_T for non-boolean types or
+    // GrB_LOR_MONOID_BOOL for boolean, and the GrB_ONEB_T multiplicative op.
+    // These semirings are very useful for unweighted graphs, or for algorithms
+    // that operate only on the sparsity structure of unweighted graphs.
+    LAGraph_any_one_bool   ,    // (or, true) semiring
+    LAGraph_any_one_int8   ,    // (min, 1) semiring
+    LAGraph_any_one_int16  ,
+    LAGraph_any_one_int32  ,
+    LAGraph_any_one_int64  ,
+    LAGraph_any_one_uint8  ,
+    LAGraph_any_one_uint16 ,
+    LAGraph_any_one_uint32 ,
+    LAGraph_any_one_uint64 ,
+    LAGraph_any_one_fp32   ,
+    LAGraph_any_one_fp64   ;
 
 //------------------------------------------------------------------------------
 // LAGraph_Version: determine the version of LAGraph
@@ -733,8 +719,7 @@ int LAGraph_Finalize (char *msg) ;
 // LAGRAPH_UNKNOWN.
 
 LAGRAPH_PUBLIC
-int LAGraph_New         // or LAGraph_Graph_New?
-                        // FIXME: start here for Apr 6, 2022
+int LAGraph_New
 (
     // output:
     LAGraph_Graph *G,   // the graph to create, NULL if failure

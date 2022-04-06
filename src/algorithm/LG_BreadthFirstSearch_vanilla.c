@@ -96,7 +96,7 @@ int LG_BreadthFirstSearch_vanilla
     else
     {
         // only the level is needed
-        semiring = LAGraph_structural_bool ;
+        semiring = LAGraph_any_one_bool ;
 
         // create a sparse boolean vector frontier, and set frontier(src) = true
         GRB_TRY (GrB_Vector_new(&frontier, GrB_BOOL, n)) ;

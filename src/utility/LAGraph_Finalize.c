@@ -59,17 +59,17 @@ int LAGraph_Finalize (char *msg)
     GRB_TRY (GrB_Semiring_free (&LAGraph_plus_one_fp32  )) ;
     GRB_TRY (GrB_Semiring_free (&LAGraph_plus_one_fp64  )) ;
 
-    GRB_TRY (GrB_Semiring_free (&LAGraph_structural_bool  )) ;
-    GRB_TRY (GrB_Semiring_free (&LAGraph_structural_int8  )) ;
-    GRB_TRY (GrB_Semiring_free (&LAGraph_structural_int16 )) ;
-    GRB_TRY (GrB_Semiring_free (&LAGraph_structural_int32 )) ;
-    GRB_TRY (GrB_Semiring_free (&LAGraph_structural_int64 )) ;
-    GRB_TRY (GrB_Semiring_free (&LAGraph_structural_uint8 )) ;
-    GRB_TRY (GrB_Semiring_free (&LAGraph_structural_uint16)) ;
-    GRB_TRY (GrB_Semiring_free (&LAGraph_structural_uint32)) ;
-    GRB_TRY (GrB_Semiring_free (&LAGraph_structural_uint64)) ;
-    GRB_TRY (GrB_Semiring_free (&LAGraph_structural_fp32  )) ;
-    GRB_TRY (GrB_Semiring_free (&LAGraph_structural_fp64  )) ;
+    GRB_TRY (GrB_Semiring_free (&LAGraph_any_one_bool  )) ;
+    GRB_TRY (GrB_Semiring_free (&LAGraph_any_one_int8  )) ;
+    GRB_TRY (GrB_Semiring_free (&LAGraph_any_one_int16 )) ;
+    GRB_TRY (GrB_Semiring_free (&LAGraph_any_one_int32 )) ;
+    GRB_TRY (GrB_Semiring_free (&LAGraph_any_one_int64 )) ;
+    GRB_TRY (GrB_Semiring_free (&LAGraph_any_one_uint8 )) ;
+    GRB_TRY (GrB_Semiring_free (&LAGraph_any_one_uint16)) ;
+    GRB_TRY (GrB_Semiring_free (&LAGraph_any_one_uint32)) ;
+    GRB_TRY (GrB_Semiring_free (&LAGraph_any_one_uint64)) ;
+    GRB_TRY (GrB_Semiring_free (&LAGraph_any_one_fp32  )) ;
+    GRB_TRY (GrB_Semiring_free (&LAGraph_any_one_fp64  )) ;
 
     //--------------------------------------------------------------------------
     // finalize GraphBLAS

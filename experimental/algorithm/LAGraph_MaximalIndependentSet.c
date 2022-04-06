@@ -258,14 +258,14 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
             // push
             // new_neighbors{candidates,replace} = new_members' * A
             GRB_TRY (GrB_vxm (new_neighbors, candidates, NULL,
-                LAGraph_structural_bool, new_members, A, GrB_DESC_RS)) ;
+                LAGraph_any_one_bool, new_members, A, GrB_DESC_RS)) ;
         }
         else
         {
             // pull
             // new_neighbors{candidates,replace} = A * new_members
             GRB_TRY (GrB_mxv (new_neighbors, candidates, NULL,
-                LAGraph_structural_bool, A, new_members, GrB_DESC_RS)) ;
+                LAGraph_any_one_bool, A, new_members, GrB_DESC_RS)) ;
         }
 
         // remove new neighbors of new members from set of candidates

@@ -59,21 +59,21 @@ GrB_Semiring LAGraph_plus_one_fp32   = NULL ;
 GrB_Semiring LAGraph_plus_one_fp64   = NULL ;
 
 
-// use LAGraph_structural_bool, etc
+// use LAGraph_any_one_bool, etc
 
-// LAGraph_structural_T: using the GrB_MIN_MONOID_T for non-boolean types
+// LAGraph_any_one_T: using the GrB_MIN_MONOID_T for non-boolean types
 // or GrB_LOR_MONOID_BOOL for boolean, and the GrB_ONEB_T multiplicative op.
-GrB_Semiring LAGraph_structural_bool   = NULL ;
-GrB_Semiring LAGraph_structural_int8   = NULL ;
-GrB_Semiring LAGraph_structural_int16  = NULL ;
-GrB_Semiring LAGraph_structural_int32  = NULL ;
-GrB_Semiring LAGraph_structural_int64  = NULL ;
-GrB_Semiring LAGraph_structural_uint8  = NULL ;
-GrB_Semiring LAGraph_structural_uint16 = NULL ;
-GrB_Semiring LAGraph_structural_uint32 = NULL ;
-GrB_Semiring LAGraph_structural_uint64 = NULL ;
-GrB_Semiring LAGraph_structural_fp32   = NULL ;
-GrB_Semiring LAGraph_structural_fp64   = NULL ;
+GrB_Semiring LAGraph_any_one_bool   = NULL ;
+GrB_Semiring LAGraph_any_one_int8   = NULL ;
+GrB_Semiring LAGraph_any_one_int16  = NULL ;
+GrB_Semiring LAGraph_any_one_int32  = NULL ;
+GrB_Semiring LAGraph_any_one_int64  = NULL ;
+GrB_Semiring LAGraph_any_one_uint8  = NULL ;
+GrB_Semiring LAGraph_any_one_uint16 = NULL ;
+GrB_Semiring LAGraph_any_one_uint32 = NULL ;
+GrB_Semiring LAGraph_any_one_uint64 = NULL ;
+GrB_Semiring LAGraph_any_one_fp32   = NULL ;
+GrB_Semiring LAGraph_any_one_fp64   = NULL ;
 
 //------------------------------------------------------------------------------
 // LAGr_Init
@@ -228,7 +228,7 @@ int LAGr_Init
     GRB_TRY (GrB_Semiring_new (&LAGraph_plus_one_fp64,
         GrB_PLUS_MONOID_FP64  , GrB_ONEB_FP64  )) ;
 
-    // LAGraph_structural_T: using the GrB_MIN_MONOID_T for non-boolean types,
+    // LAGraph_any_one_T: using the GrB_MIN_MONOID_T for non-boolean types,
     // or GrB_LOR_MONOID_BOOL for boolean, and the GrB_ONEB_T multiplicative
     // operator.  Given any matrices A and B, C = A*B when using this semiring
     // computes a matrix C whose values (for entries present) are all equal to
@@ -244,27 +244,27 @@ int LAGr_Init
     // of 1, or true, and thus any of these monoids will compute the same
     // thing.
 
-    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_bool,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_any_one_bool,
         GrB_LOR_MONOID_BOOL   , GrB_ONEB_BOOL  )) ;
-    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_int8,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_any_one_int8,
         GrB_MIN_MONOID_INT8   , GrB_ONEB_INT8  )) ;
-    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_int16,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_any_one_int16,
         GrB_MIN_MONOID_INT16  , GrB_ONEB_INT16 )) ;
-    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_int32,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_any_one_int32,
         GrB_MIN_MONOID_INT32  , GrB_ONEB_INT32 )) ;
-    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_int64,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_any_one_int64,
         GrB_MIN_MONOID_INT64  , GrB_ONEB_INT64 )) ;
-    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_uint8,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_any_one_uint8,
         GrB_MIN_MONOID_UINT8  , GrB_ONEB_UINT8 )) ;
-    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_uint16,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_any_one_uint16,
         GrB_MIN_MONOID_UINT16 , GrB_ONEB_UINT16)) ;
-    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_uint32,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_any_one_uint32,
         GrB_MIN_MONOID_UINT32 , GrB_ONEB_UINT32)) ;
-    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_uint64,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_any_one_uint64,
         GrB_MIN_MONOID_UINT64 , GrB_ONEB_UINT64)) ;
-    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_fp32,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_any_one_fp32,
         GrB_MIN_MONOID_FP32   , GrB_ONEB_FP32  )) ;
-    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_fp64,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_any_one_fp64,
         GrB_MIN_MONOID_FP64   , GrB_ONEB_FP64  )) ;
 
     return (GrB_SUCCESS) ;
