@@ -123,9 +123,9 @@ void test_DisplayGraph (void)
                 LAGraph_Print_Level prl = pr ;
                 OK (LAGraph_DisplayGraph (G, prl, stdout, msg)) ;
             }
-            OK (LAGraph_Property_AT (G, msg)) ;
-            OK (LAGraph_Property_SymmetricStructure (G, msg)) ;
-            OK (LAGraph_Property_NDiag (G, msg)) ;
+            OK (LAGraph_Cached_AT (G, msg)) ;
+            OK (LAGraph_Cached_SymmetricStructure (G, msg)) ;
+            OK (LAGraph_Cached_NDiag (G, msg)) ;
             TEST_CHECK (G->ndiag == files [k].ndiag) ;
         }
 
@@ -264,9 +264,9 @@ void test_DisplayGraph_brutal (void)
                     LG_BRUTAL (LAGraph_DisplayGraph (G, prl, stdout, msg)) ;
                 }
             }
-            OK (LAGraph_Property_AT (G, msg)) ;
-            OK (LAGraph_Property_SymmetricStructure (G, msg)) ;
-            OK (LAGraph_Property_NDiag (G, msg)) ;
+            OK (LAGraph_Cached_AT (G, msg)) ;
+            OK (LAGraph_Cached_SymmetricStructure (G, msg)) ;
+            OK (LAGraph_Cached_NDiag (G, msg)) ;
         }
 
         // free the graph

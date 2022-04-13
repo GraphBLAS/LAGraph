@@ -63,7 +63,7 @@ int LAGraph_New
     (*G)->emin_state = LAGRAPH_UNKNOWN ;
     (*G)->emax = NULL ;
     (*G)->emax_state = LAGRAPH_UNKNOWN ;
-//  (*G)->nonzero = LAGRAPH_UNKNOWN ;       // future property
+//  (*G)->nonzero = LAGRAPH_UNKNOWN ;       // future cached property
 
     //--------------------------------------------------------------------------
     // assign its primary components

@@ -20,7 +20,7 @@
 
 // G->row_degree or G->col_degree must first be computed.  An error is returned
 // if the required degree vector has not yet been computed.  See
-// LAGraph_Property_RowDegree and LAGraph_Property_ColDegree.
+// LAGraph_Cached_RowDegree and LAGraph_Cached_ColDegree.
 
 // The permutation is in ascending order of degree if ascending is true, and
 // in descending order otherwise.
@@ -86,8 +86,7 @@ int LAGraph_SortByDegree
         Degree = (byrow) ? G->row_degree : G->col_degree ;
     }
 
-    LG_ASSERT_MSG (Degree != NULL,
-        LAGRAPH_PROPERTY_MISSING, "degree property unknown") ;
+    LG_ASSERT_MSG (Degree != NULL, LAGRAPH_NOT_CACHED, "degree unknown") ;
 
     //--------------------------------------------------------------------------
     // decide how many threads to use

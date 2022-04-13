@@ -167,7 +167,7 @@ int LAGr_TriangleCount
     if (auto_sort && method_can_use_presort)
     {
         LG_ASSERT_MSG (Degree != NULL,
-            LAGRAPH_PROPERTY_MISSING, "G->row_degree is required") ;
+            LAGRAPH_NOT_CACHED, "G->row_degree is required") ;
     }
 
     //--------------------------------------------------------------------------

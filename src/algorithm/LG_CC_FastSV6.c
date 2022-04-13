@@ -28,7 +28,7 @@
 // Modified by Tim Davis, Texas A&M University: revised Reduce_assign to use
 // purely GrB* and GxB* methods and the matrix C.  Added warmup phase.  Changed
 // to use GxB pack/unpack instead of GxB import/export.  Converted to use the
-// LAGraph_Graph object.  Exploiting iso property for the temporary matrices
+// LAGraph_Graph object.  Exploiting iso status for the temporary matrices
 // C and T.
 
 // The input graph G must be undirected, or directed and with an adjacency

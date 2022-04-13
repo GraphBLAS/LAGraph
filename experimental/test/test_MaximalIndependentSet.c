@@ -107,19 +107,19 @@ void test_MIS (void)
         TEST_CHECK (mis == NULL) ;
 
         // check if the pattern is symmetric
-        OK (LAGraph_Property_SymmetricStructure (G, msg)) ;
+        OK (LAGraph_Cached_SymmetricStructure (G, msg)) ;
 
         if (G->structure_is_symmetric == LAGraph_FALSE)
         {
             // make the adjacency matrix symmetric
-            OK (LAGraph_Property_AT (G, msg)) ;
+            OK (LAGraph_Cached_AT (G, msg)) ;
             OK (GrB_eWiseAdd (G->A, NULL, NULL, GrB_LOR, G->A, G->AT, NULL)) ;
             G->structure_is_symmetric = true ;
         }
         G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
 
         // check for self-edges
-        OK (LAGraph_Property_NDiag (G, msg)) ;
+        OK (LAGraph_Cached_NDiag (G, msg)) ;
         if (G->ndiag != 0)
         {
             // remove self-edges
@@ -130,7 +130,7 @@ void test_MIS (void)
         }
 
         // compute the row degree
-        OK (LAGraph_Property_RowDegree (G, msg)) ;
+        OK (LAGraph_Cached_RowDegree (G, msg)) ;
 
         GrB_Index n ;
         GrB_Matrix_nrows (&n, G->A) ;
@@ -175,13 +175,13 @@ void test_MIS (void)
         }
         printf ("creating at least %g singletons\n", (double) nsingletons) ;
 
-        OK (LAGraph_DeleteProperties (G, msg)) ;
+        OK (LAGraph_DeleteCached (G, msg)) ;
         G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
         G->structure_is_symmetric = true ;
         G->ndiag = 0 ;
 
         // recompute the row degree
-        OK (LAGraph_Property_RowDegree (G, msg)) ;
+        OK (LAGraph_Cached_RowDegree (G, msg)) ;
 
         GrB_Index nonsingletons, nsingletons_actual ;
         OK (GrB_Vector_nvals (&nonsingletons, G->row_degree)) ;

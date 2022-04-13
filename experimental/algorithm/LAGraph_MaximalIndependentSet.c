@@ -44,7 +44,7 @@
 // The graph cannot have any self edges, and it must be symmetric.  Self-edges
 // (diagonal entries) will cause the method to stall, and thus G->ndiag must be
 // zero on input.  G->row_degree must be present on input.  It must not contain
-// any explicit zeros (this is handled by LAGraph_Property_RowDegree).
+// any explicit zeros (this is handled by LAGraph_Cached_RowDegree).
 
 // Singletons require special treatment.  Since they have no neighbors, their
 // score is never greater than the max of their neighbors, so they never get

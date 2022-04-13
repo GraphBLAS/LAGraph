@@ -16,7 +16,7 @@
 int LAGraph_DeleteDiag
 (
     // input/output:
-    LAGraph_Graph G,    // diagonal entries removed, most properties cleared
+    LAGraph_Graph G,    // diagonal entries removed, most cached properties cleared
     char *msg
 )
 {
@@ -33,11 +33,11 @@ int LAGraph_DeleteDiag
     }
 
     //--------------------------------------------------------------------------
-    // delete all properties not affected by the removal of the diagonal
+    // delete all cached properties not affected by the removal of the diagonal
     //--------------------------------------------------------------------------
 
-    LAGraph_BooleanProperty structure_is_symmetric = G->structure_is_symmetric ;
-    LG_TRY (LAGraph_DeleteProperties (G, msg)) ;
+    LAGraph_Boolean structure_is_symmetric = G->structure_is_symmetric ;
+    LG_TRY (LAGraph_DeleteCached (G, msg)) ;
     G->structure_is_symmetric = structure_is_symmetric ;
 
     //--------------------------------------------------------------------------

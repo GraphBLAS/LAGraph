@@ -32,9 +32,9 @@ void test_Init (void)
 
     #if LAGRAPH_SUITESPARSE
     const char *name, *date ;
-    OK (GxB_get (GxB_LIBRARY_NAME, &name)) ;
-    OK (GxB_get (GxB_LIBRARY_DATE, &date)) ;
-    OK (GxB_get (GxB_LIBRARY_VERSION, ver)) ;
+    OK (GxB_Global_Option_get (GxB_LIBRARY_NAME, &name)) ;
+    OK (GxB_Global_Option_get (GxB_LIBRARY_DATE, &date)) ;
+    OK (GxB_Global_Option_get (GxB_LIBRARY_VERSION, ver)) ;
     printf ("\nlibrary: %s %d.%d.%d (%s)\n", name, ver [0], ver [1], ver [2],
         date) ;
     printf (  "include: %s %d.%d.%d (%s)\n", GxB_IMPLEMENTATION_NAME,

@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_Property_ColDegree: determine G->col_degree
+// LAGraph_Cached_ColDegree: determine G->col_degree
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -11,13 +11,13 @@
 
 //------------------------------------------------------------------------------
 
-// LAGraph_Property_ColDegree computes G->col_degree, where G->col_degree(j) is
+// LAGraph_Cached_ColDegree computes G->col_degree, where G->col_degree(j) is
 // the number of entries in G->A (:,j).  If there are no entries in G->A (:,j),
 // G->coldgree(j) is not present in the structure of G->col_degree.  That is,
 // G->col_degree contains no explicit zero entries.
 
 // G->col_degree is not computed if the graph is undirected.  Use G->row_degree
-// instead, and LAGraph_Property_RowDegree.
+// instead, and LAGraph_Cached_RowDegree.
 
 #define LG_FREE_WORK            \
 {                               \
@@ -28,12 +28,12 @@
 #define LG_FREE_ALL             \
 {                               \
     LG_FREE_WORK ;              \
-    GrB_free (&col_degree) ;     \
+    GrB_free (&col_degree) ;    \
 }
 
 #include "LG_internal.h"
 
-int LAGraph_Property_ColDegree
+int LAGraph_Cached_ColDegree
 (
     // input/output:
     LAGraph_Graph G,    // graph to determine G->col_degree

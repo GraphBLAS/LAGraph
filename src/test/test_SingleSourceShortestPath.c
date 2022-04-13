@@ -269,7 +269,7 @@ void test_SingleSourceShortestPath_types (void)
         TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
         // find the smallest entry
-        OK (LAGraph_Property_EMin (G, msg)) ;
+        OK (LAGraph_Cached_EMin (G, msg)) ;
 
         // delta values to try
         int32_t Deltas [ ] = { 30, 100, 50000 } ;

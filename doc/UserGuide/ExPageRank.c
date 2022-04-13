@@ -19,7 +19,7 @@ void test_PageRank(void)
     OK (fclose (f)) ;
     OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
-    OK (LAGraph_Property_RowDegree (G, msg)) ;
+    OK (LAGraph_Cached_RowDegree (G, msg)) ;
 
     // compute its pagerank
     OK (LAGr_PageRank (&centrality, &niters, G, 0.85, 1e-4, 100, msg)) ;

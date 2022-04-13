@@ -80,7 +80,7 @@ int LG_BreadthFirstSearch_SSGrB
     }
 
     //--------------------------------------------------------------------------
-    // get the problem size and properties
+    // get the problem size and cached properties
     //--------------------------------------------------------------------------
 
     GrB_Matrix A = G->A ;
@@ -105,14 +105,14 @@ int LG_BreadthFirstSearch_SSGrB
         // AT = A' is different from A
         AT = G->AT ;
         LG_ASSERT_MSG (AT != NULL,
-            LAGRAPH_PROPERTY_MISSING, "G->AT is required") ;
+            LAGRAPH_NOT_CACHED, "G->AT is required") ;
     }
 
     // FIXME: if AT is not present, do push-only?
 
     // direction-optimization requires G->AT and G->row_degree
     LG_ASSERT_MSG (Degree != NULL,
-        LAGRAPH_PROPERTY_MISSING, "G->row_degree is required") ;
+        LAGRAPH_NOT_CACHED, "G->row_degree is required") ;
 
     bool push_pull = true ;
 

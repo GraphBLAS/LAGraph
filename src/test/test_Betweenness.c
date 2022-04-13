@@ -254,7 +254,7 @@ void test_bc (void)
     OK (fclose (f)) ;
     OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
-    OK (LAGraph_Property_AT (G, msg)) ;
+    OK (LAGraph_Cached_AT (G, msg)) ;
 
     // compute its betweenness centrality
     OK (LAGr_Betweenness (&centrality, G, west0067_sources, 4, msg)) ;

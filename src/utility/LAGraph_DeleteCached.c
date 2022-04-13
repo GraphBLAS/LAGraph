@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_Property_NDiag: count the # of diagonal entries of a graph
+// LAGraph_DeleteCached: deletes the cached properties of a graph
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -13,30 +13,43 @@
 
 #include "LG_internal.h"
 
-int LAGraph_Property_NDiag
+int LAGraph_DeleteCached
 (
     // input/output:
-    LAGraph_Graph G,    // graph to compute G->ndiag
+    LAGraph_Graph G,    // G stays valid, only cached properties are freed
     char *msg
 )
 {
 
     //--------------------------------------------------------------------------
-    // clear msg and check G
+    // check inputs
     //--------------------------------------------------------------------------
 
-    LG_CLEAR_MSG_AND_BASIC_ASSERT (G, msg) ;
-
-    // already computed
-    if (G->ndiag != LAGRAPH_UNKNOWN)
+    LG_CLEAR_MSG ;
+    if (G == NULL)
     {
+        // success: nothing to do
         return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
-    // compute G->ndiag
+    // free all cached properties of the graph
     //--------------------------------------------------------------------------
 
-    return (LG_ndiag (&G->ndiag, G->A, msg)) ;
-}
+    GRB_TRY (GrB_free (&(G->AT))) ;
+    GRB_TRY (GrB_free (&(G->row_degree))) ;
+    GRB_TRY (GrB_free (&(G->col_degree))) ;
+    GRB_TRY (GrB_free (&(G->emin))) ;
+    GRB_TRY (GrB_free (&(G->emax))) ;
 
+    //--------------------------------------------------------------------------
+    // clear the cached scalar properties of the graph
+    //--------------------------------------------------------------------------
+
+    G->structure_is_symmetric = LAGRAPH_UNKNOWN ;
+    G->emin_state = LAGRAPH_UNKNOWN ;
+    G->emax_state = LAGRAPH_UNKNOWN ;
+//  G->nonzero = LAGRAPH_UNKNOWN ;
+    G->ndiag = LAGRAPH_UNKNOWN ;
+    return (GrB_SUCCESS) ;
+}

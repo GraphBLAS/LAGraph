@@ -129,11 +129,11 @@ void test_SortByDegree (void)
             TEST_CHECK (A == NULL) ;
             TEST_CHECK (G != NULL) ;
 
-            // create the properties
-            OK (LAGraph_Property_AT (G, msg)) ;
-            OK (LAGraph_Property_RowDegree (G, msg)) ;
-            OK (LAGraph_Property_ColDegree (G, msg)) ;
-            OK (LAGraph_Property_SymmetricStructure (G, msg)) ;
+            // create the cached properties
+            OK (LAGraph_Cached_AT (G, msg)) ;
+            OK (LAGraph_Cached_RowDegree (G, msg)) ;
+            OK (LAGraph_Cached_ColDegree (G, msg)) ;
+            OK (LAGraph_Cached_SymmetricStructure (G, msg)) ;
             OK (LAGraph_DisplayGraph (G, LAGraph_SHORT, stdout, msg)) ;
 
             // sort 4 different ways
@@ -166,10 +166,10 @@ void test_SortByDegree (void)
                 TEST_CHECK (B == NULL) ;
                 TEST_CHECK (H != NULL) ;
 
-                // get the properties of H
-                OK (LAGraph_Property_RowDegree (H, msg)) ;
-                OK (LAGraph_Property_ColDegree (H, msg)) ;
-                OK (LAGraph_Property_SymmetricStructure (H, msg)) ;
+                // get the cached properties of H
+                OK (LAGraph_Cached_RowDegree (H, msg)) ;
+                OK (LAGraph_Cached_ColDegree (H, msg)) ;
+                OK (LAGraph_Cached_SymmetricStructure (H, msg)) ;
                 TEST_CHECK (G->structure_is_symmetric ==
                             H->structure_is_symmetric) ;
                 printf ("\nTrial %d, graph H, sorted (%s) by (%s) degrees:\n",
@@ -279,11 +279,11 @@ void test_SortByDegree_brutal (void)
             TEST_CHECK (A == NULL) ;
             TEST_CHECK (G != NULL) ;
 
-            // create the properties
-            OK (LAGraph_Property_AT (G, msg)) ;
-            OK (LAGraph_Property_RowDegree (G, msg)) ;
-            OK (LAGraph_Property_ColDegree (G, msg)) ;
-            OK (LAGraph_Property_SymmetricStructure (G, msg)) ;
+            // create the cached properties
+            OK (LAGraph_Cached_AT (G, msg)) ;
+            OK (LAGraph_Cached_RowDegree (G, msg)) ;
+            OK (LAGraph_Cached_ColDegree (G, msg)) ;
+            OK (LAGraph_Cached_SymmetricStructure (G, msg)) ;
             // OK (LAGraph_DisplayGraph (G, LAGraph_SHORT, stdout, msg)) ;
 
             // sort 4 different ways
@@ -316,10 +316,10 @@ void test_SortByDegree_brutal (void)
                 TEST_CHECK (B == NULL) ;
                 TEST_CHECK (H != NULL) ;
 
-                // get the properties of H
-                OK (LAGraph_Property_RowDegree (H, msg)) ;
-                OK (LAGraph_Property_ColDegree (H, msg)) ;
-                OK (LAGraph_Property_SymmetricStructure (H, msg)) ;
+                // get the cached properties of H
+                OK (LAGraph_Cached_RowDegree (H, msg)) ;
+                OK (LAGraph_Cached_ColDegree (H, msg)) ;
+                OK (LAGraph_Cached_SymmetricStructure (H, msg)) ;
                 TEST_CHECK (G->structure_is_symmetric ==
                             H->structure_is_symmetric) ;
 
@@ -397,10 +397,10 @@ void test_SortByDegree_failures (void)
     TEST_MSG ("Loading of adjacency matrix failed") ;
     OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
 
-    // degree property must first be computed
+    // cached degree property must first be computed
     result = LAGraph_SortByDegree (&P, G, true, true, msg) ;
     printf ("\nresult %d: msg: %s\n", result, msg) ;
-    TEST_CHECK (result == LAGRAPH_PROPERTY_MISSING) ;
+    TEST_CHECK (result == LAGRAPH_NOT_CACHED) ;
 
     teardown ( ) ;
 }

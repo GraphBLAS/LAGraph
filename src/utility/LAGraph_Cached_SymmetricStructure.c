@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_Property_SymmetricStructure: determine G->structure_is_symmetric
+// LAGraph_Cached_SymmetricStructure: determine G->structure_is_symmetric
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -23,7 +23,7 @@
 
 #include "LG_internal.h"
 
-int LAGraph_Property_SymmetricStructure
+int LAGraph_Cached_SymmetricStructure
 (
     // input/output:
     LAGraph_Graph G,    // graph to determine the symmetry of structure of A
@@ -48,7 +48,7 @@ int LAGraph_Property_SymmetricStructure
 
     if (G->structure_is_symmetric != LAGRAPH_UNKNOWN)
     {
-        // symmetric property is already known
+        // cached symmetric property is already known
         return (GrB_SUCCESS) ;
     }
 
@@ -73,7 +73,7 @@ int LAGraph_Property_SymmetricStructure
 
     if (G->AT == NULL)
     {
-        LG_TRY (LAGraph_Property_AT (G, msg)) ;
+        LG_TRY (LAGraph_Cached_AT (G, msg)) ;
     }
 
     //--------------------------------------------------------------------------

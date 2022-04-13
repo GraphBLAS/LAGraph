@@ -111,7 +111,7 @@ int main (int argc, char **argv)
 
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
-    LAGRAPH_TRY (LAGraph_Property_EMin (G, msg)) ;
+    LAGRAPH_TRY (LAGraph_Cached_EMin (G, msg)) ;
 
     //--------------------------------------------------------------------------
     // get delta

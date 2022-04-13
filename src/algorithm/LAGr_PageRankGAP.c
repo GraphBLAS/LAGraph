@@ -24,9 +24,9 @@
 // handles sinks correctly.  This method does not return a centrality metric
 // such that sum(centrality) is 1, if sinks are present.
 
-// The G->AT and G->row_degree properties must be defined for this method.  If G
-// is undirected or G->A is known to have a symmetric structure, then G->A is
-// used instead of G->AT, however.
+// The G->AT and G->row_degree cached properties must be defined for this
+// method.  If G is undirected or G->A is known to have a symmetric structure,
+// then G->A is used instead of G->AT, however.
 
 #define LG_FREE_WORK                \
 {                                   \
@@ -78,11 +78,11 @@ int LAGr_PageRankGAP
         // A and A' differ
         AT = G->AT ;
         LG_ASSERT_MSG (AT != NULL,
-            LAGRAPH_PROPERTY_MISSING, "G->AT is required") ;
+            LAGRAPH_NOT_CACHED, "G->AT is required") ;
     }
     GrB_Vector d_out = G->row_degree ;
     LG_ASSERT_MSG (d_out != NULL,
-        LAGRAPH_PROPERTY_MISSING, "G->row_degree is required") ;
+        LAGRAPH_NOT_CACHED, "G->row_degree is required") ;
 
     //--------------------------------------------------------------------------
     // initializations

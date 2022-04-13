@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/test/test_Property_NDiag.c:  test LAGraph_Property_NDiag
+// LAGraph/src/test/test_Cached_NDiag.c:  test LAGraph_Cached_NDiag
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -107,10 +107,10 @@ void teardown (void)
 }
 
 //------------------------------------------------------------------------------
-// test_Property_NDiag:  test LAGraph_Property_NDiag
+// test_Cached_NDiag:  test LAGraph_Cached_NDiag
 //------------------------------------------------------------------------------
 
-void test_Property_NDiag (void)
+void test_Cached_NDiag (void)
 {
 
     //--------------------------------------------------------------------------
@@ -141,7 +141,7 @@ void test_Property_NDiag (void)
         //----------------------------------------------------------------------
 
         OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
-        OK (LAGraph_Property_NDiag (G, msg)) ;
+        OK (LAGraph_Cached_NDiag (G, msg)) ;
         TEST_CHECK (G->ndiag == files [k].ndiag) ;
 
         //----------------------------------------------------------------------
@@ -151,7 +151,7 @@ void test_Property_NDiag (void)
         OK (LAGraph_Delete (&G, msg)) ;
     }
 
-    TEST_CHECK (LAGraph_Property_NDiag (NULL, msg) == GrB_NULL_POINTER) ;
+    TEST_CHECK (LAGraph_Cached_NDiag (NULL, msg) == GrB_NULL_POINTER) ;
 
     //--------------------------------------------------------------------------
     // finish the test
@@ -161,11 +161,11 @@ void test_Property_NDiag (void)
 }
 
 //------------------------------------------------------------------------------
-// test_Property_NDiag_brutal
+// test_Cached_NDiag_brutal
 //------------------------------------------------------------------------------
 
 #if LAGRAPH_SUITESPARSE
-void test_Property_NDiag_brutal (void)
+void test_Cached_NDiag_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
 
@@ -191,7 +191,7 @@ void test_Property_NDiag_brutal (void)
         //----------------------------------------------------------------------
 
         OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
-        LG_BRUTAL (LAGraph_Property_NDiag (G, msg)) ;
+        LG_BRUTAL (LAGraph_Cached_NDiag (G, msg)) ;
         TEST_CHECK (G->ndiag == files [k].ndiag) ;
 
         //----------------------------------------------------------------------
@@ -211,9 +211,9 @@ void test_Property_NDiag_brutal (void)
 
 TEST_LIST =
 {
-    { "NDiag", test_Property_NDiag },
+    { "NDiag", test_Cached_NDiag },
     #if LAGRAPH_SUITESPARSE
-    { "NDiag_brutal", test_Property_NDiag_brutal },
+    { "NDiag_brutal", test_Cached_NDiag_brutal },
     #endif
     { NULL, NULL }
 } ;

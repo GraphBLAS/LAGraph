@@ -119,8 +119,8 @@ int main (int argc, char **argv)
         true, true, true, NULL, false, argc, argv)) ;
     LAGRAPH_TRY (LAGraph_DisplayGraph (G, LAGraph_SHORT, stdout, msg)) ;
 
-    // determine the row degree property
-    LAGRAPH_TRY (LAGraph_Property_RowDegree (G, msg)) ;
+    // determine the cached row degree property
+    LAGRAPH_TRY (LAGraph_Cached_RowDegree (G, msg)) ;
 
     GrB_Index n, nvals ;
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;

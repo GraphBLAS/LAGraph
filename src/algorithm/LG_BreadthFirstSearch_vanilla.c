@@ -12,7 +12,7 @@
 
 //------------------------------------------------------------------------------
 
-// This is a Basic algorithm (no extra G-> properties are required),
+// This is a Basic algorithm (no extra cached properties are required),
 // but it is not user-callable (see LAGr_BreadthFirstSearch instead).
 
 #define LG_FREE_WORK        \
@@ -62,7 +62,7 @@ int LG_BreadthFirstSearch_vanilla
     }
 
     //--------------------------------------------------------------------------
-    // get the problem size and properties
+    // get the problem size
     //--------------------------------------------------------------------------
 
     GrB_Matrix A = G->A ;

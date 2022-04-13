@@ -58,8 +58,7 @@ int LAGraph_SampleDegree
         Degree = (byrow) ? G->row_degree : G->col_degree ;
     }
 
-    LG_ASSERT_MSG (Degree != NULL,
-        LAGRAPH_PROPERTY_MISSING, "degree property unknown") ;
+    LG_ASSERT_MSG (Degree != NULL, LAGRAPH_NOT_CACHED, "degree unknown") ;
 
     //--------------------------------------------------------------------------
     // allocate workspace

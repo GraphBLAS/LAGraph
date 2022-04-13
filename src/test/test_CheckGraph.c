@@ -96,14 +96,14 @@ void test_CheckGraph (void)
             TEST_CHECK (G->structure_is_symmetric == LAGraph_TRUE) ;
         }
 
-        // create its properties
-        OK (LAGraph_Property_AT (G, msg)) ;
+        // create its cached properties
+        OK (LAGraph_Cached_AT (G, msg)) ;
         OK (LAGraph_CheckGraph (G, msg)) ;
 
-        OK (LAGraph_Property_RowDegree (G, msg)) ;
+        OK (LAGraph_Cached_RowDegree (G, msg)) ;
         OK (LAGraph_CheckGraph (G, msg)) ;
 
-        OK (LAGraph_Property_ColDegree (G, msg)) ;
+        OK (LAGraph_Cached_ColDegree (G, msg)) ;
         OK (LAGraph_CheckGraph (G, msg)) ;
 
         // free the graph
@@ -265,12 +265,12 @@ void test_CheckGraph_brutal (void)
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
     LG_BRUTAL_BURBLE (LAGraph_CheckGraph (G, msg)) ;
 
-    // create its properties
-    LG_BRUTAL_BURBLE (LAGraph_Property_AT (G, msg)) ;
+    // create its cached properties
+    LG_BRUTAL_BURBLE (LAGraph_Cached_AT (G, msg)) ;
     LG_BRUTAL_BURBLE (LAGraph_CheckGraph (G, msg)) ;
-    LG_BRUTAL_BURBLE (LAGraph_Property_RowDegree (G, msg)) ;
+    LG_BRUTAL_BURBLE (LAGraph_Cached_RowDegree (G, msg)) ;
     LG_BRUTAL_BURBLE (LAGraph_CheckGraph (G, msg)) ;
-    LG_BRUTAL_BURBLE (LAGraph_Property_ColDegree (G, msg)) ;
+    LG_BRUTAL_BURBLE (LAGraph_Cached_ColDegree (G, msg)) ;
     LG_BRUTAL_BURBLE (LAGraph_CheckGraph (G, msg)) ;
     LG_BRUTAL_BURBLE (LAGraph_Delete (&G, msg)) ;
 

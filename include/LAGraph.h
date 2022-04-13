@@ -33,10 +33,10 @@
 // See also the LAGraph_Version utility method, which returns these values.
 // These definitions must match the same definitions in LAGraph/CMakeLists.txt.
 // FIXME: use config to create include/LAGraph.h from LAGraph/CMakeLists.txt
-#define LAGRAPH_DATE "Apr 6, 2022"
+#define LAGRAPH_DATE "Apr 13, 2022"
 #define LAGRAPH_VERSION_MAJOR 0
 #define LAGRAPH_VERSION_MINOR 9
-#define LAGRAPH_VERSION_UPDATE 17
+#define LAGRAPH_VERSION_UPDATE 18
 
 //==============================================================================
 // include files and helper macros
@@ -187,23 +187,23 @@
 
 //  LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED: the method requires an undirected
 //      graph, or a directed graph with an adjacency matrix that is known to
-//      have a symmetric structure.  LAGraph_Property_SymmetricStructure can
-//      be used to determine this property.
+//      have a symmetric structure.  LAGraph_Cached_SymmetricStructure can
+//      be used to determine this cached property.
 
 //  LAGRAPH_IO_ERROR:  a file input or output method failed, or an input file
 //      has an incorrect format that cannot be parsed.
 
-//  LAGRAPH_PROPERTY_MISSING:  some methods require one or more cached
-//      properties to be computed before calling them (AT, row_degree, or
-//      col_degree.  Use LAGraph_Property_AT, LAGraph_Property_RowDegree,
-//      and/or LAGraph_Property_ColDegree to compute them.
+//  LAGRAPH_NOT_CACHED:  some methods require one or more cached properties to
+//      be computed before calling them (AT, row_degree, or col_degree.  Use
+//      LAGraph_Cached_AT, LAGraph_Cached_RowDegree, and/or
+//      LAGraph_Cached_ColDegree to compute them.
 
 //  LAGRAPH_NO_SELF_EDGES_ALLOWED:  some methods requires that the graph have
 //      no self edges, which correspond to the entries on the diagonal of the
-//      adjacency matrix.  If the G->ndiag property is nonzero or unknown, this
-//      error condition is returned.  Use LAGraph_Property_NDiag to compute
-//      G->ndiag, or LAGraph_DeleteDiag to remove all diagonal entries from
-//      G->A.
+//      adjacency matrix.  If the G->ndiag cached property is nonzero or
+//      unknown, this error condition is returned.  Use LAGraph_Cached_NDiag to
+//      compute G->ndiag, or LAGraph_DeleteDiag to remove all diagonal entries
+//      from G->A.
 
 //  LAGRAPH_CONVERGENCE_FAILURE:  an iterative process failed to converge to
 //      a good solution.
@@ -211,7 +211,7 @@
 #define LAGRAPH_INVALID_GRAPH                   (-1000)
 #define LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED    (-1001)
 #define LAGRAPH_IO_ERROR                        (-1002)
-#define LAGRAPH_PROPERTY_MISSING                (-1003)
+#define LAGRAPH_NOT_CACHED                      (-1003)
 #define LAGRAPH_NO_SELF_EDGES_ALLOWED           (-1004)
 #define LAGRAPH_CONVERGENCE_FAILURE             (-1005)
 
@@ -441,7 +441,7 @@ typedef enum
 LAGraph_Kind ;
 
 //------------------------------------------------------------------------------
-// LAGraph_BooleanProperty: true, false, or unknown
+// LAGraph_Boolean: true, false, or unknown
 //------------------------------------------------------------------------------
 
 typedef enum
@@ -450,31 +450,32 @@ typedef enum
     LAGraph_TRUE = 1,
     LAGraph_BOOLEAN_UNKNOWN = LAGRAPH_UNKNOWN
 }
-LAGraph_BooleanProperty ;
+LAGraph_Boolean ;
 
 //------------------------------------------------------------------------------
-// LAGraph_PropertyState: value, bound, or unknown
+// LAGraph_State: value, bound, or unknown
 //------------------------------------------------------------------------------
 
-// LAGraph_PropertyState describes the status of a graph property.
-// If the property is computed in floating-point arithmetic, it may have been
+// LAGraph_State describes the status of a cached property of a graph.  If the
+// cached property is computed in floating-point arithmetic, it may have been
 // computed with roundoff error, but it may still be declared as "value" if the
-// roundoff error is expected to be small, or if the property was computed as
-// carefully as possible (to within reasonable roundoff error).
+// roundoff error is expected to be small, or if the cached property was
+// computed as carefully as possible (to within reasonable roundoff error).
 
-// The "bound" state indicates that the property is an upper or lower bound,
-// depending on the particular property.  If computed in floating-point
-// arithmetic, an "upper bound" property may be actually slightly lower than
-// the actual upper bound, because of floating-point roundoff.
+// The "bound" state indicates that the cached property is an upper or lower
+// bound, depending on the particular cached property.  If computed in
+// floating-point arithmetic, an "upper bound" cached property may be actually
+// slightly lower than the actual upper bound, because of floating-point
+// roundoff.
 
 typedef enum
 {
-    LAGraph_VALUE = 0,  // property is a known value (ignoring roundoff)
-    LAGraph_BOUND = 1,  // property is a bound (upper or lower, depending
-                        // on the particular property)
-    LAGraph_BOUND_UNKNOWN = LAGRAPH_UNKNOWN,
+    LAGraph_VALUE = 0,  // cached property is a known value (ignoring roundoff)
+    LAGraph_BOUND = 1,  // cached property is a bound (upper or lower,
+                        // depending on the particular cached property)
+    LAGraph_STATE_UNKNOWN = LAGRAPH_UNKNOWN,
 }
-LAGraph_PropertyState ;
+LAGraph_State ;
 
 //------------------------------------------------------------------------------
 // LAGraph_Graph: the primary graph data structure of LAGraph
@@ -522,15 +523,15 @@ struct LAGraph_Graph_struct
 
     // All of these components may be deleted or set to 'unknown' at any time.
     // For example, if AT is NULL, then the transpose of A has not been
-    // computed.  A scalar property of type LAGraph_BooleanProperty would be
-    // set to LAGRAPH_UNKNOWN to denote that its value is unknown.
+    // computed.  A scalar cached property of type LAGraph_Boolean would be set
+    // to LAGRAPH_UNKNOWN to denote that its value is unknown.
 
-    // If present, the properties must be valid and accurate.  If the graph
-    // changes, these properties can either be recomputed or deleted to denote
-    // the fact that they are unknown.  This choice is up to individual LAGraph
-    // methods and utilities.
+    // If present, the cached properties must be valid and accurate.  If the
+    // graph changes, these cached properties can either be recomputed or
+    // deleted to denote the fact that they are unknown.  This choice is up to
+    // individual LAGraph methods and utilities.
 
-    // LAGraph methods can set non-scalar properties only if they are
+    // LAGraph methods can set non-scalar cached properties only if they are
     // constructing the graph.  They cannot modify them or create them if the
     // graph is declared as a read-only object in the parameter list of the
     // method.
@@ -551,25 +552,25 @@ struct LAGraph_Graph_struct
 
     // If G is held as an incidence matrix, then G->A might be rectangular,
     // in the future, but the graph G may have a symmetric structure anyway.
-    LAGraph_BooleanProperty structure_is_symmetric ;    // For an undirected
-            // graph, this property will always be implicitly true and can be
-            // ignored.  The matrix A for a directed weighted graph will
+    LAGraph_Boolean structure_is_symmetric ;    // For an undirected
+            // graph, this cached property will always be implicitly true and
+            // can be ignored.  The matrix A for a directed weighted graph will
             // typically be unsymmetric, but might have a symmetric structure.
-            // In that case, this scalar property can be set to true.
-            // By default, this property is set to LAGRAPH_UNKNOWN.
+            // In that case, this scalar cached property can be set to true.
+            // By default, this cached property is set to LAGRAPH_UNKNOWN.
 
     int64_t ndiag ; // # of entries on the diagonal of A, or LAGRAPH_UNKNOWN if
             // unknown.  For the adjacency matrix of a directed or undirected
             // graph, this is the number of self-edges in the graph.
 
     GrB_Scalar emin ;   // minimum edge weight: value, lower bound, or unknown
-    LAGraph_PropertyState emin_state ;
+    LAGraph_State emin_state ;
             // VALUE: emin is equal to the smallest entry, min(G->A)
             // BOUND: emin <= min(G->A)
             // UNKNOWN: emin is unknown
 
     GrB_Scalar emax ;   // maximum edge weight: value, upper bound, or unknown
-    LAGraph_PropertyState emax_state ;
+    LAGraph_State emax_state ;
             // VALUE: emax is equal to the largest entry, max(G->A)
             // BOUND: emax >= max(G->A)
             // UNKNOWN: emax is unknown
@@ -578,8 +579,9 @@ struct LAGraph_Graph_struct
 
     // Some algorithms may want to know if the graph has any edge weights
     // exactly equal to zero.  In some cases, this can be inferred from the
-    // emin/emax bounds, or it can be indicated via the following property:
-    // LAGraph_BooleanProperty nonzero ;  // If true, then all entries in
+    // emin/emax bounds, or it can be indicated via the following cached
+    // property:
+    // LAGraph_Boolean nonzero ;  // If true, then all entries in
             // G->A are known to be nonzero.  If false, G->A may contain
             // entries in its structure that are identically equal to zero.  If
             // unknown, then G->A may or may not have entries equal to zero.
@@ -588,12 +590,10 @@ struct LAGraph_Graph_struct
     // GrB_Vector row_sum, col_sum ;
     // row_sum(i) = sum(abs(A(i,:))), regardless of kind
     // col_sum(j) = sum(abs(A(:,j))), regardless of kind
-    // LAGraph_BooleanProperty connected ;   // true if G is a connected graph
+    // LAGraph_Boolean connected ;   // true if G is a connected graph
 } ;
 
 typedef struct LAGraph_Graph_struct *LAGraph_Graph ;
-
-// FIXME: start here, Apr 13, 2022
 
 //==============================================================================
 // LAGraph utilities
@@ -606,7 +606,7 @@ typedef struct LAGraph_Graph_struct *LAGraph_Graph ;
 // This method must be called before calling any other GrB* or LAGraph* method.
 // It initializes GraphBLAS with GrB_init and then performs LAGraph-specific
 // initializations.  In particular, the LAGraph semirings listed below are
-// created.
+// created.  FIXME: discuss GrB_init before LAGr*_Init (is OK).
 
 LAGRAPH_PUBLIC
 int LAGraph_Init (char *msg) ;
@@ -714,9 +714,9 @@ int LAGraph_Finalize (char *msg) ;
 // LAGraph_New: create a new graph
 //------------------------------------------------------------------------------
 
-// LAGraph_New creates a new graph G.  The properties G->AT, G->row_degree, and
-// G->col_degree are set to NULL, and scalar properties are set to
-// LAGRAPH_UNKNOWN.
+// LAGraph_New creates a new graph G.  The cached properties G->AT,
+// G->row_degree, and G->col_degree are set to NULL, and scalar
+// cached properties are set to LAGRAPH_UNKNOWN.
 
 LAGRAPH_PUBLIC
 int LAGraph_New
@@ -757,15 +757,15 @@ int LAGraph_Delete
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_DeleteProperties: free any internal cached properties of a graph
+// LAGraph_DeleteCached: free any internal cached properties of a graph
 //------------------------------------------------------------------------------
 
-// LAGraph_DeleteProperties frees all cached properies of a graph G.  The graph
+// LAGraph_DeleteCached frees all cached properies of a graph G.  The graph
 // is still valid.  This method should be used if G->A changes, since such
-// changes will normally invalidate G->AT, G->rowdgree, and/or G->col_degree.
+// changes will normally invalidate G->AT, G->row_degree, and/or G->col_degree.
 
 LAGRAPH_PUBLIC
-int LAGraph_DeleteProperties
+int LAGraph_DeleteCached
 (
     // input/output:
     LAGraph_Graph G,    // G stays valid, only cached properties are freed
@@ -773,10 +773,10 @@ int LAGraph_DeleteProperties
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Property_AT: construct G->AT for a graph
+// LAGraph_Cached_AT: construct G->AT for a graph
 //------------------------------------------------------------------------------
 
-// LAGraph_Property_AT constructs G->AT, the transpose of G->A.  This matrix is
+// LAGraph_Cached_AT constructs G->AT, the transpose of G->A.  This matrix is
 // required by some of the algorithms.  Basic algorithms may construct G->AT if
 // they require it.  The matrix G->AT is then available for subsequent use.
 // If G->A changes, G->AT should be freed and recomputed.  If G->AT already
@@ -784,7 +784,7 @@ int LAGraph_DeleteProperties
 // be explictly freed.
 
 LAGRAPH_PUBLIC
-int LAGraph_Property_AT
+int LAGraph_Cached_AT
 (
     // input/output:
     LAGraph_Graph G,    // graph for which to compute G->AT
@@ -792,18 +792,25 @@ int LAGraph_Property_AT
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Property_SymmetricStructure: determine G->structure_is_symmetric
+// LAGraph_Cached_SymmetricStructure: determine G->structure_is_symmetric
 //------------------------------------------------------------------------------
 
-// LAGraph_Property_SymmetricStructure determines if the sparsity structure
+// FIXME: start here Apr 20, 2022
+
+// FIXME: name doesn't match the name of the property:  is this OK?
+// G->structure_is_symmetric
+// G->symmetric_structure
+
+
+// LAGraph_Cached_SymmetricStructure determines if the sparsity structure
 // of G->A is symmetric (ignoring its values).  If G->kind denotes that the
-// graph is undirected, this property is implicitly true (and not checked).
+// graph is undirected, this cached property is implicitly true (and not checked).
 // Otherwise, this method determines if the structure of G->A for a directed
 // graph G has a symmetric sparsity structure.  No work is performend if the
-// property is already known.
+// cached property is already known.
 
 LAGRAPH_PUBLIC
-int LAGraph_Property_SymmetricStructure
+int LAGraph_Cached_SymmetricStructure
 (
     // input/output:
     LAGraph_Graph G,    // graph to determine the symmetry of structure of A
@@ -811,14 +818,14 @@ int LAGraph_Property_SymmetricStructure
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Property_RowDegree: determine G->row_degree
+// LAGraph_Cached_RowDegree: determine G->row_degree
 //------------------------------------------------------------------------------
 
-// LAGraph_Property_RowDegree computes G->row_degree.  No work is performed if
+// LAGraph_Cached_RowDegree computes G->row_degree.  No work is performed if
 // it already exists in G.
 
 LAGRAPH_PUBLIC
-int LAGraph_Property_RowDegree
+int LAGraph_Cached_RowDegree
 (
     // input/output:
     LAGraph_Graph G,    // graph to determine G->row_degree
@@ -826,16 +833,16 @@ int LAGraph_Property_RowDegree
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Property_ColDegree: determine G->col_degree
+// LAGraph_Cached_ColDegree: determine G->col_degree
 //------------------------------------------------------------------------------
 
-// LAGraph_Property_ColDegree computes G->col_degree.  No work is performed if
+// LAGraph_Cached_ColDegree computes G->col_degree.  No work is performed if
 // it already exists in G.  If G is undirected, G->col_degree is never computed.
 // Instead, G->row_degree is used instead.  No work is performed it is already
 // exists in G.
 
 LAGRAPH_PUBLIC
-int LAGraph_Property_ColDegree
+int LAGraph_Cached_ColDegree
 (
     // input/output:
     LAGraph_Graph G,    // graph to determine G->col_degree
@@ -843,16 +850,19 @@ int LAGraph_Property_ColDegree
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Property_NDiag: determine G->ndiag
+// LAGraph_Cached_NDiag: determine G->ndiag
 //------------------------------------------------------------------------------
 
-// LAGraph_Property_NDiag computes G->ndiag, the number of diagonal entries
+// LAGraph_Cached_NDiag computes G->ndiag, the number of diagonal entries
 // that appear in the G->A matrix.  For an undirected or directed graph with an
 // adjacency matrix G->A, these are the number of self-edges in G.  No work is
 // performed it is already computed.
 
+// FIXME: should this be "number of self-edges"?  (what if G->A is an
+// incidence matrix, or a hypergraph, ...)?
+
 LAGRAPH_PUBLIC
-int LAGraph_Property_NDiag
+int LAGraph_Cached_NDiag
 (
     // input/output:
     LAGraph_Graph G,    // graph to compute G->ndiag
@@ -860,13 +870,13 @@ int LAGraph_Property_NDiag
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Property_EMin: determine G->emin
+// LAGraph_Cached_EMin: determine G->emin
 //------------------------------------------------------------------------------
 
-// LAGraph_Property_EMin computes G->emin = min (G->A).
+// LAGraph_Cached_EMin computes G->emin = min (G->A).
 
 LAGRAPH_PUBLIC
-int LAGraph_Property_EMin
+int LAGraph_Cached_EMin
 (
     // input/output:
     LAGraph_Graph G,    // graph to determine G->emin
@@ -874,13 +884,13 @@ int LAGraph_Property_EMin
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Property_EMax: determine G->emax
+// LAGraph_Cached_EMax: determine G->emax
 //------------------------------------------------------------------------------
 
-// LAGraph_Property_EMax computes G->emax = max (G->A).
+// LAGraph_Cached_EMax computes G->emax = max (G->A).
 
 LAGRAPH_PUBLIC
-int LAGraph_Property_EMax
+int LAGraph_Cached_EMax
 (
     // input/output:
     LAGraph_Graph G,    // graph to determine G->emax
@@ -891,7 +901,7 @@ int LAGraph_Property_EMax
 // LAGraph_DeleteDiag: remove all diagonal entries from G->A
 //------------------------------------------------------------------------------
 
-// LAGraph_DeleteDiag removes any diagonal entries from G->A.  Most properties
+// LAGraph_DeleteDiag removes any diagonal entries from G->A.  Most cached properties
 // are cleared or set to LAGRAPH_UNKNOWN.  G->ndiag is set to zero, and
 // G->structure_is_symmetric is left unchanged.
 
@@ -899,7 +909,7 @@ LAGRAPH_PUBLIC
 int LAGraph_DeleteDiag
 (
     // input/output:
-    LAGraph_Graph G,    // diagonal entries removed, most properties cleared
+    LAGraph_Graph G,    // diagonal entries removed, most cached properties cleared
     char *msg
 ) ;
 
@@ -1329,7 +1339,8 @@ int LAGraph_KindName
 
 // LAGraph_SortByDegree sorts the nodes of a graph by their row or column
 // degrees.  The graph G->A itself is not changed.  Refer to LAGr_TriangleCount
-// for an example of how to permute G->A after calling this function.
+// for an example of how to permute G->A after calling this function.  The
+// output &P must be freed by LAGraph_Free.
 
 LAGRAPH_PUBLIC
 int LAGraph_SortByDegree
@@ -1602,9 +1613,9 @@ int LAGraph_Sort3
 // Basic algorithm are meant to be easy to use.  They may encompass many
 // underlying Advanced algorithms, each with various parameters that may be
 // controlled.  For the Basic API, these parameters are determined
-// automatically.  Graph properties may be determined, and as a result, the
-// graph G is both an input and an output of these methods, since they may be
-// modified.
+// automatically.  Cached graph properties may be determined, and as a result,
+// the graph G is both an input and an output of these methods, since they may
+// be modified.
 
 // LAGraph Basic algorithms are named with the LAGraph_* prefix.
 
@@ -1638,9 +1649,9 @@ int LAGraph_TriangleCount
 
 // The Advanced algorithms require the caller to select the algorithm and choose
 // any parameter settings.  G is not modified, and so it is an input-only
-// parameter to these methods.  If an Advanced algorithm requires a graph
-// property to be computed, it must be computed prior to calling the Advanced
-// method.
+// parameter to these methods.  If an Advanced algorithm requires a cached
+// graph property to be computed, it must be computed prior to calling the
+// Advanced method.
 
 // Advanced algorithms are named with the LAGr_* prefix, to distinguish them
 // from Basic algorithms.
@@ -1830,8 +1841,9 @@ int LAGr_PageRankGAP
 /* Count the triangles in a graph. Advanced API
  *
  * @param[out]    ntriangles On successful return, contains the number of tris.
- * @param[in]     G          The graph, symmetric, no self loops, and for some methods
- *                           (3-6), must have the row degree property calculated
+ * @param[in]     G          The graph, symmetric, no self loops, and for some
+ *                           methods (3-6), must have the cached row degree
+ *                           property calculated
  * @param[in]     method     specifies which algorithm to use
  *                           0:  use the default method
  *                           1:  Burkhardt:  ntri = sum (sum ((A^2) .* A)) / 6

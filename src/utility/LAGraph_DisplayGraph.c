@@ -50,7 +50,7 @@ int LAGraph_DisplayGraph
     LG_TRY (LAGraph_Matrix_TypeName (typename, A, msg)) ;
     LG_TRY (LAGraph_KindName (kindname, kind, msg)) ;
 
-    // print the basic scalar properties
+    // print the basic cached scalar properties
     FPRINTF (f, "Graph: kind: %s, nodes: %g entries: %g type: %s\n",
         kindname, (double)n, (double)nvals, typename) ;
 

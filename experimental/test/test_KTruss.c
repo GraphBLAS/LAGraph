@@ -71,7 +71,7 @@ void test_ktruss (void)
         TEST_CHECK (A == NULL) ;
 
         // check for self-edges
-        OK (LAGraph_Property_NDiag (G, msg)) ;
+        OK (LAGraph_Cached_NDiag (G, msg)) ;
         if (G->ndiag != 0)
         {
             // remove self-edges
@@ -145,7 +145,7 @@ void test_ktruss_errors (void)
     OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;
 
-    OK (LAGraph_Property_NDiag (G, msg)) ;
+    OK (LAGraph_Cached_NDiag (G, msg)) ;
 
     // C is NULL
     int result = LAGraph_KTruss (NULL, G, 3, msg) ;

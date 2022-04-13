@@ -19,6 +19,8 @@
 // LAGraph global objects
 //------------------------------------------------------------------------------
 
+bool LG_init_has_been_called = false ;
+
 // LAGraph_plus_first_T: using the GrB_PLUS_MONOID_T monoid and the
 // corresponding GrB_FIRST_T multiplicative operator.
 GrB_Semiring LAGraph_plus_first_int8   = NULL ;
@@ -101,6 +103,11 @@ int LAGr_Init
     LG_ASSERT (user_free_function   != NULL, GrB_NULL_POINTER) ;
     GrB_Info info ;
 
+    // ensure LAGr_Init has not already been called
+    LG_ASSERT_MSG (!LG_init_has_been_called, GrB_INVALID_VALUE,
+        "LAGr*_Init can only be called once") ;
+    LG_init_has_been_called = true ;
+
     //--------------------------------------------------------------------------
     // start GraphBLAS
     //--------------------------------------------------------------------------
@@ -120,7 +127,7 @@ int LAGr_Init
 
     #endif
 
-    LG_ASSERT_MSG (info == GrB_SUCCESS, info,
+    LG_ASSERT_MSG (info == GrB_SUCCESS || info == GrB_INVALID_VALUE, info,
         "failed to initialize GraphBLAS") ;
 
     #undef  LG_FREE_ALL

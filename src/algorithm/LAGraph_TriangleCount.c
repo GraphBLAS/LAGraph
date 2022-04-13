@@ -36,9 +36,9 @@ int LAGraph_TriangleCount
 )
 {
     // find out if graph is symmetric, compute G->row_degree, and G->ndiag
-    LG_TRY (LAGraph_Property_SymmetricStructure (G, msg)) ;
-    LG_TRY (LAGraph_Property_RowDegree (G, msg)) ;
-    LG_TRY (LAGraph_Property_NDiag (G, msg)) ;
+    LG_TRY (LAGraph_Cached_SymmetricStructure (G, msg)) ;
+    LG_TRY (LAGraph_Cached_RowDegree (G, msg)) ;
+    LG_TRY (LAGraph_Cached_NDiag (G, msg)) ;
 
     // default method and auto selection of sort
     int method  = LAGraph_TriangleCount_Default ;

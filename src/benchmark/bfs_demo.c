@@ -89,10 +89,10 @@ int main (int argc, char **argv)
         false, false, true, NULL, false, argc, argv)) ;
 
     // compute G->row_degree
-    LAGRAPH_TRY (LAGraph_Property_RowDegree (G, msg)) ;
+    LAGRAPH_TRY (LAGraph_Cached_RowDegree (G, msg)) ;
 
     // compute G->col_degree, just to test it (not needed for any tests)
-    LAGRAPH_TRY (LAGraph_Property_ColDegree (G, msg)) ;
+    LAGRAPH_TRY (LAGraph_Cached_ColDegree (G, msg)) ;
 
     GrB_Index n ;
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;

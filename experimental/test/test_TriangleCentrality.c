@@ -81,7 +81,7 @@ void test_TriangleCentrality (void)
         TEST_CHECK (C == NULL) ;
 
         // check for self-edges
-        OK (LAGraph_Property_NDiag (G, msg)) ;
+        OK (LAGraph_Cached_NDiag (G, msg)) ;
         if (G->ndiag != 0)
         {
             // remove self-edges
@@ -138,7 +138,7 @@ void test_errors (void)
     OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;
 
-    OK (LAGraph_Property_NDiag (G, msg)) ;
+    OK (LAGraph_Cached_NDiag (G, msg)) ;
 
     uint64_t ntri ;
     GrB_Vector c = NULL ;

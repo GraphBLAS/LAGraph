@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_DeleteProperties: deletes the cached properties of a graph
+// LAGraph_Cached_AT: construct G->AT for a graph
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -11,45 +11,47 @@
 
 //------------------------------------------------------------------------------
 
+#define LG_FREE_ALL GrB_free (&AT) ;
+
 #include "LG_internal.h"
 
-int LAGraph_DeleteProperties
+int LAGraph_Cached_AT
 (
     // input/output:
-    LAGraph_Graph G,    // G stays valid, only cached properties are freed
+    LAGraph_Graph G,    // graph for which to compute G->AT
     char *msg
 )
 {
 
     //--------------------------------------------------------------------------
-    // check inputs
+    // clear msg and check G
     //--------------------------------------------------------------------------
 
-    LG_CLEAR_MSG ;
-    if (G == NULL)
+    GrB_Matrix AT = NULL ;
+    LG_CLEAR_MSG_AND_BASIC_ASSERT (G, msg) ;
+    GrB_Matrix A = G->A ;
+    LAGraph_Kind kind = G->kind ;
+
+    if (G->AT != NULL || kind == LAGraph_ADJACENCY_UNDIRECTED)
     {
-        // success: nothing to do
+        // G->AT already computed, or not needed since A is symmetric
         return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
-    // free all cached properties of the graph
+    // G->AT = (G->A)'
     //--------------------------------------------------------------------------
 
-    GRB_TRY (GrB_free (&(G->AT))) ;
-    GRB_TRY (GrB_free (&(G->row_degree))) ;
-    GRB_TRY (GrB_free (&(G->col_degree))) ;
-    GRB_TRY (GrB_free (&(G->emin))) ;
-    GRB_TRY (GrB_free (&(G->emax))) ;
+    GrB_Index nrows, ncols ;
+    GRB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
+    GRB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
+    GrB_Type atype ;
+    char atype_name [LAGRAPH_MAX_NAME_LEN] ;
+    LG_TRY (LAGraph_Matrix_TypeName (atype_name, A, msg)) ;
+    LG_TRY (LAGraph_TypeFromName (&atype, atype_name, msg)) ;
+    GRB_TRY (GrB_Matrix_new (&AT, atype, ncols, nrows)) ;
+    GRB_TRY (GrB_transpose (AT, NULL, NULL, A, NULL)) ;
+    G->AT = AT ;
 
-    //--------------------------------------------------------------------------
-    // clear the scalar properties of the graph
-    //--------------------------------------------------------------------------
-
-    G->structure_is_symmetric = LAGRAPH_UNKNOWN ;
-    G->emin_state = LAGRAPH_UNKNOWN ;
-    G->emax_state = LAGRAPH_UNKNOWN ;
-//  G->nonzero = LAGRAPH_UNKNOWN ;
-    G->ndiag = LAGRAPH_UNKNOWN ;
     return (GrB_SUCCESS) ;
 }

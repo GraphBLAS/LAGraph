@@ -136,8 +136,7 @@ int LAGr_Betweenness
     {
         // A and A' differ
         AT = G->AT ;
-        LG_ASSERT_MSG (AT != NULL,
-            LAGRAPH_PROPERTY_MISSING, "G->AT is required") ;
+        LG_ASSERT_MSG (AT != NULL, LAGRAPH_NOT_CACHED, "G->AT is required") ;
     }
 
     // =========================================================================

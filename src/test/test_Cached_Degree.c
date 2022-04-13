@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/test/test_Property_Degree.c:  test LAGraph_Property_*Degree
+// LAGraph/src/test/test_Cached_Degree.c:  test LAGraph_Cached_*Degree
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -72,7 +72,7 @@ void check_degree
 }
 
 //------------------------------------------------------------------------------
-// test_Property_Degree:  test LAGraph_Property_*Degree
+// test_Cached_Degree:  test LAGraph_Cached_*Degree
 //------------------------------------------------------------------------------
 
 typedef struct
@@ -232,10 +232,10 @@ const matrix_info files [ ] =
 } ;
 
 //-----------------------------------------------------------------------------
-// test_Property_Degree
+// test_Cached_Degree
 //-----------------------------------------------------------------------------
 
-void test_Property_Degree (void)
+void test_Cached_Degree (void)
 {
     setup ( ) ;
 
@@ -261,8 +261,8 @@ void test_Property_Degree (void)
 
         for (int trial = 0 ; trial <= 2 ; trial++)
         {
-            // create the G->row_degree property and check it
-            OK (LAGraph_Property_RowDegree (G, msg)) ;
+            // create the G->row_degree cached property and check it
+            OK (LAGraph_Cached_RowDegree (G, msg)) ;
             GrB_Index n ;
             OK (GrB_Matrix_nrows (&n, G->A)) ;
             check_degree (G->row_degree, n, row_deg) ;
@@ -270,12 +270,12 @@ void test_Property_Degree (void)
             if (trial == 2)
             {
                 // use G->AT to compute G->col_degree 
-                OK (LAGraph_DeleteProperties (G, msg)) ;
-                OK (LAGraph_Property_AT (G, msg)) ;
+                OK (LAGraph_DeleteCached (G, msg)) ;
+                OK (LAGraph_Cached_AT (G, msg)) ;
             }
 
-            // create the G->ColDegree property and check it
-            OK (LAGraph_Property_ColDegree (G, msg)) ;
+            // create the G->ColDegree cached property and check it
+            OK (LAGraph_Cached_ColDegree (G, msg)) ;
             OK (GrB_Matrix_ncols (&n, G->A)) ;
             check_degree (G->col_degree, n, col_deg) ;
         }
@@ -284,10 +284,10 @@ void test_Property_Degree (void)
     }
 
     // check error handling
-    int status = LAGraph_Property_RowDegree (NULL, msg) ;
+    int status = LAGraph_Cached_RowDegree (NULL, msg) ;
     printf ("\nstatus: %d, msg: %s\n", status, msg) ;
     TEST_CHECK (status == GrB_NULL_POINTER) ;
-    status = LAGraph_Property_ColDegree (NULL, msg) ;
+    status = LAGraph_Cached_ColDegree (NULL, msg) ;
     printf ("status: %d, msg: %s\n", status, msg) ;
     TEST_CHECK (status == GrB_NULL_POINTER) ;
 
@@ -295,11 +295,11 @@ void test_Property_Degree (void)
 }
 
 //-----------------------------------------------------------------------------
-// test_Property_Degree_brutal
+// test_Cached_Degree_brutal
 //-----------------------------------------------------------------------------
 
 #if LAGRAPH_SUITESPARSE
-void test_Property_Degree_brutal (void)
+void test_Cached_Degree_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
 
@@ -325,8 +325,8 @@ void test_Property_Degree_brutal (void)
 
         for (int trial = 0 ; trial <= 2 ; trial++)
         {
-            // create the G->row_degree property and check it
-            LG_BRUTAL (LAGraph_Property_RowDegree (G, msg)) ;
+            // create the G->row_degree cached property and check it
+            LG_BRUTAL (LAGraph_Cached_RowDegree (G, msg)) ;
             GrB_Index n ;
             OK (GrB_Matrix_nrows (&n, G->A)) ;
             check_degree (G->row_degree, n, row_deg) ;
@@ -334,12 +334,12 @@ void test_Property_Degree_brutal (void)
             if (trial == 2)
             {
                 // use G->AT to compute G->col_degree 
-                OK (LAGraph_DeleteProperties (G, msg)) ;
-                OK (LAGraph_Property_AT (G, msg)) ;
+                OK (LAGraph_DeleteCached (G, msg)) ;
+                OK (LAGraph_Cached_AT (G, msg)) ;
             }
 
-            // create the G->ColDegree property and check it
-            LG_BRUTAL (LAGraph_Property_ColDegree (G, msg)) ;
+            // create the G->ColDegree cached property and check it
+            LG_BRUTAL (LAGraph_Cached_ColDegree (G, msg)) ;
             OK (GrB_Matrix_ncols (&n, G->A)) ;
             check_degree (G->col_degree, n, col_deg) ;
         }
@@ -357,9 +357,9 @@ void test_Property_Degree_brutal (void)
 
 TEST_LIST =
 {
-    { "Property_Degree", test_Property_Degree },
+    { "test_Degree", test_Cached_Degree },
     #if LAGRAPH_SUITESPARSE
-    { "Property_Degree_brutal", test_Property_Degree_brutal },
+    { "test_Degree_brutal", test_Cached_Degree_brutal },
     #endif
     { NULL, NULL }
 } ;

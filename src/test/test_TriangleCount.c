@@ -62,7 +62,7 @@ void setup(void)
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LAGraph_Property_NDiag(G, msg);
+    retval = LAGraph_Cached_NDiag(G, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
@@ -137,10 +137,10 @@ void test_TriangleCount_Methods3(void)
     // LAGraph_TriangleCount_Sandia = 3,       // sum (sum ((L * L) .* L))
     retval = LAGr_TriangleCount(&ntriangles, G,
         LAGraph_TriangleCount_Sandia, &presort, msg);
-    TEST_CHECK(retval == LAGRAPH_PROPERTY_MISSING);  // should fail (row_degrees needs to be defined)
+    TEST_CHECK(retval == LAGRAPH_NOT_CACHED);  // should fail (row_degrees needs to be defined)
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LAGraph_Property_RowDegree(G, msg);
+    retval = LAGraph_Cached_RowDegree(G, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
@@ -167,10 +167,10 @@ void test_TriangleCount_Methods4(void)
     // LAGraph_TriangleCount_Sandia2 = 4,      // sum (sum ((U * U) .* U))
     retval = LAGr_TriangleCount(&ntriangles, G,
         LAGraph_TriangleCount_Sandia2, &presort, msg);
-    TEST_CHECK(retval == LAGRAPH_PROPERTY_MISSING);  // should fail (row_degrees needs to be defined)
+    TEST_CHECK(retval == LAGRAPH_NOT_CACHED);  // should fail (row_degrees needs to be defined)
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LAGraph_Property_RowDegree(G, msg);
+    retval = LAGraph_Cached_RowDegree(G, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
@@ -198,10 +198,10 @@ void test_TriangleCount_Methods5(void)
     // LAGraph_TriangleCount_SandiaDot = 5,    // sum (sum ((L * U') .* L))
     retval = LAGr_TriangleCount(&ntriangles, G,
         LAGraph_TriangleCount_SandiaDot, &presort, msg);
-    TEST_CHECK(retval == LAGRAPH_PROPERTY_MISSING);  // should fail (row_degrees needs to be defined)
+    TEST_CHECK(retval == LAGRAPH_NOT_CACHED);  // should fail (row_degrees needs to be defined)
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LAGraph_Property_RowDegree(G, msg);
+    retval = LAGraph_Cached_RowDegree(G, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
@@ -228,10 +228,10 @@ void test_TriangleCount_Methods6(void)
     // LAGraph_TriangleCount_SandiaDot2 = 6,   // sum (sum ((U * L') .* U))
     retval = LAGr_TriangleCount(&ntriangles, G,
         LAGraph_TriangleCount_SandiaDot2 , &presort, msg);
-    TEST_CHECK(retval == LAGRAPH_PROPERTY_MISSING);  // should fail (row_degrees needs to be defined)
+    TEST_CHECK(retval == LAGRAPH_NOT_CACHED);  // should fail (row_degrees needs to be defined)
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LAGraph_Property_RowDegree(G, msg);
+    retval = LAGraph_Cached_RowDegree(G, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
@@ -361,7 +361,7 @@ void test_TriangleCount_autosort (void)
     OK (LAGraph_DeleteDiag (G, msg)) ;
     TEST_CHECK (G->ndiag == 0) ;
 
-    OK (LAGraph_Property_RowDegree (G, msg)) ;
+    OK (LAGraph_Cached_RowDegree (G, msg)) ;
 
     // try each method
     GrB_Index nt1 = 0 ;
