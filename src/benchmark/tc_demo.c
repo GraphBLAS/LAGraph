@@ -135,7 +135,7 @@ int main (int argc, char **argv)
     GrB_Info info = GxB_Matrix_Iterator_attach (iterator, G->A, NULL) ;
     if (info < 0) { abort ( ) ; }
     // seek to the first entry
-    info = GxB_Matrix_Iterator_seek (iterator, 15) ;
+    info = GxB_Matrix_Iterator_seek (iterator, 1) ;
     printf ("info %d\n", info) ;
     while (info != GxB_EXHAUSTED)
     {
