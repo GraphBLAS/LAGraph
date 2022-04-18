@@ -46,12 +46,15 @@ void test_Init (void)
     TEST_CHECK (ver [2] == GxB_IMPLEMENTATION_SUB) ;
     OK (strcmp (date, GxB_IMPLEMENTATION_DATE)) ;
 
+    #if ( GxB_IMPLEMENTATION_MAJOR >= 7 )
     char *compiler ;
     int compiler_version [3] ;
     OK (GxB_Global_Option_get (GxB_COMPILER_NAME, &compiler)) ;
     OK (GxB_Global_Option_get (GxB_COMPILER_VERSION, compiler_version)) ;
     printf ("GraphBLAS compiled with: %s v%d.%d.%d\n", compiler,
         compiler_version [0], compiler_version [1], compiler_version [2]) ;
+    #endif
+
     #else
     printf ("\nVanilla GraphBLAS: no GxB* extensions\n") ;
     #endif
