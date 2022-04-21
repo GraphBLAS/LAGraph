@@ -24,12 +24,12 @@
 
 #include "LAGraph_demo.h"
 
-#define NTHREAD_LIST 1
+//#define NTHREAD_LIST 1
 // #define NTHREAD_LIST 2
-#define THREAD_LIST 0
+//#define THREAD_LIST 0
 
-// #define NTHREAD_LIST 6
-// #define THREAD_LIST 64, 32, 24, 12, 8, 4
+ #define NTHREAD_LIST 7
+ #define THREAD_LIST 64, 32, 24, 12, 8, 4, 0
 
 #define LG_FREE_ALL                 \
 {                                   \
@@ -83,7 +83,7 @@ int main (int argc, char **argv)
     bool burble = false ;
     demo_init (burble) ;
 
-    int ntrials = 3 ;
+    int ntrials = 5 ;
     // ntrials = 1 ;        // HACK
     printf ("# of trials: %d\n", ntrials) ;
 
@@ -236,6 +236,17 @@ int main (int argc, char **argv)
             {
                 int nthreads = Nthreads [t] ;
                 if (nthreads > nthreads_max) continue ;
+                if (nthreads != 0) // Use GPU
+                {
+                  GxB_Global_Option_set( GxB_GLOBAL_GPU_CONTROL, GxB_GPU_NEVER);
+                  printf(" CPU ONLY using %d threads", nthreads);
+                }
+                else
+                {
+                  GxB_Global_Option_set( GxB_GLOBAL_GPU_CONTROL, GxB_GPU_ALWAYS);
+                  printf(" GPU ONLY using %d threads", nthreads);
+                }
+
                 LAGRAPH_TRY (LAGraph_SetNumThreads (nthreads, msg)) ;
                 GrB_Index nt2 ;
                 double ttot = 0, ttrial [100] ;
