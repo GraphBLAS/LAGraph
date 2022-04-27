@@ -86,14 +86,18 @@ void test_DeleteCached (void)
         TEST_CHECK (A == NULL) ;
 
         // create all cached properties (see test_Cached_* for tests of content)
+        int ok_result = (kind == LAGraph_ADJACENCY_UNDIRECTED) ?
+            LAGRAPH_CACHE_NOT_NEEDED : GrB_SUCCESS ;
         OK (LAGraph_Cached_RowDegree (G, msg)) ;
-        OK (LAGraph_Cached_ColDegree (G, msg)) ;
-        OK (LAGraph_Cached_AT (G, msg)) ;
-        OK (LAGraph_Cached_SymmetricStructure (G, msg)) ;
+        int result = LAGraph_Cached_ColDegree (G, msg) ;
+        TEST_CHECK (result == ok_result) ;
+        result = LAGraph_Cached_AT (G, msg) ;
+        TEST_CHECK (result == ok_result) ;
+        OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
 
         // print them
         printf ("\nGraph: ndiag %g, symmetric structure: %d\n",
-            (double) G->ndiag, G->structure_is_symmetric) ;
+            (double) G->ndiag, G->is_symmetric_structure) ;
         printf ("  adj matrix: ") ;
         int rr = (LAGraph_Matrix_Print (G->A, LAGraph_SHORT, stdout, msg)) ;
         printf ("result: %d msg: %s\n", rr, msg) ;
@@ -160,7 +164,7 @@ void test_del_brutal (void)
         LG_BRUTAL (LAGraph_Cached_RowDegree (G, msg)) ;
         LG_BRUTAL (LAGraph_Cached_ColDegree (G, msg)) ;
         LG_BRUTAL (LAGraph_Cached_AT (G, msg)) ;
-        LG_BRUTAL (LAGraph_Cached_SymmetricStructure (G, msg)) ;
+        LG_BRUTAL (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
 
         for (int trial = 0 ; trial <= 1 ; trial++)
         {

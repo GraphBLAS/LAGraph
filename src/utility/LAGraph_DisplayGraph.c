@@ -56,7 +56,7 @@ int LAGraph_DisplayGraph
 
     // print the scalar cached properties
     FPRINTF (f, "  structural symmetry: ") ;
-    switch (G->structure_is_symmetric)
+    switch (G->is_symmetric_structure)
     {
         case LAGraph_FALSE : FPRINTF (f, "unsymmetric") ; break ;
         case LAGraph_TRUE  : FPRINTF (f, "symmetric")   ; break ;

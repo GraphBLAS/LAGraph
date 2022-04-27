@@ -89,21 +89,25 @@ void test_CheckGraph (void)
         TEST_CHECK (G->kind == kind) ;
         if (kind == LAGraph_ADJACENCY_DIRECTED)
         {
-            TEST_CHECK (G->structure_is_symmetric == LAGRAPH_UNKNOWN) ;
+            TEST_CHECK (G->is_symmetric_structure == LAGRAPH_UNKNOWN) ;
         }
         else
         {
-            TEST_CHECK (G->structure_is_symmetric == LAGraph_TRUE) ;
+            TEST_CHECK (G->is_symmetric_structure == LAGraph_TRUE) ;
         }
 
         // create its cached properties
-        OK (LAGraph_Cached_AT (G, msg)) ;
+        int ok_result = (kind == LAGraph_ADJACENCY_UNDIRECTED) ?
+            LAGRAPH_CACHE_NOT_NEEDED : GrB_SUCCESS ;
+        int result = LAGraph_Cached_AT (G, msg) ;
         OK (LAGraph_CheckGraph (G, msg)) ;
+        TEST_CHECK (result == ok_result) ;
 
         OK (LAGraph_Cached_RowDegree (G, msg)) ;
         OK (LAGraph_CheckGraph (G, msg)) ;
 
-        OK (LAGraph_Cached_ColDegree (G, msg)) ;
+        result = LAGraph_Cached_ColDegree (G, msg) ;
+        TEST_CHECK (result == ok_result) ;
         OK (LAGraph_CheckGraph (G, msg)) ;
 
         // free the graph

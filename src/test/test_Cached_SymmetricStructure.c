@@ -137,17 +137,17 @@ void test_Cached_Symmetric_Structure (void)
         OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
         TEST_CHECK (A == NULL) ;
 
-        // compute the structure_is_symmetric cached property
-        OK (LAGraph_Cached_SymmetricStructure (G, msg)) ;
+        // compute the is_symmetric_structure cached property
+        OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
 
         // check the result
         if (sym_structure)
         {
-            TEST_CHECK (G->structure_is_symmetric == LAGraph_TRUE) ;
+            TEST_CHECK (G->is_symmetric_structure == LAGraph_TRUE) ;
         }
         else
         {
-            TEST_CHECK (G->structure_is_symmetric == LAGraph_FALSE) ;
+            TEST_CHECK (G->is_symmetric_structure == LAGraph_FALSE) ;
         }
 
         // delete all cached properties
@@ -155,16 +155,16 @@ void test_Cached_Symmetric_Structure (void)
 
         // try again, but precompute G->AT
         OK (LAGraph_Cached_AT (G, msg)) ;
-        OK (LAGraph_Cached_SymmetricStructure (G, msg)) ;
+        OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
 
         // check the result
         if (sym_structure)
         {
-            TEST_CHECK (G->structure_is_symmetric == LAGraph_TRUE) ;
+            TEST_CHECK (G->is_symmetric_structure == LAGraph_TRUE) ;
         }
         else
         {
-            TEST_CHECK (G->structure_is_symmetric == LAGraph_FALSE) ;
+            TEST_CHECK (G->is_symmetric_structure == LAGraph_FALSE) ;
         }
 
         // delete all cached properties
@@ -175,8 +175,8 @@ void test_Cached_Symmetric_Structure (void)
         {
             G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
             // recompute the symmetry cached property
-            OK (LAGraph_Cached_SymmetricStructure (G, msg)) ;
-            TEST_CHECK (G->structure_is_symmetric == LAGraph_TRUE) ;
+            OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
+            TEST_CHECK (G->is_symmetric_structure == LAGraph_TRUE) ;
         }
 
         OK (LAGraph_Delete (&G, msg)) ;
@@ -184,7 +184,7 @@ void test_Cached_Symmetric_Structure (void)
     }
 
     // check error handling
-    int status = LAGraph_Cached_SymmetricStructure (NULL, msg) ;
+    int status = LAGraph_Cached_IsSymmetricStructure (NULL, msg) ;
     printf ("\nstatus: %d, msg: %s\n", status, msg) ;
     TEST_CHECK (status == GrB_NULL_POINTER) ;
 
@@ -221,17 +221,17 @@ void test_Cached_Symmetric_Structure_brutal (void)
         OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
         TEST_CHECK (A == NULL) ;
 
-        // compute the structure_is_symmetric cached property
-        LG_BRUTAL (LAGraph_Cached_SymmetricStructure (G, msg)) ;
+        // compute the is_symmetric_structure cached property
+        LG_BRUTAL (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
 
         // check the result
         if (sym_structure)
         {
-            TEST_CHECK (G->structure_is_symmetric == LAGraph_TRUE) ;
+            TEST_CHECK (G->is_symmetric_structure == LAGraph_TRUE) ;
         }
         else
         {
-            TEST_CHECK (G->structure_is_symmetric == LAGraph_FALSE) ;
+            TEST_CHECK (G->is_symmetric_structure == LAGraph_FALSE) ;
         }
 
         // delete all cached properties
@@ -239,16 +239,16 @@ void test_Cached_Symmetric_Structure_brutal (void)
 
         // try again, but precompute G->AT
         LG_BRUTAL (LAGraph_Cached_AT (G, msg)) ;
-        LG_BRUTAL (LAGraph_Cached_SymmetricStructure (G, msg)) ;
+        LG_BRUTAL (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
 
         // check the result
         if (sym_structure)
         {
-            TEST_CHECK (G->structure_is_symmetric == LAGraph_TRUE) ;
+            TEST_CHECK (G->is_symmetric_structure == LAGraph_TRUE) ;
         }
         else
         {
-            TEST_CHECK (G->structure_is_symmetric == LAGraph_FALSE) ;
+            TEST_CHECK (G->is_symmetric_structure == LAGraph_FALSE) ;
         }
 
         // delete all cached properties
@@ -259,8 +259,8 @@ void test_Cached_Symmetric_Structure_brutal (void)
         {
             G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
             // recompute the symmetry cached property
-            LG_BRUTAL (LAGraph_Cached_SymmetricStructure (G, msg)) ;
-            TEST_CHECK (G->structure_is_symmetric == LAGraph_TRUE) ;
+            LG_BRUTAL (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
+            TEST_CHECK (G->is_symmetric_structure == LAGraph_TRUE) ;
         }
 
         OK (LAGraph_Delete (&G, msg)) ;

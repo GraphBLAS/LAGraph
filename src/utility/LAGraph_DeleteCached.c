@@ -46,10 +46,12 @@ int LAGraph_DeleteCached
     // clear the cached scalar properties of the graph
     //--------------------------------------------------------------------------
 
-    G->structure_is_symmetric = LAGRAPH_UNKNOWN ;
+    G->is_symmetric_structure =
+        (G->kind == LAGraph_ADJACENCY_UNDIRECTED)
+        ? LAGraph_TRUE
+        : LAGRAPH_UNKNOWN ;
     G->emin_state = LAGRAPH_UNKNOWN ;
     G->emax_state = LAGRAPH_UNKNOWN ;
-//  G->nonzero = LAGRAPH_UNKNOWN ;
     G->ndiag = LAGRAPH_UNKNOWN ;
     return (GrB_SUCCESS) ;
 }

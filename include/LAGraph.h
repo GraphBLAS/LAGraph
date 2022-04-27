@@ -187,7 +187,7 @@
 
 //  LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED: the method requires an undirected
 //      graph, or a directed graph with an adjacency matrix that is known to
-//      have a symmetric structure.  LAGraph_Cached_SymmetricStructure can
+//      have a symmetric structure.  LAGraph_Cached_IsSymmetricStructure can
 //      be used to determine this cached property.
 
 //  LAGRAPH_IO_ERROR:  a file input or output method failed, or an input file
@@ -208,12 +208,19 @@
 //  LAGRAPH_CONVERGENCE_FAILURE:  an iterative process failed to converge to
 //      a good solution.
 
+//  LAGRAPH_CACHE_NOT_NEEDED: this is a warning, not an error.  It is returned
+//      by LAGraph_Cached_* methods when asked to compute cached properties
+//      that are not needed.  These include G->AT and G->col_degree for an
+//      undirected graph.
+
 #define LAGRAPH_INVALID_GRAPH                   (-1000)
 #define LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED    (-1001)
 #define LAGRAPH_IO_ERROR                        (-1002)
 #define LAGRAPH_NOT_CACHED                      (-1003)
 #define LAGRAPH_NO_SELF_EDGES_ALLOWED           (-1004)
 #define LAGRAPH_CONVERGENCE_FAILURE             (-1005)
+
+#define LAGRAPH_CACHE_NOT_NEEDED                ( 1000)
 
 // @retval GrB_SUCCESS if successful
 // @retval a negative GrB_Info value on error (in range -999 to -1)
@@ -496,7 +503,7 @@ LAGraph_State ;
 //      AT          AT = A'
 //      row_degree  row_degree(i) = # of entries in A(i,:)
 //      col_degree  col_degree(j) = # of entries in A(:,j)
-//      structure_is_symmetric: true if the structure of A is symmetric
+//      is_symmetric_structure: true if the structure of A is symmetric
 //      ndiag       the number of entries on the diagonal of A
 //      emin        minimum edge weight
 //      emax        maximum edge weight
@@ -552,7 +559,7 @@ struct LAGraph_Graph_struct
 
     // If G is held as an incidence matrix, then G->A might be rectangular,
     // in the future, but the graph G may have a symmetric structure anyway.
-    LAGraph_Boolean structure_is_symmetric ;    // For an undirected
+    LAGraph_Boolean is_symmetric_structure ;    // For an undirected
             // graph, this cached property will always be implicitly true and
             // can be ignored.  The matrix A for a directed weighted graph will
             // typically be unsymmetric, but might have a symmetric structure.
@@ -606,7 +613,7 @@ typedef struct LAGraph_Graph_struct *LAGraph_Graph ;
 // This method must be called before calling any other GrB* or LAGraph* method.
 // It initializes GraphBLAS with GrB_init and then performs LAGraph-specific
 // initializations.  In particular, the LAGraph semirings listed below are
-// created.  FIXME: discuss GrB_init before LAGr*_Init (is OK).
+// created.  FIXME: document calling GrB_init before LAGr*_Init (is OK).
 
 LAGRAPH_PUBLIC
 int LAGraph_Init (char *msg) ;
@@ -792,25 +799,18 @@ int LAGraph_Cached_AT
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Cached_SymmetricStructure: determine G->structure_is_symmetric
+// LAGraph_Cached_IsSymmetricStructure: determine G->is_symmetric_structure
 //------------------------------------------------------------------------------
 
-// FIXME: start here Apr 20, 2022
-
-// FIXME: name doesn't match the name of the property:  is this OK?
-// G->structure_is_symmetric
-// G->symmetric_structure
-
-
-// LAGraph_Cached_SymmetricStructure determines if the sparsity structure
-// of G->A is symmetric (ignoring its values).  If G->kind denotes that the
-// graph is undirected, this cached property is implicitly true (and not checked).
+// LAGraph_Cached_IsSymmetricStructure determines if the sparsity structure of
+// G->A is symmetric (ignoring its values).  If G->kind denotes that the graph
+// is undirected, this cached property is implicitly true (and not checked).
 // Otherwise, this method determines if the structure of G->A for a directed
-// graph G has a symmetric sparsity structure.  No work is performend if the
+// graph G has a symmetric sparsity structure.  No work is performed if the
 // cached property is already known.
 
 LAGRAPH_PUBLIC
-int LAGraph_Cached_SymmetricStructure
+int LAGraph_Cached_IsSymmetricStructure
 (
     // input/output:
     LAGraph_Graph G,    // graph to determine the symmetry of structure of A
@@ -836,10 +836,10 @@ int LAGraph_Cached_RowDegree
 // LAGraph_Cached_ColDegree: determine G->col_degree
 //------------------------------------------------------------------------------
 
-// LAGraph_Cached_ColDegree computes G->col_degree.  No work is performed if
-// it already exists in G.  If G is undirected, G->col_degree is never computed.
-// Instead, G->row_degree is used instead.  No work is performed it is already
-// exists in G.
+// LAGraph_Cached_ColDegree computes G->col_degree.  No work is performed if it
+// already exists in G.  If G is undirected, G->col_degree is never computed
+// and remains NULL (the method returns LAGRAPH_CACHE_NOT_NEEDED).  No work is
+// performed if it is already exists in G.
 
 LAGRAPH_PUBLIC
 int LAGraph_Cached_ColDegree
@@ -852,6 +852,8 @@ int LAGraph_Cached_ColDegree
 //------------------------------------------------------------------------------
 // LAGraph_Cached_NDiag: determine G->ndiag
 //------------------------------------------------------------------------------
+
+// FIXME: start here May 11, 2022
 
 // LAGraph_Cached_NDiag computes G->ndiag, the number of diagonal entries
 // that appear in the G->A matrix.  For an undirected or directed graph with an
@@ -901,15 +903,16 @@ int LAGraph_Cached_EMax
 // LAGraph_DeleteDiag: remove all diagonal entries from G->A
 //------------------------------------------------------------------------------
 
-// LAGraph_DeleteDiag removes any diagonal entries from G->A.  Most cached properties
-// are cleared or set to LAGRAPH_UNKNOWN.  G->ndiag is set to zero, and
-// G->structure_is_symmetric is left unchanged.
+// LAGraph_DeleteDiag removes any diagonal entries from G->A.  Most cached
+// properties are cleared or set to LAGRAPH_UNKNOWN.  G->ndiag is set to zero,
+// and G->is_symmetric_structure is left unchanged.
 
 LAGRAPH_PUBLIC
 int LAGraph_DeleteDiag
 (
     // input/output:
-    LAGraph_Graph G,    // diagonal entries removed, most cached properties cleared
+    LAGraph_Graph G,    // diagonal entries removed, most cached properties
+                        // cleared
     char *msg
 ) ;
 
@@ -1320,7 +1323,7 @@ int LAGraph_Scalar_TypeName
 //------------------------------------------------------------------------------
 
 // LAGraph_KindName: return the name of a graph kind.  For example, if given
-// LAGaphH_ADJACENCY_UNDIRECTED, the string "undirected" is returned.
+// LAGraph_ADJACENCY_UNDIRECTED, the string "undirected" is returned.
 
 LAGRAPH_PUBLIC
 int LAGraph_KindName
@@ -1623,8 +1626,8 @@ int LAGraph_Sort3
 // LAGraph_TriangleCount
 //------------------------------------------------------------------------------
 
-// This is a Basic algorithm (G->ndiag, G->row_degree, G->structure_is_symmetric
-// are computed, if not present).
+// This is a Basic algorithm (G->ndiag, G->row_degree,
+// G->is_symmetric_structure are computed, if not present).
 
 /*
  * Count the triangles in a graph.
@@ -1727,7 +1730,7 @@ int LAGr_BreadthFirstSearch
 // LAGr_ConnectedComponents: connected components of an undirected graph
 //------------------------------------------------------------------------------
 
-// This is an Advanced algorithm (G->structure_is_symmetric must be known),
+// This is an Advanced algorithm (G->is_symmetric_structure must be known),
 
 LAGRAPH_PUBLIC
 int LAGr_ConnectedComponents
@@ -1836,7 +1839,7 @@ int LAGr_PageRankGAP
 //------------------------------------------------------------------------------
 
 // This is an Advanced algorithm (G->ndiag, G->row_degree,
-// G->structure_is_symmetric are required).
+// G->is_symmetric_structure are required).
 
 /* Count the triangles in a graph. Advanced API
  *

@@ -482,13 +482,18 @@ void test_BreadthFirstSearch_many(void)
         TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
         // create its cached properties
-        OK (LAGraph_Cached_AT (G, msg)) ;
+        int ok_result = (kind == LAGraph_ADJACENCY_UNDIRECTED) ?
+            LAGRAPH_CACHE_NOT_NEEDED : GrB_SUCCESS ;
+        int result = LAGraph_Cached_AT (G, msg) ;
+        TEST_CHECK (result == ok_result) ;
+
         OK (LAGraph_CheckGraph (G, msg)) ;
 
         OK (LAGraph_Cached_RowDegree (G, msg)) ;
         OK (LAGraph_CheckGraph (G, msg)) ;
 
-        OK (LAGraph_Cached_ColDegree (G, msg)) ;
+        result = LAGraph_Cached_ColDegree (G, msg) ;
+        TEST_CHECK (result == ok_result) ;
         OK (LAGraph_CheckGraph (G, msg)) ;
 
         GrB_Index n = 0 ;
@@ -593,9 +598,14 @@ void test_bfs_brutal (void)
         }
 
         // create its cached properties
-        OK (LAGraph_Cached_AT (G, msg)) ;
+        int ok_result = (kind == LAGraph_ADJACENCY_UNDIRECTED) ?
+            LAGRAPH_CACHE_NOT_NEEDED : GrB_SUCCESS ;
+        int result = LAGraph_Cached_AT (G, msg) ;
+        TEST_CHECK (result == ok_result) ;
+
         OK (LAGraph_Cached_RowDegree (G, msg)) ;
-        OK (LAGraph_Cached_ColDegree (G, msg)) ;
+        result = LAGraph_Cached_ColDegree (G, msg) ;
+        TEST_CHECK (result == ok_result) ;
 
         // run the BFS
         int64_t step = (n > 100) ? (3*n/4) : ((n/4) + 1) ;

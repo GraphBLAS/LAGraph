@@ -107,14 +107,14 @@ void test_MIS (void)
         TEST_CHECK (mis == NULL) ;
 
         // check if the pattern is symmetric
-        OK (LAGraph_Cached_SymmetricStructure (G, msg)) ;
+        OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
 
-        if (G->structure_is_symmetric == LAGraph_FALSE)
+        if (G->is_symmetric_structure == LAGraph_FALSE)
         {
             // make the adjacency matrix symmetric
             OK (LAGraph_Cached_AT (G, msg)) ;
             OK (GrB_eWiseAdd (G->A, NULL, NULL, GrB_LOR, G->A, G->AT, NULL)) ;
-            G->structure_is_symmetric = true ;
+            G->is_symmetric_structure = LAGraph_TRUE ;
         }
         G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
 
@@ -177,7 +177,7 @@ void test_MIS (void)
 
         OK (LAGraph_DeleteCached (G, msg)) ;
         G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
-        G->structure_is_symmetric = true ;
+        G->is_symmetric_structure = LAGraph_TRUE ;
         G->ndiag = 0 ;
 
         // recompute the row degree

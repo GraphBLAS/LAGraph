@@ -30,12 +30,17 @@ int LAGraph_Cached_AT
     GrB_Matrix AT = NULL ;
     LG_CLEAR_MSG_AND_BASIC_ASSERT (G, msg) ;
     GrB_Matrix A = G->A ;
-    LAGraph_Kind kind = G->kind ;
 
-    if (G->AT != NULL || kind == LAGraph_ADJACENCY_UNDIRECTED)
+    if (G->AT != NULL)
     {
-        // G->AT already computed, or not needed since A is symmetric
+        // G->AT already computed
         return (GrB_SUCCESS) ;
+    }
+
+    if (G->kind == LAGraph_ADJACENCY_UNDIRECTED)
+    {
+        // G->AT not needed since A is symmetric (warning only, not an error)
+        return (LAGRAPH_CACHE_NOT_NEEDED) ;
     }
 
     //--------------------------------------------------------------------------

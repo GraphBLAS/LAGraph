@@ -49,10 +49,16 @@ int LAGraph_Cached_ColDegree
     GrB_Vector col_degree = NULL, x = NULL ;
     LG_CLEAR_MSG_AND_BASIC_ASSERT (G, msg) ;
 
-    if (G->col_degree != NULL || G->kind == LAGraph_ADJACENCY_UNDIRECTED)
+    if (G->col_degree != NULL)
     {
-        // G->col_degree already computed, or not needed
+        // G->col_degree already computed
         return (GrB_SUCCESS) ;
+    }
+
+    if (G->kind == LAGraph_ADJACENCY_UNDIRECTED)
+    {
+        // G->col_degree is not computed since A is symmetric (warning only)
+        return (LAGRAPH_CACHE_NOT_NEEDED) ;
     }
 
     //--------------------------------------------------------------------------

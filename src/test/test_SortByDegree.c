@@ -130,10 +130,14 @@ void test_SortByDegree (void)
             TEST_CHECK (G != NULL) ;
 
             // create the cached properties
-            OK (LAGraph_Cached_AT (G, msg)) ;
+            int ok_result = (kind == LAGraph_ADJACENCY_UNDIRECTED) ?
+                LAGRAPH_CACHE_NOT_NEEDED : GrB_SUCCESS ;
+            int result = LAGraph_Cached_AT (G, msg) ;
+            TEST_CHECK (result == ok_result) ;
             OK (LAGraph_Cached_RowDegree (G, msg)) ;
-            OK (LAGraph_Cached_ColDegree (G, msg)) ;
-            OK (LAGraph_Cached_SymmetricStructure (G, msg)) ;
+            result = LAGraph_Cached_ColDegree (G, msg) ;
+            TEST_CHECK (result == ok_result) ;
+            OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
             OK (LAGraph_DisplayGraph (G, LAGraph_SHORT, stdout, msg)) ;
 
             // sort 4 different ways
@@ -168,16 +172,17 @@ void test_SortByDegree (void)
 
                 // get the cached properties of H
                 OK (LAGraph_Cached_RowDegree (H, msg)) ;
-                OK (LAGraph_Cached_ColDegree (H, msg)) ;
-                OK (LAGraph_Cached_SymmetricStructure (H, msg)) ;
-                TEST_CHECK (G->structure_is_symmetric ==
-                            H->structure_is_symmetric) ;
+                result = LAGraph_Cached_ColDegree (H, msg) ;
+                TEST_CHECK (result == ok_result) ;
+                OK (LAGraph_Cached_IsSymmetricStructure (H, msg)) ;
+                TEST_CHECK (G->is_symmetric_structure ==
+                            H->is_symmetric_structure) ;
                 printf ("\nTrial %d, graph H, sorted (%s) by (%s) degrees:\n",
                     trial, ascending ? "ascending" : "descending",
                     byrow ? "row" : "column") ;
                 OK (LAGraph_DisplayGraph (H, LAGraph_SHORT, stdout, msg)) ;
 
-                d = (byrow || G->structure_is_symmetric) ?
+                d = (byrow || G->is_symmetric_structure == LAGraph_TRUE) ?
                     H->row_degree : H->col_degree ;
 
                 // ensure d is sorted in ascending or descending order
@@ -280,10 +285,14 @@ void test_SortByDegree_brutal (void)
             TEST_CHECK (G != NULL) ;
 
             // create the cached properties
-            OK (LAGraph_Cached_AT (G, msg)) ;
+            int ok_result = (kind == LAGraph_ADJACENCY_UNDIRECTED) ?
+                LAGRAPH_CACHE_NOT_NEEDED : GrB_SUCCESS ;
+            int result = LAGraph_Cached_AT (G, msg) ;
+            TEST_CHECK (result == ok_result) ;
             OK (LAGraph_Cached_RowDegree (G, msg)) ;
-            OK (LAGraph_Cached_ColDegree (G, msg)) ;
-            OK (LAGraph_Cached_SymmetricStructure (G, msg)) ;
+            result = LAGraph_Cached_ColDegree (G, msg) ;
+            TEST_CHECK (result == ok_result) ;
+            OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
             // OK (LAGraph_DisplayGraph (G, LAGraph_SHORT, stdout, msg)) ;
 
             // sort 4 different ways
@@ -318,12 +327,13 @@ void test_SortByDegree_brutal (void)
 
                 // get the cached properties of H
                 OK (LAGraph_Cached_RowDegree (H, msg)) ;
-                OK (LAGraph_Cached_ColDegree (H, msg)) ;
-                OK (LAGraph_Cached_SymmetricStructure (H, msg)) ;
-                TEST_CHECK (G->structure_is_symmetric ==
-                            H->structure_is_symmetric) ;
+                result = LAGraph_Cached_ColDegree (H, msg) ;
+                TEST_CHECK (result == ok_result) ;
+                OK (LAGraph_Cached_IsSymmetricStructure (H, msg)) ;
+                TEST_CHECK (G->is_symmetric_structure ==
+                            H->is_symmetric_structure) ;
 
-                d = (byrow || G->structure_is_symmetric) ?
+                d = (byrow || G->is_symmetric_structure == LAGraph_TRUE) ?
                     H->row_degree : H->col_degree ;
 
                 // ensure d is sorted in ascending or descending order

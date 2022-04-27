@@ -307,7 +307,7 @@ void test_TriangleCount_many (void)
 
         // convert to directed but with symmetric pattern
         G->kind = LAGraph_ADJACENCY_DIRECTED ;
-        G->structure_is_symmetric = LAGraph_TRUE ;
+        G->is_symmetric_structure = LAGraph_TRUE ;
         OK (LAGraph_TriangleCount (&nt1, G, msg)) ;
         TEST_CHECK (nt1 == ntriangles) ;
 
@@ -422,7 +422,7 @@ void test_TriangleCount_brutal (void)
 
         // convert to directed but with symmetric pattern
         G->kind = LAGraph_ADJACENCY_DIRECTED ;
-        G->structure_is_symmetric = LAGraph_TRUE ;
+        G->is_symmetric_structure = LAGraph_TRUE ;
         LG_BRUTAL (LAGraph_TriangleCount (&nt1, G, msg)) ;
         TEST_CHECK (nt1 == ntriangles) ;
 

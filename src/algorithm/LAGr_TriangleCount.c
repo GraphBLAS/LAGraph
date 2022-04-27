@@ -14,7 +14,7 @@
 // Count the number of triangles in a graph,
 
 // This is an Advanced algorithm (G->ndiag, G->row_degree,
-// G->structure_is_symmetric are required).
+// G->is_symmetric_structure are required).
 
 // Given a symmetric graph A with no-self edges, LAGr_TriangleCount counts the
 // number of triangles in the graph.  A triangle is a clique of size three,
@@ -149,7 +149,7 @@ int LAGr_TriangleCount
 
     LG_ASSERT_MSG ((G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGraph_ADJACENCY_DIRECTED &&
-        G->structure_is_symmetric == LAGraph_TRUE)),
+        G->is_symmetric_structure == LAGraph_TRUE)),
         LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED,
         "G->A must be known to be symmetric") ;
 

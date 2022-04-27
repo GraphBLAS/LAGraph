@@ -134,7 +134,7 @@ void test_AllKTruss (void)
 
         // convert to directed with symmetric structure and recompute
         G->kind = LAGraph_ADJACENCY_DIRECTED ;
-        G->structure_is_symmetric = true ;
+        G->is_symmetric_structure = LAGraph_TRUE ;
         int64_t k2 ;
         GrB_Matrix *Cset2 ;
         int64_t *ntris2, *nedges2, *nsteps2 ;
@@ -235,7 +235,7 @@ void test_allktruss_errors (void)
     // G is undirected
     G->ndiag = 0 ;
     G->kind = LAGraph_ADJACENCY_DIRECTED ;
-    G->structure_is_symmetric = LAGraph_FALSE ;
+    G->is_symmetric_structure = LAGraph_FALSE ;
     result = LAGraph_AllKTruss (Cset, &kmax, ntris, nedges, nsteps, G, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == -1005) ;

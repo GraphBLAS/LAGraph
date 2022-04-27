@@ -90,10 +90,14 @@ void test_Cached_AT (void)
         TEST_CHECK (A == NULL) ;
 
         // create the G->AT cached property
-        OK (LAGraph_Cached_AT (G, msg)) ;
+        int ok_result = (kind == LAGraph_ADJACENCY_UNDIRECTED) ?
+            LAGRAPH_CACHE_NOT_NEEDED : GrB_SUCCESS ;
+        int result = LAGraph_Cached_AT (G, msg) ;
+        TEST_CHECK (result == ok_result) ;
 
         // try to create it again; this should safely do nothing
-        OK (LAGraph_Cached_AT (G, msg)) ;
+        result = LAGraph_Cached_AT (G, msg) ;
+        TEST_CHECK (result == ok_result) ;
 
         // check the result
         if (kind == LAGraph_ADJACENCY_UNDIRECTED)

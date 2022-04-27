@@ -60,7 +60,7 @@ int LAGraph_KTruss              // compute the k-truss of a graph
 
     if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGraph_ADJACENCY_DIRECTED &&
-        G->structure_is_symmetric == LAGraph_TRUE))
+        G->is_symmetric_structure == LAGraph_TRUE))
     {
         // the structure of A is known to be symmetric
         ;
