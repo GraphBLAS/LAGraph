@@ -1,0 +1,532 @@
+\begin{verbatim}
+int LAGraph_Random_Init
+(
+    char *msg
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+int LAGraph_Random_Finalize
+(
+    char *msg
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+int LAGraph_Random_Seed     // construct a random seed vector
+(
+    // input/output
+    GrB_Vector Seed,    // vector of random number seeds, normally GrB_UINT64
+    // input
+    uint64_t seed,      // scalar input seed
+    char *msg
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+int LAGraph_Random_Next     // advance to next random vector
+(
+    // input/output
+    GrB_Vector Seed,
+    char *msg
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
+(
+    // output
+    GrB_Matrix *A,      // A is constructed on output
+    // input
+    GrB_Type type,      // type of matrix to construct
+    GrB_Index nrows,    // # of rows of A
+    GrB_Index ncols,    // # of columns of A
+    double density,     // density: build a sparse matrix with
+                        // density*nrows*cols values if not INFINITY;
+                        // build a dense matrix if INFINITY.
+    uint64_t seed,      // random number seed
+    char *msg
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+int LAGraph_SWrite_HeaderStart  // write the first part of the JSON header
+(
+    FILE *f,                    // file to write to
+    const char *name,           // name of this collection of matrices
+    char *msg
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+int LAGraph_SWrite_HeaderItem   // write a single item to the JSON header
+(
+    // inputs:
+    FILE *f,                    // file to write to
+    LAGraph_Contents_kind kind, // matrix, vector, or text
+    const char *name,           // name of the matrix/vector/text; matrices from
+                                // sparse.tamu.edu use the form "Group/Name"
+    const char *type,           // name of type of the matrix/vector
+    int compression,            // text compression method
+    GrB_Index blob_size,        // exact size of serialized blob for this item
+    char *msg
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+int LAGraph_SWrite_HeaderItem   // write a single item to the JSON header
+(
+    // inputs:
+    FILE *f,                    // file to write to
+    LAGraph_Contents_kind kind, // matrix, vector, or text
+    const char *name,           // name of the matrix/vector/text; matrices from
+                                // sparse.tamu.edu use the form "Group/Name"
+    const char *type,           // name of type of the matrix/vector
+    // todo: text not yet supported by LAGraph_SWrithe_HeaderItem
+    int compression,            // text compression method
+    GrB_Index blob_size,        // exact size of serialized blob for this item
+    char *msg
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+int LAGraph_SWrite_HeaderEnd    // write the end of the JSON header
+(
+    FILE *f,                    // file to write to
+    char *msg
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+int LAGraph_SWrite_Item  // write the serialized blob of a matrix/vector/text
+(
+    // input:
+    FILE *f,                // file to write to
+    const void *blob,       // serialized blob from G*B_Matrix_serialize
+    GrB_Index blob_size,    // exact size of the serialized blob
+    char *msg
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+int LAGraph_SRead   // read a set of matrices from a *.lagraph file
+(
+    FILE *f,                        // file to read from
+    // output
+    char **collection,              // name of collection (allocated string)
+    LAGraph_Contents **Contents,    // array contents of contents
+    GrB_Index *ncontents,           // # of items in the Contents array
+    char *msg
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+void LAGraph_SFreeContents      // free the Contents returned by LAGraph_SRead
+(
+    // input/output
+    LAGraph_Contents **Contents,    // array of size ncontents
+    GrB_Index ncontents
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
+(
+    // inputs:
+    char *filename,             // name of file to write to
+    GrB_Matrix *Set,            // array of GrB_Matrix of size nmatrices
+    GrB_Index nmatrices,        // # of matrices to write to *.lagraph file
+//  todo: handle vectors and text in LAGraph_SSaveSet
+    char *collection,           // name of this collection of matrices
+    char *msg
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+void LAGraph_SFreeSet           // free a set of matrices
+(
+    // input/output
+    GrB_Matrix **Set_handle,    // array of GrB_Matrix of size nmatrices
+    GrB_Index nmatrices         // # of matrices in the set
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+int LAGraph_AllKTruss   // compute all k-trusses of a graph
+(
+    // outputs
+    GrB_Matrix *Cset,   // size n, output k-truss subgraphs
+    int64_t *kmax,      // smallest k where k-truss is empty
+    int64_t *ntris,     // size max(n,4), ntris [k] is #triangles in k-truss
+    int64_t *nedges,    // size max(n,4), nedges [k] is #edges in k-truss
+    int64_t *nstepss,   // size max(n,4), nstepss [k] is #steps for k-truss
+    // input
+    LAGraph_Graph G,    // input graph
+    char *msg
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+int LAGraph_KTruss      // compute the k-truss of a graph
+(
+    // outputs:
+    GrB_Matrix *C,      // output k-truss subgraph, C
+    // inputs:
+    LAGraph_Graph G,    // input graph
+    uint32_t k,         // find the k-truss, where k >= 3
+    char *msg
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+int LAGraph_cc_lacc (
+    GrB_Vector *result,
+    GrB_Matrix A,
+    bool sanitize,
+    char *msg
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+GrB_Info LAGraph_BF_basic
+(
+    GrB_Vector *pd_output,
+    const GrB_Matrix A,
+    const GrB_Index s
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+GrB_Info LAGraph_BF_basic_pushpull
+(
+    GrB_Vector *pd_output,
+    const GrB_Matrix A,
+    const GrB_Matrix AT,
+    const GrB_Index s
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+GrB_Info LAGraph_BF_basic_mxv
+(
+    GrB_Vector *pd_output,      //the pointer to the vector of distance
+    const GrB_Matrix AT,        //transposed adjacency matrix for the graph
+    const GrB_Index s           //given index of the source
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+GrB_Info LAGraph_BF_full
+(
+    GrB_Vector *pd_output,
+    GrB_Vector *ppi_output,
+    GrB_Vector *ph_output,
+    const GrB_Matrix A,
+    const GrB_Index s
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+GrB_Info LAGraph_BF_full1
+(
+    GrB_Vector *pd_output,
+    GrB_Vector *ppi_output,
+    GrB_Vector *ph_output,
+    const GrB_Matrix A,
+    const GrB_Index s
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+GrB_Info LAGraph_BF_full1a
+(
+    GrB_Vector *pd_output,
+    GrB_Vector *ppi_output,
+    GrB_Vector *ph_output,
+    const GrB_Matrix A,
+    const GrB_Index s
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+GrB_Info LAGraph_BF_full2
+(
+    GrB_Vector *pd_output,      //the pointer to the vector of distance
+    GrB_Vector *ppi_output,     //the pointer to the vector of parent
+    GrB_Vector *ph_output,      //the pointer to the vector of hops
+    const GrB_Matrix A,         //matrix for the graph
+    const GrB_Index s           //given index of the source
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+GrB_Info LAGraph_BF_full_mxv
+(
+    GrB_Vector *pd_output,
+    GrB_Vector *ppi_output,
+    GrB_Vector *ph_output,
+    const GrB_Matrix AT,
+    const GrB_Index s
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+GrB_Info LAGraph_BF_pure_c
+(
+    int32_t **pd,
+
+    int64_t **ppi,
+
+    const int64_t s,
+    const int64_t n,
+    const int64_t nz,
+    const int64_t *I,
+    const int64_t *J,
+    const int32_t *W
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+GrB_Info LAGraph_BF_pure_c_double
+(
+    double **pd,
+
+    int64_t **ppi,
+
+    const int64_t s,
+    const int64_t n,
+    const int64_t nz,
+    const int64_t *I,
+    const int64_t *J,
+    const double  *W
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+int LAGraph_cdlp
+(
+    GrB_Vector *CDLP_handle,
+    const GrB_Matrix A,
+    bool symmetric,
+    bool sanitize,
+    int itermax,
+    double *t,
+    char *msg
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+GrB_Info LAGraph_dnn
+(
+    // output
+    GrB_Matrix *Yhandle,
+    // input: not modified
+    GrB_Matrix *W,
+    GrB_Matrix *Bias,
+    int nlayers,
+    GrB_Matrix Y0
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+GrB_Info LAGraph_FW
+(
+    const GrB_Matrix G,
+    GrB_Matrix *D,
+    GrB_Type   *D_type
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+int LAGraph_lcc            // compute lcc for all nodes in A
+(
+    GrB_Vector *LCC_handle,     // output vector
+    const GrB_Matrix A,         // input matrix
+    bool symmetric,             // if true, the matrix is symmetric
+    bool sanitize,              // if true, ensure A is binary
+    double t [2],               // t [0] = sanitize time, t [1] = lcc time,
+                                // in seconds
+    char *msg
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+int LAGraph_msf
+(
+    GrB_Matrix *result, // output: an unsymmetrical matrix, the spanning forest
+    GrB_Matrix A,       // input matrix
+    bool sanitize,      // if true, ensure A is symmetric
+    char *msg
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+int LAGraph_scc (
+    GrB_Vector *result,     // output: array of component identifiers
+    GrB_Matrix A,           // input matrix
+    char *msg
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
+(
+    // outputs:
+    GrB_Vector *centrality,     // centrality(i): triangle centrality of i
+    uint64_t *ntriangles,       // # of triangles in the graph
+    // inputs:
+    int method,                 // 0, 1, 2, or 3
+    LAGraph_Graph G,            // input graph
+    char *msg
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+int LAGraph_MaximalIndependentSet       // maximal independent set
+(
+    // outputs:
+    GrB_Vector *mis,            // mis(i) = true if i is in the set
+    // inputs:
+    LAGraph_Graph G,            // input graph
+    uint64_t seed,              // random number seed
+    GrB_Vector ignore_node,     // if NULL, no nodes are ignored.  Otherwise
+                                // ignore_node(i) = true if node i is to be
+                                // ignored, and not treated as a candidate
+                                // added to maximal independent set.
+    char *msg
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
+(
+    // output
+    GrB_Vector *component,  // output: array of component identifiers
+    // inputs
+    LAGraph_Graph G,        // input graph, modified then restored
+    char *msg
+) ;
+\end{verbatim}
+
+
+
+
+\begin{verbatim}
+typedef enum
+{
+    LAGraph_unknown_kind = -1,  // unknown kind
+    LAGraph_matrix_kind = 0,    // a serialized GrB_Matrix
+    LAGraph_vector_kind = 1,    // a serialized GrB_Vector (SS:GrB only)
+    LAGraph_text_kind = 2,      // text (char *), possibly compressed
+}
+LAGraph_Contents_kind ;
+\end{verbatim}
+
+
+
+

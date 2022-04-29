@@ -33,10 +33,10 @@
 // See also the LAGraph_Version utility method, which returns these values.
 // These definitions must match the same definitions in LAGraph/CMakeLists.txt.
 // FIXME: use config to create include/LAGraph.h from LAGraph/CMakeLists.txt
-#define LAGRAPH_DATE "Apr 13, 2022"
+#define LAGRAPH_DATE "Apr 29, 2022"
 #define LAGRAPH_VERSION_MAJOR 0
 #define LAGRAPH_VERSION_MINOR 9
-#define LAGRAPH_VERSION_UPDATE 18
+#define LAGRAPH_VERSION_UPDATE 19
 
 //==============================================================================
 // include files and helper macros
@@ -616,7 +616,10 @@ typedef struct LAGraph_Graph_struct *LAGraph_Graph ;
 // created.  FIXME: document calling GrB_init before LAGr*_Init (is OK).
 
 LAGRAPH_PUBLIC
-int LAGraph_Init (char *msg) ;
+int LAGraph_Init
+(
+    char *msg
+) ;
 
 // TODO: augment the v2.1 C API, Table 3.9 to include these
 
@@ -715,7 +718,10 @@ int LAGraph_Version
 // may be used.
 
 LAGRAPH_PUBLIC
-int LAGraph_Finalize (char *msg) ;
+int LAGraph_Finalize
+(
+    char *msg
+) ;
 
 //------------------------------------------------------------------------------
 // LAGraph_New: create a new graph
