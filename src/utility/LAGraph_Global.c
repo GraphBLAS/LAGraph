@@ -13,10 +13,29 @@
 
 #include "LG_internal.h"
 
-// These are modified by LAGraph_Init and LAGr_Init.
+//------------------------------------------------------------------------------
+// memory management
+//------------------------------------------------------------------------------
 
+// These are modified by LAGraph_Init and LAGr_Init:
 void * (* LAGraph_Malloc_function  ) (size_t)         = malloc ;
 void * (* LAGraph_Calloc_function  ) (size_t, size_t) = calloc ;
 void * (* LAGraph_Realloc_function ) (void *, size_t) = realloc ;
 void   (* LAGraph_Free_function    ) (void *)         = free ;
+
+//------------------------------------------------------------------------------
+// threading control
+//------------------------------------------------------------------------------
+
+// These are initialized by LAGraph_Init and LAGr_Init, modified by
+// LAGraph_SetNumThreads and accessed by LAGraph_GetNumThreads.
+// They are not intendend to be directly access by the end user.
+
+int LG_nthreads_hi ;    // # of threads to use at the higher level of a nested
+                        // parallel region in LAGraph.  Default: 1.
+
+int LG_nthreads_lo ;    // # of threads to use at the lower level of a nested
+                        // parallel region, or to use inside GraphBLAS.
+                        // Default: the value obtained by omp_get_max_threads
+                        // if OpenMP is in use, or 1 otherwise.
 

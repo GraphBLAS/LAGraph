@@ -23,6 +23,7 @@ char msg [LAGRAPH_MSG_LEN] ;
 void test_sort1 (void)
 {
     OK (LAGraph_Init (msg)) ;
+    OK (LAGraph_SetNumThreads (1, 4, msg)) ;
 
     for (int trial = 0 ; trial <= 1 ; trial++)
     {
@@ -37,7 +38,7 @@ void test_sort1 (void)
             A0 [k] = (int64_t) LG_Random15 (&seed) ;
         }
 
-        OK (LAGraph_Sort1 (A0, n, 4, msg)) ;
+        OK (LAGraph_Sort1 (A0, n, msg)) ;
 
         for (int k = 1 ; k < n ; k++)
         {
@@ -49,7 +50,7 @@ void test_sort1 (void)
             A0 [k] = (int64_t) (LG_Random15 (&seed) % 4) ;
         }
 
-        OK (LAGraph_Sort1 (A0, n, 4, msg)) ;
+        OK (LAGraph_Sort1 (A0, n, msg)) ;
 
         for (int k = 1 ; k < n ; k++)
         {
@@ -69,6 +70,7 @@ void test_sort1 (void)
 void test_sort2 (void)
 {
     OK (LAGraph_Init (msg)) ;
+    OK (LAGraph_SetNumThreads (1, 4, msg)) ;
 
     int64_t n = 256 * 1024 ;
 
@@ -83,7 +85,7 @@ void test_sort2 (void)
         A1 [k] = (int64_t) LG_Random60 (&seed) ;
     }
 
-    OK (LAGraph_Sort2 (A0, A1, n, 4, msg)) ;
+    OK (LAGraph_Sort2 (A0, A1, n, msg)) ;
 
     for (int k = 1 ; k < n ; k++)
     {
@@ -97,7 +99,7 @@ void test_sort2 (void)
         A1 [k] = (int64_t) (LG_Random15 (&seed) % 4) ;
     }
 
-    OK (LAGraph_Sort2 (A0, A1, n, 4, msg)) ;
+    OK (LAGraph_Sort2 (A0, A1, n, msg)) ;
 
     for (int k = 1 ; k < n ; k++)
     {
@@ -119,6 +121,7 @@ void test_sort2 (void)
 void test_sort1_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
+    OK (LAGraph_SetNumThreads (1, 4, msg)) ;
 
     for (int trial = 0 ; trial <= 1 ; trial++)
     {
@@ -133,7 +136,7 @@ void test_sort1_brutal (void)
             A0 [k] = (int64_t) LG_Random15 (&seed) ;
         }
 
-        LG_BRUTAL (LAGraph_Sort1 (A0, n, 4, msg)) ;
+        LG_BRUTAL (LAGraph_Sort1 (A0, n, msg)) ;
 
         for (int k = 1 ; k < n ; k++)
         {
@@ -145,7 +148,7 @@ void test_sort1_brutal (void)
             A0 [k] = (int64_t) (LG_Random15 (&seed) % 4) ;
         }
 
-        LG_BRUTAL (LAGraph_Sort1 (A0, n, 4, msg)) ;
+        LG_BRUTAL (LAGraph_Sort1 (A0, n, msg)) ;
 
         for (int k = 1 ; k < n ; k++)
         {
@@ -167,6 +170,7 @@ void test_sort1_brutal (void)
 void test_sort2_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
+    OK (LAGraph_SetNumThreads (1, 4, msg)) ;
 
     int64_t n = 256 * 1024 ;
 
@@ -181,7 +185,7 @@ void test_sort2_brutal (void)
         A1 [k] = (int64_t) LG_Random60 (&seed) ;
     }
 
-    LG_BRUTAL (LAGraph_Sort2 (A0, A1, n, 4, msg)) ;
+    LG_BRUTAL (LAGraph_Sort2 (A0, A1, n, msg)) ;
 
     for (int k = 1 ; k < n ; k++)
     {
@@ -195,7 +199,7 @@ void test_sort2_brutal (void)
         A1 [k] = (int64_t) (LG_Random15 (&seed) % 4) ;
     }
 
-    LG_BRUTAL (LAGraph_Sort2 (A0, A1, n, 4, msg)) ;
+    LG_BRUTAL (LAGraph_Sort2 (A0, A1, n, msg)) ;
 
     for (int k = 1 ; k < n ; k++)
     {

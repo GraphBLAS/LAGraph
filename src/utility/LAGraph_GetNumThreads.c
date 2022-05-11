@@ -18,38 +18,25 @@
 int LAGraph_GetNumThreads
 (
     // output:
-    int *nthreads,      // # of threads to use
+    int *nthreads_hi,
+    int *nthreads_lo,
     char *msg
 )
 {
 
-   //---------------------------------------------------------------------------
-   // check inputs
-   //---------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    // check inputs
+    //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    LG_ASSERT (nthreads != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (nthreads_hi != NULL && nthreads_lo != NULL, GrB_NULL_POINTER) ;
 
-   //---------------------------------------------------------------------------
-   // get number of threads
-   //---------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    // get number of threads
+    //--------------------------------------------------------------------------
 
-    #if LAGRAPH_SUITESPARSE
-    {
-        // SuiteSparse:GraphBLAS: get # of threads from global setting
-        GRB_TRY (GxB_get (GxB_NTHREADS, nthreads)) ;
-    }
-    #elif defined ( _OPENMP )
-    {
-        // get # of threads from OpenMP global setting
-        (*nthreads) = omp_get_max_threads ( ) ;
-    }
-    #else
-    {
-        // single-threaded if not using SuiteSparse:GraphBLAS or OpenMP
-        (*nthreads) = 1 ;
-    }
-    #endif
+    (*nthreads_hi) = LG_nthreads_hi ;
+    (*nthreads_lo) = LG_nthreads_lo ;
     return (GrB_SUCCESS) ;
 }
 

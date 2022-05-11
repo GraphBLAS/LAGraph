@@ -75,8 +75,9 @@ int main (int argc, char **argv)
 
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;
-    int nthreads_max ;
-    LAGRAPH_TRY (LAGraph_GetNumThreads (&nthreads_max, NULL)) ;
+    int nthreads_max, nthreads_hi, nthreads_lo ;
+    LAGRAPH_TRY (LAGraph_GetNumThreads (&nthreads_hi, &nthreads_lo, msg)) ;
+    nthreads_max = nthreads_hi * nthreads_lo ;
     if (Nthreads [1] == 0)
     {
         // create thread list automatically
@@ -151,7 +152,7 @@ int main (int argc, char **argv)
     {
         int nthreads = Nthreads [trial] ;
         if (nthreads > nthreads_max) continue ;
-        LAGRAPH_TRY (LAGraph_SetNumThreads (nthreads, NULL)) ;
+        LAGRAPH_TRY (LAGraph_SetNumThreads (1, nthreads, NULL)) ;
         double ttt = 0 ;
         int ntrials = NTRIALS ;
         for (int k = 0 ; k < ntrials ; k++)
@@ -185,7 +186,7 @@ int main (int argc, char **argv)
     {
         int nthreads = Nthreads [trial] ;
         if (nthreads > nthreads_max) continue ;
-        LAGRAPH_TRY (LAGraph_SetNumThreads (nthreads, NULL)) ;
+        LAGRAPH_TRY (LAGraph_SetNumThreads (1, nthreads, NULL)) ;
         double ttt = 0 ;
         int ntrials = NTRIALS ;
         for (int k = 0 ; k < ntrials ; k++)
@@ -220,7 +221,7 @@ int main (int argc, char **argv)
     {
         int nthreads = Nthreads [trial] ;
         if (nthreads > nthreads_max) continue ;
-        LAGRAPH_TRY (LAGraph_SetNumThreads (nthreads, NULL)) ;
+        LAGRAPH_TRY (LAGraph_SetNumThreads (1, nthreads, NULL)) ;
         double ttt = 0 ;
         int ntrials = NTRIALS ;
         for (int k = 0 ; k < ntrials ; k++)
@@ -255,7 +256,7 @@ int main (int argc, char **argv)
     {
         int nthreads = Nthreads [trial] ;
         if (nthreads > nthreads_max) continue ;
-        LAGRAPH_TRY (LAGraph_SetNumThreads (nthreads, NULL)) ;
+        LAGRAPH_TRY (LAGraph_SetNumThreads (1, nthreads, NULL)) ;
         double ttt = 0 ;
         int ntrials = 1 /* NTRIALS */ ;
         for (int k = 0 ; k < ntrials ; k++)
@@ -290,7 +291,7 @@ int main (int argc, char **argv)
     {
         int nthreads = Nthreads [trial] ;
         if (nthreads > nthreads_max) continue ;
-        LAGRAPH_TRY (LAGraph_SetNumThreads (nthreads, NULL)) ;
+        LAGRAPH_TRY (LAGraph_SetNumThreads (1, nthreads, NULL)) ;
         double ttt = 0 ;
         int ntrials = 1 /* NTRIALS */ ;
         for (int k = 0 ; k < ntrials ; k++)

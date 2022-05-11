@@ -146,6 +146,24 @@ int LAGr_Init
     LAGraph_Free_function    = user_free_function ;
 
     //--------------------------------------------------------------------------
+    // set # of LAGraph threads
+    //--------------------------------------------------------------------------
+
+    LG_nthreads_hi = 1 ;                // for LAGraph itself, if nested
+                                        // regions call GraphBLAS
+    #ifdef _OPENMP
+    LG_nthreads_lo = omp_get_max_threads ( ) ; // for lower-level parallelism
+    #else
+    LG_nthreads_lo = 1 ;
+    #endif
+
+    #if LAGRAPH_SUITESPARSE
+    {
+        GRB_TRY (GxB_set (GxB_NTHREADS, LG_nthreads_lo)) ;
+    }
+    #endif
+
+    //--------------------------------------------------------------------------
     // create global objects
     //--------------------------------------------------------------------------
 

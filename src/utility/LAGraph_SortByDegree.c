@@ -96,8 +96,7 @@ int LAGraph_SortByDegree
     GRB_TRY (GrB_Vector_size (&n, Degree)) ;
 
     #define CHUNK (64*1024)
-    int nthreads ;
-    LG_TRY (LAGraph_GetNumThreads (&nthreads, msg)) ;
+    int nthreads = LG_nthreads_hi * LG_nthreads_lo ;
     nthreads = LAGRAPH_MIN (nthreads, n/CHUNK) ;
     nthreads = LAGRAPH_MAX (nthreads, 1) ;
 
@@ -151,7 +150,7 @@ int LAGraph_SortByDegree
     // sort by degrees, with ties by node id
     //--------------------------------------------------------------------------
 
-    LG_TRY (LAGraph_Sort2 (D, P, n, nthreads, msg)) ;
+    LG_TRY (LAGraph_Sort2 (D, P, n, msg)) ;
 
     //--------------------------------------------------------------------------
     // free workspace and return result

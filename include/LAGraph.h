@@ -33,10 +33,10 @@
 // See also the LAGraph_Version utility method, which returns these values.
 // These definitions must match the same definitions in LAGraph/CMakeLists.txt.
 // FIXME: use config to create include/LAGraph.h from LAGraph/CMakeLists.txt
-#define LAGRAPH_DATE "Apr 29, 2022"
+#define LAGRAPH_DATE "May 11, 2022"
 #define LAGRAPH_VERSION_MAJOR 0
 #define LAGRAPH_VERSION_MINOR 9
-#define LAGRAPH_VERSION_UPDATE 19
+#define LAGRAPH_VERSION_UPDATE 20
 
 //==============================================================================
 // include files and helper macros
@@ -545,11 +545,13 @@ struct LAGraph_Graph_struct
 
     GrB_Matrix AT ;         // AT = A', the transpose of A, with the same type.
 
+    // FIXME: out_degree
     GrB_Vector row_degree ;  // a GrB_INT64 vector of length m, if A is m-by-n.
            // where row_degree(i) is the number of entries in A(i,:).  If
            // row_degree is sparse and the entry row_degree(i) is not present,
            // then it is assumed to be zero.
 
+    // FIXME: in_degree
     GrB_Vector col_degree ;  // a GrB_INT64 vector of length n, if A is m-by-n.
             // where col_degree(j) is the number of entries in A(:,j).  If
             // col_degree is sparse and the entry col_degree(j) is not present,
@@ -566,6 +568,7 @@ struct LAGraph_Graph_struct
             // In that case, this scalar cached property can be set to true.
             // By default, this cached property is set to LAGRAPH_UNKNOWN.
 
+    // FIXME: rename nself_edges
     int64_t ndiag ; // # of entries on the diagonal of A, or LAGRAPH_UNKNOWN if
             // unknown.  For the adjacency matrix of a directed or undirected
             // graph, this is the number of self-edges in the graph.
@@ -859,8 +862,6 @@ int LAGraph_Cached_ColDegree
 // LAGraph_Cached_NDiag: determine G->ndiag
 //------------------------------------------------------------------------------
 
-// FIXME: start here May 11, 2022
-
 // LAGraph_Cached_NDiag computes G->ndiag, the number of diagonal entries
 // that appear in the G->A matrix.  For an undirected or directed graph with an
 // adjacency matrix G->A, these are the number of self-edges in G.  No work is
@@ -870,7 +871,7 @@ int LAGraph_Cached_ColDegree
 // incidence matrix, or a hypergraph, ...)?
 
 LAGRAPH_PUBLIC
-int LAGraph_Cached_NDiag
+int LAGraph_Cached_NDiag        // FIXME: LAGraph_Cached_NSelfEdges
 (
     // input/output:
     LAGraph_Graph G,    // graph to compute G->ndiag
@@ -913,8 +914,12 @@ int LAGraph_Cached_EMax
 // properties are cleared or set to LAGRAPH_UNKNOWN.  G->ndiag is set to zero,
 // and G->is_symmetric_structure is left unchanged.
 
+// FIXME: should this be "delete self edges"?  If G->A is an incidence matrix,
+// or a hypergraph, then this deletes columns (or rows) of A with just a single
+// entry.  Bipartite graphs: no effect.
+
 LAGRAPH_PUBLIC
-int LAGraph_DeleteDiag
+int LAGraph_DeleteDiag  // FIXME: LAGraph_DeleteSelfEdges
 (
     // input/output:
     LAGraph_Graph G,    // diagonal entries removed, most cached properties
@@ -942,15 +947,15 @@ int LAGraph_CheckGraph
 //------------------------------------------------------------------------------
 
 // LAGraph_GetNumThreads determines the current number of OpenMP threads that
-// can be used.  This is provided by SuiteSparse:GraphBLAS via a GxB extension,
-// or by omp_get_max_threads() otherwise.  If OpenMP is not in use, then 1 is
-// returned.
+// can be used.
 
 LAGRAPH_PUBLIC
 int LAGraph_GetNumThreads
 (
     // output:
-    int *nthreads,      // # of threads to use
+    int *nthreads_hi,   // for outer region for nested parallelism
+    int *nthreads_lo,   // for inner region of nested parallelism, or for the
+                        // underlying GraphBLAS library
     char *msg
 ) ;
 
@@ -959,15 +964,14 @@ int LAGraph_GetNumThreads
 //------------------------------------------------------------------------------
 
 // LAGraph_SetNumThreads sets the current number of OpenMP threads that
-// can be used.  This is provided by SuiteSparse:GraphBLAS via a GxB extension,
-// or by omp_set_max_threads() otherwise.  If OpenMP is not in use, then this
-// function silently returns with no error message.
+// can be used.
 
 LAGRAPH_PUBLIC
 int LAGraph_SetNumThreads
 (
     // input:
-    int nthreads,       // # of threads to use
+    int nthreads_hi,
+    int nthreads_lo,
     char *msg
 ) ;
 
@@ -1134,6 +1138,8 @@ int LAGraph_Toc
  * column-major order.  This rule is follwed by LAGraph_MMWrite.  However,
  * LAGraph_MMRead can read the entries in any order.
  *
+ * FIXME FUTURE: add support for user-defined types.
+ *
  * @param[out]    A     handle of the matrix to create
  * @param[in]     f     handle to an open file to read from
  * @param[in,out] msg   any error messages
@@ -1163,6 +1169,8 @@ int LAGraph_MMRead
 // MatrixMarket header line always appears, followed by the second line
 // containing the GraphBLAS type:
 //      %%GraphBLAS type <entrytype>
+
+// FIXME FUTURE: add support for user-defined types.
 
 LAGRAPH_PUBLIC
 int LAGraph_MMWrite
@@ -1351,6 +1359,8 @@ int LAGraph_KindName
 // for an example of how to permute G->A after calling this function.  The
 // output &P must be freed by LAGraph_Free.
 
+// FIXME: what if the graph is bipartite, incidence, hypergraph, ... ?
+
 LAGRAPH_PUBLIC
 int LAGraph_SortByDegree
 (
@@ -1370,6 +1380,8 @@ int LAGraph_SortByDegree
 // LAGraph_SampleDegree computes an estimate of the median and mean of the row
 // or column degree, by randomly sampling the G->row_degree or G->col_degree
 // vector.
+
+// FIXME: what if the graph is bipartite, incidence, hypergraph, ... ?
 
 LAGRAPH_PUBLIC
 int LAGraph_SampleDegree
@@ -1466,7 +1478,8 @@ int LAGraph_Matrix_IsEqual_op
  * @param[out]   result   Set to true on return is vectors are "equal"
  * @param[in]    A        First vector to compare
  * @param[in]    B        Second vector to compare
- * @param[out]   msg      If an error code is returned, this may hold an error msg.
+ * @param[out]   msg      If an error code is returned,
+ *                        this may hold an error msg.
  *
  * @retval GrB_SUCCESS          if completed successfully (equal or not)
  * @retval GrB_NULL_POINTER     A, result or type is NULL
@@ -1497,7 +1510,8 @@ int LAGraph_Vector_IsEqual
  * @param[in]    A        First vector to compare
  * @param[in]    B        Second vector to compare
  * @param[in]    op       Binary operator to use for the comparisons
- * @param[out]   msg      If an error code is returned, this may hold an error msg.
+ * @param[out]   msg      If an error code is returned,
+ *                        this may hold an error msg.
  *
  * @retval GrB_SUCCESS          if completed successfully (equal or not)
  * @retval GrB_NULL_POINTER     result or op is NULL
@@ -1567,7 +1581,6 @@ int LAGraph_Sort1
     int64_t *A_0,       // size n array
     // input:
     const int64_t n,
-    int nthreads,       // # of threads to use
     char *msg
 ) ;
 
@@ -1588,7 +1601,6 @@ int LAGraph_Sort2
     int64_t *A_1,       // size n array
     // input:
     const int64_t n,
-    int nthreads,       // # of threads to use
     char *msg
 ) ;
 
@@ -1611,7 +1623,6 @@ int LAGraph_Sort3
     int64_t *A_2,       // size n array
     // input:
     const int64_t n,
-    int nthreads,       // # of threads to use
     char *msg
 ) ;
 

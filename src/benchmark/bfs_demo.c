@@ -54,8 +54,9 @@ int main (int argc, char **argv)
 
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;
-    int nthreads_max ;
-    LAGRAPH_TRY (LAGraph_GetNumThreads (&nthreads_max, NULL)) ;
+    int nthreads_max, nthreads_hi, nthreads_lo ;
+    LAGRAPH_TRY (LAGraph_GetNumThreads (&nthreads_hi, &nthreads_lo, msg)) ;
+    nthreads_max = nthreads_hi * nthreads_lo ;
     printf ("nthreads_max: %d\n", nthreads_max) ;
     if (Nthreads [1] == 0)
     {
@@ -128,7 +129,7 @@ int main (int argc, char **argv)
     {
         int nthreads = Nthreads [tt] ;
         if (nthreads > nthreads_max) continue ;
-        LAGRAPH_TRY (LAGraph_SetNumThreads (nthreads, msg)) ;
+        LAGRAPH_TRY (LAGraph_SetNumThreads (1, nthreads, msg)) ;
 
         tp [nthreads] = 0 ;
         tl [nthreads] = 0 ;
@@ -285,7 +286,7 @@ int main (int argc, char **argv)
         }
     }
     // restore default
-    LAGRAPH_TRY (LAGraph_SetNumThreads (nthreads_max, msg)) ;
+    LAGRAPH_TRY (LAGraph_SetNumThreads (nthreads_hi, nthreads_lo, msg)) ;
     printf ("\n") ;
 
     //--------------------------------------------------------------------------

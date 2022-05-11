@@ -318,7 +318,6 @@ int LAGraph_Sort1
     int64_t *A_0,       // size n array
     // input:
     const int64_t n,
-    int nthreads,       // # of threads to use
     char *msg
 )
 {
@@ -335,6 +334,7 @@ int LAGraph_Sort1
     // handle small problems with a single thread
     //--------------------------------------------------------------------------
 
+    int nthreads = LG_nthreads_hi * LG_nthreads_lo ; // # of threads to use
     if (nthreads <= 1 || n <= LG_BASECASE)
     {
         // sequential quicksort
