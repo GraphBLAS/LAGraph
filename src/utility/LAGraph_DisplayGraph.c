@@ -81,18 +81,18 @@ int LAGraph_DisplayGraph
         LG_TRY (LAGraph_Matrix_Print (AT, pr2, stdout, msg)) ;
     }
 
-    GrB_Vector row_degree = G->row_degree ;
-    if (row_degree != NULL)
+    GrB_Vector out_degree = G->out_degree ;
+    if (out_degree != NULL)
     {
-        FPRINTF (f, "  row degree: ") ;
-        LG_TRY (LAGraph_Vector_Print (row_degree, pr2, stdout, msg)) ;
+        FPRINTF (f, "  out degree: ") ;
+        LG_TRY (LAGraph_Vector_Print (out_degree, pr2, stdout, msg)) ;
     }
 
-    GrB_Vector col_degree = G->col_degree ;
-    if (col_degree != NULL)
+    GrB_Vector in_degree = G->in_degree ;
+    if (in_degree != NULL)
     {
-        FPRINTF (f, "  column degree: ") ;
-        LG_TRY (LAGraph_Vector_Print (col_degree, pr2, stdout, msg)) ;
+        FPRINTF (f, "  in degree: ") ;
+        LG_TRY (LAGraph_Vector_Print (in_degree, pr2, stdout, msg)) ;
     }
 
     return (GrB_SUCCESS) ;

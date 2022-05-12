@@ -33,10 +33,10 @@
 // See also the LAGraph_Version utility method, which returns these values.
 // These definitions must match the same definitions in LAGraph/CMakeLists.txt.
 // FIXME: use config to create include/LAGraph.h from LAGraph/CMakeLists.txt
-#define LAGRAPH_DATE "May 11, 2022"
+#define LAGRAPH_DATE "May 12, 2022"
 #define LAGRAPH_VERSION_MAJOR 0
 #define LAGRAPH_VERSION_MINOR 9
-#define LAGRAPH_VERSION_UPDATE 20
+#define LAGRAPH_VERSION_UPDATE 21
 
 //==============================================================================
 // include files and helper macros
@@ -194,9 +194,9 @@
 //      has an incorrect format that cannot be parsed.
 
 //  LAGRAPH_NOT_CACHED:  some methods require one or more cached properties to
-//      be computed before calling them (AT, row_degree, or col_degree.  Use
-//      LAGraph_Cached_AT, LAGraph_Cached_RowDegree, and/or
-//      LAGraph_Cached_ColDegree to compute them.
+//      be computed before calling them (AT, out_degree, or in_degree.  Use
+//      LAGraph_Cached_AT, LAGraph_Cached_OutDegree, and/or
+//      LAGraph_Cached_InDegree to compute them.
 
 //  LAGRAPH_NO_SELF_EDGES_ALLOWED:  some methods requires that the graph have
 //      no self edges, which correspond to the entries on the diagonal of the
@@ -210,7 +210,7 @@
 
 //  LAGRAPH_CACHE_NOT_NEEDED: this is a warning, not an error.  It is returned
 //      by LAGraph_Cached_* methods when asked to compute cached properties
-//      that are not needed.  These include G->AT and G->col_degree for an
+//      that are not needed.  These include G->AT and G->in_degree for an
 //      undirected graph.
 
 #define LAGRAPH_INVALID_GRAPH                   (-1000)
@@ -501,8 +501,8 @@ LAGraph_State ;
 
 // (2) cached properties of the graph, which can be recreated any time:
 //      AT          AT = A'
-//      row_degree  row_degree(i) = # of entries in A(i,:)
-//      col_degree  col_degree(j) = # of entries in A(:,j)
+//      out_degree  out_degree(i) = # of entries in A(i,:)
+//      in_degree   in_degree(j) = # of entries in A(:,j)
 //      is_symmetric_structure: true if the structure of A is symmetric
 //      ndiag       the number of entries on the diagonal of A
 //      emin        minimum edge weight
@@ -545,19 +545,17 @@ struct LAGraph_Graph_struct
 
     GrB_Matrix AT ;         // AT = A', the transpose of A, with the same type.
 
-    // FIXME: out_degree
-    GrB_Vector row_degree ;  // a GrB_INT64 vector of length m, if A is m-by-n.
-           // where row_degree(i) is the number of entries in A(i,:).  If
-           // row_degree is sparse and the entry row_degree(i) is not present,
+    GrB_Vector out_degree ;  // a GrB_INT64 vector of length m, if A is m-by-n.
+           // where out_degree(i) is the number of entries in A(i,:).  If
+           // out_degree is sparse and the entry out_degree(i) is not present,
            // then it is assumed to be zero.
 
-    // FIXME: in_degree
-    GrB_Vector col_degree ;  // a GrB_INT64 vector of length n, if A is m-by-n.
-            // where col_degree(j) is the number of entries in A(:,j).  If
-            // col_degree is sparse and the entry col_degree(j) is not present,
+    GrB_Vector in_degree ;  // a GrB_INT64 vector of length n, if A is m-by-n.
+            // where in_degree(j) is the number of entries in A(:,j).  If
+            // in_degree is sparse and the entry in_degree(j) is not present,
             // then it is assumed to be zero.  If A is known to have a
             // symmetric structure, the convention is that the degree is held in
-            // row_degree, and col_degree is left as NULL.
+            // out_degree, and in_degree is left as NULL.
 
     // If G is held as an incidence matrix, then G->A might be rectangular,
     // in the future, but the graph G may have a symmetric structure anyway.
@@ -731,7 +729,7 @@ int LAGraph_Finalize
 //------------------------------------------------------------------------------
 
 // LAGraph_New creates a new graph G.  The cached properties G->AT,
-// G->row_degree, and G->col_degree are set to NULL, and scalar
+// G->out_degree, and G->in_degree are set to NULL, and scalar
 // cached properties are set to LAGRAPH_UNKNOWN.
 
 LAGRAPH_PUBLIC
@@ -758,7 +756,7 @@ int LAGraph_New
 //------------------------------------------------------------------------------
 
 // LAGraph_Delete frees a graph G, including its adjacency matrix G->A and the
-// cached properties G->AT, G->row_degree, and G->col_degree.
+// cached properties G->AT, G->out_degree, and G->in_degree.
 
 LAGRAPH_PUBLIC
 int LAGraph_Delete
@@ -778,7 +776,7 @@ int LAGraph_Delete
 
 // LAGraph_DeleteCached frees all cached properies of a graph G.  The graph
 // is still valid.  This method should be used if G->A changes, since such
-// changes will normally invalidate G->AT, G->row_degree, and/or G->col_degree.
+// changes will normally invalidate G->AT, G->out_degree, and/or G->in_degree.
 
 LAGRAPH_PUBLIC
 int LAGraph_DeleteCached
@@ -827,34 +825,34 @@ int LAGraph_Cached_IsSymmetricStructure
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Cached_RowDegree: determine G->row_degree
+// LAGraph_Cached_OutDegree: determine G->out_degree
 //------------------------------------------------------------------------------
 
-// LAGraph_Cached_RowDegree computes G->row_degree.  No work is performed if
+// LAGraph_Cached_OutDegree computes G->out_degree.  No work is performed if
 // it already exists in G.
 
 LAGRAPH_PUBLIC
-int LAGraph_Cached_RowDegree
+int LAGraph_Cached_OutDegree
 (
     // input/output:
-    LAGraph_Graph G,    // graph to determine G->row_degree
+    LAGraph_Graph G,    // graph to determine G->out_degree
     char *msg
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Cached_ColDegree: determine G->col_degree
+// LAGraph_Cached_InDegree: determine G->in_degree
 //------------------------------------------------------------------------------
 
-// LAGraph_Cached_ColDegree computes G->col_degree.  No work is performed if it
-// already exists in G.  If G is undirected, G->col_degree is never computed
+// LAGraph_Cached_InDegree computes G->in_degree.  No work is performed if it
+// already exists in G.  If G is undirected, G->in_degree is never computed
 // and remains NULL (the method returns LAGRAPH_CACHE_NOT_NEEDED).  No work is
 // performed if it is already exists in G.
 
 LAGRAPH_PUBLIC
-int LAGraph_Cached_ColDegree
+int LAGraph_Cached_InDegree
 (
     // input/output:
-    LAGraph_Graph G,    // graph to determine G->col_degree
+    LAGraph_Graph G,    // graph to determine G->in_degree
     char *msg
 ) ;
 
@@ -1354,12 +1352,10 @@ int LAGraph_KindName
 // LAGraph_SortByDegree: sort a graph by its row or column degree
 //------------------------------------------------------------------------------
 
-// LAGraph_SortByDegree sorts the nodes of a graph by their row or column
-// degrees.  The graph G->A itself is not changed.  Refer to LAGr_TriangleCount
-// for an example of how to permute G->A after calling this function.  The
-// output &P must be freed by LAGraph_Free.
-
-// FIXME: what if the graph is bipartite, incidence, hypergraph, ... ?
+// LAGraph_SortByDegree sorts the nodes of a graph by their out or in degrees.
+// The graph G->A itself is not changed.  Refer to LAGr_TriangleCount for an
+// example of how to permute G->A after calling this function.  The output &P
+// must be freed by LAGraph_Free.
 
 LAGRAPH_PUBLIC
 int LAGraph_SortByDegree
@@ -1368,7 +1364,7 @@ int LAGraph_SortByDegree
     int64_t **P_handle,     // P is returned as a permutation vector of size n
     // input:
     const LAGraph_Graph G,  // graph of n nodes
-    bool byrow,             // if true, sort G->row_degree, else G->col_degree
+    bool byout,             // if true, sort G->out_degree, else G->in_degree
     bool ascending,         // sort in ascending or descending order
     char *msg
 ) ;
@@ -1377,11 +1373,9 @@ int LAGraph_SortByDegree
 // LAGraph_SampleDegree: sample the degree median and mean
 //------------------------------------------------------------------------------
 
-// LAGraph_SampleDegree computes an estimate of the median and mean of the row
-// or column degree, by randomly sampling the G->row_degree or G->col_degree
+// LAGraph_SampleDegree computes an estimate of the median and mean of the out
+// or in degree, by randomly sampling the G->out_degree or G->in_degree
 // vector.
-
-// FIXME: what if the graph is bipartite, incidence, hypergraph, ... ?
 
 LAGRAPH_PUBLIC
 int LAGraph_SampleDegree
@@ -1391,7 +1385,7 @@ int LAGraph_SampleDegree
     double *sample_median,  // sampled median degree
     // input:
     const LAGraph_Graph G,  // graph of n nodes
-    bool byrow,             // if true, sample G->row_degree, else G->col_degree
+    bool byout,             // if true, sample G->out_degree, else G->in_degree
     int64_t nsamples,       // number of samples
     uint64_t seed,          // random number seed
     char *msg
@@ -1643,7 +1637,7 @@ int LAGraph_Sort3
 // LAGraph_TriangleCount
 //------------------------------------------------------------------------------
 
-// This is a Basic algorithm (G->ndiag, G->row_degree,
+// This is a Basic algorithm (G->ndiag, G->out_degree,
 // G->is_symmetric_structure are computed, if not present).
 
 /*
@@ -1808,7 +1802,7 @@ int LAGr_Betweenness
 // LAGr_PageRank: pagerank
 //------------------------------------------------------------------------------
 
-// This is an Advanced algorithm (G->AT and G->row_degree are required).
+// This is an Advanced algorithm (G->AT and G->out_degree are required).
 
 // LAGr_PageRank computes the standard pagerank of a
 // directed graph G.  Sinks (nodes with no out-going edges) are handled.
@@ -1831,7 +1825,7 @@ int LAGr_PageRank
 // LAGr_PageRankGAP: GAP-style pagerank
 //------------------------------------------------------------------------------
 
-// This is an Advanced algorithm (G->AT and G->row_degree are required).
+// This is an Advanced algorithm (G->AT and G->out_degree are required).
 
 // LAGr_PageRankGAP computes the GAP-style pagerank of a
 // directed graph G.  Sinks (nodes with no out-going edges) are not handled.
@@ -1855,7 +1849,7 @@ int LAGr_PageRankGAP
 // LAGr_TriangleCount: triangle counting
 //------------------------------------------------------------------------------
 
-// This is an Advanced algorithm (G->ndiag, G->row_degree,
+// This is an Advanced algorithm (G->ndiag, G->out_degree,
 // G->is_symmetric_structure are required).
 
 /* Count the triangles in a graph. Advanced API

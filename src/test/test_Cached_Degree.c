@@ -78,8 +78,8 @@ void check_degree
 typedef struct
 {
     const char *name ;
-    const int row_deg [67] ;
-    const int col_deg [67] ;
+    const int out_deg [67] ;
+    const int in_deg [67] ;
 }
 matrix_info ;
 
@@ -245,8 +245,8 @@ void test_Cached_Degree (void)
         // load the matrix as A
         const char *aname = files [k].name ;
         if (strlen (aname) == 0) break;
-        const int *row_deg = files [k].row_deg ;
-        const int *col_deg = files [k].col_deg ;
+        const int *out_deg = files [k].out_deg ;
+        const int *in_deg = files [k].in_deg ;
         TEST_CASE (aname) ;
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
@@ -261,33 +261,33 @@ void test_Cached_Degree (void)
 
         for (int trial = 0 ; trial <= 2 ; trial++)
         {
-            // create the G->row_degree cached property and check it
-            OK (LAGraph_Cached_RowDegree (G, msg)) ;
+            // create the G->out_degree cached property and check it
+            OK (LAGraph_Cached_OutDegree (G, msg)) ;
             GrB_Index n ;
             OK (GrB_Matrix_nrows (&n, G->A)) ;
-            check_degree (G->row_degree, n, row_deg) ;
+            check_degree (G->out_degree, n, out_deg) ;
 
             if (trial == 2)
             {
-                // use G->AT to compute G->col_degree 
+                // use G->AT to compute G->in_degree 
                 OK (LAGraph_DeleteCached (G, msg)) ;
                 OK (LAGraph_Cached_AT (G, msg)) ;
             }
 
-            // create the G->ColDegree cached property and check it
-            OK (LAGraph_Cached_ColDegree (G, msg)) ;
+            // create the G->in_degree cached property and check it
+            OK (LAGraph_Cached_InDegree (G, msg)) ;
             OK (GrB_Matrix_ncols (&n, G->A)) ;
-            check_degree (G->col_degree, n, col_deg) ;
+            check_degree (G->in_degree, n, in_deg) ;
         }
 
         OK (LAGraph_Delete (&G, msg)) ;
     }
 
     // check error handling
-    int status = LAGraph_Cached_RowDegree (NULL, msg) ;
+    int status = LAGraph_Cached_OutDegree (NULL, msg) ;
     printf ("\nstatus: %d, msg: %s\n", status, msg) ;
     TEST_CHECK (status == GrB_NULL_POINTER) ;
-    status = LAGraph_Cached_ColDegree (NULL, msg) ;
+    status = LAGraph_Cached_InDegree (NULL, msg) ;
     printf ("status: %d, msg: %s\n", status, msg) ;
     TEST_CHECK (status == GrB_NULL_POINTER) ;
 
@@ -309,8 +309,8 @@ void test_Cached_Degree_brutal (void)
         // load the matrix as A
         const char *aname = files [k].name ;
         if (strlen (aname) == 0) break;
-        const int *row_deg = files [k].row_deg ;
-        const int *col_deg = files [k].col_deg ;
+        const int *out_deg = files [k].out_deg ;
+        const int *in_deg = files [k].in_deg ;
         TEST_CASE (aname) ;
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
@@ -325,23 +325,23 @@ void test_Cached_Degree_brutal (void)
 
         for (int trial = 0 ; trial <= 2 ; trial++)
         {
-            // create the G->row_degree cached property and check it
-            LG_BRUTAL (LAGraph_Cached_RowDegree (G, msg)) ;
+            // create the G->out_degree cached property and check it
+            LG_BRUTAL (LAGraph_Cached_OutDegree (G, msg)) ;
             GrB_Index n ;
             OK (GrB_Matrix_nrows (&n, G->A)) ;
-            check_degree (G->row_degree, n, row_deg) ;
+            check_degree (G->out_degree, n, out_deg) ;
 
             if (trial == 2)
             {
-                // use G->AT to compute G->col_degree 
+                // use G->AT to compute G->in_degree 
                 OK (LAGraph_DeleteCached (G, msg)) ;
                 OK (LAGraph_Cached_AT (G, msg)) ;
             }
 
-            // create the G->ColDegree cached property and check it
-            LG_BRUTAL (LAGraph_Cached_ColDegree (G, msg)) ;
+            // create the G->in_degree cached property and check it
+            LG_BRUTAL (LAGraph_Cached_InDegree (G, msg)) ;
             OK (GrB_Matrix_ncols (&n, G->A)) ;
-            check_degree (G->col_degree, n, col_deg) ;
+            check_degree (G->in_degree, n, in_deg) ;
         }
 
         OK (LAGraph_Delete (&G, msg)) ;

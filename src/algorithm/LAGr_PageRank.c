@@ -11,7 +11,7 @@
 
 //------------------------------------------------------------------------------
 
-// This is an Advanced algorithm (G->AT and G->row_degree are required).
+// This is an Advanced algorithm (G->AT and G->out_degree are required).
 
 // PageRank (not for the GAP benchmark, but for production use).  Do not use
 // this method for the GAP benchmark.  Use LAGr_PageRankGAP instead.
@@ -21,10 +21,10 @@
 // thus sum(centrality) is not maintained as 1.  This method handles sinks
 // properly, and thus keeps sum(centrality) equal to 1.
 
-// The G->AT and G->row_degree cached properties must be defined for this
+// The G->AT and G->out_degree cached properties must be defined for this
 // method.  If G is undirected or G->A is known to have a symmetric structure,
-// then G->A is used instead of G->AT, however.  G->row_degree must be computed
-// so that it contains no explicit zeros; as done by LAGraph_Cached_RowDegree.
+// then G->A is used instead of G->AT, however.  G->out_degree must be computed
+// so that it contains no explicit zeros; as done by LAGraph_Cached_OutDegree.
 
 #define LG_FREE_WORK                \
 {                                   \
@@ -80,9 +80,9 @@ int LAGr_PageRank
         AT = G->AT ;
         LG_ASSERT_MSG (AT != NULL, LAGRAPH_NOT_CACHED, "G->AT is required") ;
     }
-    GrB_Vector d_out = G->row_degree ;
+    GrB_Vector d_out = G->out_degree ;
     LG_ASSERT_MSG (d_out != NULL,
-        LAGRAPH_NOT_CACHED, "G->row_degree is required") ;
+        LAGRAPH_NOT_CACHED, "G->out_degree is required") ;
 
     //--------------------------------------------------------------------------
     // initializations
@@ -103,8 +103,8 @@ int LAGr_PageRank
     GRB_TRY (GrB_assign (r, NULL, NULL, (float) (1.0 / n), GrB_ALL, n, NULL)) ;
 
     // find all sinks, where sink(i) = true if node i has d_out(i)=0, or with
-    // d_out(i) not present.  LAGraph_Cached_RowDegree computes d_out =
-    // G->row_degree so that it has no explicit zeros, so a structural mask can
+    // d_out(i) not present.  LAGraph_Cached_OutDegree computes d_out =
+    // G->out_degree so that it has no explicit zeros, so a structural mask can
     // be used here.
     GrB_Index nsinks, nvals ;
     GRB_TRY (GrB_Vector_nvals (&nvals, d_out)) ;

@@ -88,8 +88,8 @@ void test_DeleteCached (void)
         // create all cached properties (see test_Cached_* for tests of content)
         int ok_result = (kind == LAGraph_ADJACENCY_UNDIRECTED) ?
             LAGRAPH_CACHE_NOT_NEEDED : GrB_SUCCESS ;
-        OK (LAGraph_Cached_RowDegree (G, msg)) ;
-        int result = LAGraph_Cached_ColDegree (G, msg) ;
+        OK (LAGraph_Cached_OutDegree (G, msg)) ;
+        int result = LAGraph_Cached_InDegree (G, msg) ;
         TEST_CHECK (result == ok_result) ;
         result = LAGraph_Cached_AT (G, msg) ;
         TEST_CHECK (result == ok_result) ;
@@ -101,20 +101,20 @@ void test_DeleteCached (void)
         printf ("  adj matrix: ") ;
         int rr = (LAGraph_Matrix_Print (G->A, LAGraph_SHORT, stdout, msg)) ;
         printf ("result: %d msg: %s\n", rr, msg) ;
-        printf ("  row degree: ") ;
-        OK (LAGraph_Vector_Print (G->row_degree, LAGraph_SHORT, stdout, msg)) ;
+        printf ("  out degree: ") ;
+        OK (LAGraph_Vector_Print (G->out_degree, LAGraph_SHORT, stdout, msg)) ;
         if (kind == LAGraph_ADJACENCY_DIRECTED)
         {
             printf ("  adj transposed: ") ;
             OK (LAGraph_Matrix_Print (G->AT, LAGraph_SHORT, stdout, msg)) ;
-            printf ("  col degree: ") ;
-            OK (LAGraph_Vector_Print (G->col_degree, LAGraph_SHORT, stdout,
+            printf ("  in degree: ") ;
+            OK (LAGraph_Vector_Print (G->in_degree, LAGraph_SHORT, stdout,
                 msg)) ;
         }
         else
         {
             TEST_CHECK (G->AT == NULL) ;
-            TEST_CHECK (G->col_degree == NULL) ;
+            TEST_CHECK (G->in_degree == NULL) ;
         }
 
         for (int trial = 0 ; trial <= 1 ; trial++)
@@ -122,8 +122,8 @@ void test_DeleteCached (void)
             // delete all the cached properties
             OK (LAGraph_DeleteCached (G, msg)) ;
             TEST_CHECK (G->AT == NULL) ;
-            TEST_CHECK (G->row_degree == NULL) ;
-            TEST_CHECK (G->col_degree == NULL) ;
+            TEST_CHECK (G->out_degree == NULL) ;
+            TEST_CHECK (G->in_degree == NULL) ;
         }
 
         OK (LAGraph_Delete (&G, msg)) ;
@@ -161,8 +161,8 @@ void test_del_brutal (void)
         TEST_CHECK (A == NULL) ;
 
         // create all cached properties (see test_Cached_* for tests of content)
-        LG_BRUTAL (LAGraph_Cached_RowDegree (G, msg)) ;
-        LG_BRUTAL (LAGraph_Cached_ColDegree (G, msg)) ;
+        LG_BRUTAL (LAGraph_Cached_OutDegree (G, msg)) ;
+        LG_BRUTAL (LAGraph_Cached_InDegree (G, msg)) ;
         LG_BRUTAL (LAGraph_Cached_AT (G, msg)) ;
         LG_BRUTAL (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
 
@@ -171,8 +171,8 @@ void test_del_brutal (void)
             // delete all the cached properties
             LG_BRUTAL (LAGraph_DeleteCached (G, msg)) ;
             TEST_CHECK (G->AT == NULL) ;
-            TEST_CHECK (G->row_degree == NULL) ;
-            TEST_CHECK (G->col_degree == NULL) ;
+            TEST_CHECK (G->out_degree == NULL) ;
+            TEST_CHECK (G->in_degree == NULL) ;
         }
     
         LG_BRUTAL (LAGraph_Delete (&G, msg)) ;

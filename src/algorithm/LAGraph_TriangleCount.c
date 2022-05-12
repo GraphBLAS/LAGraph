@@ -11,7 +11,7 @@
 
 //------------------------------------------------------------------------------
 
-// This is a Basic algorithm (G->ndiag, G->row_degree, G->is_symmetric_structure
+// This is a Basic algorithm (G->ndiag, G->out_degree, G->is_symmetric_structure
 // are computed, if not present).
 
 #define LG_FREE_ALL ;
@@ -22,7 +22,7 @@
 
 //****************************************************************************
 // Pick the default method with auto presort
-// Compute G->ndiag, and G->row_degree if needed.  Determine if G->A is
+// Compute G->ndiag, and G->out_degree if needed.  Determine if G->A is
 // symmetric, if not known.
 
 int LAGraph_TriangleCount
@@ -30,15 +30,15 @@ int LAGraph_TriangleCount
     // output:
     uint64_t      *ntriangles,   // # of triangles
     // input/output:
-    LAGraph_Graph  G,       // G->ndiag, G->row_degree,
+    LAGraph_Graph  G,       // G->ndiag, G->out_degree,
                             // G->is_symmetric_structure are computed, if not
                             // already present
     char          *msg
 )
 {
-    // find out if graph is symmetric, compute G->row_degree, and G->ndiag
+    // find out if graph is symmetric, compute G->out_degree, and G->ndiag
     LG_TRY (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
-    LG_TRY (LAGraph_Cached_RowDegree (G, msg)) ;
+    LG_TRY (LAGraph_Cached_OutDegree (G, msg)) ;
     LG_TRY (LAGraph_Cached_NDiag (G, msg)) ;
 
     // default method and auto selection of sort

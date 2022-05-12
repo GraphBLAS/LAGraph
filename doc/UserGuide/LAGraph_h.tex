@@ -165,10 +165,10 @@ int LAGraph_Cached_IsSymmetricStructure
 
 
 \begin{verbatim}
-int LAGraph_Cached_RowDegree
+int LAGraph_Cached_OutDegree
 (
     // input/output:
-    LAGraph_Graph G,    // graph to determine G->row_degree
+    LAGraph_Graph G,    // graph to determine G->out_degree
     char *msg
 ) ;
 \end{verbatim}
@@ -177,10 +177,10 @@ int LAGraph_Cached_RowDegree
 
 
 \begin{verbatim}
-int LAGraph_Cached_ColDegree
+int LAGraph_Cached_InDegree
 (
     // input/output:
-    LAGraph_Graph G,    // graph to determine G->col_degree
+    LAGraph_Graph G,    // graph to determine G->in_degree
     char *msg
 ) ;
 \end{verbatim}
@@ -189,7 +189,7 @@ int LAGraph_Cached_ColDegree
 
 
 \begin{verbatim}
-int LAGraph_Cached_NDiag
+int LAGraph_Cached_NDiag        // FIXME: LAGraph_Cached_NSelfEdges
 (
     // input/output:
     LAGraph_Graph G,    // graph to compute G->ndiag
@@ -225,7 +225,7 @@ int LAGraph_Cached_EMax
 
 
 \begin{verbatim}
-int LAGraph_DeleteDiag
+int LAGraph_DeleteDiag  // FIXME: LAGraph_DeleteSelfEdges
 (
     // input/output:
     LAGraph_Graph G,    // diagonal entries removed, most cached properties
@@ -253,7 +253,9 @@ int LAGraph_CheckGraph
 int LAGraph_GetNumThreads
 (
     // output:
-    int *nthreads,      // # of threads to use
+    int *nthreads_hi,   // for outer region for nested parallelism
+    int *nthreads_lo,   // for inner region of nested parallelism, or for the
+                        // underlying GraphBLAS library
     char *msg
 ) ;
 \end{verbatim}
@@ -265,7 +267,8 @@ int LAGraph_GetNumThreads
 int LAGraph_SetNumThreads
 (
     // input:
-    int nthreads,       // # of threads to use
+    int nthreads_hi,
+    int nthreads_lo,
     char *msg
 ) ;
 \end{verbatim}
@@ -468,7 +471,7 @@ int LAGraph_SortByDegree
     int64_t **P_handle,     // P is returned as a permutation vector of size n
     // input:
     const LAGraph_Graph G,  // graph of n nodes
-    bool byrow,             // if true, sort G->row_degree, else G->col_degree
+    bool byout,             // if true, sort G->out_degree, else G->in_degree
     bool ascending,         // sort in ascending or descending order
     char *msg
 ) ;
@@ -485,7 +488,7 @@ int LAGraph_SampleDegree
     double *sample_median,  // sampled median degree
     // input:
     const LAGraph_Graph G,  // graph of n nodes
-    bool byrow,             // if true, sample G->row_degree, else G->col_degree
+    bool byout,             // if true, sample G->out_degree, else G->in_degree
     int64_t nsamples,       // number of samples
     uint64_t seed,          // random number seed
     char *msg
@@ -608,7 +611,6 @@ int LAGraph_Sort1
     int64_t *A_0,       // size n array
     // input:
     const int64_t n,
-    int nthreads,       // # of threads to use
     char *msg
 ) ;
 \end{verbatim}
@@ -624,7 +626,6 @@ int LAGraph_Sort2
     int64_t *A_1,       // size n array
     // input:
     const int64_t n,
-    int nthreads,       // # of threads to use
     char *msg
 ) ;
 \end{verbatim}
@@ -641,7 +642,6 @@ int LAGraph_Sort3
     int64_t *A_2,       // size n array
     // input:
     const int64_t n,
-    int nthreads,       // # of threads to use
     char *msg
 ) ;
 \end{verbatim}

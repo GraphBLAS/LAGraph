@@ -103,10 +103,10 @@ void test_CheckGraph (void)
         OK (LAGraph_CheckGraph (G, msg)) ;
         TEST_CHECK (result == ok_result) ;
 
-        OK (LAGraph_Cached_RowDegree (G, msg)) ;
+        OK (LAGraph_Cached_OutDegree (G, msg)) ;
         OK (LAGraph_CheckGraph (G, msg)) ;
 
-        result = LAGraph_Cached_ColDegree (G, msg) ;
+        result = LAGraph_Cached_InDegree (G, msg) ;
         TEST_CHECK (result == ok_result) ;
         OK (LAGraph_CheckGraph (G, msg)) ;
 
@@ -186,29 +186,29 @@ void test_CheckGraph_failures (void)
 
     G->AT = NULL ;
 
-    // G->row_degree has the right type, but wrong size
-    G->row_degree = d_int64 ;
+    // G->out_degree has the right type, but wrong size
+    G->out_degree = d_int64 ;
     TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
     printf ("msg: %s\n", msg) ;
 
-    // G->row_degree has the right size, but wrong type
-    G->row_degree = d_bool ;
+    // G->out_degree has the right size, but wrong type
+    G->out_degree = d_bool ;
     TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
     printf ("msg: %s\n", msg) ;
 
-    G->row_degree = NULL ;
+    G->out_degree = NULL ;
 
-    // G->col_degree has the right type, but wrong size
-    G->col_degree = d_int64 ;
+    // G->in_degree has the right type, but wrong size
+    G->in_degree = d_int64 ;
     TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
     printf ("msg: %s\n", msg) ;
 
-    // G->col_degree has the right size, but wrong type
-    G->col_degree = d_bool ;
+    // G->in_degree has the right size, but wrong type
+    G->in_degree = d_bool ;
     TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
     printf ("msg: %s\n", msg) ;
 
-    G->col_degree = NULL ;
+    G->in_degree = NULL ;
 
     #if LAGRAPH_SUITESPARSE
     // G->A must be by-row
@@ -272,9 +272,9 @@ void test_CheckGraph_brutal (void)
     // create its cached properties
     LG_BRUTAL_BURBLE (LAGraph_Cached_AT (G, msg)) ;
     LG_BRUTAL_BURBLE (LAGraph_CheckGraph (G, msg)) ;
-    LG_BRUTAL_BURBLE (LAGraph_Cached_RowDegree (G, msg)) ;
+    LG_BRUTAL_BURBLE (LAGraph_Cached_OutDegree (G, msg)) ;
     LG_BRUTAL_BURBLE (LAGraph_CheckGraph (G, msg)) ;
-    LG_BRUTAL_BURBLE (LAGraph_Cached_ColDegree (G, msg)) ;
+    LG_BRUTAL_BURBLE (LAGraph_Cached_InDegree (G, msg)) ;
     LG_BRUTAL_BURBLE (LAGraph_CheckGraph (G, msg)) ;
     LG_BRUTAL_BURBLE (LAGraph_Delete (&G, msg)) ;
 

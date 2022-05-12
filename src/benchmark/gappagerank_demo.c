@@ -83,12 +83,12 @@ int main (int argc, char **argv)
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
 
-    // determine the cached row degree property
-    LAGRAPH_TRY (LAGraph_Cached_RowDegree (G, msg)) ;
+    // determine the cached out degree property
+    LAGRAPH_TRY (LAGraph_Cached_OutDegree (G, msg)) ;
 
     // check # of sinks:
     GrB_Index nsinks ;
-    GRB_TRY (GrB_Vector_nvals (&nvals, G->row_degree)) ;
+    GRB_TRY (GrB_Vector_nvals (&nvals, G->out_degree)) ;
     nsinks = n - nvals ;
     printf ("nsinks: %" PRIu64 "\n", nsinks) ;
 

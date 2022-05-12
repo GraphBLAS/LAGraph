@@ -56,8 +56,8 @@ int LAGraph_New
     (*G)->A = NULL ;
     (*G)->kind = LAGraph_KIND_UNKNOWN ;
     (*G)->AT = NULL ;
-    (*G)->row_degree = NULL ;
-    (*G)->col_degree = NULL ;
+    (*G)->out_degree = NULL ;
+    (*G)->in_degree = NULL ;
     (*G)->is_symmetric_structure = LAGRAPH_UNKNOWN ;
     (*G)->ndiag = LAGRAPH_UNKNOWN ;
     (*G)->emin = NULL ;

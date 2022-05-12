@@ -531,7 +531,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
 // This method will not insert the new entries T(i,key) for rows i that have
 // had entries deleted.  That can be done with GrB_assign, with an n-by-1 mask
 // M computed from the before-and-after row degrees of A and T:
-// M = (parent != key) && (row_degree(T) < row_degree(A))
+// M = (parent != key) && (out_degree(T) < out_degree(A))
 // J [0] = key.
 // GxB_Matrix_subassign_BOOL (T, M, NULL, true, GrB_ALL, n, J, 1, NULL)
 // or with

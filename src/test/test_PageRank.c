@@ -202,7 +202,7 @@ void test_ranker(void)
     OK (fclose (f)) ;
     OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
-    OK (LAGraph_Cached_RowDegree (G, msg)) ;
+    OK (LAGraph_Cached_OutDegree (G, msg)) ;
 
     // compute its pagerank using the GAP method
     OK (LAGr_PageRankGAP (&centrality, &niters, G, 0.85,
@@ -248,7 +248,7 @@ void test_ranker(void)
     OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
     OK (LAGraph_Cached_AT (G, msg)) ;
-    OK (LAGraph_Cached_RowDegree (G, msg)) ;
+    OK (LAGraph_Cached_OutDegree (G, msg)) ;
 
     // compute its pagerank using the GAP method
     OK (LAGr_PageRankGAP (&centrality, &niters, G, 0.85,
@@ -287,7 +287,7 @@ void test_ranker(void)
     OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
     OK (LAGraph_Cached_AT (G, msg)) ;
-    OK (LAGraph_Cached_RowDegree (G, msg)) ;
+    OK (LAGraph_Cached_OutDegree (G, msg)) ;
 
     printf ("\n=========== ldbc-directed-example, with sink nodes 3 and 9:\n") ;
     OK (LAGraph_DisplayGraph (G, LAGraph_COMPLETE, stdout, msg)) ;

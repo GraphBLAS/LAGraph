@@ -134,8 +134,8 @@ void test_SortByDegree (void)
                 LAGRAPH_CACHE_NOT_NEEDED : GrB_SUCCESS ;
             int result = LAGraph_Cached_AT (G, msg) ;
             TEST_CHECK (result == ok_result) ;
-            OK (LAGraph_Cached_RowDegree (G, msg)) ;
-            result = LAGraph_Cached_ColDegree (G, msg) ;
+            OK (LAGraph_Cached_OutDegree (G, msg)) ;
+            result = LAGraph_Cached_InDegree (G, msg) ;
             TEST_CHECK (result == ok_result) ;
             OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
             OK (LAGraph_DisplayGraph (G, LAGraph_SHORT, stdout, msg)) ;
@@ -143,12 +143,12 @@ void test_SortByDegree (void)
             // sort 4 different ways
             for (int trial = 0 ; trial <= 3 ; trial++)
             {
-                bool byrow = (trial == 0 || trial == 1) ;
+                bool byout = (trial == 0 || trial == 1) ;
                 bool ascending = (trial == 0 || trial == 2) ;
 
                 // sort the graph by degree
                 TEST_CHECK (P == NULL) ;
-                OK (LAGraph_SortByDegree (&P, G, byrow, ascending, msg)) ;
+                OK (LAGraph_SortByDegree (&P, G, byout, ascending, msg)) ;
                 TEST_CHECK (P != NULL) ;
 
                 // ensure P is a permutation of 0..n-1
@@ -171,19 +171,19 @@ void test_SortByDegree (void)
                 TEST_CHECK (H != NULL) ;
 
                 // get the cached properties of H
-                OK (LAGraph_Cached_RowDegree (H, msg)) ;
-                result = LAGraph_Cached_ColDegree (H, msg) ;
+                OK (LAGraph_Cached_OutDegree (H, msg)) ;
+                result = LAGraph_Cached_InDegree (H, msg) ;
                 TEST_CHECK (result == ok_result) ;
                 OK (LAGraph_Cached_IsSymmetricStructure (H, msg)) ;
                 TEST_CHECK (G->is_symmetric_structure ==
                             H->is_symmetric_structure) ;
                 printf ("\nTrial %d, graph H, sorted (%s) by (%s) degrees:\n",
                     trial, ascending ? "ascending" : "descending",
-                    byrow ? "row" : "column") ;
+                    byout ? "row" : "column") ;
                 OK (LAGraph_DisplayGraph (H, LAGraph_SHORT, stdout, msg)) ;
 
-                d = (byrow || G->is_symmetric_structure == LAGraph_TRUE) ?
-                    H->row_degree : H->col_degree ;
+                d = (byout || G->is_symmetric_structure == LAGraph_TRUE) ?
+                    H->out_degree : H->in_degree ;
 
                 // ensure d is sorted in ascending or descending order
                 int64_t last_deg = (ascending) ? (-1) : (n+1) ;
@@ -289,8 +289,8 @@ void test_SortByDegree_brutal (void)
                 LAGRAPH_CACHE_NOT_NEEDED : GrB_SUCCESS ;
             int result = LAGraph_Cached_AT (G, msg) ;
             TEST_CHECK (result == ok_result) ;
-            OK (LAGraph_Cached_RowDegree (G, msg)) ;
-            result = LAGraph_Cached_ColDegree (G, msg) ;
+            OK (LAGraph_Cached_OutDegree (G, msg)) ;
+            result = LAGraph_Cached_InDegree (G, msg) ;
             TEST_CHECK (result == ok_result) ;
             OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
             // OK (LAGraph_DisplayGraph (G, LAGraph_SHORT, stdout, msg)) ;
@@ -298,12 +298,12 @@ void test_SortByDegree_brutal (void)
             // sort 4 different ways
             for (int trial = 0 ; trial <= 3 ; trial++)
             {
-                bool byrow = (trial == 0 || trial == 1) ;
+                bool byout = (trial == 0 || trial == 1) ;
                 bool ascending = (trial == 0 || trial == 2) ;
 
                 // sort the graph by degree
                 TEST_CHECK (P == NULL) ;
-                OK (LAGraph_SortByDegree (&P, G, byrow, ascending, msg)) ;
+                OK (LAGraph_SortByDegree (&P, G, byout, ascending, msg)) ;
                 TEST_CHECK (P != NULL) ;
 
                 // ensure P is a permutation of 0..n-1
@@ -326,15 +326,15 @@ void test_SortByDegree_brutal (void)
                 TEST_CHECK (H != NULL) ;
 
                 // get the cached properties of H
-                OK (LAGraph_Cached_RowDegree (H, msg)) ;
-                result = LAGraph_Cached_ColDegree (H, msg) ;
+                OK (LAGraph_Cached_OutDegree (H, msg)) ;
+                result = LAGraph_Cached_InDegree (H, msg) ;
                 TEST_CHECK (result == ok_result) ;
                 OK (LAGraph_Cached_IsSymmetricStructure (H, msg)) ;
                 TEST_CHECK (G->is_symmetric_structure ==
                             H->is_symmetric_structure) ;
 
-                d = (byrow || G->is_symmetric_structure == LAGraph_TRUE) ?
-                    H->row_degree : H->col_degree ;
+                d = (byout || G->is_symmetric_structure == LAGraph_TRUE) ?
+                    H->out_degree : H->in_degree ;
 
                 // ensure d is sorted in ascending or descending order
                 int64_t last_deg = (ascending) ? (-1) : (n+1) ;

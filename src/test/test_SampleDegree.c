@@ -154,7 +154,7 @@ void test_SampleDegree (void)
         TEST_MSG ("SampleDegree without column degrees precomputed succeeded") ;
 
         // Compute and check the row samples
-        OK (LAGraph_Cached_RowDegree (G, msg)) ;
+        OK (LAGraph_Cached_OutDegree (G, msg)) ;
         OK (LAGraph_SampleDegree (&mean, &median, G, 1,
             files [k].nsamples, files [k].seed, msg)) ;
 
@@ -169,7 +169,7 @@ void test_SampleDegree (void)
         // Compute the column samples
         OK (LAGraph_DeleteCached (G, msg)) ;
 
-        OK (LAGraph_Cached_ColDegree (G, msg)) ;
+        OK (LAGraph_Cached_InDegree (G, msg)) ;
         OK (LAGraph_SampleDegree (&mean, &median, G, 0,
             files [k].nsamples, files [k].seed, msg)) ;
 
@@ -216,7 +216,7 @@ void test_SampleDegree_brutal (void)
         TEST_CHECK (A == NULL) ;
 
         // Compute and check the row samples
-        LG_BRUTAL (LAGraph_Cached_RowDegree (G, msg)) ;
+        LG_BRUTAL (LAGraph_Cached_OutDegree (G, msg)) ;
         LG_BRUTAL (LAGraph_SampleDegree (&mean, &median, G, 1,
             files [k].nsamples, files [k].seed, msg)) ;
 
@@ -226,7 +226,7 @@ void test_SampleDegree_brutal (void)
         // Compute the column samples
         LG_BRUTAL (LAGraph_DeleteCached (G, msg)) ;
 
-        LG_BRUTAL (LAGraph_Cached_ColDegree (G, msg)) ;
+        LG_BRUTAL (LAGraph_Cached_InDegree (G, msg)) ;
         LG_BRUTAL (LAGraph_SampleDegree (&mean, &median, G, 0,
             files [k].nsamples, files [k].seed, msg)) ;
 

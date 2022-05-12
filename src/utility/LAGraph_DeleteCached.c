@@ -37,8 +37,8 @@ int LAGraph_DeleteCached
     //--------------------------------------------------------------------------
 
     GRB_TRY (GrB_free (&(G->AT))) ;
-    GRB_TRY (GrB_free (&(G->row_degree))) ;
-    GRB_TRY (GrB_free (&(G->col_degree))) ;
+    GRB_TRY (GrB_free (&(G->out_degree))) ;
+    GRB_TRY (GrB_free (&(G->in_degree))) ;
     GRB_TRY (GrB_free (&(G->emin))) ;
     GRB_TRY (GrB_free (&(G->emax))) ;
 

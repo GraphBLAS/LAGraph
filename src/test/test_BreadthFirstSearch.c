@@ -292,7 +292,7 @@ void test_BreadthFirstSearch_parent(void)
     GrB_Vector parent    = NULL;
     GrB_Vector parent_do = NULL;
 
-    OK (LAGraph_Cached_RowDegree (G, msg)) ;
+    OK (LAGraph_Cached_OutDegree (G, msg)) ;
 
     retval = LAGr_BreadthFirstSearch(NULL, &parent, G, 30, msg);
     TEST_CHECK(retval == 0);
@@ -358,7 +358,7 @@ void test_BreadthFirstSearch_level(void)
 
     GrB_Vector level    = NULL;
     GrB_Vector level_do = NULL;
-    OK (LAGraph_Cached_RowDegree (G, msg)) ;
+    OK (LAGraph_Cached_OutDegree (G, msg)) ;
 
     retval = LAGr_BreadthFirstSearch(&level, NULL, G, 30, msg);
     TEST_CHECK(retval == 0);
@@ -412,7 +412,7 @@ void test_BreadthFirstSearch_both(void)
     setup();
     int retval;
 
-    OK (LAGraph_Cached_RowDegree (G, msg)) ;
+    OK (LAGraph_Cached_OutDegree (G, msg)) ;
     GrB_Vector parent    = NULL;
     GrB_Vector level    = NULL;
     retval = LAGr_BreadthFirstSearch(&level, &parent, G, 30, msg);
@@ -489,10 +489,10 @@ void test_BreadthFirstSearch_many(void)
 
         OK (LAGraph_CheckGraph (G, msg)) ;
 
-        OK (LAGraph_Cached_RowDegree (G, msg)) ;
+        OK (LAGraph_Cached_OutDegree (G, msg)) ;
         OK (LAGraph_CheckGraph (G, msg)) ;
 
-        result = LAGraph_Cached_ColDegree (G, msg) ;
+        result = LAGraph_Cached_InDegree (G, msg) ;
         TEST_CHECK (result == ok_result) ;
         OK (LAGraph_CheckGraph (G, msg)) ;
 
@@ -603,8 +603,8 @@ void test_bfs_brutal (void)
         int result = LAGraph_Cached_AT (G, msg) ;
         TEST_CHECK (result == ok_result) ;
 
-        OK (LAGraph_Cached_RowDegree (G, msg)) ;
-        result = LAGraph_Cached_ColDegree (G, msg) ;
+        OK (LAGraph_Cached_OutDegree (G, msg)) ;
+        result = LAGraph_Cached_InDegree (G, msg) ;
         TEST_CHECK (result == ok_result) ;
 
         // run the BFS

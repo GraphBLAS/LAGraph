@@ -130,7 +130,7 @@ void test_MIS (void)
         }
 
         // compute the row degree
-        OK (LAGraph_Cached_RowDegree (G, msg)) ;
+        OK (LAGraph_Cached_OutDegree (G, msg)) ;
 
         GrB_Index n ;
         GrB_Matrix_nrows (&n, G->A) ;
@@ -180,11 +180,11 @@ void test_MIS (void)
         G->is_symmetric_structure = LAGraph_TRUE ;
         G->ndiag = 0 ;
 
-        // recompute the row degree
-        OK (LAGraph_Cached_RowDegree (G, msg)) ;
+        // recompute the out degree
+        OK (LAGraph_Cached_OutDegree (G, msg)) ;
 
         GrB_Index nonsingletons, nsingletons_actual ;
-        OK (GrB_Vector_nvals (&nonsingletons, G->row_degree)) ;
+        OK (GrB_Vector_nvals (&nonsingletons, G->out_degree)) ;
         nsingletons_actual = n - nonsingletons ;
         printf ("actual # of singletons: %g\n", (double) nsingletons_actual) ;
         TEST_CHECK (nsingletons <= nsingletons_actual) ;
