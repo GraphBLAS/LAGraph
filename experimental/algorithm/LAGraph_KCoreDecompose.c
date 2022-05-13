@@ -62,7 +62,7 @@ int LAGraph_KCore_Decompose
 
     // no self edges can be present
     // todo: what would happen if there are self edges?
-    LG_ASSERT_MSG (G->ndiag == 0, -1004, "G->ndiag must be zero") ;
+    LG_ASSERT_MSG (G->nself_edges == 0, -1004, "G->nself_edges must be zero") ;
 
     //create work scalars
     GrB_Index nrows, n;

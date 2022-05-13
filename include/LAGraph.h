@@ -33,10 +33,10 @@
 // See also the LAGraph_Version utility method, which returns these values.
 // These definitions must match the same definitions in LAGraph/CMakeLists.txt.
 // FIXME: use config to create include/LAGraph.h from LAGraph/CMakeLists.txt
-#define LAGRAPH_DATE "May 12, 2022"
+#define LAGRAPH_DATE "May 13, 2022"
 #define LAGRAPH_VERSION_MAJOR 0
 #define LAGRAPH_VERSION_MINOR 9
-#define LAGRAPH_VERSION_UPDATE 21
+#define LAGRAPH_VERSION_UPDATE 22
 
 //==============================================================================
 // include files and helper macros

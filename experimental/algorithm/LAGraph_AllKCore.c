@@ -60,7 +60,7 @@ int LAGraph_KCore_All
     }
 
     // no self edges can be present
-    LG_ASSERT_MSG (G->ndiag == 0, -1004, "G->ndiag must be zero") ;
+    LG_ASSERT_MSG (G->nself_edges == 0, -1004, "G->nself_edges must be zero") ;
 
     //create work scalars
     uint64_t level = 0; //don't set at 1 in case of empty graph getting returned as kmax = 1

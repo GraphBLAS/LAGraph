@@ -9,6 +9,8 @@
 // See additional acknowledgments in the LICENSE file,
 // or contact permission@sei.cmu.edu for the full terms.
 
+// Contributed by Pranav Konduri, Texas A&M University
+
 //------------------------------------------------------------------------------
 
 // This method is for testing only, to check the result of other, faster methods.  
@@ -29,6 +31,7 @@
 
 #include "LG_internal.h"
 #include "LG_test.h"
+#include "LG_Xtest.h"
 
 int LG_check_kcore_decompose
 (
@@ -66,7 +69,7 @@ int LG_check_kcore_decompose
     }
 
     // no self edges can be present
-    LG_ASSERT_MSG (G->ndiag == 0, -1004, "G->ndiag must be zero") ;
+    LG_ASSERT_MSG (G->nself_edges == 0, -1004, "G->nself_edges must be zero") ;
     
     //create work scalars
     GrB_Index size_matrix, nvals_matrix, size_vector, nvals_vector;

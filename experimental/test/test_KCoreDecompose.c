@@ -5,6 +5,9 @@
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
+
+// Contributed by Pranav Konduri, Texas A&M University
+
 //-----------------------------------------------------------------------------
 
 #include <stdio.h>
@@ -12,6 +15,7 @@
 
 #include <LAGraphX.h>
 #include <LAGraph_test.h>
+#include "LG_Xtest.h"
 
 char msg [LAGRAPH_MSG_LEN] ;
 LAGraph_Graph G = NULL ;
@@ -73,14 +77,14 @@ void test_KCoreDecompose (void)
         G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
 
         // check for self-edges, and remove them.
-        OK (LAGraph_Cached_NDiag (G, msg)) ;
-        if (G->ndiag != 0)
+        OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
+        if (G->nself_edges != 0)
         {
             // remove self-edges
-            printf ("graph has %g self edges\n", (double) G->ndiag) ;
-            OK (LAGraph_DeleteDiag (G, msg)) ;
-            printf ("now has %g self edges\n", (double) G->ndiag) ;
-            TEST_CHECK (G->ndiag == 0) ;
+            printf ("graph has %g self edges\n", (double) G->nself_edges) ;
+            OK (LAGraph_DeleteSelfEdges (G, msg)) ;
+            printf ("now has %g self edges\n", (double) G->nself_edges) ;
+            TEST_CHECK (G->nself_edges == 0) ;
         }
 
         bool ok;
@@ -121,31 +125,31 @@ void test_errors (void)
     OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;
 
-    OK (LAGraph_Cached_NDiag (G, msg)) ;
+    OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
 
-    uint64_t kval ;
+    uint64_t kval = 2 ;
     GrB_Vector c = NULL ;
 
     // c is NULL
-    int result = LAGraph_KCore_Decompose (&D1, G, NULL, &kval, msg) ;
+    int result = LAGraph_KCore_Decompose (&D1, G, NULL, kval, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
 
     // G is invalid
-    result = LAGraph_KCore_Decompose (&D1, NULL, &c, &kval, msg) ;
+    result = LAGraph_KCore_Decompose (&D1, NULL, c, kval, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
     TEST_CHECK (c == NULL) ;
 
     // G may have self edges
-    G->ndiag = LAGRAPH_UNKNOWN ;
+    G->nself_edges = LAGRAPH_UNKNOWN ;
     result = LAGraph_KCore_Decompose(&D1, G, c, kval, msg);
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == -1004) ;
     TEST_CHECK (c == NULL) ;
 
     // G is undirected
-    G->ndiag = 0 ;
+    G->nself_edges = 0 ;
     G->kind = LAGraph_ADJACENCY_DIRECTED ;
     G->is_symmetric_structure = LAGraph_FALSE ;
     result = LAGraph_KCore_Decompose(&D1, G, c, kval, msg);

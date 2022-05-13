@@ -784,4 +784,42 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
+// kcore algorithms
+//------------------------------------------------------------------------------
+
+LAGRAPH_PUBLIC
+int LAGraph_KCore_All       
+(
+    // outputs:
+    GrB_Vector *decomp,     // kcore decomposition
+    uint64_t *kmax,
+    // inputs:
+    LAGraph_Graph G,            // input graph
+    char *msg
+) ;
+
+LAGRAPH_PUBLIC
+int LAGraph_KCore       
+(
+    // outputs:
+    GrB_Vector *decomp,     // kcore decomposition
+    // inputs:
+    LAGraph_Graph G,        // input graph
+    uint64_t k,             //k level to compare to
+    char *msg
+) ;
+
+LAGRAPH_PUBLIC
+int LAGraph_KCore_Decompose      
+(
+    // outputs:
+    GrB_Matrix *D,              // kcore decomposition
+    // inputs:
+    LAGraph_Graph G,            // input graph
+    GrB_Vector decomp,         // input decomposition matrix
+    uint64_t k,
+    char *msg
+) ;
+
 #endif
