@@ -72,14 +72,27 @@ int LAGraph_KCore_Decompose
     
     //Create Vectors and Matrices
     GRB_TRY (GrB_Vector_new(&deg, GrB_INT64, n)) ;
-    GRB_TRY (GrB_Matrix_new(&C, GrB_INT64, n, n)) ;
     GRB_TRY (GrB_Matrix_new(D, GrB_INT64, n, n)) ;
 
     //create deg vector using select 
     GRB_TRY (GrB_select (deg, GrB_NULL, GrB_NULL, GrB_VALUEGE_INT64, decomp, k, GrB_NULL)) ;
 
     //create decomposition matrix (C * A * C)
+
+    #if LAGRAPH_SUITESPARSE
+        #if GxB_IMPLEMENTATION >= GxB_VERSION (7,0,0)
+        // SuiteSparse 7.x and later:
+        GRB_TRY (GrB_Matrix_diag(&C, deg, 0)) ;
+        #else
+        // SuiteSparse 6.x and earlier, which had the incorrect signature:
+        GRB_TRY (GrB_Matrix_new(&C, GrB_INT64, n, n)) ;
+        GRB_TRY (GrB_Matrix_diag(C, deg, 0)) ;
+        #endif
+    #else
+    // standard GrB:
     GRB_TRY (GrB_Matrix_diag(&C, deg, 0)) ;
+    #endif
+
     GRB_TRY (GrB_mxm (*D, NULL, NULL, GxB_ANY_SECONDI_INT64, C, A, GrB_NULL)) ;
     GRB_TRY (GrB_mxm (*D, NULL, NULL, GxB_MIN_SECONDI_INT64, *D, C, GrB_NULL)) ; 
     
