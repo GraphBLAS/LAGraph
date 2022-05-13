@@ -121,7 +121,7 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
     }
 
     // no self edges can be present
-    LG_ASSERT_MSG (G->ndiag == 0, -1004, "G->ndiag must be zero") ;
+    LG_ASSERT_MSG (G->nself_edges == 0, -1004, "G->nself_edges must be zero") ;
 
     //--------------------------------------------------------------------------
     // create the T matrix

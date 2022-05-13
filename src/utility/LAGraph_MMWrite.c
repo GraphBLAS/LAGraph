@@ -448,10 +448,10 @@ int LAGraph_MMWrite
     if (!is_general)
     {
         // count the entries on the diagonal
-        int64_t ndiag = 0 ;
-        LG_TRY (LG_ndiag (&ndiag, A, msg)) ;
+        int64_t nself_edges = 0 ;
+        LG_TRY (LG_nself_edges (&nself_edges, A, msg)) ;
         // nvals_to_print = # of entries in tril(A), including diagonal
-        nvals_to_print = ndiag + (nvals - ndiag) / 2 ;
+        nvals_to_print = nself_edges + (nvals - nself_edges) / 2 ;
     }
 
     FPRINTF (f, "%" PRIu64 " %" PRIu64 " %" PRIu64 "\n",

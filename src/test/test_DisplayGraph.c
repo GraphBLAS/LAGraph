@@ -69,7 +69,7 @@ const char *prwhat (int pr)
 typedef struct
 {
     LAGraph_Kind kind ;
-    int ndiag ;
+    int nself_edges ;
     const char *name ;
 }
 matrix_info ;
@@ -128,8 +128,8 @@ void test_DisplayGraph (void)
             int result = LAGraph_Cached_AT (G, msg) ;
             TEST_CHECK (result == ok_result) ;
             OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
-            OK (LAGraph_Cached_NDiag (G, msg)) ;
-            TEST_CHECK (G->ndiag == files [k].ndiag) ;
+            OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
+            TEST_CHECK (G->nself_edges == files [k].nself_edges) ;
         }
 
         // free the graph
@@ -272,7 +272,7 @@ void test_DisplayGraph_brutal (void)
             int result = LAGraph_Cached_AT (G, msg) ;
             TEST_CHECK (result == ok_result) ;
             OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
-            OK (LAGraph_Cached_NDiag (G, msg)) ;
+            OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
         }
 
         // free the graph

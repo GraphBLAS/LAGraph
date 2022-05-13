@@ -96,8 +96,8 @@ void test_DeleteCached (void)
         OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
 
         // print them
-        printf ("\nGraph: ndiag %g, symmetric structure: %d\n",
-            (double) G->ndiag, G->is_symmetric_structure) ;
+        printf ("\nGraph: nself_edges %g, symmetric structure: %d\n",
+            (double) G->nself_edges, G->is_symmetric_structure) ;
         printf ("  adj matrix: ") ;
         int rr = (LAGraph_Matrix_Print (G->A, LAGraph_SHORT, stdout, msg)) ;
         printf ("result: %d msg: %s\n", rr, msg) ;

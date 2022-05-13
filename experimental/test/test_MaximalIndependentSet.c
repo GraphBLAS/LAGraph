@@ -119,14 +119,14 @@ void test_MIS (void)
         G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
 
         // check for self-edges
-        OK (LAGraph_Cached_NDiag (G, msg)) ;
-        if (G->ndiag != 0)
+        OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
+        if (G->nself_edges != 0)
         {
             // remove self-edges
-            printf ("graph has %g self edges\n", (double) G->ndiag) ;
-            OK (LAGraph_DeleteDiag (G, msg)) ;
-            printf ("now has %g self edges\n", (double) G->ndiag) ;
-            TEST_CHECK (G->ndiag == 0) ;
+            printf ("graph has %g self edges\n", (double) G->nself_edges) ;
+            OK (LAGraph_DeleteSelfEdges (G, msg)) ;
+            printf ("now has %g self edges\n", (double) G->nself_edges) ;
+            TEST_CHECK (G->nself_edges == 0) ;
         }
 
         // compute the row degree
@@ -178,7 +178,7 @@ void test_MIS (void)
         OK (LAGraph_DeleteCached (G, msg)) ;
         G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
         G->is_symmetric_structure = LAGraph_TRUE ;
-        G->ndiag = 0 ;
+        G->nself_edges = 0 ;
 
         // recompute the out degree
         OK (LAGraph_Cached_OutDegree (G, msg)) ;

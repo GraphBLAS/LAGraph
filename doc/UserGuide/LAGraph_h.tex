@@ -189,10 +189,10 @@ int LAGraph_Cached_InDegree
 
 
 \begin{verbatim}
-int LAGraph_Cached_NDiag        // FIXME: LAGraph_Cached_NSelfEdges
+int LAGraph_Cached_NSelfEdges
 (
     // input/output:
-    LAGraph_Graph G,    // graph to compute G->ndiag
+    LAGraph_Graph G,    // graph to compute G->nself_edges
     char *msg
 ) ;
 \end{verbatim}
@@ -225,7 +225,7 @@ int LAGraph_Cached_EMax
 
 
 \begin{verbatim}
-int LAGraph_DeleteDiag  // FIXME: LAGraph_DeleteSelfEdges
+int LAGraph_DeleteSelfEdges
 (
     // input/output:
     LAGraph_Graph G,    // diagonal entries removed, most cached properties

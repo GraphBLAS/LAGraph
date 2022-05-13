@@ -515,10 +515,10 @@ void LG_qsort_3     // sort array A of size 3-by-n, using 3 keys (A [0:2][])
 // count entries on the diagonal of a matrix
 //------------------------------------------------------------------------------
 
-int LG_ndiag
+int LG_nself_edges
 (
     // output
-    int64_t *ndiag,         // # of entries
+    int64_t *nself_edges,   // # of entries
     // input
     GrB_Matrix A,           // matrix to count
     char *msg               // error message

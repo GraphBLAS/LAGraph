@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_Cached_NDiag: count the # of diagonal entries of a graph
+// LAGraph_Cached_NSelfEdges: count the # of diagonal entries of a graph
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -13,10 +13,10 @@
 
 #include "LG_internal.h"
 
-int LAGraph_Cached_NDiag
+int LAGraph_Cached_NSelfEdges
 (
     // input/output:
-    LAGraph_Graph G,    // graph to compute G->ndiag
+    LAGraph_Graph G,    // graph to compute G->nself_edges
     char *msg
 )
 {
@@ -28,15 +28,15 @@ int LAGraph_Cached_NDiag
     LG_CLEAR_MSG_AND_BASIC_ASSERT (G, msg) ;
 
     // already computed
-    if (G->ndiag != LAGRAPH_UNKNOWN)
+    if (G->nself_edges != LAGRAPH_UNKNOWN)
     {
         return (GrB_SUCCESS) ;
     }
 
     //--------------------------------------------------------------------------
-    // compute G->ndiag
+    // compute G->nself_edges
     //--------------------------------------------------------------------------
 
-    return (LG_ndiag (&G->ndiag, G->A, msg)) ;
+    return (LG_nself_edges (&G->nself_edges, G->A, msg)) ;
 }
 

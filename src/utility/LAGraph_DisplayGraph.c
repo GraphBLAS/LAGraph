@@ -62,7 +62,10 @@ int LAGraph_DisplayGraph
         case LAGraph_TRUE  : FPRINTF (f, "symmetric")   ; break ;
         default            : FPRINTF (f, "unknown")     ; break ;
     }
-    if (G->ndiag >= 0) FPRINTF (f, "  self-edges: %g", (double) G->ndiag) ;
+    if (G->nself_edges >= 0)
+    {
+        FPRINTF (f, "  self-edges: %g", (double) G->nself_edges) ;
+    }
     FPRINTF (f, "\n") ;
 
     FPRINTF (f, "  adjacency matrix: ") ;

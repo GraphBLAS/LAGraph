@@ -52,6 +52,6 @@ int LAGraph_DeleteCached
         : LAGRAPH_UNKNOWN ;
     G->emin_state = LAGRAPH_UNKNOWN ;
     G->emax_state = LAGRAPH_UNKNOWN ;
-    G->ndiag = LAGRAPH_UNKNOWN ;
+    G->nself_edges = LAGRAPH_UNKNOWN ;
     return (GrB_SUCCESS) ;
 }

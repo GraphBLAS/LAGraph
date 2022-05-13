@@ -59,7 +59,7 @@ int LAGraph_New
     (*G)->out_degree = NULL ;
     (*G)->in_degree = NULL ;
     (*G)->is_symmetric_structure = LAGRAPH_UNKNOWN ;
-    (*G)->ndiag = LAGRAPH_UNKNOWN ;
+    (*G)->nself_edges = LAGRAPH_UNKNOWN ;
     (*G)->emin = NULL ;
     (*G)->emin_state = LAGRAPH_UNKNOWN ;
     (*G)->emax = NULL ;

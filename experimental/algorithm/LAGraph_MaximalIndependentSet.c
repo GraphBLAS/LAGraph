@@ -42,9 +42,9 @@
 // mis[i] == true implies node i is a member of the set.
 
 // The graph cannot have any self edges, and it must be symmetric.  Self-edges
-// (diagonal entries) will cause the method to stall, and thus G->ndiag must be
-// zero on input.  G->out_degree must be present on input.  It must not contain
-// any explicit zeros (this is handled by LAGraph_Cached_OutDegree).
+// (diagonal entries) will cause the method to stall, and thus G->nself_edges
+// must be zero on input.  G->out_degree must be present on input.  It must not
+// contain any explicit zeros (this is handled by LAGraph_Cached_OutDegree).
 
 // Singletons require special treatment.  Since they have no neighbors, their
 // score is never greater than the max of their neighbors, so they never get
@@ -99,8 +99,9 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
         LG_ASSERT_MSG (false, -105, "G->A must be symmetric") ;
     }
 
-    LG_ASSERT_MSG (G->out_degree != NULL, -106, "G->out_degree must be defined") ;
-    LG_ASSERT_MSG (G->ndiag == 0, -107, "G->ndiag must be zero") ;
+    LG_ASSERT_MSG (G->out_degree != NULL, -106,
+        "G->out_degree must be defined") ;
+    LG_ASSERT_MSG (G->nself_edges == 0, -107, "G->nself_edges must be zero") ;
 
     //--------------------------------------------------------------------------
     // initializations

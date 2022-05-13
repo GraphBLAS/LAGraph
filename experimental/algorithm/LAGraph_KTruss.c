@@ -72,7 +72,7 @@ int LAGraph_KTruss              // compute the k-truss of a graph
     }
 
     // no self edges can be present
-    LG_ASSERT_MSG (G->ndiag == 0, -1004, "G->ndiag must be zero") ;
+    LG_ASSERT_MSG (G->nself_edges == 0, -1004, "G->nself_edges must be zero") ;
 
     //--------------------------------------------------------------------------
     // initializations

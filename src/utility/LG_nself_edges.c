@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LG_ndiag: count the # of diagonal entries in a matrix
+// LG_nself_edges: count the # of diagonal entries in a matrix
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -20,10 +20,10 @@
 
 #include "LG_internal.h"
 
-int LG_ndiag
+int LG_nself_edges
 (
     // output:
-    int64_t *ndiag,         // # of entries 
+    int64_t *nself_edges,         // # of entries 
     // input:
     GrB_Matrix A,           // matrix to count
     char *msg               // error message
@@ -36,8 +36,8 @@ int LG_ndiag
 
     GrB_Matrix D = NULL, M = NULL ;
     GrB_Vector d = NULL ;
-    LG_ASSERT (ndiag != NULL, GrB_NULL_POINTER) ;
-    (*ndiag) = LAGRAPH_UNKNOWN ;
+    LG_ASSERT (nself_edges != NULL, GrB_NULL_POINTER) ;
+    (*nself_edges) = LAGRAPH_UNKNOWN ;
 
     GrB_Index nrows, ncols ;
     GRB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
@@ -57,7 +57,7 @@ int LG_ndiag
 
         GRB_TRY (GrB_Vector_new (&d, atype, n)) ;
         GRB_TRY (GxB_Vector_diag (d, A, 0, NULL)) ;
-        GRB_TRY (GrB_Vector_nvals ((GrB_Index *) ndiag, d)) ;
+        GRB_TRY (GrB_Vector_nvals ((GrB_Index *) nself_edges, d)) ;
 
     #else
 
@@ -76,7 +76,7 @@ int LG_ndiag
         // D<M,struct> = A
         GRB_TRY (GrB_assign (D, M, NULL, A, GrB_ALL, nrows, GrB_ALL, ncols,
             GrB_DESC_S)) ;
-        GRB_TRY (GrB_Matrix_nvals ((GrB_Index *) ndiag, D)) ;
+        GRB_TRY (GrB_Matrix_nvals ((GrB_Index *) nself_edges, D)) ;
 
     #endif
 

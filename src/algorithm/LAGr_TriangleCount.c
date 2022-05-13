@@ -13,7 +13,7 @@
 
 // Count the number of triangles in a graph,
 
-// This is an Advanced algorithm (G->ndiag, G->out_degree,
+// This is an Advanced algorithm (G->nself_edges, G->out_degree,
 // G->is_symmetric_structure are required).
 
 // Given a symmetric graph A with no-self edges, LAGr_TriangleCount counts the
@@ -139,7 +139,7 @@ int LAGr_TriangleCount
     }
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     LG_ASSERT (ntriangles != NULL, GrB_NULL_POINTER) ;
-    LG_ASSERT (G->ndiag == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED) ;
+    LG_ASSERT (G->nself_edges == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED) ;
 
     if (method == LAGraph_TriangleCount_Default)
     {

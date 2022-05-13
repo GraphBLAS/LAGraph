@@ -62,11 +62,11 @@ void setup(void)
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LAGraph_Cached_NDiag(G, msg);
+    retval = LAGraph_Cached_NSelfEdges(G, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    TEST_CHECK(G->ndiag == 0);
+    TEST_CHECK(G->nself_edges == 0);
 }
 
 //****************************************************************************
@@ -292,10 +292,10 @@ void test_TriangleCount_many (void)
         TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
         // delete any diagonal entries
-        OK (LAGraph_DeleteDiag (G, msg)) ;
-        TEST_CHECK (G->ndiag == 0) ;
-        OK (LAGraph_DeleteDiag (G, msg)) ;
-        TEST_CHECK (G->ndiag == 0) ;
+        OK (LAGraph_DeleteSelfEdges (G, msg)) ;
+        TEST_CHECK (G->nself_edges == 0) ;
+        OK (LAGraph_DeleteSelfEdges (G, msg)) ;
+        TEST_CHECK (G->nself_edges == 0) ;
 
         // get the # of triangles
         uint64_t nt0, nt1 ;
@@ -358,8 +358,8 @@ void test_TriangleCount_autosort (void)
     OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
-    OK (LAGraph_DeleteDiag (G, msg)) ;
-    TEST_CHECK (G->ndiag == 0) ;
+    OK (LAGraph_DeleteSelfEdges (G, msg)) ;
+    TEST_CHECK (G->nself_edges == 0) ;
 
     OK (LAGraph_Cached_OutDegree (G, msg)) ;
 
@@ -409,7 +409,7 @@ void test_TriangleCount_brutal (void)
         OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
 
         // delete any diagonal entries
-        OK (LAGraph_DeleteDiag (G, msg)) ;
+        OK (LAGraph_DeleteSelfEdges (G, msg)) ;
 
         // get the # of triangles
         uint64_t nt0, nt1 ;

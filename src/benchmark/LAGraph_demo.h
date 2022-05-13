@@ -945,7 +945,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
 
     if (remove_self_edges)
     {
-        LAGRAPH_TRY (LAGraph_DeleteDiag (*G, msg)) ;
+        LAGRAPH_TRY (LAGraph_DeleteSelfEdges (*G, msg)) ;
     }
     // LAGRAPH_TRY (LAGraph_DisplayGraph (*G, 2, stdout, msg)) ;
 

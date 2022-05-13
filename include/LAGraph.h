@@ -200,10 +200,10 @@
 
 //  LAGRAPH_NO_SELF_EDGES_ALLOWED:  some methods requires that the graph have
 //      no self edges, which correspond to the entries on the diagonal of the
-//      adjacency matrix.  If the G->ndiag cached property is nonzero or
-//      unknown, this error condition is returned.  Use LAGraph_Cached_NDiag to
-//      compute G->ndiag, or LAGraph_DeleteDiag to remove all diagonal entries
-//      from G->A.
+//      adjacency matrix.  If the G->nself_edges cached property is nonzero or
+//      unknown, this error condition is returned.  Use LAGraph_Cached_NSelfEdges to
+//      compute G->nself_edges, or LAGraph_DeleteSelfEdges to remove all diagonal
+//      entries from G->A.
 
 //  LAGRAPH_CONVERGENCE_FAILURE:  an iterative process failed to converge to
 //      a good solution.
@@ -504,7 +504,7 @@ LAGraph_State ;
 //      out_degree  out_degree(i) = # of entries in A(i,:)
 //      in_degree   in_degree(j) = # of entries in A(:,j)
 //      is_symmetric_structure: true if the structure of A is symmetric
-//      ndiag       the number of entries on the diagonal of A
+//      nself_edges the number of entries on the diagonal of A
 //      emin        minimum edge weight
 //      emax        maximum edge weight
 
@@ -566,10 +566,10 @@ struct LAGraph_Graph_struct
             // In that case, this scalar cached property can be set to true.
             // By default, this cached property is set to LAGRAPH_UNKNOWN.
 
-    // FIXME: rename nself_edges
-    int64_t ndiag ; // # of entries on the diagonal of A, or LAGRAPH_UNKNOWN if
-            // unknown.  For the adjacency matrix of a directed or undirected
-            // graph, this is the number of self-edges in the graph.
+    int64_t nself_edges ; // # of entries on the diagonal of A, or
+            // LAGRAPH_UNKNOWN if unknown.  For the adjacency matrix of a
+            // directed or undirected graph, this is the number of self-edges
+            // in the graph.
 
     GrB_Scalar emin ;   // minimum edge weight: value, lower bound, or unknown
     LAGraph_State emin_state ;
@@ -857,22 +857,19 @@ int LAGraph_Cached_InDegree
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Cached_NDiag: determine G->ndiag
+// LAGraph_Cached_NSelfEdges: determine G->nself_edges
 //------------------------------------------------------------------------------
 
-// LAGraph_Cached_NDiag computes G->ndiag, the number of diagonal entries
+// LAGraph_Cached_NSelfEdges computes G->nself_edges, the number of diagonal entries
 // that appear in the G->A matrix.  For an undirected or directed graph with an
 // adjacency matrix G->A, these are the number of self-edges in G.  No work is
 // performed it is already computed.
 
-// FIXME: should this be "number of self-edges"?  (what if G->A is an
-// incidence matrix, or a hypergraph, ...)?
-
 LAGRAPH_PUBLIC
-int LAGraph_Cached_NDiag        // FIXME: LAGraph_Cached_NSelfEdges
+int LAGraph_Cached_NSelfEdges
 (
     // input/output:
-    LAGraph_Graph G,    // graph to compute G->ndiag
+    LAGraph_Graph G,    // graph to compute G->nself_edges
     char *msg
 ) ;
 
@@ -905,19 +902,15 @@ int LAGraph_Cached_EMax
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_DeleteDiag: remove all diagonal entries from G->A
+// LAGraph_DeleteSelfEdges: remove all diagonal entries from G->A
 //------------------------------------------------------------------------------
 
-// LAGraph_DeleteDiag removes any diagonal entries from G->A.  Most cached
-// properties are cleared or set to LAGRAPH_UNKNOWN.  G->ndiag is set to zero,
-// and G->is_symmetric_structure is left unchanged.
-
-// FIXME: should this be "delete self edges"?  If G->A is an incidence matrix,
-// or a hypergraph, then this deletes columns (or rows) of A with just a single
-// entry.  Bipartite graphs: no effect.
+// LAGraph_DeleteSelfEdges removes any diagonal entries from G->A.  Most cached
+// properties are cleared or set to LAGRAPH_UNKNOWN.  G->nself_edges is set to
+// zero, and G->is_symmetric_structure is left unchanged.
 
 LAGRAPH_PUBLIC
-int LAGraph_DeleteDiag  // FIXME: LAGraph_DeleteSelfEdges
+int LAGraph_DeleteSelfEdges
 (
     // input/output:
     LAGraph_Graph G,    // diagonal entries removed, most cached properties
@@ -1637,7 +1630,7 @@ int LAGraph_Sort3
 // LAGraph_TriangleCount
 //------------------------------------------------------------------------------
 
-// This is a Basic algorithm (G->ndiag, G->out_degree,
+// This is a Basic algorithm (G->nself_edges, G->out_degree,
 // G->is_symmetric_structure are computed, if not present).
 
 /*
@@ -1849,7 +1842,7 @@ int LAGr_PageRankGAP
 // LAGr_TriangleCount: triangle counting
 //------------------------------------------------------------------------------
 
-// This is an Advanced algorithm (G->ndiag, G->out_degree,
+// This is an Advanced algorithm (G->nself_edges, G->out_degree,
 // G->is_symmetric_structure are required).
 
 /* Count the triangles in a graph. Advanced API
