@@ -614,7 +614,8 @@ typedef struct LAGraph_Graph_struct *LAGraph_Graph ;
 // This method must be called before calling any other GrB* or LAGraph* method.
 // It initializes GraphBLAS with GrB_init and then performs LAGraph-specific
 // initializations.  In particular, the LAGraph semirings listed below are
-// created.  FIXME: document calling GrB_init before LAGr*_Init (is OK).
+// created.  GrB_init can also safely be called before calling LAGr_Init
+// or LAGraph_Init.
 
 LAGRAPH_PUBLIC
 int LAGraph_Init
@@ -622,7 +623,7 @@ int LAGraph_Init
     char *msg
 ) ;
 
-// TODO: augment the v2.1 C API, Table 3.9 to include these
+// FUTURE: include these as built-in semirings in v2.1 C API, Table 3.9:
 
 // LAGraph semirings, created by LAGraph_Init or LAGr_Init:
 LAGRAPH_PUBLIC GrB_Semiring
@@ -940,6 +941,8 @@ int LAGraph_CheckGraph
 // LAGraph_GetNumThreads determines the current number of OpenMP threads that
 // can be used.
 
+// FIXME: start here for next LAGraph meeting.
+
 LAGRAPH_PUBLIC
 int LAGraph_GetNumThreads
 (
@@ -1129,7 +1132,7 @@ int LAGraph_Toc
  * column-major order.  This rule is follwed by LAGraph_MMWrite.  However,
  * LAGraph_MMRead can read the entries in any order.
  *
- * FIXME FUTURE: add support for user-defined types.
+ * FUTURE: add support for user-defined types.
  *
  * @param[out]    A     handle of the matrix to create
  * @param[in]     f     handle to an open file to read from
@@ -1161,7 +1164,7 @@ int LAGraph_MMRead
 // containing the GraphBLAS type:
 //      %%GraphBLAS type <entrytype>
 
-// FIXME FUTURE: add support for user-defined types.
+// FUTURE: add support for user-defined types.
 
 LAGRAPH_PUBLIC
 int LAGraph_MMWrite
@@ -1640,14 +1643,15 @@ int LAGraph_Sort3
  * @param[in,out] G          The graph, symmetric, no self loops.
  * @param[out]    msg        Error message if a failure code is returned.
  */
+
 LAGRAPH_PUBLIC
 int LAGraph_TriangleCount
 (
     // output:
-    uint64_t      *ntriangles,   // # of triangles
+    uint64_t *ntriangles,   // # of triangles
     // input/output:
     LAGraph_Graph  G,
-    char          *msg
+    char *msg
 ) ;
 
 //==============================================================================
@@ -1722,12 +1726,12 @@ LAGRAPH_PUBLIC
 int LAGr_BreadthFirstSearch
 (
     // output:
-    GrB_Vector    *level,
-    GrB_Vector    *parent,
+    GrB_Vector *level,
+    GrB_Vector *parent,
     // input:
     const LAGraph_Graph G,
-    GrB_Index      src,
-    char          *msg
+    GrB_Index src,
+    char *msg
 ) ;
 
 //------------------------------------------------------------------------------
@@ -1908,12 +1912,12 @@ LAGRAPH_PUBLIC
 int LAGr_TriangleCount
 (
     // output:
-    uint64_t       *ntriangles,
+    uint64_t *ntriangles,
     // input:
     const LAGraph_Graph G,
     LAGraph_TriangleCount_Method    method,
     LAGraph_TriangleCount_Presort *presort,
-    char           *msg
+    char *msg
 ) ;
 
 #endif
