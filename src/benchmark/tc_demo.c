@@ -161,7 +161,7 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     GrB_Index ntriangles, ntsimple = 0 ;
-    double tic [2] ;
+    double tic [2], ttot ;
 
 #if 1
     // check # of triangles
@@ -179,13 +179,13 @@ int main (int argc, char **argv)
     int presort = LAGraph_TriangleCount_AutoSort ; // = 2 (auto selection)
     print_method (stdout, 6, presort) ;
 
-    // warmup method:
+    // warmup method: without the GPU
     // LAGraph_TriangleCount_SandiaDot2 = 6,   // sum (sum ((U * L') .* U))
+    GxB_set (GxB_GPU_CONTROL, GxB_GPU_NEVER) ;
     LAGRAPH_TRY (LAGr_TriangleCount (&ntriangles, G,
         LAGraph_TriangleCount_SandiaDot2, &presort, msg) );
-    printf ("# of triangles: %" PRIu64 "\n", ntriangles) ;
+    printf ("# of triangles: %" PRIu64 " (CPU)\n", ntriangles) ;
     print_method (stdout, 6, presort) ;
-    double ttot ;
     LAGRAPH_TRY (LAGraph_Toc (&ttot, tic, NULL)) ;
     printf ("nthreads: %3d time: %12.6f rate: %6.2f (SandiaDot2, one trial)\n",
             nthreads_max, ttot, 1e-6 * nvals / ttot) ;
@@ -194,6 +194,29 @@ int main (int argc, char **argv)
     if (ntriangles != ntsimple)
     {
         printf ("wrong # triangles: %g %g\n", (double) ntriangles,
+            (double) ntsimple) ;
+        fflush (stdout) ;
+        fflush (stderr) ;
+        abort ( ) ;
+    }
+#endif
+
+    // warmup method: with the GPU
+    // LAGraph_TriangleCount_SandiaDot2 = 6,   // sum (sum ((U * L') .* U))
+    GrB_Index ntriangles_gpu ;
+    GxB_set (GxB_GPU_CONTROL, GxB_GPU_ALWAYS) ;
+    LAGRAPH_TRY (LAGr_TriangleCount (&ntriangles_gpu, G,
+        LAGraph_TriangleCount_SandiaDot2, &presort, msg) );
+    printf ("# of triangles: %" PRIu64 " (GPU)\n", ntriangles_gpu) ;
+    print_method (stdout, 6, presort) ;
+    LAGRAPH_TRY (LAGraph_Toc (&ttot, tic, NULL)) ;
+    printf ("nthreads: %3d time: %12.6f rate: %6.2f (SandiaDot2, warmup GPU)\n",
+            nthreads_max, ttot, 1e-6 * nvals / ttot) ;
+
+#if 1
+    if (ntriangles_gpu != ntsimple)
+    {
+        printf ("wrong # triangles: %g %g\n", (double) ntriangles_gpu,
             (double) ntsimple) ;
         fflush (stdout) ;
         fflush (stderr) ;
