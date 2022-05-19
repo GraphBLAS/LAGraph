@@ -190,11 +190,13 @@ int main (int argc, char **argv)
     printf ("nthreads: %3d time: %12.6f rate: %6.2f (SandiaDot2, one trial)\n",
             nthreads_max, ttot, 1e-6 * nvals / ttot) ;
 
-#if 0
+#if 1
     if (ntriangles != ntsimple)
     {
         printf ("wrong # triangles: %g %g\n", (double) ntriangles,
             (double) ntsimple) ;
+        fflush (stdout) ;
+        fflush (stderr) ;
         abort ( ) ;
     }
 #endif
@@ -269,11 +271,13 @@ int main (int argc, char **argv)
                 printf ("nthreads: %3d time: %12.6f rate: %6.2f", nthreads,
                         ttot, 1e-6 * nvals / ttot) ;
                 printf ("   # of triangles: %" PRId64 " presort: %d\n",
-                        ntriangles, presort) ;
-            #if 0
+                        nt2, presort) ;
+            #if 1
                 if (nt2 != ntriangles)
                 {
                     printf ("Test failure!\n") ;
+                    fflush (stdout) ;
+                    fflush (stderr) ;
                     abort ( ) ;
                 }
             #endif
