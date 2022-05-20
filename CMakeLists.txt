@@ -56,10 +56,10 @@ set ( CMAKE_MACOSX_RPATH TRUE )
 
 # version of LAGraph
 # FIXME: use config to create include/LAGraph.h from these definitions
-set ( LAGraph_DATE "May 13, 2022" )
+set ( LAGraph_DATE "May 20, 2022" )
 set ( LAGraph_VERSION_MAJOR 0 )
 set ( LAGraph_VERSION_MINOR 9 )
-set ( LAGraph_VERSION_SUB   22 )
+set ( LAGraph_VERSION_SUB   23 )
 
 project ( lagraph
           VERSION "${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}" )
