@@ -1672,11 +1672,11 @@ int LAGraph_TriangleCount
 //------------------------------------------------------------------------------
 
 // LAGr_Init is identical to LAGraph_Init, except that it allows the user
-// application to provide four memory management functions, replacing the
-// standard malloc, calloc, realloc, and free.  The functions pointed to by
-// user_malloc_function, user_calloc_function, user_realloc_function, and
-// user_free_function have the same signature as the ANSI C malloc, calloc,
-// realloc, and free functions, respectively.
+// application to specify the GraphBLAS mode.  It also provides four memory
+// management functions, replacing the standard malloc, calloc, realloc, and
+// free.  The functions user_malloc_function, user_calloc_function,
+// user_realloc_function, and user_free_function have the same signature as the
+// ANSI C malloc, calloc, realloc, and free functions, respectively.
 
 // Only user_malloc_function and user_free_function are required.
 // user_calloc_function may be NULL, in which case LAGraph_Calloc uses
@@ -1687,6 +1687,7 @@ LAGRAPH_PUBLIC
 int LAGr_Init
 (
     // input:
+    GrB_Mode mode,      // mode for GrB_Init or GxB_Init
     void * (* user_malloc_function  ) (size_t),
     void * (* user_calloc_function  ) (size_t, size_t),
     void * (* user_realloc_function ) (void *, size_t),

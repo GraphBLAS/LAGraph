@@ -85,6 +85,7 @@ LAGRAPH_PUBLIC
 int LAGr_Init
 (
     // input:
+    GrB_Mode mode,      // mode for GrB_Init or GxB_Init
     void * (* user_malloc_function  ) (size_t),
     void * (* user_calloc_function  ) (size_t, size_t),
     void * (* user_realloc_function ) (void *, size_t),
@@ -114,7 +115,7 @@ int LAGr_Init
 
     #if LAGRAPH_SUITESPARSE
 
-        info = GxB_init (GrB_NONBLOCKING,
+        info = GxB_init (mode,
             user_malloc_function,
             user_calloc_function,
             user_realloc_function,
@@ -123,7 +124,7 @@ int LAGr_Init
     #else
 
         // GxB_init is not available.  Use GrB_init instead.
-        info = GrB_init (GrB_NONBLOCKING) ;
+        info = GrB_init (mode) ;
 
     #endif
 
