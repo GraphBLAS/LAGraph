@@ -148,7 +148,7 @@ void test_SingleSourceShortestPath(void)
 
         // add a single negative edge and try again
         OK (GrB_free (&(G->emin))) ;
-        G->emin_kind = LAGRAPH_UNKNOWN ;
+        G->emin_state = LAGRAPH_UNKNOWN ;
         OK (GrB_Matrix_setElement_INT32 (G->A, -1, 0, 1)) ;
         OK (GrB_Scalar_setElement (Delta, 30)) ;
         OK (LAGr_SingleSourceShortestPath (&path_length, G, 0, Delta, msg)) ;
@@ -269,7 +269,7 @@ void test_SingleSourceShortestPath_types (void)
         TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
         // find the smallest entry
-        OK (LAGraph_Property_EMin (G, msg)) ;
+        OK (LAGraph_Cached_EMin (G, msg)) ;
 
         // delta values to try
         int32_t Deltas [ ] = { 30, 100, 50000 } ;

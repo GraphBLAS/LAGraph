@@ -46,7 +46,8 @@ int LAGraph_New
     // allocate the graph
     //--------------------------------------------------------------------------
 
-    LG_TRY (LAGraph_Malloc ((void **) G, 1, sizeof (struct LAGraph_Graph_struct), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) G, 1,
+        sizeof (struct LAGraph_Graph_struct), msg)) ;
 
     //--------------------------------------------------------------------------
     // initialize its members
@@ -55,15 +56,14 @@ int LAGraph_New
     (*G)->A = NULL ;
     (*G)->kind = LAGraph_KIND_UNKNOWN ;
     (*G)->AT = NULL ;
-    (*G)->rowdegree = NULL ;
-    (*G)->coldegree = NULL ;
-    (*G)->structure_is_symmetric = LAGRAPH_UNKNOWN ;
-    (*G)->ndiag = LAGRAPH_UNKNOWN ;
+    (*G)->out_degree = NULL ;
+    (*G)->in_degree = NULL ;
+    (*G)->is_symmetric_structure = LAGRAPH_UNKNOWN ;
+    (*G)->nself_edges = LAGRAPH_UNKNOWN ;
     (*G)->emin = NULL ;
-    (*G)->emin_kind = LAGRAPH_UNKNOWN ;
+    (*G)->emin_state = LAGRAPH_UNKNOWN ;
     (*G)->emax = NULL ;
-    (*G)->emax_kind = LAGRAPH_UNKNOWN ;
-//  (*G)->nonzero = LAGRAPH_UNKNOWN ;       // future property
+    (*G)->emax_state = LAGRAPH_UNKNOWN ;
 
     //--------------------------------------------------------------------------
     // assign its primary components
@@ -81,7 +81,7 @@ int LAGraph_New
         (*A) = NULL ;
 
         (*G)->kind = kind ;
-        (*G)->structure_is_symmetric =
+        (*G)->is_symmetric_structure =
             (kind == LAGraph_ADJACENCY_UNDIRECTED)
             ? LAGraph_TRUE
             : LAGRAPH_UNKNOWN ;

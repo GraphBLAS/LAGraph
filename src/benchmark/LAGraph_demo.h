@@ -945,7 +945,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
 
     if (remove_self_edges)
     {
-        LAGRAPH_TRY (LAGraph_DeleteDiag (*G, msg)) ;
+        LAGRAPH_TRY (LAGraph_DeleteSelfEdges (*G, msg)) ;
     }
     // LAGRAPH_TRY (LAGraph_DisplayGraph (*G, 2, stdout, msg)) ;
 
@@ -1004,8 +1004,8 @@ static int readproblem          // returns 0 if successful, -1 if failure
     if (!A_is_symmetric)
     {
         // compute G->AT and determine if A has a symmetric structure
-        LAGRAPH_TRY (LAGraph_Property_SymmetricStructure (*G, msg)) ;
-        if ((*G)->structure_is_symmetric && structural)
+        LAGRAPH_TRY (LAGraph_Cached_IsSymmetricStructure (*G, msg)) ;
+        if (((*G)->is_symmetric_structure == LAGraph_TRUE) && structural)
         {
             // if G->A has a symmetric structure, declare the graph undirected
             // and free G->AT since it isn't needed.
@@ -1042,7 +1042,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
                 GRB_TRY (GrB_Matrix_free (&((*G)->AT))) ;
             }
             (*G)->kind = LAGraph_ADJACENCY_UNDIRECTED ;
-            (*G)->structure_is_symmetric = true ;
+            (*G)->is_symmetric_structure = LAGraph_TRUE ;
         }
     }
     // LAGRAPH_TRY (LAGraph_DisplayGraph (*G, 2, stdout, msg)) ;
@@ -1107,11 +1107,17 @@ static inline int demo_init (bool burble)
     mallopt (M_TOP_PAD, 16*1024*1024) ; // increase padding to speedup malloc
     #endif
 
-//  LAGRAPH_TRY (LAGraph_Init (NULL)) ;
+#if 0
+    // just use the CPU
+    LAGRAPH_TRY (LAGraph_Init (NULL)) ;
+#else
+    // use the GPU
     // rmm_wrap_initialize (rmm_wrap_managed, INT32_MAX, INT64_MAX) ;
     rmm_wrap_initialize (rmm_wrap_managed, 256 * 1000000L, 256 * 100000000L) ;
-    LAGRAPH_TRY (LAGr_Init (rmm_wrap_malloc, rmm_wrap_calloc, rmm_wrap_realloc, rmm_wrap_free, NULL)) ;
+    LAGRAPH_TRY (LAGr_Init (GxB_NONBLOCKING_GPU, rmm_wrap_malloc,
+        rmm_wrap_calloc, rmm_wrap_realloc, rmm_wrap_free, NULL)) ;
     GxB_set (GxB_GPU_CONTROL, GxB_GPU_ALWAYS) ;
+#endif
 
     #if LAGRAPH_SUITESPARSE
     printf ("include: %s v%d.%d.%d [%s]\n",

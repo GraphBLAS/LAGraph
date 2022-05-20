@@ -18,6 +18,6 @@ int LAGraph_Init (char *msg)
 
     LG_CLEAR_MSG ;
 
-    // use ANSI C memory allocation functions
-    return (LAGr_Init (malloc, calloc, realloc, free, msg)) ;
+    // use GraphBLAS nonblocking mode, and ANSI C memory allocation functions
+    return (LAGr_Init (GrB_NONBLOCKING, malloc, calloc, realloc, free, msg)) ;
 }

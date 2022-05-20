@@ -1,8 +1,8 @@
 // Basic vs Advanced algorithms, not utilities
 
-// Basic algorithm:  G can be modified (input/output).  Properties computed
-// if needed.  Sometimes fewer inputs than Advanced (parameters computed
-// automically, or with defaults).
+// Basic algorithm:  G can be modified (input/output).  Cached properties
+// computed if needed.  Sometimes fewer inputs than Advanced (parameters
+// computed automically, or with defaults).
 
 LAGraph_WhatEver    // is a Basic method
 

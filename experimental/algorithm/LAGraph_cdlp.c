@@ -258,8 +258,6 @@ int LAGraph_cdlp
         GRB_TRY (GrB_transpose (AT, NULL, NULL, A, NULL)) ;
     }
 
-    int nthreads;
-    LAGraph_GetNumThreads(&nthreads, NULL);
     for (int iteration = 0; iteration < itermax; iteration++)
     {
         // Initialize data structures for extraction from 'AL_in' and (for directed graphs) 'AL_out'
@@ -282,7 +280,7 @@ int LAGraph_cdlp
                                                        GrB_NULL, &X[nz], &nz, AT));
         }
 
-        LAGraph_Sort2((int64_t *) I, (int64_t *) X, nnz, nthreads, NULL);
+        LAGraph_Sort2((int64_t *) I, (int64_t *) X, nnz, NULL);
 
         // save current labels for comparison by swapping L and L_prev
         GrB_Matrix L_swap = L;

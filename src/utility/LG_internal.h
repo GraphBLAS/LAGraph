@@ -348,6 +348,16 @@ MM_storage_enum ;
 // LG_PART and LG_PARTITION: definitions for partitioning an index range
 //------------------------------------------------------------------------------
 
+LAGRAPH_PUBLIC
+int LG_nthreads_hi ;    // # of threads to use at the higher level of a nested
+                        // parallel region in LAGraph.  Default: 1.
+
+LAGRAPH_PUBLIC
+int LG_nthreads_lo ;    // # of threads to use at the lower level of a nested
+                        // parallel region, or to use inside GraphBLAS.
+                        // Default: the value obtained by omp_get_max_threads
+                        // if OpenMP is in use, or 1 otherwise.
+
 // LG_PART and LG_PARTITION:  divide the index range 0:n-1 uniformly
 // for nthreads.  LG_PART(tid,n,nthreads) is the first index for thread tid.
 #define LG_PART(tid,n,nthreads)  \
@@ -384,7 +394,7 @@ static inline void LG_eslice
 // All of the LG_qsort_* functions are single-threaded, by design.  The
 // LAGraph_Sort* functions are parallel.  None of these sorting methods are
 // guaranteed to be stable.  These functions are contributed by Tim Davis, and
-// are derived from SuiteSparse:GraphBLAS v4.0.3.  Functions named LG_* are not
+// are derived from SuiteSparse:GraphBLAS.  Functions named LG_* are not
 // meant to be accessible by end users of LAGraph.
 
 #define LG_BASECASE (64 * 1024)
@@ -505,10 +515,10 @@ void LG_qsort_3     // sort array A of size 3-by-n, using 3 keys (A [0:2][])
 // count entries on the diagonal of a matrix
 //------------------------------------------------------------------------------
 
-int LG_ndiag
+int LG_nself_edges
 (
     // output
-    int64_t *ndiag,         // # of entries
+    int64_t *nself_edges,   // # of entries
     // input
     GrB_Matrix A,           // matrix to count
     char *msg               // error message

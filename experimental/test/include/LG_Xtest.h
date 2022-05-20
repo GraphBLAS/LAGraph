@@ -36,4 +36,26 @@ int LG_check_ktruss
     char *msg
 ) ;
 
+int LG_check_kcore
+(
+    // outputs:
+    GrB_Vector *decomp,     // kcore decomposition
+    uint64_t *kmax,         // max kcore- if kfinal == -1, kmax = -1
+    // inputs
+    LAGraph_Graph G,        // input graph
+    int64_t kfinal,         // max k to check for graph.
+    char *msg
+) ;
+
+int LG_check_kcore_decompose
+(
+    // outputs:
+    GrB_Matrix *D,              // kcore decomposition
+    // inputs:
+    LAGraph_Graph G,            // input graph
+    GrB_Vector decomp,
+    uint64_t k,
+    char *msg
+) ;
+
 #endif

@@ -32,9 +32,9 @@ void test_Init (void)
 
     #if LAGRAPH_SUITESPARSE
     const char *name, *date ;
-    OK (GxB_get (GxB_LIBRARY_NAME, &name)) ;
-    OK (GxB_get (GxB_LIBRARY_DATE, &date)) ;
-    OK (GxB_get (GxB_LIBRARY_VERSION, ver)) ;
+    OK (GxB_Global_Option_get (GxB_LIBRARY_NAME, &name)) ;
+    OK (GxB_Global_Option_get (GxB_LIBRARY_DATE, &date)) ;
+    OK (GxB_Global_Option_get (GxB_LIBRARY_VERSION, ver)) ;
     printf ("\nlibrary: %s %d.%d.%d (%s)\n", name, ver [0], ver [1], ver [2],
         date) ;
     printf (  "include: %s %d.%d.%d (%s)\n", GxB_IMPLEMENTATION_NAME,
@@ -45,6 +45,16 @@ void test_Init (void)
     TEST_CHECK (ver [1] == GxB_IMPLEMENTATION_MINOR) ;
     TEST_CHECK (ver [2] == GxB_IMPLEMENTATION_SUB) ;
     OK (strcmp (date, GxB_IMPLEMENTATION_DATE)) ;
+
+    #if ( GxB_IMPLEMENTATION_MAJOR >= 7 )
+    char *compiler ;
+    int compiler_version [3] ;
+    OK (GxB_Global_Option_get (GxB_COMPILER_NAME, &compiler)) ;
+    OK (GxB_Global_Option_get (GxB_COMPILER_VERSION, compiler_version)) ;
+    printf ("GraphBLAS compiled with: %s v%d.%d.%d\n", compiler,
+        compiler_version [0], compiler_version [1], compiler_version [2]) ;
+    #endif
+
     #else
     printf ("\nVanilla GraphBLAS: no GxB* extensions\n") ;
     #endif
@@ -67,20 +77,7 @@ void test_Init (void)
     TEST_CHECK (ver [2] == LAGRAPH_VERSION_UPDATE) ;
     OK (strcmp (version_date, LAGRAPH_DATE)) ;
 
-    // LAGraph_Init cannot be called twice
-    status = LAGraph_Init (msg) ;
-    printf ("\nstatus: %d msg: %s\n", status, msg) ;
-    TEST_CHECK (status != GrB_SUCCESS) ;
-
     OK (LAGraph_Finalize (msg)) ;
-
-    // calling LAGraph_Finalize twice leads to undefined behavior;
-    // for SuiteSparse, it returns GrB_SUCCESS
-    status = LAGraph_Finalize (msg) ;
-    printf ("status %d\n", status) ;
-    #if LAGRAPH_SUITESPARSE
-    TEST_CHECK (status == GrB_SUCCESS) ;
-    #endif
 }
 
 //-----------------------------------------------------------------------------

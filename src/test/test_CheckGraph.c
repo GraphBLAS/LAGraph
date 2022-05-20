@@ -89,21 +89,25 @@ void test_CheckGraph (void)
         TEST_CHECK (G->kind == kind) ;
         if (kind == LAGraph_ADJACENCY_DIRECTED)
         {
-            TEST_CHECK (G->structure_is_symmetric == LAGRAPH_UNKNOWN) ;
+            TEST_CHECK (G->is_symmetric_structure == LAGRAPH_UNKNOWN) ;
         }
         else
         {
-            TEST_CHECK (G->structure_is_symmetric == LAGraph_TRUE) ;
+            TEST_CHECK (G->is_symmetric_structure == LAGraph_TRUE) ;
         }
 
-        // create its properties
-        OK (LAGraph_Property_AT (G, msg)) ;
+        // create its cached properties
+        int ok_result = (kind == LAGraph_ADJACENCY_UNDIRECTED) ?
+            LAGRAPH_CACHE_NOT_NEEDED : GrB_SUCCESS ;
+        int result = LAGraph_Cached_AT (G, msg) ;
+        OK (LAGraph_CheckGraph (G, msg)) ;
+        TEST_CHECK (result == ok_result) ;
+
+        OK (LAGraph_Cached_OutDegree (G, msg)) ;
         OK (LAGraph_CheckGraph (G, msg)) ;
 
-        OK (LAGraph_Property_RowDegree (G, msg)) ;
-        OK (LAGraph_CheckGraph (G, msg)) ;
-
-        OK (LAGraph_Property_ColDegree (G, msg)) ;
+        result = LAGraph_Cached_InDegree (G, msg) ;
+        TEST_CHECK (result == ok_result) ;
         OK (LAGraph_CheckGraph (G, msg)) ;
 
         // free the graph
@@ -182,29 +186,29 @@ void test_CheckGraph_failures (void)
 
     G->AT = NULL ;
 
-    // G->rowdegree has the right type, but wrong size
-    G->rowdegree = d_int64 ;
+    // G->out_degree has the right type, but wrong size
+    G->out_degree = d_int64 ;
     TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
     printf ("msg: %s\n", msg) ;
 
-    // G->rowdegree has the right size, but wrong type
-    G->rowdegree = d_bool ;
+    // G->out_degree has the right size, but wrong type
+    G->out_degree = d_bool ;
     TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
     printf ("msg: %s\n", msg) ;
 
-    G->rowdegree = NULL ;
+    G->out_degree = NULL ;
 
-    // G->coldegree has the right type, but wrong size
-    G->coldegree = d_int64 ;
+    // G->in_degree has the right type, but wrong size
+    G->in_degree = d_int64 ;
     TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
     printf ("msg: %s\n", msg) ;
 
-    // G->coldegree has the right size, but wrong type
-    G->coldegree = d_bool ;
+    // G->in_degree has the right size, but wrong type
+    G->in_degree = d_bool ;
     TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
     printf ("msg: %s\n", msg) ;
 
-    G->coldegree = NULL ;
+    G->in_degree = NULL ;
 
     #if LAGRAPH_SUITESPARSE
     // G->A must be by-row
@@ -265,12 +269,12 @@ void test_CheckGraph_brutal (void)
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
     LG_BRUTAL_BURBLE (LAGraph_CheckGraph (G, msg)) ;
 
-    // create its properties
-    LG_BRUTAL_BURBLE (LAGraph_Property_AT (G, msg)) ;
+    // create its cached properties
+    LG_BRUTAL_BURBLE (LAGraph_Cached_AT (G, msg)) ;
     LG_BRUTAL_BURBLE (LAGraph_CheckGraph (G, msg)) ;
-    LG_BRUTAL_BURBLE (LAGraph_Property_RowDegree (G, msg)) ;
+    LG_BRUTAL_BURBLE (LAGraph_Cached_OutDegree (G, msg)) ;
     LG_BRUTAL_BURBLE (LAGraph_CheckGraph (G, msg)) ;
-    LG_BRUTAL_BURBLE (LAGraph_Property_ColDegree (G, msg)) ;
+    LG_BRUTAL_BURBLE (LAGraph_Cached_InDegree (G, msg)) ;
     LG_BRUTAL_BURBLE (LAGraph_CheckGraph (G, msg)) ;
     LG_BRUTAL_BURBLE (LAGraph_Delete (&G, msg)) ;
 

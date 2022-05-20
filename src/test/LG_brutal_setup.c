@@ -18,7 +18,8 @@ int LG_brutal_setup (char *msg)
 {
     LG_brutal = -1 ;        // disable brutal testing for now
     LG_nmalloc = 0 ;        // assuming nothing is malloc'd
-    int result = LAGr_Init (LG_brutal_malloc, LG_brutal_calloc,
+    int result = LAGr_Init (GrB_NONBLOCKING,
+        LG_brutal_malloc, LG_brutal_calloc,
         LG_brutal_realloc, LG_brutal_free, msg) ;
     if (result != 0) return (result) ;
     #if LAGRAPH_SUITESPARSE

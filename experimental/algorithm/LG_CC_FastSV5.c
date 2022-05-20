@@ -347,7 +347,7 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
 
     LG_ASSERT_MSG ((G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGraph_ADJACENCY_DIRECTED &&
-        G->structure_is_symmetric == LAGraph_TRUE)),
+        G->is_symmetric_structure == LAGraph_TRUE)),
         -1001, "G->A must be known to be symmetric") ;
 
     GrB_Matrix S = G->A ;
@@ -368,8 +368,10 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
     //--------------------------------------------------------------------------
 
     // determine # of threads to use for Reduce_assign
-    int nthreads ;
-    LG_TRY (LAGraph_GetNumThreads (&nthreads, NULL)) ;
+    int nthreads, nthreads_hi, nthreads_lo ;
+    LG_TRY (LAGraph_GetNumThreads (&nthreads_hi, &nthreads_lo, msg)) ;
+    nthreads = nthreads_hi * nthreads_lo ;
+
     nthreads = LAGRAPH_MIN (nthreads, n / 16) ;
     nthreads = LAGRAPH_MAX (nthreads, 1) ;
 

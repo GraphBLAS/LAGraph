@@ -19,6 +19,8 @@
 // LAGraph global objects
 //------------------------------------------------------------------------------
 
+bool LG_init_has_been_called = false ;
+
 // LAGraph_plus_first_T: using the GrB_PLUS_MONOID_T monoid and the
 // corresponding GrB_FIRST_T multiplicative operator.
 GrB_Semiring LAGraph_plus_first_int8   = NULL ;
@@ -59,21 +61,21 @@ GrB_Semiring LAGraph_plus_one_fp32   = NULL ;
 GrB_Semiring LAGraph_plus_one_fp64   = NULL ;
 
 
-// use LAGraph_structural_bool, etc
+// use LAGraph_any_one_bool, etc
 
-// LAGraph_structural_T: using the GrB_MIN_MONOID_T for non-boolean types
+// LAGraph_any_one_T: using the GrB_MIN_MONOID_T for non-boolean types
 // or GrB_LOR_MONOID_BOOL for boolean, and the GrB_ONEB_T multiplicative op.
-GrB_Semiring LAGraph_structural_bool   = NULL ;
-GrB_Semiring LAGraph_structural_int8   = NULL ;
-GrB_Semiring LAGraph_structural_int16  = NULL ;
-GrB_Semiring LAGraph_structural_int32  = NULL ;
-GrB_Semiring LAGraph_structural_int64  = NULL ;
-GrB_Semiring LAGraph_structural_uint8  = NULL ;
-GrB_Semiring LAGraph_structural_uint16 = NULL ;
-GrB_Semiring LAGraph_structural_uint32 = NULL ;
-GrB_Semiring LAGraph_structural_uint64 = NULL ;
-GrB_Semiring LAGraph_structural_fp32   = NULL ;
-GrB_Semiring LAGraph_structural_fp64   = NULL ;
+GrB_Semiring LAGraph_any_one_bool   = NULL ;
+GrB_Semiring LAGraph_any_one_int8   = NULL ;
+GrB_Semiring LAGraph_any_one_int16  = NULL ;
+GrB_Semiring LAGraph_any_one_int32  = NULL ;
+GrB_Semiring LAGraph_any_one_int64  = NULL ;
+GrB_Semiring LAGraph_any_one_uint8  = NULL ;
+GrB_Semiring LAGraph_any_one_uint16 = NULL ;
+GrB_Semiring LAGraph_any_one_uint32 = NULL ;
+GrB_Semiring LAGraph_any_one_uint64 = NULL ;
+GrB_Semiring LAGraph_any_one_fp32   = NULL ;
+GrB_Semiring LAGraph_any_one_fp64   = NULL ;
 
 //------------------------------------------------------------------------------
 // LAGr_Init
@@ -83,6 +85,7 @@ LAGRAPH_PUBLIC
 int LAGr_Init
 (
     // input:
+    GrB_Mode mode,      // mode for GrB_Init or GxB_Init
     void * (* user_malloc_function  ) (size_t),
     void * (* user_calloc_function  ) (size_t, size_t),
     void * (* user_realloc_function ) (void *, size_t),
@@ -101,13 +104,18 @@ int LAGr_Init
     LG_ASSERT (user_free_function   != NULL, GrB_NULL_POINTER) ;
     GrB_Info info ;
 
+    // ensure LAGr_Init has not already been called
+    LG_ASSERT_MSG (!LG_init_has_been_called, GrB_INVALID_VALUE,
+        "LAGr*_Init can only be called once") ;
+    LG_init_has_been_called = true ;
+
     //--------------------------------------------------------------------------
     // start GraphBLAS
     //--------------------------------------------------------------------------
 
     #if LAGRAPH_SUITESPARSE
 
-        info = GxB_init (GrB_NONBLOCKING,
+        info = GxB_init (mode,
             user_malloc_function,
             user_calloc_function,
             user_realloc_function,
@@ -116,11 +124,11 @@ int LAGr_Init
     #else
 
         // GxB_init is not available.  Use GrB_init instead.
-        info = GrB_init (GrB_NONBLOCKING) ;
+        info = GrB_init (mode) ;
 
     #endif
 
-    LG_ASSERT_MSG (info == GrB_SUCCESS, info,
+    LG_ASSERT_MSG (info == GrB_SUCCESS || info == GrB_INVALID_VALUE, info,
         "failed to initialize GraphBLAS") ;
 
     #undef  LG_FREE_ALL
@@ -137,6 +145,24 @@ int LAGr_Init
     LAGraph_Calloc_function  = user_calloc_function ;
     LAGraph_Realloc_function = user_realloc_function ;
     LAGraph_Free_function    = user_free_function ;
+
+    //--------------------------------------------------------------------------
+    // set # of LAGraph threads
+    //--------------------------------------------------------------------------
+
+    LG_nthreads_hi = 1 ;                // for LAGraph itself, if nested
+                                        // regions call GraphBLAS
+    #ifdef _OPENMP
+    LG_nthreads_lo = omp_get_max_threads ( ) ; // for lower-level parallelism
+    #else
+    LG_nthreads_lo = 1 ;
+    #endif
+
+    #if LAGRAPH_SUITESPARSE
+    {
+        GRB_TRY (GxB_set (GxB_NTHREADS, LG_nthreads_lo)) ;
+    }
+    #endif
 
     //--------------------------------------------------------------------------
     // create global objects
@@ -228,7 +254,7 @@ int LAGr_Init
     GRB_TRY (GrB_Semiring_new (&LAGraph_plus_one_fp64,
         GrB_PLUS_MONOID_FP64  , GrB_ONEB_FP64  )) ;
 
-    // LAGraph_structural_T: using the GrB_MIN_MONOID_T for non-boolean types,
+    // LAGraph_any_one_T: using the GrB_MIN_MONOID_T for non-boolean types,
     // or GrB_LOR_MONOID_BOOL for boolean, and the GrB_ONEB_T multiplicative
     // operator.  Given any matrices A and B, C = A*B when using this semiring
     // computes a matrix C whose values (for entries present) are all equal to
@@ -244,27 +270,27 @@ int LAGr_Init
     // of 1, or true, and thus any of these monoids will compute the same
     // thing.
 
-    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_bool,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_any_one_bool,
         GrB_LOR_MONOID_BOOL   , GrB_ONEB_BOOL  )) ;
-    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_int8,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_any_one_int8,
         GrB_MIN_MONOID_INT8   , GrB_ONEB_INT8  )) ;
-    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_int16,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_any_one_int16,
         GrB_MIN_MONOID_INT16  , GrB_ONEB_INT16 )) ;
-    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_int32,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_any_one_int32,
         GrB_MIN_MONOID_INT32  , GrB_ONEB_INT32 )) ;
-    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_int64,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_any_one_int64,
         GrB_MIN_MONOID_INT64  , GrB_ONEB_INT64 )) ;
-    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_uint8,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_any_one_uint8,
         GrB_MIN_MONOID_UINT8  , GrB_ONEB_UINT8 )) ;
-    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_uint16,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_any_one_uint16,
         GrB_MIN_MONOID_UINT16 , GrB_ONEB_UINT16)) ;
-    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_uint32,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_any_one_uint32,
         GrB_MIN_MONOID_UINT32 , GrB_ONEB_UINT32)) ;
-    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_uint64,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_any_one_uint64,
         GrB_MIN_MONOID_UINT64 , GrB_ONEB_UINT64)) ;
-    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_fp32,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_any_one_fp32,
         GrB_MIN_MONOID_FP32   , GrB_ONEB_FP32  )) ;
-    GRB_TRY (GrB_Semiring_new (&LAGraph_structural_fp64,
+    GRB_TRY (GrB_Semiring_new (&LAGraph_any_one_fp64,
         GrB_MIN_MONOID_FP64   , GrB_ONEB_FP64  )) ;
 
     return (GrB_SUCCESS) ;

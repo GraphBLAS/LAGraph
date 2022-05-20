@@ -12,7 +12,7 @@
 
 //------------------------------------------------------------------------------
 
-// This is an Advanced algorithm (G->structure_is_symmetric must be known),
+// This is an Advanced algorithm (G->is_symmetric_structure must be known),
 // but it is not user-callable (see LAGr_ConnectedComponents instead).
 
 // Code is based on the algorithm described in the following paper:
@@ -28,7 +28,7 @@
 // Modified by Tim Davis, Texas A&M University: revised Reduce_assign to use
 // purely GrB* and GxB* methods and the matrix C.  Added warmup phase.  Changed
 // to use GxB pack/unpack instead of GxB import/export.  Converted to use the
-// LAGraph_Graph object.  Exploiting iso property for the temporary matrices
+// LAGraph_Graph object.  Exploiting iso status for the temporary matrices
 // C and T.
 
 // The input graph G must be undirected, or directed and with an adjacency
@@ -229,7 +229,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
 
     LG_ASSERT_MSG ((G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGraph_ADJACENCY_DIRECTED &&
-        G->structure_is_symmetric == LAGraph_TRUE)),
+        G->is_symmetric_structure == LAGraph_TRUE)),
         LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED,
         "G->A must be known to be symmetric") ;
 
@@ -287,8 +287,9 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
 // [ todo: nthreads will not be needed once GxB_select with a GxB_RankUnaryOp
 // and a new GxB_extract are added to SuiteSparse:GraphBLAS.
     // determine # of threads to use
-    int nthreads ;
-    LG_TRY (LAGraph_GetNumThreads (&nthreads, NULL)) ;
+    int nthreads, nthreads_hi, nthreads_lo ;
+    LG_TRY (LAGraph_GetNumThreads (&nthreads_hi, &nthreads_lo, msg)) ;
+    nthreads = nthreads_hi * nthreads_lo ;
     nthreads = LAGRAPH_MIN (nthreads, n / 16) ;
     nthreads = LAGRAPH_MAX (nthreads, 1) ;
 // ]
@@ -530,7 +531,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
 // This method will not insert the new entries T(i,key) for rows i that have
 // had entries deleted.  That can be done with GrB_assign, with an n-by-1 mask
 // M computed from the before-and-after row degrees of A and T:
-// M = (parent != key) && (row_degree(T) < row_degree(A))
+// M = (parent != key) && (out_degree(T) < out_degree(A))
 // J [0] = key.
 // GxB_Matrix_subassign_BOOL (T, M, NULL, true, GrB_ALL, n, J, 1, NULL)
 // or with

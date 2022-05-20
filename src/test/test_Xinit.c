@@ -28,23 +28,24 @@ void test_Xinit (void)
 
     printf ("\nTesting LAGr_Init:\n") ;
 
-    TEST_CHECK (LAGr_Init (NULL, NULL, NULL, NULL, msg)
+    TEST_CHECK (LAGr_Init (GrB_NONBLOCKING, NULL, NULL, NULL, NULL, msg)
         == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
-    TEST_CHECK (LAGr_Init (malloc, NULL, NULL, NULL, msg)
+    TEST_CHECK (LAGr_Init (GrB_NONBLOCKING, malloc, NULL, NULL, NULL, msg)
         == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
-    TEST_CHECK (LAGr_Init (NULL, NULL, NULL, free, msg)
+    TEST_CHECK (LAGr_Init (GrB_NONBLOCKING, NULL, NULL, NULL, free, msg)
         == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
-    OK (LAGr_Init (malloc, calloc, realloc, free, msg)) ;
+    OK (LAGr_Init (GrB_NONBLOCKING, malloc, calloc, realloc, free, msg)) ;
     printf ("msg: [%s]\n", msg) ;
 
     // LAGr_Init cannot be called twice
-    int status = LAGr_Init (malloc, calloc, realloc, free, msg) ;
+    int status = LAGr_Init (GrB_NONBLOCKING,
+        malloc, calloc, realloc, free, msg) ;
     TEST_CHECK (status != GrB_SUCCESS) ;
     printf ("msg: %s\n", msg) ;
 
@@ -61,8 +62,9 @@ void test_Xinit_brutal (void)
     // no brutal memory failures, but test LG_brutal_malloc/calloc/realloc/free
     LG_brutal = -1 ;
     LG_nmalloc = 0 ;
-    OK (LAGr_Init (LG_brutal_malloc, LG_brutal_calloc, LG_brutal_realloc,
-        LG_brutal_free, msg)) ;
+    OK (LAGr_Init (GrB_NONBLOCKING,
+        LG_brutal_malloc, LG_brutal_calloc, LG_brutal_realloc, LG_brutal_free,
+        msg)) ;
 
     int32_t *p = LG_brutal_malloc (42 * sizeof (int32_t)) ;
     TEST_CHECK (p != NULL) ;
@@ -124,7 +126,8 @@ void test_Xinit_brutal (void)
     {
         LG_brutal = nbrutal ;
         GB_Global_GrB_init_called_set (false) ;
-        int result = LAGr_Init (LG_brutal_malloc, LG_brutal_calloc,
+        int result = LAGr_Init (GrB_NONBLOCKING,
+            LG_brutal_malloc, LG_brutal_calloc,
             LG_brutal_realloc, LG_brutal_free, msg) ;
         if (result == 0)
         {

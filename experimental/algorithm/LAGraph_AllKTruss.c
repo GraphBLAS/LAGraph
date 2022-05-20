@@ -84,13 +84,14 @@ int LAGraph_AllKTruss   // compute all k-trusses of a graph
 
     LG_CLEAR_MSG ;
     int64_t k = 0 ;
-    LG_ASSERT (Cset != NULL && nstepss != NULL && kmax != NULL && ntris != NULL
-        && nedges != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (Cset != NULL && nstepss != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (kmax != NULL && ntris != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (nedges != NULL, GrB_NULL_POINTER) ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
 
     if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGraph_ADJACENCY_DIRECTED &&
-        G->structure_is_symmetric == LAGraph_TRUE))
+        G->is_symmetric_structure == LAGraph_TRUE))
     {
         // the structure of A is known to be symmetric
         ;
@@ -102,7 +103,7 @@ int LAGraph_AllKTruss   // compute all k-trusses of a graph
     }
 
     // no self edges can be present
-    LG_ASSERT_MSG (G->ndiag == 0, -1004, "G->ndiag must be zero") ;
+    LG_ASSERT_MSG (G->nself_edges == 0, -1004, "G->nself_edges must be zero") ;
 
     //--------------------------------------------------------------------------
     // initializations

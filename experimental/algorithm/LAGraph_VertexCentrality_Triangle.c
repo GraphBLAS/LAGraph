@@ -109,7 +109,7 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
 
     if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGraph_ADJACENCY_DIRECTED &&
-        G->structure_is_symmetric == LAGraph_TRUE))
+        G->is_symmetric_structure == LAGraph_TRUE))
     {
         // the structure of A is known to be symmetric
         A = G->A ;
@@ -121,7 +121,7 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
     }
 
     // no self edges can be present
-    LG_ASSERT_MSG (G->ndiag == 0, -1004, "G->ndiag must be zero") ;
+    LG_ASSERT_MSG (G->nself_edges == 0, -1004, "G->nself_edges must be zero") ;
 
     //--------------------------------------------------------------------------
     // create the T matrix

@@ -150,8 +150,8 @@ void test_cdlp (void)
         TEST_CHECK (A == NULL) ;
 
         // check for self-edges
-        OK (LAGraph_Property_NDiag (G, msg)) ;
-        bool sanitize = (G->ndiag != 0) ;
+        OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
+        bool sanitize = (G->nself_edges != 0) ;
 
         GrB_Vector c = NULL ;
         double t [2] ;
@@ -208,7 +208,7 @@ void test_errors (void)
     OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;
 
-    OK (LAGraph_Property_NDiag (G, msg)) ;
+    OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
 
     GrB_Vector c = NULL ;
     double t [2] ;

@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/test/test_Property_Degree.c:  test LAGraph_Property_*Degree
+// LAGraph/src/test/test_Cached_Degree.c:  test LAGraph_Cached_*Degree
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -72,14 +72,14 @@ void check_degree
 }
 
 //------------------------------------------------------------------------------
-// test_Property_Degree:  test LAGraph_Property_*Degree
+// test_Cached_Degree:  test LAGraph_Cached_*Degree
 //------------------------------------------------------------------------------
 
 typedef struct
 {
     const char *name ;
-    const int rowdeg [67] ;
-    const int coldeg [67] ;
+    const int out_deg [67] ;
+    const int in_deg [67] ;
 }
 matrix_info ;
 
@@ -232,10 +232,10 @@ const matrix_info files [ ] =
 } ;
 
 //-----------------------------------------------------------------------------
-// test_Property_Degree
+// test_Cached_Degree
 //-----------------------------------------------------------------------------
 
-void test_Property_Degree (void)
+void test_Cached_Degree (void)
 {
     setup ( ) ;
 
@@ -245,8 +245,8 @@ void test_Property_Degree (void)
         // load the matrix as A
         const char *aname = files [k].name ;
         if (strlen (aname) == 0) break;
-        const int *rowdeg = files [k].rowdeg ;
-        const int *coldeg = files [k].coldeg ;
+        const int *out_deg = files [k].out_deg ;
+        const int *in_deg = files [k].in_deg ;
         TEST_CASE (aname) ;
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
@@ -261,33 +261,33 @@ void test_Property_Degree (void)
 
         for (int trial = 0 ; trial <= 2 ; trial++)
         {
-            // create the G->rowdegree property and check it
-            OK (LAGraph_Property_RowDegree (G, msg)) ;
+            // create the G->out_degree cached property and check it
+            OK (LAGraph_Cached_OutDegree (G, msg)) ;
             GrB_Index n ;
             OK (GrB_Matrix_nrows (&n, G->A)) ;
-            check_degree (G->rowdegree, n, rowdeg) ;
+            check_degree (G->out_degree, n, out_deg) ;
 
             if (trial == 2)
             {
-                // use G->AT to compute G->coldegree 
-                OK (LAGraph_DeleteProperties (G, msg)) ;
-                OK (LAGraph_Property_AT (G, msg)) ;
+                // use G->AT to compute G->in_degree 
+                OK (LAGraph_DeleteCached (G, msg)) ;
+                OK (LAGraph_Cached_AT (G, msg)) ;
             }
 
-            // create the G->ColDegree property and check it
-            OK (LAGraph_Property_ColDegree (G, msg)) ;
+            // create the G->in_degree cached property and check it
+            OK (LAGraph_Cached_InDegree (G, msg)) ;
             OK (GrB_Matrix_ncols (&n, G->A)) ;
-            check_degree (G->coldegree, n, coldeg) ;
+            check_degree (G->in_degree, n, in_deg) ;
         }
 
         OK (LAGraph_Delete (&G, msg)) ;
     }
 
     // check error handling
-    int status = LAGraph_Property_RowDegree (NULL, msg) ;
+    int status = LAGraph_Cached_OutDegree (NULL, msg) ;
     printf ("\nstatus: %d, msg: %s\n", status, msg) ;
     TEST_CHECK (status == GrB_NULL_POINTER) ;
-    status = LAGraph_Property_ColDegree (NULL, msg) ;
+    status = LAGraph_Cached_InDegree (NULL, msg) ;
     printf ("status: %d, msg: %s\n", status, msg) ;
     TEST_CHECK (status == GrB_NULL_POINTER) ;
 
@@ -295,11 +295,11 @@ void test_Property_Degree (void)
 }
 
 //-----------------------------------------------------------------------------
-// test_Property_Degree_brutal
+// test_Cached_Degree_brutal
 //-----------------------------------------------------------------------------
 
 #if LAGRAPH_SUITESPARSE
-void test_Property_Degree_brutal (void)
+void test_Cached_Degree_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
 
@@ -309,8 +309,8 @@ void test_Property_Degree_brutal (void)
         // load the matrix as A
         const char *aname = files [k].name ;
         if (strlen (aname) == 0) break;
-        const int *rowdeg = files [k].rowdeg ;
-        const int *coldeg = files [k].coldeg ;
+        const int *out_deg = files [k].out_deg ;
+        const int *in_deg = files [k].in_deg ;
         TEST_CASE (aname) ;
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
@@ -325,23 +325,23 @@ void test_Property_Degree_brutal (void)
 
         for (int trial = 0 ; trial <= 2 ; trial++)
         {
-            // create the G->rowdegree property and check it
-            LG_BRUTAL (LAGraph_Property_RowDegree (G, msg)) ;
+            // create the G->out_degree cached property and check it
+            LG_BRUTAL (LAGraph_Cached_OutDegree (G, msg)) ;
             GrB_Index n ;
             OK (GrB_Matrix_nrows (&n, G->A)) ;
-            check_degree (G->rowdegree, n, rowdeg) ;
+            check_degree (G->out_degree, n, out_deg) ;
 
             if (trial == 2)
             {
-                // use G->AT to compute G->coldegree 
-                OK (LAGraph_DeleteProperties (G, msg)) ;
-                OK (LAGraph_Property_AT (G, msg)) ;
+                // use G->AT to compute G->in_degree 
+                OK (LAGraph_DeleteCached (G, msg)) ;
+                OK (LAGraph_Cached_AT (G, msg)) ;
             }
 
-            // create the G->ColDegree property and check it
-            LG_BRUTAL (LAGraph_Property_ColDegree (G, msg)) ;
+            // create the G->in_degree cached property and check it
+            LG_BRUTAL (LAGraph_Cached_InDegree (G, msg)) ;
             OK (GrB_Matrix_ncols (&n, G->A)) ;
-            check_degree (G->coldegree, n, coldeg) ;
+            check_degree (G->in_degree, n, in_deg) ;
         }
 
         OK (LAGraph_Delete (&G, msg)) ;
@@ -357,9 +357,9 @@ void test_Property_Degree_brutal (void)
 
 TEST_LIST =
 {
-    { "Property_Degree", test_Property_Degree },
+    { "test_Degree", test_Cached_Degree },
     #if LAGRAPH_SUITESPARSE
-    { "Property_Degree_brutal", test_Property_Degree_brutal },
+    { "test_Degree_brutal", test_Cached_Degree_brutal },
     #endif
     { NULL, NULL }
 } ;

@@ -17,7 +17,7 @@
 // global variables
 //------------------------------------------------------------------------------
 
-int nthreads = 0 ;
+int nthreads_hi = 0, nthreads_lo = 0 ;
 char msg [LAGRAPH_MSG_LEN] ;
 
 //------------------------------------------------------------------------------
@@ -29,24 +29,33 @@ void test_NumThreads (void)
 
     OK (LAGraph_Init (msg)) ;
 
-    nthreads = 0 ;
-    OK (LAGraph_GetNumThreads (&nthreads, msg)) ;
-    TEST_CHECK (nthreads > 0) ;
+    nthreads_hi = 0 ;
+    nthreads_lo = 0 ;
+    OK (LAGraph_GetNumThreads (&nthreads_hi, &nthreads_lo, msg)) ;
+    TEST_CHECK (nthreads_hi > 0) ;
+    TEST_CHECK (nthreads_lo > 0) ;
 
-    nthreads = 0 ;
-    OK (LAGraph_GetNumThreads (&nthreads, NULL)) ;
-    TEST_CHECK (nthreads > 0) ;
+    nthreads_hi = 0 ;
+    nthreads_lo = 0 ;
+    OK (LAGraph_GetNumThreads (&nthreads_hi, &nthreads_lo, NULL)) ;
+    TEST_CHECK (nthreads_hi > 0) ;
+    TEST_CHECK (nthreads_lo > 0) ;
 
-    OK (LAGraph_SetNumThreads (4, msg)) ;
-    OK (LAGraph_GetNumThreads (&nthreads, msg)) ;
-    TEST_CHECK (nthreads > 0) ;
+    OK (LAGraph_SetNumThreads (2, 4, msg)) ;
+    nthreads_hi = 0 ;
+    nthreads_lo = 0 ;
+    OK (LAGraph_GetNumThreads (&nthreads_hi, &nthreads_lo, msg)) ;
+    TEST_CHECK (nthreads_hi > 0) ;
+    TEST_CHECK (nthreads_lo > 0) ;
 
-    OK (LAGraph_SetNumThreads (4, NULL)) ;
-    nthreads = 0 ;
-    OK (LAGraph_GetNumThreads (&nthreads, NULL)) ;
-    TEST_CHECK (nthreads > 0) ;
+    OK (LAGraph_SetNumThreads (2, 4, NULL)) ;
+    nthreads_hi = 0 ;
+    nthreads_lo = 0 ;
+    OK (LAGraph_GetNumThreads (&nthreads_hi, &nthreads_lo, NULL)) ;
+    TEST_CHECK (nthreads_hi > 0) ;
+    TEST_CHECK (nthreads_lo > 0) ;
 
-    TEST_CHECK (LAGraph_GetNumThreads (NULL, msg) == GrB_NULL_POINTER) ;
+    TEST_CHECK (LAGraph_GetNumThreads (NULL, NULL, msg) == GrB_NULL_POINTER) ;
     printf ("\nmsg: %s\n", msg) ;
 
     OK (LAGraph_Finalize (msg)) ;

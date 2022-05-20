@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_DeleteProperties: deletes the cached properties of a graph
+// LAGraph_DeleteCached: deletes the cached properties of a graph
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -13,7 +13,7 @@
 
 #include "LG_internal.h"
 
-int LAGraph_DeleteProperties
+int LAGraph_DeleteCached
 (
     // input/output:
     LAGraph_Graph G,    // G stays valid, only cached properties are freed
@@ -37,19 +37,21 @@ int LAGraph_DeleteProperties
     //--------------------------------------------------------------------------
 
     GRB_TRY (GrB_free (&(G->AT))) ;
-    GRB_TRY (GrB_free (&(G->rowdegree))) ;
-    GRB_TRY (GrB_free (&(G->coldegree))) ;
+    GRB_TRY (GrB_free (&(G->out_degree))) ;
+    GRB_TRY (GrB_free (&(G->in_degree))) ;
     GRB_TRY (GrB_free (&(G->emin))) ;
     GRB_TRY (GrB_free (&(G->emax))) ;
 
     //--------------------------------------------------------------------------
-    // clear the scalar properties of the graph
+    // clear the cached scalar properties of the graph
     //--------------------------------------------------------------------------
 
-    G->structure_is_symmetric = LAGRAPH_UNKNOWN ;
-    G->emin_kind = LAGRAPH_UNKNOWN ;
-    G->emax_kind = LAGRAPH_UNKNOWN ;
-//  G->nonzero = LAGRAPH_UNKNOWN ;
-    G->ndiag = LAGRAPH_UNKNOWN ;
+    G->is_symmetric_structure =
+        (G->kind == LAGraph_ADJACENCY_UNDIRECTED)
+        ? LAGraph_TRUE
+        : LAGRAPH_UNKNOWN ;
+    G->emin_state = LAGRAPH_UNKNOWN ;
+    G->emax_state = LAGRAPH_UNKNOWN ;
+    G->nself_edges = LAGRAPH_UNKNOWN ;
     return (GrB_SUCCESS) ;
 }

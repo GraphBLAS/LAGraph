@@ -145,16 +145,16 @@ void test_SampleDegree (void)
         // SampleDegree requires degrees to be precomputed
         ret_code = LAGraph_SampleDegree (&mean, &median, G, 1,
             files [k].nsamples, files [k].seed, msg) ;
-        TEST_CHECK (ret_code == LAGRAPH_PROPERTY_MISSING) ;
+        TEST_CHECK (ret_code == LAGRAPH_NOT_CACHED) ;
         TEST_MSG ("SampleDegree without row degrees precomputed succeeded") ;
 
         ret_code = LAGraph_SampleDegree (&mean, &median, G, 0,
             files [k].nsamples, files [k].seed, msg) ;
-        TEST_CHECK (ret_code == LAGRAPH_PROPERTY_MISSING) ;
+        TEST_CHECK (ret_code == LAGRAPH_NOT_CACHED) ;
         TEST_MSG ("SampleDegree without column degrees precomputed succeeded") ;
 
         // Compute and check the row samples
-        OK (LAGraph_Property_RowDegree (G, msg)) ;
+        OK (LAGraph_Cached_OutDegree (G, msg)) ;
         OK (LAGraph_SampleDegree (&mean, &median, G, 1,
             files [k].nsamples, files [k].seed, msg)) ;
 
@@ -167,9 +167,9 @@ void test_SampleDegree (void)
         TEST_MSG ("Row Median Produced: %f", median) ;
 
         // Compute the column samples
-        OK (LAGraph_DeleteProperties (G, msg)) ;
+        OK (LAGraph_DeleteCached (G, msg)) ;
 
-        OK (LAGraph_Property_ColDegree (G, msg)) ;
+        OK (LAGraph_Cached_InDegree (G, msg)) ;
         OK (LAGraph_SampleDegree (&mean, &median, G, 0,
             files [k].nsamples, files [k].seed, msg)) ;
 
@@ -216,7 +216,7 @@ void test_SampleDegree_brutal (void)
         TEST_CHECK (A == NULL) ;
 
         // Compute and check the row samples
-        LG_BRUTAL (LAGraph_Property_RowDegree (G, msg)) ;
+        LG_BRUTAL (LAGraph_Cached_OutDegree (G, msg)) ;
         LG_BRUTAL (LAGraph_SampleDegree (&mean, &median, G, 1,
             files [k].nsamples, files [k].seed, msg)) ;
 
@@ -224,9 +224,9 @@ void test_SampleDegree_brutal (void)
         TEST_CHECK (is_close(median, files [k].row_median)) ;
 
         // Compute the column samples
-        LG_BRUTAL (LAGraph_DeleteProperties (G, msg)) ;
+        LG_BRUTAL (LAGraph_DeleteCached (G, msg)) ;
 
-        LG_BRUTAL (LAGraph_Property_ColDegree (G, msg)) ;
+        LG_BRUTAL (LAGraph_Cached_InDegree (G, msg)) ;
         LG_BRUTAL (LAGraph_SampleDegree (&mean, &median, G, 0,
             files [k].nsamples, files [k].seed, msg)) ;
 

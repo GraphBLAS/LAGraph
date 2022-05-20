@@ -13,8 +13,8 @@
 
 // Count the number of triangles in a graph,
 
-// This is an Advanced algorithm (G->ndiag, G->rowdegree,
-// G->structure_is_symmetric are required).
+// This is an Advanced algorithm (G->nself_edges, G->out_degree,
+// G->is_symmetric_structure are required).
 
 // Given a symmetric graph A with no-self edges, LAGr_TriangleCount counts the
 // number of triangles in the graph.  A triangle is a clique of size three,
@@ -75,9 +75,7 @@ static int tricount_prep
         GRB_TRY (GrB_Matrix_new (L, GrB_BOOL, n, n)) ;
         GRB_TRY (GrB_select (*L, NULL, NULL, GrB_TRIL, A, (int64_t) (-1),
             NULL)) ;
-//      GRB_TRY(GrB_Matrix_setElement(*L, false, 0, 0));
-      GRB_TRY (GrB_Matrix_wait (*L, GrB_MATERIALIZE)) ;
-      //GRB_TRY (GxB_Matrix_fprint (*L, "L", GxB_COMPLETE, stdout)) ;
+        GRB_TRY (GrB_Matrix_wait (*L, GrB_MATERIALIZE)) ;
     }
 
     if (U != NULL)
@@ -85,9 +83,7 @@ static int tricount_prep
         // U = triu (A,1)
         GRB_TRY (GrB_Matrix_new (U, GrB_BOOL, n, n)) ;
         GRB_TRY (GrB_select (*U, NULL, NULL, GrB_TRIU, A, (int64_t) 1, NULL)) ;
-//      GRB_TRY(GrB_Matrix_setElement(*U, 0, 0, 0));
-      GRB_TRY (GrB_Matrix_wait (*U, GrB_MATERIALIZE)) ;
-      //GRB_TRY (GxB_Matrix_fprint (*U, "U", GxB_COMPLETE, stdout)) ;
+        GRB_TRY (GrB_Matrix_wait (*U, GrB_MATERIALIZE)) ;
     }
     return (GrB_SUCCESS) ;
 }
@@ -145,7 +141,7 @@ int LAGr_TriangleCount
     }
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     LG_ASSERT (ntriangles != NULL, GrB_NULL_POINTER) ;
-    LG_ASSERT (G->ndiag == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED) ;
+    LG_ASSERT (G->nself_edges == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED) ;
 
     if (method == LAGraph_TriangleCount_Default)
     {
@@ -155,7 +151,7 @@ int LAGr_TriangleCount
 
     LG_ASSERT_MSG ((G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGraph_ADJACENCY_DIRECTED &&
-        G->structure_is_symmetric == LAGraph_TRUE)),
+        G->is_symmetric_structure == LAGraph_TRUE)),
         LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED,
         "G->A must be known to be symmetric") ;
 
@@ -167,13 +163,13 @@ int LAGr_TriangleCount
     method == LAGraph_TriangleCount_SandiaDot2 ; // 6: sum (sum ((U * L') .* U))
 
     GrB_Matrix A = G->A ;
-    GrB_Vector Degree = G->rowdegree ;
+    GrB_Vector Degree = G->out_degree ;
     bool auto_sort = (presort != NULL)
         && ((*presort) == LAGraph_TriangleCount_AutoSort) ;
     if (auto_sort && method_can_use_presort)
     {
         LG_ASSERT_MSG (Degree != NULL,
-            LAGRAPH_PROPERTY_MISSING, "G->rowdegree is required") ;
+            LAGRAPH_NOT_CACHED, "G->out_degree is required") ;
     }
 
     //--------------------------------------------------------------------------
@@ -183,7 +179,11 @@ int LAGr_TriangleCount
     GrB_Index n ;
     GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
     GRB_TRY (GrB_Matrix_new (&C, GrB_INT64, n, n)) ;
-    GrB_Semiring semiring = GxB_PLUS_PAIR_INT64 ;       // hack
+    #if LAGRAPH_SUITESPARSE
+    GrB_Semiring semiring = GxB_PLUS_PAIR_INT64 ;
+    #else
+    GrB_Semiring semiring = LAGraph_plus_one_int64 ;
+    #endif
     GrB_Monoid monoid = GrB_PLUS_MONOID_INT64 ;
 
     //--------------------------------------------------------------------------
@@ -298,8 +298,6 @@ int LAGr_TriangleCount
             // using the masked saxpy3 method
             LG_TRY (tricount_prep (&L, NULL, A, msg)) ;
             GRB_TRY (GrB_mxm (C, L, NULL, semiring, L, L, GrB_DESC_S)) ;
-            //GRB_TRY (GxB_Matrix_fprint (C, "my mat", GxB_COMPLETE, stdout)) ;
-
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             break ;
 
@@ -308,7 +306,6 @@ int LAGr_TriangleCount
             // using the masked saxpy3 method
             LG_TRY (tricount_prep (NULL, &U, A, msg)) ;
             GRB_TRY (GrB_mxm (C, U, NULL, semiring, U, U, GrB_DESC_S)) ;
-            //GRB_TRY (GxB_Matrix_fprint (C, "my mat", GxB_COMPLETE, stdout)) ;
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             break ;
 
@@ -321,7 +318,6 @@ int LAGr_TriangleCount
             // using the masked dot product
             LG_TRY (tricount_prep (&L, &U, A, msg)) ;
             GRB_TRY (GrB_mxm (C, L, NULL, semiring, L, U, GrB_DESC_ST1)) ;
-            //GRB_TRY (GxB_Matrix_fprint (C, "my mat", GxB_COMPLETE, stdout)) ;
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             break ;
 
@@ -330,7 +326,6 @@ int LAGr_TriangleCount
             // using the masked dot product
             LG_TRY (tricount_prep (&L, &U, A, msg)) ;
             GRB_TRY (GrB_mxm (C, U, NULL, semiring, U, L, GrB_DESC_ST1)) ;
-            //GRB_TRY (GxB_Matrix_fprint (C, "my mat", GxB_COMPLETE, stdout)) ;
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             break ;
     }
@@ -339,7 +334,6 @@ int LAGr_TriangleCount
     // return result
     //--------------------------------------------------------------------------
 
-    //GxB_print (C, 3) ;
     LG_FREE_ALL ;
     (*ntriangles) = (uint64_t) ntri ;
     return (GrB_SUCCESS) ;

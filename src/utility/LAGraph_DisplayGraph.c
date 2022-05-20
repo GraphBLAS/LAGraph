@@ -50,19 +50,22 @@ int LAGraph_DisplayGraph
     LG_TRY (LAGraph_Matrix_TypeName (typename, A, msg)) ;
     LG_TRY (LAGraph_KindName (kindname, kind, msg)) ;
 
-    // print the basic scalar properties
+    // print the basic cached scalar properties
     FPRINTF (f, "Graph: kind: %s, nodes: %g entries: %g type: %s\n",
         kindname, (double)n, (double)nvals, typename) ;
 
     // print the scalar cached properties
     FPRINTF (f, "  structural symmetry: ") ;
-    switch (G->structure_is_symmetric)
+    switch (G->is_symmetric_structure)
     {
         case LAGraph_FALSE : FPRINTF (f, "unsymmetric") ; break ;
         case LAGraph_TRUE  : FPRINTF (f, "symmetric")   ; break ;
         default            : FPRINTF (f, "unknown")     ; break ;
     }
-    if (G->ndiag >= 0) FPRINTF (f, "  self-edges: %g", (double) G->ndiag) ;
+    if (G->nself_edges >= 0)
+    {
+        FPRINTF (f, "  self-edges: %g", (double) G->nself_edges) ;
+    }
     FPRINTF (f, "\n") ;
 
     FPRINTF (f, "  adjacency matrix: ") ;
@@ -81,18 +84,18 @@ int LAGraph_DisplayGraph
         LG_TRY (LAGraph_Matrix_Print (AT, pr2, stdout, msg)) ;
     }
 
-    GrB_Vector rowdegree = G->rowdegree ;
-    if (rowdegree != NULL)
+    GrB_Vector out_degree = G->out_degree ;
+    if (out_degree != NULL)
     {
-        FPRINTF (f, "  row degree: ") ;
-        LG_TRY (LAGraph_Vector_Print (rowdegree, pr2, stdout, msg)) ;
+        FPRINTF (f, "  out degree: ") ;
+        LG_TRY (LAGraph_Vector_Print (out_degree, pr2, stdout, msg)) ;
     }
 
-    GrB_Vector coldegree = G->coldegree ;
-    if (coldegree != NULL)
+    GrB_Vector in_degree = G->in_degree ;
+    if (in_degree != NULL)
     {
-        FPRINTF (f, "  column degree: ") ;
-        LG_TRY (LAGraph_Vector_Print (coldegree, pr2, stdout, msg)) ;
+        FPRINTF (f, "  in degree: ") ;
+        LG_TRY (LAGraph_Vector_Print (in_degree, pr2, stdout, msg)) ;
     }
 
     return (GrB_SUCCESS) ;

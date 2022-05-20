@@ -57,10 +57,10 @@ int LG_check_ktruss
     GrB_Index n, ncols, Cp_len, Cj_len, Cx_len, nvals1, nvals2 ;
     LG_ASSERT (C_handle != NULL, GrB_NULL_POINTER) ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
-    LG_ASSERT_MSG (G->ndiag == 0, -104, "G->ndiag must be zero") ;
+    LG_ASSERT_MSG (G->nself_edges == 0, -104, "G->nself_edges must be zero") ;
     if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGraph_ADJACENCY_DIRECTED &&
-        G->structure_is_symmetric == LAGraph_TRUE))
+        G->is_symmetric_structure == LAGraph_TRUE))
     {
         // the structure of A is known to be symmetric
         ;

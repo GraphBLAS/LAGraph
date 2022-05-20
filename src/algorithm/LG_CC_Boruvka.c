@@ -12,7 +12,7 @@
 
 //------------------------------------------------------------------------------
 
-// This is an Advanced algorithm (G->structure_is_symmetric must be known),
+// This is an Advanced algorithm (G->is_symmetric_structure must be known),
 // but it is not user-callable (see LAGr_ConnectedComponents instead).
 
 // Code is based on Boruvka's minimum spanning forest algorithm.
@@ -123,7 +123,7 @@ int LG_CC_Boruvka
 
     LG_ASSERT_MSG ((G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGraph_ADJACENCY_DIRECTED &&
-        G->structure_is_symmetric == LAGraph_TRUE)),
+        G->is_symmetric_structure == LAGraph_TRUE)),
         LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED,
         "G->A must be known to be symmetric") ;
 

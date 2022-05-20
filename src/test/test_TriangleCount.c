@@ -62,11 +62,11 @@ void setup(void)
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LAGraph_Property_NDiag(G, msg);
+    retval = LAGraph_Cached_NSelfEdges(G, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    TEST_CHECK(G->ndiag == 0);
+    TEST_CHECK(G->nself_edges == 0);
 }
 
 //****************************************************************************
@@ -137,10 +137,10 @@ void test_TriangleCount_Methods3(void)
     // LAGraph_TriangleCount_Sandia = 3,       // sum (sum ((L * L) .* L))
     retval = LAGr_TriangleCount(&ntriangles, G,
         LAGraph_TriangleCount_Sandia, &presort, msg);
-    TEST_CHECK(retval == LAGRAPH_PROPERTY_MISSING);  // should fail (rowdegrees needs to be defined)
+    TEST_CHECK(retval == LAGRAPH_NOT_CACHED);  // should fail (out_degrees needs to be defined)
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LAGraph_Property_RowDegree(G, msg);
+    retval = LAGraph_Cached_OutDegree(G, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
@@ -167,10 +167,10 @@ void test_TriangleCount_Methods4(void)
     // LAGraph_TriangleCount_Sandia2 = 4,      // sum (sum ((U * U) .* U))
     retval = LAGr_TriangleCount(&ntriangles, G,
         LAGraph_TriangleCount_Sandia2, &presort, msg);
-    TEST_CHECK(retval == LAGRAPH_PROPERTY_MISSING);  // should fail (rowdegrees needs to be defined)
+    TEST_CHECK(retval == LAGRAPH_NOT_CACHED);  // should fail (out_degrees needs to be defined)
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LAGraph_Property_RowDegree(G, msg);
+    retval = LAGraph_Cached_OutDegree(G, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
@@ -198,10 +198,10 @@ void test_TriangleCount_Methods5(void)
     // LAGraph_TriangleCount_SandiaDot = 5,    // sum (sum ((L * U') .* L))
     retval = LAGr_TriangleCount(&ntriangles, G,
         LAGraph_TriangleCount_SandiaDot, &presort, msg);
-    TEST_CHECK(retval == LAGRAPH_PROPERTY_MISSING);  // should fail (rowdegrees needs to be defined)
+    TEST_CHECK(retval == LAGRAPH_NOT_CACHED);  // should fail (out_degrees needs to be defined)
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LAGraph_Property_RowDegree(G, msg);
+    retval = LAGraph_Cached_OutDegree(G, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
@@ -228,10 +228,10 @@ void test_TriangleCount_Methods6(void)
     // LAGraph_TriangleCount_SandiaDot2 = 6,   // sum (sum ((U * L') .* U))
     retval = LAGr_TriangleCount(&ntriangles, G,
         LAGraph_TriangleCount_SandiaDot2 , &presort, msg);
-    TEST_CHECK(retval == LAGRAPH_PROPERTY_MISSING);  // should fail (rowdegrees needs to be defined)
+    TEST_CHECK(retval == LAGRAPH_NOT_CACHED);  // should fail (out_degrees needs to be defined)
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LAGraph_Property_RowDegree(G, msg);
+    retval = LAGraph_Cached_OutDegree(G, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
@@ -253,7 +253,7 @@ void test_TriangleCount(void)
 
     uint64_t ntriangles = 0UL;
     int retval = LAGraph_TriangleCount(&ntriangles, G, msg);
-    TEST_CHECK(retval == 0);  // should not fail (rowdegrees will be calculated)
+    TEST_CHECK(retval == 0);  // should not fail (out_degrees will be calculated)
     TEST_MSG("retval = %d (%s)", retval, msg);
 
     TEST_CHECK( ntriangles == 45 );
@@ -292,10 +292,10 @@ void test_TriangleCount_many (void)
         TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
         // delete any diagonal entries
-        OK (LAGraph_DeleteDiag (G, msg)) ;
-        TEST_CHECK (G->ndiag == 0) ;
-        OK (LAGraph_DeleteDiag (G, msg)) ;
-        TEST_CHECK (G->ndiag == 0) ;
+        OK (LAGraph_DeleteSelfEdges (G, msg)) ;
+        TEST_CHECK (G->nself_edges == 0) ;
+        OK (LAGraph_DeleteSelfEdges (G, msg)) ;
+        TEST_CHECK (G->nself_edges == 0) ;
 
         // get the # of triangles
         uint64_t nt0, nt1 ;
@@ -307,7 +307,7 @@ void test_TriangleCount_many (void)
 
         // convert to directed but with symmetric pattern
         G->kind = LAGraph_ADJACENCY_DIRECTED ;
-        G->structure_is_symmetric = LAGraph_TRUE ;
+        G->is_symmetric_structure = LAGraph_TRUE ;
         OK (LAGraph_TriangleCount (&nt1, G, msg)) ;
         TEST_CHECK (nt1 == ntriangles) ;
 
@@ -358,10 +358,10 @@ void test_TriangleCount_autosort (void)
     OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
-    OK (LAGraph_DeleteDiag (G, msg)) ;
-    TEST_CHECK (G->ndiag == 0) ;
+    OK (LAGraph_DeleteSelfEdges (G, msg)) ;
+    TEST_CHECK (G->nself_edges == 0) ;
 
-    OK (LAGraph_Property_RowDegree (G, msg)) ;
+    OK (LAGraph_Cached_OutDegree (G, msg)) ;
 
     // try each method
     GrB_Index nt1 = 0 ;
@@ -409,7 +409,7 @@ void test_TriangleCount_brutal (void)
         OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
 
         // delete any diagonal entries
-        OK (LAGraph_DeleteDiag (G, msg)) ;
+        OK (LAGraph_DeleteSelfEdges (G, msg)) ;
 
         // get the # of triangles
         uint64_t nt0, nt1 ;
@@ -422,7 +422,7 @@ void test_TriangleCount_brutal (void)
 
         // convert to directed but with symmetric pattern
         G->kind = LAGraph_ADJACENCY_DIRECTED ;
-        G->structure_is_symmetric = LAGraph_TRUE ;
+        G->is_symmetric_structure = LAGraph_TRUE ;
         LG_BRUTAL (LAGraph_TriangleCount (&nt1, G, msg)) ;
         TEST_CHECK (nt1 == ntriangles) ;
 

@@ -28,8 +28,16 @@
 // Random number generator
 //****************************************************************************
 
-LAGRAPH_PUBLIC int LAGraph_Random_Init (char *msg) ;
-LAGRAPH_PUBLIC int LAGraph_Random_Finalize (char *msg) ;
+LAGRAPH_PUBLIC
+int LAGraph_Random_Init
+(
+    char *msg
+) ;
+LAGRAPH_PUBLIC
+int LAGraph_Random_Finalize
+(
+    char *msg
+) ;
 
 #if defined ( COVERAGE )
 // for testing only
@@ -398,7 +406,7 @@ GrB_Info LAGraph_BF_basic_mxv
     GrB_Vector *pd_output,      //the pointer to the vector of distance
     const GrB_Matrix AT,        //transposed adjacency matrix for the graph
     const GrB_Index s           //given index of the source
-);
+) ;
 
 /**
  * Bellman-Ford single source shortest paths, returning both the path lengths
@@ -452,7 +460,7 @@ GrB_Info LAGraph_BF_full1
     GrB_Vector *ph_output,
     const GrB_Matrix A,
     const GrB_Index s
-);
+) ;
 
 /**
  * Bellman-Ford single source shortest paths, returning both the path lengths
@@ -479,7 +487,7 @@ GrB_Info LAGraph_BF_full1a
     GrB_Vector *ph_output,
     const GrB_Matrix A,
     const GrB_Index s
-);
+) ;
 
 /**
  * Bellman-Ford single source shortest paths, returning both the path lengths
@@ -506,7 +514,7 @@ GrB_Info LAGraph_BF_full2
     GrB_Vector *ph_output,      //the pointer to the vector of hops
     const GrB_Matrix A,         //matrix for the graph
     const GrB_Index s           //given index of the source
-);
+) ;
 
 /**
  * Bellman-Ford single source shortest paths, returning both the path lengths
@@ -533,7 +541,7 @@ GrB_Info LAGraph_BF_full_mxv
     GrB_Vector *ph_output,
     const GrB_Matrix AT,
     const GrB_Index s
-);
+) ;
 
 /**
  * Bellman-Ford single source shortest paths, returning both the path lengths
@@ -570,7 +578,7 @@ GrB_Info LAGraph_BF_pure_c
     const int64_t *I,
     const int64_t *J,
     const int32_t *W
-);
+) ;
 
 /**
  * Bellman-Ford single source shortest paths, returning both the path lengths
@@ -607,7 +615,7 @@ GrB_Info LAGraph_BF_pure_c_double
     const int64_t *I,
     const int64_t *J,
     const double  *W
-);
+) ;
 
 //****************************************************************************
 /**
@@ -637,7 +645,7 @@ int LAGraph_cdlp
     int itermax,
     double *t,
     char *msg
-);
+) ;
 
 //****************************************************************************
 /**
@@ -666,7 +674,7 @@ GrB_Info LAGraph_dnn
     GrB_Matrix *Bias,
     int nlayers,
     GrB_Matrix Y0
-);
+) ;
 
 //****************************************************************************
 /**
@@ -687,7 +695,7 @@ GrB_Info LAGraph_FW
     const GrB_Matrix G,
     GrB_Matrix *D,
     GrB_Type   *D_type
-);
+) ;
 
 //****************************************************************************
 /**
@@ -773,6 +781,44 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
     GrB_Vector *component,  // output: array of component identifiers
     // inputs
     LAGraph_Graph G,        // input graph, modified then restored
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
+// kcore algorithms
+//------------------------------------------------------------------------------
+
+LAGRAPH_PUBLIC
+int LAGraph_KCore_All       
+(
+    // outputs:
+    GrB_Vector *decomp,     // kcore decomposition
+    uint64_t *kmax,
+    // inputs:
+    LAGraph_Graph G,            // input graph
+    char *msg
+) ;
+
+LAGRAPH_PUBLIC
+int LAGraph_KCore       
+(
+    // outputs:
+    GrB_Vector *decomp,     // kcore decomposition
+    // inputs:
+    LAGraph_Graph G,        // input graph
+    uint64_t k,             //k level to compare to
+    char *msg
+) ;
+
+LAGRAPH_PUBLIC
+int LAGraph_KCore_Decompose      
+(
+    // outputs:
+    GrB_Matrix *D,              // kcore decomposition
+    // inputs:
+    LAGraph_Graph G,            // input graph
+    GrB_Vector decomp,         // input decomposition matrix
+    uint64_t k,
     char *msg
 ) ;
 

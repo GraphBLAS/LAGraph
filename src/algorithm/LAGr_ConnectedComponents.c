@@ -11,7 +11,7 @@
 
 //------------------------------------------------------------------------------
 
-// This is an Advanced algorithm (G->structure_is_symmetric must be known).
+// This is an Advanced algorithm (G->is_symmetric_structure must be known).
 
 // Connected Components via LG_CC_FastSV6 if using SuiteSparse:GraphBLAS and
 // its GxB extensions, or LG_CC_Boruvka otherwise.  The former is much faster.

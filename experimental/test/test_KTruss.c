@@ -71,14 +71,14 @@ void test_ktruss (void)
         TEST_CHECK (A == NULL) ;
 
         // check for self-edges
-        OK (LAGraph_Property_NDiag (G, msg)) ;
-        if (G->ndiag != 0)
+        OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
+        if (G->nself_edges != 0)
         {
             // remove self-edges
-            printf ("graph has %g self edges\n", (double) G->ndiag) ;
-            OK (LAGraph_DeleteDiag (G, msg)) ;
-            printf ("now has %g self edges\n", (double) G->ndiag) ;
-            TEST_CHECK (G->ndiag == 0) ;
+            printf ("graph has %g self edges\n", (double) G->nself_edges) ;
+            OK (LAGraph_DeleteSelfEdges (G, msg)) ;
+            printf ("now has %g self edges\n", (double) G->nself_edges) ;
+            TEST_CHECK (G->nself_edges == 0) ;
         }
 
         // compute each k-truss until the result is empty
@@ -115,7 +115,7 @@ void test_ktruss (void)
 
         // convert to directed with symmetric structure and recompute
         G->kind = LAGraph_ADJACENCY_DIRECTED ;
-        G->structure_is_symmetric = true ;
+        G->is_symmetric_structure = LAGraph_TRUE ;
         OK (LAGraph_KTruss (&C1, G, 3, msg)) ;
         OK (LG_check_ktruss (&C2, G, 3, msg)) ;
         OK (LAGraph_Matrix_IsEqual (&ok, C1, C2, msg)) ;
@@ -145,7 +145,7 @@ void test_ktruss_errors (void)
     OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;
 
-    OK (LAGraph_Property_NDiag (G, msg)) ;
+    OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
 
     // C is NULL
     int result = LAGraph_KTruss (NULL, G, 3, msg) ;
@@ -165,16 +165,16 @@ void test_ktruss_errors (void)
     TEST_CHECK (C1 == NULL) ;
 
     // G may have self edges
-    G->ndiag = LAGRAPH_UNKNOWN ;
+    G->nself_edges = LAGRAPH_UNKNOWN ;
     result = LAGraph_KTruss (&C1, G, 3, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == -1004) ;
     TEST_CHECK (C1 == NULL) ;
 
     // G is undirected
-    G->ndiag = 0 ;
+    G->nself_edges = 0 ;
     G->kind = LAGraph_ADJACENCY_DIRECTED ;
-    G->structure_is_symmetric = LAGraph_FALSE ;
+    G->is_symmetric_structure = LAGraph_FALSE ;
     result = LAGraph_KTruss (&C1, G, 3, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == -1005) ;

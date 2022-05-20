@@ -24,12 +24,12 @@
 
 #include "LAGraph_demo.h"
 
-//#define NTHREAD_LIST 1
+#define NTHREAD_LIST 1
 // #define NTHREAD_LIST 2
-//#define THREAD_LIST 0
+#define THREAD_LIST 0
 
- #define NTHREAD_LIST 7
- #define THREAD_LIST 64, 32, 24, 12, 8, 4, 0
+// #define NTHREAD_LIST 6
+// #define THREAD_LIST 64, 32, 24, 12, 8, 4
 
 #define LG_FREE_ALL                 \
 {                                   \
@@ -83,14 +83,15 @@ int main (int argc, char **argv)
     bool burble = false ;
     demo_init (burble) ;
 
-    int ntrials = 5 ;
+    int ntrials = 3 ;
     // ntrials = 1 ;        // HACK
     printf ("# of trials: %d\n", ntrials) ;
 
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;
-    int nthreads_max ;
-    LAGRAPH_TRY (LAGraph_GetNumThreads (&nthreads_max, NULL)) ;
+    int nthreads_max, nthreads_hi, nthreads_lo ;
+    LAGRAPH_TRY (LAGraph_GetNumThreads (&nthreads_hi, &nthreads_lo, msg)) ;
+    nthreads_max = nthreads_hi * nthreads_lo ;
     if (Nthreads [1] == 0)
     {
         // create thread list automatically
@@ -119,51 +120,21 @@ int main (int argc, char **argv)
         true, true, true, NULL, false, argc, argv)) ;
     LAGRAPH_TRY (LAGraph_DisplayGraph (G, LAGraph_SHORT, stdout, msg)) ;
 
-    // determine the row degree property
-    LAGRAPH_TRY (LAGraph_Property_RowDegree (G, msg)) ;
+    // determine the cached out degree property
+    LAGRAPH_TRY (LAGraph_Cached_OutDegree (G, msg)) ;
 
     GrB_Index n, nvals ;
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
-
-    // HACK: make sure G->A is non-iso
-
-    // create an iterator
-    GxB_Iterator iterator ;
-    GxB_Iterator_new (&iterator) ;
-    // attach it to the matrix A
-    GrB_Info info = GxB_Matrix_Iterator_attach (iterator, G->A, NULL) ;
-    if (info < 0) { abort ( ) ; }
-    // seek to the first entry
-    info = GxB_Matrix_Iterator_seek (iterator, 1) ;
-    printf ("info %d\n", info) ;
-    while (info != GxB_EXHAUSTED)
-    {
-        // get the entry A(i,j)
-        GrB_Index i, j ;
-        GxB_Matrix_Iterator_getIndex (iterator, &i, &j) ;
-        // set it to 0
-        printf ("setting A(%d,%d) = 0\n", (int) i, (int) j) ;
-        GRB_TRY (GrB_Matrix_setElement (G->A, 0, i, j)) ;
-        break ;
-    }
-    GrB_free (&iterator) ;
-
-    GxB_print (G->A, 2) ;
-//  GRB_TRY (GrB_Matrix_setElement (G->A, 0, 2, 2)) ;
-//  GxB_print (G->A, 3) ;
-    GrB_wait (G->A, GrB_MATERIALIZE) ;
-//  GxB_print (G->A, 3) ;
-//  printf ("HERE ============================\n") ;
 
     //--------------------------------------------------------------------------
     // triangle counting
     //--------------------------------------------------------------------------
 
     GrB_Index ntriangles, ntsimple = 0 ;
-    double tic [2], ttot ;
+    double tic [2] ;
 
-#if 1
+#if 0
     // check # of triangles
     LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
     LAGRAPH_TRY (LG_check_tri (&ntsimple, G, NULL)) ;
@@ -179,47 +150,22 @@ int main (int argc, char **argv)
     int presort = LAGraph_TriangleCount_AutoSort ; // = 2 (auto selection)
     print_method (stdout, 6, presort) ;
 
-    // warmup method: without the GPU
+    // warmup method:
     // LAGraph_TriangleCount_SandiaDot2 = 6,   // sum (sum ((U * L') .* U))
-    GxB_set (GxB_GPU_CONTROL, GxB_GPU_NEVER) ;
     LAGRAPH_TRY (LAGr_TriangleCount (&ntriangles, G,
         LAGraph_TriangleCount_SandiaDot2, &presort, msg) );
-    printf ("# of triangles: %" PRIu64 " (CPU)\n", ntriangles) ;
+    printf ("# of triangles: %" PRIu64 "\n", ntriangles) ;
     print_method (stdout, 6, presort) ;
+    double ttot ;
     LAGRAPH_TRY (LAGraph_Toc (&ttot, tic, NULL)) ;
     printf ("nthreads: %3d time: %12.6f rate: %6.2f (SandiaDot2, one trial)\n",
             nthreads_max, ttot, 1e-6 * nvals / ttot) ;
 
-#if 1
+#if 0
     if (ntriangles != ntsimple)
     {
         printf ("wrong # triangles: %g %g\n", (double) ntriangles,
             (double) ntsimple) ;
-        fflush (stdout) ;
-        fflush (stderr) ;
-        abort ( ) ;
-    }
-#endif
-
-    // warmup method: with the GPU
-    // LAGraph_TriangleCount_SandiaDot2 = 6,   // sum (sum ((U * L') .* U))
-    GrB_Index ntriangles_gpu ;
-    GxB_set (GxB_GPU_CONTROL, GxB_GPU_ALWAYS) ;
-    LAGRAPH_TRY (LAGr_TriangleCount (&ntriangles_gpu, G,
-        LAGraph_TriangleCount_SandiaDot2, &presort, msg) );
-    printf ("# of triangles: %" PRIu64 " (GPU)\n", ntriangles_gpu) ;
-    print_method (stdout, 6, presort) ;
-    LAGRAPH_TRY (LAGraph_Toc (&ttot, tic, NULL)) ;
-    printf ("nthreads: %3d time: %12.6f rate: %6.2f (SandiaDot2, warmup GPU)\n",
-            nthreads_max, ttot, 1e-6 * nvals / ttot) ;
-
-#if 1
-    if (ntriangles_gpu != ntsimple)
-    {
-        printf ("wrong # triangles: %g %g\n", (double) ntriangles_gpu,
-            (double) ntsimple) ;
-        fflush (stdout) ;
-        fflush (stderr) ;
         abort ( ) ;
     }
 #endif
@@ -261,18 +207,7 @@ int main (int argc, char **argv)
             {
                 int nthreads = Nthreads [t] ;
                 if (nthreads > nthreads_max) continue ;
-                if (nthreads != 0) // Use GPU
-                {
-                  GxB_Global_Option_set( GxB_GLOBAL_GPU_CONTROL, GxB_GPU_NEVER);
-                  printf(" CPU ONLY using %d threads", nthreads);
-                }
-                else
-                {
-                  GxB_Global_Option_set( GxB_GLOBAL_GPU_CONTROL, GxB_GPU_ALWAYS);
-                  printf(" GPU ONLY using %d threads", nthreads);
-                }
-
-                LAGRAPH_TRY (LAGraph_SetNumThreads (nthreads, msg)) ;
+                LAGRAPH_TRY (LAGraph_SetNumThreads (1, nthreads, msg)) ;
                 GrB_Index nt2 ;
                 double ttot = 0, ttrial [100] ;
                 for (int trial = 0 ; trial < ntrials ; trial++)
@@ -294,16 +229,12 @@ int main (int argc, char **argv)
                 printf ("nthreads: %3d time: %12.6f rate: %6.2f", nthreads,
                         ttot, 1e-6 * nvals / ttot) ;
                 printf ("   # of triangles: %" PRId64 " presort: %d\n",
-                        nt2, presort) ;
-            #if 1
+                        ntriangles, presort) ;
                 if (nt2 != ntriangles)
                 {
                     printf ("Test failure!\n") ;
-                    fflush (stdout) ;
-                    fflush (stderr) ;
                     abort ( ) ;
                 }
-            #endif
                 fprintf (stderr, "Avg: TC method%d.%d %3d: %10.3f sec: %s\n",
                          method, sorting, nthreads, ttot, matrix_name) ;
 
@@ -324,8 +255,6 @@ int main (int argc, char **argv)
         nthreads_best, t_best, 1e-6 * nvals / t_best) ;
     LG_FREE_ALL ;
     LAGRAPH_TRY (LAGraph_Finalize (msg)) ;
-    // FIXME:
-    rmm_wrap_finalize ( ) ;
     return (GrB_SUCCESS) ;
 }
 

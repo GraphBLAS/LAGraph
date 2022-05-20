@@ -52,8 +52,9 @@ int main (int argc, char **argv)
 
     int nt = NTHREAD_LIST ;
     int Nthreads [20] = { 0, THREAD_LIST } ;
-    int nthreads_max ;
-    LAGRAPH_TRY (LAGraph_GetNumThreads (&nthreads_max, NULL)) ;
+    int nthreads_max, nthreads_hi, nthreads_lo ;
+    LAGRAPH_TRY (LAGraph_GetNumThreads (&nthreads_hi, &nthreads_lo, msg)) ;
+    nthreads_max = nthreads_hi * nthreads_lo ;
     if (Nthreads [1] == 0)
     {
         // create thread list automatically
@@ -83,7 +84,7 @@ int main (int argc, char **argv)
     GrB_Index n, nvals ;
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
-    LAGRAPH_TRY (LAGraph_Property_EMin (G, msg)) ;
+    LAGRAPH_TRY (LAGraph_Cached_EMin (G, msg)) ;
 
     //--------------------------------------------------------------------------
     // get delta
@@ -120,7 +121,7 @@ int main (int argc, char **argv)
     {
         int nthreads = Nthreads [tt] ;
         if (nthreads > nthreads_max) continue ;
-        LAGRAPH_TRY (LAGraph_SetNumThreads (nthreads, msg)) ;
+        LAGRAPH_TRY (LAGraph_SetNumThreads (1, nthreads, msg)) ;
         double total_time = 0 ;
 
         for (int trial = 0 ; trial < ntrials ; trial++)

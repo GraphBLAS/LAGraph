@@ -167,7 +167,7 @@ void test_cc_matrices (void)
 
             // convert to directed with symmetric pattern for next trial
             G->kind = LAGraph_ADJACENCY_DIRECTED ;
-            G->structure_is_symmetric = LAGraph_TRUE ;
+            G->is_symmetric_structure = LAGraph_TRUE ;
         }
 
         OK (LAGraph_Delete (&G, msg)) ;

@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_Property_NDiag: count the # of diagonal entries of a graph
+// LAGraph_Cached_AT: construct G->AT for a graph
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -11,12 +11,14 @@
 
 //------------------------------------------------------------------------------
 
+#define LG_FREE_ALL GrB_free (&AT) ;
+
 #include "LG_internal.h"
 
-int LAGraph_Property_NDiag
+int LAGraph_Cached_AT
 (
     // input/output:
-    LAGraph_Graph G,    // graph to compute G->ndiag
+    LAGraph_Graph G,    // graph for which to compute G->AT
     char *msg
 )
 {
@@ -25,18 +27,36 @@ int LAGraph_Property_NDiag
     // clear msg and check G
     //--------------------------------------------------------------------------
 
+    GrB_Matrix AT = NULL ;
     LG_CLEAR_MSG_AND_BASIC_ASSERT (G, msg) ;
+    GrB_Matrix A = G->A ;
 
-    // already computed
-    if (G->ndiag != LAGRAPH_UNKNOWN)
+    if (G->AT != NULL)
     {
+        // G->AT already computed
         return (GrB_SUCCESS) ;
     }
 
+    if (G->kind == LAGraph_ADJACENCY_UNDIRECTED)
+    {
+        // G->AT not needed since A is symmetric (warning only, not an error)
+        return (LAGRAPH_CACHE_NOT_NEEDED) ;
+    }
+
     //--------------------------------------------------------------------------
-    // compute G->ndiag
+    // G->AT = (G->A)'
     //--------------------------------------------------------------------------
 
-    return (LG_ndiag (&G->ndiag, G->A, msg)) ;
+    GrB_Index nrows, ncols ;
+    GRB_TRY (GrB_Matrix_nrows (&nrows, A)) ;
+    GRB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
+    GrB_Type atype ;
+    char atype_name [LAGRAPH_MAX_NAME_LEN] ;
+    LG_TRY (LAGraph_Matrix_TypeName (atype_name, A, msg)) ;
+    LG_TRY (LAGraph_TypeFromName (&atype, atype_name, msg)) ;
+    GRB_TRY (GrB_Matrix_new (&AT, atype, ncols, nrows)) ;
+    GRB_TRY (GrB_transpose (AT, NULL, NULL, A, NULL)) ;
+    G->AT = AT ;
+
+    return (GrB_SUCCESS) ;
 }
-

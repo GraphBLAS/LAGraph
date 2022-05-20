@@ -132,10 +132,7 @@ int LAGraph_Realloc
         //----------------------------------------------------------------------
 
         pnew = LAGraph_Realloc_function (*p, newsize) ;
-        if (pnew == NULL)
-        {
-            return (GrB_OUT_OF_MEMORY) ;
-        }
+        if (pnew == NULL) return (GrB_OUT_OF_MEMORY) ;
         (*p) = pnew ;
     }
 

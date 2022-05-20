@@ -14,13 +14,13 @@
 // LAGraph_SortByDegree computes a permutation vector P that sorts a graph
 // by degree (either row or column degree of its adjacency matrix A).
 // If G is undirected, or if G is directed but is known to have a symmetric
-// adjacency matrix, then G->rowdegree is used (and byrow is ignored).
-// Otherwise, if G->rowdegree is used if byrow is true, and G->coldegree is
-// used if byrow is false.
+// adjacency matrix, then G->out_degree is used (and byout is ignored).
+// Otherwise, if G->out_degree is used if byout is true, and G->in_degree is
+// used if byout is false.
 
-// G->rowdegree or G->coldegree must first be computed.  An error is returned
+// G->out_degree or G->in_degree must first be computed.  An error is returned
 // if the required degree vector has not yet been computed.  See
-// LAGraph_Property_RowDegree and LAGraph_Property_ColDegree.
+// LAGraph_Cached_OutDegree and LAGraph_Cached_InDegree.
 
 // The permutation is in ascending order of degree if ascending is true, and
 // in descending order otherwise.
@@ -31,7 +31,7 @@
 
 // The output is a permutation P where P [k] = i if row i is the kth row in
 // the permutation (or P [k] = j if column j is the kth column in the
-// permutation, with byrow false).
+// permutation, with byout false).
 
 #define LG_FREE_WORK                    \
 {                                       \
@@ -53,7 +53,7 @@ int LAGraph_SortByDegree
     int64_t **P_handle,     // P is returned as a permutation vector of size n
     // input:
     const LAGraph_Graph G,  // graph of n nodes
-    bool byrow,             // if true, sort G->rowdegree, else G->coldegree
+    bool byout,             // if true, sort G->out_degree, else G->in_degree
     bool ascending,         // sort in ascending or descending order
     char *msg
 )
@@ -75,19 +75,18 @@ int LAGraph_SortByDegree
 
     if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGraph_ADJACENCY_DIRECTED &&
-        G->structure_is_symmetric == LAGraph_TRUE))
+        G->is_symmetric_structure == LAGraph_TRUE))
     {
         // the structure of A is known to be symmetric
-        Degree = G->rowdegree ;
+        Degree = G->out_degree ;
     }
     else
     {
         // A is not known to be symmetric
-        Degree = (byrow) ? G->rowdegree : G->coldegree ;
+        Degree = (byout) ? G->out_degree : G->in_degree ;
     }
 
-    LG_ASSERT_MSG (Degree != NULL,
-        LAGRAPH_PROPERTY_MISSING, "degree property unknown") ;
+    LG_ASSERT_MSG (Degree != NULL, LAGRAPH_NOT_CACHED, "degree unknown") ;
 
     //--------------------------------------------------------------------------
     // decide how many threads to use
@@ -97,8 +96,7 @@ int LAGraph_SortByDegree
     GRB_TRY (GrB_Vector_size (&n, Degree)) ;
 
     #define CHUNK (64*1024)
-    int nthreads ;
-    LG_TRY (LAGraph_GetNumThreads (&nthreads, msg)) ;
+    int nthreads = LG_nthreads_hi * LG_nthreads_lo ;
     nthreads = LAGRAPH_MIN (nthreads, n/CHUNK) ;
     nthreads = LAGRAPH_MAX (nthreads, 1) ;
 
@@ -152,7 +150,7 @@ int LAGraph_SortByDegree
     // sort by degrees, with ties by node id
     //--------------------------------------------------------------------------
 
-    LG_TRY (LAGraph_Sort2 (D, P, n, nthreads, msg)) ;
+    LG_TRY (LAGraph_Sort2 (D, P, n, msg)) ;
 
     //--------------------------------------------------------------------------
     // free workspace and return result

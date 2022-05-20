@@ -42,9 +42,9 @@
 // mis[i] == true implies node i is a member of the set.
 
 // The graph cannot have any self edges, and it must be symmetric.  Self-edges
-// (diagonal entries) will cause the method to stall, and thus G->ndiag must be
-// zero on input.  G->rowdegree must be present on input.  It must not contain
-// any explicit zeros (this is handled by LAGraph_Property_RowDegree).
+// (diagonal entries) will cause the method to stall, and thus G->nself_edges
+// must be zero on input.  G->out_degree must be present on input.  It must not
+// contain any explicit zeros (this is handled by LAGraph_Cached_OutDegree).
 
 // Singletons require special treatment.  Since they have no neighbors, their
 // score is never greater than the max of their neighbors, so they never get
@@ -79,7 +79,7 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     GrB_Vector candidates = NULL ;      // candidate nodes
     GrB_Vector empty = NULL ;           // an empty vector
     GrB_Vector Seed = NULL ;            // random number seed vector
-    GrB_Vector degree = NULL ;          // (float) G->rowdegree
+    GrB_Vector degree = NULL ;          // (float) G->out_degree
     GrB_Matrix A ;                      // G->A, the adjacency matrix
     GrB_Index n ;                       // # of nodes
 
@@ -88,7 +88,7 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
 
     if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGraph_ADJACENCY_DIRECTED &&
-        G->structure_is_symmetric == LAGraph_TRUE))
+        G->is_symmetric_structure == LAGraph_TRUE))
     {
         // the structure of A is known to be symmetric
         A = G->A ;
@@ -99,8 +99,9 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
         LG_ASSERT_MSG (false, -105, "G->A must be symmetric") ;
     }
 
-    LG_ASSERT_MSG (G->rowdegree != NULL, -106, "G->rowdegree must be defined") ;
-    LG_ASSERT_MSG (G->ndiag == 0, -107, "G->ndiag must be zero") ;
+    LG_ASSERT_MSG (G->out_degree != NULL, -106,
+        "G->out_degree must be defined") ;
+    LG_ASSERT_MSG (G->nself_edges == 0, -107, "G->nself_edges must be zero") ;
 
     //--------------------------------------------------------------------------
     // initializations
@@ -117,8 +118,8 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     GRB_TRY (GrB_Vector_new (&score, GrB_FP32, n)) ;
     GRB_TRY (GrB_Vector_new (&iset, GrB_BOOL, n)) ;
 
-    // degree = (float) G->rowdegree
-    GRB_TRY (GrB_assign (degree, NULL, NULL, G->rowdegree, GrB_ALL, n, NULL)) ;
+    // degree = (float) G->out_degree
+    GRB_TRY (GrB_assign (degree, NULL, NULL, G->out_degree, GrB_ALL, n, NULL)) ;
 
     //--------------------------------------------------------------------------
     // remove singletons (nodes of degree zero) and handle ignore_node
@@ -258,14 +259,14 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
             // push
             // new_neighbors{candidates,replace} = new_members' * A
             GRB_TRY (GrB_vxm (new_neighbors, candidates, NULL,
-                LAGraph_structural_bool, new_members, A, GrB_DESC_RS)) ;
+                LAGraph_any_one_bool, new_members, A, GrB_DESC_RS)) ;
         }
         else
         {
             // pull
             // new_neighbors{candidates,replace} = A * new_members
             GRB_TRY (GrB_mxv (new_neighbors, candidates, NULL,
-                LAGraph_structural_bool, A, new_members, GrB_DESC_RS)) ;
+                LAGraph_any_one_bool, A, new_members, GrB_DESC_RS)) ;
         }
 
         // remove new neighbors of new members from set of candidates

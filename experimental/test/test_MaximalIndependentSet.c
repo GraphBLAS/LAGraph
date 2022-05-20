@@ -107,30 +107,30 @@ void test_MIS (void)
         TEST_CHECK (mis == NULL) ;
 
         // check if the pattern is symmetric
-        OK (LAGraph_Property_SymmetricStructure (G, msg)) ;
+        OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
 
-        if (G->structure_is_symmetric == LAGraph_FALSE)
+        if (G->is_symmetric_structure == LAGraph_FALSE)
         {
             // make the adjacency matrix symmetric
-            OK (LAGraph_Property_AT (G, msg)) ;
+            OK (LAGraph_Cached_AT (G, msg)) ;
             OK (GrB_eWiseAdd (G->A, NULL, NULL, GrB_LOR, G->A, G->AT, NULL)) ;
-            G->structure_is_symmetric = true ;
+            G->is_symmetric_structure = LAGraph_TRUE ;
         }
         G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
 
         // check for self-edges
-        OK (LAGraph_Property_NDiag (G, msg)) ;
-        if (G->ndiag != 0)
+        OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
+        if (G->nself_edges != 0)
         {
             // remove self-edges
-            printf ("graph has %g self edges\n", (double) G->ndiag) ;
-            OK (LAGraph_DeleteDiag (G, msg)) ;
-            printf ("now has %g self edges\n", (double) G->ndiag) ;
-            TEST_CHECK (G->ndiag == 0) ;
+            printf ("graph has %g self edges\n", (double) G->nself_edges) ;
+            OK (LAGraph_DeleteSelfEdges (G, msg)) ;
+            printf ("now has %g self edges\n", (double) G->nself_edges) ;
+            TEST_CHECK (G->nself_edges == 0) ;
         }
 
         // compute the row degree
-        OK (LAGraph_Property_RowDegree (G, msg)) ;
+        OK (LAGraph_Cached_OutDegree (G, msg)) ;
 
         GrB_Index n ;
         GrB_Matrix_nrows (&n, G->A) ;
@@ -175,16 +175,16 @@ void test_MIS (void)
         }
         printf ("creating at least %g singletons\n", (double) nsingletons) ;
 
-        OK (LAGraph_DeleteProperties (G, msg)) ;
+        OK (LAGraph_DeleteCached (G, msg)) ;
         G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
-        G->structure_is_symmetric = true ;
-        G->ndiag = 0 ;
+        G->is_symmetric_structure = LAGraph_TRUE ;
+        G->nself_edges = 0 ;
 
-        // recompute the row degree
-        OK (LAGraph_Property_RowDegree (G, msg)) ;
+        // recompute the out degree
+        OK (LAGraph_Cached_OutDegree (G, msg)) ;
 
         GrB_Index nonsingletons, nsingletons_actual ;
-        OK (GrB_Vector_nvals (&nonsingletons, G->rowdegree)) ;
+        OK (GrB_Vector_nvals (&nonsingletons, G->out_degree)) ;
         nsingletons_actual = n - nonsingletons ;
         printf ("actual # of singletons: %g\n", (double) nsingletons_actual) ;
         TEST_CHECK (nsingletons <= nsingletons_actual) ;

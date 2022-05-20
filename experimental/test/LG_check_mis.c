@@ -103,8 +103,7 @@ int LG_check_mis        // check if iset is a valid MIS of A
     }
 
     // e = (e || A*iset), using the structural semiring
-    GRB_TRY (GrB_vxm (e, NULL, GrB_LOR, LAGraph_structural_bool, iset, A,
-        NULL)) ;
+    GRB_TRY (GrB_vxm (e, NULL, GrB_LOR, LAGraph_any_one_bool, iset, A, NULL)) ;
 
     // drop explicit zeros from e
     // e<e.replace> = e

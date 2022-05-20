@@ -127,7 +127,7 @@ int LAGr_Betweenness
     GrB_Matrix A = G->A ;
     GrB_Matrix AT ;
     if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
-        G->structure_is_symmetric == LAGraph_TRUE)
+        G->is_symmetric_structure == LAGraph_TRUE)
     {
         // A and A' have the same structure
         AT = A ;
@@ -136,8 +136,7 @@ int LAGr_Betweenness
     {
         // A and A' differ
         AT = G->AT ;
-        LG_ASSERT_MSG (AT != NULL,
-            LAGRAPH_PROPERTY_MISSING, "G->AT is required") ;
+        LG_ASSERT_MSG (AT != NULL, LAGRAPH_NOT_CACHED, "G->AT is required") ;
     }
 
     // =========================================================================

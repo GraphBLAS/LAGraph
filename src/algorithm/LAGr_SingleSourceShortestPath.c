@@ -253,8 +253,8 @@ int LAGr_SingleSourceShortestPath
     {
         double emin = -1 ;
         if (G->emin != NULL &&
-            (G->emin_kind == LAGraph_EXACT ||
-             G->emin_kind == LAGraph_BOUND))
+            (G->emin_state == LAGraph_VALUE ||
+             G->emin_state == LAGraph_BOUND))
         {
             GRB_TRY (GrB_Scalar_extractElement_FP64 (&emin, G->emin)) ;
         }
@@ -303,8 +303,8 @@ int LAGr_SingleSourceShortestPath
         // tmasked<reach> = t
         // FUTURE: this is costly, typically using Method 06s in SuiteSparse,
         // which is a very general-purpose one.  Write a specialized kernel to
-        // exploit the given properties (reach and t are bitmap, tmasked starts
-        // empty), or fuse this assignment with the GrB_select below.
+        // exploit the fact that reach and t are bitmap and tmasked starts
+        // empty, or fuse this assignment with the GrB_select below.
         GRB_TRY (GrB_assign (tmasked, reach, NULL, t, GrB_ALL, n, NULL)) ;
         // tmasked = select (tmasked < (step+1)*Delta)
         GRB_TRY (GrB_select (tmasked, NULL, NULL, lt, tmasked, uBound, NULL)) ;

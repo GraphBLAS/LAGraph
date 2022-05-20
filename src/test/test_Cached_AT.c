@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/test/test_DeleteProperties.c:  test LAGraph_DeleteProperties
+// LAGraph/src/test/test_Cached_AT.c:  test LAGraph_Cached_AT
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -19,9 +19,11 @@
 
 LAGraph_Graph G = NULL ;
 char msg [LAGRAPH_MSG_LEN] ;
-GrB_Matrix A = NULL ;
+GrB_Matrix A = NULL, B = NULL ;
+GrB_Type atype = NULL ;
 #define LEN 512
 char filename [LEN+1] ;
+char atype_name [LAGRAPH_MAX_NAME_LEN] ;
 
 //------------------------------------------------------------------------------
 // setup: start a test
@@ -42,7 +44,7 @@ void teardown (void)
 }
 
 //------------------------------------------------------------------------------
-// test_DeleteProperties:  test LAGraph_DeleteProperties
+// test_Cached_AT:  test LAGraph_Cached_AT
 //------------------------------------------------------------------------------
 
 typedef struct
@@ -57,12 +59,14 @@ const matrix_info files [ ] =
     LAGraph_ADJACENCY_DIRECTED,   "cover.mtx",
     LAGraph_ADJACENCY_DIRECTED,   "ldbc-directed-example.mtx",
     LAGraph_ADJACENCY_UNDIRECTED, "ldbc-undirected-example.mtx",
-    LAGraph_ADJACENCY_UNDIRECTED, "A.mtx",
-    LAGraph_ADJACENCY_UNDIRECTED, "bcsstk13.mtx",
     LAGRAPH_UNKNOWN,              ""
 } ;
 
-void test_DeleteProperties (void)
+//-----------------------------------------------------------------------------
+// test_Cached_AT
+//-----------------------------------------------------------------------------
+
+void test_Cached_AT (void)
 {
     setup ( ) ;
 
@@ -71,8 +75,8 @@ void test_DeleteProperties (void)
 
         // load the matrix as A
         const char *aname = files [k].name ;
+        int kind = files [k].kind ;
         if (strlen (aname) == 0) break;
-        LAGraph_Kind kind = files [k].kind ;
         TEST_CASE (aname) ;
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
@@ -85,55 +89,53 @@ void test_DeleteProperties (void)
         OK (LAGraph_New (&G, &A, kind, msg)) ;
         TEST_CHECK (A == NULL) ;
 
-        // create all properties (see test_Property_* for tests of content)
-        OK (LAGraph_Property_RowDegree (G, msg)) ;
-        OK (LAGraph_Property_ColDegree (G, msg)) ;
-        OK (LAGraph_Property_AT (G, msg)) ;
-        OK (LAGraph_Property_SymmetricStructure (G, msg)) ;
+        // create the G->AT cached property
+        int ok_result = (kind == LAGraph_ADJACENCY_UNDIRECTED) ?
+            LAGRAPH_CACHE_NOT_NEEDED : GrB_SUCCESS ;
+        int result = LAGraph_Cached_AT (G, msg) ;
+        TEST_CHECK (result == ok_result) ;
 
-        // print them
-        printf ("\nGraph: ndiag %g, symmetric structure: %d\n",
-            (double) G->ndiag, G->structure_is_symmetric) ;
-        printf ("  adj matrix: ") ;
-        int rr = (LAGraph_Matrix_Print (G->A, LAGraph_SHORT, stdout, msg)) ;
-        printf ("result: %d msg: %s\n", rr, msg) ;
-        printf ("  row degree: ") ;
-        OK (LAGraph_Vector_Print (G->rowdegree, LAGraph_SHORT, stdout, msg)) ;
-        if (kind == LAGraph_ADJACENCY_DIRECTED)
+        // try to create it again; this should safely do nothing
+        result = LAGraph_Cached_AT (G, msg) ;
+        TEST_CHECK (result == ok_result) ;
+
+        // check the result
+        if (kind == LAGraph_ADJACENCY_UNDIRECTED)
         {
-            printf ("  adj transposed: ") ;
-            OK (LAGraph_Matrix_Print (G->AT, LAGraph_SHORT, stdout, msg)) ;
-            printf ("  col degree: ") ;
-            OK (LAGraph_Vector_Print (G->coldegree, LAGraph_SHORT, stdout,
-                msg)) ;
+            TEST_CHECK (G->AT == NULL) ;
         }
         else
         {
-            TEST_CHECK (G->AT == NULL) ;
-            TEST_CHECK (G->coldegree == NULL) ;
-        }
+            // ensure G->A and G->AT are transposed of each other;
+            // B = (G->AT)'
+            GrB_Index nrows, ncols ;
+            OK (GrB_Matrix_nrows (&nrows, G->A)) ;
+            OK (GrB_Matrix_nrows (&ncols, G->A)) ;
+            OK (LAGraph_Matrix_TypeName (atype_name, G->A, msg)) ;
+            OK (LAGraph_TypeFromName (&atype, atype_name, msg)) ;
+            OK (GrB_Matrix_new (&B, atype, nrows, ncols)) ;
+            OK (GrB_transpose (B, NULL, NULL, G->AT, NULL)) ;
 
-        for (int trial = 0 ; trial <= 1 ; trial++)
-        {
-            // delete all the properties
-            OK (LAGraph_DeleteProperties (G, msg)) ;
-            TEST_CHECK (G->AT == NULL) ;
-            TEST_CHECK (G->rowdegree == NULL) ;
-            TEST_CHECK (G->coldegree == NULL) ;
+            // ensure B and G->A are the same
+            bool ok ;
+            OK (LAGraph_Matrix_IsEqual (&ok, G->A, B, msg)) ;
+            TEST_CHECK (ok) ;
+            TEST_MSG ("Test for G->A and B equal failed") ;
+            OK (GrB_free (&B)) ;
         }
 
         OK (LAGraph_Delete (&G, msg)) ;
     }
 
-    OK (LAGraph_DeleteProperties (NULL, msg)) ;
-
     teardown ( ) ;
 }
 
 //-----------------------------------------------------------------------------
+// test_Cached_AT_brutal
+//-----------------------------------------------------------------------------
 
 #if LAGRAPH_SUITESPARSE
-void test_del_brutal (void)
+void test_Cached_AT_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
 
@@ -142,8 +144,8 @@ void test_del_brutal (void)
 
         // load the matrix as A
         const char *aname = files [k].name ;
+        int kind = files [k].kind ;
         if (strlen (aname) == 0) break;
-        LAGraph_Kind kind = files [k].kind ;
         TEST_CASE (aname) ;
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
@@ -153,26 +155,41 @@ void test_del_brutal (void)
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
         // construct the graph G with adjacency matrix A
-        LG_BRUTAL (LAGraph_New (&G, &A, kind, msg)) ;
+        OK (LAGraph_New (&G, &A, kind, msg)) ;
         TEST_CHECK (A == NULL) ;
 
-        // create all properties (see test_Property_* for tests of content)
-        LG_BRUTAL (LAGraph_Property_RowDegree (G, msg)) ;
-        LG_BRUTAL (LAGraph_Property_ColDegree (G, msg)) ;
-        LG_BRUTAL (LAGraph_Property_AT (G, msg)) ;
-        LG_BRUTAL (LAGraph_Property_SymmetricStructure (G, msg)) ;
+        // create the G->AT cached property
+        LG_BRUTAL (LAGraph_Cached_AT (G, msg)) ;
 
-        for (int trial = 0 ; trial <= 1 ; trial++)
+        // try to create it again; this should safely do nothing
+        LG_BRUTAL (LAGraph_Cached_AT (G, msg)) ;
+
+        // check the result
+        if (kind == LAGraph_ADJACENCY_UNDIRECTED)
         {
-            // delete all the properties
-            LG_BRUTAL (LAGraph_DeleteProperties (G, msg)) ;
             TEST_CHECK (G->AT == NULL) ;
-            TEST_CHECK (G->rowdegree == NULL) ;
-            TEST_CHECK (G->coldegree == NULL) ;
         }
-    
-        LG_BRUTAL (LAGraph_Delete (&G, msg)) ;
-        LG_BRUTAL (LAGraph_DeleteProperties (NULL, msg)) ;
+        else
+        {
+            // ensure G->A and G->AT are transposed of each other;
+            // B = (G->AT)'
+            GrB_Index nrows, ncols ;
+            OK (GrB_Matrix_nrows (&nrows, G->A)) ;
+            OK (GrB_Matrix_nrows (&ncols, G->A)) ;
+            OK (LAGraph_Matrix_TypeName (atype_name, G->A, msg)) ;
+            OK (LAGraph_TypeFromName (&atype, atype_name, msg)) ;
+            OK (GrB_Matrix_new (&B, atype, nrows, ncols)) ;
+            OK (GrB_transpose (B, NULL, NULL, G->AT, NULL)) ;
+
+            // ensure B and G->A are the same
+            bool ok ;
+            LG_BRUTAL (LAGraph_Matrix_IsEqual (&ok, G->A, B, msg)) ;
+            TEST_CHECK (ok) ;
+            TEST_MSG ("Test for G->A and B equal failed") ;
+            OK (GrB_free (&B)) ;
+        }
+
+        OK (LAGraph_Delete (&G, msg)) ;
     }
 
     OK (LG_brutal_teardown (msg)) ;
@@ -185,8 +202,10 @@ void test_del_brutal (void)
 
 TEST_LIST =
 {
-    { "Property_DeleteProperties", test_DeleteProperties },
-    { "Property_DeleteProperties_brutal", test_del_brutal },
+    { "test_AT", test_Cached_AT },
+    #if LAGRAPH_SUITESPARSE
+    { "test_AT_brutal", test_Cached_AT_brutal },
+    #endif
     { NULL, NULL }
 } ;
 

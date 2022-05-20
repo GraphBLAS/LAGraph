@@ -69,7 +69,7 @@ const char *prwhat (int pr)
 typedef struct
 {
     LAGraph_Kind kind ;
-    int ndiag ;
+    int nself_edges ;
     const char *name ;
 }
 matrix_info ;
@@ -123,10 +123,13 @@ void test_DisplayGraph (void)
                 LAGraph_Print_Level prl = pr ;
                 OK (LAGraph_DisplayGraph (G, prl, stdout, msg)) ;
             }
-            OK (LAGraph_Property_AT (G, msg)) ;
-            OK (LAGraph_Property_SymmetricStructure (G, msg)) ;
-            OK (LAGraph_Property_NDiag (G, msg)) ;
-            TEST_CHECK (G->ndiag == files [k].ndiag) ;
+            int ok_result = (kind == LAGraph_ADJACENCY_UNDIRECTED) ?
+                LAGRAPH_CACHE_NOT_NEEDED : GrB_SUCCESS ;
+            int result = LAGraph_Cached_AT (G, msg) ;
+            TEST_CHECK (result == ok_result) ;
+            OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
+            OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
+            TEST_CHECK (G->nself_edges == files [k].nself_edges) ;
         }
 
         // free the graph
@@ -264,9 +267,12 @@ void test_DisplayGraph_brutal (void)
                     LG_BRUTAL (LAGraph_DisplayGraph (G, prl, stdout, msg)) ;
                 }
             }
-            OK (LAGraph_Property_AT (G, msg)) ;
-            OK (LAGraph_Property_SymmetricStructure (G, msg)) ;
-            OK (LAGraph_Property_NDiag (G, msg)) ;
+            int ok_result = (kind == LAGraph_ADJACENCY_UNDIRECTED) ?
+                LAGRAPH_CACHE_NOT_NEEDED : GrB_SUCCESS ;
+            int result = LAGraph_Cached_AT (G, msg) ;
+            TEST_CHECK (result == ok_result) ;
+            OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
+            OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
         }
 
         // free the graph

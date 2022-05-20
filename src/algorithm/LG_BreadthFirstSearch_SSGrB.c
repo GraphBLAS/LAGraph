@@ -11,7 +11,7 @@
 
 //------------------------------------------------------------------------------
 
-// This is an Advanced algorithm (G->AT and G->rowdegree are required),
+// This is an Advanced algorithm (G->AT and G->out_degree are required),
 // but it is not user-callable (see LAGr_BreadthFirstSearch instead).
 
 // References:
@@ -80,7 +80,7 @@ int LG_BreadthFirstSearch_SSGrB
     }
 
     //--------------------------------------------------------------------------
-    // get the problem size and properties
+    // get the problem size and cached properties
     //--------------------------------------------------------------------------
 
     GrB_Matrix A = G->A ;
@@ -92,10 +92,10 @@ int LG_BreadthFirstSearch_SSGrB
     GRB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
 
     GrB_Matrix AT ;
-    GrB_Vector Degree = G->rowdegree ;
+    GrB_Vector Degree = G->out_degree ;
     if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGraph_ADJACENCY_DIRECTED &&
-        G->structure_is_symmetric == LAGraph_TRUE))
+        G->is_symmetric_structure == LAGraph_TRUE))
     {
         // AT and A have the same structure and can be used in both directions
         AT = G->A ;
@@ -105,14 +105,14 @@ int LG_BreadthFirstSearch_SSGrB
         // AT = A' is different from A
         AT = G->AT ;
         LG_ASSERT_MSG (AT != NULL,
-            LAGRAPH_PROPERTY_MISSING, "G->AT is required") ;
+            LAGRAPH_NOT_CACHED, "G->AT is required") ;
     }
 
     // FIXME: if AT is not present, do push-only?
 
-    // direction-optimization requires G->AT and G->rowdegree
+    // direction-optimization requires G->AT and G->out_degree
     LG_ASSERT_MSG (Degree != NULL,
-        LAGRAPH_PROPERTY_MISSING, "G->rowdegree is required") ;
+        LAGRAPH_NOT_CACHED, "G->out_degree is required") ;
 
     bool push_pull = true ;
 
@@ -139,8 +139,8 @@ int LG_BreadthFirstSearch_SSGrB
     }
     else
     {
-        // only the level is needed, use the LAGraph_structural_bool semiring
-        semiring = LAGraph_structural_bool ;
+        // only the level is needed, use the LAGraph_any_one_bool semiring
+        semiring = LAGraph_any_one_bool ;
 
         // create a sparse boolean vector q, and set q(src) = true
         GRB_TRY (GrB_Vector_new (&q, GrB_BOOL, n)) ;

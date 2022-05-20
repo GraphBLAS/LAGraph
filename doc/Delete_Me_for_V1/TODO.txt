@@ -1,4 +1,7 @@
-As of Mar 11, 2022:
+As of May 18, 2022:
+
+    * cmake: need to find the right liblagraph and libgraphblas
+        (not in /usr/local/lib*, but the one being compiled/tested).
 
     * entire user guide
         experimental -> src, how to do it.
@@ -9,16 +12,11 @@ As of Mar 11, 2022:
 
     * document all src & experimental: algorithms, utilities, and tests.
 
-    * draft name scheme:  LAGraph_* are Basic algorithms, LAGr_* are Advanced
-        Basic: in/out, can set properties
-        Adv: in only, prop must be provided on input, can also have extra
-            parameters, ...
-
     * check function names and API
 
     * add FUTURE to User Guide (see below)
 
-    * error messages in src/benchmark
+    * for BFS (with SS:GrB): if AT not present, use push-only method?
 
 --------------------------------------------------------------------------------
 add FUTURE items as a section in the User Guide:
@@ -28,7 +26,7 @@ FUTURE: LAGraph_SingleSourceShortestPath:  Write a Basic method that
             Delta on its own (hard to do).
 
 FUTURE: LAGraph_BreadthFirstSearch basic method that computes G->AT
-        and G->rowdegree first.
+        and G->out_degree first.
 
 FUTURE: all algorithms can use Basic and Advanced variants.
 

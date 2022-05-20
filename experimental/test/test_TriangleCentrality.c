@@ -1,7 +1,7 @@
-//----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // LAGraph/src/test/test_TriangleCentrality.c: test cases for triangle
 // centrality
-// ----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
@@ -10,7 +10,7 @@
 
 // Contributed by Timothy A. Davis, Texas A&M University
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 #include <stdio.h>
 #include <acutest.h>
@@ -81,14 +81,14 @@ void test_TriangleCentrality (void)
         TEST_CHECK (C == NULL) ;
 
         // check for self-edges
-        OK (LAGraph_Property_NDiag (G, msg)) ;
-        if (G->ndiag != 0)
+        OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
+        if (G->nself_edges != 0)
         {
             // remove self-edges
-            printf ("graph has %g self edges\n", (double) G->ndiag) ;
-            OK (LAGraph_DeleteDiag (G, msg)) ;
-            printf ("now has %g self edges\n", (double) G->ndiag) ;
-            TEST_CHECK (G->ndiag == 0) ;
+            printf ("graph has %g self edges\n", (double) G->nself_edges) ;
+            OK (LAGraph_DeleteSelfEdges (G, msg)) ;
+            printf ("now has %g self edges\n", (double) G->nself_edges) ;
+            TEST_CHECK (G->nself_edges == 0) ;
         }
 
         uint64_t ntri ;
@@ -138,7 +138,7 @@ void test_errors (void)
     OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;
 
-    OK (LAGraph_Property_NDiag (G, msg)) ;
+    OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
 
     uint64_t ntri ;
     GrB_Vector c = NULL ;
@@ -155,16 +155,16 @@ void test_errors (void)
     TEST_CHECK (c == NULL) ;
 
     // G may have self edges
-    G->ndiag = LAGRAPH_UNKNOWN ;
+    G->nself_edges = LAGRAPH_UNKNOWN ;
     result = LAGraph_VertexCentrality_Triangle (&c, &ntri, 3, G, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == -1004) ;
     TEST_CHECK (c == NULL) ;
 
     // G is undirected
-    G->ndiag = 0 ;
+    G->nself_edges = 0 ;
     G->kind = LAGraph_ADJACENCY_DIRECTED ;
-    G->structure_is_symmetric = LAGraph_FALSE ;
+    G->is_symmetric_structure = LAGraph_FALSE ;
     result = LAGraph_VertexCentrality_Triangle (&c, &ntri, 3, G, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == -1005) ;

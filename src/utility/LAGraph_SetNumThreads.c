@@ -16,7 +16,8 @@
 int LAGraph_SetNumThreads
 (
     // input:
-    int nthreads,       // # of threads to use
+    int nthreads_hi,
+    int nthreads_lo,
     char *msg
 )
 {
@@ -31,21 +32,20 @@ int LAGraph_SetNumThreads
     // set number of threads to use
     //--------------------------------------------------------------------------
 
+    nthreads_hi = LAGRAPH_MAX (nthreads_hi, 1) ;
+    nthreads_lo = LAGRAPH_MAX (nthreads_lo, 1) ;
+
     #if LAGRAPH_SUITESPARSE
     {
         // SuiteSparse:GraphBLAS: set # of threads with global setting
-        GRB_TRY (GxB_set (GxB_NTHREADS, nthreads)) ;
-    }
-    #elif defined ( _OPENMP )
-    {
-        // set # of threads with OpenMP global setting
-        omp_set_num_threads (nthreads) ;
-    }
-    #else
-    {
-        // nothing to do
+        GRB_TRY (GxB_set (GxB_NTHREADS, nthreads_lo)) ;
     }
     #endif
+
+    // set # of LAGraph threads
+    LG_nthreads_hi = nthreads_hi ;      // for LAGraph itself, if nested
+                                        // regions call GraphBLAS
+    LG_nthreads_lo = nthreads_lo ;      // for lower-level parallelism
 
     return (GrB_SUCCESS) ;
 }

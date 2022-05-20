@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_Property_SymmetricStructure: determine G->structure_is_symmetric
+// LAGraph_Cached_IsSymmetricStructure: determine G->is_symmetric_structure
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -23,7 +23,7 @@
 
 #include "LG_internal.h"
 
-int LAGraph_Property_SymmetricStructure
+int LAGraph_Cached_IsSymmetricStructure
 (
     // input/output:
     LAGraph_Graph G,    // graph to determine the symmetry of structure of A
@@ -38,17 +38,16 @@ int LAGraph_Property_SymmetricStructure
     GrB_Matrix C = NULL, S1 = NULL, S2 = NULL ;
     LG_CLEAR_MSG_AND_BASIC_ASSERT (G, msg) ;
 
-    LAGraph_Kind kind = G->kind ;
-    if (kind == LAGraph_ADJACENCY_UNDIRECTED)
+    if (G->kind == LAGraph_ADJACENCY_UNDIRECTED)
     {
         // assume A is symmetric for an undirected graph
-        G->structure_is_symmetric = true ;
+        G->is_symmetric_structure = LAGraph_TRUE ;
         return (GrB_SUCCESS) ;
     }
 
-    if (G->structure_is_symmetric != LAGRAPH_UNKNOWN)
+    if (G->is_symmetric_structure != LAGRAPH_UNKNOWN)
     {
-        // symmetric property is already known
+        // cached symmetric property is already known
         return (GrB_SUCCESS) ;
     }
 
@@ -63,7 +62,7 @@ int LAGraph_Property_SymmetricStructure
     if (n != ncols)
     {
         // A is rectangular and thus cannot be symmetric
-        G->structure_is_symmetric = false ;
+        G->is_symmetric_structure = LAGraph_FALSE ;
         return (GrB_SUCCESS) ;
     }
 
@@ -73,7 +72,7 @@ int LAGraph_Property_SymmetricStructure
 
     if (G->AT == NULL)
     {
-        LG_TRY (LAGraph_Property_AT (G, msg)) ;
+        LG_TRY (LAGraph_Cached_AT (G, msg)) ;
     }
 
     //--------------------------------------------------------------------------
@@ -88,7 +87,8 @@ int LAGraph_Property_SymmetricStructure
     GrB_Index nvals1, nvals2 ;
     GRB_TRY (GrB_Matrix_nvals (&nvals1, C)) ;
     GRB_TRY (GrB_Matrix_nvals (&nvals2, A)) ;
-    G->structure_is_symmetric = (nvals1 == nvals2) ;
+    G->is_symmetric_structure =
+        (nvals1 == nvals2) ? LAGraph_TRUE : LAGraph_FALSE ;
 
     //--------------------------------------------------------------------------
     // free workspace and return result

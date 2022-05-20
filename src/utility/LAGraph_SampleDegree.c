@@ -25,7 +25,7 @@ int LAGraph_SampleDegree
     double *sample_median,  // sampled median degree
     // input:
     const LAGraph_Graph G,  // graph of n nodes
-    bool byrow,             // if true, sample G->rowdegree, else G->coldegree
+    bool byout,             // if true, sample G->out_degree, else G->in_degree
     int64_t nsamples,       // number of samples
     uint64_t seed,          // random number seed
     char *msg
@@ -47,19 +47,18 @@ int LAGraph_SampleDegree
 
     if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGraph_ADJACENCY_DIRECTED &&
-        G->structure_is_symmetric == LAGraph_TRUE))
+        G->is_symmetric_structure == LAGraph_TRUE))
     {
         // the structure of A is known to be symmetric
-        Degree = G->rowdegree ;
+        Degree = G->out_degree ;
     }
     else
     {
         // A is not known to be symmetric
-        Degree = (byrow) ? G->rowdegree : G->coldegree ;
+        Degree = (byout) ? G->out_degree : G->in_degree ;
     }
 
-    LG_ASSERT_MSG (Degree != NULL,
-        LAGRAPH_PROPERTY_MISSING, "degree property unknown") ;
+    LG_ASSERT_MSG (Degree != NULL, LAGRAPH_NOT_CACHED, "degree unknown") ;
 
     //--------------------------------------------------------------------------
     // allocate workspace
