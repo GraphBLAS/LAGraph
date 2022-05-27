@@ -960,6 +960,19 @@ int LAGraph_GetNumThreads
 // LAGraph_SetNumThreads sets the current number of OpenMP threads that
 // can be used.
 
+// Two thread counts can be controlled:
+//
+// nthreads_hi: this is the # of threads to be used in outer regions of a
+//      nested parallel construct, assuming that nthreads_lo is used in the
+//      inner region.  The total number of threads used for an entire nested
+//      region in LAGraph is given by nthreads_hi * nthreads_lo.  This product
+//      is also the # of threads that a flat parallel region in LAGraph may
+//      use.
+//
+// nthreads_lo: this is the # of threads to be used in an inner region of a
+//      nested parallel construct, or for the # of threads to be used in each
+//      call to the underlying GraphBLAS library.
+
 LAGRAPH_PUBLIC
 int LAGraph_SetNumThreads
 (
