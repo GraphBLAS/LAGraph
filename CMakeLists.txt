@@ -48,21 +48,23 @@ cmake_minimum_required ( VERSION 3.13 )
 
 set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 
-if ( CMAKE_VERSION VERSION_GREATER "3.0" )
-    cmake_policy ( SET CMP0042 NEW )
-    cmake_policy ( SET CMP0048 NEW )
-endif ( )
+cmake_policy ( SET CMP0042 NEW )
+cmake_policy ( SET CMP0048 NEW )
 set ( CMAKE_MACOSX_RPATH TRUE )
 
 # version of LAGraph
-# FIXME: use config to create include/LAGraph.h from these definitions
-set ( LAGraph_DATE "May 20, 2022" )
+set ( LAGraph_DATE "May 31, 2022" )
 set ( LAGraph_VERSION_MAJOR 0 )
 set ( LAGraph_VERSION_MINOR 9 )
-set ( LAGraph_VERSION_SUB   23 )
+set ( LAGraph_VERSION_SUB   26 )
 
 project ( lagraph
           VERSION "${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}" )
+
+# configure LAGraph.h with the LAGraph date and version
+configure_file (
+    "config/LAGraph.h.in"
+    "${PROJECT_SOURCE_DIR}/include/LAGraph.h" )
 
 #-------------------------------------------------------------------------------
 # code coverage and build type

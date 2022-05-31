@@ -481,79 +481,80 @@ void test_BreadthFirstSearch_many(void)
         OK (LAGraph_New (&G, &A, kind, msg)) ;
         TEST_CHECK (A == NULL) ;    // A has been moved into G->A
 
-        // create its cached properties
-        int ok_result = (kind == LAGraph_ADJACENCY_UNDIRECTED) ?
-            LAGRAPH_CACHE_NOT_NEEDED : GrB_SUCCESS ;
-        int result = LAGraph_Cached_AT (G, msg) ;
-        TEST_CHECK (result == ok_result) ;
-
-        OK (LAGraph_CheckGraph (G, msg)) ;
-
-        OK (LAGraph_Cached_OutDegree (G, msg)) ;
-        OK (LAGraph_CheckGraph (G, msg)) ;
-
-        result = LAGraph_Cached_InDegree (G, msg) ;
-        TEST_CHECK (result == ok_result) ;
-        OK (LAGraph_CheckGraph (G, msg)) ;
-
         GrB_Index n = 0 ;
         OK (GrB_Matrix_nrows (&n, G->A)) ;
 
-        // run the BFS
-        int64_t step = (n > 100) ? (3*n/4) : ((n/4) + 1) ;
-        for (int64_t src = 0 ; src < n ; src += step)
+        for (int caching = 0 ; caching <= 1 ; caching++)
         {
-            GrB_Vector parent = NULL ;
-            GrB_Vector level = NULL ;
-
-            int64_t maxlevel ;
-            GrB_Index nvisited ;
-
-            OK (LAGr_BreadthFirstSearch (&level, &parent, G, src, msg)) ;
-            OK (LG_check_bfs (level, parent, G, src, msg)) ;
-            OK (GrB_reduce (&maxlevel, NULL, GrB_MAX_MONOID_INT64,
-                level, NULL)) ;
-            OK (GrB_Vector_nvals (&nvisited, level)) ;
+            // run the BFS
+            int64_t step = (n > 100) ? (3*n/4) : ((n/4) + 1) ;
+            for (int64_t src = 0 ; src < n ; src += step)
             {
-                printf ("src %g n: %g max level: %g nvisited: %g\n",
-                    (double) src, (double) n, (double) maxlevel,
-                    (double) nvisited) ;
+                GrB_Vector parent = NULL ;
+                GrB_Vector level = NULL ;
+
+                int64_t maxlevel ;
+                GrB_Index nvisited ;
+
+                OK (LAGr_BreadthFirstSearch (&level, &parent, G, src, msg)) ;
+                OK (LG_check_bfs (level, parent, G, src, msg)) ;
+                OK (GrB_reduce (&maxlevel, NULL, GrB_MAX_MONOID_INT64,
+                    level, NULL)) ;
+                OK (GrB_Vector_nvals (&nvisited, level)) ;
+                {
+                    printf ("src %g n: %g max level: %g nvisited: %g\n",
+                        (double) src, (double) n, (double) maxlevel,
+                        (double) nvisited) ;
+                }
+                OK (GrB_free(&parent));
+                OK (GrB_free(&level));
+
+                OK (LG_BreadthFirstSearch_vanilla (&level, &parent,
+                    G, src, msg)) ;
+                OK (LG_check_bfs (level, parent, G, src, msg)) ;
+                OK (GrB_reduce (&maxlevel, NULL, GrB_MAX_MONOID_INT64,
+                    level, NULL)) ;
+                OK (GrB_Vector_nvals (&nvisited, level)) ;
+                {
+                    printf ("src %g n: %g max level: %g nvisited: %g\n",
+                        (double) src, (double) n, (double) maxlevel,
+                        (double) nvisited) ;
+                }
+                OK (GrB_free(&parent));
+                OK (GrB_free(&level));
+
+                OK (LAGr_BreadthFirstSearch (NULL, &parent, G, src, msg)) ;
+                OK (LG_check_bfs (NULL, parent, G, src, msg)) ;
+                OK (GrB_free(&parent));
+
+                OK (LG_BreadthFirstSearch_vanilla (NULL, &parent,
+                    G, src, msg)) ;
+                OK (LG_check_bfs (NULL, parent, G, src, msg)) ;
+                OK (GrB_free(&parent));
+
+                OK (LAGr_BreadthFirstSearch (&level, NULL, G, src, msg)) ;
+                OK (LG_check_bfs (level, NULL, G, src, msg)) ;
+                OK (GrB_free(&level));
+
+                OK (LG_BreadthFirstSearch_vanilla (&level, NULL, G, src, msg)) ;
+                OK (LG_check_bfs (level, NULL, G, src, msg)) ;
+                OK (GrB_free(&level));
+
             }
-            OK (GrB_free(&parent));
-            OK (GrB_free(&level));
 
-            OK (LG_BreadthFirstSearch_vanilla (&level, &parent,
-                G, src, msg)) ;
-            OK (LG_check_bfs (level, parent, G, src, msg)) ;
-            OK (GrB_reduce (&maxlevel, NULL, GrB_MAX_MONOID_INT64,
-                level, NULL)) ;
-            OK (GrB_Vector_nvals (&nvisited, level)) ;
-            {
-                printf ("src %g n: %g max level: %g nvisited: %g\n",
-                    (double) src, (double) n, (double) maxlevel,
-                    (double) nvisited) ;
-            }
-            OK (GrB_free(&parent));
-            OK (GrB_free(&level));
-
-            OK (LAGr_BreadthFirstSearch (NULL, &parent, G, src, msg)) ;
-            OK (LG_check_bfs (NULL, parent, G, src, msg)) ;
-            OK (GrB_free(&parent));
-
-            OK (LG_BreadthFirstSearch_vanilla (NULL, &parent,
-                G, src, msg)) ;
-            OK (LG_check_bfs (NULL, parent, G, src, msg)) ;
-            OK (GrB_free(&parent));
-
-            OK (LAGr_BreadthFirstSearch (&level, NULL, G, src, msg)) ;
-            OK (LG_check_bfs (level, NULL, G, src, msg)) ;
-            OK (GrB_free(&level));
-
-            OK (LG_BreadthFirstSearch_vanilla (&level, NULL, G, src, msg)) ;
-            OK (LG_check_bfs (level, NULL, G, src, msg)) ;
-            OK (GrB_free(&level));
-
+            // create its cached properties
+            int ok_result = (kind == LAGraph_ADJACENCY_UNDIRECTED) ?
+                LAGRAPH_CACHE_NOT_NEEDED : GrB_SUCCESS ;
+            int result = LAGraph_Cached_AT (G, msg) ;
+            TEST_CHECK (result == ok_result) ;
+            OK (LAGraph_CheckGraph (G, msg)) ;
+            OK (LAGraph_Cached_OutDegree (G, msg)) ;
+            OK (LAGraph_CheckGraph (G, msg)) ;
+            result = LAGraph_Cached_InDegree (G, msg) ;
+            TEST_CHECK (result == ok_result) ;
+            OK (LAGraph_CheckGraph (G, msg)) ;
         }
+
         OK (LAGraph_Delete (&G, msg)) ;
     }
 
@@ -597,46 +598,48 @@ void test_bfs_brutal (void)
             continue ;
         }
 
-        // create its cached properties
-        int ok_result = (kind == LAGraph_ADJACENCY_UNDIRECTED) ?
-            LAGRAPH_CACHE_NOT_NEEDED : GrB_SUCCESS ;
-        int result = LAGraph_Cached_AT (G, msg) ;
-        TEST_CHECK (result == ok_result) ;
-
-        OK (LAGraph_Cached_OutDegree (G, msg)) ;
-        result = LAGraph_Cached_InDegree (G, msg) ;
-        TEST_CHECK (result == ok_result) ;
-
-        // run the BFS
-        int64_t step = (n > 100) ? (3*n/4) : ((n/4) + 1) ;
-        for (int64_t src = 0 ; src < n ; src += step)
+        for (int caching = 0 ; caching <= 1 ; caching++)
         {
-            GrB_Vector parent = NULL ;
-            GrB_Vector level = NULL ;
+            // run the BFS
+            int64_t step = (n > 100) ? (3*n/4) : ((n/4) + 1) ;
+            for (int64_t src = 0 ; src < n ; src += step)
+            {
+                GrB_Vector parent = NULL ;
+                GrB_Vector level = NULL ;
 
-            // parent and level with SS:GrB
-            LG_BRUTAL_BURBLE (LAGr_BreadthFirstSearch (&level, &parent, G, src, msg)) ;
-            OK (LG_check_bfs (level, parent, G, src, msg)) ;
-            OK (GrB_free (&parent)) ;
-            OK (GrB_free (&level)) ;
+                // parent and level with SS:GrB
+                LG_BRUTAL_BURBLE (LAGr_BreadthFirstSearch (&level, &parent, G, src, msg)) ;
+                OK (LG_check_bfs (level, parent, G, src, msg)) ;
+                OK (GrB_free (&parent)) ;
+                OK (GrB_free (&level)) ;
 
-            // level only with SS:GrB
-            LG_BRUTAL (LAGr_BreadthFirstSearch (&level, NULL, G, src, msg)) ;
-            OK (LG_check_bfs (level, NULL, G, src, msg)) ;
-            OK (GrB_free (&level)) ;
+                // level only with SS:GrB
+                LG_BRUTAL (LAGr_BreadthFirstSearch (&level, NULL, G, src, msg)) ;
+                OK (LG_check_bfs (level, NULL, G, src, msg)) ;
+                OK (GrB_free (&level)) ;
 
-            // parent and level with vanilla
-            LG_BRUTAL (LG_BreadthFirstSearch_vanilla (&level,
-                &parent, G, src, msg)) ;
-            OK (LG_check_bfs (level, parent, G, src, msg)) ;
-            OK (GrB_free (&parent)) ;
-            OK (GrB_free (&level)) ;
+                // parent and level with vanilla
+                LG_BRUTAL (LG_BreadthFirstSearch_vanilla (&level,
+                    &parent, G, src, msg)) ;
+                OK (LG_check_bfs (level, parent, G, src, msg)) ;
+                OK (GrB_free (&parent)) ;
+                OK (GrB_free (&level)) ;
 
-            // level-only with vanilla
-            LG_BRUTAL (LG_BreadthFirstSearch_vanilla (&level, NULL,
-                    G, src, msg)) ;
-            OK (LG_check_bfs (level, NULL, G, src, msg)) ;
-            OK (GrB_free (&level)) ;
+                // level-only with vanilla
+                LG_BRUTAL (LG_BreadthFirstSearch_vanilla (&level, NULL,
+                        G, src, msg)) ;
+                OK (LG_check_bfs (level, NULL, G, src, msg)) ;
+                OK (GrB_free (&level)) ;
+            }
+
+            // create its cached properties
+            int ok_result = (kind == LAGraph_ADJACENCY_UNDIRECTED) ?
+                LAGRAPH_CACHE_NOT_NEEDED : GrB_SUCCESS ;
+            int result = LAGraph_Cached_AT (G, msg) ;
+            TEST_CHECK (result == ok_result) ;
+            OK (LAGraph_Cached_OutDegree (G, msg)) ;
+            result = LAGraph_Cached_InDegree (G, msg) ;
+            TEST_CHECK (result == ok_result) ;
         }
 
         OK (LAGraph_Delete (&G, msg)) ;
@@ -658,5 +661,5 @@ TEST_LIST = {
     {"BreadthFirstSearch_many", test_BreadthFirstSearch_many},
     {"BreadthFirstSearch_brutal", test_bfs_brutal },
     {NULL, NULL}
-};
+} ;
 
