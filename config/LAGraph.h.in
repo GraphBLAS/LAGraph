@@ -213,6 +213,7 @@
 //      that are not needed.  These include G->AT and G->in_degree for an
 //      undirected graph.
 
+// LAGraph errors:
 #define LAGRAPH_INVALID_GRAPH                   (-1000)
 #define LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED    (-1001)
 #define LAGRAPH_IO_ERROR                        (-1002)
@@ -220,6 +221,7 @@
 #define LAGRAPH_NO_SELF_EDGES_ALLOWED           (-1004)
 #define LAGRAPH_CONVERGENCE_FAILURE             (-1005)
 
+// LAGraph warnings:
 #define LAGRAPH_CACHE_NOT_NEEDED                ( 1000)
 
 // @retval GrB_SUCCESS if successful
@@ -938,10 +940,11 @@ int LAGraph_CheckGraph
 // LAGraph_GetNumThreads: determine # of OpenMP threads to use
 //------------------------------------------------------------------------------
 
-// LAGraph_GetNumThreads determines the current number of OpenMP threads that
-// can be used.
+// FIXME: start here for next LAGraph meeting: June 1, 2022
 
-// FIXME: start here for next LAGraph meeting.
+// LAGraph_GetNumThreads determines the current number of OpenMP threads that
+// can be used.  See LAGraph_SetNumThreads for a description of nthreads_hi
+// and nthreads_lo.
 
 LAGRAPH_PUBLIC
 int LAGraph_GetNumThreads
@@ -965,9 +968,8 @@ int LAGraph_GetNumThreads
 // nthreads_hi: this is the # of threads to be used in outer regions of a
 //      nested parallel construct, assuming that nthreads_lo is used in the
 //      inner region.  The total number of threads used for an entire nested
-//      region in LAGraph is given by nthreads_hi * nthreads_lo.  This product
-//      is also the # of threads that a flat parallel region in LAGraph may
-//      use.
+//      region in LAGraph is given by nthreads_hi*nthreads_lo.  This product is
+//      also the # of threads that a flat parallel region in LAGraph may use.
 //
 // nthreads_lo: this is the # of threads to be used in an inner region of a
 //      nested parallel construct, or for the # of threads to be used in each
@@ -1712,7 +1714,12 @@ int LAGr_Init
 // LAGr_BreadthFirstSearch: breadth-first search
 //------------------------------------------------------------------------------
 
-// This is an Advanced algorithm (G->AT and G->rowdgree are required).
+// This is an Advanced algorithm.  G->AT and G->rowdgree are required to use
+// the fastest push/pull method when using SuiteSparse:GraphBLAS.  If these
+// cached properties are not present, or if a vanilla GraphBLAS library is
+// being used, then a push-only method is used (which can be slower).  G is not
+// modified; that is, G->AT and G->out_degree are not computed if not already
+// cached.
 
 /*
  * Perform breadth-first traversal, computing parent vertex ID's
@@ -1815,8 +1822,9 @@ int LAGr_Betweenness
 
 // This is an Advanced algorithm (G->AT and G->out_degree are required).
 
-// LAGr_PageRank computes the standard pagerank of a
-// directed graph G.  Sinks (nodes with no out-going edges) are handled.
+// LAGr_PageRank computes the standard pagerank of a directed graph G.  Sinks
+// (nodes with no out-going edges) are handled.  This method should be used for
+// production only, not for the GAP benchmark.
 
 LAGRAPH_PUBLIC
 int LAGr_PageRank
@@ -1838,9 +1846,9 @@ int LAGr_PageRank
 
 // This is an Advanced algorithm (G->AT and G->out_degree are required).
 
-// LAGr_PageRankGAP computes the GAP-style pagerank of a
-// directed graph G.  Sinks (nodes with no out-going edges) are not handled.
-// This method should be used for the GAP benchmark only, not for production.
+// LAGr_PageRankGAP computes the GAP-style pagerank of a directed graph G.
+// Sinks (nodes with no out-going edges) are not handled.  This method should
+// be used for the GAP benchmark only, not for production.
 
 LAGRAPH_PUBLIC
 int LAGr_PageRankGAP
@@ -1897,6 +1905,9 @@ int LAGr_PageRankGAP
  * @retval GrB_INVALID_VALUE    invalid method value
  */
 
+// FIXME: should these typedefs be LAGr_* since they are only used for
+// Advanced methods?
+
 typedef enum
 {
     LAGraph_TriangleCount_Default = 0,      // use default method
@@ -1929,7 +1940,7 @@ int LAGr_TriangleCount
     uint64_t *ntriangles,
     // input:
     const LAGraph_Graph G,
-    LAGraph_TriangleCount_Method    method,
+    LAGraph_TriangleCount_Method method,
     LAGraph_TriangleCount_Presort *presort,
     char *msg
 ) ;

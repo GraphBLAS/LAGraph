@@ -15,27 +15,27 @@
 // and its GxB extensions, or a push-only method otherwise.  The former is
 // much faster.
 
-// This is an Advanced algorithm (G->AT and G->rowdgree are required).
+// This is an Advanced algorithm.  SuiteSparse can use a push/pull method if
+// G->AT and G->rowdgree are provided.  G->AT is not required if G is
+// undirected.  The vanilla method is always push-only.
 
 #include "LG_alg_internal.h"
 
 int LAGr_BreadthFirstSearch
 (
     // output:
-    GrB_Vector    *level,
-    GrB_Vector    *parent,
+    GrB_Vector *level,
+    GrB_Vector *parent,
     // input:
     const LAGraph_Graph G,
-    GrB_Index      src,
-    char          *msg
+    GrB_Index src,
+    char *msg
 )
 {
 
 #if LAGRAPH_SUITESPARSE
-    // requires G->AT and G->out_degree
     return LG_BreadthFirstSearch_SSGrB   (level, parent, G, src, msg) ;
 #else
-    // requires no cached properties, but G is input-only anyway
     return LG_BreadthFirstSearch_vanilla (level, parent, G, src, msg) ;
 #endif
 }

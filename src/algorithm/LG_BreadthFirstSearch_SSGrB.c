@@ -11,9 +11,12 @@
 
 //------------------------------------------------------------------------------
 
-// This is an Advanced algorithm (G->AT and G->out_degree are required),
-// but it is not user-callable (see LAGr_BreadthFirstSearch instead).
-
+// This is an Advanced algorithm.  G->AT and G->out_degree are required for
+// this method to use push-pull optimization.  If not provided, this method
+// defaults to a push-only algorithm, which can be slower.  This is not
+// user-callable (see LAGr_BreadthFirstSearch instead).  G->AT and
+// G->out_degree are not computed if not present.
+ 
 // References:
 //
 // Carl Yang, Aydin Buluc, and John D. Owens. 2018. Implementing Push-Pull
@@ -44,11 +47,11 @@
 //****************************************************************************
 int LG_BreadthFirstSearch_SSGrB
 (
-    GrB_Vector    *level,
-    GrB_Vector    *parent,
+    GrB_Vector *level,
+    GrB_Vector *parent,
     const LAGraph_Graph G,
-    GrB_Index      src,
-    char          *msg
+    GrB_Index src,
+    char *msg
 )
 {
 
@@ -91,7 +94,7 @@ int LG_BreadthFirstSearch_SSGrB
 
     GRB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
 
-    GrB_Matrix AT ;
+    GrB_Matrix AT = NULL ;
     GrB_Vector Degree = G->out_degree ;
     if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGraph_ADJACENCY_DIRECTED &&
@@ -102,19 +105,14 @@ int LG_BreadthFirstSearch_SSGrB
     }
     else
     {
-        // AT = A' is different from A
+        // AT = A' is different from A.  If G->AT is NULL, then a push-only
+        // method is used.
         AT = G->AT ;
-        LG_ASSERT_MSG (AT != NULL,
-            LAGRAPH_NOT_CACHED, "G->AT is required") ;
     }
 
-    // FIXME: if AT is not present, do push-only?
-
-    // direction-optimization requires G->AT and G->out_degree
-    LG_ASSERT_MSG (Degree != NULL,
-        LAGRAPH_NOT_CACHED, "G->out_degree is required") ;
-
-    bool push_pull = true ;
+    // direction-optimization requires G->AT (if G is directed) and
+    // G->out_degree (for both undirected and directed cases)
+    bool push_pull = (Degree != NULL && AT != NULL) ;
 
     // determine the semiring type
     GrB_Type int_type = (n > INT32_MAX) ? GrB_INT64 : GrB_INT32 ;
@@ -252,12 +250,12 @@ int LG_BreadthFirstSearch_SSGrB
         // mask is pi if computing parent, v if computing just level
         if (do_push)
         {
-            // q'{!mask} = q'*A
+            // push (saxpy-based vxm):  q'{!mask} = q'*A
             GRB_TRY (GrB_vxm (q, mask, NULL, semiring, q, A, GrB_DESC_RSC)) ;
         }
         else
         {
-            // q{!mask} = AT*q
+            // pull (dot-product-based mxv):  q{!mask} = AT*q
             GRB_TRY (GrB_mxv (q, mask, NULL, semiring, AT, q, GrB_DESC_RSC)) ;
         }
 

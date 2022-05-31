@@ -1,4 +1,4 @@
-As of May 18, 2022:
+As of May 31, 2022:
 
     * cmake: need to find the right liblagraph and libgraphblas
         (not in /usr/local/lib*, but the one being compiled/tested).
@@ -15,8 +15,6 @@ As of May 18, 2022:
     * check function names and API
 
     * add FUTURE to User Guide (see below)
-
-    * for BFS (with SS:GrB): if AT not present, use push-only method?
 
 --------------------------------------------------------------------------------
 add FUTURE items as a section in the User Guide:
