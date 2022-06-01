@@ -70,8 +70,6 @@ int main (int argc, char **argv)
     }
     printf ("\n") ;
 
-    double tic [2] ;
-
     //--------------------------------------------------------------------------
     // read in the graph
     //--------------------------------------------------------------------------
@@ -117,11 +115,10 @@ int main (int argc, char **argv)
         for (int trial = 0 ; trial < ntrials ; trial++)
         {
             GrB_free (&PR) ;
-            LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+            double t1 = LAGraph_WallClockTime ( ) ;
             LAGRAPH_TRY (LAGr_PageRankGAP (&PR, &iters, G,
                 damping, tol, itermax, msg)) ;
-            double t1 ;
-            LAGRAPH_TRY (LAGraph_Toc (&t1, tic, NULL)) ;
+            t1 = LAGraph_WallClockTime ( ) - t1 ;
             printf ("trial: %2d time: %10.4f sec\n", trial, t1) ;
             total_time += t1 ;
         }
@@ -157,11 +154,10 @@ int main (int argc, char **argv)
         for (int trial = 0 ; trial < ntrials ; trial++)
         {
             GrB_free (&PR) ;
-            LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+            double t1 = LAGraph_WallClockTime ( ) ;
             LAGRAPH_TRY (LAGr_PageRank (&PR, &iters, G,
                 damping, tol, itermax, msg)) ;
-            double t1 ;
-            LAGRAPH_TRY (LAGraph_Toc (&t1, tic, NULL)) ;
+            t1 = LAGraph_WallClockTime ( ) - t1 ;
             printf ("trial: %2d time: %10.4f sec\n", trial, t1) ;
             total_time += t1 ;
         }

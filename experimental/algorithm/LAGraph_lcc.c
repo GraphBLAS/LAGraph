@@ -153,14 +153,13 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     // ensure input is binary and has no self-edges
     //--------------------------------------------------------------------------
 
-    double tic [2] ;
     t [0] = 0 ;         // sanitize time
     t [1] = 0 ;         // LCC time
 
     // fixme: use operators that ignore the values of A
     if (sanitize)
     {
-        LAGraph_Tic (tic, NULL) ;
+        t [0] = LAGraph_WallClockTime ( ) ;
 
         // S = binary structure of A
         GrB_Matrix_new (&S, GrB_FP64, n, n) ;
@@ -168,7 +167,7 @@ int LAGraph_lcc            // compute lcc for all nodes in A
 
         // remove all self edges
         GrB_select (S, NULL, NULL, GrB_OFFDIAG, S, 0, NULL) ;
-        LAGraph_Toc (&t[0], tic, NULL) ;
+        t [0] = LAGraph_WallClockTime ( ) - t [0] ;
     }
     else
     {
@@ -177,7 +176,7 @@ int LAGraph_lcc            // compute lcc for all nodes in A
         S = A ;
     }
 
-    LAGraph_Tic (tic, NULL) ;
+    t [1] = LAGraph_WallClockTime ( ) ;
 
     //--------------------------------------------------------------------------
     // create the operators for LAGraph_lcc
@@ -288,7 +287,7 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     (*LCC_handle) = LCC ; LCC = NULL ;
 
     LG_FREE_ALL ;
-    LAGraph_Toc (&t[1], tic, NULL) ;
+    t [1] = LAGraph_WallClockTime ( ) - t [1] ;
     return (GrB_SUCCESS) ;
 #endif
 }

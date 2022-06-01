@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/test/test_TicToc.c:  test LAGraph_Tic and LAGraph_Toc
+// LAGraph/src/test/test_WallClockTime.c:  test LAGraph_WallClockTime
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -17,20 +17,20 @@
 // global variables
 //------------------------------------------------------------------------------
 
-double t, tic [2] ;
+double t ;
 char msg [LAGRAPH_MSG_LEN] ;
 
 //------------------------------------------------------------------------------
-// test_TicToc:  test LAGraph_TicToc
+// test_WallClockTime:  test LAGraph_WallClockTime
 //------------------------------------------------------------------------------
 
-void test_TicToc (void)
+void test_WallClockTime (void)
 {
 
     OK (LAGraph_Init (msg)) ;
 
     // start the timer
-    OK (LAGraph_Tic (tic, msg)) ;
+    double t = LAGraph_WallClockTime ( ) ;
 
     // do some useless work
     double x = msg [0] ;
@@ -44,15 +44,10 @@ void test_TicToc (void)
     }
 
     // stop the timer
-    OK (LAGraph_Toc (&t, tic, msg)) ;
+    t = LAGraph_WallClockTime ( ) - t ;
 
     // print the result so the compiler doesn't remove the loops above
     printf ("\nresult: %g, time: %g sec\n", x, t) ;
-
-    // check error conditions
-    TEST_CHECK (LAGraph_Toc (NULL, NULL, msg) == GrB_NULL_POINTER) ;
-    TEST_CHECK (LAGraph_Toc (&t,   NULL, msg) == GrB_NULL_POINTER) ;
-    TEST_CHECK (LAGraph_Toc (NULL, tic,  msg) == GrB_NULL_POINTER) ;
 
     OK (LAGraph_Finalize (msg)) ;
 }
@@ -63,7 +58,7 @@ void test_TicToc (void)
 
 TEST_LIST =
 {
-    { "TicToc", test_TicToc },
+    { "WallClockTime", test_WallClockTime },
     // no brutal test needed
     { NULL, NULL }
 } ;

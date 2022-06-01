@@ -132,20 +132,18 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     GrB_Index ntriangles, ntsimple = 0 ;
-    double tic [2] ;
 
 #if 0
     // check # of triangles
-    LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+    double tsimple = LAGraph_WallClockTime ( ) ;
     LAGRAPH_TRY (LG_check_tri (&ntsimple, G, NULL)) ;
-    double tsimple ;
-    LAGRAPH_TRY (LAGraph_Toc (&tsimple, tic, NULL)) ;
+    tsimple = LAGraph_WallClockTime ( ) - tsimple ;
     printf ("# of triangles: %" PRId64 " slow time: %g sec\n",
         ntsimple, tsimple) ;
 #endif
 
     // warmup for more accurate timing, and also print # of triangles
-    LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+    double ttot = LAGraph_WallClockTime ( ) ;
     printf ("\nwarmup method: ") ;
     int presort = LAGraph_TriangleCount_AutoSort ; // = 2 (auto selection)
     print_method (stdout, 6, presort) ;
@@ -156,8 +154,7 @@ int main (int argc, char **argv)
         LAGraph_TriangleCount_SandiaDot2, &presort, msg) );
     printf ("# of triangles: %" PRIu64 "\n", ntriangles) ;
     print_method (stdout, 6, presort) ;
-    double ttot ;
-    LAGRAPH_TRY (LAGraph_Toc (&ttot, tic, NULL)) ;
+    ttot = LAGraph_WallClockTime ( ) - ttot ;
     printf ("nthreads: %3d time: %12.6f rate: %6.2f (SandiaDot2, one trial)\n",
             nthreads_max, ttot, 1e-6 * nvals / ttot) ;
 
@@ -212,14 +209,12 @@ int main (int argc, char **argv)
                 double ttot = 0, ttrial [100] ;
                 for (int trial = 0 ; trial < ntrials ; trial++)
                 {
-                    LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+                    double tt = LAGraph_WallClockTime ( ) ;
                     presort = sorting ;
-
                     LAGRAPH_TRY(
                         LAGr_TriangleCount (&nt2, G, method,
                                                       &presort, msg) );
-
-                    LAGRAPH_TRY (LAGraph_Toc (&ttrial [trial], tic, NULL)) ;
+                    ttrial [trial] = LAGraph_WallClockTime ( ) - tt ;
                     ttot += ttrial [trial] ;
                     printf ("trial %2d: %12.6f sec rate %6.2f  # triangles: "
                         "%g\n", trial, ttrial [trial],

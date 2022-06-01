@@ -88,10 +88,9 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
     
     // warmup for more accurate timing
-    double tic [2], tt ;
-    LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+    double tt = LAGraph_WallClockTime ( ) ;
     LAGRAPH_TRY (LAGraph_FastGraphletTransform (&Fnet, G, true, msg)) ;
-    LAGRAPH_TRY (LAGraph_Toc (&tt, tic, NULL)) ;
+    tt = LAGraph_WallClockTime ( ) - tt ;
     GRB_TRY (GrB_free (&Fnet)) ;
     printf ("warmup time %g sec\n", tt) ;
 
@@ -113,14 +112,12 @@ int main (int argc, char **argv)
         for (int trial = 0 ; trial < ntrials ; trial++)
         {
             int64_t seed = trial * n + 1 ;
-            LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+            double tt = LAGraph_WallClockTime ( ) ;
             LAGRAPH_TRY (LAGraph_FastGraphletTransform (&Fnet, G, true, msg)) ;
-            double t1 ;
-            LAGRAPH_TRY (LAGraph_Toc (&t1, tic, NULL)) ;
+            tt = LAGraph_WallClockTime ( ) - tt ;
             GRB_TRY (GrB_free (&Fnet)) ;
-
-            printf ("trial: %2d time: %10.4f sec\n", trial, t1) ;
-            total_time += t1 ;
+            printf ("trial: %2d time: %10.4f sec\n", trial, tt) ;
+            total_time += tt ;
         }
 
         double t = total_time / ntrials ;

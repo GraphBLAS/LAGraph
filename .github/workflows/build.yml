@@ -8,8 +8,6 @@ jobs:
     strategy:
       matrix:
         config:
-         - {grb_version: 6.0.2, conda_grb_package_hash: h9c3ff4c}
-         - {grb_version: 6.1.4, conda_grb_package_hash: h9c3ff4c}
          - {grb_version: 6.2.4, conda_grb_package_hash: h27087fc}
          - {grb_version: 7.0.1, conda_grb_package_hash: h27087fc}
          - {grb_version: 7.1.0, conda_grb_package_hash: h27087fc}
@@ -51,8 +49,6 @@ jobs:
     strategy:
       matrix:
         config:
-         - {grb_version: 6.0.2, conda_grb_package_hash: h4a89273}
-         - {grb_version: 6.1.4, conda_grb_package_hash: h4a89273}
          - {grb_version: 6.2.4, conda_grb_package_hash: h3f3baac}
          - {grb_version: 7.0.1, conda_grb_package_hash: h3f3baac}
          - {grb_version: 7.1.0, conda_grb_package_hash: h7881ed4}

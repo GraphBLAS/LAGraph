@@ -130,8 +130,7 @@ GrB_Info LAGraph_BF_basic_pushpull
     while (!same && iter < n - 1)
     {
 
-        double tic [2] ;
-        LAGraph_Tic (tic, NULL);
+        // double t2 = LAGraph_WallClockTime ( ) ;
 
         // excute semiring on d and A, and save the result to d
         if (!use_vxm_with_A)
@@ -153,8 +152,8 @@ GrB_Info LAGraph_BF_basic_pushpull
         }
         iter++;
 
-        double t2;
-        LAGraph_Toc (&t2, tic, NULL) ;
+        // t2 = LAGraph_WallClockTime ( ) - t2 ;
+
         GrB_Index dnz ;
         GRB_TRY (GrB_Vector_nvals (&dnz, d)) ;
 

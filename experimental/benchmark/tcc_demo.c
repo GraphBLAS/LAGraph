@@ -107,11 +107,10 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     // warmup for more accurate timing
-    double tic [2], tt ;
     uint64_t ntri ;
-    LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+    double tt = LAGraph_WallClockTime ( ) ;
     LAGRAPH_TRY (LAGraph_VertexCentrality_Triangle (&c, &ntri, 3, G, msg)) ;
-    LAGRAPH_TRY (LAGraph_Toc (&tt, tic, NULL)) ;
+    tt = LAGraph_WallClockTime ( ) - tt ;
     GRB_TRY (GrB_free (&c)) ;
     printf ("warmup time %g sec, # triangles: %g\n", tt, (double) ntri) ;
 
@@ -125,11 +124,11 @@ int main (int argc, char **argv)
             double ttot = 0, ttrial [100] ;
             for (int trial = 0 ; trial < ntrials ; trial++)
             {
-                LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+                double tt = LAGraph_WallClockTime ( ) ;
                 LAGRAPH_TRY (LAGraph_VertexCentrality_Triangle (&c, &ntri,
                     method, G, msg)) ;
                 GRB_TRY (GrB_free (&c)) ;
-                LAGRAPH_TRY (LAGraph_Toc (&ttrial [trial], tic, NULL)) ;
+                ttrial [trial] = LAGraph_WallClockTime ( ) - tt ;
                 ttot += ttrial [trial] ;
                 printf ("threads %2d trial %2d: %12.6f sec\n",
                     nthreads, trial, ttrial [trial]) ;

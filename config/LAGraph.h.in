@@ -984,50 +984,17 @@ int LAGraph_SetNumThreads
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Tic: start the timer
+// LAGraph_WallClockTime: return the current wall clock time
 //------------------------------------------------------------------------------
 
-// LAGraph_Tic starts a wallclock timer.  Normally, this is simply a wrapper
-// for omp_get_wtime, if OpenMP is in use.  Otherwise, an OS-specific timing
-// function is called.
-
-// FIXME: use a single function LAGraph_Time.  Wrapper (1-to-1) for 
-// omp_get_wtime, or other timers (same API).
+// LAGraph_WallClockTime returns the current wall clock time.  Normally, this
+// is simply a wrapper for omp_get_wtime, if OpenMP is in use.  Otherwise, an
+// OS-specific timing function is called.
 
 LAGRAPH_PUBLIC
-double LAGraph_WallClockTime     // returns omp_get_wtime(), or ...
+double LAGraph_WallClockTime     // returns omp_get_wtime(), or other timer
 (
     void
-) ;
-
-LAGRAPH_PUBLIC
-double LAGraph_Time     // returns omp_get_wtime(), or ...
-(
-    void
-) ;
-
-LAGRAPH_PUBLIC
-int LAGraph_Tic
-(
-    double tic [2],     // tic [0]: seconds, tic [1]: nanoseconds
-    char *msg
-) ;
-
-//------------------------------------------------------------------------------
-// LAGraph_Toc: return time since last call to LAGraph_Tic
-//------------------------------------------------------------------------------
-
-// LAGraph_Toc returns the time since the last call to LAGraph_Tic with the
-// same tic input array (which is not modified).
-
-LAGRAPH_PUBLIC
-int LAGraph_Toc
-(
-    // output:
-    double *t,              // time since last call to LAGraph_Tic
-    // input:
-    const double tic [2],   // tic from last call to LAGraph_Tic
-    char *msg
 ) ;
 
 //------------------------------------------------------------------------------

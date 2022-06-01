@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_Tic: start the timer
+// LAGraph_WallClockTime: return the current wall clock time
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -14,14 +14,14 @@
 // Example usage:
 
 /*
-    double tic [2], t ;
-    LAGraph_Tic (tic, NULL) ;
+    double t1 = LAGraph_WallClockTime ( ) ;
+
     // ... do stuff
-    LAGraph_Toc (&t, tic, NULL) ;
-    printf ("time to 'do stuff' : %g (seconds)\n', t) ;
+    double t2 = LAGraph_WallClockTime ( ) ;
+    printf ("time to 'do stuff' : %g (seconds)\n', t2 - t1) ;
     // ... more stuff
-    LAGraph_Toc (&t, tic, NULL) ;
-    printf ("time to 'do stuff' and 'more stuff': %g (seconds)\n', t) ;
+    double t3 = LAGraph_WallClockTime ( ) ;
+    printf ("time to 'do stuff' and 'more stuff': %g (seconds)\n', t3 - t1) ;
 */
 
 #include "LG_internal.h"
@@ -37,20 +37,14 @@
     #endif
 #endif
 
-int LAGraph_Tic
-(
-    double tic [2],     // tic [0]: seconds, tic [1]: nanoseconds
-    char *msg
-)
+double LAGraph_WallClockTime (void)
 {
-
-    LG_CLEAR_MSG ;
+    double t_wallclock ;
 
     #if defined ( _OPENMP )
 
         // OpenMP is available; use the OpenMP timer function
-        tic [0] = omp_get_wtime ( ) ;
-        tic [1] = 0 ;
+        t_wallclock = omp_get_wtime ( ) ;
 
     #elif defined ( __linux__ )
 
@@ -58,8 +52,7 @@ int LAGraph_Tic
         // resolution clock_gettime instead.  May require -lrt
         struct timespec t ;
         LAGRAPH_TRY (clock_gettime (CLOCK_MONOTONIC, &t)) ;
-        tic [0] = (double) t.tv_sec ;
-        tic [1] = (double) t.tv_nsec ;
+        t_wallclock = (double) t.tv_sec + 1e-9 * ((double) t.tv_nsec) ;
 
     #elif defined ( __MACH__ )
 
@@ -69,8 +62,7 @@ int LAGraph_Tic
         host_get_clock_service (mach_host_self ( ), SYSTEM_CLOCK, &cclock) ;
         clock_get_time (cclock, &t) ;
         mach_port_deallocate (mach_task_self ( ), cclock) ;
-        tic [0] = (double) t.tv_sec;
-        tic [1] = (double) t.tv_nsec;
+        t_wallclock = (double) t.tv_sec + 1e-9 * ((double) t.tv_nsec) ;
 
     #else
 
@@ -81,11 +73,10 @@ int LAGraph_Tic
         // given by CLOCKS_PER_SEC.  In Mac OSX this is a very high resolution
         // clock, and clock ( ) is faster than clock_get_time (...) ;
         clock_t t = clock ( ) ;
-        tic [0] = ((double) t) / ((double) CLOCKS_PER_SEC) ;
-        tic [1] = 0 ;
+        t_wallclock = ((double) t) / ((double) CLOCKS_PER_SEC) ;
 
     #endif
 
-    return (GrB_SUCCESS) ;
+    return (t_wallclock) ;
 }
 

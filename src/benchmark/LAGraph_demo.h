@@ -764,8 +764,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
     // read in a matrix from a file
     //--------------------------------------------------------------------------
 
-    double tic [2] ;
-    LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+    double t_read = LAGraph_WallClockTime ( ) ;
 
     if (argc > 1)
     {
@@ -1075,8 +1074,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
     // free workspace, print a summary of the graph, and return result
     //--------------------------------------------------------------------------
 
-    double t_read ;
-    LAGRAPH_TRY (LAGraph_Toc (&t_read, tic, msg)) ;
+    t_read = LAGraph_WallClockTime ( ) - t_read ;
     printf ("read time: %g\n", t_read) ;
 
     LG_FREE_WORK ;

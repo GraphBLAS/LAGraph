@@ -121,21 +121,19 @@ int main (int argc, char **argv)
     // begin tests
     //--------------------------------------------------------------------------
 
-    double tic [2], tcheck ;
-
     // warmup
     LAGRAPH_TRY (LAGr_ConnectedComponents (&components, G, msg)) ;
     GrB_Index nCC = countCC (components, n) ;
     printf ("nCC: %20.0g\n", (double) nCC) ;
 
 #if 0 & LG_CHECK_RESULT
-    LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+    double tcheck = LAGraph_WallClockTime ( ) ;
     int result = LG_check_cc (components, G, msg) ;
     if (result != 0)
     {
         printf ("test failure: (%d) %s\n", result, msg) ;
     }
-    LAGRAPH_TRY (LAGraph_Toc (&tcheck, tic, NULL)) ;
+    tcheck = LAGraph_WallClockTime ( ) - tcheck ;
     LAGRAPH_TRY (result) ;
     printf ("LG_check_cc passed, time: %g\n", tcheck) ;
 #endif
@@ -157,11 +155,10 @@ int main (int argc, char **argv)
         int ntrials = NTRIALS ;
         for (int k = 0 ; k < ntrials ; k++)
         {
-            double ttrial ;
             GrB_free (&components2) ;
-            LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+            double ttrial = LAGraph_WallClockTime ( ) ;
             LAGRAPH_TRY (LAGr_ConnectedComponents (&components2, G, msg)) ;
-            LAGRAPH_TRY (LAGraph_Toc (&ttrial, tic, NULL)) ;
+            ttrial = LAGraph_WallClockTime ( ) - ttrial ;
             ttt += ttrial ;
             printf ("SV6:      nthreads: %2d trial: %2d time: %10.4f sec\n",
                 nthreads, k, ttrial) ;
@@ -191,11 +188,10 @@ int main (int argc, char **argv)
         int ntrials = NTRIALS ;
         for (int k = 0 ; k < ntrials ; k++)
         {
-            double ttrial ;
             GrB_free (&components2) ;
-            LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+            double ttrial = LAGraph_WallClockTime ( ) ;
             LAGRAPH_TRY (LG_CC_7 (&components2, G, msg)) ;
-            LAGRAPH_TRY (LAGraph_Toc (&ttrial, tic, NULL)) ;
+            ttrial = LAGraph_WallClockTime ( ) - ttrial ;
             ttt += ttrial ;
             printf ("SV7:      nthreads: %2d trial: %2d time: %10.4f sec\n",
                 nthreads, k, ttrial) ;
@@ -226,11 +222,10 @@ int main (int argc, char **argv)
         int ntrials = NTRIALS ;
         for (int k = 0 ; k < ntrials ; k++)
         {
-            double ttrial ;
             GrB_free (&components2) ;
-            LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+            double ttrial = LAGraph_WallClockTime ( ) ;
             LAGRAPH_TRY (LG_CC_FastSV5 (&components2, G, msg)) ;
-            LAGRAPH_TRY (LAGraph_Toc (&ttrial, tic, NULL)) ;
+            ttrial = LAGraph_WallClockTime ( ) - ttrial ;
             ttt += ttrial ;
             printf ("SV5b:     nthreads: %2d trial: %2d time: %10.4f sec\n",
                 nthreads, k, ttrial) ;
@@ -261,11 +256,10 @@ int main (int argc, char **argv)
         int ntrials = 1 /* NTRIALS */ ;
         for (int k = 0 ; k < ntrials ; k++)
         {
-            double ttrial ;
             GrB_free (&components2) ;
-            LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+            double ttrial = LAGraph_WallClockTime ( ) ;
             LAGRAPH_TRY (LG_CC_Boruvka (&components2, G, msg)) ;
-            LAGRAPH_TRY (LAGraph_Toc (&ttrial, tic, NULL)) ;
+            ttrial = LAGraph_WallClockTime ( ) - ttrial ;
             ttt += ttrial ;
             printf ("Boruvka:  nthreads: %2d trial: %2d time: %10.4f sec\n",
                 nthreads, k, ttrial) ;
@@ -296,11 +290,10 @@ int main (int argc, char **argv)
         int ntrials = 1 /* NTRIALS */ ;
         for (int k = 0 ; k < ntrials ; k++)
         {
-            double ttrial ;
             GrB_free (&components2) ;
-            LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+            double ttrial = LAGraph_WallClockTime ( ) ;
             LAGRAPH_TRY (LAGraph_cc_lacc (&components2, G->A, false, msg)) ;
-            LAGRAPH_TRY (LAGraph_Toc (&ttrial, tic, NULL)) ;
+            ttrial = LAGraph_WallClockTime ( ) - ttrial ;
             ttt += ttrial ;
             printf ("LACC:     nthreads: %2d trial: %2d time: %10.4f sec\n",
                 nthreads, k, ttrial) ;

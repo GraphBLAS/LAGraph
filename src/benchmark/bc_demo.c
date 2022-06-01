@@ -159,14 +159,11 @@ int main (int argc, char **argv)
         {
             if (Nthreads [t] > nthreads_max) continue ;
             LAGRAPH_TRY (LAGraph_SetNumThreads (1, Nthreads [t], msg)) ;
-
             GrB_free (&centrality) ;
-            double tic [2] ;
-            LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+            double t2 = LAGraph_WallClockTime ( ) ;
             LAGRAPH_TRY (LAGr_Betweenness (&centrality, G, vertex_list,
                 batch_size, msg)) ;
-            double t2 ;
-            LAGRAPH_TRY (LAGraph_Toc (&t2, tic, msg)) ;
+            t2 = LAGraph_WallClockTime ( ) - t2 ;
             printf ("BC time %2d: %12.4f (sec)\n", Nthreads [t], t2) ;
             fflush (stdout) ;
             tt [t] += t2 ;

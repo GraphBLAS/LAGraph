@@ -56,8 +56,8 @@ int LG_check_bfs
     // check inputs
     //--------------------------------------------------------------------------
 
-    double tic [2], tt ;
-    LAGraph_Tic (tic, msg) ;
+    double tt = LAGraph_WallClockTime ( ) ;
+
     GrB_Vector Row = NULL ;
     GrB_Index *Ap = NULL, *Aj = NULL, *neighbors = NULL ;
     void *Ax = NULL ;
@@ -109,9 +109,9 @@ int LG_check_bfs
 
     if (print_timings)
     {
-        LAGraph_Toc (&tt, tic, msg) ;
+        tt = LAGraph_WallClockTime ( ) - tt ;
         printf ("LG_check_bfs init  time: %g sec\n", tt) ;
-        LAGraph_Tic (tic, msg) ;
+        tt = LAGraph_WallClockTime ( ) ;
     }
 
     queue [0] = src ;
@@ -167,9 +167,9 @@ int LG_check_bfs
 
     if (print_timings)
     {
-        LAGraph_Toc (&tt, tic, msg) ;
+        tt = LAGraph_WallClockTime ( ) - tt ;
         printf ("LG_check_bfs bfs   time: %g sec\n", tt) ;
-        LAGraph_Tic (tic, msg) ;
+        tt = LAGraph_WallClockTime ( ) ;
     }
 
     //--------------------------------------------------------------------------
@@ -234,7 +234,7 @@ int LG_check_bfs
 
     if (print_timings)
     {
-        LAGraph_Toc (&tt, tic, msg) ;
+        tt = LAGraph_WallClockTime ( ) - tt ;
         printf ("LG_check_bfs check time: %g sec\n", tt) ;
     }
     return (GrB_SUCCESS) ;

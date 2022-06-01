@@ -80,8 +80,7 @@ GrB_Info LAGraph_BF_basic
     while (!same && iter < n - 1)
     {
 
-        double tic [2] ;
-        LAGraph_Tic(tic, NULL);
+        double t = LAGraph_WallClockTime ( ) ;
 
         // execute semiring on d and A, and save the result to d
         GRB_TRY (GrB_vxm(dtmp, GrB_NULL, GrB_NULL, GrB_MIN_PLUS_SEMIRING_FP64, d, A,
@@ -94,8 +93,7 @@ GrB_Info LAGraph_BF_basic
             d = ttmp;
         }
         iter++;
-        double t;
-        LAGraph_Toc (&t, tic, NULL );
+        t = LAGraph_WallClockTime ( ) - t ;
         GrB_Index dnz ;
         GRB_TRY (GrB_Vector_nvals (&dnz, d)) ;
 //      printf ("step %3d time %16.4f sec, nvals %.16g\n", iter, t, (double) dnz);

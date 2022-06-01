@@ -101,11 +101,10 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
 
     // warmup for more accurate timing
-    double tic [2], tt ;
     LAGRAPH_TRY (LAGraph_SetNumThreads (24, 24, msg)) ;
-    LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+    double tt = LAGraph_WallClockTime ( ) ;
     LAGRAPH_TRY (LAGraph_KCore_All (&c, &kmax, G, msg)) ;
-    LAGRAPH_TRY (LAGraph_Toc (&tt, tic, NULL)) ;
+    tt = LAGraph_WallClockTime ( ) - tt ;
     printf("warmup time: %g sec\n\n", tt) ;
     //LAGRAPH_TRY (LAGraph_KCore_Decompose (&D, G, &c, kmax, msg)) ;
 
@@ -121,10 +120,10 @@ int main (int argc, char **argv)
         double ttot = 0, ttrial [100] ;
         for (int trial = 0 ; trial < ntrials ; trial++)
         {
-            LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+            double tt = LAGraph_WallClockTime ( ) ;
             LAGRAPH_TRY (LAGraph_KCore_All (&c, &kmax, G, msg)) ;
             GRB_TRY (GrB_free (&c)) ;
-            LAGRAPH_TRY (LAGraph_Toc (&ttrial [trial], tic, NULL)) ;
+            ttrial [trial] = LAGraph_WallClockTime ( ) - tt ;
             ttot += ttrial [trial] ;
             printf ("threads %2d trial %2d: %12.6f sec\n",
                 nthreads, trial, ttrial [trial]) ;

@@ -70,7 +70,6 @@ int LG_check_sssp
     // check inputs
     //--------------------------------------------------------------------------
 
-    double tic [2], tt ;
     GrB_Vector Row = NULL ;
     GrB_Index *Ap = NULL, *Aj = NULL, *neighbors = NULL ;
     GrB_Index Ap_size, Aj_size, Ax_size, n, ncols ;
@@ -80,7 +79,7 @@ int LG_check_sssp
     double *path_length_in = NULL, *distance = NULL, *neighbor_weights = NULL ;
     void *Ax = NULL ;
 
-    LAGraph_Tic (tic, msg) ;
+    double tt = LAGraph_WallClockTime ( ) ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GRB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
@@ -167,9 +166,9 @@ int LG_check_sssp
 
     if (print_timings)
     {
-        LAGraph_Toc (&tt, tic, msg) ;
+        tt = LAGraph_WallClockTime ( ) - tt ;
         printf ("LG_check_sssp init  time: %g sec\n", tt) ;
-        LAGraph_Tic (tic, msg) ;
+        tt = LAGraph_WallClockTime ( ) ;
     }
 
     // initializations
@@ -299,9 +298,9 @@ int LG_check_sssp
 
     if (print_timings)
     {
-        LAGraph_Toc (&tt, tic, msg) ;
+        tt = LAGraph_WallClockTime ( ) - tt ;
         printf ("LG_check_sssp time: %g sec\n", tt) ;
-        LAGraph_Tic (tic, msg) ;
+        tt = LAGraph_WallClockTime ( ) ;
     }
 
     //--------------------------------------------------------------------------
@@ -345,7 +344,7 @@ int LG_check_sssp
 
     if (print_timings)
     {
-        LAGraph_Toc (&tt, tic, msg) ;
+        tt = LAGraph_WallClockTime ( ) - tt ;
         printf ("LG_check_sssp check time: %g sec\n", tt) ;
     }
     return (GrB_SUCCESS) ;
