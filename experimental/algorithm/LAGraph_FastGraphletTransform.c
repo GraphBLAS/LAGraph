@@ -11,6 +11,8 @@
 // LAGraph_FastGraphletTransform: computes the Fast Graphlet Transform of
 // an undirected graph.  No self edges are allowed on the input graph.
 
+// fixme: rename this
+
 // https://arxiv.org/pdf/2007.11111.pdf
 
 //------------------------------------------------------------------------------

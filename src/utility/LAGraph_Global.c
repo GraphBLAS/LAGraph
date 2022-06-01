@@ -31,10 +31,10 @@ void   (* LAGraph_Free_function    ) (void *)         = free ;
 // LAGraph_SetNumThreads and accessed by LAGraph_GetNumThreads.
 // They are not intendend to be directly access by the end user.
 
-int LG_nthreads_hi ;    // # of threads to use at the higher level of a nested
+int LG_nthreads_outer ; // # of threads to use at the higher level of a nested
                         // parallel region in LAGraph.  Default: 1.
 
-int LG_nthreads_lo ;    // # of threads to use at the lower level of a nested
+int LG_nthreads_inner ; // # of threads to use at the lower level of a nested
                         // parallel region, or to use inside GraphBLAS.
                         // Default: the value obtained by omp_get_max_threads
                         // if OpenMP is in use, or 1 otherwise.

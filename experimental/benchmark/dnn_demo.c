@@ -280,9 +280,9 @@ int main (int argc, char **argv)
     if (type == GrB_FP64) printf ("double\n") ; else printf ("float\n") ;
 
     // get the max # of threads that can be used
-    int nthreads_max, nthreads_hi, nthreads_lo ;
-    LG_TRY (LAGraph_GetNumThreads (&nthreads_hi, &nthreads_lo, msg)) ;
-    nthreads_max = nthreads_hi * nthreads_lo ;
+    int nthreads_max, nthreads_outer, nthreads_inner ;
+    LG_TRY (LAGraph_GetNumThreads (&nthreads_outer, &nthreads_inner, msg)) ;
+    nthreads_max = nthreads_outer * nthreads_inner ;
     printf ("max # of nthreads: %d\n", nthreads_max) ;
 
     #define NNTHREADS 12
@@ -554,7 +554,7 @@ int main (int argc, char **argv)
             printf ("\n# entries in final Y: %g million\n",
                 (double) final_ynvals / 1e6) ;
             printf ("check time: %g sec\n", tcheck) ;
-            LAGraph_SetNumThreads (nthreads_hi, nthreads_lo, NULL) ;
+            LAGraph_SetNumThreads (nthreads_outer, nthreads_inner, NULL) ;
         }
 
         //----------------------------------------------------------------------

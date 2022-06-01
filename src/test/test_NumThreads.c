@@ -17,7 +17,7 @@
 // global variables
 //------------------------------------------------------------------------------
 
-int nthreads_hi = 0, nthreads_lo = 0 ;
+int nthreads_outer = 0, nthreads_inner = 0 ;
 char msg [LAGRAPH_MSG_LEN] ;
 
 //------------------------------------------------------------------------------
@@ -29,31 +29,31 @@ void test_NumThreads (void)
 
     OK (LAGraph_Init (msg)) ;
 
-    nthreads_hi = 0 ;
-    nthreads_lo = 0 ;
-    OK (LAGraph_GetNumThreads (&nthreads_hi, &nthreads_lo, msg)) ;
-    TEST_CHECK (nthreads_hi > 0) ;
-    TEST_CHECK (nthreads_lo > 0) ;
+    nthreads_outer = 0 ;
+    nthreads_inner = 0 ;
+    OK (LAGraph_GetNumThreads (&nthreads_outer, &nthreads_inner, msg)) ;
+    TEST_CHECK (nthreads_outer > 0) ;
+    TEST_CHECK (nthreads_inner > 0) ;
 
-    nthreads_hi = 0 ;
-    nthreads_lo = 0 ;
-    OK (LAGraph_GetNumThreads (&nthreads_hi, &nthreads_lo, NULL)) ;
-    TEST_CHECK (nthreads_hi > 0) ;
-    TEST_CHECK (nthreads_lo > 0) ;
+    nthreads_outer = 0 ;
+    nthreads_inner = 0 ;
+    OK (LAGraph_GetNumThreads (&nthreads_outer, &nthreads_inner, NULL)) ;
+    TEST_CHECK (nthreads_outer > 0) ;
+    TEST_CHECK (nthreads_inner > 0) ;
 
     OK (LAGraph_SetNumThreads (2, 4, msg)) ;
-    nthreads_hi = 0 ;
-    nthreads_lo = 0 ;
-    OK (LAGraph_GetNumThreads (&nthreads_hi, &nthreads_lo, msg)) ;
-    TEST_CHECK (nthreads_hi > 0) ;
-    TEST_CHECK (nthreads_lo > 0) ;
+    nthreads_outer = 0 ;
+    nthreads_inner = 0 ;
+    OK (LAGraph_GetNumThreads (&nthreads_outer, &nthreads_inner, msg)) ;
+    TEST_CHECK (nthreads_outer > 0) ;
+    TEST_CHECK (nthreads_inner > 0) ;
 
     OK (LAGraph_SetNumThreads (2, 4, NULL)) ;
-    nthreads_hi = 0 ;
-    nthreads_lo = 0 ;
-    OK (LAGraph_GetNumThreads (&nthreads_hi, &nthreads_lo, NULL)) ;
-    TEST_CHECK (nthreads_hi > 0) ;
-    TEST_CHECK (nthreads_lo > 0) ;
+    nthreads_outer = 0 ;
+    nthreads_inner = 0 ;
+    OK (LAGraph_GetNumThreads (&nthreads_outer, &nthreads_inner, NULL)) ;
+    TEST_CHECK (nthreads_outer > 0) ;
+    TEST_CHECK (nthreads_inner > 0) ;
 
     TEST_CHECK (LAGraph_GetNumThreads (NULL, NULL, msg) == GrB_NULL_POINTER) ;
     printf ("\nmsg: %s\n", msg) ;

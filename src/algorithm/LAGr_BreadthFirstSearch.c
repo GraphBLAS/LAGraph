@@ -16,7 +16,7 @@
 // much faster.
 
 // This is an Advanced algorithm.  SuiteSparse can use a push/pull method if
-// G->AT and G->rowdgree are provided.  G->AT is not required if G is
+// G->AT and G->out_degree are provided.  G->AT is not required if G is
 // undirected.  The vanilla method is always push-only.
 
 #include "LG_alg_internal.h"

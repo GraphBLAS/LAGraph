@@ -822,4 +822,19 @@ int LAGraph_KCore_Decompose
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
+// counting graphlets
+//------------------------------------------------------------------------------
+
+LAGRAPH_PUBLIC
+int LAGraph_FastGraphletTransform
+(
+    // outputs:
+    GrB_Matrix *F_net,  // 16-by-n matrix of graphlet counts
+    // inputs:
+    LAGraph_Graph G,
+    bool compute_d_15,  // probably this makes most sense
+    char *msg
+) ;
+
 #endif

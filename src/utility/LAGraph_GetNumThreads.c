@@ -18,8 +18,8 @@
 int LAGraph_GetNumThreads
 (
     // output:
-    int *nthreads_hi,
-    int *nthreads_lo,
+    int *nthreads_outer,
+    int *nthreads_inner,
     char *msg
 )
 {
@@ -29,14 +29,15 @@ int LAGraph_GetNumThreads
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    LG_ASSERT (nthreads_hi != NULL && nthreads_lo != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (nthreads_outer != NULL && nthreads_inner != NULL,
+        GrB_NULL_POINTER) ;
 
     //--------------------------------------------------------------------------
     // get number of threads
     //--------------------------------------------------------------------------
 
-    (*nthreads_hi) = LG_nthreads_hi ;
-    (*nthreads_lo) = LG_nthreads_lo ;
+    (*nthreads_outer) = LG_nthreads_outer ;
+    (*nthreads_inner) = LG_nthreads_inner ;
     return (GrB_SUCCESS) ;
 }
 

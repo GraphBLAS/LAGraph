@@ -287,9 +287,9 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
 // [ todo: nthreads will not be needed once GxB_select with a GxB_RankUnaryOp
 // and a new GxB_extract are added to SuiteSparse:GraphBLAS.
     // determine # of threads to use
-    int nthreads, nthreads_hi, nthreads_lo ;
-    LG_TRY (LAGraph_GetNumThreads (&nthreads_hi, &nthreads_lo, msg)) ;
-    nthreads = nthreads_hi * nthreads_lo ;
+    int nthreads, nthreads_outer, nthreads_inner ;
+    LG_TRY (LAGraph_GetNumThreads (&nthreads_outer, &nthreads_inner, msg)) ;
+    nthreads = nthreads_outer * nthreads_inner ;
     nthreads = LAGRAPH_MIN (nthreads, n / 16) ;
     nthreads = LAGRAPH_MAX (nthreads, 1) ;
 // ]

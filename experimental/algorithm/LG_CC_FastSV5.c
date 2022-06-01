@@ -368,9 +368,9 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
     //--------------------------------------------------------------------------
 
     // determine # of threads to use for Reduce_assign
-    int nthreads, nthreads_hi, nthreads_lo ;
-    LG_TRY (LAGraph_GetNumThreads (&nthreads_hi, &nthreads_lo, msg)) ;
-    nthreads = nthreads_hi * nthreads_lo ;
+    int nthreads, nthreads_outer, nthreads_inner ;
+    LG_TRY (LAGraph_GetNumThreads (&nthreads_outer, &nthreads_inner, msg)) ;
+    nthreads = nthreads_outer * nthreads_inner ;
 
     nthreads = LAGRAPH_MIN (nthreads, n / 16) ;
     nthreads = LAGRAPH_MAX (nthreads, 1) ;

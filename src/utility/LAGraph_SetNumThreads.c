@@ -16,8 +16,8 @@
 int LAGraph_SetNumThreads
 (
     // input:
-    int nthreads_hi,
-    int nthreads_lo,
+    int nthreads_outer,
+    int nthreads_inner,
     char *msg
 )
 {
@@ -32,20 +32,20 @@ int LAGraph_SetNumThreads
     // set number of threads to use
     //--------------------------------------------------------------------------
 
-    nthreads_hi = LAGRAPH_MAX (nthreads_hi, 1) ;
-    nthreads_lo = LAGRAPH_MAX (nthreads_lo, 1) ;
+    nthreads_outer = LAGRAPH_MAX (nthreads_outer, 1) ;
+    nthreads_inner = LAGRAPH_MAX (nthreads_inner, 1) ;
 
     #if LAGRAPH_SUITESPARSE
     {
         // SuiteSparse:GraphBLAS: set # of threads with global setting
-        GRB_TRY (GxB_set (GxB_NTHREADS, nthreads_lo)) ;
+        GRB_TRY (GxB_set (GxB_NTHREADS, nthreads_inner)) ;
     }
     #endif
 
     // set # of LAGraph threads
-    LG_nthreads_hi = nthreads_hi ;      // for LAGraph itself, if nested
-                                        // regions call GraphBLAS
-    LG_nthreads_lo = nthreads_lo ;      // for lower-level parallelism
+    LG_nthreads_outer = nthreads_outer ;    // for LAGraph itself, if nested
+                                            // regions call GraphBLAS
+    LG_nthreads_inner = nthreads_inner ;    // for lower-level parallelism
 
     return (GrB_SUCCESS) ;
 }

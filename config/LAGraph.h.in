@@ -940,19 +940,17 @@ int LAGraph_CheckGraph
 // LAGraph_GetNumThreads: determine # of OpenMP threads to use
 //------------------------------------------------------------------------------
 
-// FIXME: start here for next LAGraph meeting: June 1, 2022
-
 // LAGraph_GetNumThreads determines the current number of OpenMP threads that
-// can be used.  See LAGraph_SetNumThreads for a description of nthreads_hi
-// and nthreads_lo.
+// can be used.  See LAGraph_SetNumThreads for a description of nthreads_outer
+// and nthreads_inner.
 
 LAGRAPH_PUBLIC
 int LAGraph_GetNumThreads
 (
     // output:
-    int *nthreads_hi,   // for outer region for nested parallelism
-    int *nthreads_lo,   // for inner region of nested parallelism, or for the
-                        // underlying GraphBLAS library
+    int *nthreads_outer,    // for outer region for nested parallelism
+    int *nthreads_inner,    // for inner region of nested parallelism, or for
+                            // the underlying GraphBLAS library
     char *msg
 ) ;
 
@@ -965,13 +963,14 @@ int LAGraph_GetNumThreads
 
 // Two thread counts can be controlled:
 //
-// nthreads_hi: this is the # of threads to be used in outer regions of a
-//      nested parallel construct, assuming that nthreads_lo is used in the
+// nthreads_outer: this is the # of threads to be used in outer regions of a
+//      nested parallel construct, assuming that nthreads_inner is used in the
 //      inner region.  The total number of threads used for an entire nested
-//      region in LAGraph is given by nthreads_hi*nthreads_lo.  This product is
-//      also the # of threads that a flat parallel region in LAGraph may use.
+//      region in LAGraph is given by nthreads_outer*nthreads_inner.  This
+//      product is also the # of threads that a flat parallel region in LAGraph
+//      may use.
 //
-// nthreads_lo: this is the # of threads to be used in an inner region of a
+// nthreads_inner: this is the # of threads to be used in an inner region of a
 //      nested parallel construct, or for the # of threads to be used in each
 //      call to the underlying GraphBLAS library.
 
@@ -979,8 +978,8 @@ LAGRAPH_PUBLIC
 int LAGraph_SetNumThreads
 (
     // input:
-    int nthreads_hi,
-    int nthreads_lo,
+    int nthreads_outer,
+    int nthreads_inner,
     char *msg
 ) ;
 
@@ -991,6 +990,21 @@ int LAGraph_SetNumThreads
 // LAGraph_Tic starts a wallclock timer.  Normally, this is simply a wrapper
 // for omp_get_wtime, if OpenMP is in use.  Otherwise, an OS-specific timing
 // function is called.
+
+// FIXME: use a single function LAGraph_Time.  Wrapper (1-to-1) for 
+// omp_get_wtime, or other timers (same API).
+
+LAGRAPH_PUBLIC
+double LAGraph_WallClockTime     // returns omp_get_wtime(), or ...
+(
+    void
+) ;
+
+LAGRAPH_PUBLIC
+double LAGraph_Time     // returns omp_get_wtime(), or ...
+(
+    void
+) ;
 
 LAGRAPH_PUBLIC
 int LAGraph_Tic
@@ -1168,6 +1182,8 @@ int LAGraph_MMRead
     FILE *f,        // file to read from, already open
     char *msg
 ) ;
+
+// FIXME: start here for next LAGraph meeting: June 1, 2022
 
 //------------------------------------------------------------------------------
 // LAGraph_MMWrite: write a matrix in MatrixMarket format

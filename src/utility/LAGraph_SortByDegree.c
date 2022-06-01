@@ -96,7 +96,7 @@ int LAGraph_SortByDegree
     GRB_TRY (GrB_Vector_size (&n, Degree)) ;
 
     #define CHUNK (64*1024)
-    int nthreads = LG_nthreads_hi * LG_nthreads_lo ;
+    int nthreads = LG_nthreads_outer * LG_nthreads_inner ;
     nthreads = LAGRAPH_MIN (nthreads, n/CHUNK) ;
     nthreads = LAGRAPH_MAX (nthreads, 1) ;
 

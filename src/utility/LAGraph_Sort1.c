@@ -334,7 +334,7 @@ int LAGraph_Sort1
     // handle small problems with a single thread
     //--------------------------------------------------------------------------
 
-    int nthreads = LG_nthreads_hi * LG_nthreads_lo ; // # of threads to use
+    int nthreads = LG_nthreads_outer * LG_nthreads_inner ; // # threads to use
     if (nthreads <= 1 || n <= LG_BASECASE)
     {
         // sequential quicksort

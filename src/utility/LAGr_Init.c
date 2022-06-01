@@ -150,17 +150,17 @@ int LAGr_Init
     // set # of LAGraph threads
     //--------------------------------------------------------------------------
 
-    LG_nthreads_hi = 1 ;                // for LAGraph itself, if nested
+    LG_nthreads_outer = 1 ;             // for LAGraph itself, if nested
                                         // regions call GraphBLAS
     #ifdef _OPENMP
-    LG_nthreads_lo = omp_get_max_threads ( ) ; // for lower-level parallelism
+    LG_nthreads_inner = omp_get_max_threads ( ) ; // for lower-level parallelism
     #else
-    LG_nthreads_lo = 1 ;
+    LG_nthreads_inner = 1 ;
     #endif
 
     #if LAGRAPH_SUITESPARSE
     {
-        GRB_TRY (GxB_set (GxB_NTHREADS, LG_nthreads_lo)) ;
+        GRB_TRY (GxB_set (GxB_NTHREADS, LG_nthreads_inner)) ;
     }
     #endif
 
