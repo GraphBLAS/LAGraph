@@ -39,7 +39,7 @@
 
 double LAGraph_WallClockTime (void)
 {
-    double t_wallclock ;
+    double t_wallclock = 0 ;
 
     #if defined ( _OPENMP )
 
@@ -51,8 +51,11 @@ double LAGraph_WallClockTime (void)
         // Linux has a very low resolution clock() function, so use the high
         // resolution clock_gettime instead.  May require -lrt
         struct timespec t ;
-        LAGRAPH_TRY (clock_gettime (CLOCK_MONOTONIC, &t)) ;
-        t_wallclock = (double) t.tv_sec + 1e-9 * ((double) t.tv_nsec) ;
+        int e = clock_gettime (CLOCK_MONOTONIC, &t) ;
+        if (e == 0)
+        {
+            t_wallclock = (double) t.tv_sec + 1e-9 * ((double) t.tv_nsec) ;
+        }
 
     #elif defined ( __MACH__ )
 
