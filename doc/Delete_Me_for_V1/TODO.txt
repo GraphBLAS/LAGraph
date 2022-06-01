@@ -1,4 +1,4 @@
-As of May 31, 2022:
+As of June 1, 2022:
 
     * cmake: need to find the right liblagraph and libgraphblas
         (not in /usr/local/lib*, but the one being compiled/tested).
