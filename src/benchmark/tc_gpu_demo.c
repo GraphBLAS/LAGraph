@@ -24,8 +24,7 @@
 
 #include "LAGraph_demo.h"
 
-#define NTHREAD_LIST 1
-// #define NTHREAD_LIST 2
+#define NTHREAD_LIST 2
 #define THREAD_LIST 40, 0
 
 //  #define NTHREAD_LIST 7
