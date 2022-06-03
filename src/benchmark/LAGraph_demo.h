@@ -1113,7 +1113,7 @@ static inline int demo_init (bool burble)
 #else
     // use the GPU
     // rmm_wrap_initialize (rmm_wrap_managed, INT32_MAX, INT64_MAX) ;
-    rmm_wrap_initialize (rmm_wrap_managed, 256 * 1000000L, 256 * 100000000L) ;
+    rmm_wrap_initialize (rmm_wrap_managed, 256 * 1000000L, 256 * 1000000000L) ;
     LAGRAPH_TRY (LAGr_Init (GxB_NONBLOCKING_GPU, rmm_wrap_malloc,
         rmm_wrap_calloc, rmm_wrap_realloc, rmm_wrap_free, NULL)) ;
     GxB_set (GxB_GPU_CONTROL, GxB_GPU_ALWAYS) ;

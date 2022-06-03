@@ -80,7 +80,7 @@ int main (int argc, char **argv)
     LAGraph_Graph G = NULL ;
 
     // start GraphBLAS and LAGraph
-    bool burble = false ;
+    bool burble = true ;
     demo_init (burble) ;
 
     int ntrials = 5 ;
@@ -177,7 +177,8 @@ int main (int argc, char **argv)
     // warmup for more accurate timing, and also print # of triangles
     LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
     printf ("\nwarmup method: ") ;
-    int presort = LAGraph_TriangleCount_AutoSort ; // = 2 (auto selection)
+//  int presort = LAGraph_TriangleCount_AutoSort ; // = 2 (auto selection)
+    int presort = LAGraph_TriangleCount_NoSort ;    // HACK
     print_method (stdout, 6, presort) ;
 
     // warmup method: without the GPU
@@ -198,7 +199,7 @@ int main (int argc, char **argv)
             (double) ntsimple) ;
         fflush (stdout) ;
         fflush (stderr) ;
-        abort ( ) ;
+        // abort ( ) ;
     }
 #endif
 
@@ -221,7 +222,7 @@ int main (int argc, char **argv)
             (double) ntsimple) ;
         fflush (stdout) ;
         fflush (stderr) ;
-        abort ( ) ;
+        // abort ( ) ;
     }
 #endif
 
@@ -237,11 +238,13 @@ int main (int argc, char **argv)
     // for (int method = 5 ; method <= 6 ; method++)
 
     // try all methods 3 to 5
-    for (int method = 3 ; method <= 5 ; method++)
+//  for (int method = 3 ; method <= 5 ; method++)
+    for (int method = 1 ; method <= 1 ; method++)   // HACK
     {
         // for (int sorting = -1 ; sorting <= 2 ; sorting++)
 
         int sorting = LAGraph_TriangleCount_AutoSort ; // just use auto-sort
+            sorting = LAGraph_TriangleCount_NoSort ;    // HACK: no-sort
         {
             printf ("\nMethod: ") ;
             int presort ;
@@ -251,12 +254,12 @@ int main (int argc, char **argv)
                 printf ("kron fails on method %d; skipped\n", method) ;
                 continue ;
             }
-            if (n != 134217728 && method < 5)
-            {
-                printf ("all but urand is slow with method %d: skipped\n",
-                        method) ;
-                continue ;
-            }
+//          if (n != 134217728 && method < 5)
+//          {
+//              printf ("all but urand is slow with method %d: skipped\n",
+//                      method) ;
+//              continue ;
+//          }
 
             for (int t = 1 ; t <= nt ; t++)
             {
@@ -302,7 +305,7 @@ int main (int argc, char **argv)
                     printf ("Test failure!\n") ;
                     fflush (stdout) ;
                     fflush (stderr) ;
-                    abort ( ) ;
+                    // abort ( ) ;
                 }
             #endif
                 fprintf (stderr, "Avg: TC method%d.%d %3d: %10.3f sec: %s\n",

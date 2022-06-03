@@ -280,7 +280,8 @@ int LAGr_TriangleCount
 
         case LAGraph_TriangleCount_Burkhardt:  // 1: sum (sum ((A^2) .* A)) / 6
 
-            GRB_TRY (GrB_mxm (C, A, NULL, semiring, A, A, GrB_DESC_S)) ;
+            // using the dot product method, A*A' instead of A^2:
+            GRB_TRY (GrB_mxm (C, A, NULL, semiring, A, A, GrB_DESC_ST1)) ;
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             ntri /= 6 ;
             break ;
