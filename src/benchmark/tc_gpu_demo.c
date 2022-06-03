@@ -26,7 +26,7 @@
 
 #define NTHREAD_LIST 1
 // #define NTHREAD_LIST 2
-#define THREAD_LIST 40 0
+#define THREAD_LIST 40, 0
 
 //  #define NTHREAD_LIST 7
 //  #define THREAD_LIST 64, 32, 24, 12, 8, 4, 0
