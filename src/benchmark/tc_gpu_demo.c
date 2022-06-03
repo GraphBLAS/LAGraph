@@ -83,7 +83,7 @@ int main (int argc, char **argv)
     demo_init (burble) ;
 
     int ntrials = 5 ;
-    // ntrials = 1 ;        // HACK
+    ntrials = 1 ;        // HACK
     printf ("# of trials: %d\n", ntrials) ;
 
     int nt = NTHREAD_LIST ;

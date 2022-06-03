@@ -96,6 +96,8 @@ static int tricount_prep
 #define LG_FREE_ALL                         \
 {                                           \
     GrB_free (&C) ;                         \
+    GrB_free (&C_gpu) ;                         \
+    GrB_free (&Delta) ;                         \
     GrB_free (&L) ;                         \
     GrB_free (&T) ;                         \
     GrB_free (&U) ;                         \
@@ -120,6 +122,7 @@ int LAGr_TriangleCount
 
     LG_CLEAR_MSG ;
     GrB_Matrix C = NULL, L = NULL, U = NULL, T = NULL ;
+    GrB_Matrix C_gpu = NULL, Delta = NULL, Work = NULL ;
     int64_t *P = NULL ;
     LG_ASSERT_MSG (
     method == LAGraph_TriangleCount_Default ||   // 0: use default method
@@ -179,6 +182,9 @@ int LAGr_TriangleCount
     GrB_Index n ;
     GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
     GRB_TRY (GrB_Matrix_new (&C, GrB_INT64, n, n)) ;
+    GRB_TRY (GrB_Matrix_new (&C_gpu, GrB_INT64, n, n)) ;
+    GRB_TRY (GrB_Matrix_new (&Delta, GrB_INT64, n, n)) ;
+    GRB_TRY (GrB_Matrix_new (&Work, GrB_INT64, n, n)) ;
     #if LAGRAPH_SUITESPARSE
     GrB_Semiring semiring = GxB_PLUS_PAIR_INT64 ;
     #else
@@ -274,6 +280,7 @@ int LAGr_TriangleCount
     //--------------------------------------------------------------------------
 
     int64_t ntri ;
+    GrB_Desc_Value save ;
 
     switch (method)
     {
@@ -281,7 +288,39 @@ int LAGr_TriangleCount
         case LAGraph_TriangleCount_Burkhardt:  // 1: sum (sum ((A^2) .* A)) / 6
 
             // using the dot product method, A*A' instead of A^2:
+            GxB_get (GxB_GPU_CONTROL, &save) ;
+
+            // use the CPU
+            GxB_set (GxB_GPU_CONTROL, GxB_GPU_NEVER) ;
             GRB_TRY (GrB_mxm (C, A, NULL, semiring, A, A, GrB_DESC_ST1)) ;
+
+            // use the GPU
+            GxB_set (GxB_GPU_CONTROL, GxB_GPU_ALWAYS) ;
+            GRB_TRY (GrB_mxm (C_gpu, A, NULL, semiring, A, A, GrB_DESC_ST1)) ;
+
+            // compare: Delta = C - C_gpu
+            GRB_TRY (GrB_eWiseAdd (Delta, NULL, NULL, GrB_MINUS_INT64,
+                C, C_gpu, NULL)) ;
+            // drop explicit zeros from Delta
+            GRB_TRY (GrB_Matrix_select_INT64 (Delta, NULL, NULL,
+                GrB_VALUENE_INT64, Delta, (int64_t) 0, NULL)) ;
+            GRB_TRY (GxB_print (Delta, 3)) ;
+
+            // look at Delta in C and C_gpu:
+            GRB_TRY (GrB_assign (Work, Delta, NULL, C,
+                GrB_ALL, n, GrB_ALL, n, GrB_DESC_S)) ;
+            printf ("relevant entries in C:\n") ;
+            GRB_TRY (GxB_print (Work, 3)) ;
+            GRB_TRY (GrB_Matrix_clear (Work)) ;
+            GRB_TRY (GrB_assign (Work, Delta, NULL, C_gpu,
+                GrB_ALL, n, GrB_ALL, n, GrB_DESC_S)) ;
+            printf ("relevant entries in C_gpu:\n") ;
+            GRB_TRY (GxB_print (Work, 3)) ;
+            GRB_TRY (GrB_Matrix_clear (Work)) ;
+
+            // restore
+            GxB_set (GxB_GPU_CONTROL, save) ;
+
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             ntri /= 6 ;
             break ;
