@@ -287,6 +287,15 @@ int LAGr_TriangleCount
 
         case LAGraph_TriangleCount_Burkhardt:  // 1: sum (sum ((A^2) .* A)) / 6
 
+#if 1
+            // using the dot product method, A*A' instead of A^2:
+            GRB_TRY (GrB_mxm (C, A, NULL, semiring, A, A, GrB_DESC_ST1)) ;
+
+            // do it again for timing
+            GRB_TRY (GrB_Matrix_clear (C)) ;
+            GRB_TRY (GrB_mxm (C, A, NULL, semiring, A, A, GrB_DESC_ST1)) ;
+
+#else
             // using the dot product method, A*A' instead of A^2:
             GxB_get (GxB_GPU_CONTROL, &save) ;
 
@@ -321,6 +330,7 @@ int LAGr_TriangleCount
             // restore
             GxB_set (GxB_GPU_CONTROL, save) ;
 
+#endif
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             ntri /= 6 ;
             break ;
@@ -366,6 +376,13 @@ int LAGr_TriangleCount
             // using the masked dot product
             LG_TRY (tricount_prep (&L, &U, A, msg)) ;
 
+#if 1
+            GRB_TRY (GrB_mxm (C, U, NULL, semiring, U, L, GrB_DESC_ST1)) ;
+
+            // do it again for timing
+            GRB_TRY (GrB_Matrix_clear (C)) ;
+            GRB_TRY (GrB_mxm (C, U, NULL, semiring, U, L, GrB_DESC_ST1)) ;
+#else
             GxB_get (GxB_GPU_CONTROL, &save) ;
 
             // use the CPU
@@ -398,7 +415,7 @@ int LAGr_TriangleCount
 
             // restore
             GxB_set (GxB_GPU_CONTROL, save) ;
-
+#endif
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             break ;
     }
