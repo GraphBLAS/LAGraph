@@ -64,7 +64,7 @@ find_library(
   NAMES graphblas
   HINTS ${CMAKE_SOURCE_DIR}/../GraphBLAS
   PATHS GRAPHBLAS_ROOT ENV GRAPHBLAS_ROOT
-  PATH_SUFFIXES lib build
+  PATH_SUFFIXES lib build alternative
   )
 
 # get version of .so using REALPATH
