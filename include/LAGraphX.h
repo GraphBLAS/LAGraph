@@ -23,10 +23,9 @@
 // development, and is intended only for illustration not benchmarking.  Do not
 // use for benchmarking, without asking the authors.
 
-
-//****************************************************************************
-// Random number generator
-//****************************************************************************
+//------------------------------------------------------------------------------
+// LAGraph_Random_*: Random number generator
+//------------------------------------------------------------------------------
 
 LAGRAPH_PUBLIC
 int LAGraph_Random_Init

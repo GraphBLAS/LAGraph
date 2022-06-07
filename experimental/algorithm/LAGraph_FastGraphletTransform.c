@@ -392,7 +392,7 @@ int LAGraph_FastGraphletTransform
 
         //GrB_wait (A, GrB_MATERIALIZE) ;     // this is essential
         int nthreads = 1 ;
-        // TODO: parallelize this...
+        // todo: parallelize this...
 //#pragma omp parallel for num_threads(nthreads)
         //for (int tid = 0 ; tid < nthreads ; tid++)
         {

@@ -1150,7 +1150,7 @@ int LAGraph_MMRead
     char *msg
 ) ;
 
-// FIXME: start here for next LAGraph meeting: June 1, 2022
+// FIXME: start here for next LAGraph meeting: June 8, 2022
 
 //------------------------------------------------------------------------------
 // LAGraph_MMWrite: write a matrix in MatrixMarket format
@@ -1888,8 +1888,8 @@ int LAGr_PageRankGAP
  * @retval GrB_INVALID_VALUE    invalid method value
  */
 
-// FIXME: should these typedefs be LAGr_* since they are only used for
-// Advanced methods?
+// FIXME: should these enum typedefs be named LAGr_* since they are only used
+// for Advanced methods?
 
 typedef enum
 {
