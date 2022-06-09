@@ -126,6 +126,8 @@ int main (int argc, char **argv)
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
 
+    GxB_print (G->A, 2) ;
+#if 0
     // HACK: make sure G->A is non-iso
 
     // create an iterator
@@ -150,11 +152,13 @@ int main (int argc, char **argv)
     GrB_free (&iterator) ;
 
     GxB_print (G->A, 2) ;
-//  GRB_TRY (GrB_Matrix_setElement (G->A, 0, 2, 2)) ;
-//  GxB_print (G->A, 3) ;
     GrB_wait (G->A, GrB_MATERIALIZE) ;
-//  GxB_print (G->A, 3) ;
-//  printf ("HERE ============================\n") ;
+
+#else
+    bool A_iso ;
+    GxB_Matrix_iso (&A_iso, A) ;
+    printf ("G->A iso: %d\n", A_iso) ;
+#endif
 
     //--------------------------------------------------------------------------
     // triangle counting
