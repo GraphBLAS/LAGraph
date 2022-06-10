@@ -1128,7 +1128,9 @@ double LAGraph_WallClockTime     // returns omp_get_wtime(), or other timer
  * column-major order.  This rule is follwed by LAGraph_MMWrite.  However,
  * LAGraph_MMRead can read the entries in any order.
  *
- * FUTURE: add support for user-defined types.
+ * FUTURE: add support for user-defined types. Perhaps LAGr_MMRead (...) with
+ * an extra parameter: pointer to function that reads a single UDT scalar
+ * from the file and returns the UDT scalar itself.  Or LAGraph_MMRead_UDT.
  *
  * @param[out]    A     handle of the matrix to create
  * @param[in]     f     handle to an open file to read from
@@ -1150,8 +1152,6 @@ int LAGraph_MMRead
     char *msg
 ) ;
 
-// FIXME: start here for next LAGraph meeting: June 8, 2022
-
 //------------------------------------------------------------------------------
 // LAGraph_MMWrite: write a matrix in MatrixMarket format
 //------------------------------------------------------------------------------
@@ -1162,7 +1162,9 @@ int LAGraph_MMRead
 // containing the GraphBLAS type:
 //      %%GraphBLAS type <entrytype>
 
-// FUTURE: add support for user-defined types.
+// FUTURE: add support for user-defined types.  Perhaps as LAGr_MMWrite,
+// which has an extra parameter: a pointer to a function that takes a UDT
+// scalar as input, and writes it to the file.  Or LAGraph_MMWrite_UDT
 
 LAGRAPH_PUBLIC
 int LAGraph_MMWrite
@@ -1324,6 +1326,8 @@ int LAGraph_Scalar_TypeName
     char *msg
 ) ;
 
+// FIXME: start here for next LAGraph meeting: June 17, 2022
+
 //------------------------------------------------------------------------------
 // LAGraph_KindName: return the name of a kind
 //------------------------------------------------------------------------------
@@ -1351,6 +1355,10 @@ int LAGraph_KindName
 // example of how to permute G->A after calling this function.  The output &P
 // must be freed by LAGraph_Free.
 
+// FIXME: this method requires G->out_degree or G->in_degree to already be
+// computed.  Rename it LAGr_SortByDegree.  Need the Advanced version in other
+// LAGr_* methods, like LAGr_TriangleCount, which requires G to be input-only.
+
 LAGRAPH_PUBLIC
 int LAGraph_SortByDegree
 (
@@ -1370,6 +1378,10 @@ int LAGraph_SortByDegree
 // LAGraph_SampleDegree computes an estimate of the median and mean of the out
 // or in degree, by randomly sampling the G->out_degree or G->in_degree
 // vector.
+
+// FIXME: this method requires G->out_degree or G->in_degree to already be
+// computed.  Rename it LAGr_SampleDegree.  Need the Advanced version in other
+// LAGr_* methods, like LAGr_TriangleCount, which requires G to be input-only.
 
 LAGRAPH_PUBLIC
 int LAGraph_SampleDegree
@@ -1710,9 +1722,9 @@ int LAGr_Init
  *
  * @param[out]    level      If non-NULL on input, on successful return, it
  *                           contains the levels of each vertex reached. The
- *                           src vertex is assigned level 0. If a vertex i is not
- *                           reached, parent(i) is not present.
- *                           The level vector is not computed if NULL.
+ *                           src vertex is assigned level 0. If a vertex i is
+ *                           not reached, parent(i) is not present.  The level
+ *                           vector is not computed if NULL.
  * @param[out]    parent     If non-NULL on input, on successful return, it
  *                           contains parent vertex IDs for each vertex reached.
  *                           The src vertex will have itself as its parent. If a
