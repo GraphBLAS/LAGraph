@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGr_SquareClustering: vertex square-clustering
+// LAGraph_SquareClustering: vertex square-clustering
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2022 by The LAGraph Contributors, All Rights Reserved.
@@ -68,7 +68,7 @@ int LAGraph_SquareClustering
     // Temporary workspace matrix (int64)
     GrB_Matrix Q = NULL ;
 
-    GrB_Vector d_out = G->out_degree ;
+    GrB_Vector deg = G->out_degree ;
     GrB_Matrix A = G->A ;
     GrB_Index n = 0 ;
 
@@ -79,7 +79,7 @@ int LAGraph_SquareClustering
     LG_ASSERT (square_clustering != NULL, GrB_NULL_POINTER) ;
     (*square_clustering) = NULL ;
 
-    LG_ASSERT_MSG (d_out != NULL,
+    LG_ASSERT_MSG (deg != NULL,
         LAGRAPH_NOT_CACHED, "G->out_degree is required") ;
 
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
@@ -96,7 +96,19 @@ int LAGraph_SquareClustering
     // out_degrees as a diagonal matrix.  We use this twice:
     // 1) as a mask to ignore the diagonal elements when computing `A @ A.T`
     // 2) and to multiply each column of a matrix by the degrees.
-    GRB_TRY (GrB_Matrix_diag (&D, d_out, 0)) ;
+    #if LAGRAPH_SUITESPARSE
+        #if GxB_IMPLEMENTATION >= GxB_VERSION (7,0,0)
+        // SuiteSparse 7.x and later:
+        GRB_TRY (GrB_Matrix_diag(&D, deg, 0)) ;
+        #else
+        // SuiteSparse 6.x and earlier, which had the incorrect signature:
+        GRB_TRY (GrB_Matrix_new(&D, GrB_INT64, n, n)) ;
+        GRB_TRY (GrB_Matrix_diag(D, deg, 0)) ;
+        #endif
+    #else
+    // standard GrB:
+    GRB_TRY (GrB_Matrix_diag(&D, deg, 0)) ;
+    #endif
 
     // We'll use `P2 = plus_pair(A @ A.T).new(mask=~D.S)` throughout.
     // We use ~D.S as a mask so P2 won't have values along the diagonal.
@@ -124,12 +136,12 @@ int LAGraph_SquareClustering
     // First three contributions will become negative in the final step.
     //
     // (1) Subtract 1 for each u and 1 for each w for all combos:
-    //     denom = d_out * (d_out - 1)
+    //     denom = deg * (deg - 1)
     GRB_TRY (GrB_Vector_new (&denom, GrB_INT64, n)) ;
     GRB_TRY (GrB_Vector_apply_BinaryOp2nd_INT64 (denom, NULL, NULL,
-        GrB_MINUS_INT64, d_out, 1, NULL)) ;
+        GrB_MINUS_INT64, deg, 1, NULL)) ;
     GRB_TRY (GrB_Vector_eWiseMult_BinaryOp (denom, NULL, NULL, GrB_TIMES_INT64,
-        denom, d_out, NULL)) ;
+        denom, deg, NULL)) ;
 
     // (2) Subtract the number of squares (will become negative, so add here):
     //     denom = denom + squares

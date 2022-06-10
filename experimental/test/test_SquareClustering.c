@@ -78,7 +78,7 @@ void test_SquareClustering (void)
     TEST_CHECK (nvals == 8) ;
 
     // OK (GrB_Vector_new(&soln, GrB_FP64, n)) ;
-    // OK (GrB_Vector_build_FP64(soln, soln_indices, soln_values, 2,
+    // OK (GrB_Vector_build_FP64(soln, soln_indices, soln_values, 8,
     //     GrB_PLUS_FP64)) ;
     double val;
     for (GrB_Index i = 0 ; i < 8 ; ++i)
