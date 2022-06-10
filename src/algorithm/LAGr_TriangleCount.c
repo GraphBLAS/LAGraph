@@ -282,6 +282,8 @@ int LAGr_TriangleCount
     int64_t ntri ;
     GrB_Desc_Value save ;
 
+    double tic [2], ttot ;
+
     switch (method)
     {
 
@@ -347,16 +349,22 @@ int LAGr_TriangleCount
 
             // using the masked saxpy3 method
             LG_TRY (tricount_prep (&L, NULL, A, msg)) ;
+         LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
             GRB_TRY (GrB_mxm (C, L, NULL, semiring, L, L, GrB_DESC_S)) ;
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
+         LAGRAPH_TRY (LAGraph_Toc (&ttot, tic, NULL)) ;
+         printf (" Sandia tc_kernel_time: %14.8f \n", ttot);
             break ;
 
         case LAGraph_TriangleCount_Sandia2: // 4: sum (sum ((U * U) .* U))
 
             // using the masked saxpy3 method
             LG_TRY (tricount_prep (NULL, &U, A, msg)) ;
+         LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
             GRB_TRY (GrB_mxm (C, U, NULL, semiring, U, U, GrB_DESC_S)) ;
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
+         LAGRAPH_TRY (LAGraph_Toc (&ttot, tic, NULL)) ;
+         printf (" Sandia2 tc_kernel_time: %14.8f \n", ttot);
             break ;
 
         default:
@@ -367,8 +375,11 @@ int LAGr_TriangleCount
 
             // using the masked dot product
             LG_TRY (tricount_prep (&L, &U, A, msg)) ;
+         LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
             GRB_TRY (GrB_mxm (C, L, NULL, semiring, L, U, GrB_DESC_ST1)) ;
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
+         LAGRAPH_TRY (LAGraph_Toc (&ttot, tic, NULL)) ;
+         printf (" SandiaDot tc_kernel_time: %14.8f \n", ttot);
             break ;
 
         case LAGraph_TriangleCount_SandiaDot2: // 6: sum (sum ((U * L') .* U))
@@ -417,6 +428,8 @@ int LAGr_TriangleCount
             GxB_set (GxB_GPU_CONTROL, save) ;
 #endif
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
+         LAGRAPH_TRY (LAGraph_Toc (&ttot, tic, NULL)) ;
+         printf (" SandiaDot2 tc_kernel_time: %14.8f \n", ttot);
             break ;
     }
 

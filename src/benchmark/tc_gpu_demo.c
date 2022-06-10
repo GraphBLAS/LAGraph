@@ -178,7 +178,6 @@ int main (int argc, char **argv)
 #endif
 
     // warmup for more accurate timing, and also print # of triangles
-    LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
     printf ("\nwarmup method: ") ;
 //  int presort = LAGraph_TriangleCount_AutoSort ; // = 2 (auto selection)
     int presort = LAGraph_TriangleCount_NoSort ;    // HACK
@@ -187,6 +186,7 @@ int main (int argc, char **argv)
     // warmup method: without the GPU
     // LAGraph_TriangleCount_SandiaDot2 = 6,   // sum (sum ((U * L') .* U))
     GxB_set (GxB_GPU_CONTROL, GxB_GPU_NEVER) ;
+    LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
     LAGRAPH_TRY (LAGr_TriangleCount (&ntriangles, G,
         LAGraph_TriangleCount_SandiaDot2, &presort, msg) );
     printf ("# of triangles: %" PRIu64 " (CPU)\n", ntriangles) ;
@@ -209,7 +209,9 @@ int main (int argc, char **argv)
     // warmup method: with the GPU
     // LAGraph_TriangleCount_SandiaDot2 = 6,   // sum (sum ((U * L') .* U))
     GrB_Index ntriangles_gpu ;
+    //presort = LAGraph_TriangleCount_NoSort ; //turn off sorting on GPU
     GxB_set (GxB_GPU_CONTROL, GxB_GPU_ALWAYS) ;
+    LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
     LAGRAPH_TRY (LAGr_TriangleCount (&ntriangles_gpu, G,
         LAGraph_TriangleCount_SandiaDot2, &presort, msg) );
     printf ("# of triangles: %" PRIu64 " (GPU)\n", ntriangles_gpu) ;
@@ -218,6 +220,7 @@ int main (int argc, char **argv)
     printf ("nthreads: %3d time: %12.6f rate: %6.2f (SandiaDot2, warmup GPU)\n",
             nthreads_max, ttot, 1e-6 * nvals / ttot) ;
 
+    presort = LAGraph_TriangleCount_AutoSort ; // = 2 (auto selection)
 #if 1
     if (ntriangles_gpu != ntsimple)
     {
@@ -241,8 +244,7 @@ int main (int argc, char **argv)
     // for (int method = 5 ; method <= 6 ; method++)
 
     // try all methods 3 to 5
-//  for (int method = 3 ; method <= 5 ; method++)
-    for (int method = 1 ; method <= 1 ; method++)   // HACK
+    for (int method = 6 ; method <= 6 ; method++)
     {
         // for (int sorting = -1 ; sorting <= 2 ; sorting++)
 
@@ -257,26 +259,23 @@ int main (int argc, char **argv)
                 printf ("kron fails on method %d; skipped\n", method) ;
                 continue ;
             }
-//          if (n != 134217728 && method < 5)
-//          {
-//              printf ("all but urand is slow with method %d: skipped\n",
-//                      method) ;
-//              continue ;
-//          }
 
             for (int t = 1 ; t <= nt ; t++)
             {
                 int nthreads = Nthreads [t] ;
                 if (nthreads > nthreads_max) continue ;
-                if (nthreads != 0) // Use CPU
+                if (nthreads != 0) // Don't Use GPU
                 {
                   GxB_Global_Option_set( GxB_GLOBAL_GPU_CONTROL, GxB_GPU_NEVER);
                   printf(" CPU ONLY using %d threads", nthreads);
+                  presort = LAGraph_TriangleCount_AutoSort ; // = 2 (auto selection)
                 }
                 else
                 {
+                  nthreads = 40;
                   GxB_Global_Option_set( GxB_GLOBAL_GPU_CONTROL, GxB_GPU_ALWAYS);
                   printf(" GPU ONLY using %d threads", nthreads);
+                  presort = LAGraph_TriangleCount_NoSort ; //turn off sorting on GPU
                 }
 
                 LAGRAPH_TRY (LAGraph_SetNumThreads (1, nthreads, msg)) ;
@@ -285,7 +284,7 @@ int main (int argc, char **argv)
                 for (int trial = 0 ; trial < ntrials ; trial++)
                 {
                     LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
-                    presort = sorting ;
+                    //presort = sorting ;
 
                     LAGRAPH_TRY(
                         LAGr_TriangleCount (&nt2, G, method,
