@@ -27,6 +27,7 @@
     GrB_free (&D) ;                 \
     GrB_free (&P2) ;                \
     GrB_free (&Q) ;                 \
+    GrB_free (&uw_degrees) ;        \
 }
 
 #define LG_FREE_ALL                 \
@@ -58,6 +59,9 @@ int LAGraph_SquareClustering
 
     // Final result: the square coefficients for each node (squares / denom)
     GrB_Vector r = NULL ;
+
+    // Used by pure GrB version; the largest factor of the denominator
+    GrB_Vector uw_degrees = NULL;
 
     // out_degrees assigned to diagonal matrix
     GrB_Matrix D = NULL ;
@@ -172,7 +176,6 @@ int LAGraph_SquareClustering
     GRB_TRY (GrB_Matrix_reduce_Monoid (denom, NULL, GxB_RMINUS_INT64,
         GrB_PLUS_MONOID_INT64, Q, NULL)) ;
     #else
-    GrB_Vector uw_degrees = NULL;
     GRB_TRY (GrB_Vector_new (&uw_degrees, GrB_INT64, n)) ;
     GRB_TRY (GrB_Matrix_reduce_Monoid (uw_degrees, NULL, NULL,
         GrB_PLUS_MONOID_INT64, Q, NULL)) ;
