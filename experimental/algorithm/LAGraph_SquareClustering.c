@@ -113,7 +113,7 @@ int LAGraph_SquareClustering
     // We'll use `P2 = plus_pair(A @ A.T).new(mask=~D.S)` throughout.
     // We use ~D.S as a mask so P2 won't have values along the diagonal.
     GRB_TRY (GrB_Matrix_new (&P2, GrB_INT64, n, n)) ;
-    GRB_TRY (GrB_mxm (P2, D, NULL, GxB_PLUS_PAIR_INT64, A, A, GrB_DESC_SCT1)) ;
+    GRB_TRY (GrB_mxm (P2, D, NULL, LAGraph_plus_one_int64, A, A, GrB_DESC_SCT1)) ;
 
     // Now compute the number of squares (the numerator).  We cound squares
     // based on https://arxiv.org/pdf/2007.11111.pdf (sigma_12, c_4).
@@ -164,10 +164,21 @@ int LAGraph_SquareClustering
     //     Q = plus_pair(A @ P2.T).new(mask=A.S)
     //     Q = any_times(Q @ D)
     //     denom(rminus) = Q.reduce_rowwise()
-    GRB_TRY (GrB_mxm (Q, A, NULL, GxB_PLUS_PAIR_INT64, A, P2, GrB_DESC_RST1)) ;
-    GRB_TRY (GrB_mxm (Q, NULL, NULL, GxB_ANY_TIMES_INT64, Q, D, NULL)) ;
+    GRB_TRY (GrB_mxm (Q, A, NULL, LAGraph_plus_one_int64, A, P2,
+        GrB_DESC_RST1)) ;
+    GRB_TRY (GrB_mxm (Q, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_INT64, Q, D,
+        NULL)) ;
+    #if LAGRAPH_SUITESPARSE
     GRB_TRY (GrB_Matrix_reduce_Monoid (denom, NULL, GxB_RMINUS_INT64,
         GrB_PLUS_MONOID_INT64, Q, NULL)) ;
+    #else
+    GrB_Vector uw_degrees = NULL;
+    GRB_TRY (GrB_Vector_new (&uw_degrees, GrB_INT64, n)) ;
+    GRB_TRY (GrB_Matrix_reduce_Monoid (uw_degrees, NULL, NULL,
+        GrB_PLUS_MONOID_INT64, Q, NULL)) ;
+    GRB_TRY (GrB_Vector_eWiseMult_BinaryOp (denom, NULL, NULL,
+        GrB_MINUS_INT64, uw_degrees, denom, NULL)) ;
+    #endif
 
     // Almost done!  Now compute the final result:
     //     square_clustering = squares / denom
