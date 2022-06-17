@@ -33,10 +33,10 @@
 // See also the LAGraph_Version utility method, which returns these values.
 // These definitions are derived from LAGraph/CMakeLists.txt.
 
-#define LAGRAPH_DATE "June 1, 2022"
+#define LAGRAPH_DATE "June 17, 2022"
 #define LAGRAPH_VERSION_MAJOR  0
 #define LAGRAPH_VERSION_MINOR  9
-#define LAGRAPH_VERSION_UPDATE 27
+#define LAGRAPH_VERSION_UPDATE 28
 
 //==============================================================================
 // include files and helper macros
@@ -1128,7 +1128,9 @@ double LAGraph_WallClockTime     // returns omp_get_wtime(), or other timer
  * column-major order.  This rule is follwed by LAGraph_MMWrite.  However,
  * LAGraph_MMRead can read the entries in any order.
  *
- * FUTURE: add support for user-defined types.
+ * FUTURE: add support for user-defined types. Perhaps LAGr_MMRead (...) with
+ * an extra parameter: pointer to function that reads a single UDT scalar
+ * from the file and returns the UDT scalar itself.  Or LAGraph_MMRead_UDT.
  *
  * @param[out]    A     handle of the matrix to create
  * @param[in]     f     handle to an open file to read from
@@ -1150,8 +1152,6 @@ int LAGraph_MMRead
     char *msg
 ) ;
 
-// FIXME: start here for next LAGraph meeting: June 8, 2022
-
 //------------------------------------------------------------------------------
 // LAGraph_MMWrite: write a matrix in MatrixMarket format
 //------------------------------------------------------------------------------
@@ -1162,7 +1162,9 @@ int LAGraph_MMRead
 // containing the GraphBLAS type:
 //      %%GraphBLAS type <entrytype>
 
-// FUTURE: add support for user-defined types.
+// FUTURE: add support for user-defined types.  Perhaps as LAGr_MMWrite,
+// which has an extra parameter: a pointer to a function that takes a UDT
+// scalar as input, and writes it to the file.  Or LAGraph_MMWrite_UDT
 
 LAGRAPH_PUBLIC
 int LAGraph_MMWrite
@@ -1324,6 +1326,8 @@ int LAGraph_Scalar_TypeName
     char *msg
 ) ;
 
+// FIXME: start here for next LAGraph meeting: June 17, 2022
+
 //------------------------------------------------------------------------------
 // LAGraph_KindName: return the name of a kind
 //------------------------------------------------------------------------------
@@ -1339,49 +1343,6 @@ int LAGraph_KindName
                     // LAGRAPH_MAX_NAME_LEN)
     // input:
     LAGraph_Kind kind,  // graph kind
-    char *msg
-) ;
-
-//------------------------------------------------------------------------------
-// LAGraph_SortByDegree: sort a graph by its row or column degree
-//------------------------------------------------------------------------------
-
-// LAGraph_SortByDegree sorts the nodes of a graph by their out or in degrees.
-// The graph G->A itself is not changed.  Refer to LAGr_TriangleCount for an
-// example of how to permute G->A after calling this function.  The output &P
-// must be freed by LAGraph_Free.
-
-LAGRAPH_PUBLIC
-int LAGraph_SortByDegree
-(
-    // output:
-    int64_t **P_handle,     // P is returned as a permutation vector of size n
-    // input:
-    const LAGraph_Graph G,  // graph of n nodes
-    bool byout,             // if true, sort G->out_degree, else G->in_degree
-    bool ascending,         // sort in ascending or descending order
-    char *msg
-) ;
-
-//------------------------------------------------------------------------------
-// LAGraph_SampleDegree: sample the degree median and mean
-//------------------------------------------------------------------------------
-
-// LAGraph_SampleDegree computes an estimate of the median and mean of the out
-// or in degree, by randomly sampling the G->out_degree or G->in_degree
-// vector.
-
-LAGRAPH_PUBLIC
-int LAGraph_SampleDegree
-(
-    // output:
-    double *sample_mean,    // sampled mean degree
-    double *sample_median,  // sampled median degree
-    // input:
-    const LAGraph_Graph G,  // graph of n nodes
-    bool byout,             // if true, sample G->out_degree, else G->in_degree
-    int64_t nsamples,       // number of samples
-    uint64_t seed,          // random number seed
     char *msg
 ) ;
 
@@ -1694,6 +1655,53 @@ int LAGr_Init
 ) ;
 
 //------------------------------------------------------------------------------
+// LAGr_SortByDegree: sort a graph by its row or column degree
+//------------------------------------------------------------------------------
+
+// LAGr_SortByDegree sorts the nodes of a graph by their out or in degrees.
+// The graph G->A itself is not changed.  Refer to LAGr_TriangleCount for an
+// example of how to permute G->A after calling this function.  The output &P
+// must be freed by LAGraph_Free.
+
+// This method requires G->out_degree or G->in_degree to already be computed.
+
+LAGRAPH_PUBLIC
+int LAGr_SortByDegree
+(
+    // output:
+    int64_t **P_handle,     // P is returned as a permutation vector of size n
+    // input:
+    const LAGraph_Graph G,  // graph of n nodes
+    bool byout,             // if true, sort G->out_degree, else G->in_degree
+    bool ascending,         // sort in ascending or descending order
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
+// LAGr_SampleDegree: sample the degree median and mean
+//------------------------------------------------------------------------------
+
+// LAGr_SampleDegree computes an estimate of the median and mean of the out
+// or in degree, by randomly sampling the G->out_degree or G->in_degree
+// vector.
+
+// This method requires G->out_degree or G->in_degree to already be computed.
+
+LAGRAPH_PUBLIC
+int LAGr_SampleDegree
+(
+    // output:
+    double *sample_mean,    // sampled mean degree
+    double *sample_median,  // sampled median degree
+    // input:
+    const LAGraph_Graph G,  // graph of n nodes
+    bool byout,             // if true, sample G->out_degree, else G->in_degree
+    int64_t nsamples,       // number of samples
+    uint64_t seed,          // random number seed
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
 // LAGr_BreadthFirstSearch: breadth-first search
 //------------------------------------------------------------------------------
 
@@ -1710,9 +1718,9 @@ int LAGr_Init
  *
  * @param[out]    level      If non-NULL on input, on successful return, it
  *                           contains the levels of each vertex reached. The
- *                           src vertex is assigned level 0. If a vertex i is not
- *                           reached, parent(i) is not present.
- *                           The level vector is not computed if NULL.
+ *                           src vertex is assigned level 0. If a vertex i is
+ *                           not reached, parent(i) is not present.  The level
+ *                           vector is not computed if NULL.
  * @param[out]    parent     If non-NULL on input, on successful return, it
  *                           contains parent vertex IDs for each vertex reached.
  *                           The src vertex will have itself as its parent. If a

@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_SampleDegree: sample the degree median and mean
+// LAGr_SampleDegree: sample the degree median and mean
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -11,14 +11,14 @@
 
 //------------------------------------------------------------------------------
 
-// LAGraph_SampleDegree computes estimates of the mean and median of the
+// LAGr_SampleDegree computes estimates of the mean and median of the
 // row or column degree of a graph.
 
 #define LG_FREE_ALL LAGraph_Free ((void **) &samples, NULL) ;
 
 #include "LG_internal.h"
 
-int LAGraph_SampleDegree
+int LAGr_SampleDegree
 (
     // output:
     double *sample_mean,    // sampled mean degree

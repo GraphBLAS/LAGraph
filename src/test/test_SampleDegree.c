@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/test/test_SampleDegree.c:  test LAGraph_SampleDegree
+// LAGraph/src/test/test_SampleDegree.c:  test LAGr_SampleDegree
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -54,7 +54,7 @@ bool is_close (double a, double b)
 }
 
 //------------------------------------------------------------------------------
-// test_SampleDegree:  test LAGraph_SampleDegree
+// test_SampleDegree:  test LAGr_SampleDegree
 //------------------------------------------------------------------------------
 
 typedef struct
@@ -143,19 +143,19 @@ void test_SampleDegree (void)
         TEST_CHECK (A == NULL) ;
 
         // SampleDegree requires degrees to be precomputed
-        ret_code = LAGraph_SampleDegree (&mean, &median, G, 1,
+        ret_code = LAGr_SampleDegree (&mean, &median, G, 1,
             files [k].nsamples, files [k].seed, msg) ;
         TEST_CHECK (ret_code == LAGRAPH_NOT_CACHED) ;
         TEST_MSG ("SampleDegree without row degrees precomputed succeeded") ;
 
-        ret_code = LAGraph_SampleDegree (&mean, &median, G, 0,
+        ret_code = LAGr_SampleDegree (&mean, &median, G, 0,
             files [k].nsamples, files [k].seed, msg) ;
         TEST_CHECK (ret_code == LAGRAPH_NOT_CACHED) ;
         TEST_MSG ("SampleDegree without column degrees precomputed succeeded") ;
 
         // Compute and check the row samples
         OK (LAGraph_Cached_OutDegree (G, msg)) ;
-        OK (LAGraph_SampleDegree (&mean, &median, G, 1,
+        OK (LAGr_SampleDegree (&mean, &median, G, 1,
             files [k].nsamples, files [k].seed, msg)) ;
 
         TEST_CHECK (is_close(mean, files [k].row_mean)) ;
@@ -170,7 +170,7 @@ void test_SampleDegree (void)
         OK (LAGraph_DeleteCached (G, msg)) ;
 
         OK (LAGraph_Cached_InDegree (G, msg)) ;
-        OK (LAGraph_SampleDegree (&mean, &median, G, 0,
+        OK (LAGr_SampleDegree (&mean, &median, G, 0,
             files [k].nsamples, files [k].seed, msg)) ;
 
         TEST_CHECK (is_close(mean, files [k].col_mean)) ;
@@ -217,7 +217,7 @@ void test_SampleDegree_brutal (void)
 
         // Compute and check the row samples
         LG_BRUTAL (LAGraph_Cached_OutDegree (G, msg)) ;
-        LG_BRUTAL (LAGraph_SampleDegree (&mean, &median, G, 1,
+        LG_BRUTAL (LAGr_SampleDegree (&mean, &median, G, 1,
             files [k].nsamples, files [k].seed, msg)) ;
 
         TEST_CHECK (is_close(mean, files [k].row_mean)) ;
@@ -227,7 +227,7 @@ void test_SampleDegree_brutal (void)
         LG_BRUTAL (LAGraph_DeleteCached (G, msg)) ;
 
         LG_BRUTAL (LAGraph_Cached_InDegree (G, msg)) ;
-        LG_BRUTAL (LAGraph_SampleDegree (&mean, &median, G, 0,
+        LG_BRUTAL (LAGr_SampleDegree (&mean, &median, G, 0,
             files [k].nsamples, files [k].seed, msg)) ;
 
         TEST_CHECK (is_close(mean, files [k].col_mean)) ;

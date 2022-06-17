@@ -1347,57 +1347,6 @@ int LAGraph_KindName
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_SortByDegree: sort a graph by its row or column degree
-//------------------------------------------------------------------------------
-
-// LAGraph_SortByDegree sorts the nodes of a graph by their out or in degrees.
-// The graph G->A itself is not changed.  Refer to LAGr_TriangleCount for an
-// example of how to permute G->A after calling this function.  The output &P
-// must be freed by LAGraph_Free.
-
-// FIXME: this method requires G->out_degree or G->in_degree to already be
-// computed.  Rename it LAGr_SortByDegree.  Need the Advanced version in other
-// LAGr_* methods, like LAGr_TriangleCount, which requires G to be input-only.
-
-LAGRAPH_PUBLIC
-int LAGraph_SortByDegree
-(
-    // output:
-    int64_t **P_handle,     // P is returned as a permutation vector of size n
-    // input:
-    const LAGraph_Graph G,  // graph of n nodes
-    bool byout,             // if true, sort G->out_degree, else G->in_degree
-    bool ascending,         // sort in ascending or descending order
-    char *msg
-) ;
-
-//------------------------------------------------------------------------------
-// LAGraph_SampleDegree: sample the degree median and mean
-//------------------------------------------------------------------------------
-
-// LAGraph_SampleDegree computes an estimate of the median and mean of the out
-// or in degree, by randomly sampling the G->out_degree or G->in_degree
-// vector.
-
-// FIXME: this method requires G->out_degree or G->in_degree to already be
-// computed.  Rename it LAGr_SampleDegree.  Need the Advanced version in other
-// LAGr_* methods, like LAGr_TriangleCount, which requires G to be input-only.
-
-LAGRAPH_PUBLIC
-int LAGraph_SampleDegree
-(
-    // output:
-    double *sample_mean,    // sampled mean degree
-    double *sample_median,  // sampled median degree
-    // input:
-    const LAGraph_Graph G,  // graph of n nodes
-    bool byout,             // if true, sample G->out_degree, else G->in_degree
-    int64_t nsamples,       // number of samples
-    uint64_t seed,          // random number seed
-    char *msg
-) ;
-
-//------------------------------------------------------------------------------
 // LAGraph_DisplayGraph: print the contents of a graph
 //------------------------------------------------------------------------------
 
@@ -1702,6 +1651,53 @@ int LAGr_Init
     void * (* user_calloc_function  ) (size_t, size_t),
     void * (* user_realloc_function ) (void *, size_t),
     void   (* user_free_function    ) (void *),
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
+// LAGr_SortByDegree: sort a graph by its row or column degree
+//------------------------------------------------------------------------------
+
+// LAGr_SortByDegree sorts the nodes of a graph by their out or in degrees.
+// The graph G->A itself is not changed.  Refer to LAGr_TriangleCount for an
+// example of how to permute G->A after calling this function.  The output &P
+// must be freed by LAGraph_Free.
+
+// This method requires G->out_degree or G->in_degree to already be computed.
+
+LAGRAPH_PUBLIC
+int LAGr_SortByDegree
+(
+    // output:
+    int64_t **P_handle,     // P is returned as a permutation vector of size n
+    // input:
+    const LAGraph_Graph G,  // graph of n nodes
+    bool byout,             // if true, sort G->out_degree, else G->in_degree
+    bool ascending,         // sort in ascending or descending order
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
+// LAGr_SampleDegree: sample the degree median and mean
+//------------------------------------------------------------------------------
+
+// LAGr_SampleDegree computes an estimate of the median and mean of the out
+// or in degree, by randomly sampling the G->out_degree or G->in_degree
+// vector.
+
+// This method requires G->out_degree or G->in_degree to already be computed.
+
+LAGRAPH_PUBLIC
+int LAGr_SampleDegree
+(
+    // output:
+    double *sample_mean,    // sampled mean degree
+    double *sample_median,  // sampled median degree
+    // input:
+    const LAGraph_Graph G,  // graph of n nodes
+    bool byout,             // if true, sample G->out_degree, else G->in_degree
+    int64_t nsamples,       // number of samples
+    uint64_t seed,          // random number seed
     char *msg
 ) ;
 

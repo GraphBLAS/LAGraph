@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/test/test_SortByDegree  test LAGraph_SortByDegree
+// LAGraph/src/test/test_SortByDegree  test LAGr_SortByDegree
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -48,7 +48,7 @@ void teardown (void)
 }
 
 //------------------------------------------------------------------------------
-// test_SortByDegree  test LAGraph_SortByDegree
+// test_SortByDegree  test LAGr_SortByDegree
 //------------------------------------------------------------------------------
 
 const char *files [ ] =
@@ -148,7 +148,7 @@ void test_SortByDegree (void)
 
                 // sort the graph by degree
                 TEST_CHECK (P == NULL) ;
-                OK (LAGraph_SortByDegree (&P, G, byout, ascending, msg)) ;
+                OK (LAGr_SortByDegree (&P, G, byout, ascending, msg)) ;
                 TEST_CHECK (P != NULL) ;
 
                 // ensure P is a permutation of 0..n-1
@@ -303,7 +303,7 @@ void test_SortByDegree_brutal (void)
 
                 // sort the graph by degree
                 TEST_CHECK (P == NULL) ;
-                OK (LAGraph_SortByDegree (&P, G, byout, ascending, msg)) ;
+                OK (LAGr_SortByDegree (&P, G, byout, ascending, msg)) ;
                 TEST_CHECK (P != NULL) ;
 
                 // ensure P is a permutation of 0..n-1
@@ -384,18 +384,18 @@ void test_SortByDegree_brutal (void)
 #endif
 
 //-----------------------------------------------------------------------------
-// test_SortByDegree_failures:  test error handling of LAGraph_SortByDegree
+// test_SortByDegree_failures:  test error handling of LAGr_SortByDegree
 //-----------------------------------------------------------------------------
 
 void test_SortByDegree_failures (void)
 {
     setup ( ) ;
 
-    int result = LAGraph_SortByDegree (NULL, NULL, true, true, msg) ;
+    int result = LAGr_SortByDegree (NULL, NULL, true, true, msg) ;
     printf ("\nresult %d: msg: %s\n", result, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
 
-    result = LAGraph_SortByDegree (&P, NULL, true, true, msg) ;
+    result = LAGr_SortByDegree (&P, NULL, true, true, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
@@ -408,7 +408,7 @@ void test_SortByDegree_failures (void)
     OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
 
     // cached degree property must first be computed
-    result = LAGraph_SortByDegree (&P, G, true, true, msg) ;
+    result = LAGr_SortByDegree (&P, G, true, true, msg) ;
     printf ("\nresult %d: msg: %s\n", result, msg) ;
     TEST_CHECK (result == LAGRAPH_NOT_CACHED) ;
 

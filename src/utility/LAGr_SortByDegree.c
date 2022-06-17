@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_SortByDegree: sort a graph by its row or column degree
+// LAGr_SortByDegree: sort a graph by its row or column degree
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -11,7 +11,7 @@
 
 //------------------------------------------------------------------------------
 
-// LAGraph_SortByDegree computes a permutation vector P that sorts a graph
+// LAGr_SortByDegree computes a permutation vector P that sorts a graph
 // by degree (either row or column degree of its adjacency matrix A).
 // If G is undirected, or if G is directed but is known to have a symmetric
 // adjacency matrix, then G->out_degree is used (and byout is ignored).
@@ -47,7 +47,7 @@
 
 #include "LG_internal.h"
 
-int LAGraph_SortByDegree
+int LAGr_SortByDegree
 (
     // output:
     int64_t **P_handle,     // P is returned as a permutation vector of size n

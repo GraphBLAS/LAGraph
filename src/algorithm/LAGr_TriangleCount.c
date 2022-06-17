@@ -219,7 +219,7 @@ int LAGr_TriangleCount
             {
                 // estimate the mean and median degrees
                 double mean, median ;
-                LG_TRY (LAGraph_SampleDegree (&mean, &median,
+                LG_TRY (LAGr_SampleDegree (&mean, &median,
                     G, true, NSAMPLES, n, msg)) ;
                 // sort if the average degree is very high vs the median
                 if (mean > 4 * median)
@@ -256,7 +256,7 @@ int LAGr_TriangleCount
     if (presort != NULL && (*presort) != LAGraph_TriangleCount_NoSort)
     {
         // P = permutation that sorts the rows by their degree
-        LG_TRY (LAGraph_SortByDegree (&P, G, true,
+        LG_TRY (LAGr_SortByDegree (&P, G, true,
             (*presort) == LAGraph_TriangleCount_Ascending, msg)) ;
 
         // T = A (P,P) and typecast to boolean
