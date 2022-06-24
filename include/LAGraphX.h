@@ -836,4 +836,13 @@ int LAGraph_FastGraphletTransform
     char *msg
 ) ;
 
+LAGRAPH_PUBLIC
+int LAGraph_SquareClustering
+(
+    // outputs:
+    GrB_Vector *square_clustering,
+    // inputs:
+    LAGraph_Graph G,
+    char *msg
+) ;
 #endif
