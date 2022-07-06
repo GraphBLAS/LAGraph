@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_DisplayGraph: print the contents of a graph
+// LAGraph_Graph_Print: print the contents of a graph
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -13,11 +13,11 @@
 
 #include "LG_internal.h"
 
-int LAGraph_DisplayGraph
+int LAGraph_Graph_Print
 (
     // input:
     const LAGraph_Graph G,  // graph to display
-    LAGraph_PrintLevel pr, // print level (0 to 5)
+    LAGraph_PrintLevel pr,  // print level (0 to 5)
     FILE *f,                // file to write to, must already be open
     char *msg
 )

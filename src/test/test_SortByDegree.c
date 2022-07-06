@@ -138,7 +138,7 @@ void test_SortByDegree (void)
             result = LAGraph_Cached_InDegree (G, msg) ;
             TEST_CHECK (result == ok_result) ;
             OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
-            OK (LAGraph_DisplayGraph (G, LAGraph_SHORT, stdout, msg)) ;
+            OK (LAGraph_Graph_Print (G, LAGraph_SHORT, stdout, msg)) ;
 
             // sort 4 different ways
             for (int trial = 0 ; trial <= 3 ; trial++)
@@ -180,7 +180,7 @@ void test_SortByDegree (void)
                 printf ("\nTrial %d, graph H, sorted (%s) by (%s) degrees:\n",
                     trial, ascending ? "ascending" : "descending",
                     byout ? "row" : "column") ;
-                OK (LAGraph_DisplayGraph (H, LAGraph_SHORT, stdout, msg)) ;
+                OK (LAGraph_Graph_Print (H, LAGraph_SHORT, stdout, msg)) ;
 
                 d = (byout || G->is_symmetric_structure == LAGraph_TRUE) ?
                     H->out_degree : H->in_degree ;
@@ -293,7 +293,7 @@ void test_SortByDegree_brutal (void)
             result = LAGraph_Cached_InDegree (G, msg) ;
             TEST_CHECK (result == ok_result) ;
             OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
-            // OK (LAGraph_DisplayGraph (G, LAGraph_SHORT, stdout, msg)) ;
+            // OK (LAGraph_Graph_Print (G, LAGraph_SHORT, stdout, msg)) ;
 
             // sort 4 different ways
             for (int trial = 0 ; trial <= 3 ; trial++)

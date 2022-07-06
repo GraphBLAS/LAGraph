@@ -120,7 +120,7 @@ int LG_check_export
 //      the GrB_Matrix or GrB_Vector as an invalid object, and then LG_BRUTAL
 //      will never succeed.  If this occurs, simply use GrB_wait to finalize
 //      all components of G first, before trying a brutal test on a method that
-//      uses G.  See src/test/test_DisplayGraph.c for an example.
+//      uses G.  See src/test/test_Graph_Print.c for an example.
 //
 //  (3) LG_BRUTAL will fail for methods that unpack/pack their input matrix
 //      G->A (such as several of the LG_check_* methods, and the current draft

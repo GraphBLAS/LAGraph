@@ -290,7 +290,7 @@ void test_ranker(void)
     OK (LAGraph_Cached_OutDegree (G, msg)) ;
 
     printf ("\n=========== ldbc-directed-example, with sink nodes 3 and 9:\n") ;
-    OK (LAGraph_DisplayGraph (G, LAGraph_COMPLETE, stdout, msg)) ;
+    OK (LAGraph_Graph_Print (G, LAGraph_COMPLETE, stdout, msg)) ;
 
     // compute its pagerank using the GAP method ("bleeds" rank)
     OK (LAGr_PageRankGAP (&centrality, &niters, G, 0.85,

@@ -936,7 +936,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
     LAGraph_Kind G_kind = A_is_symmetric ?  LAGraph_ADJACENCY_UNDIRECTED :
         LAGraph_ADJACENCY_DIRECTED ;
     LAGRAPH_TRY (LAGraph_New (G, &A, G_kind, msg)) ;
-    // LAGRAPH_TRY (LAGraph_DisplayGraph (*G, 2, stdout, msg)) ;
+    // LAGRAPH_TRY (LAGraph_Graph_Print (*G, 2, stdout, msg)) ;
 
     //--------------------------------------------------------------------------
     // remove self-edges, if requested
@@ -946,7 +946,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
     {
         LAGRAPH_TRY (LAGraph_DeleteSelfEdges (*G, msg)) ;
     }
-    // LAGRAPH_TRY (LAGraph_DisplayGraph (*G, 2, stdout, msg)) ;
+    // LAGRAPH_TRY (LAGraph_Graph_Print (*G, 2, stdout, msg)) ;
 
     //--------------------------------------------------------------------------
     // ensure all entries are > 0, if requested
@@ -998,7 +998,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
     // determine the graph properies
     //--------------------------------------------------------------------------
 
-    // LAGRAPH_TRY (LAGraph_DisplayGraph (*G, 2, stdout, msg)) ;
+    // LAGRAPH_TRY (LAGraph_Graph_Print (*G, 2, stdout, msg)) ;
 
     if (!A_is_symmetric)
     {
@@ -1044,7 +1044,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
             (*G)->is_symmetric_structure = LAGraph_TRUE ;
         }
     }
-    // LAGRAPH_TRY (LAGraph_DisplayGraph (*G, 2, stdout, msg)) ;
+    // LAGRAPH_TRY (LAGraph_Graph_Print (*G, 2, stdout, msg)) ;
 
     //--------------------------------------------------------------------------
     // generate 64 random source nodes, if requested but not provided on input
@@ -1078,7 +1078,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
     printf ("read time: %g\n", t_read) ;
 
     LG_FREE_WORK ;
-    // LAGRAPH_TRY (LAGraph_DisplayGraph (*G, LAGraph_SHORT, stdout, msg)) ;
+    // LAGRAPH_TRY (LAGraph_Graph_Print (*G, LAGraph_SHORT, stdout, msg)) ;
     return (GrB_SUCCESS) ;
 }
 

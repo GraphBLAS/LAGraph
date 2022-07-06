@@ -1327,10 +1327,10 @@ int LAGraph_Scalar_TypeName
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_DisplayGraph: print the contents of a graph
+// LAGraph_Graph_Print: print the contents of a graph
 //------------------------------------------------------------------------------
 
-// LAGraph_DisplayGraph prints the contents of a graph to a file in a human-
+// LAGraph_Graph_Print prints the contents of a graph to a file in a human-
 // readable form.  This method is not meant for saving a graph to a file;
 // see LAGraph_MMWrite for that method.
 
@@ -1361,9 +1361,7 @@ typedef enum
 LAGraph_PrintLevel ;
 
 LAGRAPH_PUBLIC
-int LAGraph_DisplayGraph
-// FIXME: rename this
-// int LAGraph_Graph_Print
+int LAGraph_Graph_Print
 (
     // input:
     const LAGraph_Graph G,  // graph to display

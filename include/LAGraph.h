@@ -33,10 +33,10 @@
 // See also the LAGraph_Version utility method, which returns these values.
 // These definitions are derived from LAGraph/CMakeLists.txt.
 
-#define LAGRAPH_DATE "June 17, 2022"
+#define LAGRAPH_DATE "July 6, 2022"
 #define LAGRAPH_VERSION_MAJOR  0
 #define LAGRAPH_VERSION_MINOR  9
-#define LAGRAPH_VERSION_UPDATE 28
+#define LAGRAPH_VERSION_UPDATE 29
 
 //==============================================================================
 // include files and helper macros
@@ -1327,10 +1327,10 @@ int LAGraph_Scalar_TypeName
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_DisplayGraph: print the contents of a graph
+// LAGraph_Graph_Print: print the contents of a graph
 //------------------------------------------------------------------------------
 
-// LAGraph_DisplayGraph prints the contents of a graph to a file in a human-
+// LAGraph_Graph_Print prints the contents of a graph to a file in a human-
 // readable form.  This method is not meant for saving a graph to a file;
 // see LAGraph_MMWrite for that method.
 
@@ -1361,9 +1361,7 @@ typedef enum
 LAGraph_PrintLevel ;
 
 LAGRAPH_PUBLIC
-int LAGraph_DisplayGraph
-// FIXME: rename this
-// int LAGraph_Graph_Print
+int LAGraph_Graph_Print
 (
     // input:
     const LAGraph_Graph G,  // graph to display
