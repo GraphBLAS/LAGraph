@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_KindName: return the name of a kind
+// LG_KindName: return the name of a kind
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -13,7 +13,7 @@
 
 #include "LG_internal.h"
 
-int LAGraph_KindName
+int LG_KindName
 (
     char *name,     // name of the kind (user provided array of size at least
                     // LAGRAPH_MAX_NAME_LEN)

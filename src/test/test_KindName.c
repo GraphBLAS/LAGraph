@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/test/test_KindName.c:  test LAGraph_KindName
+// LAGraph/src/test/test_KindName.c:  test LG_KindName
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -39,23 +39,23 @@ void teardown (void)
 }
 
 //------------------------------------------------------------------------------
-// test_KindName:  test LAGraph_KindName
+// test_KindName:  test LG_KindName
 //------------------------------------------------------------------------------
 
 void test_KindName (void)
 {
     setup ( ) ;
 
-    OK (LAGraph_KindName (name, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
+    OK (LG_KindName (name, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     OK (strcmp (name, "undirected")) ;
 
-    OK (LAGraph_KindName (name, LAGraph_ADJACENCY_DIRECTED, msg)) ;
+    OK (LG_KindName (name, LAGraph_ADJACENCY_DIRECTED, msg)) ;
     OK (strcmp (name, "directed")) ;
 
-    OK (LAGraph_KindName (name, LAGRAPH_UNKNOWN, msg)) ;
+    OK (LG_KindName (name, LAGRAPH_UNKNOWN, msg)) ;
     OK (strcmp (name, "unknown")) ;
 
-    TEST_CHECK (LAGraph_KindName (name, 42, msg) == GrB_INVALID_VALUE) ;
+    TEST_CHECK (LG_KindName (name, 42, msg) == GrB_INVALID_VALUE) ;
     printf ("\nmsg: %s\n", msg) ;
 
     teardown ( ) ;
@@ -65,7 +65,7 @@ void test_KindName (void)
 // test_KindName_brutal
 //------------------------------------------------------------------------------
 
-// LAGraph_KindName currently doesn't do any mallocs so this test is not
+// LG_KindName currently doesn't do any mallocs so this test is not
 // strictly necessary, but it's simple to include here.  It serves as a very
 // simple use-case of the brutal testing mechanism.
 
@@ -73,7 +73,7 @@ void test_KindName (void)
 void test_KindName_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
-    LG_BRUTAL (LAGraph_KindName (name, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
+    LG_BRUTAL (LG_KindName (name, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     OK (strcmp (name, "undirected")) ;
     OK (LG_brutal_teardown (msg)) ;
 }

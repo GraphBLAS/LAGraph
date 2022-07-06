@@ -11,7 +11,8 @@
 
 //------------------------------------------------------------------------------
 
-// These definitions are not meant for the end-user of LAGraph or GraphBLAS
+// These definitions are not meant for the user application that relies on
+// LAGraph and/or GraphBLAS.  LG_* methods are for internal use in LAGraph.
 
 #ifndef LG_INTERNAL_H
 #define LG_INTERNAL_H
@@ -536,5 +537,22 @@ GrB_Index LG_Random15 (uint64_t *seed) ;
 
 // return a random uint64_t, in range 0 to LG_RANDOM60_MAX
 GrB_Index LG_Random60 (uint64_t *seed) ;
+
+//------------------------------------------------------------------------------
+// LG_KindName: return the name of a kind
+//------------------------------------------------------------------------------
+
+// LG_KindName: return the name of a graph kind.  For example, if given
+// LAGraph_ADJACENCY_UNDIRECTED, the string "undirected" is returned.
+
+int LG_KindName
+(
+    // output:
+    char *name,     // name of the kind (user provided array of size at least
+                    // LAGRAPH_MAX_NAME_LEN)
+    // input:
+    LAGraph_Kind kind,  // graph kind
+    char *msg
+) ;
 
 #endif

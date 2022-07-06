@@ -48,7 +48,7 @@ int LAGraph_DisplayGraph
     char typename [LAGRAPH_MAX_NAME_LEN] ;
     char kindname [LAGRAPH_MAX_NAME_LEN] ;
     LG_TRY (LAGraph_Matrix_TypeName (typename, A, msg)) ;
-    LG_TRY (LAGraph_KindName (kindname, kind, msg)) ;
+    LG_TRY (LG_KindName (kindname, kind, msg)) ;
 
     // print the basic cached scalar properties
     FPRINTF (f, "Graph: kind: %s, nodes: %g entries: %g type: %s\n",

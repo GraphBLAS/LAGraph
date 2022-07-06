@@ -1326,26 +1326,6 @@ int LAGraph_Scalar_TypeName
     char *msg
 ) ;
 
-// FIXME: start here for next LAGraph meeting: June 17, 2022
-
-//------------------------------------------------------------------------------
-// LAGraph_KindName: return the name of a kind
-//------------------------------------------------------------------------------
-
-// LAGraph_KindName: return the name of a graph kind.  For example, if given
-// LAGraph_ADJACENCY_UNDIRECTED, the string "undirected" is returned.
-
-LAGRAPH_PUBLIC
-int LAGraph_KindName
-(
-    // output:
-    char *name,     // name of the kind (user provided array of size at least
-                    // LAGRAPH_MAX_NAME_LEN)
-    // input:
-    LAGraph_Kind kind,  // graph kind
-    char *msg
-) ;
-
 //------------------------------------------------------------------------------
 // LAGraph_DisplayGraph: print the contents of a graph
 //------------------------------------------------------------------------------
@@ -1353,6 +1333,9 @@ int LAGraph_KindName
 // LAGraph_DisplayGraph prints the contents of a graph to a file in a human-
 // readable form.  This method is not meant for saving a graph to a file;
 // see LAGraph_MMWrite for that method.
+
+// FIXME: add this to LG_internal.h
+#define LG_SHORT_LEN 30
 
 typedef enum
 {
@@ -1362,11 +1345,30 @@ typedef enum
     LAGraph_COMPLETE = 3,   // print the entire contents of the object
     LAGraph_SHORT_VERBOSE = 4,    // LAGraph_SHORT but with "%.15g" for doubles
     LAGraph_COMPLETE_VERBOSE = 5  // LAGraph_COMPLETE, but "%.15g" for doubles
+    // FUTURE:
+    // LAGraph_SHORT_ARRAY ...
+    // LAGraph_COMPLETE_ARRAY ...
+    //
+    //      .  3.3 . 9 .
+    //     99  32  . . .
+    //
+    // LAGraph_SHORT_STRUCTURE ...
+    // LAGraph_COMPLETE_STRUCTURE ...
+    //
+    //      . x . x x x .
+    //      x x . x x x .
+    //      . x . x . x .
+    //      . . . . x x .
+    // FUTURE: # of digits per entry? automatic digits per column?
 }
 LAGraph_Print_Level ;
+// FIXME:
+// LAGraph_PrintLevel ;
 
 LAGRAPH_PUBLIC
 int LAGraph_DisplayGraph
+// FIXME: rename this
+// int LAGraph_Graph_Print
 (
     // input:
     const LAGraph_Graph G,  // graph to display
@@ -1374,6 +1376,51 @@ int LAGraph_DisplayGraph
     FILE *f,                // file to write to, must already be open
     char *msg
 ) ;
+
+//------------------------------------------------------------------------------
+// LAGraph_Matrix_Print: pretty-print a matrix
+//------------------------------------------------------------------------------
+
+// LAGraph_Matrix_Print displays a matrix in a human-readable form.  This
+// method is not meant for saving a GrB_Matrix to a file; see LAGraph_MMWrite
+// for that method.
+
+// FIXME: filename doesn't match
+
+LAGRAPH_PUBLIC
+int LAGraph_Matrix_Print
+(
+    // input:
+    const GrB_Matrix A,     // matrix to pretty-print to the file
+    LAGraph_Print_Level pr, // print level (0 to 5)
+    FILE *f,            // file to write it to, must be already open; use
+                        // stdout or stderr to print to those locations.
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
+// LAGraph_Vector_Print: pretty-print a matrix
+//------------------------------------------------------------------------------
+
+// LAGraph_Vector_Print displays a vector in a human-readable form.  This
+// method is not meant for saving a GrB_Vector to a file.  To perform that
+// operation, copy the GrB_Vector into an n-by-1 GrB_Matrix and use
+// LAGraph_MMWrite.
+
+// FIXME: filename doesn't match
+
+LAGRAPH_PUBLIC
+int LAGraph_Vector_Print
+(
+    // input:
+    const GrB_Vector v,     // vector to pretty-print to the file
+    LAGraph_Print_Level pr, // print level (0 to 5)
+    FILE *f,            // file to write it to, must be already open; use
+                        // stdout or stderr to print to those locations.
+    char *msg
+) ;
+
+// FIXME: start here for next LAGraph meeting
 
 //------------------------------------------------------------------------------
 // LAGraph_Matrix_IsEqual: compare for exact equality
@@ -1475,45 +1522,6 @@ int LAGraph_Vector_IsEqual_op
     const GrB_Vector A,
     const GrB_Vector B,
     const GrB_BinaryOp op,        // comparator to use
-    char *msg
-) ;
-
-//------------------------------------------------------------------------------
-// LAGraph_Matrix_Print: pretty-print a matrix
-//------------------------------------------------------------------------------
-
-// LAGraph_Matrix_Print displays a matrix in a human-readable form.  This
-// method is not meant for saving a GrB_Matrix to a file; see LAGraph_MMWrite
-// for that method.
-
-LAGRAPH_PUBLIC
-int LAGraph_Matrix_Print
-(
-    // input:
-    const GrB_Matrix A,     // matrix to pretty-print to the file
-    LAGraph_Print_Level pr, // print level (0 to 5)
-    FILE *f,            // file to write it to, must be already open; use
-                        // stdout or stderr to print to those locations.
-    char *msg
-) ;
-
-//------------------------------------------------------------------------------
-// LAGraph_Vector_Print: pretty-print a matrix
-//------------------------------------------------------------------------------
-
-// LAGraph_Vector_Print displays a vector in a human-readable form.  This
-// method is not meant for saving a GrB_Vector to a file.  To perform that
-// operation, copy the GrB_Vector into an n-by-1 GrB_Matrix and use
-// LAGraph_MMWrite.
-
-LAGRAPH_PUBLIC
-int LAGraph_Vector_Print
-(
-    // input:
-    const GrB_Vector v,     // vector to pretty-print to the file
-    LAGraph_Print_Level pr, // print level (0 to 5)
-    FILE *f,            // file to write it to, must be already open; use
-                        // stdout or stderr to print to those locations.
     char *msg
 ) ;
 
