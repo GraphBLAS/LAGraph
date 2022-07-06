@@ -88,7 +88,7 @@ void test_msf (void)
         C = NULL ;
         int result = LAGraph_msf (&C, G->A, sanitize, msg) ;
         printf ("result: %d\n", result) ;
-        LAGraph_Print_Level pr = (n <= 100) ? LAGraph_COMPLETE : LAGraph_SHORT ;
+        LAGraph_PrintLevel pr = (n <= 100) ? LAGraph_COMPLETE : LAGraph_SHORT ;
 
         // check result C for A.mtx
         if (strcmp (aname, "A.mtx") == 0)

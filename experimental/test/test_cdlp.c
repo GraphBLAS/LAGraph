@@ -161,7 +161,7 @@ void test_cdlp (void)
 
         GrB_Index n ;
         OK (GrB_Vector_size (&n, c)) ;
-        LAGraph_Print_Level pr = (n <= 100) ? LAGraph_COMPLETE : LAGraph_SHORT ;
+        LAGraph_PrintLevel pr = (n <= 100) ? LAGraph_COMPLETE : LAGraph_SHORT ;
 
         // check result c for jagmesh7
         if (strcmp (aname, "jagmesh7.mtx") == 0)

@@ -102,7 +102,7 @@ void test_TriangleCentrality (void)
             printf ("# of triangles: %g\n", (double) ntri) ;
             TEST_CHECK (ntri == ntriangles) ;
 
-            LAGraph_Print_Level
+            LAGraph_PrintLevel
                 pr = (n <= 100) ? LAGraph_COMPLETE : LAGraph_SHORT ;
             printf ("\ncentrality:\n") ;
             OK (LAGraph_Vector_Print (c, pr, stdout, msg)) ;

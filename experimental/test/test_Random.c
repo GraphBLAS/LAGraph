@@ -30,7 +30,7 @@ void test_Random (void)
     OK (LAGraph_Random_Init (msg)) ;
 
     uint64_t seed = 42 ;
-    LAGraph_Print_Level pr = LAGraph_COMPLETE_VERBOSE ;
+    LAGraph_PrintLevel pr = LAGraph_COMPLETE_VERBOSE ;
 
     for (int trial = 0 ; trial <= 4 ; trial++)
     {

@@ -120,7 +120,7 @@ void test_DisplayGraph (void)
             {
                 printf ("\n########### %s: pr: %d (%s)\n",
                     aname, pr, prwhat (pr)) ;
-                LAGraph_Print_Level prl = pr ;
+                LAGraph_PrintLevel prl = pr ;
                 OK (LAGraph_DisplayGraph (G, prl, stdout, msg)) ;
             }
             int ok_result = (kind == LAGraph_ADJACENCY_UNDIRECTED) ?
@@ -161,7 +161,7 @@ void test_DisplayGraph_failures (void)
     OK (LAGraph_New (&G, NULL, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
 
     // G->A is NULL
-    LAGraph_Print_Level pr = LAGraph_COMPLETE_VERBOSE ;
+    LAGraph_PrintLevel pr = LAGraph_COMPLETE_VERBOSE ;
     result = LAGraph_DisplayGraph (G, pr, stdout, msg) ;
     printf ("result: %d, msg: %s\n", result, msg) ;
     TEST_CHECK (result == LAGRAPH_INVALID_GRAPH) ;
@@ -257,7 +257,7 @@ void test_DisplayGraph_brutal (void)
             {
                 printf ("\n########### %s: pr: %d (%s)\n",
                     aname, pr, prwhat (pr)) ;
-                LAGraph_Print_Level prl = pr ;
+                LAGraph_PrintLevel prl = pr ;
                 if (pr == 3 || pr == 5)
                 {
                     printf ("skipped for brutal tests\n") ;

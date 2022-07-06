@@ -17,7 +17,7 @@ int LAGraph_DisplayGraph
 (
     // input:
     const LAGraph_Graph G,  // graph to display
-    LAGraph_Print_Level pr, // print level (0 to 5)
+    LAGraph_PrintLevel pr, // print level (0 to 5)
     FILE *f,                // file to write to, must already be open
     char *msg
 )
@@ -70,7 +70,7 @@ int LAGraph_DisplayGraph
 
     FPRINTF (f, "  adjacency matrix: ") ;
 
-    LAGraph_Print_Level pr2 = (LAGraph_Print_Level) prl ;
+    LAGraph_PrintLevel pr2 = (LAGraph_PrintLevel) prl ;
     LG_TRY (LAGraph_Matrix_Print (A, pr2, stdout, msg)) ;
 
     //--------------------------------------------------------------------------

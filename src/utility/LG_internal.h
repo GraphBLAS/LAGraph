@@ -555,4 +555,9 @@ int LG_KindName
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
+
+// # of entries to print for LAGraph_Matrix_Print and LAGraph_Vector_Print
+#define LG_SHORT_LEN 30
+
 #endif

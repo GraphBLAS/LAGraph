@@ -25,7 +25,7 @@ void test_print (void)
 {
     OK (LAGraph_Init (msg)) ;
     printf ("\n") ;
-    LAGraph_Print_Level pr = LAGraph_SHORT ;
+    LAGraph_PrintLevel pr = LAGraph_SHORT ;
 
     OK (GrB_Vector_new (&v, GrB_BOOL, n)) ;
     OK (GrB_assign (v, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
@@ -118,7 +118,7 @@ void test_print_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
     printf ("\n") ;
-    LAGraph_Print_Level pr = LAGraph_SHORT ;
+    LAGraph_PrintLevel pr = LAGraph_SHORT ;
 
     OK (GrB_Vector_new (&v, GrB_BOOL, n)) ;
     OK (GrB_assign (v, NULL, NULL, 0, GrB_ALL, n, NULL)) ;

@@ -1334,9 +1334,6 @@ int LAGraph_Scalar_TypeName
 // readable form.  This method is not meant for saving a graph to a file;
 // see LAGraph_MMWrite for that method.
 
-// FIXME: add this to LG_internal.h
-#define LG_SHORT_LEN 30
-
 typedef enum
 {
     LAGraph_SILENT = 0,     // nothing is printed
@@ -1361,9 +1358,7 @@ typedef enum
     //      . . . . x x .
     // FUTURE: # of digits per entry? automatic digits per column?
 }
-LAGraph_Print_Level ;
-// FIXME: rename
-// LAGraph_PrintLevel ;
+LAGraph_PrintLevel ;
 
 LAGRAPH_PUBLIC
 int LAGraph_DisplayGraph
@@ -1372,7 +1367,7 @@ int LAGraph_DisplayGraph
 (
     // input:
     const LAGraph_Graph G,  // graph to display
-    LAGraph_Print_Level pr, // print level (0 to 5)
+    LAGraph_PrintLevel pr,  // print level (0 to 5)
     FILE *f,                // file to write to, must already be open
     char *msg
 ) ;
@@ -1385,14 +1380,12 @@ int LAGraph_DisplayGraph
 // method is not meant for saving a GrB_Matrix to a file; see LAGraph_MMWrite
 // for that method.
 
-// FIXME: filename doesn't match
-
 LAGRAPH_PUBLIC
 int LAGraph_Matrix_Print
 (
     // input:
     const GrB_Matrix A,     // matrix to pretty-print to the file
-    LAGraph_Print_Level pr, // print level (0 to 5)
+    LAGraph_PrintLevel pr,  // print level (0 to 5)
     FILE *f,            // file to write it to, must be already open; use
                         // stdout or stderr to print to those locations.
     char *msg
@@ -1407,14 +1400,12 @@ int LAGraph_Matrix_Print
 // operation, copy the GrB_Vector into an n-by-1 GrB_Matrix and use
 // LAGraph_MMWrite.
 
-// FIXME: filename doesn't match
-
 LAGRAPH_PUBLIC
 int LAGraph_Vector_Print
 (
     // input:
     const GrB_Vector v,     // vector to pretty-print to the file
-    LAGraph_Print_Level pr, // print level (0 to 5)
+    LAGraph_PrintLevel pr,  // print level (0 to 5)
     FILE *f,            // file to write it to, must be already open; use
                         // stdout or stderr to print to those locations.
     char *msg

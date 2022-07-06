@@ -187,7 +187,7 @@ void test_MMRead (void)
         for (int pr = 0 ; pr <= 2 ; pr++)
         {
             printf ("\nPretty-print %s: pr=%d:\n", aname, pr) ;
-            LAGraph_Print_Level prl = pr ;
+            LAGraph_PrintLevel prl = pr ;
             OK (LAGraph_Matrix_Print (A, prl, stdout, msg)) ;
         }
 

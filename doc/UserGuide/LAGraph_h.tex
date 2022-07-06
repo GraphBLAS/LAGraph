@@ -441,7 +441,7 @@ int LAGraph_DisplayGraph
 (
     // input:
     const LAGraph_Graph G,  // graph to display
-    LAGraph_Print_Level pr, // print level (0 to 5)
+    LAGraph_PrintLevel pr,  // print level (0 to 5)
     FILE *f,                // file to write to, must already be open
     char *msg
 ) ;
@@ -455,7 +455,7 @@ int LAGraph_Matrix_Print
 (
     // input:
     const GrB_Matrix A,     // matrix to pretty-print to the file
-    LAGraph_Print_Level pr, // print level (0 to 5)
+    LAGraph_PrintLevel pr,  // print level (0 to 5)
     FILE *f,            // file to write it to, must be already open; use
                         // stdout or stderr to print to those locations.
     char *msg
@@ -470,7 +470,7 @@ int LAGraph_Vector_Print
 (
     // input:
     const GrB_Vector v,     // vector to pretty-print to the file
-    LAGraph_Print_Level pr, // print level (0 to 5)
+    LAGraph_PrintLevel pr,  // print level (0 to 5)
     FILE *f,            // file to write it to, must be already open; use
                         // stdout or stderr to print to those locations.
     char *msg
@@ -850,7 +850,7 @@ typedef enum
     //      . . . . x x .
     // FUTURE: # of digits per entry? automatic digits per column?
 }
-LAGraph_Print_Level ;
+LAGraph_PrintLevel ;
 \end{verbatim}
 
 
