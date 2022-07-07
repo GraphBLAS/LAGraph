@@ -83,7 +83,7 @@ int main (int argc, char **argv)
     demo_init (burble) ;
 
     int ntrials = 5 ;
-    ntrials = 1 ;        // HACK
+    ntrials = 3 ;        // HACK
     printf ("# of trials: %d\n", ntrials) ;
 
     int nt = NTHREAD_LIST ;
@@ -189,9 +189,9 @@ int main (int argc, char **argv)
     LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
     LAGRAPH_TRY (LAGr_TriangleCount (&ntriangles, G,
         LAGraph_TriangleCount_SandiaDot2, &presort, msg) );
+    LAGRAPH_TRY (LAGraph_Toc (&ttot, tic, NULL)) ;
     printf ("# of triangles: %" PRIu64 " (CPU)\n", ntriangles) ;
     print_method (stdout, 6, presort) ;
-    LAGRAPH_TRY (LAGraph_Toc (&ttot, tic, NULL)) ;
     printf ("nthreads: %3d time: %12.6f rate: %6.2f (SandiaDot2, one trial)\n",
             nthreads_max, ttot, 1e-6 * nvals / ttot) ;
 
@@ -214,11 +214,13 @@ int main (int argc, char **argv)
     LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
     LAGRAPH_TRY (LAGr_TriangleCount (&ntriangles_gpu, G,
         LAGraph_TriangleCount_SandiaDot2, &presort, msg) );
+    LAGRAPH_TRY (LAGraph_Toc (&ttot, tic, NULL)) ;
     printf ("# of triangles: %" PRIu64 " (GPU)\n", ntriangles_gpu) ;
     print_method (stdout, 6, presort) ;
-    LAGRAPH_TRY (LAGraph_Toc (&ttot, tic, NULL)) ;
     printf ("nthreads: %3d time: %12.6f rate: %6.2f (SandiaDot2, warmup GPU)\n",
             nthreads_max, ttot, 1e-6 * nvals / ttot) ;
+
+    GxB_set (GxB_GPU_CONTROL, GxB_GPU_NEVER) ;
 
     presort = LAGraph_TriangleCount_AutoSort ; // = 2 (auto selection)
 #if 1
@@ -244,7 +246,7 @@ int main (int argc, char **argv)
     // for (int method = 5 ; method <= 6 ; method++)
 
     // try all methods 3 to 5
-    for (int method = 6 ; method <= 6 ; method++)
+    for (int method = 1 ; method <= 1 ; method++)
     {
         // for (int sorting = -1 ; sorting <= 2 ; sorting++)
 

@@ -291,10 +291,11 @@ int LAGr_TriangleCount
 
 #if 1
             // using the dot product method, A*A' instead of A^2:
-            GRB_TRY (GrB_mxm (C, A, NULL, semiring, A, A, GrB_DESC_ST1)) ;
+            //GRB_TRY (GrB_mxm (C, A, NULL, semiring, A, A, GrB_DESC_ST1)) ;
 
             // do it again for timing
-            GRB_TRY (GrB_Matrix_clear (C)) ;
+            // GRB_TRY (GrB_Matrix_clear (C)) ;
+            LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
             GRB_TRY (GrB_mxm (C, A, NULL, semiring, A, A, GrB_DESC_ST1)) ;
 
 #else
@@ -334,6 +335,8 @@ int LAGr_TriangleCount
 
 #endif
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
+            LAGRAPH_TRY (LAGraph_Toc (&ttot, tic, NULL)) ;
+            printf (" Burkhardt tc_kernel_time: %14.8f \n", ttot);
             ntri /= 6 ;
             break ;
 
@@ -388,10 +391,11 @@ int LAGr_TriangleCount
             LG_TRY (tricount_prep (&L, &U, A, msg)) ;
 
 #if 1
-            GRB_TRY (GrB_mxm (C, U, NULL, semiring, U, L, GrB_DESC_ST1)) ;
+            //GRB_TRY (GrB_mxm (C, U, NULL, semiring, U, L, GrB_DESC_ST1)) ;
 
             // do it again for timing
-            GRB_TRY (GrB_Matrix_clear (C)) ;
+            //GRB_TRY (GrB_Matrix_clear (C)) ;
+            LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
             GRB_TRY (GrB_mxm (C, U, NULL, semiring, U, L, GrB_DESC_ST1)) ;
 #else
             GxB_get (GxB_GPU_CONTROL, &save) ;
