@@ -40,3 +40,472 @@ Text to introduce the examples.
 \vfill
 
 \linenumbers
+
+\chapter{LaTex Examples from GraphBLAS ... to be removed in final draft}
+
+In this chapter, we put all the examples of Latex formatting we might want to draw on as we 
+write this document.   This saves us having to dig through the GraphBLAS spec should we want
+to typeset some math or make a table using the same format as was used for GraphBLAS.  This 
+appendix will be removed before we publish the completed spec.
+
+\vfill
+
+\newgeometry{left=2.5cm,top=2cm,bottom=2cm}
+
+%=============================================================================
+%=============================================================================
+
+\section{Notation}
+
+\begin{tabular}[H]{l|p{5in}}
+Notation & Description \\
+\hline
+$\Dout, \Dinn, \Din1, \Din2$  & Refers to output and input domains of various GraphBLAS operators. \\
+$\bDout(*), \bDinn(*),$ & Evaluates to output and input domains of GraphBLAS operators (usually \\
+~~~~$\bDin1(*), \bDin2(*)$ & a unary or binary operator, or semiring). \\
+$\mathbf{D}(*)$   & Evaluates to the (only) domain of a GraphBLAS object (usually a monoid, vector, or matrix). \\ 
+$f$             & An arbitrary unary function, usually a component of a unary operator. \\
+$\mathbf{f}(F_u)$ & Evaluates to the unary function contained in the unary operator given as the argument. \\
+$\odot$         & An arbitrary binary function, usually a component of a binary operator. \\
+$\mathbf{\bigodot}(*)$ & Evaluates to the binary function contained in the binary operator or monoid given as the argument. \\
+$\otimes$       & Multiplicative binary operator of a semiring. \\
+$\oplus$        & Additive binary operator of a semiring. \\
+$\mathbf{\bigotimes}(S)$ & Evaluates to the multiplicative binary operator of the semiring given as the argument. \\
+$\mathbf{\bigoplus}(S)$ & Evaluates to the additive binary operator of the semiring given as the argument. \\
+$\mathbf{0}(*)$   & The identity of a monoid, or the additive identity of a GraphBLAS semiring. \\
+$\mathbf{L}(*)$   & The contents (all stored values) of the vector or matrix GraphBLAS objects.  For a vector, it is the set of (index, value) pairs, and for a matrix it is the set of (row, col, value) triples. \\
+$\mathbf{v}(i)$ or $v_i$   & The $i^{th}$ element of the vector $\vector{v}$.\\
+$\mathbf{size}(\vector{v})$ & The size of the vector $\vector{v}$.\\
+$\mathbf{ind}(\vector{v})$ & The set of indices corresponding to the stored values of the vector $\vector{v}$.\\
+$\mathbf{nrows}(\vector{A})$ & The number of rows in the $\matrix{A}$.\\
+$\mathbf{ncols}(\vector{A})$ & The number of columns in the $\matrix{A}$.\\
+$\mathbf{indrow}(\vector{A})$ & The set of row indices corresponding to rows in $\matrix{A}$ that have stored values.  \\
+$\mathbf{indcol}(\vector{A})$ & The set of column indices corresponding to columns in $\matrix{A}$ that have stored values. \\
+$\mathbf{ind}(\vector{A})$ & The set of $(i,j)$ indices corresponding to the stored values of the matrix. \\
+$\mathbf{A}(i,j)$ or $A_{ij}$ & The element of $\matrix{A}$ with row index $i$ and column index $j$.\\
+$\matrix{A}(:,j)$ & The $j^{th}$ column of matrix $\matrix{A}$.\\
+$\matrix{A}(i,:)$ & The $i^{th}$ row of matrix $\matrix{A}$.\\
+$\matrix{A}^T$ &The transpose of matrix $\matrix{A}$. \\
+$\neg\matrix{M}$ & The complement of $\matrix{M}$.\\
+s$(\matrix{M})$ & The structure of $\matrix{M}$.\\
+$\vector{\widetilde{t}}$ & A temporary object created  by the GraphBLAS implementation. \\
+$<type>$ & A method argument type that is {\sf void *} or one of the types from Table~\ref{Tab:PredefinedTypes}. \\
+{\sf GrB\_ALL} & A method argument literal to indicate that all indices of an input array should be used.\\
+{\sf GrB\_Type} & A method argument type that is either a user defined type or one of the  types from Table~\ref{Tab:PredefinedTypes}.\\
+{\sf GrB\_Object} &  A method argument type referencing any of the GraphBLAS object types.\\
+{\sf GrB\_NULL} & The GraphBLAS NULL.
+\end{tabular}
+
+\restoregeometry
+
+%============================================================================
+\section{Algebraic objects, operators and associated functions}
+
+GraphBLAS operators operate on elements stored in GraphBLAS collections. A 
+\emph{binary operator} is a function that maps two input values to one 
+output value. A \emph{unary operator} is a function that maps one input value 
+to one output value.  Binary operators are defined over two input domains
+and produce an output from a (possibly different) third domain. Unary
+operators are specified over one input domain and produce an output from a
+(possibly different) second domain.
+
+In addition to the operators that operate on stored values, GraphBLAS
+also supports \emph{index unary operators} that maps a stored value and 
+the indices of its position in the matrix or vector to an output value.
+That output value can be used in the index unary operator variants of {\sf apply} (\S~\ref{Sec:Apply}) 
+to compute a new stored value, or be used in the {\sf select} operation (\S~\ref{Sec:Select}) to 
+determine if the stored input value should be kept or annihilated.
+
+Some GraphBLAS operations require a monoid or semiring.  A monoid contains an associative 
+binary operator where the input and output domains are
+the same. The monoid also includes an identity value of the operator.
+The semiring consists of a binary operator -- referred to as the ``times'' 
+operator -- with up to three different domains (two inputs
+and one output) and a monoid -- referred to as the ``plus'' operator -- that
+is also commutative.  Furthermore, the domain
+of the monoid must be the same as the output domain of the ``times'' operator.
+
+The GraphBLAS \emph{algebraic objects} operators, monoids, and semirings
+are presented in this section.
+These objects can be used as input arguments to various GraphBLAS
+operations, as shown in Table~\ref{Tab:OperatorInputType}.
+The specific rules for each algebraic object
+are explained in the respective sections of those objects.  A summary
+of the properties and recipes for building these GraphBLAS algebraic
+objects is presented in Table~\ref{Tab:AlgebraicObjects}.
+
+\begin{table}[t]
+    \hrule
+    \begin{center}
+        \caption[Operator input for relevant GraphBLAS operations.]{Operator input for relevant GraphBLAS operations. 
+        The semiring add and times are shown if applicable.}
+        \label{Tab:OperatorInputType}
+        \begin{tabular}{l|l}
+        Operation                       & Operator input        \\ \hline
+        {\sf mxm, mxv, vxm}             & semiring              \\ \hline
+        {\sf eWiseAdd}                  & binary operator       \\
+                                        & monoid                \\
+                                        & semiring (add)        \\ \hline
+        {\sf eWiseMult}                 & binary operator       \\
+                                        & monoid                \\
+                                        & semiring (times)      \\ \hline
+       {\sf reduce} (to vector or {\sf GrB\_Scalar})  & binary operator    \\ 
+                                        & monoid                \\ \hline
+       {\sf reduce} (to scalar value)   & monoid                \\ \hline
+       {\sf apply}                      & unary operator        \\
+	                                    & binary operator with scalar \\
+                                        & index unary operator  \\ \hline
+       {\sf select}                     & index unary operator  \\ \hline
+       {\sf kronecker}                  & binary operator       \\
+                                        & monoid                \\
+                                        & semiring              \\ \hline
+       {\sf dup} argument (build methods)     & binary operator \\ \hline
+       {\sf accum} argument (various methods) & binary operator \\
+       \end{tabular}
+    \end{center}
+    \hrule
+\end{table}
+
+%====================
+
+\begin{table}
+    \hrule
+    \begin{center}
+        \caption[Properties and recipes for building GraphBLAS algebraic objects.]{Properties and recipes for building GraphBLAS algebraic objects: unary operator, binary operator, monoid, and semiring (composed of operations \emph{add} and \emph{times}).}
+        \label{Tab:AlgebraicObjects}
+        
+        \vspace{1\baselineskip}
+        (a) Properties of algebraic objects.
+        \vspace{1\baselineskip}
+        
+        \begin{tabular}{l|l|l|l|l}
+            Object          & Must be       & Must be        & Identity         & Number \\
+                            & commutative   & associative    & must exist       & of domains  \\
+            \hline
+            Unary operator  & n/a           & n/a            & n/a              & 2  \\
+            Binary operator & no            & no             & no               & 3  \\
+            Monoid          & no            & yes            & yes              & 1  \\
+            Reduction add   & yes           & yes            & yes (see Note 1) & 1  \\
+            Semiring add    & yes           & yes            & yes              & 1  \\
+            Semiring times  & no            & no             & no               & 3  (see Note 2) \\
+        \end{tabular}
+        
+        \vspace{1\baselineskip}
+        (b) Recipes for algebraic objects.
+        \vspace{1\baselineskip}
+        
+        \begin{tabular}{l|l|l}
+            Object          & Recipe                                        & Number of domains \\
+            \hline
+            Unary operator  & Function pointer                              & 2 \\
+            Binary operator & Function pointer                              & 3 \\
+            Monoid          & Associative binary operator with identity     & 1 \\
+            Semiring        & Commutative monoid $+$ binary operator        & 3 \\
+        \end{tabular}
+        
+    \end{center}
+
+        {\footnotesize Note 1: Some high-performance GraphBLAS implementations may require 
+        an identity to perform reductions to sparse objects like GraphBLAS vectors 
+        and scalars. According to the descriptions of the corresponding GraphBLAS operations, 
+        however, this identity is mathematically not necessary.  There are API signatures to
+        support both.\newline
+        Note 2: The output domain of the semiring times must be same as the domain of the 
+        semiring's add monoid. This ensures three domains for a semiring rather than four.}
+
+    \hrule
+\end{table}
+
+%====================
+
+%==================
+\begin{landscape}
+
+\begin{table}
+\hspace{-2.5em}\begin{threeparttable}
+\hrule
+%\vspace{1\baselineskip}
+\caption[Predefined index unary operators for GraphBLAS in C.]{Predefined index unary operators for GraphBLAS in C.  The $T$ can be
+any suffix from Table~\ref{Tab:PredefinedDomains}. $I_{U64}$ refers to the 
+    unsigned 64-bit, {\sf GrB\_Index}, integer type, $I_{32}$ refers to the signed, 32-bit integer type, and $I_{64}$ refers to signed, 64-bit 
+integer type.
+The parameters, $u_i$ or $A_{ij}$, are the stored values from the containers 
+where the $i$ and $j$ parameters are set to the row and column indices 
+corresponding to the location of the stored value. When operating on vectors, 
+$j$ will be passed with a zero value. Finally, $s$ is an additional scalar 
+value used in the operators.
+The expressions in the ``Description'' column are to be treated as mathematical specifications.
+    That is, for the index arithmetic functions in the first two groups below, each one of $i$, $j$, and $s$ is interpreted as an integer number in the set $\mathbb{Z}$.
+    Functions are evaluated using arithmetic in $\mathbb{Z}$, producing a result value that is also in $\mathbb{Z}$. 
+    The result value is converted to the output type according to the rules of the C language. In particular, if the value cannot be represented as a signed 32- or 64-bit integer type, the output is implementation defined.
+    Any deviations from this ideal behavior, including limitations on the values of $i$, $j$, and $s$, or possible overflow and underflow conditions, must be defined by the implementation.
+    }
+\label{Tab:PredefIndexOperators}
+%\vspace{1\baselineskip}
+
+    {\small
+\begin{tabular}{l|l|cccc|rcll}
+Operator type             & GraphBLAS                		& \multicolumn{4}{c|}{Domains ($-$ is don't care)}	& \multicolumn{4}{c}{Description} \\ 
+Type                      & Name                     		& $A,u$ & $i$, $j$  	& $s$ 		& result        & &&& \\ \hline
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWINDEX\_$I_{32/64}$} 	& $-$   & $I_{U64}$	& $I_{32/64}$ 	& $I_{32/64}$ 	& $f(A_{ij},i,j,s)$ & $=$ & $(i + s)$, 		& replace with its row index (+ s) \\
+                          &                          		& $-$   & $I_{U64}$ 	& $I_{32/64}$ 	& $I_{32/64}$ 	& $f(u_{i}, i,0,s)$ & $=$ & $(i + s)$  		& \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLINDEX\_$I_{32/64}$} 	& $-$   & $I_{U64}$ 	& $I_{32/64}$ 	& $I_{32/64}$ 	& $f(A_{ij},i,j,s)$ & $=$ & $(j + s)$ 		& replace with its column index (+ s) \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_DIAGINDEX\_$I_{32/64}$}	& $-$   & $I_{U64}$ 	& $I_{32/64}$ 	& $I_{32/64}$ 	& $f(A_{ij},i,j,s)$ & $=$ & $(j - i + s)$	& replace with its diagonal index (+ s) \\
+\hline
+
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_TRIL}    			& $-$ 	& $I_{U64}$ 	& $I_{64}$ 	& {\sf bool} 	& $f(A_{ij},i,j,s)$ & $=$ & $(j \leq i + s)$ 	& triangle on or below diagonal s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_TRIU}    			& $-$ 	& $I_{U64}$ 	& $I_{64}$ 	& {\sf bool} 	& $f(A_{ij},i,j,s)$ & $=$ & $(j \geq i + s)$ 	& triangle on or above diagonal s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_DIAG}    			& $-$ 	& $I_{U64}$ 	& $I_{64}$ 	& {\sf bool} 	& $f(A_{ij},i,j,s)$ & $=$ & $(j  ==  i + s)$ 	& diagonal s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_OFFDIAG} 			& $-$ 	& $I_{U64}$ 	& $I_{64}$ 	& {\sf bool} 	& $f(A_{ij},i,j,s)$ & $=$ & $(j \neq i + s)$ 	& all but diagonal s \\
+
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLLE}   			& $-$ 	& $I_{U64}$ 	& $I_{64}$ 	& {\sf bool} 	& $f(A_{ij},i,j,s)$ & $=$ & $(j \leq s)$ 	& columns less or equal to s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_COLGT}   			& $-$ 	& $I_{U64}$ 	& $I_{64}$ 	& {\sf bool} 	& $f(A_{ij},i,j,s)$ & $=$ & $(j >    s)$ 	& columns greater than s \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWLE}   			& $-$ 	& $I_{U64}$ 	& $I_{64}$ 	& {\sf bool} 	& $f(A_{ij},i,j,s)$ & $=$ & $(i \leq s)$, 	& rows less or equal to s \\
+                          &                    			& $-$ 	& $I_{U64}$ 	& $I_{64}$ 	& {\sf bool} 	& $f(u_{i}, i,0,s)$ & $=$ & $(i \leq s)$  \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_ROWGT}   			& $-$ 	& $I_{U64}$ 	& $I_{64}$ 	& {\sf bool} 	& $f(A_{ij},i,j,s)$ & $=$ & $(i >    s)$, 	& rows greater than s \\
+                          &                    			& $-$ 	& $I_{U64}$ 	& $I_{64}$ 	& {\sf bool} 	& $f(u_{i}, i,0,s)$ & $=$ & $(i >    s)$ \\
+\hline
+                     
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUEEQ\_$T$} 		& $T$ 	& $-$ 		& $T$	 	& {\sf bool} 	& $f(A_{ij},i,j,s)$ & $=$ & $(A_{ij} ==   s)$, 	& elements equal to value s \\
+                          &                         		& $T$ 	& $-$ 		& $T$ 		& {\sf bool} 	& $f(u_{i}, i,0,s)$ & $=$ & $(u_{i}  ==   s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUENE\_$T$} 		& $T$ 	& $-$ 		& $T$ 		& {\sf bool} 	& $f(A_{ij},i,j,s)$ & $=$ & $(A_{ij} \neq s)$, 	& elements not equal to value s \\
+                          &                         		& $T$ 	& $-$ 		& $T$ 		& {\sf bool} 	& $f(u_{i}, i,0,s)$ & $=$ & $(u_{i}  \neq s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUELT\_$T$} 		& $T$ 	& $-$ 		& $T$ 		& {\sf bool} 	& $f(A_{ij},i,j,s)$ & $=$ & $(A_{ij} <    s)$, 	& elements less than value s \\
+                          &                         		& $T$ 	& $-$ 		& $T$ 		& {\sf bool} 	& $f(u_{i}, i,0,s)$ & $=$ & $(u_{i}  <    s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUELE\_$T$} 		& $T$ 	& $-$ 		& $T$ 		& {\sf bool} 	& $f(A_{ij},i,j,s)$ & $=$ & $(A_{ij} \leq s)$, 	& elements less or equal to value s \\
+                          &                         		& $T$ 	& $-$ 		& $T$ 		& {\sf bool} 	& $f(u_{i}, i,0,s)$ & $=$ & $(u_{i}  \leq s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUEGT\_$T$} 		& $T$ 	& $-$ 		& $T$ 		& {\sf bool}	& $f(A_{ij},i,j,s)$ & $=$ & $(A_{ij} >    s)$,	& elements greater than value s \\
+                          &                         		& $T$ 	& $-$	 	& $T$ 		& {\sf bool} 	& $f(u_{i}, i,0,s)$ & $=$ & $(u_{i}  >    s)$ \\
+{\sf GrB\_IndexUnaryOp}   & {\sf GrB\_VALUEGE\_$T$} 		& $T$ 	& $-$ 		& $T$ 		& {\sf bool} 	& $f(A_{ij},i,j,s)$ & $=$ & $(A_{ij} \geq s)$, 	& elements greater or equal to value s \\
+                          &                         		& $T$ 	& $-$ 		& $T$ 		& {\sf bool} 	& $f(u_{i}, i,0,s)$ & $=$ & $(u_{i}  \geq s)$ \\
+\end{tabular}
+    }
+\hrule
+\end{threeparttable}
+\end{table}
+
+
+\end{landscape}
+
+%==================
+
+
+
+\section{{\sf vxm}: Vector-matrix multiply}
+
+Multiplies a (row) vector with a matrix on an semiring. The result is a vector.
+
+\paragraph{\syntax}
+
+\begin{verbatim}
+        GrB_Info GrB_vxm(GrB_Vector             w,
+                         const GrB_Vector       mask,
+                         const GrB_BinaryOp     accum,
+                         const GrB_Semiring     op,
+                         const GrB_Vector       u, 
+                         const GrB_Matrix       A,
+                         const GrB_Descriptor   desc);
+\end{verbatim}
+
+\paragraph{Parameters}
+
+\begin{itemize}[leftmargin=1.1in]
+    \item[{\sf w}]    ({\sf INOUT}) An existing GraphBLAS vector.  On input,
+    the vector provides values that may be accumulated with the result of the
+    vector-matrix product.  On output, this vector holds the results of the
+    operation.
+
+    \item[{\sf mask}] ({\sf IN}) An optional ``write'' mask that controls which
+    results from this operation are stored into the output vector {\sf w}. The 
+    mask dimensions must match those of the vector {\sf w}. If the 
+    {\sf GrB\_STRUCTURE} descriptor is {\em not} set for the mask, the domain of the
+    {\sf mask} vector must be of type {\sf bool} or any of the predefined 
+    ``built-in'' types in Table~\ref{Tab:PredefinedTypes}.  If the default
+    mask is desired (\ie, a mask that is all {\sf true} with the dimensions of {\sf w}), 
+    {\sf GrB\_NULL} should be specified.
+
+    \item[{\sf accum}] ({\sf IN}) An optional binary operator used for accumulating
+    entries into existing {\sf w} entries.
+    %: ${\sf accum} = \langle \bDout({\sf accum}),\bDin1({\sf accum}),
+    %\bDin2({\sf accum}), \odot \rangle$. 
+    If assignment rather than accumulation is
+    desired, {\sf GrB\_NULL} should be specified.
+
+    \item[{\sf op}]   ({\sf IN}) Semiring used in the vector-matrix
+    multiply.
+    %: ${\sf op}=\langle \bDout({\sf op}),\bDin1({\sf op}),\bDin2({\sf op}),\oplus,\otimes,0 \rangle$.
+
+    \item[{\sf u}]    ({\sf IN}) The GraphBLAS vector holding the values for
+    the left-hand vector in the multiplication.
+
+    \item[{\sf A}]    ({\sf IN}) The GraphBLAS matrix holding the values
+    for the right-hand matrix in the multiplication.
+
+    \item[{\sf desc}] ({\sf IN}) An optional operation descriptor. If
+    a \emph{default} descriptor is desired, {\sf GrB\_NULL} should be
+    specified. Non-default field/value pairs are listed as follows:  \\
+
+    \hspace*{-2em}\begin{tabular}{lllp{2.7in}}
+        Param & Field  & Value & Description \\
+        \hline
+        {\sf w}    & {\sf GrB\_OUTP} & {\sf GrB\_REPLACE} & Output vector {\sf w}
+        is cleared (all elements removed) before the result is stored in it.\\
+
+        {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_STRUCTURE}   & The write mask is
+        constructed from the structure (pattern of stored values) of the input
+        {\sf mask} vector. The stored values are not examined.\\
+
+        {\sf mask} & {\sf GrB\_MASK} & {\sf GrB\_COMP}   & Use the
+        complement of {\sf mask}. \\
+
+        {\sf A}    & {\sf GrB\_INP1} & {\sf GrB\_TRAN}   & Use transpose of {\sf A}
+        for the operation. \\
+    \end{tabular}
+\end{itemize}
+
+\paragraph{Return Values}
+
+\begin{itemize}[leftmargin=2.1in]
+    \item[{\sf GrB\_SUCCESS}]         In blocking mode, the operation completed
+    successfully. In non-blocking mode, this indicates that the compatibility 
+    tests on dimensions and domains for the input arguments passed successfully. 
+    Either way, output vector {\sf w} is ready to be used in the next method of 
+    the sequence.
+
+    \item[{\sf GrB\_PANIC}]           Unknown internal error.
+
+    \item[{\sf GrB\_INVALID\_OBJECT}] This is returned in any execution mode 
+    whenever one of the opaque GraphBLAS objects (input or output) is in an invalid 
+    state caused by a previous execution error.  Call {\sf GrB\_error()} to access 
+    any error messages generated by the implementation.
+
+    \item[{\sf GrB\_OUT\_OF\_MEMORY}] Not enough memory available for the operation.
+
+    \item[{\sf GrB\_UNINITIALIZED\_OBJECT}] One or more of the GraphBLAS objects 
+    has not been initialized by a call to {\sf new} (or {\sf dup} for matrix or
+    vector parameters).
+
+    \item[{\sf GrB\_DIMENSION\_MISMATCH}] Mask, vector, and/or matrix 
+    dimensions are incompatible.
+
+    \item[{\sf GrB\_DOMAIN\_MISMATCH}]    The domains of the various vectors/matrices are
+    incompatible with the corresponding domains of the semiring or
+    accumulation operator, or the mask's domain is not compatible with {\sf bool}
+    (in the case where {\sf desc[GrB\_MASK].GrB\_STRUCTURE} is not set).
+\end{itemize}
+
+\paragraph{Description}
+
+{\sf GrB\_vxm} computes the vector-matrix product ${\sf w}^T = {\sf
+u}^T \oplus . \otimes {\sf A}$, or, if an optional binary accumulation
+operator ($\odot$) is provided, ${\sf w}^T = {\sf w}^T \odot
+\left({\sf u}^T \oplus . \otimes {\sf A}\right)$ (where matrix {\sf A}
+ can be optionally transposed).  Logically, this operation
+occurs in three steps:
+\begin{enumerate}[leftmargin=0.85in]
+\item[\bf Setup] The internal vectors, matrices and mask used in the computation are formed and their domains/dimensions are tested for compatibility.
+\item[\bf Compute] The indicated computations are carried out.
+\item[\bf Output] The result is written into the output vector, possibly under control of a mask.
+\end{enumerate}
+
+Up to four argument vectors or matrices are used in the {\sf GrB\_vxm} operation:
+\begin{enumerate}
+	\item ${\sf w} = \langle \bold{D}({\sf w}),\bold{size}({\sf w}),\bold{L}({\sf w}) = \{(i,w_i) \} \rangle$
+	\item ${\sf mask} = \langle \bold{D}({\sf mask}),\bold{size}({\sf mask}),\bold{L}({\sf mask}) = \{(i,m_i) \} \rangle$ (optional)
+	\item ${\sf u} = \langle \bold{D}({\sf u}),\bold{size}({\sf u}),\bold{L}({\sf u}) = \{(i,u_i) \} \rangle$
+	\item ${\sf A} = \langle \bold{D}({\sf A}),\bold{nrows}({\sf A}), \bold{ncols}({\sf A}),\bold{L}({\sf A}) = \{(i,j,A_{ij}) \} \rangle$
+\end{enumerate}
+
+The argument matrices, vectors, the semiring, and the accumulation operator (if provided) 
+are tested for domain compatibility as follows:
+\begin{enumerate}
+	\item If {\sf mask} is not {\sf GrB\_NULL}, and ${\sf desc[GrB\_MASK].GrB\_STRUCTURE}$
+    is not set, then $\bold{D}({\sf mask})$ must be from one of the pre-defined types of 
+    Table~\ref{Tab:PredefinedTypes}.
+
+	\item $\bold{D}({\sf u})$ must be compatible with $\bDin1({\sf op})$ of the semiring.
+
+	\item $\bold{D}({\sf A})$ must be compatible with $\bDin2({\sf op})$ of the semiring.
+
+	\item $\bold{D}({\sf w})$ must be compatible with $\bDout({\sf op})$ of the semiring.
+
+	\item If {\sf accum} is not {\sf GrB\_NULL}, then $\bold{D}({\sf w})$ must be compatible with $\bDin1({\sf accum})$ and $\bDout({\sf accum})$ of the 
+	accumulation operator and $\bDout({\sf op})$ of the semiring must be compatible with $\bDin2({\sf accum})$ of the accumulation operator.
+\end{enumerate}
+Two domains are compatible with each other if values from one domain can be cast 
+to values in the other domain as per the rules of the C language.
+In particular, domains from Table~\ref{Tab:PredefinedTypes} are all compatible 
+with each other. A domain from a user-defined type is only compatible with itself.
+If any compatibility rule above is violated, execution of {\sf GrB\_vxm} ends and 
+the domain mismatch error listed above is returned.
+
+From the argument vectors and matrices, the internal matrices and mask used in 
+the computation are formed ($\leftarrow$ denotes copy):
+\begin{enumerate}
+	\item Vector $\vector{\widetilde{w}} \leftarrow {\sf w}$.
+
+	\item One-dimensional mask, $\vector{\widetilde{m}}$, is computed from 
+    argument {\sf mask} as follows:
+	\begin{enumerate}
+		\item If ${\sf mask} = {\sf GrB\_NULL}$, then $\vector{\widetilde{m}} = 
+        \langle \bold{size}({\sf w}), \{i, \ \forall \ i : 0 \leq i < 
+        \bold{size}({\sf w}) \} \rangle$.
+
+		\item If {\sf mask} $\ne$ {\sf GrB\_NULL},  
+        \begin{enumerate}
+            \item If ${\sf desc[GrB\_MASK].GrB\_STRUCTURE}$ is set, then
+            $\vector{\widetilde{m}} = 
+            \langle \bold{size}({\sf mask}), \{i : i \in \bold{ind}({\sf mask}) \} \rangle$,
+            \item Otherwise, $\vector{\widetilde{m}} = 
+            \langle \bold{size}({\sf mask}), \{i : i \in \bold{ind}({\sf mask}) \wedge
+            ({\sf bool}){\sf mask}(i) = \true \} \rangle$.
+        \end{enumerate}
+
+		\item	If ${\sf desc[GrB\_MASK].GrB\_COMP}$ is set, then 
+        $\vector{\widetilde{m}} \leftarrow \neg \vector{\widetilde{m}}$.
+	\end{enumerate}
+
+	\item Vector $\vector{\widetilde{u}} \leftarrow {\sf u}$.
+
+	\item Matrix $\matrix{\widetilde{A}} \leftarrow {\sf desc[GrB\_INP1].GrB\_TRAN} \ ? \ {\sf A}^T : {\sf A}$.
+\end{enumerate}
+
+The internal matrices and masks are checked for shape compatibility. The following 
+conditions must hold:
+\begin{enumerate}
+	\item $\bold{size}(\vector{\widetilde{w}}) = \bold{size}(\vector{\widetilde{m}})$.
+
+	\item $\bold{size}(\vector{\widetilde{w}}) = \bold{ncols}(\matrix{\widetilde{A}})$.
+
+	\item $\bold{size}(\vector{\widetilde{u}}) = \bold{nrows}(\matrix{\widetilde{A}})$.
+\end{enumerate}
+If any compatibility rule above is violated, execution of {\sf GrB\_vxm} ends and 
+the dimension mismatch error listed above is returned.
+
+From this point forward, in {\sf GrB\_NONBLOCKING} mode, the method can 
+optionally exit with {\sf GrB\_SUCCESS} return code and defer any computation 
+and/or execution error codes.
+
+We are now ready to carry out the vector-matrix multiplication and any additional 
+associated operations.  We describe this in terms of two intermediate vectors:
+\begin{itemize}
+    \item $\vector{\widetilde{t}}$: The vector holding the product of vector
+    $\vector{\widetilde{u}}^T$ and matrix $\matrix{\widetilde{A}}$.
+    \item $\vector{\widetilde{z}}$: The vector holding the result after 
+    application of the (optional) accumulation operator.
+\end{itemize}
+
+The intermediate vector $\vector{\widetilde{t}} = \langle
+\bDout({\sf op}), \bold{ncols}(\matrix{\widetilde{A}}),
+\{(j,t_j) : \bold{ind}(\vector{\widetilde{u}}) \cap
+\bold{ind}(\matrix{\widetilde{A}}(:,j)) \neq \emptyset \} \rangle$
+is created.  The value of each of its elements is computed by 
+\[t_j = \bigoplus_{k \in \bold{ind}(\vector{\widetilde{u}}) \cap
+\bold{ind}(\matrix{\widetilde{A}}(:,j))} (\vector{\widetilde{u}}(k)
+\otimes \matrix{\widetilde{A}}(k,j)),\] where $\oplus$ and $\otimes$
+are the additive and multiplicative operators of semiring {\sf op},
+respectively.
+
+
+
+
