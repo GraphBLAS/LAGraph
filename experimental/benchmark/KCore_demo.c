@@ -89,7 +89,7 @@ int main (int argc, char **argv)
     GrB_Index n, nvals ;
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
-    // LAGRAPH_TRY (LAGraph_Graph_Print (G, LAGraph_SHORT, stdout, msg)) ;
+    LAGRAPH_TRY (LAGraph_Graph_Print (G, LAGraph_SHORT, stdout, msg)) ;
     GRB_TRY (GrB_Matrix_new (&A, GrB_INT64, n, n)) ;
     GRB_TRY (GrB_assign (A, G->A, NULL, (double) 1,
         GrB_ALL, n, GrB_ALL, n, GrB_DESC_S)) ;
@@ -106,6 +106,7 @@ int main (int argc, char **argv)
     LAGRAPH_TRY (LAGraph_SetNumThreads (24, 24, msg)) ;
     double tt = LAGraph_WallClockTime ( ) ;
     LAGRAPH_TRY (LAGraph_KCore (&c, G, k, msg)) ;
+    LAGRAPH_TRY (LAGraph_Vector_Print (c, LAGraph_SHORT, stdout, msg)) ;
     tt = LAGraph_WallClockTime ( ) - tt ;
     printf("warmup time: %g sec\n\n", tt) ;
     // LAGRAPH_TRY (LAGraph_KCore_Decompose (&D, G, &c, k, msg)) ;
