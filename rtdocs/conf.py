@@ -39,7 +39,7 @@ if read_the_docs_build:
     output_dir = 'build'
     configureDoxyfile(input_dir, output_dir)
     subprocess.call('doxygen', shell=True)
-    breathe_projects['LAGraph'] = output_dir + '/xml'
+    breathe_projects['lagraph'] = output_dir + '/xml'
 
 
 # -- Project information -----------------------------------------------------
@@ -82,6 +82,6 @@ html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 
 # Breathe Configuration
-breathe_default_project = 'LAGraph'
+breathe_default_project = 'lagraph'
 
 master_doc = 'index'

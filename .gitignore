@@ -42,6 +42,8 @@ cmake-build-debug*
 CMakeFiles*
 *~
 
+*/build/*
+
 # Do not ignore this file
 !.gitignore
 

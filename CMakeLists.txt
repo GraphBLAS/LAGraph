@@ -266,6 +266,7 @@ enable_testing()
 
 add_subdirectory(src)
 add_subdirectory(experimental)
+add_subdirectory(rtdocs)
 
 #-------------------------------------------------------------------------------
 # to install use "sudo make install"

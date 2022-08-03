@@ -9,6 +9,9 @@ LAGraph Documentation
 
 GraphBLAS Objects
 -----------------
+.. doxygenstruct:: LAGraph_Graph_struct
+   :members:
+
 .. doxygenclass:: LAGraph_Graph
    :members:
 
@@ -64,11 +67,13 @@ Algorithms
 ----------
 .. doxygenfunction:: grb::multiply(AMatrixType&&, BMatrixType&&, ReduceFn&&, CombineFn&&, MaskType&&)
 
-.. doxygenfunction:: LAGr_PageRank
+.. doxygenfunction:: LAGr_SingleSourceShortestPath
+    :project: lagraph
 
 .. doxygenfunction:: grb::ewise(const AMatrixType&, const BMatrixType&, const BinaryOp&)
 
-.. doxygenfunction:: grb::ewise(const AMatrixType&, const BMatrixType&, CMatrixType&, const BinaryOp&, const Accumulator&)
+.. doxygenfunction:: LAGraph_Matrix_IsEqual
+    :project: lagraph
 
 Utility Functions
 -----------------
