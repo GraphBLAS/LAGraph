@@ -1409,7 +1409,7 @@ int LAGraph_Vector_Print
     char *msg
 ) ;
 
-// FIXME: start here for next LAGraph meeting
+// FIXME: start here for next LAGraph meeting, Aug 3, 2022
 
 //------------------------------------------------------------------------------
 // LAGraph_Matrix_IsEqual: compare for exact equality
@@ -1435,7 +1435,11 @@ int LAGraph_Matrix_IsEqual
 //------------------------------------------------------------------------------
 
 // LAGraph_Matrix_IsEqual_op compares two matrices using the given binary
-// operator.  The op may be built-in or user-defined.
+// operator.  The op may be built-in or user-defined.  The two matrices may
+// have different types and still be determined to be equal.  To be equal,
+// two matrices must have the same sparsity structure, and op(aij,bij) must
+// return true for all pairs of entries aij and bij that appear in the
+// structure of both A and B.
 
 LAGRAPH_PUBLIC
 int LAGraph_Matrix_IsEqual_op
@@ -1453,10 +1457,12 @@ int LAGraph_Matrix_IsEqual_op
 // LAGraph_Vector_IsEqual: check if two vectors are equal
 //------------------------------------------------------------------------------
 
+// FIXME: we haven't used the following format, @param, etc, for all methods
+// in LAGraph.h or LAGraphX.h.
+
 /**
- * Checks if two vectors are identically equal (same size, type (if accessible),
- * pattern, and values) according to an equal operator of a type determined
- * internally.
+ * Checks if two vectors are identically equal (same size, type, pattern, and
+ * values) according to an equal operator of a type determined internally.
  *
  * @note If either or both contain NaN's, result will be false
  *
@@ -1520,6 +1526,10 @@ int LAGraph_Vector_IsEqual_op
 
 // LAGraph_Sort1 sorts an int64_t array of size n in ascending order.
 
+// FIXME: it would be possible to define a single LAGraph_Sort which takes in
+// 3 arrays of int64.  If an input array is NULL, it wouldn't take part in the
+// sort.  So LAGraph_Sort1 (A,n,msg) could be LAGraph_Sort(A,NULL,NULL,n,msg).
+
 LAGRAPH_PUBLIC
 int LAGraph_Sort1
 (
@@ -1539,6 +1549,8 @@ int LAGraph_Sort1
 // treated as a single pair.  The pairs are sorted by the first value A_0,
 // with ties broken by A_1.
 
+// FIXME: see comment above about LAGraph_Sort1.
+
 LAGRAPH_PUBLIC
 int LAGraph_Sort2
 (
@@ -1551,7 +1563,7 @@ int LAGraph_Sort2
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Sort2: sort three arrays of size n
+// LAGraph_Sort3: sort three arrays of size n
 //------------------------------------------------------------------------------
 
 // LAGraph_Sort3 sorts three int64_t arrays A of size n in ascending order.
@@ -1559,6 +1571,8 @@ int LAGraph_Sort2
 // A_2 [k]) is treated as a single triplet.  The triplets are sorted by the
 // first value A_0, with ties broken by A_1, and then by A_2 if the values of
 // A_0 and A_1 are identical.
+
+// FIXME: see comment above about LAGraph_Sort1.
 
 LAGRAPH_PUBLIC
 int LAGraph_Sort3
@@ -1643,7 +1657,7 @@ LAGRAPH_PUBLIC
 int LAGr_Init
 (
     // input:
-    GrB_Mode mode,      // mode for GrB_Init or GxB_Init
+    GrB_Mode mode,      // mode for GrB_Init
     void * (* user_malloc_function  ) (size_t),
     void * (* user_calloc_function  ) (size_t, size_t),
     void * (* user_realloc_function ) (void *, size_t),
