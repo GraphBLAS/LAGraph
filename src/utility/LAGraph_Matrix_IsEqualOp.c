@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_Vector_IsEqual_op: compare two vectors with a given op
+// LAGraph_Matrix_IsEqualOp: compare two matrices with a given op
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -11,26 +11,24 @@
 
 //------------------------------------------------------------------------------
 
-// LAGraph_Vector_IsEqual_op: checks if two vectors are equal (same size,
-// structure, size, and values), using a provided binary operator.
-
-// See also LAGraph_Matrix_IsEqual_op.
+// LAGraph_Matrix_IsEqualOp: check if two matrices are equal (same
+// size, structure, size, and values).
 
 #define LG_FREE_WORK GrB_free (&C) ;
 
 #include "LG_internal.h"
 
 //------------------------------------------------------------------------------
-// LAGraph_Vector_IsEqual_op:  compare two vectors using a given operator
+// LAGraph_Matrix_IsEqualOp: compare two matrices using a given operator
 //------------------------------------------------------------------------------
 
-int LAGraph_Vector_IsEqual_op
+int LAGraph_Matrix_IsEqualOp
 (
     // output:
     bool *result,           // true if A == B, false if A != B or error
     // input:
-    const GrB_Vector A,
-    const GrB_Vector B,
+    const GrB_Matrix A,
+    const GrB_Matrix B,
     const GrB_BinaryOp op,        // comparator to use
     char *msg
 )
@@ -41,16 +39,16 @@ int LAGraph_Vector_IsEqual_op
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
-    GrB_Vector C = NULL ;
+    GrB_Matrix C = NULL ;
     LG_ASSERT (op != NULL && result != NULL, GrB_NULL_POINTER) ;
 
     //--------------------------------------------------------------------------
-    // check for NULL and aliased vectors
+    // check for NULL and aliased matrices
     //--------------------------------------------------------------------------
 
     if (A == NULL || B == NULL || A == B)
     {
-        // two NULL vectors are identical, as are two aliased matrices
+        // two NULL matrices are identical, as are two aliased matrices
         (*result) = (A == B) ;
         return (GrB_SUCCESS) ;
     }
@@ -59,12 +57,14 @@ int LAGraph_Vector_IsEqual_op
     // compare the size of A and B
     //--------------------------------------------------------------------------
 
-    GrB_Index nrows1, nrows2;
-    GRB_TRY (GrB_Vector_size (&nrows1, A)) ;
-    GRB_TRY (GrB_Vector_size (&nrows2, B)) ;
-    if (nrows1 != nrows2)
+    GrB_Index nrows1, ncols1, nrows2, ncols2 ;
+    GRB_TRY (GrB_Matrix_nrows (&nrows1, A)) ;
+    GRB_TRY (GrB_Matrix_nrows (&nrows2, B)) ;
+    GRB_TRY (GrB_Matrix_ncols (&ncols1, A)) ;
+    GRB_TRY (GrB_Matrix_ncols (&ncols2, B)) ;
+    if (nrows1 != nrows2 || ncols1 != ncols2)
     {
-        // # of rows differ
+        // dimensions differ
         (*result) = false ;
         return (GrB_SUCCESS) ;
     }
@@ -74,8 +74,8 @@ int LAGraph_Vector_IsEqual_op
     //--------------------------------------------------------------------------
 
     GrB_Index nvals1, nvals2 ;
-    GRB_TRY (GrB_Vector_nvals (&nvals1, A)) ;
-    GRB_TRY (GrB_Vector_nvals (&nvals2, B)) ;
+    GRB_TRY (GrB_Matrix_nvals (&nvals1, A)) ;
+    GRB_TRY (GrB_Matrix_nvals (&nvals2, B)) ;
     if (nvals1 != nvals2)
     {
         // # of entries differ
@@ -87,7 +87,7 @@ int LAGraph_Vector_IsEqual_op
     // C = A .* B, where the structure of C is the intersection of A and B
     //--------------------------------------------------------------------------
 
-    GRB_TRY (GrB_Vector_new (&C, GrB_BOOL, nrows1)) ;
+    GRB_TRY (GrB_Matrix_new (&C, GrB_BOOL, nrows1, ncols1)) ;
     GRB_TRY (GrB_eWiseMult (C, NULL, NULL, op, A, B, NULL)) ;
 
     //--------------------------------------------------------------------------
@@ -95,7 +95,7 @@ int LAGraph_Vector_IsEqual_op
     //--------------------------------------------------------------------------
 
     GrB_Index nvals ;
-    GRB_TRY (GrB_Vector_nvals (&nvals, C)) ;
+    GRB_TRY (GrB_Matrix_nvals (&nvals, C)) ;
     if (nvals != nvals1)
     {
         // structure of A and B are different

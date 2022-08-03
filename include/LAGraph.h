@@ -33,10 +33,10 @@
 // See also the LAGraph_Version utility method, which returns these values.
 // These definitions are derived from LAGraph/CMakeLists.txt.
 
-#define LAGRAPH_DATE "July 6, 2022"
+#define LAGRAPH_DATE "Aug 3, 2022"
 #define LAGRAPH_VERSION_MAJOR  0
 #define LAGRAPH_VERSION_MINOR  9
-#define LAGRAPH_VERSION_UPDATE 29
+#define LAGRAPH_VERSION_UPDATE 30
 
 //==============================================================================
 // include files and helper macros
@@ -1409,14 +1409,12 @@ int LAGraph_Vector_Print
     char *msg
 ) ;
 
-// FIXME: start here for next LAGraph meeting
-
 //------------------------------------------------------------------------------
 // LAGraph_Matrix_IsEqual: compare for exact equality
 //------------------------------------------------------------------------------
 
 // LAGraph_Matrix_IsEqual compares two matrices for exact equality.  If the two
-// matrices must have different data types, the result is always false (no
+// matrices have different data types, the result is always false (no
 // typecasting is performed).  Only the 11 built-in GrB* types are supported.
 
 LAGRAPH_PUBLIC
@@ -1431,14 +1429,18 @@ int LAGraph_Matrix_IsEqual
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Matrix_IsEqual_op: check if two matrices are equal with given op
+// LAGraph_Matrix_IsEqualOp: check if two matrices are equal with given op
 //------------------------------------------------------------------------------
 
-// LAGraph_Matrix_IsEqual_op compares two matrices using the given binary
-// operator.  The op may be built-in or user-defined.
+// LAGraph_Matrix_IsEqualOp compares two matrices using the given binary
+// operator.  The op may be built-in or user-defined.  The two matrices may
+// have different types and still be determined to be equal.  To be equal,
+// two matrices must have the same sparsity structure, and op(aij,bij) must
+// return true for all pairs of entries aij and bij that appear in the
+// structure of both A and B.
 
 LAGRAPH_PUBLIC
-int LAGraph_Matrix_IsEqual_op
+int LAGraph_Matrix_IsEqualOp
 (
     // output:
     bool *result,           // true if A == B, false if A != B or error
@@ -1454,9 +1456,8 @@ int LAGraph_Matrix_IsEqual_op
 //------------------------------------------------------------------------------
 
 /**
- * Checks if two vectors are identically equal (same size, type (if accessible),
- * pattern, and values) according to an equal operator of a type determined
- * internally.
+ * Checks if two vectors are identically equal (same size, type, pattern, and
+ * values) according to an equal operator of a type determined internally.
  *
  * @note If either or both contain NaN's, result will be false
  *
@@ -1483,7 +1484,7 @@ int LAGraph_Vector_IsEqual
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Vector_IsEqual_op: check if two vectors are equal with given op
+// LAGraph_Vector_IsEqualOp: check if two vectors are equal with given op
 //------------------------------------------------------------------------------
 
 /**
@@ -1503,7 +1504,7 @@ int LAGraph_Vector_IsEqual
  * @return Any GraphBLAS errors that may have been encountered
  */
 LAGRAPH_PUBLIC
-int LAGraph_Vector_IsEqual_op
+int LAGraph_Vector_IsEqualOp
 (
     // output:
     bool *result,           // true if A == B, false if A != B or error
@@ -1514,11 +1515,17 @@ int LAGraph_Vector_IsEqual_op
     char *msg
 ) ;
 
+// FIXME: start here for next LAGraph meeting, Aug 10, 2022
+
 //------------------------------------------------------------------------------
 // LAGraph_Sort1: sort array of size n
 //------------------------------------------------------------------------------
 
 // LAGraph_Sort1 sorts an int64_t array of size n in ascending order.
+
+// FIXME: it would be possible to define a single LAGraph_Sort which takes in
+// 3 arrays of int64.  If an input array is NULL, it wouldn't take part in the
+// sort.  So LAGraph_Sort1 (A,n,msg) could be LAGraph_Sort(A,NULL,NULL,n,msg).
 
 LAGRAPH_PUBLIC
 int LAGraph_Sort1
@@ -1539,6 +1546,8 @@ int LAGraph_Sort1
 // treated as a single pair.  The pairs are sorted by the first value A_0,
 // with ties broken by A_1.
 
+// FIXME: see comment above about LAGraph_Sort1.
+
 LAGRAPH_PUBLIC
 int LAGraph_Sort2
 (
@@ -1551,7 +1560,7 @@ int LAGraph_Sort2
 ) ;
 
 //------------------------------------------------------------------------------
-// LAGraph_Sort2: sort three arrays of size n
+// LAGraph_Sort3: sort three arrays of size n
 //------------------------------------------------------------------------------
 
 // LAGraph_Sort3 sorts three int64_t arrays A of size n in ascending order.
@@ -1559,6 +1568,8 @@ int LAGraph_Sort2
 // A_2 [k]) is treated as a single triplet.  The triplets are sorted by the
 // first value A_0, with ties broken by A_1, and then by A_2 if the values of
 // A_0 and A_1 are identical.
+
+// FIXME: see comment above about LAGraph_Sort1.
 
 LAGRAPH_PUBLIC
 int LAGraph_Sort3
@@ -1643,7 +1654,7 @@ LAGRAPH_PUBLIC
 int LAGr_Init
 (
     // input:
-    GrB_Mode mode,      // mode for GrB_Init or GxB_Init
+    GrB_Mode mode,      // mode for GrB_Init
     void * (* user_malloc_function  ) (size_t),
     void * (* user_calloc_function  ) (size_t, size_t),
     void * (* user_realloc_function ) (void *, size_t),
@@ -1858,6 +1869,10 @@ int LAGr_PageRankGAP
 
 // This is an Advanced algorithm (G->nself_edges, G->out_degree,
 // G->is_symmetric_structure are required).
+
+// FIXME: we haven't used the following format, @param, etc, for all methods
+// in LAGraph.h or LAGraphX.h.  Should add this for all methods (algorithms
+// and utilities) here in LAGraph.h at least.
 
 /* Count the triangles in a graph. Advanced API
  *

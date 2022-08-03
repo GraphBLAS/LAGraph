@@ -494,7 +494,7 @@ int LAGraph_Matrix_IsEqual
 
 
 \begin{verbatim}
-int LAGraph_Matrix_IsEqual_op
+int LAGraph_Matrix_IsEqualOp
 (
     // output:
     bool *result,           // true if A == B, false if A != B or error
@@ -525,7 +525,7 @@ int LAGraph_Vector_IsEqual
 
 
 \begin{verbatim}
-int LAGraph_Vector_IsEqual_op
+int LAGraph_Vector_IsEqualOp
 (
     // output:
     bool *result,           // true if A == B, false if A != B or error
@@ -603,7 +603,7 @@ int LAGraph_TriangleCount
 int LAGr_Init
 (
     // input:
-    GrB_Mode mode,      // mode for GrB_Init or GxB_Init
+    GrB_Mode mode,      // mode for GrB_Init
     void * (* user_malloc_function  ) (size_t),
     void * (* user_calloc_function  ) (size_t, size_t),
     void * (* user_realloc_function ) (void *, size_t),

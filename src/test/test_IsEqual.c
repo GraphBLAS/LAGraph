@@ -159,10 +159,10 @@ void test_IsEqual (void)
         else if (atype == GrB_FP32  ) op = GrB_EQ_FP32   ;
         else if (atype == GrB_FP64  ) op = GrB_EQ_FP64   ;
 
-        OK (LAGraph_Matrix_IsEqual_op (&same, A, B, op, msg)) ;
+        OK (LAGraph_Matrix_IsEqualOp (&same, A, B, op, msg)) ;
         TEST_CHECK (same == isequal) ;
 
-        OK (LAGraph_Matrix_IsEqual_op (&same, A, A, op, msg)) ;
+        OK (LAGraph_Matrix_IsEqualOp (&same, A, A, op, msg)) ;
         TEST_CHECK (same == true) ;
 
         //----------------------------------------------------------------------
@@ -278,10 +278,10 @@ void test_IsEqual_brutal (void)
         else if (atype == GrB_FP32  ) op = GrB_EQ_FP32   ;
         else if (atype == GrB_FP64  ) op = GrB_EQ_FP64   ;
 
-        LG_BRUTAL (LAGraph_Matrix_IsEqual_op (&same, A, B, op, msg)) ;
+        LG_BRUTAL (LAGraph_Matrix_IsEqualOp (&same, A, B, op, msg)) ;
         TEST_CHECK (same == isequal) ;
 
-        LG_BRUTAL (LAGraph_Matrix_IsEqual_op (&same, A, A, op, msg)) ;
+        LG_BRUTAL (LAGraph_Matrix_IsEqualOp (&same, A, A, op, msg)) ;
         TEST_CHECK (same == true) ;
 
         //----------------------------------------------------------------------
@@ -355,7 +355,7 @@ void test_IsEqual_failures (void)
     TEST_CHECK (result == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
-    result = LAGraph_Matrix_IsEqual_op (&same, A, B, NULL, msg) ;
+    result = LAGraph_Matrix_IsEqualOp (&same, A, B, NULL, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
@@ -363,7 +363,7 @@ void test_IsEqual_failures (void)
     TEST_CHECK (result == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
-    result = LAGraph_Vector_IsEqual_op (&same, u, v, NULL, msg) ;
+    result = LAGraph_Vector_IsEqualOp (&same, u, v, NULL, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
     printf ("msg: %s\n", msg) ;
 
@@ -394,24 +394,24 @@ void test_Vector_IsEqual (void)
     setup ( ) ;
 
     bool same = false ;
-    OK (LAGraph_Vector_IsEqual_op (&same, NULL, NULL, GrB_EQ_BOOL, msg)) ;
+    OK (LAGraph_Vector_IsEqualOp (&same, NULL, NULL, GrB_EQ_BOOL, msg)) ;
     TEST_CHECK (same == true) ;
 
     OK (GrB_Vector_new (&u, GrB_BOOL, 3)) ;
     OK (GrB_Vector_new (&v, GrB_BOOL, 2)) ;
 
-    OK (LAGraph_Vector_IsEqual_op (&same, u, v, GrB_EQ_BOOL, msg)) ;
+    OK (LAGraph_Vector_IsEqualOp (&same, u, v, GrB_EQ_BOOL, msg)) ;
     TEST_CHECK (same == false) ;
 
     OK (GrB_free (&u)) ;
     OK (GrB_Vector_new (&u, GrB_BOOL, 2)) ;
 
-    OK (LAGraph_Vector_IsEqual_op (&same, u, v, GrB_EQ_BOOL, msg)) ;
+    OK (LAGraph_Vector_IsEqualOp (&same, u, v, GrB_EQ_BOOL, msg)) ;
     TEST_CHECK (same == true) ;
 
     OK (GrB_Vector_setElement (u, true, 0)) ;
     OK (GrB_Vector_setElement (v, true, 1)) ;
-    OK (LAGraph_Vector_IsEqual_op (&same, u, v, GrB_EQ_BOOL, msg)) ;
+    OK (LAGraph_Vector_IsEqualOp (&same, u, v, GrB_EQ_BOOL, msg)) ;
     TEST_CHECK (same == false) ;
 
     OK (LAGraph_Vector_IsEqual (&same, u, v, msg)) ;

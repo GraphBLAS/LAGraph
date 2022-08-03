@@ -274,7 +274,7 @@ GrB_Info LAGraph_BF_full_mxv
         // execute semiring on d and AT, and save the result to dtmp
         GRB_TRY (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, BF_lMIN_PLUSrhs_Tuple3,
             Atmp, d, GrB_NULL));
-        LG_TRY (LAGraph_Vector_IsEqual_op(&same, dtmp, d, BF_EQ_Tuple3, NULL));
+        LG_TRY (LAGraph_Vector_IsEqualOp (&same, dtmp, d, BF_EQ_Tuple3, NULL));
         if (!same)
         {
             GrB_Vector ttmp = dtmp;
@@ -291,7 +291,7 @@ GrB_Info LAGraph_BF_full_mxv
         // execute semiring again to check for negative-weight cycle
         GRB_TRY (GrB_mxv(dtmp, GrB_NULL, GrB_NULL, BF_lMIN_PLUSrhs_Tuple3,
             Atmp, d, GrB_NULL));
-        LG_TRY (LAGraph_Vector_IsEqual_op(&same, dtmp, d, BF_EQ_Tuple3, NULL));
+        LG_TRY (LAGraph_Vector_IsEqualOp (&same, dtmp, d, BF_EQ_Tuple3, NULL));
 
         // if d != dtmp, then there is a negative-weight cycle in the graph
         if (!same)

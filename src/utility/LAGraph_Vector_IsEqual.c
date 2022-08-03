@@ -19,7 +19,7 @@
 // If the two vectors are GrB_FP32, GrB_FP64, or related, and have NaNs, then
 // this function will return false, since NaN == NaN is false.  To check for
 // NaN equality (like isequalwithequalnans in MATLAB), use
-// LAGraph_Vector_IsEqual_op with a user-defined operator f(x,y) that returns
+// LAGraph_Vector_IsEqualOp with a user-defined operator f(x,y) that returns
 // true if x and y are both NaN.
 
 #define LG_FREE_WORK GrB_free (&C) ;
