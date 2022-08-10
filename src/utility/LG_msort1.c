@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_Sort1: sort a list of integers
+// LG_msort1: sort a list of integers
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
@@ -18,7 +18,7 @@
 #include "LG_internal.h"
 
 //------------------------------------------------------------------------------
-// prototype only needed for LAGraph_Sort1
+// prototype only needed for LG_msort1
 //------------------------------------------------------------------------------
 
 void LG_msort_1b_create_merge_tasks
@@ -309,10 +309,10 @@ static void LG_msort_1b_merge
 }
 
 //------------------------------------------------------------------------------
-// LAGraph_Sort1: parallel mergesort
+// LG_msort1: parallel mergesort
 //------------------------------------------------------------------------------
 
-int LAGraph_Sort1
+int LG_msort1
 (
     // input/output:
     int64_t *A_0,       // size n array

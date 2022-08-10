@@ -279,7 +279,7 @@ int LAGraph_cdlp
                                                        GrB_NULL, &X[nz], &nz, AT));
         }
 
-        LAGraph_Sort2((int64_t *) I, (int64_t *) X, nnz, NULL);
+        LG_msort2((int64_t *) I, (int64_t *) X, nnz, NULL);
 
         // save current labels for comparison by swapping L and L_prev
         GrB_Matrix L_swap = L;

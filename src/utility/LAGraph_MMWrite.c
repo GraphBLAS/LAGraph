@@ -484,7 +484,7 @@ int LAGraph_MMWrite
         ctype *X = NULL ;                                                   \
         LG_TRY (LAGraph_Malloc ((void **) &X, nvals, sizeof (ctype), msg)) ;\
         GRB_TRY (GrB_Matrix_extractTuples (I, J, X, &nvals, A)) ;           \
-        LG_TRY (LAGraph_Sort3 ((int64_t *) J, (int64_t *) I,                \
+        LG_TRY (LG_msort3 ((int64_t *) J, (int64_t *) I,                    \
             (int64_t *) K, nvals, msg)) ;                                   \
         for (int64_t k = 0 ; k < nvals ; k++)                               \
         {                                                                   \

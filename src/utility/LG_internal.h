@@ -393,12 +393,67 @@ static inline void LG_eslice
 //------------------------------------------------------------------------------
 
 // All of the LG_qsort_* functions are single-threaded, by design.  The
-// LAGraph_Sort* functions are parallel.  None of these sorting methods are
+// LG_msort* functions are parallel.  None of these sorting methods are
 // guaranteed to be stable.  These functions are contributed by Tim Davis, and
 // are derived from SuiteSparse:GraphBLAS.  Functions named LG_* are not
 // meant to be accessible by end users of LAGraph.
 
 #define LG_BASECASE (64 * 1024)
+
+//------------------------------------------------------------------------------
+// LG_msort1: sort array of size n
+//------------------------------------------------------------------------------
+
+// LG_msort1 sorts an int64_t array of size n in ascending order.
+
+int LG_msort1
+(
+    // input/output:
+    int64_t *A_0,       // size n array
+    // input:
+    const int64_t n,
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
+// LG_msort2: sort two arrays of size n
+//------------------------------------------------------------------------------
+
+// LG_msort2 sorts two int64_t arrays A of size n in ascending order.
+// The arrays are kept in the same order, where the pair (A_0 [k], A_1 [k]) is
+// treated as a single pair.  The pairs are sorted by the first value A_0,
+// with ties broken by A_1.
+
+int LG_msort2
+(
+    // input/output:
+    int64_t *A_0,       // size n array
+    int64_t *A_1,       // size n array
+    // input:
+    const int64_t n,
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
+// LG_msort3: sort three arrays of size n
+//------------------------------------------------------------------------------
+
+// LG_msort3 sorts three int64_t arrays A of size n in ascending order.
+// The arrays are kept in the same order, where the triplet (A_0 [k], A_1 [k],
+// A_2 [k]) is treated as a single triplet.  The triplets are sorted by the
+// first value A_0, with ties broken by A_1, and then by A_2 if the values of
+// A_0 and A_1 are identical.
+
+int LG_msort3
+(
+    // input/output:
+    int64_t *A_0,       // size n array
+    int64_t *A_1,       // size n array
+    int64_t *A_2,       // size n array
+    // input:
+    const int64_t n,
+    char *msg
+) ;
 
 void LG_qsort_1a    // sort array A of size 1-by-n
 (

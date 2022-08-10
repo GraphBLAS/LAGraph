@@ -33,10 +33,10 @@
 // See also the LAGraph_Version utility method, which returns these values.
 // These definitions are derived from LAGraph/CMakeLists.txt.
 
-#define LAGRAPH_DATE "Aug 3, 2022"
+#define LAGRAPH_DATE "Aug 10, 2022"
 #define LAGRAPH_VERSION_MAJOR  0
 #define LAGRAPH_VERSION_MINOR  9
-#define LAGRAPH_VERSION_UPDATE 30
+#define LAGRAPH_VERSION_UPDATE 31
 
 //==============================================================================
 // include files and helper macros
@@ -1515,74 +1515,6 @@ int LAGraph_Vector_IsEqualOp
     char *msg
 ) ;
 
-// FIXME: start here for next LAGraph meeting, Aug 10, 2022
-
-//------------------------------------------------------------------------------
-// LAGraph_Sort1: sort array of size n
-//------------------------------------------------------------------------------
-
-// LAGraph_Sort1 sorts an int64_t array of size n in ascending order.
-
-// FIXME: it would be possible to define a single LAGraph_Sort which takes in
-// 3 arrays of int64.  If an input array is NULL, it wouldn't take part in the
-// sort.  So LAGraph_Sort1 (A,n,msg) could be LAGraph_Sort(A,NULL,NULL,n,msg).
-
-LAGRAPH_PUBLIC
-int LAGraph_Sort1
-(
-    // input/output:
-    int64_t *A_0,       // size n array
-    // input:
-    const int64_t n,
-    char *msg
-) ;
-
-//------------------------------------------------------------------------------
-// LAGraph_Sort2: sort two arrays of size n
-//------------------------------------------------------------------------------
-
-// LAGraph_Sort2 sorts two int64_t arrays A of size n in ascending order.
-// The arrays are kept in the same order, where the pair (A_0 [k], A_1 [k]) is
-// treated as a single pair.  The pairs are sorted by the first value A_0,
-// with ties broken by A_1.
-
-// FIXME: see comment above about LAGraph_Sort1.
-
-LAGRAPH_PUBLIC
-int LAGraph_Sort2
-(
-    // input/output:
-    int64_t *A_0,       // size n array
-    int64_t *A_1,       // size n array
-    // input:
-    const int64_t n,
-    char *msg
-) ;
-
-//------------------------------------------------------------------------------
-// LAGraph_Sort3: sort three arrays of size n
-//------------------------------------------------------------------------------
-
-// LAGraph_Sort3 sorts three int64_t arrays A of size n in ascending order.
-// The arrays are kept in the same order, where the triplet (A_0 [k], A_1 [k],
-// A_2 [k]) is treated as a single triplet.  The triplets are sorted by the
-// first value A_0, with ties broken by A_1, and then by A_2 if the values of
-// A_0 and A_1 are identical.
-
-// FIXME: see comment above about LAGraph_Sort1.
-
-LAGRAPH_PUBLIC
-int LAGraph_Sort3
-(
-    // input/output:
-    int64_t *A_0,       // size n array
-    int64_t *A_1,       // size n array
-    int64_t *A_2,       // size n array
-    // input:
-    const int64_t n,
-    char *msg
-) ;
-
 //==============================================================================
 // LAGraph Basic algorithms
 //==============================================================================
@@ -1708,6 +1640,8 @@ int LAGr_SampleDegree
     uint64_t seed,          // random number seed
     char *msg
 ) ;
+
+// FIXME: start here for next LAGraph meeting, Aug 17, 2022
 
 //------------------------------------------------------------------------------
 // LAGr_BreadthFirstSearch: breadth-first search

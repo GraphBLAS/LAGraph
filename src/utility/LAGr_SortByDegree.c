@@ -150,7 +150,7 @@ int LAGr_SortByDegree
     // sort by degrees, with ties by node id
     //--------------------------------------------------------------------------
 
-    LG_TRY (LAGraph_Sort2 (D, P, n, msg)) ;
+    LG_TRY (LG_msort2 (D, P, n, msg)) ;
 
     //--------------------------------------------------------------------------
     // free workspace and return result

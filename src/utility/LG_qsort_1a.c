@@ -11,8 +11,6 @@
 
 //------------------------------------------------------------------------------
 
-// This function is not user-callable.  Use LAGraph_Sort1 instead.
-
 #include "LG_internal.h"
 
 // returns true if A [a] < B [b]
