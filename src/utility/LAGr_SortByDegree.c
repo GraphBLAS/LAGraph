@@ -50,7 +50,7 @@
 int LAGr_SortByDegree
 (
     // output:
-    int64_t **P_handle,     // P is returned as a permutation vector of size n
+    int64_t **P_handle,     // permutation vector of size n
     // input:
     const LAGraph_Graph G,  // graph of n nodes
     bool byout,             // if true, sort G->out_degree, else G->in_degree

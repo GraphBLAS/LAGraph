@@ -120,7 +120,7 @@ int LAGr_Betweenness
 
     GrB_Index n = 0 ;                   // # nodes in the graph
 
-    LG_ASSERT (centrality != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (centrality != NULL && sources != NULL, GrB_NULL_POINTER) ;
     (*centrality) = NULL ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
 

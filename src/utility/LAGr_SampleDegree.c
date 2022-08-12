@@ -64,7 +64,8 @@ int LAGr_SampleDegree
     // allocate workspace
     //--------------------------------------------------------------------------
 
-    LG_TRY (LAGraph_Malloc ((void **) &samples, nsamples, sizeof (int64_t), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &samples, nsamples, sizeof (int64_t),
+        msg)) ;
 
     //--------------------------------------------------------------------------
     // pick nsamples nodes at random and determine their degree

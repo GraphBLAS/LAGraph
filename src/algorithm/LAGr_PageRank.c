@@ -65,7 +65,7 @@ int LAGr_PageRank
     LG_CLEAR_MSG ;
     GrB_Vector r = NULL, d = NULL, t = NULL, w = NULL, d1 = NULL ;
     GrB_Vector sink = NULL, rsink = NULL ;
-    LG_ASSERT (centrality != NULL, GrB_NULL_POINTER) ;
+    LG_ASSERT (centrality != NULL && iters != NULL, GrB_NULL_POINTER) ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     GrB_Matrix AT ;
     if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||

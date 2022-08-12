@@ -11,6 +11,11 @@
 
 //------------------------------------------------------------------------------
 
+// Unlike all other LAGraph functions, this function does not return an error
+// code as an int, nor does it have a char *msg parameter for error messages.
+// It simply returns the current wall clock time, as a double value, indicating
+// the amount of time passed in seconds since some fixed point in the past.
+
 // Example usage:
 
 /*

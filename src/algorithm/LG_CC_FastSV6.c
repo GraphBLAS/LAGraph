@@ -391,10 +391,13 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         GrB_Index Tj_size = nvals * sizeof (GrB_Index) ;
         GrB_Index Tx_size = sizeof (bool) ;
         LG_TRY (LAGraph_Malloc ((void **) &Tp, n+1, sizeof (GrB_Index), msg)) ;
-        LG_TRY (LAGraph_Malloc ((void **) &Tj, nvals, sizeof (GrB_Index), msg)) ;
+        LG_TRY (LAGraph_Malloc ((void **) &Tj, nvals, sizeof (GrB_Index),
+            msg)) ;
         LG_TRY (LAGraph_Calloc ((void **) &Tx, 1, sizeof (bool), msg)) ;
-        LG_TRY (LAGraph_Malloc ((void **) &range, nthreads + 1, sizeof (int64_t), msg)) ;
-        LG_TRY (LAGraph_Calloc ((void **) &count, nthreads + 1, sizeof (GrB_Index), msg));
+        LG_TRY (LAGraph_Malloc ((void **) &range, nthreads + 1,
+            sizeof (int64_t), msg)) ;
+        LG_TRY (LAGraph_Calloc ((void **) &count, nthreads + 1,
+            sizeof (GrB_Index), msg)) ;
 
         //----------------------------------------------------------------------
         // define parallel tasks to construct T
@@ -485,8 +488,10 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         #define NEXT(x) ((x + 23) & (HASH_SIZE-1))
 
         // allocate and initialize the hash table
-        LG_TRY (LAGraph_Malloc ((void **) &ht_key, HASH_SIZE, sizeof (GrB_Index), msg)) ;
-        LG_TRY (LAGraph_Calloc ((void **) &ht_count, HASH_SIZE, sizeof (int), msg)) ;
+        LG_TRY (LAGraph_Malloc ((void **) &ht_key, HASH_SIZE,
+            sizeof (GrB_Index), msg)) ;
+        LG_TRY (LAGraph_Calloc ((void **) &ht_count, HASH_SIZE,
+            sizeof (int), msg)) ;
         for (int k = 0 ; k < HASH_SIZE ; k++)
         {
             ht_key [k] = UINT64_MAX ;

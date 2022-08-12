@@ -21,14 +21,10 @@
 
 #include "LG_internal.h"
 
-//------------------------------------------------------------------------------
-// LAGraph_Matrix_IsEqual: compare using GrB_EQ_type operator
-//------------------------------------------------------------------------------
-
 int LAGraph_Matrix_IsEqual
 (
     // output:
-    bool *result,       // true if A == B, false if A != B or error
+    bool *result,           // true if A == B, false if A != B or error
     // input:
     const GrB_Matrix A,
     const GrB_Matrix B,
@@ -107,9 +103,6 @@ int LAGraph_Matrix_IsEqual
     GrB_Type type ;
     LG_TRY (LAGraph_TypeFromName (&type, atype_name, msg)) ;
     GrB_BinaryOp op = NULL ;
-    // LAGraph_BinaryOp_Picker (&op, "==", type) ;
-    // LAGraph_BinaryOp_Picker (&op, "+", type) ;
-    // LAGraph_BinaryOp_Picker (&op, "plus", type) ;
     if      (type == GrB_BOOL  ) op = GrB_EQ_BOOL   ;
     else if (type == GrB_INT8  ) op = GrB_EQ_INT8   ;
     else if (type == GrB_INT16 ) op = GrB_EQ_INT16  ;

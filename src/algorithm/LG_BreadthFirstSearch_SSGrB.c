@@ -44,7 +44,6 @@
 
 #include "LG_internal.h"
 
-//****************************************************************************
 int LG_BreadthFirstSearch_SSGrB
 (
     GrB_Vector *level,

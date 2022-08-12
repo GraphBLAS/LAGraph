@@ -300,14 +300,14 @@ int LAGraph_MMWrite
         }
 
         //----------------------------------------------------------------------
-        // check for Hermitian
+        // check for Hermitian (not yet supported)
         //----------------------------------------------------------------------
 
         #if 0
         if (MM_type == MM_complex && MM_storage == MM_general)
         {
-            LG_TRY (LAGraph_isall (&isequal, A, AT,
-                LAGraph_HERMITIAN_ComplexFP64)) ;
+            LG_TRY (LAGraph_Matrix_IsEqualOp (&isequal, A, AT,
+                LAGraph_HERMITIAN_ComplexFP64, msg)) ;
             if (isequal)
             {
                 MM_storage = MM_hermitian ;
