@@ -116,12 +116,12 @@
 // an error, and positive values denote success but with some kind of
 // algorithm-specific note or warning.
 
-// In addition, all LAGraph functions also have a final parameter that is a
+// In addition, all LAGraph functions also have a final msg parameter that is a
 // pointer to a user-allocated string in which an algorithm-specific error
-// message can be returned.  If NULL, no error message is returned.  This is
-// not itself an error condition, it just indicates that the caller does not
-// need the message returned.  If the message string is provided but no error
-// occurs, an empty string is returned.
+// message can be returned.  If msg is NULL, no error message is returned.
+// This is not itself an error condition, it just indicates that the caller
+// does not need the message returned.  If the message string is provided but
+// no error occurs, an empty string is returned.
 
 // LAGRAPH_MSG_LEN: The maximum required length of a message string
 #define LAGRAPH_MSG_LEN 256
@@ -201,9 +201,9 @@
 //  LAGRAPH_NO_SELF_EDGES_ALLOWED:  some methods requires that the graph have
 //      no self edges, which correspond to the entries on the diagonal of the
 //      adjacency matrix.  If the G->nself_edges cached property is nonzero or
-//      unknown, this error condition is returned.  Use LAGraph_Cached_NSelfEdges to
-//      compute G->nself_edges, or LAGraph_DeleteSelfEdges to remove all diagonal
-//      entries from G->A.
+//      unknown, this error condition is returned.  Use
+//      LAGraph_Cached_NSelfEdges to compute G->nself_edges, or
+//      LAGraph_DeleteSelfEdges to remove all diagonal entries from G->A.
 
 //  LAGRAPH_CONVERGENCE_FAILURE:  an iterative process failed to converge to
 //      a good solution.
@@ -224,19 +224,15 @@
 // LAGraph warnings:
 #define LAGRAPH_CACHE_NOT_NEEDED                ( 1000)
 
-// @retval GrB_SUCCESS if successful
-// @retval a negative GrB_Info value on error (in range -999 to -1)
-// @retval a positive GrB_Info value if successful but with extra information
+// Summary of return values for all LAGraph functions that return int:
+//   * GrB_SUCCESS if successful
+//   * a negative GrB_Info value on error (in range -999 to -1)
+//   * a positive GrB_Info value if successful but with extra information
 //         (in range 1 to 999)
-
-// @retval -1999 to -1000: a common LAGraph-specific error, given in the list
-//          above
-// @retval 1000 to 1999: if successful, with extra LAGraph-specific information
-
-// @retval <= -2000 an LAGraph error specific to a particular LAGraph method
-//         >= 2000
-
-// @param[in,out] msg   any error messages
+//   * -1999 to -1000: a common LAGraph-specific error, see list above
+//   * 1000 to 1999: if successful, with extra LAGraph-specific information
+//   * <= -2000: an LAGraph error specific to a particular LAGraph method
+//   * >= 2000: an LAGraph warning specific to a particular LAGraph method
 
 //------------------------------------------------------------------------------
 // LAGRAPH_TRY: try an LAGraph method and check for errors
@@ -342,6 +338,20 @@ LAGRAPH_PUBLIC void   (* LAGraph_Free_function    ) (void *)         ;
 // LAGraph_Malloc:  allocate a block of memory (wrapper for malloc)
 //------------------------------------------------------------------------------
 
+/** LAGraph_Malloc: allocates a block of memory.  Uses the ANSI C11 malloc
+ * function if LAGraph_Init was used, or the user_malloc_function passed to
+ * LAGr_Init.
+ *
+ * @param[out] p        handle to allocated memory
+ * @param[in] nitems    number of items to allocate, each of size size_of_item
+ * @param[in] size_of_item  bytes allocted = nitems*size_of_item
+ * @param[in,out] msg   any error messages
+ *
+ * @retval GrB_SUCCESS if successful.
+ * @retval GrB_OUT_OF_MEMORY if out of memory.
+ * @retval GrB_NULL_POINTER if p is NULL on input.
+ */
+
 LAGRAPH_PUBLIC
 int LAGraph_Malloc
 (
@@ -357,6 +367,21 @@ int LAGraph_Malloc
 // LAGraph_Calloc:  allocate a block of memory (wrapper for calloc)
 //------------------------------------------------------------------------------
 
+/** LAGraph_Calloc: allocates a block of memory and sets it to zero.  Uses the
+ * ANSI C11 malloc and memset functions if LAGraph_Init was used or if NULL
+ * was passed to LAGr_Init for the user_calloc_function, or the non-NULL
+ * user_calloc_function passed to LAGr_Init otherwise.
+ *
+ * @param[out] p        handle to allocated memory
+ * @param[in] nitems    number of items to allocate, each of size size_of_item
+ * @param[in] size_of_item  bytes allocted = nitems*size_of_item
+ * @param[in,out] msg   any error messages
+ *
+ * @retval GrB_SUCCESS if successful.
+ * @retval GrB_OUT_OF_MEMORY if out of memory.
+ * @retval GrB_NULL_POINTER if p is NULL on input.
+ */
+
 LAGRAPH_PUBLIC
 int LAGraph_Calloc
 (
@@ -371,6 +396,28 @@ int LAGraph_Calloc
 //------------------------------------------------------------------------------
 // LAGraph_Realloc: reallocate a block of memory (wrapper for realloc)
 //------------------------------------------------------------------------------
+
+/** LAGraph_Realloc: reallocates a block of memory.  Uses the ANSI C11 malloc,
+ * memcpy, and free functions if LAGraph_Init was used or if NULL was passed to
+ * LAGr_Init for the user_realloc_function, or the non-NULL
+ * user_realloc_function passed to LAGr_Init otherwise.  Note that unlike the
+ * ANSI C11 realloc function, this function requires the old size of block to
+ * be provided on input (nitems_old).  This size must be exact; behavior is
+ * undefined if the incorrect size is given.  The value nitems_old*size_of_item
+ * must be the same as nitems*size_of_item when the block of memory was
+ * allocated by LAGraph_Malloc or LAGraph_Calloc, or equal to
+ * nitems_new*size_of_item from the last call to LAGraph_Realloc.
+ *
+ * @param[in,out] p     handle to allocated memory
+ * @param[in] nitems_new    new number of items to allocate
+ * @param[in] nitems_old    prior number of items allocated
+ * @param[in] size_of_item  size of each item
+ * @param[in,out] msg   any error messages
+ *
+ * @retval GrB_SUCCESS if successful.
+ * @retval GrB_OUT_OF_MEMORY if out of memory.
+ * @retval GrB_NULL_POINTER if p is NULL on input.
+ */
 
 LAGRAPH_PUBLIC
 int LAGraph_Realloc
@@ -388,10 +435,18 @@ int LAGraph_Realloc
 // LAGraph_Free:  free a block of memory (wrapper for free)
 //------------------------------------------------------------------------------
 
-// If LAGraph_Malloc (&p, ...) is the pointer to the allocated block of memory,
-// LAGraph_Free (&p, ...) is the method to free it.  The parameter is passed as
-// &p so that p can be set to NULL on return, to guard against double-free.
-// LAGraph_Free does nothing if &p or p are NULL on input.
+/** LAGraph_Free: frees a block of memory.  The block must have been previously
+ * allocated by LAGraph_Malloc or LAGraph_Calloc.  If LAGraph_Malloc (&p, ...)
+ * is the pointer to the allocated block of memory, LAGraph_Free (&p, ...) is
+ * the method to free it.  The parameter is passed as &p so that p can be set
+ * to NULL on return, to guard against double-free.  LAGraph_Free does nothing
+ * if &p or p are NULL on input; this is not an error.
+ *
+ * @param[in,out] p     handle to allocated memory
+ * @param[in,out] msg   any error messages
+ *
+ * @retval GrB_SUCCESS in all cases.
+ */
 
 LAGRAPH_PUBLIC
 int LAGraph_Free            // free a block of memory and set p to NULL
@@ -417,19 +472,22 @@ int LAGraph_Free            // free a block of memory and set p to NULL
 // LAGraph_Kind: the kind of a graph
 //------------------------------------------------------------------------------
 
-// Currently, only two types of graphs are supported: undirected graphs and
-// directed graphs.  Edge weights are assumed to be present.  Unweighted graphs
-// can be represented by setting all entries present in the sparsity structure
-// to the same value, typically 1.  Additional types of graphs will be added in
-// the future.
+/** LAGraph_Kind: the kind of a graph.  Currently, only two types of graphs are
+ * supported: undirected graphs and directed graphs.  Edge weights are assumed
+ * to be present.  Unweighted graphs can be represented by setting all entries
+ * present in the sparsity structure to the same value, typically 1.
+ * Additional types of graphs will be added in the future.
+ */
 
 typedef enum
 {
-    LAGraph_ADJACENCY_UNDIRECTED = 0, // A is square and symmetric; both upper
-                                      // and lower triangular parts are
-                                      // present.  A(i,j) is the edge (i,j)
+    LAGraph_ADJACENCY_UNDIRECTED = 0, ///< undirected graph.
+        // G->A is square and symmetric; both upper and lower triangular parts
+        // are present.  A(i,j) is the edge (i,j).  Results are undefined if
+        // A is unsymmetric.
 
-    LAGraph_ADJACENCY_DIRECTED = 1,   // A is square; A(i,j) is the edge (i,j)
+    LAGraph_ADJACENCY_DIRECTED = 1,   ///< directed graph.
+        // G->A is square; A(i,j) is the edge (i,j).
 
     // possible future kinds of graphs:
     // LAGraph_ADJACENCY_UNDIRECTED_UNWEIGHTED
@@ -445,7 +503,7 @@ typedef enum
     // LAGraph_HYPERGRAPH_DIRECTED
     // ...
 
-    LAGraph_KIND_UNKNOWN = LAGRAPH_UNKNOWN      // the graph kind is unknown
+    LAGraph_KIND_UNKNOWN = LAGRAPH_UNKNOWN  ///< unknown kind of graph (-1).
 }
 LAGraph_Kind ;
 
@@ -453,11 +511,14 @@ LAGraph_Kind ;
 // LAGraph_Boolean: true, false, or unknown
 //------------------------------------------------------------------------------
 
+/** LAGraph_Boolean: a boolean value (true or false) or unknown (-1).
+ */ 
+
 typedef enum
 {
-    LAGraph_FALSE = 0,
-    LAGraph_TRUE = 1,
-    LAGraph_BOOLEAN_UNKNOWN = LAGRAPH_UNKNOWN
+    LAGraph_FALSE = 0,      ///< the Boolean value is known to be false.
+    LAGraph_TRUE = 1,       ///< the Boolean value is known to be true.
+    LAGraph_BOOLEAN_UNKNOWN = LAGRAPH_UNKNOWN   ///< Boolean value is unknown.
 }
 LAGraph_Boolean ;
 
@@ -465,24 +526,25 @@ LAGraph_Boolean ;
 // LAGraph_State: value, bound, or unknown
 //------------------------------------------------------------------------------
 
-// LAGraph_State describes the status of a cached property of a graph.  If the
-// cached property is computed in floating-point arithmetic, it may have been
-// computed with roundoff error, but it may still be declared as "value" if the
-// roundoff error is expected to be small, or if the cached property was
-// computed as carefully as possible (to within reasonable roundoff error).
-
-// The "bound" state indicates that the cached property is an upper or lower
-// bound, depending on the particular cached property.  If computed in
-// floating-point arithmetic, an "upper bound" cached property may be actually
-// slightly lower than the actual upper bound, because of floating-point
-// roundoff.
+/** LAGraph_State describes the status of a cached property of a graph.  If the
+ * cached property is computed in floating-point arithmetic, it may have been
+ * computed with roundoff error, but it may still be declared as "value" if the
+ * roundoff error is expected to be small, or if the cached property was
+ * computed as carefully as possible (to within reasonable roundoff error).
+ * The "bound" state indicates that the cached property is an upper or lower
+ * bound, depending on the particular cached property.  If computed in
+ * floating-point arithmetic, an "upper bound" cached property may be actually
+ * slightly lower than the actual upper bound, because of floating-point
+ * roundoff.
+ */
 
 typedef enum
 {
-    LAGraph_VALUE = 0,  // cached property is a known value (ignoring roundoff)
-    LAGraph_BOUND = 1,  // cached property is a bound (upper or lower,
-                        // depending on the particular cached property)
-    LAGraph_STATE_UNKNOWN = LAGRAPH_UNKNOWN,
+    LAGraph_VALUE = 0,  ///< cached property is a known value.
+    LAGraph_BOUND = 1,  ///< cached property is a bound.
+        // The bound is upper or lower, depending on the particular cached
+        // property.
+    LAGraph_STATE_UNKNOWN = LAGRAPH_UNKNOWN,    ///< the property is unknown.
 }
 LAGraph_State ;
 
@@ -490,25 +552,25 @@ LAGraph_State ;
 // LAGraph_Graph: the primary graph data structure of LAGraph
 //------------------------------------------------------------------------------
 
-// The LAGraph_Graph object contains a GrB_Matrix A as its primary component.
-// For graphs represented with adjacency matrices, A(i,j) denotes the edge
-// (i,j).  Unlike GrB_* objects in GraphBLAS, the LAGraph_Graph data structure
-// is not opaque.  User applications have full access to its contents.
-
-// An LAGraph_Graph G contains two kinds of components:
-
-// (1) primary components of the graph, which fully define the graph:
-//      A           the adjacency matrix of the graph
-//      kind        the kind of graph (undirected, directed, bipartite, ...)
-
-// (2) cached properties of the graph, which can be recreated any time:
-//      AT          AT = A'
-//      out_degree  out_degree(i) = # of entries in A(i,:)
-//      in_degree   in_degree(j) = # of entries in A(:,j)
-//      is_symmetric_structure: true if the structure of A is symmetric
-//      nself_edges the number of entries on the diagonal of A
-//      emin        minimum edge weight
-//      emax        maximum edge weight
+/** LAGraph_Graph: a representation of a graph.  The object G contains a
+ * GrB_Matrix G->A as its primary component.  For graphs represented with
+ * adjacency matrices, A(i,j) denotes the edge (i,j).  Unlike GrB_* objects in
+ * GraphBLAS, the LAGraph_Graph data structure is not opaque.  User
+ * applications have full access to its contents.  
+ *
+ * An LAGraph_Graph G contains two kinds of components:
+ *  (1) primary components of the graph, which fully define the graph:
+ *      A           the adjacency matrix of the graph
+ *      kind        the kind of graph (undirected, directed, bipartite, ...)
+ *  (2) cached properties of the graph, which can be recreated any time:
+ *      AT          AT = A'
+ *      out_degree  out_degree(i) = # of entries in A(i,:)
+ *      in_degree   in_degree(j) = # of entries in A(:,j)
+ *      is_symmetric_structure: true if the structure of A is symmetric
+ *      nself_edges the number of entries on the diagonal of A
+ *      emin        minimum edge weight
+ *      emax        maximum edge weight
+ */
 
 struct LAGraph_Graph_struct
 {
@@ -517,8 +579,8 @@ struct LAGraph_Graph_struct
     // primary components of the graph
     //--------------------------------------------------------------------------
 
-    GrB_Matrix   A;          // the adjacency matrix of the graph
-    LAGraph_Kind kind;       // the kind of graph
+    GrB_Matrix  A ;         // the adjacency matrix of the graph
+    LAGraph_Kind kind ;     // the kind of graph
 
     // possible future components:
     // multigraph ..
@@ -613,11 +675,19 @@ typedef struct LAGraph_Graph_struct *LAGraph_Graph ;
 // LAGraph_Init: start GraphBLAS and LAGraph
 //------------------------------------------------------------------------------
 
-// This method must be called before calling any other GrB* or LAGraph* method.
-// It initializes GraphBLAS with GrB_init and then performs LAGraph-specific
-// initializations.  In particular, the LAGraph semirings listed below are
-// created.  GrB_init can also safely be called before calling LAGr_Init
-// or LAGraph_Init.
+/** LAGraph_Init: initializes GraphBLAS and LAGraph.  This method must be
+ * called before calling any other GrB* or LAGraph* method.  It initializes
+ * GraphBLAS with GrB_init and then performs LAGraph-specific initializations.
+ * In particular, the LAGraph semirings listed below are created.  GrB_init can
+ * also safely be called before calling LAGr_Init or LAGraph_Init.  
+ *
+ * @param[in,out] msg   any error messages
+ *
+ * @retval GrB_SUCCESS if successful.
+ * @retval GrB_INVALID_VALUE if LAGraph_Init or LAGr_Init has already been
+ *      called by the user application.
+ * @returns any GraphBLAS errors that may have been encountered
+ */
 
 LAGRAPH_PUBLIC
 int LAGraph_Init
@@ -689,19 +759,30 @@ LAGRAPH_PUBLIC GrB_Semiring
 // LAGraph_Version: determine the version of LAGraph
 //------------------------------------------------------------------------------
 
-// The version number and date can also be obtained via compile-time constants
-// from LAGraph.h.  However, it is possible to compile a user application that
-// #includes one version of LAGraph.h and then links with another version of
-// the LAGraph library later on, so the version number and date may differ from
-// the compile-time constants.
-
-// The LAGraph_Version method allows the library itself to be
-// queried, after it is linked in with the user application.
-
-// The version_number array is set to LAGRAPH_VERSION_MAJOR,
-// LAGRAPH_VERSION_MINOR, and LAGRAPH_VERSION_UPDATE, in that order.
-// The LAGRAPH_DATE string is copied into the user-provided version_date
-// string, and is null-terminated.
+/** LAGraph_Version: determines the version of LAGraph.  The version number and
+ * date can also be obtained via compile-time constants from LAGraph.h.
+ * However, it is possible to compile a user application that #includes one
+ * version of LAGraph.h and then links with another version of the LAGraph
+ * library later on, so the version number and date may differ from the
+ * compile-time constants.
+ *
+ * The LAGraph_Version method allows the library itself to be queried, after it
+ * is linked in with the user application.
+ *
+ * The version_number array is set to LAGRAPH_VERSION_MAJOR,
+ * LAGRAPH_VERSION_MINOR, and LAGRAPH_VERSION_UPDATE, in that order.  The
+ * LAGRAPH_DATE string is copied into the user-provided version_date string,
+ * and is null-terminated.  If 
+ *
+ * @param[out] version_number   an array of size 3; with the major, minor,
+ *      and update versions of LAGraph, in that order.
+ * @param[out] version_date     an array of size >= LAGraph_MSG_LEN, returned
+ *      with the date of this version of LAGraph.
+ * @param[in,out] msg   any error messages
+ *
+ * @retval GrB_SUCCESS if successful.
+ * @retval GrB_NULL_POINTER if version_number or version_date are NULL.
+ */
 
 LAGRAPH_PUBLIC
 int LAGraph_Version
@@ -720,6 +801,8 @@ int LAGraph_Version
 // GrB_finalize and frees any LAGraph objects created by LAGraph_Init or
 // LAGr_Init.  After calling this method, no LAGraph or GraphBLAS methods
 // may be used.
+
+// FIXME: @ is here
 
 LAGRAPH_PUBLIC
 int LAGraph_Finalize
@@ -987,9 +1070,11 @@ int LAGraph_SetNumThreads
 // LAGraph_WallClockTime: return the current wall clock time
 //------------------------------------------------------------------------------
 
-// LAGraph_WallClockTime returns the current wall clock time.  Normally, this
-// is simply a wrapper for omp_get_wtime, if OpenMP is in use.  Otherwise, an
-// OS-specific timing function is called.
+/** LAGraph_WallClockTime returns the current wall clock time.  Normally, this
+ * is simply a wrapper for omp_get_wtime, if OpenMP is in use.  Otherwise, an
+ * OS-specific timing function is called.
+ * @returns the current wall clock time since some fixed time in the past.
+ */
 
 LAGRAPH_PUBLIC
 double LAGraph_WallClockTime     // returns omp_get_wtime(), or other timer
@@ -1001,7 +1086,8 @@ double LAGraph_WallClockTime     // returns omp_get_wtime(), or other timer
 // LAGraph_MMRead: read a matrix in MatrixMarket format
 //------------------------------------------------------------------------------
 
-/* The file format used here is compatible with all variations of the Matrix
+/** LAGraph_MMRead: read a matrix in MatrixMarket format.
+ * The file format used here is compatible with all variations of the Matrix
  * Market "coordinate" and "array" format (http://www.nist.gov/MatrixMarket),
  * for sparse and dense matrices repsectively.  The format is fully described
  * in LAGraph/Doc/MatrixMarket.pdf, and summarized here (with extensions for
@@ -1470,7 +1556,7 @@ int LAGraph_Matrix_IsEqualOp
  * @retval GrB_SUCCESS          if completed successfully (equal or not)
  * @retval GrB_NULL_POINTER     A, result or type is NULL
  * @retval GrB_NOT_IMPLEMENTED  type is not supported
- * @return Any GraphBLAS errors that may have been encountered
+ * @returns any GraphBLAS errors that may have been encountered
  */
 LAGRAPH_PUBLIC
 int LAGraph_Vector_IsEqual
@@ -1570,17 +1656,32 @@ int LAGraph_TriangleCount
 // LAGr_Init: start GraphBLAS and LAGraph, and set malloc/etc functions
 //------------------------------------------------------------------------------
 
-// LAGr_Init is identical to LAGraph_Init, except that it allows the user
-// application to specify the GraphBLAS mode.  It also provides four memory
-// management functions, replacing the standard malloc, calloc, realloc, and
-// free.  The functions user_malloc_function, user_calloc_function,
-// user_realloc_function, and user_free_function have the same signature as the
-// ANSI C malloc, calloc, realloc, and free functions, respectively.
-
-// Only user_malloc_function and user_free_function are required.
-// user_calloc_function may be NULL, in which case LAGraph_Calloc uses
-// LAGraph_Malloc and memset.  Likewise, user_realloc_function may be NULL, in
-// which case LAGraph_Realloc uses LAGraph_Malloc, memcpy, and LAGraph_Free.
+/** LAGraph_Init: initializes GraphBLAS and LAGraph.  LAGr_Init is identical to
+ * LAGraph_Init, except that it allows the user application to specify the
+ * GraphBLAS mode.  It also provides four memory management functions,
+ * replacing the standard malloc, calloc, realloc, and free.  The functions
+ * user_malloc_function, user_calloc_function, user_realloc_function, and
+ * user_free_function have the same signature as the ANSI C malloc, calloc,
+ * realloc, and free functions, respectively.  Only user_malloc_function and
+ * user_free_function are required.  user_calloc_function may be NULL, in which
+ * case LAGraph_Calloc uses LAGraph_Malloc and memset.  Likewise,
+ * user_realloc_function may be NULL, in which case LAGraph_Realloc uses
+ * LAGraph_Malloc, memcpy, and LAGraph_Free.  
+ *
+ * @param[in] mode                      the mode for GrB_Init
+ * @param[in] user_malloc_function      pointer to a malloc function
+ * @param[in] user_calloc_function      pointer to a calloc function, or NULL
+ * @param[in] user_realloc_function     pointer to a realalloc function, or NULL
+ * @param[in] user_free_function        pointer to a free function
+ * @param[in,out] msg                   any error messages
+ *
+ * @retval GrB_SUCCESS if successful.
+ * @retval GrB_INVALID_VALUE if LAGraph_Init or LAGr_Init has already been
+ *      called by the user application.
+ * @retval GrB_NULL_POINTER if user_malloc_function or user_free_function
+ *      are NULL.
+ * @returns any GraphBLAS errors that may have been encountered
+ */
 
 LAGRAPH_PUBLIC
 int LAGr_Init
