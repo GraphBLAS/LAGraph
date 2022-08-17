@@ -237,14 +237,15 @@ void test_BreadthFirstSearch_invalid_src(void)
     GrB_Index n;
     TEST_CHECK(0 == GrB_Matrix_nrows(&n, (G->A)));
 
-    GrB_Vector parent    = NULL;
+    GrB_Vector parent = NULL ;
+    GrB_Vector level  = NULL ;
 
-    retval = LAGr_BreadthFirstSearch(NULL, NULL, G, n, msg);
-    TEST_CHECK(retval == 0);
+    retval = LAGr_BreadthFirstSearch(&level, NULL, G, n, msg);
+    TEST_CHECK(retval == GrB_INVALID_INDEX);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LG_BreadthFirstSearch_vanilla(NULL, NULL, G, n, msg);
-    TEST_CHECK(retval == 0);
+    retval = LG_BreadthFirstSearch_vanilla(&level, NULL, G, n, msg);
+    TEST_CHECK(retval == GrB_INVALID_INDEX);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
     retval = LAGr_BreadthFirstSearch(NULL, &parent, G, n, msg);
@@ -264,20 +265,26 @@ void test_BreadthFirstSearch_neither(void)
     setup();
     int retval;
 
+    printf ("\nTest level and parent both NULL:\n") ;
+
+    LAGraph_PrintLevel pr = LAGraph_COMPLETE_VERBOSE ;
+    retval = LAGraph_Graph_Print (G, pr, stdout, msg) ;
+    TEST_CHECK(retval == GrB_SUCCESS);
+
     retval = LAGr_BreadthFirstSearch(NULL, NULL, G, 0, msg);
-    TEST_CHECK(retval == 0);
+    TEST_CHECK(retval == GrB_NULL_POINTER);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
     retval = LG_BreadthFirstSearch_vanilla(NULL, NULL, G, 0, msg);
-    TEST_CHECK(retval == 0);
+    TEST_CHECK(retval == GrB_NULL_POINTER);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
     retval = LAGr_BreadthFirstSearch(NULL, NULL, G, 0, msg);
-    TEST_CHECK(retval == 0);
+    TEST_CHECK(retval == GrB_NULL_POINTER);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
     retval = LG_BreadthFirstSearch_vanilla(NULL, NULL, G, 0, msg);
-    TEST_CHECK(retval == 0);
+    TEST_CHECK(retval == GrB_NULL_POINTER);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
     teardown();

@@ -33,10 +33,10 @@
 // See also the LAGraph_Version utility method, which returns these values.
 // These definitions are derived from LAGraph/CMakeLists.txt.
 
-#define LAGRAPH_DATE "Aug 12, 2022"
+#define LAGRAPH_DATE "Aug 17, 2022"
 #define LAGRAPH_VERSION_MAJOR  0
 #define LAGRAPH_VERSION_MINOR  9
-#define LAGRAPH_VERSION_UPDATE 32
+#define LAGRAPH_VERSION_UPDATE 33
 
 //==============================================================================
 // include files and helper macros
@@ -2092,15 +2092,13 @@ int LAGr_SampleDegree
     char *msg
 ) ;
 
-// FIXME: start here for next LAGraph meeting, Aug 17, 2022
-
 //------------------------------------------------------------------------------
 // LAGr_BreadthFirstSearch: breadth-first search
 //------------------------------------------------------------------------------
 
 /** LAGr_BreadthFirstSearch: breadth-first search of a graph, computing the
  * breadth-first-search tree and/or the level of the nodes encountered.  This
- * is an Advanced algorithm.  G->AT and G->rowdgree are required to use the
+ * is an Advanced algorithm.  G->AT and G->out_degree are required to use the
  * fastest push/pull method when using SuiteSparse:GraphBLAS.  If these cached
  * properties are not present, or if a vanilla GraphBLAS library is being used,
  * then a push-only method is used (which can be slower).  G is not modified;
@@ -2109,20 +2107,23 @@ int LAGr_SampleDegree
  * @param[out]    level      If non-NULL on input, on successful return, it
  *                           contains the levels of each vertex reached. The
  *                           src vertex is assigned level 0. If a vertex i is
- *                           not reached, parent(i) is not present.  The level
+ *                           not reached, level(i) is not present.  The level
  *                           vector is not computed if NULL.
  * @param[out]    parent     If non-NULL on input, on successful return, it
- *                           contains parent vertex IDs for each vertex reached.
- *                           The src vertex will have itself as its parent. If a
- *                           vertex i is not reached, parent(i) is not present.
- *                           The parent vector is not computed if NULL.
+ *                           contains parent vertex IDs for each vertex
+ *                           reached, where parent(i) is the node ID of the
+ *                           parent of node i.  The src vertex will have itself
+ *                           as its parent. If a vertex i is not reached,
+ *                           parent(i) is not present.  The parent vector is
+ *                           not computed if NULL.
  * @param[in]     G          The graph, directed or undirected.
  * @param[in]     src        The index of the src vertex (0-based)
- * @param[out]    msg        Error message if a failure code is returned.
+ * @param[in,out] msg        any error messages.
  *
- * @retval GrB_SUCCESS if successful, or if both level and parent are NULL
- *      (which indicates that nothing is to be computed).
+ * @retval GrB_SUCCESS if successful.
  * @retval GrB_INVALID_INDEX if src is invalid.
+ * @retval GrB_NULL_POINTER if both level and parent are NULL, or if
+ *      G is NULL.
  * @retval LAGRAPH_INVALID_GRAPH Graph is invalid (LAGraph_CheckGraph failed).
  * @returns any GraphBLAS errors that may have been encountered.
  */
@@ -2145,6 +2146,7 @@ int LAGr_BreadthFirstSearch
 
 /** LAGr_ConnectedComponents: connected components of an undirected graph.
  * This is an Advanced algorithm (G->is_symmetric_structure must be known).
+ * FIXME: what if a node has no edges?  is components sparse?
  *
  * @param[out] component    component(i)=s if node i is in the component whose
  *                          representative node is s.
@@ -2181,6 +2183,7 @@ int LAGr_ConnectedComponents
  *
  * FUTURE: add a Basic algorithm that computes G->emin, G->emax, and then uses
  * that information to compute an appropriate (estimated) Delta.
+ * FIXME: check if pattern of path_length is reach(G,i) or inf?
  *
  * @param[out] path_length  path_length (i) is the length of the shortest
  *                          path from the source vertex to vertex i.
@@ -2219,6 +2222,10 @@ int LAGr_SingleSourceShortestPath
  * Only a few given source nodes are used for the approximation.  This is an
  * Advanced algorithm (G->AT is required).
  *
+ * FUTURE: create a Basic algorithm that randomly selects source nodes,
+ * or computes the exact centrality with all nodes as sources (which is very
+ * costly).
+ *
  * @param[out] centrality   centrality(i) is the metric for node i.
  * @param[in] G         input graph.
  * @param[in] sources   source vertices to compute shortest paths, size ns
@@ -2244,6 +2251,8 @@ int LAGr_Betweenness
     int32_t ns,                 // number of source vertices
     char *msg
 ) ;
+
+// FIXME: start here for next LAGraph meeting, Aug 24, 2022
 
 //------------------------------------------------------------------------------
 // LAGr_PageRank: PageRank of a graph.

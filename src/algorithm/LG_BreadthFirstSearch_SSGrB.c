@@ -72,14 +72,10 @@ int LG_BreadthFirstSearch_SSGrB
     bool compute_parent = (parent != NULL) ;
     if (compute_level ) (*level ) = NULL ;
     if (compute_parent) (*parent) = NULL ;
+    LG_ASSERT_MSG (compute_level || compute_parent, GrB_NULL_POINTER,
+        "either level or parent must be non-NULL") ;
 
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
-
-    if (!(compute_level || compute_parent))
-    {
-        // nothing to do
-        return (GrB_SUCCESS) ;
-    }
 
     //--------------------------------------------------------------------------
     // get the problem size and cached properties
