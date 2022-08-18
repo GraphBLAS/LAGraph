@@ -266,7 +266,9 @@ enable_testing()
 
 add_subdirectory(src)
 add_subdirectory(experimental)
-add_subdirectory(rtdocs)
+if (DEFINED ENV{READTHEDOCS})
+  add_subdirectory(rtdocs)
+endif ()
 
 #-------------------------------------------------------------------------------
 # to install use "sudo make install"
