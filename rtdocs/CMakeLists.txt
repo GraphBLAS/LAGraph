@@ -2,7 +2,7 @@ find_package(Doxygen REQUIRED)
 find_package(Sphinx REQUIRED)
 
 # Find all the public headers
-get_target_property(LAGRAPH_PUBLIC_HEADER_DIR "LAGraph" INTERFACE_INCLUDE_DIRECTORIES)
+get_target_property(LAGRAPH_PUBLIC_HEADER_DIR "lagraph" INTERFACE_INCLUDE_DIRECTORIES)
 file(GLOB_RECURSE LAGRAPH_PUBLIC_HEADERS
   ${LAGRAPH_PUBLIC_HEADER_DIR}/*)
 
@@ -20,7 +20,7 @@ file(MAKE_DIRECTORY ${DOXYGEN_OUTPUT_DIR})
 
 # Only regenerate Doxygen when the Doxyfile or public headers change
 add_custom_command(OUTPUT ${DOXYGEN_INDEX_FILE}
-    DEPENDS ${RGRI_PUBLIC_HEADERS}
+    DEPENDS ${LAGRAPH_PUBLIC_HEADERS}
             COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE_OUT}
         MAIN_DEPENDENCY ${DOXYFILE_OUT} ${DOXYFILE_IN}
             COMMENT "Generating docs"
@@ -41,9 +41,9 @@ add_custom_command(OUTPUT ${SPHINX_INDEX_FILE}
     COMMAND
         ${SPHINX_EXECUTABLE} -b html
         # Tell Breathe where to find the Doxygen output
-    -Dbreathe_projects.RGRI=${DOXYGEN_OUTPUT_DIR}/xml
+        -Dbreathe_projects.lagraph=${DOXYGEN_OUTPUT_DIR}/xml
         ${SPHINX_SOURCE} ${SPHINX_BUILD}
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     DEPENDS
         # Other docs files you want to track should go here (or in some variable)
         ${CMAKE_CURRENT_SOURCE_DIR}/index.rst
