@@ -15,7 +15,7 @@ jobs:
       uses: actions/checkout@v2.0.0
     - name: Install tools for build
       run: |
-        sudo apt install -y lcov
+        sudo apt install -y lcov doxygen
     - name: Get GraphBLAS binaries
       run: |
         mkdir graphblas-binaries
@@ -55,7 +55,7 @@ jobs:
       uses: actions/checkout@v2.0.0
     - name: Install dependencies
       run: |
-        brew install libomp
+        brew install libomp doxygen
     - name: Get GraphBLAS binaries
       run: |
         mkdir graphblas-binaries
