@@ -1,0 +1,133 @@
+\hypertarget{structLAGraph__Graph__struct}{}\section{L\+A\+Graph\+\_\+\+Graph\+\_\+struct Struct Reference}
+\label{structLAGraph__Graph__struct}\index{L\+A\+Graph\+\_\+\+Graph\+\_\+struct@{L\+A\+Graph\+\_\+\+Graph\+\_\+struct}}
+
+
+{\ttfamily \#include $<$L\+A\+Graph.\+h$>$}
+
+\subsection*{Data Fields}
+\begin{Indent}\textbf{ Primary Components}\par
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structLAGraph__Graph__struct_a5cea03ee2e21fd0bb09e58a7743f7d52}\label{structLAGraph__Graph__struct_a5cea03ee2e21fd0bb09e58a7743f7d52}} 
+Gr\+B\+\_\+\+Matrix \hyperlink{structLAGraph__Graph__struct_a5cea03ee2e21fd0bb09e58a7743f7d52}{A}
+\begin{DoxyCompactList}\small\item\em the adjacency matrix of the graph \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{structLAGraph__Graph__struct_a04886ec19a68599c3a89b94c4d422fed}\label{structLAGraph__Graph__struct_a04886ec19a68599c3a89b94c4d422fed}} 
+L\+A\+Graph\+\_\+\+Kind \hyperlink{structLAGraph__Graph__struct_a04886ec19a68599c3a89b94c4d422fed}{kind}
+\begin{DoxyCompactList}\small\item\em the kind of graph \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Cached Properties}\par
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structLAGraph__Graph__struct_a18d4dcbaf21aebefdd92aa815f7859b2}\label{structLAGraph__Graph__struct_a18d4dcbaf21aebefdd92aa815f7859b2}} 
+Gr\+B\+\_\+\+Matrix \hyperlink{structLAGraph__Graph__struct_a18d4dcbaf21aebefdd92aa815f7859b2}{AT}
+\begin{DoxyCompactList}\small\item\em AT = A\textquotesingle{}, the transpose of A, with the same type. \end{DoxyCompactList}\item 
+Gr\+B\+\_\+\+Vector \hyperlink{structLAGraph__Graph__struct_a80f2da5366a6f2395b91b158d5ee509c}{out\+\_\+degree}
+\item 
+Gr\+B\+\_\+\+Vector \hyperlink{structLAGraph__Graph__struct_aa076ad742dc43f1caf1197c285abde44}{in\+\_\+degree}
+\item 
+L\+A\+Graph\+\_\+\+Boolean \hyperlink{structLAGraph__Graph__struct_aefb37c8aac85f1688aa5e460a574ef36}{is\+\_\+symmetric\+\_\+structure}
+\item 
+int64\+\_\+t \hyperlink{structLAGraph__Graph__struct_a39076f3755c663cd382bcf8a935dbf0a}{nself\+\_\+edges}
+\item 
+\mbox{\Hypertarget{structLAGraph__Graph__struct_a7d7ba0cd10b9d40abab4a4812c7256e3}\label{structLAGraph__Graph__struct_a7d7ba0cd10b9d40abab4a4812c7256e3}} 
+Gr\+B\+\_\+\+Scalar \hyperlink{structLAGraph__Graph__struct_a7d7ba0cd10b9d40abab4a4812c7256e3}{emin}
+\begin{DoxyCompactList}\small\item\em minimum edge weight\+: value, lower bound, or unknown \end{DoxyCompactList}\item 
+L\+A\+Graph\+\_\+\+State \hyperlink{structLAGraph__Graph__struct_ad86508a1f8b0c38fd7420d28b2cff430}{emin\+\_\+state}
+\item 
+\mbox{\Hypertarget{structLAGraph__Graph__struct_a63ecd7e2b4340cfcb0e50e9d1020ac31}\label{structLAGraph__Graph__struct_a63ecd7e2b4340cfcb0e50e9d1020ac31}} 
+Gr\+B\+\_\+\+Scalar \hyperlink{structLAGraph__Graph__struct_a63ecd7e2b4340cfcb0e50e9d1020ac31}{emax}
+\begin{DoxyCompactList}\small\item\em maximum edge weight\+: value, upper bound, or unknown \end{DoxyCompactList}\item 
+L\+A\+Graph\+\_\+\+State \hyperlink{structLAGraph__Graph__struct_ad7bf05c8e88d308e233428d059c52111}{emax\+\_\+state}
+\end{DoxyCompactItemize}
+\end{Indent}
+
+
+\subsection{Detailed Description}
+L\+A\+Graph\+\_\+\+Graph\+: a representation of a graph. The object G contains a Gr\+B\+\_\+\+Matrix G-\/$>$A as its primary component. For graphs represented with adjacency matrices, A(i,j) denotes the edge (i,j). Unlike Gr\+B\+\_\+$\ast$ objects in Graph\+B\+L\+AS, the L\+A\+Graph\+\_\+\+Graph data structure is not opaque. User applications have full access to its contents.
+
+An L\+A\+Graph\+\_\+\+Graph G contains two kinds of components\+:
+\begin{DoxyEnumerate}
+\item Primary components of the graph, which fully define the graph.
+\item Cached properties of the graph, which can be recreated any time. 
+\end{DoxyEnumerate}
+
+Definition at line 582 of file L\+A\+Graph.\+h.
+
+
+
+\subsection{Field Documentation}
+\mbox{\Hypertarget{structLAGraph__Graph__struct_ad7bf05c8e88d308e233428d059c52111}\label{structLAGraph__Graph__struct_ad7bf05c8e88d308e233428d059c52111}} 
+\index{L\+A\+Graph\+\_\+\+Graph\+\_\+struct@{L\+A\+Graph\+\_\+\+Graph\+\_\+struct}!emax\+\_\+state@{emax\+\_\+state}}
+\index{emax\+\_\+state@{emax\+\_\+state}!L\+A\+Graph\+\_\+\+Graph\+\_\+struct@{L\+A\+Graph\+\_\+\+Graph\+\_\+struct}}
+\subsubsection{\texorpdfstring{emax\+\_\+state}{emax\_state}}
+{\footnotesize\ttfamily L\+A\+Graph\+\_\+\+State L\+A\+Graph\+\_\+\+Graph\+\_\+struct\+::emax\+\_\+state}
+
+
+\begin{DoxyItemize}
+\item V\+A\+L\+UE\+: emax is equal to the largest entry, max(G-\/$>$A)
+\item B\+O\+U\+ND\+: emax $>$= max(G-\/$>$A)
+\item U\+N\+K\+N\+O\+WN\+: emax is unknown 
+\end{DoxyItemize}
+
+Definition at line 660 of file L\+A\+Graph.\+h.
+
+\mbox{\Hypertarget{structLAGraph__Graph__struct_ad86508a1f8b0c38fd7420d28b2cff430}\label{structLAGraph__Graph__struct_ad86508a1f8b0c38fd7420d28b2cff430}} 
+\index{L\+A\+Graph\+\_\+\+Graph\+\_\+struct@{L\+A\+Graph\+\_\+\+Graph\+\_\+struct}!emin\+\_\+state@{emin\+\_\+state}}
+\index{emin\+\_\+state@{emin\+\_\+state}!L\+A\+Graph\+\_\+\+Graph\+\_\+struct@{L\+A\+Graph\+\_\+\+Graph\+\_\+struct}}
+\subsubsection{\texorpdfstring{emin\+\_\+state}{emin\_state}}
+{\footnotesize\ttfamily L\+A\+Graph\+\_\+\+State L\+A\+Graph\+\_\+\+Graph\+\_\+struct\+::emin\+\_\+state}
+
+
+\begin{DoxyItemize}
+\item V\+A\+L\+UE\+: emin is equal to the smallest entry, min(G-\/$>$A)
+\item B\+O\+U\+ND\+: emin $<$= min(G-\/$>$A)
+\item U\+N\+K\+N\+O\+WN\+: emin is unknown 
+\end{DoxyItemize}
+
+Definition at line 654 of file L\+A\+Graph.\+h.
+
+\mbox{\Hypertarget{structLAGraph__Graph__struct_aa076ad742dc43f1caf1197c285abde44}\label{structLAGraph__Graph__struct_aa076ad742dc43f1caf1197c285abde44}} 
+\index{L\+A\+Graph\+\_\+\+Graph\+\_\+struct@{L\+A\+Graph\+\_\+\+Graph\+\_\+struct}!in\+\_\+degree@{in\+\_\+degree}}
+\index{in\+\_\+degree@{in\+\_\+degree}!L\+A\+Graph\+\_\+\+Graph\+\_\+struct@{L\+A\+Graph\+\_\+\+Graph\+\_\+struct}}
+\subsubsection{\texorpdfstring{in\+\_\+degree}{in\_degree}}
+{\footnotesize\ttfamily Gr\+B\+\_\+\+Vector L\+A\+Graph\+\_\+\+Graph\+\_\+struct\+::in\+\_\+degree}
+
+a Gr\+B\+\_\+\+I\+N\+T64 vector of length n, if A is m-\/by-\/n. where in\+\_\+degree(j) is the number of entries in A(\+:,j). If in\+\_\+degree is sparse and the entry in\+\_\+degree(j) is not present, then it is assumed to be zero. If A is known to have a symmetric structure, the convention is that the degree is held in out\+\_\+degree, and in\+\_\+degree is left as N\+U\+LL. 
+
+Definition at line 632 of file L\+A\+Graph.\+h.
+
+\mbox{\Hypertarget{structLAGraph__Graph__struct_aefb37c8aac85f1688aa5e460a574ef36}\label{structLAGraph__Graph__struct_aefb37c8aac85f1688aa5e460a574ef36}} 
+\index{L\+A\+Graph\+\_\+\+Graph\+\_\+struct@{L\+A\+Graph\+\_\+\+Graph\+\_\+struct}!is\+\_\+symmetric\+\_\+structure@{is\+\_\+symmetric\+\_\+structure}}
+\index{is\+\_\+symmetric\+\_\+structure@{is\+\_\+symmetric\+\_\+structure}!L\+A\+Graph\+\_\+\+Graph\+\_\+struct@{L\+A\+Graph\+\_\+\+Graph\+\_\+struct}}
+\subsubsection{\texorpdfstring{is\+\_\+symmetric\+\_\+structure}{is\_symmetric\_structure}}
+{\footnotesize\ttfamily L\+A\+Graph\+\_\+\+Boolean L\+A\+Graph\+\_\+\+Graph\+\_\+struct\+::is\+\_\+symmetric\+\_\+structure}
+
+For an undirected graph, this cached property will always be implicitly true and can be ignored. The matrix A for a directed weighted graph will typically be unsymmetric, but might have a symmetric structure. In that case, this scalar cached property can be set to true. By default, this cached property is set to L\+A\+G\+R\+A\+P\+H\+\_\+\+U\+N\+K\+N\+O\+WN. 
+
+Definition at line 641 of file L\+A\+Graph.\+h.
+
+\mbox{\Hypertarget{structLAGraph__Graph__struct_a39076f3755c663cd382bcf8a935dbf0a}\label{structLAGraph__Graph__struct_a39076f3755c663cd382bcf8a935dbf0a}} 
+\index{L\+A\+Graph\+\_\+\+Graph\+\_\+struct@{L\+A\+Graph\+\_\+\+Graph\+\_\+struct}!nself\+\_\+edges@{nself\+\_\+edges}}
+\index{nself\+\_\+edges@{nself\+\_\+edges}!L\+A\+Graph\+\_\+\+Graph\+\_\+struct@{L\+A\+Graph\+\_\+\+Graph\+\_\+struct}}
+\subsubsection{\texorpdfstring{nself\+\_\+edges}{nself\_edges}}
+{\footnotesize\ttfamily int64\+\_\+t L\+A\+Graph\+\_\+\+Graph\+\_\+struct\+::nself\+\_\+edges}
+
+number of entries on the diagonal of A, or L\+A\+G\+R\+A\+P\+H\+\_\+\+U\+N\+K\+N\+O\+WN if unknown. For the adjacency matrix of a directed or undirected graph, this is the number of self-\/edges in the graph. 
+
+Definition at line 648 of file L\+A\+Graph.\+h.
+
+\mbox{\Hypertarget{structLAGraph__Graph__struct_a80f2da5366a6f2395b91b158d5ee509c}\label{structLAGraph__Graph__struct_a80f2da5366a6f2395b91b158d5ee509c}} 
+\index{L\+A\+Graph\+\_\+\+Graph\+\_\+struct@{L\+A\+Graph\+\_\+\+Graph\+\_\+struct}!out\+\_\+degree@{out\+\_\+degree}}
+\index{out\+\_\+degree@{out\+\_\+degree}!L\+A\+Graph\+\_\+\+Graph\+\_\+struct@{L\+A\+Graph\+\_\+\+Graph\+\_\+struct}}
+\subsubsection{\texorpdfstring{out\+\_\+degree}{out\_degree}}
+{\footnotesize\ttfamily Gr\+B\+\_\+\+Vector L\+A\+Graph\+\_\+\+Graph\+\_\+struct\+::out\+\_\+degree}
+
+a Gr\+B\+\_\+\+I\+N\+T64 vector of length m, if A is m-\/by-\/n. where out\+\_\+degree(i) is the number of entries in A(i,\+:). If out\+\_\+degree is sparse and the entry out\+\_\+degree(i) is not present, then it is assumed to be zero. 
+
+Definition at line 627 of file L\+A\+Graph.\+h.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/davis/master/\+L\+A\+Graph/include/L\+A\+Graph.\+h\end{DoxyCompactItemize}
