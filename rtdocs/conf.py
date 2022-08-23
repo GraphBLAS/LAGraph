@@ -39,13 +39,13 @@ if read_the_docs_build:
     output_dir = 'build'
     configureDoxyfile(input_dir, output_dir)
     subprocess.call('doxygen', shell=True)
-    breathe_projects['LAGraph'] = output_dir + '/xml'
+    breathe_projects['lagraph'] = output_dir + '/xml'
 
 
 # -- Project information -----------------------------------------------------
 
 project = 'LAGraph'
-# copyright = ''
+copyright = '2022'
 # author = ''
 
 
@@ -80,8 +80,9 @@ html_theme = 'sphinx_rtd_theme'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+html_css_files = ["custom.css"]
 
 # Breathe Configuration
-breathe_default_project = 'LAGraph'
+breathe_default_project = 'lagraph'
 
 master_doc = 'index'

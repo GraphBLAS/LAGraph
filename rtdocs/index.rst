@@ -1,75 +1,62 @@
 LAGraph Documentation
 =====================
 
+The LAGraph library is a collection of high level graph algorithms
+based on the GraphBLAS C API.  These algorithms construct
+graph algorithms expressed *in the language of linear algebra*.
+Graphs are expressed as matrices, and the operations over
+these matrices are generalized through the use of a
+semiring algebraic structure.
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
+   core
+   algorithms
+   utils
+
+
+Example Usage
+-------------
+
+.. code-block:: C
+
+    #include <stdlib.h>
+    #include <stdio.h>
+    #include <stdint.h>
+    #include <stdbool.h>
+    #include "LAGraph.h"
+
+    void test_PageRank(void)
+    {
+        LAGraph_Init (msg) ;
+        GrB_Matrix A = NULL ;
+        GrB_Vector centrality = NULL, cmatlab = NULL, diff = NULL ;
+        int niters = 0 ;
+
+        // create the karate graph
+        snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
+        FILE *f = fopen (filename, "r") ;
+        TEST_CHECK (f != NULL) ;
+        OK (LAGraph_MMRead (&A, f, msg)) ;
+        OK (fclose (f)) ;
+        OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
+        TEST_CHECK (A == NULL) ;    // A has been moved into G->A
+        OK (LAGraph_Cached_OutDegree (G, msg)) ;
+
+        // compute its pagerank
+        OK (LAGr_PageRank (&centrality, &niters, G, 0.85, 1e-4, 100, msg)) ;
+        OK (LAGraph_Delete (&G, msg)) ;
+
+        // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
+        float err = difference (centrality, karate_rank) ;
+        printf ("\nkarate:   err: %e\n", err) ;
+        TEST_CHECK (err < 1e-4) ;
+        OK (GrB_free (&centrality)) ;
+
+        LAGraph_Finalize (msg) ;
+    }
+
+
 :ref:`genindex`
-
-GraphBLAS Objects
------------------
-.. doxygenclass:: LAGraph_Graph
-   :members:
-
-Example
-~~~~~~~
-
-.. code-block:: C++
-
-   #include <iostream>
-   #include <grb/grb.hpp>
-   int main(int argc, char** argv) {
-     // Create a new matrix, reading in from a file.
-     grb::matrix<float, int> a("data/chesapeake.mtx");
-
-     size_t m = a.shape()[0];
-     size_t k = a.shape()[1];
-
-     std::cout << "chesapeake.mtx is a " << m << " by " << k << " matrix." << std::endl;
-
-     // Set element 12,9 (row 12, column 9) to 12.
-     a[{12, 9}] = 12;
-
-     grb::matrix<float, int> b("data/chesapeake.mtx");
-
-     auto c = grb::multiply(a, b);
-
-     std::cout << "Sum of elements is " << grb::sum(c) << std::endl;
-
-     return 0;
-   }
-
-Binary Operators
-----------------
-Binary operators are function objects that implement binary operators, that is
-operators that accept two inputs and produce a single output.  A collection of
-binary operators are pre-defined by GraphBLAS.
-
-.. doxygentypedef:: grb::plus
-
-.. doxygentypedef:: grb::minus
-
-.. doxygentypedef:: grb::multiplies
-
-.. doxygentypedef:: grb::times
-
-.. doxygentypedef:: grb::max
-
-.. doxygentypedef:: grb::min
-
-.. doxygentypedef:: grb::modulus
-
-Algorithms
-----------
-.. doxygenfunction:: grb::multiply(AMatrixType&&, BMatrixType&&, ReduceFn&&, CombineFn&&, MaskType&&)
-
-.. doxygenfunction:: LAGr_PageRank
-
-.. doxygenfunction:: grb::ewise(const AMatrixType&, const BMatrixType&, const BinaryOp&)
-
-.. doxygenfunction:: grb::ewise(const AMatrixType&, const BMatrixType&, CMatrixType&, const BinaryOp&, const Accumulator&)
-
-Utility Functions
------------------
-.. doxygenfunction:: grb::print(const grb::matrix<Args...>&, std::string)
