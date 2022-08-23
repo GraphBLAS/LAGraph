@@ -698,7 +698,7 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
         // import T for the final phase
         GRB_TRY (GxB_Matrix_import_CSR (&T, type, nrows, ncols,
                 &Tp, &Tj, &Tx, Tp_siz, Tj_siz, Tx_siz,
-                T_iso, T_jumbled, NULL)) ;
+                T_iso, /* T is jumbled: */ true, NULL)) ;
 
         // restore G->A
         G->A = S ;

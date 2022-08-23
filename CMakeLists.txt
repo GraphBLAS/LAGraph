@@ -53,10 +53,10 @@ cmake_policy ( SET CMP0048 NEW )
 set ( CMAKE_MACOSX_RPATH TRUE )
 
 # version of LAGraph
-set ( LAGraph_DATE "Aug 17, 2022" )
+set ( LAGraph_DATE "Aug 23, 2022" )
 set ( LAGraph_VERSION_MAJOR 0 )
 set ( LAGraph_VERSION_MINOR 9 )
-set ( LAGraph_VERSION_SUB   33 )
+set ( LAGraph_VERSION_SUB   35 )
 
 project ( lagraph
           VERSION "${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}" )
