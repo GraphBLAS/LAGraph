@@ -486,12 +486,12 @@ int LAGraph_Free            // free a block of memory and set p to NULL
 typedef enum
 {
     LAGraph_ADJACENCY_UNDIRECTED = 0, ///< undirected graph.
-        // G->A is square and symmetric; both upper and lower triangular parts
-        // are present.  A(i,j) is the edge (i,j).  Results are undefined if
-        // A is unsymmetric.
+        ///< G->A is square and symmetric; both upper and lower triangular parts
+        ///< are present.  A(i,j) is the edge (i,j).  Results are undefined if
+        ///< A is unsymmetric.
 
     LAGraph_ADJACENCY_DIRECTED = 1,   ///< directed graph.
-        // G->A is square; A(i,j) is the edge (i,j).
+        ///< G->A is square; A(i,j) is the edge (i,j).
 
     // possible future kinds of graphs:
     // LAGraph_ADJACENCY_UNDIRECTED_UNWEIGHTED
@@ -563,10 +563,13 @@ LAGraph_State ;
  * applications have full access to its contents.
  *
  * An LAGraph_Graph G contains two kinds of components:
- *  (1) primary components of the graph, which fully define the graph:
+ *  1. Primary components of the graph, which fully define the graph.
+ *  2. Cached properties of the graph, which can be recreated any time.*/
+
+/* (1) primary components:
  *      A           the adjacency matrix of the graph
  *      kind        the kind of graph (undirected, directed, bipartite, ...)
- *  (2) cached properties of the graph, which can be recreated any time:
+ * (2) cached properties:
  *      AT          AT = A'
  *      out_degree  out_degree(i) = # of entries in A(i,:)
  *      in_degree   in_degree(j) = # of entries in A(:,j)
@@ -583,8 +586,13 @@ struct LAGraph_Graph_struct
     // primary components of the graph
     //--------------------------------------------------------------------------
 
-    GrB_Matrix  A ;         // the adjacency matrix of the graph
-    LAGraph_Kind kind ;     // the kind of graph
+    /** @name Primary Components */
+    //@{
+
+    GrB_Matrix  A ;         ///< the adjacency matrix of the graph
+    LAGraph_Kind kind ;     ///< the kind of graph
+
+    //@}
 
     // possible future components:
     // multigraph ..
@@ -611,45 +619,50 @@ struct LAGraph_Graph_struct
     // graph is declared as a read-only object in the parameter list of the
     // method.
 
-    GrB_Matrix AT ;         // AT = A', the transpose of A, with the same type.
+    /** @name Cached Properties */
+    //@{
 
-    GrB_Vector out_degree ;  // a GrB_INT64 vector of length m, if A is m-by-n.
-           // where out_degree(i) is the number of entries in A(i,:).  If
-           // out_degree is sparse and the entry out_degree(i) is not present,
-           // then it is assumed to be zero.
+    GrB_Matrix AT ;         ///< AT = A', the transpose of A, with the same type.
 
-    GrB_Vector in_degree ;  // a GrB_INT64 vector of length n, if A is m-by-n.
-            // where in_degree(j) is the number of entries in A(:,j).  If
-            // in_degree is sparse and the entry in_degree(j) is not present,
-            // then it is assumed to be zero.  If A is known to have a
-            // symmetric structure, the convention is that the degree is held in
-            // out_degree, and in_degree is left as NULL.
+    GrB_Vector out_degree ;  ///< a GrB_INT64 vector of length m, if A is m-by-n.
+           ///< where out_degree(i) is the number of entries in A(i,:).  If
+           ///< out_degree is sparse and the entry out_degree(i) is not present,
+           ///< then it is assumed to be zero.
+
+    GrB_Vector in_degree ;  ///< a GrB_INT64 vector of length n, if A is m-by-n.
+            ///< where in_degree(j) is the number of entries in A(:,j).  If
+            ///< in_degree is sparse and the entry in_degree(j) is not present,
+            ///< then it is assumed to be zero.  If A is known to have a
+            ///< symmetric structure, the convention is that the degree is held in
+            ///< out_degree, and in_degree is left as NULL.
 
     // If G is held as an incidence matrix, then G->A might be rectangular,
     // in the future, but the graph G may have a symmetric structure anyway.
-    LAGraph_Boolean is_symmetric_structure ;    // For an undirected
-            // graph, this cached property will always be implicitly true and
-            // can be ignored.  The matrix A for a directed weighted graph will
-            // typically be unsymmetric, but might have a symmetric structure.
-            // In that case, this scalar cached property can be set to true.
-            // By default, this cached property is set to LAGRAPH_UNKNOWN.
+    LAGraph_Boolean is_symmetric_structure ;    ///< For an undirected
+            ///< graph, this cached property will always be implicitly true and
+            ///< can be ignored.  The matrix A for a directed weighted graph will
+            ///< typically be unsymmetric, but might have a symmetric structure.
+            ///< In that case, this scalar cached property can be set to true.
+            ///< By default, this cached property is set to LAGRAPH_UNKNOWN.
 
-    int64_t nself_edges ; // # of entries on the diagonal of A, or
-            // LAGRAPH_UNKNOWN if unknown.  For the adjacency matrix of a
-            // directed or undirected graph, this is the number of self-edges
-            // in the graph.
+    int64_t nself_edges ; ///< number of entries on the diagonal of A, or
+            ///< LAGRAPH_UNKNOWN if unknown.  For the adjacency matrix of a
+            ///< directed or undirected graph, this is the number of self-edges
+            ///< in the graph.
 
-    GrB_Scalar emin ;   // minimum edge weight: value, lower bound, or unknown
+    GrB_Scalar emin ;   ///< minimum edge weight: value, lower bound, or unknown
     LAGraph_State emin_state ;
-            // VALUE: emin is equal to the smallest entry, min(G->A)
-            // BOUND: emin <= min(G->A)
-            // UNKNOWN: emin is unknown
+            ///< - VALUE: emin is equal to the smallest entry, min(G->A)
+            ///< - BOUND: emin <= min(G->A)
+            ///< - UNKNOWN: emin is unknown
 
-    GrB_Scalar emax ;   // maximum edge weight: value, upper bound, or unknown
+    GrB_Scalar emax ;   ///< maximum edge weight: value, upper bound, or unknown
     LAGraph_State emax_state ;
-            // VALUE: emax is equal to the largest entry, max(G->A)
-            // BOUND: emax >= max(G->A)
-            // UNKNOWN: emax is unknown
+            ///< - VALUE: emax is equal to the largest entry, max(G->A)
+            ///< - BOUND: emax >= max(G->A)
+            ///< - UNKNOWN: emax is unknown
+
+    //@}
 
     // possible future cached properties:
 
@@ -2365,10 +2378,10 @@ typedef enum
     LAGraph_TriangleCount_Ascending = 1,    ///< sort by degree, ascending.
     LAGraph_TriangleCount_Descending = -1,  ///< sort by degree, descending.
     LAGraph_TriangleCount_AutoSort = 2,     ///< auto selection of sort.
-        // No sort if rule is not triggered.  Otherwise: sort in ascending
-        // order for methods 3 and 5, descending ordering for methods 4 and 6.
-        // On output, presort is modified to reflect the sorting method used
-        // (0, -1, or 1).  If presort is NULL on input, no sort is performed.
+        ///< No sort if rule is not triggered.  Otherwise: sort in ascending
+        ///< order for methods 3 and 5, descending ordering for methods 4 and 6.
+        ///< On output, presort is modified to reflect the sorting method used
+        ///< (0, -1, or 1).  If presort is NULL on input, no sort is performed.
 }
 LAGraph_TriangleCount_Presort ;
 
