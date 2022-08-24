@@ -2265,8 +2265,6 @@ int LAGr_Betweenness
     char *msg
 ) ;
 
-// FIXME: start here for next LAGraph meeting, Aug 24, 2022
-
 //------------------------------------------------------------------------------
 // LAGr_PageRank: PageRank of a graph.
 //------------------------------------------------------------------------------
@@ -2310,6 +2308,8 @@ int LAGr_PageRank
 // LAGr_PageRankGAP: GAP-style PageRank of a graph (for GAP benchmarking only)
 //------------------------------------------------------------------------------
 
+// FIXME: don't add this to the rtdocs.
+
 /** LAGr_PageRankGAP: computes the GAP PageRank of a directed graph G.  Sinks
  * (nodes with no out-going edges) are NOT properly handled.  This method
  * should be NOT be used for production.  It is intended for the GAP benchmark
@@ -2349,11 +2349,20 @@ int LAGr_PageRankGAP
 // LAGr_TriangleCount: triangle counting
 //------------------------------------------------------------------------------
 
+// FIXME: start here for next LAGraph meeting, Aug 31, 2022
+
 // FIXME: should these enum typedefs be named LAGr_* since they are only used
-// for Advanced methods?
+// for Advanced methods? Answer: Yes.
 
 /** LAGraph_TriangleCount_Method: an enum to select the method used to
  * count the number of triangles.
+ */
+
+ /* FIXME: use these names:
+ Sandia_LL
+ Sandia_UU
+ Sandia_LU
+ Sandia_UL
  */
 
 typedef enum
@@ -2382,6 +2391,8 @@ typedef enum
         ///< order for methods 3 and 5, descending ordering for methods 4 and 6.
         ///< On output, presort is modified to reflect the sorting method used
         ///< (0, -1, or 1).  If presort is NULL on input, no sort is performed.
+
+        // FIXME use "Sandia_LL" instead of "3", etc. in the discussion above.
 }
 LAGraph_TriangleCount_Presort ;
 
@@ -2394,6 +2405,7 @@ LAGraph_TriangleCount_Presort ;
  *                          G->is_symmetric_structure are required.
  *
  * @param[in]     method    specifies which algorithm to use
+                            FIXME: shorten this
  *                           0:  use the default method
  *                           1:  Burkhardt:  ntri = sum (sum ((A^2) .* A)) / 6
  *                           2:  Cohen:      ntri = sum (sum ((L * U) .* A)) / 2
@@ -2404,7 +2416,7 @@ LAGraph_TriangleCount_Presort ;
  *
  * @param[in,out] presort   controls the presort of the graph. If set to 2 on
  *                          input, presort will be set to sort type used
- *                          on output:
+ *                          on output: FIXME: shorten this.
  *                             0: no sort
  *                             1: sort by degree, ascending order
  *                            -1: sort by degree, descending order

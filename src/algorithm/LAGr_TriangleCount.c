@@ -42,6 +42,8 @@
 // fastest.  For many small graphs, the saxpy-based Sandia and Sandia2 methods
 // are often faster that the dot-product-based methods.
 
+// FIXME: add cite to Burkhard and to Cohen.
+
 // Reference (for the "Sandia*" methods): Wolf, Deveci, Berry, Hammond,
 // Rajamanickam, 'Fast linear algebra- based triangle counting with
 // KokkosKernels', IEEE HPEC'17, https://dx.doi.org/10.1109/HPEC.2017.8091043,
