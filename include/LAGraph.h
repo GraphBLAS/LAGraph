@@ -546,8 +546,8 @@ typedef enum
 {
     LAGraph_VALUE = 0,  ///< cached property is a known value.
     LAGraph_BOUND = 1,  ///< cached property is a bound.
-        // The bound is upper or lower, depending on the particular cached
-        // property.
+        ///< The bound is upper or lower, depending on the particular cached
+        ///< property.
     LAGraph_STATE_UNKNOWN = LAGRAPH_UNKNOWN,    ///< the property is unknown.
 }
 LAGraph_State ;
@@ -1270,38 +1270,38 @@ double LAGraph_WallClockTime     // returns omp_get_wtime(), or other timer
  *
  *      %%MatrixMarket matrix <fmt> <type> <storage>
  *
- *      <fmt> is one of: coordinate or array.  The former is a sparse matrix in
+ * <fmt> is one of: coordinate or array.  The former is a sparse matrix in
  *      triplet form.  The latter is a dense matrix in column-major form.
  *      Both formats are returned as a GrB_Matrix.
  *
- *      <type> is one of: real, complex, pattern, or integer.  The real,
+ * <type> is one of: real, complex, pattern, or integer.  The real,
  *      integer, and pattern formats are returned as GrB_FP64, GrB_INT64, and
  *      GrB_BOOL, respectively, but these types are modified by the %%GraphBLAS
  *      structured comment described below.  Complex matrices are currently not
  *      supported.
  *
- *      <storage> is one of: general, Hermitian, symmetric, or skew-symmetric.
+ * <storage> is one of: general, Hermitian, symmetric, or skew-symmetric.
  *      The Matrix Market format is case-insensitive, so "hermitian" and
  *      "Hermitian" are treated the same).
  *
- *      Not all combinations are permitted.  Only the following are meaningful:
+ * Not all combinations are permitted.  Only the following are meaningful:
  *
- *      (1) (coordinate or array) x (real, integer, or complex)
+ * (1) (coordinate or array) x (real, integer, or complex)
  *          x (general, symmetric, or skew-symmetric)
  *
- *      (2) (coordinate or array) x (complex) x (Hermitian)
+ * (2) (coordinate or array) x (complex) x (Hermitian)
  *
- *      (3) (coodinate) x (pattern) x (general or symmetric)
+ * (3) (coodinate) x (pattern) x (general or symmetric)
  *
  * The second line is an optional extension to the Matrix Market format:
  *
  *      %%GraphBLAS type <entrytype>
  *
- *      <entrytype> is one of the 11 built-in types (bool, int8_t, int16_t,
+ * <entrytype> is one of the 11 built-in types (bool, int8_t, int16_t,
  *      int32_t, int64_t, uint8_t, uint16_t, uint32_t, uint64_t, float, or
  *      double.
  *
- *      If this second line is included, it overrides the default GraphBLAS
+ * If this second line is included, it overrides the default GraphBLAS
  *      types for the Matrix Market <type> on line one of the file: real,
  *      pattern, and integer.  The Matrix Market complex <type> is not yet
  *      supported.
