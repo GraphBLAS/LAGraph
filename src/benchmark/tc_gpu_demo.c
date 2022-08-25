@@ -126,6 +126,8 @@ int main (int argc, char **argv)
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
 
+    GxB_set (G->A, GxB_SPARSITY_CONTROL, GxB_HYPERSPARSE) ;
+
     GxB_print (G->A, 2) ;
 #if 0
     // HACK: make sure G->A is non-iso
