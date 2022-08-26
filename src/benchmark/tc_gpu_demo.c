@@ -126,6 +126,7 @@ int main (int argc, char **argv)
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
 
+    printf ("Hack: force hypersparse\n") ;
     GxB_set (G->A, GxB_SPARSITY_CONTROL, GxB_HYPERSPARSE) ;
 
     GxB_print (G->A, 2) ;
