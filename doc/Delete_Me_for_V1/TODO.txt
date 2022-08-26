@@ -1,16 +1,9 @@
-As of June 17, 2022:
+As of Aug 25, 2022:
 
     * cmake: need to find the right liblagraph and libgraphblas
         (not in /usr/local/lib*, but the one being compiled/tested).
 
-    * entire user guide
-        experimental -> src, how to do it.
-        HTML vs PDF vs ... link into PDF ...
-        write it in LaTeX
-        also update top-level README.txt
-        see also https://github.com/GraphBLAS/LAGraph-Docs .
-
-    * document all src & experimental: algorithms, utilities, and tests.
+    * entire user guide:  rtdocs is in good shape.  Ditch LaTeX?
 
     * check function names and API
 
