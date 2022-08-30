@@ -1018,6 +1018,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
             LAGRAPH_TRY (LAGraph_Matrix_IsEqual (&sym, (*G)->A, (*G)->AT, msg));
             if (!sym)
             {
+                printf ("forcing G-> to be symmetric (via A = A+A')\n") ;
                 GrB_BinaryOp op = NULL ;
                 GrB_Type type ;
                 if      (atype == GrB_BOOL  ) op = GrB_LOR ;
@@ -1038,8 +1039,9 @@ static int readproblem          // returns 0 if successful, -1 if failure
                 else CATCH (GrB_NOT_IMPLEMENTED) ;    // unknown type
                 GRB_TRY (GrB_eWiseAdd ((*G)->A, NULL, NULL, op,
                                        (*G)->A, (*G)->AT, NULL)) ;
-                GRB_TRY (GrB_Matrix_free (&((*G)->AT))) ;
             }
+            // G->AT is not required
+            GRB_TRY (GrB_Matrix_free (&((*G)->AT))) ;
             (*G)->kind = LAGraph_ADJACENCY_UNDIRECTED ;
             (*G)->is_symmetric_structure = LAGraph_TRUE ;
         }

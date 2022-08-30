@@ -18,7 +18,7 @@
 //------------------------------------------------------------------------------
 #define F_UNARY(f)  ((void (*)(void *, const void *)) f)
 
-#define LAGraph_FREE_WORK           \
+#define LG_FREE_WORK                \
 {                                   \
     GrB_free (&C_3) ;               \
     GrB_free (&d_0) ;               \
@@ -53,9 +53,9 @@
     GrB_free (&C_4) ;               \
 }
 
-#define LAGraph_FREE_ALL            \
+#define LG_FREE_ALL                 \
 {                                   \
-    LAGraph_FREE_WORK ;             \
+    LG_FREE_WORK ;                  \
 }
 
 #define F_UNARY(f)  ((void (*)(void *, const void *)) f)
@@ -415,7 +415,7 @@ int LAGraph_FastGraphletTransform
             GxB_Iterator_new (&riterator) ;
             GrB_Info info = GxB_rowIterator_attach (riterator, A, NULL) ;
             if (info < 0) {
-                LAGraph_FREE_ALL ;
+                LG_FREE_ALL ;
                 return info ;
             }
 
@@ -423,7 +423,7 @@ int LAGraph_FastGraphletTransform
             GxB_Iterator_new (&iterator) ;
             info = GxB_rowIterator_attach (iterator, A, NULL) ;
             if (info < 0) {
-                LAGraph_FREE_ALL ;
+                LG_FREE_ALL ;
                 return info ;
             }
 
@@ -554,7 +554,7 @@ int LAGraph_FastGraphletTransform
     // free work
     //--------------------------------------------------------------------------
 
-    LAGraph_FREE_WORK ;
+    LG_FREE_WORK ;
 
     return (0) ;
 }

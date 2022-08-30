@@ -845,4 +845,18 @@ int LAGraph_SquareClustering
     LAGraph_Graph G,
     char *msg
 ) ;
+
+//------------------------------------------------------------------------------
+// a simple example of an algorithm
+//------------------------------------------------------------------------------
+
+GrB_Info LAGraph_HelloWorld // a simple algorithm, just for illustration
+(
+    // output
+    GrB_Matrix *Yhandle,    // Y, created on output
+    // input: not modified
+    LAGraph_Graph G,
+    char *msg
+) ;
+
 #endif
