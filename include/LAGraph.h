@@ -2157,9 +2157,10 @@ int LAGr_BreadthFirstSearch
 // LAGr_ConnectedComponents: connected components of an undirected graph
 //------------------------------------------------------------------------------
 
+// FIXME: what if a node has no edges?  is components sparse?  Check this.
+
 /** LAGr_ConnectedComponents: connected components of an undirected graph.
  * This is an Advanced algorithm (G->is_symmetric_structure must be known).
- * FIXME: what if a node has no edges?  is components sparse?
  *
  * @param[out] component    component(i)=s if node i is in the component whose
  *                          representative node is s.
@@ -2188,6 +2189,8 @@ int LAGr_ConnectedComponents
 // LAGr_SingleSourceShortestPath: single-source shortest paths
 //------------------------------------------------------------------------------
 
+// FIXME: check if pattern of path_length is reach(G,i) or inf?  Check this.
+
 /** LAGr_SingleSourceShortestPath: single-source shortest paths.  This is an
  * Advanced algorithm (G->emin is required for best performance).  The graph G
  * must have an adjacency matrix of type GrB_INT32, GrB_INT64, GrB_UINT32,
@@ -2196,7 +2199,6 @@ int LAGr_ConnectedComponents
  *
  * FUTURE: add a Basic algorithm that computes G->emin, G->emax, and then uses
  * that information to compute an appropriate (estimated) Delta.
- * FIXME: check if pattern of path_length is reach(G,i) or inf?
  *
  * @param[out] path_length  path_length (i) is the length of the shortest
  *                          path from the source vertex to vertex i.
@@ -2265,8 +2267,6 @@ int LAGr_Betweenness
     char *msg
 ) ;
 
-// FIXME: start here for next LAGraph meeting, Aug 24, 2022
-
 //------------------------------------------------------------------------------
 // LAGr_PageRank: PageRank of a graph.
 //------------------------------------------------------------------------------
@@ -2310,26 +2310,11 @@ int LAGr_PageRank
 // LAGr_PageRankGAP: GAP-style PageRank of a graph (for GAP benchmarking only)
 //------------------------------------------------------------------------------
 
-/** LAGr_PageRankGAP: computes the GAP PageRank of a directed graph G.  Sinks
- * (nodes with no out-going edges) are NOT properly handled.  This method
- * should be NOT be used for production.  It is intended for the GAP benchmark
- * only.  This is an Advanced algorithm (G->AT and G->out_degree are required).
- *
- * @param[out] centrality   centrality(i) is the PageRank of node i.
- * @param[out] iters        number of iterations taken.
- * @param[in] G             input graph.
- * @param[in] damping       damping factor (typically 0.85).
- * @param[in] tol           stopping tolerance (typically 1e-4).
- * @param[in] itermax       maximum number of iterations (typically 100).
- * @param[in,out] msg       any error messages.
- *
- * @retval GrB_SUCCESS if successful.
- * @retval GrB_NULL_POINTER if G, centrality, and/our iters are NULL.
- * @retval LAGRAPH_NOT_CACHED if G->AT is required but not present,
- *      or if G->out_degree is not present.
- * @retval LAGRAPH_INVALID_GRAPH Graph is invalid (LAGraph_CheckGraph failed).
- * @returns any GraphBLAS errors that may have been encountered.
- */
+// LAGr_PageRankGAP: computes the GAP PageRank of a directed graph G.  Sinks
+// (nodes with no out-going edges) are NOT properly handled.  This method
+// should be NOT be used for production.  It is intended for the GAP benchmark
+// only.  This is an Advanced algorithm (G->AT and G->out_degree are required).
+// The parameters and return values are the same as LAGr_PageRank.
 
 LAGRAPH_PUBLIC
 int LAGr_PageRankGAP
@@ -2349,75 +2334,58 @@ int LAGr_PageRankGAP
 // LAGr_TriangleCount: triangle counting
 //------------------------------------------------------------------------------
 
-// FIXME: should these enum typedefs be named LAGr_* since they are only used
-// for Advanced methods?
-
-/** LAGraph_TriangleCount_Method: an enum to select the method used to
- * count the number of triangles.
+/** LAGr_TriangleCount_Method: an enum to select the method used to count the
+ * number of triangles.
  */
 
 typedef enum
 {
-    LAGraph_TriangleCount_Default = 0,      ///< use default method
-    LAGraph_TriangleCount_Burkhardt = 1,    ///< sum (sum ((A^2) .* A)) / 6
-    LAGraph_TriangleCount_Cohen = 2,        ///< sum (sum ((L * U) .* A)) / 2
-    LAGraph_TriangleCount_Sandia = 3,       ///< sum (sum ((L * L) .* L))
-    LAGraph_TriangleCount_Sandia2 = 4,      ///< sum (sum ((U * U) .* U))
-    LAGraph_TriangleCount_SandiaDot = 5,    ///< sum (sum ((L * U') .* L))
-    LAGraph_TriangleCount_SandiaDot2 = 6,   ///< sum (sum ((U * L') .* U))
+    LAGr_TriangleCount_Default = 0,     ///< use default method
+    LAGr_TriangleCount_Burkhardt = 1,   ///< sum (sum ((A^2) .* A)) / 6
+    LAGr_TriangleCount_Cohen = 2,       ///< sum (sum ((L * U) .* A)) / 2
+    LAGr_TriangleCount_Sandia_LL = 3,   ///< sum (sum ((L * L) .* L))
+    LAGr_TriangleCount_Sandia_UU = 4,   ///< sum (sum ((U * U) .* U))
+    LAGr_TriangleCount_Sandia_LU = 5,   ///< sum (sum ((L * U') .* L))
+    LAGr_TriangleCount_Sandia_UL = 6,   ///< sum (sum ((U * L') .* U))
 }
-LAGraph_TriangleCount_Method ;
+LAGr_TriangleCount_Method ;
 
-/** LAGraph_TriangleCount_Presort: an enum to control if/how the matrix is
-  * sorted prior to counting triangles.
-  */
+/** LAGr_TriangleCount_Presort: an enum to control if/how the matrix is sorted
+ * prior to counting triangles.
+ */
 
 typedef enum
 {
-    LAGraph_TriangleCount_NoSort = 0,       ///< no sort
-    LAGraph_TriangleCount_Ascending = 1,    ///< sort by degree, ascending.
-    LAGraph_TriangleCount_Descending = -1,  ///< sort by degree, descending.
-    LAGraph_TriangleCount_AutoSort = 2,     ///< auto selection of sort.
+    LAGr_TriangleCount_NoSort = 0,       ///< no sort
+    LAGr_TriangleCount_Ascending = 1,    ///< sort by degree, ascending.
+    LAGr_TriangleCount_Descending = -1, ///< sort by degree, descending.
+    LAGr_TriangleCount_AutoSort = 2,     ///< auto selection of sort.
         ///< No sort if rule is not triggered.  Otherwise: sort in ascending
-        ///< order for methods 3 and 5, descending ordering for methods 4 and 6.
-        ///< On output, presort is modified to reflect the sorting method used
-        ///< (0, -1, or 1).  If presort is NULL on input, no sort is performed.
+        ///< order for Sandia_LL and Sandia_LU, descending ordering for
+        ///< Sandia_UU and Sandia_UL.  On output, presort is modified to
+        ///< reflect the sorting method used (NoSort, Ascending, or Descending).
+        ///< If presort is NULL on input, no sort is performed.
 }
-LAGraph_TriangleCount_Presort ;
+LAGr_TriangleCount_Presort ;
+
+// FIXME: start here for next LAGraph meeting, Aug 31, 2022
 
 /** LAGr_TriangleCount: count the triangles in a graph (advanced API).
  *
- * @param[out]    ntriangles    the number of triangles in G.
- *
- * @param[in]     G         The graph, symmetric, no self loops.
+ * @param[out] ntriangles   the number of triangles in G.
+ * @param[in]  G            The graph, symmetric, no self loops.
  *                          G->nself_edges, G->out_degree, and
  *                          G->is_symmetric_structure are required.
  *
- * @param[in]     method    specifies which algorithm to use
- *                           0:  use the default method
- *                           1:  Burkhardt:  ntri = sum (sum ((A^2) .* A)) / 6
- *                           2:  Cohen:      ntri = sum (sum ((L * U) .* A)) / 2
- *                           3:  Sandia:     ntri = sum (sum ((L * L) .* L))
- *                           4:  Sandia2:    ntri = sum (sum ((U * U) .* U))
- *                           5:  SandiaDot:  ntri = sum (sum ((L * U') .* L))
- *                           6:  SandiaDot2: ntri = sum (sum ((U * L') .* U))
+ * @param[in] method        specifies which algorithm to use.
+ *                          See the LAGr_TriangleCount_Method enum description.
  *
  * @param[in,out] presort   controls the presort of the graph. If set to 2 on
  *                          input, presort will be set to sort type used
- *                          on output:
- *                             0: no sort
- *                             1: sort by degree, ascending order
- *                            -1: sort by degree, descending order
- *                             2: auto selection:
- *                                Method   Presort return value
- *                                1        0
- *                                2        0
- *                                3        1
- *                                4       -1
- *                                5        1
- *                                6       -1
+ *                          on output.  See the description of the
+ *                          LAGr_TriangleCount_Presort enum.
  *
- * @param[in,out] msg           any error messages.
+ * @param[in,out] msg       any error messages.
  *
  * @retval GrB_SUCCESS if successful.
  * @retval GrB_NULL_POINTER if G or ntriangles are NULL.
@@ -2438,8 +2406,8 @@ int LAGr_TriangleCount
     uint64_t *ntriangles,
     // input:
     const LAGraph_Graph G,
-    LAGraph_TriangleCount_Method method,
-    LAGraph_TriangleCount_Presort *presort,
+    LAGr_TriangleCount_Method method,
+    LAGr_TriangleCount_Presort *presort,
     char *msg
 ) ;
 

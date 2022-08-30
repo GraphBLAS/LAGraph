@@ -38,8 +38,8 @@ int LAGraph_TriangleCount
     LG_TRY (LAGraph_Cached_NSelfEdges (G, msg)) ;
 
     // default method and auto selection of sort
-    int method  = LAGraph_TriangleCount_Default ;
-    int presort = LAGraph_TriangleCount_AutoSort ;
+    LAGr_TriangleCount_Method  method  = LAGr_TriangleCount_Default ;
+    LAGr_TriangleCount_Presort presort = LAGr_TriangleCount_AutoSort ;
     return (LAGr_TriangleCount (ntriangles, G, method, &presort, msg)) ;
 }
 

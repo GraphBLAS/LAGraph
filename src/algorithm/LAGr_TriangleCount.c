@@ -27,26 +27,32 @@
 //  0:  default:    use the default method (currently methood 5)
 //  1:  Burkhardt:  ntri = sum (sum ((A^2) .* A)) / 6
 //  2:  Cohen:      ntri = sum (sum ((L * U) .* A)) / 2
-//  3:  Sandia:     ntri = sum (sum ((L * L) .* L))
-//  4:  Sandia2:    ntri = sum (sum ((U * U) .* U))
-//  5:  SandiaDot:  ntri = sum (sum ((L * U') .* L)).  Note that L=U'.
-//  6:  SandiaDot2: ntri = sum (sum ((U * L') .* U)).  Note that U=L'.
+//  3:  Sandia_LL:  ntri = sum (sum ((L * L) .* L))
+//  4:  Sandia_UU:  ntri = sum (sum ((U * U) .* U))
+//  5:  Sandia_LU:  ntri = sum (sum ((L * U') .* L)).  Note that L=U'.
+//  6:  Sandia_UL:  ntri = sum (sum ((U * L') .* U)).  Note that U=L'.
 
 // A is a square symmetric matrix, of any type.  Its values are ignored.
 // Results are undefined for methods 1 and 2 if self-edges exist in A.  Results
 // are undefined for all methods if A is unsymmetric.
 
-// The Sandia* methods all tend to be faster than the Burkhardt or Cohen
-// methods.  For the largest graphs, SandiaDot tends to be fastest, except for
-// the GAP-urand matrix, where the saxpy-based Sandia method (L*L.*L) is
-// fastest.  For many small graphs, the saxpy-based Sandia and Sandia2 methods
-// are often faster that the dot-product-based methods.
+// The Sandia_* methods all tend to be faster than the Burkhardt or Cohen
+// methods.  For the largest graphs, Sandia_LU tends to be fastest, except for
+// the GAP-urand matrix, where the saxpy-based Sandia_LL method (L*L.*L) is
+// fastest.  For many small graphs, the saxpy-based Sandia_LL and Sandia_UU
+// methods are often faster that the dot-product-based methods.
 
-// FIXME: add cite to Burkhard and to Cohen.
+// Reference for the Burkhardt method:  Burkhardt, Paul. "Graphing Trillions of
+// Triangles." Information Visualization 16, no. 3 (July 2017): 157–66.
+// https://doi.org/10.1177/1473871616666393.
+ 
+// Reference for the Cohen method:  J. Cohen, "Graph twiddling in a mapreduce
+// world," Computing in Science & Engineering, vol. 11, no. 4, pp. 29–41, 2009.
+// https://doi.org/10.1109/MCSE.2009.120
 
-// Reference (for the "Sandia*" methods): Wolf, Deveci, Berry, Hammond,
-// Rajamanickam, 'Fast linear algebra- based triangle counting with
-// KokkosKernels', IEEE HPEC'17, https://dx.doi.org/10.1109/HPEC.2017.8091043,
+// Reference for the "Sandia_*" methods: Wolf, Deveci, Berry, Hammond,
+// Rajamanickam, "Fast linear algebra- based triangle counting with
+// KokkosKernels", IEEE HPEC'17, https://dx.doi.org/10.1109/HPEC.2017.8091043
 
 #define LG_FREE_ALL             \
 {                               \
@@ -110,8 +116,8 @@ int LAGr_TriangleCount
     uint64_t       *ntriangles,
     // input:
     const LAGraph_Graph G,
-    LAGraph_TriangleCount_Method    method,
-    LAGraph_TriangleCount_Presort *presort,
+    LAGr_TriangleCount_Method    method,
+    LAGr_TriangleCount_Presort *presort,
     char           *msg
 )
 {
@@ -124,31 +130,31 @@ int LAGr_TriangleCount
     GrB_Matrix C = NULL, L = NULL, U = NULL, T = NULL ;
     int64_t *P = NULL ;
     LG_ASSERT_MSG (
-    method == LAGraph_TriangleCount_Default ||   // 0: use default method
-    method == LAGraph_TriangleCount_Burkhardt || // 1: sum (sum ((A^2) .* A))/6
-    method == LAGraph_TriangleCount_Cohen ||     // 2: sum (sum ((L * U) .*A))/2
-    method == LAGraph_TriangleCount_Sandia ||    // 3: sum (sum ((L * L) .* L))
-    method == LAGraph_TriangleCount_Sandia2 ||   // 4: sum (sum ((U * U) .* U))
-    method == LAGraph_TriangleCount_SandiaDot || // 5: sum (sum ((L * U') .* L))
-    method == LAGraph_TriangleCount_SandiaDot2,  // 6: sum (sum ((U * L') .* U))
+    method == LAGr_TriangleCount_Default ||   // 0: use default method
+    method == LAGr_TriangleCount_Burkhardt || // 1: sum (sum ((A^2) .* A))/6
+    method == LAGr_TriangleCount_Cohen ||     // 2: sum (sum ((L * U) .*A))/2
+    method == LAGr_TriangleCount_Sandia_LL ||    // 3: sum (sum ((L * L) .* L))
+    method == LAGr_TriangleCount_Sandia_UU ||   // 4: sum (sum ((U * U) .* U))
+    method == LAGr_TriangleCount_Sandia_LU || // 5: sum (sum ((L * U') .* L))
+    method == LAGr_TriangleCount_Sandia_UL,  // 6: sum (sum ((U * L') .* U))
     GrB_INVALID_VALUE, "method is invalid") ;
     if (presort != NULL)
     {
         LG_ASSERT_MSG (
-        (*presort) == LAGraph_TriangleCount_NoSort ||
-        (*presort) == LAGraph_TriangleCount_Ascending ||
-        (*presort) == LAGraph_TriangleCount_Descending ||
-        (*presort) == LAGraph_TriangleCount_AutoSort,
+        (*presort) == LAGr_TriangleCount_NoSort ||
+        (*presort) == LAGr_TriangleCount_Ascending ||
+        (*presort) == LAGr_TriangleCount_Descending ||
+        (*presort) == LAGr_TriangleCount_AutoSort,
         GrB_INVALID_VALUE, "presort is invalid") ;
     }
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     LG_ASSERT (ntriangles != NULL, GrB_NULL_POINTER) ;
     LG_ASSERT (G->nself_edges == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED) ;
 
-    if (method == LAGraph_TriangleCount_Default)
+    if (method == LAGr_TriangleCount_Default)
     {
-        // 0: use default method (5): SandiaDot: sum (sum ((L * U') .* L))
-        method = LAGraph_TriangleCount_SandiaDot ;
+        // 0: use default method (5): Sandia_LU sum (sum ((L * U') .* L))
+        method = LAGr_TriangleCount_Sandia_LU ;
     }
 
     LG_ASSERT_MSG ((G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
@@ -157,17 +163,17 @@ int LAGr_TriangleCount
         LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED,
         "G->A must be known to be symmetric") ;
 
-    // the Sandia* methods can benefit from the presort
+    // the Sandia_* methods can benefit from the presort
     bool method_can_use_presort =
-    method == LAGraph_TriangleCount_Sandia ||    // 3: sum (sum ((L * L) .* L))
-    method == LAGraph_TriangleCount_Sandia2 ||   // 4: sum (sum ((U * U) .* U))
-    method == LAGraph_TriangleCount_SandiaDot || // 5: sum (sum ((L * U') .* L))
-    method == LAGraph_TriangleCount_SandiaDot2 ; // 6: sum (sum ((U * L') .* U))
+    method == LAGr_TriangleCount_Sandia_LL || // sum (sum ((L * L) .* L))
+    method == LAGr_TriangleCount_Sandia_UU || // sum (sum ((U * U) .* U))
+    method == LAGr_TriangleCount_Sandia_LU || // sum (sum ((L * U') .* L))
+    method == LAGr_TriangleCount_Sandia_UL ; // sum (sum ((U * L') .* U))
 
     GrB_Matrix A = G->A ;
     GrB_Vector Degree = G->out_degree ;
     bool auto_sort = (presort != NULL)
-        && ((*presort) == LAGraph_TriangleCount_AutoSort) ;
+        && ((*presort) == LAGr_TriangleCount_AutoSort) ;
     if (auto_sort && method_can_use_presort)
     {
         LG_ASSERT_MSG (Degree != NULL,
@@ -195,7 +201,7 @@ int LAGr_TriangleCount
     if (auto_sort)
     {
         // auto selection of sorting method
-        (*presort) = LAGraph_TriangleCount_NoSort ; // default is not to sort
+        (*presort) = LAGr_TriangleCount_NoSort ; // default is not to sort
 
         if (method_can_use_presort)
         {
@@ -228,22 +234,22 @@ int LAGr_TriangleCount
                 {
                     switch (method)
                     {
-                        case LAGraph_TriangleCount_Sandia:
+                        case LAGr_TriangleCount_Sandia_LL:
                             // 3:sum (sum ((L * L) .* L))
-                            (*presort) = LAGraph_TriangleCount_Ascending  ;
+                            (*presort) = LAGr_TriangleCount_Ascending  ;
                             break ;
-                        case LAGraph_TriangleCount_Sandia2:
+                        case LAGr_TriangleCount_Sandia_UU:
                             // 4: sum (sum ((U * U) .* U))
-                            (*presort) = LAGraph_TriangleCount_Descending ;
+                            (*presort) = LAGr_TriangleCount_Descending ;
                             break ;
                         default:
-                        case LAGraph_TriangleCount_SandiaDot:
+                        case LAGr_TriangleCount_Sandia_LU:
                             // 5: sum (sum ((L * U') .* L))
-                            (*presort) = LAGraph_TriangleCount_Ascending  ;
+                            (*presort) = LAGr_TriangleCount_Ascending  ;
                             break ;
-                        case LAGraph_TriangleCount_SandiaDot2:
+                        case LAGr_TriangleCount_Sandia_UL:
                             // 6: sum (sum ((U * L') .* U))
-                            (*presort) = LAGraph_TriangleCount_Descending ;
+                            (*presort) = LAGr_TriangleCount_Descending ;
                             break ;
                     }
                 }
@@ -255,11 +261,11 @@ int LAGr_TriangleCount
     // sort the input matrix, if requested
     //--------------------------------------------------------------------------
 
-    if (presort != NULL && (*presort) != LAGraph_TriangleCount_NoSort)
+    if (presort != NULL && (*presort) != LAGr_TriangleCount_NoSort)
     {
         // P = permutation that sorts the rows by their degree
         LG_TRY (LAGr_SortByDegree (&P, G, true,
-            (*presort) == LAGraph_TriangleCount_Ascending, msg)) ;
+            (*presort) == LAGr_TriangleCount_Ascending, msg)) ;
 
         // T = A (P,P) and typecast to boolean
         GRB_TRY (GrB_Matrix_new (&T, GrB_BOOL, n, n)) ;
@@ -280,14 +286,14 @@ int LAGr_TriangleCount
     switch (method)
     {
 
-        case LAGraph_TriangleCount_Burkhardt:  // 1: sum (sum ((A^2) .* A)) / 6
+        case LAGr_TriangleCount_Burkhardt:  // 1: sum (sum ((A^2) .* A)) / 6
 
             GRB_TRY (GrB_mxm (C, A, NULL, semiring, A, A, GrB_DESC_S)) ;
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             ntri /= 6 ;
             break ;
 
-        case LAGraph_TriangleCount_Cohen: // 2: sum (sum ((L * U) .* A)) / 2
+        case LAGr_TriangleCount_Cohen: // 2: sum (sum ((L * U) .* A)) / 2
 
             LG_TRY (tricount_prep (&L, &U, A, msg)) ;
             GRB_TRY (GrB_mxm (C, A, NULL, semiring, L, U, GrB_DESC_S)) ;
@@ -295,7 +301,7 @@ int LAGr_TriangleCount
             ntri /= 2 ;
             break ;
 
-        case LAGraph_TriangleCount_Sandia: // 3: sum (sum ((L * L) .* L))
+        case LAGr_TriangleCount_Sandia_LL: // 3: sum (sum ((L * L) .* L))
 
             // using the masked saxpy3 method
             LG_TRY (tricount_prep (&L, NULL, A, msg)) ;
@@ -303,7 +309,7 @@ int LAGr_TriangleCount
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             break ;
 
-        case LAGraph_TriangleCount_Sandia2: // 4: sum (sum ((U * U) .* U))
+        case LAGr_TriangleCount_Sandia_UU: // 4: sum (sum ((U * U) .* U))
 
             // using the masked saxpy3 method
             LG_TRY (tricount_prep (NULL, &U, A, msg)) ;
@@ -312,10 +318,10 @@ int LAGr_TriangleCount
             break ;
 
         default:
-        case LAGraph_TriangleCount_SandiaDot: // 5: sum (sum ((L * U') .* L))
+        case LAGr_TriangleCount_Sandia_LU: // 5: sum (sum ((L * U') .* L))
 
             // This tends to be the fastest method for most large matrices, but
-            // the SandiaDot2 method is also very fast.
+            // the Sandia_UL method is also very fast.
 
             // using the masked dot product
             LG_TRY (tricount_prep (&L, &U, A, msg)) ;
@@ -323,7 +329,7 @@ int LAGr_TriangleCount
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             break ;
 
-        case LAGraph_TriangleCount_SandiaDot2: // 6: sum (sum ((U * L') .* U))
+        case LAGr_TriangleCount_Sandia_UL: // 6: sum (sum ((U * L') .* U))
 
             // using the masked dot product
             LG_TRY (tricount_prep (&L, &U, A, msg)) ;

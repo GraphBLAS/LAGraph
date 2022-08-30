@@ -1,13 +1,16 @@
+
 As of Aug 25, 2022:
 
-    * cmake: need to find the right liblagraph and libgraphblas
+    * FIXME: cmake: need to find the right liblagraph and libgraphblas
         (not in /usr/local/lib*, but the one being compiled/tested).
 
-    * entire user guide:  rtdocs is in good shape.  Ditch LaTeX?
+    * FIXME: entire user guide:  rtdocs is in good shape.  Ditch LaTeX?
 
-    * check function names and API
+    * FIXME: check function names and API
 
-    * add FUTURE to User Guide (see below)
+    * FIXME: add FUTURE to User Guide (see below)
+
+    * FIXME: delete this file and its folder "Delete_me_for_V1"
 
 --------------------------------------------------------------------------------
 add FUTURE items as a section in the User Guide:
