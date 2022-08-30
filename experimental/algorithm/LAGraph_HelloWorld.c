@@ -16,7 +16,7 @@
 // folder.  All it does is make a copy of the G->A matrix and return it as
 // the new matrix Y.  Inside, it allocates some worspace as well (the matrix W,
 // which is not used).  To illustrate the use of the error msg string, it
-// returns an error if the graph is undirected.
+// returns an error if the graph not directed.
 
 // The GRB_TRY and LG_TRY macros use the LG_FREE_ALL macro to free all
 // workspace and all output variables if an error occurs.  To use these macros,
@@ -27,9 +27,9 @@
 // to LAGraph_whatever.c, and use it as a template for your own algorithm.
 // Then place the prototype in include/LAGraphX.h.
 
-// See experimental/benchmark/helloworld_demo.c and
-// helloworld2_demo.c for two "benchmark" methods that exercise this
-// algorithm.
+// See experimental/test/test_HelloWorld.c for a test for this method, and
+// experimental/benchmark/helloworld_demo.c and helloworld2_demo.c for two
+// methods that benchmark the performance of this algorithm.
 
 #define LG_FREE_WORK                        \
 {                                           \
@@ -66,18 +66,17 @@ GrB_Info LAGraph_HelloWorld // a simple algorithm, just for illustration
     GrB_Matrix W = NULL, Y = NULL ;     // declare workspace and output(s)
     LG_CLEAR_MSG ;                      // clears the msg string, if not NULL
 
+    // the caller must pass in a non-NULL &Y on input
+    LG_ASSERT (Yhandle != NULL, GrB_NULL_POINTER) ;
+    (*Yhandle) = NULL ;
+
     // basic checks of the input graph
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
 
-    // the caller must pass in a non-NULL &Y on input
-    LG_ASSERT (Yhandle != NULL, GrB_NULL_POINTER) ;
-
     // the graph must be directed (a useless test, just to illustrate
-    // the use of the LG_ASSERT_MSG macro.
+    // the use of the LG_ASSERT_MSG macro)
     LG_ASSERT_MSG (G->kind == LAGraph_ADJACENCY_DIRECTED,
         GrB_INVALID_VALUE, "LAGraph_HelloWorld requires a directed graph") ;
-
-    (*Yhandle) = NULL ;
 
     //--------------------------------------------------------------------------
     // allocate workspace and create the output matrix Y
