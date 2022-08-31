@@ -2350,13 +2350,13 @@ int LAGr_PageRankGAP
 
 typedef enum
 {
-    LAGr_TriangleCount_Default = 0,     ///< use default method
+    LAGr_TriangleCount_AutoMethod = 0,  ///< auto selection of method
     LAGr_TriangleCount_Burkhardt = 1,   ///< sum (sum ((A^2) .* A)) / 6
     LAGr_TriangleCount_Cohen = 2,       ///< sum (sum ((L * U) .* A)) / 2
     LAGr_TriangleCount_Sandia_LL = 3,   ///< sum (sum ((L * L) .* L))
     LAGr_TriangleCount_Sandia_UU = 4,   ///< sum (sum ((U * U) .* U))
-    LAGr_TriangleCount_Sandia_LU = 5,   ///< sum (sum ((L * U') .* L))
-    LAGr_TriangleCount_Sandia_UL = 6,   ///< sum (sum ((U * L') .* U))
+    LAGr_TriangleCount_Sandia_LUT = 5,  ///< sum (sum ((L * U') .* L))
+    LAGr_TriangleCount_Sandia_ULT = 6,  ///< sum (sum ((U * L') .* U))
 }
 LAGr_TriangleCount_Method ;
 
@@ -2366,19 +2366,19 @@ LAGr_TriangleCount_Method ;
 
 typedef enum
 {
-    LAGr_TriangleCount_NoSort = 0,       ///< no sort
-    LAGr_TriangleCount_Ascending = 1,    ///< sort by degree, ascending.
+    LAGr_TriangleCount_NoSort = 2,      ///< no sort
+    LAGr_TriangleCount_Ascending = 1,   ///< sort by degree, ascending.
     LAGr_TriangleCount_Descending = -1, ///< sort by degree, descending.
-    LAGr_TriangleCount_AutoSort = 2,     ///< auto selection of sort.
-        ///< No sort if rule is not triggered.  Otherwise: sort in ascending
-        ///< order for Sandia_LL and Sandia_LU, descending ordering for
-        ///< Sandia_UU and Sandia_UL.  On output, presort is modified to
-        ///< reflect the sorting method used (NoSort, Ascending, or Descending).
-        ///< If presort is NULL on input, no sort is performed.
+    LAGr_TriangleCount_AutoSort = 0,    ///< auto selection of presort:
+        ///< No presort is done for the Burkhard or Cohen methods, and
+        ///< no sort is done for the Sandia_* methods if the sampled mean
+        ///< out-degree is <= 4 * the sample median out-degree.
+        ///< Otherwise: sort in ascending order for Sandia_LL and Sandia_LUT,
+        ///< descending ordering for Sandia_UU and Sandia_ULT.  On output,
+        ///< presort is modified to reflect the sorting method used (NoSort,
+        ///< Ascending, or Descending).
 }
 LAGr_TriangleCount_Presort ;
-
-// FIXME: start here for next LAGraph meeting, Aug 31, 2022
 
 /** LAGr_TriangleCount: count the triangles in a graph (advanced API).
  *
@@ -2386,15 +2386,14 @@ LAGr_TriangleCount_Presort ;
  * @param[in]  G            The graph, symmetric, no self loops.
  *                          G->nself_edges, G->out_degree, and
  *                          G->is_symmetric_structure are required.
- *
- * @param[in] method        specifies which algorithm to use.
- *                          See the LAGr_TriangleCount_Method enum description.
- *
- * @param[in,out] presort   controls the presort of the graph. If set to 2 on
- *                          input, presort will be set to sort type used
- *                          on output.  See the description of the
- *                          LAGr_TriangleCount_Presort enum.
- *
+ * @param[in,out] method    specifies which algorithm to use, and returns
+ *                          the method chosen.  If NULL, the AutoMethod is
+ *                          used, and the method is not reported.  Also see the
+ *                          LAGr_TriangleCount_Method enum description.
+ * @param[in,out] presort   controls the presort of the graph, and returns the
+ *                          presort chosen.  If NULL, the AutoSort is used, and
+ *                          the presort method is not reported.  Also see the
+ *                          description of the LAGr_TriangleCount_Presort enum.
  * @param[in,out] msg       any error messages.
  *
  * @retval GrB_SUCCESS if successful.
@@ -2416,7 +2415,7 @@ int LAGr_TriangleCount
     uint64_t *ntriangles,
     // input:
     const LAGraph_Graph G,
-    LAGr_TriangleCount_Method method,
+    LAGr_TriangleCount_Method *method,
     LAGr_TriangleCount_Presort *presort,
     char *msg
 ) ;

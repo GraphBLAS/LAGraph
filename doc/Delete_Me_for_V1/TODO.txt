@@ -4,8 +4,10 @@ As of Aug 31, 2022:
     * FIXME: cmake: need to find the right liblagraph and libgraphblas
         (not in /usr/local/lib*, but the one being compiled/tested).
 
-    * FIXME: entire user guide:  rtdocs is in good shape.  Ditch LaTeX?
-        Can we construct a PDF from rtdocs?
+    * FIXME: entire user guide:  rtdocs is in good shape.  Ditch LaTeX.
+        Can we construct a PDF from rtdocs? Yes.
+
+    * FIXME: write a contributer's guide, first-cut
 
     * FIXME: check function names and API
 
