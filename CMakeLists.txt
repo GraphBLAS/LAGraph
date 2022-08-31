@@ -124,12 +124,8 @@ message ( STATUS "GraphBLAS root:              " ${GRAPHBLAS_ROOT} )
 find_package (GraphBLAS REQUIRED MODULE)
 
 #-------------------------------------------------------------------------------
-# FIXME: Is this really necessary? (remove this comment)
+# install directories for "sudo make install"
 #-------------------------------------------------------------------------------
-
-# REPLY: by Tim D: yes, if we want a "sudo make install" to work.
-# With also need to use the "install ( ... )" command.
-# See the last part of the SuiteSparse:GraphBLAS CMakeLists.txt
 
 include ( GNUInstallDirs )
 
