@@ -1,9 +1,9 @@
 Installation
 ============
 
-LAGraph is available at https://github.com/GraphBLAS/LAGraph .
+LAGraph is available at `<https://github.com/GraphBLAS/LAGraph>`_.
 Be sure to check out the reorg branch (for now).
-LAGraph requires SuiteSparse:GraphBLAS, available at https://github.com/DrTimothyAldenDavis/GraphBLAS.
+LAGraph requires SuiteSparse:GraphBLAS, available at `<https://github.com/DrTimothyAldenDavis/GraphBLAS>`_.
 
 To compile and install LAGraph, you must first compile and install a recent
 version of SuiteSparse:GraphBLAS.  Place LAGraph and GraphBLAS in the same
@@ -13,17 +13,14 @@ At least on Linux or Mac, if GraphBLAS is not installed system-wide,
 LAGraph can find it if GraphBLAS appears in the same folder as LAGraph,
 so you do not need system privileges to use GraphBLAS.
 
-Next, in Linux or Mac, run these commands:
+Next, in Linux or Mac, run these commands::
 
-FIXME: how do we format the list below and put in plain text format?
-
-.. code-block:: sh
     cd LAGraph/build
     cmake ..
     make
     make test
 
-If you have system admin privileges, you can then install it:
+If you have system admin privileges, you can then install it::
 
     sudo make install
 

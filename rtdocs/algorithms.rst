@@ -45,6 +45,6 @@ from Basic algorithms.
 
 .. doxygenfunction:: LAGr_TriangleCount
 
-.. doxygenenum:: LAGraph_TriangleCount_Method
+.. doxygenenum:: LAGr_TriangleCount_Method
 
-.. doxygenenum:: LAGraph_TriangleCount_Presort
+.. doxygenenum:: LAGr_TriangleCount_Presort

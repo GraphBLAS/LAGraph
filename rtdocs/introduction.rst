@@ -7,7 +7,7 @@ But GraphBLAS doesn't have any graph algorithms.
 discuss the LAGraph idea:  graph algorithms using GraphBLAS,
 with several additional data structures.  In particular the LAGraph_Graph.
 Discuss its properties, and cached properties, and the differences
-between Basic (LAGraph_*) and Advanced (LAGr_*)
+between Basic (``LAGraph_*``) and Advanced (``LAGr_*``).
 
 LAGraph and GraphBLAS work together; you can have a mix of
 LAGraph_Graph objects and GraphBLAS objects together in the same
