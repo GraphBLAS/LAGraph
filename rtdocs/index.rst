@@ -8,6 +8,10 @@ Graphs are expressed as matrices, and the operations over
 these matrices are generalized through the use of a
 semiring algebraic structure.
 
+LAGraph is available at https://github.com/GraphBLAS/LAGraph.
+LAGraph requires SuiteSparse:GraphBLAS, available at 
+https://github.com/DrTimothyAldenDavis/GraphBLAS.
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
@@ -15,6 +19,8 @@ semiring algebraic structure.
    core
    algorithms
    utils
+   experimental
+   installation
 
 
 Example Usage
@@ -22,39 +28,35 @@ Example Usage
 
 .. code-block:: C
 
-    #include <stdlib.h>
-    #include <stdio.h>
-    #include <stdint.h>
-    #include <stdbool.h>
     #include "LAGraph.h"
+    #define LAGRAPH_FREE_ALL            \
+        /* free everything */           \
+        LAGraph_Delete (&G, msg) ;      \
+        GrB_free (&centrality) ;
 
-    void test_PageRank(void)
+    int main (void)
     {
+        // initialize LAGraph
         LAGraph_Init (msg) ;
         GrB_Matrix A = NULL ;
-        GrB_Vector centrality = NULL, cmatlab = NULL, diff = NULL ;
+        GrB_Vector centrality = NULL ;
         int niters = 0 ;
 
-        // create the karate graph
-        snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
-        FILE *f = fopen (filename, "r") ;
-        TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&A, f, msg)) ;
-        OK (fclose (f)) ;
-        OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
-        TEST_CHECK (A == NULL) ;    // A has been moved into G->A
-        OK (LAGraph_Cached_OutDegree (G, msg)) ;
+        // create the karate graph and compute the out-degree of all nodes
+        FILE *f = fopen ("LAGraph/data/karate.mtx", "r") ;
+        LAGRAPH_TRY (LAGraph_MMRead (&A, f, msg)) ;
+        fclose (f) ;
+        LAGRAPH_TRY (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
+        LAGRAPH_TRY (LAGraph_Cached_OutDegree (G, msg)) ;
 
-        // compute its pagerank
-        OK (LAGr_PageRank (&centrality, &niters, G, 0.85, 1e-4, 100, msg)) ;
-        OK (LAGraph_Delete (&G, msg)) ;
+        // compute the pagerank
+        LAGRAPH_TRY (LAGr_PageRank (&centrality, &niters, G, 0.85, 1e-4, 100, msg)) ;
 
-        // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
-        float err = difference (centrality, karate_rank) ;
-        printf ("\nkarate:   err: %e\n", err) ;
-        TEST_CHECK (err < 1e-4) ;
-        OK (GrB_free (&centrality)) ;
+        // print the result
+        LAGRAPH_TRY (LAGraph_Vector_print (centrality, LAGRAPH_COMPLETE, stdout, msg)) ;
 
+        // free the graph, the pagerank, and finish LAGraph
+        LAGRAPH_FREE_ALL ;
         LAGraph_Finalize (msg) ;
     }
 

@@ -53,10 +53,10 @@ cmake_policy ( SET CMP0048 NEW )
 set ( CMAKE_MACOSX_RPATH TRUE )
 
 # version of LAGraph
-set ( LAGraph_DATE "Aug 29, 2022" )
+set ( LAGraph_DATE "Aug 31, 2022" )
 set ( LAGraph_VERSION_MAJOR 0 )
 set ( LAGraph_VERSION_MINOR 9 )
-set ( LAGraph_VERSION_SUB   36 )
+set ( LAGraph_VERSION_SUB   37 )
 
 project ( lagraph
           VERSION "${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}" )
@@ -124,10 +124,10 @@ message ( STATUS "GraphBLAS root:              " ${GRAPHBLAS_ROOT} )
 find_package (GraphBLAS REQUIRED MODULE)
 
 #-------------------------------------------------------------------------------
-# Is this really necessary?
+# FIXME: Is this really necessary? (remove this comment)
 #-------------------------------------------------------------------------------
 
-# Tim: yes, if we want a "sudo make install" to work.
+# REPLY: by Tim D: yes, if we want a "sudo make install" to work.
 # With also need to use the "install ( ... )" command.
 # See the last part of the SuiteSparse:GraphBLAS CMakeLists.txt
 

@@ -108,7 +108,7 @@
 #endif
 
 //==============================================================================
-// LAGraph error handling
+// LAGraph error handling: FIXME: add to rtdocs
 //==============================================================================
 
 // All LAGraph functions that return an int use it to indicate an error status
@@ -146,7 +146,7 @@
 */
 
 //------------------------------------------------------------------------------
-// LAGraph error status:
+// LAGraph error status: FIXME: need to add this to rtdocs
 //------------------------------------------------------------------------------
 
 // All LAGraph methods return an int to denote their status:  zero if they are
@@ -242,51 +242,50 @@
 // LAGRAPH_TRY: try an LAGraph method and check for errors
 //------------------------------------------------------------------------------
 
-// In a robust application, the return values from each call to LAGraph and
-// GraphBLAS should be checked, and corrective action should be taken if an
-// error occurs.  The LAGRAPH_TRY and GRB_TRY macros assist in this effort.
-
-// LAGraph and GraphBLAS are written in C, and so they cannot rely on the
-// try/catch mechanism of C++.  To accomplish a similar goal, each LAGraph file
-// must #define its own file-specific macro called LAGRAPH_CATCH.  The typical
-// usage of macro is to free any temporary matrices/vectors or workspace when
-// an error occurs, and then "throw" the error by returning to the caller.  A
-// user application may also #define LAGRAPH_CATCH and use these macros.
-
-// A typical example of a user function that calls LAGraph might #define
-// LAGRAPH_CATCH as follows.  Suppose workvector is a GrB_vector used for
-// computations internal to the mybfs function, and W is a (double *) space
-// created by malloc.
-
-#if example_usage_only
-
-    // an example user-defined LAGRAPH_CATCH macro
-    #define LAGRAPH_CATCH(status)                                   \
-    {                                                               \
-        /* an LAGraph error has occurred */                         \
-        printf ("LAGraph error: (%d): file: %s, line: %d\n%s\n",    \
-            status, __FILE__, __LINE__, msg) ;                      \
-        /* free any internal workspace and return the status */     \
-        GrB_free (*parent) ;                                        \
-        GrB_free (workvector) ;                                     \
-        LAGraph_Free ((void **) &W, NULL) ;                         \
-        return (status) ;                                           \
-    }
-
-    // an example user function that uses LAGRAPH_TRY / LAGRAPH_CATCH
-    int mybfs (LAGraph_Graph G, GrB_Vector *parent, int64_t src)
-    {
-        GrB_Vector workvector = NULL ;
-        double *W = NULL ;
-        char msg [LAGRAPH_MSG_LEN] ;
-        (*parent) = NULL ;
-        LAGRAPH_TRY (LAGr_BreadthFirstSearch (NULL, parent, G, src, true,
-            msg)) ;
-        // ...
-        return (GrB_SUCCESS) ;
-    }
-
-#endif
+/** LAGRAPH_TRY: In a robust application, the return values from each call to
+ * LAGraph and GraphBLAS should be checked, and corrective action should be
+ * taken if an error occurs.  The LAGRAPH_TRY and GRB_TRY macros assist in this
+ * effort.
+ *
+ * LAGraph and GraphBLAS are written in C, and so they cannot rely on the
+ * try/catch mechanism of C++.  To accomplish a similar goal, each LAGraph file
+ * must #define its own file-specific macro called LAGRAPH_CATCH.  The typical
+ * usage of macro is to free any temporary matrices/vectors or workspace when
+ * an error occurs, and then "throw" the error by returning to the caller.  A
+ * user application may also #define LAGRAPH_CATCH and use these macros.
+ * The LAGRAPH_CATCH macro takes a single argument, which is the return value
+ * from an LAGraph method.
+ *
+ * A typical example of a user function that calls LAGraph might #define
+ * LAGRAPH_CATCH as follows.  Suppose workvector is a GrB_vector used for
+ * computations internal to the mybfs function, and W is a (double *) space
+ * created by malloc.
+ *
+ *      // an example user-defined LAGRAPH_CATCH macro, which prints the error
+ *      // then frees any workspace or results, and returns to the caller:
+ *      #define LAGRAPH_CATCH(status)                                   \
+ *      {                                                               \
+ *          printf ("LAGraph error: (%d): file: %s, line: %d\n%s\n",    \
+ *              status, __FILE__, __LINE__, msg) ;                      \
+ *          GrB_free (*parent) ;                                        \
+ *          GrB_free (workvector) ;                                     \
+ *          LAGraph_Free ((void **) &W, NULL) ;                         \
+ *          return (status) ;                                           \
+ *      }
+ *
+ *      // an example user function that uses LAGRAPH_TRY / LAGRAPH_CATCH
+ *      int mybfs (LAGraph_Graph G, GrB_Vector *parent, int64_t src)
+ *      {
+ *          GrB_Vector workvector = NULL ;
+ *          double *W = NULL ;
+ *          char msg [LAGRAPH_MSG_LEN] ;
+ *          (*parent) = NULL ;
+ *          LAGRAPH_TRY (LAGr_BreadthFirstSearch (NULL, parent, G, src, true,
+ *              msg)) ;
+ *          // ...
+ *          return (GrB_SUCCESS) ;
+ *      }
+ */
 
 #define LAGRAPH_TRY(LAGraph_method)             \
 {                                               \
@@ -301,19 +300,21 @@
 // GRB_TRY: try a GraphBLAS method and check for errors
 //------------------------------------------------------------------------------
 
-// LAGraph provides a similar functionality for calling GraphBLAS methods.
-// GraphBLAS returns info = 0 (GrB_SUCCESS) or 1 (GrB_NO_VALUE) on success, and
-// a value < 0 on failure.  The user application must #define GRB_CATCH to use
-// GRB_TRY.  Note that GraphBLAS_info is internal to this macro.  If the
-// user application or LAGraph method wants a copy, a statement such as
-// info = GraphBLAS_info ; where info is defined outside of this macro.
-
-// GraphBLAS and LAGraph both use the convention that negative values are
-// errors, and the LAGraph_status is a superset of the GrB_Info enum.  As a
-// result, the user can define LAGRAPH_CATCH and GRB_TRY as the same operation.
-// The main difference between the two would be the error message string.  For
-// LAGraph, the string is the last parameter, and LAGRAPH_CATCH can optionally
-// print it out.  For GraphBLAS, the GrB_error mechanism can return a string.
+/** GRB_TRY: LAGraph provides a similar functionality as LAGRAPH_TRY for
+ * calling GraphBLAS methods, with the GRB_TRY macro.  GraphBLAS returns info =
+ * 0 (GrB_SUCCESS) or 1 (GrB_NO_VALUE) on success, and a value < 0 on failure.
+ * The user application must #define GRB_CATCH to use GRB_TRY.  Note that
+ * GraphBLAS_info is internal to this macro.  If the user application or
+ * LAGraph method wants a copy, a statement such as info = GraphBLAS_info ;
+ * where info is defined outside of this macro.
+ *
+ * GraphBLAS and LAGraph both use the convention that negative values are
+ * errors, and the LAGraph_status is a superset of the GrB_Info enum.  As a
+ * result, the user can define LAGRAPH_CATCH and GRB_TRY as the same operation.
+ * The main difference between the two would be the error message string.  For
+ * LAGraph, the string is the last parameter, and LAGRAPH_CATCH can optionally
+ * print it out.  For GraphBLAS, the GrB_error mechanism can return a string.  
+ */
 
 #define GRB_TRY(GrB_method)                     \
 {                                               \
@@ -564,20 +565,20 @@ LAGraph_State ;
  *
  * An LAGraph_Graph G contains two kinds of components:
  *  1. Primary components of the graph, which fully define the graph.
- *  2. Cached properties of the graph, which can be recreated any time.*/
-
-/* (1) primary components:
- *      A           the adjacency matrix of the graph
- *      kind        the kind of graph (undirected, directed, bipartite, ...)
- * (2) cached properties:
- *      AT          AT = A'
- *      out_degree  out_degree(i) = # of entries in A(i,:)
- *      in_degree   in_degree(j) = # of entries in A(:,j)
- *      is_symmetric_structure: true if the structure of A is symmetric
- *      nself_edges the number of entries on the diagonal of A
- *      emin        minimum edge weight
- *      emax        maximum edge weight
+ *  2. Cached properties of the graph, which can be recreated any time.
  */
+
+// (1) primary components:
+//      A           the adjacency matrix of the graph
+//      kind        the kind of graph (undirected, directed, bipartite, ...)
+// (2) cached properties:
+//      AT          AT = A'
+//      out_degree  out_degree(i) = # of entries in A(i,:)
+//      in_degree   in_degree(j) = # of entries in A(:,j)
+//      is_symmetric_structure: true if the structure of A is symmetric
+//      nself_edges the number of entries on the diagonal of A
+//      emin        minimum edge weight
+//      emax        maximum edge weight
 
 struct LAGraph_Graph_struct
 {
@@ -604,27 +605,29 @@ struct LAGraph_Graph_struct
     // cached properties of the graph
     //--------------------------------------------------------------------------
 
-    // All of these components may be deleted or set to 'unknown' at any time.
-    // For example, if AT is NULL, then the transpose of A has not been
-    // computed.  A scalar cached property of type LAGraph_Boolean would be set
-    // to LAGRAPH_UNKNOWN to denote that its value is unknown.
+    /** @name Cached Properties
+     *
+     * All of these components may be deleted or set to 'unknown' at any time.
+     * For example, if AT is NULL, then the transpose of A has not been
+     * computed.  A scalar cached property of type LAGraph_Boolean would be set
+     * to LAGRAPH_UNKNOWN to denote that its value is unknown.  
+     *
+     * If present, the cached properties must be valid and accurate.  If the
+     * graph changes, these cached properties can either be recomputed or
+     * deleted to denote the fact that they are unknown.  This choice is up to
+     * individual LAGraph methods and utilities.
+     *
+     * LAGraph methods can set non-scalar cached properties only if they are
+     * constructing the graph.  They cannot modify them or create them if the
+     * graph is declared as a read-only object in the parameter list of the
+     * method.
+     */
 
-    // If present, the cached properties must be valid and accurate.  If the
-    // graph changes, these cached properties can either be recomputed or
-    // deleted to denote the fact that they are unknown.  This choice is up to
-    // individual LAGraph methods and utilities.
-
-    // LAGraph methods can set non-scalar cached properties only if they are
-    // constructing the graph.  They cannot modify them or create them if the
-    // graph is declared as a read-only object in the parameter list of the
-    // method.
-
-    /** @name Cached Properties */
     //@{
 
-    GrB_Matrix AT ;         ///< AT = A', the transpose of A, with the same type.
+    GrB_Matrix AT ; ///< AT = A', the transpose of A, with the same type.
 
-    GrB_Vector out_degree ;  ///< a GrB_INT64 vector of length m, if A is m-by-n.
+    GrB_Vector out_degree ; ///< a GrB_INT64 vector of length m, if A is m-by-n.
            ///< where out_degree(i) is the number of entries in A(i,:).  If
            ///< out_degree is sparse and the entry out_degree(i) is not present,
            ///< then it is assumed to be zero.
@@ -633,17 +636,20 @@ struct LAGraph_Graph_struct
             ///< where in_degree(j) is the number of entries in A(:,j).  If
             ///< in_degree is sparse and the entry in_degree(j) is not present,
             ///< then it is assumed to be zero.  If A is known to have a
-            ///< symmetric structure, the convention is that the degree is held in
-            ///< out_degree, and in_degree is left as NULL.
+            ///< symmetric structure, the convention is that the degree is held
+            ///< in G->out_degree, and in G->in_degree is left as NULL.
 
-    // If G is held as an incidence matrix, then G->A might be rectangular,
-    // in the future, but the graph G may have a symmetric structure anyway.
+    // FUTURE: If G is held as an incidence matrix, then G->A might be
+    // rectangular, in the future, but the graph G may have a symmetric
+    // structure anyway.
+
     LAGraph_Boolean is_symmetric_structure ;    ///< For an undirected
             ///< graph, this cached property will always be implicitly true and
-            ///< can be ignored.  The matrix A for a directed weighted graph will
-            ///< typically be unsymmetric, but might have a symmetric structure.
-            ///< In that case, this scalar cached property can be set to true.
-            ///< By default, this cached property is set to LAGRAPH_UNKNOWN.
+            ///< can be ignored.  The matrix A for a directed weighted graph
+            ///< will typically be unsymmetric, but might have a symmetric
+            ///< structure.  In that case, this scalar cached property can be
+            ///< set to true. By default, this cached property is set to
+            ///< LAGRAPH_UNKNOWN.
 
     int64_t nself_edges ; ///< number of entries on the diagonal of A, or
             ///< LAGRAPH_UNKNOWN if unknown.  For the adjacency matrix of a
@@ -664,8 +670,7 @@ struct LAGraph_Graph_struct
 
     //@}
 
-    // possible future cached properties:
-
+    // FUTURE: possible future cached properties:
     // Some algorithms may want to know if the graph has any edge weights
     // exactly equal to zero.  In some cases, this can be inferred from the
     // emin/emax bounds, or it can be indicated via the following cached
@@ -713,6 +718,8 @@ int LAGraph_Init
 ) ;
 
 // FUTURE: include these as built-in semirings in v2.1 C API, Table 3.9:
+
+// FIXME: add these to the rtdocs
 
 // LAGraph semirings, created by LAGraph_Init or LAGr_Init:
 LAGRAPH_PUBLIC GrB_Semiring
@@ -1314,81 +1321,78 @@ double LAGraph_WallClockTime     // returns omp_get_wtime(), or other timer
  * remaining lines are space delimited, and free format (one or more spaces can
  * appear, and each field has arbitrary width).
  *
- * The Matrix Market file <fmt> can be coordinate or array:
+ * The Matrix Market file <fmt> can be coordinate or array.
  *
- *      coordinate:  for this format, the first non-comment line must appear,
- *      and it must contain three integers:
+ * (1) coordinate:  for this format, the first non-comment line must appear,
+ * and it must contain three integers:
  *
- *              nrows ncols nvals
+ *      nrows ncols nvals
  *
- *          For example, a 5-by-12 matrix with 42 entries would have:
+ * For example, a 5-by-12 matrix with 42 entries would have:
  *
- *              5 12 42
+ *      5 12 42
  *
- *          Each of the remaining lines defines one entry.  The order is
- *          arbitrary.  If the Matrix Market <type> is real or integer, each
- *          line contains three numbers: row index, column index, and value.
- *          For example, if A(3,4) is equal to 5.77, a line:
+ * Each of the remaining lines defines one entry.  The order is arbitrary.  If
+ * the Matrix Market <type> is real or integer, each line contains three
+ * numbers: row index, column index, and value.  For example, if A(3,4) is
+ * equal to 5.77, a line:
  *
- *              3 4 5.77
+ *      3 4 5.77
  *
- *          would appear in the file.  The indices in the Matrix Market are
- *          1-based, so this entry becomes A(2,3) in the GrB_Matrix returned to
- *          the caller.  If the <type> is pattern, then only the row and column
- *          index appears.  If <type> is complex, four values appear.  If
- *          A(8,4) has a real part of 6.2 and an imaginary part of -9.3, then
- *          the line is:
+ * would appear in the file.  The indices in the Matrix Market are 1-based, so
+ * this entry becomes A(2,3) in the GrB_Matrix returned to the caller.  If the
+ * <type> is pattern, then only the row and column index appears.  If <type> is
+ * complex, four values appear.  If A(8,4) has a real part of 6.2 and an
+ * imaginary part of -9.3, then the line is:
  *
- *              8 4 6.2 -9.3
+ *      8 4 6.2 -9.3
  *
- *          and since the file is 1-based but a GraphBLAS matrix is always
- *          0-based, one is subtracted from the row and column indices in the
- *          file, so this entry becomes A(7,3).
+ * and since the file is 1-based but a GraphBLAS matrix is always 0-based, one
+ * is subtracted from the row and column indices in the file, so this entry
+ * becomes A(7,3).  Note however that LAGraph does not yet support complex
+ * types.
  *
- *      array: for this format, the first non-comment line must appear, and it
- *      must contain just two integers:
+ * (2) array: for this format, the first non-comment line must appear, and it
+ * must contain just two integers:
+
  *
- *              nrows ncols
+ *      nrows ncols
  *
- *          A 5-by-12 matrix would thus have the line
+ * A 5-by-12 matrix would have this as the first non-comment line after the
+ * header:
  *
- *              5 12
+ *      5 12
  *
- *          Each of the remaining lines defines one entry, in column major
- *          order.  If the <type> is real or integer, this is the value of the
- *          entry.  An entry if <type> of complex consists of two values, the
- *          real and imaginary part (not yet supported).  The <type> cannot be
- *          pattern in this case.
+ * Each of the remaining lines defines one entry, in column major order.  If
+ * the <type> is real or integer, this is the value of the entry.  An entry if
+ * <type> of complex consists of two values, the real and imaginary part (not
+ * yet supported).  The <type> cannot be pattern in this case.
  *
- *      For both coordinate and array formats, real and complex values may use
- *      the terms INF, +INF, -INF, and NAN to represent floating-point infinity
- *      and NaN values, in either upper or lower case.
+ * For both coordinate and array formats, real and complex values may use the
+ * terms INF, +INF, -INF, and NAN to represent floating-point infinity and NaN
+ * values, in either upper or lower case.
  *
  * The <storage> token is general, symmetric, skew-symmetric, or Hermitian:
  *
- *      general: the matrix has no symmetry properties (or at least none that
- *      were exploited when the file was created).
+ * (1) general: the matrix has no symmetry properties (or at least none that
+ * were exploited when the file was created).
  *
- *      symmetric:  A(i,j) == A(j,i).  Only entries on or below the diagonal
- *      appear in the file.  Each off-diagonal entry in the file creates two
- *      entries in the GrB_Matrix that is returned.
+ * (2) symmetric:  A(i,j) == A(j,i).  Only entries on or below the diagonal
+ * appear in the file.  Each off-diagonal entry in the file creates two entries
+ * in the GrB_Matrix that is returned.
  *
- *      skew-symmetric:  A(i,j) == -A(i,j).  There are no entries on the
- *      diagonal.  Only entries below the diagonal appear in the file.  Each
- *      off-diagonal entry in the file creates two entries in the GrB_Matrix
- *      that is returned.
+ * (3) skew-symmetric:  A(i,j) == -A(i,j).  There are no entries on the
+ * diagonal.  Only entries below the diagonal appear in the file.  Each
+ * off-diagonal entry in the file creates two entries in the GrB_Matrix that is
+ * returned.
  *
- *      Hermitian: square complex matrix with A(i,j) = conj (A(j,i)).  All
- *      entries on the diagonal are real.  Each off-diagonal entry in the file
- *      creates two entries in the GrB_Matrix that is returned.
+ * (4) Hermitian: square complex matrix with A(i,j) = conj (A(j,i)).  All
+ * entries on the diagonal are real.  Each off-diagonal entry in the file
+ * creates two entries in the GrB_Matrix that is returned.
  *
  * According to the Matrix Market format, entries are always listed in
  * column-major order.  This rule is follwed by LAGraph_MMWrite.  However,
  * LAGraph_MMRead can read the entries in any order.
- *
- * FUTURE: add support for user-defined types. Perhaps LAGr_MMRead (...) with
- * an extra parameter: pointer to function that reads a single UDT scalar
- * from the file and returns the UDT scalar itself.  Or LAGraph_MMRead_UDT.
  *
  * @param[out] A        handle of the matrix to create.
  * @param[in,out]  f    handle to an open file to read from.
@@ -1402,6 +1406,10 @@ double LAGraph_WallClockTime     // returns omp_get_wtime(), or other timer
  *      (GxB_FC32 and GxB_FC64 in SuiteSparse:GraphBLAS) are not yet supported.
  * @returns any GraphBLAS errors that may have been encountered.
  */
+
+// FUTURE: add support for user-defined types. Perhaps LAGr_MMRead (...) with
+// an extra parameter: pointer to function that reads a single UDT scalar
+// from the file and returns the UDT scalar itself.  Or LAGraph_MMRead_UDT.
 
 LAGRAPH_PUBLIC
 int LAGraph_MMRead
@@ -1421,11 +1429,8 @@ int LAGraph_MMRead
  * LAGraph_MMRead for a description of the output file format.  The
  * MatrixMarket header line always appears, followed by the second line
  * containing the GraphBLAS type:
- *      %%GraphBLAS type <entrytype>
  *
- * FUTURE: add support for user-defined types.  Perhaps as LAGr_MMWrite, which
- * has an extra parameter: a pointer to a function that takes a UDT scalar as
- * input, and writes it to the file.  Or call it LAGraph_MMWrite_UDT.
+ *      %%GraphBLAS type <entrytype>
  *
  * @param[in] A         matrix to write.
  * @param[in,out] f     handle to an open file to write to.
@@ -1438,6 +1443,10 @@ int LAGraph_MMRead
  *      (GxB_FC32 and GxB_FC64 in SuiteSparse:GraphBLAS) are not yet supported.
  * @returns any GraphBLAS errors that may have been encountered.
  */
+
+// FUTURE: add support for user-defined types.  Perhaps as LAGr_MMWrite, which
+// has an extra parameter: a pointer to a function that takes a UDT scalar as
+// input, and writes it to the file.  Or call it LAGraph_MMWrite_UDT.
 
 LAGRAPH_PUBLIC
 int LAGraph_MMWrite
@@ -2197,9 +2206,6 @@ int LAGr_ConnectedComponents
  * GrB_UINT64, GrB_FP32, or GrB_FP64.  If G->A has any other type,
  * GrB_NOT_IMPLEMENTED is returned.
  *
- * FUTURE: add a Basic algorithm that computes G->emin, G->emax, and then uses
- * that information to compute an appropriate (estimated) Delta.
- *
  * @param[out] path_length  path_length (i) is the length of the shortest
  *                          path from the source vertex to vertex i.
  * @param[in] G         input graph.
@@ -2215,6 +2221,9 @@ int LAGr_ConnectedComponents
  * @retval LAGRAPH_INVALID_GRAPH Graph is invalid (LAGraph_CheckGraph failed).
  * @returns any GraphBLAS errors that may have been encountered.
  */
+
+// FUTURE: add a Basic algorithm that computes G->emin, G->emax, and then uses
+// that information to compute an appropriate (estimated) Delta.
 
 LAGRAPH_PUBLIC
 int LAGr_SingleSourceShortestPath
@@ -2237,10 +2246,6 @@ int LAGr_SingleSourceShortestPath
  * Only a few given source nodes are used for the approximation.  This is an
  * Advanced algorithm (G->AT is required).
  *
- * FUTURE: create a Basic algorithm that randomly selects source nodes,
- * or computes the exact centrality with all nodes as sources (which is very
- * costly).
- *
  * @param[out] centrality   centrality(i) is the metric for node i.
  * @param[in] G         input graph.
  * @param[in] sources   source vertices to compute shortest paths, size ns
@@ -2254,6 +2259,11 @@ int LAGr_SingleSourceShortestPath
  * @retval LAGRAPH_NOT_CACHED if G->AT is required but not present.
  * @returns any GraphBLAS errors that may have been encountered.
  */
+
+// FUTURE: create a Basic algorithm that randomly selects source nodes, or
+// computes the exact centrality with all nodes as sources (which is very
+// costly).
+
 
 LAGRAPH_PUBLIC
 int LAGr_Betweenness
