@@ -7,7 +7,7 @@ THIS WORK IS FUNDED IN PART BY:
     Engineering Institute, a federally funded research and development center.
     [DM19-0270]
 2.  The United States Department of Defense under Contract No. FA8650-18-2-7835 and HR0011-18-3-0007
-3.  NVIDIA, Intel, MIT Lincoln Laboratory, IBM, and Julia Computing.
+3.  NVIDIA, Intel, MIT Lincoln Laboratory, MathWorks, IBM, and Julia Computing.
 4.  The National Science Foundation (1514406, OAC-1740333, CCF-1629657).
 5.  The United States Department of Energy, Office of Science, ASCR Contract No. DE-AC02-05CH11231.
 

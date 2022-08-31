@@ -15,11 +15,13 @@ LAGraph requires SuiteSparse:GraphBLAS, available at https://github.com/DrTimoth
    :maxdepth: 2
    :caption: Contents:
 
+   introduction
    core
    algorithms
    utils
    experimental
    installation
+   references
 
 
 Example Usage
