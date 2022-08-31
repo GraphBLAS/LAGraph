@@ -18,21 +18,29 @@ the experimental/benchmark folder.
 An simple example algorithm and its test and benchmark is provided,
 which serves as a template for creating new algorithms:
 
-    * algorithm/LAGraph_HelloWorld.c:  a simple "algorithm" that
-        merely creates a copy of the G->A adjacency matrix.
+    * `algorithm/LAGraph_HelloWorld.c`_
+        a simple "algorithm" that merely creates a copy of the G->A
+        adjacency matrix.
 
-    * benchmark/helloworld2_demo.c: a benchmark program illustrates how to
+    * `benchmark/helloworld2_demo.c`_
+        a benchmark program illustrates how to
         write a main program that loads in a graph, calls an algorithm, and
         checks and prints the result.  If any file appears in the
         benchmark folder with a name ending in _demo.c, then the CMake
         script will find it and compile it.
 
-    * benchmark/helloworld_demo.c: another benchmark program.
+    * `benchmark/helloworld_demo.c`_
+        another benchmark program.
         This one relies on internal utilities.  See the file for
         details.
 
-    * test/test_HelloWorld.c: a test program, using the acutest
+    * `test/test_HelloWorld.c`_
+        a test program, using the acutest
         test suite.  If any file appears in experimenta/test with
         the prefix test_*, the CMake script will compile it and
         include it in the "make test" target.
 
+.. _algorithm/LAGraph_HelloWorld.c: https://github.com/GraphBLAS/LAGraph/blob/reorg/experimental/algorithm/LAGraph_HelloWorld.c
+.. _benchmark/helloworld2_demo.c: https://github.com/GraphBLAS/LAGraph/blob/reorg/experimental/benchmark/helloworld2_demo.c
+.. _benchmark/helloworld_demo.c: https://github.com/GraphBLAS/LAGraph/blob/reorg/experimental/benchmark/helloworld_demo.c
+.. _test/test_HelloWorld.c: https://github.com/GraphBLAS/LAGraph/blob/reorg/experimental/test/test_HelloWorld.c

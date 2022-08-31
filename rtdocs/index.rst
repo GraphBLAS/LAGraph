@@ -8,8 +8,8 @@ Graphs are expressed as matrices, and the operations over
 these matrices are generalized through the use of a
 semiring algebraic structure.
 
-LAGraph is available at https://github.com/GraphBLAS/LAGraph.
-LAGraph requires SuiteSparse:GraphBLAS, available at https://github.com/DrTimothyAldenDavis/GraphBLAS.
+LAGraph is available at `<https://github.com/GraphBLAS/LAGraph>`_.
+LAGraph requires SuiteSparse:GraphBLAS, available at `<https://github.com/DrTimothyAldenDavis/GraphBLAS>`_.
 
 .. toctree::
    :maxdepth: 2

@@ -61,14 +61,14 @@ Input/Output Functions
 
 .. doxygenfunction:: LAGraph_MMWrite
 
-Error handling (FIXME)
+Error handling
 --------------
 
 FIXME: Discuss the msg string, and return values.
 
-LAGRAPH_TRY
+.. doxygendefine:: LAGRAPH_TRY
 
-GRB_TRY
+.. doxygendefine:: GRB_TRY
 
 list of error values, 0: GrB_SUCCESS, positive: warning, negative: error, etc.
 
