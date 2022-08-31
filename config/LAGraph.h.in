@@ -2370,7 +2370,7 @@ typedef enum
     LAGr_TriangleCount_Ascending = 1,   ///< sort by degree, ascending.
     LAGr_TriangleCount_Descending = -1, ///< sort by degree, descending.
     LAGr_TriangleCount_AutoSort = 0,    ///< auto selection of presort:
-        ///< No presort is done for the Burkhard or Cohen methods, and
+        ///< No presort is done for the Burkhardt or Cohen methods, and
         ///< no sort is done for the Sandia_* methods if the sampled mean
         ///< out-degree is <= 4 * the sample median out-degree.
         ///< Otherwise: sort in ascending order for Sandia_LL and Sandia_LUT,
