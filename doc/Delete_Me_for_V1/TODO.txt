@@ -1,10 +1,11 @@
 
-As of Aug 25, 2022:
+As of Aug 31, 2022:
 
     * FIXME: cmake: need to find the right liblagraph and libgraphblas
         (not in /usr/local/lib*, but the one being compiled/tested).
 
     * FIXME: entire user guide:  rtdocs is in good shape.  Ditch LaTeX?
+        Can we construct a PDF from rtdocs?
 
     * FIXME: check function names and API
 
@@ -58,6 +59,7 @@ FUTURE: add interfaces to external packages.
         in the sequential case)
     graph partitioning: METIS, Mongoose, etc
     SuiteSparse solvers (UMFPACK, CHOLMOD, KLU, SPQR, ...)
+    graph drawing methods
     others?
 
 FUTURE: interfaces to MATLAB, Python, Julia, etc.
