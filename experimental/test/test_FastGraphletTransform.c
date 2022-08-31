@@ -143,9 +143,8 @@ void test_FastGraphletTransform(void)
         // check that each element matches fglt result
         for (int i = 0 ; i < n ; i++) {
             for (int j = 0 ; j < 16 ; j++) {
-                int64_t x;
-                if (GrB_Matrix_extractElement (&x, F_net, j, i) == GrB_NO_VALUE)
-                    x = 0 ;
+                int64_t x = 0 ;
+                OK (GrB_Matrix_extractElement (&x, F_net, j, i)) ;
                 ok &= (x == A_graphlet_counts [16 * i + j]) ;
             }
         }

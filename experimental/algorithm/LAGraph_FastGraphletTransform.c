@@ -62,6 +62,7 @@
 
 #include "LG_internal.h"
 #include "LAGraphX.h"
+#include <omp.h>
 
 void sub_one_mult (int64_t *z, const int64_t *x) { (*z) = (*x) * ((*x)-1) ; }
 
@@ -413,22 +414,14 @@ int LAGraph_FastGraphletTransform
 
             GxB_Iterator riterator ;
             GxB_Iterator_new (&riterator) ;
-            GrB_Info info = GxB_rowIterator_attach (riterator, A, NULL) ;
-            if (info < 0) {
-                LG_FREE_ALL ;
-                return info ;
-            }
+            GRB_TRY (GxB_rowIterator_attach (riterator, A, NULL)) ;
 
             GxB_Iterator iterator ;
             GxB_Iterator_new (&iterator) ;
-            info = GxB_rowIterator_attach (iterator, A, NULL) ;
-            if (info < 0) {
-                LG_FREE_ALL ;
-                return info ;
-            }
+            GRB_TRY (GxB_rowIterator_attach (iterator, A, NULL)) ;
 
             // seek to A(row1,:)
-            info = GxB_rowIterator_seekRow (iterator, row1) ;
+            GrB_Info info = GxB_rowIterator_seekRow (iterator, row1) ;
             while (info != GxB_EXHAUSTED)
             {
                 // iterate over entries in A(i,:)

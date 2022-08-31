@@ -35,6 +35,7 @@ matrix_info ;
 const matrix_info files [ ] =
 {
     {"karate.mtx" },
+    {"west0067.mtx" },
     // {"amazon0601.mtx" },
     // {"cit-Patents.mtx"},
     // {"hollywood-2009.mtx"},
@@ -74,8 +75,13 @@ void test_KCore (void)
             OK (LAGraph_Cached_AT (G, msg)) ;
             OK (GrB_eWiseAdd (G->A, NULL, NULL, GrB_LOR, G->A, G->AT, NULL)) ;
             G->is_symmetric_structure = true ;
+            // consider the graph as directed
+            G->kind = LAGraph_ADJACENCY_DIRECTED ;
         }
-        G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
+        else
+        {
+            G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
+        }
 
         // check for self-edges, and remove them.
         OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
@@ -87,7 +93,6 @@ void test_KCore (void)
             printf ("now has %g self edges\n", (double) G->nself_edges) ;
             TEST_CHECK (G->nself_edges == 0) ;
         }
-
         
         uint64_t kmax;
         bool ok;
