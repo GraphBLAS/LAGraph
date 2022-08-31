@@ -17,7 +17,7 @@ Next, in Linux or Mac, run these commands:
 
 FIXME: how do we format the list below and put in plain text format?
 
-::
+.. code-block:: sh
     cd LAGraph/build
     cmake ..
     make

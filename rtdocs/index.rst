@@ -60,5 +60,6 @@ Note that this simple example does not check any error conditions.
         LAGraph_Finalize (msg) ;
     }
 
+Stuff here
 
 :ref:`genindex`
