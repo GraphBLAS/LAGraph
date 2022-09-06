@@ -333,10 +333,8 @@ int LG_check_sssp
         else
         {
             err = fabs (path_length_in [i] - distance [i]) ;
-            if (err > 0)
-            {
-                err = err / LAGRAPH_MAX (path_length_in [i], distance [i]) ;
-            }
+            double d = LAGRAPH_MAX (path_length_in [i], distance [i]) ;
+            if (err > 0) err = err / d ;
             ok = (err < 1e-5) ;
         }
         LG_ASSERT_MSG (ok, -2001, "invalid path length") ;

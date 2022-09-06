@@ -1,17 +1,13 @@
 
-As of Aug 31, 2022:
-
-    * FIXME: cmake: need to find the right liblagraph and libgraphblas
-        (not in /usr/local/lib*, but the one being compiled/tested).
+As of Sept 6, 2022:
 
     * FIXME: entire user guide:  rtdocs is in good shape.  Ditch LaTeX.
         Can we construct a PDF from rtdocs? Yes.
 
     * FIXME: write a contributer's guide, first-cut
 
-    * FIXME: check function names and API
-
-    * FIXME: add FUTURE to User Guide (see below)
+    * FIXME: add FUTURE to User Guide (see below), or to
+        experimental/README.txt
 
     * FIXME: delete this file and its folder "Delete_me_for_V1"
 
