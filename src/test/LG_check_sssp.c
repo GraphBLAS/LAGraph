@@ -33,6 +33,8 @@ LG_Element ;
     LAGraph_Free ((void **) &distance, NULL) ;          \
     LAGraph_Free ((void **) &parent, NULL) ;            \
     LAGraph_Free ((void **) &path_length_in, NULL) ;    \
+    LAGraph_Free ((void **) &reachable, NULL) ;         \
+    LAGraph_Free ((void **) &reachable_in, NULL) ;      \
     LAGraph_Free ((void **) &neighbor_weights, NULL) ;  \
     LAGraph_Free ((void **) &neighbors, NULL) ;         \
     GrB_free (&Row) ;                                   \
@@ -78,6 +80,7 @@ int LG_check_sssp
 
     double *path_length_in = NULL, *distance = NULL, *neighbor_weights = NULL ;
     void *Ax = NULL ;
+    bool *reachable = NULL, *reachable_in = NULL ;
 
     double tt = LAGraph_WallClockTime ( ) ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
@@ -136,7 +139,9 @@ int LG_check_sssp
     // get the contents of the Path_Length vector
     //--------------------------------------------------------------------------
 
-    LG_TRY (LAGraph_Malloc ((void **) &path_length_in, n, sizeof (double), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &path_length_in, n, sizeof (double),
+        msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &reachable_in, n, sizeof (double), msg)) ;
     for (int64_t i = 0 ; i < n ; i++)
     {
         double t ;
@@ -146,6 +151,7 @@ int LG_check_sssp
         {
             path_length_in [i] = t ;
         }
+        reachable_in [i] = (path_length_in [i] < etypeinf) ;
     }
 
     //--------------------------------------------------------------------------
@@ -173,11 +179,14 @@ int LG_check_sssp
 
     // initializations
     LG_TRY (LAGraph_Malloc ((void **) &distance, n, sizeof (double), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void **) &reachable, n, sizeof (bool), msg)) ;
     for (int64_t i = 0 ; i < n ; i++)
     {
         distance [i] = INFINITY ;
+        reachable [i] = false ;
     }
     distance [src] = 0 ;
+    reachable [src] = true ;
 
     #if !LAGRAPH_SUITESPARSE
     GRB_TRY (GrB_Vector_new (&Row, GrB_FP64, n)) ;
@@ -214,14 +223,13 @@ int LG_check_sssp
         // extract the min element u from the top of the heap
         LG_Element e = Heap [1] ;
         int64_t u = e.name ;
-        // printf ("\nGot node %ld\n", u) ;
 
         double u_distance = e.key ;
         ASSERT (distance [u] == u_distance) ;
         LG_heap_delete (1, Heap, Iheap, n, &nheap) ;
         ASSERT (Iheap [u] == 0) ;
+        reachable [u] = (u_distance < etypeinf) ;
 
-        // printf ("\nafter delete\n") ;
         if (n < 200)
         {
             LG_ASSERT_MSG (LG_heap_check (Heap, Iheap, n, nheap) == 0, -2000,
@@ -272,15 +280,12 @@ int LG_check_sssp
             #else
             w = weights [iso ? 0 : k] ;
             #endif
-//          printf ("consider edge (%d,%d) weight %g\n", (int) u, (int) v, w) ;
 
             LG_ASSERT_MSG (w > 0, -2002, "invalid graph (weights must be > 0)");
             double new_distance = u_distance + w ;
             if (distance [v] > new_distance)
             {
                 // reduce the key of node v
-//              printf ("decreased key of node %d from %g to %g\n",
-//                  (int) v, distance [v], new_distance) ;
                 distance [v] = new_distance ;
                 // parent [v] = u ;
                 int64_t p = Iheap [v] ;
@@ -328,12 +333,38 @@ int LG_check_sssp
         else
         {
             err = fabs (path_length_in [i] - distance [i]) ;
-            if (err > 0) err = err / LAGRAPH_MAX (path_length_in [i], distance [i]) ;
+            if (err > 0)
+            {
+                err = err / LAGRAPH_MAX (path_length_in [i], distance [i]) ;
+            }
             ok = (err < 1e-5) ;
         }
-//      printf ("%d: %g %g err %g ok: %d\n", (int) i,
-//          path_length_in [i], distance [i], err, ok) ;
         LG_ASSERT_MSG (ok, -2001, "invalid path length") ;
+    }
+
+    //--------------------------------------------------------------------------
+    // check the reach
+    //--------------------------------------------------------------------------
+
+    for (int64_t i = 0 ; i < n ; i++)
+    {
+        bool ok = (reachable [i] == reachable_in [i]) ;
+        #if 0
+        printf ("reach [%ld]: %d %d\n", i, reachable [i], reachable_in [i]) ;
+        if (!ok)
+        {
+            printf ("Hey! source %ld\n", src) ;
+            GxB_print (G->A, 3) ;
+            GxB_print (Path_Length, 3) ;
+            for (int64_t i = 0 ; i < n ; i++)
+            {
+                printf ("check [%ld]: reach %d %d distance %g\n", i,
+                    reachable [i], reachable_in [i], distance [i]) ;
+            }
+
+        }
+        #endif
+        LG_ASSERT_MSG (ok, -2001, "invalid reach") ;
     }
 
     //--------------------------------------------------------------------------

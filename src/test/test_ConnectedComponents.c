@@ -42,6 +42,7 @@ const matrix_info files [ ] =
     {      1, "ldbc-undirected-example.mtx" },
     {      1, "ldbc-wcc-example.mtx" },
     {      3, "LFAT5.mtx" },
+    {   1989, "LFAT5_hypersparse.mtx" },
     {      6, "LFAT5_two.mtx" },
     {      1, "bcsstk13.mtx" },
     {      1, "tree-example.mtx" },
@@ -111,6 +112,9 @@ void test_cc_matrices (void)
             int ncomponents = count_connected_components (C) ;
             printf ("# components: %6u Matrix: %s\n", ncomponents, aname) ;
             TEST_CHECK (ncomponents == ncomp) ;
+            GrB_Index cnvals ;
+            OK (GrB_Vector_nvals (&cnvals, C)) ;
+            TEST_CHECK (cnvals == n) ;
 
             // check the result
             OK (LG_check_cc (C, G, msg)) ;
@@ -123,18 +127,6 @@ void test_cc_matrices (void)
             TEST_CHECK (ncomponents == ncomp) ;
             OK (LG_check_cc (C2, G, msg)) ;
             OK (GrB_free (&C2)) ;
-            #endif
-
-            #if 0
-            // find the connected components with LG_CC_7
-            #if LAGRAPH_SUITESPARSE
-            printf ("\n------ CC_7:\n") ;
-            OK (LG_CC_7 (&C2, G, msg)) ;
-            ncomponents = count_connected_components (C2) ;
-            TEST_CHECK (ncomponents == ncomp) ;
-            OK (LG_check_cc (C2, G, msg)) ;
-            OK (GrB_free (&C2)) ;
-            #endif
             #endif
 
             // find the connected components with LG_CC_Boruvka

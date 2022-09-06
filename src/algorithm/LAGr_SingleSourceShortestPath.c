@@ -135,7 +135,7 @@ int LAGr_SingleSourceShortestPath
 
 #if LAGRAPH_SUITESPARSE
     // optional hints for SuiteSparse:GraphBLAS
-    GRB_TRY (GxB_set (t, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
+    GRB_TRY (GxB_set (t, GxB_SPARSITY_CONTROL, GxB_BITMAP + GxB_FULL)) ;
     GRB_TRY (GxB_set (tmasked, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
     GRB_TRY (GxB_set (tReq, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
     GRB_TRY (GxB_set (tless, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;

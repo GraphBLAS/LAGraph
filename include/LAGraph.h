@@ -33,10 +33,10 @@
 // See also the LAGraph_Version utility method, which returns these values.
 // These definitions are derived from LAGraph/CMakeLists.txt.
 
-#define LAGRAPH_DATE "Aug 32, 2022"
+#define LAGRAPH_DATE "Sept 6, 2022"
 #define LAGRAPH_VERSION_MAJOR  0
 #define LAGRAPH_VERSION_MINOR  9
-#define LAGRAPH_VERSION_UPDATE 37
+#define LAGRAPH_VERSION_UPDATE 38
 
 //==============================================================================
 // include files and helper macros
@@ -146,7 +146,7 @@
 */
 
 //------------------------------------------------------------------------------
-// LAGraph error status: FIXME: need to add this to rtdocs
+// LAGraph error status: FIXME: add to rtdocs
 //------------------------------------------------------------------------------
 
 // All LAGraph methods return an int to denote their status:  zero if they are
@@ -599,7 +599,7 @@ struct LAGraph_Graph_struct
     // multigraph ..
     // GrB_Matrix *Amult ; // array of size nmatrices
     // int nmatrices ;
-    // GrB_Vector VertexWeights ;
+    // GrB_Vector NodeWeights ;
 
     //--------------------------------------------------------------------------
     // cached properties of the graph
@@ -719,7 +719,7 @@ int LAGraph_Init
 
 // FUTURE: include these as built-in semirings in v2.1 C API, Table 3.9:
 
-// FIXME: add these to the rtdocs
+// FIXME: add LAGraph semirings to the rtdocs
 
 // LAGraph semirings, created by LAGraph_Init or LAGr_Init:
 LAGRAPH_PUBLIC GrB_Semiring
@@ -2127,19 +2127,19 @@ int LAGr_SampleDegree
  * that is, G->AT and G->out_degree are not computed if not already cached.
  *
  * @param[out]    level      If non-NULL on input, on successful return, it
- *                           contains the levels of each vertex reached. The
- *                           src vertex is assigned level 0. If a vertex i is
+ *                           contains the levels of each node reached. The
+ *                           src node is assigned level 0. If a node i is
  *                           not reached, level(i) is not present.  The level
  *                           vector is not computed if NULL.
  * @param[out]    parent     If non-NULL on input, on successful return, it
- *                           contains parent vertex IDs for each vertex
+ *                           contains parent node IDs for each node
  *                           reached, where parent(i) is the node ID of the
- *                           parent of node i.  The src vertex will have itself
- *                           as its parent. If a vertex i is not reached,
+ *                           parent of node i.  The src node will have itself
+ *                           as its parent. If a node i is not reached,
  *                           parent(i) is not present.  The parent vector is
  *                           not computed if NULL.
  * @param[in]     G          The graph, directed or undirected.
- * @param[in]     src        The index of the src vertex (0-based)
+ * @param[in]     src        The index of the src node (0-based)
  * @param[in,out] msg        any error messages.
  *
  * @retval GrB_SUCCESS if successful.
@@ -2166,13 +2166,13 @@ int LAGr_BreadthFirstSearch
 // LAGr_ConnectedComponents: connected components of an undirected graph
 //------------------------------------------------------------------------------
 
-// FIXME: what if a node has no edges?  is components sparse?  Check this.
-
 /** LAGr_ConnectedComponents: connected components of an undirected graph.
  * This is an Advanced algorithm (G->is_symmetric_structure must be known).
  *
  * @param[out] component    component(i)=s if node i is in the component whose
- *                          representative node is s.
+ *                          representative node is s.  If node i has no edges,
+ *                          it is placed in its own component, and thus the
+ *                          component vector is always dense.
  * @param[in] G             input graph to find the components for.
  * @param[in,out] msg       any error messages.
  *
@@ -2198,8 +2198,6 @@ int LAGr_ConnectedComponents
 // LAGr_SingleSourceShortestPath: single-source shortest paths
 //------------------------------------------------------------------------------
 
-// FIXME: check if pattern of path_length is reach(G,i) or inf?  Check this.
-
 /** LAGr_SingleSourceShortestPath: single-source shortest paths.  This is an
  * Advanced algorithm (G->emin is required for best performance).  The graph G
  * must have an adjacency matrix of type GrB_INT32, GrB_INT64, GrB_UINT32,
@@ -2207,7 +2205,12 @@ int LAGr_ConnectedComponents
  * GrB_NOT_IMPLEMENTED is returned.
  *
  * @param[out] path_length  path_length (i) is the length of the shortest
- *                          path from the source vertex to vertex i.
+ *                          path from the source node to node i.  The
+ *                          path_length vector is dense.  If node (i) is not
+ *                          reachable from the src node, then path_length (i)
+ *                          is set to INFINITY for GrB_FP32 and FP32, or the
+ *                          maximum integer for GrB_INT32, INT64, UINT32, or
+ *                          UINT64.
  * @param[in] G         input graph.
  * @param[in] src       source node.
  * @param[in] Delta     for delta stepping.
