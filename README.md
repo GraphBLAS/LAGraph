@@ -61,7 +61,7 @@ LAGraph contains the following files and folders:
 
 	( cd build ; cmake .. ; make )
 
-    cmake:  helper scripts for CMake to find GraphBLAS and to provide
+    cmake_modules:  helper scripts for CMake to find GraphBLAS and to provide
         test coverage
 
     data: small test matrices for the continuous integration tests

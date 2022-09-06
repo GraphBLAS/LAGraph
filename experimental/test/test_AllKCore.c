@@ -103,11 +103,11 @@ void test_AllKCore (void)
         bool ok;
         //test the k-core
         OK(LAGraph_KCore_All(&c1, &km1, G, msg)) ;
-        printf ("kmax: %lu km1 %lu\n",  kmax, km1) ;
+        // printf ("kmax: %lu km1 %lu\n",  kmax, km1) ;
         TEST_CHECK(kmax == km1) ;
 
         OK(LG_check_kcore(&c2, &km2, G, check_kmax, msg)) ;
-        printf ("kmax: %lu km1 %lu\n",  kmax, km2) ;
+        // printf ("kmax: %lu km1 %lu\n",  kmax, km2) ;
         
         TEST_CHECK(kmax == km2) ;
         TEST_CHECK(km1 == km2) ;
