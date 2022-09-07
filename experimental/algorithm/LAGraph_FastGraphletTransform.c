@@ -400,7 +400,7 @@ int LAGraph_FastGraphletTransform
             GrB_Index *neighbors = (GrB_Index*) malloc(n * sizeof(GrB_Index));
             GrB_Index *k4cmn = (GrB_Index*) malloc(n * sizeof(GrB_Index));
             int64_t *f15 = (int64_t*) malloc(n * sizeof(int64_t));
-            GrB_Index *I = (int64_t*) malloc(n * sizeof(GrB_Index));
+            GrB_Index *I = (GrB_Index *) malloc(n * sizeof(GrB_Index));
             int *isNeighbor = (int*) malloc(n * sizeof(int));
             for (int i = 0; i < n; ++i) {
                 neighbors [i] = k4cmn [i] = f15 [i] = isNeighbor [i] = 0 ;
