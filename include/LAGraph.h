@@ -111,6 +111,9 @@
 // LAGraph error handling: FIXME: add to rtdocs
 //==============================================================================
 
+/** STuff: where
+ */
+
 // All LAGraph functions that return an int use it to indicate an error status
 // (described below), where zero (GrB_SUCCESS) denotes success, negative values
 // indicate an error, and positive values denote success but with some kind of
@@ -149,6 +152,8 @@
 // LAGraph error status: FIXME: add to rtdocs
 //------------------------------------------------------------------------------
 
+// FIXME see doxygen group
+
 // All LAGraph methods return an int to denote their status:  zero if they are
 // successful (which is the value of GrB_SUCCESS), negative on error, or
 // positive for an informational value (such as GrB_NO_VALUE).  Integers in the
@@ -181,13 +186,25 @@
 //  GrB_NOT_IMPLEMENTED: if a type is not supported, or when SuiteSparse
 //      GraphBLAS is required.
 
+// Summary of return values for all LAGraph functions that return int:
+//   * GrB_SUCCESS if successful
+//   * a negative GrB_Info value on error (in range -999 to -1)
+//   * a positive GrB_Info value if successful but with extra information
+//         (in range 1 to 999)
+//   * -1999 to -1000: a common LAGraph-specific error, see list above
+//   * 1000 to 1999: if successful, with extra LAGraph-specific information
+//   * <= -2000: an LAGraph error specific to a particular LAGraph method
+//   * >= 2000: an LAGraph warning specific to a particular LAGraph method
+#define LAGRAPH_ERROR_HANDLING
+
 // Many LAGraph methods share common error cases, described below.  These
 // return values are in the range -1000 to -1999.  Return values of -2000 or
 // greater may be used by specific LAGraph methods, which denote errors not in
 // this list:
 
-//  LAGRAPH_INVALID_GRAPH:  the input graph is invalid; the details are given
-//      in the error msg string returned by the method.
+/// LAGRAPH_INVALID_GRAPH:  the input graph is invalid; the details are given
+///   in the error msg string returned by the method.
+#define LAGRAPH_INVALID_GRAPH                   (-1000)
 
 //  LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED: the method requires an undirected
 //      graph, or a directed graph with an adjacency matrix that is known to
@@ -218,7 +235,6 @@
 //      undirected graph.
 
 // LAGraph errors:
-#define LAGRAPH_INVALID_GRAPH                   (-1000)
 #define LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED    (-1001)
 #define LAGRAPH_IO_ERROR                        (-1002)
 #define LAGRAPH_NOT_CACHED                      (-1003)
@@ -227,16 +243,6 @@
 
 // LAGraph warnings:
 #define LAGRAPH_CACHE_NOT_NEEDED                ( 1000)
-
-// Summary of return values for all LAGraph functions that return int:
-//   * GrB_SUCCESS if successful
-//   * a negative GrB_Info value on error (in range -999 to -1)
-//   * a positive GrB_Info value if successful but with extra information
-//         (in range 1 to 999)
-//   * -1999 to -1000: a common LAGraph-specific error, see list above
-//   * 1000 to 1999: if successful, with extra LAGraph-specific information
-//   * <= -2000: an LAGraph error specific to a particular LAGraph method
-//   * >= 2000: an LAGraph warning specific to a particular LAGraph method
 
 //------------------------------------------------------------------------------
 // LAGRAPH_TRY: try an LAGraph method and check for errors
@@ -310,7 +316,7 @@
  *
  * GraphBLAS and LAGraph both use the convention that negative values are
  * errors, and the LAGraph_status is a superset of the GrB_Info enum.  As a
- * result, the user can define LAGRAPH_CATCH and GRB_TRY as the same operation.
+ * result, the user can define LAGRAPH_CATCH and GRB_CATCH as the same operation.
  * The main difference between the two would be the error message string.  For
  * LAGraph, the string is the last parameter, and LAGRAPH_CATCH can optionally
  * print it out.  For GraphBLAS, the GrB_error mechanism can return a string.  
