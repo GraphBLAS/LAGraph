@@ -2,7 +2,7 @@ Introduction
 ============
 
 FIXME: discuss the GraphBLAS idea:  matrix operations with semirings.
-But GraphBLAS doesn't have any graph algorithms.
+GraphBLAS, however, doesn't have any graph algorithms.
 
 discuss the LAGraph idea:  graph algorithms using GraphBLAS,
 with several additional data structures.  In particular the LAGraph_Graph.
