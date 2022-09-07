@@ -34,7 +34,7 @@ set_property ( TARGET lagraph PROPERTY C_STANDARD 11 )
 target_link_libraries(lagraph PUBLIC ${GRAPHBLAS_LIBRARIES} ${M_LIB} )
 target_link_directories( lagraph BEFORE PUBLIC ${CMAKE_SOURCE_DIR}/build )
 target_include_directories ( lagraph PUBLIC include/ )
-install ( FILES ${LAGRAPH_INCLUDE} DESTINATION include)
+# install ( FILES ${LAGRAPH_INCLUDE} DESTINATION include)
 
 #-------------------------------------------------------------------------------
 # static lagraph library properties

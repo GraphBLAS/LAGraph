@@ -46,7 +46,11 @@
 
 cmake_minimum_required ( VERSION 3.13 )
 
-set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
+set ( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
+    ${CMAKE_SOURCE_DIR}/cmake_modules
+    ${CMAKE_SOURCE_DIR}/../cmake_modules
+    ${CMAKE_SOURCE_DIR}/../SuiteSparse/cmake_modules
+    )
 
 cmake_policy ( SET CMP0042 NEW )
 cmake_policy ( SET CMP0048 NEW )
@@ -267,11 +271,41 @@ if (DEFINED ENV{READTHEDOCS})
 endif ()
 
 #-------------------------------------------------------------------------------
-# to install use "sudo make install"
+# LAGraph installation location
 #-------------------------------------------------------------------------------
 
-# only install the dynamic  library
+# use "cmake -DLOCAL=1" to install only in ../lib and ../include.
+
+if ( NOT LOCAL )
+
+    # install in /usr/local/lib and /usr/local/include.
+    # requires "sudo make install"
+    message ( STATUS "Installation will be system-wide (requires 'sudo make install')." )
+    message ( STATUS "    If you do not have 'sudo' privilege, do 'make local' instead." )
+    include ( GNUInstallDirs )
+
+    install ( TARGETS lagraph lagraphx
+        LIBRARY       DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} )
+
+    install ( TARGETS lagraph_static lagraphx_static
+        ARCHIVE       DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} )
+
+else ( )
+
+    message ( STATUS "Installation in ../lib and ../include only," )
+    message ( STATUS "    with 'make install'. No 'sudo' required." )
+
+endif ( )
+
+# also install in SuiteSparse/lib and SuiteSparse/include;
+# does not require "sudo make install", just "make install"
 install ( TARGETS lagraph lagraphx
-         LIBRARY       DESTINATION ${CMAKE_INSTALL_LIBDIR}
-         PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-         ARCHIVE       DESTINATION ${CMAKE_INSTALL_LIBDIR} )
+    LIBRARY       DESTINATION ${CMAKE_SOURCE_DIR}/../lib
+    PUBLIC_HEADER DESTINATION ${CMAKE_SOURCE_DIR}/../include )
+
+install ( TARGETS lagraph_static lagraphx_static
+    ARCHIVE       DESTINATION ${CMAKE_SOURCE_DIR}/../lib
+    PUBLIC_HEADER DESTINATION ${CMAKE_SOURCE_DIR}/../include )
+
