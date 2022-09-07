@@ -68,6 +68,8 @@ FIXME: Discuss the msg string, and return values.
 
 .. doxygendefine:: LAGRAPH_TRY
 
+.. doxygendefine:: LAGRAPH_INVALID_GRAPH
+
 .. doxygendefine:: GRB_TRY
 
 list of error values, 0: GrB_SUCCESS, positive: warning, negative: error, etc.

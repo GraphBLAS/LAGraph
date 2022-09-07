@@ -21,6 +21,7 @@ LAGraph requires SuiteSparse:GraphBLAS, available at `<https://github.com/DrTimo
    utils
    experimental
    installation
+   acknowledgements
    references
 
 
