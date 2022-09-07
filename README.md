@@ -2,51 +2,52 @@
 
 # LAGraph
 
-LAGraph is a draft library plus a test harness for collecting algorithms that
+LAGraph is a library plus a test harness for collecting algorithms that
 use GraphBLAS.
+
+See <https://github.com/GraphBLAS/LAGraph> for the source code for LAGraph,
+Documenation is at <https://lagraph.readthedocs.org>.
+Test coverage results are at <https://graphblas.org/LAGrah>.
 
 Currently, SuiteSparse:GraphBLAS v7.0.0 or later is required.  However, use the
 latest stable release of SuiteSparse:GraphBLAS for best results.
 See <https://github.com/DrTimothyAldenDavis/GraphBLAS>
 
-Since LAGraph is a draft, it contains are many draft/experimental codes with
-known sub-par performance.  Performance of the best methods is highly sensitive
-on which version of SuiteSparse:GraphBLAS is being used, as well.  No one other
-than the authors of this code are aware of which methods are the best, and how
-to achieve that performance.
+A simple Makefile is provided but its use is optional. It simplifies the
+use of cmake, which is the primary build system for LAGraph.  For Windows,
+import the CMakeLists.txt into MS Visual Studio instead.
 
-Thus, do not benchmark LAGraph on your own without asking the authors first.
-
-To build do the following from the top level directory:
+To compile, run the tests, and install (Linux, Mac):
 ```
-cd build
-cmake ..
-make
-make test
+        make
+        make test
+        sudo make install
 ```
 
-To install, first build LAGraph and then do (in the build directory):
+To compile/install for elsewhere (for example, in /home/me/mystuff/lib
+and /home/me/mystuff/include), do not use this Makefile.  Instead, do:
 ```
-sudo make install
+        cd build
+        cmake -DCMAKE_INSTALL_PREFIX="/home/me/mystuff" ..
+        make
+        make install
 ```
 
-To compile with a non-default compiler:
+To clean up the files:
 ```
-CC=gcc-11 cmake ..
+        make clean
 ```
 
-To compile with test coverage:
+To uninstall:
 ```
-cd build
-cmake -DCOVERAGE=1 .. ; make -j8 ; make test_coverage
+        make uninstall
 ```
+
+To compile and run test coverage: use "make cov".  Next, open your browser to
+your local file, LAGraph/build/test_coverage/index.html.  Be sure to do "make
+clean" afterwards, and then "make" to compile without test coverage.
 
 The test coverage of the latest [CI build](https://github.com/GraphBLAS/LAGraph/actions) is deployed to <https://graphblas.github.io/LAGraph/>.
-
-Then open this file in your browser:
-```
-build/test_coverage/index.html
-```
 
 To run the GAP benchmarks, see the instructions in this file:
 ```
@@ -57,9 +58,7 @@ To run the GAP benchmarks, see the instructions in this file:
 
 LAGraph contains the following files and folders:
 
-    CMakeLists.txt: a CMake script for compiling:
-
-	( cd build ; cmake .. ; make )
+    CMakeLists.txt: a CMake script for compiling/installing/testing LAGraph.
 
     cmake_modules:  helper scripts for CMake to find GraphBLAS and to provide
         test coverage
@@ -71,6 +70,8 @@ LAGraph contains the following files and folders:
     doc: documentation
 
     include: contains the LAGraph.h and LAGraphX.h files
+        Do not edit include/LAGraph.h, since it is constructed
+        from config/LAGraph.h.in.
 
     LICENSE: BSD 2-clause license
 
@@ -92,6 +93,24 @@ LAGraph contains the following files and folders:
 
     build: initially empty
 
+    Acknowledgments.txt
+
+    ChangeLog: changes since LAGraph v1.0
+
+    config: LAGraph.h.in, for constructing include/LAGraph.h
+
+    ContributionInstructions.txt: how to contributed to LAGraph
+
+    Contributors.txt: list of contributors
+
+    Dockerfile
+
+    Makefile: simple scripts that rely on cmake
+
+    Papers: papers on LAGraph
+
+    rtdocs: source for the LAGraph documentation
+
 # LAGraph and GraphBLAS
 
 To link against GraphBLAS, first install whatever GraphBLAS library you wish to
@@ -110,23 +129,5 @@ location.
 
 # Authors
 
-    Tim Davis, Texas A&M University
-    Scott McMillan, SEI, Carnegie Mellon University
-    Gabor Szarnyas
-    Jinhao Chen, Texas A&M University
-    Michel Pelletier, Graphegon
-    Scott Kolodziej, Texas A&M University
-    Yongzhe Zhang, SOKENDAI, Japan
-    Marton Elekes
-    Balint Hegyi
-    Tim Mattson, Intel
-    Mohsen Aznaveh, Texas A&M University
-    James Kitchen, Anaconda
-    Aydin Buluc, Lawrence Berkeley National Lab
-    Janos B. Antal
-    Roi Lipman, Redis
-    Erik Welch, Anaconda
-    Carl Yang
-    Tze Meng Low,
-    Florentin Dorre
+    See the Contributors.txt file
 
