@@ -134,6 +134,15 @@ find_package (GraphBLAS REQUIRED MODULE)
 include ( GNUInstallDirs )
 
 #-------------------------------------------------------------------------------
+# Provide user settable options.
+#-------------------------------------------------------------------------------
+
+option(ENABLE_NVIDIA "Enable use of NVIDIA libraries" FALSE)
+if(ENABLE_NVIDIA)
+    add_compile_definitions(LAGRAPH_USE_NVIDIA)
+endif()
+
+#-------------------------------------------------------------------------------
 # determine what user threading model to use
 #-------------------------------------------------------------------------------
 
@@ -268,7 +277,8 @@ add_subdirectory(src)
 add_subdirectory(experimental)
 
 #-------------------------------------------------------------------------------
-# to install use "sudo make install"
+# to install use "sudo make install" or run cmake with -DCMAKE_INSTALL_PREFIX
+# to redirect the base installation directory.
 #-------------------------------------------------------------------------------
 
 # only install the dynamic  library

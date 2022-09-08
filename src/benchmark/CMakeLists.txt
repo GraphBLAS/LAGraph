@@ -12,7 +12,20 @@
 include_directories ( ${CMAKE_SOURCE_DIR}/src/test/include
     ${CMAKE_SOURCE_DIR}/src/algorithm )
 
-file( GLOB DEMO_SOURCES LIST_DIRECTORIES false *_demo.c )
+set(DEMO_SOURCES
+    bc_demo.c
+    bfs_demo.c
+    cc_demo.c
+    gappagerank_demo.c
+    mtx2bin_demo.c
+    ss2_demo.c
+    sssp_demo.c
+    tc_demo.c)
+
+if(ENABLE_NVIDIA)
+    list(APPEND DEMO_SOURCES tc_gpu_demo.c)
+endif()
+
 foreach( demosourcefile ${DEMO_SOURCES} )
     get_filename_component(justname ${demosourcefile} NAME)
     string( REPLACE ".c" "" demoname ${justname} )

@@ -30,7 +30,7 @@
 # and /home/me/mystuff/include), do not use this Makefile.  Instead, do:
 #
 #       cd build
-#       cmake -DCMAKE_INSTALL_PREFIX="/home/me/mystuff" ..
+#       cmake .. -DCMAKE_INSTALL_PREFIX="/home/me/mystuff"
 #       make
 #       make install
 #
@@ -41,6 +41,10 @@
 # To uninstall:
 #
 #       make uninstall
+#
+# To enable using NVIDIA's memory management libraries in the benchmarks:
+#
+#       make CMAKE_OPTIONS="-DENABLE_NVIDIA=TRUE"
 #
 # To compile and run test coverage: use "make cov".  Next, open your browser to
 # your local file, LAGraph/build/test_coverage/index.html.  Be sure to do "make
