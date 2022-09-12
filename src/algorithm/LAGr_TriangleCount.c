@@ -396,6 +396,11 @@ int LAGr_TriangleCount
             // do it again for timing
             //GRB_TRY (GrB_Matrix_clear (C)) ;
             LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+
+            // HACK:
+            GxB_set (L, GxB_SPARSITY_CONTROL, GxB_BITMAP) ;
+            GxB_print (L, 2) ;  // FIXME SLOW!!
+
             GRB_TRY (GrB_mxm (C, U, NULL, semiring, U, L, GrB_DESC_ST1)) ;
 #else
             GxB_get (GxB_GPU_CONTROL, &save) ;
