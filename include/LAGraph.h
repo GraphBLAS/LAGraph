@@ -162,50 +162,57 @@
  */
 #define LAGRAPH_RETURN_VALUES
 
-/** LAGRAPH_INVALID_GRAPH:  the input graph is invalid; the details are given
- *      in the error msg string returned by the method.
+/** LAGRAPH_INVALID_GRAPH:
+ *      The input graph is invalid; the details are given in the error msg
+ *      string returned by the method.
  */
 #define LAGRAPH_INVALID_GRAPH                   (-1000)
 
-/** LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED: the method requires an undirected
- *      graph, or a directed graph with an adjacency matrix that is known to
- *      have a symmetric structure.  LAGraph_Cached_IsSymmetricStructure can
- *      be used to determine this cached property.
+/** LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED:
+ *      The method requires an undirected graph, or a directed graph with an
+ *      adjacency matrix that is known to have a symmetric structure.
+ *      LAGraph_Cached_IsSymmetricStructure can be used to determine this
+ *      cached property.
  */
 #define LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED    (-1001)
 
-/** LAGRAPH_IO_ERROR:  a file input or output method failed, or an input file
- *      has an incorrect format that cannot be parsed.
+/** LAGRAPH_IO_ERROR:
+ *      A file input or output method failed, or an input file has an incorrect
+ *      format that cannot be parsed.
  */
 #define LAGRAPH_IO_ERROR                        (-1002)
 
-/** LAGRAPH_NOT_CACHED:  some methods require one or more cached properties to
- *      be computed before calling them (AT, out_degree, or in_degree.  Use
+/** LAGRAPH_NOT_CACHED:
+ *      Some methods require one or more cached properties to be computed
+ *      before calling them (AT, out_degree, or in_degree.  Use
  *      LAGraph_Cached_AT, LAGraph_Cached_OutDegree, and/or
  *      LAGraph_Cached_InDegree to compute them.
  */
 #define LAGRAPH_NOT_CACHED                      (-1003)
 
-/** LAGRAPH_NO_SELF_EDGES_ALLOWED:  some methods requires that the graph have
- *      no self edges, which correspond to the entries on the diagonal of the
- *      adjacency matrix.  If the G->nself_edges cached property is nonzero or
- *      unknown, this error condition is returned.  Use
- *      LAGraph_Cached_NSelfEdges to compute G->nself_edges, or
- *      LAGraph_DeleteSelfEdges to remove all diagonal entries from G->A.
+/** LAGRAPH_NO_SELF_EDGES_ALLOWED:
+ *      Some methods requires that the graph have no self edges, which
+ *      correspond to the entries on the diagonal of the adjacency matrix.  If
+ *      the G->nself_edges cached property is nonzero or unknown, this error
+ *      condition is returned.  Use LAGraph_Cached_NSelfEdges to compute
+ *      G->nself_edges, or LAGraph_DeleteSelfEdges to remove all diagonal
+ *      entries from G->A.
  */
 #define LAGRAPH_NO_SELF_EDGES_ALLOWED           (-1004)
 
-//  LAGRAPH_CONVERGENCE_FAILURE:  an iterative process failed to converge to
-//      a good solution.
+/** LAGRAPH_CONVERGENCE_FAILURE:
+ *      An iterative process failed to converge to a good solution.
+ */
 #define LAGRAPH_CONVERGENCE_FAILURE             (-1005)
 
-//  LAGRAPH_CACHE_NOT_NEEDED: this is a warning, not an error.  It is returned
-//      by LAGraph_Cached_* methods when asked to compute cached properties
-//      that are not needed.  These include G->AT and G->in_degree for an
-//      undirected graph.
+/** LAGRAPH_CACHE_NOT_NEEDED:
+ *      This is a warning, not an error.  It is returned by LAGraph_Cached_*
+ *      methods when asked to compute cached properties that are not needed.
+ *      These include G->AT and G->in_degree for an undirected graph.
+ */
 #define LAGRAPH_CACHE_NOT_NEEDED                ( 1000)
 
-/** LAGRAPH_MSG_LEN: return error message string.
+/**
  * In addition, all such LAGraph functions also have a final msg parameter that
  * is a pointer to a user-allocated string in which an algorithm-specific error
  * message can be returned.  If msg is NULL, no error message is returned.
