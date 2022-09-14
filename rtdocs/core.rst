@@ -25,7 +25,6 @@ FIXME: overview here.
 
 .. doxygendefine:: LAGRAPH_RETURN_VALUES
 
-
     .. doxygendefine:: LAGRAPH_RETURN_VALUES
 
     .. doxygendefine:: LAGRAPH_INVALID_GRAPH
@@ -42,11 +41,9 @@ FIXME: overview here.
 
     .. doxygendefine:: LAGRAPH_CACHE_NOT_NEEDED
 
-.. doxygendefine::  LAGRAPH_MSG_LEN
+.. doxygendefine:: LAGRAPH_MSG_LEN
 
 .. doxygendefine:: LAGRAPH_TRY
-
-.. doxygendefine:: LAGRAPH_INVALID_GRAPH
 
 .. doxygendefine:: GRB_TRY
 

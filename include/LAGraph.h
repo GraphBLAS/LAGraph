@@ -238,7 +238,8 @@
 // LAGRAPH_TRY: try an LAGraph method and check for errors
 //------------------------------------------------------------------------------
 
-/** LAGRAPH_TRY: In a robust application, the return values from each call to
+/** LAGRAPH_TRY: try an LAGraph method and check for errors.
+ * In a robust application, the return values from each call to
  * LAGraph and GraphBLAS should be checked, and corrective action should be
  * taken if an error occurs.  The LAGRAPH_TRY and GRB_TRY macros assist in this
  * effort.
