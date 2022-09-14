@@ -152,8 +152,7 @@
 // LAGraph error status: FIXME: add to rtdocs
 //------------------------------------------------------------------------------
 
-/** LAGRAPH_ERROR_HANDLING:
- *
+/**
  * All LAGraph methods return an int to denote their status:  zero if they are
  * successful (which is the value of GrB_SUCCESS), negative on error, or
  * positive for an informational value (such as GrB_NO_VALUE).  Integers in the
