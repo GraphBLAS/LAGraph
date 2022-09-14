@@ -1,11 +1,24 @@
 Utility Functions
 =================
 
+Input/Output Functions
+----------------------
+
+.. doxygenfunction:: LAGraph_MMRead
+
+.. doxygenfunction:: LAGraph_MMWrite
+
 .. doxygenfunction:: LAGraph_WallClockTime
+
+Matrix Structure Functions
+--------------------------
 
 .. doxygenfunction:: LAGraph_Matrix_Structure
 
 .. doxygenfunction:: LAGraph_Vector_Structure
+
+Matrix Comparison Functions
+---------------------------
 
 .. doxygenfunction:: LAGraph_Matrix_IsEqual
 

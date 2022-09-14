@@ -17,6 +17,7 @@ LAGraph requires SuiteSparse:GraphBLAS, available at `<https://github.com/DrTimo
 
    introduction
    core
+   graph
    algorithms
    utils
    experimental
