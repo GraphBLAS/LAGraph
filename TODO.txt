@@ -1,9 +1,0 @@
-As of Sept 7, 2022:
-
-    * FIXME: entire user guide:  rtdocs is in good shape.
-
-    * FIXME: write a contributer's guide, first-cut
-        See HelloWorld example in experimental/
-
-    * FIXME: delete this file when done
-

@@ -20,7 +20,7 @@ to `pip install` into without affecting the system python.
 ### Set up the virtual environment
 *This only needs to be done once.*
 
-    cd lagraph/rtdocs
+    cd LAGraph/rtdocs
     python -m venv .venv
     source .venv/bin/activate
     pip install sphinx==4.0.3
@@ -30,7 +30,7 @@ to `pip install` into without affecting the system python.
 
 ### Build the docs
 
-    cd lagraph/rtdocs
+    cd LAGraph/rtdocs
     source .venv/bin/activate
     ./make_docs.sh
 
@@ -52,6 +52,6 @@ If you don't already have conda installed, download and install [miniconda](http
 
 ### Build the docs
 
-    cd lagraph/rtdocs
+    cd LAGraph/rtdocs
     conda activate lagraph
     ./make_docs.sh
