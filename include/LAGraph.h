@@ -554,11 +554,11 @@ LAGraph_State ;
 // LAGraph_Graph: the primary graph data structure of LAGraph
 //------------------------------------------------------------------------------
 
-/** LAGraph_Graph: a representation of a graph.  The object G contains a
- * GrB_Matrix G->A as its primary component.  For graphs represented with
- * adjacency matrices, A(i,j) denotes the edge (i,j).  Unlike GrB_* objects in
- * GraphBLAS, the LAGraph_Graph data structure is not opaque.  User
- * applications have full access to its contents.
+/** LAGraph_Graph: a representation of a graph.
+ * The LAGraph_Graph G contains a GrB_Matrix G->A as its primary component.
+ * For graphs represented with adjacency matrices, A(i,j) denotes the edge
+ * (i,j).  Unlike GrB_* objects in GraphBLAS, the LAGraph_Graph data structure
+ * is not opaque.  User applications have full access to its contents.
  *
  * An LAGraph_Graph G contains two kinds of components:
  *  1. Primary components of the graph, which fully define the graph.
