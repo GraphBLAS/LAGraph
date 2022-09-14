@@ -158,9 +158,9 @@
  * positive for an informational value (such as GrB_NO_VALUE).  Integers in the
  * range -999 to 999 are reserved for GraphBLAS GrB_Info return values:
  *
- *  successful results:
- *  GrB_SUCCESS = 0             // all is well
- *  GrB_NO_VALUE = 1            // A(i,j) requested but not there
+ *      successful results:
+ *      GrB_SUCCESS = 0             // all is well
+ *      GrB_NO_VALUE = 1            // A(i,j) requested but not there
  *
  *      errors:
  *      GrB_UNINITIALIZED_OBJECT = -1   // object has not been initialized
@@ -180,20 +180,20 @@
  *
  * LAGraph returns any errors it receives from GraphBLAS, and also uses the
  *  GrB_* error codes in these cases:
- *  GrB_INVALID_INDEX: if a source node id is out of range
- *  GrB_INVALID_VALUE: if an enum to select a method or option is out of range
- *  GrB_NOT_IMPLEMENTED: if a type is not supported, or when SuiteSparse
- *      GraphBLAS is required.
+ *      GrB_INVALID_INDEX: if a source node id is out of range
+ *      GrB_INVALID_VALUE: if an enum to select an option is out of range
+ *      GrB_NOT_IMPLEMENTED: if a type is not supported, or when SuiteSparse
+ *          GraphBLAS is required.
  *
  * Summary of return values for all LAGraph functions that return int:
- *   * GrB_SUCCESS if successful
- *   * a negative GrB_Info value on error (in range -999 to -1)
- *   * a positive GrB_Info value if successful but with extra information
+ *      * GrB_SUCCESS if successful
+ *      * a negative GrB_Info value on error (in range -999 to -1)
+ *      * a positive GrB_Info value if successful but with extra information
  *         (in range 1 to 999)
- *   * -1999 to -1000: a common LAGraph-specific error, see list above
- *   * 1000 to 1999: if successful, with extra LAGraph-specific information
- *   * <= -2000: an LAGraph error specific to a particular LAGraph method
- *   * >= 2000: an LAGraph warning specific to a particular LAGraph method
+ *      * -1999 to -1000: a common LAGraph-specific error, see list above
+ *      * 1000 to 1999: if successful, with extra LAGraph-specific information
+ *      * <= -2000: an LAGraph error specific to a particular LAGraph method
+ *      * >= 2000: an LAGraph warning specific to a particular LAGraph method
  */
 #define LAGRAPH_ERROR_HANDLING
 
