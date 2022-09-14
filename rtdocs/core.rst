@@ -21,8 +21,6 @@ Program Functions
 Error handling
 --------------
 
-FIXME: overview here.
-
 .. doxygendefine:: LAGRAPH_RETURN_VALUES
 
 .. doxygendefine:: LAGRAPH_INVALID_GRAPH
@@ -53,13 +51,4 @@ Enums
 .. doxygenenum:: LAGraph_Boolean
 
 .. doxygenenum:: LAGraph_State
-
-Pre-defined semirings
----------------------
-
-LAGraph adds the following pre-defined semirings.  They are created
-by `LAGr_Init` or `LAGraph_Init`, and freed by `LAGraph_Finalize`.
-
-.. doxygenvariable:: LAGraph_plus_first_int8
-
 

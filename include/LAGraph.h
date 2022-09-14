@@ -112,7 +112,14 @@
 //==============================================================================
 
 /**
- * All LAGraph methods return an int to denote their status:  zero if they are
+ * Nearly all LAGraph methods return an int to denote their status, and
+ * have a final string (msg) that captures any error messages.
+ *
+ * LAGraph has a single function that does not follow this rule.
+ * LAGraph_WallClockTime has no error handling mechanism (it returns a value of
+ * type double, and does not have an final msg string parameter.
+ *
+ * All other methods return an int to denote their status:  zero if they are
  * successful (which is the value of GrB_SUCCESS), negative on error, or
  * positive for an informational value (such as GrB_NO_VALUE).  Integers in the
  * range -999 to 999 are reserved for GraphBLAS GrB_Info return values:
@@ -138,7 +145,7 @@
  *      GrB_EMPTY_OBJECT = -106         // an object does not contain a value
  *
  * LAGraph returns any errors it receives from GraphBLAS, and also uses the
- *  GrB_* error codes in these cases:
+ * GrB_* error codes in these cases:
  *
  *      GrB_INVALID_INDEX: if a source node id is out of range
  *      GrB_INVALID_VALUE: if an enum to select an option is out of range
@@ -158,71 +165,56 @@
  * Many LAGraph methods share common error cases, described below.  These
  * return values are in the range -1000 to -1999.  Return values of -2000 or
  * greater may be used by specific LAGraph methods, which denote errors not in
- * the following list.
+ * the following list:
+ *
+ *      * LAGRAPH_INVALID_GRAPH (-1000):
+ *          The input graph is invalid; the details are given in the error msg
+ *          string returned by the method.
+ *      * LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED (-1001):
+ *          The method requires an undirected graph, or a directed graph with
+ *          an adjacency matrix that is known to have a symmetric structure.
+ *          LAGraph_Cached_IsSymmetricStructure can be used to determine this
+ *          cached property.
+ *      * LAGRAPH_IO_ERROR (-1002):
+ *          A file input or output method failed, or an input file has an
+ *          incorrect format that cannot be parsed.
+ *      * LAGRAPH_NOT_CACHED (-1003):
+ *          Some methods require one or more cached properties to be computed
+ *          before calling them (AT, out_degree, or in_degree.  Use
+ *          LAGraph_Cached_AT, LAGraph_Cached_OutDegree, and/or
+ *          LAGraph_Cached_InDegree to compute them.
+ *      * LAGRAPH_NO_SELF_EDGES_ALLOWED (-1004):
+ *          Some methods requires that the graph have no self edges, which
+ *          correspond to the entries on the diagonal of the adjacency matrix.
+ *          If the G->nself_edges cached property is nonzero or unknown, this
+ *          error condition is returned.  Use LAGraph_Cached_NSelfEdges to
+ *          compute G->nself_edges, or LAGraph_DeleteSelfEdges to remove all
+ *          diagonal entries from G->A.
+ *      * LAGRAPH_CONVERGENCE_FAILURE (-1005):
+ *          An iterative process failed to converge to a good solution.
+ *      * LAGRAPH_CACHE_NOT_NEEDED (1000):
+ *          This is a warning, not an error.  It is returned by
+ *          LAGraph_Cached_* methods when asked to compute cached properties
+ *          that are not needed.  These include G->AT and G->in_degree for an
+ *          undirected graph.
  */
 #define LAGRAPH_RETURN_VALUES
 
-/** LAGRAPH_INVALID_GRAPH:
- *      The input graph is invalid; the details are given in the error msg
- *      string returned by the method.
- */
 #define LAGRAPH_INVALID_GRAPH                   (-1000)
-
-/** LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED:
- *      The method requires an undirected graph, or a directed graph with an
- *      adjacency matrix that is known to have a symmetric structure.
- *      LAGraph_Cached_IsSymmetricStructure can be used to determine this
- *      cached property.
- */
 #define LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED    (-1001)
-
-/** LAGRAPH_IO_ERROR:
- *      A file input or output method failed, or an input file has an incorrect
- *      format that cannot be parsed.
- */
 #define LAGRAPH_IO_ERROR                        (-1002)
-
-/** LAGRAPH_NOT_CACHED:
- *      Some methods require one or more cached properties to be computed
- *      before calling them (AT, out_degree, or in_degree.  Use
- *      LAGraph_Cached_AT, LAGraph_Cached_OutDegree, and/or
- *      LAGraph_Cached_InDegree to compute them.
- */
 #define LAGRAPH_NOT_CACHED                      (-1003)
-
-/** LAGRAPH_NO_SELF_EDGES_ALLOWED:
- *      Some methods requires that the graph have no self edges, which
- *      correspond to the entries on the diagonal of the adjacency matrix.  If
- *      the G->nself_edges cached property is nonzero or unknown, this error
- *      condition is returned.  Use LAGraph_Cached_NSelfEdges to compute
- *      G->nself_edges, or LAGraph_DeleteSelfEdges to remove all diagonal
- *      entries from G->A.
- */
 #define LAGRAPH_NO_SELF_EDGES_ALLOWED           (-1004)
-
-/** LAGRAPH_CONVERGENCE_FAILURE:
- *      An iterative process failed to converge to a good solution.
- */
 #define LAGRAPH_CONVERGENCE_FAILURE             (-1005)
-
-/** LAGRAPH_CACHE_NOT_NEEDED:
- *      This is a warning, not an error.  It is returned by LAGraph_Cached_*
- *      methods when asked to compute cached properties that are not needed.
- *      These include G->AT and G->in_degree for an undirected graph.
- */
 #define LAGRAPH_CACHE_NOT_NEEDED                ( 1000)
 
 /**
- * In addition, all such LAGraph functions also have a final msg parameter that
- * is a pointer to a user-allocated string in which an algorithm-specific error
- * message can be returned.  If msg is NULL, no error message is returned.
- * This is not itself an error condition, it just indicates that the caller
- * does not need the message returned.  If the message string is provided but
- * no error occurs, an empty string is returned.
- *
- * A single LAGraph function has no error handling mechanism
- * (LAGraph_WallClockTime); it returns a value of type double, and does not
- * have an final msg string parameter.
+ * In addition, all LAGraph functions (except for LAGraph_WallClockTime) also
+ * have a final msg parameter that is a pointer to a user-allocated string in
+ * which an algorithm-specific error message can be returned.  If msg is NULL,
+ * no error message is returned.  This is not itself an error condition, it
+ * just indicates that the caller does not need the message returned.  If the
+ * message string is provided but no error occurs, an empty string is returned.
  *
  * LAGRAPH_MSG_LEN is the maximum required length of a message string.
  *
