@@ -716,14 +716,12 @@ int LAGraph_Init
 
 // FUTURE: include these as built-in semirings in v2.1 C API, Table 3.9:
 
-// FIXME: add LAGraph semirings to the rtdocs
-
 // LAGraph semirings, created by LAGraph_Init or LAGr_Init:
 LAGRAPH_PUBLIC GrB_Semiring
 
     // LAGraph_plus_first_T: using the GrB_PLUS_MONOID_T monoid and the
     // corresponding GrB_FIRST_T multiplicative operator.
-    LAGraph_plus_first_int8   ,     ///<
+    LAGraph_plus_first_int8   ,
     LAGraph_plus_first_int16  ,
     LAGraph_plus_first_int32  ,
     LAGraph_plus_first_int64  ,

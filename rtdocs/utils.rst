@@ -65,60 +65,68 @@ by `LAGr_Init` or `LAGraph_Init`, and freed by `LAGraph_Finalize`.
 `LAGraph_plus_first_T`: using the `GrB_PLUS_MONOID_T` monoid and the
 corresponding GrB_FIRST_T multiplicative operator:
 
-        LAGraph_plus_first_int8
-        LAGraph_plus_first_int16
-        LAGraph_plus_first_int32
-        LAGraph_plus_first_int64
-        LAGraph_plus_first_uint8
-        LAGraph_plus_first_uint16
-        LAGraph_plus_first_uint32
-        LAGraph_plus_first_uint64
-        LAGraph_plus_first_fp32
-        LAGraph_plus_first_fp64
+.. code-block:: C
+
+    LAGraph_plus_first_int8
+    LAGraph_plus_first_int16
+    LAGraph_plus_first_int32
+    LAGraph_plus_first_int64
+    LAGraph_plus_first_uint8
+    LAGraph_plus_first_uint16
+    LAGraph_plus_first_uint32
+    LAGraph_plus_first_uint64
+    LAGraph_plus_first_fp32
+    LAGraph_plus_first_fp64
 
 `LAGraph_plus_second_T`: using the `GrB_PLUS_MONOID_T` monoid and the
 corresponding `GrB_SECOND_T` multiplicative operator:
 
-        LAGraph_plus_second_int8
-        LAGraph_plus_second_int16
-        LAGraph_plus_second_int32
-        LAGraph_plus_second_int64
-        LAGraph_plus_second_uint8
-        LAGraph_plus_second_uint16
-        LAGraph_plus_second_uint32
-        LAGraph_plus_second_uint64
-        LAGraph_plus_second_fp32
-        LAGraph_plus_second_fp64
+.. code-block:: C
+
+    LAGraph_plus_second_int8
+    LAGraph_plus_second_int16
+    LAGraph_plus_second_int32
+    LAGraph_plus_second_int64
+    LAGraph_plus_second_uint8
+    LAGraph_plus_second_uint16
+    LAGraph_plus_second_uint32
+    LAGraph_plus_second_uint64
+    LAGraph_plus_second_fp32
+    LAGraph_plus_second_fp64
 
 `LAGraph_plus_one_T`: using the `GrB_PLUS_MONOID_T` monoid and the
 corresponding `GrB_ONEB_T` multiplicative operator:
 
-        LAGraph_plus_one_int8
-        LAGraph_plus_one_int16
-        LAGraph_plus_one_int32
-        LAGraph_plus_one_int64
-        LAGraph_plus_one_uint8
-        LAGraph_plus_one_uint16
-        LAGraph_plus_one_uint32
-        LAGraph_plus_one_uint64
-        LAGraph_plus_one_fp32
-        LAGraph_plus_one_fp64
+.. code-block:: C
+
+    LAGraph_plus_one_int8
+    LAGraph_plus_one_int16
+    LAGraph_plus_one_int32
+    LAGraph_plus_one_int64
+    LAGraph_plus_one_uint8
+    LAGraph_plus_one_uint16
+    LAGraph_plus_one_uint32
+    LAGraph_plus_one_uint64
+    LAGraph_plus_one_fp32
+    LAGraph_plus_one_fp64
 
 `LAGraph_any_one_T`: using the `GrB_MIN_MONOID_T` for non-boolean types or
 `GrB_LOR_MONOID_BOOL` for boolean, and the `GrB_ONEB_T` multiplicative op.
 These semirings are very useful for unweighted graphs, or for algorithms
 that operate only on the sparsity structure of unweighted graphs:
 
-        LAGraph_any_one_bool
-        LAGraph_any_one_int8
-        LAGraph_any_one_int16
-        LAGraph_any_one_int32
-        LAGraph_any_one_int64
-        LAGraph_any_one_uint8
-        LAGraph_any_one_uint16
-        LAGraph_any_one_uint32
-        LAGraph_any_one_uint64
-        LAGraph_any_one_fp32
-        LAGraph_any_one_fp64
+.. code-block:: C
+
+    LAGraph_any_one_bool
+    LAGraph_any_one_int8
+    LAGraph_any_one_int16
+    LAGraph_any_one_int32
+    LAGraph_any_one_int64
+    LAGraph_any_one_uint8
+    LAGraph_any_one_uint16
+    LAGraph_any_one_uint32
+    LAGraph_any_one_uint64
+    LAGraph_any_one_fp32
+    LAGraph_any_one_fp64
 
 
