@@ -195,7 +195,7 @@
  *      * <= -2000: an LAGraph error specific to a particular LAGraph method
  *      * >= 2000: an LAGraph warning specific to a particular LAGraph method
  */
-#define LAGRAPH_ERROR_HANDLING
+#define LAGRAPH_RETURN_VALUES
 
 // Many LAGraph methods share common error cases, described below.  These
 // return values are in the range -1000 to -1999.  Return values of -2000 or
