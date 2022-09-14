@@ -9,6 +9,13 @@ The fundamental object in LAGraph is the `LAGraph_Graph`.
     :members:
     :undoc-members:
 
+.. doxygenenum:: LAGraph_Boolean
+
+.. doxygenenum:: LAGraph_State
+
+.. doxygenenum:: LAGraph_Kind
+
+
 Basic Graph Functions
 ---------------------
 

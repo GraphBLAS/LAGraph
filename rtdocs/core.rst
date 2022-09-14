@@ -1,10 +1,12 @@
-FIXME TITLE
-============
+LAGraph context and error handling
+==================================
 
-FIXME: intro.  startup
+The sections below describe a set of functions that manage the LAGraph context
+within a user application, and discuss how errors are handled.
 
-Program Functions
------------------
+
+LAGraph Context Functions
+-------------------------
 
 .. doxygenfunction:: LAGraph_Init
 
@@ -28,13 +30,4 @@ Error handling
 .. doxygendefine:: LAGRAPH_TRY
 
 .. doxygendefine:: GRB_TRY
-
-Enums
------
-
-.. doxygenenum:: LAGraph_Kind
-
-.. doxygenenum:: LAGraph_Boolean
-
-.. doxygenenum:: LAGraph_State
 
