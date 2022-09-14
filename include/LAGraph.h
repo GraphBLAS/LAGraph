@@ -732,7 +732,7 @@ LAGRAPH_PUBLIC GrB_Semiring
 
     // LAGraph_plus_first_T: using the GrB_PLUS_MONOID_T monoid and the
     // corresponding GrB_FIRST_T multiplicative operator.
-    LAGraph_plus_first_int8   ,
+    LAGraph_plus_first_int8   ,     ///<
     LAGraph_plus_first_int16  ,
     LAGraph_plus_first_int32  ,
     LAGraph_plus_first_int64  ,
