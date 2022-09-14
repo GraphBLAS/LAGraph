@@ -108,49 +108,8 @@
 #endif
 
 //==============================================================================
-// LAGraph error handling: FIXME: add to rtdocs
+// LAGraph error handling: return values and msg string
 //==============================================================================
-
-/** STuff: where
- */
-
-// All LAGraph functions that return an int use it to indicate an error status
-// (described below), where zero (GrB_SUCCESS) denotes success, negative values
-// indicate an error, and positive values denote success but with some kind of
-// algorithm-specific note or warning.
-
-// In addition, all such LAGraph functions also have a final msg parameter that
-// is a pointer to a user-allocated string in which an algorithm-specific error
-// message can be returned.  If msg is NULL, no error message is returned.
-// This is not itself an error condition, it just indicates that the caller
-// does not need the message returned.  If the message string is provided but
-// no error occurs, an empty string is returned.
-
-// A single LAGraph function has no error handling mechanism
-// (LAGraph_WallClockTime); it returns a value of type double, and does not
-// have an final msg string parameter.
-
-/// LAGRAPH_MSG_LEN: The maximum required length of a message string
-#define LAGRAPH_MSG_LEN 256
-
-// For example, the following call computes the breadth-first-search of an
-// LAGraph_Graph G, starting at a given source node.  It returns a status of
-// zero if it succeeds and a negative value on failure.
-
-/*
-    GrB_Vector level, parent ;
-    char msg [LAGRAPH_MSG_LEN] ;
-    int status = LAGr_BreadthFirstSearch (&level, &parent, G, src, msg) ;
-    if (status < 0)
-    {
-        printf ("error: %s\n", msg) ;
-        // take corrective action ...
-    }
-*/
-
-//------------------------------------------------------------------------------
-// LAGraph error status: FIXME: add to rtdocs
-//------------------------------------------------------------------------------
 
 /**
  * All LAGraph methods return an int to denote their status:  zero if they are
@@ -180,6 +139,7 @@
  *
  * LAGraph returns any errors it receives from GraphBLAS, and also uses the
  *  GrB_* error codes in these cases:
+ *
  *      GrB_INVALID_INDEX: if a source node id is out of range
  *      GrB_INVALID_VALUE: if an enum to select an option is out of range
  *      GrB_NOT_IMPLEMENTED: if a type is not supported, or when SuiteSparse
@@ -194,55 +154,85 @@
  *      * 1000 to 1999: if successful, with extra LAGraph-specific information
  *      * <= -2000: an LAGraph error specific to a particular LAGraph method
  *      * >= 2000: an LAGraph warning specific to a particular LAGraph method
+ *
+ * Many LAGraph methods share common error cases, described below.  These
+ * return values are in the range -1000 to -1999.  Return values of -2000 or
+ * greater may be used by specific LAGraph methods, which denote errors not in
+ * the following list.
  */
 #define LAGRAPH_RETURN_VALUES
 
-// Many LAGraph methods share common error cases, described below.  These
-// return values are in the range -1000 to -1999.  Return values of -2000 or
-// greater may be used by specific LAGraph methods, which denote errors not in
-// this list:
-
-/// LAGRAPH_INVALID_GRAPH:  the input graph is invalid; the details are given
-///   in the error msg string returned by the method.
+/** LAGRAPH_INVALID_GRAPH:  the input graph is invalid; the details are given
+ *      in the error msg string returned by the method.
+ */
 #define LAGRAPH_INVALID_GRAPH                   (-1000)
 
-//  LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED: the method requires an undirected
-//      graph, or a directed graph with an adjacency matrix that is known to
-//      have a symmetric structure.  LAGraph_Cached_IsSymmetricStructure can
-//      be used to determine this cached property.
+/** LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED: the method requires an undirected
+ *      graph, or a directed graph with an adjacency matrix that is known to
+ *      have a symmetric structure.  LAGraph_Cached_IsSymmetricStructure can
+ *      be used to determine this cached property.
+ */
+#define LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED    (-1001)
 
-//  LAGRAPH_IO_ERROR:  a file input or output method failed, or an input file
-//      has an incorrect format that cannot be parsed.
+/** LAGRAPH_IO_ERROR:  a file input or output method failed, or an input file
+ *      has an incorrect format that cannot be parsed.
+ */
+#define LAGRAPH_IO_ERROR                        (-1002)
 
-//  LAGRAPH_NOT_CACHED:  some methods require one or more cached properties to
-//      be computed before calling them (AT, out_degree, or in_degree.  Use
-//      LAGraph_Cached_AT, LAGraph_Cached_OutDegree, and/or
-//      LAGraph_Cached_InDegree to compute them.
+/** LAGRAPH_NOT_CACHED:  some methods require one or more cached properties to
+ *      be computed before calling them (AT, out_degree, or in_degree.  Use
+ *      LAGraph_Cached_AT, LAGraph_Cached_OutDegree, and/or
+ *      LAGraph_Cached_InDegree to compute them.
+ */
+#define LAGRAPH_NOT_CACHED                      (-1003)
 
-//  LAGRAPH_NO_SELF_EDGES_ALLOWED:  some methods requires that the graph have
-//      no self edges, which correspond to the entries on the diagonal of the
-//      adjacency matrix.  If the G->nself_edges cached property is nonzero or
-//      unknown, this error condition is returned.  Use
-//      LAGraph_Cached_NSelfEdges to compute G->nself_edges, or
-//      LAGraph_DeleteSelfEdges to remove all diagonal entries from G->A.
+/** LAGRAPH_NO_SELF_EDGES_ALLOWED:  some methods requires that the graph have
+ *      no self edges, which correspond to the entries on the diagonal of the
+ *      adjacency matrix.  If the G->nself_edges cached property is nonzero or
+ *      unknown, this error condition is returned.  Use
+ *      LAGraph_Cached_NSelfEdges to compute G->nself_edges, or
+ *      LAGraph_DeleteSelfEdges to remove all diagonal entries from G->A.
+ */
+#define LAGRAPH_NO_SELF_EDGES_ALLOWED           (-1004)
 
 //  LAGRAPH_CONVERGENCE_FAILURE:  an iterative process failed to converge to
 //      a good solution.
+#define LAGRAPH_CONVERGENCE_FAILURE             (-1005)
 
 //  LAGRAPH_CACHE_NOT_NEEDED: this is a warning, not an error.  It is returned
 //      by LAGraph_Cached_* methods when asked to compute cached properties
 //      that are not needed.  These include G->AT and G->in_degree for an
 //      undirected graph.
-
-// LAGraph errors:
-#define LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED    (-1001)
-#define LAGRAPH_IO_ERROR                        (-1002)
-#define LAGRAPH_NOT_CACHED                      (-1003)
-#define LAGRAPH_NO_SELF_EDGES_ALLOWED           (-1004)
-#define LAGRAPH_CONVERGENCE_FAILURE             (-1005)
-
-// LAGraph warnings:
 #define LAGRAPH_CACHE_NOT_NEEDED                ( 1000)
+
+/** LAGRAPH_MSG_LEN: return error message string.
+ * In addition, all such LAGraph functions also have a final msg parameter that
+ * is a pointer to a user-allocated string in which an algorithm-specific error
+ * message can be returned.  If msg is NULL, no error message is returned.
+ * This is not itself an error condition, it just indicates that the caller
+ * does not need the message returned.  If the message string is provided but
+ * no error occurs, an empty string is returned.
+ *
+ * A single LAGraph function has no error handling mechanism
+ * (LAGraph_WallClockTime); it returns a value of type double, and does not
+ * have an final msg string parameter.
+ *
+ * LAGRAPH_MSG_LEN is the maximum required length of a message string.
+ *
+ * For example, the following call computes the breadth-first-search of an
+ * LAGraph_Graph G, starting at a given source node.  It returns a status of
+ * zero if it succeeds and a negative value on failure.
+ *
+ *      GrB_Vector level, parent ;
+ *      char msg [LAGRAPH_MSG_LEN] ;
+ *      int status = LAGr_BreadthFirstSearch (&level, &parent, G, src, msg) ;
+ *      if (status < 0)
+ *      {
+ *          printf ("error: %s\n", msg) ;
+ *          // take corrective action ...
+ *      }
+ */
+#define LAGRAPH_MSG_LEN 256
 
 //------------------------------------------------------------------------------
 // LAGRAPH_TRY: try an LAGraph method and check for errors
@@ -316,10 +306,11 @@
  *
  * GraphBLAS and LAGraph both use the convention that negative values are
  * errors, and the LAGraph_status is a superset of the GrB_Info enum.  As a
- * result, the user can define LAGRAPH_CATCH and GRB_CATCH as the same operation.
- * The main difference between the two would be the error message string.  For
- * LAGraph, the string is the last parameter, and LAGRAPH_CATCH can optionally
- * print it out.  For GraphBLAS, the GrB_error mechanism can return a string.  
+ * result, the user can define LAGRAPH_CATCH and GRB_CATCH as the same
+ * operation.  The main difference between the two would be the error message
+ * string.  For LAGraph, the string is the last parameter, and LAGRAPH_CATCH
+ * can optionally print it out.  For GraphBLAS, the GrB_error mechanism can
+ * return a string.  
  */
 
 #define GRB_TRY(GrB_method)                     \

@@ -21,9 +21,28 @@ Program Functions
 Error handling
 --------------
 
-FIXME: Discuss the msg string, and return values.
+FIXME: overview here.
 
 .. doxygendefine:: LAGRAPH_RETURN_VALUES
+
+
+    .. doxygendefine:: LAGRAPH_RETURN_VALUES
+
+    .. doxygendefine:: LAGRAPH_INVALID_GRAPH
+
+    .. doxygendefine:: LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED
+
+    .. doxygendefine:: LAGRAPH_IO_ERROR
+
+    .. doxygendefine:: LAGRAPH_NOT_CACHED
+
+    .. doxygendefine:: LAGRAPH_NO_SELF_EDGES_ALLOWED
+
+    .. doxygendefine:: LAGRAPH_CONVERGENCE_FAILURE
+
+    .. doxygendefine:: LAGRAPH_CACHE_NOT_NEEDED
+
+.. doxygendefine::  LAGRAPH_MSG_LEN
 
 .. doxygendefine:: LAGRAPH_TRY
 
