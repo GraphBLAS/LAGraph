@@ -66,6 +66,8 @@ Error handling
 
 FIXME: Discuss the msg string, and return values.
 
+.. doxygendefine:: LAGRAPH_ERROR_HANDLING
+
 .. doxygendefine:: LAGRAPH_TRY
 
 .. doxygendefine:: LAGRAPH_INVALID_GRAPH
