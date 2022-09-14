@@ -130,7 +130,7 @@
 // (LAGraph_WallClockTime); it returns a value of type double, and does not
 // have an final msg string parameter.
 
-// LAGRAPH_MSG_LEN: The maximum required length of a message string
+/// LAGRAPH_MSG_LEN: The maximum required length of a message string
 #define LAGRAPH_MSG_LEN 256
 
 // For example, the following call computes the breadth-first-search of an
@@ -152,49 +152,50 @@
 // LAGraph error status: FIXME: add to rtdocs
 //------------------------------------------------------------------------------
 
-// FIXME see doxygen group
-
-// All LAGraph methods return an int to denote their status:  zero if they are
-// successful (which is the value of GrB_SUCCESS), negative on error, or
-// positive for an informational value (such as GrB_NO_VALUE).  Integers in the
-// range -999 to 999 are reserved for GraphBLAS GrB_Info return values:
-
-//  successful results:
-//  GrB_SUCCESS = 0             // all is well
-//  GrB_NO_VALUE = 1            // A(i,j) requested but not there
-
-//  errors:
-//  GrB_UNINITIALIZED_OBJECT = -1   // object has not been initialized
-//  GrB_NULL_POINTER = -2           // input pointer is NULL
-//  GrB_INVALID_VALUE = -3          // generic error; some value is bad
-//  GrB_INVALID_INDEX = -4          // row or column index is out of bounds
-//  GrB_DOMAIN_MISMATCH = -5        // object domains are not compatible
-//  GrB_DIMENSION_MISMATCH = -6     // matrix dimensions do not match
-//  GrB_OUTPUT_NOT_EMPTY = -7       // output matrix already has values
-//  GrB_NOT_IMPLEMENTED = -8        // method not implemented
-//  GrB_PANIC = -101                // unknown error
-//  GrB_OUT_OF_MEMORY = -102        // out of memory
-//  GrB_INSUFFICIENT_SPACE = -103,  // output array not large enough
-//  GrB_INVALID_OBJECT = -104       // object is corrupted
-//  GrB_INDEX_OUT_OF_BOUNDS = -105  // row or col index out of bounds
-//  GrB_EMPTY_OBJECT = -106         // an object does not contain a value
-
-// LAGraph returns any errors it receives from GraphBLAS, and also uses the
-//  GrB_* error codes in these cases:
-//  GrB_INVALID_INDEX: if a source node id is out of range
-//  GrB_INVALID_VALUE: if an enum to select a method or option is out of range
-//  GrB_NOT_IMPLEMENTED: if a type is not supported, or when SuiteSparse
-//      GraphBLAS is required.
-
-// Summary of return values for all LAGraph functions that return int:
-//   * GrB_SUCCESS if successful
-//   * a negative GrB_Info value on error (in range -999 to -1)
-//   * a positive GrB_Info value if successful but with extra information
-//         (in range 1 to 999)
-//   * -1999 to -1000: a common LAGraph-specific error, see list above
-//   * 1000 to 1999: if successful, with extra LAGraph-specific information
-//   * <= -2000: an LAGraph error specific to a particular LAGraph method
-//   * >= 2000: an LAGraph warning specific to a particular LAGraph method
+/** LAGRAPH_ERROR_HANDLING:
+ *
+ * All LAGraph methods return an int to denote their status:  zero if they are
+ * successful (which is the value of GrB_SUCCESS), negative on error, or
+ * positive for an informational value (such as GrB_NO_VALUE).  Integers in the
+ * range -999 to 999 are reserved for GraphBLAS GrB_Info return values:
+ *
+ *  successful results:
+ *  GrB_SUCCESS = 0             // all is well
+ *  GrB_NO_VALUE = 1            // A(i,j) requested but not there
+ *
+ *  errors:
+ *  GrB_UNINITIALIZED_OBJECT = -1   // object has not been initialized
+ *  GrB_NULL_POINTER = -2           // input pointer is NULL
+ *  GrB_INVALID_VALUE = -3          // generic error; some value is bad
+ *  GrB_INVALID_INDEX = -4          // row or column index is out of bounds
+ *  GrB_DOMAIN_MISMATCH = -5        // object domains are not compatible
+ *  GrB_DIMENSION_MISMATCH = -6     // matrix dimensions do not match
+ *  GrB_OUTPUT_NOT_EMPTY = -7       // output matrix already has values
+ *  GrB_NOT_IMPLEMENTED = -8        // method not implemented
+ *  GrB_PANIC = -101                // unknown error
+ *  GrB_OUT_OF_MEMORY = -102        // out of memory
+ *  GrB_INSUFFICIENT_SPACE = -103,  // output array not large enough
+ *  GrB_INVALID_OBJECT = -104       // object is corrupted
+ *  GrB_INDEX_OUT_OF_BOUNDS = -105  // row or col index out of bounds
+ *  GrB_EMPTY_OBJECT = -106         // an object does not contain a value
+ *
+ * LAGraph returns any errors it receives from GraphBLAS, and also uses the
+ *  GrB_* error codes in these cases:
+ *  GrB_INVALID_INDEX: if a source node id is out of range
+ *  GrB_INVALID_VALUE: if an enum to select a method or option is out of range
+ *  GrB_NOT_IMPLEMENTED: if a type is not supported, or when SuiteSparse
+ *      GraphBLAS is required.
+ *
+ * Summary of return values for all LAGraph functions that return int:
+ *   * GrB_SUCCESS if successful
+ *   * a negative GrB_Info value on error (in range -999 to -1)
+ *   * a positive GrB_Info value if successful but with extra information
+ *         (in range 1 to 999)
+ *   * -1999 to -1000: a common LAGraph-specific error, see list above
+ *   * 1000 to 1999: if successful, with extra LAGraph-specific information
+ *   * <= -2000: an LAGraph error specific to a particular LAGraph method
+ *   * >= 2000: an LAGraph warning specific to a particular LAGraph method
+ */
 #define LAGRAPH_ERROR_HANDLING
 
 // Many LAGraph methods share common error cases, described below.  These
