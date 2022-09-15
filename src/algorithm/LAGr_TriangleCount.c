@@ -289,51 +289,8 @@ int LAGr_TriangleCount
 
         case LAGraph_TriangleCount_Burkhardt:  // 1: sum (sum ((A^2) .* A)) / 6
 
-#if 1
-            // using the dot product method, A*A' instead of A^2:
-            //GRB_TRY (GrB_mxm (C, A, NULL, semiring, A, A, GrB_DESC_ST1)) ;
-
-            // do it again for timing
-            // GRB_TRY (GrB_Matrix_clear (C)) ;
             LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
             GRB_TRY (GrB_mxm (C, A, NULL, semiring, A, A, GrB_DESC_ST1)) ;
-
-#else
-            // using the dot product method, A*A' instead of A^2:
-            GxB_get (GxB_GPU_CONTROL, &save) ;
-
-            // use the CPU
-            GxB_set (GxB_GPU_CONTROL, GxB_GPU_NEVER) ;
-            GRB_TRY (GrB_mxm (C, A, NULL, semiring, A, A, GrB_DESC_ST1)) ;
-
-            // use the GPU
-            GxB_set (GxB_GPU_CONTROL, GxB_GPU_ALWAYS) ;
-            GRB_TRY (GrB_mxm (C_gpu, A, NULL, semiring, A, A, GrB_DESC_ST1)) ;
-
-            // compare: Delta = C - C_gpu
-            GRB_TRY (GrB_eWiseAdd (Delta, NULL, NULL, GrB_MINUS_INT64,
-                C, C_gpu, NULL)) ;
-            // drop explicit zeros from Delta
-            GRB_TRY (GrB_Matrix_select_INT64 (Delta, NULL, NULL,
-                GrB_VALUENE_INT64, Delta, (int64_t) 0, NULL)) ;
-            GRB_TRY (GxB_print (Delta, 3)) ;
-
-            // look at Delta in C and C_gpu:
-            GRB_TRY (GrB_assign (Work, Delta, NULL, C,
-                GrB_ALL, n, GrB_ALL, n, GrB_DESC_S)) ;
-            printf ("relevant entries in C:\n") ;
-            GRB_TRY (GxB_print (Work, 3)) ;
-            GRB_TRY (GrB_Matrix_clear (Work)) ;
-            GRB_TRY (GrB_assign (Work, Delta, NULL, C_gpu,
-                GrB_ALL, n, GrB_ALL, n, GrB_DESC_S)) ;
-            printf ("relevant entries in C_gpu:\n") ;
-            GRB_TRY (GxB_print (Work, 3)) ;
-            GRB_TRY (GrB_Matrix_clear (Work)) ;
-
-            // restore
-            GxB_set (GxB_GPU_CONTROL, save) ;
-
-#endif
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             LAGRAPH_TRY (LAGraph_Toc (&ttot, tic, NULL)) ;
             printf (" Burkhardt tc_kernel_time: %14.8f \n", ttot);
@@ -352,22 +309,22 @@ int LAGr_TriangleCount
 
             // using the masked saxpy3 method
             LG_TRY (tricount_prep (&L, NULL, A, msg)) ;
-         LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+            LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
             GRB_TRY (GrB_mxm (C, L, NULL, semiring, L, L, GrB_DESC_S)) ;
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
-         LAGRAPH_TRY (LAGraph_Toc (&ttot, tic, NULL)) ;
-         printf (" Sandia tc_kernel_time: %14.8f \n", ttot);
+            LAGRAPH_TRY (LAGraph_Toc (&ttot, tic, NULL)) ;
+            printf (" Sandia tc_kernel_time: %14.8f \n", ttot);
             break ;
 
         case LAGraph_TriangleCount_Sandia2: // 4: sum (sum ((U * U) .* U))
 
             // using the masked saxpy3 method
             LG_TRY (tricount_prep (NULL, &U, A, msg)) ;
-         LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+            LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
             GRB_TRY (GrB_mxm (C, U, NULL, semiring, U, U, GrB_DESC_S)) ;
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
-         LAGRAPH_TRY (LAGraph_Toc (&ttot, tic, NULL)) ;
-         printf (" Sandia2 tc_kernel_time: %14.8f \n", ttot);
+            LAGRAPH_TRY (LAGraph_Toc (&ttot, tic, NULL)) ;
+            printf (" Sandia2 tc_kernel_time: %14.8f \n", ttot);
             break ;
 
         default:
@@ -378,11 +335,11 @@ int LAGr_TriangleCount
 
             // using the masked dot product
             LG_TRY (tricount_prep (&L, &U, A, msg)) ;
-         LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
+            LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
             GRB_TRY (GrB_mxm (C, L, NULL, semiring, L, U, GrB_DESC_ST1)) ;
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
-         LAGRAPH_TRY (LAGraph_Toc (&ttot, tic, NULL)) ;
-         printf (" SandiaDot tc_kernel_time: %14.8f \n", ttot);
+            LAGRAPH_TRY (LAGraph_Toc (&ttot, tic, NULL)) ;
+            printf (" SandiaDot tc_kernel_time: %14.8f \n", ttot);
             break ;
 
         case LAGraph_TriangleCount_SandiaDot2: // 6: sum (sum ((U * L') .* U))
@@ -390,55 +347,14 @@ int LAGr_TriangleCount
             // using the masked dot product
             LG_TRY (tricount_prep (&L, &U, A, msg)) ;
 
-#if 1
-            //GRB_TRY (GrB_mxm (C, U, NULL, semiring, U, L, GrB_DESC_ST1)) ;
-
-            // do it again for timing
-            //GRB_TRY (GrB_Matrix_clear (C)) ;
-            LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
-
             // HACK:
             GxB_set (L, GxB_SPARSITY_CONTROL, GxB_BITMAP) ;
-            GxB_print (L, 2) ;  // FIXME SLOW!!
 
+            LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
             GRB_TRY (GrB_mxm (C, U, NULL, semiring, U, L, GrB_DESC_ST1)) ;
-#else
-            GxB_get (GxB_GPU_CONTROL, &save) ;
-
-            // use the CPU
-            GxB_set (GxB_GPU_CONTROL, GxB_GPU_NEVER) ;
-            GRB_TRY (GrB_mxm (C, U, NULL, semiring, U, L, GrB_DESC_ST1)) ;
-
-            // use the GPU
-            GxB_set (GxB_GPU_CONTROL, GxB_GPU_ALWAYS) ;
-            GRB_TRY (GrB_mxm (C_gpu, U, NULL, semiring, U, L, GrB_DESC_ST1)) ;
-
-            // compare: Delta = C - C_gpu
-            GRB_TRY (GrB_eWiseAdd (Delta, NULL, NULL, GrB_MINUS_INT64,
-                C, C_gpu, NULL)) ;
-            // drop explicit zeros from Delta
-            GRB_TRY (GrB_Matrix_select_INT64 (Delta, NULL, NULL,
-                GrB_VALUENE_INT64, Delta, (int64_t) 0, NULL)) ;
-            GRB_TRY (GxB_print (Delta, 3)) ;
-
-            // look at Delta in C and C_gpu:
-            GRB_TRY (GrB_assign (Work, Delta, NULL, C,
-                GrB_ALL, n, GrB_ALL, n, GrB_DESC_S)) ;
-            printf ("relevant entries in C:\n") ;
-            GRB_TRY (GxB_print (Work, 3)) ;
-            GRB_TRY (GrB_Matrix_clear (Work)) ;
-            GRB_TRY (GrB_assign (Work, Delta, NULL, C_gpu,
-                GrB_ALL, n, GrB_ALL, n, GrB_DESC_S)) ;
-            printf ("relevant entries in C_gpu:\n") ;
-            GRB_TRY (GxB_print (Work, 3)) ;
-            GRB_TRY (GrB_Matrix_clear (Work)) ;
-
-            // restore
-            GxB_set (GxB_GPU_CONTROL, save) ;
-#endif
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
-         LAGRAPH_TRY (LAGraph_Toc (&ttot, tic, NULL)) ;
-         printf (" SandiaDot2 tc_kernel_time: %14.8f \n", ttot);
+            LAGRAPH_TRY (LAGraph_Toc (&ttot, tic, NULL)) ;
+            printf (" SandiaDot2 tc_kernel_time: %14.8f \n", ttot);
             break ;
     }
 

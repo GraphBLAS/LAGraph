@@ -129,7 +129,6 @@ int main (int argc, char **argv)
 //  printf ("Hack: force hypersparse\n") ;
 //  GxB_set (G->A, GxB_SPARSITY_CONTROL, GxB_HYPERSPARSE) ;
 
-    GxB_print (G->A, 2) ;
 #if 0
     // HACK: make sure G->A is non-iso
 
