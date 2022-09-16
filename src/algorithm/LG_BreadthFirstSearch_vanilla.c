@@ -104,12 +104,12 @@ int LG_BreadthFirstSearch_vanilla
         // create the level vector. v(i) is the level of node i
         // v (src) = 0 denotes the source node
         GRB_TRY (GrB_Vector_new(&l_level, int_type, n)) ;
-        //GRB_TRY (GrB_Vector_setElement(l_level, 0, src)) ;
     }
 
     //--------------------------------------------------------------------------
     // BFS traversal and label the nodes
     //--------------------------------------------------------------------------
+
     GrB_Index nq = 1 ;          // number of nodes in the current level
     GrB_Index last_nq = 0 ;
     GrB_Index current_level = 0;
