@@ -1,28 +1,26 @@
 File: Contributors.txt
 
-Contributors:
+Contributors (in alphabetical order):
 
-FIXME: make this alphabetical
-
-    Tim Davis, Texas A&M University
-    Scott McMillan, SEI, Carnegie Mellon University
-    Gabor Szarnyas, CWI, Amsterdam
-    Jinhao Chen, Texas A&M University
-    Michel Pelletier, Graphegon
-    Scott Kolodziej, Texas A&M University
-    Yongzhe Zhang, SOKENDAI, Japan
-    Marton Elekes
-    Balint Hegyi
-    Tim Mattson, Intel
-    Mohsen Aznaveh, Texas A&M University
-    James Kitchen, Anaconda
-    Aydin Buluc, Lawrence Berkeley National Lab
-    Janos B. Antal
-    Roi Lipman, Redis
-    Erik Welch, Anaconda
-    Carl Yang
-    Tze Meng Low,
-    Florentin Dorre
-    Pranav Konduri, Texas A&M University
-    Tanner Hoke, Texas A&M University
+    Janos B. Antal,    Budapest University of Technology and Economics, Hungary
+    Mohsen Aznaveh,    Texas A&M University
+    Aydin Buluc,       Lawrence Berkeley National Lab
+    Jinhao Chen,       Texas A&M University
+    Tim Davis,         Texas A&M University
+    Florentin Dorre,   Technische Univeritat Dresden, Neo4j
+    Marton Elekes,     Budapest University of Technology and Economics, Hungary
+    Balint Hegyi,      Budapest University of Technology and Economics, Hungary
+    Tanner Hoke,       Texas A&M University
+    James Kitchen,     Anaconda
+    Scott Kolodziej,   Texas A&M University
+    Pranav Konduri,    Texas A&M University
+    Roi Lipman,        Redis Labs
+    Tze Meng Low,      Carnegie Mellon University
+    Tim Mattson,       Intel
+    Scott McMillan,    Carnegie Mellon University
+    Michel Pelletier,  Graphegon
+    Gabor Szarnyas,    CWI Amsterdam, The Netherlands
+    Erik Welch,        Anaconda, NVIDIA
+    Carl Yang,         University of Californie at Davis, Waymo
+    Yongzhe Zhang,     SOKENDAI, Japan
 
