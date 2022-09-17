@@ -1,7 +1,7 @@
 The Graph Object
 ================
 
-The fundamental object in LAGraph is the `LAGraph_Graph`.
+The fundamental object in LAGraph is the ``LAGraph_Graph``.
 
 .. doxygentypedef:: LAGraph_Graph
 

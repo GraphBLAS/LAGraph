@@ -8,10 +8,13 @@ within a user application, and discuss how errors are handled.
 LAGraph Context Functions
 -------------------------
 
+.. _lagraph_init:
 .. doxygenfunction:: LAGraph_Init
 
+.. _lagr_init:
 .. doxygenfunction:: LAGr_Init
 
+.. _lagraph_finalize:
 .. doxygenfunction:: LAGraph_Finalize
 
 .. doxygenfunction:: LAGraph_Version
@@ -27,7 +30,8 @@ Error handling
 
 .. doxygendefine:: LAGRAPH_MSG_LEN
 
+.. lagraph_try:
 .. doxygendefine:: LAGRAPH_TRY
 
+.. _grb_try:
 .. doxygendefine:: GRB_TRY
-

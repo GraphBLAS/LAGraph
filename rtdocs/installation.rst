@@ -2,7 +2,7 @@ Installation
 ============
 
 LAGraph is available at `<https://github.com/GraphBLAS/LAGraph>`_.  Be sure to
-check out the default `stable` branch, or use one of the stable releases.
+check out the default ``stable`` branch, or use one of the stable releases.
 LAGraph requires SuiteSparse:GraphBLAS, available at
 `<https://github.com/DrTimothyAldenDavis/GraphBLAS>`_.
 
