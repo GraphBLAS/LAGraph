@@ -1,11 +1,9 @@
 Installation
 ============
 
-FIXME: need to make a `stable` default branch on github.
-
-LAGraph is available at `<https://github.com/GraphBLAS/LAGraph>`_.  Be sure to
-check out the reorg branch (for now; this will be changed to the stable branch
-in v1.0).  LAGraph requires SuiteSparse:GraphBLAS, available at
+LAGraph is available at `<https://github.com/GraphBLAS/LAGraph>`_.  The **stable**
+branch contains the latest release, which is likely what most users should be using.
+LAGraph requires SuiteSparse:GraphBLAS, available at
 `<https://github.com/DrTimothyAldenDavis/GraphBLAS>`_.
 
 To compile and install LAGraph, you must first compile and install a recent
