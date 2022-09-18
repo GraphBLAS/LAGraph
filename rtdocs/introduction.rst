@@ -2,7 +2,7 @@ Introduction
 ============
 
 A graph is a set of vertices and a set of edges between them.  This pair of sets
-sets leads directly to the familiar picture of a graph as a set of dots connected
+leads directly to the familiar picture of a graph as a set of dots connected
 by arcs (an undirected graphs) or arrows (a directed graph). You can also represent a 
 graph in terms of matrices.   Usually, this is done with an adjacency matrix where
 the rows and columns correspond to the vertices and the non-empty
@@ -27,8 +27,8 @@ we need a way to generalize the type and the operators to use instead of the usu
 We do this through an algebraic semiring.   This algebraic structure consists of (1) an operator
 corresponding to addition, (2) the identity of that operator, (3) an operator corresponding to multiplication,
 and (4) the identity of that operator.  We are all familiar with the semiring used with real numbers
-consisting of $(+,0,*,1)$.  A common semiring in graph algorithms is the so-called tropical semiring 
-consisting of $(min,infinity,+,0)$.  This is used in shortest path algorithms.   These semirings 
+consisting of (+,0,*,1).  A common semiring in graph algorithms is the so-called tropical semiring 
+consisting of (min,infinity,+,0).  This is used in shortest path algorithms.   These semirings 
 give us a mathematically rigorous way to modify the operators used in our graph algorithms.
 
 If you work with linear algebra, you most likely know about the Basic Linear Algebra subprograms or BLAS.
