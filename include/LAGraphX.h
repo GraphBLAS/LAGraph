@@ -836,6 +836,33 @@ int LAGraph_FastGraphletTransform
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
+// matching and coarsening
+//------------------------------------------------------------------------------
+
+LAGRAPH_PUBLIC
+int LAGraph_MaximalMatching
+(
+    // outputs:
+    GrB_Vector *matching,
+    // inputs:
+    GrB_Matrix E, // incidence matrix, not part of LAGraph_Graph (for now)
+    int matching_type, // 0 (random), 1 (heavy weight), or 2 (light weight)
+    uint64_t seed,
+    char *msg
+) ;
+
+LAGRAPH_PUBLIC
+int LAGraph_Coarsen_EdgeMatching
+(
+    // outputs:
+    LAGraph_Graph coarsened,
+    // inputs:
+    LAGraph_Graph G,
+    int matching_type, // 0, 1, or 2, refer to above
+    char *msg
+) ;
+
 LAGRAPH_PUBLIC
 int LAGraph_SquareClustering
 (
