@@ -47,7 +47,7 @@ graphs use algorithms but don't develop them "from scratch", the graphBLAS are n
 
 Hence, there is a need for a library of Graph Algorithms implemented on top of the GraphBLAS. We have created this
 library.  It is called LAGraph.   The LAGraph library is a library of functions that implement the most common
-high level graph algorithms used in graph analytics.  It incliudes types, utility functions and everything needed
+high level graph algorithms used in graph analytics.  It includes types, utility functions and everything needed
 to incorporate graph algorithms into your analytics work flows.  The library uses the GraphBLAS objects (e.g., GrB_matrix
 and GrB_vector) inside the objects defined by LAGraph.  Consequently, GraphBLAS and LAGraph functions can be freely mixed
 inside a single program.
