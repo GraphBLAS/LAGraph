@@ -210,14 +210,14 @@
 #define LAGRAPH_CACHE_NOT_NEEDED                ( 1000)
 
 /**
- * All LAGraph functions (except for \sphinxref{LAGraph_WallClockTime})
+ * All LAGraph functions (except for @sphinxref{LAGraph_WallClockTime})
  * have a final msg parameter that is a pointer to a user-allocated string in
  * which an algorithm-specific error message can be returned.  If msg is NULL,
  * no error message is returned.  This is not itself an error condition, it
  * just indicates that the caller does not need the message returned.  If the
  * message string is provided but no error occurs, an empty string is returned.
  *
- * LAGRAPH_MSG_LEN is the maximum required length of a message string.
+ * LAGRAPH_MSG_LEN is the minimum required length of a message string.
  *
  * For example, the following call computes the breadth-first-search of an
  * LAGraph_Graph G, starting at a given source node.  It returns a status of
@@ -228,9 +228,27 @@
  *      int status = LAGr_BreadthFirstSearch (&level, &parent, G, src, msg) ;
  *      if (status < 0)
  *      {
- *          printf ("error: %s\n", msg) ;
- *          // take corrective action ...
+ *          printf ("status %d, error: %s\n", status, msg) ;
+ *          ... take corrective action here ...
  *      }
+ *
+ * Error handling is simplified by the @sphinxref{LAGRAPH_TRY} / LAGRAPH_CATCH
+ * mechanism described below.  For example, assuming the user application
+ * #defines a single LAGRAPH_CATCH mechanism for all error handling, the
+ * above example would become:
+ *
+ *      GrB_Vector level, parent ;
+ *      char msg [LAGRAPH_MSG_LEN] ;
+ *      #define LAGRAPH_CATCH(status)                           \
+ *      {                                                       \
+ *          printf ("status %d, error: %s\n", status, msg) ;    \
+ *          ... take corrective action here ...                 \
+ *      }
+ *      ...
+ *      LAGRAPH_TRY (LAGr_BreadthFirstSearch (&level, &parent, G, src, msg)) ;
+ *
+ * The advantage of the second use case is that the error-handling block of
+ * code needs to be written only once.
  */
 #define LAGRAPH_MSG_LEN 256
 
@@ -239,9 +257,10 @@
 //------------------------------------------------------------------------------
 
 /** LAGRAPH_TRY: try an LAGraph method and check for errors.
- * In a robust application, the return values from each call to
- * LAGraph and GraphBLAS should be checked, and corrective action should be
- * taken if an error occurs.  The LAGRAPH_TRY and \sphinxref{GRB_TRY} macros assist in this
+ *
+ * In a robust application, the return values from each call to LAGraph and
+ * GraphBLAS should be checked, and corrective action should be taken if an
+ * error occurs.  The LAGRAPH_TRY and @sphinxref{GRB_TRY} macros assist in this
  * effort.
  *
  * LAGraph and GraphBLAS are written in C, and so they cannot rely on the
@@ -282,6 +301,17 @@
  *          // ...
  *          return (GrB_SUCCESS) ;
  *      }
+ *
+ * LAGRAPH_TRY is defined as follows:
+ *
+ *      #define LAGRAPH_TRY(LAGraph_method)             \
+ *      {                                               \
+ *          int LG_status = LAGraph_method ;            \
+ *          if (LG_status < GrB_SUCCESS)                \
+ *          {                                           \
+ *              LAGRAPH_CATCH (LG_status) ;             \
+ *          }                                           \
+ *      }
  */
 
 #define LAGRAPH_TRY(LAGraph_method)             \
@@ -300,10 +330,7 @@
 /** GRB_TRY: LAGraph provides a similar functionality as LAGRAPH_TRY for
  * calling GraphBLAS methods, with the GRB_TRY macro.  GraphBLAS returns info =
  * 0 (GrB_SUCCESS) or 1 (GrB_NO_VALUE) on success, and a value < 0 on failure.
- * The user application must `#define GRB_CATCH` to use GRB_TRY.  Note that
- * GraphBLAS_info is internal to this macro.  If the user application or
- * LAGraph method wants a copy, a statement such as info = GraphBLAS_info ;
- * where info is defined outside of this macro.
+ * The user application must `#define GRB_CATCH` to use GRB_TRY.
  *
  * GraphBLAS and LAGraph both use the convention that negative values are
  * errors, and the LAGraph_status is a superset of the GrB_Info enum.  As a
@@ -312,6 +339,18 @@
  * string.  For LAGraph, the string is the last parameter, and LAGRAPH_CATCH
  * can optionally print it out.  For GraphBLAS, the GrB_error mechanism can
  * return a string.  
+ *
+ * GRB_TRY is defined as follows:
+ *
+ *      #define GRB_TRY(GrB_method)                     \
+ *      {                                               \
+ *          GrB_Info LG_GrB_Info = GrB_method ;         \
+ *          if (LG_GrB_Info < GrB_SUCCESS)              \
+ *          {                                           \
+ *              GRB_CATCH (LG_GrB_Info) ;               \
+ *          }                                           \
+ *      }
+ *
  */
 
 #define GRB_TRY(GrB_method)                     \
@@ -820,8 +859,8 @@ int LAGraph_Version
 
 /** LAGraph_Finalize: finish LAGraph and GraphBLAS.  Must be called as the last
  * LAGraph method.  It calls GrB_finalize and frees any LAGraph objects created
- * by @sphinxref{LAGraph_Init} or @sphinxref{LAGr_Init}.  After calling this method, no LAGraph or
- * GraphBLAS methods may be used.
+ * by @sphinxref{LAGraph_Init} or @sphinxref{LAGr_Init}.  After calling this
+ * method, no LAGraph or GraphBLAS methods may be used.
  *
  * @param[in,out] msg   any error messages.
  *
@@ -1209,17 +1248,17 @@ int LAGraph_GetNumThreads
 /** LAGraph_SetNumThreads sets the current number of OpenMP threads that can be
  * used by LAGraph and GraphBLAS.  Two thread counts can be controlled:
  *
- * @param[in] nthreads_outer    \rst_star{
+ * @param[in] nthreads_outer
  *    number of threads to be used in outer regions of a
  *    nested parallel construct assuming that nthreads_inner is used in the
  *    inner region.  The total number of threads used for an entire nested
  *    region in LAGraph is given by nthreads_outer*nthreads_inner.  This
  *    product is also the # of threads that a flat parallel region in LAGraph
- *    may use. }
- * @param[in] nthreads_inner    \rst_star{
+ *    may use.
+ * @param[in] nthreads_inner
  *    number of threads to be used in an inner region of a
  *    nested parallel construct, or for the # of threads to be used in each
- *    call to the underlying GraphBLAS library. }
+ *    call to the underlying GraphBLAS library.
  * @param[in,out] msg           any error messages.
  *
  * @retval GrB_SUCCESS if successful.
@@ -1412,8 +1451,8 @@ double LAGraph_WallClockTime     // returns omp_get_wtime(), or other timer
  * }
  *
  * According to the Matrix Market format, entries are always listed in
- * column-major order.  This rule is follwed by \sphinxref{LAGraph_MMWrite}.  However,
- * LAGraph_MMRead can read the entries in any order.
+ * column-major order.  This rule is follwed by @sphinxref{LAGraph_MMWrite}.
+ * However, LAGraph_MMRead can read the entries in any order.
  *
  * @param[out] A        handle of the matrix to create.
  * @param[in,out]  f    handle to an open file to read from.
@@ -1447,7 +1486,7 @@ int LAGraph_MMRead
 //------------------------------------------------------------------------------
 
 /** LAGraph_MMWrite: writes a matrix in MatrixMarket format.  Refer to
- * \sphinxref{LAGraph_MMRead} for a description of the output file format.  The
+ * @sphinxref{LAGraph_MMRead} for a description of the output file format.  The
  * MatrixMarket header line always appears, followed by the second line
  * containing the GraphBLAS type:
  *
@@ -1740,7 +1779,7 @@ LAGraph_PrintLevel ;
 
 /** LAGraph_Graph_Print: prints the contents of a graph to a file in a human-
  * readable form.  This method is not meant for saving a graph to a file; see
- * \sphinxref{LAGraph_MMWrite} for that method.
+ * @sphinxref{LAGraph_MMWrite} for that method.
  *
  * @param[in] G         graph to display.
  * @param[in] pr        print level.
@@ -1771,7 +1810,7 @@ int LAGraph_Graph_Print
 
 /** LAGraph_Matrix_Print displays a matrix in a human-readable form.  This
  * method is not meant for saving a GrB_Matrix to a file; see
- * \sphinxref{LAGraph_MMWrite} for that method.
+ * @sphinxref{LAGraph_MMWrite} for that method.
  *
  * @param[in] A         matrix to display.
  * @param[in] pr        print level.
@@ -1803,7 +1842,7 @@ int LAGraph_Matrix_Print
 /** LAGraph_Vector_Print displays a vector in a human-readable form.  This
  * method is not meant for saving a GrB_Vector to a file.  To perform that
  * operation, copy the GrB_Vector into an n-by-1 GrB_Matrix and use
- * \sphinxref{LAGraph_MMWrite}.
+ * @sphinxref{LAGraph_MMWrite}.
  *
  * @param[in] v         vector to display.
  * @param[in] pr        print level.
@@ -2026,16 +2065,17 @@ int LAGraph_TriangleCount
 //------------------------------------------------------------------------------
 
 /** LAGr_Init: initializes GraphBLAS and LAGraph.  LAGr_Init is identical to
- * \sphinxref{LAGraph_Init}, except that it allows the user application to specify the
- * GraphBLAS mode.  It also provides four memory management functions,
- * replacing the standard `malloc`, `calloc`, `realloc`, and `free`.  The functions
- * `user_malloc_function`, `user_calloc_function`, `user_realloc_function`, and
- * `user_free_function` have the same signature as the ANSI C malloc, calloc,
- * realloc, and free functions, respectively.  Only user_malloc_function and
- * user_free_function are required.  user_calloc_function may be NULL, in which
- * case `LAGraph_Calloc` uses `LAGraph_Malloc` and `memset`.  Likewise,
- * user_realloc_function may be NULL, in which case `LAGraph_Realloc` uses
- * `LAGraph_Malloc`, `memcpy`, and `LAGraph_Free`.
+ * @sphinxref{LAGraph_Init}, except that it allows the user application to
+ * specify the GraphBLAS mode.  It also provides four memory management
+ * functions, replacing the standard `malloc`, `calloc`, `realloc`, and `free`.
+ * The functions `user_malloc_function`, `user_calloc_function`,
+ * `user_realloc_function`, and `user_free_function` have the same signature as
+ * the ANSI C malloc, calloc, realloc, and free functions, respectively.  Only
+ * user_malloc_function and user_free_function are required.
+ * user_calloc_function may be NULL, in which case `LAGraph_Calloc` uses
+ * `LAGraph_Malloc` and `memset`.  Likewise, user_realloc_function may be NULL,
+ * in which case `LAGraph_Realloc` uses `LAGraph_Malloc`, `memcpy`, and
+ * `LAGraph_Free`.
  *
  * @param[in] mode                      the mode for GrB_Init
  * @param[in] user_malloc_function      pointer to a malloc function
@@ -2148,20 +2188,18 @@ int LAGr_SampleDegree
  * then a push-only method is used (which can be slower).  G is not modified;
  * that is, G->AT and G->out_degree are not computed if not already cached.
  *
- * @param[out]    level   \rst_star{
- *                           If non-NULL on input, on successful return, it
+ * @param[out]    level      If non-NULL on input, on successful return, it
  *                           contains the levels of each node reached. The
  *                           src node is assigned level 0. If a node i is
  *                           not reached, level(i) is not present.  The level
- *                           vector is not computed if NULL. }
- * @param[out]    parent  \rst_star{
- *                           If non-NULL on input, on successful return, it
+ *                           vector is not computed if NULL.
+ * @param[out]    parent     If non-NULL on input, on successful return, it
  *                           contains parent node IDs for each node
  *                           reached, where parent(i) is the node ID of the
  *                           parent of node i.  The src node will have itself
  *                           as its parent. If a node i is not reached,
  *                           parent(i) is not present.  The parent vector is
- *                           not computed if NULL. }
+ *                           not computed if NULL.
  * @param[in]     G          The graph, directed or undirected.
  * @param[in]     src        The index of the src node (0-based)
  * @param[in,out] msg        any error messages.
@@ -2193,11 +2231,10 @@ int LAGr_BreadthFirstSearch
 /** LAGr_ConnectedComponents: connected components of an undirected graph.
  * This is an Advanced algorithm (G->is_symmetric_structure must be known).
  *
- * @param[out] component  \rst_star{
- *                          component(i)=s if node i is in the component whose
+ * @param[out] component    component(i)=s if node i is in the component whose
  *                          representative node is s.  If node i has no edges,
  *                          it is placed in its own component, and thus the
- *                          component vector is always dense. }
+ *                          component vector is always dense.
  * @param[in] G             input graph to find the components for.
  * @param[in,out] msg       any error messages.
  *
@@ -2229,14 +2266,11 @@ int LAGr_ConnectedComponents
  * GrB_UINT64, GrB_FP32, or GrB_FP64.  If G->A has any other type,
  * GrB_NOT_IMPLEMENTED is returned.
  *
- * @param[out] path_length  \rst_star{
- *     path_length (i) is the length of the shortest
- *     path from the source node to node i.  The
- *     path_length vector is dense.  If node (i) is not
- *     reachable from the src node, then path_length (i)
- *     is set to INFINITY for GrB_FP32 and FP32, or the
- *     maximum integer for GrB_INT32, INT64, UINT32, or
- *     UINT64. }
+ * @param[out] path_length  path_length (i) is the length of the shortest
+ *     path from the source node to node i.  The path_length vector is dense.
+ *     If node (i) is not reachable from the src node, then path_length (i) is
+ *     set to INFINITY for GrB_FP32 and FP32, or the maximum integer for
+ *     GrB_INT32, INT64, UINT32, or UINT64.
  * @param[in] G         input graph.
  * @param[in] src       source node.
  * @param[in] Delta     for delta stepping.
@@ -2412,20 +2446,17 @@ LAGr_TriangleCount_Presort ;
 /** LAGr_TriangleCount: count the triangles in a graph (advanced API).
  *
  * @param[out] ntriangles   the number of triangles in G.
- * @param[in]  G          \rst_star{
- *                          The graph, symmetric, no self loops.
+ * @param[in]  G            The graph, symmetric, no self loops.
  *                          G->nself_edges, G->out_degree, and
- *                          G->is_symmetric_structure are required. }
- * @param[in,out] method  \rst_star{
- *                          specifies which algorithm to use, and returns
+ *                          G->is_symmetric_structure are required.
+ * @param[in,out] method    specifies which algorithm to use, and returns
  *                          the method chosen.  If NULL, the AutoMethod is
  *                          used, and the method is not reported.  Also see the
- *                          LAGr_TriangleCount_Method enum description. }
- * @param[in,out] presort \rst_star{
- *                          controls the presort of the graph, and returns the
+ *                          LAGr_TriangleCount_Method enum description.
+ * @param[in,out] presort   controls the presort of the graph, and returns the
  *                          presort chosen.  If NULL, the AutoSort is used, and
  *                          the presort method is not reported.  Also see the
- *                          description of the LAGr_TriangleCount_Presort enum. }
+ *                          description of the LAGr_TriangleCount_Presort enum.
  * @param[in,out] msg       any error messages.
  *
  * @retval GrB_SUCCESS if successful.
