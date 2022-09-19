@@ -43,8 +43,6 @@ from Basic algorithms.
 
 .. doxygenfunction:: LAGr_PageRank
 
-.. doxygenfunction:: LAGr_PageRankGAP
-
 .. doxygenfunction:: LAGr_TriangleCount
 
 .. doxygenenum:: LAGr_TriangleCount_Method

@@ -1209,17 +1209,17 @@ int LAGraph_GetNumThreads
 /** LAGraph_SetNumThreads sets the current number of OpenMP threads that can be
  * used by LAGraph and GraphBLAS.  Two thread counts can be controlled:
  *
- * @param[in] nthreads_outer    \rst_star{
+ * @param[in] nthreads_outer
  *    number of threads to be used in outer regions of a
  *    nested parallel construct assuming that nthreads_inner is used in the
  *    inner region.  The total number of threads used for an entire nested
  *    region in LAGraph is given by nthreads_outer*nthreads_inner.  This
  *    product is also the # of threads that a flat parallel region in LAGraph
- *    may use. }
- * @param[in] nthreads_inner    \rst_star{
+ *    may use.
+ * @param[in] nthreads_inner
  *    number of threads to be used in an inner region of a
  *    nested parallel construct, or for the # of threads to be used in each
- *    call to the underlying GraphBLAS library. }
+ *    call to the underlying GraphBLAS library.
  * @param[in,out] msg           any error messages.
  *
  * @retval GrB_SUCCESS if successful.
@@ -2148,20 +2148,18 @@ int LAGr_SampleDegree
  * then a push-only method is used (which can be slower).  G is not modified;
  * that is, G->AT and G->out_degree are not computed if not already cached.
  *
- * @param[out]    level   \rst_star{
- *                           If non-NULL on input, on successful return, it
+ * @param[out]    level      If non-NULL on input, on successful return, it
  *                           contains the levels of each node reached. The
  *                           src node is assigned level 0. If a node i is
  *                           not reached, level(i) is not present.  The level
- *                           vector is not computed if NULL. }
- * @param[out]    parent  \rst_star{
- *                           If non-NULL on input, on successful return, it
+ *                           vector is not computed if NULL.
+ * @param[out]    parent     If non-NULL on input, on successful return, it
  *                           contains parent node IDs for each node
  *                           reached, where parent(i) is the node ID of the
  *                           parent of node i.  The src node will have itself
  *                           as its parent. If a node i is not reached,
  *                           parent(i) is not present.  The parent vector is
- *                           not computed if NULL. }
+ *                           not computed if NULL.
  * @param[in]     G          The graph, directed or undirected.
  * @param[in]     src        The index of the src node (0-based)
  * @param[in,out] msg        any error messages.
@@ -2193,11 +2191,10 @@ int LAGr_BreadthFirstSearch
 /** LAGr_ConnectedComponents: connected components of an undirected graph.
  * This is an Advanced algorithm (G->is_symmetric_structure must be known).
  *
- * @param[out] component  \rst_star{
- *                          component(i)=s if node i is in the component whose
+ * @param[out] component    component(i)=s if node i is in the component whose
  *                          representative node is s.  If node i has no edges,
  *                          it is placed in its own component, and thus the
- *                          component vector is always dense. }
+ *                          component vector is always dense.
  * @param[in] G             input graph to find the components for.
  * @param[in,out] msg       any error messages.
  *
@@ -2229,14 +2226,11 @@ int LAGr_ConnectedComponents
  * GrB_UINT64, GrB_FP32, or GrB_FP64.  If G->A has any other type,
  * GrB_NOT_IMPLEMENTED is returned.
  *
- * @param[out] path_length  \rst_star{
- *     path_length (i) is the length of the shortest
- *     path from the source node to node i.  The
- *     path_length vector is dense.  If node (i) is not
- *     reachable from the src node, then path_length (i)
- *     is set to INFINITY for GrB_FP32 and FP32, or the
- *     maximum integer for GrB_INT32, INT64, UINT32, or
- *     UINT64. }
+ * @param[out] path_length  path_length (i) is the length of the shortest
+ *     path from the source node to node i.  The path_length vector is dense.
+ *     If node (i) is not reachable from the src node, then path_length (i) is
+ *     set to INFINITY for GrB_FP32 and FP32, or the maximum integer for
+ *     GrB_INT32, INT64, UINT32, or UINT64.
  * @param[in] G         input graph.
  * @param[in] src       source node.
  * @param[in] Delta     for delta stepping.
@@ -2412,20 +2406,17 @@ LAGr_TriangleCount_Presort ;
 /** LAGr_TriangleCount: count the triangles in a graph (advanced API).
  *
  * @param[out] ntriangles   the number of triangles in G.
- * @param[in]  G          \rst_star{
- *                          The graph, symmetric, no self loops.
+ * @param[in]  G            The graph, symmetric, no self loops.
  *                          G->nself_edges, G->out_degree, and
- *                          G->is_symmetric_structure are required. }
- * @param[in,out] method  \rst_star{
- *                          specifies which algorithm to use, and returns
+ *                          G->is_symmetric_structure are required.
+ * @param[in,out] method    specifies which algorithm to use, and returns
  *                          the method chosen.  If NULL, the AutoMethod is
  *                          used, and the method is not reported.  Also see the
- *                          LAGr_TriangleCount_Method enum description. }
- * @param[in,out] presort \rst_star{
- *                          controls the presort of the graph, and returns the
+ *                          LAGr_TriangleCount_Method enum description.
+ * @param[in,out] presort   controls the presort of the graph, and returns the
  *                          presort chosen.  If NULL, the AutoSort is used, and
  *                          the presort method is not reported.  Also see the
- *                          description of the LAGr_TriangleCount_Presort enum. }
+ *                          description of the LAGr_TriangleCount_Presort enum.
  * @param[in,out] msg       any error messages.
  *
  * @retval GrB_SUCCESS if successful.
