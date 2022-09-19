@@ -241,7 +241,8 @@
 /** LAGRAPH_TRY: try an LAGraph method and check for errors.
  * In a robust application, the return values from each call to LAGraph and
  * GraphBLAS should be checked, and corrective action should be taken if an
- * error occurs.  The LAGRAPH_TRY and \sphinxref{GRB_TRY} macros assist in this
+ * error occurs.  The LAGRAPH_TRY and @sphinxref{GRB_TRY} (HERE)
+ macros assist in this
  * effort.
  *
  * LAGraph and GraphBLAS are written in C, and so they cannot rely on the
