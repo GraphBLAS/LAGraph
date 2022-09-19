@@ -116,8 +116,9 @@
  * have a final string (msg) that captures any error messages.
  *
  * LAGraph has a single function that does not follow this rule.
- * LAGraph_WallClockTime has no error handling mechanism (it returns a value of
- * type double, and does not have an final msg string parameter.
+ * @sphinxref{LAGraph_WallClockTime} has no error handling mechanism (it
+ * returns a value of type double, and does not have an final msg string
+ * parameter.
  *
  * All other methods return an int to denote their status:  zero if they are
  * successful (which is the value of GrB_SUCCESS), negative on error, or
@@ -338,7 +339,7 @@
  * operation.  The main difference between the two would be the error message
  * string.  For LAGraph, the string is the last parameter, and LAGRAPH_CATCH
  * can optionally print it out.  For GraphBLAS, the GrB_error mechanism can
- * return a string.  
+ * return a string.
  *
  * GRB_TRY is defined as follows:
  *
@@ -648,7 +649,7 @@ struct LAGraph_Graph_struct
      * All of these components may be deleted or set to 'unknown' at any time.
      * For example, if AT is NULL, then the transpose of A has not been
      * computed.  A scalar cached property of type LAGraph_Boolean would be set
-     * to LAGRAPH_UNKNOWN to denote that its value is unknown.  
+     * to LAGRAPH_UNKNOWN to denote that its value is unknown.
      *
      * If present, the cached properties must be valid and accurate.  If the
      * graph changes, these cached properties can either be recomputed or
@@ -1788,7 +1789,8 @@ LAGraph_PrintLevel ;
  *
  * @retval GrB_SUCCESS if successful.
  * @retval GrB_NULL_POINTER if G or f are NULL.
- * @retval LAGRAPH_INVALID_GRAPH if G is invalid (LAGraph_CheckGraph failed).
+ * @retval LAGRAPH_INVALID_GRAPH if G is invalid
+ *              (@sphinxref{LAGraph_CheckGraph} failed).
  * @retval GrB_NOT_IMPLEMENTED if G->A has a user-defined type.
  * @retval LAGRAPH_IO_ERROR if the file could not be written to.
  * @returns any GraphBLAS errors that may have been encountered.
@@ -2025,12 +2027,15 @@ int LAGraph_Vector_IsEqualOp
  * computed, if not present).
  *
  * @param[out]    ntriangles    the number of triangles in G.
- * @param[in,out] G             the graph, symmetric, no self loops.
+ * @param[in,out] G             the graph, which must by undirected, or
+ *                              directed but with a symmetric structure.
+ *                              No self loops can be present.
  * @param[in,out] msg           any error messages.
  *
  * @retval GrB_SUCCESS if successful.
  * @retval GrB_NULL_POINTER if G or ntriangles are NULL.
- * @retval LAGRAPH_INVALID_GRAPH if G is invalid (LAGraph_CheckGraph failed).
+ * @retval LAGRAPH_INVALID_GRAPH if G is invalid
+ *              (@sphinxref{LAGraph_CheckGraph} failed).
  * @retval LAGRAPH_NO_SELF_EDGES_ALLOWED if G has any self-edges.
  * @retval LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED if G is directed with an
  *      unsymmetric G->A matrix.
@@ -2123,7 +2128,8 @@ int LAGr_Init
  * @retval GrB_NULL_POINTER if P or G are NULL.
  * @retval LAGRAPH_NOT_CACHED if G->in_degree or G->out_degree is not computed
  *      (whichever one is required).
- * @retval LAGRAPH_INVALID_GRAPH if G is invalid (LAGraph_CheckGraph failed).
+ * @retval LAGRAPH_INVALID_GRAPH if G is invalid
+ *              (@sphinxref{LAGraph_CheckGraph} failed).
  * @returns any GraphBLAS errors that may have been encountered.
  */
 
@@ -2158,7 +2164,8 @@ int LAGr_SortByDegree
  * @retval GrB_NULL_POINTER if sample_mean, sample_median, or G are NULL.
  * @retval LAGRAPH_NOT_CACHED if G->in_degree or G->out_degree is not computed
  *      (whichever one is required).
- * @retval LAGRAPH_INVALID_GRAPH if G is invalid (LAGraph_CheckGraph failed).
+ * @retval LAGRAPH_INVALID_GRAPH if G is invalid
+ *              (@sphinxref{LAGraph_CheckGraph} failed).
  * @returns any GraphBLAS errors that may have been encountered.
  */
 
@@ -2208,7 +2215,8 @@ int LAGr_SampleDegree
  * @retval GrB_INVALID_INDEX if src is invalid.
  * @retval GrB_NULL_POINTER if both level and parent are NULL, or if
  *      G is NULL.
- * @retval LAGRAPH_INVALID_GRAPH Graph is invalid (LAGraph_CheckGraph failed).
+ * @retval LAGRAPH_INVALID_GRAPH Graph is invalid
+ *              (@sphinxref{LAGraph_CheckGraph} failed).
  * @returns any GraphBLAS errors that may have been encountered.
  */
 
@@ -2236,11 +2244,14 @@ int LAGr_BreadthFirstSearch
  *                          it is placed in its own component, and thus the
  *                          component vector is always dense.
  * @param[in] G             input graph to find the components for.
+ *                          The graph must be undirected, or
+ *                          G->is_symmetric_structure must be true.
  * @param[in,out] msg       any error messages.
  *
  * @retval GrB_SUCCESS if successful.
  * @retval GrB_NULL_POINTER if G or component are NULL.
- * @retval LAGRAPH_INVALID_GRAPH Graph is invalid (LAGraph_CheckGraph failed).
+ * @retval LAGRAPH_INVALID_GRAPH Graph is invalid
+ *              (@sphinxref{LAGraph_CheckGraph} failed).
  * @retval LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED if G is directed with an
  *      unsymmetric G->A matrix.
  * @returns any GraphBLAS errors that may have been encountered.
@@ -2281,7 +2292,8 @@ int LAGr_ConnectedComponents
  * @retval GrB_INVALID_INDEX if src is invalid.
  * @retval GrB_EMPTY_OBJECT if Delta does not contain a value.
  * @retval GrB_NOT_IMPLEMENTED if the type is not supported.
- * @retval LAGRAPH_INVALID_GRAPH Graph is invalid (LAGraph_CheckGraph failed).
+ * @retval LAGRAPH_INVALID_GRAPH Graph is invalid
+ *              (@sphinxref{LAGraph_CheckGraph} failed).
  * @returns any GraphBLAS errors that may have been encountered.
  */
 
@@ -2318,7 +2330,8 @@ int LAGr_SingleSourceShortestPath
  * @retval GrB_SUCCESS if successful.
  * @retval GrB_NULL_POINTER if G, centrality, and/our sources are NULL.
  * @retval GrB_INVALID_INDEX if any source node is invalid.
- * @retval LAGRAPH_INVALID_GRAPH Graph is invalid (LAGraph_CheckGraph failed).
+ * @retval LAGRAPH_INVALID_GRAPH Graph is invalid
+ *              (@sphinxref{LAGraph_CheckGraph} failed).
  * @retval LAGRAPH_NOT_CACHED if G->AT is required but not present.
  * @returns any GraphBLAS errors that may have been encountered.
  */
@@ -2361,7 +2374,8 @@ int LAGr_Betweenness
  * @retval GrB_NULL_POINTER if G, centrality, and/our iters are NULL.
  * @retval LAGRAPH_NOT_CACHED if G->AT is required but not present,
  *      or if G->out_degree is not present.
- * @retval LAGRAPH_INVALID_GRAPH Graph is invalid (LAGraph_CheckGraph failed).
+ * @retval LAGRAPH_INVALID_GRAPH Graph is invalid
+ *              (@sphinxref{LAGraph_CheckGraph} failed).
  * @returns any GraphBLAS errors that may have been encountered.
  */
 
@@ -2446,7 +2460,8 @@ LAGr_TriangleCount_Presort ;
 /** LAGr_TriangleCount: count the triangles in a graph (advanced API).
  *
  * @param[out] ntriangles   the number of triangles in G.
- * @param[in]  G            The graph, symmetric, no self loops.
+ * @param[in]  G            The graph, which must be undirected or have
+ *                          G->is_symmetric_structure true, with no self loops.
  *                          G->nself_edges, G->out_degree, and
  *                          G->is_symmetric_structure are required.
  * @param[in,out] method    specifies which algorithm to use, and returns
@@ -2461,7 +2476,8 @@ LAGr_TriangleCount_Presort ;
  *
  * @retval GrB_SUCCESS if successful.
  * @retval GrB_NULL_POINTER if G or ntriangles are NULL.
- * @retval LAGRAPH_INVALID_GRAPH Graph is invalid (LAGraph_CheckGraph failed).
+ * @retval LAGRAPH_INVALID_GRAPH Graph is invalid
+ *              (@sphinxref{LAGraph_CheckGraph} failed).
  * @retval LAGRAPH_NO_SELF_EDGES_ALLOWED if G has any self-edges, or if
  *      G->nself_edges is not computed.
  * @retval LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED if G is directed with an
