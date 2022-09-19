@@ -210,14 +210,14 @@
 #define LAGRAPH_CACHE_NOT_NEEDED                ( 1000)
 
 /**
- * All LAGraph functions (except for \sphinxref{LAGraph_WallClockTime})
+ * All LAGraph functions (except for @sphinxref{LAGraph_WallClockTime})
  * have a final msg parameter that is a pointer to a user-allocated string in
  * which an algorithm-specific error message can be returned.  If msg is NULL,
  * no error message is returned.  This is not itself an error condition, it
  * just indicates that the caller does not need the message returned.  If the
  * message string is provided but no error occurs, an empty string is returned.
  *
- * LAGRAPH_MSG_LEN is the maximum required length of a message string.
+ * LAGRAPH_MSG_LEN is the minimum required length of a message string.
  *
  * For example, the following call computes the breadth-first-search of an
  * LAGraph_Graph G, starting at a given source node.  It returns a status of
@@ -239,9 +239,9 @@
 //------------------------------------------------------------------------------
 
 /** LAGRAPH_TRY: try an LAGraph method and check for errors.
- * In a robust application, the return values from each call to
- * LAGraph and GraphBLAS should be checked, and corrective action should be
- * taken if an error occurs.  The LAGRAPH_TRY and \sphinxref{GRB_TRY} macros assist in this
+ * In a robust application, the return values from each call to LAGraph and
+ * GraphBLAS should be checked, and corrective action should be taken if an
+ * error occurs.  The LAGRAPH_TRY and \sphinxref{GRB_TRY} macros assist in this
  * effort.
  *
  * LAGraph and GraphBLAS are written in C, and so they cannot rely on the
@@ -820,8 +820,8 @@ int LAGraph_Version
 
 /** LAGraph_Finalize: finish LAGraph and GraphBLAS.  Must be called as the last
  * LAGraph method.  It calls GrB_finalize and frees any LAGraph objects created
- * by @sphinxref{LAGraph_Init} or @sphinxref{LAGr_Init}.  After calling this method, no LAGraph or
- * GraphBLAS methods may be used.
+ * by @sphinxref{LAGraph_Init} or @sphinxref{LAGr_Init}.  After calling this
+ * method, no LAGraph or GraphBLAS methods may be used.
  *
  * @param[in,out] msg   any error messages.
  *
@@ -1412,8 +1412,8 @@ double LAGraph_WallClockTime     // returns omp_get_wtime(), or other timer
  * }
  *
  * According to the Matrix Market format, entries are always listed in
- * column-major order.  This rule is follwed by \sphinxref{LAGraph_MMWrite}.  However,
- * LAGraph_MMRead can read the entries in any order.
+ * column-major order.  This rule is follwed by \sphinxref{LAGraph_MMWrite}.
+ * However, LAGraph_MMRead can read the entries in any order.
  *
  * @param[out] A        handle of the matrix to create.
  * @param[in,out]  f    handle to an open file to read from.
@@ -2026,16 +2026,17 @@ int LAGraph_TriangleCount
 //------------------------------------------------------------------------------
 
 /** LAGr_Init: initializes GraphBLAS and LAGraph.  LAGr_Init is identical to
- * \sphinxref{LAGraph_Init}, except that it allows the user application to specify the
- * GraphBLAS mode.  It also provides four memory management functions,
- * replacing the standard `malloc`, `calloc`, `realloc`, and `free`.  The functions
- * `user_malloc_function`, `user_calloc_function`, `user_realloc_function`, and
- * `user_free_function` have the same signature as the ANSI C malloc, calloc,
- * realloc, and free functions, respectively.  Only user_malloc_function and
- * user_free_function are required.  user_calloc_function may be NULL, in which
- * case `LAGraph_Calloc` uses `LAGraph_Malloc` and `memset`.  Likewise,
- * user_realloc_function may be NULL, in which case `LAGraph_Realloc` uses
- * `LAGraph_Malloc`, `memcpy`, and `LAGraph_Free`.
+ * \sphinxref{LAGraph_Init}, except that it allows the user application to
+ * specify the GraphBLAS mode.  It also provides four memory management
+ * functions, replacing the standard `malloc`, `calloc`, `realloc`, and `free`.
+ * The functions `user_malloc_function`, `user_calloc_function`,
+ * `user_realloc_function`, and `user_free_function` have the same signature as
+ * the ANSI C malloc, calloc, realloc, and free functions, respectively.  Only
+ * user_malloc_function and user_free_function are required.
+ * user_calloc_function may be NULL, in which case `LAGraph_Calloc` uses
+ * `LAGraph_Malloc` and `memset`.  Likewise, user_realloc_function may be NULL,
+ * in which case `LAGraph_Realloc` uses `LAGraph_Malloc`, `memcpy`, and
+ * `LAGraph_Free`.
  *
  * @param[in] mode                      the mode for GrB_Init
  * @param[in] user_malloc_function      pointer to a malloc function
