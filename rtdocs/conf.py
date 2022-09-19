@@ -46,6 +46,7 @@ if read_the_docs_build:
 
 project = 'LAGraph'
 copyright = '2022'
+version = 'latest'
 # author = ''
 
 
