@@ -41,5 +41,6 @@ Basic Graph Functions
 
 .. doxygenfunction:: LAGraph_DeleteSelfEdges
 
+.. _lagraph_checkgraph:
 .. doxygenfunction:: LAGraph_CheckGraph
 

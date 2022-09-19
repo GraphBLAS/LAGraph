@@ -15,7 +15,7 @@ References
 
 * Hoke, Tanner (2022). An Implementation of Fast Graphlet Transform in
   GraphBLAS. Undergraduate Research Scholars Program, Texas A&M University.
-`<https://hdl.handle.net/1969.1/196609>`_
+  `<https://hdl.handle.net/1969.1/196609>`_
 
 * Konduri, Pranav S (2022). An Implementation of the Parallel K-core
   Decomposition Algorithm in GraphBLAS. Undergraduate Research Scholars
