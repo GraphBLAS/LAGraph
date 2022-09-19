@@ -12,3 +12,14 @@ References
 * LAGraph: Linear Algebra, Network Analysis Libraries, and the Study of Graph Algorithms, Gabor Szarnyas, David A. Bader, Timothy A. Davis, James Kitchen, Timothy G. Mattson, Scott McMillan, Erik Welch, GrAPL workshop  at IPDPS 2021
 
 * Algorithm 1000: SuiteSparse:GraphBLAS: Graph Algorithms in the Language of Sparse Linear Algebra Timothy A. Davis, ACM Trans. Math. Softw., vol 45, no 4, Dec. 2019. `<https://doi.org/10.1145/3322125>`_
+
+* Hoke, Tanner (2022). An Implementation of Fast Graphlet Transform in
+  GraphBLAS. Undergraduate Research Scholars Program, Texas A&M University.
+`<https://hdl.handle.net/1969.1/196609>`_
+
+* Konduri, Pranav S (2022). An Implementation of the Parallel K-core
+  Decomposition Algorithm in GraphBLAS. Undergraduate Research Scholars
+  Program, Texas A&M University. `<https://hdl.handle.net/1969.1/196516>`_
+
+* Waheed, Abeer (2022). TriPoll in GraphBLAS. Undergraduate Research Scholars
+  Program, Texas A&M University.  `<https://hdl.handle.net/1969.1/196576>`_
