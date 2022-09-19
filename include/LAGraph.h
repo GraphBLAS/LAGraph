@@ -210,7 +210,7 @@
 #define LAGRAPH_CACHE_NOT_NEEDED                ( 1000)
 
 /**
- * All LAGraph functions (except for @sphinxref{LAGraph_WallClockTime})
+ * All LAGraph functions (except for \sphinxref{LAGraph_WallClockTime})
  * have a final msg parameter that is a pointer to a user-allocated string in
  * which an algorithm-specific error message can be returned.  If msg is NULL,
  * no error message is returned.  This is not itself an error condition, it
@@ -232,7 +232,7 @@
  *          ... take corrective action here ...
  *      }
  *
- * Error handling is simplified by the @sphinxref{LAGRAPH_TRY} / LAGRAPH_CATCH
+ * Error handling is simplified by the \sphinxref{LAGRAPH_TRY} / LAGRAPH_CATCH
  * mechanism described below.  For example, assuming the user application
  * #defines a single LAGRAPH_CATCH mechanism for all error handling, the
  * above example would become:
@@ -260,7 +260,7 @@
  *
  * In a robust application, the return values from each call to LAGraph and
  * GraphBLAS should be checked, and corrective action should be taken if an
- * error occurs.  The LAGRAPH_TRY and @sphinxref{GRB_TRY} macros assist in this
+ * error occurs.  The LAGRAPH_TRY and \sphinxref{GRB_TRY} macros assist in this
  * effort.
  *
  * LAGraph and GraphBLAS are written in C, and so they cannot rely on the
@@ -327,9 +327,9 @@
 // GRB_TRY: try a GraphBLAS method and check for errors
 //------------------------------------------------------------------------------
 
-/** GRB_TRY: LAGraph provides a similar functionality as LAGRAPH_TRY for
- * calling GraphBLAS methods, with the GRB_TRY macro.  GraphBLAS returns info =
- * 0 (GrB_SUCCESS) or 1 (GrB_NO_VALUE) on success, and a value < 0 on failure.
+/** GRB_TRY: LAGraph provides a similar functionality as \sphinxref{LAGRAPH_TRY}
+ * for calling GraphBLAS methods, with the GRB_TRY macro.  GraphBLAS returns info
+ * = 0 (GrB_SUCCESS) or 1 (GrB_NO_VALUE) on success, and a value < 0 on failure.
  * The user application must `#define GRB_CATCH` to use GRB_TRY.
  *
  * GraphBLAS and LAGraph both use the convention that negative values are
@@ -739,7 +739,7 @@ typedef struct LAGraph_Graph_struct *LAGraph_Graph ;
  * called before calling any other GrB* or LAGraph* method.  It initializes
  * GraphBLAS with GrB_init and then performs LAGraph-specific initializations.
  * In particular, the LAGraph semirings listed below are created.  GrB_init can
- * also safely be called before calling @sphinxref{LAGr_Init} or LAGraph_Init.
+ * also safely be called before calling \sphinxref{LAGr_Init} or LAGraph_Init.
  *
  * @param[in,out] msg   any error messages.
  *
@@ -859,7 +859,7 @@ int LAGraph_Version
 
 /** LAGraph_Finalize: finish LAGraph and GraphBLAS.  Must be called as the last
  * LAGraph method.  It calls GrB_finalize and frees any LAGraph objects created
- * by @sphinxref{LAGraph_Init} or @sphinxref{LAGr_Init}.  After calling this
+ * by \sphinxref{LAGraph_Init} or \sphinxref{LAGr_Init}.  After calling this
  * method, no LAGraph or GraphBLAS methods may be used.
  *
  * @param[in,out] msg   any error messages.
@@ -1301,7 +1301,7 @@ double LAGraph_WallClockTime     // returns omp_get_wtime(), or other timer
 /** LAGraph_MMRead: reads a matrix in MatrixMarket format.
  * The file format used here is compatible with all variations of the Matrix
  * Market "coordinate" and "array" format (http://www.nist.gov/MatrixMarket),
- * for sparse and dense matrices repsectively.  The format is fully described
+ * for sparse and dense matrices respectively.  The format is fully described
  * in <a href="https://github.com/GraphBLAS/LAGraph/blob/stable/papers/MatrixMarket.pdf">
  * LAGraph/Doc/MatrixMarket.pdf</a>, and summarized here (with extensions for LAGraph).
  *

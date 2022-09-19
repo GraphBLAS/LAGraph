@@ -30,7 +30,7 @@ Error handling
 
 .. doxygendefine:: LAGRAPH_MSG_LEN
 
-.. lagraph_try:
+.. _lagraph_try:
 .. doxygendefine:: LAGRAPH_TRY
 
 .. _grb_try:
