@@ -228,9 +228,27 @@
  *      int status = LAGr_BreadthFirstSearch (&level, &parent, G, src, msg) ;
  *      if (status < 0)
  *      {
- *          printf ("error: %s\n", msg) ;
- *          // take corrective action ...
+ *          printf ("status %d, error: %s\n", status, msg) ;
+ *          ... take corrective action here ...
  *      }
+ *
+ * Error handling is simplified by the @sphinxref{LAGRAPH_TRY} / LAGRAPH_CATCH
+ * mechanism described below.  For example, assuming the user application
+ * #defines a single LAGRAPH_CATCH mechanism for all error handling, the
+ * above example would become:
+ *
+ *      GrB_Vector level, parent ;
+ *      char msg [LAGRAPH_MSG_LEN] ;
+ *      #define LAGRAPH_CATCH(status)                           \
+ *      {                                                       \
+ *          printf ("status %d, error: %s\n", status, msg) ;    \
+ *          ... take corrective action here ...                 \
+ *      }
+ *      ...
+ *      LAGRAPH_TRY (LAGr_BreadthFirstSearch (&level, &parent, G, src, msg)) ;
+ *
+ * The advantage of the second use case is that the error-handling block of
+ * code needs to be written only once.
  */
 #define LAGRAPH_MSG_LEN 256
 
@@ -239,10 +257,10 @@
 //------------------------------------------------------------------------------
 
 /** LAGRAPH_TRY: try an LAGraph method and check for errors.
+ *
  * In a robust application, the return values from each call to LAGraph and
  * GraphBLAS should be checked, and corrective action should be taken if an
- * error occurs.  The LAGRAPH_TRY and @sphinxref{GRB_TRY} (HERE)
- macros assist in this
+ * error occurs.  The LAGRAPH_TRY and @sphinxref{GRB_TRY} macros assist in this
  * effort.
  *
  * LAGraph and GraphBLAS are written in C, and so they cannot rely on the
@@ -283,6 +301,17 @@
  *          // ...
  *          return (GrB_SUCCESS) ;
  *      }
+ *
+ * LAGRAPH_TRY is defined as follows:
+ *
+ *      #define LAGRAPH_TRY(LAGraph_method)             \
+ *      {                                               \
+ *          int LG_status = LAGraph_method ;            \
+ *          if (LG_status < GrB_SUCCESS)                \
+ *          {                                           \
+ *              LAGRAPH_CATCH (LG_status) ;             \
+ *          }                                           \
+ *      }
  */
 
 #define LAGRAPH_TRY(LAGraph_method)             \
@@ -301,10 +330,7 @@
 /** GRB_TRY: LAGraph provides a similar functionality as LAGRAPH_TRY for
  * calling GraphBLAS methods, with the GRB_TRY macro.  GraphBLAS returns info =
  * 0 (GrB_SUCCESS) or 1 (GrB_NO_VALUE) on success, and a value < 0 on failure.
- * The user application must `#define GRB_CATCH` to use GRB_TRY.  Note that
- * GraphBLAS_info is internal to this macro.  If the user application or
- * LAGraph method wants a copy, a statement such as info = GraphBLAS_info ;
- * where info is defined outside of this macro.
+ * The user application must `#define GRB_CATCH` to use GRB_TRY.
  *
  * GraphBLAS and LAGraph both use the convention that negative values are
  * errors, and the LAGraph_status is a superset of the GrB_Info enum.  As a
@@ -313,6 +339,18 @@
  * string.  For LAGraph, the string is the last parameter, and LAGRAPH_CATCH
  * can optionally print it out.  For GraphBLAS, the GrB_error mechanism can
  * return a string.  
+ *
+ * GRB_TRY is defined as follows:
+ *
+ *      #define GRB_TRY(GrB_method)                     \
+ *      {                                               \
+ *          GrB_Info LG_GrB_Info = GrB_method ;         \
+ *          if (LG_GrB_Info < GrB_SUCCESS)              \
+ *          {                                           \
+ *              GRB_CATCH (LG_GrB_Info) ;               \
+ *          }                                           \
+ *      }
+ *
  */
 
 #define GRB_TRY(GrB_method)                     \
@@ -1413,7 +1451,7 @@ double LAGraph_WallClockTime     // returns omp_get_wtime(), or other timer
  * }
  *
  * According to the Matrix Market format, entries are always listed in
- * column-major order.  This rule is follwed by \sphinxref{LAGraph_MMWrite}.
+ * column-major order.  This rule is follwed by @sphinxref{LAGraph_MMWrite}.
  * However, LAGraph_MMRead can read the entries in any order.
  *
  * @param[out] A        handle of the matrix to create.
@@ -1448,7 +1486,7 @@ int LAGraph_MMRead
 //------------------------------------------------------------------------------
 
 /** LAGraph_MMWrite: writes a matrix in MatrixMarket format.  Refer to
- * \sphinxref{LAGraph_MMRead} for a description of the output file format.  The
+ * @sphinxref{LAGraph_MMRead} for a description of the output file format.  The
  * MatrixMarket header line always appears, followed by the second line
  * containing the GraphBLAS type:
  *
@@ -1741,7 +1779,7 @@ LAGraph_PrintLevel ;
 
 /** LAGraph_Graph_Print: prints the contents of a graph to a file in a human-
  * readable form.  This method is not meant for saving a graph to a file; see
- * \sphinxref{LAGraph_MMWrite} for that method.
+ * @sphinxref{LAGraph_MMWrite} for that method.
  *
  * @param[in] G         graph to display.
  * @param[in] pr        print level.
@@ -1772,7 +1810,7 @@ int LAGraph_Graph_Print
 
 /** LAGraph_Matrix_Print displays a matrix in a human-readable form.  This
  * method is not meant for saving a GrB_Matrix to a file; see
- * \sphinxref{LAGraph_MMWrite} for that method.
+ * @sphinxref{LAGraph_MMWrite} for that method.
  *
  * @param[in] A         matrix to display.
  * @param[in] pr        print level.
@@ -1804,7 +1842,7 @@ int LAGraph_Matrix_Print
 /** LAGraph_Vector_Print displays a vector in a human-readable form.  This
  * method is not meant for saving a GrB_Vector to a file.  To perform that
  * operation, copy the GrB_Vector into an n-by-1 GrB_Matrix and use
- * \sphinxref{LAGraph_MMWrite}.
+ * @sphinxref{LAGraph_MMWrite}.
  *
  * @param[in] v         vector to display.
  * @param[in] pr        print level.
@@ -2027,7 +2065,7 @@ int LAGraph_TriangleCount
 //------------------------------------------------------------------------------
 
 /** LAGr_Init: initializes GraphBLAS and LAGraph.  LAGr_Init is identical to
- * \sphinxref{LAGraph_Init}, except that it allows the user application to
+ * @sphinxref{LAGraph_Init}, except that it allows the user application to
  * specify the GraphBLAS mode.  It also provides four memory management
  * functions, replacing the standard `malloc`, `calloc`, `realloc`, and `free`.
  * The functions `user_malloc_function`, `user_calloc_function`,
