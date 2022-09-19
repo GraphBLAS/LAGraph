@@ -7,8 +7,8 @@ References
 
 * Design of the GraphBLAS API for C, Aydin Buluc, Tim Mattson, Scott McMillan, Jose Moreira, and Carl Yang Graph Algorithms Building Blocks workshop at IPDPS, 2017
 
-* LAGraph: A Community Effort to Collect Graph Algorithms Built on Top of the GraphBLAS T Mattson, TA Davis, M Kumar, A Buluç, S McMillan, J Moreira, C Yang GrAPL workshop at IPDPS 2019. https://people.eecs.berkeley.edu/~aydin/LAGraph19.pdf
+* LAGraph: A Community Effort to Collect Graph Algorithms Built on Top of the GraphBLAS T Mattson, TA Davis, M Kumar, A Buluç, S McMillan, J Moreira, C Yang GrAPL workshop at IPDPS 2019. `<https://people.eecs.berkeley.edu/~aydin/LAGraph19.pdf>`_
 
 * LAGraph: Linear Algebra, Network Analysis Libraries, and the Study of Graph Algorithms, Gabor Szarnyas, David A. Bader, Timothy A. Davis, James Kitchen, Timothy G. Mattson, Scott McMillan, Erik Welch, GrAPL workshop  at IPDPS 2021
 
-* Algorithm 1000: SuiteSparse:GraphBLAS: Graph Algorithms in the Language of Sparse Linear Algebra Timothy A. Davis, ACM Trans. Math. Softw., vol 45, no 4, Dec. 2019. https://doi.org/10.1145/3322125
+* Algorithm 1000: SuiteSparse:GraphBLAS: Graph Algorithms in the Language of Sparse Linear Algebra Timothy A. Davis, ACM Trans. Math. Softw., vol 45, no 4, Dec. 2019. `<https://doi.org/10.1145/3322125>`_
