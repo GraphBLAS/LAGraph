@@ -1,6 +1,7 @@
 File: Contributors.txt
 
-see ContributionInstructions.txt for information on how you can Contribute to this project).
+See ContributionInstructions.txt for information on how you can Contribute to
+this project.
 
 Contributors (in alphabetical order):
 
