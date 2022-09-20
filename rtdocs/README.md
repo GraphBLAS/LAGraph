@@ -1,7 +1,7 @@
 Automatic Deployment
 ======================
 [LAGraph on ReadTheDocs](https://lagraph.readthedocs.io) is updated automatically when the
-reorg branch on github is updated. A webhook from GitHub to RTD activates, and RTD finds the
+stable branch on github is updated. A webhook from GitHub to RTD activates, and RTD finds the
 `.readthedocs.yaml` file to set up configuration and build and deploy the docs.
 
 Local Build
