@@ -49,7 +49,7 @@
 #include "LG_internal.h"
 #include "LAGraphX.h"
 
-GrB_Info LAGraph_HelloWorld // a simple algorithm, just for illustration
+int LAGraph_HelloWorld // a simple algorithm, just for illustration
 (
     // output
     GrB_Matrix *Yhandle,    // Y, created on output
@@ -89,6 +89,7 @@ GrB_Info LAGraph_HelloWorld // a simple algorithm, just for illustration
     // free workspace and return result
     //--------------------------------------------------------------------------
 
+    LG_FREE_WORK ;
     (*Yhandle) = Y ;
     return (GrB_SUCCESS) ;
 }

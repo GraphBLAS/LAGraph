@@ -40,7 +40,7 @@ which serves as a template for creating new algorithms:
         the prefix test_*, the CMake script will compile it and
         include it in the "make test" target.
 
-.. _algorithm/LAGraph_HelloWorld.c: https://github.com/GraphBLAS/LAGraph/blob/reorg/experimental/algorithm/LAGraph_HelloWorld.c
-.. _benchmark/helloworld2_demo.c: https://github.com/GraphBLAS/LAGraph/blob/reorg/experimental/benchmark/helloworld2_demo.c
-.. _benchmark/helloworld_demo.c: https://github.com/GraphBLAS/LAGraph/blob/reorg/experimental/benchmark/helloworld_demo.c
-.. _test/test_HelloWorld.c: https://github.com/GraphBLAS/LAGraph/blob/reorg/experimental/test/test_HelloWorld.c
+.. _algorithm/LAGraph_HelloWorld.c: https://github.com/GraphBLAS/LAGraph/blob/stable/experimental/algorithm/LAGraph_HelloWorld.c
+.. _benchmark/helloworld2_demo.c: https://github.com/GraphBLAS/LAGraph/blob/stable/experimental/benchmark/helloworld2_demo.c
+.. _benchmark/helloworld_demo.c: https://github.com/GraphBLAS/LAGraph/blob/stable/experimental/benchmark/helloworld_demo.c
+.. _test/test_HelloWorld.c: https://github.com/GraphBLAS/LAGraph/blob/stable/experimental/test/test_HelloWorld.c
