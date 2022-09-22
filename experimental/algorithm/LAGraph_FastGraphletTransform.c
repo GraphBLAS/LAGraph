@@ -339,7 +339,7 @@ int LAGraph_FastGraphletTransform
         GrB_free (&e) ;
 
     }
-    GxB_set (GxB_NTHREADS, omp_get_max_threads()) ;
+    // GxB_set (GxB_NTHREADS, omp_get_max_threads()) ;
 
     GRB_TRY (GxB_Matrix_concat (C_4, C_Tiles, tile_cnt, 1, NULL)) ;
 
