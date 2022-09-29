@@ -1,3 +1,15 @@
+//------------------------------------------------------------------------------
+// LAGraph_MaximalMatching: maximal matching using an adaptation of Luby's MIS algorithm
+// on a line graph. Derived from LAGraph_MaximalIndependentSet
+//------------------------------------------------------------------------------
+
+// LAGraph, (c) 2022 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+
+// Contributed by Vidith Madhu, Texas A&M University
+
+//------------------------------------------------------------------------------
+
 #include "LG_internal.h"
 #include "LAGraphX.h"
 
@@ -7,10 +19,22 @@
 // void one_binop_func (uint64_t *out, const uint64_t *in1, const uint64_t *in2) { (*out) = 1 ; } 
 // void sub_two_unop_func (uint64_t *out, const uint64_t *in) { (*out) = ((*in) - 2); }
 
-/*
-Maximal matching algorithm interpreted as a max independent set on a line graph
-Heavily influenced by MaximalIndependentSet.c
-*/
+#define LG_FREE_ALL                         \
+{                                           \
+    GrB_free(&E_t) ;                        \
+    GrB_free(&score) ;                      \
+    GrB_free(&candidates) ;                 \
+    GrB_free(&Seed) ;                       \
+    GrB_free(&node_degree) ;                \
+    GrB_free(&degree) ;                     \
+    GrB_free(&max_node_neighbor) ;          \
+    GrB_free(&max_neighbor) ;               \
+    GrB_free(&new_members) ;                \
+    GrB_free(&new_neighbors) ;              \
+    GrB_free(&new_members_nodes) ;          \
+    GrB_free(&new_members_node_degree) ;    \
+}                                           \
+
 int LAGraph_MaximalMatching
 (
     // outputs:
@@ -122,8 +146,10 @@ int LAGraph_MaximalMatching
 
         // check if any node has > 1 edge touching it. 
         GRB_TRY (GrB_mxv (new_members_node_degree, new_members, NULL, LAGraph_plus_second_uint64, E, new_members, GrB_DESC_RS)) ;
+
         GrB_Index max_degree ; 
         GRB_TRY (GrB_reduce (&max_degree, NULL, GrB_MAX_MONOID_UINT64, new_members_node_degree, NULL)) ;
+
         if (max_degree >= 2) {
             nfailures++ ;
             if (nfailures > MAX_FAILURES) {
@@ -149,5 +175,6 @@ int LAGraph_MaximalMatching
     }
     (*matching) = result ;
 
+    LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }
