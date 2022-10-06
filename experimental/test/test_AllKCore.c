@@ -3,11 +3,14 @@
 // decomposition
 // ----------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 //
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Pranav Konduri, Texas A&M University
 
@@ -72,7 +75,7 @@ void test_AllKCore (void)
         OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
 
         if (G->is_symmetric_structure == LAGraph_FALSE)
-        {   
+        {
             printf("This matrix is not symmetric. \n");
             // make the adjacency matrix symmetric
             OK (LAGraph_Cached_AT (G, msg)) ;
@@ -108,7 +111,7 @@ void test_AllKCore (void)
 
         OK(LG_check_kcore(&c2, &km2, G, check_kmax, msg)) ;
         // printf ("kmax: %lu km1 %lu\n",  kmax, km2) ;
-        
+
         TEST_CHECK(kmax == km2) ;
         TEST_CHECK(km1 == km2) ;
         OK (LAGraph_Vector_IsEqual (&ok, c1, c2, msg)) ;

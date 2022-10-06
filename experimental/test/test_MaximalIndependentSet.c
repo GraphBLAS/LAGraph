@@ -2,10 +2,14 @@
 // LAGraph/experimental/test/test_MaximalIndependentSet
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Timothy A. Davis, Texas A&M University
 
@@ -143,7 +147,7 @@ void test_MIS (void)
         }
 
         for (int64_t seed = 0 ; seed <= 4*n ; seed += n)
-        { 
+        {
             // compute the MIS with no ignored nodes
             OK (LAGraph_MaximalIndependentSet (&mis, G, seed, NULL, msg)) ;
             // check the result
@@ -167,7 +171,7 @@ void test_MIS (void)
         {
             // make node i a singleton
             I [0] = i ;
-            OK (GrB_assign (G->A, NULL, NULL, empty_col, GrB_ALL, n, I, 1,  
+            OK (GrB_assign (G->A, NULL, NULL, empty_col, GrB_ALL, n, I, 1,
                 NULL)) ;
             OK (GrB_assign (G->A, NULL, NULL, empty_row, I, 1, GrB_ALL, n,
                 NULL)) ;
@@ -190,7 +194,7 @@ void test_MIS (void)
         TEST_CHECK (nsingletons <= nsingletons_actual) ;
 
         for (int64_t seed = 0 ; seed <= 4*n ; seed += n)
-        { 
+        {
             // compute the MIS with no ignored nodes
             OK (LAGraph_MaximalIndependentSet (&mis, G, seed, NULL, msg)) ;
             // check the result
@@ -244,4 +248,3 @@ TEST_LIST =
     { "MIS", test_MIS },
     { NULL, NULL }
 } ;
-

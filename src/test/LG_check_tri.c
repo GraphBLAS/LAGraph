@@ -2,10 +2,14 @@
 // LG_check_tri: compute the number of triangles in a graph (simple method)
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Timothy A. Davis, Texas A&M University
 
@@ -102,17 +106,17 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
                     int64_t i1 = Ai [p1] ;
                     int64_t i2 = Ai [p2] ;
                     if (i1 < i2)
-                    { 
+                    {
                         // A(i1,i) appears before A(i2,j)
                         p1++ ;
                     }
                     else if (i2 < i1)
-                    { 
+                    {
                         // A(i2,j) appears before A(i1,i)
                         p2++ ;
                     }
                     else // i1 == i2 == k
-                    { 
+                    {
                         // A(k,i) and A(k,j) are the next entries to merge
                         ntriangles++ ;
                         p1++ ;
@@ -132,4 +136,3 @@ int LG_check_tri        // -1 if out of memory, 0 if successful
     (*ntri) = ntriangles ;
     return (GrB_SUCCESS) ;
 }
-

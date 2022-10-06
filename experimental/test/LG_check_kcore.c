@@ -2,19 +2,22 @@
 // LG_check_kcore: construct the kcore of a graph (simple method)
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 //
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Pranav Konduri, Texas A&M University
 
 //------------------------------------------------------------------------------
 
-// An implementation of the BZ algorithm (2003) for k-core decomposition.  
-// This method is for testing only, to check the result of other, faster methods.  
-// Do not benchmark this method; it is simple by design.  
+// An implementation of the BZ algorithm (2003) for k-core decomposition.
+// This method is for testing only, to check the result of other, faster methods.
+// Do not benchmark this method; it is simple by design.
 
 #define LG_FREE_ALL                             \
 {                                               \
@@ -69,7 +72,7 @@ int LG_check_kcore
         &typesize, msg)) ;
 
     //--------------------------------------------------------------------------
-    // compute the k-core 
+    // compute the k-core
     //--------------------------------------------------------------------------
     //printf ("\n================================== COMPUTING BZ_KCORE: ==================================\n") ;
     //printf("ap_len = %ld, aj_len = %ld, ax_len = %ld\n", Ap_len, Aj_len, Ax_len) ;
@@ -89,7 +92,7 @@ int LG_check_kcore
     }
 
     //setup output vector
-    GrB_Type int_type  = (maxDeg > INT32_MAX) ? GrB_INT64 : GrB_INT32 ; 
+    GrB_Type int_type  = (maxDeg > INT32_MAX) ? GrB_INT64 : GrB_INT32 ;
     GRB_TRY (GrB_Vector_new(decomp, int_type, n)) ;
     GrB_IndexUnaryOp valueGE = (maxDeg > INT32_MAX) ? GrB_VALUEGE_INT64 : GrB_VALUEGE_INT32 ;
 
@@ -108,7 +111,7 @@ int LG_check_kcore
     }
 
     //Do bin-sort
-    //vert -- contains the vertices in sorted order of degree 
+    //vert -- contains the vertices in sorted order of degree
     //pos -- contains the positon of a vertex in vert array
     for(uint64_t i = 0; i < n; i++){
         pos[i] = bin[ deg[i] ];
@@ -170,7 +173,6 @@ int LG_check_kcore
 
     LG_FREE_ALL;
     (*kmax) = level ;
-    GRB_TRY (GrB_Vector_wait(*decomp, GrB_MATERIALIZE)); 
-    return (GrB_SUCCESS);    
+    GRB_TRY (GrB_Vector_wait(*decomp, GrB_MATERIALIZE));
+    return (GrB_SUCCESS);
 }
-
