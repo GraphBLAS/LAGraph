@@ -44,7 +44,7 @@ int LG_nself_edges
     GRB_TRY (GrB_Matrix_ncols (&ncols, A)) ;
     GrB_Index n = LAGRAPH_MIN (nrows, ncols) ;
 
-    // TODO: use a method that does not require atype
+    // FUTURE: use a method that does not require atype
 
     GrB_Type atype ;
     char atype_name [LAGRAPH_MAX_NAME_LEN] ;

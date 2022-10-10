@@ -1,19 +1,16 @@
+--------------------------------------------------------------------------------
+LAGraph/experimental/README.txt
+--------------------------------------------------------------------------------
 
-As of Aug 25, 2022:
+This experimental folder includes algorithms and utilities in various
+stages of completion.  Their prototypes appear in LAGraph/include/LAGraphX.h.
 
-    * FIXME: cmake: need to find the right liblagraph and libgraphblas
-        (not in /usr/local/lib*, but the one being compiled/tested).
-
-    * FIXME: entire user guide:  rtdocs is in good shape.  Ditch LaTeX?
-
-    * FIXME: check function names and API
-
-    * FIXME: add FUTURE to User Guide (see below)
-
-    * FIXME: delete this file and its folder "Delete_me_for_V1"
+When new methods methods are developed for LAGraph, they are first placed in
+this folder, and then when they are finished and polised, they are moved into
+the src/ folder.
 
 --------------------------------------------------------------------------------
-add FUTURE items as a section in the User Guide:
+FUTURE WORK:
 
 FUTURE: LAGraph_SingleSourceShortestPath:  Write a Basic method that
             computes G->emin (that's easy).  And G->emax so it can decide on
@@ -35,11 +32,11 @@ FUTURE: file I/O with a common, binary, non-opaque format that all
             would be specified by the json header in the *.lagraph file.
             See the doc/lagraph_format.txt file for details.
 
-            Tim D. moved this to FUTURE.  It would require
-            the LAGraph_SLoad, *SSave, etc to move from experimental to src,
-            and those functions need work (API design, text compression).
-            Adding this feature also requires an LAGraph_serialize/deserialize,
-            which requies LZ4 compression.  We could do this for v1.1.
+            It would require the LAGraph_SLoad, *SSave, etc to move from
+            experimental to src, and those functions need work (API design,
+            text compression).  Adding this feature also requires an
+            LAGraph_serialize/deserialize, which requies LZ4 compression.  We
+            could do this for v1.1.
 
 FUTURE: can we exploit asynch algorithms? C += A*C for example?
         Gauss-Seidel, Afforest, etc?  I can do it in GraphBLAS; can LAGraph
@@ -58,6 +55,7 @@ FUTURE: add interfaces to external packages.
         in the sequential case)
     graph partitioning: METIS, Mongoose, etc
     SuiteSparse solvers (UMFPACK, CHOLMOD, KLU, SPQR, ...)
+    graph drawing methods
     others?
 
 FUTURE: interfaces to MATLAB, Python, Julia, etc.

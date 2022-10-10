@@ -2,6 +2,9 @@
 
 version: 2
 
+formats:
+  - pdf
+
 sphinx:
   builder: html
   configuration: rtdocs/conf.py

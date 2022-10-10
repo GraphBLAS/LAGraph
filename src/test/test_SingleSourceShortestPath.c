@@ -29,37 +29,38 @@ typedef struct
 }
 matrix_info ;
 
-const matrix_info files [ ] = 
+const matrix_info files [ ] =
 {
-    { "A.mtx" }, 
-    { "cover.mtx" }, 
-    { "jagmesh7.mtx" }, 
-    { "ldbc-cdlp-directed-example.mtx" }, 
-    { "ldbc-cdlp-undirected-example.mtx" }, 
-    { "ldbc-directed-example.mtx" }, 
-    { "ldbc-undirected-example.mtx" }, 
-    { "ldbc-wcc-example.mtx" }, 
-    { "LFAT5.mtx" }, 
-    { "msf1.mtx" }, 
-    { "msf2.mtx" }, 
-    { "msf3.mtx" }, 
-    { "sample2.mtx" }, 
-    { "sample.mtx" }, 
-    { "olm1000.mtx" }, 
-    { "bcsstk13.mtx" }, 
-    { "cryg2500.mtx" }, 
-    { "tree-example.mtx" }, 
-    { "west0067.mtx" }, 
-    { "karate.mtx" }, 
-    { "matrix_bool.mtx" }, 
+    { "A.mtx" },
+    { "cover.mtx" },
+    { "jagmesh7.mtx" },
+    { "ldbc-cdlp-directed-example.mtx" },
+    { "ldbc-cdlp-undirected-example.mtx" },
+    { "ldbc-directed-example.mtx" },
+    { "ldbc-undirected-example.mtx" },
+    { "ldbc-wcc-example.mtx" },
+    { "LFAT5.mtx" },
+    { "LFAT5_hypersparse.mtx" },
+    { "msf1.mtx" },
+    { "msf2.mtx" },
+    { "msf3.mtx" },
+    { "sample2.mtx" },
+    { "sample.mtx" },
+    { "olm1000.mtx" },
+    { "bcsstk13.mtx" },
+    { "cryg2500.mtx" },
+    { "tree-example.mtx" },
+    { "west0067.mtx" },
+    { "karate.mtx" },
+    { "matrix_bool.mtx" },
     { "test_BF.mtx" },
     { "test_FW_1000.mtx" },
     { "test_FW_2003.mtx" },
     { "test_FW_2500.mtx" },
-    { "skew_fp32.mtx" }, 
-    { "matrix_uint32.mtx" }, 
-    { "matrix_uint64.mtx" }, 
-    { "" }, 
+    { "skew_fp32.mtx" },
+    { "matrix_uint32.mtx" },
+    { "matrix_uint64.mtx" },
+    { "" },
 } ;
 
 //****************************************************************************
@@ -105,7 +106,7 @@ void test_SingleSourceShortestPath(void)
         // ensure all entries are positive, and in the range 1 to 255
         OK (GrB_Matrix_apply_BinaryOp2nd_INT32 (A, NULL, NULL,
             GrB_BAND_INT32, A, 255, NULL)) ;
-        int32_t x ; 
+        int32_t x ;
         OK (GrB_reduce (&x, NULL, GrB_MIN_MONOID_INT32, A, NULL)) ;
         if (x < 1)
         {
@@ -394,7 +395,7 @@ void test_SingleSourceShortestPath_brutal (void)
         // ensure all entries are positive, and in the range 1 to 255
         OK (GrB_Matrix_apply_BinaryOp2nd_INT32 (A, NULL, NULL,
             GrB_BAND_INT32, A, 255, NULL)) ;
-        int32_t x ; 
+        int32_t x ;
         OK (GrB_reduce (&x, NULL, GrB_MIN_MONOID_INT32, A, NULL)) ;
         if (x < 1)
         {
@@ -414,7 +415,9 @@ void test_SingleSourceShortestPath_brutal (void)
         OK (GrB_Scalar_setElement (Delta, delta)) ;
         LG_BRUTAL (LAGr_SingleSourceShortestPath (&path_length, G, src,
             Delta, msg)) ;
-        OK (LG_check_sssp (path_length, G, src, msg)) ;
+        int rr = (LG_check_sssp (path_length, G, src, msg)) ;
+        printf ("rr %d msg %s\n", rr, msg) ;
+        OK (rr) ;
         OK (GrB_free(&path_length)) ;
 
         // add a single negative edge and try again

@@ -57,6 +57,7 @@ void test_Xinit (void)
 //------------------------------------------------------------------------------
 
 #if LAGRAPH_SUITESPARSE
+LAGRAPH_PUBLIC bool LG_init_has_been_called ;
 void test_Xinit_brutal (void)
 {
     // no brutal memory failures, but test LG_brutal_malloc/calloc/realloc/free
@@ -126,6 +127,7 @@ void test_Xinit_brutal (void)
     {
         LG_brutal = nbrutal ;
         GB_Global_GrB_init_called_set (false) ;
+        LG_init_has_been_called = false ;
         int result = LAGr_Init (GrB_NONBLOCKING,
             LG_brutal_malloc, LG_brutal_calloc,
             LG_brutal_realloc, LG_brutal_free, msg) ;
@@ -137,6 +139,7 @@ void test_Xinit_brutal (void)
             TEST_CHECK (LG_nmalloc == 0) ;
             break ;
         }
+        OK (LAGraph_Finalize (msg)) ;
     }
 }
 #endif

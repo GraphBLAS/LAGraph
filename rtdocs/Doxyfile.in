@@ -251,7 +251,9 @@ TAB_SIZE               = 4
 # commands \{ and \} for these it is advised to use the version @{ and @} or use
 # a double escape (\\{ and \\})
 
-ALIASES                =
+ALIASES = sphinxref{1}="@verbatim embed:rst:inline :ref:`\1 <\1>` @endverbatim"
+ALIASES += rst_star{1}="\verbatim embed:rst:leading-asterisk \1 \endverbatim"
+ALIASES += rst_slash{1}="\verbatim embed:rst:leading-slashes \1 \endverbatim"
 
 # This tag can be used to specify a number of word-keyword mappings (TCL only).
 # A mapping has the form "name=value". For example adding "class=itcl::class"

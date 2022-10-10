@@ -29,34 +29,26 @@
 #   CC=gcc cmake ..
 
 #-------------------------------------------------------------------------------
-# link directories for lagraph library
-#-------------------------------------------------------------------------------
-
-# ensure the tests look for liblagraph.so and liblagraphx.so in the build
-# folder, before looking elsewhere
-# link_directories ( BEFORE ${CMAKE_BINARY_DIR} )
-# link_directories ( ${CMAKE_BINARY_DIR} )
-# message ( STATUS "binary dir:     : " ${CMAKE_BINARY_DIR} )
-# message ( STATUS "link directories: " ${CMAKE_LINK_DIRECTORIES} )
-# message ( STATUS "library path:   : " ${CMAKE_LIBRARY_PATH} )
-
-#-------------------------------------------------------------------------------
 # get the version
 #-------------------------------------------------------------------------------
 
 cmake_minimum_required ( VERSION 3.13 )
 
-set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
+set ( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
+    ${CMAKE_SOURCE_DIR}/cmake_modules
+    ${CMAKE_SOURCE_DIR}/../cmake_modules
+    ${CMAKE_SOURCE_DIR}/../SuiteSparse/cmake_modules
+    )
 
 cmake_policy ( SET CMP0042 NEW )
 cmake_policy ( SET CMP0048 NEW )
 set ( CMAKE_MACOSX_RPATH TRUE )
 
 # version of LAGraph
-set ( LAGraph_DATE "Aug 29, 2022" )
-set ( LAGraph_VERSION_MAJOR 0 )
-set ( LAGraph_VERSION_MINOR 9 )
-set ( LAGraph_VERSION_SUB   36 )
+set ( LAGraph_DATE "Sept 20, 2022" )
+set ( LAGraph_VERSION_MAJOR 1 )
+set ( LAGraph_VERSION_MINOR 0 )
+set ( LAGraph_VERSION_SUB   0 )
 
 project ( lagraph
           VERSION "${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}" )
@@ -119,19 +111,9 @@ endif ( )
 # or
 #     GRAPHBLAS_ROOT=<path> cmake ..
 # or uncomment the next line:
-set ( ENV{GRAPHBLAS_ROOT} ${CMAKE_SOURCE_DIR}/../GraphBLAS )
+# set ( ENV{GRAPHBLAS_ROOT} ${CMAKE_SOURCE_DIR}/../GraphBLAS )
 message ( STATUS "GraphBLAS root:              " ${GRAPHBLAS_ROOT} )
-find_package (GraphBLAS REQUIRED MODULE)
-
-#-------------------------------------------------------------------------------
-# Is this really necessary?
-#-------------------------------------------------------------------------------
-
-# Tim: yes, if we want a "sudo make install" to work.
-# With also need to use the "install ( ... )" command.
-# See the last part of the SuiteSparse:GraphBLAS CMakeLists.txt
-
-include ( GNUInstallDirs )
+find_package (GraphBLAS 7.0.1 REQUIRED MODULE)
 
 #-------------------------------------------------------------------------------
 # determine what user threading model to use
@@ -168,20 +150,17 @@ message ( STATUS "CMAKE have Win32 pthreads: " ${CMAKE_USE_WIN32_THREADS_INIT} )
 message ( STATUS "CMAKE have OpenMP:         " ${OPENMP_FOUND} )
 
 #-------------------------------------------------------------------------------
-# include directories for lagraph library
+# include directories for LAGraph library
 #-------------------------------------------------------------------------------
-
-# The GraphBLAS include directory is placed last.  If it is /usr/local/include
-# and there is already a /usr/local/include/LAGraph.h present there, then that
-# LAGraph.h may be an older version of LAGraph.
 
 include_directories ( ${CMAKE_SOURCE_DIR}/include
                       ${CMAKE_SOURCE_DIR}/src/utility
                       ${CMAKE_SOURCE_DIR}/test/include
                       ${GRAPHBLAS_INCLUDE_DIR} )
-include_directories("/usr/local/include")
+include_directories ( "/usr/local/include" )
 
-set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLGDIR=${CMAKE_SOURCE_DIR}")
+# tell LAGraph where to find its own source (for LAGraph/data files)
+set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLGDIR=${CMAKE_SOURCE_DIR}" )
 
 #-------------------------------------------------------------------------------
 # compiler options
@@ -251,31 +230,36 @@ endif ( )
 message ( STATUS "CMAKE C flags: " ${CMAKE_C_FLAGS} )
 
 #-------------------------------------------------------------------------------
+# enable testing and add subdirectories
 #-------------------------------------------------------------------------------
 
-# CTEST cannot find the binaries when in this location
-#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+# allow ctest to find the binaries:
+set ( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR} )
+set ( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR} )
 
-# set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-# set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+enable_testing ( )
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-
-enable_testing()
-
-add_subdirectory(src)
-add_subdirectory(experimental)
-if (DEFINED ENV{READTHEDOCS})
-  add_subdirectory(rtdocs)
-endif ()
+add_subdirectory ( src )
+add_subdirectory ( experimental )
+if ( DEFINED ENV{READTHEDOCS} )
+    add_subdirectory ( rtdocs )
+endif ( )
 
 #-------------------------------------------------------------------------------
-# to install use "sudo make install"
+# LAGraph installation location
 #-------------------------------------------------------------------------------
 
-# only install the dynamic  library
+# install in ${CMAKE_INSTALL_PREFIX}/lib and ${CMAKE_INSTALL_PREFIX}/include.
+# Requires "sudo make install" if this is /usr/local (default).
+
+message ( STATUS "Installation in: ${CMAKE_INSTALL_PREFIX}" )
+include ( GNUInstallDirs )
+
 install ( TARGETS lagraph lagraphx
-         LIBRARY       DESTINATION ${CMAKE_INSTALL_LIBDIR}
-         PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-         ARCHIVE       DESTINATION ${CMAKE_INSTALL_LIBDIR} )
+    LIBRARY       DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} )
+
+install ( TARGETS lagraph_static lagraphx_static
+    ARCHIVE       DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} )
+

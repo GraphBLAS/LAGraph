@@ -24,20 +24,20 @@
 // lower and strictly upper triangular parts of the symmetrix matrix A,
 // respectively.  Each method computes the same result, ntri:
 
-//  0:  default:    use the default method (currently methood 5)
+//  0:  default:    use the default method (currently method Sandia_LUT)
 //  1:  Burkhardt:  ntri = sum (sum ((A^2) .* A)) / 6
 //  2:  Cohen:      ntri = sum (sum ((L * U) .* A)) / 2
 //  3:  Sandia_LL:  ntri = sum (sum ((L * L) .* L))
 //  4:  Sandia_UU:  ntri = sum (sum ((U * U) .* U))
-//  5:  Sandia_LU:  ntri = sum (sum ((L * U') .* L)).  Note that L=U'.
-//  6:  Sandia_UL:  ntri = sum (sum ((U * L') .* U)).  Note that U=L'.
+//  5:  Sandia_LUT: ntri = sum (sum ((L * U') .* L)).  Note that L=U'.
+//  6:  Sandia_ULT: ntri = sum (sum ((U * L') .* U)).  Note that U=L'.
 
 // A is a square symmetric matrix, of any type.  Its values are ignored.
 // Results are undefined for methods 1 and 2 if self-edges exist in A.  Results
 // are undefined for all methods if A is unsymmetric.
 
 // The Sandia_* methods all tend to be faster than the Burkhardt or Cohen
-// methods.  For the largest graphs, Sandia_LU tends to be fastest, except for
+// methods.  For the largest graphs, Sandia_LUT tends to be fastest, except for
 // the GAP-urand matrix, where the saxpy-based Sandia_LL method (L*L.*L) is
 // fastest.  For many small graphs, the saxpy-based Sandia_LL and Sandia_UU
 // methods are often faster that the dot-product-based methods.
@@ -113,12 +113,12 @@ static int tricount_prep
 int LAGr_TriangleCount
 (
     // output:
-    uint64_t       *ntriangles,
+    uint64_t *ntriangles,
     // input:
     const LAGraph_Graph G,
-    LAGr_TriangleCount_Method    method,
-    LAGr_TriangleCount_Presort *presort,
-    char           *msg
+    LAGr_TriangleCount_Method *p_method,
+    LAGr_TriangleCount_Presort *p_presort,
+    char *msg
 )
 {
 
@@ -129,33 +129,33 @@ int LAGr_TriangleCount
     LG_CLEAR_MSG ;
     GrB_Matrix C = NULL, L = NULL, U = NULL, T = NULL ;
     int64_t *P = NULL ;
+
+    // get the method
+    LAGr_TriangleCount_Method method ;
+    method = (p_method == NULL) ? LAGr_TriangleCount_AutoMethod : (*p_method) ;
     LG_ASSERT_MSG (
-    method == LAGr_TriangleCount_Default ||   // 0: use default method
-    method == LAGr_TriangleCount_Burkhardt || // 1: sum (sum ((A^2) .* A))/6
-    method == LAGr_TriangleCount_Cohen ||     // 2: sum (sum ((L * U) .*A))/2
-    method == LAGr_TriangleCount_Sandia_LL ||    // 3: sum (sum ((L * L) .* L))
-    method == LAGr_TriangleCount_Sandia_UU ||   // 4: sum (sum ((U * U) .* U))
-    method == LAGr_TriangleCount_Sandia_LU || // 5: sum (sum ((L * U') .* L))
-    method == LAGr_TriangleCount_Sandia_UL,  // 6: sum (sum ((U * L') .* U))
+    method == LAGr_TriangleCount_AutoMethod ||  // 0: use auto method
+    method == LAGr_TriangleCount_Burkhardt  ||  // 1: sum (sum ((A^2) .* A))/6
+    method == LAGr_TriangleCount_Cohen      ||  // 2: sum (sum ((L * U) .*A))/2
+    method == LAGr_TriangleCount_Sandia_LL  ||  // 3: sum (sum ((L * L) .* L))
+    method == LAGr_TriangleCount_Sandia_UU  ||  // 4: sum (sum ((U * U) .* U))
+    method == LAGr_TriangleCount_Sandia_LUT ||  // 5: sum (sum ((L * U') .* L))
+    method == LAGr_TriangleCount_Sandia_ULT,    // 6: sum (sum ((U * L') .* U))
     GrB_INVALID_VALUE, "method is invalid") ;
-    if (presort != NULL)
-    {
-        LG_ASSERT_MSG (
-        (*presort) == LAGr_TriangleCount_NoSort ||
-        (*presort) == LAGr_TriangleCount_Ascending ||
-        (*presort) == LAGr_TriangleCount_Descending ||
-        (*presort) == LAGr_TriangleCount_AutoSort,
-        GrB_INVALID_VALUE, "presort is invalid") ;
-    }
+
+    // get the presort
+    LAGr_TriangleCount_Presort presort ;
+    presort = (p_presort == NULL) ? LAGr_TriangleCount_AutoSort : (*p_presort) ;
+    LG_ASSERT_MSG (
+    presort == LAGr_TriangleCount_NoSort     ||
+    presort == LAGr_TriangleCount_Ascending  ||
+    presort == LAGr_TriangleCount_Descending ||
+    presort == LAGr_TriangleCount_AutoSort,
+    GrB_INVALID_VALUE, "presort is invalid") ;
+
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     LG_ASSERT (ntriangles != NULL, GrB_NULL_POINTER) ;
     LG_ASSERT (G->nself_edges == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED) ;
-
-    if (method == LAGr_TriangleCount_Default)
-    {
-        // 0: use default method (5): Sandia_LU sum (sum ((L * U') .* L))
-        method = LAGr_TriangleCount_Sandia_LU ;
-    }
 
     LG_ASSERT_MSG ((G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGraph_ADJACENCY_DIRECTED &&
@@ -163,17 +163,23 @@ int LAGr_TriangleCount
         LAGRAPH_SYMMETRIC_STRUCTURE_REQUIRED,
         "G->A must be known to be symmetric") ;
 
-    // the Sandia_* methods can benefit from the presort
+    if (method == LAGr_TriangleCount_AutoMethod)
+    {
+        // AutoMethod: use default, Sandia_LUT: sum (sum ((L * U') .* L))
+        method = LAGr_TriangleCount_Sandia_LUT ;
+    }
+
+    // only the Sandia_* methods can benefit from the presort
     bool method_can_use_presort =
     method == LAGr_TriangleCount_Sandia_LL || // sum (sum ((L * L) .* L))
     method == LAGr_TriangleCount_Sandia_UU || // sum (sum ((U * U) .* U))
-    method == LAGr_TriangleCount_Sandia_LU || // sum (sum ((L * U') .* L))
-    method == LAGr_TriangleCount_Sandia_UL ; // sum (sum ((U * L') .* U))
+    method == LAGr_TriangleCount_Sandia_LUT || // sum (sum ((L * U') .* L))
+    method == LAGr_TriangleCount_Sandia_ULT ; // sum (sum ((U * L') .* U))
 
     GrB_Matrix A = G->A ;
     GrB_Vector Degree = G->out_degree ;
-    bool auto_sort = (presort != NULL)
-        && ((*presort) == LAGr_TriangleCount_AutoSort) ;
+
+    bool auto_sort = (presort == LAGr_TriangleCount_AutoSort) ;
     if (auto_sort && method_can_use_presort)
     {
         LG_ASSERT_MSG (Degree != NULL,
@@ -198,10 +204,16 @@ int LAGr_TriangleCount
     // heuristic sort rule
     //--------------------------------------------------------------------------
 
-    if (auto_sort)
+    if (!method_can_use_presort)
     {
-        // auto selection of sorting method
-        (*presort) = LAGr_TriangleCount_NoSort ; // default is not to sort
+        // no sorting for the Burkhardt and Cohen methods: presort parameter
+        // is ignored.
+        presort = LAGr_TriangleCount_NoSort ;
+    }
+    else if (auto_sort)
+    {
+        // auto selection of sorting method for Sandia_* methods
+        presort = LAGr_TriangleCount_NoSort ; // default is not to sort
 
         if (method_can_use_presort)
         {
@@ -236,20 +248,20 @@ int LAGr_TriangleCount
                     {
                         case LAGr_TriangleCount_Sandia_LL:
                             // 3:sum (sum ((L * L) .* L))
-                            (*presort) = LAGr_TriangleCount_Ascending  ;
+                            presort = LAGr_TriangleCount_Ascending  ;
                             break ;
                         case LAGr_TriangleCount_Sandia_UU:
                             // 4: sum (sum ((U * U) .* U))
-                            (*presort) = LAGr_TriangleCount_Descending ;
+                            presort = LAGr_TriangleCount_Descending ;
                             break ;
                         default:
-                        case LAGr_TriangleCount_Sandia_LU:
+                        case LAGr_TriangleCount_Sandia_LUT:
                             // 5: sum (sum ((L * U') .* L))
-                            (*presort) = LAGr_TriangleCount_Ascending  ;
+                            presort = LAGr_TriangleCount_Ascending  ;
                             break ;
-                        case LAGr_TriangleCount_Sandia_UL:
+                        case LAGr_TriangleCount_Sandia_ULT:
                             // 6: sum (sum ((U * L') .* U))
-                            (*presort) = LAGr_TriangleCount_Descending ;
+                            presort = LAGr_TriangleCount_Descending ;
                             break ;
                     }
                 }
@@ -261,11 +273,11 @@ int LAGr_TriangleCount
     // sort the input matrix, if requested
     //--------------------------------------------------------------------------
 
-    if (presort != NULL && (*presort) != LAGr_TriangleCount_NoSort)
+    if (presort != LAGr_TriangleCount_NoSort)
     {
         // P = permutation that sorts the rows by their degree
         LG_TRY (LAGr_SortByDegree (&P, G, true,
-            (*presort) == LAGr_TriangleCount_Ascending, msg)) ;
+            presort == LAGr_TriangleCount_Ascending, msg)) ;
 
         // T = A (P,P) and typecast to boolean
         GRB_TRY (GrB_Matrix_new (&T, GrB_BOOL, n, n)) ;
@@ -318,10 +330,10 @@ int LAGr_TriangleCount
             break ;
 
         default:
-        case LAGr_TriangleCount_Sandia_LU: // 5: sum (sum ((L * U') .* L))
+        case LAGr_TriangleCount_Sandia_LUT: // 5: sum (sum ((L * U') .* L))
 
             // This tends to be the fastest method for most large matrices, but
-            // the Sandia_UL method is also very fast.
+            // the Sandia_ULT method is also very fast.
 
             // using the masked dot product
             LG_TRY (tricount_prep (&L, &U, A, msg)) ;
@@ -329,7 +341,7 @@ int LAGr_TriangleCount
             GRB_TRY (GrB_reduce (&ntri, NULL, monoid, C, NULL)) ;
             break ;
 
-        case LAGr_TriangleCount_Sandia_UL: // 6: sum (sum ((U * L') .* U))
+        case LAGr_TriangleCount_Sandia_ULT: // 6: sum (sum ((U * L') .* U))
 
             // using the masked dot product
             LG_TRY (tricount_prep (&L, &U, A, msg)) ;
@@ -343,6 +355,8 @@ int LAGr_TriangleCount
     //--------------------------------------------------------------------------
 
     LG_FREE_ALL ;
+    if (p_method != NULL) (*p_method) = method ;
+    if (p_presort != NULL) (*p_presort) = presort ;
     (*ntriangles) = (uint64_t) ntri ;
     return (GrB_SUCCESS) ;
 }

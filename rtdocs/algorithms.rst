@@ -1,12 +1,14 @@
 Algorithms
 ==========
 
+Algorithms come in two flavors: `Basic`_ and `Advanced`_.
+
 Basic
 -----
 
-Basic algorithm are meant to be easy to use.  They may encompass many
-underlying Advanced algorithms, each with various parameters that may be
-controlled.  For the Basic API, these parameters are determined
+Basic algorithm are meant to be easy to use.  A single basic algorithm may
+encompass many underlying Advanced algorithms, each with various parameters
+that may be controlled.  For the Basic API, these parameters are determined
 automatically.  Cached graph properties may be determined, and as a result,
 the graph G is both an input and an output of these methods, since they may
 be modified.
@@ -41,10 +43,8 @@ from Basic algorithms.
 
 .. doxygenfunction:: LAGr_PageRank
 
-.. doxygenfunction:: LAGr_PageRankGAP
-
 .. doxygenfunction:: LAGr_TriangleCount
 
-.. doxygenenum:: LAGraph_TriangleCount_Method
+.. doxygenenum:: LAGr_TriangleCount_Method
 
-.. doxygenenum:: LAGraph_TriangleCount_Presort
+.. doxygenenum:: LAGr_TriangleCount_Presort

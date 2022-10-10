@@ -90,10 +90,10 @@ void test_TriangleCount_Methods1(void)
 
     // with presort
     LAGr_TriangleCount_Presort presort = LAGr_TriangleCount_AutoSort ;
+    LAGr_TriangleCount_Method method = LAGr_TriangleCount_Burkhardt ;
     ntriangles = 0UL;
     // LAGr_TriangleCount_Burkhardt: sum (sum ((A^2) .* A)) / 6
-    retval = LAGr_TriangleCount(&ntriangles, G,
-        LAGr_TriangleCount_Burkhardt, &presort, msg);
+    retval = LAGr_TriangleCount(&ntriangles, G, &method, &presort, msg);
 
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
@@ -112,10 +112,10 @@ void test_TriangleCount_Methods2(void)
     uint64_t ntriangles = 0UL;
 
     LAGr_TriangleCount_Presort presort = LAGr_TriangleCount_AutoSort ;
+    LAGr_TriangleCount_Method method = LAGr_TriangleCount_Cohen ;
     ntriangles = 0UL;
     // LAGr_TriangleCount_Cohen: sum (sum ((L * U) .* A)) / 2
-    retval = LAGr_TriangleCount(&ntriangles, G,
-        LAGr_TriangleCount_Cohen, &presort, msg);
+    retval = LAGr_TriangleCount(&ntriangles, G, &method, &presort, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
@@ -133,10 +133,10 @@ void test_TriangleCount_Methods3(void)
     uint64_t ntriangles = 0UL;
 
     LAGr_TriangleCount_Presort presort = LAGr_TriangleCount_AutoSort ;
+    LAGr_TriangleCount_Method method = LAGr_TriangleCount_Sandia_LL ;
     ntriangles = 0UL;
     // LAGr_TriangleCount_Sandia_LL: sum (sum ((L * L) .* L))
-    retval = LAGr_TriangleCount(&ntriangles, G,
-        LAGr_TriangleCount_Sandia_LL, &presort, msg);
+    retval = LAGr_TriangleCount (&ntriangles, G, &method, &presort, msg) ;
     // should fail (out_degrees needs to be defined)
     TEST_CHECK(retval == LAGRAPH_NOT_CACHED);
     TEST_MSG("retval = %d (%s)", retval, msg);
@@ -145,8 +145,9 @@ void test_TriangleCount_Methods3(void)
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LAGr_TriangleCount(&ntriangles, G,
-        LAGr_TriangleCount_Sandia_LL, &presort, msg);
+    presort = LAGr_TriangleCount_AutoSort ;
+    method = LAGr_TriangleCount_Sandia_LL ;
+    retval = LAGr_TriangleCount(&ntriangles, G, &method, &presort, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
@@ -164,10 +165,10 @@ void test_TriangleCount_Methods4(void)
     uint64_t ntriangles = 0UL;
 
     LAGr_TriangleCount_Presort presort = LAGr_TriangleCount_AutoSort ;
+    LAGr_TriangleCount_Method method = LAGr_TriangleCount_Sandia_UU ;
     ntriangles = 0UL;
     // LAGr_TriangleCount_Sandia_UU: sum (sum ((U * U) .* U))
-    retval = LAGr_TriangleCount(&ntriangles, G,
-        LAGr_TriangleCount_Sandia_UU, &presort, msg);
+    retval = LAGr_TriangleCount(&ntriangles, G, &method, &presort, msg);
     // should fail (out_degrees needs to be defined)
     TEST_CHECK(retval == LAGRAPH_NOT_CACHED);
     TEST_MSG("retval = %d (%s)", retval, msg);
@@ -176,8 +177,9 @@ void test_TriangleCount_Methods4(void)
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LAGr_TriangleCount(&ntriangles, G,
-        LAGr_TriangleCount_Sandia_UU, &presort, msg);
+    presort = LAGr_TriangleCount_AutoSort ;
+    method = LAGr_TriangleCount_Sandia_UU ;
+    retval = LAGr_TriangleCount(&ntriangles, G, &method, &presort, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
@@ -195,11 +197,10 @@ void test_TriangleCount_Methods5(void)
     uint64_t ntriangles = 0UL;
 
     LAGr_TriangleCount_Presort presort = LAGr_TriangleCount_AutoSort ;
+    LAGr_TriangleCount_Method method = LAGr_TriangleCount_Sandia_LUT ;
     ntriangles = 0UL;
-    ntriangles = 0UL;
-    // LAGr_TriangleCount_Sandia_LU: sum (sum ((L * U') .* L))
-    retval = LAGr_TriangleCount(&ntriangles, G,
-        LAGr_TriangleCount_Sandia_LU, &presort, msg);
+    // LAGr_TriangleCount_Sandia_LUT: sum (sum ((L * U') .* L))
+    retval = LAGr_TriangleCount(&ntriangles, G, &method, &presort, msg);
     // should fail (out_degrees needs to be defined)
     TEST_CHECK(retval == LAGRAPH_NOT_CACHED);
     TEST_MSG("retval = %d (%s)", retval, msg);
@@ -208,8 +209,9 @@ void test_TriangleCount_Methods5(void)
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LAGr_TriangleCount(&ntriangles, G,
-        LAGr_TriangleCount_Sandia_LU, &presort, msg);
+    presort = LAGr_TriangleCount_AutoSort ;
+    method = LAGr_TriangleCount_Sandia_LUT ;
+    retval = LAGr_TriangleCount(&ntriangles, G, &method, &presort, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
@@ -227,10 +229,10 @@ void test_TriangleCount_Methods6(void)
     uint64_t ntriangles = 0UL;
 
     LAGr_TriangleCount_Presort presort = LAGr_TriangleCount_AutoSort ;
+    LAGr_TriangleCount_Method method = LAGr_TriangleCount_Sandia_ULT ;
     ntriangles = 0UL;
-    // LAGr_TriangleCount_Sandia_UL: sum (sum ((U * L') .* U))
-    retval = LAGr_TriangleCount(&ntriangles, G,
-        LAGr_TriangleCount_Sandia_UL , &presort, msg);
+    // LAGr_TriangleCount_Sandia_ULT: sum (sum ((U * L') .* U))
+    retval = LAGr_TriangleCount(&ntriangles, G, &method, &presort, msg);
     // should fail (out_degrees needs to be defined)
     TEST_CHECK(retval == LAGRAPH_NOT_CACHED) ;
     TEST_MSG("retval = %d (%s)", retval, msg);
@@ -239,8 +241,9 @@ void test_TriangleCount_Methods6(void)
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
-    retval = LAGr_TriangleCount(&ntriangles, G,
-        LAGr_TriangleCount_Sandia_UL , &presort, msg);
+    presort = LAGr_TriangleCount_AutoSort ;
+    method = LAGr_TriangleCount_Sandia_ULT ;
+    retval = LAGr_TriangleCount(&ntriangles, G, &method, &presort, msg);
     TEST_CHECK(retval == 0);
     TEST_MSG("retval = %d (%s)", retval, msg);
 
@@ -320,18 +323,23 @@ void test_TriangleCount_many (void)
         TEST_CHECK (nt0 == nt1) ;
 
         // try each method
-        for (int method = 1 ; method <= 6 ; method++)
+        for (int method = 0 ; method <= 6 ; method++)
         {
             for (int presort = 0 ; presort <= 2 ; presort++)
             {
                 LAGr_TriangleCount_Presort s = presort ;
-                OK (LAGr_TriangleCount (&nt1, G, method, &s, msg)) ;
+                LAGr_TriangleCount_Method m = method ;
+                OK (LAGr_TriangleCount (&nt1, G, &m, &s, msg)) ;
                 TEST_CHECK (nt1 == ntriangles) ;
             }
         }
 
         // invalid method
-        int result = LAGr_TriangleCount (&nt1, G, 99, NULL, msg) ;
+        LAGr_TriangleCount_Method method = 99 ;
+        int result = LAGr_TriangleCount (&nt1, G, &method, NULL, msg) ;
+        TEST_CHECK (result == GrB_INVALID_VALUE) ;
+        LAGr_TriangleCount_Presort presort = 99 ;
+        result = LAGr_TriangleCount (&nt1, G, NULL, &presort, msg) ;
         TEST_CHECK (result == GrB_INVALID_VALUE) ;
 
         OK (LAGraph_Delete (&G, msg)) ;
@@ -341,6 +349,7 @@ void test_TriangleCount_many (void)
 }
 
 //****************************************************************************
+
 void test_TriangleCount_autosort (void)
 {
     OK (LAGraph_Init(msg)) ;
@@ -368,13 +377,14 @@ void test_TriangleCount_autosort (void)
 
     OK (LAGraph_Cached_OutDegree (G, msg)) ;
 
-    // try each method
+    // try each method; with autosort 
     GrB_Index nt1 = 0 ;
-    for (int method = 1 ; method <= 6 ; method++)
+    for (int method = 0 ; method <= 6 ; method++)
     {
         LAGr_TriangleCount_Presort presort = LAGr_TriangleCount_AutoSort ;
+        LAGr_TriangleCount_Method m = method ;
         nt1 = 0 ;
-        OK (LAGr_TriangleCount (&nt1, G, method, &presort, msg)) ;
+        OK (LAGr_TriangleCount (&nt1, G, &m, &presort, msg)) ;
         TEST_CHECK (nt1 == 2749560) ;
     }
 
@@ -385,6 +395,9 @@ void test_TriangleCount_autosort (void)
     OK (LAGraph_Finalize(msg)) ;
 }
 
+//------------------------------------------------------------------------------
+// test_TriangleCount_brutal
+//------------------------------------------------------------------------------
 
 #if LAGRAPH_SUITESPARSE
 void test_TriangleCount_brutal (void)
@@ -435,13 +448,13 @@ void test_TriangleCount_brutal (void)
         TEST_CHECK (nt0 == nt1) ;
 
         // try each method
-        for (int method = 1 ; method <= 6 ; method++)
+        for (int method = 0 ; method <= 6 ; method++)
         {
             for (int presort = 0 ; presort <= 2 ; presort++)
             {
                 LAGr_TriangleCount_Presort s = presort ;
-                LG_BRUTAL_BURBLE (LAGr_TriangleCount (&nt1, G,
-                    method, &s, msg)) ;
+                LAGr_TriangleCount_Method m = method ;
+                LG_BRUTAL_BURBLE (LAGr_TriangleCount (&nt1, G, &m, &s, msg)) ;
                 TEST_CHECK (nt1 == ntriangles) ;
             }
         }

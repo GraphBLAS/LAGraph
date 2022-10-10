@@ -37,6 +37,7 @@ matrix_info ;
 const matrix_info files [ ] =
 {
     {     4, "karate.mtx" },
+    {     6, "west0067.mtx" },
     // {   10, "amazon0601.mtx" },
     // {   64, "cit-Patents.mtx"},
     // {   2208, "hollywood-2009.mtx"},
@@ -77,8 +78,13 @@ void test_AllKCore (void)
             OK (LAGraph_Cached_AT (G, msg)) ;
             OK (GrB_eWiseAdd (G->A, NULL, NULL, GrB_LOR, G->A, G->AT, NULL)) ;
             G->is_symmetric_structure = true ;
+            // consider the graph as directed
+            G->kind = LAGraph_ADJACENCY_DIRECTED ;
         }
-        G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
+        else
+        {
+            G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
+        }
 
         // check for self-edges, and remove them.
         OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
@@ -97,9 +103,11 @@ void test_AllKCore (void)
         bool ok;
         //test the k-core
         OK(LAGraph_KCore_All(&c1, &km1, G, msg)) ;
+        // printf ("kmax: %lu km1 %lu\n",  kmax, km1) ;
         TEST_CHECK(kmax == km1) ;
 
         OK(LG_check_kcore(&c2, &km2, G, check_kmax, msg)) ;
+        // printf ("kmax: %lu km1 %lu\n",  kmax, km2) ;
         
         TEST_CHECK(kmax == km2) ;
         TEST_CHECK(km1 == km2) ;

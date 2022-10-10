@@ -1,71 +1,37 @@
-Core Objects
-============
+LAGraph context and error handling
+==================================
 
-Graph Object
-------------
+The sections below describe a set of functions that manage the LAGraph context
+within a user application, and discuss how errors are handled.
 
-The fundamental object in LAGraph is the `LAGraph_Graph`.
 
-.. doxygentypedef:: LAGraph_Graph
+LAGraph Context Functions
+-------------------------
 
-.. doxygenstruct:: LAGraph_Graph_struct
-    :members:
-    :undoc-members:
-
-Program Functions
------------------
-
-.. doxygenfunction:: LAGraph_Version
-
+.. _lagraph_init:
 .. doxygenfunction:: LAGraph_Init
 
+.. _lagr_init:
 .. doxygenfunction:: LAGr_Init
 
+.. _lagraph_finalize:
 .. doxygenfunction:: LAGraph_Finalize
+
+.. doxygenfunction:: LAGraph_Version
 
 .. doxygenfunction:: LAGraph_GetNumThreads
 
 .. doxygenfunction:: LAGraph_SetNumThreads
 
-Graph Functions
----------------
+Error handling
+--------------
 
-.. doxygenfunction:: LAGraph_New
+.. doxygendefine:: LAGRAPH_RETURN_VALUES
 
-.. doxygenfunction:: LAGraph_Delete
+.. doxygendefine:: LAGRAPH_MSG_LEN
 
-.. doxygenfunction:: LAGraph_DeleteCached
+.. _lagraph_try:
+.. doxygendefine:: LAGRAPH_TRY
 
-.. doxygenfunction:: LAGraph_Cached_AT
-
-.. doxygenfunction:: LAGraph_Cached_IsSymmetricStructure
-
-.. doxygenfunction:: LAGraph_Cached_OutDegree
-
-.. doxygenfunction:: LAGraph_Cached_InDegree
-
-.. doxygenfunction:: LAGraph_Cached_NSelfEdges
-
-.. doxygenfunction:: LAGraph_Cached_EMin
-
-.. doxygenfunction:: LAGraph_Cached_EMax
-
-.. doxygenfunction:: LAGraph_DeleteSelfEdges
-
-.. doxygenfunction:: LAGraph_CheckGraph
-
-Input/Output Functions
-----------------------
-
-.. doxygenfunction:: LAGraph_MMRead
-
-.. doxygenfunction:: LAGraph_MMWrite
-
-Enums
------
-
-.. doxygenenum:: LAGraph_Kind
-
-.. doxygenenum:: LAGraph_Boolean
-
-.. doxygenenum:: LAGraph_State
+.. _grb_try:
+.. doxygendefine:: GRB_TRY

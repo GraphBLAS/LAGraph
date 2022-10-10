@@ -12,7 +12,6 @@
 include_directories ( ${CMAKE_SOURCE_DIR}/include utility )
 
 file ( GLOB LAGRAPH_LIB_SOURCES "utility/*.c" "algorithm/*.c" )
-file ( GLOB LAGRAPH_INCLUDES "../include/*.h" )
 
 if ( "${CMAKE_C_COMPILER_ID}" STREQUAL "MSVC" )
     set ( M_LIB "" )
@@ -24,17 +23,17 @@ endif ( )
 # dynamic lagraph library properties
 #-------------------------------------------------------------------------------
 
-add_library ( lagraph SHARED ${LAGRAPH_LIB_SOURCES} ${LAGRAPH_INCLUDES} )
+add_library ( lagraph SHARED ${LAGRAPH_LIB_SOURCES} )
 SET_TARGET_PROPERTIES ( lagraph PROPERTIES
     VERSION ${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}
     SOVERSION ${LAGraph_VERSION_MAJOR}
     C_STANDARD_REQUIRED 11
-    PUBLIC_HEADER "${LAGRAPH_INCLUDES}" )
+    PUBLIC_HEADER "include/LAGraph.h" )
 set_property ( TARGET lagraph PROPERTY C_STANDARD 11 )
-target_link_libraries(lagraph PUBLIC ${GRAPHBLAS_LIBRARIES} ${M_LIB} )
-target_link_directories( lagraph BEFORE PUBLIC ${CMAKE_SOURCE_DIR}/build )
+target_link_libraries ( lagraph PUBLIC ${GRAPHBLAS_LIBRARIES} ${M_LIB} )
+target_link_directories ( lagraph BEFORE PUBLIC ${CMAKE_SOURCE_DIR}/build )
 target_include_directories ( lagraph PUBLIC include/ )
-install ( FILES ${LAGRAPH_INCLUDE} DESTINATION include)
+# install ( FILES ${LAGRAPH_INCLUDE} DESTINATION include)
 
 #-------------------------------------------------------------------------------
 # static lagraph library properties
@@ -46,10 +45,9 @@ SET_TARGET_PROPERTIES ( lagraph_static PROPERTIES
     OUTPUT_NAME lagraph
     POSITION_INDEPENDENT_CODE OFF
     SOVERSION ${LAGraph_VERSION_MAJOR}
-    C_STANDARD_REQUIRED 11
-    PUBLIC_HEADER "${LAGRAPH_INCLUDES}" )
+    C_STANDARD_REQUIRED 11 )
 set_property ( TARGET lagraph_static PROPERTY C_STANDARD 11 )
-target_link_libraries(lagraph_static PUBLIC ${GRAPHBLAS_LIBRARIES} ${M_LIB} )
+target_link_libraries ( lagraph_static PUBLIC ${GRAPHBLAS_LIBRARIES} ${M_LIB} )
 target_link_directories( lagraph_static BEFORE PUBLIC ${CMAKE_SOURCE_DIR}/build )
 
 #-------------------------------------------------------------------------------
@@ -65,6 +63,6 @@ endif ( )
 # applications
 #-------------------------------------------------------------------------------
 
-add_subdirectory(test)
-add_subdirectory(benchmark)
+add_subdirectory ( test )
+add_subdirectory ( benchmark )
 

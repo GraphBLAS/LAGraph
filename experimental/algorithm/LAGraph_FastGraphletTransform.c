@@ -18,7 +18,7 @@
 //------------------------------------------------------------------------------
 #define F_UNARY(f)  ((void (*)(void *, const void *)) f)
 
-#define LAGraph_FREE_WORK           \
+#define LG_FREE_WORK                \
 {                                   \
     GrB_free (&C_3) ;               \
     GrB_free (&d_0) ;               \
@@ -53,15 +53,16 @@
     GrB_free (&C_4) ;               \
 }
 
-#define LAGraph_FREE_ALL            \
+#define LG_FREE_ALL                 \
 {                                   \
-    LAGraph_FREE_WORK ;             \
+    LG_FREE_WORK ;                  \
 }
 
 #define F_UNARY(f)  ((void (*)(void *, const void *)) f)
 
 #include "LG_internal.h"
 #include "LAGraphX.h"
+#include <omp.h>
 
 void sub_one_mult (int64_t *z, const int64_t *x) { (*z) = (*x) * ((*x)-1) ; }
 
@@ -399,7 +400,7 @@ int LAGraph_FastGraphletTransform
             GrB_Index *neighbors = (GrB_Index*) malloc(n * sizeof(GrB_Index));
             GrB_Index *k4cmn = (GrB_Index*) malloc(n * sizeof(GrB_Index));
             int64_t *f15 = (int64_t*) malloc(n * sizeof(int64_t));
-            GrB_Index *I = (int64_t*) malloc(n * sizeof(GrB_Index));
+            GrB_Index *I = (GrB_Index *) malloc(n * sizeof(GrB_Index));
             int *isNeighbor = (int*) malloc(n * sizeof(int));
             for (int i = 0; i < n; ++i) {
                 neighbors [i] = k4cmn [i] = f15 [i] = isNeighbor [i] = 0 ;
@@ -413,22 +414,14 @@ int LAGraph_FastGraphletTransform
 
             GxB_Iterator riterator ;
             GxB_Iterator_new (&riterator) ;
-            GrB_Info info = GxB_rowIterator_attach (riterator, A, NULL) ;
-            if (info < 0) {
-                LAGraph_FREE_ALL ;
-                return info ;
-            }
+            GRB_TRY (GxB_rowIterator_attach (riterator, A, NULL)) ;
 
             GxB_Iterator iterator ;
             GxB_Iterator_new (&iterator) ;
-            info = GxB_rowIterator_attach (iterator, A, NULL) ;
-            if (info < 0) {
-                LAGraph_FREE_ALL ;
-                return info ;
-            }
+            GRB_TRY (GxB_rowIterator_attach (iterator, A, NULL)) ;
 
             // seek to A(row1,:)
-            info = GxB_rowIterator_seekRow (iterator, row1) ;
+            GrB_Info info = GxB_rowIterator_seekRow (iterator, row1) ;
             while (info != GxB_EXHAUSTED)
             {
                 // iterate over entries in A(i,:)
@@ -554,7 +547,7 @@ int LAGraph_FastGraphletTransform
     // free work
     //--------------------------------------------------------------------------
 
-    LAGraph_FREE_WORK ;
+    LG_FREE_WORK ;
 
     return (0) ;
 }

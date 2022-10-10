@@ -2,10 +2,14 @@
 // LAGraphX.h: include file for LAGraph experimental code
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 //------------------------------------------------------------------------------
 
@@ -271,6 +275,7 @@ void LAGraph_SFreeSet           // free a set of matrices
  * @param[out]  nstepss Array of size n (on input), nstepss [k] is num steps for k-truss
  * @param[in]   G       input graph, A, not modified.  Must be undirected
  *                      or directed with symmetric structure, no self edges.
+ * @param[in,out] msg   any error messages.
  *
  * @retval GrB_SUCCESS      if completed successfully (equal or not)
  * @retval GrB_NULL_POINTER if kmax, ntris, nedges, nsteps is NULL
@@ -297,6 +302,7 @@ int LAGraph_AllKTruss   // compute all k-trusses of a graph
  * @param[out]  C       k-truss subgraph, of type GrB_UINT32
  * @param[in]   G       input graph, not modified
  * @param[in]   k       the truss to find
+ * @param[in,out] msg   any error messages.
  *
  * @retval GrB_SUCCESS      if completed successfully (equal or not)
  * @retval GrB_NULL_POINTER if C or C_type is NULL
@@ -324,6 +330,7 @@ int LAGraph_KTruss      // compute the k-truss of a graph
  *                       by the algorithm, ownership returned to caller).
  * @param[in]  A         the graph (symmetric)
  * @param[in]  sanitize  If true, test to ensure A is symmetric
+ * @param[in,out] msg    any error messages.
  *
  * @retval GrB_SUCCESS      if completed successfully
  * @retval GrB_NULL_POINTER if result is NULL
@@ -627,6 +634,7 @@ GrB_Info LAGraph_BF_pure_c_double
  * @param[in]   itermax      max number of iterations (0 computes nothing)
  * @param[out]  t            array of two doubles allocated by caller:
  *                           [0]=sanitize time, [1]=cdlp time in seconds
+ * @param[in,out] msg        any error messages.
  *
  * @retval GrB_SUCCESS        if completed successfully
  * @retval GrB_NULL_POINTER   If t or CDLP_handle is NULL
@@ -706,6 +714,7 @@ GrB_Info LAGraph_FW
  * @param[in]   sanitize     if true, verify that A is binary
  * @param[out]  t            array of two doubles
  *                           [0]=sanitize time, [1]=lcc time in seconds
+ * @param[in,out] msg        any error messages.
  *
  * @retval GrB_SUCCESS        if completed successfully
  * @retval GrB_NOT_IMPLEMENTED vanilla version has not been implemented yet
@@ -872,4 +881,19 @@ int LAGraph_SquareClustering
     LAGraph_Graph G,
     char *msg
 ) ;
+
+//------------------------------------------------------------------------------
+// a simple example of an algorithm
+//------------------------------------------------------------------------------
+
+LAGRAPH_PUBLIC
+int LAGraph_HelloWorld // a simple algorithm, just for illustration
+(
+    // output
+    GrB_Matrix *Yhandle,    // Y, created on output
+    // input: not modified
+    LAGraph_Graph G,
+    char *msg
+) ;
+
 #endif

@@ -33,7 +33,7 @@ jobs:
         make test_coverage
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@4.1.1
-      if: matrix.config.grb_version == '7.1.0' && github.event_name == 'push' && github.ref == 'refs/heads/reorg'
+      if: matrix.config.grb_version == '7.1.0' && github.event_name == 'push' && github.ref == 'refs/heads/stable'
       with:
         branch: gh-pages
         folder: build/test_coverage/

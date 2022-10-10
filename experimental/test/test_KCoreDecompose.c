@@ -34,6 +34,7 @@ matrix_info ;
 const matrix_info files [ ] =
 {
     {     4, "karate.mtx" },
+    {     6, "west0067.mtx" },
     // {   10, "amazon0601.mtx" },
     // {   64, "cit-Patents.mtx"},
     // {   2208, "hollywood-2009.mtx"},
@@ -73,8 +74,13 @@ void test_KCoreDecompose (void)
             OK (LAGraph_Cached_AT (G, msg)) ;
             OK (GrB_eWiseAdd (G->A, NULL, NULL, GrB_LOR, G->A, G->AT, NULL)) ;
             G->is_symmetric_structure = true ;
+            // consider the graph as directed
+            G->kind = LAGraph_ADJACENCY_DIRECTED ;
         }
-        G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
+        else
+        {
+            G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
+        }
 
         // check for self-edges, and remove them.
         OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
@@ -148,11 +154,16 @@ void test_errors (void)
     TEST_CHECK (result == -1004) ;
     TEST_CHECK (c == NULL) ;
 
-    // G is undirected
+    // G is directed
     G->nself_edges = 0 ;
     G->kind = LAGraph_ADJACENCY_DIRECTED ;
     G->is_symmetric_structure = LAGraph_FALSE ;
     result = LAGraph_KCore_Decompose(&D1, G, c, kval, msg);
+    printf ("\nresult: %d %s\n", result, msg) ;
+    TEST_CHECK (result == -1005) ;
+    TEST_CHECK (c == NULL) ;
+
+    result = LG_check_kcore_decompose(&D1, G, c, kval, msg);
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == -1005) ;
     TEST_CHECK (c == NULL) ;
