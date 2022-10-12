@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// mtx2bin: convert Matrix Market file to SuiteSparse:GraphBLAS binary file
+// LAGraph/src/benchmark/mtx2bin_demo.c: convert Matrix Market file to SS:GrB binary file
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.

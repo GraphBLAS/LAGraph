@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/src/demo/bc_demo: betweenness centrality for the GAP benchmark
+// LAGraph/src/benchmark/bc_demo.c:  Benchmark for LAGr_Betweenness
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.

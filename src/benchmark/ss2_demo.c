@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// test_sssp: test for LAGraph
+// LAGraph/src/benchmark/ss2_demo.c: Benchmark for LAGr_SingleSourceShortestPath
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
@@ -17,8 +17,8 @@
 //------------------------------------------------------------------------------
 
 // Usage:
-// test_sssp matrix.mtx sourcenodes.mtx delta
-// test_sssp matrix.grb sourcenodes.mtx delta
+// ss2_demo matrix.mtx sourcenodes.mtx delta
+// ss2_demo matrix.grb sourcenodes.mtx delta
 
 #include "LAGraph_demo.h"
 #include "LAGraphX.h"
