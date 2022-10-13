@@ -862,10 +862,10 @@ int LAGraph_MaximalMatching
 ) ;
 
 LAGRAPH_PUBLIC
-int LAGraph_Coarsen_EdgeMatching
+int LAGraph_Coarsen_Matching
 (
     // outputs:
-    LAGraph_Graph coarsened,
+    GrB_Matrix *coarsened, // coarsened adjacency
     // inputs:
     LAGraph_Graph G,
     int matching_type, // 0, 1, or 2, refer to above

@@ -52,6 +52,7 @@ int LAGraph_MaximalMatching
 
     GrB_Matrix E_t = NULL ;                     // E transpose. Maybe it's better to use 'A' descriptor instead of storing this explicitly?
     GrB_Vector score = NULL ;                   // score for each edge. Computed according to matching_type
+    GrB_Vector weight = NULL ;                  // weight of each edge
     GrB_Vector candidates = NULL ;              // set of candidate edges
     GrB_Vector Seed = NULL ;                    // random number seed vector
     GrB_Vector node_degree = NULL ;             // intermediate result for computing edge degree; degree of the node. Only computed once
@@ -65,7 +66,7 @@ int LAGraph_MaximalMatching
     // GrB_Vector discard = NULL ;              // edges to discard from consideration
     GrB_Vector result = NULL ;                  // resulting matching    
 
-    GrB_Vector empty = NULL ;
+    GrB_Vector empty = NULL ;                   // empty vector
 
     GrB_Index num_edges ;
     GrB_Index num_nodes ;
@@ -79,6 +80,7 @@ int LAGraph_MaximalMatching
     GRB_TRY (GrB_Vector_new (&candidates, GrB_BOOL, num_edges)) ;
     GRB_TRY (GrB_Vector_new (&Seed, GrB_UINT64, num_edges)) ;
     GRB_TRY (GrB_Vector_new (&score, GrB_FP32, num_edges)) ;
+    GRB_TRY (GrB_Vector_new (&weight, GrB_FP32, num_edges)) ;
     GRB_TRY (GrB_Vector_new (&node_degree, GrB_UINT64, num_nodes)) ;
     GRB_TRY (GrB_Vector_new (&degree, GrB_UINT64, num_edges)) ;
     GRB_TRY (GrB_Vector_new (&max_node_neighbor, GrB_FP32, num_nodes)) ;
@@ -90,7 +92,8 @@ int LAGraph_MaximalMatching
     // GRB_TRY (GrB_Vector_new (&discard, GrB_BOOL, num_edges)) ;
     GRB_TRY (GrB_Vector_new (&result, GrB_BOOL, num_edges)) ;
 
- 
+    GRB_TRY (GrB_assign (Seed, NULL, NULL, 0, GrB_ALL, num_edges, NULL)) ;
+
     LG_TRY (LAGraph_Random_Seed (Seed, seed, msg)) ;
 
     // initially all edges are considered
@@ -102,8 +105,6 @@ int LAGraph_MaximalMatching
 
     GRB_TRY (GrB_Vector_nvals(&ncandidates, candidates)) ;
 
-    LAGRAPH_TRY (LAGraph_Vector_Print (candidates, LAGraph_SHORT, stdout, msg)) ;
-
     // TODO: fix semirings to match type of E. For now, let's assume E has integral edge weights.
     // for each node, counts incident edges
     GRB_TRY (GrB_mxv (node_degree, NULL, NULL, LAGraph_plus_one_uint64, E, candidates, NULL)) ;
@@ -111,6 +112,8 @@ int LAGraph_MaximalMatching
     // for each edge, sums incident edges for each node. Each edge has an excess of 2 degree, but it doesn't matter since
     // we care about relative degree
     GRB_TRY (GrB_mxv (degree, NULL, NULL, LAGraph_plus_second_uint64, E_t, node_degree, NULL)) ;
+
+    GRB_TRY (GrB_reduce (weight, NULL, NULL, GrB_MAX_MONOID_FP32, E_t, NULL)) ;
 
     while (ncandidates > 0) {
         // first just generate the scores again
@@ -123,6 +126,8 @@ int LAGraph_MaximalMatching
             // first get weights of edges in vector
             // assign random scores, but somehow want to weigh by edge weight
             // or maybe, a combination of edge weight + degree?
+            // or, multiply scores by edge weight (using eWiseMult)
+            // for light matching, can multiply scores by 1 / (edge weight)
             if (matching_type == 1) {
                 // heavy
             } else {
