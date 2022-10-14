@@ -2,10 +2,14 @@
 // LAGraph_Vector_Print:  pretty-print a vector
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Timothy A. Davis, Texas A&M University
 
@@ -143,43 +147,43 @@ int LAGraph_Vector_Print
     {
         return (LG_Vector_Print_BOOL (v, pr, f, msg)) ;
     }
-    else if (type == GrB_INT8) 
+    else if (type == GrB_INT8)
     {
         return (LG_Vector_Print_INT8 (v, pr, f, msg)) ;
     }
-    else if (type == GrB_INT16) 
+    else if (type == GrB_INT16)
     {
         return (LG_Vector_Print_INT16 (v, pr, f, msg)) ;
     }
-    else if (type == GrB_INT32) 
+    else if (type == GrB_INT32)
     {
         return (LG_Vector_Print_INT32 (v, pr, f, msg)) ;
     }
-    else if (type == GrB_INT64) 
+    else if (type == GrB_INT64)
     {
         return (LG_Vector_Print_INT64 (v, pr, f, msg)) ;
     }
-    else if (type == GrB_UINT8) 
+    else if (type == GrB_UINT8)
     {
         return (LG_Vector_Print_UINT8 (v, pr, f, msg)) ;
     }
-    else if (type == GrB_UINT16) 
+    else if (type == GrB_UINT16)
     {
         return (LG_Vector_Print_UINT16 (v, pr, f, msg)) ;
     }
-    else if (type == GrB_UINT32) 
+    else if (type == GrB_UINT32)
     {
         return (LG_Vector_Print_UINT32 (v, pr, f, msg)) ;
     }
-    else if (type == GrB_UINT64) 
+    else if (type == GrB_UINT64)
     {
         return (LG_Vector_Print_UINT64 (v, pr, f, msg)) ;
     }
-    else if (type == GrB_FP32) 
+    else if (type == GrB_FP32)
     {
         return (LG_Vector_Print_FP32 (v, pr, f, msg)) ;
     }
-    else if (type == GrB_FP64) 
+    else if (type == GrB_FP64)
     {
         return (LG_Vector_Print_FP64 (v, pr, f, msg)) ;
     }
@@ -200,4 +204,3 @@ int LAGraph_Vector_Print
         return (GrB_SUCCESS) ;
     }
 }
-

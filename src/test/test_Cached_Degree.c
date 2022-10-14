@@ -2,10 +2,14 @@
 // LAGraph/src/test/test_Cached_Degree.c:  test LAGraph_Cached_*Degree
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Timothy A. Davis, Texas A&M University
 
@@ -85,132 +89,132 @@ matrix_info ;
 
 const matrix_info files [ ] =
 {
-    { "A.mtx", 
+    { "A.mtx",
         { 3, 5, 5, 5, 3, 4, 5,  },
         { 3, 5, 5, 5, 3, 4, 5,  }, },
-     { "LFAT5.mtx", 
+     { "LFAT5.mtx",
         { 3, 2, 2, 4, 4, 3, 3, 5, 5, 2, 2, 4, 4, 3,  },
         { 3, 2, 2, 4, 4, 3, 3, 5, 5, 2, 2, 4, 4, 3,  }, },
-     { "cover.mtx", 
+     { "cover.mtx",
         { 2, 2, 1, 2, 1, 1, 3,  },
         { 1, 1, 3, 2, 2, 2, 1,  }, },
-     { "cover_structure.mtx", 
+     { "cover_structure.mtx",
         { 2, 2, 1, 2, 1, 1, 3,  },
         { 1, 1, 3, 2, 2, 2, 1,  }, },
-     { "full.mtx", 
+     { "full.mtx",
         { 3, 3, 3,  },
         { 3, 3, 3,  }, },
-     { "full_symmetric.mtx", 
+     { "full_symmetric.mtx",
         { 4, 4, 4, 4,  },
         { 4, 4, 4, 4,  }, },
-     { "karate.mtx", 
+     { "karate.mtx",
         { 16, 9, 10, 6, 3, 4, 4, 4, 5, 2, 3, 1, 2, 5, 2, 2, 2, 2, 2, 3,
           2, 2, 2, 5, 3, 3, 2, 4, 3, 4, 4, 6, 12, 17,  },
         { 16, 9, 10, 6, 3, 4, 4, 4, 5, 2, 3, 1, 2, 5, 2, 2, 2, 2, 2, 3,
           2, 2, 2, 5, 3, 3, 2, 4, 3, 4, 4, 6, 12, 17,  }, },
-     { "ldbc-cdlp-directed-example.mtx", 
+     { "ldbc-cdlp-directed-example.mtx",
         { 3, 2, 2, 2, 3, 2, 3, 1,  },
         { 2, 2, 2, 1, 3, 4, 3, 1,  }, },
-     { "ldbc-cdlp-undirected-example.mtx", 
+     { "ldbc-cdlp-undirected-example.mtx",
         { 3, 2, 2, 3, 4, 3, 3, 4,  },
         { 3, 2, 2, 3, 4, 3, 3, 4,  }, },
-     { "ldbc-directed-example-bool.mtx", 
+     { "ldbc-directed-example-bool.mtx",
         { 2, 3, 4, 0, 3, 2, 1, 1, 1, 0,  },
         { 2, 0, 3, 5, 3, 0, 0, 2, 0, 2,  }, },
-     { "ldbc-directed-example-unweighted.mtx", 
+     { "ldbc-directed-example-unweighted.mtx",
         { 2, 3, 4, 0, 3, 2, 1, 1, 1, 0,  },
         { 2, 0, 3, 5, 3, 0, 0, 2, 0, 2,  }, },
-     { "ldbc-directed-example.mtx", 
+     { "ldbc-directed-example.mtx",
         { 2, 3, 4, 0, 3, 2, 1, 1, 1, 0,  },
         { 2, 0, 3, 5, 3, 0, 0, 2, 0, 2,  }, },
-     { "ldbc-undirected-example-bool.mtx", 
+     { "ldbc-undirected-example-bool.mtx",
         { 2, 4, 2, 3, 5, 2, 3, 2, 1,  },
         { 2, 4, 2, 3, 5, 2, 3, 2, 1,  }, },
-     { "ldbc-undirected-example-unweighted.mtx", 
+     { "ldbc-undirected-example-unweighted.mtx",
         { 2, 4, 2, 3, 5, 2, 3, 2, 1,  },
         { 2, 4, 2, 3, 5, 2, 3, 2, 1,  }, },
-     { "ldbc-undirected-example.mtx", 
+     { "ldbc-undirected-example.mtx",
         { 2, 4, 2, 3, 5, 2, 3, 2, 1,  },
         { 2, 4, 2, 3, 5, 2, 3, 2, 1,  }, },
-     { "ldbc-wcc-example.mtx", 
+     { "ldbc-wcc-example.mtx",
         { 3, 3, 5, 5, 5, 2, 1, 3, 1, 2,  },
         { 3, 3, 5, 5, 5, 2, 1, 3, 1, 2,  }, },
-     { "matrix_bool.mtx", 
+     { "matrix_bool.mtx",
         { 2, 2, 1, 2, 1, 1, 3,  },
         { 1, 1, 3, 2, 2, 2, 1,  }, },
-     { "matrix_fp32.mtx", 
+     { "matrix_fp32.mtx",
         { 2, 2, 1, 2, 1, 1, 3,  },
         { 1, 1, 3, 2, 2, 2, 1,  }, },
-     { "matrix_fp32_structure.mtx", 
+     { "matrix_fp32_structure.mtx",
         { 2, 2, 1, 2, 1, 1, 3,  },
         { 1, 1, 3, 2, 2, 2, 1,  }, },
-     { "matrix_fp64.mtx", 
+     { "matrix_fp64.mtx",
         { 2, 2, 1, 2, 1, 1, 3,  },
         { 1, 1, 3, 2, 2, 2, 1,  }, },
-     { "matrix_int16.mtx", 
+     { "matrix_int16.mtx",
         { 2, 2, 1, 2, 1, 1, 3,  },
         { 1, 1, 3, 2, 2, 2, 1,  }, },
-     { "matrix_int32.mtx", 
+     { "matrix_int32.mtx",
         { 2, 2, 1, 2, 1, 1, 3,  },
         { 1, 1, 3, 2, 2, 2, 1,  }, },
-     { "matrix_int64.mtx", 
+     { "matrix_int64.mtx",
         { 2, 2, 1, 2, 1, 1, 3,  },
         { 1, 1, 3, 2, 2, 2, 1,  }, },
-     { "matrix_int8.mtx", 
+     { "matrix_int8.mtx",
         { 2, 2, 1, 2, 1, 1, 3,  },
         { 1, 1, 3, 2, 2, 2, 1,  }, },
-     { "matrix_uint16.mtx", 
+     { "matrix_uint16.mtx",
         { 2, 2, 1, 2, 1, 1, 3,  },
         { 1, 1, 3, 2, 2, 2, 1,  }, },
-     { "matrix_uint32.mtx", 
+     { "matrix_uint32.mtx",
         { 2, 2, 1, 2, 1, 1, 3,  },
         { 1, 1, 3, 2, 2, 2, 1,  }, },
-     { "matrix_uint64.mtx", 
+     { "matrix_uint64.mtx",
         { 2, 2, 1, 2, 1, 1, 3,  },
         { 1, 1, 3, 2, 2, 2, 1,  }, },
-     { "matrix_uint8.mtx", 
+     { "matrix_uint8.mtx",
         { 2, 2, 1, 2, 1, 1, 3,  },
         { 1, 1, 3, 2, 2, 2, 1,  }, },
-     { "msf1.mtx", 
+     { "msf1.mtx",
         { 2, 2, 1, 1, 1, 1,  },
         { 1, 1, 2, 2, 0, 2,  }, },
-     { "msf2.mtx", 
+     { "msf2.mtx",
         { 2, 3, 3, 2, 1, 1, 0, 0,  },
         { 0, 1, 1, 1, 2, 2, 2, 3,  }, },
-     { "msf3.mtx", 
+     { "msf3.mtx",
         { 2, 2, 2, 1, 0,  },
         { 0, 1, 1, 2, 3,  }, },
-     { "structure.mtx", 
+     { "structure.mtx",
         { 2, 2, 1, 2, 1, 1, 3,  },
         { 1, 1, 3, 2, 2, 2, 1,  }, },
-     { "sample.mtx", 
+     { "sample.mtx",
         { 3, 2, 1, 2, 2, 1, 1, 0,  },
         { 0, 1, 3, 1, 3, 1, 1, 2,  }, },
-     { "sample2.mtx", 
+     { "sample2.mtx",
         { 2, 3, 4, 3, 5, 5, 3, 3,  },
         { 2, 3, 4, 3, 5, 5, 3, 3,  }, },
-     { "skew_fp32.mtx", 
+     { "skew_fp32.mtx",
         { 3, 3, 3, 4, 3, 4,  },
         { 3, 3, 3, 4, 3, 4,  }, },
-     { "skew_fp64.mtx", 
+     { "skew_fp64.mtx",
         { 3, 3, 3, 4, 3, 4,  },
         { 3, 3, 3, 4, 3, 4,  }, },
-     { "skew_int16.mtx", 
+     { "skew_int16.mtx",
         { 3, 3, 3, 4, 3, 4,  },
         { 3, 3, 3, 4, 3, 4,  }, },
-     { "skew_int32.mtx", 
+     { "skew_int32.mtx",
         { 3, 3, 3, 4, 3, 4,  },
         { 3, 3, 3, 4, 3, 4,  }, },
-     { "skew_int64.mtx", 
+     { "skew_int64.mtx",
         { 3, 3, 3, 4, 3, 4,  },
         { 3, 3, 3, 4, 3, 4,  }, },
-     { "skew_int8.mtx", 
+     { "skew_int8.mtx",
         { 3, 3, 3, 4, 3, 4,  },
         { 3, 3, 3, 4, 3, 4,  }, },
-     { "tree-example.mtx", 
+     { "tree-example.mtx",
         { 1, 1, 2, 3, 2, 1,  },
         { 1, 1, 2, 3, 2, 1,  }, },
-     { "west0067.mtx", 
+     { "west0067.mtx",
         { 3, 3, 3, 3, 5, 5, 5, 5, 5, 6, 3, 3, 3, 3, 4, 5, 5, 5, 5, 5,
           3, 3, 3, 3, 6, 6, 6, 6, 6, 6, 5, 5, 5, 5, 5, 3, 3, 3, 3, 5,
           5, 5, 5, 5, 6, 3, 3, 3, 3, 4, 4, 4, 4, 4, 6, 1, 5, 5, 5, 5,
@@ -219,7 +223,7 @@ const matrix_info files [ ] =
           3, 3, 3, 3, 3, 4, 4, 4, 4, 3, 10, 3, 3, 3, 3, 3, 10, 5, 5, 5,
           5, 4, 5, 4, 4, 4, 4, 3, 10, 3, 3, 3, 3, 3, 10, 5, 5, 5, 5, 4,
           5, 4, 4, 4, 4, 3, 5,  }, },
-     { "west0067_jumbled.mtx", 
+     { "west0067_jumbled.mtx",
         { 3, 3, 3, 3, 5, 5, 5, 5, 5, 6, 3, 3, 3, 3, 4, 5, 5, 5, 5, 5,
           3, 3, 3, 3, 6, 6, 6, 6, 6, 6, 5, 5, 5, 5, 5, 3, 3, 3, 3, 5,
           5, 5, 5, 5, 6, 3, 3, 3, 3, 4, 4, 4, 4, 4, 6, 1, 5, 5, 5, 5,
@@ -269,7 +273,7 @@ void test_Cached_Degree (void)
 
             if (trial == 2)
             {
-                // use G->AT to compute G->in_degree 
+                // use G->AT to compute G->in_degree
                 OK (LAGraph_DeleteCached (G, msg)) ;
                 OK (LAGraph_Cached_AT (G, msg)) ;
             }
@@ -333,7 +337,7 @@ void test_Cached_Degree_brutal (void)
 
             if (trial == 2)
             {
-                // use G->AT to compute G->in_degree 
+                // use G->AT to compute G->in_degree
                 OK (LAGraph_DeleteCached (G, msg)) ;
                 OK (LAGraph_Cached_AT (G, msg)) ;
             }
@@ -363,4 +367,3 @@ TEST_LIST =
     #endif
     { NULL, NULL }
 } ;
-

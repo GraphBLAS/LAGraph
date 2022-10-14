@@ -1,8 +1,15 @@
 //------------------------------------------------------------------------------
 // LAGraph_KCore: Single K-core Decomposition Using the GraphBLAS API
 //------------------------------------------------------------------------------
-// LAGraph, (c) 2022 by The LAGraph Contributors, All Rights Reserved.
+
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Pranav Konduri, Texas A&M University
 
@@ -20,12 +27,12 @@
 {                                   \
     LG_FREE_WORK                    \
     GrB_free (decomp) ;             \
-}                                   
+}
 
 #include "LG_internal.h"
 
 
-int LAGraph_KCore       
+int LAGraph_KCore
 (
     // outputs:
     GrB_Vector *decomp,     // kcore decomposition
@@ -43,7 +50,7 @@ int LAGraph_KCore
 
     LG_ASSERT (decomp != NULL, GrB_NULL_POINTER) ;
     (*decomp) = NULL ;
-    
+
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
 
     if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
@@ -91,16 +98,16 @@ int LAGraph_KCore
 
     // determine semiring types
     GrB_IndexUnaryOp valueLT = (maxDeg > INT32_MAX) ? GrB_VALUELT_INT64 : GrB_VALUELT_INT32 ;
-    GrB_BinaryOp minus_op = (maxDeg > INT32_MAX) ? GrB_MINUS_INT64 : GrB_MINUS_INT32 ; 
-    GrB_Semiring semiring = (maxDeg > INT32_MAX) ? LAGraph_plus_one_int64 : LAGraph_plus_one_int32 ; 
-    
+    GrB_BinaryOp minus_op = (maxDeg > INT32_MAX) ? GrB_MINUS_INT64 : GrB_MINUS_INT32 ;
+    GrB_Semiring semiring = (maxDeg > INT32_MAX) ? LAGraph_plus_one_int64 : LAGraph_plus_one_int32 ;
+
 
 #if LG_SUITESPARSE
     GRB_TRY (GxB_set (done, GxB_SPARSITY_CONTROL, GxB_BITMAP + GxB_FULL)) ;    // try this
     //GRB_TRY (GxB_set (*decomp, GxB_SPARSITY_CONTROL, GxB_BITMAP + GxB_FULL)) ; // try this ... likely not needed
 #endif
 
-    // Creating q 
+    // Creating q
     GRB_TRY (GrB_select (q, GrB_NULL, GrB_NULL, valueLT, deg, k, GrB_NULL)) ; // get all nodes with degree = level
     GRB_TRY (GrB_Vector_nvals(&qnvals, q));
 
@@ -113,19 +120,18 @@ int LAGraph_KCore
 
         // Create delta (the nodes who lost friends, and how many they lost) (push version)
         GRB_TRY (GrB_vxm (delta, GrB_NULL, GrB_NULL, semiring, q, A, GrB_NULL));
-       
+
         // Create new deg vector (keep anything not in done vector)
         GRB_TRY (GrB_eWiseAdd(deg, done, GrB_NULL, minus_op, deg, delta, GrB_DESC_RSC)) ;
-        
-        // Update q, set new nvals 
+
+        // Update q, set new nvals
         GRB_TRY (GrB_select (q, GrB_NULL, GrB_NULL, valueLT, deg, k, GrB_NULL)) ;
         GRB_TRY (GrB_Vector_nvals(&qnvals, q)) ;
         GRB_TRY (GrB_Vector_nvals(&degnvals, deg)) ;
     }
     //Assign values of deg to decomp
-    GRB_TRY (GrB_assign (*decomp, deg, NULL, k, GrB_ALL, n, GrB_NULL)) ; 
+    GRB_TRY (GrB_assign (*decomp, deg, NULL, k, GrB_ALL, n, GrB_NULL)) ;
     GRB_TRY(GrB_Vector_wait(*decomp, GrB_MATERIALIZE));
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }
-

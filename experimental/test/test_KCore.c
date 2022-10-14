@@ -2,11 +2,14 @@
 // LAGraph/expirimental/test/test_KCore.c: test cases for single k-core
 // ----------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 //
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Pranav Konduri, Texas A&M University
 
@@ -69,7 +72,7 @@ void test_KCore (void)
         OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
 
         if (G->is_symmetric_structure == LAGraph_FALSE)
-        {   
+        {
             printf("This matrix is not symmetric. \n");
             // make the adjacency matrix symmetric
             OK (LAGraph_Cached_AT (G, msg)) ;
@@ -93,7 +96,7 @@ void test_KCore (void)
             printf ("now has %g self edges\n", (double) G->nself_edges) ;
             TEST_CHECK (G->nself_edges == 0) ;
         }
-        
+
         uint64_t kmax;
         bool ok;
         //test the k-core
@@ -116,7 +119,7 @@ void test_KCore (void)
 void test_errors (void)
 {
     LAGraph_Init (msg) ;
-    
+
     snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
     FILE *f = fopen (filename, "r") ;
     TEST_CHECK (f != NULL) ;

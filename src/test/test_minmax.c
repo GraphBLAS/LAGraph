@@ -2,10 +2,14 @@
 // LAGraph/src/test/test_minmax.c:  test LAGraph_Cached_EMin/EMax
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Timothy A. Davis, Texas A&M University
 
@@ -40,7 +44,7 @@ typedef struct
 }
 matrix_info ;
 
-const matrix_info files [ ] = 
+const matrix_info files [ ] =
 {
     //              amin                amax name
     {                  1,                  1, "A2.mtx" } ,
@@ -117,7 +121,7 @@ typedef struct
 }
 matrix_info_int64 ;
 
-const matrix_info_int64 files_int64 [ ] = 
+const matrix_info_int64 files_int64 [ ] =
 {
     { -9223372036854775800L,  9223372036854775807L, "matrix_int64.mtx" } ,
     { -9223372036854775807L,  9223372036854775807L, "skew_int64.mtx" } ,
@@ -132,7 +136,7 @@ typedef struct
 }
 matrix_info_uint64 ;
 
-const matrix_info_uint64 files_uint64 [ ] = 
+const matrix_info_uint64 files_uint64 [ ] =
 {
     {                    0, 18446744073709551615UL, "matrix_uint64.mtx" } ,
     {                    0,                      0, "" }
@@ -430,4 +434,3 @@ TEST_LIST =
     { "test_minmax_failures", test_minmax_failures },
     { NULL, NULL }
 } ;
-

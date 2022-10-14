@@ -2,10 +2,14 @@
 // LAGraph/experimental/benchmark/tcc_demo.c: benchmark for triangle centrality
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Tim Davis, Texas A&M
 
@@ -132,7 +136,7 @@ int main (int argc, char **argv)
                 ttot += ttrial [trial] ;
                 printf ("threads %2d trial %2d: %12.6f sec\n",
                     nthreads, trial, ttrial [trial]) ;
-                fprintf (stderr, "threads %2d trial %2d: %12.6f sec\n", 
+                fprintf (stderr, "threads %2d trial %2d: %12.6f sec\n",
                     nthreads, trial, ttrial [trial]) ;
             }
             ttot = ttot / ntrials ;
@@ -151,4 +155,3 @@ int main (int argc, char **argv)
     LAGRAPH_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
 }
-
