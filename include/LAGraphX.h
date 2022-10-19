@@ -260,6 +260,14 @@ void LAGraph_SFreeSet           // free a set of matrices
     GrB_Index nmatrices         // # of matrices in the set
 ) ;
 
+LAGRAPH_PUBLIC
+int LAGraph_A_to_E
+(
+    GrB_Matrix *result,
+    LAGraph_Graph graph,
+    char *msg
+) ;
+
 //****************************************************************************
 // Algorithms
 //****************************************************************************

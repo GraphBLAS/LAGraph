@@ -151,8 +151,6 @@ int LAGraph_MaximalMatching
         GRB_TRY (GrB_select (new_members, NULL, NULL, GrB_VALUEEQ_BOOL, new_members, true, NULL)) ; 
 
         // check if any node has > 1 edge touching it. 
-        // first, we need to clear out the old entries
-        GRB_TRY (GrB_assign (new_members_node_degree, NULL, NULL, empty, GrB_ALL, num_nodes, NULL)) ;
         GRB_TRY (GrB_mxv (new_members_node_degree, NULL, NULL, LAGraph_plus_second_uint64, E, new_members, NULL)) ;
 
         GrB_Index max_degree ; 
@@ -164,7 +162,7 @@ int LAGraph_MaximalMatching
                 break ;
             }
             // regen seed
-            LG_TRY (LAGraph_Random_Seed (Seed, seed, msg)) ;
+            LG_TRY (LAGraph_Random_Seed (Seed, seed + nfailures, msg)) ;
             continue ;
         }
         // add new members to result and remove from candidates
@@ -172,8 +170,6 @@ int LAGraph_MaximalMatching
         GRB_TRY (GrB_assign (result, new_members, NULL, true, GrB_ALL, num_edges, GrB_DESC_S)) ; 
         // to include neighbor edges, need to compute new_neighbors
         // to do this, we need to compute the intermediate result new_members_nodes
-        // first, we need to clear out the old entries in new_members_nodes
-        GRB_TRY (GrB_assign (new_members_nodes, NULL, NULL, empty, GrB_ALL, num_nodes, NULL)) ;
         GRB_TRY (GrB_mxv (new_members_nodes, NULL, NULL, LAGraph_any_one_bool, E, new_members, NULL)) ;
         GRB_TRY (GrB_mxv (new_neighbors, NULL, NULL, LAGraph_any_one_bool, E_t, new_members_nodes, NULL)) ;
 
@@ -184,6 +180,9 @@ int LAGraph_MaximalMatching
         // do something about stalling?
 
         ncandidates = GrB_Vector_nvals(&ncandidates, candidates) ;
+
+        // regen seed vector
+        LG_TRY (LAGraph_Random_Next (Seed, msg)) ;
     }
     (*matching) = result ;
 
