@@ -13,8 +13,9 @@ int main (int argc, char** argv)
     bool burble = false;
     demo_init (burble) ;
 
+    LAGRAPH_TRY (LAGraph_Random_Init (msg)) ;
     LAGRAPH_TRY (readproblem (&G, NULL,
-        true, true, true, NULL, false, argc, argv)) ;
+        true, true, false, NULL, false, argc, argv)) ;
     
     GRB_TRY (LAGraph_A_to_E (&E, G, msg)) ;
     GrB_Index num_edges ;
@@ -22,7 +23,10 @@ int main (int argc, char** argv)
     // GRB_TRY (GrB_Vector_new (&matching, GrB_BOOL, num_edges)) ;
     // LAGRAPH_TRY (LAGraph_Graph_Print (G, LAGraph_SHORT, stdout, msg)) ;
     printf("printing E now: \n");
-    LAGRAPH_TRY (LAGraph_Matrix_Print (E, LAGraph_SHORT, stdout, msg)) ;
+    char name [LAGRAPH_MAX_NAME_LEN] ;
+    LAGRAPH_TRY (LAGraph_Matrix_TypeName (name, E, msg)) ;
+    printf("%s\n", name) ;
+    LAGRAPH_TRY (LAGraph_Matrix_Print (E, 4, stdout, msg)) ;
     printf("running max matching now...\n");
     // LAGRAPH_TRY (LAGraph_MaximalMatching (&matching, E, 0, 5, msg)) ;
     return (GrB_SUCCESS) ;

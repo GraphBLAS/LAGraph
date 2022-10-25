@@ -19,7 +19,7 @@
 // void one_binop_func (uint64_t *out, const uint64_t *in1, const uint64_t *in2) { (*out) = 1 ; } 
 // void sub_two_unop_func (uint64_t *out, const uint64_t *in) { (*out) = ((*in) - 2); }
 
-#define LG_FREE_ALL                         \
+#define LG_FREE_WORK                        \
 {                                           \
     GrB_free(&E_t) ;                        \
     GrB_free(&score) ;                      \
@@ -33,6 +33,13 @@
     GrB_free(&new_neighbors) ;              \
     GrB_free(&new_members_nodes) ;          \
     GrB_free(&new_members_node_degree) ;    \
+    GrB_free(&empty) ;                      \
+}                                           \
+
+#define LG_FREE_ALL                         \
+{                                           \
+    LG_FREE_WORK ;                          \
+    GrB_free(&result) ;                     \
 }                                           \
 
 int LAGraph_MaximalMatching
@@ -63,9 +70,7 @@ int LAGraph_MaximalMatching
     GrB_Vector new_neighbors = NULL ;           // union of new members and their neighbor edges
     GrB_Vector new_members_nodes = NULL ;       // nodes touching an edge in new_members
     GrB_Vector new_members_node_degree = NULL ; // node degree considering only new members
-    // GrB_Vector discard = NULL ;              // edges to discard from consideration
     GrB_Vector result = NULL ;                  // resulting matching    
-
     GrB_Vector empty = NULL ;                   // empty vector
 
     GrB_Index num_edges ;
@@ -89,8 +94,8 @@ int LAGraph_MaximalMatching
     GRB_TRY (GrB_Vector_new (&new_neighbors, GrB_BOOL, num_edges)) ;
     GRB_TRY (GrB_Vector_new (&new_members_nodes, GrB_BOOL, num_nodes)) ;
     GRB_TRY (GrB_Vector_new (&new_members_node_degree, GrB_UINT64, num_nodes)) ;
-    // GRB_TRY (GrB_Vector_new (&discard, GrB_BOOL, num_edges)) ;
     GRB_TRY (GrB_Vector_new (&result, GrB_BOOL, num_edges)) ;
+    GRB_TRY (GrB_Vector_new (&empty, GrB_BOOL, num_edges)) ;
 
     GRB_TRY (GrB_assign (Seed, NULL, NULL, 0, GrB_ALL, num_edges, NULL)) ;
 
@@ -161,7 +166,7 @@ int LAGraph_MaximalMatching
             if (nfailures > MAX_FAILURES) {
                 break ;
             }
-            // regen seed
+            // regen seed and seed vector
             LG_TRY (LAGraph_Random_Seed (Seed, seed + nfailures, msg)) ;
             continue ;
         }
@@ -181,7 +186,7 @@ int LAGraph_MaximalMatching
 
         ncandidates = GrB_Vector_nvals(&ncandidates, candidates) ;
 
-        // regen seed vector
+        // advance seed vector
         LG_TRY (LAGraph_Random_Next (Seed, msg)) ;
     }
     (*matching) = result ;
