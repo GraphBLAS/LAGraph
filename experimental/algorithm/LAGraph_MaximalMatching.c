@@ -164,6 +164,7 @@ int LAGraph_MaximalMatching
         if (max_degree >= 2) {
             nfailures++ ;
             if (nfailures > MAX_FAILURES) {
+                printf("hit max failures\n");
                 break ;
             }
             // regen seed and seed vector
@@ -177,7 +178,7 @@ int LAGraph_MaximalMatching
         // to do this, we need to compute the intermediate result new_members_nodes
         GRB_TRY (GrB_mxv (new_members_nodes, NULL, NULL, LAGraph_any_one_bool, E, new_members, NULL)) ;
         GRB_TRY (GrB_mxv (new_neighbors, NULL, NULL, LAGraph_any_one_bool, E_t, new_members_nodes, NULL)) ;
-
+        LAGRAPH_TRY (LAGraph_Vector_Print (new_neighbors, LAGraph_SHORT, stdout, msg)) ;
         // removes the union of new_members and their neighbors
         GRB_TRY (GrB_assign (candidates, new_neighbors, NULL, empty, GrB_ALL, num_edges, GrB_DESC_S)) ;
 

@@ -15,6 +15,8 @@
 #include "LG_internal.h"
 #include "LAGraphX.h"
 
+// #define dbg
+
 int LAGraph_A_to_E
 (
     GrB_Matrix *result, // incidence
@@ -27,7 +29,6 @@ int LAGraph_A_to_E
     LG_ASSERT_MSG (G->nself_edges == 0, -107, "G->nself_edges must be zero") ;
 
     const GrB_Matrix A = G->A ;
-
     // Setup
     GrB_Matrix E = NULL ;
     GrB_Index *row_indices = NULL ;
@@ -52,10 +53,12 @@ int LAGraph_A_to_E
     LG_TRY (LAGraph_Malloc ((void**)(&values), nvals, sizeof(double), msg)) ;
 
     GRB_TRY (GrB_Matrix_extractTuples (row_indices, col_indices, values, &nvals, A)) ;
-    for (int i = 0; i < nvals; i++){
-        printf("%d %d %.5f\n", row_indices[i], col_indices[i], values[i]);
-    }
-    
+    #ifdef dbg
+        printf("Printing A values\n");
+        for (int i = 0; i < nvals; i++){
+            printf("%ld %ld %.5f\n", row_indices[i], col_indices[i], values[i]);
+        }
+    #endif    
     // number of entries in E should be 2 * n_edges
     // n_edges is nvals / 2 (don't count duplicates). So, number of entries in E is just nvals.
     LG_TRY (LAGraph_Malloc ((void**)(&E_row_indices), nvals, sizeof(GrB_Index), msg)) ;
@@ -83,11 +86,12 @@ int LAGraph_A_to_E
             pos++ ;
         }   
     }
-
-    for (int i = 0; i < nvals; i++){
-        printf("%d %d %.5f\n", E_row_indices[i], E_col_indices[i], E_values[i]);
-    }
-
+    #ifdef dbg
+        printf("Printing E values\n");
+        for (int i = 0; i < nvals; i++){
+            printf("%ld %ld %.5f\n", E_row_indices[i], E_col_indices[i], E_values[i]);
+        }
+    #endif
     GRB_TRY (GrB_Matrix_build (E, E_row_indices, E_col_indices, E_values, nvals, GrB_SECOND_UINT64)) ;
 
     LAGraph_Free ((void**)(&row_indices), msg) ;
