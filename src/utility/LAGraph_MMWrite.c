@@ -360,6 +360,7 @@ int LAGraph_MMWrite
         if (is_structural)
         {
             MM_type = MM_pattern ;
+            MM_fmt = MM_coordinate ;
         }
     }
 

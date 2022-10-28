@@ -1,3 +1,8 @@
+Version 1.0.1: Oct 28, 2022
+
+    * bug fix: LAGraph_MMWrite incorrectly created a Matrix Market
+        file with "array pattern" format, which is invalid.
+
 Version 1.0.0: Sept 20, 2022
 
     * LAGraph v1.0 released.
