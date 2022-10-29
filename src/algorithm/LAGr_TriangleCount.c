@@ -348,7 +348,7 @@ int LAGr_TriangleCount
             LG_TRY (tricount_prep (&L, &U, A, msg)) ;
 
             // HACK:
-            GxB_set (L, GxB_SPARSITY_CONTROL, GxB_BITMAP) ;
+//          GxB_set (L, GxB_SPARSITY_CONTROL, GxB_BITMAP) ;
 
             LAGRAPH_TRY (LAGraph_Tic (tic, NULL)) ;
             GRB_TRY (GrB_mxm (C, U, NULL, semiring, U, L, GrB_DESC_ST1)) ;
