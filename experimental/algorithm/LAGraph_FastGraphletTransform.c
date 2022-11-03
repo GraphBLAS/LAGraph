@@ -325,7 +325,11 @@ int LAGraph_FastGraphletTransform
         }                               \
     }
 
-    GxB_set (GxB_NTHREADS, 1) ;
+//  GxB_set (GxB_NTHREADS, 1) ;
+    int save_nthreads_outer, save_nthreads_inner ;
+    LG_TRY (LAGraph_GetNumThreads (&save_nthreads_outer, &save_nthreads_inner, msg)) ;
+    LG_TRY (LAGraph_SetNumThreads (1, 1, msg)) ;
+
     #pragma omp parallel for num_threads(omp_get_max_threads()) schedule(dynamic,1)
     for (int i = 0; i < tile_cnt; ++i) {
         GrB_Matrix A_i = NULL, e = NULL ;
@@ -347,7 +351,8 @@ int LAGraph_FastGraphletTransform
         GrB_free (&e) ;
 
     }
-    GxB_set (GxB_NTHREADS, omp_get_max_threads()) ;
+//  GxB_set (GxB_NTHREADS, omp_get_max_threads()) ;
+    LG_TRY (LAGraph_SetNumThreads (save_nthreads_outer, save_nthreads_inner, msg)) ;
 
     GRB_TRY (GxB_Matrix_concat (C_4, C_Tiles, tile_cnt, 1, NULL)) ;
 
