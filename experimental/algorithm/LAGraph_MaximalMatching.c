@@ -13,6 +13,8 @@
 #include "LG_internal.h"
 #include "LAGraphX.h"
 
+// #define dbg
+
 #define F_UNARY(f)  ((void (*)(void *, const void *)) f)
 #define F_BINARY(f) ((void (*)(void *, const void *, const void *)) f)
 
@@ -150,10 +152,15 @@ int LAGraph_MaximalMatching
         GRB_TRY (GrB_mxv (max_neighbor, candidates, NULL, GrB_MAX_SECOND_SEMIRING_FP32, E_t, max_node_neighbor, GrB_DESC_RS)) ;
 
         // Note that we are using the GE operator and not G, since max_neighbor includes the self score
-        GRB_TRY (GrB_eWiseAdd (new_members, candidates, NULL, GrB_GE_FP32, score, max_neighbor, GrB_DESC_R)) ;
+        // GRB_TRY (GrB_assign (new_members, NULL, NULL, empty, GrB_ALL, num_edges, NULL)) ; // just experimenting
+        GRB_TRY (GrB_eWiseAdd (new_members, NULL, NULL, GrB_GE_FP32, score, max_neighbor, NULL)) ;
 
-        // sparsifies new_members
+        // makes new_members structural
         GRB_TRY (GrB_select (new_members, NULL, NULL, GrB_VALUEEQ_BOOL, new_members, true, NULL)) ; 
+        #ifdef dbg
+            printf("new members for ncandidates = %lld:\n", ncandidates);
+            LAGRAPH_TRY (LAGraph_Vector_Print (new_members, LAGraph_SHORT, stdout, msg)) ;
+        #endif
 
         // check if any node has > 1 edge touching it. 
         GRB_TRY (GrB_mxv (new_members_node_degree, NULL, NULL, LAGraph_plus_second_uint64, E, new_members, NULL)) ;
@@ -164,7 +171,9 @@ int LAGraph_MaximalMatching
         if (max_degree >= 2) {
             nfailures++ ;
             if (nfailures > MAX_FAILURES) {
-                printf("hit max failures\n");
+                //#ifdef dbg
+                    printf("[DBG] hit max failures %d\n", nfailures);
+                //#endif
                 break ;
             }
             // regen seed and seed vector
@@ -178,14 +187,20 @@ int LAGraph_MaximalMatching
         // to do this, we need to compute the intermediate result new_members_nodes
         GRB_TRY (GrB_mxv (new_members_nodes, NULL, NULL, LAGraph_any_one_bool, E, new_members, NULL)) ;
         GRB_TRY (GrB_mxv (new_neighbors, NULL, NULL, LAGraph_any_one_bool, E_t, new_members_nodes, NULL)) ;
-        LAGRAPH_TRY (LAGraph_Vector_Print (new_neighbors, LAGraph_SHORT, stdout, msg)) ;
+        #ifdef dbg
+            LAGRAPH_TRY (LAGraph_Vector_Print (new_neighbors, LAGraph_SHORT, stdout, msg)) ;
+        #endif
         // removes the union of new_members and their neighbors
         GRB_TRY (GrB_assign (candidates, new_neighbors, NULL, empty, GrB_ALL, num_edges, GrB_DESC_S)) ;
 
+        #ifdef dbg
+            printf("candidates:\n");
+            LAGRAPH_TRY (LAGraph_Vector_Print (candidates, LAGraph_SHORT, stdout, msg)) ;
+        #endif
         GrB_Index last_ncandidates = ncandidates ;
         // do something about stalling?
 
-        ncandidates = GrB_Vector_nvals(&ncandidates, candidates) ;
+        GrB_Vector_nvals(&ncandidates, candidates) ;
 
         // advance seed vector
         LG_TRY (LAGraph_Random_Next (Seed, msg)) ;
