@@ -4,6 +4,8 @@
 
 // #define dbg
 
+const int DUMP = 1;
+
 int main (int argc, char** argv)
 {
     char msg [LAGRAPH_MSG_LEN] ;
@@ -35,6 +37,11 @@ int main (int argc, char** argv)
         printf("running max matching now...\n") ;
     #endif 
     LAGRAPH_TRY (LAGraph_MaximalMatching (&matching, E, 0, 5, msg)) ;
-    LAGRAPH_TRY (LAGraph_Vector_Print (matching, LAGraph_SHORT, stdout, msg)) ;
+    LAGRAPH_TRY (LAGraph_Vector_Print (matching, DUMP ? LAGraph_COMPLETE : LAGraph_SHORT, stdout, msg)) ;
+    if (DUMP) {
+        // want to dump E to the file to verify correctness of matching
+        // (we need E to know which nodes correspond to entries in the matching vector)
+        LAGRAPH_TRY (LAGraph_Matrix_Print (E, LAGraph_COMPLETE, stdout, msg)) ;
+    }
     return (GrB_SUCCESS) ;
 }

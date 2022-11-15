@@ -80,18 +80,18 @@ int LAGraph_MaximalMatching
     
     GRB_TRY (GrB_Matrix_nrows (&num_nodes, E)) ;
     GRB_TRY (GrB_Matrix_ncols (&num_edges, E)) ;
-    // TODO: match this type with E
-    GRB_TRY (GrB_Matrix_new (&E_t, GrB_UINT64, num_edges, num_nodes)) ;
+    // TODO: match this type with E (for now, it's fp64)
+    GRB_TRY (GrB_Matrix_new (&E_t, GrB_FP64, num_edges, num_nodes)) ;
     GRB_TRY (GrB_transpose (E_t, NULL, NULL, E, NULL)) ;
 
     GRB_TRY (GrB_Vector_new (&candidates, GrB_BOOL, num_edges)) ;
     GRB_TRY (GrB_Vector_new (&Seed, GrB_UINT64, num_edges)) ;
-    GRB_TRY (GrB_Vector_new (&score, GrB_FP32, num_edges)) ;
-    GRB_TRY (GrB_Vector_new (&weight, GrB_FP32, num_edges)) ;
+    GRB_TRY (GrB_Vector_new (&score, GrB_FP64, num_edges)) ;
+    GRB_TRY (GrB_Vector_new (&weight, GrB_FP64, num_edges)) ;
     GRB_TRY (GrB_Vector_new (&node_degree, GrB_UINT64, num_nodes)) ;
     GRB_TRY (GrB_Vector_new (&degree, GrB_UINT64, num_edges)) ;
-    GRB_TRY (GrB_Vector_new (&max_node_neighbor, GrB_FP32, num_nodes)) ;
-    GRB_TRY (GrB_Vector_new (&max_neighbor, GrB_FP32, num_edges)) ;
+    GRB_TRY (GrB_Vector_new (&max_node_neighbor, GrB_FP64, num_nodes)) ;
+    GRB_TRY (GrB_Vector_new (&max_neighbor, GrB_FP64, num_edges)) ;
     GRB_TRY (GrB_Vector_new (&new_members, GrB_BOOL, num_edges)) ;
     GRB_TRY (GrB_Vector_new (&new_neighbors, GrB_BOOL, num_edges)) ;
     GRB_TRY (GrB_Vector_new (&new_members_nodes, GrB_BOOL, num_nodes)) ;
@@ -112,7 +112,6 @@ int LAGraph_MaximalMatching
 
     GRB_TRY (GrB_Vector_nvals(&ncandidates, candidates)) ;
 
-    // TODO: fix semirings to match type of E. For now, let's assume E has integral edge weights.
     // for each node, counts incident edges
     GRB_TRY (GrB_mxv (node_degree, NULL, NULL, LAGraph_plus_one_uint64, E, candidates, NULL)) ;
 
@@ -120,14 +119,15 @@ int LAGraph_MaximalMatching
     // we care about relative degree
     GRB_TRY (GrB_mxv (degree, NULL, NULL, LAGraph_plus_second_uint64, E_t, node_degree, NULL)) ;
 
-    GRB_TRY (GrB_reduce (weight, NULL, NULL, GrB_MAX_MONOID_FP32, E_t, NULL)) ;
+    // TODO: fix semirings and monoids to match type of E. For now, using fp64 (most general type).
+    GRB_TRY (GrB_reduce (weight, NULL, NULL, GrB_MAX_MONOID_FP64, E_t, NULL)) ;
 
     while (ncandidates > 0) {
         // first just generate the scores again
         if (matching_type == 0) {
 
             // weighs the score based on degree
-            GRB_TRY (GrB_eWiseMult (score, candidates, NULL, GrB_DIV_FP32, Seed, degree, GrB_DESC_RS)) ;
+            GRB_TRY (GrB_eWiseMult (score, candidates, NULL, GrB_DIV_FP64, Seed, degree, GrB_DESC_RS)) ;
 
         } else {
             // first get weights of edges in vector
@@ -137,8 +137,10 @@ int LAGraph_MaximalMatching
             // for light matching, can multiply scores by 1 / (edge weight)
             if (matching_type == 1) {
                 // heavy
+                GRB_TRY (GrB_eWiseMult (score, NULL, NULL, GrB_TIMES_FP64, score, weight, NULL)) ;
             } else {
                 // light
+                GRB_TRY (GrB_eWiseMult (score, NULL, NULL, GrB_DIV_FP64, score, weight, NULL)) ;
             }
         }
 
@@ -146,14 +148,14 @@ int LAGraph_MaximalMatching
 
         // intermediate result. Max score edge touching each node
         // don't need to clear this out first because we populate the result for all nodes
-        GRB_TRY (GrB_mxv (max_node_neighbor, NULL, NULL, GrB_MAX_SECOND_SEMIRING_FP32, E, score, NULL)) ;
+        GRB_TRY (GrB_mxv (max_node_neighbor, NULL, NULL, GrB_MAX_SECOND_SEMIRING_FP64, E, score, NULL)) ;
 
         // Max edge touching each candidate edge, including itself
-        GRB_TRY (GrB_mxv (max_neighbor, candidates, NULL, GrB_MAX_SECOND_SEMIRING_FP32, E_t, max_node_neighbor, GrB_DESC_RS)) ;
+        GRB_TRY (GrB_mxv (max_neighbor, candidates, NULL, GrB_MAX_SECOND_SEMIRING_FP64, E_t, max_node_neighbor, GrB_DESC_RS)) ;
 
         // Note that we are using the GE operator and not G, since max_neighbor includes the self score
         // GRB_TRY (GrB_assign (new_members, NULL, NULL, empty, GrB_ALL, num_edges, NULL)) ; // just experimenting
-        GRB_TRY (GrB_eWiseAdd (new_members, NULL, NULL, GrB_GE_FP32, score, max_neighbor, NULL)) ;
+        GRB_TRY (GrB_eWiseAdd (new_members, NULL, NULL, GrB_GE_FP64, score, max_neighbor, NULL)) ;
 
         // makes new_members structural
         GRB_TRY (GrB_select (new_members, NULL, NULL, GrB_VALUEEQ_BOOL, new_members, true, NULL)) ; 
@@ -171,9 +173,9 @@ int LAGraph_MaximalMatching
         if (max_degree >= 2) {
             nfailures++ ;
             if (nfailures > MAX_FAILURES) {
-                //#ifdef dbg
+                #ifdef dbg
                     printf("[DBG] hit max failures %d\n", nfailures);
-                //#endif
+                #endif
                 break ;
             }
             // regen seed and seed vector

@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
-// LAGraph_A_to_E: Given an undirected graph with no self-loops, builds its
-// corresponding incidence matrix
+// LAGraph_A_to_E: Given the adjacency matrix of an undirected graph with no 
+// self-loops, builds its corresponding incidence matrix
 //------------------------------------------------------------------------------
 
 // SuiteSparse:GraphBLAS, Timothy A. Davis, (c) 2017-2021, All Rights Reserved.

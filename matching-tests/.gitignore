@@ -1,2 +1,4 @@
 *.txt
 *.mtx
+gen_bipartite
+verify
