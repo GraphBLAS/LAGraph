@@ -10,7 +10,7 @@ using namespace std;
 
 const int INF = 1e9;
 int MAX_SIZE;
-int SPARSE_FACTOR = 200; // increase this for sparser graphs
+int SPARSE_FACTOR = 200; // increase this for sparser graphs. Expected #of edges is (n * n) / SPARSE_FACTOR
 
 const string HEADER = "%%MatrixMarket matrix coordinate pattern symmetric\n%%GraphBLAS type bool";
 

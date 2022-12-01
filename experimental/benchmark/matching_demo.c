@@ -22,9 +22,6 @@ int main (int argc, char** argv)
         true, true, false, GrB_FP64, false, argc, argv)) ;
     
     GRB_TRY (LAGraph_A_to_E (&E, G, msg)) ;
-    GrB_Index num_edges ;
-    GRB_TRY (GrB_Matrix_nrows (&num_edges, E)) ;
-    GRB_TRY (GrB_Vector_new (&matching, GrB_BOOL, num_edges)) ;
     // LAGRAPH_TRY (LAGraph_Graph_Print (G, LAGraph_SHORT, stdout, msg)) ;
     #ifdef dbg
         printf("printing E now: \n");
