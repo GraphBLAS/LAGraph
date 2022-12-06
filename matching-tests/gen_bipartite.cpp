@@ -9,7 +9,7 @@
 using namespace std;
 
 const int INF = 1e9;
-int MAX_SIZE;
+int NUM_NODES;
 int SPARSE_FACTOR = 200; // increase this for sparser graphs. Expected #of edges is (n * n) / SPARSE_FACTOR
 
 const string HEADER = "%%MatrixMarket matrix coordinate pattern symmetric\n%%GraphBLAS type bool";
@@ -75,7 +75,7 @@ int maxflow(int s, int t, int n) {
 }
 
 int main(int argc, char **argv){
-    MAX_SIZE = atoi(argv[1]);
+    NUM_NODES = atoi(argv[1]);
     SPARSE_FACTOR = atoi(argv[2]);
 
     random_device rd;
@@ -84,8 +84,8 @@ int main(int argc, char **argv){
 
     ofstream graph_out("data.mtx");
 
-    int n = MAX_SIZE / 2;
-    int m = MAX_SIZE / 2;   
+    int n = NUM_NODES / 2;
+    int m = NUM_NODES / 2;   
     // cout << n << " " << m << endl;
     adj.resize(n + m + 2);
     capacity.resize(n + m + 2);

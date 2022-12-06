@@ -154,6 +154,7 @@ int LAGraph_MaximalMatching
         GRB_TRY (GrB_mxv (max_neighbor, candidates, NULL, GrB_MAX_SECOND_SEMIRING_FP64, E_t, max_node_neighbor, GrB_DESC_RS)) ;
 
         // Note that we are using the GE operator and not G, since max_neighbor includes the self score
+        // correctness: both score and max_neighbor only have entries for candidates, so no non-candidate members are produced
         // GRB_TRY (GrB_assign (new_members, NULL, NULL, empty, GrB_ALL, num_edges, NULL)) ; // just experimenting
         GRB_TRY (GrB_eWiseAdd (new_members, NULL, NULL, GrB_GE_FP64, score, max_neighbor, NULL)) ;
 
@@ -165,7 +166,7 @@ int LAGraph_MaximalMatching
         #endif
 
         // check if any node has > 1 edge touching it. 
-        GRB_TRY (GrB_mxv (new_members_node_degree, NULL, NULL, LAGraph_plus_second_uint64, E, new_members, NULL)) ;
+        GRB_TRY (GrB_mxv (new_members_node_degree, NULL, NULL, LAGraph_plus_one_uint64, E, new_members, NULL)) ;
 
         GrB_Index max_degree ; 
         GRB_TRY (GrB_reduce (&max_degree, NULL, GrB_MAX_MONOID_UINT64, new_members_node_degree, NULL)) ;

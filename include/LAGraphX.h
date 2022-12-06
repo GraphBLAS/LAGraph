@@ -863,8 +863,8 @@ int LAGraph_MaximalMatching
     // outputs:
     GrB_Vector *matching,
     // inputs:
-    GrB_Matrix E, // incidence matrix, not part of LAGraph_Graph (for now)
-    int matching_type, // 0 (random), 1 (heavy weight), or 2 (light weight)
+    GrB_Matrix E,       // incidence matrix, not part of LAGraph_Graph (for now)
+    int matching_type,  // 0 (random), 1 (heavy weight), or 2 (light weight)
     uint64_t seed,
     char *msg
 ) ;
@@ -874,9 +874,13 @@ int LAGraph_Coarsen_Matching
 (
     // outputs:
     GrB_Matrix *coarsened, // coarsened adjacency
+    GrB_Vector *mapping,   // parent mapping (not compressed)
     // inputs:
     LAGraph_Graph G,
-    int matching_type, // 0, 1, or 2, refer to above
+    int matching_type,     // 0, 1, or 2, refer to above
+    int preserve_mapping,  // preserve initial namespace of nodes
+    int nlevels,
+    uint64_t seed,         // used for matching
     char *msg
 ) ;
 

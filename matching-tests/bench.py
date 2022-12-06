@@ -45,5 +45,6 @@ for i in range(len(sizes)):
         avg_ratio += run_result[1] / run_result[0]
         runs += 1
     
+    avg_ratio /= runs
     print(f'(n={sizes[i]}, k={sparse_factors[i]}), optimality ratio: {avg_ratio}')
 
