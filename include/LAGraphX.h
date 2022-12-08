@@ -869,19 +869,4 @@ int LAGraph_HelloWorld // a simple algorithm, just for illustration
     char *msg
 ) ;
 
-//------------------------------------------------------------------------------
-// for GPU development
-//------------------------------------------------------------------------------
-
-int LAGr_TriangleCount_GPU
-(
-    // output:
-    uint64_t       *ntriangles,
-    // input:
-    const LAGraph_Graph G,
-    LAGraph_TriangleCount_Method    method,
-    LAGraph_TriangleCount_Presort *presort,
-    char           *msg
-) ;
-
 #endif
