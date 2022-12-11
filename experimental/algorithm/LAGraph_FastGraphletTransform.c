@@ -69,7 +69,9 @@
 
 #include "LG_internal.h"
 #include "LAGraphX.h"
+#ifdef _OPENMP
 #include <omp.h>
+#endif
 
 void sub_one_mult (int64_t *z, const int64_t *x) { (*z) = (*x) * ((*x)-1) ; }
 
