@@ -79,7 +79,7 @@ int LAGraph_Matrix_TypeName
     // determine the name of the type of the GrB_Matrix A
     //--------------------------------------------------------------------------
 
-    #if LAGRAPH_SUITESPARSE
+    #if 1 // LAGRAPH_SUITESPARSE
     return (GxB_Matrix_type_name (name, A)) ;
     #else
     name [0] = '\0' ;
@@ -113,7 +113,7 @@ int LAGraph_Vector_TypeName
     // determine the name of the type of the GrB_Vector v
     //--------------------------------------------------------------------------
 
-    #if LAGRAPH_SUITESPARSE
+    #if 1 // LAGRAPH_SUITESPARSE
     return (GxB_Vector_type_name (name, v)) ;
     #else
     name [0] = '\0' ;
@@ -147,7 +147,7 @@ int LAGraph_Scalar_TypeName
     // determine the name of the type of the GrB_Scalar s
     //--------------------------------------------------------------------------
 
-    #if LAGRAPH_SUITESPARSE
+    #if 1 // LAGRAPH_SUITESPARSE
     return (GxB_Scalar_type_name (name, s)) ;
     #else
     name [0] = '\0' ;

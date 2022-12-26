@@ -127,6 +127,7 @@ const matrix_info files [ ] =
 void test_lcc (void)
 {
     LAGraph_Init (msg) ;
+    #if LAGRAPH_SUITESPARSE
 
     for (int k = 0 ; ; k++)
     {
@@ -190,6 +191,9 @@ void test_lcc (void)
         OK (LAGraph_Delete (&G, msg)) ;
     }
 
+    #else
+    printf ("test skipped\n") ;
+    #endif
     LAGraph_Finalize (msg) ;
 }
 
@@ -200,6 +204,7 @@ void test_lcc (void)
 void test_errors (void)
 {
     LAGraph_Init (msg) ;
+    #if LAGRAPH_SUITESPARSE
 
     snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
     FILE *f = fopen (filename, "r") ;
@@ -221,16 +226,17 @@ void test_errors (void)
     printf ("\nresult: %d\n", result) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
 
-    #if LAGRAPH_SUITESPARSE
     // G->A is held by column
     OK (GxB_set (G->A, GxB_FORMAT, GxB_BY_COL)) ;
     result = LAGraph_lcc (&c, G->A, true, true, t, msg) ;
     printf ("\nresult: %d\n", result) ;
     TEST_CHECK (result == GrB_INVALID_VALUE) ;
     TEST_CHECK (c == NULL) ;
-    #endif
 
     OK (LAGraph_Delete (&G, msg)) ;
+    #else
+    printf ("test skipped\n") ;
+    #endif
     LAGraph_Finalize (msg) ;
 }
 

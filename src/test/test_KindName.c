@@ -91,6 +91,8 @@ void test_KindName_brutal (void)
 TEST_LIST =
 {
     { "KindName", test_KindName },
+    #if LAGRAPH_SUITESPARSE
     { "KindName_brutal", test_KindName_brutal },
+    #endif
     { NULL, NULL }
 } ;

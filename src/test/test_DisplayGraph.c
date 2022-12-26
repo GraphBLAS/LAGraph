@@ -294,7 +294,9 @@ void test_Graph_Print_brutal (void)
 TEST_LIST =
 {
     { "Graph_Print", test_Graph_Print },
+    #if LAGRAPH_SUITESPARSE
     { "Graph_Print_brutal", test_Graph_Print_brutal },
+    #endif
     { "Graph_Print_failures", test_Graph_Print_failures },
     { NULL, NULL }
 } ;

@@ -212,6 +212,8 @@ void test_export_brutal (void)
 //****************************************************************************
 TEST_LIST = {
     {"test_export", test_export },
+    #if LAGRAPH_SUITESPARSE
     {"test_export_brutal", test_export_brutal },
+    #endif
     {NULL, NULL}
 };

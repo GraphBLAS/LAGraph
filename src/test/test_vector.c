@@ -104,6 +104,8 @@ void test_vector_brutal (void)
 TEST_LIST =
 {
     { "vector", test_vector },
+    #if LAGRAPH_SUITESPARSE
     { "vector_brutal", test_vector_brutal },
+    #endif
     { NULL, NULL }
 } ;

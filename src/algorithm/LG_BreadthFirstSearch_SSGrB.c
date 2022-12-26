@@ -62,15 +62,15 @@ int LG_BreadthFirstSearch_SSGrB
     // check inputs
     //--------------------------------------------------------------------------
 
-#if !LAGRAPH_SUITESPARSE
-    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
-#else
-
     LG_CLEAR_MSG ;
     GrB_Vector q = NULL ;           // the current frontier
     GrB_Vector w = NULL ;           // to compute work remaining
     GrB_Vector pi = NULL ;          // parent vector
     GrB_Vector v = NULL ;           // level vector
+
+#if !LAGRAPH_SUITESPARSE
+    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
+#else
 
     bool compute_level  = (level != NULL) ;
     bool compute_parent = (parent != NULL) ;

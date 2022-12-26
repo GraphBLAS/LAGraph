@@ -194,6 +194,8 @@ void test_del_brutal (void)
 TEST_LIST =
 {
     { "test_DeleteCached", test_DeleteCached },
+    #if LAGRAPH_SUITESPARSE
     { "test_DeleteCached_brutal", test_del_brutal },
+    #endif
     { NULL, NULL }
 } ;

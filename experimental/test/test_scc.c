@@ -98,6 +98,7 @@ const matrix_info files [ ] =
 void test_scc (void)
 {
     LAGraph_Init (msg) ;
+    #if LAGRAPH_SUITESPARSE
 
     for (int k = 0 ; ; k++)
     {
@@ -148,6 +149,9 @@ void test_scc (void)
         OK (LAGraph_Delete (&G, msg)) ;
     }
 
+    #else
+    printf ("test skipped\n") ;
+    #endif
     LAGraph_Finalize (msg) ;
 }
 
@@ -158,6 +162,7 @@ void test_scc (void)
 void test_errors (void)
 {
     LAGraph_Init (msg) ;
+    #if LAGRAPH_SUITESPARSE
 
     GrB_Vector c = NULL ;
     GrB_Matrix A = NULL ;
@@ -174,6 +179,9 @@ void test_errors (void)
 
     OK (GrB_free (&c)) ;
     OK (GrB_free (&A)) ;
+    #else
+    printf ("test skipped\n") ;
+    #endif
     LAGraph_Finalize (msg) ;
 }
 

@@ -182,6 +182,8 @@ TEST_LIST =
 {
     { "New", test_New },
     { "New_failures", test_New_failures },
+    #if LAGRAPH_SUITESPARSE
     { "New_brutal", test_New_brutal },
+    #endif
     { NULL, NULL }
 } ;

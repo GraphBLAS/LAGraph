@@ -670,6 +670,8 @@ TEST_LIST = {
     {"BreadthFirstSearch_level", test_BreadthFirstSearch_level},
     {"BreadthFirstSearch_both", test_BreadthFirstSearch_both},
     {"BreadthFirstSearch_many", test_BreadthFirstSearch_many},
+    #if LAGRAPH_SUITESPARSE
     {"BreadthFirstSearch_brutal", test_bfs_brutal },
+    #endif
     {NULL, NULL}
 } ;

@@ -483,6 +483,8 @@ TEST_LIST = {
     {"TriangleCount"         , test_TriangleCount},
     {"TriangleCount_many"    , test_TriangleCount_many},
     {"TriangleCount_autosort", test_TriangleCount_autosort},
+    #if LAGRAPH_SUITESPARSE
     {"TriangleCount_brutal"  , test_TriangleCount_brutal},
+    #endif
     {NULL, NULL}
 };

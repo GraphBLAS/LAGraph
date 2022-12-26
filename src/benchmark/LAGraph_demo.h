@@ -48,7 +48,7 @@
 #define LEN LAGRAPH_BIN_HEADER
 
 #if !LAGRAPH_SUITESPARSE
-#error "SuiteSparse:GraphBLAS v6.0.0 or later is required"
+#warning "SuiteSparse:GraphBLAS v7.1.0 or later is required"
 #endif
 
 //------------------------------------------------------------------------------

@@ -104,7 +104,8 @@ int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
                 estimate, sizeof (uint8_t), msg)) ;
             GRB_TRY (GrB_Matrix_serialize (Contents [i].blob,
                 (GrB_Index *) &(Contents [i].blob_size), Set [i])) ;
-            LG_TRY (LAGraph_Realloc (&(Contents [i].blob_size),
+            LG_TRY (LAGraph_Realloc ((void **) &(Contents [i].blob),
+                (size_t) Contents [i].blob_size,
                 estimate, sizeof (uint8_t), msg)) ;
         }
         #endif

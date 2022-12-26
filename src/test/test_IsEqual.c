@@ -445,6 +445,8 @@ TEST_LIST =
     { "IsEqual", test_IsEqual },
     { "Vector_IsEqual", test_Vector_IsEqual },
     { "IsEqual_failures", test_IsEqual_failures },
+    #if LAGRAPH_SUITESPARSE
     { "IsEqual_brutal", test_IsEqual_brutal },
+    #endif
     { NULL, NULL }
 } ;

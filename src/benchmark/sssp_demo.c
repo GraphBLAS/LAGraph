@@ -148,8 +148,8 @@ int main (int argc, char **argv)
                 Delta, msg)) ;
             ttrial = LAGraph_WallClockTime ( ) - ttrial ;
 
-            printf ("sssp15:  threads: %2d trial: %2d source %g "
-                "time: %10.4f sec\n", nthreads, trial, (double) src, ttrial) ;
+            printf ("sssp15:  threads: %2d trial: %2d source %12" PRId64
+                " time: %10.4f sec\n", nthreads, trial, src, ttrial) ;
             total_time += ttrial ;
 
 #if LG_CHECK_RESULT

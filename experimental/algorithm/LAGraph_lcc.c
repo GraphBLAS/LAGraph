@@ -121,9 +121,6 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     char *msg
 )
 {
-#if !LAGRAPH_SUITESPARSE
-    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
-#else
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -140,6 +137,10 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     GrB_UnaryOp LAGraph_COMB_DIR_FP64 = NULL ;
     GrB_UnaryOp LAGraph_COMB_UNDIR_FP64 = NULL ;
     GrB_Info info ;
+
+#if !LAGRAPH_SUITESPARSE
+    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
+#else
 
     // n = size of A (# of nodes in the graph)
     GrB_Index n ;

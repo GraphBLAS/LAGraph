@@ -58,6 +58,7 @@ const matrix_info files [ ] =
 void test_msf (void)
 {
     LAGraph_Init (msg) ;
+    #if LAGRAPH_SUITESPARSE
 
     for (int k = 0 ; ; k++)
     {
@@ -119,6 +120,9 @@ void test_msf (void)
         OK (LAGraph_Delete (&G, msg)) ;
     }
 
+    #else
+    printf ("test skipped\n") ;
+    #endif
     LAGraph_Finalize (msg) ;
 }
 
@@ -129,6 +133,7 @@ void test_msf (void)
 void test_errors (void)
 {
     LAGraph_Init (msg) ;
+    #if LAGRAPH_SUITESPARSE
 
     // C and A are NULL
     int result = LAGraph_msf (NULL, NULL, true, msg) ;
@@ -140,6 +145,9 @@ void test_errors (void)
     TEST_CHECK (result == GrB_DIMENSION_MISMATCH) ;
 
     OK (GrB_free (&A)) ;
+    #else
+    printf ("test skipped\n") ;
+    #endif
     LAGraph_Finalize (msg) ;
 }
 
