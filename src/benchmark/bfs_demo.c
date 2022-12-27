@@ -159,8 +159,8 @@ int main (int argc, char **argv)
                 ttrial = LAGraph_WallClockTime ( ) - ttrial ;
                 tp [nthreads] += ttrial ;
                 printf ("parent only  pushpull trial: %2d threads: %2d "
-                    "src: %g %10.4f sec\n",
-                    trial, nthreads, (double) src, ttrial) ;
+                    "src: %12" PRId64 " %10.4f sec\n",
+                    trial, nthreads, src, ttrial) ;
                 fflush (stdout) ;
 
                 int32_t maxlevel ;
@@ -195,7 +195,7 @@ int main (int argc, char **argv)
                 GRB_TRY (GrB_reduce (&maxlevel, NULL, GrB_MAX_MONOID_INT32,
                     level, NULL)) ;
                 printf ("level only   pushpull trial: %2d threads: %2d "
-                    "src: %g %10.4f sec maxlevel: %d\n",
+                    "src: %12" PRId64 " %10.4f sec maxlevel: %d\n",
                     trial, nthreads, (double) src, ttrial, maxlevel) ;
                 fflush (stdout) ;
 
@@ -230,7 +230,7 @@ int main (int argc, char **argv)
                 GRB_TRY (GrB_reduce (&maxlevel, NULL, GrB_MAX_MONOID_INT32,
                     level, NULL)) ;
                 printf ("parent+level pushpull trial: %2d threads: %2d "
-                    "src: %g %10.4f sec\n",
+                    "src: %12" PRId64 " %10.4f sec\n",
                     trial, nthreads, (double) src, ttrial) ;
                 fflush (stdout) ;
 
