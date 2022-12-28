@@ -8,8 +8,8 @@ jobs:
     strategy:
       matrix:
         config:
-         - {grb_version: 7.0.1, conda_grb_package_hash: h27087fc}
          - {grb_version: 7.1.0, conda_grb_package_hash: h27087fc}
+         - {grb_version: 7.3.0, conda_grb_package_hash: h27087fc}
     steps:
     - name: Checkout
       uses: actions/checkout@v2.0.0
@@ -44,18 +44,19 @@ jobs:
         name: test_coverage
         path: build/test_coverage/
   macos:
-    runs-on: macos-11
+    runs-on: macos-12
     strategy:
       matrix:
         config:
-         - {grb_version: 7.0.1, conda_grb_package_hash: h3f3baac}
          - {grb_version: 7.1.0, conda_grb_package_hash: h7881ed4}
+         - {grb_version: 7.3.0, conda_grb_package_hash: ha894c9a}
     steps:
     - name: Checkout
       uses: actions/checkout@v2.0.0
     - name: Install dependencies
       run: |
-        brew install libomp
+        brew extract --version=14.0.6 libomp homebrew/cask
+        brew install libomp@14.0.6
     - name: Get GraphBLAS binaries
       run: |
         mkdir graphblas-binaries
@@ -68,9 +69,7 @@ jobs:
         export GRAPHBLAS_INCLUDE_DIR=`pwd`/graphblas-binaries/include
         export GRAPHBLAS_LIBRARY=`pwd`/graphblas-binaries/lib/libgraphblas.dylib
         # adding an extra line to the CMakeLists.txt file to locate the libomp instance installed by brew
-        mv CMakeLists.txt CMakeLists2.txt
-        echo 'include_directories("/usr/local/opt/libomp/include")' > CMakeLists1.txt
-        cat CMakeLists1.txt CMakeLists2.txt > CMakeLists.txt
+        echo 'include_directories("/usr/local/opt/libomp/include")' | cat - CMakeLists.txt
         cd build
         CC=gcc cmake .. -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY}
         JOBS=2 make
