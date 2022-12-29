@@ -52,6 +52,10 @@ int LAGraph_KCore_Decompose
     LG_ASSERT (D != NULL, GrB_NULL_POINTER) ;
     (*D) = NULL ;
 
+#if !LAGRAPH_SUITESPARSE
+    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
+#else
+
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
 
     if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
@@ -108,4 +112,5 @@ int LAGraph_KCore_Decompose
 
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
+#endif
 }

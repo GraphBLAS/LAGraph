@@ -29,6 +29,8 @@
 #include <LAGraph.h>
 #include <LAGraphX.h>
 
+#if LAGRAPH_SUITESPARSE
+
 //****************************************************************************
 // global C arrays used in SelectOp
 GrB_Index *I = NULL, *V = NULL, *F = NULL, *B = NULL, *M = NULL;
@@ -99,6 +101,8 @@ static GrB_Info propagate (GrB_Vector label, GrB_Vector mask,
     GRB_TRY (GrB_free (&t));
     return GrB_SUCCESS;
 }
+
+#endif
 
 //****************************************************************************
 //****************************************************************************

@@ -52,6 +52,7 @@ const matrix_info files [ ] =
 void test_KCoreDecompose (void)
 {
     LAGraph_Init (msg) ;
+    #if LAGRAPH_SUITESPARSE
 
     for (int k = 0 ; ; k++)
     {
@@ -116,6 +117,7 @@ void test_KCoreDecompose (void)
         OK (LAGraph_Delete (&G, msg)) ;
     }
 
+    #endif
     LAGraph_Finalize (msg) ;
 }
 
@@ -126,6 +128,7 @@ void test_KCoreDecompose (void)
 void test_errors (void)
 {
     LAGraph_Init (msg) ;
+    #if LAGRAPH_SUITESPARSE
 
     snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
     FILE *f = fopen (filename, "r") ;
@@ -175,11 +178,14 @@ void test_errors (void)
     TEST_CHECK (c == NULL) ;
 
     OK (LAGraph_Delete (&G, msg)) ;
+    #endif
     LAGraph_Finalize (msg) ;
 }
 
 TEST_LIST = {
+    #if LAGRAPH_SUITESPARSE
     {"KCoreDecompose", test_KCoreDecompose},
     {"KCoreDecompose_errors", test_errors},
+    #endif
     {NULL, NULL}
 };

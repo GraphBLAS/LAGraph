@@ -330,15 +330,15 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
 )
 {
 
-#if !LAGRAPH_SUITESPARSE
-    LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED, "SuiteSparse required") ;
-#else
-
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
+
+#if !LAGRAPH_SUITESPARSE
+    LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED, "SuiteSparse required") ;
+#else
 
     uint32_t *V32 = NULL ;
     int32_t *ht_key = NULL, *ht_val = NULL ;

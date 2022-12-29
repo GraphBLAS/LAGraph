@@ -128,6 +128,10 @@ int LAGraph_FastGraphletTransform
     GrB_Index nvals ;
     int64_t ntri ;
 
+#if !LAGRAPH_SUITESPARSE
+    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
+#else
+
     A = G->A ;
 
     GrB_Index n ;
@@ -564,4 +568,5 @@ int LAGraph_FastGraphletTransform
     LG_FREE_WORK ;
 
     return (0) ;
+#endif
 }

@@ -119,6 +119,10 @@ int LAGraph_msf
 
     LG_CLEAR_MSG ;
 
+#if !LAGRAPH_SUITESPARSE
+    return (GrB_NOT_IMPLEMENTED) ;
+#else
+
     GrB_Info info;
     GrB_Index n;
     GrB_Matrix S = NULL, T = NULL;
@@ -132,10 +136,6 @@ int LAGraph_msf
 
     GxB_SelectOp s1 = NULL, s2 = NULL;
     if (result == NULL || A == NULL) return (GrB_NULL_POINTER) ;
-
-#if !LAGRAPH_SUITESPARSE
-    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
-#else
 
     GrB_Index ncols ;
     GRB_TRY (GrB_Matrix_nrows (&n, A));

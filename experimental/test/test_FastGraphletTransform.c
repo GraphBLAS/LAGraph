@@ -79,6 +79,8 @@ int64_t A_graphlet_counts [ ] =
 void test_FastGraphletTransform(void)
 {
     LAGraph_Init (msg) ;
+    #if LAGRAPH_SUITESPARSE
+
     GrB_Matrix A = NULL, F_net = NULL ;
     GrB_Index n ;
     bool ok = 1 ;
@@ -160,6 +162,7 @@ void test_FastGraphletTransform(void)
 
     //--------------------------------------------------------------------------
 
+    #endif
     LAGraph_Finalize (msg) ;
 }
 
