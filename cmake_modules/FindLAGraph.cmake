@@ -93,7 +93,7 @@ string(
   ${LAGRAPH_LIBRARY}
   )
 
-set ( LAGRAPH_VERSION "" )
+# set ( LAGRAPH_VERSION "" )
 if ( EXISTS "${LAGRAPH_INCLUDE_DIR}" AND NOT LAGRAPH_VERSION )
     # if the version does not appear in the filename, read the include file
     file ( STRINGS ${LAGRAPH_INCLUDE_DIR}/LAGraph.h LAGRAPH_MAJOR_STR
