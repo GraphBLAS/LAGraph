@@ -93,25 +93,22 @@ string(
   ${LAGRAPH_LIBRARY}
   )
 
-if ( NOT LAGRAPH_VERSION )
-    # if the version does not appear in the filename, read the include file.
-    # The LAGraph.h file includes the following lines:
-    #   #define LAGRAPH_VERSION_MAJOR  1
-    #   #define LAGRAPH_VERSION_MINOR  0
-    #   #define LAGRAPH_VERSION_UPDATE 1
-    file ( STRINGS ${LAGRAPH_INCLUDE_DIR}/LAGraph.h LAGRAPH_VER_MAJOR_STRING
+set ( LAGRAPH_VERSION "" )
+if ( EXISTS "${LAGRAPH_INCLUDE_DIR}" AND NOT LAGRAPH_VERSION )
+    # if the version does not appear in the filename, read the include file
+    file ( STRINGS ${LAGRAPH_INCLUDE_DIR}/LAGraph.h LAGRAPH_MAJOR_STR
         REGEX "define LAGRAPH_VERSION_MAJOR " )
-    file ( STRINGS ${LAGRAPH_INCLUDE_DIR}/LAGraph.h LAGRAPH_VER_MINOR_STRING
+    file ( STRINGS ${LAGRAPH_INCLUDE_DIR}/LAGraph.h LAGRAPH_MINOR_STR
         REGEX "define LAGRAPH_VERSION_MINOR " )
-    file ( STRINGS ${LAGRAPH_INCLUDE_DIR}/LAGraph.h LAGRAPH_VER_UPDATE_STRING
+    file ( STRINGS ${LAGRAPH_INCLUDE_DIR}/LAGraph.h LAGRAPH_PATCH_STR
         REGEX "define LAGRAPH_VERSION_UPDATE " )
-    message ( STATUS "major from LAGraph.h:  ${LAGRAPH_VER_MAJOR_STRING}" )
-    message ( STATUS "minor from LAGraph.h:  ${LAGRAPH_VER_MINOR_STRING}" )
-    message ( STATUS "update from LAGraph.h: ${LAGRAPH_VER_UPDATE_STRING}" )
-    string ( REGEX MATCH "[0-9]+" LAGRAPH_VER_MAJOR ${LAGRAPH_VER_MAJOR_STRING} )
-    string ( REGEX MATCH "[0-9]+" LAGRAPH_VER_MINOR ${LAGRAPH_VER_MINOR_STRING} )
-    string ( REGEX MATCH "[0-9]+" LAGRAPH_VER_UPDATE ${LAGRAPH_VER_UPDATE_STRING} )
-    set ( LAGRAPH_VERSION "${LAGRAPH_VER_MAJOR}.${LAGRAPH_VER_MINOR}.${LAGRAPH_VER_UPDATE}")
+    message ( STATUS "major: ${LAGRAPH_MAJOR_STR}" )
+    message ( STATUS "minor: ${LAGRAPH_MINOR_STR}" )
+    message ( STATUS "patch: ${LAGRAPH_PATCH_STR}" )
+    string ( REGEX MATCH "[0-9]+" LAGRAPH_MAJOR ${LAGRAPH_MAJOR_STR} )
+    string ( REGEX MATCH "[0-9]+" LAGRAPH_MINOR ${LAGRAPH_MINOR_STR} )
+    string ( REGEX MATCH "[0-9]+" LAGRAPH_PATCH ${LAGRAPH_PATCH_STR} )
+    set (LAGRAPH_VERSION "${LAGRAPH_MAJOR}.${LAGRAPH_MINOR}.${LAGRAPH_PATCH}")
 endif ( )
 
 set ( LAGRAPH_LIBRARIES ${LAGRAPH_LIBRARY} )
@@ -137,5 +134,9 @@ if ( LAGRAPH_FOUND )
     message ( STATUS "LAGraph static:: " ${LAGRAPH_STATIC} )
 else ( )
     message ( STATUS "LAGraph not found" )
+    set ( LAGRAPH_INCLUDE_DIR "" )
+    set ( LAGRAPH_LIBRARIES "" )
+    set ( LAGRAPH_LIBRARY "" )
+    set ( LAGRAPH_STATIC "" )
 endif ( )
 
