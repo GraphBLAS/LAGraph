@@ -44,6 +44,12 @@ SET_TARGET_PROPERTIES ( lagraphx_static PROPERTIES
     POSITION_INDEPENDENT_CODE OFF
     SOVERSION ${LAGraph_VERSION_MAJOR}
     C_STANDARD_REQUIRED 11 )
+
+if ( MSVC )
+    set_target_properties ( lagraphx_static PROPERTIES
+        OUTPUT_NAME lagraphx_static )
+endif ( )
+
 set_property ( TARGET lagraphx_static PROPERTY C_STANDARD 11 )
 target_link_libraries ( lagraphx_static PUBLIC lagraph_static ${GRAPHBLAS_LIBRARIES} )
 target_link_directories ( lagraphx_static BEFORE PUBLIC ${CMAKE_SOURCE_DIR}/build )
