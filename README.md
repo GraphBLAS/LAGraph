@@ -1,6 +1,24 @@
 [![Build Status](https://github.com/GraphBLAS/LAGraph/workflows/LAGraph%20CI/badge.svg)](https://github.com/GraphBLAS/LAGraph/actions)
 [![Documentation Status](https://readthedocs.org/projects/lagraph/badge/?version=latest)](https://lagraph.readthedocs.io/en/latest/?badge=latest)
 
+# General
+
+Build against `LucataGraphBLAS`:
+```shell
+cmake -B build_lgb -DGRAPHBLAS_ROOT=/path/to/your/LucataGraphBLAS -DLAGRAPH_VANILLA=1
+cmake --build build_lgb --parallel 16
+```
+
+Build against SuiteSparse's `GraphBLAS`
+```shell
+cmake -B build -DUSING_LUCATAGRAPHBLAS=OFF
+cmake --build build --parallel 16
+```
+
+---
+> Below is the original `LAGraph` documentation
+
+
 # LAGraph
 
 LAGraph is a library plus a test harness for collecting algorithms that

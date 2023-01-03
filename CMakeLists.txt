@@ -120,6 +120,9 @@ message ( STATUS "GraphBLAS_ROOT: ${GraphBLAS_ROOT} $ENV{GraphBLAS_ROOT}" )
 message ( STATUS "GRAPHBLAS_ROOT: ${GRAPHBLAS_ROOT} $ENV{GRAPHBLAS_ROOT}" )
 find_package (GraphBLAS 7.0.1 REQUIRED MODULE)
 
+# Added for LucataGraphBLAS
+set(USING_LUCATAGRAPHBLAS ON CACHE BOOL "Flag for using LucataGraphBLAS (as opposed to GraphBLAS)")
+
 #-------------------------------------------------------------------------------
 # determine what user threading model to use
 #-------------------------------------------------------------------------------
