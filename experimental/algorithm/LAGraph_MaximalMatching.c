@@ -15,12 +15,6 @@
 
 // #define dbg
 
-#define F_UNARY(f)  ((void (*)(void *, const void *)) f)
-#define F_BINARY(f) ((void (*)(void *, const void *, const void *)) f)
-
-// void one_binop_func (uint64_t *out, const uint64_t *in1, const uint64_t *in2) { (*out) = 1 ; } 
-// void sub_two_unop_func (uint64_t *out, const uint64_t *in) { (*out) = ((*in) - 2); }
-
 #define LG_FREE_WORK                        \
 {                                           \
     GrB_free(&E_t) ;                        \
@@ -119,7 +113,8 @@ int LAGraph_MaximalMatching
     // we care about relative degree
     GRB_TRY (GrB_mxv (degree, NULL, NULL, LAGraph_plus_second_uint64, E_t, node_degree, NULL)) ;
 
-    // TODO: fix semirings and monoids to match type of E. For now, using fp64 (most general type).
+    // TODO: fix structure types, semirings, monoids to match underlying type of A. For now, casting everything to FP64 (catch all type)
+    // this mainly requires annoying changes in LAGraph_A_to_E to accommodate several types
     GRB_TRY (GrB_reduce (weight, NULL, NULL, GrB_MAX_MONOID_FP64, E_t, NULL)) ;
 
     while (ncandidates > 0) {
@@ -131,9 +126,7 @@ int LAGraph_MaximalMatching
 
         } else {
             // first get weights of edges in vector
-            // assign random scores, but somehow want to weigh by edge weight
-            // or maybe, a combination of edge weight + degree?
-            // or, multiply scores by edge weight (using eWiseMult)
+            // multiply scores by edge weight (using eWiseMult)
             // for light matching, can multiply scores by 1 / (edge weight)
             if (matching_type == 1) {
                 // heavy
@@ -171,7 +164,7 @@ int LAGraph_MaximalMatching
         GrB_Index max_degree ; 
         GRB_TRY (GrB_reduce (&max_degree, NULL, GrB_MAX_MONOID_UINT64, new_members_node_degree, NULL)) ;
 
-        if (max_degree >= 2) {
+        if (max_degree > 1) {
             nfailures++ ;
             if (nfailures > MAX_FAILURES) {
                 #ifdef dbg
@@ -201,13 +194,13 @@ int LAGraph_MaximalMatching
             LAGRAPH_TRY (LAGraph_Vector_Print (candidates, LAGraph_SHORT, stdout, msg)) ;
         #endif
         GrB_Index last_ncandidates = ncandidates ;
-        // do something about stalling?
 
         GrB_Vector_nvals(&ncandidates, candidates) ;
-
+        
         // advance seed vector
         LG_TRY (LAGraph_Random_Next (Seed, msg)) ;
     }
+
     (*matching) = result ;
 
     LG_FREE_WORK ;

@@ -879,7 +879,8 @@ int LAGraph_Coarsen_Matching
     LAGraph_Graph G,
     int matching_type,     // 0, 1, or 2, refer to above
     int preserve_mapping,  // preserve initial namespace of nodes
-    int nlevels,
+    int combine_weights,   // whether to sum edge weights or just keep the pattern
+    int nlevels,           // #of coarsening levels
     uint64_t seed,         // used for matching
     char *msg
 ) ;

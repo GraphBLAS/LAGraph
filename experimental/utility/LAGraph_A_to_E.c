@@ -20,16 +20,15 @@
 int LAGraph_A_to_E
 (
     GrB_Matrix *result, // incidence
-    LAGraph_Graph G, // must be symmetric, no self-loops
+    LAGraph_Graph G, // must be undirected, no self-loops
     char *msg
 )
 {
     // TODO: What are the proper error codes?
     LG_ASSERT_MSG (
-        G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
-        (G->kind == LAGraph_ADJACENCY_DIRECTED && G->is_symmetric_structure == LAGraph_TRUE), 
+        G->kind == LAGraph_ADJACENCY_UNDIRECTED,
         -105, 
-        "G->A must be symmetric"
+        "G must be undirected"
     ) ;
 
     LG_ASSERT_MSG (G->nself_edges == 0, -107, "G->nself_edges must be zero") ;
@@ -108,6 +107,8 @@ int LAGraph_A_to_E
     LAGraph_Free ((void**)(&E_col_indices), msg) ;
     LAGraph_Free ((void**)(&E_values), msg) ;
 
-    (*result) = E ;
+    GRB_TRY (GrB_Matrix_dup (result, E)) ;
+    GRB_TRY (GrB_free (&E)) ;
+
     return (GrB_SUCCESS) ;
 }
