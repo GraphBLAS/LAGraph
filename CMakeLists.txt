@@ -2,10 +2,14 @@
 # LAGraph/CMakeLists.txt:  cmake script for LAGraph
 #-------------------------------------------------------------------------------
 
-# LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+# LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 # SPDX-License-Identifier: BSD-2-Clause
-# See additional acknowledgments in the LICENSE file,
-# or contact permission@sei.cmu.edu for the full terms.
+#
+# For additional details (including references to third party source code and
+# other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+# Contributors.txt for a full list of contributors. Created, in part, with
+# funding and support from the U.S. Government (see Acknowledgments.txt file).
+# DM22-0790
 
 #-------------------------------------------------------------------------------
 
@@ -45,10 +49,10 @@ cmake_policy ( SET CMP0048 NEW )
 set ( CMAKE_MACOSX_RPATH TRUE )
 
 # version of LAGraph
-set ( LAGraph_DATE "Sept 20, 2022" )
+set ( LAGraph_DATE "Dec 28, 2022" )
 set ( LAGraph_VERSION_MAJOR 1 )
 set ( LAGraph_VERSION_MINOR 0 )
-set ( LAGraph_VERSION_SUB   0 )
+set ( LAGraph_VERSION_SUB   1 )
 
 project ( lagraph
           VERSION "${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}" )
@@ -112,7 +116,8 @@ endif ( )
 #     GRAPHBLAS_ROOT=<path> cmake ..
 # or uncomment the next line:
 # set ( ENV{GRAPHBLAS_ROOT} ${CMAKE_SOURCE_DIR}/../GraphBLAS )
-message ( STATUS "GraphBLAS root:              " ${GRAPHBLAS_ROOT} )
+message ( STATUS "GraphBLAS_ROOT: ${GraphBLAS_ROOT} $ENV{GraphBLAS_ROOT}" )
+message ( STATUS "GRAPHBLAS_ROOT: ${GRAPHBLAS_ROOT} $ENV{GRAPHBLAS_ROOT}" )
 find_package (GraphBLAS 7.0.1 REQUIRED MODULE)
 
 #-------------------------------------------------------------------------------

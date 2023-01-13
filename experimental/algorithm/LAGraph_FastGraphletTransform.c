@@ -2,8 +2,15 @@
 // LAGraph_FastGraphletTransform: fast graphlet transform
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
+
 // Contributed by Tanner Hoke, Texas A&M University, ...
 
 //------------------------------------------------------------------------------
@@ -62,7 +69,9 @@
 
 #include "LG_internal.h"
 #include "LAGraphX.h"
+#ifdef _OPENMP
 #include <omp.h>
+#endif
 
 void sub_one_mult (int64_t *z, const int64_t *x) { (*z) = (*x) * ((*x)-1) ; }
 
@@ -118,6 +127,10 @@ int LAGraph_FastGraphletTransform
 
     GrB_Index nvals ;
     int64_t ntri ;
+
+#if !LAGRAPH_SUITESPARSE
+    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
+#else
 
     A = G->A ;
 
@@ -212,7 +225,7 @@ int LAGraph_FastGraphletTransform
     // p_1_minus_one = p_1 - 1
     GRB_TRY (GrB_apply (p_1_minus_one, NULL, NULL, GrB_MINUS_INT64, d_1, (int64_t) 1, NULL)) ;
 
-    // d_6 = hadamard(d_2, p_1-1) 
+    // d_6 = hadamard(d_2, p_1-1)
     GRB_TRY (GrB_eWiseMult (d_6, NULL, NULL, GrB_TIMES_INT64, d_2, p_1_minus_one, NULL)) ;
 
     // d_6 -= 2c_3
@@ -277,8 +290,8 @@ int LAGraph_FastGraphletTransform
 
     // D_1 = diag(d_1)
     GRB_TRY (GxB_Matrix_diag (D_1, d_1, (int64_t) 0, NULL)) ;
-    
-    GRB_TRY (GrB_Matrix_nvals (&nvals, A)); 
+
+    GRB_TRY (GrB_Matrix_nvals (&nvals, A));
 
     const GrB_Index entries_per_tile = 1000;
     GrB_Index ntiles = (nvals + entries_per_tile - 1) / entries_per_tile ;
@@ -292,7 +305,7 @@ int LAGraph_FastGraphletTransform
     for (GrB_Index i = 0; i < n; ++i) {
         int64_t deg ;
         GRB_TRY (GrB_Vector_extractElement (&deg, d_1, i)) ;
-         
+
         if (i == n - 1 || (tot_deg / entries_per_tile != (tot_deg + deg) / entries_per_tile)) {
             Tile_nrows [tile_cnt++] = i - last_row ;
             last_row = i ;
@@ -318,7 +331,11 @@ int LAGraph_FastGraphletTransform
         }                               \
     }
 
-    GxB_set (GxB_NTHREADS, 1) ;
+//  GxB_set (GxB_NTHREADS, 1) ;
+    int save_nthreads_outer, save_nthreads_inner ;
+    LG_TRY (LAGraph_GetNumThreads (&save_nthreads_outer, &save_nthreads_inner, msg)) ;
+    LG_TRY (LAGraph_SetNumThreads (1, 1, msg)) ;
+
     #pragma omp parallel for num_threads(omp_get_max_threads()) schedule(dynamic,1)
     for (int i = 0; i < tile_cnt; ++i) {
         GrB_Matrix A_i = NULL, e = NULL ;
@@ -340,7 +357,8 @@ int LAGraph_FastGraphletTransform
         GrB_free (&e) ;
 
     }
-    GxB_set (GxB_NTHREADS, omp_get_max_threads()) ;
+//  GxB_set (GxB_NTHREADS, omp_get_max_threads()) ;
+    LG_TRY (LAGraph_SetNumThreads (save_nthreads_outer, save_nthreads_inner, msg)) ;
 
     GRB_TRY (GxB_Matrix_concat (C_4, C_Tiles, tile_cnt, 1, NULL)) ;
 
@@ -550,5 +568,5 @@ int LAGraph_FastGraphletTransform
     LG_FREE_WORK ;
 
     return (0) ;
+#endif
 }
-

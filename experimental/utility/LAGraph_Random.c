@@ -2,10 +2,14 @@
 // LAGraph_Random: generate a random vector (of any sparsity structure)
 //------------------------------------------------------------------------------
 
-// SuiteSparse:GraphBLAS, Timothy A. Davis, (c) 2017-2021, All Rights Reserved.
-// SPDX-License-Identifier: Apache-2.0
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Timothy A. Davis, Texas A&M University
 
@@ -27,7 +31,7 @@
 #define LG_RAND_NEXT(seed) ((seed) * 1103515245 + 12345)
 
 // extract a random 15-bit value from a seed (no longer used)
-// #define LG_RAND_15_MAX 32767 
+// #define LG_RAND_15_MAX 32767
 // #define LG_RAND_15(seed) (((seed)/65536) % (LG_RAND_15_MAX + 1))
 
 //------------------------------------------------------------------------------
@@ -139,7 +143,7 @@ int LAGraph_Random_Seed     // construct a random seed vector
     {
         // Set all Seed values to 1, to break the random seed vector.
         // This is just for testing, to test algorithms that need to handle
-        // extreme cases when the random number generator is non-random. 
+        // extreme cases when the random number generator is non-random.
         GRB_TRY (GrB_Vector_apply_BinaryOp2nd_UINT64 (Seed, NULL, NULL,
             GrB_ONEB_UINT64, Seed, 0, NULL)) ;
     }
@@ -170,4 +174,3 @@ int LAGraph_Random_Next     // advance to next random vector
     GRB_TRY (GrB_Vector_apply (Seed, NULL, NULL, LG_rand_next_op, Seed, NULL)) ;
     return (GrB_SUCCESS) ;
 }
-

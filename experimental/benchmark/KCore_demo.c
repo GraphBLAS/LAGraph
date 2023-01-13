@@ -2,8 +2,14 @@
 // LAGraph/experimental/benchmark/KCore_demo.c: benchmark for kcore (single k-core)
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2022 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Pranav Konduri, Texas A&M University
 
@@ -44,13 +50,13 @@ int main (int argc, char **argv)
     GrB_Matrix A = NULL ;
     GrB_Matrix D = NULL ;
     LAGraph_Graph G = NULL ;
-    
+
 
     // start GraphBLAS and LAGraph
     bool burble = false ;
     demo_init (burble) ;
 
-    int ntrials = 3 ; 
+    int ntrials = 3 ;
     printf ("# of trials: %d\n", ntrials) ;
 
     int nt = NTHREAD_LIST ;
@@ -80,7 +86,7 @@ int main (int argc, char **argv)
     //--------------------------------------------------------------------------
     // read in the graph
     //--------------------------------------------------------------------------
-    
+
     char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
     int k = (argc > 2) ? atoi(argv [2]) : 0;
     LAGRAPH_TRY (readproblem (&G, NULL,
@@ -140,4 +146,3 @@ int main (int argc, char **argv)
     LAGRAPH_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
 }
-

@@ -2,10 +2,14 @@
 // LAGraph_MaximalIndependentSet: maximal independent set, with constraints
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Modified from the GraphBLAS C API Specification, by Aydin Buluc, Timothy
 // Mattson, Scott McMillan, Jose' Moreira, Carl Yang.  Based on "GraphBLAS
@@ -34,7 +38,7 @@
 #include "LG_internal.h"
 #include "LAGraphX.h"
 
-// A variant of Luby's randomized algorithm [Luby 1985]. 
+// A variant of Luby's randomized algorithm [Luby 1985].
 
 // Given a numeric n x n adjacency matrix A of an unweighted and undirected
 // graph (where the value true represents an edge), compute a maximal set of
@@ -128,7 +132,7 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     GrB_Index nonsingletons = 0 ;
     GRB_TRY (GrB_Vector_nvals (&nonsingletons, degree)) ;
     if (nonsingletons == n)
-    { 
+    {
         if (ignore_node == NULL)
         {
             // all nodes have degree 1 or more; all nodes are candidates
@@ -274,7 +278,7 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
         GRB_TRY (GrB_assign (candidates, new_neighbors, NULL, empty,
             GrB_ALL, n, GrB_DESC_S)) ;
 
-        // sparsify the random number seeds (just keep it for each candidate) 
+        // sparsify the random number seeds (just keep it for each candidate)
         // Seed{candidates,replace} = Seed
         GRB_TRY (GrB_assign (Seed, candidates, NULL, Seed, GrB_ALL, n,
             GrB_DESC_RS)) ;
@@ -308,4 +312,3 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }
-

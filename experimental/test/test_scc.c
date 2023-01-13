@@ -2,10 +2,14 @@
 // LAGraph/experimental/test/test_scc.c: tests for Strongly Connected Components
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Timothy A. Davis, Texas A&M University
 
@@ -94,6 +98,7 @@ const matrix_info files [ ] =
 void test_scc (void)
 {
     LAGraph_Init (msg) ;
+    #if LAGRAPH_SUITESPARSE
 
     for (int k = 0 ; ; k++)
     {
@@ -144,6 +149,9 @@ void test_scc (void)
         OK (LAGraph_Delete (&G, msg)) ;
     }
 
+    #else
+    printf ("test skipped\n") ;
+    #endif
     LAGraph_Finalize (msg) ;
 }
 
@@ -154,6 +162,7 @@ void test_scc (void)
 void test_errors (void)
 {
     LAGraph_Init (msg) ;
+    #if LAGRAPH_SUITESPARSE
 
     GrB_Vector c = NULL ;
     GrB_Matrix A = NULL ;
@@ -170,6 +179,9 @@ void test_errors (void)
 
     OK (GrB_free (&c)) ;
     OK (GrB_free (&A)) ;
+    #else
+    printf ("test skipped\n") ;
+    #endif
     LAGraph_Finalize (msg) ;
 }
 
@@ -180,4 +192,3 @@ TEST_LIST = {
     {"scc_errors", test_errors},
     {NULL, NULL}
 };
-

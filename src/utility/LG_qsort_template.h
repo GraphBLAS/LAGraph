@@ -2,10 +2,14 @@
 // LG_qsort_template: quicksort of a K-by-n array
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Timothy A. Davis, Texas A&M University
 
@@ -75,7 +79,7 @@ static inline int64_t LG_partition
 
         // However, if the two sides have met, the partition is finished.
         if (left >= right)
-        { 
+        {
             // A has been partitioned into A [0:right] and A [right+1:n-1].
             // k = right+1, so A is split into A [0:k-1] and A [k:n-1].
             return (right + 1) ;
@@ -108,14 +112,14 @@ static void LG_quicksort    // sort A [0:n-1]
         for (int64_t k = 1 ; k < n ; k++)
         {
             for (int64_t j = k ; j > 0 && LG_lt (A, j, A, j-1) ; j--)
-            { 
+            {
                 // swap A [j-1] and A [j]
                 LG_swap (A, j-1, j) ;
             }
         }
     }
     else
-    { 
+    {
         // partition A [0:n-1] into A [0:k-1] and A [k:n-1]
         int64_t k = LG_partition (LG_arg (A), n, seed, tx) ;
 
@@ -124,4 +128,3 @@ static void LG_quicksort    // sort A [0:n-1]
         LG_quicksort (LG_arg_offset (A, k), n-k, seed, tx) ; // sort A [k+1:n-1]
     }
 }
-

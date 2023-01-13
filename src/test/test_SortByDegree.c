@@ -2,10 +2,14 @@
 // LAGraph/src/test/test_SortByDegree  test LAGr_SortByDegree
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Timothy A. Davis, Texas A&M University
 
@@ -53,31 +57,31 @@ void teardown (void)
 
 const char *files [ ] =
 {
-    "A.mtx", 
-    "LFAT5.mtx", 
-    "cover.mtx", 
-    "full.mtx", 
-    "full_symmetric.mtx", 
-    "karate.mtx", 
-    "ldbc-cdlp-directed-example.mtx", 
-    "ldbc-cdlp-undirected-example.mtx", 
-    "ldbc-directed-example-bool.mtx", 
-    "ldbc-directed-example-unweighted.mtx", 
-    "ldbc-directed-example.mtx", 
-    "ldbc-undirected-example-bool.mtx", 
-    "ldbc-undirected-example-unweighted.mtx", 
-    "ldbc-undirected-example.mtx", 
-    "ldbc-wcc-example.mtx", 
-    "matrix_int16.mtx", 
-    "msf1.mtx", 
-    "msf2.mtx", 
-    "msf3.mtx", 
-    "structure.mtx", 
-    "sample.mtx", 
-    "sample2.mtx", 
-    "skew_fp32.mtx", 
-    "tree-example.mtx", 
-    "west0067.mtx", 
+    "A.mtx",
+    "LFAT5.mtx",
+    "cover.mtx",
+    "full.mtx",
+    "full_symmetric.mtx",
+    "karate.mtx",
+    "ldbc-cdlp-directed-example.mtx",
+    "ldbc-cdlp-undirected-example.mtx",
+    "ldbc-directed-example-bool.mtx",
+    "ldbc-directed-example-unweighted.mtx",
+    "ldbc-directed-example.mtx",
+    "ldbc-undirected-example-bool.mtx",
+    "ldbc-undirected-example-unweighted.mtx",
+    "ldbc-undirected-example.mtx",
+    "ldbc-wcc-example.mtx",
+    "matrix_int16.mtx",
+    "msf1.mtx",
+    "msf2.mtx",
+    "msf3.mtx",
+    "structure.mtx",
+    "sample.mtx",
+    "sample2.mtx",
+    "skew_fp32.mtx",
+    "tree-example.mtx",
+    "west0067.mtx",
     "",
 } ;
 
@@ -428,4 +432,3 @@ TEST_LIST =
     #endif
     { NULL, NULL }
 } ;
-

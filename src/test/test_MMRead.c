@@ -2,10 +2,14 @@
 // LAGraph/src/test/test_MMRead.c:  test LAGraph_MMRead and LAGraph_MMWrite
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Timothy A. Davis, Texas A&M University
 
@@ -44,7 +48,7 @@ typedef struct
 }
 matrix_info ;
 
-const matrix_info files [ ] = 
+const matrix_info files [ ] =
 {
     // nrows ncols nvals type         name
     {    7,    7,    30, "bool",    "A.mtx" },
@@ -327,6 +331,7 @@ const mangled_matrix_info mangled_files [ ] =
     LAGRAPH_IO_ERROR, "mangled_skew.mtx",   // unsigned skew invalid
     GrB_NOT_IMPLEMENTED, "mangled15.mtx",   // complex not supported
     GrB_NOT_IMPLEMENTED, "mangled16.mtx",   // complex not supported
+    LAGRAPH_IO_ERROR, "mangled_format.mtx", // "array pattern" invalid
     0, "",
 } ;
 
@@ -691,6 +696,73 @@ void test_MMReadWrite_brutal (void)
 }
 #endif
 
+//------------------------------------------------------------------------------
+// test_array_pattern
+//------------------------------------------------------------------------------
+
+void test_array_pattern ( )
+{
+
+    //--------------------------------------------------------------------------
+    // start up the test
+    //--------------------------------------------------------------------------
+
+    OK (LG_brutal_setup (msg)) ;
+
+    //--------------------------------------------------------------------------
+    // construct a dense 3-by-3 matrix of all 1's (iso-valued)
+    //--------------------------------------------------------------------------
+
+    OK (GrB_Matrix_new (&A, GrB_INT64, 3, 3)) ;
+    OK (GrB_Matrix_assign_INT64 (A, NULL, NULL, 1, GrB_ALL, 3, GrB_ALL, 3,
+        NULL)) ;
+    OK (GrB_Matrix_wait (A, GrB_MATERIALIZE)) ;
+    printf ("\nA matrix:\n") ;
+    OK (LAGraph_Matrix_Print (A, LAGraph_COMPLETE, stdout, msg)) ;
+
+    //--------------------------------------------------------------------------
+    // write it to a temporary file
+    //--------------------------------------------------------------------------
+
+    FILE *f = tmpfile ( ) ; // fopen ("/tmp/mine.mtx", "w") ;
+    OK (LAGraph_MMWrite (A, f, NULL, msg)) ;
+    TEST_MSG ("Failed to write matrix to a temp file\n") ;
+//  OK (fclose (f)) ;
+
+    //--------------------------------------------------------------------------
+    // load it back in again
+    //--------------------------------------------------------------------------
+
+    rewind (f) ;
+//  f = fopen ("/tmp/mine.mtx", "r") ;
+    OK (LAGraph_MMRead (&B, f, msg)) ;
+    TEST_MSG ("Failed to load matrix from a temp file\n") ;
+    OK (fclose (f)) ;       // close and delete the temporary file
+
+    printf ("\nB matrix:\n") ;
+    OK (LAGraph_Matrix_Print (B, LAGraph_COMPLETE, stdout, msg)) ;
+
+    //--------------------------------------------------------------------------
+    // ensure A and B are the same
+    //--------------------------------------------------------------------------
+
+    OK (LAGraph_Matrix_TypeName (btype_name, B, msg)) ;
+    TEST_CHECK (MATCHNAME ("int64_t", btype_name)) ;
+    bool ok ;
+    OK (LAGraph_Matrix_IsEqual (&ok, A, B, msg)) ;
+    TEST_CHECK (ok) ;
+    TEST_MSG ("Failed test for equality, dense 3-by-3\n") ;
+
+    //--------------------------------------------------------------------------
+    // finish the test
+    //--------------------------------------------------------------------------
+
+    OK (GrB_free (&A)) ;
+    OK (GrB_free (&B)) ;
+
+    OK (LG_brutal_teardown (msg)) ;
+}
+
 //-----------------------------------------------------------------------------
 // TEST_LIST: the list of tasks for this entire test
 //-----------------------------------------------------------------------------
@@ -706,6 +778,6 @@ TEST_LIST =
     #if LAGRAPH_SUITESPARSE
     { "MMReadWrite_brutal", test_MMReadWrite_brutal },
     #endif
+    { "array_pattern", test_array_pattern },
     { NULL, NULL }
 } ;
-

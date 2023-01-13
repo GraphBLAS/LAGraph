@@ -2,10 +2,14 @@
 // LG_heap: a Heap data structure and its operations
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Timothy A. Davis, Texas A&M University
 
@@ -177,7 +181,7 @@ static inline void LG_heapify
     ASSERT (Heap != NULL && Iheap != NULL) ;
 
     if (p > nheap / 2 || nheap <= 1)
-    { 
+    {
         // nothing to do.  p has no children in the Heap.
         // Also safely do nothing if p is outside the Heap (p > nheap).
         return ;
@@ -221,7 +225,7 @@ static inline void LG_heapify
             {
                 // left node has a smaller key than the right node
                 if (e.key > eleft.key)
-                { 
+                {
                     // key of element e is bigger than the left child of p, so
                     // bubble up the left child into the hole at Heap [p] and
                     // continue down the left child.  The hole moves to node
@@ -231,7 +235,7 @@ static inline void LG_heapify
                     p = pleft ;
                 }
                 else
-                { 
+                {
                     // done!  key of element e is is smaller than the left
                     // child of p; place e in the hole at p, and we're done.
                     Heap [p] = e ;
@@ -243,7 +247,7 @@ static inline void LG_heapify
             {
                 // right node has a smaller key than the left node
                 if (e.key > eright.key)
-                { 
+                {
                     // key of element e is bigger than the right child of p, so
                     // bubble up the right child into hole at Heap [p] and
                     // continue down the right child.  The hole moves to node
@@ -253,7 +257,7 @@ static inline void LG_heapify
                     p = pright ;
                 }
                 else
-                { 
+                {
                     // done!  key of element e is is smaller than the right
                     // child of p; place e in the hole at p, and we're done.
                     Heap [p] = e ;
@@ -274,7 +278,7 @@ static inline void LG_heapify
                 // left child is in the Heap; check its key
                 LG_Element eleft = Heap [pleft] ;
                 if (e.key > eleft.key)
-                { 
+                {
                     // key of element e is bigger than the left child of p, so
                     // bubble up the left child into the hole at Heap [p] and
                     // continue down the left child.  The hole moves to node
@@ -329,7 +333,7 @@ static inline void LG_heap_build
     //--------------------------------------------------------------------------
 
     for (int64_t p = nheap / 2 ; p >= 1 ; p--)
-    { 
+    {
         LG_heapify (p, Heap, Iheap, n, nheap) ;
     }
 
@@ -354,7 +358,7 @@ static inline void LG_heap_delete
     int64_t *restrict nheap         // the number of nodes in the Heap;
                                     // decremented on output
 )
-{ 
+{
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -397,7 +401,7 @@ static inline void LG_heap_decrease_key
     ASSERT (p >= 1 && p < nheap) ;
     ASSERT (new_key < Heap [p].key) ;
 
-//  printf ("Decreasing Heap [%ld] = name: %ld key: from %ld to %ld\n", 
+//  printf ("Decreasing Heap [%ld] = name: %ld key: from %ld to %ld\n",
 //      p, Heap [p].name, Heap [p].key, new_key) ;
 
     Heap [p].key = new_key ;
@@ -423,4 +427,3 @@ static inline void LG_heap_decrease_key
 }
 
 #endif
-

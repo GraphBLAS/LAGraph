@@ -2,10 +2,14 @@
 // LAGraph/src/test/test_DeleteCached.c:  test LAGraph_DeleteCached
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Timothy A. Davis, Texas A&M University
 
@@ -174,7 +178,7 @@ void test_del_brutal (void)
             TEST_CHECK (G->out_degree == NULL) ;
             TEST_CHECK (G->in_degree == NULL) ;
         }
-    
+
         LG_BRUTAL (LAGraph_Delete (&G, msg)) ;
         LG_BRUTAL (LAGraph_DeleteCached (NULL, msg)) ;
     }
@@ -190,7 +194,8 @@ void test_del_brutal (void)
 TEST_LIST =
 {
     { "test_DeleteCached", test_DeleteCached },
+    #if LAGRAPH_SUITESPARSE
     { "test_DeleteCached_brutal", test_del_brutal },
+    #endif
     { NULL, NULL }
 } ;
-

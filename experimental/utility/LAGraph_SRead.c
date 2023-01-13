@@ -2,10 +2,14 @@
 // LAGraph_SRead: read a sequence of serialized objects from a file
 //------------------------------------------------------------------------------
 
-// SuiteSparse:GraphBLAS, Timothy A. Davis, (c) 2017-2021, All Rights Reserved.
-// SPDX-License-Identifier: Apache-2.0
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Timothy A. Davis, Texas A&M University
 
@@ -131,7 +135,7 @@ int LAGraph_SRead   // read a set of matrices from a *.lagraph file
     LAGRAPH_TRY (LAGraph_Malloc ((void **) &json_string, s, sizeof (char),
         msg)) ;
     while (true)
-    { 
+    {
         if (k == s)
         {
             // json_string is full; double its size
@@ -181,7 +185,7 @@ int LAGraph_SRead   // read a set of matrices from a *.lagraph file
              LAGRAPH_VERSION_UPDATE)) ;
 
     //--------------------------------------------------------------------------
-    // check GraphBLAS library name and version 
+    // check GraphBLAS library name and version
     //--------------------------------------------------------------------------
 
     o = o->next ;
@@ -368,4 +372,3 @@ int LAGraph_SRead   // read a set of matrices from a *.lagraph file
     (*ncontents_handle) = ncontents ;
     return (GrB_SUCCESS) ;
 }
-
