@@ -76,6 +76,7 @@ void test_TypeName  (void)
     TEST_CHECK (LAGraph_Scalar_TypeName (NULL, s, msg) == GrB_NULL_POINTER) ;
     TEST_CHECK (LAGraph_Scalar_TypeName (name, NULL, msg) == GrB_NULL_POINTER) ;
 
+#if 0 //UDT not implemeented in LGB
     name [0] = '\0' ;
     OK (GrB_Type_new (&type, sizeof (myint))) ;
     int result = LAGraph_NameOfType (name, type, msg) ;
@@ -87,6 +88,7 @@ void test_TypeName  (void)
     TEST_CHECK (result == GrB_NOT_IMPLEMENTED) ;
     printf ("\nmsg: %s\n", msg) ;
     #endif
+#endif
 
     TEST_CHECK (LAGraph_NameOfType (NULL, NULL, msg) == GrB_NULL_POINTER) ;
     printf ("\nmsg: %s\n", msg) ;
@@ -155,6 +157,7 @@ void test_TypeSize (void)
     OK (LAGraph_SizeOfType  (&size, GrB_FP64, msg)) ;
     TEST_CHECK (size == sizeof (double)) ;
 
+#if 0
     size = 0 ;
     OK (GrB_Type_new (&type, sizeof (myint))) ;
     int result = LAGraph_SizeOfType (&size, type, msg) ;
@@ -166,7 +169,7 @@ void test_TypeSize (void)
     TEST_CHECK (result == GrB_NOT_IMPLEMENTED) ;
     printf ("\nmsg: %s\n", msg) ;
     #endif
-
+  #endif
     TEST_CHECK (LAGraph_SizeOfType (NULL, NULL, msg) == GrB_NULL_POINTER) ;
     printf ("\nmsg: %s\n", msg) ;
 

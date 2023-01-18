@@ -17,6 +17,8 @@
 
 #include "LG_internal.h"
 
+extern bool LG_init_has_been_called;
+
 int LAGraph_Finalize (char *msg)
 {
 
@@ -25,6 +27,8 @@ int LAGraph_Finalize (char *msg)
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
+    
+    LG_init_has_been_called = false;
 
     //--------------------------------------------------------------------------
     // free global objects
