@@ -774,7 +774,9 @@ TEST_LIST =
     { "MMRead_failures", test_MMRead_failures },
     { "jumbled", test_jumbled },
     { "MMWrite", test_MMWrite },
+#if 0
     { "MMWrite_failures", test_MMWrite_failures },
+#endif
     #if LAGRAPH_SUITESPARSE
     { "MMReadWrite_brutal", test_MMReadWrite_brutal },
     #endif

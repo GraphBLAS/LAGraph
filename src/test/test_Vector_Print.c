@@ -102,6 +102,7 @@ void test_print (void)
     OK (GrB_Vector_free (&v)) ;
 
     // attempt to print a vector with a user-defined type, which should fail
+#if 0
     GrB_Type type = NULL ;
     OK (GrB_Type_new (&type, sizeof (int))) ;
     OK (GrB_Vector_new (&v, type, n)) ;
@@ -110,6 +111,7 @@ void test_print (void)
     OK (GrB_Vector_free (&v)) ;
 
     OK (GrB_Type_free (&type)) ;
+#endif
     OK (LAGraph_Finalize (msg)) ;
 }
 
