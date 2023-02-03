@@ -1,4 +1,5 @@
 *.txt
 *.mtx
 gen_bipartite
+gen_general
 verify

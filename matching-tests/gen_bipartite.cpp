@@ -7,13 +7,55 @@
 // #define dbg
 
 using namespace std;
+using ll = long long;
 
-const int INF = 1e9;
-int NUM_NODES;
-int SPARSE_FACTOR = 200; // increase this for sparser graphs. Expected #of edges is (n * n) / SPARSE_FACTOR
+const ll INF = 1e18;
 
-const string HEADER = "%%MatrixMarket matrix coordinate pattern symmetric\n%%GraphBLAS type bool";
+const string HEADER = "%%MatrixMarket matrix coordinate integer symmetric\n%%GraphBLAS type uint32_t";
 
+vector<vector<ll>> cost;
+int n, m;
+
+/*
+Credits: Andrey Lopatin (https://zafar.cc/2017/7/19/hungarian-algorithm/)
+*/
+void hungarian(ll &C) {
+    vector<ll> u (n+1), v (m+1), p (m+1), way (m+1);
+    vector<vector<ll>> A = cost;
+    for (int i=1; i<=n; ++i) {
+        p[0] = i;
+        int j0 = 0;
+        vector<ll> minv (m+1, INF);
+        vector<char> used (m+1, false);
+        do {
+            used[j0] = true;
+            int i0 = p[j0],  j1;
+            ll delta = INF;
+            for (int j=1; j<=m; ++j)
+                if (!used[j]) {
+                    ll cur = A[i0][j]-u[i0]-v[j];
+                    if (cur < minv[j])
+                        minv[j] = cur,  way[j] = j0;
+                    if (minv[j] < delta)
+                        delta = minv[j],  j1 = j;
+                }
+            for (int j=0; j<=m; ++j)
+                if (used[j])
+                    u[p[j]] += delta,  v[j] -= delta;
+                else
+                    minv[j] -= delta;
+            j0 = j1;
+        } while (p[j0] != 0);
+        do {
+            int j1 = way[j0];
+            p[j0] = p[j1];
+            j0 = j1;
+        } while (j0);
+    }
+    C = -v[0];
+}
+
+// ***
 vector<vector<int>> adj;
 vector<vector<int>> capacity;
 
@@ -73,40 +115,62 @@ int maxflow(int s, int t, int n) {
 
     return flow;
 }
+// ***
 
 int main(int argc, char **argv){
-    NUM_NODES = atoi(argv[1]);
-    SPARSE_FACTOR = atoi(argv[2]);
+    int num_nodes = atoi(argv[1]);
+    int sparse_factor = atoi(argv[2]);
+    // bool weighted = atoi(argv[3]);
+    bool weighted = 0;
 
     random_device rd;
     mt19937 gen(rd());
-    uniform_int_distribution<int> distr(1, 2 * SPARSE_FACTOR);
+    uniform_int_distribution<int> distr(1, 2 * sparse_factor);
+    uniform_int_distribution<int> weight_distr(1, 1e9);
 
     ofstream graph_out("data.mtx");
-
-    int n = NUM_NODES / 2;
-    int m = NUM_NODES / 2;   
+    assert(num_nodes % 2 == 0);
+    assert(num_nodes <= 1e3);
+    n = m = num_nodes / 2;
     // cout << n << " " << m << endl;
+    // ***
     adj.resize(n + m + 2);
     capacity.resize(n + m + 2);
     for(int i = 0; i < n + m + 2; i++){
         capacity[i].resize(n + m + 2);
         fill(capacity[i].begin(), capacity[i].end(), 0);
     }
-
-    vector<pair<int, int>> edges;
+    // ***
+    cost.resize(n + 1);
+    for(int i = 1; i <= n; i++){
+        cost[i].resize(m + 1);
+    }
+    vector<vector<int>> edges;
+    // ***
+    vector<pair<int, int>> edges2;
+    // ***
     for(int i = 1; i <= n; i++){
         for(int j = 1; j <= m; j++){
-            int choose = distr(gen) % SPARSE_FACTOR;
+            int choose = distr(gen) % sparse_factor;
+            int weight = weighted ? weight_distr(gen) : 1;
             if(choose == 0){
                 // add edge
+                // one entry in the cost matrix (Hungarian method)
+                cost[i][j] = -weight;
+                edges.pb(vector<int> {i, j + n, weight});
+                // ***
                 adj[i].pb(j + n);
                 adj[j + n].pb(i);
                 capacity[i][j + n] = 1;
-                edges.pb({i, j + n});
+                edges2.pb({i, j + n});
+                // ***
+            } else {
+                cost[i][j] = 1;
             }
         }
     }
+    cout << edges.size() << endl;
+    // ***
     for(int i = 1; i <= n; i++){
         // source
         adj[0].pb(i);
@@ -119,12 +183,18 @@ int main(int argc, char **argv){
         adj[n + m + 1].pb(i);
         capacity[i][n + m + 1] = 1;
     }
+    // ***
+
     graph_out << HEADER << endl;
     graph_out << (n + m) << " " << (n + m) << " " << edges.size() << endl;
     for(auto elem : edges){
-        int u = elem.f;
-        int v = elem.s;
-        graph_out << u << " " << v << endl;
+        int u = elem[0];
+        int v = elem[1];
+        int w = elem[2];
+        graph_out << u << " " << v << " " << w << endl;
     }
-    cout << maxflow(0, n + m + 1, n + m + 2) << endl;
+    ll C;
+    hungarian(C);
+    cout << C << endl;
+    cout << "mf: " << maxflow(0, n + m + 1, n + m + 2) << endl;
 }

@@ -5,6 +5,7 @@
 #define s second
 
 using namespace std;
+using ll = long long;
 
 string getRaw(string ln){
     string raw = "";
@@ -27,9 +28,14 @@ int parseSingle(string ln){
     return stoi(getRaw(ln));
 }
 
-pair<int, int> parsePair(string ln){
-    pair<int, int> res = {-1, -1};
+vector<int> parsePair(string ln){
+    vector<int> res(3, -1);
     string raw = getRaw(ln);
+    const int FIRST_INDENT = 4;
+    const int SECOND_INDENT = 3;
+    int at = FIRST_INDENT + 2 + raw.size() + SECOND_INDENT;
+    string weight_raw = ln.substr(at, ln.size() - at);
+    int w = stoi(weight_raw);
     string raw_f = ""; string raw_s = "";
     int comma_pos = -1;
     for(int i = 0; i < raw.size(); i++){
@@ -45,13 +51,17 @@ pair<int, int> parsePair(string ln){
     for(int i = comma_pos + 2; i < raw.size(); i++){
         raw_s += raw[i];
     }
-    return make_pair(stoi(raw_f), stoi(raw_s));
+    res[0] = stoi(raw_f);
+    res[1] = stoi(raw_s);
+    res[2] = w;
+    return res;
 }
 
 int main(){
     ifstream data_in("grb_result.txt");
     set<int> edges;
     map<int, pair<int, int>> edge_map;
+    map<int, int> weight_map;
     int which_mat = -1;
     while(!data_in.eof()){
         string s;
@@ -67,15 +77,23 @@ int main(){
             int val = parseSingle(s);
             edges.insert(val);
         } else if (which_mat == 1){
-            pair<int, int> val = parsePair(s);
-            int edge_id = val.s;
-            int node_id = val.f;
+            auto val = parsePair(s);
+            int edge_id = val[1];
+            int node_id = val[0];
+            if(weight_map.count(edge_id)){
+                if(weight_map[edge_id] != val[2]){
+                    // bad; edge has multiple weights
+                    cout << -1 << endl;
+                    return 0;
+                }
+            }
+            weight_map[edge_id] = val[2];
             if(!edge_map.count(edge_id)){
                 edge_map[edge_id] = make_pair(node_id, -1);
             } else {
                 if(edge_map[edge_id].s != -1){
                     // bad; more than 2 nodes per edge
-                    printf("[ERR] edge (%d) has more than 2 nodes\n", edge_id);
+                    cout << -1 << endl;
                     return 0;
                 }
                 edge_map[edge_id].s = node_id;
@@ -83,22 +101,29 @@ int main(){
         }
     }
     map<int, int> freq;
+    ll tot_weight = 0;
     for(int e : edges){
         if(!edge_map.count(e)){
-            printf("[ERR] chosen edge (%d) not in E\n", e);
+            cout << -1 << endl;
             return 0;
         }
+        bool not_found = !edge_map.count(e);
         auto nodes = edge_map[e];
+        if(not_found || (nodes.f == -1 || nodes.s == -1)){
+            cout << -1 << endl;
+            return 0;
+        }
         freq[nodes.f]++;
         freq[nodes.s]++;
         if(freq[nodes.f] > 1){
-            printf("[ERR] node (%d) touched more than once", nodes.f);
+            cout << -1 << endl;
             return 0;
         }
         if(freq[nodes.s] > 1){
-            printf("[ERR] node (%d) touched more than once", nodes.s);
+            cout << -1 << endl;
             return 0;
         }
+        tot_weight += weight_map[e];
     }
-    printf("Verification passed\n");
+    cout << edges.size() << " " << tot_weight << endl;
 }
