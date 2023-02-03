@@ -19,8 +19,16 @@ int LAGraph_Parent_to_S
 (
     GrB_Matrix *result,
     GrB_Vector parent,  // dense vector of size n. parent[i] -> representative of node i
+    int compress,       // whether to compress the namespace of the coarsened graph
     char *msg
 )
 {
+    GrB_Matrix S ;
+    if (compress) {
+        
+    } else {
+
+    }
+    (*result) = S ;
     return (GrB_SUCCESS) ;
 }

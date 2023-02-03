@@ -107,8 +107,6 @@ int LAGraph_A_to_E
     LAGraph_Free ((void**)(&E_col_indices), msg) ;
     LAGraph_Free ((void**)(&E_values), msg) ;
 
-    GRB_TRY (GrB_Matrix_dup (result, E)) ;
-    GRB_TRY (GrB_free (&E)) ;
-
+    (*result) = E ;
     return (GrB_SUCCESS) ;
 }

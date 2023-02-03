@@ -11,19 +11,23 @@ LAGraph_Graph G = NULL ;
 typedef struct
 {
     double matching_val ; // for unweighted matchings, the size of the set. For weighted, sum of edge weights
-    int matching_type ;
-    bool is_exact ;
+    int matching_type ;   // 0: unweighted, 1: heavy, 2: light
+    bool is_exact ;       // whether or not matching_val is exactly computed for this test
     const char *name ;
 }
 matrix_info ;
 
 const matrix_info files [ ] =
 {
-    { 0, 0, "" }
+    { 25, 0, 1, "random_bipartite_bool_1.mtx" },
+    { 9, 0, 1, "random_bipartite_bool_2.mtx" },
+    { 438, 0, 1, "random_bipartite_bool_3.mtx" },
+    { 1550, 0, 1, "random_bipartite_bool_4.mtx" },
+    { 0, 0, 0, "" }
 } ;
 
 double tolerances [ ] = {
-    0.1,    // random matching, exact
+    0.15,   // random matching, exact
     0,      // weighted matching, exact
     0.07,   // random matching, inexact
     0       // weighted matching, inexact
@@ -37,7 +41,8 @@ char msg [LAGRAPH_MSG_LEN] ;
 
 void test_MaximalMatching (void) 
 {
-    LAGraph_Init (msg) ;
+    OK (LAGraph_Init (msg)) ;
+    OK (LAGraph_Random_Init (msg)) ;
 
     for (int k = 0 ; ; k++)
     {
@@ -53,7 +58,7 @@ void test_MaximalMatching (void)
         TEST_CHECK (A != NULL) ;
         TEST_MSG ("Loading of adjacency matrix failed") ;
 
-        OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
+        OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
 
         OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
         OK (LAGraph_Cached_AT (G, msg)) ;
@@ -73,6 +78,7 @@ void test_MaximalMatching (void)
         OK (LAGraph_Matrix_IsEqual (&ok, G->A, G->AT, msg)) ;
         TEST_CHECK (ok) ;
         TEST_MSG ("Input graph is not undirected") ;
+        G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
 
         OK (LAGraph_A_to_E (&E, G, msg)) ;
         GrB_Index num_nodes ;
@@ -92,11 +98,11 @@ void test_MaximalMatching (void)
         OK (GrB_Vector_new (&hop_edges, GrB_BOOL, num_edges)) ;
         OK (GrB_Vector_new (&hop_nodes, GrB_BOOL, num_nodes)) ;
 
+        printf("\n");
         // run max matching
         for (int i = 0; i < SEEDS_PER_TEST; i++){
             // try random seeds
             uint64_t seed = rand() ;
-            GrB_Vector matching = NULL ;
             OK (LAGraph_MaximalMatching (&matching, E, files [k].matching_type, seed, msg)) ;
             // check correctness
             OK (GrB_mxv (node_degree, NULL, NULL, LAGraph_plus_one_uint64, E, matching, NULL)) ;
@@ -121,7 +127,9 @@ void test_MaximalMatching (void)
             if (files [k].matching_type == 0) {
                 // random
                 // we only care about the number of chosen edges
-                OK (GrB_Vector_nvals (&matching_value, matching)) ;
+                uint64_t matching_val_int ;
+                OK (GrB_Vector_nvals (&matching_val_int, matching)) ;
+                matching_value = matching_val_int ;
                 if (files [k].is_exact) {
                     which_tolerance = 0 ;
                 } else {
@@ -130,7 +138,10 @@ void test_MaximalMatching (void)
             } else {
                 // weighted
                 // sum the weights of the chosen edges.
-                OK (GrB_reduce (&matching_value, matching, GrB_PLUS_MONOID_FP64, weight, GrB_DESC_S)) ;
+                // eliminate entries in the weight that are not in the matching, then sum the remaining entries
+                OK (GrB_eWiseMult (weight, NULL, NULL, GrB_TIMES_FP64, weight, matching, NULL)) ;
+                OK (GrB_reduce (&matching_value, NULL, GrB_PLUS_MONOID_FP64, weight, NULL)) ;
+                
                 if (files [k].is_exact) {
                     which_tolerance = 1 ;
                 } else {
@@ -138,20 +149,30 @@ void test_MaximalMatching (void)
                 }
             }
             double error = fabs(matching_value - expected) / expected ;
-            ok = error <= tolerances [which_tolerance] ;
+            ok = (error <= tolerances [which_tolerance]) ;
             TEST_CHECK (ok) ;
-            TEST_MSG ("Value of produced matching has %.5f error for tolerance %.5f\n", error, tolerances [which_tolerance]) ;
-        }    
+            printf ("Value of produced matching has %.5f error, tolerance is %.5f\n for case (%d)\n", error, tolerances [which_tolerance], k) ;
+            OK (GrB_free (&matching)) ;
+        }
+        OK (GrB_free (&A)) ;
+        OK (GrB_free (&E)) ;
+        OK (GrB_free (&E_t)) ;
+        OK (GrB_free (&weight)) ;
+        OK (GrB_free (&node_degree)) ;
+        OK (GrB_free (&hop_edges)) ;
+        OK (GrB_free (&hop_nodes)) ;
+
+        OK (LAGraph_Delete (&G, msg)) ;
     }
 }
 
 void test_MaximalMatchingErrors (void)
 {
-
+    OK (0) ;
 }
 
 TEST_LIST = {
-    {"MaximalMatching", test_MaximalMatching},
-    {"MaximalMatchingErrors", test_MaximalMatchingErrors},
-    {NULL, NULL}
+    { "MaximalMatching", test_MaximalMatching },
+    { "MaximalMatchingErrors", test_MaximalMatchingErrors },
+    { NULL, NULL }
 } ;

@@ -71,13 +71,12 @@ int LAGraph_MaximalMatching
 
     GrB_Index num_edges ;
     GrB_Index num_nodes ;
-    
+
     GRB_TRY (GrB_Matrix_nrows (&num_nodes, E)) ;
     GRB_TRY (GrB_Matrix_ncols (&num_edges, E)) ;
     // TODO: match this type with E (for now, it's fp64)
     GRB_TRY (GrB_Matrix_new (&E_t, GrB_FP64, num_edges, num_nodes)) ;
     GRB_TRY (GrB_transpose (E_t, NULL, NULL, E, NULL)) ;
-
     GRB_TRY (GrB_Vector_new (&candidates, GrB_BOOL, num_edges)) ;
     GRB_TRY (GrB_Vector_new (&Seed, GrB_UINT64, num_edges)) ;
     GRB_TRY (GrB_Vector_new (&score, GrB_FP64, num_edges)) ;
@@ -92,7 +91,7 @@ int LAGraph_MaximalMatching
     GRB_TRY (GrB_Vector_new (&new_members_node_degree, GrB_UINT64, num_nodes)) ;
     GRB_TRY (GrB_Vector_new (&result, GrB_BOOL, num_edges)) ;
     GRB_TRY (GrB_Vector_new (&empty, GrB_BOOL, num_edges)) ;
-
+    
     GRB_TRY (GrB_assign (Seed, NULL, NULL, 0, GrB_ALL, num_edges, NULL)) ;
 
     LG_TRY (LAGraph_Random_Seed (Seed, seed, msg)) ;

@@ -40,5 +40,6 @@ int main (int argc, char** argv)
         // (we need E to know which nodes correspond to entries in the matching vector)
         LAGRAPH_TRY (LAGraph_Matrix_Print (E, LAGraph_COMPLETE, stdout, msg)) ;
     }
+    GRB_TRY (GrB_free (&matching)) ;
     return (GrB_SUCCESS) ;
 }

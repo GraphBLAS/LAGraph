@@ -268,6 +268,15 @@ int LAGraph_A_to_E
     char *msg
 ) ;
 
+LAGRAPH_PUBLIC
+int LAGraph_Parent_to_S
+(
+    GrB_Matrix *result,
+    GrB_Vector parent,          // parent vector
+    int compress,               // whether to compress the namespace of the coarsened graph
+    char *msg
+) ;
+
 //****************************************************************************
 // Algorithms
 //****************************************************************************
