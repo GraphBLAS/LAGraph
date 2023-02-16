@@ -11,7 +11,7 @@ cmake --build build_lgb --parallel 16
 
 Build against SuiteSparse's `GraphBLAS`
 ```shell
-cmake -B build -DUSING_LUCATAGRAPHBLAS=OFF
+cmake -B build -DUSING_LUCATAGRAPHBLAS=OFF -DGRAPHBLAS_ROOT=/path/to/your/GraphBLAS
 cmake --build build --parallel 16
 ```
 
