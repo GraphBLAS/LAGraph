@@ -15,7 +15,7 @@ cmake --build build --target install # installs LGB in build/install
 
 For SuiteSparse GraphBLAS the process is nearly identical:
 ```shell
-cmake -B build -DCMAKE_INSTALL_PREFIX=$(pwd)/build/install <other cmake args>
+cmake -B build -DCMAKE_INSTALL_PREFIX=$(pwd)/build/install -DNSTATIC=0 <other cmake args>
 cmake --build build --parallel 16
 cmake --build build --target install
 ```
