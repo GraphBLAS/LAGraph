@@ -20,10 +20,10 @@ include_directories ( ${CMAKE_SOURCE_DIR}/include
 file ( GLOB LAGRAPHX_LIB_SOURCES "utility/*.c" "algorithm/*.c" )
 
 #-------------------------------------------------------------------------------
-# dynamic lagraphx library properties
+# static lagraphx library properties
 #-------------------------------------------------------------------------------
 
-add_library ( lagraphx SHARED ${LAGRAPHX_LIB_SOURCES} )
+add_library ( lagraphx STATIC ${LAGRAPHX_LIB_SOURCES} )
 SET_TARGET_PROPERTIES ( lagraphx PROPERTIES
     VERSION ${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}
     SOVERSION ${LAGraph_VERSION_MAJOR}
@@ -37,22 +37,22 @@ target_link_directories ( lagraphx BEFORE PUBLIC ${CMAKE_SOURCE_DIR}/build )
 # static lagraphx library properties
 #-------------------------------------------------------------------------------
 
-add_library ( lagraphx_static STATIC ${LAGRAPHX_LIB_SOURCES} )
-SET_TARGET_PROPERTIES ( lagraphx_static PROPERTIES
-    VERSION ${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}
-    OUTPUT_NAME lagraphx
-    POSITION_INDEPENDENT_CODE OFF
-    SOVERSION ${LAGraph_VERSION_MAJOR}
-    C_STANDARD_REQUIRED 11 )
+# add_library ( lagraphx_static STATIC ${LAGRAPHX_LIB_SOURCES} )
+# SET_TARGET_PROPERTIES ( lagraphx_static PROPERTIES
+#     VERSION ${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}
+#     OUTPUT_NAME lagraphx
+#     POSITION_INDEPENDENT_CODE OFF
+#     SOVERSION ${LAGraph_VERSION_MAJOR}
+#     C_STANDARD_REQUIRED 11 )
 
-if ( MSVC )
-    set_target_properties ( lagraphx_static PROPERTIES
-        OUTPUT_NAME lagraphx_static )
-endif ( )
+# if ( MSVC )
+#     set_target_properties ( lagraphx_static PROPERTIES
+#         OUTPUT_NAME lagraphx_static )
+# endif ( )
 
-set_property ( TARGET lagraphx_static PROPERTY C_STANDARD 11 )
-target_link_libraries ( lagraphx_static PUBLIC lagraph_static ${GRAPHBLAS_LIBRARIES} )
-target_link_directories ( lagraphx_static BEFORE PUBLIC ${CMAKE_SOURCE_DIR}/build )
+# set_property ( TARGET lagraphx_static PROPERTY C_STANDARD 11 )
+# target_link_libraries ( lagraphx_static PUBLIC lagraph_static ${GRAPHBLAS_LIBRARIES} )
+# target_link_directories ( lagraphx_static BEFORE PUBLIC ${CMAKE_SOURCE_DIR}/build )
 
 #-------------------------------------------------------------------------------
 # add OpenMP
@@ -60,7 +60,7 @@ target_link_directories ( lagraphx_static BEFORE PUBLIC ${CMAKE_SOURCE_DIR}/buil
 
 if ( OPENMP_FOUND )
     target_link_libraries ( lagraphx PUBLIC lagraph ${OpenMP_C_LIBRARIES} )
-    target_link_libraries ( lagraphx_static PUBLIC lagraph_static ${OpenMP_C_LIBRARIES} )
+    # target_link_libraries ( lagraphx_static PUBLIC lagraph_static ${OpenMP_C_LIBRARIES} )
 endif ( )
 
 #-------------------------------------------------------------------------------

@@ -34,10 +34,10 @@ else ( )
 endif ( )
 
 #-------------------------------------------------------------------------------
-# dynamic lagraphtest library properties
+# static lagraphtest library properties
 #-------------------------------------------------------------------------------
 
-add_library ( lagraphtest SHARED ${LAGRAPHTEST_LIB_SOURCES} )
+add_library ( lagraphtest STATIC ${LAGRAPHTEST_LIB_SOURCES} )
 SET_TARGET_PROPERTIES ( lagraphtest PROPERTIES
     VERSION ${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}
     SOVERSION ${LAGraph_VERSION_MAJOR}
@@ -50,22 +50,22 @@ target_link_directories( lagraphtest BEFORE PUBLIC ${CMAKE_SOURCE_DIR}/build )
 # static lagraphtest library properties
 #-------------------------------------------------------------------------------
 
-add_library ( lagraphtest_static STATIC ${LAGRAPHTEST_LIB_SOURCES} )
-SET_TARGET_PROPERTIES ( lagraphtest_static PROPERTIES
-    VERSION ${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}
-    OUTPUT_NAME lagraphtest
-    POSITION_INDEPENDENT_CODE OFF
-    SOVERSION ${LAGraph_VERSION_MAJOR}
-    C_STANDARD_REQUIRED 11 )
+# add_library ( lagraphtest_static STATIC ${LAGRAPHTEST_LIB_SOURCES} )
+# SET_TARGET_PROPERTIES ( lagraphtest_static PROPERTIES
+#     VERSION ${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}
+#     OUTPUT_NAME lagraphtest
+#     POSITION_INDEPENDENT_CODE OFF
+#     SOVERSION ${LAGraph_VERSION_MAJOR}
+#     C_STANDARD_REQUIRED 11 )
 
-if ( MSVC )
-    set_target_properties ( lagraphtest_static PROPERTIES
-        OUTPUT_NAME lagraphtest_static )
-endif ( )
+# if ( MSVC )
+#     set_target_properties ( lagraphtest_static PROPERTIES
+#         OUTPUT_NAME lagraphtest_static )
+# endif ( )
 
-set_property ( TARGET lagraphtest_static PROPERTY C_STANDARD 11 )
-target_link_libraries(lagraphtest_static PUBLIC lagraph ${GRAPHBLAS_LIBRARIES})
-target_link_directories( lagraphtest_static BEFORE PUBLIC ${CMAKE_SOURCE_DIR}/build )
+# set_property ( TARGET lagraphtest_static PROPERTY C_STANDARD 11 )
+# target_link_libraries(lagraphtest_static PUBLIC lagraph ${GRAPHBLAS_LIBRARIES})
+# target_link_directories( lagraphtest_static BEFORE PUBLIC ${CMAKE_SOURCE_DIR}/build )
 
 #-------------------------------------------------------------------------------
 # add OpenMP
@@ -73,7 +73,7 @@ target_link_directories( lagraphtest_static BEFORE PUBLIC ${CMAKE_SOURCE_DIR}/bu
 
 if ( OPENMP_FOUND )
     target_link_libraries ( lagraphtest PUBLIC ${OpenMP_C_LIBRARIES} )
-    target_link_libraries ( lagraphtest_static PUBLIC ${OpenMP_C_LIBRARIES} )
+    # target_link_libraries ( lagraphtest_static PUBLIC ${OpenMP_C_LIBRARIES} )
 endif ( )
 
 #-------------------------------------------------------------------------------
@@ -89,7 +89,7 @@ foreach( testsourcefile ${TEST_SOURCES} )
     if(USING_LUCATAGRAPHBLAS)
         set_target_properties(${testname} PROPERTIES LINKER_LANGUAGE CXX)
     endif()
-    target_link_libraries( ${testname} lagraph lagraphx lagraphtest ${GRAPHBLAS_LIBRARIES} )
+    target_link_libraries( ${testname} lagraph lagraphx lagraphtest ${GRAPHBLAS_LIBRARIES} ${LUCATA_EXTRA_LIBS} )
     target_link_directories( ${testname} BEFORE PUBLIC ${CMAKE_SOURCE_DIR}/build )
     string( REPLACE "test_" "ctest_" ctestname ${testname})
     add_test( ${ctestname} ${testname})
