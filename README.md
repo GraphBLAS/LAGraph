@@ -23,7 +23,6 @@ cmake --build build --target install
 ## Building LAGraph
 
 ### Build against `LucataGraphBLAS`
-:
 ```shell
 cmake -B build -DGRAPHBLAS_ROOT=/path/to/LucataGraphBLAS/build/install
 cmake --build build --parallel 16
@@ -34,7 +33,7 @@ If you want to compile with the Lucata toolchain (i.e. `emu-cc.sh`) then you *MU
 ```shell
 cmake -B build_lc -DGRAPHBLAS_ROOT=/path/to/LucataGraphBLAS/build_lc/install \
     -DCMAKE_C_COMPILER=/tools/lucata/bin/emu-cc.sh \
-    -DCMAKE_C_COMPILER=/tools/lucata/bin/emu-cc.sh
+    -DCMAKE_CXX_COMPILER=/tools/lucata/bin/emu-cc.sh
 cmake --build build_lc --parallel 16
 ```
 
