@@ -118,22 +118,15 @@ int LAGraph_MaximalMatching
 
     while (ncandidates > 0) {
         // first just generate the scores again
-        if (matching_type == 0) {
+        GRB_TRY (GrB_eWiseMult (score, candidates, NULL, GrB_DIV_FP64, Seed, degree, GrB_DESC_RS)) ;
 
-            // weighs the score based on degree
-            GRB_TRY (GrB_eWiseMult (score, candidates, NULL, GrB_DIV_FP64, Seed, degree, GrB_DESC_RS)) ;
-
-        } else {
-            // first get weights of edges in vector
-            // multiply scores by edge weight (using eWiseMult)
-            // for light matching, can multiply scores by 1 / (edge weight)
-            if (matching_type == 1) {
-                // heavy
-                GRB_TRY (GrB_eWiseMult (score, NULL, NULL, GrB_TIMES_FP64, score, weight, NULL)) ;
-            } else {
-                // light
-                GRB_TRY (GrB_eWiseMult (score, NULL, NULL, GrB_DIV_FP64, score, weight, NULL)) ;
-            }
+        // for light matching, can multiply scores by 1 / (edge weight)
+        if (matching_type == 1) {
+            // heavy
+            GRB_TRY (GrB_eWiseMult (score, NULL, NULL, GrB_TIMES_FP64, score, weight, NULL)) ;
+        } else if (matching_type == 2) {
+            // light
+            GRB_TRY (GrB_eWiseMult (score, NULL, NULL, GrB_DIV_FP64, score, weight, NULL)) ;
         }
 
         // the actual edge selection is common regardless of matching type
@@ -201,7 +194,7 @@ int LAGraph_MaximalMatching
     }
 
     (*matching) = result ;
-
+    
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }
