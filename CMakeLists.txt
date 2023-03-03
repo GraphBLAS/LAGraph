@@ -120,8 +120,44 @@ message ( STATUS "GraphBLAS_ROOT: ${GraphBLAS_ROOT} $ENV{GraphBLAS_ROOT}" )
 message ( STATUS "GRAPHBLAS_ROOT: ${GRAPHBLAS_ROOT} $ENV{GRAPHBLAS_ROOT}" )
 find_package (GraphBLAS 7.0.1 REQUIRED MODULE)
 
-# Added for LucataGraphBLAS
-set(USING_LUCATAGRAPHBLAS ON CACHE BOOL "Flag for using LucataGraphBLAS (as opposed to GraphBLAS)")
+
+#-------------------------------------------------------------------------------
+# custom settings for lucata
+#-------------------------------------------------------------------------------
+# Set the linker language to CXX for the compiled targets
+set( USING_LUCATAGRAPHBLAS ON CACHE BOOL "Flag for using LucataGraphBLAS (as opposed to GraphBLAS)" )
+
+if ( USING_LUCATAGRAPHBLAS )
+    message("")
+    message( STATUS "=============== Start Lucata Settings ===============" )
+    message( STATUS "USING_LUCATAGRAPHBLAS set to ON" )
+    set( LAGRAPH_VANILLA 1 )
+    message( STATUS "Turning on LAGRAPH_VANILLA" )
+    # Check for emu-cc in compiler path (this is fragile and should not be the long term solution)
+    string( FIND "${CMAKE_C_COMPILER}" "emu-cc" FOUND_EMU_CC )
+    if ( FOUND_EMU_CC EQUAL -1 )
+        set( LUCATA_TOOLCHAIN_FOUND FALSE )
+        message( STATUS "Compiler IS NOT Lucata toolchain compiler emu-cc" )
+    else()
+        set( LUCATA_TOOLCHAIN_FOUND TRUE )
+        message( STATUS "Compiler IS Lucata toolchain compiler emu-cc" )
+
+        set( LUCATA_ROOT /tools/lucata/ CACHE PATH "Path to lucata toolchain, only used if USING_LUCATA_TOOLCHAIN is on" )
+        message( STATUS "LUCATA_ROOT set to ${LUCATA_ROOT}" )
+
+        set( LUCATA_EXTRA_LIBS ${LUCATA_ROOT}/lib/libmemoryweb.a )
+
+        message( STATUS "Skipping RPATH for builds with Lucata toolchain because we don't support it." )
+        set( CMAKE_SKIP_INSTALL_RPATH ON )
+        set( CMAKE_SKIP_RPATH         ON )
+
+        message( STATUS "Turning on PIC" )
+        set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
+
+        message( STATUS "Turning off experimental benchmarks until the toolchain is updated for big frames")
+    endif()
+    message( STATUS "=============== End Lucata Settings ===============\n" )
+endif()
 
 #-------------------------------------------------------------------------------
 # determine what user threading model to use
@@ -202,7 +238,7 @@ elseif ( "${CMAKE_C_COMPILER_ID}" STREQUAL "Intel" )
     #endif ( )
 elseif ( "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang" )
     # options for clang
-    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -O3 -std=c11 " )
+    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -std=c11 " )
     #if ( CMAKE_C_COMPILER_VERSION VERSION_LESS 3.3 )
     #    message ( FATAL_ERROR "clang version must be at least 3.3" )
     #endif ( )
@@ -267,7 +303,7 @@ install ( TARGETS lagraph lagraphx
     LIBRARY       DESTINATION ${CMAKE_INSTALL_LIBDIR}
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} )
 
-install ( TARGETS lagraph_static lagraphx_static
-    ARCHIVE       DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} )
+# install ( TARGETS lagraph_static lagraphx_static
+#     ARCHIVE       DESTINATION ${CMAKE_INSTALL_LIBDIR}
+#     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} )
 

@@ -3,16 +3,44 @@
 
 # General
 
-Build against `LucataGraphBLAS`:
+## Prerequisites
+You must have a GraphBLAS implementation installed to build LAGraph. This installation is a separate step from building GraphBLAS. To build and install LucataGraphBLAS, the process looks like this:
+
 ```shell
-cmake -B build_lgb -DGRAPHBLAS_ROOT=/path/to/your/LucataGraphBLAS -DLAGRAPH_VANILLA=1
-cmake --build build_lgb --parallel 16
+# Inside LucataGraphBLAS
+cmake -B build <other cmake args>    # configure
+cmake --build build --parallel 16    # build
+cmake --build build --target install # installs LGB in build/install
 ```
 
-Build against SuiteSparse's `GraphBLAS`
+For SuiteSparse GraphBLAS the process is nearly identical:
 ```shell
-cmake -B build -DUSING_LUCATAGRAPHBLAS=OFF -DGRAPHBLAS_ROOT=/path/to/your/GraphBLAS
+cmake -B build -DCMAKE_INSTALL_PREFIX=$(pwd)/build/install -DNSTATIC=0 <other cmake args>
 cmake --build build --parallel 16
+cmake --build build --target install
+```
+
+## Building LAGraph
+
+### Build against `LucataGraphBLAS`
+```shell
+cmake -B build -DGRAPHBLAS_ROOT=/path/to/LucataGraphBLAS/build/install
+cmake --build build --parallel 16
+```
+
+If you want to compile with the Lucata toolchain (i.e. `emu-cc.sh`) then you *MUST* point cmake to an LC build of LucataGraphBLAS *AND* tell cmake to use `emu-cc.sh` as your compilers. For example:
+
+```shell
+cmake -B build_lc -DGRAPHBLAS_ROOT=/path/to/LucataGraphBLAS/build_lc/install \
+    -DCMAKE_C_COMPILER=/tools/lucata/bin/emu-cc.sh \
+    -DCMAKE_CXX_COMPILER=/tools/lucata/bin/emu-cc.sh
+cmake --build build_lc --parallel 16
+```
+
+### Build against SuiteSparse's `GraphBLAS`
+```shell
+cmake -B build_gb -DUSING_LUCATAGRAPHBLAS=OFF -DGRAPHBLAS_ROOT=/path/to/your/GraphBLAS/build/install
+cmake --build build_gb --parallel 16
 ```
 
 ---
