@@ -51,14 +51,14 @@ int main (int argc, char** argv)
         //--------------------------------------------------------------------------
         // Printing E matrix, best result from ntrial runs for my own, external tests for quality (not performance)
         //--------------------------------------------------------------------------
-        int ntrials = atoi(argv[3]) ;
+        int ntrials = atoi(argv [3]) ;
 
         GrB_Vector best_matching = NULL ;
         GrB_Index max_val = 0 ;
 
         for (int trial = 0 ; trial < ntrials ; trial++) {
             int64_t seed = trial * n + 1 ;
-            LAGRAPH_TRY (LAGraph_MaximalMatching (&matching, E, atoi(argv[2]), seed, msg)) ;
+            LAGRAPH_TRY (LAGraph_MaximalMatching (&matching, E, atoi(argv [2]), seed, msg)) ;
             GrB_Index nvals ;
             GRB_TRY (GrB_Vector_nvals (&nvals, matching)) ;
             if (nvals > max_val) {

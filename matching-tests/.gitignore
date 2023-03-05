@@ -1,5 +1,8 @@
 *.txt
 *.mtx
+test_cpp.cpp
+test.c
 gen_bipartite
 gen_general
 verify
+build

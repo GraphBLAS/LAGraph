@@ -1,4 +1,18 @@
-#include <bits/stdc++.h>
+extern "C" {
+   #include "LAGraph.h"
+   #include "LAGraphX.h"
+   #include "GraphBLAS.h"
+}
+
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <queue>
+#include <chrono>
+#include <algorithm>
+#include <random>
+#include <cassert>
+#include <cstring>
 
 #define pb push_back
 #define f first
@@ -6,38 +20,53 @@
 
 // #define dbg
 
-using namespace std;
+char msg[1024];
 
-const string HEADER = "%%MatrixMarket matrix coordinate integer symmetric\n%%GraphBLAS type uint32_t";
-
-const int INF = 1e9;
-bool prefer_light;
-map<int, int> deg;
-
-bool cmp_basic(vector<int> &a, vector<int> &b){
-    if(prefer_light){
-        if(a[2] < b[2]){
-            return 1;
-        }        
-    } else {
-        if(a[2] > b[2]){
-            return 1;
-        }
-    }
-    return 0;
+#define OK(method)                                                  \
+{                                                                   \
+    int info = method ;                                        \
+    if (!(info == GrB_SUCCESS || info != GrB_NO_VALUE))             \
+    {                                                               \
+        printf ("error! line %d info %d\n", __LINE__, info) ;       \
+        printf ("msg is %s\n", msg) ;                               \
+        abort ( ) ;                                                 \
+    }                                                               \
 }
 
-bool cmp_with_degree(vector<int> &a, vector<int> &b){
+using namespace std;
+using ll = long long;
+
+const string HEADER = "%%MatrixMarket matrix coordinate integer symmetric\n%%GraphBLAS type uint32_t";
+const string WEIGHTED_HEADER = "%%MatrixMarket matrix coordinate integer symmetric\n%%GraphBLAS type uint32_t";
+
+bool prefer_light = 0;
+bool weighted = 0;
+vector<int> deg;
+
+bool cmp_basic_heavy(vector<ll> &a, vector<ll> &b){
+    return (a[2] > b[2]);
+}
+
+bool cmp_basic_light(vector<ll> &a, vector<ll> &b){
+    return (a[2] < b[2]);
+}
+
+bool cmp_with_degree_heavy(vector<ll> &a, vector<ll> &b){
     if(a[2] == b[2]){
         int sum_deg_a = max(deg[a[0]], deg[a[1]]);
         int sum_deg_b = max(deg[b[0]], deg[b[1]]);
-        if(sum_deg_a < sum_deg_b){
-            return 1;
-        } else {
-            return 0;
-        }
+        return (sum_deg_a < sum_deg_b);
     }
-    return cmp_basic(a, b);
+    return (weighted ? cmp_basic_heavy(a, b) : 0);
+}
+
+bool cmp_with_degree_light(vector<ll> &a, vector<ll> &b){
+    if(a[2] == b[2]){
+        int sum_deg_a = max(deg[a[0]], deg[a[1]]);
+        int sum_deg_b = max(deg[b[0]], deg[b[1]]);
+        return (sum_deg_a < sum_deg_b);
+    }
+    return (weighted ? cmp_basic_light(a, b) : 0);
 }
 
 /*
@@ -182,16 +211,16 @@ struct BlossomSolver {
 int main(int argc, char **argv){
     int num_nodes = atoi(argv[1]);
     int sparse_factor = atoi(argv[2]);
-    bool naive = atoi(argv[3]); // if selected, we just use the naive greedy way
-    bool weighted;
+    int naive = atoi(argv[3]);
+    int perf = 0;
     if(naive){
-        weighted = atoi(argv[4]);
+        perf = atoi(argv[4]);
+        weighted = atoi(argv[5]);
         if(weighted){
-            prefer_light = atoi(argv[5]);
+            prefer_light = atoi(argv[6]);
         }
     }
     int n = num_nodes;
-
     if(!naive){
         assert(n <= 1000);
     }
@@ -222,7 +251,7 @@ int main(int argc, char **argv){
         } else {
             sort(edges.begin(), edges.end(), cmp_basic); // greedily choose by edge weight
         }
-        set<int> touched;
+        unordered_set<int> touched;
         uint64_t tot_weight = 0;
         int chosen = 0;
         /*
