@@ -49,6 +49,7 @@ jobs:
       with:
         name: test_coverage
         path: build/test_coverage/
+      if: github.event_name == 'push' && github.ref == 'refs/heads/stable'
   macos:
     runs-on: macos-12
     strategy:
