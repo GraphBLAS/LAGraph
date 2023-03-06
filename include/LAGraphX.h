@@ -654,6 +654,44 @@ int LAGraph_cdlp
     char *msg
 ) ;
 
+
+//------------------------------------------------------------------------------
+// LAGr_PageRankGX: PageRank as defined in LDBC Graphalytics (GX)
+//------------------------------------------------------------------------------
+
+/** LAGr_PageRankGX: computes the PageRank of a directed graph G as defined in
+ * the LDBC Graphalytics benchmark.
+ *
+ * @param[out] centrality   centrality(i) is the PageRank of node i.
+ * @param[out] iters        number of iterations taken.
+ * @param[in] G             input graph.
+ * @param[in] damping       damping factor (typically 0.85).
+ * @param[in] tol           stopping tolerance (typically 1e-4).
+ * @param[in] itermax       maximum number of iterations (typically 100).
+ * @param[in,out] msg       any error messages.
+ *
+ * @retval GrB_SUCCESS if successful.
+ * @retval GrB_NULL_POINTER if G, centrality, and/our iters are NULL.
+ * @retval LAGRAPH_NOT_CACHED if G->AT is required but not present,
+ *      or if G->out_degree is not present.
+ * @retval LAGRAPH_INVALID_GRAPH Graph is invalid
+ *              (@sphinxref{LAGraph_CheckGraph} failed).
+ * @returns any GraphBLAS errors that may have been encountered.
+ */
+LAGRAPH_PUBLIC
+int LAGr_PageRankGX
+(
+    // output:
+    GrB_Vector *centrality,
+    int *iters,
+    // input:
+    const LAGraph_Graph G,
+    float damping,
+    float tol,
+    int itermax,
+    char *msg
+) ;
+
 //****************************************************************************
 /**
  * Sparse deep neural network inference. Performs ReLU inference using input
