@@ -35,7 +35,7 @@ jobs:
         export GRAPHBLAS_INCLUDE_DIR=`pwd`/graphblas-binaries/include
         export GRAPHBLAS_LIBRARY=`pwd`/graphblas-binaries/lib/libgraphblas.so
         cd build
-        cmake .. -DCOVERAGE=1 -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY} -DLAGRAPH_VANILLA=${{ matrix.vanilla }}
+        cmake .. -DCOVERAGE=1 -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY} -DLAGRAPH_VANILLA=${{ matrix.config.vanilla }}
         JOBS=2 make
         make test_coverage
     - name: Deploy
@@ -85,6 +85,6 @@ jobs:
         # adding an extra line to the CMakeLists.txt file to locate the libomp instance installed by brew
         echo 'include_directories("/usr/local/opt/libomp/include")' | cat - CMakeLists.txt
         cd build
-        CC=gcc cmake .. -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY} -DLAGRAPH_VANILLA=${{ matrix.vanilla }}
+        CC=gcc cmake .. -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY} -DLAGRAPH_VANILLA=${{ matrix.config.vanilla }}
         JOBS=2 make
         make test
