@@ -8,9 +8,8 @@ jobs:
     strategy:
       matrix:
         config:
-         - {grb_version: 7.1.0, conda_grb_package_hash: h27087fc, conda_extension: tar.bz2}
-         - {grb_version: 7.3.0, conda_grb_package_hash: h27087fc, conda_extension: tar.bz2}
-         - {grb_version: 7.4.1, conda_grb_package_hash: hcb278e6, conda_extension: conda}
+         - {grb_version: 7.4.3, conda_grb_package_hash: hcb278e6, conda_extension: conda, vanilla: 0}
+         - {grb_version: 7.4.3, conda_grb_package_hash: hcb278e6, conda_extension: conda, vanilla: 1}
     steps:
     - name: Checkout
       uses: actions/checkout@v2.0.0
@@ -34,7 +33,7 @@ jobs:
         export GRAPHBLAS_INCLUDE_DIR=`pwd`/graphblas-binaries/include
         export GRAPHBLAS_LIBRARY=`pwd`/graphblas-binaries/lib/libgraphblas.so
         cd build
-        cmake .. -DCOVERAGE=1 -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY}
+        cmake .. -DCOVERAGE=1 -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY} -DLAGRAPH_VANILLA=${{ matrix.config.vanilla }}
         JOBS=2 make
         make test_coverage
     - name: Deploy
@@ -49,14 +48,14 @@ jobs:
       with:
         name: test_coverage
         path: build/test_coverage/
+      if: github.event_name == 'push' && github.ref == 'refs/heads/stable'
   macos:
     runs-on: macos-12
     strategy:
       matrix:
         config:
-         - {grb_version: 7.1.0, conda_grb_package_hash: h7881ed4, conda_extension: tar.bz2}
-         - {grb_version: 7.3.0, conda_grb_package_hash: ha894c9a, conda_extension: tar.bz2}
-         - {grb_version: 7.4.1, conda_grb_package_hash: ha894c9a, conda_extension: conda}
+         - {grb_version: 7.4.3, conda_grb_package_hash: ha894c9a, conda_extension: conda, vanilla: 0}
+         - {grb_version: 7.4.3, conda_grb_package_hash: ha894c9a, conda_extension: conda, vanilla: 1}
     steps:
     - name: Checkout
       uses: actions/checkout@v2.0.0
@@ -83,6 +82,6 @@ jobs:
         # adding an extra line to the CMakeLists.txt file to locate the libomp instance installed by brew
         echo 'include_directories("/usr/local/opt/libomp/include")' | cat - CMakeLists.txt
         cd build
-        CC=gcc cmake .. -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY}
+        CC=gcc cmake .. -DGRAPHBLAS_INCLUDE_DIR=${GRAPHBLAS_INCLUDE_DIR} -DGRAPHBLAS_LIBRARY=${GRAPHBLAS_LIBRARY} -DLAGRAPH_VANILLA=${{ matrix.config.vanilla }}
         JOBS=2 make
         make test
