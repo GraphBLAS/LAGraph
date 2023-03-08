@@ -2284,8 +2284,8 @@ int LAGr_ConnectedComponents
  * @param[out] path_length  path_length (i) is the length of the shortest
  *     path from the source node to node i.  The path_length vector is dense.
  *     If node (i) is not reachable from the src node, then path_length (i) is
- *     set to INFINITY for GrB_FP32 and FP32, or the maximum integer for
- *     GrB_INT32, INT64, UINT32, or UINT64.
+ *     set to INFINITY for GrB_FP32 and GrB_FP64, or the maximum integer for
+ *     GrB_INT32, GrB_INT64, GrB_UINT32, and GrB_UINT64.
  * @param[in] G         input graph.
  * @param[in] src       source node.
  * @param[in] Delta     for delta stepping.
