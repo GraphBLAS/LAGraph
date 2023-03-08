@@ -8,10 +8,8 @@ jobs:
     strategy:
       matrix:
         config:
-         - {grb_version: 7.1.0, conda_grb_package_hash: h27087fc, conda_extension: tar.bz2, vanilla: 0}
-         - {grb_version: 7.3.0, conda_grb_package_hash: h27087fc, conda_extension: tar.bz2, vanilla: 0}
-         - {grb_version: 7.4.1, conda_grb_package_hash: hcb278e6, conda_extension: conda,   vanilla: 0}
-         - {grb_version: 7.4.1, conda_grb_package_hash: hcb278e6, conda_extension: conda,   vanilla: 1}
+         - {grb_version: 7.4.3, conda_grb_package_hash: hcb278e6, conda_extension: conda, vanilla: 0}
+         - {grb_version: 7.4.3, conda_grb_package_hash: hcb278e6, conda_extension: conda, vanilla: 1}
     steps:
     - name: Checkout
       uses: actions/checkout@v2.0.0
@@ -56,10 +54,8 @@ jobs:
     strategy:
       matrix:
         config:
-         - {grb_version: 7.1.0, conda_grb_package_hash: h27087fc, conda_extension: tar.bz2, vanilla: 0}
-         - {grb_version: 7.3.0, conda_grb_package_hash: h27087fc, conda_extension: tar.bz2, vanilla: 0}
-         - {grb_version: 7.4.1, conda_grb_package_hash: hcb278e6, conda_extension: conda,   vanilla: 0}
-         - {grb_version: 7.4.1, conda_grb_package_hash: hcb278e6, conda_extension: conda,   vanilla: 1}
+         - {grb_version: 7.4.3, conda_grb_package_hash: ha894c9a, conda_extension: conda, vanilla: 0}
+         - {grb_version: 7.4.3, conda_grb_package_hash: ha894c9a, conda_extension: conda, vanilla: 1}
     steps:
     - name: Checkout
       uses: actions/checkout@v2.0.0
