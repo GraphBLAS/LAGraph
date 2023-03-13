@@ -223,7 +223,7 @@ void test_ranker(void)
     OK (GrB_free (&centrality)) ;
 
     // compute its pagerank using the LDBC Graphalytics method
-    OK (LAGr_PageRankGX (&centrality, &niters, G, 0.85, 1e-4, 100, msg)) ;
+    OK (LAGr_PageRankGX (&centrality, &niters, G, 0.85, 100, msg)) ;
 
     // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
     err = difference (centrality, karate_rank) ;
@@ -266,7 +266,7 @@ void test_ranker(void)
     OK (GrB_free (&centrality)) ;
 
     // compute its pagerank using the LDBC Graphalytics method
-    OK (LAGr_PageRankGX (&centrality, &niters, G, 0.85, 1e-4, 100, msg)) ;
+    OK (LAGr_PageRankGX (&centrality, &niters, G, 0.85, 100, msg)) ;
 
     // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
     err = difference (centrality, west0067_rank) ;
@@ -310,7 +310,7 @@ void test_ranker(void)
     OK (GrB_free (&centrality)) ;
 
     // compute its pagerank using the LDBC Graphalytics method
-    OK (LAGr_PageRankGX (&centrality, &niters, G, 0.85, 1e-4, 100, msg)) ;
+    OK (LAGr_PageRankGX (&centrality, &niters, G, 0.85, 100, msg)) ;
 
     // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
     err = difference (centrality, ldbc_directed_example_rank) ;

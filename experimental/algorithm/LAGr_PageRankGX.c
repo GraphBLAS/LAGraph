@@ -56,7 +56,6 @@ int LAGr_PageRankGX
     // input:
     const LAGraph_Graph G,  // input graph
     float damping,          // damping factor (typically 0.85)
-    float tol,              // stopping tolerance (typically 1e-4)
     int itermax,            // maximum number of iterations (typically 100)
     char *msg
 )
@@ -99,7 +98,6 @@ int LAGr_PageRankGX
 
     const float scaled_damping = (1 - damping) / n ;
     const float teleport = scaled_damping ; // teleport = (1 - damping) / n
-    float rdiff = 1 ;       // first iteration is always done
 
     // Determine vector of non-sink vertices:
     // These vertices are the ones which have outgoing edges. In subsequent
@@ -136,7 +134,7 @@ int LAGr_PageRankGX
 
     printf("running pagerank for a maximum of %d iterations", itermax);
 
-    for ((*iters) = 0 ; (*iters) < itermax && rdiff > tol ; (*iters)++)
+    for ((*iters) = 0 ; (*iters) < itermax ; (*iters)++)
     {
         // swap t and r ; now t is the old score
         GrB_Vector temp = t ; t = r ; r = temp ;
@@ -168,8 +166,6 @@ int LAGr_PageRankGX
         GRB_TRY (GrB_assign (t, NULL, GrB_MINUS_FP32, r, GrB_ALL, n, NULL)) ;
         // t = abs (t)
         GRB_TRY (GrB_apply (t, NULL, NULL, GrB_ABS_FP32, t, NULL)) ;
-        // rdiff = sum (t)
-        GRB_TRY (GrB_reduce (&rdiff, NULL, GrB_PLUS_MONOID_FP32, t, NULL)) ;
     }
 
     //--------------------------------------------------------------------------

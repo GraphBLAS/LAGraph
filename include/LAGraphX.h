@@ -666,7 +666,6 @@ int LAGraph_cdlp
  * @param[out] iters        number of iterations taken.
  * @param[in] G             input graph.
  * @param[in] damping       damping factor (typically 0.85).
- * @param[in] tol           stopping tolerance (typically 1e-4).
  * @param[in] itermax       maximum number of iterations (typically 100).
  * @param[in,out] msg       any error messages.
  *
@@ -687,7 +686,6 @@ int LAGr_PageRankGX
     // input:
     const LAGraph_Graph G,
     float damping,
-    float tol,
     int itermax,
     char *msg
 ) ;
