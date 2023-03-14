@@ -160,12 +160,6 @@ int LAGr_PageRankGX
         // r += A'*w
         GRB_TRY (GrB_mxv (r, NULL, GrB_PLUS_FP64, LAGraph_plus_second_fp64,
             AT, w, NULL)) ;
-
-        // calculate the diff introduced by the latest iteration
-        // t -= r
-        GRB_TRY (GrB_assign (t, NULL, GrB_MINUS_FP64, r, GrB_ALL, n, NULL)) ;
-        // t = abs (t)
-        GRB_TRY (GrB_apply (t, NULL, NULL, GrB_ABS_FP64, t, NULL)) ;
     }
 
     //--------------------------------------------------------------------------
