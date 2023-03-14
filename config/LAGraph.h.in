@@ -2276,10 +2276,9 @@ int LAGr_ConnectedComponents
 //------------------------------------------------------------------------------
 
 /** LAGr_SingleSourceShortestPath: single-source shortest paths.  This is an
- * Advanced algorithm (G->emin is required for best performance).  The graph G
- * must have an adjacency matrix of type GrB_INT32, GrB_INT64, GrB_UINT32,
- * GrB_UINT64, GrB_FP32, or GrB_FP64.  If G->A has any other type,
- * GrB_NOT_IMPLEMENTED is returned.
+ * Advanced algorithm (G->emin is required).  The graph G must have an adjacency
+ * matrix of type GrB_INT32, GrB_INT64, GrB_UINT32, GrB_UINT64, GrB_FP32, or
+ * GrB_FP64.  If G->A has any other type, GrB_NOT_IMPLEMENTED is returned.
  *
  * @param[out] path_length  path_length (i) is the length of the shortest
  *     path from the source node to node i.  The path_length vector is dense.
