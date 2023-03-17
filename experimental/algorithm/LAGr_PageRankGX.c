@@ -56,7 +56,6 @@ int LAGr_PageRankGX
     // input:
     const LAGraph_Graph G,  // input graph
     float damping,          // damping factor (typically 0.85)
-    float tol,              // stopping tolerance (typically 1e-4)
     int itermax,            // maximum number of iterations (typically 100)
     char *msg
 )
@@ -99,7 +98,6 @@ int LAGr_PageRankGX
 
     const float scaled_damping = (1 - damping) / n ;
     const float teleport = scaled_damping ; // teleport = (1 - damping) / n
-    float rdiff = 1 ;       // first iteration is always done
 
     // Determine vector of non-sink vertices:
     // These vertices are the ones which have outgoing edges. In subsequent
@@ -112,22 +110,22 @@ int LAGr_PageRankGX
     GRB_TRY (GrB_Vector_new (&sink_vec, GrB_FP64, n)) ;
 
     // r = 1 / n
-    GRB_TRY (GrB_Vector_new (&t, GrB_FP32, n)) ;
-    GRB_TRY (GrB_Vector_new (&r, GrB_FP32, n)) ;
-    GRB_TRY (GrB_Vector_new (&w, GrB_FP32, n)) ;
+    GRB_TRY (GrB_Vector_new (&t, GrB_FP64, n)) ;
+    GRB_TRY (GrB_Vector_new (&r, GrB_FP64, n)) ;
+    GRB_TRY (GrB_Vector_new (&w, GrB_FP64, n)) ;
     GRB_TRY (GrB_assign (r, NULL, NULL, (float) (1.0 / n), GrB_ALL, n, NULL)) ;
 
     // prescale with damping factor, so it isn't done each iteration
     // d = d_out / damping ;
-    GRB_TRY (GrB_Vector_new (&d, GrB_FP32, n)) ;
-    GRB_TRY (GrB_apply (d, NULL, NULL, GrB_DIV_FP32, d_out, damping, NULL)) ;
+    GRB_TRY (GrB_Vector_new (&d, GrB_FP64, n)) ;
+    GRB_TRY (GrB_apply (d, NULL, NULL, GrB_DIV_FP64, d_out, damping, NULL)) ;
 
     // d1 = 1 / damping
     float dmin = 1.0 / damping ;
-    GRB_TRY (GrB_Vector_new (&d1, GrB_FP32, n)) ;
+    GRB_TRY (GrB_Vector_new (&d1, GrB_FP64, n)) ;
     GRB_TRY (GrB_assign (d1, NULL, NULL, dmin, GrB_ALL, n, NULL)) ;
     // d = max (d1, d)
-    GRB_TRY (GrB_eWiseAdd (d, NULL, NULL, GrB_MAX_FP32, d1, d, NULL)) ;
+    GRB_TRY (GrB_eWiseAdd (d, NULL, NULL, GrB_MAX_FP64, d1, d, NULL)) ;
     GrB_free (&d1) ;
 
     //--------------------------------------------------------------------------
@@ -136,7 +134,7 @@ int LAGr_PageRankGX
 
     printf("running pagerank for a maximum of %d iterations", itermax);
 
-    for ((*iters) = 0 ; (*iters) < itermax && rdiff > tol ; (*iters)++)
+    for ((*iters) = 0 ; (*iters) < itermax ; (*iters)++)
     {
         // swap t and r ; now t is the old score
         GrB_Vector temp = t ; t = r ; r = temp ;
@@ -155,21 +153,13 @@ int LAGr_PageRankGX
         sink_value *= (damping / n);
 
         // w = t ./ d
-        GRB_TRY (GrB_eWiseMult (w, NULL, NULL, GrB_DIV_FP32, t, d, NULL)) ;
-        // r = teleport
+        GRB_TRY (GrB_eWiseMult (w, NULL, NULL, GrB_DIV_FP64, t, d, NULL)) ;
+        // r = teleport + redistributed from sinks
         GRB_TRY (GrB_assign (r, NULL, NULL, teleport + sink_value, GrB_ALL,
             n, NULL)) ;
         // r += A'*w
-        GRB_TRY (GrB_mxv (r, NULL, GrB_PLUS_FP32, LAGraph_plus_second_fp32,
+        GRB_TRY (GrB_mxv (r, NULL, GrB_PLUS_FP64, LAGraph_plus_second_fp64,
             AT, w, NULL)) ;
-
-        // calculate the diff introduced by the latest iteration
-        // t -= r
-        GRB_TRY (GrB_assign (t, NULL, GrB_MINUS_FP32, r, GrB_ALL, n, NULL)) ;
-        // t = abs (t)
-        GRB_TRY (GrB_apply (t, NULL, NULL, GrB_ABS_FP32, t, NULL)) ;
-        // rdiff = sum (t)
-        GRB_TRY (GrB_reduce (&rdiff, NULL, GrB_PLUS_MONOID_FP32, t, NULL)) ;
     }
 
     //--------------------------------------------------------------------------
