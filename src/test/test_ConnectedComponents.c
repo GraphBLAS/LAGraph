@@ -122,6 +122,7 @@ void test_cc_matrices (void)
 
             // check the result
             OK (LG_check_cc (C, G, msg)) ;
+            OK (GrB_free (&C)) ;
 
             // find the connected components with LG_CC_FastSV5
             #if LAGRAPH_SUITESPARSE
@@ -167,7 +168,6 @@ void test_cc_matrices (void)
         }
 
         OK (LAGraph_Delete (&G, msg)) ;
-        OK (GrB_free (&C)) ;
     }
 
     OK (LAGraph_Finalize (msg)) ;

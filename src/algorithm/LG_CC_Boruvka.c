@@ -93,6 +93,7 @@ void my_select_func (void *z, const void *x,
     LAGraph_Free ((void **) &I, NULL) ;     \
     LAGraph_Free ((void **) &Px, NULL) ;    \
     LAGraph_Free ((void **) &mem, NULL) ;   \
+    GrB_free (&S) ;                         \
     GrB_free (&gp) ;                        \
     GrB_free (&mnp) ;                       \
     GrB_free (&ccmn) ;                      \
