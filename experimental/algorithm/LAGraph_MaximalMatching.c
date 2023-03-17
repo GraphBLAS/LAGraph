@@ -51,6 +51,15 @@ int LAGraph_MaximalMatching
 {
     LG_CLEAR_MSG ;
 
+    if (matching == NULL) {
+        return GrB_NULL_POINTER ;
+    }
+    (*matching) = NULL ;
+    
+    if (E == NULL) {
+        return GrB_NULL_POINTER ;
+    }
+
     const GrB_Index MAX_FAILURES = 50 ;
 
     GrB_Matrix E_t = NULL ;                     // E transpose. Maybe it's better to use 'A' descriptor instead of storing this explicitly?

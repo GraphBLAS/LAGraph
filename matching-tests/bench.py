@@ -4,7 +4,16 @@ NUM_RUNS = 1
 
 run_verification_cmd = './build/verify < data.mtx > verif_result'
 
+
 tests = [
+    {
+        'type': 'bipartite',
+        'performance': False,
+        'args': '5000 10 1 0 0',
+        'grb_args': 'stdin 0 1',
+        'arg_names': 'num_nodes,sparse_factor,is_naive,perf,weighted,prefer_light',
+        'grb_arg_names': 'filename,match_type,ntrials'
+    },
     {
         'type': 'bipartite',
         'performance': True,
@@ -16,7 +25,7 @@ tests = [
     {
         'type': 'bipartite',
         'performance': True,
-        'args': '15000 512 1 1 1 0',
+        'args': '15000 128 1 1 1 0',
         'grb_args': 'data.mtx 1',
         'arg_names': 'num_nodes,sparse_factor,is_naive,perf,weighted,prefer_light',
         'grb_arg_names': 'filename,match_type'
@@ -24,7 +33,7 @@ tests = [
     {
         'type': 'bipartite',
         'performance': True,
-        'args': '50000 512 1 1 1 0',
+        'args': '50000 128 1 1 1 0',
         'grb_args': 'data.mtx 1',
         'arg_names': 'num_nodes,sparse_factor,is_naive,perf,weighted,prefer_light',
         'grb_arg_names': 'filename,match_type'
@@ -40,7 +49,7 @@ tests = [
     {
         'type': 'bipartite',
         'performance': True,
-        'args': '50000 512 1 1 0',
+        'args': '50000 64 1 1 0',
         'grb_args': 'data.mtx 0',
         'arg_names': 'num_nodes,sparse_factor,is_naive,perf,weighted,prefer_light',
         'grb_arg_names': 'filename,match_type'
@@ -78,6 +87,8 @@ tests = [
         'grb_arg_names': 'filename,match_type,ntrials'
     }
 ]
+
+NUM_TESTS = 1 # len(tests)
 
 '''
     {
@@ -203,7 +214,7 @@ def do_run(test):
     return [my_result, grb_result]
 
 
-for i in range(len(tests)):
+for i in range(NUM_TESTS):
     avg_ratio = 0
     avg_perf_ratio = 0
     runs = 0

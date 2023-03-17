@@ -14,7 +14,8 @@ using vvi = vector<vector<int>>;
 
 enum Semiring {
     ANY_ONE = 0,
-    PLUS_TIMES
+    PLUS_TIMES = 1,
+    OR_AND = 2
 };
 
 
@@ -37,7 +38,7 @@ vvi mul(vvi a, vvi b, Semiring s){
             for(int k = 0; k < a[0].size(); k++){
                 if(s == PLUS_TIMES){
                     res[i][j] += a[i][k] * b[k][j];
-                } else if (s == ANY_ONE){
+                } else if (s == ANY_ONE || s == OR_AND){
                     res[i][j] = res[i][j] || (a[i][k] && b[k][j]);
                 }
             }

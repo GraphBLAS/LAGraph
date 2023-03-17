@@ -16,7 +16,9 @@ int main (int argc, char** argv)
 
     LAGraph_Graph G = NULL ;
     GrB_Matrix E = NULL ;
+    GrB_Matrix E_t = NULL ;
     GrB_Vector matching = NULL ;
+    GrB_Vector weight = NULL ;
 
     bool burble = false ; 
     demo_init (burble) ;
@@ -42,9 +44,16 @@ int main (int argc, char** argv)
         true, true, false, GrB_FP64, false, force_stdin ? 1 : argc, argv)) ;
 
     GrB_Index n ;
+    GrB_Index num_edges ;
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
 
     GRB_TRY (LAGraph_A_to_E (&E, G, msg)) ;
+    GRB_TRY (GrB_Matrix_ncols (&num_edges, E)) ;
+    GRB_TRY (GrB_Matrix_new (&E_t, GrB_FP64, num_edges, n)) ;
+    
+    GRB_TRY (GrB_transpose (E_t, NULL, NULL, E, NULL)) ;
+
+    GRB_TRY (GrB_reduce (weight, NULL, NULL, GrB_MAX_MONOID_FP64, E_t, NULL)) ;
 
     if (!test_performance) {
 
@@ -52,21 +61,37 @@ int main (int argc, char** argv)
         // Printing E matrix, best result from ntrial runs for my own, external tests for quality (not performance)
         //--------------------------------------------------------------------------
         int ntrials = atoi(argv [3]) ;
+        int matching_type = atoi(argv [2]) ;
 
         GrB_Vector best_matching = NULL ;
-        GrB_Index max_val = 0 ;
+        double best_val = (matching_type == 2) ? 1e18 : 0 ;
 
         for (int trial = 0 ; trial < ntrials ; trial++) {
             int64_t seed = trial * n + 1 ;
-            LAGRAPH_TRY (LAGraph_MaximalMatching (&matching, E, atoi(argv [2]), seed, msg)) ;
-            GrB_Index nvals ;
-            GRB_TRY (GrB_Vector_nvals (&nvals, matching)) ;
-            if (nvals > max_val) {
+            
+            LAGRAPH_TRY (LAGraph_MaximalMatching (&matching, E, matching_type, seed, msg)) ;
+            double matching_value = 0 ;
+            if (matching_type != 0) {
+                GrB_Vector use_weights = NULL ;
+                GRB_TRY (GrB_Vector_new (&use_weights, GrB_FP64, num_edges)) ;
+                GRB_TRY (GrB_eWiseMult (use_weights, NULL, NULL, GrB_TIMES_FP64, weight, matching, NULL)) ;
+                GRB_TRY (GrB_reduce (&matching_value, NULL, GrB_PLUS_MONOID_FP64, use_weights, NULL)) ;
+                GrB_free (&use_weights) ;
+            } else {
+                GrB_Index matching_value_int ;
+                GRB_TRY (GrB_Vector_nvals (&matching_value_int, matching)) ;
+                matching_value = matching_value_int ;
+            }
+            bool cond = (matching_value > best_val) ;
+            if (matching_type == 2) {
+                cond = (matching_value < best_val) ;
+            }
+            if (cond) {
                 if (best_matching != NULL) {
                     GrB_free (&best_matching) ;
                 }
                 best_matching = matching ;
-                max_val = nvals ;
+                best_val = matching_value ;
             } else {
                 GrB_free (&matching) ;
             }
@@ -172,6 +197,8 @@ int main (int argc, char** argv)
     //--------------------------------------------------------------------------
     LAGraph_Delete (&G, NULL) ;
     GrB_free (&E) ;
+    GrB_free (&E_t) ;
+    GrB_free (&weight) ;
 
     LAGRAPH_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;

@@ -55,14 +55,15 @@ bool cmp_basic_heavy(vector<ll> &a, vector<ll> &b){
 bool cmp_basic_light(vector<ll> &a, vector<ll> &b){
     return (a[2] < b[2]);
 }
-
+// a: {u, v, weight}
+// u <-> v, weight
 bool cmp_with_degree_heavy(vector<ll> &a, vector<ll> &b){
     if(a[2] == b[2]){
         int sum_deg_a = max(deg[a[0]], deg[a[1]]);
         int sum_deg_b = max(deg[b[0]], deg[b[1]]);
         return (sum_deg_a < sum_deg_b);
     }
-    return (weighted ? cmp_basic_heavy(a, b) : 0);
+    return cmp_basic_heavy(a, b);
 }
 
 bool cmp_with_degree_light(vector<ll> &a, vector<ll> &b){
@@ -71,7 +72,7 @@ bool cmp_with_degree_light(vector<ll> &a, vector<ll> &b){
         int sum_deg_b = max(deg[b[0]], deg[b[1]]);
         return (sum_deg_a < sum_deg_b);
     }
-    return (weighted ? cmp_basic_light(a, b) : 0);
+    return cmp_basic_light(a, b);
 }
 
 int bfs(int s, int t, vector<int>& parent) {
@@ -133,7 +134,7 @@ int maxflow(int s, int t, int n) {
 
 int main(int argc, char **argv){
     int num_nodes = atoi(argv[1]);
-    int sparse_factor = atoi(argv[2]);
+    double sparse_factor = atof(argv[2]);
     int naive = atoi(argv[3]);
     int perf = 0;
     if(naive){
@@ -142,6 +143,10 @@ int main(int argc, char **argv){
         if(weighted){
             prefer_light = atoi(argv[6]);
         }
+    }
+
+    if(!naive){
+        assert(num_nodes <= 1000);
     }
 
     int n = num_nodes / 2;
@@ -159,7 +164,7 @@ int main(int argc, char **argv){
     OK ( LAGraph_Init (msg)) ;
     OK ( LAGraph_Random_Init (msg)) ;
 
-    OK ( LAGraph_Random_Matrix (&A, GrB_UINT32, n, m, (1.0 / sparse_factor), seed_distr(gen), msg)) ;
+    OK ( LAGraph_Random_Matrix (&A, GrB_UINT32, n, m, (sparse_factor / n), seed_distr(gen), msg)) ;
 
     GrB_Index nvals ;
     OK ( GrB_Matrix_nvals (&nvals, A)) ;
@@ -187,11 +192,15 @@ int main(int argc, char **argv){
         ll u = rows[i] + 1;
         ll v = cols[i] + 1 + n;
         ll weight = vals[i];
+        if (!weighted){
+            weight = 1;
+        }
         // cout << "adding edge " << u << " " << v << " " << weight << endl;
         assert(weight >= 0);
         deg[u]++;
         deg[v]++;
-        edges.pb(vector<ll> {u, v, weight});
+        // want below diagonal edges for symmetric format
+        edges.pb(vector<ll> {v, u, weight});
         if(!naive){
             adj[u].pb(v);
             adj[v].pb(u);
@@ -202,6 +211,8 @@ int main(int argc, char **argv){
     OK ( LAGraph_Free ((void**)(&rows), msg)) ;
     OK ( LAGraph_Free ((void**)(&cols), msg)) ;
     OK ( LAGraph_Free ((void**)(&vals), msg)) ;
+    // why does this not work?
+    // OK ( GrB_free (&A)) ;
 
     ofstream graph_out("data.mtx");
 

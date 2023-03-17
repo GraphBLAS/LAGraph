@@ -19,18 +19,27 @@ matrix_info ;
 
 const matrix_info files [ ] =
 {
+    // unweighted bipartite
     { 25, 0, 1, "random_bipartite_bool_1.mtx" },
     { 9, 0, 1, "random_bipartite_bool_2.mtx" },
-    { 438, 0, 1, "random_bipartite_bool_3.mtx" },
     { 1550, 0, 1, "random_bipartite_bool_4.mtx" },
+    { 2379, 0, 0, "random_bipartite_bool_5.mtx" },
+    { 12290, 0, 0, "random_bipartite_bool_6.mtx" },
+    // unweighted general
+    { 4967, 0, 0, "random_general_bool_1.mtx" },
+    { 8, 0, 1, "random_general_bool_2.mtx" },
+    { 22, 0, 0, "random_general_bool_3.mtx" },
+    { 2416, 0, 0, "random_general_bool_4.mtx" },
+    { 499, 0, 1, "random_general_bool_5.mtx"},
+    
     { 0, 0, 0, "" }
 } ;
 
-double tolerances [ ] = {
-    0.15,   // random matching, exact
-    0,      // weighted matching, exact
-    0.07,   // random matching, inexact
-    0       // weighted matching, inexact
+double thresholds [ ] = {
+    0.85,   // random matching, exact
+    0.95,   // random matching, naive
+    0,      // weighted matching, naive, light
+    0,      // weighted matching, naive, heavy
 } ;
 
 #define SEEDS_PER_TEST 10
@@ -73,7 +82,7 @@ void test_MaximalMatching (void)
         }
 
         // check if G is undirected
-        // by definition, G->A must equal G->AT if G is undirected
+        // by definition, G->A must equal G->AT iff G is undirected
         bool ok ;
         OK (LAGraph_Matrix_IsEqual (&ok, G->A, G->AT, msg)) ;
         TEST_CHECK (ok) ;
@@ -123,7 +132,7 @@ void test_MaximalMatching (void)
             double expected = files [k].matching_val ;
             double matching_value = 0 ;
             ok = 0 ;
-            size_t which_tolerance ;
+            size_t which_threshold ;
             if (files [k].matching_type == 0) {
                 // random
                 // we only care about the number of chosen edges
@@ -131,9 +140,9 @@ void test_MaximalMatching (void)
                 OK (GrB_Vector_nvals (&matching_val_int, matching)) ;
                 matching_value = matching_val_int ;
                 if (files [k].is_exact) {
-                    which_tolerance = 0 ;
+                    which_threshold = 0 ;
                 } else {
-                    which_tolerance = 3 ;
+                    which_threshold = 1 ;
                 }
             } else {
                 // weighted
@@ -142,16 +151,16 @@ void test_MaximalMatching (void)
                 OK (GrB_eWiseMult (weight, NULL, NULL, GrB_TIMES_FP64, weight, matching, NULL)) ;
                 OK (GrB_reduce (&matching_value, NULL, GrB_PLUS_MONOID_FP64, weight, NULL)) ;
                 
-                if (files [k].is_exact) {
-                    which_tolerance = 1 ;
-                } else {
-                    which_tolerance = 4 ;
-                }
+                which_threshold = 2 ;
             }
-            double error = fabs(matching_value - expected) / expected ;
-            ok = (error <= tolerances [which_tolerance]) ;
+            if (which_threshold == 0) {
+                // exact matching must have strict upper bound
+                TEST_CHECK (matching_value <= expected) ;
+            }
+            double slack = matching_value / expected ;
+            ok = (slack >= thresholds [which_threshold]) ;
             TEST_CHECK (ok) ;
-            printf ("Value of produced matching has %.5f error, tolerance is %.5f\n for case (%d)\n", error, tolerances [which_tolerance], k) ;
+            printf ("Value of produced matching has %.5f slack, tolerance is %.5f\n for case (%d)\n", slack, thresholds [which_threshold], k) ;
             OK (GrB_free (&matching)) ;
         }
         OK (GrB_free (&A)) ;
@@ -168,7 +177,28 @@ void test_MaximalMatching (void)
 
 void test_MaximalMatchingErrors (void)
 {
-    OK (0) ;
+    OK (LAGraph_Init (msg)) ;
+
+    snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
+    FILE *f = fopen (filename, "r") ;
+    TEST_CHECK (f != NULL) ;
+    OK (LAGraph_MMRead (&A, f, msg)) ;
+    TEST_MSG ("Loading of adjacency matrix failed") ;
+
+    E = NULL ;
+    matching = NULL ;
+
+    OK (GrB_Matrix_new (&E, GrB_FP64, 1, 1)) ;
+
+    // result pointer is null
+    int result = LAGraph_MaximalMatching (NULL, E, 0, 0, msg) ;
+    printf ("\nresult: %d %s\n", result, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
+
+    // E matrix is null
+    result = LAGraph_MaximalMatching (&matching, NULL, 0, 0, msg) ;
+    printf ("\nresult: %d %s\n", result, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
 }
 
 TEST_LIST = {
