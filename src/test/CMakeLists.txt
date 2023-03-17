@@ -97,7 +97,7 @@ foreach( testsourcefile ${TEST_SOURCES} )
             NAME ${ctestname}
             COMMAND ${CMAKE_COMMAND} -E env
             ${LUCATA_ROOT}/bin/emusim.x --forward_return_value
-            -- ${testname}
+            -- ${testname} --no-exec
         )
     else()
         add_test(${ctestname} ${testname})
