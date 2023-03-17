@@ -1,4 +1,3 @@
-File: ContributionInstructions.txt:
 
 Thank you for your interest in contributing to the LAGraph project (“We” or
 “Us”).  By making any Contribution to this project, you agree to the terms
@@ -95,7 +94,7 @@ necessary permissions to make this Contribution.
 (c) The grant of rights under Section 2 does not violate any grant of rights
 which You have made to third parties, including Your employer. If You are an
 employee, You warrant that Your employer has approved this Agreement. If You are
-less than eighteen years old, Uour parent or guardian must sign a printed
+less than eighteen years old, Your parent or guardian must sign a printed
 version of this Agreement and send it to permission@sei.cmu.edu.
 
 (d) You shall make each Contribution in full compliance with U.S. export control

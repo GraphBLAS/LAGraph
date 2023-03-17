@@ -2,10 +2,14 @@
 // LAGraph_cc_lacc.c
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Scott McMillan, SEI, Carnegie Mellon University
 
@@ -21,6 +25,7 @@
 {                           \
     free(I);                \
     free(V);                \
+    GrB_free (&S2) ;        \
     GrB_free (&stars);      \
     GrB_free (&mask);       \
     GrB_free (&parents);    \
@@ -87,6 +92,7 @@ int LAGraph_cc_lacc
     GrB_Vector tmp = NULL, pNonstars = NULL, nsgp = NULL; // temporary
     GrB_Index *I = NULL;
     GrB_Index *V = NULL;
+    GrB_Matrix S2 = NULL, S = NULL ;
 
     GrB_Index n ;
     GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
@@ -95,11 +101,11 @@ int LAGraph_cc_lacc
     //printf ("number of nodes: %g\n", (double) n) ;
     //printf ("number of edges: %g\n", (double) nnz) ;
 
-    GrB_Matrix S = NULL;
     if (sanitize)
     {
-        GRB_TRY (GrB_Matrix_new (&S, GrB_BOOL, n, n)) ;
-        GRB_TRY (GrB_eWiseAdd (S, NULL, NULL, GrB_LOR, A, A, GrB_DESC_T1)) ;
+        GRB_TRY (GrB_Matrix_new (&S2, GrB_BOOL, n, n)) ;
+        GRB_TRY (GrB_eWiseAdd (S2, NULL, NULL, GrB_LOR, A, A, GrB_DESC_T1)) ;
+        S = S2 ;
     }
     else
     {

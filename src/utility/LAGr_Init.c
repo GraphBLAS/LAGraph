@@ -2,10 +2,14 @@
 // LAGr_Init: start GraphBLAS and LAGraph, and set malloc/etc functions
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Timothy A. Davis, Texas A&M University
 
@@ -230,7 +234,7 @@ int LAGr_Init
     // the matrices A and B.  C(i,j) is the size of the intersection of the
     // structures of A(i,:) and B(:,j).  In MATLAB, for the FP64 data type,
     // this can be written as:
-    // 
+    //
     //      C = spones (A) * spones (B)
 
     GRB_TRY (GrB_Semiring_new (&LAGraph_plus_one_int8,
@@ -295,4 +299,3 @@ int LAGr_Init
 
     return (GrB_SUCCESS) ;
 }
-

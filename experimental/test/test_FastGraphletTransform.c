@@ -1,11 +1,14 @@
 //----------------------------------------------------------------------------
 // LAGraph/src/test/test_TriangleCount.cpp: test cases for triangle
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 //
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 //-----------------------------------------------------------------------------
 
@@ -24,7 +27,7 @@ LAGraph_Graph G = NULL;
 #define LEN 512
 char filename [LEN+1] ;
 
-int64_t karate_graphlet_counts [ ] = 
+int64_t karate_graphlet_counts [ ] =
 {
     1,16,17,102,18,81,197,13,352,6,34,171,10,2,30,7,
     1,9,19,24,12,73,56,33,32,8,80,27,6,2,18,7,
@@ -76,6 +79,8 @@ int64_t A_graphlet_counts [ ] =
 void test_FastGraphletTransform(void)
 {
     LAGraph_Init (msg) ;
+    #if LAGRAPH_SUITESPARSE
+
     GrB_Matrix A = NULL, F_net = NULL ;
     GrB_Index n ;
     bool ok = 1 ;
@@ -157,6 +162,7 @@ void test_FastGraphletTransform(void)
 
     //--------------------------------------------------------------------------
 
+    #endif
     LAGraph_Finalize (msg) ;
 }
 

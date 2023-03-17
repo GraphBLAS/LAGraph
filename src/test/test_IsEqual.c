@@ -2,10 +2,14 @@
 // LAGraph/src/test/test_IsEqual.c:  test LAGraph_*_IsEqual
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Timothy A. Davis, Texas A&M University
 
@@ -40,7 +44,7 @@ typedef struct
 }
 matrix_info ;
 
-const matrix_info files [ ] = 
+const matrix_info files [ ] =
 {
     //   iseq        matrix1             matrix2
     {    0, 0, "A.mtx"           , "cover.mtx" },
@@ -441,7 +445,8 @@ TEST_LIST =
     { "IsEqual", test_IsEqual },
     { "Vector_IsEqual", test_Vector_IsEqual },
     { "IsEqual_failures", test_IsEqual_failures },
+    #if LAGRAPH_SUITESPARSE
     { "IsEqual_brutal", test_IsEqual_brutal },
+    #endif
     { NULL, NULL }
 } ;
-

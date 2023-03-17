@@ -2,10 +2,14 @@
 // LAGr_SingleSourceShortestPath: single-source shortest path
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Jinhao Chen, Scott Kolodziej and Tim Davis, Texas A&M
 // University.  Adapted from GraphBLAS Template Library (GBTL) by Scott
@@ -162,7 +166,6 @@ int LAGr_SingleSourceShortestPath
         GRB_TRY (GrB_Scalar_extractElement (&delta_int32, Delta)) ;
         GRB_TRY (GrB_assign (t, NULL, NULL, (int32_t) INT32_MAX,
             GrB_ALL, n, NULL)) ;
-        ne = GrB_VALUENE_INT32 ;
         le = GrB_VALUELE_INT32 ;
         ge = GrB_VALUEGE_INT32 ;
         lt = GrB_VALUELT_INT32 ;
@@ -176,7 +179,6 @@ int LAGr_SingleSourceShortestPath
         GRB_TRY (GrB_Scalar_extractElement (&delta_int64, Delta)) ;
         GRB_TRY (GrB_assign (t, NULL, NULL, (int64_t) INT64_MAX,
             GrB_ALL, n, NULL)) ;
-        ne = GrB_VALUENE_INT64 ;
         le = GrB_VALUELE_INT64 ;
         ge = GrB_VALUEGE_INT64 ;
         lt = GrB_VALUELT_INT64 ;
@@ -190,7 +192,6 @@ int LAGr_SingleSourceShortestPath
         GRB_TRY (GrB_Scalar_extractElement (&delta_uint32, Delta)) ;
         GRB_TRY (GrB_assign (t, NULL, NULL, (uint32_t) UINT32_MAX,
             GrB_ALL, n, NULL)) ;
-        ne = GrB_VALUENE_UINT32 ;
         le = GrB_VALUELE_UINT32 ;
         ge = GrB_VALUEGE_UINT32 ;
         lt = GrB_VALUELT_UINT32 ;
@@ -205,7 +206,6 @@ int LAGr_SingleSourceShortestPath
         GRB_TRY (GrB_Scalar_extractElement (&delta_uint64, Delta)) ;
         GRB_TRY (GrB_assign (t, NULL, NULL, (uint64_t) UINT64_MAX,
             GrB_ALL, n, NULL)) ;
-        ne = GrB_VALUENE_UINT64 ;
         le = GrB_VALUELE_UINT64 ;
         ge = GrB_VALUEGE_UINT64 ;
         lt = GrB_VALUELT_UINT64 ;
@@ -220,7 +220,6 @@ int LAGr_SingleSourceShortestPath
         GRB_TRY (GrB_Scalar_extractElement (&delta_fp32, Delta)) ;
         GRB_TRY (GrB_assign (t, NULL, NULL, (float) INFINITY,
             GrB_ALL, n, NULL)) ;
-        ne = GrB_VALUENE_FP32 ;
         le = GrB_VALUELE_FP32 ;
         ge = GrB_VALUEGE_FP32 ;
         lt = GrB_VALUELT_FP32 ;
@@ -234,7 +233,6 @@ int LAGr_SingleSourceShortestPath
         GRB_TRY (GrB_Scalar_extractElement (&delta_fp64, Delta)) ;
         GRB_TRY (GrB_assign (t, NULL, NULL, (double) INFINITY,
             GrB_ALL, n, NULL)) ;
-        ne = GrB_VALUENE_FP64 ;
         le = GrB_VALUELE_FP64 ;
         ge = GrB_VALUEGE_FP64 ;
         lt = GrB_VALUELT_FP64 ;
@@ -343,7 +341,8 @@ int LAGr_SingleSourceShortestPath
             // remove explicit zeros from tless so it can be used as a
             // structural mask
             GrB_Index tless_nvals ;
-            GRB_TRY (GrB_select (tless, NULL, NULL, ne, tless, 0, NULL)) ;
+            GRB_TRY (GrB_select (tless, NULL, NULL, GrB_VALUENE_BOOL,
+                tless, false, NULL)) ;
             GRB_TRY (GrB_Vector_nvals (&tless_nvals, tless)) ;
             if (tless_nvals == 0) break ;
 
@@ -416,4 +415,3 @@ int LAGr_SingleSourceShortestPath
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }
-

@@ -2,10 +2,14 @@
 // LG_CC_FastSV5: connected components
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Yongzhe Zhang; modified by Tim Davis, Texas A&M University
 
@@ -326,15 +330,15 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
 )
 {
 
-#if !LAGRAPH_SUITESPARSE
-    LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED, "SuiteSparse required") ;
-#else
-
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------
 
     LG_CLEAR_MSG ;
+
+#if !LAGRAPH_SUITESPARSE
+    LG_ASSERT_MSG (false, GrB_NOT_IMPLEMENTED, "SuiteSparse required") ;
+#else
 
     uint32_t *V32 = NULL ;
     int32_t *ht_key = NULL, *ht_val = NULL ;

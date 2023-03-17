@@ -2,10 +2,14 @@
 // LG_CC_FastSV6: connected components
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Yongzhe Zhang, modified by Timothy A. Davis, Texas A&M
 // University
@@ -241,7 +245,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
     GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
     GRB_TRY (GrB_Matrix_nvals (&nvals, A)) ;
 
-    // determine the integer type, operators, and semirings to use 
+    // determine the integer type, operators, and semirings to use
     GrB_Type Uint, Int ;
     GrB_IndexUnaryOp ramp ;
     GrB_Semiring min_2nd, min_2ndi ;
@@ -527,7 +531,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         // not changed). The key node is the representative of the (estimated)
         // largest component.  T is constructed as a copy of A, except:
         // (1) all edges A(i,:) for nodes i in the key component deleted, and
-        // (2) for nodes i not in the key component, A(i,j) is deleted if 
+        // (2) for nodes i not in the key component, A(i,j) is deleted if
         //     j is in the key component.
         // (3) If A(i,:) has any deletions from (2), T(i,key) is added to T.
 

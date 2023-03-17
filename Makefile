@@ -53,6 +53,9 @@ default: library
 library:
 	( cd build && cmake $(CMAKE_OPTIONS) .. && $(MAKE) --jobs=${JOBS} )
 
+vanilla:
+	( cd build && cmake $(CMAKE_OPTIONS) -DLAGRAPH_VANILLA=1 .. && $(MAKE) --jobs=${JOBS} )
+
 # compile with -g for debugging
 debug:
 	( cd build && cmake $(CMAKE_OPTIONS) -DCMAKE_BUILD_TYPE=Debug .. && $(MAKE) --jobs=${JOBS} )

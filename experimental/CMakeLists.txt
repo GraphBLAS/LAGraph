@@ -2,10 +2,14 @@
 # LAGraph/experimental/CMakeLists.txt:  cmake script for LAGraph/experimental
 #-------------------------------------------------------------------------------
 
-# LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+# LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 # SPDX-License-Identifier: BSD-2-Clause
-# See additional acknowledgments in the LICENSE file,
-# or contact permission@sei.cmu.edu for the full terms.
+#
+# For additional details (including references to third party source code and
+# other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+# Contributors.txt for a full list of contributors. Created, in part, with
+# funding and support from the U.S. Government (see Acknowledgments.txt file).
+# DM22-0790
 
 #-------------------------------------------------------------------------------
 
@@ -40,6 +44,12 @@ SET_TARGET_PROPERTIES ( lagraphx_static PROPERTIES
     POSITION_INDEPENDENT_CODE OFF
     SOVERSION ${LAGraph_VERSION_MAJOR}
     C_STANDARD_REQUIRED 11 )
+
+if ( MSVC )
+    set_target_properties ( lagraphx_static PROPERTIES
+        OUTPUT_NAME lagraphx_static )
+endif ( )
+
 set_property ( TARGET lagraphx_static PROPERTY C_STANDARD 11 )
 target_link_libraries ( lagraphx_static PUBLIC lagraph_static ${GRAPHBLAS_LIBRARIES} )
 target_link_directories ( lagraphx_static BEFORE PUBLIC ${CMAKE_SOURCE_DIR}/build )

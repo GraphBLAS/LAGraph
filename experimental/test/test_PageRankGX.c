@@ -18,7 +18,9 @@
 #include <stdio.h>
 #include <acutest.h>
 
+#include <LAGraphX.h>
 #include <LAGraph_test.h>
+#include "LG_Xtest.h"
 
 #define LEN 512
 char msg [LAGRAPH_MSG_LEN] ;
@@ -58,8 +60,8 @@ float difference (GrB_Vector centrality, double *matlab_result)
 //------------------------------------------------------------------------------
 
 // The first two matrices have no sinks (nodes with zero outdegree) so the
-// MATLAB centrality (G, 'pagerank'), LAGraph_VertextCentrality_PageRankGAP,
-// and LAGr_PageRank results will be essentially the same.
+// MATLAB centrality (G, 'pagerank') and LAGr_PageRank
+// results will be essentially the same.
 
 // MATLAB computes in double precision, while LAGraph_*PageRank* computes in
 // single precision, so the difference will be about 1e-5 or so.
@@ -208,26 +210,25 @@ void test_ranker(void)
     TEST_CHECK (A == NULL) ;    // A has been moved into G->A
     OK (LAGraph_Cached_OutDegree (G, msg)) ;
 
-    // compute its pagerank using the GAP method
-    OK (LAGr_PageRankGAP (&centrality, &niters, G, 0.85,
-        1e-4, 100, msg)) ;
+    // compute its pagerank using the standard method
+    OK (LAGr_PageRank (&centrality, &niters, G, 0.85, 1e-4, 100, msg)) ;
 
     // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
     float err = difference (centrality, karate_rank) ;
     float rsum = 0 ;
     OK (GrB_reduce (&rsum, NULL, GrB_PLUS_MONOID_FP32, centrality, NULL)) ;
-    printf ("\nkarate:   err: %e (GAP),      sum(r): %e iters: %d\n",
+    printf ("karate:   err: %e (standard), sum(r): %e iters: %d\n",
         err, rsum, niters) ;
     TEST_CHECK (err < 1e-4) ;
     OK (GrB_free (&centrality)) ;
 
-    // compute its pagerank using the standard method
-    OK (LAGr_PageRank (&centrality, &niters, G, 0.85, 1e-4, 100, msg)) ;
+    // compute its pagerank using the LDBC Graphalytics method
+    OK (LAGr_PageRankGX (&centrality, &niters, G, 0.85, 100, msg)) ;
 
     // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
     err = difference (centrality, karate_rank) ;
     OK (GrB_reduce (&rsum, NULL, GrB_PLUS_MONOID_FP32, centrality, NULL)) ;
-    printf ("karate:   err: %e (standard), sum(r): %e iters: %d\n",
+    printf ("karate:   err: %e (Graphalytics), sum(r): %e iters: %d\n",
         err, rsum, niters) ;
     TEST_CHECK (err < 1e-4) ;
     OK (GrB_free (&centrality)) ;
@@ -254,20 +255,18 @@ void test_ranker(void)
     OK (LAGraph_Cached_AT (G, msg)) ;
     OK (LAGraph_Cached_OutDegree (G, msg)) ;
 
-    // compute its pagerank using the GAP method
-    OK (LAGr_PageRankGAP (&centrality, &niters, G, 0.85,
-        1e-4, 100, msg)) ;
+    // compute its pagerank using the standard method
+    OK (LAGr_PageRank (&centrality, &niters, G, 0.85, 1e-4, 100, msg)) ;
 
     // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
     err = difference (centrality, west0067_rank) ;
-    OK (GrB_reduce (&rsum, NULL, GrB_PLUS_MONOID_FP32, centrality, NULL)) ;
-    printf ("west0067: err: %e (GAP),      sum(r): %e iters: %d\n",
+    printf ("west0067: err: %e (standard), sum(r): %e iters: %d\n",
         err, rsum, niters) ;
     TEST_CHECK (err < 1e-4) ;
     OK (GrB_free (&centrality)) ;
 
-    // compute its pagerank using the standard method
-    OK (LAGr_PageRank (&centrality, &niters, G, 0.85, 1e-4, 100, msg)) ;
+    // compute its pagerank using the LDBC Graphalytics method
+    OK (LAGr_PageRankGX (&centrality, &niters, G, 0.85, 100, msg)) ;
 
     // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
     err = difference (centrality, west0067_rank) ;
@@ -296,20 +295,22 @@ void test_ranker(void)
     printf ("\n=========== ldbc-directed-example, with sink nodes 3 and 9:\n") ;
     OK (LAGraph_Graph_Print (G, LAGraph_COMPLETE, stdout, msg)) ;
 
-    // compute its pagerank using the GAP method ("bleeds" rank)
-    OK (LAGr_PageRankGAP (&centrality, &niters, G, 0.85,
-        1e-4, 100, msg)) ;
+    // compute its pagerank using the standard method
+    OK (LAGr_PageRank (&centrality, &niters, G, 0.85, 1e-4, 100, msg)) ;
+
+    // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
     err = difference (centrality, ldbc_directed_example_rank) ;
     OK (GrB_reduce (&rsum, NULL, GrB_PLUS_MONOID_FP32, centrality, NULL)) ;
-    printf ("\nGAP-style page rank is expected to be wrong:\n") ;
-    printf ("ldbc-directed: err: %e (GAP), sum(r): %e, niters %d\n",
+    printf ("\nwith sinks handled properly:\n") ;
+    printf ("ldbc-directed: err: %e (standard), sum(r): %e, niters %d\n",
         err, rsum, niters) ;
-    printf ("The GAP pagerank is incorrect for this method:\n") ;
+    TEST_CHECK (err < 1e-4) ;
+    printf ("This is the correct pagerank, with sinks handled properly:\n") ;
     OK (LAGraph_Vector_Print (centrality, LAGraph_COMPLETE, stdout, msg)) ;
     OK (GrB_free (&centrality)) ;
 
-    // compute its pagerank using the standard method
-    OK (LAGr_PageRank (&centrality, &niters, G, 0.85, 1e-4, 100, msg)) ;
+    // compute its pagerank using the LDBC Graphalytics method
+    OK (LAGr_PageRankGX (&centrality, &niters, G, 0.85, 100, msg)) ;
 
     // compare with MATLAB: cmatlab = centrality (G, 'pagerank')
     err = difference (centrality, ldbc_directed_example_rank) ;

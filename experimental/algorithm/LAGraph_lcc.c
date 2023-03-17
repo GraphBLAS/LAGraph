@@ -2,10 +2,14 @@
 // LAGraph_lcc: local clustering coefficient
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Gabor Szarnyas and Balint Hegyi, Budapest University of
 // Technology and Economics (with accented characters: G\'{a}bor Sz\'{a}rnyas
@@ -117,9 +121,6 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     char *msg
 )
 {
-#if !LAGRAPH_SUITESPARSE
-    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
-#else
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -136,6 +137,10 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     GrB_UnaryOp LAGraph_COMB_DIR_FP64 = NULL ;
     GrB_UnaryOp LAGraph_COMB_UNDIR_FP64 = NULL ;
     GrB_Info info ;
+
+#if !LAGRAPH_SUITESPARSE
+    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
+#else
 
     // n = size of A (# of nodes in the graph)
     GrB_Index n ;

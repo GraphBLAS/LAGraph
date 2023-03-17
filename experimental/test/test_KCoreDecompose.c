@@ -3,8 +3,14 @@
 // decomposition
 // ----------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Pranav Konduri, Texas A&M University
 
@@ -46,6 +52,7 @@ const matrix_info files [ ] =
 void test_KCoreDecompose (void)
 {
     LAGraph_Init (msg) ;
+    #if LAGRAPH_SUITESPARSE
 
     for (int k = 0 ; ; k++)
     {
@@ -68,7 +75,7 @@ void test_KCoreDecompose (void)
         OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
 
         if (G->is_symmetric_structure == LAGraph_FALSE)
-        {   
+        {
             printf("This matrix is not symmetric. \n");
             // make the adjacency matrix symmetric
             OK (LAGraph_Cached_AT (G, msg)) ;
@@ -96,7 +103,7 @@ void test_KCoreDecompose (void)
         bool ok;
         //get the kcore at the designated k-value
         LAGraph_KCore(&c, G, kval, msg) ;
-        
+
         //decompose the k-core from vector c into D1
         LAGraph_KCore_Decompose(&D1, G, c, kval, msg);
 
@@ -106,10 +113,11 @@ void test_KCoreDecompose (void)
         //check equality
         OK (LAGraph_Matrix_IsEqual (&ok, D1, D2, msg)) ;
         TEST_CHECK(ok);
-        
+
         OK (LAGraph_Delete (&G, msg)) ;
     }
 
+    #endif
     LAGraph_Finalize (msg) ;
 }
 
@@ -120,6 +128,7 @@ void test_KCoreDecompose (void)
 void test_errors (void)
 {
     LAGraph_Init (msg) ;
+    #if LAGRAPH_SUITESPARSE
 
     snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
     FILE *f = fopen (filename, "r") ;
@@ -169,11 +178,14 @@ void test_errors (void)
     TEST_CHECK (c == NULL) ;
 
     OK (LAGraph_Delete (&G, msg)) ;
+    #endif
     LAGraph_Finalize (msg) ;
 }
 
 TEST_LIST = {
+    #if LAGRAPH_SUITESPARSE
     {"KCoreDecompose", test_KCoreDecompose},
     {"KCoreDecompose_errors", test_errors},
+    #endif
     {NULL, NULL}
 };

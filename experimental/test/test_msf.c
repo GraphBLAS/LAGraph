@@ -2,10 +2,14 @@
 // LAGraph/experimental/test/test_msf.c: test cases for Min Spanning Forest
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Timothy A. Davis, Texas A&M University
 
@@ -54,6 +58,7 @@ const matrix_info files [ ] =
 void test_msf (void)
 {
     LAGraph_Init (msg) ;
+    #if LAGRAPH_SUITESPARSE
 
     for (int k = 0 ; ; k++)
     {
@@ -115,6 +120,9 @@ void test_msf (void)
         OK (LAGraph_Delete (&G, msg)) ;
     }
 
+    #else
+    printf ("test skipped\n") ;
+    #endif
     LAGraph_Finalize (msg) ;
 }
 
@@ -125,6 +133,7 @@ void test_msf (void)
 void test_errors (void)
 {
     LAGraph_Init (msg) ;
+    #if LAGRAPH_SUITESPARSE
 
     // C and A are NULL
     int result = LAGraph_msf (NULL, NULL, true, msg) ;
@@ -136,6 +145,9 @@ void test_errors (void)
     TEST_CHECK (result == GrB_DIMENSION_MISMATCH) ;
 
     OK (GrB_free (&A)) ;
+    #else
+    printf ("test skipped\n") ;
+    #endif
     LAGraph_Finalize (msg) ;
 }
 

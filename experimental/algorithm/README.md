@@ -18,4 +18,5 @@
 * LAGraph_lcc: Local clustering coefficient
 * LAGraph_msf: Minimum spanning forest
 * LAGraph_scc: Strongly connected components
+* LAGraph_PageRankGX: PageRank algorithm as defined by LDBC Graphalytics
 * more to appear here...

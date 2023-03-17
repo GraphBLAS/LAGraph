@@ -100,7 +100,10 @@ LAGraph contains the following files and folders:
 
     config: LAGraph.h.in, for constructing include/LAGraph.h
 
-    ContributionInstructions.txt: how to contributed to LAGraph
+    CONTRIBUTING.md: how to contributed to LAGraph
+
+    CODE_OF_CONDUCT.md: code of conduct from
+        https://www.contributor-covenant.org/version/2/1/code_of_conduct.html
 
     Contributors.txt: list of contributors
 

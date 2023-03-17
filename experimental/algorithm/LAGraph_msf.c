@@ -2,10 +2,14 @@
 // LAGraph_msf.c
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Yongzhe Zhang (zyz915@gmail.com)
 
@@ -84,6 +88,8 @@ static GrB_Index *weight = NULL, *parent = NULL, *partner = NULL;
 // for each element A(i, j), it is selected if
 //   1. weight[i] == A(i, j)    -- where weight[i] stores i's minimum edge weight
 //   2. parent[j] == partner[i] -- j belongs to the specified connected component
+#if 0
+// for GxB_SelectOp:
 bool f1 (
     GrB_Index i, GrB_Index j,
     const void *x, const void *thunk)
@@ -92,8 +98,19 @@ bool f1 (
     return (weight[i] == *aij) && (parent[j] == partner[i]);
 }
 
+#else
+// for GrB_IndexUnaryOp:
+void f1 (bool *z, const void *x, GrB_Index i, GrB_Index j, const void *thunk)
+{
+    uint64_t *aij = (uint64_t*) x;
+    (*z) = (weight[i] == *aij) && (parent[j] == partner[i]);
+}
+#endif
+
 // edge removal:
 // A(i, j) is removed when parent[i] == parent[j]
+#if 0
+// for GxB_SelectOp:
 bool f2 (
     GrB_Index i, GrB_Index j,
     const void *x, const void *thunk)
@@ -101,6 +118,14 @@ bool f2 (
     uint64_t *aij = (uint64_t*) x;
     return (parent[i] != parent[j]);
 }
+#else
+// for GrB_IndexUnaryOp:
+void f2 (bool *z, const void *x, GrB_Index i, GrB_Index j, const void *thunk)
+{
+    uint64_t *aij = (uint64_t*) x;
+    (*z) = (parent[i] != parent[j]);
+}
+#endif
 
 //****************************************************************************
 //****************************************************************************
@@ -114,9 +139,11 @@ int LAGraph_msf
 {
 
     LG_CLEAR_MSG ;
+
 #if !LAGRAPH_SUITESPARSE
-    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
+    return (GrB_NOT_IMPLEMENTED) ;
 #else
+
     GrB_Info info;
     GrB_Index n;
     GrB_Matrix S = NULL, T = NULL;
@@ -128,7 +155,11 @@ int LAGraph_msf
     GrB_Semiring combMin = NULL;
     GrB_UnaryOp fst = NULL, snd = NULL;
 
+#if 0
     GxB_SelectOp s1 = NULL, s2 = NULL;
+#else
+    GrB_IndexUnaryOp s1 = NULL, s2 = NULL;
+#endif
     if (result == NULL || A == NULL) return (GrB_NULL_POINTER) ;
 
     GrB_Index ncols ;
@@ -184,8 +215,14 @@ int LAGraph_msf
     GRB_TRY (GrB_UnaryOp_new (&snd, get_snd, GrB_UINT64, GrB_UINT64));
 
     // GrB_SelectOp
+
+#if 0
     GxB_SelectOp_new (&s1, f1, GrB_UINT64, GrB_NULL);
     GxB_SelectOp_new (&s2, f2, GrB_UINT64, GrB_NULL);
+#else
+    GrB_IndexUnaryOp_new (&s1, (void *) f1, GrB_BOOL, GrB_UINT64, GrB_UINT64);
+    GrB_IndexUnaryOp_new (&s2, (void *) f2, GrB_BOOL, GrB_UINT64, GrB_UINT64);
+#endif
 
     // the main computation
     GrB_Index nvals, diff, ntuples = 0, num;
@@ -236,7 +273,11 @@ int LAGraph_msf
         GRB_TRY (GrB_assign (t, 0, 0, inf, GrB_ALL, 0, 0));
         GRB_TRY (GrB_apply (t, mask, 0, snd, edge, 0));
         GRB_TRY (GrB_Vector_extractTuples (I, partner, &n, t));
+#if 0
         GRB_TRY (GxB_select (T, 0, 0, s1, S, GrB_NULL, 0));
+#else
+        GRB_TRY (GrB_select (T, 0, 0, s1, S, 0, 0));
+#endif
         GRB_TRY (GrB_Vector_clear (t));
 
         // 5. the generated matrix may still have redundant edges
@@ -262,7 +303,11 @@ int LAGraph_msf
 
         // remove the edges in the same connected component
         GRB_TRY (GrB_Vector_extractTuples (I, parent, &n, f));
+#if 0
         GRB_TRY (GxB_select (S, 0, 0, s2, S, GrB_NULL, 0));
+#else
+        GRB_TRY (GrB_select (S, 0, 0, s2, S, 0, 0));
+#endif
         GrB_Matrix_nvals (&nvals, S);
         if (nvals == 0) break;
     }

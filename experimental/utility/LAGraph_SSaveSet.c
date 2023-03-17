@@ -2,10 +2,14 @@
 // LAGraph_SSaveSet: save a set of matrices to a *.lagraph file
 //------------------------------------------------------------------------------
 
-// SuiteSparse:GraphBLAS, Timothy A. Davis, (c) 2017-2021, All Rights Reserved.
-// SPDX-License-Identifier: Apache-2.0
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Timothy A. Davis, Texas A&M University
 
@@ -100,7 +104,8 @@ int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
                 estimate, sizeof (uint8_t), msg)) ;
             GRB_TRY (GrB_Matrix_serialize (Contents [i].blob,
                 (GrB_Index *) &(Contents [i].blob_size), Set [i])) ;
-            LG_TRY (LAGraph_Realloc (&(Contents [i].blob_size),
+            LG_TRY (LAGraph_Realloc ((void **) &(Contents [i].blob),
+                (size_t) Contents [i].blob_size,
                 estimate, sizeof (uint8_t), msg)) ;
         }
         #endif
@@ -139,4 +144,3 @@ int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }
-

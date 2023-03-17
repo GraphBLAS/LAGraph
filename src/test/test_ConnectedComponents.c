@@ -2,10 +2,14 @@
 // LAGraph/src/test/test_ConnectedComponents.c: test cases for CC
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2021 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
-// See additional acknowledgments in the LICENSE file,
-// or contact permission@sei.cmu.edu for the full terms.
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
 // Contributed by Timothy A. Davis, Texas A&M University
 
@@ -118,6 +122,7 @@ void test_cc_matrices (void)
 
             // check the result
             OK (LG_check_cc (C, G, msg)) ;
+            OK (GrB_free (&C)) ;
 
             // find the connected components with LG_CC_FastSV5
             #if LAGRAPH_SUITESPARSE
@@ -163,7 +168,6 @@ void test_cc_matrices (void)
         }
 
         OK (LAGraph_Delete (&G, msg)) ;
-        OK (GrB_free (&C)) ;
     }
 
     OK (LAGraph_Finalize (msg)) ;
