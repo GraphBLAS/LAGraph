@@ -49,7 +49,9 @@ int main (int argc, char** argv)
 
     GRB_TRY (LAGraph_A_to_E (&E, G, msg)) ;
     GRB_TRY (GrB_Matrix_ncols (&num_edges, E)) ;
+
     GRB_TRY (GrB_Matrix_new (&E_t, GrB_FP64, num_edges, n)) ;
+    GRB_TRY (GrB_Vector_new (&weight, GrB_FP64, num_edges)) ;
     
     GRB_TRY (GrB_transpose (E_t, NULL, NULL, E, NULL)) ;
 

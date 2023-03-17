@@ -285,6 +285,7 @@ int main(int argc, char **argv){
     OK ( LAGraph_Free ((void**)(&rows), msg)) ;
     OK ( LAGraph_Free ((void**)(&cols), msg)) ;
     OK ( LAGraph_Free ((void**)(&vals), msg)) ;
+    OK ( GrB_Matrix_free (&A)) ;
 
     ofstream graph_out("data.mtx");
 
