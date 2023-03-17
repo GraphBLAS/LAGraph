@@ -92,6 +92,15 @@ foreach( testsourcefile ${TEST_SOURCES} )
     target_link_libraries( ${testname} lagraph lagraphx lagraphtest ${GRAPHBLAS_LIBRARIES} ${LUCATA_EXTRA_LIBS} )
     target_link_directories( ${testname} BEFORE PUBLIC ${CMAKE_SOURCE_DIR}/build )
     string( REPLACE "test_" "ctest_" ctestname ${testname})
-    add_test( ${ctestname} ${testname})
+    if (LUCATA_TOOLCHAIN_FOUND)
+        add_test(
+            NAME ${ctestname}
+            COMMAND ${CMAKE_COMMAND} -E env
+            ${LUCATA_ROOT}/bin/emusim.x --forward_return_value
+            -- ${testname}
+        )
+    else()
+        add_test(${ctestname} ${testname})
+    endif()
 endforeach( testsourcefile ${TEST_SOURCES} )
 
