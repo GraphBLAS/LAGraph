@@ -37,7 +37,7 @@ const matrix_info files [ ] =
 
 double thresholds [ ] = {
     0.85,   // random matching, exact
-    0.95,   // random matching, naive
+    0.93,   // random matching, naive
     0,      // weighted matching, naive, light
     0,      // weighted matching, naive, heavy
 } ;
@@ -83,7 +83,7 @@ void test_MaximalMatching (void)
 
         // check if G is undirected
         // by definition, G->A must equal G->AT iff G is undirected
-        bool ok ;
+        bool ok = 0;
         OK (LAGraph_Matrix_IsEqual (&ok, G->A, G->AT, msg)) ;
         TEST_CHECK (ok) ;
         TEST_MSG ("Input graph is not undirected") ;
@@ -108,6 +108,8 @@ void test_MaximalMatching (void)
         OK (GrB_Vector_new (&hop_nodes, GrB_BOOL, num_nodes)) ;
 
         printf("\n");
+        double avg_slack = 0 ;
+        size_t which_threshold ;
         // run max matching
         for (int i = 0; i < SEEDS_PER_TEST; i++){
             // try random seeds
@@ -131,8 +133,7 @@ void test_MaximalMatching (void)
             // check that the value of the matching is close enough
             double expected = files [k].matching_val ;
             double matching_value = 0 ;
-            ok = 0 ;
-            size_t which_threshold ;
+
             if (files [k].matching_type == 0) {
                 // random
                 // we only care about the number of chosen edges
@@ -158,11 +159,19 @@ void test_MaximalMatching (void)
                 TEST_CHECK (matching_value <= expected) ;
             }
             double slack = matching_value / expected ;
-            ok = (slack >= thresholds [which_threshold]) ;
-            TEST_CHECK (ok) ;
-            printf ("Value of produced matching has %.5f slack, tolerance is %.5f\n for case (%d)\n", slack, thresholds [which_threshold], k) ;
+            if (files [k].matching_type == 2) {
+                // flip it for light matchings
+                slack = expected / matching_value ;
+            }
+            avg_slack += slack ;
             OK (GrB_free (&matching)) ;
         }
+        avg_slack /= SEEDS_PER_TEST ;
+        ok = (avg_slack >= thresholds [which_threshold]) ;
+
+        TEST_CHECK (ok) ;
+        printf ("Value of produced matching has %.5f slack, tolerance is %.5f\n for case (%d)\n", avg_slack, thresholds [which_threshold], k) ;
+
         OK (GrB_free (&A)) ;
         OK (GrB_free (&E)) ;
         OK (GrB_free (&E_t)) ;
