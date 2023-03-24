@@ -260,6 +260,23 @@ void LAGraph_SFreeSet           // free a set of matrices
     GrB_Index nmatrices         // # of matrices in the set
 ) ;
 
+LAGRAPH_PUBLIC
+int LAGraph_A_to_E
+(
+    GrB_Matrix *result,
+    LAGraph_Graph graph,
+    char *msg
+) ;
+
+LAGRAPH_PUBLIC
+int LAGraph_Parent_to_S
+(
+    GrB_Matrix *result,
+    GrB_Vector parent,          // parent vector
+    int compress,               // whether to compress the namespace of the coarsened graph
+    char *msg
+) ;
+
 //****************************************************************************
 // Algorithms
 //****************************************************************************
@@ -878,6 +895,38 @@ int LAGraph_FastGraphletTransform
     // inputs:
     LAGraph_Graph G,
     bool compute_d_15,  // probably this makes most sense
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
+// matching and coarsening
+//------------------------------------------------------------------------------
+
+LAGRAPH_PUBLIC
+int LAGraph_MaximalMatching
+(
+    // outputs:
+    GrB_Vector *matching,
+    // inputs:
+    GrB_Matrix E,       // incidence matrix, not part of LAGraph_Graph (for now)
+    int matching_type,  // 0 (random), 1 (heavy weight), or 2 (light weight)
+    uint64_t seed,
+    char *msg
+) ;
+
+LAGRAPH_PUBLIC
+int LAGraph_Coarsen_Matching
+(
+    // outputs:
+    GrB_Matrix *coarsened, // coarsened adjacency
+    GrB_Vector *mapping,   // parent mapping (not compressed)
+    // inputs:
+    LAGraph_Graph G,
+    int matching_type,     // 0, 1, or 2, refer to above
+    int preserve_mapping,  // preserve initial namespace of nodes
+    int combine_weights,   // whether to sum edge weights or just keep the pattern
+    int nlevels,           // #of coarsening levels
+    uint64_t seed,         // used for matching
     char *msg
 ) ;
 
