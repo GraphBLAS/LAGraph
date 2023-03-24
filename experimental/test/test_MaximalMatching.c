@@ -37,7 +37,7 @@ const matrix_info files [ ] =
 
 double thresholds [ ] = {
     0.85,   // random matching, exact
-    0.93,   // random matching, naive
+    0.90,   // random matching, naive
     0,      // weighted matching, naive, light
     0,      // weighted matching, naive, heavy
 } ;
