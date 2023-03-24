@@ -1,4 +1,5 @@
-*.txt
+grb_result.txt
+my_result.txt
 *.mtx
 test_cpp.cpp
 test.c
