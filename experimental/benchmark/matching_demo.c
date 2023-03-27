@@ -3,7 +3,7 @@
 #include "LAGraphX.h"
 #include <omp.h>
 
-// #define VERBOSE
+#define VERBOSE
 
 #define NTHREAD_LIST 4
 #define THREAD_LIST 40, 20, 16, 8, // 4, 2, 1
@@ -184,12 +184,14 @@ int main (int argc, char** argv)
 
         double t = total_time / ntrials ;
 
+#ifndef VERBOSE
         printf("%.7f\n", t);
+#endif
 
 #ifdef VERBOSE
-        printf ("weighted max matching: %3d: avg time: %10.7f (sec) matrix: %s\n",
+        printf ("maximal matching: %3d: avg time: %10.7f (sec) matrix: %s\n",
                 nthreads, t, matrix_name) ;
-        fprintf (stderr, "weighted max matching: %3d: avg time: %10.7f (sec) matrix: %s\n",
+        fprintf (stderr, "maximal matching: %3d: avg time: %10.7f (sec) matrix: %s\n",
                 nthreads, t, matrix_name) ;
 #endif
     }
