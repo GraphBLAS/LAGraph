@@ -117,9 +117,9 @@ void test_Xinit_brutal (void)
                 LG_brutal_free (ok ? pnew : p) ;
             }
         }
+        OK (GrB_finalize ( )) ;
         if (ok)
         {
-            OK (GrB_finalize ( )) ;
             printf ("\nGxB_init, finally: %d %g\n", nbrutal,
                 (double) LG_nmalloc) ;
             TEST_CHECK (LG_nmalloc == 0) ;
