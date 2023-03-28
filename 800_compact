@@ -1897,4 +1897,94 @@ Graph: kind: undirected, nodes: 1.34218e+08 entries: 4.22326e+09 type: bool
     (11, 80121717)   1
     (11, 113872174)   1
     (11, 115829864)   1
- 
+    (11, 125066355)   1
+    (11, 129708509)   1
+    (11, 131285585)   1
+    (11, 132549336)   1
+    (14, 11049596)   1
+    (14, 11455408)   1
+    (14, 19942609)   1
+    ...
+dlopen: /home/faculty/d/davis/.SuiteSparse/GraphBLAS/8.0.0/libGB_jit_AxB_dot2_2c1f685800080087.so
+
+warmup method: Sandia_ULT: sum ((U*L') .* U)   auto-sort
+dlopen: /home/faculty/d/davis/.SuiteSparse/GraphBLAS/8.0.0/libGB_jit_AxB_dot3_2c1f685800280055.so
+dlopen: /home/faculty/d/davis/.SuiteSparse/GraphBLAS/8.0.0/libGB_jit_reduce_2c1f885.so
+# of triangles: 106873365648
+Sandia_ULT: sum ((U*L') .* U)   sort: descending degree
+nthreads:  40 time:   901.308347 rate:   4.69 (Sandia_ULT, one trial)
+
+Method: Sandia_LL: sum ((L*L) .* L)     auto-sort
+kron fails on method 3; skipped
+
+Method: Sandia_UU: sum ((U*U) .* U)     auto-sort
+kron fails on method 4; skipped
+
+Method: Sandia_LUT: sum ((L*U') .* L)   auto-sort
+trial  0:   868.159773 sec rate   4.86  # triangles: 1.06873e+11
+^C
+[0;36mhypersparse $[0m pwd
+/home/faculty/d/davis/master/LAGraph/src/benchmark
+[0;36mhypersparse $[0m git status
+On branch davis2
+Your branch is up to date with 'origin/davis2'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	[31mmodified:   ../algorithm/LG_CC_FastSV6.c[m
+	[31mmodified:   GAP_2023.txt[m
+	[31mmodified:   cc_demo.c[m
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	[31m../../800_compact[m
+
+no changes added to commit (use "git add" and/or "git commit -a")
+[0;36mhypersparse $[0m cd ..
+[0;36mhypersparse $[0m cd ..
+[0;36mhypersparse $[0m git status
+On branch davis2
+Your branch is up to date with 'origin/davis2'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	[31mmodified:   src/algorithm/LG_CC_FastSV6.c[m
+	[31mmodified:   src/benchmark/GAP_2023.txt[m
+	[31mmodified:   src/benchmark/cc_demo.c[m
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	[31m800_compact[m
+
+no changes added to commit (use "git add" and/or "git commit -a")
+[0;36mhypersparse $[0m git add .[Kg[Kdig[Kt[Kgit add .
+[0;36mhypersparse $[0m git commit -m 'benchmark in progress'
+[davis2 6e4895c6] benchmark in progress
+ 4 files changed, 1943 insertions(+), 7 deletions(-)
+ create mode 100644 800_compact
+[0;36mhypersparse $[0m git push
+Enumerating objects: 16, done.
+Counting objects:   6% (1/16)Counting objects:  12% (2/16)Counting objects:  18% (3/16)Counting objects:  25% (4/16)Counting objects:  31% (5/16)Counting objects:  37% (6/16)Counting objects:  43% (7/16)Counting objects:  50% (8/16)Counting objects:  56% (9/16)Counting objects:  62% (10/16)Counting objects:  68% (11/16)Counting objects:  75% (12/16)Counting objects:  81% (13/16)Counting objects:  87% (14/16)Counting objects:  93% (15/16)Counting objects: 100% (16/16)Counting objects: 100% (16/16), done.
+Delta compression using up to 40 threads
+Compressing objects:  11% (1/9)Compressing objects:  22% (2/9)Compressing objects:  33% (3/9)Compressing objects:  44% (4/9)Compressing objects:  55% (5/9)Compressing objects:  66% (6/9)Compressing objects:  77% (7/9)Compressing objects:  88% (8/9)Compressing objects: 100% (9/9)Compressing objects: 100% (9/9), done.
+Writing objects:  11% (1/9)Writing objects:  22% (2/9)Writing objects:  33% (3/9)Writing objects:  44% (4/9)Writing objects:  55% (5/9)Writing objects:  66% (6/9)Writing objects:  77% (7/9)Writing objects:  88% (8/9)Writing objects: 100% (9/9)Writing objects: 100% (9/9), 17.39 KiB | 3.48 MiB/s, done.
+Total 9 (delta 6), reused 0 (delta 0)
+remote: Resolving deltas:   0% (0/6)[Kremote: Resolving deltas:  16% (1/6)[Kremote: Resolving deltas:  33% (2/6)[Kremote: Resolving deltas:  50% (3/6)[Kremote: Resolving deltas:  66% (4/6)[Kremote: Resolving deltas:  83% (5/6)[Kremote: Resolving deltas: 100% (6/6)[Kremote: Resolving deltas: 100% (6/6), completed with 6 local objects.[K
+To https://github.com/GraphBLAS/LAGraph.git
+   1817f37c..6e4895c6  davis2 -> davis2
+[0;36mhypersparse $[0m dir
+total 424
+104 744_benchmark          8 CODE_OF_CONDUCT.md    4 [0m[01;32minclude[0m/
+100 800_3_benchmark        4 [01;32mconfig[0m/               4 LICENSE
+120 800_compact            8 CONTRIBUTING.md       4 Makefile
+  4 Acknowledgments.txt    4 Contributors.txt      4 [01;32mpapers[0m/
+  4 [01;32mbuild[0m/                 4 [01;32mdata[0m/                 8 README.md
+  4 ChangeLog              4 [01;32mdeps[0m/                 4 [01;32mrtdocs[0m/
+ 12 CMakeLists.txt         4 Dockerfile            4 [01;32msrc[0m/
+  4 [01;32mcmake_modules[0m/         4 [01;32mexperimental[0m/
+[0;36mhypersparse $[0m exit
+exit
+
+Script done on 2023-03-28 11:45:05-05:00 [COMMAND_EXIT_CODE="0"]
