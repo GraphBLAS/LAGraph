@@ -2,7 +2,8 @@ hypersparse: 20-core Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz,
 with 40 threads (all default settings), gcc 12.2.0 -O3 (Ubuntu 20.04),
 unless otherwise indicated.  Single socket system (no NUMA effects).
 
-v8_compact: same as draft3 but with COMPACT on
+v8_compact: same as draft3 but with COMPACT on.  Times do not include
+    compilation of any JIT kernels
 v8.0.0.draft3: COMPACT is off
 v7.4.4: gcc 12.2.0, with seq_cst
 v7.4.3: gcc 12.2.0, Mar 27, 2023, no seq_cst in atomics
@@ -44,8 +45,9 @@ CC              kron        urand       twitter     web         road
 CC   GAP:2021     .531       1.653        .229        .237        .046 (2022)  
 ================================================================================
 
-CC  v8 compact   3.268 ??    3.858 ??    1.577 ??    2.406 ??     .757 (Mar 27)
-CC  v8.0.0_d3    3.280 ??    3.862 ??    1.583 ??    2.395 ??     .748 (Mar 27)
+CC  v8 compact   2.864       3.714       1.369       2.042        .761 (Mar 28)
+CC  v8.0.0_d3    2.870       3.714       1.366       2.043        .750 (Mar 28)
+CC  v7.4.4       2.875       3.724       1.374       2.053        .774 (Mar 28) 
 CC  v7.4.4       2.874       3.716       1.366       2.036        .746 (Mar 27) 
 CC  v7.4.3       2.883       3.720       1.370       2.041        .749 (Mar 27) 
               ------------------------------------------------------------------
@@ -83,8 +85,8 @@ TC              kron        urand       twitter     web         road
 TC   GAP:2021  361.216      21.831      77.734      21.834        .031 (2022)  
 ================================================================================
 
-TC   v8_compact   .           .           .           .           .    (Mar 27)
-TC   v8.0.0_d3 869.948      32.530     224.442      33.191        .193 (Mar 27)
+TC v8_compact     .           .           .           .           .    (Mar 27)
+TC v8.0.0_d3   869.948      32.530     224.442      33.191        .193 (Mar 27)
 TC dot v7.4.4  867.834      32.694     223.546      33.401        .191 (Mar 27) 
 TC dot v7.4.3  867.840      32.651     224.636      33.259        .195 (Mar 27) 
               ------------------------------------------------------------------

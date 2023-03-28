@@ -142,9 +142,8 @@ int main (int argc, char **argv)
     printf ("LG_check_cc passed, time: %g\n", tcheck) ;
 #endif
 
-    GxB_set (GxB_BURBLE, true) ;
-    // #define NTRIALS 16
-    #define NTRIALS 2
+    #define NTRIALS 16
+    // #define NTRIALS 1
     printf ("# of trials: %d\n\n", NTRIALS) ;
 
     //--------------------------------------------------------------------------
@@ -161,14 +160,9 @@ int main (int argc, char **argv)
         for (int k = 0 ; k < ntrials ; k++)
         {
             GrB_free (&components2) ;
-            // HACK: add burble
-            printf ("\n ---------------------------------- start burble\n") ;
-            GxB_set (GxB_BURBLE, true) ;
             double ttrial = LAGraph_WallClockTime ( ) ;
             LAGRAPH_TRY (LAGr_ConnectedComponents (&components2, G, msg)) ;
             ttrial = LAGraph_WallClockTime ( ) - ttrial ;
-            printf ("\n ---------------------------------- end burble\n") ;
-            GxB_set (GxB_BURBLE, true) ;
             ttt += ttrial ;
             printf ("SV6:      nthreads: %2d trial: %2d time: %10.4f sec\n",
                 nthreads, k, ttrial) ;

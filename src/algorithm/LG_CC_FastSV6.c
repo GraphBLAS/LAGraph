@@ -81,13 +81,8 @@ static inline GrB_Info fastsv
     GrB_Index Cx_size = sizeof (bool) ;
     bool iso = true, jumbled = false, done = false ;
 
-    printf ("\n============= start fastsv:\n") ;
-    int iter = 0 ;
-
     while (true)
     {
-        printf ("=========================== fastsv iter: %d\n", iter) ;
-        iter++ ;
 
         //----------------------------------------------------------------------
         // hooking & shortcutting
@@ -161,7 +156,6 @@ static inline GrB_Info fastsv
         // swap gp and gp_new
         GrB_Vector s = (*gp) ; (*gp) = (*gp_new) ; (*gp_new) = s ;
     }
-    printf ("============= end fastsv:\n") ;
     return (GrB_SUCCESS) ;
 }
 
@@ -356,7 +350,6 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
 
     if (sampling)
     {
-        printf ("============= sample:\n") ;
 
 // [ todo: GxB_select, using a new operator: GxB_RankUnaryOp, will do all this,
 // with GxB_Matrix_select_RankOp_Scalar with operator GxB_LEASTRANK and a
@@ -414,8 +407,6 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         // define parallel tasks to construct T
         //----------------------------------------------------------------------
 
-        double tt1 = omp_get_wtime ( ) ;
-
         // thread tid works on rows range[tid]:range[tid+1]-1 of A and T
         for (int tid = 0 ; tid <= nthreads ; tid++)
         {
@@ -466,11 +457,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
                 }
                 Tp [i + 1] = p ;
             }
-
         }
-
-        tt1 = omp_get_wtime ( ) - tt1 ;
-        printf ("\n time to build T: %g\n", tt1) ;
 
         //----------------------------------------------------------------------
         // import the result into the GrB_Matrix T
@@ -504,8 +491,6 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         #define HASH(x) (((x << 4) + x) & (HASH_SIZE-1))
         #define NEXT(x) ((x + 23) & (HASH_SIZE-1))
 
-        double tt2 = omp_get_wtime ( ) ;
-
         // allocate and initialize the hash table
         LG_TRY (LAGraph_Malloc ((void **) &ht_key, HASH_SIZE,
             sizeof (GrB_Index), msg)) ;
@@ -538,9 +523,6 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
             }
         }
 
-        tt2 = omp_get_wtime ( ) - tt2 ;
-        printf ("hash time %g\n", tt2) ;
-
         //----------------------------------------------------------------------
         // compact the largest connected component in A
         //----------------------------------------------------------------------
@@ -569,8 +551,6 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         bool T_jumbled, T_iso ;
         GRB_TRY (GxB_Matrix_unpack_CSR (T, &Tp, &Tj, &Tx, &Tp_size, &Tj_size,
             &Tx_size, &T_iso, &T_jumbled, NULL)) ;
-
-        double tt3 = omp_get_wtime ( ) ;
 
         #pragma omp parallel for num_threads(nthreads) schedule(static)
         for (int tid = 0 ; tid < nthreads ; tid++)
@@ -639,9 +619,6 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
 
         // finalize T
         Tp [n] = nvals ;
-
-        tt3 = omp_get_wtime ( ) - tt3 ;
-        printf ("compact time %g\n", tt3) ;
 
         // pack T for the final phase
         GRB_TRY (GxB_Matrix_pack_CSR (T, &Tp, &Tj, &Tx, Tp_size, Tj_size,
