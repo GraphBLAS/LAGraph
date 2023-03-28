@@ -1916,4 +1916,383 @@ sssp15:  threads: 40 trial: 43 source     21372803 time:    32.1155 sec
 sssp15:  threads: 40 trial: 44 source      2898009 time:    33.1533 sec
 sssp15:  threads: 40 trial: 45 source      8491277 time:    31.1362 sec
 sssp15:  threads: 40 trial: 46 source     18798317 time:    31.7288 sec
-sssp15:  threads: 40 trial: 47 source  
+sssp15:  threads: 40 trial: 47 source     23757560 time:    31.8317 sec
+sssp15:  threads: 40 trial: 48 source     17161819 time:    31.5167 sec
+sssp15:  threads: 40 trial: 49 source     23180739 time:    33.5362 sec
+sssp15:  threads: 40 trial: 50 source     10997085 time:    31.8938 sec
+sssp15:  threads: 40 trial: 51 source      3730630 time:    33.4134 sec
+sssp15:  threads: 40 trial: 52 source      1079068 time:    32.5983 sec
+sssp15:  threads: 40 trial: 53 source     15426822 time:    31.5006 sec
+sssp15:  threads: 40 trial: 54 source     12190925 time:    32.2052 sec
+sssp15:  threads: 40 trial: 55 source      1155218 time:    32.3557 sec
+sssp15:  threads: 40 trial: 56 source     10693488 time:    31.1174 sec
+sssp15:  threads: 40 trial: 57 source     14434835 time:    32.5921 sec
+sssp15:  threads: 40 trial: 58 source     19963339 time:    32.0667 sec
+sssp15:  threads: 40 trial: 59 source      3486185 time:    31.8421 sec
+sssp15:  threads: 40 trial: 60 source     18383269 time:    32.4380 sec
+sssp15:  threads: 40 trial: 61 source     20269908 time:    31.7196 sec
+sssp15:  threads: 40 trial: 62 source     12370764 time:    32.3144 sec
+sssp15:  threads: 40 trial: 63 source      7843140 time:    32.2356 sec
+
+40: SSSP    time:      32.337400 sec  rate:     1.78 (delta 50000)
+Avg: SSSP          40:     32.337 sec: ../../../GAP/GAP-road/GAP-road.grb
+ 
+======================================================================
+GAP benchmarks using LAGraph+GraphBLAS: Triangle Counting
+======================================================================
+Matrix input file format:  grb
+GAP matrices located in:   ../../../GAP
+include: SuiteSparse:GraphBLAS v7.4.4 [Mar 25, 2023]
+library: SuiteSparse:GraphBLAS v7.4.4 [Mar 25, 2023]
+# of trials: 3
+threads to test:  40
+matrix: ../../../GAP/GAP-kron/GAP-kron.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-kron/GAP-kron.grb
+read time: 46.5552
+Graph: kind: undirected, nodes: 1.34218e+08 entries: 4.22326e+09 type: bool
+  structural symmetry: symmetric  self-edges: 0
+  adjacency matrix: GrB_BOOL matrix: 134217726-by-134217726 entries: 4223264644
+    (1, 83111928)   1
+    (2, 113772338)   1
+    (9, 26920261)   1
+    (9, 33335674)   1
+    (9, 90905511)   1
+    (9, 92964069)   1
+    (9, 126874301)   1
+    (11, 3075467)   1
+    (11, 11283179)   1
+    (11, 14136330)   1
+    (11, 18241662)   1
+    (11, 21256905)   1
+    (11, 26197037)   1
+    (11, 34992956)   1
+    (11, 49762924)   1
+    (11, 54231301)   1
+    (11, 55275316)   1
+    (11, 55896288)   1
+    (11, 56613538)   1
+    (11, 69378808)   1
+    (11, 76391974)   1
+    (11, 77970070)   1
+    (11, 80121717)   1
+    (11, 113872174)   1
+    (11, 115829864)   1
+    (11, 125066355)   1
+    (11, 129708509)   1
+    (11, 131285585)   1
+    (11, 132549336)   1
+    (14, 11049596)   1
+    (14, 11455408)   1
+    (14, 19942609)   1
+    ...
+
+warmup method: Sandia_ULT: sum ((U*L') .* U)   auto-sort
+# of triangles: 106873365648
+Sandia_ULT: sum ((U*L') .* U)   sort: descending degree
+nthreads:  40 time:   903.292657 rate:   4.68 (Sandia_ULT, one trial)
+
+Method: Sandia_LL: sum ((L*L) .* L)     auto-sort
+kron fails on method 3; skipped
+
+Method: Sandia_UU: sum ((U*U) .* U)     auto-sort
+kron fails on method 4; skipped
+
+Method: Sandia_LUT: sum ((L*U') .* L)   auto-sort
+trial  0:   866.055773 sec rate   4.88  # triangles: 1.06873e+11
+trial  1:   870.036112 sec rate   4.85  # triangles: 1.06873e+11
+trial  2:   867.410756 sec rate   4.87  # triangles: 1.06873e+11
+nthreads:  40 time:   867.834213 rate:   4.87   # of triangles: 106873365648 presort: 1
+
+Method used: Sandia_LUT: sum ((L*U') .* L)   ascending degree
+Avg: TC method5.0  40:    867.834 sec: ../../../GAP/GAP-kron/GAP-kron.grb
+
+Best method: Sandia_LUT: sum ((L*U') .* L)   auto-sort
+nthreads:  40 time:   867.834213 rate:   4.87
+include: SuiteSparse:GraphBLAS v7.4.4 [Mar 25, 2023]
+library: SuiteSparse:GraphBLAS v7.4.4 [Mar 25, 2023]
+# of trials: 3
+threads to test:  40
+matrix: ../../../GAP/GAP-urand/GAP-urand.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-urand/GAP-urand.grb
+read time: 51.678
+Graph: kind: undirected, nodes: 1.34218e+08 entries: 4.29497e+09 type: bool
+  structural symmetry: symmetric  self-edges: 0
+  adjacency matrix: GrB_BOOL matrix: 134217728-by-134217728 entries: 4294966740
+    (0, 8291853)   1
+    (0, 9845139)   1
+    (0, 14571172)   1
+    (0, 16459757)   1
+    (0, 27302127)   1
+    (0, 27726180)   1
+    (0, 30303523)   1
+    (0, 32640525)   1
+    (0, 33360373)   1
+    (0, 40782998)   1
+    (0, 41057943)   1
+    (0, 43348321)   1
+    (0, 50206206)   1
+    (0, 52510658)   1
+    (0, 53390371)   1
+    (0, 53579654)   1
+    (0, 54622695)   1
+    (0, 57696071)   1
+    (0, 59385788)   1
+    (0, 60365539)   1
+    (0, 64764501)   1
+    (0, 64889445)   1
+    (0, 72706136)   1
+    (0, 77394182)   1
+    (0, 82101150)   1
+    (0, 86364056)   1
+    (0, 86790574)   1
+    (0, 90287459)   1
+    (0, 104674459)   1
+    (0, 109716228)   1
+    (0, 120042750)   1
+    (0, 125093057)   1
+    ...
+
+warmup method: Sandia_ULT: sum ((U*L') .* U)   auto-sort
+# of triangles: 5378
+Sandia_ULT: sum ((U*L') .* U)   sort: none
+nthreads:  40 time:    33.959765 rate: 126.47 (Sandia_ULT, one trial)
+
+Method: Sandia_LL: sum ((L*L) .* L)     auto-sort
+trial  0:    28.901491 sec rate 148.61  # triangles: 5378
+trial  1:    28.654824 sec rate 149.89  # triangles: 5378
+trial  2:    28.696212 sec rate 149.67  # triangles: 5378
+nthreads:  40 time:    28.750842 rate: 149.39   # of triangles: 5378 presort: 2
+
+Method used: Sandia_LL: sum ((L*L) .* L)     sort: none
+Avg: TC method3.0  40:     28.751 sec: ../../../GAP/GAP-urand/GAP-urand.grb
+
+Method: Sandia_UU: sum ((U*U) .* U)     auto-sort
+trial  0:    27.581986 sec rate 155.72  # triangles: 5378
+trial  1:    27.658788 sec rate 155.28  # triangles: 5378
+trial  2:    27.555579 sec rate 155.87  # triangles: 5378
+nthreads:  40 time:    27.598785 rate: 155.62   # of triangles: 5378 presort: 2
+
+Method used: Sandia_UU: sum ((U*U) .* U)     sort: none
+Avg: TC method4.0  40:     27.599 sec: ../../../GAP/GAP-urand/GAP-urand.grb
+
+Method: Sandia_LUT: sum ((L*U') .* L)   auto-sort
+trial  0:    32.690143 sec rate 131.38  # triangles: 5378
+trial  1:    32.685928 sec rate 131.40  # triangles: 5378
+trial  2:    32.706251 sec rate 131.32  # triangles: 5378
+nthreads:  40 time:    32.694107 rate: 131.37   # of triangles: 5378 presort: 2
+
+Method used: Sandia_LUT: sum ((L*U') .* L)   sort: none
+Avg: TC method5.0  40:     32.694 sec: ../../../GAP/GAP-urand/GAP-urand.grb
+
+Best method: Sandia_UU: sum ((U*U) .* U)     auto-sort
+nthreads:  40 time:    27.598785 rate: 155.62
+include: SuiteSparse:GraphBLAS v7.4.4 [Mar 25, 2023]
+library: SuiteSparse:GraphBLAS v7.4.4 [Mar 25, 2023]
+# of trials: 3
+threads to test:  40
+matrix: ../../../GAP/GAP-twitter/GAP-twitter.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-twitter/GAP-twitter.grb
+forcing G-> to be symmetric (via A = A+A')
+read time: 28.8769
+Graph: kind: undirected, nodes: 6.15784e+07 entries: 2.40503e+09 type: bool
+  structural symmetry: symmetric  self-edges: 0
+  adjacency matrix: GrB_BOOL matrix: 61578415-by-61578415 entries: 2405026092
+    (12, 13)   1
+    (12, 14)   1
+    (12, 15)   1
+    (12, 16)   1
+    (12, 17)   1
+    (12, 18)   1
+    (12, 20)   1
+    (12, 21)   1
+    (12, 22)   1
+    (12, 23)   1
+    (12, 24)   1
+    (12, 31)   1
+    (12, 38)   1
+    (12, 41)   1
+    (12, 47)   1
+    (12, 52)   1
+    (12, 53)   1
+    (12, 56)   1
+    (12, 57)   1
+    (12, 58)   1
+    (12, 59)   1
+    (12, 60)   1
+    (12, 61)   1
+    (12, 62)   1
+    (12, 64)   1
+    (12, 67)   1
+    (12, 69)   1
+    (12, 70)   1
+    (12, 76)   1
+    (12, 87)   1
+    (12, 89)   1
+    (12, 92)   1
+    ...
+
+warmup method: Sandia_ULT: sum ((U*L') .* U)   auto-sort
+# of triangles: 34824916864
+Sandia_ULT: sum ((U*L') .* U)   sort: descending degree
+nthreads:  40 time:   233.419742 rate:  10.30 (Sandia_ULT, one trial)
+
+Method: Sandia_LL: sum ((L*L) .* L)     auto-sort
+all but urand is slow with method 3: skipped
+
+Method: Sandia_UU: sum ((U*U) .* U)     auto-sort
+all but urand is slow with method 4: skipped
+
+Method: Sandia_LUT: sum ((L*U') .* L)   auto-sort
+trial  0:   223.031752 sec rate  10.78  # triangles: 3.48249e+10
+trial  1:   223.012412 sec rate  10.78  # triangles: 3.48249e+10
+trial  2:   224.593549 sec rate  10.71  # triangles: 3.48249e+10
+nthreads:  40 time:   223.545904 rate:  10.76   # of triangles: 34824916864 presort: 1
+
+Method used: Sandia_LUT: sum ((L*U') .* L)   ascending degree
+Avg: TC method5.0  40:    223.546 sec: ../../../GAP/GAP-twitter/GAP-twitter.grb
+
+Best method: Sandia_LUT: sum ((L*U') .* L)   auto-sort
+nthreads:  40 time:   223.545904 rate:  10.76
+include: SuiteSparse:GraphBLAS v7.4.4 [Mar 25, 2023]
+library: SuiteSparse:GraphBLAS v7.4.4 [Mar 25, 2023]
+# of trials: 3
+threads to test:  40
+matrix: ../../../GAP/GAP-web/GAP-web.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-web/GAP-web.grb
+forcing G-> to be symmetric (via A = A+A')
+read time: 29.83
+Graph: kind: undirected, nodes: 5.06362e+07 entries: 3.62013e+09 type: bool
+  structural symmetry: symmetric  self-edges: 0
+  adjacency matrix: GrB_BOOL matrix: 50636151-by-50636151 entries: 3620126660
+    (0, 50395004)   1
+    (1, 50395004)   1
+    (2, 50395004)   1
+    (3, 50395004)   1
+    (4, 50395004)   1
+    (5, 50395004)   1
+    (6, 50395004)   1
+    (7, 50395004)   1
+    (8, 50395004)   1
+    (9, 50395004)   1
+    (10, 11)   1
+    (10, 49817219)   1
+    (10, 49824797)   1
+    (10, 49824842)   1
+    (10, 49824843)   1
+    (10, 49824846)   1
+    (10, 49826026)   1
+    (10, 49826027)   1
+    (10, 49826709)   1
+    (10, 49826710)   1
+    (10, 49826711)   1
+    (10, 49826712)   1
+    (10, 49826713)   1
+    (10, 49826714)   1
+    (10, 49826715)   1
+    (10, 49826716)   1
+    (10, 49826717)   1
+    (10, 49826719)   1
+    (10, 49827761)   1
+    (10, 49853332)   1
+    (10, 49853570)   1
+    (10, 49853571)   1
+    ...
+
+warmup method: Sandia_ULT: sum ((U*L') .* U)   auto-sort
+# of triangles: 84907041475
+Sandia_ULT: sum ((U*L') .* U)   sort: none
+nthreads:  40 time:    38.988223 rate:  92.85 (Sandia_ULT, one trial)
+
+Method: Sandia_LL: sum ((L*L) .* L)     auto-sort
+all but urand is slow with method 3: skipped
+
+Method: Sandia_UU: sum ((U*U) .* U)     auto-sort
+all but urand is slow with method 4: skipped
+
+Method: Sandia_LUT: sum ((L*U') .* L)   auto-sort
+trial  0:    33.395310 sec rate 108.40  # triangles: 8.4907e+10
+trial  1:    33.424396 sec rate 108.31  # triangles: 8.4907e+10
+trial  2:    33.383684 sec rate 108.44  # triangles: 8.4907e+10
+nthreads:  40 time:    33.401130 rate: 108.38   # of triangles: 84907041475 presort: 2
+
+Method used: Sandia_LUT: sum ((L*U') .* L)   sort: none
+Avg: TC method5.0  40:     33.401 sec: ../../../GAP/GAP-web/GAP-web.grb
+
+Best method: Sandia_LUT: sum ((L*U') .* L)   auto-sort
+nthreads:  40 time:    33.401130 rate: 108.38
+include: SuiteSparse:GraphBLAS v7.4.4 [Mar 25, 2023]
+library: SuiteSparse:GraphBLAS v7.4.4 [Mar 25, 2023]
+# of trials: 3
+threads to test:  40
+matrix: ../../../GAP/GAP-road/GAP-road.grb
+[.grb]
+Reading binary file: ../../../GAP/GAP-road/GAP-road.grb
+read time: 1.04447
+Graph: kind: undirected, nodes: 2.39473e+07 entries: 5.77086e+07 type: bool
+  structural symmetry: symmetric  self-edges: 0
+  adjacency matrix: GrB_BOOL matrix: 23947347-by-23947347 entries: 57708624
+    (0, 1)   1
+    (0, 709)   1
+    (0, 1049673)   1
+    (1, 0)   1
+    (1, 2097154)   1
+    (2, 9)   1
+    (2, 2097152)   1
+    (2, 2097156)   1
+    (3, 1903)   1
+    (3, 1048578)   1
+    (4, 5)   1
+    (4, 2097153)   1
+    (5, 4)   1
+    (5, 11)   1
+    (5, 1048579)   1
+    (6, 7)   1
+    (6, 1048580)   1
+    (6, 1048582)   1
+    (7, 6)   1
+    (8, 33976)   1
+    (8, 1048581)   1
+    (9, 2)   1
+    (9, 10)   1
+    (9, 2097155)   1
+    (10, 9)   1
+    (10, 11)   1
+    (10, 2097152)   1
+    (11, 5)   1
+    (11, 10)   1
+    (11, 2097155)   1
+    (12, 1048586)   1
+    (12, 1049686)   1
+    ...
+
+warmup method: Sandia_ULT: sum ((U*L') .* U)   auto-sort
+# of triangles: 438804
+Sandia_ULT: sum ((U*L') .* U)   sort: none
+nthreads:  40 time:     0.199259 rate: 289.62 (Sandia_ULT, one trial)
+
+Method: Sandia_LL: sum ((L*L) .* L)     auto-sort
+all but urand is slow with method 3: skipped
+
+Method: Sandia_UU: sum ((U*U) .* U)     auto-sort
+all but urand is slow with method 4: skipped
+
+Method: Sandia_LUT: sum ((L*U') .* L)   auto-sort
+trial  0:     0.190612 sec rate 302.75  # triangles: 438804
+trial  1:     0.189658 sec rate 304.28  # triangles: 438804
+trial  2:     0.191392 sec rate 301.52  # triangles: 438804
+nthreads:  40 time:     0.190554 rate: 302.85   # of triangles: 438804 presort: 2
+
+Method used: Sandia_LUT: sum ((L*U') .* L)   sort: none
+Avg: TC method5.0  40:      0.191 sec: ../../../GAP/GAP-road/GAP-road.grb
+
+Best method: Sandia_LUT: sum ((L*U') .* L)   auto-sort
+nthreads:  40 time:     0.190554 rate: 302.85
+[0;36mhypersparse $[0m 
+[0;36mhypersparse $[0m exit
+exit
+
+Script done on 2023-03-27 21:23:43-05:00 [COMMAND_EXIT_CODE="0"]
