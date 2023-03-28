@@ -181,13 +181,13 @@ for (int nrepeat = 0 ; nrepeat <= 1 ; nrepeat++)
         }
 
         GrB_free (&centrality) ;
-        if (nrepeat == 0)
-        {
-            printf ("warmup average: %g sec\n", tt [1] / ntrials) ;
-        }
 
         // if burble is on, just do the first batch
         if (burble) break ;
+    }
+    if (nrepeat == 0)
+    {
+        printf ("warmup average: %g sec\n", tt [1] / ntrials) ;
     }
 }
 

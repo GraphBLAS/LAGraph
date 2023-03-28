@@ -110,14 +110,31 @@ int main (int argc, char **argv)
     GRB_TRY (GrB_Scalar_setElement (Delta, delta)) ;
 
     //--------------------------------------------------------------------------
-    // begin tests
+    // get the number of source nodes
     //--------------------------------------------------------------------------
 
-    // get the number of source nodes
     GrB_Index nsource ;
     GRB_TRY (GrB_Matrix_nrows (&nsource, SourceNodes)) ;
-
     int ntrials = (int) nsource ;
+
+    //--------------------------------------------------------------------------
+    // warmup
+    //--------------------------------------------------------------------------
+
+    LAGRAPH_TRY (LAGraph_SetNumThreads (1, nthreads_max, msg)) ;
+    // src = SourceNodes [0]
+    GrB_Index src = -1 ;
+    GRB_TRY (GrB_Matrix_extractElement (&src, SourceNodes, 0, 0)) ;
+    src-- ;     // convert from 1-based to 0-based
+
+    double t1 = LAGraph_WallClockTime ( ) ;
+    LAGRAPH_TRY (LAGr_SingleSourceShortestPath (&pathlen, G, src, Delta, msg)) ;
+    t1 = LAGraph_WallClockTime ( ) - t1 ;
+    printf ("warmup: %g sec\n", t1) ;
+
+    //--------------------------------------------------------------------------
+    // begin tests
+    //--------------------------------------------------------------------------
 
     for (int tt = 1 ; tt <= nt ; tt++)
     {
