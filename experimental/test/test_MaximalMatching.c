@@ -31,15 +31,25 @@ const matrix_info files [ ] =
     { 22, 0, 0, "random_general_bool_3.mtx" },
     { 2416, 0, 0, "random_general_bool_4.mtx" },
     { 499, 0, 1, "random_general_bool_5.mtx"},
-    
+    // weighted bipartite
+    { 734309039921, 1, 0, "random_bipartite_int_1.mtx"},
+    { 9652307617985, 1, 0, "random_bipartite_int_2.mtx"},
+    { 279715045601, 2, 0, "random_bipartite_int_3.mtx"},
+    { 691019246022, 2, 0, "random_bipartite_int_4.mtx"},
+    // weighted general
+    { 150286044439, 1, 0, "random_general_int_1.mtx" },
+    { 8358339868972, 1, 0, "random_general_int_2.mtx" },
+    { 173409012452, 2, 0, "random_general_int_3.mtx" },
+    { 1112155626677, 2, 0, "random_general_int_4.mtx" },
+
     { 0, 0, 0, "" }
 } ;
 
 double thresholds [ ] = {
     0.85,   // random matching, exact
     0.90,   // random matching, naive
-    0,      // weighted matching, naive, light
-    0,      // weighted matching, naive, heavy
+    0.85,   // weighted matching, naive, light
+    0.90,   // weighted matching, naive, heavy
 } ;
 
 #define SEEDS_PER_TEST 10
@@ -149,10 +159,14 @@ void test_MaximalMatching (void)
                 // weighted
                 // sum the weights of the chosen edges.
                 // eliminate entries in the weight that are not in the matching, then sum the remaining entries
-                OK (GrB_eWiseMult (weight, NULL, NULL, GrB_TIMES_FP64, weight, matching, NULL)) ;
-                OK (GrB_reduce (&matching_value, NULL, GrB_PLUS_MONOID_FP64, weight, NULL)) ;
+                GrB_Vector use_weights = NULL ;
+
+                OK (GrB_Vector_new (&use_weights, GrB_FP64, num_edges)) ;
+                OK (GrB_eWiseMult (use_weights, NULL, NULL, GrB_TIMES_FP64, weight, matching, NULL)) ;
+                OK (GrB_reduce (&matching_value, NULL, GrB_PLUS_MONOID_FP64, use_weights, NULL)) ;
+                OK (GrB_free (&use_weights)) ;
                 
-                which_threshold = 2 ;
+                which_threshold = 3 ;
             }
             if (which_threshold == 0) {
                 // exact matching must have strict upper bound
@@ -162,6 +176,7 @@ void test_MaximalMatching (void)
             if (files [k].matching_type == 2) {
                 // flip it for light matchings
                 slack = expected / matching_value ;
+                which_threshold = 2 ;
             }
             avg_slack += slack ;
             OK (GrB_free (&matching)) ;
