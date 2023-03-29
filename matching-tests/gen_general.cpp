@@ -24,7 +24,7 @@ char msg[1024];
 
 #define OK(method)                                                  \
 {                                                                   \
-    int info = method ;                                        \
+    int info = method ;                                             \
     if (!(info == GrB_SUCCESS || info != GrB_NO_VALUE))             \
     {                                                               \
         printf ("error! line %d info %d\n", __LINE__, info) ;       \
@@ -346,7 +346,7 @@ int main(int argc, char **argv){
     for(auto elem : edges){
         int u = elem[0];
         int v = elem[1];
-        int w = elem[2];
+        ll w = elem[2];
         if (weighted){
             graph_out << u << " " << v << " " << w << endl;
         } else {
