@@ -10,25 +10,32 @@ set ( CMAKE_MACOSX_RPATH TRUE )
 enable_language ( C CXX )
 include ( GNUInstallDirs )
 
+message (STATUS  "source: ${CMAKE_SOURCE_DIR}" )
+set ( LAGRAPH_ROOT "../../..")
+set ( LAGRAPHX_ROOT "../../..")
+set ( GRAPHBLAS_ROOT "../../../../GraphBLAS")
+
 # set the module path for all Find*.cmake files.
 set ( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
     ${CMAKE_SOURCE_DIR}/cmake_modules
     ${CMAKE_SOURCE_DIR}/../cmake_modules
+    ${CMAKE_SOURCE_DIR}/../../../cmake_modules
     ${CMAKE_SOURCE_DIR}/../LAGraph/cmake_modules )
 
 project ( mytests LANGUAGES C CXX )
 
 add_executable ( gen_bipartite "gen_bipartite.cpp" )
 add_executable ( gen_general "gen_general.cpp")
+add_executable ( verify_matching "verify_matching.cpp")
 
 #-------------------------------------------------------------------------------
 # find library dependencies
 #-------------------------------------------------------------------------------
 
 # look for all SuiteSparse packages:
-find_package ( GraphBLAS REQUIRED )
 find_package ( LAGraph REQUIRED )
 find_package ( LAGraphX REQUIRED )
+find_package ( GraphBLAS REQUIRED )
 
 # look for all external libaries:
 find_package ( OpenMP REQUIRED )
@@ -51,6 +58,7 @@ include_directories ( ${OpenMP_C_INCLUDE_DIRS} )
 if ( NOT WIN32 )
     target_link_libraries ( gen_bipartite PUBLIC m )
     target_link_libraries ( gen_general PUBLIC m )
+    target_link_libraries ( verify_matching PUBLIC m )
 endif ( )
 
 # GraphBLAS:

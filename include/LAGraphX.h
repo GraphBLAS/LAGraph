@@ -902,6 +902,14 @@ int LAGraph_FastGraphletTransform
 // matching and coarsening
 //------------------------------------------------------------------------------
 
+typedef enum
+{
+    LAGraph_Matching_random = 0,
+    LAGraph_Matching_heavy = 1,
+    LAGraph_Matching_light = 2,
+}
+LAGraph_Matching_kind ;
+
 LAGRAPH_PUBLIC
 int LAGraph_MaximalMatching
 (
@@ -910,7 +918,7 @@ int LAGraph_MaximalMatching
     // inputs:
     GrB_Matrix E,       // incidence matrix, not part of LAGraph_Graph (for now)
     int matching_type,  // 0 (random), 1 (heavy weight), or 2 (light weight)
-    uint64_t seed,
+    uint64_t seed,      // random number seed
     char *msg
 ) ;
 

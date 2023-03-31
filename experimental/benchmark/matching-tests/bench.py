@@ -2,7 +2,7 @@ import os
 
 NUM_RUNS = 1
 
-run_verification_cmd = './build/verify < data.mtx > verif_result'
+run_verification_cmd = './build/verify_matching < data.mtx > verif_result'
 
 
 tests = [
@@ -88,7 +88,7 @@ tests = [
     }
 ]
 
-NUM_TESTS = 1 # len(tests)
+NUM_TESTS = len(tests)
 
 '''
     {
@@ -146,7 +146,7 @@ NUM_TESTS = 1 # len(tests)
 '''
 
 def build_grb_cmd(args):
-    return f'../build/experimental/benchmark/matching_demo {args} < data.mtx > grb_result.txt'
+    return f'../../../build/experimental/benchmark/matching_demo {args} < data.mtx > grb_result.txt'
 
 
 def build_cmd(type, args):
@@ -262,3 +262,5 @@ for i in range(NUM_TESTS):
     
     result += f'): quality metric: {avg_ratio}, performance metric: {avg_perf_ratio}'
     print(result)
+
+print('All tests passed')

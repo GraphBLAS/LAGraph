@@ -1,3 +1,8 @@
+// FIXME: explain.
+
+// Example:
+// gen_bipartite ...
+
 extern "C" {
    #include "LAGraph.h"
    #include "LAGraphX.h"

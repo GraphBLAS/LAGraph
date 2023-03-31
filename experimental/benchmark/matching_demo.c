@@ -1,9 +1,17 @@
+// FIXME : explain this
+
+//  matching_demo data.mtx
+
+//  matching_demo < data.mtx
+
+//  matching_demo stdin < data.mtx
+
 #include "../../src/benchmark/LAGraph_demo.h"
 #include "LG_internal.h"
 #include "LAGraphX.h"
 #include <omp.h>
 
-#define VERBOSE
+// #define VERBOSE
 
 #define NTHREAD_LIST 4
 #define THREAD_LIST 40, 20, 16, 8, // 4, 2, 1

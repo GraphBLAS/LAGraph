@@ -10,6 +10,8 @@
 
 //------------------------------------------------------------------------------
 
+// FIXME: describe inputs/outputs, describe algo
+
 #include "LG_internal.h"
 #include "LAGraphX.h"
 
@@ -45,6 +47,8 @@ int LAGraph_MaximalMatching
     // inputs:
     GrB_Matrix E,       // incidence
     int matching_type,  // 0 (random), 1 (heavy weight matching), 2 (light weight matching)
+    // FIXME: enum
+
     uint64_t seed,      // random number seed
     char *msg
 )
@@ -123,7 +127,7 @@ int LAGraph_MaximalMatching
 
     // TODO: fix structure types, semirings, monoids to match underlying type of A. For now, casting everything to FP64 (catch all type)
     // this mainly requires annoying changes in LAGraph_A_to_E to accommodate several types
-    GRB_TRY (GrB_reduce (weight, NULL, NULL, GrB_MAX_MONOID_FP64, E_t, NULL)) ;
+    GRB_TRY (GrB_reduce (weight, NULL, NULL, GrB_MAX_MONOID_FP64, E_t, NULL)) ; // use ANY ?
 
     while (ncandidates > 0) {
         // first just generate the scores again
