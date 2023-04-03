@@ -164,12 +164,12 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     t [0] = 0 ;         // sanitize time
     t [1] = 0 ;         // LCC time
 
-    // fixme: use operators that ignore the values of A
+    // FIXME: use operators that ignore the values of A
     if (sanitize)
     {
         t [0] = LAGraph_WallClockTime ( ) ;
 
-        // T = binary structure of A
+        // T = binary structure of A; note that T is iso-valued
         GrB_Matrix_new (&T, GrB_FP64, n, n) ;
         GrB_apply (T, NULL, NULL, GrB_ONEB_FP64, A, 0, NULL) ;
 
@@ -220,12 +220,16 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     {
 
         GRB_TRY (GrB_Matrix_new (&AT, GrB_FP64, n, n)) ;
+        // FIXME: use AT = one (S') instead so that S can be treated as-if-iso;
+        // this will be faster.
         GRB_TRY (GrB_transpose (AT, NULL, NULL, S, NULL)) ;
 
         //----------------------------------------------------------------------
         // C = A \/ A' to create an undirected graph G
         //----------------------------------------------------------------------
 
+        // FIXME: use G = union (pair,S,AT) instead, so G is iso by
+        // construction.  This will be faster.
         GRB_TRY (GrB_Matrix_new (&G, GrB_FP64, n, n)) ;
         GRB_TRY (GrB_eWiseAdd (G, NULL, NULL, GrB_LOR, S, AT, NULL)) ;
 
@@ -233,6 +237,8 @@ int LAGraph_lcc            // compute lcc for all nodes in A
         // D = A + A' to create an undirected multigraph D
         //----------------------------------------------------------------------
 
+        // NOTE: D is not iso-valued since it is a multigraph; it will contain
+        // 1s and 2s.
         GRB_TRY (GrB_Matrix_new (&D, GrB_FP64, n, n)) ;
         GRB_TRY (GrB_eWiseAdd (D, NULL, NULL, GrB_PLUS_FP64, S, AT, NULL)) ;
         GrB_free (&AT) ;
@@ -242,6 +248,8 @@ int LAGraph_lcc            // compute lcc for all nodes in A
         //----------------------------------------------------------------------
 
         // note that L=U' since D is symmetric
+        // NOTE: U is not iso-valued since it is a multigraph; it will contain
+        // 1's and 2's
         GRB_TRY (GxB_select (U, NULL, NULL, GxB_TRIU, D, NULL, NULL)) ;
         GrB_free (&D) ;
 
@@ -252,6 +260,8 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     // Find wedges of each node
     //--------------------------------------------------------------------------
 
+    // FIXME: check the semiring here; GrB_reduce should be O(n) time if C is
+    // iso-valued and all 1s.  See LAGraph_*_indegree.
     // W(i) = sum (C (i,:))
     GRB_TRY (GrB_Vector_new (&W, GrB_FP64, n)) ;
     GRB_TRY (GrB_reduce (W, NULL, NULL, GrB_PLUS_FP64, C, NULL)) ;
