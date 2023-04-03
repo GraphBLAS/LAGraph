@@ -64,9 +64,11 @@
 
 #define LG_FREE_ALL                 \
 {                                   \
-    GrB_free (&C) ;                 \
     GrB_free (&CL) ;                \
-    if (sanitize) GrB_free (&S) ;   \
+    GrB_free (&T) ;                 \
+    GrB_free (&AT) ;                \
+    GrB_free (&D) ;                 \
+    GrB_free (&G) ;                 \
     GrB_free (&U) ;                 \
     GrB_free (&W) ;                 \
     GrB_free (&LCC) ;               \
@@ -132,7 +134,8 @@ int LAGraph_lcc            // compute lcc for all nodes in A
         return (GrB_NULL_POINTER) ;
     }
 
-    GrB_Matrix C = NULL, CL = NULL, S = NULL, U = NULL ;
+    GrB_Matrix AT = NULL, D = NULL, G = NULL ;
+    GrB_Matrix C = NULL, CL = NULL, S = NULL, U = NULL, T = NULL ;
     GrB_Vector W = NULL, LCC = NULL ;
     GrB_UnaryOp LAGraph_COMB_DIR_FP64 = NULL ;
     GrB_UnaryOp LAGraph_COMB_UNDIR_FP64 = NULL ;
@@ -166,13 +169,14 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     {
         t [0] = LAGraph_WallClockTime ( ) ;
 
-        // S = binary structure of A
-        GrB_Matrix_new (&S, GrB_FP64, n, n) ;
-        GrB_apply (S, NULL, NULL, GrB_ONEB_FP64, A, 0, NULL) ;
+        // T = binary structure of A
+        GrB_Matrix_new (&T, GrB_FP64, n, n) ;
+        GrB_apply (T, NULL, NULL, GrB_ONEB_FP64, A, 0, NULL) ;
 
         // remove all self edges
-        GrB_select (S, NULL, NULL, GrB_OFFDIAG, S, 0, NULL) ;
+        GrB_select (T, NULL, NULL, GrB_OFFDIAG, T, 0, NULL) ;
         t [0] = LAGraph_WallClockTime ( ) - t [0] ;
+        S = T ;
     }
     else
     {
@@ -180,6 +184,10 @@ int LAGraph_lcc            // compute lcc for all nodes in A
         // Results are undefined if this condition does not hold.
         S = A ;
     }
+
+    // The matrix S must not be freed.  T is freed instead.  S is either A
+    // (the input matrix which cannot be freed) or T (which is freed itself).
+    // So the matrix S itself is not free.
 
     t [1] = LAGraph_WallClockTime ( ) ;
 
@@ -195,34 +203,31 @@ int LAGraph_lcc            // compute lcc for all nodes in A
                                  F_UNARY (LAGraph_comb_undir_fp64),
                                  GrB_FP64, GrB_FP64)) ;
 
-    GRB_TRY (GrB_Matrix_new (&C, GrB_FP64, n, n)) ;
     GRB_TRY (GrB_Matrix_new (&U, GrB_UINT32, n, n)) ;
 
     if (symmetric)
     {
-        C = S ;
-        S = NULL ;
 
         //----------------------------------------------------------------------
-        // U = triu(C)
+        // use C as the undirected graph, and compute U = triu(C)
         //----------------------------------------------------------------------
 
+        C = S ;     // C must not be freed
         GRB_TRY (GxB_select (U, NULL, NULL, GxB_TRIU, C, NULL, NULL)) ;
 
     }
     else
     {
-        GrB_Matrix AT = NULL, D = NULL ;
 
         GRB_TRY (GrB_Matrix_new (&AT, GrB_FP64, n, n)) ;
         GRB_TRY (GrB_transpose (AT, NULL, NULL, S, NULL)) ;
 
         //----------------------------------------------------------------------
-        // C = A \/ A' to create an undirected graph C
+        // C = A \/ A' to create an undirected graph G
         //----------------------------------------------------------------------
 
-        GRB_TRY (GrB_Matrix_new (&C, GrB_FP64, n, n)) ;
-        GRB_TRY (GrB_eWiseAdd (C, NULL, NULL, GrB_LOR, S, AT, NULL)) ;
+        GRB_TRY (GrB_Matrix_new (&G, GrB_FP64, n, n)) ;
+        GRB_TRY (GrB_eWiseAdd (G, NULL, NULL, GrB_LOR, S, AT, NULL)) ;
 
         //----------------------------------------------------------------------
         // D = A + A' to create an undirected multigraph D
@@ -230,9 +235,7 @@ int LAGraph_lcc            // compute lcc for all nodes in A
 
         GRB_TRY (GrB_Matrix_new (&D, GrB_FP64, n, n)) ;
         GRB_TRY (GrB_eWiseAdd (D, NULL, NULL, GrB_PLUS_FP64, S, AT, NULL)) ;
-
         GrB_free (&AT) ;
-        if (sanitize) GrB_free (&S) ;
 
         //----------------------------------------------------------------------
         // U = triu(D)
@@ -241,6 +244,8 @@ int LAGraph_lcc            // compute lcc for all nodes in A
         // note that L=U' since D is symmetric
         GRB_TRY (GxB_select (U, NULL, NULL, GxB_TRIU, D, NULL, NULL)) ;
         GrB_free (&D) ;
+
+        C = G ;     // C must not be freed; G is freed instead
     }
 
     //--------------------------------------------------------------------------
@@ -269,9 +274,14 @@ int LAGraph_lcc            // compute lcc for all nodes in A
 
     // CL<C> = C*L = C*U' using a masked dot product
     GRB_TRY (GrB_Matrix_new (&CL, GrB_FP64, n, n)) ;
+
+    printf ("--------------------------- CL<C> = C*U':\n") ;
+    printf ("C matrix:\n") ; GxB_print (C, 3) ;
+    printf ("U matrix has 2's in it for the west0067 matrix:\n") ;
+    GxB_print (U, 3) ;
     GRB_TRY (GrB_mxm (CL, C, NULL, LAGraph_plus_one_fp64, C, U,
                          GrB_DESC_ST1));
-    GrB_free (&U) ; U = NULL;
+    GrB_free (&U) ;     // this sets U to NULL
 
     //--------------------------------------------------------------------------
     // Calculate LCC
@@ -280,7 +290,7 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     // LCC(i) = sum (CL (i,:)) = # of triangles at each node
     GRB_TRY (GrB_Vector_new (&LCC, GrB_FP64, n)) ;
     GRB_TRY (GrB_reduce (LCC, NULL, NULL, GrB_PLUS_FP64, CL, NULL)) ;
-    GrB_free (&CL) ; CL = NULL;
+    GrB_free (&CL) ;        // this sets CL to NULL
 
     // LCC = LCC ./ W
     GRB_TRY (GrB_eWiseMult (LCC, NULL, NULL, GrB_DIV_FP64, LCC, W, NULL)) ;

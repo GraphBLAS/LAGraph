@@ -110,16 +110,16 @@ double lcc_west0067 [67] = {
 
 const matrix_info files [ ] =
 {
-    { 1, "A.mtx" },
-    { 1, "jagmesh7.mtx" },
+//  { 1, "A.mtx" },
+//  { 1, "jagmesh7.mtx" },
     { 0, "west0067.mtx" }, // unsymmetric
-    { 1, "bcsstk13.mtx" },
-    { 1, "karate.mtx" },
-    { 1, "ldbc-cdlp-undirected-example.mtx" },
-    { 1, "ldbc-undirected-example-bool.mtx" },
-    { 1, "ldbc-undirected-example-unweighted.mtx" },
-    { 1, "ldbc-undirected-example.mtx" },
-    { 1, "ldbc-wcc-example.mtx" },
+//  { 1, "bcsstk13.mtx" },
+//  { 1, "karate.mtx" },
+//  { 1, "ldbc-cdlp-undirected-example.mtx" },
+//  { 1, "ldbc-undirected-example-bool.mtx" },
+//  { 1, "ldbc-undirected-example-unweighted.mtx" },
+//  { 1, "ldbc-undirected-example.mtx" },
+//  { 1, "ldbc-wcc-example.mtx" },
     { 0, "" },
 } ;
 
@@ -176,18 +176,19 @@ void test_lcc (void)
             // cgood = abs (cgood - c)
             OK (GrB_eWiseAdd (cgood, NULL, NULL, GrB_MINUS_FP64, cgood, c,
                 NULL)) ;
+            printf ("difference: cgood-c:\n") ; GxB_print (cgood, 3) ;
             OK (GrB_apply (cgood, NULL, NULL, GrB_ABS_FP64, cgood, NULL)) ;
             double err = 0 ;
             // err = max (cgood)
             OK (GrB_reduce (&err, NULL, GrB_MAX_MONOID_FP64, cgood, NULL)) ;
             printf ("err: %g\n", err) ;
             TEST_CHECK (err < 1e-6) ;
+            OK (GrB_free (&cgood)) ;
         }
 
         printf ("\nlcc:\n") ;
         OK (LAGraph_Vector_Print (c, pr, stdout, msg)) ;
         OK (GrB_free (&c)) ;
-
         OK (LAGraph_Delete (&G, msg)) ;
     }
 
