@@ -291,8 +291,8 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     // CL<C> = C*L = C*U' using a masked dot product
     GRB_TRY (GrB_Matrix_new (&CL, GrB_FP64, n, n)) ;
 
-    GRB_TRY (GrB_mxm (CL, C, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, C, U,
-                         GrB_DESC_ST1));
+    GrB_Semiring sr = symmetric ? LAGraph_plus_one_fp64 : GrB_PLUS_TIMES_SEMIRING_FP64;
+    GRB_TRY (GrB_mxm (CL, C, NULL, sr, C, U, GrB_DESC_ST1));
     GrB_free (&U) ;     // this sets U to NULL
 
     //--------------------------------------------------------------------------
