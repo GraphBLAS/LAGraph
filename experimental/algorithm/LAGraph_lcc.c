@@ -266,8 +266,8 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     // FIXME: check the semiring here; GrB_reduce should be O(n) time if C is
     // iso-valued and all 1s.  See LAGraph_*_indegree.
     // W(i) = sum (C (i,:))
-    GRB_TRY (GrB_Vector_new (&W, GrB_FP64, n)) ;
-    GRB_TRY (GrB_reduce (W, NULL, NULL, GrB_PLUS_FP64, C, NULL)) ;
+    GRB_TRY (GrB_Vector_new (&W, GrB_UINT64, n)) ;
+    GRB_TRY (GrB_reduce (W, NULL, NULL, GrB_PLUS_UINT64, C, NULL)) ;
 
     // Compute vector W defining the number of wedges per vertex
     if (symmetric)
