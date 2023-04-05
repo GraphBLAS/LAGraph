@@ -242,8 +242,8 @@ int LAGraph_lcc            // compute lcc for all nodes in A
 
         // NOTE: D is not iso-valued since it is a multigraph; it will contain
         // 1s and 2s.
-        GRB_TRY (GrB_Matrix_new (&D, GrB_FP64, n, n)) ;
-        GRB_TRY (GrB_eWiseAdd (D, NULL, NULL, GrB_PLUS_FP64, S, AT, NULL)) ;
+        GRB_TRY (GrB_Matrix_new (&D, GrB_UINT32, n, n)) ;
+        GRB_TRY (GrB_eWiseAdd (D, NULL, NULL, GrB_PLUS_UINT32, S, AT, NULL)) ;
         GrB_free (&AT) ;
 
         //----------------------------------------------------------------------
