@@ -221,10 +221,8 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     else
     {
 
-        GRB_TRY (GrB_Matrix_new (&AT, GrB_FP64, n, n)) ;
-        // FIXME: use AT = one (S') instead so that S can be treated as-if-iso;
-        // this will be faster.
-        GRB_TRY (GrB_transpose (AT, NULL, NULL, S, NULL)) ;
+        GRB_TRY (GrB_Matrix_new (&AT, GrB_BOOL, n, n)) ;
+        GRB_TRY (GrB_transpose (AT, NULL, GrB_ONEB_BOOL, S, NULL)) ;
 
         //----------------------------------------------------------------------
         // C = A \/ A' to create an undirected graph G
