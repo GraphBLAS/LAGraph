@@ -73,6 +73,7 @@
     GrB_free (&W) ;                 \
     GrB_free (&LCC) ;               \
     GrB_free (&true_value) ;        \
+    GrB_free (&zeros) ;             \
     GrB_free (&LAGraph_COMB_DIR_FP64) ;   \
     GrB_free (&LAGraph_COMB_UNDIR_FP64) ; \
 }
@@ -138,6 +139,7 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     GrB_Matrix AT = NULL, D = NULL, G = NULL ;
     GrB_Matrix C = NULL, CL = NULL, S = NULL, U = NULL, T = NULL ;
     GrB_Vector W = NULL, LCC = NULL ;
+    GrB_Vector zeros = NULL;
     GrB_Scalar true_value = NULL;
     GrB_UnaryOp LAGraph_COMB_DIR_FP64 = NULL ;
     GrB_UnaryOp LAGraph_COMB_UNDIR_FP64 = NULL ;
@@ -263,11 +265,12 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     // Find wedges of each node
     //--------------------------------------------------------------------------
 
-    // FIXME: check the semiring here; GrB_reduce should be O(n) time if C is
-    // iso-valued and all 1s.  See LAGraph_*_indegree.
     // W(i) = sum (C (i,:))
     GRB_TRY (GrB_Vector_new (&W, GrB_UINT64, n)) ;
-    GRB_TRY (GrB_reduce (W, NULL, NULL, GrB_PLUS_UINT64, C, NULL)) ;
+    GRB_TRY (GrB_Vector_new (&zeros, GrB_UINT64, n)) ;
+    GRB_TRY (GrB_assign (zeros, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
+    GRB_TRY (GrB_mxv (W, NULL, NULL, LAGraph_plus_one_int64, C, zeros, NULL)) ;
+    GrB_free (&zeros);
 
     // Compute vector W defining the number of wedges per vertex
     if (symmetric)
