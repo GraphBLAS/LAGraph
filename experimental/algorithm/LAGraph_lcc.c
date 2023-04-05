@@ -172,8 +172,8 @@ int LAGraph_lcc            // compute lcc for all nodes in A
         t [0] = LAGraph_WallClockTime ( ) ;
 
         // T = binary structure of A; note that T is iso-valued
-        GrB_Matrix_new (&T, GrB_FP64, n, n) ;
-        GrB_apply (T, NULL, NULL, GrB_ONEB_FP64, A, 0, NULL) ;
+        GrB_Matrix_new (&T, GrB_BOOL, n, n) ;
+        GrB_apply (T, NULL, NULL, GrB_ONEB_BOOL, A, 0, NULL) ;
 
         // remove all self edges
         GrB_select (T, NULL, NULL, GrB_OFFDIAG, T, 0, NULL) ;
