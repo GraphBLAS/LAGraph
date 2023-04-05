@@ -168,7 +168,6 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     t [0] = 0 ;         // sanitize time
     t [1] = 0 ;         // LCC time
 
-    // FIXME: use operators that ignore the values of A
     if (sanitize)
     {
         t [0] = LAGraph_WallClockTime ( ) ;
@@ -199,6 +198,7 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     // create the operators for LAGraph_lcc
     //--------------------------------------------------------------------------
 
+    // TODO: pass method name and strings for GxB 8.0.0's JIT
     GRB_TRY (GrB_UnaryOp_new (&LAGraph_COMB_DIR_FP64,
                                  F_UNARY (LAGraph_comb_dir_fp64),
                                  GrB_FP64, GrB_FP64)) ;
@@ -217,12 +217,14 @@ int LAGraph_lcc            // compute lcc for all nodes in A
         //----------------------------------------------------------------------
 
         C = S ;     // C must not be freed
-        GRB_TRY (GxB_select (U, NULL, NULL, GxB_TRIU, C, NULL, NULL)) ;
+        GRB_TRY (GrB_select (U, NULL, NULL, GrB_TRIU, C, 0, NULL)) ;
 
     }
     else
     {
 
+        // NOTE: AT is iso-valued
+        // TODO: look at the burble
         GRB_TRY (GrB_Matrix_new (&AT, GrB_BOOL, n, n)) ;
         GRB_TRY (GrB_transpose (AT, NULL, GrB_ONEB_BOOL, S, NULL)) ;
 
@@ -242,6 +244,7 @@ int LAGraph_lcc            // compute lcc for all nodes in A
         // D = A + A' to create an undirected multigraph D
         //----------------------------------------------------------------------
 
+        // TODO: do not mix types, start with FP64
         // NOTE: D is not iso-valued since it is a multigraph; it will contain
         // 1s and 2s.
         GRB_TRY (GrB_Matrix_new (&D, GrB_UINT32, n, n)) ;
@@ -255,7 +258,7 @@ int LAGraph_lcc            // compute lcc for all nodes in A
         // note that L=U' since D is symmetric
         // NOTE: U is not iso-valued since it is a multigraph; it will contain
         // 1s and 2s
-        GRB_TRY (GxB_select (U, NULL, NULL, GxB_TRIU, D, NULL, NULL)) ;
+        GRB_TRY (GrB_select (U, NULL, NULL, GrB_TRIU, D, 0, NULL)) ;
         GrB_free (&D) ;
 
         C = G ;     // C must not be freed; G is freed instead
