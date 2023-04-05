@@ -252,7 +252,7 @@ int LAGraph_lcc            // compute lcc for all nodes in A
 
         // note that L=U' since D is symmetric
         // NOTE: U is not iso-valued since it is a multigraph; it will contain
-        // 1's and 2's
+        // 1s and 2s
         GRB_TRY (GxB_select (U, NULL, NULL, GxB_TRIU, D, NULL, NULL)) ;
         GrB_free (&D) ;
 
