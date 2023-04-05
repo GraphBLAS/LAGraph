@@ -72,8 +72,9 @@
     GrB_free (&U) ;                 \
     GrB_free (&W) ;                 \
     GrB_free (&LCC) ;               \
-    GrB_free (&LAGraph_COMB_DIR_FP64) ;                 \
-    GrB_free (&LAGraph_COMB_UNDIR_FP64) ;                 \
+    GrB_free (&true_value) ;        \
+    GrB_free (&LAGraph_COMB_DIR_FP64) ;   \
+    GrB_free (&LAGraph_COMB_UNDIR_FP64) ; \
 }
 
 #include "LG_internal.h"
@@ -137,6 +138,7 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     GrB_Matrix AT = NULL, D = NULL, G = NULL ;
     GrB_Matrix C = NULL, CL = NULL, S = NULL, U = NULL, T = NULL ;
     GrB_Vector W = NULL, LCC = NULL ;
+    GrB_Scalar true_value = NULL;
     GrB_UnaryOp LAGraph_COMB_DIR_FP64 = NULL ;
     GrB_UnaryOp LAGraph_COMB_UNDIR_FP64 = NULL ;
     GrB_Info info ;
@@ -228,10 +230,13 @@ int LAGraph_lcc            // compute lcc for all nodes in A
         // C = A \/ A' to create an undirected graph G
         //----------------------------------------------------------------------
 
-        // FIXME: use G = union (pair,S,AT) instead, so G is iso by
-        // construction.  This will be faster.
-        GRB_TRY (GrB_Matrix_new (&G, GrB_FP64, n, n)) ;
-        GRB_TRY (GrB_eWiseAdd (G, NULL, NULL, GrB_LOR, S, AT, NULL)) ;
+        GRB_TRY (GrB_Scalar_new (&true_value, GrB_BOOL)) ;
+        GRB_TRY (GrB_Scalar_setElement (true_value, true)) ;
+
+        GRB_TRY (GrB_Matrix_new (&G, GrB_BOOL, n, n)) ;
+        GRB_TRY (GxB_eWiseUnion (G, NULL, NULL, GrB_ONEB_BOOL, S, true_value,
+            AT, true_value, NULL)) ;
+        GrB_free (&true_value) ;
 
         //----------------------------------------------------------------------
         // D = A + A' to create an undirected multigraph D
