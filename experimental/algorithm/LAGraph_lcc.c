@@ -86,6 +86,32 @@
 
 #define F_UNARY(f)  ((void (*)(void *, const void *)) f)
 
+#define LAGRAPH_COMB_DIR_FP64                                                 \
+"void LAGraph_comb_dir_fp64                                               \n" \
+"(                                                                        \n" \
+"    void *z,                                                             \n" \
+"    const void *x                                                        \n" \
+")                                                                        \n" \
+"{                                                                        \n" \
+"    double xd = *(double *) x ;                                          \n" \
+"    double *zd = (double *) z ;                                          \n" \
+"    (*zd) = ((xd) * (xd - 1));                                           \n" \
+"}                                                                        \n" \
+"}"
+
+#define LAGRAPH_COMB_UNDIR_FP64                                               \
+"void LAGraph_comb_undir_fp64                                             \n" \
+"(                                                                        \n" \
+"    void *z,                                                             \n" \
+"    const void *x                                                        \n" \
+")                                                                        \n" \
+"{                                                                        \n" \
+"    double xd = *(double *) x ;                                          \n" \
+"    double *zd = (double *) z ;                                          \n" \
+"    (*zd) = ((xd) * (xd - 1)) / 2;                                       \n" \
+"}                                                                        \n" \
+"}"
+
 // z = x * (x - 1), used by LAGraph_lcc.
 // This operator calculates the 2-permutation of d(v).
 void LAGraph_comb_dir_fp64
@@ -125,7 +151,6 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     char *msg
 )
 {
-
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------
@@ -173,8 +198,8 @@ int LAGraph_lcc            // compute lcc for all nodes in A
         t [0] = LAGraph_WallClockTime ( ) ;
 
         // T = binary structure of A; note that T is iso-valued
-        GrB_Matrix_new (&T, GrB_BOOL, n, n) ;
-        GrB_apply (T, NULL, NULL, GrB_ONEB_BOOL, A, 0, NULL) ;
+        GrB_Matrix_new (&T, GrB_FP64, n, n) ;
+        GrB_apply (T, NULL, NULL, GrB_ONEB_FP64, A, 0, NULL) ;
 
         // remove all self edges
         GrB_select (T, NULL, NULL, GrB_OFFDIAG, T, 0, NULL) ;
@@ -198,16 +223,20 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     // create the operators for LAGraph_lcc
     //--------------------------------------------------------------------------
 
-    // TODO: pass method name and strings for GxB 8.0.0's JIT
-    GRB_TRY (GrB_UnaryOp_new (&LAGraph_COMB_DIR_FP64,
-                                 F_UNARY (LAGraph_comb_dir_fp64),
-                                 GrB_FP64, GrB_FP64)) ;
+    GRB_TRY (GxB_UnaryOp_new (&LAGraph_COMB_DIR_FP64,
+        F_UNARY (LAGraph_comb_dir_fp64),
+        GrB_FP64, GrB_FP64,
+        "LAGraph_comb_dir_fp64",
+        LAGRAPH_COMB_DIR_FP64
+        )) ;
 
-    GRB_TRY (GrB_UnaryOp_new (&LAGraph_COMB_UNDIR_FP64,
-                                 F_UNARY (LAGraph_comb_undir_fp64),
-                                 GrB_FP64, GrB_FP64)) ;
+    GRB_TRY (GxB_UnaryOp_new (&LAGraph_COMB_UNDIR_FP64,
+        F_UNARY (LAGraph_comb_undir_fp64),
+        GrB_FP64, GrB_FP64,
+        "LAGraph_comb_undir_fp64",
+        LAGRAPH_COMB_UNDIR_FP64)) ;
 
-    GRB_TRY (GrB_Matrix_new (&U, GrB_UINT32, n, n)) ;
+    GRB_TRY (GrB_Matrix_new (&U, GrB_FP64, n, n)) ;
 
     if (symmetric)
     {
@@ -224,19 +253,18 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     {
 
         // NOTE: AT is iso-valued
-        // TODO: look at the burble
-        GRB_TRY (GrB_Matrix_new (&AT, GrB_BOOL, n, n)) ;
-        GRB_TRY (GrB_transpose (AT, NULL, GrB_ONEB_BOOL, S, NULL)) ;
+        GRB_TRY (GrB_Matrix_new (&AT, GrB_FP64, n, n)) ;
+        GRB_TRY (GrB_transpose (AT, NULL, GrB_ONEB_FP64, S, NULL)) ;
 
         //----------------------------------------------------------------------
         // C = A \/ A' to create an undirected graph G
         //----------------------------------------------------------------------
 
-        GRB_TRY (GrB_Scalar_new (&true_value, GrB_BOOL)) ;
+        GRB_TRY (GrB_Scalar_new (&true_value, GrB_FP64)) ;
         GRB_TRY (GrB_Scalar_setElement (true_value, true)) ;
 
-        GRB_TRY (GrB_Matrix_new (&G, GrB_BOOL, n, n)) ;
-        GRB_TRY (GxB_eWiseUnion (G, NULL, NULL, GrB_ONEB_BOOL, S, true_value,
+        GRB_TRY (GrB_Matrix_new (&G, GrB_FP64, n, n)) ;
+        GRB_TRY (GxB_eWiseUnion (G, NULL, NULL, GrB_ONEB_FP64, S, true_value,
             AT, true_value, NULL)) ;
         GrB_free (&true_value) ;
 
@@ -244,11 +272,10 @@ int LAGraph_lcc            // compute lcc for all nodes in A
         // D = A + A' to create an undirected multigraph D
         //----------------------------------------------------------------------
 
-        // TODO: do not mix types, start with FP64
         // NOTE: D is not iso-valued since it is a multigraph; it will contain
         // 1s and 2s.
-        GRB_TRY (GrB_Matrix_new (&D, GrB_UINT32, n, n)) ;
-        GRB_TRY (GrB_eWiseAdd (D, NULL, NULL, GrB_PLUS_UINT32, S, AT, NULL)) ;
+        GRB_TRY (GrB_Matrix_new (&D, GrB_FP64, n, n)) ;
+        GRB_TRY (GrB_eWiseAdd (D, NULL, NULL, GrB_PLUS_FP64, S, AT, NULL)) ;
         GrB_free (&AT) ;
 
         //----------------------------------------------------------------------
@@ -269,10 +296,10 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     //--------------------------------------------------------------------------
 
     // W(i) = sum (C (i,:))
-    GRB_TRY (GrB_Vector_new (&W, GrB_UINT64, n)) ;
-    GRB_TRY (GrB_Vector_new (&zeros, GrB_UINT64, n)) ;
+    GRB_TRY (GrB_Vector_new (&W, GrB_FP64, n)) ;
+    GRB_TRY (GrB_Vector_new (&zeros, GrB_FP64, n)) ;
     GRB_TRY (GrB_assign (zeros, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
-    GRB_TRY (GrB_mxv (W, NULL, NULL, LAGraph_plus_one_int64, C, zeros, NULL)) ;
+    GRB_TRY (GrB_mxv (W, NULL, NULL, LAGraph_plus_one_fp64, C, zeros, NULL)) ;
     GrB_free (&zeros);
 
     // Compute vector W defining the number of wedges per vertex
@@ -318,6 +345,7 @@ int LAGraph_lcc            // compute lcc for all nodes in A
 
     LG_FREE_ALL ;
     t [1] = LAGraph_WallClockTime ( ) - t [1] ;
+
     return (GrB_SUCCESS) ;
 #endif
 }
