@@ -15,14 +15,12 @@
 
 //-----------------------------------------------------------------------------
 
-// todo: write a simple lcc method, as LG_check_lcc, and compare its results
-// with LAGraph_lcc
-
 #include <stdio.h>
 #include <acutest.h>
 
 #include <LAGraphX.h>
 #include <LAGraph_test.h>
+#include "LG_Xtest.h"
 
 char msg [LAGRAPH_MSG_LEN] ;
 LAGraph_Graph G = NULL ;
@@ -36,77 +34,6 @@ typedef struct
     const char *name ;
 }
 matrix_info ;
-
-// this known solution is listed here in lower precision than double allows
-double lcc_west0067 [67] = {
-    0.0909091,
-    0.0238095,
-    0.0714286,
-    0.0238095,
-    0.125,
-    0.119048,
-    0.178571,
-    0.133333,
-    0.0952381,
-    0.0833333,
-    0.0666667,
-    0.1,
-    0.0892857,
-    0.0714286,
-    0.138889,
-    0.0555556,
-    0.0694444,
-    0.0555556,
-    0.0714286,
-    0.0769231,
-    0.0333333,
-    0.0666667,
-    0.0666667,
-    0.0333333,
-    0.0694444,
-    0.0444444,
-    0.0555556,
-    0.0777778,
-    0.0333333,
-            0,
-    0.0904762,
-    0.0535714,
-    0.0714286,
-    0.107143,
-    0.0892857,
-            0,
-    0.0681818,
-    0.0357143,
-    0.0178571,
-    0.0666667,
-    0.0555556,
-    0.0694444,
-    0.0666667,
-    0.111111,
-    0.0444444,
-    0.142857,
-    0.166667,
-    0.2,
-    0.0448718,
-    0.166667,
-    0.166667,
-    0.119048,
-    0.166667,
-    0.190476,
-    0.104167,
-    0.0333333,
-    0.0444444,
-    0.0444444,
-    0.0777778,
-    0.0416667,
-    0.0222222,
-    0.0972222,
-    0.142857,
-    0.0416667,
-    0.0555556,
-    0.196429,
-    0.155556
-} ;
 
 const matrix_info files [ ] =
 {
@@ -148,8 +75,9 @@ void test_lcc (void)
         TEST_CHECK (A == NULL) ;
 
         // check for self-edges
+        OK (LAGraph_Cached_IsSymmetricStructure (G, msg));
         OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
-        bool sanitize = (G->nself_edges != 0) ;
+        bool sanitize = (G->nself_edges != 0) || (strcmp(aname, "ldbc-undirected-example.mtx") == 0);
 
         GrB_Vector c = NULL ;
         double t [2] ;
@@ -161,28 +89,18 @@ void test_lcc (void)
         OK (GrB_Vector_size (&n, c)) ;
         LAGraph_PrintLevel pr = (n <= 100) ? LAGraph_COMPLETE : LAGraph_SHORT ;
 
-        // check result c for west0067
-        if (strcmp (aname, "west0067.mtx") == 0)
-        {
-            GrB_Vector cgood = NULL ;
-            OK (GrB_Vector_new (&cgood, GrB_FP64, n)) ;
-            for (int k = 0 ; k < n ; k++)
-            {
-                OK (GrB_Vector_setElement (cgood, lcc_west0067 [k], k)) ;
-            }
-            OK (GrB_wait (cgood, GrB_MATERIALIZE)) ;
-            printf ("\nlcc (known result, but with float precision):\n") ;
-            OK (LAGraph_Vector_Print (cgood, pr, stdout, msg)) ;
-            // cgood = abs (cgood - c)
-            OK (GrB_eWiseAdd (cgood, NULL, NULL, GrB_MINUS_FP64, cgood, c,
-                NULL)) ;
-            OK (GrB_apply (cgood, NULL, NULL, GrB_ABS_FP64, cgood, NULL)) ;
-            double err = 0 ;
-            // err = max (cgood)
-            OK (GrB_reduce (&err, NULL, GrB_MAX_MONOID_FP64, cgood, NULL)) ;
-            printf ("err: %g\n", err) ;
-            TEST_CHECK (err < 1e-6) ;
-        }
+        GrB_Vector cgood = NULL ;
+        OK (LG_check_lcc(&cgood, G, msg));
+        // cgood = abs (cgood - c)
+        OK (GrB_eWiseAdd (cgood, NULL, NULL, GrB_MINUS_FP64, cgood, c,
+            NULL)) ;
+        OK (GrB_apply (cgood, NULL, NULL, GrB_ABS_FP64, cgood, NULL)) ;
+        double err = 0 ;
+        // err = max (cgood)
+        OK (GrB_reduce (&err, NULL, GrB_MAX_MONOID_FP64, cgood, NULL)) ;
+        printf ("err: %g\n", err) ;
+        TEST_CHECK (err < 1e-6) ;
+        OK (GrB_free (&cgood)) ;
 
         printf ("\nlcc:\n") ;
         OK (LAGraph_Vector_Print (c, pr, stdout, msg)) ;

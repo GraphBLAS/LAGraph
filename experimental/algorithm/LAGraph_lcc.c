@@ -64,7 +64,7 @@
 
 #define LG_FREE_ALL                 \
 {                                   \
-    GrB_free (&C) ;                 \
+    if (!symmetric) GrB_free (&C) ; \
     GrB_free (&CL) ;                \
     if (sanitize) GrB_free (&S) ;   \
     GrB_free (&U) ;                 \
