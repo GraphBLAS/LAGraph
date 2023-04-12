@@ -1,5 +1,37 @@
+'''
+bench.py
+
+Script that auto-runs a sequence of tests
+
+Usage:
+make
+python3 bench.py
+
+Details:
+
+Test structure:
+type [string]: <bipartite/general> (what type of graph)
+performance [boolean]: <True/False> (whether to run a performance test)
+args [string]: space-separated arguments for gen_bipartite/gen_general (both use same arguments, depends on which type is specified)
+grb_args [string]: space-separated arguments for matching_demo (further specified in matching_demo.c)
+arg_names [string]: comma-separated argument names to display for each argument in args
+grb_arg_names [string]: comma-separated argument names to display for each argument in grb_args
+
+To add new tests, simply use the following structure:
+{
+    'type': <type>
+    'performance': <performance>
+    'args': <args>
+    'grb_args': <grb_args>
+    'arg_names': <arg_names>
+    'grb_arg_names': <grb_arg_names>
+}
+and add it to the tests list
+'''
+
 import os
 
+# How many runs to do per test (results are averaged)
 NUM_RUNS = 1
 
 run_verification_cmd = './build/verify_matching < data.mtx > verif_result'
@@ -8,9 +40,10 @@ run_verification_cmd = './build/verify_matching < data.mtx > verif_result'
 tests = [
     {
         'type': 'bipartite',
-        'performance': False,
-        'args': '5000 10 1 0 0',
-        'grb_args': 'stdin 0 1',
+        'performance': True,
+        'args': '1000000 10 1 1 0',
+        'grb_args': 'data.mtx 0',
+        'islight': False,
         'arg_names': 'num_nodes,sparse_factor,is_naive,perf,weighted,prefer_light',
         'grb_arg_names': 'filename,match_type,ntrials'
     },
@@ -88,7 +121,8 @@ tests = [
     }
 ]
 
-NUM_TESTS = len(tests)
+# How many tests to run
+NUM_TESTS = 1
 
 '''
     {
@@ -231,7 +265,10 @@ for i in range(NUM_TESTS):
             if (run_result[0] == 0):
                 # empty graph
                 continue
-            avg_ratio += run_result[1] / run_result[0]
+            if(tests[i].get('islight') == True):
+                avg_ratio += run_result[0] / run_result[1]
+            else:
+                avg_ratio += run_result[1] / run_result[0]
             runs += 1
     
     if (perf_runs > 0):

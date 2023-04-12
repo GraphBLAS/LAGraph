@@ -1,7 +1,29 @@
-// FIXME: explain.
+/*
+gen_bipartite.cpp
 
-// Example:
-// gen_bipartite ...
+Generates a random, undirected bipartite graph and evaluates matching to test LAGraph_MaximalMatching
+
+Usage:
+./gen_bipartite <num_nodes> <sparse_factor> <naive> <perf> <weighted> <prefer_light>
+NOTE: The <weighted> and <perf> arguments are only read when <naive> = 1. The <prefer_light> argument is only read if <weighted> = 1.
+num_nodes [int]: How many nodes to include in the randomly generated graph
+sparse_factor [double]: Average degree of each node in the random graph
+naive [0/1]: Whether to evaluate the matching of the random graph using the naive method or exact (maximum) method. Described further below.
+perf [0/1]: IF naive = 1, whether to output performance data (running time) or the matching details. Note that this means the exact (maximum) method can not be benchmarked for performance.
+weighted [0/1]: IF naive = 1, specifies if the random graph (and matching) should be weighted. Note that this means the exact (maximum) method can not run on weighted graphs.
+prefer_light [0/1]: IF the graph is weighted, then specifies whether to give preference to light matchings or heavy matchings.
+
+Details:
+The maximum matching technique used here is a classic implementation of Ford-Fulkerson max flow, which is well known to find maximum-cardinality matchings in bipartite graphs.
+Note that due to the runtime complexity of this algorithm (O(N^3) worst case), this method can only be run on small graphs (and thus why it does not make sense to benchmark performance).
+The purpose of including this is to benchmark the quality of the GraphBLAS produced matching against the exactly optimal answer.
+
+The naive technique first sorts all edges by weight for weighted graphs (using the prefer_light option, unweighted graphs have edge weight 1). The sort breaks ties between edges
+of the same weight by edge degree (edges with a lower degree are favored). The method then traverses the edge list and attempts to include each edge in order in the matching.
+
+In both cases, the generated graph is printed in MatrixMarket format to data.mtx. This is so the random graph can be evaluated using
+GraphBLAS. In addition, the evaluated matching value is printed to stdout (this can be piped out to any file).
+*/
 
 extern "C" {
    #include "LAGraph.h"

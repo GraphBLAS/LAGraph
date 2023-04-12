@@ -1,10 +1,36 @@
-// FIXME : explain this
+//------------------------------------------------------------------------------
+// LAGraph/experimental/benchmark/matching_demo.c: runner for LAGraph_MaximalMatching
+//------------------------------------------------------------------------------
 
-//  matching_demo data.mtx
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
-//  matching_demo < data.mtx
+// Contributed by Vidith Madhu, Texas A&M University
 
-//  matching_demo stdin < data.mtx
+/*
+Usage:
+Option 1: Run for performance
+./matching_demo <matrix_name> <matching_type>
+matrix_name: either the name of the .mtx file or empty for stdin
+matching_type: 0, 1, 2 for random matching, heavy edge matching, and light edge matching respectively
+NOTE: This is the typical scenario that all other benchmark codes are used for
+
+Option 2: Run for quality
+./matching_demo -q <matching_type> <ntrials>
+NOTE: this option only accepts input via stdin
+-q option as the matrix name specifies to run for quality, not performance
+matching_type: 0, 1, 2 for random matching, heavy edge matching, and light edge matching respectively
+ntrials: How many trials to run (picks matching with the highest quality across all runs)
+NOTE: When complete, prints out the matching vector and E matrix of the input graph. This can be piped out to any file.
+*/
+
+//------------------------------------------------------------------------------
 
 #include "../../src/benchmark/LAGraph_demo.h"
 #include "LG_internal.h"
@@ -13,8 +39,8 @@
 
 // #define VERBOSE
 
-#define NTHREAD_LIST 4
-#define THREAD_LIST 40, 20, 16, 8, // 4, 2, 1
+#define NTHREAD_LIST 1
+#define THREAD_LIST 8
 
 int main (int argc, char** argv)
 {
@@ -38,9 +64,8 @@ int main (int argc, char** argv)
     int force_stdin = 0 ;
 
     if (argc > 1) {
-        // stdin is never a valid filename; if this is in argv[1], then it means I want to use this demo run
-        // to print out data for my external tests, and not benchmark performance; I have my own arguments stored in argv.
-        force_stdin = ( strcmp (argv [1], "stdin") == 0 ) ;
+        // -q option as the matrix name means to run the quality tests
+        force_stdin = ( strcmp (argv [1], "-q") == 0 ) ;
 
         if (force_stdin) {
             // mark that I am not running performance benchmarks, but printing data for my external tests
