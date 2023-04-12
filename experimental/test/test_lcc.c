@@ -30,24 +30,23 @@ char filename [LEN+1] ;
 
 typedef struct
 {
-    bool symmetric ;
     const char *name ;
 }
 matrix_info ;
 
 const matrix_info files [ ] =
 {
-    { 1, "A.mtx" },
-    { 1, "jagmesh7.mtx" },
-    { 0, "west0067.mtx" }, // unsymmetric
-    { 1, "bcsstk13.mtx" },
-    { 1, "karate.mtx" },
-    { 1, "ldbc-cdlp-undirected-example.mtx" },
-    { 1, "ldbc-undirected-example-bool.mtx" },
-    { 1, "ldbc-undirected-example-unweighted.mtx" },
-    { 1, "ldbc-undirected-example.mtx" },
-    { 1, "ldbc-wcc-example.mtx" },
-    { 0, "" },
+    { "A.mtx" },
+    { "jagmesh7.mtx" },
+    { "west0067.mtx" }, // unsymmetric
+    { "bcsstk13.mtx" },
+    { "karate.mtx" },
+    { "ldbc-cdlp-undirected-example.mtx" },
+    { "ldbc-undirected-example-bool.mtx" },
+    { "ldbc-undirected-example-unweighted.mtx" },
+    { "ldbc-undirected-example.mtx" },
+    { "ldbc-wcc-example.mtx" },
+    { "" },
 } ;
 
 //****************************************************************************
@@ -61,7 +60,6 @@ void test_lcc (void)
 
         // load the matrix as A
         const char *aname = files [k].name ;
-        bool symmetric = files [k].symmetric ;
         if (strlen (aname) == 0) break;
         printf ("\n================================== %s:\n", aname) ;
         TEST_CASE (aname) ;
@@ -77,13 +75,11 @@ void test_lcc (void)
         // check for self-edges
         OK (LAGraph_Cached_IsSymmetricStructure (G, msg));
         OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
-        bool sanitize = (G->nself_edges != 0) || (strcmp(aname, "ldbc-undirected-example.mtx") == 0);
 
         GrB_Vector c = NULL ;
-        double t [2] ;
 
         // compute the local clustering coefficient
-        OK (LAGraph_lcc (&c, G->A, symmetric, sanitize, t, msg)) ;
+        OK (LAGraph_lcc (&c, G, msg)) ;
 
         GrB_Index n ;
         OK (GrB_Vector_size (&n, c)) ;
@@ -134,22 +130,16 @@ void test_errors (void)
     OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     TEST_CHECK (A == NULL) ;
 
+    OK (LAGraph_Cached_IsSymmetricStructure (G, msg));
     OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
 
     GrB_Vector c = NULL ;
     double t [2] ;
 
     // c is NULL
-    int result = LAGraph_lcc (NULL, G->A, true, false, t, msg) ;
+    int result = LAGraph_lcc (NULL, G, msg) ;
     printf ("\nresult: %d\n", result) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
-
-    // G->A is held by column
-    OK (GxB_set (G->A, GxB_FORMAT, GxB_BY_COL)) ;
-    result = LAGraph_lcc (&c, G->A, true, true, t, msg) ;
-    printf ("\nresult: %d\n", result) ;
-    TEST_CHECK (result == GrB_INVALID_VALUE) ;
-    TEST_CHECK (c == NULL) ;
 
     OK (LAGraph_Delete (&G, msg)) ;
     #else
