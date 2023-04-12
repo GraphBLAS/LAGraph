@@ -145,7 +145,7 @@ if ( USING_LUCATAGRAPHBLAS )
         set( LUCATA_TOOLCHAIN_FOUND TRUE )
         message( STATUS "Compiler IS Lucata toolchain compiler emu-cc" )
 
-        set( LUCATA_ROOT /tools/lucata-23.r1.1feb.NoCxxUtils/ CACHE PATH "Path to lucata toolchain, only used if USING_LUCATA_TOOLCHAIN is on" )
+        set( LUCATA_ROOT /tools/lucata/ CACHE PATH "Path to lucata toolchain, only used if USING_LUCATA_TOOLCHAIN is on" )
         message( STATUS "LUCATA_ROOT set to ${LUCATA_ROOT}" )
 
         set( LUCATA_EXTRA_LIBS ${LUCATA_ROOT}/lib/libmemoryweb.a )
