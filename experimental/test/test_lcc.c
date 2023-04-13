@@ -86,7 +86,8 @@ void test_lcc (void)
         LAGraph_PrintLevel pr = (n <= 100) ? LAGraph_COMPLETE : LAGraph_SHORT ;
 
         GrB_Vector cgood = NULL ;
-        OK (LG_check_lcc(&cgood, G, msg));
+        OK (LG_check_lcc(&cgood, G, msg)) ;
+        OK (GrB_wait (cgood, GrB_MATERIALIZE)) ;
         // cgood = abs (cgood - c)
         OK (GrB_eWiseAdd (cgood, NULL, NULL, GrB_MINUS_FP64, cgood, c,
             NULL)) ;

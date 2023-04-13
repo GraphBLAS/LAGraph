@@ -2,7 +2,7 @@
 // LG_check_lcc: compute local clustering coefficients of a graph (simple)
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2023 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 //
 // For additional details (including references to third party source code and
@@ -22,6 +22,7 @@
 
 #define LG_FREE_ALL                             \
 {                                               \
+    LAGraph_Free ((void **) &LCC, msg) ;        \
     LAGraph_Free ((void **) &column, msg) ;     \
     free(neighbors) ;                           \
     free(links) ;                               \
@@ -33,6 +34,7 @@
 #include "LG_test.h"
 #include "LG_Xtest.h"
 
+// comparison function for qsort
 int comp_GrB_Index(const void *x, const void *y) {
     GrB_Index i = *(const GrB_Index*)x;
     GrB_Index j = *(const GrB_Index*)y;
@@ -41,6 +43,7 @@ int comp_GrB_Index(const void *x, const void *y) {
     return 0;
 }
 
+// assumes that the indices array is sorted
 GrB_Index find(const GrB_Index* indices, GrB_Index n, GrB_Index index) {
     GrB_Index i = 0, j = n, h;
     while (i < j) {
@@ -54,6 +57,7 @@ GrB_Index find(const GrB_Index* indices, GrB_Index n, GrB_Index index) {
     return i;
 }
 
+// assumes that the indices array is sorted
 void exclude(GrB_Index* indices, GrB_Index *n, GrB_Index element) {
     GrB_Index index = find(indices, *n, element);
     if ((index < *n) && (indices[index] == element)) {
@@ -62,6 +66,8 @@ void exclude(GrB_Index* indices, GrB_Index *n, GrB_Index element) {
     }
 }
 
+// computes how many elements are in the intersection of both sets
+// assumes that both arrays are sorted and don't have any duplicates
 GrB_Index intersection_size(
         GrB_Index* x, GrB_Index nx,
         GrB_Index* y, GrB_Index ny
@@ -101,7 +107,7 @@ int LG_check_lcc(
 
     LG_CLEAR_MSG ;
 
-    GrB_Vector column = NULL ;
+    GrB_Vector LCC = NULL, column = NULL ;
     GrB_Index *neighbors = NULL, *links = NULL ;
     GrB_Index n, ncols ;
     LG_ASSERT (coefficients != NULL, GrB_NULL_POINTER) ;
@@ -110,8 +116,7 @@ int LG_check_lcc(
     GRB_TRY (GrB_Matrix_ncols (&ncols, G->A)) ;
     LG_ASSERT (n == ncols, GrB_INVALID_OBJECT) ;
 
-    GRB_TRY (GrB_Vector_new (coefficients, GrB_FP64, n)) ;
-
+    GRB_TRY (GrB_Vector_new (&LCC, GrB_FP64, n)) ;
     GRB_TRY (GrB_Vector_new (&column, GrB_BOOL, n)) ;
 
     GrB_Index e, i, j, k, nn, nl, esum ;
@@ -122,65 +127,44 @@ int LG_check_lcc(
 
     GrB_Matrix A = G->A;
 
-    if ((G->kind == LAGraph_ADJACENCY_UNDIRECTED) ||
+    bool undirected = (G->kind == LAGraph_ADJACENCY_UNDIRECTED) ||
             ((G->kind == LAGraph_ADJACENCY_UNDIRECTED) &&
-            G->is_symmetric_structure == LAGraph_TRUE)) {
+            (G->is_symmetric_structure == LAGraph_TRUE)) ;
+    bool directed = !undirected;
 
-        for (i = 0; i < n; i++) {
-
-            GRB_TRY (GrB_extract (column, GrB_NULL, GrB_NULL, A, GrB_ALL, n, i, GrB_DESC_R)) ;
-            nn = n;
-            GRB_TRY (GrB_Vector_extractTuples (neighbors, (bool*)NULL, &nn, column)) ;
-            if (nn == 0) continue;
-            qsort(neighbors, nn, sizeof(GrB_Index), comp_GrB_Index);
-            exclude(neighbors, &nn, i);
-            k = nn;
-            if (k < 2) continue;
-
-            esum = 0;
-            for (j = 0; j < nn; j++) {
-                e = neighbors[j];
-                GRB_TRY (GrB_extract (column, GrB_NULL, GrB_NULL, A, GrB_ALL, n, e, GrB_DESC_R));
-                nl = n;
-                GRB_TRY (GrB_Vector_extractTuples (links, (bool*)NULL, &nl, column));
-                if (nl == 0) continue;
-                qsort(links, nl, sizeof(GrB_Index), comp_GrB_Index);
-                nl = find(links, nl, e);
-                esum += intersection_size(neighbors, nn, links, nl);
-            }
-            GRB_TRY (GrB_Vector_setElement (*coefficients, ((double)(2*esum))/((double)(k*(k-1))), i));
+    for (i = 0; i < n; i++) {
+        GRB_TRY (GrB_extract (column, GrB_NULL, GrB_NULL, A, GrB_ALL, n, i, GrB_DESC_R)) ;
+        if (directed) {
+            GRB_TRY (GrB_extract(column, GrB_NULL, GxB_ANY_UINT32, A, GrB_ALL, n, i, GrB_DESC_T0));
         }
-    } else {
+        nn = n;
+        GRB_TRY (GrB_Vector_extractTuples (neighbors, (bool*)NULL, &nn, column)) ;
+        if (nn == 0) continue;
+        qsort(neighbors, nn, sizeof(GrB_Index), comp_GrB_Index);
+        exclude(neighbors, &nn, i);
+        k = nn;
+        if (k < 2) continue;
 
-        for (i = 0; i < n; i++) {
-            GRB_TRY (GrB_extract (column, GrB_NULL, GrB_NULL, A, GrB_ALL, n, i, GrB_DESC_R)) ;
-            GRB_TRY (GrB_extract (column, GrB_NULL, GxB_ANY_UINT32, A, GrB_ALL, n, i, GrB_DESC_T0)) ;
-            nn = n;
-            GRB_TRY (GrB_Vector_extractTuples (neighbors, (bool*)NULL, &nn, column)) ;
-            if (nn == 0) continue;
-            qsort(neighbors, nn, sizeof(GrB_Index), comp_GrB_Index);
-            exclude(neighbors, &nn, i);
-            k = nn;
-            if (k < 2) {
-                continue;
-            }
-
-            esum = 0;
-            for (j = 0; j < nn; j++) {
-                e = neighbors[j];
-                GRB_TRY (GrB_extract (column, GrB_NULL, GrB_NULL, A, GrB_ALL, n, e, GrB_DESC_R));
-                nl = n;
-                GRB_TRY (GrB_Vector_extractTuples (links, (bool*)NULL, &nl, column));
-                if (nl == 0) continue;
-                qsort(links, nl, sizeof(GrB_Index), comp_GrB_Index);
+        esum = 0;
+        for (j = 0; j < nn; j++) {
+            e = neighbors[j];
+            GRB_TRY (GrB_extract (column, GrB_NULL, GrB_NULL, A, GrB_ALL, n, e, GrB_DESC_R));
+            nl = n;
+            GRB_TRY (GrB_Vector_extractTuples (links, (bool*)NULL, &nl, column));
+            if (nl == 0) continue;
+            qsort(links, nl, sizeof(GrB_Index), comp_GrB_Index);
+            if (directed) {
                 exclude(links, &nl, e);
-                esum += intersection_size(neighbors, nn, links, nl);
+            } else {
+                nl = find(links, nl, e);
             }
-            GRB_TRY (GrB_Vector_setElement (*coefficients, ((double)esum)/((double)(k*(k-1))), i));
+            esum += intersection_size(neighbors, nn, links, nl);
         }
+        if (undirected) esum *= 2;
+        GRB_TRY (GrB_Vector_setElement (LCC, ((double)esum)/((double)(k*(k-1))), i));
     }
 
+    *coefficients = LCC ; LCC = NULL ;
     LG_FREE_ALL;
-    GRB_TRY (GrB_wait (*coefficients, GrB_MATERIALIZE));
     return (GrB_SUCCESS);
 }

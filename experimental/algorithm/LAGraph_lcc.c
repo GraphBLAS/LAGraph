@@ -2,7 +2,7 @@
 // LAGraph_lcc: local clustering coefficient
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2023 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 //
 // For additional details (including references to third party source code and
@@ -16,6 +16,7 @@
 // and B\'{a}lint Hegyi, using LaTeX syntax).
 // https://inf.mit.bme.hu/en/members/szarnyasg .
 // Modified by Timothy A. Davis, Texas A&M University
+// Modified by Pascal Costanza, Intel, Belgium
 
 //------------------------------------------------------------------------------
 
