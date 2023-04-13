@@ -709,11 +709,7 @@ GrB_Info LAGraph_FW
  * Compute the local clustering coefficient for all nodes in a graph.
  *
  * @param[out]  LCC_handle   output vector holding coefficients
- * @param[in]   A            adjacency matrix for the graph
- * @param[in]   symmetric    denote whether the matrix is symmetric
- * @param[in]   sanitize     if true, verify that A is binary
- * @param[out]  t            array of two doubles
- *                           [0]=sanitize time, [1]=lcc time in seconds
+ * @param[in]   G            the graph
  * @param[in,out] msg        any error messages.
  *
  * @retval GrB_SUCCESS        if completed successfully

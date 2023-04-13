@@ -93,6 +93,9 @@ int main (int argc, char **argv)
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
 
+    LAGRAPH_TRY (LAGraph_Cached_IsSymmetricStructure(G, msg)) ;
+    LAGRAPH_TRY (LAGraph_Cached_NSelfEdges(G, msg)) ;
+
     //--------------------------------------------------------------------------
     // local clustering coefficient
     //--------------------------------------------------------------------------
@@ -121,7 +124,7 @@ int main (int argc, char **argv)
     LAGRAPH_TRY (GrB_reduce (&err, NULL, GrB_MAX_MONOID_FP64, cgood, NULL)) ;
     printf ("err: %g\n", err) ;
     if (err >= 1e-6) {
-        LAGRAPH_CATCH (GrB_PANIC) ;
+        LAGRAPH_TRY (GrB_PANIC) ;
     }
     LAGRAPH_TRY (GrB_free (&c)) ;
     LAGRAPH_TRY (GrB_free (&cgood)) ;
@@ -134,7 +137,7 @@ int main (int argc, char **argv)
         LAGRAPH_TRY (LAGraph_SetNumThreads(1, nthreads, msg));
         double ttot = 0, ttrial[100];
         for (int trial = 0; trial < ntrials; trial++) {
-            double tt = LAGraph_WallClockTime();
+            tt = LAGraph_WallClockTime();
             LAGRAPH_TRY (LAGraph_lcc(&c, G, msg));
             GRB_TRY (GrB_free(&c));
             ttrial[trial] = LAGraph_WallClockTime() - tt;
