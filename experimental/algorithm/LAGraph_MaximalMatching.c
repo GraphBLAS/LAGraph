@@ -10,7 +10,21 @@
 
 //------------------------------------------------------------------------------
 
-// FIXME: describe inputs/outputs, describe algo
+/*
+Uses a modified version of Luby's MIS algorithm
+Major algorithm steps:
+- Compute score for each edge
+- Find max score neighbor of each edge (*)
+- Retain edges with score == max score neighbor (*)
+- Add retained edges to result
+- Remove retained edges and their neighbors from the graph (*)
+
+(*): these steps involve what can be thought as a "2-hop" process that involves two
+GrB_mxv's: the first to go from edges to vertices, and the second from vertices back to edges.
+Tying both steps together yields a single BFS-like step in the line graph. A important side effect
+of this is that the source edge gets included in the result of this 2-hop step, which cannot be avoided
+since we do not compute E'E explicitly.
+*/
 
 #include "LG_internal.h"
 #include "LAGraphX.h"
@@ -43,13 +57,11 @@
 int LAGraph_MaximalMatching
 (
     // outputs:
-    GrB_Vector *matching,
+    GrB_Vector *matching,                 // pointer to output vector
     // inputs:
-    GrB_Matrix E,       // incidence
-    int matching_type,  // 0 (random), 1 (heavy weight matching), 2 (light weight matching)
-    // FIXME: enum
-
-    uint64_t seed,      // random number seed
+    GrB_Matrix E,                         // incidence
+    LAGraph_Matching_kind matching_type,  // 0 (random), 1 (heavy weight matching), 2 (light weight matching)
+    uint64_t seed,                        // random number seed
     char *msg
 )
 {
@@ -134,10 +146,10 @@ int LAGraph_MaximalMatching
         GRB_TRY (GrB_eWiseMult (score, candidates, NULL, GrB_DIV_FP64, Seed, degree, GrB_DESC_RS)) ;
 
         // for light matching, can multiply scores by 1 / (edge weight)
-        if (matching_type == 1) {
+        if (matching_type == LAGraph_Matching_heavy) {
             // heavy
             GRB_TRY (GrB_eWiseMult (score, NULL, NULL, GrB_TIMES_FP64, score, weight, NULL)) ;
-        } else if (matching_type == 2) {
+        } else if (matching_type == LAGraph_Matching_light) {
             // light
             GRB_TRY (GrB_eWiseMult (score, NULL, NULL, GrB_DIV_FP64, score, weight, NULL)) ;
         }

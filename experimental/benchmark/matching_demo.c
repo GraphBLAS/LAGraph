@@ -37,7 +37,7 @@ NOTE: When complete, prints out the matching vector and E matrix of the input gr
 #include "LAGraphX.h"
 #include <omp.h>
 
-// #define VERBOSE
+#define VERBOSE
 
 #define NTHREAD_LIST 1
 #define THREAD_LIST 8
