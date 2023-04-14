@@ -83,6 +83,33 @@
 
 #define F_UNARY(f)  ((void (*)(void *, const void *)) f)
 
+
+#define LAGRAPH_COMB_DIR_FP64                                                 \
+"void LAGraph_comb_dir_fp64                                               \n" \
+"(                                                                        \n" \
+"    void *z,                                                             \n" \
+"    const void *x                                                        \n" \
+")                                                                        \n" \
+"{                                                                        \n" \
+"    double xd = *(double *) x ;                                          \n" \
+"    double *zd = (double *) z ;                                          \n" \
+"    (*zd) = ((xd) * (xd - 1));                                           \n" \
+"}                                                                        \n" \
+"}"
+
+#define LAGRAPH_COMB_UNDIR_FP64                                               \
+"void LAGraph_comb_undir_fp64                                             \n" \
+"(                                                                        \n" \
+"    void *z,                                                             \n" \
+"    const void *x                                                        \n" \
+")                                                                        \n" \
+"{                                                                        \n" \
+"    double xd = *(double *) x ;                                          \n" \
+"    double *zd = (double *) z ;                                          \n" \
+"    (*zd) = ((xd) * (xd - 1)) / 2;                                       \n" \
+"}                                                                        \n" \
+"}"
+
 // z = x * (x - 1), used by LAGraph_lcc.
 // This operator calculates the 2-permutation of d(v).
 void LAGraph_comb_dir_fp64
@@ -149,8 +176,8 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     // ensure input is binary and has no self-edges
     //--------------------------------------------------------------------------
 
-    GRB_TRY (GrB_Matrix_new (&S, GrB_BOOL, n, n));
-    GRB_TRY (GrB_assign (S, A, GrB_NULL, true, GrB_ALL, n, GrB_ALL, n, GrB_DESC_S));
+    GRB_TRY (GrB_Matrix_new (&S, GrB_FP64, n, n));
+    GRB_TRY (GrB_assign (S, A, GrB_NULL, 1, GrB_ALL, n, GrB_ALL, n, GrB_DESC_S));
     if (G->nself_edges != 0) {
         GRB_TRY (GrB_select (S, GrB_NULL, GrB_NULL, GrB_OFFDIAG, S, 0, GrB_NULL));
     }
@@ -159,15 +186,21 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     // create the operators for LAGraph_lcc
     //--------------------------------------------------------------------------
 
-    GRB_TRY (GrB_UnaryOp_new (&LAGraph_COMB_DIR_FP64,
-                                 F_UNARY (LAGraph_comb_dir_fp64),
-                                 GrB_FP64, GrB_FP64)) ;
+    GRB_TRY (GxB_UnaryOp_new (&LAGraph_COMB_DIR_FP64,
+                              F_UNARY (LAGraph_comb_dir_fp64),
+                              GrB_FP64, GrB_FP64,
+                              "LAGraph_comb_dir_fp64",
+                              LAGRAPH_COMB_DIR_FP64
+                              )) ;
 
-    GRB_TRY (GrB_UnaryOp_new (&LAGraph_COMB_UNDIR_FP64,
-                                 F_UNARY (LAGraph_comb_undir_fp64),
-                                 GrB_FP64, GrB_FP64)) ;
+    GRB_TRY (GxB_UnaryOp_new (&LAGraph_COMB_UNDIR_FP64,
+                              F_UNARY (LAGraph_comb_undir_fp64),
+                              GrB_FP64, GrB_FP64,
+                              "LAGraph_comb_undir_fp64",
+                              LAGRAPH_COMB_UNDIR_FP64
+                              )) ;
 
-    GRB_TRY (GrB_Matrix_new (&U, GrB_UINT32, n, n)) ;
+    GRB_TRY (GrB_Matrix_new (&U, GrB_FP64, n, n)) ;
 
     if (G->is_symmetric_structure == LAGraph_TRUE)
     {
@@ -185,22 +218,22 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     {
         GrB_Matrix AT = NULL, D = NULL ;
 
-        GRB_TRY (GrB_Matrix_new (&AT, GrB_BOOL, n, n)) ;
+        GRB_TRY (GrB_Matrix_new (&AT, GrB_FP64, n, n)) ;
         GRB_TRY (GrB_transpose (AT, NULL, NULL, S, NULL)) ;
 
         //----------------------------------------------------------------------
         // C = A \/ A' to create an undirected graph C
         //----------------------------------------------------------------------
 
-        GRB_TRY (GrB_Matrix_new (&C, GrB_BOOL, n, n)) ;
-        GRB_TRY (GrB_eWiseAdd (C, NULL, NULL, GrB_LOR, S, AT, NULL)) ;
+        GRB_TRY (GrB_Matrix_new (&C, GrB_FP64, n, n)) ;
+        GRB_TRY (GrB_eWiseAdd (C, NULL, NULL, GrB_ONEB_FP64, S, AT, NULL)) ;
 
         //----------------------------------------------------------------------
         // D = A + A' to create an undirected multigraph D
         //----------------------------------------------------------------------
 
-        GRB_TRY (GrB_Matrix_new (&D, GrB_UINT32, n, n)) ;
-        GRB_TRY (GrB_eWiseAdd (D, NULL, NULL, GrB_PLUS_UINT32, S, AT, NULL)) ;
+        GRB_TRY (GrB_Matrix_new (&D, GrB_FP64, n, n)) ;
+        GRB_TRY (GrB_eWiseAdd (D, NULL, NULL, GrB_PLUS_FP64, S, AT, NULL)) ;
 
         GRB_TRY (GrB_free (&AT)) ;
         GRB_TRY (GrB_free (&S)) ;
