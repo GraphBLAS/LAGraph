@@ -1,4 +1,22 @@
-// FIXME: explain.
+/*
+gen_general.cpp
+
+Generates a random, undirected graph and evaluates matching to test LAGraph_MaximalMatching
+
+Usage:
+Identical to gen_bipartite
+
+Details:
+The maximum matching technique used here is an implementation of a lesser known algorithm called the Blossom algorithm.
+Read more here: https://www.cambridge.org/core/journals/canadian-journal-of-mathematics/article/paths-trees-and-flowers/08B492B72322C4130AE800C0610E0E21
+The implementation is provided 
+
+The naive technique first sorts all edges by weight for weighted graphs (using the prefer_light option, unweighted graphs have edge weight 1). The sort breaks ties between edges
+of the same weight by edge degree (edges with a lower degree are favored). The method then traverses the edge list and attempts to include each edge in order in the matching.
+
+In both cases, the generated graph is printed in MatrixMarket format to data.mtx. This is so the random graph can be evaluated using
+GraphBLAS. In addition, the evaluated matching value is printed to stdout (this can be piped out to any file).
+*/
 
 extern "C" {
    #include "LAGraph.h"

@@ -1,4 +1,27 @@
-#include <bits/stdc++.h>
+/*
+verify_matching.cpp
+
+Usage:
+./verify_matching.cpp
+
+Details:
+Reads and parses output from the file 'grb_result.txt'. File must contain ONLY the following data in order:
+1. Printout of a matching vector (result of LAGraph_MaximalMatching), produced by LAGraph_Vector_Print() with LAGraph_COMPLETE
+2. Prinout of E matrix (input of LAGraph_MaximalMatching), produced by LAGraph_Matrix_Print() with LAGraph_COMPLETE
+
+Determines if the matching described in 'grb_result.txt' is a valid matching, and if so returns the matching value (#of edges/sum of edge weights)
+
+Known bugs: If the edge weights are large, LAGraph_Matrix_Print uses scientific notation, which messes up the parsing
+*/
+
+#include <iostream>
+#include <fstream>
+#include <map>
+#include <set>
+#include <vector>
+#include <queue>
+#include <algorithm>
+#include <random>
 
 #define pb push_back
 #define f first
@@ -125,5 +148,5 @@ int main(){
         }
         tot_weight += weight_map[e];
     }
-    cout << edges.size() << " " << tot_weight << endl;
+    cout << tot_weight << endl;
 }
