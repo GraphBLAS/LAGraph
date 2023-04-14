@@ -17,6 +17,27 @@
 
 // #define dbg
 
+// suggest a new name
+
+// LAGraph_Incidence
+// LAGraph_IncidenceMatrix
+
+// Given an undirected graph G, construct the incidence matrix E.
+// ...
+/*
+The incidence matrix E has size n-by-e where the
+undirected graph G has n nodes and e edges.  If the kth edge of G is the edge
+(i,j), then the column E(:,k) contains two entries:  E(i,k) and E(j,k), which
+have the same value.  If the graph G is weighted, then both E(i,k) and E(j,k)
+are equal to the weight of the (i,j) edge.  If G is unweighted, then both are
+equal to 1 (and the matrix E is thus iso-valued).
+
+G->A is treated as if FP64.  E has type GrB_FP64
+
+#define LG_FREE_WORK ...
+#define LG_FREE_ALL ...
+*/
+
 int LAGraph_A_to_E
 (
     GrB_Matrix *result, // incidence
@@ -72,6 +93,7 @@ int LAGraph_A_to_E
 
     // current index in E_* arrays
     GrB_Index pos = 0;
+    GrB_Index n_edges = nvals / 2 ;
 
     for (size_t i = 0; i < nvals; i++) {
         // only consider edges if row < col (prevent duplicates)
@@ -85,9 +107,9 @@ int LAGraph_A_to_E
             E_values[pos] = value ;
             // printf("DBG: pos = %lld, [%lld, %lld, %lld]\n", pos, E_col_indices[pos], E_row_indices[pos], E_values[pos]);
             // now put the col values (2nd endpoint)
-            E_col_indices[pos + (nvals >> 1)] = pos ;
-            E_row_indices[pos + (nvals >> 1)] = col ;
-            E_values[pos + (nvals >> 1)] = value ;
+            E_col_indices[pos + n_edges] = pos ;
+            E_row_indices[pos + n_edges] = col ;
+            E_values[pos + n_edges] = value ;
             pos++ ;
         }   
     }

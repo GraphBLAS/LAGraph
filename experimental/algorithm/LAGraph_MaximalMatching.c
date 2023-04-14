@@ -24,6 +24,19 @@ GrB_mxv's: the first to go from edges to vertices, and the second from vertices 
 Tying both steps together yields a single BFS-like step in the line graph. A important side effect
 of this is that the source edge gets included in the result of this 2-hop step, which cannot be avoided
 since we do not compute E'E explicitly.
+
+The input to this method is an incidence matrix E, of size n-by-e where the
+undirected graph G has n nodes and e edges.  If the kth edge of G is the edge
+(i,j), then the column E(:,k) contains two entries:  E(i,k) and E(j,k), which
+have the same value.  If the graph G is weighted, then both E(i,k) and E(j,k)
+are equal to the weight of the (i,j) edge.  If G is unweighted, then both are
+equal to 1 (and the matrix E is thus iso-valued).
+
+The output is vector 'matching' of size e, where matching(k) is present (and
+equal to true) if the kth edge appears in the maximal matching.  If (i,j) is
+a matched edge, then no other edges of G that are incident on nodes i and j
+appear in the matching.
+
 */
 
 #include "LG_internal.h"
