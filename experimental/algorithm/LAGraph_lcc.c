@@ -71,8 +71,7 @@
     GrB_free (&U) ;                 \
     GrB_free (&W) ;                 \
     GrB_free (&LCC) ;               \
-    GrB_free (&LAGraph_COMB_DIR_FP64) ;                 \
-    GrB_free (&LAGraph_COMB_UNDIR_FP64) ;                 \
+    GrB_free (&LAGraph_COMB_FP64) ; \
 }
 
 #include "LG_internal.h"
@@ -158,8 +157,7 @@ int LAGraph_lcc            // compute lcc for all nodes in A
 
     GrB_Matrix C = NULL, CL = NULL, S = NULL, U = NULL ;
     GrB_Vector W = NULL, LCC = NULL ;
-    GrB_UnaryOp LAGraph_COMB_DIR_FP64 = NULL ;
-    GrB_UnaryOp LAGraph_COMB_UNDIR_FP64 = NULL ;
+    GrB_UnaryOp LAGraph_COMB_FP64 = NULL ;
     GrB_Info info ;
 
 #if !LAGRAPH_SUITESPARSE
@@ -177,7 +175,7 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     //--------------------------------------------------------------------------
 
     GRB_TRY (GrB_Matrix_new (&S, GrB_FP64, n, n));
-    GRB_TRY (GrB_assign (S, A, GrB_NULL, 1, GrB_ALL, n, GrB_ALL, n, GrB_DESC_S));
+    GRB_TRY (GrB_apply (S, GrB_NULL, GrB_NULL, GrB_ONEB_FP64, A, 0, GrB_NULL));
     if (G->nself_edges != 0) {
         GRB_TRY (GrB_select (S, GrB_NULL, GrB_NULL, GrB_OFFDIAG, S, 0, GrB_NULL));
     }
@@ -186,19 +184,21 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     // create the operators for LAGraph_lcc
     //--------------------------------------------------------------------------
 
-    GRB_TRY (GxB_UnaryOp_new (&LAGraph_COMB_DIR_FP64,
-                              F_UNARY (LAGraph_comb_dir_fp64),
-                              GrB_FP64, GrB_FP64,
-                              "LAGraph_comb_dir_fp64",
-                              LAGRAPH_COMB_DIR_FP64
-                              )) ;
-
-    GRB_TRY (GxB_UnaryOp_new (&LAGraph_COMB_UNDIR_FP64,
-                              F_UNARY (LAGraph_comb_undir_fp64),
-                              GrB_FP64, GrB_FP64,
-                              "LAGraph_comb_undir_fp64",
-                              LAGRAPH_COMB_UNDIR_FP64
-                              )) ;
+    if (G->is_symmetric_structure == LAGraph_TRUE) {
+        GRB_TRY (GxB_UnaryOp_new(&LAGraph_COMB_FP64,
+                                 F_UNARY(LAGraph_comb_undir_fp64),
+                                 GrB_FP64, GrB_FP64,
+                                 "LAGraph_comb_undir_fp64",
+                                 LAGRAPH_COMB_UNDIR_FP64
+        ));
+    } else {
+        GRB_TRY (GxB_UnaryOp_new(&LAGraph_COMB_FP64,
+                                 F_UNARY(LAGraph_comb_dir_fp64),
+                                 GrB_FP64, GrB_FP64,
+                                 "LAGraph_comb_dir_fp64",
+                                 LAGRAPH_COMB_DIR_FP64
+        ));
+    }
 
     GRB_TRY (GrB_Matrix_new (&U, GrB_FP64, n, n)) ;
 
@@ -219,7 +219,7 @@ int LAGraph_lcc            // compute lcc for all nodes in A
         GrB_Matrix AT = NULL, D = NULL ;
 
         GRB_TRY (GrB_Matrix_new (&AT, GrB_FP64, n, n)) ;
-        GRB_TRY (GrB_transpose (AT, NULL, NULL, S, NULL)) ;
+        GRB_TRY (GrB_transpose (AT, NULL, GrB_ONEB_FP64, S, NULL)) ;
 
         //----------------------------------------------------------------------
         // C = A \/ A' to create an undirected graph C
@@ -256,16 +256,7 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     GRB_TRY (GrB_reduce (W, NULL, NULL, GrB_PLUS_FP64, C, NULL)) ;
 
     // Compute vector W defining the number of wedges per vertex
-    if (G->is_symmetric_structure == LAGraph_TRUE)
-    {
-        // the graph is undirected
-        GRB_TRY (GrB_apply(W, NULL, NULL, LAGraph_COMB_UNDIR_FP64, W, NULL));
-    }
-    else
-    {
-        // the graph is directed
-        GRB_TRY (GrB_apply(W, NULL, NULL, LAGraph_COMB_DIR_FP64, W, NULL)) ;
-    }
+    GRB_TRY (GrB_apply(W, NULL, NULL, LAGraph_COMB_FP64, W, NULL));
 
     //--------------------------------------------------------------------------
     // Calculate triangles
