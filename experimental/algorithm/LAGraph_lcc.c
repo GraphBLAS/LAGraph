@@ -70,6 +70,7 @@
     GrB_free (&S) ;                 \
     GrB_free (&U) ;                 \
     GrB_free (&W) ;                 \
+    GrB_free (&x) ;                 \
     GrB_free (&LCC) ;               \
     GrB_free (&LAGraph_COMB_FP64) ; \
 }
@@ -82,32 +83,6 @@
 
 #define F_UNARY(f)  ((void (*)(void *, const void *)) f)
 
-
-#define LAGRAPH_COMB_DIR_FP64                                                 \
-"void LAGraph_comb_dir_fp64                                               \n" \
-"(                                                                        \n" \
-"    void *z,                                                             \n" \
-"    const void *x                                                        \n" \
-")                                                                        \n" \
-"{                                                                        \n" \
-"    double xd = *(double *) x ;                                          \n" \
-"    double *zd = (double *) z ;                                          \n" \
-"    (*zd) = ((xd) * (xd - 1));                                           \n" \
-"}                                                                        \n" \
-"}"
-
-#define LAGRAPH_COMB_UNDIR_FP64                                               \
-"void LAGraph_comb_undir_fp64                                             \n" \
-"(                                                                        \n" \
-"    void *z,                                                             \n" \
-"    const void *x                                                        \n" \
-")                                                                        \n" \
-"{                                                                        \n" \
-"    double xd = *(double *) x ;                                          \n" \
-"    double *zd = (double *) z ;                                          \n" \
-"    (*zd) = ((xd) * (xd - 1)) / 2;                                       \n" \
-"}                                                                        \n" \
-"}"
 
 // z = x * (x - 1), used by LAGraph_lcc.
 // This operator calculates the 2-permutation of d(v).
@@ -122,6 +97,18 @@ void LAGraph_comb_dir_fp64
     (*zd) = ((xd) * (xd - 1)) ;
 }
 
+#define LAGRAPH_COMB_DIR_FP64                                                 \
+"void LAGraph_comb_dir_fp64                                               \n" \
+"(                                                                        \n" \
+"    void *z,                                                             \n" \
+"    const void *x                                                        \n" \
+")                                                                        \n" \
+"{                                                                        \n" \
+"    double xd = *(double *) x ;                                          \n" \
+"    double *zd = (double *) z ;                                          \n" \
+"    (*zd) = ((xd) * (xd - 1));                                           \n" \
+"}"
+
 // z = x * (x - 1) / 2, used by LAGraph_lcc.
 // This operator calculates the 2-combination of d(v).
 void LAGraph_comb_undir_fp64
@@ -134,6 +121,18 @@ void LAGraph_comb_undir_fp64
     double *zd = (double *) z ;
     (*zd) = ((xd) * (xd - 1)) / 2;
 }
+
+#define LAGRAPH_COMB_UNDIR_FP64                                               \
+"void LAGraph_comb_undir_fp64                                             \n" \
+"(                                                                        \n" \
+"    void *z,                                                             \n" \
+"    const void *x                                                        \n" \
+")                                                                        \n" \
+"{                                                                        \n" \
+"    double xd = *(double *) x ;                                          \n" \
+"    double *zd = (double *) z ;                                          \n" \
+"    (*zd) = ((xd) * (xd - 1)) / 2;                                       \n" \
+"}"
 
 //------------------------------------------------------------------------------
 
@@ -156,7 +155,7 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     }
 
     GrB_Matrix C = NULL, CL = NULL, S = NULL, U = NULL ;
-    GrB_Vector W = NULL, LCC = NULL ;
+    GrB_Vector W = NULL, LCC = NULL, x = NULL ;
     GrB_UnaryOp LAGraph_COMB_FP64 = NULL ;
     GrB_Info info ;
 
@@ -211,7 +210,7 @@ int LAGraph_lcc            // compute lcc for all nodes in A
         // U = triu(C)
         //----------------------------------------------------------------------
 
-        GRB_TRY (GxB_select (U, NULL, NULL, GxB_TRIU, C, 0, NULL)) ;
+        GRB_TRY (GrB_select (U, NULL, NULL, GrB_TRIU, C, 0, NULL)) ;
 
     }
     else
@@ -243,7 +242,7 @@ int LAGraph_lcc            // compute lcc for all nodes in A
         //----------------------------------------------------------------------
 
         // note that L=U' since D is symmetric
-        GRB_TRY (GxB_select (U, NULL, NULL, GxB_TRIU, D, 0, NULL)) ;
+        GRB_TRY (GrB_select (U, NULL, NULL, GrB_TRIU, D, 0, NULL)) ;
         GRB_TRY (GrB_free (&D)) ;
     }
 
@@ -251,9 +250,15 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     // Find wedges of each node
     //--------------------------------------------------------------------------
 
-    // W(i) = sum (C (i,:))
+    // W(i) = sum (C (i,:)) = # of entries in C(i,:) because all entries
+    // present in C are equal to 1.
     GRB_TRY (GrB_Vector_new (&W, GrB_FP64, n)) ;
-    GRB_TRY (GrB_reduce (W, NULL, NULL, GrB_PLUS_FP64, C, NULL)) ;
+    // x = zeros (n,1)
+    GRB_TRY (GrB_Vector_new (&x, GrB_INT64, n)) ;
+    GRB_TRY (GrB_assign (x, NULL, NULL, 0, GrB_ALL, n, NULL)) ;
+    // W = C*x using the plus_one semiring
+    GRB_TRY (GrB_mxv (W, NULL, NULL, LAGraph_plus_one_fp64, C, x, NULL)) ;
+    GrB_free (&x) ;
 
     // Compute vector W defining the number of wedges per vertex
     GRB_TRY (GrB_apply(W, NULL, NULL, LAGraph_COMB_FP64, W, NULL));
