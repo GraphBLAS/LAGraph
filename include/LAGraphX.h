@@ -905,4 +905,55 @@ int LAGraph_HelloWorld // a simple algorithm, just for illustration
     char *msg
 ) ;
 
+//------------------------------------------------------------------------------
+// run a breadth first search for multiple source nodes
+//------------------------------------------------------------------------------
+
+LAGRAPH_PUBLIC
+int LAGraph_MultiSourceBFS 
+(
+    // outputs:
+    GrB_Matrix    *level,
+    GrB_Matrix    *parent,
+    // inputs:
+    const LAGraph_Graph G,
+    GrB_Vector      src,
+    char          *msg
+) ;
+
+//------------------------------------------------------------------------------
+// estimate the diameter of a graph
+//------------------------------------------------------------------------------
+
+LAGRAPH_PUBLIC
+int LAGraph_EstimateDiameter
+(
+    // outputs:
+    GrB_Index    *diameter,
+    GrB_Vector    *peripheral,
+    // inputs:
+    const LAGraph_Graph G,
+    GrB_Index    maxSrcs,
+    GrB_Index    maxLoops,
+    // add seed for randomization
+    char          *msg
+) ;
+
+//------------------------------------------------------------------------------
+// find the exact diameter of a graph
+//------------------------------------------------------------------------------
+
+LAGRAPH_PUBLIC
+int LAGraph_ExactDiameter
+(
+    // outputs:
+    GrB_Index    *diameter,
+    GrB_Vector    *peripheral,
+    GrB_Vector    *eccentricity,
+    // inputs:
+    const LAGraph_Graph G,
+    GrB_Index      k,
+    char          *msg
+) ;
+
 #endif
