@@ -61,16 +61,16 @@ int LAGraph_ExactDiameter
     // check inputs
     //--------------------------------------------------------------------------
 
-#if !LAGRAPH_SUITESPARSE
-    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
-#else
-
     LG_CLEAR_MSG ;
     GrB_Vector ecc = NULL ;           // the eccentricity of the nodes
     GrB_Vector peri = NULL ;          // vector to store peripheral node status in
     GrB_Vector srcEcc = NULL ;        // work vector to store each iteration's eccentricity in temporarily
     GrB_Matrix level = NULL;          // work matrix for storing msbfs level info
     GrB_Index d ;                     // diameter
+
+#if !LAGRAPH_SUITESPARSE
+    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
+#else
 
     bool compute_periphery  = (peripheral != NULL) ;
     if (compute_periphery ) (*peripheral) = NULL ;

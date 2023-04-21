@@ -45,15 +45,15 @@ int LAGraph_MultiSourceBFS
     // check inputs
     //--------------------------------------------------------------------------
 
-#if !LAGRAPH_SUITESPARSE
-    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
-#else
-
     LG_CLEAR_MSG ;
     GrB_Matrix q = NULL ;           // the current frontier 
     // GrB_Vector w = NULL ;     to compute work remaining, removed since not doing push-pull
     GrB_Matrix pi = NULL ;          // parent matrix
     GrB_Matrix v = NULL ;           // level matrix
+
+#if !LAGRAPH_SUITESPARSE
+    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
+#else
 
     bool compute_level  = (level != NULL) ;
     bool compute_parent = (parent != NULL) ;

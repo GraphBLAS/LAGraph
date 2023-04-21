@@ -93,10 +93,6 @@ int LAGraph_EstimateDiameter
     // check inputs
     //--------------------------------------------------------------------------
 
-#if !LAGRAPH_SUITESPARSE
-    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
-#else
-
     LG_CLEAR_MSG ;
     GrB_Vector ecc = NULL ;           // the eccentricity of the nodes
     GrB_Vector peri = NULL ;          // vector to store peripheral node status in
@@ -107,6 +103,10 @@ int LAGraph_EstimateDiameter
     GrB_Matrix level = NULL ;       // matrix for msbfs to put level info in
     GrB_Vector candidateSrcs = NULL ; // work vector for getting sources for the next iteration of the loop
     GrB_BinaryOp Mod = NULL ;
+
+#if !LAGRAPH_SUITESPARSE
+    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
+#else
 
     bool compute_periphery  = (peripheral != NULL) ;
     if (compute_periphery ) (*peripheral) = NULL ;
