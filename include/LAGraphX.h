@@ -927,7 +927,7 @@ int LAGraph_EstimateDiameter
     const LAGraph_Graph G,
     GrB_Index    maxSrcs,
     GrB_Index    maxLoops,
-    // add seed for randomization
+    uint64_t     seed,          // seed for randomization
     char          *msg
 ) ;
 

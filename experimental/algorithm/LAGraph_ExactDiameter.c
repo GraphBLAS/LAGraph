@@ -42,6 +42,7 @@
 }
 
 #include "LG_internal.h"
+#include "LAGraphX.h"
 
 int LAGraph_ExactDiameter
 (

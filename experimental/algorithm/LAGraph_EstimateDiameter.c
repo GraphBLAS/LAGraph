@@ -31,6 +31,7 @@
     GrB_free (&candidateSrcs) ;       \
     GrB_free (&srcs) ;      \
     GrB_free (&level) ;     \
+    GrB_free (&Mod) ;       \
 }
 
 #define LG_FREE_ALL         \
@@ -40,6 +41,39 @@
 }
 
 #include "LG_internal.h"
+#include "LAGraphX.h"
+
+void mod32 (int32_t *z, const int32_t *x, const int32_t *y) ;
+void mod32 (int32_t *z, const int32_t *x, const int32_t *y)
+{
+    /* make sure x is positive */
+    int32_t t = ((*x) > 0) ? (*x) : -(*x) ;
+    (*z) = t % (*y) ;
+}
+
+#define MOD32_DEFN                                                  \
+"void mod32 (int32_t *z, const int32_t *x, const int32_t *y)    \n" \
+"{                                                              \n" \
+"    /* make sure x is positive */                              \n" \
+"    int32_t t = ((*x) > 0) ? (*x) : -(*x) ;                    \n" \
+"    (*z) = t % (*y) ;                                          \n" \
+"}"
+
+void mod64 (int64_t *z, const int64_t *x, const int64_t *y) ;
+void mod64 (int64_t *z, const int64_t *x, const int64_t *y)
+{
+    /* make sure x is positive */
+    int64_t t = ((*x) > 0) ? (*x) : -(*x) ;
+    (*z) = t % (*y) ;
+}
+
+#define MOD64_DEFN                                                  \
+"void mod64 (int64_t *z, const int64_t *x, const int64_t *y)    \n" \
+"{                                                              \n" \
+"    /* make sure x is positive */                              \n" \
+"    int64_t t = ((*x) > 0) ? (*x) : -(*x) ;                    \n" \
+"    (*z) = t % (*y) ;                                          \n" \
+"}"
 
 int LAGraph_EstimateDiameter
 (
@@ -50,7 +84,7 @@ int LAGraph_EstimateDiameter
     const LAGraph_Graph G,
     GrB_Index    maxSrcs,
     GrB_Index    maxLoops,
-    // add seed for randomization
+    uint64_t     seed,          // seed for randomization
     char          *msg
 )
 {
@@ -72,6 +106,7 @@ int LAGraph_EstimateDiameter
     GrB_Index nsrcs ;               // number of current sources
     GrB_Matrix level = NULL ;       // matrix for msbfs to put level info in
     GrB_Vector candidateSrcs = NULL ; // work vector for getting sources for the next iteration of the loop
+    GrB_BinaryOp Mod = NULL ;
 
     bool compute_periphery  = (peripheral != NULL) ;
     if (compute_periphery ) (*peripheral) = NULL ;
@@ -96,6 +131,8 @@ int LAGraph_EstimateDiameter
     // set up the first maxSrcs random nodes
     //--------------------------------------------------------------------------
 
+//  GxB_set (GxB_BURBLE, true) ;
+
     // currently just doing the first maxSrcs, consider different randomization
     // check maxSrcs < n
     // printf("Selecting sources \n");
@@ -105,18 +142,45 @@ int LAGraph_EstimateDiameter
         nsrcs = maxSrcs;
     }
     GRB_TRY (GrB_Vector_new (&srcs, int_type, nsrcs)) ;
-    for (int64_t i = 0; i < nsrcs; i++){
-        GRB_TRY (GrB_Vector_setElement (srcs, i, i)) ;
+    // srcs (0:nsrcs-1) = 0
+    GRB_TRY (GrB_assign (srcs, NULL, NULL, 0, GrB_ALL, nsrcs, NULL)) ;
+    if (nsrcs == n)
+    {
+        // srcs = 0:n-1
+        GrB_IndexUnaryOp op =
+            (n > INT32_MAX) ?  GrB_ROWINDEX_INT64 : GrB_ROWINDEX_INT32 ;
+        GRB_TRY (GrB_apply (srcs, NULL, NULL, op, srcs, 0, NULL)) ;
+//      for (int64_t i = 0; i < nsrcs; i++){
+//          GRB_TRY (GrB_Vector_setElement (srcs, i, i)) ;
+//      }
     }
+    else
+    {
+        // srcs = randomized, still of size nsrcs-1, values in range 0 to UINT64_MAX
+        LAGRAPH_TRY (LAGraph_Random_Seed (srcs, seed, msg)) ;
+        GRB_TRY (GxB_BinaryOp_new (&Mod,
+            (n > INT32_MAX) ? ((GxB_binary_function)mod64) : ((GxB_binary_function)mod32),
+            int_type, int_type, int_type,
+            (n > INT32_MAX) ? "mod64" : "mod32",
+            (n > INT32_MAX) ? MOD64_DEFN : MOD32_DEFN)) ;
+//      GxB_print (Mod, 3) ;
+//      printf ("Before Mod:, n = %lu\n", n) ;
+//      GxB_print (srcs, 3) ;
+        GRB_TRY (GrB_apply (srcs, NULL, NULL, Mod, srcs, n, NULL)) ;
+        GrB_free (&Mod) ;
+    }
+
+//  GxB_print (srcs, 3) ;
+//  GxB_set (GxB_BURBLE, false) ;
 
     //--------------------------------------------------------------------------
     // core loop, run until current and previous diameters match or reach given limit
     //--------------------------------------------------------------------------
 
-    GrB_Monoid max = (n > INT32_MAX) ?
-            GrB_MAX_MONOID_INT64 : GrB_MAX_MONOID_INT32 ;
-    GrB_IndexUnaryOp eqOp = (n > INT32_MAX) ?
-            GrB_VALUEEQ_INT64 : GrB_VALUEEQ_INT32 ;
+    GrB_Monoid max =
+        (n > INT32_MAX) ?  GrB_MAX_MONOID_INT64 : GrB_MAX_MONOID_INT32 ;
+    GrB_IndexUnaryOp eqOp =
+        (n > INT32_MAX) ?  GrB_VALUEEQ_INT64 : GrB_VALUEEQ_INT32 ;
     bool incSrcs = false;
     for (int64_t i = 0; i < maxLoops; i++){
         // printf("Start of main loop \n");

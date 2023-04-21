@@ -60,6 +60,7 @@ int main (int argc, char **argv)
 
     // start GraphBLAS and LAGraph
     LAGRAPH_TRY (LAGraph_Init (msg)) ;
+    LAGRAPH_TRY (LAGraph_Random_Init (msg)) ;
 
     //--------------------------------------------------------------------------
     // read in the graph via a Matrix Market file from stdin
@@ -80,7 +81,7 @@ int main (int argc, char **argv)
 
     printf ("\n==========================Running diameter\n") ;
     t = LAGraph_WallClockTime ( ) ;
-    LAGRAPH_TRY (LAGraph_EstimateDiameter (&diameter, &peripheral, G, numInBatch, maxLoops, msg)) ;
+    LAGRAPH_TRY (LAGraph_EstimateDiameter (&diameter, &peripheral, G, numInBatch, maxLoops, 42, msg)) ;
     t = LAGraph_WallClockTime ( ) - t ;
     printf ("Time for LAGraph_EstimateDiameter: %g sec\n", t) ;
 
@@ -105,6 +106,7 @@ int main (int argc, char **argv)
 
     GrB_free (&Y) ;
     LAGraph_Delete (&G, msg) ;
+    LAGRAPH_TRY (LAGraph_Random_Finalize (msg)) ;
     LAGRAPH_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
 }
