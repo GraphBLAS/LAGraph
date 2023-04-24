@@ -150,7 +150,7 @@ int LG_check_lcc(
 
     GrB_Index i, nvals = 0 ;
 
-#pragma omp parallel for reduction(+ : nvals)
+#pragma omp parallel for schedule(dynamic) reduction(+ : nvals)
     for (i = 0; i < n; i++) {
         GrB_Index *neighbors = Ti + Tp[i];
         GrB_Index k = Tp[i + 1] - Tp[i];
