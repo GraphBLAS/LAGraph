@@ -23,9 +23,14 @@
 #define LG_FREE_ALL                             \
 {                                               \
     LAGraph_Free ((void **) &LCC, msg) ;        \
-    LAGraph_Free ((void **) &column, msg) ;     \
-    free(neighbors) ;                           \
-    free(links) ;                               \
+    LAGraph_Free ((void **) &S, msg) ;          \
+    if (directed) LAGraph_Free ((void **) &T, msg) ;          \
+    free (Sp) ;                                 \
+    free (Si) ;                                 \
+    if (directed) free (Tp) ;                   \
+    if (directed) free (Ti) ;                   \
+    free (vb) ;                                 \
+    free (vx) ;                                 \
 }
 
 #include <stdlib.h>
@@ -33,15 +38,6 @@
 #include "LG_test.h"
 #include "LG_test.h"
 #include "LG_Xtest.h"
-
-// comparison function for qsort
-int comp_GrB_Index(const void *x, const void *y) {
-    GrB_Index i = *(const GrB_Index*)x;
-    GrB_Index j = *(const GrB_Index*)y;
-    if (i < j) return -1;
-    if (i > j) return +1;
-    return 0;
-}
 
 // assumes that the indices array is sorted
 GrB_Index find(const GrB_Index* indices, GrB_Index n, GrB_Index index) {
@@ -57,15 +53,6 @@ GrB_Index find(const GrB_Index* indices, GrB_Index n, GrB_Index index) {
     return i;
 }
 
-// assumes that the indices array is sorted
-void exclude(GrB_Index* indices, GrB_Index *n, GrB_Index element) {
-    GrB_Index index = find(indices, *n, element);
-    if ((index < *n) && (indices[index] == element)) {
-        *n = *n - 1;
-        memcpy(&indices[index], &indices[index+1], (*n-index)*sizeof(GrB_Index));
-    }
-}
-
 // computes how many elements are in the intersection of both sets
 // assumes that both arrays are sorted and don't have any duplicates
 GrB_Index intersection_size(
@@ -74,7 +61,7 @@ GrB_Index intersection_size(
 ) {
     GrB_Index n = 0;
     while ((nx > 0) && (ny > 0)) {
-        if (y[0] < x[0]) {
+        if (y[0] > x[0]) {
             GrB_Index* tmp = x; x = y; y = tmp;
             GrB_Index ntmp = nx; nx = ny; ny = ntmp;
         }
@@ -93,6 +80,7 @@ GrB_Index intersection_size(
     return n;
 }
 
+// This is a slow version.
 int LG_check_lcc(
     // outputs:
     GrB_Vector *coefficients,     // the local clustering coefficients
@@ -107,8 +95,17 @@ int LG_check_lcc(
 
     LG_CLEAR_MSG ;
 
-    GrB_Vector LCC = NULL, column = NULL ;
-    GrB_Index *neighbors = NULL, *links = NULL ;
+    bool undirected = (G->kind == LAGraph_ADJACENCY_UNDIRECTED) ||
+                      ((G->kind == LAGraph_ADJACENCY_DIRECTED) &&
+                       (G->is_symmetric_structure == LAGraph_TRUE)) ;
+    bool directed = !undirected ;
+
+    GrB_Matrix S = NULL, T = NULL ;
+    GrB_Index *Sp = NULL, *Si = NULL, *Tp = NULL, *Ti = NULL ;
+    void *Sx = NULL , *Tx = NULL ;
+    int8_t *vb = NULL ;
+    double *vx = NULL ;
+    GrB_Vector LCC = NULL ;
     GrB_Index n, ncols ;
     LG_ASSERT (coefficients != NULL, GrB_NULL_POINTER) ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
@@ -117,52 +114,71 @@ int LG_check_lcc(
     LG_ASSERT (n == ncols, GrB_INVALID_OBJECT) ;
 
     GRB_TRY (GrB_Vector_new (&LCC, GrB_FP64, n)) ;
-    GRB_TRY (GrB_Vector_new (&column, GrB_BOOL, n)) ;
 
-    GrB_Index e, i, j, k, nn, nl, esum ;
-    neighbors = (GrB_Index*)malloc(n*sizeof(GrB_Index)) ;
-    links = (GrB_Index*)malloc(n*sizeof(GrB_Index)) ;
-    LG_ASSERT (neighbors != NULL, GrB_NULL_POINTER) ;
-    LG_ASSERT (links != NULL, GrB_NULL_POINTER) ;
+    GrB_Matrix A = G->A ;
 
-    GrB_Matrix A = G->A;
+    GRB_TRY(GrB_Matrix_new(&S, GrB_BOOL, n, n)) ;
+    GRB_TRY(GrB_assign(S, A, GrB_NULL, true, GrB_ALL, n, GrB_ALL, n, GrB_DESC_S)) ;
+    if (G->nself_edges != 0) {
+        GRB_TRY(GrB_select(S, GrB_NULL, GrB_NULL, GrB_OFFDIAG, S, 0, GrB_NULL)) ;
+    }
 
-    bool undirected = (G->kind == LAGraph_ADJACENCY_UNDIRECTED) ||
-            ((G->kind == LAGraph_ADJACENCY_UNDIRECTED) &&
-            (G->is_symmetric_structure == LAGraph_TRUE)) ;
-    bool directed = !undirected;
+    if (directed) {
+        GRB_TRY(GrB_Matrix_new(&T, GrB_BOOL, n, n)) ;
+        GRB_TRY(GrB_eWiseAdd(T, GrB_NULL, GrB_NULL, GrB_ONEB_BOOL, S, S, GrB_DESC_T1)) ;
+    } else {
+        T = S ;
+    }
 
+    GrB_Index Sp_size, Si_size, Sx_size ;
+    bool Siso ;
+    GRB_TRY(GxB_Matrix_unpack_CSC(S, &Sp, &Si, &Sx, &Sp_size, &Si_size, &Sx_size, &Siso, NULL, GrB_NULL));
+    free(Sx); Sx = NULL;
+
+    GrB_Index Tp_size, Ti_size, Tx_size ;
+    bool Tiso ;
+    if (directed) {
+        GRB_TRY(GxB_Matrix_unpack_CSC(T, &Tp, &Ti, &Tx, &Tp_size, &Ti_size, &Tx_size, &Tiso, NULL, GrB_NULL));
+        free(Tx); Tx = NULL;
+    } else {
+        Tp = Sp; Tp_size = Sp_size;
+        Ti = Si; Ti_size = Si_size;
+    }
+
+    vb = calloc(n, sizeof(int8_t)) ;
+    vx = malloc(n*sizeof(double)) ;
+
+    GrB_Index i, nvals = 0 ;
+
+#pragma omp parallel for schedule(dynamic) reduction(+ : nvals)
     for (i = 0; i < n; i++) {
-        GRB_TRY (GrB_extract (column, GrB_NULL, GrB_NULL, A, GrB_ALL, n, i, GrB_DESC_R)) ;
-        if (directed) {
-            GRB_TRY (GrB_extract(column, GrB_NULL, GxB_ANY_UINT32, A, GrB_ALL, n, i, GrB_DESC_T0));
-        }
-        nn = n;
-        GRB_TRY (GrB_Vector_extractTuples (neighbors, (bool*)NULL, &nn, column)) ;
-        if (nn == 0) continue;
-        qsort(neighbors, nn, sizeof(GrB_Index), comp_GrB_Index);
-        exclude(neighbors, &nn, i);
-        k = nn;
+        GrB_Index *neighbors = Ti + Tp[i];
+        GrB_Index k = Tp[i + 1] - Tp[i];
         if (k < 2) continue;
 
-        esum = 0;
-        for (j = 0; j < nn; j++) {
-            e = neighbors[j];
-            GRB_TRY (GrB_extract (column, GrB_NULL, GrB_NULL, A, GrB_ALL, n, e, GrB_DESC_R));
-            nl = n;
-            GRB_TRY (GrB_Vector_extractTuples (links, (bool*)NULL, &nl, column));
-            if (nl == 0) continue;
-            qsort(links, nl, sizeof(GrB_Index), comp_GrB_Index);
-            if (directed) {
-                exclude(links, &nl, e);
-            } else {
-                nl = find(links, nl, e);
+        GrB_Index j, esum = 0;
+        for (j = 0; j < k; j++) {
+            GrB_Index e = neighbors[j];
+            GrB_Index *links = Si + Sp[e];
+            GrB_Index l = Sp[e + 1] - Sp[e];
+            if (l == 0) continue;
+            if (undirected) {
+                l = find(links, l, e);
             }
-            esum += intersection_size(neighbors, nn, links, nl);
+            esum += intersection_size(neighbors, k, links, l);
         }
-        if (undirected) esum *= 2;
-        GRB_TRY (GrB_Vector_setElement (LCC, ((double)esum)/((double)(k*(k-1))), i));
+
+        if (esum == 0) continue;
+
+        if (undirected) {
+            esum *= 2;
+        }
+        vb[i] = true;
+        vx[i] = ((double) esum) / ((double) (k * (k - 1)));
+        nvals++;
     }
+
+    GRB_TRY(GxB_Vector_pack_Bitmap(LCC, &vb, (void**)&vx, n*sizeof(int8_t), n*sizeof(double), false, nvals, GrB_NULL)) ;
 
     *coefficients = LCC ; LCC = NULL ;
     LG_FREE_ALL;
