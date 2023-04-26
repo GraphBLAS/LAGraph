@@ -154,35 +154,28 @@ void test_cdlp (void)
         TEST_CHECK (A == NULL) ;
 
         // check for self-edges
-        OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
-        bool sanitize = (G->nself_edges != 0) ;
+        OK (LAGraph_DeleteSelfEdges (G, msg)) ;
+        OK (LAGraph_Cached_IsSymmetricStructure (G, msg)) ;
+        bool sanitize = true ; // (G->nself_edges != 0) ;
 
         GrB_Vector c = NULL ;
         double t [2] ;
 
         // compute the communities with LAGraph_cdlp
-        OK (LAGraph_cdlp (&c, G->A, symmetric, sanitize, 100, t, msg)) ;
+        OK (LAGraph_cdlp (&c, G->A, G->is_symmetric_structure == LAGraph_TRUE, sanitize, 100, t, msg)) ;
 
         GrB_Index n ;
         OK (GrB_Vector_size (&n, c)) ;
         LAGraph_PrintLevel pr = (n <= 100) ? LAGraph_COMPLETE : LAGraph_SHORT ;
 
-        // check result c for jagmesh7
-        if (strcmp (aname, "jagmesh7.mtx") == 0)
-        {
-            GrB_Vector cgood = NULL ;
-            OK (GrB_Vector_new (&cgood, GrB_UINT64, n)) ;
-            for (int k = 0 ; k < n ; k++)
-            {
-                OK (GrB_Vector_setElement (cgood, cdlp_jagmesh7 [k], k)) ;
-            }
-            OK (GrB_wait (cgood, GrB_MATERIALIZE)) ;
-            printf ("\ncdlp (known result):\n") ;
-            OK (LAGraph_Vector_Print (cgood, pr, stdout, msg)) ;
-            bool ok = false ;
-            OK (LAGraph_Vector_IsEqual (&ok, c, cgood, msg)) ;
-            TEST_CHECK (ok) ;
-        }
+        GrB_Vector cgood = NULL ;
+        OK (LAGraph_cdlp_nosort(&cgood, G, 100, msg)) ;
+        OK (GrB_wait (cgood, GrB_MATERIALIZE)) ;
+        printf ("\ncdlp (known result):\n") ;
+        OK (LAGraph_Vector_Print (cgood, pr, stdout, msg)) ;
+        bool ok = false ;
+        OK (LAGraph_Vector_IsEqual (&ok, c, cgood, msg)) ;
+        TEST_CHECK (ok) ;
 
         printf ("\ncdlp:\n") ;
         OK (LAGraph_Vector_Print (c, pr, stdout, msg)) ;

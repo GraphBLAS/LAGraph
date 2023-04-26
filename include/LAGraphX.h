@@ -654,6 +654,15 @@ int LAGraph_cdlp
     char *msg
 ) ;
 
+LAGRAPH_PUBLIC
+int LAGraph_cdlp_nosort
+        (
+                GrB_Vector *CDLP_handle,
+                const LAGraph_Graph G,
+                int itermax,
+                char *msg
+        ) ;
+
 
 //------------------------------------------------------------------------------
 // LAGr_PageRankGX: PageRank as defined in LDBC Graphalytics (GX)
