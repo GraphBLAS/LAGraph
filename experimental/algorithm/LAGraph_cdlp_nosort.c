@@ -69,6 +69,7 @@
 #include <LAGraphX.h>
 #include "LG_internal.h"
 
+// A Go-style slice / Lisp-style property list
 typedef struct {
     GrB_Index* entries;
     size_t len, cap;
@@ -78,10 +79,6 @@ void plist_init(plist* list) {
     list->entries = NULL;
     list->len = 0;
     list->cap = 0;
-}
-
-void plist_reset(plist* list) {
-    list->len = 0;
 }
 
 void plist_free(plist *list) {
@@ -101,15 +98,6 @@ void plist_append(plist* list, GrB_Index key, GrB_Index value) {
     list->entries[list->len] = key;
     list->entries[list->len+1] = value;
     list->len += 2;
-}
-
-GrB_Index plist_find(plist* list, GrB_Index entry) {
-    for (size_t i = 0; i < list->len; i += 2) {
-        if (list->entries[i] == entry) {
-            return list->entries[i+1];
-        }
-    }
-    return 0;
 }
 
 GrB_Index plist_add(plist* list, GrB_Index entry) {
@@ -223,9 +211,7 @@ int LAGraph_cdlp_nosort
 #pragma omp parallel for schedule(dynamic)
         for (GrB_Index i = 0; i < n; i++) {
             plist counts ;
-            plist_init (&counts) ; // This should be a reset of a private copy of the outer counts object,
-                                    // but OpenMP doesn't seem to have a way to call plist_free
-                                    // on exit from a thread / parallel for.
+            plist_init (&counts) ;
             GrB_Index* neighbors = Si + Sp[i] ;
             GrB_Index sz = Sp[i+1] - Sp[i] ;
             for (GrB_Index j = 0; j < sz; j++) {
