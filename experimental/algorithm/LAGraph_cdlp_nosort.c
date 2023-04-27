@@ -197,8 +197,8 @@ int LAGraph_cdlp_nosort
         GRB_TRY (GrB_transpose (T, GrB_NULL, GrB_NULL, S, GrB_NULL)) ;
         void * Tx = NULL ;
         GrB_Index Tps, Tis, Txs ;
-        bool Tiso ;
-        GRB_TRY (GxB_Matrix_unpack_CSC (T, &Tp, &Ti, &Tx, &Tps, &Tis, &Txs, &Tiso, NULL, GrB_NULL)) ;
+        bool Tiso, Tjumbled ;
+        GRB_TRY (GxB_Matrix_unpack_CSR (T, &Tp, &Ti, &Tx, &Tps, &Tis, &Txs, &Tiso, &Tjumbled, GrB_NULL)) ;
         LAGRAPH_TRY (LAGraph_Free ((void *)&Tx, NULL)) ;
         GRB_TRY (GrB_free (&T)) ;
     }
@@ -206,8 +206,8 @@ int LAGraph_cdlp_nosort
     {
         void * Sx = NULL ;
         GrB_Index Sps, Sis, Sxs ;
-        bool Siso ;
-        GRB_TRY (GxB_Matrix_unpack_CSC (S, &Sp, &Si, &Sx, &Sps, &Sis, &Sxs, &Siso, NULL, GrB_NULL)) ;
+        bool Siso, Sjumbled ;
+        GRB_TRY (GxB_Matrix_unpack_CSR (S, &Sp, &Si, &Sx, &Sps, &Sis, &Sxs, &Siso, &Sjumbled, GrB_NULL)) ;
         LAGRAPH_TRY (LAGraph_Free((void *)&Sx, NULL)) ;
         GRB_TRY (GrB_free (&S)) ;
     }

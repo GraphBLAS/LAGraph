@@ -628,12 +628,8 @@ GrB_Info LAGraph_BF_pure_c_double
  * Community detection using label propagation algorithm
  *
  * @param[out]  CDLP_handle  community vector
- * @param[in]   A            adjacency matrix for the graph
- * @param[in]   symmetric    denote whether the matrix is symmetric
- * @param[in]   sanitize     if true, verify that A is binary
+ * @param[in]   G            the graph
  * @param[in]   itermax      max number of iterations (0 computes nothing)
- * @param[out]  t            array of two doubles allocated by caller:
- *                           [0]=sanitize time, [1]=cdlp time in seconds
  * @param[in,out] msg        any error messages.
  *
  * @retval GrB_SUCCESS        if completed successfully
@@ -646,22 +642,19 @@ LAGRAPH_PUBLIC
 int LAGraph_cdlp
 (
     GrB_Vector *CDLP_handle,
-    const GrB_Matrix A,
-    bool symmetric,
-    bool sanitize,
+    LAGraph_Graph G,
     int itermax,
-    double *t,
     char *msg
 ) ;
 
 LAGRAPH_PUBLIC
 int LAGraph_cdlp_nosort
-        (
-                GrB_Vector *CDLP_handle,
-                const LAGraph_Graph G,
-                int itermax,
-                char *msg
-        ) ;
+(
+    GrB_Vector *CDLP_handle,
+    LAGraph_Graph G,
+    int itermax,
+    char *msg
+) ;
 
 
 //------------------------------------------------------------------------------

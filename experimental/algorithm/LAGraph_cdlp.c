@@ -124,14 +124,12 @@
 {                                                                       \
     LAGraph_Free ((void *) &I, NULL) ;                                  \
     LAGraph_Free ((void *) &X, NULL) ;                                  \
-    LAGraph_Free ((void *) &AI, NULL) ;                                 \
-    LAGraph_Free ((void *) &AJ, NULL) ;                                 \
-    LAGraph_Free ((void *) &AX, NULL) ;                                 \
-    LAGraph_Free ((void *) &X, NULL) ;                                  \
-    LAGraph_Free ((void *) &X, NULL) ;                                  \
+    LAGraph_Free ((void *) &LP, NULL) ;                                 \
+    LAGraph_Free ((void *) &LI, NULL) ;                                 \
+    LAGraph_Free ((void *) &LX, NULL) ;                                 \
     GrB_free (&L) ;                                                     \
     GrB_free (&L_prev) ;                                                \
-    if (sanitize) GrB_free (&S) ;                                       \
+    GrB_free (&S) ;                                                     \
     GrB_free (&AT) ;                                                    \
 }
 
@@ -143,17 +141,18 @@
 int LAGraph_cdlp
 (
     GrB_Vector *CDLP_handle, // output vector
-    const GrB_Matrix A,      // input matrix
-    bool symmetric,          // denote whether the matrix is symmetric
-    bool sanitize,           // if true, ensure A is binary
+    LAGraph_Graph G,      // input graph
     int itermax,             // max number of iterations,
-    double *t,               // t [0] = sanitize time, t [1] = cdlp time,
-                             // in seconds
     char *msg
 )
 {
     GrB_Info info;
     LG_CLEAR_MSG ;
+
+    GrB_Matrix A = G->A ;
+    bool symmetric = (G->kind == LAGraph_ADJACENCY_UNDIRECTED) ||
+            ((G->kind == LAGraph_ADJACENCY_DIRECTED) &&
+                    (G->is_symmetric_structure == LAGraph_TRUE)) ;
 
     // Diagonal label matrix
     GrB_Matrix L = NULL;
@@ -165,10 +164,9 @@ int LAGraph_cdlp
     // Result CDLP vector
     GrB_Vector CDLP = NULL;
 
-    // Arrays holding extracted tuples if the matrix needs to be copied
-    GrB_Index *AI = NULL;
-    GrB_Index *AJ = NULL;
-    GrB_Index *AX = NULL;
+    // Arrays for constructing initial labels
+    GrB_Index *LP = NULL, *LI = NULL, *LX = NULL ;
+
     // Arrays holding extracted tuples during the algorithm
     GrB_Index *I = NULL;
     GrB_Index *X = NULL;
@@ -177,7 +175,7 @@ int LAGraph_cdlp
     // check inputs
     //--------------------------------------------------------------------------
 
-    if (CDLP_handle == NULL || t == NULL)
+    if (CDLP_handle == NULL)
     {
         return GrB_NULL_POINTER;
     }
@@ -185,9 +183,6 @@ int LAGraph_cdlp
     //--------------------------------------------------------------------------
     // ensure input is binary and has no self-edges
     //--------------------------------------------------------------------------
-
-    t [0] = 0;         // sanitize time
-    t [1] = 0;         // CDLP time
 
     // n = size of A (# of nodes in the graph)
     // nz = # of non-zero elements in the matrix
@@ -205,50 +200,22 @@ int LAGraph_cdlp
         nnz = nz;
     }
 
-    if (sanitize)
-    {
-        t [0] = LAGraph_WallClockTime ( ) ;
-
-        LAGRAPH_TRY (LAGraph_Malloc ((void **) &AI, nz, sizeof(GrB_Index),msg));
-        LAGRAPH_TRY (LAGraph_Malloc ((void **) &AJ, nz, sizeof(GrB_Index),msg));
-        GRB_TRY (GrB_Matrix_extractTuples_UINT64(AI, AJ, GrB_NULL, &nz, A))
-
-        LAGRAPH_TRY (LAGraph_Malloc ((void **) &AX, nz, sizeof(GrB_Index),msg));
-        GRB_TRY (GrB_Matrix_new(&S, GrB_UINT64, n, n));
-        GRB_TRY (GrB_Matrix_build(S, AI, AJ, AX, nz, GrB_PLUS_UINT64));
-
-        t [0] = LAGraph_WallClockTime ( ) - t [0] ;
-    }
-    else
-    {
-        // Use the input as-is, and assume it is UINT64(!) with no self edges.
-        // Results are undefined if this condition does not hold.
-        S = A;
-    }
-
-    t [1] = LAGraph_WallClockTime ( ) ;
-
-#ifdef LAGRAPH_SUITESPARSE
-    GxB_Format_Value A_format = -1, global_format = -1 ;
-    GRB_TRY (GxB_get(A, GxB_FORMAT, &A_format))
-    GRB_TRY (GxB_get(GxB_FORMAT, &global_format))
-    if (A_format != GxB_BY_ROW || global_format != GxB_BY_ROW)
-    {
-        return (GrB_INVALID_VALUE) ;
-    }
-#endif
+    GRB_TRY (GrB_Matrix_new (&S, GrB_UINT64, n, n)) ;
+    GRB_TRY (GrB_apply (S, GrB_NULL, GrB_NULL, GrB_ONEB_UINT64, A, 0, GrB_NULL)) ;
 
     // Initialize L with diagonal elements 1..n
-    LAGRAPH_TRY (LAGraph_Malloc ((void **) &I, n, sizeof (GrB_Index), msg)) ;
-    LAGRAPH_TRY (LAGraph_Malloc ((void **) &X, n, sizeof (GrB_Index), msg)) ;
+    LAGRAPH_TRY (LAGraph_Malloc ((void **) &LP, n+1, sizeof (GrB_Index), msg)) ;
+    for (GrB_Index i = 0; i <= n; i++) {
+        LP[i] = i ;
+    }
+    LAGRAPH_TRY (LAGraph_Malloc((void **) &LI, n, sizeof (GrB_Index), msg)) ;
+    LAGRAPH_TRY (LAGraph_Malloc((void **) &LX, n, sizeof (GrB_Index), msg)) ;
     for (GrB_Index i = 0; i < n; i++) {
-        I[i] = i;
-        X[i] = i;
+        LI[i] = i ;
+        LX[i] = i ;
     }
     GRB_TRY (GrB_Matrix_new (&L, GrB_UINT64, n, n)) ;
-    GRB_TRY (GrB_Matrix_build (L, I, I, X, n, GrB_PLUS_UINT64)) ;
-    LAGraph_Free ((void **) &I, NULL) ;
-    LAGraph_Free ((void **) &X, NULL) ;
+    GRB_TRY (GxB_Matrix_pack_CSC(L, &LP, &LI, (void **) &LX, (n+1)*sizeof(GrB_Index), n*sizeof(GrB_Index), n*sizeof(GrB_Index), false, false, GrB_NULL)) ;
 
     // Initialize matrix for storing previous labels
     GRB_TRY (GrB_Matrix_new(&L_prev, GrB_UINT64, n, n))
@@ -258,15 +225,15 @@ int LAGraph_cdlp
         // compute AT for the unsymmetric case as it will be used
         // to compute A' = A' min.2nd L in each iteration
         GRB_TRY (GrB_Matrix_new (&AT, GrB_UINT64, n, n)) ;
-        GRB_TRY (GrB_transpose (AT, NULL, NULL, A, NULL)) ;
+        GRB_TRY (GrB_transpose (AT, NULL, NULL, S, NULL)) ;
     }
+
+    // Initialize data structures for extraction from 'AL_in' and (for directed graphs) 'AL_out'
+    LAGRAPH_TRY (LAGraph_Malloc((void **) &I, nnz, sizeof(GrB_Index), msg));
+    LAGRAPH_TRY (LAGraph_Malloc((void **) &X, nnz, sizeof(GrB_Index), msg));
 
     for (int iteration = 0; iteration < itermax; iteration++)
     {
-        // Initialize data structures for extraction from 'AL_in' and (for directed graphs) 'AL_out'
-        LAGRAPH_TRY (LAGraph_Malloc((void **) &I, nnz, sizeof(GrB_Index), msg));
-        LAGRAPH_TRY (LAGraph_Malloc((void **) &X, nnz, sizeof(GrB_Index), msg));
-
         // A = A min.2nd L
         // (using the "push" (saxpy) method)
         GRB_TRY (GrB_mxm(S, GrB_NULL, GrB_NULL,
@@ -322,9 +289,6 @@ int LAGraph_cdlp
             }
         }
 
-        LAGraph_Free ((void **) &I, NULL) ;
-        LAGraph_Free ((void **) &X, NULL) ;
-
         bool isequal;
         LAGraph_Matrix_IsEqual (&isequal, L_prev, L, NULL);
         if (isequal) {
@@ -332,17 +296,15 @@ int LAGraph_cdlp
         }
     }
 
+    LAGraph_Free ((void **) &I, NULL) ;
+    LAGraph_Free ((void **) &X, NULL) ;
+
     //--------------------------------------------------------------------------
     // extract final labels to the result vector
     //--------------------------------------------------------------------------
 
     GRB_TRY (GrB_Vector_new(&CDLP, GrB_UINT64, n))
-    for (GrB_Index i = 0; i < n; i++)
-    {
-        uint64_t x;
-        GRB_TRY (GrB_Matrix_extractElement(&x, L, i, i))
-        GRB_TRY (GrB_Vector_setElement(CDLP, x, i))
-    }
+    GRB_TRY (GxB_Vector_diag (CDLP, L, 0, GrB_NULL)) ;
 
     //--------------------------------------------------------------------------
     // free workspace and return result
@@ -351,8 +313,6 @@ int LAGraph_cdlp
     (*CDLP_handle) = CDLP;
     CDLP = NULL;            // set to NULL so LG_FREE_ALL doesn't free it
     LG_FREE_ALL;
-
-    t [1] = LAGraph_WallClockTime ( ) - t [1] ;
 
     return (GrB_SUCCESS);
 }
