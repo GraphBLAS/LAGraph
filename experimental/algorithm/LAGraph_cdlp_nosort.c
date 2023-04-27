@@ -178,7 +178,7 @@ int LAGraph_cdlp_nosort
     GRB_TRY (GrB_Matrix_nrows(&n, A)) ;
 
     GRB_TRY (GrB_Matrix_new (&S, GrB_UINT64, n, n)) ;
-    GRB_TRY (GrB_assign (S, A, GrB_NULL, 0, GrB_ALL, n, GrB_ALL, n, GrB_DESC_S)) ;
+    GRB_TRY (GrB_apply (S, GrB_NULL, GrB_NULL, GrB_ONEB_UINT64, A, 0, GrB_NULL)) ;
 
     if (G->kind == LAGraph_ADJACENCY_DIRECTED) {
         GRB_TRY (GrB_Matrix_new (&T, GrB_UINT64, n, n)) ;

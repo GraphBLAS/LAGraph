@@ -303,7 +303,7 @@ int LAGraph_cdlp
     // extract final labels to the result vector
     //--------------------------------------------------------------------------
 
-    GRB_TRY (GrB_Vector_new(&CDLP, GrB_UINT64, n))
+    GRB_TRY (GrB_Vector_new(&CDLP, GrB_UINT64, n)) ;
     GRB_TRY (GxB_Vector_diag (CDLP, L, 0, GrB_NULL)) ;
 
     //--------------------------------------------------------------------------
