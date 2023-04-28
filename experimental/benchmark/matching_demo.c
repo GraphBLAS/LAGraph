@@ -42,6 +42,18 @@ NOTE: When complete, prints out the matching vector and E matrix of the input gr
 #define NTHREAD_LIST 1
 #define THREAD_LIST 8
 
+#undef LG_FREE_ALL
+#define LG_FREE_ALL                 \
+{                                   \
+    LAGraph_Delete (&G, NULL) ;     \
+    GrB_free (&E) ;                 \
+    GrB_free (&E_t) ;               \
+    GrB_free (&matching) ;          \
+    GrB_free (&weight) ;            \
+    GrB_free (&best_matching) ;     \
+    GrB_free (&use_weights) ;       \
+}
+
 int main (int argc, char** argv)
 {
     char msg [LAGRAPH_MSG_LEN] ;
@@ -53,6 +65,8 @@ int main (int argc, char** argv)
     GrB_Matrix E_t = NULL ;
     GrB_Vector matching = NULL ;
     GrB_Vector weight = NULL ;
+    GrB_Vector best_matching = NULL ;
+    GrB_Vector use_weights = NULL ;
 
     bool burble = false ; 
     demo_init (burble) ;
@@ -98,7 +112,7 @@ int main (int argc, char** argv)
         int ntrials = atoi(argv [3]) ;
         int matching_type = atoi(argv [2]) ;
 
-        GrB_Vector best_matching = NULL ;
+        // best answer so far
         double best_val = (matching_type == 2) ? 1e18 : 0 ;
 
         for (int trial = 0 ; trial < ntrials ; trial++) {
@@ -107,34 +121,38 @@ int main (int argc, char** argv)
             LAGRAPH_TRY (LAGraph_MaximalMatching (&matching, E, matching_type, seed, msg)) ;
             double matching_value = 0 ;
             if (matching_type != 0) {
-                GrB_Vector use_weights = NULL ;
+                // weighted matching; need to compute total weight of matching
                 GRB_TRY (GrB_Vector_new (&use_weights, GrB_FP64, num_edges)) ;
                 GRB_TRY (GrB_eWiseMult (use_weights, NULL, NULL, GrB_TIMES_FP64, weight, matching, NULL)) ;
                 GRB_TRY (GrB_reduce (&matching_value, NULL, GrB_PLUS_MONOID_FP64, use_weights, NULL)) ;
-                GrB_free (&use_weights) ;
+                GRB_TRY (GrB_free (&use_weights)) ;
             } else {
+                // random matching; just want number of matched edges
                 GrB_Index matching_value_int ;
                 GRB_TRY (GrB_Vector_nvals (&matching_value_int, matching)) ;
                 matching_value = matching_value_int ;
             }
             bool cond = (matching_value > best_val) ;
             if (matching_type == 2) {
+                // for light matchings, want to prefer smaller values
                 cond = (matching_value < best_val) ;
             }
             if (cond) {
                 if (best_matching != NULL) {
-                    GrB_free (&best_matching) ;
+                    // free the previous vector before updating
+                    GRB_TRY (GrB_free (&best_matching)) ;
                 }
                 best_matching = matching ;
                 best_val = matching_value ;
             } else {
-                GrB_free (&matching) ;
+                GRB_TRY (GrB_free (&matching)) ;
             }
         }
+        // print matching vector and E matrix; matching will be validated again in custom tests
         LAGRAPH_TRY (LAGraph_Vector_Print (best_matching, LAGraph_COMPLETE, stdout, msg)) ;
         LAGRAPH_TRY (LAGraph_Matrix_Print (E, LAGraph_COMPLETE, stdout, msg)) ;
 
-        GrB_free (&best_matching) ;
+        GRB_TRY (GrB_free (&best_matching)) ;
         return 0 ;
     }
     int nt = NTHREAD_LIST ;
@@ -173,6 +191,7 @@ int main (int argc, char** argv)
 
     // warmup for more accurate timing
     double tt = LAGraph_WallClockTime ( ) ;
+    // user-provided matching type (random, heavy, light)
     int match_type = (argc > 2) ? atoi(argv[2]) : 1;
     // GRB_TRY (LAGraph_Matrix_Print (E, LAGraph_COMPLETE, stdout, msg)) ;
     LAGRAPH_TRY (LAGraph_MaximalMatching (&matching, E, match_type, 5, msg)) ;
@@ -232,10 +251,7 @@ int main (int argc, char** argv)
     //--------------------------------------------------------------------------
     // free all workspace and finish
     //--------------------------------------------------------------------------
-    LAGraph_Delete (&G, NULL) ;
-    GrB_free (&E) ;
-    GrB_free (&E_t) ;
-    GrB_free (&weight) ;
+    LG_FREE_ALL ;
 
     LAGRAPH_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;

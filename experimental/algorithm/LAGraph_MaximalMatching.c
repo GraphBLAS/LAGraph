@@ -31,6 +31,9 @@ since we do not compute E'E explicitly.
 
 // #define dbg
 
+#undef LG_FREE_ALL
+#undef LG_FREE_WORK
+
 #define LG_FREE_WORK                        \
 {                                           \
     GrB_free(&E_t) ;                        \

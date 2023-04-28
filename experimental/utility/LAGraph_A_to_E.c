@@ -17,6 +17,17 @@
 
 // #define dbg
 
+#undef LG_FREE_ALL
+#define LG_FREE_ALL                                           \
+{                                                             \
+   LAGraph_Free ((void**)(&row_indices), msg) ;               \
+   LAGraph_Free ((void**)(&col_indices), msg) ;               \
+   LAGraph_Free ((void**)(&values), msg) ;                    \
+   LAGraph_Free ((void**)(&E_row_indices), msg) ;             \
+   LAGraph_Free ((void**)(&E_col_indices), msg) ;             \
+   LAGraph_Free ((void**)(&E_values), msg) ;                  \
+}                                                             \
+
 int LAGraph_A_to_E
 (
     GrB_Matrix *result, // incidence
@@ -99,14 +110,8 @@ int LAGraph_A_to_E
     #endif
     GRB_TRY (GrB_Matrix_build (E, E_row_indices, E_col_indices, E_values, nvals, GrB_SECOND_UINT64)) ;
 
-    LAGraph_Free ((void**)(&row_indices), msg) ;
-    LAGraph_Free ((void**)(&col_indices), msg) ;
-    LAGraph_Free ((void**)(&values), msg) ;
-
-    LAGraph_Free ((void**)(&E_row_indices), msg) ;
-    LAGraph_Free ((void**)(&E_col_indices), msg) ;
-    LAGraph_Free ((void**)(&E_values), msg) ;
-
+    LG_FREE_ALL ;
+    
     (*result) = E ;
     return (GrB_SUCCESS) ;
 }
