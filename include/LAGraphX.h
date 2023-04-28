@@ -948,4 +948,113 @@ int LAGraph_ExactDiameter
     char          *msg
 ) ;
 
+//------------------------------------------------------------------------------
+// HDIP_Fiedler
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// applies a Householder Reflection
+//------------------------------------------------------------------------------
+
+LAGRAPH_PUBLIC
+int LAGraph_Happly // happly Checked for pointer issues
+(
+    // outputs:
+    GrB_Vector y, // y output of Householder reflection on x.
+    // inputs:
+    GrB_Vector u, // u, the vector used for application of householder
+    GrB_Vector x, // x, the vector on which householder reflection is applied
+    float alpha,  // the scalar alpha used for application of householder
+    // error msg
+    char *msg
+);
+
+//------------------------------------------------------------------------------
+// Compute H*M*H*x = (M-u*x'-x*u)*x
+//------------------------------------------------------------------------------
+
+LAGRAPH_PUBLIC
+int LAGraph_hmhx // hmhx checked for pointer issues
+(
+    // outputs:
+    GrB_Vector z, // z output of hmhx
+    // inputs:
+    GrB_Matrix M, // Matrix used in hmhx
+    GrB_Vector u, // Vector u used for happly
+    GrB_Vector x, // Vector x used for happly
+    float alpha,  // the scalar alpha used for happly
+    char *msg
+);
+
+//------------------------------------------------------------------------------
+// Euclidean normalization on a vector
+//------------------------------------------------------------------------------
+
+LAGRAPH_PUBLIC
+int LAGraph_norm2 // norm2 checked for pointer mistakes
+(
+    // outputs:
+    float norm2,
+    // inputs:
+    GrB_Vector v,
+    // error msg
+    char *msg
+);
+
+//------------------------------------------------------------------------------
+// Computes Laplacian of a Matrix
+//------------------------------------------------------------------------------
+
+LAGRAPH_PUBLIC
+int LAGraph_Laplacian // compute the Laplacian matrix
+(
+    //  outputs:
+    GrB_Matrix *Lap, // the output Laplacian matrix
+    float *inform,    // infinity norm of Lap
+    // inputs:
+    GrB_Matrix G, // input matrix, symmetric
+    char *msg
+);
+
+//------------------------------------------------------------------------------
+// Preconditioned Conjugate Gradient
+//------------------------------------------------------------------------------
+
+LAGRAPH_PUBLIC
+int LAGraph_mypcg2(
+    // outputs
+    GrB_Vector *steper,
+    GrB_Index *k_result,
+    // inputs:
+    GrB_Matrix L, // input matrix, symmetric, result from Laplacian
+    GrB_Vector u, // vector u will be passed into another function to create Householder reflection
+    float malpha, // This float
+    GrB_Matrix invdiag,
+    GrB_Vector b,
+    float tol,
+    float maxit,
+    // error msging
+    char *msg
+);
+
+//------------------------------------------------------------------------------
+// Computes the Fiedler Vector
+//------------------------------------------------------------------------------
+
+LAGRAPH_PUBLIC
+int LAGraph_Hdip_Fiedler // compute the Hdip_Fiedler
+(
+    // outputs:
+    GrB_Vector *iters, // Stores number of inner and outer iterations
+    float *lamb,       // Lambda of hdip_fiedler
+    GrB_Vector *x,     // the hdip fielder result vector
+    // inputs:
+    GrB_Matrix L, // input matrix, symmetric, result from Laplacian
+    float InfNorm,
+    GrB_Vector kmax,
+    float emax,
+    float tol,
+    char *msg
+);
+
 #endif
