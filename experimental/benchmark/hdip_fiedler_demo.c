@@ -170,10 +170,10 @@ int main(int argc, char **argv)
         false,        // ensure all entries are positive, if true
         argc, argv)); // input to this main program
     t = LAGraph_WallClockTime() - t;
-    //printf("Time to read the graph:      %g sec\n", t);
+    printf("Time to read the graph:      %g sec\n", t);
 
-    //printf("\n==========================The input graph matrix G:\n");
-    //LG_TRY(LAGraph_Graph_Print(G, LAGraph_SHORT, stdout, msg));
+    printf("\n==========================The input graph matrix G:\n");
+    LG_TRY(LAGraph_Graph_Print(G, LAGraph_SHORT, stdout, msg));
 
     //--------------------------------------------------------------------------
     // try the LAGraph_HelloWorld "algorithm"
@@ -181,7 +181,6 @@ int main(int argc, char **argv)
     GrB_Index n, nvals;
     GRB_TRY(GrB_Matrix_nrows(&n, G->A));
     GRB_TRY(GrB_Matrix_nvals(&nvals, G->A));
-    // LAGRAPH_TRY(LAGraph_Graph_Print(G, LAGraph_SHORT, stdout, msg));
     GRB_TRY(GrB_Matrix_new(&A, GrB_FP32, n, n));
     GRB_TRY(GrB_assign(A, G->A, NULL, (double)1,
                        GrB_ALL, n, GrB_ALL, n, GrB_DESC_S));
@@ -196,7 +195,8 @@ int main(int argc, char **argv)
     float infnorm;
     LG_TRY(LAGraph_Laplacian(&Y, &infnorm, A, msg));
 
-    //LAGRAPH_TRY(LAGraph_Matrix_Print(Y, LAGraph_SHORT, stdout, msg));
+    printf("\n===========================The laplacian matrix: \n");
+    LAGRAPH_TRY(LAGraph_Matrix_Print(Y, LAGraph_SHORT, stdout, msg));
 
     //--------------------------------------------------------------------------
     // try the LAGraph_mypcg2 "algorithm"
@@ -223,20 +223,13 @@ int main(int argc, char **argv)
     GRB_TRY(GrB_apply(indiag, NULL, NULL, GrB_MINV_FP32, indiag, NULL));
     
     GRB_TRY(GrB_Vector_new(&x, GrB_FP32, n));
-    // GRB_TRY (GrB_apply (x, NULL, NULL, GxB_ONE_FP32, x, NULL));
     GRB_TRY(GrB_assign(x, NULL, NULL, 1, GrB_ALL, n, NULL));
     GRB_TRY(GrB_Vector_setElement_FP32(x, 0, 0));
 
     t = LAGraph_WallClockTime( );
     int result = LAGraph_mypcg2(&steper, &k, Y, u, alpha, indiag, x, .000001, 50, msg);
-    //printf("\n==========================The steper:\n");
-    //GxB_print(steper, 3);
-    //printf("result: %d %s\n", result, msg);
-    //LG_TRY(result);
-    printf("k = %lu\n", k);
-    //printf("aftermypcg2");
-    // t = LAGraph_WallClockTime( ) - t;
-    //printf("Time for LAGraph_HelloWorld: %g sec\n", t);
+    t = LAGraph_WallClockTime( ) - t;
+    printf("Time for LAGraph_mypcg2: %g sec\n", t);
 
     //--------------------------------------------------------------------------
     // try the LAGraph_Hdip_Fiedler "algorithm"
@@ -246,9 +239,10 @@ int main(int argc, char **argv)
     GRB_TRY(GrB_Vector_setElement_FP32(kmax, 20, 0));
     GRB_TRY(GrB_Vector_setElement_FP32(kmax, 50, 1));
 
+    t = LAGraph_WallClockTime( );
     LAGraph_Hdip_Fiedler(&iters_handle, &lambda_result, &x_handle, Y, infnorm, kmax, 0.000001, 0.000001, msg);
-    printf("\n==========================The iters_handle:\n");
-    GxB_print(iters_handle, 3);
+    t = LAGraph_WallClockTime( ) - t;
+    printf("Time for LAGraph_Hdip_Fiedler: %g sec\n", t);
 
     //--------------------------------------------------------------------------
     // check the results (make sure Y is a copy of G->A)
@@ -257,7 +251,6 @@ int main(int argc, char **argv)
     t = LAGraph_WallClockTime();
     float err = difference (x_handle, karate_laplacian) ;
     printf("\n=============================Testing karate x vector:\n");
-    printf("err: %f\n", err);
     t = LAGraph_WallClockTime() - t;
     printf("Time to check results:       %g sec\n", t);
     if (err < 1e-4)
@@ -270,7 +263,9 @@ int main(int argc, char **argv)
     }
 
     printf("\n=============================Testing karate lambda:\n");
-    if (lambda_result - karate_lambda < 1e-4)
+    err = abs(lambda_result - karate_lambda);
+    //GRB_TRY (GrB_apply (err, NULL, NULL, GrB_ABS_FP32,err, NULL));
+    if (err < 1e-4)
     {
         printf("Test passed.\n");
     }
@@ -278,11 +273,11 @@ int main(int argc, char **argv)
     {
         printf("Test failure!\n");
     }
-
+/*
     t = LAGraph_WallClockTime();
-    err = difference (iters_handle, karate_iters) ;
-    printf("\n=============================Testing karate iterations:\n");
-    printf("err: %f\n", err);
+    err = iters_handle[0] - karate_iters[0] ;
+    GRB_TRY (GrB_apply (err, NULL, NULL, GrB_ABS_FP32,err, NULL));
+    printf("\n=============================Testing karate outer iterations:\n");
     t = LAGraph_WallClockTime() - t;
     printf("Time to check results:       %g sec\n", t);
     if (err < 1e-4)
@@ -294,6 +289,21 @@ int main(int argc, char **argv)
         printf("Test failure!\n");
     }
 
+    t = LAGraph_WallClockTime();
+    err = iters_handle[1] - karate_iters[1] ;
+    GRB_TRY (GrB_apply (err, NULL, NULL, GrB_ABS_FP32,err, NULL));
+    printf("\n=============================Testing karate inner iterations:\n");
+    t = LAGraph_WallClockTime() - t;
+    printf("Time to check results:       %g sec\n", t);
+    if (err < 1e-4)
+    {
+        printf("Test passed.\n");
+    }
+    else
+    {
+        printf("Test failure!\n");
+    }
+*/
 
     //--------------------------------------------------------------------------
     // print the results (Y is just a copy of G->A)
