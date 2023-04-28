@@ -96,7 +96,7 @@ int LAGraph_Coarsen_Matching
 
     while (nlevels > 0) {
         // get E
-        LG_TRY (LAGraph_A_to_E (&E, G_cpy, msg)) ;
+        LG_TRY (LAGraph_Incidence_Matrix (&E, G_cpy, msg)) ;
         GRB_TRY (GrB_transpose (E_t, NULL, NULL, E, NULL)) ;
         
         // run maximal matching

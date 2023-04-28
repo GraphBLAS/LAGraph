@@ -44,6 +44,9 @@ appear in the matching.
 
 // #define dbg
 
+#undef LG_FREE_ALL
+#undef LG_FREE_WORK
+
 #define LG_FREE_WORK                        \
 {                                           \
     GrB_free(&E_t) ;                        \
@@ -151,7 +154,7 @@ int LAGraph_MaximalMatching
     GRB_TRY (GrB_mxv (degree, NULL, NULL, LAGraph_plus_second_uint64, E_t, node_degree, NULL)) ;
 
     // TODO: fix structure types, semirings, monoids to match underlying type of A. For now, casting everything to FP64 (catch all type)
-    // this mainly requires annoying changes in LAGraph_A_to_E to accommodate several types
+    // this mainly requires annoying changes in LAGraph_Incidence_Matrix to accommodate several types
     GRB_TRY (GrB_reduce (weight, NULL, NULL, GrB_MAX_MONOID_FP64, E_t, NULL)) ; // use ANY ?
 
     while (ncandidates > 0) {

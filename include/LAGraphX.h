@@ -261,7 +261,7 @@ void LAGraph_SFreeSet           // free a set of matrices
 ) ;
 
 LAGRAPH_PUBLIC
-int LAGraph_A_to_E
+int LAGraph_Incidence_Matrix
 (
     GrB_Matrix *result,
     LAGraph_Graph graph,
