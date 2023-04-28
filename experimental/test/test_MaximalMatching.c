@@ -1,3 +1,25 @@
+//------------------------------------------------------------------------------
+// LAGraph/experimental/test/test_MaximalMatching
+//------------------------------------------------------------------------------
+
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
+
+// Contributed by Vidith Madhu, Texas A&M University
+
+//------------------------------------------------------------------------------
+
+/*
+NOTE: Unlike the other tests, this does not use .mtx files, but rather generates the test
+matrices using specified configurations and seeds with LAGraph_Random_Matrix
+*/
+
 #include <stdio.h>
 #include <acutest.h>
 #include <LAGraphX.h>
@@ -13,34 +35,38 @@ typedef struct
     double matching_val ; // for unweighted matchings, the size of the set. For weighted, sum of edge weights
     int matching_type ;   // 0: unweighted, 1: heavy, 2: light
     bool is_exact ;       // whether or not matching_val is exactly computed for this test
+    GrB_Index n ;         // number of nodes in the graph. If bipartite, number of nodes in the left set
+    GrB_Index m ;         // if not bipartite, should be -1. Otherwise, the number of nodes in the right set
+    double density ;      // density of the graph
+    uint64_t seed ;       // seed used to generate the graph for this test
     const char *name ;
 }
 matrix_info ;
 
-const matrix_info files [ ] =
+const matrix_info tests [ ] =
 {
     // unweighted bipartite
-    { 25, 0, 1, "random_bipartite_bool_1.mtx" },
-    { 9, 0, 1, "random_bipartite_bool_2.mtx" },
-    { 1550, 0, 1, "random_bipartite_bool_4.mtx" },
-    { 2379, 0, 0, "random_bipartite_bool_5.mtx" },
-    { 2443, 0, 0, "random_bipartite_bool_6.mtx" },
+    { 25, 0, 1, "random_bipartite_bool_1" },
+    { 9, 0, 1, "random_bipartite_bool_2" },
+    { 1550, 0, 1, "random_bipartite_bool_4" },
+    { 2379, 0, 0, "random_bipartite_bool_5" },
+    { 2443, 0, 0, "random_bipartite_bool_6" },
     // unweighted general
-    { 4646, 0, 0, "random_general_bool_1.mtx" },
-    { 8, 0, 1, "random_general_bool_2.mtx" },
-    { 22, 0, 0, "random_general_bool_3.mtx" },
-    { 2416, 0, 0, "random_general_bool_4.mtx" },
-    { 499, 0, 1, "random_general_bool_5.mtx"},
+    { 4646, 0, 0, "random_general_bool_1" },
+    { 8, 0, 1, "random_general_bool_2" },
+    { 22, 0, 0, "random_general_bool_3" },
+    { 2416, 0, 0, "random_general_bool_4" },
+    { 499, 0, 1, "random_general_bool_5" },
     // weighted bipartite
-    { 734309039921, 1, 0, "random_bipartite_int_1.mtx"},
-    { 9652307617985, 1, 0, "random_bipartite_int_2.mtx"},
-    { 279715045601, 2, 0, "random_bipartite_int_3.mtx"},
-    { 691019246022, 2, 0, "random_bipartite_int_4.mtx"},
+    { 734309039921, 1, 0, "random_bipartite_int_1" },
+    { 9652307617985, 1, 0, "random_bipartite_int_2" },
+    { 279715045601, 2, 0, "random_bipartite_int_3" },
+    { 691019246022, 2, 0, "random_bipartite_int_4" },
     // weighted general
-    { 150286044439, 1, 0, "random_general_int_1.mtx" },
-    { 8358339868972, 1, 0, "random_general_int_2.mtx" },
-    { 173409012452, 2, 0, "random_general_int_3.mtx" },
-    { 1112155626677, 2, 0, "random_general_int_4.mtx" },
+    { 150286044439, 1, 0, "random_general_int_1" },
+    { 8358339868972, 1, 0, "random_general_int_2" },
+    { 173409012452, 2, 0, "random_general_int_3" },
+    { 1112155626677, 2, 0, "random_general_int_4" },
 
     { 0, 0, 0, "" }
 } ;
@@ -65,17 +91,62 @@ void test_MaximalMatching (void)
 
     for (int k = 0 ; ; k++)
     {
-        const char *aname = files [k].name ;
+        const char *aname = tests [k].name ;
         if (strlen (aname) == 0) break ;
         TEST_CASE (aname) ;
+        
+        // graph generation below
+        //--------------
+        if (tests [k].m != -1) {
+            GrB_Index n = tests [k].n ;
+            GrB_Index m = tests [k].m ;
+            /*
+            Bipartite graph generation works as follows: Create a random n x m matrix for the top right
+            quadrant. The bottom left quadrant will be the transpose of this matrix. The other 2 quadrants
+            will be empty.
+            */
+            GrB_Matrix A_tr = NULL ; // top-right quadrant
+            GrB_Index A_tr_nvals ;   // number of entries in top-right quadrant
+            GrB_Index *tr_rows, *tr_cols ;
+            uint32_t *tr_vals ;
+
+            OK ( LAGraph_Random_Matrix (&A_tr, GrB_UINT32, n, m, tests [k].density, tests [k].seed, msg)) ;
+
+            OK ( GrB_Matrix_nvals (&A_tr_nvals, A_tr)) ;
+
+            OK ( GrB_Matrix_new (&A, GrB_UINT32, n + m, n + m)) ;
+
+            OK ( LAGraph_Malloc ((void**)(&tr_rows), A_tr_nvals, sizeof(GrB_Index), msg)) ;
+            OK ( LAGraph_Malloc ((void**)(&tr_cols), A_tr_nvals, sizeof(GrB_Index), msg)) ;
+            OK ( LAGraph_Malloc ((void**)(&tr_vals), A_tr_nvals, sizeof(uint32_t), msg)) ;
+
+            OK ( GrB_Matrix_extractTuples (tr_rows, tr_cols, tr_vals, &A_tr_nvals, A_tr)) ;
+
+            for (GrB_Index i = 0; i < A_tr_nvals; i++) {
+                GrB_Index row = tr_rows[i];
+                GrB_Index col = tr_cols[i];
+                uint32_t val = tr_vals[i];
+                OK ( GrB_Matrix_setElement (A, val, row, col + n)) ;
+                OK ( GrB_Matrix_setElement (A, val, col + n, row)) ;
+            }
+
+        } else {
+            OK ( LAGraph_Random_Matrix (&A, GrB_UINT32, n, n, tests [k].density, tests [k].seed, msg)) ;
+            // TODO: make A symmetric
+        }
+        // old code using files
+        //--------------
+        /*
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
         TEST_MSG ("Filename %s is invalid", filename) ;
         OK (LAGraph_MMRead (&A, f, msg)) ;
+        */
+        //--------------
 
         TEST_CHECK (A != NULL) ;
-        TEST_MSG ("Loading of adjacency matrix failed") ;
+        TEST_MSG ("Building of adjacency matrix failed") ;
 
         OK (LAGraph_New (&G, &A, LAGraph_ADJACENCY_DIRECTED, msg)) ;
 
@@ -99,7 +170,7 @@ void test_MaximalMatching (void)
         TEST_MSG ("Input graph is not undirected") ;
         G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
 
-        OK (LAGraph_A_to_E (&E, G, msg)) ;
+        OK (LAGraph_Incidence_Matrix (&E, G, msg)) ;
         GrB_Index num_nodes ;
         GrB_Index num_edges ;
         OK (GrB_Matrix_nrows (&num_nodes, E)) ;
@@ -124,7 +195,7 @@ void test_MaximalMatching (void)
         // run max matching
         for (int i = 0; i < SEEDS_PER_TEST; i++){
             // try random seeds
-            OK (LAGraph_MaximalMatching (&matching, E, files [k].matching_type, seed, msg)) ;
+            OK (LAGraph_MaximalMatching (&matching, E, tests [k].matching_type, seed, msg)) ;
             // check correctness
             OK (GrB_mxv (node_degree, NULL, NULL, LAGraph_plus_one_uint64, E, matching, NULL)) ;
             GrB_Index max_degree ;
@@ -141,16 +212,16 @@ void test_MaximalMatching (void)
             TEST_CHECK (hop_edges_nvals == num_edges) ;
             TEST_MSG ("Matching is not maximal") ;
             // check that the value of the matching is close enough
-            double expected = files [k].matching_val ;
+            double expected = tests [k].matching_val ;
             double matching_value = 0 ;
 
-            if (files [k].matching_type == 0) {
+            if (tests [k].matching_type == 0) {
                 // random
                 // we only care about the number of chosen edges
                 uint64_t matching_val_int ;
                 OK (GrB_Vector_nvals (&matching_val_int, matching)) ;
                 matching_value = matching_val_int ;
-                if (files [k].is_exact) {
+                if (tests [k].is_exact) {
                     which_threshold = 0 ;
                 } else {
                     which_threshold = 1 ;
@@ -173,7 +244,7 @@ void test_MaximalMatching (void)
                 TEST_CHECK (matching_value <= expected) ;
             }
             double slack = matching_value / expected ;
-            if (files [k].matching_type == 2) {
+            if (tests [k].matching_type == 2) {
                 // flip it for light matchings
                 slack = expected / matching_value ;
                 which_threshold = 2 ;

@@ -179,7 +179,7 @@ int main(int argc, char **argv){
     int n = num_nodes / 2;
     int m = n;
 
-    GrB_Matrix A = NULL;
+    GrB_Matrix A = NULL ;
 
     random_device rd;
     mt19937_64 gen(rd());

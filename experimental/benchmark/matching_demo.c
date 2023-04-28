@@ -94,7 +94,7 @@ int main (int argc, char** argv)
     GrB_Index num_edges ;
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
 
-    GRB_TRY (LAGraph_A_to_E (&E, G, msg)) ;
+    GRB_TRY (LAGraph_Incidence_Matrix (&E, G, msg)) ;
     GRB_TRY (GrB_Matrix_ncols (&num_edges, E)) ;
 
     GRB_TRY (GrB_Matrix_new (&E_t, GrB_FP64, num_edges, n)) ;
@@ -152,7 +152,8 @@ int main (int argc, char** argv)
         LAGRAPH_TRY (LAGraph_Vector_Print (best_matching, LAGraph_COMPLETE, stdout, msg)) ;
         LAGRAPH_TRY (LAGraph_Matrix_Print (E, LAGraph_COMPLETE, stdout, msg)) ;
 
-        GRB_TRY (GrB_free (&best_matching)) ;
+        LG_FREE_ALL ;
+        
         return 0 ;
     }
     int nt = NTHREAD_LIST ;

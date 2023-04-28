@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph_A_to_E: Given the adjacency matrix of an undirected graph with no 
+// LAGraph_Incidence_Matrix: Given the adjacency matrix of an undirected graph with no 
 // self-loops, builds its corresponding incidence matrix
 //------------------------------------------------------------------------------
 
@@ -10,12 +10,36 @@
 
 // Contributed by Vidith Madhu, Texas A&M University
 
+// Given an undirected graph G, construct the incidence matrix E.
+/*
+The incidence matrix E has size n-by-e where the
+undirected graph G has n nodes and e edges.  If the kth edge of G is the edge
+(i,j), then the column E(:,k) contains two entries:  E(i,k) and E(j,k), which
+have the same value.  If the graph G is weighted, then both E(i,k) and E(j,k)
+are equal to the weight of the (i,j) edge.  If G is unweighted, then both are
+equal to 1 (and the matrix E is thus iso-valued).
+
+G->A is treated as if FP64.  E has type GrB_FP64
+*/
+
 //--------
 
 #include "LG_internal.h"
 #include "LAGraphX.h"
 
 // #define dbg
+
+GrB_Matrix E = NULL ;
+
+GrB_Index *row_indices = NULL ;
+GrB_Index *col_indices = NULL ;
+
+double *values = NULL ;
+
+GrB_Index *E_row_indices = NULL ;
+GrB_Index *E_col_indices = NULL ;
+
+double *E_values = NULL ;
 
 #undef LG_FREE_ALL
 #define LG_FREE_ALL                                           \
@@ -26,16 +50,15 @@
    LAGraph_Free ((void**)(&E_row_indices), msg) ;             \
    LAGraph_Free ((void**)(&E_col_indices), msg) ;             \
    LAGraph_Free ((void**)(&E_values), msg) ;                  \
-}                                                             \
+}
 
-int LAGraph_A_to_E
+int LAGraph_Incidence_Matrix
 (
     GrB_Matrix *result, // incidence
     LAGraph_Graph G, // must be undirected, no self-loops
     char *msg
 )
 {
-    // TODO: What are the proper error codes?
     LG_ASSERT_MSG (
         G->kind == LAGraph_ADJACENCY_UNDIRECTED,
         -105, 
@@ -45,16 +68,6 @@ int LAGraph_A_to_E
     LG_ASSERT_MSG (G->nself_edges == 0, -107, "G->nself_edges must be zero") ;
 
     const GrB_Matrix A = G->A ;
-    // Setup
-    GrB_Matrix E = NULL ;
-    GrB_Index *row_indices = NULL ;
-    GrB_Index *col_indices = NULL ;
-    // cast everything into a fp64
-    double *values = NULL ;
-
-    GrB_Index *E_row_indices = NULL ;
-    GrB_Index *E_col_indices = NULL ;
-    double *E_values = NULL ;
 
     GrB_Index nvals ;
     GrB_Index num_nodes ;
@@ -83,6 +96,7 @@ int LAGraph_A_to_E
 
     // current index in E_* arrays
     GrB_Index pos = 0;
+    GrB_Index n_edges = nvals / 2 ;
 
     for (size_t i = 0; i < nvals; i++) {
         // only consider edges if row < col (prevent duplicates)
@@ -96,9 +110,9 @@ int LAGraph_A_to_E
             E_values[pos] = value ;
             // printf("DBG: pos = %lld, [%lld, %lld, %lld]\n", pos, E_col_indices[pos], E_row_indices[pos], E_values[pos]);
             // now put the col values (2nd endpoint)
-            E_col_indices[pos + (nvals >> 1)] = pos ;
-            E_row_indices[pos + (nvals >> 1)] = col ;
-            E_values[pos + (nvals >> 1)] = value ;
+            E_col_indices[pos + n_edges] = pos ;
+            E_row_indices[pos + n_edges] = col ;
+            E_values[pos + n_edges] = value ;
             pos++ ;
         }   
     }
