@@ -132,13 +132,13 @@ int LG_check_lcc(
 
     GrB_Index Sp_size, Si_size, Sx_size ;
     bool Siso ;
-    GRB_TRY(GxB_Matrix_unpack_CSC(S, &Sp, &Si, &Sx, &Sp_size, &Si_size, &Sx_size, &Siso, NULL, GrB_NULL));
+    GRB_TRY(GxB_Matrix_unpack_CSR(S, &Sp, &Si, &Sx, &Sp_size, &Si_size, &Sx_size, &Siso, NULL, GrB_NULL));
     free(Sx); Sx = NULL;
 
     GrB_Index Tp_size, Ti_size, Tx_size ;
     bool Tiso ;
     if (directed) {
-        GRB_TRY(GxB_Matrix_unpack_CSC(T, &Tp, &Ti, &Tx, &Tp_size, &Ti_size, &Tx_size, &Tiso, NULL, GrB_NULL));
+        GRB_TRY(GxB_Matrix_unpack_CSR(T, &Tp, &Ti, &Tx, &Tp_size, &Ti_size, &Tx_size, &Tiso, NULL, GrB_NULL));
         free(Tx); Tx = NULL;
     } else {
         Tp = Sp; Tp_size = Sp_size;
