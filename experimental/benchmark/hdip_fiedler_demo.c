@@ -62,7 +62,71 @@ float difference (GrB_Vector centrality, double *matlab_result)
     return (err) ;
 }
 
-double karate_laplacian [34] = {
+// Bucky test data
+double bucky_fiedler [60] = {
+	-0.2236,
+	-0.2071,
+	-0.1804,
+	-0.1804,
+	-0.2071,
+	-0.2022,
+	-0.1669,
+	-0.1098,
+	-0.1098,
+	-0.1669,
+	-0.1669,
+	-0.1481,
+	-0.0744,
+	-0.0477,
+	-0.1049,
+	-0.1098,
+	-0.0744,
+	 0.0094,
+	 0.0259,
+   	-0.0477,
+   	-0.1098,
+   	-0.0477,
+   	 0.0259,
+   	 0.0094,
+   	-0.0744,
+   	-0.1669,
+   	-0.1049,
+   	-0.0477,
+   	-0.0744,
+   	-0.1481,
+   	 0.1481,
+   	 0.0745,
+   	 0.0477,
+   	 0.1049,
+   	 0.1669,
+    	 0.0745,
+   	-0.0094,
+   	-0.0259,
+   	 0.0477,
+   	 0.1098,
+   	 0.0477,
+   	-0.0259,
+   	-0.0094,
+   	 0.0745,
+   	 0.1098,
+   	 0.1049,
+   	 0.0477,
+   	 0.0745,
+   	 0.1481,
+   	 0.1669,
+   	 0.1669,
+   	 0.1098,
+   	 0.1098,
+   	 0.1669,
+   	 0.2022,
+   	 0.2071,
+   	 0.1804,
+   	 0.1804,
+   	 0.2071,
+   	 0.2236} ;
+
+// Karate test data
+double karate_fiedler [34] = {
         -0.3561,
         -0.1036,
         -0.0156,
@@ -97,12 +161,6 @@ double karate_laplacian [34] = {
          0.0790,
          0.1427,
          0.1274} ;
-
-double karate_iters [2] = {
-        2,
-        14} ;
-
-float karate_lambda = 1.3297;
 
 // LG_FREE_ALL is required by LG_TRY
 #undef LG_FREE_ALL
@@ -160,6 +218,7 @@ int main(int argc, char **argv)
 
     double t = LAGraph_WallClockTime();
     char *matrix_name = (argc > 1) ? argv[1] : "stdin";
+    
     LG_TRY(readproblem(
         &G,           // the graph that is read from stdin or a file
         NULL,         // source nodes (none, if NULL)
@@ -245,11 +304,12 @@ int main(int argc, char **argv)
     printf("Time for LAGraph_Hdip_Fiedler: %g sec\n", t);
 
     //--------------------------------------------------------------------------
-    // check the results (make sure Y is a copy of G->A)
+    // check the results (Make sure imported graph is correct for karate or bucky)
     //--------------------------------------------------------------------------
-
+    
+    //Testing karate
     t = LAGraph_WallClockTime();
-    float err = difference (x_handle, karate_laplacian) ;
+    float err = difference (x_handle, karate_fiedler) ;
     printf("\n=============================Testing karate x vector:\n");
     t = LAGraph_WallClockTime() - t;
     printf("Time to check results:       %g sec\n", t);
@@ -263,8 +323,7 @@ int main(int argc, char **argv)
     }
 
     printf("\n=============================Testing karate lambda:\n");
-    err = abs(lambda_result - karate_lambda);
-    //GRB_TRY (GrB_apply (err, NULL, NULL, GrB_ABS_FP32,err, NULL));
+    err = abs(lambda_result - 1.3297);
     if (err < 1e-4)
     {
         printf("Test passed.\n");
@@ -273,10 +332,11 @@ int main(int argc, char **argv)
     {
         printf("Test failure!\n");
     }
-/*
+
     t = LAGraph_WallClockTime();
-    err = iters_handle[0] - karate_iters[0] ;
-    GRB_TRY (GrB_apply (err, NULL, NULL, GrB_ABS_FP32,err, NULL));
+    GrB_Index temp = NULL;
+    GRB_TRY (GrB_Vector_extractElement_FP32(&temp, iters_handle, 0));
+    err = abs(temp - 2) ;
     printf("\n=============================Testing karate outer iterations:\n");
     t = LAGraph_WallClockTime() - t;
     printf("Time to check results:       %g sec\n", t);
@@ -290,8 +350,8 @@ int main(int argc, char **argv)
     }
 
     t = LAGraph_WallClockTime();
-    err = iters_handle[1] - karate_iters[1] ;
-    GRB_TRY (GrB_apply (err, NULL, NULL, GrB_ABS_FP32,err, NULL));
+    GRB_TRY (GrB_Vector_extractElement_FP32(&temp, iters_handle, 1));
+    err = abs(temp - 14) ;
     printf("\n=============================Testing karate inner iterations:\n");
     t = LAGraph_WallClockTime() - t;
     printf("Time to check results:       %g sec\n", t);
@@ -303,7 +363,63 @@ int main(int argc, char **argv)
     {
         printf("Test failure!\n");
     }
-*/
+    
+    //Testing Bucky
+    t = LAGraph_WallClockTime();
+    err = difference (x_handle, bucky_fiedler) ;
+    printf("\n=============================Testing bucky x vector:\n");
+    t = LAGraph_WallClockTime() - t;
+    printf("Time to check results:       %g sec\n", t);
+    if (err < 1e-4)
+    {
+        printf("Test passed.\n");
+    }
+    else
+    {
+        printf("Test failure!\n");
+    }
+
+    printf("\n=============================Testing bucky lambda:\n");
+    err = abs(lambda_result - 0.2434);
+    if (err < 1e-4)
+    {
+        printf("Test passed.\n");
+    }
+    else
+    {
+        printf("Test failure!\n");
+    }
+
+    t = LAGraph_WallClockTime();
+    GRB_TRY (GrB_Vector_extractElement_FP32(&temp, iters_handle, 0));
+    err = abs(temp - 11) ;
+    printf("\n=============================Testing bucky outer iterations:\n");
+    t = LAGraph_WallClockTime() - t;
+    printf("Time to check results:       %g sec\n", t);
+    if (err < 1e-4)
+    {
+        printf("Test passed.\n");
+    }
+    else
+    {
+        printf("Test failure!\n");
+    }
+
+    t = LAGraph_WallClockTime();
+    GRB_TRY (GrB_Vector_extractElement_FP32(&temp, iters_handle, 1));
+    err = abs(temp - 98) ;
+    printf("\n=============================Testing karate bucky iterations:\n");
+    t = LAGraph_WallClockTime() - t;
+    printf("Time to check results:       %g sec\n", t);
+    if (err < 1e-4)
+    {
+        printf("Test passed.\n");
+    }
+    else
+    {
+        printf("Test failure!\n");
+    }
+
 
     //--------------------------------------------------------------------------
     // print the results (Y is just a copy of G->A)
