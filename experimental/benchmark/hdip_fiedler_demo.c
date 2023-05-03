@@ -162,6 +162,75 @@ double karate_fiedler [34] = {
          0.1427,
          0.1274} ;
 
+double west0067_fiedler [67] = {
+   -0.7918,
+   -0.0506,
+   -0.0329,
+   -0.0366,
+   -0.1569,
+   -0.1608,
+   -0.1776,
+   -0.1747,
+   -0.1529,
+   -0.0391,
+   -0.0320,
+   -0.0046,
+   -0.1138,
+   -0.0140,
+   -0.0314,
+   -0.0114,
+   -0.0066,
+   -0.0862,
+    0.0245,
+   -0.0117,
+    0.0232,
+    0.0338,
+    0.0052,
+    0.0185,
+   -0.0731,
+   -0.0520,
+   -0.0602,
+   -0.0711,
+   -0.0623,
+    0.0528,
+   -0.0016,
+    0.0447,
+    0.0566,
+    0.0444,
+    0.0610,
+    0.0220,
+   -0.0008,
+    0.0171,
+    0.0305,
+    0.0519,
+    0.0414,
+    0.0491,
+    0.0482,
+    0.0912,
+    0.0660,
+    0.1074,
+    0.1016,
+    0.1078,
+    0.0683,
+    0.0871,
+    0.0777,
+    0.0839,
+    0.0901,
+    0.1092,
+    0.0850,
+    0.0752,
+   -0.0019,
+    0.0239,
+    0.0442,
+    0.0772,
+   -0.0179,
+    0.0770,
+    0.1072,
+    0.0342,
+    0.0762,
+    0.1115,
+    0.1000} ;
+
 // LG_FREE_ALL is required by LG_TRY
 #undef LG_FREE_ALL
 #define LG_FREE_ALL              \
@@ -332,37 +401,6 @@ int main(int argc, char **argv)
     {
         printf("Test failure!\n");
     }
-
-    t = LAGraph_WallClockTime();
-    GrB_Index temp = NULL;
-    GRB_TRY (GrB_Vector_extractElement_FP32(&temp, iters_handle, 0));
-    err = abs(temp - 2) ;
-    printf("\n=============================Testing karate outer iterations:\n");
-    t = LAGraph_WallClockTime() - t;
-    printf("Time to check results:       %g sec\n", t);
-    if (err < 1e-4)
-    {
-        printf("Test passed.\n");
-    }
-    else
-    {
-        printf("Test failure!\n");
-    }
-
-    t = LAGraph_WallClockTime();
-    GRB_TRY (GrB_Vector_extractElement_FP32(&temp, iters_handle, 1));
-    err = abs(temp - 14) ;
-    printf("\n=============================Testing karate inner iterations:\n");
-    t = LAGraph_WallClockTime() - t;
-    printf("Time to check results:       %g sec\n", t);
-    if (err < 1e-4)
-    {
-        printf("Test passed.\n");
-    }
-    else
-    {
-        printf("Test failure!\n");
-    }
     
     //Testing Bucky
     t = LAGraph_WallClockTime();
@@ -390,10 +428,10 @@ int main(int argc, char **argv)
         printf("Test failure!\n");
     }
 
+    //Testing West0067
     t = LAGraph_WallClockTime();
-    GRB_TRY (GrB_Vector_extractElement_FP32(&temp, iters_handle, 0));
-    err = abs(temp - 11) ;
-    printf("\n=============================Testing bucky outer iterations:\n");
+    err = difference (x_handle, west0067_fiedler) ;
+    printf("\n=============================Testing west0067 x vector:\n");
     t = LAGraph_WallClockTime() - t;
     printf("Time to check results:       %g sec\n", t);
     if (err < 1e-4)
@@ -405,12 +443,8 @@ int main(int argc, char **argv)
         printf("Test failure!\n");
     }
 
-    t = LAGraph_WallClockTime();
-    GRB_TRY (GrB_Vector_extractElement_FP32(&temp, iters_handle, 1));
-    err = abs(temp - 98) ;
-    printf("\n=============================Testing karate bucky iterations:\n");
-    t = LAGraph_WallClockTime() - t;
-    printf("Time to check results:       %g sec\n", t);
+    printf("\n=============================Testing west0067 lambda:\n");
+    err = abs(lambda_result - 6.5586);
     if (err < 1e-4)
     {
         printf("Test passed.\n");
