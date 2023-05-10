@@ -17,6 +17,8 @@
 
 #include "LG_internal.h"
 
+extern bool LG_init_has_been_called;
+
 int LAGraph_Finalize (char *msg)
 {
 
@@ -80,5 +82,6 @@ int LAGraph_Finalize (char *msg)
     //--------------------------------------------------------------------------
 
     GRB_TRY (GrB_finalize ( )) ;
+    LG_init_has_been_called = false;
     return (GrB_SUCCESS) ;
 }

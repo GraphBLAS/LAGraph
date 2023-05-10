@@ -128,6 +128,9 @@ find_package (GraphBLAS 7.0.1 REQUIRED MODULE)
 set( USING_LUCATAGRAPHBLAS ON CACHE BOOL "Flag for using LucataGraphBLAS (as opposed to GraphBLAS)" )
 
 if ( USING_LUCATAGRAPHBLAS )
+    # Save the compile commands to `${CMAKE_BINARY_DIR}/compile_commands.json`
+    set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE CACHE BOOL "Export compile commands to build directory" FORCE)
+
     message("")
     message( STATUS "=============== Start Lucata Settings ===============" )
     message( STATUS "USING_LUCATAGRAPHBLAS set to ON" )
@@ -165,6 +168,8 @@ endif()
 
 if ( COVERAGE )
     message ( STATUS "OpenMP disabled for test coverage" )
+elseif ( USING_LUCATAGRAPHBLAS )
+    message ( STATUS "OpenMP disabled for Lucata" )
 else ( )
     include ( FindOpenMP  )
     include ( FindThreads )
