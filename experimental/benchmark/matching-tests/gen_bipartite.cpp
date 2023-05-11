@@ -184,6 +184,7 @@ int main(int argc, char **argv){
     random_device rd;
     mt19937_64 gen(rd());
     uniform_int_distribution<ll> seed_distr(1, 1e15);
+    uint64_t seed = 88; // seed_distr(gen);
 
     GrB_Index *rows, *cols ;
     uint32_t *vals ;
@@ -191,7 +192,7 @@ int main(int argc, char **argv){
     OK ( LAGraph_Init (msg)) ;
     OK ( LAGraph_Random_Init (msg)) ;
 
-    OK ( LAGraph_Random_Matrix (&A, GrB_UINT32, n, m, (sparse_factor / n), seed_distr(gen), msg)) ;
+    OK ( LAGraph_Random_Matrix (&A, GrB_UINT32, n, m, (sparse_factor / n), seed, msg)) ;
 
     GrB_Index nvals ;
     OK ( GrB_Matrix_nvals (&nvals, A)) ;
