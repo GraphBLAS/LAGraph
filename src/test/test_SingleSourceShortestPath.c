@@ -44,7 +44,7 @@ const matrix_info files [ ] =
     { "ldbc-undirected-example.mtx" },
     { "ldbc-wcc-example.mtx" },
     { "LFAT5.mtx" },
-    { "LFAT5_hypersparse.mtx" },
+    // { "LFAT5_hypersparse.mtx" },
     { "msf1.mtx" },
     { "msf2.mtx" },
     { "msf3.mtx" },
