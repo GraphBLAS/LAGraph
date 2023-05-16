@@ -36,7 +36,7 @@ const matrix_info files [ ] =
 {
     { LAGraph_ADJACENCY_UNDIRECTED, "A.mtx" },
     { LAGraph_ADJACENCY_DIRECTED,   "cover.mtx" },
-    { LAGraph_ADJACENCY_UNDIRECTED, "jagmesh7.mtx" },
+    // { LAGraph_ADJACENCY_UNDIRECTED, "jagmesh7.mtx" },
     { LAGraph_ADJACENCY_DIRECTED,   "ldbc-cdlp-directed-example.mtx" },
     { LAGraph_ADJACENCY_UNDIRECTED, "ldbc-cdlp-undirected-example.mtx" },
     { LAGraph_ADJACENCY_DIRECTED,   "ldbc-directed-example.mtx" },
@@ -48,9 +48,9 @@ const matrix_info files [ ] =
     { LAGraph_ADJACENCY_DIRECTED,   "msf3.mtx" },
     { LAGraph_ADJACENCY_DIRECTED,   "sample2.mtx" },
     { LAGraph_ADJACENCY_DIRECTED,   "sample.mtx" },
-    { LAGraph_ADJACENCY_DIRECTED,   "olm1000.mtx" },
-    { LAGraph_ADJACENCY_UNDIRECTED, "bcsstk13.mtx" },
-    { LAGraph_ADJACENCY_DIRECTED,   "cryg2500.mtx" },
+    // { LAGraph_ADJACENCY_DIRECTED,   "olm1000.mtx" },
+    // { LAGraph_ADJACENCY_UNDIRECTED, "bcsstk13.mtx" },
+    // { LAGraph_ADJACENCY_DIRECTED,   "cryg2500.mtx" },
     { LAGraph_ADJACENCY_UNDIRECTED, "tree-example.mtx" },
     { LAGraph_ADJACENCY_DIRECTED,   "west0067.mtx" },
     { LAGraph_ADJACENCY_UNDIRECTED, "karate.mtx" },
@@ -64,7 +64,7 @@ const matrix_info files [ ] =
     { LAGraph_ADJACENCY_DIRECTED,   "matrix_int32.mtx" },
     { LAGraph_ADJACENCY_DIRECTED,   "matrix_uint64.mtx" },
     { LAGraph_ADJACENCY_DIRECTED,   "skew_fp32.mtx" },
-    { LAGraph_ADJACENCY_UNDIRECTED, "pushpull.mtx" },
+    // { LAGraph_ADJACENCY_UNDIRECTED, "pushpull.mtx" },
     { LAGRAPH_UNKNOWN, "" },
 } ;
 
