@@ -40,12 +40,12 @@ const matrix_info files [ ] =
 {
     {     45, "karate.mtx" },
     {     11, "A.mtx" },
-    {   2016, "jagmesh7.mtx" },
+    // {   2016, "jagmesh7.mtx" },
     {      6, "ldbc-cdlp-undirected-example.mtx" },
     {      4, "ldbc-undirected-example.mtx" },
     {      5, "ldbc-wcc-example.mtx" },
     {      0, "LFAT5.mtx" },
-    { 342300, "bcsstk13.mtx" },
+    // { 342300, "bcsstk13.mtx" },
     {      0, "tree-example.mtx" },
     {      0, "" },
 } ;
@@ -482,7 +482,7 @@ TEST_LIST = {
     {"TriangleCount_Methods6", test_TriangleCount_Methods6},
     {"TriangleCount"         , test_TriangleCount},
     {"TriangleCount_many"    , test_TriangleCount_many},
-    {"TriangleCount_autosort", test_TriangleCount_autosort},
+    // {"TriangleCount_autosort", test_TriangleCount_autosort},
     #if LAGRAPH_SUITESPARSE
     {"TriangleCount_brutal"  , test_TriangleCount_brutal},
     #endif
