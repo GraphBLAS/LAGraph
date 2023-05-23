@@ -18,13 +18,13 @@
 #undef LG_FREE_ALL
 #undef LG_FREE_WORK
 
-#define LG_FREE_WORK                                \
-{                                                   \
-    GrB_free(&eq) ;                                 \
-    GrB_free(&id) ;                                 \
-    LAGraph_Free((void**) indices, msg) ;           \
-    LAGraph_Free((void**) vals, msg) ;              \
-}                                                   \
+#define LG_FREE_WORK                                        \
+{                                                           \
+    GrB_free(&parent_sorted) ;                              \
+    GrB_free(&sorted_permutation) ;                         \
+    LAGraph_Free((void**)(&new_labels), msg) ;              \
+    LAGraph_Free ((void**)(&new_label_assigned), msg);      \
+}                                                           \
 
 #define LG_FREE_ALL                                 \
 {                                                   \
@@ -35,60 +35,75 @@
 int LAGraph_Parent_to_S
 (
     GrB_Matrix *result,
-    GrB_Vector parent,      // dense vector of size n. parent[i] -> representative of node i
+    GrB_Vector parent,      // dense integer vector of size n. parent[i] -> representative of node i
     int preserve_mapping,   // whether to preserve the original namespace of nodes
     char *msg
 )
 {
-    GrB_Vector eq = NULL ;
-    GrB_Vector id = NULL ;  // id[i] = i
+    GrB_Vector parent_sorted = NULL ;
+    GrB_Vector sorted_permutation = NULL ;
     GrB_Matrix S = NULL ;
 
     GrB_Index *indices ;
     GrB_Index *vals ;
+    GrB_Index *new_labels ;     // tracks new label mapping
+    bool *new_label_assigned ;
     GrB_Index nvals ;
 
     GrB_Index n ;
     GRB_TRY (GrB_Vector_nvals (&n, parent)) ;
 
     if (!preserve_mapping) {
-        // result dim: n' by n (n' != n)
-        GrB_Index n_new ;
-        // n_new is number of unique elements in parent
+        // result dim: n' by n (n' is the new number of vertices)
+        GrB_Index n_new = 0 ;
+        // n_new (or n') is number of unique elements in parent
         // equals grb_reduce with an "equal" operator
-        GRB_TRY (GrB_Vector_new (&id, GrB_UINT64, n)) ;
-        GRB_TRY (GrB_Vector_new (&eq, GrB_BOOL, n)) ;
 
-        GRB_TRY (GrB_eWiseAdd (id, NULL, NULL, GxB_FIRSTI_INT64, id, id, NULL)) ;
-        GRB_TRY (GrB_eWiseAdd (eq, NULL, NULL, GxB_ISEQ_INT64, parent, id, NULL)) ;
+        // important step: relabel the vertices from [0...(n - 1)] to [0...(n' - 1)]
+        // need to sort to ensure ordering of new labels matches ordering of old labels
+        GRB_TRY (GrB_Vector_new (&parent_sorted, GrB_UINT64, n)) ;
+        GRB_TRY (GrB_Vector_new (&sorted_permutation, GrB_UINT64, n)) ;
+        GRB_TRY (GxB_Vector_sort (parent_sorted, sorted_permutation, GrB_LT_UINT64, parent, NULL)) ;
 
-        GRB_TRY (GrB_reduce (&n_new, NULL, GrB_PLUS_MONOID_UINT64, eq, NULL)) ;
+        LG_TRY (LAGraph_Malloc ((void**)(&new_labels), n, sizeof(GrB_Index), msg)) ;
+        LG_TRY (LAGraph_Malloc ((void**)(&new_label_assigned), n, sizeof(bool), msg)) ;
+        
+        memset (new_label_assigned, 0, sizeof(bool) * n) ;
 
-        GRB_TRY (GrB_Matrix_new (&S, GrB_BOOL, n_new, n)) ;
+        // perform relabelling
+        for (GrB_Index i = 0; i < n; i++) {
+            uint64_t val, perm_idx ;
+            GRB_TRY (GrB_Vector_extractElement (&val, parent_sorted, i)) ;
+            GRB_TRY (GrB_Vector_extractElement (&perm_idx, sorted_permutation, i)) ;
+            if (!new_label_assigned[val]) {
+                new_labels[val] = n_new ;
+                new_label_assigned[val] = true ;
+                n_new++ ;
+            }
+            GRB_TRY (GrB_Vector_setElement (parent, new_labels[val], perm_idx)) ;
+        }
 
-        GRB_TRY (GrB_free (&eq)) ;
-        GRB_TRY (GrB_free (&id)) ;
+        GRB_TRY (GrB_Matrix_new (&S, GrB_UINT64, n_new, n)) ;
+
+        GRB_TRY (GrB_free (&parent_sorted)) ;
+        GRB_TRY (GrB_free (&sorted_permutation)) ;
+        LG_TRY (LAGraph_Free ((void**)(&new_labels), msg)) ;
+        LG_TRY (LAGraph_Free ((void**)(&new_label_assigned), msg)) ;
     } else {
         // result dim: n by n
-        GRB_TRY (GrB_Matrix_new (&S, GrB_BOOL, n, n)) ;
+        GRB_TRY (GrB_Matrix_new (&S, GrB_UINT64, n, n)) ;
     }
 
-    // extract tuples from parent, make S[j][i] = 1 for p[i] = j
-
-    GRB_TRY (GrB_Vector_nvals (&nvals, parent)) ;
-
-    LG_TRY (LAGraph_Malloc ((void**)(&indices), nvals, sizeof(GrB_Index), msg)) ;
-    LG_TRY (LAGraph_Malloc ((void**)(&vals), nvals, sizeof(GrB_Index), msg)) ;
-
-    GRB_TRY (GrB_Vector_extractTuples (indices, vals, &nvals, parent)) ;
-
-    for (GrB_Index idx = 0; idx < nvals; idx++) {
-        GrB_Index i = vals[idx] ;
-        GrB_Index j = indices[idx] ;
-        
-        GRB_TRY (GrB_Matrix_setElement (S, true, i, j)) ;
+    for (GrB_Index idx = 0; idx < n; idx++) {
+        uint64_t i ;
+        GRB_TRY (GrB_Vector_extractElement (&i, parent, idx)) ;
+        GrB_Index j = idx ;
+        // printf("set (%lld, %lld) to 1\n", i, j);    
+        GRB_TRY (GrB_Matrix_setElement (S, 1, i, j)) ;
     }
 
     (*result) = S ;
+
+    LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }

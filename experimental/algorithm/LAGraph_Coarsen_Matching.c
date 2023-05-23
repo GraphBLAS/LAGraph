@@ -118,9 +118,9 @@ int LAGraph_Coarsen_Matching
 
     GRB_TRY (GrB_Vector_new (&edge_parent, GrB_UINT64, num_edges)) ;
     GRB_TRY (GrB_Vector_new (&node_parent, GrB_UINT64, num_nodes)) ;
-    GRB_TRY (GrB_Vector_new (&ones, GrB_UINT64, num_nodes)) ;
+    GRB_TRY (GrB_Vector_new (&ones, GrB_BOOL, num_nodes)) ;
 
-    GRB_TRY (GrB_assign (ones, NULL, NULL, 1, GrB_ALL, num_nodes, NULL)) ;
+    GRB_TRY (GrB_assign (ones, NULL, NULL, true, GrB_ALL, num_nodes, NULL)) ;
 
     if (!preserve_mapping) {
         LG_TRY (LAGraph_Malloc ((void**)(&mapping), nlevels, sizeof(GrB_Vector), msg)) ;
@@ -151,43 +151,79 @@ int LAGraph_Coarsen_Matching
         // make edge_parent
         // want to do E_t * ones and get the first entry for each edge (mask output with matched_edges)
         GRB_TRY (GrB_mxv (edge_parent, matched_edges, NULL, GxB_MIN_SECONDI_INT64, E_t, ones, GrB_DESC_RS)) ;
+        #ifdef dbg
+            printf("Printing edge_parent for level (%lld)\n", curr_level) ;
+            LG_TRY (LAGraph_Vector_Print (edge_parent, LAGraph_COMPLETE, stdout, msg)) ;
+            printf("Printing E for level (%lld)\n", curr_level) ;
+            LG_TRY (LAGraph_Matrix_Print (E, LAGraph_COMPLETE, stdout, msg)) ;
+        #endif
+
         // now, we have edge_parent (each edge points to its parent node)
         // can do E * edge_parent with min_second to get node_parent
         GRB_TRY (GrB_mxv (node_parent, NULL, NULL, GrB_MIN_SECOND_SEMIRING_UINT64, E, edge_parent, NULL)) ;
-        // need to do eWiseAdd with [1...n] since some nodes might not touch any matched edges, and we want those nodes to point to self
-        GRB_TRY (GrB_eWiseAdd (node_parent, node_parent, NULL, GxB_FIRSTI_INT64, ones, node_parent, GrB_DESC_SC)) ;
+
+        // need to do eWiseAdd with [0...(n - 1)] since some nodes might not touch any matched edges, and we want those nodes to point to self
+        // TODO: THIS IS BROKEN
+        /*
+        GRB_TRY (GrB_eWiseAdd (node_parent, node_parent, NULL, GxB_SECONDI_INT64, ones, node_parent, GrB_DESC_SC)) ;
+        printf("Printing node_parent for level (%lld)\n", curr_level) ;
+        LG_TRY (LAGraph_Vector_Print (node_parent, LAGraph_COMPLETE, stdout, msg)) ;
+        */
+        for (GrB_Index i = 0; i < num_nodes; i++) {
+            if (GxB_Vector_isStoredElement (node_parent, i) == GrB_NO_VALUE) {
+                GRB_TRY (GrB_Vector_setElement (node_parent, i, i)) ;
+            }
+        }
 
         #ifdef dbg
+            printf("Printing node_parent for level (%lld)\n", curr_level) ;
             LG_TRY (LAGraph_Vector_Print (node_parent, LAGraph_COMPLETE, stdout, msg)) ;
+            printf("Printing matched edges for level (%lld)\n", curr_level) ;
+            LG_TRY (LAGraph_Vector_Print (matched_edges, LAGraph_COMPLETE, stdout, msg)) ;
         #endif
         
         LG_TRY (LAGraph_Parent_to_S (&S, node_parent, preserve_mapping, msg)) ;
+
+        #ifdef dbg
+            printf("Printing S for level (%lld)\n", curr_level) ;
+            LG_TRY (LAGraph_Matrix_Print (S, LAGraph_COMPLETE, stdout, msg)) ;
+        #endif
+
+        GrB_Index S_rows, S_cols ;
+
         if (!preserve_mapping) {
             // need to resize S_t
-            GrB_Index S_rows, S_cols ;
             GRB_TRY (GrB_Matrix_nrows (&S_rows, S)) ;
             GRB_TRY (GrB_Matrix_ncols (&S_cols, S)) ;
             GRB_TRY (GrB_Matrix_resize (S_t, S_cols, S_rows)) ;
-            // resize result
-            GRB_TRY (GrB_Matrix_resize (A, S_rows, S_rows)) ;
         }
         GRB_TRY (GrB_transpose (S_t, NULL, NULL, S, NULL)) ;
 
         GrB_Semiring semiring = combine_weights ? GrB_PLUS_TIMES_SEMIRING_FP64 : LAGraph_any_one_bool ;
+
         GRB_TRY (GrB_mxm (S, NULL, NULL, semiring, S, A, NULL)) ;
+        if (!preserve_mapping) {
+            // resize result
+            GRB_TRY (GrB_Matrix_resize (A, S_rows, S_rows)) ;
+        }
         GRB_TRY (GrB_mxm (A, NULL, NULL, semiring, S, S_t, NULL)) ;
+
         G_cpy->A = A ;
+        LG_TRY (LAGraph_DeleteCached (G_cpy, msg)) ;
         LG_TRY (LAGraph_Cached_NSelfEdges (G_cpy, msg)) ;
         // parent nodes for matched edges will form self-edges; need to delete
         LG_TRY (LAGraph_DeleteSelfEdges (G_cpy, msg)) ;
         A = G_cpy->A ;
+
         // want to free before we reassign what they point to
         GRB_TRY (GrB_free (&E)) ;
         GRB_TRY (GrB_free (&S)) ;
         GRB_TRY (GrB_free (&matched_edges)) ;
 
-        // record a deep copy of the current node_parent for the current coarsening level
-        GRB_TRY (GrB_Vector_dup ((mapping) + (curr_level * sizeof(GrB_Vector)), node_parent)) ;
+        if (!preserve_mapping){
+            // record a deep copy of the current node_parent for the current coarsening level
+            GRB_TRY (GrB_Vector_dup ((mapping) + (curr_level * sizeof(GrB_Vector)), node_parent)) ;
+        }
 
         nlevels-- ;
         curr_level++ ;
