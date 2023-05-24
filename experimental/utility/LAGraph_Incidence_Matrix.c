@@ -29,18 +29,6 @@ G->A is treated as if FP64.  E has type GrB_FP64
 
 // #define dbg
 
-GrB_Matrix E = NULL ;
-
-GrB_Index *row_indices = NULL ;
-GrB_Index *col_indices = NULL ;
-
-double *values = NULL ;
-
-GrB_Index *E_row_indices = NULL ;
-GrB_Index *E_col_indices = NULL ;
-
-double *E_values = NULL ;
-
 #undef LG_FREE_ALL
 #define LG_FREE_ALL                                           \
 {                                                             \
@@ -59,6 +47,19 @@ int LAGraph_Incidence_Matrix
     char *msg
 )
 {
+
+    GrB_Matrix E = NULL ;
+
+    GrB_Index *row_indices = NULL ;
+    GrB_Index *col_indices = NULL ;
+
+    double *values = NULL ;
+
+    GrB_Index *E_row_indices = NULL ;
+    GrB_Index *E_col_indices = NULL ;
+
+    double *E_values = NULL ;
+
     LG_ASSERT_MSG (
         G->kind == LAGraph_ADJACENCY_UNDIRECTED,
         -105, 

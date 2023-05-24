@@ -917,7 +917,7 @@ int LAGraph_MaximalMatching
     GrB_Vector *matching,
     // inputs:
     GrB_Matrix E,                         // incidence matrix, not part of LAGraph_Graph (for now)
-    LAGraph_Matching_kind matching_type,  // 0 (random), 1 (heavy weight), or 2 (light weight)
+    LAGraph_Matching_kind matching_type,  // refer to above enum
     uint64_t seed,                        // random number seed
     char *msg
 ) ;
@@ -926,15 +926,15 @@ LAGRAPH_PUBLIC
 int LAGraph_Coarsen_Matching
 (
     // outputs:
-    GrB_Matrix *coarsened, // coarsened adjacency
-    GrB_Vector *mapping,   // parent mapping (not compressed)
+    GrB_Matrix *coarsened,                   // coarsened adjacency
+    GrB_Vector **mapping,                    // parent mapping for each level; if preserve_mapping is true, is NULL
     // inputs:
     LAGraph_Graph G,
-    int matching_type,     // 0, 1, or 2, refer to above
-    int preserve_mapping,  // preserve initial namespace of nodes
-    int combine_weights,   // whether to sum edge weights or just keep the pattern
-    int nlevels,           // #of coarsening levels
-    uint64_t seed,         // used for matching
+    LAGraph_Matching_kind matching_type,     // refer to above enum
+    int preserve_mapping,                    // preserve initial namespace of nodes
+    int combine_weights,                     // whether to sum edge weights or just keep the pattern
+    GrB_Index nlevels,                       // #of coarsening levels
+    uint64_t seed,                           // used for matching
     char *msg
 ) ;
 
