@@ -101,7 +101,7 @@ int main (int argc, char **argv)
 
     // compute check result
     double tt = LAGraph_WallClockTime ( ) ;
-    LAGRAPH_TRY (LAGraph_cdlp_nosort (&cgood, G, 100, msg)) ;
+    LAGRAPH_TRY (LAGraph_cdlp_withsort (&cgood, G, 100, msg)) ;
     tt = LAGraph_WallClockTime() - tt ;
     printf ("compute check time %g sec\n", tt) ;
 

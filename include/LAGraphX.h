@@ -648,7 +648,7 @@ int LAGraph_cdlp
 ) ;
 
 LAGRAPH_PUBLIC
-int LAGraph_cdlp_nosort
+int LAGraph_cdlp_withsort
 (
     GrB_Vector *CDLP_handle,
     LAGraph_Graph G,
