@@ -135,7 +135,6 @@ void test_errors (void)
     OK (LAGraph_Cached_NSelfEdges (G, msg)) ;
 
     GrB_Vector c = NULL ;
-    double t [2] ;
 
     // c is NULL
     int result = LAGraph_lcc (NULL, G, msg) ;
