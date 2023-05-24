@@ -33,7 +33,7 @@ parent (representative) of both endpoints, and any node not part of a matched ed
 #include "LG_internal.h"
 #include "LAGraphX.h"
 
-#define dbg
+// #define dbg
 
 #undef LG_FREE_ALL
 #undef LG_FREE_WORK
@@ -222,7 +222,8 @@ int LAGraph_Coarsen_Matching
 
         if (!preserve_mapping){
             // record a deep copy of the current node_parent for the current coarsening level
-            GRB_TRY (GrB_Vector_dup ((mapping) + (curr_level * sizeof(GrB_Vector)), node_parent)) ;
+            GRB_TRY (GrB_Vector_dup (mapping + curr_level, node_parent)) ;
+            // printf("passed %d 0x%X\n", curr_level, mapping + (curr_level * sizeof(GrB_Vector))) ;
         }
 
         nlevels-- ;
