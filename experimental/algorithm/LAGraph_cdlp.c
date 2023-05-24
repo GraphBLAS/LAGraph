@@ -16,6 +16,8 @@
 // and B\'{a}lint Hegyi, using LaTeX syntax).
 // https://inf.mit.bme.hu/en/members/szarnyasg .
 
+// Modified by Pascal Costanza, Intel, Belgium
+
 //------------------------------------------------------------------------------
 
 // ## Background
@@ -48,128 +50,114 @@
 // an outgoing and on an incoming edge counts twice:
 //
 // min ( argmax_{l} (#incoming neighbors with l + #outgoing neighbors with l) )
-//
-// ## Example (undirected)
-//
-// For an example, let's assume an undirected graph where vertex 1 has four
-// neighbors {2, 3, 4, 5}, and the current labels in the graph are
-// L = [3, 5, 4, 5, 4].
-//
-// In this example, the distribution of labels among the neighbors of vertex 1
-// is {4 => 2, 5 => 2}, therefore, the minimum mode value is 4.
-//
-// Next, we capture this operation using GraphBLAS operations and
-// data structures. Notice that the neighbors of vertex 1 are encoded
-// as a sparse vector in the adjacency matrix:
-//
-// A = | 0 1 1 1 1 |
-//     | 1 . . .   |
-//     | 1 .       |
-//     | 1 .       |
-//     | 1         |
-//
-// To allow propagating the labels along edges, we use a diagonal matrix
-// with the elements of the diagonal set to the values of L:
-//
-// diag(L) = | 3 0 0 0 0 |
-//           | 0 5 0 0 0 |
-//           | 0 0 4 0 0 |
-//           | 0 0 0 5 0 |
-//           | 0 0 0 0 4 |
-//
-// If we multiply adjacency matrix with diag(L), we get a matrix
-// containing the labels of the neighbor nodes. We use the 'sel2nd' operator
-// for multiplication to avoid having to lookup the value on the left.
-// The conventional plus.times semiring would also work: 1 * y = sel2nd(1, y).
-// Note that we multiply with a diagonal matrix so the addition operator
-// is not used. In the implementation, we use "min" so the semiring is
-// "min.sel2nd" on uint64 values.
-//
-// In the example, this gives the following:
-//
-// AL = A min.sel2nd diag(L) = | 0 5 4 5 4 |
-//                             | 3 . . . . |
-//
-// ## Selecting the minimum mode value
-//
-// Next, we need to compute the minimum mode value for each row. As it is
-// difficult to capture this operation as a monoid, we use a sort operation
-// on each row. In the undirected case, we extract tuples <I, _, X> from the
-// matrix, then use <I, X> for sorting. In the directed case, we extract
-// tuples <I1, _, X1> and <I2, _, X2>, then use <I1+I2, X1+X2>,
-// where '+' denotes concatenation. Column indices (J) are not used.
-//
-// The resulting two-tuples are sorted using a parallel merge sort.
-// Finally, we use the sorted arrays compute the minimum mode value for each
-// row.
-//
-// ## Fixed point
-//
-// At the end of each iteration, we check whether L[i-1] == L[i] and
-// terminate if we reached a fixed point.
-//
-// ## Further optimizations
-//
-// A possible optimization is that the first iteration is rather trivial:
-//
-// * in the undirected case, each vertex gets the minimal initial label (=id)
-//   of its neighbors.
-// * in the directed case, each vertex gets the minimal initial label (=id)
-//   of its neighbors which are doubly-linked (on an incoming and on an
-//   outgoing edge). In the absence of such a neighbor, it picks the minimal
-//   label of its neighbors (connected through either an incoming or through
-//   an outgoing edge).
 
 #define LG_FREE_ALL                                                     \
 {                                                                       \
-    LAGraph_Free ((void *) &I, NULL) ;                                  \
-    LAGraph_Free ((void *) &X, NULL) ;                                  \
-    LAGraph_Free ((void *) &LP, NULL) ;                                 \
-    LAGraph_Free ((void *) &LI, NULL) ;                                 \
-    LAGraph_Free ((void *) &LX, NULL) ;                                 \
-    GrB_free (&L) ;                                                     \
-    GrB_free (&L_prev) ;                                                \
     GrB_free (&S) ;                                                     \
-    GrB_free (&AT) ;                                                    \
+    GrB_free (&T) ;                                                     \
+    LAGraph_Free ((void *) &Sp, NULL) ;                                 \
+    LAGraph_Free ((void *) &Si, NULL) ;                                 \
+    LAGraph_Free ((void *) &Tp, NULL) ;                                 \
+    LAGraph_Free ((void *) &Ti, NULL) ;                                 \
+    free (L) ; L = NULL ;                                               \
+    free (L_next) ; L = NULL ;                                          \
+    plist_free (&counts) ;                                              \
+    GrB_free (&CDLP) ;                                                  \
 }
 
 #include <LAGraph.h>
 #include <LAGraphX.h>
 #include "LG_internal.h"
 
+// A Go-style slice / Lisp-style property list
+typedef struct {
+    GrB_Index* entries;
+    size_t len, cap;
+} plist;
+
+void plist_init(plist* list) {
+    list->entries = NULL;
+    list->len = 0;
+    list->cap = 0;
+}
+
+void plist_free(plist *list) {
+    free(list->entries);
+    plist_init(list);
+}
+
+void plist_append(plist* list, GrB_Index key, GrB_Index value) {
+    if (list->len == list->cap) {
+        size_t new_size = list->cap == 0 ? 16 : 2*list->cap;
+        GrB_Index* new_entries = (GrB_Index*)malloc(new_size * sizeof(GrB_Index));
+        memcpy(new_entries, list->entries, list->len * sizeof(GrB_Index));
+        free(list->entries);
+        list->entries = new_entries;
+        list->cap = new_size;
+    }
+    list->entries[list->len] = key;
+    list->entries[list->len+1] = value;
+    list->len += 2;
+}
+
+GrB_Index plist_add(plist* list, GrB_Index entry) {
+    for (size_t i = 0; i < list->len; i += 2) {
+        if (list->entries[i] == entry) {
+            return ++list->entries[i+1];
+        }
+    }
+    plist_append(list, entry, 1);
+    return 1;
+}
+
+typedef void (*plist_reducer) (GrB_Index* entry1, GrB_Index* count1, GrB_Index entry2, GrB_Index count2);
+
+void plist_reduce(plist* list, GrB_Index* entry, GrB_Index* count, plist_reducer reducer) {
+    if (list->len == 0) {
+        *entry = -1;
+        *count = -1;
+        return;
+    }
+    *entry = list->entries[0];
+    *count = list->entries[1];
+    for (size_t i = 2; i < list->len; i += 2) {
+        reducer(entry, count, list->entries[i], list->entries[i+1]);
+    }
+}
+
+void counts_reducer(GrB_Index* e1, GrB_Index* c1, GrB_Index e2, GrB_Index c2) {
+    if (*c1 > c2) {
+        return;
+    }
+    if (c2 > *c1) {
+        *e1 = e2;
+        *c1 = c2;
+        return;
+    }
+    if (*e1 < e2) {
+        return;
+    }
+    *e1 = e2;
+    *c1 = c2;
+}
+
 //****************************************************************************
 int LAGraph_cdlp
-(
-    GrB_Vector *CDLP_handle, // output vector
-    LAGraph_Graph G,      // input graph
-    int itermax,             // max number of iterations,
-    char *msg
-)
+        (
+                GrB_Vector *CDLP_handle,    // output vector
+                LAGraph_Graph G,            // input graph
+                int itermax,                // max number of iterations
+                char *msg
+        )
 {
     GrB_Info info;
     LG_CLEAR_MSG ;
 
-    GrB_Matrix A = G->A ;
-    bool symmetric = (G->kind == LAGraph_ADJACENCY_UNDIRECTED) ||
-            ((G->kind == LAGraph_ADJACENCY_DIRECTED) &&
-                    (G->is_symmetric_structure == LAGraph_TRUE)) ;
-
-    // Diagonal label matrix
-    GrB_Matrix L = NULL;
-    GrB_Matrix L_prev = NULL;
-    // Source adjacency matrix
-    GrB_Matrix S = NULL;
-    // Transposed matrix for the unsymmetric case
-    GrB_Matrix AT = NULL;
-    // Result CDLP vector
-    GrB_Vector CDLP = NULL;
-
-    // Arrays for constructing initial labels
-    GrB_Index *LP = NULL, *LI = NULL, *LX = NULL ;
-
-    // Arrays holding extracted tuples during the algorithm
-    GrB_Index *I = NULL;
-    GrB_Index *X = NULL;
+    GrB_Matrix S = NULL, T = NULL ;
+    GrB_Vector CDLP ;
+    GrB_Index *Sp = NULL, *Si = NULL, *Tp = NULL, *Ti = NULL, *L = NULL, *L_next = NULL ;
+    plist counts ;
+    plist_init (&counts) ;
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -180,131 +168,90 @@ int LAGraph_cdlp
         return GrB_NULL_POINTER;
     }
 
+    GrB_Matrix A = G->A ;
+
     //--------------------------------------------------------------------------
     // ensure input is binary and has no self-edges
     //--------------------------------------------------------------------------
 
-    // n = size of A (# of nodes in the graph)
-    // nz = # of non-zero elements in the matrix
-    // nnz = # of non-zero elements used in the computations
-    //   (twice as many for directed graphs)
-    GrB_Index n, nz, nnz;
-    GRB_TRY (GrB_Matrix_nrows(&n, A))
-    GRB_TRY (GrB_Matrix_nvals(&nz, A))
-    if (!symmetric)
-    {
-        nnz = 2 * nz;
-    }
-    else
-    {
-        nnz = nz;
-    }
+    GrB_Index n;
+    GRB_TRY (GrB_Matrix_nrows(&n, A)) ;
 
     GRB_TRY (GrB_Matrix_new (&S, GrB_UINT64, n, n)) ;
     GRB_TRY (GrB_apply (S, GrB_NULL, GrB_NULL, GrB_ONEB_UINT64, A, 0, GrB_NULL)) ;
 
-    // Initialize L with diagonal elements 1..n
-    LAGRAPH_TRY (LAGraph_Malloc ((void **) &LP, n+1, sizeof (GrB_Index), msg)) ;
-    for (GrB_Index i = 0; i <= n; i++) {
-        LP[i] = i ;
+    if (G->kind == LAGraph_ADJACENCY_DIRECTED) {
+        GRB_TRY (GrB_Matrix_new (&T, GrB_UINT64, n, n)) ;
+        GRB_TRY (GrB_transpose (T, GrB_NULL, GrB_NULL, S, GrB_NULL)) ;
+        void * Tx = NULL ;
+        GrB_Index Tps, Tis, Txs ;
+        bool Tiso, Tjumbled ;
+        GRB_TRY (GxB_Matrix_unpack_CSR (T, &Tp, &Ti, &Tx, &Tps, &Tis, &Txs, &Tiso, &Tjumbled, GrB_NULL)) ;
+        LAGRAPH_TRY (LAGraph_Free ((void *)&Tx, NULL)) ;
+        GRB_TRY (GrB_free (&T)) ;
     }
-    LAGRAPH_TRY (LAGraph_Malloc((void **) &LI, n, sizeof (GrB_Index), msg)) ;
-    LAGRAPH_TRY (LAGraph_Malloc((void **) &LX, n, sizeof (GrB_Index), msg)) ;
+
+    {
+        void * Sx = NULL ;
+        GrB_Index Sps, Sis, Sxs ;
+        bool Siso, Sjumbled ;
+        GRB_TRY (GxB_Matrix_unpack_CSR (S, &Sp, &Si, &Sx, &Sps, &Sis, &Sxs, &Siso, &Sjumbled, GrB_NULL)) ;
+        LAGRAPH_TRY (LAGraph_Free((void *)&Sx, NULL)) ;
+        GRB_TRY (GrB_free (&S)) ;
+    }
+
+    L = (GrB_Index *)malloc(n * sizeof(GrB_Index)) ;
     for (GrB_Index i = 0; i < n; i++) {
-        LI[i] = i ;
-        LX[i] = i ;
+        L[i] = i ;
     }
-    GRB_TRY (GrB_Matrix_new (&L, GrB_UINT64, n, n)) ;
-    GRB_TRY (GxB_Matrix_pack_CSC(L, &LP, &LI, (void **) &LX, (n+1)*sizeof(GrB_Index), n*sizeof(GrB_Index), n*sizeof(GrB_Index), false, false, GrB_NULL)) ;
+    L_next = (GrB_Index *)malloc(n * sizeof(GrB_Index)) ;
 
-    // Initialize matrix for storing previous labels
-    GRB_TRY (GrB_Matrix_new(&L_prev, GrB_UINT64, n, n))
+    for (int iteration = 0; iteration < itermax; iteration++) {
 
-    if (!symmetric)
-    {
-        // compute AT for the unsymmetric case as it will be used
-        // to compute A' = A' min.2nd L in each iteration
-        GRB_TRY (GrB_Matrix_new (&AT, GrB_UINT64, n, n)) ;
-        GRB_TRY (GrB_transpose (AT, NULL, NULL, S, NULL)) ;
-    }
-
-    // Initialize data structures for extraction from 'AL_in' and (for directed graphs) 'AL_out'
-    LAGRAPH_TRY (LAGraph_Malloc((void **) &I, nnz, sizeof(GrB_Index), msg));
-    LAGRAPH_TRY (LAGraph_Malloc((void **) &X, nnz, sizeof(GrB_Index), msg));
-
-    for (int iteration = 0; iteration < itermax; iteration++)
-    {
-        // A = A min.2nd L
-        // (using the "push" (saxpy) method)
-        GRB_TRY (GrB_mxm(S, GrB_NULL, GrB_NULL,
-                           GrB_MIN_SECOND_SEMIRING_UINT64, S, L, NULL));
-        GRB_TRY (GrB_Matrix_extractTuples_UINT64(I, GrB_NULL, X, &nz, S));
-
-        if (!symmetric)
-        {
-            // A' = A' min.2nd L
-            // (using the "push" (saxpy) method)
-            GRB_TRY (GrB_mxm(AT, GrB_NULL, GrB_NULL,
-                               GrB_MIN_SECOND_SEMIRING_UINT64, AT, L, NULL));
-            GRB_TRY (GrB_Matrix_extractTuples_UINT64(&I[nz],
-                                                       GrB_NULL, &X[nz], &nz, AT));
-        }
-
-        LG_msort2((int64_t *) I, (int64_t *) X, nnz, NULL);
-
-        // save current labels for comparison by swapping L and L_prev
-        GrB_Matrix L_swap = L;
-        L = L_prev;
-        L_prev = L_swap;
-
-        GrB_Index mode_value = -1;
-        GrB_Index mode_length = 0;
-        GrB_Index run_length = 1;
-
-        // I[k] is the current row index
-        // X[k] is the current value
-        // we iterate in range 1..nnz and use the last index (nnz) to process the last row of the matrix
-        for (GrB_Index k = 1; k <= nnz; k++)
-        {
-            // check if we have a reason to recompute the mode value
-            if (k == nnz           // we surpassed the last element
-                || I[k-1] != I[k]  // the row index has changed
-                || X[k-1] != X[k]) // the run value has changed
-            {
-                if (run_length > mode_length)
-                {
-                    mode_value = X[k-1];
-                    mode_length = run_length;
+#pragma omp parallel for schedule(dynamic)
+        for (GrB_Index i = 0; i < n; i++) {
+            plist counts ;
+            plist_init (&counts) ;
+            GrB_Index* neighbors = Si + Sp[i] ;
+            GrB_Index sz = Sp[i+1] - Sp[i] ;
+            for (GrB_Index j = 0; j < sz; j++) {
+                plist_add (&counts, L[neighbors[j]]) ;
+            }
+            if (G->kind == LAGraph_ADJACENCY_DIRECTED) {
+                neighbors = Ti + Tp[i] ;
+                sz = Tp[i+1] - Tp[i] ;
+                for (GrB_Index j = 0; j < sz; j++) {
+                    plist_add (&counts, L[neighbors[j]]) ;
                 }
-                run_length = 0;
             }
-            run_length++;
-
-            // check if we passed a row
-            if (k == nnz           // we surpassed the last element
-                || I[k-1] != I[k]) // or the row index has changed
-            {
-                GrB_Matrix_setElement(L, mode_value, I[k-1], I[k-1]);
-                mode_length = 0;
-            }
+            GrB_Index best_label, best_count ;
+            plist_reduce (&counts, &best_label, &best_count, counts_reducer) ;
+            L_next[i] = best_label ;
+            plist_free (&counts) ;
         }
 
-        bool isequal;
-        LAGraph_Matrix_IsEqual (&isequal, L_prev, L, NULL);
-        if (isequal) {
-            break;
+        GrB_Index* tmp = L ; L = L_next ; L_next = tmp ;
+        bool changed = false ;
+        for (GrB_Index i = 0; i < n; i++) {
+            if (L[i] != L_next[i]) {
+                changed = true ;
+                break ;
+            }
+        }
+        if (!changed) {
+             break ;
         }
     }
-
-    LAGraph_Free ((void **) &I, NULL) ;
-    LAGraph_Free ((void **) &X, NULL) ;
 
     //--------------------------------------------------------------------------
     // extract final labels to the result vector
     //--------------------------------------------------------------------------
 
-    GRB_TRY (GrB_Vector_new(&CDLP, GrB_UINT64, n)) ;
-    GRB_TRY (GxB_Vector_diag (CDLP, L, 0, GrB_NULL)) ;
+    GRB_TRY (GrB_Vector_new(&CDLP, GrB_UINT64, n))
+    for (GrB_Index i = 0; i < n; i++)
+    {
+        GRB_TRY (GrB_Vector_setElement(CDLP, L[i], i))
+    }
 
     //--------------------------------------------------------------------------
     // free workspace and return result

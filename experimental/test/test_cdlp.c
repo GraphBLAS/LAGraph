@@ -86,7 +86,7 @@ void test_cdlp (void)
         LAGraph_PrintLevel pr = (n <= 100) ? LAGraph_COMPLETE : LAGraph_SHORT ;
 
         GrB_Vector cgood = NULL ;
-        OK (LAGraph_cdlp_nosort(&cgood, G, 100, msg)) ;
+        OK (LAGraph_cdlp_withsort(&cgood, G, 100, msg)) ;
         OK (GrB_wait (cgood, GrB_MATERIALIZE)) ;
         printf ("\ncdlp (known result):\n") ;
         OK (LAGraph_Vector_Print (cgood, pr, stdout, msg)) ;

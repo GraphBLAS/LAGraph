@@ -107,7 +107,7 @@ int main (int argc, char **argv)
 
     // warmup for more accurate timing
     tt = LAGraph_WallClockTime ( ) ;
-    LAGRAPH_TRY (LAGraph_cdlp_nosort (&c, G, 100, msg)) ;
+    LAGRAPH_TRY (LAGraph_cdlp_withsort (&c, G, 100, msg)) ;
     tt = LAGraph_WallClockTime ( ) - tt ;
     printf ("warmup time %g sec\n", tt) ;
 
@@ -131,7 +131,7 @@ int main (int argc, char **argv)
         double ttot = 0, ttrial[100];
         for (int trial = 0; trial < ntrials; trial++) {
             tt = LAGraph_WallClockTime();
-            LAGRAPH_TRY (LAGraph_cdlp_nosort(&c, G, 100, msg));
+            LAGRAPH_TRY (LAGraph_cdlp_withsort(&c, G, 100, msg));
             GRB_TRY (GrB_free(&c));
             ttrial[trial] = LAGraph_WallClockTime() - tt;
             ttot += ttrial[trial];
