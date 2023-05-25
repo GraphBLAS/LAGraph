@@ -260,6 +260,14 @@ void LAGraph_SFreeSet           // free a set of matrices
     GrB_Index nmatrices         // # of matrices in the set
 ) ;
 
+LAGRAPH_PUBLIC
+int LAGraph_Incidence_Matrix
+(
+    GrB_Matrix *result,
+    LAGraph_Graph graph,
+    char *msg
+) ;
+
 //****************************************************************************
 // Algorithms
 //****************************************************************************
@@ -872,6 +880,30 @@ int LAGraph_FastGraphletTransform
     // inputs:
     LAGraph_Graph G,
     bool compute_d_15,  // probably this makes most sense
+    char *msg
+) ;
+
+//------------------------------------------------------------------------------
+// matching and coarsening
+//------------------------------------------------------------------------------
+
+typedef enum
+{
+    LAGraph_Matching_random = 0,
+    LAGraph_Matching_heavy = 1,
+    LAGraph_Matching_light = 2,
+}
+LAGraph_Matching_kind ;
+
+LAGRAPH_PUBLIC
+int LAGraph_MaximalMatching
+(
+    // outputs:
+    GrB_Vector *matching,
+    // inputs:
+    GrB_Matrix E,                         // incidence matrix, not part of LAGraph_Graph (for now)
+    LAGraph_Matching_kind matching_type,  // 0 (random), 1 (heavy weight), or 2 (light weight)
+    uint64_t seed,                        // random number seed
     char *msg
 ) ;
 
