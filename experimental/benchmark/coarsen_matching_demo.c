@@ -25,9 +25,9 @@ int main(int argc, char **argv)
 
     GrB_Matrix A = G->A ;
 
-    LAGRAPH_TRY (LAGraph_Coarsen_Matching (&coarsened, &mappings, G, LAGraph_Matching_random, 0, 1, 2, 42, msg)) ;
+    LAGRAPH_TRY (LAGraph_Coarsen_Matching (&coarsened, &mappings, G, LAGraph_Matching_random, 1, 1, 1, 67, msg)) ;
     LAGRAPH_TRY (LAGraph_Matrix_Print (coarsened, LAGraph_COMPLETE, stdout, msg)) ;
-    LAGRAPH_TRY (LAGraph_Vector_Print (mappings[1], LAGraph_COMPLETE, stdout, msg)) ;
+    // LAGRAPH_TRY (LAGraph_Vector_Print (mappings[0], LAGraph_COMPLETE, stdout, msg)) ;
     /*
     char msg[1024] ;
     LAGraph_Init (msg) ;

@@ -43,11 +43,7 @@ int LAGraph_Parent_to_S
     GrB_Vector parent_sorted = NULL ;
     GrB_Vector sorted_permutation = NULL ;
     GrB_Matrix S = NULL ;
-
-    GrB_Index *indices ;
-    GrB_Index *vals ;
-    GrB_Index *new_labels ;     // tracks new label mapping
-    bool *new_label_assigned ;
+    
     GrB_Index nvals ;
 
     GrB_Index n ;
