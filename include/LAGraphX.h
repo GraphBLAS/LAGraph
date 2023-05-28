@@ -902,7 +902,7 @@ int LAGraph_MaximalMatching
     GrB_Vector *matching,
     // inputs:
     GrB_Matrix E,                         // incidence matrix, not part of LAGraph_Graph (for now)
-    LAGraph_Matching_kind matching_type,  // 0 (random), 1 (heavy weight), or 2 (light weight)
+    LAGraph_Matching_kind matching_type,  // refer to above enum
     uint64_t seed,                        // random number seed
     char *msg
 ) ;

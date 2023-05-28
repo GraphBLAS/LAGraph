@@ -17,7 +17,7 @@
 Usage:
 Option 1: Run for performance
 ./matching_demo <matrix_name> <matching_type>
-matrix_name: either the name of the .mtx file or empty for stdin
+matrix_name: either the name of the .mtx file or "stdin" for stdin
 matching_type: 0, 1, 2 for random matching, heavy edge matching, and light edge matching respectively
 NOTE: This is the typical scenario that all other benchmark codes are used for
 
@@ -74,18 +74,23 @@ int main (int argc, char** argv)
     //--------------------------------------------------------------------------
     // read in the graph
     //--------------------------------------------------------------------------
-    char *matrix_name = (argc > 1) ? argv [1] : "stdin" ;
-    int force_stdin = 0 ;
-
-    if (argc > 1) {
-        // -q option as the matrix name means to run the quality tests
-        force_stdin = ( strcmp (argv [1], "-q") == 0 ) ;
-
-        if (force_stdin) {
-            // mark that I am not running performance benchmarks, but printing data for my external tests
-            test_performance = false ;
-        }
+    if (argc < 3) {
+        printf ("Invalid usage, read comments\n") ;
+        return 0 ;
     }
+    int quality = 0 ;
+    int force_stdin = 0 ;
+    char *matrix_name = argv [1] ;
+    // -q option as the matrix name means to run the quality tests
+    quality = ( strcmp (matrix_name, "-q") == 0 ) ;
+    force_stdin = ( strcmp (matrix_name, "stdin") == 0 ) ;
+
+    force_stdin = force_stdin || quality ;
+
+    if (quality) {
+        test_performance = false ;
+    }
+
     LAGRAPH_TRY (LAGraph_Random_Init (msg)) ;
     LAGRAPH_TRY (readproblem (&G, NULL,
         true, true, false, GrB_FP64, false, force_stdin ? 1 : argc, argv)) ;
@@ -109,8 +114,12 @@ int main (int argc, char** argv)
         //--------------------------------------------------------------------------
         // Printing E matrix, best result from ntrial runs for my own, external tests for quality (not performance)
         //--------------------------------------------------------------------------
-        int ntrials = atoi(argv [3]) ;
-        int matching_type = atoi(argv [2]) ;
+        if (argc < 4) {
+            printf ("Invalid usage, read comments\n") ;
+            return 0 ;
+        }
+        int ntrials = atoi (argv [3]) ;
+        int matching_type = atoi (argv [2]) ;
 
         // best answer so far
         double best_val = (matching_type == 2) ? 1e18 : 0 ;
@@ -193,7 +202,7 @@ int main (int argc, char** argv)
     // warmup for more accurate timing
     double tt = LAGraph_WallClockTime ( ) ;
     // user-provided matching type (random, heavy, light)
-    int match_type = (argc > 2) ? atoi(argv[2]) : 1;
+    int match_type = atoi (argv [2]) ;
     // GRB_TRY (LAGraph_Matrix_Print (E, LAGraph_COMPLETE, stdout, msg)) ;
     LAGRAPH_TRY (LAGraph_MaximalMatching (&matching, E, match_type, 5, msg)) ;
     tt = LAGraph_WallClockTime ( ) - tt ;
