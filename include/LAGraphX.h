@@ -268,15 +268,6 @@ int LAGraph_Incidence_Matrix
     char *msg
 ) ;
 
-LAGRAPH_PUBLIC
-int LAGraph_Parent_to_S
-(
-    GrB_Matrix *result,
-    GrB_Vector parent,          // parent vector
-    int compress,               // whether to compress the namespace of the coarsened graph
-    char *msg
-) ;
-
 //****************************************************************************
 // Algorithms
 //****************************************************************************
@@ -645,12 +636,8 @@ GrB_Info LAGraph_BF_pure_c_double
  * Community detection using label propagation algorithm
  *
  * @param[out]  CDLP_handle  community vector
- * @param[in]   A            adjacency matrix for the graph
- * @param[in]   symmetric    denote whether the matrix is symmetric
- * @param[in]   sanitize     if true, verify that A is binary
+ * @param[in]   G            the graph
  * @param[in]   itermax      max number of iterations (0 computes nothing)
- * @param[out]  t            array of two doubles allocated by caller:
- *                           [0]=sanitize time, [1]=cdlp time in seconds
  * @param[in,out] msg        any error messages.
  *
  * @retval GrB_SUCCESS        if completed successfully
@@ -663,11 +650,17 @@ LAGRAPH_PUBLIC
 int LAGraph_cdlp
 (
     GrB_Vector *CDLP_handle,
-    const GrB_Matrix A,
-    bool symmetric,
-    bool sanitize,
+    LAGraph_Graph G,
     int itermax,
-    double *t,
+    char *msg
+) ;
+
+LAGRAPH_PUBLIC
+int LAGraph_cdlp_withsort
+(
+    GrB_Vector *CDLP_handle,
+    LAGraph_Graph G,
+    int itermax,
     char *msg
 ) ;
 
@@ -762,11 +755,7 @@ GrB_Info LAGraph_FW
  * Compute the local clustering coefficient for all nodes in a graph.
  *
  * @param[out]  LCC_handle   output vector holding coefficients
- * @param[in]   A            adjacency matrix for the graph
- * @param[in]   symmetric    denote whether the matrix is symmetric
- * @param[in]   sanitize     if true, verify that A is binary
- * @param[out]  t            array of two doubles
- *                           [0]=sanitize time, [1]=lcc time in seconds
+ * @param[in]   G            the graph
  * @param[in,out] msg        any error messages.
  *
  * @retval GrB_SUCCESS        if completed successfully
@@ -778,11 +767,7 @@ LAGRAPH_PUBLIC
 int LAGraph_lcc            // compute lcc for all nodes in A
 (
     GrB_Vector *LCC_handle,     // output vector
-    const GrB_Matrix A,         // input matrix
-    bool symmetric,             // if true, the matrix is symmetric
-    bool sanitize,              // if true, ensure A is binary
-    double t [2],               // t [0] = sanitize time, t [1] = lcc time,
-                                // in seconds
+    LAGraph_Graph G,            // input graph
     char *msg
 ) ;
 
@@ -923,22 +908,6 @@ int LAGraph_MaximalMatching
 ) ;
 
 LAGRAPH_PUBLIC
-int LAGraph_Coarsen_Matching
-(
-    // outputs:
-    GrB_Matrix *coarsened,                   // coarsened adjacency
-    GrB_Vector **mapping,                    // parent mapping for each level; if preserve_mapping is true, is NULL
-    // inputs:
-    LAGraph_Graph G,
-    LAGraph_Matching_kind matching_type,     // refer to above enum
-    int preserve_mapping,                    // preserve initial namespace of nodes
-    int combine_weights,                     // whether to sum edge weights or just keep the pattern
-    GrB_Index nlevels,                       // #of coarsening levels
-    uint64_t seed,                           // used for matching
-    char *msg
-) ;
-
-LAGRAPH_PUBLIC
 int LAGraph_SquareClustering
 (
     // outputs:
@@ -960,6 +929,57 @@ int LAGraph_HelloWorld // a simple algorithm, just for illustration
     // input: not modified
     LAGraph_Graph G,
     char *msg
+) ;
+
+//------------------------------------------------------------------------------
+// run a breadth first search for multiple source nodes
+//------------------------------------------------------------------------------
+
+LAGRAPH_PUBLIC
+int LAGraph_MultiSourceBFS 
+(
+    // outputs:
+    GrB_Matrix    *level,
+    GrB_Matrix    *parent,
+    // inputs:
+    const LAGraph_Graph G,
+    GrB_Vector      src,
+    char          *msg
+) ;
+
+//------------------------------------------------------------------------------
+// estimate the diameter of a graph
+//------------------------------------------------------------------------------
+
+LAGRAPH_PUBLIC
+int LAGraph_EstimateDiameter
+(
+    // outputs:
+    GrB_Index    *diameter,
+    GrB_Vector    *peripheral,
+    // inputs:
+    const LAGraph_Graph G,
+    GrB_Index    maxSrcs,
+    GrB_Index    maxLoops,
+    uint64_t     seed,          // seed for randomization
+    char          *msg
+) ;
+
+//------------------------------------------------------------------------------
+// find the exact diameter of a graph
+//------------------------------------------------------------------------------
+
+LAGRAPH_PUBLIC
+int LAGraph_ExactDiameter
+(
+    // outputs:
+    GrB_Index    *diameter,
+    GrB_Vector    *peripheral,
+    GrB_Vector    *eccentricity,
+    // inputs:
+    const LAGraph_Graph G,
+    GrB_Index      k,
+    char          *msg
 ) ;
 
 #endif
