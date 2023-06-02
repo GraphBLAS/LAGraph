@@ -43,11 +43,7 @@ int LAGraph_Parent_to_S
     GrB_Vector parent_sorted = NULL ;
     GrB_Vector sorted_permutation = NULL ;
     GrB_Matrix S = NULL ;
-
-    GrB_Index *indices ;
-    GrB_Index *vals ;
-    GrB_Index *new_labels ;     // tracks new label mapping
-    bool *new_label_assigned ;
+    
     GrB_Index nvals ;
 
     GrB_Index n ;
@@ -83,13 +79,13 @@ int LAGraph_Parent_to_S
         // since vertices are 0-indexed
         n_new += (n > 0) ;
 
-        GRB_TRY (GrB_Matrix_new (&S, GrB_UINT64, n_new, n)) ;
+        GRB_TRY (GrB_Matrix_new (&S, GrB_BOOL, n_new, n)) ;
 
         GRB_TRY (GrB_free (&parent_sorted)) ;
         GRB_TRY (GrB_free (&sorted_permutation)) ;
     } else {
         // result dim: n by n
-        GRB_TRY (GrB_Matrix_new (&S, GrB_UINT64, n, n)) ;
+        GRB_TRY (GrB_Matrix_new (&S, GrB_BOOL, n, n)) ;
     }
 
     for (GrB_Index idx = 0; idx < n; idx++) {
@@ -97,7 +93,7 @@ int LAGraph_Parent_to_S
         GRB_TRY (GrB_Vector_extractElement (&i, parent_cpy, idx)) ;
         GrB_Index j = idx ;
         // printf("set (%lld, %lld) to 1\n", i, j);    
-        GRB_TRY (GrB_Matrix_setElement (S, 1, i, j)) ;
+        GRB_TRY (GrB_Matrix_setElement (S, true, i, j)) ;
     }
 
     (*result) = S ;
