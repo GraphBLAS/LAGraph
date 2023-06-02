@@ -18,7 +18,7 @@ int main(int argc, char **argv)
 
     LAGRAPH_TRY (LAGraph_Random_Init (msg)) ;
     LAGRAPH_TRY (readproblem (&G, NULL,
-        true, true, false, GrB_FP64, false, argc, argv)) ;
+        true, true, false, GrB_INT8, false, argc, argv)) ;
     
     GrB_Vector *mappings ;
     GrB_Matrix coarsened ;

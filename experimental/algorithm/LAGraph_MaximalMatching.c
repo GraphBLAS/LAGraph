@@ -70,6 +70,8 @@ appear in the matching.
     GrB_free(&result) ;                     \
 }                                           \
 
+#define MAX_FAILURES 50
+
 int LAGraph_MaximalMatching
 (
     // outputs:
@@ -91,8 +93,6 @@ int LAGraph_MaximalMatching
     if (E == NULL) {
         return GrB_NULL_POINTER ;
     }
-
-    const GrB_Index MAX_FAILURES = 50 ;
 
     GrB_Matrix E_t = NULL ;                     // E transpose. Maybe it's better to use 'A' descriptor instead of storing this explicitly?
     GrB_Vector score = NULL ;                   // score for each edge. Computed according to matching_type
