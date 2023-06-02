@@ -214,8 +214,15 @@ int LAGraph_cdlp_withsort
         LI[i] = i ;
         LX[i] = i ;
     }
+#if LAGRAPH_SUITESPARSE
     GRB_TRY (GrB_Matrix_new (&L, GrB_UINT64, n, n)) ;
-    GRB_TRY (GxB_Matrix_pack_CSC(L, &LP, &LI, (void **) &LX, (n+1)*sizeof(GrB_Index), n*sizeof(GrB_Index), n*sizeof(GrB_Index), false, false, GrB_NULL)) ;
+    GRB_TRY (GxB_Matrix_pack_CSC (L, &LP, &LI, (void **) &LX, (n+1)*sizeof(GrB_Index), n*sizeof(GrB_Index), n*sizeof(GrB_Index), false, false, GrB_NULL)) ;
+#else
+    GRB_TRY (GrB_Matrix_import (&L, GrB_UINT64, n, n, LP, LI, LX, n+1, n, n, GrB_CSC_FORMAT)) ;
+    LAGRAPH_TRY (LAGraph_Free ((void **) &LP, NULL)) ;
+    LAGRAPH_TRY (LAGraph_Free ((void **) &LI, NULL)) ;
+    LAGRAPH_TRY (LAGraph_Free ((void **) &LX, NULL)) ;
+#endif
 
     // Initialize matrix for storing previous labels
     GRB_TRY (GrB_Matrix_new(&L_prev, GrB_UINT64, n, n))
@@ -304,7 +311,16 @@ int LAGraph_cdlp_withsort
     //--------------------------------------------------------------------------
 
     GRB_TRY (GrB_Vector_new(&CDLP, GrB_UINT64, n)) ;
+#if LAGRAPH_SUITESPARSE
     GRB_TRY (GxB_Vector_diag (CDLP, L, 0, GrB_NULL)) ;
+#else
+    for (GrB_Index i = 0; i < n; i++)
+    {
+        uint64_t x;
+        GRB_TRY (GrB_Matrix_extractElement(&x, L, i, i))
+        GRB_TRY (GrB_Vector_setElement(CDLP, x, i))
+    }
+#endif
 
     //--------------------------------------------------------------------------
     // free workspace and return result
