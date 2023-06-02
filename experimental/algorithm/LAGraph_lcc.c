@@ -158,10 +158,6 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     GrB_UnaryOp LAGraph_COMB_FP64 = NULL ;
     GrB_Info info ;
 
-#if !LAGRAPH_SUITESPARSE
-    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
-#else
-
     LG_ASSERT_MSG (G->is_symmetric_structure != LAGraph_BOOLEAN_UNKNOWN,
                    LAGRAPH_NOT_CACHED,
                    "G->is_symmetric_structure is required") ;
@@ -190,6 +186,7 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     // create the operators for LAGraph_lcc
     //--------------------------------------------------------------------------
 
+#if LAGRAPH_SUITESPARSE
     if (G->is_symmetric_structure == LAGraph_TRUE) {
         GRB_TRY (GxB_UnaryOp_new(&LAGraph_COMB_FP64,
                                  F_UNARY(LAGraph_comb_undir_fp64),
@@ -205,6 +202,19 @@ int LAGraph_lcc            // compute lcc for all nodes in A
                                  LAGRAPH_COMB_DIR_FP64
         ));
     }
+#else
+    if (G->is_symmetric_structure == LAGraph_TRUE) {
+        GRB_TRY (GrB_UnaryOp_new(&LAGraph_COMB_FP64,
+                                 F_UNARY(LAGraph_comb_undir_fp64),
+                                 GrB_FP64, GrB_FP64
+        ));
+    } else {
+        GRB_TRY (GrB_UnaryOp_new(&LAGraph_COMB_FP64,
+                                 F_UNARY(LAGraph_comb_dir_fp64),
+                                 GrB_FP64, GrB_FP64
+        ));
+    }
+#endif
 
     GRB_TRY (GrB_Matrix_new (&U, GrB_FP64, n, n)) ;
 
@@ -246,7 +256,7 @@ int LAGraph_lcc            // compute lcc for all nodes in A
 
     // CL<C> = C*L = C*U' using a masked dot product
     GRB_TRY (GrB_Matrix_new (&CL, GrB_FP64, n, n)) ;
-    GRB_TRY (GrB_mxm (CL, S, NULL, GxB_PLUS_SECOND_FP64, S, U, GrB_DESC_ST1));
+    GRB_TRY (GrB_mxm (CL, S, NULL, LAGraph_plus_second_fp64, S, U, GrB_DESC_ST1));
     GRB_TRY (GrB_free (&U)) ;
 
     //--------------------------------------------------------------------------
@@ -269,5 +279,4 @@ int LAGraph_lcc            // compute lcc for all nodes in A
 
     LG_FREE_ALL ;
     return (GrB_SUCCESS) ;
-#endif
 }

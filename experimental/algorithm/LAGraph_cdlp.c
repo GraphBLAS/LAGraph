@@ -185,8 +185,16 @@ int LAGraph_cdlp
         GRB_TRY (GrB_transpose (T, GrB_NULL, GrB_NULL, S, GrB_NULL)) ;
         void * Tx = NULL ;
         GrB_Index Tps, Tis, Txs ;
+#if LAGRAPH_SUITESPARSE
         bool Tiso, Tjumbled ;
         GRB_TRY (GxB_Matrix_unpack_CSR (T, &Tp, &Ti, &Tx, &Tps, &Tis, &Txs, &Tiso, &Tjumbled, GrB_NULL)) ;
+#else
+        GRB_TRY (GrB_Matrix_exportSize (&Tps, &Tis, &Txs, GrB_CSR_FORMAT, T)) ;
+        LAGRAPH_TRY (LAGraph_Malloc ((void *)&Tp, Tps, sizeof(GrB_Index), NULL)) ;
+        LAGRAPH_TRY (LAGraph_Malloc ((void *)&Ti, Tis, sizeof(GrB_Index), NULL)) ;
+        LAGRAPH_TRY (LAGraph_Malloc ((void *)&Tx, Txs, sizeof(GrB_UINT64), NULL)) ;
+        GRB_TRY (GrB_Matrix_export (Tp, Ti, (uint64_t *)Tx, &Tps, &Tis, &Txs, GrB_CSR_FORMAT, T)) ;
+#endif
         LAGRAPH_TRY (LAGraph_Free ((void *)&Tx, NULL)) ;
         GRB_TRY (GrB_free (&T)) ;
     }
@@ -194,8 +202,16 @@ int LAGraph_cdlp
     {
         void * Sx = NULL ;
         GrB_Index Sps, Sis, Sxs ;
+#if LAGRAPH_SUITESPARSE
         bool Siso, Sjumbled ;
         GRB_TRY (GxB_Matrix_unpack_CSR (S, &Sp, &Si, &Sx, &Sps, &Sis, &Sxs, &Siso, &Sjumbled, GrB_NULL)) ;
+#else
+        GRB_TRY (GrB_Matrix_exportSize (&Sps, &Sis, &Sxs, GrB_CSR_FORMAT, S)) ;
+        LAGRAPH_TRY (LAGraph_Malloc ((void *)&Sp, Sps, sizeof(GrB_Index), NULL)) ;
+        LAGRAPH_TRY (LAGraph_Malloc ((void *)&Si, Sis, sizeof(GrB_Index), NULL)) ;
+        LAGRAPH_TRY (LAGraph_Malloc ((void *)&Sx, Sxs, sizeof(GrB_UINT64), NULL)) ;
+        GRB_TRY (GrB_Matrix_export (Sp, Si, (uint64_t *)Sx, &Sps, &Sis, &Sxs, GrB_CSR_FORMAT, S)) ;
+#endif
         LAGRAPH_TRY (LAGraph_Free((void *)&Sx, NULL)) ;
         GRB_TRY (GrB_free (&S)) ;
     }
