@@ -28,7 +28,7 @@ There are 2 outputs from the function:
 have type GrB_INT64. Else, it will have the same type as the input matrix).
 2. A list of GrB_Vectors (mapping_result) of length nlevels, where if mapping_result[i][u] = v,
 then node u in G_{i} maps to node v in G_{i + 1}, where G_0 is the initial graph. Note that this means 
-the length of mapping_result[i] is the number of nodes in G_{i}. If preserve_mapping = true, then there is no need 
+the length of mapping_result[i] is the number of nodes in G_{i}. If preserve_mapping = 1, then there is no need 
 for such a result, and a NULL pointer is returned.
 
 More specifically, the coarsening step involves a reduction from a graph G to G', where we use a bijection f from
@@ -161,9 +161,11 @@ int LAGraph_Coarsen_Matching
 
     GRB_TRY (GrB_Matrix_nrows (&num_nodes, A)) ;
 
-    GRB_TRY (GrB_Matrix_new (&S_t, GrB_UINT64, num_nodes, num_nodes)) ;
+    if (preserve_mapping) {
+        GRB_TRY (GrB_Matrix_new (&S_t, GrB_UINT64, num_nodes, num_nodes)) ;
+        GRB_TRY (GrB_Vector_new (&node_parent, GrB_UINT64, num_nodes)) ;
+    }
 
-    GRB_TRY (GrB_Vector_new (&node_parent, GrB_UINT64, num_nodes)) ;
     GRB_TRY (GrB_Vector_new (&full, GrB_BOOL, num_nodes)) ;
 
     GRB_TRY (GrB_assign (full, NULL, NULL, true, GrB_ALL, num_nodes, NULL)) ;
@@ -182,9 +184,8 @@ int LAGraph_Coarsen_Matching
 
         if (!preserve_mapping) {
             GRB_TRY (GrB_Matrix_nrows (&num_nodes, A)) ;
-            // resize structures
-            // need to resize E_t, edge_parent, node_parent, full
-            GRB_TRY (GrB_free (&node_parent)) ;
+
+            // create node_parent for this level
             GRB_TRY (GrB_Vector_new (&node_parent, GrB_UINT64, num_nodes)) ;
 
             // ok to resize full since we are using its contents later
@@ -237,10 +238,10 @@ int LAGraph_Coarsen_Matching
         GrB_Index S_rows, S_cols ;
 
         if (!preserve_mapping) {
-            // need to resize S_t
+            // need to create S_t for this level
             GRB_TRY (GrB_Matrix_nrows (&S_rows, S)) ;
             GRB_TRY (GrB_Matrix_ncols (&S_cols, S)) ;
-            GRB_TRY (GrB_free (&S_t)) ;
+            
             GRB_TRY (GrB_Matrix_new (&S_t, GrB_UINT64, S_rows, S_cols)) ;
         }
         GRB_TRY (GrB_transpose (S_t, NULL, NULL, S, NULL)) ;
@@ -278,7 +279,10 @@ int LAGraph_Coarsen_Matching
         if (!preserve_mapping){
             // record a deep copy of the current node_parent for the current coarsening level
             GRB_TRY (GrB_Vector_dup (mapping + curr_level, node_parent)) ;
-            // printf("passed %d 0x%X\n", curr_level, mapping + (curr_level * sizeof(GrB_Vector))) ;
+
+            // also free node_parent and S_t for this level
+            GRB_TRY (GrB_free (&node_parent)) ;
+            GRB_TRY (GrB_free (&S_t)) ;
         }
 
         nlevels-- ;
