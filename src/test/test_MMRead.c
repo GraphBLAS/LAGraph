@@ -467,39 +467,32 @@ void test_MMWrite (void)
         // create a file for comments
         //----------------------------------------------------------------------
 
-        FILE *fcomments = fopen (LG_DATA_DIR "comments.txt", "w") ;
+        FILE *fcomments = tmpfile ( ) ;
         TEST_CHECK (fcomments != NULL) ;
         fprintf (fcomments, " comments for %s\n", aname) ;
         fprintf (fcomments, " this file was created by test_MMRead.c\n") ;
-        fclose (fcomments) ;
-        TEST_MSG ("Failed to create comments.txt") ;
+        TEST_MSG ("Failed to create temporary comments file for %s", aname) ;
 
         //----------------------------------------------------------------------
         // write the matrix to the data/comments_*.mtx file
         //----------------------------------------------------------------------
 
-        snprintf (filename, LEN, LG_DATA_DIR "comments_%s", aname) ;
-        fcomments = fopen (LG_DATA_DIR "comments.txt", "r") ;
-        FILE *foutput = fopen (filename, "w") ;
+        // snprintf (filename, LEN, LG_DATA_DIR "comments_%s", aname) ;
+        rewind (fcomments) ;
+        FILE *foutput = tmpfile ( ) ;
         TEST_CHECK (foutput != NULL) ;
-        TEST_CHECK (fcomments != NULL) ;
         OK (LAGraph_MMWrite (A, foutput, fcomments, msg)) ;
-        fclose (fcomments) ;
-        fclose (foutput) ;
-        TEST_MSG ("Failed to create %s", filename) ;
+        TEST_MSG ("Failed to create temporary commented file for %s", aname) ;
 
         //----------------------------------------------------------------------
         // load in the data/comments_.mtx file as the matrix B
         //----------------------------------------------------------------------
 
-        f = fopen (filename, "r") ;
-        TEST_CHECK (f != NULL) ;
-        OK (LAGraph_MMRead (&B, f, msg)) ;
-
+        rewind (foutput) ;
+        OK (LAGraph_MMRead (&B, foutput, msg)) ;
         OK (LAGraph_Matrix_TypeName (btype_name, B, msg)) ;
         TEST_CHECK (MATCHNAME (atype_name, btype_name)) ;
-        OK (fclose (f)) ;
-        TEST_MSG ("Loading of %s failed", filename) ;
+        TEST_MSG ("Loading temporary commented file for %s failed", aname) ;
 
         //----------------------------------------------------------------------
         // ensure A and B are the same
@@ -508,7 +501,7 @@ void test_MMWrite (void)
         bool ok ;
         OK (LAGraph_Matrix_IsEqual (&ok, A, B, msg)) ;
         TEST_CHECK (ok) ;
-        TEST_MSG ("Test for A and B equal failed: %s", filename) ;
+        TEST_MSG ("Test for A and B equal failed: %s", aname) ;
 
         //----------------------------------------------------------------------
         // write a nan
@@ -520,21 +513,19 @@ void test_MMWrite (void)
             double a ;
             OK (GrB_Matrix_extractElement (&a, A, 0, 0)) ;
             TEST_CHECK (isnan (a)) ;
-            foutput = fopen (filename, "w") ;
-            fcomments = fopen (LG_DATA_DIR "comments.txt", "r") ;
-            TEST_CHECK (foutput != NULL) ;
+            rewind (fcomments) ;
+            rewind (foutput) ;
             OK (LAGraph_MMWrite (A, foutput, fcomments, msg)) ;
-            fclose (fcomments) ;
-            fclose (foutput) ;
             OK (GrB_free (&A)) ;
-            f = fopen (filename, "r") ;
-            TEST_CHECK (f != NULL) ;
-            OK (LAGraph_MMRead (&A, f, msg)) ;
-            fclose (f) ;
+            rewind (foutput) ;
+            OK (LAGraph_MMRead (&A, foutput, msg)) ;
             a = 0 ;
             OK (GrB_Matrix_extractElement (&a, A, 0, 0)) ;
             TEST_CHECK (isnan (a)) ;
         }
+
+        OK (fclose (fcomments)) ;
+        OK (fclose (foutput)) ;
 
         //----------------------------------------------------------------------
         // free workspace
