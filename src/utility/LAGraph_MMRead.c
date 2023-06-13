@@ -960,6 +960,10 @@ int LAGraph_MMRead
             // also set the A(j,i) entry, if symmetric
             //------------------------------------------------------------------
 
+#if LAGRAPH_SUITESPARSE
+            if (type == GrB_BOOL)
+                break;
+#endif
             if (i != j && MM_storage != MM_general)
             {
                 if (MM_storage == MM_symmetric)
@@ -971,16 +975,15 @@ int LAGraph_MMRead
                     negate_scalar (type, x) ;
                     set_value (typesize, j, i, x, I, J, X, &nvals2) ;
                 }
-                #if 0
+#if 0
                 else if (MM_storage == MM_hermitian)
                 {
                     double complex *value = (double complex *) x ;
                     (*value) = conj (*value) ;
                     set_value (typesize, j, i, x, I, J, X, &nvals2) ;
                 }
-                #endif
+#endif
             }
-
             // one more entry has been read in
             break ;
         }
@@ -1059,5 +1062,25 @@ int LAGraph_MMRead
     //--------------------------------------------------------------------------
 
     LG_FREE_WORK ;
+
+    // WIP: add symmetric values after creating the matrix with one triangle
+#if LAGRAPH_SUITESPARSE
+    if (MM_storage != MM_general) {
+        if (type == GrB_BOOL)
+        {
+            if (MM_storage == MM_symmetric)
+            {
+                GRB_TRY ( GrB_Matrix_eWiseAdd_BinaryOp (*A, NULL, NULL,
+                                                        GxB_ANY_BOOL, *A, *A, GrB_DESC_T1) ) ;
+            }
+            else if (MM_storage == MM_skew_symmetric)
+            {
+                GRB_TRY ( GrB_Matrix_eWiseAdd_BinaryOp (*A, NULL, GxB_RMINUS_BOOL,
+                                                        GxB_ANY_BOOL, *A, *A, GrB_DESC_T1) ) ;
+            }
+        }
+    }
+#endif
+
     return (GrB_SUCCESS) ;
 }
