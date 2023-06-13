@@ -35,6 +35,7 @@
     LAGraph_Free ((void **) &I, NULL) ; \
     LAGraph_Free ((void **) &J, NULL) ; \
     LAGraph_Free ((void **) &X, NULL) ; \
+    GrB_free (&one) ;                   \
 }
 
 #define LG_FREE_ALL                     \
@@ -409,6 +410,8 @@ int LAGraph_MMRead
 
     GrB_Index *I = NULL, *J = NULL ;
     uint8_t *X = NULL ;
+    GrB_Scalar one = NULL;
+
     LG_CLEAR_MSG ;
     LG_ASSERT (A != NULL, GrB_NULL_POINTER) ;
     LG_ASSERT (f != NULL, GrB_NULL_POINTER) ;
@@ -989,6 +992,15 @@ int LAGraph_MMRead
 
     if (type == GrB_BOOL)
     {
+#if LAGRAPH_SUITESPARSE
+      if (MM_type == MM_pattern)
+      {
+          GRB_TRY( GrB_Scalar_new(&one, GrB_BOOL) );
+          GRB_TRY( GrB_Scalar_setElement(one, true) ) ;
+          GRB_TRY (GxB_Matrix_build_Scalar (*A, I, J, one, nvals2)) ;
+      }
+      else
+#endif
         GRB_TRY (GrB_Matrix_build_BOOL (*A, I, J, (bool *) X, nvals2, NULL)) ;
     }
     else if (type == GrB_INT8)
