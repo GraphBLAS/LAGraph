@@ -365,6 +365,16 @@ static inline void negate_scalar
 #endif
 }
 
+bool can_negate(GrB_Type type)
+{
+    return ( type == GrB_INT8 ||
+             type == GrB_INT16 ||
+             type == GrB_INT32 ||
+             type == GrB_INT64 ||
+             type == GrB_FP32 ||
+             type == GrB_FP64 );
+}
+
 //------------------------------------------------------------------------------
 // set_value
 //------------------------------------------------------------------------------
@@ -960,10 +970,7 @@ int LAGraph_MMRead
             // also set the A(j,i) entry, if symmetric
             //------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
-            if (type == GrB_BOOL)
-                break;
-#endif
+#if !LAGRAPH_SUITESPARSE
             if (i != j && MM_storage != MM_general)
             {
                 if (MM_storage == MM_symmetric)
@@ -984,6 +991,7 @@ int LAGraph_MMRead
                 }
 #endif
             }
+#endif
             // one more entry has been read in
             break ;
         }
@@ -993,92 +1001,140 @@ int LAGraph_MMRead
     // build the final matrix
     //--------------------------------------------------------------------------
 
+#if LAGRAPH_SUITESPARSE
+#define SKEW_FREE                                                       \
+{                                                                       \
+    GrB_free(&Diag);                                                    \
+    GrB_free(&Id);                                                      \
+    GrB_free(&one);                                                     \
+}
+
+#define SKEW_CATCH(info)                                                \
+{                                                                       \
+    LG_ERROR_MSG ("GraphBLAS failure (file %s, line %d): info: %d",     \
+        __FILE__, __LINE__, info) ;                                     \
+    SKEW_FREE();                                                        \
+    return (info) ;                                                     \
+}
+
+#pragma push_macro("GRB_CATCH")
+#undef GRB_CATCH
+#define GRB_CATCH(info) SKEW_CATCH(info)
+
+#define SKEW_BUILDER(_grb_type)                                         \
+{                                                                       \
+    GrB_Vector Diag;                                                    \
+    GrB_Matrix Id;                                                      \
+    GrB_Scalar one;                                                     \
+                                                                        \
+    GRB_TRY (GrB_Scalar_new (&one, GrB_ ## _grb_type)) ;                \
+    GRB_TRY (GrB_Scalar_setElement (one, 1)) ;                          \
+    GRB_TRY (GrB_Vector_new (&Diag, GrB_ ## _grb_type, nrows)) ;        \
+    GRB_TRY (GxB_Vector_build_Scalar (Diag, GrB_ALL, one, nrows)) ;     \
+    GRB_TRY (GrB_Matrix_diag(&Id, Diag, 0)) ;                           \
+                                                                        \
+    GRB_TRY (GrB_Matrix_eWiseAdd_BinaryOp (*A, Id, GxB_RMINUS_ ## _grb_type, \
+                                           GxB_ANY_ ## _grb_type,       \
+                                           *A, *A, GrB_DESC_SCT1)) ;    \
+    SKEW_FREE;                                                          \
+}
+
+#pragma pop_macro("GRB_CATCH")
+
+#define MATRIX_BUILDER(_grb_type, _c_type) {                            \
+    if (MM_type == MM_pattern)                                          \
+    {                                                                   \
+        GRB_TRY (GrB_Scalar_new (&one, GrB_ ## _grb_type)) ;            \
+        GRB_TRY (GrB_Scalar_setElement (one, 1)) ;                      \
+        GRB_TRY (GxB_Matrix_build_Scalar (*A, I, J, one, nvals2)) ;     \
+    }                                                                   \
+    else                                                                \
+        GRB_TRY (GrB_Matrix_build_ ## _grb_type (*A, I, J, (_c_type *) X, nvals2, NULL)) ; \
+                                                                        \
+    /* do not need the workspace (I,J,X, etc) anymore  */               \
+    LG_FREE_WORK ;                                                      \
+                                                                        \
+    GxB_set( GxB_BURBLE, true );                                        \
+    if (MM_storage != MM_general)                                       \
+    {                                                                   \
+        if (MM_storage == MM_skew_symmetric &&                          \
+            can_negate(GrB_ ## _grb_type))                              \
+        {                                                               \
+            SKEW_BUILDER(_grb_type);                                    \
+        }                                                               \
+        else if (MM_storage == MM_symmetric)                            \
+        {                                                               \
+            GRB_TRY (                                                   \
+                GrB_Matrix_eWiseAdd_BinaryOp (*A, NULL, NULL,           \
+                                              GxB_ANY_ ## _grb_type,    \
+                                              *A, *A, GrB_DESC_T1) ) ;  \
+        }                                                               \
+    }                                                                   \
+    GxB_set( GxB_BURBLE, false );                                       \
+}
+
+#else // ! LAGRAPH_SUITESPARSE
+
+#define MATRIX_BUILDER(_grb_type, _c_type)                              \
+{                                                                       \
+    GRB_TRY (GrB_Matrix_build_ ## _grb_type (*A, I, J, (_c_type *) X, nvals2, NULL)) ; \
+    LG_FREE_WORK;                                                       \
+}
+
+#endif
+
     if (type == GrB_BOOL)
     {
-#if LAGRAPH_SUITESPARSE
-      if (MM_type == MM_pattern)
-      {
-          GRB_TRY( GrB_Scalar_new(&one, GrB_BOOL) );
-          GRB_TRY( GrB_Scalar_setElement(one, true) ) ;
-          GRB_TRY (GxB_Matrix_build_Scalar (*A, I, J, one, nvals2)) ;
-      }
-      else
-#endif
-        GRB_TRY (GrB_Matrix_build_BOOL (*A, I, J, (bool *) X, nvals2, NULL)) ;
+        MATRIX_BUILDER(BOOL, bool);
     }
     else if (type == GrB_INT8)
     {
-        GRB_TRY (GrB_Matrix_build_INT8 (*A, I, J, (int8_t *) X, nvals2, NULL)) ;
+        MATRIX_BUILDER(INT8, int8_t);
     }
     else if (type == GrB_INT16)
     {
-        GRB_TRY (GrB_Matrix_build_INT16 (*A, I, J, (int16_t *) X, nvals2, NULL)) ;
+        MATRIX_BUILDER(INT16 , int16_t);
     }
     else if (type == GrB_INT32)
     {
-        GRB_TRY (GrB_Matrix_build_INT32 (*A, I, J, (int32_t *) X, nvals2, NULL)) ;
+        MATRIX_BUILDER(INT32 , int32_t);
     }
     else if (type == GrB_INT64)
     {
-        GRB_TRY (GrB_Matrix_build_INT64 (*A, I, J, (int64_t *) X, nvals2, NULL)) ;
+        MATRIX_BUILDER(INT64 , int64_t);
     }
     else if (type == GrB_UINT8)
     {
-        GRB_TRY (GrB_Matrix_build_UINT8 (*A, I, J, (uint8_t *) X, nvals2, NULL)) ;
+        MATRIX_BUILDER(UINT8 , uint8_t);
     }
     else if (type == GrB_UINT16)
     {
-        GRB_TRY (GrB_Matrix_build_UINT16 (*A, I, J, (uint16_t *) X, nvals2, NULL)) ;
+        MATRIX_BUILDER(UINT16 , uint16_t);
     }
     else if (type == GrB_UINT32)
     {
-        GRB_TRY (GrB_Matrix_build_UINT32 (*A, I, J, (uint32_t *) X, nvals2, NULL)) ;
+        MATRIX_BUILDER(UINT32 , uint32_t);
     }
     else if (type == GrB_UINT64)
     {
-        GRB_TRY (GrB_Matrix_build_UINT64 (*A, I, J, (uint64_t *) X, nvals2, NULL)) ;
+        MATRIX_BUILDER(UINT64 , uint64_t);
     }
     else if (type == GrB_FP32)
     {
-        GRB_TRY (GrB_Matrix_build_FP32 (*A, I, J, (float *) X, nvals2, NULL)) ;
+        MATRIX_BUILDER(FP32 , float);
     }
     else if (type == GrB_FP64)
     {
-        GRB_TRY (GrB_Matrix_build_FP64 (*A, I, J, (double *) X, nvals2, NULL)) ;
+        MATRIX_BUILDER(FP64 , double);
     }
 #if 0
     else if (type == GxB_FC32)
     {
-        GRB_TRY (GxB_Matrix_build_FC32 (*A, I, J, (GxB_FC32_t *) X, nvals2, NULL)) ;
+        MATRIX_BUILDER(FC32 , GxB_FC32_t);
     }
     else if (type == GxB_FC64)
     {
-        GRB_TRY (GxB_Matrix_build_FC64 (*A, I, J, (GxB_FC64_t *) X, nvals2, NULL)) ;
-    }
-#endif
-
-    //--------------------------------------------------------------------------
-    // free workspace and return result
-    //--------------------------------------------------------------------------
-
-    LG_FREE_WORK ;
-
-    // WIP: add symmetric values after creating the matrix with one triangle
-#if LAGRAPH_SUITESPARSE
-    if (MM_storage != MM_general) {
-        if (type == GrB_BOOL)
-        {
-            if (MM_storage == MM_symmetric)
-            {
-                GRB_TRY ( GrB_Matrix_eWiseAdd_BinaryOp (*A, NULL, NULL,
-                                                        GxB_ANY_BOOL, *A, *A, GrB_DESC_T1) ) ;
-            }
-            else if (MM_storage == MM_skew_symmetric)
-            {
-                GRB_TRY ( GrB_Matrix_eWiseAdd_BinaryOp (*A, NULL, GxB_RMINUS_BOOL,
-                                                        GxB_ANY_BOOL, *A, *A, GrB_DESC_T1) ) ;
-            }
-        }
+        MATRIX_BUILDER(FC64 , GxB_FC64_t);
     }
 #endif
 
