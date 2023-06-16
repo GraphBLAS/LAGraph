@@ -24,7 +24,6 @@
     GrB_free(&parent_sorted) ;                              \
     GrB_free(&sorted_permutation) ;                         \
     GrB_free(&apply_mask) ;                                 \
-    GrB_free(&full) ;                                       \
     GrB_free (&one) ;                                       \
     GrB_free(&VALUENEQ_ROWINDEX_UINT64) ;                   \
     GrB_free(&ROWINDEX_SUBK_UINT64) ;                       \
@@ -72,7 +71,7 @@ int LAGraph_Parent_to_S
     GrB_Index *discard_indices = NULL ;
     uint64_t *discard_values = NULL ;
     GrB_Vector apply_mask = NULL ;
-    GrB_Vector full = NULL ;
+    // GrB_Vector full = NULL ;
 
     GrB_IndexUnaryOp VALUENEQ_ROWINDEX_UINT64 = NULL ;
     GrB_IndexUnaryOp ROWINDEX_SUBK_UINT64 = NULL ;
@@ -143,8 +142,8 @@ int LAGraph_Parent_to_S
         GRB_TRY (GrB_IndexUnaryOp_new (&VALUENEQ_ROWINDEX_UINT64, F_INDEX_UNARY(valueneq_index_func), GrB_BOOL, GrB_UINT64, GrB_UINT64)) ;
         GRB_TRY (GrB_IndexUnaryOp_new (&ROWINDEX_SUBK_UINT64, F_INDEX_UNARY(index_subk_func), GrB_UINT64, GrB_UINT64, GrB_UINT64)) ;
         GRB_TRY (GrB_Vector_new (&apply_mask, GrB_UINT64, n)) ;
-        GRB_TRY (GrB_Vector_new (&full, GrB_UINT64, n)) ;
-        GRB_TRY (GrB_assign (full, NULL, NULL, 1, GrB_ALL, n, NULL)) ;
+        // GRB_TRY (GrB_Vector_new (&full, GrB_UINT64, n)) ;
+        // GRB_TRY (GrB_assign (full, NULL, NULL, 1, GrB_ALL, n, NULL)) ;
 
         // put all discarded nodes into parent_cpy
         GRB_TRY (GrB_select (parent_cpy, NULL, NULL, VALUENEQ_ROWINDEX_UINT64, parent, 0, NULL)) ;
@@ -165,7 +164,7 @@ int LAGraph_Parent_to_S
                 GRB_TRY (GrB_apply (parent_cpy, NULL, NULL, GrB_IDENTITY_UINT64, parent, NULL)) ;
             }
             // mask everything up to and including discarded_node
-            GRB_TRY (GrB_select (apply_mask, NULL, NULL, GrB_ROWLE, full, discarded_node, NULL)) ;
+            GRB_TRY (GrB_select (apply_mask, NULL, NULL, GrB_ROWLE, parent, discarded_node, NULL)) ;
 
             // now do the GrB_apply using the complement of apply_mask
             // how this works: suppose we are at the ith non-discarded entry and want to compute its new value.
