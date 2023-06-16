@@ -864,7 +864,14 @@ int LAGraph_MMRead
     // allocate space for the triplets
     //--------------------------------------------------------------------------
 
-    GrB_Index nvals3 = ((MM_storage == MM_general) ? 1 : 2) * (nvals + 1) ;
+#if LAGRAPH_SUITESPARSE
+#define IS_SYMMETRY_GEN_IN_TRIPLETS() (MM_storage != MM_symmetric)
+#else
+#define IS_SYMMETRY_GEN_IN_TRIPLETS() (true)
+#endif
+
+    // In some symmetry cases, a (j,i) triplet entry is added for each (i,j)
+    GrB_Index nvals3 = (IS_SYMMETRY_GEN_IN_TRIPLETS() ? 2 : 1) * (nvals + 1) ;
     LG_TRY (LAGraph_Malloc ((void **) &I, nvals3, sizeof (GrB_Index), msg)) ;
     LG_TRY (LAGraph_Malloc ((void **) &J, nvals3, sizeof (GrB_Index), msg)) ;
     LG_TRY (LAGraph_Malloc ((void **) &X, nvals3, typesize, msg)) ;
@@ -969,35 +976,29 @@ int LAGraph_MMRead
             //------------------------------------------------------------------
             // also set the A(j,i) entry, if symmetric
             //------------------------------------------------------------------
-
-#if !LAGRAPH_SUITESPARSE
-            if (i != j && MM_storage != MM_general)
+            if (IS_SYMMETRY_GEN_IN_TRIPLETS())
             {
-                if (MM_storage == MM_symmetric)
+                if (i != j)
                 {
-                    set_value (typesize, j, i, x, I, J, X, &nvals2) ;
-                }
-                else if (MM_storage == MM_skew_symmetric)
-                {
-                    negate_scalar (type, x) ;
-                    set_value (typesize, j, i, x, I, J, X, &nvals2) ;
-                }
+                    if (MM_storage == MM_symmetric)
+                    {
+                        set_value (typesize, j, i, x, I, J, X, &nvals2) ;
+                    }
+                    else if (MM_storage == MM_skew_symmetric)
+                    {
+                        negate_scalar (type, x) ;
+                        set_value (typesize, j, i, x, I, J, X, &nvals2) ;
+                    }
 #if 0
-                else if (MM_storage == MM_hermitian)
-                {
-                    double complex *value = (double complex *) x ;
-                    (*value) = conj (*value) ;
-                    set_value (typesize, j, i, x, I, J, X, &nvals2) ;
+                    else if (MM_storage == MM_hermitian)
+                    {
+                        double complex *value = (double complex *) x ;
+                        (*value) = conj (*value) ;
+                        set_value (typesize, j, i, x, I, J, X, &nvals2) ;
+                    }
+#endif
                 }
-#endif
             }
-#else // LAGRAPH_SUITESPARSE
-            if (i != j && MM_storage == MM_skew_symmetric)
-            {
-                negate_scalar (type, x) ;
-                set_value (typesize, j, i, x, I, J, X, &nvals2) ;
-            }
-#endif
             // one more entry has been read in
             break ;
         }
@@ -1008,6 +1009,7 @@ int LAGraph_MMRead
     //--------------------------------------------------------------------------
 
 #if LAGRAPH_SUITESPARSE
+// TODO: this needs proper testing before being re-added
 /* #define SKEW_FREE                                                       \ */
 /* {                                                                       \ */
 /*     GrB_free(&Diag);                                                    \ */
