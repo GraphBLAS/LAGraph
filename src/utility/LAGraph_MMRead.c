@@ -1062,15 +1062,18 @@ int LAGraph_MMRead
     /* do not need the workspace (I,J,X, etc) anymore  */               \
     LG_FREE_WORK ;                                                      \
                                                                         \
-    if (MM_storage == MM_symmetric)                                     \
+    if (!IS_SYMMETRY_GEN_IN_TRIPLETS())                                 \
     {                                                                   \
-        GxB_set( GxB_BURBLE, true );                                    \
-        GRB_TRY (                                                       \
-            GrB_Matrix_eWiseAdd_BinaryOp (*A, NULL, NULL,               \
-                                          GxB_ANY_ ## _grb_type,        \
-                                          *A, *A, GrB_DESC_T1) ) ;      \
-        GxB_set( GxB_BURBLE, false );                                   \
+        if (MM_storage == MM_symmetric)                                 \
+        {                                                               \
+            GxB_set( GxB_BURBLE, true );                                \
+            GRB_TRY (                                                   \
+                GrB_Matrix_eWiseAdd_BinaryOp (*A, NULL, NULL,           \
+                                              GxB_ANY_ ## _grb_type,    \
+                                              *A, *A, GrB_DESC_T1) ) ;  \
+            GxB_set( GxB_BURBLE, false );                               \
                                                                         \
+        }                                                               \
     }                                                                   \
 }
 
