@@ -215,6 +215,13 @@ int LAGraph_Coarsen_Matching
         // can do E * edge_parent with min_second to get node_parent
         GRB_TRY (GrB_mxv (node_parent, NULL, NULL, GrB_MIN_SECOND_SEMIRING_UINT64, E, edge_parent, NULL)) ;
 
+        if (!preserve_mapping) {
+            // record a deep copy of the current node_parent for the current coarsening level
+            // want to do this before the GrB_apply (see below) to keep the returned mappings sparse
+            // in other words, we want the total space consumed by the mapping result to be O(e) for e edges
+            GRB_TRY (GrB_Vector_dup (mapping + curr_level, node_parent)) ;
+        }
+
         // populate non-existent entries in node_parent with their index
         // handles nodes that are not engaged in a matching
         GrB_apply (node_parent, node_parent, NULL, GrB_ROWINDEX_INT64, full, (int64_t) 0, GrB_DESC_SC) ;
@@ -242,7 +249,7 @@ int LAGraph_Coarsen_Matching
             GRB_TRY (GrB_Matrix_nrows (&S_rows, S)) ;
             GRB_TRY (GrB_Matrix_ncols (&S_cols, S)) ;
             
-            GRB_TRY (GrB_Matrix_new (&S_t, GrB_UINT64, S_rows, S_cols)) ;
+            GRB_TRY (GrB_Matrix_new (&S_t, GrB_UINT64, S_cols, S_rows)) ;
         }
         GRB_TRY (GrB_transpose (S_t, NULL, NULL, S, NULL)) ;
 
@@ -277,9 +284,6 @@ int LAGraph_Coarsen_Matching
         GRB_TRY (GrB_free (&edge_parent)) ;
 
         if (!preserve_mapping){
-            // record a deep copy of the current node_parent for the current coarsening level
-            GRB_TRY (GrB_Vector_dup (mapping + curr_level, node_parent)) ;
-
             // also free node_parent and S_t for this level
             GRB_TRY (GrB_free (&node_parent)) ;
             GRB_TRY (GrB_free (&S_t)) ;

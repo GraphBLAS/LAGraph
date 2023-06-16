@@ -23,6 +23,15 @@
     GrB_free(&parent_cpy) ;                                 \
     GrB_free(&parent_sorted) ;                              \
     GrB_free(&sorted_permutation) ;                         \
+    GrB_free(&apply_mask) ;                                 \
+    GrB_free(&full) ;                                       \
+    GrB_free (&one) ;                                       \
+    GrB_free(&VALUENEQ_ROWINDEX_UINT64) ;                   \
+    GrB_free(&ROWINDEX_SUBK_UINT64) ;                       \
+    LAGraph_Free ((void**) &discard_indices, NULL) ;        \
+    LAGraph_Free ((void**) &discard_values, NULL) ;         \
+    LAGraph_Free ((void**) &I, NULL) ;                      \
+    LAGraph_Free ((void**) &J, NULL) ;                      \
 }                                                           \
 
 #define LG_FREE_ALL                                 \
@@ -30,6 +39,17 @@
     LG_FREE_WORK ;                                  \
     GrB_free(&S) ;                                  \
 }                                                   \
+
+
+#define F_INDEX_UNARY(f)  ((void (*)(void *, const void *, GrB_Index, GrB_Index, const void *)) f)
+
+void valueneq_index_func (bool *z, const uint64_t *x, GrB_Index i, GrB_Index j, const void *y) {
+    (*z) = ((*x) != i) ;
+}
+
+void index_subk_func (uint64_t *z, const uint64_t *x, GrB_Index i, GrB_Index j, const uint64_t *y) {
+    (*z) = (i - (*y)) ;
+}
 
 int LAGraph_Parent_to_S
 (
@@ -39,19 +59,38 @@ int LAGraph_Parent_to_S
     char *msg
 )
 {
-    GrB_Vector parent_cpy = NULL ;          // don't modify input parent
+    GrB_Vector parent_cpy = NULL ;          // don't modify input parent (also useful to have for compressing node labels)
     GrB_Vector parent_sorted = NULL ;
     GrB_Vector sorted_permutation = NULL ;
     GrB_Matrix S = NULL ;
-    
-    GrB_Index nvals ;
+
+    // used to unpack parent_cpy and build S
+    GrB_Index *J = NULL, *I = NULL, J_size, I_size ;
+    GrB_Scalar one = NULL ;
+
+    // used for node compression
+    GrB_Index *discard_indices = NULL ;
+    uint64_t *discard_values = NULL ;
+    GrB_Vector apply_mask = NULL ;
+    GrB_Vector full = NULL ;
+
+    GrB_IndexUnaryOp VALUENEQ_ROWINDEX_UINT64 = NULL ;
+    GrB_IndexUnaryOp ROWINDEX_SUBK_UINT64 = NULL ;
 
     GrB_Index n ;
     GRB_TRY (GrB_Vector_nvals (&n, parent)) ;
 
-    GRB_TRY (GrB_Vector_dup (&parent_cpy, parent)) ;
+    if (preserve_mapping) {
+        // parent_cpy will be the same as parent
+        GRB_TRY (GrB_Vector_dup (&parent_cpy, parent)) ;
+    } else {
+        // we want an empty vector for the compression step (see below code)
+        GRB_TRY (GrB_Vector_new (&parent_cpy, GrB_UINT64, n)) ;
+    }
 
     if (!preserve_mapping) {
+#if 0
+        // old code
         // result dim: n' by n (n' is the new number of vertices)
         GrB_Index n_new = 0 ;
         // n_new (or n') is number of unique elements in parent
@@ -83,60 +122,87 @@ int LAGraph_Parent_to_S
 
         GRB_TRY (GrB_free (&parent_sorted)) ;
         GRB_TRY (GrB_free (&sorted_permutation)) ;
-    } else {
+#endif
+        /*
+        new code:
+            - GrB_select to identify discarded nodes
+            - suppose we have m discarded nodes - want to do O(m) grb_apply's
+            - example:
+                parent vector:
+                    0 1 2 1 4 7 6 7
+                    . . . ^ . ^ . . (discarded nodes marked with '^')
+                claim: All other nodes besides those discarded are in order
+                proof: If not discarded, then p[i] = i, which is in order w.r.t. index
+            
+            - So, we can create the new mapping while preserving order without a sort, and
+              without looping through all nodes
+            - The looping is only O(m) for m discarded nodes.
+                - In the case of coarsening, if we sum this across all coarsening steps its just O(n).
+        */
+        
+        GRB_TRY (GrB_IndexUnaryOp_new (&VALUENEQ_ROWINDEX_UINT64, F_INDEX_UNARY(valueneq_index_func), GrB_BOOL, GrB_UINT64, GrB_UINT64)) ;
+        GRB_TRY (GrB_IndexUnaryOp_new (&ROWINDEX_SUBK_UINT64, F_INDEX_UNARY(index_subk_func), GrB_UINT64, GrB_UINT64, GrB_UINT64)) ;
+        GRB_TRY (GrB_Vector_new (&apply_mask, GrB_UINT64, n)) ;
+        GRB_TRY (GrB_Vector_new (&full, GrB_UINT64, n)) ;
+        GRB_TRY (GrB_assign (full, NULL, NULL, 1, GrB_ALL, n, NULL)) ;
+
+        // put all discarded nodes into parent_cpy
+        GRB_TRY (GrB_select (parent_cpy, NULL, NULL, VALUENEQ_ROWINDEX_UINT64, parent, 0, NULL)) ;
+        // now, parent_cpy has entries for all discarded nodes
+        // we want to get the indices of these entries
+        GrB_Index num_discarded ;
+        GRB_TRY (GrB_Vector_nvals (&num_discarded, parent_cpy)) ;
+        LG_TRY (LAGraph_Malloc ((void**)(&discard_indices), num_discarded, sizeof(GrB_Index), msg)) ;
+        LG_TRY (LAGraph_Malloc ((void**)(&discard_values), num_discarded, sizeof(uint64_t), msg)) ;
+
+        GRB_TRY (GrB_Vector_extractTuples (discard_indices, discard_values, &num_discarded, parent_cpy)) ;
+
+        // now, perform our GrB_apply's to do the relabeling
+        for (GrB_Index i = 0 ; i < num_discarded ; i++) {
+            GrB_Index discarded_node = discard_indices [i] ;
+            if (i == 0) {
+                // first apply everything
+                GRB_TRY (GrB_apply (parent_cpy, NULL, NULL, GrB_IDENTITY_UINT64, parent, NULL)) ;
+            }
+            // mask everything up to and including discarded_node
+            GRB_TRY (GrB_select (apply_mask, NULL, NULL, GrB_ROWLE, full, discarded_node, NULL)) ;
+
+            // now do the GrB_apply using the complement of apply_mask
+            // how this works: suppose we are at the ith non-discarded entry and want to compute its new value.
+            // we know that p[i] = i. If there are k discarded entries before the ith entry, then this will remap to p[i] = i - k.
+            GRB_TRY (GrB_apply (parent_cpy, apply_mask, NULL, ROWINDEX_SUBK_UINT64, parent, i + 1, GrB_DESC_SC)) ;
+        }
+
+        // update the entries for discarded nodes
+        // first, store the new entries (don't intermix extractElement and setElement)
+        for (GrB_Index i = 0 ; i < num_discarded ; i++) {
+            GrB_Index old_parent = discard_values [i] ;
+            uint64_t new_parent ;
+            GRB_TRY (GrB_Vector_extractElement (&new_parent, parent_cpy, old_parent)) ;
+            discard_values [i] = new_parent ;
+        }
+
+        for (GrB_Index i = 0 ; i < num_discarded ; i++) {
+            GrB_Index discarded_node = discard_indices [i] ;
+            GRB_TRY (GrB_Vector_setElement (parent_cpy, discard_values [i], discarded_node)) ;
+        }
+
+        GRB_TRY (GrB_Matrix_new (&S, GrB_UINT64, n - num_discarded, n)) ;
+    } else { 
         // result dim: n by n
         GRB_TRY (GrB_Matrix_new (&S, GrB_UINT64, n, n)) ;
     }
 
-    GrB_Index J = NULL, I = NULL, J_size, I_size, nvals ;
-    bool iso ;
-    GxB_Vector_unpack_CSC (parent_cpy, &J, &I, &J_size, &I_size, NULL,
-        &nvals, NULL) ;
-    GrB_Scalar one ;
-    GrB_Scalar_new (&one, GrB_UINT64) ;
-    GrB_Scalar_setElement (one, 1) ;
-    GxB_Matrix_build_Scalar (S, I, J, one, nvals, NULL) ;
+    GrB_Index nvals ;
 
-    LAGraph_Free ((void **) &I, NULL) ;
-    LAGraph_Free ((void **) &J, NULL) ;
-    GrB_free (&one) ;
+    GRB_TRY (GxB_Vector_unpack_CSC (parent_cpy, &J, (void**) &I, &J_size, &I_size, NULL, &nvals, NULL, NULL)) ;
+    GRB_TRY (GrB_Scalar_new (&one, GrB_UINT64)) ;
+    GRB_TRY (GrB_Scalar_setElement (one, 1)) ;
+
+    GRB_TRY (GxB_Matrix_build_Scalar (S, I, J, one, nvals)) ;    
 
 #if 0
-GrB_Info GxB_Vector_unpack_CSC  // unpack a CSC vector
-(
-    GrB_Vector v,       // vector to unpack (type and length unchanged)
-    GrB_Index **vi,     // indices
-    void **vx,          // values
-    GrB_Index *vi_size, // size of vi in bytes
-    GrB_Index *vx_size, // size of vx in bytes
-    bool *iso,          // if true, v is iso
-    GrB_Index *nvals,   // # of entries in vector
-    bool *jumbled,      // if true, indices may be unsorted
-    const GrB_Descriptor desc
-) ;
-
-GrB_Info GxB_Matrix_build_Scalar    // build a matrix from (I,J,scalar) tuples
-(
-    GrB_Matrix C,                   // matrix to build
-    const GrB_Index *I,             // array of row indices of tuples
-    const GrB_Index *J,             // array of column indices of tuples
-    GrB_Scalar scalar,              // value for all tuples
-    GrB_Index nvals                 // number of tuples
-) ;
-
-GrB_Info GrB_Matrix_build_UINT64    // build a matrix from (I,J,X) tuples
-(
-    GrB_Matrix C,                   // matrix to build
-    const GrB_Index *I,             // array of row indices of tuples
-    const GrB_Index *J,             // array of column indices of tuples
-    const uint64_t *X,              // array of values of tuples
-    GrB_Index nvals,                // number of tuples
-    const GrB_BinaryOp dup          // binary function to assemble duplicates
-) ;
-#endif
-
-
-#if 0
+    // old code (not parallel)
     for (GrB_Index idx = 0; idx < n; idx++) {
         uint64_t i ;
         GRB_TRY (GrB_Vector_extractElement (&i, parent_cpy, idx)) ;
@@ -151,3 +217,4 @@ GrB_Info GrB_Matrix_build_UINT64    // build a matrix from (I,J,X) tuples
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }
+ 
