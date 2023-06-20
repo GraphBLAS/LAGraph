@@ -1066,13 +1066,10 @@ int LAGraph_MMRead
     {                                                                   \
         if (MM_storage == MM_symmetric)                                 \
         {                                                               \
-            GxB_set( GxB_BURBLE, true );                                \
             GRB_TRY (                                                   \
                 GrB_Matrix_eWiseAdd_BinaryOp (*A, NULL, NULL,           \
                                               GxB_ANY_ ## _grb_type,    \
                                               *A, *A, GrB_DESC_T1) ) ;  \
-            GxB_set( GxB_BURBLE, false );                               \
-                                                                        \
         }                                                               \
     }                                                                   \
 }
