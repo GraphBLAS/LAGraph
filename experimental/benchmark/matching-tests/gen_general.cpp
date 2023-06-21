@@ -270,12 +270,6 @@ int main(int argc, char **argv){
 
     OK ( GrB_Matrix_extractTuples_UINT32 (rows, cols, vals, &nvals, A)) ;
 
-    vector<vector<int>> adj;
-
-    if(!naive){
-        adj.resize(n + 1);
-    }
-
     deg.resize(n + 1);
     fill(deg.begin(), deg.end(), 0);
 
@@ -297,10 +291,6 @@ int main(int argc, char **argv){
         deg[u]++;
         deg[v]++;
         edges.pb(vector<ll> {u, v, weight});
-        if(!naive){
-            adj[u].pb(v);
-            adj[v].pb(u);
-        }
     }
 
     OK ( LAGraph_Free ((void**)(&rows), msg)) ;

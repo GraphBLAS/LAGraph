@@ -268,15 +268,6 @@ int LAGraph_Incidence_Matrix
     char *msg
 ) ;
 
-LAGRAPH_PUBLIC
-int LAGraph_Parent_to_S
-(
-    GrB_Matrix *result,
-    GrB_Vector parent,          // parent vector
-    int compress,               // whether to compress the namespace of the coarsened graph
-    char *msg
-) ;
-
 //****************************************************************************
 // Algorithms
 //****************************************************************************
@@ -927,7 +918,8 @@ int LAGraph_Coarsen_Matching
 (
     // outputs:
     GrB_Matrix *coarsened,                   // coarsened adjacency
-    GrB_Vector **mapping,                    // parent mapping for each level; if preserve_mapping is true, is NULL
+    GrB_Vector **parent_result,              // parent mapping for each level; if preserve_mapping is true, is NULL
+    GrB_Vector **mapping_result,             // new node labels for each leve; if preserve_mapping is true, is NULL
     // inputs:
     LAGraph_Graph G,
     LAGraph_Matching_kind matching_type,     // refer to above enum
