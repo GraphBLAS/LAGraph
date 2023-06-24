@@ -227,7 +227,7 @@ int main(int argc, char **argv){
         assert(weight >= 0);
         deg[u]++;
         deg[v]++;
-        // want below diagonal edges for symmetric format
+        // want below diagonal edges for symmetric matrix-market format
         edges.pb(vector<ll> {v, u, weight});
         if(!naive){
             adj[u].pb(v);

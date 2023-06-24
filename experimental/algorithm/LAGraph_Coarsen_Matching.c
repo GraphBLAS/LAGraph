@@ -23,13 +23,17 @@ counts the number of combined edges)
 6. Random seed used for maximal matching
 7. msg for LAGraph error reporting
 
-There are 2 outputs from the function:
+There are 3 outputs from the function:
 1. A GrB_Matrix of the coarsened graph (if the input adjacency matrix is of type GrB_BOOL or GrB_UINT* or GrB_INT*, it will
 have type GrB_INT64. Else, it will have the same type as the input matrix).
-2. A list of GrB_Vectors (mapping_result) of length nlevels, where if mapping_result[i][u] = v,
-then node u in G_{i} maps to node v in G_{i + 1}, where G_0 is the initial graph. Note that this means 
-the length of mapping_result[i] is the number of nodes in G_{i}. If preserve_mapping = 1, then there is no need 
+2. A list of GrB_Vectors (parent_result) of length nlevels, where if parent_result[i][u] = v,
+then the parent of node u in G_{i} is node v in G_{i}, where G_0 is the initial graph. Note that this means 
+the length of parent_result[i] is the number of nodes in G_{i}. If preserve_mapping = 1, then there is no need 
 for such a result, and a NULL pointer is returned.
+3. A list of GrB_Vectors (mapping_result) of length nlevels, where if mapping_result[i][u] = v,
+then node u in G_{i} is relabeled as node v in G_{i + 1}. Again, the length of mapping_result[i] is the number
+of nodes in G_{i}; if preserve_mapping = 1, then this result is returned as NULL. This result is used to interpret
+the contents of parent_result, since the naming of nodes may change in an arbitrary fashion for successive coarsenings.
 
 More specifically, the coarsening step involves a reduction from a graph G to G', where we use a bijection f from
 nodes in G to nodes in G'. We can consider f(u) to be the parent of node u. 
@@ -42,6 +46,188 @@ parent (representative) of both endpoints, and any node not part of a matched ed
 #include "LAGraphX.h"
 
 // #define dbg
+
+#undef LG_FREE_ALL
+#undef LG_FREE_WORK
+
+#define LG_FREE_WORK                                        \
+{                                                           \
+    GrB_free(&parent_cpy) ;                                 \
+    GrB_free(&one) ;                                        \
+    GrB_free(&VALUEEQ_ROWINDEX_UINT64) ;                    \
+    LAGraph_Free ((void**) &original_indices, NULL) ;       \
+    LAGraph_Free ((void**) &original_values, NULL) ;        \
+    LAGraph_Free ((void**) &preserved_values, NULL) ;       \
+    LAGraph_Free ((void**) &S_rows, NULL) ;                 \
+    LAGraph_Free ((void**) &S_cols, NULL) ;                 \
+}                                                           \
+
+#define LG_FREE_ALL                                 \
+{                                                   \
+    LG_FREE_WORK ;                                  \
+    GrB_free(&S) ;                                  \
+}                                                   \
+
+#define F_INDEX_UNARY(f)  ((void (*)(void *, const void *, GrB_Index, GrB_Index, const void *)) f)
+
+void valueeq_index_func (bool *z, const uint64_t *x, GrB_Index i, GrB_Index j, const void *y) {
+    (*z) = ((*x) == i) ;
+}
+
+static int LAGraph_Parent_to_S
+(   
+    // input/outputs:
+    GrB_Matrix *result,             // resulting S matrix
+    GrB_Vector *mapping,            // if not NULL on input, and preserve_mapping = false, will return the new labels of nodes
+                                    // more specifically, on output, mapping[i] exists iff node i survives in the coarsened graph, and has
+                                    // value equal to the new label of node i.
+                                    // if preserve_mapping = true, is returned as NULL on output
+
+    GrB_Vector *inv_mapping,        // same as above except the inverse (mapping of new nodes to old nodes)
+                                    // more specifically, on output, mapping[i] is the node in the uncoarsened graph that maps to node i in the coarsened graph
+                                    // again, if preserve_mapping = true, is NULL on output
+
+    // strictly inputs:
+    GrB_Vector parent,              // dense integer vector of size n. parent[i] -> representative of node i
+    int preserve_mapping,           // whether to preserve the original namespace of nodes, or to compress it down
+    char *msg
+)
+{
+    GrB_Vector parent_cpy = NULL ;          // don't modify input parent. Also useful to have for compressing node labels.
+    GrB_Matrix S = NULL ;
+
+    // ------------------------ BUILDING S MATRIX --------------------------
+    // used to unpack parent_cpy and build S
+    GrB_Index *S_cols = NULL, *S_rows = NULL, S_cols_size, S_rows_size ;
+    GrB_Scalar one = NULL ;
+    GrB_Index nvals ;
+    // ---------------------------------------------------------------------
+    
+
+    // ----------------------- NODE COMPRESSION -----------------------------
+    // [0...(n - 1)]
+    // No need to free this since it gets packed
+    uint64_t *ramp = NULL ;
+    // used to unpack preserved nodes
+    // note: No need to free this array since they are packed back
+    GrB_Index *preserved_indices = NULL, preserved_indices_size, preserved_values_size ;
+    // need to free this (not packed back)
+    uint64_t *preserved_values = NULL ;
+    // used to extractTuples for original parent
+    GrB_Index *original_indices = NULL ;
+    uint64_t *original_values = NULL ;
+
+    GrB_Index num_preserved ;
+    bool is_jumbled ;
+
+    GrB_IndexUnaryOp VALUEEQ_ROWINDEX_UINT64 = NULL ;
+    // ---------------------------------------------------------------------
+
+    // number of nodes in original graph
+    GrB_Index n ;
+
+    GRB_TRY (GrB_Vector_nvals (&n, parent)) ;
+
+    if (preserve_mapping) {
+        // parent_cpy will be the same as parent
+        GRB_TRY (GrB_Vector_dup (&parent_cpy, parent)) ;
+    } else {
+        // we want an empty vector for the compression step (see below code)
+        GRB_TRY (GrB_Vector_new (&parent_cpy, GrB_UINT64, n)) ;
+    }
+
+    if (!preserve_mapping) {
+        /*
+        new code:
+            - identify preserved nodes (GrB_select to parent_cpy)
+            - unpack to get values of preserved
+            - build ramp vector (full vector, GrB_apply w/ row index)
+            - pack back into parent_cpy with ramp as values, preserved as indices
+            - GrB_extract into parent_cpy from parent_cpy with row indices as values from original parent
+                - This fills in the new parents for discarded nodes
+        */
+        
+        GRB_TRY (GrB_IndexUnaryOp_new (&VALUEEQ_ROWINDEX_UINT64, F_INDEX_UNARY(valueeq_index_func), GrB_BOOL, GrB_UINT64, GrB_UINT64)) ;
+
+        // identify preserved nodes
+        GRB_TRY (GrB_select (parent_cpy, NULL, NULL, VALUEEQ_ROWINDEX_UINT64, parent, 0, NULL)) ;
+        
+        // get indices of preserved nodes
+        GRB_TRY (GxB_Vector_unpack_CSC (
+                parent_cpy, 
+                &preserved_indices, 
+                (void**) &preserved_values, 
+                &preserved_indices_size, 
+                &preserved_values_size, 
+                NULL, 
+                &num_preserved,
+                &is_jumbled,
+                NULL
+        )) ;
+        
+        // build ramp vector
+        // TODO: parallelize this
+        LG_TRY (LAGraph_Malloc ((void**) &ramp, num_preserved, sizeof(uint64_t), msg)) ;
+        for (GrB_Index i = 0 ; i < num_preserved ; i++) {
+            ramp [i] = i ;
+        }
+
+        if (inv_mapping != NULL) {
+            GRB_TRY (GrB_Vector_new (inv_mapping, GrB_UINT64, num_preserved)) ;
+            GRB_TRY (GrB_Vector_build (*inv_mapping, ramp, preserved_indices, num_preserved, GrB_SECOND_INT64)) ;
+        }
+
+        // pack back into parent_cpy
+        GRB_TRY (GxB_Vector_pack_CSC (
+            parent_cpy,
+            &preserved_indices,
+            (void**) &ramp,
+            num_preserved * sizeof(GrB_Index),
+            num_preserved * sizeof(uint64_t),
+            false,
+            num_preserved,
+            is_jumbled,
+            NULL
+        )) ;
+
+        if (mapping != NULL) {
+            // alternate method:
+            // (*mapping) = parent_cpy
+            // and free parent_cpy in LG_FREE_ALL instead of LG_FREE_WORK 
+            GRB_TRY (GrB_Vector_dup (mapping, parent_cpy)) ;
+        }
+
+        LG_TRY (LAGraph_Malloc ((void**) &original_indices, n, sizeof(GrB_Index), msg)) ;
+        LG_TRY (LAGraph_Malloc ((void**) &original_values, n, sizeof(uint64_t), msg)) ;
+
+        // is extractTuples needed? Since this is a static function (and won't be exposed to users), 
+        // is it OK to just unpack and rip the contents of the input out?
+        GRB_TRY (GrB_Vector_extractTuples (original_indices, original_values, &n, parent)) ;
+
+        // fill in entries for discarded nodes
+        GRB_TRY (GrB_Vector_extract (parent_cpy, NULL, NULL, parent_cpy, original_values, n, NULL)) ;
+
+        GRB_TRY (GrB_Matrix_new (&S, GrB_UINT64, num_preserved, n)) ;
+
+    } else { 
+        // result dim: n by n
+        GRB_TRY (GrB_Matrix_new (&S, GrB_UINT64, n, n)) ;
+        // mapping is the identity map, signified by null return values
+        (*mapping) = NULL ;
+        (*inv_mapping) = NULL ;
+    }
+
+    GRB_TRY (GxB_Vector_unpack_CSC (parent_cpy, &S_cols, (void**) &S_rows, &S_cols_size, &S_rows_size, NULL, &nvals, NULL, NULL)) ;
+    GRB_TRY (GrB_Scalar_new (&one, GrB_UINT64)) ;
+    GRB_TRY (GrB_Scalar_setElement (one, 1)) ;
+
+    GRB_TRY (GxB_Matrix_build_Scalar (S, S_rows, S_cols, one, nvals)) ;    
+
+    (*result) = S ;
+
+    LG_FREE_WORK ;
+    return (GrB_SUCCESS) ;
+}
 
 #undef LG_FREE_ALL
 #undef LG_FREE_WORK
@@ -65,14 +251,18 @@ parent (representative) of both endpoints, and any node not part of a matched ed
 {                                                   \
     LG_FREE_WORK ;                                  \
     LAGraph_Delete(&G_cpy, msg) ;                   \
-    LAGraph_Free((void**) mapping, msg) ;           \
+    LAGraph_Free((void**) all_parents, msg) ;           \
 }                                                   \
 
 int LAGraph_Coarsen_Matching
 (
     // outputs:
     GrB_Matrix *coarsened,                  // coarsened adjacency
-    GrB_Vector **mapping_result,            // array of parent mappings for each level; if preserve_mapping is true, is NULL
+    GrB_Vector **parent_result,             // array of parent mappings for each level; if preserve_mapping is true, is NULL
+                                            // specifically, parent_result[i][u] = v if node u maps to node v in the i-th graph
+    GrB_Vector **mapping_result,            // array of mappings from old nodes to new nodes for each level; needed to interpret parent_result
+                                            // if preserve_mapping is true, is NULL
+                                            // refer to the description of the mapping result in Parent_to_S for the contents of mapping_result[i]
     // inputs:
     LAGraph_Graph G,                        // input graph
     LAGraph_Matching_kind matching_type,    // how to perform the coarsening
@@ -95,7 +285,8 @@ int LAGraph_Coarsen_Matching
     GrB_Vector node_parent = NULL ;         // points to parent (representative) node for each node
     GrB_Vector full = NULL ;                // full vector
 
-    GrB_Vector *mapping = NULL ;            // resulting array of parent mappings (used for output)
+    GrB_Vector *all_parents = NULL ;        // resulting array of parents (used for output)
+    GrB_Vector *all_mappings = NULL ;       // resulting array of mappings (used for output)
 
     // used to build int64 A matrix if needed
     GrB_Index *rows = NULL ;
@@ -171,7 +362,8 @@ int LAGraph_Coarsen_Matching
     GRB_TRY (GrB_assign (full, NULL, NULL, true, GrB_ALL, num_nodes, NULL)) ;
 
     if (!preserve_mapping) {
-        LG_TRY (LAGraph_Malloc ((void**)(&mapping), nlevels, sizeof(GrB_Vector), msg)) ;
+        LG_TRY (LAGraph_Malloc ((void**)(&all_parents), nlevels, sizeof(GrB_Vector), msg)) ;
+        LG_TRY (LAGraph_Malloc ((void**)(&all_mappings), nlevels, sizeof(GrB_Vector), msg)) ;
     }
 
     GrB_Index curr_level = 0 ;
@@ -215,16 +407,14 @@ int LAGraph_Coarsen_Matching
         // can do E * edge_parent with min_second to get node_parent
         GRB_TRY (GrB_mxv (node_parent, NULL, NULL, GrB_MIN_SECOND_SEMIRING_UINT64, E, edge_parent, NULL)) ;
 
-        if (!preserve_mapping) {
-            // record a deep copy of the current node_parent for the current coarsening level
-            // want to do this before the GrB_apply (see below) to keep the returned mappings sparse
-            // in other words, we want the total space consumed by the mapping result to be O(e) for e edges
-            GRB_TRY (GrB_Vector_dup (mapping + curr_level, node_parent)) ;
-        }
-
         // populate non-existent entries in node_parent with their index
         // handles nodes that are not engaged in a matching
         GrB_apply (node_parent, node_parent, NULL, GrB_ROWINDEX_INT64, full, (int64_t) 0, GrB_DESC_SC) ;
+
+        if (!preserve_mapping) {
+            // record a deep copy of the current node_parent for the current coarsening level
+            GRB_TRY (GrB_Vector_dup (all_parents + curr_level, node_parent)) ;
+        }
 
         #ifdef dbg
             printf("Printing node_parent for level (%lld)\n", curr_level) ;
@@ -233,7 +423,7 @@ int LAGraph_Coarsen_Matching
             LG_TRY (LAGraph_Vector_Print (matched_edges, LAGraph_COMPLETE, stdout, msg)) ;
         #endif
         
-        LG_TRY (LAGraph_Parent_to_S (&S, node_parent, preserve_mapping, msg)) ;
+        LG_TRY (LAGraph_Parent_to_S (&S, all_mappings + curr_level, NULL, node_parent, preserve_mapping, msg)) ;
 
         #ifdef dbg
             printf("Printing S for level (%lld)\n", curr_level) ;
@@ -293,7 +483,8 @@ int LAGraph_Coarsen_Matching
         curr_level++ ;
     }
     (*coarsened) = A ;
-    (*mapping_result) = mapping ;
+    (*parent_result) = all_parents ;
+    (*mapping_result) = all_mappings ;
 
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
