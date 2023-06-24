@@ -45,7 +45,7 @@ parent (representative) of both endpoints, and any node not part of a matched ed
 #include "LG_internal.h"
 #include "LAGraphX.h"
 
-#define dbg
+// #define dbg
 
 #undef LG_FREE_ALL
 #undef LG_FREE_WORK
@@ -251,7 +251,7 @@ static int LAGraph_Parent_to_S
 {                                                   \
     LG_FREE_WORK ;                                  \
     LAGraph_Delete(&G_cpy, msg) ;                   \
-LAGraph_Free((void**) all_parents, msg) ;           \
+    LAGraph_Free((void**) all_parents, msg) ;       \
 }                                                   \
 
 int LAGraph_Coarsen_Matching
