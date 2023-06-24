@@ -45,7 +45,7 @@ parent (representative) of both endpoints, and any node not part of a matched ed
 #include "LG_internal.h"
 #include "LAGraphX.h"
 
-// #define dbg
+#define dbg
 
 #undef LG_FREE_ALL
 #undef LG_FREE_WORK
@@ -207,18 +207,18 @@ static int LAGraph_Parent_to_S
         // fill in entries for discarded nodes
         GRB_TRY (GrB_Vector_extract (parent_cpy, NULL, NULL, parent_cpy, original_values, n, NULL)) ;
 
-        GRB_TRY (GrB_Matrix_new (&S, GrB_UINT64, num_preserved, n)) ;
+        GRB_TRY (GrB_Matrix_new (&S, GrB_FP64, num_preserved, n)) ;
 
     } else { 
         // result dim: n by n
-        GRB_TRY (GrB_Matrix_new (&S, GrB_UINT64, n, n)) ;
+        GRB_TRY (GrB_Matrix_new (&S, GrB_FP64, n, n)) ;
         // mapping is the identity map, signified by null return values
         (*mapping) = NULL ;
         (*inv_mapping) = NULL ;
     }
 
     GRB_TRY (GxB_Vector_unpack_CSC (parent_cpy, &S_cols, (void**) &S_rows, &S_cols_size, &S_rows_size, NULL, &nvals, NULL, NULL)) ;
-    GRB_TRY (GrB_Scalar_new (&one, GrB_UINT64)) ;
+    GRB_TRY (GrB_Scalar_new (&one, GrB_FP64)) ;
     GRB_TRY (GrB_Scalar_setElement (one, 1)) ;
 
     GRB_TRY (GxB_Matrix_build_Scalar (S, S_rows, S_cols, one, nvals)) ;    
@@ -251,7 +251,7 @@ static int LAGraph_Parent_to_S
 {                                                   \
     LG_FREE_WORK ;                                  \
     LAGraph_Delete(&G_cpy, msg) ;                   \
-    LAGraph_Free((void**) all_parents, msg) ;           \
+LAGraph_Free((void**) all_parents, msg) ;           \
 }                                                   \
 
 int LAGraph_Coarsen_Matching
@@ -310,7 +310,7 @@ int LAGraph_Coarsen_Matching
             // output will become int64
             // reasoning: want to prevent overflow from combining edges and accomodate negative edge weights
             #ifdef dbg
-                printf("Rebuilding A with GrB_INT64\n");
+                printf("Rebuilding A with GrB_INT64, orig type was %s\n", typename);
             #endif
 
             GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
@@ -323,7 +323,7 @@ int LAGraph_Coarsen_Matching
             GRB_TRY (GrB_Matrix_extractTuples (rows, cols, vals, &nvals, G->A)) ;
 
             GRB_TRY (GrB_Matrix_new (&A, GrB_INT64, nrows, nrows)) ;
-            GRB_TRY (GrB_Matrix_build (A, rows, cols, vals, nvals, GrB_SECOND_INT64)) ;
+            GRB_TRY (GrB_Matrix_build (A, rows, cols, vals, nvals, NULL)) ;
 
             LG_TRY (LAGraph_Free ((void**)(&rows), msg)) ;
             LG_TRY (LAGraph_Free ((void**)(&cols), msg)) ;
@@ -439,7 +439,7 @@ int LAGraph_Coarsen_Matching
             GRB_TRY (GrB_Matrix_nrows (&S_rows, S)) ;
             GRB_TRY (GrB_Matrix_ncols (&S_cols, S)) ;
             
-            GRB_TRY (GrB_Matrix_new (&S_t, GrB_UINT64, S_cols, S_rows)) ;
+            GRB_TRY (GrB_Matrix_new (&S_t, GrB_FP64, S_cols, S_rows)) ;
         }
         GRB_TRY (GrB_transpose (S_t, NULL, NULL, S, NULL)) ;
 

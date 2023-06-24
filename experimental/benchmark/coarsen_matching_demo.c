@@ -18,7 +18,7 @@ int main(int argc, char **argv)
 
     LAGRAPH_TRY (LAGraph_Random_Init (msg)) ;
     LAGRAPH_TRY (readproblem (&G, NULL,
-        true, true, false, GrB_INT8, false, argc, argv)) ;
+        true, true, false, GrB_FP64, false, argc, argv)) ;
     
     GrB_Vector *all_parents, *all_mappings ;
     GrB_Matrix coarsened ;
@@ -38,5 +38,11 @@ int main(int argc, char **argv)
     GRB_TRY (LAGraph_Random_Matrix (&test2, GrB_BOOL, 5, 3, 0.2, 93, msg)) ;
     GRB_TRY (GrB_transpose (test2, NULL, NULL, test, NULL)) ;
     return (GrB_SUCCESS) ;
+
+    3 3 4
+    1 2 1.7
+    1 3 0.5
+    2 1 1.7
+    3 1 0.5
     */
 }
