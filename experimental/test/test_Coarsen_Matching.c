@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// LAGraph/experimental/test/test_MaximalMatching
+// LAGraph/experimental/test/test_CoarsenMatching
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
@@ -30,7 +30,7 @@ matrices using specified configurations and seeds with LAGraph_Random_Matrix
 char msg [LAGRAPH_MSG_LEN] ;
 
 GrB_Matrix A = NULL, A_coarse_LAGraph = NULL, A_coarse_naive = NULL ;
-GrB_Vector *parent = NULL, *mapping = NULL ;  // comes from the Coarsen_Matching function
+GrB_Vector *parent = NULL, *newlabels = NULL ;  // comes from the Coarsen_Matching function
 LAGraph_Graph G = NULL ;
 
 typedef struct
@@ -137,7 +137,7 @@ void test_Coarsen_Matching () {
             OK (LAGraph_Coarsen_Matching (
                 &A_coarse_LAGraph,
                 &parent,
-                &mapping,
+                &newlabels,
                 G,
                 tests [k].matching_type, 
                 tests [k].preserve_mapping,
@@ -152,7 +152,7 @@ void test_Coarsen_Matching () {
                 &A_coarse_naive,
                 G->A,
                 parent[0],
-                mapping[0],
+                newlabels[0],
                 tests [k].preserve_mapping,
                 tests [k].combine_weights,
                 msg
