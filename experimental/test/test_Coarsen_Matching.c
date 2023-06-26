@@ -71,7 +71,7 @@ void test_Coarsen_Matching () {
         if (strlen (aname) == 0) break ;
         TEST_CASE (aname) ;
 
-        // first generate graph (code from test_MaximalMatching) ===========
+        // ================= first generate graph (code from test_MaximalMatching) =================
         GrB_Index n = tests [k].n ;
 
         GrB_Matrix A_dup = NULL ;
@@ -105,7 +105,7 @@ void test_Coarsen_Matching () {
         OK (LAGraph_Free ((void**)(&rows), msg)) ;
         OK (LAGraph_Free ((void**)(&cols), msg)) ;
         OK (LAGraph_Free ((void**)(&vals), msg)) ;
-        // graph generation done ======================================
+        // =============================== graph generation done ======================================
 
         TEST_CHECK (A != NULL) ;
         TEST_MSG ("Building of adjacency matrix failed") ;
@@ -147,7 +147,6 @@ void test_Coarsen_Matching () {
                 msg
             )) ;
 
-            // TODO: Check parent vector for correctness (must be derived from a valid matching)
             OK (LG_check_coarsen (
                 &A_coarse_naive,
                 G->A,
@@ -157,9 +156,32 @@ void test_Coarsen_Matching () {
                 tests [k].combine_weights,
                 msg
             )) ;
+
+            // Check parent vector for matching-specific correctness (must be derived from a valid matching)
+            // requirements: no node is the parent of more than 2 nodes, and if p[i] != i, then A[i][p[i]] exists
+
+            int8_t *freq ;
+            OK (LAGraph_Malloc ((void**)(&freq), n, sizeof(int8_t), msg)) ;
+            memset(freq, 0, n * sizeof(int8_t)) ;
+
+            for (GrB_Index i = 0 ; i < n ; i++) {
+                uint64_t par ;
+                OK (GrB_Vector_extractElement (&par, parent[0], i)) ;
+                freq [par]++ ;
+                TEST_CHECK (freq [par] <= 2) ;
+                TEST_MSG ("Parent vector not from a valid matching for test: %s\n", tests [k].name) ;
+
+                if (par != i) {
+                    // what is the right error code?
+                    TEST_CHECK (GxB_Matrix_isStoredElement (G->A, i, par) == GrB_SUCCESS) ;
+                    TEST_MSG ("Parent vector not from a valid matching for test: %s\n", tests [k].name) ;
+                }
+            }
+            OK (LAGraph_Free ((void**)(&freq), msg)) ;
+
             OK (LAGraph_Matrix_IsEqual (&ok, A_coarse_LAGraph, A_coarse_naive, msg)) ;
             TEST_CHECK (ok) ;
-            printf ("Coarsened matrices do not match for test: %s", tests [k].name) ;
+            TEST_MSG ("Coarsened matrices do not match for test: %s", tests [k].name) ;
             // OK (LAGraph_Matrix_Print(A, LAGraph_COMPLETE, stdout, msg)) ;
             // printf("isnull? %d\n", A_coarse_LAGraph == NULL) ;
             OK (LAGraph_Matrix_Print(G->A, LAGraph_COMPLETE, stdout, msg)) ;

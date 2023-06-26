@@ -38,7 +38,7 @@ int LG_check_coarsen
     // inputs:
     GrB_Matrix A,          // input adjacency (for the purposes of testing, is FP64)
     GrB_Vector parent,     // parent mapping
-    GrB_Vector newlabels,    // new labels of nodes, used to populate resulting adjacency matrix, NULL if preserve_mapping = 1
+    GrB_Vector newlabels,  // new labels of nodes, used to populate resulting adjacency matrix, NULL if preserve_mapping = 1
     int preserve_mapping,  // whether to preserve the original namespace of nodes
     int combine_weights,   // whether to combine the weights of edges that collapse together
     char *msg
@@ -75,10 +75,10 @@ int LG_check_coarsen
 
     if (!preserve_mapping) {
         // if preserve_mapping = true, mapping is just the identity map
-        int *occ ;
+        bool *occ ;
         GrB_Index num_entries = 0 ;
-        LG_TRY (LAGraph_Malloc ((void**)(&occ), n, sizeof(int), msg)) ;
-        memset(occ, 0, n * sizeof(int)) ;
+        LG_TRY (LAGraph_Malloc ((void**)(&occ), n, sizeof(bool), msg)) ;
+        memset(occ, 0, n * sizeof(bool)) ;
 
         // check that mapping vector is well-formed (entries must form a permutation of [0...(n_new - 1)])
         for (GrB_Index i = 0 ; i < n ; i++) {
@@ -89,10 +89,9 @@ int LG_check_coarsen
             uint64_t new_label ;
             GRB_TRY (GrB_Vector_extractElement (&new_label, newlabels, i)) ;
             // TODO: What error code to use here?
+            LG_ASSERT (new_label >= 0 && new_label < n_new, -1) ;
             LG_ASSERT (!occ[new_label], -1) ;
             occ[new_label] = 1 ;
-
-            LG_ASSERT (new_label >= 0 && new_label < n_new, -1) ;
         }
         LG_ASSERT (num_entries == n_new, -1) ;
         LG_TRY (LAGraph_Free ((void**)(&occ), msg)) ;
