@@ -120,6 +120,8 @@ static inline GrB_Info fastsv
         // size 1 where Cx [0] = false, so the all entries present in C are
         // equal to false.
 
+        // FIXME: also write a vanilla GrB method.
+
         // pack Cp, Px, and Cx into a matrix C with C(i,j) present if Px(j) == i
         GRB_TRY (GxB_Matrix_pack_CSC (C, Cp, /* Px is Ci: */ Px, Cx,
             Cp_size, Ci_size, Cx_size, iso, jumbled, NULL)) ;

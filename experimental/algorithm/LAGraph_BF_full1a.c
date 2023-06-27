@@ -370,6 +370,7 @@ GrB_Info LAGraph_BF_full1a
     LAGRAPH_TRY (LAGraph_Malloc ((void **) &pi, n, sizeof(GrB_Index), msg)) ;
 
     // todo: create 3 unary ops, and use GrB_apply?
+    // FIXME: yes, that would be faster with the SuiteSparse JIT.
 
     GRB_TRY (GrB_Vector_extractTuples_UDT (I, (void *) W, &n, d));
 

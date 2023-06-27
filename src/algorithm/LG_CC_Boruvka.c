@@ -31,6 +31,8 @@
 // Reduce_assign
 //------------------------------------------------------------------------------
 
+// FIXME: Reduce_assign is slow.  See src/algorithm/LG_CC_FastSV6.
+
 // w[Px[i]] = min(w[Px[i]], s[i]) for i in [0..n-1].
 
 static GrB_Info Reduce_assign

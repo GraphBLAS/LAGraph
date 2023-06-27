@@ -132,7 +132,7 @@ int LAGraph_KCore_All
             GRB_TRY (GrB_vxm (delta, GrB_NULL, GrB_NULL, semiring, q, A, GrB_NULL));
 
             // Create new deg vector (keep anything not in done vector w/ replace command)
-            GRB_TRY (GrB_eWiseAdd(deg, done, GrB_NULL, minus_op, deg, delta, GrB_DESC_RSC /* try GrB_DESC_RSC */)) ;
+            GRB_TRY (GrB_eWiseAdd(deg, done, GrB_NULL, minus_op, deg, delta, GrB_DESC_RSC)) ;
 
             // Update q, set new nvals
             GRB_TRY (GrB_select (q, GrB_NULL, GrB_NULL, valueLE, deg, level, GrB_NULL)) ;

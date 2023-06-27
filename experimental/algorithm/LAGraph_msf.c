@@ -62,6 +62,8 @@ static void get_snd (void *y, const void *x)
     *(uint64_t*)y = (*(uint64_t*)x) & INT_MAX;
 }
 
+// FIXME: Reduce_assign is slow.  See src/algorithm/LG_CC_FastSV6.
+
 //****************************************************************************
 // w[index[i]] = min(w[index[i]], s[i]) for i in [0..n-1]
 static GrB_Info Reduce_assign (GrB_Vector w,

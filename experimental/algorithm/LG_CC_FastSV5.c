@@ -161,6 +161,8 @@ static inline int32_t ht_most_frequent
 // todo: add this to GraphBLAS as a variant of GrB_assign, either as
 // GxB_assign_accum (or another name), or as a GxB_* descriptor setting.
 
+// FIXME: Reduce_assign32 is slow.  See src/algorithm/LG_CC_FastSV6.
+
 static inline int Reduce_assign32
 (
     GrB_Vector *w_handle,   // vector of size n, all entries present
