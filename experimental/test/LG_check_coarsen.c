@@ -23,6 +23,8 @@
 // the parent vector for a matching-based coarsening must come from a valid matching. Such properties should be checked
 // in the respective coarsening tests.
 
+// NOTE: The input adjacency matrix A must be from an undirected graph
+
 #include "LG_internal.h"
 #include "LG_test.h"
 #include "LG_test.h"
@@ -66,9 +68,10 @@ int LG_check_coarsen
         GRB_TRY (GrB_Vector_extractElement (&grandpa, parent, par)) ;
         LG_ASSERT (grandpa == par, -1) ;
 
-        if (par != i) {
+        if (par != i && (!preserve_mapping)) {
             // make sure that there is no new label for nodes that get discarded
             LG_ASSERT (GxB_Vector_isStoredElement (newlabels, i) == GrB_NO_VALUE, -1) ;
+            // also update new number of nodes
             n_new-- ;
         }
     }
@@ -142,7 +145,12 @@ int LG_check_coarsen
         if (combine_weights) {
             // current weight of edge between u_par and v_par
             double curr_weight ;
-            GRB_TRY (GrB_Matrix_extractElement (&curr_weight, result, u_par_newlabel, v_par_newlabel)) ;
+
+            if (GxB_Matrix_isStoredElement (result, u_par_newlabel, v_par_newlabel) == GrB_NO_VALUE) {
+                curr_weight = 0 ;
+            } else {
+                GRB_TRY (GrB_Matrix_extractElement (&curr_weight, result, u_par_newlabel, v_par_newlabel)) ;
+            }
 
             // weight of the current edge being added
             double my_weight = vals [i] ;

@@ -213,8 +213,12 @@ static int LAGraph_Parent_to_S
         // result dim: n by n
         GRB_TRY (GrB_Matrix_new (&S, GrB_FP64, n, n)) ;
         // newlabels is the identity map, signified by null return values
-        (*newlabels) = NULL ;
-        (*inv_newlabels) = NULL ;
+        if (newlabels != NULL) {
+            (*newlabels) = NULL ;
+        }
+        if (inv_newlabels != NULL) {
+            (*inv_newlabels) = NULL ;
+        }
     }
 
     GRB_TRY (GxB_Vector_unpack_CSC (parent_cpy, &S_cols, (void**) &S_rows, &S_cols_size, &S_rows_size, NULL, &nvals, NULL, NULL)) ;
@@ -302,7 +306,7 @@ int LAGraph_Coarsen_Matching
         LG_TRY (LAGraph_Matrix_TypeName (typename, G->A, msg)) ;
         LG_TRY (LAGraph_TypeFromName (&type, typename, msg)) ;
 
-        if ((type == GrB_FP32 || type == GrB_FP64) || type == GrB_INT64) {
+        if ((type == GrB_FP32 || type == GrB_FP64) || (type == GrB_INT64 || type == GrB_UINT64)) {
             // output will keep the same type as input
             GRB_TRY (GrB_Matrix_dup (&A, G->A)) ;
             A_type = type ;
@@ -420,8 +424,16 @@ int LAGraph_Coarsen_Matching
             printf("Printing matched edges for level (%lld)\n", curr_level) ;
             LG_TRY (LAGraph_Vector_Print (matched_edges, LAGraph_COMPLETE, stdout, msg)) ;
         #endif
-        
-        LG_TRY (LAGraph_Parent_to_S (&S, all_newlabels + curr_level, NULL, node_parent, preserve_mapping, msg)) ;
+
+        // build the S matrix
+        LG_TRY (LAGraph_Parent_to_S (
+            &S,
+            (all_newlabels == NULL ? NULL : all_newlabels + curr_level), 
+            NULL, 
+            node_parent,
+            preserve_mapping, 
+            msg
+        )) ;
 
         #ifdef dbg
             printf("Printing S for level (%lld)\n", curr_level) ;

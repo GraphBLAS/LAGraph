@@ -18,17 +18,17 @@ int main(int argc, char **argv)
 
     LAGRAPH_TRY (LAGraph_Random_Init (msg)) ;
     LAGRAPH_TRY (readproblem (&G, NULL,
-        true, true, false, GrB_FP64, false, argc, argv)) ;
+        true, true, false, GrB_UINT64, false, argc, argv)) ;
     
     GrB_Vector *all_parents, *all_mappings ;
     GrB_Matrix coarsened ;
 
     GrB_Matrix A = G->A ;
 
-    LAGRAPH_TRY (LAGraph_Coarsen_Matching (&coarsened, &all_parents, &all_mappings, G, LAGraph_Matching_random, 0, 1, 1, 17, msg)) ;
+    LAGRAPH_TRY (LAGraph_Coarsen_Matching (&coarsened, &all_parents, &all_mappings, G, LAGraph_Matching_random, 1, 1, 1, 17, msg)) ;
     LAGRAPH_TRY (LAGraph_Matrix_Print (coarsened, LAGraph_COMPLETE, stdout, msg)) ;
-    LAGRAPH_TRY (LAGraph_Vector_Print (all_parents[0], LAGraph_COMPLETE, stdout, msg)) ;
-    LAGRAPH_TRY (LAGraph_Vector_Print (all_mappings[0], LAGraph_COMPLETE, stdout, msg)) ;
+    // LAGRAPH_TRY (LAGraph_Vector_Print (all_parents[0], LAGraph_COMPLETE, stdout, msg)) ;
+    // LAGRAPH_TRY (LAGraph_Vector_Print (all_mappings[0], LAGraph_COMPLETE, stdout, msg)) ;
     /*
     char msg[1024] ;
     LAGraph_Init (msg) ;
