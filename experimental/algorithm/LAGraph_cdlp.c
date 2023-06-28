@@ -61,12 +61,14 @@
     LAGraph_Free ((void *) &Ti, NULL) ;                                 \
     free (L) ; L = NULL ;                                               \
     free (L_next) ; L = NULL ;                                          \
-    plist_free (&counts) ;                                              \
+    ptable_pool_free (counts_pool, max_threads) ; counts_pool = NULL ;  \
     GrB_free (&CDLP) ;                                                  \
 }
 
 #include <LAGraph.h>
 #include <LAGraphX.h>
+#include <omp.h>
+#include <stdalign.h>
 #include "LG_internal.h"
 
 // A Go-style slice / Lisp-style property list
@@ -75,24 +77,18 @@ typedef struct {
     size_t len, cap;
 } plist;
 
-void plist_init(plist* list) {
-    list->entries = NULL;
-    list->len = 0;
-    list->cap = 0;
-}
-
 void plist_free(plist *list) {
     free(list->entries);
-    plist_init(list);
+}
+
+void plist_clear(plist *list) {
+    list->len = 0;
 }
 
 void plist_append(plist* list, GrB_Index key, GrB_Index value) {
     if (list->len == list->cap) {
         size_t new_size = list->cap == 0 ? 16 : 2*list->cap;
-        GrB_Index* new_entries = (GrB_Index*)malloc(new_size * sizeof(GrB_Index));
-        memcpy(new_entries, list->entries, list->len * sizeof(GrB_Index));
-        free(list->entries);
-        list->entries = new_entries;
+        list->entries = (GrB_Index*)realloc(list->entries, new_size * sizeof(GrB_Index));
         list->cap = new_size;
     }
     list->entries[list->len] = key;
@@ -113,14 +109,7 @@ GrB_Index plist_add(plist* list, GrB_Index entry) {
 typedef void (*plist_reducer) (GrB_Index* entry1, GrB_Index* count1, GrB_Index entry2, GrB_Index count2);
 
 void plist_reduce(plist* list, GrB_Index* entry, GrB_Index* count, plist_reducer reducer) {
-    if (list->len == 0) {
-        *entry = -1;
-        *count = -1;
-        return;
-    }
-    *entry = list->entries[0];
-    *count = list->entries[1];
-    for (size_t i = 2; i < list->len; i += 2) {
+    for (size_t i = 0; i < list->len; i += 2) {
         reducer(entry, count, list->entries[i], list->entries[i+1]);
     }
 }
@@ -141,6 +130,57 @@ void counts_reducer(GrB_Index* e1, GrB_Index* c1, GrB_Index e2, GrB_Index c2) {
     *c1 = c2;
 }
 
+
+#define bucket_bits 9llu
+#define nof_buckets (1llu << bucket_bits)
+#define bucket_shift (64llu - bucket_bits)
+
+typedef struct {
+    alignas(64) plist buckets[nof_buckets];
+} ptable;
+
+void ptable_free(ptable* table) {
+    for (size_t i = 0; i < nof_buckets; i++) {
+        plist_free(&table->buckets[i]);
+    }
+}
+
+void ptable_pool_free(ptable* table, size_t n) {
+    if (table == NULL) {
+        return;
+    }
+    for (size_t i = 0; i < n; i++) {
+        ptable_free(&table[i]);
+    }
+    free(table);
+}
+
+void ptable_clear(ptable* table) {
+    for (size_t i = 0; i < nof_buckets; i++) {
+        plist_clear(&table->buckets[i]);
+    }
+}
+
+GrB_Index fib_reduce(GrB_Index x)
+{
+    // 2^64 / golden ratio = 11400714819323198485
+    GrB_Index fibhash = x * 11400714819323198485llu;
+    // fast reduce
+    return fibhash >> bucket_shift;
+}
+
+void ptable_add(ptable* table, GrB_Index entry) {
+    plist_add(&table->buckets[fib_reduce(entry)], entry);
+}
+
+void ptable_reduce(ptable* table, GrB_Index* entry, GrB_Index* count, plist_reducer reducer) {
+    *entry = GrB_INDEX_MAX + 1;
+    *count = 0;
+    for (GrB_Index i = 0; i < nof_buckets; i++) {
+        plist_reduce(&table->buckets[i], entry, count, reducer);
+    }
+}
+
 //****************************************************************************
 int LAGraph_cdlp
         (
@@ -156,8 +196,9 @@ int LAGraph_cdlp
     GrB_Matrix S = NULL, T = NULL ;
     GrB_Vector CDLP ;
     GrB_Index *Sp = NULL, *Si = NULL, *Tp = NULL, *Ti = NULL, *L = NULL, *L_next = NULL ;
-    plist counts ;
-    plist_init (&counts) ;
+    ptable *counts_pool = NULL ;
+
+    size_t max_threads = omp_get_max_threads();
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -222,28 +263,29 @@ int LAGraph_cdlp
     }
     L_next = (GrB_Index *)malloc(n * sizeof(GrB_Index)) ;
 
+    counts_pool = calloc(max_threads, sizeof(ptable));
+
     for (int iteration = 0; iteration < itermax; iteration++) {
 
 #pragma omp parallel for schedule(dynamic)
         for (GrB_Index i = 0; i < n; i++) {
-            plist counts ;
-            plist_init (&counts) ;
+            ptable *counts = &counts_pool[omp_get_thread_num()];
             GrB_Index* neighbors = Si + Sp[i] ;
             GrB_Index sz = Sp[i+1] - Sp[i] ;
             for (GrB_Index j = 0; j < sz; j++) {
-                plist_add (&counts, L[neighbors[j]]) ;
+                ptable_add (counts, L[neighbors[j]]) ;
             }
             if (G->kind == LAGraph_ADJACENCY_DIRECTED) {
                 neighbors = Ti + Tp[i] ;
                 sz = Tp[i+1] - Tp[i] ;
                 for (GrB_Index j = 0; j < sz; j++) {
-                    plist_add (&counts, L[neighbors[j]]) ;
+                    ptable_add (counts, L[neighbors[j]]) ;
                 }
             }
             GrB_Index best_label, best_count ;
-            plist_reduce (&counts, &best_label, &best_count, counts_reducer) ;
+            ptable_reduce (counts, &best_label, &best_count, counts_reducer) ;
             L_next[i] = best_label ;
-            plist_free (&counts) ;
+            ptable_clear (counts) ;
         }
 
         GrB_Index* tmp = L ; L = L_next ; L_next = tmp ;
@@ -259,6 +301,8 @@ int LAGraph_cdlp
         }
     }
 
+    ptable_pool_free(counts_pool, max_threads); counts_pool = NULL;
+
     //--------------------------------------------------------------------------
     // extract final labels to the result vector
     //--------------------------------------------------------------------------
@@ -266,7 +310,11 @@ int LAGraph_cdlp
     GRB_TRY (GrB_Vector_new(&CDLP, GrB_UINT64, n))
     for (GrB_Index i = 0; i < n; i++)
     {
-        GRB_TRY (GrB_Vector_setElement(CDLP, L[i], i))
+        GrB_Index l = L[i];
+        if (l == GrB_INDEX_MAX + 1) {
+            l = i;
+        }
+        GRB_TRY (GrB_Vector_setElement(CDLP, l, i))
     }
 
     //--------------------------------------------------------------------------

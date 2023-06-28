@@ -257,6 +257,7 @@ int LAGraph_lcc            // compute lcc for all nodes in A
     // CL<C> = C*L = C*U' using a masked dot product
     GRB_TRY (GrB_Matrix_new (&CL, GrB_FP64, n, n)) ;
     GRB_TRY (GrB_mxm (CL, S, NULL, LAGraph_plus_second_fp64, S, U, GrB_DESC_ST1));
+    GRB_TRY (GrB_free (&S)) ;
     GRB_TRY (GrB_free (&U)) ;
 
     //--------------------------------------------------------------------------
