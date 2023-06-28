@@ -35,6 +35,7 @@
     LAGraph_Free ((void **) &I, NULL) ; \
     LAGraph_Free ((void **) &J, NULL) ; \
     LAGraph_Free ((void **) &X, NULL) ; \
+    GrB_free (&one) ;                   \
 }
 
 #define LG_FREE_ALL                     \
@@ -364,6 +365,16 @@ static inline void negate_scalar
 #endif
 }
 
+bool can_negate(GrB_Type type)
+{
+    return ( type == GrB_INT8 ||
+             type == GrB_INT16 ||
+             type == GrB_INT32 ||
+             type == GrB_INT64 ||
+             type == GrB_FP32 ||
+             type == GrB_FP64 );
+}
+
 //------------------------------------------------------------------------------
 // set_value
 //------------------------------------------------------------------------------
@@ -409,6 +420,8 @@ int LAGraph_MMRead
 
     GrB_Index *I = NULL, *J = NULL ;
     uint8_t *X = NULL ;
+    GrB_Scalar one = NULL;
+
     LG_CLEAR_MSG ;
     LG_ASSERT (A != NULL, GrB_NULL_POINTER) ;
     LG_ASSERT (f != NULL, GrB_NULL_POINTER) ;
@@ -851,7 +864,14 @@ int LAGraph_MMRead
     // allocate space for the triplets
     //--------------------------------------------------------------------------
 
-    GrB_Index nvals3 = ((MM_storage == MM_general) ? 1 : 2) * (nvals + 1) ;
+#if LAGRAPH_SUITESPARSE
+#define IS_SYMMETRY_GEN_IN_TRIPLETS() (MM_storage != MM_symmetric)
+#else
+#define IS_SYMMETRY_GEN_IN_TRIPLETS() (true)
+#endif
+
+    // In some symmetry cases, a (j,i) triplet entry is added for each (i,j)
+    GrB_Index nvals3 = (IS_SYMMETRY_GEN_IN_TRIPLETS() ? 2 : 1) * (nvals + 1) ;
     LG_TRY (LAGraph_Malloc ((void **) &I, nvals3, sizeof (GrB_Index), msg)) ;
     LG_TRY (LAGraph_Malloc ((void **) &J, nvals3, sizeof (GrB_Index), msg)) ;
     LG_TRY (LAGraph_Malloc ((void **) &X, nvals3, typesize, msg)) ;
@@ -956,28 +976,29 @@ int LAGraph_MMRead
             //------------------------------------------------------------------
             // also set the A(j,i) entry, if symmetric
             //------------------------------------------------------------------
-
-            if (i != j && MM_storage != MM_general)
+            if (IS_SYMMETRY_GEN_IN_TRIPLETS())
             {
-                if (MM_storage == MM_symmetric)
+                if (i != j)
                 {
-                    set_value (typesize, j, i, x, I, J, X, &nvals2) ;
+                    if (MM_storage == MM_symmetric)
+                    {
+                        set_value (typesize, j, i, x, I, J, X, &nvals2) ;
+                    }
+                    else if (MM_storage == MM_skew_symmetric)
+                    {
+                        negate_scalar (type, x) ;
+                        set_value (typesize, j, i, x, I, J, X, &nvals2) ;
+                    }
+#if 0
+                    else if (MM_storage == MM_hermitian)
+                    {
+                        double complex *value = (double complex *) x ;
+                        (*value) = conj (*value) ;
+                        set_value (typesize, j, i, x, I, J, X, &nvals2) ;
+                    }
+#endif
                 }
-                else if (MM_storage == MM_skew_symmetric)
-                {
-                    negate_scalar (type, x) ;
-                    set_value (typesize, j, i, x, I, J, X, &nvals2) ;
-                }
-                #if 0
-                else if (MM_storage == MM_hermitian)
-                {
-                    double complex *value = (double complex *) x ;
-                    (*value) = conj (*value) ;
-                    set_value (typesize, j, i, x, I, J, X, &nvals2) ;
-                }
-                #endif
             }
-
             // one more entry has been read in
             break ;
         }
@@ -987,65 +1008,136 @@ int LAGraph_MMRead
     // build the final matrix
     //--------------------------------------------------------------------------
 
+#if LAGRAPH_SUITESPARSE
+// TODO: this needs proper testing before being re-added
+/* #define SKEW_FREE                                                       \ */
+/* {                                                                       \ */
+/*     GrB_free(&Diag);                                                    \ */
+/*     GrB_free(&Id);                                                      \ */
+/*     GrB_free(&one);                                                     \ */
+/* } */
+
+/* #define SKEW_CATCH(info)                                                \ */
+/* {                                                                       \ */
+/*     LG_ERROR_MSG ("GraphBLAS failure (file %s, line %d): info: %d",     \ */
+/*         __FILE__, __LINE__, info) ;                                     \ */
+/*     SKEW_FREE();                                                        \ */
+/*     return (info) ;                                                     \ */
+/* } */
+
+/* #pragma push_macro("GRB_CATCH") */
+/* #undef GRB_CATCH */
+/* #define GRB_CATCH(info) SKEW_CATCH(info) */
+
+/* #define SKEW_BUILDER(_grb_type)                                         \ */
+/* {                                                                       \ */
+/*     GrB_Vector Diag;                                                    \ */
+/*     GrB_Matrix Id;                                                      \ */
+/*     GrB_Scalar one;                                                     \ */
+/*                                                                         \ */
+/*     GRB_TRY (GrB_Scalar_new (&one, GrB_ ## _grb_type)) ;                \ */
+/*     GRB_TRY (GrB_Scalar_setElement (one, 1)) ;                          \ */
+/*     GRB_TRY (GrB_Vector_new (&Diag, GrB_ ## _grb_type, nrows)) ;        \ */
+/*     GRB_TRY (GxB_Vector_build_Scalar (Diag, GrB_ALL, one, nrows)) ;     \ */
+/*     GRB_TRY (GrB_Matrix_diag(&Id, Diag, 0)) ;                           \ */
+/*                                                                         \ */
+/*     GRB_TRY (GrB_Matrix_eWiseAdd_BinaryOp (*A, Id, GxB_RMINUS_ ## _grb_type, \ */
+/*                                            GxB_ANY_ ## _grb_type,       \ */
+/*                                            *A, *A, GrB_DESC_SCT1)) ;    \ */
+/*     SKEW_FREE;                                                          \ */
+/* } */
+
+// #pragma pop_macro("GRB_CATCH")
+
+#define MATRIX_BUILDER(_grb_type, _c_type) {                            \
+    if (MM_type == MM_pattern)                                          \
+    {                                                                   \
+        GRB_TRY (GrB_Scalar_new (&one, GrB_ ## _grb_type)) ;            \
+        GRB_TRY (GrB_Scalar_setElement (one, 1)) ;                      \
+        GRB_TRY (GxB_Matrix_build_Scalar (*A, I, J, one, nvals2)) ;     \
+    }                                                                   \
+    else                                                                \
+        GRB_TRY (GrB_Matrix_build_ ## _grb_type (*A, I, J, (_c_type *) X, nvals2, NULL)) ; \
+                                                                        \
+    /* do not need the workspace (I,J,X, etc) anymore  */               \
+    LG_FREE_WORK ;                                                      \
+                                                                        \
+    if (!IS_SYMMETRY_GEN_IN_TRIPLETS())                                 \
+    {                                                                   \
+        if (MM_storage == MM_symmetric)                                 \
+        {                                                               \
+            GRB_TRY (                                                   \
+                GrB_Matrix_eWiseAdd_BinaryOp (*A, NULL, NULL,           \
+                                              GxB_ANY_ ## _grb_type,    \
+                                              *A, *A, GrB_DESC_T1) ) ;  \
+        }                                                               \
+    }                                                                   \
+}
+
+#else // ! LAGRAPH_SUITESPARSE
+
+#define MATRIX_BUILDER(_grb_type, _c_type)                              \
+{                                                                       \
+    GRB_TRY (GrB_Matrix_build_ ## _grb_type (*A, I, J, (_c_type *) X, nvals2, NULL)) ; \
+    LG_FREE_WORK;                                                       \
+}
+
+#endif
+
     if (type == GrB_BOOL)
     {
-        GRB_TRY (GrB_Matrix_build_BOOL (*A, I, J, (bool *) X, nvals2, NULL)) ;
+        MATRIX_BUILDER(BOOL, bool);
     }
     else if (type == GrB_INT8)
     {
-        GRB_TRY (GrB_Matrix_build_INT8 (*A, I, J, (int8_t *) X, nvals2, NULL)) ;
+        MATRIX_BUILDER(INT8, int8_t);
     }
     else if (type == GrB_INT16)
     {
-        GRB_TRY (GrB_Matrix_build_INT16 (*A, I, J, (int16_t *) X, nvals2, NULL)) ;
+        MATRIX_BUILDER(INT16 , int16_t);
     }
     else if (type == GrB_INT32)
     {
-        GRB_TRY (GrB_Matrix_build_INT32 (*A, I, J, (int32_t *) X, nvals2, NULL)) ;
+        MATRIX_BUILDER(INT32 , int32_t);
     }
     else if (type == GrB_INT64)
     {
-        GRB_TRY (GrB_Matrix_build_INT64 (*A, I, J, (int64_t *) X, nvals2, NULL)) ;
+        MATRIX_BUILDER(INT64 , int64_t);
     }
     else if (type == GrB_UINT8)
     {
-        GRB_TRY (GrB_Matrix_build_UINT8 (*A, I, J, (uint8_t *) X, nvals2, NULL)) ;
+        MATRIX_BUILDER(UINT8 , uint8_t);
     }
     else if (type == GrB_UINT16)
     {
-        GRB_TRY (GrB_Matrix_build_UINT16 (*A, I, J, (uint16_t *) X, nvals2, NULL)) ;
+        MATRIX_BUILDER(UINT16 , uint16_t);
     }
     else if (type == GrB_UINT32)
     {
-        GRB_TRY (GrB_Matrix_build_UINT32 (*A, I, J, (uint32_t *) X, nvals2, NULL)) ;
+        MATRIX_BUILDER(UINT32 , uint32_t);
     }
     else if (type == GrB_UINT64)
     {
-        GRB_TRY (GrB_Matrix_build_UINT64 (*A, I, J, (uint64_t *) X, nvals2, NULL)) ;
+        MATRIX_BUILDER(UINT64 , uint64_t);
     }
     else if (type == GrB_FP32)
     {
-        GRB_TRY (GrB_Matrix_build_FP32 (*A, I, J, (float *) X, nvals2, NULL)) ;
+        MATRIX_BUILDER(FP32 , float);
     }
     else if (type == GrB_FP64)
     {
-        GRB_TRY (GrB_Matrix_build_FP64 (*A, I, J, (double *) X, nvals2, NULL)) ;
+        MATRIX_BUILDER(FP64 , double);
     }
 #if 0
     else if (type == GxB_FC32)
     {
-        GRB_TRY (GxB_Matrix_build_FC32 (*A, I, J, (GxB_FC32_t *) X, nvals2, NULL)) ;
+        MATRIX_BUILDER(FC32 , GxB_FC32_t);
     }
     else if (type == GxB_FC64)
     {
-        GRB_TRY (GxB_Matrix_build_FC64 (*A, I, J, (GxB_FC64_t *) X, nvals2, NULL)) ;
+        MATRIX_BUILDER(FC64 , GxB_FC64_t);
     }
 #endif
 
-    //--------------------------------------------------------------------------
-    // free workspace and return result
-    //--------------------------------------------------------------------------
-
-    LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }
