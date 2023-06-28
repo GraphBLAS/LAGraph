@@ -89,10 +89,7 @@ void plist_free(plist *list) {
 void plist_append(plist* list, GrB_Index key, GrB_Index value) {
     if (list->len == list->cap) {
         size_t new_size = list->cap == 0 ? 16 : 2*list->cap;
-        GrB_Index* new_entries = (GrB_Index*)malloc(new_size * sizeof(GrB_Index));
-        memcpy(new_entries, list->entries, list->len * sizeof(GrB_Index));
-        free(list->entries);
-        list->entries = new_entries;
+        list->entries = (GrB_Index*)realloc(list->entries, new_size * sizeof(GrB_Index));
         list->cap = new_size;
     }
     list->entries[list->len] = key;
@@ -266,7 +263,11 @@ int LAGraph_cdlp
     GRB_TRY (GrB_Vector_new(&CDLP, GrB_UINT64, n))
     for (GrB_Index i = 0; i < n; i++)
     {
-        GRB_TRY (GrB_Vector_setElement(CDLP, L[i], i))
+        GrB_Index l = L[i];
+        if (l == GrB_INDEX_MAX + 1) {
+            l = i;
+        }
+        GRB_TRY (GrB_Vector_setElement(CDLP, l, i))
     }
 
     //--------------------------------------------------------------------------
