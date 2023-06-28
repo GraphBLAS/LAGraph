@@ -13,6 +13,8 @@
 
 // Contributed by Timothy A. Davis, Texas A&M University
 
+// FIXME: deprecate.  Use GrB_get.
+
 //------------------------------------------------------------------------------
 
 #include "LG_internal.h"
