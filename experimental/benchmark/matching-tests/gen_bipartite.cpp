@@ -8,10 +8,10 @@ Usage:
 NOTE: The <weighted> and <perf> arguments are only read when <naive> = 1. The <prefer_light> argument is only read if <weighted> = 1.
 num_nodes [int]: How many nodes to include in the randomly generated graph
 sparse_factor [double]: Average degree of each node in the random graph
-naive [0/1]: Whether to evaluate the matching of the random graph using the naive method or exact (maximum) method. Described further below.
 perf [0/1]: IF naive = 1, whether to output performance data (running time) or the matching details. Note that this means the exact (maximum) method can not be benchmarked for performance.
+naive [0/1]: Whether to evaluate the matching of the random graph using the naive method or exact (maximum) method. Described further below. naive = 1 always if perf = 1.
 weighted [0/1]: IF naive = 1, specifies if the random graph (and matching) should be weighted. Note that this means the exact (maximum) method can not run on weighted graphs.
-prefer_light [0/1]: IF the graph is weighted, then specifies whether to give preference to light matchings or heavy matchings.
+prefer_light [0/1]: IF the graph is weighted, then specifies whether to give preference to light matchings or heavy matchings. Ignored if weighted = 0.
 
 Details:
 The maximum matching technique used here is a classic implementation of Ford-Fulkerson max flow, which is well known to find maximum-cardinality matchings in bipartite graphs.
@@ -160,12 +160,19 @@ int maxflow(int s, int t, int n) {
 }
 
 int main(int argc, char **argv){
+    // TODO: Right now, perf is controlled by naive. Switch this
     int num_nodes = atoi(argv[1]);
     double sparse_factor = atof(argv[2]);
-    int naive = atoi(argv[3]);
-    int perf = 0;
+    int perf = atoi(argv[3]);
+    
+    int naive;
+    if(perf){
+        naive = 1;
+    } else {
+        naive = atoi(argv[4]);
+    }
+    
     if(naive){
-        perf = atoi(argv[4]);
         weighted = atoi(argv[5]);
         if(weighted){
             prefer_light = atoi(argv[6]);

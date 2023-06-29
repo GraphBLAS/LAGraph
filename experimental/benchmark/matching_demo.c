@@ -37,7 +37,7 @@ NOTE: When complete, prints out the matching vector and E matrix of the input gr
 #include "LAGraphX.h"
 #include <omp.h>
 
-#define VERBOSE
+// #define VERBOSE
 
 #define NTHREAD_LIST 1
 #define THREAD_LIST 8
@@ -57,8 +57,6 @@ NOTE: When complete, prints out the matching vector and E matrix of the input gr
 int main (int argc, char** argv)
 {
     char msg [LAGRAPH_MSG_LEN] ;
-
-    bool test_performance = true ;
 
     LAGraph_Graph G = NULL ;
     GrB_Matrix E = NULL ;
@@ -87,10 +85,6 @@ int main (int argc, char** argv)
 
     force_stdin = force_stdin || quality ;
 
-    if (quality) {
-        test_performance = false ;
-    }
-
     LAGRAPH_TRY (LAGraph_Random_Init (msg)) ;
     LAGRAPH_TRY (readproblem (&G, NULL,
         true, true, false, GrB_FP64, false, force_stdin ? 1 : argc, argv)) ;
@@ -109,7 +103,7 @@ int main (int argc, char** argv)
 
     GRB_TRY (GrB_reduce (weight, NULL, NULL, GrB_MAX_MONOID_FP64, E_t, NULL)) ;
 
-    if (!test_performance) {
+    if (quality) {
 
         //--------------------------------------------------------------------------
         // Printing E matrix, best result from ntrial runs for my own, external tests for quality (not performance)
@@ -163,7 +157,7 @@ int main (int argc, char** argv)
 
         LG_FREE_ALL ;
         
-        return 0 ;
+        return (GrB_SUCCESS) ;
     }
     int nt = NTHREAD_LIST ;
     
