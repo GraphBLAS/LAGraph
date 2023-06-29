@@ -3,11 +3,11 @@ Notes from LAGraph meeting, June 14, 2023:
 
     For LAGraph 1.1:
 
-        move algorithms from experimental to src
-        use v2.1 C API spec? ... yes
+        * move algorithms from experimental to src
+        * use v2.1 C API spec
 
-        test coverage of new experimental methods
-        need faster MM reader/writer
+        * test coverage of new experimental methods
+        * need faster MM reader/writer
 
 
     LDBC: updates, in src, and experimental <<<<
