@@ -183,7 +183,7 @@ void test_CheckGraph_failures (void)
 
     #if LAGRAPH_SUITESPARSE
     // G->AT must be by-row
-    OK (GxB_set (G->AT, GxB_FORMAT, GxB_BY_COL)) ;
+    OK (GxB_set (G->AT, GxB_FORMAT, GxB_BY_COL)) ;  // FIXME: use GrB_set
     TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
     printf ("msg: %s\n", msg) ;
     #endif
@@ -216,7 +216,7 @@ void test_CheckGraph_failures (void)
 
     #if LAGRAPH_SUITESPARSE
     // G->A must be by-row
-    OK (GxB_set (G->A, GxB_FORMAT, GxB_BY_COL)) ;
+    OK (GxB_set (G->A, GxB_FORMAT, GxB_BY_COL)) ;   // FIXME: use GrB_set
     TEST_CHECK (LAGraph_CheckGraph (G, msg) == LAGRAPH_INVALID_GRAPH) ;
     printf ("msg: %s\n", msg) ;
     #endif

@@ -2,7 +2,7 @@
 // LAGraph_demo.h: include file for LAGraph/src/benchmark programs
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2023 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 //
 // For additional details (including references to third party source code and
@@ -223,7 +223,7 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
     // create the type string
     //--------------------------------------------------------------------------
 
-    GRB_TRY (GxB_Type_size (&typesize, type)) ;
+    LAGRAPH_TRY (LAGraph_SizeOfType (&typesize, type, msg)) ;
 
     char typename [LEN] ;
     int32_t typecode ;
@@ -284,7 +284,7 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
     }
     else
     {
-        // unsupported type (GxB_FC32 and GxB_FC64 not yet supported)
+        // unsupported type
         CATCH (GrB_NOT_IMPLEMENTED) ;
     }
     typename [72] = '\0' ;

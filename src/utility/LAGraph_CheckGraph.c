@@ -48,6 +48,7 @@ int LAGraph_CheckGraph
     }
 
     #if LAGRAPH_SUITESPARSE
+        // FIXME: use GrB_get with GrB_STORAGE_ORIENTATION_HINT
         // only by-row format is supported when using SuiteSparse
         GxB_Format_Value fmt ;
         GRB_TRY (GxB_get (A, GxB_FORMAT, &fmt)) ;
@@ -70,6 +71,7 @@ int LAGraph_CheckGraph
 
         #if LAGRAPH_SUITESPARSE
             // only by-row format is supported when using SuiteSparse
+            // FIXME: use GrB_get with GrB_STORAGE_ORIENTATION_HINT
             GxB_Format_Value fmt ;
             GRB_TRY (GxB_get (AT, GxB_FORMAT, &fmt)) ;
             LG_ASSERT_MSG (fmt == GxB_BY_ROW,

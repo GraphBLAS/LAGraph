@@ -619,4 +619,29 @@ int LG_KindName
 // # of entries to print for LAGraph_Matrix_Print and LAGraph_Vector_Print
 #define LG_SHORT_LEN 30
 
+//------------------------------------------------------------------------------
+// GrB_get/set for SuiteSparse
+//------------------------------------------------------------------------------
+
+#if LAGRAPH_SUITESPARSE
+
+    // SuiteSparse v8.1 or later
+    #define LG_HYPERSPARSE GxB_HYPERSPARSE
+    #define LG_SPARSE      GxB_SPARSE
+    #define LG_BITMAP      GxB_BITMAP
+    #define LG_FULL        GxB_FULL
+    #define LG_SET_SPARSITY(object,sparsity) \
+        GrB_set (object, sparsity, GxB_SPARSITY_CONTROL)
+
+#else
+
+    // vanilla GraphBLAS
+    #define LG_HYPERSPARSE 1
+    #define LG_SPARSE      2
+    #define LG_BITMAP      4
+    #define LG_FULL        8
+    #define LG_SET_SPARSITY(object,sparsity) GrB_SUCCESS
+
+#endif
+
 #endif

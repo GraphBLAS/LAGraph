@@ -164,6 +164,7 @@ int LAGr_Init
 
     #if LAGRAPH_SUITESPARSE
     {
+        // FIXME: use GrB_set
         GRB_TRY (GxB_set (GxB_NTHREADS, LG_nthreads_inner)) ;
     }
     #endif

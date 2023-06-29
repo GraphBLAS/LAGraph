@@ -198,7 +198,7 @@ void test_Graph_Print_failures (void)
 
     #if LAGRAPH_SUITESPARSE
     // G->AT must be held by row, not by column
-    OK (GxB_set (G->AT, GxB_FORMAT, GxB_BY_COL)) ;
+    OK (GxB_set (G->AT, GxB_FORMAT, GxB_BY_COL)) ;  // FIXME: use GrB_set
     result = LAGraph_Graph_Print (G, pr, stdout, msg) ;
     printf ("result: %d, msg: %s\n", result, msg) ;
     TEST_CHECK (result == LAGRAPH_INVALID_GRAPH) ;

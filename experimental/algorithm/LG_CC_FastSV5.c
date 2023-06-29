@@ -2,7 +2,7 @@
 // LG_CC_FastSV5: connected components
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2023 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 //
 // For additional details (including references to third party source code and
@@ -441,7 +441,7 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
         GRB_TRY (GxB_Matrix_export_CSR (&S, &type, &nrows, &ncols, &Sp, &Sj,
             &Sx, &Sp_size, &Sj_size, &Sx_size,
             &S_iso, &S_jumbled, NULL)) ;
-        GRB_TRY (GxB_Type_size (&typesize, type)) ;
+        LAGRAPH_TRY (LAGraph_SizeOfType (&typesize, type, msg)) ;
         G->A = NULL ;
 
         //----------------------------------------------------------------------

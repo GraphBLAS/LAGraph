@@ -122,10 +122,8 @@ int LAGraph_Vector_IsEqual
     else if (type == GrB_UINT64) op = GrB_EQ_UINT64 ;
     else if (type == GrB_FP32  ) op = GrB_EQ_FP32   ;
     else if (type == GrB_FP64  ) op = GrB_EQ_FP64   ;
-    #if 0
-    else if (type == GxB_FC32  ) op = GxB_EQ_FC32   ;
-    else if (type == GxB_FC64  ) op = GxB_EQ_FC64   ;
-    #endif
+//  else if (type == GxB_FC32  ) op = GxB_EQ_FC32   ;
+//  else if (type == GxB_FC64  ) op = GxB_EQ_FC64   ;
 
     LG_ASSERT_MSG (op != NULL, GrB_NOT_IMPLEMENTED, "type not supported") ;
 

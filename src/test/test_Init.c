@@ -34,6 +34,7 @@ void test_Init (void)
     OK (status) ;
     int ver [3] ;
 
+    // FIXME: use GrB_get as much as possible here
     #if LAGRAPH_SUITESPARSE
     const char *name, *date ;
     OK (GxB_Global_Option_get (GxB_LIBRARY_NAME, &name)) ;

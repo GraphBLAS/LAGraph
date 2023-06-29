@@ -114,6 +114,7 @@ void setup (void)
     printf ("\nsetup: %s\n", __FILE__) ;
     printf ("data is in [%s]\n", LG_DATA_DIR) ;
     OK (LAGraph_Init (msg)) ;
+    // FIXME: use GrB_get as much as possible here
     #if LAGRAPH_SUITESPARSE
     OK (GxB_get (GxB_LIBRARY_NAME, &name)) ;
     OK (GxB_get (GxB_LIBRARY_DATE, &date)) ;

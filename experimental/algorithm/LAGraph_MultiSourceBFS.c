@@ -95,7 +95,8 @@ int LAGraph_MultiSourceBFS
 
         // create the parent matrix.  pi(i, j) is the parent id of node j in source i's BFS
         GRB_TRY (GrB_Matrix_new (&pi, int_type, nsrc, n)) ;
-        GRB_TRY (GxB_set (pi, GxB_SPARSITY_CONTROL, GxB_BITMAP + GxB_FULL)) ; // CHECK this works with matrices too
+        GRB_TRY (LG_SET_SPARSITY (pi, LG_BITMAP + LG_FULL)) ;
+
         // pi (i, src) = src denotes the root of that row's BFS tree
         for (int64_t s = 0; s < nsrc; s++) 
         {
@@ -139,7 +140,7 @@ int LAGraph_MultiSourceBFS
         // create the level matrix. v(i,j) is the level of node j in source i's BFS
         // v (s, src) = 0 denotes the source node of that row
         GRB_TRY (GrB_Matrix_new (&v, int_type, nsrc, n)) ;
-        GRB_TRY (GxB_set (v, GxB_SPARSITY_CONTROL, GxB_BITMAP + GxB_FULL)) ;
+        GRB_TRY (LG_SET_SPARSITY (v, LG_BITMAP + LG_FULL)) ;
         for (int64_t s = 0; s < nsrc; s++) 
         {
             GrB_Index currsrc;
@@ -162,14 +163,10 @@ int LAGraph_MultiSourceBFS
 
     for (int64_t nvisited = nsrc, k = 1 ; nvisited < n*nsrc ; nvisited += nq, k++)
     {
-        // skipping push-pull selection
+
         //----------------------------------------------------------------------
         // q = frontier at the kth level of the BFS
         //----------------------------------------------------------------------
-
-        // skipped since all push
-        // int sparsity = do_push ? GxB_SPARSE : GxB_BITMAP ;
-        // GRB_TRY (GxB_set (q, GxB_SPARSITY_CONTROL, sparsity)) ;
 
         // mask is pi if computing parent, v if computing just level
         

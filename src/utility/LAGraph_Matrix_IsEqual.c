@@ -2,7 +2,7 @@
 // LAGraph_Matrix_IsEqual: check two matrices for exact equality
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2023 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 //
 // For additional details (including references to third party source code and
@@ -18,7 +18,7 @@
 // LAGraph_Matrix_IsEqual: check if two matrices are identically equal (same
 // size, type, structure, size, and values).
 
-// If the two matrices are GrB_FP32, GrB_FP64, GxB_FC32, or GxB_FC64 and have
+// If the two matrices have any floating point type and have
 // NaNs, then these functions will return false, since NaN == NaN is false.
 
 #define LG_FREE_WORK GrB_free (&C) ;
@@ -118,10 +118,8 @@ int LAGraph_Matrix_IsEqual
     else if (type == GrB_UINT64) op = GrB_EQ_UINT64 ;
     else if (type == GrB_FP32  ) op = GrB_EQ_FP32   ;
     else if (type == GrB_FP64  ) op = GrB_EQ_FP64   ;
-    #if 0
-    else if (type == GxB_FC32  ) op = GxB_EQ_FC32   ;
-    else if (type == GxB_FC64  ) op = GxB_EQ_FC64   ;
-    #endif
+//  else if (type == GxB_FC32  ) op = GxB_EQ_FC32   ;
+//  else if (type == GxB_FC64  ) op = GxB_EQ_FC64   ;
 
     LG_ASSERT_MSG (op != NULL, GrB_NOT_IMPLEMENTED, "type not supported") ;
 

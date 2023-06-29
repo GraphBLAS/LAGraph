@@ -68,7 +68,7 @@ int LG_nself_edges
     #else
 
         //----------------------------------------------------------------------
-        // pure GrB version with no GxB extensions
+        // pure GrB version
         //----------------------------------------------------------------------
 
         GRB_TRY (GrB_Matrix_new (&M, GrB_BOOL, nrows, ncols)) ;

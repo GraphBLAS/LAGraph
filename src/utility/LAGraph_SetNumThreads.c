@@ -42,6 +42,7 @@ int LAGraph_SetNumThreads
     #if LAGRAPH_SUITESPARSE
     {
         // SuiteSparse:GraphBLAS: set # of threads with global setting
+        // FIXME: use GrB_set
         GRB_TRY (GxB_set (GxB_NTHREADS, nthreads_inner)) ;
     }
     #endif
