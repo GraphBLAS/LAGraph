@@ -163,11 +163,6 @@ void test_AllKTruss (void)
             {
                 OK (LAGraph_Matrix_IsEqual (&ok, Cset [k], Cset2 [k], msg)) ;
             }
-//          if (!ok)
-//          {
-//              GxB_print (Cset [k], 2) ;
-//              GxB_print (Cset2 [k], 2) ;
-//          }
             TEST_CHECK (ok) ;
             OK (GrB_free (&(Cset [k]))) ;
             OK (GrB_free (&(Cset2 [k]))) ;

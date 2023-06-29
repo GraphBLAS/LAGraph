@@ -150,19 +150,7 @@ int LAGraph_SquareClustering
     GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
 
     // out_degrees as a diagonal matrix.
-    #if LAGRAPH_SUITESPARSE
-        #if GxB_IMPLEMENTATION >= GxB_VERSION (7,0,0)
-        // SuiteSparse 7.x and later:
-        GRB_TRY (GrB_Matrix_diag(&D, deg, 0)) ;
-        #else
-        // SuiteSparse 6.x and earlier, which had the incorrect signature:
-        GRB_TRY (GrB_Matrix_new(&D, GrB_INT64, n, n)) ;
-        GRB_TRY (GrB_Matrix_diag(D, deg, 0)) ;
-        #endif
-    #else
-    // standard GrB:
     GRB_TRY (GrB_Matrix_diag(&D, deg, 0)) ;
-    #endif
 
     // We use ~D.S as a mask so P2 won't have values along the diagonal.
     //    P2(~D.S) = plus_pair(A @ A.T)

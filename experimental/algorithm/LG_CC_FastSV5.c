@@ -158,9 +158,6 @@ static inline int32_t ht_most_frequent
 // in undefined behavior.  GrB_assign in SuiteSparse:GraphBLAS follows the
 // MATLAB rule, which discards all but the first of the duplicates.
 
-// todo: add this to GraphBLAS as a variant of GrB_assign, either as
-// GxB_assign_accum (or another name), or as a GxB_* descriptor setting.
-
 // FIXME: Reduce_assign32 is slow.  See src/algorithm/LG_CC_FastSV6.
 
 static inline int Reduce_assign32
@@ -322,7 +319,7 @@ static inline int Reduce_assign32
 
 #endif
 
-int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
+int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method
 (
     // output
     GrB_Vector *component,  // component(i)=s if node is in the component s
@@ -514,8 +511,7 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
 
         // T (i,:) consists of the first FASTSV_SAMPLES of S (i,:).
 
-        // todo: this could be done by GxB_Select, using a new operator.  Need
-        // to define a set of GxB_SelectOp operators that would allow for this.
+        // todo: this could be done by GrB_Select, using a new operator.
 
         // Note that Tx is not modified.  Only Tp and Tj are constructed.
 

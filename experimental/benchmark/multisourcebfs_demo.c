@@ -116,8 +116,8 @@ int main (int argc, char **argv)
         GRB_TRY (GrB_Vector_extractElement (&src, SourceNodes, i)) ;
         LAGRAPH_TRY (LAGr_BreadthFirstSearch (&tempLevel,&tempParent, G, src, msg)) ;
         
-        LAGRAPH_TRY (GxB_subassign(check_level, NULL, NULL, tempLevel, i, GrB_ALL, n, GrB_NULL)) ;
-        LAGRAPH_TRY (GxB_subassign(check_parent, NULL, NULL, tempParent, i, GrB_ALL, n, GrB_NULL)) ;
+        LAGRAPH_TRY (GrB_assign(check_level, NULL, NULL, tempLevel, i, GrB_ALL, n, GrB_NULL)) ;
+        LAGRAPH_TRY (GrB_assign(check_parent, NULL, NULL, tempParent, i, GrB_ALL, n, GrB_NULL)) ;
     }
     
     t = LAGraph_WallClockTime ( ) - t ;

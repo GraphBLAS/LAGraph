@@ -109,7 +109,6 @@ void test_SWrite (void)
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, f, msg)) ;
         fclose (f) ;
-        // GxB_print (A, 3) ;
 
         // get the name of the C typedef for the matrix
         OK (LAGraph_Matrix_TypeName (atypename, A, msg)) ;
@@ -134,7 +133,7 @@ void test_SWrite (void)
             #if LAGRAPH_SUITESPARSE
             if (k % 2 == 0)
             {
-                // for SuiteSparse: try GxB for every other matrix
+                // for SuiteSparse
                 OK (GxB_Matrix_serialize (&blob, &blob_size, A, NULL)) ;
             }
             else
@@ -153,14 +152,9 @@ void test_SWrite (void)
 
             // deserialize the matrix
             int rr = (GrB_Matrix_deserialize (&B, atype, blob, blob_size)) ;
-            // printf ("A:\n") ; GxB_print (A, 2) ;
-            // printf ("B:\n") ; GxB_print (B, 2) ;
-            // printf ("rr: %d\n", rr) ;
             OK (rr) ;
 
             // ensure the matrices A and B are the same
-            // GxB_print (A,3) ;
-            // GxB_print (B,3) ;
             bool ok = false ;
             OK (LAGraph_Matrix_IsEqual (&ok, A, B, msg)) ;
             TEST_CHECK (ok) ;
@@ -201,8 +195,6 @@ void test_SWrite (void)
             OK (GrB_Matrix_deserialize (&B, atype, blob2, blob_size2)) ;
 
             // ensure the matrices A and B are the same
-            // GxB_print (A,3) ;
-            // GxB_print (B,3) ;
             OK (LAGraph_Matrix_IsEqual (&ok, A, B, msg)) ;
             TEST_CHECK (ok) ;
             OK (GrB_free (&B)) ;

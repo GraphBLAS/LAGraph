@@ -156,7 +156,8 @@ int LAGraph_EstimateDiameter
         // srcs = randomized, still of size nsrcs-1, values in range 0 to UINT64_MAX
         LAGRAPH_TRY (LAGraph_Random_Seed (srcs, seed, msg)) ;
         GRB_TRY (GxB_BinaryOp_new (&Mod,
-            (n > INT32_MAX) ? ((GxB_binary_function)mod64) : ((GxB_binary_function)mod32),
+            (n > INT32_MAX) ? ((GxB_binary_function)mod64) :
+                              ((GxB_binary_function)mod32),
             int_type, int_type, int_type,
             (n > INT32_MAX) ? "mod64" : "mod32",
             (n > INT32_MAX) ? MOD64_DEFN : MOD32_DEFN)) ;

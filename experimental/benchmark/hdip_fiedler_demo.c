@@ -454,10 +454,10 @@ int main(int argc, char **argv)
     //--------------------------------------------------------------------------
 
     printf("\n===============================The result vector x:\n");
-    GxB_print(x_handle, 3);
+    LAGraph_Vector_Print (x_handle, 3, stdout, msg) ;
     printf("\n===============================The lambda: %f\n", lambda_result);
     printf("\n===============================The iters: \n");
-    GxB_print(iters_handle, 3);
+    LAGraph_Vector_Print (iters_handle, 3, stdout, msg) ;
 
     //--------------------------------------------------------------------------
     // free everyting and finish

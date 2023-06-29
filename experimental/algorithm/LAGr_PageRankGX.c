@@ -103,7 +103,7 @@ int LAGr_PageRankGX
     // These vertices are the ones which have outgoing edges. In subsequent
     // operations, this mask can be negated to select sink vertices.
     GRB_TRY (GrB_Vector_new (&non_sink_mask, GrB_BOOL, n)) ;
-    GRB_TRY (GrB_reduce (non_sink_mask, NULL, NULL, GxB_LOR_BOOL_MONOID,
+    GRB_TRY (GrB_reduce (non_sink_mask, NULL, NULL, GrB_LOR_MONOID_BOOL,
         G->A, NULL)) ;
 
     // Initialize vector for collecting the sink values
@@ -146,7 +146,7 @@ int LAGr_PageRankGX
 
         // Sum the previous PR values of sink vertices together
         double sink_value;
-        GRB_TRY (GrB_reduce (&sink_value, NULL, GxB_PLUS_FP64_MONOID,
+        GRB_TRY (GrB_reduce (&sink_value, NULL, GrB_PLUS_MONOID_FP64,
             sink_vec, NULL )) ;
 
         // Multiply by damping factor and 1 / |V|

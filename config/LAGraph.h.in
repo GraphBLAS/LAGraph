@@ -60,7 +60,7 @@
 //==============================================================================
 
 // GraphBLAS C API specification, OpenMP, and vanilla vs
-// SuiteSparse:GraphBLAS GxB extensions.
+// SuiteSparse:GraphBLAS extensions.
 
 #if ( GRB_VERSION < 2 )
     #error "The GraphBLAS library must support the v2.0 C API Specification"
@@ -97,10 +97,10 @@
 #endif
 
 #if ( !LAGRAPH_VANILLA ) && defined ( GxB_SUITESPARSE_GRAPHBLAS )
-    // use SuiteSparse, and its GxB* extensions
+    // use SuiteSparse, and its extensions
     #define LAGRAPH_SUITESPARSE 1
 #else
-    // use any GraphBLAS library (possibly SuiteSparse) but with no GxB*
+    // use any GraphBLAS library (possibly SuiteSparse) but with no extensions
     #define LAGRAPH_SUITESPARSE 0
 #endif
 
@@ -1468,7 +1468,7 @@ double LAGraph_WallClockTime     // returns omp_get_wtime(), or other timer
  * @retval LAGRAPH_IO_ERROR if the file could not
  *      be read or contains a matrix with an invalid Matrix Market format.
  * @retval GrB_NOT_IMPLEMENTED if the type is not supported.  Complex types
- *      (GxB_FC32 and GxB_FC64 in SuiteSparse:GraphBLAS) are not yet supported.
+ *      are not yet supported.
  * @returns any GraphBLAS errors that may have been encountered.
  */
 
@@ -1506,7 +1506,7 @@ int LAGraph_MMRead
  * @retval GrB_NULL_POINTER if A or f are NULL.
  * @retval LAGRAPH_IO_ERROR if the file could not be written to.
  * @retval GrB_NOT_IMPLEMENTED if the type is not supported.  Complex types
- *      (GxB_FC32 and GxB_FC64 in SuiteSparse:GraphBLAS) are not yet supported.
+ *      are not yet supported.
  * @returns any GraphBLAS errors that may have been encountered.
  */
 
