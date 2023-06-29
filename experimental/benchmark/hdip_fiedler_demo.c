@@ -271,12 +271,6 @@ int main(int argc, char **argv)
     bool burble = false; // set true for diagnostic outputs
     demo_init(burble);
 
-    // debug only:
-    int64_t free_pool_limit[64];
-    for (int k = 0; k < 64; k++)
-        free_pool_limit[k] = 0;
-    GxB_set(GxB_MEMORY_POOL, free_pool_limit);
-
     //--------------------------------------------------------------------------
     // read in the graph: this method is defined in LAGraph_demo.h
     //--------------------------------------------------------------------------

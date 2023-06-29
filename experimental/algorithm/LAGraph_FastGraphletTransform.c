@@ -331,7 +331,6 @@ int LAGraph_FastGraphletTransform
         }                               \
     }
 
-//  GxB_set (GxB_NTHREADS, 1) ;
     int save_nthreads_outer, save_nthreads_inner ;
     LG_TRY (LAGraph_GetNumThreads (&save_nthreads_outer, &save_nthreads_inner, msg)) ;
     LG_TRY (LAGraph_SetNumThreads (1, 1, msg)) ;
@@ -357,7 +356,6 @@ int LAGraph_FastGraphletTransform
         GrB_free (&e) ;
 
     }
-//  GxB_set (GxB_NTHREADS, omp_get_max_threads()) ;
     LG_TRY (LAGraph_SetNumThreads (save_nthreads_outer, save_nthreads_inner, msg)) ;
 
     GRB_TRY (GxB_Matrix_concat (C_4, C_Tiles, tile_cnt, 1, NULL)) ;

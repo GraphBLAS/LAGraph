@@ -162,12 +162,7 @@ int LAGr_Init
     LG_nthreads_inner = 1 ;
     #endif
 
-    #if LAGRAPH_SUITESPARSE
-    {
-        // FIXME: use GrB_set
-        GRB_TRY (GxB_set (GxB_NTHREADS, LG_nthreads_inner)) ;
-    }
-    #endif
+    GRB_TRY (LG_SET_NTHREADS (LG_nthreads_inner)) ;
 
     //--------------------------------------------------------------------------
     // create global objects

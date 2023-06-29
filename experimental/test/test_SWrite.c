@@ -95,12 +95,6 @@ const char *files [ ] =
 void test_SWrite (void)
 {
     LAGraph_Init (msg) ;
-    GrB_Descriptor desc = NULL ;
-    #if LAGRAPH_SUITESPARSE
-    // FIXME: remove this?
-    OK (GrB_Descriptor_new (&desc)) ;
-    OK (GxB_set (desc, GxB_COMPRESSION, GxB_COMPRESSION_LZ4HC + 9)) ;
-    #endif
 
     for (int k = 0 ; k < NFILES ; k++)
     {
@@ -141,7 +135,7 @@ void test_SWrite (void)
             if (k % 2 == 0)
             {
                 // for SuiteSparse: try GxB for every other matrix
-                OK (GxB_Matrix_serialize (&blob, &blob_size, A, desc)) ;
+                OK (GxB_Matrix_serialize (&blob, &blob_size, A, NULL)) ;
             }
             else
             #endif
@@ -226,7 +220,6 @@ void test_SWrite (void)
         OK (GrB_free (&A)) ;
     }
 
-    OK (GrB_free (&desc)) ;
     LAGraph_Finalize (msg) ;
 }
 
