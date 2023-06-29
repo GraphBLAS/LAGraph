@@ -100,10 +100,9 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
 //****************************************************************************
 
 // The LAGraph *.lagraph file consists of an ASCII JSON header, followed by
-// one or more serialized "blobs" created by GrB_Matrix_serialize (or
-// GxB_Matrix_serialize if using SuiteSparse:GraphBLAS).  The file can only be
-// read back into LAGraph when using the same GraphBLAS library used to create
-// it.
+// one or more serialized "blobs" created by G*B_Matrix_serialize.  The file
+// can only be read back into LAGraph when using the same GraphBLAS library
+// used to create it.
 
 // To create a binary file containing one or more GrB_Matrix objects, the user
 // application must first open the file f, create the ascii JSON header with
@@ -915,7 +914,7 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
 
 // FIXME: delete this; superseded by LG_CC_FastSV6
 LAGRAPH_PUBLIC
-int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
+int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method
 (
     // output
     GrB_Vector *component,  // output: array of component identifiers

@@ -111,7 +111,7 @@ int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
     LG_TRY (LAGraph_SWrite_HeaderStart (f, collection, msg)) ;
     for (GrB_Index i = 0 ; i < nmatrices ; i++)
     {
-        char typename [GxB_MAX_NAME_LEN] ;
+        char typename [LAGRAPH_MAX_NAME_LEN+1] ;
         LG_TRY (LAGraph_Matrix_TypeName (typename, Set [i], msg)) ;
         char matrix_name [256] ;
         snprintf (matrix_name, 256, "A_%" PRIu64, i) ;

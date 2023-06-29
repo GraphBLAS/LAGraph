@@ -130,10 +130,10 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
     {
         default :
         case 0 : // for backward compatibility with prior versions
-        case 2 : is_sparse = true ; break ; // GxB_SPARSE = 2
-        case 1 : is_hyper  = true ; break ; // GxB_HYPERSPARSE = 1
-        case 4 : is_bitmap = true ; break ; // GxB_BITMAP = 4
-        case 8 : is_full   = true ; break ; // GxB_FULL = 4
+        case 2 : is_sparse = true ; break ;
+        case 1 : is_hyper  = true ; break ;
+        case 4 : is_bitmap = true ; break ;
+        case 8 : is_full   = true ; break ;
     }
 
     //--------------------------------------------------------------------------
@@ -301,11 +301,13 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
     // The header is informational only, for "head" command, so the file can
     // be visually inspected.
 
+    int32_t ver [3] ;
+    GRB_TRY (GrB_get (GrB_GLOBAL, &(ver [0]), GrB_LIBRARY_VER_MAJOR)) ;
+    GRB_TRY (GrB_get (GrB_GLOBAL, &(ver [1]), GrB_LIBRARY_VER_MINOR)) ;
+    GRB_TRY (GrB_get (GrB_GLOBAL, &(ver [2]), GrB_LIBRARY_VER_PATCH)) ;
+
     char version [LEN] ;
-    snprintf (version, LEN, "%d.%d.%d (LAGraph DRAFT)",
-        GxB_IMPLEMENTATION_MAJOR,
-        GxB_IMPLEMENTATION_MINOR,
-        GxB_IMPLEMENTATION_SUB) ;
+    snprintf (version, LEN, "%d.%d.%d (LAGraph)", ver [0], ver [1], ver [2]) ;
     version [25] = '\0' ;
 
     char user [LEN] ;
@@ -559,10 +561,8 @@ static inline int binread   // returns 0 if successful, -1 if failure
         case 8:  type = GrB_UINT64      ; break ;
         case 9:  type = GrB_FP32        ; break ;
         case 10: type = GrB_FP64        ; break ;
-        #if 0
-        case 11: type = GxB_FC32        ; break ;
-        case 12: type = GxB_FC64        ; break ;
-        #endif
+//      case 11: type = GxB_FC32        ; break ;
+//      case 12: type = GxB_FC64        ; break ;
         default: CATCH (GrB_NOT_IMPLEMENTED) ;    // unknown or unsupported type
     }
 
@@ -897,7 +897,7 @@ static int readproblem          // returns 0 if successful, -1 if failure
     // typecast, if requested
     //--------------------------------------------------------------------------
 
-    GRB_TRY (GxB_Matrix_type (&atype, A)) ;
+    GRB_TRY (GxB_Matrix_type (&atype, A)) ;     // FIXME: use GrB_get
 
     if (structural)
     {
@@ -923,10 +923,8 @@ static int readproblem          // returns 0 if successful, -1 if failure
         else if (pref == GrB_UINT64) op = GrB_IDENTITY_UINT64 ;
         else if (pref == GrB_FP32  ) op = GrB_IDENTITY_FP32 ;
         else if (pref == GrB_FP64  ) op = GrB_IDENTITY_FP64 ;
-        #if 0
-        else if (pref == GxB_FC32  ) op = GxB_IDENTITY_FC32 ;
-        else if (pref == GxB_FC64  ) op = GxB_IDENTITY_FC64 ;
-        #endif
+//      else if (pref == GxB_FC32  ) op = GxB_IDENTITY_FC32 ;
+//      else if (pref == GxB_FC64  ) op = GxB_IDENTITY_FC64 ;
         else CATCH (GrB_NOT_IMPLEMENTED) ;    // unsupported type
 
         GRB_TRY (GrB_apply (A2, NULL, NULL, op, A, NULL)) ;
@@ -982,10 +980,8 @@ static int readproblem          // returns 0 if successful, -1 if failure
         else if (atype == GrB_UINT64) idxop = GrB_VALUENE_UINT64 ;
         else if (atype == GrB_FP32  ) idxop = GrB_VALUENE_FP32 ;
         else if (atype == GrB_FP64  ) idxop = GrB_VALUENE_FP64 ;
-        #if 0
-        else if (atype == GxB_FC32  ) idxop = GxB_VALUENE_FC32 ;
-        else if (atype == GxB_FC64  ) idxop = GxB_VALUENE_FC64 ;
-        #endif
+//      else if (atype == GxB_FC32  ) idxop = GxB_VALUENE_FC32 ;
+//      else if (atype == GxB_FC64  ) idxop = GxB_VALUENE_FC64 ;
         if (idxop != NULL)
         {
             GRB_TRY (GrB_select ((*G)->A, NULL, NULL, idxop, (*G)->A, 0, NULL));
@@ -999,10 +995,8 @@ static int readproblem          // returns 0 if successful, -1 if failure
         else if (atype == GrB_INT64 ) op = GrB_ABS_INT64 ;
         else if (atype == GrB_FP32  ) op = GrB_ABS_FP32 ;
         else if (atype == GrB_FP64  ) op = GrB_ABS_FP64 ;
-        #if 0
-        else if (atype == GxB_FC32  ) op = GxB_ABS_FC32 ;
-        else if (atype == GxB_FC64  ) op = GxB_ABS_FC64 ;
-        #endif
+//      else if (atype == GxB_FC32  ) op = GxB_ABS_FC32 ;
+//      else if (atype == GxB_FC64  ) op = GxB_ABS_FC64 ;
         if (op != NULL)
         {
             GRB_TRY (GrB_apply ((*G)->A, NULL, NULL, op, (*G)->A, NULL)) ;
@@ -1047,10 +1041,8 @@ static int readproblem          // returns 0 if successful, -1 if failure
                 else if (atype == GrB_UINT64) op = GrB_PLUS_UINT64 ;
                 else if (atype == GrB_FP32  ) op = GrB_PLUS_FP32 ;
                 else if (atype == GrB_FP64  ) op = GrB_PLUS_FP64 ;
-                #if 0
-                else if (type == GxB_FC32  ) op = GxB_PLUS_FC32 ;
-                else if (type == GxB_FC64  ) op = GxB_PLUS_FC64 ;
-                #endif
+//              else if (type == GxB_FC32  ) op = GxB_PLUS_FC32 ;
+//              else if (type == GxB_FC64  ) op = GxB_PLUS_FC64 ;
                 else CATCH (GrB_NOT_IMPLEMENTED) ;    // unknown type
                 GRB_TRY (GrB_eWiseAdd ((*G)->A, NULL, NULL, op,
                                        (*G)->A, (*G)->AT, NULL)) ;
