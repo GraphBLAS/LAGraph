@@ -223,9 +223,9 @@ endif ( )
 
 if ( LAGRAPH_VANILLA )
     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DLAGRAPH_VANILLA=1 " )
-    message ( STATUS "Vanilla build: not relying on any GxB extensions" )
+    message ( STATUS "Vanilla build: not relying on SuiteSparse extensions" )
 else ( )
-    message ( STATUS "GxB build: relying on SuiteSparse GxB extensions" )
+    message ( STATUS "SuiteSparse build: relying on SuiteSparse extensions" )
 endif ( )
 
 #-------------------------------------------------------------------------------
