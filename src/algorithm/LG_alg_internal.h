@@ -45,7 +45,7 @@ int LG_BreadthFirstSearch_vanilla
     char          *msg
 ) ;
 
-int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
+int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method
 (
     // output:
     GrB_Vector *component,  // output: array of component identifiers

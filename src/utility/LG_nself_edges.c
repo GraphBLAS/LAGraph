@@ -58,7 +58,7 @@ int LG_nself_edges
     #if LAGRAPH_SUITESPARSE
 
         //----------------------------------------------------------------------
-        // SuiteSparse:GraphBLAS v5.0.2: use GxB_Vector_diag
+        // SuiteSparse:GraphBLAS
         //----------------------------------------------------------------------
 
         GRB_TRY (GrB_Vector_new (&d, atype, n)) ;
@@ -68,7 +68,7 @@ int LG_nself_edges
     #else
 
         //----------------------------------------------------------------------
-        // pure GrB version with no GxB extensions
+        // pure GrB version
         //----------------------------------------------------------------------
 
         GRB_TRY (GrB_Matrix_new (&M, GrB_BOOL, nrows, ncols)) ;

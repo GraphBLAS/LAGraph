@@ -49,10 +49,10 @@ cmake_policy ( SET CMP0048 NEW )
 set ( CMAKE_MACOSX_RPATH TRUE )
 
 # version of LAGraph
-set ( LAGraph_DATE "Dec 28, 2022" )
+set ( LAGraph_DATE "June 29, 2022" )
 set ( LAGraph_VERSION_MAJOR 1 )
-set ( LAGraph_VERSION_MINOR 0 )
-set ( LAGraph_VERSION_SUB   1 )
+set ( LAGraph_VERSION_MINOR 1 )
+set ( LAGraph_VERSION_SUB   0 )
 
 project ( lagraph
           VERSION "${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}" )
@@ -223,9 +223,9 @@ endif ( )
 
 if ( LAGRAPH_VANILLA )
     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DLAGRAPH_VANILLA=1 " )
-    message ( STATUS "Vanilla build: not relying on any GxB extensions" )
+    message ( STATUS "Vanilla build: not relying on SuiteSparse extensions" )
 else ( )
-    message ( STATUS "GxB build: relying on SuiteSparse GxB extensions" )
+    message ( STATUS "SuiteSparse build: relying on SuiteSparse extensions" )
 endif ( )
 
 #-------------------------------------------------------------------------------

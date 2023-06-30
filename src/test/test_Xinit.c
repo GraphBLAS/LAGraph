@@ -120,7 +120,7 @@ void test_Xinit_brutal (void)
         OK (GrB_finalize ( )) ;
         if (ok)
         {
-            printf ("\nGxB_init, finally: %d %g\n", nbrutal,
+            printf ("\nG*B_init, finally: %d %g\n", nbrutal,
                 (double) LG_nmalloc) ;
             TEST_CHECK (LG_nmalloc == 0) ;
             break ;

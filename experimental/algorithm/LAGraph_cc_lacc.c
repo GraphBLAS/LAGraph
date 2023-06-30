@@ -42,6 +42,8 @@
 #include <LAGraph.h>
 #include <LAGraphX.h>
 
+// FIXME: Reduce_assign is slow.  See src/algorithm/LG_CC_FastSV6.
+
 //****************************************************************************
 // mask = NULL, accumulator = GrB_MIN_UINT64, descriptor = NULL
 static GrB_Info Reduce_assign (GrB_Vector w,

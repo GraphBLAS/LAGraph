@@ -1,3 +1,9 @@
+Version 1.1.0:  in progress
+
+    * v2.1 C API: using the new GrB_get/set methods in the C API;
+        LAGraph can now use a "vanilla" GraphBLAS that supports the v2.1
+        C API.
+
 Version 1.0.1: Dec 26, 2022
 
     * bug fix: LAGraph_MMWrite incorrectly created a Matrix Market

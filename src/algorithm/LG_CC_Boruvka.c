@@ -22,14 +22,16 @@
 // Code is based on Boruvka's minimum spanning forest algorithm.
 
 // This method relies solely on GrB* methods in the V2.0 C API, but it much
-// slower in general than LG_CC_FastSV6, which uses GxB pack/unpack methods
-// for faster access to the contents of the matrices and vectors.
+// slower in general than LG_CC_FastSV6, which uses SuiteSparse pack/unpack
+// methods for faster access to the contents of the matrices and vectors.
 
 #include "LG_internal.h"
 
 //------------------------------------------------------------------------------
 // Reduce_assign
 //------------------------------------------------------------------------------
+
+// FIXME: Reduce_assign is slow.  See src/algorithm/LG_CC_FastSV6.
 
 // w[Px[i]] = min(w[Px[i]], s[i]) for i in [0..n-1].
 

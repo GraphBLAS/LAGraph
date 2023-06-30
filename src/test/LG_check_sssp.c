@@ -351,21 +351,6 @@ int LG_check_sssp
     for (int64_t i = 0 ; i < n ; i++)
     {
         bool ok = (reachable [i] == reachable_in [i]) ;
-        #if 0
-        printf ("reach [%ld]: %d %d\n", i, reachable [i], reachable_in [i]) ;
-        if (!ok)
-        {
-            printf ("Hey! source %ld\n", src) ;
-            GxB_print (G->A, 3) ;
-            GxB_print (Path_Length, 3) ;
-            for (int64_t i = 0 ; i < n ; i++)
-            {
-                printf ("check [%ld]: reach %d %d distance %g\n", i,
-                    reachable [i], reachable_in [i], distance [i]) ;
-            }
-
-        }
-        #endif
         LG_ASSERT_MSG (ok, -2001, "invalid reach") ;
     }
 

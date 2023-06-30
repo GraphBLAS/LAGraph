@@ -163,7 +163,7 @@ int LAGraph_FastGraphletTransform
     GRB_TRY (GrB_Vector_new (&d_2, GrB_INT64, n)) ;
 
     // d_2 = p_2 = A*p_1 - c_2 = A*d_1 - d_1
-    GRB_TRY (GrB_mxv (d_2, NULL, NULL, GxB_PLUS_SECOND_INT64, A, d_1, NULL)) ;
+    GRB_TRY (GrB_mxv (d_2, NULL, NULL, LAGraph_plus_second_int64, A, d_1, NULL)) ;
     GRB_TRY (GrB_eWiseMult (d_2, NULL, NULL, GrB_MINUS_INT64, d_2, d_1, NULL)) ;
 
     //--------------------------------------------------------------------------
@@ -186,7 +186,7 @@ int LAGraph_FastGraphletTransform
     GRB_TRY (GrB_Vector_new (&d_4, GrB_INT64, n)) ;
 
     // C_3 = hadamard(A, A^2)
-    GRB_TRY (GrB_mxm (C_3, A, NULL, GxB_PLUS_FIRST_INT64, A, A, GrB_DESC_ST1)) ;
+    GRB_TRY (GrB_mxm (C_3, A, NULL, LAGraph_plus_first_int64, A, A, GrB_DESC_ST1)) ;
 
     // d_4 = c_3 = C_3e/2
     GRB_TRY (GrB_reduce (d_4, NULL, NULL, GrB_PLUS_MONOID_INT64, C_3, NULL)) ;
@@ -207,7 +207,7 @@ int LAGraph_FastGraphletTransform
     GRB_TRY (GrB_apply (two_c_3, NULL, NULL, GrB_TIMES_INT64, 2, d_4, NULL)) ;
 
     // d_5 = A * d_2
-    GRB_TRY (GrB_mxv (d_5, NULL, NULL, GxB_PLUS_SECOND_INT64, A, d_2, NULL)) ;
+    GRB_TRY (GrB_mxv (d_5, NULL, NULL, LAGraph_plus_second_int64, A, d_2, NULL)) ;
 
     // d_5 -= hadamard(p_1, p_1 - 1)
     GRB_TRY (GrB_eWiseAdd (d_5, NULL, NULL, GrB_MINUS_INT64, d_5, v, NULL)) ;
@@ -242,7 +242,7 @@ int LAGraph_FastGraphletTransform
     GRB_TRY (GrB_apply (p_1_minus_two, NULL, NULL, GrB_MINUS_INT64, d_1, (int64_t) 2, NULL)) ;
     GRB_TRY (GrB_eWiseMult (p_1_p_1_had, NULL, NULL, GrB_TIMES_INT64, p_1_minus_one, p_1_minus_two, NULL)) ;
 
-    GRB_TRY (GrB_mxv (d_7, NULL, NULL, GxB_PLUS_SECOND_INT64, A, p_1_p_1_had, NULL)) ;
+    GRB_TRY (GrB_mxv (d_7, NULL, NULL, LAGraph_plus_second_int64, A, p_1_p_1_had, NULL)) ;
     GRB_TRY (GrB_apply (d_7, NULL, NULL, GrB_DIV_INT64, d_7, (int64_t) 2, NULL)) ;
 
     //--------------------------------------------------------------------------
@@ -260,7 +260,7 @@ int LAGraph_FastGraphletTransform
 
     GRB_TRY (GrB_Vector_new (&d_9, GrB_INT64, n)) ;
 
-    GRB_TRY (GrB_mxv (d_9, NULL, NULL, GxB_PLUS_SECOND_INT64, A, d_4, NULL)) ;
+    GRB_TRY (GrB_mxv (d_9, NULL, NULL, LAGraph_plus_second_int64, A, d_4, NULL)) ;
     GRB_TRY (GrB_eWiseAdd (d_9, NULL, NULL, GrB_MINUS_INT64, d_9, two_c_3, NULL)) ;
 
     //--------------------------------------------------------------------------
@@ -269,7 +269,7 @@ int LAGraph_FastGraphletTransform
 
     GRB_TRY (GrB_Vector_new (&d_10, GrB_INT64, n)) ;
 
-    GRB_TRY (GrB_mxv (d_10, NULL, NULL, GxB_PLUS_TIMES_INT64, C_3, p_1_minus_two, NULL)) ;
+    GRB_TRY (GrB_mxv (d_10, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_INT64, C_3, p_1_minus_two, NULL)) ;
 
     //--------------------------------------------------------------------------
     // compute d_11 = hadamard(p_1 - 2, c_3)
@@ -331,7 +331,6 @@ int LAGraph_FastGraphletTransform
         }                               \
     }
 
-//  GxB_set (GxB_NTHREADS, 1) ;
     int save_nthreads_outer, save_nthreads_inner ;
     LG_TRY (LAGraph_GetNumThreads (&save_nthreads_outer, &save_nthreads_inner, msg)) ;
     LG_TRY (LAGraph_SetNumThreads (1, 1, msg)) ;
@@ -346,18 +345,17 @@ int LAGraph_FastGraphletTransform
         TRY (GrB_Matrix_new (&A_i, GrB_INT64, Tile_nrows [i], n)) ;
         TRY (GrB_Matrix_new (&C_Tiles [i], GrB_INT64, Tile_nrows [i], 1)) ;
 
-        TRY (GrB_mxm (A_i, NULL, NULL, GxB_PLUS_PAIR_INT64, A_Tiles [i], A, NULL)) ;
+        TRY (GrB_mxm (A_i, NULL, NULL, LAGraph_plus_one_int64, A_Tiles [i], A, NULL)) ;
         TRY (GrB_eWiseAdd (A_i, NULL, NULL, GrB_MINUS_INT64, A_i, D_Tiles [i], NULL)) ;
         TRY (GrB_apply (A_i, NULL, NULL, Sub_one_mult, A_i, NULL)) ;
 
         // multiply A_i by it on the right
-        TRY (GrB_mxm (C_Tiles [i], NULL, NULL, GxB_PLUS_FIRST_INT64, A_i, e, NULL)) ;
+        TRY (GrB_mxm (C_Tiles [i], NULL, NULL, LAGraph_plus_first_int64, A_i, e, NULL)) ;
 
         GrB_free (&A_i) ;
         GrB_free (&e) ;
 
     }
-//  GxB_set (GxB_NTHREADS, omp_get_max_threads()) ;
     LG_TRY (LAGraph_SetNumThreads (save_nthreads_outer, save_nthreads_inner, msg)) ;
 
     GRB_TRY (GxB_Matrix_concat (C_4, C_Tiles, tile_cnt, 1, NULL)) ;
@@ -374,7 +372,7 @@ int LAGraph_FastGraphletTransform
     GRB_TRY (GrB_Vector_new (&d_13, GrB_INT64, n)) ;
 
     GRB_TRY (GrB_eWiseMult (D_4c, NULL, NULL, GrB_MINUS_INT64, C_3, A, NULL)) ; // can be mult because we mask with A next
-    GRB_TRY (GrB_mxm (D_4c, A, NULL, GxB_PLUS_SECOND_INT64, A, D_4c, GrB_DESC_S)) ;
+    GRB_TRY (GrB_mxm (D_4c, A, NULL, LAGraph_plus_second_int64, A, D_4c, GrB_DESC_S)) ;
 
     // d_13  = D_{4,c}*e/2
     GRB_TRY (GrB_reduce (d_13, NULL, NULL, GrB_PLUS_INT64, D_4c, NULL)) ;
@@ -544,7 +542,6 @@ int LAGraph_FastGraphletTransform
     GRB_TRY (GrB_Matrix_new (&U_inv, GrB_INT64, 16, 16)) ;
 
     GRB_TRY (GrB_Matrix_build (U_inv, U_inv_I, U_inv_J, U_inv_X, U_inv_nvals, GrB_PLUS_INT64)) ;
-    //GRB_TRY (GxB_print (U_inv, 3)) ;
 
     //--------------------------------------------------------------------------
     // construct net frequencies matrix F_net
@@ -552,14 +549,12 @@ int LAGraph_FastGraphletTransform
 
     GRB_TRY (GrB_Matrix_new (F_net, GrB_INT64, 16, n)) ;
 
-    GRB_TRY (GrB_mxm (*F_net, NULL, NULL, GxB_PLUS_TIMES_INT64, U_inv, F_raw, NULL)) ;
+    GRB_TRY (GrB_mxm (*F_net, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_INT64, U_inv, F_raw, NULL)) ;
 
     GrB_Vector f_net = NULL ;
     GRB_TRY (GrB_Vector_new (&f_net, GrB_INT64, 16)) ;
     GRB_TRY (GrB_reduce (f_net, NULL, NULL, GrB_PLUS_INT64, *F_net, NULL)) ;
-    GRB_TRY (GxB_print (f_net, 3)) ;
     GRB_TRY (GrB_free (&f_net)) ;
-    //GRB_TRY (GxB_print (*F_net, 3)) ;
 
     //--------------------------------------------------------------------------
     // free work

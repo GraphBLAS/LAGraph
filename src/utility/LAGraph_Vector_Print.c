@@ -15,9 +15,7 @@
 
 //------------------------------------------------------------------------------
 
-// LAGraph_Vector_Print:  pretty-print a vector.  The type is either derived
-// from GxB_Vector_type (if available) or assumed to be GrB_FP64 otherwise,
-// or passed in as a parameter.
+// LAGraph_Vector_Print:  pretty-print a vector.
 
 #include "LG_internal.h"
 
@@ -96,11 +94,8 @@ LG_VECTOR_PRINT (UINT32, uint32_t, GrB_UINT32, "%" PRIu32, "%" PRIu32  ) ;
 LG_VECTOR_PRINT (UINT64, uint64_t, GrB_UINT64, "%" PRIu64, "%" PRIu64  ) ;
 LG_VECTOR_PRINT (FP32  , float   , GrB_FP32  , "%g"  , "%0.7g" ) ;
 LG_VECTOR_PRINT (FP64  , double  , GrB_FP64  , "%g"  , "%0.15g") ;
-#if 0
-// would need to pass in an iscomplex flag to print creal(x) and cimag(x)
-LG_VECTOR_PRINT (FC32  , GxB_FC32_t, GxB_FC32, ...) ;
-LG_VECTOR_PRINT (FC64  , GxB_FC64_t, GxB_FC64, ...) ;
-#endif
+// LG_VECTOR_PRINT (FC32  , GxB_FC32_t, GxB_FC32, ...) ;
+// LG_VECTOR_PRINT (FC64  , GxB_FC64_t, GxB_FC64, ...) ;
 
 #undef  LG_FREE_WORK
 #define LG_FREE_WORK ;
@@ -134,73 +129,32 @@ int LAGraph_Vector_Print
     // determine the type
     //--------------------------------------------------------------------------
 
-    GrB_Type type ;
-    char typename [LAGRAPH_MAX_NAME_LEN] ;
-    LG_TRY (LAGraph_Vector_TypeName (typename, v, msg)) ;
-    LG_TRY (LAGraph_TypeFromName (&type, typename, msg)) ;
+    int32_t typecode ;
+    GRB_TRY (GrB_get (v, &typecode, GrB_ELTYPE_CODE)) ;
 
     //--------------------------------------------------------------------------
     // print the vector
     //--------------------------------------------------------------------------
 
-    if (type == GrB_BOOL)
+    switch (typecode)
     {
-        return (LG_Vector_Print_BOOL (v, pr, f, msg)) ;
-    }
-    else if (type == GrB_INT8)
-    {
-        return (LG_Vector_Print_INT8 (v, pr, f, msg)) ;
-    }
-    else if (type == GrB_INT16)
-    {
-        return (LG_Vector_Print_INT16 (v, pr, f, msg)) ;
-    }
-    else if (type == GrB_INT32)
-    {
-        return (LG_Vector_Print_INT32 (v, pr, f, msg)) ;
-    }
-    else if (type == GrB_INT64)
-    {
-        return (LG_Vector_Print_INT64 (v, pr, f, msg)) ;
-    }
-    else if (type == GrB_UINT8)
-    {
-        return (LG_Vector_Print_UINT8 (v, pr, f, msg)) ;
-    }
-    else if (type == GrB_UINT16)
-    {
-        return (LG_Vector_Print_UINT16 (v, pr, f, msg)) ;
-    }
-    else if (type == GrB_UINT32)
-    {
-        return (LG_Vector_Print_UINT32 (v, pr, f, msg)) ;
-    }
-    else if (type == GrB_UINT64)
-    {
-        return (LG_Vector_Print_UINT64 (v, pr, f, msg)) ;
-    }
-    else if (type == GrB_FP32)
-    {
-        return (LG_Vector_Print_FP32 (v, pr, f, msg)) ;
-    }
-    else if (type == GrB_FP64)
-    {
-        return (LG_Vector_Print_FP64 (v, pr, f, msg)) ;
-    }
-    #if 0
-    else if (type == GxB_FC32)
-    {
-        return (LG_Vector_Print_FC32 (v, pr, f, msg)) ;
-    }
-    else if (type == GxB_FC32)
-    {
-        return (LG_Vector_Print_FC64 (v, pr, f, msg)) ;
-    }
-    #endif
-    else
-    {
-        LG_ASSERT_MSG (false,
-            GrB_NOT_IMPLEMENTED, "user-defined types not supported") ;
-        return (GrB_SUCCESS) ;
+        case GrB_BOOL_CODE   : return (LG_Vector_Print_BOOL (v, pr, f, msg)) ;
+        case GrB_INT8_CODE   : return (LG_Vector_Print_INT8 (v, pr, f, msg)) ;
+        case GrB_INT16_CODE  : return (LG_Vector_Print_INT16 (v, pr, f, msg)) ;
+        case GrB_INT32_CODE  : return (LG_Vector_Print_INT32 (v, pr, f, msg)) ;
+        case GrB_INT64_CODE  : return (LG_Vector_Print_INT64 (v, pr, f, msg)) ;
+        case GrB_UINT8_CODE  : return (LG_Vector_Print_UINT8 (v, pr, f, msg)) ;
+        case GrB_UINT16_CODE : return (LG_Vector_Print_UINT16 (v, pr, f, msg)) ;
+        case GrB_UINT32_CODE : return (LG_Vector_Print_UINT32 (v, pr, f, msg)) ;
+        case GrB_UINT64_CODE : return (LG_Vector_Print_UINT64 (v, pr, f, msg)) ;
+        case GrB_FP32_CODE   : return (LG_Vector_Print_FP32 (v, pr, f, msg)) ;
+        case GrB_FP64_CODE   : return (LG_Vector_Print_FP64 (v, pr, f, msg)) ;
+//      case GxB_FC32_CODE   : return (LG_Vector_Print_FC32 (v, pr, f, msg)) ;
+//      case GxB_FC64_CODE   : return (LG_Vector_Print_FC64 (v, pr, f, msg)) ;
+        default              :
+            LG_ASSERT_MSG (false,
+                GrB_NOT_IMPLEMENTED, "user-defined types not supported") ;
+            return (GrB_NOT_IMPLEMENTED) ;
     }
 }
+

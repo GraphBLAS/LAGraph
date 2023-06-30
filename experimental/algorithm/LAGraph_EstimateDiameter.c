@@ -131,14 +131,14 @@ int LAGraph_EstimateDiameter
     // set up the first maxSrcs random nodes
     //--------------------------------------------------------------------------
 
-//  GxB_set (GxB_BURBLE, true) ;
-
     // currently just doing the first maxSrcs, consider different randomization
     // check maxSrcs < n
-    // printf("Selecting sources \n");
-    if (maxSrcs > n){
+    if (maxSrcs > n)
+    {
         nsrcs = n;
-    } else {
+    }
+    else
+    {
         nsrcs = maxSrcs;
     }
     GRB_TRY (GrB_Vector_new (&srcs, int_type, nsrcs)) ;
@@ -150,28 +150,20 @@ int LAGraph_EstimateDiameter
         GrB_IndexUnaryOp op =
             (n > INT32_MAX) ?  GrB_ROWINDEX_INT64 : GrB_ROWINDEX_INT32 ;
         GRB_TRY (GrB_apply (srcs, NULL, NULL, op, srcs, 0, NULL)) ;
-//      for (int64_t i = 0; i < nsrcs; i++){
-//          GRB_TRY (GrB_Vector_setElement (srcs, i, i)) ;
-//      }
     }
     else
     {
         // srcs = randomized, still of size nsrcs-1, values in range 0 to UINT64_MAX
         LAGRAPH_TRY (LAGraph_Random_Seed (srcs, seed, msg)) ;
         GRB_TRY (GxB_BinaryOp_new (&Mod,
-            (n > INT32_MAX) ? ((GxB_binary_function)mod64) : ((GxB_binary_function)mod32),
+            (n > INT32_MAX) ? ((GxB_binary_function)mod64) :
+                              ((GxB_binary_function)mod32),
             int_type, int_type, int_type,
             (n > INT32_MAX) ? "mod64" : "mod32",
             (n > INT32_MAX) ? MOD64_DEFN : MOD32_DEFN)) ;
-//      GxB_print (Mod, 3) ;
-//      printf ("Before Mod:, n = %lu\n", n) ;
-//      GxB_print (srcs, 3) ;
         GRB_TRY (GrB_apply (srcs, NULL, NULL, Mod, srcs, n, NULL)) ;
         GrB_free (&Mod) ;
     }
-
-//  GxB_print (srcs, 3) ;
-//  GxB_set (GxB_BURBLE, false) ;
 
     //--------------------------------------------------------------------------
     // core loop, run until current and previous diameters match or reach given limit
@@ -182,8 +174,8 @@ int LAGraph_EstimateDiameter
     GrB_IndexUnaryOp eqOp =
         (n > INT32_MAX) ?  GrB_VALUEEQ_INT64 : GrB_VALUEEQ_INT32 ;
     bool incSrcs = false;
-    for (int64_t i = 0; i < maxLoops; i++){
-        // printf("Start of main loop \n");
+    for (int64_t i = 0; i < maxLoops; i++)
+    {
         // save previous diameter
         lastd = d;
 
@@ -200,7 +192,6 @@ int LAGraph_EstimateDiameter
             incSrcs = true;
             break;
         }
-        // printf("Loop midpoint 1 \n");
 
         // now with fewer for loops
         // said in last discussion: remaining for loop fine because of batch processing?
@@ -220,8 +211,6 @@ int LAGraph_EstimateDiameter
             nsrcs = nperi;
         }
 
-        // printf("Loop midpoint 2 \n");
-        // printf("Number of peripheral nodes: %d \n",nperi);
         // choose sources
         GrB_free (&srcs) ;
         GRB_TRY (GrB_Vector_new (&srcs, int_type, nsrcs)) ;
@@ -235,7 +224,6 @@ int LAGraph_EstimateDiameter
 
 
     }
-    // printf("Loop complete \n");
 
     //--------------------------------------------------------------------------
     // after loop, set up peripheral nodes if needed

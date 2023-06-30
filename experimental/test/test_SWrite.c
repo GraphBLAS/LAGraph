@@ -19,6 +19,7 @@
 #include <acutest.h>
 #include <LAGraphX.h>
 #include <LAGraph_test.h>
+#include "LG_internal.h"
 
 char msg [LAGRAPH_MSG_LEN] ;
 LAGraph_Graph G = NULL ;
@@ -94,11 +95,6 @@ const char *files [ ] =
 void test_SWrite (void)
 {
     LAGraph_Init (msg) ;
-    GrB_Descriptor desc = NULL ;
-    #if LAGRAPH_SUITESPARSE
-    OK (GrB_Descriptor_new (&desc)) ;
-    OK (GxB_set (desc, GxB_COMPRESSION, GxB_COMPRESSION_LZ4HC + 9)) ;
-    #endif
 
     for (int k = 0 ; k < NFILES ; k++)
     {
@@ -113,7 +109,6 @@ void test_SWrite (void)
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, f, msg)) ;
         fclose (f) ;
-        // GxB_print (A, 3) ;
 
         // get the name of the C typedef for the matrix
         OK (LAGraph_Matrix_TypeName (atypename, A, msg)) ;
@@ -123,20 +118,8 @@ void test_SWrite (void)
         for (int scon = 1 ; scon <= 8 ; scon = 2*scon)
         #endif
         {
-            #if LAGRAPH_SUITESPARSE
             // for SuiteSparse only: test all sparsity formats
-            OK (GxB_set (A, GxB_SPARSITY_CONTROL, scon)) ;
-            #endif
-
-            // workaround for bug in v6.0.0 to v6.0.2:
-            // ensure the matrix is not iso
-            #if LAGRAPH_SUITESPARSE
-            #if GxB_IMPLEMENTATION < GxB_VERSION (6,0,3)
-            printf ("workaround for bug in SS:GrB v6.0.2 (fixed in v6.0.3)\n") ;
-            OK (GrB_Matrix_setElement (A, 0, 0, 0)) ;
-            OK (GrB_wait (A, GrB_MATERIALIZE)) ;
-            #endif
-            #endif
+            OK (LG_SET_SPARSITY (A, scon)) ;
 
             // open a temporary *.lagraph file to hold the matrix
             f = tmpfile ( ) ;
@@ -145,14 +128,13 @@ void test_SWrite (void)
             TEST_CHECK (f != NULL) ;
 
             // serialize the matrix
-            // GxB_set (GxB_BURBLE, true) ;
             void *blob = NULL ;
             GrB_Index blob_size = 0 ;
             #if LAGRAPH_SUITESPARSE
             if (k % 2 == 0)
             {
-                // for SuiteSparse: try GxB for every other matrix
-                OK (GxB_Matrix_serialize (&blob, &blob_size, A, desc)) ;
+                // for SuiteSparse
+                OK (GxB_Matrix_serialize (&blob, &blob_size, A, NULL)) ;
             }
             else
             #endif
@@ -170,15 +152,9 @@ void test_SWrite (void)
 
             // deserialize the matrix
             int rr = (GrB_Matrix_deserialize (&B, atype, blob, blob_size)) ;
-            // printf ("A:\n") ; GxB_print (A, 2) ;
-            // printf ("B:\n") ; GxB_print (B, 2) ;
-            // printf ("rr: %d\n", rr) ;
             OK (rr) ;
-            // GxB_set (GxB_BURBLE, false) ;
 
             // ensure the matrices A and B are the same
-            // GxB_print (A,3) ;
-            // GxB_print (B,3) ;
             bool ok = false ;
             OK (LAGraph_Matrix_IsEqual (&ok, A, B, msg)) ;
             TEST_CHECK (ok) ;
@@ -217,11 +193,8 @@ void test_SWrite (void)
             TEST_CHECK (blob_size == blob_size2) ;
 
             OK (GrB_Matrix_deserialize (&B, atype, blob2, blob_size2)) ;
-            // GxB_set (GxB_BURBLE, false) ;
 
             // ensure the matrices A and B are the same
-            // GxB_print (A,3) ;
-            // GxB_print (B,3) ;
             OK (LAGraph_Matrix_IsEqual (&ok, A, B, msg)) ;
             TEST_CHECK (ok) ;
             OK (GrB_free (&B)) ;
@@ -239,7 +212,6 @@ void test_SWrite (void)
         OK (GrB_free (&A)) ;
     }
 
-    OK (GrB_free (&desc)) ;
     LAGraph_Finalize (msg) ;
 }
 

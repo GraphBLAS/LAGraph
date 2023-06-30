@@ -224,7 +224,7 @@ GrB_Info LAGraph_BF_full1a
     //--------------------------------------------------------------------------
     // allocate arrays used for tuplets
     //--------------------------------------------------------------------------
-#if 1
+
     LAGRAPH_TRY (LAGraph_Malloc ((void **) &I, nz, sizeof(GrB_Index), msg)) ;
     LAGRAPH_TRY (LAGraph_Malloc ((void **) &J, nz, sizeof(GrB_Index), msg)) ;
     LAGRAPH_TRY (LAGraph_Malloc ((void **) &w, nz, sizeof(double), msg)) ;
@@ -251,32 +251,6 @@ GrB_Info LAGraph_BF_full1a
     LAGraph_Free ((void**)&J, NULL);
     LAGraph_Free ((void**)&W, NULL);
     LAGraph_Free ((void**)&w, NULL);
-
-#else
-
-    todo: GraphBLAS could use a new kind of unary operator, not z=f(x), but
-
-    [z,flag] = f (aij, i, j, k, nrows, ncols, nvals, etc, ...)
-    flag: keep or discard.  Combines GrB_apply and GxB_select.
-
-    builtins:
-        f(...) =
-            i, bool is true
-            j, bool is true
-            i+j*nrows, etc.
-            k
-            tril, triu (like GxB_select): return aij, and true/false boolean
-
-        z=f(x,i).  x: double, z:tuple3, i:GrB_Index with the row index of x
-        // z = (BF_Tuple3_struct) { .w = x, .h = 1, .pi = i + 1 };
-
-    GrB_apply (Atmp, op, A, ...)
-
-    in the BFS, this is used:
-        op:  z = f ( .... ) = i
-        to replace x(i) with i
-
-#endif
 
     //--------------------------------------------------------------------------
     // create and initialize "distance" vector d, dmasked and dless
@@ -370,6 +344,7 @@ GrB_Info LAGraph_BF_full1a
     LAGRAPH_TRY (LAGraph_Malloc ((void **) &pi, n, sizeof(GrB_Index), msg)) ;
 
     // todo: create 3 unary ops, and use GrB_apply?
+    // FIXME: yes, that would be faster with the SuiteSparse JIT.
 
     GRB_TRY (GrB_Vector_extractTuples_UDT (I, (void *) W, &n, d));
 

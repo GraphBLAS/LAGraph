@@ -18,6 +18,12 @@
 #include "LG_internal.h"
 #include "LG_test.h"
 
+#if LAGRAPH_SUITESPARSE
+#if GxB_IMPLEMENTATION < GxB_VERSION (7,4,1)
+#error "SuiteSparse:GraphBLAS v7.4.1 or later is required for LAGraph tests"
+#endif
+#endif
+
 int LG_brutal_setup (char *msg)
 {
     LG_brutal = -1 ;        // disable brutal testing for now
@@ -25,12 +31,6 @@ int LG_brutal_setup (char *msg)
     int result = LAGr_Init (GrB_NONBLOCKING,
         LG_brutal_malloc, LG_brutal_calloc,
         LG_brutal_realloc, LG_brutal_free, msg) ;
-    if (result != 0) return (result) ;
-    #if LAGRAPH_SUITESPARSE
-    // disable the SuiteSparse:GraphBLAS memory pool
-    int64_t free_pool_limit [64] ;
-    memset (free_pool_limit, 0, 64 * sizeof (int64_t)) ;
-    result = GxB_set (GxB_MEMORY_POOL, free_pool_limit) ;
-    #endif
     return (result) ;
 }
+

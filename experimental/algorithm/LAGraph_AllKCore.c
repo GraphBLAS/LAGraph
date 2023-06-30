@@ -104,10 +104,7 @@ int LAGraph_KCore_All
     GrB_BinaryOp minus_op = (maxDeg > INT32_MAX) ? GrB_MINUS_INT64 : GrB_MINUS_INT32 ;
     GrB_Semiring semiring = (maxDeg > INT32_MAX) ? LAGraph_plus_one_int64 : LAGraph_plus_one_int32 ;
 
-#if LG_SUITESPARSE
-    GRB_TRY (GxB_set (done, GxB_SPARSITY_CONTROL, GxB_BITMAP + GxB_FULL)) ;    // try this
-    //GRB_TRY (GxB_set (*decomp, GxB_SPARSITY_CONTROL, GxB_BITMAP + GxB_FULL)) ; // try this ... likely not needed...
-#endif
+    GRB_TRY (LG_SET_SPARSITY (done,  LG_BITMAP + LG_FULL)) ;
 
     //printf ("\n================================== COMPUTING GrB_KCORE: ==================================\n") ;
     while(todo > 0){
@@ -132,7 +129,7 @@ int LAGraph_KCore_All
             GRB_TRY (GrB_vxm (delta, GrB_NULL, GrB_NULL, semiring, q, A, GrB_NULL));
 
             // Create new deg vector (keep anything not in done vector w/ replace command)
-            GRB_TRY (GrB_eWiseAdd(deg, done, GrB_NULL, minus_op, deg, delta, GrB_DESC_RSC /* try GrB_DESC_RSC */)) ;
+            GRB_TRY (GrB_eWiseAdd(deg, done, GrB_NULL, minus_op, deg, delta, GrB_DESC_RSC)) ;
 
             // Update q, set new nvals
             GRB_TRY (GrB_select (q, GrB_NULL, GrB_NULL, valueLE, deg, level, GrB_NULL)) ;
