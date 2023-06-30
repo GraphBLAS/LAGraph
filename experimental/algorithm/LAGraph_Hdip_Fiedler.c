@@ -168,6 +168,7 @@ int LAGraph_norm2 //norm2 checked for pointer mistakes
     GRB_TRY (GrB_Vector_new (&t, GrB_FP32, len)) ;
 
     // t = v.^2
+    // FIXME: use GrB_TIMES_FP32 with GrB_eWiseMult for vanilla case
     GRB_TRY (GrB_apply (t, NULL, NULL, GxB_POW_FP32, v, (float) 2, NULL)) ;
 
     GRB_TRY (GrB_reduce (&norm2,NULL, GrB_PLUS_MONOID_FP32, t, NULL));

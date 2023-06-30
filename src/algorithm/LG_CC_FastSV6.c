@@ -30,10 +30,10 @@
 // 144: 14-27 (2020).
 
 // Modified by Tim Davis, Texas A&M University: revised Reduce_assign to use
-// purely GrB* and GxB* methods and the matrix C.  Added warmup phase.  Changed
-// to use GxB pack/unpack instead of GxB import/export.  Converted to use the
-// LAGraph_Graph object.  Exploiting iso status for the temporary matrices
-// C and T.
+// purely loop-free GraphBLAS methods and the matrix C.  Added warmup phase.
+// Changed to use pack/unpack instead of import/export.  Converted to
+// use the LAGraph_Graph object.  Exploiting iso status for the temporary
+// matrices C and T.
 
 // The input graph G must be undirected, or directed and with an adjacency
 // matrix that has a symmetric structure.  Self-edges (diagonal entries) are
@@ -201,7 +201,7 @@ static inline GrB_Info fastsv
 
 #endif
 
-int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
+int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method
 (
     // output:
     GrB_Vector *component,  // component(i)=r if node is in the component r
@@ -368,8 +368,8 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
 //      GxB_GREATESTRELRANK (...): select aij rank k > y*d where y is double
 //
 // By default, the rank of aij is its relative position as the kth entry in its
-// row (from "left" to "right").  If a new GxB setting in the descriptor is
-// set, then k is the relative position of aij as the kth entry in its column.
+// row (from "left" to "right").  The descriptor could redefine this so that
+// k is the relative position of aij as the kth entry in its column, not row.
 // The default would be that the rank is the position of aij in its row A(i,:).
 
 // Other:
