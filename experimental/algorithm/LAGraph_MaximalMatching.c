@@ -157,6 +157,10 @@ int LAGraph_MaximalMatching
     // this mainly requires annoying changes in LAGraph_Incidence_Matrix to accommodate several types
     GRB_TRY (GrB_reduce (weight, NULL, NULL, GrB_MAX_MONOID_FP64, E_t, NULL)) ; // use ANY ?
 
+    #if defined ( COVERAGE )
+    int kount = 0 ;
+    #endif
+
     while (ncandidates > 0) {
         // first just generate the scores again
         GRB_TRY (GrB_eWiseMult (score, candidates, NULL, GrB_DIV_FP64, Seed, degree, GrB_DESC_RS)) ;
@@ -197,6 +201,11 @@ int LAGraph_MaximalMatching
         GrB_Index max_degree ; 
         GRB_TRY (GrB_reduce (&max_degree, NULL, GrB_MAX_MONOID_UINT64, new_members_node_degree, NULL)) ;
 
+        #if defined ( COVERAGE )
+        if (num_nodes == 20 && kount++ == 1) max_degree = 2 ;
+        if (num_nodes == 30 && kount++ == 0) max_degree = 2 ;
+        #endif
+
         if (max_degree > 1) {
             nfailures++ ;
             if (nfailures > MAX_FAILURES) {
@@ -232,6 +241,14 @@ int LAGraph_MaximalMatching
         
         // advance seed vector
         LG_TRY (LAGraph_Random_Next (Seed, msg)) ;
+
+        #if defined ( COVERAGE )
+        if (num_nodes == 50 && kount++ == 0)
+        {
+            // hack the Seed vector
+            GRB_TRY (GrB_assign (Seed, NULL, NULL, 42, GrB_ALL, num_edges, NULL)) ;
+        }
+        #endif
     }
 
     (*matching) = result ;
