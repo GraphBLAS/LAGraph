@@ -74,6 +74,8 @@ void valueeq_index_func (bool *z, const uint64_t *x, GrB_Index i, GrB_Index j, c
     (*z) = ((*x) == i) ;
 }
 
+#if LAGRAPH_SUITESPARSE
+
 static int LAGraph_Parent_to_S
 (   
     // input/outputs:
@@ -233,6 +235,8 @@ static int LAGraph_Parent_to_S
     return (GrB_SUCCESS) ;
 }
 
+#endif
+
 #undef LG_FREE_ALL
 #undef LG_FREE_WORK
 
@@ -278,6 +282,11 @@ int LAGraph_Coarsen_Matching
 )
 {
     LG_CLEAR_MSG ;
+
+#if !LAGRAPH_SUITESPARSE
+    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
+#else
+
     LAGraph_Graph G_cpy = NULL ;            // used for the IncidenceMatrix function
     GrB_Matrix A = NULL ;                   // resulting adjacency matrix (used for output)
     GrB_Matrix E = NULL ;                   // incidence matrix
@@ -498,4 +507,5 @@ int LAGraph_Coarsen_Matching
 
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
+#endif
 }
