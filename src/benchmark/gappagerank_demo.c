@@ -95,17 +95,27 @@ int main (int argc, char **argv)
     printf ("nsinks: %" PRIu64 "\n", nsinks) ;
 
     //--------------------------------------------------------------------------
+    // warmup
+    //--------------------------------------------------------------------------
+
+    float damping = 0.85 ;
+    float tol = 1e-4 ;
+    int iters = 0, itermax = 100 ;
+
+    double t1 = LAGraph_WallClockTime ( ) ;
+    LAGRAPH_TRY (LAGraph_SetNumThreads (1, nthreads_max, msg)) ;
+    LAGRAPH_TRY (LAGr_PageRankGAP (&PR, &iters, G,
+                damping, tol, itermax, msg)) ;
+    t1 = LAGraph_WallClockTime ( ) - t1 ;
+    printf ("warmup: %10.4f sec\n", t1) ;
+
+    //--------------------------------------------------------------------------
     // compute the GAP pagerank
     //--------------------------------------------------------------------------
 
     // the GAP benchmark requires 16 trials
     int ntrials = 16 ;
-    // ntrials = 1 ;    // HACK to run just one trial
     printf ("# of trials: %d\n", ntrials) ;
-
-    float damping = 0.85 ;
-    float tol = 1e-4 ;
-    int iters = 0, itermax = 100 ;
 
     for (int kk = 1 ; kk <= nt ; kk++)
     {
@@ -146,6 +156,7 @@ int main (int argc, char **argv)
     // the STD pagerank may be slower than the GAP-style pagerank, because it
     // must do extra work to handle sinks.  sum(PR) will always equal 1.
 
+#if 0
     for (int kk = 1 ; kk <= nt ; kk++)
     {
         int nthreads = Nthreads [kk] ;
@@ -177,6 +188,7 @@ int main (int argc, char **argv)
              nthreads, t, matrix_name, rsum) ;
 
     }
+#endif
 
     //--------------------------------------------------------------------------
     // free all workspace and finish

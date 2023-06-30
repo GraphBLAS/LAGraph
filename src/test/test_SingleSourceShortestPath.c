@@ -263,7 +263,7 @@ void test_SingleSourceShortestPath_types (void)
             // T = max (abs (double (A)), 0.1)
             OK (GrB_Matrix_new (&T, GrB_FP64, n, n)) ;
             OK (GrB_apply (T, NULL, NULL, GrB_ABS_FP64, A, NULL)) ;
-            OK (GrB_apply (T, NULL, NULL, GrB_MAX_FP64, A, 0.1, NULL)) ;
+            OK (GrB_apply (T, NULL, NULL, GrB_MAX_FP64, T, 0.1, NULL)) ;
             OK (GrB_free (&A)) ;
             A = T ;
         }

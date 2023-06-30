@@ -9,7 +9,7 @@ Identical to gen_bipartite
 Details:
 The maximum matching technique used here is an implementation of a lesser known algorithm called the Blossom algorithm.
 Read more here: https://www.cambridge.org/core/journals/canadian-journal-of-mathematics/article/paths-trees-and-flowers/08B492B72322C4130AE800C0610E0E21
-The implementation is provided 
+The implementation is provided here: https://codeforces.com/blog/entry/92339
 
 The naive technique first sorts all edges by weight for weighted graphs (using the prefer_light option, unweighted graphs have edge weight 1). The sort breaks ties between edges
 of the same weight by edge degree (edges with a lower degree are favored). The method then traverses the edge list and attempts to include each edge in order in the matching.
@@ -232,10 +232,16 @@ struct BlossomSolver {
 int main(int argc, char **argv){
     int num_nodes = atoi(argv[1]);
     double sparse_factor = atof(argv[2]);
-    int naive = atoi(argv[3]);
-    int perf = 0;
+    int perf = atoi(argv[3]);
+
+    int naive;
+    if(perf){
+        naive = 1;
+    } else {
+        naive = atoi(argv[4]);
+    }
+    
     if(naive){
-        perf = atoi(argv[4]);
         weighted = atoi(argv[5]);
         if(weighted){
             prefer_light = atoi(argv[6]);

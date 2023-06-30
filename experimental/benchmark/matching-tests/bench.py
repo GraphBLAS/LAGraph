@@ -13,7 +13,8 @@ Test structure:
 type [string]: <bipartite/general> (what type of graph)
 performance [boolean]: <True/False> (whether to run a performance test)
 args [string]: space-separated arguments for gen_bipartite/gen_general (both use same arguments, depends on which type is specified)
-grb_args [string]: space-separated arguments for matching_demo (further specified in matching_demo.c)
+grb_args [string]: space-separated arguments for matching_demo (further specified in ../matching_demo.c)
+islight [boolean]: <True/False> (is it a light matching)
 arg_names [string]: comma-separated argument names to display for each argument in args
 grb_arg_names [string]: comma-separated argument names to display for each argument in grb_args
 
@@ -23,89 +24,69 @@ To add new tests, simply use the following structure:
     'performance': <performance>
     'args': <args>
     'grb_args': <grb_args>
+    'islight': <islight>
     'arg_names': <arg_names>
     'grb_arg_names': <grb_arg_names>
 }
 and add it to the tests list
+
+Notes:
+For performance tests, you want ./matching_demo to accept input via stdin, since the data.mtx
+is piped to it (see the build_grb_cmd function below)
 '''
 
 import os
+from termcolor import cprint
 
-# How many runs to do per test (results are averaged)
+# How many runs to do per test (results are averaged across all runs)
 NUM_RUNS = 1
+# How many tests to run
+NUM_TESTS = 4
 
-run_verification_cmd = './build/verify_matching < data.mtx > verif_result'
+run_verification_cmd = './build/verify_matching > verif_result'
 
 
 tests = [
     {
         'type': 'bipartite',
-        'performance': True,
-        'args': '1000000 10 1 1 0',
-        'grb_args': 'data.mtx 0',
+        'performance': False,
+        'args': '3000 50 0 1 0 0',
+        'grb_args': '-q 0 3',
         'islight': False,
-        'arg_names': 'num_nodes,sparse_factor,is_naive,perf,weighted,prefer_light',
+        'arg_names': 'num_nodes,sparse_factor,perf,is_naive,weighted,prefer_light',
+        'grb_arg_names': 'filename,match_type,ntrials'
+    },
+    {
+        'type': 'bipartite',
+        'performance': False,
+        'args': '1000 50 0 1 0 0',
+        'grb_args': '-q 0 3',
+        'islight': False,
+        'arg_names': 'num_nodes,sparse_factor,perf,is_naive,weighted,prefer_light',
+        'grb_arg_names': 'filename,match_type,ntrials'
+    },
+    {
+        'type': 'bipartite',
+        'performance': False,
+        'args': '1000 10 0 1 0 0',
+        'grb_args': '-q 0 3',
+        'islight': False,
+        'arg_names': 'num_nodes,sparse_factor,perf,is_naive,weighted,prefer_light',
+        'grb_arg_names': 'filename,match_type,ntrials'
+    },
+    {
+        'type': 'bipartite',
+        'performance': True,
+        'args': '10000 100 1 1 0 0',
+        'grb_args': 'stdin 0',
+        'islight': False,
+        'arg_names': 'num_nodes,sparse_factor,perf,is_naive,weighted,prefer_light',
         'grb_arg_names': 'filename,match_type,ntrials'
     },
 ]
 
-# How many tests to run
-NUM_TESTS = 1
+assert(NUM_TESTS <= len(tests))
 
-'''
-    {
-        'type': 'bipartite',
-        'performance': False,
-        'args': '1000 500 0',
-        'grb_args': 'stdin 0 5',
-        'arg_names': 'num_nodes,sparse_factor,is_naive',
-        'grb_arg_names': 'filename,match_type,ntrials',
-        'weighted': False
-    },
-    {
-        'type': 'bipartite',
-        'performance': False,
-        'args': '1000 1000 0',
-        'arg_names': 'num_nodes,sparse_factor,is_naive',
-        'weighted': False
-    },
-    {
-        'type': 'general',
-        'performance': False,
-        'args': '1000 1000 0',
-        'arg_names': 'num_nodes,sparse_factor,is_naive',
-        'weighted': False
-    },
-    {
-        'type': 'general',
-        'performance': False,
-        'args': '1000 500 0',
-        'arg_names': 'num_nodes,sparse_factor,is_naive',
-        'weighted': False
-    },
-    {
-        'type': 'general',
-        'performance': False,
-        'args': '1000 50 0',
-        'arg_names': 'num_nodes,sparse_factor,is_naive',
-        'weighted': False
-    },
-    {
-        'type': 'general',
-        'performance': False,
-        'args': '1000 500 1 0',
-        'arg_names': 'num_nodes,sparse_factor,is_naive,weighted',
-        'weighted': False
-    },
-    {
-        'type': 'general',
-        'performance': False,
-        'args': '1000 100 1 0',
-        'arg_names': 'num_nodes,sparse_factor,is_naive,weighted',
-        'weighted': False
-    },
-]
-'''
 
 def build_grb_cmd(args):
     return f'../../../build/experimental/benchmark/matching_demo {args} < data.mtx > grb_result.txt'
@@ -163,7 +144,8 @@ def do_run(test):
         if(toks[0] == -1):
             type = test.get('type')
             args = test.get('args')
-            print(f'Verification failed for {type} run w/ args {args}')
+            cprint('[ERROR]', color='red', end='')
+            print(f' Verification failed for {type} run w/ args {args}')
             exit()
         else:
             grb_result = toks[0]
@@ -176,7 +158,10 @@ def do_run(test):
     return [my_result, grb_result]
 
 
+print(f'Running {NUM_TESTS} test(s) with {NUM_RUNS} run(s) each')
+
 for i in range(NUM_TESTS):
+    cprint(f'============ TEST {i} ============', color='light_grey')
     avg_ratio = 0
     avg_perf_ratio = 0
     runs = 0
@@ -214,18 +199,39 @@ for i in range(NUM_TESTS):
     grb_arg_list = tests[i].get('grb_args').split(' ')
     grb_arg_names_list = tests[i].get('grb_arg_names').split(',')
     type = tests[i].get('type')
-    result = f'(type: {type}, MY ARGS: '
-    for i in range(len(arg_list)):
-        result += f'{arg_names_list[i]}: {arg_list[i]}'
-        if(i < len(arg_list) - 1):
-            result += ', '
-    result += ' GRB ARGS: '
-    for i in range(len(grb_arg_list)):
-        result += f'{grb_arg_names_list[i]}: {grb_arg_list[i]}'
-        if(i < len(grb_arg_list) - 1):
-            result += ', '
-    
-    result += f'): quality metric: {avg_ratio}, performance metric: {avg_perf_ratio}'
-    print(result)
 
-print('All tests passed')
+    cprint(f'GRAPH TYPE: ', color='light_cyan', end='')
+    print(f'{type}')
+
+    cprint(f'PERFORMANCE TEST: ', color='light_cyan', end='')
+    if(tests[i].get('performance')):
+        print('yes')
+    else:
+        print('no')
+
+    cprint('MY ARGS: ', color='light_cyan', end='')
+    print('(', end='')
+    for i in range(len(arg_list)):
+        print(f'{arg_names_list[i]}: {arg_list[i]}', end='')
+        if(i < len(arg_list) - 1):
+            print(', ', end='')
+        else:
+            print(')')
+    
+    cprint('GRB ARGS: ', color='light_cyan', end='')
+    print('(', end='')
+    for i in range(len(grb_arg_list)):
+        print(f'{grb_arg_names_list[i]}: {grb_arg_list[i]}', end='')
+        if(i < len(grb_arg_list) - 1):
+            print(', ', end='')
+        else:
+            print(')')
+
+    cprint(f'\nquality metric: ', attrs=['bold'], end='') 
+    cprint(f'{avg_ratio}', attrs=['bold'])
+    cprint(f'performance metric: ', attrs=['bold'], end='')
+    cprint(f'{avg_perf_ratio}', attrs=['bold'])
+
+    cprint(f'================================\n\n', 'light_grey')
+
+cprint('All tests passed', 'green')

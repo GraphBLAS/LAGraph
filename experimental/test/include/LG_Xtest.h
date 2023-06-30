@@ -58,4 +58,26 @@ int LG_check_kcore_decompose
     char *msg
 ) ;
 
+int LG_check_coarsen
+(
+    // outputs:
+    GrB_Matrix *coarsened,    // coarsened adjacency
+    // inputs:
+    GrB_Matrix A,             // input adjacency (for the purposes of testing, is UINT32)
+    GrB_Vector parent,        // parent mapping (must be compressed, i.e. p[p[i]] = p[i] for all i)
+    GrB_Vector mapping,       // new labels of nodes, used to populate resulting adjacency matrix, NULL if preserve_mapping = 1
+    int preserve_mapping,     // whether to preserve the original namespace of nodes
+    int combine_weights,      // whether to combine the weights of edges that collapse together
+    char *msg
+) ;
+
+int LG_check_lcc
+(
+     // outputs:
+     GrB_Vector *coefficients,     // the local clustering coefficients
+     // inputs
+     LAGraph_Graph G,        // input graph
+     char *msg
+) ;
+
 #endif

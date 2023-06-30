@@ -47,7 +47,7 @@ int LAGraph_Incidence_Matrix
     char *msg
 )
 {
-
+    
     GrB_Matrix E = NULL ;
 
     GrB_Index *row_indices = NULL ;
@@ -123,7 +123,7 @@ int LAGraph_Incidence_Matrix
             printf("%ld %ld %.5f\n", E_row_indices[i], E_col_indices[i], E_values[i]);
         }
     #endif
-    GRB_TRY (GrB_Matrix_build (E, E_row_indices, E_col_indices, E_values, nvals, GrB_SECOND_UINT64)) ;
+    GRB_TRY (GrB_Matrix_build (E, E_row_indices, E_col_indices, E_values, nvals, NULL)) ;
 
     LG_FREE_ALL ;
     

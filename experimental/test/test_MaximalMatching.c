@@ -224,7 +224,6 @@ void test_MaximalMatching (void)
         OK (GrB_Vector_new (&hop_edges, GrB_BOOL, num_edges)) ;
         OK (GrB_Vector_new (&hop_nodes, GrB_BOOL, num_nodes)) ;
 
-        printf("\n");
         double avg_slack = 0 ;
         size_t which_threshold ;
         uint64_t seed = 0 ;

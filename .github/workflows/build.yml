@@ -8,8 +8,8 @@ jobs:
     strategy:
       matrix:
         config:
-         - {grb_version: 7.4.3, conda_grb_package_hash: hcb278e6, conda_extension: conda, vanilla: 0}
-         - {grb_version: 7.4.3, conda_grb_package_hash: hcb278e6, conda_extension: conda, vanilla: 1}
+         - {grb_version: 7.4.4, conda_grb_package_hash: hcb278e6, conda_extension: conda, vanilla: 0, deploy_test_results: true}
+         - {grb_version: 7.4.4, conda_grb_package_hash: hcb278e6, conda_extension: conda, vanilla: 1, deploy_test_results: false}
     steps:
     - name: Checkout
       uses: actions/checkout@v2.0.0
@@ -38,7 +38,7 @@ jobs:
         make test_coverage
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@4.1.1
-      if: matrix.config.grb_version == '7.4.1' && github.event_name == 'push' && github.ref == 'refs/heads/stable'
+      if: matrix.deploy_test_results && github.event_name == 'push' && github.ref == 'refs/heads/stable'
       with:
         branch: gh-pages
         folder: build/test_coverage/
@@ -54,8 +54,8 @@ jobs:
     strategy:
       matrix:
         config:
-         - {grb_version: 7.4.3, conda_grb_package_hash: ha894c9a, conda_extension: conda, vanilla: 0}
-         - {grb_version: 7.4.3, conda_grb_package_hash: ha894c9a, conda_extension: conda, vanilla: 1}
+         - {grb_version: 7.4.4, conda_grb_package_hash: ha894c9a, conda_extension: conda, vanilla: 0}
+         - {grb_version: 7.4.4, conda_grb_package_hash: ha894c9a, conda_extension: conda, vanilla: 1}
     steps:
     - name: Checkout
       uses: actions/checkout@v2.0.0
