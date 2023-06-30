@@ -47,7 +47,7 @@ int LAGraph_Incidence_Matrix
     char *msg
 )
 {
-
+    
     GrB_Matrix E = NULL ;
 
     GrB_Index *row_indices = NULL ;

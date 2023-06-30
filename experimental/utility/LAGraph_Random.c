@@ -60,6 +60,18 @@ void LG_rand_next_f (void *z, const void *x)
     (*((uint64_t *) z)) = seed ;
 }
 
+#define LG_RAND_NEXT_F_DEFN                         \
+"void LG_rand_next_f (void *z, const void *x)   \n" \
+"{                                              \n" \
+"    uint64_t seed = (*((uint64_t *) x)) ;      \n" \
+"    seed = ((seed) * 1103515245 + 12345) ;     \n" \
+"    seed = ((seed) * 1103515245 + 12345) ;     \n" \
+"    seed = ((seed) * 1103515245 + 12345) ;     \n" \
+"    seed = ((seed) * 1103515245 + 12345) ;     \n" \
+"    seed = ((seed) * 1103515245 + 12345) ;     \n" \
+"    (*((uint64_t *) z)) = seed ;               \n" \
+"}"
+
 //------------------------------------------------------------------------------
 // LAGraph_Random_Init:  create the random seed operator
 //------------------------------------------------------------------------------
@@ -74,8 +86,13 @@ int LAGraph_Random_Init (char *msg)
 {
     LG_CLEAR_MSG ;
     LG_rand_next_op = NULL ;
+    #if LAGRAPH_SUITESPARSE
+    GRB_TRY (GxB_UnaryOp_new (&LG_rand_next_op, LG_rand_next_f,
+        GrB_UINT64, GrB_UINT64, "LG_rand_next_f", LG_RAND_NEXT_F_DEFN)) ;
+    #else
     GRB_TRY (GrB_UnaryOp_new (&LG_rand_next_op, LG_rand_next_f,
         GrB_UINT64, GrB_UINT64)) ;
+    #endif
     return (GrB_SUCCESS) ;
 }
 
