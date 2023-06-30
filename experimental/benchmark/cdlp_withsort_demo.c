@@ -142,11 +142,11 @@ int main (int argc, char **argv)
         }
         ttot = ttot / ntrials;
 
-        printf("Avg: CDLP NO SORT "
+        printf("Avg: CDLP WITH SORT "
                "nthreads: %3d time: %12.6f matrix: %s\n",
                nthreads, ttot, matrix_name);
 
-        fprintf(stderr, "Avg: CDLP NO SORT "
+        fprintf(stderr, "Avg: CDLP WITH SORT "
                         "nthreads: %3d time: %12.6f matrix: %s\n",
                 nthreads, ttot, matrix_name);
     }

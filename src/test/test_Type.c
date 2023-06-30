@@ -80,9 +80,17 @@ void test_TypeName  (void)
     OK (GrB_Type_new (&type, sizeof (myint))) ;
     int result = LAGraph_NameOfType (name, type, msg) ;
     #if LAGRAPH_SUITESPARSE
-    printf ("\nSuiteSparse knows the type name: [%s]\n", name) ;
     TEST_CHECK (result == GrB_SUCCESS) ;
-    OK (strcmp (name, "myint")) ;
+        #if (GxB_SPEC_MAJOR == 2 && GxB_SPEC_MINOR == 1)
+            // SS:GrB v8.1.x using the draft v2.1 spec with GrB_get/GrB_set
+            printf ("\nSuiteSparse: type name not yet set: [%s]\n", name) ;
+            OK (strcmp (name, "")) ;
+        #else
+            // SS:GrB v8.0.x and earlier, where GrB_Type_new is a macro that
+            // captures the name "myint" as a string.
+            printf ("\nSuiteSparse knows the type name: [%s]\n", name) ;
+            OK (strcmp (name, "myint")) ;
+        #endif
     #else
     TEST_CHECK (result == GrB_NOT_IMPLEMENTED) ;
     printf ("\nmsg: %s\n", msg) ;
