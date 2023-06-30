@@ -19,6 +19,7 @@ Contributors (in alphabetical order):
     Scott Kolodziej,   Texas A&M University
     Pranav Konduri,    Texas A&M University
     Roi Lipman,        Redis Labs
+    Vidith Madhu,      Texas A&M University
     Tze Meng Low,      Carnegie Mellon University
     Tim Mattson,       Intel
     Scott McMillan,    Carnegie Mellon University
