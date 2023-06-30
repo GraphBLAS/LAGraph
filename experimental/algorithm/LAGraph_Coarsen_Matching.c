@@ -24,7 +24,7 @@ counts the number of combined edges)
 7. msg for LAGraph error reporting
 
 There are 3 outputs from the function:
-1. A GrB_Matrix of the coarsened graph (if the input adjacency matrix is of type GrB_BOOL or GrB_UINT* or GrB_INT*, it will
+1. A GrB_Matrix of the coarsened graph (if the input adjacency matrix is of type GrB_BOOL or GrB_UINT{8|16|32} or GrB_INT*, it will
 have type GrB_INT64. Else, it will have the same type as the input matrix).
 2. A list of GrB_Vectors (parent_result) of length nlevels, where if parent_result[i][u] = v,
 then the parent of node u in G_{i} is node v in G_{i}, where G_0 is the initial graph. Note that this means 
@@ -273,7 +273,7 @@ int LAGraph_Coarsen_Matching
     int preserve_mapping,                   // preserve original namespace of nodes
     int combine_weights,                    // whether to sum edge weights or just keep the pattern
     GrB_Index nlevels,                      // #of coarsening levels
-    uint64_t seed,                          // used for matching
+    uint64_t seed,                          // seed used for matching
     char *msg
 )
 {

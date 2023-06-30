@@ -71,4 +71,13 @@ int LG_check_coarsen
     char *msg
 ) ;
 
+int LG_check_lcc
+(
+     // outputs:
+     GrB_Vector *coefficients,     // the local clustering coefficients
+     // inputs
+     LAGraph_Graph G,        // input graph
+     char *msg
+) ;
+
 #endif
