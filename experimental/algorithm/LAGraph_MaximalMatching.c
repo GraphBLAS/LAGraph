@@ -158,7 +158,7 @@ int LAGraph_MaximalMatching
     GRB_TRY (GrB_reduce (weight, NULL, NULL, GrB_MAX_MONOID_FP64, E_t, NULL)) ; // use ANY ?
 
     #if defined ( COVERAGE )
-    int kount = 0 ;
+        int kount = 0 ;
     #endif
 
     while (ncandidates > 0) {
@@ -202,8 +202,8 @@ int LAGraph_MaximalMatching
         GRB_TRY (GrB_reduce (&max_degree, NULL, GrB_MAX_MONOID_UINT64, new_members_node_degree, NULL)) ;
 
         #if defined ( COVERAGE )
-        if (num_nodes == 20 && kount++ == 1) max_degree = 2 ;
-        if (num_nodes == 30 && kount++ == 0) max_degree = 2 ;
+            if (num_nodes == 20 && kount++ == 1) max_degree = 2 ;
+            if (num_nodes == 30 && kount++ == 0) max_degree = 2 ;
         #endif
 
         if (max_degree > 1) {

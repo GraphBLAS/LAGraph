@@ -45,6 +45,8 @@ parent (representative) of both endpoints, and any node not part of a matched ed
 #include "LG_internal.h"
 #include "LAGraphX.h"
 
+#include <omp.h>
+
 // #define dbg
 
 #undef LG_FREE_ALL
@@ -168,10 +170,14 @@ static int LAGraph_Parent_to_S
         )) ;
         
         // build ramp vector
-        // TODO: parallelize this
         LG_TRY (LAGraph_Malloc ((void**) &ramp, num_preserved, sizeof(uint64_t), msg)) ;
-        for (GrB_Index i = 0 ; i < num_preserved ; i++) {
-            ramp [i] = i ;
+
+        #pragma omp parallel
+        {
+            #pragma omp for
+            for (GrB_Index i = 0 ; i < num_preserved ; i++) {
+                ramp [i] = i ;
+            }
         }
 
         if (inv_newlabels != NULL) {

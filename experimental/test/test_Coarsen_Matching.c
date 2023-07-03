@@ -18,6 +18,10 @@
 /*
 NOTE: Unlike the other tests, this does not use .mtx files, but rather generates the test
 matrices using specified configurations and seeds with LAGraph_Random_Matrix
+
+NOTE: Changes to LAGraph_Random may break these tests, since the LAGraph_Random implementation
+used to build the test graphs may produce a different output from the new implementation
+given the same seed.
 */
 
 #include <stdio.h>
