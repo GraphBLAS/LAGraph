@@ -182,6 +182,7 @@ void test_Coarsen_Matching () {
                 G->A,
                 parent [0],
                 (newlabels == NULL ? NULL : newlabels [0]),
+                NULL,
                 tests [k].preserve_mapping,
                 tests [k].combine_weights,
                 msg
