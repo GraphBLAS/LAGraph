@@ -39,9 +39,9 @@ int LG_check_coarsen
     GrB_Matrix *coarsened,    // coarsened adjacency
     // inputs:
     GrB_Matrix A,               // input adjacency (for the purposes of testing, is FP64)
-    GrB_Vector parent,          // parent mapping
-    GrB_Vector newlabels,       // new labels of nodes, used to populate resulting adjacency matrix, NULL if preserve_mapping = 1
-    GrB_Vector inv_newlabels,   // inverse of newlabels
+    GrB_Vector parent,          // parent mapping. Must not be NULL.
+    GrB_Vector newlabels,       // new labels of nodes, used to populate resulting adjacency matrix, can be NULL if preserve_mapping = 1, else must be a valid result
+    GrB_Vector inv_newlabels,   // inverse of newlabels, can be NULL if preserve_mapping = 1, else must be a valid result
     int preserve_mapping,       // whether to preserve the original namespace of nodes
     int combine_weights,        // whether to combine the weights of edges that collapse together
     char *msg
@@ -97,23 +97,23 @@ int LG_check_coarsen
             LG_ASSERT (!occ[new_label], -1) ;
             occ[new_label] = 1 ;
         }
-        if (inv_newlabels != NULL) {
-            for (GrB_Index i = 0 ; i < n_new ; i++) {
-                LG_ASSERT (GxB_Vector_isStoredElement (inv_newlabels, i) == GrB_SUCCESS, -1) ;
-                uint64_t old_label ;
-                GRB_TRY (GrB_Vector_extractElement (&old_label, inv_newlabels, i)) ;
-                LG_ASSERT (GxB_Vector_isStoredElement (newlabels, old_label) == GrB_SUCCESS, -1) ;
-
-                uint64_t new_label ; // entry in newlabels, check that it matches i
-                GRB_TRY (GrB_Vector_extractElement (&new_label, newlabels, old_label)) ;
-                LG_ASSERT (new_label == i, -1) ;
-            }
-        }
         LG_ASSERT (num_entries == n_new, -1) ;
         LG_TRY (LAGraph_Free ((void**)(&occ), msg)) ;
+
+        // check inv_newlabels
+        for (GrB_Index i = 0 ; i < n_new ; i++) {
+            LG_ASSERT (GxB_Vector_isStoredElement (inv_newlabels, i) == GrB_SUCCESS, -1) ;
+            uint64_t old_label ;
+            GRB_TRY (GrB_Vector_extractElement (&old_label, inv_newlabels, i)) ;
+            LG_ASSERT (GxB_Vector_isStoredElement (newlabels, old_label) == GrB_SUCCESS, -1) ;
+
+            uint64_t new_label ; // entry in newlabels, check that it matches i
+            GRB_TRY (GrB_Vector_extractElement (&new_label, newlabels, old_label)) ;
+            // TODO: Proper error code?
+            LG_ASSERT (new_label == i, -1) ;
+        }
     }
-
-
+    
     GRB_TRY (GrB_Matrix_new (&result, GrB_FP64, n_new, n_new)) ;
 
     GrB_Index *rows = NULL, *cols = NULL ;

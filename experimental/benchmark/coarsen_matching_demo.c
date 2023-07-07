@@ -11,12 +11,9 @@
 #define NTHREAD_LIST 1
 #define THREAD_LIST 8
 
+
 int main(int argc, char **argv)
 {
-    /*
-    strategy:
-    either stdin, file, or random
-    */
     char msg [LAGRAPH_MSG_LEN] ;
 
     LAGraph_Graph G = NULL ;
@@ -31,13 +28,12 @@ int main(int argc, char **argv)
 
     // using -r will build a random graph
     bool random = (strcmp (matrix_name, "-r") == 0) ;
-    bool force_stdin = (strcmp (matrix_name, "stdin") == 0) ;
 
     LG_TRY (LAGraph_Random_Init (msg)) ;
 
     if (!random) {
         LG_TRY (readproblem (&G, NULL,
-            true, true, false, GrB_FP64, false, force_stdin ? 1 : argc, argv)) ;
+            true, true, false, GrB_FP64, false, argc, argv)) ;
     } else {
         GrB_Index n = (argc > 2 ? atoi (argv [2]) : DEFAULT_SIZE) ;
         double density = (argc > 3 ? atof (argv [3]) : DEFAULT_DENSITY) ;
@@ -95,7 +91,7 @@ int main(int argc, char **argv)
     // warmup for more accurate timing
     double tt = LAGraph_WallClockTime ( ) ;
     // GRB_TRY (LAGraph_Matrix_Print (E, LAGraph_COMPLETE, stdout, msg)) ;
-    int res = (LAGraph_Coarsen_Matching (&coarsened, &parent_result, &newlabels_result, G, LAGraph_Matching_heavy, 0, 1, 1, DEFAULT_SEED, msg)) ;
+    // int res = (LAGraph_Coarsen_Matching (&coarsened, &parent_result, &newlabels_result, G, LAGraph_Matching_heavy, 0, 1, 1, DEFAULT_SEED, msg)) ;
 
     tt = LAGraph_WallClockTime ( ) - tt ;
 
@@ -132,7 +128,7 @@ int main(int argc, char **argv)
             int64_t seed = trial * n + 1 ;
             double tt = LAGraph_WallClockTime ( ) ;
 
-            LG_TRY (LAGraph_Coarsen_Matching (&coarsened, &parent_result, &newlabels_result, G, LAGraph_Matching_heavy, 0, 1, 1, DEFAULT_SEED, msg)) ;
+            // LG_TRY (LAGraph_Coarsen_Matching (&coarsened, &parent_result, &newlabels_result, G, LAGraph_Matching_heavy, 0, 1, 1, DEFAULT_SEED, msg)) ;
 
             tt = LAGraph_WallClockTime ( ) - tt ;
 
@@ -169,30 +165,4 @@ int main(int argc, char **argv)
     LG_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
 
-    /*
-    GrB_Vector *all_parents, *all_mappings ;
-    GrB_Matrix coarsened ;
-
-    GrB_Matrix A = G->A ;
-
-    LG_TRY (LAGraph_Coarsen_Matching (&coarsened, &all_parents, &all_mappings, G, LAGraph_Matching_random, 0, 1, 1, 17, msg)) ;
-    LG_TRY (LAGraph_Matrix_Print (coarsened, LAGraph_COMPLETE, stdout, msg)) ;
-    // LG_TRY (LAGraph_Vector_Print (all_parents[0], LAGraph_COMPLETE, stdout, msg)) ;
-    // LG_TRY (LAGraph_Vector_Print (all_mappings[0], LAGraph_COMPLETE, stdout, msg)) ;
-    /*
-    char msg[1024] ;
-    LAGraph_Init (msg) ;
-    LAGraph_Random_Init (msg) ;
-    GrB_Matrix test = NULL , test2 = NULL ;
-    GRB_TRY (LAGraph_Random_Matrix (&test, GrB_BOOL, 3, 5, 0.5, 42, msg)) ;
-    GRB_TRY (LAGraph_Random_Matrix (&test2, GrB_BOOL, 5, 3, 0.2, 93, msg)) ;
-    GRB_TRY (GrB_transpose (test2, NULL, NULL, test, NULL)) ;
-    return (GrB_SUCCESS) ;
-
-    3 3 4
-    1 2 1.7
-    1 3 0.5
-    2 1 1.7
-    3 1 0.5
-    */
 }

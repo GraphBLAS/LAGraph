@@ -34,7 +34,7 @@ given the same seed.
 char msg [LAGRAPH_MSG_LEN] ;
 
 GrB_Matrix A = NULL, A_coarse_LAGraph = NULL, A_coarse_naive = NULL ;
-GrB_Vector *parent = NULL, *newlabels = NULL ;  // comes from the Coarsen_Matching function
+GrB_Vector *parent = NULL, *newlabels = NULL, *inv_newlabels = NULL ;  // outputs from the Coarsen_Matching function
 LAGraph_Graph G = NULL ;
 
 typedef struct
@@ -80,7 +80,9 @@ const matrix_info tests [ ] = {
     // random, nopreserve, nocombine
     {10, 0.3, 92, LAGraph_Matching_heavy, 0, 0, "small-random-nopreserve-nocombine"},
     {500, 0.4, 44, LAGraph_Matching_light, 0, 0, "large-random-nopreserve-nocombine"},
-
+    
+    // test case to exercise passing NULL pointers for outputs
+    {500, 0.4, 44, LAGraph_Matching_light, 0, 0, "null-inputs"},
     {0, 0, 0, 0, 0, 0, ""}
 } ;
 
@@ -98,7 +100,7 @@ void test_Coarsen_Matching () {
     for (int k = 0 ; ; k++)
     {
         const char *aname = tests [k].name ;
-        if (strlen (aname) == 0) break ;
+        if (strlen (aname) == 0) { break ; }
         TEST_CASE (aname) ;
 
         // ================= first generate graph (code from test_MaximalMatching) =================
@@ -162,67 +164,107 @@ void test_Coarsen_Matching () {
         G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
 
         uint64_t matching_seed = 0 ;
-
-        for (int i = 0; i < SEEDS_PER_TEST ; i++) {
+        if (strcmp (aname, "null-inputs") == 0) {
+            // do this to get full code coverage and catch any unexpected behavior
             OK (LAGraph_Coarsen_Matching (
                 &A_coarse_LAGraph,
-                &parent,
-                &newlabels,
+                NULL,
+                NULL,
+                NULL,
                 G,
                 tests [k].matching_type, 
-                tests [k].preserve_mapping,
+                0,
                 tests [k].combine_weights,
                 1,
                 matching_seed,
                 msg
             )) ;
-
-            OK (LG_check_coarsen (
-                &A_coarse_naive,
-                G->A,
-                parent [0],
-                (newlabels == NULL ? NULL : newlabels [0]),
+            // do it with parent, inv_newlabels NULL but newlabels not NULL
+            OK (LAGraph_Coarsen_Matching (
+                &A_coarse_LAGraph,
                 NULL,
-                tests [k].preserve_mapping,
+                &newlabels,
+                NULL,
+                G,
+                tests [k].matching_type, 
+                0,
                 tests [k].combine_weights,
+                1,
+                matching_seed,
                 msg
             )) ;
+            TEST_CHECK (newlabels != NULL) ;
+            TEST_MSG ("Null input check failed!\n") ;
+        } else {
+            for (int i = 0; i < SEEDS_PER_TEST ; i++) {
+                OK (LAGraph_Coarsen_Matching (
+                    &A_coarse_LAGraph,
+                    &parent,
+                    &newlabels,
+                    &inv_newlabels,
+                    G,
+                    tests [k].matching_type, 
+                    tests [k].preserve_mapping,
+                    tests [k].combine_weights,
+                    1,
+                    matching_seed,
+                    msg
+                )) ;
+                OK (LG_check_coarsen (
+                    &A_coarse_naive,
+                    G->A,
+                    parent [0],
+                    (newlabels == NULL ? NULL : newlabels [0]),
+                    (inv_newlabels == NULL ? NULL : inv_newlabels [0]),
+                    tests [k].preserve_mapping,
+                    tests [k].combine_weights,
+                    msg
+                )) ;
 
-            // Check parent vector for matching-specific correctness (must be derived from a valid matching)
-            // requirements: no node is the parent of more than 2 nodes, and if p[i] != i, then A[i][p[i]] exists
-            int8_t *freq ;
-            OK (LAGraph_Malloc ((void**)(&freq), n, sizeof(int8_t), msg)) ;
-            memset(freq, 0, n * sizeof(int8_t)) ;
+                if (newlabels != NULL) {
+                    GrB_free (newlabels) ;
+                    LAGraph_Free ((void**)(&newlabels), msg) ;
 
-            for (GrB_Index i = 0 ; i < n ; i++) {
-                uint64_t par ;
-                OK (GrB_Vector_extractElement (&par, parent[0], i)) ;
-                freq [par]++ ;
-                TEST_CHECK (freq [par] <= 2) ;
-                TEST_MSG ("Parent vector not from a valid matching for test: %s\n", tests [k].name) ;
-
-                if (par != i) {
-                    // make sure that (i, par) is a edge in the graph
-                    // what is the right error code?
-                    TEST_CHECK (GxB_Matrix_isStoredElement (G->A, i, par) == GrB_SUCCESS) ;
-                    TEST_MSG ("Parent vector not from a valid matching for test: %s\n", tests [k].name) ;
+                    GrB_free (inv_newlabels) ;
+                    LAGraph_Free ((void**)(&inv_newlabels), msg) ;
                 }
+
+                // Check parent vector for matching-specific correctness (must be derived from a valid matching)
+                // requirements: no node is the parent of more than 2 nodes, and if p[i] != i, then A[i][p[i]] exists
+                int8_t *freq ;
+                OK (LAGraph_Malloc ((void**)(&freq), n, sizeof(int8_t), msg)) ;
+                memset(freq, 0, n * sizeof(int8_t)) ;
+
+                for (GrB_Index i = 0 ; i < n ; i++) {
+                    uint64_t par ;
+                    OK (GrB_Vector_extractElement (&par, parent[0], i)) ;
+                    freq [par]++ ;
+                    TEST_CHECK (freq [par] <= 2) ;
+                    TEST_MSG ("Parent vector not from a valid matching for test: %s\n", tests [k].name) ;
+
+                    if (par != i) {
+                        // make sure that (i, par) is a edge in the graph
+                        // what is the right error code?
+                        TEST_CHECK (GxB_Matrix_isStoredElement (G->A, i, par) == GrB_SUCCESS) ;
+                        TEST_MSG ("Parent vector not from a valid matching for test: %s\n", tests [k].name) ;
+                    }
+                }
+                OK (LAGraph_Free ((void**)(&freq), msg)) ;
+
+    #if 0
+                OK (LAGraph_Matrix_Print (G->A, LAGraph_COMPLETE, stdout, msg)) ;
+                OK (LAGraph_Matrix_Print (A_coarse_LAGraph, LAGraph_COMPLETE, stdout, msg)) ;
+                OK (LAGraph_Matrix_Print (A_coarse_naive, LAGraph_COMPLETE, stdout, msg)) ;
+                OK (LAGraph_Vector_Print (parent[0], LAGraph_COMPLETE, stdout, msg)) ;
+                OK (LAGraph_Vector_Print (newlabels[0], LAGraph_COMPLETE, stdout, msg)) ;
+    #endif
+                OK (LAGraph_Matrix_IsEqual (&ok, A_coarse_LAGraph, A_coarse_naive, msg)) ;
+                TEST_CHECK (ok) ;
+                TEST_MSG ("Coarsened matrices do not match for test: %s", tests [k].name) ;
+
+                matching_seed += tests [k].n ;
             }
-            OK (LAGraph_Free ((void**)(&freq), msg)) ;
-
-#if 0
-            OK (LAGraph_Matrix_Print (G->A, LAGraph_COMPLETE, stdout, msg)) ;
-            OK (LAGraph_Matrix_Print (A_coarse_LAGraph, LAGraph_COMPLETE, stdout, msg)) ;
-            OK (LAGraph_Matrix_Print (A_coarse_naive, LAGraph_COMPLETE, stdout, msg)) ;
-            OK (LAGraph_Vector_Print (parent[0], LAGraph_COMPLETE, stdout, msg)) ;
-            OK (LAGraph_Vector_Print (newlabels[0], LAGraph_COMPLETE, stdout, msg)) ;
-#endif
-            OK (LAGraph_Matrix_IsEqual (&ok, A_coarse_LAGraph, A_coarse_naive, msg)) ;
-            TEST_CHECK (ok) ;
-            TEST_MSG ("Coarsened matrices do not match for test: %s", tests [k].name) ;
-
-            matching_seed += tests [k].n ;
-         }
+        }
     }
 }
 

@@ -912,8 +912,9 @@ int LAGraph_Coarsen_Matching
 (
     // outputs:
     GrB_Matrix *coarsened,                   // coarsened adjacency
-    GrB_Vector **parent_result,              // parent mapping for each level; if preserve_mapping is true, is NULL
-    GrB_Vector **newlabels_result,           // new node labels for each leve; if preserve_mapping is true, is NULL
+    GrB_Vector **parent_result,              // description in LAGraph_CoarsenMatching
+    GrB_Vector **newlabels_result,           // description in LAGraph_CoarsenMatching
+    GrB_Vector **inv_newlabels_result,       // description in LAGraph_CoarsenMatching
     // inputs:
     LAGraph_Graph G,
     LAGraph_Matching_kind matching_type,     // refer to above enum
