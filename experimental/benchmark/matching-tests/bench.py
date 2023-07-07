@@ -77,7 +77,7 @@ tests = [
     {
         'type': 'bipartite',
         'performance': True,
-        'args': '1000000 100 1 1 0 0',
+        'args': '10000 100 1 1 0 0',
         'grb_args': 'stdin 0',
         'islight': False,
         'arg_names': 'num_nodes,sparse_factor,perf,is_naive,weighted,prefer_light',

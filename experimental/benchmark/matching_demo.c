@@ -66,7 +66,7 @@ int main (int argc, char** argv)
     GrB_Vector best_matching = NULL ;
     GrB_Vector use_weights = NULL ;
 
-    bool burble = false ; 
+    bool burble = true ; 
     demo_init (burble) ;
 
     //--------------------------------------------------------------------------
