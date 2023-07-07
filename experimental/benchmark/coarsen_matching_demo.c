@@ -52,7 +52,7 @@ int main(int argc, char **argv)
     GrB_Index n ;
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_Matrix coarsened = NULL ;
-    GrB_Vector *parent_result = NULL , *newlabels_result = NULL ;
+    GrB_Vector *parent_result = NULL, *newlabels_result = NULL, *inv_newlabels_result = NULL ;
 
     int nt = NTHREAD_LIST ;
     
@@ -91,15 +91,17 @@ int main(int argc, char **argv)
     // warmup for more accurate timing
     double tt = LAGraph_WallClockTime ( ) ;
     // GRB_TRY (LAGraph_Matrix_Print (E, LAGraph_COMPLETE, stdout, msg)) ;
-    // int res = (LAGraph_Coarsen_Matching (&coarsened, &parent_result, &newlabels_result, G, LAGraph_Matching_heavy, 0, 1, 1, DEFAULT_SEED, msg)) ;
+    LG_TRY (LAGraph_Coarsen_Matching (&coarsened, &parent_result, &newlabels_result, &inv_newlabels_result, G, LAGraph_Matching_heavy, 0, 1, 1, DEFAULT_SEED, msg)) ;
 
     tt = LAGraph_WallClockTime ( ) - tt ;
 
     GRB_TRY (GrB_free (&coarsened)) ;
     GRB_TRY (GrB_free (parent_result)) ; // free vector (first list element)
     GRB_TRY (GrB_free (newlabels_result)) ;
+    GRB_TRY (GrB_free (inv_newlabels_result)) ;
     LG_TRY (LAGraph_Free ((void**)(&parent_result), msg)) ; // free pointer to list
     LG_TRY (LAGraph_Free ((void**)(&newlabels_result), msg)) ;
+    LG_TRY (LAGraph_Free ((void**)(&inv_newlabels_result), msg)) ;
 #ifdef VERBOSE
     printf ("warmup time %g sec\n", tt) ;
 #endif
@@ -128,15 +130,18 @@ int main(int argc, char **argv)
             int64_t seed = trial * n + 1 ;
             double tt = LAGraph_WallClockTime ( ) ;
 
-            // LG_TRY (LAGraph_Coarsen_Matching (&coarsened, &parent_result, &newlabels_result, G, LAGraph_Matching_heavy, 0, 1, 1, DEFAULT_SEED, msg)) ;
+            LG_TRY (LAGraph_Coarsen_Matching (&coarsened, &parent_result, &newlabels_result, &inv_newlabels_result, G, LAGraph_Matching_heavy, 0, 1, 1, DEFAULT_SEED, msg)) ;
 
             tt = LAGraph_WallClockTime ( ) - tt ;
 
             GRB_TRY (GrB_free (&coarsened)) ;
             GRB_TRY (GrB_free (parent_result)) ; // free vector (first list element)
             GRB_TRY (GrB_free (newlabels_result)) ;
-            LG_TRY (LAGraph_Free ((void**)(&parent_result), msg)) ;    // free pointer to list
+            GRB_TRY (GrB_free (inv_newlabels_result)) ;
+            LG_TRY (LAGraph_Free ((void**)(&parent_result), msg)) ; // free pointer to list
             LG_TRY (LAGraph_Free ((void**)(&newlabels_result), msg)) ;
+            LG_TRY (LAGraph_Free ((void**)(&inv_newlabels_result), msg)) ;
+            
 #ifdef VERBOSE
             printf ("trial: %2d time: %10.7f sec\n", trial, tt) ;
 #endif
