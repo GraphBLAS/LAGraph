@@ -20,7 +20,7 @@ NOTE: Unlike the other tests, this does not use .mtx files, but rather generates
 matrices using specified configurations and seeds with LAGraph_Random_Matrix
 
 NOTE: Changes to LAGraph_Random may break these tests, since the LAGraph_Random implementation
-used to build the test graphs may produce a different output from the new implementation
+used to build the test graphs may produce a different output from newer implementations
 given the same seed.
 */
 
@@ -228,7 +228,6 @@ void test_Coarsen_Matching () {
                     GrB_free (inv_newlabels) ;
                     LAGraph_Free ((void**)(&inv_newlabels), msg) ;
                 }
-
                 // Check parent vector for matching-specific correctness (must be derived from a valid matching)
                 // requirements: no node is the parent of more than 2 nodes, and if p[i] != i, then A[i][p[i]] exists
                 int8_t *freq ;
@@ -249,6 +248,9 @@ void test_Coarsen_Matching () {
                         TEST_MSG ("Parent vector not from a valid matching for test: %s\n", tests [k].name) ;
                     }
                 }
+                GrB_free (parent) ;
+                LAGraph_Free ((void**)(&parent), msg) ;
+                
                 OK (LAGraph_Free ((void**)(&freq), msg)) ;
 
     #if 0

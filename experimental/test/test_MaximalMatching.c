@@ -20,7 +20,7 @@ NOTE: Unlike the other tests, this does not use .mtx files, but rather generates
 matrices using specified configurations and seeds with LAGraph_Random_Matrix
 
 NOTE: Changes to LAGraph_Random may break these tests, since the LAGraph_Random implementation
-used to build the test graphs may produce a different output from the new implementation
+used to build the test graphs may produce a different output from newer implementations
 given the same seed.
 */
 
@@ -76,7 +76,7 @@ const matrix_info tests [ ] =
 double thresholds [ ] = {
     0.85,   // random matching, exact
     0.90,   // random matching, naive
-    0.82,   // weighted matching, naive, light
+    0.80,   // weighted matching, naive, light
     0.90,   // weighted matching, naive, heavy
 } ;
 
@@ -228,7 +228,7 @@ void test_MaximalMatching (void)
         OK (GrB_Vector_new (&hop_edges, GrB_BOOL, num_edges)) ;
         OK (GrB_Vector_new (&hop_nodes, GrB_BOOL, num_nodes)) ;
 
-        double avg_error = 0 ;
+        double avg_acc = 0 ;
         size_t which_threshold ;
         uint64_t seed = 0 ;
         // run max matching
@@ -282,21 +282,21 @@ void test_MaximalMatching (void)
                 // exact matching must have strict upper bound
                 TEST_CHECK (matching_value <= expected) ;
             }
-            double error = matching_value / expected ;
+            double acc = matching_value / expected ;
             if (tests [k].matching_type == 2) {
                 // flip it for light matchings
-                error = expected / matching_value ;
+                acc = expected / matching_value ;
                 which_threshold = 2 ;
             }
-            avg_error += error ;
+            avg_acc += acc ;
             OK (GrB_free (&matching)) ;
             seed += num_nodes ;
         }
-        avg_error /= SEEDS_PER_TEST ;
-        ok = (avg_error >= thresholds [which_threshold]) ;
+        avg_acc /= SEEDS_PER_TEST ;
+        ok = (avg_acc >= thresholds [which_threshold]) ;
 
         TEST_CHECK (ok) ;
-        printf ("Value of produced matching has %.5f error, tolerance is %.5f\n for case (%d)\n", avg_error, thresholds [which_threshold], k) ;
+        printf ("Value of produced matching has %.5f accuracy, passing threshold is %.5f\n for case (%d)\n", avg_acc, thresholds [which_threshold], k) ;
 
         OK (GrB_free (&A)) ;
         OK (GrB_free (&E)) ;

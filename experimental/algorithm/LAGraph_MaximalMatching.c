@@ -113,15 +113,20 @@ int LAGraph_MaximalMatching
     GrB_Index num_edges ;
     GrB_Index num_nodes ;
 
+    char typename[LAGRAPH_MAX_NAME_LEN] ;
+    GrB_Type type ;
+    LG_TRY (LAGraph_Matrix_TypeName (typename, E, msg)) ;
+    LG_TRY (LAGraph_TypeFromName (&type, typename, msg)) ;
+
+
     GRB_TRY (GrB_Matrix_nrows (&num_nodes, E)) ;
     GRB_TRY (GrB_Matrix_ncols (&num_edges, E)) ;
-    // TODO: match this type with E (for now, it's fp64)
-    GRB_TRY (GrB_Matrix_new (&E_t, GrB_FP64, num_edges, num_nodes)) ;
+    GRB_TRY (GrB_Matrix_new (&E_t, type, num_edges, num_nodes)) ;
     GRB_TRY (GrB_transpose (E_t, NULL, NULL, E, NULL)) ;
     GRB_TRY (GrB_Vector_new (&candidates, GrB_BOOL, num_edges)) ;
     GRB_TRY (GrB_Vector_new (&Seed, GrB_UINT64, num_edges)) ;
     GRB_TRY (GrB_Vector_new (&score, GrB_FP64, num_edges)) ;
-    GRB_TRY (GrB_Vector_new (&weight, GrB_FP64, num_edges)) ;
+    GRB_TRY (GrB_Vector_new (&weight, type, num_edges)) ;
     GRB_TRY (GrB_Vector_new (&node_degree, GrB_UINT64, num_nodes)) ;
     GRB_TRY (GrB_Vector_new (&degree, GrB_UINT64, num_edges)) ;
     GRB_TRY (GrB_Vector_new (&max_node_neighbor, GrB_FP64, num_nodes)) ;
@@ -153,8 +158,6 @@ int LAGraph_MaximalMatching
     // we care about relative degree
     GRB_TRY (GrB_mxv (degree, NULL, NULL, LAGraph_plus_second_uint64, E_t, node_degree, NULL)) ;
 
-    // TODO: fix structure types, semirings, monoids to match underlying type of A. For now, casting everything to FP64 (catch all type)
-    // this mainly requires annoying changes in LAGraph_Incidence_Matrix to accommodate several types
     GRB_TRY (GrB_reduce (weight, NULL, NULL, GrB_MAX_MONOID_FP64, E_t, NULL)) ; // use ANY ?
 
     #if defined ( COVERAGE )
