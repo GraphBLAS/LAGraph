@@ -155,9 +155,9 @@ int main(int argc, char **argv)
 #endif
 
 #ifdef VERBOSE
-        printf ("single-level coarsening (heavy, nopreserve, combine): %3d: avg time: %10.7f (sec) matrix: %s\n",
+        printf ("single-level coarsening (heavy, nopreserve, combine): %3d threads: avg time: %10.7f (sec) matrix: %s\n",
                 nthreads, t, (random ? "random" : matrix_name)) ;
-        fprintf (stderr, "single-level coarsening (heavy, nopreserve, combine): %3d: avg time: %10.7f (sec) matrix: %s\n",
+        fprintf (stderr, "single-level coarsening (heavy, nopreserve, combine): %3d threads: avg time: %10.7f (sec) matrix: %s\n",
                 nthreads, t, (random ? "random" : matrix_name)) ;
 #endif
     }
