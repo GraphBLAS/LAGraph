@@ -47,6 +47,8 @@ appear in the matching.
 #undef LG_FREE_ALL
 #undef LG_FREE_WORK
 
+// #define OPTIMIZE_PUSH_PULL
+
 #define LG_FREE_WORK                        \
 {                                           \
     GrB_free(&E_t) ;                        \
@@ -160,6 +162,10 @@ int LAGraph_MaximalMatching
 
     GRB_TRY (GrB_reduce (weight, NULL, NULL, GrB_MAX_MONOID_FP64, E_t, NULL)) ; // use ANY ?
 
+    #ifdef OPTIMIZE_PUSH_PULL
+        GrB_Index sparsity_thresh = 0.04 ;
+    #endif
+
     #if defined ( COVERAGE )
         int kount = 0 ;
     #endif
@@ -181,11 +187,33 @@ int LAGraph_MaximalMatching
 
         // intermediate result. Max score edge touching each node
         // don't need to clear this out first because we populate the result for all nodes
-        GRB_TRY (GrB_mxv (max_node_neighbor, NULL, NULL, GrB_MAX_SECOND_SEMIRING_FP64, E, score, NULL)) ;
+    #ifdef OPTIMIZE_PUSH_PULL
+        if (ncandidates > sparsity_thresh * num_edges)
+    #endif 
+        {
+            GRB_TRY (GrB_mxv (max_node_neighbor, NULL, NULL, GrB_MAX_SECOND_SEMIRING_FP64, E, score, NULL)) ;
+        }
+    #ifdef OPTIMIZE_PUSH_PULL
+        else {
+            GRB_TRY (GrB_vxm (max_node_neighbor, NULL, NULL, GrB_MAX_SECOND_SEMIRING_FP64, score, E, NULL)) ;
+        }
+    #endif
+
+        GrB_Index node_nvals ;
+        GRB_TRY (GrB_Vector_nvals (&node_nvals, max_node_neighbor)) ;
 
         // Max edge touching each candidate edge, including itself
-        GRB_TRY (GrB_mxv (max_neighbor, candidates, NULL, GrB_MAX_SECOND_SEMIRING_FP64, E_t, max_node_neighbor, GrB_DESC_RS)) ;
-
+    #ifdef OPTIMIZE_PUSH_PULL
+        if (node_nvals > sparsity_thresh * num_nodes)
+    #endif
+        {
+            GRB_TRY (GrB_mxv (max_neighbor, candidates, NULL, GrB_MAX_SECOND_SEMIRING_FP64, E_t, max_node_neighbor, GrB_DESC_RS)) ;
+        }
+    #ifdef OPTIMIZE_PUSH_PULL
+        else {
+            GRB_TRY (GrB_vxm (max_neighbor, candidates, NULL, GrB_MAX_SECOND_SEMIRING_FP64, max_node_neighbor, E_t, GrB_DESC_RS)) ;
+        }
+    #endif
         // Note that we are using the GE operator and not G, since max_neighbor includes the self score
         // correctness: both score and max_neighbor only have entries for candidates, so no non-candidate members are produced
         // GRB_TRY (GrB_assign (new_members, NULL, NULL, empty, GrB_ALL, num_edges, NULL)) ; // just experimenting
@@ -193,28 +221,41 @@ int LAGraph_MaximalMatching
 
         // makes new_members structural
         GRB_TRY (GrB_select (new_members, NULL, NULL, GrB_VALUEEQ_BOOL, new_members, true, NULL)) ; 
-        #ifdef dbg
-            printf("new members for ncandidates = %lld:\n", ncandidates);
-            LAGRAPH_TRY (LAGraph_Vector_Print (new_members, LAGraph_SHORT, stdout, msg)) ;
-        #endif
+    #ifdef dbg
+        printf("new members for ncandidates = %lld:\n", ncandidates);
+        LAGRAPH_TRY (LAGraph_Vector_Print (new_members, LAGraph_SHORT, stdout, msg)) ;
+    #endif
+
+        GrB_Index new_members_nvals ;
+        GRB_TRY (GrB_Vector_nvals (&new_members_nvals, new_members)) ;
 
         // check if any node has > 1 edge touching it. 
-        GRB_TRY (GrB_mxv (new_members_node_degree, NULL, NULL, LAGraph_plus_one_uint64, E, new_members, NULL)) ;
+    #ifdef OPTIMIZE_PUSH_PULL
+        if (new_members_nvals > sparsity_thresh * num_edges)
+    #endif 
+        {
+            GRB_TRY (GrB_mxv (new_members_node_degree, NULL, NULL, LAGraph_plus_one_uint64, E, new_members, NULL)) ;
+        }
+    #ifdef OPTIMIZE_PUSH_PULL
+        else {
+            GRB_TRY (GrB_vxm (new_members_node_degree, NULL, NULL, LAGraph_plus_one_uint64, new_members, E, NULL)) ;
+        }
+    #endif
 
         GrB_Index max_degree ; 
         GRB_TRY (GrB_reduce (&max_degree, NULL, GrB_MAX_MONOID_UINT64, new_members_node_degree, NULL)) ;
 
-        #if defined ( COVERAGE )
-            if (num_nodes == 20 && kount++ == 1) max_degree = 2 ;
-            if (num_nodes == 30 && kount++ == 0) max_degree = 2 ;
-        #endif
+    #if defined ( COVERAGE )
+        if (num_nodes == 20 && kount++ == 1) max_degree = 2 ;
+        if (num_nodes == 30 && kount++ == 0) max_degree = 2 ;
+    #endif
 
         if (max_degree > 1) {
             nfailures++ ;
             if (nfailures > MAX_FAILURES) {
-                #ifdef dbg
+    #ifdef dbg
                     printf("[DBG] hit max failures %d\n", nfailures);
-                #endif
+    #endif
                 break ;
             }
             // regen seed and seed vector
@@ -226,18 +267,43 @@ int LAGraph_MaximalMatching
         GRB_TRY (GrB_assign (result, new_members, NULL, true, GrB_ALL, num_edges, GrB_DESC_S)) ; 
         // to include neighbor edges, need to compute new_neighbors
         // to do this, we need to compute the intermediate result new_members_nodes
-        GRB_TRY (GrB_mxv (new_members_nodes, NULL, NULL, LAGraph_any_one_bool, E, new_members, NULL)) ;
-        GRB_TRY (GrB_mxv (new_neighbors, NULL, NULL, LAGraph_any_one_bool, E_t, new_members_nodes, NULL)) ;
-        #ifdef dbg
-            LAGRAPH_TRY (LAGraph_Vector_Print (new_neighbors, LAGraph_SHORT, stdout, msg)) ;
-        #endif
+    #ifdef OPTIMIZE_PUSH_PULL
+        if (new_members_nvals > sparsity_thresh * num_edges)
+    #endif
+        {
+            GRB_TRY (GrB_mxv (new_members_nodes, NULL, NULL, LAGraph_any_one_bool, E, new_members, NULL)) ;
+        }
+    #ifdef OPTIMIZE_PUSH_PULL
+        else {
+            GRB_TRY (GrB_vxm (new_members_nodes, NULL, NULL, LAGraph_any_one_bool, new_members, E, NULL)) ;
+        }
+    #endif
+
+        GRB_TRY (GrB_Vector_nvals (&node_nvals, new_members_nodes)) ;
+    
+    #ifdef OPTIMIZE_PUSH_PULL
+        if (node_nvals > sparsity_thresh * num_nodes)
+    #endif
+        {
+            GRB_TRY (GrB_mxv (new_neighbors, NULL, NULL, LAGraph_any_one_bool, E_t, new_members_nodes, NULL)) ;
+        }
+    #ifdef OPTIMIZE_PUSH_PULL
+        else {
+            GRB_TRY (GrB_vxm (new_neighbors, NULL, NULL, LAGraph_any_one_bool, new_members_nodes, E_t, NULL)) ;
+        }
+    #endif
+
+
+    #ifdef dbg
+        LAGRAPH_TRY (LAGraph_Vector_Print (new_neighbors, LAGraph_SHORT, stdout, msg)) ;
+    #endif
         // removes the union of new_members and their neighbors
         GRB_TRY (GrB_assign (candidates, new_neighbors, NULL, empty, GrB_ALL, num_edges, GrB_DESC_S)) ;
 
-        #ifdef dbg
-            printf("candidates:\n");
-            LAGRAPH_TRY (LAGraph_Vector_Print (candidates, LAGraph_SHORT, stdout, msg)) ;
-        #endif
+    #ifdef dbg
+        printf("candidates:\n");
+        LAGRAPH_TRY (LAGraph_Vector_Print (candidates, LAGraph_SHORT, stdout, msg)) ;
+    #endif
         GrB_Index last_ncandidates = ncandidates ;
 
         GrB_Vector_nvals(&ncandidates, candidates) ;
@@ -245,13 +311,13 @@ int LAGraph_MaximalMatching
         // advance seed vector
         LG_TRY (LAGraph_Random_Next (Seed, msg)) ;
 
-        #if defined ( COVERAGE )
+    #if defined ( COVERAGE )
         if (num_nodes == 50 && kount++ == 0)
         {
             // hack the Seed vector
             GRB_TRY (GrB_assign (Seed, NULL, NULL, 42, GrB_ALL, num_edges, NULL)) ;
         }
-        #endif
+    #endif
     }
 
     (*matching) = result ;
