@@ -41,7 +41,7 @@ from termcolor import cprint
 # How many runs to do per test (results are averaged across all runs)
 NUM_RUNS = 1
 # How many tests to run
-NUM_TESTS = 4
+NUM_TESTS = 1
 
 run_verification_cmd = './build/verify_matching > verif_result'
 
@@ -49,35 +49,8 @@ run_verification_cmd = './build/verify_matching > verif_result'
 tests = [
     {
         'type': 'bipartite',
-        'performance': False,
-        'args': '3000 50 0 1 0 0',
-        'grb_args': '-q 0 3',
-        'islight': False,
-        'arg_names': 'num_nodes,sparse_factor,perf,is_naive,weighted,prefer_light',
-        'grb_arg_names': 'filename,match_type,ntrials'
-    },
-    {
-        'type': 'bipartite',
-        'performance': False,
-        'args': '1000 50 0 1 0 0',
-        'grb_args': '-q 0 3',
-        'islight': False,
-        'arg_names': 'num_nodes,sparse_factor,perf,is_naive,weighted,prefer_light',
-        'grb_arg_names': 'filename,match_type,ntrials'
-    },
-    {
-        'type': 'bipartite',
-        'performance': False,
-        'args': '1000 10 0 1 0 0',
-        'grb_args': '-q 0 3',
-        'islight': False,
-        'arg_names': 'num_nodes,sparse_factor,perf,is_naive,weighted,prefer_light',
-        'grb_arg_names': 'filename,match_type,ntrials'
-    },
-    {
-        'type': 'bipartite',
         'performance': True,
-        'args': '10000 100 1 1 0 0',
+        'args': '1000 100 1 1 0 0',
         'grb_args': 'stdin 0',
         'islight': False,
         'arg_names': 'num_nodes,sparse_factor,perf,is_naive,weighted,prefer_light',

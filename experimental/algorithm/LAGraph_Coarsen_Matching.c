@@ -161,6 +161,7 @@ static int LAGraph_Parent_to_S
 
         // identify preserved nodes
         GRB_TRY (GrB_select (parent_cpy, NULL, NULL, VALUEEQ_ROWINDEX_UINT64, parent, 0, NULL)) ;
+        GRB_TRY (GrB_free (&VALUEEQ_ROWINDEX_UINT64)) ;
         
         // get indices of preserved nodes
         GRB_TRY (GxB_Vector_unpack_CSC (
@@ -203,6 +204,8 @@ static int LAGraph_Parent_to_S
             is_jumbled,
             NULL
         )) ;
+
+        LG_TRY (LAGraph_Free ((void**)(&ramp), msg)) ;
 
         if (newlabels != NULL) {
             // alternate method:
