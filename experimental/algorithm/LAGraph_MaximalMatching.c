@@ -47,7 +47,7 @@ appear in the matching.
 #undef LG_FREE_ALL
 #undef LG_FREE_WORK
 
-// #define OPTIMIZE_PUSH_PULL
+#define OPTIMIZE_PUSH_PULL
 
 #define LG_FREE_WORK                        \
 {                                           \
@@ -163,7 +163,7 @@ int LAGraph_MaximalMatching
     GRB_TRY (GrB_reduce (weight, NULL, NULL, GrB_MAX_MONOID_FP64, E_t, NULL)) ; // use ANY ?
 
     #ifdef OPTIMIZE_PUSH_PULL
-        GrB_Index sparsity_thresh = 0.04 ;
+        double sparsity_thresh = 0.04 ;
     #endif
 
     #if defined ( COVERAGE )
@@ -195,7 +195,7 @@ int LAGraph_MaximalMatching
         }
     #ifdef OPTIMIZE_PUSH_PULL
         else {
-            GRB_TRY (GrB_vxm (max_node_neighbor, NULL, NULL, GrB_MAX_SECOND_SEMIRING_FP64, score, E, NULL)) ;
+            GRB_TRY (GrB_vxm (max_node_neighbor, NULL, NULL, GrB_MAX_FIRST_SEMIRING_FP64, score, E_t, NULL)) ;
         }
     #endif
 
@@ -211,7 +211,7 @@ int LAGraph_MaximalMatching
         }
     #ifdef OPTIMIZE_PUSH_PULL
         else {
-            GRB_TRY (GrB_vxm (max_neighbor, candidates, NULL, GrB_MAX_SECOND_SEMIRING_FP64, max_node_neighbor, E_t, GrB_DESC_RS)) ;
+            GRB_TRY (GrB_vxm (max_neighbor, candidates, NULL, GrB_MAX_FIRST_SEMIRING_FP64, max_node_neighbor, E, GrB_DESC_RS)) ;
         }
     #endif
         // Note that we are using the GE operator and not G, since max_neighbor includes the self score
@@ -238,7 +238,7 @@ int LAGraph_MaximalMatching
         }
     #ifdef OPTIMIZE_PUSH_PULL
         else {
-            GRB_TRY (GrB_vxm (new_members_node_degree, NULL, NULL, LAGraph_plus_one_uint64, new_members, E, NULL)) ;
+            GRB_TRY (GrB_vxm (new_members_node_degree, NULL, NULL, LAGraph_plus_one_uint64, new_members, E_t, NULL)) ;
         }
     #endif
 
@@ -275,7 +275,7 @@ int LAGraph_MaximalMatching
         }
     #ifdef OPTIMIZE_PUSH_PULL
         else {
-            GRB_TRY (GrB_vxm (new_members_nodes, NULL, NULL, LAGraph_any_one_bool, new_members, E, NULL)) ;
+            GRB_TRY (GrB_vxm (new_members_nodes, NULL, NULL, LAGraph_any_one_bool, new_members, E_t, NULL)) ;
         }
     #endif
 
@@ -289,7 +289,7 @@ int LAGraph_MaximalMatching
         }
     #ifdef OPTIMIZE_PUSH_PULL
         else {
-            GRB_TRY (GrB_vxm (new_neighbors, NULL, NULL, LAGraph_any_one_bool, new_members_nodes, E_t, NULL)) ;
+            GRB_TRY (GrB_vxm (new_neighbors, NULL, NULL, LAGraph_any_one_bool, new_members_nodes, E, NULL)) ;
         }
     #endif
 

@@ -190,7 +190,7 @@ int main(int argc, char **argv){
     random_device rd;
     mt19937_64 gen(rd());
     uniform_int_distribution<ll> seed_distr(1, 1e15);
-    uint64_t seed = 88; // seed_distr(gen);
+    uint64_t seed = seed_distr(gen);
 
     GrB_Index *rows, *cols ;
     uint32_t *vals ;
