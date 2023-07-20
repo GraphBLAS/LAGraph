@@ -8,7 +8,8 @@ Usage:
 num_nodes [int]: How many nodes to include in the randomly generated graph
 sparse_factor [double]: Average degree of each node in the random graph
 perf [0/1]: Whether to output performance data (running time) or the produced matching details. Note that the exact (maximum) method can not be benchmarked for performance.
-naive [0/1]: Whether to evaluate the matching of the random graph using the naive method or exact (maximum) method. Described further below. naive = 1 always if perf = 1.
+naive [0/1]: Whether to evaluate the matching of the random graph using the naive method or exact (maximum) method. Described further below. naive = 1 always if perf = 1; in this case,
+the value of the input is ignored despite still being required.
 weighted [0/1]: IF naive = 1, specifies if the random graph (and matching) should be weighted. Note that the exact (maximum) method can not run on weighted graphs.
 prefer_light [0/1]: IF the graph is weighted, then specifies whether to give preference to light matchings or heavy matchings. Ignored if weighted = 0.
 

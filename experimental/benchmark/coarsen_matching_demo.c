@@ -49,6 +49,9 @@ int main(int argc, char **argv)
         LG_TRY (LAGraph_DeleteSelfEdges (G, msg)) ;
         // LG_TRY (LAGraph_Graph_Print (G, LAGraph_COMPLETE, stdout, msg)) ;
     }
+    if (burble) {
+        printf("================ DONE WITH MATRIX BUILDING ================\n") ;
+    }
     GrB_Index n ;
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_Matrix coarsened = NULL ;
@@ -87,7 +90,9 @@ int main(int argc, char **argv)
 #ifdef VERBOSE
     printf ("\n") ;
 #endif
-
+    if (burble) {
+        printf("================ STARTING WARMUP ================\n") ;
+    }
     // warmup for more accurate timing
     double tt = LAGraph_WallClockTime ( ) ;
     // GRB_TRY (LAGraph_Matrix_Print (E, LAGraph_COMPLETE, stdout, msg)) ;
@@ -102,6 +107,9 @@ int main(int argc, char **argv)
     LG_TRY (LAGraph_Free ((void**)(&parent_result), msg)) ; // free pointer to list
     LG_TRY (LAGraph_Free ((void**)(&newlabels_result), msg)) ;
     LG_TRY (LAGraph_Free ((void**)(&inv_newlabels_result), msg)) ;
+    if (burble) {
+        printf("================ WARMUP DONE ================\n") ;
+    }
 #ifdef VERBOSE
     printf ("warmup time %g sec\n", tt) ;
 #endif

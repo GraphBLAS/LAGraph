@@ -234,7 +234,7 @@ void test_MaximalMatching (void)
         // run max matching
         for (int i = 0; i < SEEDS_PER_TEST; i++){
             // try random seeds
-            OK (LAGraph_MaximalMatching (&matching, E, tests [k].matching_type, seed, msg)) ;
+            OK (LAGraph_MaximalMatching (&matching, E, E_t, tests [k].matching_type, seed, msg)) ;
             // check correctness
             OK (GrB_mxv (node_degree, NULL, NULL, LAGraph_plus_one_uint64, E, matching, NULL)) ;
             GrB_Index max_degree ;
@@ -326,12 +326,17 @@ void test_MaximalMatchingErrors (void)
     OK (GrB_Matrix_new (&E, GrB_FP64, 1, 1)) ;
 
     // result pointer is null
-    int result = LAGraph_MaximalMatching (NULL, E, 0, 0, msg) ;
+    int result = LAGraph_MaximalMatching (NULL, E, E, 0, 0, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
 
     // E matrix is null
-    result = LAGraph_MaximalMatching (&matching, NULL, 0, 0, msg) ;
+    result = LAGraph_MaximalMatching (&matching, NULL, E, 0, 0, msg) ;
+    printf ("\nresult: %d %s\n", result, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
+
+    // E_t matrix is null
+    result = LAGraph_MaximalMatching (&matching, E, NULL, 0, 0, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
 }

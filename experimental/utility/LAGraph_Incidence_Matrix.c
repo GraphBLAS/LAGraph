@@ -86,6 +86,9 @@ int LAGraph_Incidence_Matrix
     GRB_TRY (GrB_Matrix_new (&E, type, num_nodes, num_edges)) ;
     GRB_TRY (GrB_Matrix_new (&E_half, type, num_nodes, num_edges)) ;
 
+    // (*result) = E ;
+    // return (GrB_SUCCESS) ;
+
     // get just the lower triangular entries
     GRB_TRY (GrB_select (A_tril, NULL, NULL, GrB_TRIL, A, 0, NULL)) ;
 
@@ -111,7 +114,6 @@ int LAGraph_Incidence_Matrix
     // build E_1 with (row_indices, ramp, values)
     // build E_2 with (col_indices, ramp, values)
     // E = E_1 + E_2
-
     GRB_TRY (GrB_Matrix_build (E_half, col_indices, ramp, values, num_edges, NULL)) ;
     GRB_TRY (GrB_Matrix_build (E, row_indices, ramp, values, num_edges, NULL)) ;
 
