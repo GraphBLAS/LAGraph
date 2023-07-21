@@ -37,6 +37,7 @@ equal to true) if the kth edge appears in the maximal matching.  If (i,j) is
 a matched edge, then no other edges of G that are incident on nodes i and j
 appear in the matching.
 
+This method requires O(e) space for an undirected graph with e edges
 */
 
 #include "LG_internal.h"
@@ -222,17 +223,11 @@ int LAGraph_MaximalMatching
         GRB_TRY (GrB_Vector_nvals (&new_members_nvals, new_members)) ;
 
         // check if any node has > 1 edge touching it. 
-    #ifdef OPTIMIZE_PUSH_PULL
-        if (new_members_nvals > sparsity_thresh * num_edges)
-    #endif 
-        {
+        if (new_members_nvals > sparsity_thresh * num_edges) {
             GRB_TRY (GrB_mxv (new_members_node_degree, NULL, NULL, LAGraph_plus_one_uint64, E, new_members, NULL)) ;
-        }
-    #ifdef OPTIMIZE_PUSH_PULL
-        else {
+        } else {
             GRB_TRY (GrB_vxm (new_members_node_degree, NULL, NULL, LAGraph_plus_one_uint64, new_members, E_t, NULL)) ;
         }
-    #endif
 
         GrB_Index max_degree ; 
         GRB_TRY (GrB_reduce (&max_degree, NULL, GrB_MAX_MONOID_UINT64, new_members_node_degree, NULL)) ;
@@ -246,7 +241,7 @@ int LAGraph_MaximalMatching
             nfailures++ ;
             if (nfailures > MAX_FAILURES) {
     #ifdef dbg
-                    printf("[DBG] hit max failures %d\n", nfailures);
+                printf("[DBG] hit max failures %d\n", nfailures);
     #endif
                 break ;
             }
