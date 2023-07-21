@@ -267,6 +267,7 @@ int LAGraph_cdlp
 
     for (int iteration = 0; iteration < itermax; iteration++) {
 
+// FIXME: redo the chunk size
 #pragma omp parallel for schedule(dynamic)
         for (GrB_Index i = 0; i < n; i++) {
             ptable *counts = &counts_pool[omp_get_thread_num()];
