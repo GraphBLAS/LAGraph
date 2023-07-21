@@ -50,7 +50,9 @@ The coarsening step involves a reduction from a graph G to G', where we use a bi
 nodes in G to nodes in G'. We can consider f(u) to be the parent of node u. 
 For each edge (u, v) in G, we add an edge (f(u), f(v)) to G' iff f(u) != f(v). In our case,
 this bijection is given by the maximal matching, where for every matched edge, one of the endpoints of the edge is the
-parent (representative) of both endpoints, and any node not part of a matched edge is its own parent.  
+parent (representative) of both endpoints, and any node not part of a matched edge is its own parent.
+
+This method requires O(e + n) space for an undirected graph with e edges and n nodes
 */
 
 #include "LG_internal.h"
@@ -367,7 +369,7 @@ int LAGraph_Coarsen_Matching
         // G is not undirected
         LG_ASSERT_MSG (false, -105, "G must be undirected") ;
     }
-    // CHKPT("Done with building A");
+    CHKPT("Done with building A");
     LG_ASSERT_MSG (G->nself_edges == 0, -107, "G->nself_edges must be zero") ;
     
     // make new LAGraph_Graph to use for building incidence matrix and for useful functions (delete self-edges)
@@ -381,7 +383,7 @@ int LAGraph_Coarsen_Matching
     GrB_Index num_edges ;
 
     GRB_TRY (GrB_Matrix_nrows (&num_nodes, A)) ;
-    // CHKPT("Done building G_cpy");
+    CHKPT("Done building G_cpy");
     if (preserve_mapping) {
         GRB_TRY (GrB_Matrix_new (&S_t, GrB_FP64, num_nodes, num_nodes)) ;
         GRB_TRY (GrB_Vector_new (&node_parent, GrB_UINT64, num_nodes)) ;
@@ -413,11 +415,11 @@ int LAGraph_Coarsen_Matching
     #endif
 
     GrB_Index curr_level = 0 ;
-    // CHKPT("Starting main loop");
+    CHKPT("Starting main loop");
     while (nlevels > 0) {
         // get E
         LG_TRY (LAGraph_Incidence_Matrix (&E, G_cpy, msg)) ;
-        // CHKPT("Done with LAGraph_IncidenceMatrix");
+        CHKPT("Done with LAGraph_IncidenceMatrix");
         GRB_TRY (GrB_Matrix_nvals (&num_edges, A)) ;
         num_edges /= 2 ; // since undirected
 
@@ -435,10 +437,10 @@ int LAGraph_Coarsen_Matching
         GRB_TRY (GrB_Vector_new (&edge_parent, GrB_UINT64, num_edges)) ;
 
         GRB_TRY (GrB_transpose (E_t, NULL, NULL, E, NULL)) ;
-        // CHKPT("Starting maximal matching");
+        CHKPT("Starting maximal matching");
         // run maximal matching
         LG_TRY (LAGraph_MaximalMatching (&matched_edges, E, E_t, matching_type, seed, msg)) ;
-        // CHKPT("Done with maximal matching");
+        CHKPT("Done with maximal matching");
         // TODO: Make single coarsening step a util function
         // make edge_parent
         // want to do E_t * full and get the first entry for each edge (mask output with matched_edges)

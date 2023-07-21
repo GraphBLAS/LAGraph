@@ -4,11 +4,11 @@
 
 #define VERBOSE
 
-#define DEFAULT_SIZE 10000
+#define DEFAULT_SIZE 2000
 #define DEFAULT_DENSITY 0.5
 #define DEFAULT_SEED 42
 
-#define NTHREAD_LIST 1
+#define NTHREAD_LIST 0
 #define THREAD_LIST 8
 
 
@@ -18,7 +18,7 @@ int main(int argc, char **argv)
 
     LAGraph_Graph G = NULL ;
 
-    bool burble = false ; 
+    bool burble = true ; 
     demo_init (burble) ;
 
     //--------------------------------------------------------------------------
