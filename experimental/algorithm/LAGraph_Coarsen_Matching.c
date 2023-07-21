@@ -276,6 +276,13 @@ static int LAGraph_Parent_to_S
     LAGraph_Free((void**) all_parents, msg) ;       \
 }                                                   \
 
+#define CHKPT(msg)                                  \
+{                                                   \
+    printf("*** [CHKPT] %s ***\n", msg) ;           \
+}                                                   \
+
+#define OPTIMIZE_PUSH_PULL
+
 int LAGraph_Coarsen_Matching
 (
     // outputs:
@@ -360,7 +367,7 @@ int LAGraph_Coarsen_Matching
         // G is not undirected
         LG_ASSERT_MSG (false, -105, "G must be undirected") ;
     }
-
+    // CHKPT("Done with building A");
     LG_ASSERT_MSG (G->nself_edges == 0, -107, "G->nself_edges must be zero") ;
     
     // make new LAGraph_Graph to use for building incidence matrix and for useful functions (delete self-edges)
@@ -374,7 +381,7 @@ int LAGraph_Coarsen_Matching
     GrB_Index num_edges ;
 
     GRB_TRY (GrB_Matrix_nrows (&num_nodes, A)) ;
-
+    // CHKPT("Done building G_cpy");
     if (preserve_mapping) {
         GRB_TRY (GrB_Matrix_new (&S_t, GrB_FP64, num_nodes, num_nodes)) ;
         GRB_TRY (GrB_Vector_new (&node_parent, GrB_UINT64, num_nodes)) ;
@@ -397,11 +404,20 @@ int LAGraph_Coarsen_Matching
         }
     }
 
-    GrB_Index curr_level = 0 ;
+    // for push/pull optimization
+    double sparsity_thresh = 
+    #ifdef OPTIMIZE_PUSH_PULL
+        0.06 ;
+    #else
+        0.0;
+    #endif
 
+    GrB_Index curr_level = 0 ;
+    // CHKPT("Starting main loop");
     while (nlevels > 0) {
         // get E
         LG_TRY (LAGraph_Incidence_Matrix (&E, G_cpy, msg)) ;
+        // CHKPT("Done with LAGraph_IncidenceMatrix");
         GRB_TRY (GrB_Matrix_nvals (&num_edges, A)) ;
         num_edges /= 2 ; // since undirected
 
@@ -414,14 +430,15 @@ int LAGraph_Coarsen_Matching
             // ok to resize full since we are using its contents later
             GRB_TRY (GrB_Vector_resize (full, num_nodes)) ;
         }
+        
         GRB_TRY (GrB_Matrix_new (&E_t, GrB_FP64, num_edges, num_nodes)) ;
         GRB_TRY (GrB_Vector_new (&edge_parent, GrB_UINT64, num_edges)) ;
 
         GRB_TRY (GrB_transpose (E_t, NULL, NULL, E, NULL)) ;
-
+        // CHKPT("Starting maximal matching");
         // run maximal matching
-        LG_TRY (LAGraph_MaximalMatching (&matched_edges, E, matching_type, seed, msg)) ;
-
+        LG_TRY (LAGraph_MaximalMatching (&matched_edges, E, E_t, matching_type, seed, msg)) ;
+        // CHKPT("Done with maximal matching");
         // TODO: Make single coarsening step a util function
         // make edge_parent
         // want to do E_t * full and get the first entry for each edge (mask output with matched_edges)
@@ -433,14 +450,20 @@ int LAGraph_Coarsen_Matching
             printf("Printing E for level (%lld)\n", curr_level) ;
             LG_TRY (LAGraph_Matrix_Print (E, LAGraph_COMPLETE, stdout, msg)) ;
         #endif
-
         // now, we have edge_parent (each edge points to its parent node)
         // can do E * edge_parent with min_second to get node_parent
-        GRB_TRY (GrB_mxv (node_parent, NULL, NULL, GrB_MIN_SECOND_SEMIRING_UINT64, E, edge_parent, NULL)) ;
+        GrB_Index num_matched ;
+        GRB_TRY (GrB_Vector_nvals (&num_matched, edge_parent)) ;
+        
+        if (num_matched > sparsity_thresh * num_edges) {
+            GRB_TRY (GrB_mxv (node_parent, NULL, NULL, GrB_MIN_SECOND_SEMIRING_UINT64, E, edge_parent, NULL)) ;
+        } else {
+            GRB_TRY (GrB_vxm (node_parent, NULL, NULL, GrB_MIN_FIRST_SEMIRING_UINT64, edge_parent, E_t, NULL)) ;
+        }
 
         // populate non-existent entries in node_parent with their index
         // handles nodes that are not engaged in a matching
-        GrB_apply (node_parent, node_parent, NULL, GrB_ROWINDEX_INT64, full, (int64_t) 0, GrB_DESC_SC) ;
+        GrB_apply (node_parent, node_parent, NULL, GrB_ROWINDEX_INT64, full, (uint64_t) 0, GrB_DESC_SC) ;
 
         if (all_parents != NULL) {
             // record a deep copy of the current node_parent for the current coarsening level

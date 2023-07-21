@@ -31,12 +31,13 @@ To add new tests, simply use the following structure:
 and add it to the tests list
 
 Notes:
-For performance tests, you want ./matching_demo to accept input via stdin, since the data.mtx
+For performance tests, you want matching_demo to accept input via stdin, since the data.mtx
 is piped to it (see the build_grb_cmd function below)
 '''
 
 import os
 from termcolor import cprint
+
 
 # How many runs to do per test (results are averaged across all runs)
 NUM_RUNS = 1
@@ -50,7 +51,7 @@ tests = [
     {
         'type': 'bipartite',
         'performance': True,
-        'args': '1000 100 1 1 0 0',
+        'args': '1000000 10 1 1 0 0',
         'grb_args': 'stdin 0',
         'islight': False,
         'arg_names': 'num_nodes,sparse_factor,perf,is_naive,weighted,prefer_light',
