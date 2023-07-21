@@ -47,22 +47,44 @@ GrB_Index *I = NULL, *V = NULL, *F = NULL, *B = NULL, *M = NULL;
 // hold. The converse is not true unless F[u]==B[u]. However, we can safely remove
 // an edge (u, v) if either F[u]!=F[v] or B[u]!=B[v] holds, which can accelerate
 // the SCC computation in the future rounds.
+
+#if 0
+// using GxB_SelectOp
 bool edge_removal (GrB_Index i, GrB_Index j, const void *x, const void *thunk) ;
 bool edge_removal (GrB_Index i, GrB_Index j, const void *x, const void *thunk)
 {
     return !M[i] && !M[j] && F[i] == F[j] && B[i] == B[j];
 }
+#else
+// using GrB_IndexUnaryOp
+void edge_removal (bool *z, const void *x, GrB_Index i, GrB_Index j, const void *thunk) ;
+void edge_removal (bool *z, const void *x, GrB_Index i, GrB_Index j, const void *thunk)
+{
+    (*z) = (!M[i] && !M[j] && F[i] == F[j] && B[i] == B[j]) ;
+}
+#endif
 
 //****************************************************************************
 // trim_one: remove the edges connected to trivial SCCs
 //  - A vertex is a trivial SCC if it has no incoming or outgoing edges.
 //  - M[i] = i   | if vertex i is a trivial SCC
 //    M[i] = n   | otherwise
+
+#if 0
+// using GxB_SelectOp
 bool trim_one (GrB_Index i, GrB_Index j, const void *x, const void *thunk) ;
 bool trim_one (GrB_Index i, GrB_Index j, const void *x, const void *thunk)
 {
     return M[i] == M[j];
 }
+#else
+// using GrB_IndexUnaryOp
+void trim_one (bool *z, const void *x, GrB_Index i, GrB_Index j, const void *thunk) ;
+void trim_one (bool *z, const void *x, GrB_Index i, GrB_Index j, const void *thunk)
+{
+    (*z) = (M[i] == M[j]) ;
+}
+#endif
 
 //****************************************************************************
 // label propagation
@@ -123,7 +145,11 @@ int LAGraph_scc
     GrB_Vector ind;
     GrB_Vector inf;
     GrB_Vector f, b, mask;
+#if 0
     GxB_SelectOp sel1, sel2;
+#else
+    GrB_IndexUnaryOp sel1 = NULL, sel2 = NULL ;
+#endif
     GrB_Monoid Add;
 
     if (result == NULL || A == NULL) return (GrB_NULL_POINTER) ;
@@ -169,9 +195,14 @@ int LAGraph_scc
     GRB_TRY (GrB_Vector_new (&f, GrB_UINT64, n));
     GRB_TRY (GrB_Vector_new (&b, GrB_UINT64, n));
     GRB_TRY (GrB_Vector_new (&mask, GrB_UINT64, n));
+#if 0
     // GxB_SelectOp
     GRB_TRY (GxB_SelectOp_new (&sel1, trim_one, GrB_BOOL, GrB_NULL));
     GRB_TRY (GxB_SelectOp_new (&sel2, edge_removal, GrB_BOOL, GrB_NULL));
+#else
+    GRB_TRY (GrB_IndexUnaryOp_new (&sel1, (void *) trim_one, GrB_BOOL, GrB_UINT64, GrB_UINT64));
+    GRB_TRY (GrB_IndexUnaryOp_new (&sel2, (void *) edge_removal, GrB_BOOL, GrB_UINT64, GrB_UINT64));
+#endif
 
     // remove trivial SCCs
     GRB_TRY (GrB_reduce (f, 0, GrB_PLUS_UINT64, GrB_PLUS_UINT64, FW, 0));
@@ -186,8 +217,13 @@ int LAGraph_scc
     if (nvals < n)
     {
         GRB_TRY (GrB_Vector_extractTuples (I, M, &n, scc));
+#if 0
         GRB_TRY (GxB_select (FW, 0, 0, sel1, FW, GrB_NULL, 0));
         GRB_TRY (GxB_select (BW, 0, 0, sel1, BW, GrB_NULL, 0));
+#else
+        GRB_TRY (GrB_select (FW, 0, 0, sel1, FW, 0, 0));
+        GRB_TRY (GrB_select (BW, 0, 0, sel1, BW, 0, 0));
+#endif
     }
 
     GRB_TRY (GrB_Matrix_nvals (&nvals, FW));
@@ -209,8 +245,13 @@ int LAGraph_scc
         GRB_TRY (GrB_Vector_extractTuples (I, B, &n, b));
         GRB_TRY (GrB_Vector_extractTuples (I, M, &n, mask));
 
+#if 0
         GRB_TRY (GxB_select (FW, 0, 0, sel2, FW, GrB_NULL, 0));
         GRB_TRY (GxB_select (BW, 0, 0, sel2, BW, GrB_NULL, 0));
+#else
+        GRB_TRY (GrB_select (FW, 0, 0, sel2, FW, 0, 0));
+        GRB_TRY (GrB_select (BW, 0, 0, sel2, BW, 0, 0));
+#endif
 
         GRB_TRY (GrB_Matrix_nvals (&nvals, FW));
     }
