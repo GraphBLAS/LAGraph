@@ -1101,8 +1101,8 @@ static inline int demo_init (bool burble)
     char msg [LAGRAPH_MSG_LEN] ;
     msg [0] = '\0' ;
 
-    #ifdef __linux__
-    // Use mallopt to speedup malloc and free on Linux.  Otherwise, it can take
+    #ifdef __GLIBC__
+    // Use mallopt to speedup malloc and free on Linux (glibc).  Otherwise, it can take
     // several seconds to free a large block of memory.  For this to be
     // effective, demo_init must be called before calling malloc/free, and
     // before calling LAGraph_Init.
