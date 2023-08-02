@@ -60,57 +60,57 @@ int LG_check_coarsen
     // check that parent mapping is well-formed and is compressed (i.e. p[p[i]] = p[i] for all i)
     // also calculate n_new
     for (GrB_Index i = 0 ; i < n ; i++) {
-        LG_ASSERT (GxB_Vector_isStoredElement (parent, i) == GrB_SUCCESS, -1) ;
         uint64_t par ;
-        GRB_TRY (GrB_Vector_extractElement (&par, parent, i)) ;
-        // TODO: What error code to use here?
-        LG_ASSERT (par >= 0 && par < n, -1) ;
+        LG_ASSERT (GrB_Vector_extractElement (&par, parent, i) == GrB_SUCCESS, GrB_INVALID_VALUE) ;
+        LG_ASSERT (par >= 0 && par < n, GrB_INVALID_INDEX) ;
+
         uint64_t grandpa ;
         GRB_TRY (GrB_Vector_extractElement (&grandpa, parent, par)) ;
-        LG_ASSERT (grandpa == par, -1) ;
+        LG_ASSERT (grandpa == par, GrB_INVALID_VALUE) ;
 
         if (par != i && (!preserve_mapping)) {
             // make sure that there is no new label for nodes that get discarded
-            LG_ASSERT (GxB_Vector_isStoredElement (newlabels, i) == GrB_NO_VALUE, -1) ;
+            uint64_t dummy ;
+            LG_ASSERT (GrB_Vector_extractElement (&dummy, newlabels, i) == GrB_NO_VALUE, GrB_INVALID_VALUE) ;
             // also update new number of nodes
             n_new-- ;
         }
     }
 
     if (!preserve_mapping) {
-        // if preserve_mapping = true, mapping is just the identity map
+        // if preserve_mapping = false, newlabels is not the identity and must be checked
         bool *occ ;
         GrB_Index num_entries = 0 ;
         LG_TRY (LAGraph_Malloc ((void**)(&occ), n, sizeof(bool), msg)) ;
-        memset(occ, 0, n * sizeof(bool)) ;
+        memset (occ, 0, n * sizeof(bool)) ;
 
-        // check that mapping vector is well-formed (entries must form a permutation of [0...(n_new - 1)])
+        // check that newlabels vector is well-formed (entries must form a permutation of [0...(n_new - 1)])
         for (GrB_Index i = 0 ; i < n ; i++) {
-            if (GxB_Vector_isStoredElement (newlabels, i) == GrB_NO_VALUE) {
+            uint64_t new_label ;
+            GrB_Info status = GrB_Vector_extractElement (&new_label, newlabels, i) ;
+            GRB_TRY (status) ; // check for errors
+            if (status == GrB_NO_VALUE) {
                 continue ;
             }
             num_entries++ ;
-            uint64_t new_label ;
             GRB_TRY (GrB_Vector_extractElement (&new_label, newlabels, i)) ;
-            // TODO: What error code to use here?
-            LG_ASSERT (new_label >= 0 && new_label < n_new, -1) ;
-            LG_ASSERT (!occ[new_label], -1) ;
+
+            LG_ASSERT (new_label >= 0 && new_label < n_new, GrB_INVALID_INDEX) ;
+            LG_ASSERT (!occ[new_label], GrB_INVALID_VALUE) ;
             occ[new_label] = 1 ;
         }
-        LG_ASSERT (num_entries == n_new, -1) ;
+        LG_ASSERT (num_entries == n_new, GrB_INVALID_VALUE) ;
         LG_TRY (LAGraph_Free ((void**)(&occ), msg)) ;
 
         // check inv_newlabels
         for (GrB_Index i = 0 ; i < n_new ; i++) {
-            LG_ASSERT (GxB_Vector_isStoredElement (inv_newlabels, i) == GrB_SUCCESS, -1) ;
             uint64_t old_label ;
-            GRB_TRY (GrB_Vector_extractElement (&old_label, inv_newlabels, i)) ;
-            LG_ASSERT (GxB_Vector_isStoredElement (newlabels, old_label) == GrB_SUCCESS, -1) ;
+            LG_ASSERT (GrB_Vector_extractElement (&old_label, inv_newlabels, i) == GrB_SUCCESS, GrB_INVALID_VALUE) ;
 
             uint64_t new_label ; // entry in newlabels, check that it matches i
-            GRB_TRY (GrB_Vector_extractElement (&new_label, newlabels, old_label)) ;
-            // TODO: Proper error code?
-            LG_ASSERT (new_label == i, -1) ;
+            LG_ASSERT (GrB_Vector_extractElement (&new_label, newlabels, old_label) == GrB_SUCCESS, GrB_INVALID_VALUE) ;
+
+            LG_ASSERT (new_label == i, GrB_INVALID_VALUE) ;
         }
     }
     
@@ -159,10 +159,11 @@ int LG_check_coarsen
             // current weight of edge between u_par and v_par
             double curr_weight ;
 
-            if (GxB_Matrix_isStoredElement (result, u_par_newlabel, v_par_newlabel) == GrB_NO_VALUE) {
+            GrB_Info status = GrB_Matrix_extractElement (&curr_weight, result, u_par_newlabel, v_par_newlabel) ;
+            GRB_TRY (status) ; // check for errors
+
+            if (status == GrB_NO_VALUE) {
                 curr_weight = 0 ;
-            } else {
-                GRB_TRY (GrB_Matrix_extractElement (&curr_weight, result, u_par_newlabel, v_par_newlabel)) ;
             }
 
             // weight of the current edge being added

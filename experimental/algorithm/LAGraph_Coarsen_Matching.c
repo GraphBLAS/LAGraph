@@ -25,7 +25,7 @@ counts the number of combined edges)
 
 There are 4 outputs from the function:
 1. A GrB_Matrix of the coarsened graph (if the input adjacency matrix is of type GrB_BOOL or GrB_UINT{8|16|32} or GrB_INT*, it will
-have type GrB_INT64. Else, it will have the same type as the input matrix).
+have type GrB_INT64. If it is of type GrB_FP32, it will have type GrB_FP64. Else, it will have the same type as the input matrix.
 
 2. A list of GrB_Vectors (parent_result) of length nlevels, where if parent_result[i][u] = v,
 then the parent of node u in G_{i} is node v in G_{i}, where G_0 is the initial graph. Note that this means 
@@ -183,12 +183,9 @@ static int LAGraph_Parent_to_S
         // build ramp vector
         LG_TRY (LAGraph_Malloc ((void**) &ramp, num_preserved, sizeof(uint64_t), msg)) ;
 
-        #pragma omp parallel
-        {
-            #pragma omp for
-            for (GrB_Index i = 0 ; i < num_preserved ; i++) {
-                ramp [i] = i ;
-            }
+        #pragma omp parallel for
+        for (GrB_Index i = 0 ; i < num_preserved ; i++) {
+            ramp [i] = i ;
         }
 
         if (inv_newlabels != NULL) {
@@ -387,10 +384,10 @@ int LAGraph_Coarsen_Matching
     else
     {
         // G is not undirected
-        LG_ASSERT_MSG (false, -105, "G must be undirected") ;
+        LG_ASSERT_MSG (false, LAGRAPH_INVALID_GRAPH, "G must be undirected") ;
     }
     CHKPT("Done with building A");
-    LG_ASSERT_MSG (G->nself_edges == 0, -107, "G->nself_edges must be zero") ;
+    LG_ASSERT_MSG (G->nself_edges == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED, "G->nself_edges must be zero") ;
 
     // make new LAGraph_Graph to use for building incidence matrix and for useful functions (delete self-edges)
     LG_TRY (LAGraph_New (&G_cpy, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
