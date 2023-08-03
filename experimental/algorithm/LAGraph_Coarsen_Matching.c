@@ -302,10 +302,6 @@ int LAGraph_Coarsen_Matching
     char *msg
 )
 {
-    
-#if !LAGRAPH_SUITESPARSE
-    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
-#endif
 
     LG_CLEAR_MSG ;
 
@@ -332,6 +328,10 @@ int LAGraph_Coarsen_Matching
     GrB_Index nvals, nrows ;
     GrB_Type A_type ;
     // check properties (no self-loops, undirected)
+
+#if !LAGRAPH_SUITESPARSE
+    LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
+#endif
 
     if (G->kind == LAGraph_ADJACENCY_UNDIRECTED)
     {
