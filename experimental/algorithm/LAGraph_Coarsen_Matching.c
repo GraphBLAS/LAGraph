@@ -329,9 +329,9 @@ int LAGraph_Coarsen_Matching
     GrB_Type A_type ;
     // check properties (no self-loops, undirected)
 
-// #if !LAGRAPH_SUITESPARSE
-//     LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
-// #endif
+#if !LAGRAPH_SUITESPARSE
+     LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
+#endif
 
     if (G->kind == LAGraph_ADJACENCY_UNDIRECTED)
     {
