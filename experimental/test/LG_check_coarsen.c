@@ -40,8 +40,8 @@ int LG_check_coarsen
     // inputs:
     GrB_Matrix A,               // input adjacency (for the purposes of testing, is FP64)
     GrB_Vector parent,          // parent mapping. Must not be NULL.
-    GrB_Vector newlabels,       // new labels of nodes, used to populate resulting adjacency matrix, can be NULL if preserve_mapping = 1, else must be a valid result
-    GrB_Vector inv_newlabels,   // inverse of newlabels, can be NULL if preserve_mapping = 1, else must be a valid result
+    GrB_Vector newlabel,       // new labels of nodes, used to populate resulting adjacency matrix, can be NULL if preserve_mapping = 1, else must be a valid result
+    GrB_Vector inv_newlabel,   // inverse of newlabel, can be NULL if preserve_mapping = 1, else must be a valid result
     int preserve_mapping,       // whether to preserve the original namespace of nodes
     int combine_weights,        // whether to combine the weights of edges that collapse together
     char *msg
@@ -71,29 +71,29 @@ int LG_check_coarsen
         if (par != i && (!preserve_mapping)) {
             // make sure that there is no new label for nodes that get discarded
             uint64_t dummy ;
-            LG_ASSERT (GrB_Vector_extractElement (&dummy, newlabels, i) == GrB_NO_VALUE, GrB_INVALID_VALUE) ;
+            LG_ASSERT (GrB_Vector_extractElement (&dummy, newlabel, i) == GrB_NO_VALUE, GrB_INVALID_VALUE) ;
             // also update new number of nodes
             n_new-- ;
         }
     }
 
     if (!preserve_mapping) {
-        // if preserve_mapping = false, newlabels is not the identity and must be checked
+        // if preserve_mapping = false, newlabel is not the identity and must be checked
         bool *occ ;
         GrB_Index num_entries = 0 ;
         LG_TRY (LAGraph_Malloc ((void**)(&occ), n, sizeof(bool), msg)) ;
         memset (occ, 0, n * sizeof(bool)) ;
 
-        // check that newlabels vector is well-formed (entries must form a permutation of [0...(n_new - 1)])
+        // check that newlabel vector is well-formed (entries must form a permutation of [0...(n_new - 1)])
         for (GrB_Index i = 0 ; i < n ; i++) {
             uint64_t new_label ;
-            GrB_Info status = GrB_Vector_extractElement (&new_label, newlabels, i) ;
+            GrB_Info status = GrB_Vector_extractElement (&new_label, newlabel, i) ;
             GRB_TRY (status) ; // check for errors
             if (status == GrB_NO_VALUE) {
                 continue ;
             }
             num_entries++ ;
-            GRB_TRY (GrB_Vector_extractElement (&new_label, newlabels, i)) ;
+            GRB_TRY (GrB_Vector_extractElement (&new_label, newlabel, i)) ;
 
             LG_ASSERT (new_label >= 0 && new_label < n_new, GrB_INVALID_INDEX) ;
             LG_ASSERT (!occ[new_label], GrB_INVALID_VALUE) ;
@@ -102,13 +102,13 @@ int LG_check_coarsen
         LG_ASSERT (num_entries == n_new, GrB_INVALID_VALUE) ;
         LG_TRY (LAGraph_Free ((void**)(&occ), msg)) ;
 
-        // check inv_newlabels
+        // check inv_newlabel
         for (GrB_Index i = 0 ; i < n_new ; i++) {
             uint64_t old_label ;
-            LG_ASSERT (GrB_Vector_extractElement (&old_label, inv_newlabels, i) == GrB_SUCCESS, GrB_INVALID_VALUE) ;
+            LG_ASSERT (GrB_Vector_extractElement (&old_label, inv_newlabel, i) == GrB_SUCCESS, GrB_INVALID_VALUE) ;
 
-            uint64_t new_label ; // entry in newlabels, check that it matches i
-            LG_ASSERT (GrB_Vector_extractElement (&new_label, newlabels, old_label) == GrB_SUCCESS, GrB_INVALID_VALUE) ;
+            uint64_t new_label ; // entry in newlabel, check that it matches i
+            LG_ASSERT (GrB_Vector_extractElement (&new_label, newlabel, old_label) == GrB_SUCCESS, GrB_INVALID_VALUE) ;
 
             LG_ASSERT (new_label == i, GrB_INVALID_VALUE) ;
         }
@@ -150,8 +150,8 @@ int LG_check_coarsen
             v_par_newlabel = v_par ;
         } else {
             // find new labels
-            GRB_TRY (GrB_Vector_extractElement (&u_par_newlabel, newlabels, u_par)) ;
-            GRB_TRY (GrB_Vector_extractElement (&v_par_newlabel, newlabels, v_par)) ;
+            GRB_TRY (GrB_Vector_extractElement (&u_par_newlabel, newlabel, u_par)) ;
+            GRB_TRY (GrB_Vector_extractElement (&v_par_newlabel, newlabel, v_par)) ;
         }
         double res_weight = 1 ;
 
