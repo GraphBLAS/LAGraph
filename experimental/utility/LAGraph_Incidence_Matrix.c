@@ -19,7 +19,7 @@ have the same value.  If the graph G is weighted, then both E(i,k) and E(j,k)
 are equal to the weight of the (i,j) edge.  If G is unweighted, then both are
 equal to 1 (and the matrix E is thus iso-valued).
 
-G->A is treated as if FP64.  E has type GrB_FP64
+The result has the same type as the input adjacency matrix.
 */
 
 //--------
@@ -56,17 +56,17 @@ int LAGraph_Incidence_Matrix
 
     GrB_Index *row_indices = NULL ;
     GrB_Index *col_indices = NULL ;
-    double *values = NULL ;
+    void *values = NULL ;
 
     GrB_Index *ramp = NULL ;
 
     LG_ASSERT_MSG (
         G->kind == LAGraph_ADJACENCY_UNDIRECTED,
-        -105, 
+        LAGRAPH_INVALID_GRAPH, 
         "G must be undirected"
     ) ;
 
-    LG_ASSERT_MSG (G->nself_edges == 0, -107, "G->nself_edges must be zero") ;
+    LG_ASSERT_MSG (G->nself_edges == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED, "G->nself_edges must be zero") ;
 
     GrB_Matrix A = G->A ;
 
@@ -86,6 +86,18 @@ int LAGraph_Incidence_Matrix
     GRB_TRY (GrB_Matrix_new (&E, type, num_nodes, num_edges)) ;
     GRB_TRY (GrB_Matrix_new (&E_half, type, num_nodes, num_edges)) ;
 
+    bool is_uint64 = (type == GrB_UINT64) ;
+    bool is_float = ((type == GrB_FP32) || (type == GrB_FP64)) ;
+
+    // which intermediate type to cast to
+    // uint64_t : 0, double: 1, int64_t: 2
+    // if the input matrix type is GrB_INT* or GrB_UINT{8|16|32}, it becomes a int64_t
+    // if the input matrix type is GrB_UINT64, it becomes a uint64_t
+    // if the input matrix type is GrB_FP{32|64}, it becomes a double
+    int which_type = (is_uint64 ? 0 : (is_float ? 1 : 2)) ;
+
+    size_t value_sizes[3] = {sizeof(uint64_t), sizeof(double), sizeof(int64_t)} ;
+
     // (*result) = E ;
     // return (GrB_SUCCESS) ;
 
@@ -95,9 +107,20 @@ int LAGraph_Incidence_Matrix
     // Arrays to extract A into
     LG_TRY (LAGraph_Malloc ((void**)(&row_indices), num_edges, sizeof(GrB_Index), msg)) ;
     LG_TRY (LAGraph_Malloc ((void**)(&col_indices), num_edges, sizeof(GrB_Index), msg)) ;
-    LG_TRY (LAGraph_Malloc ((void**)(&values), num_edges, sizeof(double), msg)) ;
+    LG_TRY (LAGraph_Malloc ((void**)(&values), num_edges, value_sizes[which_type], msg)) ;
 
-    GRB_TRY (GrB_Matrix_extractTuples (row_indices, col_indices, values, &num_edges, A_tril)) ;
+    switch (which_type){
+        case 0:
+            GRB_TRY (GrB_Matrix_extractTuples_UINT64 (row_indices, col_indices, values, &num_edges, A_tril)) ;
+            break;
+        case 1:
+            GRB_TRY (GrB_Matrix_extractTuples_FP64 (row_indices, col_indices, values, &num_edges, A_tril)) ;
+            break;
+        case 2:
+            GRB_TRY (GrB_Matrix_extractTuples_INT64 (row_indices, col_indices, values, &num_edges, A_tril)) ;
+            break;
+    }
+    
     #ifdef dbg
         printf("Printing A_tril values\n");
         for (int i = 0; i < num_edges; i++){
@@ -114,8 +137,20 @@ int LAGraph_Incidence_Matrix
     // build E_1 with (row_indices, ramp, values)
     // build E_2 with (col_indices, ramp, values)
     // E = E_1 + E_2
-    GRB_TRY (GrB_Matrix_build (E_half, col_indices, ramp, values, num_edges, NULL)) ;
-    GRB_TRY (GrB_Matrix_build (E, row_indices, ramp, values, num_edges, NULL)) ;
+    switch (which_type) {
+        case 0:
+            GRB_TRY (GrB_Matrix_build_UINT64 (E_half, col_indices, ramp, values, num_edges, NULL)) ;
+            GRB_TRY (GrB_Matrix_build_UINT64 (E, row_indices, ramp, values, num_edges, NULL)) ;
+            break;
+        case 1:
+            GRB_TRY (GrB_Matrix_build_FP64 (E_half, col_indices, ramp, values, num_edges, NULL)) ;
+            GRB_TRY (GrB_Matrix_build_FP64 (E, row_indices, ramp, values, num_edges, NULL)) ;
+            break;
+        case 2:
+            GRB_TRY (GrB_Matrix_build_INT64 (E_half, col_indices, ramp, values, num_edges, NULL)) ;
+            GRB_TRY (GrB_Matrix_build_INT64 (E, row_indices, ramp, values, num_edges, NULL)) ;
+            break;
+    }
 
     GRB_TRY (GrB_eWiseAdd (E, NULL, NULL, GrB_PLUS_FP64, E, E_half, NULL)) ;
 

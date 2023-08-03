@@ -919,8 +919,8 @@ int LAGraph_Coarsen_Matching
     // inputs:
     LAGraph_Graph G,
     LAGraph_Matching_kind matching_type,     // refer to above enum
-    int preserve_mapping,                    // preserve initial namespace of nodes
-    int combine_weights,                     // whether to sum edge weights or just keep the pattern
+    bool preserve_mapping,                   // preserve initial namespace of nodes
+    bool combine_weights,                    // whether to sum edge weights or just keep the pattern
     GrB_Index nlevels,                       // #of coarsening levels
     uint64_t seed,                           // used for matching
     char *msg
