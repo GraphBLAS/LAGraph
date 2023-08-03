@@ -308,17 +308,13 @@ void test_MaximalMatching (void)
 
         OK (LAGraph_Delete (&G, msg)) ;
     }
+    OK (LAGraph_Finalize (msg)) ;
+    OK (LAGraph_Random_Finalize (msg)) ;
 }
 
 void test_MaximalMatchingErrors (void)
 {
     OK (LAGraph_Init (msg)) ;
-
-    snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
-    FILE *f = fopen (filename, "r") ;
-    TEST_CHECK (f != NULL) ;
-    OK (LAGraph_MMRead (&A, f, msg)) ;
-    TEST_MSG ("Loading of adjacency matrix failed") ;
 
     E = NULL ;
     matching = NULL ;
@@ -326,7 +322,7 @@ void test_MaximalMatchingErrors (void)
     OK (GrB_Matrix_new (&E, GrB_FP64, 1, 1)) ;
 
     // result pointer is null
-    int result = LAGraph_MaximalMatching (NULL, E, E, 0, 0, msg) ;
+    GrB_Info result = LAGraph_MaximalMatching (NULL, E, E, 0, 0, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
 
@@ -339,6 +335,8 @@ void test_MaximalMatchingErrors (void)
     result = LAGraph_MaximalMatching (&matching, E, NULL, 0, 0, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
+
+    OK (LAGraph_Finalize (msg)) ;
 }
 
 TEST_LIST = {
