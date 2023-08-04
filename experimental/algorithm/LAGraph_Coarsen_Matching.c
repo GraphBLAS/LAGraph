@@ -324,9 +324,9 @@ int LAGraph_Coarsen_Matching
     GrB_Type A_type ;
     // check properties (no self-loops, undirected)
 
-// #if !LAGRAPH_SUITESPARSE
-//     LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
-// #endif
+#if !LAGRAPH_SUITESPARSE
+     LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
+#endif
 
     if (G->kind == LAGraph_ADJACENCY_UNDIRECTED)
     {
@@ -384,6 +384,10 @@ int LAGraph_Coarsen_Matching
     CHKPT("Done with building A");
     LG_ASSERT_MSG (G->nself_edges == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED, "G->nself_edges must be zero") ;
 
+    if (coarsened == NULL) {
+        return GrB_NULL_POINTER ;
+    }
+
     // make new LAGraph_Graph to use for building incidence matrix and for useful functions (delete self-edges)
     LG_TRY (LAGraph_New (&G_cpy, &A, LAGraph_ADJACENCY_UNDIRECTED, msg)) ;
     LG_TRY (LAGraph_Cached_NSelfEdges (G_cpy, msg)) ;
@@ -396,6 +400,7 @@ int LAGraph_Coarsen_Matching
 
     GRB_TRY (GrB_Matrix_nrows (&num_nodes, A)) ;
     CHKPT("Done building G_cpy");
+
     if (preserve_mapping) {
         GRB_TRY (GrB_Matrix_new (&S_t, A_type, num_nodes, num_nodes)) ;
         GRB_TRY (GrB_Vector_new (&node_parent, GrB_UINT64, num_nodes)) ;

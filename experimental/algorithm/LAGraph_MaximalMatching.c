@@ -88,15 +88,7 @@ int LAGraph_MaximalMatching
 {
     LG_CLEAR_MSG ;
 
-    if (matching == NULL) {
-        return GrB_NULL_POINTER ;
-    }
-    (*matching) = NULL ;
-    
-    if (E == NULL) {
-        return GrB_NULL_POINTER ;
-    }
-    if (E_t == NULL) {
+    if ((matching == NULL) || (E == NULL) || (E_t == NULL)) {
         return GrB_NULL_POINTER ;
     }
 
