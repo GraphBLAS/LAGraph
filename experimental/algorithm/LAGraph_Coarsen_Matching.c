@@ -11,40 +11,7 @@
 
 /*
 This method is used to coarsen an undirected graph. The coarsening is based on a maximal matching,
-which is handled by LAGraph_MaximalMatching.
-The inputs to this algorithm are as follows in order:
-1. an LAGraph_Graph containing the target graph to coarsen
-2. the type of matching to perform (random, heavy, or light)
-3. whether to retain the size of the graph when coarsening. If 1, then nodes that are eliminated by a coarsening step
-are turned into singletons. If 0, the size of the graph is changed and nodes are explicitly relabeled.
-4. whether edges that are combined during a coarsening step should have their edge weights summed (for an unweighted graph, this
-counts the number of combined edges)
-5. How many coarsening steps to perform
-6. Random seed used for maximal matching (same for every coarsening step)
-7. msg for LAGraph error reporting
-
-There are 4 outputs from the function:
-1. A GrB_Matrix of the coarsened graph (if the input adjacency matrix is of type GrB_BOOL or GrB_UINT{8|16|32} or GrB_INT*, it will
-have type GrB_INT64. If it is of type GrB_FP32, it will have type GrB_FP64. Else, it will have the same type as the input matrix.
-
-2. A list of GrB_Vectors (parent_result) of length nlevels, where if parent_result[i][u] = v,
-then the parent of node u in G_{i} is node v in G_{i}, where G_0 is the initial graph. Note that this means 
-the length of parent_result[i] is the number of nodes in G_{i}.
-
-3. A list of GrB_Vectors (newlabels_result) of length nlevels, where if newlabels_result[i][u] = v,
-then node u in G_{i} is relabeled as node v in G_{i + 1}. In addition, newlabels_result[i][u] exists iff node u survives the i-th coarsening step.
-Again, the length of newlabels_result[i] is the number of nodes in G_{i}. If preserve_mapping = 1, then this result is returned as NULL since no
-relabeling occurs. This result is used to interpret the contents of parent_result, since the labels of nodes may change in an arbitrary fashion 
-for each coarsening step.
-
-4. A list of GrB_Vectors (inv_newlabels_result) of length nlevels, where if inv_newlabels_result[i][u] = v,
-then node u in G_{i + 1} had an original label as node v in G_{i}. In other words, this is simply the inverse of result (3).
-The length of inv_newlabels_result[i] is the number of nodes in G_{i + 1}. This is always a full vector. If preserve_mapping = 1,
-this is returned as NULL.
-
-NOTE: Results (2), (3), and (4) are only computed/returned if they are not passed as a NULL pointer on input.
-Passing a NULL pointer denotes that the user does not want that particular result, and no return value is given.
-This means that a NULL pointer may safely be passed on input.
+which is handled by LAGraph_MaximalMatching. 
 
 The coarsening step involves a reduction from a graph G to G', where we use a bijection f from
 nodes in G to nodes in G'. We can consider f(u) to be the parent of node u. 
@@ -52,7 +19,40 @@ For each edge (u, v) in G, we add an edge (f(u), f(v)) to G' iff f(u) != f(v). I
 this bijection is given by the maximal matching, where for every matched edge, one of the endpoints of the edge is the
 parent (representative) of both endpoints, and any node not part of a matched edge is its own parent.
 
-This method requires O(e + n) space for an undirected graph with e edges and n nodes
+This method performs a single coarsening step on the input graph.
+
+The inputs to this algorithm are as follows in order:
+1. an LAGraph_Graph containing the target graph to coarsen
+2. the type of matching to perform (random, heavy, or light)
+3. whether to retain the size of the graph when coarsening. If 1, then nodes that are eliminated by a coarsening step
+are turned into singletons. If 0, the size of the graph is changed and nodes are explicitly relabeled.
+4. whether edges that are combined during a coarsening step should have their edge weights summed (for an unweighted graph, this
+counts the number of combined edges). If this option is false, then only the pattern of combined edges is retained.
+6. Random seed used for maximal matching (same for every coarsening step)
+7. msg for LAGraph error reporting
+
+There are 4 outputs from the function:
+1. A GrB_Matrix of the coarsened graph (if the input adjacency matrix is of type GrB_BOOL or GrB_UINT{8|16|32} or GrB_INT*, it will
+have type GrB_INT64. If it is of type GrB_FP32, it will have type GrB_FP64. Else, it will have the same type as the input matrix.
+
+2. A full GrB_Vector (parent_result) of length n where if parent_result[u] = v,
+then node u has parent v. This parent mapping is derived from a maximal matching of the graph
+and is used for the coarsening step (meaning node u collapses into node v).
+
+3. A GrB_Vector (newlabels_result) of length n where if newlabels_result[u] = v,
+then node u in G is relabeled as node v in G', where G' is the coarsened graph. In addition, newlabels_result[u] exists iff node u survives the i-th coarsening step.
+If preserve_mapping = 1, then this result is returned as NULL since no relabeling occurs. This result is used to interpret the contents of parent_result, 
+since the labels of nodes may change in an arbitrary fashion for each coarsening step.
+
+4. A full GrB_Vector (inv_newlabels_result) of length n' (the number of vertices in the coarsened graph) where if inv_newlabels_result[u] = v,
+then node u in G' had an original label as node v in G, where G' is the coarsened graph. In other words, this is simply the inverse of result (3).
+If preserve_mapping = 1, this is returned as NULL.
+
+NOTE: Results (2), (3), and (4) are only computed/returned if they are not passed as a NULL pointer on input.
+Passing a NULL pointer denotes that the user does not want that particular result, and no return value is given.
+This means that a NULL pointer may safely be passed on input.
+
+This method requires O(n + e) space for an undirected graph with e edges and n nodes
 */
 
 #include "LG_internal.h"
@@ -61,7 +61,7 @@ This method requires O(e + n) space for an undirected graph with e edges and n n
 #include <omp.h>
 
 // #define dbg
-#define burble
+// #define burble
 
 #undef LG_FREE_ALL
 #undef LG_FREE_WORK
@@ -274,31 +274,30 @@ static int LAGraph_Parent_to_S
 {                                                   \
     LG_FREE_WORK ;                                  \
     LAGraph_Delete(&G_cpy, msg) ;                   \
-    LAGraph_Free((void**) all_parents, msg) ;       \
 }                                                   \
 
-#define CHKPT(msg)                                  \
-{                                                   \
-    printf("*** [CHKPT] *** %s\n", msg) ;           \
-}                                                   \
+#ifdef burble                                      
+    #define CHKPT(msg){ printf("*** [CHKPT] *** %s\n", msg) ; }                                                            
+#else                                                   
+    #define CHKPT(msg){}
+#endif
 
 #define OPTIMIZE_PUSH_PULL
 
 int LAGraph_Coarsen_Matching
 (
     // outputs:
-    GrB_Matrix *coarsened,                  // coarsened adjacency
-    GrB_Vector **parent_result,             // refer to comments at top of file
-    GrB_Vector **newlabels_result,          // refer to comments at top of file
-    GrB_Vector **inv_newlabels_result,      // refer to comments at top of file
+    GrB_Matrix *coarsened,                 // coarsened adjacency
+    GrB_Vector *parent_result,             // refer to comments at top of file
+    GrB_Vector *newlabel_result,           // refer to comments at top of file
+    GrB_Vector *inv_newlabel_result,       // refer to comments at top of file
 
     // inputs:
-    LAGraph_Graph G,                        // input graph
-    LAGraph_Matching_kind matching_type,    // how to perform the coarsening
-    bool preserve_mapping,                   // preserve original namespace of nodes
-    bool combine_weights,                    // whether to sum edge weights or just keep the pattern
-    GrB_Index nlevels,                      // #of coarsening levels
-    uint64_t seed,                          // seed used for matching
+    LAGraph_Graph G,                       // input graph
+    LAGraph_Matching_kind matching_type,   // how to perform the coarsening
+    bool preserve_mapping,                 // preserve original namespace of nodes
+    bool combine_weights,                  // whether to sum edge weights or just keep the pattern
+    uint64_t seed,                         // seed used for matching
     char *msg
 )
 {
@@ -315,10 +314,6 @@ int LAGraph_Coarsen_Matching
     GrB_Vector edge_parent = NULL ;         // points to parent (representative) node for each edge
     GrB_Vector node_parent = NULL ;         // points to parent (representative) node for each node
     GrB_Vector full = NULL ;                // full vector
-
-    GrB_Vector *all_parents = NULL ;        // resulting array of parents (used for output)
-    GrB_Vector *all_newlabels = NULL ;      // resulting array of new labels (used for output)
-    GrB_Vector *all_inv_newlabels = NULL ;  // resulting array of inverse new labels (used for output)
 
     // used to build int64/fp64 A matrix if needed
     GrB_Index *rows = NULL ;
@@ -415,173 +410,152 @@ int LAGraph_Coarsen_Matching
 
     GRB_TRY (GrB_assign (full, NULL, NULL, true, GrB_ALL, num_nodes, NULL)) ;
 
-    if (parent_result != NULL) {
-        LG_TRY (LAGraph_Malloc ((void**)(&all_parents), nlevels, sizeof(GrB_Vector), msg)) ;
-    }
-
-    if (!preserve_mapping) {
-        if (newlabels_result != NULL) {
-            LG_TRY (LAGraph_Malloc ((void**)(&all_newlabels), nlevels, sizeof(GrB_Vector), msg)) ;
-        }
-        if (inv_newlabels_result != NULL) {
-            LG_TRY (LAGraph_Malloc ((void**)(&all_inv_newlabels), nlevels, sizeof(GrB_Vector), msg)) ;
-        }
-    }
-
     // for push/pull optimization
     double sparsity_thresh = 
     #ifdef OPTIMIZE_PUSH_PULL
-        0.06 ;
+        0.04 ;
     #else
-        0.0;
+        1.0 ;
     #endif
 
     GrB_Index curr_level = 0 ;
     CHKPT("Starting main loop");
-    while (nlevels > 0) {
-        // get E
-        LG_TRY (LAGraph_Incidence_Matrix (&E, G_cpy, msg)) ;
-        CHKPT("Done with LAGraph_IncidenceMatrix");
-        GRB_TRY (GrB_Matrix_nvals (&num_edges, A)) ;
-        num_edges /= 2 ; // since undirected
 
-        if (!preserve_mapping) {
-            GRB_TRY (GrB_Matrix_nrows (&num_nodes, A)) ;
+    // ------------------------ COARSENING STEP ------------------------
+    // get E
+    LG_TRY (LAGraph_Incidence_Matrix (&E, G_cpy, msg)) ;
+    CHKPT("Done with LAGraph_IncidenceMatrix");
+    GRB_TRY (GrB_Matrix_nvals (&num_edges, A)) ;
+    num_edges /= 2 ; // since undirected
 
-            // create node_parent for this level
-            GRB_TRY (GrB_Vector_new (&node_parent, GrB_UINT64, num_nodes)) ;
+    if (!preserve_mapping) {
+        GRB_TRY (GrB_Matrix_nrows (&num_nodes, A)) ;
 
-            // ok to resize full since we are using its contents later
-            GRB_TRY (GrB_Vector_resize (full, num_nodes)) ;
-        }
-        
-        GRB_TRY (GrB_Matrix_new (&E_t, A_type, num_edges, num_nodes)) ;
-        GRB_TRY (GrB_Vector_new (&edge_parent, GrB_UINT64, num_edges)) ;
+        // create node_parent for this level
+        GRB_TRY (GrB_Vector_new (&node_parent, GrB_UINT64, num_nodes)) ;
 
-        GRB_TRY (GrB_transpose (E_t, NULL, NULL, E, NULL)) ;
-        CHKPT("Starting maximal matching");
-        // run maximal matching
-        LG_TRY (LAGraph_MaximalMatching (&matched_edges, E, E_t, matching_type, seed, msg)) ;
-        CHKPT("Done with maximal matching");
-        // TODO: Make single coarsening step a util function
-        // make edge_parent
-        // want to do E_t * full and get the first entry for each edge (mask output with matched_edges)
-        GRB_TRY (GrB_mxv (edge_parent, matched_edges, NULL, GxB_MIN_SECONDI_INT64, E_t, full, GrB_DESC_RS)) ;
-
-        #ifdef dbg
-            printf("Printing edge_parent for level (%lld)\n", curr_level) ;
-            LG_TRY (LAGraph_Vector_Print (edge_parent, LAGraph_COMPLETE, stdout, msg)) ;
-            printf("Printing E for level (%lld)\n", curr_level) ;
-            LG_TRY (LAGraph_Matrix_Print (E, LAGraph_COMPLETE, stdout, msg)) ;
-        #endif
-        // now, we have edge_parent (each edge points to its parent node)
-        // can do E * edge_parent with min_second to get node_parent
-        GrB_Index num_matched ;
-        GRB_TRY (GrB_Vector_nvals (&num_matched, edge_parent)) ;
-        
-        if (num_matched > sparsity_thresh * num_edges) {
-            GRB_TRY (GrB_mxv (node_parent, NULL, NULL, GrB_MIN_SECOND_SEMIRING_UINT64, E, edge_parent, NULL)) ;
-        } else {
-            GRB_TRY (GrB_vxm (node_parent, NULL, NULL, GrB_MIN_FIRST_SEMIRING_UINT64, edge_parent, E_t, NULL)) ;
-        }
-
-        // assign empty masked by singletons
-        // populate non-existent entries in node_parent with their index
-        // handles nodes that are not engaged in a matching
-        GrB_apply (node_parent, node_parent, NULL, GrB_ROWINDEX_INT64, full, (uint64_t) 0, GrB_DESC_SC) ;
-
-        if (all_parents != NULL) {
-            // record a deep copy of the current node_parent for the current coarsening level
-            GRB_TRY (GrB_Vector_dup (all_parents + curr_level, node_parent)) ;
-        }
-
-        #ifdef dbg
-            printf("Printing node_parent for level (%lld)\n", curr_level) ;
-            LG_TRY (LAGraph_Vector_Print (node_parent, LAGraph_COMPLETE, stdout, msg)) ;
-            printf("Printing matched edges for level (%lld)\n", curr_level) ;
-            LG_TRY (LAGraph_Vector_Print (matched_edges, LAGraph_COMPLETE, stdout, msg)) ;
-        #endif
-
-        // build the S matrix
-        LG_TRY (LAGraph_Parent_to_S (
-            &S,
-            (all_newlabels == NULL ? NULL : all_newlabels + curr_level), 
-            (all_inv_newlabels == NULL ? NULL : all_inv_newlabels + curr_level),
-            node_parent,
-            preserve_mapping, 
-            A_type,
-            msg
-        )) ;
-
-        #ifdef dbg
-            printf("Printing S for level (%lld)\n", curr_level) ;
-            LG_TRY (LAGraph_Matrix_Print (S, LAGraph_COMPLETE, stdout, msg)) ;
-            printf("Printing A for level (%lld)\n", curr_level) ;
-            LG_TRY (LAGraph_Matrix_Print (A, LAGraph_COMPLETE, stdout, msg)) ;
-        #endif
-        
-        GrB_Index S_nrows, S_ncols ;
-
-        if (!preserve_mapping) {
-            // need to create S_t for this level
-            GRB_TRY (GrB_Matrix_nrows (&S_nrows, S)) ;
-            GRB_TRY (GrB_Matrix_ncols (&S_ncols, S)) ;
-            
-            GRB_TRY (GrB_Matrix_new (&S_t, A_type, S_ncols, S_nrows)) ;
-        }
-        GRB_TRY (GrB_transpose (S_t, NULL, NULL, S, NULL)) ;
-
-        GrB_Semiring combine_semiring = (A_type == GrB_FP64) ? GrB_PLUS_TIMES_SEMIRING_FP64 : GrB_PLUS_TIMES_SEMIRING_INT64 ;
-        GrB_Semiring semiring = combine_weights ? combine_semiring : LAGraph_any_one_bool ;
-        
-        GRB_TRY (GrB_mxm (S, NULL, NULL, semiring, S, A, NULL)) ;
-
-        #ifdef dbg
-            printf("Printing S * A for level (%lld)\n", curr_level) ;
-            LG_TRY (LAGraph_Matrix_Print (S, LAGraph_COMPLETE, stdout, msg)) ;
-        #endif
-
-        if (!preserve_mapping) {
-            // resize result
-            GRB_TRY (GrB_free (&A)) ;
-            GRB_TRY (GrB_Matrix_new (&A, A_type, S_nrows, S_nrows)) ;
-        }
-        GRB_TRY (GrB_mxm (A, NULL, NULL, semiring, S, S_t, NULL)) ;
-
-        G_cpy->A = A ;
-        // make nself_edges unknown for delete self edges to work
-        G_cpy->nself_edges = LAGRAPH_UNKNOWN ;
-        // parent nodes for matched edges will form self-edges; need to delete
-        LG_TRY (LAGraph_DeleteSelfEdges (G_cpy, msg)) ;
-        A = G_cpy->A ;
-
-        // want to free before we reassign what they point to
-        GRB_TRY (GrB_free (&S)) ;
-        GRB_TRY (GrB_free (&E)) ;
-        GRB_TRY (GrB_free (&E_t)) ;
-        GRB_TRY (GrB_free (&matched_edges)) ;
-        GRB_TRY (GrB_free (&edge_parent)) ;
-
-        if (!preserve_mapping){
-            // also free node_parent and S_t for this level
-            GRB_TRY (GrB_free (&node_parent)) ;
-            GRB_TRY (GrB_free (&S_t)) ;
-        }
-
-        nlevels-- ;
-        curr_level++ ;
+        // ok to resize full since we are using its contents later
+        GRB_TRY (GrB_Vector_resize (full, num_nodes)) ;
     }
-    (*coarsened) = A ;
+    
+    GRB_TRY (GrB_Matrix_new (&E_t, A_type, num_edges, num_nodes)) ;
+    GRB_TRY (GrB_Vector_new (&edge_parent, GrB_UINT64, num_edges)) ;
+
+    GRB_TRY (GrB_transpose (E_t, NULL, NULL, E, NULL)) ;
+    CHKPT("Starting maximal matching");
+    // run maximal matching
+    LG_TRY (LAGraph_MaximalMatching (&matched_edges, E, E_t, matching_type, seed, msg)) ;
+    CHKPT("Done with maximal matching");
+    // TODO: Make single coarsening step a util function
+    // make edge_parent
+    // want to do E_t * full and get the first entry for each edge (mask output with matched_edges)
+    GRB_TRY (GrB_mxv (edge_parent, matched_edges, NULL, GxB_MIN_SECONDI_INT64, E_t, full, GrB_DESC_RS)) ;
+
+    #ifdef dbg
+        printf("Printing edge_parent for level (%lld)\n", curr_level) ;
+        LG_TRY (LAGraph_Vector_Print (edge_parent, LAGraph_COMPLETE, stdout, msg)) ;
+        printf("Printing E for level (%lld)\n", curr_level) ;
+        LG_TRY (LAGraph_Matrix_Print (E, LAGraph_COMPLETE, stdout, msg)) ;
+    #endif
+    // now, we have edge_parent (each edge points to its parent node)
+    // can do E * edge_parent with min_second to get node_parent
+    GrB_Index num_matched ;
+    GRB_TRY (GrB_Vector_nvals (&num_matched, edge_parent)) ;
+    
+    if (num_matched > sparsity_thresh * num_edges) {
+        GRB_TRY (GxB_set (edge_parent, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
+        GRB_TRY (GrB_mxv (node_parent, NULL, NULL, GrB_MIN_SECOND_SEMIRING_UINT64, E, edge_parent, NULL)) ;
+    } else {
+        GRB_TRY (GxB_set (edge_parent, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
+        GRB_TRY (GrB_vxm (node_parent, NULL, NULL, GrB_MIN_FIRST_SEMIRING_UINT64, edge_parent, E_t, NULL)) ;
+    }
+
+    // assign empty masked by singletons
+    // populate non-existent entries in node_parent with their index
+    // handles nodes that are not engaged in a matching
+    GrB_apply (node_parent, node_parent, NULL, GrB_ROWINDEX_INT64, full, (uint64_t) 0, GrB_DESC_SC) ;
 
     if (parent_result != NULL) {
-        (*parent_result) = all_parents ;
+        // record a deep copy of the current node_parent for the current coarsening level
+        GRB_TRY (GrB_Vector_dup (parent_result, node_parent)) ;
     }
-    if (newlabels_result != NULL) {
-        (*newlabels_result) = all_newlabels ;
+
+    #ifdef dbg
+        printf("Printing node_parent for level (%lld)\n", curr_level) ;
+        LG_TRY (LAGraph_Vector_Print (node_parent, LAGraph_COMPLETE, stdout, msg)) ;
+        printf("Printing matched edges for level (%lld)\n", curr_level) ;
+        LG_TRY (LAGraph_Vector_Print (matched_edges, LAGraph_COMPLETE, stdout, msg)) ;
+    #endif
+
+    // build the S matrix
+    LG_TRY (LAGraph_Parent_to_S (
+        &S,
+        (newlabel_result == NULL ? NULL : newlabel_result), 
+        (inv_newlabel_result == NULL ? NULL : inv_newlabel_result),
+        node_parent,
+        preserve_mapping, 
+        A_type,
+        msg
+    )) ;
+
+    #ifdef dbg
+        printf("Printing S for level (%lld)\n", curr_level) ;
+        LG_TRY (LAGraph_Matrix_Print (S, LAGraph_COMPLETE, stdout, msg)) ;
+        printf("Printing A for level (%lld)\n", curr_level) ;
+        LG_TRY (LAGraph_Matrix_Print (A, LAGraph_COMPLETE, stdout, msg)) ;
+    #endif
+    
+    GrB_Index S_nrows, S_ncols ;
+
+    if (!preserve_mapping) {
+        // need to create S_t for this level
+        GRB_TRY (GrB_Matrix_nrows (&S_nrows, S)) ;
+        GRB_TRY (GrB_Matrix_ncols (&S_ncols, S)) ;
+        
+        GRB_TRY (GrB_Matrix_new (&S_t, A_type, S_ncols, S_nrows)) ;
     }
-    if (inv_newlabels_result != NULL) {
-        (*inv_newlabels_result) = all_inv_newlabels ;
+    GRB_TRY (GrB_transpose (S_t, NULL, NULL, S, NULL)) ;
+
+    GrB_Semiring combine_semiring = (A_type == GrB_FP64) ? GrB_PLUS_TIMES_SEMIRING_FP64 : GrB_PLUS_TIMES_SEMIRING_INT64 ;
+    GrB_Semiring semiring = combine_weights ? combine_semiring : LAGraph_any_one_bool ;
+    
+    GRB_TRY (GrB_mxm (S, NULL, NULL, semiring, S, A, NULL)) ;
+
+    #ifdef dbg
+        printf("Printing S * A for level (%lld)\n", curr_level) ;
+        LG_TRY (LAGraph_Matrix_Print (S, LAGraph_COMPLETE, stdout, msg)) ;
+    #endif
+
+    if (!preserve_mapping) {
+        // resize result
+        GRB_TRY (GrB_free (&A)) ;
+        GRB_TRY (GrB_Matrix_new (&A, A_type, S_nrows, S_nrows)) ;
     }
+    GRB_TRY (GrB_mxm (A, NULL, NULL, semiring, S, S_t, NULL)) ;
+
+    G_cpy->A = A ;
+    // make nself_edges unknown for delete self edges to work
+    G_cpy->nself_edges = LAGRAPH_UNKNOWN ;
+    // parent nodes for matched edges will form self-edges; need to delete
+    LG_TRY (LAGraph_DeleteSelfEdges (G_cpy, msg)) ;
+    A = G_cpy->A ;
+
+    // want to free before we reassign what they point to
+    GRB_TRY (GrB_free (&S)) ;
+    GRB_TRY (GrB_free (&E)) ;
+    GRB_TRY (GrB_free (&E_t)) ;
+    GRB_TRY (GrB_free (&matched_edges)) ;
+    GRB_TRY (GrB_free (&edge_parent)) ;
+
+    if (!preserve_mapping){
+        // also free node_parent and S_t for this level
+        GRB_TRY (GrB_free (&node_parent)) ;
+        GRB_TRY (GrB_free (&S_t)) ;
+    }
+
+    // ------------------------ COARSENING STEP DONE ------------------------
+
+    (*coarsened) = A ;
     
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;

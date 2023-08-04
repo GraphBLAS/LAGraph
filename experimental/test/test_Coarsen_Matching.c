@@ -30,7 +30,7 @@ matrices using specified configurations and seeds with LAGraph_Random_Matrix
 char msg [LAGRAPH_MSG_LEN] ;
 
 GrB_Matrix A = NULL, A_coarse_LAGraph = NULL, A_coarse_naive = NULL ;
-GrB_Vector *parent = NULL, *newlabels = NULL, *inv_newlabels = NULL ;  // outputs from the Coarsen_Matching function
+GrB_Vector parent = NULL, newlabel = NULL, inv_newlabel = NULL ;    // outputs from the Coarsen_Matching function
 LAGraph_Graph G = NULL ;
 
 typedef struct
@@ -170,7 +170,6 @@ void test_Coarsen_Matching () {
                 tests [k].matching_type, 
                 tests [k].preserve_mapping,
                 tests [k].combine_weights,
-                1,
                 matching_seed,
                 msg
             )) ;
