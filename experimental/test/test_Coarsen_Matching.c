@@ -30,7 +30,7 @@ matrices using specified configurations and seeds with LAGraph_Random_Matrix
 char msg [LAGRAPH_MSG_LEN] ;
 
 GrB_Matrix A = NULL, A_coarse_LAGraph = NULL, A_coarse_naive = NULL ;
-GrB_Vector *parent = NULL, *newlabels = NULL, *inv_newlabels = NULL ;  // outputs from the Coarsen_Matching function
+GrB_Vector parent = NULL, newlabel = NULL, inv_newlabel = NULL ;    // outputs from the Coarsen_Matching function
 LAGraph_Graph G = NULL ;
 
 typedef struct
@@ -171,7 +171,6 @@ void test_Coarsen_Matching () {
                 tests [k].matching_type, 
                 0,
                 tests [k].combine_weights,
-                1,
                 matching_seed,
                 msg
             )) ;
@@ -179,50 +178,45 @@ void test_Coarsen_Matching () {
             OK (LAGraph_Coarsen_Matching (
                 &A_coarse_LAGraph,
                 NULL,
-                &newlabels,
+                &newlabel,
                 NULL,
                 G,
                 tests [k].matching_type, 
                 0,
                 tests [k].combine_weights,
-                1,
                 matching_seed,
                 msg
             )) ;
-            TEST_CHECK (newlabels != NULL) ;
+            TEST_CHECK (newlabel != NULL) ;
             TEST_MSG ("Null input check failed!\n") ;
         } else {
             for (int i = 0; i < SEEDS_PER_TEST ; i++) {
                 OK (LAGraph_Coarsen_Matching (
                     &A_coarse_LAGraph,
                     &parent,
-                    &newlabels,
-                    &inv_newlabels,
+                    &newlabel,
+                    &inv_newlabel,
                     G,
                     tests [k].matching_type, 
                     tests [k].preserve_mapping,
                     tests [k].combine_weights,
-                    1,
                     matching_seed,
                     msg
                 )) ;
                 OK (LG_check_coarsen (
                     &A_coarse_naive,
                     G->A,
-                    parent [0],
-                    (newlabels == NULL ? NULL : newlabels [0]),
-                    (inv_newlabels == NULL ? NULL : inv_newlabels [0]),
+                    parent,
+                    (newlabel == NULL ? NULL : newlabel),
+                    (inv_newlabel == NULL ? NULL : inv_newlabel),
                     tests [k].preserve_mapping,
                     tests [k].combine_weights,
                     msg
                 )) ;
 
-                if (newlabels != NULL) {
-                    GrB_free (newlabels) ;
-                    LAGraph_Free ((void**)(&newlabels), msg) ;
-
-                    GrB_free (inv_newlabels) ;
-                    LAGraph_Free ((void**)(&inv_newlabels), msg) ;
+                if (newlabel != NULL) {
+                    GrB_free (&newlabel) ;
+                    GrB_free (&inv_newlabel) ;
                 }
                 // Check parent vector for matching-specific correctness (must be derived from a valid matching)
                 // requirements: no node is the parent of more than 2 nodes, and if p[i] != i, then A[i][p[i]] exists
@@ -232,7 +226,7 @@ void test_Coarsen_Matching () {
 
                 for (GrB_Index i = 0 ; i < n ; i++) {
                     uint64_t par ;
-                    OK (GrB_Vector_extractElement (&par, parent[0], i)) ;
+                    OK (GrB_Vector_extractElement (&par, parent, i)) ;
                     freq [par]++ ;
                     TEST_CHECK (freq [par] <= 2) ;
                     TEST_MSG ("Parent vector not from a valid matching for test: %s\n", tests [k].name) ;
@@ -244,8 +238,7 @@ void test_Coarsen_Matching () {
                         TEST_MSG ("Parent vector not from a valid matching for test: %s\n", tests [k].name) ;
                     }
                 }
-                GrB_free (parent) ;
-                LAGraph_Free ((void**)(&parent), msg) ;
+                GrB_free (&parent) ;
                 
                 OK (LAGraph_Free ((void**)(&freq), msg)) ;
 
