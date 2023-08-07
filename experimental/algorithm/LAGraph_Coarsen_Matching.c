@@ -249,20 +249,24 @@ static int LAGraph_Parent_to_S
 #undef LG_FREE_ALL
 #undef LG_FREE_WORK
 
-#define LG_FREE_WORK                                \
-{                                                   \
-    GrB_free(&E) ;                                  \
-    GrB_free(&S) ;                                  \
-    GrB_free(&matched_edges) ;                      \
-    GrB_free(&E_t) ;                                \
-    GrB_free(&S_t) ;                                \
-    GrB_free(&edge_parent) ;                        \
-    GrB_free(&node_parent) ;                        \
-    GrB_free(&full) ;                               \
-    LAGraph_Free ((void**)(&rows), msg) ;           \
-    LAGraph_Free ((void**)(&cols), msg) ;           \
-    LAGraph_Free ((void**)(&vals), msg) ;           \
-}                                                   \
+#define LG_FREE_WORK                                        \
+{                                                           \
+    GrB_free(&E) ;                                          \
+    GrB_free(&S) ;                                          \
+    GrB_free(&matched_edges) ;                              \
+    GrB_free(&E_t) ;                                        \
+    GrB_free(&S_t) ;                                        \
+    GrB_free(&edge_parent) ;                                \
+    GrB_free(&node_parent) ;                                \
+    GrB_free(&full) ;                                       \
+    GrB_free (&non_singletons) ;                            \
+    LAGraph_Free ((void**)(&rows), msg) ;                   \
+    LAGraph_Free ((void**)(&cols), msg) ;                   \
+    LAGraph_Free ((void**)(&vals), msg) ;                   \
+    LAGraph_Free ((void**)(&non_singleton_indices), msg) ;  \
+    LAGraph_Free ((void**)(&non_singleton_values), msg) ;   \
+    LAGraph_Free ((void**)(&ramp), msg) ;                   \
+}                                                           \
 
 #define LG_FREE_ALL                                 \
 {                                                   \
@@ -300,10 +304,12 @@ int LAGraph_Coarsen_Matching
 
     LAGraph_Graph G_cpy = NULL ;            // used for the IncidenceMatrix function
     GrB_Matrix A = NULL ;                   // resulting adjacency matrix (used for output)
-    GrB_Matrix E = NULL ;                   // incidence matrix
+    GrB_Matrix E_raw = NULL ;               // incidence matrix (with singletons)
+    GrB_Matrix E = NULL ;                   // incidence matrix (no singletons)
     GrB_Matrix E_t = NULL ;                 // transpose of incidence
     GrB_Matrix S = NULL ;                   // S matrix (S[i][j] -> node j maps to node i in coarsened graph)
     GrB_Matrix S_t = NULL ;                 // transpose of S
+    GrB_Vector non_singletons = NULL ;      // which nodes are not singletons
     GrB_Vector matched_edges = NULL ;       // result of maximal matching
     GrB_Vector edge_parent = NULL ;         // points to parent (representative) node for each edge
     GrB_Vector node_parent = NULL ;         // points to parent (representative) node for each node
@@ -314,9 +320,15 @@ int LAGraph_Coarsen_Matching
     GrB_Index *cols = NULL ;
     void *vals = NULL ;
 
+    // used to extract from non-singletons vector
+    GrB_Index *non_singleton_indices = NULL ;   // will be row index set for GrB_extract from E_raw
+    bool *non_singleton_values = NULL ;
+    uint64_t *ramp = NULL ;                     // ramp from [0...(num_edges - 1)] -> will be column index set for GrB_extract from E_raw
+    GrB_Index non_singleton_indices_size, non_singleton_values_size ;
+    bool is_jumbled ;
+
     GrB_Index nvals, nrows ;
     GrB_Type A_type ;
-    // check properties (no self-loops, undirected)
 
 #if !LAGRAPH_SUITESPARSE
      LG_ASSERT (false, GrB_NOT_IMPLEMENTED) ;
@@ -402,13 +414,9 @@ int LAGraph_Coarsen_Matching
 
     CHKPT("Done building G_cpy");
 
-    GRB_TRY (GrB_Matrix_new (&E_t, A_type, num_edges, num_nodes)) ;
     GRB_TRY (GrB_Vector_new (&edge_parent, GrB_UINT64, num_edges)) ;
 
-    GRB_TRY (GrB_Vector_new (&node_parent, GrB_UINT64, num_nodes)) ;
-
-    GRB_TRY (GrB_Vector_new (&full, GrB_BOOL, num_nodes)) ;
-    GRB_TRY (GrB_assign (full, NULL, NULL, true, GrB_ALL, num_nodes, NULL)) ;
+    GRB_TRY (GrB_Vector_new (&non_singletons, GrB_BOOL, num_nodes)) ;
 
     // for push/pull optimization
     double sparsity_thresh = 
@@ -425,9 +433,48 @@ int LAGraph_Coarsen_Matching
     // coarsening step
     //----------------------------------------------------------------------------------------------------------------------------------------------------
 
-    // get incidence matrix
-    LG_TRY (LAGraph_Incidence_Matrix (&E, G_cpy, msg)) ;
+    // get raw incidence matrix
+    LG_TRY (LAGraph_Incidence_Matrix (&E_raw, G_cpy, msg)) ;
     CHKPT("Done with LAGraph_IncidenceMatrix");
+
+    // get non-singletons, extract from E_raw (delete singletons)
+    GRB_TRY (GrB_reduce (non_singletons, NULL, NULL, GxB_ANY_BOOL_MONOID, E_raw, NULL)) ;
+
+    GRB_TRY (GxB_Vector_unpack_CSC (
+        non_singletons,
+        &non_singleton_indices, 
+        (void**) &non_singleton_values, 
+        &non_singleton_indices_size,
+        &non_singleton_values_size,
+        NULL,
+        &num_nodes,
+        &is_jumbled,
+        NULL
+    )) ;
+    /*
+    To build:
+    Also free new objects created for extracting singleton
+    */
+    LG_TRY (LAGraph_Malloc ((void**)(&ramp), num_edges, sizeof(uint64_t), msg)) ;
+    
+    #pragma omp parallel for
+    for (GrB_Index i = 0; i < num_edges; i++) {
+        ramp[i] = i ;
+    }
+
+    GRB_TRY (GrB_Matrix_new (&E, A_type, num_nodes, num_edges)) ;
+    GRB_TRY (GrB_Matrix_extract (E, NULL, NULL, E_raw, non_singleton_indices, num_nodes, ramp, num_edges, NULL)) ;
+
+    // build objects dependent on num_nodes
+    GRB_TRY (GrB_Matrix_new (&E_t, A_type, num_edges, num_nodes)) ;
+    GRB_TRY (GrB_Vector_new (&full, GrB_BOOL, num_nodes)) ;
+    GRB_TRY (GrB_Vector_new (&node_parent, GrB_UINT64, num_nodes)) ;
+
+    // cleanup non-singletons vector and associated objects
+    GRB_TRY (GrB_free (&non_singletons)) ;
+    LG_TRY (LAGraph_Free ((void**)(&non_singleton_indices), msg)) ;
+    LG_TRY (LAGraph_Free ((void**)(&non_singleton_values), msg)) ;
+    LG_TRY (LAGraph_Free ((void**)(&ramp), msg)) ;
 
     GRB_TRY (GrB_transpose (E_t, NULL, NULL, E, NULL)) ;
     CHKPT("Starting maximal matching");
