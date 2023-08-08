@@ -4,7 +4,7 @@
 
 #define VERBOSE
 
-#define DEFAULT_SIZE 100
+#define DEFAULT_SIZE 4
 #define DEFAULT_DENSITY 0.5
 #define DEFAULT_SEED 42
 
@@ -58,6 +58,7 @@ int main(int argc, char **argv)
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
     GrB_Matrix coarsened = NULL ;
     GrB_Vector parent_result = NULL, newlabel_result = NULL, inv_newlabel_result = NULL ;
+    GrB_Vector local_newlabel_result = NULL, inv_local_newlabel_result = NULL ;
 
     int nt = NTHREAD_LIST ;
     
@@ -98,7 +99,8 @@ int main(int argc, char **argv)
     // warmup for more accurate timing
     double tt = LAGraph_WallClockTime ( ) ;
     // GRB_TRY (LAGraph_Matrix_Print (E, LAGraph_COMPLETE, stdout, msg)) ;
-    LG_TRY (LAGraph_Coarsen_Matching (&coarsened, &parent_result, &newlabel_result, &inv_newlabel_result, G, LAGraph_Matching_heavy, 0, 1, DEFAULT_SEED, msg)) ;
+    LG_TRY (LAGraph_Coarsen_Matching (&coarsened, &parent_result, &newlabel_result, &inv_newlabel_result, 
+        &local_newlabel_result, &inv_local_newlabel_result, G, LAGraph_Matching_heavy, 0, 1, DEFAULT_SEED, msg)) ;
 
     tt = LAGraph_WallClockTime ( ) - tt ;
 
@@ -115,6 +117,8 @@ int main(int argc, char **argv)
     GRB_TRY (GrB_free (&parent_result)) ;
     GRB_TRY (GrB_free (&newlabel_result)) ;
     GRB_TRY (GrB_free (&inv_newlabel_result)) ;
+    GRB_TRY (GrB_free (&local_newlabel_result)) ;
+    GRB_TRY (GrB_free (&inv_local_newlabel_result)) ;
 
     if (burble) {
         printf("================ WARMUP DONE ================\n") ;
@@ -147,7 +151,8 @@ int main(int argc, char **argv)
             int64_t seed = trial * n + 1 ;
             double tt = LAGraph_WallClockTime ( ) ;
 
-            LG_TRY (LAGraph_Coarsen_Matching (&coarsened, &parent_result, &newlabel_result, &inv_newlabel_result, G, LAGraph_Matching_heavy, 0, 1, DEFAULT_SEED, msg)) ;
+            LG_TRY (LAGraph_Coarsen_Matching (&coarsened, &parent_result, &newlabel_result, &inv_newlabel_result, 
+                &local_newlabel_result, &inv_local_newlabel_result, G, LAGraph_Matching_heavy, 0, 1, DEFAULT_SEED, msg)) ;
 
             tt = LAGraph_WallClockTime ( ) - tt ;
 
@@ -155,6 +160,8 @@ int main(int argc, char **argv)
             GRB_TRY (GrB_free (&parent_result)) ;
             GRB_TRY (GrB_free (&newlabel_result)) ;
             GRB_TRY (GrB_free (&inv_newlabel_result)) ;
+            GRB_TRY (GrB_free (&local_newlabel_result)) ;
+            GRB_TRY (GrB_free (&inv_local_newlabel_result)) ;
             
 #ifdef VERBOSE
             printf ("trial: %2d time: %10.7f sec\n", trial, tt) ;

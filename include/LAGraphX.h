@@ -912,16 +912,19 @@ LAGRAPH_PUBLIC
 int LAGraph_Coarsen_Matching
 (
     // outputs:
-    GrB_Matrix *coarsened,                  // coarsened adjacency
-    GrB_Vector *parent_result,              // description in LAGraph_CoarsenMatching
-    GrB_Vector *newlabel_result,            // description in LAGraph_CoarsenMatching
-    GrB_Vector *inv_newlabel_result,        // description in LAGraph_CoarsenMatching
+    GrB_Matrix *coarsened,                 // coarsened adjacency (refer to further details at top of file)
+    GrB_Vector *parent_result,             // description in LAGraph_Coarsen_Matching
+    GrB_Vector *newlabel_result,           // description in LAGraph_Coarsen_Matching
+    GrB_Vector *inv_newlabel_result,       // description in LAGraph_Coarsen_Matching
+    GrB_Vector *local_newlabel_result,     // description in LAGraph_Coarsen_Matching
+    GrB_Vector *inv_local_newlabel_result, // description in LAGraph_Coarsen_Matching
+
     // inputs:
-    LAGraph_Graph G,
-    LAGraph_Matching_kind matching_type,     // refer to above enum
-    bool preserve_mapping,                   // preserve initial namespace of nodes
-    bool combine_weights,                    // whether to sum edge weights or just keep the pattern
-    uint64_t seed,                           // used for matching
+    LAGraph_Graph G,                       // input graph
+    LAGraph_Matching_kind matching_type,   // how to perform the coarsening
+    bool preserve_mapping,                 // preserve original namespace of nodes
+    bool combine_weights,                  // whether to sum edge weights or just keep the pattern
+    uint64_t seed,                         // seed used for matching
     char *msg
 ) ;
 

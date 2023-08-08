@@ -19,7 +19,10 @@ For each edge (u, v) in G, we add an edge (f(u), f(v)) to G' iff f(u) != f(v). I
 this bijection is given by the maximal matching, where for every matched edge, one of the endpoints of the edge is the
 parent (representative) of both endpoints, and any node not part of a matched edge is its own parent.
 
-This method performs a single coarsening step on the input graph.
+This method performs a single coarsening step on the input graph. To reduce the memory footprint, singletons in
+the input graph are first eliminated before performing the coarsening. This means that G in the above description
+is the input graph excluding any singletons. Nodes are relabeled after the singletons are deleted.
+This removal can be done because singletons cannot be engaged in a matching and thus will not contribute to the coarsening.
 
 The inputs to this algorithm are as follows in order:
 1. an LAGraph_Graph containing the target graph to coarsen
@@ -52,7 +55,7 @@ NOTE: Results (2), (3), and (4) are only computed/returned if they are not passe
 Passing a NULL pointer denotes that the user does not want that particular result, and no return value is given.
 This means that a NULL pointer may safely be passed on input.
 
-This method requires O(n + e) space for an undirected graph with e edges and n nodes
+This method requires O(e) space for an undirected graph with e edges
 */
 
 #include "LG_internal.h"
@@ -159,7 +162,7 @@ static int LAGraph_Parent_to_S
             - GrB_extract into parent_cpy from parent_cpy with row indices as values from original parent
                 - This fills in the new parents for discarded nodes
         */
-        
+        LG_TRY (LAGraph_Vector_Print (parent, LAGraph_COMPLETE, stdout, msg)) ;
         GRB_TRY (GrB_IndexUnaryOp_new (&VALUEEQ_ROWINDEX_UINT64, F_INDEX_UNARY(valueeq_index_func), GrB_BOOL, GrB_UINT64, GrB_UINT64)) ;
 
         // identify preserved nodes
@@ -181,7 +184,7 @@ static int LAGraph_Parent_to_S
         
         // build ramp vector
         LG_TRY (LAGraph_Malloc ((void**) &ramp, num_preserved, sizeof(uint64_t), msg)) ;
-
+        
         #pragma omp parallel for
         for (GrB_Index i = 0 ; i < num_preserved ; i++) {
             ramp [i] = i ;
@@ -285,10 +288,12 @@ static int LAGraph_Parent_to_S
 int LAGraph_Coarsen_Matching
 (
     // outputs:
-    GrB_Matrix *coarsened,                 // coarsened adjacency
+    GrB_Matrix *coarsened,                 // coarsened adjacency (refer to further details at top of file)
     GrB_Vector *parent_result,             // refer to comments at top of file
     GrB_Vector *newlabel_result,           // refer to comments at top of file
     GrB_Vector *inv_newlabel_result,       // refer to comments at top of file
+    GrB_Vector *local_newlabel_result,     // refer to comments at top of file
+    GrB_Vector *inv_local_newlabel_result, // refer to comments at top of file
 
     // inputs:
     LAGraph_Graph G,                       // input graph
@@ -303,9 +308,9 @@ int LAGraph_Coarsen_Matching
     LG_CLEAR_MSG ;
 
     LAGraph_Graph G_cpy = NULL ;            // used for the IncidenceMatrix function
-    GrB_Matrix A = NULL ;                   // resulting adjacency matrix (used for output)
-    GrB_Matrix E_raw = NULL ;               // incidence matrix (with singletons)
-    GrB_Matrix E = NULL ;                   // incidence matrix (no singletons)
+    GrB_Matrix A_raw = NULL ;               // adjacency matrix (with singletons)
+    GrB_Matrix A = NULL ;                   // adjacency matrix (no singletons) (used to perform coarsening, and for output)
+    GrB_Matrix E = NULL ;                   // incidence matrix
     GrB_Matrix E_t = NULL ;                 // transpose of incidence
     GrB_Matrix S = NULL ;                   // S matrix (S[i][j] -> node j maps to node i in coarsened graph)
     GrB_Matrix S_t = NULL ;                 // transpose of S
@@ -315,15 +320,15 @@ int LAGraph_Coarsen_Matching
     GrB_Vector node_parent = NULL ;         // points to parent (representative) node for each node
     GrB_Vector full = NULL ;                // full vector
 
-    // used to build int64/fp64 A matrix if needed
+    // used to build int64/fp64 A_raw matrix if needed
     GrB_Index *rows = NULL ;
     GrB_Index *cols = NULL ;
     void *vals = NULL ;
 
     // used to extract from non-singletons vector
-    GrB_Index *non_singleton_indices = NULL ;   // will be row index set for GrB_extract from E_raw
+    GrB_Index *non_singleton_indices = NULL ;   // will be row index set for GrB_extract from A_raw
     bool *non_singleton_values = NULL ;
-    uint64_t *ramp = NULL ;                     // ramp from [0...(num_edges - 1)] -> will be column index set for GrB_extract from E_raw
+    uint64_t *ramp = NULL ;                     // ramp from [0...(num_nodes - 1)] -> used to build outputs local_newlabel and inv_local_newlabel
     GrB_Index non_singleton_indices_size, non_singleton_values_size ;
     bool is_jumbled ;
 
@@ -347,7 +352,7 @@ int LAGraph_Coarsen_Matching
 
         if ((type == GrB_FP64) || (type == GrB_INT64 || type == GrB_UINT64)) {
             // output will keep the same type as input
-            GRB_TRY (GrB_Matrix_dup (&A, G->A)) ;
+            GRB_TRY (GrB_Matrix_dup (&A_raw, G->A)) ;
             A_type = type ;
         } else {
             // output will become int64/fp64
@@ -371,12 +376,12 @@ int LAGraph_Coarsen_Matching
                 GRB_TRY (GrB_Matrix_extractTuples_INT64 (rows, cols, vals, &nvals, G->A)) ;
             }
 
-            GRB_TRY (GrB_Matrix_new (&A, is_float ? GrB_FP64 : GrB_INT64, nrows, nrows)) ;
+            GRB_TRY (GrB_Matrix_new (&A_raw, is_float ? GrB_FP64 : GrB_INT64, nrows, nrows)) ;
 
             if (is_float) {
-                GRB_TRY (GrB_Matrix_build_FP64 (A, rows, cols, vals, nvals, NULL)) ;
+                GRB_TRY (GrB_Matrix_build_FP64 (A_raw, rows, cols, vals, nvals, NULL)) ;
             } else {
-                GRB_TRY (GrB_Matrix_build_INT64 (A, rows, cols, vals, nvals, NULL)) ;
+                GRB_TRY (GrB_Matrix_build_INT64 (A_raw, rows, cols, vals, nvals, NULL)) ;
             }
 
             LG_TRY (LAGraph_Free ((void**)(&rows), msg)) ;
@@ -391,6 +396,53 @@ int LAGraph_Coarsen_Matching
         // G is not undirected
         LG_ASSERT_MSG (false, LAGRAPH_INVALID_GRAPH, "G must be undirected") ;
     }
+
+    GrB_Index num_nodes ;
+    GRB_TRY (GrB_Matrix_nrows (&num_nodes, A_raw)) ;
+
+    GRB_TRY (GrB_Vector_new (&non_singletons, GrB_BOOL, num_nodes)) ;
+
+    // get pattern of singletons from A_raw
+    GRB_TRY (GrB_reduce (non_singletons, NULL, NULL, GxB_ANY_BOOL_MONOID, A_raw, NULL)) ;
+
+    GrB_Index orig_num_nodes = num_nodes ;
+
+    GRB_TRY (GxB_Vector_unpack_CSC (
+        non_singletons,
+        &non_singleton_indices, 
+        (void**) &non_singleton_values, 
+        &non_singleton_indices_size,
+        &non_singleton_values_size,
+        NULL,
+        &num_nodes,
+        &is_jumbled,
+        NULL
+    )) ;
+
+    LG_TRY (LAGraph_Malloc ((void**)(&ramp), num_nodes, sizeof(uint64_t), msg)) ;
+
+    #pragma omp parallel for
+    for (GrB_Index i = 0; i < num_nodes; i++) {
+        ramp[i] = i;
+    }
+
+    // build local_newlabel and inv_local_newlabel if requested
+    if (local_newlabel_result != NULL) {
+        GRB_TRY (GrB_Vector_new (local_newlabel_result, GrB_UINT64, orig_num_nodes)) ;
+        GRB_TRY (GrB_Vector_build (*local_newlabel_result, non_singleton_indices, ramp, num_nodes, NULL)) ;
+    }
+
+    if (inv_local_newlabel_result != NULL) {
+        GRB_TRY (GrB_Vector_new (inv_local_newlabel_result, GrB_UINT64, num_nodes)) ;
+        GRB_TRY (GrB_Vector_build (*inv_local_newlabel_result, ramp, non_singleton_indices, num_nodes, NULL)) ;
+    }
+
+    GRB_TRY (GrB_Matrix_new (&A, A_type, num_nodes, num_nodes)) ;
+    GRB_TRY (GrB_Matrix_extract (A, NULL, NULL, A_raw, non_singleton_indices, num_nodes, non_singleton_indices, num_nodes, NULL)) ;
+
+    // cleanup A_raw
+    GRB_TRY (GrB_free (&A_raw)) ;
+
     CHKPT("Done with building A");
     LG_ASSERT_MSG (G->nself_edges == 0, LAGRAPH_NO_SELF_EDGES_ALLOWED, "G->nself_edges must be zero") ;
 
@@ -405,18 +457,27 @@ int LAGraph_Coarsen_Matching
     // set A back (LAGraph_New sets A = NULL)
     A = G_cpy->A ;
 
-    GrB_Index num_nodes ;
     GrB_Index num_edges ;
-
-    GRB_TRY (GrB_Matrix_nrows (&num_nodes, A)) ;
     GRB_TRY (GrB_Matrix_nvals (&num_edges, A)) ;
+    
     num_edges /= 2 ; // since undirected
 
     CHKPT("Done building G_cpy");
 
+    // build objects needed for coarsening
     GRB_TRY (GrB_Vector_new (&edge_parent, GrB_UINT64, num_edges)) ;
 
-    GRB_TRY (GrB_Vector_new (&non_singletons, GrB_BOOL, num_nodes)) ;
+    GRB_TRY (GrB_Matrix_new (&E_t, A_type, num_edges, num_nodes)) ;
+    GRB_TRY (GrB_Vector_new (&full, GrB_BOOL, num_nodes)) ;
+    GRB_TRY (GrB_Vector_new (&node_parent, GrB_UINT64, num_nodes)) ;
+
+    GRB_TRY (GrB_assign (full, NULL, NULL, true, GrB_ALL, num_nodes, NULL)) ; 
+
+    // cleanup non-singletons vector and associated objects
+    GRB_TRY (GrB_free (&non_singletons)) ;
+    LG_TRY (LAGraph_Free ((void**)(&non_singleton_indices), msg)) ;
+    LG_TRY (LAGraph_Free ((void**)(&non_singleton_values), msg)) ;
+    LG_TRY (LAGraph_Free ((void**)(&ramp), msg)) ;
 
     // for push/pull optimization
     double sparsity_thresh = 
@@ -433,48 +494,9 @@ int LAGraph_Coarsen_Matching
     // coarsening step
     //----------------------------------------------------------------------------------------------------------------------------------------------------
 
-    // get raw incidence matrix
-    LG_TRY (LAGraph_Incidence_Matrix (&E_raw, G_cpy, msg)) ;
+    // get incidence matrix
+    LG_TRY (LAGraph_Incidence_Matrix (&E, G_cpy, msg)) ;
     CHKPT("Done with LAGraph_IncidenceMatrix");
-
-    // get non-singletons, extract from E_raw (delete singletons)
-    GRB_TRY (GrB_reduce (non_singletons, NULL, NULL, GxB_ANY_BOOL_MONOID, E_raw, NULL)) ;
-
-    GRB_TRY (GxB_Vector_unpack_CSC (
-        non_singletons,
-        &non_singleton_indices, 
-        (void**) &non_singleton_values, 
-        &non_singleton_indices_size,
-        &non_singleton_values_size,
-        NULL,
-        &num_nodes,
-        &is_jumbled,
-        NULL
-    )) ;
-    /*
-    To build:
-    Also free new objects created for extracting singleton
-    */
-    LG_TRY (LAGraph_Malloc ((void**)(&ramp), num_edges, sizeof(uint64_t), msg)) ;
-    
-    #pragma omp parallel for
-    for (GrB_Index i = 0; i < num_edges; i++) {
-        ramp[i] = i ;
-    }
-
-    GRB_TRY (GrB_Matrix_new (&E, A_type, num_nodes, num_edges)) ;
-    GRB_TRY (GrB_Matrix_extract (E, NULL, NULL, E_raw, non_singleton_indices, num_nodes, ramp, num_edges, NULL)) ;
-
-    // build objects dependent on num_nodes
-    GRB_TRY (GrB_Matrix_new (&E_t, A_type, num_edges, num_nodes)) ;
-    GRB_TRY (GrB_Vector_new (&full, GrB_BOOL, num_nodes)) ;
-    GRB_TRY (GrB_Vector_new (&node_parent, GrB_UINT64, num_nodes)) ;
-
-    // cleanup non-singletons vector and associated objects
-    GRB_TRY (GrB_free (&non_singletons)) ;
-    LG_TRY (LAGraph_Free ((void**)(&non_singleton_indices), msg)) ;
-    LG_TRY (LAGraph_Free ((void**)(&non_singleton_values), msg)) ;
-    LG_TRY (LAGraph_Free ((void**)(&ramp), msg)) ;
 
     GRB_TRY (GrB_transpose (E_t, NULL, NULL, E, NULL)) ;
     CHKPT("Starting maximal matching");
@@ -485,7 +507,6 @@ int LAGraph_Coarsen_Matching
     // make edge_parent
     // want to do E_t * full and get the first entry for each edge (mask output with matched_edges)
     GRB_TRY (GrB_mxv (edge_parent, matched_edges, NULL, GxB_MIN_SECONDI_INT64, E_t, full, GrB_DESC_RS)) ;
-
     #ifdef dbg
         printf("Printing edge_parent for level (%lld)\n", curr_level) ;
         LG_TRY (LAGraph_Vector_Print (edge_parent, LAGraph_COMPLETE, stdout, msg)) ;
@@ -496,7 +517,7 @@ int LAGraph_Coarsen_Matching
     // can do E * edge_parent with min_second to get node_parent
     GrB_Index num_matched ;
     GRB_TRY (GrB_Vector_nvals (&num_matched, edge_parent)) ;
-    
+
     if (num_matched > sparsity_thresh * num_edges) {
         GRB_TRY (GxB_set (edge_parent, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
         GRB_TRY (GrB_mxv (node_parent, NULL, NULL, GrB_MIN_SECOND_SEMIRING_UINT64, E, edge_parent, NULL)) ;
@@ -504,8 +525,6 @@ int LAGraph_Coarsen_Matching
         GRB_TRY (GxB_set (edge_parent, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
         GRB_TRY (GrB_vxm (node_parent, NULL, NULL, GrB_MIN_FIRST_SEMIRING_UINT64, edge_parent, E_t, NULL)) ;
     }
-
-    // DO NOT apply for nodes that are singletons
 
     // populate non-existent entries in node_parent with their index
     // handles nodes that are not engaged in a matching

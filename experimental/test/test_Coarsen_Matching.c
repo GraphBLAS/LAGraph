@@ -29,7 +29,10 @@ matrices using specified configurations and seeds with LAGraph_Random_Matrix
 
 char msg [LAGRAPH_MSG_LEN] ;
 
-GrB_Matrix A = NULL, A_coarse_LAGraph = NULL, A_coarse_naive = NULL ;
+GrB_Matrix A = NULL, A_no_singletons = NULL, A_dup = NULL, A_coarse_LAGraph = NULL, A_coarse_naive = NULL ;
+
+GrB_Vector non_singletons = NULL ;
+
 GrB_Vector parent = NULL, newlabel = NULL, inv_newlabel = NULL ;    // outputs from the Coarsen_Matching function
 LAGraph_Graph G = NULL ;
 
@@ -101,7 +104,6 @@ void test_Coarsen_Matching () {
         // ================= first generate graph (code from test_MaximalMatching) =================
         GrB_Index n = tests [k].n ;
 
-        GrB_Matrix A_dup = NULL ;
         A = NULL ;
         GrB_Index nvals ;
         GrB_Index *rows, *cols ;
@@ -159,13 +161,25 @@ void test_Coarsen_Matching () {
         TEST_MSG ("Input graph is not undirected") ;
         G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
 
+        // TODO: Delete singletons from A
+        // strategy: grb_reduce to get non_singletons, unpack non_singletons to get index set, use index set to extract on A for both rows/cols
+        // also keep a copy of original A; original will be passed to LAGraph method, and singleton-free will be passed to checker
+
+        GrB_Index num_nodes ;
+        OK (GrB_Matrix_nrows (&num_nodes, G->A)) ;
+        OK (GrB_Vector_new (&non_singletons, GrB_BOOL, num_nodes)) ;
+
         uint64_t matching_seed = 0 ;
         for (int i = 0; i < SEEDS_PER_TEST ; i++) {
+            // TODO: Get local_newlabels and inv_local_newlabels and check if they are correct
+            // conditions for correctness: local_newlabels must not have any entries for singletons, ...
             OK (LAGraph_Coarsen_Matching (
                 &A_coarse_LAGraph,
                 &parent,
                 &newlabel,
                 &inv_newlabel,
+                NULL,
+                NULL,
                 G,
                 tests [k].matching_type, 
                 tests [k].preserve_mapping,
@@ -286,32 +300,11 @@ void test_Coarsen_Matching_NullInputs() {
     OK (LAGraph_Cached_AT (G, msg) < 0) ; // warning is expected; check for error
 
     // do this to get full code coverage and catch any unexpected behavior
-    OK (LAGraph_Coarsen_Matching (
-        &A_coarse_LAGraph,
-        NULL,
-        NULL,
-        NULL,
-        G,
-        0,
-        0,
-        1,
-        42,
-        msg
-    )) ;
+    OK (LAGraph_Coarsen_Matching (&A_coarse_LAGraph, NULL, NULL, NULL, G, 0, 0, 1, 42, msg)) ;
     OK (GrB_free (&A_coarse_LAGraph)) ;
+
     // do it with parent, inv_newlabels NULL but newlabels not NULL
-    OK (LAGraph_Coarsen_Matching (
-        &A_coarse_LAGraph,
-        NULL,
-        &newlabel,
-        NULL,
-        G,
-        0,
-        0,
-        1,
-        42,
-        msg
-    )) ;
+    OK (LAGraph_Coarsen_Matching (&A_coarse_LAGraph, NULL, &newlabel, NULL, G, 0, 0, 1, 42, msg)) ;
     OK (GrB_free (&A_coarse_LAGraph)) ;
     OK (LAGraph_Delete (&G, msg)) ;
 
