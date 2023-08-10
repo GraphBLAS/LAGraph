@@ -4,14 +4,14 @@
 
 #define VERBOSE
 
-#define DEFAULT_SIZE 4
-#define DEFAULT_DENSITY 0.5
+#define DEFAULT_SIZE 10000000000
+#define DEFAULT_DENSITY 0.000000000000001
 #define DEFAULT_SEED 42
 
 #define NTHREAD_LIST 0
 #define THREAD_LIST 8
 
-// #define SHOW_RESULTS
+#define SHOW_RESULTS
 
 
 int main(int argc, char **argv)
@@ -20,7 +20,7 @@ int main(int argc, char **argv)
 
     LAGraph_Graph G = NULL ;
 
-    bool burble = false ; 
+    bool burble = true ; 
     demo_init (burble) ;
 
     //--------------------------------------------------------------------------
@@ -105,12 +105,16 @@ int main(int argc, char **argv)
     tt = LAGraph_WallClockTime ( ) - tt ;
 
 #ifdef SHOW_RESULTS
+    printf("printing original adjacency:\n") ;
+    LG_TRY (LAGraph_Matrix_Print (G->A, LAGraph_COMPLETE, stdout, msg)) ;
     printf("printing coarsened adjacency:\n") ;
     LG_TRY (LAGraph_Matrix_Print (coarsened, LAGraph_COMPLETE, stdout, msg)) ;
     printf("printing parent vec:\n") ;
     LG_TRY (LAGraph_Vector_Print (parent_result, LAGraph_COMPLETE, stdout, msg)) ;
     printf("printing newlabel vec:\n") ;
     LG_TRY (LAGraph_Vector_Print (newlabel_result, LAGraph_COMPLETE, stdout, msg)) ;
+    printf("printing local newlabel vec:\n") ;
+    LG_TRY (LAGraph_Vector_Print (local_newlabel_result, LAGraph_COMPLETE, stdout, msg)) ;
 #endif
 
     GRB_TRY (GrB_free (&coarsened)) ;

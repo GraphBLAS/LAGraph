@@ -11,18 +11,23 @@
 
 /*
 This method is used to coarsen an undirected graph. The coarsening is based on a maximal matching,
-which is handled by LAGraph_MaximalMatching. 
+which is handled by LAGraph_MaximalMatching.  An example usage of this method is given at the 
+end of this description.
 
-The coarsening step involves a reduction from a graph G to G', where we use a bijection f from
+This method performs two transformations on the input graph. The first eliminates singletons from the graph
+to reduce memory footprint, and the second performs the coarsening step on the singleton-free graph. The adjacency
+matrix of the resulting graph is the main output of the method.
+We will herein refer to the input graph as G_1, the singleton-free input graph as G_2, and the
+coarsened singleton-free graph as G_3.
+
+Generally, the coarsening step involves a reduction from a graph G to G', where we use a bijection f from
 nodes in G to nodes in G'. We can consider f(u) to be the parent of node u. 
-For each edge (u, v) in G, we add an edge (f(u), f(v)) to G' iff f(u) != f(v). In our case,
-this bijection is given by the maximal matching, where for every matched edge, one of the endpoints of the edge is the
-parent (representative) of both endpoints, and any node not part of a matched edge is its own parent.
+For each edge (u, v) in G, we add an edge (f(u), f(v)) to G' iff f(u) != f(v). The edge weight of any
+edge (u', v') in the coarsened graph will be the sum of weights of all edges (u, v) in the original graph such that
+(f(u), f(v)) = (u', v').
+In our case, the bijection used for the coarsening is given by the maximal matching, where for every matched edge, 
+one of the endpoints of the edge is the parent (representative) of both endpoints, and any node not part of a matched edge is its own parent.
 
-This method performs a single coarsening step on the input graph. To reduce the memory footprint, singletons in
-the input graph are first eliminated before performing the coarsening. This means that G in the above description
-is the input graph excluding any singletons. Nodes are relabeled after the singletons are deleted.
-This removal can be done because singletons cannot be engaged in a matching and thus will not contribute to the coarsening.
 
 The inputs to this algorithm are as follows in order:
 1. an LAGraph_Graph containing the target graph to coarsen
@@ -34,28 +39,53 @@ counts the number of combined edges). If this option is false, then only the pat
 6. Random seed used for maximal matching (same for every coarsening step)
 7. msg for LAGraph error reporting
 
-There are 4 outputs from the function:
-1. A GrB_Matrix of the coarsened graph (if the input adjacency matrix is of type GrB_BOOL or GrB_UINT{8|16|32} or GrB_INT*, it will
+There are 6 outputs from the function:
+1. A GrB_Matrix of the adjacency matrix of G_3 (if the input adjacency matrix is of type GrB_BOOL or GrB_UINT{8|16|32} or GrB_INT*, it will
 have type GrB_INT64. If it is of type GrB_FP32, it will have type GrB_FP64. Else, it will have the same type as the input matrix.
 
-2. A full GrB_Vector (parent_result) of length n where if parent_result[u] = v,
-then node u has parent v. This parent mapping is derived from a maximal matching of the graph
+2. A full GrB_Vector (parent_result) of length n_2 (the number of vertices in G_2) where if parent_result[u] = v,
+then the parent of node u in G_2 is node v. This parent mapping is derived from a maximal matching of G_2
 and is used for the coarsening step (meaning node u collapses into node v).
 
-3. A GrB_Vector (newlabels_result) of length n where if newlabels_result[u] = v,
-then node u in G is relabeled as node v in G', where G' is the coarsened graph. In addition, newlabels_result[u] exists iff node u survives the i-th coarsening step.
+3. A GrB_Vector (newlabel_result) of length n_2 where if newlabels_result[u] = v,
+then node u in G_2 is relabeled as node v in G_3. In addition, newlabels_result[u] exists iff node u survives the coarsening step.
 If preserve_mapping = 1, then this result is returned as NULL since no relabeling occurs. This result is used to interpret the contents of parent_result, 
-since the labels of nodes may change in an arbitrary fashion for each coarsening step.
+since nodes may be relabeled in an arbitrary fashion during the coarsening step.
 
-4. A full GrB_Vector (inv_newlabels_result) of length n' (the number of vertices in the coarsened graph) where if inv_newlabels_result[u] = v,
-then node u in G' had an original label as node v in G, where G' is the coarsened graph. In other words, this is simply the inverse of result (3).
+4. A full GrB_Vector (inv_newlabels_result) of length n_3 (the number of vertices in G_3) where if inv_newlabels_result[u] = v,
+then node u in G_3 had an original label as node v in G_2. In other words, this is simply the inverse of result (3).
 If preserve_mapping = 1, this is returned as NULL.
 
-NOTE: Results (2), (3), and (4) are only computed/returned if they are not passed as a NULL pointer on input.
+5. A GrB_Vector (local_newlabel_result) of length n_1, where if local_newlabel_result[u] = v, then node u in G_1 is relabeled to
+node v in G_2. More specifically, deleting singletons from the original input graph can cause "local" relabeling to occur (we
+call this "local" since the relabeling does not involve a coarsening step). local_newlabel_result[u] exists iff node u in G_1 is not
+a singleton.
+
+6. A full GrB_Vector (inv_local_newlabel_result) of length n_2, where if inv_local_newlabel_result[u] = v, then node u in G_2
+had an original label as node v in G_1. In other words, this is the inverse of result (5).
+
+NOTE: Results (2), (3), (4), (5), and (6) are only computed/returned if they are not passed as a NULL pointer on input.
 Passing a NULL pointer denotes that the user does not want that particular result, and no return value is given.
 This means that a NULL pointer may safely be passed on input.
 
 This method requires O(e) space for an undirected graph with e edges
+
+***** EXAMPLE USAGE OF RESULTS *****
+Suppose the user passes as input an undirected graph with some singletons (G_1), and they obtain the
+result (G_3). Let us assume the user computes a partition of G_3 and wants to uncoarsen the partition
+to G_1.
+The user can use the results of this method in this order:
+1. Use inv_newlabel_result to lookup the original label of each node in G_3;
+specifically, they can relabel all of the nodes in G_3 to their labels in G_2 (the input graph w/o singletons)
+2. Use parent_result to recover the nodes in G_2 that were eliminated during the coarsening. These nodes would
+be assigned the same partition as their parent.
+3. After the previous step, the user has the partition of nodes in G_2, however this cannot
+be used since the structure of G_2 is unknown to the user (they only have G_1). So, they can use
+inv_local_newlabel_result to restore the labels of the graph in the original input before eliminating
+singletons. The user now has the partition in terms of G_1, which they can then use
+for for iterative refinement (such as Kernighan-Lin, Fiduccia-Mattheyses). If G_1 was the result of an earlier
+coarsening, the same steps can be applied again to uncoarsen the graph.
+
 */
 
 #include "LG_internal.h"
@@ -162,7 +192,6 @@ static int LAGraph_Parent_to_S
             - GrB_extract into parent_cpy from parent_cpy with row indices as values from original parent
                 - This fills in the new parents for discarded nodes
         */
-        LG_TRY (LAGraph_Vector_Print (parent, LAGraph_COMPLETE, stdout, msg)) ;
         GRB_TRY (GrB_IndexUnaryOp_new (&VALUEEQ_ROWINDEX_UINT64, F_INDEX_UNARY(valueeq_index_func), GrB_BOOL, GrB_UINT64, GrB_UINT64)) ;
 
         // identify preserved nodes
@@ -401,7 +430,6 @@ int LAGraph_Coarsen_Matching
     GRB_TRY (GrB_Matrix_nrows (&num_nodes, A_raw)) ;
 
     GRB_TRY (GrB_Vector_new (&non_singletons, GrB_BOOL, num_nodes)) ;
-
     // get pattern of singletons from A_raw
     GRB_TRY (GrB_reduce (non_singletons, NULL, NULL, GxB_ANY_BOOL_MONOID, A_raw, NULL)) ;
 
@@ -425,7 +453,6 @@ int LAGraph_Coarsen_Matching
     for (GrB_Index i = 0; i < num_nodes; i++) {
         ramp[i] = i;
     }
-
     // build local_newlabel and inv_local_newlabel if requested
     if (local_newlabel_result != NULL) {
         GRB_TRY (GrB_Vector_new (local_newlabel_result, GrB_UINT64, orig_num_nodes)) ;
@@ -438,6 +465,7 @@ int LAGraph_Coarsen_Matching
     }
 
     GRB_TRY (GrB_Matrix_new (&A, A_type, num_nodes, num_nodes)) ;
+    // TODO: This seems to be extremely slow
     GRB_TRY (GrB_Matrix_extract (A, NULL, NULL, A_raw, non_singleton_indices, num_nodes, non_singleton_indices, num_nodes, NULL)) ;
 
     // cleanup A_raw

@@ -31,7 +31,10 @@ char msg [LAGRAPH_MSG_LEN] ;
 
 GrB_Matrix A = NULL, A_no_singletons = NULL, A_dup = NULL, A_coarse_LAGraph = NULL, A_coarse_naive = NULL ;
 
+// used for building A_no_singletons
 GrB_Vector non_singletons = NULL ;
+GrB_Index *non_singleton_indices = NULL ;
+bool *non_singleton_values = NULL ;
 
 GrB_Vector parent = NULL, newlabel = NULL, inv_newlabel = NULL ;    // outputs from the Coarsen_Matching function
 LAGraph_Graph G = NULL ;
@@ -161,13 +164,41 @@ void test_Coarsen_Matching () {
         TEST_MSG ("Input graph is not undirected") ;
         G->kind = LAGraph_ADJACENCY_UNDIRECTED ;
 
-        // TODO: Delete singletons from A
-        // strategy: grb_reduce to get non_singletons, unpack non_singletons to get index set, use index set to extract on A for both rows/cols
-        // also keep a copy of original A; original will be passed to LAGraph method, and singleton-free will be passed to checker
+        // put A back
+        A = G->A;
 
         GrB_Index num_nodes ;
-        OK (GrB_Matrix_nrows (&num_nodes, G->A)) ;
+        OK (GrB_Matrix_nrows (&num_nodes, A)) ;
+
+        // remove singletons from A using same process as in Coarsen_Matching
         OK (GrB_Vector_new (&non_singletons, GrB_BOOL, num_nodes)) ;
+
+        // get pattern of singletons from A
+        OK (GrB_reduce (non_singletons, NULL, NULL, GxB_ANY_BOOL_MONOID, A, NULL)) ;
+
+        GrB_Index orig_num_nodes = num_nodes ;
+        GrB_Index non_singleton_indices_size, non_singleton_values_size ;
+        bool is_jumbled ;
+
+        OK (GxB_Vector_unpack_CSC (
+            non_singletons,
+            &non_singleton_indices, 
+            (void**) &non_singleton_values, 
+            &non_singleton_indices_size,
+            &non_singleton_values_size,
+            NULL,
+            &num_nodes,
+            &is_jumbled,
+            NULL
+        )) ;
+
+        OK (GrB_Matrix_new (&A_no_singletons, GrB_FP64, num_nodes, num_nodes)) ;
+        OK (GrB_Matrix_extract (A_no_singletons, NULL, NULL, A, non_singleton_indices, num_nodes, non_singleton_indices, num_nodes, NULL)) ;
+
+        // cleanup
+        OK (GrB_free (&non_singletons)) ;
+        OK (LAGraph_Free ((void**)(&non_singleton_indices), msg)) ;
+        OK (LAGraph_Free ((void**)(&non_singleton_values), msg)) ;
 
         uint64_t matching_seed = 0 ;
         for (int i = 0; i < SEEDS_PER_TEST ; i++) {
@@ -189,7 +220,7 @@ void test_Coarsen_Matching () {
             )) ;
             OK (LG_check_coarsen (
                 &A_coarse_naive,
-                G->A,
+                A_no_singletons,
                 parent,
                 (newlabel == NULL ? NULL : newlabel),
                 (inv_newlabel == NULL ? NULL : inv_newlabel),
@@ -261,7 +292,7 @@ void test_Coarsen_Matching_Errors() {
     G->kind = LAGraph_ADJACENCY_DIRECTED ;
 
     // directed graph
-    GrB_Info result = LAGraph_Coarsen_Matching (NULL, NULL, NULL, NULL, G, 0, 0, 0, 0, msg) ;
+    GrB_Info result = LAGraph_Coarsen_Matching (NULL, NULL, NULL, NULL, NULL, NULL, G, 0, 0, 0, 0, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == LAGRAPH_INVALID_GRAPH) ;
 
@@ -269,14 +300,14 @@ void test_Coarsen_Matching_Errors() {
     G->nself_edges = 1 ;
 
     // non-zero self-loops
-    result = LAGraph_Coarsen_Matching (NULL, NULL, NULL, NULL, G, 0, 0, 0, 0, msg) ;
+    result = LAGraph_Coarsen_Matching (NULL, NULL, NULL, NULL, NULL, NULL, G, 0, 0, 0, 0, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == LAGRAPH_NO_SELF_EDGES_ALLOWED) ;
 
     G->nself_edges = 0;
 
     // output coarsened matrix pointer is NULL
-    result = LAGraph_Coarsen_Matching (NULL, NULL, NULL, NULL, G, 0, 0, 0, 0, msg) ;
+    result = LAGraph_Coarsen_Matching (NULL, NULL, NULL, NULL, NULL, NULL, G, 0, 0, 0, 0, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
 
@@ -300,11 +331,11 @@ void test_Coarsen_Matching_NullInputs() {
     OK (LAGraph_Cached_AT (G, msg) < 0) ; // warning is expected; check for error
 
     // do this to get full code coverage and catch any unexpected behavior
-    OK (LAGraph_Coarsen_Matching (&A_coarse_LAGraph, NULL, NULL, NULL, G, 0, 0, 1, 42, msg)) ;
+    OK (LAGraph_Coarsen_Matching (&A_coarse_LAGraph, NULL, NULL, NULL, NULL, NULL, G, 0, 0, 1, 42, msg)) ;
     OK (GrB_free (&A_coarse_LAGraph)) ;
 
     // do it with parent, inv_newlabels NULL but newlabels not NULL
-    OK (LAGraph_Coarsen_Matching (&A_coarse_LAGraph, NULL, &newlabel, NULL, G, 0, 0, 1, 42, msg)) ;
+    OK (LAGraph_Coarsen_Matching (&A_coarse_LAGraph, NULL, &newlabel, NULL, NULL, NULL, G, 0, 0, 1, 42, msg)) ;
     OK (GrB_free (&A_coarse_LAGraph)) ;
     OK (LAGraph_Delete (&G, msg)) ;
 
