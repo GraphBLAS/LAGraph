@@ -14,4 +14,23 @@ Notes from LAGraph meeting, June 14, 2023:
     polished experimental --> to src
 
         
+document promotion from experimental to src
+    (checklist)
+
+    (1) doxygen comments in LAGraphX.h -> LAGraph.h
+    (2) match error codes, msg usage
+    (3) unit test, experimental/test/test_HelloWorld
+        kinds of tests
+        (a) reimplement algo in C, compare w LAGraph
+        (b) check validity after getting LAGraph result
+        (c) bespoke sample results from other packages
+            for specific graph test cases
+        (d) smoke test ... need more than this
+    (4) experimental/benchmark/hello_demo.c
+    (5) performance OK? compared to what baseline?
+        time and memory
+
+    (6) How GraphBLASy is it?
+    (7) GxB or vanilla?
+
 
