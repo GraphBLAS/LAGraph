@@ -1,4 +1,4 @@
-Version 1.0.2: July 21, 2022
+Version 1.0.2: Aug 2, 2023
 
     * port: removed GxB_SelectOp so LAGraph v1.0.2 can be compiled with
         SuiteSparse:GraphBLAS v8.x.
