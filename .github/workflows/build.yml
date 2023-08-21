@@ -62,8 +62,10 @@ jobs:
       uses: actions/checkout@v2.0.0
     - name: Install dependencies
       run: |
-        brew extract --version=14.0.6 libomp homebrew/cask
-        brew install libomp@14.0.6
+        # brew extract --version=14.0.6 libomp homebrew/cask
+        # brew install libomp@14.0.6
+        brew extract libomp homebrew/cask
+        brew install libomp
     - name: Get GraphBLAS binaries
       run: |
         mkdir graphblas-binaries
