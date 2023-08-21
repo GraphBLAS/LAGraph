@@ -64,7 +64,7 @@ jobs:
       run: |
         # brew extract --version=14.0.6 libomp homebrew/cask
         # brew install libomp@14.0.6
-        brew extract libomp homebrew/cask
+        brew extract libomp
         brew install libomp
     - name: Get GraphBLAS binaries
       run: |
