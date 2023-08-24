@@ -118,7 +118,7 @@ endif ( )
 # set ( ENV{GRAPHBLAS_ROOT} ${CMAKE_SOURCE_DIR}/../GraphBLAS )
 message ( STATUS "GraphBLAS_ROOT: ${GraphBLAS_ROOT} $ENV{GraphBLAS_ROOT}" )
 message ( STATUS "GRAPHBLAS_ROOT: ${GRAPHBLAS_ROOT} $ENV{GRAPHBLAS_ROOT}" )
-find_package (GraphBLAS 8.1.0 REQUIRED MODULE)
+find_package (GraphBLAS 9.0.0 REQUIRED MODULE)
 
 #-------------------------------------------------------------------------------
 # determine what user threading model to use
