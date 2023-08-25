@@ -178,6 +178,8 @@ static int LAGraph_Parent_to_S
             &is_jumbled,
             NULL
         )) ;
+
+        LG_TRY (LAGraph_Free ((void**)(&preserved_values), msg)) ;
         
         // build ramp vector
         LG_TRY (LAGraph_Malloc ((void**) &ramp, num_preserved, sizeof(uint64_t), msg)) ;
@@ -204,8 +206,6 @@ static int LAGraph_Parent_to_S
             is_jumbled,
             NULL
         )) ;
-
-        LG_TRY (LAGraph_Free ((void**)(&ramp), msg)) ;
 
         if (newlabels != NULL) {
             GRB_TRY (GrB_Vector_dup (newlabels, parent_cpy)) ;
@@ -457,8 +457,6 @@ int LAGraph_Coarsen_Matching
         GRB_TRY (GxB_set (edge_parent, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
         GRB_TRY (GrB_vxm (node_parent, NULL, NULL, GrB_MIN_FIRST_SEMIRING_UINT64, edge_parent, E_t, NULL)) ;
     }
-
-    // DO NOT apply for nodes that are singletons
 
     // populate non-existent entries in node_parent with their index
     // handles nodes that are not engaged in a matching

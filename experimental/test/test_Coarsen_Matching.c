@@ -203,7 +203,6 @@ void test_Coarsen_Matching () {
 
                 if (par != i) {
                     // make sure that (i, par) is a edge in the graph
-                    // what is the right error code?
                     TEST_CHECK (GxB_Matrix_isStoredElement (G->A, i, par) == GrB_SUCCESS) ;
                     TEST_MSG ("Parent vector not from a valid matching for test: %s\n", tests [k].name) ;
                 }
@@ -286,32 +285,12 @@ void test_Coarsen_Matching_NullInputs() {
     OK (LAGraph_Cached_AT (G, msg) < 0) ; // warning is expected; check for error
 
     // do this to get full code coverage and catch any unexpected behavior
-    OK (LAGraph_Coarsen_Matching (
-        &A_coarse_LAGraph,
-        NULL,
-        NULL,
-        NULL,
-        G,
-        0,
-        0,
-        1,
-        42,
-        msg
-    )) ;
+    OK (LAGraph_Coarsen_Matching (&A_coarse_LAGraph, NULL, NULL, NULL, G, 0, 0, 1, 42, msg)) ;
+
     OK (GrB_free (&A_coarse_LAGraph)) ;
     // do it with parent, inv_newlabels NULL but newlabels not NULL
-    OK (LAGraph_Coarsen_Matching (
-        &A_coarse_LAGraph,
-        NULL,
-        &newlabel,
-        NULL,
-        G,
-        0,
-        0,
-        1,
-        42,
-        msg
-    )) ;
+    OK (LAGraph_Coarsen_Matching (&A_coarse_LAGraph, NULL, &newlabel, NULL, G, 0, 0, 1, 42, msg)) ;
+
     OK (GrB_free (&A_coarse_LAGraph)) ;
     OK (LAGraph_Delete (&G, msg)) ;
 
