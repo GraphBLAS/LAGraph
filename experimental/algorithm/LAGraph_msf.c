@@ -88,22 +88,17 @@ static GrB_Index *weight = NULL, *parent = NULL, *partner = NULL;
 // for each element A(i, j), it is selected if
 //   1. weight[i] == A(i, j)    -- where weight[i] stores i's minimum edge weight
 //   2. parent[j] == partner[i] -- j belongs to the specified connected component
-bool f1 (
-    GrB_Index i, GrB_Index j,
-    const void *x, const void *thunk)
+void f1 (bool *z, const void *x, GrB_Index i, GrB_Index j, const void *thunk)
 {
     uint64_t *aij = (uint64_t*) x;
-    return (weight[i] == *aij) && (parent[j] == partner[i]);
+    (*z) = (weight[i] == *aij) && (parent[j] == partner[i]);
 }
 
 // edge removal:
 // A(i, j) is removed when parent[i] == parent[j]
-bool f2 (
-    GrB_Index i, GrB_Index j,
-    const void *x, const void *thunk)
+void f2 (bool *z, const void *x, GrB_Index i, GrB_Index j, const void *thunk)
 {
-    uint64_t *aij = (uint64_t*) x;
-    return (parent[i] != parent[j]);
+    (*z) = (parent[i] != parent[j]);
 }
 
 //****************************************************************************
@@ -134,7 +129,7 @@ int LAGraph_msf
     GrB_Semiring combMin = NULL;
     GrB_UnaryOp fst = NULL, snd = NULL;
 
-    GxB_SelectOp s1 = NULL, s2 = NULL;
+    GrB_IndexUnaryOp s1 = NULL, s2 = NULL;
     if (result == NULL || A == NULL) return (GrB_NULL_POINTER) ;
 
     GrB_Index ncols ;
@@ -190,8 +185,8 @@ int LAGraph_msf
     GRB_TRY (GrB_UnaryOp_new (&snd, get_snd, GrB_UINT64, GrB_UINT64));
 
     // GrB_SelectOp
-    GxB_SelectOp_new (&s1, f1, GrB_UINT64, GrB_NULL);
-    GxB_SelectOp_new (&s2, f2, GrB_UINT64, GrB_NULL);
+    GrB_IndexUnaryOp_new (&s1, (void *) f1, GrB_BOOL, GrB_UINT64, GrB_UINT64);
+    GrB_IndexUnaryOp_new (&s2, (void *) f2, GrB_BOOL, GrB_UINT64, GrB_UINT64);
 
     // the main computation
     GrB_Index nvals, diff, ntuples = 0, num;
@@ -242,7 +237,7 @@ int LAGraph_msf
         GRB_TRY (GrB_assign (t, 0, 0, inf, GrB_ALL, 0, 0));
         GRB_TRY (GrB_apply (t, mask, 0, snd, edge, 0));
         GRB_TRY (GrB_Vector_extractTuples (I, partner, &n, t));
-        GRB_TRY (GxB_select (T, 0, 0, s1, S, GrB_NULL, 0));
+        GRB_TRY (GrB_select (T, 0, 0, s1, S, 0, 0));
         GRB_TRY (GrB_Vector_clear (t));
 
         // 5. the generated matrix may still have redundant edges
@@ -268,7 +263,7 @@ int LAGraph_msf
 
         // remove the edges in the same connected component
         GRB_TRY (GrB_Vector_extractTuples (I, parent, &n, f));
-        GRB_TRY (GxB_select (S, 0, 0, s2, S, GrB_NULL, 0));
+        GRB_TRY (GrB_select (S, 0, 0, s2, S, 0, 0));
         GrB_Matrix_nvals (&nvals, S);
         if (nvals == 0) break;
     }

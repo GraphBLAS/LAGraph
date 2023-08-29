@@ -2,7 +2,7 @@
 # LAGraph/CMakeLists.txt:  cmake script for LAGraph
 #-------------------------------------------------------------------------------
 
-# LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
+# LAGraph, (c) 2019-2023 by The LAGraph Contributors, All Rights Reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 #
 # For additional details (including references to third party source code and
@@ -49,10 +49,10 @@ cmake_policy ( SET CMP0048 NEW )
 set ( CMAKE_MACOSX_RPATH TRUE )
 
 # version of LAGraph
-set ( LAGraph_DATE "Dec 28, 2022" )
+set ( LAGraph_DATE "Aug 2, 2023" )
 set ( LAGraph_VERSION_MAJOR 1 )
 set ( LAGraph_VERSION_MINOR 0 )
-set ( LAGraph_VERSION_SUB   1 )
+set ( LAGraph_VERSION_SUB   2 )
 
 project ( lagraph
           VERSION "${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}" )

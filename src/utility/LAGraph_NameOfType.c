@@ -40,14 +40,6 @@ int LAGraph_NameOfType
     // determine the name of the type
     //--------------------------------------------------------------------------
 
-    #if LAGRAPH_SUITESPARSE
-
-        // always succeeds, even for user-defined types, unless the
-        // type is an invalid object
-        return (GxB_Type_name (name, type)) ;
-
-    #else
-
         if      (type == GrB_BOOL  ) strcpy (name, "bool")     ;
         else if (type == GrB_INT8  ) strcpy (name, "int8_t")   ;
         else if (type == GrB_INT16 ) strcpy (name, "int16_t")  ;
@@ -71,5 +63,4 @@ int LAGraph_NameOfType
         }
         return (GrB_SUCCESS) ;
 
-    #endif
 }
