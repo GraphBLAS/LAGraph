@@ -4,13 +4,13 @@ gen_bipartite.cpp
 Generates a random, undirected bipartite graph and evaluates matching to test LAGraph_MaximalMatching
 
 Usage:
-./gen_bipartite <num_nodes> <sparse_factor> <naive> <perf> <weighted> <prefer_light>
-NOTE: The <weighted> and <perf> arguments are only read when <naive> = 1. The <prefer_light> argument is only read if <weighted> = 1.
+./gen_bipartite <num_nodes> <sparse_factor> <perf> <naive> <weighted> <prefer_light>
 num_nodes [int]: How many nodes to include in the randomly generated graph
 sparse_factor [double]: Average degree of each node in the random graph
-perf [0/1]: IF naive = 1, whether to output performance data (running time) or the matching details. Note that this means the exact (maximum) method can not be benchmarked for performance.
-naive [0/1]: Whether to evaluate the matching of the random graph using the naive method or exact (maximum) method. Described further below. naive = 1 always if perf = 1.
-weighted [0/1]: IF naive = 1, specifies if the random graph (and matching) should be weighted. Note that this means the exact (maximum) method can not run on weighted graphs.
+perf [0/1]: Whether to output performance data (running time) or the produced matching details. Note that the exact (maximum) method can not be benchmarked for performance.
+naive [0/1]: Whether to evaluate the matching of the random graph using the naive method or exact (maximum) method. Described further below. naive = 1 always if perf = 1; in this case,
+the value of the input is ignored despite still being required.
+weighted [0/1]: IF naive = 1, specifies if the random graph (and matching) should be weighted. Note that the exact (maximum) method can not run on weighted graphs.
 prefer_light [0/1]: IF the graph is weighted, then specifies whether to give preference to light matchings or heavy matchings. Ignored if weighted = 0.
 
 Details:
@@ -191,7 +191,7 @@ int main(int argc, char **argv){
     random_device rd;
     mt19937_64 gen(rd());
     uniform_int_distribution<ll> seed_distr(1, 1e15);
-    uint64_t seed = 88; // seed_distr(gen);
+    uint64_t seed = seed_distr(gen);
 
     GrB_Index *rows, *cols ;
     uint32_t *vals ;
@@ -234,7 +234,7 @@ int main(int argc, char **argv){
         assert(weight >= 0);
         deg[u]++;
         deg[v]++;
-        // want below diagonal edges for symmetric format
+        // want below diagonal edges for symmetric matrix-market format
         edges.pb(vector<ll> {v, u, weight});
         if(!naive){
             adj[u].pb(v);

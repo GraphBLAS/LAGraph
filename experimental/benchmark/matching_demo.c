@@ -66,7 +66,7 @@ int main (int argc, char** argv)
     GrB_Vector best_matching = NULL ;
     GrB_Vector use_weights = NULL ;
 
-    bool burble = false ; 
+    bool burble = true ; 
     demo_init (burble) ;
 
     //--------------------------------------------------------------------------
@@ -121,7 +121,7 @@ int main (int argc, char** argv)
         for (int trial = 0 ; trial < ntrials ; trial++) {
             int64_t seed = trial * n + 1 ;
             
-            LAGRAPH_TRY (LAGraph_MaximalMatching (&matching, E, matching_type, seed, msg)) ;
+            LAGRAPH_TRY (LAGraph_MaximalMatching (&matching, E, E_t, matching_type, seed, msg)) ;
             double matching_value = 0 ;
             if (matching_type != 0) {
                 // weighted matching; need to compute total weight of matching
@@ -198,7 +198,7 @@ int main (int argc, char** argv)
     // user-provided matching type (random, heavy, light)
     int match_type = atoi (argv [2]) ;
     // GRB_TRY (LAGraph_Matrix_Print (E, LAGraph_COMPLETE, stdout, msg)) ;
-    LAGRAPH_TRY (LAGraph_MaximalMatching (&matching, E, match_type, 5, msg)) ;
+    LAGRAPH_TRY (LAGraph_MaximalMatching (&matching, E, E_t, match_type, 5, msg)) ;
     tt = LAGraph_WallClockTime ( ) - tt ;
     GRB_TRY (GrB_free (&matching)) ;
 #ifdef VERBOSE
@@ -229,7 +229,7 @@ int main (int argc, char** argv)
         {
             int64_t seed = trial * n + 1 ;
             double tt = LAGraph_WallClockTime ( ) ;
-            LAGRAPH_TRY (LAGraph_MaximalMatching (&matching, E, match_type, seed, msg)) ;
+            LAGRAPH_TRY (LAGraph_MaximalMatching (&matching, E, E_t, match_type, seed, msg)) ;
             tt = LAGraph_WallClockTime ( ) - tt ;
             GRB_TRY (GrB_free (&matching)) ;
 #ifdef VERBOSE

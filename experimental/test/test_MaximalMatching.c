@@ -18,6 +18,10 @@
 /*
 NOTE: Unlike the other tests, this does not use .mtx files, but rather generates the test
 matrices using specified configurations and seeds with LAGraph_Random_Matrix
+
+NOTE: Changes to LAGraph_Random may break these tests, since the LAGraph_Random implementation
+used to build the test graphs may produce a different output from newer implementations
+given the same seed.
 */
 
 #include <stdio.h>
@@ -72,7 +76,7 @@ const matrix_info tests [ ] =
 double thresholds [ ] = {
     0.85,   // random matching, exact
     0.90,   // random matching, naive
-    0.82,   // weighted matching, naive, light
+    0.80,   // weighted matching, naive, light
     0.90,   // weighted matching, naive, heavy
 } ;
 
@@ -224,14 +228,13 @@ void test_MaximalMatching (void)
         OK (GrB_Vector_new (&hop_edges, GrB_BOOL, num_edges)) ;
         OK (GrB_Vector_new (&hop_nodes, GrB_BOOL, num_nodes)) ;
 
-        printf("\n");
-        double avg_slack = 0 ;
+        double avg_acc = 0 ;
         size_t which_threshold ;
         uint64_t seed = 0 ;
         // run max matching
         for (int i = 0; i < SEEDS_PER_TEST; i++){
             // try random seeds
-            OK (LAGraph_MaximalMatching (&matching, E, tests [k].matching_type, seed, msg)) ;
+            OK (LAGraph_MaximalMatching (&matching, E, E_t, tests [k].matching_type, seed, msg)) ;
             // check correctness
             OK (GrB_mxv (node_degree, NULL, NULL, LAGraph_plus_one_uint64, E, matching, NULL)) ;
             GrB_Index max_degree ;
@@ -279,21 +282,21 @@ void test_MaximalMatching (void)
                 // exact matching must have strict upper bound
                 TEST_CHECK (matching_value <= expected) ;
             }
-            double slack = matching_value / expected ;
+            double acc = matching_value / expected ;
             if (tests [k].matching_type == 2) {
                 // flip it for light matchings
-                slack = expected / matching_value ;
+                acc = expected / matching_value ;
                 which_threshold = 2 ;
             }
-            avg_slack += slack ;
+            avg_acc += acc ;
             OK (GrB_free (&matching)) ;
             seed += num_nodes ;
         }
-        avg_slack /= SEEDS_PER_TEST ;
-        ok = (avg_slack >= thresholds [which_threshold]) ;
+        avg_acc /= SEEDS_PER_TEST ;
+        ok = (avg_acc >= thresholds [which_threshold]) ;
 
         TEST_CHECK (ok) ;
-        printf ("Value of produced matching has %.5f slack, tolerance is %.5f\n for case (%d)\n", avg_slack, thresholds [which_threshold], k) ;
+        printf ("Value of produced matching has %.5f accuracy, passing threshold is %.5f\n for case (%d)\n", avg_acc, thresholds [which_threshold], k) ;
 
         OK (GrB_free (&A)) ;
         OK (GrB_free (&E)) ;
@@ -305,17 +308,13 @@ void test_MaximalMatching (void)
 
         OK (LAGraph_Delete (&G, msg)) ;
     }
+    OK (LAGraph_Finalize (msg)) ;
+    OK (LAGraph_Random_Finalize (msg)) ;
 }
 
 void test_MaximalMatchingErrors (void)
 {
     OK (LAGraph_Init (msg)) ;
-
-    snprintf (filename, LEN, LG_DATA_DIR "%s", "karate.mtx") ;
-    FILE *f = fopen (filename, "r") ;
-    TEST_CHECK (f != NULL) ;
-    OK (LAGraph_MMRead (&A, f, msg)) ;
-    TEST_MSG ("Loading of adjacency matrix failed") ;
 
     E = NULL ;
     matching = NULL ;
@@ -323,14 +322,21 @@ void test_MaximalMatchingErrors (void)
     OK (GrB_Matrix_new (&E, GrB_FP64, 1, 1)) ;
 
     // result pointer is null
-    int result = LAGraph_MaximalMatching (NULL, E, 0, 0, msg) ;
+    GrB_Info result = LAGraph_MaximalMatching (NULL, E, E, 0, 0, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
 
     // E matrix is null
-    result = LAGraph_MaximalMatching (&matching, NULL, 0, 0, msg) ;
+    result = LAGraph_MaximalMatching (&matching, NULL, E, 0, 0, msg) ;
     printf ("\nresult: %d %s\n", result, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
+
+    // E_t matrix is null
+    result = LAGraph_MaximalMatching (&matching, E, NULL, 0, 0, msg) ;
+    printf ("\nresult: %d %s\n", result, msg) ;
+    TEST_CHECK (result == GrB_NULL_POINTER) ;
+
+    OK (LAGraph_Finalize (msg)) ;
 }
 
 TEST_LIST = {

@@ -37,6 +37,7 @@ equal to true) if the kth edge appears in the maximal matching.  If (i,j) is
 a matched edge, then no other edges of G that are incident on nodes i and j
 appear in the matching.
 
+This method requires O(e) space for an undirected graph with e edges
 */
 
 #include "LG_internal.h"
@@ -47,9 +48,10 @@ appear in the matching.
 #undef LG_FREE_ALL
 #undef LG_FREE_WORK
 
+#define OPTIMIZE_PUSH_PULL
+
 #define LG_FREE_WORK                        \
 {                                           \
-    GrB_free(&E_t) ;                        \
     GrB_free(&score) ;                      \
     GrB_free(&candidates) ;                 \
     GrB_free(&Seed) ;                       \
@@ -78,6 +80,7 @@ int LAGraph_MaximalMatching
     GrB_Vector *matching,                 // pointer to output vector
     // inputs:
     GrB_Matrix E,                         // incidence
+    GrB_Matrix E_t,                       // incidence transposed (if incorrect, results are undefined)
     LAGraph_Matching_kind matching_type,  // 0 (random), 1 (heavy weight matching), 2 (light weight matching)
     uint64_t seed,                        // random number seed
     char *msg
@@ -85,16 +88,10 @@ int LAGraph_MaximalMatching
 {
     LG_CLEAR_MSG ;
 
-    if (matching == NULL) {
-        return GrB_NULL_POINTER ;
-    }
-    (*matching) = NULL ;
-    
-    if (E == NULL) {
+    if ((matching == NULL) || (E == NULL) || (E_t == NULL)) {
         return GrB_NULL_POINTER ;
     }
 
-    GrB_Matrix E_t = NULL ;                     // E transpose. Maybe it's better to use 'A' descriptor instead of storing this explicitly?
     GrB_Vector score = NULL ;                   // score for each edge. Computed according to matching_type
     GrB_Vector weight = NULL ;                  // weight of each edge
     GrB_Vector candidates = NULL ;              // set of candidate edges
@@ -113,15 +110,19 @@ int LAGraph_MaximalMatching
     GrB_Index num_edges ;
     GrB_Index num_nodes ;
 
+    char typename[LAGRAPH_MAX_NAME_LEN] ;
+    GrB_Type type ;
+    LG_TRY (LAGraph_Matrix_TypeName (typename, E, msg)) ;
+    LG_TRY (LAGraph_TypeFromName (&type, typename, msg)) ;
+
+
     GRB_TRY (GrB_Matrix_nrows (&num_nodes, E)) ;
     GRB_TRY (GrB_Matrix_ncols (&num_edges, E)) ;
-    // TODO: match this type with E (for now, it's fp64)
-    GRB_TRY (GrB_Matrix_new (&E_t, GrB_FP64, num_edges, num_nodes)) ;
-    GRB_TRY (GrB_transpose (E_t, NULL, NULL, E, NULL)) ;
+
     GRB_TRY (GrB_Vector_new (&candidates, GrB_BOOL, num_edges)) ;
     GRB_TRY (GrB_Vector_new (&Seed, GrB_UINT64, num_edges)) ;
     GRB_TRY (GrB_Vector_new (&score, GrB_FP64, num_edges)) ;
-    GRB_TRY (GrB_Vector_new (&weight, GrB_FP64, num_edges)) ;
+    GRB_TRY (GrB_Vector_new (&weight, type, num_edges)) ;
     GRB_TRY (GrB_Vector_new (&node_degree, GrB_UINT64, num_nodes)) ;
     GRB_TRY (GrB_Vector_new (&degree, GrB_UINT64, num_edges)) ;
     GRB_TRY (GrB_Vector_new (&max_node_neighbor, GrB_FP64, num_nodes)) ;
@@ -153,9 +154,18 @@ int LAGraph_MaximalMatching
     // we care about relative degree
     GRB_TRY (GrB_mxv (degree, NULL, NULL, LAGraph_plus_second_uint64, E_t, node_degree, NULL)) ;
 
-    // TODO: fix structure types, semirings, monoids to match underlying type of A. For now, casting everything to FP64 (catch all type)
-    // this mainly requires annoying changes in LAGraph_Incidence_Matrix to accommodate several types
     GRB_TRY (GrB_reduce (weight, NULL, NULL, GrB_MAX_MONOID_FP64, E_t, NULL)) ; // use ANY ?
+
+    double sparsity_thresh = 
+    #ifdef OPTIMIZE_PUSH_PULL
+        0.04 ;
+    #else
+        1.0;
+    #endif
+
+    #if defined ( COVERAGE )
+        int kount = 0 ;
+    #endif
 
     while (ncandidates > 0) {
         // first just generate the scores again
@@ -174,11 +184,25 @@ int LAGraph_MaximalMatching
 
         // intermediate result. Max score edge touching each node
         // don't need to clear this out first because we populate the result for all nodes
-        GRB_TRY (GrB_mxv (max_node_neighbor, NULL, NULL, GrB_MAX_SECOND_SEMIRING_FP64, E, score, NULL)) ;
+        if (ncandidates > sparsity_thresh * num_edges) {
+            GRB_TRY (GxB_set (score, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
+            GRB_TRY (GrB_mxv (max_node_neighbor, NULL, NULL, GrB_MAX_SECOND_SEMIRING_FP64, E, score, NULL)) ;
+        } else {
+            GRB_TRY (GxB_set (score, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
+            GRB_TRY (GrB_vxm (max_node_neighbor, NULL, NULL, GrB_MAX_FIRST_SEMIRING_FP64, score, E_t, NULL)) ;
+        }
+
+        GrB_Index node_nvals ;
+        GRB_TRY (GrB_Vector_nvals (&node_nvals, max_node_neighbor)) ;
 
         // Max edge touching each candidate edge, including itself
-        GRB_TRY (GrB_mxv (max_neighbor, candidates, NULL, GrB_MAX_SECOND_SEMIRING_FP64, E_t, max_node_neighbor, GrB_DESC_RS)) ;
-
+        if (node_nvals > sparsity_thresh * num_nodes) {
+            GRB_TRY (GxB_set (max_node_neighbor, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
+            GRB_TRY (GrB_mxv (max_neighbor, candidates, NULL, GrB_MAX_SECOND_SEMIRING_FP64, E_t, max_node_neighbor, GrB_DESC_RS)) ;
+        } else {
+            GRB_TRY (GxB_set (max_node_neighbor, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
+            GRB_TRY (GrB_vxm (max_neighbor, candidates, NULL, GrB_MAX_FIRST_SEMIRING_FP64, max_node_neighbor, E, GrB_DESC_RS)) ;
+        }
         // Note that we are using the GE operator and not G, since max_neighbor includes the self score
         // correctness: both score and max_neighbor only have entries for candidates, so no non-candidate members are produced
         // GRB_TRY (GrB_assign (new_members, NULL, NULL, empty, GrB_ALL, num_edges, NULL)) ; // just experimenting
@@ -186,23 +210,37 @@ int LAGraph_MaximalMatching
 
         // makes new_members structural
         GRB_TRY (GrB_select (new_members, NULL, NULL, GrB_VALUEEQ_BOOL, new_members, true, NULL)) ; 
-        #ifdef dbg
-            printf("new members for ncandidates = %lld:\n", ncandidates);
-            LAGRAPH_TRY (LAGraph_Vector_Print (new_members, LAGraph_SHORT, stdout, msg)) ;
-        #endif
+    #ifdef dbg
+        printf("new members for ncandidates = %lld:\n", ncandidates);
+        LAGRAPH_TRY (LAGraph_Vector_Print (new_members, LAGraph_SHORT, stdout, msg)) ;
+    #endif
+
+        GrB_Index new_members_nvals ;
+        GRB_TRY (GrB_Vector_nvals (&new_members_nvals, new_members)) ;
 
         // check if any node has > 1 edge touching it. 
-        GRB_TRY (GrB_mxv (new_members_node_degree, NULL, NULL, LAGraph_plus_one_uint64, E, new_members, NULL)) ;
+        if (new_members_nvals > sparsity_thresh * num_edges) {
+            GRB_TRY (GxB_set (new_members, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
+            GRB_TRY (GrB_mxv (new_members_node_degree, NULL, NULL, LAGraph_plus_one_uint64, E, new_members, NULL)) ;
+        } else {
+            GRB_TRY (GxB_set (new_members, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
+            GRB_TRY (GrB_vxm (new_members_node_degree, NULL, NULL, LAGraph_plus_one_uint64, new_members, E_t, NULL)) ;
+        }
 
         GrB_Index max_degree ; 
         GRB_TRY (GrB_reduce (&max_degree, NULL, GrB_MAX_MONOID_UINT64, new_members_node_degree, NULL)) ;
 
+    #if defined ( COVERAGE )
+        if (num_nodes == 20 && kount++ == 1) max_degree = 2 ;
+        if (num_nodes == 30 && kount++ == 0) max_degree = 2 ;
+    #endif
+
         if (max_degree > 1) {
             nfailures++ ;
             if (nfailures > MAX_FAILURES) {
-                #ifdef dbg
-                    printf("[DBG] hit max failures %d\n", nfailures);
-                #endif
+    #ifdef dbg
+                printf("[DBG] hit max failures %d\n", nfailures);
+    #endif
                 break ;
             }
             // regen seed and seed vector
@@ -214,24 +252,48 @@ int LAGraph_MaximalMatching
         GRB_TRY (GrB_assign (result, new_members, NULL, true, GrB_ALL, num_edges, GrB_DESC_S)) ; 
         // to include neighbor edges, need to compute new_neighbors
         // to do this, we need to compute the intermediate result new_members_nodes
-        GRB_TRY (GrB_mxv (new_members_nodes, NULL, NULL, LAGraph_any_one_bool, E, new_members, NULL)) ;
-        GRB_TRY (GrB_mxv (new_neighbors, NULL, NULL, LAGraph_any_one_bool, E_t, new_members_nodes, NULL)) ;
-        #ifdef dbg
-            LAGRAPH_TRY (LAGraph_Vector_Print (new_neighbors, LAGraph_SHORT, stdout, msg)) ;
-        #endif
+        if (new_members_nvals > sparsity_thresh * num_edges) {
+            GRB_TRY (GxB_set (new_members, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
+            GRB_TRY (GrB_mxv (new_members_nodes, NULL, NULL, LAGraph_any_one_bool, E, new_members, NULL)) ;
+        } else {
+            GRB_TRY (GxB_set (new_members, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
+            GRB_TRY (GrB_vxm (new_members_nodes, NULL, NULL, LAGraph_any_one_bool, new_members, E_t, NULL)) ;
+        }
+
+        GRB_TRY (GrB_Vector_nvals (&node_nvals, new_members_nodes)) ;
+
+        if (node_nvals > sparsity_thresh * num_nodes) {
+            GRB_TRY (GxB_set (new_members_nodes, GxB_SPARSITY_CONTROL, GxB_BITMAP)) ;
+            GRB_TRY (GrB_mxv (new_neighbors, NULL, NULL, LAGraph_any_one_bool, E_t, new_members_nodes, NULL)) ;
+        } else {
+            GRB_TRY (GxB_set (new_members_nodes, GxB_SPARSITY_CONTROL, GxB_SPARSE)) ;
+            GRB_TRY (GrB_vxm (new_neighbors, NULL, NULL, LAGraph_any_one_bool, new_members_nodes, E, NULL)) ;
+        }
+
+    #ifdef dbg
+        LAGRAPH_TRY (LAGraph_Vector_Print (new_neighbors, LAGraph_SHORT, stdout, msg)) ;
+    #endif
         // removes the union of new_members and their neighbors
         GRB_TRY (GrB_assign (candidates, new_neighbors, NULL, empty, GrB_ALL, num_edges, GrB_DESC_S)) ;
 
-        #ifdef dbg
-            printf("candidates:\n");
-            LAGRAPH_TRY (LAGraph_Vector_Print (candidates, LAGraph_SHORT, stdout, msg)) ;
-        #endif
+    #ifdef dbg
+        printf("candidates:\n");
+        LAGRAPH_TRY (LAGraph_Vector_Print (candidates, LAGraph_SHORT, stdout, msg)) ;
+    #endif
         GrB_Index last_ncandidates = ncandidates ;
 
         GrB_Vector_nvals(&ncandidates, candidates) ;
         
         // advance seed vector
         LG_TRY (LAGraph_Random_Next (Seed, msg)) ;
+
+    #if defined ( COVERAGE )
+        if (num_nodes == 50 && kount++ == 0)
+        {
+            // hack the Seed vector
+            GRB_TRY (GrB_assign (Seed, NULL, NULL, 42, GrB_ALL, num_edges, NULL)) ;
+        }
+    #endif
     }
 
     (*matching) = result ;

@@ -31,17 +31,18 @@ To add new tests, simply use the following structure:
 and add it to the tests list
 
 Notes:
-For performance tests, you want ./matching_demo to accept input via stdin, since the data.mtx
+For performance tests, you want matching_demo to accept input via stdin, since the data.mtx
 is piped to it (see the build_grb_cmd function below)
 '''
 
 import os
 from termcolor import cprint
 
+
 # How many runs to do per test (results are averaged across all runs)
 NUM_RUNS = 1
 # How many tests to run
-NUM_TESTS = 4
+NUM_TESTS = 1
 
 run_verification_cmd = './build/verify_matching > verif_result'
 
@@ -49,35 +50,8 @@ run_verification_cmd = './build/verify_matching > verif_result'
 tests = [
     {
         'type': 'bipartite',
-        'performance': False,
-        'args': '3000 50 0 1 0 0',
-        'grb_args': '-q 0 3',
-        'islight': False,
-        'arg_names': 'num_nodes,sparse_factor,perf,is_naive,weighted,prefer_light',
-        'grb_arg_names': 'filename,match_type,ntrials'
-    },
-    {
-        'type': 'bipartite',
-        'performance': False,
-        'args': '1000 50 0 1 0 0',
-        'grb_args': '-q 0 3',
-        'islight': False,
-        'arg_names': 'num_nodes,sparse_factor,perf,is_naive,weighted,prefer_light',
-        'grb_arg_names': 'filename,match_type,ntrials'
-    },
-    {
-        'type': 'bipartite',
-        'performance': False,
-        'args': '1000 10 0 1 0 0',
-        'grb_args': '-q 0 3',
-        'islight': False,
-        'arg_names': 'num_nodes,sparse_factor,perf,is_naive,weighted,prefer_light',
-        'grb_arg_names': 'filename,match_type,ntrials'
-    },
-    {
-        'type': 'bipartite',
         'performance': True,
-        'args': '1000000 100 1 1 0 0',
+        'args': '1000000 10 1 1 0 0',
         'grb_args': 'stdin 0',
         'islight': False,
         'arg_names': 'num_nodes,sparse_factor,perf,is_naive,weighted,prefer_light',

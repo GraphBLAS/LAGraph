@@ -31,15 +31,6 @@
 // LAGraph_Random_*: Random number generator
 //------------------------------------------------------------------------------
 
-// FIXME: add a random vector generator.  Perhaps allow for better parallel
-// random number generators.  The current one works fine as a "fast but low
-// quality" method.  Need a high quality parallel random number generator too.
-
-// FIXME: merge LAGraph_Random_Init and LAGraph_Random_Finalize into
-// LAGr_Init and LAGraph_Finalize.
-
-// FIXME: "LAGRAPH_PUBLIC" not needed for functions, just global variables.
-
 LAGRAPH_PUBLIC
 int LAGraph_Random_Init
 (
@@ -56,7 +47,6 @@ int LAGraph_Random_Finalize
 LAGRAPH_PUBLIC bool random_hack ;
 #endif
 
-// FIXME: add (as-is?)
 LAGRAPH_PUBLIC
 int LAGraph_Random_Seed     // construct a random seed vector
 (
@@ -67,7 +57,6 @@ int LAGraph_Random_Seed     // construct a random seed vector
     char *msg
 ) ;
 
-// FIXME: add (as-is?)
 LAGRAPH_PUBLIC
 int LAGraph_Random_Next     // advance to next random vector
 (
@@ -76,7 +65,6 @@ int LAGraph_Random_Next     // advance to next random vector
     char *msg
 ) ;
 
-// FIXME: add (as-is?)
 LAGRAPH_PUBLIC
 GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
 (
@@ -93,16 +81,15 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
     char *msg
 ) ;
 
-// FIXME: add more matrix generators in the future
-
 //****************************************************************************
 // binary file I/O
 //****************************************************************************
 
 // The LAGraph *.lagraph file consists of an ASCII JSON header, followed by
-// one or more serialized "blobs" created by G*B_Matrix_serialize.  The file
-// can only be read back into LAGraph when using the same GraphBLAS library
-// used to create it.
+// one or more serialized "blobs" created by GrB_Matrix_serialize (or
+// GxB_Matrix_serialize if using SuiteSparse:GraphBLAS).  The file can only be
+// read back into LAGraph when using the same GraphBLAS library used to create
+// it.
 
 // To create a binary file containing one or more GrB_Matrix objects, the user
 // application must first open the file f, create the ascii JSON header with
@@ -163,10 +150,6 @@ typedef struct
     char type_name [LAGRAPH_MAX_NAME_LEN+4] ;
 }
 LAGraph_Contents ;
-
-//------------------------------------------------------------------------------
-// LAGraph_SWrite*, *SRead, *SFreeContents: expert methods
-//------------------------------------------------------------------------------
 
 LAGRAPH_PUBLIC
 int LAGraph_SWrite_HeaderStart  // write the first part of the JSON header
@@ -241,10 +224,6 @@ void LAGraph_SFreeContents      // free the Contents returned by LAGraph_SRead
     GrB_Index ncontents
 ) ;
 
-//------------------------------------------------------------------------------
-// LAGraph_SSaveSet, _SLoadset, _SFreeSet: simple methods
-//------------------------------------------------------------------------------
-
 LAGRAPH_PUBLIC
 int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
 (
@@ -281,18 +260,11 @@ void LAGraph_SFreeSet           // free a set of matrices
     GrB_Index nmatrices         // # of matrices in the set
 ) ;
 
-//==============================================================================
-
-// FIXME: a utility function.  Should it instead create a new LAGraph_Graph
-// with LAGraph_Kind of "LAGraph_INCIDENCE_*?  Or is this OK?
-
 LAGRAPH_PUBLIC
 int LAGraph_Incidence_Matrix
 (
-    // output
-    GrB_Matrix *E,          // incidence matrix of G
-    // input
-    LAGraph_Graph G,        // input graph
+    GrB_Matrix *result,
+    LAGraph_Graph graph,
     char *msg
 ) ;
 
@@ -316,23 +288,6 @@ int LAGraph_Incidence_Matrix
  * @retval GrB_SUCCESS      if completed successfully (equal or not)
  * @retval GrB_NULL_POINTER if kmax, ntris, nedges, nsteps is NULL
  */
-
-// FIXME: CSet should be "GrB_Matrix **Cset_handle" so it can be allocated by
-// the algorithm to the right size (n is big).  Then kmax is the size
-// of the array Cset.
-
-// FIXME: ntris is the same; should be int64_t **ntris_handle.  This should
-// be returned since it's a byproduct of the algorithm.   Alternatively,
-// it could be computed since ntris [k] is just:
-//
-//      GrB_reduce (&nt, NULL, GrB_PLUS_MONOID_INT64, Cset [k], NULL) ;
-//      ntris [k] = nt / 6 ;
-
-// FIXME: nedges could be removed.  The user can get this from each matrix
-// using GrB_Matrix_nvals.
-
-// FIXME: nstepss is not necessary (it's just informational).
-
 LAGRAPH_PUBLIC
 int LAGraph_AllKTruss   // compute all k-trusses of a graph
 (
@@ -361,9 +316,6 @@ int LAGraph_AllKTruss   // compute all k-trusses of a graph
  * @retval GrB_NULL_POINTER if C or C_type is NULL
  * @return Any GraphBLAS errors that may have been encountered
  */
-
-// FIXME: looks ok to add as-is
-
 LAGRAPH_PUBLIC
 int LAGraph_KTruss      // compute the k-truss of a graph
 (
@@ -391,46 +343,17 @@ int LAGraph_KTruss      // compute the k-truss of a graph
  * @retval GrB_SUCCESS      if completed successfully
  * @retval GrB_NULL_POINTER if result is NULL
  */
-
- // FIXME:  needs lots of work.
-
 LAGRAPH_PUBLIC
 int LAGraph_cc_lacc (
-    // output
-    GrB_Vector *result, // FIXME: rename this vector
-    // input:
-    GrB_Matrix A,       // FIXME: should be LAGraph_Graph
-    bool sanitize,      // FIXME: remove this
+    GrB_Vector *result,
+    GrB_Matrix A,
+    bool sanitize,
     char *msg
 ) ;
 
 //****************************************************************************
 // Bellman Ford variants
 //****************************************************************************
-
-// FIXME: we should add a Bellman Ford method.  It would be slower than delta
-// stepping, but it does have the advantage of handling negative weight
-// edges and being able to detect negative-weight cycles.
-
-// FIXME: need to fix the API: use LAGraph_Graph, add char *msg, etc.
-
-/*
-    these just return distance vector: merge these into a single algorithm
-    LAGraph_BF_basic            uses A
-    LAGraph_BF_basic_mxv        same as BF_basic, but uses AT instead
-    LAGraph_BF_basic_pushpull   uses both A at AT, push/pull optimization
-
-    these methods also return parent and hops vectors:
-    LAGraph_BF_full1a           fastest variant
-    LAGraph_BF_full1            discard this
-    LAGraph_BF_full2            discard this
-    LAGraph_BF_full             discard this
-    LAGraph_BF_full_mxv         discard this (as above but uses AT)
-
-    for testing only: do not add to LAGraph.h:
-    LAGraph_BF_pure_c.c
-    LAGraph_BF_pure_c_double.c
-*/
 
 /**
  * Bellman-Ford single source shortest paths, returning just the shortest path
@@ -656,9 +579,6 @@ GrB_Info LAGraph_BF_full_mxv
  * @retval GrB_NO_VALUE       if A has a negative weight cycle
  *
  */
-
-// FIXME: move this to the test for BF
-
 LAGRAPH_PUBLIC
 GrB_Info LAGraph_BF_pure_c
 (
@@ -696,9 +616,6 @@ GrB_Info LAGraph_BF_pure_c
  * @retval GrB_NO_VALUE       if A has a negative weight cycle
  *
  */
-
-// FIXME: move this to the test for BF
-
 LAGRAPH_PUBLIC
 GrB_Info LAGraph_BF_pure_c_double
 (
@@ -729,9 +646,6 @@ GrB_Info LAGraph_BF_pure_c_double
  * @retval GrB_OUT_OF_MEMORY  if allocation fails.
  * @retval GrB_NO_VALUE       if A has a negative weight cycle
  */
-
-// FIXME: add as-is, but rename the method.
-
 LAGRAPH_PUBLIC
 int LAGraph_cdlp
 (
@@ -740,8 +654,6 @@ int LAGraph_cdlp
     int itermax,
     char *msg
 ) ;
-
-// FIXME: remove this, correct?
 
 LAGRAPH_PUBLIC
 int LAGraph_cdlp_withsort
@@ -775,10 +687,6 @@ int LAGraph_cdlp_withsort
  *              (@sphinxref{LAGraph_CheckGraph} failed).
  * @returns any GraphBLAS errors that may have been encountered.
  */
-
-// FIXME: keep this in experimental.  It is required for the LDBC
-// benchmark, but we don't need yet another pagerank method.
-
 LAGRAPH_PUBLIC
 int LAGr_PageRankGX
 (
@@ -809,10 +717,6 @@ int LAGr_PageRankGX
  * @retval GrB_DOMAIN_MISMATCH if type of Y0 is not FP32 or FP64, or the types of
  *                             W or Bias arent the same as Y0
  */
-
-// FIXME: do not add this yet.  It is an implementation of the Sparse DNN
-// Challenge, and might not be a good general-purpose algorithm.
-
 LAGRAPH_PUBLIC
 GrB_Info LAGraph_dnn
 (
@@ -823,6 +727,27 @@ GrB_Info LAGraph_dnn
     GrB_Matrix *Bias,
     int nlayers,
     GrB_Matrix Y0
+) ;
+
+//****************************************************************************
+/**
+ * Compute all-pairs shortest paths using Floyd-Warshall method
+ *
+ * @param[in]   G       input graph, with edge weights
+ * @param[out]  D       output graph, created on output
+ * @param[out]  D_type  type of scalar stored in D (see source for explanation)
+ *
+ * @retval GrB_SUCCESS         if completed successfully
+ * @retval GrB_NOT_IMPLEMENTED vanilla version has not been implemented yet
+ * @retval GrB_NULL_POINTER    If D or D_type is NULL
+ * @retval GrB_INVALID_VALUE   If G is not square
+ */
+LAGRAPH_PUBLIC
+GrB_Info LAGraph_FW
+(
+    const GrB_Matrix G,
+    GrB_Matrix *D,
+    GrB_Type   *D_type
 ) ;
 
 //****************************************************************************
@@ -838,9 +763,6 @@ GrB_Info LAGraph_dnn
  * @retval GrB_NULL_POINTER   If LCC_handle or LCC_type is NULL
  * @retval GrB_INVALID_VALUE  If A is not stored in CSR format
  */
-
-// FIXME: add this as-is, but rename it
-
 LAGRAPH_PUBLIC
 int LAGraph_lcc            // compute lcc for all nodes in A
 (
@@ -850,10 +772,6 @@ int LAGraph_lcc            // compute lcc for all nodes in A
 ) ;
 
 //****************************************************************************
-
-// FIXME: add this but fix the API to use LAGraph_Graph, and rename it.  Do not
-// use global variables in user-defined operators.  Replace Reduce_assign with
-// the faster metohd in src/algorithm/LG_CC_FastSV6.
 
 LAGRAPH_PUBLIC
 int LAGraph_msf
@@ -866,9 +784,6 @@ int LAGraph_msf
 
 //****************************************************************************
 
-// FIXME: do not use global variables in user-defined operators.
-// rename it and fix the API to use LAGraph_Graph.
-
 LAGRAPH_PUBLIC
 int LAGraph_scc (
     GrB_Vector *result,     // output: array of component identifiers
@@ -877,10 +792,6 @@ int LAGraph_scc (
 ) ;
 
 //****************************************************************************
-
-// FIXME: in good shape but has 3 methods (needs only one: method3).
-// Remove 'method' parameter.
-
 LAGRAPH_PUBLIC
 int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
 (
@@ -894,9 +805,6 @@ int LAGraph_VertexCentrality_Triangle       // vertex triangle-centrality
 ) ;
 
 //****************************************************************************
-
-// FIXME: in good shape.
-
 LAGRAPH_PUBLIC
 int LAGraph_MaximalIndependentSet       // maximal independent set
 (
@@ -912,9 +820,8 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     char *msg
 ) ;
 
-// FIXME: delete this; superseded by LG_CC_FastSV6
 LAGRAPH_PUBLIC
-int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method
+int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method, with GxB extensions
 (
     // output
     GrB_Vector *component,  // output: array of component identifiers
@@ -927,12 +834,8 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method
 // kcore algorithms
 //------------------------------------------------------------------------------
 
-// FIXME: add all of these methods, but perhaps merge LAGraph_KCore and
-// LAGraph_KCore_All into a single method.  Needs more documentation
-// (see Honors thesis in Papers/ folder).
-
 LAGRAPH_PUBLIC
-int LAGraph_KCore_All // FIXME: filename does not match function name
+int LAGraph_KCore_All
 (
     // outputs:
     GrB_Vector *decomp,     // kcore decomposition
@@ -953,7 +856,6 @@ int LAGraph_KCore
     char *msg
 ) ;
 
-// FIXME: rename LAGraph_KCore_Decomposition
 LAGRAPH_PUBLIC
 int LAGraph_KCore_Decompose
 (
@@ -970,8 +872,6 @@ int LAGraph_KCore_Decompose
 // counting graphlets
 //------------------------------------------------------------------------------
 
-// FIXME: add this.  Consider the bool compute_d_15 parameter.
-
 LAGRAPH_PUBLIC
 int LAGraph_FastGraphletTransform
 (
@@ -986,8 +886,6 @@ int LAGraph_FastGraphletTransform
 //------------------------------------------------------------------------------
 // matching and coarsening
 //------------------------------------------------------------------------------
-
-// FIXME: add this
 
 typedef enum
 {
@@ -1004,14 +902,28 @@ int LAGraph_MaximalMatching
     GrB_Vector *matching,
     // inputs:
     GrB_Matrix E,                         // incidence matrix, not part of LAGraph_Graph (for now)
+    GrB_Matrix E_t,                       // incidence transposed
     LAGraph_Matching_kind matching_type,  // refer to above enum
     uint64_t seed,                        // random number seed
     char *msg
 ) ;
 
-//------------------------------------------------------------------------------
-
-// FIXME: add this
+LAGRAPH_PUBLIC
+int LAGraph_Coarsen_Matching
+(
+    // outputs:
+    GrB_Matrix *coarsened,                  // coarsened adjacency
+    GrB_Vector *parent_result,              // description in LAGraph_CoarsenMatching
+    GrB_Vector *newlabel_result,            // description in LAGraph_CoarsenMatching
+    GrB_Vector *inv_newlabel_result,        // description in LAGraph_CoarsenMatching
+    // inputs:
+    LAGraph_Graph G,
+    LAGraph_Matching_kind matching_type,     // refer to above enum
+    bool preserve_mapping,                   // preserve initial namespace of nodes
+    bool combine_weights,                    // whether to sum edge weights or just keep the pattern
+    uint64_t seed,                           // used for matching
+    char *msg
+) ;
 
 LAGRAPH_PUBLIC
 int LAGraph_SquareClustering
@@ -1027,9 +939,6 @@ int LAGraph_SquareClustering
 // a simple example of an algorithm
 //------------------------------------------------------------------------------
 
-// FIXME: do not add this; keep it always in experimental, as an example
-// algorithm.
-
 LAGRAPH_PUBLIC
 int LAGraph_HelloWorld // a simple algorithm, just for illustration
 (
@@ -1043,8 +952,6 @@ int LAGraph_HelloWorld // a simple algorithm, just for illustration
 //------------------------------------------------------------------------------
 // run a breadth first search for multiple source nodes
 //------------------------------------------------------------------------------
-
-// FIXME: add this
 
 LAGRAPH_PUBLIC
 int LAGraph_MultiSourceBFS 
@@ -1061,8 +968,6 @@ int LAGraph_MultiSourceBFS
 //------------------------------------------------------------------------------
 // estimate the diameter of a graph
 //------------------------------------------------------------------------------
-
-// FIXME: add this
 
 LAGRAPH_PUBLIC
 int LAGraph_EstimateDiameter
@@ -1082,8 +987,6 @@ int LAGraph_EstimateDiameter
 // find the exact diameter of a graph
 //------------------------------------------------------------------------------
 
-// FIXME: add this
-
 LAGRAPH_PUBLIC
 int LAGraph_ExactDiameter
 (
@@ -1100,9 +1003,6 @@ int LAGraph_ExactDiameter
 //------------------------------------------------------------------------------
 // HDIP_Fiedler
 //------------------------------------------------------------------------------
-
-// FIXME: add this, but probably define many of the helper functions as
-// static, just accessible to the Fiedler method itself.
 
 //------------------------------------------------------------------------------
 // applies a Householder Reflection
@@ -1142,9 +1042,6 @@ int LAGraph_hmhx // hmhx checked for pointer issues
 // Euclidean normalization on a vector
 //------------------------------------------------------------------------------
 
-// FIXME: this might be nice to have.  Note that GraphBLAS should have
-// a GrB_vtxv to compute c += a'*b for two vectors a and b.
-
 LAGRAPH_PUBLIC
 int LAGraph_norm2 // norm2 checked for pointer mistakes
 (
@@ -1159,9 +1056,6 @@ int LAGraph_norm2 // norm2 checked for pointer mistakes
 //------------------------------------------------------------------------------
 // Computes Laplacian of a Matrix
 //------------------------------------------------------------------------------
-
-// FIXME: add this to src/utility;  very useful, but change the API
-// to pass in an LAGraph_Graph
 
 LAGRAPH_PUBLIC
 int LAGraph_Laplacian // compute the Laplacian matrix
@@ -1198,8 +1092,6 @@ int LAGraph_mypcg2(
 //------------------------------------------------------------------------------
 // Computes the Fiedler Vector
 //------------------------------------------------------------------------------
-
-// FIXME: add this but change the API.
 
 LAGRAPH_PUBLIC
 int LAGraph_Hdip_Fiedler // compute the Hdip_Fiedler
