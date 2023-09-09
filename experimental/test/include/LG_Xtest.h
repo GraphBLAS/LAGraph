@@ -67,4 +67,18 @@ int LG_check_lcc
      char *msg
 ) ;
 
+int LG_check_coarsen
+(
+    // outputs:
+    GrB_Matrix *coarsened,    // coarsened adjacency
+    // inputs:
+    GrB_Matrix A,               // input adjacency (for the purposes of testing, is FP64)
+    GrB_Vector parent,          // parent mapping. Must not be NULL.
+    GrB_Vector newlabel,       // new labels of nodes, used to populate resulting adjacency matrix, can be NULL if preserve_mapping = 1, else must be a valid result
+    GrB_Vector inv_newlabel,   // inverse of newlabel, can be NULL if preserve_mapping = 1, else must be a valid result
+    int preserve_mapping,       // whether to preserve the original namespace of nodes
+    int combine_weights,        // whether to combine the weights of edges that collapse together
+    char *msg
+) ;
+
 #endif
