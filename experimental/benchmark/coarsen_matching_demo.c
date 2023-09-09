@@ -13,12 +13,24 @@
 
 // #define SHOW_RESULTS
 
+#define LG_FREE_ALL                     \
+{                                       \
+    LAGraph_Delete (&G, NULL) ;         \
+    GrB_free (&A) ;                     \
+    GrB_free (&coarsened) ;             \
+    GrB_free (&parent_result) ;         \
+    GrB_free (&newlabel_result) ;       \
+    GrB_free (&inv_newlabel_result) ;   \
+}                                       \
 
 int main(int argc, char **argv)
 {
     char msg [LAGRAPH_MSG_LEN] ;
 
     LAGraph_Graph G = NULL ;
+    GrB_Matrix A = NULL ;
+    GrB_Matrix coarsened = NULL ;
+    GrB_Vector parent_result = NULL, newlabel_result = NULL, inv_newlabel_result = NULL ;
 
     bool burble = false ; 
     demo_init (burble) ;
@@ -40,8 +52,6 @@ int main(int argc, char **argv)
         GrB_Index n = (argc > 2 ? atoi (argv [2]) : DEFAULT_SIZE) ;
         double density = (argc > 3 ? atof (argv [3]) : DEFAULT_DENSITY) ;
         uint64_t seed = (argc > 4 ? atoll (argv [4]) : DEFAULT_SEED) ;
-        
-        GrB_Matrix A = NULL ;
 
         LG_TRY (LAGraph_Random_Matrix (&A, GrB_FP64, n, n, density, seed, msg)) ;
         GRB_TRY (GrB_eWiseAdd (A, NULL, NULL, GrB_PLUS_FP64, A, A, GrB_DESC_T1)) ;
@@ -56,8 +66,6 @@ int main(int argc, char **argv)
     }
     GrB_Index n ;
     GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
-    GrB_Matrix coarsened = NULL ;
-    GrB_Vector parent_result = NULL, newlabel_result = NULL, inv_newlabel_result = NULL ;
 
     int nt = NTHREAD_LIST ;
     
@@ -176,12 +184,8 @@ int main(int argc, char **argv)
 #endif
     }
 
-    //--------------------------------------------------------------------------
-    // free all workspace and finish
-    //--------------------------------------------------------------------------
     LG_FREE_ALL ;
 
     LG_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
-
 }
