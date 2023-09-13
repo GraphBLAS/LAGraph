@@ -61,7 +61,8 @@ int LG_check_coarsen
     // also calculate n_new
     for (GrB_Index i = 0 ; i < n ; i++) {
         uint64_t par ;
-        LG_ASSERT (GrB_Vector_extractElement (&par, parent, i) == GrB_SUCCESS, GrB_INVALID_VALUE) ;
+        GrB_Info status = GrB_Vector_extractElement (&par, parent, i) ;
+        LG_ASSERT (status == GrB_SUCCESS, GrB_INVALID_VALUE) ;
         LG_ASSERT (par >= 0 && par < n, GrB_INVALID_INDEX) ;
 
         uint64_t grandpa ;
@@ -71,7 +72,8 @@ int LG_check_coarsen
         if (par != i && (!preserve_mapping)) {
             // make sure that there is no new label for nodes that get discarded
             uint64_t dummy ;
-            LG_ASSERT (GrB_Vector_extractElement (&dummy, newlabel, i) == GrB_NO_VALUE, GrB_INVALID_VALUE) ;
+            status = GrB_Vector_extractElement (&dummy, newlabel, i) ;
+            LG_ASSERT (status == GrB_NO_VALUE, GrB_INVALID_VALUE) ;
             // also update new number of nodes
             n_new-- ;
         }
@@ -105,10 +107,12 @@ int LG_check_coarsen
         // check inv_newlabel
         for (GrB_Index i = 0 ; i < n_new ; i++) {
             uint64_t old_label ;
-            LG_ASSERT (GrB_Vector_extractElement (&old_label, inv_newlabel, i) == GrB_SUCCESS, GrB_INVALID_VALUE) ;
+            GrB_Info status=  GrB_Vector_extractElement (&old_label, inv_newlabel, i) ;
+            LG_ASSERT (status == GrB_SUCCESS, GrB_INVALID_VALUE) ;
 
             uint64_t new_label ; // entry in newlabel, check that it matches i
-            LG_ASSERT (GrB_Vector_extractElement (&new_label, newlabel, old_label) == GrB_SUCCESS, GrB_INVALID_VALUE) ;
+            status = GrB_Vector_extractElement (&new_label, newlabel, old_label) ;
+            LG_ASSERT (status == GrB_SUCCESS, GrB_INVALID_VALUE) ;
 
             LG_ASSERT (new_label == i, GrB_INVALID_VALUE) ;
         }
