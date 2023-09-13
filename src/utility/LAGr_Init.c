@@ -104,8 +104,14 @@ int LAGr_Init
 
     // malloc and free are required; calloc and realloc are optional
     LG_CLEAR_MSG ;
-    LG_ASSERT (user_malloc_function != NULL, GrB_NULL_POINTER) ;
-    LG_ASSERT (user_free_function   != NULL, GrB_NULL_POINTER) ;
+
+    #if LAGRAPH_SUITESPARSE
+    if (!(mode == GxB_NONBLOCKING_GPU || mode == GxB_BLOCKING_GPU))
+    #endif
+    {
+        LG_ASSERT (user_malloc_function != NULL, GrB_NULL_POINTER) ;
+        LG_ASSERT (user_free_function   != NULL, GrB_NULL_POINTER) ;
+    }
     GrB_Info info ;
 
     // ensure LAGr_Init has not already been called
@@ -145,10 +151,22 @@ int LAGr_Init
     // save the memory management pointers in global LAGraph space
     //--------------------------------------------------------------------------
 
+    #if LAGRAPH_SUITESPARSE
+    // ask SuiteSparse:GraphBLAS for the function pointers
+    GRB_TRY (GxB_Global_Option_get (GxB_MALLOC_FUNCTION,
+        (void **) (&LAGraph_Malloc_function))) ;
+    GRB_TRY (GxB_Global_Option_get (GxB_CALLOC_FUNCTION,
+        (void **) (&LAGraph_Calloc_function))) ;
+    GRB_TRY (GxB_Global_Option_get (GxB_REALLOC_FUNCTION,
+        (void **) (&LAGraph_Realloc_function))) ;
+    GRB_TRY (GxB_Global_Option_get (GxB_FREE_FUNCTION,
+        (void **) (&LAGraph_Free_function))) ;
+    #else
     LAGraph_Malloc_function  = user_malloc_function ;
     LAGraph_Calloc_function  = user_calloc_function ;
     LAGraph_Realloc_function = user_realloc_function ;
     LAGraph_Free_function    = user_free_function ;
+    #endif
 
     //--------------------------------------------------------------------------
     // set # of LAGraph threads

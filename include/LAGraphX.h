@@ -1109,4 +1109,19 @@ int LAGraph_Hdip_Fiedler // compute the Hdip_Fiedler
     char *msg
 );
 
+//------------------------------------------------------------------------------
+// for GPU development
+//------------------------------------------------------------------------------
+
+int LAGr_TriangleCount_GPU
+(
+    // output:
+    uint64_t                   *ntriangles,
+    // input:
+    const LAGraph_Graph         G,
+    LAGr_TriangleCount_Method  *method,
+    LAGr_TriangleCount_Presort *presort,
+    char                       *msg
+) ;
+
 #endif
