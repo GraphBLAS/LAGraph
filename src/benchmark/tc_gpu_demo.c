@@ -28,6 +28,9 @@
 
 
 #include "LAGraphX.h"
+
+#if defined ( SUITESPARSE_CUDA )
+
 #define EXPERIMENTAL_GPU
 #include "LAGraph_demo.h"
 // #include "GB_Global.h"
@@ -76,9 +79,11 @@ void print_method (FILE *f, int method, int sorting)
 {
     fprintf (f, "%s\n", method_name (method, sorting)) ;
 }
+#endif
 
 int main (int argc, char **argv)
 {
+#if defined ( SUITESPARSE_CUDA )
 
     //--------------------------------------------------------------------------
     // initialize LAGraph and GraphBLAS
@@ -313,5 +318,6 @@ int main (int argc, char **argv)
         nthreads_best, t_best, 1e-6 * nvals / t_best) ;
     LG_FREE_ALL ;
     LAGRAPH_TRY (LAGraph_Finalize (msg)) ;
+#endif
     return (GrB_SUCCESS) ;
 }
