@@ -88,7 +88,6 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     GrB_Index n ;                       // # of nodes
 
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
-    LG_ASSERT (mis != NULL, GrB_NULL_POINTER) ;
 
     if (G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGraph_ADJACENCY_DIRECTED &&
@@ -110,7 +109,6 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     //--------------------------------------------------------------------------
     // initializations
     //--------------------------------------------------------------------------
-
     GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
     GRB_TRY (GrB_Vector_new (&neighbor_max, GrB_FP32, n)) ;
     GRB_TRY (GrB_Vector_new (&degree, GrB_FP32, n)) ;
@@ -188,6 +186,7 @@ int LAGraph_MaximalIndependentSet       // maximal independent set
     }
 
     // create the random number seeds
+    LAGRAPH_TRY(LAGraph_Vector_Print(Seed, LAGraph_SHORT, stdout, msg));
     LG_TRY (LAGraph_Random_Seed (Seed, seed, msg)) ;
 
     //--------------------------------------------------------------------------

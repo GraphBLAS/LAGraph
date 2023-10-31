@@ -100,7 +100,7 @@ int main (int argc, char **argv)
     LAGRAPH_TRY (LAGraph_Cached_InDegree (G, msg)) ;
 
     GrB_Index n ;
-    GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
+    GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ; 
 
     //--------------------------------------------------------------------------
     // get the source nodes
@@ -123,6 +123,8 @@ int main (int argc, char **argv)
     GrB_free (&parent) ;
     twarmup = LAGraph_WallClockTime ( ) - twarmup ;
     printf ("warmup: parent only, pushpull: %g sec\n", twarmup) ;
+
+    GxB_print (G->A, GxB_COMPLETE);
 
     //--------------------------------------------------------------------------
     // run the BFS on all source nodes

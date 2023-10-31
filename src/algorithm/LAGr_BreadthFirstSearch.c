@@ -37,9 +37,9 @@ int LAGr_BreadthFirstSearch
 )
 {
 
-#if LAGRAPH_SUITESPARSE
-    return LG_BreadthFirstSearch_SSGrB   (level, parent, G, src, msg) ;
-#else
+// #if LAGRAPH_SUITESPARSE
+    // return LG_BreadthFirstSearch_SSGrB   (level, parent, G, src, msg) ;
+// #else
     return LG_BreadthFirstSearch_vanilla (level, parent, G, src, msg) ;
-#endif
+// #endif
 }

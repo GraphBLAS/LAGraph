@@ -133,9 +133,11 @@ int LAGraph_Random_Seed     // construct a random seed vector
         (uint64_t) INT32_MAX, NULL)) ;
 
     // Seed = Seed + seed
+    // LAGRAPH_TRY(LAGraph_Vector_Print(Seed, LAGraph_SHORT, stdout, msg));
     GRB_TRY (GrB_apply (Seed, NULL, NULL, GrB_PLUS_UINT64, Seed, seed, NULL)) ;
 
     // Seed = next (Seed)
+
     GRB_TRY (GrB_Vector_apply (Seed, NULL, NULL, LG_rand_next_op, Seed, NULL)) ;
 
     #if defined ( COVERAGE )

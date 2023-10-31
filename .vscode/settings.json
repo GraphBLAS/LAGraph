@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "lg_alg_internal.h": "c",
+        "lg_internal.h": "c",
+        "lagraphx.h": "c",
+        "lagraph.h": "c"
+    }
+}

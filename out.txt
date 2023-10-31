@@ -1,0 +1,126 @@
+include: SuiteSparse:GraphBLAS v7.4.4 [Mar 25, 2023]
+library: SuiteSparse:GraphBLAS v7.4.4 [Mar 25, 2023]
+matrix: data/bc_demo.mtx
+[.mtx]
+Reading matrix market file: data/bc_demo.mtx
+read time: 0.000240358
+Initial frontier
+
+  5x5 GraphBLAS double matrix, bitmap by row
+  frontier, 8 entries, memory: 441 bytes
+
+    (0,1)    1
+    (0,2)    1
+    (0,3)    1
+    (1,2)    1
+    (1,4)    1
+    (2,4)    1
+    (3,2)    1
+    (3,4)    1
+
+
+Initial paths
+
+  5x5 GraphBLAS double matrix, bitmap by row
+  sparsity control: bitmap/full
+  paths, 5 entries, memory: 249 bytes
+  iso value:    1
+
+    (0,0)    1
+    (1,1)    1
+    (2,2)    1
+    (3,3)    1
+    (4,4)    1
+
+depth = 0 -----------------------------
+S[0]
+
+  5x5 GraphBLAS bool matrix, bitmap by row
+  S [depth], 8 entries, memory: 249 bytes
+  iso value:   1
+
+    (0,1)   1
+    (0,2)   1
+    (0,3)   1
+    (1,2)   1
+    (1,4)   1
+    (2,4)   1
+    (3,2)   1
+    (3,4)   1
+
+Updated paths:
+
+  5x5 GraphBLAS double matrix, bitmap by row
+  sparsity control: bitmap/full
+  paths, 13 entries, memory: 441 bytes
+
+    (0,0)    1
+    (0,1)    1
+    (0,2)    1
+    (0,3)    1
+    (1,1)    1
+    (1,2)    1
+    (1,4)    1
+    (2,2)    1
+    (2,4)    1
+    (3,2)    1
+    (3,3)    1
+    (3,4)    1
+    (4,4)    1
+
+Updated frontier:
+
+  5x5 GraphBLAS double matrix, bitmap by row
+  sparsity control: bitmap only
+  frontier, 1 entry, memory: 441 bytes
+
+    (0,4)    3
+
+depth = 1 -----------------------------
+S[1]
+
+  5x5 GraphBLAS bool matrix, bitmap by row
+  sparsity control: bitmap only
+  S [depth], 1 entry, memory: 249 bytes
+  iso value:   1
+
+    (0,4)   1
+
+Updated paths:
+
+  5x5 GraphBLAS double matrix, bitmap by row
+  sparsity control: bitmap/full
+  paths, 14 entries, memory: 441 bytes
+
+    (0,0)    1
+    (0,1)    1
+    (0,2)    1
+    (0,3)    1
+    (0,4)    3
+    (1,1)    1
+    (1,2)    1
+    (1,4)    1
+    (2,2)    1
+    (2,4)    1
+    (3,2)    1
+    (3,3)    1
+    (3,4)    1
+    (4,4)    1
+
+Updated frontier:
+
+  5x5 GraphBLAS double matrix, sparse by row
+  sparsity control: sparse only
+  frontier, no entries, memory: 280 bytes
+
+BC time:       0.0016 (sec)
+
+  5x1 GraphBLAS double vector, full by col
+  centrality, 5 entries, memory: 256 bytes
+
+    (0,0)    0
+    (1,0)    0.333333
+    (2,0)    0.333333
+    (3,0)    0.333333
+    (4,0)    0
+

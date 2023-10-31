@@ -147,7 +147,7 @@ int LAGr_Betweenness
     // === initializations =====================================================
     // =========================================================================
 
-    // Initialize paths and frontier with source notes
+    // Initialize paths and frontier with source nodes
     GRB_TRY (GrB_Matrix_nrows (&n, A)) ;
     GRB_TRY (GrB_Matrix_new (&paths,    GrB_FP64, ns, n)) ;
     GRB_TRY (GrB_Matrix_new (&frontier, GrB_FP64, ns, n)) ;
@@ -169,6 +169,13 @@ int LAGr_Betweenness
     GRB_TRY (GrB_mxm (frontier, paths, NULL, LAGraph_plus_first_fp64,
         frontier, A, GrB_DESC_RSC)) ;
 
+    printf("Initial frontier\n");
+    GxB_print(frontier, GxB_COMPLETE);
+
+    printf("\nInitial paths\n");
+    GxB_print(paths, GxB_COMPLETE);
+
+
     // Allocate memory for the array of S matrices
     LG_TRY (LAGraph_Malloc ((void **) &S, n+1, sizeof (GrB_Matrix), msg)) ;
     S [0] = NULL ;
@@ -184,7 +191,7 @@ int LAGr_Betweenness
     int64_t depth ;
     for (depth = 0 ; frontier_size > 0 && depth < n ; depth++)
     {
-
+        printf("depth = %i -----------------------------\n", depth);
         //----------------------------------------------------------------------
         // S [depth] = structure of frontier
         //----------------------------------------------------------------------
@@ -192,12 +199,18 @@ int LAGr_Betweenness
         S [depth+1] = NULL ;
         LG_TRY (LAGraph_Matrix_Structure (&(S [depth]), frontier, msg)) ;
 
+        printf("S[%i]\n", depth);
+        GxB_print(S [depth], GxB_COMPLETE);
+
         //----------------------------------------------------------------------
         // Accumulate path counts: paths += frontier
         //----------------------------------------------------------------------
 
         GRB_TRY (GrB_assign (paths, NULL, GrB_PLUS_FP64, frontier, GrB_ALL, ns,
             GrB_ALL, n, NULL)) ;
+
+        printf("Updated paths:\n");
+        GxB_print(paths, GxB_COMPLETE);
 
         //----------------------------------------------------------------------
         // Update frontier: frontier<!paths> = frontier*A
@@ -230,6 +243,9 @@ int LAGr_Betweenness
         //----------------------------------------------------------------------
         // Get size of current frontier: frontier_size = nvals(frontier)
         //----------------------------------------------------------------------
+
+        printf("Updated frontier:\n");
+        GxB_print(frontier, GxB_COMPLETE);
 
         last_frontier_size = frontier_size ;
         last_was_pull = do_pull ;

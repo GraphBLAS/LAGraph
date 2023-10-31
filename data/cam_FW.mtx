@@ -1,0 +1,15 @@
+%%MatrixMarket matrix coordinate real general
+%%GraphBLAS type double
+7 7 12
+1 2 0.3
+1 4 0.8
+2 5 0.1
+2 7 0.7
+3 6 0.5
+4 1 0.2
+4 3 0.4
+5 6 0.1
+6 3 0.5
+7 3 .1
+7 4 0.5
+7 5 0.8
