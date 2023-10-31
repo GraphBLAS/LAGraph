@@ -1,27 +1,30 @@
-#define LG_FREE_WORK             \
-    {                            \
-        GrB_free(&T);            \
-        GrB_free(&C);            \
-        GrB_free(&W);            \
-        GrB_free(&w_temp);       \
-        \  
-        GrB_free(&m);            \
-        \   
-        GrB_free(&m_index);      \
-        GrB_free(&D);            \
-        \                
-        GrB_free(&E);            \
-        GrB_free(&C_temp);       \
-        \     
-            GrB_free(&Identity); \
-    \                                                                        
-}
+//------------------------------------------------------------------------------
+// LAGr_PeerPressureClustering: Graph clustering using the peer pressure method
+//------------------------------------------------------------------------------
+
+// Cameron Quilici, Texas A&M University
+
+#define LG_FREE_WORK         \
+    {                        \
+        GrB_free(&T);        \
+        GrB_free(&C);        \
+        GrB_free(&W);        \
+        GrB_free(&w_temp);   \
+        GrB_free(&m);        \
+        GrB_free(&m_index);  \
+        GrB_free(&D);        \
+        GrB_free(&E);        \
+        GrB_free(&C_temp);   \
+        GrB_free(&Identity); \
+    }
 
 #define LG_FREE_ALL    \
     {                  \
         LG_FREE_WORK;  \
         GrB_free(C_f); \
     }
+
+#define DEBUG
 
 #include "LG_internal.h"
 
@@ -32,29 +35,35 @@ int LAGr_PeerPressureClustering(
     LAGraph_Graph G, // input graph
     char *msg)
 {
-    LG_CLEAR_MSG;
-
     GrB_Matrix T = NULL;
 
     // Cluster workspace matrix
     GrB_Matrix C = NULL;
 
+    // The newly computed cluster matrix at the end of each loop
+    GrB_Matrix C_temp = NULL;
+
     // Used for normalizing weights and assuring that vertices have equal votes
     GrB_Matrix W = NULL;
-
     GrB_Vector w_temp = NULL;
 
+    // Objects used for the argmax functionality
     GrB_Vector m = NULL;
     GrB_Vector m_index = NULL;
     GrB_Matrix D = NULL;
     GrB_Matrix E = NULL;
 
-    GrB_Matrix C_temp = NULL;
-
+    // The identity matrix of type GrB_BOOL
     GrB_Matrix Identity = NULL;
 
     // Number of vertices in the graph
     GrB_Index n = 0;
+
+    //--------------------------------------------------------------------------
+    // check inputs
+    //--------------------------------------------------------------------------
+
+    LG_CLEAR_MSG;
 
     LG_ASSERT(C_f != NULL, GrB_NULL_POINTER);
     (*C_f) = NULL;
@@ -68,6 +77,7 @@ int LAGr_PeerPressureClustering(
     //--------------------------------------------------------------------------
     // initializations
     //--------------------------------------------------------------------------
+
     GRB_TRY(GrB_Matrix_nrows(&n, A));
     GRB_TRY(GrB_Matrix_new(&T, GrB_FP64, n, n));
     GRB_TRY(GrB_Matrix_new(&C, GrB_BOOL, n, n));
@@ -84,7 +94,10 @@ int LAGr_PeerPressureClustering(
     // For now, assure that all vertices have equal weights
     LG_ASSERT_MSG(G->nself_edges == n, -106, "G->nself_edges must be equal to the number of nodes");
 
-    // Normalize the weights by the out-degrees
+    //--------------------------------------------------------------------------
+    // assuring vertices have equal votes by normalizing weights via out-degrees
+    //--------------------------------------------------------------------------
+
     GRB_TRY(GrB_apply(w_temp, NULL, NULL, GrB_MINV_FP64, G->out_degree, NULL));
     GRB_TRY(GrB_Matrix_diag(&W, w_temp, 0));
     GRB_TRY(GrB_mxm(A, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, W, A, GrB_DESC_R));
@@ -95,18 +108,20 @@ int LAGr_PeerPressureClustering(
     LAGRAPH_TRY(LAGraph_Malloc((void **)&ones_array, n, sizeof(GrB_UINT64), msg));
     LAGRAPH_TRY(LAGraph_Malloc((void **)&ones_array_indices, n, sizeof(GrB_Index), msg));
 
+    // [?] Is there a way to combine this call with the creation of the identity matrix creation
+    // since in C boolean 1 is true? This feels unnecessary
     GRB_TRY(GrB_Vector_new(&ones, GrB_UINT64, n));
     GRB_TRY(GrB_assign(ones, NULL, NULL, 1, GrB_ALL, n, NULL));
+    GRB_TRY(GrB_Vector_extractTuples_UINT64(ones_array_indices, ones_array, &n, ones));
+    GRB_TRY(GrB_Matrix_diag(&C, ones, 0)); // Initial cluster C_i (this is the same as Identity with UINT_64 instead)
+    GRB_TRY(GrB_Vector_free(&ones));
 
+    // Create identity matrix of type boolean for later
+    // [?] Maybe could avoid duplications and simply use the original C matrix above???
     GRB_TRY(GrB_Vector_new(&trues, GrB_BOOL, n));
     GRB_TRY(GrB_assign(trues, NULL, NULL, true, GrB_ALL, n, NULL));
     GRB_TRY(GrB_Matrix_diag(&Identity, trues, 0));
     GRB_TRY(GrB_Vector_free(&trues));
-
-    GRB_TRY(GrB_Vector_extractTuples_UINT64(ones_array_indices, ones_array, &n, ones));
-
-    GRB_TRY(GrB_Matrix_diag(&C, ones, 0)); // Initial cluster C_i
-    GRB_TRY(GrB_Vector_free(&ones));
 
     GxB_print(W, GxB_COMPLETE);
     GxB_print(C, GxB_COMPLETE);
@@ -123,19 +138,20 @@ int LAGr_PeerPressureClustering(
         // T = C_i x A
         GRB_TRY(GrB_mxm(T, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, C, A, GrB_DESC_R));
 
-        // GRB_TRY (GrB_mxv(m, NULL, NULL, GrB_MAX_FIRST_SEMIRING_FP64, T, ones_fp, GrB_DESC_R)) ;
-
-        // Maximum value vector
+        // Maximum value vector where m[k] = l means l is the maximum fp value in column
+        // k of the matrix T
         GRB_TRY(GrB_mxv(m, NULL, NULL, GrB_MAX_FIRST_SEMIRING_FP64, T, ones_fp, GrB_DESC_RT0));
 
         // argmax code T. Davis SS User Guide p. 286
-        // GRB_TRY(GrB_assign(m_index, NULL, NULL, 1, GrB_ALL, n, NULL));
         GRB_TRY(GrB_Matrix_diag(&D, m, 0));
         GRB_TRY(GrB_mxm(E, NULL, NULL, GxB_ANY_EQ_FP64, T, D, NULL));
-        GRB_TRY(GrB_select(E, NULL, NULL, GrB_VALUENE_BOOL, E, 0, NULL));
+        GRB_TRY(GrB_select(E, NULL, NULL, GrB_VALUENE_BOOL, E, 0, NULL)); // E == G in the pseudocode
+        // m_index holds the first row index of T which is equal to the respective value of m,
+        // for each column
         GRB_TRY(GrB_mxv(m_index, NULL, NULL, GxB_MIN_SECONDI_INT64, E, ones_fp, GrB_DESC_RT0));
 
         // m_index_values are ROW indices and m_index_indices are COLUMN indices
+        // [?] More of a C question but do these NEED to be allocated on heap?
         GrB_Index *m_index_values, *m_index_indices;
         LAGRAPH_TRY(LAGraph_Malloc((void **)&m_index_values, n, sizeof(GrB_INT64), msg));
         LAGRAPH_TRY(LAGraph_Malloc((void **)&m_index_indices, n, sizeof(GrB_Index), msg));
@@ -156,17 +172,30 @@ int LAGr_PeerPressureClustering(
             break;
         }
 
-        // Maybe unnecessary because of R descriptor?
+#ifdef DEBUG
+        printf("--------------------------------------------------\n"
+               "Current Values\n"
+               "--------------------------------------------------\n");
+        GxB_print(C_temp, GxB_COMPLETE);
+        GxB_print(m_index, GxB_COMPLETE);
+#endif
+
+        // [?] Maybe unnecessary because of R descriptor? These do need to be cleared
+        // at the end of each iteration though...
         GRB_TRY(GrB_Matrix_dup(&C, C_temp));
         GRB_TRY(GrB_Matrix_clear(C_temp));
         GRB_TRY(GrB_Matrix_clear(T));
     }
 
-    // GxB_print(T, GxB_COMPLETE);
-    // GxB_print(m, GxB_COMPLETE);
-    // GxB_print(D, GxB_COMPLETE);
+#ifdef DEBUG
+    printf("Final tally matrix T where T[i][j] = k means there are "
+           "k votes from cluster i for vertex j to be in cluster i:\n");
+    GxB_print(T, GxB_COMPLETE);
+    printf("Final cluster matrix C_temp where C_temp[i][j] == 1 means "
+           "vertex j is in cluster i:\n");
     GxB_print(C_temp, GxB_COMPLETE);
     GxB_print(m_index, GxB_COMPLETE);
+#endif
 
     GRB_TRY(GrB_Vector_free(&ones_fp));
 
