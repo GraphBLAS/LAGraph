@@ -15,7 +15,7 @@ int main (int argc, char**argv)
     GrB_Matrix C_f ;         // Clustering result vector
 
     // start GraphBLAS and LAGraph
-    bool burble = true ;
+    bool burble = false ;
     demo_init (burble) ;
 
     FILE *f ;
