@@ -138,7 +138,7 @@ int LAGr_PeerPressureClustering(
     // main algorithm logic
     //--------------------------------------------------------------------------
     GrB_Index count = 0;
-    while (true)
+    while (true && count <= 20)
     {
         printf("Iteration %d\n", count);
         count++;
@@ -197,7 +197,7 @@ int LAGr_PeerPressureClustering(
         GRB_TRY(GrB_Matrix_clear(T));
     }
 
-#ifdef DEBUG
+
     printf("Final tally matrix T where T[i][j] = k means there are "
            "k votes from cluster i for vertex j to be in cluster i:\n");
     GxB_print(T, GxB_COMPLETE);
@@ -205,7 +205,7 @@ int LAGr_PeerPressureClustering(
            "vertex j is in cluster i:\n");
     GxB_print(C_temp, GxB_COMPLETE);
     GxB_print(m_index, GxB_COMPLETE);
-#endif
+
 
     GRB_TRY(GrB_Vector_free(&ones_fp));
 
