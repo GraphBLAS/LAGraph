@@ -15,7 +15,7 @@ int main (int argc, char**argv)
     GrB_Matrix C_f ;         // Clustering result vector
 
     // start GraphBLAS and LAGraph
-    bool burble = false ;
+    bool burble = true ;
     demo_init (burble) ;
 
     FILE *f ;
@@ -36,12 +36,10 @@ int main (int argc, char**argv)
     // GrB_Index n ;
     // GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
 
-    GxB_print (G->A, GxB_COMPLETE);
+    // GxB_print (G->A, GxB_COMPLETE);
 
-    // Run Vertex Cover approximation algorithm
+    // Run Peer Pressure Clustering algorithm
     GRB_TRY(LAGr_PeerPressureClustering(&C_f, G, msg));
-
-    // GxB_print (VC, GxB_COMPLETE);
 
     LG_FREE_ALL ;
     LAGRAPH_TRY (LAGraph_Finalize (msg)) ;

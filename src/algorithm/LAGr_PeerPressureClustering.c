@@ -24,9 +24,10 @@
         GrB_free(C_f); \
     }
 
-#define DEBUG
+// #define DEBUG
 
 #include "LG_internal.h"
+#include <LAGraphX.h>
 
 int LAGr_PeerPressureClustering(
     // output:
@@ -35,6 +36,8 @@ int LAGr_PeerPressureClustering(
     LAGraph_Graph G, // input graph
     char *msg)
 {
+    // GxB_set (GxB_PRINT_1BASED, true);
+
     GrB_Matrix T = NULL;
 
     // Cluster workspace matrix
@@ -86,12 +89,13 @@ int LAGr_PeerPressureClustering(
     GRB_TRY(GrB_Matrix_new(&D, GrB_FP64, n, n));
     GRB_TRY(GrB_Matrix_new(&E, GrB_BOOL, n, n));
     GRB_TRY(GrB_Matrix_new(&Identity, GrB_BOOL, n, n));
-    GRB_TRY(GrB_Matrix_new(&C_f, GrB_BOOL, n, n));
+    // GRB_TRY(GrB_Matrix_new(C_f, GrB_BOOL, n, n));
     GRB_TRY(GrB_Vector_new(&w_temp, GrB_FP64, n));
     GRB_TRY(GrB_Vector_new(&m, GrB_FP64, n));
     GRB_TRY(GrB_Vector_new(&m_index, GrB_INT64, n));
 
     // For now, assure that all vertices have equal weights
+    // printf("nselfedges %d", G->nself_edges);
     LG_ASSERT_MSG(G->nself_edges == n, -106, "G->nself_edges must be equal to the number of nodes");
 
     //--------------------------------------------------------------------------
@@ -123,8 +127,8 @@ int LAGr_PeerPressureClustering(
     GRB_TRY(GrB_Matrix_diag(&Identity, trues, 0));
     GRB_TRY(GrB_Vector_free(&trues));
 
-    GxB_print(W, GxB_COMPLETE);
-    GxB_print(C, GxB_COMPLETE);
+    // GxB_print(W, GxB_COMPLETE);
+    // GxB_print(C, GxB_COMPLETE);
 
     GrB_Vector ones_fp;
     GRB_TRY(GrB_Vector_new(&ones_fp, GrB_FP64, n));
@@ -171,6 +175,9 @@ int LAGr_PeerPressureClustering(
             *C_f = C_temp; // Set output matrix
             break;
         }
+
+        // Unpack in order to get array indices
+        // Apply keep as a dense vector
 
 #ifdef DEBUG
         printf("--------------------------------------------------\n"
