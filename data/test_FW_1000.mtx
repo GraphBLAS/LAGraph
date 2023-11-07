@@ -3,6 +3,7 @@
 % same pattern as http://www.cise.ufl.edu/research/sparse/matrices/Bai/olm1000
 % but with different values
 %-------------------------------------------------------------------------------
+%%GraphBLAS type float
 1000 1000 3996
 1 1 50
 1 2 457

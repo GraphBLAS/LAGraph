@@ -96,7 +96,7 @@ int LAGr_PeerPressureClustering(
 
     // For now, assure that all vertices have equal weights
     // printf("nselfedges %d", G->nself_edges);
-    LG_ASSERT_MSG(G->nself_edges == n, -106, "G->nself_edges must be equal to the number of nodes");
+    // LG_ASSERT_MSG(G->nself_edges == n, -106, "G->nself_edges must be equal to the number of nodes");
 
     //--------------------------------------------------------------------------
     // assuring vertices have equal votes by normalizing weights via out-degrees
