@@ -137,8 +137,11 @@ int LAGr_PeerPressureClustering(
     //--------------------------------------------------------------------------
     // main algorithm logic
     //--------------------------------------------------------------------------
+    GrB_Index count = 0;
     while (true)
     {
+        printf("Iteration %d\n", count);
+        count++;
         // T = C_i x A
         GRB_TRY(GrB_mxm(T, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, C, A, GrB_DESC_R));
 
