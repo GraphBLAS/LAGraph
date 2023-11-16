@@ -110,22 +110,22 @@ int LAGr_PeerPressureClustering(
     // For now, assure that all vertices have equal weights
     // printf("nselfedges %d", G->nself_edges);
     // LG_ASSERT_MSG(G->nself_edges == n, -106, "G->nself_edges must be equal to the number of nodes");
-//     if (G->nself_edges != n)
-//     {
-//         printf("Ensuring each vertex has a self edge\n");
-//         GRB_TRY(GrB_assign(A, A, NULL, Identity_F, GrB_ALL, n, GrB_ALL, n, GrB_DESC_SC));
-//         G->A = A;
+    if (G->nself_edges != n)
+    {
+        printf("Ensuring each vertex has a self edge\n");
+        GRB_TRY(GrB_assign(A, A, NULL, Identity_F, GrB_ALL, n, GrB_ALL, n, GrB_DESC_SC));
+        G->A = A;
 
-//         G->out_degree = NULL;
-//         G->nself_edges = LAGRAPH_UNKNOWN;
+        G->out_degree = NULL;
+        G->nself_edges = LAGRAPH_UNKNOWN;
 
-//         LAGRAPH_TRY(LAGraph_Cached_OutDegree(G, msg));
-//         LAGRAPH_TRY (LAGraph_Cached_NSelfEdges (G, msg)) ;
-//         printf("nself edges %d\n", G->nself_edges);
-// #ifdef DEBUG
-//         GxB_print(A, GxB_COMPLETE);
-// #endif
-//     }
+        LAGRAPH_TRY(LAGraph_Cached_OutDegree(G, msg));
+        LAGRAPH_TRY (LAGraph_Cached_NSelfEdges (G, msg)) ;
+        // printf("nself edges %d\n", G->nself_edges);
+#ifdef DEBUG
+        GxB_print(A, GxB_COMPLETE);
+#endif
+    }
 
     //--------------------------------------------------------------------------
     // assuring vertices have equal votes by normalizing weights via out-degrees
