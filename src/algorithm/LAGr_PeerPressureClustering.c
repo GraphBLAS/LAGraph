@@ -4,18 +4,19 @@
 
 // Cameron Quilici, Texas A&M University
 
-#define LG_FREE_WORK         \
-    {                        \
-        GrB_free(&T);        \
-        GrB_free(&C);        \
-        GrB_free(&W);        \
-        GrB_free(&w_temp);   \
-        GrB_free(&m);        \
-        GrB_free(&m_index);  \
-        GrB_free(&D);        \
-        GrB_free(&E);        \
-        GrB_free(&C_temp);   \
-        GrB_free(&Identity); \
+#define LG_FREE_WORK           \
+    {                          \
+        GrB_free(&T);          \
+        GrB_free(&C);          \
+        GrB_free(&W);          \
+        GrB_free(&w_temp);     \
+        GrB_free(&m);          \
+        GrB_free(&m_index);    \
+        GrB_free(&D);          \
+        GrB_free(&E);          \
+        GrB_free(&C_temp);     \
+        GrB_free(&Identity_B); \
+        GrB_free(&Identity_F); \
     }
 
 #define LG_FREE_ALL    \
@@ -57,7 +58,8 @@ int LAGr_PeerPressureClustering(
     GrB_Matrix E = NULL;
 
     // The identity matrix of type GrB_BOOL
-    GrB_Matrix Identity = NULL;
+    GrB_Matrix Identity_B = NULL;
+    GrB_Matrix Identity_F = NULL;
 
     // Number of vertices in the graph
     GrB_Index n = 0;
@@ -88,15 +90,42 @@ int LAGr_PeerPressureClustering(
     GRB_TRY(GrB_Matrix_new(&W, GrB_FP64, n, n));
     GRB_TRY(GrB_Matrix_new(&D, GrB_FP64, n, n));
     GRB_TRY(GrB_Matrix_new(&E, GrB_BOOL, n, n));
-    GRB_TRY(GrB_Matrix_new(&Identity, GrB_BOOL, n, n));
+    GRB_TRY(GrB_Matrix_new(&Identity_B, GrB_BOOL, n, n));
+    GRB_TRY(GrB_Matrix_new(&Identity_F, GrB_FP64, n, n)); // [?] Is this necessary?
     // GRB_TRY(GrB_Matrix_new(C_f, GrB_BOOL, n, n));
     GRB_TRY(GrB_Vector_new(&w_temp, GrB_FP64, n));
     GRB_TRY(GrB_Vector_new(&m, GrB_FP64, n));
     GRB_TRY(GrB_Vector_new(&m_index, GrB_INT64, n));
 
+    // Used below
+    GrB_Vector ones, trues;
+    GrB_Index *ones_array, *ones_array_indices;
+    // [?] Is there a way to combine this call with the creation of the identity matrix creation
+    // since in C boolean 1 is true? This feels unnecessary
+    GRB_TRY(GrB_Vector_new(&ones, GrB_UINT64, n));
+    GRB_TRY(GrB_assign(ones, NULL, NULL, 1, GrB_ALL, n, NULL));
+
+    GRB_TRY(GrB_Matrix_diag(&Identity_F, ones, 0)); // Identity FP Matrix
+
     // For now, assure that all vertices have equal weights
     // printf("nselfedges %d", G->nself_edges);
     // LG_ASSERT_MSG(G->nself_edges == n, -106, "G->nself_edges must be equal to the number of nodes");
+//     if (G->nself_edges != n)
+//     {
+//         printf("Ensuring each vertex has a self edge\n");
+//         GRB_TRY(GrB_assign(A, A, NULL, Identity_F, GrB_ALL, n, GrB_ALL, n, GrB_DESC_SC));
+//         G->A = A;
+
+//         G->out_degree = NULL;
+//         G->nself_edges = LAGRAPH_UNKNOWN;
+
+//         LAGRAPH_TRY(LAGraph_Cached_OutDegree(G, msg));
+//         LAGRAPH_TRY (LAGraph_Cached_NSelfEdges (G, msg)) ;
+//         printf("nself edges %d\n", G->nself_edges);
+// #ifdef DEBUG
+//         GxB_print(A, GxB_COMPLETE);
+// #endif
+//     }
 
     //--------------------------------------------------------------------------
     // assuring vertices have equal votes by normalizing weights via out-degrees
@@ -107,15 +136,10 @@ int LAGr_PeerPressureClustering(
     GRB_TRY(GrB_mxm(A, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, W, A, GrB_DESC_R));
 
     // Initial cluster vector (each vertex is in its own cluster)
-    GrB_Vector ones, trues;
-    GrB_Index *ones_array, *ones_array_indices;
+
     LAGRAPH_TRY(LAGraph_Malloc((void **)&ones_array, n, sizeof(GrB_UINT64), msg));
     LAGRAPH_TRY(LAGraph_Malloc((void **)&ones_array_indices, n, sizeof(GrB_Index), msg));
 
-    // [?] Is there a way to combine this call with the creation of the identity matrix creation
-    // since in C boolean 1 is true? This feels unnecessary
-    GRB_TRY(GrB_Vector_new(&ones, GrB_UINT64, n));
-    GRB_TRY(GrB_assign(ones, NULL, NULL, 1, GrB_ALL, n, NULL));
     GRB_TRY(GrB_Vector_extractTuples_UINT64(ones_array_indices, ones_array, &n, ones));
     GRB_TRY(GrB_Matrix_diag(&C, ones, 0)); // Initial cluster C_i (this is the same as Identity with UINT_64 instead)
     GRB_TRY(GrB_Vector_free(&ones));
@@ -124,7 +148,7 @@ int LAGr_PeerPressureClustering(
     // [?] Maybe could avoid duplications and simply use the original C matrix above???
     GRB_TRY(GrB_Vector_new(&trues, GrB_BOOL, n));
     GRB_TRY(GrB_assign(trues, NULL, NULL, true, GrB_ALL, n, NULL));
-    GRB_TRY(GrB_Matrix_diag(&Identity, trues, 0));
+    GRB_TRY(GrB_Matrix_diag(&Identity_B, trues, 0));
     GRB_TRY(GrB_Vector_free(&trues));
 
     // GxB_print(W, GxB_COMPLETE);
@@ -165,7 +189,7 @@ int LAGr_PeerPressureClustering(
 
         GRB_TRY(GrB_Vector_extractTuples_INT64(m_index_indices, m_index_values, &n, m_index));
 
-        GRB_TRY(GrB_extract(C_temp, NULL, NULL, Identity, GrB_ALL, n, m_index_values, n, NULL));
+        GRB_TRY(GrB_extract(C_temp, NULL, NULL, Identity_B, GrB_ALL, n, m_index_values, n, NULL));
 
         LAGraph_Free((void **)&m_index_values, NULL);
         LAGraph_Free((void **)&m_index_indices, NULL);
@@ -197,7 +221,6 @@ int LAGr_PeerPressureClustering(
         GRB_TRY(GrB_Matrix_clear(T));
     }
 
-
     printf("Final tally matrix T where T[i][j] = k means there are "
            "k votes from cluster i for vertex j to be in cluster i:\n");
     GxB_print(T, GxB_COMPLETE);
@@ -205,7 +228,6 @@ int LAGr_PeerPressureClustering(
            "vertex j is in cluster i:\n");
     GxB_print(C_temp, GxB_COMPLETE);
     GxB_print(m_index, GxB_COMPLETE);
-
 
     GRB_TRY(GrB_Vector_free(&ones_fp));
 
