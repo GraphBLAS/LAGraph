@@ -4,6 +4,7 @@
 {                                       \
     LAGraph_Delete (&G, msg) ;          \
     GrB_free (&A) ;                     \
+    GrB_free (&C_f) ;                     \
 }
 
 int main (int argc, char**argv)
@@ -12,7 +13,7 @@ int main (int argc, char**argv)
 
     LAGraph_Graph G = NULL ;
     GrB_Matrix A = NULL ;
-    GrB_Matrix C_f ;         // Clustering result vector
+    GrB_Matrix C_f = NULL;         // Clustering result vector
 
     // start GraphBLAS and LAGraph
     bool burble = false ;
@@ -41,6 +42,24 @@ int main (int argc, char**argv)
 
     // Run Peer Pressure Clustering algorithm
     GRB_TRY(LAGr_PeerPressureClustering(&C_f, G, msg));
+
+    GxB_print (C_f, GxB_SHORT);
+
+    char *o_file = "pp_out.mtx";
+    f = fopen(o_file, "w");
+    if (f == NULL)
+    {
+        printf("Error opening file %s\n", o_file);
+        return -1;
+    }
+
+    // Write the C_f matrix to the file
+    LAGRAPH_TRY (LAGraph_MMWrite(C_f, f, NULL, msg));
+
+    // Close the file
+    fclose(f);
+    f = NULL;
+
 
     LG_FREE_ALL ;
     LAGRAPH_TRY (LAGraph_Finalize (msg)) ;

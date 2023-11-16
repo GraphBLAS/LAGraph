@@ -14,7 +14,6 @@
         GrB_free(&m_index);    \
         GrB_free(&D);          \
         GrB_free(&E);          \
-        GrB_free(&C_temp);     \
         GrB_free(&Identity_B); \
         GrB_free(&Identity_F); \
     }
@@ -120,7 +119,7 @@ int LAGr_PeerPressureClustering(
         G->nself_edges = LAGRAPH_UNKNOWN;
 
         LAGRAPH_TRY(LAGraph_Cached_OutDegree(G, msg));
-        LAGRAPH_TRY (LAGraph_Cached_NSelfEdges (G, msg)) ;
+        LAGRAPH_TRY(LAGraph_Cached_NSelfEdges(G, msg));
         // printf("nself edges %d\n", G->nself_edges);
 #ifdef DEBUG
         GxB_print(A, GxB_COMPLETE);
@@ -199,7 +198,8 @@ int LAGr_PeerPressureClustering(
         if (res || count > 20)
         {
             GxB_print(T, GxB_SHORT);
-            *C_f = C_temp; // Set output matrix
+            (*C_f) = C_temp; // Set output matrix
+            GxB_print(*C_f, GxB_SHORT);
             break;
         }
 
@@ -231,7 +231,7 @@ int LAGr_PeerPressureClustering(
 
     GRB_TRY(GrB_Vector_free(&ones_fp));
 
-    LG_FREE_ALL;
+    LG_FREE_WORK;
 
     return (GrB_SUCCESS);
 }
