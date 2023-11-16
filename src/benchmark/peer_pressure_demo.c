@@ -37,7 +37,7 @@ int main (int argc, char**argv)
     // GRB_TRY (GrB_Matrix_nrows (&n, G->A)) ;
 
     printf("Input Matrix:\n");
-    GxB_print (G->A, GxB_COMPLETE);
+    GxB_print (G->A, GxB_SHORT);
 
     // Run Peer Pressure Clustering algorithm
     GRB_TRY(LAGr_PeerPressureClustering(&C_f, G, msg));
