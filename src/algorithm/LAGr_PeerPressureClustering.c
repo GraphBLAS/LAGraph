@@ -198,7 +198,7 @@ int LAGr_PeerPressureClustering(
         LAGRAPH_TRY(LAGraph_Matrix_IsEqual(&res, C, C_temp, msg));
         if (res)
         {
-            GxB_print(T, GxB_COMPLETE);
+            GxB_print(T, GxB_SHORT);
             *C_f = C_temp; // Set output matrix
             break;
         }
