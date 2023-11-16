@@ -195,7 +195,7 @@ int LAGr_PeerPressureClustering(
 
         bool res = NULL;
         LAGRAPH_TRY(LAGraph_Matrix_IsEqual(&res, C, C_temp, msg));
-        if (res || count > 100)
+        if (res || count > 1000)
         {
             GxB_print(T, GxB_SHORT);
             (*C_f) = C_temp; // Set output matrix
