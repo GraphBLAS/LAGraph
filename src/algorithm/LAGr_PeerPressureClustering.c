@@ -162,7 +162,7 @@ int LAGr_PeerPressureClustering(
     // main algorithm logic
     //--------------------------------------------------------------------------
     GrB_Index count = 0;
-    while (true && count <= 20)
+    while (true)
     {
         printf("Iteration %d\n", count);
         count++;
@@ -196,7 +196,7 @@ int LAGr_PeerPressureClustering(
 
         bool res = NULL;
         LAGRAPH_TRY(LAGraph_Matrix_IsEqual(&res, C, C_temp, msg));
-        if (res)
+        if (res || count > 20)
         {
             GxB_print(T, GxB_SHORT);
             *C_f = C_temp; // Set output matrix
