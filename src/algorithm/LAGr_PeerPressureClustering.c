@@ -223,11 +223,11 @@ int LAGr_PeerPressureClustering(
 
     printf("Final tally matrix T where T[i][j] = k means there are "
            "k votes from cluster i for vertex j to be in cluster i:\n");
-    GxB_print(T, GxB_COMPLETE);
+    GxB_print(T, GxB_SHORT);
     printf("Final cluster matrix C_temp where C_temp[i][j] == 1 means "
            "vertex j is in cluster i:\n");
-    GxB_print(C_temp, GxB_COMPLETE);
-    GxB_print(m_index, GxB_COMPLETE);
+    GxB_print(C_temp, GxB_SHORT);
+    GxB_print(m_index, GxB_SHORT);
 
     GRB_TRY(GrB_Vector_free(&ones_fp));
 
