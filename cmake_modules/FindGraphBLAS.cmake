@@ -9,13 +9,13 @@ SPDX-License-Identifier: BSD-2-Clause
 See additional acknowledgments in the LICENSE file,
 or contact permission@sei.cmu.edu for the full terms.
 
-Find the native GRAPHBLAS includes and library.
+Find the native GraphBLAS includes and library.
 
 IMPORTED Targets
 ^^^^^^^^^^^^^^^^
 
-This module defines :prop_tgt:`IMPORTED` target ``GRAPHBLAS::GRAPHBLAS``, if
-GRAPHBLAS has been found.
+This module defines :prop_tgt:`IMPORTED` target ``GraphBLAS::GraphBLAS``, if
+GraphBLAS has been found.
 
 Result Variables
 ^^^^^^^^^^^^^^^^
@@ -61,14 +61,50 @@ in your CMakeLists.txt file.  See also SuiteSparse/Example/CMakeLists.txt:
 # installation (SuiteSparse:GraphBLAS). As other installations become available
 # changes to this will likely be required.
 
+
+## New versions of SuiteSparse GraphBLAS (8.0.3 and newer) ##
+
+find_package ( GraphBLAS ${GraphBLAS_FIND_VERSION} CONFIG
+    PATHS ${CMAKE_BINARY_DIR} ${PROJECT_SOURCE_DIR}/../GraphBLAS/build NO_DEFAULT_PATH )
+if ( NOT TARGET SuiteSparse::GraphBLAS )
+    find_package ( GraphBLAS ${GraphBLAS_FIND_VERSION} CONFIG )
+endif ( )
+
+if ( GraphBLAS_FOUND )
+    if ( TARGET SuiteSparse::GraphBLAS )
+        # It's not possible to create an alias of an alias.
+        get_property ( _graphblas_aliased TARGET SuiteSparse::GraphBLAS
+            PROPERTY ALIASED_TARGET )
+        if ( "${_graphblas_aliased}" STREQUAL "" )
+            add_library ( GraphBLAS::GraphBLAS ALIAS SuiteSparse::GraphBLAS )
+        else ( )
+            add_library ( GraphBLAS::GraphBLAS ALIAS ${_graphblas_aliased} )
+        endif ( )
+    endif ( )
+    if ( TARGET SuiteSparse::GraphBLAS_static )
+        # It's not possible to create an alias of an alias.
+        get_property ( _graphblas_aliased TARGET SuiteSparse::GraphBLAS_static
+            PROPERTY ALIASED_TARGET )
+        if ( "${_graphblas_aliased}" STREQUAL "" )
+            add_library ( GraphBLAS::GraphBLAS_static ALIAS SuiteSparse::GraphBLAS_static )
+        else ( )
+            add_library ( GraphBLAS::GraphBLAS_static ALIAS ${_graphblas_aliased} )
+        endif ( )
+    endif ( )
+    return ( )
+endif ( )
+
+
+## Older versions of SuiteSparse GraphBLAS (or different vendor?) ##
+
 # "Include" for SuiteSparse:GraphBLAS
 find_path ( GRAPHBLAS_INCLUDE_DIR
   NAMES GraphBLAS.h
   HINTS ${GRAPHBLAS_ROOT}
   HINTS ENV GRAPHBLAS_ROOT
-  HINTS ${CMAKE_SOURCE_DIR}/..
-  HINTS ${CMAKE_SOURCE_DIR}/../GraphBLAS
-  HINTS ${CMAKE_SOURCE_DIR}/../SuiteSparse/GraphBLAS
+  HINTS ${PROJECT_SOURCE_DIR}/..
+  HINTS ${PROJECT_SOURCE_DIR}/../GraphBLAS
+  HINTS ${PROJECT_SOURCE_DIR}/../SuiteSparse/GraphBLAS
   PATH_SUFFIXES include Include
   )
 
@@ -77,9 +113,9 @@ find_library ( GRAPHBLAS_LIBRARY
   NAMES graphblas
   HINTS ${GRAPHBLAS_ROOT}
   HINTS ENV GRAPHBLAS_ROOT
-  HINTS ${CMAKE_SOURCE_DIR}/..
-  HINTS ${CMAKE_SOURCE_DIR}/../GraphBLAS
-  HINTS ${CMAKE_SOURCE_DIR}/../SuiteSparse/GraphBLAS
+  HINTS ${PROJECT_SOURCE_DIR}/..
+  HINTS ${PROJECT_SOURCE_DIR}/../GraphBLAS
+  HINTS ${PROJECT_SOURCE_DIR}/../SuiteSparse/GraphBLAS
   PATH_SUFFIXES lib build alternative
   )
 
@@ -98,9 +134,9 @@ find_library ( GRAPHBLAS_STATIC
   NAMES ${STATIC_NAME}
   HINTS ${GRAPHBLAS_ROOT}
   HINTS ENV GRAPHBLAS_ROOT
-  HINTS ${CMAKE_SOURCE_DIR}/..
-  HINTS ${CMAKE_SOURCE_DIR}/../GraphBLAS
-  HINTS ${CMAKE_SOURCE_DIR}/../SuiteSparse/GraphBLAS
+  HINTS ${PROJECT_SOURCE_DIR}/..
+  HINTS ${PROJECT_SOURCE_DIR}/../GraphBLAS
+  HINTS ${PROJECT_SOURCE_DIR}/../SuiteSparse/GraphBLAS
   PATH_SUFFIXES lib build alternative
   )
 set ( CMAKE_FIND_LIBRARY_SUFFIXES ${save} )
@@ -162,3 +198,16 @@ else ( )
     set ( GRAPHBLAS_STATIC "" )
 endif ( )
 
+# Create target from information found
+if ( NOT "${GRAPHBLAS_LIBRARY}" STREQUAL "" )
+    add_library ( GraphBLAS::GraphBLAS UNKNOWN IMPORTED )
+    set_target_properties ( GraphBLAS::GraphBLAS PROPERTIES
+        IMPORTED_LOCATION "${GRAPHBLAS_LIBRARY}"
+        IMPORTED_INCLUDE_DIRECTORIES "${GRAPHBLAS_INCLUDE_DIR}" )
+endif ( )
+if ( NOT "${GRAPHBLAS_STATIC}" STREQUAL "" )
+    add_library ( GraphBLAS::GraphBLAS_static UNKNOWN IMPORTED )
+    set_target_properties ( GraphBLAS::GraphBLAS_static PROPERTIES
+        IMPORTED_LOCATION "${GRAPHBLAS_STATIC}"
+        IMPORTED_INCLUDE_DIRECTORIES "${GRAPHBLAS_INCLUDE_DIR}" )
+endif ( )

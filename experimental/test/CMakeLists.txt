@@ -17,9 +17,9 @@
 # build the lagraphxtest library
 #-------------------------------------------------------------------------------
 
-include_directories ( ${CMAKE_SOURCE_DIR}/src/test/include
-    ${CMAKE_SOURCE_DIR}/src/test/include
-    ${CMAKE_SOURCE_DIR}/experimental/test/include )
+include_directories ( ${PROJECT_SOURCE_DIR}/src/test/include
+    ${PROJECT_SOURCE_DIR}/src/test/include
+    ${PROJECT_SOURCE_DIR}/experimental/test/include )
 
 file ( GLOB LAGRAPHXTEST_LIB_SOURCES "LG_*.c" )
 
@@ -35,43 +35,52 @@ endif ( )
 # dynamic lagraphxtest library properties
 #-------------------------------------------------------------------------------
 
-add_library ( lagraphxtest SHARED ${LAGRAPHXTEST_LIB_SOURCES} )
-SET_TARGET_PROPERTIES ( lagraphxtest PROPERTIES
-    VERSION ${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}
-    SOVERSION ${LAGraph_VERSION_MAJOR}
-    C_STANDARD_REQUIRED 11 )
-set_property ( TARGET lagraphxtest PROPERTY C_STANDARD 11 )
-target_link_libraries(lagraphxtest PUBLIC lagraph lagraphtest ${GRAPHBLAS_LIBRARIES})
-target_link_directories( lagraphxtest BEFORE PUBLIC ${CMAKE_SOURCE_DIR}/build )
+if ( BUILD_SHARED_LIBS )
+    add_library ( lagraphxtest SHARED ${LAGRAPHXTEST_LIB_SOURCES} )
+    set_target_properties ( lagraphxtest PROPERTIES
+        VERSION ${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}
+        SOVERSION ${LAGraph_VERSION_MAJOR}
+        C_STANDARD_REQUIRED ON
+        C_STANDARD 11
+        RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/dlls )
+    target_link_libraries ( lagraphxtest PRIVATE LAGraph lagraphtest GraphBLAS::GraphBLAS )
+    target_compile_definitions ( lagraphxtest PRIVATE LGX_TEST_LIBRARY )
+    target_compile_definitions ( lagraphxtest PUBLIC LGX_TEST_DLL )
+endif ( )
 
 #-------------------------------------------------------------------------------
 # static lagraphxtest library properties
 #-------------------------------------------------------------------------------
 
-add_library ( lagraphxtest_static STATIC ${LAGRAPHXTEST_LIB_SOURCES} )
-SET_TARGET_PROPERTIES ( lagraphxtest_static PROPERTIES
-    VERSION ${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}
-    OUTPUT_NAME lagraphxtest
-    POSITION_INDEPENDENT_CODE OFF
-    SOVERSION ${LAGraph_VERSION_MAJOR}
-    C_STANDARD_REQUIRED 11 )
-
-if ( MSVC )
+if ( BUILD_STATIC_LIBS )
+    add_library ( lagraphxtest_static STATIC ${LAGRAPHXTEST_LIB_SOURCES} )
     set_target_properties ( lagraphxtest_static PROPERTIES
-        OUTPUT_NAME lagraphxtest_static )
-endif ( )
+        VERSION ${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}
+        OUTPUT_NAME lagraphxtest
+        POSITION_INDEPENDENT_CODE OFF
+        SOVERSION ${LAGraph_VERSION_MAJOR}
+        C_STANDARD_REQUIRED ON
+        C_STANDARD 11 )
 
-set_property ( TARGET lagraphxtest_static PROPERTY C_STANDARD 11 )
-target_link_libraries(lagraphxtest_static PUBLIC lagraph lagraphtest ${GRAPHBLAS_LIBRARIES})
-target_link_directories( lagraphxtest_static BEFORE PUBLIC ${CMAKE_SOURCE_DIR}/build )
+    if ( MSVC )
+        set_target_properties ( lagraphxtest_static PROPERTIES
+            OUTPUT_NAME lagraphxtest_static )
+    endif ( )
+
+    target_link_libraries ( lagraphxtest_static PUBLIC LAGraph_static lagraphtest_static GraphBLAS::GraphBLAS )
+endif ( )
 
 #-------------------------------------------------------------------------------
 # add OpenMP
 #-------------------------------------------------------------------------------
 
-if ( OPENMP_FOUND )
-    target_link_libraries ( lagraphxtest PUBLIC ${OpenMP_C_LIBRARIES} )
-    target_link_libraries ( lagraphxtest_static PUBLIC ${OpenMP_C_LIBRARIES} )
+if ( OPENMP_C_FOUND )
+    if ( BUILD_SHARED_LIBS )
+        target_link_libraries ( lagraphxtest PRIVATE OpenMP::OpenMP_C )
+    endif ( )
+    if ( BUILD_STATIC_LIBS )
+        target_link_libraries ( lagraphxtest_static PUBLIC OpenMP::OpenMP_C )
+    endif ( )
 endif ( )
 
 
@@ -85,9 +94,27 @@ foreach( testsourcefile ${TEST_SOURCES} )
     string( REPLACE ".c" "" testname ${justname} )
 #   message("Adding: ${testname}")
     add_executable( ${testname} ${testsourcefile} )
-    target_link_libraries( ${testname} lagraphx lagraph lagraphxtest lagraphtest ${GRAPHBLAS_LIBRARIES} )
-    target_link_directories( ${testname} BEFORE PUBLIC ${CMAKE_SOURCE_DIR}/build )
-    string( REPLACE "test_" "ctest_" ctestname ${testname})
-    add_test( ${ctestname} ${testname})
+    set_target_properties ( ${testname} PROPERTIES
+        C_STANDARD_REQUIRED ON
+        C_STANDARD 11 )
+    if ( BUILD_SHARED_LIBS )
+        target_link_libraries( ${testname}
+            LAGraphX LAGraph lagraphxtest lagraphtest GraphBLAS::GraphBLAS )
+    else ( )
+        target_link_libraries( ${testname}
+            LAGraphX_static LAGraph_static lagraphxtest_static lagraphtest_static GraphBLAS::GraphBLAS )
+    endif ( )
+    string( REPLACE "test_" "LAGraphX_" ctestname ${testname})
+    add_test( NAME ${ctestname} COMMAND $<TARGET_FILE:${testname}> )
+#   add_test( NAME ${ctestname} COMMAND valgrind $<TARGET_FILE:${testname}> )
+    if (WIN32)
+        if ( BUILD_SHARED_LIBS )
+            set_tests_properties ( ${ctestname} PROPERTIES
+                ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:$<TARGET_FILE_DIR:SuiteSparse::GraphBLAS>;PATH=path_list_prepend:$<TARGET_FILE_DIR:lagraphxtest>" )
+        else ( )
+            set_tests_properties ( ${ctestname} PROPERTIES
+                ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:$<TARGET_FILE_DIR:SuiteSparse::GraphBLAS>" )
+        endif ( )
+    endif ( )
 endforeach( testsourcefile ${TEST_SOURCES} )
 

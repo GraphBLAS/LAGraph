@@ -13,8 +13,8 @@
 
 #-------------------------------------------------------------------------------
 
-include_directories ( ${CMAKE_SOURCE_DIR}/src/test/include
-    ${CMAKE_SOURCE_DIR}/src/algorithm )
+include_directories ( ${PROJECT_SOURCE_DIR}/src/test/include
+    ${PROJECT_SOURCE_DIR}/src/algorithm )
 
 file( GLOB DEMO_SOURCES LIST_DIRECTORIES false *_demo.c )
 foreach( demosourcefile ${DEMO_SOURCES} )
@@ -22,6 +22,12 @@ foreach( demosourcefile ${DEMO_SOURCES} )
     string( REPLACE ".c" "" demoname ${justname} )
 #   message("Adding: ${demoname}")
     add_executable( ${demoname} ${demosourcefile} )
-    target_link_libraries( ${demoname} lagraph lagraphx lagraphtest ${GRAPHBLAS_LIBRARIES} )
-    target_link_directories( ${demoname} BEFORE PUBLIC ${CMAKE_SOURCE_DIR}/build )
+    set_target_properties ( ${demoname} PROPERTIES
+        C_STANDARD_REQUIRED ON
+        C_STANDARD 11 )
+    if ( BUILD_SHARED_LIBS )
+        target_link_libraries( ${demoname} LAGraph LAGraphX lagraphtest GraphBLAS::GraphBLAS )
+    else ( )
+        target_link_libraries( ${demoname} LAGraph_static LAGraphX_static lagraphtest_static GraphBLAS::GraphBLAS )
+    endif ( )
 endforeach( demosourcefile ${DEMO_SOURCES} )
