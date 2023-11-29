@@ -146,7 +146,6 @@ else ( )
     message ( STATUS "GraphBLAS_ROOT: ${GraphBLAS_ROOT} $ENV{GraphBLAS_ROOT}" )
     message ( STATUS "GRAPHBLAS_ROOT: ${GRAPHBLAS_ROOT} $ENV{GRAPHBLAS_ROOT}" )
 
-#   find_package ( GraphBLAS 8.3.0 MODULE REQUIRED )
     find_package ( GraphBLAS 7.1.0 MODULE REQUIRED )
 
 endif ( )
