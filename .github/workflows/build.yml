@@ -5,9 +5,9 @@ on: [push, pull_request]
 jobs:
   linux:
     runs-on: ubuntu-23.10
-    strategy:
-      matrix:
-        config:
+#    strategy:
+#      matrix:
+#        config:
 #         - {grb_version: 7.1.0, conda_grb_package_hash: h27087fc, conda_extension: tar.bz2}
 #         - {grb_version: 7.3.0, conda_grb_package_hash: h27087fc, conda_extension: tar.bz2}
 #         - {grb_version: 7.4.1, conda_grb_package_hash: hcb278e6, conda_extension: conda}
