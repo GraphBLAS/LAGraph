@@ -52,7 +52,7 @@ set ( LAGraph_VERSION_SUB   0 CACHE STRING "" FORCE )
 # define the project
 #-------------------------------------------------------------------------------
 
-project ( lagraph
+project ( LAGraph
           VERSION "${LAGraph_VERSION_MAJOR}.${LAGraph_VERSION_MINOR}.${LAGraph_VERSION_SUB}" )
 
 #-------------------------------------------------------------------------------
