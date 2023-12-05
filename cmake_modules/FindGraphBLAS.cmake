@@ -62,7 +62,9 @@ in your CMakeLists.txt file.  See also SuiteSparse/Example/CMakeLists.txt:
 # changes to this will likely be required.
 
 
-## New versions of SuiteSparse GraphBLAS (8.0.3 and newer) ##
+## New versions of SuiteSparse GraphBLAS (8.3.0 and newer) ##
+
+message ( STATUS "Looking for SuiteSparse GraphBLAS" )
 
 find_package ( GraphBLAS ${GraphBLAS_FIND_VERSION} CONFIG
     PATHS ${CMAKE_BINARY_DIR} ${PROJECT_SOURCE_DIR}/../GraphBLAS/build NO_DEFAULT_PATH )
@@ -96,6 +98,8 @@ endif ( )
 
 
 ## Older versions of SuiteSparse GraphBLAS (or different vendor?) ##
+
+message ( STATUS "Looking for vanilla GraphBLAS (or older SuiteSparse)" )
 
 # "Include" for SuiteSparse:GraphBLAS
 find_path ( GRAPHBLAS_INCLUDE_DIR
@@ -215,15 +219,18 @@ else ( )
 endif ( )
 
 # Create target from information found
+
 if ( GRAPHBLAS_LIBRARY )
+    message ( STATUS "Create target GraphBLAS::GraphBLAS" )
     add_library ( GraphBLAS::GraphBLAS UNKNOWN IMPORTED )
     set_target_properties ( GraphBLAS::GraphBLAS PROPERTIES
         IMPORTED_LOCATION "${GRAPHBLAS_LIBRARY}"
-        IMPORTED_INCLUDE_DIRECTORIES "${GRAPHBLAS_INCLUDE_DIR}" )
+        INTERFACE_INCLUDE_DIRECTORIES "${GRAPHBLAS_INCLUDE_DIR}" )
 endif ( )
 if ( GRAPHBLAS_STATIC )
+    message ( STATUS "Create target GraphBLAS::GraphBLAS_static" )
     add_library ( GraphBLAS::GraphBLAS_static UNKNOWN IMPORTED )
     set_target_properties ( GraphBLAS::GraphBLAS_static PROPERTIES
         IMPORTED_LOCATION "${GRAPHBLAS_STATIC}"
-        IMPORTED_INCLUDE_DIRECTORIES "${GRAPHBLAS_INCLUDE_DIR}" )
+        INTERFACE_INCLUDE_DIRECTORIES "${GRAPHBLAS_INCLUDE_DIR}" )
 endif ( )
