@@ -62,7 +62,7 @@ in your CMakeLists.txt file.  See also SuiteSparse/Example/CMakeLists.txt:
 # changes to this will likely be required.
 
 
-## New versions of SuiteSparse GraphBLAS (8.3.0 and newer) ##
+## New versions of SuiteSparse GraphBLAS (8.2.0 and newer) ##
 
 message ( STATUS "Looking for SuiteSparse GraphBLAS" )
 
@@ -75,6 +75,7 @@ endif ( )
 if ( GraphBLAS_FOUND )
     if ( TARGET SuiteSparse::GraphBLAS )
         # It's not possible to create an alias of an alias.
+        message ( STATUS "Found SuiteSparse::GraphBLAS" )
         get_property ( _graphblas_aliased TARGET SuiteSparse::GraphBLAS
             PROPERTY ALIASED_TARGET )
         if ( "${_graphblas_aliased}" STREQUAL "" )
@@ -82,8 +83,16 @@ if ( GraphBLAS_FOUND )
         else ( )
             add_library ( GraphBLAS::GraphBLAS ALIAS ${_graphblas_aliased} )
         endif ( )
+        if ( GRAPHBLAS_VERSION LESS "8.3.0" )
+            # workaround for SuiteSparse:GraphBLAS 8.2.x (did not have "/Include")
+            get_property ( _inc TARGET GraphBLAS::GraphBLAS PROPERTY
+                INTERFACE_INCLUDE_DIRECTORIES )
+            include_directories ( ${_inc}/Include )
+            message ( STATUS "additional include: ${_inc}/Include" )
+        endif ( )
     endif ( )
     if ( TARGET SuiteSparse::GraphBLAS_static )
+        message ( STATUS "Found SuiteSparse::GraphBLAS_static" )
         # It's not possible to create an alias of an alias.
         get_property ( _graphblas_aliased TARGET SuiteSparse::GraphBLAS_static
             PROPERTY ALIASED_TARGET )
@@ -92,12 +101,20 @@ if ( GraphBLAS_FOUND )
         else ( )
             add_library ( GraphBLAS::GraphBLAS_static ALIAS ${_graphblas_aliased} )
         endif ( )
+        if ( GRAPHBLAS_VERSION LESS "8.3.0" )
+            # workaround for SuiteSparse:GraphBLAS 8.2.x (did not have "/Include")
+            get_property ( _inc TARGET GraphBLAS::GraphBLAS PROPERTY
+                INTERFACE_INCLUDE_DIRECTORIES )
+            include_directories ( ${_inc}/Include )
+            message ( STATUS "additional include: ${_inc}/Include" )
+        endif ( )
     endif ( )
     return ( )
 endif ( )
 
 
-## Older versions of SuiteSparse GraphBLAS (or different vendor?) ##
+## Older versions of SuiteSparse GraphBLAS (8.0 or older)
+## or vanilla GraphBLAS libraries
 
 message ( STATUS "Looking for vanilla GraphBLAS (or older SuiteSparse)" )
 
