@@ -219,7 +219,7 @@ find_path ( GRAPHBLAS_INCLUDE_DIR
   HINTS ${PROJECT_SOURCE_DIR}/../GraphBLAS
   HINTS ${PROJECT_SOURCE_DIR}/../SuiteSparse/GraphBLAS
   PATH_SUFFIXES include Include
-  )
+  NO_DEFAULT_PATH )
 
 # dynamic SuiteSparse:GraphBLAS library
 find_library ( GRAPHBLAS_LIBRARY
@@ -232,7 +232,7 @@ find_library ( GRAPHBLAS_LIBRARY
   HINTS ${PROJECT_SOURCE_DIR}/../GraphBLAS
   HINTS ${PROJECT_SOURCE_DIR}/../SuiteSparse/GraphBLAS
   PATH_SUFFIXES lib build alternative
-  )
+  NO_DEFAULT_PATH )
 
 if ( MSVC )
     set ( STATIC_NAME graphblas_static )
@@ -253,7 +253,8 @@ find_library ( GRAPHBLAS_STATIC
   HINTS ${PROJECT_SOURCE_DIR}/../GraphBLAS
   HINTS ${PROJECT_SOURCE_DIR}/../SuiteSparse/GraphBLAS
   PATH_SUFFIXES lib build alternative
-  )
+  NO_DEFAULT_PATH )
+
 set ( CMAKE_FIND_LIBRARY_SUFFIXES ${save} )
 if ( MINGW AND GRAPHBLAS_STATIC MATCHES ".*\.dll\.a" )
     set ( GRAPHBLAS_STATIC "" )
