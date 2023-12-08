@@ -210,8 +210,9 @@ static inline int Reduce_assign32
         ht_init (ht_key, ht_val) ;
         ht_sample (index, n, HASH_SAMPLES, ht_key, ht_val, seed) ;
 
+        int tid ;
         #pragma omp parallel for num_threads(nthreads) schedule(static)
-        for (int tid = 0 ; tid < nthreads ; tid++)
+        for (tid = 0 ; tid < nthreads ; tid++)
         {
             // get the thread-specific buf array of size HASH_SIZE
             // todo: buf is a bad variable name; it's not a "buffer",
@@ -259,7 +260,7 @@ static inline int Reduce_assign32
             int32_t i = ht_key [h] ;
             if (i != -1)
             {
-                for (int32_t tid = 0 ; tid < nthreads ; tid++)
+                for (tid = 0 ; tid < nthreads ; tid++)
                 {
                     w_x [i] = LAGRAPH_MIN (w_x [i], mem [tid * HASH_SIZE + h]) ;
                 }
@@ -271,7 +272,7 @@ static inline int Reduce_assign32
     else
     {
         // sequential version
-        for (GrB_Index k = 0 ; k < n ; k++)
+        for (int64_t k = 0 ; k < n ; k++)
         {
             uint32_t i = index [k] ;
             w_x [i] = LAGRAPH_MIN (w_x [i], s_x [s_iso?0:k]) ;
@@ -393,8 +394,9 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method
     LAGRAPH_TRY (LAGraph_Malloc ((void **) &V32, n, sizeof (uint32_t), msg)) ;
 
     // prepare vectors
+    int64_t i ;
     #pragma omp parallel for num_threads(nthreads2) schedule(static)
-    for (GrB_Index i = 0 ; i < n ; i++)
+    for (i = 0 ; i < n ; i++)
     {
         I [i] = i ;
         V32 [i] = (uint32_t) i ;
@@ -477,7 +479,8 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method
         //----------------------------------------------------------------------
 
         // thread tid works on rows range[tid]:range[tid+1]-1 of S and T
-        for (int tid = 0 ; tid <= nthreads ; tid++)
+        int tid ;
+        for (tid = 0 ; tid <= nthreads ; tid++)
         {
             range [tid] = (n * tid + nthreads - 1) / nthreads ;
         }
@@ -487,7 +490,7 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method
         //----------------------------------------------------------------------
 
         #pragma omp parallel for num_threads(nthreads) schedule(static)
-        for (int tid = 0 ; tid < nthreads ; tid++)
+        for (tid = 0 ; tid < nthreads ; tid++)
         {
             for (int32_t i = range [tid] ; i < range [tid+1] ; i++)
             {
@@ -500,7 +503,7 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method
         // count = cumsum (count)
         //----------------------------------------------------------------------
 
-        for (int tid = 0 ; tid < nthreads ; tid++)
+        for (tid = 0 ; tid < nthreads ; tid++)
         {
             count [tid + 1] += count [tid] ;
         }
@@ -516,7 +519,7 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method
         // Note that Tx is not modified.  Only Tp and Tj are constructed.
 
         #pragma omp parallel for num_threads(nthreads) schedule(static)
-        for (int tid = 0 ; tid < nthreads ; tid++)
+        for (tid = 0 ; tid < nthreads ; tid++)
         {
             GrB_Index p = count [tid] ;
             Tp [range [tid]] = p ;
@@ -573,8 +576,9 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method
             // calculate grandparent
             // fixme: NULL parameter is SS:GrB extension
             GRB_TRY (GrB_Vector_extractTuples (NULL, V32, &n, f)) ; // fixme
+            int64_t i ;
             #pragma omp parallel for num_threads(nthreads2) schedule(static)
-            for (uint32_t i = 0 ; i < n ; i++)
+            for (i = 0 ; i < n ; i++)
             {
                 I [i] = (GrB_Index) V32 [i] ;
             }
@@ -628,7 +632,7 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method
         // scheduled.
 
         #pragma omp parallel for num_threads(nthreads) schedule(static)
-        for (int tid = 0 ; tid < nthreads ; tid++)
+        for (tid = 0 ; tid < nthreads ; tid++)
         {
             GrB_Index ptr = Sp [range [tid]] ;
             // thread tid scans S (range [tid]:range [tid+1]-1,:),
@@ -666,9 +670,11 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method
         // Compact empty space out of Tj not filled in from the above phase.
         // This is a lot of work and should be done in parallel.
         GrB_Index offset = 0 ;
-        for (int tid = 0 ; tid < nthreads ; tid++)
+        for (tid = 0 ; tid < nthreads ; tid++)
         {
-            memcpy (Tj + offset, Tj + Tp [range [tid]],
+            // the source and destination can overlap;
+            // this is safe (memmove_s not necessary):
+            memmove (Tj + offset, Tj + Tp [range [tid]],
                 sizeof (GrB_Index) * count [tid]) ;
             offset += count [tid] ;
             count [tid] = offset - count [tid] ;
@@ -676,10 +682,10 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method
 
         // Compact empty space out of Tp
         #pragma omp parallel for num_threads(nthreads) schedule(static)
-        for (int tid = 0 ; tid < nthreads ; tid++)
+        for (tid = 0 ; tid < nthreads ; tid++)
         {
             GrB_Index ptr = Tp [range [tid]] ;
-            for (int32_t i = range [tid] ; i < range [tid+1] ; i++)
+            for (int64_t i = range [tid] ; i < range [tid+1] ; i++)
             {
                 Tp [i] -= ptr - count [tid] ;
             }
@@ -734,8 +740,9 @@ int LG_CC_FastSV5           // SuiteSparse:GraphBLAS method
         // calculate grandparent
         // fixme: NULL parameter is SS:GrB extension
         GRB_TRY (GrB_Vector_extractTuples (NULL, V32, &n, f)) ; // fixme
+        int64_t k ;
         #pragma omp parallel for num_threads(nthreads2) schedule(static)
-        for (uint32_t k = 0 ; k < n ; k++)
+        for (k = 0 ; k < n ; k++)
         {
             I [k] = (GrB_Index) V32 [k] ;
         }

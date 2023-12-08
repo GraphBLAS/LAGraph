@@ -94,7 +94,7 @@ int LAGraph_cc_lacc
     GrB_Vector tmp = NULL, pNonstars = NULL, nsgp = NULL; // temporary
     GrB_Index *I = NULL;
     GrB_Index *V = NULL;
-    GrB_Matrix S2 = NULL, S = NULL ;
+    GrB_Matrix S = NULL, S2 = NULL ;
 
     GrB_Index n ;
     GRB_TRY (GrB_Matrix_nrows (&n, A)) ;

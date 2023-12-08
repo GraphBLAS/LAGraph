@@ -44,7 +44,7 @@ FUTURE: can we exploit asynch algorithms? C += A*C for example?
 
 FUTURE: for LG_CC_FastSV6.c:
 
-    * need new methods in GraphBLAS for CC,
+    * need new GxB methods in GraphBLAS for CC,
         GxB_select with GxB_RankUnaryOp, and GxB_extract with GrB_Vectors as
         inputs instead of (GrB_Index *) arrays.
 

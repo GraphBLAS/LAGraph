@@ -70,7 +70,7 @@ int LAGraph_SSaveSet            // save a set of matrices from a *.lagraph file
     LG_ASSERT (filename != NULL && Set != NULL && collection != NULL,
         GrB_NULL_POINTER) ;
 
-    f = fopen (filename, "w") ;
+    f = fopen (filename, "wb") ;
     LG_ASSERT_MSG (f != NULL, -1001, "unable to create output file") ;
 
     //--------------------------------------------------------------------------

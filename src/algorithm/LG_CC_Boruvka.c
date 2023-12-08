@@ -22,16 +22,16 @@
 // Code is based on Boruvka's minimum spanning forest algorithm.
 
 // This method relies solely on GrB* methods in the V2.0 C API, but it much
-// slower in general than LG_CC_FastSV6, which uses SuiteSparse pack/unpack
-// methods for faster access to the contents of the matrices and vectors.
+// slower in general than LG_CC_FastSV6, which uses GxB pack/unpack methods
+// for faster access to the contents of the matrices and vectors.
+
+#include <stdint.h>
 
 #include "LG_internal.h"
 
 //------------------------------------------------------------------------------
 // Reduce_assign
 //------------------------------------------------------------------------------
-
-// FIXME: Reduce_assign is slow.  See src/algorithm/LG_CC_FastSV6.
 
 // w[Px[i]] = min(w[Px[i]], s[i]) for i in [0..n-1].
 
@@ -67,14 +67,20 @@ static GrB_Info Reduce_assign
 // select_func: IndexUnaryOp for pruning entries from S
 //------------------------------------------------------------------------------
 
-// Rather than using a global variable to access the Px array, it is passed to
-// the select function as a uint64_t value that contains a pointer to Px.  It
-// might be better to create a user-defined type for y, but this works fine.
+// The pointer to the Px array is passed to the select function as a component
+// of a user-defined data type.
+
+typedef struct
+{
+    GrB_Index *pointer ;
+}
+Parent_struct ;
 
 void my_select_func (void *z, const void *x,
                  const GrB_Index i, const GrB_Index j, const void *y)
 {
-    GrB_Index *Px = (*(GrB_Index **) y) ;
+    Parent_struct *Parent = (Parent_struct *) y ;
+    GrB_Index *Px = Parent->pointer ;
     (*((bool *) z)) = (Px [i] != Px [j]) ;
 }
 
@@ -96,6 +102,7 @@ void my_select_func (void *z, const void *x,
     LAGraph_Free ((void **) &Px, NULL) ;    \
     LAGraph_Free ((void **) &mem, NULL) ;   \
     GrB_free (&S) ;                         \
+    GrB_free (&Parent_Type) ;               \
     GrB_free (&gp) ;                        \
     GrB_free (&mnp) ;                       \
     GrB_free (&ccmn) ;                      \
@@ -123,6 +130,8 @@ int LG_CC_Boruvka
         mask = NULL ;
     GrB_IndexUnaryOp select_op = NULL ;
     GrB_Matrix S = NULL ;
+    GrB_Type Parent_Type = NULL ;
+    Parent_struct Parent ;
 
     LG_CLEAR_MSG ;
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
@@ -150,6 +159,9 @@ int LG_CC_Boruvka
 
     LG_TRY (LAGraph_Malloc ((void **) &mem, 3*n, sizeof (GrB_Index), msg)) ;
     LG_TRY (LAGraph_Malloc ((void **) &Px, n, sizeof (GrB_Index), msg)) ;
+    Parent.pointer = Px ;
+
+    GRB_TRY (GrB_Type_new (&Parent_Type, sizeof (Parent_struct))) ;
 
     #if !LAGRAPH_SUITESPARSE
     // I is not needed for SuiteSparse and remains NULL
@@ -166,7 +178,7 @@ int LG_CC_Boruvka
     GRB_TRY (GrB_Vector_extractTuples (I, Px, &n, parent)) ;
 
     GRB_TRY (GrB_IndexUnaryOp_new (&select_op, my_select_func, GrB_BOOL,
-        /* aij: ignored */ GrB_BOOL, /* y: pointer to Px */ GrB_UINT64)) ;
+        /* aij: ignored */ GrB_BOOL, /* y: pointer to Px */ Parent_Type)) ;
 
     GrB_Index nvals ;
     GRB_TRY (GrB_Matrix_nvals (&nvals, S)) ;
@@ -252,7 +264,8 @@ int LG_CC_Boruvka
 
         // This step is the costliest part of this algorithm when dealing with
         // large matrices.
-        GRB_TRY (GrB_select (S, NULL, NULL, select_op, S, (uint64_t) Px, NULL));
+        GRB_TRY (GrB_Matrix_select_UDT (S, NULL, NULL, select_op, S,
+            (void *) (&Parent), NULL)) ;
         GRB_TRY (GrB_Matrix_nvals (&nvals, S)) ;
     }
 
@@ -264,3 +277,4 @@ int LG_CC_Boruvka
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
 }
+

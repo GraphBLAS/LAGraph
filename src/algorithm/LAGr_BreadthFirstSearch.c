@@ -15,8 +15,9 @@
 
 //------------------------------------------------------------------------------
 
-// Breadth-first-search via push/pull method if using SuiteSparse:GraphBLAS, or
-// a push-only method otherwise.  The former is much faster.
+// Breadth-first-search via push/pull method if using SuiteSparse:GraphBLAS
+// and its GxB extensions, or a push-only method otherwise.  The former is
+// much faster.
 
 // This is an Advanced algorithm.  SuiteSparse can use a push/pull method if
 // G->AT and G->out_degree are provided.  G->AT is not required if G is
