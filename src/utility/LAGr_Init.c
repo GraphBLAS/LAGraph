@@ -2,7 +2,7 @@
 // LAGr_Init: start GraphBLAS and LAGraph, and set malloc/etc functions
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2023 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 //
 // For additional details (including references to third party source code and
@@ -20,6 +20,35 @@
 #include "LG_internal.h"
 
 //------------------------------------------------------------------------------
+// LG_LAGr_Init_has_been_called: a static value only accessible within this file
+//------------------------------------------------------------------------------
+
+// LG_LAGr_Init_has_been_called indicates if LAGr_Init has been called.
+// LAGr_Init (or LAGraph_Init) can be called only once, even after
+// LAGraph_Finalize has been called.  For testing purposes, the flag can be
+// cleared by src/test/test_Xinit, to allow LAGr_Init or LAGraph_Init to be
+// called again.
+
+static bool LG_LAGr_Init_has_been_called = false ;
+
+// LG_LAGr_Init_has_been_called is only modified or accessed by these two
+// routines (even in this file):
+
+#include "LG_init.h"
+
+LAGRAPH_PUBLIC
+void LG_set_LAGr_Init_has_been_called (bool setting)
+{
+    LG_LAGr_Init_has_been_called = setting ;
+}
+
+LAGRAPH_PUBLIC
+bool LG_get_LAGr_Init_has_been_called (void)
+{
+    return (LG_LAGr_Init_has_been_called) ;
+}
+
+//------------------------------------------------------------------------------
 // LAGraph global objects
 //------------------------------------------------------------------------------
 
@@ -27,59 +56,59 @@ bool LG_init_has_been_called = false ;
 
 // LAGraph_plus_first_T: using the GrB_PLUS_MONOID_T monoid and the
 // corresponding GrB_FIRST_T multiplicative operator.
-GrB_Semiring LAGraph_plus_first_int8   = NULL ;
-GrB_Semiring LAGraph_plus_first_int16  = NULL ;
-GrB_Semiring LAGraph_plus_first_int32  = NULL ;
-GrB_Semiring LAGraph_plus_first_int64  = NULL ;
-GrB_Semiring LAGraph_plus_first_uint8  = NULL ;
-GrB_Semiring LAGraph_plus_first_uint16 = NULL ;
-GrB_Semiring LAGraph_plus_first_uint32 = NULL ;
-GrB_Semiring LAGraph_plus_first_uint64 = NULL ;
-GrB_Semiring LAGraph_plus_first_fp32   = NULL ;
-GrB_Semiring LAGraph_plus_first_fp64   = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_first_int8   = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_first_int16  = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_first_int32  = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_first_int64  = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_first_uint8  = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_first_uint16 = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_first_uint32 = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_first_uint64 = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_first_fp32   = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_first_fp64   = NULL ;
 
 // LAGraph_plus_second_T: using the GrB_PLUS_MONOID_T monoid and the
 // corresponding GrB_SECOND_T multiplicative operator.
-GrB_Semiring LAGraph_plus_second_int8   = NULL ;
-GrB_Semiring LAGraph_plus_second_int16  = NULL ;
-GrB_Semiring LAGraph_plus_second_int32  = NULL ;
-GrB_Semiring LAGraph_plus_second_int64  = NULL ;
-GrB_Semiring LAGraph_plus_second_uint8  = NULL ;
-GrB_Semiring LAGraph_plus_second_uint16 = NULL ;
-GrB_Semiring LAGraph_plus_second_uint32 = NULL ;
-GrB_Semiring LAGraph_plus_second_uint64 = NULL ;
-GrB_Semiring LAGraph_plus_second_fp32   = NULL ;
-GrB_Semiring LAGraph_plus_second_fp64   = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_second_int8   = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_second_int16  = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_second_int32  = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_second_int64  = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_second_uint8  = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_second_uint16 = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_second_uint32 = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_second_uint64 = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_second_fp32   = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_second_fp64   = NULL ;
 
 // LAGraph_plus_one_T: using the GrB_PLUS_MONOID_T monoid and the
 // corresponding GrB_ONEB_T multiplicative operator.
-GrB_Semiring LAGraph_plus_one_int8   = NULL ;
-GrB_Semiring LAGraph_plus_one_int16  = NULL ;
-GrB_Semiring LAGraph_plus_one_int32  = NULL ;
-GrB_Semiring LAGraph_plus_one_int64  = NULL ;
-GrB_Semiring LAGraph_plus_one_uint8  = NULL ;
-GrB_Semiring LAGraph_plus_one_uint16 = NULL ;
-GrB_Semiring LAGraph_plus_one_uint32 = NULL ;
-GrB_Semiring LAGraph_plus_one_uint64 = NULL ;
-GrB_Semiring LAGraph_plus_one_fp32   = NULL ;
-GrB_Semiring LAGraph_plus_one_fp64   = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_one_int8   = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_one_int16  = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_one_int32  = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_one_int64  = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_one_uint8  = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_one_uint16 = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_one_uint32 = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_one_uint64 = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_one_fp32   = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_plus_one_fp64   = NULL ;
 
 
 // use LAGraph_any_one_bool, etc
 
 // LAGraph_any_one_T: using the GrB_MIN_MONOID_T for non-boolean types
 // or GrB_LOR_MONOID_BOOL for boolean, and the GrB_ONEB_T multiplicative op.
-GrB_Semiring LAGraph_any_one_bool   = NULL ;
-GrB_Semiring LAGraph_any_one_int8   = NULL ;
-GrB_Semiring LAGraph_any_one_int16  = NULL ;
-GrB_Semiring LAGraph_any_one_int32  = NULL ;
-GrB_Semiring LAGraph_any_one_int64  = NULL ;
-GrB_Semiring LAGraph_any_one_uint8  = NULL ;
-GrB_Semiring LAGraph_any_one_uint16 = NULL ;
-GrB_Semiring LAGraph_any_one_uint32 = NULL ;
-GrB_Semiring LAGraph_any_one_uint64 = NULL ;
-GrB_Semiring LAGraph_any_one_fp32   = NULL ;
-GrB_Semiring LAGraph_any_one_fp64   = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_any_one_bool   = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_any_one_int8   = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_any_one_int16  = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_any_one_int32  = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_any_one_int64  = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_any_one_uint8  = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_any_one_uint16 = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_any_one_uint32 = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_any_one_uint64 = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_any_one_fp32   = NULL ;
+LAGRAPH_PUBLIC GrB_Semiring LAGraph_any_one_fp64   = NULL ;
 
 //------------------------------------------------------------------------------
 // LAGr_Init
@@ -115,9 +144,8 @@ int LAGr_Init
     GrB_Info info ;
 
     // ensure LAGr_Init has not already been called
-    LG_ASSERT_MSG (!LG_init_has_been_called, GrB_INVALID_VALUE,
+    LG_ASSERT_MSG (!LG_get_LAGr_Init_has_been_called ( ), GrB_INVALID_VALUE,
         "LAGr*_Init can only be called once") ;
-    LG_init_has_been_called = true ;
 
     //--------------------------------------------------------------------------
     // start GraphBLAS
@@ -311,5 +339,6 @@ int LAGr_Init
     GRB_TRY (GrB_Semiring_new (&LAGraph_any_one_fp64,
         GrB_MIN_MONOID_FP64   , GrB_ONEB_FP64  )) ;
 
+    LG_set_LAGr_Init_has_been_called (true) ;
     return (GrB_SUCCESS) ;
 }
