@@ -1,8 +1,18 @@
-Version 1.1.0:  in progress
+Version 1.2.0:  in progress
 
     * v2.1 C API: using the new GrB_get/set methods in the C API;
         LAGraph can now use a "vanilla" GraphBLAS that supports the v2.1
         C API.  If SuiteSparse:GraphBLAS is used, v9.0.0 is requored.
+
+Dec 30, 2023: version 1.1.0
+
+    * major change to build system: by Markus Mützel
+    * port: to 32-bit systems
+
+Version 1.0.2: Aug 2, 2023
+
+    * port: removed GxB_SelectOp so LAGraph v1.0.2 can be compiled with
+        SuiteSparse:GraphBLAS v8.x.
 
 Version 1.0.1: Dec 26, 2022
 
