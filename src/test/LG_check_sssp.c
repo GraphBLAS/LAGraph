@@ -102,25 +102,25 @@ int LG_check_sssp
     {
         etypecode = 0 ;
         etypesize = sizeof (int32_t) ;
-        etypeinf  = INT32_MAX ;
+        etypeinf  = (double) INT32_MAX ;
     }
     else if (etype == GrB_INT64)
     {
         etypecode = 1 ;
         etypesize = sizeof (int64_t) ;
-        etypeinf  = INT64_MAX ;
+        etypeinf  = (double) INT64_MAX ;
     }
     else if (etype == GrB_UINT32)
     {
         etypecode = 2 ;
         etypesize = sizeof (uint32_t) ;
-        etypeinf  = UINT32_MAX ;
+        etypeinf  = (double) UINT32_MAX ;
     }
     else if (etype == GrB_UINT64)
     {
         etypecode = 3 ;
         etypesize = sizeof (uint64_t) ;
-        etypeinf  = UINT64_MAX ;
+        etypeinf  = (double) UINT64_MAX ;
     }
     else if (etype == GrB_FP32)
     {
@@ -251,7 +251,7 @@ int LG_check_sssp
         // directly access the indices of entries in A(u,:)
         GrB_Index degree = Ap [u+1] - Ap [u] ;
         GrB_Index *node_u_adjacency_list = Aj + Ap [u] ;
-        void *weights = Ax + ((iso ? 0 : Ap [u]) * etypesize) ;
+        void *weights = ((char *) Ax) + ((iso ? 0 : Ap [u]) * etypesize) ;
         #else
         // extract the indices of entries in A(u,:)
         GrB_Index degree = n ;
@@ -351,6 +351,21 @@ int LG_check_sssp
     for (int64_t i = 0 ; i < n ; i++)
     {
         bool ok = (reachable [i] == reachable_in [i]) ;
+        #if 0
+        printf ("reach [%ld]: %d %d\n", i, reachable [i], reachable_in [i]) ;
+        if (!ok)
+        {
+            printf ("Hey! source %ld\n", src) ;
+            GxB_print (G->A, 3) ;
+            GxB_print (Path_Length, 3) ;
+            for (int64_t i = 0 ; i < n ; i++)
+            {
+                printf ("check [%ld]: reach %d %d distance %g\n", i,
+                    reachable [i], reachable_in [i], distance [i]) ;
+            }
+
+        }
+        #endif
         LG_ASSERT_MSG (ok, -2001, "invalid reach") ;
     }
 

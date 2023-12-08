@@ -466,7 +466,7 @@ void test_MMWrite (void)
         // create a file for comments
         //----------------------------------------------------------------------
 
-        FILE *fcomments = fopen (LG_DATA_DIR "comments.txt", "w") ;
+        FILE *fcomments = fopen (LG_DATA_DIR "comments.txt", "wb") ;
         TEST_CHECK (fcomments != NULL) ;
         fprintf (fcomments, " comments for %s\n", aname) ;
         fprintf (fcomments, " this file was created by test_MMRead.c\n") ;
@@ -479,7 +479,7 @@ void test_MMWrite (void)
 
         snprintf (filename, LEN, LG_DATA_DIR "comments_%s", aname) ;
         fcomments = fopen (LG_DATA_DIR "comments.txt", "r") ;
-        FILE *foutput = fopen (filename, "w") ;
+        FILE *foutput = fopen (filename, "wb") ;
         TEST_CHECK (foutput != NULL) ;
         TEST_CHECK (fcomments != NULL) ;
         OK (LAGraph_MMWrite (A, foutput, fcomments, msg)) ;
@@ -519,7 +519,7 @@ void test_MMWrite (void)
             double a ;
             OK (GrB_Matrix_extractElement (&a, A, 0, 0)) ;
             TEST_CHECK (isnan (a)) ;
-            foutput = fopen (filename, "w") ;
+            foutput = fopen (filename, "wb") ;
             fcomments = fopen (LG_DATA_DIR "comments.txt", "r") ;
             TEST_CHECK (foutput != NULL) ;
             OK (LAGraph_MMWrite (A, foutput, fcomments, msg)) ;
@@ -723,7 +723,7 @@ void test_array_pattern ( )
     // write it to a temporary file
     //--------------------------------------------------------------------------
 
-    FILE *f = tmpfile ( ) ; // fopen ("/tmp/mine.mtx", "w") ;
+    FILE *f = tmpfile ( ) ; // fopen ("/tmp/mine.mtx", "wb") ;
     OK (LAGraph_MMWrite (A, f, NULL, msg)) ;
     TEST_MSG ("Failed to write matrix to a temp file\n") ;
 //  OK (fclose (f)) ;
