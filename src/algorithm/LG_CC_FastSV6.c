@@ -30,10 +30,10 @@
 // 144: 14-27 (2020).
 
 // Modified by Tim Davis, Texas A&M University: revised Reduce_assign to use
-// purely loop-free GraphBLAS methods and the matrix C.  Added warmup phase.
-// Changed to use pack/unpack instead of import/export.  Converted to
-// use the LAGraph_Graph object.  Exploiting iso status for the temporary
-// matrices C and T.
+// purely GrB* and GxB* methods and the matrix C.  Added warmup phase.  Changed
+// to use GxB pack/unpack instead of GxB import/export.  Converted to use the
+// LAGraph_Graph object.  Exploiting iso status for the temporary matrices
+// C and T.
 
 // The input graph G must be undirected, or directed and with an adjacency
 // matrix that has a symmetric structure.  Self-edges (diagonal entries) are
@@ -46,6 +46,8 @@
 // G->A is empty.  This will be fixed once the todos are finished below, and
 // G->A will then become a truly read-only object (assuming GrB_wait (G->A)
 // has been done first).
+
+#include <string.h>
 
 #define LG_FREE_ALL ;
 #include "LG_internal.h"
@@ -119,8 +121,6 @@ static inline GrB_Info fastsv
         // values are not relevant.  Cx is thus chosen as a GrB_BOOL array of
         // size 1 where Cx [0] = false, so the all entries present in C are
         // equal to false.
-
-        // FIXME: also write a vanilla GrB method.
 
         // pack Cp, Px, and Cx into a matrix C with C(i,j) present if Px(j) == i
         GRB_TRY (GxB_Matrix_pack_CSC (C, Cp, /* Px is Ci: */ Px, Cx,
@@ -201,7 +201,7 @@ static inline GrB_Info fastsv
 
 #endif
 
-int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method
+int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
 (
     // output:
     GrB_Vector *component,  // component(i)=r if node is in the component r
@@ -232,6 +232,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method
 
     LG_TRY (LAGraph_CheckGraph (G, msg)) ;
     LG_ASSERT (component != NULL, GrB_NULL_POINTER) ;
+    (*component) = NULL ;
 
     LG_ASSERT_MSG ((G->kind == LAGraph_ADJACENCY_UNDIRECTED ||
        (G->kind == LAGraph_ADJACENCY_DIRECTED &&
@@ -368,8 +369,8 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method
 //      GxB_GREATESTRELRANK (...): select aij rank k > y*d where y is double
 //
 // By default, the rank of aij is its relative position as the kth entry in its
-// row (from "left" to "right").  The descriptor could redefine this so that
-// k is the relative position of aij as the kth entry in its column, not row.
+// row (from "left" to "right").  If a new GxB setting in the descriptor is
+// set, then k is the relative position of aij as the kth entry in its column.
 // The default would be that the rank is the position of aij in its row A(i,:).
 
 // Other:
@@ -410,7 +411,8 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method
         //----------------------------------------------------------------------
 
         // thread tid works on rows range[tid]:range[tid+1]-1 of A and T
-        for (int tid = 0 ; tid <= nthreads ; tid++)
+        int tid;
+        for (tid = 0 ; tid <= nthreads ; tid++)
         {
             range [tid] = (n * tid + nthreads - 1) / nthreads ;
         }
@@ -420,7 +422,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method
         //----------------------------------------------------------------------
 
         #pragma omp parallel for num_threads(nthreads) schedule(static)
-        for (int tid = 0 ; tid < nthreads ; tid++)
+        for (tid = 0 ; tid < nthreads ; tid++)
         {
             for (int64_t i = range [tid] ; i < range [tid+1] ; i++)
             {
@@ -433,7 +435,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method
         // count = cumsum (count)
         //----------------------------------------------------------------------
 
-        for (int tid = 0 ; tid < nthreads ; tid++)
+        for (tid = 0 ; tid < nthreads ; tid++)
         {
             count [tid + 1] += count [tid] ;
         }
@@ -445,7 +447,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method
         // T (i,:) consists of the first FASTSV_SAMPLES of A (i,:).
 
         #pragma omp parallel for num_threads(nthreads) schedule(static)
-        for (int tid = 0 ; tid < nthreads ; tid++)
+        for (tid = 0 ; tid < nthreads ; tid++)
         {
             GrB_Index p = count [tid] ;
             Tp [range [tid]] = p ;
@@ -475,7 +477,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method
         // find the connected components of T
         //----------------------------------------------------------------------
 
-        GRB_TRY (fastsv (T, parent, mngp, &gp, &gp_new, t, eq, min, min_2nd,
+        LG_TRY (fastsv (T, parent, mngp, &gp, &gp_new, t, eq, min, min_2nd,
             C, &Cp, &Px, &Cx, msg)) ;
 
         //----------------------------------------------------------------------
@@ -553,9 +555,8 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method
         bool T_jumbled, T_iso ;
         GRB_TRY (GxB_Matrix_unpack_CSR (T, &Tp, &Tj, &Tx, &Tp_size, &Tj_size,
             &Tx_size, &T_iso, &T_jumbled, NULL)) ;
-
         #pragma omp parallel for num_threads(nthreads) schedule(static)
-        for (int tid = 0 ; tid < nthreads ; tid++)
+        for (tid = 0 ; tid < nthreads ; tid++)
         {
             GrB_Index p = Ap [range [tid]] ;
             // thread tid scans A (range [tid]:range [tid+1]-1,:),
@@ -600,17 +601,21 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method
 
         // Compact empty space out of Tj not filled in from the above phase.
         nvals = 0 ;
-        for (int tid = 0 ; tid < nthreads ; tid++)
+        for (tid = 0 ; tid < nthreads ; tid++)
         {
-            memcpy (Tj + nvals, Tj + Tp [range [tid]],
-                sizeof (GrB_Index) * count [tid]) ;
+            // memmove is safe:  src/dest can overlap, but the copy will not go
+            // outside of the array, and Tj is never NULL at this point
+            // (GRB_TRY on the GxB_Matrix_unpack_CSR above would catch that
+            // condition).  So memmove_s isn't necessary.
+            memmove (Tj + nvals,
+                Tj + Tp [range [tid]], sizeof (GrB_Index) * count [tid]) ;
             nvals += count [tid] ;
             count [tid] = nvals - count [tid] ;
         }
 
         // Compact empty space out of Tp
         #pragma omp parallel for num_threads(nthreads) schedule(static)
-        for (int tid = 0 ; tid < nthreads ; tid++)
+        for (tid = 0 ; tid < nthreads ; tid++)
         {
             GrB_Index p = Tp [range [tid]] ;
             for (int64_t i = range [tid] ; i < range [tid+1] ; i++)
@@ -655,7 +660,7 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method
     // final phase
     //--------------------------------------------------------------------------
 
-    GRB_TRY (fastsv (A, parent, mngp, &gp, &gp_new, t, eq, min, min_2nd,
+    LG_TRY (fastsv (A, parent, mngp, &gp, &gp_new, t, eq, min, min_2nd,
         C, &Cp, &Px, &Cx, msg)) ;
 
     //--------------------------------------------------------------------------

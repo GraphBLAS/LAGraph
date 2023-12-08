@@ -53,6 +53,8 @@
     GrB_free (&SourceNodes) ;       \
 }
 
+#define BATCH_SIZE 4
+
 int main (int argc, char **argv)
 {
 
@@ -66,7 +68,7 @@ int main (int argc, char **argv)
     bool burble = false ;
     demo_init (burble) ;
 
-    int batch_size = 4 ;
+    int batch_size = BATCH_SIZE ;
 
     //--------------------------------------------------------------------------
     // determine # of threads to use
@@ -96,7 +98,7 @@ int main (int argc, char **argv)
     }
     printf ("\n") ;
 
-    double tt [nthreads_max+1] ;
+    double *tt = malloc ((nthreads_max+1) *sizeof (double));
 
     //--------------------------------------------------------------------------
     // read in the graph
@@ -143,7 +145,7 @@ for (int nrepeat = 0 ; nrepeat <= 1 ; nrepeat++)
 
         ntrials++ ;
         printf ("\nTrial %d : sources: [", ntrials) ;
-        GrB_Index vertex_list [batch_size] ;
+        GrB_Index vertex_list [BATCH_SIZE] ;
         for (int64_t k = 0 ; k < batch_size ; k++)
         {
             // get the kth source node
@@ -153,7 +155,7 @@ for (int nrepeat = 0 ; nrepeat <= 1 ; nrepeat++)
             // subtract one to convert from 1-based to 0-based
             source-- ;
             vertex_list [k] = source  ;
-            printf (" %"PRIu64, source) ;
+            printf (" %"PRId64, source) ;
         }
         printf (" ]\n") ;
 
@@ -208,6 +210,7 @@ for (int nrepeat = 0 ; nrepeat <= 1 ; nrepeat++)
             Nthreads [t], t2, matrix_name) ;
     }
 
+    free ((void *) tt);
     LG_FREE_ALL;
     LAGRAPH_TRY (LAGraph_Finalize (msg)) ;
     return (GrB_SUCCESS) ;
