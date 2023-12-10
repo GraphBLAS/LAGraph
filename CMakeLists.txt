@@ -45,7 +45,7 @@ set ( CMAKE_MACOSX_RPATH TRUE )
 # version of LAGraph
 set ( LAGraph_DATE "Dec 30, 2023" )
 set ( LAGraph_VERSION_MAJOR 1 CACHE STRING "" FORCE )
-set ( LAGraph_VERSION_MINOR 1 CACHE STRING "" FORCE )
+set ( LAGraph_VERSION_MINOR 2 CACHE STRING "" FORCE )
 set ( LAGraph_VERSION_SUB   0 CACHE STRING "" FORCE )
 
 #-------------------------------------------------------------------------------

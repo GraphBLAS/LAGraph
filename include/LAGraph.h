@@ -39,7 +39,7 @@
 
 #define LAGRAPH_DATE "Dec 30, 2023"
 #define LAGRAPH_VERSION_MAJOR  1
-#define LAGRAPH_VERSION_MINOR  1
+#define LAGRAPH_VERSION_MINOR  2
 #define LAGRAPH_VERSION_UPDATE 0
 
 //==============================================================================
