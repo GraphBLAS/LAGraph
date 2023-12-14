@@ -47,6 +47,7 @@
 // G->A will then become a truly read-only object (assuming GrB_wait (G->A)
 // has been done first).
 
+#define __STDC_WANT_LIB_EXT1__ 1
 #include <string.h>
 
 #define LG_FREE_ALL ;
@@ -603,10 +604,6 @@ int LG_CC_FastSV6           // SuiteSparse:GraphBLAS method, with GxB extensions
         nvals = 0 ;
         for (tid = 0 ; tid < nthreads ; tid++)
         {
-            // memmove is safe:  src/dest can overlap, but the copy will not go
-            // outside of the array, and Tj is never NULL at this point
-            // (GRB_TRY on the GxB_Matrix_unpack_CSR above would catch that
-            // condition).  So memmove_s isn't necessary.
             memmove (Tj + nvals,
                 Tj + Tp [range [tid]], sizeof (GrB_Index) * count [tid]) ;
             nvals += count [tid] ;
