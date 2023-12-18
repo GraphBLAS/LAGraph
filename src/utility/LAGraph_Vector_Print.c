@@ -130,7 +130,7 @@ int LAGraph_Vector_Print
     //--------------------------------------------------------------------------
 
     int32_t typecode ;
-    GRB_TRY (GrB_get (v, &typecode, GrB_ELTYPE_CODE)) ;
+    GRB_TRY (GrB_get (v, &typecode, GrB_EL_TYPE_CODE)) ;
 
     //--------------------------------------------------------------------------
     // print the vector

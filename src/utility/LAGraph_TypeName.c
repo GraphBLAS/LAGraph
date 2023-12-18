@@ -46,15 +46,15 @@
     size_t len ;                                                               \
     name [0] = '\0' ;                                                          \
     int32_t typecode ;                                                         \
-    GRB_TRY (GrB_get (object, &typecode, GrB_ELTYPE_CODE)) ;                   \
+    GRB_TRY (GrB_get (object, &typecode, GrB_EL_TYPE_CODE)) ;                  \
     switch (typecode)                                                          \
     {                                                                          \
-        /* for user-defined types, return the GrB_ELTYPE_STRING */             \
+        /* for user-defined types, return the GrB_EL_TYPE_STRING */            \
         default :                                                              \
         case GrB_UDT_CODE    :                                                 \
-            GRB_TRY (GrB_get (object, &len, GrB_ELTYPE_STRING)) ;              \
+            GRB_TRY (GrB_get (object, &len, GrB_EL_TYPE_STRING)) ;             \
             LG_TRY (LAGraph_Malloc ((void **) &t, len+1, sizeof (char), msg)) ;\
-            GRB_TRY (GrB_get (object, t, GrB_ELTYPE_STRING)) ;                 \
+            GRB_TRY (GrB_get (object, t, GrB_EL_TYPE_STRING)) ;                \
             len = LAGRAPH_MIN (len, LAGRAPH_MAX_NAME_LEN) ;                    \
             strncpy (name, t, len) ;                                           \
             name [LAGRAPH_MAX_NAME_LEN-1] = '\0' ;                             \

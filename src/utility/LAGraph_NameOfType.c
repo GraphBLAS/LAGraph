@@ -48,7 +48,7 @@ int LAGraph_NameOfType
     name [0] = '\0' ;
 
     int32_t typecode ;
-    GRB_TRY (GrB_Type_get_INT32 (type, &typecode, GrB_ELTYPE_CODE)) ;
+    GRB_TRY (GrB_Type_get_INT32 (type, &typecode, GrB_EL_TYPE_CODE)) ;
 
     switch (typecode)
     {

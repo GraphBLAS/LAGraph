@@ -132,7 +132,7 @@ int LAGraph_Matrix_Print
     //--------------------------------------------------------------------------
 
     int32_t typecode ;
-    GRB_TRY (GrB_get (A, &typecode, GrB_ELTYPE_CODE)) ;
+    GRB_TRY (GrB_get (A, &typecode, GrB_EL_TYPE_CODE)) ;
 
     //--------------------------------------------------------------------------
     // print the matrix
