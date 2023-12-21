@@ -74,8 +74,8 @@
         case GrB_FP64_CODE   : strcpy (name, "double"  ) ; break ;             \
 /*      case GxB_FC32_CODE   : strcpy (name, "float complex"  ) ; break ; */   \
 /*      case GxB_FC64_CODE   : strcpy (name, "double complex" ) ; break ; */   \
-    }
-
+    }                                                                          \
+    return (GrB_SUCCESS) ;
 
 //------------------------------------------------------------------------------
 // LAGraph_Matrix_TypeName: return the name of the GrB_Type of a GrB_Matrix
