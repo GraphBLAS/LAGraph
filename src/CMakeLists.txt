@@ -88,7 +88,7 @@ if ( BUILD_STATIC_LIBS )
 endif ( )
 
 #-------------------------------------------------------------------------------
-# add OpenMP and libm if needed
+# add OpenMP
 #-------------------------------------------------------------------------------
 
 if ( OpenMP_C_FOUND )
@@ -100,20 +100,11 @@ if ( OpenMP_C_FOUND )
     endif ( )
 endif ( )
 
-# libm:
-if ( NOT WIN32 )
-    if ( BUILD_SHARED_LIBS )
-        target_link_libraries ( LAGraph PUBLIC m )
-    endif ( )
-    if ( BUILD_STATIC_LIBS )
-        target_link_libraries ( LAGraph_static PUBLIC m )
-    endif ( )
-endif ( )
-
 #-------------------------------------------------------------------------------
 # applications
 #-------------------------------------------------------------------------------
 
-add_subdirectory ( test )
-add_subdirectory ( benchmark )
-
+if ( BUILD_TESTING )
+    add_subdirectory ( test )
+    add_subdirectory ( benchmark )
+endif ( )

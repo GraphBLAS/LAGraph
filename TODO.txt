@@ -1,7 +1,7 @@
 
 Notes from LAGraph meeting, June 14, 2023:
 
-    For LAGraph 1.1:
+    For LAGraph 1.2:
 
         * move algorithms from experimental to src
         * use v2.1 C API spec
