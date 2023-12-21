@@ -33,4 +33,7 @@ foreach( demosourcefile ${DEMO_SOURCES} )
         target_link_libraries( ${demoname}
             LAGraphX_static LAGraph_static lagraphtest_static lagraphxtest_static GraphBLAS::GraphBLAS )
     endif ( )
+    if ( NOT MSVC )
+        target_link_libraries ( ${demoname} m )
+    endif ( )
 endforeach( demosourcefile ${DEMO_SOURCES} )

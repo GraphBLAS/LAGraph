@@ -101,6 +101,19 @@ if ( OpenMP_C_FOUND )
 endif ( )
 
 #-------------------------------------------------------------------------------
+# libm
+#-------------------------------------------------------------------------------
+
+if ( NOT MSVC )
+    if ( BUILD_SHARED_LIBS )
+        target_link_libraries ( LAGraph PRIVATE m )
+    endif ( )
+    if ( BUILD_STATIC_LIBS )
+        target_link_libraries ( LAGraph_static PUBLIC m )
+    endif ( )
+endif ( )
+
+#-------------------------------------------------------------------------------
 # applications
 #-------------------------------------------------------------------------------
 
