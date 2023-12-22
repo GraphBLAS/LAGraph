@@ -201,7 +201,7 @@ endif ( )
 
 if ( INSIDE_SUITESPARSE )
     # append ../lib to the install and build runpaths
-    list ( APPEND CMAKE_INSTALL_RPATH ${SUITESPARSE_FULL_LIBDIR} )
+    list ( APPEND CMAKE_INSTALL_RPATH ${SUITESPARSE_LIBDIR} )
     list ( APPEND CMAKE_BUILD_RPATH ${SUITESPARSE_LIBDIR} )
 endif ( )
 
@@ -234,9 +234,10 @@ if ( SUITESPARSE_USE_FORTRAN )
     if ( CMAKE_Fortran_COMPILER )
         enable_language ( Fortran )
         message ( STATUS "Fortran:          ${CMAKE_Fortran_COMPILER}" )
+        set ( SUITESPARSE_HAS_FORTRAN ON )
     else ( )
         # Fortran not available:
-        set ( SUITESPARSE_USE_FORTRAN OFF )
+        set ( SUITESPARSE_HAS_FORTRAN OFF )
         message ( STATUS "Fortran:          not available" )
     endif ( )
 else ( )
@@ -258,6 +259,7 @@ endif ( )
 # find CUDA
 #-------------------------------------------------------------------------------
 
+option ( SUITESPARSE_USE_CUDA "Enable CUDA acceleration for SuiteSparse" ON )
 if ( SUITESPARSE_USE_CUDA AND NOT MSVC )
 
     # try finding CUDA
@@ -275,26 +277,26 @@ if ( SUITESPARSE_USE_CUDA AND NOT MSVC )
         if ( CUDAToolkit_VERSION VERSION_LESS "11.2" )
             # CUDA is present but too old
             message ( STATUS "CUDA:               not enabled (CUDA 11.2 or later required)" )
-            set ( SUITSPARSE_HAS_CUDA OFF )
+            set ( SUITESPARSE_HAS_CUDA OFF )
         else ( )
             # CUDA 11.2 or later present
             enable_language ( CUDA )
-            set ( SUITSPARSE_HAS_CUDA ON )
+            set ( SUITESPARSE_HAS_CUDA ON )
         endif ( )
     else ( )
         # without CUDA:
         message ( STATUS "CUDA:             not found" )
-        set ( SUITSPARSE_HAS_CUDA OFF )
+        set ( SUITESPARSE_HAS_CUDA OFF )
     endif ( )
 
 else ( )
 
     # CUDA is disabled
-    set ( SUITSPARSE_HAS_CUDA OFF )
+    set ( SUITESPARSE_HAS_CUDA OFF )
 
 endif ( )
 
-if ( SUITSPARSE_HAS_CUDA )
+if ( SUITESPARSE_HAS_CUDA )
     message ( STATUS "CUDA:             enabled" )
     set ( SUITESPARSE_CUDA_ARCHITECTURES "52;75;80" CACHE STRING "CUDA architectures" )
     set ( CMAKE_CUDA_ARCHITECTURES ${SUITESPARSE_CUDA_ARCHITECTURES} )
