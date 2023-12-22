@@ -201,7 +201,7 @@ endif ( )
 
 if ( INSIDE_SUITESPARSE )
     # append ../lib to the install and build runpaths
-    list ( APPEND CMAKE_INSTALL_RPATH ${SUITESPARSE_FULL_LIBDIR} )
+    list ( APPEND CMAKE_INSTALL_RPATH ${SUITESPARSE_LIBDIR} )
     list ( APPEND CMAKE_BUILD_RPATH ${SUITESPARSE_LIBDIR} )
 endif ( )
 
@@ -234,9 +234,10 @@ if ( SUITESPARSE_USE_FORTRAN )
     if ( CMAKE_Fortran_COMPILER )
         enable_language ( Fortran )
         message ( STATUS "Fortran:          ${CMAKE_Fortran_COMPILER}" )
+        set ( SUITESPARSE_HAS_FORTRAN ON )
     else ( )
         # Fortran not available:
-        set ( SUITESPARSE_USE_FORTRAN OFF )
+        set ( SUITESPARSE_HAS_FORTRAN OFF )
         message ( STATUS "Fortran:          not available" )
     endif ( )
 else ( )
