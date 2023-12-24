@@ -24,7 +24,7 @@
         GrB_free(C_f); \
     }
 
-// #define DEBUG
+#define DEBUG
 
 #include "LG_internal.h"
 #include <LAGraphX.h>
@@ -36,7 +36,7 @@ int LAGr_PeerPressureClustering(
     LAGraph_Graph G, // input graph
     char *msg)
 {
-    // GxB_set (GxB_PRINT_1BASED, true);
+    GxB_set (GxB_PRINT_1BASED, true);
 
     GrB_Matrix T = NULL;
 
