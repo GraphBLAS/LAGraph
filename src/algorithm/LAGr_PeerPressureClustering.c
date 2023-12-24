@@ -17,6 +17,9 @@
         GrB_free(&Identity_B); \
         GrB_free(&Identity_F); \
         GrB_free(&verts_per_cluster); \
+        GrB_free(&last_vpc); \
+        GrB_free(&diff_vpc); \
+        GrB_free(&zero_INT64); \
     }
 
 #define LG_FREE_ALL    \
@@ -63,6 +66,9 @@ int LAGr_PeerPressureClustering(
 
     // Count number of vertices in each cluster
     GrB_Vector verts_per_cluster = NULL;
+    GrB_Vector last_vpc = NULL;
+    GrB_Vector diff_vpc = NULL;
+    GrB_Scalar zero_INT64 = NULL;
 
     // Number of vertices in the graph
     GrB_Index n = 0;
@@ -99,7 +105,13 @@ int LAGr_PeerPressureClustering(
     GRB_TRY(GrB_Vector_new(&w_temp, GrB_FP64, n));
     GRB_TRY(GrB_Vector_new(&m, GrB_FP64, n));
     GRB_TRY(GrB_Vector_new(&m_index, GrB_INT64, n));
+
     GRB_TRY(GrB_Vector_new(&verts_per_cluster, GrB_INT64, n));
+    GRB_TRY(GrB_Vector_new(&last_vpc, GrB_INT64, n));
+    GRB_TRY(GrB_Vector_new(&diff_vpc, GrB_INT64, n));
+
+    GRB_TRY(GrB_Scalar_new(&zero_INT64, GrB_INT64));
+    GRB_TRY(GrB_Scalar_setElement(zero_INT64, 0));
 
     // Used below
     GrB_Vector ones, trues;
@@ -143,7 +155,11 @@ int LAGr_PeerPressureClustering(
 
     LAGRAPH_TRY(LAGraph_Malloc((void **)&ones_array, n, sizeof(GrB_UINT64), msg));
     LAGRAPH_TRY(LAGraph_Malloc((void **)&ones_array_indices, n, sizeof(GrB_Index), msg));
+
     GRB_TRY(GrB_assign(verts_per_cluster, NULL, NULL, 1, GrB_ALL, n, NULL));
+    GRB_TRY(GrB_assign(last_vpc, NULL, NULL, 1, GrB_ALL, n, NULL));
+    // GRB_TRY(GrB_assign(diff_vpc, NULL, NULL, 0, GrB_ALL, n, NULL));
+
 
     GRB_TRY(GrB_Vector_extractTuples_UINT64(ones_array_indices, ones_array, &n, ones));
     GRB_TRY(GrB_Matrix_diag(&C, ones, 0)); // Initial cluster C_i (this is the same as Identity with UINT_64 instead)
@@ -200,8 +216,29 @@ int LAGr_PeerPressureClustering(
         // row of the current iteration of the cluster matrix
         GRB_TRY(GrB_reduce(verts_per_cluster, NULL, NULL, GrB_PLUS_MONOID_INT64, C_temp, NULL));
 
+        // GxB_print(verts_per_cluster, GxB_SHORT);
+        // GxB_print(last_vpc, GxB_SHORT);
+        // GxB_print(diff_vpc, GxB_SHORT);
+
+        LAGRAPH_TRY(GxB_eWiseUnion(diff_vpc, NULL, NULL, GrB_MINUS_INT64, verts_per_cluster, zero_INT64, last_vpc, zero_INT64, NULL));
+        // GRB_TRY(GrB_eWiseAdd(diff_vpc, NULL, NULL, GrB_MINUS_INT64, verts_per_cluster, last_vpc, NULL));
+
         LAGraph_Free((void **)&m_index_values, NULL);
         LAGraph_Free((void **)&m_index_indices, NULL);
+
+        #ifdef DEBUG
+        printf("\n--------------------------------------------------\n"
+               "Current Values at iteration %i\n"
+               "--------------------------------------------------\n", count);
+        // GxB_print(C_temp, GxB_SHORT);
+        // GxB_print(verts_per_cluster, GxB_SHORT);
+        // GxB_print(last_vpc, GxB_SHORT);
+        GxB_print(diff_vpc, GxB_SHORT);
+        // GxB_print(m_index, GxB_SHORT);
+#endif
+
+        // Move back up eventually
+        GRB_TRY(GrB_assign(last_vpc, NULL, NULL, verts_per_cluster, GrB_ALL, n, NULL));
 
         bool res = NULL;
         LAGRAPH_TRY(LAGraph_Matrix_IsEqual(&res, C, C_temp, msg));
@@ -216,14 +253,7 @@ int LAGr_PeerPressureClustering(
         // Unpack in order to get array indices
         // Apply keep as a dense vector
 
-#ifdef DEBUG
-        printf("\n--------------------------------------------------\n"
-               "Current Values at iteration %i\n"
-               "--------------------------------------------------\n", count);
-        // GxB_print(C_temp, GxB_SHORT);
-        GxB_print(verts_per_cluster, GxB_SHORT);
-        // GxB_print(m_index, GxB_SHORT);
-#endif
+
 
         // [?] Maybe unnecessary because of R descriptor? These do need to be cleared
         // at the end of each iteration though...
