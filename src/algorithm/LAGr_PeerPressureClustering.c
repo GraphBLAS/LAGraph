@@ -107,11 +107,10 @@ int LAGr_PeerPressureClustering(
     GRB_TRY(GrB_Matrix_diag(&Identity_F, ones, 0)); // Identity FP Matrix
 
     // For now, assure that all vertices have equal weights
-    // printf("nselfedges %d", G->nself_edges);
     // LG_ASSERT_MSG(G->nself_edges == n, -106, "G->nself_edges must be equal to the number of nodes");
     if (G->nself_edges != n)
     {
-        printf("Ensuring each vertex has a self edge\n");
+        // printf("Ensuring each vertex has a self edge\n");
         GRB_TRY(GrB_assign(A, A, NULL, Identity_F, GrB_ALL, n, GrB_ALL, n, GrB_DESC_SC));
         G->A = A;
 
@@ -122,7 +121,7 @@ int LAGr_PeerPressureClustering(
         LAGRAPH_TRY(LAGraph_Cached_NSelfEdges(G, msg));
         // printf("nself edges %d\n", G->nself_edges);
 #ifdef DEBUG
-        GxB_print(A, GxB_COMPLETE);
+        GxB_print(A, GxB_SHORT);
 #endif
     }
 
@@ -163,7 +162,7 @@ int LAGr_PeerPressureClustering(
     GrB_Index count = 0;
     while (true)
     {
-        printf("Iteration %d\n", count);
+        // printf("Iteration %d\n", count);
         count++;
         // T = C_i x A
         GRB_TRY(GrB_mxm(T, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, C, A, GrB_DESC_R));
@@ -210,8 +209,8 @@ int LAGr_PeerPressureClustering(
         printf("--------------------------------------------------\n"
                "Current Values\n"
                "--------------------------------------------------\n");
-        GxB_print(C_temp, GxB_COMPLETE);
-        GxB_print(m_index, GxB_COMPLETE);
+        GxB_print(C_temp, GxB_SHORT);
+        GxB_print(m_index, GxB_SHORT);
 #endif
 
         // [?] Maybe unnecessary because of R descriptor? These do need to be cleared
