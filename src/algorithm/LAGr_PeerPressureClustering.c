@@ -206,11 +206,11 @@ int LAGr_PeerPressureClustering(
         // Apply keep as a dense vector
 
 #ifdef DEBUG
-        printf("--------------------------------------------------\n"
-               "Current Values\n"
-               "--------------------------------------------------\n");
+        printf("\n--------------------------------------------------\n"
+               "Current Values at iteration %i\n"
+               "--------------------------------------------------\n", count);
         GxB_print(C_temp, GxB_SHORT);
-        GxB_print(m_index, GxB_SHORT);
+        // GxB_print(m_index, GxB_SHORT);
 #endif
 
         // [?] Maybe unnecessary because of R descriptor? These do need to be cleared
