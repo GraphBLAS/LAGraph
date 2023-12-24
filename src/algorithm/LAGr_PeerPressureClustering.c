@@ -16,6 +16,7 @@
         GrB_free(&E);          \
         GrB_free(&Identity_B); \
         GrB_free(&Identity_F); \
+        GrB_free(&verts_per_cluster); \
     }
 
 #define LG_FREE_ALL    \
@@ -24,7 +25,7 @@
         GrB_free(C_f); \
     }
 
-// #define DEBUG
+#define DEBUG
 
 #include "LG_internal.h"
 #include <LAGraphX.h>
@@ -59,6 +60,9 @@ int LAGr_PeerPressureClustering(
     // The identity matrix of type GrB_BOOL
     GrB_Matrix Identity_B = NULL;
     GrB_Matrix Identity_F = NULL;
+
+    // Count number of vertices in each cluster
+    GrB_Vector verts_per_cluster = NULL;
 
     // Number of vertices in the graph
     GrB_Index n = 0;
@@ -95,6 +99,7 @@ int LAGr_PeerPressureClustering(
     GRB_TRY(GrB_Vector_new(&w_temp, GrB_FP64, n));
     GRB_TRY(GrB_Vector_new(&m, GrB_FP64, n));
     GRB_TRY(GrB_Vector_new(&m_index, GrB_INT64, n));
+    GRB_TRY(GrB_Vector_new(&verts_per_cluster, GrB_INT64, n));
 
     // Used below
     GrB_Vector ones, trues;
@@ -134,9 +139,11 @@ int LAGr_PeerPressureClustering(
     GRB_TRY(GrB_mxm(A, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, W, A, GrB_DESC_R));
 
     // Initial cluster vector (each vertex is in its own cluster)
+    // Also initialize verts_per_cluster to be all 1 since each cluster starts with 1 vertex
 
     LAGRAPH_TRY(LAGraph_Malloc((void **)&ones_array, n, sizeof(GrB_UINT64), msg));
     LAGRAPH_TRY(LAGraph_Malloc((void **)&ones_array_indices, n, sizeof(GrB_Index), msg));
+    GRB_TRY(GrB_assign(verts_per_cluster, NULL, NULL, 1, GrB_ALL, n, NULL));
 
     GRB_TRY(GrB_Vector_extractTuples_UINT64(ones_array_indices, ones_array, &n, ones));
     GRB_TRY(GrB_Matrix_diag(&C, ones, 0)); // Initial cluster C_i (this is the same as Identity with UINT_64 instead)
@@ -189,6 +196,10 @@ int LAGr_PeerPressureClustering(
 
         GRB_TRY(GrB_extract(C_temp, NULL, NULL, Identity_B, GrB_ALL, n, m_index_values, n, NULL));
 
+        // Adds up the total number of vertices in each cluster, i.e., the number of nonzero entries in each
+        // row of the current iteration of the cluster matrix
+        GRB_TRY(GrB_reduce(verts_per_cluster, NULL, NULL, GrB_PLUS_MONOID_INT64, C_temp, NULL));
+
         LAGraph_Free((void **)&m_index_values, NULL);
         LAGraph_Free((void **)&m_index_indices, NULL);
 
@@ -210,6 +221,7 @@ int LAGr_PeerPressureClustering(
                "Current Values at iteration %i\n"
                "--------------------------------------------------\n", count);
         GxB_print(C_temp, GxB_SHORT);
+        GxB_print(verts_per_cluster, GxB_SHORT);
         // GxB_print(m_index, GxB_SHORT);
 #endif
 
