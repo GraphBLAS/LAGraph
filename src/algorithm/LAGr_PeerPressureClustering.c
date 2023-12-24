@@ -221,7 +221,7 @@ int LAGr_PeerPressureClustering(
         // GxB_print(diff_vpc, GxB_SHORT);
 
         LAGRAPH_TRY(GxB_eWiseUnion(diff_vpc, NULL, NULL, GrB_MINUS_INT64, verts_per_cluster, zero_INT64, last_vpc, zero_INT64, NULL));
-        GRB_TRY(GrB_select(diff_vpc, NULL, NULL, GrB_VALUENE_BOOL, diff_vpc, 0, NULL));
+        // GRB_TRY(GrB_select(diff_vpc, NULL, NULL, GrB_VALUENE_BOOL, diff_vpc, 0, NULL));
         // GRB_TRY(GrB_eWiseAdd(diff_vpc, NULL, NULL, GrB_MINUS_INT64, verts_per_cluster, last_vpc, NULL));
 
         LAGraph_Free((void **)&m_index_values, NULL);
