@@ -221,6 +221,7 @@ int LAGr_PeerPressureClustering(
         // GxB_print(diff_vpc, GxB_SHORT);
 
         LAGRAPH_TRY(GxB_eWiseUnion(diff_vpc, NULL, NULL, GrB_MINUS_INT64, verts_per_cluster, zero_INT64, last_vpc, zero_INT64, NULL));
+        GRB_TRY(GrB_select(diff_vpc, NULL, NULL, GrB_VALUENE_BOOL, diff_vpc, 0, NULL));
         // GRB_TRY(GrB_eWiseAdd(diff_vpc, NULL, NULL, GrB_MINUS_INT64, verts_per_cluster, last_vpc, NULL));
 
         LAGraph_Free((void **)&m_index_values, NULL);
@@ -230,6 +231,9 @@ int LAGr_PeerPressureClustering(
         printf("\n--------------------------------------------------\n"
                "Current Values at iteration %i\n"
                "--------------------------------------------------\n", count);
+        GrB_Index num_changed = NULL;
+        GRB_TRY(GrB_Vector_nvals(&num_changed, diff_vpc));
+        printf("Number of clusters updated since last iteration: %i\n", num_changed);
         // GxB_print(C_temp, GxB_SHORT);
         // GxB_print(verts_per_cluster, GxB_SHORT);
         // GxB_print(last_vpc, GxB_SHORT);
