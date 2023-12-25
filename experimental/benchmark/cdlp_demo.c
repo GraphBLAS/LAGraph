@@ -33,7 +33,7 @@ int main(int argc, char **argv)
     LAGRAPH_TRY(LAGraph_cdlp(&CDLP_vector, G->A, symmetric, sanitize, itermax, t, msg));
 
     // Print results and timings
-    GxB_print(CDLP_vector, GxB_SHORT);
+    GxB_print(CDLP_vector, GxB_COMPLETE);
     printf("Sanitize time: %f\n", t[0]);
     printf("CDLP time: %f\n", t[1]);
 
