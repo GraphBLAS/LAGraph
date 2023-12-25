@@ -189,6 +189,8 @@ int LAGr_PeerPressureClustering(
         count++;
         // T = C_i x A
         GRB_TRY(GrB_mxm(T, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, C, A, GrB_DESC_R));
+        
+        GRB_TRY(GrB_select(T, NULL, NULL, GrB_VALUENE_FP64, T, 0.0, NULL));
 
         // Maximum value vector where m[k] = l means l is the maximum fp value in column
         // k of the matrix T
@@ -235,10 +237,10 @@ int LAGr_PeerPressureClustering(
         GRB_TRY(GrB_Vector_nvals(&num_changed, diff_vpc));
         // GRB_TRY(GrB_Vector_nvals())
 
-        float percent_difference = (float) num_changed / 
+        // float percent_difference = (float) num_changed / ;
 
         printf("Number of clusters updated since last iteration: %i\n", num_changed);
-        printf("This iteration's clusters are %.3f percent similar to last iteration's\n", percent_difference);
+        // printf("This iteration's clusters are %.3f percent similar to last iteration's\n", percent_difference);
         // GxB_print(C_temp, GxB_SHORT);
         // GxB_print(verts_per_cluster, GxB_SHORT);
         // GxB_print(last_vpc, GxB_SHORT);
