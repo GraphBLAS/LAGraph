@@ -50,6 +50,7 @@
 #if defined ( _OPENMP )
     #include <omp.h>
 #endif
+#undef I
 
 // LAGRAPH_MIN/MAX: suitable for integers, and non-NaN floating point
 #define LAGRAPH_MIN(x,y) (((x) < (y)) ? (x) : (y))
