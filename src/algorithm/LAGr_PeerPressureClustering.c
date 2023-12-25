@@ -239,11 +239,12 @@ int LAGr_PeerPressureClustering(
 
         printf("Number of clusters updated since last iteration: %i\n", num_changed);
         printf("This iteration's clusters are %.3f percent similar to last iteration's\n", percent_difference);
-        // GxB_print(C_temp, GxB_SHORT);
+        GxB_print(C_temp, GxB_SHORT);
         // GxB_print(verts_per_cluster, GxB_SHORT);
         // GxB_print(last_vpc, GxB_SHORT);
         // GxB_print(diff_vpc, GxB_SHORT);
         // GxB_print(m_index, GxB_SHORT);
+        GxB_print(T, GxB_SHORT);
 #endif
 
         // Move back up eventually
