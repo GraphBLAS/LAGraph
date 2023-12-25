@@ -24,7 +24,7 @@ int main(int argc, char **argv)
     LAGRAPH_TRY(readproblem(&G, NULL, false, false, false, NULL, true, argc, argv));
 
     // Prepare parameters for CDLP
-    bool symmetric = true; // Set based on your matrix characteristics
+    bool symmetric = false; // Set based on your matrix characteristics
     bool sanitize = false; // Set as needed
     int itermax = 100; // Maximum number of iterations
     double t[2]; // To store timings
