@@ -233,11 +233,12 @@ int LAGr_PeerPressureClustering(
                "--------------------------------------------------\n", count);
         GrB_Index num_changed = NULL;
         GRB_TRY(GrB_Vector_nvals(&num_changed, diff_vpc));
+        // GRB_TRY(GrB_Vector_nvals())
 
-        // float percent_difference = (float) num_changed / 
+        float percent_difference = (float) num_changed / 
 
         printf("Number of clusters updated since last iteration: %i\n", num_changed);
-        // printf("This iteration's clusters are %.3f percent similar to last iteration's\n", percent_difference);
+        printf("This iteration's clusters are %.3f percent similar to last iteration's\n", percent_difference);
         // GxB_print(C_temp, GxB_SHORT);
         // GxB_print(verts_per_cluster, GxB_SHORT);
         // GxB_print(last_vpc, GxB_SHORT);
@@ -255,6 +256,7 @@ int LAGr_PeerPressureClustering(
             GxB_print(T, GxB_SHORT);
             (*C_f) = C_temp; // Set output matrix
             GxB_print(*C_f, GxB_SHORT);
+            GxB_print(verts_per_cluster, GxB_COMPLETE);
             break;
         }
 
