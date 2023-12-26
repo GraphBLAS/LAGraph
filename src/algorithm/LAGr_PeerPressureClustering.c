@@ -142,6 +142,9 @@ int LAGr_PeerPressureClustering(
 // #endif
 //     }
 
+        LAGRAPH_TRY(LAGraph_Cached_OutDegree(G, msg));
+        LAGRAPH_TRY(LAGraph_Cached_NSelfEdges(G, msg));
+
     //--------------------------------------------------------------------------
     // assuring vertices have equal votes by normalizing weights via out-degrees
     //--------------------------------------------------------------------------
