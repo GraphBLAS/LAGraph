@@ -4,22 +4,22 @@
 
 // Cameron Quilici, Texas A&M University
 
-#define LG_FREE_WORK           \
-    {                          \
-        GrB_free(&T);          \
-        GrB_free(&C);          \
-        GrB_free(&W);          \
-        GrB_free(&w_temp);     \
-        GrB_free(&m);          \
-        GrB_free(&m_index);    \
-        GrB_free(&D);          \
-        GrB_free(&E);          \
-        GrB_free(&Identity_B); \
-        GrB_free(&Identity_F); \
+#define LG_FREE_WORK                  \
+    {                                 \
+        GrB_free(&T);                 \
+        GrB_free(&C);                 \
+        GrB_free(&W);                 \
+        GrB_free(&w_temp);            \
+        GrB_free(&m);                 \
+        GrB_free(&m_index);           \
+        GrB_free(&D);                 \
+        GrB_free(&E);                 \
+        GrB_free(&Identity_B);        \
+        GrB_free(&Identity_F);        \
         GrB_free(&verts_per_cluster); \
-        GrB_free(&last_vpc); \
-        GrB_free(&diff_vpc); \
-        GrB_free(&zero_INT64); \
+        GrB_free(&last_vpc);          \
+        GrB_free(&diff_vpc);          \
+        GrB_free(&zero_INT64);        \
     }
 
 #define LG_FREE_ALL    \
@@ -40,7 +40,7 @@ int LAGr_PeerPressureClustering(
     LAGraph_Graph G, // input graph
     char *msg)
 {
-    GxB_set (GxB_PRINT_1BASED, true);
+    GxB_set(GxB_PRINT_1BASED, true);
 
     GrB_Matrix T = NULL;
 
@@ -101,7 +101,6 @@ int LAGr_PeerPressureClustering(
     GRB_TRY(GrB_Matrix_new(&E, GrB_BOOL, n, n));
     GRB_TRY(GrB_Matrix_new(&Identity_B, GrB_BOOL, n, n));
     GRB_TRY(GrB_Matrix_new(&Identity_F, GrB_FP64, n, n)); // [?] Is this necessary?
-    // GRB_TRY(GrB_Matrix_new(C_f, GrB_BOOL, n, n));
     GRB_TRY(GrB_Vector_new(&w_temp, GrB_FP64, n));
     GRB_TRY(GrB_Vector_new(&m, GrB_FP64, n));
     GRB_TRY(GrB_Vector_new(&m_index, GrB_INT64, n));
@@ -127,7 +126,6 @@ int LAGr_PeerPressureClustering(
     // LG_ASSERT_MSG(G->nself_edges == n, -106, "G->nself_edges must be equal to the number of nodes");
     if (G->nself_edges != n)
     {
-        // printf("Ensuring each vertex has a self edge\n");
         GRB_TRY(GrB_assign(A, A, NULL, Identity_F, GrB_ALL, n, GrB_ALL, n, GrB_DESC_SC));
         G->A = A;
 
@@ -141,7 +139,6 @@ int LAGr_PeerPressureClustering(
         GxB_print(A, GxB_SHORT);
 #endif
     }
-
 
     //--------------------------------------------------------------------------
     // assuring vertices have equal votes by normalizing weights via out-degrees
@@ -159,8 +156,6 @@ int LAGr_PeerPressureClustering(
 
     GRB_TRY(GrB_assign(verts_per_cluster, NULL, NULL, 1, GrB_ALL, n, NULL));
     GRB_TRY(GrB_assign(last_vpc, NULL, NULL, 1, GrB_ALL, n, NULL));
-    // GRB_TRY(GrB_assign(diff_vpc, NULL, NULL, 0, GrB_ALL, n, NULL));
-
 
     GRB_TRY(GrB_Vector_extractTuples_UINT64(ones_array_indices, ones_array, &n, ones));
     GRB_TRY(GrB_Matrix_diag(&C, ones, 0)); // Initial cluster C_i (this is the same as Identity with UINT_64 instead)
@@ -180,6 +175,8 @@ int LAGr_PeerPressureClustering(
     GRB_TRY(GrB_Vector_new(&ones_fp, GrB_FP64, n));
     GRB_TRY(GrB_assign(ones_fp, NULL, NULL, (double)1, GrB_ALL, n, NULL));
 
+    double t0, t1, t2, t3, t4;
+
     //--------------------------------------------------------------------------
     // main algorithm logic
     //--------------------------------------------------------------------------
@@ -188,25 +185,41 @@ int LAGr_PeerPressureClustering(
     {
         // printf("Iteration %d\n", count);
         count++;
+
+        // Tally (vote) matrix T where T[i][j] = k means there are k votes from cluster i for vertex j
+        // to be in cluster i
         // T = C_i x A
+
+        t0 = LAGraph_WallClockTime();
         GRB_TRY(GrB_mxm(T, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, C, A, GrB_DESC_R));
-        
-        GRB_TRY(GrB_select(T, NULL, NULL, GrB_VALUENE_FP64, T, 0.0, NULL));
+        t0 = LAGraph_WallClockTime() - t0;
+        printf("Time T = C * A (size = %i)\n\t%f\n", n, t0);
+
+        // GRB_TRY(GrB_select(T, NULL, NULL, GrB_VALUENE_FP64, T, 0.0, NULL));
 
         // Maximum value vector where m[k] = l means l is the maximum fp value in column
-        // k of the matrix T
-        GRB_TRY(GrB_mxv(m, NULL, NULL, GrB_MAX_FIRST_SEMIRING_FP64, T, ones_fp, GrB_DESC_RT0));
+        // k of the matrix T. In other words, the vector m holds the maximum number of votes that each
+        // vertex got.
 
+        t1 = LAGraph_WallClockTime();
+        GRB_TRY(GrB_mxv(m, NULL, NULL, GrB_MAX_FIRST_SEMIRING_FP64, T, ones_fp, GrB_DESC_RT0));
+        t1 = LAGraph_WallClockTime() - t1;
+        printf("Time m = T * ones_fp (size = %i)\n\t%f\n", n, t1);
+
+        // Now we need to find *which* cluster(s) cast the highest votes, for this we need argmax code
         // argmax code T. Davis SS User Guide p. 286
+        t2 = LAGraph_WallClockTime();
         GRB_TRY(GrB_Matrix_diag(&D, m, 0));
         GRB_TRY(GrB_mxm(E, NULL, NULL, GxB_ANY_EQ_FP64, T, D, NULL));
         GRB_TRY(GrB_select(E, NULL, NULL, GrB_VALUENE_BOOL, E, 0, NULL)); // E == G in the pseudocode
-        // m_index holds the first row index of T which is equal to the respective value of m,
-        // for each column
+
+        // m_index holds the first (i.e., if two clusters c_1 and c_2 cast the same vote L for vertex v
+        // to gain membership into c_1/c_2, c_1 wins since it comes first/has the minimum index) row
+        // index of T which is equal to the respective value of m, for each column
         GRB_TRY(GrB_mxv(m_index, NULL, NULL, GxB_MIN_SECONDI_INT64, E, ones_fp, GrB_DESC_RT0));
 
         // m_index_values are ROW indices and m_index_indices are COLUMN indices
-        // [?] More of a C question but do these NEED to be allocated on heap?
+        // [?] More of a C question but do these NEED to be allocated on heap? A more efficient way to do this?
         GrB_Index *m_index_values, *m_index_indices;
         LAGRAPH_TRY(LAGraph_Malloc((void **)&m_index_values, n, sizeof(GrB_INT64), msg));
         LAGRAPH_TRY(LAGraph_Malloc((void **)&m_index_indices, n, sizeof(GrB_Index), msg));
@@ -214,6 +227,13 @@ int LAGr_PeerPressureClustering(
         GRB_TRY(GrB_Vector_extractTuples_INT64(m_index_indices, m_index_values, &n, m_index));
 
         GRB_TRY(GrB_extract(C_temp, NULL, NULL, Identity_B, GrB_ALL, n, m_index_values, n, NULL));
+        t2 = LAGraph_WallClockTime() - t2;
+        printf("Argmax time (size = %i)\n\t%f\n", n, t2);
+
+
+        //--------------------------------------------------------------------------
+        // begin debugging/printing/misc info section
+        //--------------------------------------------------------------------------
 
         // Adds up the total number of vertices in each cluster, i.e., the number of nonzero entries in each
         // row of the current iteration of the cluster matrix
@@ -230,15 +250,13 @@ int LAGr_PeerPressureClustering(
         LAGraph_Free((void **)&m_index_values, NULL);
         LAGraph_Free((void **)&m_index_indices, NULL);
 
-        #ifdef DEBUG
+#ifdef DEBUG
         printf("\n--------------------------------------------------\n"
                "Current Values at iteration %i\n"
-               "--------------------------------------------------\n", count);
+               "--------------------------------------------------\n",
+               count);
         GrB_Index num_changed = NULL;
         GRB_TRY(GrB_Vector_nvals(&num_changed, diff_vpc));
-        // GRB_TRY(GrB_Vector_nvals())
-
-        // float percent_difference = (float) num_changed / ;
 
         printf("Number of clusters updated since last iteration: %i\n", num_changed);
         // printf("This iteration's clusters are %.3f percent similar to last iteration's\n", percent_difference);
@@ -248,41 +266,45 @@ int LAGr_PeerPressureClustering(
         // GxB_print(diff_vpc, GxB_SHORT);
         // GxB_print(m_index, GxB_SHORT);
         // GxB_print(T, GxB_SHORT);
+        printf("--------------------------------------------------\n\n\n");
 #endif
 
         // Move back up eventually
         GRB_TRY(GrB_assign(last_vpc, NULL, NULL, verts_per_cluster, GrB_ALL, n, NULL));
 
+        //--------------------------------------------------------------------------
+        // end debugging/printing/misc info section
+        //--------------------------------------------------------------------------
+
+        // When no changes to the cluster matrix have been made, terminate
         bool res = NULL;
         LAGRAPH_TRY(LAGraph_Matrix_IsEqual(&res, C, C_temp, msg));
         if (res || count > 1000)
         {
-            GxB_print(T, GxB_SHORT);
             (*C_f) = C_temp; // Set output matrix
-            GxB_print(*C_f, GxB_SHORT);
-            GxB_print(verts_per_cluster, GxB_COMPLETE);
             break;
         }
 
-        // Unpack in order to get array indices
-        // Apply keep as a dense vector
-
-
-
-        // [?] Maybe unnecessary because of R descriptor? These do need to be cleared
+        // [?] Maybe unnecessary because of R descriptor? These DO need to be cleared
         // at the end of each iteration though...
+        // Below code could potentially be very slow
         GRB_TRY(GrB_Matrix_dup(&C, C_temp));
         GRB_TRY(GrB_Matrix_clear(C_temp));
         GRB_TRY(GrB_Matrix_clear(T));
     }
 
-    printf("Final tally matrix T where T[i][j] = k means there are "
+    printf("--------------------------------------------------\n"
+           "Final Information\n"
+           "--------------------------------------------------\n"
+           "Final tally matrix T where T[i][j] = k means there are "
            "k votes from cluster i for vertex j to be in cluster i:\n");
     GxB_print(T, GxB_SHORT);
     printf("Final cluster matrix C_temp where C_temp[i][j] == 1 means "
            "vertex j is in cluster i:\n");
     GxB_print(C_temp, GxB_SHORT);
     GxB_print(m_index, GxB_SHORT);
+    printf("Number of vertices per cluster:\n");
+    GxB_print(verts_per_cluster, GxB_COMPLETE);
 
     GRB_TRY(GrB_Vector_free(&ones_fp));
 
