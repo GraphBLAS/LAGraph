@@ -28,7 +28,7 @@
         GrB_free(C_f); \
     }
 
-#define DEBUG
+// #define DEBUG
 
 #include "LG_internal.h"
 #include <LAGraphX.h>
@@ -175,7 +175,7 @@ int LAGr_PeerPressureClustering(
     GRB_TRY(GrB_Vector_new(&ones_fp, GrB_FP64, n));
     GRB_TRY(GrB_assign(ones_fp, NULL, NULL, (double)1, GrB_ALL, n, NULL));
 
-    double t0, t1, t2, t3, t4;
+    double tt, t0, t1, t2, t3, t4;
 
     //--------------------------------------------------------------------------
     // main algorithm logic
@@ -183,6 +183,7 @@ int LAGr_PeerPressureClustering(
     GrB_Index count = 0;
     while (true)
     {
+        tt = LAGraph_WallClockTime();
         // printf("Iteration %d\n", count);
         count++;
 
@@ -229,7 +230,6 @@ int LAGr_PeerPressureClustering(
         GRB_TRY(GrB_extract(C_temp, NULL, NULL, Identity_B, GrB_ALL, n, m_index_values, n, NULL));
         t2 = LAGraph_WallClockTime() - t2;
         printf("Argmax time (size = %i)\n\t%f\n", n, t2);
-
 
         //--------------------------------------------------------------------------
         // begin debugging/printing/misc info section
@@ -291,6 +291,9 @@ int LAGr_PeerPressureClustering(
         GRB_TRY(GrB_Matrix_dup(&C, C_temp));
         GRB_TRY(GrB_Matrix_clear(C_temp));
         GRB_TRY(GrB_Matrix_clear(T));
+
+        tt = LAGraph_WallClockTime() - tt;
+        printf("Total time of iteration %i (size = %i)\n\t%f\n", count, n, tt);
     }
 
     printf("--------------------------------------------------\n"
