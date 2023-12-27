@@ -293,7 +293,7 @@ int LAGr_PeerPressureClustering(
         GRB_TRY(GrB_Matrix_clear(T));
 
         tt = LAGraph_WallClockTime() - tt;
-        printf("Total time of iteration %i (size = %i)\n\t%f\n", count, n, tt);
+        printf("Total time of iteration %i (size = %i)\n\t%f\n\n\n", count, n, tt);
     }
 
     printf("--------------------------------------------------\n"
