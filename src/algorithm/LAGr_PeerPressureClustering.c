@@ -31,7 +31,7 @@
         GrB_free(C_f); \
     }
 
-#define DEBUG
+// #define DEBUG
 
 #include "LG_internal.h"
 #include <LAGraphX.h>
