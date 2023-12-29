@@ -121,7 +121,7 @@ int LAGr_PeerPressureClustering(
         GRB_TRY(GrB_Matrix_build_FP64(A_san, AI, AJ, AX, nz, GrB_PLUS_FP64));
 
         A = A_san;
-        GxB_print(A, GxB_COMPLETE);
+        GxB_print(A, GxB_SHORT);
     }
     else
     {
