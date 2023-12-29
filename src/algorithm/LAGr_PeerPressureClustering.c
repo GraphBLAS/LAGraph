@@ -263,12 +263,12 @@ int LAGr_PeerPressureClustering(
         
         printf("Number of clusters updated since last iteration: %i\n", num_changed);
         printf("%2.3f %% of all cluster assignments have been updated since last iteration\n", percent_updated * 100);
-        // GxB_print(C_temp, GxB_SHORT);
-        // GxB_print(verts_per_cluster, GxB_SHORT);
+        GxB_print(C_temp, GxB_COMPLETE);
+        GxB_print(verts_per_cluster, GxB_COMPLETE);
         // GxB_print(last_vpc, GxB_SHORT);
         // GxB_print(diff_vpc, GxB_SHORT);
-        // GxB_print(m_index, GxB_SHORT);
-        // GxB_print(T, GxB_SHORT);
+        GxB_print(m_index, GxB_COMPLETE);
+        GxB_print(T, GxB_COMPLETE);
         printf("--------------------------------------------------\n\n\n");
 #endif
 
