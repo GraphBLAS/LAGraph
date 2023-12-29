@@ -28,7 +28,7 @@
         GrB_free(C_f); \
     }
 
-// #define DEBUG
+#define DEBUG
 
 #include "LG_internal.h"
 #include <LAGraphX.h>
@@ -175,6 +175,7 @@ int LAGr_PeerPressureClustering(
     GRB_TRY(GrB_Vector_new(&ones_fp, GrB_FP64, n));
     GRB_TRY(GrB_assign(ones_fp, NULL, NULL, (double)1, GrB_ALL, n, NULL));
 
+    GrB_Index last_num_changed = n;
     double tt, t0, t1, t2, t3, t4;
 
     //--------------------------------------------------------------------------
@@ -194,7 +195,7 @@ int LAGr_PeerPressureClustering(
         t0 = LAGraph_WallClockTime();
         GRB_TRY(GrB_mxm(T, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, C, A, GrB_DESC_R));
         t0 = LAGraph_WallClockTime() - t0;
-        printf("Time T = C * A (size = %i)\n\t%f\n", n, t0);
+        // printf("Time T = C * A (size = %i)\n\t%f\n", n, t0);
 
         // GRB_TRY(GrB_select(T, NULL, NULL, GrB_VALUENE_FP64, T, 0.0, NULL));
 
@@ -205,10 +206,10 @@ int LAGr_PeerPressureClustering(
         t1 = LAGraph_WallClockTime();
         GRB_TRY(GrB_mxv(m, NULL, NULL, GrB_MAX_FIRST_SEMIRING_FP64, T, ones_fp, GrB_DESC_RT0));
         t1 = LAGraph_WallClockTime() - t1;
-        printf("Time m = T * ones_fp (size = %i)\n\t%f\n", n, t1);
+        // printf("Time m = T * ones_fp (size = %i)\n\t%f\n", n, t1);
 
         // Now we need to find *which* cluster(s) cast the highest votes, for this we need argmax code
-        // argmax code T. Davis SS User Guide p. 286
+        // argmax ( adapted to argmin) code T. Davis SS User Guide p. 286
         t2 = LAGraph_WallClockTime();
         GRB_TRY(GrB_Matrix_diag(&D, m, 0));
         GRB_TRY(GrB_mxm(E, NULL, NULL, GxB_ANY_EQ_FP64, T, D, NULL));
@@ -229,7 +230,7 @@ int LAGr_PeerPressureClustering(
 
         GRB_TRY(GrB_extract(C_temp, NULL, NULL, Identity_B, GrB_ALL, n, m_index_values, n, NULL));
         t2 = LAGraph_WallClockTime() - t2;
-        printf("Argmax time (size = %i)\n\t%f\n", n, t2);
+        // printf("Argmax time (size = %i)\n\t%f\n", n, t2);
 
         //--------------------------------------------------------------------------
         // begin debugging/printing/misc info section
@@ -245,7 +246,9 @@ int LAGr_PeerPressureClustering(
 
         LAGRAPH_TRY(GxB_eWiseUnion(diff_vpc, NULL, NULL, GrB_MINUS_INT64, verts_per_cluster, zero_INT64, last_vpc, zero_INT64, NULL));
         GRB_TRY(GrB_select(diff_vpc, NULL, NULL, GrB_VALUENE_INT64, diff_vpc, 0, GrB_DESC_R));
-        // GRB_TRY(GrB_eWiseAdd(diff_vpc, NULL, NULL, GrB_MINUS_INT64, verts_per_cluster, last_vpc, NULL));
+
+        GrB_Index num_changed = NULL;
+        GRB_TRY(GrB_Vector_nvals(&num_changed, diff_vpc));
 
         LAGraph_Free((void **)&m_index_values, NULL);
         LAGraph_Free((void **)&m_index_indices, NULL);
@@ -255,11 +258,11 @@ int LAGr_PeerPressureClustering(
                "Current Values at iteration %i\n"
                "--------------------------------------------------\n",
                count);
-        GrB_Index num_changed = NULL;
-        GRB_TRY(GrB_Vector_nvals(&num_changed, diff_vpc));
 
+        double percent_updated = num_changed * 1.0 / n;
+        
         printf("Number of clusters updated since last iteration: %i\n", num_changed);
-        // printf("This iteration's clusters are %.3f percent similar to last iteration's\n", percent_difference);
+        printf("%2.3f %% of all cluster assignments have been updated since last iteration\n", percent_updated * 100);
         // GxB_print(C_temp, GxB_SHORT);
         // GxB_print(verts_per_cluster, GxB_SHORT);
         // GxB_print(last_vpc, GxB_SHORT);
@@ -271,6 +274,7 @@ int LAGr_PeerPressureClustering(
 
         // Move back up eventually
         GRB_TRY(GrB_assign(last_vpc, NULL, NULL, verts_per_cluster, GrB_ALL, n, NULL));
+        // last_num_changed = num_changed;
 
         //--------------------------------------------------------------------------
         // end debugging/printing/misc info section
@@ -293,7 +297,7 @@ int LAGr_PeerPressureClustering(
         GRB_TRY(GrB_Matrix_clear(T));
 
         tt = LAGraph_WallClockTime() - tt;
-        printf("Total time of iteration %i (size = %i)\n\t%f\n\n\n", count, n, tt);
+        // printf("Total time of iteration %i (size = %i)\n\t%f\n\n\n", count, n, tt);
     }
 
     printf("--------------------------------------------------\n"
