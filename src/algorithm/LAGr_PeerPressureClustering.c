@@ -238,7 +238,7 @@ int LAGr_PeerPressureClustering(
 
         // Adds up the total number of vertices in each cluster, i.e., the number of nonzero entries in each
         // row of the current iteration of the cluster matrix
-        GRB_TRY(GrB_reduce(verts_per_cluster, NULL, NULL, GrB_PLUS_MONOID_INT64, C_temp, NULL));
+        GRB_TRY(GrB_reduce(verts_per_cluster, NULL, NULL, GrB_PLUS_MONOID_INT64, C_temp, GrB_DESC_R));
 
         // GxB_print(verts_per_cluster, GxB_SHORT);
         // GxB_print(last_vpc, GxB_SHORT);
@@ -309,7 +309,6 @@ int LAGr_PeerPressureClustering(
     printf("Final cluster matrix C_temp where C_temp[i][j] == 1 means "
            "vertex j is in cluster i:\n");
     GxB_print(C_temp, GxB_SHORT);
-    GxB_print(m_index, GxB_SHORT);
     printf("Number of vertices per cluster:\n");
     GxB_print(verts_per_cluster, GxB_COMPLETE);
 
