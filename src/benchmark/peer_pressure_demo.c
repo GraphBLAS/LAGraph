@@ -41,7 +41,7 @@ int main (int argc, char**argv)
     GxB_print (G->A, GxB_SHORT);
 
     // Run Peer Pressure Clustering algorithm
-    GRB_TRY(LAGr_PeerPressureClustering(&C_f, G, msg));
+    GRB_TRY(LAGr_PeerPressureClustering(&C_f, true, G, msg));
 
     GxB_print (C_f, GxB_SHORT);
 

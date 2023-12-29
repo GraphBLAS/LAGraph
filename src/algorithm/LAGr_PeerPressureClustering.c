@@ -4,22 +4,25 @@
 
 // Cameron Quilici, Texas A&M University
 
-#define LG_FREE_WORK                  \
-    {                                 \
-        GrB_free(&T);                 \
-        GrB_free(&C);                 \
-        GrB_free(&W);                 \
-        GrB_free(&w_temp);            \
-        GrB_free(&m);                 \
-        GrB_free(&m_index);           \
-        GrB_free(&D);                 \
-        GrB_free(&E);                 \
-        GrB_free(&Identity_B);        \
-        GrB_free(&Identity_F);        \
-        GrB_free(&verts_per_cluster); \
-        GrB_free(&last_vpc);          \
-        GrB_free(&diff_vpc);          \
-        GrB_free(&zero_INT64);        \
+#define LG_FREE_WORK                     \
+    {                                    \
+        GrB_free(&T);                    \
+        GrB_free(&C);                    \
+        GrB_free(&W);                    \
+        GrB_free(&w_temp);               \
+        GrB_free(&m);                    \
+        GrB_free(&m_index);              \
+        GrB_free(&D);                    \
+        GrB_free(&E);                    \
+        GrB_free(&Identity_B);           \
+        GrB_free(&Identity_F);           \
+        GrB_free(&verts_per_cluster);    \
+        GrB_free(&last_vpc);             \
+        GrB_free(&diff_vpc);             \
+        GrB_free(&zero_INT64);           \
+        LAGraph_Free((void *)&AI, NULL); \
+        LAGraph_Free((void *)&AJ, NULL); \
+        LAGraph_Free((void *)&AX, NULL); \
     }
 
 #define LG_FREE_ALL    \
@@ -37,10 +40,12 @@ int LAGr_PeerPressureClustering(
     // output:
     GrB_Matrix *C_f, // Final clustering C_f[i][j] == 1 indicates vertex j is in cluster i
     // input:
+    bool sanitize,
     LAGraph_Graph G, // input graph
     char *msg)
 {
-    GxB_set(GxB_PRINT_1BASED, true);
+    // GxB_set(GxB_PRINT_1BASED, true);
+    char MATRIX_TYPE[LAGRAPH_MSG_LEN];
 
     GrB_Matrix T = NULL;
 
@@ -70,8 +75,11 @@ int LAGr_PeerPressureClustering(
     GrB_Vector diff_vpc = NULL;
     GrB_Scalar zero_INT64 = NULL;
 
-    // Number of vertices in the graph
-    GrB_Index n = 0;
+    GrB_Matrix A_san = NULL;
+    // Arrays holding extracted tuples if the matrix needs to be copied
+    GrB_Index *AI = NULL;
+    GrB_Index *AJ = NULL;
+    double *AX = NULL;
 
     //--------------------------------------------------------------------------
     // check inputs
@@ -79,11 +87,46 @@ int LAGr_PeerPressureClustering(
 
     LG_CLEAR_MSG;
 
+    GrB_Matrix A;
+
     LG_ASSERT(C_f != NULL, GrB_NULL_POINTER);
     (*C_f) = NULL;
     LG_TRY(LAGraph_CheckGraph(G, msg));
 
-    GrB_Matrix A = G->A;
+    GrB_Index n, nz;
+    GRB_TRY(GrB_Matrix_nrows(&n, G->A));
+    GRB_TRY(GrB_Matrix_nvals(&nz, G->A));
+
+    GrB_Vector ones_fp;
+    GrB_Vector ones_fp_nz;
+    GRB_TRY(GrB_Vector_new(&ones_fp, GrB_FP64, n));
+    GRB_TRY(GrB_Vector_new(&ones_fp_nz, GrB_FP64, nz));
+    GRB_TRY(GrB_assign(ones_fp, NULL, NULL, (double)1, GrB_ALL, n, NULL));
+    GRB_TRY(GrB_assign(ones_fp_nz, NULL, NULL, (double)1, GrB_ALL, nz, NULL));
+
+    LAGraph_Matrix_TypeName(&MATRIX_TYPE, G->A, msg);
+    printf("%s\n", MATRIX_TYPE);
+    if (strcmp(MATRIX_TYPE, "float") != 0)
+    {
+        LAGRAPH_TRY(LAGraph_Malloc((void **)&AI, nz, sizeof(GrB_Index), msg));
+        LAGRAPH_TRY(LAGraph_Malloc((void **)&AJ, nz, sizeof(GrB_Index), msg));
+        GRB_TRY(GrB_Matrix_extractTuples_BOOL(AI, AJ, NULL, &nz, G->A));
+
+        // Extract values from the ones_vector
+        LAGRAPH_TRY(LAGraph_Malloc((void **)&AX, nz, sizeof(double), msg));
+        GRB_TRY(GrB_Vector_extractTuples_FP64(NULL, AX, &nz, ones_fp_nz));
+
+        // Build the sanitized matrix
+        GRB_TRY (GrB_Matrix_new(&A_san, GrB_FP64, n, n));
+        GRB_TRY(GrB_Matrix_build_FP64(A_san, AI, AJ, AX, nz, GrB_PLUS_FP64));
+
+        A = A_san;
+        GxB_print(A, GxB_COMPLETE);
+    }
+    else
+    {
+        A = G->A;
+    }
 
     LG_ASSERT_MSG(G->out_degree != NULL, -106,
                   "G->out_degree must be defined");
@@ -92,7 +135,6 @@ int LAGr_PeerPressureClustering(
     // initializations
     //--------------------------------------------------------------------------
 
-    GRB_TRY(GrB_Matrix_nrows(&n, A));
     GRB_TRY(GrB_Matrix_new(&T, GrB_FP64, n, n));
     GRB_TRY(GrB_Matrix_new(&C, GrB_BOOL, n, n));
     GRB_TRY(GrB_Matrix_new(&C_temp, GrB_BOOL, n, n));
@@ -170,10 +212,6 @@ int LAGr_PeerPressureClustering(
 
     // GxB_print(W, GxB_COMPLETE);
     // GxB_print(C, GxB_COMPLETE);
-
-    GrB_Vector ones_fp;
-    GRB_TRY(GrB_Vector_new(&ones_fp, GrB_FP64, n));
-    GRB_TRY(GrB_assign(ones_fp, NULL, NULL, (double)1, GrB_ALL, n, NULL));
 
     GrB_Index last_num_changed = n;
     double tt, t0, t1, t2, t3, t4;
@@ -260,7 +298,7 @@ int LAGr_PeerPressureClustering(
                count);
 
         double percent_updated = num_changed * 1.0 / n;
-        
+
         printf("Number of clusters updated since last iteration: %i\n", num_changed);
         printf("%2.3f %% of all cluster assignments have been updated since last iteration\n", percent_updated * 100);
         GxB_print(C_temp, GxB_COMPLETE);
