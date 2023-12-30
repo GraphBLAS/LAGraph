@@ -80,7 +80,7 @@ const matrix_info files [ ] =
     {                  1,                  1, "matrix_fp32_structure.mtx" } ,
     {          -INFINITY,           INFINITY, "matrix_fp64.mtx" } ,
     {             -32768,              32767, "matrix_int16.mtx" } ,
-    {        -2147483648,         2147483647, "matrix_int32.mtx" } ,
+    {      -2147483648.0,         2147483647, "matrix_int32.mtx" } ,
     {               -128,                127, "matrix_int8.mtx" } ,
     {                  0,              65535, "matrix_uint16.mtx" } ,
     {                  0,         4294967295, "matrix_uint32.mtx" } ,
@@ -185,7 +185,7 @@ void test_minmax (void)
         TEST_CASE (aname) ;
         printf ("\n============= %2d: %s\n", k, aname) ;
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
-        FILE *f = fopen (filename, "r") ;
+        FILE *f = fopen (filename, "rb") ;
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
@@ -212,6 +212,10 @@ void test_minmax (void)
         double emin2 = 0 ;
         double emax2 = 0 ;
 
+        printf ("min/max as GrB_Scalars:\n") ;
+        GxB_print (G->emin, 3) ;
+        GxB_print (G->emax, 3) ;
+
         int result ;
         result = GrB_Scalar_extractElement_FP64 (&emin2, G->emin) ;
         printf ("min: %g %g err %g\n", emin1, emin2, emin1 - emin2) ;
@@ -223,6 +227,29 @@ void test_minmax (void)
         {
             TEST_CHECK (result == GrB_SUCCESS) ;
         }
+
+        #if 0
+        if (emin1 != emin2)
+        {
+            // failure on MSVC, OpenMP
+            // https://github.com/DrTimothyAldenDavis/SuiteSparse/actions/runs/6763376325/job/18380420493?pr=503
+            // now fixed.
+            printf ("Test failure, k: %d name: %s\n", k, aname) ;
+            printf ("emin1: %30.20g\n", emin1) ;
+            printf ("emin2: %30.20g\n", emin2) ;
+            OK (LAGraph_Matrix_Print (G->A, 5, stdout, msg)) ;
+
+            // extract as int64:
+            int64_t emin2_int64 = 0 ;
+            int64_t emax2_int64 = 0 ;
+            GrB_Scalar_extractElement_INT64 (&emin2_int64, G->emin) ;
+            GrB_Scalar_extractElement_INT64 (&emax2_int64, G->emax) ;
+            printf ("emin2 int64: %" PRId64 "\n", emin2_int64) ;
+            printf ("emax2 int64: %" PRId64 "\n", emax2_int64) ;
+
+        }
+        #endif
+
         TEST_CHECK (emin1 == emin2) ;
 
         result = GrB_Scalar_extractElement_FP64 (&emax2, G->emax) ;
@@ -273,7 +300,7 @@ void test_minmax_int64 (void)
         TEST_CASE (aname) ;
         printf ("\n============= %2d: %s\n", k, aname) ;
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
-        FILE *f = fopen (filename, "r") ;
+        FILE *f = fopen (filename, "rb") ;
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;
@@ -350,7 +377,7 @@ void test_minmax_uint64 (void)
         TEST_CASE (aname) ;
         printf ("\n============= %2d: %s\n", k, aname) ;
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
-        FILE *f = fopen (filename, "r") ;
+        FILE *f = fopen (filename, "rb") ;
         TEST_CHECK (f != NULL) ;
         OK (LAGraph_MMRead (&A, f, msg)) ;
         OK (fclose (f)) ;

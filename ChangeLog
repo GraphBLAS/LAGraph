@@ -1,3 +1,8 @@
+Dec 30, 2023: version 1.1.0
+
+    * major change to build system: by Markus Mützel
+    * port: to 32-bit systems
+
 Version 1.0.2: Aug 2, 2023
 
     * port: removed GxB_SelectOp so LAGraph v1.0.2 can be compiled with

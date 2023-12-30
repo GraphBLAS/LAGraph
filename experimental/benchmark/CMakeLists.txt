@@ -13,9 +13,9 @@
 
 #-------------------------------------------------------------------------------
 
-include_directories ( ${CMAKE_SOURCE_DIR}/src/test/include
-    ${CMAKE_SOURCE_DIR}/src/benchmark
-    ${CMAKE_SOURCE_DIR}/experimental/test/include )
+include_directories ( ${PROJECT_SOURCE_DIR}/src/test/include
+    ${PROJECT_SOURCE_DIR}/src/benchmark
+    ${PROJECT_SOURCE_DIR}/experimental/test/include )
 
 file( GLOB DEMO_SOURCES LIST_DIRECTORIES false *_demo.c )
 foreach( demosourcefile ${DEMO_SOURCES} )
@@ -23,6 +23,14 @@ foreach( demosourcefile ${DEMO_SOURCES} )
     string( REPLACE ".c" "" demoname ${justname} )
 #   message("Adding: ${demoname}")
     add_executable( ${demoname} ${demosourcefile} )
-    target_link_libraries( ${demoname} lagraphx lagraph lagraphtest lagraphxtest ${GRAPHBLAS_LIBRARIES} )
-    target_link_directories( ${demoname} BEFORE PUBLIC ${CMAKE_SOURCE_DIR}/build )
+    set_target_properties ( ${demoname} PROPERTIES
+        C_STANDARD_REQUIRED ON
+        C_STANDARD 11 )
+    if ( BUILD_SHARED_LIBS )
+        target_link_libraries( ${demoname}
+            LAGraphX LAGraph lagraphtest lagraphxtest GraphBLAS::GraphBLAS )
+    else ( )
+        target_link_libraries( ${demoname}
+            LAGraphX_static LAGraph_static lagraphtest_static lagraphxtest_static GraphBLAS::GraphBLAS )
+    endif ( )
 endforeach( demosourcefile ${DEMO_SOURCES} )
