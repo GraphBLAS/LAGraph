@@ -39,10 +39,15 @@
 cmake_minimum_required ( VERSION 3.20 ) # LAGraph can be built stand-alone
 
 # version of LAGraph
-set ( LAGraph_DATE "Dec 30, 2023" )
+set ( LAGraph_DATE "Jan XX, 2024" )     # FIXME for 7.5.0
 set ( LAGraph_VERSION_MAJOR 1 CACHE STRING "" FORCE )
 set ( LAGraph_VERSION_MINOR 2 CACHE STRING "" FORCE )
 set ( LAGraph_VERSION_SUB   0 CACHE STRING "" FORCE )
+
+message ( STATUS "Building LAGraph version: v"
+    ${LAGraph_VERSION_MAJOR}.
+    ${LAGraph_VERSION_MINOR}.
+    ${LAGraph_VERSION_SUB} " (" ${LAGraph_DATE} ")" )
 
 #-------------------------------------------------------------------------------
 # define the project
@@ -70,6 +75,9 @@ configure_file (
     "config/LAGraph.h.in"
     "${PROJECT_SOURCE_DIR}/include/LAGraph.h"
     NEWLINE_STYLE LF )
+
+include ( CheckSymbolExists )
+check_symbol_exists ( fmax "math.h" NO_LIBM )
 
 #-------------------------------------------------------------------------------
 # code coverage and build type
@@ -162,7 +170,11 @@ if ( COVERAGE )
     message ( STATUS "OpenMP disabled for test coverage" )
 else ( )
     if ( LAGRAPH_USE_OPENMP )
-        find_package ( OpenMP GLOBAL )
+        if ( CMAKE_VERSION VERSION_LESS 3.24 )
+            find_package ( OpenMP COMPONENTS C )
+        else ( )
+            find_package ( OpenMP COMPONENTS C GLOBAL )
+        endif ( )
         if ( OpenMP_C_FOUND AND BUILD_STATIC_LIBS )
             list ( APPEND LAGRAPH_STATIC_LIBS ${OpenMP_C_LIBRARIES} )
         endif ( )
@@ -349,7 +361,7 @@ install ( FILES
 
 if ( NOT MSVC )
     if ( BUILD_STATIC_LIBS )
-        if ( NOT WIN32 )
+        if ( NOT NO_LIBM )
             list ( APPEND LAGRAPH_STATIC_LIBS "m" )
         endif ( )
     endif ( )
