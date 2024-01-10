@@ -4,6 +4,11 @@ Version 1.2.0:  in progress
         LAGraph can now use a "vanilla" GraphBLAS that supports the v2.1
         C API.  If SuiteSparse:GraphBLAS is used, v9.0.0 is required.
 
+
+Jan 10, 2024: version 1.1.1
+
+    * minor update to build system
+
 Dec 30, 2023: version 1.1.0
 
     * major change to build system: by Markus Mützel
