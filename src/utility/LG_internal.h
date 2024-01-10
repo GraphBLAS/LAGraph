@@ -625,7 +625,7 @@ int LG_KindName
 
 #if LAGRAPH_SUITESPARSE
 
-    // SuiteSparse v8.1 or later
+    // SuiteSparse:GraphBLAS v8.1 or later
     #define LG_HYPERSPARSE GxB_HYPERSPARSE
     #define LG_SPARSE      GxB_SPARSE
     #define LG_BITMAP      GxB_BITMAP
