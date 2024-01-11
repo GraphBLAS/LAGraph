@@ -186,9 +186,9 @@ int LAGr_PeerPressureClustering(
     // assuring vertices have equal votes by normalizing weights via out-degrees
     //--------------------------------------------------------------------------
 
-    // GRB_TRY(GrB_apply(w_temp, NULL, NULL, GrB_MINV_FP64, G->out_degree, NULL));
-    // GRB_TRY(GrB_Matrix_diag(&W, w_temp, 0));
-    // GRB_TRY(GrB_mxm(A, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, W, A, GrB_DESC_R));
+    GRB_TRY(GrB_apply(w_temp, NULL, NULL, GrB_MINV_FP64, G->out_degree, NULL));
+    GRB_TRY(GrB_Matrix_diag(&W, w_temp, 0));
+    GRB_TRY(GrB_mxm(A, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, W, A, GrB_DESC_R));
 
     // Initial cluster vector (each vertex is in its own cluster)
     // Also initialize verts_per_cluster to be all 1 since each cluster starts with 1 vertex
