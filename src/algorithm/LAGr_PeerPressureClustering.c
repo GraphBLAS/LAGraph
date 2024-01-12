@@ -81,6 +81,8 @@ int LAGr_PeerPressureClustering(
     GrB_Index *AJ = NULL;
     double *AX = NULL;
 
+    double p = .9;
+
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------
@@ -117,7 +119,7 @@ int LAGr_PeerPressureClustering(
         GRB_TRY(GrB_Vector_extractTuples_FP64(NULL, AX, &nz, ones_fp_nz));
 
         // Build the sanitized matrix
-        GRB_TRY (GrB_Matrix_new(&A_san, GrB_FP64, n, n));
+        GRB_TRY(GrB_Matrix_new(&A_san, GrB_FP64, n, n));
         GRB_TRY(GrB_Matrix_build_FP64(A_san, AI, AJ, AX, nz, GrB_PLUS_FP64));
 
         A = A_san;
@@ -222,6 +224,8 @@ int LAGr_PeerPressureClustering(
     GrB_Index count = 0;
     while (true)
     {
+
+        // GxB_print(A, GxB_COMPLETE);
         tt = LAGraph_WallClockTime();
         // printf("Iteration %d\n", count);
         count++;
@@ -287,6 +291,19 @@ int LAGr_PeerPressureClustering(
 
         GrB_Index num_changed = NULL;
         GRB_TRY(GrB_Vector_nvals(&num_changed, diff_vpc));
+
+        // Re-use w_temp and W workspaces
+        GRB_TRY(GrB_assign(w_temp, NULL, NULL, 1, GrB_ALL, n, GrB_DESC_R));
+        // GxB_print(verts_per_cluster, GxB_COMPLETE);
+//         GxB_print(w_temp, GxB_COMPLETE);
+        GRB_TRY(GrB_apply(w_temp, verts_per_cluster, NULL, GxB_POW_FP64, verts_per_cluster, p, GrB_DESC_S));
+        // GxB_print(w_temp, GxB_COMPLETE);
+
+        GRB_TRY(GxB_Matrix_diag(W, w_temp, 0, GrB_DESC_R));
+        // GxB_print(W, GxB_COMPLETE);
+        // GxB_print(A, GxB_COMPLETE);
+        GRB_TRY(GrB_mxm(A, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, W, A, NULL));
+        // GxB_print(A, GxB_COMPLETE);
 
         LAGraph_Free((void **)&m_index_values, NULL);
         LAGraph_Free((void **)&m_index_indices, NULL);

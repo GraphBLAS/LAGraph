@@ -37,9 +37,6 @@ int main(int argc, char **argv)
     printf("Sanitize time: %f\n", t[0]);
     printf("CDLP time: %f\n", t[1]);
 
-    // Optionally, save the result to a file
-    // ... [File writing code similar to the original program]
-
     // Cleanup and finalize
     LG_FREE_ALL;
     LAGRAPH_TRY(LAGraph_Finalize(msg));
