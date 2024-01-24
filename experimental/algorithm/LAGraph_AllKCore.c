@@ -105,7 +105,7 @@ int LAGraph_KCore_All
     GrB_BinaryOp minus_op = (maxDeg > INT32_MAX) ? GrB_MINUS_INT64 : GrB_MINUS_INT32 ;
     GrB_Semiring semiring = (maxDeg > INT32_MAX) ? LAGraph_plus_one_int64 : LAGraph_plus_one_int32 ;
 
-    GRB_TRY (LG_SET_SPARSITY (done,  LG_BITMAP + LG_FULL)) ;
+    GRB_TRY (LG_SET_FORMAT_HINT (done, LG_BITMAP + LG_FULL)) ;
 
     //printf ("\n================================== COMPUTING GrB_KCORE: ==================================\n") ;
     while(todo > 0){
