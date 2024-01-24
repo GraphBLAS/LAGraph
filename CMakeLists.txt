@@ -39,7 +39,7 @@
 cmake_minimum_required ( VERSION 3.20 ) # LAGraph can be built stand-alone
 
 # version of LAGraph
-set ( LAGraph_DATE "Jan 10, 2024" )
+set ( LAGraph_DATE "Feb XX, 2024" )
 set ( LAGraph_VERSION_MAJOR 1 CACHE STRING "" FORCE )
 set ( LAGraph_VERSION_MINOR 2 CACHE STRING "" FORCE )
 set ( LAGraph_VERSION_SUB   0 CACHE STRING "" FORCE )
@@ -162,9 +162,6 @@ endif ( )
 #-------------------------------------------------------------------------------
 
 option ( LAGRAPH_USE_OPENMP "ON: Use OpenMP in LAGraph if available.  OFF: Do not use OpenMP.  (Default: SUITESPARSE_USE_OPENMP)" ${SUITESPARSE_USE_OPENMP} )
-if ( NOT SUITESPARSE_USE_OPENMP )
-    set ( LAGRAPH_USE_OPENMP "OFF" CACHE STRING "" FORCE )
-endif ( )
 if ( COVERAGE )
     set ( LAGRAPH_USE_OPENMP "OFF" CACHE STRING "" FORCE ) # OK: test coverage is enabled
     message ( STATUS "OpenMP disabled for test coverage" )
@@ -184,7 +181,7 @@ else ( )
     endif ( )
 endif ( )
 
-if ( OpenMP_C_FOUND )
+if ( LAGRAPH_USE_OPENMP AND OpenMP_C_FOUND )
     set ( LAGRAPH_HAS_OPENMP ON )
 else ( )
     set ( LAGRAPH_HAS_OPENMP OFF )
