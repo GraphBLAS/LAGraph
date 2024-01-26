@@ -31,7 +31,7 @@
         GrB_free(C_f); \
     }
 
-#define DEBUG
+// #define DEBUG
 
 #include "LG_internal.h"
 #include <LAGraphX.h>
@@ -216,7 +216,7 @@ int LAGr_PeerPressureClustering(
     // GxB_print(C, GxB_COMPLETE);
 
     GrB_Index last_num_changed = n;
-    double tt, t0, t1, t2, t3, t4;
+    double tt, t0;
 
     //--------------------------------------------------------------------------
     // main algorithm logic
@@ -237,7 +237,7 @@ int LAGr_PeerPressureClustering(
         t0 = LAGraph_WallClockTime();
         GRB_TRY(GrB_mxm(T, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, C, A, GrB_DESC_R));
         t0 = LAGraph_WallClockTime() - t0;
-        // printf("Time T = C * A (size = %i)\n\t%f\n", n, t0);
+        printf("\tTime T = C * A (size = %i)\n\t%f\n", n, t0);
 
         // GRB_TRY(GrB_select(T, NULL, NULL, GrB_VALUENE_FP64, T, 0.0, NULL));
 
@@ -245,14 +245,14 @@ int LAGr_PeerPressureClustering(
         // k of the matrix T. In other words, the vector m holds the maximum number of votes that each
         // vertex got.
 
-        t1 = LAGraph_WallClockTime();
+        t0 = LAGraph_WallClockTime();
         GRB_TRY(GrB_mxv(m, NULL, NULL, GrB_MAX_FIRST_SEMIRING_FP64, T, ones_fp, GrB_DESC_RT0));
-        t1 = LAGraph_WallClockTime() - t1;
-        // printf("Time m = T * ones_fp (size = %i)\n\t%f\n", n, t1);
+        t0 = LAGraph_WallClockTime() - t0;
+        printf("Time m = T * ones_fp (size = %i)\n\t%f\n", n, t0);
 
-        // Now we need to find *which* cluster(s) cast the highest votes, for this we need argmax code
+        // Now w\te need to find *which* cluster(s) cast the highest votes, for this we need argmax code
         // argmax ( adapted to argmin) code T. Davis SS User Guide p. 286
-        t2 = LAGraph_WallClockTime();
+        t0 = LAGraph_WallClockTime();
         GRB_TRY(GrB_Matrix_diag(&D, m, 0));
         GRB_TRY(GrB_mxm(E, NULL, NULL, GxB_ANY_EQ_FP64, T, D, NULL));
         GRB_TRY(GrB_select(E, NULL, NULL, GrB_VALUENE_BOOL, E, 0, NULL)); // E == G in the pseudocode
@@ -271,8 +271,8 @@ int LAGr_PeerPressureClustering(
         GRB_TRY(GrB_Vector_extractTuples_INT64(m_index_indices, m_index_values, &n, m_index));
 
         GRB_TRY(GrB_extract(C_temp, NULL, NULL, Identity_B, GrB_ALL, n, m_index_values, n, NULL));
-        t2 = LAGraph_WallClockTime() - t2;
-        // printf("Argmax time (size = %i)\n\t%f\n", n, t2);
+        t0 = LAGraph_WallClockTime() - t0;
+        printf("\tArgmax time (size = %i)\n\t%f\n", n, t0);
 
         //--------------------------------------------------------------------------
         // begin debugging/printing/misc info section
@@ -352,7 +352,7 @@ int LAGr_PeerPressureClustering(
         GRB_TRY(GrB_Matrix_clear(T));
 
         tt = LAGraph_WallClockTime() - tt;
-        // printf("Total time of iteration %i (size = %i)\n\t%f\n\n\n", count, n, tt);
+        printf("Total time of iteration %i (size = %i)\n\t%f\n\n\n", count, n, tt);
     }
 
     printf("--------------------------------------------------\n"
@@ -365,7 +365,7 @@ int LAGr_PeerPressureClustering(
            "vertex j is in cluster i:\n");
     GxB_print(C_temp, GxB_SHORT);
     printf("Number of vertices per cluster:\n");
-    GxB_print(verts_per_cluster, GxB_COMPLETE);
+    GxB_print(verts_per_cluster, GxB_SHORT);
 
     GRB_TRY(GrB_Vector_free(&ones_fp));
 
