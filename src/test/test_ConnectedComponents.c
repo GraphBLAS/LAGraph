@@ -23,6 +23,9 @@
 #include "LAGraphX.h"
 #include "LG_alg_internal.h"
 
+#undef NDEBUG
+#include <assert.h>
+
 char msg [LAGRAPH_MSG_LEN] ;
 LAGraph_Graph G = NULL ;
 #define LEN 512
@@ -82,6 +85,7 @@ void test_cc_matrices (void)
 {
 
     OK (LAGraph_Init (msg)) ;
+    // OK (GxB_set (GxB_BURBLE, true)) ;
 
     for (int k = 0 ; ; k++)
     {
@@ -122,6 +126,7 @@ void test_cc_matrices (void)
 
             // check the result
             OK (LG_check_cc (C, G, msg)) ;
+            OK (GrB_free (&C)) ;
 
             // find the connected components with LG_CC_FastSV5
             #if LAGRAPH_SUITESPARSE
@@ -134,14 +139,16 @@ void test_cc_matrices (void)
             #endif
 
             // find the connected components with LG_CC_Boruvka
+            int result = GrB_SUCCESS ;
             printf ("\n------ CC_BORUVKA:\n") ;
-            OK (LG_CC_Boruvka (&C2, G, msg)) ;
+            result = LG_CC_Boruvka (&C2, G, msg) ;
+            OK (result) ;
             ncomponents = count_connected_components (C2) ;
             TEST_CHECK (ncomponents == ncomp) ;
             OK (LG_check_cc (C2, G, msg)) ;
             OK (GrB_free (&C2)) ;
 
-            int result = LG_CC_Boruvka (NULL, G, msg) ;
+            result = LG_CC_Boruvka (NULL, G, msg) ;
             TEST_CHECK (result == GrB_NULL_POINTER) ;
 
             if (trial == 0)
@@ -167,7 +174,6 @@ void test_cc_matrices (void)
         }
 
         OK (LAGraph_Delete (&G, msg)) ;
-        OK (GrB_free (&C)) ;
     }
 
     OK (LAGraph_Finalize (msg)) ;
@@ -183,8 +189,11 @@ void test_cc_errors (void)
     printf ("\n") ;
 
     // check for null pointers
-    int result = LG_CC_Boruvka (NULL, NULL, msg) ;
+    int result = GrB_SUCCESS ;
+
+    result = LG_CC_Boruvka (NULL, NULL, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
+
     #if LAGRAPH_SUITESPARSE
     result = LG_CC_FastSV6 (NULL, NULL, msg) ;
     TEST_CHECK (result == GrB_NULL_POINTER) ;
@@ -203,6 +212,7 @@ void test_cc_errors (void)
     result = LG_CC_Boruvka (&C, G, msg) ;
     TEST_CHECK (result == -1001) ;
     printf ("result expected: %d msg:\n%s\n", result, msg) ;
+
     #if LAGRAPH_SUITESPARSE
     result = LG_CC_FastSV6 (&C, G, msg) ;
     TEST_CHECK (result == -1001) ;

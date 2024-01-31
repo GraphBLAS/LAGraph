@@ -89,11 +89,12 @@ int LAGraph_KCore_All(
     // set output to int64
     GRB_TRY(GrB_Vector_new(decomp, int_type, n));
 
-    // change deg vector to int32 if needed
-    if (int_type == GrB_INT32)
-    {
-        GRB_TRY(GrB_Vector_new(&deg, int_type, n));
-        GRB_TRY(GrB_assign(deg, G->out_degree, NULL, G->out_degree, GrB_ALL, n, NULL));
+    //change deg vector to int32 if needed
+    if(int_type == GrB_INT32){
+        GrB_free (&deg) ;
+        GRB_TRY (GrB_Vector_new(&deg, int_type, n)) ;
+        GRB_TRY (GrB_assign (deg, G->out_degree, NULL, G->out_degree, GrB_ALL, n, NULL)) ;
+
     }
 
     // determine semiring types
