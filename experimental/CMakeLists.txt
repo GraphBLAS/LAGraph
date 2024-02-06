@@ -61,7 +61,7 @@ if ( BUILD_STATIC_LIBS )
         C_STANDARD 11
         PUBLIC_HEADER "include/LAGraphX.h" )
 
-    if ( MSVC )
+    if ( MSVC OR ("${CMAKE_C_SIMULATE_ID}" STREQUAL "MSVC") )
         set_target_properties ( LAGraphX_static PROPERTIES
             OUTPUT_NAME lagraphx_static )
     endif ( )
@@ -98,7 +98,7 @@ endif ( )
 # libm
 #-------------------------------------------------------------------------------
 
-if ( NOT MSVC )
+if ( NOT ( MSVC OR ("${CMAKE_C_SIMULATE_ID}" STREQUAL "MSVC") ) )
     if ( BUILD_SHARED_LIBS )
         target_link_libraries ( LAGraphX PRIVATE m )
     endif ( )
