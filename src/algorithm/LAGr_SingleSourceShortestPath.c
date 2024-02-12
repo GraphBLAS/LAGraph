@@ -138,12 +138,12 @@ int LAGr_SingleSourceShortestPath
     GRB_TRY (GrB_Vector_new (&reach, GrB_BOOL, n)) ;
 
     // optional hints for SuiteSparse:GraphBLAS
-    GRB_TRY (LG_SET_SPARSITY (t, LG_BITMAP)) ;
-    GRB_TRY (LG_SET_SPARSITY (tmasked, LG_SPARSE)) ;
-    GRB_TRY (LG_SET_SPARSITY (tReq, LG_SPARSE)) ;
-    GRB_TRY (LG_SET_SPARSITY (tless, LG_SPARSE)) ;
-    GRB_TRY (LG_SET_SPARSITY (s, LG_SPARSE)) ;
-    GRB_TRY (LG_SET_SPARSITY (reach, LG_BITMAP)) ;
+    GRB_TRY (LG_SET_FORMAT_HINT (t, LG_BITMAP)) ;
+    GRB_TRY (LG_SET_FORMAT_HINT (tmasked, LG_SPARSE)) ;
+    GRB_TRY (LG_SET_FORMAT_HINT (tReq, LG_SPARSE)) ;
+    GRB_TRY (LG_SET_FORMAT_HINT (tless, LG_SPARSE)) ;
+    GRB_TRY (LG_SET_FORMAT_HINT (s, LG_SPARSE)) ;
+    GRB_TRY (LG_SET_FORMAT_HINT (reach, LG_BITMAP)) ;
 
     // select the operators, and set t (:) = infinity
     GrB_IndexUnaryOp ne, le, ge, lt, gt ;

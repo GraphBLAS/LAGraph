@@ -55,11 +55,11 @@ library:
 
 # install only in SuiteSparse/lib and SuiteSparse/include
 local:
-	( cd build && cmake $(CMAKE_OPTIONS) -USUITESPARSE_PKGFILEDIR -DLOCAL_INSTALL=1 .. && cmake --build . --config Release -j${JOBS} )
+	( cd build && cmake $(CMAKE_OPTIONS) -USUITESPARSE_PKGFILEDIR -DSUITESPARSE_LOCAL_INSTALL=1 .. && cmake --build . --config Release -j${JOBS} )
 
 # install CMAKE_INSTALL_PREFIX
 global:
-	( cd build && cmake $(CMAKE_OPTIONS) -USUITESPARSE_PKGFILEDIR -DLOCAL_INSTALL=0 .. && cmake --build . --config Release -j${JOBS} )
+	( cd build && cmake $(CMAKE_OPTIONS) -USUITESPARSE_PKGFILEDIR -DSUITESPARSE_LOCAL_INSTALL=0 .. && cmake --build . --config Release -j${JOBS} )
 
 vanilla:
 	( cd build && cmake $(CMAKE_OPTIONS) -USUITESPARSE_PKGFILEDIR -DLAGRAPH_VANILLA=1 .. && cmake --build . --config Release -j${JOBS} )
@@ -85,10 +85,10 @@ remake:
 
 # just run cmake to set things up
 setup:
-	( cd build ; cmake $(CMAKE_OPTIONS) .. )
+	( cd build && cmake $(CMAKE_OPTIONS) .. )
 
 install:
-	( cd build ; cmake --install . )
+	( cd build && cmake --install . )
 
 # remove any installed libraries and #include files
 uninstall:

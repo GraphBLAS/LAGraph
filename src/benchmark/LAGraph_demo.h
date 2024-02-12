@@ -124,7 +124,7 @@ static inline int binwrite  // returns 0 if successful, < 0 on error
     GRB_TRY (GrB_Scalar_new (&hyper_switch, GrB_FP64)) ;
     GRB_TRY (LG_GET_HYPER_SWITCH (*A, hyper_switch)) ;
     GRB_TRY (GrB_Scalar_extractElement (&hyper, hyper_switch)) ;
-    GRB_TRY (LG_GET_SPARSITY_STATUS (*A, &kind)) ;
+    GRB_TRY (LG_GET_SPARSITY_STATUS (*A, &kind)) ;  // FIXME rename this macro
 
     switch (kind)
     {

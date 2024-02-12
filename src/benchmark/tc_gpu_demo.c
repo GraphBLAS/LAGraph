@@ -29,7 +29,7 @@
 
 #include "LAGraphX.h"
 
-#if defined ( SUITESPARSE_CUDA )
+#if defined ( GRAPHBLAS_HAS_CUDA )
 
 #define EXPERIMENTAL_GPU
 #include "LAGraph_demo.h"
@@ -83,7 +83,7 @@ void print_method (FILE *f, int method, int sorting)
 
 int main (int argc, char **argv)
 {
-#if defined ( SUITESPARSE_CUDA )
+#if defined ( GRAPHBLAS_HAS_CUDA )
 
     //--------------------------------------------------------------------------
     // initialize LAGraph and GraphBLAS

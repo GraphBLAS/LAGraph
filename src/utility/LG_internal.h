@@ -625,12 +625,12 @@ int LG_KindName
 
 #if LAGRAPH_SUITESPARSE
 
-    // SuiteSparse v8.1 or later
+    // SuiteSparse:GraphBLAS v8.1 or later
     #define LG_HYPERSPARSE GxB_HYPERSPARSE
     #define LG_SPARSE      GxB_SPARSE
     #define LG_BITMAP      GxB_BITMAP
     #define LG_FULL        GxB_FULL
-    #define LG_SET_SPARSITY(object,sparsity) \
+    #define LG_SET_FORMAT_HINT(object,sparsity) \
         GrB_set (object, (int32_t) (sparsity), GxB_SPARSITY_CONTROL)
 
     #define LG_SET_NTHREADS(nthreads) \
@@ -642,6 +642,8 @@ int LG_KindName
     #define LG_GET_HYPER_SWITCH(A,hyper) \
         GrB_get (A, hyper, GxB_HYPER_SWITCH)
 
+    // FIXME: rename LG_GET_SPARSITY_STATUS to LG_GET_FORMAT_HINT?
+    // or LG_GET_FORMAT?  See above for LG_SET_FORMAT_HINT.
     #define LG_GET_SPARSITY_STATUS(A,status) \
         GrB_get (A, (int32_t *) status, GxB_SPARSITY_STATUS)
 
@@ -658,7 +660,7 @@ int LG_KindName
     #define LG_SPARSE      2
     #define LG_BITMAP      4
     #define LG_FULL        8
-    #define LG_SET_SPARSITY(object,sparsity) GrB_SUCCESS
+    #define LG_SET_FORMAT_HINT(object,sparsity) GrB_SUCCESS
     #define LG_SET_NTHREADS(nthreads) GrB_SUCCESS
     #define LG_SET_HYPER_SWITCH(A,hyper) GrB_SUCCESS
     #define LG_GET_HYPER_SWITCH(A,hyper) GrB_SUCCESS

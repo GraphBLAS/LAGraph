@@ -102,7 +102,6 @@ void f1 (bool *z, const void *x, GrB_Index i, GrB_Index j, const void *thunk)
 
 void f2 (bool *z, const void *x, GrB_Index i, GrB_Index j, const void *thunk)
 {
-    uint64_t *aij = (uint64_t*) x;
     (*z) = (parent[i] != parent[j]);
 }
 

@@ -119,7 +119,7 @@ void test_SWrite (void)
         #endif
         {
             // for SuiteSparse only: test all sparsity formats
-            OK (LG_SET_SPARSITY (A, scon)) ;
+            OK (LG_SET_FORMAT_HINT (A, scon)) ;
 
             // open a temporary *.lagraph file to hold the matrix
             f = tmpfile ( ) ;

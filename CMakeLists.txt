@@ -36,17 +36,18 @@
 # get the version
 #-------------------------------------------------------------------------------
 
-cmake_minimum_required ( VERSION 3.20 )
-
-cmake_policy ( SET CMP0042 NEW )
-cmake_policy ( SET CMP0048 NEW )
-set ( CMAKE_MACOSX_RPATH TRUE )
+cmake_minimum_required ( VERSION 3.20 ) # LAGraph can be built stand-alone
 
 # version of LAGraph
-set ( LAGraph_DATE "Dec 30, 2023" )
+set ( LAGraph_DATE "Feb XX, 2024" )
 set ( LAGraph_VERSION_MAJOR 1 CACHE STRING "" FORCE )
 set ( LAGraph_VERSION_MINOR 2 CACHE STRING "" FORCE )
 set ( LAGraph_VERSION_SUB   0 CACHE STRING "" FORCE )
+
+message ( STATUS "Building LAGraph version: v"
+    ${LAGraph_VERSION_MAJOR}.
+    ${LAGraph_VERSION_MINOR}.
+    ${LAGraph_VERSION_SUB} " (" ${LAGraph_DATE} ")" )
 
 #-------------------------------------------------------------------------------
 # define the project
@@ -69,13 +70,14 @@ include ( SuiteSparsePolicy )
 
 enable_language ( C )
 
-option ( NOPENMP "ON: do not use OpenMP.  OFF (default): use OpenMP" OFF )
-
 # configure LAGraph.h with the LAGraph date and version
 configure_file (
     "config/LAGraph.h.in"
     "${PROJECT_SOURCE_DIR}/include/LAGraph.h"
     NEWLINE_STYLE LF )
+
+include ( CheckSymbolExists )
+check_symbol_exists ( fmax "math.h" NO_LIBM )
 
 #-------------------------------------------------------------------------------
 # code coverage and build type
@@ -159,18 +161,36 @@ endif ( )
 # determine what user threading model to use
 #-------------------------------------------------------------------------------
 
+option ( LAGRAPH_USE_OPENMP "ON: Use OpenMP in LAGraph if available.  OFF: Do not use OpenMP.  (Default: SUITESPARSE_USE_OPENMP)" ${SUITESPARSE_USE_OPENMP} )
 if ( COVERAGE )
+    set ( LAGRAPH_USE_OPENMP "OFF" CACHE STRING "" FORCE ) # OK: test coverage is enabled
     message ( STATUS "OpenMP disabled for test coverage" )
 else ( )
-    if ( NOPENMP )
-        set ( OpenMP_C_FOUND OFF )
-    else ( )
-        find_package ( OpenMP )
+    if ( LAGRAPH_USE_OPENMP )
+        if ( CMAKE_VERSION VERSION_LESS 3.24 )
+            find_package ( OpenMP COMPONENTS C )
+        else ( )
+            find_package ( OpenMP COMPONENTS C GLOBAL )
+        endif ( )
         if ( OpenMP_C_FOUND AND BUILD_STATIC_LIBS )
             list ( APPEND LAGRAPH_STATIC_LIBS ${OpenMP_C_LIBRARIES} )
         endif ( )
         find_package ( Threads )
+    else ( )
+        set ( OpenMP_C_FOUND OFF )
     endif ( )
+endif ( )
+
+if ( LAGRAPH_USE_OPENMP AND OpenMP_C_FOUND )
+    set ( LAGRAPH_HAS_OPENMP ON )
+else ( )
+    set ( LAGRAPH_HAS_OPENMP OFF )
+endif ( )
+message ( STATUS "LAGraph has OpenMP: ${LAGRAPH_HAS_OPENMP}" )
+
+# check for strict usage
+if ( SUITESPARSE_USE_STRICT AND LAGRAPH_USE_OPENMP AND NOT LAGRAPH_HAS_OPENMP )
+    message ( FATAL_ERROR "OpenMP required for LAGraph but not found" )
 endif ( )
 
 #-------------------------------------------------------------------------------
@@ -227,13 +247,13 @@ elseif ( "${CMAKE_C_COMPILER_ID}" STREQUAL "Intel" )
     #if ( CMAKE_C_COMPILER_VERSION VERSION_LESS 18.0 )
     #    message ( FATAL_ERROR "icc version must be at least 18.0" )
     #endif ( )
-elseif ( "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang" )
+elseif ( "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang" AND NOT "${CMAKE_C_COMPILER_FRONTEND_VARIANT}" STREQUAL "MSVC" )
     # options for clang
     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -O3 " )
     #if ( CMAKE_C_COMPILER_VERSION VERSION_LESS 3.3 )
     #    message ( FATAL_ERROR "clang version must be at least 3.3" )
     #endif ( )
-elseif ( "${CMAKE_C_COMPILER_ID}" STREQUAL "MSVC" )
+elseif ( "${CMAKE_C_COMPILER_ID}" STREQUAL "MSVC" OR "${CMAKE_C_COMPILER_FRONTEND_VARIANT}" STREQUAL "MSVC" )
     # options for MicroSoft Visual Studio
 elseif ( "${CMAKE_C_COMPILER_ID}" STREQUAL "PGI" )
     # options for PGI pgcc compiler
@@ -267,7 +287,7 @@ message ( STATUS "CMAKE C flags: " ${CMAKE_C_FLAGS} )
 # enable testing and add subdirectories
 #-------------------------------------------------------------------------------
 
-enable_testing ( )
+include ( CTest )
 
 add_subdirectory ( src )
 add_subdirectory ( experimental )
@@ -338,10 +358,9 @@ install ( FILES
 
 if ( NOT MSVC )
     if ( BUILD_STATIC_LIBS )
-        if ( NOT WIN32 )
+        if ( NOT NO_LIBM )
             list ( APPEND LAGRAPH_STATIC_LIBS "m" )
         endif ( )
-        list ( APPEND LAGRAPH_STATIC_LIBS ${GRAPHBLAS_LIBRARY} )
     endif ( )
     # This might be something like:
     #   /usr/lib/libgomp.so;/usr/lib/libpthread.a;m
@@ -369,6 +388,9 @@ if ( NOT MSVC )
             endif ( )
         endforeach ( )
     endforeach ( )
+    if ( BUILD_STATIC_LIBS )
+        set ( LAGRAPH_STATIC_LIBS "-l$<TARGET_FILE_BASE_NAME:GraphBLAS::GraphBLAS> ${LAGRAPH_STATIC_LIBS}" )
+    endif ( )
 
     set ( prefix "${CMAKE_INSTALL_PREFIX}" )
     set ( exec_prefix "\${prefix}" )
@@ -384,10 +406,19 @@ if ( NOT MSVC )
     else ( )
         set ( includedir "\${prefix}/${SUITESPARSE_INCLUDEDIR}")
     endif ( )
+    if ( BUILD_SHARED_LIBS )
+        set ( SUITESPARSE_LIB_BASE_NAME $<TARGET_FILE_BASE_NAME:LAGraph> )
+    else ( )
+        set ( SUITESPARSE_LIB_BASE_NAME $<TARGET_FILE_BASE_NAME:LAGraph_static> )
+    endif ( )
     configure_file (
         config/LAGraph.pc.in
-        LAGraph.pc
+        LAGraph.pc.out
         @ONLY
+        NEWLINE_STYLE LF )
+    file ( GENERATE
+        OUTPUT LAGraph.pc
+        INPUT ${CMAKE_CURRENT_BINARY_DIR}/LAGraph.pc.out
         NEWLINE_STYLE LF )
     install ( FILES
         ${CMAKE_CURRENT_BINARY_DIR}/LAGraph.pc

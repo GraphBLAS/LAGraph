@@ -17,12 +17,6 @@ include_directories ( utility )
 
 file ( GLOB LAGRAPH_LIB_SOURCES "utility/*.c" "algorithm/*.c" )
 
-if ( WIN32 )
-    set ( M_LIB "" )
-else ( )
-    set ( M_LIB "m" )
-endif ( )
-
 #-------------------------------------------------------------------------------
 # dynamic lagraph library properties
 #-------------------------------------------------------------------------------
@@ -42,7 +36,10 @@ if ( BUILD_SHARED_LIBS )
         set_target_properties ( LAGraph PROPERTIES EXPORT_NO_SYSTEM ON )
     endif ( )
 
-    target_link_libraries ( LAGraph PRIVATE GraphBLAS::GraphBLAS ${M_LIB} )
+    target_link_libraries ( LAGraph PRIVATE GraphBLAS::GraphBLAS )
+    if ( NOT NO_LIBM )
+        target_link_libraries ( LAGraph PRIVATE "m" )
+    endif ( )
 
     target_include_directories ( LAGraph PUBLIC
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
@@ -66,7 +63,7 @@ if ( BUILD_STATIC_LIBS )
         C_STANDARD 11
         PUBLIC_HEADER "include/LAGraph.h" )
 
-    if ( MSVC )
+    if ( MSVC OR ("${CMAKE_C_SIMULATE_ID}" STREQUAL "MSVC") )
         set_target_properties ( LAGraph_static PROPERTIES
             OUTPUT_NAME lagraph_static )
     endif ( )
@@ -80,7 +77,9 @@ if ( BUILD_STATIC_LIBS )
     else ( )
         target_link_libraries ( LAGraph_static PUBLIC GraphBLAS::GraphBLAS )
     endif ( )
-    target_link_libraries ( LAGraph_static PUBLIC ${M_LIB} )
+    if ( NOT NO_LIBM )
+        target_link_libraries ( LAGraph_static PUBLIC "m" )
+    endif ( )
 
     target_include_directories ( LAGraph_static PUBLIC
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
@@ -88,10 +87,10 @@ if ( BUILD_STATIC_LIBS )
 endif ( )
 
 #-------------------------------------------------------------------------------
-# add OpenMP and libm if needed
+# add OpenMP
 #-------------------------------------------------------------------------------
 
-if ( OpenMP_C_FOUND )
+if ( LAGRAPH_HAS_OPENMP )
     if ( BUILD_SHARED_LIBS )
         target_link_libraries ( LAGraph PRIVATE OpenMP::OpenMP_C )
     endif ( )
@@ -100,20 +99,11 @@ if ( OpenMP_C_FOUND )
     endif ( )
 endif ( )
 
-# libm:
-if ( NOT WIN32 )
-    if ( BUILD_SHARED_LIBS )
-        target_link_libraries ( LAGraph PUBLIC m )
-    endif ( )
-    if ( BUILD_STATIC_LIBS )
-        target_link_libraries ( LAGraph_static PUBLIC m )
-    endif ( )
-endif ( )
-
 #-------------------------------------------------------------------------------
 # applications
 #-------------------------------------------------------------------------------
 
-add_subdirectory ( test )
-add_subdirectory ( benchmark )
-
+if ( BUILD_TESTING )
+    add_subdirectory ( test )
+    add_subdirectory ( benchmark )
+endif ( )

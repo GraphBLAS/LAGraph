@@ -64,7 +64,7 @@ if ( BUILD_STATIC_LIBS )
         C_STANDARD_REQUIRED ON
         C_STANDARD 11 )
 
-    if ( MSVC )
+    if ( MSVC OR ("${CMAKE_C_SIMULATE_ID}" STREQUAL "MSVC") )
         set_target_properties ( lagraphtest_static PROPERTIES
             OUTPUT_NAME lagraphtest_static )
     endif ( )
@@ -76,7 +76,7 @@ endif ( )
 # add OpenMP
 #-------------------------------------------------------------------------------
 
-if ( OpenMP_C_FOUND )
+if ( LAGRAPH_HAS_OPENMP )
     if ( BUILD_SHARED_LIBS )
         target_link_libraries ( lagraphtest PRIVATE OpenMP::OpenMP_C )
     endif ( )
@@ -112,7 +112,7 @@ foreach( testsourcefile ${TEST_SOURCES} )
                 ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:$<TARGET_FILE_DIR:GraphBLAS::GraphBLAS>;PATH=path_list_prepend:$<TARGET_FILE_DIR:lagraphtest>" )
         else ( )
             set_tests_properties ( ${ctestname} PROPERTIES
-                ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:$<TARGET_FILE_DIR:GraphBLAS::GraphBLAS>>" )
+                ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:$<TARGET_FILE_DIR:GraphBLAS::GraphBLAS>" )
         endif ( )
     endif ( )
 endforeach( testsourcefile ${TEST_SOURCES} )

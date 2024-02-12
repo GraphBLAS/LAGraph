@@ -95,7 +95,7 @@ int LAGraph_MultiSourceBFS
 
         // create the parent matrix.  pi(i, j) is the parent id of node j in source i's BFS
         GRB_TRY (GrB_Matrix_new (&pi, int_type, nsrc, n)) ;
-        GRB_TRY (LG_SET_SPARSITY (pi, LG_BITMAP + LG_FULL)) ;
+        GRB_TRY (LG_SET_FORMAT_HINT (pi, LG_BITMAP + LG_FULL)) ;
 
         // pi (i, src) = src denotes the root of that row's BFS tree
         for (int64_t s = 0; s < nsrc; s++) 
@@ -140,7 +140,7 @@ int LAGraph_MultiSourceBFS
         // create the level matrix. v(i,j) is the level of node j in source i's BFS
         // v (s, src) = 0 denotes the source node of that row
         GRB_TRY (GrB_Matrix_new (&v, int_type, nsrc, n)) ;
-        GRB_TRY (LG_SET_SPARSITY (v, LG_BITMAP + LG_FULL)) ;
+        GRB_TRY (LG_SET_FORMAT_HINT (v, LG_BITMAP + LG_FULL)) ;
         for (int64_t s = 0; s < nsrc; s++) 
         {
             GrB_Index currsrc;

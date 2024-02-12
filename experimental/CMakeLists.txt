@@ -61,7 +61,7 @@ if ( BUILD_STATIC_LIBS )
         C_STANDARD 11
         PUBLIC_HEADER "include/LAGraphX.h" )
 
-    if ( MSVC )
+    if ( MSVC OR ("${CMAKE_C_SIMULATE_ID}" STREQUAL "MSVC") )
         set_target_properties ( LAGraphX_static PROPERTIES
             OUTPUT_NAME lagraphx_static )
     endif ( )
@@ -85,7 +85,7 @@ endif ( )
 # add OpenMP
 #-------------------------------------------------------------------------------
 
-if ( OpenMP_C_FOUND )
+if ( LAGRAPH_HAS_OPENMP )
     if ( BUILD_SHARED_LIBS )
         target_link_libraries ( LAGraphX PRIVATE OpenMP::OpenMP_C )
     endif ( )
@@ -95,9 +95,23 @@ if ( OpenMP_C_FOUND )
 endif ( )
 
 #-------------------------------------------------------------------------------
+# libm
+#-------------------------------------------------------------------------------
+
+if ( NOT ( MSVC OR ("${CMAKE_C_SIMULATE_ID}" STREQUAL "MSVC") ) )
+    if ( BUILD_SHARED_LIBS )
+        target_link_libraries ( LAGraphX PRIVATE m )
+    endif ( )
+    if ( BUILD_STATIC_LIBS )
+        target_link_libraries ( LAGraphX_static PUBLIC m )
+    endif ( )
+endif ( )
+
+#-------------------------------------------------------------------------------
 # applications
 #-------------------------------------------------------------------------------
 
-add_subdirectory ( test )
-add_subdirectory ( benchmark )
-
+if ( BUILD_TESTING )
+    add_subdirectory ( test )
+    add_subdirectory ( benchmark )
+endif ( )
