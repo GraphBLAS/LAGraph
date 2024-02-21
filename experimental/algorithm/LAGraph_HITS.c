@@ -32,15 +32,19 @@
 #include "LG_internal.h"    
 
 // Check graph with error messages if it's empty
-int LAGr_HITS(
-    GrB_Vector * hubs,
-    GrB_Vector* authorities,
-    int * iters,
+
+int LAGr_HITS
+(
+    GrB_Vector *hubs,
+    GrB_Vector *authorities,
+    int *iters,
     const LAGraph_Graph G,
     float tol,
     int itermax,
     char *msg 
-) {
+)
+{
+
     LG_CLEAR_MSG ;
     GrB_Vector h = NULL, a = NULL, h_old = NULL, a_old=NULL;
     LG_ASSERT (hubs != NULL, GrB_NULL_POINTER) ;
@@ -76,7 +80,7 @@ int LAGr_HITS(
     GRB_TRY(GrB_assign(a, NULL, NULL, defaultValue, GrB_ALL, n, NULL));
     GRB_TRY(GrB_assign(h, NULL, NULL, defaultValue, GrB_ALL, n, NULL));
 
-    int indegree, outdegree;
+    GrB_Index indegree, outdegree;
 
 
     // Count the number of non-zero entries in the indegree vector

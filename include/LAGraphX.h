@@ -1137,6 +1137,7 @@ int LAGraph_Hdip_Fiedler // compute the Hdip_Fiedler
 // for GPU development
 //------------------------------------------------------------------------------
 
+LAGRAPHX_PUBLIC
 int LAGr_TriangleCount_GPU
 (
     // output:
@@ -1148,16 +1149,21 @@ int LAGr_TriangleCount_GPU
     char                       *msg
 ) ;
 
-LAGRAPH_PUBLIC
-int LAGr_HITS(
-    GrB_Vector * hubs,
-    GrB_Vector* authorities,
-    int * iters,
+//------------------------------------------------------------------------------
+// Hubs and Authorities
+//------------------------------------------------------------------------------
+
+LAGRAPHX_PUBLIC
+int LAGr_HITS
+(
+    GrB_Vector *hubs,
+    GrB_Vector *authorities,
+    int *iters,
     const LAGraph_Graph G,
     float tol,
     int itermax,
     char *msg 
-);
+) ;
 
 #if defined ( __cplusplus )
 }

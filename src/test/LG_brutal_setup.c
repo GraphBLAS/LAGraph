@@ -18,12 +18,6 @@
 #include "LG_internal.h"
 #include "LG_test.h"
 
-#if LAGRAPH_SUITESPARSE
-#if GxB_IMPLEMENTATION < GxB_VERSION (7,4,1)
-#error "SuiteSparse:GraphBLAS v7.4.1 or later is required for LAGraph tests"
-#endif
-#endif
-
 int LG_brutal_setup (char *msg)
 {
     LG_brutal = -1 ;        // disable brutal testing for now

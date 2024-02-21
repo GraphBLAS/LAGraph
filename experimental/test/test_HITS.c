@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <acutest.h>
+#include "LAGraphX.h"
 #include "LAGraph_test.h"
 
 #define LEN 512

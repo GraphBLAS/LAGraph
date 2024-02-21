@@ -48,9 +48,9 @@ int LAGraph_Cached_EMin
     // determine the type of G->A and the corresponding min monoid
     //--------------------------------------------------------------------------
 
+    GrB_Type atype ;
     char atype_name [LAGRAPH_MAX_NAME_LEN] ;
     LG_TRY (LAGraph_Matrix_TypeName (atype_name, G->A, msg)) ;
-    GrB_Type atype ;
     LG_TRY (LAGraph_TypeFromName (&atype, atype_name, msg)) ;
     GrB_Monoid monoid ;
     if      (atype == GrB_BOOL  ) monoid = GrB_LAND_MONOID_BOOL  ;
