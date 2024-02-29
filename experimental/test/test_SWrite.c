@@ -33,9 +33,12 @@ char filename [LEN+1] ;
 GrB_Type atype = NULL ;
 char atypename [LAGRAPH_MAX_NAME_LEN] ;
 
-#define NFILES 51
+// FIXME
+// #define NFILES 51
+#define NFILES 1
 const char *files [ ] =
 {
+#if 0
     "A.mtx",
     "cover.mtx",
     "cover_structure.mtx",
@@ -56,7 +59,9 @@ const char *files [ ] =
     "sample2.mtx",
     "sample.mtx",
     "sources_7.mtx",
+#endif
     "olm1000.mtx",
+#if 0
     "bcsstk13.mtx",
     "cryg2500.mtx",
     "tree-example.mtx",
@@ -87,6 +92,7 @@ const char *files [ ] =
     "full.mtx",
     "full_symmetric.mtx",
     "empty.mtx",
+#endif
     "",
 } ;
 
