@@ -20,17 +20,17 @@
 // This method is for testing only, to check the result of other, faster methods.
 // Do not benchmark this method; it is simple by design.
 
-#define LG_FREE_ALL                             \
-{                                               \
-    LAGraph_Free ((void **) &LCC, msg) ;        \
-    LAGraph_Free ((void **) &S, msg) ;          \
-    if (directed) LAGraph_Free ((void **) &T, msg) ;          \
-    free (Sp) ;                                 \
-    free (Si) ;                                 \
-    if (directed) free (Tp) ;                   \
-    if (directed) free (Ti) ;                   \
-    free (vb) ;                                 \
-    free (vx) ;                                 \
+#define LG_FREE_ALL                         \
+{                                           \
+    GrB_free (&S) ;                         \
+    GrB_free (&W) ;                         \
+    GrB_free (&LCC) ;                       \
+    LAGraph_Free ((void **) &Sp, msg) ;     \
+    LAGraph_Free ((void **) &Si, msg) ;     \
+    LAGraph_Free ((void **) &Tp, msg) ;     \
+    LAGraph_Free ((void **) &Ti, msg) ;     \
+    LAGraph_Free ((void **) &vb, msg) ;     \
+    LAGraph_Free ((void **) &vx, msg) ;     \
 }
 
 #include <stdlib.h>
@@ -100,7 +100,7 @@ int LG_check_lcc(
                        (G->is_symmetric_structure == LAGraph_TRUE)) ;
     bool directed = !undirected ;
 
-    GrB_Matrix S = NULL, T = NULL ;
+    GrB_Matrix S = NULL, T = NULL, W = NULL ;
     GrB_Index *Sp = NULL, *Si = NULL, *Tp = NULL, *Ti = NULL ;
     void *Sx = NULL , *Tx = NULL ;
     int8_t *vb = NULL ;
@@ -123,9 +123,11 @@ int LG_check_lcc(
         GRB_TRY(GrB_select(S, GrB_NULL, GrB_NULL, GrB_OFFDIAG, S, 0, GrB_NULL)) ;
     }
 
-    if (directed) {
-        GRB_TRY(GrB_Matrix_new(&T, GrB_BOOL, n, n)) ;
-        GRB_TRY(GrB_eWiseAdd(T, GrB_NULL, GrB_NULL, GrB_ONEB_BOOL, S, S, GrB_DESC_T1)) ;
+    if (directed)
+    {
+        GRB_TRY(GrB_Matrix_new(&W, GrB_BOOL, n, n)) ;
+        GRB_TRY(GrB_eWiseAdd(W, GrB_NULL, GrB_NULL, GrB_ONEB_BOOL, S, S, GrB_DESC_T1)) ;
+        T = W ;
     } else {
         T = S ;
     }
@@ -133,20 +135,23 @@ int LG_check_lcc(
     GrB_Index Sp_size, Si_size, Sx_size ;
     bool Siso ;
     GRB_TRY(GxB_Matrix_unpack_CSR(S, &Sp, &Si, &Sx, &Sp_size, &Si_size, &Sx_size, &Siso, NULL, GrB_NULL));
-    free(Sx); Sx = NULL;
+    LAGraph_Free (&Sx, msg) ;
 
     GrB_Index Tp_size, Ti_size, Tx_size ;
     bool Tiso ;
     if (directed) {
         GRB_TRY(GxB_Matrix_unpack_CSR(T, &Tp, &Ti, &Tx, &Tp_size, &Ti_size, &Tx_size, &Tiso, NULL, GrB_NULL));
-        free(Tx); Tx = NULL;
+        LAGraph_Free (&Tx, msg) ;
     } else {
         Tp = Sp; Tp_size = Sp_size;
         Ti = Si; Ti_size = Si_size;
     }
 
-    vb = calloc(n, sizeof(int8_t)) ;
-    vx = malloc(n*sizeof(double)) ;
+    // vb = calloc(n, sizeof(int8_t)) ;
+    LAGraph_Calloc ((void **) &vb, n, sizeof (int8_t), msg) ;
+
+    // vx = malloc(n*sizeof(double)) ;
+    LAGraph_Malloc ((void **) &vx, n, sizeof (double), msg) ;
 
     GrB_Index i, nvals = 0 ;
 
