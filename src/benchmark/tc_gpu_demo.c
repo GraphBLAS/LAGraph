@@ -146,6 +146,7 @@ int main (int argc, char **argv)
     // triangle counting
     //--------------------------------------------------------------------------
 
+    // GxB_set (GxB_BURBLE, true) ;
     GrB_Index ntriangles, ntsimple = 0 ;
 
 #if 0
@@ -182,7 +183,6 @@ int main (int argc, char **argv)
     GrB_Index ntriangles_gpu ;
     GB_Global_hack_set (2, 1) ; // always use the GPU
 
-    GxB_set (GxB_BURBLE, true) ;
     //LAGr_TriangleCount_Method method = LAGr_TriangleCount_Sandia_ULT ;
     LAGRAPH_TRY (LAGr_TriangleCount_GPU (&ntriangles_gpu, G, &method, &presort, msg)) ;
 //    GxB_set (GxB_BURBLE, false) ;
@@ -247,7 +247,7 @@ int main (int argc, char **argv)
                 GB_Global_hack_set (2, 2) ; // never use the GPU
             }
 
-            printf ("\nMethod: GPU: %d", with_gpu) ;
+            printf ("\nMethod: GPU: %d ", with_gpu) ;
             print_method (stdout, method, sorting) ;
 
 	    /**
@@ -312,7 +312,7 @@ int main (int argc, char **argv)
         }
     }
 
-    printf ("\nBest method: GPU: %d", gpu_best) ;
+    printf ("\nBest method: GPU: %d ", gpu_best) ;
     print_method (stdout, method_best, sorting_best) ;
     printf ("nthreads: %3d time: %12.6f rate: %6.2f\n",
         nthreads_best, t_best, 1e-6 * nvals / t_best) ;
