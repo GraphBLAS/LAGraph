@@ -1165,6 +1165,59 @@ int LAGr_HITS
     char *msg 
 ) ;
 
+//------------------------------------------------------------------------------
+// graph clustering with quality metrics
+//------------------------------------------------------------------------------
+
+LAGRAPHX_PUBLIC
+int LAGr_PeerPressureClustering(
+    // output:
+    GrB_Vector *c_f,      // final clustering vector
+    // input:
+    bool normalize,       // if true, normalize the input graph via out-degree
+    bool make_undirected, // if true, make G undirected which generally leads to a coarser partitioning
+    double thresh,        // Threshold for convergence (percent of vertices that changed clusters)
+    int max_iter,         // Maximum number of iterations
+    LAGraph_Graph G,      // input graph
+    char *msg
+);
+
+LAGRAPHX_PUBLIC
+int LAGr_MarkovClustering(
+    // output:
+    GrB_Vector *c_f,              // final clustering vector
+    // input
+    int e,                        // expansion coefficient
+    int i,                        // inflation coefficient
+    double pruning_threshold,     // threshold for pruning values
+    double convergence_threshold, // MSE threshold for convergence
+    int max_iter,                 // maximum iterations
+    LAGraph_Graph G,              // input graph
+    char *msg
+);
+
+LAGRAPHX_PUBLIC
+int LAGr_PartitionQuality(
+    // Outputs
+    double *cov,  // Coverage
+    double *perf, // Performance
+    // Inputs
+    GrB_Vector c, // Cluster vector where c[i] = j means vertex i is in cluster j
+    GrB_Matrix A, // Adjacency matrix
+    char *msg
+);
+
+LAGRAPHX_PUBLIC
+int LAGr_Modularity(
+    // Outputs
+    double *mod_handle, // Modularity
+    // Inputs
+    double gamma,       // Resolution parameter
+    GrB_Vector c,       // Cluster vector where c[i] = j means vertex i is in cluster j
+    GrB_Matrix A,       // Adjacency matrix
+    char *msg
+) ;
+
 #if defined ( __cplusplus )
 }
 #endif
