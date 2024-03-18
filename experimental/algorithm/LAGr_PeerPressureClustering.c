@@ -114,7 +114,6 @@ int LAGr_PeerPressureClustering(
 
     GRB_TRY(GrB_Matrix_new(&T, GrB_FP64, n, n));
     GRB_TRY(GrB_Matrix_new(&C, GrB_BOOL, n, n));
-    GRB_TRY(GrB_Matrix_new(&C_temp, GrB_BOOL, n, n));
     GRB_TRY(GrB_Matrix_new(&CD, GrB_BOOL, n, n));
     GRB_TRY(GrB_Matrix_new(&W, GrB_FP64, n, n));
     GRB_TRY(GrB_Matrix_new(&D, GrB_FP64, n, n));
@@ -184,6 +183,7 @@ int LAGr_PeerPressureClustering(
 
         // m_index_values are row indices
         GRB_TRY(GrB_Vector_extractTuples_INT64(NULL, m_index_values, &n, m_index));
+        GRB_TRY(GrB_Matrix_new(&C_temp, GrB_BOOL, n, n));
         GRB_TRY(GrB_extract(C_temp, NULL, NULL, I, GrB_ALL, n, m_index_values, n, NULL));
 
         GRB_TRY(GrB_eWiseMult(CD, NULL, NULL, GrB_ONEB_BOOL, C, C_temp, NULL));
