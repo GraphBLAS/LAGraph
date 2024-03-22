@@ -146,7 +146,7 @@ int main (int argc, char **argv)
     // triangle counting
     //--------------------------------------------------------------------------
 
-    // GxB_set (GxB_BURBLE, true) ;
+    GxB_set (GxB_BURBLE, true) ;
     GrB_Index ntriangles, ntsimple = 0 ;
 
 #if 0
@@ -185,7 +185,7 @@ int main (int argc, char **argv)
 
     //LAGr_TriangleCount_Method method = LAGr_TriangleCount_Sandia_ULT ;
     LAGRAPH_TRY (LAGr_TriangleCount_GPU (&ntriangles_gpu, G, &method, &presort, msg)) ;
-//    GxB_set (GxB_BURBLE, false) ;
+    GxB_set (GxB_BURBLE, false) ;
     ttot = LAGraph_WallClockTime ( ) - ttot ;
 
     printf ("# of triangles: %" PRIu64 " (GPU)\n", ntriangles_gpu) ;
