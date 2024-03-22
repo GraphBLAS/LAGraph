@@ -1,4 +1,16 @@
 
+Notes from LAGraph meeting, Mar 20, 2024:
+
+    v1.2:
+        * now using v2.1 C API, but requires a recent SS:GraphBLAS
+            (add v8.3.x and latest v9.0.3 to CI)?
+        * test coverage of new experimental methods
+        * any polished algorithms to move from experimental -> src?
+
+    Future:
+        * add support for complex data types in LAGraph? GrB?
+            see sparse BLAS effort; they need complex
+
 Notes from LAGraph meeting, June 14, 2023:
 
     For LAGraph 1.2:
