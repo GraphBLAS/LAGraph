@@ -1,6 +1,6 @@
 Apr 3, 2024:
 
-    candidates for src -> experimental:
+    candidates for moving experimental into src:
 
         experimental/algorithm/LAGraph_AllKCore.c
         experimental/algorithm/LAGraph_AllKTruss.c
