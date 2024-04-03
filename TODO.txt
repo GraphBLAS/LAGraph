@@ -1,3 +1,26 @@
+Apr 3, 2024:
+
+    candidates for src -> experimental:
+
+        experimental/algorithm/LAGraph_AllKCore.c
+        experimental/algorithm/LAGraph_AllKTruss.c
+        experimental/algorithm/LAGraph_Coarsen_Matching.c
+        experimental/algorithm/LAGraph_EstimateDiameter.c
+        experimental/algorithm/LAGraph_ExactDiameter.c
+        experimental/algorithm/LAGraph_FastGraphletTransform.c
+        experimental/algorithm/LAGraph_HITS.c
+        experimental/algorithm/LAGraph_Hdip_Fiedler.c
+        experimental/algorithm/LAGraph_KCore.c
+        experimental/algorithm/LAGraph_KCoreDecompose.c
+        experimental/algorithm/LAGraph_KTruss.c
+        experimental/algorithm/LAGraph_MaximalIndependentSet.c
+        experimental/algorithm/LAGraph_MaximalMatching.c
+        experimental/algorithm/LAGraph_MultiSourceBFS.c
+        experimental/algorithm/LAGraph_SquareClustering.c
+        experimental/algorithm/LAGraph_VertexCentrality_Triangle.c
+        experimental/algorithm/LAGraph_lcc.c
+        experimental/algorithm/LAGraph_scc.c
+        experimental/utility/LAGraph_Incidence_Matrix.c
 
 Notes from LAGraph meeting, Mar 20, 2024:
 

@@ -183,6 +183,13 @@ int LG_check_lcc(
         nvals++;
     }
 
+    if (!directed)
+    {
+        // do not free these; they are aliases to Sp and Si:
+        Tp = NULL ;
+        Ti = NULL ;
+    }
+
     GRB_TRY(GxB_Vector_pack_Bitmap(LCC, &vb, (void**)&vx, n*sizeof(int8_t), n*sizeof(double), false, nvals, GrB_NULL)) ;
 
     *coefficients = LCC ; LCC = NULL ;
