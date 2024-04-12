@@ -1,8 +1,7 @@
 //------------------------------------------------------------------------------
-// LAGraph/experimental/benchmark/lcc_demo.c:
-// benchmark for community detection using label propagation
+// LAGraph/experimental/benchmark/mcl_demo.c:
+// benchmark for Markov cluster algorithm
 //------------------------------------------------------------------------------
-
 // LAGraph, (c) 2023 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 //
@@ -12,14 +11,13 @@
 // funding and support from the U.S. Government (see Acknowledgments.txt file).
 // DM22-0790
 
-// Contributed by Pascal Costanza, Intel, Belgium
-// Based on tcc_demo by Tim Davis, Texas A&M
+// Contributed by Cameron Quilici, Texas A&M University
 
 //------------------------------------------------------------------------------
 
-// Usage:  peer_pressure_demo < matrixmarketfile.mtx
-//         peer_pressure_demo matrixmarketfile.mtx
-//         peer_pressure_demo matrixmarketfile.grb
+// Usage:  mcl_demo < matrixmarketfile.mtx
+//         mcl_demo matrixmarketfile.mtx
+//         mcl_demo matrixmarketfile.grb
 
 #include "../../src/benchmark/LAGraph_demo.h"
 #include "LAGraphX.h"

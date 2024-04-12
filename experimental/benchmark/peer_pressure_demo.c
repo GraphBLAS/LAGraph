@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
-// LAGraph/experimental/benchmark/lcc_demo.c:
-// benchmark for community detection using label propagation
+// LAGraph/experimental/benchmark/peer_pressure_demo.c:
+// benchmark for peer pressure clustering algorithm
 //------------------------------------------------------------------------------
 
 // LAGraph, (c) 2023 by The LAGraph Contributors, All Rights Reserved.
@@ -12,8 +12,7 @@
 // funding and support from the U.S. Government (see Acknowledgments.txt file).
 // DM22-0790
 
-// Contributed by Pascal Costanza, Intel, Belgium
-// Based on tcc_demo by Tim Davis, Texas A&M
+// Contributed by Cameron Quilici, Texas A&M University
 
 //------------------------------------------------------------------------------
 
@@ -25,8 +24,6 @@
 #include "LAGraphX.h"
 #include "LG_Xtest.h"
 
-#define NTHREAD_LIST 1
-#define THREAD_LIST 0
 
 #define LG_FREE_ALL                                                            \
     {                                                                          \
@@ -50,12 +47,12 @@ int main(int argc, char **argv)
     char msg[LAGRAPH_MSG_LEN];
 
     GrB_Vector c = NULL;
-    GrB_Vector vpc, vpc_sorted = NULL;
+    GrB_Vector vpc = NULL, vpc_sorted = NULL;
     GrB_Matrix C = NULL;
     GrB_Scalar TRUE_BOOL = NULL;
     LAGraph_Graph G = NULL;
 
-    GrB_Index *cI, *cX = NULL;
+    GrB_Index *cI = NULL, *cX = NULL;
 
     // start GraphBLAS and LAGraph
     bool burble = false;
@@ -128,22 +125,6 @@ int main(int argc, char **argv)
     GRB_TRY(GxB_Vector_sort(vpc_sorted, NULL, GrB_GT_FP64, vpc, NULL));
 
     GxB_print(vpc_sorted, GxB_SHORT);
-
-    //--------------------------------------------------------------------------
-    // write cluster vector and adjacency matrix to files
-    //--------------------------------------------------------------------------
-
-    char *fn = "data/cluster_matrix.mtx";
-    FILE *f = fopen(fn, "w");
-    if (f == NULL)
-    {
-        fprintf(stderr, "Error opening file '%s' for writing\n", fn);
-        return -1;
-    }
-
-    LAGRAPH_TRY(LAGraph_MMWrite((GrB_Matrix)c, f, NULL, msg));
-
-    fclose(f);
 
     LG_FREE_ALL;
     LAGRAPH_TRY(LAGraph_Finalize(msg));
