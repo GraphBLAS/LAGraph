@@ -83,7 +83,7 @@ int main(int argc, char **argv)
     GRB_TRY(GrB_Scalar_setElement_BOOL(TRUE_BOOL, (bool)1));
 
     //--------------------------------------------------------------------------
-    // run mcl algorithm
+    // run MCL algorithm
     //--------------------------------------------------------------------------
 
     // compute check result
@@ -125,4 +125,8 @@ int main(int argc, char **argv)
     GRB_TRY(GxB_Vector_sort(vpc_sorted, NULL, GrB_GT_FP64, vpc, NULL));
 
     GxB_print(vpc_sorted, GxB_SHORT);
+
+    LG_FREE_ALL;
+    LAGRAPH_TRY(LAGraph_Finalize(msg));
+    return (GrB_SUCCESS);
 }
