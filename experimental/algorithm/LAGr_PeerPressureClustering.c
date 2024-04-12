@@ -17,10 +17,12 @@
 
 #define LG_FREE_WORK                                                           \
     {                                                                          \
+        GrB_free(&A);                                                          \
+        GrB_free(&S);                                                          \
         GrB_free(&T);                                                          \
         GrB_free(&C);                                                          \
         GrB_free(&C_temp);                                                     \
-        GrB_free(&ones);                                                       \
+        GrB_free(&CD);                                                         \
         GrB_free(&W);                                                          \
         GrB_free(&w_temp);                                                     \
         GrB_free(&out_degree);                                                 \
@@ -29,7 +31,7 @@
         GrB_free(&D);                                                          \
         GrB_free(&E);                                                          \
         GrB_free(&I);                                                          \
-        GrB_free(&S);                                                          \
+        GrB_free(&ones);                                                       \
         GrB_free(&c);                                                          \
         LAGraph_Free((void **)&m_index_values, NULL);                          \
         LAGraph_Free((void **)&CfI, NULL);                                     \
@@ -113,8 +115,8 @@ int LAGr_PeerPressureClustering(
     else
     {
         A2 = G->A;
-    }   
-    
+    }
+
     // If the threshold is negative, set it to 0
     thresh = fmax(thresh, 0);
 
@@ -127,18 +129,17 @@ int LAGr_PeerPressureClustering(
     //--------------------------------------------------------------------------
 
     GRB_TRY(GrB_Matrix_new(&T, GrB_FP64, n, n));
-    GRB_TRY(GrB_Matrix_new(&C, GrB_BOOL, n, n));
     GRB_TRY(GrB_Matrix_new(&CD, GrB_BOOL, n, n));
     GRB_TRY(GrB_Matrix_new(&W, GrB_FP64, n, n));
     GRB_TRY(GrB_Matrix_new(&D, GrB_FP64, n, n));
     GRB_TRY(GrB_Matrix_new(&E, GrB_BOOL, n, n));
-    GRB_TRY(GrB_Matrix_new(&I, GrB_FP64, n, n));
     GRB_TRY(GrB_Vector_new(&m, GrB_FP64, n));
     GRB_TRY(GrB_Vector_new(&m_index, GrB_INT64, n));
     GRB_TRY(GrB_Vector_new(&out_degree, GrB_INT64, n));
     GRB_TRY(GrB_Vector_new(&ones, GrB_FP64, n));
 
     GRB_TRY(GrB_assign(ones, NULL, NULL, 1, GrB_ALL, n, NULL));
+
     // Identity matrix of all 1 (cast throughout to float, bool, int)
     GRB_TRY(GrB_Matrix_diag(&I, ones, 0));
 
@@ -188,6 +189,8 @@ int LAGr_PeerPressureClustering(
         // argmax across columns of T (T. Davis SS User Guide p. 286)
         //------------------------------------------------------------------------
 
+        if (D != NULL)
+            GrB_free(&D);
         GRB_TRY(GrB_Matrix_diag(&D, m, 0));
         GRB_TRY(GrB_mxm(E, NULL, NULL, GxB_ANY_EQ_FP64, T, D, NULL));
         // E = G in the pseudocode
