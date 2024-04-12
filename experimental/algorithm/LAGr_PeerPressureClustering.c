@@ -131,7 +131,6 @@ int LAGr_PeerPressureClustering(
     GRB_TRY(GrB_Matrix_new(&T, GrB_FP64, n, n));
     GRB_TRY(GrB_Matrix_new(&CD, GrB_BOOL, n, n));
     GRB_TRY(GrB_Matrix_new(&W, GrB_FP64, n, n));
-    GRB_TRY(GrB_Matrix_new(&D, GrB_FP64, n, n));
     GRB_TRY(GrB_Matrix_new(&E, GrB_BOOL, n, n));
     GRB_TRY(GrB_Vector_new(&m, GrB_FP64, n));
     GRB_TRY(GrB_Vector_new(&m_index, GrB_INT64, n));
