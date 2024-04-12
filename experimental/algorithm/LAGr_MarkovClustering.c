@@ -17,10 +17,12 @@
 
 #define LG_FREE_WORK                                                           \
     {                                                                          \
+        GrB_free(&A);                                                          \
         GrB_free(&T);                                                          \
         GrB_free(&T_temp);                                                     \
         GrB_free(&w);                                                          \
         GrB_free(&D);                                                          \
+        GrB_free(&CC);                                                         \
         GrB_free(&ones);                                                       \
         GrB_free(&MSE);                                                        \
         GrB_free(&argmax_v);                                                   \
@@ -56,6 +58,7 @@ int LAGr_MarkovClustering(
     LAGraph_Graph G,              // input graph
     char *msg)
 {
+    GrB_Matrix A = NULL;
     GrB_Matrix T = NULL;      // transfer workspace matrix
     GrB_Matrix T_temp = NULL; // subsequent iteration transfer matrix
     GrB_Matrix CC = NULL;
@@ -76,6 +79,7 @@ int LAGr_MarkovClustering(
 
     GrB_Index *pi = NULL, *px = NULL;
     GrB_Index *pi_new = NULL, *px_new = NULL;
+
     //--------------------------------------------------------------------------
     // check inputs
     //--------------------------------------------------------------------------
@@ -86,23 +90,23 @@ int LAGr_MarkovClustering(
     (*c_f) = NULL;
     LG_TRY(LAGraph_CheckGraph(G, msg));
 
-    GrB_Matrix A = G->A;
     GrB_Index n, nrows, ncols;
-    GRB_TRY(GrB_Matrix_nrows(&nrows, A));
-    GRB_TRY(GrB_Matrix_nrows(&ncols, A));
+    GRB_TRY(GrB_Matrix_nrows(&nrows, G->A));
+    GRB_TRY(GrB_Matrix_nrows(&ncols, G->A));
 
     LG_ASSERT_MSG(nrows == ncols, -1002, "Input matrix must be square");
     n = nrows;
+
+    // All types of input matrices get cast to type FP32 for this algorithm
+    GRB_TRY(GrB_Matrix_new(&A, GrB_FP32, n, n));
+    GRB_TRY(GrB_apply(A, NULL, NULL, GrB_IDENTITY_FP32, G->A, NULL));
 
     //--------------------------------------------------------------------------
     // initializations
     //--------------------------------------------------------------------------
 
-    GRB_TRY(GrB_Matrix_new(&T, GrB_FP32, n, n));
     GRB_TRY(GrB_Matrix_new(&CC, GrB_BOOL, n, n));
-    GRB_TRY(GrB_Matrix_new(&T_temp, GrB_FP32, n, n));
     GRB_TRY(GrB_Matrix_new(&MSE, GrB_FP32, n, n));
-    GRB_TRY(GrB_Matrix_new(&D, GrB_FP32, n, n));
     GRB_TRY(GrB_Vector_new(&w, GrB_FP32, n));
     GRB_TRY(GrB_Vector_new(&ones, GrB_FP32, n));
     GRB_TRY(GrB_Vector_new(&argmax_v, GrB_FP32, n));
@@ -135,6 +139,7 @@ int LAGr_MarkovClustering(
         GRB_TRY(GrB_reduce(w, NULL, NULL, GrB_PLUS_MONOID_FP32, T_temp,
                            GrB_DESC_T0));
         GRB_TRY(GrB_apply(w, NULL, NULL, GrB_MINV_FP32, w, NULL));
+        if (D != NULL) GrB_free(&D);
         GRB_TRY(GrB_Matrix_diag(&D, w, 0));
         GRB_TRY(GrB_mxm(T_temp, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP32,
                         T_temp, D, NULL));
@@ -151,6 +156,7 @@ int LAGr_MarkovClustering(
             break;
 
         // Set T to the previous iteration
+        if (T != NULL) GrB_free(&T);
         GRB_TRY(GrB_Matrix_dup(&T, T_temp));
 
         // Expansion step
@@ -182,6 +188,7 @@ int LAGr_MarkovClustering(
     // argmax_v = max (T_temp) where argmax_v(j) = max (T_temp (:,j))
     GRB_TRY(GrB_mxv(argmax_v, NULL, NULL, GrB_MAX_FIRST_SEMIRING_FP32, T_temp,
                     ones, GrB_DESC_T0));
+    if (D != NULL) GrB_free(&D);
     GRB_TRY(GrB_Matrix_diag(&D, argmax_v, 0));
     GRB_TRY(GrB_mxm(CC, NULL, NULL, GxB_ANY_EQ_FP32, T_temp, D, NULL));
     GRB_TRY(GrB_select(CC, NULL, NULL, GrB_VALUENE_BOOL, CC, 0, NULL));
