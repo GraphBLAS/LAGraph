@@ -83,7 +83,7 @@ int main(int argc, char **argv)
     GRB_TRY(GrB_Scalar_setElement_BOOL(TRUE_BOOL, (bool)1));
 
     //--------------------------------------------------------------------------
-    // run peer pressure clustering algorithm
+    // run mcl algorithm
     //--------------------------------------------------------------------------
 
     // compute check result
