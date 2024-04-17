@@ -2,33 +2,46 @@
 // LAGr_PeerPressureClustering: Graph clustering using the peer pressure method
 //------------------------------------------------------------------------------
 
-// Cameron Quilici, Texas A&M University
+// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
+// SPDX-License-Identifier: BSD-2-Clause
+//
+// For additional details (including references to third party source code and
+// other files) see the LICENSE file or contact permission@sei.cmu.edu. See
+// Contributors.txt for a full list of contributors. Created, in part, with
+// funding and support from the U.S. Government (see Acknowledgments.txt file).
+// DM22-0790
 
-#define LG_FREE_WORK                  \
-    {                                 \
-        GrB_free(&T);                 \
-        GrB_free(&C);                 \
-        GrB_free(&C_temp);            \
-        GrB_free(&ones);              \
-        GrB_free(&W);                 \
-        GrB_free(&w_temp);            \
-        GrB_free(&out_degree);        \
-        GrB_free(&m);                 \
-        GrB_free(&m_index);           \
-        GrB_free(&D);                 \
-        GrB_free(&E);                 \
-        GrB_free(&I);                 \
-        GrB_free(&S);                 \
-        GrB_free(&c);                 \
-        LAGraph_Free((void **)&m_index_values, NULL);   \
-        LAGraph_Free((void **)&CfI, NULL);  \
-        LAGraph_Free((void **)&CfJ, NULL);  \
+// Contributed by Cameron Quilici, Texas A&M University
+
+//------------------------------------------------------------------------------
+
+#define LG_FREE_WORK                                                           \
+    {                                                                          \
+        GrB_free(&A);                                                          \
+        GrB_free(&S);                                                          \
+        GrB_free(&T);                                                          \
+        GrB_free(&C);                                                          \
+        GrB_free(&C_temp);                                                     \
+        GrB_free(&CD);                                                         \
+        GrB_free(&W);                                                          \
+        GrB_free(&w_temp);                                                     \
+        GrB_free(&out_degree);                                                 \
+        GrB_free(&m);                                                          \
+        GrB_free(&m_index);                                                    \
+        GrB_free(&D);                                                          \
+        GrB_free(&E);                                                          \
+        GrB_free(&I);                                                          \
+        GrB_free(&ones);                                                       \
+        GrB_free(&c);                                                          \
+        LAGraph_Free((void **)&m_index_values, NULL);                          \
+        LAGraph_Free((void **)&CfI, NULL);                                     \
+        LAGraph_Free((void **)&CfJ, NULL);                                     \
     }
 
-#define LG_FREE_ALL    \
-    {                  \
-        LG_FREE_WORK;  \
-        GrB_free(c_f); \
+#define LG_FREE_ALL                                                            \
+    {                                                                          \
+        LG_FREE_WORK;                                                          \
+        GrB_free(c_f);                                                         \
     }
 
 #define DEBUG
@@ -38,11 +51,13 @@
 
 int LAGr_PeerPressureClustering(
     // output:
-    GrB_Vector *c_f,      // Final clustering where c_f[i] = j means vertex i is in cluster j
+    GrB_Vector *c_f, // output cluster vector
     // input:
     bool normalize,       // if true, normalize the input graph via out-degree
-    bool make_undirected, // if true, make G undirected which generally leads to a coarser partitioning
-    double thresh,        // Threshold for convergence (percent of vertices that changed clusters)
+    bool make_undirected, // if true, make G undirected which generally leads to
+                          // a coarser partitioning
+    double thresh,        // Threshold for convergence (percent of vertices that
+                          // changed clusters)
     int max_iter,         // Maximum number of iterations
     LAGraph_Graph G,      // input graph
     char *msg)
@@ -52,7 +67,7 @@ int LAGr_PeerPressureClustering(
     GrB_Matrix S = NULL;      // symmetrized matrix, if needed
     GrB_Matrix T = NULL;      // Tally matrix
     GrB_Matrix C = NULL;      // Cluster workspace matrix
-    GrB_Matrix C_temp = NULL; // Newly computed cluster matrix at the end of each loop
+    GrB_Matrix C_temp = NULL; // Subsequent iteration cluster matrix
     GrB_Matrix CD = NULL;
 
     // Workspaces for weights (normalization and scaling)
@@ -70,7 +85,7 @@ int LAGr_PeerPressureClustering(
     GrB_Matrix I = NULL;
     GrB_Vector ones = NULL;
 
-    GrB_Index *m_index_values = NULL ;
+    GrB_Index *m_index_values = NULL;
     GrB_Index *CfI = NULL, *CfJ = NULL;
     GrB_Vector c = NULL;
 
@@ -93,7 +108,7 @@ int LAGr_PeerPressureClustering(
     {
         // A and A' differ so set A = A + A'
         LG_ASSERT_MSG(G->AT != NULL, LAGRAPH_NOT_CACHED, "G->AT is required");
-        GRB_TRY(GrB_Matrix_new(&S, GrB_FP64, n, n)) ;
+        GRB_TRY(GrB_Matrix_new(&S, GrB_FP64, n, n));
         GRB_TRY(GrB_eWiseAdd(S, NULL, NULL, GrB_ONEB_FP64, G->A, G->AT, NULL));
         A2 = S;
     }
@@ -102,7 +117,8 @@ int LAGr_PeerPressureClustering(
         A2 = G->A;
     }
 
-    thresh = fmax (thresh, 0) ;
+    // If the threshold is negative, set it to 0
+    thresh = fmax(thresh, 0);
 
     // All types of input matrices get cast to type FP64 for this algorithm
     GRB_TRY(GrB_Matrix_new(&A, GrB_FP64, n, n));
@@ -113,20 +129,18 @@ int LAGr_PeerPressureClustering(
     //--------------------------------------------------------------------------
 
     GRB_TRY(GrB_Matrix_new(&T, GrB_FP64, n, n));
-    GRB_TRY(GrB_Matrix_new(&C, GrB_BOOL, n, n));
     GRB_TRY(GrB_Matrix_new(&CD, GrB_BOOL, n, n));
     GRB_TRY(GrB_Matrix_new(&W, GrB_FP64, n, n));
-    GRB_TRY(GrB_Matrix_new(&D, GrB_FP64, n, n));
     GRB_TRY(GrB_Matrix_new(&E, GrB_BOOL, n, n));
-    GRB_TRY(GrB_Matrix_new(&I, GrB_FP64, n, n));
     GRB_TRY(GrB_Vector_new(&m, GrB_FP64, n));
     GRB_TRY(GrB_Vector_new(&m_index, GrB_INT64, n));
     GRB_TRY(GrB_Vector_new(&out_degree, GrB_INT64, n));
     GRB_TRY(GrB_Vector_new(&ones, GrB_FP64, n));
 
-
     GRB_TRY(GrB_assign(ones, NULL, NULL, 1, GrB_ALL, n, NULL));
-    GRB_TRY(GrB_Matrix_diag(&I, ones, 0)); // Identity matrix of all 1 (float, bool, int)
+
+    // Identity matrix of all 1 (cast throughout to float, bool, int)
+    GRB_TRY(GrB_Matrix_diag(&I, ones, 0));
 
     // Ensure that all vertices have self-edges
     GRB_TRY(GrB_eWiseAdd(A, NULL, NULL, GrB_ONEB_FP64, A, I, NULL));
@@ -137,12 +151,14 @@ int LAGr_PeerPressureClustering(
 
     if (normalize)
     {
-        GRB_TRY(GrB_reduce(out_degree, NULL, NULL, GrB_PLUS_MONOID_INT64, A, NULL));
+        GRB_TRY(
+            GrB_reduce(out_degree, NULL, NULL, GrB_PLUS_MONOID_INT64, A, NULL));
         GRB_TRY(GrB_Vector_new(&w_temp, GrB_FP64, n));
         GRB_TRY(GrB_apply(w_temp, NULL, NULL, GrB_MINV_FP64, out_degree, NULL));
         GRB_TRY(GrB_Matrix_diag(&W, w_temp, 0));
         GrB_free(&w_temp);
-        GRB_TRY(GrB_mxm(A, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, W, A, NULL));
+        GRB_TRY(
+            GrB_mxm(A, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_FP64, W, A, NULL));
     }
 
     // Initial cluster vector (each vertex is in its own cluster)
@@ -160,40 +176,45 @@ int LAGr_PeerPressureClustering(
     GrB_Index iter = 0;
     while (true)
     {
-        // Tally (vote) matrix T where T[i][j] = k means there are k votes from cluster i for vertex j
-        // to be in cluster i
-        // T = C_i x A
+        // Voting phase (T = A (plus,second) C)
+        // T (i, j) = k <==> k votes for vertex j to be in cluster i
         GRB_TRY(GrB_mxm(T, NULL, NULL, GxB_PLUS_SECOND_FP64, C, A, NULL));
 
-        // Maximum value vector where m[k] = l means l is the maximum fp value in column
-        // k of the matrix T. In other words, the vector m holds the maximum number of votes that each
-        // vertex got.
-        GRB_TRY(GrB_vxm(m, NULL, NULL, GrB_MAX_SECOND_SEMIRING_FP64, ones, T, NULL));
+        // m = max (T (:, j))
+        GRB_TRY(GrB_vxm(m, NULL, NULL, GrB_MAX_SECOND_SEMIRING_FP64, ones, T,
+                        NULL));
 
-        // Now we need to find *which* cluster(s) cast the highest votes, for this we need argmax code
-        // taken from T. Davis SS User Guide p. 286
+        //------------------------------------------------------------------------
+        // argmax across columns of T (T. Davis SS User Guide p. 286)
+        //------------------------------------------------------------------------
+
+        if (D != NULL)
+            GrB_free(&D);
         GRB_TRY(GrB_Matrix_diag(&D, m, 0));
         GRB_TRY(GrB_mxm(E, NULL, NULL, GxB_ANY_EQ_FP64, T, D, NULL));
-        GRB_TRY(GrB_select(E, NULL, NULL, GrB_VALUENE_BOOL, E, 0, NULL)); // E == G in the pseudocode
-
-        // m_index holds the first (i.e., if two clusters c_1 and c_2 cast the same vote L for vertex v
-        // to gain membership into c_1/c_2, c_1 wins since it comes first/has the minimum index) row
-        // index of T which is equal to the respective value of m, for each column
-        GRB_TRY(GrB_vxm(m_index, NULL, NULL, GxB_MIN_SECONDI_INT64, ones, E, NULL));
-
-        // m_index_values are row indices
-        GRB_TRY(GrB_Vector_extractTuples_INT64(NULL, m_index_values, &n, m_index));
+        // E = G in the pseudocode
+        GRB_TRY(GrB_select(E, NULL, NULL, GrB_VALUENE_BOOL, E, 0, NULL));
+        // Ties broken by minimum row index
+        GRB_TRY(
+            GrB_vxm(m_index, NULL, NULL, GxB_MIN_SECONDI_INT64, ones, E, NULL));
+        // m_index_values(i) = argmax(T(:, i))
+        GRB_TRY(
+            GrB_Vector_extractTuples_INT64(NULL, m_index_values, &n, m_index));
         GRB_TRY(GrB_Matrix_new(&C_temp, GrB_BOOL, n, n));
-        GRB_TRY(GrB_extract(C_temp, NULL, NULL, I, GrB_ALL, n, m_index_values, n, NULL));
+        GRB_TRY(GrB_extract(C_temp, NULL, NULL, I, GrB_ALL, n, m_index_values,
+                            n, NULL));
 
+        // Calculate change in cluster matrix between iterations
         GRB_TRY(GrB_eWiseMult(CD, NULL, NULL, GrB_ONEB_BOOL, C, C_temp, NULL));
-        GRB_TRY(GrB_reduce(&num_changed, NULL, GrB_PLUS_MONOID_INT64, CD, NULL));
+        GRB_TRY(
+            GrB_reduce(&num_changed, NULL, GrB_PLUS_MONOID_INT64, CD, NULL));
         num_changed = n - num_changed;
         double percent_updated = num_changed * 1.0 / n;
 
-        // When no changes to the cluster matrix have been made, terminate
+        // Terminate when cluster matrix reaches a steady-state
         if (percent_updated <= thresh || iter > max_iter)
         {
+            // Convert cluster matrix to cluster vector
             LG_TRY(LAGraph_Malloc((void **)&CfI, n, sizeof(GrB_Index), msg));
             LG_TRY(LAGraph_Malloc((void **)&CfJ, n, sizeof(GrB_Index), msg));
             GRB_TRY(GrB_Matrix_extractTuples_BOOL(CfI, CfJ, NULL, &n, C_temp));
@@ -205,13 +226,12 @@ int LAGr_PeerPressureClustering(
             break;
         }
 
-        GrB_free (&C) ;
-        C = C_temp ;
-        C_temp = NULL ;
+        GrB_free(&C);
+        C = C_temp;
+        C_temp = NULL;
 
         iter++;
     }
-
 
     LG_FREE_WORK;
 
