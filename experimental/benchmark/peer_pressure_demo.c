@@ -86,9 +86,10 @@ int main(int argc, char **argv)
     //--------------------------------------------------------------------------
 
     // compute check result
+    c = NULL;
     double tt = LAGraph_WallClockTime();
     LAGRAPH_TRY(
-        LAGr_PeerPressureClustering(&c, false, false, 0.0001, 50, G, msg));
+        LAGr_PeerPressureClustering(&c, true, false, 0.0001, 50, G, msg));
     tt = LAGraph_WallClockTime() - tt;
     printf("peer pressure run time %g sec\n", tt);
 
