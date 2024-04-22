@@ -64,7 +64,7 @@ int main(int argc, char **argv)
 
     char *matrix_name = (argc > 1) ? argv[1] : "stdin";
     LAGRAPH_TRY(
-        readproblem(&G, NULL, false, true, true, NULL, false, argc, argv));
+        readproblem(&G, NULL, false, false, false, NULL, false, argc, argv));
 
     GrB_Index n, nvals;
     GRB_TRY(GrB_Matrix_nrows(&n, G->A));
