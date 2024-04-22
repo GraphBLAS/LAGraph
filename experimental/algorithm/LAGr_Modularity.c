@@ -91,6 +91,7 @@ int LAGr_Modularity(
     // initializations
     //--------------------------------------------------------------------------
 
+    // use int64, not bool:
     GRB_TRY(GrB_Matrix_new(&C, GrB_BOOL, n, n));
     GRB_TRY(GrB_Matrix_new(&CA, GrB_INT64, n, n));
     GRB_TRY(GrB_Vector_new(&l, GrB_INT64, n));

@@ -74,6 +74,7 @@ int LAGr_PartitionQuality(
     GRB_TRY(GrB_Matrix_nrows(&n, A));
     GRB_TRY(GrB_Matrix_nvals(&nedges, A));
 
+    // USE int64:
     GRB_TRY(GrB_Matrix_new(&C, GrB_BOOL, n, n));
     GRB_TRY(GrB_Matrix_new(&CA, GrB_INT64, n, n));
     GRB_TRY(GrB_Vector_new(&trace, GrB_INT64, n));
@@ -93,6 +94,10 @@ int LAGr_PartitionQuality(
     LAGraph_Free((void **)&cI, NULL);
     LAGraph_Free((void **)&cX, NULL);
 
+    // FIXME: pass in G and do
+    // bool_is_undirected = (G->kind == LAGraph_ADJACENCY_UNDIRECTED) ;
+
+    // DON'T:
     // check if graph is undirected (that is, is A symmetric)
     bool is_undirected;
     GRB_TRY(GrB_Matrix_new(&AT, GrB_BOOL, n, n));
@@ -107,7 +112,7 @@ int LAGr_PartitionQuality(
     GRB_TRY(GrB_reduce(&sum_k2, NULL, GrB_PLUS_MONOID_INT64, k, NULL));
 
     // Calculate actual number of intra-cluster edges
-    GRB_TRY(GrB_mxm(CA, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_INT64, C, A, NULL));
+    GRB_TRY(GrB_mxm(CA, NULL, NULL, LAGraph_plus_one_int64, C, A, NULL));
     GRB_TRY(GrB_mxm(CA, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_INT64, CA, C,
                     GrB_DESC_RT1));
     GRB_TRY(GxB_Vector_diag(trace, CA, 0, NULL));

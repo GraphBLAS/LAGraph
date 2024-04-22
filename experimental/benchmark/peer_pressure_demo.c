@@ -69,6 +69,7 @@ int main(int argc, char **argv)
     GrB_Index n, nvals;
     GRB_TRY(GrB_Matrix_nrows(&n, G->A));
     GRB_TRY(GrB_Matrix_nvals(&nvals, G->A));
+    GxB_print (G->A, 5) ;
 
     //--------------------------------------------------------------------------
     // initializations

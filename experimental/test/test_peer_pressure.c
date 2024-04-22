@@ -83,6 +83,7 @@ void test_peer_pressure(void)
         FILE *f = fopen(filename, "r");
         TEST_CHECK(f != NULL);
         OK(LAGraph_MMRead(&A, f, msg));
+        GxB_print (A, 5) ;
 
         // construct a directed graph G with adjacency matrix A
         OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_DIRECTED, msg));
@@ -96,8 +97,8 @@ void test_peer_pressure(void)
         // compute clustering
         double cov, perf, mod ;
         OK(LAGr_PeerPressureClustering(&c, true, false, 0.0001, 50, G, msg));
-        OK(LAGr_PartitionQuality(&cov, &perf, c, A, msg));
-        OK(LAGr_Modularity(&mod, (double)1, c, A, msg));
+        OK(LAGr_PartitionQuality(&cov, &perf, c, G->A, msg));
+        OK(LAGr_Modularity(&mod, (double)1, c, G->A, msg));
 
         // GrB_Index n;
         // OK(GrB_Vector_size(&n, c));
@@ -112,9 +113,12 @@ void test_peer_pressure(void)
         // printf("\peer pressure:\n");
         // OK(LAGraph_Vector_Print(c, pr, stdout, msg));
         bool ok_cov = false, ok_perf = false, ok_mod = false;
-        ok_cov = (fabs(cov - coverage[0]) < 1e-4) ? true : ok_cov;
-        ok_perf = (fabs(perf - coverage[1]) < 1e-4) ? true : ok_perf;
-        ok_mod = (fabs(cov - coverage[0]) < 1e-4) ? true : ok_mod;
+        printf ("coverage:   %g %g\n", cov, coverage[k]) ;
+        printf ("perf:       %g %g\n", perf, performance[k]) ;
+        printf ("modularity: %g %g\n", mod, modularity[k]) ;
+        ok_cov = (fabs(cov - coverage[k]) < 1e-4) ? true : ok_cov;
+        ok_perf = (fabs(perf - performance[k]) < 1e-4) ? true : ok_perf;
+        ok_mod = (fabs(mod - modularity[k]) < 1e-4) ? true : ok_mod;
 
         TEST_CHECK(ok_cov);
         TEST_CHECK(ok_perf);
