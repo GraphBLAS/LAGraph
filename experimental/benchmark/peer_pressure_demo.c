@@ -128,6 +128,10 @@ int main(int argc, char **argv)
 
     GxB_print(vpc_sorted, GxB_SHORT);
 
+    FILE *f = fopen("./data/pp_out.mtx", "w");
+    LAGRAPH_TRY(LAGraph_MMWrite((GrB_Matrix)c, f, NULL, msg));
+    fclose(f);
+
     LG_FREE_ALL;
     LAGRAPH_TRY(LAGraph_Finalize(msg));
     return (GrB_SUCCESS);
