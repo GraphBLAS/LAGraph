@@ -38,6 +38,8 @@
         LAGraph_Free((void **)&cX, NULL);                                      \
     }
 
+#define IO 0
+
 int main(int argc, char **argv)
 {
 
@@ -126,9 +128,11 @@ int main(int argc, char **argv)
 
     GxB_print(vpc_sorted, GxB_SHORT);
 
+#if IO
     FILE *f = fopen("./data/pp_out.mtx", "w");
     LAGRAPH_TRY(LAGraph_MMWrite((GrB_Matrix)c, f, NULL, msg));
     fclose(f);
+#endif
 
     LG_FREE_ALL;
     LAGRAPH_TRY(LAGraph_Finalize(msg));
