@@ -41,9 +41,10 @@
         GrB_free(&k_out);                                                      \
         GrB_free(&in_degree);                                                  \
         GrB_free(&out_degree);                                                 \
+        GrB_free(&A);                                                          \
         GrB_free(&CA);                                                         \
         GrB_free(&C);                                                          \
-        GrB_free(&ONE_BOOL);                                                   \
+        GrB_free(&ONE_INT64);                                                  \
         LAGraph_Free((void **)&lX, NULL);                                      \
         LAGraph_Free((void **)&k_outX, NULL);                                  \
         LAGraph_Free((void **)&k_inX, NULL);                                   \
@@ -63,16 +64,15 @@ int LAGr_Modularity(
     // Inputs
     double resolution, // resolution parameter
     GrB_Vector c,      // input cluster vector
-    GrB_Matrix A,      // adjacency matrix of original graph from which the
-                       // clustering was obtained
+    LAGraph_Graph G,   // original graph from which clustering was obtained
     char *msg)
 {
     GrB_Vector l = NULL;
     GrB_Vector vmask = NULL;
     GrB_Vector k_in = NULL, k_out = NULL;
     GrB_Vector out_degree = NULL, in_degree = NULL;
-    GrB_Matrix C = NULL, CA = NULL;
-    GrB_Scalar ONE_BOOL = NULL;
+    GrB_Matrix C = NULL, CA = NULL, A = NULL;
+    GrB_Scalar ONE_INT64 = NULL;
 
     GrB_Index *lX = NULL, *k_outX = NULL, *k_inX = NULL;
 
@@ -80,11 +80,19 @@ int LAGr_Modularity(
     LG_ASSERT_MSG(resolution >= 0, -1006,
                   "resolution parameter must be non-negative");
 
+    GrB_Index n, nedges;
+    GRB_TRY(GrB_Matrix_nrows(&n, G->A));
+
+    // Do not consider edge weights for modularity
+    // FUTURE: There is a way to consider edge weights in modularity calculations,
+    // so could give users the option to pass in a 'weights' parameter specifying 
+    // that edge weights should be used in the calculations.
+    GRB_TRY(GrB_Matrix_new(&A, GrB_INT64, n, n));
+    GRB_TRY(GrB_apply(A, NULL, NULL, GxB_ONE_INT64, G->A, NULL));
+
     // remove self-edges, not relevant to clustering metrics
     GRB_TRY(GrB_select(A, NULL, NULL, GrB_OFFDIAG, A, 0, NULL));
 
-    GrB_Index n, nedges;
-    GRB_TRY(GrB_Matrix_nrows(&n, A));
     GRB_TRY(GrB_Matrix_nvals(&nedges, A));
 
     //--------------------------------------------------------------------------
@@ -92,7 +100,7 @@ int LAGr_Modularity(
     //--------------------------------------------------------------------------
 
     // use int64, not bool:
-    GRB_TRY(GrB_Matrix_new(&C, GrB_BOOL, n, n));
+    GRB_TRY(GrB_Matrix_new(&C, GrB_INT64, n, n));
     GRB_TRY(GrB_Matrix_new(&CA, GrB_INT64, n, n));
     GRB_TRY(GrB_Vector_new(&l, GrB_INT64, n));
     GRB_TRY(GrB_Vector_new(&vmask, GrB_INT64, n));
@@ -100,23 +108,23 @@ int LAGr_Modularity(
     GRB_TRY(GrB_Vector_new(&k_out, GrB_INT64, n));
     GRB_TRY(GrB_Vector_new(&out_degree, GrB_INT64, n));
     GRB_TRY(GrB_Vector_new(&in_degree, GrB_INT64, n));
-    GRB_TRY(GrB_Scalar_new(&ONE_BOOL, GrB_BOOL));
+    GRB_TRY(GrB_Scalar_new(&ONE_INT64, GrB_BOOL));
 
-    GRB_TRY(GrB_Scalar_setElement_BOOL(ONE_BOOL, (bool)1));
+    GRB_TRY(GrB_Scalar_setElement_BOOL(ONE_INT64, (uint64_t)1));
 
-    // Convert the cluster vector to a boolean matrix C where
+    // Convert the cluster vector to a uint64_t matrix C where
     // C(i, j) = 1 if and only if vertex j is in cluster i
     GrB_Index *cI, *cX;
     LAGRAPH_TRY(LAGraph_Malloc((void **)&cI, n, sizeof(GrB_Index), msg));
     LAGRAPH_TRY(LAGraph_Malloc((void **)&cX, n, sizeof(GrB_Index), msg));
     GRB_TRY(GrB_Vector_extractTuples_INT64(cI, cX, &n, c));
-    GRB_TRY(GxB_Matrix_build_Scalar(C, cX, cI, ONE_BOOL, n));
+    GRB_TRY(GxB_Matrix_build_Scalar(C, cX, cI, ONE_INT64, n));
     GrB_Matrix_wait(C, GrB_MATERIALIZE);
     LAGraph_Free((void **)&cI, NULL);
     LAGraph_Free((void **)&cX, NULL);
 
     // Calculate actual number of intra-cluster edges
-    GRB_TRY(GrB_mxm(CA, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_INT64, C, A, NULL));
+    GRB_TRY(GrB_mxm(CA, NULL, NULL, LAGraph_plus_one_int64, C, A, NULL));
     GRB_TRY(GrB_mxm(CA, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_INT64, CA, C,
                     GrB_DESC_T1));
     GRB_TRY(GxB_Vector_diag(l, CA, 0, NULL));

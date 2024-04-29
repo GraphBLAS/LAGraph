@@ -69,8 +69,7 @@ int main(int argc, char **argv)
     GrB_Index n, nvals;
     GRB_TRY(GrB_Matrix_nrows(&n, G->A));
     GRB_TRY(GrB_Matrix_nvals(&nvals, G->A));
-    GxB_print (G->A, 5) ;
-
+    
     //--------------------------------------------------------------------------
     // initializations
     //--------------------------------------------------------------------------
@@ -90,7 +89,7 @@ int main(int argc, char **argv)
     c = NULL;
     double tt = LAGraph_WallClockTime();
     LAGRAPH_TRY(
-        LAGr_PeerPressureClustering(&c, true, false, 0.0001, 50, G, msg));
+        LAGr_PeerPressureClustering(&c, false, true, 0.0001, 50, G, msg));
     tt = LAGraph_WallClockTime() - tt;
     printf("peer pressure run time %g sec\n", tt);
 
@@ -98,14 +97,14 @@ int main(int argc, char **argv)
 
     double cov, perf, mod;
     tt = LAGraph_WallClockTime();
-    LAGRAPH_TRY(LAGr_PartitionQuality(&cov, &perf, c, G->A, msg));
+    LAGRAPH_TRY(LAGr_PartitionQuality(&cov, &perf, c, G, msg));
     tt = LAGraph_WallClockTime() - tt;
     printf("\npartition quality run time %g sec\n\tcoverage    = "
            "%f\n\tperformance = %f\n",
            tt, cov, perf);
 
     tt = LAGraph_WallClockTime();
-    LAGRAPH_TRY(LAGr_Modularity(&mod, (double)1, c, G->A, msg));
+    LAGRAPH_TRY(LAGr_Modularity(&mod, (double)1, c, G, msg));
     tt = LAGraph_WallClockTime() - tt;
     printf("modularity run time %g sec\n\tmodularity  = %f\n", tt, mod);
 
