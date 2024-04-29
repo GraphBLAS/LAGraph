@@ -140,7 +140,6 @@ int LAGr_MarkovClustering(
             double mse = 0;
             GRB_TRY(GxB_Matrix_eWiseUnion(MSE, NULL, NULL, GrB_MINUS_FP32, T,
                                           zero_FP32, T_prev, zero_FP32, NULL));
-//          GRB_TRY(GrB_eWiseMult(MSE, NULL, NULL, GrB_TIMES_FP32, MSE, MSE, NULL));
             GRB_TRY(GrB_apply(MSE, NULL, NULL, GxB_POW_FP32, MSE, (double) 2, NULL));
 
             GRB_TRY(GrB_reduce(&mse, NULL, GrB_PLUS_MONOID_FP32, MSE, NULL));

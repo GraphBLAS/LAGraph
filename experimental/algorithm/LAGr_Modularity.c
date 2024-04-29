@@ -76,9 +76,17 @@ int LAGr_Modularity(
 
     GrB_Index *lX = NULL, *k_outX = NULL, *k_inX = NULL;
 
+    //--------------------------------------------------------------------------
+    // check inputs
+    //--------------------------------------------------------------------------
+
+    LG_CLEAR_MSG;
+
     LG_ASSERT_MSG(mod_handle != NULL, GrB_NULL_POINTER, "mod_handle is NULL");
-    LG_ASSERT_MSG(resolution >= 0, -1006,
+    LG_ASSERT_MSG(resolution >= 0, GrB_INVALID_VALUE,
                   "resolution parameter must be non-negative");
+
+    LG_TRY(LAGraph_CheckGraph(G, msg));
 
     GrB_Index n, nedges;
     GRB_TRY(GrB_Matrix_nrows(&n, G->A));
@@ -99,7 +107,6 @@ int LAGr_Modularity(
     // initializations
     //--------------------------------------------------------------------------
 
-    // use int64, not bool:
     GRB_TRY(GrB_Matrix_new(&C, GrB_INT64, n, n));
     GRB_TRY(GrB_Matrix_new(&CA, GrB_INT64, n, n));
     GRB_TRY(GrB_Vector_new(&l, GrB_INT64, n));
@@ -108,9 +115,9 @@ int LAGr_Modularity(
     GRB_TRY(GrB_Vector_new(&k_out, GrB_INT64, n));
     GRB_TRY(GrB_Vector_new(&out_degree, GrB_INT64, n));
     GRB_TRY(GrB_Vector_new(&in_degree, GrB_INT64, n));
-    GRB_TRY(GrB_Scalar_new(&ONE_INT64, GrB_BOOL));
+    GRB_TRY(GrB_Scalar_new(&ONE_INT64, GrB_INT64));
 
-    GRB_TRY(GrB_Scalar_setElement_BOOL(ONE_INT64, (uint64_t)1));
+    GRB_TRY(GrB_Scalar_setElement_INT64(ONE_INT64, (int64_t)1));
 
     // Convert the cluster vector to a uint64_t matrix C where
     // C(i, j) = 1 if and only if vertex j is in cluster i

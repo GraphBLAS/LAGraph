@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-// LAGraph/src/test/test_peer_pressure.c: test cases for Peer Pressure
+// LAGraph/src/test/test_mcl.c: test cases for Markov Clustering
 // ----------------------------------------------------------------------------
 
 // LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
@@ -41,23 +41,17 @@ const matrix_info files[] = {
 
 const int nfiles = 6;
 
-const double coverage[] = {
-    1.000000, 0.653359, 0.181507, 0.048510, 0.243590, 0.833333,
-    // Start config 2
-    1.000000, 0.644804, 0.123288, 0.695750, 1.000000, 0.722222};
+const double coverage[] = {1.000000, 0.635932, 0.784247,
+                           0.089424, 0.871795, 0.888889};
 
-const double performance[] = {
-    0.714286, 0.989642, 0.841701, 0.977048, 0.887701, 0.866667,
-    // Start config 2
-    0.714286, 0.992349, 0.914518, 0.934843, 0.139037, 0.777778};
+const double performance[] = {0.714286, 0.990614, 0.282678,
+                              0.975945, 0.611408, 0.622222};
 
-const double modularity[] = {
-    0.000000, 0.641262, 0.043324, 0.042696, 0.158120, 0.500000,
-    // Start config 2
-    0.000000, 0.634677, 0.078228, 0.596324, 0.000000, 0.351852};
+const double modularity[] = {0.000000, 0.624182, 0.033355,
+                             0.083733, 0.359961, 0.339506};
 
 //****************************************************************************
-void test_peer_pressure(void)
+void test_mcl(void)
 {
     LAGraph_Init(msg);
 
@@ -73,7 +67,6 @@ void test_peer_pressure(void)
         FILE *f = fopen(filename, "r");
         TEST_CHECK(f != NULL);
         OK(LAGraph_MMRead(&A, f, msg));
-        // GxB_print (A, 5) ;
 
         // construct a directed graph G with adjacency matrix A
         OK(LAGraph_New(&G, &A, LAGraph_ADJACENCY_DIRECTED, msg));
@@ -88,37 +81,17 @@ void test_peer_pressure(void)
 
         // compute clustering
         double cov, perf, mod;
-        OK(LAGr_PeerPressureClustering(&c, true, false, 0.0001, 50, G, msg));
+        OK(LAGr_MarkovClustering(&c, 2, 2, 0.0001, 1e-8, 100, G, msg));
         OK(LAGr_PartitionQuality(&cov, &perf, c, G, msg));
         OK(LAGr_Modularity(&mod, (double)1, c, G, msg));
 
         bool ok_cov = false, ok_perf = false, ok_mod = false;
-        printf("\nConfiguration 1:\n");
         printf("coverage:   %g %g\n", cov, coverage[k]);
         printf("perf:       %g %g\n", perf, performance[k]);
         printf("modularity: %g %g\n", mod, modularity[k]);
         ok_cov = (fabs(cov - coverage[k]) < 1e-4) ? true : ok_cov;
         ok_perf = (fabs(perf - performance[k]) < 1e-4) ? true : ok_perf;
         ok_mod = (fabs(mod - modularity[k]) < 1e-4) ? true : ok_mod;
-
-        TEST_CHECK(ok_cov);
-        TEST_CHECK(ok_perf);
-        TEST_CHECK(ok_mod);
-
-        c = NULL;
-        OK(LAGr_PeerPressureClustering(&c, false, true, 0.0001, 50, G, msg));
-        OK(LAGr_PartitionQuality(&cov, &perf, c, G, msg));
-        OK(LAGr_Modularity(&mod, (double)1, c, G, msg));
-
-        ok_cov = false, ok_perf = false, ok_mod = false;
-        printf("\nConfiguration 2:\n");
-        printf("coverage:   %g %g\n", cov, coverage[k + nfiles]);
-        printf("perf:       %g %g\n", perf, performance[k + nfiles]);
-        printf("modularity: %g %g\n", mod, modularity[k + nfiles]);
-        ok_cov = (fabs(cov - coverage[k + nfiles]) < 1e-4) ? true : ok_cov;
-        ok_perf =
-            (fabs(perf - performance[k + nfiles]) < 1e-4) ? true : ok_perf;
-        ok_mod = (fabs(mod - modularity[k + nfiles]) < 1e-4) ? true : ok_mod;
 
         TEST_CHECK(ok_cov);
         TEST_CHECK(ok_perf);
@@ -151,32 +124,40 @@ void test_errors(void)
     TEST_CHECK(A == NULL);
 
     GrB_Vector c = NULL;
-    bool normalize = false, make_undirected = false;
-    double thresh = 1e-5;
-    int max_iter = 100;
+    int e = 2, i = 2, max_iter = 50;
+    double prune_thresh = 0.0001, conv_thresh = 1e-8;
 
     // c is NULL
-    GrB_Info result = LAGr_PeerPressureClustering(
-        NULL, normalize, make_undirected, thresh, max_iter, G, msg);
+    GrB_Info result = LAGr_MarkovClustering(NULL, e, i, prune_thresh,
+                                            conv_thresh, max_iter, G, msg);
     printf("\nresult: %d %s\n", result, msg);
     TEST_CHECK(result == GrB_NULL_POINTER);
 
-    // G has no AT
-    G->AT = NULL;
-    make_undirected = true;
-    G->kind = LAGraph_ADJACENCY_DIRECTED;
-    G->is_symmetric_structure = LAGraph_FALSE;
-    result = LAGr_PeerPressureClustering(&c, normalize, make_undirected, thresh,
-                                         max_iter, G, msg);
+    // e is less than 2
+    e = -100;
+    result = LAGr_MarkovClustering(&c, e, i, prune_thresh, conv_thresh,
+                                   max_iter, G, msg);
     printf("\nresult: %d %s\n", result, msg);
-    TEST_CHECK(result == LAGRAPH_NOT_CACHED);
+    TEST_CHECK(result == GrB_INVALID_VALUE);
 
     OK(LAGraph_Delete(&G, msg));
+    TEST_CHECK(G == NULL);
+
+    // bad graph, G->A is null
+    OK(LAGraph_New(&G, NULL, LAGraph_ADJACENCY_UNDIRECTED, msg));
+    result = LAGr_MarkovClustering(&c, e, i, prune_thresh, conv_thresh,
+                                   max_iter, G, msg);
+    printf("\nresult: %d %s\n", result, msg);
+    TEST_CHECK(result == LAGRAPH_INVALID_GRAPH);
+
+    OK(LAGraph_Delete(&G, msg));
+    TEST_CHECK(G == NULL);
+
     LAGraph_Finalize(msg);
 }
 
 //****************************************************************************
 
-TEST_LIST = {{"peer_pressure", test_peer_pressure},
+TEST_LIST = {{"peer_pressure", test_mcl},
              {"peer_pressure_errors", test_errors},
              {NULL, NULL}};

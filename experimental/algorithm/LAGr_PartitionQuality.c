@@ -41,6 +41,8 @@
         LG_FREE_WORK;                                                          \
     }
 
+#define DEBUG 0
+
 #include "LG_internal.h"
 #include <LAGraphX.h>
 
@@ -63,11 +65,19 @@ int LAGr_PartitionQuality(
     GrB_Index n, nedges;
     GrB_Index n_intraEdges, n_interEdges, n_interNonEdges, sum_k2;
 
+    //--------------------------------------------------------------------------
+    // check inputs
+    //--------------------------------------------------------------------------
+
+    LG_CLEAR_MSG;
+
     LG_ASSERT_MSG(cov != NULL || perf != NULL, GrB_NULL_POINTER,
                   "cov and perf "
                   "cannot both be NULL");
 
-    LG_ASSERT_MSG (G->is_symmetric_structure != LAGraph_BOOLEAN_UNKNOWN,
+    LG_TRY(LAGraph_CheckGraph(G, msg));
+
+    LG_ASSERT_MSG (G->is_symmetric_structure != LAGRAPH_UNKNOWN,
             LAGRAPH_NOT_CACHED,
             "G->is_symmetric_structure is required") ;
 
@@ -76,9 +86,11 @@ int LAGr_PartitionQuality(
     // Delete self-edges, not relevant to these clustering metrics
     GRB_TRY(GrB_select(A, NULL, NULL, GrB_OFFDIAG, A, 0, NULL));
 
+#if DEBUG
     FILE *f = fopen("./data/pp_sanitized_data.mtx", "w");
     LAGRAPH_TRY(LAGraph_MMWrite(A, f, NULL, msg));
     fclose(f);
+#endif
 
     GRB_TRY(GrB_Matrix_nrows(&n, A));
     GRB_TRY(GrB_Matrix_nvals(&nedges, A));
