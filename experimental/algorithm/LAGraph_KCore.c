@@ -31,8 +31,11 @@
 
 #include "LG_internal.h"
 
+// FIXME: need both basic and expert methods
 
-int LAGraph_KCore
+int LAGraph_KCore  // FIXME: LAGr_KCore (expert), cache is_symmetric_structure
+                   // FIXME: cache nself_edges
+                   // FIXME: cache out degree
 (
     // outputs:
     GrB_Vector *decomp,     // kcore decomposition

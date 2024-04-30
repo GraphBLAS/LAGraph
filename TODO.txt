@@ -2,6 +2,9 @@ Apr 3, 2024:
 
     candidates for moving experimental into src:
 
+        Need a good set of random # generators:
+            both quick and "dirty", and slow and good.
+
         experimental/algorithm/LAGraph_AllKCore.c
         experimental/algorithm/LAGraph_AllKTruss.c
         experimental/algorithm/LAGraph_Coarsen_Matching.c

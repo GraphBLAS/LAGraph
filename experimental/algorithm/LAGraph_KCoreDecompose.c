@@ -31,13 +31,15 @@
 #include "LG_internal.h"
 
 
+// FIXME: need both basic and expert
+
 int LAGraph_KCore_Decompose
 (
     // outputs:
     GrB_Matrix *D,              // kcore decomposition
     // inputs:
     LAGraph_Graph G,            // input graph
-    GrB_Vector decomp,         // input decomposition matrix
+    GrB_Vector decomp,          // input decomposition vector
     uint64_t k,
     char *msg
 )

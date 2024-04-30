@@ -31,6 +31,8 @@
 
 #include "LG_internal.h"
 
+// FIXME: need both basic and expert methods
+// FIXME: match filename to function name (this name is OK)
 
 int LAGraph_KCore_All
 (
