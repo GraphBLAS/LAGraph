@@ -22,6 +22,9 @@
 // very simple cluster quality metrics which can be used to evaluate the quality
 // of a clustering, primarily based on the idea of intra-cluster density.
 
+// Note that coverage and performance are counting problems. Therefore, if a
+// weighted graph is passed to this function, edge weights are ignored.
+
 // https://arxiv.org/abs/0906.0612 pp. 15
 
 #define LG_FREE_WORK                                                           \
@@ -30,14 +33,15 @@
         GrB_free(&k);                                                          \
         GrB_free(&C);                                                          \
         GrB_free(&CA);                                                         \
-        GrB_free(&AT);                                                         \
-        GrB_free(&ONE_BOOL);                                                   \
+        GrB_free(&ONE_INT64);                                                  \
     }
 
 #define LG_FREE_ALL                                                            \
     {                                                                          \
         LG_FREE_WORK;                                                          \
     }
+
+#define DEBUG 0
 
 #include "LG_internal.h"
 #include <LAGraphX.h>
@@ -47,9 +51,8 @@ int LAGr_PartitionQuality(
     double *cov,  // coverage output, can be NULL
     double *perf, // performance output, can be NULL
     // Inputs
-    GrB_Vector c, // input cluster vector
-    GrB_Matrix A, // adjacency matrix of original graph from which the
-                  // clustering was obtained
+    GrB_Vector c,    // input cluster vector
+    LAGraph_Graph G, // original graph from which the clustering was obtained
     char *msg)
 {
     GrB_Vector trace = NULL;
@@ -57,30 +60,48 @@ int LAGr_PartitionQuality(
     GrB_Matrix C = NULL;
     GrB_Matrix CA = NULL;
 
-    GrB_Scalar ONE_BOOL = NULL;
-
-    GrB_Matrix AT = NULL;
+    GrB_Scalar ONE_INT64 = NULL;
 
     GrB_Index n, nedges;
     GrB_Index n_intraEdges, n_interEdges, n_interNonEdges, sum_k2;
+
+    //--------------------------------------------------------------------------
+    // check inputs
+    //--------------------------------------------------------------------------
+
+    LG_CLEAR_MSG;
 
     LG_ASSERT_MSG(cov != NULL || perf != NULL, GrB_NULL_POINTER,
                   "cov and perf "
                   "cannot both be NULL");
 
+    LG_TRY(LAGraph_CheckGraph(G, msg));
+
+    LG_ASSERT_MSG (G->is_symmetric_structure != LAGRAPH_UNKNOWN,
+            LAGRAPH_NOT_CACHED,
+            "G->is_symmetric_structure is required") ;
+
+    GrB_Matrix A = G->A;
+
     // Delete self-edges, not relevant to these clustering metrics
     GRB_TRY(GrB_select(A, NULL, NULL, GrB_OFFDIAG, A, 0, NULL));
+
+#if DEBUG
+    FILE *f = fopen("./data/pp_sanitized_data.mtx", "w");
+    LAGRAPH_TRY(LAGraph_MMWrite(A, f, NULL, msg));
+    fclose(f);
+#endif
 
     GRB_TRY(GrB_Matrix_nrows(&n, A));
     GRB_TRY(GrB_Matrix_nvals(&nedges, A));
 
-    GRB_TRY(GrB_Matrix_new(&C, GrB_BOOL, n, n));
+    GRB_TRY(GrB_Matrix_new(&C, GrB_INT64, n, n));
     GRB_TRY(GrB_Matrix_new(&CA, GrB_INT64, n, n));
     GRB_TRY(GrB_Vector_new(&trace, GrB_INT64, n));
     GRB_TRY(GrB_Vector_new(&k, GrB_INT64, n));
-    GRB_TRY(GrB_Scalar_new(&ONE_BOOL, GrB_BOOL));
+    GRB_TRY(GrB_Scalar_new(&ONE_INT64, GrB_INT64));
 
-    GRB_TRY(GrB_Scalar_setElement_BOOL(ONE_BOOL, (bool)1));
+    GRB_TRY(GrB_Scalar_setElement_BOOL(ONE_INT64, (uint64_t)1));
 
     // convert the cluster vector to a boolean matrix C where
     // C(i, j) = 1 if and only if vertex j is in cluster i
@@ -88,16 +109,12 @@ int LAGr_PartitionQuality(
     LAGRAPH_TRY(LAGraph_Malloc((void **)&cI, n, sizeof(GrB_Index), msg));
     LAGRAPH_TRY(LAGraph_Malloc((void **)&cX, n, sizeof(GrB_Index), msg));
     GRB_TRY(GrB_Vector_extractTuples_INT64(cI, cX, &n, c));
-    GRB_TRY(GxB_Matrix_build_Scalar(C, cX, cI, ONE_BOOL, n));
+    GRB_TRY(GxB_Matrix_build_Scalar(C, cX, cI, ONE_INT64, n));
     GrB_Matrix_wait(C, GrB_MATERIALIZE);
     LAGraph_Free((void **)&cI, NULL);
     LAGraph_Free((void **)&cX, NULL);
 
-    // check if graph is undirected (that is, is A symmetric)
-    bool is_undirected;
-    GRB_TRY(GrB_Matrix_new(&AT, GrB_BOOL, n, n));
-    GRB_TRY(GrB_transpose(AT, NULL, NULL, A, NULL));
-    LAGRAPH_TRY(LAGraph_Matrix_IsEqual(&is_undirected, A, AT, msg));
+    bool is_undirected = (G->is_symmetric_structure == LAGraph_TRUE);
 
     // k = sum(C) .^ 2
     GRB_TRY(GrB_reduce(k, NULL, NULL, GrB_PLUS_MONOID_INT64, C, NULL));
@@ -106,10 +123,12 @@ int LAGr_PartitionQuality(
     // sum_k2 = total number of possible intra-cluster edges
     GRB_TRY(GrB_reduce(&sum_k2, NULL, GrB_PLUS_MONOID_INT64, k, NULL));
 
-    // Calculate actual number of intra-cluster edges
-    GRB_TRY(GrB_mxm(CA, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_INT64, C, A, NULL));
+    // Calculate actual number of intra-cluster edges, if A is weighted
+    // then we ignore the weights and just count the number of edges as
+    // performance and coverage are inherently counting problems
+    GRB_TRY(GrB_mxm(CA, NULL, NULL, LAGraph_plus_one_int64, C, A, NULL));
     GRB_TRY(GrB_mxm(CA, NULL, NULL, GrB_PLUS_TIMES_SEMIRING_INT64, CA, C,
-                    GrB_DESC_RT1));
+                    GrB_DESC_T1));
     GRB_TRY(GxB_Vector_diag(trace, CA, 0, NULL));
 
     GRB_TRY(

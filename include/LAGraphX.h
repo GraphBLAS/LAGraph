@@ -1199,11 +1199,11 @@ int LAGr_MarkovClustering(
 LAGRAPHX_PUBLIC
 int LAGr_PartitionQuality(
     // Outputs
-    double *cov,  // Coverage
-    double *perf, // Performance
+    double *cov,     // Coverage
+    double *perf,    // Performance
     // Inputs
-    GrB_Vector c, // Cluster vector where c[i] = j means vertex i is in cluster j
-    GrB_Matrix A, // Adjacency matrix
+    GrB_Vector c,    // Cluster vector where c[i] = j means vertex i is in cluster j
+    LAGraph_Graph G, // original graph
     char *msg
 );
 
@@ -1214,7 +1214,7 @@ int LAGr_Modularity(
     // Inputs
     double gamma,       // Resolution parameter
     GrB_Vector c,       // Cluster vector where c[i] = j means vertex i is in cluster j
-    GrB_Matrix A,       // Adjacency matrix
+    LAGraph_Graph G,    // original graph
     char *msg
 ) ;
 

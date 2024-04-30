@@ -38,6 +38,8 @@
         LAGraph_Free((void **)&cX, NULL);                                      \
     }
 
+#define IO 0
+
 int main(int argc, char **argv)
 {
 
@@ -65,7 +67,7 @@ int main(int argc, char **argv)
 
     char *matrix_name = (argc > 1) ? argv[1] : "stdin";
     LAGRAPH_TRY(
-        readproblem(&G, NULL, false, true, true, GrB_FP32, false, argc, argv));
+        readproblem(&G, NULL, false, false, false, NULL, false, argc, argv));
 
     GrB_Index n, nvals;
     GRB_TRY(GrB_Matrix_nrows(&n, G->A));
@@ -96,14 +98,14 @@ int main(int argc, char **argv)
 
     double cov, perf, mod;
     tt = LAGraph_WallClockTime();
-    LAGRAPH_TRY(LAGr_PartitionQuality(&cov, &perf, c, G->A, msg));
+    LAGRAPH_TRY(LAGr_PartitionQuality(&cov, &perf, c, G, msg));
     tt = LAGraph_WallClockTime() - tt;
     printf("\npartition quality run time %g sec\n\tcoverage    = "
            "%f\n\tperformance = %f\n",
            tt, cov, perf);
 
     tt = LAGraph_WallClockTime();
-    LAGRAPH_TRY(LAGr_Modularity(&mod, (double)1, c, G->A, msg));
+    LAGRAPH_TRY(LAGr_Modularity(&mod, (double)1, c, G, msg));
     tt = LAGraph_WallClockTime() - tt;
     printf("modularity run time %g sec\n\tmodularity  = %f\n", tt, mod);
 
@@ -125,6 +127,12 @@ int main(int argc, char **argv)
     GRB_TRY(GxB_Vector_sort(vpc_sorted, NULL, GrB_GT_FP64, vpc, NULL));
 
     GxB_print(vpc_sorted, GxB_SHORT);
+
+#if IO
+    FILE *f = fopen("./data/pp_out.mtx", "w");
+    LAGRAPH_TRY(LAGraph_MMWrite((GrB_Matrix)c, f, NULL, msg));
+    fclose(f);
+#endif
 
     LG_FREE_ALL;
     LAGRAPH_TRY(LAGraph_Finalize(msg));
