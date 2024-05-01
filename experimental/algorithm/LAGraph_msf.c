@@ -19,6 +19,9 @@
  * Code is based on Boruvka's minimum spanning forest algorithm
  */
 
+// FIXME: is this ready for src?  It uses global values, so not yet ready.
+// FIXME: Reduce_assign is slow.  See src/algorithm/LG_CC_FastSV6.
+
 #define LG_FREE_ALL                                  \
 {                                                    \
     GrB_free (&S);                                   \

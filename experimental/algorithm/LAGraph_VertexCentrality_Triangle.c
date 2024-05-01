@@ -15,6 +15,8 @@
 
 //------------------------------------------------------------------------------
 
+// FIXME: ready for src, except remove all methods except method 3.
+
 // LAGraph_VertexCentrality_Triangle: computes the TriangleCentrality of
 // an undirected graph.  No self edges are allowed on the input graph.
 // Methods 2 and 3 can tolerate any edge weights (they are ignored; only the

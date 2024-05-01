@@ -15,6 +15,8 @@
 
 //------------------------------------------------------------------------------
 
+// FIXME: not ready for src; uses global variables
+
 /**
  * Code is based on the Min-Label algorithm described in the following paper:
  * D. Yan, J. Cheng, K. Xin, Y. Lu, W. Ng, Y. Bu, "Pregel Algorithms for Graph

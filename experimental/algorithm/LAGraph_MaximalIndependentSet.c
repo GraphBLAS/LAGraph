@@ -59,6 +59,7 @@
 // FIXME: rename LAGr_MaximalIndependentSet (this is expert)
 // FIXME: add a basic method
 // FIXME: need random numbers, vectors, matrices for LAGraph
+// vanilla OK: no GxB used
 
 int LAGraph_MaximalIndependentSet       // maximal independent set
 (

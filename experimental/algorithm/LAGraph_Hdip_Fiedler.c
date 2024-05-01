@@ -1,6 +1,19 @@
 #include "LG_internal.h"
 #include <float.h>
 
+// FIXME: rename this method and add to src
+// FIXME: add standard comments to the top of this file
+// FIXME: what functions should be exposed to the user application?
+
+//      candidates:
+//      LAGraph_Laplacian: compute the Laplacian matrix  
+//      LAGraph_Happly: apply a Housefolder reflection
+//      LAGraph_norm2: 2-norm of a vector
+
+//      very specific to the HDIP method for computing the Fiedler vector:
+//      LAGraph_hmhx: y = H*M*H*x = (M-u*x'-x*u)*x
+//      LAGraph_mypcg2: preconditioned conjugate gradient (very specialized)
+
 //------------------------------------------------------------------------------
 // LAGraph_Hdip_Fiedler
 //------------------------------------------------------------------------------
@@ -578,6 +591,12 @@ int LAGraph_mypcg2
     GrB_free (&iters) ;                     \
 }
 
+// FIXME: need a basic API and an Advanced API
+// FIXME: the basic API needs to use an LAGraph_Graph
+// FIXME: the advance API can work on the Laplacian L and its infinity norm
+// FIXME: this method has many inputs; the basic method should use defaults
+// FIXME: need to add error checking of inputs
+
 int LAGraph_Hdip_Fiedler   // compute the Hdip_Fiedler
 (
     // outputs:
@@ -706,6 +725,5 @@ int LAGraph_Hdip_Fiedler   // compute the Hdip_Fiedler
     (*iters_handle) = iters ;
     return (GrB_SUCCESS);
 }
-
 
 

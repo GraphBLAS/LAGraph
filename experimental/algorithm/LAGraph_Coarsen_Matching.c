@@ -9,6 +9,8 @@
 
 //------------------------------------------------------------------------------
 
+// FIXME: ready for src? need a vanilla non-GxB, and incidence graphs.
+
 /*
 This method is used to coarsen an undirected graph. The coarsening is based on a maximal matching,
 which is handled by LAGraph_MaximalMatching. 

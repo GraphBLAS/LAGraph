@@ -21,6 +21,10 @@
  * distributed memory (IPDPS 2019)
  **/
 
+// FIXME: is this ready for src?  Good, except Reduce_assign.
+// FIXME: Reduce_assign is slow.  See src/algorithm/LG_CC_FastSV6.
+// FIXME: do not use malloc/free.  Use LAGraph_Malloc/LAGraph_Free.
+
 #define LG_FREE_ALL         \
 {                           \
     free(I);                \
@@ -41,8 +45,6 @@
 #include "LG_internal.h"
 #include <LAGraph.h>
 #include <LAGraphX.h>
-
-// FIXME: Reduce_assign is slow.  See src/algorithm/LG_CC_FastSV6.
 
 //****************************************************************************
 // mask = NULL, accumulator = GrB_MIN_UINT64, descriptor = NULL

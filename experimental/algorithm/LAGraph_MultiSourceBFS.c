@@ -11,6 +11,8 @@
 
 //------------------------------------------------------------------------------
 
+// FIXME: almost ready for src; need a vanilla method
+
 // Takes in a vector of source nodes and finds level and/or parent vectors for each,
 // stored together in a matrix
 

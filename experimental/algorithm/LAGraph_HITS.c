@@ -13,6 +13,9 @@
 
 // Contributed by Aurko Routh, Texas A&M University
 
+// FIXME: almost ready for src.  this is advanced; add a basic method and add to src
+// FIXME: rename to LAGr_HubsAndAuthorities?
+
 //------------------------------------------------------------------------------
 
 #define LG_FREE_WORK                \
@@ -29,7 +32,7 @@
 }
 
 #include "LAGraphX.h"
-#include "LG_internal.h"    
+#include "LG_internal.h"
 
 // Check graph with error messages if it's empty
 
@@ -41,7 +44,7 @@ int LAGr_HITS
     const LAGraph_Graph G,
     float tol,
     int itermax,
-    char *msg 
+    char *msg
 )
 {
 
@@ -75,7 +78,7 @@ int LAGr_HITS
     GRB_TRY (GrB_Vector_new (&a_old, GrB_FP32, n)) ;
     GRB_TRY (GrB_Vector_new (&h, GrB_FP32, n));
     GRB_TRY (GrB_Vector_new (&a, GrB_FP32, n)) ;
-    
+
     float defaultValue = 1.0;
     GRB_TRY(GrB_assign(a, NULL, NULL, defaultValue, GrB_ALL, n, NULL));
     GRB_TRY(GrB_assign(h, NULL, NULL, defaultValue, GrB_ALL, n, NULL));
@@ -93,10 +96,10 @@ int LAGr_HITS
 
     bool flag = (indegree + outdegree) > n/16.0;
     for((*iters) = 0; (*iters) < itermax && rdiff > tol; (*iters)++) {
-        // Save old values of h and a       
+        // Save old values of h and a
         GrB_Vector temp = h_old ; h_old = h ; h = temp ;
         temp = a_old ; a_old = a ; a = temp ;
-        // GxB_set(GxB_BURBLE, true);
+
         if(flag) {
             //a = 0
             GRB_TRY(GrB_assign(a, NULL, GrB_PLUS_FP32, 0.0, GrB_ALL, n, NULL));
@@ -108,22 +111,20 @@ int LAGr_HITS
             GRB_TRY(GrB_mxv(h, NULL,NULL, LAGraph_plus_second_fp32, G->A, a_old, NULL));
         } else {
             // a = AT . h
-            GRB_TRY(GrB_mxv(a, NULL,NULL, LAGraph_plus_second_fp32, AT, h_old, NULL));            
+            GRB_TRY(GrB_mxv(a, NULL,NULL, LAGraph_plus_second_fp32, AT, h_old, NULL));
             // h = A . a
             GRB_TRY(GrB_mxv(h, NULL,NULL, LAGraph_plus_second_fp32, G->A, a_old, NULL));
         }
-        // GxB_set(GxB_BURBLE, false);
 
-        
         // float maxA;
         float sumA;
         GRB_TRY(GrB_reduce(&sumA, NULL, GrB_PLUS_MONOID_FP32, a, NULL)); // Calculate the sum of all elements in the vector
         GRB_TRY(GrB_assign(a, NULL, GrB_DIV_FP32, sumA, GrB_ALL, n, NULL)); // Divide all elements by the sum
-        
+
         float sumH;
         GRB_TRY(GrB_reduce(&sumH, NULL, GrB_PLUS_MONOID_FP32, h, NULL)); // Calculate the sum of all elements in the vector
         GRB_TRY(GrB_assign(h, NULL, GrB_DIV_FP32, sumH, GrB_ALL, n, NULL)); // Divide all elements by the sum
-    
+
         // Deal with tolerance
 
         // a_old -= a
@@ -137,10 +138,10 @@ int LAGr_HITS
 
         // h_old -= h
         GRB_TRY (GrB_assign (h_old, NULL, GrB_MINUS_FP32, h, GrB_ALL, n, NULL));
-        
+
         // h_old = abs(h_old)
         GRB_TRY (GrB_apply (h_old, NULL, NULL, GrB_ABS_FP32, h_old, NULL));
-        
+
         // rdiff += sum(h_old)
         GRB_TRY (GrB_reduce (&rdiff, GrB_PLUS_FP32, GrB_PLUS_MONOID_FP32, h_old, NULL)) ;
 
@@ -152,7 +153,7 @@ int LAGr_HITS
     float sumA;
     GRB_TRY(GrB_reduce(&sumA, NULL, GrB_PLUS_MONOID_FP32, a, NULL)); // Calculate the sum of all elements in the vector
     GRB_TRY(GrB_assign(a, NULL, GrB_DIV_FP32, sumA, GrB_ALL, n, NULL)); // Divide all elements by the sum
-    
+
     float sumH;
     GRB_TRY(GrB_reduce(&sumH, NULL, GrB_PLUS_MONOID_FP32, h, NULL)); // Calculate the sum of all elements in the vector
     GRB_TRY(GrB_assign(h, NULL, GrB_DIV_FP32, sumH, GrB_ALL, n, NULL)); // Divide all elements by the sum

@@ -49,6 +49,8 @@
 
 #include "LG_internal.h"
 
+// FIXME: not ready for src; need a vanilla method with no GxB
+
 #if LAGRAPH_SUITESPARSE
 
 //------------------------------------------------------------------------------

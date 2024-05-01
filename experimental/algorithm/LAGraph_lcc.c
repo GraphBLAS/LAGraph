@@ -23,6 +23,8 @@
 // This function was originally written for the LDBC Graphalytics benchmark,
 // at https://graphalytics.org/ .
 
+// FIXME: ready to add to src
+
 // The local clustering coefficient is a measure for each node of a graph.
 // Its definition is fully described in the following document:
 // https://ldbc.github.io/ldbc_graphalytics_docs/graphalytics_spec.pdf
