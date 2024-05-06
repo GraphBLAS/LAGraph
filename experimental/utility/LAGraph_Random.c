@@ -49,6 +49,48 @@ GrB_UnaryOp LG_rand_next_op = NULL ;
 
 // z = f(x), where x is the old seed and z is the new seed.
 
+// FIXME: use xorshift, from https://en.wikipedia.org/wiki/Xorshift
+// with a state of uint64_t, or xorshift64star
+
+#if 0
+
+============================================================
+xorshift64:
+============================================================
+
+    struct xorshift64_state {
+        uint64_t a;
+    };
+
+    uint64_t xorshift64(struct xorshift64_state *state)
+    {
+            uint64_t x = state->a;
+            x ^= x << 13;
+            x ^= x >> 7;
+            x ^= x << 17;
+            return state->a = x;
+    }
+
+============================================================
+xorshift64start:
+============================================================
+
+    but of course do not use a static variable for the state:
+
+    /* xorshift64s, variant A_1(12,25,27) with multiplier M_32 from line 3 of
+     * table 5 */
+    uint64_t xorshift64star(void) {
+        /* initial seed must be nonzero, don't use a static variable for the
+         * state if multithreaded */
+        static uint64_t x = 1;
+        x ^= x >> 12;
+        x ^= x << 25;
+        x ^= x >> 27;
+        return x * 0x2545F4914F6CDD1DULL;
+    }
+
+#endif
+
 void LG_rand_next_f (void *z, const void *x)
 {
     uint64_t seed = (*((uint64_t *) x)) ;
