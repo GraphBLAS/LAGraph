@@ -1,3 +1,16 @@
+May 15, 2024:
+
+    agenda:
+        need to start moving algorithms from experimental to src;
+            see all the FIXMEs.
+        need conda forge with GraphBLAS 9.1.x for github CI
+
+May 1, 2024:
+
+    discussed random number generation.
+    See commit to v1.2 branch.  We also need a more robust
+    method (Tim Mattson is working on it).
+
 Apr 3, 2024:
 
     candidates for moving experimental into src:

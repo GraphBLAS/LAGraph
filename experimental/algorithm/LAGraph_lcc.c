@@ -24,6 +24,7 @@
 // at https://graphalytics.org/ .
 
 // FIXME: ready to add to src
+// FIXME: rename this method
 
 // The local clustering coefficient is a measure for each node of a graph.
 // Its definition is fully described in the following document:

@@ -4,6 +4,7 @@
 // FIXME: rename this method and add to src
 // FIXME: add standard comments to the top of this file
 // FIXME: what functions should be exposed to the user application?
+// FIXME: need the CI test for this method
 
 //      candidates:
 //      LAGraph_Laplacian: compute the Laplacian matrix  

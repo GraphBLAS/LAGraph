@@ -15,6 +15,8 @@
 
 //------------------------------------------------------------------------------
 
+// FIXME: ready to consider for src
+
 #define LG_FREE_WORK                                                           \
     {                                                                          \
         GrB_free(&T_prev);                                                     \

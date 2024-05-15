@@ -15,6 +15,10 @@
 
 //------------------------------------------------------------------------------
 
+// FIXME: ready to consider for src
+// FIXME: define the output vector c that defines the cluster assignment
+// FIXME: some unused variables (the vector c)
+
 #define LG_FREE_WORK                                                           \
     {                                                                          \
         GrB_free(&A);                                                          \

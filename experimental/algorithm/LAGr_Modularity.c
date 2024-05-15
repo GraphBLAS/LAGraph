@@ -15,6 +15,8 @@
 
 //------------------------------------------------------------------------------
 
+// FIXME: ready to consider for src
+
 // The modularity (Q) of a graph clustering C is defined as (directed case):
 //
 // Q = \sum{c = 1}^n [\frac{L_c}{m} - \gamma(\frac{k_c^{in} k_c^{out}}{m})^2]

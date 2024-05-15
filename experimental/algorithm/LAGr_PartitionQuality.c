@@ -15,6 +15,9 @@
 
 //------------------------------------------------------------------------------
 
+// FIXME: ready to consider for src
+// FIXME: define the input vector c that defines the cluster assignment
+
 // The coverage of a graph clustering C ( Cov(C) ) is defined as the ratio of
 // intra-cluster edges to the total edges in a graph. The performance of a graph
 // clustering C ( Perf(C) ) is defined as the ratio of intra-cluster edges and
