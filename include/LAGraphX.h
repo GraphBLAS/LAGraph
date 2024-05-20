@@ -1218,6 +1218,20 @@ int LAGr_Modularity(
     char *msg
 ) ;
 
+LAGRAPHX_PUBLIC
+int LAGraph_argminmax
+(
+    // output
+    GrB_Matrix *x,              // min/max value in each row/col of A
+    GrB_Matrix *p,              // index of min/max value in each row/col of A
+    // input
+    GrB_Matrix A,
+    int dim,                    // dim=1: cols of A, dim=2: rows of A
+    bool is_min,
+    char *msg
+); 
+
+
 #if defined ( __cplusplus )
 }
 #endif
