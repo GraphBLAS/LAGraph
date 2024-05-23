@@ -41,7 +41,7 @@ void test_argminmax (void)
     GxB_print(A, 2);
     // test the algorithm
     OK (LAGraph_argminmax (&x,&p, A,dim,is_min, msg));
-    printf("\n")
+    printf("\n") ;
     GxB_print(x,3);
     GxB_print(p,3);
     // print the result

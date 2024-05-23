@@ -63,6 +63,14 @@ void mod_function (void *z, const void *x, const void *y)
     (*((uint64_t *) z)) = a % b ;
 }
 
+#define MOD_FUNCTION_DEFN                                           \
+"void mod_function (void *z, const void *x, const void *y)      \n" \
+"{                                                              \n" \
+"    uint64_t a = (*((uint64_t *) x)) ;                         \n" \
+"    uint64_t b = (*((uint64_t *) y)) ;                         \n" \
+"    (*((uint64_t *) z)) = a % b ;                              \n" \
+"}"
+
 //------------------------------------------------------------------------------
 // LAGraph_Random_Matrix
 //------------------------------------------------------------------------------
@@ -115,8 +123,14 @@ GrB_Info LAGraph_Random_Matrix    // random matrix of any built-in type
     // create the Mod operator
     //--------------------------------------------------------------------------
 
+    #if LAGRAPH_SUITESPARSE
+    GRB_TRY (GxB_BinaryOp_new (&Mod, mod_function,
+        GrB_UINT64, GrB_UINT64, GrB_UINT64,
+        "mod_function", MOD_FUNCTION_DEFN)) ;
+    #else
     GRB_TRY (GrB_BinaryOp_new (&Mod, mod_function,
         GrB_UINT64, GrB_UINT64, GrB_UINT64)) ;
+    #endif
 
     //--------------------------------------------------------------------------
     // determine the number of entries to generate

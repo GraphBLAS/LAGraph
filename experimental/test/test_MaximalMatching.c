@@ -89,7 +89,7 @@ char msg [LAGRAPH_MSG_LEN] ;
 void test_MaximalMatching (void) 
 {
     OK (LAGraph_Init (msg)) ;
-    GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
+//  GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
     OK (LAGraph_Random_Init (msg)) ;
 
     for (int k = 0 ; ; k++)
@@ -281,6 +281,7 @@ void test_MaximalMatching (void)
             }
             if (which_threshold == 0) {
                 // exact matching must have strict upper bound
+                printf ("matching_value %g expected %g\n", matching_value, expected) ;
                 TEST_CHECK (matching_value <= expected) ;
             }
             double acc = matching_value / expected ;
@@ -316,7 +317,7 @@ void test_MaximalMatching (void)
 void test_MaximalMatchingErrors (void)
 {
     OK (LAGraph_Init (msg)) ;
-    GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
+//  GrB_set (GrB_GLOBAL, (int32_t) (true), GxB_BURBLE) ;
 
     E = NULL ;
     matching = NULL ;
