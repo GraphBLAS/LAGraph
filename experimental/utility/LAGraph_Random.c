@@ -207,10 +207,6 @@ int LAGraph_Random_Seed // construct a random state vector
     GrB_Vector T = NULL ;
     LG_ASSERT (State != NULL, GrB_NULL_POINTER) ;
 
-    // revise the seed
-    seed = seed ^ LG_RAND_MARSAGLIA_SEED ;
-    if (seed == 0) seed = LG_RAND_MARSAGLIA_SEED ;
-
     // T = 1:n-1 but only for entries present in the State vector.  This
     // requires a typecast from int64 to uint64.
     GrB_Index n ;
