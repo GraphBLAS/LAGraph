@@ -1,9 +1,22 @@
+LAGraph TODO:
+
+May 29, 2024:
+
+    since last meeting:  added better random number generator, and argmin/argmax
+    agenda: see May 15:
+        (1) many FIXMEs
+        (2) need latest GraphBLAS (at least 9.1.0)
+        (3) test coverage
+        (4) fix MaximalMatching and CoarsenMatching (change in random number
+            generator broke their tests)
+
 May 15, 2024:
 
     agenda:
         need to start moving algorithms from experimental to src;
             see all the FIXMEs.
         need conda forge with GraphBLAS 9.1.x for github CI
+    discussion: on random number generation
 
 May 1, 2024:
 

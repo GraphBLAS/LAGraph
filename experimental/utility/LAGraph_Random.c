@@ -2,7 +2,7 @@
 // LAGraph_Random: generate a random vector (of any sparsity structure)
 //------------------------------------------------------------------------------
 
-// LAGraph, (c) 2019-2022 by The LAGraph Contributors, All Rights Reserved.
+// LAGraph, (c) 2019-2024 by The LAGraph Contributors, All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 //
 // For additional details (including references to third party source code and
@@ -20,8 +20,19 @@
 // FUTURE: add LAGraph_Random_Init to LAGraph_Init,
 // and added LAGraph_Random_Finalize to LAGraph_Finalize.
 
+// LAGRAPH_V11_GENERATOR: if 1, use the simple generator in LAGraph v1.1.
+// Otherwise, use xorshift64, initialized with splitmix64.
+#define LAGRAPH_V11_GENERATOR 1
+
 #include "LG_internal.h"
 #include "LAGraphX.h"
+
+//------------------------------------------------------------------------------
+// LG_RAND macros
+//------------------------------------------------------------------------------
+
+// Generate the next seed
+#define LG_RAND_NEXT(seed) ((seed) * 1103515245 + 12345)
 
 //------------------------------------------------------------------------------
 // global operator
@@ -75,7 +86,7 @@ void LG_rand_next_func (void *z, const void *x)
     (*((uint64_t *) z)) = state ;
 }
 
-#define LG_RAND_NEXT_F_DEFN                             \
+#define LG_RAND_NEXT_F2_DEFN                            \
 "void LG_rand_next_func (void *z, const void *x)    \n" \
 "{                                                  \n" \
 "    uint64_t state = (*((uint64_t *) x)) ;         \n" \
@@ -83,6 +94,29 @@ void LG_rand_next_func (void *z, const void *x)
 "    state ^= state >> 7 ;                          \n" \
 "    state ^= state << 17 ;                         \n" \
 "    (*((uint64_t *) z)) = state ;                  \n" \
+"}"
+
+void LG_rand_next_f (void *z, const void *x)
+{
+    uint64_t seed = (*((uint64_t *) x)) ;
+    seed = LG_RAND_NEXT (seed) ;
+    seed = LG_RAND_NEXT (seed) ;
+    seed = LG_RAND_NEXT (seed) ;
+    seed = LG_RAND_NEXT (seed) ;
+    seed = LG_RAND_NEXT (seed) ;
+    (*((uint64_t *) z)) = seed ;
+}
+
+#define LG_RAND_NEXT_F_DEFN                         \
+"void LG_rand_next_f (void *z, const void *x)   \n" \
+"{                                              \n" \
+"    uint64_t seed = (*((uint64_t *) x)) ;      \n" \
+"    seed = ((seed) * 1103515245 + 12345) ;     \n" \
+"    seed = ((seed) * 1103515245 + 12345) ;     \n" \
+"    seed = ((seed) * 1103515245 + 12345) ;     \n" \
+"    seed = ((seed) * 1103515245 + 12345) ;     \n" \
+"    seed = ((seed) * 1103515245 + 12345) ;     \n" \
+"    (*((uint64_t *) z)) = seed ;               \n" \
 "}"
 
 // Initialize the xorshift64 generator with splitmix64
@@ -152,13 +186,31 @@ int LAGraph_Random_Init (char *msg)
     LG_rand_next_op = NULL ;
     LG_rand_init_op = NULL ;
     #if LAGRAPH_SUITESPARSE
+
+    #ifdef LAGRAPH_V11_GENERATOR
+    // using the generator from LAGraph v1.1
     GRB_TRY (GxB_UnaryOp_new (&LG_rand_next_op, LG_rand_next_func,
-        GrB_UINT64, GrB_UINT64, "LG_rand_next_func", LG_RAND_NEXT_F_DEFN)) ;
+        GrB_UINT64, GrB_UINT64, "LG_rand_next_f", LG_RAND_NEXT_F_DEFN)) ;
+    #else
+    // using the xorshift generator from LAGraph v1.2
+    GRB_TRY (GxB_UnaryOp_new (&LG_rand_next_op, LG_rand_next_func,
+        GrB_UINT64, GrB_UINT64, "LG_rand_next_func", LG_RAND_NEXT_F2_DEFN)) ;
+    #endif
+
     GRB_TRY (GxB_UnaryOp_new (&LG_rand_init_op, LG_rand_init_func,
         GrB_UINT64, GrB_UINT64, "LG_rand_init_func", LG_RAND_INIT_F_DEFN)) ;
     #else
+
+    #ifdef LAGRAPH_V11_GENERATOR
+    // using the generator from LAGraph v1.1
     GRB_TRY (GrB_UnaryOp_new (&LG_rand_next_op, LG_rand_next_func,
         GrB_UINT64, GrB_UINT64)) ;
+    #else
+    // using the xorshift generator from LAGraph v1.2
+    GRB_TRY (GrB_UnaryOp_new (&LG_rand_next_op, LG_rand_next_f,
+        GrB_UINT64, GrB_UINT64)) ;
+    #endif
+
     GRB_TRY (GrB_UnaryOp_new (&LG_rand_init_op, LG_rand_init_func,
         GrB_UINT64, GrB_UINT64)) ;
     #endif
@@ -192,6 +244,8 @@ int LAGraph_Random_Finalize (char *msg)
 bool random_hack = false ;
 #endif
 
+// FIXME: should this method allow the user to pass in the init and next ops?
+
 // FIXME: rename this method:
 int LAGraph_Random_Seed // construct a random state vector
 (
@@ -215,15 +269,28 @@ int LAGraph_Random_Seed // construct a random state vector
     GRB_TRY (GrB_Vector_apply_IndexOp_INT64 (T, NULL, NULL,
         GrB_ROWINDEX_INT64, State, 1, NULL)) ;
 
+    #if LAGRAPH_V11_GENERATOR
+    // LAGraph v1.1:
+    // State = T * INT32_MAX
+    GRB_TRY (GrB_apply (State, NULL, NULL, GrB_TIMES_UINT64, T,
+        (uint64_t) INT32_MAX, NULL)) ;
+    // State = State + seed
+    GRB_TRY (GrB_apply (State, NULL, NULL, GrB_PLUS_UINT64, State, seed,
+        NULL)) ;
+    // State = next (State)
+    GRB_TRY (GrB_Vector_apply (State, NULL, NULL, LG_rand_next_op, State,
+        NULL)) ;
+    #else
+    // LAGraph v1.2:
     // State = next (T)
     GRB_TRY (GrB_Vector_apply (State, NULL, NULL, LG_rand_next_op, T, NULL)) ;
-
     // State = State + seed
     GRB_TRY (GrB_Vector_apply_BinaryOp2nd_UINT64 (State, NULL, NULL,
         GrB_PLUS_UINT64, State, seed, NULL)) ;
-
     // State = init (State)
-    GRB_TRY (GrB_Vector_apply (State, NULL, NULL, LG_rand_init_op, State, NULL)) ;
+    GRB_TRY (GrB_Vector_apply (State, NULL, NULL, LG_rand_init_op, State,
+        NULL)) ;
+    #endif
 
     #if defined ( COVERAGE )
     if (random_hack)
@@ -261,7 +328,8 @@ int LAGraph_Random_Next     // advance to next random vector
     LG_CLEAR_MSG ;
     LG_ASSERT (State != NULL, GrB_NULL_POINTER) ;
     // State = next (State)
-    GRB_TRY (GrB_Vector_apply (State, NULL, NULL, LG_rand_next_op, State, NULL)) ;
+    GRB_TRY (GrB_Vector_apply (State, NULL, NULL, LG_rand_next_op, State,
+        NULL)) ;
     //printf ("next:\n") ;
     //GxB_print (State, 2) ;
     return (GrB_SUCCESS) ;
