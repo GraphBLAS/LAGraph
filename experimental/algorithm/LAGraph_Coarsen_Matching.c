@@ -264,13 +264,13 @@ static int LAGraph_Parent_to_S
     LAGraph_Free ((void**)(&rows), msg) ;           \
     LAGraph_Free ((void**)(&cols), msg) ;           \
     LAGraph_Free ((void**)(&vals), msg) ;           \
-}                                                   \
+    LAGraph_Delete(&G_cpy, msg) ;                   \
+}
 
 #define LG_FREE_ALL                                 \
 {                                                   \
     LG_FREE_WORK ;                                  \
-    LAGraph_Delete(&G_cpy, msg) ;                   \
-}                                                   \
+}
 
 #ifdef burble                                      
     #define CHKPT(msg){ printf("*** [CHKPT] *** %s\n", msg) ; }                                                            
@@ -346,6 +346,17 @@ int LAGraph_Coarsen_Matching
                 printf("Rebuilding A with GrB_INT64/FP64, orig type was %s\n", typename);
             #endif
 
+            #if 0
+
+            // FIXME: fast and easy
+            GRB_TRY (GrB_Matrix_nrows (&nrows, G->A)) ;
+            A_type = (is_float ? GrB_FP64 : GrB_INT64) ;
+            GRB_TRY (GrB_Matrix_new (&A, A_type, nrows, nrows)) ;
+            GRB_TRY (GrB_assign (A, NULL, NULL, G->A, GrB_ALL, nrows, GrB_ALL, nrows, NULL)) ;
+
+            #else
+
+            // FIXME: slow and hard
             bool is_float = (type == GrB_FP32) ;
 
             GRB_TRY (GrB_Matrix_nvals (&nvals, G->A)) ;
@@ -372,8 +383,9 @@ int LAGraph_Coarsen_Matching
             LG_TRY (LAGraph_Free ((void**)(&rows), msg)) ;
             LG_TRY (LAGraph_Free ((void**)(&cols), msg)) ;
             LG_TRY (LAGraph_Free ((void**)(&vals), msg)) ;
-            
             A_type = (is_float ? GrB_FP64 : GrB_INT64) ;
+            #endif
+            
         }
     }
     else
@@ -528,6 +540,9 @@ int LAGraph_Coarsen_Matching
     // parent nodes for matched edges will form self-edges; need to delete
     LG_TRY (LAGraph_DeleteSelfEdges (G_cpy, msg)) ;
     A = G_cpy->A ;
+    G_cpy->A = NULL ;
+//  printf ("in Coarsen_Matching: A after deleting self edges:\n") ;
+//  GxB_print (A,5) ;
 
     // free all objects
     GRB_TRY (GrB_free (&S)) ;

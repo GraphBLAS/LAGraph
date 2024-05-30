@@ -22,7 +22,7 @@
 
 // LAGRAPH_V11_GENERATOR: if 1, use the simple generator in LAGraph v1.1.
 // Otherwise, use xorshift64, initialized with splitmix64.
-#define LAGRAPH_V11_GENERATOR 1
+#define LAGRAPH_V11_GENERATOR 0
 
 #include "LG_internal.h"
 #include "LAGraphX.h"
@@ -30,7 +30,7 @@
 void dump_state (GrB_Vector State) ;
 void dump_state (GrB_Vector State)
 {
-    GxB_print (State, 2) ;
+    GxB_print (State, 5) ;
     uint64_t nvals ;
     GrB_Vector_nvals (&nvals, State) ;
     if (nvals > 0) 
@@ -172,6 +172,7 @@ void LG_rand_init_func (void *z, const void *x)
     state += 0x9E3779B97f4A7C15 ;
     state = (state ^ (state >> 30)) * 0xBF58476D1CE4E5B9 ;
     state = (state ^ (state >> 27)) * 0x94D049BB133111EB ;
+    state = (state ^ (state >> 31)) ;
     if (state == 0) state = LG_RAND_MARSAGLIA_SEED ;
     (*((uint64_t *) z)) = state ;
 }
@@ -183,6 +184,7 @@ void LG_rand_init_func (void *z, const void *x)
 "    state += 0x9E3779B97f4A7C15 ;                              \n" \
 "    state = (state ^ (state >> 30)) * 0xBF58476D1CE4E5B9 ;     \n" \
 "    state = (state ^ (state >> 27)) * 0x94D049BB133111EB ;     \n" \
+"    state = (state ^ (state >> 31)) ;                          \n" \
 "    #define LG_RAND_MARSAGLIA_SEED 88172645463325252LL         \n" \
 "    if (state == 0) state = LG_RAND_MARSAGLIA_SEED ;           \n" \
 "    (*((uint64_t *) z)) = state ;                              \n" \
@@ -234,8 +236,8 @@ int LAGraph_Random_Init (char *msg)
         GrB_UINT64, GrB_UINT64)) ;
     #endif
 
-    GxB_print (LG_rand_next_op, 5) ;
-    GxB_print (LG_rand_init_op, 5) ;
+//  GxB_print (LG_rand_next_op, 5) ;
+//  GxB_print (LG_rand_init_op, 5) ;
 
     return (GrB_SUCCESS) ;
 }
@@ -326,8 +328,8 @@ int LAGraph_Random_Seed // construct a random state vector
     }
     #endif
 
-    printf ("\nseed: %" PRIu64 "\n", seed) ;
-    dump_state (State) ;
+//  printf ("\nseed: %" PRIu64 "\n", seed) ;
+//  dump_state (State) ;
 
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
@@ -353,8 +355,8 @@ int LAGraph_Random_Next     // advance to next random vector
     // State = next (State)
     GRB_TRY (GrB_Vector_apply (State, NULL, NULL, LG_rand_next_op, State,
         NULL)) ;
-    printf ("next:\n") ;
-    dump_state (State) ;
+//  printf ("next:\n") ;
+//  dump_state (State) ;
 
     return (GrB_SUCCESS) ;
 }
