@@ -27,6 +27,24 @@
 #include "LG_internal.h"
 #include "LAGraphX.h"
 
+void dump_state (GrB_Vector State) ;
+void dump_state (GrB_Vector State)
+{
+    GxB_print (State, 2) ;
+    uint64_t nvals ;
+    GrB_Vector_nvals (&nvals, State) ;
+    if (nvals > 0) 
+    {
+        uint64_t maxstate = 0, minstate = 0 ;
+        GrB_reduce (&maxstate, NULL, GrB_MAX_MONOID_UINT64, State, NULL) ;
+        GrB_reduce (&minstate, NULL, GrB_MIN_MONOID_UINT64, State, NULL) ;
+        printf ("    nvals: %g min: %lu (log2 %g), max %lu (log2 %g)\n",
+            (double) nvals,
+            minstate, log2 ((double) minstate),
+            maxstate, log2 ((double) maxstate)) ;
+    }
+}
+
 //------------------------------------------------------------------------------
 // LG_RAND macros
 //------------------------------------------------------------------------------
@@ -188,7 +206,7 @@ int LAGraph_Random_Init (char *msg)
     LG_rand_init_op = NULL ;
     #if LAGRAPH_SUITESPARSE
 
-    #ifdef LAGRAPH_V11_GENERATOR
+    #if LAGRAPH_V11_GENERATOR
     // using the generator from LAGraph v1.1
     GRB_TRY (GxB_UnaryOp_new (&LG_rand_next_op, LG_rand_next_f,
         GrB_UINT64, GrB_UINT64, "LG_rand_next_f", LG_RAND_NEXT_F_DEFN)) ;
@@ -202,7 +220,7 @@ int LAGraph_Random_Init (char *msg)
         GrB_UINT64, GrB_UINT64, "LG_rand_init_func", LG_RAND_INIT_F_DEFN)) ;
     #else
 
-    #ifdef LAGRAPH_V11_GENERATOR
+    #if LAGRAPH_V11_GENERATOR
     // using the generator from LAGraph v1.1
     GRB_TRY (GrB_UnaryOp_new (&LG_rand_next_op, LG_rand_next_f,
         GrB_UINT64, GrB_UINT64)) ;
@@ -215,6 +233,10 @@ int LAGraph_Random_Init (char *msg)
     GRB_TRY (GrB_UnaryOp_new (&LG_rand_init_op, LG_rand_init_func,
         GrB_UINT64, GrB_UINT64)) ;
     #endif
+
+    GxB_print (LG_rand_next_op, 5) ;
+    GxB_print (LG_rand_init_op, 5) ;
+
     return (GrB_SUCCESS) ;
 }
 
@@ -304,20 +326,8 @@ int LAGraph_Random_Seed // construct a random state vector
     }
     #endif
 
-    // printf ("\nseed: %" PRIu64 "\n", seed) ;
-    // GxB_print (State, 5) ;
-    uint64_t nvals ;
-    GrB_Vector_nvals (&nvals, State) ;
-    if (nvals > 0) 
-    {
-        uint64_t maxstate = 0, minstate = 0 ;
-        GrB_reduce (&maxstate, NULL, GrB_MAX_MONOID_UINT64, State, NULL) ;
-        GrB_reduce (&minstate, NULL, GrB_MIN_MONOID_UINT64, State, NULL) ;
-        printf ("    nvals: %g min: %lu (log2 %g), max %lu (log2 %g)\n",
-            (double) nvals,
-            minstate, log2 ((double) minstate),
-            maxstate, log2 ((double) maxstate)) ;
-    }
+    printf ("\nseed: %" PRIu64 "\n", seed) ;
+    dump_state (State) ;
 
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
@@ -343,8 +353,9 @@ int LAGraph_Random_Next     // advance to next random vector
     // State = next (State)
     GRB_TRY (GrB_Vector_apply (State, NULL, NULL, LG_rand_next_op, State,
         NULL)) ;
-    //printf ("next:\n") ;
-    //GxB_print (State, 2) ;
+    printf ("next:\n") ;
+    dump_state (State) ;
+
     return (GrB_SUCCESS) ;
 }
 
