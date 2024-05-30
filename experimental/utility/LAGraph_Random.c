@@ -45,7 +45,8 @@ GrB_UnaryOp LG_rand_next_op = NULL ;
 GrB_UnaryOp LG_rand_init_op = NULL ;
 
 //------------------------------------------------------------------------------
-// LG_rand_next_func:  unary operator to construct the next state
+// LG_rand_next_f :  unary operator to construct the next state
+// LG_rand_next_f2:  unary operator to construct the next state
 //------------------------------------------------------------------------------
 
 // z = f(x), where x is the old state and z is the new state.
@@ -77,7 +78,7 @@ GrB_UnaryOp LG_rand_init_op = NULL ;
 
 #endif
 
-void LG_rand_next_func (void *z, const void *x)
+void LG_rand_next_f2 (void *z, const void *x)
 {
     uint64_t state = (*((uint64_t *) x)) ;
     state ^= state << 13 ;
@@ -87,7 +88,7 @@ void LG_rand_next_func (void *z, const void *x)
 }
 
 #define LG_RAND_NEXT_F2_DEFN                            \
-"void LG_rand_next_func (void *z, const void *x)    \n" \
+"void LG_rand_next_f2 (void *z, const void *x)      \n" \
 "{                                                  \n" \
 "    uint64_t state = (*((uint64_t *) x)) ;         \n" \
 "    state ^= state << 13 ;                         \n" \
@@ -189,12 +190,12 @@ int LAGraph_Random_Init (char *msg)
 
     #ifdef LAGRAPH_V11_GENERATOR
     // using the generator from LAGraph v1.1
-    GRB_TRY (GxB_UnaryOp_new (&LG_rand_next_op, LG_rand_next_func,
+    GRB_TRY (GxB_UnaryOp_new (&LG_rand_next_op, LG_rand_next_f,
         GrB_UINT64, GrB_UINT64, "LG_rand_next_f", LG_RAND_NEXT_F_DEFN)) ;
     #else
     // using the xorshift generator from LAGraph v1.2
-    GRB_TRY (GxB_UnaryOp_new (&LG_rand_next_op, LG_rand_next_func,
-        GrB_UINT64, GrB_UINT64, "LG_rand_next_func", LG_RAND_NEXT_F2_DEFN)) ;
+    GRB_TRY (GxB_UnaryOp_new (&LG_rand_next_op, LG_rand_next_f2,
+        GrB_UINT64, GrB_UINT64, "LG_rand_next_f2", LG_RAND_NEXT_F2_DEFN)) ;
     #endif
 
     GRB_TRY (GxB_UnaryOp_new (&LG_rand_init_op, LG_rand_init_func,
@@ -203,11 +204,11 @@ int LAGraph_Random_Init (char *msg)
 
     #ifdef LAGRAPH_V11_GENERATOR
     // using the generator from LAGraph v1.1
-    GRB_TRY (GrB_UnaryOp_new (&LG_rand_next_op, LG_rand_next_func,
+    GRB_TRY (GrB_UnaryOp_new (&LG_rand_next_op, LG_rand_next_f,
         GrB_UINT64, GrB_UINT64)) ;
     #else
     // using the xorshift generator from LAGraph v1.2
-    GRB_TRY (GrB_UnaryOp_new (&LG_rand_next_op, LG_rand_next_f,
+    GRB_TRY (GrB_UnaryOp_new (&LG_rand_next_op, LG_rand_next_f2,
         GrB_UINT64, GrB_UINT64)) ;
     #endif
 
@@ -304,7 +305,19 @@ int LAGraph_Random_Seed // construct a random state vector
     #endif
 
     // printf ("\nseed: %" PRIu64 "\n", seed) ;
-    // GxB_print (State, 2) ;
+    // GxB_print (State, 5) ;
+    uint64_t nvals ;
+    GrB_Vector_nvals (&nvals, State) ;
+    if (nvals > 0) 
+    {
+        uint64_t maxstate = 0, minstate = 0 ;
+        GrB_reduce (&maxstate, NULL, GrB_MAX_MONOID_UINT64, State, NULL) ;
+        GrB_reduce (&minstate, NULL, GrB_MIN_MONOID_UINT64, State, NULL) ;
+        printf ("    nvals: %g min: %lu (log2 %g), max %lu (log2 %g)\n",
+            (double) nvals,
+            minstate, log2 ((double) minstate),
+            maxstate, log2 ((double) maxstate)) ;
+    }
 
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
