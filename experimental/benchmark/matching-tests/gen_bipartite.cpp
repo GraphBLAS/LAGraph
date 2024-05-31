@@ -160,20 +160,19 @@ int maxflow(int s, int t, int n) {
 }
 
 int main(int argc, char **argv){
-    // TODO: Right now, perf is controlled by naive. Switch this
     int num_nodes = atoi(argv[1]);
-    double sparse_factor = atof(argv[2]);
-    int perf = atoi(argv[3]);
+    double sparse_factor = atof(argv[2]); // average degree of each node in the left set
+    int perf = atoi(argv[3]);             // whether to test performance or quality
     
     int naive;
     if(perf){
-        naive = 1;
+        naive = 1;  // if testing for performance, only use the naive method
     } else {
         naive = atoi(argv[4]);
     }
     
     if(naive){
-        weighted = atoi(argv[5]);
+        weighted = atoi(argv[5]); // only the naive method has a weighted matching option
         if(weighted){
             prefer_light = atoi(argv[6]);
         }
@@ -191,7 +190,7 @@ int main(int argc, char **argv){
     random_device rd;
     mt19937_64 gen(rd());
     uniform_int_distribution<ll> seed_distr(1, 1e15);
-    uint64_t seed = seed_distr(gen);
+    uint64_t seed = 83; // seed_distr(gen);
 
     GrB_Index *rows, *cols ;
     uint32_t *vals ;

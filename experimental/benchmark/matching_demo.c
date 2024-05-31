@@ -22,7 +22,7 @@ matching_type: 0, 1, 2 for random matching, heavy edge matching, and light edge 
 NOTE: This is the typical scenario that all other benchmark codes are used for
 
 Option 2: Run for quality
-./matching_demo -q <matching_type> <ntrials>
+./matching_demo -q <matrix_name> <matching_type> <ntrials>
 NOTE: this option only accepts input via stdin
 -q option as the matrix name specifies to run for quality, not performance
 matching_type: 0, 1, 2 for random matching, heavy edge matching, and light edge matching respectively
@@ -73,7 +73,7 @@ int main (int argc, char** argv)
     // read in the graph
     //--------------------------------------------------------------------------
     if (argc < 3) {
-        printf ("Invalid usage, read comments\n") ;
+        printf ("Invalid usage, please read comments\n") ;
         return 0 ;
     }
     int quality = 0 ;
@@ -81,13 +81,29 @@ int main (int argc, char** argv)
     char *matrix_name = argv [1] ;
     // -q option as the matrix name means to run the quality tests
     quality = ( strcmp (matrix_name, "-q") == 0 ) ;
+    char *q_argv [4] = {NULL, NULL, NULL, NULL} ; // build a new argv in the quality case
+    if (quality) {
+	    if (argc != 5){
+            printf("Invalid usage, please read comments\n") ;
+            return 0;
+	    }
+	    LAGRAPH_TRY (LAGraph_Malloc ((void**) &q_argv, argc - 1, sizeof(char*), msg)) ;
+	    q_argv [0] = argv [0] ;
+	    q_argv [1] = argv [2] ;
+	    q_argv [2] = argv [3] ;
+	    q_argv [3] = argv [4] ;
+	    matrix_name = q_argv[2] ;
+    } else {
+        if (argc != 3){
+            printf("Invalid usage, please read comments\n");
+            return 0;
+        }
+    }
     force_stdin = ( strcmp (matrix_name, "stdin") == 0 ) ;
-
-    force_stdin = force_stdin || quality ;
-
+		    
     LAGRAPH_TRY (LAGraph_Random_Init (msg)) ;
     LAGRAPH_TRY (readproblem (&G, NULL,
-        true, true, false, GrB_FP64, false, force_stdin ? 1 : argc, argv)) ;
+        true, true, false, GrB_FP64, false, force_stdin ? 1 : argc - quality, quality ? q_argv : argv)) ;
 
     GrB_Index n ;
     GrB_Index num_edges ;
@@ -108,12 +124,8 @@ int main (int argc, char** argv)
         //--------------------------------------------------------------------------
         // Printing E matrix, best result from ntrial runs for my own, external tests for quality (not performance)
         //--------------------------------------------------------------------------
-        if (argc < 4) {
-            printf ("Invalid usage, read comments\n") ;
-            return 0 ;
-        }
-        int ntrials = atoi (argv [3]) ;
-        int matching_type = atoi (argv [2]) ;
+        int ntrials = atoi (q_argv [3]) ;
+        int matching_type = atoi (q_argv [2]) ;
 
         // best answer so far
         double best_val = (matching_type == 2) ? 1e18 : 0 ;

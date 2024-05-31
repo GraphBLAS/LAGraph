@@ -913,7 +913,7 @@ int LAGraph_FastGraphletTransform
 
 typedef enum
 {
-    LAGraph_Matching_random = 0,
+    LAGraph_Matching_unweighted = 0,
     LAGraph_Matching_heavy = 1,
     LAGraph_Matching_light = 2,
 }

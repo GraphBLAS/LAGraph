@@ -51,17 +51,17 @@ matrix_info ;
 
 const matrix_info tests [ ] = {
     // random, preserve, combine
-    {10, 0.3, 55, LAGraph_Matching_random, 1, 1, "small-random-preserve-combine"},
-    {500, 0.4, 16, LAGraph_Matching_random, 1, 1, "large-random-preserve-combine"},
+    {10, 0.3, 55, LAGraph_Matching_unweighted, 1, 1, "small-random-preserve-combine"},
+    {500, 0.4, 16, LAGraph_Matching_unweighted, 1, 1, "large-random-preserve-combine"},
     // random, preserve, nocombine
-    {10, 0.3, 62, LAGraph_Matching_random, 1, 0, "small-random-preserve-nocombine"},
-    {500, 0.4, 21, LAGraph_Matching_random, 1, 0, "large-random-preserve-nocombine"},
+    {10, 0.3, 62, LAGraph_Matching_unweighted, 1, 0, "small-random-preserve-nocombine"},
+    {500, 0.4, 21, LAGraph_Matching_unweighted, 1, 0, "large-random-preserve-nocombine"},
     // random, nopreserve, combine
-    {10, 0.3, 23, LAGraph_Matching_random, 0, 1, "small-random-nopreserve-combine"},
-    {500, 0.4, 31, LAGraph_Matching_random, 0, 1, "large-random-nopreserve-combine"},
+    {10, 0.3, 23, LAGraph_Matching_unweighted, 0, 1, "small-random-nopreserve-combine"},
+    {500, 0.4, 31, LAGraph_Matching_unweighted, 0, 1, "large-random-nopreserve-combine"},
     // random, nopreserve, nocombine
-    {10, 0.3, 92, LAGraph_Matching_random, 0, 0, "small-random-nopreserve-nocombine"},
-    {500, 0.4, 44, LAGraph_Matching_random, 0, 0, "large-random-nopreserve-nocombine"},
+    {10, 0.3, 92, LAGraph_Matching_unweighted, 0, 0, "small-random-nopreserve-nocombine"},
+    {500, 0.4, 44, LAGraph_Matching_unweighted, 0, 0, "large-random-nopreserve-nocombine"},
 
     // same as above except weighted matching (mix of light and heavy)
     // random, preserve, combine
