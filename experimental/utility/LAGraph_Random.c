@@ -175,14 +175,13 @@ void LG_rand_init_func (void *z, const void *x, GrB_Index i,
 "   state ^= state << 13 ;                                      \n" \
 "   state ^= state >> 7 ;                                       \n" \
 "   state ^= state << 17 ;                                      \n" \
-"   seed = (*((uint64_t *) y)) ;                                \n" \
-"   uint64_t state += seed ;                                    \n" \
+"   uint64_t seed = (*((uint64_t *) y)) ;                       \n" \
+"   state += seed ;                                             \n" \
 "   uint64_t result = (state += 0x9E3779B97f4A7C15) ;           \n" \
 "   result = (result ^ (result >> 30)) * 0xBF58476D1CE4E5B9 ;   \n" \
 "   result = (result ^ (result >> 27)) * 0x94D049BB133111EB ;   \n" \
 "   result = (result ^ (result >> 31)) ;                        \n" \
-"   #define LG_RAND_MARSAGLIA_SEED 88172645463325252LL          \n" \
-"   if (result == 0) result = LG_RAND_MARSAGLIA_SEED ;          \n" \
+"   if (result == 0) result = 88172645463325252LL ;             \n" \
 "   (*((uint64_t *) z)) = result ;                              \n" \
 "}"
 
@@ -211,7 +210,7 @@ int LAGraph_Random_Init (char *msg)
             // using the generator from LAGraph v1.1
             GRB_TRY (GxB_UnaryOp_new (&LG_rand_next_op, LG_rand_next_f1,
                 GrB_UINT64, GrB_UINT64,
-                "LG_rand_next_f1", LG_RAND_NEXT_F_DEFN)) ;
+                "LG_rand_next_f1", LG_RAND_NEXT_F1_DEFN)) ;
         }
         #else
         {
