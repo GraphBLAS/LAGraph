@@ -19,9 +19,6 @@
 NOTE: Unlike the other tests, this does not use .mtx files, but rather generates the test
 matrices using specified configurations and seeds with LAGraph_Random_Matrix
 
-NOTE: Changes to LAGraph_Random may break these tests, since the LAGraph_Random implementation
-used to build the test graphs may produce a different output from newer implementations
-given the same seed.
 */
 
 #include <stdio.h>
@@ -36,46 +33,49 @@ LAGraph_Graph G = NULL ;
 
 typedef struct
 {
-    double matching_val ; // for unweighted matchings, the size of the set. For weighted, sum of edge weights
+    double matching_val ; // for unweighted matchings, the size of the matching. For weighted, sum of edge weights
     int matching_type ;   // 0: unweighted, 1: heavy, 2: light
     int is_exact ;        // whether or not matching_val is exactly computed for this test
-    GrB_Index n ;         // number of nodes in the graph. If bipartite, number of nodes in the left set
-    GrB_Index m ;         // if not bipartite, should be -1. Otherwise, the number of nodes in the right set
-    double density ;      // density of the matrix
-    uint64_t seed ;       // seed used to generate the graph for this test
-    const char *name ;
+    const char *name ;    // matrix file name
 }
 matrix_info ;
 
 const matrix_info tests [ ] =
 {
     // unweighted bipartite
-    { 43, 0, 1, 50, 50, 5.0 / 50, 143, "random_bipartite_bool_1" },
-    { 496, 0, 1, 500, 500, 3.0 / 500, 88, "random_bipartite_bool_2" },
-    { 479, 0, 0, 500, 500, 10.0 / 500, 42, "random_bipartite_bool_3" },
-    { 2483, 0, 0, 2500, 2500, 100.0 / 2500, 55, "random_bipartite_bool_4" },
+    { 150, 0, 1, "random_unweighted_bipartite1.mtx" }, // 42
+    { 150, 0, 1, "random_unweighted_bipartite2.mtx" }, // 69
+    { 143, 0, 0, "random_unweighted_bipartite1.mtx" }, // repeat
+    { 147, 0, 0, "random_unweighted_bipartite2.mtx" }, // repeat
+
     // unweighted general
-    { 24, 0, 1, 50, -1, 5.0 / 50, 92, "random_general_bool_1" } ,
-    { 100, 0, 1, 200, -1, 10.0 / 200, 112, "random_general_bool_2" },
-    { 242, 0, 0, 500, -1, 10.0 / 500, 48, "random_general_bool_3" },
-    { 1487, 0, 0, 3000, -1, 50.0 / 3000, 64, "random_general_bool_4" },
+    // { 25, 0, 1, 50, -1, 5.0 / 50, 31, "unweighted_general_1" } , // 31
+    { 25, 0, 1, "random_unweighted_general1.mtx"},
+    // { 100, 0, 1, 200, -1, 10.0 / 200, 101, "unweighted_general_2" }, // 101
+    { 100, 0, 1, "random_unweighted_general2.mtx"},
+    { 24, 0, 0, "random_unweighted_general1.mtx"},
+    { 95, 0, 0, "random_unweighted_general2.mtx"},
+
     // weighted bipartite
-    { 3777422047635, 1, 0, 1000, 1000, 20.0 / 1000, 130, "random_bipartite_int_1" },
-    { 9851292258178, 1, 0, 2500, 2500, 30.0 / 2500, 78, "random_bipartite_int_2" },
-    { 372131180649, 2, 0, 1000, 1000, 20.0 / 1000, 24, "random_bipartite_int_3" },
-    { 639851753175, 2, 0, 2500, 2500, 30.0 / 2500, 178, "random_bipartite_int_4" },
+    // answer, matching_type, is_exact, l_node, r_node, density, seed, name
+    // { 3777422047635, 1, 0, 1000, 1000, 20.0 / 1000, 83, "weighted_bipartite_1" },
+    { 775940425564, 1, 0, "random_weighted_bipartite1.mtx"}, // seed: 83, nodes: 500, spf: 8
+    // { 9851292258178, 1, 0, 2500, 2500, 30.0 / 2500, 78, "weighted_bipartite_2" }
+    { 417490248760, 1, 0, "random_weighted_bipartite2.mtx"}, // seed: 151, nodes: 300, spf: 5 
+    { 181453589490, 2, 0, "random_weighted_bipartite1.mtx" }, // repeat
+    { 133704435764, 2, 0, "random_weighted_bipartite2.mtx" }, // repeat
     // weighted general
-    { 1847843295771, 1, 0, 1000, -1, 20.0 / 1000, 155, "random_general_int_1" },
-    { 9991765577349, 1, 0, 5000, -1, 50.0 / 5000, 98, "random_general_int_2" },
-    { 193597661237, 2, 0, 1000, -1, 20.0 / 1000, 44, "random_general_int_3" },
-    { 520480326025, 2, 0, 5000, -1, 50.0 / 5000, 101, "random_general_int_4" },
+    { 783685067769, 1, 0, "random_weighted_general1.mtx" }, // seed: 137, nodes: 500, spf: 8
+    { 420609293186, 1, 0, "random_weighted_general2.mtx" }, // seed: 62, nodes: 300, spf: 5
+    { 165090013148, 2, 0, "random_weighted_general1.mtx" }, // repeat
+    { 128746478507, 2, 0, "random_weighted_general2.mtx" }, // repeat
     
-    { 0, 0, 0, 0, 0, 0.0, 0, "" }
+    { 0, 0, 0, "" }
 } ;
 
 double thresholds [ ] = {
-    0.85,   // random matching, exact
-    0.90,   // random matching, naive
+    0.85,   // unweighted matching, exact
+    0.90,   // unweighted matching, naive
     0.80,   // weighted matching, naive, light
     0.90,   // weighted matching, naive, heavy
 } ;
@@ -98,92 +98,13 @@ void test_MaximalMatching (void)
         if (strlen (aname) == 0) break ;
         TEST_CASE (aname) ;
 
-        // graph generation below
-        //--------------
-        if (tests [k].m != -1) {
-            // we want a bipartite graph
-            GrB_Index n = tests [k].n ;
-            GrB_Index m = tests [k].m ;
-            /*
-            Bipartite graph generation works as follows: Create a random n x m matrix for the top right
-            quadrant. The bottom left quadrant will be the transpose of this matrix. The other 2 quadrants
-            will be empty.
-            This exactly matches the process that the custom tests use
-            */
-            GrB_Matrix A_tr = NULL ; // top-right quadrant
-            GrB_Index A_tr_nvals ;   // number of entries in top-right quadrant
-            GrB_Index *tr_rows, *tr_cols ;
-            uint32_t *tr_vals ;
-
-            OK (LAGraph_Random_Matrix (&A_tr, GrB_UINT32, n, m, tests [k].density, tests [k].seed, msg)) ;
-
-            OK (GrB_Matrix_nvals (&A_tr_nvals, A_tr)) ;
-
-            OK (GrB_Matrix_new (&A, GrB_UINT32, n + m, n + m)) ;
-
-            OK (LAGraph_Malloc ((void**)(&tr_rows), A_tr_nvals, sizeof(GrB_Index), msg)) ;
-            OK (LAGraph_Malloc ((void**)(&tr_cols), A_tr_nvals, sizeof(GrB_Index), msg)) ;
-            OK (LAGraph_Malloc ((void**)(&tr_vals), A_tr_nvals, sizeof(uint32_t), msg)) ;
-
-            OK (GrB_Matrix_extractTuples (tr_rows, tr_cols, tr_vals, &A_tr_nvals, A_tr)) ;
-
-            for (GrB_Index i = 0; i < A_tr_nvals; i++) {
-                GrB_Index row = tr_rows[i];
-                GrB_Index col = tr_cols[i];
-                uint32_t val = tr_vals[i];
-                OK (GrB_Matrix_setElement (A, val, row, col + n)) ;
-                OK (GrB_Matrix_setElement (A, val, col + n, row)) ;
-            }
-
-            OK (GrB_free (&A_tr)) ;
-            OK (LAGraph_Free ((void**)(&tr_rows), msg)) ;
-            OK (LAGraph_Free ((void**)(&tr_cols), msg)) ;
-            OK (LAGraph_Free ((void**)(&tr_vals), msg)) ;
-
-        } else {
-            GrB_Index n = tests [k].n ;
-
-            GrB_Matrix A_dup = NULL ;
-            GrB_Index nvals ;
-            GrB_Index *rows, *cols ;
-            uint32_t *vals ;
-
-            OK (LAGraph_Random_Matrix (&A_dup, GrB_UINT32, n, n, tests [k].density, tests [k].seed, msg)) ;
-            OK (GrB_Matrix_new (&A, GrB_UINT32, n, n)) ;
-
-            OK (GrB_Matrix_nvals (&nvals, A_dup)) ;
-
-            OK (LAGraph_Malloc ((void**)(&rows), nvals, sizeof(GrB_Index), msg)) ;
-            OK (LAGraph_Malloc ((void**)(&cols), nvals, sizeof(GrB_Index), msg)) ;
-            OK (LAGraph_Malloc ((void**)(&vals), nvals, sizeof(uint32_t), msg)) ;
-
-            OK (GrB_Matrix_extractTuples (rows, cols, vals, &nvals, A_dup)) ;
-
-            for (GrB_Index i = 0; i < nvals; i++) {
-                GrB_Index row = rows[i];
-                GrB_Index col = cols[i];
-                uint32_t val = vals[i];
-                if (col < row){
-                    // use lower triangular entries for the entire matrix
-                    OK (GrB_Matrix_setElement (A, val, col, row)) ;
-                    OK (GrB_Matrix_setElement (A, val, row, col)) ;
-                }
-            }
-            
-            OK (GrB_free (&A_dup)) ;
-            OK (LAGraph_Free ((void**)(&rows), msg)) ;
-            OK (LAGraph_Free ((void**)(&cols), msg)) ;
-            OK (LAGraph_Free ((void**)(&vals), msg)) ;
-        }
         // old code using files
         //--------------
-        /*
         snprintf (filename, LEN, LG_DATA_DIR "%s", aname) ;
         FILE *f = fopen (filename, "r") ;
         TEST_CHECK (f != NULL) ;
         TEST_MSG ("Filename %s is invalid", filename) ;
         OK (LAGraph_MMRead (&A, f, msg)) ;
-        */
         //--------------
 
         TEST_CHECK (A != NULL) ;
@@ -256,7 +177,7 @@ void test_MaximalMatching (void)
             double matching_value = 0 ;
 
             if (tests [k].matching_type == 0) {
-                // random
+                // unweighted
                 // we only care about the number of chosen edges
                 uint64_t matching_val_int ;
                 OK (GrB_Vector_nvals (&matching_val_int, matching)) ;

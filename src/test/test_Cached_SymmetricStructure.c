@@ -34,6 +34,7 @@ char filename [LEN+1] ;
 void setup (void)
 {
     OK (LAGraph_Init (msg)) ;
+    GrB_set (GrB_GLOBAL, true, GxB_BURBLE) ;
 }
 
 //------------------------------------------------------------------------------

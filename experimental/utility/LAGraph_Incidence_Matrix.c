@@ -19,10 +19,12 @@ have the same value.  If the graph G is weighted, then both E(i,k) and E(j,k)
 are equal to the weight of the (i,j) edge.  If G is unweighted, then both are
 equal to 1 (and the matrix E is thus iso-valued).
 
-The result has the same type as the input adjacency matrix.
-*/
+The type of the result is always compatible with the type of the input graph, but
+may be of a larger size; UINT8, UINT16, UINT32, INT8, INT16, INT32, INT64, and BOOL becomes
+a UINT64. UINT64 remains as a UINT64. FP32 and FP64 both become FP64.
 
-//--------
+Note that complex types are NOT supported.
+*/
 
 #include "LG_internal.h"
 #include "LAGraphX.h"

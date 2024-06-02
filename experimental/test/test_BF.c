@@ -57,6 +57,7 @@ void setup (void)
 {
     OK (LAGraph_Init (msg)) ;
     OK (LAGraph_Random_Init (msg)) ;
+    GxB_set (GxB_BURBLE, true, GrB_GLOBAL) ;
 }
 
 //------------------------------------------------------------------------------
