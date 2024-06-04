@@ -22,6 +22,8 @@ set ( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
     ${CMAKE_SOURCE_DIR}/../../../cmake_modules
     ${CMAKE_SOURCE_DIR}/../LAGraph/cmake_modules )
 
+include ( SuiteSparsePolicy )
+
 project ( mytests LANGUAGES C CXX )
 
 add_executable ( gen_bipartite "gen_bipartite.cpp" )
@@ -33,9 +35,12 @@ add_executable ( verify_matching "verify_matching.cpp")
 #-------------------------------------------------------------------------------
 
 # look for all SuiteSparse packages:
-find_package ( LAGraph REQUIRED )
-find_package ( LAGraphX REQUIRED )
-find_package ( GraphBLAS REQUIRED )
+find_package ( LAGraph 
+    PATHS ${LAGRAPH_ROOT}/build NO_DEFAULT_PATH REQUIRED )
+# find_package ( LAGraphX
+#     PATHS ${LAGRAPHX_ROOT}/build/experimental NO_DEFAULT_PATH REQUIRED )
+find_package ( GraphBLAS REQUIRED
+    PATHS ${GRAPHBLAS_ROOT}/build NO_DEFAULT_PATH REQUIRED )
 
 # look for all external libaries:
 find_package ( OpenMP REQUIRED )
@@ -72,6 +77,7 @@ target_link_libraries ( gen_general PUBLIC ${LAGRAPH_LIBRARIES} )
 include_directories ( ${LAGRAPH_INCLUDE_DIR} )
 
 # LAGraphX:
+message ( "LAGraphX libraries: " ${LAGRAPHX_LIBRARIES} )
 target_link_libraries ( gen_bipartite PUBLIC ${LAGRAPHX_LIBRARIES} )
 target_link_libraries ( gen_general PUBLIC ${LAGRAPHX_LIBRARIES} )
 include_directories ( ${LAGRAPHX_INCLUDE_DIR} )
