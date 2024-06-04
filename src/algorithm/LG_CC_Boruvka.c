@@ -273,6 +273,9 @@ int LG_CC_Boruvka
     // free workspace and return result
     //--------------------------------------------------------------------------
 
+    // parent depends on the Px array, which GraphBLAS does not know about, so
+    // parent must be computed before Px is freed.
+    GRB_TRY (GrB_wait (parent, GrB_MATERIALIZE)) ;
     (*component) = parent ;
     LG_FREE_WORK ;
     return (GrB_SUCCESS) ;
